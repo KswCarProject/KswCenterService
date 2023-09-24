@@ -7,23 +7,23 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
+/* loaded from: classes.dex */
 public final class FontVariationAxis {
-    private static final Pattern STYLE_VALUE_PATTERN = Pattern.compile("-?(([0-9]+(\\.[0-9]+)?)|(\\.[0-9]+))");
-    private static final Pattern TAG_PATTERN = Pattern.compile("[ -~]{4}");
     @UnsupportedAppUsage
     private final float mStyleValue;
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
     private final int mTag;
     private final String mTagString;
+    private static final Pattern TAG_PATTERN = Pattern.compile("[ -~]{4}");
+    private static final Pattern STYLE_VALUE_PATTERN = Pattern.compile("-?(([0-9]+(\\.[0-9]+)?)|(\\.[0-9]+))");
 
     public FontVariationAxis(String tagString, float styleValue) {
-        if (isValidTag(tagString)) {
-            this.mTag = makeTag(tagString);
-            this.mTagString = tagString;
-            this.mStyleValue = styleValue;
-            return;
+        if (!isValidTag(tagString)) {
+            throw new IllegalArgumentException("Illegal tag pattern: " + tagString);
         }
-        throw new IllegalArgumentException("Illegal tag pattern: " + tagString);
+        this.mTag = makeTag(tagString);
+        this.mTagString = tagString;
+        this.mStyleValue = styleValue;
     }
 
     public int getOpenTypeTagValue() {
@@ -51,7 +51,11 @@ public final class FontVariationAxis {
     }
 
     public static int makeTag(String tagString) {
-        return (tagString.charAt(0) << 24) | (tagString.charAt(1) << 16) | (tagString.charAt(2) << 8) | tagString.charAt(3);
+        char c1 = tagString.charAt(0);
+        char c2 = tagString.charAt(1);
+        char c3 = tagString.charAt(2);
+        char c4 = tagString.charAt(3);
+        return (c1 << 24) | (c2 << 16) | (c3 << '\b') | c4;
     }
 
     public static FontVariationAxis[] fromFontVariationSettings(String settings) {
@@ -64,26 +68,26 @@ public final class FontVariationAxis {
         while (i < length) {
             char c = settings.charAt(i);
             if (!Character.isWhitespace(c)) {
-                if ((c == '\'' || c == '\"') && length >= i + 6 && settings.charAt(i + 5) == c) {
-                    String tagString = settings.substring(i + 1, i + 5);
-                    int i2 = i + 6;
-                    int endOfValueString = settings.indexOf(44, i2);
-                    if (endOfValueString == -1) {
-                        endOfValueString = length;
-                    }
-                    try {
-                        axisList.add(new FontVariationAxis(tagString, Float.parseFloat(settings.substring(i2, endOfValueString))));
-                        i = endOfValueString;
-                    } catch (NumberFormatException e) {
-                        throw new IllegalArgumentException("Failed to parse float string: " + e.getMessage());
-                    }
-                } else {
+                if ((c != '\'' && c != '\"') || length < i + 6 || settings.charAt(i + 5) != c) {
                     throw new IllegalArgumentException("Tag should be wrapped with double or single quote: " + settings);
+                }
+                String tagString = settings.substring(i + 1, i + 5);
+                int i2 = i + 6;
+                int endOfValueString = settings.indexOf(44, i2);
+                if (endOfValueString == -1) {
+                    endOfValueString = length;
+                }
+                try {
+                    float value = Float.parseFloat(settings.substring(i2, endOfValueString));
+                    axisList.add(new FontVariationAxis(tagString, value));
+                    i = endOfValueString;
+                } catch (NumberFormatException e) {
+                    throw new IllegalArgumentException("Failed to parse float string: " + e.getMessage());
                 }
             }
             i++;
         }
-        if (axisList.isEmpty() != 0) {
+        if (axisList.isEmpty()) {
             return null;
         }
         return (FontVariationAxis[]) axisList.toArray(new FontVariationAxis[0]);
@@ -93,7 +97,7 @@ public final class FontVariationAxis {
         if (axes == null) {
             return "";
         }
-        return TextUtils.join((CharSequence) SmsManager.REGEX_PREFIX_DELIMITER, (Object[]) axes);
+        return TextUtils.join(SmsManager.REGEX_PREFIX_DELIMITER, axes);
     }
 
     public boolean equals(Object o) {
@@ -111,6 +115,6 @@ public final class FontVariationAxis {
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(this.mTag), Float.valueOf(this.mStyleValue)});
+        return Objects.hash(Integer.valueOf(this.mTag), Float.valueOf(this.mStyleValue));
     }
 }

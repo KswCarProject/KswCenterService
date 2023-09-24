@@ -4,11 +4,12 @@ import android.annotation.SystemApi;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ResolveInfo;
+import android.content.p002pm.ResolveInfo;
 import android.telephony.mbms.MbmsDownloadReceiver;
 import java.util.List;
 
 @SystemApi
+/* loaded from: classes4.dex */
 public class VendorUtils {
     public static final String ACTION_CLEANUP = "android.telephony.mbms.action.CLEANUP";
     public static final String ACTION_DOWNLOAD_RESULT_INTERNAL = "android.telephony.mbms.action.DOWNLOAD_RESULT_INTERNAL";
@@ -28,9 +29,9 @@ public class VendorUtils {
         Intent queryIntent = new Intent();
         queryIntent.setComponent(candidate);
         List<ResolveInfo> receivers = context.getPackageManager().queryBroadcastReceivers(queryIntent, 0);
-        if (receivers == null || receivers.size() <= 0) {
-            return null;
+        if (receivers != null && receivers.size() > 0) {
+            return candidate;
         }
-        return candidate;
+        return null;
     }
 }

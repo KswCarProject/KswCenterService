@@ -2,14 +2,15 @@ package android.media;
 
 import android.annotation.UnsupportedAppUsage;
 import android.content.res.AssetFileDescriptor;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
+import android.p007os.Handler;
+import android.p007os.Looper;
+import android.p007os.Message;
 import android.util.AndroidRuntimeException;
 import android.util.Log;
 import java.io.FileDescriptor;
 import java.lang.ref.WeakReference;
 
+/* loaded from: classes3.dex */
 public class JetPlayer {
     private static final int JET_EVENT = 1;
     private static final int JET_EVENT_CHAN_MASK = 245760;
@@ -29,15 +30,14 @@ public class JetPlayer {
     private static int MAXTRACKS = 32;
     private static final String TAG = "JetPlayer-J";
     private static JetPlayer singletonRef;
-    private NativeEventHandler mEventHandler = null;
-    /* access modifiers changed from: private */
-    public final Object mEventListenerLock = new Object();
-    private Looper mInitializationLooper = null;
-    /* access modifiers changed from: private */
-    public OnJetEventListener mJetEventListener = null;
+    private Looper mInitializationLooper;
     @UnsupportedAppUsage
     private long mNativePlayerInJavaObj;
+    private NativeEventHandler mEventHandler = null;
+    private final Object mEventListenerLock = new Object();
+    private OnJetEventListener mJetEventListener = null;
 
+    /* loaded from: classes3.dex */
     public interface OnJetEventListener {
         void onJetEvent(JetPlayer jetPlayer, short s, byte b, byte b2, byte b3, byte b4);
 
@@ -90,6 +90,7 @@ public class JetPlayer {
     }
 
     private JetPlayer() {
+        this.mInitializationLooper = null;
         Looper myLooper = Looper.myLooper();
         this.mInitializationLooper = myLooper;
         if (myLooper == null) {
@@ -101,8 +102,7 @@ public class JetPlayer {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() {
+    protected void finalize() {
         native_finalize();
     }
 
@@ -121,10 +121,10 @@ public class JetPlayer {
 
     public boolean loadJetFile(AssetFileDescriptor afd) {
         long len = afd.getLength();
-        if (len >= 0) {
-            return native_loadJetFromFileD(afd.getFileDescriptor(), afd.getStartOffset(), len);
+        if (len < 0) {
+            throw new AndroidRuntimeException("no length for fd");
         }
-        throw new AndroidRuntimeException("no length for fd");
+        return native_loadJetFromFileD(afd.getFileDescriptor(), afd.getStartOffset(), len);
     }
 
     public boolean closeJetFile() {
@@ -173,6 +173,7 @@ public class JetPlayer {
         return native_clearQueue();
     }
 
+    /* loaded from: classes3.dex */
     private class NativeEventHandler extends Handler {
         private JetPlayer mJet;
 
@@ -181,6 +182,7 @@ public class JetPlayer {
             this.mJet = jet;
         }
 
+        @Override // android.p007os.Handler
         public void handleMessage(Message msg) {
             OnJetEventListener listener;
             synchronized (JetPlayer.this.mEventListenerLock) {
@@ -189,7 +191,7 @@ public class JetPlayer {
             switch (msg.what) {
                 case 1:
                     if (listener != null) {
-                        JetPlayer.this.mJetEventListener.onJetEvent(this.mJet, (short) ((msg.arg1 & -16777216) >> 24), (byte) ((msg.arg1 & JetPlayer.JET_EVENT_TRACK_MASK) >> 18), (byte) (((msg.arg1 & JetPlayer.JET_EVENT_CHAN_MASK) >> 14) + 1), (byte) ((msg.arg1 & JetPlayer.JET_EVENT_CTRL_MASK) >> 7), (byte) (msg.arg1 & 127));
+                        JetPlayer.this.mJetEventListener.onJetEvent(this.mJet, (short) ((msg.arg1 & (-16777216)) >> 24), (byte) ((msg.arg1 & JetPlayer.JET_EVENT_TRACK_MASK) >> 18), (byte) (((msg.arg1 & JetPlayer.JET_EVENT_CHAN_MASK) >> 14) + 1), (byte) ((msg.arg1 & JetPlayer.JET_EVENT_CTRL_MASK) >> 7), (byte) (msg.arg1 & 127));
                         return;
                     }
                     return;
@@ -219,18 +221,20 @@ public class JetPlayer {
     }
 
     public void setEventListener(OnJetEventListener listener) {
-        setEventListener(listener, (Handler) null);
+        setEventListener(listener, null);
     }
 
     public void setEventListener(OnJetEventListener listener, Handler handler) {
         synchronized (this.mEventListenerLock) {
             this.mJetEventListener = listener;
-            if (listener == null) {
-                this.mEventHandler = null;
-            } else if (handler != null) {
-                this.mEventHandler = new NativeEventHandler(this, handler.getLooper());
+            if (listener != null) {
+                if (handler != null) {
+                    this.mEventHandler = new NativeEventHandler(this, handler.getLooper());
+                } else {
+                    this.mEventHandler = new NativeEventHandler(this, this.mInitializationLooper);
+                }
             } else {
-                this.mEventHandler = new NativeEventHandler(this, this.mInitializationLooper);
+                this.mEventHandler = null;
             }
         }
     }
@@ -239,16 +243,17 @@ public class JetPlayer {
     private static void postEventFromNative(Object jetplayer_ref, int what, int arg1, int arg2) {
         JetPlayer jet = (JetPlayer) ((WeakReference) jetplayer_ref).get();
         if (jet != null && jet.mEventHandler != null) {
-            jet.mEventHandler.sendMessage(jet.mEventHandler.obtainMessage(what, arg1, arg2, (Object) null));
+            Message m = jet.mEventHandler.obtainMessage(what, arg1, arg2, null);
+            jet.mEventHandler.sendMessage(m);
         }
     }
 
     private static void logd(String msg) {
-        Log.d(TAG, "[ android.media.JetPlayer ] " + msg);
+        Log.m72d(TAG, "[ android.media.JetPlayer ] " + msg);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static void loge(String msg) {
-        Log.e(TAG, "[ android.media.JetPlayer ] " + msg);
+        Log.m70e(TAG, "[ android.media.JetPlayer ] " + msg);
     }
 }

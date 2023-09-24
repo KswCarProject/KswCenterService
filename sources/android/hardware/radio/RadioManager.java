@@ -7,11 +7,11 @@ import android.hardware.radio.IAnnouncementListener;
 import android.hardware.radio.IRadioService;
 import android.hardware.radio.ProgramSelector;
 import android.hardware.radio.RadioTuner;
-import android.os.Handler;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.RemoteException;
-import android.os.ServiceManager;
+import android.p007os.Handler;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
 import android.telecom.Logging.Session;
 import android.text.TextUtils;
 import android.util.Log;
@@ -31,6 +31,7 @@ import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 
 @SystemApi
+/* loaded from: classes.dex */
 public class RadioManager {
     public static final int BAND_AM = 0;
     public static final int BAND_AM_HD = 3;
@@ -63,26 +64,33 @@ public class RadioManager {
     public static final int STATUS_PERMISSION_DENIED = -1;
     public static final int STATUS_TIMED_OUT = -110;
     private static final String TAG = "BroadcastRadio.manager";
-    private final Map<Announcement.OnListUpdatedListener, ICloseHandle> mAnnouncementListeners = new HashMap();
     private final Context mContext;
-    private final IRadioService mService;
+    private final Map<Announcement.OnListUpdatedListener, ICloseHandle> mAnnouncementListeners = new HashMap();
+    private final IRadioService mService = IRadioService.Stub.asInterface(ServiceManager.getServiceOrThrow(Context.RADIO_SERVICE));
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface Band {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface ConfigFlag {
     }
 
     private native int nativeListModules(List<ModuleProperties> list);
 
+    /* loaded from: classes.dex */
     public static class ModuleProperties implements Parcelable {
-        public static final Parcelable.Creator<ModuleProperties> CREATOR = new Parcelable.Creator<ModuleProperties>() {
+        public static final Parcelable.Creator<ModuleProperties> CREATOR = new Parcelable.Creator<ModuleProperties>() { // from class: android.hardware.radio.RadioManager.ModuleProperties.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public ModuleProperties createFromParcel(Parcel in) {
-                return new ModuleProperties(in);
+                return new ModuleProperties(in, null);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public ModuleProperties[] newArray(int size) {
                 return new ModuleProperties[size];
             }
@@ -105,8 +113,11 @@ public class RadioManager {
         private final Map<String, String> mVendorInfo;
         private final String mVersion;
 
+        /* synthetic */ ModuleProperties(Parcel x0, BinderC09281 x1) {
+            this(x0);
+        }
+
         public ModuleProperties(int id, String serviceName, int classId, String implementor, String product, String version, String serial, int numTuners, int numAudioSources, boolean isInitializationRequired, boolean isCaptureSupported, BandDescriptor[] bands, boolean isBgScanSupported, int[] supportedProgramTypes, int[] supportedIdentifierTypes, Map<String, Integer> dabFrequencyTable, Map<String, String> vendorInfo) {
-            Map<String, Integer> map = dabFrequencyTable;
             this.mId = id;
             this.mServiceName = TextUtils.isEmpty(serviceName) ? PhoneConstants.APN_TYPE_DEFAULT : serviceName;
             this.mClassId = classId;
@@ -122,13 +133,13 @@ public class RadioManager {
             this.mIsBgScanSupported = isBgScanSupported;
             this.mSupportedProgramTypes = arrayToSet(supportedProgramTypes);
             this.mSupportedIdentifierTypes = arrayToSet(supportedIdentifierTypes);
-            if (map != null) {
+            if (dabFrequencyTable != null) {
                 for (Map.Entry<String, Integer> entry : dabFrequencyTable.entrySet()) {
                     Objects.requireNonNull(entry.getKey());
                     Objects.requireNonNull(entry.getValue());
                 }
             }
-            this.mDabFrequencyTable = map;
+            this.mDabFrequencyTable = dabFrequencyTable;
             this.mVendorInfo = vendorInfo == null ? new HashMap<>() : vendorInfo;
         }
 
@@ -219,7 +230,6 @@ public class RadioManager {
             this.mSerial = in.readString();
             this.mNumTuners = in.readInt();
             this.mNumAudioSources = in.readInt();
-            boolean z = false;
             this.mIsInitializationRequired = in.readInt() == 1;
             this.mIsCaptureSupported = in.readInt() == 1;
             Parcelable[] tmp = in.readParcelableArray(BandDescriptor.class.getClassLoader());
@@ -227,13 +237,15 @@ public class RadioManager {
             for (int i = 0; i < tmp.length; i++) {
                 this.mBands[i] = (BandDescriptor) tmp[i];
             }
-            this.mIsBgScanSupported = in.readInt() == 1 ? true : z;
+            int i2 = in.readInt();
+            this.mIsBgScanSupported = i2 == 1;
             this.mSupportedProgramTypes = arrayToSet(in.createIntArray());
             this.mSupportedIdentifierTypes = arrayToSet(in.createIntArray());
             this.mDabFrequencyTable = Utils.readStringIntMap(in);
             this.mVendorInfo = Utils.readStringMap(in);
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeInt(this.mId);
             dest.writeString(this.mServiceName);
@@ -254,6 +266,7 @@ public class RadioManager {
             Utils.writeStringMap(dest, this.mVendorInfo);
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
@@ -263,40 +276,42 @@ public class RadioManager {
         }
 
         public int hashCode() {
-            return Objects.hash(new Object[]{Integer.valueOf(this.mId), this.mServiceName, Integer.valueOf(this.mClassId), this.mImplementor, this.mProduct, this.mVersion, this.mSerial, Integer.valueOf(this.mNumTuners), Integer.valueOf(this.mNumAudioSources), Boolean.valueOf(this.mIsInitializationRequired), Boolean.valueOf(this.mIsCaptureSupported), this.mBands, Boolean.valueOf(this.mIsBgScanSupported), this.mDabFrequencyTable, this.mVendorInfo});
+            return Objects.hash(Integer.valueOf(this.mId), this.mServiceName, Integer.valueOf(this.mClassId), this.mImplementor, this.mProduct, this.mVersion, this.mSerial, Integer.valueOf(this.mNumTuners), Integer.valueOf(this.mNumAudioSources), Boolean.valueOf(this.mIsInitializationRequired), Boolean.valueOf(this.mIsCaptureSupported), this.mBands, Boolean.valueOf(this.mIsBgScanSupported), this.mDabFrequencyTable, this.mVendorInfo);
         }
 
         public boolean equals(Object obj) {
             if (this == obj) {
                 return true;
             }
-            if (!(obj instanceof ModuleProperties)) {
-                return false;
-            }
-            ModuleProperties other = (ModuleProperties) obj;
-            if (this.mId == other.getId() && TextUtils.equals(this.mServiceName, other.mServiceName) && this.mClassId == other.mClassId && Objects.equals(this.mImplementor, other.mImplementor) && Objects.equals(this.mProduct, other.mProduct) && Objects.equals(this.mVersion, other.mVersion) && Objects.equals(this.mSerial, other.mSerial) && this.mNumTuners == other.mNumTuners && this.mNumAudioSources == other.mNumAudioSources && this.mIsInitializationRequired == other.mIsInitializationRequired && this.mIsCaptureSupported == other.mIsCaptureSupported && Objects.equals(this.mBands, other.mBands) && this.mIsBgScanSupported == other.mIsBgScanSupported && Objects.equals(this.mDabFrequencyTable, other.mDabFrequencyTable) && Objects.equals(this.mVendorInfo, other.mVendorInfo)) {
-                return true;
+            if (obj instanceof ModuleProperties) {
+                ModuleProperties other = (ModuleProperties) obj;
+                return this.mId == other.getId() && TextUtils.equals(this.mServiceName, other.mServiceName) && this.mClassId == other.mClassId && Objects.equals(this.mImplementor, other.mImplementor) && Objects.equals(this.mProduct, other.mProduct) && Objects.equals(this.mVersion, other.mVersion) && Objects.equals(this.mSerial, other.mSerial) && this.mNumTuners == other.mNumTuners && this.mNumAudioSources == other.mNumAudioSources && this.mIsInitializationRequired == other.mIsInitializationRequired && this.mIsCaptureSupported == other.mIsCaptureSupported && Objects.equals(this.mBands, other.mBands) && this.mIsBgScanSupported == other.mIsBgScanSupported && Objects.equals(this.mDabFrequencyTable, other.mDabFrequencyTable) && Objects.equals(this.mVendorInfo, other.mVendorInfo);
             }
             return false;
         }
     }
 
+    /* loaded from: classes.dex */
     public static class BandDescriptor implements Parcelable {
-        public static final Parcelable.Creator<BandDescriptor> CREATOR = new Parcelable.Creator<BandDescriptor>() {
+        public static final Parcelable.Creator<BandDescriptor> CREATOR = new Parcelable.Creator<BandDescriptor>() { // from class: android.hardware.radio.RadioManager.BandDescriptor.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public BandDescriptor createFromParcel(Parcel in) {
                 int type = BandDescriptor.lookupTypeFromParcel(in);
                 switch (type) {
                     case 0:
                     case 3:
-                        return new AmBandDescriptor(in);
+                        return new AmBandDescriptor(in, null);
                     case 1:
                     case 2:
-                        return new FmBandDescriptor(in);
+                        return new FmBandDescriptor(in, null);
                     default:
                         throw new IllegalArgumentException("Unsupported band: " + type);
                 }
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public BandDescriptor[] newArray(int size) {
                 return new BandDescriptor[size];
             }
@@ -307,16 +322,19 @@ public class RadioManager {
         private final int mType;
         private final int mUpperLimit;
 
+        /* synthetic */ BandDescriptor(Parcel x0, BinderC09281 x1) {
+            this(x0);
+        }
+
         BandDescriptor(int region, int type, int lowerLimit, int upperLimit, int spacing) {
-            if (type == 0 || type == 1 || type == 2 || type == 3) {
-                this.mRegion = region;
-                this.mType = type;
-                this.mLowerLimit = lowerLimit;
-                this.mUpperLimit = upperLimit;
-                this.mSpacing = spacing;
-                return;
+            if (type != 0 && type != 1 && type != 2 && type != 3) {
+                throw new IllegalArgumentException("Unsupported band: " + type);
             }
-            throw new IllegalArgumentException("Unsupported band: " + type);
+            this.mRegion = region;
+            this.mType = type;
+            this.mLowerLimit = lowerLimit;
+            this.mUpperLimit = upperLimit;
+            this.mSpacing = spacing;
         }
 
         public int getRegion() {
@@ -355,7 +373,7 @@ public class RadioManager {
             this.mSpacing = in.readInt();
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public static int lookupTypeFromParcel(Parcel in) {
             int pos = in.dataPosition();
             in.readInt();
@@ -364,6 +382,7 @@ public class RadioManager {
             return type;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeInt(this.mRegion);
             dest.writeInt(this.mType);
@@ -372,6 +391,7 @@ public class RadioManager {
             dest.writeInt(this.mSpacing);
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
@@ -381,30 +401,33 @@ public class RadioManager {
         }
 
         public int hashCode() {
-            return (((((((((1 * 31) + this.mRegion) * 31) + this.mType) * 31) + this.mLowerLimit) * 31) + this.mUpperLimit) * 31) + this.mSpacing;
+            int result = (1 * 31) + this.mRegion;
+            return (((((((result * 31) + this.mType) * 31) + this.mLowerLimit) * 31) + this.mUpperLimit) * 31) + this.mSpacing;
         }
 
         public boolean equals(Object obj) {
             if (this == obj) {
                 return true;
             }
-            if (!(obj instanceof BandDescriptor)) {
-                return false;
-            }
-            BandDescriptor other = (BandDescriptor) obj;
-            if (this.mRegion == other.getRegion() && this.mType == other.getType() && this.mLowerLimit == other.getLowerLimit() && this.mUpperLimit == other.getUpperLimit() && this.mSpacing == other.getSpacing()) {
-                return true;
+            if (obj instanceof BandDescriptor) {
+                BandDescriptor other = (BandDescriptor) obj;
+                return this.mRegion == other.getRegion() && this.mType == other.getType() && this.mLowerLimit == other.getLowerLimit() && this.mUpperLimit == other.getUpperLimit() && this.mSpacing == other.getSpacing();
             }
             return false;
         }
     }
 
+    /* loaded from: classes.dex */
     public static class FmBandDescriptor extends BandDescriptor {
-        public static final Parcelable.Creator<FmBandDescriptor> CREATOR = new Parcelable.Creator<FmBandDescriptor>() {
+        public static final Parcelable.Creator<FmBandDescriptor> CREATOR = new Parcelable.Creator<FmBandDescriptor>() { // from class: android.hardware.radio.RadioManager.FmBandDescriptor.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public FmBandDescriptor createFromParcel(Parcel in) {
-                return new FmBandDescriptor(in);
+                return new FmBandDescriptor(in, null);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public FmBandDescriptor[] newArray(int size) {
                 return new FmBandDescriptor[size];
             }
@@ -414,6 +437,10 @@ public class RadioManager {
         private final boolean mRds;
         private final boolean mStereo;
         private final boolean mTa;
+
+        /* synthetic */ FmBandDescriptor(Parcel x0, BinderC09281 x1) {
+            this(x0);
+        }
 
         public FmBandDescriptor(int region, int type, int lowerLimit, int upperLimit, int spacing, boolean stereo, boolean rds, boolean ta, boolean af, boolean ea) {
             super(region, type, lowerLimit, upperLimit, spacing);
@@ -445,62 +472,73 @@ public class RadioManager {
         }
 
         private FmBandDescriptor(Parcel in) {
-            super(in);
-            boolean z = false;
+            super(in, null);
             this.mStereo = in.readByte() == 1;
             this.mRds = in.readByte() == 1;
             this.mTa = in.readByte() == 1;
             this.mAf = in.readByte() == 1;
-            this.mEa = in.readByte() == 1 ? true : z;
+            this.mEa = in.readByte() == 1;
         }
 
+        @Override // android.hardware.radio.RadioManager.BandDescriptor, android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             super.writeToParcel(dest, flags);
-            dest.writeByte(this.mStereo ? (byte) 1 : 0);
-            dest.writeByte(this.mRds ? (byte) 1 : 0);
-            dest.writeByte(this.mTa ? (byte) 1 : 0);
-            dest.writeByte(this.mAf ? (byte) 1 : 0);
-            dest.writeByte(this.mEa ? (byte) 1 : 0);
+            dest.writeByte(this.mStereo ? (byte) 1 : (byte) 0);
+            dest.writeByte(this.mRds ? (byte) 1 : (byte) 0);
+            dest.writeByte(this.mTa ? (byte) 1 : (byte) 0);
+            dest.writeByte(this.mAf ? (byte) 1 : (byte) 0);
+            dest.writeByte(this.mEa ? (byte) 1 : (byte) 0);
         }
 
+        @Override // android.hardware.radio.RadioManager.BandDescriptor, android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.hardware.radio.RadioManager.BandDescriptor
         public String toString() {
             return "FmBandDescriptor [ " + super.toString() + " mStereo=" + this.mStereo + ", mRds=" + this.mRds + ", mTa=" + this.mTa + ", mAf=" + this.mAf + ", mEa =" + this.mEa + "]";
         }
 
+        @Override // android.hardware.radio.RadioManager.BandDescriptor
         public int hashCode() {
-            return (((((((((super.hashCode() * 31) + (this.mStereo ? 1 : 0)) * 31) + (this.mRds ? 1 : 0)) * 31) + (this.mTa ? 1 : 0)) * 31) + (this.mAf ? 1 : 0)) * 31) + (this.mEa ? 1 : 0);
+            int result = super.hashCode();
+            return (((((((((result * 31) + (this.mStereo ? 1 : 0)) * 31) + (this.mRds ? 1 : 0)) * 31) + (this.mTa ? 1 : 0)) * 31) + (this.mAf ? 1 : 0)) * 31) + (this.mEa ? 1 : 0);
         }
 
+        @Override // android.hardware.radio.RadioManager.BandDescriptor
         public boolean equals(Object obj) {
             if (this == obj) {
                 return true;
             }
-            if (!super.equals(obj) || !(obj instanceof FmBandDescriptor)) {
-                return false;
-            }
-            FmBandDescriptor other = (FmBandDescriptor) obj;
-            if (this.mStereo == other.isStereoSupported() && this.mRds == other.isRdsSupported() && this.mTa == other.isTaSupported() && this.mAf == other.isAfSupported() && this.mEa == other.isEaSupported()) {
-                return true;
+            if (super.equals(obj) && (obj instanceof FmBandDescriptor)) {
+                FmBandDescriptor other = (FmBandDescriptor) obj;
+                return this.mStereo == other.isStereoSupported() && this.mRds == other.isRdsSupported() && this.mTa == other.isTaSupported() && this.mAf == other.isAfSupported() && this.mEa == other.isEaSupported();
             }
             return false;
         }
     }
 
+    /* loaded from: classes.dex */
     public static class AmBandDescriptor extends BandDescriptor {
-        public static final Parcelable.Creator<AmBandDescriptor> CREATOR = new Parcelable.Creator<AmBandDescriptor>() {
+        public static final Parcelable.Creator<AmBandDescriptor> CREATOR = new Parcelable.Creator<AmBandDescriptor>() { // from class: android.hardware.radio.RadioManager.AmBandDescriptor.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public AmBandDescriptor createFromParcel(Parcel in) {
-                return new AmBandDescriptor(in);
+                return new AmBandDescriptor(in, null);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public AmBandDescriptor[] newArray(int size) {
                 return new AmBandDescriptor[size];
             }
         };
         private final boolean mStereo;
+
+        /* synthetic */ AmBandDescriptor(Parcel x0, BinderC09281 x1) {
+            this(x0);
+        }
 
         public AmBandDescriptor(int region, int type, int lowerLimit, int upperLimit, int spacing, boolean stereo) {
             super(region, type, lowerLimit, upperLimit, spacing);
@@ -512,59 +550,75 @@ public class RadioManager {
         }
 
         private AmBandDescriptor(Parcel in) {
-            super(in);
-            this.mStereo = in.readByte() != 1 ? false : true;
+            super(in, null);
+            this.mStereo = in.readByte() == 1;
         }
 
+        @Override // android.hardware.radio.RadioManager.BandDescriptor, android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             super.writeToParcel(dest, flags);
-            dest.writeByte(this.mStereo ? (byte) 1 : 0);
+            dest.writeByte(this.mStereo ? (byte) 1 : (byte) 0);
         }
 
+        @Override // android.hardware.radio.RadioManager.BandDescriptor, android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.hardware.radio.RadioManager.BandDescriptor
         public String toString() {
             return "AmBandDescriptor [ " + super.toString() + " mStereo=" + this.mStereo + "]";
         }
 
+        @Override // android.hardware.radio.RadioManager.BandDescriptor
         public int hashCode() {
-            return (super.hashCode() * 31) + (this.mStereo ? 1 : 0);
+            int result = super.hashCode();
+            return (result * 31) + (this.mStereo ? 1 : 0);
         }
 
+        @Override // android.hardware.radio.RadioManager.BandDescriptor
         public boolean equals(Object obj) {
             if (this == obj) {
                 return true;
             }
-            if (super.equals(obj) && (obj instanceof AmBandDescriptor) && this.mStereo == ((AmBandDescriptor) obj).isStereoSupported()) {
-                return true;
+            if (super.equals(obj) && (obj instanceof AmBandDescriptor)) {
+                AmBandDescriptor other = (AmBandDescriptor) obj;
+                return this.mStereo == other.isStereoSupported();
             }
             return false;
         }
     }
 
+    /* loaded from: classes.dex */
     public static class BandConfig implements Parcelable {
-        public static final Parcelable.Creator<BandConfig> CREATOR = new Parcelable.Creator<BandConfig>() {
+        public static final Parcelable.Creator<BandConfig> CREATOR = new Parcelable.Creator<BandConfig>() { // from class: android.hardware.radio.RadioManager.BandConfig.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public BandConfig createFromParcel(Parcel in) {
                 int type = BandDescriptor.lookupTypeFromParcel(in);
                 switch (type) {
                     case 0:
                     case 3:
-                        return new AmBandConfig(in);
+                        return new AmBandConfig(in, null);
                     case 1:
                     case 2:
-                        return new FmBandConfig(in);
+                        return new FmBandConfig(in, null);
                     default:
                         throw new IllegalArgumentException("Unsupported band: " + type);
                 }
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public BandConfig[] newArray(int size) {
                 return new BandConfig[size];
             }
         };
         final BandDescriptor mDescriptor;
+
+        /* synthetic */ BandConfig(Parcel x0, BinderC09281 x1) {
+            this(x0);
+        }
 
         BandConfig(BandDescriptor descriptor) {
             this.mDescriptor = (BandDescriptor) Objects.requireNonNull(descriptor);
@@ -575,11 +629,10 @@ public class RadioManager {
         }
 
         private BandConfig(Parcel in) {
-            this.mDescriptor = new BandDescriptor(in);
+            this.mDescriptor = new BandDescriptor(in, null);
         }
 
-        /* access modifiers changed from: package-private */
-        public BandDescriptor getDescriptor() {
+        BandDescriptor getDescriptor() {
             return this.mDescriptor;
         }
 
@@ -603,10 +656,12 @@ public class RadioManager {
             return this.mDescriptor.getSpacing();
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             this.mDescriptor.writeToParcel(dest, flags);
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
@@ -616,33 +671,37 @@ public class RadioManager {
         }
 
         public int hashCode() {
-            return (1 * 31) + this.mDescriptor.hashCode();
+            int result = (1 * 31) + this.mDescriptor.hashCode();
+            return result;
         }
 
         public boolean equals(Object obj) {
             if (this == obj) {
                 return true;
             }
-            if (!(obj instanceof BandConfig)) {
-                return false;
-            }
-            BandDescriptor otherDesc = ((BandConfig) obj).getDescriptor();
-            if ((this.mDescriptor == null) != (otherDesc == null)) {
-                return false;
-            }
-            if (this.mDescriptor == null || this.mDescriptor.equals(otherDesc)) {
-                return true;
+            if (obj instanceof BandConfig) {
+                BandConfig other = (BandConfig) obj;
+                BandDescriptor otherDesc = other.getDescriptor();
+                if ((this.mDescriptor == null) != (otherDesc == null)) {
+                    return false;
+                }
+                return this.mDescriptor == null || this.mDescriptor.equals(otherDesc);
             }
             return false;
         }
     }
 
+    /* loaded from: classes.dex */
     public static class FmBandConfig extends BandConfig {
-        public static final Parcelable.Creator<FmBandConfig> CREATOR = new Parcelable.Creator<FmBandConfig>() {
+        public static final Parcelable.Creator<FmBandConfig> CREATOR = new Parcelable.Creator<FmBandConfig>() { // from class: android.hardware.radio.RadioManager.FmBandConfig.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public FmBandConfig createFromParcel(Parcel in) {
-                return new FmBandConfig(in);
+                return new FmBandConfig(in, null);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public FmBandConfig[] newArray(int size) {
                 return new FmBandConfig[size];
             }
@@ -653,8 +712,12 @@ public class RadioManager {
         private final boolean mStereo;
         private final boolean mTa;
 
+        /* synthetic */ FmBandConfig(Parcel x0, BinderC09281 x1) {
+            this(x0);
+        }
+
         public FmBandConfig(FmBandDescriptor descriptor) {
-            super((BandDescriptor) descriptor);
+            super(descriptor);
             this.mStereo = descriptor.isStereoSupported();
             this.mRds = descriptor.isRdsSupported();
             this.mTa = descriptor.isTaSupported();
@@ -692,50 +755,53 @@ public class RadioManager {
         }
 
         private FmBandConfig(Parcel in) {
-            super(in);
-            boolean z = false;
+            super(in, null);
             this.mStereo = in.readByte() == 1;
             this.mRds = in.readByte() == 1;
             this.mTa = in.readByte() == 1;
             this.mAf = in.readByte() == 1;
-            this.mEa = in.readByte() == 1 ? true : z;
+            this.mEa = in.readByte() == 1;
         }
 
+        @Override // android.hardware.radio.RadioManager.BandConfig, android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             super.writeToParcel(dest, flags);
-            dest.writeByte(this.mStereo ? (byte) 1 : 0);
-            dest.writeByte(this.mRds ? (byte) 1 : 0);
-            dest.writeByte(this.mTa ? (byte) 1 : 0);
-            dest.writeByte(this.mAf ? (byte) 1 : 0);
-            dest.writeByte(this.mEa ? (byte) 1 : 0);
+            dest.writeByte(this.mStereo ? (byte) 1 : (byte) 0);
+            dest.writeByte(this.mRds ? (byte) 1 : (byte) 0);
+            dest.writeByte(this.mTa ? (byte) 1 : (byte) 0);
+            dest.writeByte(this.mAf ? (byte) 1 : (byte) 0);
+            dest.writeByte(this.mEa ? (byte) 1 : (byte) 0);
         }
 
+        @Override // android.hardware.radio.RadioManager.BandConfig, android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.hardware.radio.RadioManager.BandConfig
         public String toString() {
             return "FmBandConfig [" + super.toString() + ", mStereo=" + this.mStereo + ", mRds=" + this.mRds + ", mTa=" + this.mTa + ", mAf=" + this.mAf + ", mEa =" + this.mEa + "]";
         }
 
+        @Override // android.hardware.radio.RadioManager.BandConfig
         public int hashCode() {
-            return (((((((((super.hashCode() * 31) + (this.mStereo ? 1 : 0)) * 31) + (this.mRds ? 1 : 0)) * 31) + (this.mTa ? 1 : 0)) * 31) + (this.mAf ? 1 : 0)) * 31) + (this.mEa ? 1 : 0);
+            int result = super.hashCode();
+            return (((((((((result * 31) + (this.mStereo ? 1 : 0)) * 31) + (this.mRds ? 1 : 0)) * 31) + (this.mTa ? 1 : 0)) * 31) + (this.mAf ? 1 : 0)) * 31) + (this.mEa ? 1 : 0);
         }
 
+        @Override // android.hardware.radio.RadioManager.BandConfig
         public boolean equals(Object obj) {
             if (this == obj) {
                 return true;
             }
-            if (!super.equals(obj) || !(obj instanceof FmBandConfig)) {
-                return false;
-            }
-            FmBandConfig other = (FmBandConfig) obj;
-            if (this.mStereo == other.mStereo && this.mRds == other.mRds && this.mTa == other.mTa && this.mAf == other.mAf && this.mEa == other.mEa) {
-                return true;
+            if (super.equals(obj) && (obj instanceof FmBandConfig)) {
+                FmBandConfig other = (FmBandConfig) obj;
+                return this.mStereo == other.mStereo && this.mRds == other.mRds && this.mTa == other.mTa && this.mAf == other.mAf && this.mEa == other.mEa;
             }
             return false;
         }
 
+        /* loaded from: classes.dex */
         public static class Builder {
             private boolean mAf;
             private final BandDescriptor mDescriptor;
@@ -763,7 +829,8 @@ public class RadioManager {
             }
 
             public FmBandConfig build() {
-                return new FmBandConfig(this.mDescriptor.getRegion(), this.mDescriptor.getType(), this.mDescriptor.getLowerLimit(), this.mDescriptor.getUpperLimit(), this.mDescriptor.getSpacing(), this.mStereo, this.mRds, this.mTa, this.mAf, this.mEa);
+                FmBandConfig config = new FmBandConfig(this.mDescriptor.getRegion(), this.mDescriptor.getType(), this.mDescriptor.getLowerLimit(), this.mDescriptor.getUpperLimit(), this.mDescriptor.getSpacing(), this.mStereo, this.mRds, this.mTa, this.mAf, this.mEa);
+                return config;
             }
 
             public Builder setStereo(boolean state) {
@@ -793,20 +860,29 @@ public class RadioManager {
         }
     }
 
+    /* loaded from: classes.dex */
     public static class AmBandConfig extends BandConfig {
-        public static final Parcelable.Creator<AmBandConfig> CREATOR = new Parcelable.Creator<AmBandConfig>() {
+        public static final Parcelable.Creator<AmBandConfig> CREATOR = new Parcelable.Creator<AmBandConfig>() { // from class: android.hardware.radio.RadioManager.AmBandConfig.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public AmBandConfig createFromParcel(Parcel in) {
-                return new AmBandConfig(in);
+                return new AmBandConfig(in, null);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public AmBandConfig[] newArray(int size) {
                 return new AmBandConfig[size];
             }
         };
         private final boolean mStereo;
 
+        /* synthetic */ AmBandConfig(Parcel x0, BinderC09281 x1) {
+            this(x0);
+        }
+
         public AmBandConfig(AmBandDescriptor descriptor) {
-            super((BandDescriptor) descriptor);
+            super(descriptor);
             this.mStereo = descriptor.isStereoSupported();
         }
 
@@ -820,37 +896,45 @@ public class RadioManager {
         }
 
         private AmBandConfig(Parcel in) {
-            super(in);
-            this.mStereo = in.readByte() != 1 ? false : true;
+            super(in, null);
+            this.mStereo = in.readByte() == 1;
         }
 
+        @Override // android.hardware.radio.RadioManager.BandConfig, android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             super.writeToParcel(dest, flags);
-            dest.writeByte(this.mStereo ? (byte) 1 : 0);
+            dest.writeByte(this.mStereo ? (byte) 1 : (byte) 0);
         }
 
+        @Override // android.hardware.radio.RadioManager.BandConfig, android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.hardware.radio.RadioManager.BandConfig
         public String toString() {
             return "AmBandConfig [" + super.toString() + ", mStereo=" + this.mStereo + "]";
         }
 
+        @Override // android.hardware.radio.RadioManager.BandConfig
         public int hashCode() {
-            return (super.hashCode() * 31) + (this.mStereo ? 1 : 0);
+            int result = super.hashCode();
+            return (result * 31) + (this.mStereo ? 1 : 0);
         }
 
+        @Override // android.hardware.radio.RadioManager.BandConfig
         public boolean equals(Object obj) {
             if (this == obj) {
                 return true;
             }
-            if (super.equals(obj) && (obj instanceof AmBandConfig) && this.mStereo == ((AmBandConfig) obj).getStereo()) {
-                return true;
+            if (super.equals(obj) && (obj instanceof AmBandConfig)) {
+                AmBandConfig other = (AmBandConfig) obj;
+                return this.mStereo == other.getStereo();
             }
             return false;
         }
 
+        /* loaded from: classes.dex */
         public static class Builder {
             private final BandDescriptor mDescriptor;
             private boolean mStereo;
@@ -866,7 +950,8 @@ public class RadioManager {
             }
 
             public AmBandConfig build() {
-                return new AmBandConfig(this.mDescriptor.getRegion(), this.mDescriptor.getType(), this.mDescriptor.getLowerLimit(), this.mDescriptor.getUpperLimit(), this.mDescriptor.getSpacing(), this.mStereo);
+                AmBandConfig config = new AmBandConfig(this.mDescriptor.getRegion(), this.mDescriptor.getType(), this.mDescriptor.getLowerLimit(), this.mDescriptor.getUpperLimit(), this.mDescriptor.getSpacing(), this.mStereo);
+                return config;
             }
 
             public Builder setStereo(boolean state) {
@@ -876,12 +961,17 @@ public class RadioManager {
         }
     }
 
+    /* loaded from: classes.dex */
     public static class ProgramInfo implements Parcelable {
-        public static final Parcelable.Creator<ProgramInfo> CREATOR = new Parcelable.Creator<ProgramInfo>() {
+        public static final Parcelable.Creator<ProgramInfo> CREATOR = new Parcelable.Creator<ProgramInfo>() { // from class: android.hardware.radio.RadioManager.ProgramInfo.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public ProgramInfo createFromParcel(Parcel in) {
-                return new ProgramInfo(in);
+                return new ProgramInfo(in, null);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public ProgramInfo[] newArray(int size) {
                 return new ProgramInfo[size];
             }
@@ -900,6 +990,10 @@ public class RadioManager {
         private final ProgramSelector mSelector;
         private final int mSignalQuality;
         private final Map<String, String> mVendorInfo;
+
+        /* synthetic */ ProgramInfo(Parcel x0, BinderC09281 x1) {
+            this(x0);
+        }
 
         public ProgramInfo(ProgramSelector selector, ProgramSelector.Identifier logicallyTunedTo, ProgramSelector.Identifier physicallyTunedTo, Collection<ProgramSelector.Identifier> relatedContent, int infoFlags, int signalQuality, RadioMetadata metadata, Map<String, String> vendorInfo) {
             this.mSelector = (ProgramSelector) Objects.requireNonNull(selector);
@@ -938,7 +1032,7 @@ public class RadioManager {
             try {
                 return (int) this.mSelector.getFirstId(1);
             } catch (IllegalArgumentException e) {
-                Log.w(RadioManager.TAG, "Not an AM/FM program");
+                Log.m64w(RadioManager.TAG, "Not an AM/FM program");
                 return 0;
             }
         }
@@ -1009,6 +1103,7 @@ public class RadioManager {
             this.mVendorInfo = Utils.readStringMap(in);
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeTypedObject(this.mSelector, flags);
             dest.writeTypedObject(this.mLogicallyTunedTo, flags);
@@ -1020,6 +1115,7 @@ public class RadioManager {
             Utils.writeStringMap(dest, this.mVendorInfo);
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
@@ -1029,19 +1125,16 @@ public class RadioManager {
         }
 
         public int hashCode() {
-            return Objects.hash(new Object[]{this.mSelector, this.mLogicallyTunedTo, this.mPhysicallyTunedTo, this.mRelatedContent, Integer.valueOf(this.mInfoFlags), Integer.valueOf(this.mSignalQuality), this.mMetadata, this.mVendorInfo});
+            return Objects.hash(this.mSelector, this.mLogicallyTunedTo, this.mPhysicallyTunedTo, this.mRelatedContent, Integer.valueOf(this.mInfoFlags), Integer.valueOf(this.mSignalQuality), this.mMetadata, this.mVendorInfo);
         }
 
         public boolean equals(Object obj) {
             if (this == obj) {
                 return true;
             }
-            if (!(obj instanceof ProgramInfo)) {
-                return false;
-            }
-            ProgramInfo other = (ProgramInfo) obj;
-            if (Objects.equals(this.mSelector, other.mSelector) && Objects.equals(this.mLogicallyTunedTo, other.mLogicallyTunedTo) && Objects.equals(this.mPhysicallyTunedTo, other.mPhysicallyTunedTo) && Objects.equals(this.mRelatedContent, other.mRelatedContent) && this.mInfoFlags == other.mInfoFlags && this.mSignalQuality == other.mSignalQuality && Objects.equals(this.mMetadata, other.mMetadata) && Objects.equals(this.mVendorInfo, other.mVendorInfo)) {
-                return true;
+            if (obj instanceof ProgramInfo) {
+                ProgramInfo other = (ProgramInfo) obj;
+                return Objects.equals(this.mSelector, other.mSelector) && Objects.equals(this.mLogicallyTunedTo, other.mLogicallyTunedTo) && Objects.equals(this.mPhysicallyTunedTo, other.mPhysicallyTunedTo) && Objects.equals(this.mRelatedContent, other.mRelatedContent) && this.mInfoFlags == other.mInfoFlags && this.mSignalQuality == other.mSignalQuality && Objects.equals(this.mMetadata, other.mMetadata) && Objects.equals(this.mVendorInfo, other.mVendorInfo);
             }
             return false;
         }
@@ -1049,67 +1142,57 @@ public class RadioManager {
 
     public int listModules(List<ModuleProperties> modules) {
         if (modules == null) {
-            Log.e(TAG, "the output list must not be empty");
+            Log.m70e(TAG, "the output list must not be empty");
             return -22;
         }
-        Log.d(TAG, "Listing available tuners...");
+        Log.m72d(TAG, "Listing available tuners...");
         try {
             List<ModuleProperties> returnedList = this.mService.listModules();
             if (returnedList == null) {
-                Log.e(TAG, "Returned list was a null");
+                Log.m70e(TAG, "Returned list was a null");
                 return Integer.MIN_VALUE;
             }
             modules.addAll(returnedList);
             return 0;
         } catch (RemoteException e) {
-            Log.e(TAG, "Failed listing available tuners", e);
+            Log.m69e(TAG, "Failed listing available tuners", e);
             return -32;
         }
     }
 
     public RadioTuner openTuner(int moduleId, BandConfig config, boolean withAudio, RadioTuner.Callback callback, Handler handler) {
-        if (callback != null) {
-            Log.d(TAG, "Opening tuner " + moduleId + Session.TRUNCATE_STRING);
-            TunerCallbackAdapter halCallback = new TunerCallbackAdapter(callback, handler);
-            try {
-                ITuner tuner = this.mService.openTuner(moduleId, config, withAudio, halCallback);
-                if (tuner == null) {
-                    Log.e(TAG, "Failed to open tuner");
-                    return null;
-                }
-                return new TunerAdapter(tuner, halCallback, config != null ? config.getType() : -1);
-            } catch (RemoteException | IllegalArgumentException | IllegalStateException ex) {
-                Log.e(TAG, "Failed to open tuner", ex);
+        if (callback == null) {
+            throw new IllegalArgumentException("callback must not be empty");
+        }
+        Log.m72d(TAG, "Opening tuner " + moduleId + Session.TRUNCATE_STRING);
+        TunerCallbackAdapter halCallback = new TunerCallbackAdapter(callback, handler);
+        try {
+            ITuner tuner = this.mService.openTuner(moduleId, config, withAudio, halCallback);
+            if (tuner == null) {
+                Log.m70e(TAG, "Failed to open tuner");
                 return null;
             }
-        } else {
-            throw new IllegalArgumentException("callback must not be empty");
+            return new TunerAdapter(tuner, halCallback, config != null ? config.getType() : -1);
+        } catch (RemoteException | IllegalArgumentException | IllegalStateException ex) {
+            Log.m69e(TAG, "Failed to open tuner", ex);
+            return null;
         }
     }
 
     public void addAnnouncementListener(Set<Integer> enabledAnnouncementTypes, Announcement.OnListUpdatedListener listener) {
-        addAnnouncementListener($$Lambda$RadioManager$cfMLnpQqL72UMrjmCGbrhAOHHgg.INSTANCE, enabledAnnouncementTypes, listener);
+        addAnnouncementListener(new Executor() { // from class: android.hardware.radio.-$$Lambda$RadioManager$cfMLnpQqL72UMrjmCGbrhAOHHgg
+            @Override // java.util.concurrent.Executor
+            public final void execute(Runnable runnable) {
+                runnable.run();
+            }
+        }, enabledAnnouncementTypes, listener);
     }
 
-    public void addAnnouncementListener(final Executor executor, Set<Integer> enabledAnnouncementTypes, final Announcement.OnListUpdatedListener listener) {
+    public void addAnnouncementListener(Executor executor, Set<Integer> enabledAnnouncementTypes, Announcement.OnListUpdatedListener listener) {
         Objects.requireNonNull(executor);
         Objects.requireNonNull(listener);
         int[] types = enabledAnnouncementTypes.stream().mapToInt($$Lambda$UV1wDVoVlbcxpr8zevj_aMFtUGw.INSTANCE).toArray();
-        IAnnouncementListener listenerIface = new IAnnouncementListener.Stub() {
-            public void onListUpdated(List<Announcement> activeAnnouncements) {
-                executor.execute(new Runnable(activeAnnouncements) {
-                    private final /* synthetic */ List f$1;
-
-                    {
-                        this.f$1 = r2;
-                    }
-
-                    public final void run() {
-                        Announcement.OnListUpdatedListener.this.onListUpdated(this.f$1);
-                    }
-                });
-            }
-        };
+        IAnnouncementListener listenerIface = new BinderC09281(executor, listener);
         synchronized (this.mAnnouncementListeners) {
             ICloseHandle closeHandle = null;
             try {
@@ -1125,6 +1208,30 @@ public class RadioManager {
         }
     }
 
+    /* renamed from: android.hardware.radio.RadioManager$1 */
+    /* loaded from: classes.dex */
+    class BinderC09281 extends IAnnouncementListener.Stub {
+        final /* synthetic */ Executor val$executor;
+        final /* synthetic */ Announcement.OnListUpdatedListener val$listener;
+
+        BinderC09281(Executor executor, Announcement.OnListUpdatedListener onListUpdatedListener) {
+            this.val$executor = executor;
+            this.val$listener = onListUpdatedListener;
+        }
+
+        @Override // android.hardware.radio.IAnnouncementListener
+        public void onListUpdated(final List<Announcement> activeAnnouncements) {
+            Executor executor = this.val$executor;
+            final Announcement.OnListUpdatedListener onListUpdatedListener = this.val$listener;
+            executor.execute(new Runnable() { // from class: android.hardware.radio.-$$Lambda$RadioManager$1$yOwq8CG0kiZcgKFclFSIrjag008
+                @Override // java.lang.Runnable
+                public final void run() {
+                    Announcement.OnListUpdatedListener.this.onListUpdated(activeAnnouncements);
+                }
+            });
+        }
+    }
+
     public void removeAnnouncementListener(Announcement.OnListUpdatedListener listener) {
         Objects.requireNonNull(listener);
         synchronized (this.mAnnouncementListeners) {
@@ -1137,6 +1244,5 @@ public class RadioManager {
 
     public RadioManager(Context context) throws ServiceManager.ServiceNotFoundException {
         this.mContext = context;
-        this.mService = IRadioService.Stub.asInterface(ServiceManager.getServiceOrThrow(Context.RADIO_SERVICE));
     }
 }

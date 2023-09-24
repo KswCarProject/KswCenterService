@@ -2,8 +2,8 @@ package android.net;
 
 import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.ArraySet;
 import android.util.proto.ProtoOutputStream;
 import com.android.internal.annotations.VisibleForTesting;
@@ -17,28 +17,9 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.StringJoiner;
 
+/* loaded from: classes3.dex */
 public final class NetworkCapabilities implements Parcelable {
     private static final long CONNECTIVITY_MANAGED_CAPABILITIES = 17498112;
-    public static final Parcelable.Creator<NetworkCapabilities> CREATOR = new Parcelable.Creator<NetworkCapabilities>() {
-        public NetworkCapabilities createFromParcel(Parcel in) {
-            NetworkCapabilities netCap = new NetworkCapabilities();
-            long unused = netCap.mNetworkCapabilities = in.readLong();
-            long unused2 = netCap.mUnwantedNetworkCapabilities = in.readLong();
-            long unused3 = netCap.mTransportTypes = in.readLong();
-            int unused4 = netCap.mLinkUpBandwidthKbps = in.readInt();
-            int unused5 = netCap.mLinkDownBandwidthKbps = in.readInt();
-            NetworkSpecifier unused6 = netCap.mNetworkSpecifier = (NetworkSpecifier) in.readParcelable((ClassLoader) null);
-            TransportInfo unused7 = netCap.mTransportInfo = (TransportInfo) in.readParcelable((ClassLoader) null);
-            int unused8 = netCap.mSignalStrength = in.readInt();
-            ArraySet unused9 = netCap.mUids = in.readArraySet((ClassLoader) null);
-            String unused10 = netCap.mSSID = in.readString();
-            return netCap;
-        }
-
-        public NetworkCapabilities[] newArray(int size) {
-            return new NetworkCapabilities[size];
-        }
-    };
     private static final long DEFAULT_CAPABILITIES = 57344;
     private static final long FORCE_RESTRICTED_CAPABILITIES = 4194304;
     private static final int INVALID_UID = -1;
@@ -84,46 +65,63 @@ public final class NetworkCapabilities implements Parcelable {
     public static final int TRANSPORT_CELLULAR = 0;
     public static final int TRANSPORT_ETHERNET = 3;
     public static final int TRANSPORT_LOWPAN = 6;
-    private static final String[] TRANSPORT_NAMES = {"CELLULAR", "WIFI", "BLUETOOTH", "ETHERNET", "VPN", "WIFI_AWARE", "LOWPAN", "TEST"};
     public static final int TRANSPORT_TEST = 7;
     public static final int TRANSPORT_VPN = 4;
     public static final int TRANSPORT_WIFI = 1;
     public static final int TRANSPORT_WIFI_AWARE = 5;
     @VisibleForTesting
     static final long UNRESTRICTED_CAPABILITIES = 4163;
-    private int mEstablishingVpnAppUid = -1;
-    /* access modifiers changed from: private */
-    public int mLinkDownBandwidthKbps = 0;
-    /* access modifiers changed from: private */
-    public int mLinkUpBandwidthKbps = 0;
-    /* access modifiers changed from: private */
     @UnsupportedAppUsage
-    public long mNetworkCapabilities;
-    /* access modifiers changed from: private */
-    public NetworkSpecifier mNetworkSpecifier = null;
-    /* access modifiers changed from: private */
-    public String mSSID;
-    /* access modifiers changed from: private */
-    @UnsupportedAppUsage(maxTargetSdk = 28)
-    public int mSignalStrength = Integer.MIN_VALUE;
-    /* access modifiers changed from: private */
-    public TransportInfo mTransportInfo = null;
-    /* access modifiers changed from: private */
-    public long mTransportTypes;
-    /* access modifiers changed from: private */
-    public ArraySet<UidRange> mUids = null;
-    /* access modifiers changed from: private */
-    public long mUnwantedNetworkCapabilities;
+    private long mNetworkCapabilities;
+    private String mSSID;
+    private long mTransportTypes;
+    private long mUnwantedNetworkCapabilities;
+    private static final String[] TRANSPORT_NAMES = {"CELLULAR", "WIFI", "BLUETOOTH", "ETHERNET", "VPN", "WIFI_AWARE", "LOWPAN", "TEST"};
+    public static final Parcelable.Creator<NetworkCapabilities> CREATOR = new Parcelable.Creator<NetworkCapabilities>() { // from class: android.net.NetworkCapabilities.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public NetworkCapabilities createFromParcel(Parcel in) {
+            NetworkCapabilities netCap = new NetworkCapabilities();
+            netCap.mNetworkCapabilities = in.readLong();
+            netCap.mUnwantedNetworkCapabilities = in.readLong();
+            netCap.mTransportTypes = in.readLong();
+            netCap.mLinkUpBandwidthKbps = in.readInt();
+            netCap.mLinkDownBandwidthKbps = in.readInt();
+            netCap.mNetworkSpecifier = (NetworkSpecifier) in.readParcelable(null);
+            netCap.mTransportInfo = (TransportInfo) in.readParcelable(null);
+            netCap.mSignalStrength = in.readInt();
+            netCap.mUids = in.readArraySet(null);
+            netCap.mSSID = in.readString();
+            return netCap;
+        }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public NetworkCapabilities[] newArray(int size) {
+            return new NetworkCapabilities[size];
+        }
+    };
+    private int mEstablishingVpnAppUid = -1;
+    private int mLinkUpBandwidthKbps = 0;
+    private int mLinkDownBandwidthKbps = 0;
+    private NetworkSpecifier mNetworkSpecifier = null;
+    private TransportInfo mTransportInfo = null;
+    @UnsupportedAppUsage(maxTargetSdk = 28)
+    private int mSignalStrength = Integer.MIN_VALUE;
+    private ArraySet<UidRange> mUids = null;
+
+    /* loaded from: classes3.dex */
     private interface NameOf {
         String nameOf(int i);
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface NetCapability {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface Transport {
     }
 
@@ -140,9 +138,9 @@ public final class NetworkCapabilities implements Parcelable {
     }
 
     public void clearAll() {
-        this.mUnwantedNetworkCapabilities = 0;
-        this.mTransportTypes = 0;
-        this.mNetworkCapabilities = 0;
+        this.mUnwantedNetworkCapabilities = 0L;
+        this.mTransportTypes = 0L;
+        this.mNetworkCapabilities = 0L;
         this.mLinkDownBandwidthKbps = 0;
         this.mLinkUpBandwidthKbps = 0;
         this.mNetworkSpecifier = null;
@@ -170,21 +168,21 @@ public final class NetworkCapabilities implements Parcelable {
     @UnsupportedAppUsage
     public NetworkCapabilities addCapability(int capability) {
         checkValidCapability(capability);
-        this.mNetworkCapabilities |= (long) (1 << capability);
-        this.mUnwantedNetworkCapabilities &= (long) (~(1 << capability));
+        this.mNetworkCapabilities |= 1 << capability;
+        this.mUnwantedNetworkCapabilities &= ~(1 << capability);
         return this;
     }
 
     public void addUnwantedCapability(int capability) {
         checkValidCapability(capability);
-        this.mUnwantedNetworkCapabilities |= (long) (1 << capability);
-        this.mNetworkCapabilities &= (long) (~(1 << capability));
+        this.mUnwantedNetworkCapabilities |= 1 << capability;
+        this.mNetworkCapabilities &= ~(1 << capability);
     }
 
     @UnsupportedAppUsage
     public NetworkCapabilities removeCapability(int capability) {
         checkValidCapability(capability);
-        long mask = (long) (~(1 << capability));
+        long mask = ~(1 << capability);
         this.mNetworkCapabilities &= mask;
         this.mUnwantedNetworkCapabilities &= mask;
         return this;
@@ -264,16 +262,13 @@ public final class NetworkCapabilities implements Parcelable {
     }
 
     private boolean equalsNetCapabilitiesRequestable(NetworkCapabilities that) {
-        return (this.mNetworkCapabilities & -20905985) == (that.mNetworkCapabilities & -20905985) && (this.mUnwantedNetworkCapabilities & -20905985) == (-20905985 & that.mUnwantedNetworkCapabilities);
+        return (this.mNetworkCapabilities & (-20905985)) == (that.mNetworkCapabilities & (-20905985)) && (this.mUnwantedNetworkCapabilities & (-20905985)) == ((-20905985) & that.mUnwantedNetworkCapabilities);
     }
 
     public void maybeMarkCapabilitiesRestricted() {
-        boolean hasRestrictedCapabilities = false;
         boolean forceRestrictedCapability = (this.mNetworkCapabilities & 4194304) != 0;
         boolean hasUnrestrictedCapabilities = (this.mNetworkCapabilities & UNRESTRICTED_CAPABILITIES) != 0;
-        if ((this.mNetworkCapabilities & RESTRICTED_CAPABILITIES) != 0) {
-            hasRestrictedCapabilities = true;
-        }
+        boolean hasRestrictedCapabilities = (this.mNetworkCapabilities & RESTRICTED_CAPABILITIES) != 0;
         if (forceRestrictedCapability || (hasRestrictedCapabilities && !hasUnrestrictedCapabilities)) {
             removeCapability(13);
         }
@@ -286,14 +281,14 @@ public final class NetworkCapabilities implements Parcelable {
     @UnsupportedAppUsage
     public NetworkCapabilities addTransportType(int transportType) {
         checkValidTransportType(transportType);
-        this.mTransportTypes |= (long) (1 << transportType);
+        this.mTransportTypes |= 1 << transportType;
         setNetworkSpecifier(this.mNetworkSpecifier);
         return this;
     }
 
     public NetworkCapabilities removeTransportType(int transportType) {
         checkValidTransportType(transportType);
-        this.mTransportTypes &= (long) (~(1 << transportType));
+        this.mTransportTypes &= ~(1 << transportType);
         setNetworkSpecifier(this.mNetworkSpecifier);
         return this;
     }
@@ -386,11 +381,11 @@ public final class NetworkCapabilities implements Parcelable {
     }
 
     public NetworkCapabilities setNetworkSpecifier(NetworkSpecifier networkSpecifier) {
-        if (networkSpecifier == null || Long.bitCount(this.mTransportTypes) == 1) {
-            this.mNetworkSpecifier = networkSpecifier;
-            return this;
+        if (networkSpecifier != null && Long.bitCount(this.mTransportTypes) != 1) {
+            throw new IllegalStateException("Must have a single transport specified to use setNetworkSpecifier");
         }
-        throw new IllegalStateException("Must have a single transport specified to use setNetworkSpecifier");
+        this.mNetworkSpecifier = networkSpecifier;
+        return this;
     }
 
     public NetworkCapabilities setTransportInfo(TransportInfo transportInfo) {
@@ -408,11 +403,10 @@ public final class NetworkCapabilities implements Parcelable {
     }
 
     private void combineSpecifiers(NetworkCapabilities nc) {
-        if (this.mNetworkSpecifier == null || this.mNetworkSpecifier.equals(nc.mNetworkSpecifier)) {
-            setNetworkSpecifier(nc.mNetworkSpecifier);
-            return;
+        if (this.mNetworkSpecifier != null && !this.mNetworkSpecifier.equals(nc.mNetworkSpecifier)) {
+            throw new IllegalStateException("Can't combine two networkSpecifiers");
         }
-        throw new IllegalStateException("Can't combine two networkSpecifiers");
+        setNetworkSpecifier(nc.mNetworkSpecifier);
     }
 
     private boolean satisfiedBySpecifier(NetworkCapabilities nc) {
@@ -424,11 +418,10 @@ public final class NetworkCapabilities implements Parcelable {
     }
 
     private void combineTransportInfos(NetworkCapabilities nc) {
-        if (this.mTransportInfo == null || this.mTransportInfo.equals(nc.mTransportInfo)) {
-            setTransportInfo(nc.mTransportInfo);
-            return;
+        if (this.mTransportInfo != null && !this.mTransportInfo.equals(nc.mTransportInfo)) {
+            throw new IllegalStateException("Can't combine two TransportInfos");
         }
-        throw new IllegalStateException("Can't combine two TransportInfos");
+        setTransportInfo(nc.mTransportInfo);
     }
 
     private boolean equalsTransportInfo(NetworkCapabilities nc) {
@@ -482,7 +475,7 @@ public final class NetworkCapabilities implements Parcelable {
         if (this.mUids == null) {
             return null;
         }
-        return new ArraySet(this.mUids);
+        return new ArraySet((ArraySet) this.mUids);
     }
 
     public boolean appliesToUid(int uid) {
@@ -491,7 +484,8 @@ public final class NetworkCapabilities implements Parcelable {
         }
         Iterator<UidRange> it = this.mUids.iterator();
         while (it.hasNext()) {
-            if (it.next().contains(uid)) {
+            UidRange range = it.next();
+            if (range.contains(uid)) {
                 return true;
             }
         }
@@ -503,18 +497,18 @@ public final class NetworkCapabilities implements Parcelable {
         Set<UidRange> comparedUids = nc.mUids;
         if (comparedUids == null) {
             return this.mUids == null;
-        }
-        if (this.mUids == null) {
+        } else if (this.mUids == null) {
             return false;
-        }
-        Set<UidRange> uids = new ArraySet<>(this.mUids);
-        for (UidRange range : comparedUids) {
-            if (!uids.contains(range)) {
-                return false;
+        } else {
+            Set<UidRange> uids = new ArraySet<>(this.mUids);
+            for (UidRange range : comparedUids) {
+                if (!uids.contains(range)) {
+                    return false;
+                }
+                uids.remove(range);
             }
-            uids.remove(range);
+            return uids.isEmpty();
         }
-        return uids.isEmpty();
     }
 
     public boolean satisfiedByUids(NetworkCapabilities nc) {
@@ -541,7 +535,8 @@ public final class NetworkCapabilities implements Parcelable {
         }
         Iterator<UidRange> it = this.mUids.iterator();
         while (it.hasNext()) {
-            if (it.next().containsRange(requiredRange)) {
+            UidRange uidRange = it.next();
+            if (uidRange.containsRange(requiredRange)) {
                 return true;
             }
         }
@@ -552,7 +547,7 @@ public final class NetworkCapabilities implements Parcelable {
         if (nc.mUids == null || this.mUids == null) {
             this.mUids = null;
         } else {
-            this.mUids.addAll(nc.mUids);
+            this.mUids.addAll((ArraySet<? extends UidRange>) nc.mUids);
         }
     }
 
@@ -574,11 +569,10 @@ public final class NetworkCapabilities implements Parcelable {
     }
 
     private void combineSSIDs(NetworkCapabilities nc) {
-        if (this.mSSID == null || this.mSSID.equals(nc.mSSID)) {
-            setSSID(nc.mSSID);
-            return;
+        if (this.mSSID != null && !this.mSSID.equals(nc.mSSID)) {
+            throw new IllegalStateException("Can't combine two SSIDs");
         }
-        throw new IllegalStateException("Can't combine two SSIDs");
+        setSSID(nc.mSSID);
     }
 
     public void combineCapabilities(NetworkCapabilities nc) {
@@ -610,25 +604,29 @@ public final class NetworkCapabilities implements Parcelable {
             return "other NetworkCapabilities was null";
         }
         StringJoiner joiner = new StringJoiner(", ");
-        long oldImmutableCapabilities = this.mNetworkCapabilities & -20924417;
-        long newImmutableCapabilities = -20924417 & that.mNetworkCapabilities;
+        long oldImmutableCapabilities = this.mNetworkCapabilities & (-20924417);
+        long newImmutableCapabilities = (-20924417) & that.mNetworkCapabilities;
         if (oldImmutableCapabilities != newImmutableCapabilities) {
-            joiner.add(String.format("immutable capabilities changed: %s -> %s", new Object[]{capabilityNamesOf(BitUtils.unpackBits(oldImmutableCapabilities)), capabilityNamesOf(BitUtils.unpackBits(newImmutableCapabilities))}));
+            String before = capabilityNamesOf(BitUtils.unpackBits(oldImmutableCapabilities));
+            String after = capabilityNamesOf(BitUtils.unpackBits(newImmutableCapabilities));
+            joiner.add(String.format("immutable capabilities changed: %s -> %s", before, after));
         }
         if (!equalsSpecifier(that)) {
-            joiner.add(String.format("specifier changed: %s -> %s", new Object[]{getNetworkSpecifier(), that.getNetworkSpecifier()}));
+            NetworkSpecifier before2 = getNetworkSpecifier();
+            NetworkSpecifier after2 = that.getNetworkSpecifier();
+            joiner.add(String.format("specifier changed: %s -> %s", before2, after2));
         }
         if (!equalsTransportTypes(that)) {
-            joiner.add(String.format("transports changed: %s -> %s", new Object[]{transportNamesOf(getTransportTypes()), transportNamesOf(that.getTransportTypes())}));
+            String before3 = transportNamesOf(getTransportTypes());
+            String after3 = transportNamesOf(that.getTransportTypes());
+            joiner.add(String.format("transports changed: %s -> %s", before3, after3));
         }
-        return joiner.toString();
+        String before4 = joiner.toString();
+        return before4;
     }
 
     public boolean equalRequestableCapabilities(NetworkCapabilities nc) {
-        if (nc != null && equalsNetCapabilitiesRequestable(nc) && equalsTransportTypes(nc) && equalsSpecifier(nc)) {
-            return true;
-        }
-        return false;
+        return nc != null && equalsNetCapabilitiesRequestable(nc) && equalsTransportTypes(nc) && equalsSpecifier(nc);
     }
 
     public boolean equals(Object obj) {
@@ -636,20 +634,19 @@ public final class NetworkCapabilities implements Parcelable {
             return false;
         }
         NetworkCapabilities that = (NetworkCapabilities) obj;
-        if (!equalsNetCapabilities(that) || !equalsTransportTypes(that) || !equalsLinkBandwidths(that) || !equalsSignalStrength(that) || !equalsSpecifier(that) || !equalsTransportInfo(that) || !equalsUids(that) || !equalsSSID(that)) {
-            return false;
-        }
-        return true;
+        return equalsNetCapabilities(that) && equalsTransportTypes(that) && equalsLinkBandwidths(that) && equalsSignalStrength(that) && equalsSpecifier(that) && equalsTransportInfo(that) && equalsUids(that) && equalsSSID(that);
     }
 
     public int hashCode() {
-        return ((int) (this.mNetworkCapabilities & -1)) + (((int) (this.mNetworkCapabilities >> 32)) * 3) + (((int) (this.mUnwantedNetworkCapabilities & -1)) * 5) + (((int) (this.mUnwantedNetworkCapabilities >> 32)) * 7) + (((int) (-1 & this.mTransportTypes)) * 11) + (((int) (this.mTransportTypes >> 32)) * 13) + (this.mLinkUpBandwidthKbps * 17) + (this.mLinkDownBandwidthKbps * 19) + (Objects.hashCode(this.mNetworkSpecifier) * 23) + (this.mSignalStrength * 29) + (Objects.hashCode(this.mUids) * 31) + (Objects.hashCode(this.mSSID) * 37) + (Objects.hashCode(this.mTransportInfo) * 41);
+        return ((int) (this.mNetworkCapabilities & (-1))) + (((int) (this.mNetworkCapabilities >> 32)) * 3) + (((int) (this.mUnwantedNetworkCapabilities & (-1))) * 5) + (((int) (this.mUnwantedNetworkCapabilities >> 32)) * 7) + (((int) ((-1) & this.mTransportTypes)) * 11) + (((int) (this.mTransportTypes >> 32)) * 13) + (this.mLinkUpBandwidthKbps * 17) + (this.mLinkDownBandwidthKbps * 19) + (Objects.hashCode(this.mNetworkSpecifier) * 23) + (this.mSignalStrength * 29) + (Objects.hashCode(this.mUids) * 31) + (Objects.hashCode(this.mSSID) * 37) + (Objects.hashCode(this.mTransportInfo) * 41);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(this.mNetworkCapabilities);
         dest.writeLong(this.mUnwantedNetworkCapabilities);
@@ -667,15 +664,30 @@ public final class NetworkCapabilities implements Parcelable {
         StringBuilder sb = new StringBuilder("[");
         if (0 != this.mTransportTypes) {
             sb.append(" Transports: ");
-            appendStringRepresentationOfBitMaskToStringBuilder(sb, this.mTransportTypes, $$Lambda$FpGXkd3pLxeXY58eJ_84mi1PLWQ.INSTANCE, "|");
+            appendStringRepresentationOfBitMaskToStringBuilder(sb, this.mTransportTypes, new NameOf() { // from class: android.net.-$$Lambda$FpGXkd3pLxeXY58eJ_84mi1PLWQ
+                @Override // android.net.NetworkCapabilities.NameOf
+                public final String nameOf(int i) {
+                    return NetworkCapabilities.transportNameOf(i);
+                }
+            }, "|");
         }
         if (0 != this.mNetworkCapabilities) {
             sb.append(" Capabilities: ");
-            appendStringRepresentationOfBitMaskToStringBuilder(sb, this.mNetworkCapabilities, $$Lambda$p1_56lwnt1xBuY1muPblbN1Dtkw.INSTANCE, "&");
+            appendStringRepresentationOfBitMaskToStringBuilder(sb, this.mNetworkCapabilities, new NameOf() { // from class: android.net.-$$Lambda$p1_56lwnt1xBuY1muPblbN1Dtkw
+                @Override // android.net.NetworkCapabilities.NameOf
+                public final String nameOf(int i) {
+                    return NetworkCapabilities.capabilityNameOf(i);
+                }
+            }, "&");
         }
         if (0 != this.mUnwantedNetworkCapabilities) {
             sb.append(" Unwanted: ");
-            appendStringRepresentationOfBitMaskToStringBuilder(sb, this.mUnwantedNetworkCapabilities, $$Lambda$p1_56lwnt1xBuY1muPblbN1Dtkw.INSTANCE, "&");
+            appendStringRepresentationOfBitMaskToStringBuilder(sb, this.mUnwantedNetworkCapabilities, new NameOf() { // from class: android.net.-$$Lambda$p1_56lwnt1xBuY1muPblbN1Dtkw
+                @Override // android.net.NetworkCapabilities.NameOf
+                public final String nameOf(int i) {
+                    return NetworkCapabilities.capabilityNameOf(i);
+                }
+            }, "&");
         }
         if (this.mLinkUpBandwidthKbps > 0) {
             sb.append(" LinkUpBandwidth>=");
@@ -741,6 +753,8 @@ public final class NetworkCapabilities implements Parcelable {
     }
 
     public void writeToProto(ProtoOutputStream proto, long fieldId) {
+        int[] transportTypes;
+        int[] capabilities;
         long token = proto.start(fieldId);
         for (int transport : getTransportTypes()) {
             proto.write(2259152797697L, transport);
@@ -755,7 +769,7 @@ public final class NetworkCapabilities implements Parcelable {
         }
         TransportInfo transportInfo = this.mTransportInfo;
         proto.write(1133871366150L, hasSignalStrength());
-        proto.write((long) NetworkCapabilitiesProto.SIGNAL_STRENGTH, this.mSignalStrength);
+        proto.write(NetworkCapabilitiesProto.SIGNAL_STRENGTH, this.mSignalStrength);
         proto.end(token);
     }
 

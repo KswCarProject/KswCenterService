@@ -4,47 +4,50 @@ import android.annotation.UnsupportedAppUsage;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.CancellationSignal;
-import android.os.OperationCanceledException;
+import android.p007os.CancellationSignal;
+import android.p007os.OperationCanceledException;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.util.Arrays;
 
 @Deprecated
+/* loaded from: classes.dex */
 public class CursorLoader extends AsyncTaskLoader<Cursor> {
     @UnsupportedAppUsage
     CancellationSignal mCancellationSignal;
     Cursor mCursor;
     @UnsupportedAppUsage
-    final Loader<Cursor>.ForceLoadContentObserver mObserver = new Loader.ForceLoadContentObserver();
+    final Loader<Cursor>.ForceLoadContentObserver mObserver;
     String[] mProjection;
     String mSelection;
     String[] mSelectionArgs;
     String mSortOrder;
     Uri mUri;
 
+    /* JADX WARN: Can't rename method to resolve collision */
+    @Override // android.content.AsyncTaskLoader
     public Cursor loadInBackground() {
-        Cursor cursor;
         synchronized (this) {
-            if (!isLoadInBackgroundCanceled()) {
-                this.mCancellationSignal = new CancellationSignal();
-            } else {
+            if (isLoadInBackgroundCanceled()) {
                 throw new OperationCanceledException();
             }
+            this.mCancellationSignal = new CancellationSignal();
         }
         try {
-            cursor = getContext().getContentResolver().query(this.mUri, this.mProjection, this.mSelection, this.mSelectionArgs, this.mSortOrder, this.mCancellationSignal);
+            Cursor cursor = getContext().getContentResolver().query(this.mUri, this.mProjection, this.mSelection, this.mSelectionArgs, this.mSortOrder, this.mCancellationSignal);
             if (cursor != null) {
-                cursor.getCount();
-                cursor.registerContentObserver(this.mObserver);
+                try {
+                    cursor.getCount();
+                    cursor.registerContentObserver(this.mObserver);
+                } catch (RuntimeException ex) {
+                    cursor.close();
+                    throw ex;
+                }
             }
             synchronized (this) {
                 this.mCancellationSignal = null;
             }
             return cursor;
-        } catch (RuntimeException ex) {
-            cursor.close();
-            throw ex;
         } catch (Throwable th) {
             synchronized (this) {
                 this.mCancellationSignal = null;
@@ -53,6 +56,7 @@ public class CursorLoader extends AsyncTaskLoader<Cursor> {
         }
     }
 
+    @Override // android.content.AsyncTaskLoader
     public void cancelLoadInBackground() {
         super.cancelLoadInBackground();
         synchronized (this) {
@@ -62,27 +66,33 @@ public class CursorLoader extends AsyncTaskLoader<Cursor> {
         }
     }
 
+    @Override // android.content.Loader
     public void deliverResult(Cursor cursor) {
-        if (!isReset()) {
-            Cursor oldCursor = this.mCursor;
-            this.mCursor = cursor;
-            if (isStarted()) {
-                super.deliverResult(cursor);
+        if (isReset()) {
+            if (cursor != null) {
+                cursor.close();
+                return;
             }
-            if (oldCursor != null && oldCursor != cursor && !oldCursor.isClosed()) {
-                oldCursor.close();
-            }
-        } else if (cursor != null) {
-            cursor.close();
+            return;
+        }
+        Cursor oldCursor = this.mCursor;
+        this.mCursor = cursor;
+        if (isStarted()) {
+            super.deliverResult((CursorLoader) cursor);
+        }
+        if (oldCursor != null && oldCursor != cursor && !oldCursor.isClosed()) {
+            oldCursor.close();
         }
     }
 
     public CursorLoader(Context context) {
         super(context);
+        this.mObserver = new Loader.ForceLoadContentObserver();
     }
 
     public CursorLoader(Context context, Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         super(context);
+        this.mObserver = new Loader.ForceLoadContentObserver();
         this.mUri = uri;
         this.mProjection = projection;
         this.mSelection = selection;
@@ -90,8 +100,8 @@ public class CursorLoader extends AsyncTaskLoader<Cursor> {
         this.mSortOrder = sortOrder;
     }
 
-    /* access modifiers changed from: protected */
-    public void onStartLoading() {
+    @Override // android.content.Loader
+    protected void onStartLoading() {
         if (this.mCursor != null) {
             deliverResult(this.mCursor);
         }
@@ -100,19 +110,20 @@ public class CursorLoader extends AsyncTaskLoader<Cursor> {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onStopLoading() {
+    @Override // android.content.Loader
+    protected void onStopLoading() {
         cancelLoad();
     }
 
+    @Override // android.content.AsyncTaskLoader
     public void onCanceled(Cursor cursor) {
         if (cursor != null && !cursor.isClosed()) {
             cursor.close();
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onReset() {
+    @Override // android.content.Loader
+    protected void onReset() {
         super.onReset();
         onStopLoading();
         if (this.mCursor != null && !this.mCursor.isClosed()) {
@@ -161,6 +172,7 @@ public class CursorLoader extends AsyncTaskLoader<Cursor> {
         this.mSortOrder = sortOrder;
     }
 
+    @Override // android.content.AsyncTaskLoader, android.content.Loader
     public void dump(String prefix, FileDescriptor fd, PrintWriter writer, String[] args) {
         super.dump(prefix, fd, writer, args);
         writer.print(prefix);

@@ -5,18 +5,21 @@ import android.app.ActivityManager;
 import android.app.IActivityManager;
 import android.content.IIntentReceiver;
 import android.content.IIntentSender;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.RemoteException;
-import android.os.UserHandle;
+import android.p007os.Bundle;
+import android.p007os.Handler;
+import android.p007os.IBinder;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.RemoteException;
+import android.p007os.UserHandle;
 import android.util.AndroidException;
 import com.ibm.icu.text.PluralRules;
 
+/* loaded from: classes.dex */
 public class IntentSender implements Parcelable {
-    public static final Parcelable.Creator<IntentSender> CREATOR = new Parcelable.Creator<IntentSender>() {
+    public static final Parcelable.Creator<IntentSender> CREATOR = new Parcelable.Creator<IntentSender>() { // from class: android.content.IntentSender.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public IntentSender createFromParcel(Parcel in) {
             IBinder target = in.readStrongBinder();
             if (target != null) {
@@ -25,6 +28,8 @@ public class IntentSender implements Parcelable {
             return null;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public IntentSender[] newArray(int size) {
             return new IntentSender[size];
         }
@@ -33,10 +38,12 @@ public class IntentSender implements Parcelable {
     private final IIntentSender mTarget;
     IBinder mWhitelistToken;
 
+    /* loaded from: classes.dex */
     public interface OnFinished {
         void onSendFinished(IntentSender intentSender, Intent intent, int i, String str, Bundle bundle);
     }
 
+    /* loaded from: classes.dex */
     public static class SendIntentException extends AndroidException {
         public SendIntentException() {
         }
@@ -50,6 +57,7 @@ public class IntentSender implements Parcelable {
         }
     }
 
+    /* loaded from: classes.dex */
     private static class FinishedDispatcher extends IIntentReceiver.Stub implements Runnable {
         private final Handler mHandler;
         private Intent mIntent;
@@ -65,6 +73,7 @@ public class IntentSender implements Parcelable {
             this.mHandler = handler;
         }
 
+        @Override // android.content.IIntentReceiver
         public void performReceive(Intent intent, int resultCode, String data, Bundle extras, boolean serialized, boolean sticky, int sendingUser) {
             this.mIntent = intent;
             this.mResultCode = resultCode;
@@ -77,25 +86,23 @@ public class IntentSender implements Parcelable {
             }
         }
 
+        @Override // java.lang.Runnable
         public void run() {
             this.mWho.onSendFinished(this.mIntentSender, this.mIntent, this.mResultCode, this.mResultData, this.mResultExtras);
         }
     }
 
     public void sendIntent(Context context, int code, Intent intent, OnFinished onFinished, Handler handler) throws SendIntentException {
-        sendIntent(context, code, intent, onFinished, handler, (String) null);
+        sendIntent(context, code, intent, onFinished, handler, null);
     }
 
     public void sendIntent(Context context, int code, Intent intent, OnFinished onFinished, Handler handler, String requiredPermission) throws SendIntentException {
         String resolvedType;
-        Intent intent2 = intent;
-        OnFinished onFinished2 = onFinished;
         FinishedDispatcher finishedDispatcher = null;
-        if (intent2 != null) {
+        if (intent != null) {
             try {
-                resolvedType = intent2.resolveTypeIfNeeded(context.getContentResolver());
+                resolvedType = intent.resolveTypeIfNeeded(context.getContentResolver());
             } catch (RemoteException e) {
-                Handler handler2 = handler;
                 throw new SendIntentException();
             }
         } else {
@@ -104,16 +111,15 @@ public class IntentSender implements Parcelable {
         IActivityManager service = ActivityManager.getService();
         IIntentSender iIntentSender = this.mTarget;
         IBinder iBinder = this.mWhitelistToken;
-        if (onFinished2 != null) {
+        if (onFinished != null) {
             try {
-                finishedDispatcher = new FinishedDispatcher(this, onFinished2, handler);
+                finishedDispatcher = new FinishedDispatcher(this, onFinished, handler);
             } catch (RemoteException e2) {
                 throw new SendIntentException();
             }
-        } else {
-            Handler handler3 = handler;
         }
-        if (service.sendIntentSender(iIntentSender, iBinder, code, intent, resolvedType, finishedDispatcher, requiredPermission, (Bundle) null) < 0) {
+        int res = service.sendIntentSender(iIntentSender, iBinder, code, intent, resolvedType, finishedDispatcher, requiredPermission, null);
+        if (res < 0) {
             throw new SendIntentException();
         }
     }
@@ -176,22 +182,18 @@ public class IntentSender implements Parcelable {
         return sb.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeStrongBinder(this.mTarget.asBinder());
     }
 
     public static void writeIntentSenderOrNullToParcel(IntentSender sender, Parcel out) {
-        IBinder iBinder;
-        if (sender != null) {
-            iBinder = sender.mTarget.asBinder();
-        } else {
-            iBinder = null;
-        }
-        out.writeStrongBinder(iBinder);
+        out.writeStrongBinder(sender != null ? sender.mTarget.asBinder() : null);
     }
 
     public static IntentSender readIntentSenderOrNullFromParcel(Parcel in) {

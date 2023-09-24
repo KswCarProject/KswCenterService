@@ -5,8 +5,8 @@ import android.content.Context;
 import android.net.INetworkScoreCache;
 import android.net.NetworkKey;
 import android.net.ScoredNetwork;
-import android.os.Handler;
-import android.os.Process;
+import android.p007os.Handler;
+import android.p007os.Process;
 import android.util.Log;
 import android.util.LruCache;
 import com.android.internal.annotations.GuardedBy;
@@ -16,20 +16,21 @@ import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.util.List;
 
+/* loaded from: classes3.dex */
 public class WifiNetworkScoreCache extends INetworkScoreCache.Stub {
-    private static final boolean DBG = Log.isLoggable(TAG, 3);
     private static final int DEFAULT_MAX_CACHE_SIZE = 100;
     public static final int INVALID_NETWORK_SCORE = -128;
-    private static final String TAG = "WifiNetworkScoreCache";
     @GuardedBy({"mLock"})
     private final LruCache<String, ScoredNetwork> mCache;
     private final Context mContext;
     @GuardedBy({"mLock"})
     private CacheListener mListener;
     private final Object mLock;
+    private static final String TAG = "WifiNetworkScoreCache";
+    private static final boolean DBG = Log.isLoggable(TAG, 3);
 
     public WifiNetworkScoreCache(Context context) {
-        this(context, (CacheListener) null);
+        this(context, null);
     }
 
     public WifiNetworkScoreCache(Context context, CacheListener listener) {
@@ -43,29 +44,34 @@ public class WifiNetworkScoreCache extends INetworkScoreCache.Stub {
         this.mCache = new LruCache<>(maxCacheSize);
     }
 
+    @Override // android.net.INetworkScoreCache
     public final void updateScores(List<ScoredNetwork> networks) {
-        if (networks != null && !networks.isEmpty()) {
-            if (DBG) {
-                Log.d(TAG, "updateScores list size=" + networks.size());
-            }
-            boolean changed = false;
-            synchronized (this.mLock) {
-                for (ScoredNetwork network : networks) {
-                    String networkKey = buildNetworkKey(network);
-                    if (networkKey != null) {
-                        this.mCache.put(networkKey, network);
-                        changed = true;
-                    } else if (DBG) {
-                        Log.d(TAG, "Failed to build network key for ScoredNetwork" + network);
+        if (networks == null || networks.isEmpty()) {
+            return;
+        }
+        if (DBG) {
+            Log.m72d(TAG, "updateScores list size=" + networks.size());
+        }
+        boolean changed = false;
+        synchronized (this.mLock) {
+            for (ScoredNetwork network : networks) {
+                String networkKey = buildNetworkKey(network);
+                if (networkKey == null) {
+                    if (DBG) {
+                        Log.m72d(TAG, "Failed to build network key for ScoredNetwork" + network);
                     }
+                } else {
+                    this.mCache.put(networkKey, network);
+                    changed = true;
                 }
-                if (this.mListener != null && changed) {
-                    this.mListener.post(networks);
-                }
+            }
+            if (this.mListener != null && changed) {
+                this.mListener.post(networks);
             }
         }
     }
 
+    @Override // android.net.INetworkScoreCache
     public final void clearScores() {
         synchronized (this.mLock) {
             this.mCache.evictAll();
@@ -84,10 +90,10 @@ public class WifiNetworkScoreCache extends INetworkScoreCache.Stub {
     public int getNetworkScore(ScanResult result) {
         int score = -128;
         ScoredNetwork network = getScoredNetwork(result);
-        if (!(network == null || network.rssiCurve == null)) {
+        if (network != null && network.rssiCurve != null) {
             score = network.rssiCurve.lookupScore(result.level);
             if (DBG) {
-                Log.d(TAG, "getNetworkScore found scored network " + network.networkKey + " score " + Integer.toString(score) + " RSSI " + result.level);
+                Log.m72d(TAG, "getNetworkScore found scored network " + network.networkKey + " score " + Integer.toString(score) + " RSSI " + result.level);
             }
         }
         return score;
@@ -101,10 +107,10 @@ public class WifiNetworkScoreCache extends INetworkScoreCache.Stub {
     public int getNetworkScore(ScanResult result, boolean isActiveNetwork) {
         int score = -128;
         ScoredNetwork network = getScoredNetwork(result);
-        if (!(network == null || network.rssiCurve == null)) {
+        if (network != null && network.rssiCurve != null) {
             score = network.rssiCurve.lookupScore(result.level, isActiveNetwork);
             if (DBG) {
-                Log.d(TAG, "getNetworkScore found scored network " + network.networkKey + " score " + Integer.toString(score) + " RSSI " + result.level + " isActiveNetwork " + isActiveNetwork);
+                Log.m72d(TAG, "getNetworkScore found scored network " + network.networkKey + " score " + Integer.toString(score) + " RSSI " + result.level + " isActiveNetwork " + isActiveNetwork);
             }
         }
         return score;
@@ -125,17 +131,17 @@ public class WifiNetworkScoreCache extends INetworkScoreCache.Stub {
     public ScoredNetwork getScoredNetwork(NetworkKey networkKey) {
         ScoredNetwork scoredNetwork;
         String key = buildNetworkKey(networkKey);
-        if (key != null) {
-            synchronized (this.mLock) {
-                scoredNetwork = this.mCache.get(key);
+        if (key == null) {
+            if (DBG) {
+                Log.m72d(TAG, "Could not build key string for Network Key: " + networkKey);
+                return null;
             }
-            return scoredNetwork;
-        } else if (!DBG) {
-            return null;
-        } else {
-            Log.d(TAG, "Could not build key string for Network Key: " + networkKey);
             return null;
         }
+        synchronized (this.mLock) {
+            scoredNetwork = this.mCache.get(key);
+        }
+        return scoredNetwork;
     }
 
     private String buildNetworkKey(ScoredNetwork network) {
@@ -150,10 +156,10 @@ public class WifiNetworkScoreCache extends INetworkScoreCache.Stub {
         if (networkKey == null || networkKey.wifiKey == null || networkKey.type != 1 || (key = networkKey.wifiKey.ssid) == null) {
             return null;
         }
-        if (networkKey.wifiKey.bssid == null) {
-            return key;
+        if (networkKey.wifiKey.bssid != null) {
+            return key + networkKey.wifiKey.bssid;
         }
-        return key + networkKey.wifiKey.bssid;
+        return key;
     }
 
     private String buildNetworkKey(ScanResult result) {
@@ -169,17 +175,19 @@ public class WifiNetworkScoreCache extends INetworkScoreCache.Stub {
         return key.toString();
     }
 
-    /* access modifiers changed from: protected */
-    public final void dump(FileDescriptor fd, PrintWriter writer, String[] args) {
-        this.mContext.enforceCallingOrSelfPermission(Manifest.permission.DUMP, TAG);
-        writer.println(String.format("WifiNetworkScoreCache (%s/%d)", new Object[]{this.mContext.getPackageName(), Integer.valueOf(Process.myUid())}));
+    @Override // android.p007os.Binder
+    protected final void dump(FileDescriptor fd, PrintWriter writer, String[] args) {
+        this.mContext.enforceCallingOrSelfPermission(Manifest.C0000permission.DUMP, TAG);
+        String header = String.format("WifiNetworkScoreCache (%s/%d)", this.mContext.getPackageName(), Integer.valueOf(Process.myUid()));
+        writer.println(header);
         writer.println("  All score curves:");
         synchronized (this.mLock) {
             for (ScoredNetwork score : this.mCache.snapshot().values()) {
                 writer.println("    " + score);
             }
             writer.println("  Network scores for latest ScanResults:");
-            for (ScanResult scanResult : ((WifiManager) this.mContext.getSystemService("wifi")).getScanResults()) {
+            WifiManager wifiManager = (WifiManager) this.mContext.getSystemService("wifi");
+            for (ScanResult scanResult : wifiManager.getScanResults()) {
                 writer.println("    " + buildNetworkKey(scanResult) + PluralRules.KEYWORD_RULE_SEPARATOR + getNetworkScore(scanResult));
             }
         }
@@ -197,6 +205,7 @@ public class WifiNetworkScoreCache extends INetworkScoreCache.Stub {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class CacheListener {
         private Handler mHandler;
 
@@ -207,9 +216,9 @@ public class WifiNetworkScoreCache extends INetworkScoreCache.Stub {
             this.mHandler = handler;
         }
 
-        /* access modifiers changed from: package-private */
-        public void post(final List<ScoredNetwork> updatedNetworks) {
-            this.mHandler.post(new Runnable() {
+        void post(final List<ScoredNetwork> updatedNetworks) {
+            this.mHandler.post(new Runnable() { // from class: android.net.wifi.WifiNetworkScoreCache.CacheListener.1
+                @Override // java.lang.Runnable
                 public void run() {
                     CacheListener.this.networkCacheUpdated(updatedNetworks);
                 }

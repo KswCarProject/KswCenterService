@@ -2,10 +2,11 @@ package android.hardware;
 
 import android.content.Context;
 import android.hardware.IConsumerIrService;
-import android.os.RemoteException;
-import android.os.ServiceManager;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
 import android.util.Log;
 
+/* loaded from: classes.dex */
 public final class ConsumerIrManager {
     private static final String TAG = "ConsumerIr";
     private final String mPackageName;
@@ -17,7 +18,7 @@ public final class ConsumerIrManager {
 
     public boolean hasIrEmitter() {
         if (this.mService == null) {
-            Log.w(TAG, "no consumer ir service.");
+            Log.m64w(TAG, "no consumer ir service.");
             return false;
         }
         try {
@@ -29,7 +30,7 @@ public final class ConsumerIrManager {
 
     public void transmit(int carrierFrequency, int[] pattern) {
         if (this.mService == null) {
-            Log.w(TAG, "failed to transmit; no consumer ir service.");
+            Log.m64w(TAG, "failed to transmit; no consumer ir service.");
             return;
         }
         try {
@@ -39,6 +40,7 @@ public final class ConsumerIrManager {
         }
     }
 
+    /* loaded from: classes.dex */
     public final class CarrierFrequencyRange {
         private final int mMaxFrequency;
         private final int mMinFrequency;
@@ -59,16 +61,16 @@ public final class ConsumerIrManager {
 
     public CarrierFrequencyRange[] getCarrierFrequencies() {
         if (this.mService == null) {
-            Log.w(TAG, "no consumer ir service.");
+            Log.m64w(TAG, "no consumer ir service.");
             return null;
         }
         try {
             int[] freqs = this.mService.getCarrierFrequencies();
             if (freqs.length % 2 != 0) {
-                Log.w(TAG, "consumer ir service returned an uneven number of frequencies.");
+                Log.m64w(TAG, "consumer ir service returned an uneven number of frequencies.");
                 return null;
             }
-            CarrierFrequencyRange[] range = new CarrierFrequencyRange[(freqs.length / 2)];
+            CarrierFrequencyRange[] range = new CarrierFrequencyRange[freqs.length / 2];
             for (int i = 0; i < freqs.length; i += 2) {
                 range[i / 2] = new CarrierFrequencyRange(freqs[i], freqs[i + 1]);
             }

@@ -2,6 +2,7 @@ package com.android.internal.widget;
 
 import com.android.internal.widget.LockPatternUtils;
 
+/* loaded from: classes4.dex */
 public abstract class LockSettingsInternal {
     public abstract long addEscrowToken(byte[] bArr, int i, LockPatternUtils.EscrowTokenStateChangeCallback escrowTokenStateChangeCallback);
 

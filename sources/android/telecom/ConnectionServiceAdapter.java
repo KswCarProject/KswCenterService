@@ -1,9 +1,9 @@
 package android.telecom;
 
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.RemoteException;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.RemoteException;
 import android.telecom.Connection;
 import com.android.internal.telecom.IConnectionServiceAdapter;
 import com.android.internal.telecom.IVideoProvider;
@@ -14,17 +14,17 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+/* loaded from: classes3.dex */
 final class ConnectionServiceAdapter implements IBinder.DeathRecipient {
     private final Set<IConnectionServiceAdapter> mAdapters = Collections.newSetFromMap(new ConcurrentHashMap(8, 0.9f, 1));
 
     ConnectionServiceAdapter() {
     }
 
-    /* access modifiers changed from: package-private */
-    public void addAdapter(IConnectionServiceAdapter adapter) {
+    void addAdapter(IConnectionServiceAdapter adapter) {
         for (IConnectionServiceAdapter it : this.mAdapters) {
             if (it.asBinder() == adapter.asBinder()) {
-                Log.w((Object) this, "Ignoring duplicate adapter addition.", new Object[0]);
+                Log.m90w(this, "Ignoring duplicate adapter addition.", new Object[0]);
                 return;
             }
         }
@@ -37,8 +37,7 @@ final class ConnectionServiceAdapter implements IBinder.DeathRecipient {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void removeAdapter(IConnectionServiceAdapter adapter) {
+    void removeAdapter(IConnectionServiceAdapter adapter) {
         if (adapter != null) {
             for (IConnectionServiceAdapter it : this.mAdapters) {
                 if (it.asBinder() == adapter.asBinder() && this.mAdapters.remove(it)) {
@@ -49,6 +48,7 @@ final class ConnectionServiceAdapter implements IBinder.DeathRecipient {
         }
     }
 
+    @Override // android.p007os.IBinder.DeathRecipient
     public void binderDied() {
         Iterator<IConnectionServiceAdapter> it = this.mAdapters.iterator();
         while (it.hasNext()) {
@@ -60,8 +60,7 @@ final class ConnectionServiceAdapter implements IBinder.DeathRecipient {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void handleCreateConnectionComplete(String id, ConnectionRequest request, ParcelableConnection connection) {
+    void handleCreateConnectionComplete(String id, ConnectionRequest request, ParcelableConnection connection) {
         for (IConnectionServiceAdapter adapter : this.mAdapters) {
             try {
                 adapter.handleCreateConnectionComplete(id, request, connection, Log.getExternalSession());
@@ -70,8 +69,7 @@ final class ConnectionServiceAdapter implements IBinder.DeathRecipient {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void setActive(String callId) {
+    void setActive(String callId) {
         for (IConnectionServiceAdapter adapter : this.mAdapters) {
             try {
                 adapter.setActive(callId, Log.getExternalSession());
@@ -80,8 +78,7 @@ final class ConnectionServiceAdapter implements IBinder.DeathRecipient {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void setRinging(String callId) {
+    void setRinging(String callId) {
         for (IConnectionServiceAdapter adapter : this.mAdapters) {
             try {
                 adapter.setRinging(callId, Log.getExternalSession());
@@ -90,8 +87,7 @@ final class ConnectionServiceAdapter implements IBinder.DeathRecipient {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void setDialing(String callId) {
+    void setDialing(String callId) {
         for (IConnectionServiceAdapter adapter : this.mAdapters) {
             try {
                 adapter.setDialing(callId, Log.getExternalSession());
@@ -100,8 +96,7 @@ final class ConnectionServiceAdapter implements IBinder.DeathRecipient {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void setPulling(String callId) {
+    void setPulling(String callId) {
         for (IConnectionServiceAdapter adapter : this.mAdapters) {
             try {
                 adapter.setPulling(callId, Log.getExternalSession());
@@ -110,8 +105,7 @@ final class ConnectionServiceAdapter implements IBinder.DeathRecipient {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void setDisconnected(String callId, DisconnectCause disconnectCause) {
+    void setDisconnected(String callId, DisconnectCause disconnectCause) {
         for (IConnectionServiceAdapter adapter : this.mAdapters) {
             try {
                 adapter.setDisconnected(callId, disconnectCause, Log.getExternalSession());
@@ -120,8 +114,7 @@ final class ConnectionServiceAdapter implements IBinder.DeathRecipient {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void setOnHold(String callId) {
+    void setOnHold(String callId) {
         for (IConnectionServiceAdapter adapter : this.mAdapters) {
             try {
                 adapter.setOnHold(callId, Log.getExternalSession());
@@ -130,8 +123,7 @@ final class ConnectionServiceAdapter implements IBinder.DeathRecipient {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void setRingbackRequested(String callId, boolean ringback) {
+    void setRingbackRequested(String callId, boolean ringback) {
         for (IConnectionServiceAdapter adapter : this.mAdapters) {
             try {
                 adapter.setRingbackRequested(callId, ringback, Log.getExternalSession());
@@ -140,8 +132,7 @@ final class ConnectionServiceAdapter implements IBinder.DeathRecipient {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void setConnectionCapabilities(String callId, int capabilities) {
+    void setConnectionCapabilities(String callId, int capabilities) {
         for (IConnectionServiceAdapter adapter : this.mAdapters) {
             try {
                 adapter.setConnectionCapabilities(callId, capabilities, Log.getExternalSession());
@@ -150,8 +141,7 @@ final class ConnectionServiceAdapter implements IBinder.DeathRecipient {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void setConnectionProperties(String callId, int properties) {
+    void setConnectionProperties(String callId, int properties) {
         for (IConnectionServiceAdapter adapter : this.mAdapters) {
             try {
                 adapter.setConnectionProperties(callId, properties, Log.getExternalSession());
@@ -160,30 +150,27 @@ final class ConnectionServiceAdapter implements IBinder.DeathRecipient {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void setIsConferenced(String callId, String conferenceCallId) {
+    void setIsConferenced(String callId, String conferenceCallId) {
         for (IConnectionServiceAdapter adapter : this.mAdapters) {
             try {
-                Log.d((Object) this, "sending connection %s with conference %s", callId, conferenceCallId);
+                Log.m98d(this, "sending connection %s with conference %s", callId, conferenceCallId);
                 adapter.setIsConferenced(callId, conferenceCallId, Log.getExternalSession());
             } catch (RemoteException e) {
             }
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void onConferenceMergeFailed(String callId) {
+    void onConferenceMergeFailed(String callId) {
         for (IConnectionServiceAdapter adapter : this.mAdapters) {
             try {
-                Log.d((Object) this, "merge failed for call %s", callId);
+                Log.m98d(this, "merge failed for call %s", callId);
                 adapter.setConferenceMergeFailed(callId, Log.getExternalSession());
             } catch (RemoteException e) {
             }
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void resetConnectionTime(String callId) {
+    void resetConnectionTime(String callId) {
         for (IConnectionServiceAdapter adapter : this.mAdapters) {
             try {
                 adapter.resetConnectionTime(callId, Log.getExternalSession());
@@ -192,8 +179,7 @@ final class ConnectionServiceAdapter implements IBinder.DeathRecipient {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void removeCall(String callId) {
+    void removeCall(String callId) {
         for (IConnectionServiceAdapter adapter : this.mAdapters) {
             try {
                 adapter.removeCall(callId, Log.getExternalSession());
@@ -202,8 +188,7 @@ final class ConnectionServiceAdapter implements IBinder.DeathRecipient {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void onPostDialWait(String callId, String remaining) {
+    void onPostDialWait(String callId, String remaining) {
         for (IConnectionServiceAdapter adapter : this.mAdapters) {
             try {
                 adapter.onPostDialWait(callId, remaining, Log.getExternalSession());
@@ -212,8 +197,7 @@ final class ConnectionServiceAdapter implements IBinder.DeathRecipient {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void onPostDialChar(String callId, char nextChar) {
+    void onPostDialChar(String callId, char nextChar) {
         for (IConnectionServiceAdapter adapter : this.mAdapters) {
             try {
                 adapter.onPostDialChar(callId, nextChar, Log.getExternalSession());
@@ -222,8 +206,7 @@ final class ConnectionServiceAdapter implements IBinder.DeathRecipient {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void addConferenceCall(String callId, ParcelableConference parcelableConference) {
+    void addConferenceCall(String callId, ParcelableConference parcelableConference) {
         for (IConnectionServiceAdapter adapter : this.mAdapters) {
             try {
                 adapter.addConferenceCall(callId, parcelableConference, Log.getExternalSession());
@@ -232,25 +215,24 @@ final class ConnectionServiceAdapter implements IBinder.DeathRecipient {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void queryRemoteConnectionServices(RemoteServiceCallback callback, String callingPackage) {
+    void queryRemoteConnectionServices(RemoteServiceCallback callback, String callingPackage) {
         if (this.mAdapters.size() == 1) {
             try {
                 this.mAdapters.iterator().next().queryRemoteConnectionServices(callback, callingPackage, Log.getExternalSession());
+                return;
             } catch (RemoteException e) {
-                Log.e((Object) this, (Throwable) e, "Exception trying to query for remote CSs", new Object[0]);
+                Log.m96e(this, e, "Exception trying to query for remote CSs", new Object[0]);
+                return;
             }
-        } else {
-            try {
-                callback.onResult(Collections.EMPTY_LIST, Collections.EMPTY_LIST);
-            } catch (RemoteException e2) {
-                Log.e((Object) this, (Throwable) e2, "Exception trying to query for remote CSs", new Object[0]);
-            }
+        }
+        try {
+            callback.onResult(Collections.EMPTY_LIST, Collections.EMPTY_LIST);
+        } catch (RemoteException e2) {
+            Log.m96e(this, e2, "Exception trying to query for remote CSs", new Object[0]);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void setVideoProvider(String callId, Connection.VideoProvider videoProvider) {
+    void setVideoProvider(String callId, Connection.VideoProvider videoProvider) {
         IVideoProvider iVideoProvider;
         for (IConnectionServiceAdapter adapter : this.mAdapters) {
             if (videoProvider == null) {
@@ -265,8 +247,7 @@ final class ConnectionServiceAdapter implements IBinder.DeathRecipient {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void setIsVoipAudioMode(String callId, boolean isVoip) {
+    void setIsVoipAudioMode(String callId, boolean isVoip) {
         for (IConnectionServiceAdapter adapter : this.mAdapters) {
             try {
                 adapter.setIsVoipAudioMode(callId, isVoip, Log.getExternalSession());
@@ -275,8 +256,7 @@ final class ConnectionServiceAdapter implements IBinder.DeathRecipient {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void setStatusHints(String callId, StatusHints statusHints) {
+    void setStatusHints(String callId, StatusHints statusHints) {
         for (IConnectionServiceAdapter adapter : this.mAdapters) {
             try {
                 adapter.setStatusHints(callId, statusHints, Log.getExternalSession());
@@ -285,8 +265,7 @@ final class ConnectionServiceAdapter implements IBinder.DeathRecipient {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void setAddress(String callId, Uri address, int presentation) {
+    void setAddress(String callId, Uri address, int presentation) {
         for (IConnectionServiceAdapter adapter : this.mAdapters) {
             try {
                 adapter.setAddress(callId, address, presentation, Log.getExternalSession());
@@ -295,8 +274,7 @@ final class ConnectionServiceAdapter implements IBinder.DeathRecipient {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void setCallerDisplayName(String callId, String callerDisplayName, int presentation) {
+    void setCallerDisplayName(String callId, String callerDisplayName, int presentation) {
         for (IConnectionServiceAdapter adapter : this.mAdapters) {
             try {
                 adapter.setCallerDisplayName(callId, callerDisplayName, presentation, Log.getExternalSession());
@@ -305,9 +283,8 @@ final class ConnectionServiceAdapter implements IBinder.DeathRecipient {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void setVideoState(String callId, int videoState) {
-        Log.v((Object) this, "setVideoState: %d", Integer.valueOf(videoState));
+    void setVideoState(String callId, int videoState) {
+        Log.m92v(this, "setVideoState: %d", Integer.valueOf(videoState));
         for (IConnectionServiceAdapter adapter : this.mAdapters) {
             try {
                 adapter.setVideoState(callId, videoState, Log.getExternalSession());
@@ -316,9 +293,8 @@ final class ConnectionServiceAdapter implements IBinder.DeathRecipient {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void setConferenceableConnections(String callId, List<String> conferenceableCallIds) {
-        Log.v((Object) this, "setConferenceableConnections: %s, %s", callId, conferenceableCallIds);
+    void setConferenceableConnections(String callId, List<String> conferenceableCallIds) {
+        Log.m92v(this, "setConferenceableConnections: %s, %s", callId, conferenceableCallIds);
         for (IConnectionServiceAdapter adapter : this.mAdapters) {
             try {
                 adapter.setConferenceableConnections(callId, conferenceableCallIds, Log.getExternalSession());
@@ -327,9 +303,8 @@ final class ConnectionServiceAdapter implements IBinder.DeathRecipient {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void addExistingConnection(String callId, ParcelableConnection connection) {
-        Log.v((Object) this, "addExistingConnection: %s", callId);
+    void addExistingConnection(String callId, ParcelableConnection connection) {
+        Log.m92v(this, "addExistingConnection: %s", callId);
         for (IConnectionServiceAdapter adapter : this.mAdapters) {
             try {
                 adapter.addExistingConnection(callId, connection, Log.getExternalSession());
@@ -338,9 +313,8 @@ final class ConnectionServiceAdapter implements IBinder.DeathRecipient {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void putExtras(String callId, Bundle extras) {
-        Log.v((Object) this, "putExtras: %s", callId);
+    void putExtras(String callId, Bundle extras) {
+        Log.m92v(this, "putExtras: %s", callId);
         for (IConnectionServiceAdapter adapter : this.mAdapters) {
             try {
                 adapter.putExtras(callId, extras, Log.getExternalSession());
@@ -349,9 +323,8 @@ final class ConnectionServiceAdapter implements IBinder.DeathRecipient {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void putExtra(String callId, String key, boolean value) {
-        Log.v((Object) this, "putExtra: %s %s=%b", callId, key, Boolean.valueOf(value));
+    void putExtra(String callId, String key, boolean value) {
+        Log.m92v(this, "putExtra: %s %s=%b", callId, key, Boolean.valueOf(value));
         for (IConnectionServiceAdapter adapter : this.mAdapters) {
             try {
                 Bundle bundle = new Bundle();
@@ -362,9 +335,8 @@ final class ConnectionServiceAdapter implements IBinder.DeathRecipient {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void putExtra(String callId, String key, int value) {
-        Log.v((Object) this, "putExtra: %s %s=%d", callId, key, Integer.valueOf(value));
+    void putExtra(String callId, String key, int value) {
+        Log.m92v(this, "putExtra: %s %s=%d", callId, key, Integer.valueOf(value));
         for (IConnectionServiceAdapter adapter : this.mAdapters) {
             try {
                 Bundle bundle = new Bundle();
@@ -375,9 +347,8 @@ final class ConnectionServiceAdapter implements IBinder.DeathRecipient {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void putExtra(String callId, String key, String value) {
-        Log.v((Object) this, "putExtra: %s %s=%s", callId, key, value);
+    void putExtra(String callId, String key, String value) {
+        Log.m92v(this, "putExtra: %s %s=%s", callId, key, value);
         for (IConnectionServiceAdapter adapter : this.mAdapters) {
             try {
                 Bundle bundle = new Bundle();
@@ -388,9 +359,8 @@ final class ConnectionServiceAdapter implements IBinder.DeathRecipient {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void removeExtras(String callId, List<String> keys) {
-        Log.v((Object) this, "removeExtras: %s %s", callId, keys);
+    void removeExtras(String callId, List<String> keys) {
+        Log.m92v(this, "removeExtras: %s %s", callId, keys);
         for (IConnectionServiceAdapter adapter : this.mAdapters) {
             try {
                 adapter.removeExtras(callId, keys, Log.getExternalSession());
@@ -399,9 +369,8 @@ final class ConnectionServiceAdapter implements IBinder.DeathRecipient {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void setAudioRoute(String callId, int audioRoute, String bluetoothAddress) {
-        Log.v((Object) this, "setAudioRoute: %s %s %s", callId, CallAudioState.audioRouteToString(audioRoute), bluetoothAddress);
+    void setAudioRoute(String callId, int audioRoute, String bluetoothAddress) {
+        Log.m92v(this, "setAudioRoute: %s %s %s", callId, CallAudioState.audioRouteToString(audioRoute), bluetoothAddress);
         for (IConnectionServiceAdapter adapter : this.mAdapters) {
             try {
                 adapter.setAudioRoute(callId, audioRoute, bluetoothAddress, Log.getExternalSession());
@@ -410,9 +379,8 @@ final class ConnectionServiceAdapter implements IBinder.DeathRecipient {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void onConnectionEvent(String callId, String event, Bundle extras) {
-        Log.v((Object) this, "onConnectionEvent: %s", event);
+    void onConnectionEvent(String callId, String event, Bundle extras) {
+        Log.m92v(this, "onConnectionEvent: %s", event);
         for (IConnectionServiceAdapter adapter : this.mAdapters) {
             try {
                 adapter.onConnectionEvent(callId, event, extras, Log.getExternalSession());
@@ -421,9 +389,8 @@ final class ConnectionServiceAdapter implements IBinder.DeathRecipient {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void onRttInitiationSuccess(String callId) {
-        Log.v((Object) this, "onRttInitiationSuccess: %s", callId);
+    void onRttInitiationSuccess(String callId) {
+        Log.m92v(this, "onRttInitiationSuccess: %s", callId);
         for (IConnectionServiceAdapter adapter : this.mAdapters) {
             try {
                 adapter.onRttInitiationSuccess(callId, Log.getExternalSession());
@@ -432,9 +399,8 @@ final class ConnectionServiceAdapter implements IBinder.DeathRecipient {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void onRttInitiationFailure(String callId, int reason) {
-        Log.v((Object) this, "onRttInitiationFailure: %s", callId);
+    void onRttInitiationFailure(String callId, int reason) {
+        Log.m92v(this, "onRttInitiationFailure: %s", callId);
         for (IConnectionServiceAdapter adapter : this.mAdapters) {
             try {
                 adapter.onRttInitiationFailure(callId, reason, Log.getExternalSession());
@@ -443,9 +409,8 @@ final class ConnectionServiceAdapter implements IBinder.DeathRecipient {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void onRttSessionRemotelyTerminated(String callId) {
-        Log.v((Object) this, "onRttSessionRemotelyTerminated: %s", callId);
+    void onRttSessionRemotelyTerminated(String callId) {
+        Log.m92v(this, "onRttSessionRemotelyTerminated: %s", callId);
         for (IConnectionServiceAdapter adapter : this.mAdapters) {
             try {
                 adapter.onRttSessionRemotelyTerminated(callId, Log.getExternalSession());
@@ -454,9 +419,8 @@ final class ConnectionServiceAdapter implements IBinder.DeathRecipient {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void onRemoteRttRequest(String callId) {
-        Log.v((Object) this, "onRemoteRttRequest: %s", callId);
+    void onRemoteRttRequest(String callId) {
+        Log.m92v(this, "onRemoteRttRequest: %s", callId);
         for (IConnectionServiceAdapter adapter : this.mAdapters) {
             try {
                 adapter.onRemoteRttRequest(callId, Log.getExternalSession());
@@ -465,31 +429,28 @@ final class ConnectionServiceAdapter implements IBinder.DeathRecipient {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void onPhoneAccountChanged(String callId, PhoneAccountHandle pHandle) {
+    void onPhoneAccountChanged(String callId, PhoneAccountHandle pHandle) {
         for (IConnectionServiceAdapter adapter : this.mAdapters) {
             try {
-                Log.d((Object) this, "onPhoneAccountChanged %s", callId);
+                Log.m98d(this, "onPhoneAccountChanged %s", callId);
                 adapter.onPhoneAccountChanged(callId, pHandle, Log.getExternalSession());
             } catch (RemoteException e) {
             }
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void onConnectionServiceFocusReleased() {
+    void onConnectionServiceFocusReleased() {
         for (IConnectionServiceAdapter adapter : this.mAdapters) {
             try {
-                Log.d((Object) this, "onConnectionServiceFocusReleased", new Object[0]);
+                Log.m98d(this, "onConnectionServiceFocusReleased", new Object[0]);
                 adapter.onConnectionServiceFocusReleased(Log.getExternalSession());
             } catch (RemoteException e) {
             }
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void setConferenceState(String callId, boolean isConference) {
-        Log.v((Object) this, "setConferenceState: %s %b", callId, Boolean.valueOf(isConference));
+    void setConferenceState(String callId, boolean isConference) {
+        Log.m92v(this, "setConferenceState: %s %b", callId, Boolean.valueOf(isConference));
         for (IConnectionServiceAdapter adapter : this.mAdapters) {
             try {
                 adapter.setConferenceState(callId, isConference, Log.getExternalSession());

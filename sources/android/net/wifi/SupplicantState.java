@@ -1,8 +1,9 @@
 package android.net.wifi;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes3.dex */
 public enum SupplicantState implements Parcelable {
     DISCONNECTED,
     INTERFACE_DISABLED,
@@ -18,19 +19,19 @@ public enum SupplicantState implements Parcelable {
     UNINITIALIZED,
     INVALID;
     
-    public static final Parcelable.Creator<SupplicantState> CREATOR = null;
+    public static final Parcelable.Creator<SupplicantState> CREATOR = new Parcelable.Creator<SupplicantState>() { // from class: android.net.wifi.SupplicantState.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public SupplicantState createFromParcel(Parcel in) {
+            return SupplicantState.valueOf(in.readString());
+        }
 
-    static {
-        CREATOR = new Parcelable.Creator<SupplicantState>() {
-            public SupplicantState createFromParcel(Parcel in) {
-                return SupplicantState.valueOf(in.readString());
-            }
-
-            public SupplicantState[] newArray(int size) {
-                return new SupplicantState[size];
-            }
-        };
-    }
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public SupplicantState[] newArray(int size) {
+            return new SupplicantState[size];
+        }
+    };
 
     public static boolean isValidState(SupplicantState state) {
         return (state == UNINITIALIZED || state == INVALID) ? false : true;
@@ -102,10 +103,12 @@ public enum SupplicantState implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name());
     }

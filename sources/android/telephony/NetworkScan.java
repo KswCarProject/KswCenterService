@@ -1,11 +1,12 @@
 package android.telephony;
 
-import android.os.RemoteException;
-import android.os.ServiceManager;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
 import com.android.internal.telephony.ITelephony;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes.dex */
 public class NetworkScan {
     public static final int ERROR_INTERRUPTED = 10002;
     public static final int ERROR_INVALID_SCAN = 2;
@@ -20,22 +21,23 @@ public class NetworkScan {
     private final int mSubId;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface ScanErrorCode {
     }
 
     public void stopScan() {
         ITelephony telephony = getITelephony();
         if (telephony == null) {
-            Rlog.e(TAG, "Failed to get the ITelephony instance.");
+            Rlog.m86e(TAG, "Failed to get the ITelephony instance.");
         }
         try {
             telephony.stopNetworkScan(this.mSubId, this.mScanId);
-        } catch (IllegalArgumentException e) {
-            Rlog.d(TAG, "stopNetworkScan - no active scan for ScanID=" + this.mScanId);
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "stopNetworkScan  RemoteException", ex);
+            Rlog.m85e(TAG, "stopNetworkScan  RemoteException", ex);
+        } catch (IllegalArgumentException e) {
+            Rlog.m88d(TAG, "stopNetworkScan - no active scan for ScanID=" + this.mScanId);
         } catch (RuntimeException ex2) {
-            Rlog.e(TAG, "stopNetworkScan  RuntimeException", ex2);
+            Rlog.m85e(TAG, "stopNetworkScan  RuntimeException", ex2);
         }
     }
 

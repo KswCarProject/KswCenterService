@@ -6,16 +6,16 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.IPackageManager;
-import android.content.pm.PackageManager;
+import android.content.p002pm.IPackageManager;
+import android.content.p002pm.PackageManager;
 import android.net.IConnectivityManager;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.Parcel;
-import android.os.ParcelFileDescriptor;
-import android.os.RemoteException;
-import android.os.ServiceManager;
-import android.os.UserHandle;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.Parcel;
+import android.p007os.ParcelFileDescriptor;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
+import android.p007os.UserHandle;
 import android.system.OsConstants;
 import com.android.internal.net.VpnConfig;
 import java.net.DatagramSocket;
@@ -26,18 +26,22 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+/* loaded from: classes3.dex */
 public class VpnService extends Service {
     public static final String SERVICE_INTERFACE = "android.net.VpnService";
     public static final String SERVICE_META_DATA_SUPPORTS_ALWAYS_ON = "android.net.VpnService.SUPPORTS_ALWAYS_ON";
 
-    /* access modifiers changed from: private */
-    public static IConnectivityManager getService() {
+    static /* synthetic */ IConnectivityManager access$200() {
+        return getService();
+    }
+
+    private static IConnectivityManager getService() {
         return IConnectivityManager.Stub.asInterface(ServiceManager.getService("connectivity"));
     }
 
     public static Intent prepare(Context context) {
         try {
-            if (getService().prepareVpn(context.getPackageName(), (String) null, context.getUserId())) {
+            if (getService().prepareVpn(context.getPackageName(), null, context.getUserId())) {
                 return null;
             }
         } catch (RemoteException e) {
@@ -51,8 +55,8 @@ public class VpnService extends Service {
         String packageName = context.getPackageName();
         try {
             int userId = context.getUserId();
-            if (!cm.prepareVpn(packageName, (String) null, userId)) {
-                cm.prepareVpn((String) null, packageName, userId);
+            if (!cm.prepareVpn(packageName, null, userId)) {
+                cm.prepareVpn(null, packageName, userId);
             }
             cm.setVpnPackageAuthorization(packageName, userId, true);
         } catch (RemoteException e) {
@@ -113,6 +117,7 @@ public class VpnService extends Service {
         }
     }
 
+    @Override // android.app.Service
     public IBinder onBind(Intent intent) {
         if (intent == null || !"android.net.VpnService".equals(intent.getAction())) {
             return null;
@@ -124,39 +129,44 @@ public class VpnService extends Service {
         stopSelf();
     }
 
+    /* loaded from: classes3.dex */
     private class Callback extends Binder {
         private Callback() {
         }
 
-        /* access modifiers changed from: protected */
-        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) {
-            if (code != 16777215) {
-                return false;
+        @Override // android.p007os.Binder
+        protected boolean onTransact(int code, Parcel data, Parcel reply, int flags) {
+            if (code == 16777215) {
+                VpnService.this.onRevoke();
+                return true;
             }
-            VpnService.this.onRevoke();
-            return true;
+            return false;
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static void check(InetAddress address, int prefixLength) {
         if (address.isLoopbackAddress()) {
             throw new IllegalArgumentException("Bad address");
-        } else if (address instanceof Inet4Address) {
+        }
+        if (address instanceof Inet4Address) {
             if (prefixLength < 0 || prefixLength > 32) {
                 throw new IllegalArgumentException("Bad prefixLength");
             }
-        } else if (!(address instanceof Inet6Address)) {
+        } else if (address instanceof Inet6Address) {
+            if (prefixLength < 0 || prefixLength > 128) {
+                throw new IllegalArgumentException("Bad prefixLength");
+            }
+        } else {
             throw new IllegalArgumentException("Unsupported family");
-        } else if (prefixLength < 0 || prefixLength > 128) {
-            throw new IllegalArgumentException("Bad prefixLength");
         }
     }
 
+    /* loaded from: classes3.dex */
     public class Builder {
+        private final VpnConfig mConfig = new VpnConfig();
         @UnsupportedAppUsage
         private final List<LinkAddress> mAddresses = new ArrayList();
-        private final VpnConfig mConfig = new VpnConfig();
         @UnsupportedAppUsage
         private final List<RouteInfo> mRoutes = new ArrayList();
 
@@ -175,11 +185,11 @@ public class VpnService extends Service {
         }
 
         public Builder setMtu(int mtu) {
-            if (mtu > 0) {
-                this.mConfig.mtu = mtu;
-                return this;
+            if (mtu <= 0) {
+                throw new IllegalArgumentException("Bad mtu");
             }
-            throw new IllegalArgumentException("Bad mtu");
+            this.mConfig.mtu = mtu;
+            return this;
         }
 
         public Builder setHttpProxy(ProxyInfo proxyInfo) {
@@ -189,12 +199,12 @@ public class VpnService extends Service {
 
         public Builder addAddress(InetAddress address, int prefixLength) {
             VpnService.check(address, prefixLength);
-            if (!address.isAnyLocalAddress()) {
-                this.mAddresses.add(new LinkAddress(address, prefixLength));
-                this.mConfig.updateAllowedFamilies(address);
-                return this;
+            if (address.isAnyLocalAddress()) {
+                throw new IllegalArgumentException("Bad address");
             }
-            throw new IllegalArgumentException("Bad address");
+            this.mAddresses.add(new LinkAddress(address, prefixLength));
+            this.mConfig.updateAllowedFamilies(address);
+            return this;
         }
 
         public Builder addAddress(String address, int prefixLength) {
@@ -259,35 +269,36 @@ public class VpnService extends Service {
         }
 
         private void verifyApp(String packageName) throws PackageManager.NameNotFoundException {
+            IPackageManager pm = IPackageManager.Stub.asInterface(ServiceManager.getService("package"));
             try {
-                IPackageManager.Stub.asInterface(ServiceManager.getService("package")).getApplicationInfo(packageName, 0, UserHandle.getCallingUserId());
+                pm.getApplicationInfo(packageName, 0, UserHandle.getCallingUserId());
             } catch (RemoteException e) {
                 throw new IllegalStateException(e);
             }
         }
 
         public Builder addAllowedApplication(String packageName) throws PackageManager.NameNotFoundException {
-            if (this.mConfig.disallowedApplications == null) {
-                verifyApp(packageName);
-                if (this.mConfig.allowedApplications == null) {
-                    this.mConfig.allowedApplications = new ArrayList();
-                }
-                this.mConfig.allowedApplications.add(packageName);
-                return this;
+            if (this.mConfig.disallowedApplications != null) {
+                throw new UnsupportedOperationException("addDisallowedApplication already called");
             }
-            throw new UnsupportedOperationException("addDisallowedApplication already called");
+            verifyApp(packageName);
+            if (this.mConfig.allowedApplications == null) {
+                this.mConfig.allowedApplications = new ArrayList();
+            }
+            this.mConfig.allowedApplications.add(packageName);
+            return this;
         }
 
         public Builder addDisallowedApplication(String packageName) throws PackageManager.NameNotFoundException {
-            if (this.mConfig.allowedApplications == null) {
-                verifyApp(packageName);
-                if (this.mConfig.disallowedApplications == null) {
-                    this.mConfig.disallowedApplications = new ArrayList();
-                }
-                this.mConfig.disallowedApplications.add(packageName);
-                return this;
+            if (this.mConfig.allowedApplications != null) {
+                throw new UnsupportedOperationException("addAllowedApplication already called");
             }
-            throw new UnsupportedOperationException("addAllowedApplication already called");
+            verifyApp(packageName);
+            if (this.mConfig.disallowedApplications == null) {
+                this.mConfig.disallowedApplications = new ArrayList();
+            }
+            this.mConfig.disallowedApplications.add(packageName);
+            return this;
         }
 
         public Builder allowBypass() {
@@ -314,7 +325,7 @@ public class VpnService extends Service {
             this.mConfig.addresses = this.mAddresses;
             this.mConfig.routes = this.mRoutes;
             try {
-                return VpnService.getService().establishVpn(this.mConfig);
+                return VpnService.access$200().establishVpn(this.mConfig);
             } catch (RemoteException e) {
                 throw new IllegalStateException(e);
             }

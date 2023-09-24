@@ -3,15 +3,20 @@ package android.view;
 import android.annotation.UnsupportedAppUsage;
 import android.graphics.GraphicBuffer;
 import android.graphics.Rect;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes4.dex */
 public class AppTransitionAnimationSpec implements Parcelable {
-    public static final Parcelable.Creator<AppTransitionAnimationSpec> CREATOR = new Parcelable.Creator<AppTransitionAnimationSpec>() {
+    public static final Parcelable.Creator<AppTransitionAnimationSpec> CREATOR = new Parcelable.Creator<AppTransitionAnimationSpec>() { // from class: android.view.AppTransitionAnimationSpec.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AppTransitionAnimationSpec createFromParcel(Parcel in) {
             return new AppTransitionAnimationSpec(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AppTransitionAnimationSpec[] newArray(int size) {
             return new AppTransitionAnimationSpec[size];
         }
@@ -21,22 +26,24 @@ public class AppTransitionAnimationSpec implements Parcelable {
     public final int taskId;
 
     @UnsupportedAppUsage
-    public AppTransitionAnimationSpec(int taskId2, GraphicBuffer buffer2, Rect rect2) {
-        this.taskId = taskId2;
-        this.rect = rect2;
-        this.buffer = buffer2;
+    public AppTransitionAnimationSpec(int taskId, GraphicBuffer buffer, Rect rect) {
+        this.taskId = taskId;
+        this.rect = rect;
+        this.buffer = buffer;
     }
 
     public AppTransitionAnimationSpec(Parcel in) {
         this.taskId = in.readInt();
-        this.rect = (Rect) in.readParcelable((ClassLoader) null);
-        this.buffer = (GraphicBuffer) in.readParcelable((ClassLoader) null);
+        this.rect = (Rect) in.readParcelable(null);
+        this.buffer = (GraphicBuffer) in.readParcelable(null);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.taskId);
         dest.writeParcelable(this.rect, 0);

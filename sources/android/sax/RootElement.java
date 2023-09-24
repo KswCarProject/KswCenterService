@@ -6,11 +6,12 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+/* loaded from: classes3.dex */
 public class RootElement extends Element {
     final Handler handler;
 
     public RootElement(String uri, String localName) {
-        super((Element) null, uri, localName, 0);
+        super(null, uri, localName, 0);
         this.handler = new Handler();
     }
 
@@ -22,45 +23,45 @@ public class RootElement extends Element {
         return this.handler;
     }
 
+    /* loaded from: classes3.dex */
     class Handler extends DefaultHandler {
-        StringBuilder bodyBuilder = null;
-        Element current = null;
-        int depth = -1;
         Locator locator;
+        int depth = -1;
+        Element current = null;
+        StringBuilder bodyBuilder = null;
 
         Handler() {
         }
 
-        public void setDocumentLocator(Locator locator2) {
-            this.locator = locator2;
+        @Override // org.xml.sax.helpers.DefaultHandler, org.xml.sax.ContentHandler
+        public void setDocumentLocator(Locator locator) {
+            this.locator = locator;
         }
 
+        @Override // org.xml.sax.helpers.DefaultHandler, org.xml.sax.ContentHandler
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
             Children children;
             Element child;
-            int depth2 = this.depth + 1;
-            this.depth = depth2;
-            if (depth2 == 0) {
+            int depth = this.depth + 1;
+            this.depth = depth;
+            if (depth == 0) {
                 startRoot(uri, localName, attributes);
             } else if (this.bodyBuilder != null) {
                 throw new BadXmlException("Encountered mixed content within text element named " + this.current + ".", this.locator);
-            } else if (depth2 == this.current.depth + 1 && (children = this.current.children) != null && (child = children.get(uri, localName)) != null) {
+            } else if (depth == this.current.depth + 1 && (children = this.current.children) != null && (child = children.get(uri, localName)) != null) {
                 start(child, attributes);
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public void startRoot(String uri, String localName, Attributes attributes) throws SAXException {
+        void startRoot(String uri, String localName, Attributes attributes) throws SAXException {
             Element root = RootElement.this;
-            if (root.uri.compareTo(uri) == 0 && root.localName.compareTo(localName) == 0) {
-                start(root, attributes);
-                return;
+            if (root.uri.compareTo(uri) != 0 || root.localName.compareTo(localName) != 0) {
+                throw new BadXmlException("Root element name does not match. Expected: " + root + ", Got: " + Element.toString(uri, localName), this.locator);
             }
-            throw new BadXmlException("Root element name does not match. Expected: " + root + ", Got: " + Element.toString(uri, localName), this.locator);
+            start(root, attributes);
         }
 
-        /* access modifiers changed from: package-private */
-        public void start(Element e, Attributes attributes) {
+        void start(Element e, Attributes attributes) {
             this.current = e;
             if (e.startElementListener != null) {
                 e.startElementListener.start(attributes);
@@ -72,25 +73,27 @@ public class RootElement extends Element {
             e.visited = true;
         }
 
+        @Override // org.xml.sax.helpers.DefaultHandler, org.xml.sax.ContentHandler
         public void characters(char[] buffer, int start, int length) throws SAXException {
             if (this.bodyBuilder != null) {
                 this.bodyBuilder.append(buffer, start, length);
             }
         }
 
+        @Override // org.xml.sax.helpers.DefaultHandler, org.xml.sax.ContentHandler
         public void endElement(String uri, String localName, String qName) throws SAXException {
-            Element current2 = this.current;
-            if (this.depth == current2.depth) {
-                current2.checkRequiredChildren(this.locator);
-                if (current2.endElementListener != null) {
-                    current2.endElementListener.end();
+            Element current = this.current;
+            if (this.depth == current.depth) {
+                current.checkRequiredChildren(this.locator);
+                if (current.endElementListener != null) {
+                    current.endElementListener.end();
                 }
                 if (this.bodyBuilder != null) {
                     String body = this.bodyBuilder.toString();
                     this.bodyBuilder = null;
-                    current2.endTextElementListener.end(body);
+                    current.endTextElementListener.end(body);
                 }
-                this.current = current2.parent;
+                this.current = current.parent;
             }
             this.depth--;
         }

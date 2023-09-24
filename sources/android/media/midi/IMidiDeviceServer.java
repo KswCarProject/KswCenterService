@@ -1,12 +1,13 @@
 package android.media.midi;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import java.io.FileDescriptor;
 
+/* loaded from: classes3.dex */
 public interface IMidiDeviceServer extends IInterface {
     void closeDevice() throws RemoteException;
 
@@ -22,37 +23,47 @@ public interface IMidiDeviceServer extends IInterface {
 
     void setDeviceInfo(MidiDeviceInfo midiDeviceInfo) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements IMidiDeviceServer {
+        @Override // android.media.midi.IMidiDeviceServer
         public FileDescriptor openInputPort(IBinder token, int portNumber) throws RemoteException {
             return null;
         }
 
+        @Override // android.media.midi.IMidiDeviceServer
         public FileDescriptor openOutputPort(IBinder token, int portNumber) throws RemoteException {
             return null;
         }
 
+        @Override // android.media.midi.IMidiDeviceServer
         public void closePort(IBinder token) throws RemoteException {
         }
 
+        @Override // android.media.midi.IMidiDeviceServer
         public void closeDevice() throws RemoteException {
         }
 
+        @Override // android.media.midi.IMidiDeviceServer
         public int connectPorts(IBinder token, FileDescriptor fd, int outputPortNumber) throws RemoteException {
             return 0;
         }
 
+        @Override // android.media.midi.IMidiDeviceServer
         public MidiDeviceInfo getDeviceInfo() throws RemoteException {
             return null;
         }
 
+        @Override // android.media.midi.IMidiDeviceServer
         public void setDeviceInfo(MidiDeviceInfo deviceInfo) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements IMidiDeviceServer {
         private static final String DESCRIPTOR = "android.media.midi.IMidiDeviceServer";
         static final int TRANSACTION_closeDevice = 4;
@@ -72,12 +83,13 @@ public interface IMidiDeviceServer extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IMidiDeviceServer)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IMidiDeviceServer)) {
+                return (IMidiDeviceServer) iin;
             }
-            return (IMidiDeviceServer) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -103,70 +115,80 @@ public interface IMidiDeviceServer extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
             MidiDeviceInfo _arg0;
-            if (code != 1598968902) {
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        FileDescriptor _result = openInputPort(data.readStrongBinder(), data.readInt());
-                        reply.writeNoException();
-                        reply.writeRawFileDescriptor(_result);
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        FileDescriptor _result2 = openOutputPort(data.readStrongBinder(), data.readInt());
-                        reply.writeNoException();
-                        reply.writeRawFileDescriptor(_result2);
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        closePort(data.readStrongBinder());
-                        reply.writeNoException();
-                        return true;
-                    case 4:
-                        data.enforceInterface(DESCRIPTOR);
-                        closeDevice();
-                        return true;
-                    case 5:
-                        data.enforceInterface(DESCRIPTOR);
-                        int _result3 = connectPorts(data.readStrongBinder(), data.readRawFileDescriptor(), data.readInt());
-                        reply.writeNoException();
-                        reply.writeInt(_result3);
-                        return true;
-                    case 6:
-                        data.enforceInterface(DESCRIPTOR);
-                        MidiDeviceInfo _result4 = getDeviceInfo();
-                        reply.writeNoException();
-                        if (_result4 != null) {
-                            reply.writeInt(1);
-                            _result4.writeToParcel(reply, 1);
-                        } else {
-                            reply.writeInt(0);
-                        }
-                        return true;
-                    case 7:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = MidiDeviceInfo.CREATOR.createFromParcel(data);
-                        } else {
-                            _arg0 = null;
-                        }
-                        setDeviceInfo(_arg0);
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg02 = data.readStrongBinder();
+                    int _arg1 = data.readInt();
+                    FileDescriptor _result = openInputPort(_arg02, _arg1);
+                    reply.writeNoException();
+                    reply.writeRawFileDescriptor(_result);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg03 = data.readStrongBinder();
+                    int _arg12 = data.readInt();
+                    FileDescriptor _result2 = openOutputPort(_arg03, _arg12);
+                    reply.writeNoException();
+                    reply.writeRawFileDescriptor(_result2);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg04 = data.readStrongBinder();
+                    closePort(_arg04);
+                    reply.writeNoException();
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    closeDevice();
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg05 = data.readStrongBinder();
+                    FileDescriptor _arg13 = data.readRawFileDescriptor();
+                    int _arg2 = data.readInt();
+                    int _result3 = connectPorts(_arg05, _arg13, _arg2);
+                    reply.writeNoException();
+                    reply.writeInt(_result3);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    MidiDeviceInfo _result4 = getDeviceInfo();
+                    reply.writeNoException();
+                    if (_result4 != null) {
+                        reply.writeInt(1);
+                        _result4.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg0 = MidiDeviceInfo.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg0 = null;
+                    }
+                    setDeviceInfo(_arg0);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements IMidiDeviceServer {
             public static IMidiDeviceServer sDefaultImpl;
             private IBinder mRemote;
@@ -175,6 +197,7 @@ public interface IMidiDeviceServer extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -183,6 +206,7 @@ public interface IMidiDeviceServer extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.media.midi.IMidiDeviceServer
             public FileDescriptor openInputPort(IBinder token, int portNumber) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -190,13 +214,12 @@ public interface IMidiDeviceServer extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
                     _data.writeInt(portNumber);
-                    if (!this.mRemote.transact(1, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().openInputPort(token, portNumber);
                     }
                     _reply.readException();
                     FileDescriptor _result = _reply.readRawFileDescriptor();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -204,6 +227,7 @@ public interface IMidiDeviceServer extends IInterface {
                 }
             }
 
+            @Override // android.media.midi.IMidiDeviceServer
             public FileDescriptor openOutputPort(IBinder token, int portNumber) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -211,13 +235,12 @@ public interface IMidiDeviceServer extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
                     _data.writeInt(portNumber);
-                    if (!this.mRemote.transact(2, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().openOutputPort(token, portNumber);
                     }
                     _reply.readException();
                     FileDescriptor _result = _reply.readRawFileDescriptor();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -225,32 +248,32 @@ public interface IMidiDeviceServer extends IInterface {
                 }
             }
 
+            @Override // android.media.midi.IMidiDeviceServer
             public void closePort(IBinder token) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    if (this.mRemote.transact(3, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().closePort(token);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().closePort(token);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.midi.IMidiDeviceServer
             public void closeDevice() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().closeDevice();
                     }
                 } finally {
@@ -258,6 +281,7 @@ public interface IMidiDeviceServer extends IInterface {
                 }
             }
 
+            @Override // android.media.midi.IMidiDeviceServer
             public int connectPorts(IBinder token, FileDescriptor fd, int outputPortNumber) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -266,13 +290,12 @@ public interface IMidiDeviceServer extends IInterface {
                     _data.writeStrongBinder(token);
                     _data.writeRawFileDescriptor(fd);
                     _data.writeInt(outputPortNumber);
-                    if (!this.mRemote.transact(5, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().connectPorts(token, fd, outputPortNumber);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -280,13 +303,15 @@ public interface IMidiDeviceServer extends IInterface {
                 }
             }
 
+            @Override // android.media.midi.IMidiDeviceServer
             public MidiDeviceInfo getDeviceInfo() throws RemoteException {
                 MidiDeviceInfo _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(6, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getDeviceInfo();
                     }
                     _reply.readException();
@@ -295,16 +320,14 @@ public interface IMidiDeviceServer extends IInterface {
                     } else {
                         _result = null;
                     }
-                    MidiDeviceInfo _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.midi.IMidiDeviceServer
             public void setDeviceInfo(MidiDeviceInfo deviceInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -315,9 +338,8 @@ public interface IMidiDeviceServer extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(7, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(7, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().setDeviceInfo(deviceInfo);
                     }
                 } finally {
@@ -327,11 +349,11 @@ public interface IMidiDeviceServer extends IInterface {
         }
 
         public static boolean setDefaultImpl(IMidiDeviceServer impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IMidiDeviceServer getDefaultImpl() {

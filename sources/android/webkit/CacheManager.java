@@ -8,10 +8,12 @@ import java.io.OutputStream;
 import java.util.Map;
 
 @Deprecated
+/* loaded from: classes4.dex */
 public final class CacheManager {
     static final /* synthetic */ boolean $assertionsDisabled = false;
 
     @Deprecated
+    /* loaded from: classes4.dex */
     public static class CacheResult {
         @UnsupportedAppUsage
         long contentLength;
@@ -115,49 +117,49 @@ public final class CacheManager {
         }
 
         @UnsupportedAppUsage
-        public void setEncoding(String encoding2) {
-            this.encoding = encoding2;
+        public void setEncoding(String encoding) {
+            this.encoding = encoding;
         }
 
-        public void setContentLength(long contentLength2) {
-            this.contentLength = contentLength2;
+        public void setContentLength(long contentLength) {
+            this.contentLength = contentLength;
         }
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public static File getCacheFileBaseDir() {
         return null;
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public static boolean cacheDisabled() {
         return false;
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public static boolean startCacheTransaction() {
         return false;
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public static boolean endCacheTransaction() {
         return false;
     }
 
-    @Deprecated
     @UnsupportedAppUsage
-    public static CacheResult getCacheFile(String url, Map<String, String> map) {
+    @Deprecated
+    public static CacheResult getCacheFile(String url, Map<String, String> headers) {
         return null;
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public static void saveCacheFile(String url, CacheResult cacheResult) {
-        saveCacheFile(url, 0, cacheResult);
+        saveCacheFile(url, 0L, cacheResult);
     }
 
     @UnsupportedAppUsage

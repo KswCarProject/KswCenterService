@@ -14,6 +14,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.StringJoiner;
 
+/* loaded from: classes4.dex */
 public final class SelectionSessionLogger {
     static final String CLASSIFIER_ID = "androidtc";
     private static final int ENTITY_TYPE = 1254;
@@ -118,33 +119,33 @@ public final class SelectionSessionLogger {
                 return "SELECTION_STARTED";
             case 1102:
                 return "SELECTION_MODIFIED";
-            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_SELECT_ALL /*1103*/:
+            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_SELECT_ALL /* 1103 */:
                 return "SELECT_ALL";
-            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_RESET /*1104*/:
+            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_RESET /* 1104 */:
                 return "RESET";
-            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_SMART_SINGLE /*1105*/:
+            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_SMART_SINGLE /* 1105 */:
                 return "SMART_SELECTION_SINGLE";
-            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_SMART_MULTI /*1106*/:
+            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_SMART_MULTI /* 1106 */:
                 return "SMART_SELECTION_MULTI";
-            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_AUTO /*1107*/:
+            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_AUTO /* 1107 */:
                 return "AUTO_SELECTION";
-            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_OVERTYPE /*1108*/:
+            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_OVERTYPE /* 1108 */:
                 return "OVERTYPE";
-            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_COPY /*1109*/:
+            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_COPY /* 1109 */:
                 return "COPY";
-            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_PASTE /*1110*/:
+            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_PASTE /* 1110 */:
                 return "PASTE";
-            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_CUT /*1111*/:
+            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_CUT /* 1111 */:
                 return "CUT";
-            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_SHARE /*1112*/:
+            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_SHARE /* 1112 */:
                 return "SHARE";
-            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_SMART_SHARE /*1113*/:
+            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_SMART_SHARE /* 1113 */:
                 return "SMART_SHARE";
-            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_DRAG /*1114*/:
+            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_DRAG /* 1114 */:
                 return "DRAG";
-            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_ABANDON /*1115*/:
+            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_ABANDON /* 1115 */:
                 return "ABANDON";
-            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_OTHER /*1116*/:
+            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_OTHER /* 1116 */:
                 return "OTHER";
             default:
                 return "unknown";
@@ -168,27 +169,28 @@ public final class SelectionSessionLogger {
 
     private static void debugLog(LogMaker log) {
         String widget;
-        LogMaker logMaker = log;
         if (Log.ENABLE_FULL_LOGGING) {
-            String widgetType = Objects.toString(logMaker.getTaggedData(1255), "unknown");
-            String widgetVersion = Objects.toString(logMaker.getTaggedData(1262), "");
+            String widgetType = Objects.toString(log.getTaggedData(1255), "unknown");
+            String widgetVersion = Objects.toString(log.getTaggedData(1262), "");
             if (widgetVersion.isEmpty()) {
                 widget = widgetType;
             } else {
                 widget = widgetType + NativeLibraryHelper.CLEAR_ABI_OVERRIDE + widgetVersion;
             }
-            int index = Integer.parseInt(Objects.toString(logMaker.getTaggedData(1120), "0"));
+            int index = Integer.parseInt(Objects.toString(log.getTaggedData(1120), "0"));
             if (log.getType() == 1101) {
-                String sessionId = Objects.toString(logMaker.getTaggedData(1119), "");
-                Log.d(LOG_TAG, String.format("New selection session: %s (%s)", new Object[]{widget, sessionId.substring(sessionId.lastIndexOf(NativeLibraryHelper.CLEAR_ABI_OVERRIDE) + 1)}));
+                String sessionId = Objects.toString(log.getTaggedData(1119), "");
+                Log.m40d(LOG_TAG, String.format("New selection session: %s (%s)", widget, sessionId.substring(sessionId.lastIndexOf(NativeLibraryHelper.CLEAR_ABI_OVERRIDE) + 1)));
             }
-            String model = Objects.toString(logMaker.getTaggedData(1256), "unknown");
-            String entity = Objects.toString(logMaker.getTaggedData(1254), "unknown");
+            String model = Objects.toString(log.getTaggedData(1256), "unknown");
+            String entity = Objects.toString(log.getTaggedData(1254), "unknown");
             String type = getLogTypeString(log.getType());
             String subType = getLogSubTypeString(log.getSubtype());
-            int smartStart = Integer.parseInt(Objects.toString(logMaker.getTaggedData(1252), "0"));
-            int smartEnd = Integer.parseInt(Objects.toString(logMaker.getTaggedData(1253), "0"));
-            Log.v(LOG_TAG, String.format(Locale.US, "%2d: %s/%s/%s, range=%d,%d - smart_range=%d,%d (%s/%s)", new Object[]{Integer.valueOf(index), type, subType, entity, Integer.valueOf(Integer.parseInt(Objects.toString(logMaker.getTaggedData(1250), "0"))), Integer.valueOf(Integer.parseInt(Objects.toString(logMaker.getTaggedData(1251), "0"))), Integer.valueOf(smartStart), Integer.valueOf(smartEnd), widget, model}));
+            int smartStart = Integer.parseInt(Objects.toString(log.getTaggedData(1252), "0"));
+            int smartEnd = Integer.parseInt(Objects.toString(log.getTaggedData(1253), "0"));
+            int eventStart = Integer.parseInt(Objects.toString(log.getTaggedData(1250), "0"));
+            int eventEnd = Integer.parseInt(Objects.toString(log.getTaggedData(1251), "0"));
+            Log.m38v(LOG_TAG, String.format(Locale.US, "%2d: %s/%s/%s, range=%d,%d - smart_range=%d,%d (%s/%s)", Integer.valueOf(index), type, subType, entity, Integer.valueOf(eventStart), Integer.valueOf(eventEnd), Integer.valueOf(smartStart), Integer.valueOf(smartEnd), widget, model));
         }
     }
 
@@ -204,13 +206,16 @@ public final class SelectionSessionLogger {
         for (Locale locale : locales) {
             localesJoiner.add(locale.toLanguageTag());
         }
-        return SignatureParser.createSignature("androidtc", String.format(Locale.US, "%s_v%d", new Object[]{localesJoiner.toString(), Integer.valueOf(modelVersion)}), Objects.hash(new Object[]{text, Integer.valueOf(start), Integer.valueOf(end), context.getPackageName()}));
+        String modelName = String.format(Locale.US, "%s_v%d", localesJoiner.toString(), Integer.valueOf(modelVersion));
+        int hash = Objects.hash(text, Integer.valueOf(start), Integer.valueOf(end), context.getPackageName());
+        return SignatureParser.createSignature("androidtc", modelName, hash);
     }
 
     @VisibleForTesting
+    /* loaded from: classes4.dex */
     public static final class SignatureParser {
         static String createSignature(String classifierId, String modelName, int hash) {
-            return String.format(Locale.US, "%s|%s|%d", new Object[]{classifierId, modelName, Integer.valueOf(hash)});
+            return String.format(Locale.US, "%s|%s|%d", classifierId, modelName, Integer.valueOf(hash));
         }
 
         static String getClassifierId(String signature) {
@@ -227,18 +232,22 @@ public final class SelectionSessionLogger {
             }
             int start = signature.indexOf("|") + 1;
             int end = signature.indexOf("|", start);
-            if (start < 1 || end < start) {
-                return "";
+            if (start >= 1 && end >= start) {
+                return signature.substring(start, end);
             }
-            return signature.substring(start, end);
+            return "";
         }
 
         static int getHash(String signature) {
-            int index2;
-            if (signature != null && (index2 = signature.indexOf("|", signature.indexOf("|"))) > 0) {
-                return Integer.parseInt(signature.substring(index2));
+            if (signature == null) {
+                return 0;
             }
-            return 0;
+            int index1 = signature.indexOf("|");
+            int index2 = signature.indexOf("|", index1);
+            if (index2 <= 0) {
+                return 0;
+            }
+            return Integer.parseInt(signature.substring(index2));
         }
     }
 }

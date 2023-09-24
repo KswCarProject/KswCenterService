@@ -1,18 +1,23 @@
 package android.telecom;
 
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.ParcelFileDescriptor;
-import android.os.Parcelable;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.ParcelFileDescriptor;
+import android.p007os.Parcelable;
 import android.telecom.Connection;
 
+/* loaded from: classes3.dex */
 public final class ConnectionRequest implements Parcelable {
-    public static final Parcelable.Creator<ConnectionRequest> CREATOR = new Parcelable.Creator<ConnectionRequest>() {
+    public static final Parcelable.Creator<ConnectionRequest> CREATOR = new Parcelable.Creator<ConnectionRequest>() { // from class: android.telecom.ConnectionRequest.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ConnectionRequest createFromParcel(Parcel source) {
             return new ConnectionRequest(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ConnectionRequest[] newArray(int size) {
             return new ConnectionRequest[size];
         }
@@ -27,15 +32,16 @@ public final class ConnectionRequest implements Parcelable {
     private final String mTelecomCallId;
     private final int mVideoState;
 
+    /* loaded from: classes3.dex */
     public static final class Builder {
         private PhoneAccountHandle mAccountHandle;
         private Uri mAddress;
         private Bundle mExtras;
         private ParcelFileDescriptor mRttPipeFromInCall;
         private ParcelFileDescriptor mRttPipeToInCall;
-        private boolean mShouldShowIncomingCallUi = false;
         private String mTelecomCallId;
         private int mVideoState = 0;
+        private boolean mShouldShowIncomingCallUi = false;
 
         public Builder setAccountHandle(PhoneAccountHandle accountHandle) {
             this.mAccountHandle = accountHandle;
@@ -83,15 +89,15 @@ public final class ConnectionRequest implements Parcelable {
     }
 
     public ConnectionRequest(PhoneAccountHandle accountHandle, Uri handle, Bundle extras) {
-        this(accountHandle, handle, extras, 0, (String) null, false, (ParcelFileDescriptor) null, (ParcelFileDescriptor) null);
+        this(accountHandle, handle, extras, 0, null, false, null, null);
     }
 
     public ConnectionRequest(PhoneAccountHandle accountHandle, Uri handle, Bundle extras, int videoState) {
-        this(accountHandle, handle, extras, videoState, (String) null, false, (ParcelFileDescriptor) null, (ParcelFileDescriptor) null);
+        this(accountHandle, handle, extras, videoState, null, false, null, null);
     }
 
     public ConnectionRequest(PhoneAccountHandle accountHandle, Uri handle, Bundle extras, int videoState, String telecomCallId, boolean shouldShowIncomingCallUi) {
-        this(accountHandle, handle, extras, videoState, telecomCallId, shouldShowIncomingCallUi, (ParcelFileDescriptor) null, (ParcelFileDescriptor) null);
+        this(accountHandle, handle, extras, videoState, telecomCallId, shouldShowIncomingCallUi, null, null);
     }
 
     private ConnectionRequest(PhoneAccountHandle accountHandle, Uri handle, Bundle extras, int videoState, String telecomCallId, boolean shouldShowIncomingCallUi, ParcelFileDescriptor rttPipeFromInCall, ParcelFileDescriptor rttPipeToInCall) {
@@ -111,7 +117,7 @@ public final class ConnectionRequest implements Parcelable {
         this.mExtras = (Bundle) in.readParcelable(getClass().getClassLoader());
         this.mVideoState = in.readInt();
         this.mTelecomCallId = in.readString();
-        this.mShouldShowIncomingCallUi = in.readInt() != 1 ? false : true;
+        this.mShouldShowIncomingCallUi = in.readInt() == 1;
         this.mRttPipeFromInCall = (ParcelFileDescriptor) in.readParcelable(getClass().getClassLoader());
         this.mRttPipeToInCall = (ParcelFileDescriptor) in.readParcelable(getClass().getClassLoader());
     }
@@ -149,13 +155,13 @@ public final class ConnectionRequest implements Parcelable {
     }
 
     public Connection.RttTextStream getRttTextStream() {
-        if (!isRequestingRtt()) {
-            return null;
+        if (isRequestingRtt()) {
+            if (this.mRttTextStream == null) {
+                this.mRttTextStream = new Connection.RttTextStream(this.mRttPipeToInCall, this.mRttPipeFromInCall);
+            }
+            return this.mRttTextStream;
         }
-        if (this.mRttTextStream == null) {
-            this.mRttTextStream = new Connection.RttTextStream(this.mRttPipeToInCall, this.mRttPipeFromInCall);
-        }
-        return this.mRttTextStream;
+        return null;
     }
 
     public boolean isRequestingRtt() {
@@ -163,14 +169,14 @@ public final class ConnectionRequest implements Parcelable {
     }
 
     public String toString() {
-        Object obj;
+        Object logSafePhoneNumber;
         Object[] objArr = new Object[2];
         if (this.mAddress == null) {
-            obj = Uri.EMPTY;
+            logSafePhoneNumber = Uri.EMPTY;
         } else {
-            obj = Connection.toLogSafePhoneNumber(this.mAddress.toString());
+            logSafePhoneNumber = Connection.toLogSafePhoneNumber(this.mAddress.toString());
         }
-        objArr[0] = obj;
+        objArr[0] = logSafePhoneNumber;
         objArr[1] = bundleToString(this.mExtras);
         return String.format("ConnectionRequest %s %s", objArr);
     }
@@ -184,7 +190,7 @@ public final class ConnectionRequest implements Parcelable {
         for (String key : extras.keySet()) {
             sb.append(key);
             sb.append("=");
-            char c = 65535;
+            char c = '\uffff';
             int hashCode = key.hashCode();
             if (hashCode != -1582002592) {
                 if (hashCode == -1513984200 && key.equals(TelecomManager.EXTRA_INCOMING_CALL_ADDRESS)) {
@@ -208,10 +214,12 @@ public final class ConnectionRequest implements Parcelable {
         return sb.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel destination, int flags) {
         destination.writeParcelable(this.mAccountHandle, 0);
         destination.writeParcelable(this.mAddress, 0);

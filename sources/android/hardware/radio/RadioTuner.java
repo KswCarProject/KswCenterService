@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 @SystemApi
+/* loaded from: classes.dex */
 public abstract class RadioTuner {
     public static final int DIRECTION_DOWN = 1;
     public static final int DIRECTION_UP = 0;
@@ -88,14 +89,15 @@ public abstract class RadioTuner {
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, String> setParameters(Map<String, String> map) {
+    public Map<String, String> setParameters(Map<String, String> parameters) {
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, String> getParameters(List<String> list) {
+    public Map<String, String> getParameters(List<String> keys) {
         throw new UnsupportedOperationException();
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Callback {
         public void onError(int status) {
         }
@@ -135,7 +137,7 @@ public abstract class RadioTuner {
         public void onProgramListChanged() {
         }
 
-        public void onParametersUpdated(Map<String, String> map) {
+        public void onParametersUpdated(Map<String, String> parameters) {
         }
     }
 }

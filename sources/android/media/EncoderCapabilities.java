@@ -4,6 +4,7 @@ import android.annotation.UnsupportedAppUsage;
 import java.util.ArrayList;
 import java.util.List;
 
+/* loaded from: classes3.dex */
 public class EncoderCapabilities {
     private static final String TAG = "EncoderCapabilities";
 
@@ -21,6 +22,7 @@ public class EncoderCapabilities {
 
     private static final native void native_init();
 
+    /* loaded from: classes3.dex */
     public static class VideoEncoderCap {
         @UnsupportedAppUsage
         public final int mCodec;
@@ -50,6 +52,7 @@ public class EncoderCapabilities {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class AudioEncoderCap {
         public final int mCodec;
         public final int mMaxBitRate;

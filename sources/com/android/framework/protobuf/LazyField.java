@@ -3,14 +3,16 @@ package com.android.framework.protobuf;
 import java.util.Iterator;
 import java.util.Map;
 
+/* loaded from: classes4.dex */
 public class LazyField extends LazyFieldLite {
     private final MessageLite defaultInstance;
 
-    public LazyField(MessageLite defaultInstance2, ExtensionRegistryLite extensionRegistry, ByteString bytes) {
+    public LazyField(MessageLite defaultInstance, ExtensionRegistryLite extensionRegistry, ByteString bytes) {
         super(extensionRegistry, bytes);
-        this.defaultInstance = defaultInstance2;
+        this.defaultInstance = defaultInstance;
     }
 
+    @Override // com.android.framework.protobuf.LazyFieldLite
     public boolean containsDefaultInstance() {
         return super.containsDefaultInstance() || this.value == this.defaultInstance;
     }
@@ -19,10 +21,12 @@ public class LazyField extends LazyFieldLite {
         return getValue(this.defaultInstance);
     }
 
+    @Override // com.android.framework.protobuf.LazyFieldLite
     public int hashCode() {
         return getValue().hashCode();
     }
 
+    @Override // com.android.framework.protobuf.LazyFieldLite
     public boolean equals(Object obj) {
         return getValue().equals(obj);
     }
@@ -31,17 +35,20 @@ public class LazyField extends LazyFieldLite {
         return getValue().toString();
     }
 
+    /* loaded from: classes4.dex */
     static class LazyEntry<K> implements Map.Entry<K, Object> {
         private Map.Entry<K, LazyField> entry;
 
-        private LazyEntry(Map.Entry<K, LazyField> entry2) {
-            this.entry = entry2;
+        private LazyEntry(Map.Entry<K, LazyField> entry) {
+            this.entry = entry;
         }
 
+        @Override // java.util.Map.Entry
         public K getKey() {
             return this.entry.getKey();
         }
 
+        @Override // java.util.Map.Entry
         public Object getValue() {
             LazyField field = this.entry.getValue();
             if (field == null) {
@@ -54,25 +61,29 @@ public class LazyField extends LazyFieldLite {
             return this.entry.getValue();
         }
 
+        @Override // java.util.Map.Entry
         public Object setValue(Object value) {
-            if (value instanceof MessageLite) {
-                return this.entry.getValue().setValue((MessageLite) value);
+            if (!(value instanceof MessageLite)) {
+                throw new IllegalArgumentException("LazyField now only used for MessageSet, and the value of MessageSet must be an instance of MessageLite");
             }
-            throw new IllegalArgumentException("LazyField now only used for MessageSet, and the value of MessageSet must be an instance of MessageLite");
+            return this.entry.getValue().setValue((MessageLite) value);
         }
     }
 
+    /* loaded from: classes4.dex */
     static class LazyIterator<K> implements Iterator<Map.Entry<K, Object>> {
         private Iterator<Map.Entry<K, Object>> iterator;
 
-        public LazyIterator(Iterator<Map.Entry<K, Object>> iterator2) {
-            this.iterator = iterator2;
+        public LazyIterator(Iterator<Map.Entry<K, Object>> iterator) {
+            this.iterator = iterator;
         }
 
+        @Override // java.util.Iterator
         public boolean hasNext() {
             return this.iterator.hasNext();
         }
 
+        @Override // java.util.Iterator
         public Map.Entry<K, Object> next() {
             Map.Entry<K, ?> entry = this.iterator.next();
             if (entry.getValue() instanceof LazyField) {
@@ -81,6 +92,7 @@ public class LazyField extends LazyFieldLite {
             return entry;
         }
 
+        @Override // java.util.Iterator
         public void remove() {
             this.iterator.remove();
         }

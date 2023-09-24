@@ -2,16 +2,21 @@ package android.net.metrics;
 
 import android.annotation.SystemApi;
 import android.net.metrics.IpConnectivityLog;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class RaEvent implements IpConnectivityLog.Event {
-    public static final Parcelable.Creator<RaEvent> CREATOR = new Parcelable.Creator<RaEvent>() {
+    public static final Parcelable.Creator<RaEvent> CREATOR = new Parcelable.Creator<RaEvent>() { // from class: android.net.metrics.RaEvent.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RaEvent createFromParcel(Parcel in) {
             return new RaEvent(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RaEvent[] newArray(int size) {
             return new RaEvent[size];
         }
@@ -24,13 +29,13 @@ public final class RaEvent implements IpConnectivityLog.Event {
     public final long routeInfoLifetime;
     public final long routerLifetime;
 
-    public RaEvent(long routerLifetime2, long prefixValidLifetime2, long prefixPreferredLifetime2, long routeInfoLifetime2, long rdnssLifetime2, long dnsslLifetime2) {
-        this.routerLifetime = routerLifetime2;
-        this.prefixValidLifetime = prefixValidLifetime2;
-        this.prefixPreferredLifetime = prefixPreferredLifetime2;
-        this.routeInfoLifetime = routeInfoLifetime2;
-        this.rdnssLifetime = rdnssLifetime2;
-        this.dnsslLifetime = dnsslLifetime2;
+    public RaEvent(long routerLifetime, long prefixValidLifetime, long prefixPreferredLifetime, long routeInfoLifetime, long rdnssLifetime, long dnsslLifetime) {
+        this.routerLifetime = routerLifetime;
+        this.prefixValidLifetime = prefixValidLifetime;
+        this.prefixPreferredLifetime = prefixPreferredLifetime;
+        this.routeInfoLifetime = routeInfoLifetime;
+        this.rdnssLifetime = rdnssLifetime;
+        this.dnsslLifetime = dnsslLifetime;
     }
 
     private RaEvent(Parcel in) {
@@ -42,6 +47,7 @@ public final class RaEvent implements IpConnectivityLog.Event {
         this.dnsslLifetime = in.readLong();
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeLong(this.routerLifetime);
         out.writeLong(this.prefixValidLifetime);
@@ -51,12 +57,13 @@ public final class RaEvent implements IpConnectivityLog.Event {
         out.writeLong(this.dnsslLifetime);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
     public String toString() {
-        return "RaEvent(lifetimes: " + String.format("router=%ds, ", new Object[]{Long.valueOf(this.routerLifetime)}) + String.format("prefix_valid=%ds, ", new Object[]{Long.valueOf(this.prefixValidLifetime)}) + String.format("prefix_preferred=%ds, ", new Object[]{Long.valueOf(this.prefixPreferredLifetime)}) + String.format("route_info=%ds, ", new Object[]{Long.valueOf(this.routeInfoLifetime)}) + String.format("rdnss=%ds, ", new Object[]{Long.valueOf(this.rdnssLifetime)}) + String.format("dnssl=%ds)", new Object[]{Long.valueOf(this.dnsslLifetime)});
+        return "RaEvent(lifetimes: " + String.format("router=%ds, ", Long.valueOf(this.routerLifetime)) + String.format("prefix_valid=%ds, ", Long.valueOf(this.prefixValidLifetime)) + String.format("prefix_preferred=%ds, ", Long.valueOf(this.prefixPreferredLifetime)) + String.format("route_info=%ds, ", Long.valueOf(this.routeInfoLifetime)) + String.format("rdnss=%ds, ", Long.valueOf(this.rdnssLifetime)) + String.format("dnssl=%ds)", Long.valueOf(this.dnsslLifetime));
     }
 
     public boolean equals(Object obj) {
@@ -64,19 +71,17 @@ public final class RaEvent implements IpConnectivityLog.Event {
             return false;
         }
         RaEvent other = (RaEvent) obj;
-        if (this.routerLifetime == other.routerLifetime && this.prefixValidLifetime == other.prefixValidLifetime && this.prefixPreferredLifetime == other.prefixPreferredLifetime && this.routeInfoLifetime == other.routeInfoLifetime && this.rdnssLifetime == other.rdnssLifetime && this.dnsslLifetime == other.dnsslLifetime) {
-            return true;
-        }
-        return false;
+        return this.routerLifetime == other.routerLifetime && this.prefixValidLifetime == other.prefixValidLifetime && this.prefixPreferredLifetime == other.prefixPreferredLifetime && this.routeInfoLifetime == other.routeInfoLifetime && this.rdnssLifetime == other.rdnssLifetime && this.dnsslLifetime == other.dnsslLifetime;
     }
 
+    /* loaded from: classes3.dex */
     public static final class Builder {
-        long dnsslLifetime = -1;
-        long prefixPreferredLifetime = -1;
-        long prefixValidLifetime = -1;
-        long rdnssLifetime = -1;
-        long routeInfoLifetime = -1;
         long routerLifetime = -1;
+        long prefixValidLifetime = -1;
+        long prefixPreferredLifetime = -1;
+        long routeInfoLifetime = -1;
+        long rdnssLifetime = -1;
+        long dnsslLifetime = -1;
 
         public RaEvent build() {
             return new RaEvent(this.routerLifetime, this.prefixValidLifetime, this.prefixPreferredLifetime, this.routeInfoLifetime, this.rdnssLifetime, this.dnsslLifetime);

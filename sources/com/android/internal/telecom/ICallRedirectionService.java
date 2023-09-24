@@ -1,26 +1,31 @@
 package com.android.internal.telecom;
 
 import android.net.Uri;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.telecom.PhoneAccountHandle;
 import com.android.internal.telecom.ICallRedirectionAdapter;
 
+/* loaded from: classes4.dex */
 public interface ICallRedirectionService extends IInterface {
     void placeCall(ICallRedirectionAdapter iCallRedirectionAdapter, Uri uri, PhoneAccountHandle phoneAccountHandle, boolean z) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements ICallRedirectionService {
+        @Override // com.android.internal.telecom.ICallRedirectionService
         public void placeCall(ICallRedirectionAdapter adapter, Uri handle, PhoneAccountHandle initialPhoneAccount, boolean allowInteractiveResponse) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements ICallRedirectionService {
         private static final String DESCRIPTOR = "com.android.internal.telecom.ICallRedirectionService";
         static final int TRANSACTION_placeCall = 1;
@@ -34,51 +39,53 @@ public interface ICallRedirectionService extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof ICallRedirectionService)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof ICallRedirectionService)) {
+                return (ICallRedirectionService) iin;
             }
-            return (ICallRedirectionService) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
 
         public static String getDefaultTransactionName(int transactionCode) {
-            if (transactionCode != 1) {
-                return null;
+            if (transactionCode == 1) {
+                return "placeCall";
             }
-            return "placeCall";
+            return null;
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
             Uri _arg1;
-            if (code == 1) {
-                data.enforceInterface(DESCRIPTOR);
-                ICallRedirectionAdapter _arg0 = ICallRedirectionAdapter.Stub.asInterface(data.readStrongBinder());
-                PhoneAccountHandle _arg2 = null;
-                if (data.readInt() != 0) {
-                    _arg1 = Uri.CREATOR.createFromParcel(data);
-                } else {
-                    _arg1 = null;
+            if (code != 1) {
+                if (code == 1598968902) {
+                    reply.writeString(DESCRIPTOR);
+                    return true;
                 }
-                if (data.readInt() != 0) {
-                    _arg2 = PhoneAccountHandle.CREATOR.createFromParcel(data);
-                }
-                placeCall(_arg0, _arg1, _arg2, data.readInt() != 0);
-                return true;
-            } else if (code != 1598968902) {
                 return super.onTransact(code, data, reply, flags);
-            } else {
-                reply.writeString(DESCRIPTOR);
-                return true;
             }
+            data.enforceInterface(DESCRIPTOR);
+            ICallRedirectionAdapter _arg0 = ICallRedirectionAdapter.Stub.asInterface(data.readStrongBinder());
+            if (data.readInt() != 0) {
+                _arg1 = Uri.CREATOR.createFromParcel(data);
+            } else {
+                _arg1 = null;
+            }
+            PhoneAccountHandle _arg2 = data.readInt() != 0 ? PhoneAccountHandle.CREATOR.createFromParcel(data) : null;
+            boolean _arg3 = data.readInt() != 0;
+            placeCall(_arg0, _arg1, _arg2, _arg3);
+            return true;
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements ICallRedirectionService {
             public static ICallRedirectionService sDefaultImpl;
             private IBinder mRemote;
@@ -87,6 +94,7 @@ public interface ICallRedirectionService extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -95,6 +103,7 @@ public interface ICallRedirectionService extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // com.android.internal.telecom.ICallRedirectionService
             public void placeCall(ICallRedirectionAdapter adapter, Uri handle, PhoneAccountHandle initialPhoneAccount, boolean allowInteractiveResponse) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -112,10 +121,9 @@ public interface ICallRedirectionService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(allowInteractiveResponse);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(allowInteractiveResponse ? 1 : 0);
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().placeCall(adapter, handle, initialPhoneAccount, allowInteractiveResponse);
                     }
                 } finally {
@@ -125,11 +133,11 @@ public interface ICallRedirectionService extends IInterface {
         }
 
         public static boolean setDefaultImpl(ICallRedirectionService impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static ICallRedirectionService getDefaultImpl() {

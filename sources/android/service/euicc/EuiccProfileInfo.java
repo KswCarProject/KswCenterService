@@ -2,8 +2,8 @@ package android.service.euicc;
 
 import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.service.carrier.CarrierIdentifier;
 import android.telephony.UiccAccessRule;
 import android.text.TextUtils;
@@ -14,12 +14,17 @@ import java.util.List;
 import java.util.Objects;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class EuiccProfileInfo implements Parcelable {
-    public static final Parcelable.Creator<EuiccProfileInfo> CREATOR = new Parcelable.Creator<EuiccProfileInfo>() {
+    public static final Parcelable.Creator<EuiccProfileInfo> CREATOR = new Parcelable.Creator<EuiccProfileInfo>() { // from class: android.service.euicc.EuiccProfileInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public EuiccProfileInfo createFromParcel(Parcel in) {
             return new EuiccProfileInfo(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public EuiccProfileInfo[] newArray(int size) {
             return new EuiccProfileInfo[size];
         }
@@ -34,53 +39,46 @@ public final class EuiccProfileInfo implements Parcelable {
     public static final int PROFILE_STATE_DISABLED = 0;
     public static final int PROFILE_STATE_ENABLED = 1;
     public static final int PROFILE_STATE_UNSET = -1;
-    /* access modifiers changed from: private */
-    public final UiccAccessRule[] mAccessRules;
-    /* access modifiers changed from: private */
-    public final CarrierIdentifier mCarrierIdentifier;
-    /* access modifiers changed from: private */
-    public final String mIccid;
-    /* access modifiers changed from: private */
-    public final String mNickname;
-    /* access modifiers changed from: private */
-    public final int mPolicyRules;
-    /* access modifiers changed from: private */
-    public final int mProfileClass;
-    /* access modifiers changed from: private */
-    public final String mProfileName;
-    /* access modifiers changed from: private */
-    public final String mServiceProviderName;
-    /* access modifiers changed from: private */
-    public final int mState;
+    private final UiccAccessRule[] mAccessRules;
+    private final CarrierIdentifier mCarrierIdentifier;
+    private final String mIccid;
+    private final String mNickname;
+    private final int mPolicyRules;
+    private final int mProfileClass;
+    private final String mProfileName;
+    private final String mServiceProviderName;
+    private final int mState;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface PolicyRule {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface ProfileClass {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface ProfileState {
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public EuiccProfileInfo(String iccid, UiccAccessRule[] accessRules, String nickname) {
-        if (TextUtils.isDigitsOnly(iccid)) {
-            this.mIccid = iccid;
-            this.mAccessRules = accessRules;
-            this.mNickname = nickname;
-            this.mServiceProviderName = null;
-            this.mProfileName = null;
-            this.mProfileClass = -1;
-            this.mState = -1;
-            this.mCarrierIdentifier = null;
-            this.mPolicyRules = 0;
-            return;
+        if (!TextUtils.isDigitsOnly(iccid)) {
+            throw new IllegalArgumentException("iccid contains invalid characters: " + iccid);
         }
-        throw new IllegalArgumentException("iccid contains invalid characters: " + iccid);
+        this.mIccid = iccid;
+        this.mAccessRules = accessRules;
+        this.mNickname = nickname;
+        this.mServiceProviderName = null;
+        this.mProfileName = null;
+        this.mProfileClass = -1;
+        this.mState = -1;
+        this.mCarrierIdentifier = null;
+        this.mPolicyRules = 0;
     }
 
     private EuiccProfileInfo(Parcel in) {
@@ -90,7 +88,8 @@ public final class EuiccProfileInfo implements Parcelable {
         this.mProfileName = in.readString();
         this.mProfileClass = in.readInt();
         this.mState = in.readInt();
-        if (in.readByte() == 1) {
+        byte exist = in.readByte();
+        if (exist == 1) {
             this.mCarrierIdentifier = CarrierIdentifier.CREATOR.createFromParcel(in);
         } else {
             this.mCarrierIdentifier = null;
@@ -99,6 +98,7 @@ public final class EuiccProfileInfo implements Parcelable {
         this.mAccessRules = (UiccAccessRule[]) in.createTypedArray(UiccAccessRule.CREATOR);
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.mIccid);
         dest.writeString(this.mNickname);
@@ -116,10 +116,12 @@ public final class EuiccProfileInfo implements Parcelable {
         dest.writeTypedArray(this.mAccessRules, flags);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    /* loaded from: classes3.dex */
     public static final class Builder {
         private List<UiccAccessRule> mAccessRules;
         private CarrierIdentifier mCarrierIdentifier;
@@ -132,11 +134,10 @@ public final class EuiccProfileInfo implements Parcelable {
         private int mState;
 
         public Builder(String value) {
-            if (TextUtils.isDigitsOnly(value)) {
-                this.mIccid = value;
-                return;
+            if (!TextUtils.isDigitsOnly(value)) {
+                throw new IllegalArgumentException("iccid contains invalid characters: " + value);
             }
-            throw new IllegalArgumentException("iccid contains invalid characters: " + value);
+            this.mIccid = value;
         }
 
         public Builder(EuiccProfileInfo baseProfile) {
@@ -152,18 +153,18 @@ public final class EuiccProfileInfo implements Parcelable {
         }
 
         public EuiccProfileInfo build() {
-            if (this.mIccid != null) {
-                return new EuiccProfileInfo(this.mIccid, this.mNickname, this.mServiceProviderName, this.mProfileName, this.mProfileClass, this.mState, this.mCarrierIdentifier, this.mPolicyRules, this.mAccessRules);
+            if (this.mIccid == null) {
+                throw new IllegalStateException("ICCID must be set for a profile.");
             }
-            throw new IllegalStateException("ICCID must be set for a profile.");
+            return new EuiccProfileInfo(this.mIccid, this.mNickname, this.mServiceProviderName, this.mProfileName, this.mProfileClass, this.mState, this.mCarrierIdentifier, this.mPolicyRules, this.mAccessRules);
         }
 
         public Builder setIccid(String value) {
-            if (TextUtils.isDigitsOnly(value)) {
-                this.mIccid = value;
-                return this;
+            if (!TextUtils.isDigitsOnly(value)) {
+                throw new IllegalArgumentException("iccid contains invalid characters: " + value);
             }
-            throw new IllegalArgumentException("iccid contains invalid characters: " + value);
+            this.mIccid = value;
+            return this;
         }
 
         public Builder setNickname(String value) {
@@ -216,10 +217,10 @@ public final class EuiccProfileInfo implements Parcelable {
         this.mState = state;
         this.mCarrierIdentifier = carrierIdentifier;
         this.mPolicyRules = policyRules;
-        if (accessRules == null || accessRules.size() <= 0) {
-            this.mAccessRules = null;
-        } else {
+        if (accessRules != null && accessRules.size() > 0) {
             this.mAccessRules = (UiccAccessRule[]) accessRules.toArray(new UiccAccessRule[accessRules.size()]);
+        } else {
+            this.mAccessRules = null;
         }
     }
 
@@ -278,14 +279,15 @@ public final class EuiccProfileInfo implements Parcelable {
             return false;
         }
         EuiccProfileInfo that = (EuiccProfileInfo) obj;
-        if (!Objects.equals(this.mIccid, that.mIccid) || !Objects.equals(this.mNickname, that.mNickname) || !Objects.equals(this.mServiceProviderName, that.mServiceProviderName) || !Objects.equals(this.mProfileName, that.mProfileName) || this.mProfileClass != that.mProfileClass || this.mState != that.mState || !Objects.equals(this.mCarrierIdentifier, that.mCarrierIdentifier) || this.mPolicyRules != that.mPolicyRules || !Arrays.equals(this.mAccessRules, that.mAccessRules)) {
-            return false;
+        if (Objects.equals(this.mIccid, that.mIccid) && Objects.equals(this.mNickname, that.mNickname) && Objects.equals(this.mServiceProviderName, that.mServiceProviderName) && Objects.equals(this.mProfileName, that.mProfileName) && this.mProfileClass == that.mProfileClass && this.mState == that.mState && Objects.equals(this.mCarrierIdentifier, that.mCarrierIdentifier) && this.mPolicyRules == that.mPolicyRules && Arrays.equals(this.mAccessRules, that.mAccessRules)) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        return (((((((((((((((((1 * 31) + Objects.hashCode(this.mIccid)) * 31) + Objects.hashCode(this.mNickname)) * 31) + Objects.hashCode(this.mServiceProviderName)) * 31) + Objects.hashCode(this.mProfileName)) * 31) + this.mProfileClass) * 31) + this.mState) * 31) + Objects.hashCode(this.mCarrierIdentifier)) * 31) + this.mPolicyRules) * 31) + Arrays.hashCode(this.mAccessRules);
+        int result = (1 * 31) + Objects.hashCode(this.mIccid);
+        return (((((((((((((((result * 31) + Objects.hashCode(this.mNickname)) * 31) + Objects.hashCode(this.mServiceProviderName)) * 31) + Objects.hashCode(this.mProfileName)) * 31) + this.mProfileClass) * 31) + this.mState) * 31) + Objects.hashCode(this.mCarrierIdentifier)) * 31) + this.mPolicyRules) * 31) + Arrays.hashCode(this.mAccessRules);
     }
 
     public String toString() {

@@ -1,34 +1,22 @@
 package android.content.res;
 
 import android.annotation.UnsupportedAppUsage;
-import android.content.pm.ApplicationInfo;
+import android.content.p002pm.ApplicationInfo;
 import android.graphics.Canvas;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.Region;
 import android.net.wifi.WifiEnterpriseConfig;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.WindowManager;
 
+/* loaded from: classes.dex */
 public class CompatibilityInfo implements Parcelable {
     private static final int ALWAYS_NEEDS_COMPAT = 2;
-    @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
-    public static final Parcelable.Creator<CompatibilityInfo> CREATOR = new Parcelable.Creator<CompatibilityInfo>() {
-        public CompatibilityInfo createFromParcel(Parcel source) {
-            return new CompatibilityInfo(source);
-        }
-
-        public CompatibilityInfo[] newArray(int size) {
-            return new CompatibilityInfo[size];
-        }
-    };
-    @UnsupportedAppUsage
-    public static final CompatibilityInfo DEFAULT_COMPATIBILITY_INFO = new CompatibilityInfo() {
-    };
     public static final int DEFAULT_NORMAL_SHORT_DIMENSION = 320;
     public static final float MAXIMUM_ASPECT_RATIO = 1.7791667f;
     private static final int NEEDS_COMPAT_RES = 16;
@@ -41,13 +29,60 @@ public class CompatibilityInfo implements Parcelable {
     @UnsupportedAppUsage
     public final float applicationScale;
     private final int mCompatibilityFlags;
+    @UnsupportedAppUsage
+    public static final CompatibilityInfo DEFAULT_COMPATIBILITY_INFO = new CompatibilityInfo() { // from class: android.content.res.CompatibilityInfo.1
+    };
+    @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
+    public static final Parcelable.Creator<CompatibilityInfo> CREATOR = new Parcelable.Creator<CompatibilityInfo>() { // from class: android.content.res.CompatibilityInfo.2
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public CompatibilityInfo createFromParcel(Parcel source) {
+            return new CompatibilityInfo(source);
+        }
+
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public CompatibilityInfo[] newArray(int size) {
+            return new CompatibilityInfo[size];
+        }
+    };
 
     @UnsupportedAppUsage
     public CompatibilityInfo(ApplicationInfo appInfo, int screenLayout, int sw, boolean forceCompat) {
-        int compatFlags;
         int required;
-        int compatFlags2 = appInfo.targetSdkVersion < 26 ? 0 | 16 : 0;
-        if (appInfo.requiresSmallestWidthDp == 0 && appInfo.compatibleWidthLimitDp == 0 && appInfo.largestWidthLimitDp == 0) {
+        int compatFlags = appInfo.targetSdkVersion < 26 ? 0 | 16 : 0;
+        if (appInfo.requiresSmallestWidthDp != 0 || appInfo.compatibleWidthLimitDp != 0 || appInfo.largestWidthLimitDp != 0) {
+            int EXPANDABLE = appInfo.requiresSmallestWidthDp;
+            if (EXPANDABLE != 0) {
+                required = appInfo.requiresSmallestWidthDp;
+            } else {
+                required = appInfo.compatibleWidthLimitDp;
+            }
+            required = required == 0 ? appInfo.largestWidthLimitDp : required;
+            int compat = appInfo.compatibleWidthLimitDp != 0 ? appInfo.compatibleWidthLimitDp : required;
+            compat = compat < required ? required : compat;
+            int largest = appInfo.largestWidthLimitDp;
+            if (required > 320) {
+                compatFlags |= 4;
+            } else if (largest != 0 && sw > largest) {
+                compatFlags |= 10;
+            } else if (compat >= sw) {
+                compatFlags |= 4;
+            } else if (forceCompat) {
+                compatFlags |= 8;
+            }
+            int density = appInfo.getOverrideDensity();
+            if (density != 0) {
+                this.applicationDensity = density;
+                this.applicationScale = DisplayMetrics.DENSITY_DEVICE / this.applicationDensity;
+                this.applicationInvertedScale = 1.0f / this.applicationScale;
+                compatFlags |= 1;
+            } else {
+                this.applicationDensity = DisplayMetrics.DENSITY_DEVICE;
+                this.applicationScale = 1.0f;
+                this.applicationInvertedScale = 1.0f;
+            }
+        } else {
             int sizeInfo = 0;
             boolean anyResizeable = false;
             if ((appInfo.flags & 2048) != 0) {
@@ -67,70 +102,42 @@ public class CompatibilityInfo implements Parcelable {
                 anyResizeable = true;
                 sizeInfo |= 2;
             }
-            sizeInfo = forceCompat ? sizeInfo & -3 : sizeInfo;
-            compatFlags = compatFlags2 | 8;
+            sizeInfo = forceCompat ? sizeInfo & (-3) : sizeInfo;
+            compatFlags |= 8;
             switch (screenLayout & 15) {
                 case 3:
-                    compatFlags = (sizeInfo & 8) != 0 ? compatFlags & -9 : compatFlags;
+                    compatFlags = (sizeInfo & 8) != 0 ? compatFlags & (-9) : compatFlags;
                     if ((appInfo.flags & 2048) != 0) {
                         compatFlags |= 4;
                         break;
                     }
                     break;
                 case 4:
-                    compatFlags = (sizeInfo & 32) != 0 ? compatFlags & -9 : compatFlags;
+                    compatFlags = (sizeInfo & 32) != 0 ? compatFlags & (-9) : compatFlags;
                     if ((appInfo.flags & 524288) != 0) {
                         compatFlags |= 4;
                         break;
                     }
                     break;
             }
-            if ((268435456 & screenLayout) == 0) {
-                compatFlags = (compatFlags & -9) | 4;
-            } else if ((sizeInfo & 2) != 0) {
-                compatFlags &= -9;
-            } else if (!anyResizeable) {
-                compatFlags |= 2;
-            }
-            int density = appInfo.getOverrideDensity();
-            if ((appInfo.flags & 8192) == 0) {
-                this.applicationDensity = 160;
-                this.applicationScale = ((float) DisplayMetrics.DENSITY_DEVICE) / 160.0f;
-                this.applicationInvertedScale = 1.0f / this.applicationScale;
-                compatFlags |= 1;
-            } else if (density != 0) {
-                this.applicationDensity = density;
-                this.applicationScale = ((float) DisplayMetrics.DENSITY_DEVICE) / ((float) this.applicationDensity);
-                this.applicationInvertedScale = 1.0f / this.applicationScale;
-                compatFlags |= 1;
+            if ((268435456 & screenLayout) != 0) {
+                if ((sizeInfo & 2) != 0) {
+                    compatFlags &= -9;
+                } else if (!anyResizeable) {
+                    compatFlags |= 2;
+                }
             } else {
-                this.applicationDensity = DisplayMetrics.DENSITY_DEVICE;
-                this.applicationScale = 1.0f;
-                this.applicationInvertedScale = 1.0f;
-            }
-        } else {
-            if (appInfo.requiresSmallestWidthDp != 0) {
-                required = appInfo.requiresSmallestWidthDp;
-            } else {
-                required = appInfo.compatibleWidthLimitDp;
-            }
-            required = required == 0 ? appInfo.largestWidthLimitDp : required;
-            int compat = appInfo.compatibleWidthLimitDp != 0 ? appInfo.compatibleWidthLimitDp : required;
-            compat = compat < required ? required : compat;
-            int largest = appInfo.largestWidthLimitDp;
-            if (required > 320) {
-                compatFlags2 |= 4;
-            } else if (largest != 0 && sw > largest) {
-                compatFlags2 |= 10;
-            } else if (compat >= sw) {
-                compatFlags2 |= 4;
-            } else if (forceCompat) {
-                compatFlags2 |= 8;
+                compatFlags = (compatFlags & (-9)) | 4;
             }
             int density2 = appInfo.getOverrideDensity();
-            if (density2 != 0) {
+            if ((appInfo.flags & 8192) == 0) {
+                this.applicationDensity = 160;
+                this.applicationScale = DisplayMetrics.DENSITY_DEVICE / 160.0f;
+                this.applicationInvertedScale = 1.0f / this.applicationScale;
+                compatFlags |= 1;
+            } else if (density2 != 0) {
                 this.applicationDensity = density2;
-                this.applicationScale = ((float) DisplayMetrics.DENSITY_DEVICE) / ((float) this.applicationDensity);
+                this.applicationScale = DisplayMetrics.DENSITY_DEVICE / this.applicationDensity;
                 this.applicationInvertedScale = 1.0f / this.applicationScale;
                 compatFlags |= 1;
             } else {
@@ -140,9 +147,9 @@ public class CompatibilityInfo implements Parcelable {
             }
         }
         this.mCompatibilityFlags = compatFlags;
-        Log.d(TAG, "mCompatibilityFlags - " + Integer.toHexString(this.mCompatibilityFlags));
-        Log.d(TAG, "applicationDensity - " + this.applicationDensity);
-        Log.d(TAG, "applicationScale - " + this.applicationScale);
+        Log.m72d(TAG, "mCompatibilityFlags - " + Integer.toHexString(this.mCompatibilityFlags));
+        Log.m72d(TAG, "applicationDensity - " + this.applicationDensity);
+        Log.m72d(TAG, "applicationScale - " + this.applicationScale);
     }
 
     private CompatibilityInfo(int compFlags, int dens, float scale, float invertedScale) {
@@ -187,6 +194,7 @@ public class CompatibilityInfo implements Parcelable {
         return null;
     }
 
+    /* loaded from: classes.dex */
     public class Translator {
         @UnsupportedAppUsage
         public final float applicationInvertedScale;
@@ -196,16 +204,16 @@ public class CompatibilityInfo implements Parcelable {
         private Region mTouchableAreaBuffer;
         private Rect mVisibleInsetsBuffer;
 
-        Translator(float applicationScale2, float applicationInvertedScale2) {
+        Translator(float applicationScale, float applicationInvertedScale) {
             this.mContentInsetsBuffer = null;
             this.mVisibleInsetsBuffer = null;
             this.mTouchableAreaBuffer = null;
-            this.applicationScale = applicationScale2;
-            this.applicationInvertedScale = applicationInvertedScale2;
+            this.applicationScale = applicationScale;
+            this.applicationInvertedScale = applicationInvertedScale;
         }
 
-        Translator(CompatibilityInfo this$02) {
-            this(this$02.applicationScale, this$02.applicationInvertedScale);
+        Translator(CompatibilityInfo this$0) {
+            this(this$0.applicationScale, this$0.applicationInvertedScale);
         }
 
         @UnsupportedAppUsage
@@ -223,7 +231,8 @@ public class CompatibilityInfo implements Parcelable {
             if (this.applicationScale == 1.5f) {
                 canvas.translate(0.0026143792f, 0.0026143792f);
             }
-            canvas.scale(this.applicationScale, this.applicationScale);
+            float tinyOffset = this.applicationScale;
+            canvas.scale(tinyOffset, this.applicationScale);
         }
 
         @UnsupportedAppUsage
@@ -249,8 +258,8 @@ public class CompatibilityInfo implements Parcelable {
         public void translatePointInScreenToAppWindow(PointF point) {
             float scale = this.applicationInvertedScale;
             if (scale != 1.0f) {
-                point.x *= scale;
-                point.y *= scale;
+                point.f61x *= scale;
+                point.f62y *= scale;
             }
         }
 
@@ -297,34 +306,35 @@ public class CompatibilityInfo implements Parcelable {
         if (isScalingRequired()) {
             float invertedRatio = this.applicationInvertedScale;
             inoutDm.density = inoutDm.noncompatDensity * invertedRatio;
-            inoutDm.densityDpi = (int) ((((float) inoutDm.noncompatDensityDpi) * invertedRatio) + 0.5f);
+            inoutDm.densityDpi = (int) ((inoutDm.noncompatDensityDpi * invertedRatio) + 0.5f);
             inoutDm.scaledDensity = inoutDm.noncompatScaledDensity * invertedRatio;
             inoutDm.xdpi = inoutDm.noncompatXdpi * invertedRatio;
             inoutDm.ydpi = inoutDm.noncompatYdpi * invertedRatio;
-            inoutDm.widthPixels = (int) ((((float) inoutDm.widthPixels) * invertedRatio) + 0.5f);
-            inoutDm.heightPixels = (int) ((((float) inoutDm.heightPixels) * invertedRatio) + 0.5f);
+            inoutDm.widthPixels = (int) ((inoutDm.widthPixels * invertedRatio) + 0.5f);
+            inoutDm.heightPixels = (int) ((inoutDm.heightPixels * invertedRatio) + 0.5f);
         }
     }
 
     public void applyToConfiguration(int displayDensity, Configuration inoutConfig) {
         if (!supportsScreen()) {
-            inoutConfig.screenLayout = (inoutConfig.screenLayout & -16) | 2;
+            inoutConfig.screenLayout = (inoutConfig.screenLayout & (-16)) | 2;
             inoutConfig.screenWidthDp = inoutConfig.compatScreenWidthDp;
             inoutConfig.screenHeightDp = inoutConfig.compatScreenHeightDp;
             inoutConfig.smallestScreenWidthDp = inoutConfig.compatSmallestScreenWidthDp;
         }
         inoutConfig.densityDpi = displayDensity;
         if (isScalingRequired()) {
-            inoutConfig.densityDpi = (int) ((((float) inoutConfig.densityDpi) * this.applicationInvertedScale) + 0.5f);
+            float invertedRatio = this.applicationInvertedScale;
+            inoutConfig.densityDpi = (int) ((inoutConfig.densityDpi * invertedRatio) + 0.5f);
         }
     }
 
     @UnsupportedAppUsage
     public static float computeCompatibleScaling(DisplayMetrics dm, DisplayMetrics outDm) {
-        int longSize;
         int shortSize;
-        int newHeight;
+        int longSize;
         int newWidth;
+        int newHeight;
         int width = dm.noncompatWidthPixels;
         int height = dm.noncompatHeightPixels;
         if (width < height) {
@@ -335,11 +345,11 @@ public class CompatibilityInfo implements Parcelable {
             longSize = width;
         }
         int newShortSize = (int) ((dm.density * 320.0f) + 0.5f);
-        float aspect = ((float) longSize) / ((float) shortSize);
+        float aspect = longSize / shortSize;
         if (aspect > 1.7791667f) {
             aspect = 1.7791667f;
         }
-        int newLongSize = (int) ((((float) newShortSize) * aspect) + 0.5f);
+        int newLongSize = (int) ((newShortSize * aspect) + 0.5f);
         if (width < height) {
             newWidth = newShortSize;
             newHeight = newLongSize;
@@ -347,8 +357,8 @@ public class CompatibilityInfo implements Parcelable {
             newWidth = newLongSize;
             newHeight = newShortSize;
         }
-        float sw = ((float) width) / ((float) newWidth);
-        float sh = ((float) height) / ((float) newHeight);
+        float sw = width / newWidth;
+        float sh = height / newHeight;
         float scale = sw < sh ? sw : sh;
         if (scale < 1.0f) {
             scale = 1.0f;
@@ -366,7 +376,10 @@ public class CompatibilityInfo implements Parcelable {
         }
         try {
             CompatibilityInfo oc = (CompatibilityInfo) o;
-            if (this.mCompatibilityFlags == oc.mCompatibilityFlags && this.applicationDensity == oc.applicationDensity && this.applicationScale == oc.applicationScale && this.applicationInvertedScale == oc.applicationInvertedScale) {
+            if (this.mCompatibilityFlags != oc.mCompatibilityFlags || this.applicationDensity != oc.applicationDensity || this.applicationScale != oc.applicationScale) {
+                return false;
+            }
+            if (this.applicationInvertedScale == oc.applicationInvertedScale) {
                 return true;
             }
             return false;
@@ -399,13 +412,16 @@ public class CompatibilityInfo implements Parcelable {
     }
 
     public int hashCode() {
-        return (((((((17 * 31) + this.mCompatibilityFlags) * 31) + this.applicationDensity) * 31) + Float.floatToIntBits(this.applicationScale)) * 31) + Float.floatToIntBits(this.applicationInvertedScale);
+        int result = (17 * 31) + this.mCompatibilityFlags;
+        return (((((result * 31) + this.applicationDensity) * 31) + Float.floatToIntBits(this.applicationScale)) * 31) + Float.floatToIntBits(this.applicationInvertedScale);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mCompatibilityFlags);
         dest.writeInt(this.applicationDensity);

@@ -1,24 +1,29 @@
 package android.app.contentsuggestions;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import java.util.List;
 
+/* loaded from: classes.dex */
 public interface IClassificationsCallback extends IInterface {
     void onContentClassificationsAvailable(int i, List<ContentClassification> list) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements IClassificationsCallback {
-        public void onContentClassificationsAvailable(int statusCode, List<ContentClassification> list) throws RemoteException {
+        @Override // android.app.contentsuggestions.IClassificationsCallback
+        public void onContentClassificationsAvailable(int statusCode, List<ContentClassification> classifications) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements IClassificationsCallback {
         private static final String DESCRIPTOR = "android.app.contentsuggestions.IClassificationsCallback";
         static final int TRANSACTION_onContentClassificationsAvailable = 1;
@@ -32,40 +37,46 @@ public interface IClassificationsCallback extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IClassificationsCallback)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IClassificationsCallback)) {
+                return (IClassificationsCallback) iin;
             }
-            return (IClassificationsCallback) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
 
         public static String getDefaultTransactionName(int transactionCode) {
-            if (transactionCode != 1) {
-                return null;
+            if (transactionCode == 1) {
+                return "onContentClassificationsAvailable";
             }
-            return "onContentClassificationsAvailable";
+            return null;
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code == 1) {
-                data.enforceInterface(DESCRIPTOR);
-                onContentClassificationsAvailable(data.readInt(), data.createTypedArrayList(ContentClassification.CREATOR));
-                return true;
-            } else if (code != 1598968902) {
+            if (code != 1) {
+                if (code == 1598968902) {
+                    reply.writeString(DESCRIPTOR);
+                    return true;
+                }
                 return super.onTransact(code, data, reply, flags);
-            } else {
-                reply.writeString(DESCRIPTOR);
-                return true;
             }
+            data.enforceInterface(DESCRIPTOR);
+            int _arg0 = data.readInt();
+            List<ContentClassification> _arg1 = data.createTypedArrayList(ContentClassification.CREATOR);
+            onContentClassificationsAvailable(_arg0, _arg1);
+            return true;
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements IClassificationsCallback {
             public static IClassificationsCallback sDefaultImpl;
             private IBinder mRemote;
@@ -74,6 +85,7 @@ public interface IClassificationsCallback extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -82,15 +94,15 @@ public interface IClassificationsCallback extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.app.contentsuggestions.IClassificationsCallback
             public void onContentClassificationsAvailable(int statusCode, List<ContentClassification> classifications) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(statusCode);
                     _data.writeTypedList(classifications);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onContentClassificationsAvailable(statusCode, classifications);
                     }
                 } finally {
@@ -100,11 +112,11 @@ public interface IClassificationsCallback extends IInterface {
         }
 
         public static boolean setDefaultImpl(IClassificationsCallback impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IClassificationsCallback getDefaultImpl() {

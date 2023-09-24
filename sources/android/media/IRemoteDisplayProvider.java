@@ -1,12 +1,13 @@
 package android.media;
 
 import android.media.IRemoteDisplayCallback;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes3.dex */
 public interface IRemoteDisplayProvider extends IInterface {
     void adjustVolume(String str, int i) throws RemoteException;
 
@@ -20,30 +21,39 @@ public interface IRemoteDisplayProvider extends IInterface {
 
     void setVolume(String str, int i) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements IRemoteDisplayProvider {
+        @Override // android.media.IRemoteDisplayProvider
         public void setCallback(IRemoteDisplayCallback callback) throws RemoteException {
         }
 
+        @Override // android.media.IRemoteDisplayProvider
         public void setDiscoveryMode(int mode) throws RemoteException {
         }
 
+        @Override // android.media.IRemoteDisplayProvider
         public void connect(String id) throws RemoteException {
         }
 
+        @Override // android.media.IRemoteDisplayProvider
         public void disconnect(String id) throws RemoteException {
         }
 
+        @Override // android.media.IRemoteDisplayProvider
         public void setVolume(String id, int volume) throws RemoteException {
         }
 
+        @Override // android.media.IRemoteDisplayProvider
         public void adjustVolume(String id, int delta) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements IRemoteDisplayProvider {
         private static final String DESCRIPTOR = "android.media.IRemoteDisplayProvider";
         static final int TRANSACTION_adjustVolume = 6;
@@ -62,12 +72,13 @@ public interface IRemoteDisplayProvider extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IRemoteDisplayProvider)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IRemoteDisplayProvider)) {
+                return (IRemoteDisplayProvider) iin;
             }
-            return (IRemoteDisplayProvider) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -91,46 +102,56 @@ public interface IRemoteDisplayProvider extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        setCallback(IRemoteDisplayCallback.Stub.asInterface(data.readStrongBinder()));
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        setDiscoveryMode(data.readInt());
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        connect(data.readString());
-                        return true;
-                    case 4:
-                        data.enforceInterface(DESCRIPTOR);
-                        disconnect(data.readString());
-                        return true;
-                    case 5:
-                        data.enforceInterface(DESCRIPTOR);
-                        setVolume(data.readString(), data.readInt());
-                        return true;
-                    case 6:
-                        data.enforceInterface(DESCRIPTOR);
-                        adjustVolume(data.readString(), data.readInt());
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    IRemoteDisplayCallback _arg0 = IRemoteDisplayCallback.Stub.asInterface(data.readStrongBinder());
+                    setCallback(_arg0);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    setDiscoveryMode(_arg02);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg03 = data.readString();
+                    connect(_arg03);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg04 = data.readString();
+                    disconnect(_arg04);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg05 = data.readString();
+                    int _arg1 = data.readInt();
+                    setVolume(_arg05, _arg1);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg06 = data.readString();
+                    int _arg12 = data.readInt();
+                    adjustVolume(_arg06, _arg12);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements IRemoteDisplayProvider {
             public static IRemoteDisplayProvider sDefaultImpl;
             private IBinder mRemote;
@@ -139,6 +160,7 @@ public interface IRemoteDisplayProvider extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -147,14 +169,14 @@ public interface IRemoteDisplayProvider extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.media.IRemoteDisplayProvider
             public void setCallback(IRemoteDisplayCallback callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().setCallback(callback);
                     }
                 } finally {
@@ -162,14 +184,14 @@ public interface IRemoteDisplayProvider extends IInterface {
                 }
             }
 
+            @Override // android.media.IRemoteDisplayProvider
             public void setDiscoveryMode(int mode) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(mode);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().setDiscoveryMode(mode);
                     }
                 } finally {
@@ -177,14 +199,14 @@ public interface IRemoteDisplayProvider extends IInterface {
                 }
             }
 
+            @Override // android.media.IRemoteDisplayProvider
             public void connect(String id) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(id);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().connect(id);
                     }
                 } finally {
@@ -192,14 +214,14 @@ public interface IRemoteDisplayProvider extends IInterface {
                 }
             }
 
+            @Override // android.media.IRemoteDisplayProvider
             public void disconnect(String id) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(id);
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().disconnect(id);
                     }
                 } finally {
@@ -207,15 +229,15 @@ public interface IRemoteDisplayProvider extends IInterface {
                 }
             }
 
+            @Override // android.media.IRemoteDisplayProvider
             public void setVolume(String id, int volume) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(id);
                     _data.writeInt(volume);
-                    if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(5, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().setVolume(id, volume);
                     }
                 } finally {
@@ -223,15 +245,15 @@ public interface IRemoteDisplayProvider extends IInterface {
                 }
             }
 
+            @Override // android.media.IRemoteDisplayProvider
             public void adjustVolume(String id, int delta) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(id);
                     _data.writeInt(delta);
-                    if (this.mRemote.transact(6, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(6, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().adjustVolume(id, delta);
                     }
                 } finally {
@@ -241,11 +263,11 @@ public interface IRemoteDisplayProvider extends IInterface {
         }
 
         public static boolean setDefaultImpl(IRemoteDisplayProvider impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IRemoteDisplayProvider getDefaultImpl() {

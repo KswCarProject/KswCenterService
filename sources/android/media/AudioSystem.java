@@ -2,14 +2,15 @@ package android.media;
 
 import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
-import android.content.pm.PackageManager;
+import android.content.p002pm.PackageManager;
 import android.media.audiofx.AudioEffect;
 import android.media.audiopolicy.AudioMix;
 import android.util.Log;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.util.ArrayList;
 import java.util.Map;
 
+/* loaded from: classes3.dex */
 public class AudioSystem {
     public static final int AUDIO_FORMAT_AAC = 67108864;
     public static final int AUDIO_FORMAT_APTX = 536870912;
@@ -30,7 +31,6 @@ public class AudioSystem {
     public static final int DEAD_OBJECT = -6;
     private static final boolean DEBUG_VOLUME = false;
     public static final int DEFAULT_MUTE_STREAMS_AFFECTED = 111;
-    public static int[] DEFAULT_STREAM_VOLUME = {5, 7, 7, 15, 7, 7, 15, 7, 15, 15, 15};
     public static final int DEVICE_ALL_HDMI_SYSTEM_AUDIO_AND_SPEAKER = 2883586;
     public static final int DEVICE_BIT_DEFAULT = 1073741824;
     public static final int DEVICE_BIT_IN = Integer.MIN_VALUE;
@@ -243,7 +243,6 @@ public class AudioSystem {
     public static final int NUM_MODES = 4;
     public static final int NUM_STREAMS = 5;
     private static final int NUM_STREAM_TYPES = 11;
-    public static final int OUT_CHANNEL_COUNT_MAX = native_get_FCC_8();
     public static final int PERMISSION_DENIED = -4;
     public static final int PHONE_STATE_INCALL = 2;
     public static final int PHONE_STATE_OFFCALL = 0;
@@ -272,7 +271,6 @@ public class AudioSystem {
     public static final int STREAM_DEFAULT = -1;
     public static final int STREAM_DTMF = 8;
     public static final int STREAM_MUSIC = 3;
-    public static final String[] STREAM_NAMES = {"STREAM_VOICE_CALL", "STREAM_SYSTEM", "STREAM_RING", "STREAM_MUSIC", "STREAM_ALARM", "STREAM_NOTIFICATION", "STREAM_BLUETOOTH_SCO", "STREAM_SYSTEM_ENFORCED", "STREAM_DTMF", "STREAM_TTS", "STREAM_ACCESSIBILITY"};
     public static final int STREAM_NOTIFICATION = 5;
     public static final int STREAM_RING = 2;
     public static final int STREAM_SYSTEM = 1;
@@ -288,15 +286,21 @@ public class AudioSystem {
     private static ErrorCallback mErrorCallback;
     private static DynamicPolicyCallback sDynPolicyCallback;
     private static AudioRecordingCallback sRecordingCallback;
+    public static final int OUT_CHANNEL_COUNT_MAX = native_get_FCC_8();
+    public static final String[] STREAM_NAMES = {"STREAM_VOICE_CALL", "STREAM_SYSTEM", "STREAM_RING", "STREAM_MUSIC", "STREAM_ALARM", "STREAM_NOTIFICATION", "STREAM_BLUETOOTH_SCO", "STREAM_SYSTEM_ENFORCED", "STREAM_DTMF", "STREAM_TTS", "STREAM_ACCESSIBILITY"};
+    public static int[] DEFAULT_STREAM_VOLUME = {5, 7, 7, 15, 7, 7, 15, 7, 15, 15, 15};
 
+    /* loaded from: classes3.dex */
     public interface AudioRecordingCallback {
         void onRecordingConfigurationChanged(int i, int i2, int i3, int i4, int i5, int i6, boolean z, int[] iArr, AudioEffect.Descriptor[] descriptorArr, AudioEffect.Descriptor[] descriptorArr2, int i7, String str);
     }
 
+    /* loaded from: classes3.dex */
     public interface DynamicPolicyCallback {
         void onDynamicPolicyMixStateUpdate(String str, int i);
     }
 
+    /* loaded from: classes3.dex */
     public interface ErrorCallback {
         void onError(int i);
     }
@@ -472,31 +476,31 @@ public class AudioSystem {
     }
 
     public static int audioFormatToBluetoothSourceCodec(int audioFormat) {
-        if (audioFormat == 67108864) {
-            return 1;
-        }
-        if (audioFormat == 520093696) {
+        if (audioFormat != 67108864) {
+            if (audioFormat != 520093696) {
+                if (audioFormat != 536870912) {
+                    if (audioFormat != 553648128) {
+                        if (audioFormat != 587202560) {
+                            if (audioFormat != 637534208) {
+                                if (audioFormat != 654311424) {
+                                    if (audioFormat == 704643072) {
+                                        return 6;
+                                    }
+                                    return 1000000;
+                                }
+                                return 4;
+                            }
+                            return 8;
+                        }
+                        return 5;
+                    }
+                    return 3;
+                }
+                return 2;
+            }
             return 0;
         }
-        if (audioFormat == 536870912) {
-            return 2;
-        }
-        if (audioFormat == 553648128) {
-            return 3;
-        }
-        if (audioFormat == 587202560) {
-            return 5;
-        }
-        if (audioFormat == 637534208) {
-            return 8;
-        }
-        if (audioFormat == 654311424) {
-            return 4;
-        }
-        if (audioFormat != 704643072) {
-            return 1000000;
-        }
-        return 6;
+        return 1;
     }
 
     @UnsupportedAppUsage
@@ -537,14 +541,13 @@ public class AudioSystem {
                 cb = sDynPolicyCallback;
             }
         }
-        if (cb == null) {
-            return;
+        if (cb != null) {
+            if (event == 0) {
+                cb.onDynamicPolicyMixStateUpdate(regId, val);
+                return;
+            }
+            Log.m70e(TAG, "dynamicPolicyCallbackFromNative: unknown event " + event);
         }
-        if (event != 0) {
-            Log.e(TAG, "dynamicPolicyCallbackFromNative: unknown event " + event);
-            return;
-        }
-        cb.onDynamicPolicyMixStateUpdate(regId, val);
     }
 
     public static void setRecordingCallback(AudioRecordingCallback cb) {
@@ -554,94 +557,29 @@ public class AudioSystem {
         }
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:10:0x0014, code lost:
-        r0 = r14[0].name;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:12:0x0019, code lost:
-        if (r15.length != 0) goto L_0x001e;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:13:0x001b, code lost:
-        r1 = "None";
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:14:0x001e, code lost:
-        r1 = r15[0].name;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:15:0x0022, code lost:
-        r17 = r1;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:16:0x0024, code lost:
-        if (r16 == null) goto L_?;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:17:0x0026, code lost:
-        r16.onRecordingConfigurationChanged(r18, r19, r20, r21, r22, r23, r24, r25, r26, r27, r28, "");
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:24:?, code lost:
-        return;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:25:?, code lost:
-        return;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:8:0x000f, code lost:
-        if (r14.length != 0) goto L_0x0014;
-     */
-    @android.annotation.UnsupportedAppUsage
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    private static void recordingCallbackFromNative(int r18, int r19, int r20, int r21, int r22, int r23, boolean r24, int[] r25, android.media.audiofx.AudioEffect.Descriptor[] r26, android.media.audiofx.AudioEffect.Descriptor[] r27, int r28) {
-        /*
-            r14 = r26
-            r15 = r27
-            r1 = 0
-            java.lang.Class<android.media.AudioSystem> r2 = android.media.AudioSystem.class
-            monitor-enter(r2)
-            android.media.AudioSystem$AudioRecordingCallback r0 = sRecordingCallback     // Catch:{ all -> 0x0048 }
-            r16 = r0
-            monitor-exit(r2)     // Catch:{ all -> 0x0044 }
-            int r0 = r14.length
-            r1 = 0
-            if (r0 != 0) goto L_0x0014
-            java.lang.String r0 = "None"
-            goto L_0x0018
-        L_0x0014:
-            r0 = r14[r1]
-            java.lang.String r0 = r0.name
-        L_0x0018:
-            int r2 = r15.length
-            if (r2 != 0) goto L_0x001e
-            java.lang.String r1 = "None"
-            goto L_0x0022
-        L_0x001e:
-            r1 = r15[r1]
-            java.lang.String r1 = r1.name
-        L_0x0022:
-            r17 = r1
-            if (r16 == 0) goto L_0x0043
-            java.lang.String r13 = ""
-            r1 = r16
-            r2 = r18
-            r3 = r19
-            r4 = r20
-            r5 = r21
-            r6 = r22
-            r7 = r23
-            r8 = r24
-            r9 = r25
-            r10 = r26
-            r11 = r27
-            r12 = r28
-            r1.onRecordingConfigurationChanged(r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13)
-        L_0x0043:
-            return
-        L_0x0044:
-            r0 = move-exception
-            r1 = r16
-            goto L_0x0049
-        L_0x0048:
-            r0 = move-exception
-        L_0x0049:
-            monitor-exit(r2)     // Catch:{ all -> 0x0048 }
-            throw r0
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.media.AudioSystem.recordingCallbackFromNative(int, int, int, int, int, int, boolean, int[], android.media.audiofx.AudioEffect$Descriptor[], android.media.audiofx.AudioEffect$Descriptor[], int):void");
+    /* JADX WARN: Unsupported multi-entry loop pattern (BACK_EDGE: B:21:0x0048 -> B:22:0x0049). Please submit an issue!!! */
+    @UnsupportedAppUsage
+    private static void recordingCallbackFromNative(int event, int riid, int uid, int session, int source, int portId, boolean silenced, int[] recordingFormat, AudioEffect.Descriptor[] clientEffects, AudioEffect.Descriptor[] effects, int activeSource) {
+        AudioRecordingCallback cb;
+        synchronized (AudioSystem.class) {
+            try {
+                cb = sRecordingCallback;
+            } catch (Throwable th) {
+                th = th;
+            }
+            try {
+                if (clientEffects.length != 0) {
+                    String str = clientEffects[0].name;
+                }
+                String str2 = effects.length == 0 ? "None" : effects[0].name;
+                if (cb != null) {
+                    cb.onRecordingConfigurationChanged(event, riid, uid, session, source, portId, silenced, recordingFormat, clientEffects, effects, activeSource, "");
+                }
+            } catch (Throwable th2) {
+                th = th2;
+                throw th;
+            }
+        }
     }
 
     public static String deviceStateToString(int state) {
@@ -721,9 +659,9 @@ public class AudioSystem {
 
     public static String getInputDeviceName(int device) {
         switch (device) {
-            case DEVICE_IN_COMMUNICATION /*-2147483647*/:
+            case DEVICE_IN_COMMUNICATION /* -2147483647 */:
                 return DEVICE_IN_COMMUNICATION_NAME;
-            case DEVICE_IN_AMBIENT /*-2147483646*/:
+            case DEVICE_IN_AMBIENT /* -2147483646 */:
                 return DEVICE_IN_AMBIENT_NAME;
             case -2147483644:
                 return DEVICE_IN_BUILTIN_MIC_NAME;
@@ -737,7 +675,7 @@ public class AudioSystem {
                 return DEVICE_IN_TELEPHONY_RX_NAME;
             case -2147483520:
                 return DEVICE_IN_BACK_MIC_NAME;
-            case DEVICE_IN_REMOTE_SUBMIX /*-2147483392*/:
+            case DEVICE_IN_REMOTE_SUBMIX /* -2147483392 */:
                 return "remote_submix";
             case -2147483136:
                 return "analog_dock";
@@ -755,19 +693,19 @@ public class AudioSystem {
                 return "line";
             case -2147418112:
                 return "spdif";
-            case DEVICE_IN_BLUETOOTH_A2DP /*-2147352576*/:
+            case DEVICE_IN_BLUETOOTH_A2DP /* -2147352576 */:
                 return "bt_a2dp";
             case -2147221504:
                 return DEVICE_IN_LOOPBACK_NAME;
-            case DEVICE_IN_IP /*-2146959360*/:
+            case DEVICE_IN_IP /* -2146959360 */:
                 return "ip";
-            case DEVICE_IN_BUS /*-2146435072*/:
+            case DEVICE_IN_BUS /* -2146435072 */:
                 return "bus";
-            case DEVICE_IN_PROXY /*-2130706432*/:
+            case DEVICE_IN_PROXY /* -2130706432 */:
                 return "proxy";
-            case DEVICE_IN_USB_HEADSET /*-2113929216*/:
+            case DEVICE_IN_USB_HEADSET /* -2113929216 */:
                 return "usb_headset";
-            case DEVICE_IN_BLUETOOTH_BLE /*-2080374784*/:
+            case DEVICE_IN_BLUETOOTH_BLE /* -2080374784 */:
                 return DEVICE_IN_BLUETOOTH_BLE_NAME;
             case -2013265920:
                 return DEVICE_IN_HDMI_ARC_NAME;
@@ -857,17 +795,17 @@ public class AudioSystem {
     }
 
     public static String streamToString(int stream) {
-        if (stream >= 0 && stream < STREAM_NAMES.length) {
-            return STREAM_NAMES[stream];
+        if (stream < 0 || stream >= STREAM_NAMES.length) {
+            if (stream == Integer.MIN_VALUE) {
+                return "USE_DEFAULT_STREAM_TYPE";
+            }
+            return "UNKNOWN_STREAM_" + stream;
         }
-        if (stream == Integer.MIN_VALUE) {
-            return "USE_DEFAULT_STREAM_TYPE";
-        }
-        return "UNKNOWN_STREAM_" + stream;
+        return STREAM_NAMES[stream];
     }
 
     public static int getPlatformType(Context context) {
-        if (context.getResources().getBoolean(R.bool.config_voice_capable)) {
+        if (context.getResources().getBoolean(C3132R.bool.config_voice_capable)) {
             return 1;
         }
         if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_LEANBACK)) {
@@ -877,6 +815,7 @@ public class AudioSystem {
     }
 
     public static boolean isSingleVolume(Context context) {
-        return getPlatformType(context) == 2 || context.getResources().getBoolean(R.bool.config_single_volume);
+        boolean forceSingleVolume = context.getResources().getBoolean(C3132R.bool.config_single_volume);
+        return getPlatformType(context) == 2 || forceSingleVolume;
     }
 }

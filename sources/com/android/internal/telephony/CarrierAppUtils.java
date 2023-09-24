@@ -1,16 +1,16 @@
 package com.android.internal.telephony;
 
 import android.content.ContentResolver;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.IPackageManager;
+import android.content.p002pm.ApplicationInfo;
+import android.content.p002pm.IPackageManager;
 import android.content.res.Resources;
-import android.os.RemoteException;
+import android.p007os.RemoteException;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.ArrayMap;
 import android.util.ArraySet;
 import android.util.Slog;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.util.ArrayUtils;
 import com.android.server.SystemConfig;
@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+/* loaded from: classes4.dex */
 public final class CarrierAppUtils {
     private static final boolean DEBUG = false;
     private static final String TAG = "CarrierAppUtils";
@@ -29,14 +30,18 @@ public final class CarrierAppUtils {
     public static synchronized void disableCarrierAppsUntilPrivileged(String callingPackage, IPackageManager packageManager, TelephonyManager telephonyManager, ContentResolver contentResolver, int userId) {
         synchronized (CarrierAppUtils.class) {
             SystemConfig config = SystemConfig.getInstance();
-            disableCarrierAppsUntilPrivileged(callingPackage, packageManager, telephonyManager, contentResolver, userId, config.getDisabledUntilUsedPreinstalledCarrierApps(), config.getDisabledUntilUsedPreinstalledCarrierAssociatedApps());
+            ArraySet<String> systemCarrierAppsDisabledUntilUsed = config.getDisabledUntilUsedPreinstalledCarrierApps();
+            ArrayMap<String, List<String>> systemCarrierAssociatedAppsDisabledUntilUsed = config.getDisabledUntilUsedPreinstalledCarrierAssociatedApps();
+            disableCarrierAppsUntilPrivileged(callingPackage, packageManager, telephonyManager, contentResolver, userId, systemCarrierAppsDisabledUntilUsed, systemCarrierAssociatedAppsDisabledUntilUsed);
         }
     }
 
     public static synchronized void disableCarrierAppsUntilPrivileged(String callingPackage, IPackageManager packageManager, ContentResolver contentResolver, int userId) {
         synchronized (CarrierAppUtils.class) {
             SystemConfig config = SystemConfig.getInstance();
-            disableCarrierAppsUntilPrivileged(callingPackage, packageManager, (TelephonyManager) null, contentResolver, userId, config.getDisabledUntilUsedPreinstalledCarrierApps(), config.getDisabledUntilUsedPreinstalledCarrierAssociatedApps());
+            ArraySet<String> systemCarrierAppsDisabledUntilUsed = config.getDisabledUntilUsedPreinstalledCarrierApps();
+            ArrayMap<String, List<String>> systemCarrierAssociatedAppsDisabledUntilUsed = config.getDisabledUntilUsedPreinstalledCarrierAssociatedApps();
+            disableCarrierAppsUntilPrivileged(callingPackage, packageManager, null, contentResolver, userId, systemCarrierAppsDisabledUntilUsed, systemCarrierAssociatedAppsDisabledUntilUsed);
         }
     }
 
@@ -45,68 +50,53 @@ public final class CarrierAppUtils {
         boolean z;
         ApplicationInfo ai;
         int i;
-        IPackageManager iPackageManager = packageManager;
-        TelephonyManager telephonyManager2 = telephonyManager;
-        ContentResolver contentResolver2 = contentResolver;
-        int i2 = userId;
-        List<ApplicationInfo> candidates = getDefaultCarrierAppCandidatesHelper(iPackageManager, i2, systemCarrierAppsDisabledUntilUsed);
+        List<ApplicationInfo> candidates = getDefaultCarrierAppCandidatesHelper(packageManager, userId, systemCarrierAppsDisabledUntilUsed);
         if (candidates == null || candidates.isEmpty()) {
-            ArrayMap<String, List<String>> arrayMap = systemCarrierAssociatedAppsDisabledUntilUsed;
             return;
         }
-        Map<String, List<ApplicationInfo>> associatedApps = getDefaultCarrierAssociatedAppsHelper(iPackageManager, i2, systemCarrierAssociatedAppsDisabledUntilUsed);
+        Map<String, List<ApplicationInfo>> associatedApps = getDefaultCarrierAssociatedAppsHelper(packageManager, userId, systemCarrierAssociatedAppsDisabledUntilUsed);
         List<String> enabledCarrierPackages = new ArrayList<>();
         boolean z2 = false;
         boolean z3 = true;
-        boolean hasRunOnce = Settings.Secure.getIntForUser(contentResolver2, Settings.Secure.CARRIER_APPS_HANDLED, 0, i2) == 1;
+        boolean hasRunOnce = Settings.Secure.getIntForUser(contentResolver, Settings.Secure.CARRIER_APPS_HANDLED, 0, userId) == 1;
         try {
             Iterator<ApplicationInfo> it = candidates.iterator();
             while (it.hasNext()) {
                 ApplicationInfo ai2 = it.next();
                 String packageName = ai2.packageName;
-                String[] restrictedCarrierApps = Resources.getSystem().getStringArray(R.array.config_restrictedPreinstalledCarrierApps);
-                boolean hasPrivileges = (telephonyManager2 == null || telephonyManager2.checkCarrierPrivilegesForPackageAnyPhone(packageName) != z3 || ArrayUtils.contains((T[]) restrictedCarrierApps, packageName)) ? z2 : z3;
-                iPackageManager.setSystemAppHiddenUntilInstalled(packageName, z3);
+                String[] restrictedCarrierApps = Resources.getSystem().getStringArray(C3132R.array.config_restrictedPreinstalledCarrierApps);
+                boolean hasPrivileges = (telephonyManager == null || telephonyManager.checkCarrierPrivilegesForPackageAnyPhone(packageName) != z3 || ArrayUtils.contains(restrictedCarrierApps, packageName)) ? z2 : z3;
+                packageManager.setSystemAppHiddenUntilInstalled(packageName, z3);
                 List<ApplicationInfo> associatedAppList = associatedApps.get(packageName);
                 if (associatedAppList != null) {
                     for (ApplicationInfo associatedApp : associatedAppList) {
-                        iPackageManager.setSystemAppHiddenUntilInstalled(associatedApp.packageName, true);
+                        packageManager.setSystemAppHiddenUntilInstalled(associatedApp.packageName, true);
                         it = it;
                     }
                 }
                 Iterator<ApplicationInfo> it2 = it;
                 if (hasPrivileges) {
-                    if (!ai2.isUpdatedSystemApp()) {
-                        if (!(ai2.enabledSetting == 0 || ai2.enabledSetting == 4)) {
-                            if ((ai2.flags & 8388608) != 0) {
-                                String[] strArr = restrictedCarrierApps;
-                                String str = packageName;
-                                ai = ai2;
-                                i = 4;
-                            }
+                    if (ai2.isUpdatedSystemApp()) {
+                        ai = ai2;
+                        i = 4;
+                    } else {
+                        if (ai2.enabledSetting != 0 && ai2.enabledSetting != 4 && (ai2.flags & 8388608) != 0) {
+                            ai = ai2;
+                            i = 4;
                         }
-                        Slog.i(TAG, "Update state(" + packageName + "): ENABLED for user " + i2);
-                        iPackageManager.setSystemAppInstallState(packageName, true, i2);
-                        String[] strArr2 = restrictedCarrierApps;
-                        String str2 = packageName;
+                        Slog.m54i(TAG, "Update state(" + packageName + "): ENABLED for user " + userId);
+                        packageManager.setSystemAppInstallState(packageName, true, userId);
                         ai = ai2;
                         i = 4;
                         packageManager.setApplicationEnabledSetting(packageName, 1, 1, userId, callingPackage);
-                    } else {
-                        String str3 = packageName;
-                        ai = ai2;
-                        i = 4;
                     }
                     if (associatedAppList != null) {
                         for (ApplicationInfo associatedApp2 : associatedAppList) {
-                            if (!(associatedApp2.enabledSetting == 0 || associatedApp2.enabledSetting == i)) {
-                                if ((associatedApp2.flags & 8388608) != 0) {
-                                    i = 4;
-                                }
+                            if (associatedApp2.enabledSetting != 0 && associatedApp2.enabledSetting != i && (associatedApp2.flags & 8388608) != 0) {
+                                i = 4;
                             }
-                            Slog.i(TAG, "Update associated state(" + associatedApp2.packageName + "): ENABLED for user " + i2);
-                            iPackageManager.setSystemAppInstallState(associatedApp2.packageName, true, i2);
-                            ApplicationInfo applicationInfo = associatedApp2;
+                            Slog.m54i(TAG, "Update associated state(" + associatedApp2.packageName + "): ENABLED for user " + userId);
+                            packageManager.setSystemAppInstallState(associatedApp2.packageName, true, userId);
                             packageManager.setApplicationEnabledSetting(associatedApp2.packageName, 1, 1, userId, callingPackage);
                             i = 4;
                         }
@@ -114,29 +104,19 @@ public final class CarrierAppUtils {
                     enabledCarrierPackages.add(ai.packageName);
                     z = false;
                 } else {
-                    String packageName2 = packageName;
-                    ApplicationInfo ai3 = ai2;
-                    if (ai3.isUpdatedSystemApp() || ai3.enabledSetting != 0 || (ai3.flags & 8388608) == 0) {
+                    if (ai2.isUpdatedSystemApp() || ai2.enabledSetting != 0 || (ai2.flags & 8388608) == 0) {
                         z = false;
                     } else {
-                        StringBuilder sb = new StringBuilder();
-                        sb.append("Update state(");
-                        String packageName3 = packageName2;
-                        sb.append(packageName3);
-                        sb.append("): DISABLED_UNTIL_USED for user ");
-                        sb.append(i2);
-                        Slog.i(TAG, sb.toString());
+                        Slog.m54i(TAG, "Update state(" + packageName + "): DISABLED_UNTIL_USED for user " + userId);
                         z = false;
-                        iPackageManager.setSystemAppInstallState(packageName3, false, i2);
+                        packageManager.setSystemAppInstallState(packageName, false, userId);
                     }
                     if (!hasRunOnce && associatedAppList != null) {
                         for (ApplicationInfo associatedApp3 : associatedAppList) {
-                            if (associatedApp3.enabledSetting == 0) {
-                                if ((associatedApp3.flags & 8388608) != 0) {
-                                    Slog.i(TAG, "Update associated state(" + associatedApp3.packageName + "): DISABLED_UNTIL_USED for user " + i2);
-                                    z = false;
-                                    iPackageManager.setSystemAppInstallState(associatedApp3.packageName, false, i2);
-                                }
+                            if (associatedApp3.enabledSetting == 0 && (associatedApp3.flags & 8388608) != 0) {
+                                Slog.m54i(TAG, "Update associated state(" + associatedApp3.packageName + "): DISABLED_UNTIL_USED for user " + userId);
+                                z = false;
+                                packageManager.setSystemAppInstallState(associatedApp3.packageName, false, userId);
                             }
                         }
                     }
@@ -146,15 +126,15 @@ public final class CarrierAppUtils {
                 z3 = true;
             }
             if (!hasRunOnce) {
-                Settings.Secure.putIntForUser(contentResolver2, Settings.Secure.CARRIER_APPS_HANDLED, 1, i2);
+                Settings.Secure.putIntForUser(contentResolver, Settings.Secure.CARRIER_APPS_HANDLED, 1, userId);
             }
             if (!enabledCarrierPackages.isEmpty()) {
                 String[] packageNames = new String[enabledCarrierPackages.size()];
                 enabledCarrierPackages.toArray(packageNames);
-                iPackageManager.grantDefaultPermissionsToEnabledCarrierApps(packageNames, i2);
+                packageManager.grantDefaultPermissionsToEnabledCarrierApps(packageNames, userId);
             }
         } catch (RemoteException e) {
-            Slog.w(TAG, "Could not reach PackageManager", e);
+            Slog.m49w(TAG, "Could not reach PackageManager", e);
         }
     }
 
@@ -164,7 +144,10 @@ public final class CarrierAppUtils {
             return null;
         }
         for (int i = candidates.size() - 1; i >= 0; i--) {
-            if (!(telephonyManager.checkCarrierPrivilegesForPackageAnyPhone(candidates.get(i).packageName) == 1)) {
+            ApplicationInfo ai = candidates.get(i);
+            String packageName = ai.packageName;
+            boolean hasPrivileges = telephonyManager.checkCarrierPrivilegesForPackageAnyPhone(packageName) == 1;
+            if (!hasPrivileges) {
                 candidates.remove(i);
             }
         }
@@ -172,7 +155,8 @@ public final class CarrierAppUtils {
     }
 
     public static List<ApplicationInfo> getDefaultCarrierAppCandidates(IPackageManager packageManager, int userId) {
-        return getDefaultCarrierAppCandidatesHelper(packageManager, userId, SystemConfig.getInstance().getDisabledUntilUsedPreinstalledCarrierApps());
+        ArraySet<String> systemCarrierAppsDisabledUntilUsed = SystemConfig.getInstance().getDisabledUntilUsedPreinstalledCarrierApps();
+        return getDefaultCarrierAppCandidatesHelper(packageManager, userId, systemCarrierAppsDisabledUntilUsed);
     }
 
     private static List<ApplicationInfo> getDefaultCarrierAppCandidatesHelper(IPackageManager packageManager, int userId, ArraySet<String> systemCarrierAppsDisabledUntilUsed) {
@@ -182,7 +166,8 @@ public final class CarrierAppUtils {
         }
         List<ApplicationInfo> apps = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
-            ApplicationInfo ai = getApplicationInfoIfSystemApp(packageManager, userId, systemCarrierAppsDisabledUntilUsed.valueAt(i));
+            String packageName = systemCarrierAppsDisabledUntilUsed.valueAt(i);
+            ApplicationInfo ai = getApplicationInfoIfSystemApp(packageManager, userId, packageName);
             if (ai != null) {
                 apps.add(ai);
             }
@@ -214,12 +199,15 @@ public final class CarrierAppUtils {
     private static ApplicationInfo getApplicationInfoIfSystemApp(IPackageManager packageManager, int userId, String packageName) {
         try {
             ApplicationInfo ai = packageManager.getApplicationInfo(packageName, 536903680, userId);
-            if (ai == null || !ai.isSystemApp()) {
+            if (ai != null) {
+                if (ai.isSystemApp()) {
+                    return ai;
+                }
                 return null;
             }
-            return ai;
+            return null;
         } catch (RemoteException e) {
-            Slog.w(TAG, "Could not reach PackageManager", e);
+            Slog.m49w(TAG, "Could not reach PackageManager", e);
             return null;
         }
     }

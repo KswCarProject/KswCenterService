@@ -1,9 +1,10 @@
 package android.text.style;
 
-import android.os.Parcel;
+import android.p007os.Parcel;
 import android.text.ParcelableSpan;
 import android.text.TextPaint;
 
+/* loaded from: classes4.dex */
 public class AbsoluteSizeSpan extends MetricAffectingSpan implements ParcelableSpan {
     private final boolean mDip;
     private final int mSize;
@@ -22,22 +23,27 @@ public class AbsoluteSizeSpan extends MetricAffectingSpan implements ParcelableS
         this.mDip = src.readInt() != 0;
     }
 
+    @Override // android.text.ParcelableSpan
     public int getSpanTypeId() {
         return getSpanTypeIdInternal();
     }
 
+    @Override // android.text.ParcelableSpan
     public int getSpanTypeIdInternal() {
         return 16;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         writeToParcelInternal(dest, flags);
     }
 
+    @Override // android.text.ParcelableSpan
     public void writeToParcelInternal(Parcel dest, int flags) {
         dest.writeInt(this.mSize);
         dest.writeInt(this.mDip ? 1 : 0);
@@ -51,19 +57,21 @@ public class AbsoluteSizeSpan extends MetricAffectingSpan implements ParcelableS
         return this.mDip;
     }
 
+    @Override // android.text.style.CharacterStyle
     public void updateDrawState(TextPaint ds) {
         if (this.mDip) {
-            ds.setTextSize(((float) this.mSize) * ds.density);
+            ds.setTextSize(this.mSize * ds.density);
         } else {
-            ds.setTextSize((float) this.mSize);
+            ds.setTextSize(this.mSize);
         }
     }
 
+    @Override // android.text.style.MetricAffectingSpan
     public void updateMeasureState(TextPaint ds) {
         if (this.mDip) {
-            ds.setTextSize(((float) this.mSize) * ds.density);
+            ds.setTextSize(this.mSize * ds.density);
         } else {
-            ds.setTextSize((float) this.mSize);
+            ds.setTextSize(this.mSize);
         }
     }
 }

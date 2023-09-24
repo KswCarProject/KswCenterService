@@ -4,10 +4,12 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.util.Random;
 
+/* loaded from: classes4.dex */
 public class LayoutAnimationController {
     public static final int ORDER_NORMAL = 0;
     public static final int ORDER_RANDOM = 2;
@@ -20,14 +22,16 @@ public class LayoutAnimationController {
     private int mOrder;
     protected Random mRandomizer;
 
+    /* loaded from: classes4.dex */
     public static class AnimationParameters {
         public int count;
         public int index;
     }
 
     public LayoutAnimationController(Context context, AttributeSet attrs) {
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.LayoutAnimation);
-        this.mDelay = Animation.Description.parseValue(a.peekValue(1)).value;
+        TypedArray a = context.obtainStyledAttributes(attrs, C3132R.styleable.LayoutAnimation);
+        Animation.Description d = Animation.Description.parseValue(a.peekValue(1));
+        this.mDelay = d.value;
         this.mOrder = a.getInt(3, 0);
         int resource = a.getResourceId(2, 0);
         if (resource > 0) {
@@ -97,14 +101,14 @@ public class LayoutAnimationController {
     public void start() {
         this.mDuration = this.mAnimation.getDuration();
         this.mMaxDelay = Long.MIN_VALUE;
-        this.mAnimation.setStartTime(-1);
+        this.mAnimation.setStartTime(-1L);
     }
 
     public final Animation getAnimationForView(View view) {
         long delay = getDelayForView(view) + this.mAnimation.getStartOffset();
         this.mMaxDelay = Math.max(this.mMaxDelay, delay);
         try {
-            Animation animation = this.mAnimation.clone();
+            Animation animation = this.mAnimation.mo181clone();
             animation.setStartOffset(delay);
             return animation;
         } catch (CloneNotSupportedException e) {
@@ -116,23 +120,23 @@ public class LayoutAnimationController {
         return AnimationUtils.currentAnimationTimeMillis() > (this.mAnimation.getStartTime() + this.mMaxDelay) + this.mDuration;
     }
 
-    /* access modifiers changed from: protected */
-    public long getDelayForView(View view) {
-        AnimationParameters params = view.getLayoutParams().layoutAnimationParameters;
+    protected long getDelayForView(View view) {
+        ViewGroup.LayoutParams lp = view.getLayoutParams();
+        AnimationParameters params = lp.layoutAnimationParameters;
         if (params == null) {
-            return 0;
+            return 0L;
         }
         float delay = this.mDelay * ((float) this.mAnimation.getDuration());
-        long viewDelay = (long) (((float) getTransformedIndex(params)) * delay);
-        float totalDelay = ((float) params.count) * delay;
+        long viewDelay = getTransformedIndex(params) * delay;
+        float totalDelay = params.count * delay;
         if (this.mInterpolator == null) {
             this.mInterpolator = new LinearInterpolator();
         }
-        return (long) (this.mInterpolator.getInterpolation(((float) viewDelay) / totalDelay) * totalDelay);
+        float normalizedDelay = ((float) viewDelay) / totalDelay;
+        return this.mInterpolator.getInterpolation(normalizedDelay) * totalDelay;
     }
 
-    /* access modifiers changed from: protected */
-    public int getTransformedIndex(AnimationParameters params) {
+    protected int getTransformedIndex(AnimationParameters params) {
         switch (getOrder()) {
             case 1:
                 return (params.count - 1) - params.index;
@@ -140,7 +144,7 @@ public class LayoutAnimationController {
                 if (this.mRandomizer == null) {
                     this.mRandomizer = new Random();
                 }
-                return (int) (((float) params.count) * this.mRandomizer.nextFloat());
+                return (int) (params.count * this.mRandomizer.nextFloat());
             default:
                 return params.index;
         }

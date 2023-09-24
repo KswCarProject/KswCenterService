@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import libcore.io.IoUtils;
 
+/* loaded from: classes3.dex */
 public class DnsUtils {
     private static final int CHAR_BIT = 8;
     public static final int IPV6_ADDR_SCOPE_GLOBAL = 14;
@@ -32,7 +33,9 @@ public class DnsUtils {
     private static final String TAG = "DnsUtils";
     private static final Comparator<SortableAddress> sRfc6724Comparator = new Rfc6724Comparator();
 
+    /* loaded from: classes3.dex */
     public static class Rfc6724Comparator implements Comparator<SortableAddress> {
+        @Override // java.util.Comparator
         public int compare(SortableAddress span1, SortableAddress span2) {
             if (span1.hasSrcAddr != span2.hasSrcAddr) {
                 return span2.hasSrcAddr - span1.hasSrcAddr;
@@ -56,6 +59,7 @@ public class DnsUtils {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class SortableAddress {
         public final InetAddress address;
         public final int hasSrcAddr;
@@ -75,40 +79,28 @@ public class DnsUtils {
             this.precedence = DnsUtils.findPrecedence(addr);
             this.labelMatch = (srcAddr == null || this.label != DnsUtils.findLabel(srcAddr)) ? 0 : 1;
             this.scopeMatch = (srcAddr == null || this.scope != DnsUtils.findScope(srcAddr)) ? 0 : i;
-            if (!DnsUtils.isIpv6Address(addr) || !DnsUtils.isIpv6Address(srcAddr)) {
-                this.prefixMatchLen = 0;
-            } else {
+            if (DnsUtils.isIpv6Address(addr) && DnsUtils.isIpv6Address(srcAddr)) {
                 this.prefixMatchLen = DnsUtils.compareIpv6PrefixMatchLen(srcAddr, addr);
+            } else {
+                this.prefixMatchLen = 0;
             }
         }
     }
 
-    public static List<InetAddress> rfc6724Sort(Network network, List<InetAddress> answers) {
-        List<SortableAddress> sortableAnswerList = new ArrayList<>();
-        answers.forEach(new Consumer(sortableAnswerList, network) {
-            private final /* synthetic */ List f$0;
-            private final /* synthetic */ Network f$1;
-
-            {
-                this.f$0 = r1;
-                this.f$1 = r2;
-            }
-
+    public static List<InetAddress> rfc6724Sort(final Network network, List<InetAddress> answers) {
+        final List<SortableAddress> sortableAnswerList = new ArrayList<>();
+        answers.forEach(new Consumer() { // from class: android.net.util.-$$Lambda$DnsUtils$E7rjA1PKdcqMJSVvye8jaivYDec
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
-                this.f$0.add(new DnsUtils.SortableAddress((InetAddress) obj, DnsUtils.findSrcAddress(this.f$1, (InetAddress) obj)));
+                sortableAnswerList.add(new DnsUtils.SortableAddress(r3, DnsUtils.findSrcAddress(network, (InetAddress) obj)));
             }
         });
         Collections.sort(sortableAnswerList, sRfc6724Comparator);
-        List<InetAddress> sortedAnswers = new ArrayList<>();
-        sortableAnswerList.forEach(new Consumer(sortedAnswers) {
-            private final /* synthetic */ List f$0;
-
-            {
-                this.f$0 = r1;
-            }
-
+        final List<InetAddress> sortedAnswers = new ArrayList<>();
+        sortableAnswerList.forEach(new Consumer() { // from class: android.net.util.-$$Lambda$DnsUtils$GlRZOd_k4dipl4wcKx5eyR_B_sU
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
-                this.f$0.add(((DnsUtils.SortableAddress) obj).address);
+                sortedAnswers.add(((DnsUtils.SortableAddress) obj).address);
             }
         });
         return sortedAnswers;
@@ -141,44 +133,41 @@ public class DnsUtils {
             IoUtils.closeQuietly(socket);
             return address;
         } catch (ErrnoException e2) {
-            Log.e(TAG, "findSrcAddress:" + e2.toString());
+            Log.m70e(TAG, "findSrcAddress:" + e2.toString());
             return null;
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static int findLabel(InetAddress addr) {
         if (isIpv4Address(addr)) {
             return 4;
         }
-        if (!isIpv6Address(addr)) {
-            return 1;
-        }
-        if (addr.isLoopbackAddress()) {
-            return 0;
-        }
-        if (isIpv6Address6To4(addr)) {
-            return 2;
-        }
-        if (isIpv6AddressTeredo(addr)) {
-            return 5;
-        }
-        if (isIpv6AddressULA(addr)) {
-            return 13;
-        }
-        if (((Inet6Address) addr).isIPv4CompatibleAddress()) {
-            return 3;
-        }
-        if (addr.isSiteLocalAddress()) {
-            return 11;
-        }
-        if (isIpv6Address6Bone(addr)) {
-            return 12;
+        if (isIpv6Address(addr)) {
+            if (addr.isLoopbackAddress()) {
+                return 0;
+            }
+            if (isIpv6Address6To4(addr)) {
+                return 2;
+            }
+            if (isIpv6AddressTeredo(addr)) {
+                return 5;
+            }
+            if (isIpv6AddressULA(addr)) {
+                return 13;
+            }
+            if (((Inet6Address) addr).isIPv4CompatibleAddress()) {
+                return 3;
+            }
+            if (addr.isSiteLocalAddress()) {
+                return 11;
+            }
+            return isIpv6Address6Bone(addr) ? 12 : 1;
         }
         return 1;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static boolean isIpv6Address(InetAddress addr) {
         return addr instanceof Inet6Address;
     }
@@ -188,23 +177,17 @@ public class DnsUtils {
     }
 
     private static boolean isIpv6Address6To4(InetAddress addr) {
-        if (!isIpv6Address(addr)) {
-            return false;
-        }
-        byte[] byteAddr = addr.getAddress();
-        if (byteAddr[0] == 32 && byteAddr[1] == 2) {
-            return true;
+        if (isIpv6Address(addr)) {
+            byte[] byteAddr = addr.getAddress();
+            return byteAddr[0] == 32 && byteAddr[1] == 2;
         }
         return false;
     }
 
     private static boolean isIpv6AddressTeredo(InetAddress addr) {
-        if (!isIpv6Address(addr)) {
-            return false;
-        }
-        byte[] byteAddr = addr.getAddress();
-        if (byteAddr[0] == 32 && byteAddr[1] == 1 && byteAddr[2] == 0 && byteAddr[3] == 0) {
-            return true;
+        if (isIpv6Address(addr)) {
+            byte[] byteAddr = addr.getAddress();
+            return byteAddr[0] == 32 && byteAddr[1] == 1 && byteAddr[2] == 0 && byteAddr[3] == 0;
         }
         return false;
     }
@@ -214,24 +197,21 @@ public class DnsUtils {
     }
 
     private static boolean isIpv6Address6Bone(InetAddress addr) {
-        if (!isIpv6Address(addr)) {
-            return false;
-        }
-        byte[] byteAddr = addr.getAddress();
-        if (byteAddr[0] == 63 && byteAddr[1] == -2) {
-            return true;
+        if (isIpv6Address(addr)) {
+            byte[] byteAddr = addr.getAddress();
+            return byteAddr[0] == 63 && byteAddr[1] == -2;
         }
         return false;
     }
 
     private static int getIpv6MulticastScope(InetAddress addr) {
-        if (!isIpv6Address(addr)) {
-            return 0;
+        if (isIpv6Address(addr)) {
+            return addr.getAddress()[1] & MidiConstants.STATUS_CHANNEL_MASK;
         }
-        return addr.getAddress()[1] & MidiConstants.STATUS_CHANNEL_MASK;
+        return 0;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static int findScope(InetAddress addr) {
         if (isIpv6Address(addr)) {
             if (addr.isMulticastAddress()) {
@@ -240,10 +220,7 @@ public class DnsUtils {
             if (addr.isLoopbackAddress() || addr.isLinkLocalAddress()) {
                 return 2;
             }
-            if (addr.isSiteLocalAddress()) {
-                return 5;
-            }
-            return 14;
+            return addr.isSiteLocalAddress() ? 5 : 14;
         } else if (isIpv4Address(addr)) {
             return (addr.isLoopbackAddress() || addr.isLinkLocalAddress()) ? 2 : 14;
         } else {
@@ -251,33 +228,30 @@ public class DnsUtils {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static int findPrecedence(InetAddress addr) {
         if (isIpv4Address(addr)) {
             return 35;
         }
-        if (!isIpv6Address(addr)) {
-            return 1;
+        if (isIpv6Address(addr)) {
+            if (addr.isLoopbackAddress()) {
+                return 50;
+            }
+            if (isIpv6Address6To4(addr)) {
+                return 30;
+            }
+            if (isIpv6AddressTeredo(addr)) {
+                return 5;
+            }
+            if (isIpv6AddressULA(addr)) {
+                return 3;
+            }
+            return (((Inet6Address) addr).isIPv4CompatibleAddress() || addr.isSiteLocalAddress() || isIpv6Address6Bone(addr)) ? 1 : 40;
         }
-        if (addr.isLoopbackAddress()) {
-            return 50;
-        }
-        if (isIpv6Address6To4(addr)) {
-            return 30;
-        }
-        if (isIpv6AddressTeredo(addr)) {
-            return 5;
-        }
-        if (isIpv6AddressULA(addr)) {
-            return 3;
-        }
-        if (((Inet6Address) addr).isIPv4CompatibleAddress() || addr.isSiteLocalAddress() || isIpv6Address6Bone(addr)) {
-            return 1;
-        }
-        return 40;
+        return 1;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static int compareIpv6PrefixMatchLen(InetAddress srcAddr, InetAddress dstAddr) {
         byte[] srcByte = srcAddr.getAddress();
         byte[] dstByte = dstAddr.getAddress();
@@ -287,23 +261,28 @@ public class DnsUtils {
         }
         while (true) {
             int i2 = i;
-            if (i2 >= dstByte.length) {
-                return dstByte.length * 8;
-            }
-            if (srcByte[i2] == dstByte[i2]) {
-                i = i2 + 1;
+            if (i2 < dstByte.length) {
+                if (srcByte[i2] == dstByte[i2]) {
+                    i = i2 + 1;
+                } else {
+                    int x = BitUtils.uint8(srcByte[i2]) ^ BitUtils.uint8(dstByte[i2]);
+                    return (i2 * 8) + (Integer.numberOfLeadingZeros(x) - 24);
+                }
             } else {
-                return (i2 * 8) + (Integer.numberOfLeadingZeros(BitUtils.uint8(srcByte[i2]) ^ BitUtils.uint8(dstByte[i2])) - 24);
+                int i3 = dstByte.length;
+                return i3 * 8;
             }
         }
     }
 
     public static boolean haveIpv4(Network network) {
-        return checkConnectivity(network, OsConstants.AF_INET, new InetSocketAddress(InetAddresses.parseNumericAddress("8.8.8.8"), 0));
+        SocketAddress addrIpv4 = new InetSocketAddress(InetAddresses.parseNumericAddress("8.8.8.8"), 0);
+        return checkConnectivity(network, OsConstants.AF_INET, addrIpv4);
     }
 
     public static boolean haveIpv6(Network network) {
-        return checkConnectivity(network, OsConstants.AF_INET6, new InetSocketAddress(InetAddresses.parseNumericAddress("2000::"), 0));
+        SocketAddress addrIpv6 = new InetSocketAddress(InetAddresses.parseNumericAddress("2000::"), 0);
+        return checkConnectivity(network, OsConstants.AF_INET6, addrIpv6);
     }
 
     private static boolean checkConnectivity(Network network, int domain, SocketAddress addr) {

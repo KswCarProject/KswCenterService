@@ -1,10 +1,13 @@
 package android.location;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public class FusedBatchOptions implements Parcelable {
-    public static final Parcelable.Creator<FusedBatchOptions> CREATOR = new Parcelable.Creator<FusedBatchOptions>() {
+    public static final Parcelable.Creator<FusedBatchOptions> CREATOR = new Parcelable.Creator<FusedBatchOptions>() { // from class: android.location.FusedBatchOptions.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public FusedBatchOptions createFromParcel(Parcel parcel) {
             FusedBatchOptions options = new FusedBatchOptions();
             options.setMaxPowerAllocationInMW(parcel.readDouble());
@@ -15,27 +18,31 @@ public class FusedBatchOptions implements Parcelable {
             return options;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public FusedBatchOptions[] newArray(int size) {
             return new FusedBatchOptions[size];
         }
     };
+    private volatile long mPeriodInNS = 0;
+    private volatile int mSourcesToUse = 0;
     private volatile int mFlags = 0;
     private volatile double mMaxPowerAllocationInMW = 0.0d;
-    private volatile long mPeriodInNS = 0;
     private volatile float mSmallestDisplacementMeters = 0.0f;
-    private volatile int mSourcesToUse = 0;
 
+    /* loaded from: classes.dex */
     public static final class BatchFlags {
-        public static int CALLBACK_ON_LOCATION_FIX = 2;
         public static int WAKEUP_ON_FIFO_FULL = 1;
+        public static int CALLBACK_ON_LOCATION_FIX = 2;
     }
 
+    /* loaded from: classes.dex */
     public static final class SourceTechnologies {
-        public static int BLUETOOTH = 16;
-        public static int CELL = 8;
         public static int GNSS = 1;
-        public static int SENSORS = 4;
         public static int WIFI = 2;
+        public static int SENSORS = 4;
+        public static int CELL = 8;
+        public static int BLUETOOTH = 16;
     }
 
     public void setMaxPowerAllocationInMW(double value) {
@@ -94,10 +101,12 @@ public class FusedBatchOptions implements Parcelable {
         return this.mFlags;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeDouble(this.mMaxPowerAllocationInMW);
         parcel.writeLong(this.mPeriodInNS);

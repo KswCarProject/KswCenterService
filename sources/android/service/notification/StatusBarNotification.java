@@ -4,21 +4,27 @@ import android.annotation.UnsupportedAppUsage;
 import android.app.Notification;
 import android.app.Person;
 import android.content.Context;
-import android.content.pm.PackageManager;
+import android.content.p002pm.ApplicationInfo;
+import android.content.p002pm.PackageManager;
 import android.metrics.LogMaker;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.UserHandle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.UserHandle;
 import com.android.internal.content.NativeLibraryHelper;
 import com.android.internal.logging.nano.MetricsProto;
 import java.util.ArrayList;
 
+/* loaded from: classes3.dex */
 public class StatusBarNotification implements Parcelable {
-    public static final Parcelable.Creator<StatusBarNotification> CREATOR = new Parcelable.Creator<StatusBarNotification>() {
+    public static final Parcelable.Creator<StatusBarNotification> CREATOR = new Parcelable.Creator<StatusBarNotification>() { // from class: android.service.notification.StatusBarNotification.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public StatusBarNotification createFromParcel(Parcel parcel) {
             return new StatusBarNotification(parcel);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public StatusBarNotification[] newArray(int size) {
             return new StatusBarNotification[size];
         }
@@ -26,7 +32,9 @@ public class StatusBarNotification implements Parcelable {
     static final int MAX_LOG_TAG_LENGTH = 36;
     private String groupKey;
     @UnsupportedAppUsage
-    private final int id;
+
+    /* renamed from: id */
+    private final int f241id;
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
     private final int initialPid;
     private final String key;
@@ -46,52 +54,52 @@ public class StatusBarNotification implements Parcelable {
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
     private final UserHandle user;
 
-    public StatusBarNotification(String pkg2, String opPkg2, int id2, String tag2, int uid2, int initialPid2, Notification notification2, UserHandle user2, String overrideGroupKey2, long postTime2) {
-        if (pkg2 == null) {
-            throw new NullPointerException();
-        } else if (notification2 != null) {
-            this.pkg = pkg2;
-            this.opPkg = opPkg2;
-            this.id = id2;
-            this.tag = tag2;
-            this.uid = uid2;
-            this.initialPid = initialPid2;
-            this.notification = notification2;
-            this.user = user2;
-            this.postTime = postTime2;
-            this.overrideGroupKey = overrideGroupKey2;
-            this.key = key();
-            this.groupKey = groupKey();
-        } else {
+    public StatusBarNotification(String pkg, String opPkg, int id, String tag, int uid, int initialPid, Notification notification, UserHandle user, String overrideGroupKey, long postTime) {
+        if (pkg == null) {
             throw new NullPointerException();
         }
+        if (notification == null) {
+            throw new NullPointerException();
+        }
+        this.pkg = pkg;
+        this.opPkg = opPkg;
+        this.f241id = id;
+        this.tag = tag;
+        this.uid = uid;
+        this.initialPid = initialPid;
+        this.notification = notification;
+        this.user = user;
+        this.postTime = postTime;
+        this.overrideGroupKey = overrideGroupKey;
+        this.key = key();
+        this.groupKey = groupKey();
     }
 
     @Deprecated
-    public StatusBarNotification(String pkg2, String opPkg2, int id2, String tag2, int uid2, int initialPid2, int score, Notification notification2, UserHandle user2, long postTime2) {
-        if (pkg2 == null) {
-            throw new NullPointerException();
-        } else if (notification2 != null) {
-            this.pkg = pkg2;
-            this.opPkg = opPkg2;
-            this.id = id2;
-            this.tag = tag2;
-            this.uid = uid2;
-            this.initialPid = initialPid2;
-            this.notification = notification2;
-            this.user = user2;
-            this.postTime = postTime2;
-            this.key = key();
-            this.groupKey = groupKey();
-        } else {
+    public StatusBarNotification(String pkg, String opPkg, int id, String tag, int uid, int initialPid, int score, Notification notification, UserHandle user, long postTime) {
+        if (pkg == null) {
             throw new NullPointerException();
         }
+        if (notification == null) {
+            throw new NullPointerException();
+        }
+        this.pkg = pkg;
+        this.opPkg = opPkg;
+        this.f241id = id;
+        this.tag = tag;
+        this.uid = uid;
+        this.initialPid = initialPid;
+        this.notification = notification;
+        this.user = user;
+        this.postTime = postTime;
+        this.key = key();
+        this.groupKey = groupKey();
     }
 
     public StatusBarNotification(Parcel in) {
         this.pkg = in.readString();
         this.opPkg = in.readString();
-        this.id = in.readInt();
+        this.f241id = in.readInt();
         if (in.readInt() != 0) {
             this.tag = in.readString();
         } else {
@@ -112,11 +120,11 @@ public class StatusBarNotification implements Parcelable {
     }
 
     private String key() {
-        String sbnKey = this.user.getIdentifier() + "|" + this.pkg + "|" + this.id + "|" + this.tag + "|" + this.uid;
-        if (this.overrideGroupKey == null || !getNotification().isGroupSummary()) {
-            return sbnKey;
+        String sbnKey = this.user.getIdentifier() + "|" + this.pkg + "|" + this.f241id + "|" + this.tag + "|" + this.uid;
+        if (this.overrideGroupKey != null && getNotification().isGroupSummary()) {
+            return sbnKey + "|" + this.overrideGroupKey;
         }
-        return sbnKey + "|" + this.overrideGroupKey;
+        return sbnKey;
     }
 
     private String groupKey() {
@@ -151,16 +159,17 @@ public class StatusBarNotification implements Parcelable {
     }
 
     public boolean isAppGroup() {
-        if (getNotification().getGroup() == null && getNotification().getSortKey() == null) {
-            return false;
+        if (getNotification().getGroup() != null || getNotification().getSortKey() != null) {
+            return true;
         }
-        return true;
+        return false;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(this.pkg);
         out.writeString(this.opPkg);
-        out.writeInt(this.id);
+        out.writeInt(this.f241id);
         if (this.tag != null) {
             out.writeInt(1);
             out.writeString(this.tag);
@@ -180,6 +189,7 @@ public class StatusBarNotification implements Parcelable {
         out.writeInt(0);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -187,15 +197,16 @@ public class StatusBarNotification implements Parcelable {
     public StatusBarNotification cloneLight() {
         Notification no = new Notification();
         this.notification.cloneInto(no, false);
-        return new StatusBarNotification(this.pkg, this.opPkg, this.id, this.tag, this.uid, this.initialPid, no, this.user, this.overrideGroupKey, this.postTime);
+        return new StatusBarNotification(this.pkg, this.opPkg, this.f241id, this.tag, this.uid, this.initialPid, no, this.user, this.overrideGroupKey, this.postTime);
     }
 
-    public StatusBarNotification clone() {
-        return new StatusBarNotification(this.pkg, this.opPkg, this.id, this.tag, this.uid, this.initialPid, this.notification.clone(), this.user, this.overrideGroupKey, this.postTime);
+    /* renamed from: clone */
+    public StatusBarNotification m167clone() {
+        return new StatusBarNotification(this.pkg, this.opPkg, this.f241id, this.tag, this.uid, this.initialPid, this.notification.m146clone(), this.user, this.overrideGroupKey, this.postTime);
     }
 
     public String toString() {
-        return String.format("StatusBarNotification(pkg=%s user=%s id=%d tag=%s key=%s: %s)", new Object[]{this.pkg, this.user, Integer.valueOf(this.id), this.tag, this.key, this.notification});
+        return String.format("StatusBarNotification(pkg=%s user=%s id=%d tag=%s key=%s: %s)", this.pkg, this.user, Integer.valueOf(this.f241id), this.tag, this.key, this.notification);
     }
 
     public boolean isOngoing() {
@@ -216,7 +227,7 @@ public class StatusBarNotification implements Parcelable {
     }
 
     public int getId() {
-        return this.id;
+        return this.f241id;
     }
 
     public String getTag() {
@@ -263,8 +274,8 @@ public class StatusBarNotification implements Parcelable {
         return getNotification().getGroup();
     }
 
-    public void setOverrideGroupKey(String overrideGroupKey2) {
-        this.overrideGroupKey = overrideGroupKey2;
+    public void setOverrideGroupKey(String overrideGroupKey) {
+        this.overrideGroupKey = overrideGroupKey;
         this.groupKey = groupKey();
     }
 
@@ -280,7 +291,8 @@ public class StatusBarNotification implements Parcelable {
     public Context getPackageContext(Context context) {
         if (this.mContext == null) {
             try {
-                this.mContext = context.createApplicationContext(context.getPackageManager().getApplicationInfoAsUser(this.pkg, 8192, getUserId()), 4);
+                ApplicationInfo ai = context.getPackageManager().getApplicationInfoAsUser(this.pkg, 8192, getUserId());
+                this.mContext = context.createApplicationContext(ai, 4);
             } catch (PackageManager.NameNotFoundException e) {
                 this.mContext = null;
             }

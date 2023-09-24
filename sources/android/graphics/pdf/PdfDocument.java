@@ -10,12 +10,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/* loaded from: classes.dex */
 public class PdfDocument {
+    private Page mCurrentPage;
     private final byte[] mChunk = new byte[4096];
     private final CloseGuard mCloseGuard = CloseGuard.get();
-    private Page mCurrentPage;
-    private long mNativeDocument = nativeCreateDocument();
     private final List<PageInfo> mPages = new ArrayList();
+    private long mNativeDocument = nativeCreateDocument();
 
     private native void nativeClose(long j);
 
@@ -34,37 +35,38 @@ public class PdfDocument {
     public Page startPage(PageInfo pageInfo) {
         throwIfClosed();
         throwIfCurrentPageNotFinished();
-        if (pageInfo != null) {
-            this.mCurrentPage = new Page(new PdfCanvas(nativeStartPage(this.mNativeDocument, pageInfo.mPageWidth, pageInfo.mPageHeight, pageInfo.mContentRect.left, pageInfo.mContentRect.top, pageInfo.mContentRect.right, pageInfo.mContentRect.bottom)), pageInfo);
-            return this.mCurrentPage;
+        if (pageInfo == null) {
+            throw new IllegalArgumentException("page cannot be null");
         }
-        throw new IllegalArgumentException("page cannot be null");
+        Canvas canvas = new PdfCanvas(nativeStartPage(this.mNativeDocument, pageInfo.mPageWidth, pageInfo.mPageHeight, pageInfo.mContentRect.left, pageInfo.mContentRect.top, pageInfo.mContentRect.right, pageInfo.mContentRect.bottom));
+        this.mCurrentPage = new Page(canvas, pageInfo);
+        return this.mCurrentPage;
     }
 
     public void finishPage(Page page) {
         throwIfClosed();
         if (page == null) {
             throw new IllegalArgumentException("page cannot be null");
-        } else if (page != this.mCurrentPage) {
+        }
+        if (page != this.mCurrentPage) {
             throw new IllegalStateException("invalid page");
-        } else if (!page.isFinished()) {
-            this.mPages.add(page.getInfo());
-            this.mCurrentPage = null;
-            nativeFinishPage(this.mNativeDocument);
-            page.finish();
-        } else {
+        }
+        if (page.isFinished()) {
             throw new IllegalStateException("page already finished");
         }
+        this.mPages.add(page.getInfo());
+        this.mCurrentPage = null;
+        nativeFinishPage(this.mNativeDocument);
+        page.finish();
     }
 
     public void writeTo(OutputStream out) throws IOException {
         throwIfClosed();
         throwIfCurrentPageNotFinished();
-        if (out != null) {
-            nativeWriteTo(this.mNativeDocument, out, this.mChunk);
-            return;
+        if (out == null) {
+            throw new IllegalArgumentException("out cannot be null!");
         }
-        throw new IllegalArgumentException("out cannot be null!");
+        nativeWriteTo(this.mNativeDocument, out, this.mChunk);
     }
 
     public List<PageInfo> getPages() {
@@ -76,8 +78,7 @@ public class PdfDocument {
         dispose();
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         try {
             if (this.mCloseGuard != null) {
                 this.mCloseGuard.warnIfOpen();
@@ -92,7 +93,7 @@ public class PdfDocument {
         if (this.mNativeDocument != 0) {
             nativeClose(this.mNativeDocument);
             this.mCloseGuard.close();
-            this.mNativeDocument = 0;
+            this.mNativeDocument = 0L;
         }
     }
 
@@ -108,25 +109,24 @@ public class PdfDocument {
         }
     }
 
+    /* loaded from: classes.dex */
     private final class PdfCanvas extends Canvas {
         public PdfCanvas(long nativeCanvas) {
             super(nativeCanvas);
         }
 
+        @Override // android.graphics.Canvas
         public void setBitmap(Bitmap bitmap) {
             throw new UnsupportedOperationException();
         }
     }
 
+    /* loaded from: classes.dex */
     public static final class PageInfo {
-        /* access modifiers changed from: private */
-        public Rect mContentRect;
-        /* access modifiers changed from: private */
-        public int mPageHeight;
-        /* access modifiers changed from: private */
-        public int mPageNumber;
-        /* access modifiers changed from: private */
-        public int mPageWidth;
+        private Rect mContentRect;
+        private int mPageHeight;
+        private int mPageNumber;
+        private int mPageWidth;
 
         private PageInfo() {
         }
@@ -147,26 +147,29 @@ public class PdfDocument {
             return this.mPageNumber;
         }
 
+        /* loaded from: classes.dex */
         public static final class Builder {
             private final PageInfo mPageInfo = new PageInfo();
 
             public Builder(int pageWidth, int pageHeight, int pageNumber) {
                 if (pageWidth <= 0) {
                     throw new IllegalArgumentException("page width must be positive");
-                } else if (pageHeight <= 0) {
-                    throw new IllegalArgumentException("page width must be positive");
-                } else if (pageNumber >= 0) {
-                    int unused = this.mPageInfo.mPageWidth = pageWidth;
-                    int unused2 = this.mPageInfo.mPageHeight = pageHeight;
-                    int unused3 = this.mPageInfo.mPageNumber = pageNumber;
-                } else {
-                    throw new IllegalArgumentException("pageNumber must be non negative");
                 }
+                if (pageHeight <= 0) {
+                    throw new IllegalArgumentException("page width must be positive");
+                }
+                if (pageNumber >= 0) {
+                    this.mPageInfo.mPageWidth = pageWidth;
+                    this.mPageInfo.mPageHeight = pageHeight;
+                    this.mPageInfo.mPageNumber = pageNumber;
+                    return;
+                }
+                throw new IllegalArgumentException("pageNumber must be non negative");
             }
 
             public Builder setContentRect(Rect contentRect) {
                 if (contentRect == null || (contentRect.left >= 0 && contentRect.top >= 0 && contentRect.right <= this.mPageInfo.mPageWidth && contentRect.bottom <= this.mPageInfo.mPageHeight)) {
-                    Rect unused = this.mPageInfo.mContentRect = contentRect;
+                    this.mPageInfo.mContentRect = contentRect;
                     return this;
                 }
                 throw new IllegalArgumentException("contentRect does not fit the page");
@@ -174,13 +177,14 @@ public class PdfDocument {
 
             public PageInfo create() {
                 if (this.mPageInfo.mContentRect == null) {
-                    Rect unused = this.mPageInfo.mContentRect = new Rect(0, 0, this.mPageInfo.mPageWidth, this.mPageInfo.mPageHeight);
+                    this.mPageInfo.mContentRect = new Rect(0, 0, this.mPageInfo.mPageWidth, this.mPageInfo.mPageHeight);
                 }
                 return this.mPageInfo;
             }
         }
     }
 
+    /* loaded from: classes.dex */
     public static final class Page {
         private Canvas mCanvas;
         private final PageInfo mPageInfo;
@@ -198,12 +202,11 @@ public class PdfDocument {
             return this.mPageInfo;
         }
 
-        /* access modifiers changed from: package-private */
-        public boolean isFinished() {
+        boolean isFinished() {
             return this.mCanvas == null;
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public void finish() {
             if (this.mCanvas != null) {
                 this.mCanvas.release();

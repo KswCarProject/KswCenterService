@@ -8,6 +8,7 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
 
+/* loaded from: classes.dex */
 public class AccessoryFilter {
     public final String mManufacturer;
     public final String mModel;
@@ -45,41 +46,35 @@ public class AccessoryFilter {
     }
 
     public void write(XmlSerializer serializer) throws IOException {
-        serializer.startTag((String) null, "usb-accessory");
+        serializer.startTag(null, "usb-accessory");
         if (this.mManufacturer != null) {
-            serializer.attribute((String) null, MidiDeviceInfo.PROPERTY_MANUFACTURER, this.mManufacturer);
+            serializer.attribute(null, MidiDeviceInfo.PROPERTY_MANUFACTURER, this.mManufacturer);
         }
         if (this.mModel != null) {
-            serializer.attribute((String) null, "model", this.mModel);
+            serializer.attribute(null, "model", this.mModel);
         }
         if (this.mVersion != null) {
-            serializer.attribute((String) null, "version", this.mVersion);
+            serializer.attribute(null, "version", this.mVersion);
         }
-        serializer.endTag((String) null, "usb-accessory");
+        serializer.endTag(null, "usb-accessory");
     }
 
     public boolean matches(UsbAccessory acc) {
-        if (this.mManufacturer != null && !acc.getManufacturer().equals(this.mManufacturer)) {
+        if (this.mManufacturer == null || acc.getManufacturer().equals(this.mManufacturer)) {
+            if (this.mModel == null || acc.getModel().equals(this.mModel)) {
+                return this.mVersion == null || acc.getVersion().equals(this.mVersion);
+            }
             return false;
-        }
-        if (this.mModel != null && !acc.getModel().equals(this.mModel)) {
-            return false;
-        }
-        if (this.mVersion == null || acc.getVersion().equals(this.mVersion)) {
-            return true;
         }
         return false;
     }
 
     public boolean contains(AccessoryFilter accessory) {
-        if (this.mManufacturer != null && !Objects.equals(accessory.mManufacturer, this.mManufacturer)) {
+        if (this.mManufacturer == null || Objects.equals(accessory.mManufacturer, this.mManufacturer)) {
+            if (this.mModel == null || Objects.equals(accessory.mModel, this.mModel)) {
+                return this.mVersion == null || Objects.equals(accessory.mVersion, this.mVersion);
+            }
             return false;
-        }
-        if (this.mModel != null && !Objects.equals(accessory.mModel, this.mModel)) {
-            return false;
-        }
-        if (this.mVersion == null || Objects.equals(accessory.mVersion, this.mVersion)) {
-            return true;
         }
         return false;
     }
@@ -90,34 +85,23 @@ public class AccessoryFilter {
         }
         if (obj instanceof AccessoryFilter) {
             AccessoryFilter filter = (AccessoryFilter) obj;
-            if (!this.mManufacturer.equals(filter.mManufacturer) || !this.mModel.equals(filter.mModel) || !this.mVersion.equals(filter.mVersion)) {
-                return false;
-            }
-            return true;
-        } else if (!(obj instanceof UsbAccessory)) {
-            return false;
-        } else {
+            return this.mManufacturer.equals(filter.mManufacturer) && this.mModel.equals(filter.mModel) && this.mVersion.equals(filter.mVersion);
+        } else if (obj instanceof UsbAccessory) {
             UsbAccessory accessory = (UsbAccessory) obj;
-            if (!this.mManufacturer.equals(accessory.getManufacturer()) || !this.mModel.equals(accessory.getModel()) || !this.mVersion.equals(accessory.getVersion())) {
-                return false;
-            }
-            return true;
+            return this.mManufacturer.equals(accessory.getManufacturer()) && this.mModel.equals(accessory.getModel()) && this.mVersion.equals(accessory.getVersion());
+        } else {
+            return false;
         }
     }
 
     public int hashCode() {
-        int i;
-        int i2 = 0;
-        if (this.mManufacturer == null) {
-            i = 0;
+        int hashCode;
+        if (this.mManufacturer != null) {
+            hashCode = this.mManufacturer.hashCode();
         } else {
-            i = this.mManufacturer.hashCode();
+            hashCode = 0;
         }
-        int hashCode = i ^ (this.mModel == null ? 0 : this.mModel.hashCode());
-        if (this.mVersion != null) {
-            i2 = this.mVersion.hashCode();
-        }
-        return hashCode ^ i2;
+        return (hashCode ^ (this.mModel == null ? 0 : this.mModel.hashCode())) ^ (this.mVersion != null ? this.mVersion.hashCode() : 0);
     }
 
     public String toString() {

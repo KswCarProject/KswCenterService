@@ -2,9 +2,14 @@ package android.hardware.radio.V1_0;
 
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class SapTransferProtocol {
-    public static final int T0 = 0;
-    public static final int T1 = 1;
+
+    /* renamed from: T0 */
+    public static final int f92T0 = 0;
+
+    /* renamed from: T1 */
+    public static final int f93T1 = 1;
 
     public static final String toString(int o) {
         if (o == 0) {

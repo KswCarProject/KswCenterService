@@ -1,14 +1,19 @@
 package android.telephony.ims;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes4.dex */
 public final class RcsMessageSnippet implements Parcelable {
-    public static final Parcelable.Creator<RcsMessageSnippet> CREATOR = new Parcelable.Creator<RcsMessageSnippet>() {
+    public static final Parcelable.Creator<RcsMessageSnippet> CREATOR = new Parcelable.Creator<RcsMessageSnippet>() { // from class: android.telephony.ims.RcsMessageSnippet.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RcsMessageSnippet createFromParcel(Parcel in) {
             return new RcsMessageSnippet(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RcsMessageSnippet[] newArray(int size) {
             return new RcsMessageSnippet[size];
         }
@@ -41,10 +46,12 @@ public final class RcsMessageSnippet implements Parcelable {
         this.mTimestamp = in.readLong();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.mText);
         dest.writeInt(this.mStatus);

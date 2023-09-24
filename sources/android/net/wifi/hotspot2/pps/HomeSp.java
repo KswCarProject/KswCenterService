@@ -1,16 +1,21 @@
 package android.net.wifi.hotspot2.pps;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.TextUtils;
+import android.util.Log;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+/* loaded from: classes3.dex */
 public final class HomeSp implements Parcelable {
-    public static final Parcelable.Creator<HomeSp> CREATOR = new Parcelable.Creator<HomeSp>() {
+    public static final Parcelable.Creator<HomeSp> CREATOR = new Parcelable.Creator<HomeSp>() { // from class: android.net.wifi.hotspot2.pps.HomeSp.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public HomeSp createFromParcel(Parcel in) {
             HomeSp homeSp = new HomeSp();
             homeSp.setFqdn(in.readString());
@@ -24,6 +29,8 @@ public final class HomeSp implements Parcelable {
             return homeSp;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public HomeSp[] newArray(int size) {
             return new HomeSp[size];
         }
@@ -49,14 +56,14 @@ public final class HomeSp implements Parcelable {
     private static final int MAX_SSID_BYTES = 32;
     private static final int NULL_VALUE = -1;
     private static final String TAG = "HomeSp";
-    private String mFqdn = null;
-    private String mFriendlyName = null;
-    private Map<String, Long> mHomeNetworkIds = null;
-    private String mIconUrl = null;
-    private long[] mMatchAllOis = null;
-    private long[] mMatchAnyOis = null;
-    private String[] mOtherHomePartners = null;
-    private long[] mRoamingConsortiumOis = null;
+    private String mFqdn;
+    private String mFriendlyName;
+    private Map<String, Long> mHomeNetworkIds;
+    private String mIconUrl;
+    private long[] mMatchAllOis;
+    private long[] mMatchAnyOis;
+    private String[] mOtherHomePartners;
+    private long[] mRoamingConsortiumOis;
 
     public void setFqdn(String fqdn) {
         this.mFqdn = fqdn;
@@ -123,35 +130,54 @@ public final class HomeSp implements Parcelable {
     }
 
     public HomeSp() {
+        this.mFqdn = null;
+        this.mFriendlyName = null;
+        this.mIconUrl = null;
+        this.mHomeNetworkIds = null;
+        this.mMatchAllOis = null;
+        this.mMatchAnyOis = null;
+        this.mOtherHomePartners = null;
+        this.mRoamingConsortiumOis = null;
     }
 
     public HomeSp(HomeSp source) {
-        if (source != null) {
-            this.mFqdn = source.mFqdn;
-            this.mFriendlyName = source.mFriendlyName;
-            this.mIconUrl = source.mIconUrl;
-            if (source.mHomeNetworkIds != null) {
-                this.mHomeNetworkIds = Collections.unmodifiableMap(source.mHomeNetworkIds);
-            }
-            if (source.mMatchAllOis != null) {
-                this.mMatchAllOis = Arrays.copyOf(source.mMatchAllOis, source.mMatchAllOis.length);
-            }
-            if (source.mMatchAnyOis != null) {
-                this.mMatchAnyOis = Arrays.copyOf(source.mMatchAnyOis, source.mMatchAnyOis.length);
-            }
-            if (source.mOtherHomePartners != null) {
-                this.mOtherHomePartners = (String[]) Arrays.copyOf(source.mOtherHomePartners, source.mOtherHomePartners.length);
-            }
-            if (source.mRoamingConsortiumOis != null) {
-                this.mRoamingConsortiumOis = Arrays.copyOf(source.mRoamingConsortiumOis, source.mRoamingConsortiumOis.length);
-            }
+        this.mFqdn = null;
+        this.mFriendlyName = null;
+        this.mIconUrl = null;
+        this.mHomeNetworkIds = null;
+        this.mMatchAllOis = null;
+        this.mMatchAnyOis = null;
+        this.mOtherHomePartners = null;
+        this.mRoamingConsortiumOis = null;
+        if (source == null) {
+            return;
+        }
+        this.mFqdn = source.mFqdn;
+        this.mFriendlyName = source.mFriendlyName;
+        this.mIconUrl = source.mIconUrl;
+        if (source.mHomeNetworkIds != null) {
+            this.mHomeNetworkIds = Collections.unmodifiableMap(source.mHomeNetworkIds);
+        }
+        if (source.mMatchAllOis != null) {
+            this.mMatchAllOis = Arrays.copyOf(source.mMatchAllOis, source.mMatchAllOis.length);
+        }
+        if (source.mMatchAnyOis != null) {
+            this.mMatchAnyOis = Arrays.copyOf(source.mMatchAnyOis, source.mMatchAnyOis.length);
+        }
+        if (source.mOtherHomePartners != null) {
+            this.mOtherHomePartners = (String[]) Arrays.copyOf(source.mOtherHomePartners, source.mOtherHomePartners.length);
+        }
+        if (source.mRoamingConsortiumOis != null) {
+            this.mRoamingConsortiumOis = Arrays.copyOf(source.mRoamingConsortiumOis, source.mRoamingConsortiumOis.length);
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.mFqdn);
         dest.writeString(this.mFriendlyName);
@@ -167,78 +193,45 @@ public final class HomeSp implements Parcelable {
         if (this == thatObject) {
             return true;
         }
-        if (!(thatObject instanceof HomeSp)) {
-            return false;
+        if (thatObject instanceof HomeSp) {
+            HomeSp that = (HomeSp) thatObject;
+            return TextUtils.equals(this.mFqdn, that.mFqdn) && TextUtils.equals(this.mFriendlyName, that.mFriendlyName) && TextUtils.equals(this.mIconUrl, that.mIconUrl) && (this.mHomeNetworkIds != null ? this.mHomeNetworkIds.equals(that.mHomeNetworkIds) : that.mHomeNetworkIds == null) && Arrays.equals(this.mMatchAllOis, that.mMatchAllOis) && Arrays.equals(this.mMatchAnyOis, that.mMatchAnyOis) && Arrays.equals(this.mOtherHomePartners, that.mOtherHomePartners) && Arrays.equals(this.mRoamingConsortiumOis, that.mRoamingConsortiumOis);
         }
-        HomeSp that = (HomeSp) thatObject;
-        if (!TextUtils.equals(this.mFqdn, that.mFqdn) || !TextUtils.equals(this.mFriendlyName, that.mFriendlyName) || !TextUtils.equals(this.mIconUrl, that.mIconUrl) || (this.mHomeNetworkIds != null ? !this.mHomeNetworkIds.equals(that.mHomeNetworkIds) : that.mHomeNetworkIds != null) || !Arrays.equals(this.mMatchAllOis, that.mMatchAllOis) || !Arrays.equals(this.mMatchAnyOis, that.mMatchAnyOis) || !Arrays.equals(this.mOtherHomePartners, that.mOtherHomePartners) || !Arrays.equals(this.mRoamingConsortiumOis, that.mRoamingConsortiumOis)) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{this.mFqdn, this.mFriendlyName, this.mIconUrl, this.mHomeNetworkIds, this.mMatchAllOis, this.mMatchAnyOis, this.mOtherHomePartners, this.mRoamingConsortiumOis});
+        return Objects.hash(this.mFqdn, this.mFriendlyName, this.mIconUrl, this.mHomeNetworkIds, this.mMatchAllOis, this.mMatchAnyOis, this.mOtherHomePartners, this.mRoamingConsortiumOis);
     }
 
     public String toString() {
-        return "FQDN: " + this.mFqdn + "\n" + "FriendlyName: " + this.mFriendlyName + "\n" + "IconURL: " + this.mIconUrl + "\n" + "HomeNetworkIDs: " + this.mHomeNetworkIds + "\n" + "MatchAllOIs: " + this.mMatchAllOis + "\n" + "MatchAnyOIs: " + this.mMatchAnyOis + "\n" + "OtherHomePartners: " + this.mOtherHomePartners + "\n" + "RoamingConsortiumOIs: " + this.mRoamingConsortiumOis + "\n";
+        return "FQDN: " + this.mFqdn + "\nFriendlyName: " + this.mFriendlyName + "\nIconURL: " + this.mIconUrl + "\nHomeNetworkIDs: " + this.mHomeNetworkIds + "\nMatchAllOIs: " + this.mMatchAllOis + "\nMatchAnyOIs: " + this.mMatchAnyOis + "\nOtherHomePartners: " + this.mOtherHomePartners + "\nRoamingConsortiumOIs: " + this.mRoamingConsortiumOis + "\n";
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:13:0x0035  */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
+    /* JADX WARN: Removed duplicated region for block: B:15:0x0035  */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
     public boolean validate() {
-        /*
-            r5 = this;
-            java.lang.String r0 = r5.mFqdn
-            boolean r0 = android.text.TextUtils.isEmpty(r0)
-            r1 = 0
-            if (r0 == 0) goto L_0x0011
-            java.lang.String r0 = "HomeSp"
-            java.lang.String r2 = "Missing FQDN"
-            android.util.Log.d(r0, r2)
-            return r1
-        L_0x0011:
-            java.lang.String r0 = r5.mFriendlyName
-            boolean r0 = android.text.TextUtils.isEmpty(r0)
-            if (r0 == 0) goto L_0x0021
-            java.lang.String r0 = "HomeSp"
-            java.lang.String r2 = "Missing friendly name"
-            android.util.Log.d(r0, r2)
-            return r1
-        L_0x0021:
-            java.util.Map<java.lang.String, java.lang.Long> r0 = r5.mHomeNetworkIds
-            if (r0 == 0) goto L_0x005c
-            java.util.Map<java.lang.String, java.lang.Long> r0 = r5.mHomeNetworkIds
-            java.util.Set r0 = r0.entrySet()
-            java.util.Iterator r0 = r0.iterator()
-        L_0x002f:
-            boolean r2 = r0.hasNext()
-            if (r2 == 0) goto L_0x005c
-            java.lang.Object r2 = r0.next()
-            java.util.Map$Entry r2 = (java.util.Map.Entry) r2
-            java.lang.Object r3 = r2.getKey()
-            if (r3 == 0) goto L_0x0054
-            java.lang.Object r3 = r2.getKey()
-            java.lang.String r3 = (java.lang.String) r3
-            java.nio.charset.Charset r4 = java.nio.charset.StandardCharsets.UTF_8
-            byte[] r3 = r3.getBytes(r4)
-            int r3 = r3.length
-            r4 = 32
-            if (r3 <= r4) goto L_0x0053
-            goto L_0x0054
-        L_0x0053:
-            goto L_0x002f
-        L_0x0054:
-            java.lang.String r0 = "HomeSp"
-            java.lang.String r3 = "Invalid SSID in HomeNetworkIDs"
-            android.util.Log.d(r0, r3)
-            return r1
-        L_0x005c:
-            r0 = 1
-            return r0
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.net.wifi.hotspot2.pps.HomeSp.validate():boolean");
+        if (TextUtils.isEmpty(this.mFqdn)) {
+            Log.m72d(TAG, "Missing FQDN");
+            return false;
+        } else if (TextUtils.isEmpty(this.mFriendlyName)) {
+            Log.m72d(TAG, "Missing friendly name");
+            return false;
+        } else if (this.mHomeNetworkIds != null) {
+            for (Map.Entry<String, Long> entry : this.mHomeNetworkIds.entrySet()) {
+                if (entry.getKey() == null || entry.getKey().getBytes(StandardCharsets.UTF_8).length > 32) {
+                    Log.m72d(TAG, "Invalid SSID in HomeNetworkIDs");
+                    return false;
+                }
+                while (r0.hasNext()) {
+                }
+            }
+            return true;
+        } else {
+            return true;
+        }
     }
 
     private static void writeHomeNetworkIds(Parcel dest, Map<String, Long> networkIds) {
@@ -250,7 +243,7 @@ public final class HomeSp implements Parcelable {
         for (Map.Entry<String, Long> entry : networkIds.entrySet()) {
             dest.writeString(entry.getKey());
             if (entry.getValue() == null) {
-                dest.writeLong(-1);
+                dest.writeLong(-1L);
             } else {
                 dest.writeLong(entry.getValue().longValue());
             }

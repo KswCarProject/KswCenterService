@@ -2,26 +2,26 @@ package android.content;
 
 import android.accounts.Account;
 import android.app.Activity;
-import android.os.Bundle;
+import android.p007os.Bundle;
 import android.provider.ContactsContract;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
+/* loaded from: classes.dex */
 public class SyncActivityTooManyDeletes extends Activity implements AdapterView.OnItemClickListener {
     private Account mAccount;
     private String mAuthority;
     private long mNumDeletes;
     private String mProvider;
 
-    /* access modifiers changed from: protected */
-    public void onCreate(Bundle savedInstanceState) {
+    @Override // android.app.Activity
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle extras = getIntent().getExtras();
         if (extras == null) {
@@ -32,22 +32,25 @@ public class SyncActivityTooManyDeletes extends Activity implements AdapterView.
         this.mAccount = (Account) extras.getParcelable("account");
         this.mAuthority = extras.getString(ContactsContract.Directory.DIRECTORY_AUTHORITY);
         this.mProvider = extras.getString("provider");
-        ListAdapter adapter = new ArrayAdapter((Context) this, 17367043, 16908308, (T[]) new CharSequence[]{getResources().getText(R.string.sync_really_delete), getResources().getText(R.string.sync_undo_deletes), getResources().getText(R.string.sync_do_nothing)});
+        CharSequence[] options = {getResources().getText(C3132R.string.sync_really_delete), getResources().getText(C3132R.string.sync_undo_deletes), getResources().getText(C3132R.string.sync_do_nothing)};
+        ListAdapter adapter = new ArrayAdapter(this, 17367043, 16908308, options);
         ListView listView = new ListView(this);
         listView.setAdapter(adapter);
         listView.setItemsCanFocus(true);
         listView.setOnItemClickListener(this);
         TextView textView = new TextView(this);
-        textView.setText((CharSequence) String.format(getResources().getText(R.string.sync_too_many_deletes_desc).toString(), new Object[]{Long.valueOf(this.mNumDeletes), this.mProvider, this.mAccount.name}));
+        CharSequence tooManyDeletesDescFormat = getResources().getText(C3132R.string.sync_too_many_deletes_desc);
+        textView.setText(String.format(tooManyDeletesDescFormat.toString(), Long.valueOf(this.mNumDeletes), this.mProvider, this.mAccount.name));
         LinearLayout ll = new LinearLayout(this);
         ll.setOrientation(1);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-1, -2, 0.0f);
-        ll.addView((View) textView, (ViewGroup.LayoutParams) lp);
-        ll.addView((View) listView, (ViewGroup.LayoutParams) lp);
-        setContentView((View) ll);
+        ll.addView(textView, lp);
+        ll.addView(listView, lp);
+        setContentView(ll);
     }
 
-    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+    @Override // android.widget.AdapterView.OnItemClickListener
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (position == 0) {
             startSyncReallyDelete();
         } else if (position == 1) {

@@ -1,13 +1,14 @@
 package com.android.ims.internal.uce.options;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import com.android.ims.internal.uce.common.StatusCode;
 
+/* loaded from: classes4.dex */
 public interface IOptionsListener extends IInterface {
     @UnsupportedAppUsage
     void cmdStatus(OptionsCmdStatus optionsCmdStatus) throws RemoteException;
@@ -27,30 +28,39 @@ public interface IOptionsListener extends IInterface {
     @UnsupportedAppUsage
     void sipResponseReceived(String str, OptionsSipResponse optionsSipResponse, OptionsCapInfo optionsCapInfo) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IOptionsListener {
+        @Override // com.android.ims.internal.uce.options.IOptionsListener
         public void getVersionCb(String version) throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.uce.options.IOptionsListener
         public void serviceAvailable(StatusCode statusCode) throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.uce.options.IOptionsListener
         public void serviceUnavailable(StatusCode statusCode) throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.uce.options.IOptionsListener
         public void sipResponseReceived(String uri, OptionsSipResponse sipResponse, OptionsCapInfo capInfo) throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.uce.options.IOptionsListener
         public void cmdStatus(OptionsCmdStatus cmdStatus) throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.uce.options.IOptionsListener
         public void incomingOptions(String uri, OptionsCapInfo capInfo, int tID) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IOptionsListener {
         private static final String DESCRIPTOR = "com.android.ims.internal.uce.options.IOptionsListener";
         static final int TRANSACTION_cmdStatus = 5;
@@ -69,12 +79,13 @@ public interface IOptionsListener extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IOptionsListener)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IOptionsListener)) {
+                return (IOptionsListener) iin;
             }
-            return (IOptionsListener) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -98,133 +109,69 @@ public interface IOptionsListener extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v3, resolved type: com.android.ims.internal.uce.common.StatusCode} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v7, resolved type: com.android.ims.internal.uce.common.StatusCode} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v11, resolved type: com.android.ims.internal.uce.options.OptionsCapInfo} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v15, resolved type: com.android.ims.internal.uce.options.OptionsCmdStatus} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v19, resolved type: com.android.ims.internal.uce.options.OptionsCapInfo} */
-        /* JADX WARNING: type inference failed for: r1v1 */
-        /* JADX WARNING: type inference failed for: r1v24 */
-        /* JADX WARNING: type inference failed for: r1v25 */
-        /* JADX WARNING: type inference failed for: r1v26 */
-        /* JADX WARNING: type inference failed for: r1v27 */
-        /* JADX WARNING: type inference failed for: r1v28 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r7, android.os.Parcel r8, android.os.Parcel r9, int r10) throws android.os.RemoteException {
-            /*
-                r6 = this;
-                java.lang.String r0 = "com.android.ims.internal.uce.options.IOptionsListener"
-                r1 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r2 = 1
-                if (r7 == r1) goto L_0x00bd
-                r1 = 0
-                switch(r7) {
-                    case 1: goto L_0x00af;
-                    case 2: goto L_0x0095;
-                    case 3: goto L_0x007b;
-                    case 4: goto L_0x004d;
-                    case 5: goto L_0x0033;
-                    case 6: goto L_0x0011;
-                    default: goto L_0x000c;
-                }
-            L_0x000c:
-                boolean r1 = super.onTransact(r7, r8, r9, r10)
-                return r1
-            L_0x0011:
-                r8.enforceInterface(r0)
-                java.lang.String r3 = r8.readString()
-                int r4 = r8.readInt()
-                if (r4 == 0) goto L_0x0027
-                android.os.Parcelable$Creator<com.android.ims.internal.uce.options.OptionsCapInfo> r1 = com.android.ims.internal.uce.options.OptionsCapInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                com.android.ims.internal.uce.options.OptionsCapInfo r1 = (com.android.ims.internal.uce.options.OptionsCapInfo) r1
-                goto L_0x0028
-            L_0x0027:
-            L_0x0028:
-                int r4 = r8.readInt()
-                r6.incomingOptions(r3, r1, r4)
-                r9.writeNoException()
-                return r2
-            L_0x0033:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x0045
-                android.os.Parcelable$Creator<com.android.ims.internal.uce.options.OptionsCmdStatus> r1 = com.android.ims.internal.uce.options.OptionsCmdStatus.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                com.android.ims.internal.uce.options.OptionsCmdStatus r1 = (com.android.ims.internal.uce.options.OptionsCmdStatus) r1
-                goto L_0x0046
-            L_0x0045:
-            L_0x0046:
-                r6.cmdStatus(r1)
-                r9.writeNoException()
-                return r2
-            L_0x004d:
-                r8.enforceInterface(r0)
-                java.lang.String r3 = r8.readString()
-                int r4 = r8.readInt()
-                if (r4 == 0) goto L_0x0063
-                android.os.Parcelable$Creator<com.android.ims.internal.uce.options.OptionsSipResponse> r4 = com.android.ims.internal.uce.options.OptionsSipResponse.CREATOR
-                java.lang.Object r4 = r4.createFromParcel(r8)
-                com.android.ims.internal.uce.options.OptionsSipResponse r4 = (com.android.ims.internal.uce.options.OptionsSipResponse) r4
-                goto L_0x0064
-            L_0x0063:
-                r4 = r1
-            L_0x0064:
-                int r5 = r8.readInt()
-                if (r5 == 0) goto L_0x0073
-                android.os.Parcelable$Creator<com.android.ims.internal.uce.options.OptionsCapInfo> r1 = com.android.ims.internal.uce.options.OptionsCapInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                com.android.ims.internal.uce.options.OptionsCapInfo r1 = (com.android.ims.internal.uce.options.OptionsCapInfo) r1
-                goto L_0x0074
-            L_0x0073:
-            L_0x0074:
-                r6.sipResponseReceived(r3, r4, r1)
-                r9.writeNoException()
-                return r2
-            L_0x007b:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x008d
-                android.os.Parcelable$Creator<com.android.ims.internal.uce.common.StatusCode> r1 = com.android.ims.internal.uce.common.StatusCode.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                com.android.ims.internal.uce.common.StatusCode r1 = (com.android.ims.internal.uce.common.StatusCode) r1
-                goto L_0x008e
-            L_0x008d:
-            L_0x008e:
-                r6.serviceUnavailable(r1)
-                r9.writeNoException()
-                return r2
-            L_0x0095:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x00a7
-                android.os.Parcelable$Creator<com.android.ims.internal.uce.common.StatusCode> r1 = com.android.ims.internal.uce.common.StatusCode.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                com.android.ims.internal.uce.common.StatusCode r1 = (com.android.ims.internal.uce.common.StatusCode) r1
-                goto L_0x00a8
-            L_0x00a7:
-            L_0x00a8:
-                r6.serviceAvailable(r1)
-                r9.writeNoException()
-                return r2
-            L_0x00af:
-                r8.enforceInterface(r0)
-                java.lang.String r1 = r8.readString()
-                r6.getVersionCb(r1)
-                r9.writeNoException()
-                return r2
-            L_0x00bd:
-                r9.writeString(r0)
-                return r2
-            */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.ims.internal.uce.options.IOptionsListener.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            OptionsSipResponse _arg1;
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0 = data.readString();
+                    getVersionCb(_arg0);
+                    reply.writeNoException();
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    StatusCode _arg02 = data.readInt() != 0 ? StatusCode.CREATOR.createFromParcel(data) : null;
+                    serviceAvailable(_arg02);
+                    reply.writeNoException();
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    StatusCode _arg03 = data.readInt() != 0 ? StatusCode.CREATOR.createFromParcel(data) : null;
+                    serviceUnavailable(_arg03);
+                    reply.writeNoException();
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg04 = data.readString();
+                    if (data.readInt() != 0) {
+                        _arg1 = OptionsSipResponse.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg1 = null;
+                    }
+                    OptionsCapInfo _arg2 = data.readInt() != 0 ? OptionsCapInfo.CREATOR.createFromParcel(data) : null;
+                    sipResponseReceived(_arg04, _arg1, _arg2);
+                    reply.writeNoException();
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    OptionsCmdStatus _arg05 = data.readInt() != 0 ? OptionsCmdStatus.CREATOR.createFromParcel(data) : null;
+                    cmdStatus(_arg05);
+                    reply.writeNoException();
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg06 = data.readString();
+                    OptionsCapInfo _arg12 = data.readInt() != 0 ? OptionsCapInfo.CREATOR.createFromParcel(data) : null;
+                    int _arg22 = data.readInt();
+                    incomingOptions(_arg06, _arg12, _arg22);
+                    reply.writeNoException();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IOptionsListener {
             public static IOptionsListener sDefaultImpl;
             private IBinder mRemote;
@@ -233,6 +180,7 @@ public interface IOptionsListener extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -241,25 +189,26 @@ public interface IOptionsListener extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // com.android.ims.internal.uce.options.IOptionsListener
             public void getVersionCb(String version) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(version);
-                    if (this.mRemote.transact(1, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().getVersionCb(version);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().getVersionCb(version);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.ims.internal.uce.options.IOptionsListener
             public void serviceAvailable(StatusCode statusCode) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -271,19 +220,19 @@ public interface IOptionsListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(2, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().serviceAvailable(statusCode);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().serviceAvailable(statusCode);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.ims.internal.uce.options.IOptionsListener
             public void serviceUnavailable(StatusCode statusCode) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -295,19 +244,19 @@ public interface IOptionsListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(3, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().serviceUnavailable(statusCode);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().serviceUnavailable(statusCode);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.ims.internal.uce.options.IOptionsListener
             public void sipResponseReceived(String uri, OptionsSipResponse sipResponse, OptionsCapInfo capInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -326,19 +275,19 @@ public interface IOptionsListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(4, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().sipResponseReceived(uri, sipResponse, capInfo);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().sipResponseReceived(uri, sipResponse, capInfo);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.ims.internal.uce.options.IOptionsListener
             public void cmdStatus(OptionsCmdStatus cmdStatus) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -350,19 +299,19 @@ public interface IOptionsListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(5, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().cmdStatus(cmdStatus);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().cmdStatus(cmdStatus);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.ims.internal.uce.options.IOptionsListener
             public void incomingOptions(String uri, OptionsCapInfo capInfo, int tID) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -376,13 +325,12 @@ public interface IOptionsListener extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(tID);
-                    if (this.mRemote.transact(6, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().incomingOptions(uri, capInfo, tID);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().incomingOptions(uri, capInfo, tID);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -391,11 +339,11 @@ public interface IOptionsListener extends IInterface {
         }
 
         public static boolean setDefaultImpl(IOptionsListener impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IOptionsListener getDefaultImpl() {

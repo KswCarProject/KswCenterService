@@ -3,10 +3,11 @@ package com.wits.pms.utils;
 import android.content.Context;
 import android.media.AudioManager;
 
+/* loaded from: classes2.dex */
 public class SystemSoundControl {
-    public static int lastAlarmIndex = -1;
     public static int lastMusicIndex = -1;
     public static int lastRingIndex = -1;
+    public static int lastAlarmIndex = -1;
 
     public static void mute(Context context, int streamType, boolean mute) {
         if (mute) {

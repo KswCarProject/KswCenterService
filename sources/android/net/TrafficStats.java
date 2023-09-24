@@ -5,10 +5,9 @@ import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
 import android.net.INetworkStatsService;
-import android.net.NetworkStats;
-import android.os.Process;
-import android.os.RemoteException;
-import android.os.ServiceManager;
+import android.p007os.Process;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
 import com.android.server.NetworkManagementSocketTagger;
 import dalvik.system.SocketTagger;
 import java.io.FileDescriptor;
@@ -17,6 +16,7 @@ import java.net.DatagramSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
+/* loaded from: classes3.dex */
 public class TrafficStats {
     @Deprecated
     public static final long GB_IN_BYTES = 1073741824;
@@ -148,34 +148,35 @@ public class TrafficStats {
 
     public static void startDataProfiling(Context context) {
         synchronized (sProfilingLock) {
-            if (sActiveProfilingStart == null) {
-                sActiveProfilingStart = getDataLayerSnapshotForUid(context);
-            } else {
+            if (sActiveProfilingStart != null) {
                 throw new IllegalStateException("already profiling data");
             }
+            sActiveProfilingStart = getDataLayerSnapshotForUid(context);
         }
     }
 
     public static NetworkStats stopDataProfiling(Context context) {
         NetworkStats profilingDelta;
         synchronized (sProfilingLock) {
-            if (sActiveProfilingStart != null) {
-                profilingDelta = NetworkStats.subtract(getDataLayerSnapshotForUid(context), sActiveProfilingStart, (NetworkStats.NonMonotonicObserver) null, null);
-                sActiveProfilingStart = null;
-            } else {
+            if (sActiveProfilingStart == null) {
                 throw new IllegalStateException("not profiling data");
             }
+            NetworkStats profilingStop = getDataLayerSnapshotForUid(context);
+            profilingDelta = NetworkStats.subtract(profilingStop, sActiveProfilingStart, null, null);
+            sActiveProfilingStart = null;
         }
         return profilingDelta;
     }
 
     public static void incrementOperationCount(int operationCount) {
-        incrementOperationCount(getThreadStatsTag(), operationCount);
+        int tag = getThreadStatsTag();
+        incrementOperationCount(tag, operationCount);
     }
 
     public static void incrementOperationCount(int tag, int operationCount) {
+        int uid = Process.myUid();
         try {
-            getStatsService().incrementOperationCount(Process.myUid(), tag, operationCount);
+            getStatsService().incrementOperationCount(uid, tag, operationCount);
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
         }
@@ -194,12 +195,13 @@ public class TrafficStats {
 
     private static long addIfSupported(long stat) {
         if (stat == -1) {
-            return 0;
+            return 0L;
         }
         return stat;
     }
 
     public static long getMobileTxPackets() {
+        String[] mobileIfaces;
         long total = 0;
         for (String iface : getMobileIfaces()) {
             total += addIfSupported(getTxPackets(iface));
@@ -208,6 +210,7 @@ public class TrafficStats {
     }
 
     public static long getMobileRxPackets() {
+        String[] mobileIfaces;
         long total = 0;
         for (String iface : getMobileIfaces()) {
             total += addIfSupported(getRxPackets(iface));
@@ -216,6 +219,7 @@ public class TrafficStats {
     }
 
     public static long getMobileTxBytes() {
+        String[] mobileIfaces;
         long total = 0;
         for (String iface : getMobileIfaces()) {
             total += addIfSupported(getTxBytes(iface));
@@ -224,6 +228,7 @@ public class TrafficStats {
     }
 
     public static long getMobileRxBytes() {
+        String[] mobileIfaces;
         long total = 0;
         for (String iface : getMobileIfaces()) {
             total += addIfSupported(getRxBytes(iface));
@@ -233,14 +238,12 @@ public class TrafficStats {
 
     @UnsupportedAppUsage
     public static long getMobileTcpRxPackets() {
+        String[] mobileIfaces;
         long total = 0;
-        String[] mobileIfaces = getMobileIfaces();
-        int length = mobileIfaces.length;
-        int i = 0;
-        while (i < length) {
+        for (String iface : getMobileIfaces()) {
             try {
-                total += addIfSupported(getStatsService().getIfaceStats(mobileIfaces[i], 4));
-                i++;
+                long stat = getStatsService().getIfaceStats(iface, 4);
+                total += addIfSupported(stat);
             } catch (RemoteException e) {
                 throw e.rethrowFromSystemServer();
             }
@@ -250,14 +253,12 @@ public class TrafficStats {
 
     @UnsupportedAppUsage
     public static long getMobileTcpTxPackets() {
+        String[] mobileIfaces;
         long total = 0;
-        String[] mobileIfaces = getMobileIfaces();
-        int length = mobileIfaces.length;
-        int i = 0;
-        while (i < length) {
+        for (String iface : getMobileIfaces()) {
             try {
-                total += addIfSupported(getStatsService().getIfaceStats(mobileIfaces[i], 5));
-                i++;
+                long stat = getStatsService().getIfaceStats(iface, 5);
+                total += addIfSupported(stat);
             } catch (RemoteException e) {
                 throw e.rethrowFromSystemServer();
             }
@@ -365,95 +366,96 @@ public class TrafficStats {
 
     public static long getUidTxBytes(int uid) {
         int callingUid = Process.myUid();
-        if (callingUid != 1000 && callingUid != uid) {
-            return -1;
+        if (callingUid == 1000 || callingUid == uid) {
+            try {
+                return getStatsService().getUidStats(uid, 2);
+            } catch (RemoteException e) {
+                throw e.rethrowFromSystemServer();
+            }
         }
-        try {
-            return getStatsService().getUidStats(uid, 2);
-        } catch (RemoteException e) {
-            throw e.rethrowFromSystemServer();
-        }
+        return -1L;
     }
 
     public static long getUidRxBytes(int uid) {
         int callingUid = Process.myUid();
-        if (callingUid != 1000 && callingUid != uid) {
-            return -1;
+        if (callingUid == 1000 || callingUid == uid) {
+            try {
+                return getStatsService().getUidStats(uid, 0);
+            } catch (RemoteException e) {
+                throw e.rethrowFromSystemServer();
+            }
         }
-        try {
-            return getStatsService().getUidStats(uid, 0);
-        } catch (RemoteException e) {
-            throw e.rethrowFromSystemServer();
-        }
+        return -1L;
     }
 
     public static long getUidTxPackets(int uid) {
         int callingUid = Process.myUid();
-        if (callingUid != 1000 && callingUid != uid) {
-            return -1;
+        if (callingUid == 1000 || callingUid == uid) {
+            try {
+                return getStatsService().getUidStats(uid, 3);
+            } catch (RemoteException e) {
+                throw e.rethrowFromSystemServer();
+            }
         }
-        try {
-            return getStatsService().getUidStats(uid, 3);
-        } catch (RemoteException e) {
-            throw e.rethrowFromSystemServer();
-        }
+        return -1L;
     }
 
     public static long getUidRxPackets(int uid) {
         int callingUid = Process.myUid();
-        if (callingUid != 1000 && callingUid != uid) {
-            return -1;
+        if (callingUid == 1000 || callingUid == uid) {
+            try {
+                return getStatsService().getUidStats(uid, 1);
+            } catch (RemoteException e) {
+                throw e.rethrowFromSystemServer();
+            }
         }
-        try {
-            return getStatsService().getUidStats(uid, 1);
-        } catch (RemoteException e) {
-            throw e.rethrowFromSystemServer();
-        }
+        return -1L;
     }
 
     @Deprecated
     public static long getUidTcpTxBytes(int uid) {
-        return -1;
+        return -1L;
     }
 
     @Deprecated
     public static long getUidTcpRxBytes(int uid) {
-        return -1;
+        return -1L;
     }
 
     @Deprecated
     public static long getUidUdpTxBytes(int uid) {
-        return -1;
+        return -1L;
     }
 
     @Deprecated
     public static long getUidUdpRxBytes(int uid) {
-        return -1;
+        return -1L;
     }
 
     @Deprecated
     public static long getUidTcpTxSegments(int uid) {
-        return -1;
+        return -1L;
     }
 
     @Deprecated
     public static long getUidTcpRxSegments(int uid) {
-        return -1;
+        return -1L;
     }
 
     @Deprecated
     public static long getUidUdpTxPackets(int uid) {
-        return -1;
+        return -1L;
     }
 
     @Deprecated
     public static long getUidUdpRxPackets(int uid) {
-        return -1;
+        return -1L;
     }
 
     private static NetworkStats getDataLayerSnapshotForUid(Context context) {
+        int uid = Process.myUid();
         try {
-            return getStatsService().getDataLayerSnapshotForUid(Process.myUid());
+            return getStatsService().getDataLayerSnapshotForUid(uid);
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
         }

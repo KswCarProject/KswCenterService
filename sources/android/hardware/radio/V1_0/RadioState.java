@@ -2,9 +2,12 @@ package android.hardware.radio.V1_0;
 
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class RadioState {
     public static final int OFF = 0;
-    public static final int ON = 10;
+
+    /* renamed from: ON */
+    public static final int f91ON = 10;
     public static final int UNAVAILABLE = 1;
 
     public static final String toString(int o) {

@@ -1,7 +1,8 @@
 package android.webkit;
 
-import android.os.Handler;
+import android.p007os.Handler;
 
+/* loaded from: classes4.dex */
 public class HttpAuthHandler extends Handler {
     public boolean useHttpAuthUsernamePassword() {
         return false;

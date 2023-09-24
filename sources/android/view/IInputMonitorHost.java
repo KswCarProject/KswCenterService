@@ -1,28 +1,34 @@
 package android.view;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes4.dex */
 public interface IInputMonitorHost extends IInterface {
     void dispose() throws RemoteException;
 
     void pilferPointers() throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IInputMonitorHost {
+        @Override // android.view.IInputMonitorHost
         public void pilferPointers() throws RemoteException {
         }
 
+        @Override // android.view.IInputMonitorHost
         public void dispose() throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IInputMonitorHost {
         private static final String DESCRIPTOR = "android.view.IInputMonitorHost";
         static final int TRANSACTION_dispose = 2;
@@ -37,12 +43,13 @@ public interface IInputMonitorHost extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IInputMonitorHost)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IInputMonitorHost)) {
+                return (IInputMonitorHost) iin;
             }
-            return (IInputMonitorHost) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -58,30 +65,32 @@ public interface IInputMonitorHost extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        pilferPointers();
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        dispose();
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    pilferPointers();
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    dispose();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IInputMonitorHost {
             public static IInputMonitorHost sDefaultImpl;
             private IBinder mRemote;
@@ -90,6 +99,7 @@ public interface IInputMonitorHost extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -98,13 +108,13 @@ public interface IInputMonitorHost extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.view.IInputMonitorHost
             public void pilferPointers() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().pilferPointers();
                     }
                 } finally {
@@ -112,13 +122,13 @@ public interface IInputMonitorHost extends IInterface {
                 }
             }
 
+            @Override // android.view.IInputMonitorHost
             public void dispose() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().dispose();
                     }
                 } finally {
@@ -128,11 +138,11 @@ public interface IInputMonitorHost extends IInterface {
         }
 
         public static boolean setDefaultImpl(IInputMonitorHost impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IInputMonitorHost getDefaultImpl() {

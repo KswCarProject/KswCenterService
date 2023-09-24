@@ -11,9 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
 @Deprecated
+/* loaded from: classes.dex */
 public class FragmentBreadCrumbs extends ViewGroup implements FragmentManager.OnBackStackChangedListener {
     private static final int DEFAULT_GRAVITY = 8388627;
     Activity mActivity;
@@ -22,26 +23,25 @@ public class FragmentBreadCrumbs extends ViewGroup implements FragmentManager.On
     LayoutInflater mInflater;
     private int mLayoutResId;
     int mMaxVisible;
-    /* access modifiers changed from: private */
-    public OnBreadCrumbClickListener mOnBreadCrumbClickListener;
+    private OnBreadCrumbClickListener mOnBreadCrumbClickListener;
     private View.OnClickListener mOnClickListener;
-    /* access modifiers changed from: private */
-    public View.OnClickListener mParentClickListener;
+    private View.OnClickListener mParentClickListener;
     BackStackRecord mParentEntry;
     private int mTextColor;
     BackStackRecord mTopEntry;
 
     @Deprecated
+    /* loaded from: classes.dex */
     public interface OnBreadCrumbClickListener {
         boolean onBreadCrumbClick(FragmentManager.BackStackEntry backStackEntry, int i);
     }
 
     public FragmentBreadCrumbs(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public FragmentBreadCrumbs(Context context, AttributeSet attrs) {
-        this(context, attrs, R.attr.fragmentBreadCrumbsStyle);
+        this(context, attrs, C3132R.attr.fragmentBreadCrumbsStyle);
     }
 
     public FragmentBreadCrumbs(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -51,30 +51,34 @@ public class FragmentBreadCrumbs extends ViewGroup implements FragmentManager.On
     public FragmentBreadCrumbs(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         this.mMaxVisible = -1;
-        this.mOnClickListener = new View.OnClickListener() {
+        this.mOnClickListener = new View.OnClickListener() { // from class: android.app.FragmentBreadCrumbs.1
+            @Override // android.view.View.OnClickListener
             public void onClick(View v) {
                 if (v.getTag() instanceof FragmentManager.BackStackEntry) {
                     FragmentManager.BackStackEntry bse = (FragmentManager.BackStackEntry) v.getTag();
-                    if (bse != FragmentBreadCrumbs.this.mParentEntry) {
-                        if (FragmentBreadCrumbs.this.mOnBreadCrumbClickListener != null) {
-                            if (FragmentBreadCrumbs.this.mOnBreadCrumbClickListener.onBreadCrumbClick(bse == FragmentBreadCrumbs.this.mTopEntry ? null : bse, 0)) {
-                                return;
-                            }
+                    if (bse == FragmentBreadCrumbs.this.mParentEntry) {
+                        if (FragmentBreadCrumbs.this.mParentClickListener != null) {
+                            FragmentBreadCrumbs.this.mParentClickListener.onClick(v);
+                            return;
                         }
-                        if (bse == FragmentBreadCrumbs.this.mTopEntry) {
-                            FragmentBreadCrumbs.this.mActivity.getFragmentManager().popBackStack();
-                        } else {
-                            FragmentBreadCrumbs.this.mActivity.getFragmentManager().popBackStack(bse.getId(), 0);
+                        return;
+                    }
+                    if (FragmentBreadCrumbs.this.mOnBreadCrumbClickListener != null) {
+                        if (FragmentBreadCrumbs.this.mOnBreadCrumbClickListener.onBreadCrumbClick(bse == FragmentBreadCrumbs.this.mTopEntry ? null : bse, 0)) {
+                            return;
                         }
-                    } else if (FragmentBreadCrumbs.this.mParentClickListener != null) {
-                        FragmentBreadCrumbs.this.mParentClickListener.onClick(v);
+                    }
+                    if (bse == FragmentBreadCrumbs.this.mTopEntry) {
+                        FragmentBreadCrumbs.this.mActivity.getFragmentManager().popBackStack();
+                    } else {
+                        FragmentBreadCrumbs.this.mActivity.getFragmentManager().popBackStack(bse.getId(), 0);
                     }
                 }
             }
         };
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.FragmentBreadCrumbs, defStyleAttr, defStyleRes);
+        TypedArray a = context.obtainStyledAttributes(attrs, C3132R.styleable.FragmentBreadCrumbs, defStyleAttr, defStyleRes);
         this.mGravity = a.getInt(0, DEFAULT_GRAVITY);
-        this.mLayoutResId = a.getResourceId(2, R.layout.fragment_bread_crumb_item);
+        this.mLayoutResId = a.getResourceId(2, C3132R.layout.fragment_bread_crumb_item);
         this.mTextColor = a.getColor(1, 0);
         a.recycle();
     }
@@ -82,7 +86,7 @@ public class FragmentBreadCrumbs extends ViewGroup implements FragmentManager.On
     public void setActivity(Activity a) {
         this.mActivity = a;
         this.mInflater = (LayoutInflater) a.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.mContainer = (LinearLayout) this.mInflater.inflate((int) R.layout.fragment_bread_crumbs, (ViewGroup) this, false);
+        this.mContainer = (LinearLayout) this.mInflater.inflate(C3132R.layout.fragment_bread_crumbs, (ViewGroup) this, false);
         addView(this.mContainer);
         a.getFragmentManager().addOnBackStackChangedListener(this);
         updateCrumbs();
@@ -90,11 +94,10 @@ public class FragmentBreadCrumbs extends ViewGroup implements FragmentManager.On
     }
 
     public void setMaxVisible(int visibleCrumbs) {
-        if (visibleCrumbs >= 1) {
-            this.mMaxVisible = visibleCrumbs;
-            return;
+        if (visibleCrumbs < 1) {
+            throw new IllegalArgumentException("visibleCrumbs must be greater than zero");
         }
-        throw new IllegalArgumentException("visibleCrumbs must be greater than zero");
+        this.mMaxVisible = visibleCrumbs;
     }
 
     public void setParentTitle(CharSequence title, CharSequence shortTitle, View.OnClickListener listener) {
@@ -122,37 +125,41 @@ public class FragmentBreadCrumbs extends ViewGroup implements FragmentManager.On
         updateCrumbs();
     }
 
-    /* access modifiers changed from: protected */
-    public void onLayout(boolean changed, int l, int t, int r, int b) {
-        int childRight;
+    @Override // android.view.ViewGroup, android.view.View
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
         int childLeft;
-        if (getChildCount() != 0) {
-            View child = getChildAt(0);
-            int childTop = this.mPaddingTop;
-            int childBottom = (this.mPaddingTop + child.getMeasuredHeight()) - this.mPaddingBottom;
-            int absoluteGravity = Gravity.getAbsoluteGravity(this.mGravity & 8388615, getLayoutDirection());
-            if (absoluteGravity == 1) {
-                childLeft = this.mPaddingLeft + (((this.mRight - this.mLeft) - child.getMeasuredWidth()) / 2);
-                childRight = child.getMeasuredWidth() + childLeft;
-            } else if (absoluteGravity != 5) {
-                childLeft = this.mPaddingLeft;
-                childRight = child.getMeasuredWidth() + childLeft;
-            } else {
-                childRight = (this.mRight - this.mLeft) - this.mPaddingRight;
-                childLeft = childRight - child.getMeasuredWidth();
-            }
-            if (childLeft < this.mPaddingLeft) {
-                childLeft = this.mPaddingLeft;
-            }
-            if (childRight > (this.mRight - this.mLeft) - this.mPaddingRight) {
-                childRight = (this.mRight - this.mLeft) - this.mPaddingRight;
-            }
-            child.layout(childLeft, childTop, childRight, childBottom);
+        int childRight;
+        int childCount = getChildCount();
+        if (childCount == 0) {
+            return;
         }
+        View child = getChildAt(0);
+        int childTop = this.mPaddingTop;
+        int childBottom = (this.mPaddingTop + child.getMeasuredHeight()) - this.mPaddingBottom;
+        int layoutDirection = getLayoutDirection();
+        int horizontalGravity = this.mGravity & 8388615;
+        int absoluteGravity = Gravity.getAbsoluteGravity(horizontalGravity, layoutDirection);
+        if (absoluteGravity == 1) {
+            childLeft = this.mPaddingLeft + (((this.mRight - this.mLeft) - child.getMeasuredWidth()) / 2);
+            childRight = child.getMeasuredWidth() + childLeft;
+        } else if (absoluteGravity == 5) {
+            childRight = (this.mRight - this.mLeft) - this.mPaddingRight;
+            childLeft = childRight - child.getMeasuredWidth();
+        } else {
+            childLeft = this.mPaddingLeft;
+            childRight = child.getMeasuredWidth() + childLeft;
+        }
+        if (childLeft < this.mPaddingLeft) {
+            childLeft = this.mPaddingLeft;
+        }
+        if (childRight > (this.mRight - this.mLeft) - this.mPaddingRight) {
+            childRight = (this.mRight - this.mLeft) - this.mPaddingRight;
+        }
+        child.layout(childLeft, childTop, childRight, childBottom);
     }
 
-    /* access modifiers changed from: protected */
-    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    @Override // android.view.View
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int count = getChildCount();
         int maxHeight = 0;
         int maxWidth = 0;
@@ -166,20 +173,17 @@ public class FragmentBreadCrumbs extends ViewGroup implements FragmentManager.On
                 measuredChildState = combineMeasuredStates(measuredChildState, child.getMeasuredState());
             }
         }
-        setMeasuredDimension(resolveSizeAndState(Math.max(maxWidth + this.mPaddingLeft + this.mPaddingRight, getSuggestedMinimumWidth()), widthMeasureSpec, measuredChildState), resolveSizeAndState(Math.max(maxHeight + this.mPaddingTop + this.mPaddingBottom, getSuggestedMinimumHeight()), heightMeasureSpec, measuredChildState << 16));
+        int i2 = this.mPaddingLeft;
+        setMeasuredDimension(resolveSizeAndState(Math.max(maxWidth + i2 + this.mPaddingRight, getSuggestedMinimumWidth()), widthMeasureSpec, measuredChildState), resolveSizeAndState(Math.max(maxHeight + this.mPaddingTop + this.mPaddingBottom, getSuggestedMinimumHeight()), heightMeasureSpec, measuredChildState << 16));
     }
 
+    @Override // android.app.FragmentManager.OnBackStackChangedListener
     public void onBackStackChanged() {
         updateCrumbs();
     }
 
     private int getPreEntryCount() {
-        int i = 0;
-        int i2 = this.mTopEntry != null ? 1 : 0;
-        if (this.mParentEntry != null) {
-            i = 1;
-        }
-        return i2 + i;
+        return (this.mTopEntry != null ? 1 : 0) + (this.mParentEntry != null ? 1 : 0);
     }
 
     private FragmentManager.BackStackEntry getPreEntry(int index) {
@@ -189,51 +193,62 @@ public class FragmentBreadCrumbs extends ViewGroup implements FragmentManager.On
         return this.mTopEntry;
     }
 
-    /* access modifiers changed from: package-private */
-    public void updateCrumbs() {
+    void updateCrumbs() {
+        int i;
         FragmentManager.BackStackEntry bse;
         FragmentManager fm = this.mActivity.getFragmentManager();
         int numEntries = fm.getBackStackEntryCount();
         int numPreEntries = getPreEntryCount();
         int numViews = this.mContainer.getChildCount();
-        for (int i = 0; i < numEntries + numPreEntries; i++) {
-            if (i < numPreEntries) {
-                bse = getPreEntry(i);
+        int numViews2 = numViews;
+        for (int numViews3 = 0; numViews3 < numEntries + numPreEntries; numViews3++) {
+            if (numViews3 < numPreEntries) {
+                bse = getPreEntry(numViews3);
             } else {
-                bse = fm.getBackStackEntryAt(i - numPreEntries);
+                bse = fm.getBackStackEntryAt(numViews3 - numPreEntries);
             }
-            if (i < numViews && this.mContainer.getChildAt(i).getTag() != bse) {
-                for (int j = i; j < numViews; j++) {
-                    this.mContainer.removeViewAt(i);
+            if (numViews3 < numViews2) {
+                View v = this.mContainer.getChildAt(numViews3);
+                Object tag = v.getTag();
+                if (tag != bse) {
+                    for (int j = numViews3; j < numViews2; j++) {
+                        this.mContainer.removeViewAt(numViews3);
+                    }
+                    numViews2 = numViews3;
                 }
-                numViews = i;
             }
-            if (i >= numViews) {
+            if (numViews3 >= numViews2) {
                 View item = this.mInflater.inflate(this.mLayoutResId, (ViewGroup) this, false);
                 TextView text = (TextView) item.findViewById(16908310);
                 text.setText(bse.getBreadCrumbTitle());
                 text.setTag(bse);
                 text.setTextColor(this.mTextColor);
-                if (i == 0) {
-                    item.findViewById(R.id.left_icon).setVisibility(8);
+                if (numViews3 == 0) {
+                    item.findViewById(C3132R.C3134id.left_icon).setVisibility(8);
                 }
                 this.mContainer.addView(item);
                 text.setOnClickListener(this.mOnClickListener);
             }
         }
         int i2 = numEntries + numPreEntries;
-        int numViews2 = this.mContainer.getChildCount();
-        while (numViews2 > i2) {
-            this.mContainer.removeViewAt(numViews2 - 1);
-            numViews2--;
+        int numViews4 = this.mContainer.getChildCount();
+        while (numViews4 > i2) {
+            this.mContainer.removeViewAt(numViews4 - 1);
+            numViews4--;
         }
         int i3 = 0;
-        while (i3 < numViews2) {
+        while (i3 < numViews4) {
             View child = this.mContainer.getChildAt(i3);
-            child.findViewById(16908310).setEnabled(i3 < numViews2 + -1);
+            child.findViewById(16908310).setEnabled(i3 < numViews4 + (-1));
             if (this.mMaxVisible > 0) {
-                child.setVisibility(i3 < numViews2 - this.mMaxVisible ? 8 : 0);
-                child.findViewById(R.id.left_icon).setVisibility((i3 <= numViews2 - this.mMaxVisible || i3 == 0) ? 8 : 0);
+                child.setVisibility(i3 < numViews4 - this.mMaxVisible ? 8 : 0);
+                View leftIcon = child.findViewById(C3132R.C3134id.left_icon);
+                if (i3 > numViews4 - this.mMaxVisible && i3 != 0) {
+                    i = 0;
+                } else {
+                    i = 8;
+                }
+                leftIcon.setVisibility(i);
             }
             i3++;
         }

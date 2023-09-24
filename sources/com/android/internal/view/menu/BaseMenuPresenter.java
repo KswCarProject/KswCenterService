@@ -8,17 +8,16 @@ import com.android.internal.view.menu.MenuPresenter;
 import com.android.internal.view.menu.MenuView;
 import java.util.ArrayList;
 
+/* loaded from: classes4.dex */
 public abstract class BaseMenuPresenter implements MenuPresenter {
     private MenuPresenter.Callback mCallback;
     protected Context mContext;
     private int mId;
     protected LayoutInflater mInflater;
     private int mItemLayoutRes;
-    /* access modifiers changed from: protected */
-    public MenuBuilder mMenu;
+    protected MenuBuilder mMenu;
     private int mMenuLayoutRes;
-    /* access modifiers changed from: protected */
-    public MenuView mMenuView;
+    protected MenuView mMenuView;
     protected Context mSystemContext;
     protected LayoutInflater mSystemInflater;
 
@@ -31,12 +30,14 @@ public abstract class BaseMenuPresenter implements MenuPresenter {
         this.mItemLayoutRes = itemLayoutRes;
     }
 
+    @Override // com.android.internal.view.menu.MenuPresenter
     public void initForMenu(Context context, MenuBuilder menu) {
         this.mContext = context;
         this.mInflater = LayoutInflater.from(this.mContext);
         this.mMenu = menu;
     }
 
+    @Override // com.android.internal.view.menu.MenuPresenter
     public MenuView getMenuView(ViewGroup root) {
         if (this.mMenuView == null) {
             this.mMenuView = (MenuView) this.mSystemInflater.inflate(this.mMenuLayoutRes, root, false);
@@ -46,43 +47,44 @@ public abstract class BaseMenuPresenter implements MenuPresenter {
         return this.mMenuView;
     }
 
+    @Override // com.android.internal.view.menu.MenuPresenter
     public void updateMenuView(boolean cleared) {
         ViewGroup parent = (ViewGroup) this.mMenuView;
-        if (parent != null) {
-            int i = 0;
-            if (this.mMenu != null) {
-                this.mMenu.flagActionItems();
-                ArrayList<MenuItemImpl> visibleItems = this.mMenu.getVisibleItems();
-                int itemCount = visibleItems.size();
-                int childIndex = 0;
-                for (int i2 = 0; i2 < itemCount; i2++) {
-                    MenuItemImpl item = visibleItems.get(i2);
-                    if (shouldIncludeItem(childIndex, item)) {
-                        View convertView = parent.getChildAt(childIndex);
-                        MenuItemImpl oldItem = convertView instanceof MenuView.ItemView ? ((MenuView.ItemView) convertView).getItemData() : null;
-                        View itemView = getItemView(item, convertView, parent);
-                        if (item != oldItem) {
-                            itemView.setPressed(false);
-                            itemView.jumpDrawablesToCurrentState();
-                        }
-                        if (itemView != convertView) {
-                            addItemView(itemView, childIndex);
-                        }
-                        childIndex++;
+        if (parent == null) {
+            return;
+        }
+        int i = 0;
+        if (this.mMenu != null) {
+            this.mMenu.flagActionItems();
+            ArrayList<MenuItemImpl> visibleItems = this.mMenu.getVisibleItems();
+            int itemCount = visibleItems.size();
+            int childIndex = 0;
+            for (int childIndex2 = 0; childIndex2 < itemCount; childIndex2++) {
+                MenuItemImpl item = visibleItems.get(childIndex2);
+                if (shouldIncludeItem(childIndex, item)) {
+                    View convertView = parent.getChildAt(childIndex);
+                    MenuItemImpl oldItem = convertView instanceof MenuView.ItemView ? ((MenuView.ItemView) convertView).getItemData() : null;
+                    View itemView = getItemView(item, convertView, parent);
+                    if (item != oldItem) {
+                        itemView.setPressed(false);
+                        itemView.jumpDrawablesToCurrentState();
                     }
+                    if (itemView != convertView) {
+                        addItemView(itemView, childIndex);
+                    }
+                    childIndex++;
                 }
-                i = childIndex;
             }
-            while (i < parent.getChildCount()) {
-                if (!filterLeftoverView(parent, i)) {
-                    i++;
-                }
+            i = childIndex;
+        }
+        while (i < parent.getChildCount()) {
+            if (!filterLeftoverView(parent, i)) {
+                i++;
             }
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void addItemView(View itemView, int childIndex) {
+    protected void addItemView(View itemView, int childIndex) {
         ViewGroup currentParent = (ViewGroup) itemView.getParent();
         if (currentParent != null) {
             currentParent.removeView(itemView);
@@ -90,12 +92,12 @@ public abstract class BaseMenuPresenter implements MenuPresenter {
         ((ViewGroup) this.mMenuView).addView(itemView, childIndex);
     }
 
-    /* access modifiers changed from: protected */
-    public boolean filterLeftoverView(ViewGroup parent, int childIndex) {
+    protected boolean filterLeftoverView(ViewGroup parent, int childIndex) {
         parent.removeViewAt(childIndex);
         return true;
     }
 
+    @Override // com.android.internal.view.menu.MenuPresenter
     public void setCallback(MenuPresenter.Callback cb) {
         this.mCallback = cb;
     }
@@ -123,12 +125,14 @@ public abstract class BaseMenuPresenter implements MenuPresenter {
         return true;
     }
 
+    @Override // com.android.internal.view.menu.MenuPresenter
     public void onCloseMenu(MenuBuilder menu, boolean allMenusAreClosing) {
         if (this.mCallback != null) {
             this.mCallback.onCloseMenu(menu, allMenusAreClosing);
         }
     }
 
+    @Override // com.android.internal.view.menu.MenuPresenter
     public boolean onSubMenuSelected(SubMenuBuilder menu) {
         if (this.mCallback != null) {
             return this.mCallback.onOpenSubMenu(menu);
@@ -136,18 +140,22 @@ public abstract class BaseMenuPresenter implements MenuPresenter {
         return false;
     }
 
+    @Override // com.android.internal.view.menu.MenuPresenter
     public boolean flagActionItems() {
         return false;
     }
 
+    @Override // com.android.internal.view.menu.MenuPresenter
     public boolean expandItemActionView(MenuBuilder menu, MenuItemImpl item) {
         return false;
     }
 
+    @Override // com.android.internal.view.menu.MenuPresenter
     public boolean collapseItemActionView(MenuBuilder menu, MenuItemImpl item) {
         return false;
     }
 
+    @Override // com.android.internal.view.menu.MenuPresenter
     public int getId() {
         return this.mId;
     }

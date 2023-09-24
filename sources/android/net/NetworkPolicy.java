@@ -1,8 +1,8 @@
 package android.net;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.BackupUtils;
 import android.util.Range;
 import android.util.RecurrenceRule;
@@ -16,13 +16,18 @@ import java.time.ZonedDateTime;
 import java.util.Iterator;
 import java.util.Objects;
 
+/* loaded from: classes3.dex */
 public class NetworkPolicy implements Parcelable, Comparable<NetworkPolicy> {
     @UnsupportedAppUsage
-    public static final Parcelable.Creator<NetworkPolicy> CREATOR = new Parcelable.Creator<NetworkPolicy>() {
+    public static final Parcelable.Creator<NetworkPolicy> CREATOR = new Parcelable.Creator<NetworkPolicy>() { // from class: android.net.NetworkPolicy.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NetworkPolicy createFromParcel(Parcel in) {
             return new NetworkPolicy(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NetworkPolicy[] newArray(int size) {
             return new NetworkPolicy[size];
         }
@@ -43,8 +48,8 @@ public class NetworkPolicy implements Parcelable, Comparable<NetworkPolicy> {
     public long lastWarningSnooze;
     @UnsupportedAppUsage
     public long limitBytes;
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public boolean metered;
     @UnsupportedAppUsage
     public NetworkTemplate template;
@@ -59,78 +64,66 @@ public class NetworkPolicy implements Parcelable, Comparable<NetworkPolicy> {
     }
 
     @Deprecated
-    public NetworkPolicy(NetworkTemplate template2, int cycleDay, String cycleTimezone, long warningBytes2, long limitBytes2, boolean metered2) {
-        this(template2, cycleDay, cycleTimezone, warningBytes2, limitBytes2, -1, -1, metered2, false);
+    public NetworkPolicy(NetworkTemplate template, int cycleDay, String cycleTimezone, long warningBytes, long limitBytes, boolean metered) {
+        this(template, cycleDay, cycleTimezone, warningBytes, limitBytes, -1L, -1L, metered, false);
     }
 
-    /* JADX WARNING: Illegal instructions before constructor call */
-    @java.lang.Deprecated
-    @android.annotation.UnsupportedAppUsage
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public NetworkPolicy(android.net.NetworkTemplate r16, int r17, java.lang.String r18, long r19, long r21, long r23, long r25, boolean r27, boolean r28) {
-        /*
-            r15 = this;
-            java.time.ZoneId r0 = java.time.ZoneId.of(r18)
-            r1 = r17
-            android.util.RecurrenceRule r4 = buildRule(r1, r0)
-            r2 = r15
-            r3 = r16
-            r5 = r19
-            r7 = r21
-            r9 = r23
-            r11 = r25
-            r13 = r27
-            r14 = r28
-            r2.<init>(r3, r4, r5, r7, r9, r11, r13, r14)
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.net.NetworkPolicy.<init>(android.net.NetworkTemplate, int, java.lang.String, long, long, long, long, boolean, boolean):void");
+    @UnsupportedAppUsage
+    @Deprecated
+    public NetworkPolicy(NetworkTemplate template, int cycleDay, String cycleTimezone, long warningBytes, long limitBytes, long lastWarningSnooze, long lastLimitSnooze, boolean metered, boolean inferred) {
+        this(template, buildRule(cycleDay, ZoneId.of(cycleTimezone)), warningBytes, limitBytes, lastWarningSnooze, lastLimitSnooze, metered, inferred);
     }
 
     @Deprecated
-    public NetworkPolicy(NetworkTemplate template2, RecurrenceRule cycleRule2, long warningBytes2, long limitBytes2, long lastWarningSnooze2, long lastLimitSnooze2, boolean metered2, boolean inferred2) {
-        this(template2, cycleRule2, warningBytes2, limitBytes2, lastWarningSnooze2, lastLimitSnooze2, -1, metered2, inferred2);
+    public NetworkPolicy(NetworkTemplate template, RecurrenceRule cycleRule, long warningBytes, long limitBytes, long lastWarningSnooze, long lastLimitSnooze, boolean metered, boolean inferred) {
+        this(template, cycleRule, warningBytes, limitBytes, lastWarningSnooze, lastLimitSnooze, -1L, metered, inferred);
     }
 
-    public NetworkPolicy(NetworkTemplate template2, RecurrenceRule cycleRule2, long warningBytes2, long limitBytes2, long lastWarningSnooze2, long lastLimitSnooze2, long lastRapidSnooze2, boolean metered2, boolean inferred2) {
-        this.warningBytes = -1;
-        this.limitBytes = -1;
-        this.lastWarningSnooze = -1;
-        this.lastLimitSnooze = -1;
-        this.lastRapidSnooze = -1;
+    public NetworkPolicy(NetworkTemplate template, RecurrenceRule cycleRule, long warningBytes, long limitBytes, long lastWarningSnooze, long lastLimitSnooze, long lastRapidSnooze, boolean metered, boolean inferred) {
+        this.warningBytes = -1L;
+        this.limitBytes = -1L;
+        this.lastWarningSnooze = -1L;
+        this.lastLimitSnooze = -1L;
+        this.lastRapidSnooze = -1L;
         this.metered = true;
         this.inferred = false;
-        this.template = (NetworkTemplate) Preconditions.checkNotNull(template2, "missing NetworkTemplate");
-        this.cycleRule = (RecurrenceRule) Preconditions.checkNotNull(cycleRule2, "missing RecurrenceRule");
-        this.warningBytes = warningBytes2;
-        this.limitBytes = limitBytes2;
-        this.lastWarningSnooze = lastWarningSnooze2;
-        this.lastLimitSnooze = lastLimitSnooze2;
-        this.lastRapidSnooze = lastRapidSnooze2;
-        this.metered = metered2;
-        this.inferred = inferred2;
+        this.template = (NetworkTemplate) Preconditions.checkNotNull(template, "missing NetworkTemplate");
+        this.cycleRule = (RecurrenceRule) Preconditions.checkNotNull(cycleRule, "missing RecurrenceRule");
+        this.warningBytes = warningBytes;
+        this.limitBytes = limitBytes;
+        this.lastWarningSnooze = lastWarningSnooze;
+        this.lastLimitSnooze = lastLimitSnooze;
+        this.lastRapidSnooze = lastRapidSnooze;
+        this.metered = metered;
+        this.inferred = inferred;
     }
 
     private NetworkPolicy(Parcel source) {
-        this.warningBytes = -1;
-        this.limitBytes = -1;
-        this.lastWarningSnooze = -1;
-        this.lastLimitSnooze = -1;
-        this.lastRapidSnooze = -1;
-        boolean z = true;
+        boolean z;
+        this.warningBytes = -1L;
+        this.limitBytes = -1L;
+        this.lastWarningSnooze = -1L;
+        this.lastLimitSnooze = -1L;
+        this.lastRapidSnooze = -1L;
         this.metered = true;
         this.inferred = false;
-        this.template = (NetworkTemplate) source.readParcelable((ClassLoader) null);
-        this.cycleRule = (RecurrenceRule) source.readParcelable((ClassLoader) null);
+        this.template = (NetworkTemplate) source.readParcelable(null);
+        this.cycleRule = (RecurrenceRule) source.readParcelable(null);
         this.warningBytes = source.readLong();
         this.limitBytes = source.readLong();
         this.lastWarningSnooze = source.readLong();
         this.lastLimitSnooze = source.readLong();
         this.lastRapidSnooze = source.readLong();
-        this.metered = source.readInt() != 0;
-        this.inferred = source.readInt() == 0 ? false : z;
+        if (source.readInt() != 0) {
+            z = true;
+        } else {
+            z = false;
+        }
+        this.metered = z;
+        this.inferred = source.readInt() != 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(this.template, flags);
         dest.writeParcelable(this.cycleRule, flags);
@@ -143,6 +136,7 @@ public class NetworkPolicy implements Parcelable, Comparable<NetworkPolicy> {
         dest.writeInt(this.inferred ? 1 : 0);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -163,15 +157,16 @@ public class NetworkPolicy implements Parcelable, Comparable<NetworkPolicy> {
 
     @UnsupportedAppUsage
     public void clearSnooze() {
-        this.lastWarningSnooze = -1;
-        this.lastLimitSnooze = -1;
-        this.lastRapidSnooze = -1;
+        this.lastWarningSnooze = -1L;
+        this.lastLimitSnooze = -1L;
+        this.lastRapidSnooze = -1L;
     }
 
     public boolean hasCycle() {
         return this.cycleRule.cycleIterator().hasNext();
     }
 
+    @Override // java.lang.Comparable
     @UnsupportedAppUsage
     public int compareTo(NetworkPolicy another) {
         if (another == null || another.limitBytes == -1) {
@@ -184,22 +179,19 @@ public class NetworkPolicy implements Parcelable, Comparable<NetworkPolicy> {
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{this.template, this.cycleRule, Long.valueOf(this.warningBytes), Long.valueOf(this.limitBytes), Long.valueOf(this.lastWarningSnooze), Long.valueOf(this.lastLimitSnooze), Long.valueOf(this.lastRapidSnooze), Boolean.valueOf(this.metered), Boolean.valueOf(this.inferred)});
+        return Objects.hash(this.template, this.cycleRule, Long.valueOf(this.warningBytes), Long.valueOf(this.limitBytes), Long.valueOf(this.lastWarningSnooze), Long.valueOf(this.lastLimitSnooze), Long.valueOf(this.lastRapidSnooze), Boolean.valueOf(this.metered), Boolean.valueOf(this.inferred));
     }
 
     public boolean equals(Object obj) {
-        if (!(obj instanceof NetworkPolicy)) {
-            return false;
-        }
-        NetworkPolicy other = (NetworkPolicy) obj;
-        if (this.warningBytes == other.warningBytes && this.limitBytes == other.limitBytes && this.lastWarningSnooze == other.lastWarningSnooze && this.lastLimitSnooze == other.lastLimitSnooze && this.lastRapidSnooze == other.lastRapidSnooze && this.metered == other.metered && this.inferred == other.inferred && Objects.equals(this.template, other.template) && Objects.equals(this.cycleRule, other.cycleRule)) {
-            return true;
+        if (obj instanceof NetworkPolicy) {
+            NetworkPolicy other = (NetworkPolicy) obj;
+            return this.warningBytes == other.warningBytes && this.limitBytes == other.limitBytes && this.lastWarningSnooze == other.lastWarningSnooze && this.lastLimitSnooze == other.lastLimitSnooze && this.lastRapidSnooze == other.lastRapidSnooze && this.metered == other.metered && this.inferred == other.inferred && Objects.equals(this.template, other.template) && Objects.equals(this.cycleRule, other.cycleRule);
         }
         return false;
     }
 
     public String toString() {
-        return "NetworkPolicy{" + "template=" + this.template + " cycleRule=" + this.cycleRule + " warningBytes=" + this.warningBytes + " limitBytes=" + this.limitBytes + " lastWarningSnooze=" + this.lastWarningSnooze + " lastLimitSnooze=" + this.lastLimitSnooze + " lastRapidSnooze=" + this.lastRapidSnooze + " metered=" + this.metered + " inferred=" + this.inferred + "}";
+        return "NetworkPolicy{template=" + this.template + " cycleRule=" + this.cycleRule + " warningBytes=" + this.warningBytes + " limitBytes=" + this.limitBytes + " lastWarningSnooze=" + this.lastWarningSnooze + " lastLimitSnooze=" + this.lastLimitSnooze + " lastRapidSnooze=" + this.lastRapidSnooze + " metered=" + this.metered + " inferred=" + this.inferred + "}";
     }
 
     public byte[] getBytesForBackup() throws IOException {
@@ -220,28 +212,26 @@ public class NetworkPolicy implements Parcelable, Comparable<NetworkPolicy> {
 
     public static NetworkPolicy getNetworkPolicyFromBackup(DataInputStream in) throws IOException, BackupUtils.BadVersionException {
         RecurrenceRule buildRule;
-        long lastRapidSnooze2;
         int version = in.readInt();
         if (version < 1 || version > 3) {
             throw new BackupUtils.BadVersionException("Unknown backup version: " + version);
         }
-        NetworkTemplate template2 = NetworkTemplate.getNetworkTemplateFromBackup(in);
+        NetworkTemplate template = NetworkTemplate.getNetworkTemplateFromBackup(in);
         if (version >= 2) {
             buildRule = new RecurrenceRule(in);
         } else {
-            DataInputStream dataInputStream = in;
-            buildRule = buildRule(in.readInt(), ZoneId.of(BackupUtils.readString(in)));
+            int cycleDay = in.readInt();
+            String cycleTimezone = BackupUtils.readString(in);
+            buildRule = buildRule(cycleDay, ZoneId.of(cycleTimezone));
         }
-        RecurrenceRule cycleRule2 = buildRule;
-        long warningBytes2 = in.readLong();
-        long limitBytes2 = in.readLong();
-        long lastWarningSnooze2 = in.readLong();
-        long lastLimitSnooze2 = in.readLong();
-        if (version >= 3) {
-            lastRapidSnooze2 = in.readLong();
-        } else {
-            lastRapidSnooze2 = -1;
-        }
-        return new NetworkPolicy(template2, cycleRule2, warningBytes2, limitBytes2, lastWarningSnooze2, lastLimitSnooze2, lastRapidSnooze2, in.readInt() == 1, in.readInt() == 1);
+        RecurrenceRule cycleRule = buildRule;
+        long warningBytes = in.readLong();
+        long limitBytes = in.readLong();
+        long lastWarningSnooze = in.readLong();
+        long lastLimitSnooze = in.readLong();
+        long lastRapidSnooze = version >= 3 ? in.readLong() : -1L;
+        boolean metered = in.readInt() == 1;
+        boolean inferred = in.readInt() == 1;
+        return new NetworkPolicy(template, cycleRule, warningBytes, limitBytes, lastWarningSnooze, lastLimitSnooze, lastRapidSnooze, metered, inferred);
     }
 }

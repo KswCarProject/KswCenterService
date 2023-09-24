@@ -6,20 +6,21 @@ import android.hardware.biometrics.BiometricAuthenticator;
 import android.hardware.biometrics.BiometricPrompt;
 import android.hardware.biometrics.IBiometricService;
 import android.hardware.biometrics.IBiometricServiceReceiver;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.CancellationSignal;
-import android.os.IBinder;
-import android.os.RemoteException;
-import android.os.ServiceManager;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.CancellationSignal;
+import android.p007os.IBinder;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
 import android.text.TextUtils;
 import android.util.Log;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.security.Signature;
 import java.util.concurrent.Executor;
 import javax.crypto.Cipher;
 import javax.crypto.Mac;
 
+/* loaded from: classes.dex */
 public class BiometricPrompt implements BiometricAuthenticator, BiometricConstants {
     public static final int DISMISSED_REASON_NEGATIVE = 2;
     public static final int DISMISSED_REASON_POSITIVE = 1;
@@ -35,22 +36,22 @@ public class BiometricPrompt implements BiometricAuthenticator, BiometricConstan
     public static final String KEY_TITLE = "title";
     public static final String KEY_USE_DEFAULT_TITLE = "use_default_title";
     private static final String TAG = "BiometricPrompt";
-    /* access modifiers changed from: private */
-    public AuthenticationCallback mAuthenticationCallback;
+    private AuthenticationCallback mAuthenticationCallback;
     private final IBiometricServiceReceiver mBiometricServiceReceiver;
     private final Bundle mBundle;
     private final Context mContext;
-    /* access modifiers changed from: private */
-    public CryptoObject mCryptoObject;
-    /* access modifiers changed from: private */
-    public Executor mExecutor;
-    /* access modifiers changed from: private */
-    public final ButtonInfo mNegativeButtonInfo;
-    /* access modifiers changed from: private */
-    public final ButtonInfo mPositiveButtonInfo;
+    private CryptoObject mCryptoObject;
+    private Executor mExecutor;
+    private final ButtonInfo mNegativeButtonInfo;
+    private final ButtonInfo mPositiveButtonInfo;
     private final IBiometricService mService;
     private final IBinder mToken;
 
+    /* synthetic */ BiometricPrompt(Context x0, Bundle x1, ButtonInfo x2, ButtonInfo x3, BinderC07541 x4) {
+        this(x0, x1, x2, x3);
+    }
+
+    /* loaded from: classes.dex */
     private static class ButtonInfo {
         Executor executor;
         DialogInterface.OnClickListener listener;
@@ -61,6 +62,7 @@ public class BiometricPrompt implements BiometricAuthenticator, BiometricConstan
         }
     }
 
+    /* loaded from: classes.dex */
     public static class Builder {
         private final Bundle mBundle = new Bundle();
         private Context mContext;
@@ -94,29 +96,31 @@ public class BiometricPrompt implements BiometricAuthenticator, BiometricConstan
         public Builder setPositiveButton(CharSequence text, Executor executor, DialogInterface.OnClickListener listener) {
             if (TextUtils.isEmpty(text)) {
                 throw new IllegalArgumentException("Text must be set and non-empty");
-            } else if (executor == null) {
+            }
+            if (executor == null) {
                 throw new IllegalArgumentException("Executor must not be null");
-            } else if (listener != null) {
-                this.mBundle.putCharSequence(BiometricPrompt.KEY_POSITIVE_TEXT, text);
-                this.mPositiveButtonInfo = new ButtonInfo(executor, listener);
-                return this;
-            } else {
+            }
+            if (listener == null) {
                 throw new IllegalArgumentException("Listener must not be null");
             }
+            this.mBundle.putCharSequence(BiometricPrompt.KEY_POSITIVE_TEXT, text);
+            this.mPositiveButtonInfo = new ButtonInfo(executor, listener);
+            return this;
         }
 
         public Builder setNegativeButton(CharSequence text, Executor executor, DialogInterface.OnClickListener listener) {
             if (TextUtils.isEmpty(text)) {
                 throw new IllegalArgumentException("Text must be set and non-empty");
-            } else if (executor == null) {
+            }
+            if (executor == null) {
                 throw new IllegalArgumentException("Executor must not be null");
-            } else if (listener != null) {
-                this.mBundle.putCharSequence(BiometricPrompt.KEY_NEGATIVE_TEXT, text);
-                this.mNegativeButtonInfo = new ButtonInfo(executor, listener);
-                return this;
-            } else {
+            }
+            if (listener == null) {
                 throw new IllegalArgumentException("Listener must not be null");
             }
+            this.mBundle.putCharSequence(BiometricPrompt.KEY_NEGATIVE_TEXT, text);
+            this.mNegativeButtonInfo = new ButtonInfo(executor, listener);
+            return this;
         }
 
         public Builder setConfirmationRequired(boolean requireConfirmation) {
@@ -141,92 +145,106 @@ public class BiometricPrompt implements BiometricAuthenticator, BiometricConstan
             boolean enableFallback = this.mBundle.getBoolean(BiometricPrompt.KEY_ALLOW_DEVICE_CREDENTIAL);
             if (TextUtils.isEmpty(title) && !useDefaultTitle) {
                 throw new IllegalArgumentException("Title must be set and non-empty");
-            } else if (TextUtils.isEmpty(negative) && !enableFallback) {
+            }
+            if (TextUtils.isEmpty(negative) && !enableFallback) {
                 throw new IllegalArgumentException("Negative text must be set and non-empty");
-            } else if (TextUtils.isEmpty(negative) || !enableFallback) {
-                return new BiometricPrompt(this.mContext, this.mBundle, this.mPositiveButtonInfo, this.mNegativeButtonInfo);
-            } else {
+            }
+            if (!TextUtils.isEmpty(negative) && enableFallback) {
                 throw new IllegalArgumentException("Can't have both negative button behavior and device credential enabled");
             }
+            return new BiometricPrompt(this.mContext, this.mBundle, this.mPositiveButtonInfo, this.mNegativeButtonInfo, null);
         }
     }
 
+    /* loaded from: classes.dex */
     private class OnAuthenticationCancelListener implements CancellationSignal.OnCancelListener {
         private OnAuthenticationCancelListener() {
         }
 
+        /* synthetic */ OnAuthenticationCancelListener(BiometricPrompt x0, BinderC07541 x1) {
+            this();
+        }
+
+        @Override // android.p007os.CancellationSignal.OnCancelListener
         public void onCancel() {
             BiometricPrompt.this.cancelAuthentication();
         }
     }
 
+    /* renamed from: android.hardware.biometrics.BiometricPrompt$1 */
+    /* loaded from: classes.dex */
+    class BinderC07541 extends IBiometricServiceReceiver.Stub {
+        BinderC07541() {
+        }
+
+        @Override // android.hardware.biometrics.IBiometricServiceReceiver
+        public void onAuthenticationSucceeded() throws RemoteException {
+            BiometricPrompt.this.mExecutor.execute(new Runnable() { // from class: android.hardware.biometrics.-$$Lambda$BiometricPrompt$1$_p2Kb7GLaNe_mSDlUdJIRLMJ5kQ
+                @Override // java.lang.Runnable
+                public final void run() {
+                    BiometricPrompt.BinderC07541.lambda$onAuthenticationSucceeded$0(BiometricPrompt.BinderC07541.this);
+                }
+            });
+        }
+
+        public static /* synthetic */ void lambda$onAuthenticationSucceeded$0(BinderC07541 binderC07541) {
+            AuthenticationResult result = new AuthenticationResult(BiometricPrompt.this.mCryptoObject);
+            BiometricPrompt.this.mAuthenticationCallback.onAuthenticationSucceeded(result);
+        }
+
+        @Override // android.hardware.biometrics.IBiometricServiceReceiver
+        public void onAuthenticationFailed() throws RemoteException {
+            BiometricPrompt.this.mExecutor.execute(new Runnable() { // from class: android.hardware.biometrics.-$$Lambda$BiometricPrompt$1$AAMJr_dQQ3dkiYxppvTx2AjuvRQ
+                @Override // java.lang.Runnable
+                public final void run() {
+                    BiometricPrompt.this.mAuthenticationCallback.onAuthenticationFailed();
+                }
+            });
+        }
+
+        @Override // android.hardware.biometrics.IBiometricServiceReceiver
+        public void onError(final int error, final String message) throws RemoteException {
+            BiometricPrompt.this.mExecutor.execute(new Runnable() { // from class: android.hardware.biometrics.-$$Lambda$BiometricPrompt$1$aJtOJjyL74ZJt5iM1EsAPg6PHK4
+                @Override // java.lang.Runnable
+                public final void run() {
+                    BiometricPrompt.this.mAuthenticationCallback.onAuthenticationError(error, message);
+                }
+            });
+        }
+
+        @Override // android.hardware.biometrics.IBiometricServiceReceiver
+        public void onAcquired(final int acquireInfo, final String message) throws RemoteException {
+            BiometricPrompt.this.mExecutor.execute(new Runnable() { // from class: android.hardware.biometrics.-$$Lambda$BiometricPrompt$1$yfG83rs6eJM9CDMAlhftsvdKekY
+                @Override // java.lang.Runnable
+                public final void run() {
+                    BiometricPrompt.this.mAuthenticationCallback.onAuthenticationHelp(acquireInfo, message);
+                }
+            });
+        }
+
+        @Override // android.hardware.biometrics.IBiometricServiceReceiver
+        public void onDialogDismissed(int reason) throws RemoteException {
+            if (reason == 1) {
+                BiometricPrompt.this.mPositiveButtonInfo.executor.execute(new Runnable() { // from class: android.hardware.biometrics.-$$Lambda$BiometricPrompt$1$Kmc1otRcCm0Akw6_6yK5trqAv78
+                    @Override // java.lang.Runnable
+                    public final void run() {
+                        BiometricPrompt.this.mPositiveButtonInfo.listener.onClick(null, -1);
+                    }
+                });
+            } else if (reason == 2) {
+                BiometricPrompt.this.mNegativeButtonInfo.executor.execute(new Runnable() { // from class: android.hardware.biometrics.-$$Lambda$BiometricPrompt$1$G8c-A1luxVwjcfGpdSp4nNPnavM
+                    @Override // java.lang.Runnable
+                    public final void run() {
+                        BiometricPrompt.this.mNegativeButtonInfo.listener.onClick(null, -2);
+                    }
+                });
+            }
+        }
+    }
+
     private BiometricPrompt(Context context, Bundle bundle, ButtonInfo positiveButtonInfo, ButtonInfo negativeButtonInfo) {
         this.mToken = new Binder();
-        this.mBiometricServiceReceiver = new IBiometricServiceReceiver.Stub() {
-            public void onAuthenticationSucceeded() throws RemoteException {
-                BiometricPrompt.this.mExecutor.execute(new Runnable() {
-                    public final void run() {
-                        BiometricPrompt.this.mAuthenticationCallback.onAuthenticationSucceeded(new BiometricPrompt.AuthenticationResult(BiometricPrompt.this.mCryptoObject));
-                    }
-                });
-            }
-
-            public void onAuthenticationFailed() throws RemoteException {
-                BiometricPrompt.this.mExecutor.execute(new Runnable() {
-                    public final void run() {
-                        BiometricPrompt.this.mAuthenticationCallback.onAuthenticationFailed();
-                    }
-                });
-            }
-
-            public void onError(int error, String message) throws RemoteException {
-                BiometricPrompt.this.mExecutor.execute(new Runnable(error, message) {
-                    private final /* synthetic */ int f$1;
-                    private final /* synthetic */ String f$2;
-
-                    {
-                        this.f$1 = r2;
-                        this.f$2 = r3;
-                    }
-
-                    public final void run() {
-                        BiometricPrompt.this.mAuthenticationCallback.onAuthenticationError(this.f$1, this.f$2);
-                    }
-                });
-            }
-
-            public void onAcquired(int acquireInfo, String message) throws RemoteException {
-                BiometricPrompt.this.mExecutor.execute(new Runnable(acquireInfo, message) {
-                    private final /* synthetic */ int f$1;
-                    private final /* synthetic */ String f$2;
-
-                    {
-                        this.f$1 = r2;
-                        this.f$2 = r3;
-                    }
-
-                    public final void run() {
-                        BiometricPrompt.this.mAuthenticationCallback.onAuthenticationHelp(this.f$1, this.f$2);
-                    }
-                });
-            }
-
-            public void onDialogDismissed(int reason) throws RemoteException {
-                if (reason == 1) {
-                    BiometricPrompt.this.mPositiveButtonInfo.executor.execute(new Runnable() {
-                        public final void run() {
-                            BiometricPrompt.this.mPositiveButtonInfo.listener.onClick((DialogInterface) null, -1);
-                        }
-                    });
-                } else if (reason == 2) {
-                    BiometricPrompt.this.mNegativeButtonInfo.executor.execute(new Runnable() {
-                        public final void run() {
-                            BiometricPrompt.this.mNegativeButtonInfo.listener.onClick((DialogInterface) null, -2);
-                        }
-                    });
-                }
-            }
-        };
+        this.mBiometricServiceReceiver = new BinderC07541();
         this.mContext = context;
         this.mBundle = bundle;
         this.mPositiveButtonInfo = positiveButtonInfo;
@@ -234,7 +252,8 @@ public class BiometricPrompt implements BiometricAuthenticator, BiometricConstan
         this.mService = IBiometricService.Stub.asInterface(ServiceManager.getService(Context.BIOMETRIC_SERVICE));
     }
 
-    public static final class CryptoObject extends CryptoObject {
+    /* loaded from: classes.dex */
+    public static final class CryptoObject extends android.hardware.biometrics.CryptoObject {
         public CryptoObject(Signature signature) {
             super(signature);
         }
@@ -247,42 +266,52 @@ public class BiometricPrompt implements BiometricAuthenticator, BiometricConstan
             super(mac);
         }
 
+        @Override // android.hardware.biometrics.CryptoObject
         public Signature getSignature() {
             return super.getSignature();
         }
 
+        @Override // android.hardware.biometrics.CryptoObject
         public Cipher getCipher() {
             return super.getCipher();
         }
 
+        @Override // android.hardware.biometrics.CryptoObject
         public Mac getMac() {
             return super.getMac();
         }
     }
 
+    /* loaded from: classes.dex */
     public static class AuthenticationResult extends BiometricAuthenticator.AuthenticationResult {
         public AuthenticationResult(CryptoObject crypto) {
-            super(crypto, (BiometricAuthenticator.Identifier) null, 0);
+            super(crypto, null, 0);
         }
 
+        @Override // android.hardware.biometrics.BiometricAuthenticator.AuthenticationResult
         public CryptoObject getCryptoObject() {
             return (CryptoObject) super.getCryptoObject();
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class AuthenticationCallback extends BiometricAuthenticator.AuthenticationCallback {
+        @Override // android.hardware.biometrics.BiometricAuthenticator.AuthenticationCallback
         public void onAuthenticationError(int errorCode, CharSequence errString) {
         }
 
+        @Override // android.hardware.biometrics.BiometricAuthenticator.AuthenticationCallback
         public void onAuthenticationHelp(int helpCode, CharSequence helpString) {
         }
 
         public void onAuthenticationSucceeded(AuthenticationResult result) {
         }
 
+        @Override // android.hardware.biometrics.BiometricAuthenticator.AuthenticationCallback
         public void onAuthenticationFailed() {
         }
 
+        @Override // android.hardware.biometrics.BiometricAuthenticator.AuthenticationCallback
         public void onAuthenticationAcquired(int acquireInfo) {
         }
     }
@@ -290,131 +319,107 @@ public class BiometricPrompt implements BiometricAuthenticator, BiometricConstan
     public void authenticateUser(CancellationSignal cancel, Executor executor, AuthenticationCallback callback, int userId, IBiometricConfirmDeviceCredentialCallback confirmDeviceCredentialCallback) {
         if (cancel == null) {
             throw new IllegalArgumentException("Must supply a cancellation signal");
-        } else if (executor == null) {
+        }
+        if (executor == null) {
             throw new IllegalArgumentException("Must supply an executor");
-        } else if (callback != null) {
-            authenticateInternal((CryptoObject) null, cancel, executor, callback, userId, confirmDeviceCredentialCallback);
-        } else {
+        }
+        if (callback == null) {
             throw new IllegalArgumentException("Must supply a callback");
         }
+        authenticateInternal(null, cancel, executor, callback, userId, confirmDeviceCredentialCallback);
     }
 
     public void authenticate(CryptoObject crypto, CancellationSignal cancel, Executor executor, AuthenticationCallback callback) {
         if (crypto == null) {
             throw new IllegalArgumentException("Must supply a crypto object");
-        } else if (cancel == null) {
+        }
+        if (cancel == null) {
             throw new IllegalArgumentException("Must supply a cancellation signal");
-        } else if (executor == null) {
+        }
+        if (executor == null) {
             throw new IllegalArgumentException("Must supply an executor");
-        } else if (callback == null) {
+        }
+        if (callback == null) {
             throw new IllegalArgumentException("Must supply a callback");
-        } else if (!this.mBundle.getBoolean(KEY_ALLOW_DEVICE_CREDENTIAL)) {
-            authenticateInternal(crypto, cancel, executor, callback, this.mContext.getUserId(), (IBiometricConfirmDeviceCredentialCallback) null);
-        } else {
+        }
+        if (this.mBundle.getBoolean(KEY_ALLOW_DEVICE_CREDENTIAL)) {
             throw new IllegalArgumentException("Device credential not supported with crypto");
         }
+        authenticateInternal(crypto, cancel, executor, callback, this.mContext.getUserId(), null);
     }
 
     public void authenticate(CancellationSignal cancel, Executor executor, AuthenticationCallback callback) {
         if (cancel == null) {
             throw new IllegalArgumentException("Must supply a cancellation signal");
-        } else if (executor == null) {
+        }
+        if (executor == null) {
             throw new IllegalArgumentException("Must supply an executor");
-        } else if (callback != null) {
-            authenticateInternal((CryptoObject) null, cancel, executor, callback, this.mContext.getUserId(), (IBiometricConfirmDeviceCredentialCallback) null);
-        } else {
+        }
+        if (callback == null) {
             throw new IllegalArgumentException("Must supply a callback");
         }
+        authenticateInternal(null, cancel, executor, callback, this.mContext.getUserId(), null);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void cancelAuthentication() {
         if (this.mService != null) {
             try {
                 this.mService.cancelAuthentication(this.mToken, this.mContext.getOpPackageName());
             } catch (RemoteException e) {
-                Log.e(TAG, "Unable to cancel authentication", e);
+                Log.m69e(TAG, "Unable to cancel authentication", e);
             }
         }
     }
 
-    private void authenticateInternal(CryptoObject crypto, CancellationSignal cancel, Executor executor, AuthenticationCallback callback, int userId, IBiometricConfirmDeviceCredentialCallback confirmDeviceCredentialCallback) {
-        CryptoObject cryptoObject = crypto;
-        AuthenticationCallback authenticationCallback = callback;
+    private void authenticateInternal(CryptoObject crypto, CancellationSignal cancel, Executor executor, final AuthenticationCallback callback, int userId, IBiometricConfirmDeviceCredentialCallback confirmDeviceCredentialCallback) {
         try {
-            if (cancel.isCanceled()) {
-                Log.w(TAG, "Authentication already canceled");
-                return;
-            }
-            try {
-                cancel.setOnCancelListener(new OnAuthenticationCancelListener());
-                this.mCryptoObject = cryptoObject;
+            if (!cancel.isCanceled()) {
                 try {
-                    this.mExecutor = executor;
-                    this.mAuthenticationCallback = authenticationCallback;
-                    long sessionId = cryptoObject != null ? crypto.getOpId() : 0;
-                    if (BiometricManager.hasBiometrics(this.mContext)) {
-                        this.mService.authenticate(this.mToken, sessionId, userId, this.mBiometricServiceReceiver, this.mContext.getOpPackageName(), this.mBundle, confirmDeviceCredentialCallback);
-                    } else {
-                        this.mExecutor.execute(new Runnable(authenticationCallback) {
-                            private final /* synthetic */ BiometricPrompt.AuthenticationCallback f$1;
-
-                            {
-                                this.f$1 = r2;
-                            }
-
+                    cancel.setOnCancelListener(new OnAuthenticationCancelListener(this, null));
+                    this.mCryptoObject = crypto;
+                    try {
+                        this.mExecutor = executor;
+                        this.mAuthenticationCallback = callback;
+                        long sessionId = crypto != null ? crypto.getOpId() : 0L;
+                        if (!BiometricManager.hasBiometrics(this.mContext)) {
+                            this.mExecutor.execute(new Runnable() { // from class: android.hardware.biometrics.-$$Lambda$BiometricPrompt$Dk3E1C_ccte-BJOnzgPmi2l5r0I
+                                @Override // java.lang.Runnable
+                                public final void run() {
+                                    callback.onAuthenticationError(12, BiometricPrompt.this.mContext.getString(C3132R.string.biometric_error_hw_unavailable));
+                                }
+                            });
+                            return;
+                        } else {
+                            this.mService.authenticate(this.mToken, sessionId, userId, this.mBiometricServiceReceiver, this.mContext.getOpPackageName(), this.mBundle, confirmDeviceCredentialCallback);
+                            return;
+                        }
+                    } catch (RemoteException e) {
+                        e = e;
+                        Log.m69e(TAG, "Remote exception while authenticating", e);
+                        this.mExecutor.execute(new Runnable() { // from class: android.hardware.biometrics.-$$Lambda$BiometricPrompt$FhnggONVmg0fSM3ar79llL7ZRYM
+                            @Override // java.lang.Runnable
                             public final void run() {
-                                this.f$1.onAuthenticationError(12, BiometricPrompt.this.mContext.getString(R.string.biometric_error_hw_unavailable));
+                                callback.onAuthenticationError(1, BiometricPrompt.this.mContext.getString(C3132R.string.biometric_error_hw_unavailable));
                             }
                         });
+                        return;
                     }
-                } catch (RemoteException e) {
-                    e = e;
-                    Log.e(TAG, "Remote exception while authenticating", e);
-                    this.mExecutor.execute(new Runnable(authenticationCallback) {
-                        private final /* synthetic */ BiometricPrompt.AuthenticationCallback f$1;
-
-                        {
-                            this.f$1 = r2;
-                        }
-
+                } catch (RemoteException e2) {
+                    e = e2;
+                    Log.m69e(TAG, "Remote exception while authenticating", e);
+                    this.mExecutor.execute(new Runnable() { // from class: android.hardware.biometrics.-$$Lambda$BiometricPrompt$FhnggONVmg0fSM3ar79llL7ZRYM
+                        @Override // java.lang.Runnable
                         public final void run() {
-                            this.f$1.onAuthenticationError(1, BiometricPrompt.this.mContext.getString(R.string.biometric_error_hw_unavailable));
+                            callback.onAuthenticationError(1, BiometricPrompt.this.mContext.getString(C3132R.string.biometric_error_hw_unavailable));
                         }
                     });
+                    return;
                 }
-            } catch (RemoteException e2) {
-                e = e2;
-                Executor executor2 = executor;
-                Log.e(TAG, "Remote exception while authenticating", e);
-                this.mExecutor.execute(new Runnable(authenticationCallback) {
-                    private final /* synthetic */ BiometricPrompt.AuthenticationCallback f$1;
-
-                    {
-                        this.f$1 = r2;
-                    }
-
-                    public final void run() {
-                        this.f$1.onAuthenticationError(1, BiometricPrompt.this.mContext.getString(R.string.biometric_error_hw_unavailable));
-                    }
-                });
             }
+            Log.m64w(TAG, "Authentication already canceled");
         } catch (RemoteException e3) {
             e = e3;
-            CancellationSignal cancellationSignal = cancel;
-            Executor executor22 = executor;
-            Log.e(TAG, "Remote exception while authenticating", e);
-            this.mExecutor.execute(new Runnable(authenticationCallback) {
-                private final /* synthetic */ BiometricPrompt.AuthenticationCallback f$1;
-
-                {
-                    this.f$1 = r2;
-                }
-
-                public final void run() {
-                    this.f$1.onAuthenticationError(1, BiometricPrompt.this.mContext.getString(R.string.biometric_error_hw_unavailable));
-                }
-            });
         }
     }
 }

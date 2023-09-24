@@ -1,12 +1,13 @@
 package android.view;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Looper;
-import android.os.MessageQueue;
+import android.p007os.Looper;
+import android.p007os.MessageQueue;
 import android.util.Log;
 import dalvik.system.CloseGuard;
 import java.lang.ref.WeakReference;
 
+/* loaded from: classes4.dex */
 public abstract class InputEventSender {
     private static final String TAG = "InputEventSender";
     private final CloseGuard mCloseGuard = CloseGuard.get();
@@ -25,18 +26,17 @@ public abstract class InputEventSender {
     public InputEventSender(InputChannel inputChannel, Looper looper) {
         if (inputChannel == null) {
             throw new IllegalArgumentException("inputChannel must not be null");
-        } else if (looper != null) {
-            this.mInputChannel = inputChannel;
-            this.mMessageQueue = looper.getQueue();
-            this.mSenderPtr = nativeInit(new WeakReference(this), inputChannel, this.mMessageQueue);
-            this.mCloseGuard.open("dispose");
-        } else {
+        }
+        if (looper == null) {
             throw new IllegalArgumentException("looper must not be null");
         }
+        this.mInputChannel = inputChannel;
+        this.mMessageQueue = looper.getQueue();
+        this.mSenderPtr = nativeInit(new WeakReference(this), inputChannel, this.mMessageQueue);
+        this.mCloseGuard.open("dispose");
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         try {
             dispose(true);
         } finally {
@@ -57,7 +57,7 @@ public abstract class InputEventSender {
         }
         if (this.mSenderPtr != 0) {
             nativeDispose(this.mSenderPtr);
-            this.mSenderPtr = 0;
+            this.mSenderPtr = 0L;
         }
         this.mInputChannel = null;
         this.mMessageQueue = null;
@@ -69,8 +69,9 @@ public abstract class InputEventSender {
     public final boolean sendInputEvent(int seq, InputEvent event) {
         if (event == null) {
             throw new IllegalArgumentException("event must not be null");
-        } else if (this.mSenderPtr == 0) {
-            Log.w(TAG, "Attempted to send an input event but the input event sender has already been disposed.");
+        }
+        if (this.mSenderPtr == 0) {
+            Log.m64w(TAG, "Attempted to send an input event but the input event sender has already been disposed.");
             return false;
         } else if (event instanceof KeyEvent) {
             return nativeSendKeyEvent(this.mSenderPtr, seq, (KeyEvent) event);

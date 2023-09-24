@@ -3,11 +3,11 @@ package android.app;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.SystemProperties;
+import android.content.p002pm.PackageManager;
+import android.content.p002pm.ResolveInfo;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.SystemProperties;
 import android.provider.Settings;
 import android.util.Printer;
 import com.android.internal.util.FastPrintWriter;
@@ -15,12 +15,17 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 
+/* loaded from: classes.dex */
 public class ApplicationErrorReport implements Parcelable {
-    public static final Parcelable.Creator<ApplicationErrorReport> CREATOR = new Parcelable.Creator<ApplicationErrorReport>() {
+    public static final Parcelable.Creator<ApplicationErrorReport> CREATOR = new Parcelable.Creator<ApplicationErrorReport>() { // from class: android.app.ApplicationErrorReport.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ApplicationErrorReport createFromParcel(Parcel source) {
             return new ApplicationErrorReport(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ApplicationErrorReport[] newArray(int size) {
             return new ApplicationErrorReport[size];
         }
@@ -50,25 +55,30 @@ public class ApplicationErrorReport implements Parcelable {
         readFromParcel(in);
     }
 
-    public static ComponentName getErrorReportReceiver(Context context, String packageName2, int appFlags) {
+    public static ComponentName getErrorReportReceiver(Context context, String packageName, int appFlags) {
         ComponentName result;
-        ComponentName result2;
-        if (Settings.Global.getInt(context.getContentResolver(), Settings.Global.SEND_ACTION_APP_ERROR, 0) == 0) {
+        int enabled = Settings.Global.getInt(context.getContentResolver(), Settings.Global.SEND_ACTION_APP_ERROR, 0);
+        if (enabled == 0) {
             return null;
         }
         PackageManager pm = context.getPackageManager();
         String candidate = null;
         try {
-            candidate = pm.getInstallerPackageName(packageName2);
+            candidate = pm.getInstallerPackageName(packageName);
         } catch (IllegalArgumentException e) {
         }
-        if (candidate != null && (result2 = getErrorReportReceiver(pm, packageName2, candidate)) != null) {
-            return result2;
+        if (candidate != null && (result = getErrorReportReceiver(pm, packageName, candidate)) != null) {
+            return result;
         }
-        if ((appFlags & 1) == 0 || (result = getErrorReportReceiver(pm, packageName2, SystemProperties.get(SYSTEM_APPS_ERROR_RECEIVER_PROPERTY))) == null) {
-            return getErrorReportReceiver(pm, packageName2, SystemProperties.get(DEFAULT_ERROR_RECEIVER_PROPERTY));
+        if ((appFlags & 1) != 0) {
+            String candidate2 = SystemProperties.get(SYSTEM_APPS_ERROR_RECEIVER_PROPERTY);
+            ComponentName result2 = getErrorReportReceiver(pm, packageName, candidate2);
+            if (result2 != null) {
+                return result2;
+            }
         }
-        return result;
+        String candidate3 = SystemProperties.get(DEFAULT_ERROR_RECEIVER_PROPERTY);
+        return getErrorReportReceiver(pm, packageName, candidate3);
     }
 
     static ComponentName getErrorReportReceiver(PackageManager pm, String errorPackage, String receiverPackage) {
@@ -84,6 +94,7 @@ public class ApplicationErrorReport implements Parcelable {
         return new ComponentName(receiverPackage, info.activityInfo.name);
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.type);
         dest.writeString(this.packageName);
@@ -110,9 +121,8 @@ public class ApplicationErrorReport implements Parcelable {
                 default:
                     return;
             }
-        } else {
-            this.runningServiceInfo.writeToParcel(dest, flags);
         }
+        this.runningServiceInfo.writeToParcel(dest, flags);
     }
 
     public void readFromParcel(Parcel in) {
@@ -121,12 +131,8 @@ public class ApplicationErrorReport implements Parcelable {
         this.installerPackageName = in.readString();
         this.processName = in.readString();
         this.time = in.readLong();
-        boolean z = false;
         this.systemApp = in.readInt() == 1;
-        if (in.readInt() == 1) {
-            z = true;
-        }
-        boolean hasCrashInfo = z;
+        boolean hasCrashInfo = in.readInt() == 1;
         int i = this.type;
         if (i != 5) {
             switch (i) {
@@ -151,14 +157,14 @@ public class ApplicationErrorReport implements Parcelable {
                 default:
                     return;
             }
-        } else {
-            this.batteryInfo = null;
-            this.anrInfo = null;
-            this.crashInfo = null;
-            this.runningServiceInfo = new RunningServiceInfo(in);
         }
+        this.batteryInfo = null;
+        this.anrInfo = null;
+        this.crashInfo = null;
+        this.runningServiceInfo = new RunningServiceInfo(in);
     }
 
+    /* loaded from: classes.dex */
     public static class CrashInfo {
         public String crashTag;
         public String exceptionClassName;
@@ -212,15 +218,15 @@ public class ApplicationErrorReport implements Parcelable {
 
         private String sanitizeString(String s) {
             int acceptableLength = 10240 + 10240;
-            if (s == null || s.length() <= acceptableLength) {
-                return s;
+            if (s != null && s.length() > acceptableLength) {
+                String replacement = "\n[TRUNCATED " + (s.length() - acceptableLength) + " CHARS]\n";
+                StringBuilder sb = new StringBuilder(replacement.length() + acceptableLength);
+                sb.append(s.substring(0, 10240));
+                sb.append(replacement);
+                sb.append(s.substring(s.length() - 10240));
+                return sb.toString();
             }
-            String replacement = "\n[TRUNCATED " + (s.length() - acceptableLength) + " CHARS]\n";
-            StringBuilder sb = new StringBuilder(replacement.length() + acceptableLength);
-            sb.append(s.substring(0, 10240));
-            sb.append(replacement);
-            sb.append(s.substring(s.length() - 10240));
-            return sb.toString();
+            return s;
         }
 
         public CrashInfo(Parcel in) {
@@ -258,12 +264,17 @@ public class ApplicationErrorReport implements Parcelable {
         }
     }
 
+    /* loaded from: classes.dex */
     public static class ParcelableCrashInfo extends CrashInfo implements Parcelable {
-        public static final Parcelable.Creator<ParcelableCrashInfo> CREATOR = new Parcelable.Creator<ParcelableCrashInfo>() {
+        public static final Parcelable.Creator<ParcelableCrashInfo> CREATOR = new Parcelable.Creator<ParcelableCrashInfo>() { // from class: android.app.ApplicationErrorReport.ParcelableCrashInfo.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public ParcelableCrashInfo createFromParcel(Parcel in) {
                 return new ParcelableCrashInfo(in);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public ParcelableCrashInfo[] newArray(int size) {
                 return new ParcelableCrashInfo[size];
             }
@@ -280,11 +291,13 @@ public class ApplicationErrorReport implements Parcelable {
             super(in);
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
     }
 
+    /* loaded from: classes.dex */
     public static class AnrInfo {
         public String activity;
         public String cause;
@@ -312,6 +325,7 @@ public class ApplicationErrorReport implements Parcelable {
         }
     }
 
+    /* loaded from: classes.dex */
     public static class BatteryInfo {
         public String checkinDetails;
         public long durationMicros;
@@ -343,6 +357,7 @@ public class ApplicationErrorReport implements Parcelable {
         }
     }
 
+    /* loaded from: classes.dex */
     public static class RunningServiceInfo {
         public long durationMillis;
         public String serviceDetails;
@@ -366,6 +381,7 @@ public class ApplicationErrorReport implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -392,8 +408,7 @@ public class ApplicationErrorReport implements Parcelable {
                 default:
                     return;
             }
-        } else {
-            this.runningServiceInfo.dump(pw, prefix);
         }
+        this.runningServiceInfo.dump(pw, prefix);
     }
 }

@@ -1,5 +1,6 @@
 package android.util;
 
+/* loaded from: classes4.dex */
 public class LogPrinter implements Printer {
     private final int mBuffer;
     private final int mPriority;
@@ -17,6 +18,7 @@ public class LogPrinter implements Printer {
         this.mBuffer = buffer;
     }
 
+    @Override // android.util.Printer
     public void println(String x) {
         Log.println_native(this.mBuffer, this.mPriority, this.mTag, x);
     }

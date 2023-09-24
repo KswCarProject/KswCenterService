@@ -1,5 +1,6 @@
 package android.service.usb;
 
+/* loaded from: classes3.dex */
 public final class UsbPortStatusProto {
     public static final long CONNECTED = 1133871366145L;
     public static final long CONTAMINANT_PRESENCE_STATUS = 1159641169926L;

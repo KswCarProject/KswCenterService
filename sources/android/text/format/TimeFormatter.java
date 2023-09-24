@@ -1,13 +1,13 @@
 package android.text.format;
 
 import android.content.res.Resources;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.nio.CharBuffer;
-import java.util.Formatter;
 import java.util.Locale;
 import libcore.icu.LocaleData;
 import libcore.util.ZoneInfo;
 
+/* loaded from: classes4.dex */
 class TimeFormatter {
     private static final int DAYSPERLYEAR = 366;
     private static final int DAYSPERNYEAR = 365;
@@ -25,7 +25,7 @@ class TimeFormatter {
     private final String dateOnlyFormat;
     private final String dateTimeFormat;
     private final LocaleData localeData;
-    private Formatter numberFormatter;
+    private java.util.Formatter numberFormatter;
     private StringBuilder outputBuilder;
     private final String timeOnlyFormat;
 
@@ -36,9 +36,9 @@ class TimeFormatter {
                 sLocale = locale;
                 sLocaleData = LocaleData.get(locale);
                 Resources r = Resources.getSystem();
-                sTimeOnlyFormat = r.getString(R.string.time_of_day);
-                sDateOnlyFormat = r.getString(R.string.month_day_year);
-                sDateTimeFormat = r.getString(R.string.date_and_time);
+                sTimeOnlyFormat = r.getString(C3132R.string.time_of_day);
+                sDateOnlyFormat = r.getString(C3132R.string.month_day_year);
+                sDateTimeFormat = r.getString(C3132R.string.date_and_time);
             }
             this.dateTimeFormat = sDateTimeFormat;
             this.timeOnlyFormat = sTimeOnlyFormat;
@@ -47,11 +47,12 @@ class TimeFormatter {
         }
     }
 
+    /* JADX WARN: Type inference failed for: r0v0, types: [java.lang.StringBuilder, java.util.Formatter] */
     public String format(String pattern, ZoneInfo.WallTime wallTime, ZoneInfo zoneInfo) {
         try {
             StringBuilder stringBuilder = new StringBuilder();
             this.outputBuilder = stringBuilder;
-            this.numberFormatter = new Formatter(stringBuilder, Locale.US);
+            this.numberFormatter = new java.util.Formatter(stringBuilder, Locale.US);
             formatInternal(pattern, wallTime, zoneInfo);
             String result = stringBuilder.toString();
             if (this.localeData.zeroDigit != '0') {
@@ -82,7 +83,8 @@ class TimeFormatter {
         CharBuffer formatBuffer = CharBuffer.wrap(pattern);
         while (formatBuffer.remaining() > 0) {
             boolean outputCurrentChar = true;
-            if (formatBuffer.get(formatBuffer.position()) == '%') {
+            char currentChar = formatBuffer.get(formatBuffer.position());
+            if (currentChar == '%') {
                 outputCurrentChar = handleToken(formatBuffer, wallTime, zoneInfo);
             }
             if (outputCurrentChar) {
@@ -92,659 +94,325 @@ class TimeFormatter {
         }
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:230:0x000a, code lost:
-        continue;
-        continue;
+    /* JADX WARN: Code restructure failed: missing block: B:133:0x0325, code lost:
+        r9 = r20.getYear();
+        r10 = r20.getYearDay();
+        r11 = r20.getWeekDay();
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:72:0x01e8, code lost:
-        if (r20.getMonth() < 0) goto L_0x01fc;
+    /* JADX WARN: Code restructure failed: missing block: B:135:0x0335, code lost:
+        if (isLeap(r9) == false) goto L128;
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:74:0x01ee, code lost:
-        if (r20.getMonth() < 12) goto L_0x01f1;
+    /* JADX WARN: Code restructure failed: missing block: B:136:0x0337, code lost:
+        r12 = 366;
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:75:0x01f1, code lost:
-        r7 = r0.localeData.shortMonthNames[r20.getMonth()];
+    /* JADX WARN: Code restructure failed: missing block: B:137:0x033a, code lost:
+        r12 = 365;
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:76:0x01fc, code lost:
-        r7 = "?";
+    /* JADX WARN: Code restructure failed: missing block: B:138:0x033c, code lost:
+        r15 = (((r10 + 11) - r11) % 7) - 3;
+        r13 = r15 - (r12 % 7);
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:77:0x01fe, code lost:
-        modifyAndAppend(r7, r5);
+    /* JADX WARN: Code restructure failed: missing block: B:139:0x0347, code lost:
+        if (r13 >= (-3)) goto L104;
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:78:0x0201, code lost:
+    /* JADX WARN: Code restructure failed: missing block: B:140:0x0349, code lost:
+        r13 = r13 + 7;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:142:0x034c, code lost:
+        if (r10 < (r13 + r12)) goto L106;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:143:0x034e, code lost:
+        r9 = r9 + 1;
+        r8 = 1;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:144:0x0352, code lost:
+        if (r10 < r15) goto L107;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:145:0x0354, code lost:
+        r8 = ((r10 - r15) / 7) + 1;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:147:0x035d, code lost:
+        if (r6 != 86) goto L120;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:148:0x035f, code lost:
+        r18.numberFormatter.format(getFormat(r5, "%02d", "%2d", "%d", "%02d"), java.lang.Integer.valueOf(r8));
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:149:0x037a, code lost:
+        r14 = r4;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:150:0x037d, code lost:
+        if (r6 != 103) goto L124;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:151:0x037f, code lost:
+        outputYear(r9, r14, true, r5);
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:152:0x0383, code lost:
+        outputYear(r9, true, true, r5);
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:153:0x0386, code lost:
+        return r14;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:154:0x0387, code lost:
+        r9 = r9 - 1;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:155:0x038d, code lost:
+        if (isLeap(r9) == false) goto L112;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:156:0x038f, code lost:
+        r17 = 366;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:157:0x0392, code lost:
+        r17 = 365;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:158:0x0394, code lost:
+        r10 = r10 + r17;
+        r4 = false;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:250:?, code lost:
         return false;
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:87:0x0221, code lost:
-        r5 = r6;
+    /* JADX WARN: Code restructure failed: missing block: B:251:?, code lost:
+        return r14;
      */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    private boolean handleToken(java.nio.CharBuffer r19, libcore.util.ZoneInfo.WallTime r20, libcore.util.ZoneInfo r21) {
-        /*
-            r18 = this;
-            r0 = r18
-            r1 = r19
-            r2 = r20
-            r3 = r21
-            r4 = 0
-            r5 = r4
-        L_0x000a:
-            int r6 = r19.remaining()
-            r7 = 1
-            if (r6 <= r7) goto L_0x0411
-            int r6 = r19.position()
-            int r6 = r6 + r7
-            r1.position(r6)
-            int r6 = r19.position()
-            char r6 = r1.get(r6)
-            r8 = 7
-            r9 = 12
-            switch(r6) {
-                case 65: goto L_0x03f1;
-                case 66: goto L_0x03b0;
-                case 67: goto L_0x03a8;
-                case 68: goto L_0x03a2;
-                case 69: goto L_0x03a0;
-                case 70: goto L_0x0399;
-                case 71: goto L_0x0325;
-                case 72: goto L_0x0307;
-                case 73: goto L_0x02de;
-                default: goto L_0x0027;
+    /* JADX WARN: Code restructure failed: missing block: B:75:0x01e8, code lost:
+        if (r20.getMonth() < 0) goto L95;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:77:0x01ee, code lost:
+        if (r20.getMonth() < 12) goto L92;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:79:0x01f1, code lost:
+        r7 = r18.localeData.shortMonthNames[r20.getMonth()];
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:80:0x01fc, code lost:
+        r7 = "?";
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:81:0x01fe, code lost:
+        modifyAndAppend(r7, r5);
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:82:0x0201, code lost:
+        return false;
+     */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    private boolean handleToken(CharBuffer formatBuffer, ZoneInfo.WallTime wallTime, ZoneInfo zoneInfo) {
+        String str;
+        String str2;
+        char sign;
+        String str3;
+        boolean z = false;
+        int modifier = 0;
+        while (true) {
+            if (formatBuffer.remaining() > 1) {
+                formatBuffer.position(formatBuffer.position() + 1);
+                int currentChar = formatBuffer.get(formatBuffer.position());
+                switch (currentChar) {
+                    case 65:
+                        modifyAndAppend((wallTime.getWeekDay() < 0 || wallTime.getWeekDay() >= 7) ? "?" : this.localeData.longWeekdayNames[wallTime.getWeekDay() + 1], modifier);
+                        return false;
+                    case 66:
+                        if (modifier == 45) {
+                            if (wallTime.getMonth() < 0 || wallTime.getMonth() >= 12) {
+                                str = "?";
+                            } else {
+                                str = this.localeData.longStandAloneMonthNames[wallTime.getMonth()];
+                            }
+                            modifyAndAppend(str, modifier);
+                            return false;
+                        }
+                        modifyAndAppend((wallTime.getMonth() < 0 || wallTime.getMonth() >= 12) ? "?" : this.localeData.longMonthNames[wallTime.getMonth()], modifier);
+                        return false;
+                    case 67:
+                        outputYear(wallTime.getYear(), true, false, modifier);
+                        return false;
+                    case 68:
+                        formatInternal("%m/%d/%y", wallTime, zoneInfo);
+                        return false;
+                    case 69:
+                        break;
+                    case 70:
+                        formatInternal("%Y-%m-%d", wallTime, zoneInfo);
+                        return false;
+                    case 71:
+                        break;
+                    case 72:
+                        this.numberFormatter.format(getFormat(modifier, "%02d", "%2d", "%d", "%02d"), Integer.valueOf(wallTime.getHour()));
+                        return false;
+                    case 73:
+                        int hour = wallTime.getHour() % 12 != 0 ? wallTime.getHour() % 12 : 12;
+                        this.numberFormatter.format(getFormat(modifier, "%02d", "%2d", "%d", "%02d"), Integer.valueOf(hour));
+                        return false;
+                    default:
+                        switch (currentChar) {
+                            case 79:
+                                break;
+                            case 80:
+                                if (wallTime.getHour() >= 12) {
+                                    str2 = this.localeData.amPm[1];
+                                } else {
+                                    str2 = this.localeData.amPm[0];
+                                }
+                                modifyAndAppend(str2, -1);
+                                return false;
+                            default:
+                                switch (currentChar) {
+                                    case 82:
+                                        formatInternal(DateUtils.HOUR_MINUTE_24, wallTime, zoneInfo);
+                                        return false;
+                                    case 83:
+                                        this.numberFormatter.format(getFormat(modifier, "%02d", "%2d", "%d", "%02d"), Integer.valueOf(wallTime.getSecond()));
+                                        return false;
+                                    case 84:
+                                        formatInternal("%H:%M:%S", wallTime, zoneInfo);
+                                        return false;
+                                    case 85:
+                                        this.numberFormatter.format(getFormat(modifier, "%02d", "%2d", "%d", "%02d"), Integer.valueOf(((wallTime.getYearDay() + 7) - wallTime.getWeekDay()) / 7));
+                                        return false;
+                                    case 86:
+                                        break;
+                                    case 87:
+                                        int n = ((wallTime.getYearDay() + 7) - (wallTime.getWeekDay() != 0 ? wallTime.getWeekDay() - 1 : 6)) / 7;
+                                        this.numberFormatter.format(getFormat(modifier, "%02d", "%2d", "%d", "%02d"), Integer.valueOf(n));
+                                        return false;
+                                    case 88:
+                                        formatInternal(this.timeOnlyFormat, wallTime, zoneInfo);
+                                        return false;
+                                    case 89:
+                                        outputYear(wallTime.getYear(), true, true, modifier);
+                                        return false;
+                                    case 90:
+                                        if (wallTime.getIsDst() < 0) {
+                                            return false;
+                                        }
+                                        boolean isDst = wallTime.getIsDst() != 0;
+                                        modifyAndAppend(zoneInfo.getDisplayName(isDst, 0), modifier);
+                                        return false;
+                                    default:
+                                        switch (currentChar) {
+                                            case 94:
+                                            case 95:
+                                                break;
+                                            default:
+                                                switch (currentChar) {
+                                                    case 97:
+                                                        modifyAndAppend((wallTime.getWeekDay() < 0 || wallTime.getWeekDay() >= 7) ? "?" : this.localeData.shortWeekdayNames[wallTime.getWeekDay() + 1], modifier);
+                                                        return false;
+                                                    case 98:
+                                                        break;
+                                                    case 99:
+                                                        formatInternal(this.dateTimeFormat, wallTime, zoneInfo);
+                                                        return false;
+                                                    case 100:
+                                                        this.numberFormatter.format(getFormat(modifier, "%02d", "%2d", "%d", "%02d"), Integer.valueOf(wallTime.getMonthDay()));
+                                                        return false;
+                                                    case 101:
+                                                        this.numberFormatter.format(getFormat(modifier, "%2d", "%2d", "%d", "%02d"), Integer.valueOf(wallTime.getMonthDay()));
+                                                        return false;
+                                                    default:
+                                                        switch (currentChar) {
+                                                            case 103:
+                                                                break;
+                                                            case 104:
+                                                                break;
+                                                            default:
+                                                                switch (currentChar) {
+                                                                    case 106:
+                                                                        int yearDay = wallTime.getYearDay() + 1;
+                                                                        this.numberFormatter.format(getFormat(modifier, "%03d", "%3d", "%d", "%03d"), Integer.valueOf(yearDay));
+                                                                        return false;
+                                                                    case 107:
+                                                                        this.numberFormatter.format(getFormat(modifier, "%2d", "%2d", "%d", "%02d"), Integer.valueOf(wallTime.getHour()));
+                                                                        return false;
+                                                                    case 108:
+                                                                        int n2 = wallTime.getHour() % 12 != 0 ? wallTime.getHour() % 12 : 12;
+                                                                        this.numberFormatter.format(getFormat(modifier, "%2d", "%2d", "%d", "%02d"), Integer.valueOf(n2));
+                                                                        return false;
+                                                                    case 109:
+                                                                        this.numberFormatter.format(getFormat(modifier, "%02d", "%2d", "%d", "%02d"), Integer.valueOf(wallTime.getMonth() + 1));
+                                                                        return false;
+                                                                    case 110:
+                                                                        this.outputBuilder.append('\n');
+                                                                        return false;
+                                                                    default:
+                                                                        switch (currentChar) {
+                                                                            case 114:
+                                                                                formatInternal("%I:%M:%S %p", wallTime, zoneInfo);
+                                                                                return false;
+                                                                            case 115:
+                                                                                int timeInSeconds = wallTime.mktime(zoneInfo);
+                                                                                this.outputBuilder.append(Integer.toString(timeInSeconds));
+                                                                                return false;
+                                                                            case 116:
+                                                                                this.outputBuilder.append('\t');
+                                                                                return false;
+                                                                            case 117:
+                                                                                int day = wallTime.getWeekDay() != 0 ? wallTime.getWeekDay() : 7;
+                                                                                this.numberFormatter.format("%d", Integer.valueOf(day));
+                                                                                return false;
+                                                                            case 118:
+                                                                                formatInternal("%e-%b-%Y", wallTime, zoneInfo);
+                                                                                return false;
+                                                                            case 119:
+                                                                                this.numberFormatter.format("%d", Integer.valueOf(wallTime.getWeekDay()));
+                                                                                return false;
+                                                                            case 120:
+                                                                                formatInternal(this.dateOnlyFormat, wallTime, zoneInfo);
+                                                                                return false;
+                                                                            case 121:
+                                                                                outputYear(wallTime.getYear(), false, true, modifier);
+                                                                                return false;
+                                                                            case 122:
+                                                                                if (wallTime.getIsDst() < 0) {
+                                                                                    return false;
+                                                                                }
+                                                                                int diff = wallTime.getGmtOffset();
+                                                                                if (diff < 0) {
+                                                                                    sign = '-';
+                                                                                    diff = -diff;
+                                                                                } else {
+                                                                                    sign = '+';
+                                                                                }
+                                                                                this.outputBuilder.append(sign);
+                                                                                int diff2 = diff / 60;
+                                                                                this.numberFormatter.format(getFormat(modifier, "%04d", "%4d", "%d", "%04d"), Integer.valueOf(((diff2 / 60) * 100) + (diff2 % 60)));
+                                                                                return false;
+                                                                            default:
+                                                                                switch (currentChar) {
+                                                                                    case 35:
+                                                                                    case 45:
+                                                                                    case 48:
+                                                                                        break;
+                                                                                    case 43:
+                                                                                        formatInternal("%a %b %e %H:%M:%S %Z %Y", wallTime, zoneInfo);
+                                                                                        return false;
+                                                                                    case 77:
+                                                                                        this.numberFormatter.format(getFormat(modifier, "%02d", "%2d", "%d", "%02d"), Integer.valueOf(wallTime.getMinute()));
+                                                                                        return false;
+                                                                                    case 112:
+                                                                                        if (wallTime.getHour() >= 12) {
+                                                                                            str3 = this.localeData.amPm[1];
+                                                                                        } else {
+                                                                                            str3 = this.localeData.amPm[0];
+                                                                                        }
+                                                                                        modifyAndAppend(str3, modifier);
+                                                                                        return false;
+                                                                                    default:
+                                                                                        return true;
+                                                                                }
+                                                                        }
+                                                                }
+                                                        }
+                                                }
+                                        }
+                                        modifier = currentChar;
+                                        continue;
+                                }
+                        }
+                }
+            } else {
+                return true;
             }
-        L_0x0027:
-            switch(r6) {
-                case 79: goto L_0x03a0;
-                case 80: goto L_0x02c6;
-                default: goto L_0x002a;
-            }
-        L_0x002a:
-            switch(r6) {
-                case 82: goto L_0x02c0;
-                case 83: goto L_0x02a2;
-                case 84: goto L_0x029c;
-                case 85: goto L_0x0277;
-                case 86: goto L_0x0325;
-                case 87: goto L_0x0249;
-                case 88: goto L_0x0243;
-                case 89: goto L_0x023b;
-                case 90: goto L_0x0224;
-                default: goto L_0x002d;
-            }
-        L_0x002d:
-            switch(r6) {
-                case 94: goto L_0x0221;
-                case 95: goto L_0x0221;
-                default: goto L_0x0030;
-            }
-        L_0x0030:
-            switch(r6) {
-                case 97: goto L_0x0202;
-                case 98: goto L_0x01e4;
-                case 99: goto L_0x01de;
-                case 100: goto L_0x01c0;
-                case 101: goto L_0x01a2;
-                default: goto L_0x0033;
-            }
-        L_0x0033:
-            switch(r6) {
-                case 103: goto L_0x0325;
-                case 104: goto L_0x01e4;
-                default: goto L_0x0036;
-            }
-        L_0x0036:
-            switch(r6) {
-                case 106: goto L_0x0183;
-                case 107: goto L_0x0165;
-                case 108: goto L_0x013c;
-                case 109: goto L_0x011d;
-                case 110: goto L_0x0115;
-                default: goto L_0x0039;
-            }
-        L_0x0039:
-            switch(r6) {
-                case 114: goto L_0x010f;
-                case 115: goto L_0x0101;
-                case 116: goto L_0x00f9;
-                case 117: goto L_0x00de;
-                case 118: goto L_0x00d8;
-                case 119: goto L_0x00c4;
-                case 120: goto L_0x00be;
-                case 121: goto L_0x00b6;
-                case 122: goto L_0x007b;
-                default: goto L_0x003c;
-            }
-        L_0x003c:
-            switch(r6) {
-                case 35: goto L_0x0221;
-                case 43: goto L_0x0075;
-                case 45: goto L_0x0221;
-                case 48: goto L_0x0221;
-                case 77: goto L_0x0057;
-                case 112: goto L_0x0040;
-                default: goto L_0x003f;
-            }
-        L_0x003f:
-            return r7
-        L_0x0040:
-            int r8 = r20.getHour()
-            if (r8 < r9) goto L_0x004d
-            libcore.icu.LocaleData r8 = r0.localeData
-            java.lang.String[] r8 = r8.amPm
-            r7 = r8[r7]
-            goto L_0x0053
-        L_0x004d:
-            libcore.icu.LocaleData r7 = r0.localeData
-            java.lang.String[] r7 = r7.amPm
-            r7 = r7[r4]
-        L_0x0053:
-            r0.modifyAndAppend(r7, r5)
-            return r4
-        L_0x0057:
-            java.util.Formatter r8 = r0.numberFormatter
-            java.lang.String r9 = "%02d"
-            java.lang.String r10 = "%2d"
-            java.lang.String r11 = "%d"
-            java.lang.String r12 = "%02d"
-            java.lang.String r9 = getFormat(r5, r9, r10, r11, r12)
-            java.lang.Object[] r7 = new java.lang.Object[r7]
-            int r10 = r20.getMinute()
-            java.lang.Integer r10 = java.lang.Integer.valueOf(r10)
-            r7[r4] = r10
-            r8.format(r9, r7)
-            return r4
-        L_0x0075:
-            java.lang.String r7 = "%a %b %e %H:%M:%S %Z %Y"
-            r0.formatInternal(r7, r2, r3)
-            return r4
-        L_0x007b:
-            int r8 = r20.getIsDst()
-            if (r8 >= 0) goto L_0x0082
-            return r4
-        L_0x0082:
-            int r8 = r20.getGmtOffset()
-            if (r8 >= 0) goto L_0x008c
-            r9 = 45
-            int r8 = -r8
-            goto L_0x008e
-        L_0x008c:
-            r9 = 43
-        L_0x008e:
-            java.lang.StringBuilder r10 = r0.outputBuilder
-            r10.append(r9)
-            int r8 = r8 / 60
-            int r10 = r8 / 60
-            int r10 = r10 * 100
-            int r11 = r8 % 60
-            int r10 = r10 + r11
-            java.util.Formatter r8 = r0.numberFormatter
-            java.lang.String r11 = "%04d"
-            java.lang.String r12 = "%4d"
-            java.lang.String r13 = "%d"
-            java.lang.String r14 = "%04d"
-            java.lang.String r11 = getFormat(r5, r11, r12, r13, r14)
-            java.lang.Object[] r7 = new java.lang.Object[r7]
-            java.lang.Integer r12 = java.lang.Integer.valueOf(r10)
-            r7[r4] = r12
-            r8.format(r11, r7)
-            return r4
-        L_0x00b6:
-            int r8 = r20.getYear()
-            r0.outputYear(r8, r4, r7, r5)
-            return r4
-        L_0x00be:
-            java.lang.String r7 = r0.dateOnlyFormat
-            r0.formatInternal(r7, r2, r3)
-            return r4
-        L_0x00c4:
-            java.util.Formatter r8 = r0.numberFormatter
-            java.lang.String r9 = "%d"
-            java.lang.Object[] r7 = new java.lang.Object[r7]
-            int r10 = r20.getWeekDay()
-            java.lang.Integer r10 = java.lang.Integer.valueOf(r10)
-            r7[r4] = r10
-            r8.format(r9, r7)
-            return r4
-        L_0x00d8:
-            java.lang.String r7 = "%e-%b-%Y"
-            r0.formatInternal(r7, r2, r3)
-            return r4
-        L_0x00de:
-            int r9 = r20.getWeekDay()
-            if (r9 != 0) goto L_0x00e5
-            goto L_0x00e9
-        L_0x00e5:
-            int r8 = r20.getWeekDay()
-        L_0x00e9:
-            java.util.Formatter r9 = r0.numberFormatter
-            java.lang.String r10 = "%d"
-            java.lang.Object[] r7 = new java.lang.Object[r7]
-            java.lang.Integer r11 = java.lang.Integer.valueOf(r8)
-            r7[r4] = r11
-            r9.format(r10, r7)
-            return r4
-        L_0x00f9:
-            java.lang.StringBuilder r7 = r0.outputBuilder
-            r8 = 9
-            r7.append(r8)
-            return r4
-        L_0x0101:
-            int r7 = r20.mktime(r21)
-            java.lang.StringBuilder r8 = r0.outputBuilder
-            java.lang.String r9 = java.lang.Integer.toString(r7)
-            r8.append(r9)
-            return r4
-        L_0x010f:
-            java.lang.String r7 = "%I:%M:%S %p"
-            r0.formatInternal(r7, r2, r3)
-            return r4
-        L_0x0115:
-            java.lang.StringBuilder r7 = r0.outputBuilder
-            r8 = 10
-            r7.append(r8)
-            return r4
-        L_0x011d:
-            java.util.Formatter r8 = r0.numberFormatter
-            java.lang.String r9 = "%02d"
-            java.lang.String r10 = "%2d"
-            java.lang.String r11 = "%d"
-            java.lang.String r12 = "%02d"
-            java.lang.String r9 = getFormat(r5, r9, r10, r11, r12)
-            java.lang.Object[] r10 = new java.lang.Object[r7]
-            int r11 = r20.getMonth()
-            int r11 = r11 + r7
-            java.lang.Integer r7 = java.lang.Integer.valueOf(r11)
-            r10[r4] = r7
-            r8.format(r9, r10)
-            return r4
-        L_0x013c:
-            int r8 = r20.getHour()
-            int r8 = r8 % r9
-            if (r8 == 0) goto L_0x014a
-            int r8 = r20.getHour()
-            int r9 = r8 % 12
-        L_0x014a:
-            r8 = r9
-            java.util.Formatter r9 = r0.numberFormatter
-            java.lang.String r10 = "%2d"
-            java.lang.String r11 = "%2d"
-            java.lang.String r12 = "%d"
-            java.lang.String r13 = "%02d"
-            java.lang.String r10 = getFormat(r5, r10, r11, r12, r13)
-            java.lang.Object[] r7 = new java.lang.Object[r7]
-            java.lang.Integer r11 = java.lang.Integer.valueOf(r8)
-            r7[r4] = r11
-            r9.format(r10, r7)
-            return r4
-        L_0x0165:
-            java.util.Formatter r8 = r0.numberFormatter
-            java.lang.String r9 = "%2d"
-            java.lang.String r10 = "%2d"
-            java.lang.String r11 = "%d"
-            java.lang.String r12 = "%02d"
-            java.lang.String r9 = getFormat(r5, r9, r10, r11, r12)
-            java.lang.Object[] r7 = new java.lang.Object[r7]
-            int r10 = r20.getHour()
-            java.lang.Integer r10 = java.lang.Integer.valueOf(r10)
-            r7[r4] = r10
-            r8.format(r9, r7)
-            return r4
-        L_0x0183:
-            int r8 = r20.getYearDay()
-            int r8 = r8 + r7
-            java.util.Formatter r9 = r0.numberFormatter
-            java.lang.String r10 = "%03d"
-            java.lang.String r11 = "%3d"
-            java.lang.String r12 = "%d"
-            java.lang.String r13 = "%03d"
-            java.lang.String r10 = getFormat(r5, r10, r11, r12, r13)
-            java.lang.Object[] r7 = new java.lang.Object[r7]
-            java.lang.Integer r11 = java.lang.Integer.valueOf(r8)
-            r7[r4] = r11
-            r9.format(r10, r7)
-            return r4
-        L_0x01a2:
-            java.util.Formatter r8 = r0.numberFormatter
-            java.lang.String r9 = "%2d"
-            java.lang.String r10 = "%2d"
-            java.lang.String r11 = "%d"
-            java.lang.String r12 = "%02d"
-            java.lang.String r9 = getFormat(r5, r9, r10, r11, r12)
-            java.lang.Object[] r7 = new java.lang.Object[r7]
-            int r10 = r20.getMonthDay()
-            java.lang.Integer r10 = java.lang.Integer.valueOf(r10)
-            r7[r4] = r10
-            r8.format(r9, r7)
-            return r4
-        L_0x01c0:
-            java.util.Formatter r8 = r0.numberFormatter
-            java.lang.String r9 = "%02d"
-            java.lang.String r10 = "%2d"
-            java.lang.String r11 = "%d"
-            java.lang.String r12 = "%02d"
-            java.lang.String r9 = getFormat(r5, r9, r10, r11, r12)
-            java.lang.Object[] r7 = new java.lang.Object[r7]
-            int r10 = r20.getMonthDay()
-            java.lang.Integer r10 = java.lang.Integer.valueOf(r10)
-            r7[r4] = r10
-            r8.format(r9, r7)
-            return r4
-        L_0x01de:
-            java.lang.String r7 = r0.dateTimeFormat
-            r0.formatInternal(r7, r2, r3)
-            return r4
-        L_0x01e4:
-            int r7 = r20.getMonth()
-            if (r7 < 0) goto L_0x01fc
-            int r7 = r20.getMonth()
-            if (r7 < r9) goto L_0x01f1
-            goto L_0x01fc
-        L_0x01f1:
-            libcore.icu.LocaleData r7 = r0.localeData
-            java.lang.String[] r7 = r7.shortMonthNames
-            int r8 = r20.getMonth()
-            r7 = r7[r8]
-            goto L_0x01fe
-        L_0x01fc:
-            java.lang.String r7 = "?"
-        L_0x01fe:
-            r0.modifyAndAppend(r7, r5)
-            return r4
-        L_0x0202:
-            int r9 = r20.getWeekDay()
-            if (r9 < 0) goto L_0x021b
-            int r9 = r20.getWeekDay()
-            if (r9 < r8) goto L_0x020f
-            goto L_0x021b
-        L_0x020f:
-            libcore.icu.LocaleData r8 = r0.localeData
-            java.lang.String[] r8 = r8.shortWeekdayNames
-            int r9 = r20.getWeekDay()
-            int r9 = r9 + r7
-            r7 = r8[r9]
-            goto L_0x021d
-        L_0x021b:
-            java.lang.String r7 = "?"
-        L_0x021d:
-            r0.modifyAndAppend(r7, r5)
-            return r4
-        L_0x0221:
-            r5 = r6
-            goto L_0x000a
-        L_0x0224:
-            int r8 = r20.getIsDst()
-            if (r8 >= 0) goto L_0x022b
-            return r4
-        L_0x022b:
-            int r8 = r20.getIsDst()
-            if (r8 == 0) goto L_0x0232
-            goto L_0x0233
-        L_0x0232:
-            r7 = r4
-        L_0x0233:
-            java.lang.String r8 = r3.getDisplayName(r7, r4)
-            r0.modifyAndAppend(r8, r5)
-            return r4
-        L_0x023b:
-            int r8 = r20.getYear()
-            r0.outputYear(r8, r7, r7, r5)
-            return r4
-        L_0x0243:
-            java.lang.String r7 = r0.timeOnlyFormat
-            r0.formatInternal(r7, r2, r3)
-            return r4
-        L_0x0249:
-            int r9 = r20.getYearDay()
-            int r9 = r9 + r8
-            int r10 = r20.getWeekDay()
-            if (r10 == 0) goto L_0x025a
-            int r10 = r20.getWeekDay()
-            int r10 = r10 - r7
-            goto L_0x025b
-        L_0x025a:
-            r10 = 6
-        L_0x025b:
-            int r9 = r9 - r10
-            int r9 = r9 / r8
-            java.util.Formatter r8 = r0.numberFormatter
-            java.lang.String r10 = "%02d"
-            java.lang.String r11 = "%2d"
-            java.lang.String r12 = "%d"
-            java.lang.String r13 = "%02d"
-            java.lang.String r10 = getFormat(r5, r10, r11, r12, r13)
-            java.lang.Object[] r7 = new java.lang.Object[r7]
-            java.lang.Integer r11 = java.lang.Integer.valueOf(r9)
-            r7[r4] = r11
-            r8.format(r10, r7)
-            return r4
-        L_0x0277:
-            java.util.Formatter r9 = r0.numberFormatter
-            java.lang.String r10 = "%02d"
-            java.lang.String r11 = "%2d"
-            java.lang.String r12 = "%d"
-            java.lang.String r13 = "%02d"
-            java.lang.String r10 = getFormat(r5, r10, r11, r12, r13)
-            java.lang.Object[] r7 = new java.lang.Object[r7]
-            int r11 = r20.getYearDay()
-            int r11 = r11 + r8
-            int r12 = r20.getWeekDay()
-            int r11 = r11 - r12
-            int r11 = r11 / r8
-            java.lang.Integer r8 = java.lang.Integer.valueOf(r11)
-            r7[r4] = r8
-            r9.format(r10, r7)
-            return r4
-        L_0x029c:
-            java.lang.String r7 = "%H:%M:%S"
-            r0.formatInternal(r7, r2, r3)
-            return r4
-        L_0x02a2:
-            java.util.Formatter r8 = r0.numberFormatter
-            java.lang.String r9 = "%02d"
-            java.lang.String r10 = "%2d"
-            java.lang.String r11 = "%d"
-            java.lang.String r12 = "%02d"
-            java.lang.String r9 = getFormat(r5, r9, r10, r11, r12)
-            java.lang.Object[] r7 = new java.lang.Object[r7]
-            int r10 = r20.getSecond()
-            java.lang.Integer r10 = java.lang.Integer.valueOf(r10)
-            r7[r4] = r10
-            r8.format(r9, r7)
-            return r4
-        L_0x02c0:
-            java.lang.String r7 = "%H:%M"
-            r0.formatInternal(r7, r2, r3)
-            return r4
-        L_0x02c6:
-            int r8 = r20.getHour()
-            if (r8 < r9) goto L_0x02d3
-            libcore.icu.LocaleData r8 = r0.localeData
-            java.lang.String[] r8 = r8.amPm
-            r7 = r8[r7]
-            goto L_0x02d9
-        L_0x02d3:
-            libcore.icu.LocaleData r7 = r0.localeData
-            java.lang.String[] r7 = r7.amPm
-            r7 = r7[r4]
-        L_0x02d9:
-            r8 = -1
-            r0.modifyAndAppend(r7, r8)
-            return r4
-        L_0x02de:
-            int r8 = r20.getHour()
-            int r8 = r8 % r9
-            if (r8 == 0) goto L_0x02ec
-            int r8 = r20.getHour()
-            int r9 = r8 % 12
-        L_0x02ec:
-            r8 = r9
-            java.util.Formatter r9 = r0.numberFormatter
-            java.lang.String r10 = "%02d"
-            java.lang.String r11 = "%2d"
-            java.lang.String r12 = "%d"
-            java.lang.String r13 = "%02d"
-            java.lang.String r10 = getFormat(r5, r10, r11, r12, r13)
-            java.lang.Object[] r7 = new java.lang.Object[r7]
-            java.lang.Integer r11 = java.lang.Integer.valueOf(r8)
-            r7[r4] = r11
-            r9.format(r10, r7)
-            return r4
-        L_0x0307:
-            java.util.Formatter r8 = r0.numberFormatter
-            java.lang.String r9 = "%02d"
-            java.lang.String r10 = "%2d"
-            java.lang.String r11 = "%d"
-            java.lang.String r12 = "%02d"
-            java.lang.String r9 = getFormat(r5, r9, r10, r11, r12)
-            java.lang.Object[] r7 = new java.lang.Object[r7]
-            int r10 = r20.getHour()
-            java.lang.Integer r10 = java.lang.Integer.valueOf(r10)
-            r7[r4] = r10
-            r8.format(r9, r7)
-            return r4
-        L_0x0325:
-            int r9 = r20.getYear()
-            int r10 = r20.getYearDay()
-            int r11 = r20.getWeekDay()
-        L_0x0331:
-            boolean r12 = isLeap(r9)
-            if (r12 == 0) goto L_0x033a
-            r12 = 366(0x16e, float:5.13E-43)
-            goto L_0x033c
-        L_0x033a:
-            r12 = 365(0x16d, float:5.11E-43)
-        L_0x033c:
-            int r15 = r10 + 11
-            int r15 = r15 - r11
-            int r15 = r15 % r8
-            int r15 = r15 + -3
-            int r16 = r12 % 7
-            int r13 = r15 - r16
-            r14 = -3
-            if (r13 >= r14) goto L_0x034b
-            int r13 = r13 + 7
-        L_0x034b:
-            int r13 = r13 + r12
-            if (r10 < r13) goto L_0x0352
-            int r9 = r9 + 1
-            r8 = 1
-            goto L_0x035a
-        L_0x0352:
-            if (r10 < r15) goto L_0x0387
-            int r14 = r10 - r15
-            int r14 = r14 / r8
-            int r8 = r14 + 1
-        L_0x035a:
-            r12 = 86
-            if (r6 != r12) goto L_0x037a
-            java.util.Formatter r12 = r0.numberFormatter
-            java.lang.String r13 = "%02d"
-            java.lang.String r14 = "%2d"
-            java.lang.String r15 = "%d"
-            java.lang.String r4 = "%02d"
-            java.lang.String r4 = getFormat(r5, r13, r14, r15, r4)
-            java.lang.Object[] r7 = new java.lang.Object[r7]
-            java.lang.Integer r13 = java.lang.Integer.valueOf(r8)
-            r14 = 0
-            r7[r14] = r13
-            r12.format(r4, r7)
-            goto L_0x0386
-        L_0x037a:
-            r14 = r4
-            r4 = 103(0x67, float:1.44E-43)
-            if (r6 != r4) goto L_0x0383
-            r0.outputYear(r9, r14, r7, r5)
-            goto L_0x0386
-        L_0x0383:
-            r0.outputYear(r9, r7, r7, r5)
-        L_0x0386:
-            return r14
-        L_0x0387:
-            int r9 = r9 + -1
-            boolean r4 = isLeap(r9)
-            if (r4 == 0) goto L_0x0392
-            r17 = 366(0x16e, float:5.13E-43)
-            goto L_0x0394
-        L_0x0392:
-            r17 = 365(0x16d, float:5.11E-43)
-        L_0x0394:
-            int r10 = r10 + r17
-            r4 = 0
-            goto L_0x0331
-        L_0x0399:
-            java.lang.String r4 = "%Y-%m-%d"
-            r0.formatInternal(r4, r2, r3)
-            r4 = 0
-            return r4
-        L_0x03a0:
-            goto L_0x000a
-        L_0x03a2:
-            java.lang.String r7 = "%m/%d/%y"
-            r0.formatInternal(r7, r2, r3)
-            return r4
-        L_0x03a8:
-            int r8 = r20.getYear()
-            r0.outputYear(r8, r7, r4, r5)
-            return r4
-        L_0x03b0:
-            r4 = 45
-            if (r5 != r4) goto L_0x03d2
-            int r4 = r20.getMonth()
-            if (r4 < 0) goto L_0x03cc
-            int r4 = r20.getMonth()
-            if (r4 < r9) goto L_0x03c1
-            goto L_0x03cc
-        L_0x03c1:
-            libcore.icu.LocaleData r4 = r0.localeData
-            java.lang.String[] r4 = r4.longStandAloneMonthNames
-            int r7 = r20.getMonth()
-            r4 = r4[r7]
-            goto L_0x03ce
-        L_0x03cc:
-            java.lang.String r4 = "?"
-        L_0x03ce:
-            r0.modifyAndAppend(r4, r5)
-            goto L_0x03ef
-        L_0x03d2:
-            int r4 = r20.getMonth()
-            if (r4 < 0) goto L_0x03ea
-            int r4 = r20.getMonth()
-            if (r4 < r9) goto L_0x03df
-            goto L_0x03ea
-        L_0x03df:
-            libcore.icu.LocaleData r4 = r0.localeData
-            java.lang.String[] r4 = r4.longMonthNames
-            int r7 = r20.getMonth()
-            r4 = r4[r7]
-            goto L_0x03ec
-        L_0x03ea:
-            java.lang.String r4 = "?"
-        L_0x03ec:
-            r0.modifyAndAppend(r4, r5)
-        L_0x03ef:
-            r4 = 0
-            return r4
-        L_0x03f1:
-            int r4 = r20.getWeekDay()
-            if (r4 < 0) goto L_0x040a
-            int r4 = r20.getWeekDay()
-            if (r4 < r8) goto L_0x03fe
-            goto L_0x040a
-        L_0x03fe:
-            libcore.icu.LocaleData r4 = r0.localeData
-            java.lang.String[] r4 = r4.longWeekdayNames
-            int r8 = r20.getWeekDay()
-            int r8 = r8 + r7
-            r4 = r4[r8]
-            goto L_0x040c
-        L_0x040a:
-            java.lang.String r4 = "?"
-        L_0x040c:
-            r0.modifyAndAppend(r4, r5)
-            r4 = 0
-            return r4
-        L_0x0411:
-            return r7
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.text.format.TimeFormatter.handleToken(java.nio.CharBuffer, libcore.util.ZoneInfo$WallTime, libcore.util.ZoneInfo):boolean");
+        }
     }
 
     private void modifyAndAppend(CharSequence str, int modifier) {
@@ -802,28 +470,29 @@ class TimeFormatter {
             lead++;
         }
         if (outputTop) {
-            if (lead != 0 || trail2 >= 0) {
-                this.numberFormatter.format(getFormat(modifier, "%02d", "%2d", "%d", "%02d"), new Object[]{Integer.valueOf(lead)});
-            } else {
+            if (lead == 0 && trail2 < 0) {
                 this.outputBuilder.append("-0");
+            } else {
+                this.numberFormatter.format(getFormat(modifier, "%02d", "%2d", "%d", "%02d"), Integer.valueOf(lead));
             }
         }
         if (outputBottom) {
-            this.numberFormatter.format(getFormat(modifier, "%02d", "%2d", "%d", "%02d"), new Object[]{Integer.valueOf(trail2 < 0 ? -trail2 : trail2)});
+            int n = trail2 < 0 ? -trail2 : trail2;
+            this.numberFormatter.format(getFormat(modifier, "%02d", "%2d", "%d", "%02d"), Integer.valueOf(n));
         }
     }
 
     private static String getFormat(int modifier, String normal, String underscore, String dash, String zero) {
-        if (modifier == 45) {
-            return dash;
-        }
-        if (modifier == 48) {
+        if (modifier != 45) {
+            if (modifier != 48) {
+                if (modifier == 95) {
+                    return underscore;
+                }
+                return normal;
+            }
             return zero;
         }
-        if (modifier != 95) {
-            return normal;
-        }
-        return underscore;
+        return dash;
     }
 
     private static boolean isLeap(int year) {
@@ -839,16 +508,16 @@ class TimeFormatter {
     }
 
     private static char brokenToLower(char input) {
-        if (input < 'A' || input > 'Z') {
-            return input;
+        if (input >= 'A' && input <= 'Z') {
+            return (char) ((input - 'A') + 97);
         }
-        return (char) ((input - 'A') + 97);
+        return input;
     }
 
     private static char brokenToUpper(char input) {
-        if (input < 'a' || input > 'z') {
-            return input;
+        if (input >= 'a' && input <= 'z') {
+            return (char) ((input - 'a') + 65);
         }
-        return (char) ((input - 'a') + 65);
+        return input;
     }
 }

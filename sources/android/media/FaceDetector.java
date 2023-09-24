@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.PointF;
 import android.util.Log;
 
+/* loaded from: classes3.dex */
 public class FaceDetector {
     private static boolean sInitialized;
     private byte[] mBWBuffer;
@@ -24,6 +25,7 @@ public class FaceDetector {
 
     private static native void nativeClassInit();
 
+    /* loaded from: classes3.dex */
     public class Face {
         public static final float CONFIDENCE_THRESHOLD = 0.4f;
         public static final int EULER_X = 0;
@@ -67,22 +69,24 @@ public class FaceDetector {
     }
 
     public FaceDetector(int width, int height, int maxFaces) {
-        if (sInitialized) {
-            fft_initialize(width, height, maxFaces);
-            this.mWidth = width;
-            this.mHeight = height;
-            this.mMaxFaces = maxFaces;
-            this.mBWBuffer = new byte[(width * height)];
+        if (!sInitialized) {
+            return;
         }
+        fft_initialize(width, height, maxFaces);
+        this.mWidth = width;
+        this.mHeight = height;
+        this.mMaxFaces = maxFaces;
+        this.mBWBuffer = new byte[width * height];
     }
 
     public int findFaces(Bitmap bitmap, Face[] faces) {
-        if (!sInitialized) {
-            return 0;
-        }
-        if (bitmap.getWidth() != this.mWidth || bitmap.getHeight() != this.mHeight) {
-            throw new IllegalArgumentException("bitmap size doesn't match initialization");
-        } else if (faces.length >= this.mMaxFaces) {
+        if (sInitialized) {
+            if (bitmap.getWidth() != this.mWidth || bitmap.getHeight() != this.mHeight) {
+                throw new IllegalArgumentException("bitmap size doesn't match initialization");
+            }
+            if (faces.length < this.mMaxFaces) {
+                throw new IllegalArgumentException("faces[] smaller than maxFaces");
+            }
             int numFaces = fft_detect(bitmap);
             if (numFaces >= this.mMaxFaces) {
                 numFaces = this.mMaxFaces;
@@ -94,13 +98,11 @@ public class FaceDetector {
                 fft_get_face(faces[i], i);
             }
             return numFaces;
-        } else {
-            throw new IllegalArgumentException("faces[] smaller than maxFaces");
         }
+        return 0;
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         fft_destroy();
     }
 
@@ -111,7 +113,7 @@ public class FaceDetector {
             nativeClassInit();
             sInitialized = true;
         } catch (UnsatisfiedLinkError e) {
-            Log.d("FFTEm", "face detection library not found!");
+            Log.m72d("FFTEm", "face detection library not found!");
         }
     }
 }

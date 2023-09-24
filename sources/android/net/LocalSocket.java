@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/* loaded from: classes3.dex */
 public class LocalSocket implements Closeable {
     public static final int SOCKET_DGRAM = 1;
     public static final int SOCKET_SEQPACKET = 3;
@@ -24,13 +25,13 @@ public class LocalSocket implements Closeable {
         this(2);
     }
 
-    public LocalSocket(int sockType2) {
-        this(new LocalSocketImpl(), sockType2);
+    public LocalSocket(int sockType) {
+        this(new LocalSocketImpl(), sockType);
     }
 
-    private LocalSocket(LocalSocketImpl impl2, int sockType2) {
-        this.impl = impl2;
-        this.sockType = sockType2;
+    private LocalSocket(LocalSocketImpl impl, int sockType) {
+        this.impl = impl;
+        this.sockType = sockType;
         this.isConnected = false;
         this.isBound = false;
     }
@@ -39,12 +40,12 @@ public class LocalSocket implements Closeable {
         return createConnectedLocalSocket(new LocalSocketImpl(fd), 0);
     }
 
-    static LocalSocket createLocalSocketForAccept(LocalSocketImpl impl2) {
-        return createConnectedLocalSocket(impl2, 0);
+    static LocalSocket createLocalSocketForAccept(LocalSocketImpl impl) {
+        return createConnectedLocalSocket(impl, 0);
     }
 
-    private static LocalSocket createConnectedLocalSocket(LocalSocketImpl impl2, int sockType2) {
-        LocalSocket socket = new LocalSocket(impl2, sockType2);
+    private static LocalSocket createConnectedLocalSocket(LocalSocketImpl impl, int sockType) {
+        LocalSocket socket = new LocalSocket(impl, sockType);
         socket.isConnected = true;
         socket.isBound = true;
         socket.implCreated = true;
@@ -55,18 +56,12 @@ public class LocalSocket implements Closeable {
         return super.toString() + " impl:" + this.impl;
     }
 
-    /* JADX INFO: finally extract failed */
     private void implCreateIfNeeded() throws IOException {
         if (!this.implCreated) {
             synchronized (this) {
                 if (!this.implCreated) {
-                    try {
-                        this.impl.create(this.sockType);
-                        this.implCreated = true;
-                    } catch (Throwable th) {
-                        this.implCreated = true;
-                        throw th;
-                    }
+                    this.impl.create(this.sockType);
+                    this.implCreated = true;
                 }
             }
         }
@@ -74,27 +69,25 @@ public class LocalSocket implements Closeable {
 
     public void connect(LocalSocketAddress endpoint) throws IOException {
         synchronized (this) {
-            if (!this.isConnected) {
-                implCreateIfNeeded();
-                this.impl.connect(endpoint, 0);
-                this.isConnected = true;
-                this.isBound = true;
-            } else {
+            if (this.isConnected) {
                 throw new IOException("already connected");
             }
+            implCreateIfNeeded();
+            this.impl.connect(endpoint, 0);
+            this.isConnected = true;
+            this.isBound = true;
         }
     }
 
     public void bind(LocalSocketAddress bindpoint) throws IOException {
         implCreateIfNeeded();
         synchronized (this) {
-            if (!this.isBound) {
-                this.localAddress = bindpoint;
-                this.impl.bind(this.localAddress);
-                this.isBound = true;
-            } else {
+            if (this.isBound) {
                 throw new IOException("already bound");
             }
+            this.localAddress = bindpoint;
+            this.impl.bind(this.localAddress);
+            this.isBound = true;
         }
     }
 
@@ -112,6 +105,7 @@ public class LocalSocket implements Closeable {
         return this.impl.getOutputStream();
     }
 
+    @Override // java.io.Closeable, java.lang.AutoCloseable
     public void close() throws IOException {
         implCreateIfNeeded();
         this.impl.close();

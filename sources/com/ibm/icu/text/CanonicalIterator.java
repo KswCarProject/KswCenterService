@@ -10,10 +10,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/* loaded from: classes5.dex */
 public final class CanonicalIterator {
-    private static boolean PROGRESS = false;
-    private static final Set<String> SET_WITH_NULL_STRING = new HashSet();
-    private static boolean SKIP_ZEROS = true;
     private transient StringBuilder buffer = new StringBuilder();
     private int[] current;
     private boolean done;
@@ -21,12 +19,15 @@ public final class CanonicalIterator {
     private final Normalizer2 nfd;
     private String[][] pieces;
     private String source;
+    private static boolean PROGRESS = false;
+    private static boolean SKIP_ZEROS = true;
+    private static final Set<String> SET_WITH_NULL_STRING = new HashSet();
 
-    public CanonicalIterator(String source2) {
+    public CanonicalIterator(String source) {
         Norm2AllModes allModes = Norm2AllModes.getNFCInstance();
         this.nfd = allModes.decomp;
         this.nfcImpl = allModes.impl.ensureCanonIterData();
-        setSource(source2);
+        setSource(source);
     }
 
     public String getSource() {
@@ -70,7 +71,7 @@ public final class CanonicalIterator {
         this.source = this.nfd.normalize(newSource);
         this.done = false;
         if (newSource.length() == 0) {
-            this.pieces = new String[1][];
+            this.pieces = new String[1];
             this.current = new int[1];
             this.pieces[0] = new String[]{""};
             return;
@@ -87,7 +88,7 @@ public final class CanonicalIterator {
             i += Character.charCount(cp);
         }
         segmentList.add(this.source.substring(start, i));
-        this.pieces = new String[segmentList.size()][];
+        this.pieces = new String[segmentList.size()];
         this.current = new int[segmentList.size()];
         for (int i2 = 0; i2 < this.pieces.length; i2++) {
             if (PROGRESS) {
@@ -98,25 +99,26 @@ public final class CanonicalIterator {
     }
 
     @Deprecated
-    public static void permute(String source2, boolean skipZeros, Set<String> output) {
-        if (source2.length() > 2 || UTF16.countCodePoint(source2) > 1) {
-            Set<String> subpermute = new HashSet<>();
-            int i = 0;
-            while (i < source2.length()) {
-                int cp = UTF16.charAt(source2, i);
-                if (!skipZeros || i == 0 || UCharacter.getCombiningClass(cp) != 0) {
-                    subpermute.clear();
-                    permute(source2.substring(0, i) + source2.substring(UTF16.getCharCount(cp) + i), skipZeros, subpermute);
-                    String chStr = UTF16.valueOf(source2, i);
-                    for (String s : subpermute) {
-                        output.add(chStr + s);
-                    }
-                }
-                i += UTF16.getCharCount(cp);
-            }
+    public static void permute(String source, boolean skipZeros, Set<String> output) {
+        if (source.length() <= 2 && UTF16.countCodePoint(source) <= 1) {
+            output.add(source);
             return;
         }
-        output.add(source2);
+        Set<String> subpermute = new HashSet<>();
+        int i = 0;
+        while (i < source.length()) {
+            int cp = UTF16.charAt(source, i);
+            if (!skipZeros || i == 0 || UCharacter.getCombiningClass(cp) != 0) {
+                subpermute.clear();
+                permute(source.substring(0, i) + source.substring(UTF16.getCharCount(cp) + i), skipZeros, subpermute);
+                String chStr = UTF16.valueOf(source, i);
+                for (String s : subpermute) {
+                    String piece = chStr + s;
+                    output.add(piece);
+                }
+            }
+            i += UTF16.getCharCount(cp);
+        }
     }
 
     static {
@@ -165,9 +167,10 @@ public final class CanonicalIterator {
                     int cp2 = iter.codepoint;
                     Set<String> remainder = extract(cp2, segment, i, workingBuffer);
                     if (remainder != null) {
-                        String prefix = segment.substring(0, i) + UTF16.valueOf(cp2);
+                        String prefix = segment.substring(0, i);
+                        String prefix2 = prefix + UTF16.valueOf(cp2);
                         for (String item : remainder) {
-                            result.add(prefix + item);
+                            result.add(prefix2 + item);
                         }
                     }
                 }
@@ -188,26 +191,27 @@ public final class CanonicalIterator {
         }
         boolean ok = false;
         int decompCp = UTF16.charAt(decomp, 0);
-        buf.setLength(0);
         int decompPos = 0 + UTF16.getCharCount(decompCp);
-        int i = segmentPos;
+        buf.setLength(0);
+        int decompPos2 = decompPos;
+        int decompPos3 = segmentPos;
         while (true) {
-            if (i >= segment.length()) {
+            if (decompPos3 >= segment.length()) {
                 break;
             }
-            int cp = UTF16.charAt(segment, i);
+            int cp = UTF16.charAt(segment, decompPos3);
             if (cp == decompCp) {
                 if (PROGRESS) {
                     PrintStream printStream2 = System.out;
                     printStream2.println("  matches: " + Utility.hex(UTF16.valueOf(cp)));
                 }
-                if (decompPos == decomp.length()) {
-                    buf.append(segment.substring(UTF16.getCharCount(cp) + i));
+                if (decompPos2 == decomp.length()) {
+                    buf.append(segment.substring(UTF16.getCharCount(cp) + decompPos3));
                     ok = true;
                     break;
                 }
-                decompCp = UTF16.charAt(decomp, decompPos);
-                decompPos += UTF16.getCharCount(decompCp);
+                decompCp = UTF16.charAt(decomp, decompPos2);
+                decompPos2 += UTF16.getCharCount(decompCp);
             } else {
                 if (PROGRESS) {
                     PrintStream printStream3 = System.out;
@@ -215,7 +219,7 @@ public final class CanonicalIterator {
                 }
                 UTF16.append(buf, cp);
             }
-            i += UTF16.getCharCount(cp);
+            decompPos3 += UTF16.getCharCount(cp);
         }
         if (!ok) {
             return null;

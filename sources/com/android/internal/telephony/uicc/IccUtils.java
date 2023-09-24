@@ -4,13 +4,15 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.telephony.Rlog;
 import android.text.format.DateFormat;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import com.android.internal.midi.MidiConstants;
 import com.android.internal.telephony.EncodeException;
 import com.android.internal.telephony.GsmAlphabet;
+import com.ibm.icu.text.Bidi;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
+/* loaded from: classes4.dex */
 public class IccUtils {
     private static final char[] HEX_CHARS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', DateFormat.CAPITAL_AM_PM, 'B', 'C', 'D', DateFormat.DAY, 'F'};
     static final String LOG_TAG = "IccUtils";
@@ -18,8 +20,7 @@ public class IccUtils {
     public static String bcdToString(byte[] data, int offset, int length) {
         int v;
         StringBuilder ret = new StringBuilder(length * 2);
-        int i = offset;
-        while (i < offset + length && (v = data[i] & 15) <= 9) {
+        for (int i = offset; i < offset + length && (v = data[i] & MidiConstants.STATUS_CHANNEL_MASK) <= 9; i++) {
             ret.append((char) (v + 48));
             int v2 = (data[i] >> 4) & 15;
             if (v2 != 15) {
@@ -28,7 +29,6 @@ public class IccUtils {
                 }
                 ret.append((char) (v2 + 48));
             }
-            i++;
         }
         return ret.toString();
     }
@@ -38,7 +38,7 @@ public class IccUtils {
     }
 
     public static byte[] bcdToBytes(String bcd) {
-        byte[] output = new byte[((bcd.length() + 1) / 2)];
+        byte[] output = new byte[(bcd.length() + 1) / 2];
         bcdToBytes(bcd, output);
         return output;
     }
@@ -65,7 +65,8 @@ public class IccUtils {
         if (offset + 3 > data.length) {
             return null;
         }
-        String ret = bytesToHexString(new byte[]{(byte) ((data[offset + 0] << 4) | ((data[offset + 0] >> 4) & 15)), (byte) ((data[offset + 1] << 4) | (data[offset + 2] & MidiConstants.STATUS_CHANNEL_MASK)), (byte) ((data[offset + 2] & 240) | ((data[offset + 1] >> 4) & MidiConstants.STATUS_CHANNEL_MASK))});
+        byte[] trans = {(byte) ((data[offset + 0] << 4) | ((data[offset + 0] >> 4) & 15)), (byte) ((data[offset + 1] << 4) | (data[offset + 2] & MidiConstants.STATUS_CHANNEL_MASK)), (byte) ((data[offset + 2] & 240) | ((data[offset + 1] >> 4) & 15))};
+        String ret = bytesToHexString(trans);
         if (ret.contains("F")) {
             return ret.replaceAll("F", "");
         }
@@ -82,8 +83,10 @@ public class IccUtils {
     public static String bchToString(byte[] data, int offset, int length) {
         StringBuilder ret = new StringBuilder(length * 2);
         for (int i = offset; i < offset + length; i++) {
-            ret.append(HEX_CHARS[data[i] & 15]);
-            ret.append(HEX_CHARS[(data[i] >> 4) & 15]);
+            int v = data[i] & MidiConstants.STATUS_CHANNEL_MASK;
+            ret.append(HEX_CHARS[v]);
+            int v2 = (data[i] >> 4) & 15;
+            ret.append(HEX_CHARS[v2]);
         }
         return ret.toString();
     }
@@ -91,24 +94,24 @@ public class IccUtils {
     public static String cdmaBcdToString(byte[] data, int offset, int length) {
         StringBuilder ret = new StringBuilder(length);
         int count = 0;
-        int i = offset;
+        int count2 = offset;
         while (count < length) {
-            int v = data[i] & 15;
+            int v = data[count2] & MidiConstants.STATUS_CHANNEL_MASK;
             if (v > 9) {
                 v = 0;
             }
             ret.append((char) (v + 48));
-            int count2 = count + 1;
-            if (count2 == length) {
+            int count3 = count + 1;
+            if (count3 == length) {
                 break;
             }
-            int v2 = (data[i] >> 4) & 15;
+            int v2 = (data[count2] >> 4) & 15;
             if (v2 > 9) {
                 v2 = 0;
             }
             ret.append((char) (v2 + 48));
-            count = count2 + 1;
-            i++;
+            count = count3 + 1;
+            count2++;
         }
         return ret.toString();
     }
@@ -140,18 +143,19 @@ public class IccUtils {
             return "";
         }
         if (length >= 1 && data[offset] == Byte.MIN_VALUE) {
+            int ucslen = (length - 1) / 2;
             String ret = null;
             try {
-                ret = new String(data, offset + 1, ((length - 1) / 2) * 2, "utf-16be");
+                ret = new String(data, offset + 1, ucslen * 2, "utf-16be");
             } catch (UnsupportedEncodingException ex) {
-                Rlog.e(LOG_TAG, "implausible UnsupportedEncodingException", ex);
+                Rlog.m85e(LOG_TAG, "implausible UnsupportedEncodingException", ex);
             }
             if (ret != null) {
-                int ucslen = ret.length();
-                while (ucslen > 0 && ret.charAt(ucslen - 1) == 65535) {
-                    ucslen--;
+                int ucslen2 = ret.length();
+                while (ucslen2 > 0 && ret.charAt(ucslen2 - 1) == '\uffff') {
+                    ucslen2--;
                 }
-                return ret.substring(0, ucslen);
+                return ret.substring(0, ucslen2);
             }
         }
         boolean isucs2 = false;
@@ -166,9 +170,9 @@ public class IccUtils {
             offset += 3;
             isucs2 = true;
         } else if (length >= 4 && data[offset] == -126) {
-            int len2 = data[offset + 1] & 255;
-            if (len2 > length - 4) {
-                len2 = length - 4;
+            len = data[offset + 1] & 255;
+            if (len > length - 4) {
+                len = length - 4;
             }
             base = (char) (((data[offset + 2] & 255) << 8) | (data[offset + 3] & 255));
             offset += 4;
@@ -178,7 +182,7 @@ public class IccUtils {
             StringBuilder ret2 = new StringBuilder();
             while (len > 0) {
                 if (data[offset] < 0) {
-                    ret2.append((char) ((data[offset] & 127) + base));
+                    ret2.append((char) ((data[offset] & Bidi.LEVEL_DEFAULT_RTL) + base));
                     offset++;
                     len--;
                 }
@@ -192,25 +196,26 @@ public class IccUtils {
             }
             return ret2.toString();
         }
+        Resources resource = Resources.getSystem();
         String defaultCharset = "";
         try {
-            defaultCharset = Resources.getSystem().getString(R.string.gsm_alphabet_default_charset);
+            defaultCharset = resource.getString(C3132R.string.gsm_alphabet_default_charset);
         } catch (Resources.NotFoundException e) {
         }
         return GsmAlphabet.gsm8BitUnpackedToString(data, offset, length, defaultCharset.trim());
     }
 
     public static int hexCharToInt(char c) {
-        if (c >= '0' && c <= '9') {
-            return c - '0';
-        }
-        if (c >= 'A' && c <= 'F') {
+        if (c < '0' || c > '9') {
+            if (c < 'A' || c > 'F') {
+                if (c < 'a' || c > 'f') {
+                    throw new RuntimeException("invalid hex char '" + c + "'");
+                }
+                return (c - 'a') + 10;
+            }
             return (c - 'A') + 10;
         }
-        if (c >= 'a' && c <= 'f') {
-            return (c - 'a') + 10;
-        }
-        throw new RuntimeException("invalid hex char '" + c + "'");
+        return c - '0';
     }
 
     public static byte[] hexStringToBytes(String s) {
@@ -218,7 +223,7 @@ public class IccUtils {
             return null;
         }
         int sz = s.length();
-        byte[] ret = new byte[(sz / 2)];
+        byte[] ret = new byte[sz / 2];
         for (int i = 0; i < sz; i += 2) {
             ret[i / 2] = (byte) ((hexCharToInt(s.charAt(i)) << 4) | hexCharToInt(s.charAt(i + 1)));
         }
@@ -231,8 +236,10 @@ public class IccUtils {
         }
         StringBuilder ret = new StringBuilder(bytes.length * 2);
         for (int i = 0; i < bytes.length; i++) {
-            ret.append(HEX_CHARS[(bytes[i] >> 4) & 15]);
-            ret.append(HEX_CHARS[bytes[i] & 15]);
+            int b = (bytes[i] >> 4) & 15;
+            ret.append(HEX_CHARS[b]);
+            int b2 = bytes[i] & MidiConstants.STATUS_CHANNEL_MASK;
+            ret.append(HEX_CHARS[b2]);
         }
         return ret.toString();
     }
@@ -244,15 +251,17 @@ public class IccUtils {
         }
         switch ((data[offset] >>> 4) & 7) {
             case 0:
-                int i = offset + 1;
-                ret = GsmAlphabet.gsm7BitPackedToString(data, i, (((length - 1) * 8) - (data[offset] & 7)) / 7);
+                int unusedBits = data[offset] & 7;
+                int countSeptets = (((length - 1) * 8) - unusedBits) / 7;
+                String ret2 = GsmAlphabet.gsm7BitPackedToString(data, offset + 1, countSeptets);
+                ret = ret2;
                 break;
             case 1:
                 try {
                     ret = new String(data, offset + 1, length - 1, "utf-16");
                     break;
                 } catch (UnsupportedEncodingException ex) {
-                    Rlog.e(LOG_TAG, "implausible UnsupportedEncodingException", ex);
+                    Rlog.m85e(LOG_TAG, "implausible UnsupportedEncodingException", ex);
                     ret = "";
                     break;
                 }
@@ -260,58 +269,37 @@ public class IccUtils {
                 ret = "";
                 break;
         }
-        byte countSeptets = data[offset];
+        int countSeptets2 = data[offset];
         return ret;
     }
 
-    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r6v6, resolved type: byte} */
-    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r6v7, resolved type: byte} */
-    /* JADX WARNING: Multi-variable type inference failed */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public static android.graphics.Bitmap parseToBnW(byte[] r10, int r11) {
-        /*
-            r0 = 0
-            int r1 = r0 + 1
-            byte r0 = r10[r0]
-            r0 = r0 & 255(0xff, float:3.57E-43)
-            int r2 = r1 + 1
-            byte r1 = r10[r1]
-            r1 = r1 & 255(0xff, float:3.57E-43)
-            int r3 = r0 * r1
-            int[] r4 = new int[r3]
-            r5 = 0
-            r6 = 7
-            r7 = 0
-        L_0x0014:
-            if (r5 >= r3) goto L_0x0032
-            int r8 = r5 % 8
-            if (r8 != 0) goto L_0x0021
-            int r8 = r2 + 1
-            byte r2 = r10[r2]
-            r6 = 7
-            r7 = r2
-            r2 = r8
-        L_0x0021:
-            int r8 = r5 + 1
-            int r9 = r6 + -1
-            int r6 = r7 >> r6
-            r6 = r6 & 1
-            int r6 = bitToRGB(r6)
-            r4[r5] = r6
-            r5 = r8
-            r6 = r9
-            goto L_0x0014
-        L_0x0032:
-            if (r5 == r3) goto L_0x003c
-            java.lang.String r8 = "IccUtils"
-            java.lang.String r9 = "parse end and size error"
-            android.telephony.Rlog.e(r8, r9)
-        L_0x003c:
-            android.graphics.Bitmap$Config r8 = android.graphics.Bitmap.Config.ARGB_8888
-            android.graphics.Bitmap r8 = android.graphics.Bitmap.createBitmap((int[]) r4, (int) r0, (int) r1, (android.graphics.Bitmap.Config) r8)
-            return r8
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.internal.telephony.uicc.IccUtils.parseToBnW(byte[], int):android.graphics.Bitmap");
+    /* JADX WARN: Multi-variable type inference failed */
+    public static Bitmap parseToBnW(byte[] data, int length) {
+        int valueIndex = 0 + 1;
+        int width = data[0] & 255;
+        int valueIndex2 = valueIndex + 1;
+        int height = data[valueIndex] & 255;
+        int numOfPixels = width * height;
+        int[] pixels = new int[numOfPixels];
+        int pixelIndex = 0;
+        byte bitIndex = 7;
+        byte currentByte = 0;
+        while (pixelIndex < numOfPixels) {
+            if (pixelIndex % 8 == 0) {
+                int valueIndex3 = valueIndex2 + 1;
+                byte currentByte2 = data[valueIndex2];
+                bitIndex = 7;
+                currentByte = currentByte2;
+                valueIndex2 = valueIndex3;
+            }
+            pixels[pixelIndex] = bitToRGB((currentByte >> bitIndex) & 1);
+            pixelIndex++;
+            bitIndex--;
+        }
+        if (pixelIndex != numOfPixels) {
+            Rlog.m86e(LOG_TAG, "parse end and size error");
+        }
+        return Bitmap.createBitmap(pixels, width, height, Bitmap.Config.ARGB_8888);
     }
 
     private static int bitToRGB(int bit) {
@@ -324,56 +312,60 @@ public class IccUtils {
     public static Bitmap parseToRGB(byte[] data, int length, boolean transparency) {
         int[] resultArray;
         int valueIndex = 0 + 1;
-        int valueIndex2 = data[0] & 255;
-        int valueIndex3 = valueIndex + 1;
-        int valueIndex4 = data[valueIndex] & 255;
-        int valueIndex5 = valueIndex3 + 1;
-        int valueIndex6 = data[valueIndex3] & 255;
-        int valueIndex7 = valueIndex5 + 1;
-        int colorNumber = data[valueIndex5] & 255;
-        int valueIndex8 = valueIndex7 + 1;
-        int valueIndex9 = valueIndex8 + 1;
-        int[] colorIndexArray = getCLUT(data, ((data[valueIndex7] & 255) << 8) | (data[valueIndex8] & 255), colorNumber);
+        int width = data[0] & 255;
+        int valueIndex2 = valueIndex + 1;
+        int height = data[valueIndex] & 255;
+        int valueIndex3 = valueIndex2 + 1;
+        int bits = data[valueIndex2] & 255;
+        int valueIndex4 = valueIndex3 + 1;
+        int colorNumber = data[valueIndex3] & 255;
+        int valueIndex5 = valueIndex4 + 1;
+        int valueIndex6 = valueIndex5 + 1;
+        int clutOffset = ((data[valueIndex4] & 255) << 8) | (data[valueIndex5] & 255);
+        int[] colorIndexArray = getCLUT(data, clutOffset, colorNumber);
         if (true == transparency) {
             colorIndexArray[colorNumber - 1] = 0;
         }
-        if (8 % valueIndex6 == 0) {
-            resultArray = mapTo2OrderBitColor(data, valueIndex9, valueIndex2 * valueIndex4, colorIndexArray, valueIndex6);
+        if (8 % bits == 0) {
+            resultArray = mapTo2OrderBitColor(data, valueIndex6, width * height, colorIndexArray, bits);
         } else {
-            resultArray = mapToNon2OrderBitColor(data, valueIndex9, valueIndex2 * valueIndex4, colorIndexArray, valueIndex6);
+            resultArray = mapToNon2OrderBitColor(data, valueIndex6, width * height, colorIndexArray, bits);
         }
-        return Bitmap.createBitmap(resultArray, valueIndex2, valueIndex4, Bitmap.Config.RGB_565);
+        return Bitmap.createBitmap(resultArray, width, height, Bitmap.Config.RGB_565);
     }
 
     private static int[] mapTo2OrderBitColor(byte[] data, int valueIndex, int length, int[] colorArray, int bits) {
         if (8 % bits != 0) {
-            Rlog.e(LOG_TAG, "not event number of color");
+            Rlog.m86e(LOG_TAG, "not event number of color");
             return mapToNon2OrderBitColor(data, valueIndex, length, colorArray, bits);
         }
         int mask = 1;
-        if (bits == 4) {
-            mask = 15;
-        } else if (bits != 8) {
-            switch (bits) {
-                case 1:
-                    mask = 1;
-                    break;
-                case 2:
-                    mask = 3;
-                    break;
+        if (bits != 4) {
+            if (bits != 8) {
+                switch (bits) {
+                    case 1:
+                        mask = 1;
+                        break;
+                    case 2:
+                        mask = 3;
+                        break;
+                }
+            } else {
+                mask = 255;
             }
         } else {
-            mask = 255;
+            mask = 15;
         }
         int[] resultArray = new int[length];
         int resultIndex = 0;
         int run = 8 / bits;
         while (resultIndex < length) {
             int valueIndex2 = valueIndex + 1;
-            byte valueIndex3 = data[valueIndex];
+            byte tempByte = data[valueIndex];
             int runIndex = 0;
             while (runIndex < run) {
-                resultArray[resultIndex] = colorArray[(valueIndex3 >> (((run - runIndex) - 1) * bits)) & mask];
+                int offset = (run - runIndex) - 1;
+                resultArray[resultIndex] = colorArray[(tempByte >> (offset * bits)) & mask];
                 runIndex++;
                 resultIndex++;
             }
@@ -383,11 +375,12 @@ public class IccUtils {
     }
 
     private static int[] mapToNon2OrderBitColor(byte[] data, int valueIndex, int length, int[] colorArray, int bits) {
-        if (8 % bits != 0) {
-            return new int[length];
+        if (8 % bits == 0) {
+            Rlog.m86e(LOG_TAG, "not odd number of color");
+            return mapTo2OrderBitColor(data, valueIndex, length, colorArray, bits);
         }
-        Rlog.e(LOG_TAG, "not odd number of color");
-        return mapTo2OrderBitColor(data, valueIndex, length, colorArray, bits);
+        int[] resultArray = new int[length];
+        return resultArray;
     }
 
     private static int[] getCLUT(byte[] rawData, int offset, int number) {
@@ -402,14 +395,15 @@ public class IccUtils {
             int colorIndex2 = colorIndex + 1;
             int valueIndex2 = valueIndex + 1;
             int valueIndex3 = valueIndex2 + 1;
-            int i = ((rawData[valueIndex] & 255) << 16) | -16777216 | ((rawData[valueIndex2] & 255) << 8);
+            int i = ((rawData[valueIndex] & 255) << 16) | (-16777216) | ((rawData[valueIndex2] & 255) << 8);
             int valueIndex4 = valueIndex3 + 1;
             result[colorIndex] = i | (rawData[valueIndex3] & 255);
-            if (valueIndex4 >= endIndex) {
+            if (valueIndex4 < endIndex) {
+                colorIndex = colorIndex2;
+                valueIndex = valueIndex4;
+            } else {
                 return result;
             }
-            colorIndex = colorIndex2;
-            valueIndex = valueIndex4;
         }
     }
 
@@ -431,10 +425,10 @@ public class IccUtils {
             for (int i = 0; i < length; i++) {
                 result = (result << 8) | (src[offset + i] & 255);
             }
-            if (result >= 0) {
-                return result;
+            if (result < 0) {
+                throw new IllegalArgumentException("src cannot be parsed as a positive integer: " + result);
             }
-            throw new IllegalArgumentException("src cannot be parsed as a positive integer: " + result);
+            return result;
         }
     }
 
@@ -446,28 +440,28 @@ public class IccUtils {
         } else {
             long result = 0;
             for (int i = 0; i < length; i++) {
-                result = (result << 8) | ((long) (src[offset + i] & 255));
+                result = (result << 8) | (src[offset + i] & 255);
             }
             return result;
         }
     }
 
     public static byte[] unsignedIntToBytes(int value) {
-        if (value >= 0) {
-            byte[] bytes = new byte[byteNumForUnsignedInt(value)];
-            unsignedIntToBytes(value, bytes, 0);
-            return bytes;
+        if (value < 0) {
+            throw new IllegalArgumentException("value must be 0 or positive: " + value);
         }
-        throw new IllegalArgumentException("value must be 0 or positive: " + value);
+        byte[] bytes = new byte[byteNumForUnsignedInt(value)];
+        unsignedIntToBytes(value, bytes, 0);
+        return bytes;
     }
 
     public static byte[] signedIntToBytes(int value) {
-        if (value >= 0) {
-            byte[] bytes = new byte[byteNumForSignedInt(value)];
-            signedIntToBytes(value, bytes, 0);
-            return bytes;
+        if (value < 0) {
+            throw new IllegalArgumentException("value must be 0 or positive: " + value);
         }
-        throw new IllegalArgumentException("value must be 0 or positive: " + value);
+        byte[] bytes = new byte[byteNumForSignedInt(value)];
+        signedIntToBytes(value, bytes, 0);
+        return bytes;
     }
 
     public static int unsignedIntToBytes(int value, byte[] dest, int offset) {
@@ -494,7 +488,8 @@ public class IccUtils {
         int i = l - 1;
         int v = value;
         while (i >= 0) {
-            dest[offset + i] = (byte) (v & 255);
+            byte b = (byte) (v & 255);
+            dest[offset + i] = b;
             i--;
             v >>>= 8;
         }
@@ -530,7 +525,7 @@ public class IccUtils {
 
     public static byte countTrailingZeros(byte b) {
         if (b == 0) {
-            return 8;
+            return (byte) 8;
         }
         int v = b & 255;
         byte c = 7;
@@ -564,19 +559,17 @@ public class IccUtils {
         if (c >= 'A' && c <= 'F') {
             return (byte) (c - '7');
         }
-        if (c < 'a' || c > 'f') {
-            return 0;
+        if (c >= 'a' && c <= 'f') {
+            return (byte) (c - 'W');
         }
-        return (byte) (c - 'W');
+        return (byte) 0;
     }
 
     static byte[] stringToAdnStringField(String alphaTag) {
-        int i = 0;
         boolean isUcs2 = false;
-        while (i < alphaTag.length()) {
+        for (int i = 0; i < alphaTag.length(); i++) {
             try {
                 GsmAlphabet.countGsmSeptets(alphaTag.charAt(i), true);
-                i++;
             } catch (EncodeException e) {
                 isUcs2 = true;
             }
@@ -589,7 +582,7 @@ public class IccUtils {
             return GsmAlphabet.stringToGsm8BitPacked(alphaTag);
         }
         byte[] alphaTagBytes = alphaTag.getBytes(Charset.forName("UTF-16BE"));
-        byte[] ret = new byte[(alphaTagBytes.length + 1)];
+        byte[] ret = new byte[alphaTagBytes.length + 1];
         ret[0] = Byte.MIN_VALUE;
         System.arraycopy(alphaTagBytes, 0, ret, 1, alphaTagBytes.length);
         return ret;

@@ -1,7 +1,8 @@
 package android.location;
 
-import android.os.Bundle;
+import android.p007os.Bundle;
 
+/* loaded from: classes.dex */
 public interface LocationListener {
     void onLocationChanged(Location location);
 

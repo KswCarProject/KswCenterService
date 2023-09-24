@@ -4,21 +4,26 @@ import android.Manifest;
 import android.annotation.SystemApi;
 import android.content.Context;
 import android.net.INetworkRecommendationProvider;
-import android.os.Build;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.RemoteException;
+import android.p007os.Build;
+import android.p007os.Handler;
+import android.p007os.IBinder;
+import android.p007os.RemoteException;
 import android.util.Log;
 import com.android.internal.util.Preconditions;
 import java.util.concurrent.Executor;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public abstract class NetworkRecommendationProvider {
     private static final String TAG = "NetworkRecProvider";
-    private static final boolean VERBOSE = (Build.IS_DEBUGGABLE && Log.isLoggable(TAG, 2));
+    private static final boolean VERBOSE;
     private final IBinder mService;
 
     public abstract void onRequestScores(NetworkKey[] networkKeyArr);
+
+    static {
+        VERBOSE = Build.IS_DEBUGGABLE && Log.isLoggable(TAG, 2);
+    }
 
     public NetworkRecommendationProvider(Context context, Executor executor) {
         Preconditions.checkNotNull(context);
@@ -30,6 +35,7 @@ public abstract class NetworkRecommendationProvider {
         return this.mService;
     }
 
+    /* loaded from: classes3.dex */
     private final class ServiceWrapper extends INetworkRecommendationProvider.Stub {
         private final Context mContext;
         private final Executor mExecutor;
@@ -40,10 +46,12 @@ public abstract class NetworkRecommendationProvider {
             this.mExecutor = executor;
         }
 
+        @Override // android.net.INetworkRecommendationProvider
         public void requestScores(final NetworkKey[] networks) throws RemoteException {
             enforceCallingPermission();
             if (networks != null && networks.length > 0) {
-                execute(new Runnable() {
+                execute(new Runnable() { // from class: android.net.NetworkRecommendationProvider.ServiceWrapper.1
+                    @Override // java.lang.Runnable
                     public void run() {
                         NetworkRecommendationProvider.this.onRequestScores(networks);
                     }
@@ -61,7 +69,7 @@ public abstract class NetworkRecommendationProvider {
 
         private void enforceCallingPermission() {
             if (this.mContext != null) {
-                this.mContext.enforceCallingOrSelfPermission(Manifest.permission.REQUEST_NETWORK_SCORES, "Permission denied.");
+                this.mContext.enforceCallingOrSelfPermission(Manifest.C0000permission.REQUEST_NETWORK_SCORES, "Permission denied.");
             }
         }
     }

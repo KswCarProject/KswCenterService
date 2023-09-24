@@ -15,10 +15,11 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.widget.TabWidget;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.util.ArrayList;
 import java.util.List;
 
+/* loaded from: classes4.dex */
 public class TabHost extends FrameLayout implements ViewTreeObserver.OnTouchModeChangeListener {
     private static final int TABWIDGET_LOCATION_BOTTOM = 3;
     private static final int TABWIDGET_LOCATION_LEFT = 0;
@@ -30,30 +31,31 @@ public class TabHost extends FrameLayout implements ViewTreeObserver.OnTouchMode
     protected LocalActivityManager mLocalActivityManager;
     @UnsupportedAppUsage
     private OnTabChangeListener mOnTabChangeListener;
-    /* access modifiers changed from: private */
-    public FrameLayout mTabContent;
+    private FrameLayout mTabContent;
     private View.OnKeyListener mTabKeyListener;
-    /* access modifiers changed from: private */
-    public int mTabLayoutId;
+    private int mTabLayoutId;
     @UnsupportedAppUsage
     private List<TabSpec> mTabSpecs;
-    /* access modifiers changed from: private */
-    public TabWidget mTabWidget;
+    private TabWidget mTabWidget;
 
+    /* loaded from: classes4.dex */
     private interface ContentStrategy {
         View getContentView();
 
         void tabClosed();
     }
 
+    /* loaded from: classes4.dex */
     private interface IndicatorStrategy {
         View createIndicatorView();
     }
 
+    /* loaded from: classes4.dex */
     public interface OnTabChangeListener {
         void onTabChanged(String str);
     }
 
+    /* loaded from: classes4.dex */
     public interface TabContentFactory {
         View createTabContent(String str);
     }
@@ -81,12 +83,12 @@ public class TabHost extends FrameLayout implements ViewTreeObserver.OnTouchMode
         this.mCurrentTab = -1;
         this.mCurrentView = null;
         this.mLocalActivityManager = null;
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.TabWidget, defStyleAttr, defStyleRes);
-        saveAttributeDataForStyleable(context, R.styleable.TabWidget, attrs, a, defStyleAttr, defStyleRes);
+        TypedArray a = context.obtainStyledAttributes(attrs, C3132R.styleable.TabWidget, defStyleAttr, defStyleRes);
+        saveAttributeDataForStyleable(context, C3132R.styleable.TabWidget, attrs, a, defStyleAttr, defStyleRes);
         this.mTabLayoutId = a.getResourceId(4, 0);
         a.recycle();
         if (this.mTabLayoutId == 0) {
-            this.mTabLayoutId = R.layout.tab_indicator_holo;
+            this.mTabLayoutId = C3132R.layout.tab_indicator_holo;
         }
         initTabHost();
     }
@@ -99,56 +101,58 @@ public class TabHost extends FrameLayout implements ViewTreeObserver.OnTouchMode
     }
 
     public TabSpec newTabSpec(String tag) {
-        if (tag != null) {
-            return new TabSpec(tag);
+        if (tag == null) {
+            throw new IllegalArgumentException("tag must be non-null");
         }
-        throw new IllegalArgumentException("tag must be non-null");
+        return new TabSpec(tag);
     }
 
     public void setup() {
         this.mTabWidget = (TabWidget) findViewById(16908307);
-        if (this.mTabWidget != null) {
-            this.mTabKeyListener = new View.OnKeyListener() {
-                public boolean onKey(View v, int keyCode, KeyEvent event) {
-                    if (!KeyEvent.isModifierKey(keyCode) && keyCode != 66) {
-                        switch (keyCode) {
-                            case 19:
-                            case 20:
-                            case 21:
-                            case 22:
-                            case 23:
-                                break;
-                            default:
-                                switch (keyCode) {
-                                    case 61:
-                                    case 62:
-                                        break;
-                                    default:
-                                        TabHost.this.mTabContent.requestFocus(2);
-                                        return TabHost.this.mTabContent.dispatchKeyEvent(event);
-                                }
-                        }
-                    }
-                    return false;
-                }
-            };
-            this.mTabWidget.setTabSelectionListener(new TabWidget.OnTabSelectionChanged() {
-                public void onTabSelectionChanged(int tabIndex, boolean clicked) {
-                    TabHost.this.setCurrentTab(tabIndex);
-                    if (clicked) {
-                        TabHost.this.mTabContent.requestFocus(2);
-                    }
-                }
-            });
-            this.mTabContent = (FrameLayout) findViewById(16908305);
-            if (this.mTabContent == null) {
-                throw new RuntimeException("Your TabHost must have a FrameLayout whose id attribute is 'android.R.id.tabcontent'");
-            }
-            return;
+        if (this.mTabWidget == null) {
+            throw new RuntimeException("Your TabHost must have a TabWidget whose id attribute is 'android.R.id.tabs'");
         }
-        throw new RuntimeException("Your TabHost must have a TabWidget whose id attribute is 'android.R.id.tabs'");
+        this.mTabKeyListener = new View.OnKeyListener() { // from class: android.widget.TabHost.1
+            @Override // android.view.View.OnKeyListener
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (!KeyEvent.isModifierKey(keyCode) && keyCode != 66) {
+                    switch (keyCode) {
+                        case 19:
+                        case 20:
+                        case 21:
+                        case 22:
+                        case 23:
+                            break;
+                        default:
+                            switch (keyCode) {
+                                case 61:
+                                case 62:
+                                    break;
+                                default:
+                                    TabHost.this.mTabContent.requestFocus(2);
+                                    return TabHost.this.mTabContent.dispatchKeyEvent(event);
+                            }
+                    }
+                }
+                return false;
+            }
+        };
+        this.mTabWidget.setTabSelectionListener(new TabWidget.OnTabSelectionChanged() { // from class: android.widget.TabHost.2
+            @Override // android.widget.TabWidget.OnTabSelectionChanged
+            public void onTabSelectionChanged(int tabIndex, boolean clicked) {
+                TabHost.this.setCurrentTab(tabIndex);
+                if (clicked) {
+                    TabHost.this.mTabContent.requestFocus(2);
+                }
+            }
+        });
+        this.mTabContent = (FrameLayout) findViewById(16908305);
+        if (this.mTabContent == null) {
+            throw new RuntimeException("Your TabHost must have a FrameLayout whose id attribute is 'android.R.id.tabcontent'");
+        }
     }
 
+    @Override // android.view.View
     public void sendAccessibilityEventInternal(int eventType) {
     }
 
@@ -157,25 +161,26 @@ public class TabHost extends FrameLayout implements ViewTreeObserver.OnTouchMode
         this.mLocalActivityManager = activityGroup;
     }
 
+    @Override // android.view.ViewTreeObserver.OnTouchModeChangeListener
     public void onTouchModeChanged(boolean isInTouchMode) {
     }
 
     public void addTab(TabSpec tabSpec) {
         if (tabSpec.mIndicatorStrategy == null) {
             throw new IllegalArgumentException("you must specify a way to create the tab indicator.");
-        } else if (tabSpec.mContentStrategy != null) {
-            View tabIndicator = tabSpec.mIndicatorStrategy.createIndicatorView();
-            tabIndicator.setOnKeyListener(this.mTabKeyListener);
-            if (tabSpec.mIndicatorStrategy instanceof ViewIndicatorStrategy) {
-                this.mTabWidget.setStripEnabled(false);
-            }
-            this.mTabWidget.addView(tabIndicator);
-            this.mTabSpecs.add(tabSpec);
-            if (this.mCurrentTab == -1) {
-                setCurrentTab(0);
-            }
-        } else {
+        }
+        if (tabSpec.mContentStrategy == null) {
             throw new IllegalArgumentException("you must specify a way to create the tab content");
+        }
+        View tabIndicator = tabSpec.mIndicatorStrategy.createIndicatorView();
+        tabIndicator.setOnKeyListener(this.mTabKeyListener);
+        if (tabSpec.mIndicatorStrategy instanceof ViewIndicatorStrategy) {
+            this.mTabWidget.setStripEnabled(false);
+        }
+        this.mTabWidget.addView(tabIndicator);
+        this.mTabSpecs.add(tabSpec);
+        if (this.mCurrentTab == -1) {
+            setCurrentTab(0);
         }
     }
 
@@ -197,17 +202,17 @@ public class TabHost extends FrameLayout implements ViewTreeObserver.OnTouchMode
     }
 
     public String getCurrentTabTag() {
-        if (this.mCurrentTab < 0 || this.mCurrentTab >= this.mTabSpecs.size()) {
-            return null;
+        if (this.mCurrentTab >= 0 && this.mCurrentTab < this.mTabSpecs.size()) {
+            return this.mTabSpecs.get(this.mCurrentTab).getTag();
         }
-        return this.mTabSpecs.get(this.mCurrentTab).getTag();
+        return null;
     }
 
     public View getCurrentTabView() {
-        if (this.mCurrentTab < 0 || this.mCurrentTab >= this.mTabSpecs.size()) {
-            return null;
+        if (this.mCurrentTab >= 0 && this.mCurrentTab < this.mTabSpecs.size()) {
+            return this.mTabWidget.getChildTabViewAt(this.mCurrentTab);
         }
-        return this.mTabWidget.getChildTabViewAt(this.mCurrentTab);
+        return null;
     }
 
     public View getCurrentView() {
@@ -229,30 +234,27 @@ public class TabHost extends FrameLayout implements ViewTreeObserver.OnTouchMode
     }
 
     private int getTabWidgetLocation() {
-        int location;
-        int location2 = 1;
-        if (this.mTabWidget.getOrientation() != 1) {
-            if (this.mTabContent.getTop() < this.mTabWidget.getTop()) {
-                location2 = 3;
-            }
-            return location2;
+        if (this.mTabWidget.getOrientation() == 1) {
+            int location = this.mTabContent.getLeft() < this.mTabWidget.getLeft() ? 2 : 0;
+            return location;
         }
-        if (this.mTabContent.getLeft() < this.mTabWidget.getLeft()) {
-            location = 2;
-        } else {
-            location = 0;
-        }
-        return location;
+        int location2 = this.mTabContent.getTop() < this.mTabWidget.getTop() ? 3 : 1;
+        return location2;
     }
 
+    @Override // android.view.ViewGroup, android.view.View
     public boolean dispatchKeyEvent(KeyEvent event) {
-        int soundEffect;
-        int directionShouldChangeFocus;
         int keyCodeShouldChangeFocus;
+        int directionShouldChangeFocus;
+        int soundEffect;
         boolean handled = super.dispatchKeyEvent(event);
         if (!handled && event.getAction() == 0 && this.mCurrentView != null && this.mCurrentView.isRootNamespace() && this.mCurrentView.hasFocus()) {
             int tabWidgetLocation = getTabWidgetLocation();
-            if (tabWidgetLocation != 0) {
+            if (tabWidgetLocation == 0) {
+                keyCodeShouldChangeFocus = 21;
+                directionShouldChangeFocus = 17;
+                soundEffect = 1;
+            } else {
                 switch (tabWidgetLocation) {
                     case 2:
                         keyCodeShouldChangeFocus = 22;
@@ -270,10 +272,6 @@ public class TabHost extends FrameLayout implements ViewTreeObserver.OnTouchMode
                         soundEffect = 2;
                         break;
                 }
-            } else {
-                keyCodeShouldChangeFocus = 21;
-                directionShouldChangeFocus = 17;
-                soundEffect = 1;
             }
             if (event.getKeyCode() == keyCodeShouldChangeFocus && this.mCurrentView.findFocus().focusSearch(directionShouldChangeFocus) == null) {
                 this.mTabWidget.getChildTabViewAt(this.mCurrentTab).requestFocus();
@@ -284,32 +282,36 @@ public class TabHost extends FrameLayout implements ViewTreeObserver.OnTouchMode
         return handled;
     }
 
+    @Override // android.view.ViewGroup, android.view.View
     public void dispatchWindowFocusChanged(boolean hasFocus) {
         if (this.mCurrentView != null) {
             this.mCurrentView.dispatchWindowFocusChanged(hasFocus);
         }
     }
 
+    @Override // android.widget.FrameLayout, android.view.ViewGroup, android.view.View
     public CharSequence getAccessibilityClassName() {
         return TabHost.class.getName();
     }
 
     public void setCurrentTab(int index) {
-        if (index >= 0 && index < this.mTabSpecs.size() && index != this.mCurrentTab) {
-            if (this.mCurrentTab != -1) {
-                this.mTabSpecs.get(this.mCurrentTab).mContentStrategy.tabClosed();
-            }
-            this.mCurrentTab = index;
-            this.mTabWidget.focusCurrentTab(this.mCurrentTab);
-            this.mCurrentView = this.mTabSpecs.get(index).mContentStrategy.getContentView();
-            if (this.mCurrentView.getParent() == null) {
-                this.mTabContent.addView(this.mCurrentView, new ViewGroup.LayoutParams(-1, -1));
-            }
-            if (!this.mTabWidget.hasFocus()) {
-                this.mCurrentView.requestFocus();
-            }
-            invokeOnTabChangeListener();
+        if (index < 0 || index >= this.mTabSpecs.size() || index == this.mCurrentTab) {
+            return;
         }
+        if (this.mCurrentTab != -1) {
+            this.mTabSpecs.get(this.mCurrentTab).mContentStrategy.tabClosed();
+        }
+        this.mCurrentTab = index;
+        TabSpec spec = this.mTabSpecs.get(index);
+        this.mTabWidget.focusCurrentTab(this.mCurrentTab);
+        this.mCurrentView = spec.mContentStrategy.getContentView();
+        if (this.mCurrentView.getParent() == null) {
+            this.mTabContent.addView(this.mCurrentView, new ViewGroup.LayoutParams(-1, -1));
+        }
+        if (!this.mTabWidget.hasFocus()) {
+            this.mCurrentView.requestFocus();
+        }
+        invokeOnTabChangeListener();
     }
 
     public void setOnTabChangedListener(OnTabChangeListener l) {
@@ -322,13 +324,12 @@ public class TabHost extends FrameLayout implements ViewTreeObserver.OnTouchMode
         }
     }
 
+    /* loaded from: classes4.dex */
     public class TabSpec {
-        /* access modifiers changed from: private */
         @UnsupportedAppUsage
-        public ContentStrategy mContentStrategy;
-        /* access modifiers changed from: private */
+        private ContentStrategy mContentStrategy;
         @UnsupportedAppUsage
-        public IndicatorStrategy mIndicatorStrategy;
+        private IndicatorStrategy mIndicatorStrategy;
         private final String mTag;
 
         private TabSpec(String tag) {
@@ -370,6 +371,7 @@ public class TabHost extends FrameLayout implements ViewTreeObserver.OnTouchMode
         }
     }
 
+    /* loaded from: classes4.dex */
     private class LabelIndicatorStrategy implements IndicatorStrategy {
         private final CharSequence mLabel;
 
@@ -377,19 +379,22 @@ public class TabHost extends FrameLayout implements ViewTreeObserver.OnTouchMode
             this.mLabel = label;
         }
 
+        @Override // android.widget.TabHost.IndicatorStrategy
         public View createIndicatorView() {
             Context context = TabHost.this.getContext();
-            View tabIndicator = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(TabHost.this.mTabLayoutId, (ViewGroup) TabHost.this.mTabWidget, false);
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View tabIndicator = inflater.inflate(TabHost.this.mTabLayoutId, (ViewGroup) TabHost.this.mTabWidget, false);
             TextView tv = (TextView) tabIndicator.findViewById(16908310);
             tv.setText(this.mLabel);
             if (context.getApplicationInfo().targetSdkVersion <= 4) {
-                tabIndicator.setBackgroundResource(R.drawable.tab_indicator_v4);
-                tv.setTextColor(context.getColorStateList(R.color.tab_indicator_text_v4));
+                tabIndicator.setBackgroundResource(C3132R.C3133drawable.tab_indicator_v4);
+                tv.setTextColor(context.getColorStateList(C3132R.color.tab_indicator_text_v4));
             }
             return tabIndicator;
         }
     }
 
+    /* loaded from: classes4.dex */
     private class LabelAndIconIndicatorStrategy implements IndicatorStrategy {
         private final Drawable mIcon;
         private final CharSequence mLabel;
@@ -399,13 +404,16 @@ public class TabHost extends FrameLayout implements ViewTreeObserver.OnTouchMode
             this.mIcon = icon;
         }
 
+        @Override // android.widget.TabHost.IndicatorStrategy
         public View createIndicatorView() {
             Context context = TabHost.this.getContext();
-            View tabIndicator = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(TabHost.this.mTabLayoutId, (ViewGroup) TabHost.this.mTabWidget, false);
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View tabIndicator = inflater.inflate(TabHost.this.mTabLayoutId, (ViewGroup) TabHost.this.mTabWidget, false);
             TextView tv = (TextView) tabIndicator.findViewById(16908310);
             ImageView iconView = (ImageView) tabIndicator.findViewById(16908294);
             boolean bindIcon = true;
-            if ((iconView.getVisibility() == 8) && !TextUtils.isEmpty(this.mLabel)) {
+            boolean exclusive = iconView.getVisibility() == 8;
+            if (exclusive && !TextUtils.isEmpty(this.mLabel)) {
                 bindIcon = false;
             }
             tv.setText(this.mLabel);
@@ -414,13 +422,14 @@ public class TabHost extends FrameLayout implements ViewTreeObserver.OnTouchMode
                 iconView.setVisibility(0);
             }
             if (context.getApplicationInfo().targetSdkVersion <= 4) {
-                tabIndicator.setBackgroundResource(R.drawable.tab_indicator_v4);
-                tv.setTextColor(context.getColorStateList(R.color.tab_indicator_text_v4));
+                tabIndicator.setBackgroundResource(C3132R.C3133drawable.tab_indicator_v4);
+                tv.setTextColor(context.getColorStateList(C3132R.color.tab_indicator_text_v4));
             }
             return tabIndicator;
         }
     }
 
+    /* loaded from: classes4.dex */
     private class ViewIndicatorStrategy implements IndicatorStrategy {
         private final View mView;
 
@@ -428,11 +437,13 @@ public class TabHost extends FrameLayout implements ViewTreeObserver.OnTouchMode
             this.mView = view;
         }
 
+        @Override // android.widget.TabHost.IndicatorStrategy
         public View createIndicatorView() {
             return this.mView;
         }
     }
 
+    /* loaded from: classes4.dex */
     private class ViewIdContentStrategy implements ContentStrategy {
         private final View mView;
 
@@ -445,16 +456,19 @@ public class TabHost extends FrameLayout implements ViewTreeObserver.OnTouchMode
             throw new RuntimeException("Could not create tab content because could not find view with id " + viewId);
         }
 
+        @Override // android.widget.TabHost.ContentStrategy
         public View getContentView() {
             this.mView.setVisibility(0);
             return this.mView;
         }
 
+        @Override // android.widget.TabHost.ContentStrategy
         public void tabClosed() {
             this.mView.setVisibility(8);
         }
     }
 
+    /* loaded from: classes4.dex */
     private class FactoryContentStrategy implements ContentStrategy {
         private TabContentFactory mFactory;
         private View mTabContent;
@@ -465,6 +479,7 @@ public class TabHost extends FrameLayout implements ViewTreeObserver.OnTouchMode
             this.mFactory = factory;
         }
 
+        @Override // android.widget.TabHost.ContentStrategy
         public View getContentView() {
             if (this.mTabContent == null) {
                 this.mTabContent = this.mFactory.createTabContent(this.mTag.toString());
@@ -473,11 +488,13 @@ public class TabHost extends FrameLayout implements ViewTreeObserver.OnTouchMode
             return this.mTabContent;
         }
 
+        @Override // android.widget.TabHost.ContentStrategy
         public void tabClosed() {
             this.mTabContent.setVisibility(8);
         }
     }
 
+    /* loaded from: classes4.dex */
     private class IntentContentStrategy implements ContentStrategy {
         private final Intent mIntent;
         private View mLaunchedView;
@@ -488,25 +505,27 @@ public class TabHost extends FrameLayout implements ViewTreeObserver.OnTouchMode
             this.mIntent = intent;
         }
 
+        @Override // android.widget.TabHost.ContentStrategy
         @UnsupportedAppUsage
         public View getContentView() {
-            if (TabHost.this.mLocalActivityManager != null) {
-                Window w = TabHost.this.mLocalActivityManager.startActivity(this.mTag, this.mIntent);
-                View wd = w != null ? w.getDecorView() : null;
-                if (!(this.mLaunchedView == wd || this.mLaunchedView == null || this.mLaunchedView.getParent() == null)) {
-                    TabHost.this.mTabContent.removeView(this.mLaunchedView);
-                }
-                this.mLaunchedView = wd;
-                if (this.mLaunchedView != null) {
-                    this.mLaunchedView.setVisibility(0);
-                    this.mLaunchedView.setFocusableInTouchMode(true);
-                    ((ViewGroup) this.mLaunchedView).setDescendantFocusability(262144);
-                }
-                return this.mLaunchedView;
+            if (TabHost.this.mLocalActivityManager == null) {
+                throw new IllegalStateException("Did you forget to call 'public void setup(LocalActivityManager activityGroup)'?");
             }
-            throw new IllegalStateException("Did you forget to call 'public void setup(LocalActivityManager activityGroup)'?");
+            Window w = TabHost.this.mLocalActivityManager.startActivity(this.mTag, this.mIntent);
+            View wd = w != null ? w.getDecorView() : null;
+            if (this.mLaunchedView != wd && this.mLaunchedView != null && this.mLaunchedView.getParent() != null) {
+                TabHost.this.mTabContent.removeView(this.mLaunchedView);
+            }
+            this.mLaunchedView = wd;
+            if (this.mLaunchedView != null) {
+                this.mLaunchedView.setVisibility(0);
+                this.mLaunchedView.setFocusableInTouchMode(true);
+                ((ViewGroup) this.mLaunchedView).setDescendantFocusability(262144);
+            }
+            return this.mLaunchedView;
         }
 
+        @Override // android.widget.TabHost.ContentStrategy
         @UnsupportedAppUsage
         public void tabClosed() {
             if (this.mLaunchedView != null) {

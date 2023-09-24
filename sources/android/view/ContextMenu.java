@@ -2,8 +2,10 @@ package android.view;
 
 import android.graphics.drawable.Drawable;
 
+/* loaded from: classes4.dex */
 public interface ContextMenu extends Menu {
 
+    /* loaded from: classes4.dex */
     public interface ContextMenuInfo {
     }
 

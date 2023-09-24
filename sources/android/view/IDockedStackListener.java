@@ -1,11 +1,12 @@
 package android.view;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes4.dex */
 public interface IDockedStackListener extends IInterface {
     void onAdjustedForImeChanged(boolean z, long j) throws RemoteException;
 
@@ -17,27 +18,35 @@ public interface IDockedStackListener extends IInterface {
 
     void onDockedStackMinimizedChanged(boolean z, long j, boolean z2) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IDockedStackListener {
+        @Override // android.view.IDockedStackListener
         public void onDividerVisibilityChanged(boolean visible) throws RemoteException {
         }
 
+        @Override // android.view.IDockedStackListener
         public void onDockedStackExistsChanged(boolean exists) throws RemoteException {
         }
 
+        @Override // android.view.IDockedStackListener
         public void onDockedStackMinimizedChanged(boolean minimized, long animDuration, boolean isHomeStackResizable) throws RemoteException {
         }
 
+        @Override // android.view.IDockedStackListener
         public void onAdjustedForImeChanged(boolean adjustedForIme, long animDuration) throws RemoteException {
         }
 
+        @Override // android.view.IDockedStackListener
         public void onDockSideChanged(int newDockSide) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IDockedStackListener {
         private static final String DESCRIPTOR = "android.view.IDockedStackListener";
         static final int TRANSACTION_onAdjustedForImeChanged = 4;
@@ -55,12 +64,13 @@ public interface IDockedStackListener extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IDockedStackListener)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IDockedStackListener)) {
+                return (IDockedStackListener) iin;
             }
-            return (IDockedStackListener) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -82,57 +92,52 @@ public interface IDockedStackListener extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                boolean _arg0 = false;
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = true;
-                        }
-                        onDividerVisibilityChanged(_arg0);
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = true;
-                        }
-                        onDockedStackExistsChanged(_arg0);
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        boolean _arg02 = data.readInt() != 0;
-                        long _arg1 = data.readLong();
-                        if (data.readInt() != 0) {
-                            _arg0 = true;
-                        }
-                        onDockedStackMinimizedChanged(_arg02, _arg1, _arg0);
-                        return true;
-                    case 4:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = true;
-                        }
-                        onAdjustedForImeChanged(_arg0, data.readLong());
-                        return true;
-                    case 5:
-                        data.enforceInterface(DESCRIPTOR);
-                        onDockSideChanged(data.readInt());
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            boolean _arg0;
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0;
+                    onDividerVisibilityChanged(_arg0);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0;
+                    onDockedStackExistsChanged(_arg0);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean _arg02 = data.readInt() != 0;
+                    long _arg1 = data.readLong();
+                    _arg0 = data.readInt() != 0;
+                    onDockedStackMinimizedChanged(_arg02, _arg1, _arg0);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0;
+                    long _arg12 = data.readLong();
+                    onAdjustedForImeChanged(_arg0, _arg12);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    onDockSideChanged(data.readInt());
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IDockedStackListener {
             public static IDockedStackListener sDefaultImpl;
             private IBinder mRemote;
@@ -141,6 +146,7 @@ public interface IDockedStackListener extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -149,14 +155,14 @@ public interface IDockedStackListener extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.view.IDockedStackListener
             public void onDividerVisibilityChanged(boolean visible) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(visible);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(visible ? 1 : 0);
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onDividerVisibilityChanged(visible);
                     }
                 } finally {
@@ -164,14 +170,14 @@ public interface IDockedStackListener extends IInterface {
                 }
             }
 
+            @Override // android.view.IDockedStackListener
             public void onDockedStackExistsChanged(boolean exists) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(exists);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(exists ? 1 : 0);
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onDockedStackExistsChanged(exists);
                     }
                 } finally {
@@ -179,16 +185,16 @@ public interface IDockedStackListener extends IInterface {
                 }
             }
 
+            @Override // android.view.IDockedStackListener
             public void onDockedStackMinimizedChanged(boolean minimized, long animDuration, boolean isHomeStackResizable) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(minimized);
+                    _data.writeInt(minimized ? 1 : 0);
                     _data.writeLong(animDuration);
-                    _data.writeInt(isHomeStackResizable);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(isHomeStackResizable ? 1 : 0);
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onDockedStackMinimizedChanged(minimized, animDuration, isHomeStackResizable);
                     }
                 } finally {
@@ -196,15 +202,15 @@ public interface IDockedStackListener extends IInterface {
                 }
             }
 
+            @Override // android.view.IDockedStackListener
             public void onAdjustedForImeChanged(boolean adjustedForIme, long animDuration) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(adjustedForIme);
+                    _data.writeInt(adjustedForIme ? 1 : 0);
                     _data.writeLong(animDuration);
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onAdjustedForImeChanged(adjustedForIme, animDuration);
                     }
                 } finally {
@@ -212,14 +218,14 @@ public interface IDockedStackListener extends IInterface {
                 }
             }
 
+            @Override // android.view.IDockedStackListener
             public void onDockSideChanged(int newDockSide) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(newDockSide);
-                    if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(5, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onDockSideChanged(newDockSide);
                     }
                 } finally {
@@ -229,11 +235,11 @@ public interface IDockedStackListener extends IInterface {
         }
 
         public static boolean setDefaultImpl(IDockedStackListener impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IDockedStackListener getDefaultImpl() {

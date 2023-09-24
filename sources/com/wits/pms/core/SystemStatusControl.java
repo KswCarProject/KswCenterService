@@ -4,6 +4,7 @@ import android.view.KeyEvent;
 import com.wits.pms.statuscontrol.McuStatus;
 import com.wits.pms.statuscontrol.SystemStatus;
 
+/* loaded from: classes2.dex */
 public class SystemStatusControl {
     public static SystemStatusControl factory;
     private PowerManagerImpl mPmas;
@@ -63,8 +64,8 @@ public class SystemStatusControl {
         checkAcc();
     }
 
-    public void setMcuStatus(McuStatus mcuStatus2) {
-        this.mcuStatus = mcuStatus2;
+    public void setMcuStatus(McuStatus mcuStatus) {
+        this.mcuStatus = mcuStatus;
     }
 
     public McuStatus getMcuStatus() {

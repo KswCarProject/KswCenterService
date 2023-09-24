@@ -1,8 +1,9 @@
 package android.telephony;
 
-import android.content.pm.PackageManager;
-import android.os.PersistableBundle;
+import android.content.p002pm.PackageManager;
+import android.p007os.PersistableBundle;
 
+/* loaded from: classes.dex */
 public abstract class CellSignalStrength {
     public static final int NUM_SIGNAL_STRENGTH_BINS = 5;
     protected static final int NUM_SIGNAL_STRENGTH_THRESHOLDS = 4;

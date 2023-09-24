@@ -16,17 +16,17 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.CancellationSignal;
-import android.os.Environment;
-import android.os.FileUtils;
-import android.os.ParcelFileDescriptor;
-import android.os.RemoteException;
-import android.os.UserHandle;
-import android.os.UserManager;
-import android.os.storage.StorageManager;
-import android.os.storage.StorageVolume;
-import android.os.storage.VolumeInfo;
+import android.p007os.Bundle;
+import android.p007os.CancellationSignal;
+import android.p007os.Environment;
+import android.p007os.FileUtils;
+import android.p007os.ParcelFileDescriptor;
+import android.p007os.RemoteException;
+import android.p007os.UserHandle;
+import android.p007os.UserManager;
+import android.p007os.storage.StorageManager;
+import android.p007os.storage.StorageVolume;
+import android.p007os.storage.VolumeInfo;
 import android.provider.Downloads;
 import android.text.TextUtils;
 import android.util.ArrayMap;
@@ -47,6 +47,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+/* loaded from: classes3.dex */
 public final class MediaStore {
     public static final String ACTION_IMAGE_CAPTURE = "android.media.action.IMAGE_CAPTURE";
     public static final String ACTION_IMAGE_CAPTURE_SECURE = "android.media.action.IMAGE_CAPTURE_SECURE";
@@ -106,9 +107,10 @@ public final class MediaStore {
     public static final String VOLUME_EXTERNAL_PRIMARY = "external_primary";
     public static final String VOLUME_INTERNAL = "internal";
 
+    /* loaded from: classes3.dex */
     public interface DownloadColumns extends MediaColumns {
-        @Deprecated
         @Column(3)
+        @Deprecated
         public static final String DESCRIPTION = "description";
         @Column(3)
         public static final String DOWNLOAD_URI = "download_uri";
@@ -116,13 +118,14 @@ public final class MediaStore {
         public static final String REFERER_URI = "referer_uri";
     }
 
+    /* loaded from: classes3.dex */
     public interface MediaColumns extends BaseColumns {
         @Column(readOnly = true, value = 3)
         public static final String BUCKET_DISPLAY_NAME = "bucket_display_name";
         @Column(readOnly = true, value = 1)
         public static final String BUCKET_ID = "bucket_id";
-        @Deprecated
         @Column(3)
+        @Deprecated
         public static final String DATA = "_data";
         @Column(readOnly = true, value = 1)
         public static final String DATE_ADDED = "date_added";
@@ -138,24 +141,24 @@ public final class MediaStore {
         public static final String DOCUMENT_ID = "document_id";
         @Column(readOnly = true, value = 1)
         public static final String DURATION = "duration";
-        @Deprecated
         @Column(readOnly = true, value = 1)
-        public static final String GROUP_ID = "group_id";
         @Deprecated
+        public static final String GROUP_ID = "group_id";
         @Column(readOnly = true, value = 4)
+        @Deprecated
         public static final String HASH = "_hash";
         @Column(readOnly = true, value = 1)
         public static final String HEIGHT = "height";
         @Column(readOnly = true, value = 3)
         public static final String INSTANCE_ID = "instance_id";
-        @Deprecated
         @UnsupportedAppUsage
         @Column(1)
+        @Deprecated
         public static final String IS_DRM = "is_drm";
         @Column(1)
         public static final String IS_PENDING = "is_pending";
-        @Deprecated
         @Column(1)
+        @Deprecated
         public static final String IS_TRASHED = "is_trashed";
         @Deprecated
         public static final String MEDIA_SCANNER_NEW_OBJECT_ID = "media_scanner_new_object_id";
@@ -167,13 +170,13 @@ public final class MediaStore {
         public static final String ORIGINAL_DOCUMENT_ID = "original_document_id";
         @Column(readOnly = true, value = 3)
         public static final String OWNER_PACKAGE_NAME = "owner_package_name";
-        @Deprecated
         @Column(3)
+        @Deprecated
         public static final String PRIMARY_DIRECTORY = "primary_directory";
         @Column(3)
         public static final String RELATIVE_PATH = "relative_path";
-        @Deprecated
         @Column(3)
+        @Deprecated
         public static final String SECONDARY_DIRECTORY = "secondary_directory";
         @Column(readOnly = true, value = 1)
         public static final String SIZE = "_size";
@@ -185,13 +188,14 @@ public final class MediaStore {
         public static final String WIDTH = "width";
     }
 
+    /* loaded from: classes3.dex */
     public static class ThumbnailConstants {
         public static final int FULL_SCREEN_KIND = 2;
-        public static final Point FULL_SCREEN_SIZE = new Point(1024, 786);
         public static final int MICRO_KIND = 3;
-        public static final Point MICRO_SIZE = new Point(96, 96);
         public static final int MINI_KIND = 1;
         public static final Point MINI_SIZE = new Point(512, MetricsProto.MetricsEvent.ACTION_SHOW_SETTINGS_SUGGESTION);
+        public static final Point FULL_SCREEN_SIZE = new Point(1024, 786);
+        public static final Point MICRO_SIZE = new Point(96, 96);
     }
 
     public static Uri setIncludePending(Uri uri) {
@@ -222,13 +226,15 @@ public final class MediaStore {
     }
 
     @Deprecated
+    /* loaded from: classes3.dex */
     public static class PendingParams {
         public final Uri insertUri;
-        public final ContentValues insertValues = new ContentValues();
+        public final ContentValues insertValues;
 
-        public PendingParams(Uri insertUri2, String displayName, String mimeType) {
-            this.insertUri = (Uri) Objects.requireNonNull(insertUri2);
+        public PendingParams(Uri insertUri, String displayName, String mimeType) {
+            this.insertUri = (Uri) Objects.requireNonNull(insertUri);
             long now = System.currentTimeMillis() / 1000;
+            this.insertValues = new ContentValues();
             this.insertValues.put("_display_name", (String) Objects.requireNonNull(displayName));
             this.insertValues.put("mime_type", (String) Objects.requireNonNull(mimeType));
             this.insertValues.put("date_added", Long.valueOf(now));
@@ -271,6 +277,7 @@ public final class MediaStore {
     }
 
     @Deprecated
+    /* loaded from: classes3.dex */
     public static class PendingSession implements AutoCloseable {
         private final Context mContext;
         private final Uri mUri;
@@ -289,21 +296,23 @@ public final class MediaStore {
         }
 
         public void notifyProgress(int progress) {
-            this.mContext.getContentResolver().notifyChange(this.mUri.buildUpon().appendQueryParameter("progress", Integer.toString(progress)).build(), (ContentObserver) null, 0);
+            Uri withProgress = this.mUri.buildUpon().appendQueryParameter("progress", Integer.toString(progress)).build();
+            this.mContext.getContentResolver().notifyChange(withProgress, (ContentObserver) null, 0);
         }
 
         public Uri publish() {
             ContentValues values = new ContentValues();
             values.put(MediaColumns.IS_PENDING, (Integer) 0);
             values.putNull(MediaColumns.DATE_EXPIRES);
-            this.mContext.getContentResolver().update(this.mUri, values, (String) null, (String[]) null);
+            this.mContext.getContentResolver().update(this.mUri, values, null, null);
             return this.mUri;
         }
 
         public void abandon() {
-            this.mContext.getContentResolver().delete(this.mUri, (String) null, (String[]) null);
+            this.mContext.getContentResolver().delete(this.mUri, null, null);
         }
 
+        @Override // java.lang.AutoCloseable
         public void close() {
             notifyProgress(-1);
         }
@@ -311,19 +320,18 @@ public final class MediaStore {
 
     @Deprecated
     public static void trash(Context context, Uri uri) {
-        trash(context, uri, 172800000);
+        trash(context, uri, 172800000L);
     }
 
     @Deprecated
     public static void trash(Context context, Uri uri, long timeoutMillis) {
-        if (timeoutMillis >= 0) {
-            ContentValues values = new ContentValues();
-            values.put(MediaColumns.IS_TRASHED, (Integer) 1);
-            values.put(MediaColumns.DATE_EXPIRES, Long.valueOf((System.currentTimeMillis() + timeoutMillis) / 1000));
-            context.getContentResolver().update(uri, values, (String) null, (String[]) null);
-            return;
+        if (timeoutMillis < 0) {
+            throw new IllegalArgumentException();
         }
-        throw new IllegalArgumentException();
+        ContentValues values = new ContentValues();
+        values.put(MediaColumns.IS_TRASHED, (Integer) 1);
+        values.put(MediaColumns.DATE_EXPIRES, Long.valueOf((System.currentTimeMillis() + timeoutMillis) / 1000));
+        context.getContentResolver().update(uri, values, null, null);
     }
 
     @Deprecated
@@ -331,13 +339,15 @@ public final class MediaStore {
         ContentValues values = new ContentValues();
         values.put(MediaColumns.IS_TRASHED, (Integer) 0);
         values.putNull(MediaColumns.DATE_EXPIRES);
-        context.getContentResolver().update(uri, values, (String) null, (String[]) null);
+        context.getContentResolver().update(uri, values, null, null);
     }
 
+    /* loaded from: classes3.dex */
     public static final class Files {
         public static final Uri EXTERNAL_CONTENT_URI = getContentUri(MediaStore.VOLUME_EXTERNAL);
         public static final String TABLE = "files";
 
+        /* loaded from: classes3.dex */
         public interface FileColumns extends MediaColumns {
             @UnsupportedAppUsage
             @Column(readOnly = true, value = 1)
@@ -355,8 +365,8 @@ public final class MediaStore {
             public static final String MIME_TYPE = "mime_type";
             @Column(readOnly = true, value = 1)
             public static final String PARENT = "parent";
-            @Deprecated
             @UnsupportedAppUsage
+            @Deprecated
             public static final String STORAGE_ID = "storage_id";
             @Column(readOnly = true, value = 3)
             public static final String TITLE = "title";
@@ -394,12 +404,13 @@ public final class MediaStore {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class Downloads implements DownloadColumns {
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/download";
-        public static final Uri EXTERNAL_CONTENT_URI = getContentUri(MediaStore.VOLUME_EXTERNAL);
         public static final Uri INTERNAL_CONTENT_URI = getContentUri(MediaStore.VOLUME_INTERNAL);
-        private static final Pattern PATTERN_DOWNLOADS_DIRECTORY = Pattern.compile("(?i)^/storage/[^/]+/(?:[0-9]+/)?(?:Android/sandbox/[^/]+/)?Download/?");
+        public static final Uri EXTERNAL_CONTENT_URI = getContentUri(MediaStore.VOLUME_EXTERNAL);
         public static final Pattern PATTERN_DOWNLOADS_FILE = Pattern.compile("(?i)^/storage/[^/]+/(?:[0-9]+/)?(?:Android/sandbox/[^/]+/)?Download/.+");
+        private static final Pattern PATTERN_DOWNLOADS_DIRECTORY = Pattern.compile("(?i)^/storage/[^/]+/(?:[0-9]+/)?(?:Android/sandbox/[^/]+/)?Download/?");
 
         private Downloads() {
         }
@@ -426,20 +437,22 @@ public final class MediaStore {
     }
 
     public static String getVolumeName(File path) {
-        if (!FileUtils.contains(Environment.getStorageDirectory(), path)) {
-            return VOLUME_INTERNAL;
-        }
-        StorageVolume sv = ((StorageManager) AppGlobals.getInitialApplication().getSystemService(StorageManager.class)).getStorageVolume(path);
-        if (sv == null) {
+        if (FileUtils.contains(Environment.getStorageDirectory(), path)) {
+            StorageManager sm = (StorageManager) AppGlobals.getInitialApplication().getSystemService(StorageManager.class);
+            StorageVolume sv = sm.getStorageVolume(path);
+            if (sv != null) {
+                if (sv.isPrimary()) {
+                    return VOLUME_EXTERNAL_PRIMARY;
+                }
+                return checkArgumentVolumeName(sv.getNormalizedUuid());
+            }
             throw new IllegalStateException("Unknown volume at " + path);
-        } else if (sv.isPrimary()) {
-            return VOLUME_EXTERNAL_PRIMARY;
-        } else {
-            return checkArgumentVolumeName(sv.getNormalizedUuid());
         }
+        return VOLUME_INTERNAL;
     }
 
     @Deprecated
+    /* loaded from: classes3.dex */
     private static class InternalThumbnails implements BaseColumns {
         @GuardedBy({"sPending"})
         private static ArrayMap<Uri, CancellationSignal> sPending = new ArrayMap<>();
@@ -455,10 +468,10 @@ public final class MediaStore {
                 size = ThumbnailConstants.MICRO_SIZE;
             } else if (kind == 2) {
                 size = ThumbnailConstants.FULL_SCREEN_SIZE;
-            } else if (kind == 1) {
-                size = ThumbnailConstants.MINI_SIZE;
-            } else {
+            } else if (kind != 1) {
                 throw new IllegalArgumentException("Unsupported kind: " + kind);
+            } else {
+                size = ThumbnailConstants.MINI_SIZE;
             }
             synchronized (sPending) {
                 signal = sPending.get(uri);
@@ -468,23 +481,23 @@ public final class MediaStore {
                 }
             }
             try {
-                Bitmap loadThumbnail = cr.loadThumbnail(uri, Point.convert(size), signal);
-                synchronized (sPending) {
-                    sPending.remove(uri);
-                }
-                return loadThumbnail;
-            } catch (IOException e) {
                 try {
-                    Log.w(MediaStore.TAG, "Failed to obtain thumbnail for " + uri, e);
+                    Bitmap loadThumbnail = cr.loadThumbnail(uri, Point.convert(size), signal);
+                    synchronized (sPending) {
+                        sPending.remove(uri);
+                    }
+                    return loadThumbnail;
+                } catch (IOException e) {
+                    Log.m63w(MediaStore.TAG, "Failed to obtain thumbnail for " + uri, e);
                     synchronized (sPending) {
                         sPending.remove(uri);
                         return null;
                     }
-                } catch (Throwable th) {
-                    synchronized (sPending) {
-                        sPending.remove(uri);
-                        throw th;
-                    }
+                }
+            } catch (Throwable th) {
+                synchronized (sPending) {
+                    sPending.remove(uri);
+                    throw th;
                 }
             }
         }
@@ -500,8 +513,10 @@ public final class MediaStore {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class Images {
 
+        /* loaded from: classes3.dex */
         public interface ImageColumns extends MediaColumns {
             public static final String BUCKET_DISPLAY_NAME = "bucket_display_name";
             public static final String BUCKET_ID = "bucket_id";
@@ -511,52 +526,41 @@ public final class MediaStore {
             public static final String GROUP_ID = "group_id";
             @Column(1)
             public static final String IS_PRIVATE = "isprivate";
-            @Deprecated
             @Column(readOnly = true, value = 2)
+            @Deprecated
             public static final String LATITUDE = "latitude";
-            @Deprecated
             @Column(readOnly = true, value = 2)
-            public static final String LONGITUDE = "longitude";
             @Deprecated
+            public static final String LONGITUDE = "longitude";
             @Column(1)
+            @Deprecated
             public static final String MINI_THUMB_MAGIC = "mini_thumb_magic";
             public static final String ORIENTATION = "orientation";
-            @Deprecated
             @Column(3)
+            @Deprecated
             public static final String PICASA_ID = "picasa_id";
         }
 
+        /* loaded from: classes3.dex */
         public static final class Media implements ImageColumns {
             public static final String CONTENT_TYPE = "vnd.android.cursor.dir/image";
             public static final String DEFAULT_SORT_ORDER = "bucket_display_name";
-            public static final Uri EXTERNAL_CONTENT_URI = getContentUri(MediaStore.VOLUME_EXTERNAL);
             public static final Uri INTERNAL_CONTENT_URI = getContentUri(MediaStore.VOLUME_INTERNAL);
+            public static final Uri EXTERNAL_CONTENT_URI = getContentUri(MediaStore.VOLUME_EXTERNAL);
 
             @Deprecated
             public static final Cursor query(ContentResolver cr, Uri uri, String[] projection) {
-                return cr.query(uri, projection, (String) null, (String[]) null, "bucket_display_name");
+                return cr.query(uri, projection, null, null, "bucket_display_name");
             }
 
             @Deprecated
             public static final Cursor query(ContentResolver cr, Uri uri, String[] projection, String where, String orderBy) {
-                String str;
-                if (orderBy == null) {
-                    str = "bucket_display_name";
-                } else {
-                    str = orderBy;
-                }
-                return cr.query(uri, projection, where, (String[]) null, str);
+                return cr.query(uri, projection, where, null, orderBy == null ? "bucket_display_name" : orderBy);
             }
 
             @Deprecated
             public static final Cursor query(ContentResolver cr, Uri uri, String[] projection, String selection, String[] selectionArgs, String orderBy) {
-                String str;
-                if (orderBy == null) {
-                    str = "bucket_display_name";
-                } else {
-                    str = orderBy;
-                }
-                return cr.query(uri, projection, selection, selectionArgs, str);
+                return cr.query(uri, projection, selection, selectionArgs, orderBy == null ? "bucket_display_name" : orderBy);
             }
 
             @Deprecated
@@ -567,135 +571,99 @@ public final class MediaStore {
                 return bitmap;
             }
 
-            /* JADX WARNING: Code restructure failed: missing block: B:21:0x0048, code lost:
-                r9 = th;
-             */
-            /* JADX WARNING: Code restructure failed: missing block: B:22:0x0049, code lost:
-                r10 = null;
-             */
-            /* JADX WARNING: Code restructure failed: missing block: B:26:0x004d, code lost:
-                r10 = move-exception;
-             */
-            /* JADX WARNING: Code restructure failed: missing block: B:27:0x004e, code lost:
-                r11 = r10;
-                r10 = r9;
-                r9 = r11;
-             */
-            /* JADX WARNING: Code restructure failed: missing block: B:32:0x0057, code lost:
-                r8 = th;
-             */
-            /* JADX WARNING: Code restructure failed: missing block: B:33:0x0058, code lost:
-                r9 = null;
-             */
-            /* JADX WARNING: Code restructure failed: missing block: B:37:0x005c, code lost:
-                r9 = move-exception;
-             */
-            /* JADX WARNING: Code restructure failed: missing block: B:38:0x005d, code lost:
-                r11 = r9;
-                r9 = r8;
-                r8 = r11;
-             */
-            /* JADX WARNING: Code restructure failed: missing block: B:42:0x0064, code lost:
-                r7 = th;
-             */
-            /* JADX WARNING: Code restructure failed: missing block: B:43:0x0065, code lost:
-                r8 = null;
-             */
-            /* JADX WARNING: Code restructure failed: missing block: B:47:0x0069, code lost:
-                r8 = move-exception;
-             */
-            /* JADX WARNING: Code restructure failed: missing block: B:48:0x006a, code lost:
-                r11 = r8;
-                r8 = r7;
-                r7 = r11;
-             */
-            /* JADX WARNING: Unknown top exception splitter block from list: {B:39:0x0060=Splitter:B:39:0x0060, B:15:0x0037=Splitter:B:15:0x0037} */
+            /*  JADX ERROR: JadxRuntimeException in pass: BlockProcessor
+                jadx.core.utils.exceptions.JadxRuntimeException: Found unreachable blocks
+                	at jadx.core.dex.visitors.blocks.DominatorTree.sortBlocks(DominatorTree.java:35)
+                	at jadx.core.dex.visitors.blocks.DominatorTree.compute(DominatorTree.java:25)
+                	at jadx.core.dex.visitors.blocks.BlockProcessor.computeDominators(BlockProcessor.java:202)
+                	at jadx.core.dex.visitors.blocks.BlockProcessor.processBlocksTree(BlockProcessor.java:45)
+                	at jadx.core.dex.visitors.blocks.BlockProcessor.visit(BlockProcessor.java:39)
+                */
             @java.lang.Deprecated
-            /* Code decompiled incorrectly, please refer to instructions dump. */
             public static final java.lang.String insertImage(android.content.ContentResolver r12, java.lang.String r13, java.lang.String r14, java.lang.String r15) throws java.io.FileNotFoundException {
                 /*
                     java.io.File r0 = new java.io.File
                     r0.<init>(r13)
                     java.lang.String r1 = android.media.MediaFile.getMimeTypeForFile(r13)
                     boolean r2 = android.text.TextUtils.isEmpty(r14)
-                    if (r2 == 0) goto L_0x0011
+                    if (r2 == 0) goto L11
                     java.lang.String r14 = "Image"
-                L_0x0011:
+                L11:
                     android.provider.MediaStore$PendingParams r2 = new android.provider.MediaStore$PendingParams
-                    android.net.Uri r3 = EXTERNAL_CONTENT_URI
+                    android.net.Uri r3 = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
                     r2.<init>(r3, r14, r1)
                     android.app.Application r3 = android.app.AppGlobals.getInitialApplication()
                     android.net.Uri r4 = android.provider.MediaStore.createPending(r3, r2)
                     r5 = 0
-                    android.provider.MediaStore$PendingSession r6 = android.provider.MediaStore.openPending(r3, r4)     // Catch:{ Exception -> 0x0073 }
-                    java.io.FileInputStream r7 = new java.io.FileInputStream     // Catch:{ Throwable -> 0x0067, all -> 0x0064 }
-                    r7.<init>(r0)     // Catch:{ Throwable -> 0x0067, all -> 0x0064 }
-                    java.io.OutputStream r8 = r6.openOutputStream()     // Catch:{ Throwable -> 0x005a, all -> 0x0057 }
-                    android.os.FileUtils.copy((java.io.InputStream) r7, (java.io.OutputStream) r8)     // Catch:{ Throwable -> 0x004b, all -> 0x0048 }
-                    if (r8 == 0) goto L_0x0037
-                    $closeResource(r5, r8)     // Catch:{ Throwable -> 0x005a, all -> 0x0057 }
-                L_0x0037:
-                    $closeResource(r5, r7)     // Catch:{ Throwable -> 0x0067, all -> 0x0064 }
-                    android.net.Uri r7 = r6.publish()     // Catch:{ Throwable -> 0x0067, all -> 0x0064 }
-                    java.lang.String r7 = r7.toString()     // Catch:{ Throwable -> 0x0067, all -> 0x0064 }
-                    if (r6 == 0) goto L_0x0047
-                    $closeResource(r5, r6)     // Catch:{ Exception -> 0x0073 }
-                L_0x0047:
+                    android.provider.MediaStore$PendingSession r6 = android.provider.MediaStore.openPending(r3, r4)     // Catch: java.lang.Exception -> L73
+                    java.io.FileInputStream r7 = new java.io.FileInputStream     // Catch: java.lang.Throwable -> L67
+                    r7.<init>(r0)     // Catch: java.lang.Throwable -> L67
+                    java.io.OutputStream r8 = r6.openOutputStream()     // Catch: java.lang.Throwable -> L5a
+                    android.p007os.FileUtils.copy(r7, r8)     // Catch: java.lang.Throwable -> L4b
+                    if (r8 == 0) goto L37
+                    $closeResource(r5, r8)     // Catch: java.lang.Throwable -> L5a
+                L37:
+                    $closeResource(r5, r7)     // Catch: java.lang.Throwable -> L67
+                    android.net.Uri r7 = r6.publish()     // Catch: java.lang.Throwable -> L67
+                    java.lang.String r7 = r7.toString()     // Catch: java.lang.Throwable -> L67
+                    if (r6 == 0) goto L47
+                    $closeResource(r5, r6)     // Catch: java.lang.Exception -> L73
+                L47:
                     return r7
-                L_0x0048:
+                L48:
                     r9 = move-exception
                     r10 = r5
-                    goto L_0x0051
-                L_0x004b:
+                    goto L51
+                L4b:
                     r9 = move-exception
-                    throw r9     // Catch:{ all -> 0x004d }
-                L_0x004d:
+                    throw r9     // Catch: java.lang.Throwable -> L4d
+                L4d:
                     r10 = move-exception
                     r11 = r10
                     r10 = r9
                     r9 = r11
-                L_0x0051:
-                    if (r8 == 0) goto L_0x0056
-                    $closeResource(r10, r8)     // Catch:{ Throwable -> 0x005a, all -> 0x0057 }
-                L_0x0056:
-                    throw r9     // Catch:{ Throwable -> 0x005a, all -> 0x0057 }
-                L_0x0057:
+                L51:
+                    if (r8 == 0) goto L56
+                    $closeResource(r10, r8)     // Catch: java.lang.Throwable -> L5a
+                L56:
+                    throw r9     // Catch: java.lang.Throwable -> L5a
+                L57:
                     r8 = move-exception
                     r9 = r5
-                    goto L_0x0060
-                L_0x005a:
+                    goto L60
+                L5a:
                     r8 = move-exception
-                    throw r8     // Catch:{ all -> 0x005c }
-                L_0x005c:
+                    throw r8     // Catch: java.lang.Throwable -> L5c
+                L5c:
                     r9 = move-exception
                     r11 = r9
                     r9 = r8
                     r8 = r11
-                L_0x0060:
-                    $closeResource(r9, r7)     // Catch:{ Throwable -> 0x0067, all -> 0x0064 }
-                    throw r8     // Catch:{ Throwable -> 0x0067, all -> 0x0064 }
-                L_0x0064:
+                L60:
+                    $closeResource(r9, r7)     // Catch: java.lang.Throwable -> L67
+                    throw r8     // Catch: java.lang.Throwable -> L67
+                L64:
                     r7 = move-exception
                     r8 = r5
-                    goto L_0x006d
-                L_0x0067:
+                    goto L6d
+                L67:
                     r7 = move-exception
-                    throw r7     // Catch:{ all -> 0x0069 }
-                L_0x0069:
+                    throw r7     // Catch: java.lang.Throwable -> L69
+                L69:
                     r8 = move-exception
                     r11 = r8
                     r8 = r7
                     r7 = r11
-                L_0x006d:
-                    if (r6 == 0) goto L_0x0072
-                    $closeResource(r8, r6)     // Catch:{ Exception -> 0x0073 }
-                L_0x0072:
-                    throw r7     // Catch:{ Exception -> 0x0073 }
-                L_0x0073:
+                L6d:
+                    if (r6 == 0) goto L72
+                    $closeResource(r8, r6)     // Catch: java.lang.Exception -> L73
+                L72:
+                    throw r7     // Catch: java.lang.Exception -> L73
+                L73:
                     r6 = move-exception
                     java.lang.String r7 = "MediaStore"
                     java.lang.String r8 = "Failed to insert image"
-                    android.util.Log.w(r7, r8, r6)
+                    android.util.Log.m63w(r7, r8, r6)
                     android.content.ContentResolver r7 = r3.getContentResolver()
                     r7.delete(r4, r5, r5)
                     return r5
@@ -704,113 +672,92 @@ public final class MediaStore {
             }
 
             private static /* synthetic */ void $closeResource(Throwable x0, AutoCloseable x1) {
-                if (x0 != null) {
-                    try {
-                        x1.close();
-                    } catch (Throwable th) {
-                        x0.addSuppressed(th);
-                    }
-                } else {
+                if (x0 == null) {
                     x1.close();
+                    return;
+                }
+                try {
+                    x1.close();
+                } catch (Throwable th) {
+                    x0.addSuppressed(th);
                 }
             }
 
-            /* JADX WARNING: Code restructure failed: missing block: B:18:0x003c, code lost:
-                r6 = th;
-             */
-            /* JADX WARNING: Code restructure failed: missing block: B:19:0x003d, code lost:
-                r7 = null;
-             */
-            /* JADX WARNING: Code restructure failed: missing block: B:23:0x0041, code lost:
-                r7 = move-exception;
-             */
-            /* JADX WARNING: Code restructure failed: missing block: B:24:0x0042, code lost:
-                r8 = r7;
-                r7 = r6;
-                r6 = r8;
-             */
-            /* JADX WARNING: Code restructure failed: missing block: B:29:0x004b, code lost:
-                r5 = th;
-             */
-            /* JADX WARNING: Code restructure failed: missing block: B:30:0x004c, code lost:
-                r6 = null;
-             */
-            /* JADX WARNING: Code restructure failed: missing block: B:34:0x0050, code lost:
-                r6 = move-exception;
-             */
-            /* JADX WARNING: Code restructure failed: missing block: B:35:0x0051, code lost:
-                r8 = r6;
-                r6 = r5;
-                r5 = r8;
-             */
+            /*  JADX ERROR: JadxRuntimeException in pass: BlockProcessor
+                jadx.core.utils.exceptions.JadxRuntimeException: Found unreachable blocks
+                	at jadx.core.dex.visitors.blocks.DominatorTree.sortBlocks(DominatorTree.java:35)
+                	at jadx.core.dex.visitors.blocks.DominatorTree.compute(DominatorTree.java:25)
+                	at jadx.core.dex.visitors.blocks.BlockProcessor.computeDominators(BlockProcessor.java:202)
+                	at jadx.core.dex.visitors.blocks.BlockProcessor.processBlocksTree(BlockProcessor.java:45)
+                	at jadx.core.dex.visitors.blocks.BlockProcessor.visit(BlockProcessor.java:39)
+                */
             @java.lang.Deprecated
-            /* Code decompiled incorrectly, please refer to instructions dump. */
             public static final java.lang.String insertImage(android.content.ContentResolver r9, android.graphics.Bitmap r10, java.lang.String r11, java.lang.String r12) {
                 /*
                     boolean r0 = android.text.TextUtils.isEmpty(r11)
-                    if (r0 == 0) goto L_0x0008
+                    if (r0 == 0) goto L8
                     java.lang.String r11 = "Image"
-                L_0x0008:
+                L8:
                     android.provider.MediaStore$PendingParams r0 = new android.provider.MediaStore$PendingParams
-                    android.net.Uri r1 = EXTERNAL_CONTENT_URI
+                    android.net.Uri r1 = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
                     java.lang.String r2 = "image/jpeg"
                     r0.<init>(r1, r11, r2)
                     android.app.Application r1 = android.app.AppGlobals.getInitialApplication()
                     android.net.Uri r2 = android.provider.MediaStore.createPending(r1, r0)
                     r3 = 0
-                    android.provider.MediaStore$PendingSession r4 = android.provider.MediaStore.openPending(r1, r2)     // Catch:{ Exception -> 0x005a }
-                    java.io.OutputStream r5 = r4.openOutputStream()     // Catch:{ Throwable -> 0x004e, all -> 0x004b }
-                    android.graphics.Bitmap$CompressFormat r6 = android.graphics.Bitmap.CompressFormat.JPEG     // Catch:{ Throwable -> 0x003f, all -> 0x003c }
+                    android.provider.MediaStore$PendingSession r4 = android.provider.MediaStore.openPending(r1, r2)     // Catch: java.lang.Exception -> L5a
+                    java.io.OutputStream r5 = r4.openOutputStream()     // Catch: java.lang.Throwable -> L4e
+                    android.graphics.Bitmap$CompressFormat r6 = android.graphics.Bitmap.CompressFormat.JPEG     // Catch: java.lang.Throwable -> L3f
                     r7 = 90
-                    r10.compress(r6, r7, r5)     // Catch:{ Throwable -> 0x003f, all -> 0x003c }
-                    if (r5 == 0) goto L_0x002e
-                    $closeResource(r3, r5)     // Catch:{ Throwable -> 0x004e, all -> 0x004b }
-                L_0x002e:
-                    android.net.Uri r5 = r4.publish()     // Catch:{ Throwable -> 0x004e, all -> 0x004b }
-                    java.lang.String r5 = r5.toString()     // Catch:{ Throwable -> 0x004e, all -> 0x004b }
-                    if (r4 == 0) goto L_0x003b
-                    $closeResource(r3, r4)     // Catch:{ Exception -> 0x005a }
-                L_0x003b:
+                    r10.compress(r6, r7, r5)     // Catch: java.lang.Throwable -> L3f
+                    if (r5 == 0) goto L2e
+                    $closeResource(r3, r5)     // Catch: java.lang.Throwable -> L4e
+                L2e:
+                    android.net.Uri r5 = r4.publish()     // Catch: java.lang.Throwable -> L4e
+                    java.lang.String r5 = r5.toString()     // Catch: java.lang.Throwable -> L4e
+                    if (r4 == 0) goto L3b
+                    $closeResource(r3, r4)     // Catch: java.lang.Exception -> L5a
+                L3b:
                     return r5
-                L_0x003c:
+                L3c:
                     r6 = move-exception
                     r7 = r3
-                    goto L_0x0045
-                L_0x003f:
+                    goto L45
+                L3f:
                     r6 = move-exception
-                    throw r6     // Catch:{ all -> 0x0041 }
-                L_0x0041:
+                    throw r6     // Catch: java.lang.Throwable -> L41
+                L41:
                     r7 = move-exception
                     r8 = r7
                     r7 = r6
                     r6 = r8
-                L_0x0045:
-                    if (r5 == 0) goto L_0x004a
-                    $closeResource(r7, r5)     // Catch:{ Throwable -> 0x004e, all -> 0x004b }
-                L_0x004a:
-                    throw r6     // Catch:{ Throwable -> 0x004e, all -> 0x004b }
-                L_0x004b:
+                L45:
+                    if (r5 == 0) goto L4a
+                    $closeResource(r7, r5)     // Catch: java.lang.Throwable -> L4e
+                L4a:
+                    throw r6     // Catch: java.lang.Throwable -> L4e
+                L4b:
                     r5 = move-exception
                     r6 = r3
-                    goto L_0x0054
-                L_0x004e:
+                    goto L54
+                L4e:
                     r5 = move-exception
-                    throw r5     // Catch:{ all -> 0x0050 }
-                L_0x0050:
+                    throw r5     // Catch: java.lang.Throwable -> L50
+                L50:
                     r6 = move-exception
                     r8 = r6
                     r6 = r5
                     r5 = r8
-                L_0x0054:
-                    if (r4 == 0) goto L_0x0059
-                    $closeResource(r6, r4)     // Catch:{ Exception -> 0x005a }
-                L_0x0059:
-                    throw r5     // Catch:{ Exception -> 0x005a }
-                L_0x005a:
+                L54:
+                    if (r4 == 0) goto L59
+                    $closeResource(r6, r4)     // Catch: java.lang.Exception -> L5a
+                L59:
+                    throw r5     // Catch: java.lang.Exception -> L5a
+                L5a:
                     r4 = move-exception
                     java.lang.String r5 = "MediaStore"
                     java.lang.String r6 = "Failed to insert image"
-                    android.util.Log.w(r5, r6, r4)
+                    android.util.Log.m63w(r5, r6, r4)
                     android.content.ContentResolver r5 = r1.getContentResolver()
                     r5.delete(r2, r3, r3)
                     return r3
@@ -828,52 +775,55 @@ public final class MediaStore {
         }
 
         @Deprecated
+        /* loaded from: classes3.dex */
         public static class Thumbnails implements BaseColumns {
-            @Deprecated
             @Column(3)
+            @Deprecated
             public static final String DATA = "_data";
             public static final String DEFAULT_SORT_ORDER = "image_id ASC";
-            public static final Uri EXTERNAL_CONTENT_URI = getContentUri(MediaStore.VOLUME_EXTERNAL);
             public static final int FULL_SCREEN_KIND = 2;
             @Column(readOnly = true, value = 1)
             public static final String HEIGHT = "height";
             @Column(1)
             public static final String IMAGE_ID = "image_id";
-            public static final Uri INTERNAL_CONTENT_URI = getContentUri(MediaStore.VOLUME_INTERNAL);
             @Column(1)
             public static final String KIND = "kind";
             public static final int MICRO_KIND = 3;
             public static final int MINI_KIND = 1;
-            @Deprecated
             @Column(4)
+            @Deprecated
             public static final String THUMB_DATA = "thumb_data";
             @Column(readOnly = true, value = 1)
             public static final String WIDTH = "width";
+            public static final Uri INTERNAL_CONTENT_URI = getContentUri(MediaStore.VOLUME_INTERNAL);
+            public static final Uri EXTERNAL_CONTENT_URI = getContentUri(MediaStore.VOLUME_EXTERNAL);
 
             @Deprecated
             public static final Cursor query(ContentResolver cr, Uri uri, String[] projection) {
-                return cr.query(uri, projection, (String) null, (String[]) null, DEFAULT_SORT_ORDER);
+                return cr.query(uri, projection, null, null, DEFAULT_SORT_ORDER);
             }
 
             @Deprecated
             public static final Cursor queryMiniThumbnails(ContentResolver cr, Uri uri, int kind, String[] projection) {
-                return cr.query(uri, projection, "kind = " + kind, (String[]) null, DEFAULT_SORT_ORDER);
+                return cr.query(uri, projection, "kind = " + kind, null, DEFAULT_SORT_ORDER);
             }
 
             @Deprecated
             public static final Cursor queryMiniThumbnail(ContentResolver cr, long origId, int kind, String[] projection) {
                 Uri uri = EXTERNAL_CONTENT_URI;
-                return cr.query(uri, projection, "image_id = " + origId + " AND " + "kind" + " = " + kind, (String[]) null, (String) null);
+                return cr.query(uri, projection, "image_id = " + origId + " AND kind = " + kind, null, null);
             }
 
             @Deprecated
             public static void cancelThumbnailRequest(ContentResolver cr, long origId) {
-                InternalThumbnails.cancelThumbnail(cr, ContentUris.withAppendedId(Media.EXTERNAL_CONTENT_URI, origId));
+                Uri uri = ContentUris.withAppendedId(Media.EXTERNAL_CONTENT_URI, origId);
+                InternalThumbnails.cancelThumbnail(cr, uri);
             }
 
             @Deprecated
             public static Bitmap getThumbnail(ContentResolver cr, long imageId, int kind, BitmapFactory.Options options) {
-                return InternalThumbnails.getThumbnail(cr, ContentUris.withAppendedId(Media.EXTERNAL_CONTENT_URI, imageId), kind, options);
+                Uri uri = ContentUris.withAppendedId(Media.EXTERNAL_CONTENT_URI, imageId);
+                return InternalThumbnails.getThumbnail(cr, uri, kind, options);
             }
 
             @Deprecated
@@ -892,13 +842,15 @@ public final class MediaStore {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class Audio {
 
+        /* loaded from: classes3.dex */
         public interface AlbumColumns {
             @Column(readOnly = true, value = 3)
             public static final String ALBUM = "album";
-            @Deprecated
             @Column(3)
+            @Deprecated
             public static final String ALBUM_ART = "album_art";
             @Column(readOnly = true, value = 1)
             public static final String ALBUM_ID = "album_id";
@@ -918,6 +870,7 @@ public final class MediaStore {
             public static final String NUMBER_OF_SONGS_FOR_ARTIST = "numsongs_by_artist";
         }
 
+        /* loaded from: classes3.dex */
         public interface ArtistColumns {
             @Column(readOnly = true, value = 3)
             public static final String ARTIST = "artist";
@@ -929,6 +882,7 @@ public final class MediaStore {
             public static final String NUMBER_OF_TRACKS = "number_of_tracks";
         }
 
+        /* loaded from: classes3.dex */
         public interface AudioColumns extends MediaColumns {
             @Column(readOnly = true, value = 3)
             public static final String ALBUM = "album";
@@ -975,14 +929,16 @@ public final class MediaStore {
             public static final String YEAR = "year";
         }
 
+        /* loaded from: classes3.dex */
         public interface GenresColumns {
             @Column(3)
             public static final String NAME = "name";
         }
 
+        /* loaded from: classes3.dex */
         public interface PlaylistsColumns {
-            @Deprecated
             @Column(3)
+            @Deprecated
             public static final String DATA = "_data";
             @Column(readOnly = true, value = 1)
             public static final String DATE_ADDED = "date_added";
@@ -993,64 +949,66 @@ public final class MediaStore {
         }
 
         @Deprecated
+        /* loaded from: classes3.dex */
         public static class Thumbnails implements BaseColumns {
             @Column(1)
             public static final String ALBUM_ID = "album_id";
-            @Deprecated
             @Column(3)
+            @Deprecated
             public static final String DATA = "_data";
         }
 
         public static String keyFor(String name) {
-            if (name == null) {
-                return null;
-            }
-            boolean sortfirst = false;
-            if (name.equals(MediaStore.UNKNOWN_STRING)) {
-                return "\u0001";
-            }
-            if (name.startsWith("\u0001")) {
-                sortfirst = true;
-            }
-            String name2 = name.trim().toLowerCase();
-            if (name2.startsWith("the ")) {
-                name2 = name2.substring(4);
-            }
-            if (name2.startsWith("an ")) {
-                name2 = name2.substring(3);
-            }
-            if (name2.startsWith("a ")) {
-                name2 = name2.substring(2);
-            }
-            if (name2.endsWith(", the") || name2.endsWith(",the") || name2.endsWith(", an") || name2.endsWith(",an") || name2.endsWith(", a") || name2.endsWith(",a")) {
-                name2 = name2.substring(0, name2.lastIndexOf(44));
-            }
-            String name3 = name2.replaceAll("[\\[\\]\\(\\)\"'.,?!]", "").trim();
-            if (name3.length() <= 0) {
+            if (name != null) {
+                boolean sortfirst = false;
+                if (name.equals(MediaStore.UNKNOWN_STRING)) {
+                    return "\u0001";
+                }
+                if (name.startsWith("\u0001")) {
+                    sortfirst = true;
+                }
+                String name2 = name.trim().toLowerCase();
+                if (name2.startsWith("the ")) {
+                    name2 = name2.substring(4);
+                }
+                if (name2.startsWith("an ")) {
+                    name2 = name2.substring(3);
+                }
+                if (name2.startsWith("a ")) {
+                    name2 = name2.substring(2);
+                }
+                if (name2.endsWith(", the") || name2.endsWith(",the") || name2.endsWith(", an") || name2.endsWith(",an") || name2.endsWith(", a") || name2.endsWith(",a")) {
+                    name2 = name2.substring(0, name2.lastIndexOf(44));
+                }
+                String name3 = name2.replaceAll("[\\[\\]\\(\\)\"'.,?!]", "").trim();
+                if (name3.length() > 0) {
+                    StringBuilder b = new StringBuilder();
+                    b.append('.');
+                    int nl = name3.length();
+                    for (int i = 0; i < nl; i++) {
+                        b.append(name3.charAt(i));
+                        b.append('.');
+                    }
+                    String key = DatabaseUtils.getCollationKey(b.toString());
+                    if (sortfirst) {
+                        return "\u0001" + key;
+                    }
+                    return key;
+                }
                 return "";
             }
-            StringBuilder b = new StringBuilder();
-            b.append('.');
-            int nl = name3.length();
-            for (int i = 0; i < nl; i++) {
-                b.append(name3.charAt(i));
-                b.append('.');
-            }
-            String key = DatabaseUtils.getCollationKey(b.toString());
-            if (!sortfirst) {
-                return key;
-            }
-            return "\u0001" + key;
+            return null;
         }
 
+        /* loaded from: classes3.dex */
         public static final class Media implements AudioColumns {
             public static final String CONTENT_TYPE = "vnd.android.cursor.dir/audio";
             public static final String DEFAULT_SORT_ORDER = "title_key";
             public static final String ENTRY_CONTENT_TYPE = "vnd.android.cursor.item/audio";
-            public static final Uri EXTERNAL_CONTENT_URI = getContentUri(MediaStore.VOLUME_EXTERNAL);
             public static final String EXTRA_MAX_BYTES = "android.provider.MediaStore.extra.MAX_BYTES";
-            public static final Uri INTERNAL_CONTENT_URI = getContentUri(MediaStore.VOLUME_INTERNAL);
             public static final String RECORD_SOUND_ACTION = "android.provider.MediaStore.RECORD_SOUND";
+            public static final Uri INTERNAL_CONTENT_URI = getContentUri(MediaStore.VOLUME_INTERNAL);
+            public static final Uri EXTERNAL_CONTENT_URI = getContentUri(MediaStore.VOLUME_EXTERNAL);
 
             public static Uri getContentUri(String volumeName) {
                 return MediaStore.AUTHORITY_URI.buildUpon().appendPath(volumeName).appendPath("audio").appendPath(MediaStore.AUTHORITY).build();
@@ -1066,21 +1024,23 @@ public final class MediaStore {
             }
         }
 
+        /* loaded from: classes3.dex */
         public static final class Genres implements BaseColumns, GenresColumns {
             public static final String CONTENT_TYPE = "vnd.android.cursor.dir/genre";
             public static final String DEFAULT_SORT_ORDER = "name";
             public static final String ENTRY_CONTENT_TYPE = "vnd.android.cursor.item/genre";
-            public static final Uri EXTERNAL_CONTENT_URI = getContentUri(MediaStore.VOLUME_EXTERNAL);
             public static final Uri INTERNAL_CONTENT_URI = getContentUri(MediaStore.VOLUME_INTERNAL);
+            public static final Uri EXTERNAL_CONTENT_URI = getContentUri(MediaStore.VOLUME_EXTERNAL);
 
             public static Uri getContentUri(String volumeName) {
                 return MediaStore.AUTHORITY_URI.buildUpon().appendPath(volumeName).appendPath("audio").appendPath("genres").build();
             }
 
             public static Uri getContentUriForAudioId(String volumeName, int audioId) {
-                return ContentUris.withAppendedId(Media.getContentUri(volumeName), (long) audioId).buildUpon().appendPath("genres").build();
+                return ContentUris.withAppendedId(Media.getContentUri(volumeName), audioId).buildUpon().appendPath("genres").build();
             }
 
+            /* loaded from: classes3.dex */
             public static final class Members implements AudioColumns {
                 @Column(1)
                 public static final String AUDIO_ID = "audio_id";
@@ -1095,17 +1055,19 @@ public final class MediaStore {
             }
         }
 
+        /* loaded from: classes3.dex */
         public static final class Playlists implements BaseColumns, PlaylistsColumns {
             public static final String CONTENT_TYPE = "vnd.android.cursor.dir/playlist";
             public static final String DEFAULT_SORT_ORDER = "name";
             public static final String ENTRY_CONTENT_TYPE = "vnd.android.cursor.item/playlist";
-            public static final Uri EXTERNAL_CONTENT_URI = getContentUri(MediaStore.VOLUME_EXTERNAL);
             public static final Uri INTERNAL_CONTENT_URI = getContentUri(MediaStore.VOLUME_INTERNAL);
+            public static final Uri EXTERNAL_CONTENT_URI = getContentUri(MediaStore.VOLUME_EXTERNAL);
 
             public static Uri getContentUri(String volumeName) {
                 return MediaStore.AUTHORITY_URI.buildUpon().appendPath(volumeName).appendPath("audio").appendPath("playlists").build();
             }
 
+            /* loaded from: classes3.dex */
             public static final class Members implements AudioColumns {
                 @Column(1)
                 public static final String AUDIO_ID = "audio_id";
@@ -1126,22 +1088,24 @@ public final class MediaStore {
                     Uri uri = getContentUri(MediaStore.VOLUME_EXTERNAL, playlistId).buildUpon().appendEncodedPath(String.valueOf(from)).appendQueryParameter("move", "true").build();
                     ContentValues values = new ContentValues();
                     values.put("play_order", Integer.valueOf(to));
-                    return res.update(uri, values, (String) null, (String[]) null) != 0;
+                    return res.update(uri, values, null, null) != 0;
                 }
             }
         }
 
+        /* loaded from: classes3.dex */
         public static final class Artists implements BaseColumns, ArtistColumns {
             public static final String CONTENT_TYPE = "vnd.android.cursor.dir/artists";
             public static final String DEFAULT_SORT_ORDER = "artist_key";
             public static final String ENTRY_CONTENT_TYPE = "vnd.android.cursor.item/artist";
-            public static final Uri EXTERNAL_CONTENT_URI = getContentUri(MediaStore.VOLUME_EXTERNAL);
             public static final Uri INTERNAL_CONTENT_URI = getContentUri(MediaStore.VOLUME_INTERNAL);
+            public static final Uri EXTERNAL_CONTENT_URI = getContentUri(MediaStore.VOLUME_EXTERNAL);
 
             public static Uri getContentUri(String volumeName) {
                 return MediaStore.AUTHORITY_URI.buildUpon().appendPath(volumeName).appendPath("audio").appendPath("artists").build();
             }
 
+            /* loaded from: classes3.dex */
             public static final class Albums implements AlbumColumns {
                 public static final Uri getContentUri(String volumeName, long artistId) {
                     return ContentUris.withAppendedId(Artists.getContentUri(volumeName), artistId).buildUpon().appendPath("albums").build();
@@ -1149,18 +1113,20 @@ public final class MediaStore {
             }
         }
 
+        /* loaded from: classes3.dex */
         public static final class Albums implements BaseColumns, AlbumColumns {
             public static final String CONTENT_TYPE = "vnd.android.cursor.dir/albums";
             public static final String DEFAULT_SORT_ORDER = "album_key";
             public static final String ENTRY_CONTENT_TYPE = "vnd.android.cursor.item/album";
-            public static final Uri EXTERNAL_CONTENT_URI = getContentUri(MediaStore.VOLUME_EXTERNAL);
             public static final Uri INTERNAL_CONTENT_URI = getContentUri(MediaStore.VOLUME_INTERNAL);
+            public static final Uri EXTERNAL_CONTENT_URI = getContentUri(MediaStore.VOLUME_EXTERNAL);
 
             public static Uri getContentUri(String volumeName) {
                 return MediaStore.AUTHORITY_URI.buildUpon().appendPath(volumeName).appendPath("audio").appendPath("albums").build();
             }
         }
 
+        /* loaded from: classes3.dex */
         public static final class Radio {
             public static final String ENTRY_CONTENT_TYPE = "vnd.android.cursor.item/radio";
 
@@ -1169,9 +1135,11 @@ public final class MediaStore {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class Video {
         public static final String DEFAULT_SORT_ORDER = "_display_name";
 
+        /* loaded from: classes3.dex */
         public interface VideoColumns extends MediaColumns {
             @Column(readOnly = true, value = 3)
             public static final String ALBUM = "album";
@@ -1198,14 +1166,14 @@ public final class MediaStore {
             public static final String IS_PRIVATE = "isprivate";
             @Column(3)
             public static final String LANGUAGE = "language";
-            @Deprecated
             @Column(readOnly = true, value = 2)
+            @Deprecated
             public static final String LATITUDE = "latitude";
-            @Deprecated
             @Column(readOnly = true, value = 2)
-            public static final String LONGITUDE = "longitude";
             @Deprecated
+            public static final String LONGITUDE = "longitude";
             @Column(1)
+            @Deprecated
             public static final String MINI_THUMB_MAGIC = "mini_thumb_magic";
             @Column(readOnly = true, value = 3)
             public static final String RESOLUTION = "resolution";
@@ -1215,14 +1183,15 @@ public final class MediaStore {
 
         @Deprecated
         public static final Cursor query(ContentResolver cr, Uri uri, String[] projection) {
-            return cr.query(uri, projection, (String) null, (String[]) null, "_display_name");
+            return cr.query(uri, projection, null, null, "_display_name");
         }
 
+        /* loaded from: classes3.dex */
         public static final class Media implements VideoColumns {
             public static final String CONTENT_TYPE = "vnd.android.cursor.dir/video";
             public static final String DEFAULT_SORT_ORDER = "title";
-            public static final Uri EXTERNAL_CONTENT_URI = getContentUri(MediaStore.VOLUME_EXTERNAL);
             public static final Uri INTERNAL_CONTENT_URI = getContentUri(MediaStore.VOLUME_INTERNAL);
+            public static final Uri EXTERNAL_CONTENT_URI = getContentUri(MediaStore.VOLUME_EXTERNAL);
 
             public static Uri getContentUri(String volumeName) {
                 return MediaStore.AUTHORITY_URI.buildUpon().appendPath(volumeName).appendPath("video").appendPath(MediaStore.AUTHORITY).build();
@@ -1234,16 +1203,15 @@ public final class MediaStore {
         }
 
         @Deprecated
+        /* loaded from: classes3.dex */
         public static class Thumbnails implements BaseColumns {
-            @Deprecated
             @Column(3)
+            @Deprecated
             public static final String DATA = "_data";
             public static final String DEFAULT_SORT_ORDER = "video_id ASC";
-            public static final Uri EXTERNAL_CONTENT_URI = getContentUri(MediaStore.VOLUME_EXTERNAL);
             public static final int FULL_SCREEN_KIND = 2;
             @Column(readOnly = true, value = 1)
             public static final String HEIGHT = "height";
-            public static final Uri INTERNAL_CONTENT_URI = getContentUri(MediaStore.VOLUME_INTERNAL);
             @Column(1)
             public static final String KIND = "kind";
             public static final int MICRO_KIND = 3;
@@ -1252,15 +1220,19 @@ public final class MediaStore {
             public static final String VIDEO_ID = "video_id";
             @Column(readOnly = true, value = 1)
             public static final String WIDTH = "width";
+            public static final Uri INTERNAL_CONTENT_URI = getContentUri(MediaStore.VOLUME_INTERNAL);
+            public static final Uri EXTERNAL_CONTENT_URI = getContentUri(MediaStore.VOLUME_EXTERNAL);
 
             @Deprecated
             public static void cancelThumbnailRequest(ContentResolver cr, long origId) {
-                InternalThumbnails.cancelThumbnail(cr, ContentUris.withAppendedId(Media.EXTERNAL_CONTENT_URI, origId));
+                Uri uri = ContentUris.withAppendedId(Media.EXTERNAL_CONTENT_URI, origId);
+                InternalThumbnails.cancelThumbnail(cr, uri);
             }
 
             @Deprecated
             public static Bitmap getThumbnail(ContentResolver cr, long videoId, int kind, BitmapFactory.Options options) {
-                return InternalThumbnails.getThumbnail(cr, ContentUris.withAppendedId(Media.EXTERNAL_CONTENT_URI, videoId), kind, options);
+                Uri uri = ContentUris.withAppendedId(Media.EXTERNAL_CONTENT_URI, videoId);
+                return InternalThumbnails.getThumbnail(cr, uri, kind, options);
             }
 
             @Deprecated
@@ -1285,8 +1257,9 @@ public final class MediaStore {
     }
 
     public static Set<String> getExternalVolumeNames(Context context) {
+        StorageManager sm = (StorageManager) context.getSystemService(StorageManager.class);
         Set<String> volumeNames = new ArraySet<>();
-        for (VolumeInfo vi : ((StorageManager) context.getSystemService(StorageManager.class)).getVolumes()) {
+        for (VolumeInfo vi : sm.getVolumes()) {
             if (vi.isVisibleForUser(UserHandle.myUserId()) && vi.isMountedReadable()) {
                 if (vi.isPrimary()) {
                     volumeNames.add(VOLUME_EXTERNAL_PRIMARY);
@@ -1309,89 +1282,97 @@ public final class MediaStore {
     public static String checkArgumentVolumeName(String volumeName) {
         if (TextUtils.isEmpty(volumeName)) {
             throw new IllegalArgumentException();
-        } else if (VOLUME_INTERNAL.equals(volumeName) || VOLUME_EXTERNAL.equals(volumeName) || VOLUME_EXTERNAL_PRIMARY.equals(volumeName)) {
-            return volumeName;
-        } else {
-            for (int i = 0; i < volumeName.length(); i++) {
-                char c = volumeName.charAt(i);
-                Log.d(TAG, "checkArgumentVolumeName  c = " + c + "   volumeName.length() = " + volumeName.length());
-                if (('a' > c || c > 'z') && (('0' > c || c > '9') && c != '-')) {
-                    Log.e(TAG, "checkArgumentVolumeName  error  c = " + c);
-                    throw new IllegalArgumentException("Invalid volume name: " + volumeName);
-                }
-            }
+        }
+        if (VOLUME_INTERNAL.equals(volumeName)) {
             return volumeName;
         }
+        if (VOLUME_EXTERNAL.equals(volumeName)) {
+            return volumeName;
+        }
+        if (VOLUME_EXTERNAL_PRIMARY.equals(volumeName)) {
+            return volumeName;
+        }
+        for (int i = 0; i < volumeName.length(); i++) {
+            char c = volumeName.charAt(i);
+            Log.m72d(TAG, "checkArgumentVolumeName  c = " + c + "   volumeName.length() = " + volumeName.length());
+            if (('a' > c || c > 'z') && (('0' > c || c > '9') && c != '-')) {
+                Log.m70e(TAG, "checkArgumentVolumeName  error  c = " + c);
+                throw new IllegalArgumentException("Invalid volume name: " + volumeName);
+            }
+        }
+        return volumeName;
     }
 
     public static File getVolumePath(String volumeName) throws FileNotFoundException {
-        return getVolumePath(((StorageManager) AppGlobals.getInitialApplication().getSystemService(StorageManager.class)).getVolumes(), volumeName);
+        StorageManager sm = (StorageManager) AppGlobals.getInitialApplication().getSystemService(StorageManager.class);
+        return getVolumePath(sm.getVolumes(), volumeName);
     }
 
     public static File getVolumePath(List<VolumeInfo> volumes, String volumeName) throws FileNotFoundException {
-        File path;
-        if (!TextUtils.isEmpty(volumeName)) {
-            char c = 65535;
-            int hashCode = volumeName.hashCode();
-            if (hashCode != -1820761141) {
-                if (hashCode == 570410685 && volumeName.equals(VOLUME_INTERNAL)) {
-                    c = 0;
-                }
-            } else if (volumeName.equals(VOLUME_EXTERNAL)) {
-                c = 1;
+        if (TextUtils.isEmpty(volumeName)) {
+            throw new IllegalArgumentException();
+        }
+        char c = '\uffff';
+        int hashCode = volumeName.hashCode();
+        if (hashCode != -1820761141) {
+            if (hashCode == 570410685 && volumeName.equals(VOLUME_INTERNAL)) {
+                c = 0;
             }
-            switch (c) {
-                case 0:
-                case 1:
-                    throw new FileNotFoundException(volumeName + " has no associated path");
-                default:
-                    boolean wantPrimary = VOLUME_EXTERNAL_PRIMARY.equals(volumeName);
-                    for (VolumeInfo volume : volumes) {
-                        boolean matchPrimary = wantPrimary && volume.isPrimary();
-                        boolean matchSecondary = !wantPrimary && Objects.equals(volume.getNormalizedFsUuid(), volumeName);
-                        if ((matchPrimary || matchSecondary) && (path = volume.getPathForUser(UserHandle.myUserId())) != null) {
+        } else if (volumeName.equals(VOLUME_EXTERNAL)) {
+            c = 1;
+        }
+        switch (c) {
+            case 0:
+            case 1:
+                throw new FileNotFoundException(volumeName + " has no associated path");
+            default:
+                boolean wantPrimary = VOLUME_EXTERNAL_PRIMARY.equals(volumeName);
+                for (VolumeInfo volume : volumes) {
+                    boolean matchPrimary = wantPrimary && volume.isPrimary();
+                    boolean matchSecondary = !wantPrimary && Objects.equals(volume.getNormalizedFsUuid(), volumeName);
+                    if (matchPrimary || matchSecondary) {
+                        File path = volume.getPathForUser(UserHandle.myUserId());
+                        if (path != null) {
                             return path;
                         }
                     }
-                    throw new FileNotFoundException("Failed to find path for " + volumeName);
-            }
-        } else {
-            throw new IllegalArgumentException();
+                }
+                throw new FileNotFoundException("Failed to find path for " + volumeName);
         }
     }
 
     public static Collection<File> getVolumeScanPaths(String volumeName) throws FileNotFoundException {
-        if (!TextUtils.isEmpty(volumeName)) {
-            Context context = AppGlobals.getInitialApplication();
-            UserManager um = (UserManager) context.getSystemService(UserManager.class);
-            ArrayList<File> res = new ArrayList<>();
-            if (VOLUME_INTERNAL.equals(volumeName)) {
-                addCanonicalFile(res, new File(Environment.getRootDirectory(), AUTHORITY));
-                addCanonicalFile(res, new File(Environment.getOemDirectory(), AUTHORITY));
-                addCanonicalFile(res, new File(Environment.getProductDirectory(), AUTHORITY));
-            } else if (VOLUME_EXTERNAL.equals(volumeName)) {
-                for (String exactVolume : getExternalVolumeNames(context)) {
-                    addCanonicalFile(res, getVolumePath(exactVolume));
-                }
-                if (um.isDemoUser()) {
-                    addCanonicalFile(res, Environment.getDataPreloadsMediaDirectory());
-                }
-            } else {
-                addCanonicalFile(res, getVolumePath(volumeName));
-                if (VOLUME_EXTERNAL_PRIMARY.equals(volumeName) && um.isDemoUser()) {
-                    addCanonicalFile(res, Environment.getDataPreloadsMediaDirectory());
-                }
-            }
-            return res;
+        if (TextUtils.isEmpty(volumeName)) {
+            throw new IllegalArgumentException();
         }
-        throw new IllegalArgumentException();
+        Context context = AppGlobals.getInitialApplication();
+        UserManager um = (UserManager) context.getSystemService(UserManager.class);
+        ArrayList<File> res = new ArrayList<>();
+        if (VOLUME_INTERNAL.equals(volumeName)) {
+            addCanonicalFile(res, new File(Environment.getRootDirectory(), AUTHORITY));
+            addCanonicalFile(res, new File(Environment.getOemDirectory(), AUTHORITY));
+            addCanonicalFile(res, new File(Environment.getProductDirectory(), AUTHORITY));
+        } else if (VOLUME_EXTERNAL.equals(volumeName)) {
+            for (String exactVolume : getExternalVolumeNames(context)) {
+                addCanonicalFile(res, getVolumePath(exactVolume));
+            }
+            if (um.isDemoUser()) {
+                addCanonicalFile(res, Environment.getDataPreloadsMediaDirectory());
+            }
+        } else {
+            addCanonicalFile(res, getVolumePath(volumeName));
+            if (VOLUME_EXTERNAL_PRIMARY.equals(volumeName) && um.isDemoUser()) {
+                addCanonicalFile(res, Environment.getDataPreloadsMediaDirectory());
+            }
+        }
+        return res;
     }
 
     private static void addCanonicalFile(List<File> list, File file) {
         try {
             list.add(file.getCanonicalFile());
         } catch (IOException e) {
-            Log.w(TAG, "Failed to resolve " + file + PluralRules.KEYWORD_RULE_SEPARATOR + e);
+            Log.m64w(TAG, "Failed to resolve " + file + PluralRules.KEYWORD_RULE_SEPARATOR + e);
             list.add(file);
         }
     }
@@ -1405,114 +1386,102 @@ public final class MediaStore {
     }
 
     public static String getVersion(Context context, String volumeName) {
-        ContentProviderClient client;
+        ContentResolver resolver = context.getContentResolver();
         try {
-            client = context.getContentResolver().acquireContentProviderClient(AUTHORITY);
+            ContentProviderClient client = resolver.acquireContentProviderClient(AUTHORITY);
             Bundle in = new Bundle();
             in.putString(Intent.EXTRA_TEXT, volumeName);
-            String string = client.call(GET_VERSION_CALL, (String) null, in).getString(Intent.EXTRA_TEXT);
+            Bundle out = client.call(GET_VERSION_CALL, null, in);
+            String string = out.getString(Intent.EXTRA_TEXT);
             if (client != null) {
-                $closeResource((Throwable) null, client);
+                $closeResource(null, client);
             }
             return string;
         } catch (RemoteException e) {
             throw e.rethrowAsRuntimeException();
-        } catch (Throwable th) {
-            if (client != null) {
-                $closeResource(r2, client);
-            }
-            throw th;
         }
     }
 
     private static /* synthetic */ void $closeResource(Throwable x0, AutoCloseable x1) {
-        if (x0 != null) {
-            try {
-                x1.close();
-            } catch (Throwable th) {
-                x0.addSuppressed(th);
-            }
-        } else {
+        if (x0 == null) {
             x1.close();
+            return;
+        }
+        try {
+            x1.close();
+        } catch (Throwable th) {
+            x0.addSuppressed(th);
         }
     }
 
     public static Uri getDocumentUri(Context context, Uri mediaUri) {
-        ContentProviderClient client;
         ContentResolver resolver = context.getContentResolver();
         List<UriPermission> uriPermissions = resolver.getPersistedUriPermissions();
         try {
-            client = resolver.acquireContentProviderClient(AUTHORITY);
+            ContentProviderClient client = resolver.acquireContentProviderClient(AUTHORITY);
             Bundle in = new Bundle();
             in.putParcelable("uri", mediaUri);
             in.putParcelableList(DocumentsContract.EXTRA_URI_PERMISSIONS, uriPermissions);
-            Uri uri = (Uri) client.call(GET_DOCUMENT_URI_CALL, (String) null, in).getParcelable("uri");
+            Bundle out = client.call(GET_DOCUMENT_URI_CALL, null, in);
+            Uri uri = (Uri) out.getParcelable("uri");
             if (client != null) {
-                $closeResource((Throwable) null, client);
+                $closeResource(null, client);
             }
             return uri;
         } catch (RemoteException e) {
             throw e.rethrowAsRuntimeException();
-        } catch (Throwable th) {
-            if (client != null) {
-                $closeResource(r3, client);
-            }
-            throw th;
         }
     }
 
     public static Uri getMediaUri(Context context, Uri documentUri) {
-        ContentProviderClient client;
         ContentResolver resolver = context.getContentResolver();
         List<UriPermission> uriPermissions = resolver.getPersistedUriPermissions();
         try {
-            client = resolver.acquireContentProviderClient(AUTHORITY);
+            ContentProviderClient client = resolver.acquireContentProviderClient(AUTHORITY);
             Bundle in = new Bundle();
             in.putParcelable("uri", documentUri);
             in.putParcelableList(DocumentsContract.EXTRA_URI_PERMISSIONS, uriPermissions);
-            Uri uri = (Uri) client.call(GET_MEDIA_URI_CALL, (String) null, in).getParcelable("uri");
+            Bundle out = client.call(GET_MEDIA_URI_CALL, null, in);
+            Uri uri = (Uri) out.getParcelable("uri");
             if (client != null) {
-                $closeResource((Throwable) null, client);
+                $closeResource(null, client);
             }
             return uri;
         } catch (RemoteException e) {
             throw e.rethrowAsRuntimeException();
-        } catch (Throwable th) {
-            if (client != null) {
-                $closeResource(r3, client);
-            }
-            throw th;
         }
     }
 
     public static long getContributedMediaSize(Context context, String packageName, UserHandle user) throws IOException {
         UserManager um = (UserManager) context.getSystemService(UserManager.class);
-        if (!um.isUserUnlocked(user) || !um.isUserRunning(user)) {
-            throw new IOException("User " + user + " must be unlocked and running");
+        if (um.isUserUnlocked(user) && um.isUserRunning(user)) {
+            try {
+                ContentResolver resolver = context.createPackageContextAsUser(packageName, 0, user).getContentResolver();
+                Bundle in = new Bundle();
+                in.putString("android.intent.extra.PACKAGE_NAME", packageName);
+                Bundle out = resolver.call(AUTHORITY, GET_CONTRIBUTED_MEDIA_CALL, (String) null, in);
+                return out.getLong(Intent.EXTRA_INDEX);
+            } catch (Exception e) {
+                throw new IOException(e);
+            }
         }
-        try {
-            ContentResolver resolver = context.createPackageContextAsUser(packageName, 0, user).getContentResolver();
-            Bundle in = new Bundle();
-            in.putString("android.intent.extra.PACKAGE_NAME", packageName);
-            return resolver.call(AUTHORITY, GET_CONTRIBUTED_MEDIA_CALL, (String) null, in).getLong(Intent.EXTRA_INDEX);
-        } catch (Exception e) {
-            throw new IOException(e);
-        }
+        throw new IOException("User " + user + " must be unlocked and running");
     }
 
     public static void deleteContributedMedia(Context context, String packageName, UserHandle user) throws IOException {
         UserManager um = (UserManager) context.getSystemService(UserManager.class);
-        if (!um.isUserUnlocked(user) || !um.isUserRunning(user)) {
-            throw new IOException("User " + user + " must be unlocked and running");
+        if (um.isUserUnlocked(user) && um.isUserRunning(user)) {
+            try {
+                ContentResolver resolver = context.createPackageContextAsUser(packageName, 0, user).getContentResolver();
+                Bundle in = new Bundle();
+                in.putString("android.intent.extra.PACKAGE_NAME", packageName);
+                resolver.call(AUTHORITY, DELETE_CONTRIBUTED_MEDIA_CALL, (String) null, in);
+                return;
+            } catch (Exception e) {
+                throw new IOException(e);
+            }
         }
-        try {
-            ContentResolver resolver = context.createPackageContextAsUser(packageName, 0, user).getContentResolver();
-            Bundle in = new Bundle();
-            in.putString("android.intent.extra.PACKAGE_NAME", packageName);
-            resolver.call(AUTHORITY, DELETE_CONTRIBUTED_MEDIA_CALL, (String) null, in);
-        } catch (Exception e) {
-            throw new IOException(e);
-        }
+        throw new IOException("User " + user + " must be unlocked and running");
     }
 
     public static Uri scanFile(Context context, File file) {
@@ -1528,24 +1497,20 @@ public final class MediaStore {
     }
 
     private static Uri scan(Context context, String method, File file, boolean originatedFromShell) {
-        ContentProviderClient client;
+        ContentResolver resolver = context.getContentResolver();
         try {
-            client = context.getContentResolver().acquireContentProviderClient(AUTHORITY);
+            ContentProviderClient client = resolver.acquireContentProviderClient(AUTHORITY);
             Bundle in = new Bundle();
             in.putParcelable(Intent.EXTRA_STREAM, Uri.fromFile(file));
             in.putBoolean(EXTRA_ORIGINATED_FROM_SHELL, originatedFromShell);
-            Uri uri = (Uri) client.call(method, (String) null, in).getParcelable(Intent.EXTRA_STREAM);
+            Bundle out = client.call(method, null, in);
+            Uri uri = (Uri) out.getParcelable(Intent.EXTRA_STREAM);
             if (client != null) {
-                $closeResource((Throwable) null, client);
+                $closeResource(null, client);
             }
             return uri;
         } catch (RemoteException e) {
             throw e.rethrowAsRuntimeException();
-        } catch (Throwable th) {
-            if (client != null) {
-                $closeResource(r2, client);
-            }
-            throw th;
         }
     }
 }

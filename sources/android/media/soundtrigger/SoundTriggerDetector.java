@@ -5,11 +5,11 @@ import android.annotation.UnsupportedAppUsage;
 import android.hardware.soundtrigger.IRecognitionStatusCallback;
 import android.hardware.soundtrigger.SoundTrigger;
 import android.media.AudioFormat;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.os.ParcelUuid;
-import android.os.RemoteException;
+import android.p007os.Handler;
+import android.p007os.Looper;
+import android.p007os.Message;
+import android.p007os.ParcelUuid;
+import android.p007os.RemoteException;
 import android.util.Slog;
 import com.android.internal.app.ISoundTriggerService;
 import java.io.PrintWriter;
@@ -18,6 +18,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.UUID;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class SoundTriggerDetector {
     private static final boolean DBG = false;
     private static final int MSG_AVAILABILITY_CHANGED = 1;
@@ -29,15 +30,14 @@ public final class SoundTriggerDetector {
     public static final int RECOGNITION_FLAG_CAPTURE_TRIGGER_AUDIO = 1;
     public static final int RECOGNITION_FLAG_NONE = 0;
     private static final String TAG = "SoundTriggerDetector";
-    /* access modifiers changed from: private */
-    public final Callback mCallback;
-    /* access modifiers changed from: private */
-    public final Handler mHandler;
+    private final Callback mCallback;
+    private final Handler mHandler;
     private final Object mLock = new Object();
     private final RecognitionCallback mRecognitionCallback;
     private final UUID mSoundModelId;
     private final ISoundTriggerService mSoundTriggerService;
 
+    /* loaded from: classes3.dex */
     public static abstract class Callback {
         public abstract void onAvailabilityChanged(int i);
 
@@ -51,9 +51,11 @@ public final class SoundTriggerDetector {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface RecognitionFlags {
     }
 
+    /* loaded from: classes3.dex */
     public static class EventPayload {
         private final AudioFormat mAudioFormat;
         private final boolean mCaptureAvailable;
@@ -110,11 +112,11 @@ public final class SoundTriggerDetector {
     }
 
     public boolean startRecognition(int recognitionFlags) {
+        boolean captureTriggerAudio = (recognitionFlags & 1) != 0;
+        boolean allowMultipleTriggers = (recognitionFlags & 2) != 0;
         try {
-            if (this.mSoundTriggerService.startRecognition(new ParcelUuid(this.mSoundModelId), this.mRecognitionCallback, new SoundTrigger.RecognitionConfig((recognitionFlags & 1) != 0, (recognitionFlags & 2) != 0, (SoundTrigger.KeyphraseRecognitionExtra[]) null, (byte[]) null)) == 0) {
-                return true;
-            }
-            return false;
+            int status = this.mSoundTriggerService.startRecognition(new ParcelUuid(this.mSoundModelId), this.mRecognitionCallback, new SoundTrigger.RecognitionConfig(captureTriggerAudio, allowMultipleTriggers, null, null));
+            return status == 0;
         } catch (RemoteException e) {
             return false;
         }
@@ -122,10 +124,8 @@ public final class SoundTriggerDetector {
 
     public boolean stopRecognition() {
         try {
-            if (this.mSoundTriggerService.stopRecognition(new ParcelUuid(this.mSoundModelId), this.mRecognitionCallback) == 0) {
-                return true;
-            }
-            return false;
+            int status = this.mSoundTriggerService.stopRecognition(new ParcelUuid(this.mSoundModelId), this.mRecognitionCallback);
+            return status == 0;
         } catch (RemoteException e) {
             return false;
         }
@@ -136,35 +136,42 @@ public final class SoundTriggerDetector {
         }
     }
 
+    /* loaded from: classes3.dex */
     private class RecognitionCallback extends IRecognitionStatusCallback.Stub {
         private RecognitionCallback() {
         }
 
+        @Override // android.hardware.soundtrigger.IRecognitionStatusCallback
         public void onGenericSoundTriggerDetected(SoundTrigger.GenericRecognitionEvent event) {
-            Slog.d(SoundTriggerDetector.TAG, "onGenericSoundTriggerDetected()" + event);
+            Slog.m58d(SoundTriggerDetector.TAG, "onGenericSoundTriggerDetected()" + event);
             Message.obtain(SoundTriggerDetector.this.mHandler, 2, new EventPayload(event.triggerInData, event.captureAvailable, event.captureFormat, event.captureSession, event.data)).sendToTarget();
         }
 
+        @Override // android.hardware.soundtrigger.IRecognitionStatusCallback
         public void onKeyphraseDetected(SoundTrigger.KeyphraseRecognitionEvent event) {
-            Slog.e(SoundTriggerDetector.TAG, "Ignoring onKeyphraseDetected() called for " + event);
+            Slog.m56e(SoundTriggerDetector.TAG, "Ignoring onKeyphraseDetected() called for " + event);
         }
 
+        @Override // android.hardware.soundtrigger.IRecognitionStatusCallback
         public void onError(int status) {
-            Slog.d(SoundTriggerDetector.TAG, "onError()" + status);
+            Slog.m58d(SoundTriggerDetector.TAG, "onError()" + status);
             SoundTriggerDetector.this.mHandler.sendEmptyMessage(3);
         }
 
+        @Override // android.hardware.soundtrigger.IRecognitionStatusCallback
         public void onRecognitionPaused() {
-            Slog.d(SoundTriggerDetector.TAG, "onRecognitionPaused()");
+            Slog.m58d(SoundTriggerDetector.TAG, "onRecognitionPaused()");
             SoundTriggerDetector.this.mHandler.sendEmptyMessage(4);
         }
 
+        @Override // android.hardware.soundtrigger.IRecognitionStatusCallback
         public void onRecognitionResumed() {
-            Slog.d(SoundTriggerDetector.TAG, "onRecognitionResumed()");
+            Slog.m58d(SoundTriggerDetector.TAG, "onRecognitionResumed()");
             SoundTriggerDetector.this.mHandler.sendEmptyMessage(5);
         }
     }
 
+    /* loaded from: classes3.dex */
     private class MyHandler extends Handler {
         MyHandler() {
         }
@@ -173,28 +180,28 @@ public final class SoundTriggerDetector {
             super(looper);
         }
 
+        @Override // android.p007os.Handler
         public void handleMessage(Message msg) {
-            if (SoundTriggerDetector.this.mCallback == null) {
-                Slog.w(SoundTriggerDetector.TAG, "Received message: " + msg.what + " for NULL callback.");
-                return;
+            if (SoundTriggerDetector.this.mCallback != null) {
+                switch (msg.what) {
+                    case 2:
+                        SoundTriggerDetector.this.mCallback.onDetected((EventPayload) msg.obj);
+                        return;
+                    case 3:
+                        SoundTriggerDetector.this.mCallback.onError();
+                        return;
+                    case 4:
+                        SoundTriggerDetector.this.mCallback.onRecognitionPaused();
+                        return;
+                    case 5:
+                        SoundTriggerDetector.this.mCallback.onRecognitionResumed();
+                        return;
+                    default:
+                        super.handleMessage(msg);
+                        return;
+                }
             }
-            switch (msg.what) {
-                case 2:
-                    SoundTriggerDetector.this.mCallback.onDetected((EventPayload) msg.obj);
-                    return;
-                case 3:
-                    SoundTriggerDetector.this.mCallback.onError();
-                    return;
-                case 4:
-                    SoundTriggerDetector.this.mCallback.onRecognitionPaused();
-                    return;
-                case 5:
-                    SoundTriggerDetector.this.mCallback.onRecognitionResumed();
-                    return;
-                default:
-                    super.handleMessage(msg);
-                    return;
-            }
+            Slog.m50w(SoundTriggerDetector.TAG, "Received message: " + msg.what + " for NULL callback.");
         }
     }
 }

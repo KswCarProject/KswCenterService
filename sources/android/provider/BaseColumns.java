@@ -1,5 +1,6 @@
 package android.provider;
 
+/* loaded from: classes3.dex */
 public interface BaseColumns {
     public static final String _COUNT = "_count";
     @Column(1)

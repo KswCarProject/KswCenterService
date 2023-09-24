@@ -4,10 +4,11 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.RectF;
 import android.util.AttributeSet;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.util.ArrayList;
 import java.util.List;
 
+/* loaded from: classes4.dex */
 public class AnimationSet extends Animation {
     private static final int PROPERTY_CHANGE_BOUNDS_MASK = 128;
     private static final int PROPERTY_DURATION_MASK = 32;
@@ -17,17 +18,20 @@ public class AnimationSet extends Animation {
     private static final int PROPERTY_REPEAT_MODE_MASK = 4;
     private static final int PROPERTY_SHARE_INTERPOLATOR_MASK = 16;
     private static final int PROPERTY_START_OFFSET_MASK = 8;
-    private ArrayList<Animation> mAnimations = new ArrayList<>();
+    private ArrayList<Animation> mAnimations;
     private boolean mDirty;
-    private int mFlags = 0;
+    private int mFlags;
     private boolean mHasAlpha;
     private long mLastEnd;
     private long[] mStoredOffsets;
-    private Transformation mTempTransformation = new Transformation();
+    private Transformation mTempTransformation;
 
     public AnimationSet(Context context, AttributeSet attrs) {
         super(context, attrs);
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.AnimationSet);
+        this.mFlags = 0;
+        this.mAnimations = new ArrayList<>();
+        this.mTempTransformation = new Transformation();
+        TypedArray a = context.obtainStyledAttributes(attrs, C3132R.styleable.AnimationSet);
         setFlag(16, a.getBoolean(1, true));
         init();
         if (context.getApplicationInfo().targetSdkVersion >= 14) {
@@ -51,19 +55,24 @@ public class AnimationSet extends Animation {
     }
 
     public AnimationSet(boolean shareInterpolator) {
+        this.mFlags = 0;
+        this.mAnimations = new ArrayList<>();
+        this.mTempTransformation = new Transformation();
         setFlag(16, shareInterpolator);
         init();
     }
 
-    /* access modifiers changed from: protected */
-    public AnimationSet clone() throws CloneNotSupportedException {
-        AnimationSet animation = (AnimationSet) super.clone();
+    /* JADX INFO: Access modifiers changed from: protected */
+    @Override // android.view.animation.Animation
+    /* renamed from: clone */
+    public AnimationSet mo181clone() throws CloneNotSupportedException {
+        AnimationSet animation = (AnimationSet) super.mo181clone();
         animation.mTempTransformation = new Transformation();
         animation.mAnimations = new ArrayList<>();
         int count = this.mAnimations.size();
         ArrayList<Animation> animations = this.mAnimations;
         for (int i = 0; i < count; i++) {
-            animation.mAnimations.add(animations.get(i).clone());
+            animation.mAnimations.add(animations.get(i).mo181clone());
         }
         return animation;
     }
@@ -77,29 +86,34 @@ public class AnimationSet extends Animation {
     }
 
     private void init() {
-        this.mStartTime = 0;
+        this.mStartTime = 0L;
     }
 
+    @Override // android.view.animation.Animation
     public void setFillAfter(boolean fillAfter) {
         this.mFlags |= 1;
         super.setFillAfter(fillAfter);
     }
 
+    @Override // android.view.animation.Animation
     public void setFillBefore(boolean fillBefore) {
         this.mFlags |= 2;
         super.setFillBefore(fillBefore);
     }
 
+    @Override // android.view.animation.Animation
     public void setRepeatMode(int repeatMode) {
         this.mFlags |= 4;
         super.setRepeatMode(repeatMode);
     }
 
+    @Override // android.view.animation.Animation
     public void setStartOffset(long startOffset) {
         this.mFlags |= 8;
         super.setStartOffset(startOffset);
     }
 
+    @Override // android.view.animation.Animation
     public boolean hasAlpha() {
         if (this.mDirty) {
             int i = 0;
@@ -110,17 +124,18 @@ public class AnimationSet extends Animation {
             while (true) {
                 if (i >= count) {
                     break;
-                } else if (animations.get(i).hasAlpha()) {
+                } else if (!animations.get(i).hasAlpha()) {
+                    i++;
+                } else {
                     this.mHasAlpha = true;
                     break;
-                } else {
-                    i++;
                 }
             }
         }
         return this.mHasAlpha;
     }
 
+    @Override // android.view.animation.Animation
     public void setDuration(long durationMillis) {
         this.mFlags |= 32;
         super.setDuration(durationMillis);
@@ -129,13 +144,11 @@ public class AnimationSet extends Animation {
 
     public void addAnimation(Animation a) {
         this.mAnimations.add(a);
-        boolean changeBounds = false;
-        if (((this.mFlags & 64) == 0) && a.willChangeTransformationMatrix()) {
+        boolean noMatrix = (this.mFlags & 64) == 0;
+        if (noMatrix && a.willChangeTransformationMatrix()) {
             this.mFlags |= 64;
         }
-        if ((this.mFlags & 128) == 0) {
-            changeBounds = true;
-        }
+        boolean changeBounds = (this.mFlags & 128) == 0;
         if (changeBounds && a.willChangeBounds()) {
             this.mFlags |= 128;
         }
@@ -151,25 +164,30 @@ public class AnimationSet extends Animation {
         this.mDirty = true;
     }
 
+    @Override // android.view.animation.Animation
     public void setStartTime(long startTimeMillis) {
         super.setStartTime(startTimeMillis);
         int count = this.mAnimations.size();
         ArrayList<Animation> animations = this.mAnimations;
         for (int i = 0; i < count; i++) {
-            animations.get(i).setStartTime(startTimeMillis);
+            Animation a = animations.get(i);
+            a.setStartTime(startTimeMillis);
         }
     }
 
+    @Override // android.view.animation.Animation
     public long getStartTime() {
         long startTime = Long.MAX_VALUE;
         int count = this.mAnimations.size();
         ArrayList<Animation> animations = this.mAnimations;
         for (int i = 0; i < count; i++) {
-            startTime = Math.min(startTime, animations.get(i).getStartTime());
+            Animation a = animations.get(i);
+            startTime = Math.min(startTime, a.getStartTime());
         }
         return startTime;
     }
 
+    @Override // android.view.animation.Animation
     public void restrictDuration(long durationMillis) {
         super.restrictDuration(durationMillis);
         ArrayList<Animation> animations = this.mAnimations;
@@ -179,24 +197,29 @@ public class AnimationSet extends Animation {
         }
     }
 
+    @Override // android.view.animation.Animation
     public long getDuration() {
         ArrayList<Animation> animations = this.mAnimations;
         int count = animations.size();
         long duration = 0;
         int i = 0;
-        if ((this.mFlags & 32) == 32) {
-            return this.mDuration;
+        boolean durationSet = (this.mFlags & 32) == 32;
+        if (durationSet) {
+            long duration2 = this.mDuration;
+            return duration2;
         }
         while (true) {
             int i2 = i;
-            if (i2 >= count) {
+            if (i2 < count) {
+                duration = Math.max(duration, animations.get(i2).getDuration());
+                i = i2 + 1;
+            } else {
                 return duration;
             }
-            duration = Math.max(duration, animations.get(i2).getDuration());
-            i = i2 + 1;
         }
     }
 
+    @Override // android.view.animation.Animation
     public long computeDurationHint() {
         long duration = 0;
         int count = this.mAnimations.size();
@@ -210,9 +233,10 @@ public class AnimationSet extends Animation {
         return duration;
     }
 
+    @Override // android.view.animation.Animation
     public void initializeInvalidateRegion(int left, int top, int right, int bottom) {
         RectF region = this.mPreviousRegion;
-        region.set((float) left, (float) top, (float) right, (float) bottom);
+        region.set(left, top, right, bottom);
         region.inset(-1.0f, -1.0f);
         if (this.mFillBefore) {
             int count = this.mAnimations.size();
@@ -224,17 +248,14 @@ public class AnimationSet extends Animation {
                 if (!a.isFillEnabled() || a.getFillBefore() || a.getStartOffset() == 0) {
                     temp.clear();
                     Interpolator interpolator = a.mInterpolator;
-                    float f = 0.0f;
-                    if (interpolator != null) {
-                        f = interpolator.getInterpolation(0.0f);
-                    }
-                    a.applyTransformation(f, temp);
+                    a.applyTransformation(interpolator != null ? interpolator.getInterpolation(0.0f) : 0.0f, temp);
                     previousTransformation.compose(temp);
                 }
             }
         }
     }
 
+    @Override // android.view.animation.Animation
     public boolean getTransformation(long currentTime, Transformation t) {
         int count = this.mAnimations.size();
         ArrayList<Animation> animations = this.mAnimations;
@@ -271,6 +292,7 @@ public class AnimationSet extends Animation {
         return more;
     }
 
+    @Override // android.view.animation.Animation
     public void scaleCurrentDuration(float scale) {
         ArrayList<Animation> animations = this.mAnimations;
         int count = animations.size();
@@ -279,19 +301,17 @@ public class AnimationSet extends Animation {
         }
     }
 
+    @Override // android.view.animation.Animation
     public void initialize(int width, int height, int parentWidth, int parentHeight) {
-        boolean fillAfterSet;
         boolean durationSet;
+        boolean fillAfterSet;
         super.initialize(width, height, parentWidth, parentHeight);
-        boolean startOffsetSet = true;
         boolean durationSet2 = (this.mFlags & 32) == 32;
         boolean fillAfterSet2 = (this.mFlags & 1) == 1;
         boolean fillBeforeSet = (this.mFlags & 2) == 2;
         boolean repeatModeSet = (this.mFlags & 4) == 4;
         boolean shareInterpolator = (this.mFlags & 16) == 16;
-        if ((this.mFlags & 8) != 8) {
-            startOffsetSet = false;
-        }
+        boolean startOffsetSet = (this.mFlags & 8) == 8;
         if (shareInterpolator) {
             ensureInterpolator();
         }
@@ -318,66 +338,59 @@ public class AnimationSet extends Animation {
         int i = 0;
         while (true) {
             int i2 = i;
-            if (i2 < count) {
-                Animation a = children.get(i2);
-                if (durationSet2) {
-                    a.setDuration(duration);
-                }
-                if (fillAfterSet2) {
-                    a.setFillAfter(fillAfter);
-                }
-                if (fillBeforeSet) {
-                    a.setFillBefore(fillBefore);
-                }
-                if (repeatModeSet) {
-                    a.setRepeatMode(repeatMode);
-                }
-                if (shareInterpolator) {
-                    a.setInterpolator(interpolator);
-                }
-                if (startOffsetSet2) {
-                    long offset = a.getStartOffset();
-                    durationSet = durationSet2;
-                    fillAfterSet = fillAfterSet2;
-                    a.setStartOffset(offset + startOffset);
-                    storedOffsets[i2] = offset;
-                } else {
-                    durationSet = durationSet2;
-                    fillAfterSet = fillAfterSet2;
-                }
-                a.initialize(width, height, parentWidth, parentHeight);
-                i = i2 + 1;
-                durationSet2 = durationSet;
-                fillAfterSet2 = fillAfterSet;
-                storedOffsets = storedOffsets;
-                fillBeforeSet = fillBeforeSet;
-            } else {
-                boolean z = fillAfterSet2;
-                long[] jArr2 = storedOffsets;
-                boolean z2 = fillBeforeSet;
-                int i3 = width;
-                int i4 = height;
-                int i5 = parentWidth;
-                int i6 = parentHeight;
+            if (i2 >= count) {
                 return;
             }
+            Animation a = children.get(i2);
+            if (durationSet2) {
+                a.setDuration(duration);
+            }
+            if (fillAfterSet2) {
+                a.setFillAfter(fillAfter);
+            }
+            if (fillBeforeSet) {
+                a.setFillBefore(fillBefore);
+            }
+            if (repeatModeSet) {
+                a.setRepeatMode(repeatMode);
+            }
+            if (shareInterpolator) {
+                a.setInterpolator(interpolator);
+            }
+            if (startOffsetSet2) {
+                long offset = a.getStartOffset();
+                durationSet = durationSet2;
+                fillAfterSet = fillAfterSet2;
+                a.setStartOffset(offset + startOffset);
+                storedOffsets[i2] = offset;
+            } else {
+                durationSet = durationSet2;
+                fillAfterSet = fillAfterSet2;
+            }
+            a.initialize(width, height, parentWidth, parentHeight);
+            i = i2 + 1;
+            durationSet2 = durationSet;
+            fillAfterSet2 = fillAfterSet;
+            storedOffsets = storedOffsets;
+            fillBeforeSet = fillBeforeSet;
         }
     }
 
+    @Override // android.view.animation.Animation
     public void reset() {
         super.reset();
         restoreChildrenStartOffset();
     }
 
-    /* access modifiers changed from: package-private */
-    public void restoreChildrenStartOffset() {
+    void restoreChildrenStartOffset() {
         long[] offsets = this.mStoredOffsets;
-        if (offsets != null) {
-            ArrayList<Animation> children = this.mAnimations;
-            int count = children.size();
-            for (int i = 0; i < count; i++) {
-                children.get(i).setStartOffset(offsets[i]);
-            }
+        if (offsets == null) {
+            return;
+        }
+        ArrayList<Animation> children = this.mAnimations;
+        int count = children.size();
+        for (int i = 0; i < count; i++) {
+            children.get(i).setStartOffset(offsets[i]);
         }
     }
 
@@ -385,10 +398,12 @@ public class AnimationSet extends Animation {
         return this.mAnimations;
     }
 
+    @Override // android.view.animation.Animation
     public boolean willChangeTransformationMatrix() {
         return (this.mFlags & 64) == 64;
     }
 
+    @Override // android.view.animation.Animation
     public boolean willChangeBounds() {
         return (this.mFlags & 128) == 128;
     }

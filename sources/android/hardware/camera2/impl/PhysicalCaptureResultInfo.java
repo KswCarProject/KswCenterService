@@ -1,14 +1,19 @@
 package android.hardware.camera2.impl;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public class PhysicalCaptureResultInfo implements Parcelable {
-    public static final Parcelable.Creator<PhysicalCaptureResultInfo> CREATOR = new Parcelable.Creator<PhysicalCaptureResultInfo>() {
+    public static final Parcelable.Creator<PhysicalCaptureResultInfo> CREATOR = new Parcelable.Creator<PhysicalCaptureResultInfo>() { // from class: android.hardware.camera2.impl.PhysicalCaptureResultInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PhysicalCaptureResultInfo createFromParcel(Parcel in) {
             return new PhysicalCaptureResultInfo(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PhysicalCaptureResultInfo[] newArray(int size) {
             return new PhysicalCaptureResultInfo[size];
         }
@@ -20,15 +25,17 @@ public class PhysicalCaptureResultInfo implements Parcelable {
         readFromParcel(in);
     }
 
-    public PhysicalCaptureResultInfo(String cameraId2, CameraMetadataNative cameraMetadata2) {
-        this.cameraId = cameraId2;
-        this.cameraMetadata = cameraMetadata2;
+    public PhysicalCaptureResultInfo(String cameraId, CameraMetadataNative cameraMetadata) {
+        this.cameraId = cameraId;
+        this.cameraMetadata = cameraMetadata;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.cameraId);
         this.cameraMetadata.writeToParcel(dest, flags);

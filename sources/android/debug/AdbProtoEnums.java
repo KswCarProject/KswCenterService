@@ -1,5 +1,6 @@
 package android.debug;
 
+/* loaded from: classes.dex */
 public final class AdbProtoEnums {
     public static final int AUTOMATICALLY_ALLOWED = 4;
     public static final int AWAITING_USER_APPROVAL = 1;

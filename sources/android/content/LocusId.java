@@ -1,16 +1,21 @@
 package android.content;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.util.Preconditions;
 import java.io.PrintWriter;
 
+/* loaded from: classes.dex */
 public final class LocusId implements Parcelable {
-    public static final Parcelable.Creator<LocusId> CREATOR = new Parcelable.Creator<LocusId>() {
+    public static final Parcelable.Creator<LocusId> CREATOR = new Parcelable.Creator<LocusId>() { // from class: android.content.LocusId.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public LocusId createFromParcel(Parcel parcel) {
             return new LocusId(parcel.readString());
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public LocusId[] newArray(int size) {
             return new LocusId[size];
         }
@@ -26,7 +31,8 @@ public final class LocusId implements Parcelable {
     }
 
     public int hashCode() {
-        return (1 * 31) + (this.mId == null ? 0 : this.mId.hashCode());
+        int result = (1 * 31) + (this.mId == null ? 0 : this.mId.hashCode());
+        return result;
     }
 
     public boolean equals(Object obj) {
@@ -61,10 +67,12 @@ public final class LocusId implements Parcelable {
         return size + "_chars";
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeString(this.mId);
     }

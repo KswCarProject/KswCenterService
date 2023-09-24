@@ -3,6 +3,7 @@ package android.database;
 import android.util.SparseArray;
 import java.util.Map;
 
+/* loaded from: classes.dex */
 public class RedactingCursor extends CrossProcessCursorWrapper {
     private final SparseArray<Object> mRedactions;
 
@@ -19,24 +20,29 @@ public class RedactingCursor extends CrossProcessCursorWrapper {
                 internalRedactions.put(i, redactions.get(columns[i]));
             }
         }
-        if (internalRedactions.size() == 0) {
+        int i2 = internalRedactions.size();
+        if (i2 == 0) {
             return cursor;
         }
         return new RedactingCursor(cursor, internalRedactions);
     }
 
+    @Override // android.database.CrossProcessCursorWrapper, android.database.CrossProcessCursor
     public void fillWindow(int position, CursorWindow window) {
         DatabaseUtils.cursorFillWindow(this, position, window);
     }
 
+    @Override // android.database.CrossProcessCursorWrapper, android.database.CrossProcessCursor
     public CursorWindow getWindow() {
         return null;
     }
 
+    @Override // android.database.CursorWrapper
     public Cursor getWrappedCursor() {
         throw new UnsupportedOperationException("Returning underlying cursor risks leaking redacted data");
     }
 
+    @Override // android.database.CursorWrapper, android.database.Cursor
     public double getDouble(int columnIndex) {
         int i = this.mRedactions.indexOfKey(columnIndex);
         if (i >= 0) {
@@ -45,6 +51,7 @@ public class RedactingCursor extends CrossProcessCursorWrapper {
         return super.getDouble(columnIndex);
     }
 
+    @Override // android.database.CursorWrapper, android.database.Cursor
     public float getFloat(int columnIndex) {
         int i = this.mRedactions.indexOfKey(columnIndex);
         if (i >= 0) {
@@ -53,6 +60,7 @@ public class RedactingCursor extends CrossProcessCursorWrapper {
         return super.getFloat(columnIndex);
     }
 
+    @Override // android.database.CursorWrapper, android.database.Cursor
     public int getInt(int columnIndex) {
         int i = this.mRedactions.indexOfKey(columnIndex);
         if (i >= 0) {
@@ -61,6 +69,7 @@ public class RedactingCursor extends CrossProcessCursorWrapper {
         return super.getInt(columnIndex);
     }
 
+    @Override // android.database.CursorWrapper, android.database.Cursor
     public long getLong(int columnIndex) {
         int i = this.mRedactions.indexOfKey(columnIndex);
         if (i >= 0) {
@@ -69,6 +78,7 @@ public class RedactingCursor extends CrossProcessCursorWrapper {
         return super.getLong(columnIndex);
     }
 
+    @Override // android.database.CursorWrapper, android.database.Cursor
     public short getShort(int columnIndex) {
         int i = this.mRedactions.indexOfKey(columnIndex);
         if (i >= 0) {
@@ -77,6 +87,7 @@ public class RedactingCursor extends CrossProcessCursorWrapper {
         return super.getShort(columnIndex);
     }
 
+    @Override // android.database.CursorWrapper, android.database.Cursor
     public String getString(int columnIndex) {
         int i = this.mRedactions.indexOfKey(columnIndex);
         if (i >= 0) {
@@ -85,6 +96,7 @@ public class RedactingCursor extends CrossProcessCursorWrapper {
         return super.getString(columnIndex);
     }
 
+    @Override // android.database.CursorWrapper, android.database.Cursor
     public void copyStringToBuffer(int columnIndex, CharArrayBuffer buffer) {
         int i = this.mRedactions.indexOfKey(columnIndex);
         if (i >= 0) {
@@ -95,6 +107,7 @@ public class RedactingCursor extends CrossProcessCursorWrapper {
         super.copyStringToBuffer(columnIndex, buffer);
     }
 
+    @Override // android.database.CursorWrapper, android.database.Cursor
     public byte[] getBlob(int columnIndex) {
         int i = this.mRedactions.indexOfKey(columnIndex);
         if (i >= 0) {
@@ -103,6 +116,7 @@ public class RedactingCursor extends CrossProcessCursorWrapper {
         return super.getBlob(columnIndex);
     }
 
+    @Override // android.database.CursorWrapper, android.database.Cursor
     public int getType(int columnIndex) {
         int i = this.mRedactions.indexOfKey(columnIndex);
         if (i >= 0) {
@@ -111,6 +125,7 @@ public class RedactingCursor extends CrossProcessCursorWrapper {
         return super.getType(columnIndex);
     }
 
+    @Override // android.database.CursorWrapper, android.database.Cursor
     public boolean isNull(int columnIndex) {
         int i = this.mRedactions.indexOfKey(columnIndex);
         if (i >= 0) {

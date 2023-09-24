@@ -8,13 +8,17 @@ import android.view.textclassifier.TextClassifier;
 import android.view.textclassifier.TextLinks;
 import com.android.internal.util.Preconditions;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 
+/* loaded from: classes4.dex */
 public final class TextLinksParams {
-    /* access modifiers changed from: private */
-    public static final Function<TextLinks.TextLink, TextLinks.TextLinkSpan> DEFAULT_SPAN_FACTORY = $$Lambda$TextLinksParams$km8pN8nazHT6NQiHykIrRALWbkE.INSTANCE;
+    private static final Function<TextLinks.TextLink, TextLinks.TextLinkSpan> DEFAULT_SPAN_FACTORY = new Function() { // from class: android.view.textclassifier.-$$Lambda$TextLinksParams$km8pN8nazHT6NQiHykIrRALWbkE
+        @Override // java.util.function.Function
+        public final Object apply(Object obj) {
+            return TextLinksParams.lambda$static$0((TextLinks.TextLink) obj);
+        }
+    };
     private final int mApplyStrategy;
     private final TextClassifier.EntityConfig mEntityConfig;
     private final Function<TextLinks.TextLink, TextLinks.TextLinkSpan> mSpanFactory;
@@ -26,7 +30,7 @@ public final class TextLinksParams {
     private TextLinksParams(int applyStrategy, Function<TextLinks.TextLink, TextLinks.TextLinkSpan> spanFactory) {
         this.mApplyStrategy = applyStrategy;
         this.mSpanFactory = spanFactory;
-        this.mEntityConfig = TextClassifier.EntityConfig.createWithHints((Collection<String>) null);
+        this.mEntityConfig = TextClassifier.EntityConfig.createWithHints(null);
     }
 
     public static TextLinksParams fromLinkMask(int mask) {
@@ -57,9 +61,7 @@ public final class TextLinksParams {
         if (Linkify.containsUnsupportedCharacters(textString)) {
             EventLog.writeEvent(1397638484, "116321860", -1, "");
             return 4;
-        } else if (!textString.startsWith(textLinks.getText())) {
-            return 3;
-        } else {
+        } else if (textString.startsWith(textLinks.getText())) {
             if (textLinks.getLinks().isEmpty()) {
                 return 1;
             }
@@ -68,22 +70,27 @@ public final class TextLinksParams {
                 TextLinks.TextLinkSpan span = this.mSpanFactory.apply(link);
                 if (span != null) {
                     ClickableSpan[] existingSpans = (ClickableSpan[]) text.getSpans(link.getStart(), link.getEnd(), ClickableSpan.class);
-                    if (existingSpans.length <= 0) {
-                        text.setSpan(span, link.getStart(), link.getEnd(), 33);
-                        applyCount++;
-                    } else if (this.mApplyStrategy == 1) {
-                        for (ClickableSpan existingSpan : existingSpans) {
-                            text.removeSpan(existingSpan);
+                    if (existingSpans.length > 0) {
+                        if (this.mApplyStrategy == 1) {
+                            for (ClickableSpan existingSpan : existingSpans) {
+                                text.removeSpan(existingSpan);
+                            }
+                            text.setSpan(span, link.getStart(), link.getEnd(), 33);
+                            applyCount++;
                         }
+                    } else {
                         text.setSpan(span, link.getStart(), link.getEnd(), 33);
                         applyCount++;
                     }
                 }
             }
             return applyCount == 0 ? 2 : 0;
+        } else {
+            return 3;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class Builder {
         private int mApplyStrategy = 0;
         private Function<TextLinks.TextLink, TextLinks.TextLinkSpan> mSpanFactory = TextLinksParams.DEFAULT_SPAN_FACTORY;
@@ -107,11 +114,11 @@ public final class TextLinksParams {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static int checkApplyStrategy(int applyStrategy) {
-        if (applyStrategy == 0 || applyStrategy == 1) {
-            return applyStrategy;
+        if (applyStrategy != 0 && applyStrategy != 1) {
+            throw new IllegalArgumentException("Invalid apply strategy. See TextLinksParams.ApplyStrategy for options.");
         }
-        throw new IllegalArgumentException("Invalid apply strategy. See TextLinksParams.ApplyStrategy for options.");
+        return applyStrategy;
     }
 }

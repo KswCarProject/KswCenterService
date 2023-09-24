@@ -13,11 +13,11 @@ import android.hardware.camera2.legacy.LegacyExceptionUtils;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.hardware.camera2.utils.ArrayUtils;
 import android.hardware.camera2.utils.SubmitInfo;
-import android.os.ConditionVariable;
-import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.RemoteException;
-import android.os.ServiceSpecificException;
+import android.p007os.ConditionVariable;
+import android.p007os.Handler;
+import android.p007os.HandlerThread;
+import android.p007os.RemoteException;
+import android.p007os.ServiceSpecificException;
 import android.util.Log;
 import android.util.Pair;
 import android.util.Size;
@@ -29,6 +29,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+/* loaded from: classes.dex */
 public class LegacyCameraDevice implements AutoCloseable {
     private static final boolean DEBUG = false;
     private static final int GRALLOC_USAGE_HW_COMPOSER = 2048;
@@ -42,20 +43,19 @@ public class LegacyCameraDevice implements AutoCloseable {
     public static final int NATIVE_WINDOW_SCALING_MODE_SCALE_TO_WINDOW = 1;
     private final String TAG;
     private final Handler mCallbackHandler;
-    private final HandlerThread mCallbackHandlerThread = new HandlerThread("CallbackThread");
     private final int mCameraId;
-    private boolean mClosed = false;
     private SparseArray<Surface> mConfiguredSurfaces;
-    /* access modifiers changed from: private */
-    public final ICameraDeviceCallbacks mDeviceCallbacks;
-    private final CameraDeviceState mDeviceState = new CameraDeviceState();
-    /* access modifiers changed from: private */
-    public final ConditionVariable mIdle = new ConditionVariable(true);
+    private final ICameraDeviceCallbacks mDeviceCallbacks;
     private final RequestThreadManager mRequestThreadManager;
-    /* access modifiers changed from: private */
-    public final Handler mResultHandler;
+    private final Handler mResultHandler;
+    private final CameraCharacteristics mStaticCharacteristics;
+    private final CameraDeviceState mDeviceState = new CameraDeviceState();
+    private boolean mClosed = false;
+    private final ConditionVariable mIdle = new ConditionVariable(true);
     private final HandlerThread mResultThread = new HandlerThread("ResultThread");
-    private final CameraDeviceState.CameraDeviceStateListener mStateListener = new CameraDeviceState.CameraDeviceStateListener() {
+    private final HandlerThread mCallbackHandlerThread = new HandlerThread("CallbackThread");
+    private final CameraDeviceState.CameraDeviceStateListener mStateListener = new CameraDeviceState.CameraDeviceStateListener() { // from class: android.hardware.camera2.legacy.LegacyCameraDevice.1
+        @Override // android.hardware.camera2.legacy.CameraDeviceState.CameraDeviceStateListener
         public void onError(final int errorCode, Object errorArg, final RequestHolder holder) {
             switch (errorCode) {
                 case 0:
@@ -65,7 +65,8 @@ public class LegacyCameraDevice implements AutoCloseable {
                     break;
             }
             final CaptureResultExtras extras = LegacyCameraDevice.this.getExtrasFromRequest(holder, errorCode, errorArg);
-            LegacyCameraDevice.this.mResultHandler.post(new Runnable() {
+            LegacyCameraDevice.this.mResultHandler.post(new Runnable() { // from class: android.hardware.camera2.legacy.LegacyCameraDevice.1.1
+                @Override // java.lang.Runnable
                 public void run() {
                     try {
                         LegacyCameraDevice.this.mDeviceCallbacks.onDeviceError(errorCode, extras);
@@ -76,12 +77,15 @@ public class LegacyCameraDevice implements AutoCloseable {
             });
         }
 
+        @Override // android.hardware.camera2.legacy.CameraDeviceState.CameraDeviceStateListener
         public void onConfiguring() {
         }
 
+        @Override // android.hardware.camera2.legacy.CameraDeviceState.CameraDeviceStateListener
         public void onIdle() {
             LegacyCameraDevice.this.mIdle.open();
-            LegacyCameraDevice.this.mResultHandler.post(new Runnable() {
+            LegacyCameraDevice.this.mResultHandler.post(new Runnable() { // from class: android.hardware.camera2.legacy.LegacyCameraDevice.1.2
+                @Override // java.lang.Runnable
                 public void run() {
                     try {
                         LegacyCameraDevice.this.mDeviceCallbacks.onDeviceIdle();
@@ -92,18 +96,19 @@ public class LegacyCameraDevice implements AutoCloseable {
             });
         }
 
+        @Override // android.hardware.camera2.legacy.CameraDeviceState.CameraDeviceStateListener
         public void onBusy() {
             LegacyCameraDevice.this.mIdle.close();
         }
 
-        public void onCaptureStarted(RequestHolder holder, long timestamp) {
-            final RequestHolder requestHolder = holder;
-            final CaptureResultExtras access$400 = LegacyCameraDevice.this.getExtrasFromRequest(holder);
-            final long j = timestamp;
-            LegacyCameraDevice.this.mResultHandler.post(new Runnable() {
+        @Override // android.hardware.camera2.legacy.CameraDeviceState.CameraDeviceStateListener
+        public void onCaptureStarted(final RequestHolder holder, final long timestamp) {
+            final CaptureResultExtras extras = LegacyCameraDevice.this.getExtrasFromRequest(holder);
+            LegacyCameraDevice.this.mResultHandler.post(new Runnable() { // from class: android.hardware.camera2.legacy.LegacyCameraDevice.1.3
+                @Override // java.lang.Runnable
                 public void run() {
                     try {
-                        LegacyCameraDevice.this.mDeviceCallbacks.onCaptureStarted(access$400, j);
+                        LegacyCameraDevice.this.mDeviceCallbacks.onCaptureStarted(extras, timestamp);
                     } catch (RemoteException e) {
                         throw new IllegalStateException("Received remote exception during onCameraError callback: ", e);
                     }
@@ -111,8 +116,10 @@ public class LegacyCameraDevice implements AutoCloseable {
             });
         }
 
+        @Override // android.hardware.camera2.legacy.CameraDeviceState.CameraDeviceStateListener
         public void onRequestQueueEmpty() {
-            LegacyCameraDevice.this.mResultHandler.post(new Runnable() {
+            LegacyCameraDevice.this.mResultHandler.post(new Runnable() { // from class: android.hardware.camera2.legacy.LegacyCameraDevice.1.4
+                @Override // java.lang.Runnable
                 public void run() {
                     try {
                         LegacyCameraDevice.this.mDeviceCallbacks.onRequestQueueEmpty();
@@ -123,9 +130,11 @@ public class LegacyCameraDevice implements AutoCloseable {
             });
         }
 
+        @Override // android.hardware.camera2.legacy.CameraDeviceState.CameraDeviceStateListener
         public void onCaptureResult(final CameraMetadataNative result, final RequestHolder holder) {
             final CaptureResultExtras extras = LegacyCameraDevice.this.getExtrasFromRequest(holder);
-            LegacyCameraDevice.this.mResultHandler.post(new Runnable() {
+            LegacyCameraDevice.this.mResultHandler.post(new Runnable() { // from class: android.hardware.camera2.legacy.LegacyCameraDevice.1.5
+                @Override // java.lang.Runnable
                 public void run() {
                     try {
                         LegacyCameraDevice.this.mDeviceCallbacks.onResultReceived(result, extras, new PhysicalCaptureResultInfo[0]);
@@ -136,8 +145,10 @@ public class LegacyCameraDevice implements AutoCloseable {
             });
         }
 
+        @Override // android.hardware.camera2.legacy.CameraDeviceState.CameraDeviceStateListener
         public void onRepeatingRequestError(final long lastFrameNumber, final int repeatingRequestId) {
-            LegacyCameraDevice.this.mResultHandler.post(new Runnable() {
+            LegacyCameraDevice.this.mResultHandler.post(new Runnable() { // from class: android.hardware.camera2.legacy.LegacyCameraDevice.1.6
+                @Override // java.lang.Runnable
                 public void run() {
                     try {
                         LegacyCameraDevice.this.mDeviceCallbacks.onRepeatingRequestError(lastFrameNumber, repeatingRequestId);
@@ -148,7 +159,6 @@ public class LegacyCameraDevice implements AutoCloseable {
             });
         }
     };
-    private final CameraCharacteristics mStaticCharacteristics;
 
     private static native int nativeConnectSurface(Surface surface);
 
@@ -180,26 +190,27 @@ public class LegacyCameraDevice implements AutoCloseable {
 
     private static native int nativeSetSurfaceOrientation(Surface surface, int i, int i2);
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public CaptureResultExtras getExtrasFromRequest(RequestHolder holder) {
-        return getExtrasFromRequest(holder, -1, (Object) null);
+        return getExtrasFromRequest(holder, -1, null);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public CaptureResultExtras getExtrasFromRequest(RequestHolder holder, int errorCode, Object errorArg) {
         int errorStreamId = -1;
         if (errorCode == 5) {
-            int indexOfTarget = this.mConfiguredSurfaces.indexOfValue((Surface) errorArg);
+            Surface errorTarget = (Surface) errorArg;
+            int indexOfTarget = this.mConfiguredSurfaces.indexOfValue(errorTarget);
             if (indexOfTarget < 0) {
-                Log.e(this.TAG, "Buffer drop error reported for unknown Surface");
+                Log.m70e(this.TAG, "Buffer drop error reported for unknown Surface");
             } else {
                 errorStreamId = this.mConfiguredSurfaces.keyAt(indexOfTarget);
             }
         }
         if (holder == null) {
-            return new CaptureResultExtras(-1, -1, -1, -1, -1, -1, -1, (String) null);
+            return new CaptureResultExtras(-1, -1, -1, -1, -1L, -1, -1, null);
         }
-        return new CaptureResultExtras(holder.getRequestId(), holder.getSubsequeceId(), 0, 0, holder.getFrameNumber(), 1, errorStreamId, (String) null);
+        return new CaptureResultExtras(holder.getRequestId(), holder.getSubsequeceId(), 0, 0, holder.getFrameNumber(), 1, errorStreamId, null);
     }
 
     static boolean needsConversion(Surface s) throws LegacyExceptionUtils.BufferQueueAbandonedException {
@@ -210,7 +221,7 @@ public class LegacyCameraDevice implements AutoCloseable {
     public LegacyCameraDevice(int cameraId, Camera camera, CameraCharacteristics characteristics, ICameraDeviceCallbacks callbacks) {
         this.mCameraId = cameraId;
         this.mDeviceCallbacks = callbacks;
-        this.TAG = String.format("CameraDevice-%d-LE", new Object[]{Integer.valueOf(this.mCameraId)});
+        this.TAG = String.format("CameraDevice-%d-LE", Integer.valueOf(this.mCameraId));
         this.mResultThread.start();
         this.mResultHandler = new Handler(this.mResultThread.getLooper());
         this.mCallbackHandlerThread.start();
@@ -226,19 +237,16 @@ public class LegacyCameraDevice implements AutoCloseable {
     }
 
     public int configureOutputs(SparseArray<Surface> outputs, boolean validateSurfacesOnly) {
-        String reason;
-        SparseArray<Surface> sparseArray = outputs;
         List<Pair<Surface, Size>> sizedSurfaces = new ArrayList<>();
-        if (sparseArray != null) {
+        if (outputs != null) {
             int count = outputs.size();
-            int i = 0;
-            while (i < count) {
-                Surface output = sparseArray.valueAt(i);
+            for (int i = 0; i < count; i++) {
+                Surface output = outputs.valueAt(i);
                 if (output == null) {
-                    Log.e(this.TAG, "configureOutputs - null outputs are not allowed");
+                    Log.m70e(this.TAG, "configureOutputs - null outputs are not allowed");
                     return LegacyExceptionUtils.BAD_VALUE;
                 } else if (!output.isValid()) {
-                    Log.e(this.TAG, "configureOutputs - invalid output surfaces are not allowed");
+                    Log.m70e(this.TAG, "configureOutputs - invalid output surfaces are not allowed");
                     return LegacyExceptionUtils.BAD_VALUE;
                 } else {
                     StreamConfigurationMap streamConfigurations = (StreamConfigurationMap) this.mStaticCharacteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
@@ -254,29 +262,24 @@ public class LegacyCameraDevice implements AutoCloseable {
                                 sizes = streamConfigurations.getOutputSizes(256);
                             }
                         }
-                        if (!ArrayUtils.contains((T[]) sizes, s)) {
+                        if (!ArrayUtils.contains(sizes, s)) {
                             if (flexibleConsumer) {
                                 Size findClosestSize = findClosestSize(s, sizes);
                                 s = findClosestSize;
                                 if (findClosestSize != null) {
-                                    sizedSurfaces.add(new Pair(output, s));
+                                    sizedSurfaces.add(new Pair<>(output, s));
                                 }
                             }
-                            if (sizes == null) {
-                                reason = "format is invalid.";
-                            } else {
-                                reason = "size not in valid set: " + Arrays.toString(sizes);
-                            }
-                            Log.e(this.TAG, String.format("Surface with size (w=%d, h=%d) and format 0x%x is not valid, %s", new Object[]{Integer.valueOf(s.getWidth()), Integer.valueOf(s.getHeight()), Integer.valueOf(surfaceType), reason}));
+                            String reason = sizes == null ? "format is invalid." : "size not in valid set: " + Arrays.toString(sizes);
+                            Log.m70e(this.TAG, String.format("Surface with size (w=%d, h=%d) and format 0x%x is not valid, %s", Integer.valueOf(s.getWidth()), Integer.valueOf(s.getHeight()), Integer.valueOf(surfaceType), reason));
                             return LegacyExceptionUtils.BAD_VALUE;
                         }
-                        sizedSurfaces.add(new Pair(output, s));
+                        sizedSurfaces.add(new Pair<>(output, s));
                         if (!validateSurfacesOnly) {
                             setSurfaceDimens(output, s.getWidth(), s.getHeight());
                         }
-                        i++;
                     } catch (LegacyExceptionUtils.BufferQueueAbandonedException e) {
-                        Log.e(this.TAG, "Surface bufferqueue is abandoned, cannot configure as output: ", e);
+                        Log.m69e(this.TAG, "Surface bufferqueue is abandoned, cannot configure as output: ", e);
                         return LegacyExceptionUtils.BAD_VALUE;
                     }
                 }
@@ -290,46 +293,36 @@ public class LegacyCameraDevice implements AutoCloseable {
             this.mRequestThreadManager.configure(sizedSurfaces);
             success = this.mDeviceState.setIdle();
         }
-        if (!success) {
-            return LegacyExceptionUtils.INVALID_OPERATION;
+        if (success) {
+            this.mConfiguredSurfaces = outputs;
+            return 0;
         }
-        this.mConfiguredSurfaces = sparseArray;
-        return 0;
+        return LegacyExceptionUtils.INVALID_OPERATION;
     }
 
     public SubmitInfo submitRequestList(CaptureRequest[] requestList, boolean repeating) {
-        List<Long> surfaceIds;
         if (requestList == null || requestList.length == 0) {
-            Log.e(this.TAG, "submitRequestList - Empty/null requests are not allowed");
+            Log.m70e(this.TAG, "submitRequestList - Empty/null requests are not allowed");
             throw new ServiceSpecificException(LegacyExceptionUtils.BAD_VALUE, "submitRequestList - Empty/null requests are not allowed");
         }
         try {
-            if (this.mConfiguredSurfaces == null) {
-                surfaceIds = new ArrayList<>();
-            } else {
-                surfaceIds = getSurfaceIds(this.mConfiguredSurfaces);
-            }
-            int length = requestList.length;
-            int i = 0;
-            while (i < length) {
-                CaptureRequest request = requestList[i];
-                if (!request.getTargets().isEmpty()) {
-                    for (Surface surface : request.getTargets()) {
-                        if (surface == null) {
-                            Log.e(this.TAG, "submitRequestList - Null Surface targets are not allowed");
-                            throw new ServiceSpecificException(LegacyExceptionUtils.BAD_VALUE, "submitRequestList - Null Surface targets are not allowed");
-                        } else if (this.mConfiguredSurfaces == null) {
-                            Log.e(this.TAG, "submitRequestList - must configure  device with valid surfaces before submitting requests");
-                            throw new ServiceSpecificException(LegacyExceptionUtils.INVALID_OPERATION, "submitRequestList - must configure  device with valid surfaces before submitting requests");
-                        } else if (!containsSurfaceId(surface, surfaceIds)) {
-                            Log.e(this.TAG, "submitRequestList - cannot use a surface that wasn't configured");
-                            throw new ServiceSpecificException(LegacyExceptionUtils.BAD_VALUE, "submitRequestList - cannot use a surface that wasn't configured");
-                        }
-                    }
-                    i++;
-                } else {
-                    Log.e(this.TAG, "submitRequestList - Each request must have at least one Surface target");
+            List<Long> surfaceIds = this.mConfiguredSurfaces == null ? new ArrayList<>() : getSurfaceIds(this.mConfiguredSurfaces);
+            for (CaptureRequest request : requestList) {
+                if (request.getTargets().isEmpty()) {
+                    Log.m70e(this.TAG, "submitRequestList - Each request must have at least one Surface target");
                     throw new ServiceSpecificException(LegacyExceptionUtils.BAD_VALUE, "submitRequestList - Each request must have at least one Surface target");
+                }
+                for (Surface surface : request.getTargets()) {
+                    if (surface == null) {
+                        Log.m70e(this.TAG, "submitRequestList - Null Surface targets are not allowed");
+                        throw new ServiceSpecificException(LegacyExceptionUtils.BAD_VALUE, "submitRequestList - Null Surface targets are not allowed");
+                    } else if (this.mConfiguredSurfaces == null) {
+                        Log.m70e(this.TAG, "submitRequestList - must configure  device with valid surfaces before submitting requests");
+                        throw new ServiceSpecificException(LegacyExceptionUtils.INVALID_OPERATION, "submitRequestList - must configure  device with valid surfaces before submitting requests");
+                    } else if (!containsSurfaceId(surface, surfaceIds)) {
+                        Log.m70e(this.TAG, "submitRequestList - cannot use a surface that wasn't configured");
+                        throw new ServiceSpecificException(LegacyExceptionUtils.BAD_VALUE, "submitRequestList - cannot use a surface that wasn't configured");
+                    }
                 }
             }
             this.mIdle.close();
@@ -340,7 +333,8 @@ public class LegacyCameraDevice implements AutoCloseable {
     }
 
     public SubmitInfo submitRequest(CaptureRequest request, boolean repeating) {
-        return submitRequestList(new CaptureRequest[]{request}, repeating);
+        CaptureRequest[] requestList = {request};
+        return submitRequestList(requestList, repeating);
     }
 
     public long cancelRequest(int requestId) {
@@ -361,6 +355,7 @@ public class LegacyCameraDevice implements AutoCloseable {
         return this.mClosed;
     }
 
+    @Override // java.lang.AutoCloseable
     public void close() {
         this.mRequestThreadManager.quit();
         this.mCallbackHandlerThread.quitSafely();
@@ -368,33 +363,32 @@ public class LegacyCameraDevice implements AutoCloseable {
         try {
             this.mCallbackHandlerThread.join();
         } catch (InterruptedException e) {
-            Log.e(this.TAG, String.format("Thread %s (%d) interrupted while quitting.", new Object[]{this.mCallbackHandlerThread.getName(), Long.valueOf(this.mCallbackHandlerThread.getId())}));
+            Log.m70e(this.TAG, String.format("Thread %s (%d) interrupted while quitting.", this.mCallbackHandlerThread.getName(), Long.valueOf(this.mCallbackHandlerThread.getId())));
         }
         try {
             this.mResultThread.join();
         } catch (InterruptedException e2) {
-            Log.e(this.TAG, String.format("Thread %s (%d) interrupted while quitting.", new Object[]{this.mResultThread.getName(), Long.valueOf(this.mResultThread.getId())}));
+            Log.m70e(this.TAG, String.format("Thread %s (%d) interrupted while quitting.", this.mResultThread.getName(), Long.valueOf(this.mResultThread.getId())));
         }
         this.mClosed = true;
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         try {
-            close();
-        } catch (ServiceSpecificException e) {
-            String str = this.TAG;
-            Log.e(str, "Got error while trying to finalize, ignoring: " + e.getMessage());
-        } catch (Throwable th) {
+            try {
+                close();
+            } catch (ServiceSpecificException e) {
+                String str = this.TAG;
+                Log.m70e(str, "Got error while trying to finalize, ignoring: " + e.getMessage());
+            }
+        } finally {
             super.finalize();
-            throw th;
         }
-        super.finalize();
     }
 
     static long findEuclidDistSquare(Size a, Size b) {
-        long d0 = (long) (a.getWidth() - b.getWidth());
-        long d1 = (long) (a.getHeight() - b.getHeight());
+        long d0 = a.getWidth() - b.getWidth();
+        long d1 = a.getHeight() - b.getHeight();
         return (d0 * d0) + (d1 * d1);
     }
 
@@ -430,7 +424,7 @@ public class LegacyCameraDevice implements AutoCloseable {
         int usageFlags = detectSurfaceUsageFlags(output);
         boolean previewConsumer = (usageFlags & 1114115) == 0 && (usageFlags & 2816) != 0;
         try {
-            int surfaceFormat = detectSurfaceType(output);
+            detectSurfaceType(output);
             return previewConsumer;
         } catch (LegacyExceptionUtils.BufferQueueAbandonedException e) {
             throw new IllegalArgumentException("Surface was abandoned", e);
@@ -441,7 +435,7 @@ public class LegacyCameraDevice implements AutoCloseable {
         int usageFlags = detectSurfaceUsageFlags(output);
         boolean videoEncoderConsumer = (usageFlags & 1050883) == 0 && (usageFlags & 65536) != 0;
         try {
-            int surfaceFormat = detectSurfaceType(output);
+            detectSurfaceType(output);
             return videoEncoderConsumer;
         } catch (LegacyExceptionUtils.BufferQueueAbandonedException e) {
             throw new IllegalArgumentException("Surface was abandoned", e);
@@ -473,9 +467,10 @@ public class LegacyCameraDevice implements AutoCloseable {
     }
 
     static void disconnectSurface(Surface surface) throws LegacyExceptionUtils.BufferQueueAbandonedException {
-        if (surface != null) {
-            LegacyExceptionUtils.throwOnError(nativeDisconnectSurface(surface));
+        if (surface == null) {
+            return;
         }
+        LegacyExceptionUtils.throwOnError(nativeDisconnectSurface(surface));
     }
 
     static void produceFrame(Surface surface, byte[] pixelBuffer, int width, int height, int pixelFormat) throws LegacyExceptionUtils.BufferQueueAbandonedException {
@@ -508,43 +503,40 @@ public class LegacyCameraDevice implements AutoCloseable {
     }
 
     static List<Long> getSurfaceIds(SparseArray<Surface> surfaces) throws LegacyExceptionUtils.BufferQueueAbandonedException {
-        if (surfaces != null) {
-            List<Long> surfaceIds = new ArrayList<>();
-            int count = surfaces.size();
-            int i = 0;
-            while (i < count) {
-                long id = getSurfaceId(surfaces.valueAt(i));
-                if (id != 0) {
-                    surfaceIds.add(Long.valueOf(id));
-                    i++;
-                } else {
-                    throw new IllegalStateException("Configured surface had null native GraphicBufferProducer pointer!");
-                }
-            }
-            return surfaceIds;
+        if (surfaces == null) {
+            throw new NullPointerException("Null argument surfaces");
         }
-        throw new NullPointerException("Null argument surfaces");
+        List<Long> surfaceIds = new ArrayList<>();
+        int count = surfaces.size();
+        for (int i = 0; i < count; i++) {
+            long id = getSurfaceId(surfaces.valueAt(i));
+            if (id == 0) {
+                throw new IllegalStateException("Configured surface had null native GraphicBufferProducer pointer!");
+            }
+            surfaceIds.add(Long.valueOf(id));
+        }
+        return surfaceIds;
     }
 
     static List<Long> getSurfaceIds(Collection<Surface> surfaces) throws LegacyExceptionUtils.BufferQueueAbandonedException {
-        if (surfaces != null) {
-            List<Long> surfaceIds = new ArrayList<>();
-            for (Surface s : surfaces) {
-                long id = getSurfaceId(s);
-                if (id != 0) {
-                    surfaceIds.add(Long.valueOf(id));
-                } else {
-                    throw new IllegalStateException("Configured surface had null native GraphicBufferProducer pointer!");
-                }
-            }
-            return surfaceIds;
+        if (surfaces == null) {
+            throw new NullPointerException("Null argument surfaces");
         }
-        throw new NullPointerException("Null argument surfaces");
+        List<Long> surfaceIds = new ArrayList<>();
+        for (Surface s : surfaces) {
+            long id = getSurfaceId(s);
+            if (id == 0) {
+                throw new IllegalStateException("Configured surface had null native GraphicBufferProducer pointer!");
+            }
+            surfaceIds.add(Long.valueOf(id));
+        }
+        return surfaceIds;
     }
 
     static boolean containsSurfaceId(Surface s, Collection<Long> ids) {
         try {
-            return ids.contains(Long.valueOf(getSurfaceId(s)));
+            long id = getSurfaceId(s);
+            return ids.contains(Long.valueOf(id));
         } catch (LegacyExceptionUtils.BufferQueueAbandonedException e) {
             return false;
         }

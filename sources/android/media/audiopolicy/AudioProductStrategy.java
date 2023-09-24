@@ -2,8 +2,8 @@ package android.media.audiopolicy;
 
 import android.annotation.SystemApi;
 import android.media.AudioAttributes;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
 import com.android.internal.annotations.GuardedBy;
@@ -12,8 +12,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class AudioProductStrategy implements Parcelable {
-    public static final Parcelable.Creator<AudioProductStrategy> CREATOR = new Parcelable.Creator<AudioProductStrategy>() {
+    public static final int DEFAULT_GROUP = -1;
+    private static final String TAG = "AudioProductStrategy";
+    @GuardedBy({"sLock"})
+    private static List<AudioProductStrategy> sAudioProductStrategies;
+    private final AudioAttributesGroup[] mAudioAttributesGroups;
+    private int mId;
+    private final String mName;
+    private static final Object sLock = new Object();
+    public static final Parcelable.Creator<AudioProductStrategy> CREATOR = new Parcelable.Creator<AudioProductStrategy>() { // from class: android.media.audiopolicy.AudioProductStrategy.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AudioProductStrategy createFromParcel(Parcel in) {
             String name = in.readString();
             int id = in.readInt();
@@ -25,19 +36,13 @@ public final class AudioProductStrategy implements Parcelable {
             return new AudioProductStrategy(name, id, aag);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AudioProductStrategy[] newArray(int size) {
             return new AudioProductStrategy[size];
         }
     };
-    public static final int DEFAULT_GROUP = -1;
-    private static final String TAG = "AudioProductStrategy";
-    @GuardedBy({"sLock"})
-    private static List<AudioProductStrategy> sAudioProductStrategies;
     public static final AudioAttributes sDefaultAttributes = new AudioAttributes.Builder().setCapturePreset(0).build();
-    private static final Object sLock = new Object();
-    private final AudioAttributesGroup[] mAudioAttributesGroups;
-    private int mId;
-    private final String mName;
 
     private static native int native_list_audio_product_strategies(ArrayList<AudioProductStrategy> arrayList);
 
@@ -67,11 +72,11 @@ public final class AudioProductStrategy implements Parcelable {
         for (AudioProductStrategy productStrategy : getAudioProductStrategies()) {
             if (productStrategy.supportsAudioAttributes(audioAttributes)) {
                 int streamType = productStrategy.getLegacyStreamTypeForAudioAttributes(audioAttributes);
-                if (streamType != -1) {
-                    return streamType;
+                if (streamType == -1) {
+                    Log.m64w(TAG, "Attributes " + audioAttributes.toString() + " ported by strategy " + productStrategy.getId() + " has no stream type associated, DO NOT USE STREAM TO CONTROL THE VOLUME");
+                    return 3;
                 }
-                Log.w(TAG, "Attributes " + audioAttributes.toString() + " ported by strategy " + productStrategy.getId() + " has no stream type associated, DO NOT USE STREAM TO CONTROL THE VOLUME");
-                return 3;
+                return streamType;
             }
         }
         return 3;
@@ -79,8 +84,9 @@ public final class AudioProductStrategy implements Parcelable {
 
     private static List<AudioProductStrategy> initializeAudioProductStrategies() {
         ArrayList<AudioProductStrategy> apsList = new ArrayList<>();
-        if (native_list_audio_product_strategies(apsList) != 0) {
-            Log.w(TAG, ": initializeAudioProductStrategies failed");
+        int status = native_list_audio_product_strategies(apsList);
+        if (status != 0) {
+            Log.m64w(TAG, ": initializeAudioProductStrategies failed");
         }
         return apsList;
     }
@@ -114,13 +120,11 @@ public final class AudioProductStrategy implements Parcelable {
 
     @SystemApi
     public AudioAttributes getAudioAttributes() {
-        if (this.mAudioAttributesGroups.length == 0) {
-            return new AudioAttributes.Builder().build();
-        }
-        return this.mAudioAttributesGroups[0].getAudioAttributes();
+        return this.mAudioAttributesGroups.length == 0 ? new AudioAttributes.Builder().build() : this.mAudioAttributesGroups[0].getAudioAttributes();
     }
 
     public AudioAttributes getAudioAttributesForLegacyStreamType(int streamType) {
+        AudioAttributesGroup[] audioAttributesGroupArr;
         for (AudioAttributesGroup aag : this.mAudioAttributesGroups) {
             if (aag.supportsStreamType(streamType)) {
                 return aag.getAudioAttributes();
@@ -130,6 +134,7 @@ public final class AudioProductStrategy implements Parcelable {
     }
 
     public int getLegacyStreamTypeForAudioAttributes(AudioAttributes aa) {
+        AudioAttributesGroup[] audioAttributesGroupArr;
         Preconditions.checkNotNull(aa, "AudioAttributes must not be null");
         for (AudioAttributesGroup aag : this.mAudioAttributesGroups) {
             if (aag.supportsAttributes(aa)) {
@@ -140,6 +145,7 @@ public final class AudioProductStrategy implements Parcelable {
     }
 
     public boolean supportsAudioAttributes(AudioAttributes aa) {
+        AudioAttributesGroup[] audioAttributesGroupArr;
         Preconditions.checkNotNull(aa, "AudioAttributes must not be null");
         for (AudioAttributesGroup aag : this.mAudioAttributesGroups) {
             if (aag.supportsAttributes(aa)) {
@@ -150,6 +156,7 @@ public final class AudioProductStrategy implements Parcelable {
     }
 
     public int getVolumeGroupIdForLegacyStreamType(int streamType) {
+        AudioAttributesGroup[] audioAttributesGroupArr;
         for (AudioAttributesGroup aag : this.mAudioAttributesGroups) {
             if (aag.supportsStreamType(streamType)) {
                 return aag.getVolumeGroupId();
@@ -159,6 +166,7 @@ public final class AudioProductStrategy implements Parcelable {
     }
 
     public int getVolumeGroupIdForAudioAttributes(AudioAttributes aa) {
+        AudioAttributesGroup[] audioAttributesGroupArr;
         Preconditions.checkNotNull(aa, "AudioAttributes must not be null");
         for (AudioAttributesGroup aag : this.mAudioAttributesGroups) {
             if (aag.supportsAttributes(aa)) {
@@ -168,11 +176,14 @@ public final class AudioProductStrategy implements Parcelable {
         return -1;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
+        AudioAttributesGroup[] audioAttributesGroupArr;
         dest.writeString(this.mName);
         dest.writeInt(this.mId);
         dest.writeInt(this.mAudioAttributesGroups.length);
@@ -182,6 +193,7 @@ public final class AudioProductStrategy implements Parcelable {
     }
 
     public String toString() {
+        AudioAttributesGroup[] audioAttributesGroupArr;
         StringBuilder s = new StringBuilder();
         s.append("\n Name: ");
         s.append(this.mName);
@@ -193,32 +205,32 @@ public final class AudioProductStrategy implements Parcelable {
         return s.toString();
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static boolean attributesMatches(AudioAttributes refAttr, AudioAttributes attr) {
         Preconditions.checkNotNull(refAttr, "refAttr must not be null");
         Preconditions.checkNotNull(attr, "attr must not be null");
-        String refFormattedTags = TextUtils.join((CharSequence) ";", (Iterable) refAttr.getTags());
-        String cliFormattedTags = TextUtils.join((CharSequence) ";", (Iterable) attr.getTags());
+        String refFormattedTags = TextUtils.join(";", refAttr.getTags());
+        String cliFormattedTags = TextUtils.join(";", attr.getTags());
         if (refAttr.equals(sDefaultAttributes)) {
             return false;
         }
-        if (refAttr.getUsage() != 0 && attr.getUsage() != refAttr.getUsage()) {
+        if (refAttr.getUsage() == 0 || attr.getUsage() == refAttr.getUsage()) {
+            if (refAttr.getContentType() == 0 || attr.getContentType() == refAttr.getContentType()) {
+                if (refAttr.getAllFlags() == 0 || (attr.getAllFlags() != 0 && (attr.getAllFlags() & refAttr.getAllFlags()) == refAttr.getAllFlags())) {
+                    return refFormattedTags.length() == 0 || refFormattedTags.equals(cliFormattedTags);
+                }
+                return false;
+            }
             return false;
-        }
-        if (refAttr.getContentType() != 0 && attr.getContentType() != refAttr.getContentType()) {
-            return false;
-        }
-        if (refAttr.getAllFlags() != 0 && (attr.getAllFlags() == 0 || (attr.getAllFlags() & refAttr.getAllFlags()) != refAttr.getAllFlags())) {
-            return false;
-        }
-        if (refFormattedTags.length() == 0 || refFormattedTags.equals(cliFormattedTags)) {
-            return true;
         }
         return false;
     }
 
+    /* loaded from: classes3.dex */
     private static final class AudioAttributesGroup implements Parcelable {
-        public static final Parcelable.Creator<AudioAttributesGroup> CREATOR = new Parcelable.Creator<AudioAttributesGroup>() {
+        public static final Parcelable.Creator<AudioAttributesGroup> CREATOR = new Parcelable.Creator<AudioAttributesGroup>() { // from class: android.media.audiopolicy.AudioProductStrategy.AudioAttributesGroup.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public AudioAttributesGroup createFromParcel(Parcel in) {
                 int volumeGroupId = in.readInt();
                 int streamType = in.readInt();
@@ -230,6 +242,8 @@ public final class AudioProductStrategy implements Parcelable {
                 return new AudioAttributesGroup(volumeGroupId, streamType, aa);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public AudioAttributesGroup[] newArray(int size) {
                 return new AudioAttributesGroup[size];
             }
@@ -267,13 +281,11 @@ public final class AudioProductStrategy implements Parcelable {
         }
 
         public AudioAttributes getAudioAttributes() {
-            if (this.mAudioAttributes.length == 0) {
-                return new AudioAttributes.Builder().build();
-            }
-            return this.mAudioAttributes[0];
+            return this.mAudioAttributes.length == 0 ? new AudioAttributes.Builder().build() : this.mAudioAttributes[0];
         }
 
         public boolean supportsAttributes(AudioAttributes attributes) {
+            AudioAttributes[] audioAttributesArr;
             for (AudioAttributes refAa : this.mAudioAttributes) {
                 if (refAa.equals(attributes) || AudioProductStrategy.attributesMatches(refAa, attributes)) {
                     return true;
@@ -286,11 +298,14 @@ public final class AudioProductStrategy implements Parcelable {
             return this.mLegacyStreamType == streamType;
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
+            AudioAttributes[] audioAttributesArr;
             dest.writeInt(this.mVolumeGroupId);
             dest.writeInt(this.mLegacyStreamType);
             dest.writeInt(this.mAudioAttributes.length);
@@ -300,6 +315,7 @@ public final class AudioProductStrategy implements Parcelable {
         }
 
         public String toString() {
+            AudioAttributes[] audioAttributesArr;
             StringBuilder s = new StringBuilder();
             s.append("\n    Legacy Stream Type: ");
             s.append(Integer.toString(this.mLegacyStreamType));

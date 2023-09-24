@@ -1,13 +1,14 @@
 package android.app.backup;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.ParcelFileDescriptor;
+import android.p007os.ParcelFileDescriptor;
 import android.util.Log;
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.util.Map;
 import java.util.TreeMap;
 
+/* loaded from: classes.dex */
 public class BackupHelperDispatcher {
     private static final String TAG = "BackupHelperDispatcher";
     TreeMap<String, BackupHelper> mHelpers = new TreeMap<>();
@@ -20,6 +21,7 @@ public class BackupHelperDispatcher {
 
     private static native int writeHeader_native(Header header, FileDescriptor fileDescriptor, int i);
 
+    /* loaded from: classes.dex */
     private static class Header {
         @UnsupportedAppUsage
         int chunkSize;
@@ -40,13 +42,12 @@ public class BackupHelperDispatcher {
         if (oldState != null) {
             FileDescriptor oldStateFD = oldState.getFileDescriptor();
             while (true) {
-                int readHeader_native = readHeader_native(header, oldStateFD);
-                int err = readHeader_native;
-                if (readHeader_native < 0) {
+                int err = readHeader_native(header, oldStateFD);
+                if (err < 0) {
                     break;
                 } else if (err == 0) {
                     BackupHelper helper = helpers.get(header.keyPrefix);
-                    Log.d(TAG, "handling existing helper '" + header.keyPrefix + "' " + helper);
+                    Log.m72d(TAG, "handling existing helper '" + header.keyPrefix + "' " + helper);
                     if (helper != null) {
                         doOneBackup(oldState, data, newState, header, helper);
                         helpers.remove(header.keyPrefix);
@@ -58,7 +59,7 @@ public class BackupHelperDispatcher {
         }
         for (Map.Entry<String, BackupHelper> entry : helpers.entrySet()) {
             header.keyPrefix = entry.getKey();
-            Log.d(TAG, "handling new helper '" + header.keyPrefix + "'");
+            Log.m72d(TAG, "handling new helper '" + header.keyPrefix + "'");
             doOneBackup(oldState, data, newState, header, entry.getValue());
         }
     }
@@ -66,16 +67,15 @@ public class BackupHelperDispatcher {
     private void doOneBackup(ParcelFileDescriptor oldState, BackupDataOutput data, ParcelFileDescriptor newState, Header header, BackupHelper helper) throws IOException {
         FileDescriptor newStateFD = newState.getFileDescriptor();
         int pos = allocateHeader_native(header, newStateFD);
-        if (pos >= 0) {
-            data.setKeyPrefix(header.keyPrefix);
-            helper.performBackup(oldState, data, newState);
-            int err = writeHeader_native(header, newStateFD, pos);
-            if (err != 0) {
-                throw new IOException("writeHeader_native failed (error " + err + ")");
-            }
-            return;
+        if (pos < 0) {
+            throw new IOException("allocateHeader_native failed (error " + pos + ")");
         }
-        throw new IOException("allocateHeader_native failed (error " + pos + ")");
+        data.setKeyPrefix(header.keyPrefix);
+        helper.performBackup(oldState, data, newState);
+        int err = writeHeader_native(header, newStateFD, pos);
+        if (err != 0) {
+            throw new IOException("writeHeader_native failed (error " + err + ")");
+        }
     }
 
     public void performRestore(BackupDataInput input, int appVersionCode, ParcelFileDescriptor newState) throws IOException {
@@ -85,17 +85,18 @@ public class BackupHelperDispatcher {
             String rawKey = input.getKey();
             int pos = rawKey.indexOf(58);
             if (pos > 0) {
-                BackupHelper helper = this.mHelpers.get(rawKey.substring(0, pos));
+                String prefix = rawKey.substring(0, pos);
+                BackupHelper helper = this.mHelpers.get(prefix);
                 if (helper != null) {
                     stream.dataSize = input.getDataSize();
                     stream.key = rawKey.substring(pos + 1);
                     helper.restoreEntity(stream);
                 } else if (!alreadyComplained) {
-                    Log.w(TAG, "Couldn't find helper for: '" + rawKey + "'");
+                    Log.m64w(TAG, "Couldn't find helper for: '" + rawKey + "'");
                     alreadyComplained = true;
                 }
             } else if (!alreadyComplained) {
-                Log.w(TAG, "Entity with no prefix: '" + rawKey + "'");
+                Log.m64w(TAG, "Entity with no prefix: '" + rawKey + "'");
                 alreadyComplained = true;
             }
             input.skipEntityData();

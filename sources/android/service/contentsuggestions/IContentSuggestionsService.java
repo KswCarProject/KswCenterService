@@ -5,13 +5,14 @@ import android.app.contentsuggestions.IClassificationsCallback;
 import android.app.contentsuggestions.ISelectionsCallback;
 import android.app.contentsuggestions.SelectionsRequest;
 import android.graphics.GraphicBuffer;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes3.dex */
 public interface IContentSuggestionsService extends IInterface {
     void classifyContentSelections(ClassificationsRequest classificationsRequest, IClassificationsCallback iClassificationsCallback) throws RemoteException;
 
@@ -21,24 +22,31 @@ public interface IContentSuggestionsService extends IInterface {
 
     void suggestContentSelections(SelectionsRequest selectionsRequest, ISelectionsCallback iSelectionsCallback) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements IContentSuggestionsService {
+        @Override // android.service.contentsuggestions.IContentSuggestionsService
         public void provideContextImage(int taskId, GraphicBuffer contextImage, int colorSpaceId, Bundle imageContextRequestExtras) throws RemoteException {
         }
 
+        @Override // android.service.contentsuggestions.IContentSuggestionsService
         public void suggestContentSelections(SelectionsRequest request, ISelectionsCallback callback) throws RemoteException {
         }
 
+        @Override // android.service.contentsuggestions.IContentSuggestionsService
         public void classifyContentSelections(ClassificationsRequest request, IClassificationsCallback callback) throws RemoteException {
         }
 
+        @Override // android.service.contentsuggestions.IContentSuggestionsService
         public void notifyInteraction(String requestId, Bundle interaction) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements IContentSuggestionsService {
         private static final String DESCRIPTOR = "android.service.contentsuggestions.IContentSuggestionsService";
         static final int TRANSACTION_classifyContentSelections = 3;
@@ -55,12 +63,13 @@ public interface IContentSuggestionsService extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IContentSuggestionsService)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IContentSuggestionsService)) {
+                return (IContentSuggestionsService) iin;
             }
-            return (IContentSuggestionsService) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -80,110 +89,55 @@ public interface IContentSuggestionsService extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v2, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v6, resolved type: android.app.contentsuggestions.SelectionsRequest} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v10, resolved type: android.app.contentsuggestions.ClassificationsRequest} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v14, resolved type: android.os.Bundle} */
-        /* JADX WARNING: type inference failed for: r1v1 */
-        /* JADX WARNING: type inference failed for: r1v19 */
-        /* JADX WARNING: type inference failed for: r1v20 */
-        /* JADX WARNING: type inference failed for: r1v21 */
-        /* JADX WARNING: type inference failed for: r1v22 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r8, android.os.Parcel r9, android.os.Parcel r10, int r11) throws android.os.RemoteException {
-            /*
-                r7 = this;
-                java.lang.String r0 = "android.service.contentsuggestions.IContentSuggestionsService"
-                r1 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r2 = 1
-                if (r8 == r1) goto L_0x0099
-                r1 = 0
-                switch(r8) {
-                    case 1: goto L_0x006a;
-                    case 2: goto L_0x004b;
-                    case 3: goto L_0x002c;
-                    case 4: goto L_0x0011;
-                    default: goto L_0x000c;
-                }
-            L_0x000c:
-                boolean r1 = super.onTransact(r8, r9, r10, r11)
-                return r1
-            L_0x0011:
-                r9.enforceInterface(r0)
-                java.lang.String r3 = r9.readString()
-                int r4 = r9.readInt()
-                if (r4 == 0) goto L_0x0027
-                android.os.Parcelable$Creator<android.os.Bundle> r1 = android.os.Bundle.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r9)
-                android.os.Bundle r1 = (android.os.Bundle) r1
-                goto L_0x0028
-            L_0x0027:
-            L_0x0028:
-                r7.notifyInteraction(r3, r1)
-                return r2
-            L_0x002c:
-                r9.enforceInterface(r0)
-                int r3 = r9.readInt()
-                if (r3 == 0) goto L_0x003e
-                android.os.Parcelable$Creator<android.app.contentsuggestions.ClassificationsRequest> r1 = android.app.contentsuggestions.ClassificationsRequest.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r9)
-                android.app.contentsuggestions.ClassificationsRequest r1 = (android.app.contentsuggestions.ClassificationsRequest) r1
-                goto L_0x003f
-            L_0x003e:
-            L_0x003f:
-                android.os.IBinder r3 = r9.readStrongBinder()
-                android.app.contentsuggestions.IClassificationsCallback r3 = android.app.contentsuggestions.IClassificationsCallback.Stub.asInterface(r3)
-                r7.classifyContentSelections(r1, r3)
-                return r2
-            L_0x004b:
-                r9.enforceInterface(r0)
-                int r3 = r9.readInt()
-                if (r3 == 0) goto L_0x005d
-                android.os.Parcelable$Creator<android.app.contentsuggestions.SelectionsRequest> r1 = android.app.contentsuggestions.SelectionsRequest.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r9)
-                android.app.contentsuggestions.SelectionsRequest r1 = (android.app.contentsuggestions.SelectionsRequest) r1
-                goto L_0x005e
-            L_0x005d:
-            L_0x005e:
-                android.os.IBinder r3 = r9.readStrongBinder()
-                android.app.contentsuggestions.ISelectionsCallback r3 = android.app.contentsuggestions.ISelectionsCallback.Stub.asInterface(r3)
-                r7.suggestContentSelections(r1, r3)
-                return r2
-            L_0x006a:
-                r9.enforceInterface(r0)
-                int r3 = r9.readInt()
-                int r4 = r9.readInt()
-                if (r4 == 0) goto L_0x0080
-                android.os.Parcelable$Creator<android.graphics.GraphicBuffer> r4 = android.graphics.GraphicBuffer.CREATOR
-                java.lang.Object r4 = r4.createFromParcel(r9)
-                android.graphics.GraphicBuffer r4 = (android.graphics.GraphicBuffer) r4
-                goto L_0x0081
-            L_0x0080:
-                r4 = r1
-            L_0x0081:
-                int r5 = r9.readInt()
-                int r6 = r9.readInt()
-                if (r6 == 0) goto L_0x0094
-                android.os.Parcelable$Creator<android.os.Bundle> r1 = android.os.Bundle.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r9)
-                android.os.Bundle r1 = (android.os.Bundle) r1
-                goto L_0x0095
-            L_0x0094:
-            L_0x0095:
-                r7.provideContextImage(r3, r4, r5, r1)
-                return r2
-            L_0x0099:
-                r10.writeString(r0)
-                return r2
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.service.contentsuggestions.IContentSuggestionsService.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            GraphicBuffer _arg1;
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0 = data.readInt();
+                    if (data.readInt() != 0) {
+                        _arg1 = GraphicBuffer.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg1 = null;
+                    }
+                    int _arg2 = data.readInt();
+                    Bundle _arg3 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    provideContextImage(_arg0, _arg1, _arg2, _arg3);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    SelectionsRequest _arg02 = data.readInt() != 0 ? SelectionsRequest.CREATOR.createFromParcel(data) : null;
+                    ISelectionsCallback _arg12 = ISelectionsCallback.Stub.asInterface(data.readStrongBinder());
+                    suggestContentSelections(_arg02, _arg12);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    ClassificationsRequest _arg03 = data.readInt() != 0 ? ClassificationsRequest.CREATOR.createFromParcel(data) : null;
+                    IClassificationsCallback _arg13 = IClassificationsCallback.Stub.asInterface(data.readStrongBinder());
+                    classifyContentSelections(_arg03, _arg13);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg04 = data.readString();
+                    Bundle _arg14 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    notifyInteraction(_arg04, _arg14);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements IContentSuggestionsService {
             public static IContentSuggestionsService sDefaultImpl;
             private IBinder mRemote;
@@ -192,6 +146,7 @@ public interface IContentSuggestionsService extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -200,6 +155,7 @@ public interface IContentSuggestionsService extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.service.contentsuggestions.IContentSuggestionsService
             public void provideContextImage(int taskId, GraphicBuffer contextImage, int colorSpaceId, Bundle imageContextRequestExtras) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -218,9 +174,8 @@ public interface IContentSuggestionsService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().provideContextImage(taskId, contextImage, colorSpaceId, imageContextRequestExtras);
                     }
                 } finally {
@@ -228,6 +183,7 @@ public interface IContentSuggestionsService extends IInterface {
                 }
             }
 
+            @Override // android.service.contentsuggestions.IContentSuggestionsService
             public void suggestContentSelections(SelectionsRequest request, ISelectionsCallback callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -239,9 +195,8 @@ public interface IContentSuggestionsService extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().suggestContentSelections(request, callback);
                     }
                 } finally {
@@ -249,6 +204,7 @@ public interface IContentSuggestionsService extends IInterface {
                 }
             }
 
+            @Override // android.service.contentsuggestions.IContentSuggestionsService
             public void classifyContentSelections(ClassificationsRequest request, IClassificationsCallback callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -260,9 +216,8 @@ public interface IContentSuggestionsService extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().classifyContentSelections(request, callback);
                     }
                 } finally {
@@ -270,6 +225,7 @@ public interface IContentSuggestionsService extends IInterface {
                 }
             }
 
+            @Override // android.service.contentsuggestions.IContentSuggestionsService
             public void notifyInteraction(String requestId, Bundle interaction) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -281,9 +237,8 @@ public interface IContentSuggestionsService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().notifyInteraction(requestId, interaction);
                     }
                 } finally {
@@ -293,11 +248,11 @@ public interface IContentSuggestionsService extends IInterface {
         }
 
         public static boolean setDefaultImpl(IContentSuggestionsService impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IContentSuggestionsService getDefaultImpl() {

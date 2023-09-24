@@ -4,27 +4,22 @@ import android.annotation.UnsupportedAppUsage;
 import android.app.ActivityManager;
 import android.app.IActivityTaskManager;
 import android.content.Context;
-import android.content.pm.PackageManager;
+import android.content.p002pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Rect;
-import android.os.Handler;
-import android.os.RemoteException;
-import android.os.ServiceManager;
+import android.p007os.Handler;
+import android.p007os.IBinder;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
 import android.util.Singleton;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.util.List;
 
+/* loaded from: classes.dex */
 public class ActivityTaskManager {
     public static final String EXTRA_IGNORE_TARGET_SECURITY = "android.app.extra.EXTRA_IGNORE_TARGET_SECURITY";
     public static final String EXTRA_OPTIONS = "android.app.extra.OPTIONS";
     public static final String EXTRA_PERMISSION_TOKEN = "android.app.extra.PERMISSION_TOKEN";
-    @UnsupportedAppUsage(trackingBug = 129726065)
-    private static final Singleton<IActivityTaskManager> IActivityTaskManagerSingleton = new Singleton<IActivityTaskManager>() {
-        /* access modifiers changed from: protected */
-        public IActivityTaskManager create() {
-            return IActivityTaskManager.Stub.asInterface(ServiceManager.getService(Context.ACTIVITY_TASK_SERVICE));
-        }
-    };
     public static final int INVALID_STACK_ID = -1;
     public static final int INVALID_TASK_ID = -1;
     public static final int RESIZE_MODE_FORCED = 2;
@@ -36,6 +31,16 @@ public class ActivityTaskManager {
     public static final int SPLIT_SCREEN_CREATE_MODE_BOTTOM_OR_RIGHT = 1;
     public static final int SPLIT_SCREEN_CREATE_MODE_TOP_OR_LEFT = 0;
     private static int sMaxRecentTasks = -1;
+    @UnsupportedAppUsage(trackingBug = 129726065)
+    private static final Singleton<IActivityTaskManager> IActivityTaskManagerSingleton = new Singleton<IActivityTaskManager>() { // from class: android.app.ActivityTaskManager.1
+        /* JADX INFO: Access modifiers changed from: protected */
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.util.Singleton
+        public IActivityTaskManager create() {
+            IBinder b = ServiceManager.getService(Context.ACTIVITY_TASK_SERVICE);
+            return IActivityTaskManager.Stub.asInterface(b);
+        }
+    };
 
     ActivityTaskManager(Context context, Handler handler) {
     }
@@ -93,12 +98,12 @@ public class ActivityTaskManager {
     }
 
     public static int getMaxRecentTasksStatic() {
-        if (sMaxRecentTasks >= 0) {
-            return sMaxRecentTasks;
+        if (sMaxRecentTasks < 0) {
+            int i = ActivityManager.isLowRamDeviceStatic() ? 36 : 48;
+            sMaxRecentTasks = i;
+            return i;
         }
-        int i = ActivityManager.isLowRamDeviceStatic() ? 36 : 48;
-        sMaxRecentTasks = i;
-        return i;
+        return sMaxRecentTasks;
     }
 
     public static int getDefaultAppRecentsLimitStatic() {
@@ -110,11 +115,12 @@ public class ActivityTaskManager {
     }
 
     public static boolean supportsMultiWindow(Context context) {
-        return (!ActivityManager.isLowRamDeviceStatic() || context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_WATCH)) && Resources.getSystem().getBoolean(R.bool.config_supportsMultiWindow);
+        boolean isWatch = context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_WATCH);
+        return (!ActivityManager.isLowRamDeviceStatic() || isWatch) && Resources.getSystem().getBoolean(C3132R.bool.config_supportsMultiWindow);
     }
 
     public static boolean supportsSplitScreenMultiWindow(Context context) {
-        return supportsMultiWindow(context) && Resources.getSystem().getBoolean(R.bool.config_supportsSplitScreenMultiWindow);
+        return supportsMultiWindow(context) && Resources.getSystem().getBoolean(C3132R.bool.config_supportsSplitScreenMultiWindow);
     }
 
     public boolean moveTopActivityToPinnedStack(int stackId, Rect bounds) {
@@ -167,7 +173,7 @@ public class ActivityTaskManager {
 
     public void resizeDockedStack(Rect stackBounds, Rect taskBounds) {
         try {
-            getService().resizeDockedStack(stackBounds, taskBounds, (Rect) null, (Rect) null, (Rect) null);
+            getService().resizeDockedStack(stackBounds, taskBounds, null, null, null);
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
         }

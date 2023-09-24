@@ -8,7 +8,6 @@ import android.content.res.Resources;
 import android.graphics.ColorSpace;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Bundle;
 import android.system.ErrnoException;
 import android.system.Os;
 import android.system.OsConstants;
@@ -24,10 +23,13 @@ import java.io.InputStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.nio.ByteBuffer;
+import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicBoolean;
 import libcore.io.IoUtils;
 
+/* loaded from: classes.dex */
 public final class ImageDecoder implements AutoCloseable {
     public static final int ALLOCATOR_DEFAULT = 0;
     public static final int ALLOCATOR_HARDWARE = 3;
@@ -42,23 +44,14 @@ public final class ImageDecoder implements AutoCloseable {
     public static final int MEMORY_POLICY_DEFAULT = 1;
     public static final int MEMORY_POLICY_LOW_RAM = 0;
     public static int sApiLevel;
-    private int mAllocator = 0;
-    /* access modifiers changed from: private */
-    public final boolean mAnimated;
+    private final boolean mAnimated;
     private AssetFileDescriptor mAssetFd;
-    private final CloseGuard mCloseGuard = CloseGuard.get();
-    private final AtomicBoolean mClosed = new AtomicBoolean();
-    private boolean mConserveMemory = false;
     private Rect mCropRect;
-    private boolean mDecodeAsAlphaMask = false;
-    private ColorSpace mDesiredColorSpace = null;
     private int mDesiredHeight;
     private int mDesiredWidth;
-    /* access modifiers changed from: private */
-    public final int mHeight;
+    private final int mHeight;
     private InputStream mInputStream;
     private final boolean mIsNinePatch;
-    private boolean mMutable = false;
     private long mNativePtr;
     private OnPartialImageListener mOnPartialImageListener;
     private Rect mOutPaddingRect;
@@ -66,26 +59,37 @@ public final class ImageDecoder implements AutoCloseable {
     private PostProcessor mPostProcessor;
     private Source mSource;
     private byte[] mTempStorage;
+    private final int mWidth;
+    private int mAllocator = 0;
     private boolean mUnpremultipliedRequired = false;
-    /* access modifiers changed from: private */
-    public final int mWidth;
+    private boolean mMutable = false;
+    private boolean mConserveMemory = false;
+    private boolean mDecodeAsAlphaMask = false;
+    private ColorSpace mDesiredColorSpace = null;
+    private final AtomicBoolean mClosed = new AtomicBoolean();
+    private final CloseGuard mCloseGuard = CloseGuard.get();
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface Allocator {
     }
 
     @Deprecated
+    /* loaded from: classes.dex */
     public static class IncompleteException extends IOException {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface MemoryPolicy {
     }
 
+    /* loaded from: classes.dex */
     public interface OnHeaderDecodedListener {
         void onHeaderDecoded(ImageDecoder imageDecoder, ImageInfo imageInfo, Source source);
     }
 
+    /* loaded from: classes.dex */
     public interface OnPartialImageListener {
         boolean onPartialImage(DecodeException decodeException);
     }
@@ -98,10 +102,10 @@ public final class ImageDecoder implements AutoCloseable {
 
     private static native ImageDecoder nCreate(InputStream inputStream, byte[] bArr, Source source) throws IOException;
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static native ImageDecoder nCreate(ByteBuffer byteBuffer, int i, int i2, Source source) throws IOException;
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static native ImageDecoder nCreate(byte[] bArr, int i, int i2, Source source) throws IOException;
 
     private static native Bitmap nDecodeBitmap(long j, ImageDecoder imageDecoder, boolean z, int i, int i2, Rect rect, boolean z2, int i3, boolean z3, boolean z4, boolean z5, long j2, boolean z6) throws IOException;
@@ -114,25 +118,22 @@ public final class ImageDecoder implements AutoCloseable {
 
     private static native Size nGetSampledSize(long j, int i);
 
+    /* loaded from: classes.dex */
     public static abstract class Source {
-        /* access modifiers changed from: package-private */
-        public abstract ImageDecoder createImageDecoder() throws IOException;
+        abstract ImageDecoder createImageDecoder() throws IOException;
 
         private Source() {
         }
 
-        /* access modifiers changed from: package-private */
-        public Resources getResources() {
+        Resources getResources() {
             return null;
         }
 
-        /* access modifiers changed from: package-private */
-        public int getDensity() {
+        int getDensity() {
             return 0;
         }
 
-        /* access modifiers changed from: package-private */
-        public final int computeDstDensity() {
+        final int computeDstDensity() {
             Resources res = getResources();
             if (res == null) {
                 return Bitmap.getDefaultDensity();
@@ -141,6 +142,7 @@ public final class ImageDecoder implements AutoCloseable {
         }
     }
 
+    /* loaded from: classes.dex */
     private static class ByteArraySource extends Source {
         private final byte[] mData;
         private final int mLength;
@@ -153,11 +155,13 @@ public final class ImageDecoder implements AutoCloseable {
             this.mLength = length;
         }
 
+        @Override // android.graphics.ImageDecoder.Source
         public ImageDecoder createImageDecoder() throws IOException {
-            return ImageDecoder.nCreate(this.mData, this.mOffset, this.mLength, (Source) this);
+            return ImageDecoder.nCreate(this.mData, this.mOffset, this.mLength, this);
         }
     }
 
+    /* loaded from: classes.dex */
     private static class ByteBufferSource extends Source {
         private final ByteBuffer mBuffer;
 
@@ -166,15 +170,19 @@ public final class ImageDecoder implements AutoCloseable {
             this.mBuffer = buffer;
         }
 
+        @Override // android.graphics.ImageDecoder.Source
         public ImageDecoder createImageDecoder() throws IOException {
-            if (this.mBuffer.isDirect() || !this.mBuffer.hasArray()) {
-                ByteBuffer buffer = this.mBuffer.slice();
-                return ImageDecoder.nCreate(buffer, buffer.position(), buffer.limit(), (Source) this);
+            if (!this.mBuffer.isDirect() && this.mBuffer.hasArray()) {
+                int offset = this.mBuffer.arrayOffset() + this.mBuffer.position();
+                int length = this.mBuffer.limit() - this.mBuffer.position();
+                return ImageDecoder.nCreate(this.mBuffer.array(), offset, length, this);
             }
-            return ImageDecoder.nCreate(this.mBuffer.array(), this.mBuffer.arrayOffset() + this.mBuffer.position(), this.mBuffer.limit() - this.mBuffer.position(), (Source) this);
+            ByteBuffer buffer = this.mBuffer.slice();
+            return ImageDecoder.nCreate(buffer, buffer.position(), buffer.limit(), this);
         }
     }
 
+    /* loaded from: classes.dex */
     private static class ContentResolverSource extends Source {
         private final ContentResolver mResolver;
         private final Resources mResources;
@@ -187,16 +195,17 @@ public final class ImageDecoder implements AutoCloseable {
             this.mResources = res;
         }
 
-        /* access modifiers changed from: package-private */
-        public Resources getResources() {
+        @Override // android.graphics.ImageDecoder.Source
+        Resources getResources() {
             return this.mResources;
         }
 
+        @Override // android.graphics.ImageDecoder.Source
         public ImageDecoder createImageDecoder() throws IOException {
             AssetFileDescriptor assetFd;
             try {
                 if (this.mUri.getScheme() == "content") {
-                    assetFd = this.mResolver.openTypedAssetFileDescriptor(this.mUri, "image/*", (Bundle) null);
+                    assetFd = this.mResolver.openTypedAssetFileDescriptor(this.mUri, "image/*", null);
                 } else {
                     assetFd = this.mResolver.openAssetFileDescriptor(this.mUri, "r");
                 }
@@ -211,19 +220,15 @@ public final class ImageDecoder implements AutoCloseable {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static ImageDecoder createFromFile(File file, Source source) throws IOException {
         FileInputStream stream = new FileInputStream(file);
         FileDescriptor fd = stream.getFD();
         try {
-            Os.lseek(fd, 0, OsConstants.SEEK_CUR);
+            Os.lseek(fd, 0L, OsConstants.SEEK_CUR);
             ImageDecoder decoder = null;
             try {
                 decoder = nCreate(fd, source);
-                if (decoder != null) {
-                    decoder.mInputStream = stream;
-                    decoder.mOwnsInputStream = true;
-                }
                 return decoder;
             } finally {
                 if (decoder == null) {
@@ -238,54 +243,55 @@ public final class ImageDecoder implements AutoCloseable {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static ImageDecoder createFromStream(InputStream is, boolean closeInputStream, Source source) throws IOException {
         byte[] storage = new byte[16384];
         ImageDecoder decoder = null;
         try {
             decoder = nCreate(is, storage, source);
-            if (decoder != null) {
-                decoder.mInputStream = is;
-                decoder.mOwnsInputStream = closeInputStream;
-                decoder.mTempStorage = storage;
-            }
             return decoder;
         } finally {
-            if (decoder != null) {
+            if (decoder == null) {
+                if (closeInputStream) {
+                    IoUtils.closeQuietly(is);
+                }
+            } else {
                 decoder.mInputStream = is;
                 decoder.mOwnsInputStream = closeInputStream;
                 decoder.mTempStorage = storage;
-            } else if (closeInputStream) {
-                IoUtils.closeQuietly(is);
             }
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static ImageDecoder createFromAssetFileDescriptor(AssetFileDescriptor assetFd, Source source) throws IOException {
-        ImageDecoder decoder;
         FileDescriptor fd = assetFd.getFileDescriptor();
+        long offset = assetFd.getStartOffset();
+        ImageDecoder decoder = null;
         try {
-            Os.lseek(fd, assetFd.getStartOffset(), OsConstants.SEEK_SET);
-            decoder = nCreate(fd, source);
-        } catch (ErrnoException e) {
-            decoder = createFromStream(new FileInputStream(fd), true, source);
-        } catch (Throwable th) {
-            if (0 == 0) {
+            try {
+                Os.lseek(fd, offset, OsConstants.SEEK_SET);
+                decoder = nCreate(fd, source);
+            } catch (ErrnoException e) {
+                decoder = createFromStream(new FileInputStream(fd), true, source);
+            }
+            if (decoder == null) {
                 IoUtils.closeQuietly(assetFd);
             } else {
-                null.mAssetFd = assetFd;
+                decoder.mAssetFd = assetFd;
+            }
+            return decoder;
+        } catch (Throwable th) {
+            if (decoder == null) {
+                IoUtils.closeQuietly(assetFd);
+            } else {
+                decoder.mAssetFd = assetFd;
             }
             throw th;
         }
-        if (decoder == null) {
-            IoUtils.closeQuietly(assetFd);
-        } else {
-            decoder.mAssetFd = assetFd;
-        }
-        return decoder;
     }
 
+    /* loaded from: classes.dex */
     private static class InputStreamSource extends Source {
         final int mInputDensity;
         InputStream mInputStream;
@@ -293,38 +299,40 @@ public final class ImageDecoder implements AutoCloseable {
 
         InputStreamSource(Resources res, InputStream is, int inputDensity) {
             super();
-            if (is != null) {
-                this.mResources = res;
-                this.mInputStream = is;
-                this.mInputDensity = inputDensity;
-                return;
+            if (is == null) {
+                throw new IllegalArgumentException("The InputStream cannot be null");
             }
-            throw new IllegalArgumentException("The InputStream cannot be null");
+            this.mResources = res;
+            this.mInputStream = is;
+            this.mInputDensity = inputDensity;
         }
 
+        @Override // android.graphics.ImageDecoder.Source
         public Resources getResources() {
             return this.mResources;
         }
 
+        @Override // android.graphics.ImageDecoder.Source
         public int getDensity() {
             return this.mInputDensity;
         }
 
+        @Override // android.graphics.ImageDecoder.Source
         public ImageDecoder createImageDecoder() throws IOException {
-            ImageDecoder access$300;
+            ImageDecoder createFromStream;
             synchronized (this) {
-                if (this.mInputStream != null) {
-                    InputStream is = this.mInputStream;
-                    this.mInputStream = null;
-                    access$300 = ImageDecoder.createFromStream(is, false, this);
-                } else {
+                if (this.mInputStream == null) {
                     throw new IOException("Cannot reuse InputStreamSource");
                 }
+                InputStream is = this.mInputStream;
+                this.mInputStream = null;
+                createFromStream = ImageDecoder.createFromStream(is, false, this);
             }
-            return access$300;
+            return createFromStream;
         }
     }
 
+    /* loaded from: classes.dex */
     public static class AssetInputStreamSource extends Source {
         private AssetManager.AssetInputStream mAssetInputStream;
         private final int mDensity;
@@ -343,46 +351,52 @@ public final class ImageDecoder implements AutoCloseable {
             }
         }
 
+        @Override // android.graphics.ImageDecoder.Source
         public Resources getResources() {
             return this.mResources;
         }
 
+        @Override // android.graphics.ImageDecoder.Source
         public int getDensity() {
             return this.mDensity;
         }
 
+        @Override // android.graphics.ImageDecoder.Source
         public ImageDecoder createImageDecoder() throws IOException {
-            ImageDecoder access$500;
+            ImageDecoder createFromAsset;
             synchronized (this) {
-                if (this.mAssetInputStream != null) {
-                    AssetManager.AssetInputStream ais = this.mAssetInputStream;
-                    this.mAssetInputStream = null;
-                    access$500 = ImageDecoder.createFromAsset(ais, this);
-                } else {
+                if (this.mAssetInputStream == null) {
                     throw new IOException("Cannot reuse AssetInputStreamSource");
                 }
+                AssetManager.AssetInputStream ais = this.mAssetInputStream;
+                this.mAssetInputStream = null;
+                createFromAsset = ImageDecoder.createFromAsset(ais, this);
             }
-            return access$500;
+            return createFromAsset;
         }
     }
 
+    /* loaded from: classes.dex */
     private static class ResourceSource extends Source {
-        private Object mLock = new Object();
+        private Object mLock;
         int mResDensity;
         final int mResId;
         final Resources mResources;
 
         ResourceSource(Resources res, int resId) {
             super();
+            this.mLock = new Object();
             this.mResources = res;
             this.mResId = resId;
             this.mResDensity = 0;
         }
 
+        @Override // android.graphics.ImageDecoder.Source
         public Resources getResources() {
             return this.mResources;
         }
 
+        @Override // android.graphics.ImageDecoder.Source
         public int getDensity() {
             int i;
             synchronized (this.mLock) {
@@ -391,6 +405,7 @@ public final class ImageDecoder implements AutoCloseable {
             return i;
         }
 
+        @Override // android.graphics.ImageDecoder.Source
         public ImageDecoder createImageDecoder() throws IOException {
             TypedValue value = new TypedValue();
             InputStream is = this.mResources.openRawResource(this.mResId, value);
@@ -405,15 +420,12 @@ public final class ImageDecoder implements AutoCloseable {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static ImageDecoder createFromAsset(AssetManager.AssetInputStream ais, Source source) throws IOException {
         ImageDecoder decoder = null;
         try {
-            decoder = nCreate(ais.getNativeAsset(), source);
-            if (decoder != null) {
-                decoder.mInputStream = ais;
-                decoder.mOwnsInputStream = true;
-            }
+            long asset = ais.getNativeAsset();
+            decoder = nCreate(asset, source);
             return decoder;
         } finally {
             if (decoder == null) {
@@ -425,6 +437,7 @@ public final class ImageDecoder implements AutoCloseable {
         }
     }
 
+    /* loaded from: classes.dex */
     private static class AssetSource extends Source {
         private final AssetManager mAssets;
         private final String mFileName;
@@ -435,11 +448,14 @@ public final class ImageDecoder implements AutoCloseable {
             this.mFileName = fileName;
         }
 
+        @Override // android.graphics.ImageDecoder.Source
         public ImageDecoder createImageDecoder() throws IOException {
-            return ImageDecoder.createFromAsset((AssetManager.AssetInputStream) this.mAssets.open(this.mFileName), this);
+            InputStream is = this.mAssets.open(this.mFileName);
+            return ImageDecoder.createFromAsset((AssetManager.AssetInputStream) is, this);
         }
     }
 
+    /* loaded from: classes.dex */
     private static class FileSource extends Source {
         private final File mFile;
 
@@ -448,11 +464,13 @@ public final class ImageDecoder implements AutoCloseable {
             this.mFile = file;
         }
 
+        @Override // android.graphics.ImageDecoder.Source
         public ImageDecoder createImageDecoder() throws IOException {
             return ImageDecoder.createFromFile(this.mFile, this);
         }
     }
 
+    /* loaded from: classes.dex */
     private static class CallableSource extends Source {
         private final Callable<AssetFileDescriptor> mCallable;
 
@@ -461,9 +479,11 @@ public final class ImageDecoder implements AutoCloseable {
             this.mCallable = callable;
         }
 
+        @Override // android.graphics.ImageDecoder.Source
         public ImageDecoder createImageDecoder() throws IOException {
             try {
-                return ImageDecoder.createFromAssetFileDescriptor(this.mCallable.call(), this);
+                AssetFileDescriptor assetFd = this.mCallable.call();
+                return ImageDecoder.createFromAssetFileDescriptor(assetFd, this);
             } catch (Exception e) {
                 if (e instanceof IOException) {
                     throw ((IOException) e);
@@ -473,9 +493,9 @@ public final class ImageDecoder implements AutoCloseable {
         }
     }
 
+    /* loaded from: classes.dex */
     public static class ImageInfo {
-        /* access modifiers changed from: private */
-        public ImageDecoder mDecoder;
+        private ImageDecoder mDecoder;
         private final Size mSize;
 
         private ImageInfo(ImageDecoder decoder) {
@@ -500,6 +520,7 @@ public final class ImageDecoder implements AutoCloseable {
         }
     }
 
+    /* loaded from: classes.dex */
     public static final class DecodeException extends IOException {
         public static final int SOURCE_EXCEPTION = 1;
         public static final int SOURCE_INCOMPLETE = 2;
@@ -508,6 +529,7 @@ public final class ImageDecoder implements AutoCloseable {
         final Source mSource;
 
         @Retention(RetentionPolicy.SOURCE)
+        /* loaded from: classes.dex */
         public @interface Error {
         }
 
@@ -556,8 +578,7 @@ public final class ImageDecoder implements AutoCloseable {
         this.mCloseGuard.open("close");
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         try {
             if (this.mCloseGuard != null) {
                 this.mCloseGuard.warnIfOpen();
@@ -570,185 +591,173 @@ public final class ImageDecoder implements AutoCloseable {
         }
     }
 
-    /* JADX WARNING: Can't fix incorrect switch cases order */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public static boolean isMimeTypeSupported(java.lang.String r4) {
-        /*
-            java.util.Objects.requireNonNull(r4)
-            java.util.Locale r0 = java.util.Locale.US
-            java.lang.String r0 = r4.toLowerCase(r0)
-            int r1 = r0.hashCode()
-            r2 = 1
-            r3 = 0
-            switch(r1) {
-                case -1875291391: goto L_0x00dc;
-                case -1635437028: goto L_0x00d1;
-                case -1594371159: goto L_0x00c6;
-                case -1487464693: goto L_0x00bc;
-                case -1487464690: goto L_0x00b2;
-                case -1487394660: goto L_0x00a8;
-                case -1487018032: goto L_0x009e;
-                case -1423313290: goto L_0x0093;
-                case -985160897: goto L_0x0088;
-                case -879272239: goto L_0x007d;
-                case -879267568: goto L_0x0072;
-                case -879258763: goto L_0x0067;
-                case -332763809: goto L_0x005b;
-                case 741270252: goto L_0x004f;
-                case 1146342924: goto L_0x0044;
-                case 1378106698: goto L_0x0038;
-                case 2099152104: goto L_0x002c;
-                case 2099152524: goto L_0x0020;
-                case 2111234748: goto L_0x0014;
-                default: goto L_0x0012;
-            }
-        L_0x0012:
-            goto L_0x00e7
-        L_0x0014:
-            java.lang.String r1 = "image/x-canon-cr2"
-            boolean r0 = r0.equals(r1)
-            if (r0 == 0) goto L_0x00e7
-            r0 = 10
-            goto L_0x00e8
-        L_0x0020:
-            java.lang.String r1 = "image/x-nikon-nrw"
-            boolean r0 = r0.equals(r1)
-            if (r0 == 0) goto L_0x00e7
-            r0 = 13
-            goto L_0x00e8
-        L_0x002c:
-            java.lang.String r1 = "image/x-nikon-nef"
-            boolean r0 = r0.equals(r1)
-            if (r0 == 0) goto L_0x00e7
-            r0 = 12
-            goto L_0x00e8
-        L_0x0038:
-            java.lang.String r1 = "image/x-olympus-orf"
-            boolean r0 = r0.equals(r1)
-            if (r0 == 0) goto L_0x00e7
-            r0 = 14
-            goto L_0x00e8
-        L_0x0044:
-            java.lang.String r1 = "image/x-ico"
-            boolean r0 = r0.equals(r1)
-            if (r0 == 0) goto L_0x00e7
-            r0 = 7
-            goto L_0x00e8
-        L_0x004f:
-            java.lang.String r1 = "image/vnd.wap.wbmp"
-            boolean r0 = r0.equals(r1)
-            if (r0 == 0) goto L_0x00e7
-            r0 = 8
-            goto L_0x00e8
-        L_0x005b:
-            java.lang.String r1 = "image/x-pentax-pef"
-            boolean r0 = r0.equals(r1)
-            if (r0 == 0) goto L_0x00e7
-            r0 = 17
-            goto L_0x00e8
-        L_0x0067:
-            java.lang.String r1 = "image/png"
-            boolean r0 = r0.equals(r1)
-            if (r0 == 0) goto L_0x00e7
-            r0 = r3
-            goto L_0x00e8
-        L_0x0072:
-            java.lang.String r1 = "image/gif"
-            boolean r0 = r0.equals(r1)
-            if (r0 == 0) goto L_0x00e7
-            r0 = 3
-            goto L_0x00e8
-        L_0x007d:
-            java.lang.String r1 = "image/bmp"
-            boolean r0 = r0.equals(r1)
-            if (r0 == 0) goto L_0x00e7
-            r0 = 6
-            goto L_0x00e8
-        L_0x0088:
-            java.lang.String r1 = "image/x-panasonic-rw2"
-            boolean r0 = r0.equals(r1)
-            if (r0 == 0) goto L_0x00e7
-            r0 = 16
-            goto L_0x00e8
-        L_0x0093:
-            java.lang.String r1 = "image/x-adobe-dng"
-            boolean r0 = r0.equals(r1)
-            if (r0 == 0) goto L_0x00e7
-            r0 = 11
-            goto L_0x00e8
-        L_0x009e:
-            java.lang.String r1 = "image/webp"
-            boolean r0 = r0.equals(r1)
-            if (r0 == 0) goto L_0x00e7
-            r0 = 2
-            goto L_0x00e8
-        L_0x00a8:
-            java.lang.String r1 = "image/jpeg"
-            boolean r0 = r0.equals(r1)
-            if (r0 == 0) goto L_0x00e7
-            r0 = r2
-            goto L_0x00e8
-        L_0x00b2:
-            java.lang.String r1 = "image/heif"
-            boolean r0 = r0.equals(r1)
-            if (r0 == 0) goto L_0x00e7
-            r0 = 4
-            goto L_0x00e8
-        L_0x00bc:
-            java.lang.String r1 = "image/heic"
-            boolean r0 = r0.equals(r1)
-            if (r0 == 0) goto L_0x00e7
-            r0 = 5
-            goto L_0x00e8
-        L_0x00c6:
-            java.lang.String r1 = "image/x-sony-arw"
-            boolean r0 = r0.equals(r1)
-            if (r0 == 0) goto L_0x00e7
-            r0 = 9
-            goto L_0x00e8
-        L_0x00d1:
-            java.lang.String r1 = "image/x-samsung-srw"
-            boolean r0 = r0.equals(r1)
-            if (r0 == 0) goto L_0x00e7
-            r0 = 18
-            goto L_0x00e8
-        L_0x00dc:
-            java.lang.String r1 = "image/x-fuji-raf"
-            boolean r0 = r0.equals(r1)
-            if (r0 == 0) goto L_0x00e7
-            r0 = 15
-            goto L_0x00e8
-        L_0x00e7:
-            r0 = -1
-        L_0x00e8:
-            switch(r0) {
-                case 0: goto L_0x00ec;
-                case 1: goto L_0x00ec;
-                case 2: goto L_0x00ec;
-                case 3: goto L_0x00ec;
-                case 4: goto L_0x00ec;
-                case 5: goto L_0x00ec;
-                case 6: goto L_0x00ec;
-                case 7: goto L_0x00ec;
-                case 8: goto L_0x00ec;
-                case 9: goto L_0x00ec;
-                case 10: goto L_0x00ec;
-                case 11: goto L_0x00ec;
-                case 12: goto L_0x00ec;
-                case 13: goto L_0x00ec;
-                case 14: goto L_0x00ec;
-                case 15: goto L_0x00ec;
-                case 16: goto L_0x00ec;
-                case 17: goto L_0x00ec;
-                case 18: goto L_0x00ec;
-                default: goto L_0x00eb;
-            }
-        L_0x00eb:
-            return r3
-        L_0x00ec:
-            return r2
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.graphics.ImageDecoder.isMimeTypeSupported(java.lang.String):boolean");
+    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
+    public static boolean isMimeTypeSupported(String mimeType) {
+        char c;
+        Objects.requireNonNull(mimeType);
+        String lowerCase = mimeType.toLowerCase(Locale.US);
+        switch (lowerCase.hashCode()) {
+            case -1875291391:
+                if (lowerCase.equals("image/x-fuji-raf")) {
+                    c = 15;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -1635437028:
+                if (lowerCase.equals("image/x-samsung-srw")) {
+                    c = 18;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -1594371159:
+                if (lowerCase.equals("image/x-sony-arw")) {
+                    c = '\t';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -1487464693:
+                if (lowerCase.equals("image/heic")) {
+                    c = 5;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -1487464690:
+                if (lowerCase.equals("image/heif")) {
+                    c = 4;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -1487394660:
+                if (lowerCase.equals("image/jpeg")) {
+                    c = 1;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -1487018032:
+                if (lowerCase.equals("image/webp")) {
+                    c = 2;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -1423313290:
+                if (lowerCase.equals("image/x-adobe-dng")) {
+                    c = 11;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -985160897:
+                if (lowerCase.equals("image/x-panasonic-rw2")) {
+                    c = 16;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -879272239:
+                if (lowerCase.equals("image/bmp")) {
+                    c = 6;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -879267568:
+                if (lowerCase.equals("image/gif")) {
+                    c = 3;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -879258763:
+                if (lowerCase.equals("image/png")) {
+                    c = 0;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -332763809:
+                if (lowerCase.equals("image/x-pentax-pef")) {
+                    c = 17;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 741270252:
+                if (lowerCase.equals("image/vnd.wap.wbmp")) {
+                    c = '\b';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 1146342924:
+                if (lowerCase.equals("image/x-ico")) {
+                    c = 7;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 1378106698:
+                if (lowerCase.equals("image/x-olympus-orf")) {
+                    c = 14;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 2099152104:
+                if (lowerCase.equals("image/x-nikon-nef")) {
+                    c = '\f';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 2099152524:
+                if (lowerCase.equals("image/x-nikon-nrw")) {
+                    c = '\r';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 2111234748:
+                if (lowerCase.equals("image/x-canon-cr2")) {
+                    c = '\n';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            default:
+                c = '\uffff';
+                break;
+        }
+        switch (c) {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+            case '\b':
+            case '\t':
+            case '\n':
+            case 11:
+            case '\f':
+            case '\r':
+            case 14:
+            case 15:
+            case 16:
+            case 17:
+            case 18:
+                return true;
+            default:
+                return false;
+        }
     }
 
     public static Source createSource(Resources res, int resId) {
@@ -756,7 +765,7 @@ public final class ImageDecoder implements AutoCloseable {
     }
 
     public static Source createSource(ContentResolver cr, Uri uri) {
-        return new ContentResolverSource(cr, uri, (Resources) null);
+        return new ContentResolverSource(cr, uri, null);
     }
 
     public static Source createSource(ContentResolver cr, Uri uri, Resources res) {
@@ -770,11 +779,11 @@ public final class ImageDecoder implements AutoCloseable {
     public static Source createSource(byte[] data, int offset, int length) throws ArrayIndexOutOfBoundsException {
         if (data == null) {
             throw new NullPointerException("null byte[] in createSource!");
-        } else if (offset >= 0 && length >= 0 && offset < data.length && offset + length <= data.length) {
-            return new ByteArraySource(data, offset, length);
-        } else {
+        }
+        if (offset < 0 || length < 0 || offset >= data.length || offset + length > data.length) {
             throw new ArrayIndexOutOfBoundsException("invalid offset/length!");
         }
+        return new ByteArraySource(data, offset, length);
     }
 
     public static Source createSource(byte[] data) {
@@ -804,10 +813,10 @@ public final class ImageDecoder implements AutoCloseable {
     public Size getSampledSize(int sampleSize) {
         if (sampleSize <= 0) {
             throw new IllegalArgumentException("sampleSize must be positive! provided " + sampleSize);
-        } else if (this.mNativePtr != 0) {
-            return nGetSampledSize(this.mNativePtr, sampleSize);
-        } else {
+        } else if (this.mNativePtr == 0) {
             throw new IllegalStateException("ImageDecoder is closed!");
+        } else {
+            return nGetSampledSize(this.mNativePtr, sampleSize);
         }
     }
 
@@ -836,15 +845,21 @@ public final class ImageDecoder implements AutoCloseable {
             return 1;
         }
         int target = original / sampleSize;
-        if (computed != target && Math.abs((computed * sampleSize) - original) >= sampleSize) {
-            return target;
+        if (computed == target) {
+            return computed;
         }
-        return computed;
+        int reverse = computed * sampleSize;
+        if (Math.abs(reverse - original) < sampleSize) {
+            return computed;
+        }
+        return target;
     }
 
     public void setTargetSampleSize(int sampleSize) {
         Size size = getSampledSize(sampleSize);
-        setTargetSize(getTargetDimension(this.mWidth, sampleSize, size.getWidth()), getTargetDimension(this.mHeight, sampleSize, size.getHeight()));
+        int targetWidth = getTargetDimension(this.mWidth, sampleSize, size.getWidth());
+        int targetHeight = getTargetDimension(this.mHeight, sampleSize, size.getHeight());
+        setTargetSize(targetWidth, targetHeight);
     }
 
     private boolean requestedResize() {
@@ -933,7 +948,7 @@ public final class ImageDecoder implements AutoCloseable {
     }
 
     public int getMemorySizePolicy() {
-        return this.mConserveMemory ^ true ? 1 : 0;
+        return !this.mConserveMemory ? 1 : 0;
     }
 
     @Deprecated
@@ -980,44 +995,47 @@ public final class ImageDecoder implements AutoCloseable {
         this.mDesiredColorSpace = colorSpace;
     }
 
+    @Override // java.lang.AutoCloseable
     public void close() {
         this.mCloseGuard.close();
-        if (this.mClosed.compareAndSet(false, true)) {
-            nClose(this.mNativePtr);
-            this.mNativePtr = 0;
-            if (this.mOwnsInputStream) {
-                IoUtils.closeQuietly(this.mInputStream);
-            }
-            IoUtils.closeQuietly(this.mAssetFd);
-            this.mInputStream = null;
-            this.mAssetFd = null;
-            this.mTempStorage = null;
+        if (!this.mClosed.compareAndSet(false, true)) {
+            return;
         }
+        nClose(this.mNativePtr);
+        this.mNativePtr = 0L;
+        if (this.mOwnsInputStream) {
+            IoUtils.closeQuietly(this.mInputStream);
+        }
+        IoUtils.closeQuietly(this.mAssetFd);
+        this.mInputStream = null;
+        this.mAssetFd = null;
+        this.mTempStorage = null;
     }
 
     private void checkState(boolean animated) {
-        if (this.mNativePtr != 0) {
-            checkSubset(this.mDesiredWidth, this.mDesiredHeight, this.mCropRect);
-            if (!animated && this.mAllocator == 3) {
-                if (this.mMutable) {
-                    throw new IllegalStateException("Cannot make mutable HARDWARE Bitmap!");
-                } else if (this.mDecodeAsAlphaMask) {
-                    throw new IllegalStateException("Cannot make HARDWARE Alpha mask Bitmap!");
-                }
-            }
-            if (this.mPostProcessor != null && this.mUnpremultipliedRequired) {
-                throw new IllegalStateException("Cannot draw to unpremultiplied pixels!");
-            }
-            return;
+        if (this.mNativePtr == 0) {
+            throw new IllegalStateException("Cannot use closed ImageDecoder!");
         }
-        throw new IllegalStateException("Cannot use closed ImageDecoder!");
+        checkSubset(this.mDesiredWidth, this.mDesiredHeight, this.mCropRect);
+        if (!animated && this.mAllocator == 3) {
+            if (this.mMutable) {
+                throw new IllegalStateException("Cannot make mutable HARDWARE Bitmap!");
+            }
+            if (this.mDecodeAsAlphaMask) {
+                throw new IllegalStateException("Cannot make HARDWARE Alpha mask Bitmap!");
+            }
+        }
+        if (this.mPostProcessor != null && this.mUnpremultipliedRequired) {
+            throw new IllegalStateException("Cannot draw to unpremultiplied pixels!");
+        }
     }
 
     private static void checkSubset(int width, int height, Rect r) {
-        if (r != null) {
-            if (r.left < 0 || r.top < 0 || r.right > width || r.bottom > height) {
-                throw new IllegalStateException("Subset " + r + " not contained by scaled image bounds: (" + width + " x " + height + ")");
-            }
+        if (r == null) {
+            return;
+        }
+        if (r.left < 0 || r.top < 0 || r.right > width || r.bottom > height) {
+            throw new IllegalStateException("Subset " + r + " not contained by scaled image bounds: (" + width + " x " + height + ")");
         }
     }
 
@@ -1025,28 +1043,19 @@ public final class ImageDecoder implements AutoCloseable {
         if (this.mDesiredColorSpace == null) {
             return false;
         }
-        if (this.mDesiredColorSpace == ColorSpace.get(ColorSpace.Named.EXTENDED_SRGB) || this.mDesiredColorSpace == ColorSpace.get(ColorSpace.Named.LINEAR_EXTENDED_SRGB)) {
-            return true;
-        }
-        return false;
+        return this.mDesiredColorSpace == ColorSpace.get(ColorSpace.Named.EXTENDED_SRGB) || this.mDesiredColorSpace == ColorSpace.get(ColorSpace.Named.LINEAR_EXTENDED_SRGB);
     }
 
     private long getColorSpacePtr() {
         if (this.mDesiredColorSpace == null) {
-            return 0;
+            return 0L;
         }
         return this.mDesiredColorSpace.getNativeInstance();
     }
 
     private Bitmap decodeBitmapInternal() throws IOException {
-        boolean z = false;
         checkState(false);
-        long j = this.mNativePtr;
-        if (this.mPostProcessor != null) {
-            z = true;
-        }
-        boolean z2 = z;
-        return nDecodeBitmap(j, this, z2, this.mDesiredWidth, this.mDesiredHeight, this.mCropRect, this.mMutable, this.mAllocator, this.mUnpremultipliedRequired, this.mConserveMemory, this.mDecodeAsAlphaMask, getColorSpacePtr(), checkForExtended());
+        return nDecodeBitmap(this.mNativePtr, this, this.mPostProcessor != null, this.mDesiredWidth, this.mDesiredHeight, this.mCropRect, this.mMutable, this.mAllocator, this.mUnpremultipliedRequired, this.mConserveMemory, this.mDecodeAsAlphaMask, getColorSpacePtr(), checkForExtended());
     }
 
     private void callHeaderDecoded(OnHeaderDecodedListener listener, Source src) {
@@ -1055,243 +1064,87 @@ public final class ImageDecoder implements AutoCloseable {
             try {
                 listener.onHeaderDecoded(this, info, src);
             } finally {
-                ImageDecoder unused = info.mDecoder = null;
+                info.mDecoder = null;
             }
         }
     }
 
     public static Drawable decodeDrawable(Source src, OnHeaderDecodedListener listener) throws IOException {
-        if (listener != null) {
-            return decodeDrawableImpl(src, listener);
+        if (listener == null) {
+            throw new IllegalArgumentException("listener cannot be null! Use decodeDrawable(Source) to not have a listener");
         }
-        throw new IllegalArgumentException("listener cannot be null! Use decodeDrawable(Source) to not have a listener");
+        return decodeDrawableImpl(src, listener);
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:43:0x00c2, code lost:
-        r0 = th;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:44:0x00c4, code lost:
-        r0 = th;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:56:0x00d4, code lost:
-        $closeResource(r6, r2);
-     */
-    /* JADX WARNING: Failed to process nested try/catch */
-    /* JADX WARNING: Removed duplicated region for block: B:44:0x00c4 A[ExcHandler: Throwable (th java.lang.Throwable), Splitter:B:4:0x000a] */
-    /* JADX WARNING: Removed duplicated region for block: B:56:0x00d4  */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
+    /*  JADX ERROR: JadxRuntimeException in pass: BlockProcessor
+        jadx.core.utils.exceptions.JadxRuntimeException: Found unreachable blocks
+        	at jadx.core.dex.visitors.blocks.DominatorTree.sortBlocks(DominatorTree.java:35)
+        	at jadx.core.dex.visitors.blocks.DominatorTree.compute(DominatorTree.java:25)
+        	at jadx.core.dex.visitors.blocks.BlockProcessor.computeDominators(BlockProcessor.java:202)
+        	at jadx.core.dex.visitors.blocks.BlockProcessor.processBlocksTree(BlockProcessor.java:45)
+        	at jadx.core.dex.visitors.blocks.BlockProcessor.visit(BlockProcessor.java:39)
+        */
     private static android.graphics.drawable.Drawable decodeDrawableImpl(android.graphics.ImageDecoder.Source r20, android.graphics.ImageDecoder.OnHeaderDecodedListener r21) throws java.io.IOException {
         /*
-            r1 = r20
-            android.graphics.ImageDecoder r2 = r20.createImageDecoder()
-            r2.mSource = r1     // Catch:{ Throwable -> 0x00cb, all -> 0x00c6 }
-            r4 = r21
-            r2.callHeaderDecoded(r4, r1)     // Catch:{ Throwable -> 0x00c4, all -> 0x00c2 }
-            boolean r0 = r2.mUnpremultipliedRequired     // Catch:{ Throwable -> 0x00c4, all -> 0x00c2 }
-            if (r0 != 0) goto L_0x00b7
-            boolean r0 = r2.mMutable     // Catch:{ Throwable -> 0x00c4, all -> 0x00c2 }
-            if (r0 != 0) goto L_0x00ae
-            int r0 = r2.computeDensity(r1)     // Catch:{ Throwable -> 0x00c4, all -> 0x00c2 }
-            boolean r5 = r2.mAnimated     // Catch:{ Throwable -> 0x00c4, all -> 0x00c2 }
-            if (r5 == 0) goto L_0x005c
-            android.graphics.PostProcessor r5 = r2.mPostProcessor     // Catch:{ Throwable -> 0x00c4, all -> 0x00c2 }
-            if (r5 != 0) goto L_0x0023
-            r8 = 0
-            goto L_0x0024
-        L_0x0023:
-            r8 = r2
-        L_0x0024:
-            r5 = 1
-            r2.checkState(r5)     // Catch:{ Throwable -> 0x00c4, all -> 0x00c2 }
-            android.graphics.drawable.AnimatedImageDrawable r19 = new android.graphics.drawable.AnimatedImageDrawable     // Catch:{ Throwable -> 0x00c4, all -> 0x00c2 }
-            long r6 = r2.mNativePtr     // Catch:{ Throwable -> 0x00c4, all -> 0x00c2 }
-            int r9 = r2.mDesiredWidth     // Catch:{ Throwable -> 0x00c4, all -> 0x00c2 }
-            int r10 = r2.mDesiredHeight     // Catch:{ Throwable -> 0x00c4, all -> 0x00c2 }
-            long r11 = r2.getColorSpacePtr()     // Catch:{ Throwable -> 0x00c4, all -> 0x00c2 }
-            boolean r13 = r2.checkForExtended()     // Catch:{ Throwable -> 0x00c4, all -> 0x00c2 }
-            int r15 = r20.computeDstDensity()     // Catch:{ Throwable -> 0x00c4, all -> 0x00c2 }
-            android.graphics.Rect r14 = r2.mCropRect     // Catch:{ Throwable -> 0x00c4, all -> 0x00c2 }
-            java.io.InputStream r5 = r2.mInputStream     // Catch:{ Throwable -> 0x00c4, all -> 0x00c2 }
-            android.content.res.AssetFileDescriptor r3 = r2.mAssetFd     // Catch:{ Throwable -> 0x00c4, all -> 0x00c2 }
-            r17 = r5
-            r5 = r19
-            r16 = r14
-            r14 = r0
-            r18 = r3
-            r5.<init>(r6, r8, r9, r10, r11, r13, r14, r15, r16, r17, r18)     // Catch:{ Throwable -> 0x00c4, all -> 0x00c2 }
-            r3 = r19
-            r5 = 0
-            r2.mInputStream = r5     // Catch:{ Throwable -> 0x00c4, all -> 0x00c2 }
-            r2.mAssetFd = r5     // Catch:{ Throwable -> 0x00c4, all -> 0x00c2 }
-            if (r2 == 0) goto L_0x005b
-            $closeResource(r5, r2)
-        L_0x005b:
-            return r3
-        L_0x005c:
-            android.graphics.Bitmap r3 = r2.decodeBitmapInternal()     // Catch:{ Throwable -> 0x00c4, all -> 0x00c2 }
-            r3.setDensity(r0)     // Catch:{ Throwable -> 0x00c4, all -> 0x00c2 }
-            android.content.res.Resources r5 = r20.getResources()     // Catch:{ Throwable -> 0x00c4, all -> 0x00c2 }
-            r12 = r5
-            byte[] r5 = r3.getNinePatchChunk()     // Catch:{ Throwable -> 0x00c4, all -> 0x00c2 }
-            r13 = r5
-            if (r13 == 0) goto L_0x00a2
-            boolean r5 = android.graphics.NinePatch.isNinePatchChunk(r13)     // Catch:{ Throwable -> 0x00c4, all -> 0x00c2 }
-            if (r5 == 0) goto L_0x00a2
-            android.graphics.Rect r5 = new android.graphics.Rect     // Catch:{ Throwable -> 0x00c4, all -> 0x00c2 }
-            r5.<init>()     // Catch:{ Throwable -> 0x00c4, all -> 0x00c2 }
-            r14 = r5
-            r3.getOpticalInsets(r14)     // Catch:{ Throwable -> 0x00c4, all -> 0x00c2 }
-            android.graphics.Rect r5 = r2.mOutPaddingRect     // Catch:{ Throwable -> 0x00c4, all -> 0x00c2 }
-            if (r5 != 0) goto L_0x0088
-            android.graphics.Rect r6 = new android.graphics.Rect     // Catch:{ Throwable -> 0x00c4, all -> 0x00c2 }
-            r6.<init>()     // Catch:{ Throwable -> 0x00c4, all -> 0x00c2 }
-            r5 = r6
-        L_0x0088:
-            r15 = r5
-            long r5 = r2.mNativePtr     // Catch:{ Throwable -> 0x00c4, all -> 0x00c2 }
-            nGetPadding(r5, r15)     // Catch:{ Throwable -> 0x00c4, all -> 0x00c2 }
-            android.graphics.drawable.NinePatchDrawable r16 = new android.graphics.drawable.NinePatchDrawable     // Catch:{ Throwable -> 0x00c4, all -> 0x00c2 }
-            r11 = 0
-            r5 = r16
-            r6 = r12
-            r7 = r3
-            r8 = r13
-            r9 = r15
-            r10 = r14
-            r5.<init>(r6, r7, r8, r9, r10, r11)     // Catch:{ Throwable -> 0x00c4, all -> 0x00c2 }
-            if (r2 == 0) goto L_0x00a1
-            r5 = 0
-            $closeResource(r5, r2)
-        L_0x00a1:
-            return r16
-        L_0x00a2:
-            android.graphics.drawable.BitmapDrawable r5 = new android.graphics.drawable.BitmapDrawable     // Catch:{ Throwable -> 0x00c4, all -> 0x00c2 }
-            r5.<init>((android.content.res.Resources) r12, (android.graphics.Bitmap) r3)     // Catch:{ Throwable -> 0x00c4, all -> 0x00c2 }
-            if (r2 == 0) goto L_0x00ad
-            r6 = 0
-            $closeResource(r6, r2)
-        L_0x00ad:
-            return r5
-        L_0x00ae:
-            r6 = 0
-            java.lang.IllegalStateException r0 = new java.lang.IllegalStateException     // Catch:{ Throwable -> 0x00c4, all -> 0x00c0 }
-            java.lang.String r3 = "Cannot decode a mutable Drawable!"
-            r0.<init>(r3)     // Catch:{ Throwable -> 0x00c4, all -> 0x00c0 }
-            throw r0     // Catch:{ Throwable -> 0x00c4, all -> 0x00c0 }
-        L_0x00b7:
-            r6 = 0
-            java.lang.IllegalStateException r0 = new java.lang.IllegalStateException     // Catch:{ Throwable -> 0x00c4, all -> 0x00c0 }
-            java.lang.String r3 = "Cannot decode a Drawable with unpremultiplied pixels!"
-            r0.<init>(r3)     // Catch:{ Throwable -> 0x00c4, all -> 0x00c0 }
-            throw r0     // Catch:{ Throwable -> 0x00c4, all -> 0x00c0 }
-        L_0x00c0:
-            r0 = move-exception
-            goto L_0x00d2
-        L_0x00c2:
-            r0 = move-exception
-            goto L_0x00c9
-        L_0x00c4:
-            r0 = move-exception
-            goto L_0x00ce
-        L_0x00c6:
-            r0 = move-exception
-            r4 = r21
-        L_0x00c9:
-            r6 = 0
-            goto L_0x00d2
-        L_0x00cb:
-            r0 = move-exception
-            r4 = r21
-        L_0x00ce:
-            r3 = r0
-            throw r3     // Catch:{ all -> 0x00d0 }
-        L_0x00d0:
-            r0 = move-exception
-            r6 = r3
-        L_0x00d2:
-            if (r2 == 0) goto L_0x00d7
-            $closeResource(r6, r2)
-        L_0x00d7:
-            throw r0
+            Method dump skipped, instructions count: 216
+            To view this dump change 'Code comments level' option to 'DEBUG'
         */
         throw new UnsupportedOperationException("Method not decompiled: android.graphics.ImageDecoder.decodeDrawableImpl(android.graphics.ImageDecoder$Source, android.graphics.ImageDecoder$OnHeaderDecodedListener):android.graphics.drawable.Drawable");
     }
 
     private static /* synthetic */ void $closeResource(Throwable x0, AutoCloseable x1) {
-        if (x0 != null) {
-            try {
-                x1.close();
-            } catch (Throwable th) {
-                x0.addSuppressed(th);
-            }
-        } else {
+        if (x0 == null) {
             x1.close();
+            return;
+        }
+        try {
+            x1.close();
+        } catch (Throwable th) {
+            x0.addSuppressed(th);
         }
     }
 
     public static Drawable decodeDrawable(Source src) throws IOException {
-        return decodeDrawableImpl(src, (OnHeaderDecodedListener) null);
+        return decodeDrawableImpl(src, null);
     }
 
     public static Bitmap decodeBitmap(Source src, OnHeaderDecodedListener listener) throws IOException {
-        if (listener != null) {
-            return decodeBitmapImpl(src, listener);
+        if (listener == null) {
+            throw new IllegalArgumentException("listener cannot be null! Use decodeBitmap(Source) to not have a listener");
         }
-        throw new IllegalArgumentException("listener cannot be null! Use decodeBitmap(Source) to not have a listener");
+        return decodeBitmapImpl(src, listener);
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:12:0x0031, code lost:
-        r2 = move-exception;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:16:0x0035, code lost:
-        if (r0 != null) goto L_0x0037;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:17:0x0037, code lost:
-        $closeResource(r1, r0);
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:18:0x003a, code lost:
-        throw r2;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    private static android.graphics.Bitmap decodeBitmapImpl(android.graphics.ImageDecoder.Source r8, android.graphics.ImageDecoder.OnHeaderDecodedListener r9) throws java.io.IOException {
-        /*
-            android.graphics.ImageDecoder r0 = r8.createImageDecoder()
-            r1 = 0
-            r0.mSource = r8     // Catch:{ Throwable -> 0x0033 }
-            r0.callHeaderDecoded(r9, r8)     // Catch:{ Throwable -> 0x0033 }
-            int r2 = r0.computeDensity(r8)     // Catch:{ Throwable -> 0x0033 }
-            android.graphics.Bitmap r3 = r0.decodeBitmapInternal()     // Catch:{ Throwable -> 0x0033 }
-            r3.setDensity(r2)     // Catch:{ Throwable -> 0x0033 }
-            android.graphics.Rect r4 = r0.mOutPaddingRect     // Catch:{ Throwable -> 0x0033 }
-            if (r4 == 0) goto L_0x002a
-            byte[] r5 = r3.getNinePatchChunk()     // Catch:{ Throwable -> 0x0033 }
-            if (r5 == 0) goto L_0x002a
-            boolean r6 = android.graphics.NinePatch.isNinePatchChunk(r5)     // Catch:{ Throwable -> 0x0033 }
-            if (r6 == 0) goto L_0x002a
-            long r6 = r0.mNativePtr     // Catch:{ Throwable -> 0x0033 }
-            nGetPadding(r6, r4)     // Catch:{ Throwable -> 0x0033 }
-        L_0x002a:
-            if (r0 == 0) goto L_0x0030
-            $closeResource(r1, r0)
-        L_0x0030:
-            return r3
-        L_0x0031:
-            r2 = move-exception
-            goto L_0x0035
-        L_0x0033:
-            r1 = move-exception
-            throw r1     // Catch:{ all -> 0x0031 }
-        L_0x0035:
-            if (r0 == 0) goto L_0x003a
-            $closeResource(r1, r0)
-        L_0x003a:
-            throw r2
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.graphics.ImageDecoder.decodeBitmapImpl(android.graphics.ImageDecoder$Source, android.graphics.ImageDecoder$OnHeaderDecodedListener):android.graphics.Bitmap");
+    private static Bitmap decodeBitmapImpl(Source src, OnHeaderDecodedListener listener) throws IOException {
+        byte[] np;
+        ImageDecoder decoder = src.createImageDecoder();
+        try {
+            decoder.mSource = src;
+            decoder.callHeaderDecoded(listener, src);
+            int srcDensity = decoder.computeDensity(src);
+            Bitmap bm = decoder.decodeBitmapInternal();
+            bm.setDensity(srcDensity);
+            Rect padding = decoder.mOutPaddingRect;
+            if (padding != null && (np = bm.getNinePatchChunk()) != null && NinePatch.isNinePatchChunk(np)) {
+                nGetPadding(decoder.mNativePtr, padding);
+            }
+            if (decoder != null) {
+                $closeResource(null, decoder);
+            }
+            return bm;
+        } catch (Throwable th) {
+            try {
+                throw th;
+            } catch (Throwable th2) {
+                if (decoder != null) {
+                    $closeResource(th, decoder);
+                }
+                throw th2;
+            }
+        }
     }
 
     private int computeDensity(Source src) {
-        int dstDensity;
         if (requestedResize()) {
             return 0;
         }
@@ -1303,29 +1156,35 @@ public final class ImageDecoder implements AutoCloseable {
             return srcDensity;
         }
         Resources res = src.getResources();
-        if ((res != null && res.getDisplayMetrics().noncompatDensityDpi == srcDensity) || srcDensity == (dstDensity = src.computeDstDensity())) {
+        if (res != null && res.getDisplayMetrics().noncompatDensityDpi == srcDensity) {
+            return srcDensity;
+        }
+        int dstDensity = src.computeDstDensity();
+        if (srcDensity == dstDensity) {
             return srcDensity;
         }
         if (srcDensity < dstDensity && sApiLevel >= 28) {
             return srcDensity;
         }
-        float scale = ((float) dstDensity) / ((float) srcDensity);
-        setTargetSize(Math.max((int) ((((float) this.mWidth) * scale) + 0.5f), 1), Math.max((int) ((((float) this.mHeight) * scale) + 0.5f), 1));
+        float scale = dstDensity / srcDensity;
+        int scaledWidth = Math.max((int) ((this.mWidth * scale) + 0.5f), 1);
+        int scaledHeight = Math.max((int) ((this.mHeight * scale) + 0.5f), 1);
+        setTargetSize(scaledWidth, scaledHeight);
         return dstDensity;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public String getMimeType() {
         return nGetMimeType(this.mNativePtr);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public ColorSpace getColorSpace() {
         return nGetColorSpace(this.mNativePtr);
     }
 
     public static Bitmap decodeBitmap(Source src) throws IOException {
-        return decodeBitmapImpl(src, (OnHeaderDecodedListener) null);
+        return decodeBitmapImpl(src, null);
     }
 
     @UnsupportedAppUsage

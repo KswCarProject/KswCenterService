@@ -3,6 +3,7 @@ package android.hardware.radio.V1_0;
 import com.android.internal.telephony.IccCardConstants;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class TimeStampType {
     public static final int ANTENNA = 1;
     public static final int JAVA_RIL = 4;

@@ -2,6 +2,7 @@ package android.print;
 
 import java.util.Objects;
 
+/* loaded from: classes3.dex */
 public final class PrintJob {
     private PrintJobInfo mCachedInfo;
     private final PrintManager mPrintManager;
@@ -72,10 +73,11 @@ public final class PrintJob {
         if (this == obj) {
             return true;
         }
-        if (obj != null && getClass() == obj.getClass()) {
-            return Objects.equals(this.mCachedInfo.getId(), ((PrintJob) obj).mCachedInfo.getId());
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
         }
-        return false;
+        PrintJob other = (PrintJob) obj;
+        return Objects.equals(this.mCachedInfo.getId(), other.mCachedInfo.getId());
     }
 
     public int hashCode() {

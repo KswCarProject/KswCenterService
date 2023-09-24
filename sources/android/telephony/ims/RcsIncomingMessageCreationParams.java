@@ -1,15 +1,20 @@
 package android.telephony.ims;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.telephony.ims.RcsMessageCreationParams;
 
+/* loaded from: classes4.dex */
 public final class RcsIncomingMessageCreationParams extends RcsMessageCreationParams implements Parcelable {
-    public static final Parcelable.Creator<RcsIncomingMessageCreationParams> CREATOR = new Parcelable.Creator<RcsIncomingMessageCreationParams>() {
+    public static final Parcelable.Creator<RcsIncomingMessageCreationParams> CREATOR = new Parcelable.Creator<RcsIncomingMessageCreationParams>() { // from class: android.telephony.ims.RcsIncomingMessageCreationParams.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RcsIncomingMessageCreationParams createFromParcel(Parcel in) {
             return new RcsIncomingMessageCreationParams(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RcsIncomingMessageCreationParams[] newArray(int size) {
             return new RcsIncomingMessageCreationParams[size];
         }
@@ -18,13 +23,11 @@ public final class RcsIncomingMessageCreationParams extends RcsMessageCreationPa
     private final long mSeenTimestamp;
     private final int mSenderParticipantId;
 
+    /* loaded from: classes4.dex */
     public static class Builder extends RcsMessageCreationParams.Builder {
-        /* access modifiers changed from: private */
-        public long mArrivalTimestamp;
-        /* access modifiers changed from: private */
-        public long mSeenTimestamp;
-        /* access modifiers changed from: private */
-        public RcsParticipant mSenderParticipant;
+        private long mArrivalTimestamp;
+        private long mSeenTimestamp;
+        private RcsParticipant mSenderParticipant;
 
         public Builder(long originationTimestamp, long arrivalTimestamp, int subscriptionId) {
             super(originationTimestamp, subscriptionId);
@@ -46,13 +49,14 @@ public final class RcsIncomingMessageCreationParams extends RcsMessageCreationPa
             return this;
         }
 
+        @Override // android.telephony.ims.RcsMessageCreationParams.Builder
         public RcsIncomingMessageCreationParams build() {
             return new RcsIncomingMessageCreationParams(this);
         }
     }
 
     private RcsIncomingMessageCreationParams(Builder builder) {
-        super((RcsMessageCreationParams.Builder) builder);
+        super(builder);
         this.mArrivalTimestamp = builder.mArrivalTimestamp;
         this.mSeenTimestamp = builder.mSeenTimestamp;
         this.mSenderParticipantId = builder.mSenderParticipant.getId();
@@ -77,10 +81,12 @@ public final class RcsIncomingMessageCreationParams extends RcsMessageCreationPa
         return this.mSenderParticipantId;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest);
         dest.writeLong(this.mArrivalTimestamp);

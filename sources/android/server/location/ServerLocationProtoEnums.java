@@ -1,5 +1,6 @@
 package android.server.location;
 
+/* loaded from: classes3.dex */
 public final class ServerLocationProtoEnums {
     public static final int ACCEPTED_LOCATION_PROVIDED = 2;
     public static final int ACCEPTED_NO_LOCATION_PROVIDED = 1;
@@ -19,11 +20,15 @@ public final class ServerLocationProtoEnums {
     public static final int GPS_SIGNAL_QUALITY_UNKNOWN = -1;
     public static final int IMS = 10;
     public static final int LPP_UPLANE = 4;
-    public static final int MO = 1;
+
+    /* renamed from: MO */
+    public static final int f236MO = 1;
     public static final int MODEM_CHIPSET_VENDOR = 11;
     public static final int MSA = 2;
     public static final int MSB = 1;
-    public static final int NI = 2;
+
+    /* renamed from: NI */
+    public static final int f237NI = 2;
     public static final int OEM = 10;
     public static final int OTHER_CHIPSET_VENDOR = 13;
     public static final int OTHER_PROTOCOL_STACK = 100;

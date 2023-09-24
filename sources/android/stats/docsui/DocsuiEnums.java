@@ -1,5 +1,6 @@
 package android.stats.docsui;
 
+/* loaded from: classes3.dex */
 public final class DocsuiEnums {
     public static final int ACTION_COMPRESS = 28;
     public static final int ACTION_COPY_CLIPBOARD = 24;

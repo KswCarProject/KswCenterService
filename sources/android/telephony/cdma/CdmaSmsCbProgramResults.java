@@ -1,14 +1,19 @@
 package android.telephony.cdma;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public class CdmaSmsCbProgramResults implements Parcelable {
-    public static final Parcelable.Creator<CdmaSmsCbProgramResults> CREATOR = new Parcelable.Creator<CdmaSmsCbProgramResults>() {
+    public static final Parcelable.Creator<CdmaSmsCbProgramResults> CREATOR = new Parcelable.Creator<CdmaSmsCbProgramResults>() { // from class: android.telephony.cdma.CdmaSmsCbProgramResults.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public CdmaSmsCbProgramResults createFromParcel(Parcel in) {
             return new CdmaSmsCbProgramResults(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public CdmaSmsCbProgramResults[] newArray(int size) {
             return new CdmaSmsCbProgramResults[size];
         }
@@ -38,6 +43,7 @@ public class CdmaSmsCbProgramResults implements Parcelable {
         this.mCategoryResult = in.readInt();
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mCategory);
         dest.writeInt(this.mLanguage);
@@ -60,6 +66,7 @@ public class CdmaSmsCbProgramResults implements Parcelable {
         return "CdmaSmsCbProgramResults{category=" + this.mCategory + ", language=" + this.mLanguage + ", result=" + this.mCategoryResult + '}';
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

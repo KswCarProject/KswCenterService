@@ -1,5 +1,6 @@
 package org.mozilla.universalchardet.prober;
 
+import java.nio.ByteBuffer;
 import org.mozilla.universalchardet.prober.CharsetProber;
 import org.mozilla.universalchardet.prober.sequence.HebrewModel;
 import org.mozilla.universalchardet.prober.sequence.Ibm855Model;
@@ -14,23 +15,24 @@ import org.mozilla.universalchardet.prober.sequence.Win1251BulgarianModel;
 import org.mozilla.universalchardet.prober.sequence.Win1251Model;
 import org.mozilla.universalchardet.prober.sequence.Win1253Model;
 
+/* loaded from: classes5.dex */
 public class SBCSGroupProber extends CharsetProber {
-    private static final SequenceModel hebrewModel = new HebrewModel();
-    private static final SequenceModel ibm855Model = new Ibm855Model();
-    private static final SequenceModel ibm866Model = new Ibm866Model();
-    private static final SequenceModel koi8rModel = new Koi8rModel();
-    private static final SequenceModel latin5BulgarianModel = new Latin5BulgarianModel();
-    private static final SequenceModel latin5Model = new Latin5Model();
-    private static final SequenceModel latin7Model = new Latin7Model();
-    private static final SequenceModel macCyrillicModel = new MacCyrillicModel();
-    private static final SequenceModel win1251BulgarianModel = new Win1251BulgarianModel();
-    private static final SequenceModel win1251Model = new Win1251Model();
-    private static final SequenceModel win1253Model = new Win1253Model();
     private int activeNum;
     private int bestGuess;
-    private boolean[] isActive = new boolean[13];
-    private CharsetProber[] probers = new CharsetProber[13];
     private CharsetProber.ProbingState state;
+    private static final SequenceModel win1251Model = new Win1251Model();
+    private static final SequenceModel koi8rModel = new Koi8rModel();
+    private static final SequenceModel latin5Model = new Latin5Model();
+    private static final SequenceModel macCyrillicModel = new MacCyrillicModel();
+    private static final SequenceModel ibm866Model = new Ibm866Model();
+    private static final SequenceModel ibm855Model = new Ibm855Model();
+    private static final SequenceModel latin7Model = new Latin7Model();
+    private static final SequenceModel win1253Model = new Win1253Model();
+    private static final SequenceModel latin5BulgarianModel = new Latin5BulgarianModel();
+    private static final SequenceModel win1251BulgarianModel = new Win1251BulgarianModel();
+    private static final SequenceModel hebrewModel = new HebrewModel();
+    private CharsetProber[] probers = new CharsetProber[13];
+    private boolean[] isActive = new boolean[13];
 
     public SBCSGroupProber() {
         this.probers[0] = new SingleByteCharsetProber(win1251Model);
@@ -51,6 +53,7 @@ public class SBCSGroupProber extends CharsetProber {
         reset();
     }
 
+    @Override // org.mozilla.universalchardet.prober.CharsetProber
     public String getCharSetName() {
         if (this.bestGuess == -1) {
             getConfidence();
@@ -61,6 +64,7 @@ public class SBCSGroupProber extends CharsetProber {
         return this.probers[this.bestGuess].getCharSetName();
     }
 
+    @Override // org.mozilla.universalchardet.prober.CharsetProber
     public float getConfidence() {
         if (this.state == CharsetProber.ProbingState.FOUND_IT) {
             return 0.99f;
@@ -81,67 +85,40 @@ public class SBCSGroupProber extends CharsetProber {
         return f;
     }
 
+    @Override // org.mozilla.universalchardet.prober.CharsetProber
     public CharsetProber.ProbingState getState() {
         return this.state;
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:10:0x0031, code lost:
-        r3.state = r4;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public org.mozilla.universalchardet.prober.CharsetProber.ProbingState handleData(byte[] r4, int r5, int r6) {
-        /*
-            r3 = this;
-            java.nio.ByteBuffer r4 = r3.filterWithoutEnglishLetters(r4, r5, r6)
-            int r5 = r4.position()
-            if (r5 != 0) goto L_0x000b
-            goto L_0x004c
-        L_0x000b:
-            r5 = 0
-            r6 = r5
-        L_0x000d:
-            org.mozilla.universalchardet.prober.CharsetProber[] r0 = r3.probers
-            int r0 = r0.length
-            if (r6 >= r0) goto L_0x004c
-            boolean[] r0 = r3.isActive
-            boolean r0 = r0[r6]
-            if (r0 != 0) goto L_0x0019
-            goto L_0x0049
-        L_0x0019:
-            org.mozilla.universalchardet.prober.CharsetProber[] r0 = r3.probers
-            r0 = r0[r6]
-            byte[] r1 = r4.array()
-            int r2 = r4.position()
-            org.mozilla.universalchardet.prober.CharsetProber$ProbingState r0 = r0.handleData(r1, r5, r2)
-            org.mozilla.universalchardet.prober.CharsetProber$ProbingState r1 = org.mozilla.universalchardet.prober.CharsetProber.ProbingState.FOUND_IT
-            if (r0 != r1) goto L_0x0034
-            r3.bestGuess = r6
-            org.mozilla.universalchardet.prober.CharsetProber$ProbingState r4 = org.mozilla.universalchardet.prober.CharsetProber.ProbingState.FOUND_IT
-        L_0x0031:
-            r3.state = r4
-            goto L_0x004c
-        L_0x0034:
-            org.mozilla.universalchardet.prober.CharsetProber$ProbingState r1 = org.mozilla.universalchardet.prober.CharsetProber.ProbingState.NOT_ME
-            if (r0 != r1) goto L_0x0049
-            boolean[] r0 = r3.isActive
-            r0[r6] = r5
-            int r0 = r3.activeNum
-            int r0 = r0 + -1
-            r3.activeNum = r0
-            int r0 = r3.activeNum
-            if (r0 > 0) goto L_0x0049
-            org.mozilla.universalchardet.prober.CharsetProber$ProbingState r4 = org.mozilla.universalchardet.prober.CharsetProber.ProbingState.NOT_ME
-            goto L_0x0031
-        L_0x0049:
-            int r6 = r6 + 1
-            goto L_0x000d
-        L_0x004c:
-            org.mozilla.universalchardet.prober.CharsetProber$ProbingState r4 = r3.state
-            return r4
-        */
-        throw new UnsupportedOperationException("Method not decompiled: org.mozilla.universalchardet.prober.SBCSGroupProber.handleData(byte[], int, int):org.mozilla.universalchardet.prober.CharsetProber$ProbingState");
+    @Override // org.mozilla.universalchardet.prober.CharsetProber
+    public CharsetProber.ProbingState handleData(byte[] bArr, int i, int i2) {
+        CharsetProber.ProbingState probingState;
+        ByteBuffer filterWithoutEnglishLetters = filterWithoutEnglishLetters(bArr, i, i2);
+        if (filterWithoutEnglishLetters.position() != 0) {
+            for (int i3 = 0; i3 < this.probers.length; i3++) {
+                if (this.isActive[i3]) {
+                    CharsetProber.ProbingState handleData = this.probers[i3].handleData(filterWithoutEnglishLetters.array(), 0, filterWithoutEnglishLetters.position());
+                    if (handleData == CharsetProber.ProbingState.FOUND_IT) {
+                        this.bestGuess = i3;
+                        probingState = CharsetProber.ProbingState.FOUND_IT;
+                    } else if (handleData == CharsetProber.ProbingState.NOT_ME) {
+                        this.isActive[i3] = false;
+                        this.activeNum--;
+                        if (this.activeNum <= 0) {
+                            probingState = CharsetProber.ProbingState.NOT_ME;
+                        }
+                    } else {
+                        continue;
+                    }
+                    this.state = probingState;
+                    break;
+                }
+            }
+        }
+        return this.state;
     }
 
+    @Override // org.mozilla.universalchardet.prober.CharsetProber
     public void reset() {
         this.activeNum = 0;
         for (int i = 0; i < this.probers.length; i++) {
@@ -153,6 +130,7 @@ public class SBCSGroupProber extends CharsetProber {
         this.state = CharsetProber.ProbingState.DETECTING;
     }
 
+    @Override // org.mozilla.universalchardet.prober.CharsetProber
     public void setOption() {
     }
 }

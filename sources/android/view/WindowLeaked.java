@@ -3,7 +3,8 @@ package android.view;
 import android.annotation.UnsupportedAppUsage;
 import android.util.AndroidRuntimeException;
 
-/* compiled from: WindowManagerGlobal */
+/* compiled from: WindowManagerGlobal.java */
+/* loaded from: classes4.dex */
 final class WindowLeaked extends AndroidRuntimeException {
     @UnsupportedAppUsage
     public WindowLeaked(String msg) {

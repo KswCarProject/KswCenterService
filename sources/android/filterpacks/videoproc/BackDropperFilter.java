@@ -11,17 +11,18 @@ import android.filterfw.core.MutableFrameFormat;
 import android.filterfw.core.ShaderProgram;
 import android.filterfw.format.ImageFormat;
 import android.opengl.GLES20;
-import android.os.SystemClock;
-import android.os.SystemProperties;
+import android.p007os.SystemClock;
+import android.p007os.SystemProperties;
 import android.util.Log;
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 
+/* loaded from: classes.dex */
 public class BackDropperFilter extends Filter {
     private static final float DEFAULT_ACCEPT_STDDEV = 0.85f;
     private static final float DEFAULT_ADAPT_RATE_BG = 0.0f;
     private static final float DEFAULT_ADAPT_RATE_FG = 0.0f;
     private static final String DEFAULT_AUTO_WB_SCALE = "0.25";
-    private static final float[] DEFAULT_BG_FIT_TRANSFORM = {1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f};
     private static final float DEFAULT_EXPOSURE_CHANGE = 1.0f;
     private static final int DEFAULT_HIER_LRG_EXPONENT = 3;
     private static final float DEFAULT_HIER_LRG_SCALE = 0.7f;
@@ -54,33 +55,29 @@ public class BackDropperFilter extends Filter {
     private static final String mBgMaskShader = "uniform sampler2D tex_sampler_0;\nuniform float accept_variance;\nuniform vec2 yuv_weights;\nuniform float scale_lrg;\nuniform float scale_mid;\nuniform float scale_sml;\nuniform float exp_lrg;\nuniform float exp_mid;\nuniform float exp_sml;\nvarying vec2 v_texcoord;\nbool is_fg(vec2 dist_yc, float accept_variance) {\n  return ( dot(yuv_weights, dist_yc) >= accept_variance );\n}\nvoid main() {\n  vec4 dist_lrg_sc = texture2D(tex_sampler_0, v_texcoord, exp_lrg);\n  vec4 dist_mid_sc = texture2D(tex_sampler_0, v_texcoord, exp_mid);\n  vec4 dist_sml_sc = texture2D(tex_sampler_0, v_texcoord, exp_sml);\n  vec2 dist_lrg = inv_dist_scale * dist_lrg_sc.ba;\n  vec2 dist_mid = inv_dist_scale * dist_mid_sc.ba;\n  vec2 dist_sml = inv_dist_scale * dist_sml_sc.ba;\n  vec2 norm_dist = 0.75 * dist_sml / accept_variance;\n  bool is_fg_lrg = is_fg(dist_lrg, accept_variance * scale_lrg);\n  bool is_fg_mid = is_fg_lrg || is_fg(dist_mid, accept_variance * scale_mid);\n  float is_fg_sml =\n      float(is_fg_mid || is_fg(dist_sml, accept_variance * scale_sml));\n  float alpha = 0.5 * is_fg_sml + 0.3 * float(is_fg_mid) + 0.2 * float(is_fg_lrg);\n  gl_FragColor = vec4(alpha, norm_dist, is_fg_sml);\n}\n";
     private static final String mBgSubtractForceShader = "  vec4 ghost_rgb = (fg_adjusted * 0.7 + vec4(0.3,0.3,0.4,0.))*0.65 + \n                   0.35*bg_rgb;\n  float glow_start = 0.75 * mask_blend_bg; \n  float glow_max   = mask_blend_bg; \n  gl_FragColor = mask.a < glow_start ? bg_rgb : \n                 mask.a < glow_max ? mix(bg_rgb, vec4(0.9,0.9,1.0,1.0), \n                                     (mask.a - glow_start) / (glow_max - glow_start) ) : \n                 mask.a < mask_blend_fg ? mix(vec4(0.9,0.9,1.0,1.0), ghost_rgb, \n                                    (mask.a - glow_max) / (mask_blend_fg - glow_max) ) : \n                 ghost_rgb;\n}\n";
     private static final String mBgSubtractShader = "uniform mat3 bg_fit_transform;\nuniform float mask_blend_bg;\nuniform float mask_blend_fg;\nuniform float exposure_change;\nuniform float whitebalancered_change;\nuniform float whitebalanceblue_change;\nuniform sampler2D tex_sampler_0;\nuniform sampler2D tex_sampler_1;\nuniform sampler2D tex_sampler_2;\nuniform sampler2D tex_sampler_3;\nvarying vec2 v_texcoord;\nvoid main() {\n  vec2 bg_texcoord = (bg_fit_transform * vec3(v_texcoord, 1.)).xy;\n  vec4 bg_rgb = texture2D(tex_sampler_1, bg_texcoord);\n  vec4 wb_auto_scale = texture2D(tex_sampler_3, v_texcoord) * exposure_change / auto_wb_scale;\n  vec4 wb_manual_scale = vec4(1. + whitebalancered_change, 1., 1. + whitebalanceblue_change, 1.);\n  vec4 fg_rgb = texture2D(tex_sampler_0, v_texcoord);\n  vec4 fg_adjusted = fg_rgb * wb_manual_scale * wb_auto_scale;\n  vec4 mask = texture2D(tex_sampler_2, v_texcoord, \n                      2.0);\n  float alpha = smoothstep(mask_blend_bg, mask_blend_fg, mask.a);\n  gl_FragColor = mix(bg_rgb, fg_adjusted, alpha);\n";
-    private static final String[] mDebugOutputNames = {"debug1", "debug2"};
-    private static final String[] mInputNames = {"video", "background"};
     private static final String mMaskVerifyShader = "uniform sampler2D tex_sampler_0;\nuniform sampler2D tex_sampler_1;\nuniform float verify_rate;\nvarying vec2 v_texcoord;\nvoid main() {\n  vec4 lastmask = texture2D(tex_sampler_0, v_texcoord);\n  vec4 mask = texture2D(tex_sampler_1, v_texcoord);\n  float newmask = mix(lastmask.a, mask.a, verify_rate);\n  gl_FragColor = vec4(0., 0., 0., newmask);\n}\n";
-    private static final String[] mOutputNames = {"video"};
-    private static String mSharedUtilShader = "precision mediump float;\nuniform float fg_adapt_rate;\nuniform float bg_adapt_rate;\nconst mat4 coeff_yuv = mat4(0.299, -0.168736,  0.5,      0.000, 0.587, -0.331264, -0.418688, 0.000, 0.114,  0.5,      -0.081312, 0.000, 0.000,  0.5,       0.5,      1.000 );\nconst float dist_scale = 0.6;\nconst float inv_dist_scale = 1. / dist_scale;\nconst float var_scale=5.0;\nconst float inv_var_scale = 1. / var_scale;\nconst float min_variance = inv_var_scale *3.0/ 256.;\nconst float auto_wb_scale = 0.25;\n\nfloat gauss_dist_y(float y, float mean, float variance) {\n  float dist = (y - mean) * (y - mean) / variance;\n  return dist;\n}\nfloat gauss_dist_uv(vec2 uv, vec2 mean, vec2 variance) {\n  vec2 dist = (uv - mean) * (uv - mean) / variance;\n  return dist.r + dist.g;\n}\nfloat local_adapt_rate(float alpha) {\n  return mix(bg_adapt_rate, fg_adapt_rate, alpha);\n}\n\n";
     private static final String mUpdateBgModelMeanShader = "uniform sampler2D tex_sampler_0;\nuniform sampler2D tex_sampler_1;\nuniform sampler2D tex_sampler_2;\nuniform float subsample_level;\nvarying vec2 v_texcoord;\nvoid main() {\n  vec4 fg_rgb = texture2D(tex_sampler_0, v_texcoord, subsample_level);\n  vec4 fg = coeff_yuv * vec4(fg_rgb.rgb, 1.);\n  vec4 mean = texture2D(tex_sampler_1, v_texcoord);\n  vec4 mask = texture2D(tex_sampler_2, v_texcoord, \n                      2.0);\n\n  float alpha = local_adapt_rate(mask.a);\n  vec4 new_mean = mix(mean, fg, alpha);\n  gl_FragColor = new_mean;\n}\n";
     private static final String mUpdateBgModelVarianceShader = "uniform sampler2D tex_sampler_0;\nuniform sampler2D tex_sampler_1;\nuniform sampler2D tex_sampler_2;\nuniform sampler2D tex_sampler_3;\nuniform float subsample_level;\nvarying vec2 v_texcoord;\nvoid main() {\n  vec4 fg_rgb = texture2D(tex_sampler_0, v_texcoord, subsample_level);\n  vec4 fg = coeff_yuv * vec4(fg_rgb.rgb, 1.);\n  vec4 mean = texture2D(tex_sampler_1, v_texcoord);\n  vec4 variance = inv_var_scale * texture2D(tex_sampler_2, v_texcoord);\n  vec4 mask = texture2D(tex_sampler_3, v_texcoord, \n                      2.0);\n\n  float alpha = local_adapt_rate(mask.a);\n  vec4 cur_variance = (fg-mean)*(fg-mean);\n  vec4 new_variance = mix(variance, cur_variance, alpha);\n  new_variance = max(new_variance, vec4(min_variance));\n  gl_FragColor = var_scale * new_variance;\n}\n";
-    private final int BACKGROUND_FILL_CROP = 2;
-    private final int BACKGROUND_FIT = 1;
-    private final int BACKGROUND_STRETCH = 0;
+    private final int BACKGROUND_FILL_CROP;
+    private final int BACKGROUND_FIT;
+    private final int BACKGROUND_STRETCH;
     private ShaderProgram copyShaderProgram;
     private boolean isOpen;
     @GenerateFieldPort(hasDefault = true, name = "acceptStddev")
-    private float mAcceptStddev = DEFAULT_ACCEPT_STDDEV;
+    private float mAcceptStddev;
     @GenerateFieldPort(hasDefault = true, name = "adaptRateBg")
-    private float mAdaptRateBg = 0.0f;
+    private float mAdaptRateBg;
     @GenerateFieldPort(hasDefault = true, name = "adaptRateFg")
-    private float mAdaptRateFg = 0.0f;
+    private float mAdaptRateFg;
     @GenerateFieldPort(hasDefault = true, name = "learningAdaptRate")
-    private float mAdaptRateLearning = 0.2f;
+    private float mAdaptRateLearning;
     private GLFrame mAutoWB;
     @GenerateFieldPort(hasDefault = true, name = "autowbToggle")
-    private int mAutoWBToggle = 0;
+    private int mAutoWBToggle;
     private ShaderProgram mAutomaticWhiteBalanceProgram;
     private MutableFrameFormat mAverageFormat;
     @GenerateFieldPort(hasDefault = true, name = "backgroundFitMode")
-    private int mBackgroundFitMode = 2;
+    private int mBackgroundFitMode;
     private boolean mBackgroundFitModeChanged;
     private ShaderProgram mBgDistProgram;
     private GLFrame mBgInput;
@@ -91,90 +88,134 @@ public class BackDropperFilter extends Filter {
     private ShaderProgram mBgUpdateVarianceProgram;
     private GLFrame[] mBgVariance;
     @GenerateFieldPort(hasDefault = true, name = "chromaScale")
-    private float mChromaScale = DEFAULT_UV_SCALE_FACTOR;
+    private float mChromaScale;
     private ShaderProgram mCopyOutProgram;
     private GLFrame mDistance;
     @GenerateFieldPort(hasDefault = true, name = "exposureChange")
-    private float mExposureChange = 1.0f;
+    private float mExposureChange;
     private int mFrameCount;
     @GenerateFieldPort(hasDefault = true, name = "hierLrgExp")
-    private int mHierarchyLrgExp = 3;
+    private int mHierarchyLrgExp;
     @GenerateFieldPort(hasDefault = true, name = "hierLrgScale")
-    private float mHierarchyLrgScale = DEFAULT_HIER_LRG_SCALE;
+    private float mHierarchyLrgScale;
     @GenerateFieldPort(hasDefault = true, name = "hierMidExp")
-    private int mHierarchyMidExp = 2;
+    private int mHierarchyMidExp;
     @GenerateFieldPort(hasDefault = true, name = "hierMidScale")
-    private float mHierarchyMidScale = 0.6f;
+    private float mHierarchyMidScale;
     @GenerateFieldPort(hasDefault = true, name = "hierSmlExp")
-    private int mHierarchySmlExp = 0;
+    private int mHierarchySmlExp;
     @GenerateFieldPort(hasDefault = true, name = "hierSmlScale")
-    private float mHierarchySmlScale = 0.5f;
+    private float mHierarchySmlScale;
     @GenerateFieldPort(hasDefault = true, name = "learningDoneListener")
-    private LearningDoneListener mLearningDoneListener = null;
+    private LearningDoneListener mLearningDoneListener;
     @GenerateFieldPort(hasDefault = true, name = "learningDuration")
-    private int mLearningDuration = 40;
+    private int mLearningDuration;
     @GenerateFieldPort(hasDefault = true, name = "learningVerifyDuration")
-    private int mLearningVerifyDuration = 10;
-    private final boolean mLogVerbose = Log.isLoggable(TAG, 2);
+    private int mLearningVerifyDuration;
+    private final boolean mLogVerbose;
     @GenerateFieldPort(hasDefault = true, name = "lumScale")
-    private float mLumScale = 0.4f;
+    private float mLumScale;
     private GLFrame mMask;
     private GLFrame mMaskAverage;
     @GenerateFieldPort(hasDefault = true, name = "maskBg")
-    private float mMaskBg = DEFAULT_MASK_BLEND_BG;
+    private float mMaskBg;
     @GenerateFieldPort(hasDefault = true, name = "maskFg")
-    private float mMaskFg = 0.95f;
+    private float mMaskFg;
     private MutableFrameFormat mMaskFormat;
     @GenerateFieldPort(hasDefault = true, name = "maskHeightExp")
-    private int mMaskHeightExp = 8;
+    private int mMaskHeightExp;
     private GLFrame[] mMaskVerify;
     private ShaderProgram mMaskVerifyProgram;
     @GenerateFieldPort(hasDefault = true, name = "maskWidthExp")
-    private int mMaskWidthExp = 8;
+    private int mMaskWidthExp;
     private MutableFrameFormat mMemoryFormat;
     @GenerateFieldPort(hasDefault = true, name = "mirrorBg")
-    private boolean mMirrorBg = false;
+    private boolean mMirrorBg;
     @GenerateFieldPort(hasDefault = true, name = "orientation")
-    private int mOrientation = 0;
+    private int mOrientation;
     private FrameFormat mOutputFormat;
     private boolean mPingPong;
     @GenerateFinalPort(hasDefault = true, name = "provideDebugOutputs")
-    private boolean mProvideDebugOutputs = false;
+    private boolean mProvideDebugOutputs;
     private int mPyramidDepth;
     private float mRelativeAspect;
     private boolean mStartLearning;
     private int mSubsampleLevel;
     @GenerateFieldPort(hasDefault = true, name = "useTheForce")
-    private boolean mUseTheForce = false;
+    private boolean mUseTheForce;
     @GenerateFieldPort(hasDefault = true, name = "maskVerifyRate")
-    private float mVerifyRate = 0.25f;
+    private float mVerifyRate;
     private GLFrame mVideoInput;
     @GenerateFieldPort(hasDefault = true, name = "whitebalanceblueChange")
-    private float mWhiteBalanceBlueChange = 0.0f;
+    private float mWhiteBalanceBlueChange;
     @GenerateFieldPort(hasDefault = true, name = "whitebalanceredChange")
-    private float mWhiteBalanceRedChange = 0.0f;
-    private long startTime = -1;
+    private float mWhiteBalanceRedChange;
+    private long startTime;
+    private static final float[] DEFAULT_BG_FIT_TRANSFORM = {1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f};
+    private static final String[] mInputNames = {"video", "background"};
+    private static final String[] mOutputNames = {"video"};
+    private static final String[] mDebugOutputNames = {"debug1", "debug2"};
+    private static String mSharedUtilShader = "precision mediump float;\nuniform float fg_adapt_rate;\nuniform float bg_adapt_rate;\nconst mat4 coeff_yuv = mat4(0.299, -0.168736,  0.5,      0.000, 0.587, -0.331264, -0.418688, 0.000, 0.114,  0.5,      -0.081312, 0.000, 0.000,  0.5,       0.5,      1.000 );\nconst float dist_scale = 0.6;\nconst float inv_dist_scale = 1. / dist_scale;\nconst float var_scale=5.0;\nconst float inv_var_scale = 1. / var_scale;\nconst float min_variance = inv_var_scale *3.0/ 256.;\nconst float auto_wb_scale = 0.25;\n\nfloat gauss_dist_y(float y, float mean, float variance) {\n  float dist = (y - mean) * (y - mean) / variance;\n  return dist;\n}\nfloat gauss_dist_uv(vec2 uv, vec2 mean, vec2 variance) {\n  vec2 dist = (uv - mean) * (uv - mean) / variance;\n  return dist.r + dist.g;\n}\nfloat local_adapt_rate(float alpha) {\n  return mix(bg_adapt_rate, fg_adapt_rate, alpha);\n}\n\n";
 
+    /* loaded from: classes.dex */
     public interface LearningDoneListener {
         void onLearningDone(BackDropperFilter backDropperFilter);
     }
 
     public BackDropperFilter(String name) {
         super(name);
+        this.BACKGROUND_STRETCH = 0;
+        this.BACKGROUND_FIT = 1;
+        this.BACKGROUND_FILL_CROP = 2;
+        this.mBackgroundFitMode = 2;
+        this.mLearningDuration = 40;
+        this.mLearningVerifyDuration = 10;
+        this.mAcceptStddev = DEFAULT_ACCEPT_STDDEV;
+        this.mHierarchyLrgScale = DEFAULT_HIER_LRG_SCALE;
+        this.mHierarchyMidScale = 0.6f;
+        this.mHierarchySmlScale = 0.5f;
+        this.mMaskWidthExp = 8;
+        this.mMaskHeightExp = 8;
+        this.mHierarchyLrgExp = 3;
+        this.mHierarchyMidExp = 2;
+        this.mHierarchySmlExp = 0;
+        this.mLumScale = 0.4f;
+        this.mChromaScale = DEFAULT_UV_SCALE_FACTOR;
+        this.mMaskBg = DEFAULT_MASK_BLEND_BG;
+        this.mMaskFg = 0.95f;
+        this.mExposureChange = 1.0f;
+        this.mWhiteBalanceRedChange = 0.0f;
+        this.mWhiteBalanceBlueChange = 0.0f;
+        this.mAutoWBToggle = 0;
+        this.mAdaptRateLearning = 0.2f;
+        this.mAdaptRateBg = 0.0f;
+        this.mAdaptRateFg = 0.0f;
+        this.mVerifyRate = 0.25f;
+        this.mLearningDoneListener = null;
+        this.mUseTheForce = false;
+        this.mProvideDebugOutputs = false;
+        this.mMirrorBg = false;
+        this.mOrientation = 0;
+        this.startTime = -1L;
+        this.mLogVerbose = Log.isLoggable(TAG, 2);
         String adjStr = SystemProperties.get("ro.media.effect.bgdropper.adj");
         if (adjStr.length() > 0) {
             try {
                 this.mAcceptStddev += Float.parseFloat(adjStr);
                 if (this.mLogVerbose) {
-                    Log.v(TAG, "Adjusting accept threshold by " + adjStr + ", now " + this.mAcceptStddev);
+                    Log.m66v(TAG, "Adjusting accept threshold by " + adjStr + ", now " + this.mAcceptStddev);
                 }
             } catch (NumberFormatException e) {
-                Log.e(TAG, "Badly formatted property ro.media.effect.bgdropper.adj: " + adjStr);
+                Log.m70e(TAG, "Badly formatted property ro.media.effect.bgdropper.adj: " + adjStr);
             }
         }
     }
 
+    @Override // android.filterfw.core.Filter
     public void setupPorts() {
+        String[] strArr;
+        String[] strArr2;
+        String[] strArr3;
         FrameFormat imageFormat = ImageFormat.create(3, 0);
         for (String inputName : mInputNames) {
             addMaskedInputPort(inputName, imageFormat);
@@ -189,6 +230,7 @@ public class BackDropperFilter extends Filter {
         }
     }
 
+    @Override // android.filterfw.core.Filter
     public FrameFormat getOutputFormat(String portName, FrameFormat inputFormat) {
         MutableFrameFormat format = inputFormat.mutableCopy();
         if (!Arrays.asList(mOutputNames).contains(portName)) {
@@ -205,31 +247,32 @@ public class BackDropperFilter extends Filter {
             throw new RuntimeException("Attempting to process input frame with unknown size");
         }
         this.mMaskFormat = inputFormat.mutableCopy();
-        int maskWidth = (int) Math.pow(2.0d, (double) this.mMaskWidthExp);
-        int maskHeight = (int) Math.pow(2.0d, (double) this.mMaskHeightExp);
+        int maskWidth = (int) Math.pow(2.0d, this.mMaskWidthExp);
+        int maskHeight = (int) Math.pow(2.0d, this.mMaskHeightExp);
         this.mMaskFormat.setDimensions(maskWidth, maskHeight);
         this.mPyramidDepth = Math.max(this.mMaskWidthExp, this.mMaskHeightExp);
         this.mMemoryFormat = this.mMaskFormat.mutableCopy();
         int widthExp = Math.max(this.mMaskWidthExp, pyramidLevel(inputFormat.getWidth()));
         int heightExp = Math.max(this.mMaskHeightExp, pyramidLevel(inputFormat.getHeight()));
         this.mPyramidDepth = Math.max(widthExp, heightExp);
-        int memWidth = Math.max(maskWidth, (int) Math.pow(2.0d, (double) widthExp));
-        int memHeight = Math.max(maskHeight, (int) Math.pow(2.0d, (double) heightExp));
+        int memWidth = Math.max(maskWidth, (int) Math.pow(2.0d, widthExp));
+        int memHeight = Math.max(maskHeight, (int) Math.pow(2.0d, heightExp));
         this.mMemoryFormat.setDimensions(memWidth, memHeight);
         this.mSubsampleLevel = this.mPyramidDepth - Math.max(this.mMaskWidthExp, this.mMaskHeightExp);
         if (this.mLogVerbose) {
-            Log.v(TAG, "Mask frames size " + maskWidth + " x " + maskHeight);
-            Log.v(TAG, "Pyramid levels " + widthExp + " x " + heightExp);
-            Log.v(TAG, "Memory frames size " + memWidth + " x " + memHeight);
+            Log.m66v(TAG, "Mask frames size " + maskWidth + " x " + maskHeight);
+            Log.m66v(TAG, "Pyramid levels " + widthExp + " x " + heightExp);
+            Log.m66v(TAG, "Memory frames size " + memWidth + " x " + memHeight);
         }
         this.mAverageFormat = inputFormat.mutableCopy();
         this.mAverageFormat.setDimensions(1, 1);
         return true;
     }
 
+    @Override // android.filterfw.core.Filter
     public void prepare(FilterContext context) {
         if (this.mLogVerbose) {
-            Log.v(TAG, "Preparing BackDropperFilter!");
+            Log.m66v(TAG, "Preparing BackDropperFilter!");
         }
         this.mBgMean = new GLFrame[2];
         this.mBgVariance = new GLFrame[2];
@@ -238,86 +281,89 @@ public class BackDropperFilter extends Filter {
     }
 
     private void allocateFrames(FrameFormat inputFormat, FilterContext context) {
-        if (createMemoryFormat(inputFormat)) {
-            if (this.mLogVerbose) {
-                Log.v(TAG, "Allocating BackDropperFilter frames");
-            }
-            int numBytes = this.mMaskFormat.getSize();
-            byte[] initialBgMean = new byte[numBytes];
-            byte[] initialBgVariance = new byte[numBytes];
-            byte[] initialMaskVerify = new byte[numBytes];
-            for (int i = 0; i < numBytes; i++) {
-                initialBgMean[i] = Byte.MIN_VALUE;
-                initialBgVariance[i] = 10;
-                initialMaskVerify[i] = 0;
-            }
-            for (int i2 = 0; i2 < 2; i2++) {
-                this.mBgMean[i2] = (GLFrame) context.getFrameManager().newFrame(this.mMaskFormat);
-                this.mBgMean[i2].setData(initialBgMean, 0, numBytes);
-                this.mBgVariance[i2] = (GLFrame) context.getFrameManager().newFrame(this.mMaskFormat);
-                this.mBgVariance[i2].setData(initialBgVariance, 0, numBytes);
-                this.mMaskVerify[i2] = (GLFrame) context.getFrameManager().newFrame(this.mMaskFormat);
-                this.mMaskVerify[i2].setData(initialMaskVerify, 0, numBytes);
-            }
-            if (this.mLogVerbose != 0) {
-                Log.v(TAG, "Done allocating texture for Mean and Variance objects!");
-            }
-            this.mDistance = (GLFrame) context.getFrameManager().newFrame(this.mMaskFormat);
-            this.mMask = (GLFrame) context.getFrameManager().newFrame(this.mMaskFormat);
-            this.mAutoWB = (GLFrame) context.getFrameManager().newFrame(this.mAverageFormat);
-            this.mVideoInput = (GLFrame) context.getFrameManager().newFrame(this.mMemoryFormat);
-            this.mBgInput = (GLFrame) context.getFrameManager().newFrame(this.mMemoryFormat);
-            this.mMaskAverage = (GLFrame) context.getFrameManager().newFrame(this.mAverageFormat);
-            this.mBgDistProgram = new ShaderProgram(context, mSharedUtilShader + mBgDistanceShader);
-            this.mBgDistProgram.setHostValue("subsample_level", Float.valueOf((float) this.mSubsampleLevel));
-            this.mBgMaskProgram = new ShaderProgram(context, mSharedUtilShader + mBgMaskShader);
-            this.mBgMaskProgram.setHostValue("accept_variance", Float.valueOf(this.mAcceptStddev * this.mAcceptStddev));
-            this.mBgMaskProgram.setHostValue("yuv_weights", new float[]{this.mLumScale, this.mChromaScale});
-            this.mBgMaskProgram.setHostValue("scale_lrg", Float.valueOf(this.mHierarchyLrgScale));
-            this.mBgMaskProgram.setHostValue("scale_mid", Float.valueOf(this.mHierarchyMidScale));
-            this.mBgMaskProgram.setHostValue("scale_sml", Float.valueOf(this.mHierarchySmlScale));
-            this.mBgMaskProgram.setHostValue("exp_lrg", Float.valueOf((float) (this.mSubsampleLevel + this.mHierarchyLrgExp)));
-            this.mBgMaskProgram.setHostValue("exp_mid", Float.valueOf((float) (this.mSubsampleLevel + this.mHierarchyMidExp)));
-            this.mBgMaskProgram.setHostValue("exp_sml", Float.valueOf((float) (this.mSubsampleLevel + this.mHierarchySmlExp)));
-            if (this.mUseTheForce) {
-                this.mBgSubtractProgram = new ShaderProgram(context, mSharedUtilShader + mBgSubtractShader + mBgSubtractForceShader);
-            } else {
-                this.mBgSubtractProgram = new ShaderProgram(context, mSharedUtilShader + mBgSubtractShader + "}\n");
-            }
-            this.mBgSubtractProgram.setHostValue("bg_fit_transform", DEFAULT_BG_FIT_TRANSFORM);
-            this.mBgSubtractProgram.setHostValue("mask_blend_bg", Float.valueOf(this.mMaskBg));
-            this.mBgSubtractProgram.setHostValue("mask_blend_fg", Float.valueOf(this.mMaskFg));
-            this.mBgSubtractProgram.setHostValue("exposure_change", Float.valueOf(this.mExposureChange));
-            this.mBgSubtractProgram.setHostValue("whitebalanceblue_change", Float.valueOf(this.mWhiteBalanceBlueChange));
-            this.mBgSubtractProgram.setHostValue("whitebalancered_change", Float.valueOf(this.mWhiteBalanceRedChange));
-            this.mBgUpdateMeanProgram = new ShaderProgram(context, mSharedUtilShader + mUpdateBgModelMeanShader);
-            this.mBgUpdateMeanProgram.setHostValue("subsample_level", Float.valueOf((float) this.mSubsampleLevel));
-            this.mBgUpdateVarianceProgram = new ShaderProgram(context, mSharedUtilShader + mUpdateBgModelVarianceShader);
-            this.mBgUpdateVarianceProgram.setHostValue("subsample_level", Float.valueOf((float) this.mSubsampleLevel));
-            this.mCopyOutProgram = ShaderProgram.createIdentity(context);
-            this.mAutomaticWhiteBalanceProgram = new ShaderProgram(context, mSharedUtilShader + mAutomaticWhiteBalance);
-            this.mAutomaticWhiteBalanceProgram.setHostValue("pyramid_depth", Float.valueOf((float) this.mPyramidDepth));
-            this.mAutomaticWhiteBalanceProgram.setHostValue("autowb_toggle", Integer.valueOf(this.mAutoWBToggle));
-            this.mMaskVerifyProgram = new ShaderProgram(context, mSharedUtilShader + mMaskVerifyShader);
-            this.mMaskVerifyProgram.setHostValue("verify_rate", Float.valueOf(this.mVerifyRate));
-            if (this.mLogVerbose) {
-                Log.v(TAG, "Shader width set to " + this.mMemoryFormat.getWidth());
-            }
-            this.mRelativeAspect = 1.0f;
-            this.mFrameCount = 0;
-            this.mStartLearning = true;
+        if (!createMemoryFormat(inputFormat)) {
+            return;
         }
+        if (this.mLogVerbose) {
+            Log.m66v(TAG, "Allocating BackDropperFilter frames");
+        }
+        int numBytes = this.mMaskFormat.getSize();
+        byte[] initialBgMean = new byte[numBytes];
+        byte[] initialBgVariance = new byte[numBytes];
+        byte[] initialMaskVerify = new byte[numBytes];
+        for (int i = 0; i < numBytes; i++) {
+            initialBgMean[i] = Byte.MIN_VALUE;
+            initialBgVariance[i] = 10;
+            initialMaskVerify[i] = 0;
+        }
+        for (int i2 = 0; i2 < 2; i2++) {
+            this.mBgMean[i2] = (GLFrame) context.getFrameManager().newFrame(this.mMaskFormat);
+            this.mBgMean[i2].setData(initialBgMean, 0, numBytes);
+            this.mBgVariance[i2] = (GLFrame) context.getFrameManager().newFrame(this.mMaskFormat);
+            this.mBgVariance[i2].setData(initialBgVariance, 0, numBytes);
+            this.mMaskVerify[i2] = (GLFrame) context.getFrameManager().newFrame(this.mMaskFormat);
+            this.mMaskVerify[i2].setData(initialMaskVerify, 0, numBytes);
+        }
+        if (this.mLogVerbose) {
+            Log.m66v(TAG, "Done allocating texture for Mean and Variance objects!");
+        }
+        this.mDistance = (GLFrame) context.getFrameManager().newFrame(this.mMaskFormat);
+        this.mMask = (GLFrame) context.getFrameManager().newFrame(this.mMaskFormat);
+        this.mAutoWB = (GLFrame) context.getFrameManager().newFrame(this.mAverageFormat);
+        this.mVideoInput = (GLFrame) context.getFrameManager().newFrame(this.mMemoryFormat);
+        this.mBgInput = (GLFrame) context.getFrameManager().newFrame(this.mMemoryFormat);
+        this.mMaskAverage = (GLFrame) context.getFrameManager().newFrame(this.mAverageFormat);
+        this.mBgDistProgram = new ShaderProgram(context, mSharedUtilShader + mBgDistanceShader);
+        this.mBgDistProgram.setHostValue("subsample_level", Float.valueOf((float) this.mSubsampleLevel));
+        this.mBgMaskProgram = new ShaderProgram(context, mSharedUtilShader + mBgMaskShader);
+        this.mBgMaskProgram.setHostValue("accept_variance", Float.valueOf(this.mAcceptStddev * this.mAcceptStddev));
+        float[] yuvWeights = {this.mLumScale, this.mChromaScale};
+        this.mBgMaskProgram.setHostValue("yuv_weights", yuvWeights);
+        this.mBgMaskProgram.setHostValue("scale_lrg", Float.valueOf(this.mHierarchyLrgScale));
+        this.mBgMaskProgram.setHostValue("scale_mid", Float.valueOf(this.mHierarchyMidScale));
+        this.mBgMaskProgram.setHostValue("scale_sml", Float.valueOf(this.mHierarchySmlScale));
+        this.mBgMaskProgram.setHostValue("exp_lrg", Float.valueOf(this.mSubsampleLevel + this.mHierarchyLrgExp));
+        this.mBgMaskProgram.setHostValue("exp_mid", Float.valueOf(this.mSubsampleLevel + this.mHierarchyMidExp));
+        this.mBgMaskProgram.setHostValue("exp_sml", Float.valueOf(this.mSubsampleLevel + this.mHierarchySmlExp));
+        if (this.mUseTheForce) {
+            this.mBgSubtractProgram = new ShaderProgram(context, mSharedUtilShader + mBgSubtractShader + mBgSubtractForceShader);
+        } else {
+            this.mBgSubtractProgram = new ShaderProgram(context, mSharedUtilShader + mBgSubtractShader + "}\n");
+        }
+        this.mBgSubtractProgram.setHostValue("bg_fit_transform", DEFAULT_BG_FIT_TRANSFORM);
+        this.mBgSubtractProgram.setHostValue("mask_blend_bg", Float.valueOf(this.mMaskBg));
+        this.mBgSubtractProgram.setHostValue("mask_blend_fg", Float.valueOf(this.mMaskFg));
+        this.mBgSubtractProgram.setHostValue("exposure_change", Float.valueOf(this.mExposureChange));
+        this.mBgSubtractProgram.setHostValue("whitebalanceblue_change", Float.valueOf(this.mWhiteBalanceBlueChange));
+        this.mBgSubtractProgram.setHostValue("whitebalancered_change", Float.valueOf(this.mWhiteBalanceRedChange));
+        this.mBgUpdateMeanProgram = new ShaderProgram(context, mSharedUtilShader + mUpdateBgModelMeanShader);
+        this.mBgUpdateMeanProgram.setHostValue("subsample_level", Float.valueOf((float) this.mSubsampleLevel));
+        this.mBgUpdateVarianceProgram = new ShaderProgram(context, mSharedUtilShader + mUpdateBgModelVarianceShader);
+        this.mBgUpdateVarianceProgram.setHostValue("subsample_level", Float.valueOf((float) this.mSubsampleLevel));
+        this.mCopyOutProgram = ShaderProgram.createIdentity(context);
+        this.mAutomaticWhiteBalanceProgram = new ShaderProgram(context, mSharedUtilShader + mAutomaticWhiteBalance);
+        this.mAutomaticWhiteBalanceProgram.setHostValue("pyramid_depth", Float.valueOf((float) this.mPyramidDepth));
+        this.mAutomaticWhiteBalanceProgram.setHostValue("autowb_toggle", Integer.valueOf(this.mAutoWBToggle));
+        this.mMaskVerifyProgram = new ShaderProgram(context, mSharedUtilShader + mMaskVerifyShader);
+        this.mMaskVerifyProgram.setHostValue("verify_rate", Float.valueOf(this.mVerifyRate));
+        if (this.mLogVerbose) {
+            Log.m66v(TAG, "Shader width set to " + this.mMemoryFormat.getWidth());
+        }
+        this.mRelativeAspect = 1.0f;
+        this.mFrameCount = 0;
+        this.mStartLearning = true;
     }
 
+    @Override // android.filterfw.core.Filter
     public void process(FilterContext context) {
-        int i;
         boolean z;
+        int i;
         Frame video = pullInput("video");
         Frame background = pullInput("background");
         allocateFrames(video.getFormat(), context);
         if (this.mStartLearning) {
             if (this.mLogVerbose) {
-                Log.v(TAG, "Starting learning");
+                Log.m66v(TAG, "Starting learning");
             }
             this.mBgUpdateMeanProgram.setHostValue("bg_adapt_rate", Float.valueOf(this.mAdaptRateLearning));
             this.mBgUpdateMeanProgram.setHostValue("fg_adapt_rate", Float.valueOf(this.mAdaptRateLearning));
@@ -325,48 +371,69 @@ public class BackDropperFilter extends Filter {
             this.mBgUpdateVarianceProgram.setHostValue("fg_adapt_rate", Float.valueOf(this.mAdaptRateLearning));
             this.mFrameCount = 0;
         }
-        int inputIndex = this.mPingPong ^ 1;
-        int outputIndex = this.mPingPong;
+        int inputIndex = !this.mPingPong ? 1 : 0;
+        boolean z2 = this.mPingPong;
         this.mPingPong = !this.mPingPong;
         updateBgScaling(video, background, this.mBackgroundFitModeChanged);
         this.mBackgroundFitModeChanged = false;
-        this.copyShaderProgram.process(video, (Frame) this.mVideoInput);
-        this.copyShaderProgram.process(background, (Frame) this.mBgInput);
+        this.copyShaderProgram.process(video, this.mVideoInput);
+        this.copyShaderProgram.process(background, this.mBgInput);
         this.mVideoInput.generateMipMap();
         this.mVideoInput.setTextureParameter(10241, 9985);
         this.mBgInput.generateMipMap();
         this.mBgInput.setTextureParameter(10241, 9985);
         if (this.mStartLearning) {
-            this.copyShaderProgram.process((Frame) this.mVideoInput, (Frame) this.mBgMean[inputIndex]);
+            this.copyShaderProgram.process(this.mVideoInput, this.mBgMean[inputIndex]);
             this.mStartLearning = false;
         }
-        this.mBgDistProgram.process(new Frame[]{this.mVideoInput, this.mBgMean[inputIndex], this.mBgVariance[inputIndex]}, this.mDistance);
+        Frame[] distInputs = {this.mVideoInput, this.mBgMean[inputIndex], this.mBgVariance[inputIndex]};
+        this.mBgDistProgram.process(distInputs, this.mDistance);
         this.mDistance.generateMipMap();
         this.mDistance.setTextureParameter(10241, 9985);
-        this.mBgMaskProgram.process((Frame) this.mDistance, (Frame) this.mMask);
+        this.mBgMaskProgram.process(this.mDistance, this.mMask);
         this.mMask.generateMipMap();
         this.mMask.setTextureParameter(10241, 9985);
-        this.mAutomaticWhiteBalanceProgram.process(new Frame[]{this.mVideoInput, this.mBgInput}, this.mAutoWB);
+        Frame[] autoWBInputs = {this.mVideoInput, this.mBgInput};
+        this.mAutomaticWhiteBalanceProgram.process(autoWBInputs, this.mAutoWB);
         if (this.mFrameCount <= this.mLearningDuration) {
             pushOutput("video", video);
-            if (this.mFrameCount == this.mLearningDuration - this.mLearningVerifyDuration) {
-                this.copyShaderProgram.process((Frame) this.mMask, (Frame) this.mMaskVerify[outputIndex]);
+            if (this.mFrameCount != this.mLearningDuration - this.mLearningVerifyDuration) {
+                if (this.mFrameCount > this.mLearningDuration - this.mLearningVerifyDuration) {
+                    Frame[] maskVerifyInputs = {this.mMaskVerify[inputIndex], this.mMask};
+                    ShaderProgram shaderProgram = this.mMaskVerifyProgram;
+                    GLFrame[] gLFrameArr = this.mMaskVerify;
+                    int outputIndex = z2 ? 1 : 0;
+                    shaderProgram.process(maskVerifyInputs, gLFrameArr[outputIndex]);
+                    GLFrame[] gLFrameArr2 = this.mMaskVerify;
+                    int outputIndex2 = z2 ? 1 : 0;
+                    gLFrameArr2[outputIndex2].generateMipMap();
+                    GLFrame[] gLFrameArr3 = this.mMaskVerify;
+                    int outputIndex3 = z2 ? 1 : 0;
+                    gLFrameArr3[outputIndex3].setTextureParameter(10241, 9985);
+                }
+            } else {
+                ShaderProgram shaderProgram2 = this.copyShaderProgram;
+                GLFrame gLFrame = this.mMask;
+                GLFrame[] gLFrameArr4 = this.mMaskVerify;
+                int outputIndex4 = z2 ? 1 : 0;
+                shaderProgram2.process(gLFrame, gLFrameArr4[outputIndex4]);
                 this.mBgUpdateMeanProgram.setHostValue("bg_adapt_rate", Float.valueOf(this.mAdaptRateBg));
                 this.mBgUpdateMeanProgram.setHostValue("fg_adapt_rate", Float.valueOf(this.mAdaptRateFg));
                 this.mBgUpdateVarianceProgram.setHostValue("bg_adapt_rate", Float.valueOf(this.mAdaptRateBg));
                 this.mBgUpdateVarianceProgram.setHostValue("fg_adapt_rate", Float.valueOf(this.mAdaptRateFg));
-            } else if (this.mFrameCount > this.mLearningDuration - this.mLearningVerifyDuration) {
-                this.mMaskVerifyProgram.process(new Frame[]{this.mMaskVerify[inputIndex], this.mMask}, this.mMaskVerify[outputIndex]);
-                this.mMaskVerify[outputIndex].generateMipMap();
-                this.mMaskVerify[outputIndex].setTextureParameter(10241, 9985);
             }
             if (this.mFrameCount == this.mLearningDuration) {
-                this.copyShaderProgram.process((Frame) this.mMaskVerify[outputIndex], (Frame) this.mMaskAverage);
-                int bi = this.mMaskAverage.getData().array()[3] & 255;
+                ShaderProgram shaderProgram3 = this.copyShaderProgram;
+                GLFrame[] gLFrameArr5 = this.mMaskVerify;
+                int outputIndex5 = z2 ? 1 : 0;
+                shaderProgram3.process(gLFrameArr5[outputIndex5], this.mMaskAverage);
+                ByteBuffer mMaskAverageByteBuffer = this.mMaskAverage.getData();
+                byte[] mask_average = mMaskAverageByteBuffer.array();
+                int bi = mask_average[3] & 255;
                 if (this.mLogVerbose) {
                     i = 20;
                     z = true;
-                    Log.v(TAG, String.format("Mask_average is %d, threshold is %d", new Object[]{Integer.valueOf(bi), 20}));
+                    Log.m66v(TAG, String.format("Mask_average is %d, threshold is %d", Integer.valueOf(bi), 20));
                 } else {
                     z = true;
                     i = 20;
@@ -375,7 +442,7 @@ public class BackDropperFilter extends Filter {
                     this.mStartLearning = z;
                 } else {
                     if (this.mLogVerbose) {
-                        Log.v(TAG, "Learning done");
+                        Log.m66v(TAG, "Learning done");
                     }
                     if (this.mLearningDoneListener != null) {
                         this.mLearningDoneListener.onLearningDone(this);
@@ -384,17 +451,34 @@ public class BackDropperFilter extends Filter {
             }
         } else {
             Frame output = context.getFrameManager().newFrame(video.getFormat());
-            this.mBgSubtractProgram.process(new Frame[]{video, background, this.mMask, this.mAutoWB}, output);
+            Frame[] subtractInputs = {video, background, this.mMask, this.mAutoWB};
+            this.mBgSubtractProgram.process(subtractInputs, output);
             pushOutput("video", output);
             output.release();
         }
-        if (this.mFrameCount < this.mLearningDuration - this.mLearningVerifyDuration || ((double) this.mAdaptRateBg) > 0.0d || ((double) this.mAdaptRateFg) > 0.0d) {
-            this.mBgUpdateMeanProgram.process(new Frame[]{this.mVideoInput, this.mBgMean[inputIndex], this.mMask}, this.mBgMean[outputIndex]);
-            this.mBgMean[outputIndex].generateMipMap();
-            this.mBgMean[outputIndex].setTextureParameter(10241, 9985);
-            this.mBgUpdateVarianceProgram.process(new Frame[]{this.mVideoInput, this.mBgMean[inputIndex], this.mBgVariance[inputIndex], this.mMask}, this.mBgVariance[outputIndex]);
-            this.mBgVariance[outputIndex].generateMipMap();
-            this.mBgVariance[outputIndex].setTextureParameter(10241, 9985);
+        if (this.mFrameCount < this.mLearningDuration - this.mLearningVerifyDuration || this.mAdaptRateBg > 0.0d || this.mAdaptRateFg > 0.0d) {
+            Frame[] meanUpdateInputs = {this.mVideoInput, this.mBgMean[inputIndex], this.mMask};
+            ShaderProgram shaderProgram4 = this.mBgUpdateMeanProgram;
+            GLFrame[] gLFrameArr6 = this.mBgMean;
+            int outputIndex6 = z2 ? 1 : 0;
+            shaderProgram4.process(meanUpdateInputs, gLFrameArr6[outputIndex6]);
+            GLFrame[] gLFrameArr7 = this.mBgMean;
+            int outputIndex7 = z2 ? 1 : 0;
+            gLFrameArr7[outputIndex7].generateMipMap();
+            GLFrame[] gLFrameArr8 = this.mBgMean;
+            int outputIndex8 = z2 ? 1 : 0;
+            gLFrameArr8[outputIndex8].setTextureParameter(10241, 9985);
+            Frame[] varianceUpdateInputs = {this.mVideoInput, this.mBgMean[inputIndex], this.mBgVariance[inputIndex], this.mMask};
+            ShaderProgram shaderProgram5 = this.mBgUpdateVarianceProgram;
+            GLFrame[] gLFrameArr9 = this.mBgVariance;
+            int outputIndex9 = z2 ? 1 : 0;
+            shaderProgram5.process(varianceUpdateInputs, gLFrameArr9[outputIndex9]);
+            GLFrame[] gLFrameArr10 = this.mBgVariance;
+            int outputIndex10 = z2 ? 1 : 0;
+            gLFrameArr10[outputIndex10].generateMipMap();
+            GLFrame[] gLFrameArr11 = this.mBgVariance;
+            int outputIndex11 = z2 ? 1 : 0;
+            gLFrameArr11[outputIndex11].setTextureParameter(10241, 9985);
         }
         if (this.mProvideDebugOutputs) {
             Frame dbg1 = context.getFrameManager().newFrame(video.getFormat());
@@ -402,7 +486,7 @@ public class BackDropperFilter extends Filter {
             pushOutput("debug1", dbg1);
             dbg1.release();
             Frame dbg2 = context.getFrameManager().newFrame(this.mMemoryFormat);
-            this.mCopyOutProgram.process((Frame) this.mMask, dbg2);
+            this.mCopyOutProgram.process(this.mMask, dbg2);
             pushOutput("debug2", dbg2);
             dbg2.release();
         }
@@ -417,41 +501,38 @@ public class BackDropperFilter extends Filter {
             context.getGLEnvironment().activate();
             GLES20.glFinish();
             long endTime = SystemClock.elapsedRealtime();
-            StringBuilder sb = new StringBuilder();
-            sb.append("Avg. frame duration: ");
-            String str = TAG;
-            sb.append(String.format("%.2f", new Object[]{Double.valueOf(((double) (endTime - this.startTime)) / 30.0d)}));
-            sb.append(" ms. Avg. fps: ");
-            sb.append(String.format("%.2f", new Object[]{Double.valueOf(1000.0d / (((double) (endTime - this.startTime)) / 30.0d))}));
-            Log.v(str, sb.toString());
+            Log.m66v(TAG, "Avg. frame duration: " + String.format("%.2f", Double.valueOf((endTime - this.startTime) / 30.0d)) + " ms. Avg. fps: " + String.format("%.2f", Double.valueOf(1000.0d / ((endTime - this.startTime) / 30.0d))));
             this.startTime = endTime;
         }
     }
 
+    @Override // android.filterfw.core.Filter
     public void close(FilterContext context) {
-        if (this.mMemoryFormat != null) {
-            if (this.mLogVerbose) {
-                Log.v(TAG, "Filter Closing!");
-            }
-            for (int i = 0; i < 2; i++) {
-                this.mBgMean[i].release();
-                this.mBgVariance[i].release();
-                this.mMaskVerify[i].release();
-            }
-            this.mDistance.release();
-            this.mMask.release();
-            this.mAutoWB.release();
-            this.mVideoInput.release();
-            this.mBgInput.release();
-            this.mMaskAverage.release();
-            this.mMemoryFormat = null;
+        if (this.mMemoryFormat == null) {
+            return;
         }
+        if (this.mLogVerbose) {
+            Log.m66v(TAG, "Filter Closing!");
+        }
+        for (int i = 0; i < 2; i++) {
+            this.mBgMean[i].release();
+            this.mBgVariance[i].release();
+            this.mMaskVerify[i].release();
+        }
+        this.mDistance.release();
+        this.mMask.release();
+        this.mAutoWB.release();
+        this.mVideoInput.release();
+        this.mBgInput.release();
+        this.mMaskAverage.release();
+        this.mMemoryFormat = null;
     }
 
     public synchronized void relearn() {
         this.mStartLearning = true;
     }
 
+    @Override // android.filterfw.core.Filter
     public void fieldPortValueUpdated(String name, FilterContext context) {
         if (name.equals("backgroundFitMode")) {
             this.mBackgroundFitModeChanged = true;
@@ -464,13 +545,14 @@ public class BackDropperFilter extends Filter {
         } else if (name.equals("hierSmlScale")) {
             this.mBgMaskProgram.setHostValue("scale_sml", Float.valueOf(this.mHierarchySmlScale));
         } else if (name.equals("hierLrgExp")) {
-            this.mBgMaskProgram.setHostValue("exp_lrg", Float.valueOf((float) (this.mSubsampleLevel + this.mHierarchyLrgExp)));
+            this.mBgMaskProgram.setHostValue("exp_lrg", Float.valueOf(this.mSubsampleLevel + this.mHierarchyLrgExp));
         } else if (name.equals("hierMidExp")) {
-            this.mBgMaskProgram.setHostValue("exp_mid", Float.valueOf((float) (this.mSubsampleLevel + this.mHierarchyMidExp)));
+            this.mBgMaskProgram.setHostValue("exp_mid", Float.valueOf(this.mSubsampleLevel + this.mHierarchyMidExp));
         } else if (name.equals("hierSmlExp")) {
-            this.mBgMaskProgram.setHostValue("exp_sml", Float.valueOf((float) (this.mSubsampleLevel + this.mHierarchySmlExp)));
+            this.mBgMaskProgram.setHostValue("exp_sml", Float.valueOf(this.mSubsampleLevel + this.mHierarchySmlExp));
         } else if (name.equals("lumScale") || name.equals("chromaScale")) {
-            this.mBgMaskProgram.setHostValue("yuv_weights", new float[]{this.mLumScale, this.mChromaScale});
+            float[] yuvWeights = {this.mLumScale, this.mChromaScale};
+            this.mBgMaskProgram.setHostValue("yuv_weights", yuvWeights);
         } else if (name.equals("maskBg")) {
             this.mBgSubtractProgram.setHostValue("mask_blend_bg", Float.valueOf(this.mMaskBg));
         } else if (name.equals("maskFg")) {
@@ -487,7 +569,9 @@ public class BackDropperFilter extends Filter {
     }
 
     private void updateBgScaling(Frame video, Frame background, boolean fitModeChanged) {
-        float currentRelativeAspect = (((float) video.getFormat().getWidth()) / ((float) video.getFormat().getHeight())) / (((float) background.getFormat().getWidth()) / ((float) background.getFormat().getHeight()));
+        float foregroundAspect = video.getFormat().getWidth() / video.getFormat().getHeight();
+        float backgroundAspect = background.getFormat().getWidth() / background.getFormat().getHeight();
+        float currentRelativeAspect = foregroundAspect / backgroundAspect;
         if (currentRelativeAspect != this.mRelativeAspect || fitModeChanged) {
             this.mRelativeAspect = currentRelativeAspect;
             float xMin = 0.0f;
@@ -496,29 +580,29 @@ public class BackDropperFilter extends Filter {
             float yWidth = 1.0f;
             switch (this.mBackgroundFitMode) {
                 case 1:
-                    if (this.mRelativeAspect <= 1.0f) {
-                        yMin = 0.5f - (0.5f / this.mRelativeAspect);
-                        yWidth = 1.0f / this.mRelativeAspect;
-                        break;
-                    } else {
+                    if (this.mRelativeAspect > 1.0f) {
                         xMin = 0.5f - (this.mRelativeAspect * 0.5f);
                         xWidth = this.mRelativeAspect * 1.0f;
                         break;
-                    }
-                case 2:
-                    if (this.mRelativeAspect <= 1.0f) {
-                        xMin = 0.5f - (this.mRelativeAspect * 0.5f);
-                        xWidth = this.mRelativeAspect;
-                        break;
                     } else {
                         yMin = 0.5f - (0.5f / this.mRelativeAspect);
                         yWidth = 1.0f / this.mRelativeAspect;
+                        break;
+                    }
+                case 2:
+                    if (this.mRelativeAspect > 1.0f) {
+                        yMin = 0.5f - (0.5f / this.mRelativeAspect);
+                        yWidth = 1.0f / this.mRelativeAspect;
+                        break;
+                    } else {
+                        xMin = 0.5f - (this.mRelativeAspect * 0.5f);
+                        xWidth = this.mRelativeAspect;
                         break;
                     }
             }
             if (this.mMirrorBg) {
                 if (this.mLogVerbose) {
-                    Log.v(TAG, "Mirroring the background!");
+                    Log.m66v(TAG, "Mirroring the background!");
                 }
                 if (this.mOrientation == 0 || this.mOrientation == 180) {
                     xWidth = -xWidth;
@@ -529,13 +613,14 @@ public class BackDropperFilter extends Filter {
                 }
             }
             if (this.mLogVerbose) {
-                Log.v(TAG, "bgTransform: xMin, yMin, xWidth, yWidth : " + xMin + ", " + yMin + ", " + xWidth + ", " + yWidth + ", mRelAspRatio = " + this.mRelativeAspect);
+                Log.m66v(TAG, "bgTransform: xMin, yMin, xWidth, yWidth : " + xMin + ", " + yMin + ", " + xWidth + ", " + yWidth + ", mRelAspRatio = " + this.mRelativeAspect);
             }
-            this.mBgSubtractProgram.setHostValue("bg_fit_transform", new float[]{xWidth, 0.0f, 0.0f, 0.0f, yWidth, 0.0f, xMin, yMin, 1.0f});
+            float[] bgTransform = {xWidth, 0.0f, 0.0f, 0.0f, yWidth, 0.0f, xMin, yMin, 1.0f};
+            this.mBgSubtractProgram.setHostValue("bg_fit_transform", bgTransform);
         }
     }
 
     private int pyramidLevel(int size) {
-        return ((int) Math.floor(Math.log10((double) size) / Math.log10(2.0d))) - 1;
+        return ((int) Math.floor(Math.log10(size) / Math.log10(2.0d))) - 1;
     }
 }

@@ -2,6 +2,7 @@ package android.hardware;
 
 import android.annotation.UnsupportedAppUsage;
 
+/* loaded from: classes.dex */
 public class SensorEvent {
     public int accuracy;
     public Sensor sensor;

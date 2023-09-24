@@ -1,11 +1,12 @@
 package android.nfc;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes3.dex */
 public interface INfcDta extends IInterface {
     void disableClient() throws RemoteException;
 
@@ -21,36 +22,46 @@ public interface INfcDta extends IInterface {
 
     boolean registerMessageService(String str) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements INfcDta {
+        @Override // android.nfc.INfcDta
         public void enableDta() throws RemoteException {
         }
 
+        @Override // android.nfc.INfcDta
         public void disableDta() throws RemoteException {
         }
 
+        @Override // android.nfc.INfcDta
         public boolean enableServer(String serviceName, int serviceSap, int miu, int rwSize, int testCaseId) throws RemoteException {
             return false;
         }
 
+        @Override // android.nfc.INfcDta
         public void disableServer() throws RemoteException {
         }
 
+        @Override // android.nfc.INfcDta
         public boolean enableClient(String serviceName, int miu, int rwSize, int testCaseId) throws RemoteException {
             return false;
         }
 
+        @Override // android.nfc.INfcDta
         public void disableClient() throws RemoteException {
         }
 
+        @Override // android.nfc.INfcDta
         public boolean registerMessageService(String msgServiceName) throws RemoteException {
             return false;
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements INfcDta {
         private static final String DESCRIPTOR = "android.nfc.INfcDta";
         static final int TRANSACTION_disableClient = 6;
@@ -70,12 +81,13 @@ public interface INfcDta extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof INfcDta)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof INfcDta)) {
+                return (INfcDta) iin;
             }
-            return (INfcDta) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -101,63 +113,72 @@ public interface INfcDta extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            int i = code;
-            Parcel parcel = data;
-            Parcel parcel2 = reply;
-            if (i != 1598968902) {
-                switch (i) {
-                    case 1:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        enableDta();
-                        reply.writeNoException();
-                        return true;
-                    case 2:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        disableDta();
-                        reply.writeNoException();
-                        return true;
-                    case 3:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        boolean _result = enableServer(data.readString(), data.readInt(), data.readInt(), data.readInt(), data.readInt());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result);
-                        return true;
-                    case 4:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        disableServer();
-                        reply.writeNoException();
-                        return true;
-                    case 5:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        boolean _result2 = enableClient(data.readString(), data.readInt(), data.readInt(), data.readInt());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result2);
-                        return true;
-                    case 6:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        disableClient();
-                        reply.writeNoException();
-                        return true;
-                    case 7:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        boolean _result3 = registerMessageService(data.readString());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result3);
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
-                parcel2.writeString(DESCRIPTOR);
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
                 return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    enableDta();
+                    reply.writeNoException();
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    disableDta();
+                    reply.writeNoException();
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0 = data.readString();
+                    int _arg1 = data.readInt();
+                    int _arg2 = data.readInt();
+                    int _arg3 = data.readInt();
+                    int _arg4 = data.readInt();
+                    boolean enableServer = enableServer(_arg0, _arg1, _arg2, _arg3, _arg4);
+                    reply.writeNoException();
+                    reply.writeInt(enableServer ? 1 : 0);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    disableServer();
+                    reply.writeNoException();
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg02 = data.readString();
+                    int _arg12 = data.readInt();
+                    int _arg22 = data.readInt();
+                    int _arg32 = data.readInt();
+                    boolean enableClient = enableClient(_arg02, _arg12, _arg22, _arg32);
+                    reply.writeNoException();
+                    reply.writeInt(enableClient ? 1 : 0);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    disableClient();
+                    reply.writeNoException();
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg03 = data.readString();
+                    boolean registerMessageService = registerMessageService(_arg03);
+                    reply.writeNoException();
+                    reply.writeInt(registerMessageService ? 1 : 0);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
             }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements INfcDta {
             public static INfcDta sDefaultImpl;
             private IBinder mRemote;
@@ -166,6 +187,7 @@ public interface INfcDta extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -174,150 +196,128 @@ public interface INfcDta extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.nfc.INfcDta
             public void enableDta() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(1, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().enableDta();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().enableDta();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.nfc.INfcDta
             public void disableDta() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(2, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().disableDta();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().disableDta();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.nfc.INfcDta
             public boolean enableServer(String serviceName, int serviceSap, int miu, int rwSize, int testCaseId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeString(serviceName);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(serviceSap);
                     try {
-                        _data.writeString(serviceName);
-                        try {
-                            _data.writeInt(serviceSap);
-                            try {
-                                _data.writeInt(miu);
-                                try {
-                                    _data.writeInt(rwSize);
-                                } catch (Throwable th) {
-                                    th = th;
-                                    int i = testCaseId;
-                                    _reply.recycle();
-                                    _data.recycle();
-                                    throw th;
-                                }
-                            } catch (Throwable th2) {
-                                th = th2;
-                                int i2 = rwSize;
-                                int i3 = testCaseId;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th3) {
-                            th = th3;
-                            int i4 = miu;
-                            int i22 = rwSize;
-                            int i32 = testCaseId;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
+                        _data.writeInt(miu);
+                    } catch (Throwable th3) {
+                        th = th3;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeInt(rwSize);
                         try {
                             _data.writeInt(testCaseId);
-                            try {
-                                boolean z = false;
-                                if (this.mRemote.transact(3, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                    _reply.readException();
-                                    if (_reply.readInt() != 0) {
-                                        z = true;
-                                    }
-                                    boolean _status = z;
-                                    _reply.recycle();
-                                    _data.recycle();
-                                    return _status;
-                                }
-                                boolean enableServer = Stub.getDefaultImpl().enableServer(serviceName, serviceSap, miu, rwSize, testCaseId);
-                                _reply.recycle();
-                                _data.recycle();
-                                return enableServer;
-                            } catch (Throwable th4) {
-                                th = th4;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th5) {
-                            th = th5;
+                        } catch (Throwable th4) {
+                            th = th4;
+                        }
+                    } catch (Throwable th5) {
+                        th = th5;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                        if (!_status && Stub.getDefaultImpl() != null) {
+                            boolean enableServer = Stub.getDefaultImpl().enableServer(serviceName, serviceSap, miu, rwSize, testCaseId);
                             _reply.recycle();
                             _data.recycle();
-                            throw th;
+                            return enableServer;
                         }
+                        _reply.readException();
+                        boolean _status2 = _reply.readInt() != 0;
+                        _reply.recycle();
+                        _data.recycle();
+                        return _status2;
                     } catch (Throwable th6) {
                         th = th6;
-                        int i5 = serviceSap;
-                        int i42 = miu;
-                        int i222 = rwSize;
-                        int i322 = testCaseId;
                         _reply.recycle();
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th7) {
                     th = th7;
-                    String str = serviceName;
-                    int i52 = serviceSap;
-                    int i422 = miu;
-                    int i2222 = rwSize;
-                    int i3222 = testCaseId;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.nfc.INfcDta
             public void disableServer() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(4, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().disableServer();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().disableServer();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.nfc.INfcDta
             public boolean enableClient(String serviceName, int miu, int rwSize, int testCaseId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -327,60 +327,51 @@ public interface INfcDta extends IInterface {
                     _data.writeInt(miu);
                     _data.writeInt(rwSize);
                     _data.writeInt(testCaseId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(5, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().enableClient(serviceName, miu, rwSize, testCaseId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.nfc.INfcDta
             public void disableClient() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(6, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().disableClient();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().disableClient();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.nfc.INfcDta
             public boolean registerMessageService(String msgServiceName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(msgServiceName);
-                    boolean z = false;
-                    if (!this.mRemote.transact(7, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().registerMessageService(msgServiceName);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -389,11 +380,11 @@ public interface INfcDta extends IInterface {
         }
 
         public static boolean setDefaultImpl(INfcDta impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static INfcDta getDefaultImpl() {

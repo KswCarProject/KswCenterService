@@ -1,14 +1,19 @@
 package com.android.internal.policy;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.text.TextUtils;
+import com.android.internal.policy.IKeyguardDismissCallback;
+import com.android.internal.policy.IKeyguardDrawnCallback;
+import com.android.internal.policy.IKeyguardExitCallback;
+import com.android.internal.policy.IKeyguardStateCallback;
 
+/* loaded from: classes4.dex */
 public interface IKeyguardService extends IInterface {
     void addStateMonitorCallback(IKeyguardStateCallback iKeyguardStateCallback) throws RemoteException;
 
@@ -56,78 +61,103 @@ public interface IKeyguardService extends IInterface {
 
     void verifyUnlock(IKeyguardExitCallback iKeyguardExitCallback) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IKeyguardService {
+        @Override // com.android.internal.policy.IKeyguardService
         public void setOccluded(boolean isOccluded, boolean animate) throws RemoteException {
         }
 
+        @Override // com.android.internal.policy.IKeyguardService
         public void addStateMonitorCallback(IKeyguardStateCallback callback) throws RemoteException {
         }
 
+        @Override // com.android.internal.policy.IKeyguardService
         public void verifyUnlock(IKeyguardExitCallback callback) throws RemoteException {
         }
 
+        @Override // com.android.internal.policy.IKeyguardService
         public void dismiss(IKeyguardDismissCallback callback, CharSequence message) throws RemoteException {
         }
 
+        @Override // com.android.internal.policy.IKeyguardService
         public void onDreamingStarted() throws RemoteException {
         }
 
+        @Override // com.android.internal.policy.IKeyguardService
         public void onDreamingStopped() throws RemoteException {
         }
 
+        @Override // com.android.internal.policy.IKeyguardService
         public void onStartedGoingToSleep(int reason) throws RemoteException {
         }
 
+        @Override // com.android.internal.policy.IKeyguardService
         public void onFinishedGoingToSleep(int reason, boolean cameraGestureTriggered) throws RemoteException {
         }
 
+        @Override // com.android.internal.policy.IKeyguardService
         public void onStartedWakingUp() throws RemoteException {
         }
 
+        @Override // com.android.internal.policy.IKeyguardService
         public void onFinishedWakingUp() throws RemoteException {
         }
 
+        @Override // com.android.internal.policy.IKeyguardService
         public void onScreenTurningOn(IKeyguardDrawnCallback callback) throws RemoteException {
         }
 
+        @Override // com.android.internal.policy.IKeyguardService
         public void onScreenTurnedOn() throws RemoteException {
         }
 
+        @Override // com.android.internal.policy.IKeyguardService
         public void onScreenTurningOff() throws RemoteException {
         }
 
+        @Override // com.android.internal.policy.IKeyguardService
         public void onScreenTurnedOff() throws RemoteException {
         }
 
+        @Override // com.android.internal.policy.IKeyguardService
         public void setKeyguardEnabled(boolean enabled) throws RemoteException {
         }
 
+        @Override // com.android.internal.policy.IKeyguardService
         public void onSystemReady() throws RemoteException {
         }
 
+        @Override // com.android.internal.policy.IKeyguardService
         public void doKeyguardTimeout(Bundle options) throws RemoteException {
         }
 
+        @Override // com.android.internal.policy.IKeyguardService
         public void setSwitchingUser(boolean switching) throws RemoteException {
         }
 
+        @Override // com.android.internal.policy.IKeyguardService
         public void setCurrentUser(int userId) throws RemoteException {
         }
 
+        @Override // com.android.internal.policy.IKeyguardService
         public void onBootCompleted() throws RemoteException {
         }
 
+        @Override // com.android.internal.policy.IKeyguardService
         public void startKeyguardExitAnimation(long startTime, long fadeoutDuration) throws RemoteException {
         }
 
+        @Override // com.android.internal.policy.IKeyguardService
         public void onShortPowerPressedGoHome() throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IKeyguardService {
         private static final String DESCRIPTOR = "com.android.internal.policy.IKeyguardService";
         static final int TRANSACTION_addStateMonitorCallback = 2;
@@ -162,12 +192,13 @@ public interface IKeyguardService extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IKeyguardService)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IKeyguardService)) {
+                return (IKeyguardService) iin;
             }
-            return (IKeyguardService) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -223,203 +254,129 @@ public interface IKeyguardService extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v20, resolved type: android.os.Bundle} */
-        /* JADX WARNING: type inference failed for: r1v1 */
-        /* JADX WARNING: type inference failed for: r1v10, types: [java.lang.CharSequence] */
-        /* JADX WARNING: type inference failed for: r1v28 */
-        /* JADX WARNING: type inference failed for: r1v29 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r8, android.os.Parcel r9, android.os.Parcel r10, int r11) throws android.os.RemoteException {
-            /*
-                r7 = this;
-                java.lang.String r0 = "com.android.internal.policy.IKeyguardService"
-                r1 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r2 = 1
-                if (r8 == r1) goto L_0x012b
-                r1 = 0
-                r3 = 0
-                switch(r8) {
-                    case 1: goto L_0x0113;
-                    case 2: goto L_0x0104;
-                    case 3: goto L_0x00f5;
-                    case 4: goto L_0x00d6;
-                    case 5: goto L_0x00cf;
-                    case 6: goto L_0x00c8;
-                    case 7: goto L_0x00bd;
-                    case 8: goto L_0x00aa;
-                    case 9: goto L_0x00a3;
-                    case 10: goto L_0x009c;
-                    case 11: goto L_0x008d;
-                    case 12: goto L_0x0086;
-                    case 13: goto L_0x007f;
-                    case 14: goto L_0x0078;
-                    case 15: goto L_0x0068;
-                    case 16: goto L_0x0061;
-                    case 17: goto L_0x004a;
-                    case 18: goto L_0x003a;
-                    case 19: goto L_0x002f;
-                    case 20: goto L_0x0028;
-                    case 21: goto L_0x0019;
-                    case 22: goto L_0x0012;
-                    default: goto L_0x000d;
-                }
-            L_0x000d:
-                boolean r1 = super.onTransact(r8, r9, r10, r11)
-                return r1
-            L_0x0012:
-                r9.enforceInterface(r0)
-                r7.onShortPowerPressedGoHome()
-                return r2
-            L_0x0019:
-                r9.enforceInterface(r0)
-                long r3 = r9.readLong()
-                long r5 = r9.readLong()
-                r7.startKeyguardExitAnimation(r3, r5)
-                return r2
-            L_0x0028:
-                r9.enforceInterface(r0)
-                r7.onBootCompleted()
-                return r2
-            L_0x002f:
-                r9.enforceInterface(r0)
-                int r1 = r9.readInt()
-                r7.setCurrentUser(r1)
-                return r2
-            L_0x003a:
-                r9.enforceInterface(r0)
-                int r1 = r9.readInt()
-                if (r1 == 0) goto L_0x0045
-                r3 = r2
-            L_0x0045:
-                r1 = r3
-                r7.setSwitchingUser(r1)
-                return r2
-            L_0x004a:
-                r9.enforceInterface(r0)
-                int r3 = r9.readInt()
-                if (r3 == 0) goto L_0x005c
-                android.os.Parcelable$Creator<android.os.Bundle> r1 = android.os.Bundle.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r9)
-                android.os.Bundle r1 = (android.os.Bundle) r1
-                goto L_0x005d
-            L_0x005c:
-            L_0x005d:
-                r7.doKeyguardTimeout(r1)
-                return r2
-            L_0x0061:
-                r9.enforceInterface(r0)
-                r7.onSystemReady()
-                return r2
-            L_0x0068:
-                r9.enforceInterface(r0)
-                int r1 = r9.readInt()
-                if (r1 == 0) goto L_0x0073
-                r3 = r2
-            L_0x0073:
-                r1 = r3
-                r7.setKeyguardEnabled(r1)
-                return r2
-            L_0x0078:
-                r9.enforceInterface(r0)
-                r7.onScreenTurnedOff()
-                return r2
-            L_0x007f:
-                r9.enforceInterface(r0)
-                r7.onScreenTurningOff()
-                return r2
-            L_0x0086:
-                r9.enforceInterface(r0)
-                r7.onScreenTurnedOn()
-                return r2
-            L_0x008d:
-                r9.enforceInterface(r0)
-                android.os.IBinder r1 = r9.readStrongBinder()
-                com.android.internal.policy.IKeyguardDrawnCallback r1 = com.android.internal.policy.IKeyguardDrawnCallback.Stub.asInterface(r1)
-                r7.onScreenTurningOn(r1)
-                return r2
-            L_0x009c:
-                r9.enforceInterface(r0)
-                r7.onFinishedWakingUp()
-                return r2
-            L_0x00a3:
-                r9.enforceInterface(r0)
-                r7.onStartedWakingUp()
-                return r2
-            L_0x00aa:
-                r9.enforceInterface(r0)
-                int r1 = r9.readInt()
-                int r4 = r9.readInt()
-                if (r4 == 0) goto L_0x00b9
-                r3 = r2
-            L_0x00b9:
-                r7.onFinishedGoingToSleep(r1, r3)
-                return r2
-            L_0x00bd:
-                r9.enforceInterface(r0)
-                int r1 = r9.readInt()
-                r7.onStartedGoingToSleep(r1)
-                return r2
-            L_0x00c8:
-                r9.enforceInterface(r0)
-                r7.onDreamingStopped()
-                return r2
-            L_0x00cf:
-                r9.enforceInterface(r0)
-                r7.onDreamingStarted()
-                return r2
-            L_0x00d6:
-                r9.enforceInterface(r0)
-                android.os.IBinder r3 = r9.readStrongBinder()
-                com.android.internal.policy.IKeyguardDismissCallback r3 = com.android.internal.policy.IKeyguardDismissCallback.Stub.asInterface(r3)
-                int r4 = r9.readInt()
-                if (r4 == 0) goto L_0x00f0
-                android.os.Parcelable$Creator<java.lang.CharSequence> r1 = android.text.TextUtils.CHAR_SEQUENCE_CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r9)
-                java.lang.CharSequence r1 = (java.lang.CharSequence) r1
-                goto L_0x00f1
-            L_0x00f0:
-            L_0x00f1:
-                r7.dismiss(r3, r1)
-                return r2
-            L_0x00f5:
-                r9.enforceInterface(r0)
-                android.os.IBinder r1 = r9.readStrongBinder()
-                com.android.internal.policy.IKeyguardExitCallback r1 = com.android.internal.policy.IKeyguardExitCallback.Stub.asInterface(r1)
-                r7.verifyUnlock(r1)
-                return r2
-            L_0x0104:
-                r9.enforceInterface(r0)
-                android.os.IBinder r1 = r9.readStrongBinder()
-                com.android.internal.policy.IKeyguardStateCallback r1 = com.android.internal.policy.IKeyguardStateCallback.Stub.asInterface(r1)
-                r7.addStateMonitorCallback(r1)
-                return r2
-            L_0x0113:
-                r9.enforceInterface(r0)
-                int r1 = r9.readInt()
-                if (r1 == 0) goto L_0x011e
-                r1 = r2
-                goto L_0x011f
-            L_0x011e:
-                r1 = r3
-            L_0x011f:
-                int r4 = r9.readInt()
-                if (r4 == 0) goto L_0x0127
-                r3 = r2
-            L_0x0127:
-                r7.setOccluded(r1, r3)
-                return r2
-            L_0x012b:
-                r10.writeString(r0)
-                return r2
-            */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.internal.policy.IKeyguardService.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            boolean _arg1;
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean _arg0 = data.readInt() != 0;
+                    _arg1 = data.readInt() != 0;
+                    setOccluded(_arg0, _arg1);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    IKeyguardStateCallback _arg02 = IKeyguardStateCallback.Stub.asInterface(data.readStrongBinder());
+                    addStateMonitorCallback(_arg02);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    IKeyguardExitCallback _arg03 = IKeyguardExitCallback.Stub.asInterface(data.readStrongBinder());
+                    verifyUnlock(_arg03);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    IKeyguardDismissCallback _arg04 = IKeyguardDismissCallback.Stub.asInterface(data.readStrongBinder());
+                    dismiss(_arg04, data.readInt() != 0 ? TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(data) : null);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    onDreamingStarted();
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    onDreamingStopped();
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg05 = data.readInt();
+                    onStartedGoingToSleep(_arg05);
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg06 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    onFinishedGoingToSleep(_arg06, _arg1);
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    onStartedWakingUp();
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    onFinishedWakingUp();
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    IKeyguardDrawnCallback _arg07 = IKeyguardDrawnCallback.Stub.asInterface(data.readStrongBinder());
+                    onScreenTurningOn(_arg07);
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    onScreenTurnedOn();
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    onScreenTurningOff();
+                    return true;
+                case 14:
+                    data.enforceInterface(DESCRIPTOR);
+                    onScreenTurnedOff();
+                    return true;
+                case 15:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg1 = data.readInt() != 0;
+                    boolean _arg08 = _arg1;
+                    setKeyguardEnabled(_arg08);
+                    return true;
+                case 16:
+                    data.enforceInterface(DESCRIPTOR);
+                    onSystemReady();
+                    return true;
+                case 17:
+                    data.enforceInterface(DESCRIPTOR);
+                    Bundle _arg09 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    doKeyguardTimeout(_arg09);
+                    return true;
+                case 18:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg1 = data.readInt() != 0;
+                    boolean _arg010 = _arg1;
+                    setSwitchingUser(_arg010);
+                    return true;
+                case 19:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg011 = data.readInt();
+                    setCurrentUser(_arg011);
+                    return true;
+                case 20:
+                    data.enforceInterface(DESCRIPTOR);
+                    onBootCompleted();
+                    return true;
+                case 21:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _arg012 = data.readLong();
+                    startKeyguardExitAnimation(_arg012, data.readLong());
+                    return true;
+                case 22:
+                    data.enforceInterface(DESCRIPTOR);
+                    onShortPowerPressedGoHome();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IKeyguardService {
             public static IKeyguardService sDefaultImpl;
             private IBinder mRemote;
@@ -428,6 +385,7 @@ public interface IKeyguardService extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -436,15 +394,15 @@ public interface IKeyguardService extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // com.android.internal.policy.IKeyguardService
             public void setOccluded(boolean isOccluded, boolean animate) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(isOccluded);
-                    _data.writeInt(animate);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(isOccluded ? 1 : 0);
+                    _data.writeInt(animate ? 1 : 0);
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().setOccluded(isOccluded, animate);
                     }
                 } finally {
@@ -452,14 +410,14 @@ public interface IKeyguardService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.policy.IKeyguardService
             public void addStateMonitorCallback(IKeyguardStateCallback callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().addStateMonitorCallback(callback);
                     }
                 } finally {
@@ -467,14 +425,14 @@ public interface IKeyguardService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.policy.IKeyguardService
             public void verifyUnlock(IKeyguardExitCallback callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().verifyUnlock(callback);
                     }
                 } finally {
@@ -482,6 +440,7 @@ public interface IKeyguardService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.policy.IKeyguardService
             public void dismiss(IKeyguardDismissCallback callback, CharSequence message) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -493,9 +452,8 @@ public interface IKeyguardService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().dismiss(callback, message);
                     }
                 } finally {
@@ -503,13 +461,13 @@ public interface IKeyguardService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.policy.IKeyguardService
             public void onDreamingStarted() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(5, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onDreamingStarted();
                     }
                 } finally {
@@ -517,13 +475,13 @@ public interface IKeyguardService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.policy.IKeyguardService
             public void onDreamingStopped() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(6, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(6, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onDreamingStopped();
                     }
                 } finally {
@@ -531,14 +489,14 @@ public interface IKeyguardService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.policy.IKeyguardService
             public void onStartedGoingToSleep(int reason) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(reason);
-                    if (this.mRemote.transact(7, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(7, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onStartedGoingToSleep(reason);
                     }
                 } finally {
@@ -546,15 +504,15 @@ public interface IKeyguardService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.policy.IKeyguardService
             public void onFinishedGoingToSleep(int reason, boolean cameraGestureTriggered) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(reason);
-                    _data.writeInt(cameraGestureTriggered);
-                    if (this.mRemote.transact(8, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(cameraGestureTriggered ? 1 : 0);
+                    boolean _status = this.mRemote.transact(8, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onFinishedGoingToSleep(reason, cameraGestureTriggered);
                     }
                 } finally {
@@ -562,13 +520,13 @@ public interface IKeyguardService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.policy.IKeyguardService
             public void onStartedWakingUp() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(9, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(9, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onStartedWakingUp();
                     }
                 } finally {
@@ -576,13 +534,13 @@ public interface IKeyguardService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.policy.IKeyguardService
             public void onFinishedWakingUp() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(10, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(10, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onFinishedWakingUp();
                     }
                 } finally {
@@ -590,14 +548,14 @@ public interface IKeyguardService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.policy.IKeyguardService
             public void onScreenTurningOn(IKeyguardDrawnCallback callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                    if (this.mRemote.transact(11, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(11, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onScreenTurningOn(callback);
                     }
                 } finally {
@@ -605,13 +563,13 @@ public interface IKeyguardService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.policy.IKeyguardService
             public void onScreenTurnedOn() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(12, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(12, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onScreenTurnedOn();
                     }
                 } finally {
@@ -619,13 +577,13 @@ public interface IKeyguardService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.policy.IKeyguardService
             public void onScreenTurningOff() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(13, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(13, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onScreenTurningOff();
                     }
                 } finally {
@@ -633,13 +591,13 @@ public interface IKeyguardService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.policy.IKeyguardService
             public void onScreenTurnedOff() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(14, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(14, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onScreenTurnedOff();
                     }
                 } finally {
@@ -647,14 +605,14 @@ public interface IKeyguardService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.policy.IKeyguardService
             public void setKeyguardEnabled(boolean enabled) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(enabled);
-                    if (this.mRemote.transact(15, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(enabled ? 1 : 0);
+                    boolean _status = this.mRemote.transact(15, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().setKeyguardEnabled(enabled);
                     }
                 } finally {
@@ -662,13 +620,13 @@ public interface IKeyguardService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.policy.IKeyguardService
             public void onSystemReady() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(16, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(16, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onSystemReady();
                     }
                 } finally {
@@ -676,6 +634,7 @@ public interface IKeyguardService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.policy.IKeyguardService
             public void doKeyguardTimeout(Bundle options) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -686,9 +645,8 @@ public interface IKeyguardService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(17, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(17, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().doKeyguardTimeout(options);
                     }
                 } finally {
@@ -696,14 +654,14 @@ public interface IKeyguardService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.policy.IKeyguardService
             public void setSwitchingUser(boolean switching) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(switching);
-                    if (this.mRemote.transact(18, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(switching ? 1 : 0);
+                    boolean _status = this.mRemote.transact(18, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().setSwitchingUser(switching);
                     }
                 } finally {
@@ -711,14 +669,14 @@ public interface IKeyguardService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.policy.IKeyguardService
             public void setCurrentUser(int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userId);
-                    if (this.mRemote.transact(19, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(19, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().setCurrentUser(userId);
                     }
                 } finally {
@@ -726,13 +684,13 @@ public interface IKeyguardService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.policy.IKeyguardService
             public void onBootCompleted() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(20, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(20, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onBootCompleted();
                     }
                 } finally {
@@ -740,15 +698,15 @@ public interface IKeyguardService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.policy.IKeyguardService
             public void startKeyguardExitAnimation(long startTime, long fadeoutDuration) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeLong(startTime);
                     _data.writeLong(fadeoutDuration);
-                    if (this.mRemote.transact(21, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(21, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().startKeyguardExitAnimation(startTime, fadeoutDuration);
                     }
                 } finally {
@@ -756,13 +714,13 @@ public interface IKeyguardService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.policy.IKeyguardService
             public void onShortPowerPressedGoHome() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(22, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(22, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onShortPowerPressedGoHome();
                     }
                 } finally {
@@ -772,11 +730,11 @@ public interface IKeyguardService extends IInterface {
         }
 
         public static boolean setDefaultImpl(IKeyguardService impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IKeyguardService getDefaultImpl() {

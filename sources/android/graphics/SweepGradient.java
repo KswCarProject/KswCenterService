@@ -3,6 +3,7 @@ package android.graphics;
 import android.annotation.UnsupportedAppUsage;
 import android.graphics.ColorSpace;
 
+/* loaded from: classes.dex */
 public class SweepGradient extends Shader {
     @UnsupportedAppUsage
     private int mColor0;
@@ -30,14 +31,13 @@ public class SweepGradient extends Shader {
 
     private SweepGradient(float cx, float cy, long[] colors, float[] positions, ColorSpace colorSpace) {
         super(colorSpace);
-        if (positions == null || colors.length == positions.length) {
-            this.mCx = cx;
-            this.mCy = cy;
-            this.mColorLongs = colors;
-            this.mPositions = positions != null ? (float[]) positions.clone() : null;
-            return;
+        if (positions != null && colors.length != positions.length) {
+            throw new IllegalArgumentException("color and position arrays must be of equal length");
         }
-        throw new IllegalArgumentException("color and position arrays must be of equal length");
+        this.mCx = cx;
+        this.mCy = cy;
+        this.mColorLongs = colors;
+        this.mPositions = positions != null ? (float[]) positions.clone() : null;
     }
 
     public SweepGradient(float cx, float cy, int color0, int color1) {
@@ -48,8 +48,8 @@ public class SweepGradient extends Shader {
         this(cx, cy, new long[]{color0, color1}, (float[]) null);
     }
 
-    /* access modifiers changed from: package-private */
-    public long createNativeInstance(long nativeMatrix) {
+    @Override // android.graphics.Shader
+    long createNativeInstance(long nativeMatrix) {
         return nativeCreate(nativeMatrix, this.mCx, this.mCy, this.mColorLongs, this.mPositions, colorSpace().getNativeInstance());
     }
 }

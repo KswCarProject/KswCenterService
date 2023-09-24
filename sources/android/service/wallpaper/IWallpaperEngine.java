@@ -2,14 +2,15 @@ package android.service.wallpaper;
 
 import android.annotation.UnsupportedAppUsage;
 import android.graphics.Rect;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.view.MotionEvent;
 
+/* loaded from: classes3.dex */
 public interface IWallpaperEngine extends IInterface {
     @UnsupportedAppUsage
     void destroy() throws RemoteException;
@@ -31,36 +32,47 @@ public interface IWallpaperEngine extends IInterface {
     @UnsupportedAppUsage
     void setVisibility(boolean z) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements IWallpaperEngine {
+        @Override // android.service.wallpaper.IWallpaperEngine
         public void setDesiredSize(int width, int height) throws RemoteException {
         }
 
+        @Override // android.service.wallpaper.IWallpaperEngine
         public void setDisplayPadding(Rect padding) throws RemoteException {
         }
 
+        @Override // android.service.wallpaper.IWallpaperEngine
         public void setVisibility(boolean visible) throws RemoteException {
         }
 
+        @Override // android.service.wallpaper.IWallpaperEngine
         public void setInAmbientMode(boolean inAmbientDisplay, long animationDuration) throws RemoteException {
         }
 
+        @Override // android.service.wallpaper.IWallpaperEngine
         public void dispatchPointer(MotionEvent event) throws RemoteException {
         }
 
+        @Override // android.service.wallpaper.IWallpaperEngine
         public void dispatchWallpaperCommand(String action, int x, int y, int z, Bundle extras) throws RemoteException {
         }
 
+        @Override // android.service.wallpaper.IWallpaperEngine
         public void requestWallpaperColors() throws RemoteException {
         }
 
+        @Override // android.service.wallpaper.IWallpaperEngine
         public void destroy() throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements IWallpaperEngine {
         private static final String DESCRIPTOR = "android.service.wallpaper.IWallpaperEngine";
         static final int TRANSACTION_destroy = 8;
@@ -81,12 +93,13 @@ public interface IWallpaperEngine extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IWallpaperEngine)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IWallpaperEngine)) {
+                return (IWallpaperEngine) iin;
             }
-            return (IWallpaperEngine) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -114,135 +127,68 @@ public interface IWallpaperEngine extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v0, resolved type: android.graphics.Rect} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v2, resolved type: android.graphics.Rect} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v8, resolved type: android.graphics.Rect} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v13, resolved type: android.view.MotionEvent} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v12, resolved type: android.graphics.Rect} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v13, resolved type: android.graphics.Rect} */
-        /* JADX WARNING: type inference failed for: r1v10, types: [android.view.MotionEvent] */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r16, android.os.Parcel r17, android.os.Parcel r18, int r19) throws android.os.RemoteException {
-            /*
-                r15 = this;
-                r6 = r15
-                r7 = r16
-                r8 = r17
-                java.lang.String r9 = "android.service.wallpaper.IWallpaperEngine"
-                r0 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r10 = 1
-                if (r7 == r0) goto L_0x00b5
-                r0 = 0
-                r1 = 0
-                switch(r7) {
-                    case 1: goto L_0x00a6;
-                    case 2: goto L_0x008d;
-                    case 3: goto L_0x007e;
-                    case 4: goto L_0x006b;
-                    case 5: goto L_0x0052;
-                    case 6: goto L_0x0025;
-                    case 7: goto L_0x001e;
-                    case 8: goto L_0x0017;
-                    default: goto L_0x0012;
-                }
-            L_0x0012:
-                boolean r0 = super.onTransact(r16, r17, r18, r19)
-                return r0
-            L_0x0017:
-                r8.enforceInterface(r9)
-                r15.destroy()
-                return r10
-            L_0x001e:
-                r8.enforceInterface(r9)
-                r15.requestWallpaperColors()
-                return r10
-            L_0x0025:
-                r8.enforceInterface(r9)
-                java.lang.String r11 = r17.readString()
-                int r12 = r17.readInt()
-                int r13 = r17.readInt()
-                int r14 = r17.readInt()
-                int r0 = r17.readInt()
-                if (r0 == 0) goto L_0x0048
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-                r5 = r0
-                goto L_0x0049
-            L_0x0048:
-                r5 = r1
-            L_0x0049:
-                r0 = r15
-                r1 = r11
-                r2 = r12
-                r3 = r13
-                r4 = r14
-                r0.dispatchWallpaperCommand(r1, r2, r3, r4, r5)
-                return r10
-            L_0x0052:
-                r8.enforceInterface(r9)
-                int r0 = r17.readInt()
-                if (r0 == 0) goto L_0x0065
-                android.os.Parcelable$Creator<android.view.MotionEvent> r0 = android.view.MotionEvent.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                r1 = r0
-                android.view.MotionEvent r1 = (android.view.MotionEvent) r1
-                goto L_0x0066
-            L_0x0065:
-            L_0x0066:
-                r0 = r1
-                r15.dispatchPointer(r0)
-                return r10
-            L_0x006b:
-                r8.enforceInterface(r9)
-                int r1 = r17.readInt()
-                if (r1 == 0) goto L_0x0076
-                r0 = r10
-            L_0x0076:
-                long r1 = r17.readLong()
-                r15.setInAmbientMode(r0, r1)
-                return r10
-            L_0x007e:
-                r8.enforceInterface(r9)
-                int r1 = r17.readInt()
-                if (r1 == 0) goto L_0x0089
-                r0 = r10
-            L_0x0089:
-                r15.setVisibility(r0)
-                return r10
-            L_0x008d:
-                r8.enforceInterface(r9)
-                int r0 = r17.readInt()
-                if (r0 == 0) goto L_0x00a0
-                android.os.Parcelable$Creator<android.graphics.Rect> r0 = android.graphics.Rect.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                r1 = r0
-                android.graphics.Rect r1 = (android.graphics.Rect) r1
-                goto L_0x00a1
-            L_0x00a0:
-            L_0x00a1:
-                r0 = r1
-                r15.setDisplayPadding(r0)
-                return r10
-            L_0x00a6:
-                r8.enforceInterface(r9)
-                int r0 = r17.readInt()
-                int r1 = r17.readInt()
-                r15.setDesiredSize(r0, r1)
-                return r10
-            L_0x00b5:
-                r0 = r18
-                r0.writeString(r9)
-                return r10
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.service.wallpaper.IWallpaperEngine.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            boolean _arg0;
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    int _arg1 = data.readInt();
+                    setDesiredSize(_arg02, _arg1);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    setDisplayPadding(data.readInt() != 0 ? Rect.CREATOR.createFromParcel(data) : null);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0;
+                    setVisibility(_arg0);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0;
+                    long _arg12 = data.readLong();
+                    setInAmbientMode(_arg0, _arg12);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    MotionEvent _arg03 = data.readInt() != 0 ? MotionEvent.CREATOR.createFromParcel(data) : null;
+                    dispatchPointer(_arg03);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg04 = data.readString();
+                    int _arg13 = data.readInt();
+                    int _arg2 = data.readInt();
+                    int _arg3 = data.readInt();
+                    Bundle _arg4 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    dispatchWallpaperCommand(_arg04, _arg13, _arg2, _arg3, _arg4);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    requestWallpaperColors();
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    destroy();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements IWallpaperEngine {
             public static IWallpaperEngine sDefaultImpl;
             private IBinder mRemote;
@@ -251,6 +197,7 @@ public interface IWallpaperEngine extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -259,15 +206,15 @@ public interface IWallpaperEngine extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.service.wallpaper.IWallpaperEngine
             public void setDesiredSize(int width, int height) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(width);
                     _data.writeInt(height);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().setDesiredSize(width, height);
                     }
                 } finally {
@@ -275,6 +222,7 @@ public interface IWallpaperEngine extends IInterface {
                 }
             }
 
+            @Override // android.service.wallpaper.IWallpaperEngine
             public void setDisplayPadding(Rect padding) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -285,9 +233,8 @@ public interface IWallpaperEngine extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().setDisplayPadding(padding);
                     }
                 } finally {
@@ -295,14 +242,14 @@ public interface IWallpaperEngine extends IInterface {
                 }
             }
 
+            @Override // android.service.wallpaper.IWallpaperEngine
             public void setVisibility(boolean visible) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(visible);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(visible ? 1 : 0);
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().setVisibility(visible);
                     }
                 } finally {
@@ -310,15 +257,15 @@ public interface IWallpaperEngine extends IInterface {
                 }
             }
 
+            @Override // android.service.wallpaper.IWallpaperEngine
             public void setInAmbientMode(boolean inAmbientDisplay, long animationDuration) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(inAmbientDisplay);
+                    _data.writeInt(inAmbientDisplay ? 1 : 0);
                     _data.writeLong(animationDuration);
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().setInAmbientMode(inAmbientDisplay, animationDuration);
                     }
                 } finally {
@@ -326,6 +273,7 @@ public interface IWallpaperEngine extends IInterface {
                 }
             }
 
+            @Override // android.service.wallpaper.IWallpaperEngine
             public void dispatchPointer(MotionEvent event) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -336,9 +284,8 @@ public interface IWallpaperEngine extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(5, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().dispatchPointer(event);
                     }
                 } finally {
@@ -346,6 +293,7 @@ public interface IWallpaperEngine extends IInterface {
                 }
             }
 
+            @Override // android.service.wallpaper.IWallpaperEngine
             public void dispatchWallpaperCommand(String action, int x, int y, int z, Bundle extras) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -360,9 +308,8 @@ public interface IWallpaperEngine extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(6, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(6, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().dispatchWallpaperCommand(action, x, y, z, extras);
                     }
                 } finally {
@@ -370,13 +317,13 @@ public interface IWallpaperEngine extends IInterface {
                 }
             }
 
+            @Override // android.service.wallpaper.IWallpaperEngine
             public void requestWallpaperColors() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(7, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(7, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().requestWallpaperColors();
                     }
                 } finally {
@@ -384,13 +331,13 @@ public interface IWallpaperEngine extends IInterface {
                 }
             }
 
+            @Override // android.service.wallpaper.IWallpaperEngine
             public void destroy() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(8, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(8, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().destroy();
                     }
                 } finally {
@@ -400,11 +347,11 @@ public interface IWallpaperEngine extends IInterface {
         }
 
         public static boolean setDefaultImpl(IWallpaperEngine impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IWallpaperEngine getDefaultImpl() {

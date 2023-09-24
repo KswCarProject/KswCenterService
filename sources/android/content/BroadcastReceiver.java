@@ -4,11 +4,12 @@ import android.annotation.UnsupportedAppUsage;
 import android.app.ActivityManager;
 import android.app.IActivityManager;
 import android.app.QueuedWork;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.RemoteException;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.RemoteException;
 import android.util.Log;
 
+/* loaded from: classes.dex */
 public abstract class BroadcastReceiver {
     private boolean mDebugUnregister;
     @UnsupportedAppUsage
@@ -16,6 +17,7 @@ public abstract class BroadcastReceiver {
 
     public abstract void onReceive(Context context, Intent intent);
 
+    /* loaded from: classes.dex */
     public static class PendingResult {
         public static final int TYPE_COMPONENT = 0;
         public static final int TYPE_REGISTERED = 1;
@@ -81,13 +83,15 @@ public abstract class BroadcastReceiver {
 
         public final Bundle getResultExtras(boolean makeMap) {
             Bundle e = this.mResultExtras;
-            if (!makeMap || e != null) {
+            if (makeMap) {
+                if (e == null) {
+                    Bundle e2 = new Bundle();
+                    this.mResultExtras = e2;
+                    return e2;
+                }
                 return e;
             }
-            Bundle bundle = new Bundle();
-            Bundle e2 = bundle;
-            this.mResultExtras = bundle;
-            return e2;
+            return e;
         }
 
         public final void setResult(int code, String data, Bundle extras) {
@@ -111,19 +115,23 @@ public abstract class BroadcastReceiver {
         }
 
         public final void finish() {
-            if (this.mType == 0) {
-                final IActivityManager mgr = ActivityManager.getService();
-                if (QueuedWork.hasPendingWork()) {
-                    QueuedWork.queue(new Runnable() {
-                        public void run() {
-                            PendingResult.this.sendFinished(mgr);
-                        }
-                    }, false);
-                } else {
-                    sendFinished(mgr);
+            if (this.mType != 0) {
+                if (this.mOrderedHint && this.mType != 2) {
+                    sendFinished(ActivityManager.getService());
+                    return;
                 }
-            } else if (this.mOrderedHint && this.mType != 2) {
-                sendFinished(ActivityManager.getService());
+                return;
+            }
+            final IActivityManager mgr = ActivityManager.getService();
+            if (QueuedWork.hasPendingWork()) {
+                QueuedWork.queue(new Runnable() { // from class: android.content.BroadcastReceiver.PendingResult.1
+                    @Override // java.lang.Runnable
+                    public void run() {
+                        PendingResult.this.sendFinished(mgr);
+                    }
+                }, false);
+            } else {
+                sendFinished(mgr);
             }
         }
 
@@ -135,21 +143,20 @@ public abstract class BroadcastReceiver {
 
         public void sendFinished(IActivityManager am) {
             synchronized (this) {
-                if (!this.mFinished) {
-                    this.mFinished = true;
-                    try {
-                        if (this.mResultExtras != null) {
-                            this.mResultExtras.setAllowFds(false);
-                        }
-                        if (this.mOrderedHint) {
-                            am.finishReceiver(this.mToken, this.mResultCode, this.mResultData, this.mResultExtras, this.mAbortBroadcast, this.mFlags);
-                        } else {
-                            am.finishReceiver(this.mToken, 0, (String) null, (Bundle) null, false, this.mFlags);
-                        }
-                    } catch (RemoteException e) {
-                    }
-                } else {
+                if (this.mFinished) {
                     throw new IllegalStateException("Broadcast already finished");
+                }
+                this.mFinished = true;
+                try {
+                    if (this.mResultExtras != null) {
+                        this.mResultExtras.setAllowFds(false);
+                    }
+                    if (this.mOrderedHint) {
+                        am.finishReceiver(this.mToken, this.mResultCode, this.mResultData, this.mResultExtras, this.mAbortBroadcast, this.mFlags);
+                    } else {
+                        am.finishReceiver(this.mToken, 0, null, null, false, this.mFlags);
+                    }
+                } catch (RemoteException e) {
                 }
             }
         }
@@ -158,13 +165,13 @@ public abstract class BroadcastReceiver {
             return this.mSendingUser;
         }
 
-        /* access modifiers changed from: package-private */
-        public void checkSynchronousHint() {
-            if (!this.mOrderedHint && !this.mInitialStickyHint) {
-                RuntimeException e = new RuntimeException("BroadcastReceiver trying to return result during a non-ordered broadcast");
-                e.fillInStackTrace();
-                Log.e("BroadcastReceiver", e.getMessage(), e);
+        void checkSynchronousHint() {
+            if (this.mOrderedHint || this.mInitialStickyHint) {
+                return;
             }
+            RuntimeException e = new RuntimeException("BroadcastReceiver trying to return result during a non-ordered broadcast");
+            e.fillInStackTrace();
+            Log.m69e("BroadcastReceiver", e.getMessage(), e);
         }
     }
 
@@ -178,7 +185,8 @@ public abstract class BroadcastReceiver {
         IActivityManager am = ActivityManager.getService();
         try {
             service.prepareToLeaveProcess(myContext);
-            return am.peekService(service, service.resolveTypeIfNeeded(myContext.getContentResolver()), myContext.getOpPackageName());
+            IBinder binder = am.peekService(service, service.resolveTypeIfNeeded(myContext.getContentResolver()), myContext.getOpPackageName());
+            return binder;
         } catch (RemoteException e) {
             return null;
         }
@@ -218,14 +226,16 @@ public abstract class BroadcastReceiver {
             return null;
         }
         Bundle e = this.mPendingResult.mResultExtras;
-        if (!makeMap || e != null) {
+        if (makeMap) {
+            if (e == null) {
+                PendingResult pendingResult = this.mPendingResult;
+                Bundle e2 = new Bundle();
+                pendingResult.mResultExtras = e2;
+                return e2;
+            }
             return e;
         }
-        PendingResult pendingResult = this.mPendingResult;
-        Bundle bundle = new Bundle();
-        Bundle e2 = bundle;
-        pendingResult.mResultExtras = bundle;
-        return e2;
+        return e;
     }
 
     public final void setResult(int code, String data, Bundle extras) {
@@ -292,14 +302,15 @@ public abstract class BroadcastReceiver {
         return this.mDebugUnregister;
     }
 
-    /* access modifiers changed from: package-private */
-    public void checkSynchronousHint() {
+    void checkSynchronousHint() {
         if (this.mPendingResult == null) {
             throw new IllegalStateException("Call while result is not pending");
-        } else if (!this.mPendingResult.mOrderedHint && !this.mPendingResult.mInitialStickyHint) {
-            RuntimeException e = new RuntimeException("BroadcastReceiver trying to return result during a non-ordered broadcast");
-            e.fillInStackTrace();
-            Log.e("BroadcastReceiver", e.getMessage(), e);
         }
+        if (this.mPendingResult.mOrderedHint || this.mPendingResult.mInitialStickyHint) {
+            return;
+        }
+        RuntimeException e = new RuntimeException("BroadcastReceiver trying to return result during a non-ordered broadcast");
+        e.fillInStackTrace();
+        Log.m69e("BroadcastReceiver", e.getMessage(), e);
     }
 }

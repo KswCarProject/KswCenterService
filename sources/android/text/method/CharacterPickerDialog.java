@@ -2,7 +2,7 @@ package android.text.method;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.os.Bundle;
+import android.p007os.Bundle;
 import android.text.Editable;
 import android.text.Selection;
 import android.view.LayoutInflater;
@@ -14,15 +14,14 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ListAdapter;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
+/* loaded from: classes4.dex */
 public class CharacterPickerDialog extends Dialog implements AdapterView.OnItemClickListener, View.OnClickListener {
     private Button mCancelButton;
-    /* access modifiers changed from: private */
-    public LayoutInflater mInflater;
+    private LayoutInflater mInflater;
     private boolean mInsert;
-    /* access modifiers changed from: private */
-    public String mOptions;
+    private String mOptions;
     private Editable mText;
     private View mView;
 
@@ -35,23 +34,25 @@ public class CharacterPickerDialog extends Dialog implements AdapterView.OnItemC
         this.mInflater = LayoutInflater.from(context);
     }
 
-    /* access modifiers changed from: protected */
-    public void onCreate(Bundle savedInstanceState) {
+    @Override // android.app.Dialog
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         WindowManager.LayoutParams params = getWindow().getAttributes();
         params.token = this.mView.getApplicationWindowToken();
         params.type = 1003;
         params.flags |= 1;
-        setContentView((int) R.layout.character_picker);
-        GridView grid = (GridView) findViewById(R.id.characterPicker);
+        setContentView(C3132R.layout.character_picker);
+        GridView grid = (GridView) findViewById(C3132R.C3134id.characterPicker);
         grid.setAdapter((ListAdapter) new OptionsAdapter(getContext()));
         grid.setOnItemClickListener(this);
-        this.mCancelButton = (Button) findViewById(R.id.cancel);
+        this.mCancelButton = (Button) findViewById(C3132R.C3134id.cancel);
         this.mCancelButton.setOnClickListener(this);
     }
 
+    @Override // android.widget.AdapterView.OnItemClickListener
     public void onItemClick(AdapterView parent, View view, int position, long id) {
-        replaceCharacterAndClose(String.valueOf(this.mOptions.charAt(position)));
+        String result = String.valueOf(this.mOptions.charAt(position));
+        replaceCharacterAndClose(result);
     }
 
     private void replaceCharacterAndClose(CharSequence replace) {
@@ -64,35 +65,42 @@ public class CharacterPickerDialog extends Dialog implements AdapterView.OnItemC
         dismiss();
     }
 
+    @Override // android.view.View.OnClickListener
     public void onClick(View v) {
         if (v == this.mCancelButton) {
             dismiss();
         } else if (v instanceof Button) {
-            replaceCharacterAndClose(((Button) v).getText());
+            CharSequence result = ((Button) v).getText();
+            replaceCharacterAndClose(result);
         }
     }
 
+    /* loaded from: classes4.dex */
     private class OptionsAdapter extends BaseAdapter {
         public OptionsAdapter(Context context) {
         }
 
+        @Override // android.widget.Adapter
         public View getView(int position, View convertView, ViewGroup parent) {
-            Button b = (Button) CharacterPickerDialog.this.mInflater.inflate((int) R.layout.character_picker_button, (ViewGroup) null);
-            b.setText((CharSequence) String.valueOf(CharacterPickerDialog.this.mOptions.charAt(position)));
+            Button b = (Button) CharacterPickerDialog.this.mInflater.inflate(C3132R.layout.character_picker_button, (ViewGroup) null);
+            b.setText(String.valueOf(CharacterPickerDialog.this.mOptions.charAt(position)));
             b.setOnClickListener(CharacterPickerDialog.this);
             return b;
         }
 
+        @Override // android.widget.Adapter
         public final int getCount() {
             return CharacterPickerDialog.this.mOptions.length();
         }
 
+        @Override // android.widget.Adapter
         public final Object getItem(int position) {
             return String.valueOf(CharacterPickerDialog.this.mOptions.charAt(position));
         }
 
+        @Override // android.widget.Adapter
         public final long getItemId(int position) {
-            return (long) position;
+            return position;
         }
     }
 }

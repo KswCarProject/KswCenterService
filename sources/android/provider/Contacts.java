@@ -7,7 +7,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
@@ -16,6 +15,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 @Deprecated
+/* loaded from: classes3.dex */
 public class Contacts {
     @Deprecated
     public static final String AUTHORITY = "contacts";
@@ -34,6 +34,7 @@ public class Contacts {
     private static final String TAG = "Contacts";
 
     @Deprecated
+    /* loaded from: classes3.dex */
     public interface ContactMethodsColumns {
         @Deprecated
         public static final String AUX_DATA = "aux_data";
@@ -62,6 +63,7 @@ public class Contacts {
     }
 
     @Deprecated
+    /* loaded from: classes3.dex */
     public interface ExtensionsColumns {
         @Deprecated
         public static final String NAME = "name";
@@ -70,6 +72,7 @@ public class Contacts {
     }
 
     @Deprecated
+    /* loaded from: classes3.dex */
     public interface GroupsColumns {
         @Deprecated
         public static final String NAME = "name";
@@ -82,6 +85,7 @@ public class Contacts {
     }
 
     @Deprecated
+    /* loaded from: classes3.dex */
     public static final class Intents {
         @Deprecated
         public static final String ATTACH_IMAGE = "com.android.contacts.action.ATTACH_IMAGE";
@@ -101,6 +105,7 @@ public class Contacts {
         public static final String SHOW_OR_CREATE_CONTACT = "com.android.contacts.action.SHOW_OR_CREATE_CONTACT";
 
         @Deprecated
+        /* loaded from: classes3.dex */
         public static final class Insert {
             @Deprecated
             public static final String ACTION = "android.intent.action.INSERT";
@@ -159,7 +164,9 @@ public class Contacts {
         }
 
         @Deprecated
-        public static final class UI {
+        /* renamed from: android.provider.Contacts$Intents$UI */
+        /* loaded from: classes3.dex */
+        public static final class C1647UI {
             @Deprecated
             public static final String FILTER_CONTACTS_ACTION = "com.android.contacts.action.FILTER_CONTACTS";
             @Deprecated
@@ -186,6 +193,7 @@ public class Contacts {
     }
 
     @Deprecated
+    /* loaded from: classes3.dex */
     public interface OrganizationColumns {
         @Deprecated
         public static final String COMPANY = "company";
@@ -208,6 +216,7 @@ public class Contacts {
     }
 
     @Deprecated
+    /* loaded from: classes3.dex */
     public interface PeopleColumns {
         @Deprecated
         public static final String CUSTOM_RINGTONE = "custom_ringtone";
@@ -234,6 +243,7 @@ public class Contacts {
     }
 
     @Deprecated
+    /* loaded from: classes3.dex */
     public interface PhonesColumns {
         @Deprecated
         public static final String ISPRIMARY = "isprimary";
@@ -264,6 +274,7 @@ public class Contacts {
     }
 
     @Deprecated
+    /* loaded from: classes3.dex */
     public interface PhotosColumns {
         @Deprecated
         public static final String DATA = "data";
@@ -280,6 +291,7 @@ public class Contacts {
     }
 
     @Deprecated
+    /* loaded from: classes3.dex */
     public interface PresenceColumns {
         public static final int AVAILABLE = 5;
         public static final int AWAY = 2;
@@ -299,6 +311,7 @@ public class Contacts {
     }
 
     @Deprecated
+    /* loaded from: classes3.dex */
     public interface SettingsColumns {
         @Deprecated
         public static final String KEY = "key";
@@ -314,6 +327,7 @@ public class Contacts {
     }
 
     @Deprecated
+    /* loaded from: classes3.dex */
     public static final class Settings implements BaseColumns, SettingsColumns {
         @Deprecated
         public static final String CONTENT_DIRECTORY = "settings";
@@ -329,15 +343,13 @@ public class Contacts {
 
         @Deprecated
         public static String getSetting(ContentResolver cr, String account, String key) {
-            ContentResolver contentResolver = cr;
-            Cursor cursor = contentResolver.query(CONTENT_URI, new String[]{"value"}, "key=?", new String[]{key}, (String) null);
+            String[] selectArgs = {key};
+            Cursor cursor = cr.query(CONTENT_URI, new String[]{"value"}, "key=?", selectArgs, null);
             try {
-                if (!cursor.moveToNext()) {
-                    return null;
+                if (cursor.moveToNext()) {
+                    return cursor.getString(0);
                 }
-                String string = cursor.getString(0);
-                cursor.close();
-                return string;
+                return null;
             } finally {
                 cursor.close();
             }
@@ -348,25 +360,19 @@ public class Contacts {
             ContentValues values = new ContentValues();
             values.put("key", key);
             values.put("value", value);
-            cr.update(CONTENT_URI, values, (String) null, (String[]) null);
+            cr.update(CONTENT_URI, values, null, null);
         }
     }
 
     @Deprecated
+    /* loaded from: classes3.dex */
     public static final class People implements BaseColumns, PeopleColumns, PhonesColumns, PresenceColumns {
-        @Deprecated
-        public static final Uri CONTENT_FILTER_URI = Uri.parse("content://contacts/people/filter");
         @Deprecated
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/person";
         @Deprecated
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/person";
         @Deprecated
-        public static final Uri CONTENT_URI = Uri.parse("content://contacts/people");
-        @Deprecated
         public static final String DEFAULT_SORT_ORDER = "name ASC";
-        @Deprecated
-        public static final Uri DELETED_CONTENT_URI = Uri.parse("content://contacts/deleted_people");
-        private static final String[] GROUPS_PROJECTION = {"_id"};
         @Deprecated
         public static final String PRIMARY_EMAIL_ID = "primary_email";
         @Deprecated
@@ -374,7 +380,14 @@ public class Contacts {
         @Deprecated
         public static final String PRIMARY_PHONE_ID = "primary_phone";
         @Deprecated
+        public static final Uri CONTENT_URI = Uri.parse("content://contacts/people");
+        @Deprecated
+        public static final Uri CONTENT_FILTER_URI = Uri.parse("content://contacts/people/filter");
+        @Deprecated
+        public static final Uri DELETED_CONTENT_URI = Uri.parse("content://contacts/deleted_people");
+        @Deprecated
         public static final Uri WITH_EMAIL_OR_IM_FILTER_URI = Uri.parse("content://contacts/people/with_email_or_im_filter");
+        private static final String[] GROUPS_PROJECTION = {"_id"};
 
         @Deprecated
         private People() {
@@ -386,34 +399,33 @@ public class Contacts {
 
         @Deprecated
         public static long tryGetMyContactsGroupId(ContentResolver resolver) {
-            Cursor groupsCursor = resolver.query(Groups.CONTENT_URI, GROUPS_PROJECTION, "system_id='Contacts'", (String[]) null, (String) null);
-            if (groupsCursor == null) {
-                return 0;
-            }
-            try {
-                if (groupsCursor.moveToFirst()) {
-                    return groupsCursor.getLong(0);
+            Cursor groupsCursor = resolver.query(Groups.CONTENT_URI, GROUPS_PROJECTION, "system_id='Contacts'", null, null);
+            if (groupsCursor != null) {
+                try {
+                    if (groupsCursor.moveToFirst()) {
+                        return groupsCursor.getLong(0);
+                    }
+                    return 0L;
+                } finally {
+                    groupsCursor.close();
                 }
-                groupsCursor.close();
-                return 0;
-            } finally {
-                groupsCursor.close();
             }
+            return 0L;
         }
 
         @Deprecated
         public static Uri addToMyContactsGroup(ContentResolver resolver, long personId) {
             long groupId = tryGetMyContactsGroupId(resolver);
-            if (groupId != 0) {
-                return addToGroup(resolver, personId, groupId);
+            if (groupId == 0) {
+                throw new IllegalStateException("Failed to find the My Contacts group");
             }
-            throw new IllegalStateException("Failed to find the My Contacts group");
+            return addToGroup(resolver, personId, groupId);
         }
 
         @Deprecated
         public static Uri addToGroup(ContentResolver resolver, long personId, String groupName) {
             long groupId = 0;
-            Cursor groupsCursor = resolver.query(Groups.CONTENT_URI, GROUPS_PROJECTION, "name=?", new String[]{groupName}, (String) null);
+            Cursor groupsCursor = resolver.query(Groups.CONTENT_URI, GROUPS_PROJECTION, "name=?", new String[]{groupName}, null);
             if (groupsCursor != null) {
                 try {
                     if (groupsCursor.moveToFirst()) {
@@ -423,10 +435,10 @@ public class Contacts {
                     groupsCursor.close();
                 }
             }
-            if (groupId != 0) {
-                return addToGroup(resolver, personId, groupId);
+            if (groupId == 0) {
+                throw new IllegalStateException("Failed to find the My Contacts group");
             }
-            throw new IllegalStateException("Failed to find the My Contacts group");
+            return addToGroup(resolver, personId, groupId);
         }
 
         @Deprecated
@@ -441,19 +453,19 @@ public class Contacts {
         public static Uri createPersonInMyContactsGroup(ContentResolver resolver, ContentValues values) {
             Uri contactUri = resolver.insert(CONTENT_URI, values);
             if (contactUri == null) {
-                Log.e("Contacts", "Failed to create the contact");
+                Log.m70e("Contacts", "Failed to create the contact");
                 return null;
-            } else if (addToMyContactsGroup(resolver, ContentUris.parseId(contactUri)) != null) {
-                return contactUri;
+            } else if (addToMyContactsGroup(resolver, ContentUris.parseId(contactUri)) == null) {
+                resolver.delete(contactUri, null, null);
+                return null;
             } else {
-                resolver.delete(contactUri, (String) null, (String[]) null);
-                return null;
+                return contactUri;
             }
         }
 
         @Deprecated
         public static Cursor queryGroups(ContentResolver resolver, long person) {
-            return resolver.query(GroupMembership.CONTENT_URI, (String[]) null, "person=?", new String[]{String.valueOf(person)}, "name ASC");
+            return resolver.query(GroupMembership.CONTENT_URI, null, "person=?", new String[]{String.valueOf(person)}, "name ASC");
         }
 
         @Deprecated
@@ -461,23 +473,25 @@ public class Contacts {
             Uri photoUri = Uri.withAppendedPath(person, "photo");
             ContentValues values = new ContentValues();
             values.put("data", data);
-            cr.update(photoUri, values, (String) null, (String[]) null);
+            cr.update(photoUri, values, null, null);
         }
 
         @Deprecated
         public static InputStream openContactPhotoInputStream(ContentResolver cr, Uri person) {
-            Cursor cursor = cr.query(Uri.withAppendedPath(person, "photo"), new String[]{"data"}, (String) null, (String[]) null, (String) null);
+            Uri photoUri = Uri.withAppendedPath(person, "photo");
+            Cursor cursor = cr.query(photoUri, new String[]{"data"}, null, null, null);
             if (cursor != null) {
                 try {
                     if (cursor.moveToNext()) {
                         byte[] data = cursor.getBlob(0);
-                        if (data != null) {
-                            return new ByteArrayInputStream(data);
+                        if (data == null) {
+                            return null;
                         }
+                        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(data);
                         if (cursor != null) {
                             cursor.close();
                         }
-                        return null;
+                        return byteArrayInputStream;
                     }
                 } finally {
                     if (cursor != null) {
@@ -497,10 +511,7 @@ public class Contacts {
                 return loadPlaceholderPhoto(placeholderImageResource, context, options);
             }
             InputStream stream = openContactPhotoInputStream(context.getContentResolver(), person);
-            Bitmap bm = null;
-            if (stream != null) {
-                bm = BitmapFactory.decodeStream(stream, (Rect) null, options);
-            }
+            Bitmap bm = stream != null ? BitmapFactory.decodeStream(stream, null, options) : null;
             if (bm == null) {
                 return loadPlaceholderPhoto(placeholderImageResource, context, options);
             }
@@ -515,6 +526,7 @@ public class Contacts {
         }
 
         @Deprecated
+        /* loaded from: classes3.dex */
         public static final class Phones implements BaseColumns, PhonesColumns, PeopleColumns {
             @Deprecated
             public static final String CONTENT_DIRECTORY = "phones";
@@ -526,6 +538,7 @@ public class Contacts {
         }
 
         @Deprecated
+        /* loaded from: classes3.dex */
         public static final class ContactMethods implements BaseColumns, ContactMethodsColumns, PeopleColumns {
             @Deprecated
             public static final String CONTENT_DIRECTORY = "contact_methods";
@@ -537,6 +550,7 @@ public class Contacts {
         }
 
         @Deprecated
+        /* loaded from: classes3.dex */
         public static class Extensions implements BaseColumns, ExtensionsColumns {
             @Deprecated
             public static final String CONTENT_DIRECTORY = "extensions";
@@ -552,40 +566,42 @@ public class Contacts {
     }
 
     @Deprecated
+    /* loaded from: classes3.dex */
     public static final class Groups implements BaseColumns, GroupsColumns {
         @Deprecated
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/contactsgroup";
         @Deprecated
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/contactsgroup";
         @Deprecated
-        public static final Uri CONTENT_URI = Uri.parse("content://contacts/groups");
-        @Deprecated
         public static final String DEFAULT_SORT_ORDER = "name ASC";
-        @Deprecated
-        public static final Uri DELETED_CONTENT_URI = Uri.parse("content://contacts/deleted_groups");
         @Deprecated
         public static final String GROUP_ANDROID_STARRED = "Starred in Android";
         @Deprecated
         public static final String GROUP_MY_CONTACTS = "Contacts";
+        @Deprecated
+        public static final Uri CONTENT_URI = Uri.parse("content://contacts/groups");
+        @Deprecated
+        public static final Uri DELETED_CONTENT_URI = Uri.parse("content://contacts/deleted_groups");
 
         private Groups() {
         }
     }
 
     @Deprecated
+    /* loaded from: classes3.dex */
     public static final class Phones implements BaseColumns, PhonesColumns, PeopleColumns {
-        @Deprecated
-        public static final Uri CONTENT_FILTER_URL = Uri.parse("content://contacts/phones/filter");
         @Deprecated
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/phone";
         @Deprecated
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/phone";
         @Deprecated
-        public static final Uri CONTENT_URI = Uri.parse("content://contacts/phones");
-        @Deprecated
         public static final String DEFAULT_SORT_ORDER = "name ASC";
         @Deprecated
         public static final String PERSON_ID = "person";
+        @Deprecated
+        public static final Uri CONTENT_URI = Uri.parse("content://contacts/phones");
+        @Deprecated
+        public static final Uri CONTENT_FILTER_URL = Uri.parse("content://contacts/phones/filter");
 
         private Phones() {
         }
@@ -595,24 +611,27 @@ public class Contacts {
             if (type != 0) {
                 CharSequence[] labels = labelArray != null ? labelArray : context.getResources().getTextArray(17235971);
                 try {
-                    return labels[type - 1];
+                    CharSequence display = labels[type - 1];
+                    return display;
                 } catch (ArrayIndexOutOfBoundsException e) {
-                    return labels[0];
+                    CharSequence display2 = labels[0];
+                    return display2;
                 }
-            } else if (!TextUtils.isEmpty(label)) {
-                return label;
-            } else {
+            } else if (TextUtils.isEmpty(label)) {
                 return "";
+            } else {
+                return label;
             }
         }
 
         @Deprecated
         public static final CharSequence getDisplayLabel(Context context, int type, CharSequence label) {
-            return getDisplayLabel(context, type, label, (CharSequence[]) null);
+            return getDisplayLabel(context, type, label, null);
         }
     }
 
     @Deprecated
+    /* loaded from: classes3.dex */
     public static final class GroupMembership implements BaseColumns, GroupsColumns {
         @Deprecated
         public static final String CONTENT_DIRECTORY = "groupmembership";
@@ -620,8 +639,6 @@ public class Contacts {
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/contactsgroupmembership";
         @Deprecated
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/contactsgroupmembership";
-        @Deprecated
-        public static final Uri CONTENT_URI = Uri.parse("content://contacts/groupmembership");
         @Deprecated
         public static final String DEFAULT_SORT_ORDER = "group_id ASC";
         @Deprecated
@@ -635,6 +652,8 @@ public class Contacts {
         @Deprecated
         public static final String PERSON_ID = "person";
         @Deprecated
+        public static final Uri CONTENT_URI = Uri.parse("content://contacts/groupmembership");
+        @Deprecated
         public static final Uri RAW_CONTENT_URI = Uri.parse("content://contacts/groupmembershipraw");
 
         private GroupMembership() {
@@ -642,13 +661,12 @@ public class Contacts {
     }
 
     @Deprecated
+    /* loaded from: classes3.dex */
     public static final class ContactMethods implements BaseColumns, ContactMethodsColumns, PeopleColumns {
         @Deprecated
         public static final String CONTENT_EMAIL_ITEM_TYPE = "vnd.android.cursor.item/email";
         @Deprecated
         public static final String CONTENT_EMAIL_TYPE = "vnd.android.cursor.dir/email";
-        @Deprecated
-        public static final Uri CONTENT_EMAIL_URI = Uri.parse("content://contacts/contact_methods/email");
         @Deprecated
         public static final String CONTENT_IM_ITEM_TYPE = "vnd.android.cursor.item/jabber-im";
         @Deprecated
@@ -657,8 +675,6 @@ public class Contacts {
         public static final String CONTENT_POSTAL_TYPE = "vnd.android.cursor.dir/postal-address";
         @Deprecated
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/contact-methods";
-        @Deprecated
-        public static final Uri CONTENT_URI = Uri.parse("content://contacts/contact_methods");
         @Deprecated
         public static final String DEFAULT_SORT_ORDER = "name ASC";
         @Deprecated
@@ -683,14 +699,21 @@ public class Contacts {
         public static final int PROTOCOL_SKYPE = 3;
         @Deprecated
         public static final int PROTOCOL_YAHOO = 2;
+        @Deprecated
+        public static final Uri CONTENT_URI = Uri.parse("content://contacts/contact_methods");
+        @Deprecated
+        public static final Uri CONTENT_EMAIL_URI = Uri.parse("content://contacts/contact_methods/email");
 
+        /* loaded from: classes3.dex */
         interface ProviderNames {
             public static final String AIM = "AIM";
             public static final String GTALK = "GTalk";
             public static final String ICQ = "ICQ";
             public static final String JABBER = "JABBER";
             public static final String MSN = "MSN";
-            public static final String QQ = "QQ";
+
+            /* renamed from: QQ */
+            public static final String f160QQ = "QQ";
             public static final String SKYPE = "SKYPE";
             public static final String XMPP = "XMPP";
             public static final String YAHOO = "Yahoo";
@@ -732,7 +755,7 @@ public class Contacts {
                 case 3:
                     return ProviderNames.SKYPE;
                 case 4:
-                    return ProviderNames.QQ;
+                    return ProviderNames.f160QQ;
                 case 5:
                     return ProviderNames.GTALK;
                 case 6:
@@ -754,30 +777,35 @@ public class Contacts {
                     if (type != 0) {
                         CharSequence[] labels = context.getResources().getTextArray(17235968);
                         try {
-                            return labels[type - 1];
+                            CharSequence display = labels[type - 1];
+                            return display;
                         } catch (ArrayIndexOutOfBoundsException e) {
-                            return labels[0];
+                            CharSequence display2 = labels[0];
+                            return display2;
                         }
-                    } else if (!TextUtils.isEmpty(label)) {
-                        return label;
-                    } else {
+                    } else if (TextUtils.isEmpty(label)) {
                         return "";
+                    } else {
+                        return label;
                     }
                 case 2:
                     if (type != 0) {
                         CharSequence[] labels2 = context.getResources().getTextArray(17235972);
                         try {
-                            return labels2[type - 1];
+                            CharSequence display3 = labels2[type - 1];
+                            return display3;
                         } catch (ArrayIndexOutOfBoundsException e2) {
-                            return labels2[0];
+                            CharSequence display4 = labels2[0];
+                            return display4;
                         }
-                    } else if (!TextUtils.isEmpty(label)) {
-                        return label;
-                    } else {
+                    } else if (TextUtils.isEmpty(label)) {
                         return "";
+                    } else {
+                        return label;
                     }
                 default:
-                    return context.getString(17039375);
+                    CharSequence display5 = context.getString(17039375);
+                    return display5;
             }
         }
 
@@ -787,14 +815,16 @@ public class Contacts {
             ContentValues values = new ContentValues(2);
             values.put("data", Double.valueOf(latitude));
             values.put("aux_data", Double.valueOf(longitude));
-            long locId = ContentUris.parseId(resolver.insert(CONTENT_URI, values));
+            Uri loc = resolver.insert(CONTENT_URI, values);
+            long locId = ContentUris.parseId(loc);
             values.clear();
             values.put("aux_data", Long.valueOf(locId));
-            resolver.update(ContentUris.withAppendedId(CONTENT_URI, postalId), values, (String) null, (String[]) null);
+            resolver.update(ContentUris.withAppendedId(CONTENT_URI, postalId), values, null, null);
         }
     }
 
     @Deprecated
+    /* loaded from: classes3.dex */
     public static final class Presence implements BaseColumns, PresenceColumns, PeopleColumns {
         @Deprecated
         public static final Uri CONTENT_URI = Uri.parse("content://contacts/presence");
@@ -825,6 +855,7 @@ public class Contacts {
     }
 
     @Deprecated
+    /* loaded from: classes3.dex */
     public static final class Organizations implements BaseColumns, OrganizationColumns {
         @Deprecated
         public static final String CONTENT_DIRECTORY = "organizations";
@@ -841,19 +872,22 @@ public class Contacts {
             if (type != 0) {
                 CharSequence[] labels = context.getResources().getTextArray(17235970);
                 try {
-                    return labels[type - 1];
+                    CharSequence display = labels[type - 1];
+                    return display;
                 } catch (ArrayIndexOutOfBoundsException e) {
-                    return labels[0];
+                    CharSequence display2 = labels[0];
+                    return display2;
                 }
-            } else if (!TextUtils.isEmpty(label)) {
-                return label;
-            } else {
+            } else if (TextUtils.isEmpty(label)) {
                 return "";
+            } else {
+                return label;
             }
         }
     }
 
     @Deprecated
+    /* loaded from: classes3.dex */
     public static final class Photos implements BaseColumns, PhotosColumns {
         @Deprecated
         public static final String CONTENT_DIRECTORY = "photo";
@@ -867,6 +901,7 @@ public class Contacts {
     }
 
     @Deprecated
+    /* loaded from: classes3.dex */
     public static final class Extensions implements BaseColumns, ExtensionsColumns {
         @Deprecated
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/contact_extensions";

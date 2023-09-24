@@ -1,5 +1,6 @@
 package com.android.server.job;
 
+/* loaded from: classes4.dex */
 public final class ConstantsProto {
     public static final long BG_CRITICAL_JOB_COUNT = 1120986464270L;
     public static final long BG_LOW_JOB_COUNT = 1120986464269L;
@@ -30,6 +31,7 @@ public final class ConstantsProto {
     public static final long TIME_CONTROLLER = 1146756268057L;
     public static final long USE_HEARTBEATS = 1133871366167L;
 
+    /* loaded from: classes4.dex */
     public final class TimeController {
         public static final long SKIP_NOT_READY_JOBS = 1133871366145L;
 
@@ -37,6 +39,7 @@ public final class ConstantsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public final class QuotaController {
         public static final long ACTIVE_WINDOW_SIZE_MS = 1112396529667L;
         public static final long ALLOWED_TIME_PER_PERIOD_MS = 1112396529665L;

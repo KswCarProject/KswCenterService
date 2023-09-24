@@ -6,8 +6,9 @@ import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.LinearLayout;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
+/* loaded from: classes4.dex */
 public class WeightedLinearLayout extends LinearLayout {
     private float mMajorWeightMax;
     private float mMajorWeightMin;
@@ -20,7 +21,7 @@ public class WeightedLinearLayout extends LinearLayout {
 
     public WeightedLinearLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.WeightedLinearLayout);
+        TypedArray a = context.obtainStyledAttributes(attrs, C3132R.styleable.WeightedLinearLayout);
         this.mMajorWeightMin = a.getFloat(1, 0.0f);
         this.mMinorWeightMin = a.getFloat(3, 0.0f);
         this.mMajorWeightMax = a.getFloat(0, 0.0f);
@@ -28,8 +29,8 @@ public class WeightedLinearLayout extends LinearLayout {
         a.recycle();
     }
 
-    /* access modifiers changed from: protected */
-    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    @Override // android.widget.LinearLayout, android.view.View
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();
         int screenWidth = metrics.widthPixels;
         boolean isPortrait = screenWidth < metrics.heightPixels;
@@ -41,8 +42,8 @@ public class WeightedLinearLayout extends LinearLayout {
         float widthWeightMin = isPortrait ? this.mMinorWeightMin : this.mMajorWeightMin;
         float widthWeightMax = isPortrait ? this.mMinorWeightMax : this.mMajorWeightMax;
         if (widthMode == Integer.MIN_VALUE) {
-            int weightedMin = (int) (((float) screenWidth) * widthWeightMin);
-            int weightedMax = (int) (((float) screenWidth) * widthWeightMin);
+            int weightedMin = (int) (screenWidth * widthWeightMin);
+            int weightedMax = (int) (screenWidth * widthWeightMin);
             if (widthWeightMin > 0.0f && width < weightedMin) {
                 widthMeasureSpec2 = View.MeasureSpec.makeMeasureSpec(weightedMin, 1073741824);
                 measure = true;

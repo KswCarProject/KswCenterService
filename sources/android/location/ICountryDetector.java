@@ -1,12 +1,13 @@
 package android.location;
 
 import android.location.ICountryListener;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes.dex */
 public interface ICountryDetector extends IInterface {
     void addCountryListener(ICountryListener iCountryListener) throws RemoteException;
 
@@ -14,22 +15,28 @@ public interface ICountryDetector extends IInterface {
 
     void removeCountryListener(ICountryListener iCountryListener) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements ICountryDetector {
+        @Override // android.location.ICountryDetector
         public Country detectCountry() throws RemoteException {
             return null;
         }
 
+        @Override // android.location.ICountryDetector
         public void addCountryListener(ICountryListener listener) throws RemoteException {
         }
 
+        @Override // android.location.ICountryDetector
         public void removeCountryListener(ICountryListener listener) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements ICountryDetector {
         private static final String DESCRIPTOR = "android.location.ICountryDetector";
         static final int TRANSACTION_addCountryListener = 2;
@@ -45,12 +52,13 @@ public interface ICountryDetector extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof ICountryDetector)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof ICountryDetector)) {
+                return (ICountryDetector) iin;
             }
-            return (ICountryDetector) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -68,43 +76,47 @@ public interface ICountryDetector extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        Country _result = detectCountry();
-                        reply.writeNoException();
-                        if (_result != null) {
-                            reply.writeInt(1);
-                            _result.writeToParcel(reply, 1);
-                        } else {
-                            reply.writeInt(0);
-                        }
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        addCountryListener(ICountryListener.Stub.asInterface(data.readStrongBinder()));
-                        reply.writeNoException();
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        removeCountryListener(ICountryListener.Stub.asInterface(data.readStrongBinder()));
-                        reply.writeNoException();
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    Country _result = detectCountry();
+                    reply.writeNoException();
+                    if (_result != null) {
+                        reply.writeInt(1);
+                        _result.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    ICountryListener _arg0 = ICountryListener.Stub.asInterface(data.readStrongBinder());
+                    addCountryListener(_arg0);
+                    reply.writeNoException();
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    ICountryListener _arg02 = ICountryListener.Stub.asInterface(data.readStrongBinder());
+                    removeCountryListener(_arg02);
+                    reply.writeNoException();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements ICountryDetector {
             public static ICountryDetector sDefaultImpl;
             private IBinder mRemote;
@@ -113,6 +125,7 @@ public interface ICountryDetector extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -121,13 +134,15 @@ public interface ICountryDetector extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.location.ICountryDetector
             public Country detectCountry() throws RemoteException {
                 Country _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(1, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().detectCountry();
                     }
                     _reply.readException();
@@ -136,48 +151,45 @@ public interface ICountryDetector extends IInterface {
                     } else {
                         _result = null;
                     }
-                    Country _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.location.ICountryDetector
             public void addCountryListener(ICountryListener listener) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(listener != null ? listener.asBinder() : null);
-                    if (this.mRemote.transact(2, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().addCountryListener(listener);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().addCountryListener(listener);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.location.ICountryDetector
             public void removeCountryListener(ICountryListener listener) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(listener != null ? listener.asBinder() : null);
-                    if (this.mRemote.transact(3, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().removeCountryListener(listener);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().removeCountryListener(listener);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -186,11 +198,11 @@ public interface ICountryDetector extends IInterface {
         }
 
         public static boolean setDefaultImpl(ICountryDetector impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static ICountryDetector getDefaultImpl() {

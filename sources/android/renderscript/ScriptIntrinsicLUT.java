@@ -2,28 +2,34 @@ package android.renderscript;
 
 import android.renderscript.Script;
 
+/* loaded from: classes3.dex */
 public final class ScriptIntrinsicLUT extends ScriptIntrinsic {
-    private final byte[] mCache = new byte[1024];
-    private boolean mDirty = true;
-    private final Matrix4f mMatrix = new Matrix4f();
+    private final byte[] mCache;
+    private boolean mDirty;
+    private final Matrix4f mMatrix;
     private Allocation mTables;
 
     private ScriptIntrinsicLUT(long id, RenderScript rs) {
         super(id, rs);
-        this.mTables = Allocation.createSized(rs, Element.U8(rs), 1024);
+        this.mMatrix = new Matrix4f();
+        this.mCache = new byte[1024];
+        this.mDirty = true;
+        this.mTables = Allocation.createSized(rs, Element.m108U8(rs), 1024);
         for (int ct = 0; ct < 256; ct++) {
             this.mCache[ct] = (byte) ct;
             this.mCache[ct + 256] = (byte) ct;
             this.mCache[ct + 512] = (byte) ct;
             this.mCache[ct + 768] = (byte) ct;
         }
-        setVar(0, (BaseObj) this.mTables);
+        setVar(0, this.mTables);
     }
 
     public static ScriptIntrinsicLUT create(RenderScript rs, Element e) {
-        return new ScriptIntrinsicLUT(rs.nScriptIntrinsicCreate(3, e.getID(rs)), rs);
+        long id = rs.nScriptIntrinsicCreate(3, e.getID(rs));
+        return new ScriptIntrinsicLUT(id, rs);
     }
 
+    @Override // android.renderscript.BaseObj
     public void destroy() {
         this.mTables.destroy();
         super.destroy();
@@ -32,7 +38,8 @@ public final class ScriptIntrinsicLUT extends ScriptIntrinsic {
     private void validate(int index, int value) {
         if (index < 0 || index > 255) {
             throw new RSIllegalArgumentException("Index out of range (0-255).");
-        } else if (value < 0 || value > 255) {
+        }
+        if (value < 0 || value > 255) {
             throw new RSIllegalArgumentException("Value out of range (0-255).");
         }
     }
@@ -62,7 +69,7 @@ public final class ScriptIntrinsicLUT extends ScriptIntrinsic {
     }
 
     public void forEach(Allocation ain, Allocation aout) {
-        forEach(ain, aout, (Script.LaunchOptions) null);
+        forEach(ain, aout, null);
     }
 
     public void forEach(Allocation ain, Allocation aout, Script.LaunchOptions opt) {
@@ -74,6 +81,6 @@ public final class ScriptIntrinsicLUT extends ScriptIntrinsic {
     }
 
     public Script.KernelID getKernelID() {
-        return createKernelID(0, 3, (Element) null, (Element) null);
+        return createKernelID(0, 3, null, null);
     }
 }

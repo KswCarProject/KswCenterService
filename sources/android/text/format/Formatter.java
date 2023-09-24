@@ -9,9 +9,10 @@ import android.icu.util.MeasureUnit;
 import android.net.NetworkUtils;
 import android.text.BidiFormatter;
 import android.text.TextUtils;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.util.Locale;
 
+/* loaded from: classes4.dex */
 public final class Formatter {
     public static final int FLAG_CALCULATE_ROUNDED = 2;
     public static final int FLAG_IEC_UNITS = 8;
@@ -22,15 +23,16 @@ public final class Formatter {
     private static final int SECONDS_PER_HOUR = 3600;
     private static final int SECONDS_PER_MINUTE = 60;
 
+    /* loaded from: classes4.dex */
     public static class BytesResult {
         public final long roundedBytes;
         public final String units;
         public final String value;
 
-        public BytesResult(String value2, String units2, long roundedBytes2) {
-            this.value = value2;
-            this.units = units2;
-            this.roundedBytes = roundedBytes2;
+        public BytesResult(String value, String units, long roundedBytes) {
+            this.value = value;
+            this.units = units;
+            this.roundedBytes = roundedBytes;
         }
     }
 
@@ -39,7 +41,8 @@ public final class Formatter {
     }
 
     private static String bidiWrap(Context context, String source) {
-        if (TextUtils.getLayoutDirectionFromLocale(localeFromContext(context)) == 1) {
+        Locale locale = localeFromContext(context);
+        if (TextUtils.getLayoutDirectionFromLocale(locale) == 1) {
             return BidiFormatter.getInstance(true).unicodeWrap(source);
         }
         return source;
@@ -54,7 +57,7 @@ public final class Formatter {
             return "";
         }
         BytesResult res = formatBytes(context.getResources(), sizeBytes, flags);
-        return bidiWrap(context, context.getString(R.string.fileSizeSuffix, res.value, res.units));
+        return bidiWrap(context, context.getString(C3132R.string.fileSizeSuffix, res.value, res.units));
     }
 
     public static String formatShortFileSize(Context context, long sizeBytes) {
@@ -62,44 +65,43 @@ public final class Formatter {
             return "";
         }
         BytesResult res = formatBytes(context.getResources(), sizeBytes, 5);
-        return bidiWrap(context, context.getString(R.string.fileSizeSuffix, res.value, res.units));
+        return bidiWrap(context, context.getString(C3132R.string.fileSizeSuffix, res.value, res.units));
     }
 
     @UnsupportedAppUsage
     public static BytesResult formatBytes(Resources res, long sizeBytes, int flags) {
-        String roundFormat;
         int roundFactor;
-        long j = sizeBytes;
+        String roundFormat;
         int unit = (flags & 8) != 0 ? 1024 : 1000;
-        long j2 = 0;
-        boolean isNegative = j < 0;
-        float result = isNegative ? (float) (-j) : (float) j;
-        int suffix = R.string.byteShort;
+        long j = 0;
+        boolean isNegative = sizeBytes < 0;
+        float result = isNegative ? (float) (-sizeBytes) : (float) sizeBytes;
+        int suffix = C3132R.string.byteShort;
         long mult = 1;
         if (result > 900.0f) {
-            suffix = R.string.kilobyteShort;
-            mult = (long) unit;
-            result /= (float) unit;
+            suffix = C3132R.string.kilobyteShort;
+            mult = unit;
+            result /= unit;
         }
         if (result > 900.0f) {
-            suffix = R.string.megabyteShort;
-            mult *= (long) unit;
-            result /= (float) unit;
+            suffix = C3132R.string.megabyteShort;
+            mult *= unit;
+            result /= unit;
         }
         if (result > 900.0f) {
-            suffix = R.string.gigabyteShort;
-            mult *= (long) unit;
-            result /= (float) unit;
+            suffix = C3132R.string.gigabyteShort;
+            mult *= unit;
+            result /= unit;
         }
         if (result > 900.0f) {
-            suffix = R.string.terabyteShort;
-            mult *= (long) unit;
-            result /= (float) unit;
+            suffix = C3132R.string.terabyteShort;
+            mult *= unit;
+            result /= unit;
         }
         if (result > 900.0f) {
-            suffix = R.string.petabyteShort;
-            mult *= (long) unit;
-            result /= (float) unit;
+            suffix = C3132R.string.petabyteShort;
+            mult *= unit;
+            result /= unit;
         }
         if (mult == 1 || result >= 100.0f) {
             roundFactor = 1;
@@ -115,23 +117,26 @@ public final class Formatter {
                 roundFactor = 100;
                 roundFormat = "%.2f";
             }
-        } else if ((flags & 1) != 0) {
-            roundFactor = 1;
-            roundFormat = "%.0f";
         } else {
-            roundFactor = 100;
-            roundFormat = "%.2f";
+            int roundFactor2 = flags & 1;
+            if (roundFactor2 != 0) {
+                roundFactor = 1;
+                roundFormat = "%.0f";
+            } else {
+                roundFactor = 100;
+                roundFormat = "%.2f";
+            }
         }
         if (isNegative) {
             result = -result;
         }
-        String roundedString = String.format(roundFormat, new Object[]{Float.valueOf(result)});
+        String roundedString = String.format(roundFormat, Float.valueOf(result));
         if ((flags & 2) != 0) {
-            j2 = (((long) Math.round(((float) roundFactor) * result)) * mult) / ((long) roundFactor);
+            j = (Math.round(roundFactor * result) * mult) / roundFactor;
         }
-        long roundedBytes = j2;
-        Resources resources = res;
-        return new BytesResult(roundedString, res.getString(suffix), roundedBytes);
+        long roundedBytes = j;
+        String units = res.getString(suffix);
+        return new BytesResult(roundedString, units, roundedBytes);
     }
 
     @Deprecated
@@ -147,44 +152,47 @@ public final class Formatter {
         int minutes = 0;
         if (secondsLong >= 86400) {
             days = (int) (secondsLong / 86400);
-            secondsLong -= (long) (SECONDS_PER_DAY * days);
+            secondsLong -= SECONDS_PER_DAY * days;
         }
         if (secondsLong >= 3600) {
             hours = (int) (secondsLong / 3600);
-            secondsLong -= (long) (hours * 3600);
+            secondsLong -= hours * 3600;
         }
         if (secondsLong >= 60) {
             minutes = (int) (secondsLong / 60);
-            secondsLong -= (long) (minutes * 60);
+            secondsLong -= minutes * 60;
         }
         int seconds = (int) secondsLong;
-        MeasureFormat measureFormat = MeasureFormat.getInstance(localeFromContext(context), MeasureFormat.FormatWidth.SHORT);
+        Locale locale = localeFromContext(context);
+        MeasureFormat measureFormat = MeasureFormat.getInstance(locale, MeasureFormat.FormatWidth.SHORT);
         if (days >= 2 || (days > 0 && hours == 0)) {
             return measureFormat.format(new Measure(Integer.valueOf(days + ((hours + 12) / 24)), MeasureUnit.DAY));
         }
         if (days > 0) {
-            return measureFormat.formatMeasures(new Measure[]{new Measure(Integer.valueOf(days), MeasureUnit.DAY), new Measure(Integer.valueOf(hours), MeasureUnit.HOUR)});
-        } else if (hours >= 2 || (hours > 0 && minutes == 0)) {
-            return measureFormat.format(new Measure(Integer.valueOf(hours + ((minutes + 30) / 60)), MeasureUnit.HOUR));
-        } else {
-            if (hours > 0) {
-                return measureFormat.formatMeasures(new Measure[]{new Measure(Integer.valueOf(hours), MeasureUnit.HOUR), new Measure(Integer.valueOf(minutes), MeasureUnit.MINUTE)});
-            } else if (minutes >= 2 || (minutes > 0 && seconds == 0)) {
-                return measureFormat.format(new Measure(Integer.valueOf(minutes + ((seconds + 30) / 60)), MeasureUnit.MINUTE));
-            } else {
-                if (minutes <= 0) {
-                    return measureFormat.format(new Measure(Integer.valueOf(seconds), MeasureUnit.SECOND));
-                }
-                return measureFormat.formatMeasures(new Measure[]{new Measure(Integer.valueOf(minutes), MeasureUnit.MINUTE), new Measure(Integer.valueOf(seconds), MeasureUnit.SECOND)});
-            }
+            return measureFormat.formatMeasures(new Measure(Integer.valueOf(days), MeasureUnit.DAY), new Measure(Integer.valueOf(hours), MeasureUnit.HOUR));
         }
+        if (hours >= 2 || (hours > 0 && minutes == 0)) {
+            return measureFormat.format(new Measure(Integer.valueOf(hours + ((minutes + 30) / 60)), MeasureUnit.HOUR));
+        }
+        if (hours > 0) {
+            return measureFormat.formatMeasures(new Measure(Integer.valueOf(hours), MeasureUnit.HOUR), new Measure(Integer.valueOf(minutes), MeasureUnit.MINUTE));
+        }
+        if (minutes >= 2 || (minutes > 0 && seconds == 0)) {
+            return measureFormat.format(new Measure(Integer.valueOf(minutes + ((seconds + 30) / 60)), MeasureUnit.MINUTE));
+        }
+        if (minutes > 0) {
+            return measureFormat.formatMeasures(new Measure(Integer.valueOf(minutes), MeasureUnit.MINUTE), new Measure(Integer.valueOf(seconds), MeasureUnit.SECOND));
+        }
+        return measureFormat.format(new Measure(Integer.valueOf(seconds), MeasureUnit.SECOND));
     }
 
     @UnsupportedAppUsage
     public static String formatShortElapsedTimeRoundingUpToMinutes(Context context, long millis) {
         long minutesRoundedUp = ((millis + 60000) - 1) / 60000;
         if (minutesRoundedUp == 0 || minutesRoundedUp == 1) {
-            return MeasureFormat.getInstance(localeFromContext(context), MeasureFormat.FormatWidth.SHORT).format(new Measure(Long.valueOf(minutesRoundedUp), MeasureUnit.MINUTE));
+            Locale locale = localeFromContext(context);
+            MeasureFormat measureFormat = MeasureFormat.getInstance(locale, MeasureFormat.FormatWidth.SHORT);
+            return measureFormat.format(new Measure(Long.valueOf(minutesRoundedUp), MeasureUnit.MINUTE));
         }
         return formatShortElapsedTime(context, 60000 * minutesRoundedUp);
     }

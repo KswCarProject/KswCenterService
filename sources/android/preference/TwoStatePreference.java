@@ -3,8 +3,8 @@ package android.preference;
 import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.preference.Preference;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.TextView;
 
 @Deprecated
+/* loaded from: classes3.dex */
 public abstract class TwoStatePreference extends Preference {
     boolean mChecked;
     private boolean mCheckedSet;
@@ -32,11 +33,11 @@ public abstract class TwoStatePreference extends Preference {
     }
 
     public TwoStatePreference(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
-    /* access modifiers changed from: protected */
-    public void onClick() {
+    @Override // android.preference.Preference
+    protected void onClick() {
         super.onClick();
         boolean newValue = !isChecked();
         if (callChangeListener(Boolean.valueOf(newValue))) {
@@ -61,11 +62,10 @@ public abstract class TwoStatePreference extends Preference {
         return this.mChecked;
     }
 
+    @Override // android.preference.Preference
     public boolean shouldDisableDependents() {
-        if ((this.mDisableDependentsState ? this.mChecked : !this.mChecked) || super.shouldDisableDependents()) {
-            return true;
-        }
-        return false;
+        boolean shouldDisable = this.mDisableDependentsState ? this.mChecked : !this.mChecked;
+        return shouldDisable || super.shouldDisableDependents();
     }
 
     public void setSummaryOn(CharSequence summary) {
@@ -76,7 +76,7 @@ public abstract class TwoStatePreference extends Preference {
     }
 
     public void setSummaryOn(int summaryResId) {
-        setSummaryOn((CharSequence) getContext().getString(summaryResId));
+        setSummaryOn(getContext().getString(summaryResId));
     }
 
     public CharSequence getSummaryOn() {
@@ -91,7 +91,7 @@ public abstract class TwoStatePreference extends Preference {
     }
 
     public void setSummaryOff(int summaryResId) {
-        setSummaryOff((CharSequence) getContext().getString(summaryResId));
+        setSummaryOff(getContext().getString(summaryResId));
     }
 
     public CharSequence getSummaryOff() {
@@ -106,25 +106,18 @@ public abstract class TwoStatePreference extends Preference {
         this.mDisableDependentsState = disableDependentsState;
     }
 
-    /* access modifiers changed from: protected */
-    public Object onGetDefaultValue(TypedArray a, int index) {
+    @Override // android.preference.Preference
+    protected Object onGetDefaultValue(TypedArray a, int index) {
         return Boolean.valueOf(a.getBoolean(index, false));
     }
 
-    /* access modifiers changed from: protected */
-    public void onSetInitialValue(boolean restoreValue, Object defaultValue) {
-        boolean z;
-        if (restoreValue) {
-            z = getPersistedBoolean(this.mChecked);
-        } else {
-            z = ((Boolean) defaultValue).booleanValue();
-        }
-        setChecked(z);
+    @Override // android.preference.Preference
+    protected void onSetInitialValue(boolean restoreValue, Object defaultValue) {
+        setChecked(restoreValue ? getPersistedBoolean(this.mChecked) : ((Boolean) defaultValue).booleanValue());
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void syncSummaryView(View view) {
+    void syncSummaryView(View view) {
         TextView summaryView = (TextView) view.findViewById(16908304);
         if (summaryView != null) {
             boolean useDefaultSummary = true;
@@ -152,8 +145,8 @@ public abstract class TwoStatePreference extends Preference {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public Parcelable onSaveInstanceState() {
+    @Override // android.preference.Preference
+    protected Parcelable onSaveInstanceState() {
         Parcelable superState = super.onSaveInstanceState();
         if (isPersistent()) {
             return superState;
@@ -163,8 +156,8 @@ public abstract class TwoStatePreference extends Preference {
         return myState;
     }
 
-    /* access modifiers changed from: protected */
-    public void onRestoreInstanceState(Parcelable state) {
+    @Override // android.preference.Preference
+    protected void onRestoreInstanceState(Parcelable state) {
         if (state == null || !state.getClass().equals(SavedState.class)) {
             super.onRestoreInstanceState(state);
             return;
@@ -174,12 +167,17 @@ public abstract class TwoStatePreference extends Preference {
         setChecked(myState.checked);
     }
 
+    /* loaded from: classes3.dex */
     static class SavedState extends Preference.BaseSavedState {
-        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
+        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() { // from class: android.preference.TwoStatePreference.SavedState.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public SavedState createFromParcel(Parcel in) {
                 return new SavedState(in);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public SavedState[] newArray(int size) {
                 return new SavedState[size];
             }
@@ -188,9 +186,10 @@ public abstract class TwoStatePreference extends Preference {
 
         public SavedState(Parcel source) {
             super(source);
-            this.checked = source.readInt() != 1 ? false : true;
+            this.checked = source.readInt() == 1;
         }
 
+        @Override // android.view.AbsSavedState, android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             super.writeToParcel(dest, flags);
             dest.writeInt(this.checked ? 1 : 0);

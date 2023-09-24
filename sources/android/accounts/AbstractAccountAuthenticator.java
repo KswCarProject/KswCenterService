@@ -3,15 +3,16 @@ package android.accounts;
 import android.Manifest;
 import android.accounts.IAccountAuthenticator;
 import android.content.Context;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.RemoteException;
 import android.telephony.SmsManager;
 import android.text.TextUtils;
 import android.util.Log;
 import java.util.Arrays;
 
+/* loaded from: classes.dex */
 public abstract class AbstractAccountAuthenticator {
     private static final String KEY_ACCOUNT = "android.accounts.AbstractAccountAuthenticator.KEY_ACCOUNT";
     private static final String KEY_AUTH_TOKEN_TYPE = "android.accounts.AbstractAccountAuthenticato.KEY_AUTH_TOKEN_TYPE";
@@ -40,10 +41,12 @@ public abstract class AbstractAccountAuthenticator {
         this.mContext = context;
     }
 
+    /* loaded from: classes.dex */
     private class Transport extends IAccountAuthenticator.Stub {
         private Transport() {
         }
 
+        @Override // android.accounts.IAccountAuthenticator
         public void addAccount(IAccountAuthenticatorResponse response, String accountType, String authTokenType, String[] features, Bundle options) throws RemoteException {
             if (Log.isLoggable(AbstractAccountAuthenticator.TAG, 2)) {
                 StringBuilder sb = new StringBuilder();
@@ -53,7 +56,7 @@ public abstract class AbstractAccountAuthenticator {
                 sb.append(authTokenType);
                 sb.append(", features ");
                 sb.append(features == null ? "[]" : Arrays.toString(features));
-                Log.v(AbstractAccountAuthenticator.TAG, sb.toString());
+                Log.m66v(AbstractAccountAuthenticator.TAG, sb.toString());
             }
             AbstractAccountAuthenticator.this.checkBinderPermission();
             try {
@@ -62,7 +65,7 @@ public abstract class AbstractAccountAuthenticator {
                     if (result != null) {
                         result.keySet();
                     }
-                    Log.v(AbstractAccountAuthenticator.TAG, "addAccount: result " + AccountManager.sanitizeResult(result));
+                    Log.m66v(AbstractAccountAuthenticator.TAG, "addAccount: result " + AccountManager.sanitizeResult(result));
                 }
                 if (result != null) {
                     response.onResult(result);
@@ -74,9 +77,10 @@ public abstract class AbstractAccountAuthenticator {
             }
         }
 
+        @Override // android.accounts.IAccountAuthenticator
         public void confirmCredentials(IAccountAuthenticatorResponse response, Account account, Bundle options) throws RemoteException {
             if (Log.isLoggable(AbstractAccountAuthenticator.TAG, 2)) {
-                Log.v(AbstractAccountAuthenticator.TAG, "confirmCredentials: " + account);
+                Log.m66v(AbstractAccountAuthenticator.TAG, "confirmCredentials: " + account);
             }
             AbstractAccountAuthenticator.this.checkBinderPermission();
             try {
@@ -85,7 +89,7 @@ public abstract class AbstractAccountAuthenticator {
                     if (result != null) {
                         result.keySet();
                     }
-                    Log.v(AbstractAccountAuthenticator.TAG, "confirmCredentials: result " + AccountManager.sanitizeResult(result));
+                    Log.m66v(AbstractAccountAuthenticator.TAG, "confirmCredentials: result " + AccountManager.sanitizeResult(result));
                 }
                 if (result != null) {
                     response.onResult(result);
@@ -95,9 +99,10 @@ public abstract class AbstractAccountAuthenticator {
             }
         }
 
+        @Override // android.accounts.IAccountAuthenticator
         public void getAuthTokenLabel(IAccountAuthenticatorResponse response, String authTokenType) throws RemoteException {
             if (Log.isLoggable(AbstractAccountAuthenticator.TAG, 2)) {
-                Log.v(AbstractAccountAuthenticator.TAG, "getAuthTokenLabel: authTokenType " + authTokenType);
+                Log.m66v(AbstractAccountAuthenticator.TAG, "getAuthTokenLabel: authTokenType " + authTokenType);
             }
             AbstractAccountAuthenticator.this.checkBinderPermission();
             try {
@@ -105,7 +110,7 @@ public abstract class AbstractAccountAuthenticator {
                 result.putString(AccountManager.KEY_AUTH_TOKEN_LABEL, AbstractAccountAuthenticator.this.getAuthTokenLabel(authTokenType));
                 if (Log.isLoggable(AbstractAccountAuthenticator.TAG, 2)) {
                     result.keySet();
-                    Log.v(AbstractAccountAuthenticator.TAG, "getAuthTokenLabel: result " + AccountManager.sanitizeResult(result));
+                    Log.m66v(AbstractAccountAuthenticator.TAG, "getAuthTokenLabel: result " + AccountManager.sanitizeResult(result));
                 }
                 response.onResult(result);
             } catch (Exception e) {
@@ -113,9 +118,10 @@ public abstract class AbstractAccountAuthenticator {
             }
         }
 
+        @Override // android.accounts.IAccountAuthenticator
         public void getAuthToken(IAccountAuthenticatorResponse response, Account account, String authTokenType, Bundle loginOptions) throws RemoteException {
             if (Log.isLoggable(AbstractAccountAuthenticator.TAG, 2)) {
-                Log.v(AbstractAccountAuthenticator.TAG, "getAuthToken: " + account + ", authTokenType " + authTokenType);
+                Log.m66v(AbstractAccountAuthenticator.TAG, "getAuthToken: " + account + ", authTokenType " + authTokenType);
             }
             AbstractAccountAuthenticator.this.checkBinderPermission();
             try {
@@ -124,7 +130,7 @@ public abstract class AbstractAccountAuthenticator {
                     if (result != null) {
                         result.keySet();
                     }
-                    Log.v(AbstractAccountAuthenticator.TAG, "getAuthToken: result " + AccountManager.sanitizeResult(result));
+                    Log.m66v(AbstractAccountAuthenticator.TAG, "getAuthToken: result " + AccountManager.sanitizeResult(result));
                 }
                 if (result != null) {
                     response.onResult(result);
@@ -135,9 +141,10 @@ public abstract class AbstractAccountAuthenticator {
             }
         }
 
+        @Override // android.accounts.IAccountAuthenticator
         public void updateCredentials(IAccountAuthenticatorResponse response, Account account, String authTokenType, Bundle loginOptions) throws RemoteException {
             if (Log.isLoggable(AbstractAccountAuthenticator.TAG, 2)) {
-                Log.v(AbstractAccountAuthenticator.TAG, "updateCredentials: " + account + ", authTokenType " + authTokenType);
+                Log.m66v(AbstractAccountAuthenticator.TAG, "updateCredentials: " + account + ", authTokenType " + authTokenType);
             }
             AbstractAccountAuthenticator.this.checkBinderPermission();
             try {
@@ -146,7 +153,7 @@ public abstract class AbstractAccountAuthenticator {
                     if (result != null) {
                         result.keySet();
                     }
-                    Log.v(AbstractAccountAuthenticator.TAG, "updateCredentials: result " + AccountManager.sanitizeResult(result));
+                    Log.m66v(AbstractAccountAuthenticator.TAG, "updateCredentials: result " + AccountManager.sanitizeResult(result));
                 }
                 if (result != null) {
                     response.onResult(result);
@@ -157,6 +164,7 @@ public abstract class AbstractAccountAuthenticator {
             }
         }
 
+        @Override // android.accounts.IAccountAuthenticator
         public void editProperties(IAccountAuthenticatorResponse response, String accountType) throws RemoteException {
             AbstractAccountAuthenticator.this.checkBinderPermission();
             try {
@@ -169,6 +177,7 @@ public abstract class AbstractAccountAuthenticator {
             }
         }
 
+        @Override // android.accounts.IAccountAuthenticator
         public void hasFeatures(IAccountAuthenticatorResponse response, Account account, String[] features) throws RemoteException {
             AbstractAccountAuthenticator.this.checkBinderPermission();
             try {
@@ -181,6 +190,7 @@ public abstract class AbstractAccountAuthenticator {
             }
         }
 
+        @Override // android.accounts.IAccountAuthenticator
         public void getAccountRemovalAllowed(IAccountAuthenticatorResponse response, Account account) throws RemoteException {
             AbstractAccountAuthenticator.this.checkBinderPermission();
             try {
@@ -193,6 +203,7 @@ public abstract class AbstractAccountAuthenticator {
             }
         }
 
+        @Override // android.accounts.IAccountAuthenticator
         public void getAccountCredentialsForCloning(IAccountAuthenticatorResponse response, Account account) throws RemoteException {
             AbstractAccountAuthenticator.this.checkBinderPermission();
             try {
@@ -205,6 +216,7 @@ public abstract class AbstractAccountAuthenticator {
             }
         }
 
+        @Override // android.accounts.IAccountAuthenticator
         public void addAccountFromCredentials(IAccountAuthenticatorResponse response, Account account, Bundle accountCredentials) throws RemoteException {
             AbstractAccountAuthenticator.this.checkBinderPermission();
             try {
@@ -217,6 +229,7 @@ public abstract class AbstractAccountAuthenticator {
             }
         }
 
+        @Override // android.accounts.IAccountAuthenticator
         public void startAddAccountSession(IAccountAuthenticatorResponse response, String accountType, String authTokenType, String[] features, Bundle options) throws RemoteException {
             if (Log.isLoggable(AbstractAccountAuthenticator.TAG, 2)) {
                 StringBuilder sb = new StringBuilder();
@@ -226,7 +239,7 @@ public abstract class AbstractAccountAuthenticator {
                 sb.append(authTokenType);
                 sb.append(", features ");
                 sb.append(features == null ? "[]" : Arrays.toString(features));
-                Log.v(AbstractAccountAuthenticator.TAG, sb.toString());
+                Log.m66v(AbstractAccountAuthenticator.TAG, sb.toString());
             }
             AbstractAccountAuthenticator.this.checkBinderPermission();
             try {
@@ -235,7 +248,7 @@ public abstract class AbstractAccountAuthenticator {
                     if (result != null) {
                         result.keySet();
                     }
-                    Log.v(AbstractAccountAuthenticator.TAG, "startAddAccountSession: result " + AccountManager.sanitizeResult(result));
+                    Log.m66v(AbstractAccountAuthenticator.TAG, "startAddAccountSession: result " + AccountManager.sanitizeResult(result));
                 }
                 if (result != null) {
                     response.onResult(result);
@@ -245,9 +258,10 @@ public abstract class AbstractAccountAuthenticator {
             }
         }
 
+        @Override // android.accounts.IAccountAuthenticator
         public void startUpdateCredentialsSession(IAccountAuthenticatorResponse response, Account account, String authTokenType, Bundle loginOptions) throws RemoteException {
             if (Log.isLoggable(AbstractAccountAuthenticator.TAG, 2)) {
-                Log.v(AbstractAccountAuthenticator.TAG, "startUpdateCredentialsSession: " + account + ", authTokenType " + authTokenType);
+                Log.m66v(AbstractAccountAuthenticator.TAG, "startUpdateCredentialsSession: " + account + ", authTokenType " + authTokenType);
             }
             AbstractAccountAuthenticator.this.checkBinderPermission();
             try {
@@ -256,7 +270,7 @@ public abstract class AbstractAccountAuthenticator {
                     if (result != null) {
                         result.keySet();
                     }
-                    Log.v(AbstractAccountAuthenticator.TAG, "startUpdateCredentialsSession: result " + AccountManager.sanitizeResult(result));
+                    Log.m66v(AbstractAccountAuthenticator.TAG, "startUpdateCredentialsSession: result " + AccountManager.sanitizeResult(result));
                 }
                 if (result != null) {
                     response.onResult(result);
@@ -267,9 +281,10 @@ public abstract class AbstractAccountAuthenticator {
             }
         }
 
+        @Override // android.accounts.IAccountAuthenticator
         public void finishSession(IAccountAuthenticatorResponse response, String accountType, Bundle sessionBundle) throws RemoteException {
             if (Log.isLoggable(AbstractAccountAuthenticator.TAG, 2)) {
-                Log.v(AbstractAccountAuthenticator.TAG, "finishSession: accountType " + accountType);
+                Log.m66v(AbstractAccountAuthenticator.TAG, "finishSession: accountType " + accountType);
             }
             AbstractAccountAuthenticator.this.checkBinderPermission();
             try {
@@ -278,7 +293,7 @@ public abstract class AbstractAccountAuthenticator {
                     result.keySet();
                 }
                 if (Log.isLoggable(AbstractAccountAuthenticator.TAG, 2)) {
-                    Log.v(AbstractAccountAuthenticator.TAG, "finishSession: result " + AccountManager.sanitizeResult(result));
+                    Log.m66v(AbstractAccountAuthenticator.TAG, "finishSession: result " + AccountManager.sanitizeResult(result));
                 }
                 if (result != null) {
                     response.onResult(result);
@@ -288,6 +303,7 @@ public abstract class AbstractAccountAuthenticator {
             }
         }
 
+        @Override // android.accounts.IAccountAuthenticator
         public void isCredentialsUpdateSuggested(IAccountAuthenticatorResponse response, Account account, String statusToken) throws RemoteException {
             AbstractAccountAuthenticator.this.checkBinderPermission();
             try {
@@ -301,25 +317,25 @@ public abstract class AbstractAccountAuthenticator {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void handleException(IAccountAuthenticatorResponse response, String method, String data, Exception e) throws RemoteException {
         if (e instanceof NetworkErrorException) {
             if (Log.isLoggable(TAG, 2)) {
-                Log.v(TAG, method + "(" + data + ")", e);
+                Log.m65v(TAG, method + "(" + data + ")", e);
             }
             response.onError(3, e.getMessage());
         } else if (e instanceof UnsupportedOperationException) {
             if (Log.isLoggable(TAG, 2)) {
-                Log.v(TAG, method + "(" + data + ")", e);
+                Log.m65v(TAG, method + "(" + data + ")", e);
             }
             response.onError(6, method + " not supported");
         } else if (e instanceof IllegalArgumentException) {
             if (Log.isLoggable(TAG, 2)) {
-                Log.v(TAG, method + "(" + data + ")", e);
+                Log.m65v(TAG, method + "(" + data + ")", e);
             }
             response.onError(7, method + " not supported");
         } else {
-            Log.w(TAG, method + "(" + data + ")", e);
+            Log.m63w(TAG, method + "(" + data + ")", e);
             StringBuilder sb = new StringBuilder();
             sb.append(method);
             sb.append(" failed");
@@ -327,11 +343,11 @@ public abstract class AbstractAccountAuthenticator {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void checkBinderPermission() {
         int uid = Binder.getCallingUid();
-        if (this.mContext.checkCallingOrSelfPermission(Manifest.permission.ACCOUNT_MANAGER) != 0) {
-            throw new SecurityException("caller uid " + uid + " lacks " + Manifest.permission.ACCOUNT_MANAGER);
+        if (this.mContext.checkCallingOrSelfPermission(Manifest.C0000permission.ACCOUNT_MANAGER) != 0) {
+            throw new SecurityException("caller uid " + uid + " lacks " + Manifest.C0000permission.ACCOUNT_MANAGER);
         }
     }
 
@@ -346,7 +362,8 @@ public abstract class AbstractAccountAuthenticator {
     }
 
     public Bundle getAccountCredentialsForCloning(final AccountAuthenticatorResponse response, Account account) throws NetworkErrorException {
-        new Thread(new Runnable() {
+        new Thread(new Runnable() { // from class: android.accounts.AbstractAccountAuthenticator.1
+            @Override // java.lang.Runnable
             public void run() {
                 Bundle result = new Bundle();
                 result.putBoolean(AccountManager.KEY_BOOLEAN_RESULT, false);
@@ -357,7 +374,8 @@ public abstract class AbstractAccountAuthenticator {
     }
 
     public Bundle addAccountFromCredentials(final AccountAuthenticatorResponse response, Account account, Bundle accountCredentials) throws NetworkErrorException {
-        new Thread(new Runnable() {
+        new Thread(new Runnable() { // from class: android.accounts.AbstractAccountAuthenticator.2
+            @Override // java.lang.Runnable
             public void run() {
                 Bundle result = new Bundle();
                 result.putBoolean(AccountManager.KEY_BOOLEAN_RESULT, false);
@@ -367,39 +385,33 @@ public abstract class AbstractAccountAuthenticator {
         return null;
     }
 
-    public Bundle startAddAccountSession(AccountAuthenticatorResponse response, String accountType, String authTokenType, String[] requiredFeatures, Bundle options) throws NetworkErrorException {
-        final String str = authTokenType;
-        final String[] strArr = requiredFeatures;
-        final Bundle bundle = options;
-        final AccountAuthenticatorResponse accountAuthenticatorResponse = response;
-        new Thread(new Runnable() {
+    public Bundle startAddAccountSession(final AccountAuthenticatorResponse response, String accountType, final String authTokenType, final String[] requiredFeatures, final Bundle options) throws NetworkErrorException {
+        new Thread(new Runnable() { // from class: android.accounts.AbstractAccountAuthenticator.3
+            @Override // java.lang.Runnable
             public void run() {
                 Bundle sessionBundle = new Bundle();
-                sessionBundle.putString(AbstractAccountAuthenticator.KEY_AUTH_TOKEN_TYPE, str);
-                sessionBundle.putStringArray(AbstractAccountAuthenticator.KEY_REQUIRED_FEATURES, strArr);
-                sessionBundle.putBundle(AbstractAccountAuthenticator.KEY_OPTIONS, bundle);
+                sessionBundle.putString(AbstractAccountAuthenticator.KEY_AUTH_TOKEN_TYPE, authTokenType);
+                sessionBundle.putStringArray(AbstractAccountAuthenticator.KEY_REQUIRED_FEATURES, requiredFeatures);
+                sessionBundle.putBundle(AbstractAccountAuthenticator.KEY_OPTIONS, options);
                 Bundle result = new Bundle();
                 result.putBundle(AccountManager.KEY_ACCOUNT_SESSION_BUNDLE, sessionBundle);
-                accountAuthenticatorResponse.onResult(result);
+                response.onResult(result);
             }
         }).start();
         return null;
     }
 
-    public Bundle startUpdateCredentialsSession(AccountAuthenticatorResponse response, Account account, String authTokenType, Bundle options) throws NetworkErrorException {
-        final String str = authTokenType;
-        final Account account2 = account;
-        final Bundle bundle = options;
-        final AccountAuthenticatorResponse accountAuthenticatorResponse = response;
-        new Thread(new Runnable() {
+    public Bundle startUpdateCredentialsSession(final AccountAuthenticatorResponse response, final Account account, final String authTokenType, final Bundle options) throws NetworkErrorException {
+        new Thread(new Runnable() { // from class: android.accounts.AbstractAccountAuthenticator.4
+            @Override // java.lang.Runnable
             public void run() {
                 Bundle sessionBundle = new Bundle();
-                sessionBundle.putString(AbstractAccountAuthenticator.KEY_AUTH_TOKEN_TYPE, str);
-                sessionBundle.putParcelable(AbstractAccountAuthenticator.KEY_ACCOUNT, account2);
-                sessionBundle.putBundle(AbstractAccountAuthenticator.KEY_OPTIONS, bundle);
+                sessionBundle.putString(AbstractAccountAuthenticator.KEY_AUTH_TOKEN_TYPE, authTokenType);
+                sessionBundle.putParcelable(AbstractAccountAuthenticator.KEY_ACCOUNT, account);
+                sessionBundle.putBundle(AbstractAccountAuthenticator.KEY_OPTIONS, options);
                 Bundle result = new Bundle();
                 result.putBundle(AccountManager.KEY_ACCOUNT_SESSION_BUNDLE, sessionBundle);
-                accountAuthenticatorResponse.onResult(result);
+                response.onResult(result);
             }
         }).start();
         return null;
@@ -407,13 +419,13 @@ public abstract class AbstractAccountAuthenticator {
 
     public Bundle finishSession(AccountAuthenticatorResponse response, String accountType, Bundle sessionBundle) throws NetworkErrorException {
         if (TextUtils.isEmpty(accountType)) {
-            Log.e(TAG, "Account type cannot be empty.");
+            Log.m70e(TAG, "Account type cannot be empty.");
             Bundle result = new Bundle();
             result.putInt("errorCode", 7);
             result.putString(AccountManager.KEY_ERROR_MESSAGE, "accountType cannot be empty.");
             return result;
         } else if (sessionBundle == null) {
-            Log.e(TAG, "Session bundle cannot be null.");
+            Log.m70e(TAG, "Session bundle cannot be null.");
             Bundle result2 = new Bundle();
             result2.putInt("errorCode", 7);
             result2.putString(AccountManager.KEY_ERROR_MESSAGE, "sessionBundle cannot be null.");

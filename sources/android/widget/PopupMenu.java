@@ -11,24 +11,24 @@ import com.android.internal.view.menu.MenuBuilder;
 import com.android.internal.view.menu.MenuPopupHelper;
 import com.android.internal.view.menu.ShowableListMenu;
 
+/* loaded from: classes4.dex */
 public class PopupMenu {
     private final View mAnchor;
     @UnsupportedAppUsage
     private final Context mContext;
     private View.OnTouchListener mDragListener;
     private final MenuBuilder mMenu;
-    /* access modifiers changed from: private */
-    public OnMenuItemClickListener mMenuItemClickListener;
-    /* access modifiers changed from: private */
-    public OnDismissListener mOnDismissListener;
-    /* access modifiers changed from: private */
+    private OnMenuItemClickListener mMenuItemClickListener;
+    private OnDismissListener mOnDismissListener;
     @UnsupportedAppUsage
-    public final MenuPopupHelper mPopup;
+    private final MenuPopupHelper mPopup;
 
+    /* loaded from: classes4.dex */
     public interface OnDismissListener {
         void onDismiss(PopupMenu popupMenu);
     }
 
+    /* loaded from: classes4.dex */
     public interface OnMenuItemClickListener {
         boolean onMenuItemClick(MenuItem menuItem);
     }
@@ -45,7 +45,8 @@ public class PopupMenu {
         this.mContext = context;
         this.mAnchor = anchor;
         this.mMenu = new MenuBuilder(context);
-        this.mMenu.setCallback(new MenuBuilder.Callback() {
+        this.mMenu.setCallback(new MenuBuilder.Callback() { // from class: android.widget.PopupMenu.1
+            @Override // com.android.internal.view.menu.MenuBuilder.Callback
             public boolean onMenuItemSelected(MenuBuilder menu, MenuItem item) {
                 if (PopupMenu.this.mMenuItemClickListener != null) {
                     return PopupMenu.this.mMenuItemClickListener.onMenuItemClick(item);
@@ -53,12 +54,14 @@ public class PopupMenu {
                 return false;
             }
 
+            @Override // com.android.internal.view.menu.MenuBuilder.Callback
             public void onMenuModeChange(MenuBuilder menu) {
             }
         });
         this.mPopup = new MenuPopupHelper(context, this.mMenu, anchor, false, popupStyleAttr, popupStyleRes);
         this.mPopup.setGravity(gravity);
-        this.mPopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
+        this.mPopup.setOnDismissListener(new PopupWindow.OnDismissListener() { // from class: android.widget.PopupMenu.2
+            @Override // android.widget.PopupWindow.OnDismissListener
             public void onDismiss() {
                 if (PopupMenu.this.mOnDismissListener != null) {
                     PopupMenu.this.mOnDismissListener.onDismiss(PopupMenu.this);
@@ -77,19 +80,20 @@ public class PopupMenu {
 
     public View.OnTouchListener getDragToOpenListener() {
         if (this.mDragListener == null) {
-            this.mDragListener = new ForwardingListener(this.mAnchor) {
-                /* access modifiers changed from: protected */
-                public boolean onForwardingStarted() {
+            this.mDragListener = new ForwardingListener(this.mAnchor) { // from class: android.widget.PopupMenu.3
+                @Override // android.widget.ForwardingListener
+                protected boolean onForwardingStarted() {
                     PopupMenu.this.show();
                     return true;
                 }
 
-                /* access modifiers changed from: protected */
-                public boolean onForwardingStopped() {
+                @Override // android.widget.ForwardingListener
+                protected boolean onForwardingStopped() {
                     PopupMenu.this.dismiss();
                     return true;
                 }
 
+                @Override // android.widget.ForwardingListener
                 public ShowableListMenu getPopup() {
                     return PopupMenu.this.mPopup.getPopup();
                 }

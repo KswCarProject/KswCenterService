@@ -1,16 +1,24 @@
 package android.telecom;
 
 import android.net.Uri;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.TextUtils;
 
+/* loaded from: classes3.dex */
 public class GatewayInfo implements Parcelable {
-    public static final Parcelable.Creator<GatewayInfo> CREATOR = new Parcelable.Creator<GatewayInfo>() {
+    public static final Parcelable.Creator<GatewayInfo> CREATOR = new Parcelable.Creator<GatewayInfo>() { // from class: android.telecom.GatewayInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public GatewayInfo createFromParcel(Parcel source) {
-            return new GatewayInfo(source.readString(), Uri.CREATOR.createFromParcel(source), Uri.CREATOR.createFromParcel(source));
+            String gatewayPackageName = source.readString();
+            Uri gatewayUri = Uri.CREATOR.createFromParcel(source);
+            Uri originalAddress = Uri.CREATOR.createFromParcel(source);
+            return new GatewayInfo(gatewayPackageName, gatewayUri, originalAddress);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public GatewayInfo[] newArray(int size) {
             return new GatewayInfo[size];
         }
@@ -41,10 +49,12 @@ public class GatewayInfo implements Parcelable {
         return TextUtils.isEmpty(this.mGatewayProviderPackageName) || this.mGatewayAddress == null;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel destination, int flags) {
         destination.writeString(this.mGatewayProviderPackageName);
         this.mGatewayAddress.writeToParcel(destination, 0);

@@ -17,6 +17,7 @@ import android.util.Log;
 import java.io.IOException;
 import java.util.List;
 
+/* loaded from: classes.dex */
 public class CameraSource extends Filter {
     private static final int NEWFRAME_TIMEOUT = 100;
     private static final int NEWFRAME_TIMEOUT_REPEAT = 10;
@@ -26,41 +27,50 @@ public class CameraSource extends Filter {
     private Camera mCamera;
     private GLFrame mCameraFrame;
     @GenerateFieldPort(hasDefault = true, name = "id")
-    private int mCameraId = 0;
+    private int mCameraId;
     private Camera.Parameters mCameraParameters;
-    private float[] mCameraTransform = new float[16];
+    private float[] mCameraTransform;
     @GenerateFieldPort(hasDefault = true, name = "framerate")
-    private int mFps = 30;
+    private int mFps;
     private ShaderProgram mFrameExtractor;
     @GenerateFieldPort(hasDefault = true, name = "height")
-    private int mHeight = 240;
-    /* access modifiers changed from: private */
-    public final boolean mLogVerbose = Log.isLoggable(TAG, 2);
-    private float[] mMappedCoords = new float[16];
-    /* access modifiers changed from: private */
-    public boolean mNewFrameAvailable;
+    private int mHeight;
+    private final boolean mLogVerbose;
+    private float[] mMappedCoords;
+    private boolean mNewFrameAvailable;
     private MutableFrameFormat mOutputFormat;
     private SurfaceTexture mSurfaceTexture;
     @GenerateFinalPort(hasDefault = true, name = "waitForNewFrame")
-    private boolean mWaitForNewFrame = true;
+    private boolean mWaitForNewFrame;
     @GenerateFieldPort(hasDefault = true, name = "width")
-    private int mWidth = 320;
-    private SurfaceTexture.OnFrameAvailableListener onCameraFrameAvailableListener = new SurfaceTexture.OnFrameAvailableListener() {
-        public void onFrameAvailable(SurfaceTexture surfaceTexture) {
-            if (CameraSource.this.mLogVerbose) {
-                Log.v(CameraSource.TAG, "New frame from camera");
-            }
-            synchronized (CameraSource.this) {
-                boolean unused = CameraSource.this.mNewFrameAvailable = true;
-                CameraSource.this.notify();
-            }
-        }
-    };
+    private int mWidth;
+    private SurfaceTexture.OnFrameAvailableListener onCameraFrameAvailableListener;
 
     public CameraSource(String name) {
         super(name);
+        this.mCameraId = 0;
+        this.mWidth = 320;
+        this.mHeight = 240;
+        this.mFps = 30;
+        this.mWaitForNewFrame = true;
+        this.onCameraFrameAvailableListener = new SurfaceTexture.OnFrameAvailableListener() { // from class: android.filterpacks.videosrc.CameraSource.1
+            @Override // android.graphics.SurfaceTexture.OnFrameAvailableListener
+            public void onFrameAvailable(SurfaceTexture surfaceTexture) {
+                if (CameraSource.this.mLogVerbose) {
+                    Log.m66v(CameraSource.TAG, "New frame from camera");
+                }
+                synchronized (CameraSource.this) {
+                    CameraSource.this.mNewFrameAvailable = true;
+                    CameraSource.this.notify();
+                }
+            }
+        };
+        this.mCameraTransform = new float[16];
+        this.mMappedCoords = new float[16];
+        this.mLogVerbose = Log.isLoggable(TAG, 2);
     }
 
+    @Override // android.filterfw.core.Filter
     public void setupPorts() {
         addOutputPort("video", ImageFormat.create(3, 3));
     }
@@ -69,22 +79,24 @@ public class CameraSource extends Filter {
         this.mOutputFormat = ImageFormat.create(this.mWidth, this.mHeight, 3, 3);
     }
 
+    @Override // android.filterfw.core.Filter
     public void prepare(FilterContext context) {
         if (this.mLogVerbose) {
-            Log.v(TAG, "Preparing");
+            Log.m66v(TAG, "Preparing");
         }
         this.mFrameExtractor = new ShaderProgram(context, mFrameShader);
     }
 
+    @Override // android.filterfw.core.Filter
     public void open(FilterContext context) {
         if (this.mLogVerbose) {
-            Log.v(TAG, "Opening");
+            Log.m66v(TAG, "Opening");
         }
         this.mCamera = Camera.open(this.mCameraId);
         getCameraParameters();
         this.mCamera.setParameters(this.mCameraParameters);
         createFormats();
-        this.mCameraFrame = (GLFrame) context.getFrameManager().newBoundFrame(this.mOutputFormat, 104, 0);
+        this.mCameraFrame = (GLFrame) context.getFrameManager().newBoundFrame(this.mOutputFormat, 104, 0L);
         this.mSurfaceTexture = new SurfaceTexture(this.mCameraFrame.getTextureId());
         try {
             this.mCamera.setPreviewTexture(this.mSurfaceTexture);
@@ -96,58 +108,61 @@ public class CameraSource extends Filter {
         }
     }
 
+    @Override // android.filterfw.core.Filter
     public void process(FilterContext context) {
         if (this.mLogVerbose) {
-            Log.v(TAG, "Processing new frame");
+            Log.m66v(TAG, "Processing new frame");
         }
         if (this.mWaitForNewFrame) {
             InterruptedException e = null;
             while (true) {
                 InterruptedException waitCount = e;
-                if (this.mNewFrameAvailable != 0) {
+                if (!this.mNewFrameAvailable) {
+                    if (waitCount != 10) {
+                        try {
+                            wait(100L);
+                        } catch (InterruptedException e2) {
+                            if (this.mLogVerbose) {
+                                Log.m66v(TAG, "Interrupted while waiting for new frame");
+                            }
+                        }
+                        e = waitCount;
+                    } else {
+                        throw new RuntimeException("Timeout waiting for new frame");
+                    }
+                } else {
                     this.mNewFrameAvailable = false;
                     if (this.mLogVerbose) {
-                        Log.v(TAG, "Got new frame");
+                        Log.m66v(TAG, "Got new frame");
                     }
-                } else if (waitCount != 10) {
-                    try {
-                        wait(100);
-                    } catch (InterruptedException e2) {
-                        InterruptedException interruptedException = e2;
-                        if (this.mLogVerbose) {
-                            Log.v(TAG, "Interrupted while waiting for new frame");
-                        }
-                    }
-                    e = waitCount;
-                } else {
-                    throw new RuntimeException("Timeout waiting for new frame");
                 }
             }
         }
         this.mSurfaceTexture.updateTexImage();
         if (this.mLogVerbose) {
-            Log.v(TAG, "Using frame extractor in thread: " + Thread.currentThread());
+            Log.m66v(TAG, "Using frame extractor in thread: " + Thread.currentThread());
         }
         this.mSurfaceTexture.getTransformMatrix(this.mCameraTransform);
         Matrix.multiplyMM(this.mMappedCoords, 0, this.mCameraTransform, 0, mSourceCoords, 0);
         this.mFrameExtractor.setSourceRegion(this.mMappedCoords[0], this.mMappedCoords[1], this.mMappedCoords[4], this.mMappedCoords[5], this.mMappedCoords[8], this.mMappedCoords[9], this.mMappedCoords[12], this.mMappedCoords[13]);
         Frame output = context.getFrameManager().newFrame(this.mOutputFormat);
-        this.mFrameExtractor.process((Frame) this.mCameraFrame, output);
+        this.mFrameExtractor.process(this.mCameraFrame, output);
         long timestamp = this.mSurfaceTexture.getTimestamp();
         if (this.mLogVerbose) {
-            Log.v(TAG, "Timestamp: " + (((double) timestamp) / 1.0E9d) + " s");
+            Log.m66v(TAG, "Timestamp: " + (timestamp / 1.0E9d) + " s");
         }
         output.setTimestamp(timestamp);
         pushOutput("video", output);
         output.release();
         if (this.mLogVerbose) {
-            Log.v(TAG, "Done processing new frame");
+            Log.m66v(TAG, "Done processing new frame");
         }
     }
 
+    @Override // android.filterfw.core.Filter
     public void close(FilterContext context) {
         if (this.mLogVerbose) {
-            Log.v(TAG, "Closing");
+            Log.m66v(TAG, "Closing");
         }
         this.mCamera.release();
         this.mCamera = null;
@@ -155,12 +170,14 @@ public class CameraSource extends Filter {
         this.mSurfaceTexture = null;
     }
 
+    @Override // android.filterfw.core.Filter
     public void tearDown(FilterContext context) {
         if (this.mCameraFrame != null) {
             this.mCameraFrame.release();
         }
     }
 
+    @Override // android.filterfw.core.Filter
     public void fieldPortValueUpdated(String name, FilterContext context) {
         if (name.equals("framerate")) {
             getCameraParameters();
@@ -221,9 +238,10 @@ public class CameraSource extends Filter {
             closestHeight = smallestHeight;
         }
         if (this.mLogVerbose) {
-            Log.v(TAG, "Requested resolution: (" + width + ", " + height + "). Closest match: (" + closestWidth + ", " + closestHeight + ").");
+            Log.m66v(TAG, "Requested resolution: (" + width + ", " + height + "). Closest match: (" + closestWidth + ", " + closestHeight + ").");
         }
-        return new int[]{closestWidth, closestHeight};
+        int[] closestSize = {closestWidth, closestHeight};
+        return closestSize;
     }
 
     private int[] findClosestFpsRange(int fps, Camera.Parameters params) {
@@ -235,7 +253,7 @@ public class CameraSource extends Filter {
             }
         }
         if (this.mLogVerbose) {
-            Log.v(TAG, "Requested fps: " + fps + ".Closest frame rate range: [" + (((double) closestRange[0]) / 1000.0d) + SmsManager.REGEX_PREFIX_DELIMITER + (((double) closestRange[1]) / 1000.0d) + "]");
+            Log.m66v(TAG, "Requested fps: " + fps + ".Closest frame rate range: [" + (closestRange[0] / 1000.0d) + SmsManager.REGEX_PREFIX_DELIMITER + (closestRange[1] / 1000.0d) + "]");
         }
         return closestRange;
     }

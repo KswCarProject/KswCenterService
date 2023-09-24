@@ -8,12 +8,13 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+/* loaded from: classes3.dex */
 public class WifiP2pDnsSdServiceResponse extends WifiP2pServiceResponse {
     private static final Map<Integer, String> sVmpack = new HashMap();
     private String mDnsQueryName;
     private int mDnsType;
     private String mInstanceName;
-    private final HashMap<String, String> mTxtRecord = new HashMap<>();
+    private final HashMap<String, String> mTxtRecord;
     private int mVersion;
 
     static {
@@ -42,6 +43,7 @@ public class WifiP2pDnsSdServiceResponse extends WifiP2pServiceResponse {
         return this.mTxtRecord;
     }
 
+    @Override // android.net.wifi.p2p.nsd.WifiP2pServiceResponse
     public String toString() {
         StringBuffer sbuf = new StringBuffer();
         sbuf.append("serviceType:DnsSd(");
@@ -52,7 +54,7 @@ public class WifiP2pDnsSdServiceResponse extends WifiP2pServiceResponse {
         sbuf.append(" srcAddr:");
         sbuf.append(this.mDevice.deviceAddress);
         sbuf.append(" version:");
-        sbuf.append(String.format("%02x", new Object[]{Integer.valueOf(this.mVersion)}));
+        sbuf.append(String.format("%02x", Integer.valueOf(this.mVersion)));
         sbuf.append(" dnsName:");
         sbuf.append(this.mDnsQueryName);
         sbuf.append(" TxtRecord:");
@@ -71,6 +73,7 @@ public class WifiP2pDnsSdServiceResponse extends WifiP2pServiceResponse {
 
     protected WifiP2pDnsSdServiceResponse(int status, int tranId, WifiP2pDevice dev, byte[] data) {
         super(1, status, tranId, dev, data);
+        this.mTxtRecord = new HashMap<>();
         if (!parse()) {
             throw new IllegalArgumentException("Malformed bonjour service response");
         }
@@ -90,11 +93,11 @@ public class WifiP2pDnsSdServiceResponse extends WifiP2pServiceResponse {
             this.mVersion = dis.readUnsignedByte();
             if (this.mDnsType == 12) {
                 String rData = readDnsName(dis);
-                if (rData == null || rData.length() <= this.mDnsQueryName.length()) {
-                    return false;
+                if (rData != null && rData.length() > this.mDnsQueryName.length()) {
+                    this.mInstanceName = rData.substring(0, (rData.length() - this.mDnsQueryName.length()) - 1);
+                    return true;
                 }
-                this.mInstanceName = rData.substring(0, (rData.length() - this.mDnsQueryName.length()) - 1);
-                return true;
+                return false;
             } else if (this.mDnsType == 16) {
                 return readTxtData(dis);
             } else {
@@ -138,15 +141,9 @@ public class WifiP2pDnsSdServiceResponse extends WifiP2pServiceResponse {
     }
 
     private boolean readTxtData(DataInputStream dis) {
-        while (true) {
+        int len;
+        while (dis.available() > 0 && (len = dis.readUnsignedByte()) != 0) {
             try {
-                if (dis.available() <= 0) {
-                    break;
-                }
-                int len = dis.readUnsignedByte();
-                if (len == 0) {
-                    break;
-                }
                 byte[] data = new byte[len];
                 dis.readFully(data);
                 String[] keyVal = new String(data).split("=");
@@ -164,7 +161,7 @@ public class WifiP2pDnsSdServiceResponse extends WifiP2pServiceResponse {
 
     static WifiP2pDnsSdServiceResponse newInstance(int status, int transId, WifiP2pDevice dev, byte[] data) {
         if (status != 0) {
-            return new WifiP2pDnsSdServiceResponse(status, transId, dev, (byte[]) null);
+            return new WifiP2pDnsSdServiceResponse(status, transId, dev, null);
         }
         try {
             return new WifiP2pDnsSdServiceResponse(status, transId, dev, data);

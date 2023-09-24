@@ -1,12 +1,15 @@
 package android.graphics;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public class GraphicBuffer implements Parcelable {
     @UnsupportedAppUsage
-    public static final Parcelable.Creator<GraphicBuffer> CREATOR = new Parcelable.Creator<GraphicBuffer>() {
+    public static final Parcelable.Creator<GraphicBuffer> CREATOR = new Parcelable.Creator<GraphicBuffer>() { // from class: android.graphics.GraphicBuffer.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public GraphicBuffer createFromParcel(Parcel in) {
             int width = in.readInt();
             int height = in.readInt();
@@ -19,6 +22,8 @@ public class GraphicBuffer implements Parcelable {
             return null;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public GraphicBuffer[] newArray(int size) {
             return new GraphicBuffer[size];
         }
@@ -55,7 +60,7 @@ public class GraphicBuffer implements Parcelable {
 
     private static native boolean nLockCanvas(long j, Canvas canvas, Rect rect);
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static native long nReadGraphicBufferFromParcel(Parcel parcel);
 
     private static native boolean nUnlockCanvasAndPost(long j, Canvas canvas);
@@ -107,7 +112,7 @@ public class GraphicBuffer implements Parcelable {
     }
 
     public Canvas lockCanvas() {
-        return lockCanvas((Rect) null);
+        return lockCanvas(null);
     }
 
     public Canvas lockCanvas(Rect dirty) {
@@ -117,11 +122,11 @@ public class GraphicBuffer implements Parcelable {
         if (this.mCanvas == null) {
             this.mCanvas = new Canvas();
         }
-        if (!nLockCanvas(this.mNativeObject, this.mCanvas, dirty)) {
-            return null;
+        if (nLockCanvas(this.mNativeObject, this.mCanvas, dirty)) {
+            this.mSaveCount = this.mCanvas.save();
+            return this.mCanvas;
         }
-        this.mSaveCount = this.mCanvas.save();
-        return this.mCanvas;
+        return null;
     }
 
     public void unlockCanvasAndPost(Canvas canvas) {
@@ -143,8 +148,7 @@ public class GraphicBuffer implements Parcelable {
         return this.mDestroyed;
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         try {
             if (!this.mDestroyed) {
                 nDestroyGraphicBuffer(this.mNativeObject);
@@ -154,19 +158,20 @@ public class GraphicBuffer implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
-        if (!this.mDestroyed) {
-            dest.writeInt(this.mWidth);
-            dest.writeInt(this.mHeight);
-            dest.writeInt(this.mFormat);
-            dest.writeInt(this.mUsage);
-            nWriteGraphicBufferToParcel(this.mNativeObject, dest);
-            return;
+        if (this.mDestroyed) {
+            throw new IllegalStateException("This GraphicBuffer has been destroyed and cannot be written to a parcel.");
         }
-        throw new IllegalStateException("This GraphicBuffer has been destroyed and cannot be written to a parcel.");
+        dest.writeInt(this.mWidth);
+        dest.writeInt(this.mHeight);
+        dest.writeInt(this.mFormat);
+        dest.writeInt(this.mUsage);
+        nWriteGraphicBufferToParcel(this.mNativeObject, dest);
     }
 }

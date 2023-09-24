@@ -1,14 +1,19 @@
 package android.telephony;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public class DataConnectionRealTimeInfo implements Parcelable {
-    public static final Parcelable.Creator<DataConnectionRealTimeInfo> CREATOR = new Parcelable.Creator<DataConnectionRealTimeInfo>() {
+    public static final Parcelable.Creator<DataConnectionRealTimeInfo> CREATOR = new Parcelable.Creator<DataConnectionRealTimeInfo>() { // from class: android.telephony.DataConnectionRealTimeInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public DataConnectionRealTimeInfo createFromParcel(Parcel in) {
             return new DataConnectionRealTimeInfo(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public DataConnectionRealTimeInfo[] newArray(int size) {
             return new DataConnectionRealTimeInfo[size];
         }
@@ -43,10 +48,12 @@ public class DataConnectionRealTimeInfo implements Parcelable {
         return this.mDcPowerState;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeLong(this.mTime);
         out.writeInt(this.mDcPowerState);
@@ -54,7 +61,7 @@ public class DataConnectionRealTimeInfo implements Parcelable {
 
     public int hashCode() {
         long result = (1 * 17) + this.mTime;
-        return (int) (result + (17 * result) + ((long) this.mDcPowerState));
+        return (int) (result + (17 * result) + this.mDcPowerState);
     }
 
     public boolean equals(Object obj) {

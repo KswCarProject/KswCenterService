@@ -6,6 +6,7 @@ import android.graphics.Region;
 import android.util.ArrayMap;
 import android.view.accessibility.AccessibilityNodeInfo;
 
+/* loaded from: classes4.dex */
 public class TouchDelegate {
     public static final int ABOVE = 1;
     public static final int BELOW = 2;
@@ -42,10 +43,14 @@ public class TouchDelegate {
             case 5:
             case 6:
                 sendToDelegate = this.mDelegateTargeted;
-                if (sendToDelegate && !this.mSlopBounds.contains(x, y)) {
-                    hit = false;
-                    break;
+                if (sendToDelegate) {
+                    Rect slopBounds = this.mSlopBounds;
+                    if (!slopBounds.contains(x, y)) {
+                        hit = false;
+                        break;
+                    }
                 }
+                break;
             case 3:
                 sendToDelegate = this.mDelegateTargeted;
                 this.mDelegateTargeted = false;
@@ -55,12 +60,13 @@ public class TouchDelegate {
             return false;
         }
         if (hit) {
-            event.setLocation((float) (this.mDelegateView.getWidth() / 2), (float) (this.mDelegateView.getHeight() / 2));
+            event.setLocation(this.mDelegateView.getWidth() / 2, this.mDelegateView.getHeight() / 2);
         } else {
             int slop = this.mSlop;
-            event.setLocation((float) (-(slop * 2)), (float) (-(slop * 2)));
+            event.setLocation(-(slop * 2), -(slop * 2));
         }
-        return this.mDelegateView.dispatchTouchEvent(event);
+        boolean handled = this.mDelegateView.dispatchTouchEvent(event);
+        return handled;
     }
 
     public boolean onTouchExplorationHoverEvent(MotionEvent event) {
@@ -90,11 +96,12 @@ public class TouchDelegate {
             return false;
         }
         if (hit) {
-            event.setLocation((float) (this.mDelegateView.getWidth() / 2), (float) (this.mDelegateView.getHeight() / 2));
+            event.setLocation(this.mDelegateView.getWidth() / 2, this.mDelegateView.getHeight() / 2);
         } else {
             this.mDelegateTargeted = false;
         }
-        return this.mDelegateView.dispatchHoverEvent(event);
+        boolean handled = this.mDelegateView.dispatchHoverEvent(event);
+        return handled;
     }
 
     public AccessibilityNodeInfo.TouchDelegateInfo getTouchDelegateInfo() {

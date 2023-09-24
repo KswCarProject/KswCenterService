@@ -1,8 +1,9 @@
 package com.android.internal.util;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Message;
+import android.p007os.Message;
 
+/* loaded from: classes4.dex */
 public interface IState {
     public static final boolean HANDLED = true;
     public static final boolean NOT_HANDLED = false;

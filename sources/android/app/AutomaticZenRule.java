@@ -2,17 +2,22 @@ package android.app;
 
 import android.content.ComponentName;
 import android.net.Uri;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.service.notification.ZenPolicy;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public final class AutomaticZenRule implements Parcelable {
-    public static final Parcelable.Creator<AutomaticZenRule> CREATOR = new Parcelable.Creator<AutomaticZenRule>() {
+    public static final Parcelable.Creator<AutomaticZenRule> CREATOR = new Parcelable.Creator<AutomaticZenRule>() { // from class: android.app.AutomaticZenRule.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AutomaticZenRule createFromParcel(Parcel source) {
             return new AutomaticZenRule(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AutomaticZenRule[] newArray(int size) {
             return new AutomaticZenRule[size];
         }
@@ -30,29 +35,28 @@ public final class AutomaticZenRule implements Parcelable {
     private ComponentName owner;
 
     @Deprecated
-    public AutomaticZenRule(String name2, ComponentName owner2, Uri conditionId2, int interruptionFilter2, boolean enabled2) {
-        this(name2, owner2, (ComponentName) null, conditionId2, (ZenPolicy) null, interruptionFilter2, enabled2);
+    public AutomaticZenRule(String name, ComponentName owner, Uri conditionId, int interruptionFilter, boolean enabled) {
+        this(name, owner, null, conditionId, null, interruptionFilter, enabled);
     }
 
-    public AutomaticZenRule(String name2, ComponentName owner2, ComponentName configurationActivity2, Uri conditionId2, ZenPolicy policy, int interruptionFilter2, boolean enabled2) {
+    public AutomaticZenRule(String name, ComponentName owner, ComponentName configurationActivity, Uri conditionId, ZenPolicy policy, int interruptionFilter, boolean enabled) {
         this.enabled = false;
         this.mModified = false;
-        this.name = name2;
-        this.owner = owner2;
-        this.configurationActivity = configurationActivity2;
-        this.conditionId = conditionId2;
-        this.interruptionFilter = interruptionFilter2;
-        this.enabled = enabled2;
+        this.name = name;
+        this.owner = owner;
+        this.configurationActivity = configurationActivity;
+        this.conditionId = conditionId;
+        this.interruptionFilter = interruptionFilter;
+        this.enabled = enabled;
         this.mZenPolicy = policy;
     }
 
-    public AutomaticZenRule(String name2, ComponentName owner2, ComponentName configurationActivity2, Uri conditionId2, ZenPolicy policy, int interruptionFilter2, boolean enabled2, long creationTime2) {
-        this(name2, owner2, configurationActivity2, conditionId2, policy, interruptionFilter2, enabled2);
-        this.creationTime = creationTime2;
+    public AutomaticZenRule(String name, ComponentName owner, ComponentName configurationActivity, Uri conditionId, ZenPolicy policy, int interruptionFilter, boolean enabled, long creationTime) {
+        this(name, owner, configurationActivity, conditionId, policy, interruptionFilter, enabled);
+        this.creationTime = creationTime;
     }
 
     public AutomaticZenRule(Parcel source) {
-        boolean z = false;
         this.enabled = false;
         this.mModified = false;
         this.enabled = source.readInt() == 1;
@@ -60,12 +64,12 @@ public final class AutomaticZenRule implements Parcelable {
             this.name = source.readString();
         }
         this.interruptionFilter = source.readInt();
-        this.conditionId = (Uri) source.readParcelable((ClassLoader) null);
-        this.owner = (ComponentName) source.readParcelable((ClassLoader) null);
-        this.configurationActivity = (ComponentName) source.readParcelable((ClassLoader) null);
+        this.conditionId = (Uri) source.readParcelable(null);
+        this.owner = (ComponentName) source.readParcelable(null);
+        this.configurationActivity = (ComponentName) source.readParcelable(null);
         this.creationTime = source.readLong();
-        this.mZenPolicy = (ZenPolicy) source.readParcelable((ClassLoader) null);
-        this.mModified = source.readInt() == 1 ? true : z;
+        this.mZenPolicy = (ZenPolicy) source.readParcelable(null);
+        this.mModified = source.readInt() == 1;
     }
 
     public ComponentName getOwner() {
@@ -107,20 +111,20 @@ public final class AutomaticZenRule implements Parcelable {
         return this.creationTime;
     }
 
-    public void setConditionId(Uri conditionId2) {
-        this.conditionId = conditionId2;
+    public void setConditionId(Uri conditionId) {
+        this.conditionId = conditionId;
     }
 
-    public void setInterruptionFilter(int interruptionFilter2) {
-        this.interruptionFilter = interruptionFilter2;
+    public void setInterruptionFilter(int interruptionFilter) {
+        this.interruptionFilter = interruptionFilter;
     }
 
-    public void setName(String name2) {
-        this.name = name2;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setEnabled(boolean enabled2) {
-        this.enabled = enabled2;
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public void setModified(boolean modified) {
@@ -135,10 +139,12 @@ public final class AutomaticZenRule implements Parcelable {
         this.configurationActivity = componentName;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.enabled ? 1 : 0);
         if (this.name != null) {
@@ -157,24 +163,21 @@ public final class AutomaticZenRule implements Parcelable {
     }
 
     public String toString() {
-        return AutomaticZenRule.class.getSimpleName() + '[' + "enabled=" + this.enabled + ",name=" + this.name + ",interruptionFilter=" + this.interruptionFilter + ",conditionId=" + this.conditionId + ",owner=" + this.owner + ",configActivity=" + this.configurationActivity + ",creationTime=" + this.creationTime + ",mZenPolicy=" + this.mZenPolicy + ']';
+        return AutomaticZenRule.class.getSimpleName() + "[enabled=" + this.enabled + ",name=" + this.name + ",interruptionFilter=" + this.interruptionFilter + ",conditionId=" + this.conditionId + ",owner=" + this.owner + ",configActivity=" + this.configurationActivity + ",creationTime=" + this.creationTime + ",mZenPolicy=" + this.mZenPolicy + ']';
     }
 
     public boolean equals(Object o) {
-        if (!(o instanceof AutomaticZenRule)) {
-            return false;
+        if (o instanceof AutomaticZenRule) {
+            if (o == this) {
+                return true;
+            }
+            AutomaticZenRule other = (AutomaticZenRule) o;
+            return other.enabled == this.enabled && other.mModified == this.mModified && Objects.equals(other.name, this.name) && other.interruptionFilter == this.interruptionFilter && Objects.equals(other.conditionId, this.conditionId) && Objects.equals(other.owner, this.owner) && Objects.equals(other.mZenPolicy, this.mZenPolicy) && Objects.equals(other.configurationActivity, this.configurationActivity) && other.creationTime == this.creationTime;
         }
-        if (o == this) {
-            return true;
-        }
-        AutomaticZenRule other = (AutomaticZenRule) o;
-        if (other.enabled != this.enabled || other.mModified != this.mModified || !Objects.equals(other.name, this.name) || other.interruptionFilter != this.interruptionFilter || !Objects.equals(other.conditionId, this.conditionId) || !Objects.equals(other.owner, this.owner) || !Objects.equals(other.mZenPolicy, this.mZenPolicy) || !Objects.equals(other.configurationActivity, this.configurationActivity) || other.creationTime != this.creationTime) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Boolean.valueOf(this.enabled), this.name, Integer.valueOf(this.interruptionFilter), this.conditionId, this.owner, this.configurationActivity, this.mZenPolicy, Boolean.valueOf(this.mModified), Long.valueOf(this.creationTime)});
+        return Objects.hash(Boolean.valueOf(this.enabled), this.name, Integer.valueOf(this.interruptionFilter), this.conditionId, this.owner, this.configurationActivity, this.mZenPolicy, Boolean.valueOf(this.mModified), Long.valueOf(this.creationTime));
     }
 }

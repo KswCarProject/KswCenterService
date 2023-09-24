@@ -2,13 +2,12 @@ package android.graphics.drawable;
 
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.graphics.RectF;
 import android.graphics.drawable.shapes.RoundRectShape;
-import android.graphics.drawable.shapes.Shape;
 import android.util.AttributeSet;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import org.xmlpull.v1.XmlPullParser;
 
+/* loaded from: classes.dex */
 public class PaintDrawable extends ShapeDrawable {
     public PaintDrawable() {
     }
@@ -29,32 +28,32 @@ public class PaintDrawable extends ShapeDrawable {
     }
 
     public void setCornerRadii(float[] radii) {
-        if (radii != null) {
-            setShape(new RoundRectShape(radii, (RectF) null, (float[]) null));
-        } else if (getShape() != null) {
-            setShape((Shape) null);
+        if (radii == null) {
+            if (getShape() != null) {
+                setShape(null);
+            }
+        } else {
+            setShape(new RoundRectShape(radii, null, null));
         }
         invalidateSelf();
     }
 
-    /* access modifiers changed from: protected */
-    public boolean inflateTag(String name, Resources r, XmlPullParser parser, AttributeSet attrs) {
+    @Override // android.graphics.drawable.ShapeDrawable
+    protected boolean inflateTag(String name, Resources r, XmlPullParser parser, AttributeSet attrs) {
         if (name.equals("corners")) {
-            TypedArray a = r.obtainAttributes(attrs, R.styleable.DrawableCorners);
+            TypedArray a = r.obtainAttributes(attrs, C3132R.styleable.DrawableCorners);
             int radius = a.getDimensionPixelSize(0, 0);
-            setCornerRadius((float) radius);
+            setCornerRadius(radius);
             int topLeftRadius = a.getDimensionPixelSize(1, radius);
             int topRightRadius = a.getDimensionPixelSize(2, radius);
             int bottomLeftRadius = a.getDimensionPixelSize(3, radius);
             int bottomRightRadius = a.getDimensionPixelSize(4, radius);
-            if (!(topLeftRadius == radius && topRightRadius == radius && bottomLeftRadius == radius && bottomRightRadius == radius)) {
-                setCornerRadii(new float[]{(float) topLeftRadius, (float) topLeftRadius, (float) topRightRadius, (float) topRightRadius, (float) bottomLeftRadius, (float) bottomLeftRadius, (float) bottomRightRadius, (float) bottomRightRadius});
+            if (topLeftRadius != radius || topRightRadius != radius || bottomLeftRadius != radius || bottomRightRadius != radius) {
+                setCornerRadii(new float[]{topLeftRadius, topLeftRadius, topRightRadius, topRightRadius, bottomLeftRadius, bottomLeftRadius, bottomRightRadius, bottomRightRadius});
             }
             a.recycle();
             return true;
         }
-        Resources resources = r;
-        AttributeSet attributeSet = attrs;
         return super.inflateTag(name, r, parser, attrs);
     }
 }

@@ -1,24 +1,25 @@
 package com.android.framework.protobuf.nano;
 
-import android.os.BatteryStats;
+import android.p007os.BatteryStats;
 import java.io.IOException;
 import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.ReadOnlyBufferException;
 
+/* loaded from: classes4.dex */
 public final class CodedOutputByteBufferNano {
     public static final int LITTLE_ENDIAN_32_SIZE = 4;
     public static final int LITTLE_ENDIAN_64_SIZE = 8;
     private static final int MAX_UTF8_EXPANSION = 3;
     private final ByteBuffer buffer;
 
-    private CodedOutputByteBufferNano(byte[] buffer2, int offset, int length) {
-        this(ByteBuffer.wrap(buffer2, offset, length));
+    private CodedOutputByteBufferNano(byte[] buffer, int offset, int length) {
+        this(ByteBuffer.wrap(buffer, offset, length));
     }
 
-    private CodedOutputByteBufferNano(ByteBuffer buffer2) {
-        this.buffer = buffer2;
+    private CodedOutputByteBufferNano(ByteBuffer buffer) {
+        this.buffer = buffer;
         this.buffer.order(ByteOrder.LITTLE_ENDIAN);
     }
 
@@ -146,7 +147,7 @@ public final class CodedOutputByteBufferNano {
         if (value >= 0) {
             writeRawVarint32(value);
         } else {
-            writeRawVarint64((long) value);
+            writeRawVarint64(value);
         }
     }
 
@@ -159,24 +160,25 @@ public final class CodedOutputByteBufferNano {
     }
 
     public void writeBoolNoTag(boolean value) throws IOException {
-        writeRawByte((int) value);
+        writeRawByte(value ? 1 : 0);
     }
 
     public void writeStringNoTag(String value) throws IOException {
         try {
             int minLengthVarIntSize = computeRawVarint32Size(value.length());
-            if (minLengthVarIntSize == computeRawVarint32Size(value.length() * 3)) {
+            int maxLengthVarIntSize = computeRawVarint32Size(value.length() * 3);
+            if (minLengthVarIntSize == maxLengthVarIntSize) {
                 int oldPosition = this.buffer.position();
-                if (this.buffer.remaining() >= minLengthVarIntSize) {
-                    this.buffer.position(oldPosition + minLengthVarIntSize);
-                    encode(value, this.buffer);
-                    int newPosition = this.buffer.position();
-                    this.buffer.position(oldPosition);
-                    writeRawVarint32((newPosition - oldPosition) - minLengthVarIntSize);
-                    this.buffer.position(newPosition);
-                    return;
+                if (this.buffer.remaining() < minLengthVarIntSize) {
+                    throw new OutOfSpaceException(oldPosition + minLengthVarIntSize, this.buffer.limit());
                 }
-                throw new OutOfSpaceException(oldPosition + minLengthVarIntSize, this.buffer.limit());
+                this.buffer.position(oldPosition + minLengthVarIntSize);
+                encode(value, this.buffer);
+                int newPosition = this.buffer.position();
+                this.buffer.position(oldPosition);
+                writeRawVarint32((newPosition - oldPosition) - minLengthVarIntSize);
+                this.buffer.position(newPosition);
+                return;
             }
             writeRawVarint32(encodedLength(value));
             encode(value, this.buffer);
@@ -191,47 +193,48 @@ public final class CodedOutputByteBufferNano {
         int utf16Length = sequence.length();
         int utf8Length = utf16Length;
         int i = 0;
-        while (i < utf16Length && sequence.charAt(i) < 128) {
+        while (i < utf16Length && sequence.charAt(i) < '\u0080') {
             i++;
         }
         while (true) {
             if (i < utf16Length) {
                 char c = sequence.charAt(i);
-                if (c >= 2048) {
+                if (c < '\u0800') {
+                    utf8Length += ('\u007f' - c) >>> 31;
+                    i++;
+                } else {
                     utf8Length += encodedLengthGeneral(sequence, i);
                     break;
                 }
-                utf8Length += (127 - c) >>> 31;
-                i++;
             } else {
                 break;
             }
         }
-        if (utf8Length >= utf16Length) {
-            return utf8Length;
+        if (utf8Length < utf16Length) {
+            throw new IllegalArgumentException("UTF-8 length does not fit in int: " + (utf8Length + 4294967296L));
         }
-        throw new IllegalArgumentException("UTF-8 length does not fit in int: " + (((long) utf8Length) + 4294967296L));
+        return utf8Length;
     }
 
     private static int encodedLengthGeneral(CharSequence sequence, int start) {
         int utf16Length = sequence.length();
         int utf8Length = 0;
-        int i = start;
-        while (i < utf16Length) {
-            char c = sequence.charAt(i);
-            if (c < 2048) {
-                utf8Length += (127 - c) >>> 31;
+        int utf8Length2 = start;
+        while (utf8Length2 < utf16Length) {
+            char c = sequence.charAt(utf8Length2);
+            if (c < '\u0800') {
+                utf8Length += ('\u007f' - c) >>> 31;
             } else {
                 utf8Length += 2;
-                if (55296 <= c && c <= 57343) {
-                    if (Character.codePointAt(sequence, i) >= 65536) {
-                        i++;
-                    } else {
-                        throw new IllegalArgumentException("Unpaired surrogate at index " + i);
+                if ('\ud800' <= c && c <= '\udfff') {
+                    int cp = Character.codePointAt(sequence, utf8Length2);
+                    if (cp < 65536) {
+                        throw new IllegalArgumentException("Unpaired surrogate at index " + utf8Length2);
                     }
+                    utf8Length2++;
                 }
             }
-            i++;
+            utf8Length2++;
         }
         return utf8Length;
     }
@@ -239,17 +242,19 @@ public final class CodedOutputByteBufferNano {
     private static void encode(CharSequence sequence, ByteBuffer byteBuffer) {
         if (byteBuffer.isReadOnly()) {
             throw new ReadOnlyBufferException();
-        } else if (byteBuffer.hasArray()) {
+        }
+        if (byteBuffer.hasArray()) {
             try {
-                byteBuffer.position(encode(sequence, byteBuffer.array(), byteBuffer.arrayOffset() + byteBuffer.position(), byteBuffer.remaining()) - byteBuffer.arrayOffset());
+                int encoded = encode(sequence, byteBuffer.array(), byteBuffer.arrayOffset() + byteBuffer.position(), byteBuffer.remaining());
+                byteBuffer.position(encoded - byteBuffer.arrayOffset());
+                return;
             } catch (ArrayIndexOutOfBoundsException e) {
                 BufferOverflowException boe = new BufferOverflowException();
                 boe.initCause(e);
                 throw boe;
             }
-        } else {
-            encodeDirect(sequence, byteBuffer);
         }
+        encodeDirect(sequence, byteBuffer);
     }
 
     private static void encodeDirect(CharSequence sequence, ByteBuffer byteBuffer) {
@@ -257,21 +262,20 @@ public final class CodedOutputByteBufferNano {
         int i = 0;
         while (i < utf16Length) {
             char c = sequence.charAt(i);
-            if (c < 128) {
+            if (c < '\u0080') {
                 byteBuffer.put((byte) c);
-            } else if (c < 2048) {
+            } else if (c < '\u0800') {
                 byteBuffer.put((byte) ((c >>> 6) | 960));
                 byteBuffer.put((byte) (128 | (c & '?')));
-            } else if (c < 55296 || 57343 < c) {
-                byteBuffer.put((byte) ((c >>> 12) | 480));
+            } else if (c < '\ud800' || '\udfff' < c) {
+                byteBuffer.put((byte) ((c >>> '\f') | 480));
                 byteBuffer.put((byte) (((c >>> 6) & 63) | 128));
                 byteBuffer.put((byte) (128 | (c & '?')));
             } else {
                 if (i + 1 != sequence.length()) {
                     i++;
-                    char charAt = sequence.charAt(i);
-                    char low = charAt;
-                    if (Character.isSurrogatePair(c, charAt)) {
+                    char low = sequence.charAt(i);
+                    if (Character.isSurrogatePair(c, low)) {
                         int codePoint = Character.toCodePoint(c, low);
                         byteBuffer.put((byte) ((codePoint >>> 18) | 240));
                         byteBuffer.put((byte) (((codePoint >>> 12) & 63) | 128));
@@ -288,72 +292,72 @@ public final class CodedOutputByteBufferNano {
         }
     }
 
+    /* JADX WARN: Code restructure failed: missing block: B:12:0x0023, code lost:
+        return r12 + r0;
+     */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
     private static int encode(CharSequence sequence, byte[] bytes, int offset, int length) {
         int j;
+        char c;
         int utf16Length = sequence.length();
-        int j2 = offset;
         int i = 0;
         int limit = offset + length;
-        while (i < utf16Length && i + j2 < limit) {
-            char charAt = sequence.charAt(i);
-            char c = charAt;
-            if (charAt >= 128) {
-                break;
-            }
-            bytes[j2 + i] = (byte) c;
+        while (i < utf16Length && i + offset < limit && (c = sequence.charAt(i)) < '\u0080') {
+            bytes[offset + i] = (byte) c;
             i++;
         }
-        if (i == utf16Length) {
-            return j2 + utf16Length;
-        }
-        int j3 = j2 + i;
+        int j2 = offset + i;
         while (i < utf16Length) {
             char c2 = sequence.charAt(i);
-            if (c2 < 128 && j3 < limit) {
-                j = j3 + 1;
-                bytes[j3] = (byte) c2;
-            } else if (c2 < 2048 && j3 <= limit - 2) {
-                int j4 = j3 + 1;
-                bytes[j3] = (byte) ((c2 >>> 6) | 960);
-                j3 = j4 + 1;
-                bytes[j4] = (byte) ((c2 & '?') | 128);
-                i++;
-            } else if ((c2 < 55296 || 57343 < c2) && j3 <= limit - 3) {
-                int j5 = j3 + 1;
-                bytes[j3] = (byte) ((c2 >>> 12) | 480);
-                int j6 = j5 + 1;
-                bytes[j5] = (byte) (((c2 >>> 6) & 63) | 128);
-                j = j6 + 1;
-                bytes[j6] = (byte) ((c2 & '?') | 128);
-            } else if (j3 <= limit - 4) {
-                if (i + 1 != sequence.length()) {
-                    i++;
-                    char charAt2 = sequence.charAt(i);
-                    char low = charAt2;
-                    if (Character.isSurrogatePair(c2, charAt2)) {
-                        int codePoint = Character.toCodePoint(c2, low);
-                        int j7 = j3 + 1;
-                        bytes[j3] = (byte) ((codePoint >>> 18) | 240);
-                        int j8 = j7 + 1;
-                        bytes[j7] = (byte) (((codePoint >>> 12) & 63) | 128);
-                        int j9 = j8 + 1;
-                        bytes[j8] = (byte) (((codePoint >>> 6) & 63) | 128);
-                        j3 = j9 + 1;
-                        bytes[j9] = (byte) ((codePoint & 63) | 128);
-                        i++;
-                    }
-                }
-                StringBuilder sb = new StringBuilder();
-                sb.append("Unpaired surrogate at index ");
-                sb.append(i - 1);
-                throw new IllegalArgumentException(sb.toString());
+            if (c2 < '\u0080' && j2 < limit) {
+                j = j2 + 1;
+                bytes[j2] = (byte) c2;
             } else {
-                throw new ArrayIndexOutOfBoundsException("Failed writing " + c2 + " at index " + j3);
+                if (c2 < '\u0800' && j2 <= limit - 2) {
+                    int j3 = j2 + 1;
+                    bytes[j2] = (byte) ((c2 >>> 6) | 960);
+                    j2 = j3 + 1;
+                    bytes[j3] = (byte) ((c2 & '?') | 128);
+                } else if ((c2 < '\ud800' || '\udfff' < c2) && j2 <= limit - 3) {
+                    int j4 = j2 + 1;
+                    bytes[j2] = (byte) ((c2 >>> '\f') | 480);
+                    int j5 = j4 + 1;
+                    bytes[j4] = (byte) (((c2 >>> 6) & 63) | 128);
+                    j = j5 + 1;
+                    bytes[j5] = (byte) ((c2 & '?') | 128);
+                } else {
+                    int j6 = limit - 4;
+                    if (j2 <= j6) {
+                        if (i + 1 != sequence.length()) {
+                            i++;
+                            char low = sequence.charAt(i);
+                            if (Character.isSurrogatePair(c2, low)) {
+                                int codePoint = Character.toCodePoint(c2, low);
+                                int j7 = j2 + 1;
+                                bytes[j2] = (byte) ((codePoint >>> 18) | 240);
+                                int j8 = j7 + 1;
+                                bytes[j7] = (byte) (((codePoint >>> 12) & 63) | 128);
+                                int j9 = j8 + 1;
+                                bytes[j8] = (byte) (((codePoint >>> 6) & 63) | 128);
+                                j2 = j9 + 1;
+                                bytes[j9] = (byte) ((codePoint & 63) | 128);
+                            }
+                        }
+                        StringBuilder sb = new StringBuilder();
+                        sb.append("Unpaired surrogate at index ");
+                        sb.append(i - 1);
+                        throw new IllegalArgumentException(sb.toString());
+                    }
+                    throw new ArrayIndexOutOfBoundsException("Failed writing " + c2 + " at index " + j2);
+                }
+                i++;
             }
-            j3 = j;
+            j2 = j;
             i++;
         }
-        return j3;
+        return j2;
     }
 
     public void writeGroupNoTag(MessageNano value) throws IOException {
@@ -574,6 +578,7 @@ public final class CodedOutputByteBufferNano {
         this.buffer.clear();
     }
 
+    /* loaded from: classes4.dex */
     public static class OutOfSpaceException extends IOException {
         private static final long serialVersionUID = -6947486886997889499L;
 
@@ -583,11 +588,10 @@ public final class CodedOutputByteBufferNano {
     }
 
     public void writeRawByte(byte value) throws IOException {
-        if (this.buffer.hasRemaining()) {
-            this.buffer.put(value);
-            return;
+        if (!this.buffer.hasRemaining()) {
+            throw new OutOfSpaceException(this.buffer.position(), this.buffer.limit());
         }
-        throw new OutOfSpaceException(this.buffer.position(), this.buffer.limit());
+        this.buffer.put(value);
     }
 
     public void writeRawByte(int value) throws IOException {
@@ -615,7 +619,7 @@ public final class CodedOutputByteBufferNano {
     }
 
     public void writeRawVarint32(int value) throws IOException {
-        while ((value & -128) != 0) {
+        while ((value & (-128)) != 0) {
             writeRawByte((value & 127) | 128);
             value >>>= 7;
         }
@@ -623,23 +627,20 @@ public final class CodedOutputByteBufferNano {
     }
 
     public static int computeRawVarint32Size(int value) {
-        if ((value & -128) == 0) {
+        if ((value & (-128)) == 0) {
             return 1;
         }
-        if ((value & -16384) == 0) {
+        if ((value & (-16384)) == 0) {
             return 2;
         }
-        if ((-2097152 & value) == 0) {
+        if (((-2097152) & value) == 0) {
             return 3;
         }
-        if ((-268435456 & value) == 0) {
-            return 4;
-        }
-        return 5;
+        return ((-268435456) & value) == 0 ? 4 : 5;
     }
 
     public void writeRawVarint64(long value) throws IOException {
-        while ((-128 & value) != 0) {
+        while (((-128) & value) != 0) {
             writeRawByte((((int) value) & 127) | 128);
             value >>>= 7;
         }
@@ -647,50 +648,45 @@ public final class CodedOutputByteBufferNano {
     }
 
     public static int computeRawVarint64Size(long value) {
-        if ((-128 & value) == 0) {
+        if (((-128) & value) == 0) {
             return 1;
         }
-        if ((-16384 & value) == 0) {
+        if (((-16384) & value) == 0) {
             return 2;
         }
-        if ((-2097152 & value) == 0) {
+        if (((-2097152) & value) == 0) {
             return 3;
         }
-        if ((-268435456 & value) == 0) {
+        if (((-268435456) & value) == 0) {
             return 4;
         }
-        if ((-34359738368L & value) == 0) {
+        if (((-34359738368L) & value) == 0) {
             return 5;
         }
-        if ((-4398046511104L & value) == 0) {
+        if (((-4398046511104L) & value) == 0) {
             return 6;
         }
-        if ((-562949953421312L & value) == 0) {
+        if (((-562949953421312L) & value) == 0) {
             return 7;
         }
         if ((BatteryStats.STEP_LEVEL_MODIFIED_MODE_MASK & value) == 0) {
             return 8;
         }
-        if ((Long.MIN_VALUE & value) == 0) {
-            return 9;
-        }
-        return 10;
+        return (Long.MIN_VALUE & value) == 0 ? 9 : 10;
     }
 
     public void writeRawLittleEndian32(int value) throws IOException {
-        if (this.buffer.remaining() >= 4) {
-            this.buffer.putInt(value);
-            return;
+        if (this.buffer.remaining() < 4) {
+            throw new OutOfSpaceException(this.buffer.position(), this.buffer.limit());
         }
-        throw new OutOfSpaceException(this.buffer.position(), this.buffer.limit());
+        this.buffer.putInt(value);
     }
 
     public void writeRawLittleEndian64(long value) throws IOException {
-        if (this.buffer.remaining() >= 8) {
-            this.buffer.putLong(value);
-            return;
+        if (this.buffer.remaining() < 8) {
+            throw new OutOfSpaceException(this.buffer.position(), this.buffer.limit());
         }
-        throw new OutOfSpaceException(this.buffer.position(), this.buffer.limit());
+        this.buffer.putLong(value);
     }
 
     public static int encodeZigZag32(int n) {
@@ -744,62 +740,79 @@ public final class CodedOutputByteBufferNano {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void writeField(int number, int type, Object value) throws IOException {
+    void writeField(int number, int type, Object value) throws IOException {
         switch (type) {
             case 1:
-                writeDouble(number, ((Double) value).doubleValue());
+                Double doubleValue = (Double) value;
+                writeDouble(number, doubleValue.doubleValue());
                 return;
             case 2:
-                writeFloat(number, ((Float) value).floatValue());
+                Float floatValue = (Float) value;
+                writeFloat(number, floatValue.floatValue());
                 return;
             case 3:
-                writeInt64(number, ((Long) value).longValue());
+                Long int64Value = (Long) value;
+                writeInt64(number, int64Value.longValue());
                 return;
             case 4:
-                writeUInt64(number, ((Long) value).longValue());
+                Long uint64Value = (Long) value;
+                writeUInt64(number, uint64Value.longValue());
                 return;
             case 5:
-                writeInt32(number, ((Integer) value).intValue());
+                Integer int32Value = (Integer) value;
+                writeInt32(number, int32Value.intValue());
                 return;
             case 6:
-                writeFixed64(number, ((Long) value).longValue());
+                Long fixed64Value = (Long) value;
+                writeFixed64(number, fixed64Value.longValue());
                 return;
             case 7:
-                writeFixed32(number, ((Integer) value).intValue());
+                Integer fixed32Value = (Integer) value;
+                writeFixed32(number, fixed32Value.intValue());
                 return;
             case 8:
-                writeBool(number, ((Boolean) value).booleanValue());
+                Boolean boolValue = (Boolean) value;
+                writeBool(number, boolValue.booleanValue());
                 return;
             case 9:
-                writeString(number, (String) value);
+                String stringValue = (String) value;
+                writeString(number, stringValue);
                 return;
             case 10:
-                writeGroup(number, (MessageNano) value);
+                MessageNano groupValue = (MessageNano) value;
+                writeGroup(number, groupValue);
                 return;
             case 11:
-                writeMessage(number, (MessageNano) value);
+                MessageNano messageValue = (MessageNano) value;
+                writeMessage(number, messageValue);
                 return;
             case 12:
-                writeBytes(number, (byte[]) value);
+                byte[] bytesValue = (byte[]) value;
+                writeBytes(number, bytesValue);
                 return;
             case 13:
-                writeUInt32(number, ((Integer) value).intValue());
+                Integer uint32Value = (Integer) value;
+                writeUInt32(number, uint32Value.intValue());
                 return;
             case 14:
-                writeEnum(number, ((Integer) value).intValue());
+                Integer enumValue = (Integer) value;
+                writeEnum(number, enumValue.intValue());
                 return;
             case 15:
-                writeSFixed32(number, ((Integer) value).intValue());
+                Integer sfixed32Value = (Integer) value;
+                writeSFixed32(number, sfixed32Value.intValue());
                 return;
             case 16:
-                writeSFixed64(number, ((Long) value).longValue());
+                Long sfixed64Value = (Long) value;
+                writeSFixed64(number, sfixed64Value.longValue());
                 return;
             case 17:
-                writeSInt32(number, ((Integer) value).intValue());
+                Integer sint32Value = (Integer) value;
+                writeSInt32(number, sint32Value.intValue());
                 return;
             case 18:
-                writeSInt64(number, ((Long) value).longValue());
+                Long sint64Value = (Long) value;
+                writeSInt64(number, sint64Value.longValue());
                 return;
             default:
                 throw new IOException("Unknown type: " + type);

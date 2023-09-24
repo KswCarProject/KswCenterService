@@ -10,10 +10,10 @@ import android.content.IntentFilter;
 import android.content.res.TypedArray;
 import android.database.ContentObserver;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Process;
-import android.os.SystemClock;
-import android.os.UserHandle;
+import android.p007os.Handler;
+import android.p007os.Process;
+import android.p007os.SystemClock;
+import android.p007os.UserHandle;
 import android.provider.Settings;
 import android.text.format.DateFormat;
 import android.util.AttributeSet;
@@ -24,12 +24,13 @@ import android.view.inspector.InspectionCompanion;
 import android.view.inspector.PropertyMapper;
 import android.view.inspector.PropertyReader;
 import android.widget.RemoteViews;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.util.Calendar;
 import java.util.TimeZone;
 import libcore.icu.LocaleData;
 
 @RemoteViews.RemoteView
+/* loaded from: classes4.dex */
 public class TextClock extends TextView {
     @Deprecated
     public static final CharSequence DEFAULT_FORMAT_12_HOUR = "h:mm a";
@@ -47,17 +48,14 @@ public class TextClock extends TextView {
     private boolean mHasSeconds;
     private final BroadcastReceiver mIntentReceiver;
     private boolean mRegistered;
-    /* access modifiers changed from: private */
-    public boolean mShouldRunTicker;
+    private boolean mShouldRunTicker;
     private boolean mShowCurrentUserTime;
-    /* access modifiers changed from: private */
-    public boolean mStopTicking;
-    /* access modifiers changed from: private */
-    public final Runnable mTicker;
+    private boolean mStopTicking;
+    private final Runnable mTicker;
     private Calendar mTime;
-    /* access modifiers changed from: private */
-    public String mTimeZone;
+    private String mTimeZone;
 
+    /* loaded from: classes4.dex */
     public final class InspectionCompanion implements android.view.inspector.InspectionCompanion<TextClock> {
         private int mFormat12HourId;
         private int mFormat24HourId;
@@ -65,6 +63,7 @@ public class TextClock extends TextView {
         private boolean mPropertiesMapped = false;
         private int mTimeZoneId;
 
+        @Override // android.view.inspector.InspectionCompanion
         public void mapProperties(PropertyMapper propertyMapper) {
             this.mFormat12HourId = propertyMapper.mapObject("format12Hour", 16843722);
             this.mFormat24HourId = propertyMapper.mapObject("format24Hour", 16843723);
@@ -73,28 +72,31 @@ public class TextClock extends TextView {
             this.mPropertiesMapped = true;
         }
 
+        @Override // android.view.inspector.InspectionCompanion
         public void readProperties(TextClock node, PropertyReader propertyReader) {
-            if (this.mPropertiesMapped) {
-                propertyReader.readObject(this.mFormat12HourId, node.getFormat12Hour());
-                propertyReader.readObject(this.mFormat24HourId, node.getFormat24Hour());
-                propertyReader.readBoolean(this.mIs24HourModeEnabledId, node.is24HourModeEnabled());
-                propertyReader.readObject(this.mTimeZoneId, node.getTimeZone());
-                return;
+            if (!this.mPropertiesMapped) {
+                throw new InspectionCompanion.UninitializedPropertyMapException();
             }
-            throw new InspectionCompanion.UninitializedPropertyMapException();
+            propertyReader.readObject(this.mFormat12HourId, node.getFormat12Hour());
+            propertyReader.readObject(this.mFormat24HourId, node.getFormat24Hour());
+            propertyReader.readBoolean(this.mIs24HourModeEnabledId, node.is24HourModeEnabled());
+            propertyReader.readObject(this.mTimeZoneId, node.getTimeZone());
         }
     }
 
+    /* loaded from: classes4.dex */
     private class FormatChangeObserver extends ContentObserver {
         public FormatChangeObserver(Handler handler) {
             super(handler);
         }
 
+        @Override // android.database.ContentObserver
         public void onChange(boolean selfChange) {
             TextClock.this.chooseFormat();
             TextClock.this.onTimeChanged();
         }
 
+        @Override // android.database.ContentObserver
         public void onChange(boolean selfChange, Uri uri) {
             TextClock.this.chooseFormat();
             TextClock.this.onTimeChanged();
@@ -103,24 +105,30 @@ public class TextClock extends TextView {
 
     public TextClock(Context context) {
         super(context);
-        this.mIntentReceiver = new BroadcastReceiver() {
-            public void onReceive(Context context, Intent intent) {
+        this.mIntentReceiver = new BroadcastReceiver() { // from class: android.widget.TextClock.1
+            @Override // android.content.BroadcastReceiver
+            public void onReceive(Context context2, Intent intent) {
                 if (!TextClock.this.mStopTicking) {
-                    if (TextClock.this.mTimeZone == null && Intent.ACTION_TIMEZONE_CHANGED.equals(intent.getAction())) {
-                        TextClock.this.createTime(intent.getStringExtra("time-zone"));
-                    } else if (!TextClock.this.mShouldRunTicker && (Intent.ACTION_TIME_TICK.equals(intent.getAction()) || Intent.ACTION_TIME_CHANGED.equals(intent.getAction()))) {
-                        return;
+                    if (TextClock.this.mTimeZone != null || !Intent.ACTION_TIMEZONE_CHANGED.equals(intent.getAction())) {
+                        if (!TextClock.this.mShouldRunTicker && (Intent.ACTION_TIME_TICK.equals(intent.getAction()) || Intent.ACTION_TIME_CHANGED.equals(intent.getAction()))) {
+                            return;
+                        }
+                    } else {
+                        String timeZone = intent.getStringExtra("time-zone");
+                        TextClock.this.createTime(timeZone);
                     }
                     TextClock.this.onTimeChanged();
                 }
             }
         };
-        this.mTicker = new Runnable() {
+        this.mTicker = new Runnable() { // from class: android.widget.TextClock.2
+            @Override // java.lang.Runnable
             public void run() {
                 if (!TextClock.this.mStopTicking) {
                     TextClock.this.onTimeChanged();
                     long now = SystemClock.uptimeMillis();
-                    TextClock.this.getHandler().postAtTime(TextClock.this.mTicker, (1000 - (now % 1000)) + now);
+                    long next = (1000 - (now % 1000)) + now;
+                    TextClock.this.getHandler().postAtTime(TextClock.this.mTicker, next);
                 }
             }
         };
@@ -135,32 +143,37 @@ public class TextClock extends TextView {
         this(context, attrs, defStyleAttr, 0);
     }
 
-    /* JADX INFO: finally extract failed */
     public TextClock(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        this.mIntentReceiver = new BroadcastReceiver() {
-            public void onReceive(Context context, Intent intent) {
+        this.mIntentReceiver = new BroadcastReceiver() { // from class: android.widget.TextClock.1
+            @Override // android.content.BroadcastReceiver
+            public void onReceive(Context context2, Intent intent) {
                 if (!TextClock.this.mStopTicking) {
-                    if (TextClock.this.mTimeZone == null && Intent.ACTION_TIMEZONE_CHANGED.equals(intent.getAction())) {
-                        TextClock.this.createTime(intent.getStringExtra("time-zone"));
-                    } else if (!TextClock.this.mShouldRunTicker && (Intent.ACTION_TIME_TICK.equals(intent.getAction()) || Intent.ACTION_TIME_CHANGED.equals(intent.getAction()))) {
-                        return;
+                    if (TextClock.this.mTimeZone != null || !Intent.ACTION_TIMEZONE_CHANGED.equals(intent.getAction())) {
+                        if (!TextClock.this.mShouldRunTicker && (Intent.ACTION_TIME_TICK.equals(intent.getAction()) || Intent.ACTION_TIME_CHANGED.equals(intent.getAction()))) {
+                            return;
+                        }
+                    } else {
+                        String timeZone = intent.getStringExtra("time-zone");
+                        TextClock.this.createTime(timeZone);
                     }
                     TextClock.this.onTimeChanged();
                 }
             }
         };
-        this.mTicker = new Runnable() {
+        this.mTicker = new Runnable() { // from class: android.widget.TextClock.2
+            @Override // java.lang.Runnable
             public void run() {
                 if (!TextClock.this.mStopTicking) {
                     TextClock.this.onTimeChanged();
                     long now = SystemClock.uptimeMillis();
-                    TextClock.this.getHandler().postAtTime(TextClock.this.mTicker, (1000 - (now % 1000)) + now);
+                    long next = (1000 - (now % 1000)) + now;
+                    TextClock.this.getHandler().postAtTime(TextClock.this.mTicker, next);
                 }
             }
         };
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.TextClock, defStyleAttr, defStyleRes);
-        saveAttributeDataForStyleable(context, R.styleable.TextClock, attrs, a, defStyleAttr, defStyleRes);
+        TypedArray a = context.obtainStyledAttributes(attrs, C3132R.styleable.TextClock, defStyleAttr, defStyleRes);
+        saveAttributeDataForStyleable(context, C3132R.styleable.TextClock, attrs, a, defStyleAttr, defStyleRes);
         try {
             this.mFormat12 = a.getText(0);
             this.mFormat24 = a.getText(1);
@@ -187,7 +200,7 @@ public class TextClock extends TextView {
         chooseFormat();
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void createTime(String timeZone) {
         if (timeZone != null) {
             this.mTime = Calendar.getInstance(TimeZone.getTimeZone(timeZone));
@@ -268,7 +281,7 @@ public class TextClock extends TextView {
         return this.mFormat;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void chooseFormat() {
         boolean format24Requested = is24HourModeEnabled();
         LocaleData ld = LocaleData.get(getContext().getResources().getConfiguration().locale);
@@ -282,23 +295,20 @@ public class TextClock extends TextView {
         boolean hadSeconds = this.mHasSeconds;
         this.mHasSeconds = DateFormat.hasSeconds(this.mFormat);
         if (this.mShouldRunTicker && hadSeconds != this.mHasSeconds) {
-            if (hadSeconds) {
-                getHandler().removeCallbacks(this.mTicker);
-            } else {
+            if (!hadSeconds) {
                 this.mTicker.run();
+            } else {
+                getHandler().removeCallbacks(this.mTicker);
             }
         }
     }
 
     private static CharSequence abc(CharSequence a, CharSequence b, CharSequence c) {
-        if (a == null) {
-            return b == null ? c : b;
-        }
-        return a;
+        return a == null ? b == null ? c : b : a;
     }
 
-    /* access modifiers changed from: protected */
-    public void onAttachedToWindow() {
+    @Override // android.widget.TextView, android.view.View
+    protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         if (!this.mRegistered) {
             this.mRegistered = true;
@@ -308,6 +318,7 @@ public class TextClock extends TextView {
         }
     }
 
+    @Override // android.view.View
     public void onVisibilityAggregated(boolean isVisible) {
         super.onVisibilityAggregated(isVisible);
         if (!this.mShouldRunTicker && isVisible) {
@@ -323,8 +334,8 @@ public class TextClock extends TextView {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onDetachedFromWindow() {
+    @Override // android.view.View
+    protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         if (this.mRegistered) {
             unregisterReceiver();
@@ -342,7 +353,7 @@ public class TextClock extends TextView {
         filter.addAction(Intent.ACTION_TIME_TICK);
         filter.addAction(Intent.ACTION_TIME_CHANGED);
         filter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
-        getContext().registerReceiverAsUser(this.mIntentReceiver, Process.myUserHandle(), filter, (String) null, getHandler());
+        getContext().registerReceiverAsUser(this.mIntentReceiver, Process.myUserHandle(), filter, null, getHandler());
     }
 
     private void registerObserver() {
@@ -366,11 +377,12 @@ public class TextClock extends TextView {
 
     private void unregisterObserver() {
         if (this.mFormatChangeObserver != null) {
-            getContext().getContentResolver().unregisterContentObserver(this.mFormatChangeObserver);
+            ContentResolver resolver = getContext().getContentResolver();
+            resolver.unregisterContentObserver(this.mFormatChangeObserver);
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     @UnsupportedAppUsage
     public void onTimeChanged() {
         this.mTime.setTimeInMillis(System.currentTimeMillis());
@@ -378,18 +390,14 @@ public class TextClock extends TextView {
         setContentDescription(DateFormat.format(this.mDescFormat, this.mTime));
     }
 
-    /* access modifiers changed from: protected */
-    public void encodeProperties(ViewHierarchyEncoder stream) {
+    @Override // android.widget.TextView, android.view.View
+    protected void encodeProperties(ViewHierarchyEncoder stream) {
         super.encodeProperties(stream);
         CharSequence s = getFormat12Hour();
-        String str = null;
         stream.addProperty("format12Hour", s == null ? null : s.toString());
         CharSequence s2 = getFormat24Hour();
         stream.addProperty("format24Hour", s2 == null ? null : s2.toString());
-        if (this.mFormat != null) {
-            str = this.mFormat.toString();
-        }
-        stream.addProperty("format", str);
+        stream.addProperty("format", this.mFormat != null ? this.mFormat.toString() : null);
         stream.addProperty("hasSeconds", this.mHasSeconds);
     }
 }

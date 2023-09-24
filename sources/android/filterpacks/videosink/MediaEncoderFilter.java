@@ -17,89 +17,122 @@ import android.util.Log;
 import java.io.FileDescriptor;
 import java.io.IOException;
 
+/* loaded from: classes.dex */
 public class MediaEncoderFilter extends Filter {
     private static final int NO_AUDIO_SOURCE = -1;
     private static final String TAG = "MediaEncoderFilter";
     @GenerateFieldPort(hasDefault = true, name = "audioSource")
-    private int mAudioSource = -1;
-    private boolean mCaptureTimeLapse = false;
+    private int mAudioSource;
+    private boolean mCaptureTimeLapse;
     @GenerateFieldPort(hasDefault = true, name = "errorListener")
-    private MediaRecorder.OnErrorListener mErrorListener = null;
+    private MediaRecorder.OnErrorListener mErrorListener;
     @GenerateFieldPort(hasDefault = true, name = "outputFileDescriptor")
-    private FileDescriptor mFd = null;
+    private FileDescriptor mFd;
     @GenerateFieldPort(hasDefault = true, name = "framerate")
-    private int mFps = 30;
+    private int mFps;
     @GenerateFieldPort(hasDefault = true, name = "height")
-    private int mHeight = 0;
+    private int mHeight;
     @GenerateFieldPort(hasDefault = true, name = "infoListener")
-    private MediaRecorder.OnInfoListener mInfoListener = null;
-    private long mLastTimeLapseFrameRealTimestampNs = 0;
-    private boolean mLogVerbose = Log.isLoggable(TAG, 2);
+    private MediaRecorder.OnInfoListener mInfoListener;
+    private long mLastTimeLapseFrameRealTimestampNs;
+    private boolean mLogVerbose;
     @GenerateFieldPort(hasDefault = true, name = "maxDurationMs")
-    private int mMaxDurationMs = 0;
+    private int mMaxDurationMs;
     @GenerateFieldPort(hasDefault = true, name = "maxFileSize")
-    private long mMaxFileSize = 0;
+    private long mMaxFileSize;
     private MediaRecorder mMediaRecorder;
-    private int mNumFramesEncoded = 0;
+    private int mNumFramesEncoded;
     @GenerateFieldPort(hasDefault = true, name = "orientationHint")
-    private int mOrientationHint = 0;
+    private int mOrientationHint;
     @GenerateFieldPort(hasDefault = true, name = "outputFile")
-    private String mOutputFile = new String("/sdcard/MediaEncoderOut.mp4");
+    private String mOutputFile;
     @GenerateFieldPort(hasDefault = true, name = "outputFormat")
-    private int mOutputFormat = 2;
+    private int mOutputFormat;
     @GenerateFieldPort(hasDefault = true, name = "recordingProfile")
-    private CamcorderProfile mProfile = null;
+    private CamcorderProfile mProfile;
     private ShaderProgram mProgram;
     @GenerateFieldPort(hasDefault = true, name = "recording")
-    private boolean mRecording = true;
-    private boolean mRecordingActive = false;
+    private boolean mRecording;
+    private boolean mRecordingActive;
     @GenerateFieldPort(hasDefault = true, name = "recordingDoneListener")
-    private OnRecordingDoneListener mRecordingDoneListener = null;
+    private OnRecordingDoneListener mRecordingDoneListener;
     private GLFrame mScreen;
     @GenerateFieldPort(hasDefault = true, name = "inputRegion")
-    private Quad mSourceRegion = new Quad(new Point(0.0f, 0.0f), new Point(1.0f, 0.0f), new Point(0.0f, 1.0f), new Point(1.0f, 1.0f));
+    private Quad mSourceRegion;
     private int mSurfaceId;
     @GenerateFieldPort(hasDefault = true, name = "timelapseRecordingIntervalUs")
-    private long mTimeBetweenTimeLapseFrameCaptureUs = 0;
-    private long mTimestampNs = 0;
+    private long mTimeBetweenTimeLapseFrameCaptureUs;
+    private long mTimestampNs;
     @GenerateFieldPort(hasDefault = true, name = "videoEncoder")
-    private int mVideoEncoder = 2;
+    private int mVideoEncoder;
     @GenerateFieldPort(hasDefault = true, name = "width")
-    private int mWidth = 0;
+    private int mWidth;
 
+    /* loaded from: classes.dex */
     public interface OnRecordingDoneListener {
         void onRecordingDone();
     }
 
     public MediaEncoderFilter(String name) {
         super(name);
+        this.mRecording = true;
+        this.mOutputFile = new String("/sdcard/MediaEncoderOut.mp4");
+        this.mFd = null;
+        this.mAudioSource = -1;
+        this.mInfoListener = null;
+        this.mErrorListener = null;
+        this.mRecordingDoneListener = null;
+        this.mOrientationHint = 0;
+        this.mProfile = null;
+        this.mWidth = 0;
+        this.mHeight = 0;
+        this.mFps = 30;
+        this.mOutputFormat = 2;
+        this.mVideoEncoder = 2;
+        this.mMaxFileSize = 0L;
+        this.mMaxDurationMs = 0;
+        this.mTimeBetweenTimeLapseFrameCaptureUs = 0L;
+        this.mRecordingActive = false;
+        this.mTimestampNs = 0L;
+        this.mLastTimeLapseFrameRealTimestampNs = 0L;
+        this.mNumFramesEncoded = 0;
+        this.mCaptureTimeLapse = false;
+        Point bl = new Point(0.0f, 0.0f);
+        Point br = new Point(1.0f, 0.0f);
+        Point tl = new Point(0.0f, 1.0f);
+        Point tr = new Point(1.0f, 1.0f);
+        this.mSourceRegion = new Quad(bl, br, tl, tr);
+        this.mLogVerbose = Log.isLoggable(TAG, 2);
     }
 
+    @Override // android.filterfw.core.Filter
     public void setupPorts() {
         addMaskedInputPort("videoframe", ImageFormat.create(3, 3));
     }
 
+    @Override // android.filterfw.core.Filter
     public void fieldPortValueUpdated(String name, FilterContext context) {
         if (this.mLogVerbose) {
-            Log.v(TAG, "Port " + name + " has been updated");
+            Log.m66v(TAG, "Port " + name + " has been updated");
         }
-        if (!name.equals("recording")) {
-            if (name.equals("inputRegion")) {
-                if (isOpen()) {
-                    updateSourceRegion();
-                }
-            } else if (isOpen() && this.mRecordingActive) {
-                throw new RuntimeException("Cannot change recording parameters when the filter is recording!");
+        if (name.equals("recording")) {
+            return;
+        }
+        if (name.equals("inputRegion")) {
+            if (isOpen()) {
+                updateSourceRegion();
             }
+        } else if (isOpen() && this.mRecordingActive) {
+            throw new RuntimeException("Cannot change recording parameters when the filter is recording!");
         }
     }
 
     private void updateSourceRegion() {
         Quad flippedRegion = new Quad();
-        flippedRegion.p0 = this.mSourceRegion.p2;
-        flippedRegion.p1 = this.mSourceRegion.p3;
-        flippedRegion.p2 = this.mSourceRegion.p0;
-        flippedRegion.p3 = this.mSourceRegion.p1;
+        flippedRegion.f34p0 = this.mSourceRegion.f36p2;
+        flippedRegion.f35p1 = this.mSourceRegion.f37p3;
+        flippedRegion.f36p2 = this.mSourceRegion.f34p0;
+        flippedRegion.f37p3 = this.mSourceRegion.f35p1;
         this.mProgram.setSourceRegion(flippedRegion);
     }
 
@@ -132,22 +165,24 @@ public class MediaEncoderFilter extends Filter {
         try {
             this.mMediaRecorder.setMaxFileSize(this.mMaxFileSize);
         } catch (Exception e) {
-            Log.w(TAG, "Setting maxFileSize on MediaRecorder unsuccessful! " + e.getMessage());
+            Log.m64w(TAG, "Setting maxFileSize on MediaRecorder unsuccessful! " + e.getMessage());
         }
         this.mMediaRecorder.setMaxDuration(this.mMaxDurationMs);
     }
 
+    @Override // android.filterfw.core.Filter
     public void prepare(FilterContext context) {
         if (this.mLogVerbose) {
-            Log.v(TAG, "Preparing");
+            Log.m66v(TAG, "Preparing");
         }
         this.mProgram = ShaderProgram.createIdentity(context);
         this.mRecordingActive = false;
     }
 
+    @Override // android.filterfw.core.Filter
     public void open(FilterContext context) {
         if (this.mLogVerbose) {
-            Log.v(TAG, "Opening");
+            Log.m66v(TAG, "Opening");
         }
         updateSourceRegion();
         if (this.mRecording) {
@@ -156,38 +191,38 @@ public class MediaEncoderFilter extends Filter {
     }
 
     private void startRecording(FilterContext context) {
-        int height;
         int width;
+        int height;
         if (this.mLogVerbose) {
-            Log.v(TAG, "Starting recording");
+            Log.m66v(TAG, "Starting recording");
         }
         MutableFrameFormat screenFormat = new MutableFrameFormat(2, 3);
         screenFormat.setBytesPerSample(4);
         boolean widthHeightSpecified = this.mWidth > 0 && this.mHeight > 0;
-        if (this.mProfile == null || widthHeightSpecified) {
-            width = this.mWidth;
-            height = this.mHeight;
-        } else {
+        if (this.mProfile != null && !widthHeightSpecified) {
             width = this.mProfile.videoFrameWidth;
             height = this.mProfile.videoFrameHeight;
+        } else {
+            width = this.mWidth;
+            height = this.mHeight;
         }
         screenFormat.setDimensions(width, height);
-        this.mScreen = (GLFrame) context.getFrameManager().newBoundFrame(screenFormat, 101, 0);
+        this.mScreen = (GLFrame) context.getFrameManager().newBoundFrame(screenFormat, 101, 0L);
         this.mMediaRecorder = new MediaRecorder();
         updateMediaRecorderParams();
         try {
             this.mMediaRecorder.prepare();
             this.mMediaRecorder.start();
             if (this.mLogVerbose) {
-                Log.v(TAG, "Open: registering surface from Mediarecorder");
+                Log.m66v(TAG, "Open: registering surface from Mediarecorder");
             }
             this.mSurfaceId = context.getGLEnvironment().registerSurfaceFromMediaRecorder(this.mMediaRecorder);
             this.mNumFramesEncoded = 0;
             this.mRecordingActive = true;
-        } catch (IllegalStateException e) {
-            throw e;
-        } catch (IOException e2) {
-            throw new RuntimeException("IOException inMediaRecorder.prepare()!", e2);
+        } catch (IOException e) {
+            throw new RuntimeException("IOException inMediaRecorder.prepare()!", e);
+        } catch (IllegalStateException e2) {
+            throw e2;
         } catch (Exception e3) {
             throw new RuntimeException("Unknown Exception inMediaRecorder.prepare()!", e3);
         }
@@ -198,27 +233,29 @@ public class MediaEncoderFilter extends Filter {
             this.mLastTimeLapseFrameRealTimestampNs = timestampNs;
             this.mTimestampNs = timestampNs;
             if (this.mLogVerbose) {
-                Log.v(TAG, "timelapse: FIRST frame, last real t= " + this.mLastTimeLapseFrameRealTimestampNs + ", setting t = " + this.mTimestampNs);
+                Log.m66v(TAG, "timelapse: FIRST frame, last real t= " + this.mLastTimeLapseFrameRealTimestampNs + ", setting t = " + this.mTimestampNs);
             }
             return false;
-        } else if (this.mNumFramesEncoded < 2 || timestampNs >= this.mLastTimeLapseFrameRealTimestampNs + (this.mTimeBetweenTimeLapseFrameCaptureUs * 1000)) {
+        } else if (this.mNumFramesEncoded >= 2 && timestampNs < this.mLastTimeLapseFrameRealTimestampNs + (this.mTimeBetweenTimeLapseFrameCaptureUs * 1000)) {
             if (this.mLogVerbose) {
-                Log.v(TAG, "timelapse: encoding frame, Timestamp t = " + timestampNs + ", last real t= " + this.mLastTimeLapseFrameRealTimestampNs + ", interval = " + this.mTimeBetweenTimeLapseFrameCaptureUs);
+                Log.m66v(TAG, "timelapse: skipping intermediate frame");
+                return true;
             }
-            this.mLastTimeLapseFrameRealTimestampNs = timestampNs;
-            this.mTimestampNs += 1000000000 / ((long) this.mFps);
-            if (this.mLogVerbose) {
-                Log.v(TAG, "timelapse: encoding frame, setting t = " + this.mTimestampNs + ", delta t = " + (1000000000 / ((long) this.mFps)) + ", fps = " + this.mFps);
-            }
-            return false;
-        } else if (!this.mLogVerbose) {
             return true;
         } else {
-            Log.v(TAG, "timelapse: skipping intermediate frame");
-            return true;
+            if (this.mLogVerbose) {
+                Log.m66v(TAG, "timelapse: encoding frame, Timestamp t = " + timestampNs + ", last real t= " + this.mLastTimeLapseFrameRealTimestampNs + ", interval = " + this.mTimeBetweenTimeLapseFrameCaptureUs);
+            }
+            this.mLastTimeLapseFrameRealTimestampNs = timestampNs;
+            this.mTimestampNs += 1000000000 / this.mFps;
+            if (this.mLogVerbose) {
+                Log.m66v(TAG, "timelapse: encoding frame, setting t = " + this.mTimestampNs + ", delta t = " + (1000000000 / this.mFps) + ", fps = " + this.mFps);
+            }
+            return false;
         }
     }
 
+    @Override // android.filterfw.core.Filter
     public void process(FilterContext context) {
         GLEnvironment glEnv = context.getGLEnvironment();
         Frame input = pullInput("videoframe");
@@ -229,13 +266,15 @@ public class MediaEncoderFilter extends Filter {
             stopRecording(context);
         }
         if (this.mRecordingActive) {
-            if (!this.mCaptureTimeLapse) {
+            if (this.mCaptureTimeLapse) {
+                if (skipFrameAndModifyTimestamp(input.getTimestamp())) {
+                    return;
+                }
+            } else {
                 this.mTimestampNs = input.getTimestamp();
-            } else if (skipFrameAndModifyTimestamp(input.getTimestamp())) {
-                return;
             }
             glEnv.activateSurfaceWithId(this.mSurfaceId);
-            this.mProgram.process(input, (Frame) this.mScreen);
+            this.mProgram.process(input, this.mScreen);
             glEnv.setSurfaceTimestamp(this.mTimestampNs);
             glEnv.swapBuffers();
             this.mNumFramesEncoded++;
@@ -244,13 +283,13 @@ public class MediaEncoderFilter extends Filter {
 
     private void stopRecording(FilterContext context) {
         if (this.mLogVerbose) {
-            Log.v(TAG, "Stopping recording");
+            Log.m66v(TAG, "Stopping recording");
         }
         this.mRecordingActive = false;
         this.mNumFramesEncoded = 0;
         GLEnvironment glEnv = context.getGLEnvironment();
         if (this.mLogVerbose) {
-            Log.v(TAG, String.format("Unregistering surface %d", new Object[]{Integer.valueOf(this.mSurfaceId)}));
+            Log.m66v(TAG, String.format("Unregistering surface %d", Integer.valueOf(this.mSurfaceId)));
         }
         glEnv.unregisterSurfaceId(this.mSurfaceId);
         try {
@@ -267,15 +306,17 @@ public class MediaEncoderFilter extends Filter {
         }
     }
 
+    @Override // android.filterfw.core.Filter
     public void close(FilterContext context) {
         if (this.mLogVerbose) {
-            Log.v(TAG, "Closing");
+            Log.m66v(TAG, "Closing");
         }
         if (this.mRecordingActive) {
             stopRecording(context);
         }
     }
 
+    @Override // android.filterfw.core.Filter
     public void tearDown(FilterContext context) {
         if (this.mMediaRecorder != null) {
             this.mMediaRecorder.release();

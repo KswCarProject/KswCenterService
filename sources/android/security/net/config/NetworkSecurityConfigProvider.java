@@ -5,8 +5,9 @@ import java.security.Provider;
 import java.security.Security;
 import libcore.net.NetworkSecurityPolicy;
 
+/* loaded from: classes3.dex */
 public final class NetworkSecurityConfigProvider extends Provider {
-    private static final String PREFIX = (NetworkSecurityConfigProvider.class.getPackage().getName() + ".");
+    private static final String PREFIX = NetworkSecurityConfigProvider.class.getPackage().getName() + ".";
 
     public NetworkSecurityConfigProvider() {
         super("AndroidNSSP", 1.0d, "Android Network Security Policy Provider");
@@ -18,10 +19,9 @@ public final class NetworkSecurityConfigProvider extends Provider {
         ApplicationConfig config = new ApplicationConfig(new ManifestConfigSource(context));
         ApplicationConfig.setDefaultInstance(config);
         int pos = Security.insertProviderAt(new NetworkSecurityConfigProvider(), 1);
-        if (pos == 1) {
-            NetworkSecurityPolicy.setInstance(new ConfigNetworkSecurityPolicy(config));
-            return;
+        if (pos != 1) {
+            throw new RuntimeException("Failed to install provider as highest priority provider. Provider was installed at position " + pos);
         }
-        throw new RuntimeException("Failed to install provider as highest priority provider. Provider was installed at position " + pos);
+        NetworkSecurityPolicy.setInstance(new ConfigNetworkSecurityPolicy(config));
     }
 }

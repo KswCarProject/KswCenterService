@@ -1,8 +1,9 @@
 package android.service.autofill;
 
-import android.os.Bundle;
+import android.p007os.Bundle;
 import android.util.ArrayMap;
 
+/* loaded from: classes3.dex */
 public interface FieldClassificationUserData {
     String[] getCategoryIds();
 

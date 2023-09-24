@@ -9,12 +9,10 @@ import android.content.res.Resources;
 import android.icu.text.MeasureFormat;
 import android.icu.util.Measure;
 import android.icu.util.MeasureUnit;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Formatter;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -22,6 +20,7 @@ import libcore.icu.DateIntervalFormat;
 import libcore.icu.LocaleData;
 import libcore.icu.RelativeDateTimeFormatter;
 
+/* loaded from: classes4.dex */
 public class DateUtils {
     @Deprecated
     public static final String ABBREV_MONTH_FORMAT = "%b";
@@ -83,13 +82,13 @@ public class DateUtils {
     private static String sElapsedFormatHMMSS;
     private static String sElapsedFormatMMSS;
     private static Configuration sLastConfig;
-    private static final Object sLock = new Object();
     private static Time sNowTime;
     private static Time sThenTime;
-    @Deprecated
-    public static final int[] sameMonthTable = null;
+    private static final Object sLock = new Object();
     @Deprecated
     public static final int[] sameYearTable = null;
+    @Deprecated
+    public static final int[] sameMonthTable = null;
 
     @Deprecated
     public static String getDayOfWeekString(int dayOfWeek, int abbrev) {
@@ -103,10 +102,10 @@ public class DateUtils {
             names = d.shortWeekdayNames;
         } else if (abbrev == 40) {
             names = d.shortWeekdayNames;
-        } else if (abbrev != 50) {
-            names = d.shortWeekdayNames;
-        } else {
+        } else if (abbrev == 50) {
             names = d.tinyWeekdayNames;
+        } else {
+            names = d.shortWeekdayNames;
         }
         return names[dayOfWeek];
     }
@@ -128,16 +127,16 @@ public class DateUtils {
             names = d.shortMonthNames;
         } else if (abbrev == 40) {
             names = d.shortMonthNames;
-        } else if (abbrev != 50) {
-            names = d.shortMonthNames;
-        } else {
+        } else if (abbrev == 50) {
             names = d.tinyMonthNames;
+        } else {
+            names = d.shortMonthNames;
         }
         return names[month];
     }
 
     public static CharSequence getRelativeTimeSpanString(long startTime) {
-        return getRelativeTimeSpanString(startTime, System.currentTimeMillis(), 60000);
+        return getRelativeTimeSpanString(startTime, System.currentTimeMillis(), 60000L);
     }
 
     public static CharSequence getRelativeTimeSpanString(long time, long now, long minResolution) {
@@ -167,8 +166,8 @@ public class DateUtils {
         Configuration cfg = r.getConfiguration();
         if (sLastConfig == null || !sLastConfig.equals(cfg)) {
             sLastConfig = cfg;
-            sElapsedFormatMMSS = r.getString(R.string.elapsed_time_short_format_mm_ss);
-            sElapsedFormatHMMSS = r.getString(R.string.elapsed_time_short_format_h_mm_ss);
+            sElapsedFormatMMSS = r.getString(C3132R.string.elapsed_time_short_format_mm_ss);
+            sElapsedFormatHMMSS = r.getString(C3132R.string.elapsed_time_short_format_h_mm_ss);
         }
     }
 
@@ -184,23 +183,26 @@ public class DateUtils {
             width = MeasureFormat.FormatWidth.WIDE;
         } else if (abbrev == 20 || abbrev == 30 || abbrev == 40) {
             width = MeasureFormat.FormatWidth.SHORT;
-        } else if (abbrev != 50) {
-            width = MeasureFormat.FormatWidth.WIDE;
-        } else {
+        } else if (abbrev == 50) {
             width = MeasureFormat.FormatWidth.NARROW;
+        } else {
+            width = MeasureFormat.FormatWidth.WIDE;
         }
         MeasureFormat formatter = MeasureFormat.getInstance(Locale.getDefault(), width);
         if (millis >= 3600000) {
-            return formatter.format(new Measure(Integer.valueOf((int) ((AlarmManager.INTERVAL_HALF_HOUR + millis) / 3600000)), MeasureUnit.HOUR));
+            int hours = (int) ((AlarmManager.INTERVAL_HALF_HOUR + millis) / 3600000);
+            return formatter.format(new Measure(Integer.valueOf(hours), MeasureUnit.HOUR));
+        } else if (millis >= 60000) {
+            int minutes = (int) ((JobInfo.DEFAULT_INITIAL_BACKOFF_MILLIS + millis) / 60000);
+            return formatter.format(new Measure(Integer.valueOf(minutes), MeasureUnit.MINUTE));
+        } else {
+            int seconds = (int) ((500 + millis) / 1000);
+            return formatter.format(new Measure(Integer.valueOf(seconds), MeasureUnit.SECOND));
         }
-        if (millis >= 60000) {
-            return formatter.format(new Measure(Integer.valueOf((int) ((JobInfo.DEFAULT_INITIAL_BACKOFF_MILLIS + millis) / 60000)), MeasureUnit.MINUTE));
-        }
-        return formatter.format(new Measure(Integer.valueOf((int) ((500 + millis) / 1000)), MeasureUnit.SECOND));
     }
 
     public static String formatElapsedTime(long elapsedSeconds) {
-        return formatElapsedTime((StringBuilder) null, elapsedSeconds);
+        return formatElapsedTime(null, elapsedSeconds);
     }
 
     public static String formatElapsedTime(StringBuilder recycle, long elapsedSeconds) {
@@ -224,25 +226,22 @@ public class DateUtils {
         } else {
             sb.setLength(0);
         }
-        Formatter f = new Formatter(sb, Locale.getDefault());
+        java.util.Formatter f = new java.util.Formatter(sb, Locale.getDefault());
         initFormatStrings();
-        if (hours > 0) {
-            return f.format(sElapsedFormatHMMSS, new Object[]{Long.valueOf(hours), Long.valueOf(minutes), Long.valueOf(seconds)}).toString();
-        }
-        return f.format(sElapsedFormatMMSS, new Object[]{Long.valueOf(minutes), Long.valueOf(seconds)}).toString();
+        return hours > 0 ? f.format(sElapsedFormatHMMSS, Long.valueOf(hours), Long.valueOf(minutes), Long.valueOf(seconds)).toString() : f.format(sElapsedFormatMMSS, Long.valueOf(minutes), Long.valueOf(seconds)).toString();
     }
 
     public static final CharSequence formatSameDayTime(long then, long now, int dateStyle, int timeStyle) {
-        DateFormat f;
+        java.text.DateFormat f;
         Calendar thenCal = new GregorianCalendar();
         thenCal.setTimeInMillis(then);
         Date thenDate = thenCal.getTime();
         Calendar nowCal = new GregorianCalendar();
         nowCal.setTimeInMillis(now);
         if (thenCal.get(1) == nowCal.get(1) && thenCal.get(2) == nowCal.get(2) && thenCal.get(5) == nowCal.get(5)) {
-            f = DateFormat.getTimeInstance(timeStyle);
+            f = java.text.DateFormat.getTimeInstance(timeStyle);
         } else {
-            f = DateFormat.getDateInstance(dateStyle);
+            f = java.text.DateFormat.getDateInstance(dateStyle);
         }
         return f.format(thenDate);
     }
@@ -258,19 +257,21 @@ public class DateUtils {
     }
 
     public static String formatDateRange(Context context, long startMillis, long endMillis, int flags) {
-        return formatDateRange(context, new Formatter(new StringBuilder(50), Locale.getDefault()), startMillis, endMillis, flags).toString();
+        java.util.Formatter f = new java.util.Formatter(new StringBuilder(50), Locale.getDefault());
+        return formatDateRange(context, f, startMillis, endMillis, flags).toString();
     }
 
-    public static Formatter formatDateRange(Context context, Formatter formatter, long startMillis, long endMillis, int flags) {
-        return formatDateRange(context, formatter, startMillis, endMillis, flags, (String) null);
+    public static java.util.Formatter formatDateRange(Context context, java.util.Formatter formatter, long startMillis, long endMillis, int flags) {
+        return formatDateRange(context, formatter, startMillis, endMillis, flags, null);
     }
 
-    public static Formatter formatDateRange(Context context, Formatter formatter, long startMillis, long endMillis, int flags, String timeZone) {
+    public static java.util.Formatter formatDateRange(Context context, java.util.Formatter formatter, long startMillis, long endMillis, int flags, String timeZone) {
         if ((flags & 193) == 1) {
             flags |= DateFormat.is24HourFormat(context) ? 128 : 64;
         }
+        String range = DateIntervalFormat.formatDateRange(startMillis, endMillis, flags, timeZone);
         try {
-            formatter.out().append(DateIntervalFormat.formatDateRange(startMillis, endMillis, flags, timeZone));
+            formatter.out().append(range);
             return formatter;
         } catch (IOException impossible) {
             throw new AssertionError(impossible);
@@ -284,9 +285,8 @@ public class DateUtils {
     public static CharSequence getRelativeTimeSpanString(Context c, long millis, boolean withPreposition) {
         String result;
         int flags;
-        long j = millis;
         long now = System.currentTimeMillis();
-        long span = Math.abs(now - j);
+        long span = Math.abs(now - millis);
         synchronized (DateUtils.class) {
             if (sNowTime == null) {
                 sNowTime = new Time();
@@ -295,19 +295,20 @@ public class DateUtils {
                 sThenTime = new Time();
             }
             sNowTime.set(now);
-            sThenTime.set(j);
+            sThenTime.set(millis);
             if (span < 86400000 && sNowTime.weekDay == sThenTime.weekDay) {
                 result = formatDateRange(c, millis, millis, 1);
-                flags = R.string.preposition_for_time;
+                flags = C3132R.string.preposition_for_time;
             } else if (sNowTime.year != sThenTime.year) {
                 result = formatDateRange(c, millis, millis, 131092);
-                flags = R.string.preposition_for_date;
+                flags = C3132R.string.preposition_for_date;
             } else {
                 result = formatDateRange(c, millis, millis, 65552);
-                flags = R.string.preposition_for_date;
+                flags = C3132R.string.preposition_for_date;
             }
             if (withPreposition) {
-                result = c.getResources().getString(flags, result);
+                Resources res = c.getResources();
+                result = res.getString(flags, result);
             }
         }
         return result;

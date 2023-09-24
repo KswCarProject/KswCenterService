@@ -2,13 +2,14 @@ package com.android.internal.widget;
 
 import android.annotation.UnsupportedAppUsage;
 import android.content.Intent;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.widget.RemoteViews;
 
+/* loaded from: classes4.dex */
 public interface IRemoteViewsFactory extends IInterface {
     @UnsupportedAppUsage
     int getCount() throws RemoteException;
@@ -38,49 +39,62 @@ public interface IRemoteViewsFactory extends IInterface {
 
     void onDestroy(Intent intent) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IRemoteViewsFactory {
+        @Override // com.android.internal.widget.IRemoteViewsFactory
         public void onDataSetChanged() throws RemoteException {
         }
 
+        @Override // com.android.internal.widget.IRemoteViewsFactory
         public void onDataSetChangedAsync() throws RemoteException {
         }
 
+        @Override // com.android.internal.widget.IRemoteViewsFactory
         public void onDestroy(Intent intent) throws RemoteException {
         }
 
+        @Override // com.android.internal.widget.IRemoteViewsFactory
         public int getCount() throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.widget.IRemoteViewsFactory
         public RemoteViews getViewAt(int position) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.widget.IRemoteViewsFactory
         public RemoteViews getLoadingView() throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.widget.IRemoteViewsFactory
         public int getViewTypeCount() throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.widget.IRemoteViewsFactory
         public long getItemId(int position) throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // com.android.internal.widget.IRemoteViewsFactory
         public boolean hasStableIds() throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.widget.IRemoteViewsFactory
         public boolean isCreated() throws RemoteException {
             return false;
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IRemoteViewsFactory {
         private static final String DESCRIPTOR = "com.android.internal.widget.IRemoteViewsFactory";
         static final int TRANSACTION_getCount = 4;
@@ -103,12 +117,13 @@ public interface IRemoteViewsFactory extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IRemoteViewsFactory)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IRemoteViewsFactory)) {
+                return (IRemoteViewsFactory) iin;
             }
-            return (IRemoteViewsFactory) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -140,93 +155,97 @@ public interface IRemoteViewsFactory extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
             Intent _arg0;
-            if (code != 1598968902) {
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        onDataSetChanged();
-                        reply.writeNoException();
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        onDataSetChangedAsync();
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = Intent.CREATOR.createFromParcel(data);
-                        } else {
-                            _arg0 = null;
-                        }
-                        onDestroy(_arg0);
-                        return true;
-                    case 4:
-                        data.enforceInterface(DESCRIPTOR);
-                        int _result = getCount();
-                        reply.writeNoException();
-                        reply.writeInt(_result);
-                        return true;
-                    case 5:
-                        data.enforceInterface(DESCRIPTOR);
-                        RemoteViews _result2 = getViewAt(data.readInt());
-                        reply.writeNoException();
-                        if (_result2 != null) {
-                            reply.writeInt(1);
-                            _result2.writeToParcel(reply, 1);
-                        } else {
-                            reply.writeInt(0);
-                        }
-                        return true;
-                    case 6:
-                        data.enforceInterface(DESCRIPTOR);
-                        RemoteViews _result3 = getLoadingView();
-                        reply.writeNoException();
-                        if (_result3 != null) {
-                            reply.writeInt(1);
-                            _result3.writeToParcel(reply, 1);
-                        } else {
-                            reply.writeInt(0);
-                        }
-                        return true;
-                    case 7:
-                        data.enforceInterface(DESCRIPTOR);
-                        int _result4 = getViewTypeCount();
-                        reply.writeNoException();
-                        reply.writeInt(_result4);
-                        return true;
-                    case 8:
-                        data.enforceInterface(DESCRIPTOR);
-                        long _result5 = getItemId(data.readInt());
-                        reply.writeNoException();
-                        reply.writeLong(_result5);
-                        return true;
-                    case 9:
-                        data.enforceInterface(DESCRIPTOR);
-                        boolean _result6 = hasStableIds();
-                        reply.writeNoException();
-                        reply.writeInt(_result6);
-                        return true;
-                    case 10:
-                        data.enforceInterface(DESCRIPTOR);
-                        boolean _result7 = isCreated();
-                        reply.writeNoException();
-                        reply.writeInt(_result7);
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    onDataSetChanged();
+                    reply.writeNoException();
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    onDataSetChangedAsync();
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg0 = Intent.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg0 = null;
+                    }
+                    onDestroy(_arg0);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result = getCount();
+                    reply.writeNoException();
+                    reply.writeInt(_result);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    RemoteViews _result2 = getViewAt(_arg02);
+                    reply.writeNoException();
+                    if (_result2 != null) {
+                        reply.writeInt(1);
+                        _result2.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    RemoteViews _result3 = getLoadingView();
+                    reply.writeNoException();
+                    if (_result3 != null) {
+                        reply.writeInt(1);
+                        _result3.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result4 = getViewTypeCount();
+                    reply.writeNoException();
+                    reply.writeInt(_result4);
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg03 = data.readInt();
+                    long _result5 = getItemId(_arg03);
+                    reply.writeNoException();
+                    reply.writeLong(_result5);
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean hasStableIds = hasStableIds();
+                    reply.writeNoException();
+                    reply.writeInt(hasStableIds ? 1 : 0);
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isCreated = isCreated();
+                    reply.writeNoException();
+                    reply.writeInt(isCreated ? 1 : 0);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IRemoteViewsFactory {
             public static IRemoteViewsFactory sDefaultImpl;
             private IBinder mRemote;
@@ -235,6 +254,7 @@ public interface IRemoteViewsFactory extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -243,31 +263,31 @@ public interface IRemoteViewsFactory extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // com.android.internal.widget.IRemoteViewsFactory
             public void onDataSetChanged() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(1, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().onDataSetChanged();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().onDataSetChanged();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.widget.IRemoteViewsFactory
             public void onDataSetChangedAsync() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onDataSetChangedAsync();
                     }
                 } finally {
@@ -275,6 +295,7 @@ public interface IRemoteViewsFactory extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.widget.IRemoteViewsFactory
             public void onDestroy(Intent intent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -285,9 +306,8 @@ public interface IRemoteViewsFactory extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onDestroy(intent);
                     }
                 } finally {
@@ -295,18 +315,18 @@ public interface IRemoteViewsFactory extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.widget.IRemoteViewsFactory
             public int getCount() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(4, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCount();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -314,6 +334,7 @@ public interface IRemoteViewsFactory extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.widget.IRemoteViewsFactory
             public RemoteViews getViewAt(int position) throws RemoteException {
                 RemoteViews _result;
                 Parcel _data = Parcel.obtain();
@@ -321,7 +342,8 @@ public interface IRemoteViewsFactory extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(position);
-                    if (!this.mRemote.transact(5, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getViewAt(position);
                     }
                     _reply.readException();
@@ -330,23 +352,22 @@ public interface IRemoteViewsFactory extends IInterface {
                     } else {
                         _result = null;
                     }
-                    RemoteViews _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.widget.IRemoteViewsFactory
             public RemoteViews getLoadingView() throws RemoteException {
                 RemoteViews _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(6, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getLoadingView();
                     }
                     _reply.readException();
@@ -355,28 +376,6 @@ public interface IRemoteViewsFactory extends IInterface {
                     } else {
                         _result = null;
                     }
-                    RemoteViews _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public int getViewTypeCount() throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(7, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
-                        return Stub.getDefaultImpl().getViewTypeCount();
-                    }
-                    _reply.readException();
-                    int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -384,19 +383,38 @@ public interface IRemoteViewsFactory extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.widget.IRemoteViewsFactory
+            public int getViewTypeCount() throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        return Stub.getDefaultImpl().getViewTypeCount();
+                    }
+                    _reply.readException();
+                    int _result = _reply.readInt();
+                    return _result;
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // com.android.internal.widget.IRemoteViewsFactory
             public long getItemId(int position) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(position);
-                    if (!this.mRemote.transact(8, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getItemId(position);
                     }
                     _reply.readException();
                     long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -404,46 +422,38 @@ public interface IRemoteViewsFactory extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.widget.IRemoteViewsFactory
             public boolean hasStableIds() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(9, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(9, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().hasStableIds();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.widget.IRemoteViewsFactory
             public boolean isCreated() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(10, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(10, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isCreated();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -452,11 +462,11 @@ public interface IRemoteViewsFactory extends IInterface {
         }
 
         public static boolean setDefaultImpl(IRemoteViewsFactory impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IRemoteViewsFactory getDefaultImpl() {

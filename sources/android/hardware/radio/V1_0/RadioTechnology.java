@@ -3,6 +3,7 @@ package android.hardware.radio.V1_0;
 import com.android.internal.telephony.IccCardConstants;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class RadioTechnology {
     public static final int EDGE = 2;
     public static final int EHRPD = 13;

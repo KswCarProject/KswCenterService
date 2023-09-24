@@ -8,20 +8,18 @@ import android.util.Log;
 import com.android.internal.annotations.GuardedBy;
 import com.android.internal.annotations.VisibleForTesting;
 
+/* loaded from: classes4.dex */
 public class NetworkPinner extends ConnectivityManager.NetworkCallback {
-    /* access modifiers changed from: private */
-    public static final String TAG = NetworkPinner.class.getSimpleName();
-    /* access modifiers changed from: private */
     @GuardedBy({"sLock"})
-    public static ConnectivityManager sCM;
-    /* access modifiers changed from: private */
+    private static ConnectivityManager sCM;
     @GuardedBy({"sLock"})
-    public static Callback sCallback;
-    @VisibleForTesting
-    protected static final Object sLock = new Object();
+    private static Callback sCallback;
     @GuardedBy({"sLock"})
     @VisibleForTesting
     protected static Network sNetwork;
+    private static final String TAG = NetworkPinner.class.getSimpleName();
+    @VisibleForTesting
+    protected static final Object sLock = new Object();
 
     private static void maybeInitConnectivityManager(Context context) {
         if (sCM == null) {
@@ -32,34 +30,39 @@ public class NetworkPinner extends ConnectivityManager.NetworkCallback {
         }
     }
 
+    /* loaded from: classes4.dex */
     private static class Callback extends ConnectivityManager.NetworkCallback {
         private Callback() {
         }
 
+        @Override // android.net.ConnectivityManager.NetworkCallback
         public void onAvailable(Network network) {
             synchronized (NetworkPinner.sLock) {
-                if (this == NetworkPinner.sCallback) {
-                    if (NetworkPinner.sCM.getBoundNetworkForProcess() == null && NetworkPinner.sNetwork == null) {
-                        NetworkPinner.sCM.bindProcessToNetwork(network);
-                        NetworkPinner.sNetwork = network;
-                        String access$200 = NetworkPinner.TAG;
-                        Log.d(access$200, "Wifi alternate reality enabled on network " + network);
-                    }
-                    NetworkPinner.sLock.notify();
+                if (this != NetworkPinner.sCallback) {
+                    return;
                 }
+                if (NetworkPinner.sCM.getBoundNetworkForProcess() == null && NetworkPinner.sNetwork == null) {
+                    NetworkPinner.sCM.bindProcessToNetwork(network);
+                    NetworkPinner.sNetwork = network;
+                    String str = NetworkPinner.TAG;
+                    Log.m72d(str, "Wifi alternate reality enabled on network " + network);
+                }
+                NetworkPinner.sLock.notify();
             }
         }
 
+        @Override // android.net.ConnectivityManager.NetworkCallback
         public void onLost(Network network) {
             synchronized (NetworkPinner.sLock) {
-                if (this == NetworkPinner.sCallback) {
-                    if (network.equals(NetworkPinner.sNetwork) && network.equals(NetworkPinner.sCM.getBoundNetworkForProcess())) {
-                        NetworkPinner.unpin();
-                        String access$200 = NetworkPinner.TAG;
-                        Log.d(access$200, "Wifi alternate reality disabled on network " + network);
-                    }
-                    NetworkPinner.sLock.notify();
+                if (this != NetworkPinner.sCallback) {
+                    return;
                 }
+                if (network.equals(NetworkPinner.sNetwork) && network.equals(NetworkPinner.sCM.getBoundNetworkForProcess())) {
+                    NetworkPinner.unpin();
+                    String str = NetworkPinner.TAG;
+                    Log.m72d(str, "Wifi alternate reality disabled on network " + network);
+                }
+                NetworkPinner.sLock.notify();
             }
         }
     }
@@ -70,9 +73,9 @@ public class NetworkPinner extends ConnectivityManager.NetworkCallback {
                 maybeInitConnectivityManager(context);
                 sCallback = new Callback();
                 try {
-                    sCM.registerNetworkCallback(request, (ConnectivityManager.NetworkCallback) sCallback);
+                    sCM.registerNetworkCallback(request, sCallback);
                 } catch (SecurityException e) {
-                    Log.d(TAG, "Failed to register network callback", e);
+                    Log.m71d(TAG, "Failed to register network callback", e);
                     sCallback = null;
                 }
             }
@@ -83,10 +86,10 @@ public class NetworkPinner extends ConnectivityManager.NetworkCallback {
         synchronized (sLock) {
             if (sCallback != null) {
                 try {
-                    sCM.bindProcessToNetwork((Network) null);
-                    sCM.unregisterNetworkCallback((ConnectivityManager.NetworkCallback) sCallback);
+                    sCM.bindProcessToNetwork(null);
+                    sCM.unregisterNetworkCallback(sCallback);
                 } catch (SecurityException e) {
-                    Log.d(TAG, "Failed to unregister network callback", e);
+                    Log.m71d(TAG, "Failed to unregister network callback", e);
                 }
                 sCallback = null;
                 sNetwork = null;

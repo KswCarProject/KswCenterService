@@ -9,6 +9,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import com.android.internal.widget.RecyclerView;
 
+/* loaded from: classes4.dex */
 public class LinearSmoothScroller extends RecyclerView.SmoothScroller {
     private static final boolean DEBUG = false;
     private static final float MILLISECONDS_PER_INCH = 25.0f;
@@ -19,32 +20,33 @@ public class LinearSmoothScroller extends RecyclerView.SmoothScroller {
     private static final float TARGET_SEEK_EXTRA_SCROLL_RATIO = 1.2f;
     private static final int TARGET_SEEK_SCROLL_DISTANCE_PX = 10000;
     private final float MILLISECONDS_PER_PX;
+    protected PointF mTargetVector;
+    protected final LinearInterpolator mLinearInterpolator = new LinearInterpolator();
     protected final DecelerateInterpolator mDecelerateInterpolator = new DecelerateInterpolator();
     protected int mInterimTargetDx = 0;
     protected int mInterimTargetDy = 0;
-    protected final LinearInterpolator mLinearInterpolator = new LinearInterpolator();
-    protected PointF mTargetVector;
 
     public LinearSmoothScroller(Context context) {
         this.MILLISECONDS_PER_PX = calculateSpeedPerPixel(context.getResources().getDisplayMetrics());
     }
 
-    /* access modifiers changed from: protected */
-    public void onStart() {
+    @Override // com.android.internal.widget.RecyclerView.SmoothScroller
+    protected void onStart() {
     }
 
-    /* access modifiers changed from: protected */
-    public void onTargetFound(View targetView, RecyclerView.State state, RecyclerView.SmoothScroller.Action action) {
+    @Override // com.android.internal.widget.RecyclerView.SmoothScroller
+    protected void onTargetFound(View targetView, RecyclerView.State state, RecyclerView.SmoothScroller.Action action) {
         int dx = calculateDxToMakeVisible(targetView, getHorizontalSnapPreference());
         int dy = calculateDyToMakeVisible(targetView, getVerticalSnapPreference());
-        int time = calculateTimeForDeceleration((int) Math.sqrt((double) ((dx * dx) + (dy * dy))));
+        int distance = (int) Math.sqrt((dx * dx) + (dy * dy));
+        int time = calculateTimeForDeceleration(distance);
         if (time > 0) {
             action.update(-dx, -dy, time, this.mDecelerateInterpolator);
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onSeekTargetStep(int dx, int dy, RecyclerView.State state, RecyclerView.SmoothScroller.Action action) {
+    @Override // com.android.internal.widget.RecyclerView.SmoothScroller
+    protected void onSeekTargetStep(int dx, int dy, RecyclerView.State state, RecyclerView.SmoothScroller.Action action) {
         if (getChildCount() == 0) {
             stop();
             return;
@@ -56,63 +58,58 @@ public class LinearSmoothScroller extends RecyclerView.SmoothScroller {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onStop() {
+    @Override // com.android.internal.widget.RecyclerView.SmoothScroller
+    protected void onStop() {
         this.mInterimTargetDy = 0;
         this.mInterimTargetDx = 0;
         this.mTargetVector = null;
     }
 
-    /* access modifiers changed from: protected */
-    public float calculateSpeedPerPixel(DisplayMetrics displayMetrics) {
-        return MILLISECONDS_PER_INCH / ((float) displayMetrics.densityDpi);
+    protected float calculateSpeedPerPixel(DisplayMetrics displayMetrics) {
+        return MILLISECONDS_PER_INCH / displayMetrics.densityDpi;
     }
 
-    /* access modifiers changed from: protected */
-    public int calculateTimeForDeceleration(int dx) {
-        return (int) Math.ceil(((double) calculateTimeForScrolling(dx)) / 0.3356d);
+    protected int calculateTimeForDeceleration(int dx) {
+        return (int) Math.ceil(calculateTimeForScrolling(dx) / 0.3356d);
     }
 
-    /* access modifiers changed from: protected */
-    public int calculateTimeForScrolling(int dx) {
-        return (int) Math.ceil((double) (((float) Math.abs(dx)) * this.MILLISECONDS_PER_PX));
+    protected int calculateTimeForScrolling(int dx) {
+        return (int) Math.ceil(Math.abs(dx) * this.MILLISECONDS_PER_PX);
     }
 
-    /* access modifiers changed from: protected */
-    public int getHorizontalSnapPreference() {
-        if (this.mTargetVector == null || this.mTargetVector.x == 0.0f) {
+    protected int getHorizontalSnapPreference() {
+        if (this.mTargetVector == null || this.mTargetVector.f61x == 0.0f) {
             return 0;
         }
-        return this.mTargetVector.x > 0.0f ? 1 : -1;
+        return this.mTargetVector.f61x > 0.0f ? 1 : -1;
     }
 
-    /* access modifiers changed from: protected */
-    public int getVerticalSnapPreference() {
-        if (this.mTargetVector == null || this.mTargetVector.y == 0.0f) {
+    protected int getVerticalSnapPreference() {
+        if (this.mTargetVector == null || this.mTargetVector.f62y == 0.0f) {
             return 0;
         }
-        return this.mTargetVector.y > 0.0f ? 1 : -1;
+        return this.mTargetVector.f62y > 0.0f ? 1 : -1;
     }
 
-    /* access modifiers changed from: protected */
-    public void updateActionForInterimTarget(RecyclerView.SmoothScroller.Action action) {
+    protected void updateActionForInterimTarget(RecyclerView.SmoothScroller.Action action) {
         PointF scrollVector = computeScrollVectorForPosition(getTargetPosition());
-        if (scrollVector == null || (scrollVector.x == 0.0f && scrollVector.y == 0.0f)) {
-            action.jumpTo(getTargetPosition());
+        if (scrollVector == null || (scrollVector.f61x == 0.0f && scrollVector.f62y == 0.0f)) {
+            int target = getTargetPosition();
+            action.jumpTo(target);
             stop();
             return;
         }
         normalize(scrollVector);
         this.mTargetVector = scrollVector;
-        this.mInterimTargetDx = (int) (scrollVector.x * 10000.0f);
-        this.mInterimTargetDy = (int) (scrollVector.y * 10000.0f);
-        action.update((int) (((float) this.mInterimTargetDx) * TARGET_SEEK_EXTRA_SCROLL_RATIO), (int) (((float) this.mInterimTargetDy) * TARGET_SEEK_EXTRA_SCROLL_RATIO), (int) (((float) calculateTimeForScrolling(10000)) * TARGET_SEEK_EXTRA_SCROLL_RATIO), this.mLinearInterpolator);
+        this.mInterimTargetDx = (int) (scrollVector.f61x * 10000.0f);
+        this.mInterimTargetDy = (int) (scrollVector.f62y * 10000.0f);
+        int time = calculateTimeForScrolling(10000);
+        action.update((int) (this.mInterimTargetDx * TARGET_SEEK_EXTRA_SCROLL_RATIO), (int) (this.mInterimTargetDy * TARGET_SEEK_EXTRA_SCROLL_RATIO), (int) (time * TARGET_SEEK_EXTRA_SCROLL_RATIO), this.mLinearInterpolator);
     }
 
     private int clampApplyScroll(int tmpDt, int dt) {
-        int before = tmpDt;
         int tmpDt2 = tmpDt - dt;
-        if (before * tmpDt2 <= 0) {
+        if (tmpDt * tmpDt2 <= 0) {
             return 0;
         }
         return tmpDt2;
@@ -145,7 +142,11 @@ public class LinearSmoothScroller extends RecyclerView.SmoothScroller {
             return 0;
         }
         RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) view.getLayoutParams();
-        return calculateDtToFit(layoutManager.getDecoratedTop(view) - params.topMargin, layoutManager.getDecoratedBottom(view) + params.bottomMargin, layoutManager.getPaddingTop(), layoutManager.getHeight() - layoutManager.getPaddingBottom(), snapPreference);
+        int top = layoutManager.getDecoratedTop(view) - params.topMargin;
+        int bottom = layoutManager.getDecoratedBottom(view) + params.bottomMargin;
+        int start = layoutManager.getPaddingTop();
+        int end = layoutManager.getHeight() - layoutManager.getPaddingBottom();
+        return calculateDtToFit(top, bottom, start, end, snapPreference);
     }
 
     public int calculateDxToMakeVisible(View view, int snapPreference) {
@@ -154,7 +155,11 @@ public class LinearSmoothScroller extends RecyclerView.SmoothScroller {
             return 0;
         }
         RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) view.getLayoutParams();
-        return calculateDtToFit(layoutManager.getDecoratedLeft(view) - params.leftMargin, layoutManager.getDecoratedRight(view) + params.rightMargin, layoutManager.getPaddingLeft(), layoutManager.getWidth() - layoutManager.getPaddingRight(), snapPreference);
+        int left = layoutManager.getDecoratedLeft(view) - params.leftMargin;
+        int right = layoutManager.getDecoratedRight(view) + params.rightMargin;
+        int start = layoutManager.getPaddingLeft();
+        int end = layoutManager.getWidth() - layoutManager.getPaddingRight();
+        return calculateDtToFit(left, right, start, end, snapPreference);
     }
 
     public PointF computeScrollVectorForPosition(int targetPosition) {
@@ -162,7 +167,7 @@ public class LinearSmoothScroller extends RecyclerView.SmoothScroller {
         if (layoutManager instanceof RecyclerView.SmoothScroller.ScrollVectorProvider) {
             return ((RecyclerView.SmoothScroller.ScrollVectorProvider) layoutManager).computeScrollVectorForPosition(targetPosition);
         }
-        Log.w(TAG, "You should override computeScrollVectorForPosition when the LayoutManager does not implement " + RecyclerView.SmoothScroller.ScrollVectorProvider.class.getCanonicalName());
+        Log.m64w(TAG, "You should override computeScrollVectorForPosition when the LayoutManager does not implement " + RecyclerView.SmoothScroller.ScrollVectorProvider.class.getCanonicalName());
         return null;
     }
 }

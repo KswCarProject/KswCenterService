@@ -11,30 +11,31 @@ import java.util.HashSet;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+/* loaded from: classes.dex */
 public class FontCustomizationParser {
 
+    /* loaded from: classes.dex */
     public static class Result {
-        ArrayList<FontConfig.Alias> mAdditionalAliases = new ArrayList<>();
         ArrayList<FontConfig.Family> mAdditionalNamedFamilies = new ArrayList<>();
+        ArrayList<FontConfig.Alias> mAdditionalAliases = new ArrayList<>();
     }
 
     public static Result parse(InputStream in, String fontDir) throws XmlPullParserException, IOException {
         XmlPullParser parser = Xml.newPullParser();
-        parser.setInput(in, (String) null);
+        parser.setInput(in, null);
         parser.nextTag();
         return readFamilies(parser, fontDir);
     }
 
     private static void validate(Result result) {
         HashSet<String> familyNames = new HashSet<>();
-        int i = 0;
-        while (i < result.mAdditionalNamedFamilies.size()) {
-            String name = result.mAdditionalNamedFamilies.get(i).getName();
+        for (int i = 0; i < result.mAdditionalNamedFamilies.size(); i++) {
+            FontConfig.Family family = result.mAdditionalNamedFamilies.get(i);
+            String name = family.getName();
             if (name == null) {
                 throw new IllegalArgumentException("new-named-family requires name attribute");
-            } else if (familyNames.add(name)) {
-                i++;
-            } else {
+            }
+            if (!familyNames.add(name)) {
                 throw new IllegalArgumentException("new-named-family requires unique name attribute");
             }
         }
@@ -42,7 +43,7 @@ public class FontCustomizationParser {
 
     private static Result readFamilies(XmlPullParser parser, String fontDir) throws XmlPullParserException, IOException {
         Result out = new Result();
-        parser.require(2, (String) null, "fonts-modification");
+        parser.require(2, null, "fonts-modification");
         while (parser.next() != 3) {
             if (parser.getEventType() == 2) {
                 String tag = parser.getName();
@@ -60,13 +61,14 @@ public class FontCustomizationParser {
     }
 
     private static void readFamily(XmlPullParser parser, String fontDir, Result out) throws XmlPullParserException, IOException {
-        String customizationType = parser.getAttributeValue((String) null, "customizationType");
+        String customizationType = parser.getAttributeValue(null, "customizationType");
         if (customizationType == null) {
             throw new IllegalArgumentException("customizationType must be specified");
-        } else if (customizationType.equals("new-named-family")) {
-            out.mAdditionalNamedFamilies.add(FontListParser.readFamily(parser, fontDir));
-        } else {
-            throw new IllegalArgumentException("Unknown customizationType=" + customizationType);
         }
+        if (customizationType.equals("new-named-family")) {
+            out.mAdditionalNamedFamilies.add(FontListParser.readFamily(parser, fontDir));
+            return;
+        }
+        throw new IllegalArgumentException("Unknown customizationType=" + customizationType);
     }
 }

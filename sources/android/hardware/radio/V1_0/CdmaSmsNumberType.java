@@ -3,6 +3,7 @@ package android.hardware.radio.V1_0;
 import com.android.internal.telephony.IccCardConstants;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class CdmaSmsNumberType {
     public static final int ABBREVIATED = 6;
     public static final int ALPHANUMERIC = 5;

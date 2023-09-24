@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import java.util.List;
 import java.util.Map;
 
+/* loaded from: classes4.dex */
 public class SimpleExpandableListAdapter extends BaseExpandableListAdapter {
     private List<? extends List<? extends Map<String, ?>>> mChildData;
     private String[] mChildFrom;
@@ -42,14 +43,17 @@ public class SimpleExpandableListAdapter extends BaseExpandableListAdapter {
         this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
+    @Override // android.widget.ExpandableListAdapter
     public Object getChild(int groupPosition, int childPosition) {
-        return ((List) this.mChildData.get(groupPosition)).get(childPosition);
+        return this.mChildData.get(groupPosition).get(childPosition);
     }
 
+    @Override // android.widget.ExpandableListAdapter
     public long getChildId(int groupPosition, int childPosition) {
-        return (long) childPosition;
+        return childPosition;
     }
 
+    @Override // android.widget.ExpandableListAdapter
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         View v;
         if (convertView == null) {
@@ -57,7 +61,7 @@ public class SimpleExpandableListAdapter extends BaseExpandableListAdapter {
         } else {
             v = convertView;
         }
-        bindView(v, (Map) ((List) this.mChildData.get(groupPosition)).get(childPosition), this.mChildFrom, this.mChildTo);
+        bindView(v, this.mChildData.get(groupPosition).get(childPosition), this.mChildFrom, this.mChildTo);
         return v;
     }
 
@@ -70,27 +74,32 @@ public class SimpleExpandableListAdapter extends BaseExpandableListAdapter {
         for (int i = 0; i < len; i++) {
             TextView v = (TextView) view.findViewById(to[i]);
             if (v != null) {
-                v.setText((CharSequence) (String) data.get(from[i]));
+                v.setText((String) data.get(from[i]));
             }
         }
     }
 
+    @Override // android.widget.ExpandableListAdapter
     public int getChildrenCount(int groupPosition) {
-        return ((List) this.mChildData.get(groupPosition)).size();
+        return this.mChildData.get(groupPosition).size();
     }
 
+    @Override // android.widget.ExpandableListAdapter
     public Object getGroup(int groupPosition) {
         return this.mGroupData.get(groupPosition);
     }
 
+    @Override // android.widget.ExpandableListAdapter
     public int getGroupCount() {
         return this.mGroupData.size();
     }
 
+    @Override // android.widget.ExpandableListAdapter
     public long getGroupId(int groupPosition) {
-        return (long) groupPosition;
+        return groupPosition;
     }
 
+    @Override // android.widget.ExpandableListAdapter
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         View v;
         if (convertView == null) {
@@ -98,7 +107,7 @@ public class SimpleExpandableListAdapter extends BaseExpandableListAdapter {
         } else {
             v = convertView;
         }
-        bindView(v, (Map) this.mGroupData.get(groupPosition), this.mGroupFrom, this.mGroupTo);
+        bindView(v, this.mGroupData.get(groupPosition), this.mGroupFrom, this.mGroupTo);
         return v;
     }
 
@@ -106,10 +115,12 @@ public class SimpleExpandableListAdapter extends BaseExpandableListAdapter {
         return this.mInflater.inflate(isExpanded ? this.mExpandedGroupLayout : this.mCollapsedGroupLayout, parent, false);
     }
 
+    @Override // android.widget.ExpandableListAdapter
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
     }
 
+    @Override // android.widget.ExpandableListAdapter
     public boolean hasStableIds() {
         return true;
     }

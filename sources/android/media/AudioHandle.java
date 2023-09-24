@@ -2,6 +2,7 @@ package android.media;
 
 import android.annotation.UnsupportedAppUsage;
 
+/* loaded from: classes3.dex */
 class AudioHandle {
     @UnsupportedAppUsage
     private final int mId;
@@ -11,16 +12,17 @@ class AudioHandle {
         this.mId = id;
     }
 
-    /* access modifiers changed from: package-private */
-    public int id() {
+    /* renamed from: id */
+    int m116id() {
         return this.mId;
     }
 
     public boolean equals(Object o) {
-        if (o == null || !(o instanceof AudioHandle) || this.mId != ((AudioHandle) o).id()) {
+        if (o == null || !(o instanceof AudioHandle)) {
             return false;
         }
-        return true;
+        AudioHandle ah = (AudioHandle) o;
+        return this.mId == ah.m116id();
     }
 
     public int hashCode() {

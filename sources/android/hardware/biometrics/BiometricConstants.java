@@ -2,6 +2,7 @@ package android.hardware.biometrics;
 
 import android.annotation.UnsupportedAppUsage;
 
+/* loaded from: classes.dex */
 public interface BiometricConstants {
     public static final int BIOMETRIC_ACQUIRED_GOOD = 0;
     public static final int BIOMETRIC_ACQUIRED_IMAGER_DIRTY = 3;

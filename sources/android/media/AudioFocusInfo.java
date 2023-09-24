@@ -2,19 +2,24 @@ package android.media;
 
 import android.annotation.SystemApi;
 import android.media.AudioAttributes;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.Objects;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class AudioFocusInfo implements Parcelable {
-    public static final Parcelable.Creator<AudioFocusInfo> CREATOR = new Parcelable.Creator<AudioFocusInfo>() {
+    public static final Parcelable.Creator<AudioFocusInfo> CREATOR = new Parcelable.Creator<AudioFocusInfo>() { // from class: android.media.AudioFocusInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AudioFocusInfo createFromParcel(Parcel in) {
             AudioFocusInfo afi = new AudioFocusInfo(AudioAttributes.CREATOR.createFromParcel(in), in.readInt(), in.readString(), in.readString(), in.readInt(), in.readInt(), in.readInt(), in.readInt());
             afi.setGen(in.readLong());
             return afi;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AudioFocusInfo[] newArray(int size) {
             return new AudioFocusInfo[size];
         }
@@ -84,10 +89,12 @@ public final class AudioFocusInfo implements Parcelable {
         return this.mFlags;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         this.mAttributes.writeToParcel(dest, flags);
         dest.writeInt(this.mClientUid);
@@ -101,7 +108,7 @@ public final class AudioFocusInfo implements Parcelable {
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{this.mAttributes, Integer.valueOf(this.mClientUid), this.mClientId, this.mPackageName, Integer.valueOf(this.mGainRequest), Integer.valueOf(this.mFlags)});
+        return Objects.hash(this.mAttributes, Integer.valueOf(this.mClientUid), this.mClientId, this.mPackageName, Integer.valueOf(this.mGainRequest), Integer.valueOf(this.mFlags));
     }
 
     public boolean equals(Object obj) {

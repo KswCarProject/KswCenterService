@@ -8,9 +8,8 @@ import android.text.Spanned;
 import android.view.KeyEvent;
 import android.view.View;
 
+/* loaded from: classes4.dex */
 public abstract class MetaKeyKeyListener {
-    private static final Object ALT = new NoCopySpan.Concrete();
-    private static final Object CAP = new NoCopySpan.Concrete();
     private static final int LOCKED = 67108881;
     private static final int LOCKED_RETURN_VALUE = 2;
     public static final int META_ALT_LOCKED = 512;
@@ -35,9 +34,11 @@ public abstract class MetaKeyKeyListener {
     private static final int PRESSED = 16777233;
     private static final int PRESSED_RETURN_VALUE = 1;
     private static final int RELEASED = 33554449;
-    private static final Object SELECTING = new NoCopySpan.Concrete();
-    private static final Object SYM = new NoCopySpan.Concrete();
     private static final int USED = 50331665;
+    private static final Object CAP = new NoCopySpan.Concrete();
+    private static final Object ALT = new NoCopySpan.Concrete();
+    private static final Object SYM = new NoCopySpan.Concrete();
+    private static final Object SELECTING = new NoCopySpan.Concrete();
 
     public static void resetMetaState(Spannable text) {
         text.removeSpan(CAP);
@@ -59,20 +60,20 @@ public abstract class MetaKeyKeyListener {
     }
 
     public static final int getMetaState(CharSequence text, int meta) {
-        if (meta == 4) {
-            return getActive(text, SYM, 1, 2);
-        }
-        if (meta == 2048) {
+        if (meta != 4) {
+            if (meta != 2048) {
+                switch (meta) {
+                    case 1:
+                        return getActive(text, CAP, 1, 2);
+                    case 2:
+                        return getActive(text, ALT, 1, 2);
+                    default:
+                        return 0;
+                }
+            }
             return getActive(text, SELECTING, 1, 2);
         }
-        switch (meta) {
-            case 1:
-                return getActive(text, CAP, 1, 2);
-            case 2:
-                return getActive(text, ALT, 1, 2);
-            default:
-                return 0;
-        }
+        return getActive(text, SYM, 1, 2);
     }
 
     public static final int getMetaState(CharSequence text, int meta, KeyEvent event) {
@@ -80,25 +81,23 @@ public abstract class MetaKeyKeyListener {
         if (event.getKeyCharacterMap().getModifierBehavior() == 1) {
             metaState |= getMetaState(text);
         }
-        if (2048 != meta) {
-            return getMetaState((long) metaState, meta);
+        if (2048 == meta) {
+            return (metaState & 2048) != 0 ? 1 : 0;
         }
-        if ((metaState & 2048) != 0) {
-            return 1;
-        }
-        return 0;
+        return getMetaState(metaState, meta);
     }
 
     private static int getActive(CharSequence text, Object meta, int on, int lock) {
-        if (!(text instanceof Spanned)) {
+        if (text instanceof Spanned) {
+            Spanned sp = (Spanned) text;
+            int flag = sp.getSpanFlags(meta);
+            if (flag == LOCKED) {
+                return lock;
+            }
+            if (flag != 0) {
+                return on;
+            }
             return 0;
-        }
-        int flag = ((Spanned) text).getSpanFlags(meta);
-        if (flag == LOCKED) {
-            return lock;
-        }
-        if (flag != 0) {
-            return on;
         }
         return 0;
     }
@@ -134,7 +133,8 @@ public abstract class MetaKeyKeyListener {
     }
 
     private static void resetLock(Spannable content, Object what) {
-        if (content.getSpanFlags(what) == LOCKED) {
+        int current = content.getSpanFlags(what);
+        if (current == LOCKED) {
             content.removeSpan(what);
         }
     }
@@ -146,11 +146,11 @@ public abstract class MetaKeyKeyListener {
         } else if (keyCode == 57 || keyCode == 58 || keyCode == 78) {
             press(content, ALT);
             return true;
-        } else if (keyCode != 63) {
-            return false;
-        } else {
+        } else if (keyCode == 63) {
             press(content, SYM);
             return true;
+        } else {
+            return false;
         }
     }
 
@@ -186,23 +186,28 @@ public abstract class MetaKeyKeyListener {
         } else if (keyCode == 57 || keyCode == 58 || keyCode == 78) {
             release(content, ALT, event);
             return true;
-        } else if (keyCode != 63) {
-            return false;
-        } else {
+        } else if (keyCode == 63) {
             release(content, SYM, event);
             return true;
+        } else {
+            return false;
         }
     }
 
     private void release(Editable content, Object what, KeyEvent event) {
         int current = content.getSpanFlags(what);
-        if (event.getKeyCharacterMap().getModifierBehavior() != 1) {
-            content.removeSpan(what);
-        } else if (current == USED) {
-            content.removeSpan(what);
-        } else if (current == PRESSED) {
-            content.setSpan(what, 0, 0, RELEASED);
+        if (event.getKeyCharacterMap().getModifierBehavior() == 1) {
+            if (current == USED) {
+                content.removeSpan(what);
+                return;
+            } else if (current == PRESSED) {
+                content.setSpan(what, 0, 0, RELEASED);
+                return;
+            } else {
+                return;
+            }
         }
+        content.removeSpan(what);
     }
 
     public void clearMetaKeyState(View view, Editable content, int states) {
@@ -232,7 +237,7 @@ public abstract class MetaKeyKeyListener {
             state &= -565157566611971L;
         }
         if ((1024 & state) != 0) {
-            return state & -1130315133223941L;
+            return state & (-1130315133223941L);
         }
         return state;
     }
@@ -283,92 +288,88 @@ public abstract class MetaKeyKeyListener {
 
     public static long adjustMetaAfterKeypress(long state) {
         if ((1099511627776L & state) != 0) {
-            state = (state & -282578783305986L) | 1 | 4294967296L;
+            state = (state & (-282578783305986L)) | 1 | 4294967296L;
         } else if ((META_CAP_RELEASED & state) != 0) {
             state &= -282578783305986L;
         }
         if ((2199023255552L & state) != 0) {
-            state = (state & -565157566611971L) | 2 | 8589934592L;
+            state = (state & (-565157566611971L)) | 2 | 8589934592L;
         } else if ((META_ALT_RELEASED & state) != 0) {
             state &= -565157566611971L;
         }
         if ((META_SYM_PRESSED & state) != 0) {
-            return (state & -1130315133223941L) | 4 | 17179869184L;
+            return (state & (-1130315133223941L)) | 4 | 17179869184L;
         }
         if ((1125899906842624L & state) != 0) {
-            return state & -1130315133223941L;
+            return state & (-1130315133223941L);
         }
         return state;
     }
 
     public static long handleKeyDown(long state, int keyCode, KeyEvent event) {
-        int i = keyCode;
-        if (i == 59 || i == 60) {
-            return press(state, 1, META_SHIFT_MASK, 256, 1099511627776L, META_CAP_RELEASED, 4294967296L);
+        if (keyCode != 59 && keyCode != 60) {
+            if (keyCode != 57 && keyCode != 58 && keyCode != 78) {
+                if (keyCode == 63) {
+                    return press(state, 4, META_SYM_MASK, 1024L, META_SYM_PRESSED, 1125899906842624L, 17179869184L);
+                }
+                return state;
+            }
+            return press(state, 2, META_ALT_MASK, 512L, 2199023255552L, META_ALT_RELEASED, 8589934592L);
         }
-        if (i == 57 || i == 58 || i == 78) {
-            return press(state, 2, META_ALT_MASK, 512, 2199023255552L, META_ALT_RELEASED, 8589934592L);
-        }
-        if (i == 63) {
-            return press(state, 4, META_SYM_MASK, 1024, META_SYM_PRESSED, 1125899906842624L, 17179869184L);
-        }
-        return state;
+        return press(state, 1, META_SHIFT_MASK, 256L, 1099511627776L, META_CAP_RELEASED, 4294967296L);
     }
 
     private static long press(long state, int what, long mask, long locked, long pressed, long released, long used) {
-        int i = what;
-        long j = mask;
         if ((state & pressed) == 0) {
             if ((state & released) != 0) {
-                return ((~j) & state) | ((long) i) | locked;
+                return ((~mask) & state) | what | locked;
             }
             if ((state & used) == 0) {
                 if ((state & locked) != 0) {
-                    return state & (~j);
+                    return state & (~mask);
                 }
-                return state | ((long) i) | pressed;
+                return state | what | pressed;
             }
         }
         return state;
     }
 
     public static long handleKeyUp(long state, int keyCode, KeyEvent event) {
-        int i = keyCode;
-        if (i == 59 || i == 60) {
-            return release(state, 1, META_SHIFT_MASK, 1099511627776L, META_CAP_RELEASED, 4294967296L, event);
-        }
-        if (i == 57 || i == 58 || i == 78) {
+        if (keyCode != 59 && keyCode != 60) {
+            if (keyCode != 57 && keyCode != 58 && keyCode != 78) {
+                if (keyCode == 63) {
+                    return release(state, 4, META_SYM_MASK, META_SYM_PRESSED, 1125899906842624L, 17179869184L, event);
+                }
+                return state;
+            }
             return release(state, 2, META_ALT_MASK, 2199023255552L, META_ALT_RELEASED, 8589934592L, event);
         }
-        if (i == 63) {
-            return release(state, 4, META_SYM_MASK, META_SYM_PRESSED, 1125899906842624L, 17179869184L, event);
-        }
-        return state;
+        return release(state, 1, META_SHIFT_MASK, 1099511627776L, META_CAP_RELEASED, 4294967296L, event);
     }
 
     private static long release(long state, int what, long mask, long pressed, long released, long used, KeyEvent event) {
-        if (event.getKeyCharacterMap().getModifierBehavior() != 1) {
-            return state & (~mask);
+        if (event.getKeyCharacterMap().getModifierBehavior() == 1) {
+            if ((state & used) != 0) {
+                return state & (~mask);
+            }
+            if ((state & pressed) != 0) {
+                return state | what | released;
+            }
+            return state;
         }
-        if ((state & used) != 0) {
-            return state & (~mask);
-        }
-        if ((state & pressed) != 0) {
-            return state | ((long) what) | released;
-        }
-        return state;
+        return state & (~mask);
     }
 
     public long clearMetaKeyState(long state, int which) {
-        if (!((which & 1) == 0 || (256 & state) == 0)) {
+        if ((which & 1) != 0 && (256 & state) != 0) {
             state &= -282578783305986L;
         }
-        if (!((which & 2) == 0 || (512 & state) == 0)) {
+        if ((which & 2) != 0 && (512 & state) != 0) {
             state &= -565157566611971L;
         }
-        if ((which & 4) == 0 || (1024 & state) == 0) {
-            return state;
+        if ((which & 4) != 0 && (1024 & state) != 0) {
+            return state & (-1130315133223941L);
         }
-        return state & -1130315133223941L;
+        return state;
     }
 }

@@ -3,6 +3,7 @@ package com.android.framework.protobuf.nano;
 import java.io.IOException;
 import java.util.Arrays;
 
+/* loaded from: classes4.dex */
 public abstract class MessageNano {
     protected volatile int cachedSize = -1;
 
@@ -21,8 +22,7 @@ public abstract class MessageNano {
         return size;
     }
 
-    /* access modifiers changed from: protected */
-    public int computeSerializedSize() {
+    protected int computeSerializedSize() {
         return 0;
     }
 
@@ -46,7 +46,7 @@ public abstract class MessageNano {
     }
 
     public static final <T extends MessageNano> T mergeFrom(T msg, byte[] data) throws InvalidProtocolBufferNanoException {
-        return mergeFrom(msg, data, 0, data.length);
+        return (T) mergeFrom(msg, data, 0, data.length);
     }
 
     public static final <T extends MessageNano> T mergeFrom(T msg, byte[] data, int off, int len) throws InvalidProtocolBufferNanoException {
@@ -81,7 +81,9 @@ public abstract class MessageNano {
         return MessageNanoPrinter.print(this);
     }
 
-    public MessageNano clone() throws CloneNotSupportedException {
+    @Override // 
+    /* renamed from: clone */
+    public MessageNano mo189clone() throws CloneNotSupportedException {
         return (MessageNano) super.clone();
     }
 }

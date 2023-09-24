@@ -1,11 +1,12 @@
 package android.printservice;
 
 import android.content.Context;
-import android.os.RemoteException;
+import android.p007os.RemoteException;
 import android.print.PrintJobId;
 import android.print.PrintJobInfo;
 import android.util.Log;
 
+/* loaded from: classes3.dex */
 public final class PrintJob {
     private static final String LOG_TAG = "PrintJob";
     private PrintJobInfo mCachedInfo;
@@ -34,7 +35,7 @@ public final class PrintJob {
         try {
             info = this.mPrintServiceClient.getPrintJobInfo(this.mCachedInfo.getId());
         } catch (RemoteException re) {
-            Log.e(LOG_TAG, "Couldn't get info for job: " + this.mCachedInfo.getId(), re);
+            Log.m69e(LOG_TAG, "Couldn't get info for job: " + this.mCachedInfo.getId(), re);
         }
         if (info != null) {
             this.mCachedInfo = info;
@@ -81,14 +82,15 @@ public final class PrintJob {
         PrintService.throwIfNotCalledOnMainThread();
         int state = getInfo().getState();
         if (state == 2 || state == 4) {
-            return setState(3, (String) null);
+            return setState(3, null);
         }
         return false;
     }
 
     public boolean block(String reason) {
         PrintService.throwIfNotCalledOnMainThread();
-        int state = getInfo().getState();
+        PrintJobInfo info = getInfo();
+        int state = info.getState();
         if (state == 3 || state == 4) {
             return setState(4, reason);
         }
@@ -98,7 +100,7 @@ public final class PrintJob {
     public boolean complete() {
         PrintService.throwIfNotCalledOnMainThread();
         if (isStarted()) {
-            return setState(5, (String) null);
+            return setState(5, null);
         }
         return false;
     }
@@ -114,7 +116,7 @@ public final class PrintJob {
     public boolean cancel() {
         PrintService.throwIfNotCalledOnMainThread();
         if (!isInImmutableState()) {
-            return setState(7, (String) null);
+            return setState(7, null);
         }
         return false;
     }
@@ -124,7 +126,7 @@ public final class PrintJob {
         try {
             this.mPrintServiceClient.setProgress(this.mCachedInfo.getId(), progress);
         } catch (RemoteException re) {
-            Log.e(LOG_TAG, "Error setting progress for job: " + this.mCachedInfo.getId(), re);
+            Log.m69e(LOG_TAG, "Error setting progress for job: " + this.mCachedInfo.getId(), re);
         }
     }
 
@@ -133,7 +135,7 @@ public final class PrintJob {
         try {
             this.mPrintServiceClient.setStatus(this.mCachedInfo.getId(), status);
         } catch (RemoteException re) {
-            Log.e(LOG_TAG, "Error setting status for job: " + this.mCachedInfo.getId(), re);
+            Log.m69e(LOG_TAG, "Error setting status for job: " + this.mCachedInfo.getId(), re);
         }
     }
 
@@ -142,7 +144,7 @@ public final class PrintJob {
         try {
             this.mPrintServiceClient.setStatusRes(this.mCachedInfo.getId(), statusResId, this.mContext.getPackageName());
         } catch (RemoteException re) {
-            Log.e(LOG_TAG, "Error setting status for job: " + this.mCachedInfo.getId(), re);
+            Log.m69e(LOG_TAG, "Error setting status for job: " + this.mCachedInfo.getId(), re);
         }
     }
 
@@ -154,7 +156,7 @@ public final class PrintJob {
         try {
             return this.mPrintServiceClient.setPrintJobTag(this.mCachedInfo.getId(), tag);
         } catch (RemoteException re) {
-            Log.e(LOG_TAG, "Error setting tag for job: " + this.mCachedInfo.getId(), re);
+            Log.m69e(LOG_TAG, "Error setting tag for job: " + this.mCachedInfo.getId(), re);
             return false;
         }
     }
@@ -183,10 +185,11 @@ public final class PrintJob {
         if (this == obj) {
             return true;
         }
-        if (obj != null && getClass() == obj.getClass()) {
-            return this.mCachedInfo.getId().equals(((PrintJob) obj).mCachedInfo.getId());
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
         }
-        return false;
+        PrintJob other = (PrintJob) obj;
+        return this.mCachedInfo.getId().equals(other.mCachedInfo.getId());
     }
 
     public int hashCode() {
@@ -200,14 +203,14 @@ public final class PrintJob {
 
     private boolean setState(int state, String error) {
         try {
-            if (!this.mPrintServiceClient.setPrintJobState(this.mCachedInfo.getId(), state, error)) {
-                return false;
+            if (this.mPrintServiceClient.setPrintJobState(this.mCachedInfo.getId(), state, error)) {
+                this.mCachedInfo.setState(state);
+                this.mCachedInfo.setStatus(error);
+                return true;
             }
-            this.mCachedInfo.setState(state);
-            this.mCachedInfo.setStatus(error);
-            return true;
+            return false;
         } catch (RemoteException re) {
-            Log.e(LOG_TAG, "Error setting the state of job: " + this.mCachedInfo.getId(), re);
+            Log.m69e(LOG_TAG, "Error setting the state of job: " + this.mCachedInfo.getId(), re);
             return false;
         }
     }

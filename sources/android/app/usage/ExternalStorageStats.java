@@ -1,14 +1,19 @@
 package android.app.usage;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public final class ExternalStorageStats implements Parcelable {
-    public static final Parcelable.Creator<ExternalStorageStats> CREATOR = new Parcelable.Creator<ExternalStorageStats>() {
+    public static final Parcelable.Creator<ExternalStorageStats> CREATOR = new Parcelable.Creator<ExternalStorageStats>() { // from class: android.app.usage.ExternalStorageStats.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ExternalStorageStats createFromParcel(Parcel in) {
             return new ExternalStorageStats(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ExternalStorageStats[] newArray(int size) {
             return new ExternalStorageStats[size];
         }
@@ -56,10 +61,12 @@ public final class ExternalStorageStats implements Parcelable {
         this.obbBytes = in.readLong();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(this.totalBytes);
         dest.writeLong(this.audioBytes);

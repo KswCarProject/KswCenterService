@@ -3,14 +3,15 @@ package android.app;
 import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Bundle;
+import android.p007os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 
 @Deprecated
+/* loaded from: classes.dex */
 public class DialogFragment extends Fragment implements DialogInterface.OnCancelListener, DialogInterface.OnDismissListener {
     private static final String SAVED_BACK_STACK_ID = "android:backStackId";
     private static final String SAVED_CANCELABLE = "android:cancelable";
@@ -22,24 +23,24 @@ public class DialogFragment extends Fragment implements DialogInterface.OnCancel
     public static final int STYLE_NO_FRAME = 2;
     public static final int STYLE_NO_INPUT = 3;
     public static final int STYLE_NO_TITLE = 1;
-    @UnsupportedAppUsage
-    int mBackStackId = -1;
-    boolean mCancelable = true;
     Dialog mDialog;
     @UnsupportedAppUsage
     boolean mDismissed;
     @UnsupportedAppUsage
     boolean mShownByMe;
-    boolean mShowsDialog = true;
-    int mStyle = 0;
-    int mTheme = 0;
     @UnsupportedAppUsage
     boolean mViewDestroyed;
+    int mStyle = 0;
+    int mTheme = 0;
+    boolean mCancelable = true;
+    boolean mShowsDialog = true;
+    @UnsupportedAppUsage
+    int mBackStackId = -1;
 
     public void setStyle(int style, int theme) {
         this.mStyle = style;
         if (this.mStyle == 2 || this.mStyle == 3) {
-            this.mTheme = R.style.Theme_DeviceDefault_Dialog_NoFrame;
+            this.mTheme = C3132R.C3136style.Theme_DeviceDefault_Dialog_NoFrame;
         }
         if (theme != 0) {
             this.mTheme = theme;
@@ -50,7 +51,7 @@ public class DialogFragment extends Fragment implements DialogInterface.OnCancel
         this.mDismissed = false;
         this.mShownByMe = true;
         FragmentTransaction ft = manager.beginTransaction();
-        ft.add((Fragment) this, tag);
+        ft.add(this, tag);
         ft.commit();
     }
 
@@ -59,14 +60,14 @@ public class DialogFragment extends Fragment implements DialogInterface.OnCancel
         this.mDismissed = false;
         this.mShownByMe = true;
         FragmentTransaction ft = manager.beginTransaction();
-        ft.add((Fragment) this, tag);
+        ft.add(this, tag);
         ft.commitAllowingStateLoss();
     }
 
     public int show(FragmentTransaction transaction, String tag) {
         this.mDismissed = false;
         this.mShownByMe = true;
-        transaction.add((Fragment) this, tag);
+        transaction.add(this, tag);
         this.mViewDestroyed = false;
         this.mBackStackId = transaction.commit();
         return this.mBackStackId;
@@ -80,28 +81,28 @@ public class DialogFragment extends Fragment implements DialogInterface.OnCancel
         dismissInternal(true);
     }
 
-    /* access modifiers changed from: package-private */
-    public void dismissInternal(boolean allowStateLoss) {
-        if (!this.mDismissed) {
-            this.mDismissed = true;
-            this.mShownByMe = false;
-            if (this.mDialog != null) {
-                this.mDialog.dismiss();
-                this.mDialog = null;
-            }
-            this.mViewDestroyed = true;
-            if (this.mBackStackId >= 0) {
-                getFragmentManager().popBackStack(this.mBackStackId, 1);
-                this.mBackStackId = -1;
-                return;
-            }
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.remove(this);
-            if (allowStateLoss) {
-                ft.commitAllowingStateLoss();
-            } else {
-                ft.commit();
-            }
+    void dismissInternal(boolean allowStateLoss) {
+        if (this.mDismissed) {
+            return;
+        }
+        this.mDismissed = true;
+        this.mShownByMe = false;
+        if (this.mDialog != null) {
+            this.mDialog.dismiss();
+            this.mDialog = null;
+        }
+        this.mViewDestroyed = true;
+        if (this.mBackStackId >= 0) {
+            getFragmentManager().popBackStack(this.mBackStackId, 1);
+            this.mBackStackId = -1;
+            return;
+        }
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.remove(this);
+        if (allowStateLoss) {
+            ft.commitAllowingStateLoss();
+        } else {
+            ft.commit();
         }
     }
 
@@ -132,6 +133,7 @@ public class DialogFragment extends Fragment implements DialogInterface.OnCancel
         return this.mShowsDialog;
     }
 
+    @Override // android.app.Fragment
     public void onAttach(Context context) {
         super.onAttach(context);
         if (!this.mShownByMe) {
@@ -139,6 +141,7 @@ public class DialogFragment extends Fragment implements DialogInterface.OnCancel
         }
     }
 
+    @Override // android.app.Fragment
     public void onDetach() {
         super.onDetach();
         if (!this.mShownByMe && !this.mDismissed) {
@@ -146,6 +149,7 @@ public class DialogFragment extends Fragment implements DialogInterface.OnCancel
         }
     }
 
+    @Override // android.app.Fragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.mShowsDialog = this.mContainerId == 0;
@@ -158,20 +162,20 @@ public class DialogFragment extends Fragment implements DialogInterface.OnCancel
         }
     }
 
+    @Override // android.app.Fragment
     public LayoutInflater onGetLayoutInflater(Bundle savedInstanceState) {
         if (!this.mShowsDialog) {
             return super.onGetLayoutInflater(savedInstanceState);
         }
         this.mDialog = onCreateDialog(savedInstanceState);
         switch (this.mStyle) {
-            case 1:
-            case 2:
-                break;
             case 3:
                 this.mDialog.getWindow().addFlags(24);
+            case 1:
+            case 2:
+                this.mDialog.requestWindowFeature(1);
                 break;
         }
-        this.mDialog.requestWindowFeature(1);
         if (this.mDialog != null) {
             return (LayoutInflater) this.mDialog.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
@@ -182,40 +186,45 @@ public class DialogFragment extends Fragment implements DialogInterface.OnCancel
         return new Dialog(getActivity(), getTheme());
     }
 
+    @Override // android.content.DialogInterface.OnCancelListener
     public void onCancel(DialogInterface dialog) {
     }
 
+    @Override // android.content.DialogInterface.OnDismissListener
     public void onDismiss(DialogInterface dialog) {
         if (!this.mViewDestroyed) {
             dismissInternal(true);
         }
     }
 
+    @Override // android.app.Fragment
     public void onActivityCreated(Bundle savedInstanceState) {
         Bundle dialogState;
         super.onActivityCreated(savedInstanceState);
-        if (this.mShowsDialog) {
-            View view = getView();
-            if (view != null) {
-                if (view.getParent() == null) {
-                    this.mDialog.setContentView(view);
-                } else {
-                    throw new IllegalStateException("DialogFragment can not be attached to a container view");
-                }
+        if (!this.mShowsDialog) {
+            return;
+        }
+        View view = getView();
+        if (view != null) {
+            if (view.getParent() != null) {
+                throw new IllegalStateException("DialogFragment can not be attached to a container view");
             }
-            Activity activity = getActivity();
-            if (activity != null) {
-                this.mDialog.setOwnerActivity(activity);
-            }
-            this.mDialog.setCancelable(this.mCancelable);
-            if (!this.mDialog.takeCancelAndDismissListeners("DialogFragment", this, this)) {
-                throw new IllegalStateException("You can not set Dialog's OnCancelListener or OnDismissListener");
-            } else if (savedInstanceState != null && (dialogState = savedInstanceState.getBundle(SAVED_DIALOG_STATE_TAG)) != null) {
-                this.mDialog.onRestoreInstanceState(dialogState);
-            }
+            this.mDialog.setContentView(view);
+        }
+        Activity activity = getActivity();
+        if (activity != null) {
+            this.mDialog.setOwnerActivity(activity);
+        }
+        this.mDialog.setCancelable(this.mCancelable);
+        if (!this.mDialog.takeCancelAndDismissListeners("DialogFragment", this, this)) {
+            throw new IllegalStateException("You can not set Dialog's OnCancelListener or OnDismissListener");
+        }
+        if (savedInstanceState != null && (dialogState = savedInstanceState.getBundle(SAVED_DIALOG_STATE_TAG)) != null) {
+            this.mDialog.onRestoreInstanceState(dialogState);
         }
     }
 
+    @Override // android.app.Fragment
     public void onStart() {
         super.onStart();
         if (this.mDialog != null) {
@@ -224,10 +233,11 @@ public class DialogFragment extends Fragment implements DialogInterface.OnCancel
         }
     }
 
+    @Override // android.app.Fragment
     public void onSaveInstanceState(Bundle outState) {
         Bundle dialogState;
         super.onSaveInstanceState(outState);
-        if (!(this.mDialog == null || (dialogState = this.mDialog.onSaveInstanceState()) == null)) {
+        if (this.mDialog != null && (dialogState = this.mDialog.onSaveInstanceState()) != null) {
             outState.putBundle(SAVED_DIALOG_STATE_TAG, dialogState);
         }
         if (this.mStyle != 0) {
@@ -247,6 +257,7 @@ public class DialogFragment extends Fragment implements DialogInterface.OnCancel
         }
     }
 
+    @Override // android.app.Fragment
     public void onStop() {
         super.onStop();
         if (this.mDialog != null) {
@@ -254,6 +265,7 @@ public class DialogFragment extends Fragment implements DialogInterface.OnCancel
         }
     }
 
+    @Override // android.app.Fragment
     public void onDestroyView() {
         super.onDestroyView();
         if (this.mDialog != null) {
@@ -263,6 +275,7 @@ public class DialogFragment extends Fragment implements DialogInterface.OnCancel
         }
     }
 
+    @Override // android.app.Fragment
     public void dump(String prefix, FileDescriptor fd, PrintWriter writer, String[] args) {
         super.dump(prefix, fd, writer, args);
         writer.print(prefix);

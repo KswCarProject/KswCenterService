@@ -1,15 +1,20 @@
 package android.accounts;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public class AuthenticatorDescription implements Parcelable {
-    public static final Parcelable.Creator<AuthenticatorDescription> CREATOR = new Parcelable.Creator<AuthenticatorDescription>() {
+    public static final Parcelable.Creator<AuthenticatorDescription> CREATOR = new Parcelable.Creator<AuthenticatorDescription>() { // from class: android.accounts.AuthenticatorDescription.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AuthenticatorDescription createFromParcel(Parcel source) {
             return new AuthenticatorDescription(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AuthenticatorDescription[] newArray(int size) {
             return new AuthenticatorDescription[size];
         }
@@ -22,36 +27,36 @@ public class AuthenticatorDescription implements Parcelable {
     public final int smallIconId;
     public final String type;
 
-    public AuthenticatorDescription(String type2, String packageName2, int labelId2, int iconId2, int smallIconId2, int prefId, boolean customTokens2) {
-        if (type2 == null) {
+    public AuthenticatorDescription(String type, String packageName, int labelId, int iconId, int smallIconId, int prefId, boolean customTokens) {
+        if (type == null) {
             throw new IllegalArgumentException("type cannot be null");
-        } else if (packageName2 != null) {
-            this.type = type2;
-            this.packageName = packageName2;
-            this.labelId = labelId2;
-            this.iconId = iconId2;
-            this.smallIconId = smallIconId2;
-            this.accountPreferencesId = prefId;
-            this.customTokens = customTokens2;
-        } else {
+        }
+        if (packageName == null) {
             throw new IllegalArgumentException("packageName cannot be null");
         }
+        this.type = type;
+        this.packageName = packageName;
+        this.labelId = labelId;
+        this.iconId = iconId;
+        this.smallIconId = smallIconId;
+        this.accountPreferencesId = prefId;
+        this.customTokens = customTokens;
     }
 
-    public AuthenticatorDescription(String type2, String packageName2, int labelId2, int iconId2, int smallIconId2, int prefId) {
-        this(type2, packageName2, labelId2, iconId2, smallIconId2, prefId, false);
+    public AuthenticatorDescription(String type, String packageName, int labelId, int iconId, int smallIconId, int prefId) {
+        this(type, packageName, labelId, iconId, smallIconId, prefId, false);
     }
 
-    public static AuthenticatorDescription newKey(String type2) {
-        if (type2 != null) {
-            return new AuthenticatorDescription(type2);
+    public static AuthenticatorDescription newKey(String type) {
+        if (type == null) {
+            throw new IllegalArgumentException("type cannot be null");
         }
-        throw new IllegalArgumentException("type cannot be null");
+        return new AuthenticatorDescription(type);
     }
 
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
-    private AuthenticatorDescription(String type2) {
-        this.type = type2;
+    private AuthenticatorDescription(String type) {
+        this.type = type;
         this.packageName = null;
         this.labelId = 0;
         this.iconId = 0;
@@ -68,9 +73,10 @@ public class AuthenticatorDescription implements Parcelable {
         this.iconId = source.readInt();
         this.smallIconId = source.readInt();
         this.accountPreferencesId = source.readInt();
-        this.customTokens = source.readByte() != 1 ? false : true;
+        this.customTokens = source.readByte() == 1;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -83,16 +89,18 @@ public class AuthenticatorDescription implements Parcelable {
         if (o == this) {
             return true;
         }
-        if (!(o instanceof AuthenticatorDescription)) {
-            return false;
+        if (o instanceof AuthenticatorDescription) {
+            AuthenticatorDescription other = (AuthenticatorDescription) o;
+            return this.type.equals(other.type);
         }
-        return this.type.equals(((AuthenticatorDescription) o).type);
+        return false;
     }
 
     public String toString() {
         return "AuthenticatorDescription {type=" + this.type + "}";
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.type);
         dest.writeString(this.packageName);
@@ -100,6 +108,6 @@ public class AuthenticatorDescription implements Parcelable {
         dest.writeInt(this.iconId);
         dest.writeInt(this.smallIconId);
         dest.writeInt(this.accountPreferencesId);
-        dest.writeByte(this.customTokens ? (byte) 1 : 0);
+        dest.writeByte(this.customTokens ? (byte) 1 : (byte) 0);
     }
 }

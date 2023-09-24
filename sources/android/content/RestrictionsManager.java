@@ -1,17 +1,17 @@
 package android.content;
 
 import android.annotation.UnsupportedAppUsage;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
+import android.content.p002pm.ApplicationInfo;
+import android.content.p002pm.PackageManager;
 import android.content.res.TypedArray;
 import android.content.res.XmlResourceParser;
-import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.os.RemoteException;
+import android.p007os.Bundle;
+import android.p007os.PersistableBundle;
+import android.p007os.RemoteException;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Xml;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import com.android.internal.util.XmlUtils;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 import org.xmlpull.v1.XmlPullParserException;
 
+/* loaded from: classes.dex */
 public class RestrictionsManager {
     public static final String ACTION_PERMISSION_RESPONSE_RECEIVED = "android.content.action.PERMISSION_RESPONSE_RECEIVED";
     public static final String ACTION_REQUEST_LOCAL_APPROVAL = "android.content.action.REQUEST_LOCAL_APPROVAL";
@@ -86,18 +87,19 @@ public class RestrictionsManager {
     public void requestPermission(String requestType, String requestId, PersistableBundle request) {
         if (requestType == null) {
             throw new NullPointerException("requestType cannot be null");
-        } else if (requestId == null) {
+        }
+        if (requestId == null) {
             throw new NullPointerException("requestId cannot be null");
-        } else if (request != null) {
-            try {
-                if (this.mService != null) {
-                    this.mService.requestPermission(this.mContext.getPackageName(), requestType, requestId, request);
-                }
-            } catch (RemoteException re) {
-                throw re.rethrowFromSystemServer();
-            }
-        } else {
+        }
+        if (request == null) {
             throw new NullPointerException("request cannot be null");
+        }
+        try {
+            if (this.mService != null) {
+                this.mService.requestPermission(this.mContext.getPackageName(), requestType, requestId, request);
+            }
+        } catch (RemoteException re) {
+            throw re.rethrowFromSystemServer();
         }
     }
 
@@ -115,20 +117,22 @@ public class RestrictionsManager {
     public void notifyPermissionResponse(String packageName, PersistableBundle response) {
         if (packageName == null) {
             throw new NullPointerException("packageName cannot be null");
-        } else if (response == null) {
+        }
+        if (response == null) {
             throw new NullPointerException("request cannot be null");
-        } else if (!response.containsKey(REQUEST_KEY_ID)) {
+        }
+        if (!response.containsKey(REQUEST_KEY_ID)) {
             throw new IllegalArgumentException("REQUEST_KEY_ID must be specified");
-        } else if (response.containsKey(RESPONSE_KEY_RESULT)) {
-            try {
-                if (this.mService != null) {
-                    this.mService.notifyPermissionResponse(packageName, response);
-                }
-            } catch (RemoteException re) {
-                throw re.rethrowFromSystemServer();
-            }
-        } else {
+        }
+        if (!response.containsKey(RESPONSE_KEY_RESULT)) {
             throw new IllegalArgumentException("RESPONSE_KEY_RESULT must be specified");
+        }
+        try {
+            if (this.mService != null) {
+                this.mService.notifyPermissionResponse(packageName, response);
+            }
+        } catch (RemoteException re) {
+            throw re.rethrowFromSystemServer();
         }
     }
 
@@ -138,31 +142,34 @@ public class RestrictionsManager {
             if (appInfo == null || !appInfo.metaData.containsKey(META_DATA_APP_RESTRICTIONS)) {
                 return null;
             }
-            return loadManifestRestrictions(packageName, appInfo.loadXmlMetaData(this.mContext.getPackageManager(), META_DATA_APP_RESTRICTIONS));
+            XmlResourceParser xml = appInfo.loadXmlMetaData(this.mContext.getPackageManager(), META_DATA_APP_RESTRICTIONS);
+            return loadManifestRestrictions(packageName, xml);
         } catch (PackageManager.NameNotFoundException e) {
             throw new IllegalArgumentException("No such package " + packageName);
         }
     }
 
     private List<RestrictionEntry> loadManifestRestrictions(String packageName, XmlResourceParser xml) {
-        RestrictionEntry restriction;
         try {
             Context appContext = this.mContext.createPackageContext(packageName, 0);
             ArrayList<RestrictionEntry> restrictions = new ArrayList<>();
             try {
                 int tagType = xml.next();
                 while (tagType != 1) {
-                    if (tagType == 2 && (restriction = loadRestrictionElement(appContext, xml)) != null) {
-                        restrictions.add(restriction);
+                    if (tagType == 2) {
+                        RestrictionEntry restriction = loadRestrictionElement(appContext, xml);
+                        if (restriction != null) {
+                            restrictions.add(restriction);
+                        }
                     }
                     tagType = xml.next();
                 }
                 return restrictions;
-            } catch (XmlPullParserException e) {
-                Log.w(TAG, "Reading restriction metadata for " + packageName, e);
+            } catch (IOException e) {
+                Log.m63w(TAG, "Reading restriction metadata for " + packageName, e);
                 return null;
-            } catch (IOException e2) {
-                Log.w(TAG, "Reading restriction metadata for " + packageName, e2);
+            } catch (XmlPullParserException e2) {
+                Log.m63w(TAG, "Reading restriction metadata for " + packageName, e2);
                 return null;
             }
         } catch (PackageManager.NameNotFoundException e3) {
@@ -172,27 +179,26 @@ public class RestrictionsManager {
 
     private RestrictionEntry loadRestrictionElement(Context appContext, XmlResourceParser xml) throws IOException, XmlPullParserException {
         AttributeSet attrSet;
-        if (!xml.getName().equals(TAG_RESTRICTION) || (attrSet = Xml.asAttributeSet(xml)) == null) {
-            return null;
+        if (xml.getName().equals(TAG_RESTRICTION) && (attrSet = Xml.asAttributeSet(xml)) != null) {
+            TypedArray a = appContext.obtainStyledAttributes(attrSet, C3132R.styleable.RestrictionEntry);
+            return loadRestriction(appContext, a, xml);
         }
-        return loadRestriction(appContext, appContext.obtainStyledAttributes(attrSet, R.styleable.RestrictionEntry), xml);
+        return null;
     }
 
     private RestrictionEntry loadRestriction(Context appContext, TypedArray a, XmlResourceParser xml) throws IOException, XmlPullParserException {
         Context context = appContext;
-        TypedArray typedArray = a;
-        XmlResourceParser xmlResourceParser = xml;
-        String key = typedArray.getString(3);
-        int restrictionType = typedArray.getInt(6, -1);
-        String title = typedArray.getString(2);
-        String description = typedArray.getString(0);
-        int entries = typedArray.getResourceId(1, 0);
-        int entryValues = typedArray.getResourceId(5, 0);
+        String key = a.getString(3);
+        int restrictionType = a.getInt(6, -1);
+        String title = a.getString(2);
+        String description = a.getString(0);
+        int entries = a.getResourceId(1, 0);
+        int entryValues = a.getResourceId(5, 0);
         if (restrictionType == -1) {
-            Log.w(TAG, "restrictionType cannot be omitted");
+            Log.m64w(TAG, "restrictionType cannot be omitted");
             return null;
         } else if (key == null) {
-            Log.w(TAG, "key cannot be omitted");
+            Log.m64w(TAG, "key cannot be omitted");
             return null;
         } else {
             RestrictionEntry restriction = new RestrictionEntry(restrictionType, key);
@@ -208,41 +214,42 @@ public class RestrictionsManager {
                 case 0:
                 case 2:
                 case 6:
-                    restriction.setSelectedString(typedArray.getString(4));
+                    restriction.setSelectedString(a.getString(4));
                     break;
                 case 1:
-                    restriction.setSelectedState(typedArray.getBoolean(4, false));
+                    restriction.setSelectedState(a.getBoolean(4, false));
+                    break;
+                case 3:
+                default:
+                    Log.m64w(TAG, "Unknown restriction type " + restrictionType);
                     break;
                 case 4:
-                    int resId = typedArray.getResourceId(4, 0);
+                    int resId = a.getResourceId(4, 0);
                     if (resId != 0) {
                         restriction.setAllSelectedStrings(appContext.getResources().getStringArray(resId));
                         break;
                     }
                     break;
                 case 5:
-                    restriction.setIntValue(typedArray.getInt(4, 0));
+                    restriction.setIntValue(a.getInt(4, 0));
                     break;
                 case 7:
                 case 8:
                     int outerDepth = xml.getDepth();
                     List<RestrictionEntry> restrictionEntries = new ArrayList<>();
-                    while (XmlUtils.nextElementWithin(xmlResourceParser, outerDepth)) {
-                        RestrictionEntry childEntry = loadRestrictionElement(context, xmlResourceParser);
+                    while (XmlUtils.nextElementWithin(xml, outerDepth)) {
+                        RestrictionEntry childEntry = loadRestrictionElement(context, xml);
                         if (childEntry == null) {
-                            Log.w(TAG, "Child entry cannot be loaded for bundle restriction " + key);
+                            Log.m64w(TAG, "Child entry cannot be loaded for bundle restriction " + key);
                         } else {
                             restrictionEntries.add(childEntry);
                             if (restrictionType == 8 && childEntry.getType() != 7) {
-                                Log.w(TAG, "bundle_array " + key + " can only contain entries of type bundle");
+                                Log.m64w(TAG, "bundle_array " + key + " can only contain entries of type bundle");
                             }
                         }
                         context = appContext;
                     }
                     restriction.setRestrictions((RestrictionEntry[]) restrictionEntries.toArray(new RestrictionEntry[restrictionEntries.size()]));
-                    break;
-                default:
-                    Log.w(TAG, "Unknown restriction type " + restrictionType);
                     break;
             }
             return restriction;
@@ -275,7 +282,9 @@ public class RestrictionsManager {
                 bundle.putInt(entry.getKey(), entry.getIntValue());
                 break;
             case 7:
-                bundle.putBundle(entry.getKey(), convertRestrictionsToBundle(Arrays.asList(entry.getRestrictions())));
+                RestrictionEntry[] restrictions = entry.getRestrictions();
+                Bundle childBundle = convertRestrictionsToBundle(Arrays.asList(restrictions));
+                bundle.putBundle(entry.getKey(), childBundle);
                 break;
             case 8:
                 RestrictionEntry[] bundleRestrictionArray = entry.getRestrictions();
@@ -283,7 +292,7 @@ public class RestrictionsManager {
                 for (int i = 0; i < bundleRestrictionArray.length; i++) {
                     RestrictionEntry[] bundleRestrictions = bundleRestrictionArray[i].getRestrictions();
                     if (bundleRestrictions == null) {
-                        Log.w(TAG, "addRestrictionToBundle: Non-bundle entry found in bundle array");
+                        Log.m64w(TAG, "addRestrictionToBundle: Non-bundle entry found in bundle array");
                         bundleArray[i] = new Bundle();
                     } else {
                         bundleArray[i] = convertRestrictionsToBundle(Arrays.asList(bundleRestrictions));

@@ -8,20 +8,23 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Iterator;
 
+/* loaded from: classes4.dex */
 public final class LocalLog {
-    private final Deque<String> mLog = new ArrayDeque(this.mMaxLines);
+    private final Deque<String> mLog;
     private final int mMaxLines;
 
     @UnsupportedAppUsage
     public LocalLog(int maxLines) {
         this.mMaxLines = Math.max(0, maxLines);
+        this.mLog = new ArrayDeque(this.mMaxLines);
     }
 
     @UnsupportedAppUsage
     public void log(String msg) {
-        if (this.mMaxLines > 0) {
-            append(String.format("%s - %s", new Object[]{LocalDateTime.now(), msg}));
+        if (this.mMaxLines <= 0) {
+            return;
         }
+        append(String.format("%s - %s", LocalDateTime.now(), msg));
     }
 
     private synchronized void append(String logLine) {
@@ -37,8 +40,8 @@ public final class LocalLog {
     }
 
     public synchronized void dump(PrintWriter pw) {
-        for (String println : this.mLog) {
-            pw.println(println);
+        for (String str : this.mLog) {
+            pw.println(str);
         }
     }
 
@@ -53,6 +56,7 @@ public final class LocalLog {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class ReadOnlyLocalLog {
         private final LocalLog mLog;
 

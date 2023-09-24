@@ -1,5 +1,6 @@
 package com.android.server;
 
+/* loaded from: classes4.dex */
 public final class IntentResolverProto {
     public static final long BASE_MIME_TYPES = 2246267895810L;
     public static final long FULL_MIME_TYPES = 2246267895809L;
@@ -8,6 +9,7 @@ public final class IntentResolverProto {
     public static final long SCHEMES = 2246267895812L;
     public static final long WILD_MIME_TYPES = 2246267895811L;
 
+    /* loaded from: classes4.dex */
     public final class ArrayMapEntry {
         public static final long KEY = 1138166333441L;
         public static final long VALUES = 2237677961218L;

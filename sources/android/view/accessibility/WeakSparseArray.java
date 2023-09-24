@@ -5,6 +5,7 @@ import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 
+/* loaded from: classes4.dex */
 final class WeakSparseArray<E> {
     private final ReferenceQueue<E> mRefQueue = new ReferenceQueue<>();
     private final SparseArray<WeakReferenceWithId<E>> mSparseArray = new SparseArray<>();
@@ -14,7 +15,7 @@ final class WeakSparseArray<E> {
 
     public void append(int key, E value) {
         removeUnreachableValues();
-        this.mSparseArray.append(key, new WeakReferenceWithId(value, this.mRefQueue, key));
+        this.mSparseArray.append(key, new WeakReferenceWithId<>(value, this.mRefQueue, key));
     }
 
     public void remove(int key) {
@@ -26,7 +27,7 @@ final class WeakSparseArray<E> {
         removeUnreachableValues();
         WeakReferenceWithId<E> ref = this.mSparseArray.get(key);
         if (ref != null) {
-            return ref.get();
+            return (E) ref.get();
         }
         return null;
     }
@@ -39,6 +40,7 @@ final class WeakSparseArray<E> {
         }
     }
 
+    /* loaded from: classes4.dex */
     private static class WeakReferenceWithId<E> extends WeakReference<E> {
         final int mId;
 

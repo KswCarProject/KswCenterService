@@ -1,29 +1,35 @@
 package android.service.textclassifier;
 
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes3.dex */
 public interface ITextClassifierCallback extends IInterface {
     void onFailure() throws RemoteException;
 
     void onSuccess(Bundle bundle) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements ITextClassifierCallback {
+        @Override // android.service.textclassifier.ITextClassifierCallback
         public void onSuccess(Bundle result) throws RemoteException {
         }
 
+        @Override // android.service.textclassifier.ITextClassifierCallback
         public void onFailure() throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements ITextClassifierCallback {
         private static final String DESCRIPTOR = "android.service.textclassifier.ITextClassifierCallback";
         static final int TRANSACTION_onFailure = 2;
@@ -38,12 +44,13 @@ public interface ITextClassifierCallback extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof ITextClassifierCallback)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof ITextClassifierCallback)) {
+                return (ITextClassifierCallback) iin;
             }
-            return (ITextClassifierCallback) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -59,36 +66,38 @@ public interface ITextClassifierCallback extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
             Bundle _arg0;
-            if (code != 1598968902) {
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = Bundle.CREATOR.createFromParcel(data);
-                        } else {
-                            _arg0 = null;
-                        }
-                        onSuccess(_arg0);
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        onFailure();
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg0 = Bundle.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg0 = null;
+                    }
+                    onSuccess(_arg0);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    onFailure();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements ITextClassifierCallback {
             public static ITextClassifierCallback sDefaultImpl;
             private IBinder mRemote;
@@ -97,6 +106,7 @@ public interface ITextClassifierCallback extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -105,6 +115,7 @@ public interface ITextClassifierCallback extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.service.textclassifier.ITextClassifierCallback
             public void onSuccess(Bundle result) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -115,9 +126,8 @@ public interface ITextClassifierCallback extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onSuccess(result);
                     }
                 } finally {
@@ -125,13 +135,13 @@ public interface ITextClassifierCallback extends IInterface {
                 }
             }
 
+            @Override // android.service.textclassifier.ITextClassifierCallback
             public void onFailure() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onFailure();
                     }
                 } finally {
@@ -141,11 +151,11 @@ public interface ITextClassifierCallback extends IInterface {
         }
 
         public static boolean setDefaultImpl(ITextClassifierCallback impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static ITextClassifierCallback getDefaultImpl() {

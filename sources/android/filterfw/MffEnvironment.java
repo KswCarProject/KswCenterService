@@ -5,6 +5,7 @@ import android.filterfw.core.FilterContext;
 import android.filterfw.core.FrameManager;
 import android.filterfw.core.GLEnvironment;
 
+/* loaded from: classes.dex */
 public class MffEnvironment {
     private FilterContext mContext;
 
@@ -29,7 +30,8 @@ public class MffEnvironment {
     }
 
     public void activateGLEnvironment() {
-        if (this.mContext.getGLEnvironment() != null) {
+        GLEnvironment glEnv = this.mContext.getGLEnvironment();
+        if (glEnv != null) {
             this.mContext.getGLEnvironment().activate();
             return;
         }
@@ -37,7 +39,8 @@ public class MffEnvironment {
     }
 
     public void deactivateGLEnvironment() {
-        if (this.mContext.getGLEnvironment() != null) {
+        GLEnvironment glEnv = this.mContext.getGLEnvironment();
+        if (glEnv != null) {
             this.mContext.getGLEnvironment().deactivate();
             return;
         }

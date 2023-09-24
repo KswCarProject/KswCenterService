@@ -1,20 +1,25 @@
 package android.service.autofill;
 
 import android.app.assist.AssistStructure;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.ArrayMap;
 import android.util.SparseIntArray;
 import android.view.autofill.AutofillId;
 import android.view.autofill.Helper;
 import java.util.LinkedList;
 
+/* loaded from: classes3.dex */
 public final class FillContext implements Parcelable {
-    public static final Parcelable.Creator<FillContext> CREATOR = new Parcelable.Creator<FillContext>() {
+    public static final Parcelable.Creator<FillContext> CREATOR = new Parcelable.Creator<FillContext>() { // from class: android.service.autofill.FillContext.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public FillContext createFromParcel(Parcel parcel) {
             return new FillContext(parcel);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public FillContext[] newArray(int size) {
             return new FillContext[size];
         }
@@ -31,7 +36,7 @@ public final class FillContext implements Parcelable {
     }
 
     private FillContext(Parcel parcel) {
-        this(parcel.readInt(), (AssistStructure) parcel.readParcelable((ClassLoader) null), (AutofillId) parcel.readParcelable((ClassLoader) null));
+        this(parcel.readInt(), (AssistStructure) parcel.readParcelable(null), (AutofillId) parcel.readParcelable(null));
     }
 
     public int getRequestId() {
@@ -47,22 +52,28 @@ public final class FillContext implements Parcelable {
     }
 
     public String toString() {
-        if (!Helper.sDebug) {
-            return super.toString();
+        if (Helper.sDebug) {
+            return "FillContext [reqId=" + this.mRequestId + ", focusedId=" + this.mFocusedId + "]";
         }
-        return "FillContext [reqId=" + this.mRequestId + ", focusedId=" + this.mFocusedId + "]";
+        return super.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeInt(this.mRequestId);
         parcel.writeParcelable(this.mStructure, flags);
         parcel.writeParcelable(this.mFocusedId, flags);
     }
 
+    /* JADX WARN: Incorrect condition in loop: B:18:0x0053 */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
     public AssistStructure.ViewNode[] findViewNodesByAutofillIds(AutofillId[] ids) {
         LinkedList<AssistStructure.ViewNode> nodesToProcess = new LinkedList<>();
         AssistStructure.ViewNode[] foundNodes = new AssistStructure.ViewNode[ids.length];
@@ -83,7 +94,7 @@ public final class FillContext implements Parcelable {
         for (int i2 = 0; i2 < numWindowNodes; i2++) {
             nodesToProcess.add(this.mStructure.getWindowNodeAt(i2).getRootViewNode());
         }
-        while (missingNodeIndexes.size() > 0 && !nodesToProcess.isEmpty()) {
+        while (i > 0 && !nodesToProcess.isEmpty()) {
             AssistStructure.ViewNode node = nodesToProcess.removeFirst();
             int i3 = 0;
             while (true) {
@@ -92,15 +103,15 @@ public final class FillContext implements Parcelable {
                 }
                 int index = missingNodeIndexes.keyAt(i3);
                 AutofillId id = ids[index];
-                if (id.equals(node.getAutofillId())) {
+                if (!id.equals(node.getAutofillId())) {
+                    i3++;
+                } else {
                     foundNodes[index] = node;
                     if (this.mViewNodeLookupTable == null) {
                         this.mViewNodeLookupTable = new ArrayMap<>(ids.length);
                     }
                     this.mViewNodeLookupTable.put(id, node);
                     missingNodeIndexes.removeAt(i3);
-                } else {
-                    i3++;
                 }
             }
             for (int i4 = 0; i4 < node.getChildCount(); i4++) {

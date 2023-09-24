@@ -1,5 +1,6 @@
 package com.android.server;
 
+/* loaded from: classes4.dex */
 public final class BatchProto {
     public static final long ALARMS = 2246267895812L;
     public static final long END_REALTIME = 1112396529666L;

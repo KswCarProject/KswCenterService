@@ -5,6 +5,7 @@ import android.content.Context;
 import java.util.Locale;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public abstract class SearchIndexableData {
     public String className;
     public Context context;
@@ -31,6 +32,6 @@ public abstract class SearchIndexableData {
     }
 
     public String toString() {
-        return "SearchIndexableData[context: " + this.context + ", " + "locale: " + this.locale + ", " + "enabled: " + this.enabled + ", " + "rank: " + this.rank + ", " + "key: " + this.key + ", " + "userId: " + this.userId + ", " + "className: " + this.className + ", " + "packageName: " + this.packageName + ", " + "iconResId: " + this.iconResId + ", " + "intentAction: " + this.intentAction + ", " + "intentTargetPackage: " + this.intentTargetPackage + ", " + "intentTargetClass: " + this.intentTargetClass + "]";
+        return "SearchIndexableData[context: " + this.context + ", locale: " + this.locale + ", enabled: " + this.enabled + ", rank: " + this.rank + ", key: " + this.key + ", userId: " + this.userId + ", className: " + this.className + ", packageName: " + this.packageName + ", iconResId: " + this.iconResId + ", intentAction: " + this.intentAction + ", intentTargetPackage: " + this.intentTargetPackage + ", intentTargetClass: " + this.intentTargetClass + "]";
     }
 }

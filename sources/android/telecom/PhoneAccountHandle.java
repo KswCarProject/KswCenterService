@@ -2,19 +2,23 @@ package android.telecom;
 
 import android.annotation.UnsupportedAppUsage;
 import android.content.ComponentName;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.Process;
-import android.os.UserHandle;
-import android.util.Log;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.Process;
+import android.p007os.UserHandle;
 import java.util.Objects;
 
+/* loaded from: classes3.dex */
 public final class PhoneAccountHandle implements Parcelable {
-    public static final Parcelable.Creator<PhoneAccountHandle> CREATOR = new Parcelable.Creator<PhoneAccountHandle>() {
+    public static final Parcelable.Creator<PhoneAccountHandle> CREATOR = new Parcelable.Creator<PhoneAccountHandle>() { // from class: android.telecom.PhoneAccountHandle.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PhoneAccountHandle createFromParcel(Parcel in) {
             return new PhoneAccountHandle(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PhoneAccountHandle[] newArray(int size) {
             return new PhoneAccountHandle[size];
         }
@@ -49,7 +53,7 @@ public final class PhoneAccountHandle implements Parcelable {
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{this.mComponentName, this.mId, this.mUserHandle});
+        return Objects.hash(this.mComponentName, this.mId, this.mUserHandle);
     }
 
     public String toString() {
@@ -60,10 +64,12 @@ public final class PhoneAccountHandle implements Parcelable {
         return other != null && (other instanceof PhoneAccountHandle) && Objects.equals(((PhoneAccountHandle) other).getComponentName(), getComponentName()) && Objects.equals(((PhoneAccountHandle) other).getId(), getId()) && Objects.equals(((PhoneAccountHandle) other).getUserHandle(), getUserHandle());
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         this.mComponentName.writeToParcel(out, flags);
         out.writeString(this.mId);
@@ -72,10 +78,10 @@ public final class PhoneAccountHandle implements Parcelable {
 
     private void checkParameters(ComponentName componentName, UserHandle userHandle) {
         if (componentName == null) {
-            Log.w("PhoneAccountHandle", (Throwable) new Exception("PhoneAccountHandle has been created with null ComponentName!"));
+            android.util.Log.m62w("PhoneAccountHandle", new Exception("PhoneAccountHandle has been created with null ComponentName!"));
         }
         if (userHandle == null) {
-            Log.w("PhoneAccountHandle", (Throwable) new Exception("PhoneAccountHandle has been created with null UserHandle!"));
+            android.util.Log.m62w("PhoneAccountHandle", new Exception("PhoneAccountHandle has been created with null UserHandle!"));
         }
     }
 
@@ -85,11 +91,8 @@ public final class PhoneAccountHandle implements Parcelable {
     }
 
     public static boolean areFromSamePackage(PhoneAccountHandle a, PhoneAccountHandle b) {
-        String bPackageName = null;
         String aPackageName = a != null ? a.getComponentName().getPackageName() : null;
-        if (b != null) {
-            bPackageName = b.getComponentName().getPackageName();
-        }
+        String bPackageName = b != null ? b.getComponentName().getPackageName() : null;
         return Objects.equals(aPackageName, bPackageName);
     }
 }

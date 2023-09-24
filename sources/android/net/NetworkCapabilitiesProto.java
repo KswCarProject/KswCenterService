@@ -1,5 +1,6 @@
 package android.net;
 
+/* loaded from: classes3.dex */
 public final class NetworkCapabilitiesProto {
     public static final long CAN_REPORT_SIGNAL_STRENGTH = 1133871366150L;
     public static final long CAPABILITIES = 2259152797698L;

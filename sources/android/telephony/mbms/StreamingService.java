@@ -1,13 +1,14 @@
 package android.telephony.mbms;
 
 import android.net.Uri;
-import android.os.RemoteException;
+import android.p007os.RemoteException;
 import android.telephony.MbmsStreamingSession;
 import android.telephony.mbms.vendor.IMbmsStreamingService;
 import android.util.Log;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes4.dex */
 public class StreamingService implements AutoCloseable {
     public static final int BROADCAST_METHOD = 1;
     private static final String LOG_TAG = "MbmsStreamingService";
@@ -29,10 +30,12 @@ public class StreamingService implements AutoCloseable {
     private final int mSubscriptionId;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface StreamingState {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface StreamingStateChangeReason {
     }
 
@@ -45,18 +48,17 @@ public class StreamingService implements AutoCloseable {
     }
 
     public Uri getPlaybackUri() {
-        if (this.mService != null) {
-            try {
-                return this.mService.getPlaybackUri(this.mSubscriptionId, this.mServiceInfo.getServiceId());
-            } catch (RemoteException e) {
-                Log.w(LOG_TAG, "Remote process died");
-                this.mService = null;
-                this.mParentSession.onStreamingServiceStopped(this);
-                sendErrorToApp(3, (String) null);
-                return null;
-            }
-        } else {
+        if (this.mService == null) {
             throw new IllegalStateException("No streaming service attached");
+        }
+        try {
+            return this.mService.getPlaybackUri(this.mSubscriptionId, this.mServiceInfo.getServiceId());
+        } catch (RemoteException e) {
+            Log.m64w(LOG_TAG, "Remote process died");
+            this.mService = null;
+            this.mParentSession.onStreamingServiceStopped(this);
+            sendErrorToApp(3, null);
+            return null;
         }
     }
 
@@ -64,22 +66,22 @@ public class StreamingService implements AutoCloseable {
         return this.mServiceInfo;
     }
 
+    @Override // java.lang.AutoCloseable
     public void close() {
-        if (this.mService != null) {
+        try {
+            if (this.mService == null) {
+                throw new IllegalStateException("No streaming service attached");
+            }
             try {
                 this.mService.stopStreaming(this.mSubscriptionId, this.mServiceInfo.getServiceId());
             } catch (RemoteException e) {
-                Log.w(LOG_TAG, "Remote process died");
+                Log.m64w(LOG_TAG, "Remote process died");
                 this.mService = null;
-                sendErrorToApp(3, (String) null);
-            } catch (Throwable th) {
-                this.mParentSession.onStreamingServiceStopped(this);
-                throw th;
+                sendErrorToApp(3, null);
             }
+        } finally {
             this.mParentSession.onStreamingServiceStopped(this);
-            return;
         }
-        throw new IllegalStateException("No streaming service attached");
     }
 
     public InternalStreamingServiceCallback getCallback() {

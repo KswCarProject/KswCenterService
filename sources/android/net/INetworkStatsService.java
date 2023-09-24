@@ -2,14 +2,15 @@ package android.net;
 
 import android.annotation.UnsupportedAppUsage;
 import android.net.INetworkStatsSession;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Messenger;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Messenger;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import com.android.internal.net.VpnInfo;
 
+/* loaded from: classes3.dex */
 public interface INetworkStatsService extends IInterface {
     @UnsupportedAppUsage
     void forceUpdate() throws RemoteException;
@@ -42,60 +43,76 @@ public interface INetworkStatsService extends IInterface {
 
     void unregisterUsageRequest(DataUsageRequest dataUsageRequest) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements INetworkStatsService {
+        @Override // android.net.INetworkStatsService
         public INetworkStatsSession openSession() throws RemoteException {
             return null;
         }
 
+        @Override // android.net.INetworkStatsService
         public INetworkStatsSession openSessionForUsageStats(int flags, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.net.INetworkStatsService
         public NetworkStats getDataLayerSnapshotForUid(int uid) throws RemoteException {
             return null;
         }
 
+        @Override // android.net.INetworkStatsService
         public NetworkStats getDetailedUidStats(String[] requiredIfaces) throws RemoteException {
             return null;
         }
 
+        @Override // android.net.INetworkStatsService
         public String[] getMobileIfaces() throws RemoteException {
             return null;
         }
 
+        @Override // android.net.INetworkStatsService
         public void incrementOperationCount(int uid, int tag, int operationCount) throws RemoteException {
         }
 
+        @Override // android.net.INetworkStatsService
         public void forceUpdateIfaces(Network[] defaultNetworks, VpnInfo[] vpnArray, NetworkState[] networkStates, String activeIface) throws RemoteException {
         }
 
+        @Override // android.net.INetworkStatsService
         public void forceUpdate() throws RemoteException {
         }
 
+        @Override // android.net.INetworkStatsService
         public DataUsageRequest registerUsageCallback(String callingPackage, DataUsageRequest request, Messenger messenger, IBinder binder) throws RemoteException {
             return null;
         }
 
+        @Override // android.net.INetworkStatsService
         public void unregisterUsageRequest(DataUsageRequest request) throws RemoteException {
         }
 
+        @Override // android.net.INetworkStatsService
         public long getUidStats(int uid, int type) throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // android.net.INetworkStatsService
         public long getIfaceStats(String iface, int type) throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // android.net.INetworkStatsService
         public long getTotalStats(int type) throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements INetworkStatsService {
         private static final String DESCRIPTOR = "android.net.INetworkStatsService";
         static final int TRANSACTION_forceUpdate = 8;
@@ -121,12 +138,13 @@ public interface INetworkStatsService extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof INetworkStatsService)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof INetworkStatsService)) {
+                return (INetworkStatsService) iin;
             }
-            return (INetworkStatsService) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -164,205 +182,139 @@ public interface INetworkStatsService extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v11, resolved type: android.os.Messenger} */
-        /* JADX WARNING: type inference failed for: r3v0 */
-        /* JADX WARNING: type inference failed for: r3v1, types: [android.os.IBinder] */
-        /* JADX WARNING: type inference failed for: r3v3, types: [android.os.IBinder] */
-        /* JADX WARNING: type inference failed for: r3v15 */
-        /* JADX WARNING: type inference failed for: r3v21 */
-        /* JADX WARNING: type inference failed for: r3v22 */
-        /* JADX WARNING: type inference failed for: r3v23 */
-        /* JADX WARNING: type inference failed for: r3v24 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r9, android.os.Parcel r10, android.os.Parcel r11, int r12) throws android.os.RemoteException {
-            /*
-                r8 = this;
-                java.lang.String r0 = "android.net.INetworkStatsService"
-                r1 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r2 = 1
-                if (r9 == r1) goto L_0x0167
-                r1 = 0
-                r3 = 0
-                switch(r9) {
-                    case 1: goto L_0x0152;
-                    case 2: goto L_0x0135;
-                    case 3: goto L_0x011a;
-                    case 4: goto L_0x00ff;
-                    case 5: goto L_0x00f1;
-                    case 6: goto L_0x00db;
-                    case 7: goto L_0x00b5;
-                    case 8: goto L_0x00ab;
-                    case 9: goto L_0x006c;
-                    case 10: goto L_0x0050;
-                    case 11: goto L_0x003a;
-                    case 12: goto L_0x0024;
-                    case 13: goto L_0x0012;
-                    default: goto L_0x000d;
-                }
-            L_0x000d:
-                boolean r1 = super.onTransact(r9, r10, r11, r12)
-                return r1
-            L_0x0012:
-                r10.enforceInterface(r0)
-                int r1 = r10.readInt()
-                long r3 = r8.getTotalStats(r1)
-                r11.writeNoException()
-                r11.writeLong(r3)
-                return r2
-            L_0x0024:
-                r10.enforceInterface(r0)
-                java.lang.String r1 = r10.readString()
-                int r3 = r10.readInt()
-                long r4 = r8.getIfaceStats(r1, r3)
-                r11.writeNoException()
-                r11.writeLong(r4)
-                return r2
-            L_0x003a:
-                r10.enforceInterface(r0)
-                int r1 = r10.readInt()
-                int r3 = r10.readInt()
-                long r4 = r8.getUidStats(r1, r3)
-                r11.writeNoException()
-                r11.writeLong(r4)
-                return r2
-            L_0x0050:
-                r10.enforceInterface(r0)
-                int r1 = r10.readInt()
-                if (r1 == 0) goto L_0x0063
-                android.os.Parcelable$Creator<android.net.DataUsageRequest> r1 = android.net.DataUsageRequest.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                r3 = r1
-                android.net.DataUsageRequest r3 = (android.net.DataUsageRequest) r3
-                goto L_0x0064
-            L_0x0063:
-            L_0x0064:
-                r1 = r3
-                r8.unregisterUsageRequest(r1)
-                r11.writeNoException()
-                return r2
-            L_0x006c:
-                r10.enforceInterface(r0)
-                java.lang.String r4 = r10.readString()
-                int r5 = r10.readInt()
-                if (r5 == 0) goto L_0x0082
-                android.os.Parcelable$Creator<android.net.DataUsageRequest> r5 = android.net.DataUsageRequest.CREATOR
-                java.lang.Object r5 = r5.createFromParcel(r10)
-                android.net.DataUsageRequest r5 = (android.net.DataUsageRequest) r5
-                goto L_0x0083
-            L_0x0082:
-                r5 = r3
-            L_0x0083:
-                int r6 = r10.readInt()
-                if (r6 == 0) goto L_0x0092
-                android.os.Parcelable$Creator<android.os.Messenger> r3 = android.os.Messenger.CREATOR
-                java.lang.Object r3 = r3.createFromParcel(r10)
-                android.os.Messenger r3 = (android.os.Messenger) r3
-                goto L_0x0093
-            L_0x0092:
-            L_0x0093:
-                android.os.IBinder r6 = r10.readStrongBinder()
-                android.net.DataUsageRequest r7 = r8.registerUsageCallback(r4, r5, r3, r6)
-                r11.writeNoException()
-                if (r7 == 0) goto L_0x00a7
-                r11.writeInt(r2)
-                r7.writeToParcel(r11, r2)
-                goto L_0x00aa
-            L_0x00a7:
-                r11.writeInt(r1)
-            L_0x00aa:
-                return r2
-            L_0x00ab:
-                r10.enforceInterface(r0)
-                r8.forceUpdate()
-                r11.writeNoException()
-                return r2
-            L_0x00b5:
-                r10.enforceInterface(r0)
-                android.os.Parcelable$Creator<android.net.Network> r1 = android.net.Network.CREATOR
-                java.lang.Object[] r1 = r10.createTypedArray(r1)
-                android.net.Network[] r1 = (android.net.Network[]) r1
-                android.os.Parcelable$Creator<com.android.internal.net.VpnInfo> r3 = com.android.internal.net.VpnInfo.CREATOR
-                java.lang.Object[] r3 = r10.createTypedArray(r3)
-                com.android.internal.net.VpnInfo[] r3 = (com.android.internal.net.VpnInfo[]) r3
-                android.os.Parcelable$Creator<android.net.NetworkState> r4 = android.net.NetworkState.CREATOR
-                java.lang.Object[] r4 = r10.createTypedArray(r4)
-                android.net.NetworkState[] r4 = (android.net.NetworkState[]) r4
-                java.lang.String r5 = r10.readString()
-                r8.forceUpdateIfaces(r1, r3, r4, r5)
-                r11.writeNoException()
-                return r2
-            L_0x00db:
-                r10.enforceInterface(r0)
-                int r1 = r10.readInt()
-                int r3 = r10.readInt()
-                int r4 = r10.readInt()
-                r8.incrementOperationCount(r1, r3, r4)
-                r11.writeNoException()
-                return r2
-            L_0x00f1:
-                r10.enforceInterface(r0)
-                java.lang.String[] r1 = r8.getMobileIfaces()
-                r11.writeNoException()
-                r11.writeStringArray(r1)
-                return r2
-            L_0x00ff:
-                r10.enforceInterface(r0)
-                java.lang.String[] r3 = r10.createStringArray()
-                android.net.NetworkStats r4 = r8.getDetailedUidStats(r3)
-                r11.writeNoException()
-                if (r4 == 0) goto L_0x0116
-                r11.writeInt(r2)
-                r4.writeToParcel(r11, r2)
-                goto L_0x0119
-            L_0x0116:
-                r11.writeInt(r1)
-            L_0x0119:
-                return r2
-            L_0x011a:
-                r10.enforceInterface(r0)
-                int r3 = r10.readInt()
-                android.net.NetworkStats r4 = r8.getDataLayerSnapshotForUid(r3)
-                r11.writeNoException()
-                if (r4 == 0) goto L_0x0131
-                r11.writeInt(r2)
-                r4.writeToParcel(r11, r2)
-                goto L_0x0134
-            L_0x0131:
-                r11.writeInt(r1)
-            L_0x0134:
-                return r2
-            L_0x0135:
-                r10.enforceInterface(r0)
-                int r1 = r10.readInt()
-                java.lang.String r4 = r10.readString()
-                android.net.INetworkStatsSession r5 = r8.openSessionForUsageStats(r1, r4)
-                r11.writeNoException()
-                if (r5 == 0) goto L_0x014e
-                android.os.IBinder r3 = r5.asBinder()
-            L_0x014e:
-                r11.writeStrongBinder(r3)
-                return r2
-            L_0x0152:
-                r10.enforceInterface(r0)
-                android.net.INetworkStatsSession r1 = r8.openSession()
-                r11.writeNoException()
-                if (r1 == 0) goto L_0x0163
-                android.os.IBinder r3 = r1.asBinder()
-            L_0x0163:
-                r11.writeStrongBinder(r3)
-                return r2
-            L_0x0167:
-                r11.writeString(r0)
-                return r2
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.net.INetworkStatsService.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            DataUsageRequest _arg1;
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    INetworkStatsSession _result = openSession();
+                    reply.writeNoException();
+                    reply.writeStrongBinder(_result != null ? _result.asBinder() : null);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0 = data.readInt();
+                    String _arg12 = data.readString();
+                    INetworkStatsSession _result2 = openSessionForUsageStats(_arg0, _arg12);
+                    reply.writeNoException();
+                    reply.writeStrongBinder(_result2 != null ? _result2.asBinder() : null);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    NetworkStats _result3 = getDataLayerSnapshotForUid(_arg02);
+                    reply.writeNoException();
+                    if (_result3 != null) {
+                        reply.writeInt(1);
+                        _result3.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    String[] _arg03 = data.createStringArray();
+                    NetworkStats _result4 = getDetailedUidStats(_arg03);
+                    reply.writeNoException();
+                    if (_result4 != null) {
+                        reply.writeInt(1);
+                        _result4.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    String[] _result5 = getMobileIfaces();
+                    reply.writeNoException();
+                    reply.writeStringArray(_result5);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg04 = data.readInt();
+                    int _arg13 = data.readInt();
+                    int _arg2 = data.readInt();
+                    incrementOperationCount(_arg04, _arg13, _arg2);
+                    reply.writeNoException();
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    Network[] _arg05 = (Network[]) data.createTypedArray(Network.CREATOR);
+                    VpnInfo[] _arg14 = (VpnInfo[]) data.createTypedArray(VpnInfo.CREATOR);
+                    NetworkState[] _arg22 = (NetworkState[]) data.createTypedArray(NetworkState.CREATOR);
+                    String _arg3 = data.readString();
+                    forceUpdateIfaces(_arg05, _arg14, _arg22, _arg3);
+                    reply.writeNoException();
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    forceUpdate();
+                    reply.writeNoException();
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg06 = data.readString();
+                    if (data.readInt() != 0) {
+                        _arg1 = DataUsageRequest.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg1 = null;
+                    }
+                    Messenger _arg23 = data.readInt() != 0 ? Messenger.CREATOR.createFromParcel(data) : null;
+                    IBinder _arg32 = data.readStrongBinder();
+                    DataUsageRequest _result6 = registerUsageCallback(_arg06, _arg1, _arg23, _arg32);
+                    reply.writeNoException();
+                    if (_result6 != null) {
+                        reply.writeInt(1);
+                        _result6.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    DataUsageRequest _arg07 = data.readInt() != 0 ? DataUsageRequest.CREATOR.createFromParcel(data) : null;
+                    unregisterUsageRequest(_arg07);
+                    reply.writeNoException();
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg08 = data.readInt();
+                    int _arg15 = data.readInt();
+                    long _result7 = getUidStats(_arg08, _arg15);
+                    reply.writeNoException();
+                    reply.writeLong(_result7);
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg09 = data.readString();
+                    int _arg16 = data.readInt();
+                    long _result8 = getIfaceStats(_arg09, _arg16);
+                    reply.writeNoException();
+                    reply.writeLong(_result8);
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg010 = data.readInt();
+                    long _result9 = getTotalStats(_arg010);
+                    reply.writeNoException();
+                    reply.writeLong(_result9);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements INetworkStatsService {
             public static INetworkStatsService sDefaultImpl;
             private IBinder mRemote;
@@ -371,6 +323,7 @@ public interface INetworkStatsService extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -379,18 +332,18 @@ public interface INetworkStatsService extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.net.INetworkStatsService
             public INetworkStatsSession openSession() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(1, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().openSession();
                     }
                     _reply.readException();
                     INetworkStatsSession _result = INetworkStatsSession.Stub.asInterface(_reply.readStrongBinder());
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -398,6 +351,7 @@ public interface INetworkStatsService extends IInterface {
                 }
             }
 
+            @Override // android.net.INetworkStatsService
             public INetworkStatsSession openSessionForUsageStats(int flags, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -405,13 +359,12 @@ public interface INetworkStatsService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(flags);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(2, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().openSessionForUsageStats(flags, callingPackage);
                     }
                     _reply.readException();
                     INetworkStatsSession _result = INetworkStatsSession.Stub.asInterface(_reply.readStrongBinder());
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -419,6 +372,7 @@ public interface INetworkStatsService extends IInterface {
                 }
             }
 
+            @Override // android.net.INetworkStatsService
             public NetworkStats getDataLayerSnapshotForUid(int uid) throws RemoteException {
                 NetworkStats _result;
                 Parcel _data = Parcel.obtain();
@@ -426,7 +380,8 @@ public interface INetworkStatsService extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(uid);
-                    if (!this.mRemote.transact(3, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getDataLayerSnapshotForUid(uid);
                     }
                     _reply.readException();
@@ -435,16 +390,14 @@ public interface INetworkStatsService extends IInterface {
                     } else {
                         _result = null;
                     }
-                    NetworkStats _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.INetworkStatsService
             public NetworkStats getDetailedUidStats(String[] requiredIfaces) throws RemoteException {
                 NetworkStats _result;
                 Parcel _data = Parcel.obtain();
@@ -452,7 +405,8 @@ public interface INetworkStatsService extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStringArray(requiredIfaces);
-                    if (!this.mRemote.transact(4, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getDetailedUidStats(requiredIfaces);
                     }
                     _reply.readException();
@@ -461,28 +415,6 @@ public interface INetworkStatsService extends IInterface {
                     } else {
                         _result = null;
                     }
-                    NetworkStats _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public String[] getMobileIfaces() throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(5, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
-                        return Stub.getDefaultImpl().getMobileIfaces();
-                    }
-                    _reply.readException();
-                    String[] _result = _reply.createStringArray();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -490,6 +422,26 @@ public interface INetworkStatsService extends IInterface {
                 }
             }
 
+            @Override // android.net.INetworkStatsService
+            public String[] getMobileIfaces() throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        return Stub.getDefaultImpl().getMobileIfaces();
+                    }
+                    _reply.readException();
+                    String[] _result = _reply.createStringArray();
+                    return _result;
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // android.net.INetworkStatsService
             public void incrementOperationCount(int uid, int tag, int operationCount) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -498,19 +450,19 @@ public interface INetworkStatsService extends IInterface {
                     _data.writeInt(uid);
                     _data.writeInt(tag);
                     _data.writeInt(operationCount);
-                    if (this.mRemote.transact(6, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().incrementOperationCount(uid, tag, operationCount);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().incrementOperationCount(uid, tag, operationCount);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.INetworkStatsService
             public void forceUpdateIfaces(Network[] defaultNetworks, VpnInfo[] vpnArray, NetworkState[] networkStates, String activeIface) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -520,37 +472,37 @@ public interface INetworkStatsService extends IInterface {
                     _data.writeTypedArray(vpnArray, 0);
                     _data.writeTypedArray(networkStates, 0);
                     _data.writeString(activeIface);
-                    if (this.mRemote.transact(7, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().forceUpdateIfaces(defaultNetworks, vpnArray, networkStates, activeIface);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().forceUpdateIfaces(defaultNetworks, vpnArray, networkStates, activeIface);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.INetworkStatsService
             public void forceUpdate() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(8, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().forceUpdate();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().forceUpdate();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.INetworkStatsService
             public DataUsageRequest registerUsageCallback(String callingPackage, DataUsageRequest request, Messenger messenger, IBinder binder) throws RemoteException {
                 DataUsageRequest _result;
                 Parcel _data = Parcel.obtain();
@@ -571,7 +523,8 @@ public interface INetworkStatsService extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeStrongBinder(binder);
-                    if (!this.mRemote.transact(9, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(9, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().registerUsageCallback(callingPackage, request, messenger, binder);
                     }
                     _reply.readException();
@@ -580,16 +533,14 @@ public interface INetworkStatsService extends IInterface {
                     } else {
                         _result = null;
                     }
-                    DataUsageRequest _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.INetworkStatsService
             public void unregisterUsageRequest(DataUsageRequest request) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -601,19 +552,19 @@ public interface INetworkStatsService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(10, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(10, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().unregisterUsageRequest(request);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().unregisterUsageRequest(request);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.INetworkStatsService
             public long getUidStats(int uid, int type) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -621,13 +572,12 @@ public interface INetworkStatsService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(uid);
                     _data.writeInt(type);
-                    if (!this.mRemote.transact(11, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(11, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getUidStats(uid, type);
                     }
                     _reply.readException();
                     long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -635,6 +585,7 @@ public interface INetworkStatsService extends IInterface {
                 }
             }
 
+            @Override // android.net.INetworkStatsService
             public long getIfaceStats(String iface, int type) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -642,13 +593,12 @@ public interface INetworkStatsService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(iface);
                     _data.writeInt(type);
-                    if (!this.mRemote.transact(12, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(12, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getIfaceStats(iface, type);
                     }
                     _reply.readException();
                     long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -656,19 +606,19 @@ public interface INetworkStatsService extends IInterface {
                 }
             }
 
+            @Override // android.net.INetworkStatsService
             public long getTotalStats(int type) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(type);
-                    if (!this.mRemote.transact(13, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(13, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getTotalStats(type);
                     }
                     _reply.readException();
                     long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -678,11 +628,11 @@ public interface INetworkStatsService extends IInterface {
         }
 
         public static boolean setDefaultImpl(INetworkStatsService impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static INetworkStatsService getDefaultImpl() {

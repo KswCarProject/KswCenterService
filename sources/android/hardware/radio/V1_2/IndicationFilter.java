@@ -3,6 +3,7 @@ package android.hardware.radio.V1_2;
 import android.security.keystore.KeyProperties;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class IndicationFilter {
     public static final int ALL = -1;
     public static final int DATA_CALL_DORMANCY_CHANGED = 4;
@@ -41,9 +42,9 @@ public final class IndicationFilter {
         ArrayList<String> list = new ArrayList<>();
         int flipped = 0;
         list.add(KeyProperties.DIGEST_NONE);
-        if ((o & -1) == -1) {
+        if ((o & (-1)) == -1) {
             list.add("ALL");
-            flipped = 0 | -1;
+            flipped = 0 | (-1);
         }
         if ((o & 1) == 1) {
             list.add("SIGNAL_STRENGTH");

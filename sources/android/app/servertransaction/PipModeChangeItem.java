@@ -2,17 +2,22 @@ package android.app.servertransaction;
 
 import android.app.ClientTransactionHandler;
 import android.content.res.Configuration;
-import android.os.IBinder;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.IBinder;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public class PipModeChangeItem extends ClientTransactionItem {
-    public static final Parcelable.Creator<PipModeChangeItem> CREATOR = new Parcelable.Creator<PipModeChangeItem>() {
+    public static final Parcelable.Creator<PipModeChangeItem> CREATOR = new Parcelable.Creator<PipModeChangeItem>() { // from class: android.app.servertransaction.PipModeChangeItem.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PipModeChangeItem createFromParcel(Parcel in) {
             return new PipModeChangeItem(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PipModeChangeItem[] newArray(int size) {
             return new PipModeChangeItem[size];
         }
@@ -20,6 +25,7 @@ public class PipModeChangeItem extends ClientTransactionItem {
     private boolean mIsInPipMode;
     private Configuration mOverrideConfig;
 
+    @Override // android.app.servertransaction.BaseClientRequest
     public void execute(ClientTransactionHandler client, IBinder token, PendingTransactionActions pendingActions) {
         client.handlePictureInPictureModeChanged(token, this.mIsInPipMode, this.mOverrideConfig);
     }
@@ -37,12 +43,14 @@ public class PipModeChangeItem extends ClientTransactionItem {
         return instance;
     }
 
+    @Override // android.app.servertransaction.ObjectPoolItem
     public void recycle() {
         this.mIsInPipMode = false;
         this.mOverrideConfig = null;
         ObjectPool.recycle(this);
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeBoolean(this.mIsInPipMode);
         dest.writeTypedObject(this.mOverrideConfig, flags);
@@ -61,14 +69,15 @@ public class PipModeChangeItem extends ClientTransactionItem {
             return false;
         }
         PipModeChangeItem other = (PipModeChangeItem) o;
-        if (this.mIsInPipMode != other.mIsInPipMode || !Objects.equals(this.mOverrideConfig, other.mOverrideConfig)) {
-            return false;
+        if (this.mIsInPipMode == other.mIsInPipMode && Objects.equals(this.mOverrideConfig, other.mOverrideConfig)) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        return (((17 * 31) + (this.mIsInPipMode ? 1 : 0)) * 31) + this.mOverrideConfig.hashCode();
+        int result = (17 * 31) + (this.mIsInPipMode ? 1 : 0);
+        return (result * 31) + this.mOverrideConfig.hashCode();
     }
 
     public String toString() {

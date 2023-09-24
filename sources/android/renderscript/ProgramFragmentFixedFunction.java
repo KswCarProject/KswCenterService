@@ -5,11 +5,13 @@ import android.renderscript.Element;
 import android.renderscript.Program;
 import android.renderscript.Type;
 
+/* loaded from: classes3.dex */
 public class ProgramFragmentFixedFunction extends ProgramFragment {
     ProgramFragmentFixedFunction(long id, RenderScript rs) {
         super(id, rs);
     }
 
+    /* loaded from: classes3.dex */
     static class InternalBuilder extends Program.BaseProgramBuilder {
         public InternalBuilder(RenderScript rs) {
             super(rs);
@@ -17,39 +19,41 @@ public class ProgramFragmentFixedFunction extends ProgramFragment {
 
         public ProgramFragmentFixedFunction create() {
             this.mRS.validate();
-            long[] tmp = new long[((this.mInputCount + this.mOutputCount + this.mConstantCount + this.mTextureCount) * 2)];
+            long[] tmp = new long[(this.mInputCount + this.mOutputCount + this.mConstantCount + this.mTextureCount) * 2];
             String[] texNames = new String[this.mTextureCount];
             int i = 0;
             int idx = 0;
-            for (int i2 = 0; i2 < this.mInputCount; i2++) {
-                int idx2 = idx + 1;
-                tmp[idx] = (long) Program.ProgramParam.INPUT.mID;
-                idx = idx2 + 1;
-                tmp[idx2] = this.mInputs[i2].getID(this.mRS);
-            }
-            for (int i3 = 0; i3 < this.mOutputCount; i3++) {
+            for (int idx2 = 0; idx2 < this.mInputCount; idx2++) {
                 int idx3 = idx + 1;
-                tmp[idx] = (long) Program.ProgramParam.OUTPUT.mID;
+                tmp[idx] = Program.ProgramParam.INPUT.mID;
                 idx = idx3 + 1;
-                tmp[idx3] = this.mOutputs[i3].getID(this.mRS);
+                tmp[idx3] = this.mInputs[idx2].getID(this.mRS);
             }
-            for (int i4 = 0; i4 < this.mConstantCount; i4++) {
+            for (int i2 = 0; i2 < this.mOutputCount; i2++) {
                 int idx4 = idx + 1;
-                tmp[idx] = (long) Program.ProgramParam.CONSTANT.mID;
+                tmp[idx] = Program.ProgramParam.OUTPUT.mID;
                 idx = idx4 + 1;
-                tmp[idx4] = this.mConstants[i4].getID(this.mRS);
+                tmp[idx4] = this.mOutputs[i2].getID(this.mRS);
+            }
+            for (int i3 = 0; i3 < this.mConstantCount; i3++) {
+                int idx5 = idx + 1;
+                tmp[idx] = Program.ProgramParam.CONSTANT.mID;
+                idx = idx5 + 1;
+                tmp[idx5] = this.mConstants[i3].getID(this.mRS);
             }
             while (true) {
-                int i5 = i;
-                if (i5 < this.mTextureCount) {
-                    int idx5 = idx + 1;
-                    tmp[idx] = (long) Program.ProgramParam.TEXTURE_TYPE.mID;
-                    idx = idx5 + 1;
-                    tmp[idx5] = (long) this.mTextureTypes[i5].mID;
-                    texNames[i5] = this.mTextureNames[i5];
-                    i = i5 + 1;
+                int i4 = i;
+                int i5 = this.mTextureCount;
+                if (i4 < i5) {
+                    int idx6 = idx + 1;
+                    tmp[idx] = Program.ProgramParam.TEXTURE_TYPE.mID;
+                    idx = idx6 + 1;
+                    tmp[idx6] = this.mTextureTypes[i4].mID;
+                    texNames[i4] = this.mTextureNames[i4];
+                    i = i4 + 1;
                 } else {
-                    ProgramFragmentFixedFunction pf = new ProgramFragmentFixedFunction(this.mRS.nProgramFragmentCreate(this.mShader, texNames, tmp), this.mRS);
+                    long id = this.mRS.nProgramFragmentCreate(this.mShader, texNames, tmp);
+                    ProgramFragmentFixedFunction pf = new ProgramFragmentFixedFunction(id, this.mRS);
                     initProgram(pf);
                     return pf;
                 }
@@ -57,15 +61,17 @@ public class ProgramFragmentFixedFunction extends ProgramFragment {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class Builder {
         public static final int MAX_TEXTURE = 2;
         int mNumTextures;
-        boolean mPointSpriteEnable = false;
         RenderScript mRS;
         String mShader;
-        Slot[] mSlots = new Slot[2];
         boolean mVaryingColorEnable;
+        Slot[] mSlots = new Slot[2];
+        boolean mPointSpriteEnable = false;
 
+        /* loaded from: classes3.dex */
         public enum EnvMode {
             REPLACE(1),
             MODULATE(2),
@@ -73,11 +79,12 @@ public class ProgramFragmentFixedFunction extends ProgramFragment {
             
             int mID;
 
-            private EnvMode(int id) {
+            EnvMode(int id) {
                 this.mID = id;
             }
         }
 
+        /* loaded from: classes3.dex */
         public enum Format {
             ALPHA(1),
             LUMINANCE_ALPHA(2),
@@ -86,11 +93,12 @@ public class ProgramFragmentFixedFunction extends ProgramFragment {
             
             int mID;
 
-            private Format(int id) {
+            Format(int id) {
                 this.mID = id;
             }
         }
 
+        /* loaded from: classes3.dex */
         private class Slot {
             EnvMode env;
             Format format;
@@ -124,31 +132,31 @@ public class ProgramFragmentFixedFunction extends ProgramFragment {
                         switch (this.mSlots[i].format) {
                             case ALPHA:
                                 this.mShader += "  col.a = texture2D(UNI_Tex0, t0).a;\n";
-                                break;
+                                continue;
                             case LUMINANCE_ALPHA:
                                 this.mShader += "  col.rgba = texture2D(UNI_Tex0, t0).rgba;\n";
-                                break;
+                                continue;
                             case RGB:
                                 this.mShader += "  col.rgb = texture2D(UNI_Tex0, t0).rgb;\n";
-                                break;
+                                continue;
                             case RGBA:
                                 this.mShader += "  col.rgba = texture2D(UNI_Tex0, t0).rgba;\n";
-                                break;
+                                continue;
                         }
                     case MODULATE:
                         switch (this.mSlots[i].format) {
                             case ALPHA:
                                 this.mShader += "  col.a *= texture2D(UNI_Tex0, t0).a;\n";
-                                break;
+                                continue;
                             case LUMINANCE_ALPHA:
                                 this.mShader += "  col.rgba *= texture2D(UNI_Tex0, t0).rgba;\n";
-                                break;
+                                continue;
                             case RGB:
                                 this.mShader += "  col.rgb *= texture2D(UNI_Tex0, t0).rgb;\n";
-                                break;
+                                continue;
                             case RGBA:
                                 this.mShader += "  col.rgba *= texture2D(UNI_Tex0, t0).rgba;\n";
-                                break;
+                                continue;
                         }
                     case DECAL:
                         this.mShader += "  col = texture2D(UNI_Tex0, t0);\n";
@@ -212,7 +220,8 @@ public class ProgramFragmentFixedFunction extends ProgramFragment {
             if (!this.mVaryingColorEnable) {
                 Allocation constantData = Allocation.createTyped(this.mRS, constType);
                 FieldPacker fp = new FieldPacker(16);
-                fp.addF32(new Float4(1.0f, 1.0f, 1.0f, 1.0f));
+                Float4 f4 = new Float4(1.0f, 1.0f, 1.0f, 1.0f);
+                fp.addF32(f4);
                 constantData.setFromFieldPacker(0, fp);
                 pf.bindConstants(constantData, 0);
             }

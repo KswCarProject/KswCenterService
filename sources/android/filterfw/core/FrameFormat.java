@@ -7,6 +7,7 @@ import com.ibm.icu.text.PluralRules;
 import java.util.Arrays;
 import java.util.Map;
 
+/* loaded from: classes.dex */
 public class FrameFormat {
     public static final int BYTES_PER_SAMPLE_UNSPECIFIED = 1;
     protected static final int SIZE_UNKNOWN = -1;
@@ -26,18 +27,26 @@ public class FrameFormat {
     public static final int TYPE_OBJECT = 8;
     public static final int TYPE_POINTER = 7;
     public static final int TYPE_UNSPECIFIED = 0;
-    protected int mBaseType = 0;
-    protected int mBytesPerSample = 1;
+    protected int mBaseType;
+    protected int mBytesPerSample;
     protected int[] mDimensions;
     protected KeyValueMap mMetaData;
     protected Class mObjectClass;
-    protected int mSize = -1;
-    protected int mTarget = 0;
+    protected int mSize;
+    protected int mTarget;
 
     protected FrameFormat() {
+        this.mBaseType = 0;
+        this.mBytesPerSample = 1;
+        this.mSize = -1;
+        this.mTarget = 0;
     }
 
     public FrameFormat(int baseType, int target) {
+        this.mBaseType = 0;
+        this.mBytesPerSample = 1;
+        this.mSize = -1;
+        this.mTarget = 0;
         this.mBaseType = baseType;
         this.mTarget = target;
         initDefaults();
@@ -91,13 +100,13 @@ public class FrameFormat {
     }
 
     public boolean hasMetaKey(String key, Class expectedClass) {
-        if (this.mMetaData == null || !this.mMetaData.containsKey(key)) {
-            return false;
-        }
-        if (expectedClass.isAssignableFrom(this.mMetaData.get(key).getClass())) {
+        if (this.mMetaData != null && this.mMetaData.containsKey(key)) {
+            if (!expectedClass.isAssignableFrom(this.mMetaData.get(key).getClass())) {
+                throw new RuntimeException("FrameFormat meta-key '" + key + "' is of type " + this.mMetaData.get(key).getClass() + " but expected to be of type " + expectedClass + "!");
+            }
             return true;
         }
-        throw new RuntimeException("FrameFormat meta-key '" + key + "' is of type " + this.mMetaData.get(key).getClass() + " but expected to be of type " + expectedClass + "!");
+        return false;
     }
 
     public Object getMetaValue(String key) {
@@ -168,12 +177,9 @@ public class FrameFormat {
         if (this == object) {
             return true;
         }
-        if (!(object instanceof FrameFormat)) {
-            return false;
-        }
-        FrameFormat format = (FrameFormat) object;
-        if (format.mBaseType == this.mBaseType && format.mTarget == this.mTarget && format.mBytesPerSample == this.mBytesPerSample && Arrays.equals(format.mDimensions, this.mDimensions) && format.mMetaData.equals(this.mMetaData)) {
-            return true;
+        if (object instanceof FrameFormat) {
+            FrameFormat format = (FrameFormat) object;
+            return format.mBaseType == this.mBaseType && format.mTarget == this.mTarget && format.mBytesPerSample == this.mBytesPerSample && Arrays.equals(format.mDimensions, this.mDimensions) && format.mMetaData.equals(this.mMetaData);
         }
         return false;
     }
@@ -182,127 +188,74 @@ public class FrameFormat {
         return ((this.mBaseType ^ 4211) ^ this.mBytesPerSample) ^ getSize();
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:41:0x008c  */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public boolean isCompatibleWith(android.filterfw.core.FrameFormat r7) {
-        /*
-            r6 = this;
-            int r0 = r7.getBaseType()
-            r1 = 0
-            if (r0 == 0) goto L_0x0012
-            int r0 = r6.getBaseType()
-            int r2 = r7.getBaseType()
-            if (r0 == r2) goto L_0x0012
-            return r1
-        L_0x0012:
-            int r0 = r7.getTarget()
-            if (r0 == 0) goto L_0x0023
-            int r0 = r6.getTarget()
-            int r2 = r7.getTarget()
-            if (r0 == r2) goto L_0x0023
-            return r1
-        L_0x0023:
-            int r0 = r7.getBytesPerSample()
-            r2 = 1
-            if (r0 == r2) goto L_0x0035
-            int r0 = r6.getBytesPerSample()
-            int r3 = r7.getBytesPerSample()
-            if (r0 == r3) goto L_0x0035
-            return r1
-        L_0x0035:
-            int r0 = r7.getDimensionCount()
-            if (r0 <= 0) goto L_0x0046
-            int r0 = r6.getDimensionCount()
-            int r3 = r7.getDimensionCount()
-            if (r0 == r3) goto L_0x0046
-            return r1
-        L_0x0046:
-            r0 = r1
-        L_0x0047:
-            int r3 = r7.getDimensionCount()
-            if (r0 >= r3) goto L_0x005d
-            int r3 = r7.getDimension(r0)
-            if (r3 == 0) goto L_0x005a
-            int r4 = r6.getDimension(r0)
-            if (r4 == r3) goto L_0x005a
-            return r1
-        L_0x005a:
-            int r0 = r0 + 1
-            goto L_0x0047
-        L_0x005d:
-            java.lang.Class r0 = r7.getObjectClass()
-            if (r0 == 0) goto L_0x0078
-            java.lang.Class r0 = r6.getObjectClass()
-            if (r0 == 0) goto L_0x0077
-            java.lang.Class r0 = r7.getObjectClass()
-            java.lang.Class r3 = r6.getObjectClass()
-            boolean r0 = r0.isAssignableFrom(r3)
-            if (r0 != 0) goto L_0x0078
-        L_0x0077:
-            return r1
-        L_0x0078:
-            android.filterfw.core.KeyValueMap r0 = r7.mMetaData
-            if (r0 == 0) goto L_0x00b3
-            android.filterfw.core.KeyValueMap r0 = r7.mMetaData
-            java.util.Set r0 = r0.keySet()
-            java.util.Iterator r0 = r0.iterator()
-        L_0x0086:
-            boolean r3 = r0.hasNext()
-            if (r3 == 0) goto L_0x00b3
-            java.lang.Object r3 = r0.next()
-            java.lang.String r3 = (java.lang.String) r3
-            android.filterfw.core.KeyValueMap r4 = r6.mMetaData
-            if (r4 == 0) goto L_0x00b2
-            android.filterfw.core.KeyValueMap r4 = r6.mMetaData
-            boolean r4 = r4.containsKey(r3)
-            if (r4 == 0) goto L_0x00b2
-            android.filterfw.core.KeyValueMap r4 = r6.mMetaData
-            java.lang.Object r4 = r4.get(r3)
-            android.filterfw.core.KeyValueMap r5 = r7.mMetaData
-            java.lang.Object r5 = r5.get(r3)
-            boolean r4 = r4.equals(r5)
-            if (r4 != 0) goto L_0x00b1
-            goto L_0x00b2
-        L_0x00b1:
-            goto L_0x0086
-        L_0x00b2:
-            return r1
-        L_0x00b3:
-            return r2
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.filterfw.core.FrameFormat.isCompatibleWith(android.filterfw.core.FrameFormat):boolean");
+    /* JADX WARN: Removed duplicated region for block: B:43:0x008c  */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public boolean isCompatibleWith(FrameFormat specification) {
+        if (specification.getBaseType() == 0 || getBaseType() == specification.getBaseType()) {
+            if (specification.getTarget() == 0 || getTarget() == specification.getTarget()) {
+                if (specification.getBytesPerSample() == 1 || getBytesPerSample() == specification.getBytesPerSample()) {
+                    if (specification.getDimensionCount() <= 0 || getDimensionCount() == specification.getDimensionCount()) {
+                        for (int i = 0; i < specification.getDimensionCount(); i++) {
+                            int specDim = specification.getDimension(i);
+                            if (specDim != 0 && getDimension(i) != specDim) {
+                                return false;
+                            }
+                        }
+                        if (specification.getObjectClass() == null || (getObjectClass() != null && specification.getObjectClass().isAssignableFrom(getObjectClass()))) {
+                            if (specification.mMetaData != null) {
+                                for (String specKey : specification.mMetaData.keySet()) {
+                                    if (this.mMetaData == null || !this.mMetaData.containsKey(specKey) || !this.mMetaData.get(specKey).equals(specification.mMetaData.get(specKey))) {
+                                        return false;
+                                    }
+                                    while (r0.hasNext()) {
+                                    }
+                                }
+                            }
+                            return true;
+                        }
+                        return false;
+                    }
+                    return false;
+                }
+                return false;
+            }
+            return false;
+        }
+        return false;
     }
 
     public boolean mayBeCompatibleWith(FrameFormat specification) {
-        if (specification.getBaseType() != 0 && getBaseType() != 0 && getBaseType() != specification.getBaseType()) {
-            return false;
-        }
-        if (specification.getTarget() != 0 && getTarget() != 0 && getTarget() != specification.getTarget()) {
-            return false;
-        }
-        if (specification.getBytesPerSample() != 1 && getBytesPerSample() != 1 && getBytesPerSample() != specification.getBytesPerSample()) {
-            return false;
-        }
-        if (specification.getDimensionCount() > 0 && getDimensionCount() > 0 && getDimensionCount() != specification.getDimensionCount()) {
-            return false;
-        }
-        for (int i = 0; i < specification.getDimensionCount(); i++) {
-            int specDim = specification.getDimension(i);
-            if (specDim != 0 && getDimension(i) != 0 && getDimension(i) != specDim) {
-                return false;
-            }
-        }
-        if (specification.getObjectClass() != null && getObjectClass() != null && !specification.getObjectClass().isAssignableFrom(getObjectClass())) {
-            return false;
-        }
-        if (!(specification.mMetaData == null || this.mMetaData == null)) {
-            for (String specKey : specification.mMetaData.keySet()) {
-                if (this.mMetaData.containsKey(specKey) && !this.mMetaData.get(specKey).equals(specification.mMetaData.get(specKey))) {
+        if (specification.getBaseType() == 0 || getBaseType() == 0 || getBaseType() == specification.getBaseType()) {
+            if (specification.getTarget() == 0 || getTarget() == 0 || getTarget() == specification.getTarget()) {
+                if (specification.getBytesPerSample() == 1 || getBytesPerSample() == 1 || getBytesPerSample() == specification.getBytesPerSample()) {
+                    if (specification.getDimensionCount() <= 0 || getDimensionCount() <= 0 || getDimensionCount() == specification.getDimensionCount()) {
+                        for (int i = 0; i < specification.getDimensionCount(); i++) {
+                            int specDim = specification.getDimension(i);
+                            if (specDim != 0 && getDimension(i) != 0 && getDimension(i) != specDim) {
+                                return false;
+                            }
+                        }
+                        if (specification.getObjectClass() == null || getObjectClass() == null || specification.getObjectClass().isAssignableFrom(getObjectClass())) {
+                            if (specification.mMetaData != null && this.mMetaData != null) {
+                                for (String specKey : specification.mMetaData.keySet()) {
+                                    if (this.mMetaData.containsKey(specKey) && !this.mMetaData.get(specKey).equals(specification.mMetaData.get(specKey))) {
+                                        return false;
+                                    }
+                                }
+                            }
+                            return true;
+                        }
+                        return false;
+                    }
                     return false;
                 }
+                return false;
             }
+            return false;
         }
-        return true;
+        return false;
     }
 
     public static int bytesPerSampleOf(int baseType) {
@@ -436,8 +389,7 @@ public class FrameFormat {
         this.mBytesPerSample = bytesPerSampleOf(this.mBaseType);
     }
 
-    /* access modifiers changed from: package-private */
-    public int calcSize(int[] dimensions) {
+    int calcSize(int[] dimensions) {
         if (dimensions == null || dimensions.length <= 0) {
             return 0;
         }
@@ -448,8 +400,7 @@ public class FrameFormat {
         return size;
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean isReplaceableBy(FrameFormat format) {
+    boolean isReplaceableBy(FrameFormat format) {
         return this.mTarget == format.mTarget && getSize() == format.getSize() && Arrays.equals(format.mDimensions, this.mDimensions);
     }
 }

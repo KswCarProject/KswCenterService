@@ -1,86 +1,96 @@
 package com.wits.pms.mcu.custom.utils;
 
 import android.content.Context;
-import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.os.StatFs;
+import android.p007os.Build;
+import android.p007os.Handler;
+import android.p007os.Looper;
+import android.p007os.Message;
+import android.p007os.StatFs;
 import android.util.Log;
 import android.widget.Toast;
-import com.wits.pms.R;
+import com.wits.pms.C3580R;
 import com.wits.pms.mirror.SystemProperties;
 import com.wits.pms.utils.CopyFile;
 import java.io.File;
 
+/* loaded from: classes2.dex */
 public class SplashFlasher {
+    /* JADX WARN: Type inference failed for: r7v3, types: [com.wits.pms.mcu.custom.utils.SplashFlasher$2] */
     public static void check(final Context context, String path) {
+        File[] listFiles;
         File vendorBootanimation;
         for (File subFile : new File(path).listFiles()) {
             if (subFile.getName().toLowerCase().equals("oem") && subFile.isDirectory()) {
                 if (Integer.parseInt(Build.VERSION.RELEASE) == 11 && Build.DISPLAY.contains("M600")) {
                     File file = new File(subFile + "/imagefv.elf");
                     if (file.exists() && file.getName().equals("imagefv.elf")) {
-                        Log.i("SplashFlasher", "Checking imagefv.elf try to flash");
+                        Log.m68i("SplashFlasher", "Checking imagefv.elf try to flash");
                         flashLogo(file.getAbsolutePath());
                     }
-                } else if (Integer.parseInt(Build.VERSION.RELEASE) <= 11 || !Build.DISPLAY.contains("M600")) {
-                    File file2 = new File(subFile + "/splash.img");
-                    if (file2.exists() && file2.getName().equals("splash.img")) {
-                        Log.i("SplashFlasher", "Checking splash.img try to flash");
+                } else if (Integer.parseInt(Build.VERSION.RELEASE) > 11 && Build.DISPLAY.contains("M600")) {
+                    File file2 = new File(subFile + "/imagefv.bmp");
+                    if (file2.exists() && file2.getName().equals("imagefv.bmp")) {
+                        Log.m68i("SplashFlasher", "Checking imagefv.bmp try to flash");
                         flashLogo(file2.getAbsolutePath());
                     }
                 } else {
-                    File file3 = new File(subFile + "/imagefv.bmp");
-                    if (file3.exists() && file3.getName().equals("imagefv.bmp")) {
-                        Log.i("SplashFlasher", "Checking imagefv.bmp try to flash");
+                    File file3 = new File(subFile + "/splash.img");
+                    if (file3.exists() && file3.getName().equals("splash.img")) {
+                        Log.m68i("SplashFlasher", "Checking splash.img try to flash");
                         flashLogo(file3.getAbsolutePath());
                     }
                 }
             }
         }
-        final Handler handler = new Handler(context.getMainLooper()) {
+        final Handler handler = new Handler(context.getMainLooper()) { // from class: com.wits.pms.mcu.custom.utils.SplashFlasher.1
+            @Override // android.p007os.Handler
             public void handleMessage(Message msg) {
-                Toast.makeText(context, (CharSequence) context.getString(R.string.bootanimation_success), 1).show();
+                Toast.makeText(context, context.getString(C3580R.string.bootanimation_success), 1).show();
             }
         };
         File clearBootanimation = new File(path + "/OEM/bootanimation_clear.zip");
-        if (!clearBootanimation.exists() || !clearBootanimation.getName().equals("bootanimation_clear.zip")) {
-            final File bootAnimation = new File(path + "/OEM/bootanimation.zip");
-            if (bootAnimation.exists() && bootAnimation.getName().equals("bootanimation.zip")) {
-                Log.i("SplashFlasher", "Checking bootanimation.zip try to copy");
-                long fileLength = bootAnimation.length();
-                long availableBlocks = getAvailableBlocks("/mnt/vendor/persist");
-                Log.d("FileUtils", "copyFile fileLength=" + fileLength + " availableBlocks=" + availableBlocks);
-                if (availableBlocks - fileLength < 3145728) {
-                    Log.e("SplashFlasher", "too large bootanimation");
-                } else {
-                    new Thread() {
-                        public void run() {
-                            Looper.prepare();
-                            if (CopyFile.copyTo(bootAnimation, new File("/cache/bootanimation.zip"))) {
-                                SystemProperties.set("persist.bootanimation.update", "1");
-                                handler.sendEmptyMessage(0);
-                                Toast.makeText(context, (CharSequence) context.getString(R.string.bootanimation_success), 1).show();
-                            }
-                            Looper.loop();
-                        }
-                    }.start();
-                }
-            }
-        } else {
-            Log.i("SplashFlasher", "Checking bootanimation_clear.zip try to clear");
+        if (clearBootanimation.exists() && clearBootanimation.getName().equals("bootanimation_clear.zip")) {
+            Log.m68i("SplashFlasher", "Checking bootanimation_clear.zip try to clear");
             File cacheBootanimation = new File("/cache/bootanimation.zip");
-            if (Integer.parseInt(Build.VERSION.RELEASE) <= 10 || !Build.DISPLAY.contains("M600")) {
-                vendorBootanimation = new File("/mnt/vendor/persist/bootanimation.zip");
-            } else {
+            if (Integer.parseInt(Build.VERSION.RELEASE) > 10 && Build.DISPLAY.contains("M600")) {
                 vendorBootanimation = new File("/mnt/vendor/persist/OEM/bootanimation.zip");
+            } else {
+                vendorBootanimation = new File("/mnt/vendor/persist/bootanimation.zip");
             }
             if (cacheBootanimation.exists()) {
-                Log.d("SplashFlasher", "cache bootanimation delete = " + cacheBootanimation.delete());
+                boolean cacheDelete = cacheBootanimation.delete();
+                Log.m72d("SplashFlasher", "cache bootanimation delete = " + cacheDelete);
             }
-            if (vendorBootanimation.exists()) {
-                Log.d("SplashFlasher", "vendor bootanimation delete =" + vendorBootanimation.delete());
+            boolean cacheDelete2 = vendorBootanimation.exists();
+            if (cacheDelete2) {
+                boolean vendorDelete = vendorBootanimation.delete();
+                Log.m72d("SplashFlasher", "vendor bootanimation delete =" + vendorDelete);
+                return;
+            }
+            return;
+        }
+        final File bootAnimation = new File(path + "/OEM/bootanimation.zip");
+        if (bootAnimation.exists() && bootAnimation.getName().equals("bootanimation.zip")) {
+            Log.m68i("SplashFlasher", "Checking bootanimation.zip try to copy");
+            long fileLength = bootAnimation.length();
+            long availableBlocks = getAvailableBlocks("/mnt/vendor/persist");
+            Log.m72d("FileUtils", "copyFile fileLength=" + fileLength + " availableBlocks=" + availableBlocks);
+            if (availableBlocks - fileLength < 3145728) {
+                Log.m70e("SplashFlasher", "too large bootanimation");
+            } else {
+                new Thread() { // from class: com.wits.pms.mcu.custom.utils.SplashFlasher.2
+                    @Override // java.lang.Thread, java.lang.Runnable
+                    public void run() {
+                        Looper.prepare();
+                        boolean success = CopyFile.copyTo(bootAnimation, new File("/cache/bootanimation.zip"));
+                        if (success) {
+                            SystemProperties.set("persist.bootanimation.update", "1");
+                            handler.sendEmptyMessage(0);
+                            Toast.makeText(context, context.getString(C3580R.string.bootanimation_success), 1).show();
+                        }
+                        Looper.loop();
+                    }
+                }.start();
             }
         }
     }
@@ -89,21 +99,21 @@ public class SplashFlasher {
         StatFs sf = new StatFs(path);
         long totalBytes = sf.getTotalBytes();
         long freeBytes = sf.getFreeBytes();
-        Log.d("FileUtils", "getAvailableBlocks totalBytes=" + totalBytes + " freeBytes=" + freeBytes);
+        Log.m72d("FileUtils", "getAvailableBlocks totalBytes=" + totalBytes + " freeBytes=" + freeBytes);
         return freeBytes;
     }
 
     public static void flashLogo(String absolutePath) {
-        if (Integer.parseInt(Build.VERSION.RELEASE) <= 10 || !Build.DISPLAY.contains("M600")) {
-            if (absolutePath.contains("imagefv")) {
+        if (Integer.parseInt(Build.VERSION.RELEASE) > 10 && Build.DISPLAY.contains("M600")) {
+            if (absolutePath.contains("splash")) {
                 return;
             }
-        } else if (absolutePath.contains("splash")) {
+        } else if (absolutePath.contains("imagefv")) {
             return;
         }
         SystemProperties.set("persist.splash.path", absolutePath);
         SystemProperties.set("persist.splash.switch", "0");
         SystemProperties.set("persist.splash.switch", "1");
-        Log.i("SplashFlasher", "flashing");
+        Log.m68i("SplashFlasher", "flashing");
     }
 }

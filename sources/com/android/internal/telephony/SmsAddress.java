@@ -2,6 +2,7 @@ package com.android.internal.telephony;
 
 import android.annotation.UnsupportedAppUsage;
 
+/* loaded from: classes4.dex */
 public abstract class SmsAddress {
     public static final int TON_ABBREVIATED = 6;
     public static final int TON_ALPHANUMERIC = 5;

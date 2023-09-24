@@ -5,34 +5,40 @@ import android.telecom.Logging.Session;
 import com.android.internal.content.NativeLibraryHelper;
 import java.lang.reflect.Field;
 
+/* loaded from: classes4.dex */
 public enum FieldNamingPolicy implements FieldNamingStrategy {
-    IDENTITY {
+    IDENTITY { // from class: com.google.gson.FieldNamingPolicy.1
+        @Override // com.google.gson.FieldNamingStrategy
         public String translateName(Field f) {
             return f.getName();
         }
     },
-    UPPER_CAMEL_CASE {
+    UPPER_CAMEL_CASE { // from class: com.google.gson.FieldNamingPolicy.2
+        @Override // com.google.gson.FieldNamingStrategy
         public String translateName(Field f) {
             return FieldNamingPolicy.upperCaseFirstLetter(f.getName());
         }
     },
-    UPPER_CAMEL_CASE_WITH_SPACES {
+    UPPER_CAMEL_CASE_WITH_SPACES { // from class: com.google.gson.FieldNamingPolicy.3
+        @Override // com.google.gson.FieldNamingStrategy
         public String translateName(Field f) {
             return FieldNamingPolicy.upperCaseFirstLetter(FieldNamingPolicy.separateCamelCase(f.getName(), WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER));
         }
     },
-    LOWER_CASE_WITH_UNDERSCORES {
+    LOWER_CASE_WITH_UNDERSCORES { // from class: com.google.gson.FieldNamingPolicy.4
+        @Override // com.google.gson.FieldNamingStrategy
         public String translateName(Field f) {
             return FieldNamingPolicy.separateCamelCase(f.getName(), Session.SESSION_SEPARATION_CHAR_CHILD).toLowerCase();
         }
     },
-    LOWER_CASE_WITH_DASHES {
+    LOWER_CASE_WITH_DASHES { // from class: com.google.gson.FieldNamingPolicy.5
+        @Override // com.google.gson.FieldNamingStrategy
         public String translateName(Field f) {
             return FieldNamingPolicy.separateCamelCase(f.getName(), NativeLibraryHelper.CLEAR_ABI_OVERRIDE).toLowerCase();
         }
     };
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static String separateCamelCase(String name, String separator) {
         StringBuilder translation = new StringBuilder();
         for (int i = 0; i < name.length(); i++) {
@@ -45,7 +51,7 @@ public enum FieldNamingPolicy implements FieldNamingStrategy {
         return translation.toString();
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static String upperCaseFirstLetter(String name) {
         StringBuilder fieldNameBuilder = new StringBuilder();
         int index = 0;
@@ -58,17 +64,18 @@ public enum FieldNamingPolicy implements FieldNamingStrategy {
         if (index == name.length()) {
             return fieldNameBuilder.toString();
         }
-        if (Character.isUpperCase(firstCharacter)) {
-            return name;
+        if (!Character.isUpperCase(firstCharacter)) {
+            String modifiedTarget = modifyString(Character.toUpperCase(firstCharacter), name, index + 1);
+            fieldNameBuilder.append(modifiedTarget);
+            return fieldNameBuilder.toString();
         }
-        fieldNameBuilder.append(modifyString(Character.toUpperCase(firstCharacter), name, index + 1));
-        return fieldNameBuilder.toString();
+        return name;
     }
 
     private static String modifyString(char firstCharacter, String srcString, int indexOfSubstring) {
-        if (indexOfSubstring >= srcString.length()) {
-            return String.valueOf(firstCharacter);
+        if (indexOfSubstring < srcString.length()) {
+            return firstCharacter + srcString.substring(indexOfSubstring);
         }
-        return firstCharacter + srcString.substring(indexOfSubstring);
+        return String.valueOf(firstCharacter);
     }
 }

@@ -1,16 +1,21 @@
 package android.print;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.util.Preconditions;
 import java.util.UUID;
 
+/* loaded from: classes3.dex */
 public final class PrintJobId implements Parcelable {
-    public static final Parcelable.Creator<PrintJobId> CREATOR = new Parcelable.Creator<PrintJobId>() {
+    public static final Parcelable.Creator<PrintJobId> CREATOR = new Parcelable.Creator<PrintJobId>() { // from class: android.print.PrintJobId.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PrintJobId createFromParcel(Parcel parcel) {
             return new PrintJobId((String) Preconditions.checkNotNull(parcel.readString()));
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PrintJobId[] newArray(int size) {
             return new PrintJobId[size];
         }
@@ -26,23 +31,30 @@ public final class PrintJobId implements Parcelable {
     }
 
     public int hashCode() {
-        return (1 * 31) + this.mValue.hashCode();
+        int result = (1 * 31) + this.mValue.hashCode();
+        return result;
     }
 
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }
-        if (obj != null && getClass() == obj.getClass() && this.mValue.equals(((PrintJobId) obj).mValue)) {
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        PrintJobId other = (PrintJobId) obj;
+        if (this.mValue.equals(other.mValue)) {
             return true;
         }
         return false;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeString(this.mValue);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

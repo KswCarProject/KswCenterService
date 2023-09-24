@@ -1,5 +1,6 @@
 package android.webkit;
 
+/* loaded from: classes4.dex */
 public abstract class WebViewRenderProcessClient {
     public abstract void onRenderProcessResponsive(WebView webView, WebViewRenderProcess webViewRenderProcess);
 

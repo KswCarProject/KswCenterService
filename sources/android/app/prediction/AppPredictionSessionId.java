@@ -1,16 +1,21 @@
 package android.app.prediction;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class AppPredictionSessionId implements Parcelable {
-    public static final Parcelable.Creator<AppPredictionSessionId> CREATOR = new Parcelable.Creator<AppPredictionSessionId>() {
+    public static final Parcelable.Creator<AppPredictionSessionId> CREATOR = new Parcelable.Creator<AppPredictionSessionId>() { // from class: android.app.prediction.AppPredictionSessionId.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AppPredictionSessionId createFromParcel(Parcel parcel) {
             return new AppPredictionSessionId(parcel);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AppPredictionSessionId[] newArray(int size) {
             return new AppPredictionSessionId[size];
         }
@@ -26,10 +31,11 @@ public final class AppPredictionSessionId implements Parcelable {
     }
 
     public boolean equals(Object o) {
-        if (!getClass().equals(o != null ? o.getClass() : null)) {
-            return false;
+        if (getClass().equals(o != null ? o.getClass() : null)) {
+            AppPredictionSessionId other = (AppPredictionSessionId) o;
+            return this.mId.equals(other.mId);
         }
-        return this.mId.equals(((AppPredictionSessionId) o).mId);
+        return false;
     }
 
     public String toString() {
@@ -40,10 +46,12 @@ public final class AppPredictionSessionId implements Parcelable {
         return this.mId.hashCode();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.mId);
     }

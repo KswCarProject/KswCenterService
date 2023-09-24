@@ -8,12 +8,14 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.media.IAudioService;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.os.RemoteException;
-import android.os.ServiceManager;
-import android.os.SystemProperties;
+import android.p007os.Handler;
+import android.p007os.IBinder;
+import android.p007os.Looper;
+import android.p007os.Message;
+import android.p007os.Process;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
+import android.p007os.SystemProperties;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RSIllegalArgumentException;
@@ -38,6 +40,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Deprecated
+/* loaded from: classes.dex */
 public class Camera {
     public static final String ACTION_NEW_PICTURE = "android.hardware.action.NEW_PICTURE";
     public static final String ACTION_NEW_VIDEO = "android.hardware.action.NEW_VIDEO";
@@ -76,64 +79,52 @@ public class Camera {
     private static final String TAG = "Camera";
     private IAppOpsService mAppOps;
     private IAppOpsCallback mAppOpsCallback;
-    /* access modifiers changed from: private */
-    public AutoFocusCallback mAutoFocusCallback;
-    /* access modifiers changed from: private */
-    public final Object mAutoFocusCallbackLock = new Object();
-    /* access modifiers changed from: private */
-    public AutoFocusMoveCallback mAutoFocusMoveCallback;
-    /* access modifiers changed from: private */
-    public CameraDataCallback mCameraDataCallback;
-    /* access modifiers changed from: private */
-    public CameraMetaDataCallback mCameraMetaDataCallback;
-    /* access modifiers changed from: private */
-    public ErrorCallback mDetailedErrorCallback;
-    /* access modifiers changed from: private */
-    public ErrorCallback mErrorCallback;
+    private AutoFocusCallback mAutoFocusCallback;
+    private AutoFocusMoveCallback mAutoFocusMoveCallback;
+    private CameraDataCallback mCameraDataCallback;
+    private CameraMetaDataCallback mCameraMetaDataCallback;
+    private ErrorCallback mDetailedErrorCallback;
+    private ErrorCallback mErrorCallback;
     private EventHandler mEventHandler;
-    private boolean mFaceDetectionRunning = false;
-    /* access modifiers changed from: private */
-    public FaceDetectionListener mFaceListener;
-    @GuardedBy({"mShutterSoundLock"})
-    private boolean mHasAppOpsPlayAudio = true;
-    /* access modifiers changed from: private */
-    public PictureCallback mJpegCallback;
+    private FaceDetectionListener mFaceListener;
+    private PictureCallback mJpegCallback;
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
     private long mNativeContext;
-    /* access modifiers changed from: private */
-    public boolean mOneShot;
-    /* access modifiers changed from: private */
-    public PictureCallback mPostviewCallback;
-    /* access modifiers changed from: private */
-    public PreviewCallback mPreviewCallback;
-    /* access modifiers changed from: private */
-    public PictureCallback mRawImageCallback;
-    /* access modifiers changed from: private */
-    public ShutterCallback mShutterCallback;
+    private boolean mOneShot;
+    private PictureCallback mPostviewCallback;
+    private PreviewCallback mPreviewCallback;
+    private PictureCallback mRawImageCallback;
+    private ShutterCallback mShutterCallback;
+    private boolean mUsingPreviewAllocation;
+    private boolean mWithBuffer;
+    private OnZoomChangeListener mZoomListener;
+    private boolean mFaceDetectionRunning = false;
+    private final Object mAutoFocusCallbackLock = new Object();
+    private final Object mShutterSoundLock = new Object();
+    @GuardedBy({"mShutterSoundLock"})
+    private boolean mHasAppOpsPlayAudio = true;
     @GuardedBy({"mShutterSoundLock"})
     private boolean mShutterSoundEnabledFromApp = true;
-    private final Object mShutterSoundLock = new Object();
-    private boolean mUsingPreviewAllocation;
-    /* access modifiers changed from: private */
-    public boolean mWithBuffer;
-    /* access modifiers changed from: private */
-    public OnZoomChangeListener mZoomListener;
 
     @Deprecated
+    /* loaded from: classes.dex */
     public interface AutoFocusCallback {
         void onAutoFocus(boolean z, Camera camera);
     }
 
     @Deprecated
+    /* loaded from: classes.dex */
     public interface AutoFocusMoveCallback {
         void onAutoFocusMoving(boolean z, Camera camera);
     }
 
+    /* loaded from: classes.dex */
     public interface CameraDataCallback {
         void onCameraData(int[] iArr, Camera camera);
     }
 
     @Deprecated
+    /* loaded from: classes.dex */
     public static class CameraInfo {
         public static final int CAMERA_FACING_BACK = 0;
         public static final int CAMERA_FACING_FRONT = 1;
@@ -144,50 +135,60 @@ public class Camera {
         public int orientation;
     }
 
+    /* loaded from: classes.dex */
     public interface CameraMetaDataCallback {
         void onCameraMetaData(byte[] bArr, Camera camera);
     }
 
     @Deprecated
+    /* loaded from: classes.dex */
     public interface ErrorCallback {
         void onError(int i, Camera camera);
     }
 
     @Deprecated
+    /* loaded from: classes.dex */
     public static class Face {
-        public int blinkDetected = 0;
-        public int faceRecognised = 0;
-        public int id = -1;
-        public Point leftEye = null;
-        public Point mouth = null;
         public Rect rect;
-        public Point rightEye = null;
         public int score;
+
+        /* renamed from: id */
+        public int f69id = -1;
+        public Point leftEye = null;
+        public Point rightEye = null;
+        public Point mouth = null;
         public int smileDegree = 0;
         public int smileScore = 0;
+        public int blinkDetected = 0;
+        public int faceRecognised = 0;
     }
 
     @Deprecated
+    /* loaded from: classes.dex */
     public interface FaceDetectionListener {
         void onFaceDetection(Face[] faceArr, Camera camera);
     }
 
     @Deprecated
+    /* loaded from: classes.dex */
     public interface OnZoomChangeListener {
         void onZoomChange(int i, boolean z, Camera camera);
     }
 
     @Deprecated
+    /* loaded from: classes.dex */
     public interface PictureCallback {
         void onPictureTaken(byte[] bArr, Camera camera);
     }
 
     @Deprecated
+    /* loaded from: classes.dex */
     public interface PreviewCallback {
         void onPreviewFrame(byte[] bArr, Camera camera);
     }
 
     @Deprecated
+    /* loaded from: classes.dex */
     public interface ShutterCallback {
         void onShutter();
     }
@@ -235,7 +236,7 @@ public class Camera {
 
     private final native void native_takePicture(int i);
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public final native void setHasPreviewCallback(boolean z, boolean z2);
 
     private final native void setPreviewCallbackSurface(Surface surface);
@@ -269,37 +270,38 @@ public class Camera {
         if (packageList.length() > 0) {
             TextUtils.StringSplitter splitter = new TextUtils.SimpleStringSplitter(',');
             splitter.setString(packageList);
-            Iterator it = splitter.iterator();
+            Iterator<String> it = splitter.iterator();
             while (true) {
-                if (it.hasNext()) {
-                    if (packageName.equals((String) it.next())) {
-                        exposeAuxCamera = true;
-                        break;
-                    }
-                } else {
+                if (!it.hasNext()) {
+                    break;
+                }
+                String str = it.next();
+                if (packageName.equals(str)) {
+                    exposeAuxCamera = true;
                     break;
                 }
             }
         }
         int numberOfCameras = _getNumberOfCameras();
-        if (exposeAuxCamera || numberOfCameras <= 2) {
-            return numberOfCameras;
+        if (!exposeAuxCamera && numberOfCameras > 2) {
+            return 2;
         }
-        return 2;
+        return numberOfCameras;
     }
 
     public static void getCameraInfo(int cameraId, CameraInfo cameraInfo) {
-        if (cameraId < getNumberOfCameras()) {
-            _getCameraInfo(cameraId, cameraInfo);
-            try {
-                if (IAudioService.Stub.asInterface(ServiceManager.getService("audio")).isCameraSoundForced()) {
-                    cameraInfo.canDisableShutterSound = false;
-                }
-            } catch (RemoteException e) {
-                Log.e(TAG, "Audio service is unavailable for queries");
-            }
-        } else {
+        if (cameraId >= getNumberOfCameras()) {
             throw new RuntimeException("Unknown camera ID");
+        }
+        _getCameraInfo(cameraId, cameraInfo);
+        IBinder b = ServiceManager.getService("audio");
+        IAudioService audioService = IAudioService.Stub.asInterface(b);
+        try {
+            if (audioService.isCameraSoundForced()) {
+                cameraInfo.canDisableShutterSound = false;
+            }
+        } catch (RemoteException e) {
+            Log.m70e(TAG, "Audio service is unavailable for queries");
         }
     }
 
@@ -321,32 +323,36 @@ public class Camera {
 
     @UnsupportedAppUsage
     public static Camera openLegacy(int cameraId, int halVersion) {
-        if (halVersion >= 256) {
-            return new Camera(cameraId, halVersion);
+        if (halVersion < 256) {
+            throw new IllegalArgumentException("Invalid HAL version " + halVersion);
         }
-        throw new IllegalArgumentException("Invalid HAL version " + halVersion);
+        return new Camera(cameraId, halVersion);
     }
 
     private Camera(int cameraId, int halVersion) {
         int err = cameraInitVersion(cameraId, halVersion);
-        if (!checkInitErrors(err)) {
-            return;
-        }
-        if (err == (-OsConstants.EACCES)) {
-            throw new RuntimeException("Fail to connect to camera service");
-        } else if (err == 19) {
-            throw new RuntimeException("Camera initialization failed");
-        } else if (err == 38) {
-            throw new RuntimeException("Camera initialization failed because some methods are not implemented");
-        } else if (err == 95) {
-            throw new RuntimeException("Camera initialization failed because the hal version is not supported by this device");
-        } else if (err == 22) {
-            throw new RuntimeException("Camera initialization failed because the input arugments are invalid");
-        } else if (err == 16) {
-            throw new RuntimeException("Camera initialization failed because the camera device was already opened");
-        } else if (err == 87) {
-            throw new RuntimeException("Camera initialization failed because the max number of camera devices were already opened");
-        } else {
+        if (checkInitErrors(err)) {
+            if (err == (-OsConstants.EACCES)) {
+                throw new RuntimeException("Fail to connect to camera service");
+            }
+            if (err == 19) {
+                throw new RuntimeException("Camera initialization failed");
+            }
+            if (err == 38) {
+                throw new RuntimeException("Camera initialization failed because some methods are not implemented");
+            }
+            if (err == 95) {
+                throw new RuntimeException("Camera initialization failed because the hal version is not supported by this device");
+            }
+            if (err == 22) {
+                throw new RuntimeException("Camera initialization failed because the input arugments are invalid");
+            }
+            if (err == 16) {
+                throw new RuntimeException("Camera initialization failed because the camera device was already opened");
+            }
+            if (err == 87) {
+                throw new RuntimeException("Camera initialization failed because the max number of camera devices were already opened");
+            }
             throw new RuntimeException("Unknown camera error");
         }
     }
@@ -361,14 +367,12 @@ public class Camera {
         this.mZoomListener = null;
         this.mCameraDataCallback = null;
         this.mCameraMetaDataCallback = null;
-        Looper myLooper = Looper.myLooper();
-        Looper looper = myLooper;
-        if (myLooper != null) {
+        Looper looper = Looper.myLooper();
+        if (looper != null) {
             this.mEventHandler = new EventHandler(this, looper);
         } else {
-            Looper mainLooper = Looper.getMainLooper();
-            Looper looper2 = mainLooper;
-            if (mainLooper != null) {
+            Looper looper2 = Looper.getMainLooper();
+            if (looper2 != null) {
                 this.mEventHandler = new EventHandler(this, looper2);
             } else {
                 this.mEventHandler = null;
@@ -379,14 +383,14 @@ public class Camera {
         if (packageList.length() > 0) {
             TextUtils.StringSplitter splitter = new TextUtils.SimpleStringSplitter(',');
             splitter.setString(packageList);
-            Iterator it = splitter.iterator();
+            Iterator<String> it = splitter.iterator();
             while (true) {
-                if (it.hasNext()) {
-                    if (packageName.equals((String) it.next())) {
-                        halVersion = 256;
-                        break;
-                    }
-                } else {
+                if (!it.hasNext()) {
+                    break;
+                }
+                String str = it.next();
+                if (packageName.equals(str)) {
+                    halVersion = 256;
                     break;
                 }
             }
@@ -403,20 +407,20 @@ public class Camera {
     }
 
     Camera(int cameraId) {
-        if (cameraId < getNumberOfCameras()) {
-            int err = cameraInitNormal(cameraId);
-            if (!checkInitErrors(err)) {
-                initAppOps();
-            } else if (err == (-OsConstants.EACCES)) {
-                throw new RuntimeException("Fail to connect to camera service");
-            } else if (err == 19) {
-                throw new RuntimeException("Camera initialization failed");
-            } else {
-                throw new RuntimeException("Unknown camera error");
-            }
-        } else {
+        if (cameraId >= getNumberOfCameras()) {
             throw new RuntimeException("Unknown camera ID");
         }
+        int err = cameraInitNormal(cameraId);
+        if (checkInitErrors(err)) {
+            if (err == (-OsConstants.EACCES)) {
+                throw new RuntimeException("Fail to connect to camera service");
+            }
+            if (err == 19) {
+                throw new RuntimeException("Camera initialization failed");
+            }
+            throw new RuntimeException("Unknown camera error");
+        }
+        initAppOps();
     }
 
     public static boolean checkInitErrors(int err) {
@@ -431,13 +435,14 @@ public class Camera {
     }
 
     private void initAppOps() {
-        this.mAppOps = IAppOpsService.Stub.asInterface(ServiceManager.getService(Context.APP_OPS_SERVICE));
+        IBinder b = ServiceManager.getService(Context.APP_OPS_SERVICE);
+        this.mAppOps = IAppOpsService.Stub.asInterface(b);
         updateAppOpsPlayAudio();
         this.mAppOpsCallback = new IAppOpsCallbackWrapper(this);
         try {
             this.mAppOps.startWatchingMode(28, ActivityThread.currentPackageName(), this.mAppOpsCallback);
         } catch (RemoteException e) {
-            Log.e(TAG, "Error registering appOps callback", e);
+            Log.m69e(TAG, "Error registering appOps callback", e);
             this.mHasAppOpsPlayAudio = false;
         }
     }
@@ -451,8 +456,7 @@ public class Camera {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() {
+    protected void finalize() {
         release();
     }
 
@@ -466,7 +470,7 @@ public class Camera {
         if (holder != null) {
             setPreviewSurface(holder.getSurface());
         } else {
-            setPreviewSurface((Surface) null);
+            setPreviewSurface(null);
         }
     }
 
@@ -535,35 +539,38 @@ public class Camera {
 
     @UnsupportedAppUsage
     private final void addCallbackBuffer(byte[] callbackBuffer, int msgType) {
-        if (msgType == 16 || msgType == 128) {
-            _addCallbackBuffer(callbackBuffer, msgType);
-            return;
+        if (msgType != 16 && msgType != 128) {
+            throw new IllegalArgumentException("Unsupported message type: " + msgType);
         }
-        throw new IllegalArgumentException("Unsupported message type: " + msgType);
+        _addCallbackBuffer(callbackBuffer, msgType);
     }
 
     public final Allocation createPreviewAllocation(RenderScript rs, int usage) throws RSIllegalArgumentException {
-        Size previewSize = getParameters().getPreviewSize();
+        Parameters p = getParameters();
+        Size previewSize = p.getPreviewSize();
         Type.Builder yuvBuilder = new Type.Builder(rs, Element.createPixel(rs, Element.DataType.UNSIGNED_8, Element.DataKind.PIXEL_YUV));
         yuvBuilder.setYuvFormat(ImageFormat.YV12);
         yuvBuilder.setX(previewSize.width);
         yuvBuilder.setY(previewSize.height);
-        return Allocation.createTyped(rs, yuvBuilder.create(), usage | 32);
+        Allocation a = Allocation.createTyped(rs, yuvBuilder.create(), usage | 32);
+        return a;
     }
 
     public final void setPreviewCallbackAllocation(Allocation previewAllocation) throws IOException {
         Surface previewSurface = null;
         if (previewAllocation != null) {
-            Size previewSize = getParameters().getPreviewSize();
+            Parameters p = getParameters();
+            Size previewSize = p.getPreviewSize();
             if (previewSize.width != previewAllocation.getType().getX() || previewSize.height != previewAllocation.getType().getY()) {
                 throw new IllegalArgumentException("Allocation dimensions don't match preview dimensions: Allocation is " + previewAllocation.getType().getX() + ", " + previewAllocation.getType().getY() + ". Preview is " + previewSize.width + ", " + previewSize.height);
             } else if ((previewAllocation.getUsage() & 32) == 0) {
                 throw new IllegalArgumentException("Allocation usage does not include USAGE_IO_INPUT");
-            } else if (previewAllocation.getType().getElement().getDataKind() == Element.DataKind.PIXEL_YUV) {
+            } else {
+                if (previewAllocation.getType().getElement().getDataKind() != Element.DataKind.PIXEL_YUV) {
+                    throw new IllegalArgumentException("Allocation is not of a YUV type");
+                }
                 previewSurface = previewAllocation.getSurface();
                 this.mUsingPreviewAllocation = true;
-            } else {
-                throw new IllegalArgumentException("Allocation is not of a YUV type");
             }
         } else {
             this.mUsingPreviewAllocation = false;
@@ -571,6 +578,7 @@ public class Camera {
         setPreviewCallbackSurface(previewSurface);
     }
 
+    /* loaded from: classes.dex */
     private class EventHandler extends Handler {
         private final Camera mCamera;
 
@@ -580,18 +588,17 @@ public class Camera {
             this.mCamera = c;
         }
 
+        @Override // android.p007os.Handler
         public void handleMessage(Message msg) {
             AutoFocusCallback cb;
-            boolean success = true;
+            boolean success;
             switch (msg.what) {
                 case 1:
-                    Log.e(Camera.TAG, "Error " + msg.arg1);
+                    Log.m70e(Camera.TAG, "Error " + msg.arg1);
                     if (Camera.this.mDetailedErrorCallback != null) {
                         Camera.this.mDetailedErrorCallback.onError(msg.arg1, this.mCamera);
                         return;
-                    } else if (Camera.this.mErrorCallback == null) {
-                        return;
-                    } else {
+                    } else if (Camera.this.mErrorCallback != null) {
                         if (msg.arg1 == 3) {
                             Camera.this.mErrorCallback.onError(2, this.mCamera);
                             return;
@@ -599,6 +606,8 @@ public class Camera {
                             Camera.this.mErrorCallback.onError(msg.arg1, this.mCamera);
                             return;
                         }
+                    } else {
+                        return;
                     }
                 case 2:
                     if (Camera.this.mShutterCallback != null) {
@@ -611,21 +620,17 @@ public class Camera {
                         cb = Camera.this.mAutoFocusCallback;
                     }
                     if (cb != null) {
-                        if (msg.arg1 == 0) {
-                            success = false;
-                        }
+                        success = msg.arg1 != 0;
                         cb.onAutoFocus(success, this.mCamera);
                         return;
                     }
                     return;
                 case 8:
                     if (Camera.this.mZoomListener != null) {
-                        OnZoomChangeListener access$1000 = Camera.this.mZoomListener;
+                        OnZoomChangeListener onZoomChangeListener = Camera.this.mZoomListener;
                         int i = msg.arg1;
-                        if (msg.arg2 == 0) {
-                            success = false;
-                        }
-                        access$1000.onZoomChange(i, success, this.mCamera);
+                        success = msg.arg2 != 0;
+                        onZoomChangeListener.onZoomChange(i, success, this.mCamera);
                         return;
                     }
                     return;
@@ -633,7 +638,7 @@ public class Camera {
                     PreviewCallback pCb = Camera.this.mPreviewCallback;
                     if (pCb != null) {
                         if (Camera.this.mOneShot) {
-                            PreviewCallback unused = Camera.this.mPreviewCallback = null;
+                            Camera.this.mPreviewCallback = null;
                         } else if (!Camera.this.mWithBuffer) {
                             Camera.this.setHasPreviewCallback(true, false);
                         }
@@ -667,11 +672,9 @@ public class Camera {
                     return;
                 case 2048:
                     if (Camera.this.mAutoFocusMoveCallback != null) {
-                        AutoFocusMoveCallback access$1400 = Camera.this.mAutoFocusMoveCallback;
-                        if (msg.arg1 == 0) {
-                            success = false;
-                        }
-                        access$1400.onAutoFocusMoving(success, this.mCamera);
+                        AutoFocusMoveCallback autoFocusMoveCallback = Camera.this.mAutoFocusMoveCallback;
+                        success = msg.arg1 != 0;
+                        autoFocusMoveCallback.onAutoFocusMoving(success, this.mCamera);
                         return;
                     }
                     return;
@@ -692,7 +695,7 @@ public class Camera {
                     }
                     return;
                 default:
-                    Log.e(Camera.TAG, "Unknown message type " + msg.what);
+                    Log.m70e(Camera.TAG, "Unknown message type " + msg.what);
                     return;
             }
         }
@@ -702,7 +705,8 @@ public class Camera {
     private static void postEventFromNative(Object camera_ref, int what, int arg1, int arg2, Object obj) {
         Camera c = (Camera) ((WeakReference) camera_ref).get();
         if (c != null && c.mEventHandler != null) {
-            c.mEventHandler.sendMessage(c.mEventHandler.obtainMessage(what, arg1, arg2, obj));
+            Message m = c.mEventHandler.obtainMessage(what, arg1, arg2, obj);
+            c.mEventHandler.sendMessage(m);
         }
     }
 
@@ -728,7 +732,7 @@ public class Camera {
 
     public final void takePicture(ShutterCallback shutter, PictureCallback raw, PictureCallback jpeg) {
         SeempLog.record(65);
-        takePicture(shutter, raw, (PictureCallback) null, jpeg);
+        takePicture(shutter, raw, null, jpeg);
     }
 
     public final void takePicture(ShutterCallback shutter, PictureCallback raw, PictureCallback postview, PictureCallback jpeg) {
@@ -757,12 +761,14 @@ public class Camera {
     public final boolean enableShutterSound(boolean enabled) {
         boolean ret;
         boolean canDisableShutterSound = true;
+        IBinder b = ServiceManager.getService("audio");
+        IAudioService audioService = IAudioService.Stub.asInterface(b);
         try {
-            if (IAudioService.Stub.asInterface(ServiceManager.getService("audio")).isCameraSoundForced()) {
+            if (audioService.isCameraSoundForced()) {
                 canDisableShutterSound = false;
             }
         } catch (RemoteException e) {
-            Log.e(TAG, "Audio service is unavailable for queries");
+            Log.m70e(TAG, "Audio service is unavailable for queries");
         }
         if (!enabled && !canDisableShutterSound) {
             return false;
@@ -771,7 +777,7 @@ public class Camera {
             this.mShutterSoundEnabledFromApp = enabled;
             ret = _enableShutterSound(enabled);
             if (enabled && !this.mHasAppOpsPlayAudio) {
-                Log.i(TAG, "Shutter sound is not allowed by AppOpsManager");
+                Log.m68i(TAG, "Shutter sound is not allowed by AppOpsManager");
                 if (canDisableShutterSound) {
                     _enableShutterSound(false);
                 }
@@ -784,6 +790,7 @@ public class Camera {
         return _enableShutterSound(false);
     }
 
+    /* loaded from: classes.dex */
     private static class IAppOpsCallbackWrapper extends IAppOpsCallback.Stub {
         private final WeakReference<Camera> mWeakCamera;
 
@@ -791,85 +798,46 @@ public class Camera {
             this.mWeakCamera = new WeakReference<>(camera);
         }
 
+        @Override // com.android.internal.app.IAppOpsCallback
         public void opChanged(int op, int uid, String packageName) {
             Camera camera;
-            if (op == 28 && (camera = (Camera) this.mWeakCamera.get()) != null) {
+            if (op == 28 && (camera = this.mWeakCamera.get()) != null) {
                 camera.updateAppOpsPlayAudio();
             }
         }
     }
 
-    /* access modifiers changed from: private */
-    /* JADX WARNING: Code restructure failed: missing block: B:34:0x005d, code lost:
-        return;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
+    /* JADX INFO: Access modifiers changed from: private */
     public void updateAppOpsPlayAudio() {
-        /*
-            r9 = this;
-            java.lang.Object r0 = r9.mShutterSoundLock
-            monitor-enter(r0)
-            boolean r1 = r9.mHasAppOpsPlayAudio     // Catch:{ all -> 0x005e }
-            r2 = 1
-            r3 = 0
-            com.android.internal.app.IAppOpsService r4 = r9.mAppOps     // Catch:{ RemoteException -> 0x0026 }
-            if (r4 == 0) goto L_0x001e
-            com.android.internal.app.IAppOpsService r4 = r9.mAppOps     // Catch:{ RemoteException -> 0x0026 }
-            r5 = 28
-            r6 = 13
-            int r7 = android.os.Process.myUid()     // Catch:{ RemoteException -> 0x0026 }
-            java.lang.String r8 = android.app.ActivityThread.currentPackageName()     // Catch:{ RemoteException -> 0x0026 }
-            int r4 = r4.checkAudioOperation(r5, r6, r7, r8)     // Catch:{ RemoteException -> 0x0026 }
-            r2 = r4
-        L_0x001e:
-            if (r2 != 0) goto L_0x0022
-            r4 = 1
-            goto L_0x0023
-        L_0x0022:
-            r4 = r3
-        L_0x0023:
-            r9.mHasAppOpsPlayAudio = r4     // Catch:{ RemoteException -> 0x0026 }
-            goto L_0x0030
-        L_0x0026:
-            r2 = move-exception
-            java.lang.String r4 = "Camera"
-            java.lang.String r5 = "AppOpsService check audio operation failed"
-            android.util.Log.e(r4, r5)     // Catch:{ all -> 0x005e }
-            r9.mHasAppOpsPlayAudio = r3     // Catch:{ all -> 0x005e }
-        L_0x0030:
-            boolean r2 = r9.mHasAppOpsPlayAudio     // Catch:{ all -> 0x005e }
-            if (r1 == r2) goto L_0x005c
-            boolean r2 = r9.mHasAppOpsPlayAudio     // Catch:{ all -> 0x005e }
-            if (r2 != 0) goto L_0x0057
-            java.lang.String r2 = "audio"
-            android.os.IBinder r2 = android.os.ServiceManager.getService(r2)     // Catch:{ all -> 0x005e }
-            android.media.IAudioService r4 = android.media.IAudioService.Stub.asInterface(r2)     // Catch:{ all -> 0x005e }
-            boolean r5 = r4.isCameraSoundForced()     // Catch:{ RemoteException -> 0x004b }
-            if (r5 == 0) goto L_0x004a
-            monitor-exit(r0)     // Catch:{ all -> 0x005e }
-            return
-        L_0x004a:
-            goto L_0x0053
-        L_0x004b:
-            r5 = move-exception
-            java.lang.String r6 = "Camera"
-            java.lang.String r7 = "Audio service is unavailable for queries"
-            android.util.Log.e(r6, r7)     // Catch:{ all -> 0x005e }
-        L_0x0053:
-            r9._enableShutterSound(r3)     // Catch:{ all -> 0x005e }
-            goto L_0x005c
-        L_0x0057:
-            boolean r2 = r9.mShutterSoundEnabledFromApp     // Catch:{ all -> 0x005e }
-            r9.enableShutterSound(r2)     // Catch:{ all -> 0x005e }
-        L_0x005c:
-            monitor-exit(r0)     // Catch:{ all -> 0x005e }
-            return
-        L_0x005e:
-            r1 = move-exception
-            monitor-exit(r0)     // Catch:{ all -> 0x005e }
-            throw r1
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.hardware.Camera.updateAppOpsPlayAudio():void");
+        synchronized (this.mShutterSoundLock) {
+            boolean oldHasAppOpsPlayAudio = this.mHasAppOpsPlayAudio;
+            int mode = 1;
+            try {
+                if (this.mAppOps != null) {
+                    mode = this.mAppOps.checkAudioOperation(28, 13, Process.myUid(), ActivityThread.currentPackageName());
+                }
+                this.mHasAppOpsPlayAudio = mode == 0;
+            } catch (RemoteException e) {
+                Log.m70e(TAG, "AppOpsService check audio operation failed");
+                this.mHasAppOpsPlayAudio = false;
+            }
+            if (oldHasAppOpsPlayAudio != this.mHasAppOpsPlayAudio) {
+                if (!this.mHasAppOpsPlayAudio) {
+                    IBinder b = ServiceManager.getService("audio");
+                    IAudioService audioService = IAudioService.Stub.asInterface(b);
+                    try {
+                    } catch (RemoteException e2) {
+                        Log.m70e(TAG, "Audio service is unavailable for queries");
+                    }
+                    if (audioService.isCameraSoundForced()) {
+                        return;
+                    }
+                    _enableShutterSound(false);
+                } else {
+                    enableShutterSound(this.mShutterSoundEnabledFromApp);
+                }
+            }
+        }
     }
 
     public final void setZoomChangeListener(OnZoomChangeListener listener) {
@@ -881,12 +849,11 @@ public class Camera {
     }
 
     public final void startFaceDetection() {
-        if (!this.mFaceDetectionRunning) {
-            _startFaceDetection(0);
-            this.mFaceDetectionRunning = true;
-            return;
+        if (this.mFaceDetectionRunning) {
+            throw new RuntimeException("Face detection is already running");
         }
-        throw new RuntimeException("Face detection is already running");
+        _startFaceDetection(0);
+        this.mFaceDetectionRunning = true;
     }
 
     public final void stopFaceDetection() {
@@ -906,7 +873,7 @@ public class Camera {
         if (this.mUsingPreviewAllocation) {
             Size newPreviewSize = params.getPreviewSize();
             Size currentPreviewSize = getParameters().getPreviewSize();
-            if (!(newPreviewSize.width == currentPreviewSize.width && newPreviewSize.height == currentPreviewSize.height)) {
+            if (newPreviewSize.width != currentPreviewSize.width || newPreviewSize.height != currentPreviewSize.height) {
                 throw new IllegalStateException("Cannot change preview size while a preview allocation is configured.");
             }
         }
@@ -915,17 +882,20 @@ public class Camera {
 
     public Parameters getParameters() {
         Parameters p = new Parameters();
-        p.unflatten(native_getParameters());
+        String s = native_getParameters();
+        p.unflatten(s);
         return p;
     }
 
     public int getWBCurrentCCT() {
         Parameters p = new Parameters();
-        p.unflatten(native_getParameters());
-        if (p.getWBCurrentCCT() != null) {
-            return Integer.parseInt(p.getWBCurrentCCT());
+        String s = native_getParameters();
+        p.unflatten(s);
+        if (p.getWBCurrentCCT() == null) {
+            return 0;
         }
-        return 0;
+        int cct = Integer.parseInt(p.getWBCurrentCCT());
+        return cct;
     }
 
     @UnsupportedAppUsage
@@ -935,11 +905,12 @@ public class Camera {
         return new Parameters();
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static int byteToInt(byte[] b, int offset) {
         int value = 0;
         for (int i = 0; i < 4; i++) {
-            value += (b[(3 - i) + offset] & 255) << ((3 - i) * 8);
+            int shift = (3 - i) * 8;
+            value += (b[(3 - i) + offset] & 255) << shift;
         }
         return value;
     }
@@ -966,6 +937,7 @@ public class Camera {
         native_setLongshot(enable);
     }
 
+    /* loaded from: classes.dex */
     public class Coordinate {
         public int xCoordinate;
         public int yCoordinate;
@@ -976,12 +948,9 @@ public class Camera {
         }
 
         public boolean equals(Object obj) {
-            if (!(obj instanceof Coordinate)) {
-                return false;
-            }
-            Coordinate c = (Coordinate) obj;
-            if (this.xCoordinate == c.xCoordinate && this.yCoordinate == c.yCoordinate) {
-                return true;
+            if (obj instanceof Coordinate) {
+                Coordinate c = (Coordinate) obj;
+                return this.xCoordinate == c.xCoordinate && this.yCoordinate == c.yCoordinate;
             }
             return false;
         }
@@ -989,25 +958,28 @@ public class Camera {
 
     public int getCurrentFocusPosition() {
         Parameters p = new Parameters();
-        p.unflatten(native_getParameters());
-        if (p.getCurrentFocusPosition() != null) {
-            return Integer.parseInt(p.getCurrentFocusPosition());
+        String s = native_getParameters();
+        p.unflatten(s);
+        if (p.getCurrentFocusPosition() == null) {
+            return -1;
         }
-        return -1;
+        int focus_pos = Integer.parseInt(p.getCurrentFocusPosition());
+        return focus_pos;
     }
 
     public static Parameters getParametersCopy(Parameters parameters) {
-        if (parameters != null) {
-            Camera camera = parameters.getOuter();
-            Objects.requireNonNull(camera);
-            Parameters p = new Parameters();
-            p.copyFrom(parameters);
-            return p;
+        if (parameters == null) {
+            throw new NullPointerException("parameters must not be null");
         }
-        throw new NullPointerException("parameters must not be null");
+        Camera camera = parameters.getOuter();
+        Objects.requireNonNull(camera);
+        Parameters p = new Parameters();
+        p.copyFrom(parameters);
+        return p;
     }
 
     @Deprecated
+    /* loaded from: classes.dex */
     public class Size {
         public int height;
         public int width;
@@ -1018,12 +990,9 @@ public class Camera {
         }
 
         public boolean equals(Object obj) {
-            if (!(obj instanceof Size)) {
-                return false;
-            }
-            Size s = (Size) obj;
-            if (this.width == s.width && this.height == s.height) {
-                return true;
+            if (obj instanceof Size) {
+                Size s = (Size) obj;
+                return this.width == s.width && this.height == s.height;
             }
             return false;
         }
@@ -1034,35 +1003,34 @@ public class Camera {
     }
 
     @Deprecated
+    /* loaded from: classes.dex */
     public static class Area {
         public Rect rect;
         public int weight;
 
-        public Area(Rect rect2, int weight2) {
-            this.rect = rect2;
-            this.weight = weight2;
+        public Area(Rect rect, int weight) {
+            this.rect = rect;
+            this.weight = weight;
         }
 
         public boolean equals(Object obj) {
-            if (!(obj instanceof Area)) {
-                return false;
-            }
-            Area a = (Area) obj;
-            if (this.rect == null) {
-                if (a.rect != null) {
+            if (obj instanceof Area) {
+                Area a = (Area) obj;
+                if (this.rect == null) {
+                    if (a.rect != null) {
+                        return false;
+                    }
+                } else if (!this.rect.equals(a.rect)) {
                     return false;
                 }
-            } else if (!this.rect.equals(a.rect)) {
-                return false;
-            }
-            if (this.weight == a.weight) {
-                return true;
+                return this.weight == a.weight;
             }
             return false;
         }
     }
 
     @Deprecated
+    /* loaded from: classes.dex */
     public class Parameters {
         public static final String AE_BRACKET = "AE-Bracket";
         public static final String AE_BRACKET_HDR = "HDR";
@@ -1298,14 +1266,13 @@ public class Camera {
 
         @UnsupportedAppUsage
         public void copyFrom(Parameters other) {
-            if (other != null) {
-                this.mMap.putAll(other.mMap);
-                return;
+            if (other == null) {
+                throw new NullPointerException("other must not be null");
             }
-            throw new NullPointerException("other must not be null");
+            this.mMap.putAll(other.mMap);
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public Camera getOuter() {
             return Camera.this;
         }
@@ -1314,18 +1281,15 @@ public class Camera {
             if (this == other) {
                 return true;
             }
-            if (other == null || !this.mMap.equals(other.mMap)) {
-                return false;
-            }
-            return true;
+            return other != null && this.mMap.equals(other.mMap);
         }
 
-        @Deprecated
         @UnsupportedAppUsage
+        @Deprecated
         public void dump() {
-            Log.e(Camera.TAG, "dump: size=" + this.mMap.size());
+            Log.m70e(Camera.TAG, "dump: size=" + this.mMap.size());
             for (String k : this.mMap.keySet()) {
-                Log.e(Camera.TAG, "dump: " + k + "=" + this.mMap.get(k));
+                Log.m70e(Camera.TAG, "dump: " + k + "=" + this.mMap.get(k));
             }
         }
 
@@ -1343,12 +1307,14 @@ public class Camera {
 
         public void unflatten(String flattened) {
             this.mMap.clear();
-            TextUtils.StringSplitter<String> splitter = new TextUtils.SimpleStringSplitter(';');
+            TextUtils.StringSplitter splitter = new TextUtils.SimpleStringSplitter(';');
             splitter.setString(flattened);
             for (String kv : splitter) {
                 int pos = kv.indexOf(61);
                 if (pos != -1) {
-                    this.mMap.put(kv.substring(0, pos), kv.substring(pos + 1));
+                    String k = kv.substring(0, pos);
+                    String v = kv.substring(pos + 1);
+                    this.mMap.put(k, v);
                 }
             }
         }
@@ -1359,11 +1325,11 @@ public class Camera {
 
         public void set(String key, String value) {
             if (key.indexOf(61) != -1 || key.indexOf(59) != -1 || key.indexOf(0) != -1) {
-                Log.e(Camera.TAG, "Key \"" + key + "\" contains invalid character (= or ; or \\0)");
-            } else if (value.indexOf(61) == -1 && value.indexOf(59) == -1 && value.indexOf(0) == -1) {
-                put(key, value);
+                Log.m70e(Camera.TAG, "Key \"" + key + "\" contains invalid character (= or ; or \\0)");
+            } else if (value.indexOf(61) != -1 || value.indexOf(59) != -1 || value.indexOf(0) != -1) {
+                Log.m70e(Camera.TAG, "Value \"" + value + "\" contains invalid character (= or ; or \\0)");
             } else {
-                Log.e(Camera.TAG, "Value \"" + value + "\" contains invalid character (= or ; or \\0)");
+                put(key, value);
             }
         }
 
@@ -1412,23 +1378,28 @@ public class Camera {
         }
 
         public void setPreviewSize(int width, int height) {
-            set(KEY_PREVIEW_SIZE, Integer.toString(width) + "x" + Integer.toString(height));
+            String v = Integer.toString(width) + "x" + Integer.toString(height);
+            set(KEY_PREVIEW_SIZE, v);
         }
 
         public Size getPreviewSize() {
-            return strToSize(get(KEY_PREVIEW_SIZE));
+            String pair = get(KEY_PREVIEW_SIZE);
+            return strToSize(pair);
         }
 
         public List<Size> getSupportedPreviewSizes() {
-            return splitSize(get("preview-size-values"));
+            String str = get("preview-size-values");
+            return splitSize(str);
         }
 
         public List<Size> getSupportedVideoSizes() {
-            return splitSize(get("video-size-values"));
+            String str = get("video-size-values");
+            return splitSize(str);
         }
 
         public Size getPreferredPreviewSizeForVideo() {
-            return strToSize(get(KEY_PREFERRED_PREVIEW_SIZE_FOR_VIDEO));
+            String pair = get(KEY_PREFERRED_PREVIEW_SIZE_FOR_VIDEO);
+            return strToSize(pair);
         }
 
         public void setJpegThumbnailSize(int width, int height) {
@@ -1441,7 +1412,8 @@ public class Camera {
         }
 
         public List<Size> getSupportedJpegThumbnailSizes() {
-            return splitSize(get("jpeg-thumbnail-size-values"));
+            String str = get("jpeg-thumbnail-size-values");
+            return splitSize(str);
         }
 
         public void setJpegThumbnailQuality(int quality) {
@@ -1472,7 +1444,8 @@ public class Camera {
 
         @Deprecated
         public List<Integer> getSupportedPreviewFrameRates() {
-            return splitInt(get("preview-frame-rate-values"));
+            String str = get("preview-frame-rate-values");
+            return splitInt(str);
         }
 
         public void setPreviewFpsRange(int min, int max) {
@@ -1487,16 +1460,16 @@ public class Camera {
         }
 
         public List<int[]> getSupportedPreviewFpsRange() {
-            return splitRange(get("preview-fps-range-values"));
+            String str = get("preview-fps-range-values");
+            return splitRange(str);
         }
 
         public void setPreviewFormat(int pixel_format) {
             String s = cameraFormatForPixelFormat(pixel_format);
-            if (s != null) {
-                set(KEY_PREVIEW_FORMAT, s);
-                return;
+            if (s == null) {
+                throw new IllegalArgumentException("Invalid pixel_format=" + pixel_format);
             }
-            throw new IllegalArgumentException("Invalid pixel_format=" + pixel_format);
+            set(KEY_PREVIEW_FORMAT, s);
         }
 
         public int getPreviewFormat() {
@@ -1508,7 +1481,8 @@ public class Camera {
             ArrayList<Integer> formats = new ArrayList<>();
             Iterator<String> it = split(str).iterator();
             while (it.hasNext()) {
-                int f = pixelFormatForCameraFormat(it.next());
+                String s = it.next();
+                int f = pixelFormatForCameraFormat(s);
                 if (f != 0) {
                     formats.add(Integer.valueOf(f));
                 }
@@ -1517,24 +1491,26 @@ public class Camera {
         }
 
         public void setPictureSize(int width, int height) {
-            set(KEY_PICTURE_SIZE, Integer.toString(width) + "x" + Integer.toString(height));
+            String v = Integer.toString(width) + "x" + Integer.toString(height);
+            set(KEY_PICTURE_SIZE, v);
         }
 
         public Size getPictureSize() {
-            return strToSize(get(KEY_PICTURE_SIZE));
+            String pair = get(KEY_PICTURE_SIZE);
+            return strToSize(pair);
         }
 
         public List<Size> getSupportedPictureSizes() {
-            return splitSize(get("picture-size-values"));
+            String str = get("picture-size-values");
+            return splitSize(str);
         }
 
         public void setPictureFormat(int pixel_format) {
             String s = cameraFormatForPixelFormat(pixel_format);
-            if (s != null) {
-                set(KEY_PICTURE_FORMAT, s);
-                return;
+            if (s == null) {
+                throw new IllegalArgumentException("Invalid pixel_format=" + pixel_format);
             }
-            throw new IllegalArgumentException("Invalid pixel_format=" + pixel_format);
+            set(KEY_PICTURE_FORMAT, s);
         }
 
         public int getPictureFormat() {
@@ -1546,7 +1522,8 @@ public class Camera {
             ArrayList<Integer> formats = new ArrayList<>();
             Iterator<String> it = split(str).iterator();
             while (it.hasNext()) {
-                int f = pixelFormatForCameraFormat(it.next());
+                String s = it.next();
+                int f = pixelFormatForCameraFormat(s);
                 if (f != 0) {
                     formats.add(Integer.valueOf(f));
                 }
@@ -1555,26 +1532,26 @@ public class Camera {
         }
 
         private String cameraFormatForPixelFormat(int pixel_format) {
-            if (pixel_format == 4) {
-                return PIXEL_FORMAT_RGB565;
-            }
-            if (pixel_format == 20) {
+            if (pixel_format != 4) {
+                if (pixel_format != 20) {
+                    if (pixel_format != 256) {
+                        if (pixel_format != 842094169) {
+                            switch (pixel_format) {
+                                case 16:
+                                    return PIXEL_FORMAT_YUV422SP;
+                                case 17:
+                                    return PIXEL_FORMAT_YUV420SP;
+                                default:
+                                    return null;
+                            }
+                        }
+                        return PIXEL_FORMAT_YUV420P;
+                    }
+                    return PIXEL_FORMAT_JPEG;
+                }
                 return PIXEL_FORMAT_YUV422I;
             }
-            if (pixel_format == 256) {
-                return PIXEL_FORMAT_JPEG;
-            }
-            if (pixel_format == 842094169) {
-                return PIXEL_FORMAT_YUV420P;
-            }
-            switch (pixel_format) {
-                case 16:
-                    return PIXEL_FORMAT_YUV422SP;
-                case 17:
-                    return PIXEL_FORMAT_YUV420SP;
-                default:
-                    return null;
-            }
+            return PIXEL_FORMAT_RGB565;
         }
 
         private int pixelFormatForCameraFormat(String format) {
@@ -1596,10 +1573,10 @@ public class Camera {
             if (format.equals(PIXEL_FORMAT_RGB565)) {
                 return 4;
             }
-            if (format.equals(PIXEL_FORMAT_JPEG)) {
-                return 256;
+            if (!format.equals(PIXEL_FORMAT_JPEG)) {
+                return 0;
             }
-            return 0;
+            return 256;
         }
 
         public void setRotation(int rotation) {
@@ -1646,14 +1623,17 @@ public class Camera {
         }
 
         public void setWhiteBalance(String value) {
-            if (!same(value, get(KEY_WHITE_BALANCE))) {
-                set(KEY_WHITE_BALANCE, value);
-                set(KEY_AUTO_WHITEBALANCE_LOCK, FALSE);
+            String oldValue = get(KEY_WHITE_BALANCE);
+            if (same(value, oldValue)) {
+                return;
             }
+            set(KEY_WHITE_BALANCE, value);
+            set(KEY_AUTO_WHITEBALANCE_LOCK, FALSE);
         }
 
         public List<String> getSupportedWhiteBalance() {
-            return split(get("whitebalance-values"));
+            String str = get("whitebalance-values");
+            return split(str);
         }
 
         public String getColorEffect() {
@@ -1665,7 +1645,8 @@ public class Camera {
         }
 
         public List<String> getSupportedColorEffects() {
-            return split(get("effect-values"));
+            String str = get("effect-values");
+            return split(str);
         }
 
         public String getAntibanding() {
@@ -1677,7 +1658,8 @@ public class Camera {
         }
 
         public List<String> getSupportedAntibanding() {
-            return split(get("antibanding-values"));
+            String str = get("antibanding-values");
+            return split(str);
         }
 
         public String getSceneMode() {
@@ -1689,7 +1671,8 @@ public class Camera {
         }
 
         public List<String> getSupportedSceneModes() {
-            return split(get("scene-mode-values"));
+            String str = get("scene-mode-values");
+            return split(str);
         }
 
         public String getFlashMode() {
@@ -1701,7 +1684,8 @@ public class Camera {
         }
 
         public List<String> getSupportedFlashModes() {
-            return split(get("flash-mode-values"));
+            String str = get("flash-mode-values");
+            return split(str);
         }
 
         public String getFocusMode() {
@@ -1713,7 +1697,8 @@ public class Camera {
         }
 
         public List<String> getSupportedFocusModes() {
-            return split(get("focus-mode-values"));
+            String str = get("focus-mode-values");
+            return split(str);
         }
 
         public float getFocalLength() {
@@ -1753,11 +1738,13 @@ public class Camera {
         }
 
         public boolean getAutoExposureLock() {
-            return TRUE.equals(get(KEY_AUTO_EXPOSURE_LOCK));
+            String str = get(KEY_AUTO_EXPOSURE_LOCK);
+            return TRUE.equals(str);
         }
 
         public boolean isAutoExposureLockSupported() {
-            return TRUE.equals(get(KEY_AUTO_EXPOSURE_LOCK_SUPPORTED));
+            String str = get(KEY_AUTO_EXPOSURE_LOCK_SUPPORTED);
+            return TRUE.equals(str);
         }
 
         public void setAutoWhiteBalanceLock(boolean toggle) {
@@ -1765,11 +1752,13 @@ public class Camera {
         }
 
         public boolean getAutoWhiteBalanceLock() {
-            return TRUE.equals(get(KEY_AUTO_WHITEBALANCE_LOCK));
+            String str = get(KEY_AUTO_WHITEBALANCE_LOCK);
+            return TRUE.equals(str);
         }
 
         public boolean isAutoWhiteBalanceLockSupported() {
-            return TRUE.equals(get(KEY_AUTO_WHITEBALANCE_LOCK_SUPPORTED));
+            String str = get(KEY_AUTO_WHITEBALANCE_LOCK_SUPPORTED);
+            return TRUE.equals(str);
         }
 
         public int getZoom() {
@@ -1781,7 +1770,8 @@ public class Camera {
         }
 
         public boolean isZoomSupported() {
-            return TRUE.equals(get(KEY_ZOOM_SUPPORTED));
+            String str = get(KEY_ZOOM_SUPPORTED);
+            return TRUE.equals(str);
         }
 
         public int getMaxZoom() {
@@ -1793,7 +1783,8 @@ public class Camera {
         }
 
         public boolean isSmoothZoomSupported() {
-            return TRUE.equals(get(KEY_SMOOTH_ZOOM_SUPPORTED));
+            String str = get(KEY_SMOOTH_ZOOM_SUPPORTED);
+            return TRUE.equals(str);
         }
 
         public void getFocusDistances(float[] output) {
@@ -1836,7 +1827,8 @@ public class Camera {
         }
 
         public boolean isVideoSnapshotSupported() {
-            return TRUE.equals(get(KEY_VIDEO_SNAPSHOT_SUPPORTED));
+            String str = get(KEY_VIDEO_SNAPSHOT_SUPPORTED);
+            return TRUE.equals(str);
         }
 
         public void setVideoStabilization(boolean toggle) {
@@ -1844,18 +1836,20 @@ public class Camera {
         }
 
         public boolean getVideoStabilization() {
-            return TRUE.equals(get(KEY_VIDEO_STABILIZATION));
+            String str = get(KEY_VIDEO_STABILIZATION);
+            return TRUE.equals(str);
         }
 
         public boolean isVideoStabilizationSupported() {
-            return TRUE.equals(get(KEY_VIDEO_STABILIZATION_SUPPORTED));
+            String str = get(KEY_VIDEO_STABILIZATION_SUPPORTED);
+            return TRUE.equals(str);
         }
 
         private ArrayList<String> split(String str) {
             if (str == null) {
                 return null;
             }
-            TextUtils.StringSplitter<String> splitter = new TextUtils.SimpleStringSplitter(',');
+            TextUtils.StringSplitter splitter = new TextUtils.SimpleStringSplitter(',');
             splitter.setString(str);
             ArrayList<String> substrings = new ArrayList<>();
             for (String s : splitter) {
@@ -1868,7 +1862,7 @@ public class Camera {
             if (str == null) {
                 return null;
             }
-            TextUtils.StringSplitter<String> splitter = new TextUtils.SimpleStringSplitter(',');
+            TextUtils.StringSplitter splitter = new TextUtils.SimpleStringSplitter(',');
             splitter.setString(str);
             ArrayList<Integer> substrings = new ArrayList<>();
             for (String s : splitter) {
@@ -1881,26 +1875,28 @@ public class Camera {
         }
 
         private void splitInt(String str, int[] output) {
-            if (str != null) {
-                TextUtils.StringSplitter<String> splitter = new TextUtils.SimpleStringSplitter(',');
-                splitter.setString(str);
-                int index = 0;
-                for (String s : splitter) {
-                    output[index] = Integer.parseInt(s);
-                    index++;
-                }
+            if (str == null) {
+                return;
+            }
+            TextUtils.StringSplitter splitter = new TextUtils.SimpleStringSplitter(',');
+            splitter.setString(str);
+            int index = 0;
+            for (String s : splitter) {
+                output[index] = Integer.parseInt(s);
+                index++;
             }
         }
 
         private void splitFloat(String str, float[] output) {
-            if (str != null) {
-                TextUtils.StringSplitter<String> splitter = new TextUtils.SimpleStringSplitter(',');
-                splitter.setString(str);
-                int index = 0;
-                for (String s : splitter) {
-                    output[index] = Float.parseFloat(s);
-                    index++;
-                }
+            if (str == null) {
+                return;
+            }
+            TextUtils.StringSplitter splitter = new TextUtils.SimpleStringSplitter(',');
+            splitter.setString(str);
+            int index = 0;
+            for (String s : splitter) {
+                output[index] = Float.parseFloat(s);
+                index++;
             }
         }
 
@@ -1924,7 +1920,7 @@ public class Camera {
             if (str == null) {
                 return null;
             }
-            TextUtils.StringSplitter<String> splitter = new TextUtils.SimpleStringSplitter(',');
+            TextUtils.StringSplitter splitter = new TextUtils.SimpleStringSplitter(',');
             splitter.setString(str);
             ArrayList<Size> sizeList = new ArrayList<>();
             for (String s : splitter) {
@@ -1945,149 +1941,168 @@ public class Camera {
             }
             int pos = str.indexOf(120);
             if (pos != -1) {
-                return new Size(Integer.parseInt(str.substring(0, pos)), Integer.parseInt(str.substring(pos + 1)));
+                String width = str.substring(0, pos);
+                String height = str.substring(pos + 1);
+                return new Size(Integer.parseInt(width), Integer.parseInt(height));
             }
-            Log.e(Camera.TAG, "Invalid size parameter string=" + str);
+            Log.m70e(Camera.TAG, "Invalid size parameter string=" + str);
             return null;
         }
 
         private ArrayList<int[]> splitRange(String str) {
             int endIndex;
-            if (str != null && str.charAt(0) == '(' && str.charAt(str.length() - 1) == ')') {
-                ArrayList<int[]> rangeList = new ArrayList<>();
-                int fromIndex = 1;
-                do {
-                    int[] range = new int[2];
-                    endIndex = str.indexOf("),(", fromIndex);
-                    if (endIndex == -1) {
-                        endIndex = str.length() - 1;
-                    }
-                    splitInt(str.substring(fromIndex, endIndex), range);
-                    rangeList.add(range);
-                    fromIndex = endIndex + 3;
-                } while (endIndex != str.length() - 1);
-                if (rangeList.size() == 0) {
-                    return null;
-                }
-                return rangeList;
+            if (str == null || str.charAt(0) != '(' || str.charAt(str.length() - 1) != ')') {
+                Log.m70e(Camera.TAG, "Invalid range list string=" + str);
+                return null;
             }
-            Log.e(Camera.TAG, "Invalid range list string=" + str);
-            return null;
+            ArrayList<int[]> rangeList = new ArrayList<>();
+            int fromIndex = 1;
+            do {
+                int[] range = new int[2];
+                endIndex = str.indexOf("),(", fromIndex);
+                if (endIndex == -1) {
+                    endIndex = str.length() - 1;
+                }
+                splitInt(str.substring(fromIndex, endIndex), range);
+                rangeList.add(range);
+                fromIndex = endIndex + 3;
+            } while (endIndex != str.length() - 1);
+            if (rangeList.size() == 0) {
+                return null;
+            }
+            return rangeList;
         }
 
         @UnsupportedAppUsage
         private ArrayList<Area> splitArea(String str) {
             int endIndex;
-            if (str != null && str.charAt(0) == '(' && str.charAt(str.length() - 1) == ')') {
-                ArrayList<Area> result = new ArrayList<>();
-                int fromIndex = 1;
-                int[] array = new int[5];
-                do {
-                    endIndex = str.indexOf("),(", fromIndex);
-                    if (endIndex == -1) {
-                        endIndex = str.length() - 1;
-                    }
-                    splitInt(str.substring(fromIndex, endIndex), array);
-                    result.add(new Area(new Rect(array[0], array[1], array[2], array[3]), array[4]));
-                    fromIndex = endIndex + 3;
-                } while (endIndex != str.length() - 1);
-                if (result.size() == 0) {
+            if (str == null || str.charAt(0) != '(' || str.charAt(str.length() - 1) != ')') {
+                Log.m70e(Camera.TAG, "Invalid area string=" + str);
+                return null;
+            }
+            ArrayList<Area> result = new ArrayList<>();
+            int fromIndex = 1;
+            int[] array = new int[5];
+            do {
+                endIndex = str.indexOf("),(", fromIndex);
+                if (endIndex == -1) {
+                    endIndex = str.length() - 1;
+                }
+                splitInt(str.substring(fromIndex, endIndex), array);
+                result.add(new Area(new Rect(array[0], array[1], array[2], array[3]), array[4]));
+                fromIndex = endIndex + 3;
+            } while (endIndex != str.length() - 1);
+            if (result.size() == 0) {
+                return null;
+            }
+            if (result.size() == 1) {
+                Area area = result.get(0);
+                Rect rect = area.rect;
+                if (rect.left == 0 && rect.top == 0 && rect.right == 0 && rect.bottom == 0 && area.weight == 0) {
                     return null;
                 }
-                if (result.size() == 1) {
-                    Area area = result.get(0);
-                    Rect rect = area.rect;
-                    if (rect.left == 0 && rect.top == 0 && rect.right == 0 && rect.bottom == 0 && area.weight == 0) {
-                        return null;
-                    }
-                    return result;
-                }
-                return result;
             }
-            Log.e(Camera.TAG, "Invalid area string=" + str);
-            return null;
+            return result;
         }
 
         private boolean same(String s1, String s2) {
             if (s1 == null && s2 == null) {
                 return true;
             }
-            if (s1 == null || !s1.equals(s2)) {
-                return false;
+            if (s1 != null && s1.equals(s2)) {
+                return true;
             }
-            return true;
+            return false;
         }
 
         public List<Size> getSupportedHfrSizes() {
-            return splitSize(get("hfr-size-values"));
+            String str = get("hfr-size-values");
+            return splitSize(str);
         }
 
         public List<String> getSupportedTouchAfAec() {
-            return split(get("touch-af-aec-values"));
+            String str = get("touch-af-aec-values");
+            return split(str);
         }
 
         public List<String> getSupportedPreviewFrameRateModes() {
-            return split(get("preview-frame-rate-mode-values"));
+            String str = get("preview-frame-rate-mode-values");
+            return split(str);
         }
 
         public List<String> getSupportedSceneDetectModes() {
-            return split(get("scene-detect-values"));
+            String str = get("scene-detect-values");
+            return split(str);
         }
 
         public List<String> getSupportedIsoValues() {
-            return split(get("iso-values"));
+            String str = get("iso-values");
+            return split(str);
         }
 
         public List<String> getSupportedLensShadeModes() {
-            return split(get("lensshade-values"));
+            String str = get("lensshade-values");
+            return split(str);
         }
 
         public List<String> getSupportedHistogramModes() {
-            return split(get("histogram-values"));
+            String str = get("histogram-values");
+            return split(str);
         }
 
         public List<String> getSupportedSkinToneEnhancementModes() {
-            return split(get("skinToneEnhancement-values"));
+            String str = get("skinToneEnhancement-values");
+            return split(str);
         }
 
         public List<String> getSupportedAutoexposure() {
-            return split(get("auto-exposure-values"));
+            String str = get("auto-exposure-values");
+            return split(str);
         }
 
         public List<String> getSupportedMemColorEnhanceModes() {
-            return split(get("mce-values"));
+            String str = get("mce-values");
+            return split(str);
         }
 
         public List<String> getSupportedZSLModes() {
-            return split(get("zsl-values"));
+            String str = get("zsl-values");
+            return split(str);
         }
 
         public List<String> getSupportedVideoHDRModes() {
-            return split(get("video-hdr-values"));
+            String str = get("video-hdr-values");
+            return split(str);
         }
 
         public List<String> getSupportedVideoHighFrameRateModes() {
-            return split(get("video-hfr-values"));
+            String str = get("video-hfr-values");
+            return split(str);
         }
 
         public List<String> getSupportedContinuousAfModes() {
-            return split(get("continuous-af-values"));
+            String str = get("continuous-af-values");
+            return split(str);
         }
 
         public List<String> getSupportedDenoiseModes() {
-            return split(get("denoise-values"));
+            String str = get("denoise-values");
+            return split(str);
         }
 
         public List<String> getSupportedSelectableZoneAf() {
-            return split(get("selectable-zone-af-values"));
+            String str = get("selectable-zone-af-values");
+            return split(str);
         }
 
         public List<String> getSupportedFaceDetectionModes() {
-            return split(get("face-detection-values"));
+            String str = get("face-detection-values");
+            return split(str);
         }
 
         public List<String> getSupportedRedeyeReductionModes() {
-            return split(get("redeye-reduction-values"));
+            String str = get("redeye-reduction-values");
+            return split(str);
         }
 
         public void setGpsAltitudeRef(double altRef) {
@@ -2099,19 +2114,23 @@ public class Camera {
         }
 
         public void setTouchIndexAec(int x, int y) {
-            set(KEY_QC_TOUCH_INDEX_AEC, Integer.toString(x) + "x" + Integer.toString(y));
+            String v = Integer.toString(x) + "x" + Integer.toString(y);
+            set(KEY_QC_TOUCH_INDEX_AEC, v);
         }
 
         public Coordinate getTouchIndexAec() {
-            return strToCoordinate(get(KEY_QC_TOUCH_INDEX_AEC));
+            String pair = get(KEY_QC_TOUCH_INDEX_AEC);
+            return strToCoordinate(pair);
         }
 
         public void setTouchIndexAf(int x, int y) {
-            set(KEY_QC_TOUCH_INDEX_AF, Integer.toString(x) + "x" + Integer.toString(y));
+            String v = Integer.toString(x) + "x" + Integer.toString(y);
+            set(KEY_QC_TOUCH_INDEX_AF, v);
         }
 
         public Coordinate getTouchIndexAf() {
-            return strToCoordinate(get(KEY_QC_TOUCH_INDEX_AF));
+            String pair = get(KEY_QC_TOUCH_INDEX_AF);
+            return strToCoordinate(pair);
         }
 
         public void setSharpness(int sharpness) {
@@ -2136,7 +2155,8 @@ public class Camera {
         }
 
         public boolean isPowerModeSupported() {
-            return TRUE.equals(get(KEY_QC_POWER_MODE_SUPPORTED));
+            String str = get(KEY_QC_POWER_MODE_SUPPORTED);
+            return TRUE.equals(str);
         }
 
         public int getSharpness() {
@@ -2373,14 +2393,15 @@ public class Camera {
         }
 
         public List<String> getSupportedVideoRotationValues() {
-            return split(get("video-rotation-values"));
+            String str = get("video-rotation-values");
+            return split(str);
         }
 
         private ArrayList<Coordinate> splitCoordinate(String str) {
             if (str == null) {
                 return null;
             }
-            TextUtils.StringSplitter<String> splitter = new TextUtils.SimpleStringSplitter(',');
+            TextUtils.StringSplitter splitter = new TextUtils.SimpleStringSplitter(',');
             splitter.setString(str);
             ArrayList<Coordinate> coordinateList = new ArrayList<>();
             for (String s : splitter) {
@@ -2401,9 +2422,11 @@ public class Camera {
             }
             int pos = str.indexOf(120);
             if (pos != -1) {
-                return new Coordinate(Integer.parseInt(str.substring(0, pos)), Integer.parseInt(str.substring(pos + 1)));
+                String x = str.substring(0, pos);
+                String y = str.substring(pos + 1);
+                return new Coordinate(Integer.parseInt(x), Integer.parseInt(y));
             }
-            Log.e(Camera.TAG, "Invalid Coordinate parameter string=" + str);
+            Log.m70e(Camera.TAG, "Invalid Coordinate parameter string=" + str);
             return null;
         }
     }

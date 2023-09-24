@@ -2,29 +2,30 @@ package com.android.internal.view;
 
 import android.graphics.Canvas;
 import android.graphics.Rect;
-import android.os.SystemClock;
+import android.p007os.SystemClock;
 import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import java.util.ArrayList;
 import java.util.concurrent.locks.ReentrantLock;
 
+/* loaded from: classes4.dex */
 public abstract class BaseSurfaceHolder implements SurfaceHolder {
     static final boolean DEBUG = false;
     private static final String TAG = "BaseSurfaceHolder";
-    public final ArrayList<SurfaceHolder.Callback> mCallbacks = new ArrayList<>();
     SurfaceHolder.Callback[] mGottenCallbacks;
     boolean mHaveGottenCallbacks;
-    long mLastLockTime = 0;
-    protected int mRequestedFormat = -1;
-    int mRequestedHeight = -1;
-    int mRequestedType = -1;
-    int mRequestedWidth = -1;
-    public Surface mSurface = new Surface();
-    final Rect mSurfaceFrame = new Rect();
-    public final ReentrantLock mSurfaceLock = new ReentrantLock();
     Rect mTmpDirty;
+    public final ArrayList<SurfaceHolder.Callback> mCallbacks = new ArrayList<>();
+    public final ReentrantLock mSurfaceLock = new ReentrantLock();
+    public Surface mSurface = new Surface();
+    int mRequestedWidth = -1;
+    int mRequestedHeight = -1;
+    protected int mRequestedFormat = -1;
+    int mRequestedType = -1;
+    long mLastLockTime = 0;
     int mType = -1;
+    final Rect mSurfaceFrame = new Rect();
 
     public abstract boolean onAllowLockCanvas();
 
@@ -48,6 +49,7 @@ public abstract class BaseSurfaceHolder implements SurfaceHolder {
         return this.mRequestedType;
     }
 
+    @Override // android.view.SurfaceHolder
     public void addCallback(SurfaceHolder.Callback callback) {
         synchronized (this.mCallbacks) {
             if (!this.mCallbacks.contains(callback)) {
@@ -56,6 +58,7 @@ public abstract class BaseSurfaceHolder implements SurfaceHolder {
         }
     }
 
+    @Override // android.view.SurfaceHolder
     public void removeCallback(SurfaceHolder.Callback callback) {
         synchronized (this.mCallbacks) {
             this.mCallbacks.remove(callback);
@@ -85,6 +88,7 @@ public abstract class BaseSurfaceHolder implements SurfaceHolder {
         this.mHaveGottenCallbacks = false;
     }
 
+    @Override // android.view.SurfaceHolder
     public void setFixedSize(int width, int height) {
         if (this.mRequestedWidth != width || this.mRequestedHeight != height) {
             this.mRequestedWidth = width;
@@ -93,6 +97,7 @@ public abstract class BaseSurfaceHolder implements SurfaceHolder {
         }
     }
 
+    @Override // android.view.SurfaceHolder
     public void setSizeFromLayout() {
         if (this.mRequestedWidth != -1 || this.mRequestedHeight != -1) {
             this.mRequestedHeight = -1;
@@ -101,6 +106,7 @@ public abstract class BaseSurfaceHolder implements SurfaceHolder {
         }
     }
 
+    @Override // android.view.SurfaceHolder
     public void setFormat(int format) {
         if (this.mRequestedFormat != format) {
             this.mRequestedFormat = format;
@@ -108,6 +114,7 @@ public abstract class BaseSurfaceHolder implements SurfaceHolder {
         }
     }
 
+    @Override // android.view.SurfaceHolder
     public void setType(int type) {
         switch (type) {
             case 1:
@@ -121,69 +128,75 @@ public abstract class BaseSurfaceHolder implements SurfaceHolder {
         }
     }
 
+    @Override // android.view.SurfaceHolder
     public Canvas lockCanvas() {
-        return internalLockCanvas((Rect) null, false);
+        return internalLockCanvas(null, false);
     }
 
+    @Override // android.view.SurfaceHolder
     public Canvas lockCanvas(Rect dirty) {
         return internalLockCanvas(dirty, false);
     }
 
+    @Override // android.view.SurfaceHolder
     public Canvas lockHardwareCanvas() {
-        return internalLockCanvas((Rect) null, true);
+        return internalLockCanvas(null, true);
     }
 
     private final Canvas internalLockCanvas(Rect dirty, boolean hardware) {
-        if (this.mType != 3) {
-            this.mSurfaceLock.lock();
-            Canvas c = null;
-            if (onAllowLockCanvas()) {
-                if (dirty == null) {
-                    if (this.mTmpDirty == null) {
-                        this.mTmpDirty = new Rect();
-                    }
-                    this.mTmpDirty.set(this.mSurfaceFrame);
-                    dirty = this.mTmpDirty;
+        if (this.mType == 3) {
+            throw new SurfaceHolder.BadSurfaceTypeException("Surface type is SURFACE_TYPE_PUSH_BUFFERS");
+        }
+        this.mSurfaceLock.lock();
+        Canvas c = null;
+        if (onAllowLockCanvas()) {
+            if (dirty == null) {
+                if (this.mTmpDirty == null) {
+                    this.mTmpDirty = new Rect();
                 }
+                this.mTmpDirty.set(this.mSurfaceFrame);
+                dirty = this.mTmpDirty;
+            }
+            try {
                 if (hardware) {
-                    try {
-                        c = this.mSurface.lockHardwareCanvas();
-                    } catch (Exception e) {
-                        Log.e(TAG, "Exception locking surface", e);
-                    }
+                    c = this.mSurface.lockHardwareCanvas();
                 } else {
                     c = this.mSurface.lockCanvas(dirty);
                 }
+            } catch (Exception e) {
+                Log.m69e(TAG, "Exception locking surface", e);
             }
-            if (c != null) {
-                this.mLastLockTime = SystemClock.uptimeMillis();
-                return c;
-            }
-            long now = SystemClock.uptimeMillis();
-            long nextTime = this.mLastLockTime + 100;
-            if (nextTime > now) {
-                try {
-                    Thread.sleep(nextTime - now);
-                } catch (InterruptedException e2) {
-                }
-                now = SystemClock.uptimeMillis();
-            }
-            this.mLastLockTime = now;
-            this.mSurfaceLock.unlock();
-            return null;
         }
-        throw new SurfaceHolder.BadSurfaceTypeException("Surface type is SURFACE_TYPE_PUSH_BUFFERS");
+        if (c != null) {
+            this.mLastLockTime = SystemClock.uptimeMillis();
+            return c;
+        }
+        long now = SystemClock.uptimeMillis();
+        long nextTime = this.mLastLockTime + 100;
+        if (nextTime > now) {
+            try {
+                Thread.sleep(nextTime - now);
+            } catch (InterruptedException e2) {
+            }
+            now = SystemClock.uptimeMillis();
+        }
+        this.mLastLockTime = now;
+        this.mSurfaceLock.unlock();
+        return null;
     }
 
+    @Override // android.view.SurfaceHolder
     public void unlockCanvasAndPost(Canvas canvas) {
         this.mSurface.unlockCanvasAndPost(canvas);
         this.mSurfaceLock.unlock();
     }
 
+    @Override // android.view.SurfaceHolder
     public Surface getSurface() {
         return this.mSurface;
     }
 
+    @Override // android.view.SurfaceHolder
     public Rect getSurfaceFrame() {
         return this.mSurfaceFrame;
     }

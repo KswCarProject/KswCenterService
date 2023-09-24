@@ -1,7 +1,7 @@
 package android.speech.tts;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.logging.nano.MetricsProto;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,12 +9,17 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
+/* loaded from: classes3.dex */
 public class Voice implements Parcelable {
-    public static final Parcelable.Creator<Voice> CREATOR = new Parcelable.Creator<Voice>() {
+    public static final Parcelable.Creator<Voice> CREATOR = new Parcelable.Creator<Voice>() { // from class: android.speech.tts.Voice.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Voice createFromParcel(Parcel in) {
             return new Voice(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Voice[] newArray(int size) {
             return new Voice[size];
         }
@@ -50,20 +55,22 @@ public class Voice implements Parcelable {
         this.mLocale = (Locale) in.readSerializable();
         this.mQuality = in.readInt();
         this.mLatency = in.readInt();
-        this.mRequiresNetworkConnection = in.readByte() != 1 ? false : true;
+        this.mRequiresNetworkConnection = in.readByte() == 1;
         this.mFeatures = new HashSet();
         Collections.addAll(this.mFeatures, in.readStringArray());
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.mName);
         dest.writeSerializable(this.mLocale);
         dest.writeInt(this.mQuality);
         dest.writeInt(this.mLatency);
-        dest.writeByte(this.mRequiresNetworkConnection ? (byte) 1 : 0);
+        dest.writeByte(this.mRequiresNetworkConnection ? (byte) 1 : (byte) 0);
         dest.writeStringList(new ArrayList(this.mFeatures));
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -111,12 +118,8 @@ public class Voice implements Parcelable {
     }
 
     public int hashCode() {
-        int i = 0;
-        int result = ((((((1 * 31) + (this.mFeatures == null ? 0 : this.mFeatures.hashCode())) * 31) + this.mLatency) * 31) + (this.mLocale == null ? 0 : this.mLocale.hashCode())) * 31;
-        if (this.mName != null) {
-            i = this.mName.hashCode();
-        }
-        return ((((result + i) * 31) + this.mQuality) * 31) + (this.mRequiresNetworkConnection ? MetricsProto.MetricsEvent.AUTOFILL_SERVICE_DISABLED_APP : MetricsProto.MetricsEvent.ANOMALY_TYPE_UNOPTIMIZED_BT);
+        int result = (1 * 31) + (this.mFeatures == null ? 0 : this.mFeatures.hashCode());
+        return (((((((((result * 31) + this.mLatency) * 31) + (this.mLocale == null ? 0 : this.mLocale.hashCode())) * 31) + (this.mName != null ? this.mName.hashCode() : 0)) * 31) + this.mQuality) * 31) + (this.mRequiresNetworkConnection ? MetricsProto.MetricsEvent.AUTOFILL_SERVICE_DISABLED_APP : MetricsProto.MetricsEvent.ANOMALY_TYPE_UNOPTIMIZED_BT);
     }
 
     public boolean equals(Object obj) {

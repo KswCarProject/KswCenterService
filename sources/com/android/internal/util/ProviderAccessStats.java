@@ -1,25 +1,33 @@
 package com.android.internal.util;
 
-import android.os.SystemClock;
+import android.p007os.SystemClock;
 import android.util.SparseBooleanArray;
 import android.util.SparseLongArray;
 import java.io.PrintWriter;
+import java.util.function.Supplier;
 
+/* loaded from: classes4.dex */
 public class ProviderAccessStats {
+    private final Object mLock = new Object();
+    private final long mStartUptime = SystemClock.uptimeMillis();
     private final SparseBooleanArray mAllCallingUids = new SparseBooleanArray();
+    private final SparseLongArray mQueryStats = new SparseLongArray(16);
     private final SparseLongArray mBatchStats = new SparseLongArray(0);
-    private final SparseLongArray mDeleteInBatchStats = new SparseLongArray(0);
+    private final SparseLongArray mInsertStats = new SparseLongArray(0);
+    private final SparseLongArray mUpdateStats = new SparseLongArray(0);
     private final SparseLongArray mDeleteStats = new SparseLongArray(0);
     private final SparseLongArray mInsertInBatchStats = new SparseLongArray(0);
-    private final SparseLongArray mInsertStats = new SparseLongArray(0);
-    private final Object mLock = new Object();
-    private final SparseLongArray mOperationDurationMillis = new SparseLongArray(16);
-    private final SparseLongArray mQueryStats = new SparseLongArray(16);
-    private final long mStartUptime = SystemClock.uptimeMillis();
-    private final ThreadLocal<PerThreadData> mThreadLocal = ThreadLocal.withInitial($$Lambda$ProviderAccessStats$9AhC6lKURctNKuYjVdwu7jn6_c.INSTANCE);
     private final SparseLongArray mUpdateInBatchStats = new SparseLongArray(0);
-    private final SparseLongArray mUpdateStats = new SparseLongArray(0);
+    private final SparseLongArray mDeleteInBatchStats = new SparseLongArray(0);
+    private final SparseLongArray mOperationDurationMillis = new SparseLongArray(16);
+    private final ThreadLocal<PerThreadData> mThreadLocal = ThreadLocal.withInitial(new Supplier() { // from class: com.android.internal.util.-$$Lambda$ProviderAccessStats$9AhC6lKURctNKuYjVd-wu7jn6_c
+        @Override // java.util.function.Supplier
+        public final Object get() {
+            return ProviderAccessStats.lambda$new$0();
+        }
+    });
 
+    /* loaded from: classes4.dex */
     private static class PerThreadData {
         public int nestCount;
         public long startUptimeMillis;
@@ -72,7 +80,7 @@ public class ProviderAccessStats {
         PerThreadData data = this.mThreadLocal.get();
         data.nestCount--;
         if (data.nestCount == 0) {
-            long duration = Math.max(1, SystemClock.uptimeMillis() - data.startUptimeMillis);
+            long duration = Math.max(1L, SystemClock.uptimeMillis() - data.startUptimeMillis);
             synchronized (this.mLock) {
                 this.mOperationDurationMillis.put(callingUid, this.mOperationDurationMillis.get(callingUid) + duration);
             }
@@ -92,7 +100,7 @@ public class ProviderAccessStats {
             for (int i = 0; i < this.mAllCallingUids.size(); i++) {
                 int uid = this.mAllCallingUids.keyAt(i);
                 pw.print(prefix);
-                pw.println(String.format("  %-9d %6d  %6d %6d %6d  %6d %6d %6d %6d %12.3f", new Object[]{Integer.valueOf(uid), Long.valueOf(this.mQueryStats.get(uid)), Long.valueOf(this.mInsertStats.get(uid)), Long.valueOf(this.mUpdateStats.get(uid)), Long.valueOf(this.mDeleteStats.get(uid)), Long.valueOf(this.mBatchStats.get(uid)), Long.valueOf(this.mInsertInBatchStats.get(uid)), Long.valueOf(this.mUpdateInBatchStats.get(uid)), Long.valueOf(this.mDeleteInBatchStats.get(uid)), Double.valueOf(((double) this.mOperationDurationMillis.get(uid)) / 1000.0d)}));
+                pw.println(String.format("  %-9d %6d  %6d %6d %6d  %6d %6d %6d %6d %12.3f", Integer.valueOf(uid), Long.valueOf(this.mQueryStats.get(uid)), Long.valueOf(this.mInsertStats.get(uid)), Long.valueOf(this.mUpdateStats.get(uid)), Long.valueOf(this.mDeleteStats.get(uid)), Long.valueOf(this.mBatchStats.get(uid)), Long.valueOf(this.mInsertInBatchStats.get(uid)), Long.valueOf(this.mUpdateInBatchStats.get(uid)), Long.valueOf(this.mDeleteInBatchStats.get(uid)), Double.valueOf(this.mOperationDurationMillis.get(uid) / 1000.0d)));
             }
             pw.println();
         }

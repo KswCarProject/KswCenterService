@@ -3,6 +3,7 @@ package android.hardware.radio.V1_0;
 import com.android.internal.telephony.IccCardConstants;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class PersoSubstate {
     public static final int IN_PROGRESS = 1;
     public static final int READY = 2;

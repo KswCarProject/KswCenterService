@@ -1,19 +1,26 @@
 package android.content;
 
 import android.annotation.UnsupportedAppUsage;
+import android.database.Cursor;
 import android.net.Uri;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.Log;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/* loaded from: classes.dex */
 public class ContentProviderOperation implements Parcelable {
-    public static final Parcelable.Creator<ContentProviderOperation> CREATOR = new Parcelable.Creator<ContentProviderOperation>() {
+    public static final Parcelable.Creator<ContentProviderOperation> CREATOR = new Parcelable.Creator<ContentProviderOperation>() { // from class: android.content.ContentProviderOperation.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ContentProviderOperation createFromParcel(Parcel source) {
             return new ContentProviderOperation(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ContentProviderOperation[] newArray(int size) {
             return new ContentProviderOperation[size];
         }
@@ -57,7 +64,6 @@ public class ContentProviderOperation implements Parcelable {
         ContentValues contentValues;
         this.mType = source.readInt();
         this.mUri = Uri.CREATOR.createFromParcel(source);
-        HashMap hashMap = null;
         this.mValues = source.readInt() != 0 ? ContentValues.CREATOR.createFromParcel(source) : null;
         this.mSelection = source.readInt() != 0 ? source.readString() : null;
         this.mSelectionArgs = source.readInt() != 0 ? source.readStringArray() : null;
@@ -68,16 +74,16 @@ public class ContentProviderOperation implements Parcelable {
             contentValues = null;
         }
         this.mValuesBackReferences = contentValues;
-        this.mSelectionArgsBackReferences = source.readInt() != 0 ? new HashMap() : hashMap;
-        boolean z = false;
+        this.mSelectionArgsBackReferences = source.readInt() != 0 ? new HashMap() : null;
         if (this.mSelectionArgsBackReferences != null) {
             int count = source.readInt();
             for (int i = 0; i < count; i++) {
                 this.mSelectionArgsBackReferences.put(Integer.valueOf(source.readInt()), Integer.valueOf(source.readInt()));
             }
         }
-        this.mYieldAllowed = source.readInt() != 0;
-        this.mFailureAllowed = source.readInt() != 0 ? true : z;
+        int count2 = source.readInt();
+        this.mYieldAllowed = count2 != 0;
+        this.mFailureAllowed = source.readInt() != 0;
     }
 
     public ContentProviderOperation(ContentProviderOperation cpo, Uri withUri) {
@@ -93,6 +99,7 @@ public class ContentProviderOperation implements Parcelable {
         this.mFailureAllowed = cpo.mFailureAllowed;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mType);
         Uri.writeToParcel(dest, this.mUri);
@@ -198,204 +205,87 @@ public class ContentProviderOperation implements Parcelable {
     }
 
     public ContentProviderResult apply(ContentProvider provider, ContentProviderResult[] backRefs, int numBackRefs) throws OperationApplicationException {
-        if (!this.mFailureAllowed) {
-            return applyInternal(provider, backRefs, numBackRefs);
+        if (this.mFailureAllowed) {
+            try {
+                return applyInternal(provider, backRefs, numBackRefs);
+            } catch (Exception e) {
+                return new ContentProviderResult(e.getMessage());
+            }
         }
-        try {
-            return applyInternal(provider, backRefs, numBackRefs);
-        } catch (Exception e) {
-            return new ContentProviderResult(e.getMessage());
-        }
+        return applyInternal(provider, backRefs, numBackRefs);
     }
 
-    /* JADX INFO: finally extract failed */
-    /* JADX WARNING: type inference failed for: r3v13, types: [java.lang.Object[]] */
-    /* JADX WARNING: Code restructure failed: missing block: B:26:0x00a1, code lost:
-        if (r8 != null) goto L_0x00a3;
+    /* JADX WARN: Code restructure failed: missing block: B:27:0x00a1, code lost:
+        if (r8 != null) goto L38;
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:28:0x00a7, code lost:
-        if (r1.moveToNext() == false) goto L_0x00e9;
+    /* JADX WARN: Code restructure failed: missing block: B:29:0x00a7, code lost:
+        if (r1.moveToNext() == false) goto L51;
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:29:0x00a9, code lost:
+    /* JADX WARN: Code restructure failed: missing block: B:30:0x00a9, code lost:
         r3 = 0;
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:31:0x00ab, code lost:
-        if (r3 >= r8.length) goto L_0x00a3;
+    /* JADX WARN: Code restructure failed: missing block: B:32:0x00ab, code lost:
+        if (r3 >= r8.length) goto L50;
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:32:0x00ad, code lost:
+    /* JADX WARN: Code restructure failed: missing block: B:33:0x00ad, code lost:
         r4 = r1.getString(r3);
         r5 = r0.getAsString(r8[r3]);
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:33:0x00bb, code lost:
-        if (android.text.TextUtils.equals(r4, r5) == false) goto L_0x00c0;
+    /* JADX WARN: Code restructure failed: missing block: B:34:0x00bb, code lost:
+        if (android.text.TextUtils.equals(r4, r5) == false) goto L46;
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:34:0x00bd, code lost:
+    /* JADX WARN: Code restructure failed: missing block: B:35:0x00bd, code lost:
         r3 = r3 + 1;
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:36:0x00e8, code lost:
+    /* JADX WARN: Code restructure failed: missing block: B:37:0x00e8, code lost:
         throw new android.content.OperationApplicationException("Found value " + r4 + " when expected " + r5 + " for column " + r8[r3]);
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:37:0x00e9, code lost:
+    /* JADX WARN: Code restructure failed: missing block: B:38:0x00e9, code lost:
         r1.close();
         r1 = r2;
      */
-    /* JADX WARNING: Multi-variable type inference failed */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    private android.content.ContentProviderResult applyInternal(android.content.ContentProvider r12, android.content.ContentProviderResult[] r13, int r14) throws android.content.OperationApplicationException {
-        /*
-            r11 = this;
-            android.content.ContentValues r0 = r11.resolveValueBackReferences(r13, r14)
-            java.lang.String[] r7 = r11.resolveSelectionArgsBackReferences(r13, r14)
-            int r1 = r11.mType
-            r2 = 1
-            if (r1 != r2) goto L_0x003a
-            android.net.Uri r1 = r11.mUri
-            android.net.Uri r1 = r12.insert(r1, r0)
-            if (r1 == 0) goto L_0x001c
-            android.content.ContentProviderResult r2 = new android.content.ContentProviderResult
-            r2.<init>((android.net.Uri) r1)
-            return r2
-        L_0x001c:
-            android.content.OperationApplicationException r2 = new android.content.OperationApplicationException
-            java.lang.StringBuilder r3 = new java.lang.StringBuilder
-            r3.<init>()
-            java.lang.String r4 = "Insert into "
-            r3.append(r4)
-            android.net.Uri r4 = r11.mUri
-            r3.append(r4)
-            java.lang.String r4 = " returned no result"
-            r3.append(r4)
-            java.lang.String r3 = r3.toString()
-            r2.<init>((java.lang.String) r3)
-            throw r2
-        L_0x003a:
-            int r1 = r11.mType
-            r2 = 3
-            if (r1 != r2) goto L_0x0049
-            android.net.Uri r1 = r11.mUri
-            java.lang.String r2 = r11.mSelection
-            int r1 = r12.delete(r1, r2, r7)
-            goto L_0x00ef
-        L_0x0049:
-            int r1 = r11.mType
-            r2 = 2
-            if (r1 != r2) goto L_0x0058
-            android.net.Uri r1 = r11.mUri
-            java.lang.String r2 = r11.mSelection
-            int r1 = r12.update(r1, r0, r2, r7)
-            goto L_0x00ef
-        L_0x0058:
-            int r1 = r11.mType
-            r2 = 4
-            if (r1 != r2) goto L_0x0129
-            r1 = 0
-            if (r0 == 0) goto L_0x0090
-            java.util.ArrayList r2 = new java.util.ArrayList
-            r2.<init>()
-            java.util.Set r3 = r0.valueSet()
-            java.util.Iterator r3 = r3.iterator()
-        L_0x006d:
-            boolean r4 = r3.hasNext()
-            if (r4 == 0) goto L_0x0083
-            java.lang.Object r4 = r3.next()
-            java.util.Map$Entry r4 = (java.util.Map.Entry) r4
-            java.lang.Object r5 = r4.getKey()
-            java.lang.String r5 = (java.lang.String) r5
-            r2.add(r5)
-            goto L_0x006d
-        L_0x0083:
-            int r3 = r2.size()
-            java.lang.String[] r3 = new java.lang.String[r3]
-            java.lang.Object[] r3 = r2.toArray(r3)
-            r1 = r3
-            java.lang.String[] r1 = (java.lang.String[]) r1
-        L_0x0090:
-            r8 = r1
-            android.net.Uri r2 = r11.mUri
-            java.lang.String r4 = r11.mSelection
-            r6 = 0
-            r1 = r12
-            r3 = r8
-            r5 = r7
-            android.database.Cursor r1 = r1.query(r2, r3, r4, r5, r6)
-            int r2 = r1.getCount()     // Catch:{ all -> 0x0124 }
-            if (r8 == 0) goto L_0x00e9
-        L_0x00a3:
-            boolean r3 = r1.moveToNext()     // Catch:{ all -> 0x0124 }
-            if (r3 == 0) goto L_0x00e9
-            r3 = 0
-        L_0x00aa:
-            int r4 = r8.length     // Catch:{ all -> 0x0124 }
-            if (r3 >= r4) goto L_0x00a3
-            java.lang.String r4 = r1.getString(r3)     // Catch:{ all -> 0x0124 }
-            r5 = r8[r3]     // Catch:{ all -> 0x0124 }
-            java.lang.String r5 = r0.getAsString(r5)     // Catch:{ all -> 0x0124 }
-            boolean r6 = android.text.TextUtils.equals(r4, r5)     // Catch:{ all -> 0x0124 }
-            if (r6 == 0) goto L_0x00c0
-            int r3 = r3 + 1
-            goto L_0x00aa
-        L_0x00c0:
-            android.content.OperationApplicationException r6 = new android.content.OperationApplicationException     // Catch:{ all -> 0x0124 }
-            java.lang.StringBuilder r9 = new java.lang.StringBuilder     // Catch:{ all -> 0x0124 }
-            r9.<init>()     // Catch:{ all -> 0x0124 }
-            java.lang.String r10 = "Found value "
-            r9.append(r10)     // Catch:{ all -> 0x0124 }
-            r9.append(r4)     // Catch:{ all -> 0x0124 }
-            java.lang.String r10 = " when expected "
-            r9.append(r10)     // Catch:{ all -> 0x0124 }
-            r9.append(r5)     // Catch:{ all -> 0x0124 }
-            java.lang.String r10 = " for column "
-            r9.append(r10)     // Catch:{ all -> 0x0124 }
-            r10 = r8[r3]     // Catch:{ all -> 0x0124 }
-            r9.append(r10)     // Catch:{ all -> 0x0124 }
-            java.lang.String r9 = r9.toString()     // Catch:{ all -> 0x0124 }
-            r6.<init>((java.lang.String) r9)     // Catch:{ all -> 0x0124 }
-            throw r6     // Catch:{ all -> 0x0124 }
-        L_0x00e9:
-            r1.close()
-            r1 = r2
-        L_0x00ef:
-            java.lang.Integer r2 = r11.mExpectedCount
-            if (r2 == 0) goto L_0x011e
-            java.lang.Integer r2 = r11.mExpectedCount
-            int r2 = r2.intValue()
-            if (r2 != r1) goto L_0x00fd
-            goto L_0x011e
-        L_0x00fd:
-            android.content.OperationApplicationException r2 = new android.content.OperationApplicationException
-            java.lang.StringBuilder r3 = new java.lang.StringBuilder
-            r3.<init>()
-            java.lang.String r4 = "Expected "
-            r3.append(r4)
-            java.lang.Integer r4 = r11.mExpectedCount
-            r3.append(r4)
-            java.lang.String r4 = " rows but actual "
-            r3.append(r4)
-            r3.append(r1)
-            java.lang.String r3 = r3.toString()
-            r2.<init>((java.lang.String) r3)
-            throw r2
-        L_0x011e:
-            android.content.ContentProviderResult r2 = new android.content.ContentProviderResult
-            r2.<init>((int) r1)
-            return r2
-        L_0x0124:
-            r2 = move-exception
-            r1.close()
-            throw r2
-        L_0x0129:
-            java.lang.IllegalStateException r1 = new java.lang.IllegalStateException
-            java.lang.StringBuilder r2 = new java.lang.StringBuilder
-            r2.<init>()
-            java.lang.String r3 = "bad type, "
-            r2.append(r3)
-            int r3 = r11.mType
-            r2.append(r3)
-            java.lang.String r2 = r2.toString()
-            r1.<init>(r2)
-            throw r1
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.content.ContentProviderOperation.applyInternal(android.content.ContentProvider, android.content.ContentProviderResult[], int):android.content.ContentProviderResult");
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    private ContentProviderResult applyInternal(ContentProvider provider, ContentProviderResult[] backRefs, int numBackRefs) throws OperationApplicationException {
+        int numRows;
+        ContentValues values = resolveValueBackReferences(backRefs, numBackRefs);
+        String[] selectionArgs = resolveSelectionArgsBackReferences(backRefs, numBackRefs);
+        if (this.mType == 1) {
+            Uri newUri = provider.insert(this.mUri, values);
+            if (newUri != null) {
+                return new ContentProviderResult(newUri);
+            }
+            throw new OperationApplicationException("Insert into " + this.mUri + " returned no result");
+        }
+        if (this.mType == 3) {
+            numRows = provider.delete(this.mUri, this.mSelection, selectionArgs);
+        } else if (this.mType == 2) {
+            numRows = provider.update(this.mUri, values, this.mSelection, selectionArgs);
+        } else if (this.mType == 4) {
+            String[] projection = null;
+            if (values != null) {
+                ArrayList<String> projectionList = new ArrayList<>();
+                for (Map.Entry<String, Object> entry : values.valueSet()) {
+                    projectionList.add(entry.getKey());
+                }
+                projection = (String[]) projectionList.toArray(new String[projectionList.size()]);
+            }
+            String[] projection2 = projection;
+            Cursor cursor = provider.query(this.mUri, projection2, this.mSelection, selectionArgs, null);
+            try {
+                int numRows2 = cursor.getCount();
+            } catch (Throwable th) {
+                cursor.close();
+                throw th;
+            }
+        } else {
+            throw new IllegalStateException("bad type, " + this.mType);
+        }
+        if (this.mExpectedCount != null && this.mExpectedCount.intValue() != numRows) {
+            throw new OperationApplicationException("Expected " + this.mExpectedCount + " rows but actual " + numRows);
+        }
+        return new ContentProviderResult(numRows);
     }
 
     public ContentValues resolveValueBackReferences(ContentProviderResult[] backRefs, int numBackRefs) {
@@ -411,12 +301,11 @@ public class ContentProviderOperation implements Parcelable {
         for (Map.Entry<String, Object> entry : this.mValuesBackReferences.valueSet()) {
             String key = entry.getKey();
             Integer backRefIndex = this.mValuesBackReferences.getAsInteger(key);
-            if (backRefIndex != null) {
-                values.put(key, Long.valueOf(backRefToValue(backRefs, numBackRefs, backRefIndex)));
-            } else {
-                Log.e(TAG, toString());
+            if (backRefIndex == null) {
+                Log.m70e(TAG, toString());
                 throw new IllegalArgumentException("values backref " + key + " is not an integer");
             }
+            values.put(key, Long.valueOf(backRefToValue(backRefs, numBackRefs, backRefIndex)));
         }
         return values;
     }
@@ -428,7 +317,9 @@ public class ContentProviderOperation implements Parcelable {
         String[] newArgs = new String[this.mSelectionArgs.length];
         System.arraycopy(this.mSelectionArgs, 0, newArgs, 0, this.mSelectionArgs.length);
         for (Map.Entry<Integer, Integer> selectionArgBackRef : this.mSelectionArgsBackReferences.entrySet()) {
-            newArgs[selectionArgBackRef.getKey().intValue()] = String.valueOf(backRefToValue(backRefs, numBackRefs, Integer.valueOf(selectionArgBackRef.getValue().intValue())));
+            Integer selectionArgIndex = selectionArgBackRef.getKey();
+            int backRefIndex = selectionArgBackRef.getValue().intValue();
+            newArgs[selectionArgIndex.intValue()] = String.valueOf(backRefToValue(backRefs, numBackRefs, Integer.valueOf(backRefIndex)));
         }
         return newArgs;
     }
@@ -438,156 +329,149 @@ public class ContentProviderOperation implements Parcelable {
     }
 
     private long backRefToValue(ContentProviderResult[] backRefs, int numBackRefs, Integer backRefIndex) {
-        if (backRefIndex.intValue() < numBackRefs) {
-            ContentProviderResult backRef = backRefs[backRefIndex.intValue()];
-            if (backRef.uri != null) {
-                return ContentUris.parseId(backRef.uri);
-            }
-            return (long) backRef.count.intValue();
+        if (backRefIndex.intValue() >= numBackRefs) {
+            Log.m70e(TAG, toString());
+            throw new ArrayIndexOutOfBoundsException("asked for back ref " + backRefIndex + " but there are only " + numBackRefs + " back refs");
         }
-        Log.e(TAG, toString());
-        throw new ArrayIndexOutOfBoundsException("asked for back ref " + backRefIndex + " but there are only " + numBackRefs + " back refs");
+        ContentProviderResult backRef = backRefs[backRefIndex.intValue()];
+        if (backRef.uri != null) {
+            long backRefValue = ContentUris.parseId(backRef.uri);
+            return backRefValue;
+        }
+        long backRefValue2 = backRef.count.intValue();
+        return backRefValue2;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    /* loaded from: classes.dex */
     public static class Builder {
-        /* access modifiers changed from: private */
-        public Integer mExpectedCount;
-        /* access modifiers changed from: private */
-        public boolean mFailureAllowed;
-        /* access modifiers changed from: private */
-        public String mSelection;
-        /* access modifiers changed from: private */
-        public String[] mSelectionArgs;
-        /* access modifiers changed from: private */
-        public Map<Integer, Integer> mSelectionArgsBackReferences;
-        /* access modifiers changed from: private */
-        public final int mType;
-        /* access modifiers changed from: private */
-        public final Uri mUri;
-        /* access modifiers changed from: private */
-        public ContentValues mValues;
-        /* access modifiers changed from: private */
-        public ContentValues mValuesBackReferences;
-        /* access modifiers changed from: private */
-        public boolean mYieldAllowed;
+        private Integer mExpectedCount;
+        private boolean mFailureAllowed;
+        private String mSelection;
+        private String[] mSelectionArgs;
+        private Map<Integer, Integer> mSelectionArgsBackReferences;
+        private final int mType;
+        private final Uri mUri;
+        private ContentValues mValues;
+        private ContentValues mValuesBackReferences;
+        private boolean mYieldAllowed;
 
         private Builder(int type, Uri uri) {
-            if (uri != null) {
-                this.mType = type;
-                this.mUri = uri;
-                return;
+            if (uri == null) {
+                throw new IllegalArgumentException("uri must not be null");
             }
-            throw new IllegalArgumentException("uri must not be null");
+            this.mType = type;
+            this.mUri = uri;
         }
 
         public ContentProviderOperation build() {
             if (this.mType == 2 && ((this.mValues == null || this.mValues.isEmpty()) && (this.mValuesBackReferences == null || this.mValuesBackReferences.isEmpty()))) {
                 throw new IllegalArgumentException("Empty values");
-            } else if (this.mType != 4 || ((this.mValues != null && !this.mValues.isEmpty()) || ((this.mValuesBackReferences != null && !this.mValuesBackReferences.isEmpty()) || this.mExpectedCount != null))) {
-                return new ContentProviderOperation(this);
-            } else {
+            }
+            if (this.mType == 4 && ((this.mValues == null || this.mValues.isEmpty()) && ((this.mValuesBackReferences == null || this.mValuesBackReferences.isEmpty()) && this.mExpectedCount == null))) {
                 throw new IllegalArgumentException("Empty values");
             }
+            return new ContentProviderOperation(this);
         }
 
         public Builder withValueBackReferences(ContentValues backReferences) {
-            if (this.mType == 1 || this.mType == 2 || this.mType == 4) {
-                this.mValuesBackReferences = backReferences;
-                return this;
+            if (this.mType != 1 && this.mType != 2 && this.mType != 4) {
+                throw new IllegalArgumentException("only inserts, updates, and asserts can have value back-references");
             }
-            throw new IllegalArgumentException("only inserts, updates, and asserts can have value back-references");
+            this.mValuesBackReferences = backReferences;
+            return this;
         }
 
         public Builder withValueBackReference(String key, int previousResult) {
-            if (this.mType == 1 || this.mType == 2 || this.mType == 4) {
-                if (this.mValuesBackReferences == null) {
-                    this.mValuesBackReferences = new ContentValues();
-                }
-                this.mValuesBackReferences.put(key, Integer.valueOf(previousResult));
-                return this;
+            if (this.mType != 1 && this.mType != 2 && this.mType != 4) {
+                throw new IllegalArgumentException("only inserts, updates, and asserts can have value back-references");
             }
-            throw new IllegalArgumentException("only inserts, updates, and asserts can have value back-references");
+            if (this.mValuesBackReferences == null) {
+                this.mValuesBackReferences = new ContentValues();
+            }
+            this.mValuesBackReferences.put(key, Integer.valueOf(previousResult));
+            return this;
         }
 
         public Builder withSelectionBackReference(int selectionArgIndex, int previousResult) {
-            if (this.mType == 2 || this.mType == 3 || this.mType == 4) {
-                if (this.mSelectionArgsBackReferences == null) {
-                    this.mSelectionArgsBackReferences = new HashMap();
-                }
-                this.mSelectionArgsBackReferences.put(Integer.valueOf(selectionArgIndex), Integer.valueOf(previousResult));
-                return this;
+            if (this.mType != 2 && this.mType != 3 && this.mType != 4) {
+                throw new IllegalArgumentException("only updates, deletes, and asserts can have selection back-references");
             }
-            throw new IllegalArgumentException("only updates, deletes, and asserts can have selection back-references");
+            if (this.mSelectionArgsBackReferences == null) {
+                this.mSelectionArgsBackReferences = new HashMap();
+            }
+            this.mSelectionArgsBackReferences.put(Integer.valueOf(selectionArgIndex), Integer.valueOf(previousResult));
+            return this;
         }
 
         public Builder withValues(ContentValues values) {
-            if (this.mType == 1 || this.mType == 2 || this.mType == 4) {
-                if (this.mValues == null) {
-                    this.mValues = new ContentValues();
-                }
-                this.mValues.putAll(values);
-                return this;
+            if (this.mType != 1 && this.mType != 2 && this.mType != 4) {
+                throw new IllegalArgumentException("only inserts, updates, and asserts can have values");
             }
-            throw new IllegalArgumentException("only inserts, updates, and asserts can have values");
+            if (this.mValues == null) {
+                this.mValues = new ContentValues();
+            }
+            this.mValues.putAll(values);
+            return this;
         }
 
         public Builder withValue(String key, Object value) {
-            if (this.mType == 1 || this.mType == 2 || this.mType == 4) {
-                if (this.mValues == null) {
-                    this.mValues = new ContentValues();
-                }
-                if (value == null) {
-                    this.mValues.putNull(key);
-                } else if (value instanceof String) {
-                    this.mValues.put(key, (String) value);
-                } else if (value instanceof Byte) {
-                    this.mValues.put(key, (Byte) value);
-                } else if (value instanceof Short) {
-                    this.mValues.put(key, (Short) value);
-                } else if (value instanceof Integer) {
-                    this.mValues.put(key, (Integer) value);
-                } else if (value instanceof Long) {
-                    this.mValues.put(key, (Long) value);
-                } else if (value instanceof Float) {
-                    this.mValues.put(key, (Float) value);
-                } else if (value instanceof Double) {
-                    this.mValues.put(key, (Double) value);
-                } else if (value instanceof Boolean) {
-                    this.mValues.put(key, (Boolean) value);
-                } else if (value instanceof byte[]) {
-                    this.mValues.put(key, (byte[]) value);
-                } else {
-                    throw new IllegalArgumentException("bad value type: " + value.getClass().getName());
-                }
-                return this;
+            if (this.mType != 1 && this.mType != 2 && this.mType != 4) {
+                throw new IllegalArgumentException("only inserts and updates can have values");
             }
-            throw new IllegalArgumentException("only inserts and updates can have values");
+            if (this.mValues == null) {
+                this.mValues = new ContentValues();
+            }
+            if (value == null) {
+                this.mValues.putNull(key);
+            } else if (value instanceof String) {
+                this.mValues.put(key, (String) value);
+            } else if (value instanceof Byte) {
+                this.mValues.put(key, (Byte) value);
+            } else if (value instanceof Short) {
+                this.mValues.put(key, (Short) value);
+            } else if (value instanceof Integer) {
+                this.mValues.put(key, (Integer) value);
+            } else if (value instanceof Long) {
+                this.mValues.put(key, (Long) value);
+            } else if (value instanceof Float) {
+                this.mValues.put(key, (Float) value);
+            } else if (value instanceof Double) {
+                this.mValues.put(key, (Double) value);
+            } else if (value instanceof Boolean) {
+                this.mValues.put(key, (Boolean) value);
+            } else if (value instanceof byte[]) {
+                this.mValues.put(key, (byte[]) value);
+            } else {
+                throw new IllegalArgumentException("bad value type: " + value.getClass().getName());
+            }
+            return this;
         }
 
         public Builder withSelection(String selection, String[] selectionArgs) {
-            if (this.mType == 2 || this.mType == 3 || this.mType == 4) {
-                this.mSelection = selection;
-                if (selectionArgs == null) {
-                    this.mSelectionArgs = null;
-                } else {
-                    this.mSelectionArgs = new String[selectionArgs.length];
-                    System.arraycopy(selectionArgs, 0, this.mSelectionArgs, 0, selectionArgs.length);
-                }
-                return this;
+            if (this.mType != 2 && this.mType != 3 && this.mType != 4) {
+                throw new IllegalArgumentException("only updates, deletes, and asserts can have selections");
             }
-            throw new IllegalArgumentException("only updates, deletes, and asserts can have selections");
+            this.mSelection = selection;
+            if (selectionArgs == null) {
+                this.mSelectionArgs = null;
+            } else {
+                this.mSelectionArgs = new String[selectionArgs.length];
+                System.arraycopy(selectionArgs, 0, this.mSelectionArgs, 0, selectionArgs.length);
+            }
+            return this;
         }
 
         public Builder withExpectedCount(int count) {
-            if (this.mType == 2 || this.mType == 3 || this.mType == 4) {
-                this.mExpectedCount = Integer.valueOf(count);
-                return this;
+            if (this.mType != 2 && this.mType != 3 && this.mType != 4) {
+                throw new IllegalArgumentException("only updates, deletes, and asserts can have expected counts");
             }
-            throw new IllegalArgumentException("only updates, deletes, and asserts can have expected counts");
+            this.mExpectedCount = Integer.valueOf(count);
+            return this;
         }
 
         public Builder withYieldAllowed(boolean yieldAllowed) {

@@ -3,6 +3,7 @@ package com.android.internal.widget;
 import android.view.View;
 import com.android.internal.widget.RecyclerView;
 
+/* loaded from: classes4.dex */
 class ScrollbarHelper {
     ScrollbarHelper() {
     }
@@ -22,7 +23,10 @@ class ScrollbarHelper {
         if (!smoothScrollbarEnabled) {
             return itemsBefore;
         }
-        return Math.round((((float) itemsBefore) * (((float) Math.abs(orientation.getDecoratedEnd(endChild) - orientation.getDecoratedStart(startChild))) / ((float) (Math.abs(lm.getPosition(startChild) - lm.getPosition(endChild)) + 1)))) + ((float) (orientation.getStartAfterPadding() - orientation.getDecoratedStart(startChild))));
+        int laidOutArea = Math.abs(orientation.getDecoratedEnd(endChild) - orientation.getDecoratedStart(startChild));
+        int itemRange = Math.abs(lm.getPosition(startChild) - lm.getPosition(endChild)) + 1;
+        float avgSizePerRow = laidOutArea / itemRange;
+        return Math.round((itemsBefore * avgSizePerRow) + (orientation.getStartAfterPadding() - orientation.getDecoratedStart(startChild)));
     }
 
     static int computeScrollExtent(RecyclerView.State state, OrientationHelper orientation, View startChild, View endChild, RecyclerView.LayoutManager lm, boolean smoothScrollbarEnabled) {
@@ -32,7 +36,8 @@ class ScrollbarHelper {
         if (!smoothScrollbarEnabled) {
             return Math.abs(lm.getPosition(startChild) - lm.getPosition(endChild)) + 1;
         }
-        return Math.min(orientation.getTotalSpace(), orientation.getDecoratedEnd(endChild) - orientation.getDecoratedStart(startChild));
+        int extend = orientation.getDecoratedEnd(endChild) - orientation.getDecoratedStart(startChild);
+        return Math.min(orientation.getTotalSpace(), extend);
     }
 
     static int computeScrollRange(RecyclerView.State state, OrientationHelper orientation, View startChild, View endChild, RecyclerView.LayoutManager lm, boolean smoothScrollbarEnabled) {
@@ -42,6 +47,8 @@ class ScrollbarHelper {
         if (!smoothScrollbarEnabled) {
             return state.getItemCount();
         }
-        return (int) ((((float) (orientation.getDecoratedEnd(endChild) - orientation.getDecoratedStart(startChild))) / ((float) (Math.abs(lm.getPosition(startChild) - lm.getPosition(endChild)) + 1))) * ((float) state.getItemCount()));
+        int laidOutArea = orientation.getDecoratedEnd(endChild) - orientation.getDecoratedStart(startChild);
+        int laidOutRange = Math.abs(lm.getPosition(startChild) - lm.getPosition(endChild)) + 1;
+        return (int) ((laidOutArea / laidOutRange) * state.getItemCount());
     }
 }

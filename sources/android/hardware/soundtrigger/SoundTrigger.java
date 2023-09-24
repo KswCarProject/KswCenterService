@@ -4,9 +4,9 @@ import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
 import android.app.ActivityThread;
 import android.media.AudioFormat;
-import android.os.Handler;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Handler;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.system.OsConstants;
 import com.android.internal.logging.nano.MetricsProto;
 import java.util.ArrayList;
@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.UUID;
 
 @SystemApi
+/* loaded from: classes.dex */
 public class SoundTrigger {
     public static final int RECOGNITION_MODE_USER_AUTHENTICATION = 4;
     public static final int RECOGNITION_MODE_USER_IDENTIFICATION = 2;
@@ -25,14 +26,15 @@ public class SoundTrigger {
     public static final int SERVICE_STATE_DISABLED = 1;
     public static final int SERVICE_STATE_ENABLED = 0;
     public static final int SOUNDMODEL_STATUS_UPDATED = 0;
-    public static final int STATUS_BAD_VALUE = (-OsConstants.EINVAL);
-    public static final int STATUS_DEAD_OBJECT = (-OsConstants.EPIPE);
     public static final int STATUS_ERROR = Integer.MIN_VALUE;
-    public static final int STATUS_INVALID_OPERATION = (-OsConstants.ENOSYS);
-    public static final int STATUS_NO_INIT = (-OsConstants.ENODEV);
     public static final int STATUS_OK = 0;
-    public static final int STATUS_PERMISSION_DENIED = (-OsConstants.EPERM);
+    public static final int STATUS_PERMISSION_DENIED = -OsConstants.EPERM;
+    public static final int STATUS_NO_INIT = -OsConstants.ENODEV;
+    public static final int STATUS_BAD_VALUE = -OsConstants.EINVAL;
+    public static final int STATUS_DEAD_OBJECT = -OsConstants.EPIPE;
+    public static final int STATUS_INVALID_OPERATION = -OsConstants.ENOSYS;
 
+    /* loaded from: classes.dex */
     public interface StatusListener {
         void onRecognition(RecognitionEvent recognitionEvent);
 
@@ -48,19 +50,26 @@ public class SoundTrigger {
     private SoundTrigger() {
     }
 
+    /* loaded from: classes.dex */
     public static class ModuleProperties implements Parcelable {
-        public static final Parcelable.Creator<ModuleProperties> CREATOR = new Parcelable.Creator<ModuleProperties>() {
+        public static final Parcelable.Creator<ModuleProperties> CREATOR = new Parcelable.Creator<ModuleProperties>() { // from class: android.hardware.soundtrigger.SoundTrigger.ModuleProperties.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public ModuleProperties createFromParcel(Parcel in) {
                 return ModuleProperties.fromParcel(in);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public ModuleProperties[] newArray(int size) {
                 return new ModuleProperties[size];
             }
         };
         public final String description;
         @UnsupportedAppUsage
-        public final int id;
+
+        /* renamed from: id */
+        public final int f107id;
         public final String implementor;
         public final int maxBufferMs;
         public final int maxKeyphrases;
@@ -77,30 +86,45 @@ public class SoundTrigger {
         public final int version;
 
         @UnsupportedAppUsage
-        ModuleProperties(int id2, String implementor2, String description2, String uuid2, int version2, int maxSoundModels2, int maxKeyphrases2, int maxUsers2, int recognitionModes2, boolean supportsCaptureTransition2, int maxBufferMs2, boolean supportsConcurrentCapture2, int powerConsumptionMw2, boolean returnsTriggerInEvent2) {
-            this.id = id2;
-            this.implementor = implementor2;
-            this.description = description2;
-            this.uuid = UUID.fromString(uuid2);
-            this.version = version2;
-            this.maxSoundModels = maxSoundModels2;
-            this.maxKeyphrases = maxKeyphrases2;
-            this.maxUsers = maxUsers2;
-            this.recognitionModes = recognitionModes2;
-            this.supportsCaptureTransition = supportsCaptureTransition2;
-            this.maxBufferMs = maxBufferMs2;
-            this.supportsConcurrentCapture = supportsConcurrentCapture2;
-            this.powerConsumptionMw = powerConsumptionMw2;
-            this.returnsTriggerInEvent = returnsTriggerInEvent2;
+        ModuleProperties(int id, String implementor, String description, String uuid, int version, int maxSoundModels, int maxKeyphrases, int maxUsers, int recognitionModes, boolean supportsCaptureTransition, int maxBufferMs, boolean supportsConcurrentCapture, int powerConsumptionMw, boolean returnsTriggerInEvent) {
+            this.f107id = id;
+            this.implementor = implementor;
+            this.description = description;
+            this.uuid = UUID.fromString(uuid);
+            this.version = version;
+            this.maxSoundModels = maxSoundModels;
+            this.maxKeyphrases = maxKeyphrases;
+            this.maxUsers = maxUsers;
+            this.recognitionModes = recognitionModes;
+            this.supportsCaptureTransition = supportsCaptureTransition;
+            this.maxBufferMs = maxBufferMs;
+            this.supportsConcurrentCapture = supportsConcurrentCapture;
+            this.powerConsumptionMw = powerConsumptionMw;
+            this.returnsTriggerInEvent = returnsTriggerInEvent;
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public static ModuleProperties fromParcel(Parcel in) {
-            return new ModuleProperties(in.readInt(), in.readString(), in.readString(), in.readString(), in.readInt(), in.readInt(), in.readInt(), in.readInt(), in.readInt(), in.readByte() == 1, in.readInt(), in.readByte() == 1, in.readInt(), in.readByte() == 1);
+            int id = in.readInt();
+            String implementor = in.readString();
+            String description = in.readString();
+            String uuid = in.readString();
+            int version = in.readInt();
+            int maxSoundModels = in.readInt();
+            int maxKeyphrases = in.readInt();
+            int maxUsers = in.readInt();
+            int recognitionModes = in.readInt();
+            boolean supportsCaptureTransition = in.readByte() == 1;
+            int maxBufferMs = in.readInt();
+            boolean supportsConcurrentCapture = in.readByte() == 1;
+            int powerConsumptionMw = in.readInt();
+            boolean returnsTriggerInEvent = in.readByte() == 1;
+            return new ModuleProperties(id, implementor, description, uuid, version, maxSoundModels, maxKeyphrases, maxUsers, recognitionModes, supportsCaptureTransition, maxBufferMs, supportsConcurrentCapture, powerConsumptionMw, returnsTriggerInEvent);
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
-            dest.writeInt(this.id);
+            dest.writeInt(this.f107id);
             dest.writeString(this.implementor);
             dest.writeString(this.description);
             dest.writeString(this.uuid.toString());
@@ -109,22 +133,24 @@ public class SoundTrigger {
             dest.writeInt(this.maxKeyphrases);
             dest.writeInt(this.maxUsers);
             dest.writeInt(this.recognitionModes);
-            dest.writeByte(this.supportsCaptureTransition ? (byte) 1 : 0);
+            dest.writeByte(this.supportsCaptureTransition ? (byte) 1 : (byte) 0);
             dest.writeInt(this.maxBufferMs);
-            dest.writeByte(this.supportsConcurrentCapture ? (byte) 1 : 0);
+            dest.writeByte(this.supportsConcurrentCapture ? (byte) 1 : (byte) 0);
             dest.writeInt(this.powerConsumptionMw);
-            dest.writeByte(this.returnsTriggerInEvent ? (byte) 1 : 0);
+            dest.writeByte(this.returnsTriggerInEvent ? (byte) 1 : (byte) 0);
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
         public String toString() {
-            return "ModuleProperties [id=" + this.id + ", implementor=" + this.implementor + ", description=" + this.description + ", uuid=" + this.uuid + ", version=" + this.version + ", maxSoundModels=" + this.maxSoundModels + ", maxKeyphrases=" + this.maxKeyphrases + ", maxUsers=" + this.maxUsers + ", recognitionModes=" + this.recognitionModes + ", supportsCaptureTransition=" + this.supportsCaptureTransition + ", maxBufferMs=" + this.maxBufferMs + ", supportsConcurrentCapture=" + this.supportsConcurrentCapture + ", powerConsumptionMw=" + this.powerConsumptionMw + ", returnsTriggerInEvent=" + this.returnsTriggerInEvent + "]";
+            return "ModuleProperties [id=" + this.f107id + ", implementor=" + this.implementor + ", description=" + this.description + ", uuid=" + this.uuid + ", version=" + this.version + ", maxSoundModels=" + this.maxSoundModels + ", maxKeyphrases=" + this.maxKeyphrases + ", maxUsers=" + this.maxUsers + ", recognitionModes=" + this.recognitionModes + ", supportsCaptureTransition=" + this.supportsCaptureTransition + ", maxBufferMs=" + this.maxBufferMs + ", supportsConcurrentCapture=" + this.supportsConcurrentCapture + ", powerConsumptionMw=" + this.powerConsumptionMw + ", returnsTriggerInEvent=" + this.returnsTriggerInEvent + "]";
         }
     }
 
+    /* loaded from: classes.dex */
     public static class SoundModel {
         public static final int TYPE_GENERIC_SOUND = 1;
         public static final int TYPE_KEYPHRASE = 0;
@@ -137,20 +163,16 @@ public class SoundTrigger {
         @UnsupportedAppUsage
         public final UUID vendorUuid;
 
-        public SoundModel(UUID uuid2, UUID vendorUuid2, int type2, byte[] data2) {
-            this.uuid = uuid2;
-            this.vendorUuid = vendorUuid2;
-            this.type = type2;
-            this.data = data2;
+        public SoundModel(UUID uuid, UUID vendorUuid, int type, byte[] data) {
+            this.uuid = uuid;
+            this.vendorUuid = vendorUuid;
+            this.type = type;
+            this.data = data;
         }
 
         public int hashCode() {
-            int i = 0;
-            int result = ((((((1 * 31) + Arrays.hashCode(this.data)) * 31) + this.type) * 31) + (this.uuid == null ? 0 : this.uuid.hashCode())) * 31;
-            if (this.vendorUuid != null) {
-                i = this.vendorUuid.hashCode();
-            }
-            return result + i;
+            int result = (1 * 31) + Arrays.hashCode(this.data);
+            return (((((result * 31) + this.type) * 31) + (this.uuid == null ? 0 : this.uuid.hashCode())) * 31) + (this.vendorUuid != null ? this.vendorUuid.hashCode() : 0);
         }
 
         public boolean equals(Object obj) {
@@ -182,18 +204,25 @@ public class SoundTrigger {
         }
     }
 
+    /* loaded from: classes.dex */
     public static class Keyphrase implements Parcelable {
-        public static final Parcelable.Creator<Keyphrase> CREATOR = new Parcelable.Creator<Keyphrase>() {
+        public static final Parcelable.Creator<Keyphrase> CREATOR = new Parcelable.Creator<Keyphrase>() { // from class: android.hardware.soundtrigger.SoundTrigger.Keyphrase.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public Keyphrase createFromParcel(Parcel in) {
                 return Keyphrase.fromParcel(in);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public Keyphrase[] newArray(int size) {
                 return new Keyphrase[size];
             }
         };
         @UnsupportedAppUsage
-        public final int id;
+
+        /* renamed from: id */
+        public final int f105id;
         @UnsupportedAppUsage
         public final String locale;
         @UnsupportedAppUsage
@@ -204,31 +233,32 @@ public class SoundTrigger {
         public final int[] users;
 
         @UnsupportedAppUsage
-        public Keyphrase(int id2, int recognitionModes2, String locale2, String text2, int[] users2) {
-            this.id = id2;
-            this.recognitionModes = recognitionModes2;
-            this.locale = locale2;
-            this.text = text2;
-            this.users = users2;
+        public Keyphrase(int id, int recognitionModes, String locale, String text, int[] users) {
+            this.f105id = id;
+            this.recognitionModes = recognitionModes;
+            this.locale = locale;
+            this.text = text;
+            this.users = users;
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public static Keyphrase fromParcel(Parcel in) {
-            int id2 = in.readInt();
-            int recognitionModes2 = in.readInt();
-            String locale2 = in.readString();
-            String text2 = in.readString();
-            int[] users2 = null;
+            int id = in.readInt();
+            int recognitionModes = in.readInt();
+            String locale = in.readString();
+            String text = in.readString();
+            int[] users = null;
             int numUsers = in.readInt();
             if (numUsers >= 0) {
-                users2 = new int[numUsers];
-                in.readIntArray(users2);
+                users = new int[numUsers];
+                in.readIntArray(users);
             }
-            return new Keyphrase(id2, recognitionModes2, locale2, text2, users2);
+            return new Keyphrase(id, recognitionModes, locale, text, users);
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
-            dest.writeInt(this.id);
+            dest.writeInt(this.f105id);
             dest.writeInt(this.recognitionModes);
             dest.writeString(this.locale);
             dest.writeString(this.text);
@@ -240,17 +270,14 @@ public class SoundTrigger {
             dest.writeInt(-1);
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
         public int hashCode() {
-            int i = 0;
-            int result = ((((1 * 31) + (this.text == null ? 0 : this.text.hashCode())) * 31) + this.id) * 31;
-            if (this.locale != null) {
-                i = this.locale.hashCode();
-            }
-            return ((((result + i) * 31) + this.recognitionModes) * 31) + Arrays.hashCode(this.users);
+            int result = (1 * 31) + (this.text == null ? 0 : this.text.hashCode());
+            return (((((((result * 31) + this.f105id) * 31) + (this.locale != null ? this.locale.hashCode() : 0)) * 31) + this.recognitionModes) * 31) + Arrays.hashCode(this.users);
         }
 
         public boolean equals(Object obj) {
@@ -268,7 +295,7 @@ public class SoundTrigger {
             } else if (!this.text.equals(other.text)) {
                 return false;
             }
-            if (this.id != other.id) {
+            if (this.f105id != other.f105id) {
                 return false;
             }
             if (this.locale == null) {
@@ -285,16 +312,21 @@ public class SoundTrigger {
         }
 
         public String toString() {
-            return "Keyphrase [id=" + this.id + ", recognitionModes=" + this.recognitionModes + ", locale=" + this.locale + ", text=" + this.text + ", users=" + Arrays.toString(this.users) + "]";
+            return "Keyphrase [id=" + this.f105id + ", recognitionModes=" + this.recognitionModes + ", locale=" + this.locale + ", text=" + this.text + ", users=" + Arrays.toString(this.users) + "]";
         }
     }
 
+    /* loaded from: classes.dex */
     public static class KeyphraseSoundModel extends SoundModel implements Parcelable {
-        public static final Parcelable.Creator<KeyphraseSoundModel> CREATOR = new Parcelable.Creator<KeyphraseSoundModel>() {
+        public static final Parcelable.Creator<KeyphraseSoundModel> CREATOR = new Parcelable.Creator<KeyphraseSoundModel>() { // from class: android.hardware.soundtrigger.SoundTrigger.KeyphraseSoundModel.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public KeyphraseSoundModel createFromParcel(Parcel in) {
                 return KeyphraseSoundModel.fromParcel(in);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public KeyphraseSoundModel[] newArray(int size) {
                 return new KeyphraseSoundModel[size];
             }
@@ -303,25 +335,30 @@ public class SoundTrigger {
         public final Keyphrase[] keyphrases;
 
         @UnsupportedAppUsage
-        public KeyphraseSoundModel(UUID uuid, UUID vendorUuid, byte[] data, Keyphrase[] keyphrases2) {
+        public KeyphraseSoundModel(UUID uuid, UUID vendorUuid, byte[] data, Keyphrase[] keyphrases) {
             super(uuid, vendorUuid, 0, data);
-            this.keyphrases = keyphrases2;
+            this.keyphrases = keyphrases;
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public static KeyphraseSoundModel fromParcel(Parcel in) {
             UUID uuid = UUID.fromString(in.readString());
             UUID vendorUuid = null;
-            if (in.readInt() >= 0) {
+            int length = in.readInt();
+            if (length >= 0) {
                 vendorUuid = UUID.fromString(in.readString());
             }
-            return new KeyphraseSoundModel(uuid, vendorUuid, in.readBlob(), (Keyphrase[]) in.createTypedArray(Keyphrase.CREATOR));
+            byte[] data = in.readBlob();
+            Keyphrase[] keyphrases = (Keyphrase[]) in.createTypedArray(Keyphrase.CREATOR);
+            return new KeyphraseSoundModel(uuid, vendorUuid, data, keyphrases);
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeString(this.uuid.toString());
             if (this.vendorUuid == null) {
@@ -350,27 +387,36 @@ public class SoundTrigger {
             return sb.toString();
         }
 
+        @Override // android.hardware.soundtrigger.SoundTrigger.SoundModel
         public int hashCode() {
-            return (super.hashCode() * 31) + Arrays.hashCode(this.keyphrases);
+            int result = super.hashCode();
+            return (result * 31) + Arrays.hashCode(this.keyphrases);
         }
 
+        @Override // android.hardware.soundtrigger.SoundTrigger.SoundModel
         public boolean equals(Object obj) {
             if (this == obj) {
                 return true;
             }
-            if (super.equals(obj) && (obj instanceof KeyphraseSoundModel) && Arrays.equals(this.keyphrases, ((KeyphraseSoundModel) obj).keyphrases)) {
-                return true;
+            if (super.equals(obj) && (obj instanceof KeyphraseSoundModel)) {
+                KeyphraseSoundModel other = (KeyphraseSoundModel) obj;
+                return Arrays.equals(this.keyphrases, other.keyphrases);
             }
             return false;
         }
     }
 
+    /* loaded from: classes.dex */
     public static class GenericSoundModel extends SoundModel implements Parcelable {
-        public static final Parcelable.Creator<GenericSoundModel> CREATOR = new Parcelable.Creator<GenericSoundModel>() {
+        public static final Parcelable.Creator<GenericSoundModel> CREATOR = new Parcelable.Creator<GenericSoundModel>() { // from class: android.hardware.soundtrigger.SoundTrigger.GenericSoundModel.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public GenericSoundModel createFromParcel(Parcel in) {
                 return GenericSoundModel.fromParcel(in);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public GenericSoundModel[] newArray(int size) {
                 return new GenericSoundModel[size];
             }
@@ -381,20 +427,24 @@ public class SoundTrigger {
             super(uuid, vendorUuid, 1, data);
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public static GenericSoundModel fromParcel(Parcel in) {
             UUID uuid = UUID.fromString(in.readString());
             UUID vendorUuid = null;
-            if (in.readInt() >= 0) {
+            int length = in.readInt();
+            if (length >= 0) {
                 vendorUuid = UUID.fromString(in.readString());
             }
-            return new GenericSoundModel(uuid, vendorUuid, in.readBlob());
+            byte[] data = in.readBlob();
+            return new GenericSoundModel(uuid, vendorUuid, data);
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeString(this.uuid.toString());
             if (this.vendorUuid == null) {
@@ -421,12 +471,17 @@ public class SoundTrigger {
         }
     }
 
+    /* loaded from: classes.dex */
     public static class RecognitionEvent {
-        public static final Parcelable.Creator<RecognitionEvent> CREATOR = new Parcelable.Creator<RecognitionEvent>() {
+        public static final Parcelable.Creator<RecognitionEvent> CREATOR = new Parcelable.Creator<RecognitionEvent>() { // from class: android.hardware.soundtrigger.SoundTrigger.RecognitionEvent.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public RecognitionEvent createFromParcel(Parcel in) {
                 return RecognitionEvent.fromParcel(in);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public RecognitionEvent[] newArray(int size) {
                 return new RecognitionEvent[size];
             }
@@ -447,16 +502,16 @@ public class SoundTrigger {
         public final boolean triggerInData;
 
         @UnsupportedAppUsage
-        public RecognitionEvent(int status2, int soundModelHandle2, boolean captureAvailable2, int captureSession2, int captureDelayMs2, int capturePreambleMs2, boolean triggerInData2, AudioFormat captureFormat2, byte[] data2) {
-            this.status = status2;
-            this.soundModelHandle = soundModelHandle2;
-            this.captureAvailable = captureAvailable2;
-            this.captureSession = captureSession2;
-            this.captureDelayMs = captureDelayMs2;
-            this.capturePreambleMs = capturePreambleMs2;
-            this.triggerInData = triggerInData2;
-            this.captureFormat = captureFormat2;
-            this.data = data2;
+        public RecognitionEvent(int status, int soundModelHandle, boolean captureAvailable, int captureSession, int captureDelayMs, int capturePreambleMs, boolean triggerInData, AudioFormat captureFormat, byte[] data) {
+            this.status = status;
+            this.soundModelHandle = soundModelHandle;
+            this.captureAvailable = captureAvailable;
+            this.captureSession = captureSession;
+            this.captureDelayMs = captureDelayMs;
+            this.capturePreambleMs = capturePreambleMs;
+            this.triggerInData = triggerInData;
+            this.captureFormat = captureFormat;
+            this.data = data;
         }
 
         public boolean isCaptureAvailable() {
@@ -476,18 +531,22 @@ public class SoundTrigger {
         }
 
         protected static RecognitionEvent fromParcel(Parcel in) {
-            int status2 = in.readInt();
-            int soundModelHandle2 = in.readInt();
-            boolean captureAvailable2 = in.readByte() == 1;
-            int captureSession2 = in.readInt();
-            int captureDelayMs2 = in.readInt();
-            int capturePreambleMs2 = in.readInt();
-            boolean triggerInData2 = in.readByte() == 1;
-            AudioFormat captureFormat2 = null;
+            int status = in.readInt();
+            int soundModelHandle = in.readInt();
+            boolean captureAvailable = in.readByte() == 1;
+            int captureSession = in.readInt();
+            int captureDelayMs = in.readInt();
+            int capturePreambleMs = in.readInt();
+            boolean triggerInData = in.readByte() == 1;
+            AudioFormat captureFormat = null;
             if (in.readByte() == 1) {
-                captureFormat2 = new AudioFormat.Builder().setChannelMask(in.readInt()).setEncoding(in.readInt()).setSampleRate(in.readInt()).build();
+                int sampleRate = in.readInt();
+                int encoding = in.readInt();
+                int channelMask = in.readInt();
+                captureFormat = new AudioFormat.Builder().setChannelMask(channelMask).setEncoding(encoding).setSampleRate(sampleRate).build();
             }
-            return new RecognitionEvent(status2, soundModelHandle2, captureAvailable2, captureSession2, captureDelayMs2, capturePreambleMs2, triggerInData2, captureFormat2, in.readBlob());
+            byte[] data = in.readBlob();
+            return new RecognitionEvent(status, soundModelHandle, captureAvailable, captureSession, captureDelayMs, capturePreambleMs, triggerInData, captureFormat, data);
         }
 
         public int describeContents() {
@@ -497,11 +556,11 @@ public class SoundTrigger {
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeInt(this.status);
             dest.writeInt(this.soundModelHandle);
-            dest.writeByte(this.captureAvailable ? (byte) 1 : 0);
+            dest.writeByte(this.captureAvailable ? (byte) 1 : (byte) 0);
             dest.writeInt(this.captureSession);
             dest.writeInt(this.captureDelayMs);
             dest.writeInt(this.capturePreambleMs);
-            dest.writeByte(this.triggerInData ? (byte) 1 : 0);
+            dest.writeByte(this.triggerInData ? (byte) 1 : (byte) 0);
             if (this.captureFormat != null) {
                 dest.writeByte((byte) 1);
                 dest.writeInt(this.captureFormat.getSampleRate());
@@ -517,15 +576,16 @@ public class SoundTrigger {
             int i = 1 * 31;
             boolean z = this.captureAvailable;
             int i2 = MetricsProto.MetricsEvent.ANOMALY_TYPE_UNOPTIMIZED_BT;
-            int result = (((((((i + (z ? 1231 : 1237)) * 31) + this.captureDelayMs) * 31) + this.capturePreambleMs) * 31) + this.captureSession) * 31;
+            int result = i + (z ? 1231 : 1237);
+            int result2 = ((((((result * 31) + this.captureDelayMs) * 31) + this.capturePreambleMs) * 31) + this.captureSession) * 31;
             if (this.triggerInData) {
                 i2 = 1231;
             }
-            int result2 = result + i2;
+            int result3 = result2 + i2;
             if (this.captureFormat != null) {
-                result2 = (((((result2 * 31) + this.captureFormat.getSampleRate()) * 31) + this.captureFormat.getEncoding()) * 31) + this.captureFormat.getChannelMask();
+                result3 = (((((result3 * 31) + this.captureFormat.getSampleRate()) * 31) + this.captureFormat.getEncoding()) * 31) + this.captureFormat.getChannelMask();
             }
-            return (((((result2 * 31) + Arrays.hashCode(this.data)) * 31) + this.soundModelHandle) * 31) + this.status;
+            return (((((result3 * 31) + Arrays.hashCode(this.data)) * 31) + this.soundModelHandle) * 31) + this.status;
         }
 
         public boolean equals(Object obj) {
@@ -543,9 +603,7 @@ public class SoundTrigger {
                 if (other.captureFormat != null) {
                     return false;
                 }
-            } else if (other.captureFormat != null && this.captureFormat.getSampleRate() == other.captureFormat.getSampleRate() && this.captureFormat.getEncoding() == other.captureFormat.getEncoding() && this.captureFormat.getChannelMask() == other.captureFormat.getChannelMask()) {
-                return true;
-            } else {
+            } else if (other.captureFormat == null || this.captureFormat.getSampleRate() != other.captureFormat.getSampleRate() || this.captureFormat.getEncoding() != other.captureFormat.getEncoding() || this.captureFormat.getChannelMask() != other.captureFormat.getChannelMask()) {
                 return false;
             }
             return true;
@@ -595,12 +653,17 @@ public class SoundTrigger {
         }
     }
 
+    /* loaded from: classes.dex */
     public static class RecognitionConfig implements Parcelable {
-        public static final Parcelable.Creator<RecognitionConfig> CREATOR = new Parcelable.Creator<RecognitionConfig>() {
+        public static final Parcelable.Creator<RecognitionConfig> CREATOR = new Parcelable.Creator<RecognitionConfig>() { // from class: android.hardware.soundtrigger.SoundTrigger.RecognitionConfig.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public RecognitionConfig createFromParcel(Parcel in) {
                 return RecognitionConfig.fromParcel(in);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public RecognitionConfig[] newArray(int size) {
                 return new RecognitionConfig[size];
             }
@@ -614,30 +677,31 @@ public class SoundTrigger {
         public final KeyphraseRecognitionExtra[] keyphrases;
 
         @UnsupportedAppUsage
-        public RecognitionConfig(boolean captureRequested2, boolean allowMultipleTriggers2, KeyphraseRecognitionExtra[] keyphrases2, byte[] data2) {
-            this.captureRequested = captureRequested2;
-            this.allowMultipleTriggers = allowMultipleTriggers2;
-            this.keyphrases = keyphrases2;
-            this.data = data2;
+        public RecognitionConfig(boolean captureRequested, boolean allowMultipleTriggers, KeyphraseRecognitionExtra[] keyphrases, byte[] data) {
+            this.captureRequested = captureRequested;
+            this.allowMultipleTriggers = allowMultipleTriggers;
+            this.keyphrases = keyphrases;
+            this.data = data;
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public static RecognitionConfig fromParcel(Parcel in) {
-            boolean allowMultipleTriggers2 = false;
-            boolean captureRequested2 = in.readByte() == 1;
-            if (in.readByte() == 1) {
-                allowMultipleTriggers2 = true;
-            }
-            return new RecognitionConfig(captureRequested2, allowMultipleTriggers2, (KeyphraseRecognitionExtra[]) in.createTypedArray(KeyphraseRecognitionExtra.CREATOR), in.readBlob());
+            boolean captureRequested = in.readByte() == 1;
+            boolean allowMultipleTriggers = in.readByte() == 1;
+            KeyphraseRecognitionExtra[] keyphrases = (KeyphraseRecognitionExtra[]) in.createTypedArray(KeyphraseRecognitionExtra.CREATOR);
+            byte[] data = in.readBlob();
+            return new RecognitionConfig(captureRequested, allowMultipleTriggers, keyphrases, data);
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
-            dest.writeByte(this.captureRequested ? (byte) 1 : 0);
-            dest.writeByte(this.allowMultipleTriggers ? (byte) 1 : 0);
+            dest.writeByte(this.captureRequested ? (byte) 1 : (byte) 0);
+            dest.writeByte(this.allowMultipleTriggers ? (byte) 1 : (byte) 0);
             dest.writeTypedArray(this.keyphrases, flags);
             dest.writeBlob(this.data);
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
@@ -647,12 +711,17 @@ public class SoundTrigger {
         }
     }
 
+    /* loaded from: classes.dex */
     public static class ConfidenceLevel implements Parcelable {
-        public static final Parcelable.Creator<ConfidenceLevel> CREATOR = new Parcelable.Creator<ConfidenceLevel>() {
+        public static final Parcelable.Creator<ConfidenceLevel> CREATOR = new Parcelable.Creator<ConfidenceLevel>() { // from class: android.hardware.soundtrigger.SoundTrigger.ConfidenceLevel.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public ConfidenceLevel createFromParcel(Parcel in) {
                 return ConfidenceLevel.fromParcel(in);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public ConfidenceLevel[] newArray(int size) {
                 return new ConfidenceLevel[size];
             }
@@ -663,27 +732,32 @@ public class SoundTrigger {
         public final int userId;
 
         @UnsupportedAppUsage
-        public ConfidenceLevel(int userId2, int confidenceLevel2) {
-            this.userId = userId2;
-            this.confidenceLevel = confidenceLevel2;
+        public ConfidenceLevel(int userId, int confidenceLevel) {
+            this.userId = userId;
+            this.confidenceLevel = confidenceLevel;
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public static ConfidenceLevel fromParcel(Parcel in) {
-            return new ConfidenceLevel(in.readInt(), in.readInt());
+            int userId = in.readInt();
+            int confidenceLevel = in.readInt();
+            return new ConfidenceLevel(userId, confidenceLevel);
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeInt(this.userId);
             dest.writeInt(this.confidenceLevel);
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
         public int hashCode() {
-            return (((1 * 31) + this.confidenceLevel) * 31) + this.userId;
+            int result = (1 * 31) + this.confidenceLevel;
+            return (result * 31) + this.userId;
         }
 
         public boolean equals(Object obj) {
@@ -705,12 +779,17 @@ public class SoundTrigger {
         }
     }
 
+    /* loaded from: classes.dex */
     public static class KeyphraseRecognitionExtra implements Parcelable {
-        public static final Parcelable.Creator<KeyphraseRecognitionExtra> CREATOR = new Parcelable.Creator<KeyphraseRecognitionExtra>() {
+        public static final Parcelable.Creator<KeyphraseRecognitionExtra> CREATOR = new Parcelable.Creator<KeyphraseRecognitionExtra>() { // from class: android.hardware.soundtrigger.SoundTrigger.KeyphraseRecognitionExtra.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public KeyphraseRecognitionExtra createFromParcel(Parcel in) {
                 return KeyphraseRecognitionExtra.fromParcel(in);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public KeyphraseRecognitionExtra[] newArray(int size) {
                 return new KeyphraseRecognitionExtra[size];
             }
@@ -720,36 +799,45 @@ public class SoundTrigger {
         @UnsupportedAppUsage
         public final ConfidenceLevel[] confidenceLevels;
         @UnsupportedAppUsage
-        public final int id;
+
+        /* renamed from: id */
+        public final int f106id;
         @UnsupportedAppUsage
         public final int recognitionModes;
 
         @UnsupportedAppUsage
-        public KeyphraseRecognitionExtra(int id2, int recognitionModes2, int coarseConfidenceLevel2, ConfidenceLevel[] confidenceLevels2) {
-            this.id = id2;
-            this.recognitionModes = recognitionModes2;
-            this.coarseConfidenceLevel = coarseConfidenceLevel2;
-            this.confidenceLevels = confidenceLevels2;
+        public KeyphraseRecognitionExtra(int id, int recognitionModes, int coarseConfidenceLevel, ConfidenceLevel[] confidenceLevels) {
+            this.f106id = id;
+            this.recognitionModes = recognitionModes;
+            this.coarseConfidenceLevel = coarseConfidenceLevel;
+            this.confidenceLevels = confidenceLevels;
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public static KeyphraseRecognitionExtra fromParcel(Parcel in) {
-            return new KeyphraseRecognitionExtra(in.readInt(), in.readInt(), in.readInt(), (ConfidenceLevel[]) in.createTypedArray(ConfidenceLevel.CREATOR));
+            int id = in.readInt();
+            int recognitionModes = in.readInt();
+            int coarseConfidenceLevel = in.readInt();
+            ConfidenceLevel[] confidenceLevels = (ConfidenceLevel[]) in.createTypedArray(ConfidenceLevel.CREATOR);
+            return new KeyphraseRecognitionExtra(id, recognitionModes, coarseConfidenceLevel, confidenceLevels);
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
-            dest.writeInt(this.id);
+            dest.writeInt(this.f106id);
             dest.writeInt(this.recognitionModes);
             dest.writeInt(this.coarseConfidenceLevel);
             dest.writeTypedArray(this.confidenceLevels, flags);
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
         public int hashCode() {
-            return (((((((1 * 31) + Arrays.hashCode(this.confidenceLevels)) * 31) + this.id) * 31) + this.recognitionModes) * 31) + this.coarseConfidenceLevel;
+            int result = (1 * 31) + Arrays.hashCode(this.confidenceLevels);
+            return (((((result * 31) + this.f106id) * 31) + this.recognitionModes) * 31) + this.coarseConfidenceLevel;
         }
 
         public boolean equals(Object obj) {
@@ -760,23 +848,28 @@ public class SoundTrigger {
                 return false;
             }
             KeyphraseRecognitionExtra other = (KeyphraseRecognitionExtra) obj;
-            if (Arrays.equals(this.confidenceLevels, other.confidenceLevels) && this.id == other.id && this.recognitionModes == other.recognitionModes && this.coarseConfidenceLevel == other.coarseConfidenceLevel) {
+            if (Arrays.equals(this.confidenceLevels, other.confidenceLevels) && this.f106id == other.f106id && this.recognitionModes == other.recognitionModes && this.coarseConfidenceLevel == other.coarseConfidenceLevel) {
                 return true;
             }
             return false;
         }
 
         public String toString() {
-            return "KeyphraseRecognitionExtra [id=" + this.id + ", recognitionModes=" + this.recognitionModes + ", coarseConfidenceLevel=" + this.coarseConfidenceLevel + ", confidenceLevels=" + Arrays.toString(this.confidenceLevels) + "]";
+            return "KeyphraseRecognitionExtra [id=" + this.f106id + ", recognitionModes=" + this.recognitionModes + ", coarseConfidenceLevel=" + this.coarseConfidenceLevel + ", confidenceLevels=" + Arrays.toString(this.confidenceLevels) + "]";
         }
     }
 
+    /* loaded from: classes.dex */
     public static class KeyphraseRecognitionEvent extends RecognitionEvent implements Parcelable {
-        public static final Parcelable.Creator<KeyphraseRecognitionEvent> CREATOR = new Parcelable.Creator<KeyphraseRecognitionEvent>() {
+        public static final Parcelable.Creator<KeyphraseRecognitionEvent> CREATOR = new Parcelable.Creator<KeyphraseRecognitionEvent>() { // from class: android.hardware.soundtrigger.SoundTrigger.KeyphraseRecognitionEvent.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public KeyphraseRecognitionEvent createFromParcel(Parcel in) {
                 return KeyphraseRecognitionEvent.fromParcelForKeyphrase(in);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public KeyphraseRecognitionEvent[] newArray(int size) {
                 return new KeyphraseRecognitionEvent[size];
             }
@@ -785,12 +878,12 @@ public class SoundTrigger {
         public final KeyphraseRecognitionExtra[] keyphraseExtras;
 
         @UnsupportedAppUsage
-        public KeyphraseRecognitionEvent(int status, int soundModelHandle, boolean captureAvailable, int captureSession, int captureDelayMs, int capturePreambleMs, boolean triggerInData, AudioFormat captureFormat, byte[] data, KeyphraseRecognitionExtra[] keyphraseExtras2) {
+        public KeyphraseRecognitionEvent(int status, int soundModelHandle, boolean captureAvailable, int captureSession, int captureDelayMs, int capturePreambleMs, boolean triggerInData, AudioFormat captureFormat, byte[] data, KeyphraseRecognitionExtra[] keyphraseExtras) {
             super(status, soundModelHandle, captureAvailable, captureSession, captureDelayMs, capturePreambleMs, triggerInData, captureFormat, data);
-            this.keyphraseExtras = keyphraseExtras2;
+            this.keyphraseExtras = keyphraseExtras;
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public static KeyphraseRecognitionEvent fromParcelForKeyphrase(Parcel in) {
             int status = in.readInt();
             int soundModelHandle = in.readInt();
@@ -801,19 +894,26 @@ public class SoundTrigger {
             boolean triggerInData = in.readByte() == 1;
             AudioFormat captureFormat = null;
             if (in.readByte() == 1) {
-                captureFormat = new AudioFormat.Builder().setChannelMask(in.readInt()).setEncoding(in.readInt()).setSampleRate(in.readInt()).build();
+                int sampleRate = in.readInt();
+                int encoding = in.readInt();
+                int channelMask = in.readInt();
+                captureFormat = new AudioFormat.Builder().setChannelMask(channelMask).setEncoding(encoding).setSampleRate(sampleRate).build();
             }
-            return new KeyphraseRecognitionEvent(status, soundModelHandle, captureAvailable, captureSession, captureDelayMs, capturePreambleMs, triggerInData, captureFormat, in.readBlob(), (KeyphraseRecognitionExtra[]) in.createTypedArray(KeyphraseRecognitionExtra.CREATOR));
+            AudioFormat captureFormat2 = captureFormat;
+            byte[] data = in.readBlob();
+            KeyphraseRecognitionExtra[] keyphraseExtras = (KeyphraseRecognitionExtra[]) in.createTypedArray(KeyphraseRecognitionExtra.CREATOR);
+            return new KeyphraseRecognitionEvent(status, soundModelHandle, captureAvailable, captureSession, captureDelayMs, capturePreambleMs, triggerInData, captureFormat2, data, keyphraseExtras);
         }
 
+        @Override // android.hardware.soundtrigger.SoundTrigger.RecognitionEvent, android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeInt(this.status);
             dest.writeInt(this.soundModelHandle);
-            dest.writeByte(this.captureAvailable ? (byte) 1 : 0);
+            dest.writeByte(this.captureAvailable ? (byte) 1 : (byte) 0);
             dest.writeInt(this.captureSession);
             dest.writeInt(this.captureDelayMs);
             dest.writeInt(this.capturePreambleMs);
-            dest.writeByte(this.triggerInData ? (byte) 1 : 0);
+            dest.writeByte(this.triggerInData ? (byte) 1 : (byte) 0);
             if (this.captureFormat != null) {
                 dest.writeByte((byte) 1);
                 dest.writeInt(this.captureFormat.getSampleRate());
@@ -826,24 +926,30 @@ public class SoundTrigger {
             dest.writeTypedArray(this.keyphraseExtras, flags);
         }
 
+        @Override // android.hardware.soundtrigger.SoundTrigger.RecognitionEvent, android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.hardware.soundtrigger.SoundTrigger.RecognitionEvent
         public int hashCode() {
-            return (super.hashCode() * 31) + Arrays.hashCode(this.keyphraseExtras);
+            int result = super.hashCode();
+            return (result * 31) + Arrays.hashCode(this.keyphraseExtras);
         }
 
+        @Override // android.hardware.soundtrigger.SoundTrigger.RecognitionEvent
         public boolean equals(Object obj) {
             if (this == obj) {
                 return true;
             }
-            if (super.equals(obj) && getClass() == obj.getClass() && Arrays.equals(this.keyphraseExtras, ((KeyphraseRecognitionEvent) obj).keyphraseExtras)) {
-                return true;
+            if (super.equals(obj) && getClass() == obj.getClass()) {
+                KeyphraseRecognitionEvent other = (KeyphraseRecognitionEvent) obj;
+                return Arrays.equals(this.keyphraseExtras, other.keyphraseExtras);
             }
             return false;
         }
 
+        @Override // android.hardware.soundtrigger.SoundTrigger.RecognitionEvent
         public String toString() {
             String str;
             String str2;
@@ -890,12 +996,17 @@ public class SoundTrigger {
         }
     }
 
+    /* loaded from: classes.dex */
     public static class GenericRecognitionEvent extends RecognitionEvent implements Parcelable {
-        public static final Parcelable.Creator<GenericRecognitionEvent> CREATOR = new Parcelable.Creator<GenericRecognitionEvent>() {
+        public static final Parcelable.Creator<GenericRecognitionEvent> CREATOR = new Parcelable.Creator<GenericRecognitionEvent>() { // from class: android.hardware.soundtrigger.SoundTrigger.GenericRecognitionEvent.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public GenericRecognitionEvent createFromParcel(Parcel in) {
                 return GenericRecognitionEvent.fromParcelForGeneric(in);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public GenericRecognitionEvent[] newArray(int size) {
                 return new GenericRecognitionEvent[size];
             }
@@ -906,12 +1017,13 @@ public class SoundTrigger {
             super(status, soundModelHandle, captureAvailable, captureSession, captureDelayMs, capturePreambleMs, triggerInData, captureFormat, data);
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public static GenericRecognitionEvent fromParcelForGeneric(Parcel in) {
             RecognitionEvent event = RecognitionEvent.fromParcel(in);
             return new GenericRecognitionEvent(event.status, event.soundModelHandle, event.captureAvailable, event.captureSession, event.captureDelayMs, event.capturePreambleMs, event.triggerInData, event.captureFormat, event.data);
         }
 
+        @Override // android.hardware.soundtrigger.SoundTrigger.RecognitionEvent
         public boolean equals(Object obj) {
             if (this == obj) {
                 return true;
@@ -919,21 +1031,26 @@ public class SoundTrigger {
             if (obj == null || getClass() != obj.getClass()) {
                 return false;
             }
-            Object obj2 = obj;
             return super.equals(obj);
         }
 
+        @Override // android.hardware.soundtrigger.SoundTrigger.RecognitionEvent
         public String toString() {
             return "GenericRecognitionEvent ::" + super.toString();
         }
     }
 
+    /* loaded from: classes.dex */
     public static class SoundModelEvent implements Parcelable {
-        public static final Parcelable.Creator<SoundModelEvent> CREATOR = new Parcelable.Creator<SoundModelEvent>() {
+        public static final Parcelable.Creator<SoundModelEvent> CREATOR = new Parcelable.Creator<SoundModelEvent>() { // from class: android.hardware.soundtrigger.SoundTrigger.SoundModelEvent.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public SoundModelEvent createFromParcel(Parcel in) {
                 return SoundModelEvent.fromParcel(in);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public SoundModelEvent[] newArray(int size) {
                 return new SoundModelEvent[size];
             }
@@ -943,21 +1060,26 @@ public class SoundTrigger {
         public final int status;
 
         @UnsupportedAppUsage
-        SoundModelEvent(int status2, int soundModelHandle2, byte[] data2) {
-            this.status = status2;
-            this.soundModelHandle = soundModelHandle2;
-            this.data = data2;
+        SoundModelEvent(int status, int soundModelHandle, byte[] data) {
+            this.status = status;
+            this.soundModelHandle = soundModelHandle;
+            this.data = data;
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public static SoundModelEvent fromParcel(Parcel in) {
-            return new SoundModelEvent(in.readInt(), in.readInt(), in.readBlob());
+            int status = in.readInt();
+            int soundModelHandle = in.readInt();
+            byte[] data = in.readBlob();
+            return new SoundModelEvent(status, soundModelHandle, data);
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeInt(this.status);
             dest.writeInt(this.soundModelHandle);
@@ -965,7 +1087,8 @@ public class SoundTrigger {
         }
 
         public int hashCode() {
-            return (((((1 * 31) + Arrays.hashCode(this.data)) * 31) + this.soundModelHandle) * 31) + this.status;
+            int result = (1 * 31) + Arrays.hashCode(this.data);
+            return (((result * 31) + this.soundModelHandle) * 31) + this.status;
         }
 
         public boolean equals(Object obj) {
@@ -1013,6 +1136,7 @@ public class SoundTrigger {
         if (listener == null) {
             return null;
         }
-        return new SoundTriggerModule(moduleId, listener, handler);
+        SoundTriggerModule module = new SoundTriggerModule(moduleId, listener, handler);
+        return module;
     }
 }

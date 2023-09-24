@@ -2,6 +2,7 @@ package android.renderscript;
 
 import android.renderscript.Script;
 
+/* loaded from: classes3.dex */
 public final class ScriptIntrinsicResize extends ScriptIntrinsic {
     private Allocation mInput;
 
@@ -10,29 +11,29 @@ public final class ScriptIntrinsicResize extends ScriptIntrinsic {
     }
 
     public static ScriptIntrinsicResize create(RenderScript rs) {
-        return new ScriptIntrinsicResize(rs.nScriptIntrinsicCreate(12, 0), rs);
+        long id = rs.nScriptIntrinsicCreate(12, 0L);
+        ScriptIntrinsicResize si = new ScriptIntrinsicResize(id, rs);
+        return si;
     }
 
     public void setInput(Allocation ain) {
         Element e = ain.getElement();
-        if (e.isCompatible(Element.U8(this.mRS)) || e.isCompatible(Element.U8_2(this.mRS)) || e.isCompatible(Element.U8_3(this.mRS)) || e.isCompatible(Element.U8_4(this.mRS)) || e.isCompatible(Element.F32(this.mRS)) || e.isCompatible(Element.F32_2(this.mRS)) || e.isCompatible(Element.F32_3(this.mRS)) || e.isCompatible(Element.F32_4(this.mRS))) {
-            this.mInput = ain;
-            setVar(0, (BaseObj) ain);
-            return;
+        if (!e.isCompatible(Element.m108U8(this.mRS)) && !e.isCompatible(Element.U8_2(this.mRS)) && !e.isCompatible(Element.U8_3(this.mRS)) && !e.isCompatible(Element.U8_4(this.mRS)) && !e.isCompatible(Element.F32(this.mRS)) && !e.isCompatible(Element.F32_2(this.mRS)) && !e.isCompatible(Element.F32_3(this.mRS)) && !e.isCompatible(Element.F32_4(this.mRS))) {
+            throw new RSIllegalArgumentException("Unsupported element type.");
         }
-        throw new RSIllegalArgumentException("Unsupported element type.");
+        this.mInput = ain;
+        setVar(0, ain);
     }
 
     public Script.FieldID getFieldID_Input() {
-        return createFieldID(0, (Element) null);
+        return createFieldID(0, null);
     }
 
     public void forEach_bicubic(Allocation aout) {
-        if (aout != this.mInput) {
-            forEach_bicubic(aout, (Script.LaunchOptions) null);
-            return;
+        if (aout == this.mInput) {
+            throw new RSIllegalArgumentException("Output cannot be same as Input.");
         }
-        throw new RSIllegalArgumentException("Output cannot be same as Input.");
+        forEach_bicubic(aout, null);
     }
 
     public void forEach_bicubic(Allocation aout, Script.LaunchOptions opt) {
@@ -40,6 +41,6 @@ public final class ScriptIntrinsicResize extends ScriptIntrinsic {
     }
 
     public Script.KernelID getKernelID_bicubic() {
-        return createKernelID(0, 2, (Element) null, (Element) null);
+        return createKernelID(0, 2, null, null);
     }
 }

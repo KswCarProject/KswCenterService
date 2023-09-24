@@ -4,19 +4,21 @@ import android.annotation.UnsupportedAppUsage;
 import android.net.MacAddress;
 import android.net.wifi.WifiEnterpriseConfig;
 import android.net.wifi.WpsInfo;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.TextUtils;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.util.regex.PatternSyntaxException;
 
+/* loaded from: classes3.dex */
 public class WifiP2pConfig implements Parcelable {
-    public static final Parcelable.Creator<WifiP2pConfig> CREATOR = new Parcelable.Creator<WifiP2pConfig>() {
+    public static final Parcelable.Creator<WifiP2pConfig> CREATOR = new Parcelable.Creator<WifiP2pConfig>() { // from class: android.net.wifi.p2p.WifiP2pConfig.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WifiP2pConfig createFromParcel(Parcel in) {
             WifiP2pConfig config = new WifiP2pConfig();
             config.deviceAddress = in.readString();
-            config.wps = (WpsInfo) in.readParcelable((ClassLoader) null);
+            config.wps = (WpsInfo) in.readParcelable(null);
             config.groupOwnerIntent = in.readInt();
             config.netId = in.readInt();
             config.networkName = in.readString();
@@ -25,6 +27,8 @@ public class WifiP2pConfig implements Parcelable {
             return config;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WifiP2pConfig[] newArray(int size) {
             return new WifiP2pConfig[size];
         }
@@ -45,6 +49,7 @@ public class WifiP2pConfig implements Parcelable {
     public WpsInfo wps;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface GroupOperatingBandType {
     }
 
@@ -79,8 +84,9 @@ public class WifiP2pConfig implements Parcelable {
         this.deviceAddress = tokens[1];
         this.wps = new WpsInfo();
         if (tokens.length > 2) {
+            String[] nameVal = tokens[2].split("=");
             try {
-                devPasswdId = Integer.parseInt(tokens[2].split("=")[1]);
+                devPasswdId = Integer.parseInt(nameVal[1]);
             } catch (NumberFormatException e) {
                 devPasswdId = 0;
             }
@@ -96,9 +102,8 @@ public class WifiP2pConfig implements Parcelable {
                         this.wps.setup = 0;
                         return;
                 }
-            } else {
-                this.wps.setup = 1;
             }
+            this.wps.setup = 1;
         }
     }
 
@@ -121,6 +126,7 @@ public class WifiP2pConfig implements Parcelable {
         return sbuf.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -143,6 +149,7 @@ public class WifiP2pConfig implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.deviceAddress);
         dest.writeParcelable(this.wps, flags);
@@ -153,14 +160,15 @@ public class WifiP2pConfig implements Parcelable {
         dest.writeInt(this.groupOwnerBand);
     }
 
+    /* loaded from: classes3.dex */
     public static final class Builder {
         private static final MacAddress MAC_ANY_ADDRESS = MacAddress.fromString("02:00:00:00:00:00");
         private MacAddress mDeviceAddress = MAC_ANY_ADDRESS;
+        private String mNetworkName = "";
+        private String mPassphrase = "";
         private int mGroupOperatingBand = 0;
         private int mGroupOperatingFrequency = 0;
         private int mNetId = -1;
-        private String mNetworkName = "";
-        private String mPassphrase = "";
 
         public Builder setDeviceAddress(MacAddress deviceAddress) {
             if (deviceAddress == null) {
@@ -172,29 +180,25 @@ public class WifiP2pConfig implements Parcelable {
         }
 
         public Builder setNetworkName(String networkName) {
-            if (!TextUtils.isEmpty(networkName)) {
-                try {
-                    if (networkName.matches("^DIRECT-[a-zA-Z0-9]{2}.*")) {
-                        this.mNetworkName = networkName;
-                        return this;
-                    }
-                    throw new IllegalArgumentException("network name must starts with the prefix DIRECT-xy.");
-                } catch (PatternSyntaxException e) {
-                }
-            } else {
+            if (TextUtils.isEmpty(networkName)) {
                 throw new IllegalArgumentException("network name must be non-empty.");
             }
+            if (!networkName.matches("^DIRECT-[a-zA-Z0-9]{2}.*")) {
+                throw new IllegalArgumentException("network name must starts with the prefix DIRECT-xy.");
+            }
+            this.mNetworkName = networkName;
+            return this;
         }
 
         public Builder setPassphrase(String passphrase) {
             if (TextUtils.isEmpty(passphrase)) {
                 throw new IllegalArgumentException("passphrase must be non-empty.");
-            } else if (passphrase.length() < 8 || passphrase.length() > 63) {
-                throw new IllegalArgumentException("The length of a passphrase must be between 8 and 63.");
-            } else {
-                this.mPassphrase = passphrase;
-                return this;
             }
+            if (passphrase.length() < 8 || passphrase.length() > 63) {
+                throw new IllegalArgumentException("The length of a passphrase must be between 8 and 63.");
+            }
+            this.mPassphrase = passphrase;
+            return this;
         }
 
         public Builder setGroupOperatingBand(int band) {
@@ -210,11 +214,11 @@ public class WifiP2pConfig implements Parcelable {
         }
 
         public Builder setGroupOperatingFrequency(int frequency) {
-            if (frequency >= 0) {
-                this.mGroupOperatingFrequency = frequency;
-                return this;
+            if (frequency < 0) {
+                throw new IllegalArgumentException("Invalid group operating frequency!");
             }
-            throw new IllegalArgumentException("Invalid group operating frequency!");
+            this.mGroupOperatingFrequency = frequency;
+            return this;
         }
 
         public Builder enablePersistentMode(boolean persistent) {
@@ -229,24 +233,25 @@ public class WifiP2pConfig implements Parcelable {
         public WifiP2pConfig build() {
             if (TextUtils.isEmpty(this.mNetworkName)) {
                 throw new IllegalStateException("network name must be non-empty.");
-            } else if (TextUtils.isEmpty(this.mPassphrase)) {
+            }
+            if (TextUtils.isEmpty(this.mPassphrase)) {
                 throw new IllegalStateException("passphrase must be non-empty.");
-            } else if (this.mGroupOperatingFrequency <= 0 || this.mGroupOperatingBand <= 0) {
-                WifiP2pConfig config = new WifiP2pConfig();
-                config.deviceAddress = this.mDeviceAddress.toString();
-                config.networkName = this.mNetworkName;
-                config.passphrase = this.mPassphrase;
-                config.groupOwnerBand = 0;
-                if (this.mGroupOperatingFrequency > 0) {
-                    config.groupOwnerBand = this.mGroupOperatingFrequency;
-                } else if (this.mGroupOperatingBand > 0) {
-                    config.groupOwnerBand = this.mGroupOperatingBand;
-                }
-                config.netId = this.mNetId;
-                return config;
-            } else {
+            }
+            if (this.mGroupOperatingFrequency > 0 && this.mGroupOperatingBand > 0) {
                 throw new IllegalStateException("Preferred frequency and band are mutually exclusive.");
             }
+            WifiP2pConfig config = new WifiP2pConfig();
+            config.deviceAddress = this.mDeviceAddress.toString();
+            config.networkName = this.mNetworkName;
+            config.passphrase = this.mPassphrase;
+            config.groupOwnerBand = 0;
+            if (this.mGroupOperatingFrequency > 0) {
+                config.groupOwnerBand = this.mGroupOperatingFrequency;
+            } else if (this.mGroupOperatingBand > 0) {
+                config.groupOwnerBand = this.mGroupOperatingBand;
+            }
+            config.netId = this.mNetId;
+            return config;
         }
     }
 }

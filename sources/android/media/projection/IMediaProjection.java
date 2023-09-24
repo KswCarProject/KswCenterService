@@ -1,13 +1,14 @@
 package android.media.projection;
 
 import android.media.projection.IMediaProjectionCallback;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.provider.Telephony;
 
+/* loaded from: classes3.dex */
 public interface IMediaProjection extends IInterface {
     int applyVirtualDisplayFlags(int i) throws RemoteException;
 
@@ -25,40 +26,51 @@ public interface IMediaProjection extends IInterface {
 
     void unregisterCallback(IMediaProjectionCallback iMediaProjectionCallback) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements IMediaProjection {
+        @Override // android.media.projection.IMediaProjection
         public void start(IMediaProjectionCallback callback) throws RemoteException {
         }
 
+        @Override // android.media.projection.IMediaProjection
         public void stop() throws RemoteException {
         }
 
+        @Override // android.media.projection.IMediaProjection
         public boolean canProjectAudio() throws RemoteException {
             return false;
         }
 
+        @Override // android.media.projection.IMediaProjection
         public boolean canProjectVideo() throws RemoteException {
             return false;
         }
 
+        @Override // android.media.projection.IMediaProjection
         public boolean canProjectSecureVideo() throws RemoteException {
             return false;
         }
 
+        @Override // android.media.projection.IMediaProjection
         public int applyVirtualDisplayFlags(int flags) throws RemoteException {
             return 0;
         }
 
+        @Override // android.media.projection.IMediaProjection
         public void registerCallback(IMediaProjectionCallback callback) throws RemoteException {
         }
 
+        @Override // android.media.projection.IMediaProjection
         public void unregisterCallback(IMediaProjectionCallback callback) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements IMediaProjection {
         private static final String DESCRIPTOR = "android.media.projection.IMediaProjection";
         static final int TRANSACTION_applyVirtualDisplayFlags = 6;
@@ -79,12 +91,13 @@ public interface IMediaProjection extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IMediaProjection)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IMediaProjection)) {
+                return (IMediaProjection) iin;
             }
-            return (IMediaProjection) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -112,66 +125,72 @@ public interface IMediaProjection extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        start(IMediaProjectionCallback.Stub.asInterface(data.readStrongBinder()));
-                        reply.writeNoException();
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        stop();
-                        reply.writeNoException();
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        boolean _result = canProjectAudio();
-                        reply.writeNoException();
-                        reply.writeInt(_result);
-                        return true;
-                    case 4:
-                        data.enforceInterface(DESCRIPTOR);
-                        boolean _result2 = canProjectVideo();
-                        reply.writeNoException();
-                        reply.writeInt(_result2);
-                        return true;
-                    case 5:
-                        data.enforceInterface(DESCRIPTOR);
-                        boolean _result3 = canProjectSecureVideo();
-                        reply.writeNoException();
-                        reply.writeInt(_result3);
-                        return true;
-                    case 6:
-                        data.enforceInterface(DESCRIPTOR);
-                        int _result4 = applyVirtualDisplayFlags(data.readInt());
-                        reply.writeNoException();
-                        reply.writeInt(_result4);
-                        return true;
-                    case 7:
-                        data.enforceInterface(DESCRIPTOR);
-                        registerCallback(IMediaProjectionCallback.Stub.asInterface(data.readStrongBinder()));
-                        reply.writeNoException();
-                        return true;
-                    case 8:
-                        data.enforceInterface(DESCRIPTOR);
-                        unregisterCallback(IMediaProjectionCallback.Stub.asInterface(data.readStrongBinder()));
-                        reply.writeNoException();
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    IMediaProjectionCallback _arg0 = IMediaProjectionCallback.Stub.asInterface(data.readStrongBinder());
+                    start(_arg0);
+                    reply.writeNoException();
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    stop();
+                    reply.writeNoException();
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean canProjectAudio = canProjectAudio();
+                    reply.writeNoException();
+                    reply.writeInt(canProjectAudio ? 1 : 0);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean canProjectVideo = canProjectVideo();
+                    reply.writeNoException();
+                    reply.writeInt(canProjectVideo ? 1 : 0);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean canProjectSecureVideo = canProjectSecureVideo();
+                    reply.writeNoException();
+                    reply.writeInt(canProjectSecureVideo ? 1 : 0);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    int _result = applyVirtualDisplayFlags(_arg02);
+                    reply.writeNoException();
+                    reply.writeInt(_result);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    IMediaProjectionCallback _arg03 = IMediaProjectionCallback.Stub.asInterface(data.readStrongBinder());
+                    registerCallback(_arg03);
+                    reply.writeNoException();
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    IMediaProjectionCallback _arg04 = IMediaProjectionCallback.Stub.asInterface(data.readStrongBinder());
+                    unregisterCallback(_arg04);
+                    reply.writeNoException();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements IMediaProjection {
             public static IMediaProjection sDefaultImpl;
             private IBinder mRemote;
@@ -180,6 +199,7 @@ public interface IMediaProjection extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -188,125 +208,113 @@ public interface IMediaProjection extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.media.projection.IMediaProjection
             public void start(IMediaProjectionCallback callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                    if (this.mRemote.transact(1, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().start(callback);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().start(callback);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.projection.IMediaProjection
             public void stop() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(2, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().stop();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().stop();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.projection.IMediaProjection
             public boolean canProjectAudio() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(3, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().canProjectAudio();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.projection.IMediaProjection
             public boolean canProjectVideo() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(4, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().canProjectVideo();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.projection.IMediaProjection
             public boolean canProjectSecureVideo() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(5, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().canProjectSecureVideo();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.projection.IMediaProjection
             public int applyVirtualDisplayFlags(int flags) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(flags);
-                    if (!this.mRemote.transact(6, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().applyVirtualDisplayFlags(flags);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -314,38 +322,38 @@ public interface IMediaProjection extends IInterface {
                 }
             }
 
+            @Override // android.media.projection.IMediaProjection
             public void registerCallback(IMediaProjectionCallback callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                    if (this.mRemote.transact(7, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().registerCallback(callback);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().registerCallback(callback);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.projection.IMediaProjection
             public void unregisterCallback(IMediaProjectionCallback callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                    if (this.mRemote.transact(8, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().unregisterCallback(callback);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().unregisterCallback(callback);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -354,11 +362,11 @@ public interface IMediaProjection extends IInterface {
         }
 
         public static boolean setDefaultImpl(IMediaProjection impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IMediaProjection getDefaultImpl() {

@@ -1,11 +1,12 @@
 package android.location;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.telephony.IccCardConstants;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes.dex */
 public final class GnssMeasurement implements Parcelable {
     public static final int ADR_STATE_ALL = 31;
     public static final int ADR_STATE_CYCLE_SLIP = 4;
@@ -14,33 +15,37 @@ public final class GnssMeasurement implements Parcelable {
     public static final int ADR_STATE_RESET = 2;
     public static final int ADR_STATE_UNKNOWN = 0;
     public static final int ADR_STATE_VALID = 1;
-    public static final Parcelable.Creator<GnssMeasurement> CREATOR = new Parcelable.Creator<GnssMeasurement>() {
+    public static final Parcelable.Creator<GnssMeasurement> CREATOR = new Parcelable.Creator<GnssMeasurement>() { // from class: android.location.GnssMeasurement.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public GnssMeasurement createFromParcel(Parcel parcel) {
             GnssMeasurement gnssMeasurement = new GnssMeasurement();
-            int unused = gnssMeasurement.mFlags = parcel.readInt();
-            int unused2 = gnssMeasurement.mSvid = parcel.readInt();
-            int unused3 = gnssMeasurement.mConstellationType = parcel.readInt();
-            double unused4 = gnssMeasurement.mTimeOffsetNanos = parcel.readDouble();
-            int unused5 = gnssMeasurement.mState = parcel.readInt();
-            long unused6 = gnssMeasurement.mReceivedSvTimeNanos = parcel.readLong();
-            long unused7 = gnssMeasurement.mReceivedSvTimeUncertaintyNanos = parcel.readLong();
-            double unused8 = gnssMeasurement.mCn0DbHz = parcel.readDouble();
-            double unused9 = gnssMeasurement.mPseudorangeRateMetersPerSecond = parcel.readDouble();
-            double unused10 = gnssMeasurement.mPseudorangeRateUncertaintyMetersPerSecond = parcel.readDouble();
-            int unused11 = gnssMeasurement.mAccumulatedDeltaRangeState = parcel.readInt();
-            double unused12 = gnssMeasurement.mAccumulatedDeltaRangeMeters = parcel.readDouble();
-            double unused13 = gnssMeasurement.mAccumulatedDeltaRangeUncertaintyMeters = parcel.readDouble();
-            float unused14 = gnssMeasurement.mCarrierFrequencyHz = parcel.readFloat();
-            long unused15 = gnssMeasurement.mCarrierCycles = parcel.readLong();
-            double unused16 = gnssMeasurement.mCarrierPhase = parcel.readDouble();
-            double unused17 = gnssMeasurement.mCarrierPhaseUncertainty = parcel.readDouble();
-            int unused18 = gnssMeasurement.mMultipathIndicator = parcel.readInt();
-            double unused19 = gnssMeasurement.mSnrInDb = parcel.readDouble();
-            double unused20 = gnssMeasurement.mAutomaticGainControlLevelInDb = parcel.readDouble();
-            String unused21 = gnssMeasurement.mCodeType = parcel.readString();
+            gnssMeasurement.mFlags = parcel.readInt();
+            gnssMeasurement.mSvid = parcel.readInt();
+            gnssMeasurement.mConstellationType = parcel.readInt();
+            gnssMeasurement.mTimeOffsetNanos = parcel.readDouble();
+            gnssMeasurement.mState = parcel.readInt();
+            gnssMeasurement.mReceivedSvTimeNanos = parcel.readLong();
+            gnssMeasurement.mReceivedSvTimeUncertaintyNanos = parcel.readLong();
+            gnssMeasurement.mCn0DbHz = parcel.readDouble();
+            gnssMeasurement.mPseudorangeRateMetersPerSecond = parcel.readDouble();
+            gnssMeasurement.mPseudorangeRateUncertaintyMetersPerSecond = parcel.readDouble();
+            gnssMeasurement.mAccumulatedDeltaRangeState = parcel.readInt();
+            gnssMeasurement.mAccumulatedDeltaRangeMeters = parcel.readDouble();
+            gnssMeasurement.mAccumulatedDeltaRangeUncertaintyMeters = parcel.readDouble();
+            gnssMeasurement.mCarrierFrequencyHz = parcel.readFloat();
+            gnssMeasurement.mCarrierCycles = parcel.readLong();
+            gnssMeasurement.mCarrierPhase = parcel.readDouble();
+            gnssMeasurement.mCarrierPhaseUncertainty = parcel.readDouble();
+            gnssMeasurement.mMultipathIndicator = parcel.readInt();
+            gnssMeasurement.mSnrInDb = parcel.readDouble();
+            gnssMeasurement.mAutomaticGainControlLevelInDb = parcel.readDouble();
+            gnssMeasurement.mCodeType = parcel.readString();
             return gnssMeasurement;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public GnssMeasurement[] newArray(int i) {
             return new GnssMeasurement[i];
         }
@@ -75,58 +80,40 @@ public final class GnssMeasurement implements Parcelable {
     public static final int STATE_TOW_DECODED = 8;
     public static final int STATE_TOW_KNOWN = 16384;
     public static final int STATE_UNKNOWN = 0;
-    /* access modifiers changed from: private */
-    public double mAccumulatedDeltaRangeMeters;
-    /* access modifiers changed from: private */
-    public int mAccumulatedDeltaRangeState;
-    /* access modifiers changed from: private */
-    public double mAccumulatedDeltaRangeUncertaintyMeters;
-    /* access modifiers changed from: private */
-    public double mAutomaticGainControlLevelInDb;
-    /* access modifiers changed from: private */
-    public long mCarrierCycles;
-    /* access modifiers changed from: private */
-    public float mCarrierFrequencyHz;
-    /* access modifiers changed from: private */
-    public double mCarrierPhase;
-    /* access modifiers changed from: private */
-    public double mCarrierPhaseUncertainty;
-    /* access modifiers changed from: private */
-    public double mCn0DbHz;
-    /* access modifiers changed from: private */
-    public String mCodeType;
-    /* access modifiers changed from: private */
-    public int mConstellationType;
-    /* access modifiers changed from: private */
-    public int mFlags;
-    /* access modifiers changed from: private */
-    public int mMultipathIndicator;
-    /* access modifiers changed from: private */
-    public double mPseudorangeRateMetersPerSecond;
-    /* access modifiers changed from: private */
-    public double mPseudorangeRateUncertaintyMetersPerSecond;
-    /* access modifiers changed from: private */
-    public long mReceivedSvTimeNanos;
-    /* access modifiers changed from: private */
-    public long mReceivedSvTimeUncertaintyNanos;
-    /* access modifiers changed from: private */
-    public double mSnrInDb;
-    /* access modifiers changed from: private */
-    public int mState;
-    /* access modifiers changed from: private */
-    public int mSvid;
-    /* access modifiers changed from: private */
-    public double mTimeOffsetNanos;
+    private double mAccumulatedDeltaRangeMeters;
+    private int mAccumulatedDeltaRangeState;
+    private double mAccumulatedDeltaRangeUncertaintyMeters;
+    private double mAutomaticGainControlLevelInDb;
+    private long mCarrierCycles;
+    private float mCarrierFrequencyHz;
+    private double mCarrierPhase;
+    private double mCarrierPhaseUncertainty;
+    private double mCn0DbHz;
+    private String mCodeType;
+    private int mConstellationType;
+    private int mFlags;
+    private int mMultipathIndicator;
+    private double mPseudorangeRateMetersPerSecond;
+    private double mPseudorangeRateUncertaintyMetersPerSecond;
+    private long mReceivedSvTimeNanos;
+    private long mReceivedSvTimeUncertaintyNanos;
+    private double mSnrInDb;
+    private int mState;
+    private int mSvid;
+    private double mTimeOffsetNanos;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface AdrState {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface MultipathIndicator {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface State {
     }
 
@@ -250,7 +237,7 @@ public final class GnssMeasurement implements Parcelable {
         if ((this.mState & 65536) != 0) {
             builder.append("2ndCodeLock|");
         }
-        int remainingStates = this.mState & -16384;
+        int remainingStates = this.mState & (-16384);
         if (remainingStates > 0) {
             builder.append("Other(");
             builder.append(Integer.toBinaryString(remainingStates));
@@ -328,7 +315,7 @@ public final class GnssMeasurement implements Parcelable {
         if ((this.mAccumulatedDeltaRangeState & 16) == 16) {
             builder.append("HalfCycleReported|");
         }
-        int remainingStates = this.mAccumulatedDeltaRangeState & -32;
+        int remainingStates = this.mAccumulatedDeltaRangeState & (-32);
         if (remainingStates > 0) {
             builder.append("Other(");
             builder.append(Integer.toBinaryString(remainingStates));
@@ -513,6 +500,7 @@ public final class GnssMeasurement implements Parcelable {
         this.mCodeType = IccCardConstants.INTENT_VALUE_ICC_UNKNOWN;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeInt(this.mFlags);
         parcel.writeInt(this.mSvid);
@@ -537,24 +525,24 @@ public final class GnssMeasurement implements Parcelable {
         parcel.writeString(this.mCodeType);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
     public String toString() {
         StringBuilder builder = new StringBuilder("GnssMeasurement:\n");
-        builder.append(String.format("   %-29s = %s\n", new Object[]{"Svid", Integer.valueOf(this.mSvid)}));
-        builder.append(String.format("   %-29s = %s\n", new Object[]{"ConstellationType", Integer.valueOf(this.mConstellationType)}));
-        builder.append(String.format("   %-29s = %s\n", new Object[]{"TimeOffsetNanos", Double.valueOf(this.mTimeOffsetNanos)}));
-        builder.append(String.format("   %-29s = %s\n", new Object[]{"State", getStateString()}));
-        builder.append(String.format("   %-29s = %-25s   %-40s = %s\n", new Object[]{"ReceivedSvTimeNanos", Long.valueOf(this.mReceivedSvTimeNanos), "ReceivedSvTimeUncertaintyNanos", Long.valueOf(this.mReceivedSvTimeUncertaintyNanos)}));
-        builder.append(String.format("   %-29s = %s\n", new Object[]{"Cn0DbHz", Double.valueOf(this.mCn0DbHz)}));
-        builder.append(String.format("   %-29s = %-25s   %-40s = %s\n", new Object[]{"PseudorangeRateMetersPerSecond", Double.valueOf(this.mPseudorangeRateMetersPerSecond), "PseudorangeRateUncertaintyMetersPerSecond", Double.valueOf(this.mPseudorangeRateUncertaintyMetersPerSecond)}));
-        builder.append(String.format("   %-29s = %s\n", new Object[]{"AccumulatedDeltaRangeState", getAccumulatedDeltaRangeStateString()}));
-        builder.append(String.format("   %-29s = %-25s   %-40s = %s\n", new Object[]{"AccumulatedDeltaRangeMeters", Double.valueOf(this.mAccumulatedDeltaRangeMeters), "AccumulatedDeltaRangeUncertaintyMeters", Double.valueOf(this.mAccumulatedDeltaRangeUncertaintyMeters)}));
+        builder.append(String.format("   %-29s = %s\n", "Svid", Integer.valueOf(this.mSvid)));
+        builder.append(String.format("   %-29s = %s\n", "ConstellationType", Integer.valueOf(this.mConstellationType)));
+        builder.append(String.format("   %-29s = %s\n", "TimeOffsetNanos", Double.valueOf(this.mTimeOffsetNanos)));
+        builder.append(String.format("   %-29s = %s\n", "State", getStateString()));
+        builder.append(String.format("   %-29s = %-25s   %-40s = %s\n", "ReceivedSvTimeNanos", Long.valueOf(this.mReceivedSvTimeNanos), "ReceivedSvTimeUncertaintyNanos", Long.valueOf(this.mReceivedSvTimeUncertaintyNanos)));
+        builder.append(String.format("   %-29s = %s\n", "Cn0DbHz", Double.valueOf(this.mCn0DbHz)));
+        builder.append(String.format("   %-29s = %-25s   %-40s = %s\n", "PseudorangeRateMetersPerSecond", Double.valueOf(this.mPseudorangeRateMetersPerSecond), "PseudorangeRateUncertaintyMetersPerSecond", Double.valueOf(this.mPseudorangeRateUncertaintyMetersPerSecond)));
+        builder.append(String.format("   %-29s = %s\n", "AccumulatedDeltaRangeState", getAccumulatedDeltaRangeStateString()));
+        builder.append(String.format("   %-29s = %-25s   %-40s = %s\n", "AccumulatedDeltaRangeMeters", Double.valueOf(this.mAccumulatedDeltaRangeMeters), "AccumulatedDeltaRangeUncertaintyMeters", Double.valueOf(this.mAccumulatedDeltaRangeUncertaintyMeters)));
         Object[] objArr = new Object[2];
         objArr[0] = "CarrierFrequencyHz";
-        String str = null;
         objArr[1] = hasCarrierFrequencyHz() ? Float.valueOf(this.mCarrierFrequencyHz) : null;
         builder.append(String.format("   %-29s = %s\n", objArr));
         Object[] objArr2 = new Object[2];
@@ -567,7 +555,7 @@ public final class GnssMeasurement implements Parcelable {
         objArr3[2] = "CarrierPhaseUncertainty";
         objArr3[3] = hasCarrierPhaseUncertainty() ? Double.valueOf(this.mCarrierPhaseUncertainty) : null;
         builder.append(String.format("   %-29s = %-25s   %-40s = %s\n", objArr3));
-        builder.append(String.format("   %-29s = %s\n", new Object[]{"MultipathIndicator", getMultipathIndicatorString()}));
+        builder.append(String.format("   %-29s = %s\n", "MultipathIndicator", getMultipathIndicatorString()));
         Object[] objArr4 = new Object[2];
         objArr4[0] = "SnrInDb";
         objArr4[1] = hasSnrInDb() ? Double.valueOf(this.mSnrInDb) : null;
@@ -578,10 +566,7 @@ public final class GnssMeasurement implements Parcelable {
         builder.append(String.format("   %-29s = %s\n", objArr5));
         Object[] objArr6 = new Object[2];
         objArr6[0] = "CodeType";
-        if (hasCodeType()) {
-            str = this.mCodeType;
-        }
-        objArr6[1] = str;
+        objArr6[1] = hasCodeType() ? this.mCodeType : null;
         builder.append(String.format("   %-29s = %s\n", objArr6));
         return builder.toString();
     }

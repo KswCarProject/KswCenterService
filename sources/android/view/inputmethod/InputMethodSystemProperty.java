@@ -1,11 +1,12 @@
 package android.view.inputmethod;
 
 import android.content.ComponentName;
-import android.os.Build;
-import android.os.SystemProperties;
+import android.p007os.Build;
+import android.p007os.SystemProperties;
 
+/* loaded from: classes4.dex */
 public class InputMethodSystemProperty {
-    public static final boolean MULTI_CLIENT_IME_ENABLED = (sMultiClientImeComponentName != null);
+    public static final boolean MULTI_CLIENT_IME_ENABLED;
     public static final boolean PER_PROFILE_IME_ENABLED;
     private static final String PROP_DEBUG_MULTI_CLIENT_IME = "persist.debug.multi_client_ime";
     private static final String PROP_DEBUG_PER_PROFILE_IME = "persist.debug.per_profile_ime";
@@ -14,13 +15,14 @@ public class InputMethodSystemProperty {
 
     private static ComponentName getMultiClientImeComponentName() {
         ComponentName debugIme;
-        if (!Build.IS_DEBUGGABLE || (debugIme = ComponentName.unflattenFromString(SystemProperties.get(PROP_DEBUG_MULTI_CLIENT_IME, ""))) == null) {
-            return ComponentName.unflattenFromString(SystemProperties.get(PROP_PROD_MULTI_CLIENT_IME, ""));
+        if (Build.IS_DEBUGGABLE && (debugIme = ComponentName.unflattenFromString(SystemProperties.get(PROP_DEBUG_MULTI_CLIENT_IME, ""))) != null) {
+            return debugIme;
         }
-        return debugIme;
+        return ComponentName.unflattenFromString(SystemProperties.get(PROP_PROD_MULTI_CLIENT_IME, ""));
     }
 
     static {
+        MULTI_CLIENT_IME_ENABLED = sMultiClientImeComponentName != null;
         if (MULTI_CLIENT_IME_ENABLED) {
             PER_PROFILE_IME_ENABLED = true;
         } else if (Build.IS_DEBUGGABLE) {

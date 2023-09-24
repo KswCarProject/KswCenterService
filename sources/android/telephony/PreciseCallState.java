@@ -2,19 +2,24 @@ package android.telephony;
 
 import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Objects;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class PreciseCallState implements Parcelable {
-    public static final Parcelable.Creator<PreciseCallState> CREATOR = new Parcelable.Creator<PreciseCallState>() {
+    public static final Parcelable.Creator<PreciseCallState> CREATOR = new Parcelable.Creator<PreciseCallState>() { // from class: android.telephony.PreciseCallState.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PreciseCallState createFromParcel(Parcel in) {
             return new PreciseCallState(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PreciseCallState[] newArray(int size) {
             return new PreciseCallState[size];
         }
@@ -36,6 +41,7 @@ public final class PreciseCallState implements Parcelable {
     private int mRingingCallState;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface State {
     }
 
@@ -96,10 +102,12 @@ public final class PreciseCallState implements Parcelable {
         return this.mPreciseDisconnectCause;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(this.mRingingCallState);
         out.writeInt(this.mForegroundCallState);
@@ -109,7 +117,7 @@ public final class PreciseCallState implements Parcelable {
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(this.mRingingCallState), Integer.valueOf(this.mForegroundCallState), Integer.valueOf(this.mForegroundCallState), Integer.valueOf(this.mDisconnectCause), Integer.valueOf(this.mPreciseDisconnectCause)});
+        return Objects.hash(Integer.valueOf(this.mRingingCallState), Integer.valueOf(this.mForegroundCallState), Integer.valueOf(this.mForegroundCallState), Integer.valueOf(this.mDisconnectCause), Integer.valueOf(this.mPreciseDisconnectCause));
     }
 
     public boolean equals(Object obj) {

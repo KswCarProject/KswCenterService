@@ -2,6 +2,7 @@ package com.google.android.gles_jni;
 
 import javax.microedition.khronos.egl.EGLConfig;
 
+/* loaded from: classes4.dex */
 public class EGLConfigImpl extends EGLConfig {
     private long mEGLConfig;
 
@@ -9,8 +10,7 @@ public class EGLConfigImpl extends EGLConfig {
         this.mEGLConfig = config;
     }
 
-    /* access modifiers changed from: package-private */
-    public long get() {
+    long get() {
         return this.mEGLConfig;
     }
 }

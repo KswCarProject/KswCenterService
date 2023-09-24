@@ -1,12 +1,14 @@
 package android.view.inputmethod;
 
 import android.graphics.Rect;
-import android.os.Bundle;
+import android.p007os.Bundle;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 
+/* loaded from: classes4.dex */
 public interface InputMethodSession {
 
+    /* loaded from: classes4.dex */
     public interface EventCallback {
         void finishedEvent(int i, boolean z);
     }

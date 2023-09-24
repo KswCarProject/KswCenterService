@@ -1,11 +1,12 @@
 package android.app;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes.dex */
 public interface IUiModeManager extends IInterface {
     void disableCarMode(int i) throws RemoteException;
 
@@ -21,37 +22,47 @@ public interface IUiModeManager extends IInterface {
 
     void setNightMode(int i) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements IUiModeManager {
+        @Override // android.app.IUiModeManager
         public void enableCarMode(int flags) throws RemoteException {
         }
 
+        @Override // android.app.IUiModeManager
         public void disableCarMode(int flags) throws RemoteException {
         }
 
+        @Override // android.app.IUiModeManager
         public int getCurrentModeType() throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.IUiModeManager
         public void setNightMode(int mode) throws RemoteException {
         }
 
+        @Override // android.app.IUiModeManager
         public int getNightMode() throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.IUiModeManager
         public boolean isUiModeLocked() throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IUiModeManager
         public boolean isNightModeLocked() throws RemoteException {
             return false;
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements IUiModeManager {
         private static final String DESCRIPTOR = "android.app.IUiModeManager";
         static final int TRANSACTION_disableCarMode = 2;
@@ -71,12 +82,13 @@ public interface IUiModeManager extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IUiModeManager)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IUiModeManager)) {
+                return (IUiModeManager) iin;
             }
-            return (IUiModeManager) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -102,61 +114,66 @@ public interface IUiModeManager extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        enableCarMode(data.readInt());
-                        reply.writeNoException();
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        disableCarMode(data.readInt());
-                        reply.writeNoException();
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        int _result = getCurrentModeType();
-                        reply.writeNoException();
-                        reply.writeInt(_result);
-                        return true;
-                    case 4:
-                        data.enforceInterface(DESCRIPTOR);
-                        setNightMode(data.readInt());
-                        reply.writeNoException();
-                        return true;
-                    case 5:
-                        data.enforceInterface(DESCRIPTOR);
-                        int _result2 = getNightMode();
-                        reply.writeNoException();
-                        reply.writeInt(_result2);
-                        return true;
-                    case 6:
-                        data.enforceInterface(DESCRIPTOR);
-                        boolean _result3 = isUiModeLocked();
-                        reply.writeNoException();
-                        reply.writeInt(_result3);
-                        return true;
-                    case 7:
-                        data.enforceInterface(DESCRIPTOR);
-                        boolean _result4 = isNightModeLocked();
-                        reply.writeNoException();
-                        reply.writeInt(_result4);
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0 = data.readInt();
+                    enableCarMode(_arg0);
+                    reply.writeNoException();
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    disableCarMode(_arg02);
+                    reply.writeNoException();
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result = getCurrentModeType();
+                    reply.writeNoException();
+                    reply.writeInt(_result);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg03 = data.readInt();
+                    setNightMode(_arg03);
+                    reply.writeNoException();
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result2 = getNightMode();
+                    reply.writeNoException();
+                    reply.writeInt(_result2);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isUiModeLocked = isUiModeLocked();
+                    reply.writeNoException();
+                    reply.writeInt(isUiModeLocked ? 1 : 0);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isNightModeLocked = isNightModeLocked();
+                    reply.writeNoException();
+                    reply.writeInt(isNightModeLocked ? 1 : 0);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements IUiModeManager {
             public static IUiModeManager sDefaultImpl;
             private IBinder mRemote;
@@ -165,6 +182,7 @@ public interface IUiModeManager extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -173,56 +191,56 @@ public interface IUiModeManager extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.app.IUiModeManager
             public void enableCarMode(int flags) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(flags);
-                    if (this.mRemote.transact(1, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().enableCarMode(flags);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().enableCarMode(flags);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IUiModeManager
             public void disableCarMode(int flags) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(flags);
-                    if (this.mRemote.transact(2, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().disableCarMode(flags);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().disableCarMode(flags);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IUiModeManager
             public int getCurrentModeType() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(3, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCurrentModeType();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -230,37 +248,37 @@ public interface IUiModeManager extends IInterface {
                 }
             }
 
+            @Override // android.app.IUiModeManager
             public void setNightMode(int mode) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(mode);
-                    if (this.mRemote.transact(4, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setNightMode(mode);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setNightMode(mode);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IUiModeManager
             public int getNightMode() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(5, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getNightMode();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -268,46 +286,38 @@ public interface IUiModeManager extends IInterface {
                 }
             }
 
+            @Override // android.app.IUiModeManager
             public boolean isUiModeLocked() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(6, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isUiModeLocked();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IUiModeManager
             public boolean isNightModeLocked() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(7, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isNightModeLocked();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -316,11 +326,11 @@ public interface IUiModeManager extends IInterface {
         }
 
         public static boolean setDefaultImpl(IUiModeManager impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IUiModeManager getDefaultImpl() {

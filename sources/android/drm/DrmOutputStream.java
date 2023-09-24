@@ -1,6 +1,6 @@
 package android.drm;
 
-import android.os.ParcelFileDescriptor;
+import android.p007os.ParcelFileDescriptor;
 import android.system.ErrnoException;
 import android.system.Os;
 import android.system.OsConstants;
@@ -13,14 +13,16 @@ import libcore.io.IoBridge;
 import libcore.io.Streams;
 import libcore.util.ArrayUtils;
 
+/* loaded from: classes.dex */
 public class DrmOutputStream extends OutputStream {
     private static final String TAG = "DrmOutputStream";
     private final DrmManagerClient mClient;
     private final FileDescriptor mFd;
     private final ParcelFileDescriptor mPfd;
-    private int mSessionId = -1;
+    private int mSessionId;
 
     public DrmOutputStream(DrmManagerClient client, ParcelFileDescriptor pfd, String mimeType) throws IOException {
+        this.mSessionId = -1;
         this.mClient = client;
         this.mPfd = pfd;
         this.mFd = pfd.getFileDescriptor();
@@ -34,7 +36,7 @@ public class DrmOutputStream extends OutputStream {
         DrmConvertedStatus status = this.mClient.closeConvertSession(this.mSessionId);
         if (status.statusCode == 1) {
             try {
-                Os.lseek(this.mFd, (long) status.offset, OsConstants.SEEK_SET);
+                Os.lseek(this.mFd, status.offset, OsConstants.SEEK_SET);
             } catch (ErrnoException e) {
                 e.rethrowAsIOException();
             }
@@ -45,13 +47,15 @@ public class DrmOutputStream extends OutputStream {
         throw new IOException("Unexpected DRM status: " + status.statusCode);
     }
 
+    @Override // java.io.OutputStream, java.io.Closeable, java.lang.AutoCloseable
     public void close() throws IOException {
         if (this.mSessionId == -1) {
-            Log.w(TAG, "Closing stream without finishing");
+            Log.m64w(TAG, "Closing stream without finishing");
         }
         this.mPfd.close();
     }
 
+    @Override // java.io.OutputStream
     public void write(byte[] buffer, int offset, int count) throws IOException {
         byte[] exactBuffer;
         ArrayUtils.throwsIfOutOfBounds(buffer.length, offset, count);
@@ -69,6 +73,7 @@ public class DrmOutputStream extends OutputStream {
         throw new IOException("Unexpected DRM status: " + status.statusCode);
     }
 
+    @Override // java.io.OutputStream
     public void write(int oneByte) throws IOException {
         Streams.writeSingleByte(this, oneByte);
     }

@@ -1,16 +1,18 @@
 package android.util;
 
-import android.os.Parcel;
-import android.os.ParcelFileDescriptor;
-import android.os.Parcelable;
-import dalvik.system.CloseGuard;
+import android.p007os.Parcel;
+import android.p007os.ParcelFileDescriptor;
+import android.p007os.Parcelable;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.UUID;
 import libcore.io.IoUtils;
 
+/* loaded from: classes4.dex */
 public final class MemoryIntArray implements Parcelable, Closeable {
-    public static final Parcelable.Creator<MemoryIntArray> CREATOR = new Parcelable.Creator<MemoryIntArray>() {
+    public static final Parcelable.Creator<MemoryIntArray> CREATOR = new Parcelable.Creator<MemoryIntArray>() { // from class: android.util.MemoryIntArray.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public MemoryIntArray createFromParcel(Parcel parcel) {
             try {
                 return new MemoryIntArray(parcel);
@@ -19,13 +21,15 @@ public final class MemoryIntArray implements Parcelable, Closeable {
             }
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public MemoryIntArray[] newArray(int size) {
             return new MemoryIntArray[size];
         }
     };
     private static final int MAX_SIZE = 1024;
     private static final String TAG = "MemoryIntArray";
-    private final CloseGuard mCloseGuard;
+    private final dalvik.system.CloseGuard mCloseGuard;
     private int mFd;
     private final boolean mIsOwner;
     private final long mMemoryAddr;
@@ -43,30 +47,29 @@ public final class MemoryIntArray implements Parcelable, Closeable {
     private native int nativeSize(int i);
 
     public MemoryIntArray(int size) throws IOException {
-        this.mCloseGuard = CloseGuard.get();
+        this.mCloseGuard = dalvik.system.CloseGuard.get();
         this.mFd = -1;
-        if (size <= 1024) {
-            this.mIsOwner = true;
-            this.mFd = nativeCreate(UUID.randomUUID().toString(), size);
-            this.mMemoryAddr = nativeOpen(this.mFd, this.mIsOwner);
-            this.mCloseGuard.open("close");
-            return;
+        if (size > 1024) {
+            throw new IllegalArgumentException("Max size is 1024");
         }
-        throw new IllegalArgumentException("Max size is 1024");
+        this.mIsOwner = true;
+        String name = UUID.randomUUID().toString();
+        this.mFd = nativeCreate(name, size);
+        this.mMemoryAddr = nativeOpen(this.mFd, this.mIsOwner);
+        this.mCloseGuard.open("close");
     }
 
     private MemoryIntArray(Parcel parcel) throws IOException {
-        this.mCloseGuard = CloseGuard.get();
+        this.mCloseGuard = dalvik.system.CloseGuard.get();
         this.mFd = -1;
         this.mIsOwner = false;
-        ParcelFileDescriptor pfd = (ParcelFileDescriptor) parcel.readParcelable((ClassLoader) null);
-        if (pfd != null) {
-            this.mFd = pfd.detachFd();
-            this.mMemoryAddr = nativeOpen(this.mFd, this.mIsOwner);
-            this.mCloseGuard.open("close");
-            return;
+        ParcelFileDescriptor pfd = (ParcelFileDescriptor) parcel.readParcelable(null);
+        if (pfd == null) {
+            throw new IOException("No backing file descriptor");
         }
-        throw new IOException("No backing file descriptor");
+        this.mFd = pfd.detachFd();
+        this.mMemoryAddr = nativeOpen(this.mFd, this.mIsOwner);
+        this.mCloseGuard.open("close");
     }
 
     public boolean isWritable() {
@@ -92,6 +95,7 @@ public final class MemoryIntArray implements Parcelable, Closeable {
         return nativeSize(this.mFd);
     }
 
+    @Override // java.io.Closeable, java.lang.AutoCloseable
     public void close() throws IOException {
         if (!isClosed()) {
             nativeClose(this.mFd, this.mMemoryAddr, this.mIsOwner);
@@ -104,8 +108,7 @@ public final class MemoryIntArray implements Parcelable, Closeable {
         return this.mFd == -1;
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         try {
             if (this.mCloseGuard != null) {
                 this.mCloseGuard.warnIfOpen();
@@ -116,26 +119,22 @@ public final class MemoryIntArray implements Parcelable, Closeable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 1;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
-        ParcelFileDescriptor pfd;
         try {
-            pfd = ParcelFileDescriptor.fromFd(this.mFd);
+            ParcelFileDescriptor pfd = ParcelFileDescriptor.fromFd(this.mFd);
             parcel.writeParcelable(pfd, flags);
             if (pfd != null) {
                 pfd.close();
-                return;
             }
-            return;
         } catch (IOException ex) {
             throw new RuntimeException(ex);
-        } catch (Throwable th) {
-            r1.addSuppressed(th);
         }
-        throw th;
     }
 
     public boolean equals(Object obj) {
@@ -145,10 +144,14 @@ public final class MemoryIntArray implements Parcelable, Closeable {
         if (this == obj) {
             return true;
         }
-        if (getClass() == obj.getClass() && this.mFd == ((MemoryIntArray) obj).mFd) {
-            return true;
+        if (getClass() != obj.getClass()) {
+            return false;
         }
-        return false;
+        MemoryIntArray other = (MemoryIntArray) obj;
+        if (this.mFd != other.mFd) {
+            return false;
+        }
+        return true;
     }
 
     public int hashCode() {

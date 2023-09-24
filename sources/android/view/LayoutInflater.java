@@ -2,51 +2,45 @@ package android.view;
 
 import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
+import android.content.p002pm.ApplicationInfo;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.content.res.XmlResourceParser;
 import android.graphics.Canvas;
-import android.os.Handler;
-import android.os.Message;
-import android.os.Trace;
+import android.p007os.Handler;
+import android.p007os.Message;
+import android.p007os.Trace;
 import android.provider.MediaStore;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.util.Xml;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import com.android.internal.R;
+import com.android.internal.C3132R;
+import com.ibm.icu.text.PluralRules;
 import dalvik.system.PathClassLoader;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Objects;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+/* loaded from: classes4.dex */
 public abstract class LayoutInflater {
-    @UnsupportedAppUsage
-    private static final int[] ATTRS_THEME = {16842752};
     private static final String ATTR_LAYOUT = "layout";
-    private static final ClassLoader BOOT_CLASS_LOADER = LayoutInflater.class.getClassLoader();
     private static final String COMPILED_VIEW_DEX_FILE_NAME = "/compiled_view.dex";
     private static final boolean DEBUG = false;
-    private static final StackTraceElement[] EMPTY_STACK_TRACE = new StackTraceElement[0];
-    private static final String TAG = LayoutInflater.class.getSimpleName();
     private static final String TAG_1995 = "blink";
     private static final String TAG_INCLUDE = "include";
     private static final String TAG_MERGE = "merge";
     private static final String TAG_REQUEST_FOCUS = "requestFocus";
     private static final String TAG_TAG = "tag";
     private static final String USE_PRECOMPILED_LAYOUT = "view.precompiled_layout_enabled";
-    @UnsupportedAppUsage
-    static final Class<?>[] mConstructorSignature = {Context.class, AttributeSet.class};
-    @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 123769490)
-    private static final HashMap<String, Constructor<? extends View>> sConstructorMap = new HashMap<>();
     @UnsupportedAppUsage(maxTargetSdk = 28)
-    final Object[] mConstructorArgs = new Object[2];
+    final Object[] mConstructorArgs;
     @UnsupportedAppUsage(maxTargetSdk = 28)
     protected final Context mContext;
     @UnsupportedAppUsage
@@ -62,21 +56,34 @@ public abstract class LayoutInflater {
     private Factory2 mPrivateFactory;
     private TypedValue mTempValue;
     private boolean mUseCompiledView;
+    private static final String TAG = LayoutInflater.class.getSimpleName();
+    private static final StackTraceElement[] EMPTY_STACK_TRACE = new StackTraceElement[0];
+    @UnsupportedAppUsage
+    static final Class<?>[] mConstructorSignature = {Context.class, AttributeSet.class};
+    @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 123769490)
+    private static final HashMap<String, Constructor<? extends View>> sConstructorMap = new HashMap<>();
+    @UnsupportedAppUsage
+    private static final int[] ATTRS_THEME = {16842752};
+    private static final ClassLoader BOOT_CLASS_LOADER = LayoutInflater.class.getClassLoader();
 
+    /* loaded from: classes4.dex */
     public interface Factory {
         View onCreateView(String str, Context context, AttributeSet attributeSet);
     }
 
+    /* loaded from: classes4.dex */
     public interface Factory2 extends Factory {
         View onCreateView(View view, String str, Context context, AttributeSet attributeSet);
     }
 
+    /* loaded from: classes4.dex */
     public interface Filter {
         boolean onLoadClass(Class cls);
     }
 
     public abstract LayoutInflater cloneInContext(Context context);
 
+    /* loaded from: classes4.dex */
     private static class FactoryMerger implements Factory2 {
         private final Factory mF1;
         private final Factory2 mF12;
@@ -90,37 +97,27 @@ public abstract class LayoutInflater {
             this.mF22 = f22;
         }
 
+        @Override // android.view.LayoutInflater.Factory
         public View onCreateView(String name, Context context, AttributeSet attrs) {
             View v = this.mF1.onCreateView(name, context, attrs);
-            if (v != null) {
-                return v;
-            }
-            return this.mF2.onCreateView(name, context, attrs);
+            return v != null ? v : this.mF2.onCreateView(name, context, attrs);
         }
 
+        @Override // android.view.LayoutInflater.Factory2
         public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
-            View v;
-            if (this.mF12 != null) {
-                v = this.mF12.onCreateView(parent, name, context, attrs);
-            } else {
-                v = this.mF1.onCreateView(name, context, attrs);
-            }
-            if (v != null) {
-                return v;
-            }
-            if (this.mF22 != null) {
-                return this.mF22.onCreateView(parent, name, context, attrs);
-            }
-            return this.mF2.onCreateView(name, context, attrs);
+            View v = this.mF12 != null ? this.mF12.onCreateView(parent, name, context, attrs) : this.mF1.onCreateView(name, context, attrs);
+            return v != null ? v : this.mF22 != null ? this.mF22.onCreateView(parent, name, context, attrs) : this.mF2.onCreateView(name, context, attrs);
         }
     }
 
     protected LayoutInflater(Context context) {
+        this.mConstructorArgs = new Object[2];
         this.mContext = context;
         initPrecompiledViews();
     }
 
     protected LayoutInflater(LayoutInflater original, Context newContext) {
+        this.mConstructorArgs = new Object[2];
         this.mContext = newContext;
         this.mFactory = original.mFactory;
         this.mFactory2 = original.mFactory2;
@@ -131,10 +128,10 @@ public abstract class LayoutInflater {
 
     public static LayoutInflater from(Context context) {
         LayoutInflater LayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        if (LayoutInflater != null) {
-            return LayoutInflater;
+        if (LayoutInflater == null) {
+            throw new AssertionError("LayoutInflater not found.");
         }
-        throw new AssertionError("LayoutInflater not found.");
+        return LayoutInflater;
     }
 
     public Context getContext() {
@@ -152,34 +149,34 @@ public abstract class LayoutInflater {
     public void setFactory(Factory factory) {
         if (this.mFactorySet) {
             throw new IllegalStateException("A factory has already been set on this LayoutInflater");
-        } else if (factory != null) {
-            this.mFactorySet = true;
-            if (this.mFactory == null) {
-                this.mFactory = factory;
-            } else {
-                this.mFactory = new FactoryMerger(factory, (Factory2) null, this.mFactory, this.mFactory2);
-            }
-        } else {
+        }
+        if (factory == null) {
             throw new NullPointerException("Given factory can not be null");
+        }
+        this.mFactorySet = true;
+        if (this.mFactory == null) {
+            this.mFactory = factory;
+        } else {
+            this.mFactory = new FactoryMerger(factory, null, this.mFactory, this.mFactory2);
         }
     }
 
     public void setFactory2(Factory2 factory) {
         if (this.mFactorySet) {
             throw new IllegalStateException("A factory has already been set on this LayoutInflater");
-        } else if (factory != null) {
-            this.mFactorySet = true;
-            if (this.mFactory == null) {
-                this.mFactory2 = factory;
-                this.mFactory = factory;
-                return;
-            }
-            FactoryMerger factoryMerger = new FactoryMerger(factory, factory, this.mFactory, this.mFactory2);
-            this.mFactory2 = factoryMerger;
-            this.mFactory = factoryMerger;
-        } else {
+        }
+        if (factory == null) {
             throw new NullPointerException("Given factory can not be null");
         }
+        this.mFactorySet = true;
+        if (this.mFactory == null) {
+            this.mFactory2 = factory;
+            this.mFactory = factory;
+            return;
+        }
+        FactoryMerger factoryMerger = new FactoryMerger(factory, factory, this.mFactory, this.mFactory2);
+        this.mFactory2 = factoryMerger;
+        this.mFactory = factoryMerger;
     }
 
     @UnsupportedAppUsage
@@ -253,237 +250,152 @@ public abstract class LayoutInflater {
         }
         XmlResourceParser parser = res.getLayout(resource);
         try {
-            return inflate((XmlPullParser) parser, root, attachToRoot);
+            return inflate(parser, root, attachToRoot);
         } finally {
             parser.close();
         }
     }
 
     private View tryInflatePrecompiled(int resource, Resources res, ViewGroup root, boolean attachToRoot) {
-        XmlResourceParser parser;
-        if (!this.mUseCompiledView) {
-            return null;
-        }
-        Trace.traceBegin(8, "inflate (precompiled)");
-        String pkg = res.getResourcePackageName(resource);
-        String layout = res.getResourceEntryName(resource);
-        try {
-            View view = (View) Class.forName("" + pkg + ".CompiledView", false, this.mPrecompiledClassLoader).getMethod(layout, new Class[]{Context.class, Integer.TYPE}).invoke((Object) null, new Object[]{this.mContext, Integer.valueOf(resource)});
-            if (!(view == null || root == null)) {
-                parser = res.getLayout(resource);
-                AttributeSet attrs = Xml.asAttributeSet(parser);
-                advanceToRootNode(parser);
-                ViewGroup.LayoutParams params = root.generateLayoutParams(attrs);
-                if (attachToRoot) {
-                    root.addView(view, params);
-                } else {
-                    view.setLayoutParams(params);
+        if (this.mUseCompiledView) {
+            Trace.traceBegin(8L, "inflate (precompiled)");
+            String pkg = res.getResourcePackageName(resource);
+            String layout = res.getResourceEntryName(resource);
+            try {
+                Class clazz = Class.forName("" + pkg + ".CompiledView", false, this.mPrecompiledClassLoader);
+                Method inflater = clazz.getMethod(layout, Context.class, Integer.TYPE);
+                View view = (View) inflater.invoke(null, this.mContext, Integer.valueOf(resource));
+                if (view != null && root != null) {
+                    XmlResourceParser parser = res.getLayout(resource);
+                    AttributeSet attrs = Xml.asAttributeSet(parser);
+                    advanceToRootNode(parser);
+                    ViewGroup.LayoutParams params = root.generateLayoutParams(attrs);
+                    if (attachToRoot) {
+                        root.addView(view, params);
+                    } else {
+                        view.setLayoutParams(params);
+                    }
+                    parser.close();
                 }
-                parser.close();
+                Trace.traceEnd(8L);
+                return view;
+            } catch (Throwable th) {
+                Trace.traceEnd(8L);
+                return null;
             }
-            Trace.traceEnd(8);
-            return view;
-        } catch (Throwable th) {
-            Trace.traceEnd(8);
-            throw th;
+        }
+        return null;
+    }
+
+    private void advanceToRootNode(XmlPullParser parser) throws InflateException, IOException, XmlPullParserException {
+        int type;
+        do {
+            type = parser.next();
+            if (type == 2) {
+                break;
+            }
+        } while (type != 1);
+        if (type != 2) {
+            throw new InflateException(parser.getPositionDescription() + ": No start tag found!");
         }
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:0:0x0000 A[LOOP_START, MTH_ENTER_BLOCK] */
-    /* JADX WARNING: Removed duplicated region for block: B:5:0x000e A[RETURN] */
-    /* JADX WARNING: Removed duplicated region for block: B:6:0x000f  */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    private void advanceToRootNode(org.xmlpull.v1.XmlPullParser r5) throws android.view.InflateException, java.io.IOException, org.xmlpull.v1.XmlPullParserException {
-        /*
-            r4 = this;
-        L_0x0000:
-            int r0 = r5.next()
-            r1 = r0
-            r2 = 2
-            if (r0 == r2) goto L_0x000c
-            r0 = 1
-            if (r1 == r0) goto L_0x000c
-            goto L_0x0000
-        L_0x000c:
-            if (r1 != r2) goto L_0x000f
-            return
-        L_0x000f:
-            android.view.InflateException r0 = new android.view.InflateException
-            java.lang.StringBuilder r2 = new java.lang.StringBuilder
-            r2.<init>()
-            java.lang.String r3 = r5.getPositionDescription()
-            r2.append(r3)
-            java.lang.String r3 = ": No start tag found!"
-            r2.append(r3)
-            java.lang.String r2 = r2.toString()
-            r0.<init>((java.lang.String) r2)
-            throw r0
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.view.LayoutInflater.advanceToRootNode(org.xmlpull.v1.XmlPullParser):void");
-    }
-
-    /* JADX WARNING: type inference failed for: r10v11 */
-    /* JADX WARNING: Code restructure failed: missing block: B:28:0x0077, code lost:
-        if (r22 == false) goto L_0x0079;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:29:0x0079, code lost:
-        r16 = r1;
-        r10 = r10;
-     */
-    /* JADX WARNING: Multi-variable type inference failed */
-    /* JADX WARNING: Unknown top exception splitter block from list: {B:30:0x007b=Splitter:B:30:0x007b, B:54:0x00df=Splitter:B:54:0x00df} */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public android.view.View inflate(org.xmlpull.v1.XmlPullParser r20, android.view.ViewGroup r21, boolean r22) {
-        /*
-            r19 = this;
-            r7 = r19
-            r8 = r21
-            java.lang.Object[] r9 = r7.mConstructorArgs
-            monitor-enter(r9)
-            java.lang.String r0 = "inflate"
-            r10 = 8
-            android.os.Trace.traceBegin(r10, r0)     // Catch:{ all -> 0x00ed }
-            android.content.Context r0 = r7.mContext     // Catch:{ all -> 0x00ed }
-            r12 = r0
-            android.util.AttributeSet r0 = android.util.Xml.asAttributeSet(r20)     // Catch:{ all -> 0x00ed }
-            r13 = r0
-            java.lang.Object[] r0 = r7.mConstructorArgs     // Catch:{ all -> 0x00ed }
-            r14 = 0
-            r0 = r0[r14]     // Catch:{ all -> 0x00ed }
-            android.content.Context r0 = (android.content.Context) r0     // Catch:{ all -> 0x00ed }
-            r15 = r0
-            java.lang.Object[] r0 = r7.mConstructorArgs     // Catch:{ all -> 0x00ed }
-            r0[r14] = r12     // Catch:{ all -> 0x00ed }
-            r16 = r21
-            r17 = 0
-            r6 = 1
-            r19.advanceToRootNode(r20)     // Catch:{ XmlPullParserException -> 0x00cb, Exception -> 0x00a0, all -> 0x009b }
-            java.lang.String r0 = r20.getName()     // Catch:{ XmlPullParserException -> 0x00cb, Exception -> 0x00a0, all -> 0x009b }
-            java.lang.String r1 = "merge"
-            boolean r1 = r1.equals(r0)     // Catch:{ XmlPullParserException -> 0x00cb, Exception -> 0x00a0, all -> 0x009b }
-            if (r1 == 0) goto L_0x0057
-            if (r8 == 0) goto L_0x004e
-            if (r22 == 0) goto L_0x004e
-            r18 = 0
-            r1 = r19
-            r2 = r20
-            r3 = r21
-            r4 = r12
-            r5 = r13
-            r10 = r6
-            r6 = r18
-            r1.rInflate(r2, r3, r4, r5, r6)     // Catch:{ XmlPullParserException -> 0x0097, Exception -> 0x0093, all -> 0x008f }
-            r3 = r20
-            goto L_0x007b
-        L_0x004e:
-            r10 = r6
-            android.view.InflateException r1 = new android.view.InflateException     // Catch:{ XmlPullParserException -> 0x0097, Exception -> 0x0093, all -> 0x008f }
-            java.lang.String r2 = "<merge /> can be used only with a valid ViewGroup root and attachToRoot=true"
-            r1.<init>((java.lang.String) r2)     // Catch:{ XmlPullParserException -> 0x0097, Exception -> 0x0093, all -> 0x008f }
-            throw r1     // Catch:{ XmlPullParserException -> 0x0097, Exception -> 0x0093, all -> 0x008f }
-        L_0x0057:
-            r10 = r6
-            android.view.View r1 = r7.createViewFromTag(r8, r0, r12, r13)     // Catch:{ XmlPullParserException -> 0x0097, Exception -> 0x0093, all -> 0x008f }
-            r2 = 0
-            if (r8 == 0) goto L_0x0069
-            android.view.ViewGroup$LayoutParams r3 = r8.generateLayoutParams((android.util.AttributeSet) r13)     // Catch:{ XmlPullParserException -> 0x0097, Exception -> 0x0093, all -> 0x008f }
-            r2 = r3
-            if (r22 != 0) goto L_0x0069
-            r1.setLayoutParams(r2)     // Catch:{ XmlPullParserException -> 0x0097, Exception -> 0x0093, all -> 0x008f }
-        L_0x0069:
-            r3 = r20
-            r7.rInflateChildren(r3, r1, r13, r10)     // Catch:{ XmlPullParserException -> 0x008d, Exception -> 0x008b }
-            if (r8 == 0) goto L_0x0075
-            if (r22 == 0) goto L_0x0075
-            r8.addView((android.view.View) r1, (android.view.ViewGroup.LayoutParams) r2)     // Catch:{ XmlPullParserException -> 0x008d, Exception -> 0x008b }
-        L_0x0075:
-            if (r8 == 0) goto L_0x0079
-            if (r22 != 0) goto L_0x007b
-        L_0x0079:
-            r16 = r1
-        L_0x007b:
-            java.lang.Object[] r0 = r7.mConstructorArgs     // Catch:{ all -> 0x00f2 }
-            r0[r14] = r15     // Catch:{ all -> 0x00f2 }
-            java.lang.Object[] r0 = r7.mConstructorArgs     // Catch:{ all -> 0x00f2 }
-            r0[r10] = r17     // Catch:{ all -> 0x00f2 }
-            r1 = 8
-            android.os.Trace.traceEnd(r1)     // Catch:{ all -> 0x00f2 }
-            monitor-exit(r9)     // Catch:{ all -> 0x00f2 }
-            return r16
-        L_0x008b:
-            r0 = move-exception
-            goto L_0x00a4
-        L_0x008d:
-            r0 = move-exception
-            goto L_0x00cf
-        L_0x008f:
-            r0 = move-exception
-            r3 = r20
-            goto L_0x00df
-        L_0x0093:
-            r0 = move-exception
-            r3 = r20
-            goto L_0x00a4
-        L_0x0097:
-            r0 = move-exception
-            r3 = r20
-            goto L_0x00cf
-        L_0x009b:
-            r0 = move-exception
-            r3 = r20
-            r10 = r6
-            goto L_0x00df
-        L_0x00a0:
-            r0 = move-exception
-            r3 = r20
-            r10 = r6
-        L_0x00a4:
-            android.view.InflateException r1 = new android.view.InflateException     // Catch:{ all -> 0x00de }
-            java.lang.StringBuilder r2 = new java.lang.StringBuilder     // Catch:{ all -> 0x00de }
-            r2.<init>()     // Catch:{ all -> 0x00de }
-            java.lang.String r4 = getParserStateDescription(r12, r13)     // Catch:{ all -> 0x00de }
-            r2.append(r4)     // Catch:{ all -> 0x00de }
-            java.lang.String r4 = ": "
-            r2.append(r4)     // Catch:{ all -> 0x00de }
-            java.lang.String r4 = r0.getMessage()     // Catch:{ all -> 0x00de }
-            r2.append(r4)     // Catch:{ all -> 0x00de }
-            java.lang.String r2 = r2.toString()     // Catch:{ all -> 0x00de }
-            r1.<init>(r2, r0)     // Catch:{ all -> 0x00de }
-            java.lang.StackTraceElement[] r2 = EMPTY_STACK_TRACE     // Catch:{ all -> 0x00de }
-            r1.setStackTrace(r2)     // Catch:{ all -> 0x00de }
-            throw r1     // Catch:{ all -> 0x00de }
-        L_0x00cb:
-            r0 = move-exception
-            r3 = r20
-            r10 = r6
-        L_0x00cf:
-            android.view.InflateException r1 = new android.view.InflateException     // Catch:{ all -> 0x00de }
-            java.lang.String r2 = r0.getMessage()     // Catch:{ all -> 0x00de }
-            r1.<init>(r2, r0)     // Catch:{ all -> 0x00de }
-            java.lang.StackTraceElement[] r2 = EMPTY_STACK_TRACE     // Catch:{ all -> 0x00de }
-            r1.setStackTrace(r2)     // Catch:{ all -> 0x00de }
-            throw r1     // Catch:{ all -> 0x00de }
-        L_0x00de:
-            r0 = move-exception
-        L_0x00df:
-            java.lang.Object[] r1 = r7.mConstructorArgs     // Catch:{ all -> 0x00f2 }
-            r1[r14] = r15     // Catch:{ all -> 0x00f2 }
-            java.lang.Object[] r1 = r7.mConstructorArgs     // Catch:{ all -> 0x00f2 }
-            r1[r10] = r17     // Catch:{ all -> 0x00f2 }
-            r1 = 8
-            android.os.Trace.traceEnd(r1)     // Catch:{ all -> 0x00f2 }
-            throw r0     // Catch:{ all -> 0x00f2 }
-        L_0x00ed:
-            r0 = move-exception
-            r3 = r20
-        L_0x00f0:
-            monitor-exit(r9)     // Catch:{ all -> 0x00f2 }
-            throw r0
-        L_0x00f2:
-            r0 = move-exception
-            goto L_0x00f0
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.view.LayoutInflater.inflate(org.xmlpull.v1.XmlPullParser, android.view.ViewGroup, boolean):android.view.View");
+    /* JADX WARN: Multi-variable type inference failed */
+    /* JADX WARN: Type inference failed for: r10v0 */
+    /* JADX WARN: Type inference failed for: r10v1 */
+    /* JADX WARN: Type inference failed for: r10v4 */
+    /* JADX WARN: Type inference failed for: r10v5 */
+    /* JADX WARN: Type inference failed for: r10v6 */
+    /* JADX WARN: Type inference failed for: r10v8 */
+    /* JADX WARN: Type inference failed for: r10v9 */
+    public View inflate(XmlPullParser parser, ViewGroup root, boolean attachToRoot) {
+        ?? r10;
+        synchronized (this.mConstructorArgs) {
+            try {
+                try {
+                    ?? r102 = 8;
+                    r102 = 8;
+                    Trace.traceBegin(8L, "inflate");
+                    Context inflaterContext = this.mContext;
+                    AttributeSet attrs = Xml.asAttributeSet(parser);
+                    Context lastContext = (Context) this.mConstructorArgs[0];
+                    this.mConstructorArgs[0] = inflaterContext;
+                    View result = root;
+                    try {
+                        try {
+                            advanceToRootNode(parser);
+                            String name = parser.getName();
+                            try {
+                                if (!TAG_MERGE.equals(name)) {
+                                    r10 = 1;
+                                    View temp = createViewFromTag(root, name, inflaterContext, attrs);
+                                    ViewGroup.LayoutParams params = null;
+                                    if (root != null) {
+                                        params = root.generateLayoutParams(attrs);
+                                        if (!attachToRoot) {
+                                            temp.setLayoutParams(params);
+                                        }
+                                    }
+                                    try {
+                                        rInflateChildren(parser, temp, attrs, true);
+                                        if (root != null && attachToRoot) {
+                                            root.addView(temp, params);
+                                        }
+                                        if (root == null || !attachToRoot) {
+                                            result = temp;
+                                        }
+                                    } catch (XmlPullParserException e) {
+                                        e = e;
+                                        InflateException ie = new InflateException(e.getMessage(), e);
+                                        ie.setStackTrace(EMPTY_STACK_TRACE);
+                                        throw ie;
+                                    } catch (Exception e2) {
+                                        e = e2;
+                                        InflateException ie2 = new InflateException(getParserStateDescription(inflaterContext, attrs) + PluralRules.KEYWORD_RULE_SEPARATOR + e.getMessage(), e);
+                                        ie2.setStackTrace(EMPTY_STACK_TRACE);
+                                        throw ie2;
+                                    }
+                                } else if (root == null || !attachToRoot) {
+                                    throw new InflateException("<merge /> can be used only with a valid ViewGroup root and attachToRoot=true");
+                                } else {
+                                    r10 = 1;
+                                    rInflate(parser, root, inflaterContext, attrs, false);
+                                }
+                                this.mConstructorArgs[0] = lastContext;
+                                this.mConstructorArgs[r10] = null;
+                                Trace.traceEnd(8L);
+                                return result;
+                            } catch (XmlPullParserException e3) {
+                                e = e3;
+                            } catch (Exception e4) {
+                                e = e4;
+                            } catch (Throwable th) {
+                                e = th;
+                                this.mConstructorArgs[0] = lastContext;
+                                this.mConstructorArgs[r102] = null;
+                                Trace.traceEnd(8L);
+                                throw e;
+                            }
+                        } catch (XmlPullParserException e5) {
+                            e = e5;
+                        } catch (Exception e6) {
+                            e = e6;
+                        } catch (Throwable th2) {
+                            e = th2;
+                            r102 = 1;
+                        }
+                    } catch (Throwable th3) {
+                        e = th3;
+                    }
+                } catch (Throwable th4) {
+                    th = th4;
+                    throw th;
+                }
+            } catch (Throwable th5) {
+                th = th5;
+                throw th;
+            }
+        }
     }
 
     private static String getParserStateDescription(Context context, AttributeSet attrs) {
@@ -520,105 +432,107 @@ public abstract class LayoutInflater {
     public final View createView(Context viewContext, String name, String prefix, AttributeSet attrs) throws ClassNotFoundException, InflateException {
         String str;
         String str2;
-        Object lastContext;
         String str3;
         String str4;
         Objects.requireNonNull(viewContext);
         Objects.requireNonNull(name);
-        Constructor<? extends U> constructor = sConstructorMap.get(name);
+        Constructor<? extends View> constructor = sConstructorMap.get(name);
         if (constructor != null && !verifyClassLoader(constructor)) {
             constructor = null;
             sConstructorMap.remove(name);
         }
-        Class<? extends U> cls = null;
+        Class<? extends View> clazz = null;
         try {
-            Trace.traceBegin(8, name);
-            if (constructor == null) {
-                if (prefix != null) {
-                    str4 = prefix + name;
-                } else {
-                    str4 = name;
-                }
-                cls = Class.forName(str4, false, this.mContext.getClassLoader()).asSubclass(View.class);
-                if (!(this.mFilter == null || cls == null || this.mFilter.onLoadClass(cls))) {
-                    failNotAllowed(name, prefix, viewContext, attrs);
-                }
-                constructor = cls.getConstructor(mConstructorSignature);
-                constructor.setAccessible(true);
-                sConstructorMap.put(name, constructor);
-            } else if (this.mFilter != null) {
-                Boolean allowedState = this.mFilterMap.get(name);
-                if (allowedState == null) {
-                    if (prefix != null) {
-                        str3 = prefix + name;
-                    } else {
-                        str3 = name;
-                    }
-                    cls = Class.forName(str3, false, this.mContext.getClassLoader()).asSubclass(View.class);
-                    boolean allowed = cls != null && this.mFilter.onLoadClass(cls);
-                    this.mFilterMap.put(name, Boolean.valueOf(allowed));
-                    if (!allowed) {
-                        failNotAllowed(name, prefix, viewContext, attrs);
-                    }
-                } else if (allowedState.equals(Boolean.FALSE)) {
-                    failNotAllowed(name, prefix, viewContext, attrs);
-                }
-            }
-            lastContext = this.mConstructorArgs[0];
-            this.mConstructorArgs[0] = viewContext;
-            Object[] args = this.mConstructorArgs;
-            args[1] = attrs;
-            View view = (View) constructor.newInstance(args);
-            if (view instanceof ViewStub) {
-                ((ViewStub) view).setLayoutInflater(cloneInContext((Context) args[0]));
-            }
-            this.mConstructorArgs[0] = lastContext;
-            Trace.traceEnd(8);
-            return view;
-        } catch (NoSuchMethodException e) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(getParserStateDescription(viewContext, attrs));
-            sb.append(": Error inflating class ");
-            if (prefix != null) {
-                str = prefix + name;
-            } else {
-                str = name;
-            }
-            sb.append(str);
-            InflateException ie = new InflateException(sb.toString(), e);
-            ie.setStackTrace(EMPTY_STACK_TRACE);
-            throw ie;
-        } catch (ClassCastException e2) {
-            StringBuilder sb2 = new StringBuilder();
-            sb2.append(getParserStateDescription(viewContext, attrs));
-            sb2.append(": Class is not a View ");
-            if (prefix != null) {
-                str2 = prefix + name;
-            } else {
-                str2 = name;
-            }
-            sb2.append(str2);
-            InflateException ie2 = new InflateException(sb2.toString(), e2);
-            ie2.setStackTrace(EMPTY_STACK_TRACE);
-            throw ie2;
-        } catch (ClassNotFoundException e3) {
-            throw e3;
-        } catch (Exception e4) {
             try {
+                try {
+                    Trace.traceBegin(8L, name);
+                    if (constructor == null) {
+                        if (prefix != null) {
+                            str4 = prefix + name;
+                        } else {
+                            str4 = name;
+                        }
+                        Class asSubclass = Class.forName(str4, false, this.mContext.getClassLoader()).asSubclass(View.class);
+                        if (this.mFilter != null && asSubclass != null) {
+                            if (!this.mFilter.onLoadClass(asSubclass)) {
+                                failNotAllowed(name, prefix, viewContext, attrs);
+                            }
+                        }
+                        constructor = asSubclass.getConstructor(mConstructorSignature);
+                        constructor.setAccessible(true);
+                        sConstructorMap.put(name, constructor);
+                    } else if (this.mFilter != null) {
+                        Boolean allowedState = this.mFilterMap.get(name);
+                        if (allowedState == null) {
+                            if (prefix != null) {
+                                str3 = prefix + name;
+                            } else {
+                                str3 = name;
+                            }
+                            Class asSubclass2 = Class.forName(str3, false, this.mContext.getClassLoader()).asSubclass(View.class);
+                            boolean allowed = asSubclass2 != null && this.mFilter.onLoadClass(asSubclass2);
+                            this.mFilterMap.put(name, Boolean.valueOf(allowed));
+                            if (!allowed) {
+                                failNotAllowed(name, prefix, viewContext, attrs);
+                            }
+                        } else if (allowedState.equals(Boolean.FALSE)) {
+                            failNotAllowed(name, prefix, viewContext, attrs);
+                        }
+                    }
+                    Object lastContext = this.mConstructorArgs[0];
+                    this.mConstructorArgs[0] = viewContext;
+                    Object[] args = this.mConstructorArgs;
+                    args[1] = attrs;
+                    try {
+                        View view = constructor.newInstance(args);
+                        if (view instanceof ViewStub) {
+                            ViewStub viewStub = (ViewStub) view;
+                            viewStub.setLayoutInflater(cloneInContext((Context) args[0]));
+                        }
+                        return view;
+                    } finally {
+                        this.mConstructorArgs[0] = lastContext;
+                    }
+                } catch (ClassCastException e) {
+                    StringBuilder sb = new StringBuilder();
+                    sb.append(getParserStateDescription(viewContext, attrs));
+                    sb.append(": Class is not a View ");
+                    if (prefix != null) {
+                        str2 = prefix + name;
+                    } else {
+                        str2 = name;
+                    }
+                    sb.append(str2);
+                    InflateException ie = new InflateException(sb.toString(), e);
+                    ie.setStackTrace(EMPTY_STACK_TRACE);
+                    throw ie;
+                } catch (NoSuchMethodException e2) {
+                    StringBuilder sb2 = new StringBuilder();
+                    sb2.append(getParserStateDescription(viewContext, attrs));
+                    sb2.append(": Error inflating class ");
+                    if (prefix != null) {
+                        str = prefix + name;
+                    } else {
+                        str = name;
+                    }
+                    sb2.append(str);
+                    InflateException ie2 = new InflateException(sb2.toString(), e2);
+                    ie2.setStackTrace(EMPTY_STACK_TRACE);
+                    throw ie2;
+                }
+            } catch (ClassNotFoundException e3) {
+                throw e3;
+            } catch (Exception e4) {
                 StringBuilder sb3 = new StringBuilder();
                 sb3.append(getParserStateDescription(viewContext, attrs));
                 sb3.append(": Error inflating class ");
-                sb3.append(cls == null ? MediaStore.UNKNOWN_STRING : cls.getName());
+                sb3.append(0 == 0 ? MediaStore.UNKNOWN_STRING : clazz.getName());
                 InflateException ie3 = new InflateException(sb3.toString(), e4);
                 ie3.setStackTrace(EMPTY_STACK_TRACE);
                 throw ie3;
-            } catch (Throwable th) {
-                Trace.traceEnd(8);
-                throw th;
             }
-        } catch (Throwable th2) {
-            this.mConstructorArgs[0] = lastContext;
-            throw th2;
+        } finally {
+            Trace.traceEnd(8L);
         }
     }
 
@@ -636,13 +550,11 @@ public abstract class LayoutInflater {
         throw new InflateException(sb.toString());
     }
 
-    /* access modifiers changed from: protected */
-    public View onCreateView(String name, AttributeSet attrs) throws ClassNotFoundException {
+    protected View onCreateView(String name, AttributeSet attrs) throws ClassNotFoundException {
         return createView(name, "android.view.", attrs);
     }
 
-    /* access modifiers changed from: protected */
-    public View onCreateView(View parent, String name, AttributeSet attrs) throws ClassNotFoundException {
+    protected View onCreateView(View parent, String name, AttributeSet attrs) throws ClassNotFoundException {
         return onCreateView(name, attrs);
     }
 
@@ -655,13 +567,11 @@ public abstract class LayoutInflater {
         return createViewFromTag(parent, name, context, attrs, false);
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public View createViewFromTag(View parent, String name, Context context, AttributeSet attrs, boolean ignoreThemeAttr) {
-        Object lastContext;
+    View createViewFromTag(View parent, String name, Context context, AttributeSet attrs, boolean ignoreThemeAttr) {
         View createView;
         if (name.equals("view")) {
-            name = attrs.getAttributeValue((String) null, "class");
+            name = attrs.getAttributeValue(null, "class");
         }
         if (!ignoreThemeAttr) {
             TypedArray ta = context.obtainStyledAttributes(attrs, ATTRS_THEME);
@@ -674,15 +584,20 @@ public abstract class LayoutInflater {
         try {
             View view = tryCreateView(parent, name, context, attrs);
             if (view == null) {
-                lastContext = this.mConstructorArgs[0];
+                Object lastContext = this.mConstructorArgs[0];
                 this.mConstructorArgs[0] = context;
-                if (-1 == name.indexOf(46)) {
-                    createView = onCreateView(context, parent, name, attrs);
-                } else {
-                    createView = createView(context, name, (String) null, attrs);
+                try {
+                    if (-1 == name.indexOf(46)) {
+                        createView = onCreateView(context, parent, name, attrs);
+                    } else {
+                        createView = createView(context, name, null, attrs);
+                    }
+                    view = createView;
+                    this.mConstructorArgs[0] = lastContext;
+                } catch (Throwable th) {
+                    this.mConstructorArgs[0] = lastContext;
+                    throw th;
                 }
-                view = createView;
-                this.mConstructorArgs[0] = lastContext;
             }
             return view;
         } catch (InflateException e) {
@@ -695,9 +610,6 @@ public abstract class LayoutInflater {
             InflateException ie2 = new InflateException(getParserStateDescription(context, attrs) + ": Error inflating class " + name, e3);
             ie2.setStackTrace(EMPTY_STACK_TRACE);
             throw ie2;
-        } catch (Throwable th) {
-            this.mConstructorArgs[0] = lastContext;
-            throw th;
         }
     }
 
@@ -714,25 +626,44 @@ public abstract class LayoutInflater {
         } else {
             view = null;
         }
-        if (view != null || this.mPrivateFactory == null) {
-            return view;
+        if (view == null && this.mPrivateFactory != null) {
+            View view2 = this.mPrivateFactory.onCreateView(parent, name, context, attrs);
+            return view2;
         }
-        return this.mPrivateFactory.onCreateView(parent, name, context, attrs);
+        return view;
     }
 
-    /* access modifiers changed from: package-private */
-    public final void rInflateChildren(XmlPullParser parser, View parent, AttributeSet attrs, boolean finishInflate) throws XmlPullParserException, IOException {
+    final void rInflateChildren(XmlPullParser parser, View parent, AttributeSet attrs, boolean finishInflate) throws XmlPullParserException, IOException {
         rInflate(parser, parent, parent.getContext(), attrs, finishInflate);
     }
 
-    /* access modifiers changed from: package-private */
-    public void rInflate(XmlPullParser parser, View parent, Context context, AttributeSet attrs, boolean finishInflate) throws XmlPullParserException, IOException {
+    /* JADX WARN: Code restructure failed: missing block: B:31:0x0076, code lost:
+        if (r1 == false) goto L9;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:32:0x0078, code lost:
+        r10.restoreDefaultFocus();
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:33:0x007b, code lost:
+        if (r13 == false) goto L13;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:34:0x007d, code lost:
+        r10.onFinishInflate();
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:35:0x0080, code lost:
+        return;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:53:?, code lost:
+        return;
+     */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    void rInflate(XmlPullParser parser, View parent, Context context, AttributeSet attrs, boolean finishInflate) throws XmlPullParserException, IOException {
         int depth = parser.getDepth();
         boolean pendingRequestFocus = false;
         while (true) {
-            int next = parser.next();
-            int type = next;
-            if ((next != 3 || parser.getDepth() > depth) && type != 1) {
+            int type = parser.next();
+            if ((type != 3 || parser.getDepth() > depth) && type != 1) {
                 if (type == 2) {
                     String name = parser.getName();
                     if (TAG_REQUEST_FOCUS.equals(name)) {
@@ -741,344 +672,247 @@ public abstract class LayoutInflater {
                     } else if ("tag".equals(name)) {
                         parseViewTag(parser, parent, attrs);
                     } else if (TAG_INCLUDE.equals(name)) {
-                        if (parser.getDepth() != 0) {
-                            parseInclude(parser, context, parent, attrs);
-                        } else {
+                        if (parser.getDepth() == 0) {
                             throw new InflateException("<include /> cannot be the root element");
                         }
-                    } else if (!TAG_MERGE.equals(name)) {
+                        parseInclude(parser, context, parent, attrs);
+                    } else if (TAG_MERGE.equals(name)) {
+                        throw new InflateException("<merge /> must be the root element");
+                    } else {
                         View view = createViewFromTag(parent, name, context, attrs);
                         ViewGroup viewGroup = (ViewGroup) parent;
                         ViewGroup.LayoutParams params = viewGroup.generateLayoutParams(attrs);
                         rInflateChildren(parser, view, attrs, true);
                         viewGroup.addView(view, params);
-                    } else {
-                        throw new InflateException("<merge /> must be the root element");
                     }
                 }
             }
         }
-        if (pendingRequestFocus) {
-            parent.restoreDefaultFocus();
-        }
-        if (finishInflate) {
-            parent.onFinishInflate();
-        }
     }
 
     private void parseViewTag(XmlPullParser parser, View view, AttributeSet attrs) throws XmlPullParserException, IOException {
-        TypedArray ta = view.getContext().obtainStyledAttributes(attrs, R.styleable.ViewTag);
-        view.setTag(ta.getResourceId(1, 0), ta.getText(0));
+        Context context = view.getContext();
+        TypedArray ta = context.obtainStyledAttributes(attrs, C3132R.styleable.ViewTag);
+        int key = ta.getResourceId(1, 0);
+        CharSequence value = ta.getText(0);
+        view.setTag(key, value);
         ta.recycle();
         consumeChildElements(parser);
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:37:0x00a5 A[Catch:{ all -> 0x016a }] */
-    /* JADX WARNING: Removed duplicated region for block: B:77:0x0148  */
-    @android.annotation.UnsupportedAppUsage
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    private void parseInclude(org.xmlpull.v1.XmlPullParser r24, android.content.Context r25, android.view.View r26, android.util.AttributeSet r27) throws org.xmlpull.v1.XmlPullParserException, java.io.IOException {
-        /*
-            r23 = this;
-            r7 = r23
-            r0 = r25
-            r8 = r26
-            r9 = r27
-            boolean r1 = r8 instanceof android.view.ViewGroup
-            if (r1 == 0) goto L_0x019c
-            int[] r1 = ATTRS_THEME
-            android.content.res.TypedArray r10 = r0.obtainStyledAttributes((android.util.AttributeSet) r9, (int[]) r1)
-            r11 = 0
-            int r12 = r10.getResourceId(r11, r11)
-            r13 = 1
-            if (r12 == 0) goto L_0x001c
-            r1 = r13
-            goto L_0x001d
-        L_0x001c:
-            r1 = r11
-        L_0x001d:
-            r14 = r1
-            if (r14 == 0) goto L_0x0026
-            android.view.ContextThemeWrapper r1 = new android.view.ContextThemeWrapper
-            r1.<init>((android.content.Context) r0, (int) r12)
-            r0 = r1
-        L_0x0026:
-            r15 = r0
-            r10.recycle()
-            java.lang.String r0 = "layout"
-            r6 = 0
-            int r0 = r9.getAttributeResourceValue(r6, r0, r11)
-            if (r0 != 0) goto L_0x005c
-            java.lang.String r1 = "layout"
-            java.lang.String r1 = r9.getAttributeValue(r6, r1)
-            if (r1 == 0) goto L_0x0054
-            int r2 = r1.length()
-            if (r2 <= 0) goto L_0x0054
-            android.content.res.Resources r2 = r15.getResources()
-            java.lang.String r3 = r1.substring(r13)
-            java.lang.String r4 = "attr"
-            java.lang.String r5 = r15.getPackageName()
-            int r0 = r2.getIdentifier(r3, r4, r5)
-            goto L_0x005c
-        L_0x0054:
-            android.view.InflateException r2 = new android.view.InflateException
-            java.lang.String r3 = "You must specify a layout in the include tag: <include layout=\"@layout/layoutID\" />"
-            r2.<init>((java.lang.String) r3)
-            throw r2
-        L_0x005c:
-            android.util.TypedValue r1 = r7.mTempValue
-            if (r1 != 0) goto L_0x0067
-            android.util.TypedValue r1 = new android.util.TypedValue
-            r1.<init>()
-            r7.mTempValue = r1
-        L_0x0067:
-            if (r0 == 0) goto L_0x0079
-            android.content.res.Resources$Theme r1 = r15.getTheme()
-            android.util.TypedValue r2 = r7.mTempValue
-            boolean r1 = r1.resolveAttribute(r0, r2, r13)
-            if (r1 == 0) goto L_0x0079
-            android.util.TypedValue r1 = r7.mTempValue
-            int r0 = r1.resourceId
-        L_0x0079:
-            r5 = r0
-            if (r5 == 0) goto L_0x0177
-            android.content.res.Resources r0 = r15.getResources()
-            r1 = r8
-            android.view.ViewGroup r1 = (android.view.ViewGroup) r1
-            android.view.View r16 = r7.tryInflatePrecompiled(r5, r0, r1, r13)
-            if (r16 != 0) goto L_0x0171
-            android.content.res.Resources r0 = r15.getResources()
-            android.content.res.XmlResourceParser r0 = r0.getLayout(r5)
-            r4 = r0
-            android.util.AttributeSet r0 = android.util.Xml.asAttributeSet(r4)     // Catch:{ all -> 0x016a }
-        L_0x0096:
-            r3 = r0
-            int r0 = r4.next()     // Catch:{ all -> 0x016a }
-            r2 = r0
-            r1 = 2
-            if (r0 == r1) goto L_0x00a3
-            if (r2 == r13) goto L_0x00a3
-            r0 = r3
-            goto L_0x0096
-        L_0x00a3:
-            if (r2 != r1) goto L_0x0148
-            java.lang.String r0 = r4.getName()     // Catch:{ all -> 0x016a }
-            r1 = r0
-            java.lang.String r0 = "merge"
-            boolean r0 = r0.equals(r1)     // Catch:{ all -> 0x016a }
-            if (r0 == 0) goto L_0x00cd
-            r6 = 0
-            r17 = r1
-            r1 = r23
-            r18 = r2
-            r2 = r4
-            r11 = r3
-            r3 = r26
-            r13 = r4
-            r4 = r15
-            r19 = r5
-            r5 = r11
-            r1.rInflate(r2, r3, r4, r5, r6)     // Catch:{ all -> 0x00c9 }
-            r4 = r13
-            goto L_0x0140
-        L_0x00c9:
-            r0 = move-exception
-            r4 = r13
-            goto L_0x016d
-        L_0x00cd:
-            r17 = r1
-            r18 = r2
-            r19 = r5
-            r5 = r4
-            r4 = r3
-            r1 = r23
-            r2 = r26
-            r3 = r17
-            r20 = r4
-            r4 = r15
-            r21 = r5
-            r5 = r20
-            r0 = r6
-            r6 = r14
-            android.view.View r1 = r1.createViewFromTag(r2, r3, r4, r5, r6)     // Catch:{ all -> 0x0144 }
-            r2 = r8
-            android.view.ViewGroup r2 = (android.view.ViewGroup) r2     // Catch:{ all -> 0x0144 }
-            int[] r3 = com.android.internal.R.styleable.Include     // Catch:{ all -> 0x0144 }
-            android.content.res.TypedArray r3 = r15.obtainStyledAttributes((android.util.AttributeSet) r9, (int[]) r3)     // Catch:{ all -> 0x0144 }
-            r4 = -1
-            int r5 = r3.getResourceId(r11, r4)     // Catch:{ all -> 0x0144 }
-            int r6 = r3.getInt(r13, r4)     // Catch:{ all -> 0x0144 }
-            r3.recycle()     // Catch:{ all -> 0x0144 }
-            r22 = r0
-            android.view.ViewGroup$LayoutParams r0 = r2.generateLayoutParams((android.util.AttributeSet) r9)     // Catch:{ RuntimeException -> 0x010b }
-            r22 = r0
-            goto L_0x010c
-        L_0x0106:
-            r0 = move-exception
-            r4 = r21
-            goto L_0x016d
-        L_0x010b:
-            r0 = move-exception
-        L_0x010c:
-            if (r22 != 0) goto L_0x0117
-            r11 = r20
-            android.view.ViewGroup$LayoutParams r0 = r2.generateLayoutParams((android.util.AttributeSet) r11)     // Catch:{ all -> 0x0106 }
-            r22 = r0
-            goto L_0x011b
-        L_0x0117:
-            r11 = r20
-            r0 = r22
-        L_0x011b:
-            r1.setLayoutParams(r0)     // Catch:{ all -> 0x0144 }
-            r4 = r21
-            r7.rInflateChildren(r4, r1, r11, r13)     // Catch:{ all -> 0x0168 }
-            r13 = -1
-            if (r5 == r13) goto L_0x0129
-            r1.setId(r5)     // Catch:{ all -> 0x0168 }
-        L_0x0129:
-            switch(r6) {
-                case 0: goto L_0x0138;
-                case 1: goto L_0x0133;
-                case 2: goto L_0x012d;
-                default: goto L_0x012c;
-            }     // Catch:{ all -> 0x0168 }
-        L_0x012c:
-            goto L_0x013d
-        L_0x012d:
-            r13 = 8
-            r1.setVisibility(r13)     // Catch:{ all -> 0x0168 }
-            goto L_0x013d
-        L_0x0133:
-            r13 = 4
-            r1.setVisibility(r13)     // Catch:{ all -> 0x0168 }
-            goto L_0x013d
-        L_0x0138:
-            r13 = 0
-            r1.setVisibility(r13)     // Catch:{ all -> 0x0168 }
-        L_0x013d:
-            r2.addView(r1)     // Catch:{ all -> 0x0168 }
-        L_0x0140:
-            r4.close()
-            goto L_0x0173
-        L_0x0144:
-            r0 = move-exception
-            r4 = r21
-            goto L_0x016d
-        L_0x0148:
-            r18 = r2
-            r11 = r3
-            r19 = r5
-            android.view.InflateException r0 = new android.view.InflateException     // Catch:{ all -> 0x0168 }
-            java.lang.StringBuilder r1 = new java.lang.StringBuilder     // Catch:{ all -> 0x0168 }
-            r1.<init>()     // Catch:{ all -> 0x0168 }
-            java.lang.String r2 = getParserStateDescription(r15, r11)     // Catch:{ all -> 0x0168 }
-            r1.append(r2)     // Catch:{ all -> 0x0168 }
-            java.lang.String r2 = ": No start tag found!"
-            r1.append(r2)     // Catch:{ all -> 0x0168 }
-            java.lang.String r1 = r1.toString()     // Catch:{ all -> 0x0168 }
-            r0.<init>((java.lang.String) r1)     // Catch:{ all -> 0x0168 }
-            throw r0     // Catch:{ all -> 0x0168 }
-        L_0x0168:
-            r0 = move-exception
-            goto L_0x016d
-        L_0x016a:
-            r0 = move-exception
-            r19 = r5
-        L_0x016d:
-            r4.close()
-            throw r0
-        L_0x0171:
-            r19 = r5
-        L_0x0173:
-            consumeChildElements(r24)
-            return
-        L_0x0177:
-            r19 = r5
-            r0 = r6
-            java.lang.String r1 = "layout"
-            java.lang.String r0 = r9.getAttributeValue(r0, r1)
-            android.view.InflateException r1 = new android.view.InflateException
-            java.lang.StringBuilder r2 = new java.lang.StringBuilder
-            r2.<init>()
-            java.lang.String r3 = "You must specify a valid layout reference. The layout ID "
-            r2.append(r3)
-            r2.append(r0)
-            java.lang.String r3 = " is not valid."
-            r2.append(r3)
-            java.lang.String r2 = r2.toString()
-            r1.<init>((java.lang.String) r2)
-            throw r1
-        L_0x019c:
-            android.view.InflateException r1 = new android.view.InflateException
-            java.lang.String r2 = "<include /> can only be used inside of a ViewGroup"
-            r1.<init>((java.lang.String) r2)
-            throw r1
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.view.LayoutInflater.parseInclude(org.xmlpull.v1.XmlPullParser, android.content.Context, android.view.View, android.util.AttributeSet):void");
+    /* JADX WARN: Code restructure failed: missing block: B:37:0x00a3, code lost:
+        if (r0 != 2) goto L85;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:38:0x00a5, code lost:
+        r0 = r4.getName();
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:39:0x00b1, code lost:
+        if (android.view.LayoutInflater.TAG_MERGE.equals(r0) == false) goto L53;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:41:0x00c3, code lost:
+        rInflate(r4, r26, r15, r3, false);
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:42:0x00c6, code lost:
+        r4 = r4;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:43:0x00c9, code lost:
+        r0 = th;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:44:0x00ca, code lost:
+        r4 = r4;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:46:0x00e4, code lost:
+        r1 = createViewFromTag(r26, r0, r15, r3, r14);
+        r2 = (android.view.ViewGroup) r26;
+        r3 = r15.obtainStyledAttributes(r27, com.android.internal.C3132R.styleable.Include);
+        r5 = r3.getResourceId(0, -1);
+        r6 = r3.getInt(1, -1);
+        r3.recycle();
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:47:0x00fd, code lost:
+        r22 = null;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:49:0x0103, code lost:
+        r22 = r2.generateLayoutParams(r27);
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:50:0x0106, code lost:
+        r0 = th;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:51:0x0107, code lost:
+        r4 = r4;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:70:0x0144, code lost:
+        r0 = th;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:71:0x0145, code lost:
+        r4 = r4;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:74:0x0167, code lost:
+        throw new android.view.InflateException(getParserStateDescription(r15, r3) + ": No start tag found!");
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:79:0x016d, code lost:
+        r4.close();
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:80:0x0170, code lost:
+        throw r0;
+     */
+    @UnsupportedAppUsage
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    private void parseInclude(XmlPullParser parser, Context context, View parent, AttributeSet attrs) throws XmlPullParserException, IOException {
+        XmlResourceParser childParser;
+        AttributeSet childAttrs;
+        View view;
+        ViewGroup group;
+        int id;
+        int visibility;
+        ViewGroup.LayoutParams params;
+        AttributeSet childAttrs2;
+        ViewGroup.LayoutParams params2;
+        ContextThemeWrapper contextThemeWrapper = context;
+        if (!(parent instanceof ViewGroup)) {
+            throw new InflateException("<include /> can only be used inside of a ViewGroup");
+        }
+        TypedArray ta = contextThemeWrapper.obtainStyledAttributes(attrs, ATTRS_THEME);
+        int themeResId = ta.getResourceId(0, 0);
+        boolean hasThemeOverride = themeResId != 0;
+        if (hasThemeOverride) {
+            contextThemeWrapper = new ContextThemeWrapper(contextThemeWrapper, themeResId);
+        }
+        Context context2 = contextThemeWrapper;
+        ta.recycle();
+        int layout = attrs.getAttributeResourceValue(null, "layout", 0);
+        if (layout == 0) {
+            String value = attrs.getAttributeValue(null, "layout");
+            if (value == null || value.length() <= 0) {
+                throw new InflateException("You must specify a layout in the include tag: <include layout=\"@layout/layoutID\" />");
+            }
+            layout = context2.getResources().getIdentifier(value.substring(1), "attr", context2.getPackageName());
+        }
+        if (this.mTempValue == null) {
+            this.mTempValue = new TypedValue();
+        }
+        if (layout != 0 && context2.getTheme().resolveAttribute(layout, this.mTempValue, true)) {
+            layout = this.mTempValue.resourceId;
+        }
+        int layout2 = layout;
+        if (layout2 == 0) {
+            throw new InflateException("You must specify a valid layout reference. The layout ID " + attrs.getAttributeValue(null, "layout") + " is not valid.");
+        }
+        View precompiled = tryInflatePrecompiled(layout2, context2.getResources(), (ViewGroup) parent, true);
+        if (precompiled == null) {
+            childParser = context2.getResources().getLayout(layout2);
+            try {
+                AttributeSet childAttrs3 = Xml.asAttributeSet(childParser);
+                while (true) {
+                    childAttrs = childAttrs3;
+                    int type = childParser.next();
+                    if (type == 2 || type == 1) {
+                        try {
+                            break;
+                        } catch (Throwable th) {
+                            th = th;
+                        }
+                    } else {
+                        childAttrs3 = childAttrs;
+                    }
+                }
+            } catch (Throwable th2) {
+                th = th2;
+            }
+        }
+        consumeChildElements(parser);
+        if (params == null) {
+            childAttrs2 = childAttrs;
+            params2 = group.generateLayoutParams(childAttrs2);
+        } else {
+            childAttrs2 = childAttrs;
+            params2 = params;
+        }
+        view.setLayoutParams(params2);
+        XmlResourceParser childParser2 = childParser;
+        rInflateChildren(childParser2, view, childAttrs2, true);
+        if (id != -1) {
+            view.setId(id);
+        }
+        switch (visibility) {
+            case 0:
+                view.setVisibility(0);
+                break;
+            case 1:
+                view.setVisibility(4);
+                break;
+            case 2:
+                view.setVisibility(8);
+                break;
+        }
+        group.addView(view);
+        childParser2.close();
+        consumeChildElements(parser);
     }
 
     static final void consumeChildElements(XmlPullParser parser) throws XmlPullParserException, IOException {
         int type;
         int currentDepth = parser.getDepth();
         do {
-            int next = parser.next();
-            type = next;
-            if ((next == 3 && parser.getDepth() <= currentDepth) || type == 1) {
+            type = parser.next();
+            if (type == 3 && parser.getDepth() <= currentDepth) {
+                return;
             }
-            int next2 = parser.next();
-            type = next2;
-            return;
-        } while (type == 1);
+        } while (type != 1);
     }
 
+    /* loaded from: classes4.dex */
     private static class BlinkLayout extends FrameLayout {
         private static final int BLINK_DELAY = 500;
         private static final int MESSAGE_BLINK = 66;
-        /* access modifiers changed from: private */
-        public boolean mBlink;
-        /* access modifiers changed from: private */
-        public boolean mBlinkState;
-        private final Handler mHandler = new Handler((Handler.Callback) new Handler.Callback() {
-            public boolean handleMessage(Message msg) {
-                if (msg.what != 66) {
-                    return false;
-                }
-                if (BlinkLayout.this.mBlink) {
-                    boolean unused = BlinkLayout.this.mBlinkState = !BlinkLayout.this.mBlinkState;
-                    BlinkLayout.this.makeBlink();
-                }
-                BlinkLayout.this.invalidate();
-                return true;
-            }
-        });
+        private boolean mBlink;
+        private boolean mBlinkState;
+        private final Handler mHandler;
 
         public BlinkLayout(Context context, AttributeSet attrs) {
             super(context, attrs);
+            this.mHandler = new Handler(new Handler.Callback() { // from class: android.view.LayoutInflater.BlinkLayout.1
+                @Override // android.p007os.Handler.Callback
+                public boolean handleMessage(Message msg) {
+                    if (msg.what == 66) {
+                        if (BlinkLayout.this.mBlink) {
+                            BlinkLayout.this.mBlinkState = !BlinkLayout.this.mBlinkState;
+                            BlinkLayout.this.makeBlink();
+                        }
+                        BlinkLayout.this.invalidate();
+                        return true;
+                    }
+                    return false;
+                }
+            });
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public void makeBlink() {
-            this.mHandler.sendMessageDelayed(this.mHandler.obtainMessage(66), 500);
+            Message message = this.mHandler.obtainMessage(66);
+            this.mHandler.sendMessageDelayed(message, 500L);
         }
 
-        /* access modifiers changed from: protected */
-        public void onAttachedToWindow() {
+        @Override // android.view.ViewGroup, android.view.View
+        protected void onAttachedToWindow() {
             super.onAttachedToWindow();
             this.mBlink = true;
             this.mBlinkState = true;
             makeBlink();
         }
 
-        /* access modifiers changed from: protected */
-        public void onDetachedFromWindow() {
+        @Override // android.view.ViewGroup, android.view.View
+        protected void onDetachedFromWindow() {
             super.onDetachedFromWindow();
             this.mBlink = false;
             this.mBlinkState = true;
             this.mHandler.removeMessages(66);
         }
 
-        /* access modifiers changed from: protected */
-        public void dispatchDraw(Canvas canvas) {
+        @Override // android.view.ViewGroup, android.view.View
+        protected void dispatchDraw(Canvas canvas) {
             if (this.mBlinkState) {
                 super.dispatchDraw(canvas);
             }

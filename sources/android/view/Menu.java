@@ -3,6 +3,7 @@ package android.view;
 import android.content.ComponentName;
 import android.content.Intent;
 
+/* loaded from: classes4.dex */
 public interface Menu {
     public static final int CATEGORY_ALTERNATIVE = 262144;
     public static final int CATEGORY_CONTAINER = 65536;
@@ -67,6 +68,6 @@ public interface Menu {
 
     int size();
 
-    void setGroupDividerEnabled(boolean groupDividerEnabled) {
+    default void setGroupDividerEnabled(boolean groupDividerEnabled) {
     }
 }

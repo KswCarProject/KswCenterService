@@ -1,15 +1,20 @@
 package android.telephony;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.Arrays;
 
+/* loaded from: classes.dex */
 public final class RadioAccessSpecifier implements Parcelable {
-    public static final Parcelable.Creator<RadioAccessSpecifier> CREATOR = new Parcelable.Creator<RadioAccessSpecifier>() {
+    public static final Parcelable.Creator<RadioAccessSpecifier> CREATOR = new Parcelable.Creator<RadioAccessSpecifier>() { // from class: android.telephony.RadioAccessSpecifier.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RadioAccessSpecifier createFromParcel(Parcel in) {
             return new RadioAccessSpecifier(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RadioAccessSpecifier[] newArray(int size) {
             return new RadioAccessSpecifier[size];
         }
@@ -50,10 +55,12 @@ public final class RadioAccessSpecifier implements Parcelable {
         return (int[]) this.mChannels.clone();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mRadioAccessNetwork);
         dest.writeIntArray(this.mBands);
@@ -69,10 +76,7 @@ public final class RadioAccessSpecifier implements Parcelable {
     public boolean equals(Object o) {
         try {
             RadioAccessSpecifier ras = (RadioAccessSpecifier) o;
-            if (o != null && this.mRadioAccessNetwork == ras.mRadioAccessNetwork && Arrays.equals(this.mBands, ras.mBands) && Arrays.equals(this.mChannels, ras.mChannels)) {
-                return true;
-            }
-            return false;
+            return o != null && this.mRadioAccessNetwork == ras.mRadioAccessNetwork && Arrays.equals(this.mBands, ras.mBands) && Arrays.equals(this.mChannels, ras.mChannels);
         } catch (ClassCastException e) {
             return false;
         }

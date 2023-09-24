@@ -2,7 +2,7 @@ package android.net;
 
 import android.content.IntentFilter;
 import android.net.wifi.WifiEnterpriseConfig;
-import android.os.ServiceManager;
+import android.p007os.ServiceManager;
 import android.provider.SettingsStringUtil;
 import android.util.Log;
 import com.android.net.IProxyService;
@@ -17,45 +17,47 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
+/* loaded from: classes3.dex */
 public class PacProxySelector extends ProxySelector {
     private static final String PROXY = "PROXY ";
     public static final String PROXY_SERVICE = "com.android.net.IProxyService";
     private static final String SOCKS = "SOCKS ";
     private static final String TAG = "PacProxySelector";
-    private final List<Proxy> mDefaultList;
+    private final List<java.net.Proxy> mDefaultList;
     private IProxyService mProxyService = IProxyService.Stub.asInterface(ServiceManager.getService(PROXY_SERVICE));
 
     public PacProxySelector() {
         if (this.mProxyService == null) {
-            Log.e(TAG, "PacManager: no proxy service");
+            Log.m70e(TAG, "PacManager: no proxy service");
         }
-        this.mDefaultList = Lists.newArrayList(Proxy.NO_PROXY);
+        this.mDefaultList = Lists.newArrayList(java.net.Proxy.NO_PROXY);
     }
 
-    public List<Proxy> select(URI uri) {
+    @Override // java.net.ProxySelector
+    public List<java.net.Proxy> select(URI uri) {
         String urlString;
         if (this.mProxyService == null) {
             this.mProxyService = IProxyService.Stub.asInterface(ServiceManager.getService(PROXY_SERVICE));
         }
         if (this.mProxyService == null) {
-            Log.e(TAG, "select: no proxy service return NO_PROXY");
-            return Lists.newArrayList(Proxy.NO_PROXY);
+            Log.m70e(TAG, "select: no proxy service return NO_PROXY");
+            return Lists.newArrayList(java.net.Proxy.NO_PROXY);
         }
         String response = null;
         try {
             if (!IntentFilter.SCHEME_HTTP.equalsIgnoreCase(uri.getScheme())) {
-                uri = new URI(uri.getScheme(), (String) null, uri.getHost(), uri.getPort(), "/", (String) null, (String) null);
+                uri = new URI(uri.getScheme(), null, uri.getHost(), uri.getPort(), "/", null, null);
             }
             urlString = uri.toURL().toString();
-        } catch (URISyntaxException e) {
+        } catch (MalformedURLException e) {
             urlString = uri.getHost();
-        } catch (MalformedURLException e2) {
+        } catch (URISyntaxException e2) {
             urlString = uri.getHost();
         }
         try {
             response = this.mProxyService.resolvePacFile(uri.getHost(), urlString);
         } catch (Exception e3) {
-            Log.e(TAG, "Error resolving PAC File", e3);
+            Log.m69e(TAG, "Error resolving PAC File", e3);
         }
         if (response == null) {
             return this.mDefaultList;
@@ -63,16 +65,16 @@ public class PacProxySelector extends ProxySelector {
         return parseResponse(response);
     }
 
-    private static List<Proxy> parseResponse(String response) {
-        Proxy proxy;
+    private static List<java.net.Proxy> parseResponse(String response) {
+        java.net.Proxy proxy;
         String[] split = response.split(";");
-        List<Proxy> ret = Lists.newArrayList();
+        List<java.net.Proxy> ret = Lists.newArrayList();
         for (String s : split) {
             String trimmed = s.trim();
             if (trimmed.equals("DIRECT")) {
-                ret.add(Proxy.NO_PROXY);
+                ret.add(java.net.Proxy.NO_PROXY);
             } else if (trimmed.startsWith(PROXY)) {
-                Proxy proxy2 = proxyFromHostPort(Proxy.Type.HTTP, trimmed.substring(PROXY.length()));
+                java.net.Proxy proxy2 = proxyFromHostPort(Proxy.Type.HTTP, trimmed.substring(PROXY.length()));
                 if (proxy2 != null) {
                     ret.add(proxy2);
                 }
@@ -81,21 +83,24 @@ public class PacProxySelector extends ProxySelector {
             }
         }
         if (ret.size() == 0) {
-            ret.add(Proxy.NO_PROXY);
+            ret.add(java.net.Proxy.NO_PROXY);
         }
         return ret;
     }
 
-    private static Proxy proxyFromHostPort(Proxy.Type type, String hostPortString) {
+    private static java.net.Proxy proxyFromHostPort(Proxy.Type type, String hostPortString) {
         try {
             String[] hostPort = hostPortString.split(SettingsStringUtil.DELIMITER);
-            return new Proxy(type, InetSocketAddress.createUnresolved(hostPort[0], Integer.parseInt(hostPort[1])));
+            String host = hostPort[0];
+            int port = Integer.parseInt(hostPort[1]);
+            return new java.net.Proxy(type, InetSocketAddress.createUnresolved(host, port));
         } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
-            Log.d(TAG, "Unable to parse proxy " + hostPortString + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + e);
+            Log.m72d(TAG, "Unable to parse proxy " + hostPortString + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + e);
             return null;
         }
     }
 
+    @Override // java.net.ProxySelector
     public void connectFailed(URI uri, SocketAddress address, IOException failure) {
     }
 }

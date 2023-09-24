@@ -6,14 +6,14 @@ import android.util.ArrayMap;
 import android.util.LongSparseArray;
 import java.lang.ref.WeakReference;
 
+/* loaded from: classes.dex */
 abstract class ThemedResourceCache<T> {
     private LongSparseArray<WeakReference<T>> mNullThemedEntries;
     @UnsupportedAppUsage
     private ArrayMap<Resources.ThemeKey, LongSparseArray<WeakReference<T>>> mThemedEntries;
     private LongSparseArray<WeakReference<T>> mUnthemedEntries;
 
-    /* access modifiers changed from: protected */
-    public abstract boolean shouldInvalidateEntry(T t, int i);
+    protected abstract boolean shouldInvalidateEntry(T t, int i);
 
     ThemedResourceCache() {
     }
@@ -24,60 +24,39 @@ abstract class ThemedResourceCache<T> {
 
     public void put(long key, Resources.Theme theme, T entry, boolean usesTheme) {
         LongSparseArray<WeakReference<T>> entries;
-        if (entry != null) {
-            synchronized (this) {
+        if (entry == null) {
+            return;
+        }
+        synchronized (this) {
+            try {
                 if (!usesTheme) {
-                    try {
-                        entries = getUnthemedLocked(true);
-                    } catch (Throwable th) {
-                        throw th;
-                    }
+                    entries = getUnthemedLocked(true);
                 } else {
                     entries = getThemedLocked(theme, true);
                 }
                 if (entries != null) {
-                    entries.put(key, new WeakReference(entry));
+                    entries.put(key, new WeakReference<>(entry));
                 }
+            } catch (Throwable th) {
+                throw th;
             }
         }
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:18:0x002b, code lost:
-        return null;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public T get(long r5, android.content.res.Resources.Theme r7) {
-        /*
-            r4 = this;
-            monitor-enter(r4)
-            r0 = 0
-            android.util.LongSparseArray r1 = r4.getThemedLocked(r7, r0)     // Catch:{ all -> 0x002d }
-            if (r1 == 0) goto L_0x0016
-            java.lang.Object r2 = r1.get(r5)     // Catch:{ all -> 0x002d }
-            java.lang.ref.WeakReference r2 = (java.lang.ref.WeakReference) r2     // Catch:{ all -> 0x002d }
-            if (r2 == 0) goto L_0x0016
-            java.lang.Object r0 = r2.get()     // Catch:{ all -> 0x002d }
-            monitor-exit(r4)     // Catch:{ all -> 0x002d }
-            return r0
-        L_0x0016:
-            android.util.LongSparseArray r0 = r4.getUnthemedLocked(r0)     // Catch:{ all -> 0x002d }
-            if (r0 == 0) goto L_0x002a
-            java.lang.Object r2 = r0.get(r5)     // Catch:{ all -> 0x002d }
-            java.lang.ref.WeakReference r2 = (java.lang.ref.WeakReference) r2     // Catch:{ all -> 0x002d }
-            if (r2 == 0) goto L_0x002a
-            java.lang.Object r3 = r2.get()     // Catch:{ all -> 0x002d }
-            monitor-exit(r4)     // Catch:{ all -> 0x002d }
-            return r3
-        L_0x002a:
-            monitor-exit(r4)     // Catch:{ all -> 0x002d }
-            r0 = 0
-            return r0
-        L_0x002d:
-            r0 = move-exception
-            monitor-exit(r4)     // Catch:{ all -> 0x002d }
-            throw r0
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.content.res.ThemedResourceCache.get(long, android.content.res.Resources$Theme):java.lang.Object");
+    public T get(long key, Resources.Theme theme) {
+        WeakReference<T> unthemedEntry;
+        WeakReference<T> themedEntry;
+        synchronized (this) {
+            LongSparseArray<WeakReference<T>> themedEntries = getThemedLocked(theme, false);
+            if (themedEntries != null && (themedEntry = themedEntries.get(key)) != null) {
+                return themedEntry.get();
+            }
+            LongSparseArray<WeakReference<T>> unthemedEntries = getUnthemedLocked(false);
+            if (unthemedEntries != null && (unthemedEntry = unthemedEntries.get(key)) != null) {
+                return unthemedEntry.get();
+            }
+            return null;
+        }
     }
 
     @UnsupportedAppUsage
@@ -93,19 +72,21 @@ abstract class ThemedResourceCache<T> {
             return this.mNullThemedEntries;
         }
         if (this.mThemedEntries == null) {
-            if (!create) {
+            if (create) {
+                this.mThemedEntries = new ArrayMap<>(1);
+            } else {
                 return null;
             }
-            this.mThemedEntries = new ArrayMap<>(1);
         }
         Resources.ThemeKey key = t.getKey();
         LongSparseArray<WeakReference<T>> cache = this.mThemedEntries.get(key);
-        if (cache != null || !create) {
-            return cache;
+        if (cache == null && create) {
+            LongSparseArray<WeakReference<T>> cache2 = new LongSparseArray<>(1);
+            Resources.ThemeKey keyClone = key.m157clone();
+            this.mThemedEntries.put(keyClone, cache2);
+            return cache2;
         }
-        LongSparseArray<WeakReference<T>> cache2 = new LongSparseArray<>(1);
-        this.mThemedEntries.put(key.clone(), cache2);
-        return cache2;
+        return cache;
     }
 
     private LongSparseArray<WeakReference<T>> getUnthemedLocked(boolean create) {
@@ -145,10 +126,8 @@ abstract class ThemedResourceCache<T> {
                 entries.removeAt(i);
             }
         }
-        if (entries.size() == 0) {
-            return true;
-        }
-        return false;
+        int i2 = entries.size();
+        return i2 == 0;
     }
 
     private boolean pruneEntryLocked(T entry, int configChanges) {

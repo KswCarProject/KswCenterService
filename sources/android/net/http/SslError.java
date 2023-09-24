@@ -3,6 +3,7 @@ package android.net.http;
 import android.annotation.UnsupportedAppUsage;
 import java.security.cert.X509Certificate;
 
+/* loaded from: classes3.dex */
 public class SslError {
     static final /* synthetic */ boolean $assertionsDisabled = false;
     public static final int SSL_DATE_INVALID = 4;
@@ -70,25 +71,21 @@ public class SslError {
     }
 
     public boolean hasError(int error) {
-        boolean rval = false;
-        boolean rval2 = error >= 0 && error < 6;
-        if (!rval2) {
-            return rval2;
-        }
-        if ((this.mErrors & (1 << error)) != 0) {
-            rval = true;
+        boolean rval = error >= 0 && error < 6;
+        if (rval) {
+            return (this.mErrors & (1 << error)) != 0;
         }
         return rval;
     }
 
     public int getPrimaryError() {
-        if (this.mErrors == 0) {
-            return -1;
-        }
-        for (int error = 5; error >= 0; error--) {
-            if ((this.mErrors & (1 << error)) != 0) {
-                return error;
+        if (this.mErrors != 0) {
+            for (int error = 5; error >= 0; error--) {
+                if ((this.mErrors & (1 << error)) != 0) {
+                    return error;
+                }
             }
+            return -1;
         }
         return -1;
     }

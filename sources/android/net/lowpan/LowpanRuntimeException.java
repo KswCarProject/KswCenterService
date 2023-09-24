@@ -2,6 +2,7 @@ package android.net.lowpan;
 
 import android.util.AndroidRuntimeException;
 
+/* loaded from: classes3.dex */
 public class LowpanRuntimeException extends AndroidRuntimeException {
     public LowpanRuntimeException() {
     }

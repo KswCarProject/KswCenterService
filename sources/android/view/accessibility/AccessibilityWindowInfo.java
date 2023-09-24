@@ -1,15 +1,15 @@
 package android.view.accessibility;
 
 import android.graphics.Rect;
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.TextUtils;
 import android.util.LongArray;
 import android.util.Pools;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/* loaded from: classes4.dex */
 public final class AccessibilityWindowInfo implements Parcelable {
     public static final int ACTIVE_WINDOW_ID = Integer.MAX_VALUE;
     public static final int ANY_WINDOW_ID = -2;
@@ -17,17 +17,6 @@ public final class AccessibilityWindowInfo implements Parcelable {
     private static final int BOOLEAN_PROPERTY_ACTIVE = 1;
     private static final int BOOLEAN_PROPERTY_FOCUSED = 2;
     private static final int BOOLEAN_PROPERTY_PICTURE_IN_PICTURE = 8;
-    public static final Parcelable.Creator<AccessibilityWindowInfo> CREATOR = new Parcelable.Creator<AccessibilityWindowInfo>() {
-        public AccessibilityWindowInfo createFromParcel(Parcel parcel) {
-            AccessibilityWindowInfo info = AccessibilityWindowInfo.obtain();
-            info.initFromParcel(parcel);
-            return info;
-        }
-
-        public AccessibilityWindowInfo[] newArray(int size) {
-            return new AccessibilityWindowInfo[size];
-        }
-    };
     private static final boolean DEBUG = false;
     private static final int MAX_POOL_SIZE = 10;
     public static final int PICTURE_IN_PICTURE_ACTION_REPLACER_WINDOW_ID = -3;
@@ -38,17 +27,32 @@ public final class AccessibilityWindowInfo implements Parcelable {
     public static final int TYPE_SYSTEM = 3;
     public static final int UNDEFINED_WINDOW_ID = -1;
     private static AtomicInteger sNumInstancesInUse;
-    private static final Pools.SynchronizedPool<AccessibilityWindowInfo> sPool = new Pools.SynchronizedPool<>(10);
-    private long mAnchorId = AccessibilityNodeInfo.UNDEFINED_NODE_ID;
     private int mBooleanProperties;
-    private final Rect mBoundsInScreen = new Rect();
     private LongArray mChildIds;
-    private int mConnectionId = -1;
-    private int mId = -1;
-    private int mLayer = -1;
-    private int mParentId = -1;
     private CharSequence mTitle;
+    private static final Pools.SynchronizedPool<AccessibilityWindowInfo> sPool = new Pools.SynchronizedPool<>(10);
+    public static final Parcelable.Creator<AccessibilityWindowInfo> CREATOR = new Parcelable.Creator<AccessibilityWindowInfo>() { // from class: android.view.accessibility.AccessibilityWindowInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public AccessibilityWindowInfo createFromParcel(Parcel parcel) {
+            AccessibilityWindowInfo info = AccessibilityWindowInfo.obtain();
+            info.initFromParcel(parcel);
+            return info;
+        }
+
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public AccessibilityWindowInfo[] newArray(int size) {
+            return new AccessibilityWindowInfo[size];
+        }
+    };
     private int mType = -1;
+    private int mLayer = -1;
+    private int mId = -1;
+    private int mParentId = -1;
+    private final Rect mBoundsInScreen = new Rect();
+    private long mAnchorId = AccessibilityNodeInfo.UNDEFINED_NODE_ID;
+    private int mConnectionId = -1;
 
     private AccessibilityWindowInfo() {
     }
@@ -85,7 +89,8 @@ public final class AccessibilityWindowInfo implements Parcelable {
         if (this.mConnectionId == -1) {
             return null;
         }
-        return AccessibilityInteractionClient.getInstance().findAccessibilityNodeInfoByAccessibilityId(this.mConnectionId, this.mId, AccessibilityNodeInfo.ROOT_NODE_ID, true, 4, (Bundle) null);
+        AccessibilityInteractionClient client = AccessibilityInteractionClient.getInstance();
+        return client.findAccessibilityNodeInfoByAccessibilityId(this.mConnectionId, this.mId, AccessibilityNodeInfo.ROOT_NODE_ID, true, 4, null);
     }
 
     public void setAnchorId(long anchorId) {
@@ -96,7 +101,8 @@ public final class AccessibilityWindowInfo implements Parcelable {
         if (this.mConnectionId == -1 || this.mAnchorId == AccessibilityNodeInfo.UNDEFINED_NODE_ID || this.mParentId == -1) {
             return null;
         }
-        return AccessibilityInteractionClient.getInstance().findAccessibilityNodeInfoByAccessibilityId(this.mConnectionId, this.mParentId, this.mAnchorId, true, 0, (Bundle) null);
+        AccessibilityInteractionClient client = AccessibilityInteractionClient.getInstance();
+        return client.findAccessibilityNodeInfoByAccessibilityId(this.mConnectionId, this.mParentId, this.mAnchorId, true, 0, null);
     }
 
     public void setPictureInPicture(boolean pictureInPicture) {
@@ -111,7 +117,8 @@ public final class AccessibilityWindowInfo implements Parcelable {
         if (this.mConnectionId == -1 || this.mParentId == -1) {
             return null;
         }
-        return AccessibilityInteractionClient.getInstance().getWindow(this.mConnectionId, this.mParentId);
+        AccessibilityInteractionClient client = AccessibilityInteractionClient.getInstance();
+        return client.getWindow(this.mConnectionId, this.mParentId);
     }
 
     public void setParentId(int parentId) {
@@ -172,18 +179,20 @@ public final class AccessibilityWindowInfo implements Parcelable {
     public AccessibilityWindowInfo getChild(int index) {
         if (this.mChildIds == null) {
             throw new IndexOutOfBoundsException();
-        } else if (this.mConnectionId == -1) {
-            return null;
-        } else {
-            return AccessibilityInteractionClient.getInstance().getWindow(this.mConnectionId, (int) this.mChildIds.get(index));
         }
+        if (this.mConnectionId == -1) {
+            return null;
+        }
+        int childId = (int) this.mChildIds.get(index);
+        AccessibilityInteractionClient client = AccessibilityInteractionClient.getInstance();
+        return client.getWindow(this.mConnectionId, childId);
     }
 
     public void addChild(int childId) {
         if (this.mChildIds == null) {
             this.mChildIds = new LongArray();
         }
-        this.mChildIds.add((long) childId);
+        this.mChildIds.add(childId);
     }
 
     public static AccessibilityWindowInfo obtain() {
@@ -217,10 +226,12 @@ public final class AccessibilityWindowInfo implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeInt(this.mType);
         parcel.writeInt(this.mLayer);
@@ -240,7 +251,8 @@ public final class AccessibilityWindowInfo implements Parcelable {
                 parcel.writeInt((int) childIds.get(i));
             }
         }
-        parcel.writeInt(this.mConnectionId);
+        int i2 = this.mConnectionId;
+        parcel.writeInt(i2);
     }
 
     private void init(AccessibilityWindowInfo other) {
@@ -254,7 +266,7 @@ public final class AccessibilityWindowInfo implements Parcelable {
         this.mAnchorId = other.mAnchorId;
         if (other.mChildIds != null && other.mChildIds.size() > 0) {
             if (this.mChildIds == null) {
-                this.mChildIds = other.mChildIds.clone();
+                this.mChildIds = other.mChildIds.m174clone();
             } else {
                 this.mChildIds.addAll(other.mChildIds);
             }
@@ -262,7 +274,7 @@ public final class AccessibilityWindowInfo implements Parcelable {
         this.mConnectionId = other.mConnectionId;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void initFromParcel(Parcel parcel) {
         this.mType = parcel.readInt();
         this.mLayer = parcel.readInt();
@@ -278,10 +290,12 @@ public final class AccessibilityWindowInfo implements Parcelable {
                 this.mChildIds = new LongArray(childCount);
             }
             for (int i = 0; i < childCount; i++) {
-                this.mChildIds.add((long) parcel.readInt());
+                int childId = parcel.readInt();
+                this.mChildIds.add(childId);
             }
         }
-        this.mConnectionId = parcel.readInt();
+        int i2 = parcel.readInt();
+        this.mConnectionId = i2;
     }
 
     public int hashCode() {
@@ -295,7 +309,8 @@ public final class AccessibilityWindowInfo implements Parcelable {
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        if (this.mId == ((AccessibilityWindowInfo) obj).mId) {
+        AccessibilityWindowInfo other = (AccessibilityWindowInfo) obj;
+        if (this.mId == other.mId) {
             return true;
         }
         return false;
@@ -381,59 +396,51 @@ public final class AccessibilityWindowInfo implements Parcelable {
     public boolean changed(AccessibilityWindowInfo other) {
         if (other.mId != this.mId) {
             throw new IllegalArgumentException("Not same window.");
-        } else if (other.mType != this.mType) {
-            throw new IllegalArgumentException("Not same type.");
-        } else if (!this.mBoundsInScreen.equals(other.mBoundsInScreen) || this.mLayer != other.mLayer || this.mBooleanProperties != other.mBooleanProperties || this.mParentId != other.mParentId) {
-            return true;
-        } else {
-            if (this.mChildIds == null) {
-                if (other.mChildIds != null) {
-                    return true;
-                }
-                return false;
-            } else if (!this.mChildIds.equals(other.mChildIds)) {
-                return true;
-            } else {
-                return false;
-            }
         }
+        if (other.mType != this.mType) {
+            throw new IllegalArgumentException("Not same type.");
+        }
+        if (this.mBoundsInScreen.equals(other.mBoundsInScreen) && this.mLayer == other.mLayer && this.mBooleanProperties == other.mBooleanProperties && this.mParentId == other.mParentId) {
+            return this.mChildIds == null ? other.mChildIds != null : !this.mChildIds.equals(other.mChildIds);
+        }
+        return true;
     }
 
     public int differenceFrom(AccessibilityWindowInfo other) {
         if (other.mId != this.mId) {
             throw new IllegalArgumentException("Not same window.");
-        } else if (other.mType == this.mType) {
-            int changes = 0;
-            if (!TextUtils.equals(this.mTitle, other.mTitle)) {
-                changes = 0 | 4;
-            }
-            if (!this.mBoundsInScreen.equals(other.mBoundsInScreen)) {
-                changes |= 8;
-            }
-            if (this.mLayer != other.mLayer) {
-                changes |= 16;
-            }
-            if (getBooleanProperty(1) != other.getBooleanProperty(1)) {
-                changes |= 32;
-            }
-            if (getBooleanProperty(2) != other.getBooleanProperty(2)) {
-                changes |= 64;
-            }
-            if (getBooleanProperty(4) != other.getBooleanProperty(4)) {
-                changes |= 128;
-            }
-            if (getBooleanProperty(8) != other.getBooleanProperty(8)) {
-                changes |= 1024;
-            }
-            if (this.mParentId != other.mParentId) {
-                changes |= 256;
-            }
-            if (!Objects.equals(this.mChildIds, other.mChildIds)) {
-                return changes | 512;
-            }
-            return changes;
-        } else {
+        }
+        if (other.mType != this.mType) {
             throw new IllegalArgumentException("Not same type.");
         }
+        int changes = 0;
+        if (!TextUtils.equals(this.mTitle, other.mTitle)) {
+            changes = 0 | 4;
+        }
+        if (!this.mBoundsInScreen.equals(other.mBoundsInScreen)) {
+            changes |= 8;
+        }
+        if (this.mLayer != other.mLayer) {
+            changes |= 16;
+        }
+        if (getBooleanProperty(1) != other.getBooleanProperty(1)) {
+            changes |= 32;
+        }
+        if (getBooleanProperty(2) != other.getBooleanProperty(2)) {
+            changes |= 64;
+        }
+        if (getBooleanProperty(4) != other.getBooleanProperty(4)) {
+            changes |= 128;
+        }
+        if (getBooleanProperty(8) != other.getBooleanProperty(8)) {
+            changes |= 1024;
+        }
+        if (this.mParentId != other.mParentId) {
+            changes |= 256;
+        }
+        if (!Objects.equals(this.mChildIds, other.mChildIds)) {
+            return changes | 512;
+        }
+        return changes;
     }
 }

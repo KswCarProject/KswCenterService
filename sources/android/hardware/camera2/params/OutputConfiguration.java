@@ -4,8 +4,8 @@ import android.annotation.SystemApi;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.utils.HashCodeHelpers;
 import android.hardware.camera2.utils.SurfaceUtils;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.Log;
 import android.util.Size;
 import android.view.Surface;
@@ -16,17 +16,23 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public final class OutputConfiguration implements Parcelable {
-    public static final Parcelable.Creator<OutputConfiguration> CREATOR = new Parcelable.Creator<OutputConfiguration>() {
+    public static final Parcelable.Creator<OutputConfiguration> CREATOR = new Parcelable.Creator<OutputConfiguration>() { // from class: android.hardware.camera2.params.OutputConfiguration.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public OutputConfiguration createFromParcel(Parcel source) {
             try {
-                return new OutputConfiguration(source);
+                OutputConfiguration outputConfiguration = new OutputConfiguration(source);
+                return outputConfiguration;
             } catch (Exception e) {
-                Log.e(OutputConfiguration.TAG, "Exception creating OutputConfiguration from parcel", e);
+                Log.m69e(OutputConfiguration.TAG, "Exception creating OutputConfiguration from parcel", e);
                 return null;
             }
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public OutputConfiguration[] newArray(int size) {
             return new OutputConfiguration[size];
         }
@@ -140,29 +146,31 @@ public final class OutputConfiguration implements Parcelable {
         Preconditions.checkNotNull(surface, "Surface must not be null");
         if (this.mSurfaces.contains(surface)) {
             throw new IllegalStateException("Surface is already added!");
-        } else if (this.mSurfaces.size() == 1 && !this.mIsShared) {
+        }
+        if (this.mSurfaces.size() == 1 && !this.mIsShared) {
             throw new IllegalStateException("Cannot have 2 surfaces for a non-sharing configuration");
-        } else if (this.mSurfaces.size() + 1 <= 4) {
-            Size surfaceSize = SurfaceUtils.getSurfaceSize(surface);
-            if (!surfaceSize.equals(this.mConfiguredSize)) {
-                Log.w(TAG, "Added surface size " + surfaceSize + " is different than pre-configured size " + this.mConfiguredSize + ", the pre-configured size will be used.");
-            }
-            if (this.mConfiguredFormat != SurfaceUtils.getSurfaceFormat(surface)) {
-                throw new IllegalArgumentException("The format of added surface format doesn't match");
-            } else if (this.mConfiguredFormat == 34 || this.mConfiguredDataspace == SurfaceUtils.getSurfaceDataspace(surface)) {
-                this.mSurfaces.add(surface);
-            } else {
-                throw new IllegalArgumentException("The dataspace of added surface doesn't match");
-            }
-        } else {
+        }
+        if (this.mSurfaces.size() + 1 > 4) {
             throw new IllegalArgumentException("Exceeds maximum number of surfaces");
         }
+        Size surfaceSize = SurfaceUtils.getSurfaceSize(surface);
+        if (!surfaceSize.equals(this.mConfiguredSize)) {
+            Log.m64w(TAG, "Added surface size " + surfaceSize + " is different than pre-configured size " + this.mConfiguredSize + ", the pre-configured size will be used.");
+        }
+        if (this.mConfiguredFormat != SurfaceUtils.getSurfaceFormat(surface)) {
+            throw new IllegalArgumentException("The format of added surface format doesn't match");
+        }
+        if (this.mConfiguredFormat != 34 && this.mConfiguredDataspace != SurfaceUtils.getSurfaceDataspace(surface)) {
+            throw new IllegalArgumentException("The dataspace of added surface doesn't match");
+        }
+        this.mSurfaces.add(surface);
     }
 
     public void removeSurface(Surface surface) {
         if (getSurface() == surface) {
             throw new IllegalArgumentException("Cannot remove surface associated with this output configuration");
-        } else if (!this.mSurfaces.remove(surface)) {
+        }
+        if (!this.mSurfaces.remove(surface)) {
             throw new IllegalArgumentException("Surface is not part of this output configuration");
         }
     }
@@ -171,35 +179,38 @@ public final class OutputConfiguration implements Parcelable {
         this.SURFACE_TYPE_UNKNOWN = -1;
         this.SURFACE_TYPE_SURFACE_VIEW = 0;
         this.SURFACE_TYPE_SURFACE_TEXTURE = 1;
-        if (other != null) {
-            this.mSurfaces = other.mSurfaces;
-            this.mRotation = other.mRotation;
-            this.mSurfaceGroupId = other.mSurfaceGroupId;
-            this.mSurfaceType = other.mSurfaceType;
-            this.mConfiguredDataspace = other.mConfiguredDataspace;
-            this.mConfiguredFormat = other.mConfiguredFormat;
-            this.mConfiguredSize = other.mConfiguredSize;
-            this.mConfiguredGenerationId = other.mConfiguredGenerationId;
-            this.mIsDeferredConfig = other.mIsDeferredConfig;
-            this.mIsShared = other.mIsShared;
-            this.mPhysicalCameraId = other.mPhysicalCameraId;
-            return;
+        if (other == null) {
+            throw new IllegalArgumentException("OutputConfiguration shouldn't be null");
         }
-        throw new IllegalArgumentException("OutputConfiguration shouldn't be null");
+        this.mSurfaces = other.mSurfaces;
+        this.mRotation = other.mRotation;
+        this.mSurfaceGroupId = other.mSurfaceGroupId;
+        this.mSurfaceType = other.mSurfaceType;
+        this.mConfiguredDataspace = other.mConfiguredDataspace;
+        this.mConfiguredFormat = other.mConfiguredFormat;
+        this.mConfiguredSize = other.mConfiguredSize;
+        this.mConfiguredGenerationId = other.mConfiguredGenerationId;
+        this.mIsDeferredConfig = other.mIsDeferredConfig;
+        this.mIsShared = other.mIsShared;
+        this.mPhysicalCameraId = other.mPhysicalCameraId;
     }
 
     private OutputConfiguration(Parcel source) {
+        boolean isDeferred;
         this.SURFACE_TYPE_UNKNOWN = -1;
         this.SURFACE_TYPE_SURFACE_VIEW = 0;
-        boolean isShared = true;
         this.SURFACE_TYPE_SURFACE_TEXTURE = 1;
         int rotation = source.readInt();
         int surfaceSetId = source.readInt();
         int surfaceType = source.readInt();
         int width = source.readInt();
         int height = source.readInt();
-        boolean isDeferred = source.readInt() == 1;
-        isShared = source.readInt() != 1 ? false : isShared;
+        if (source.readInt() != 1) {
+            isDeferred = false;
+        } else {
+            isDeferred = true;
+        }
+        boolean isShared = source.readInt() == 1;
         ArrayList<Surface> surfaces = new ArrayList<>();
         source.readTypedList(surfaces, Surface.CREATOR);
         String physicalCameraId = source.readString();
@@ -249,24 +260,25 @@ public final class OutputConfiguration implements Parcelable {
         return this.mSurfaceGroupId;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
-        if (dest != null) {
-            dest.writeInt(this.mRotation);
-            dest.writeInt(this.mSurfaceGroupId);
-            dest.writeInt(this.mSurfaceType);
-            dest.writeInt(this.mConfiguredSize.getWidth());
-            dest.writeInt(this.mConfiguredSize.getHeight());
-            dest.writeInt(this.mIsDeferredConfig ? 1 : 0);
-            dest.writeInt(this.mIsShared ? 1 : 0);
-            dest.writeTypedList(this.mSurfaces);
-            dest.writeString(this.mPhysicalCameraId);
-            return;
+        if (dest == null) {
+            throw new IllegalArgumentException("dest must not be null");
         }
-        throw new IllegalArgumentException("dest must not be null");
+        dest.writeInt(this.mRotation);
+        dest.writeInt(this.mSurfaceGroupId);
+        dest.writeInt(this.mSurfaceType);
+        dest.writeInt(this.mConfiguredSize.getWidth());
+        dest.writeInt(this.mConfiguredSize.getHeight());
+        dest.writeInt(this.mIsDeferredConfig ? 1 : 0);
+        dest.writeInt(this.mIsShared ? 1 : 0);
+        dest.writeTypedList(this.mSurfaces);
+        dest.writeString(this.mPhysicalCameraId);
     }
 
     public boolean equals(Object obj) {
@@ -293,7 +305,6 @@ public final class OutputConfiguration implements Parcelable {
     }
 
     public int hashCode() {
-        int i = 0;
         if (this.mIsDeferredConfig) {
             int[] iArr = new int[8];
             iArr[0] = this.mRotation;
@@ -302,11 +313,8 @@ public final class OutputConfiguration implements Parcelable {
             iArr[3] = this.mConfiguredDataspace;
             iArr[4] = this.mSurfaceGroupId;
             iArr[5] = this.mSurfaceType;
-            iArr[6] = this.mIsShared;
-            if (this.mPhysicalCameraId != null) {
-                i = this.mPhysicalCameraId.hashCode();
-            }
-            iArr[7] = i;
+            iArr[6] = this.mIsShared ? 1 : 0;
+            iArr[7] = this.mPhysicalCameraId != null ? this.mPhysicalCameraId.hashCode() : 0;
             return HashCodeHelpers.hashCode(iArr);
         }
         int[] iArr2 = new int[9];
@@ -317,11 +325,8 @@ public final class OutputConfiguration implements Parcelable {
         iArr2[4] = this.mConfiguredFormat;
         iArr2[5] = this.mConfiguredDataspace;
         iArr2[6] = this.mSurfaceGroupId;
-        iArr2[7] = this.mIsShared;
-        if (this.mPhysicalCameraId != null) {
-            i = this.mPhysicalCameraId.hashCode();
-        }
-        iArr2[8] = i;
+        iArr2[7] = this.mIsShared ? 1 : 0;
+        iArr2[8] = this.mPhysicalCameraId != null ? this.mPhysicalCameraId.hashCode() : 0;
         return HashCodeHelpers.hashCode(iArr2);
     }
 }

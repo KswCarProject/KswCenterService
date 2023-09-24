@@ -3,10 +3,11 @@ package android.service.autofill;
 import android.view.autofill.AutofillId;
 import android.view.autofill.AutofillValue;
 
+/* loaded from: classes3.dex */
 public interface ValueFinder {
     AutofillValue findRawValueByAutofillId(AutofillId autofillId);
 
-    String findByAutofillId(AutofillId id) {
+    default String findByAutofillId(AutofillId id) {
         AutofillValue value = findRawValueByAutofillId(id);
         if (value == null || !value.isText()) {
             return null;

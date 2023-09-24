@@ -1,11 +1,12 @@
 package com.android.internal.util;
 
-import android.os.SystemClock;
+import android.p007os.SystemClock;
 import android.util.Slog;
 import android.util.proto.ProtoOutputStream;
 import com.android.internal.annotations.GuardedBy;
 import java.io.PrintWriter;
 
+/* loaded from: classes4.dex */
 public class StatLogger {
     private static final String TAG = "StatLogger";
     private final int SIZE;
@@ -18,15 +19,15 @@ public class StatLogger {
     @GuardedBy({"mLock"})
     private final long[] mDurationStats;
     private final String[] mLabels;
-    private final Object mLock = new Object();
     @GuardedBy({"mLock"})
     private final int[] mMaxCallsPerSecond;
     @GuardedBy({"mLock"})
     private final long[] mMaxDurationPerSecond;
     @GuardedBy({"mLock"})
     private final long[] mMaxDurationStats;
+    private final Object mLock = new Object();
     @GuardedBy({"mLock"})
-    private long mNextTickTime = (SystemClock.elapsedRealtime() + 1000);
+    private long mNextTickTime = SystemClock.elapsedRealtime() + 1000;
 
     public StatLogger(String[] eventLabels) {
         this.SIZE = eventLabels.length;
@@ -47,33 +48,33 @@ public class StatLogger {
     public long logDurationStat(int eventId, long start) {
         synchronized (this.mLock) {
             long duration = getTime() - start;
-            if (eventId < 0 || eventId >= this.SIZE) {
-                Slog.wtf(TAG, "Invalid event ID: " + eventId);
+            if (eventId >= 0 && eventId < this.SIZE) {
+                int[] iArr = this.mCountStats;
+                iArr[eventId] = iArr[eventId] + 1;
+                long[] jArr = this.mDurationStats;
+                jArr[eventId] = jArr[eventId] + duration;
+                if (this.mMaxDurationStats[eventId] < duration) {
+                    this.mMaxDurationStats[eventId] = duration;
+                }
+                long nowRealtime = SystemClock.elapsedRealtime();
+                if (nowRealtime > this.mNextTickTime) {
+                    if (this.mMaxCallsPerSecond[eventId] < this.mCallsPerSecond[eventId]) {
+                        this.mMaxCallsPerSecond[eventId] = this.mCallsPerSecond[eventId];
+                    }
+                    if (this.mMaxDurationPerSecond[eventId] < this.mDurationPerSecond[eventId]) {
+                        this.mMaxDurationPerSecond[eventId] = this.mDurationPerSecond[eventId];
+                    }
+                    this.mCallsPerSecond[eventId] = 0;
+                    this.mDurationPerSecond[eventId] = 0;
+                    this.mNextTickTime = 1000 + nowRealtime;
+                }
+                int[] iArr2 = this.mCallsPerSecond;
+                iArr2[eventId] = iArr2[eventId] + 1;
+                long[] jArr2 = this.mDurationPerSecond;
+                jArr2[eventId] = jArr2[eventId] + duration;
                 return duration;
             }
-            int[] iArr = this.mCountStats;
-            iArr[eventId] = iArr[eventId] + 1;
-            long[] jArr = this.mDurationStats;
-            jArr[eventId] = jArr[eventId] + duration;
-            if (this.mMaxDurationStats[eventId] < duration) {
-                this.mMaxDurationStats[eventId] = duration;
-            }
-            long nowRealtime = SystemClock.elapsedRealtime();
-            if (nowRealtime > this.mNextTickTime) {
-                if (this.mMaxCallsPerSecond[eventId] < this.mCallsPerSecond[eventId]) {
-                    this.mMaxCallsPerSecond[eventId] = this.mCallsPerSecond[eventId];
-                }
-                if (this.mMaxDurationPerSecond[eventId] < this.mDurationPerSecond[eventId]) {
-                    this.mMaxDurationPerSecond[eventId] = this.mDurationPerSecond[eventId];
-                }
-                this.mCallsPerSecond[eventId] = 0;
-                this.mDurationPerSecond[eventId] = 0;
-                this.mNextTickTime = 1000 + nowRealtime;
-            }
-            int[] iArr2 = this.mCallsPerSecond;
-            iArr2[eventId] = iArr2[eventId] + 1;
-            long[] jArr2 = this.mDurationPerSecond;
-            jArr2[eventId] = jArr2[eventId] + duration;
+            Slog.wtf(TAG, "Invalid event ID: " + eventId);
             return duration;
         }
     }
@@ -88,15 +89,15 @@ public class StatLogger {
             pw.increaseIndent();
             for (int i = 0; i < this.SIZE; i++) {
                 int count = this.mCountStats[i];
-                double durationMs = ((double) this.mDurationStats[i]) / 1000.0d;
+                double durationMs = this.mDurationStats[i] / 1000.0d;
                 Object[] objArr = new Object[7];
                 objArr[0] = this.mLabels[i];
                 objArr[1] = Integer.valueOf(count);
                 objArr[2] = Double.valueOf(durationMs);
-                objArr[3] = Double.valueOf(count == 0 ? 0.0d : durationMs / ((double) count));
+                objArr[3] = Double.valueOf(count == 0 ? 0.0d : durationMs / count);
                 objArr[4] = Integer.valueOf(this.mMaxCallsPerSecond[i]);
-                objArr[5] = Double.valueOf(((double) this.mMaxDurationPerSecond[i]) / 1000.0d);
-                objArr[6] = Double.valueOf(((double) this.mMaxDurationStats[i]) / 1000.0d);
+                objArr[5] = Double.valueOf(this.mMaxDurationPerSecond[i] / 1000.0d);
+                objArr[6] = Double.valueOf(this.mMaxDurationStats[i] / 1000.0d);
                 pw.println(String.format("%s: count=%d, total=%.1fms, avg=%.3fms, max calls/s=%d max dur/s=%.1fms max time=%.1fms", objArr));
             }
             pw.decreaseIndent();

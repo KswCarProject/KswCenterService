@@ -1,11 +1,12 @@
 package android.bluetooth;
 
-import android.os.ParcelFileDescriptor;
+import android.p007os.ParcelFileDescriptor;
 import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
 @Deprecated
+/* loaded from: classes.dex */
 public final class BluetoothHealth implements BluetoothProfile {
     @Deprecated
     public static final int APP_CONFIG_REGISTRATION_FAILURE = 1;
@@ -38,46 +39,49 @@ public final class BluetoothHealth implements BluetoothProfile {
 
     @Deprecated
     public boolean registerSinkAppConfiguration(String name, int dataType, BluetoothHealthCallback callback) {
-        Log.e(TAG, "registerSinkAppConfiguration(): BluetoothHealth is deprecated");
+        Log.m70e(TAG, "registerSinkAppConfiguration(): BluetoothHealth is deprecated");
         return false;
     }
 
     @Deprecated
     public boolean unregisterAppConfiguration(BluetoothHealthAppConfiguration config) {
-        Log.e(TAG, "unregisterAppConfiguration(): BluetoothHealth is deprecated");
+        Log.m70e(TAG, "unregisterAppConfiguration(): BluetoothHealth is deprecated");
         return false;
     }
 
     @Deprecated
     public boolean connectChannelToSource(BluetoothDevice device, BluetoothHealthAppConfiguration config) {
-        Log.e(TAG, "connectChannelToSource(): BluetoothHealth is deprecated");
+        Log.m70e(TAG, "connectChannelToSource(): BluetoothHealth is deprecated");
         return false;
     }
 
     @Deprecated
     public boolean disconnectChannel(BluetoothDevice device, BluetoothHealthAppConfiguration config, int channelId) {
-        Log.e(TAG, "disconnectChannel(): BluetoothHealth is deprecated");
+        Log.m70e(TAG, "disconnectChannel(): BluetoothHealth is deprecated");
         return false;
     }
 
     @Deprecated
     public ParcelFileDescriptor getMainChannelFd(BluetoothDevice device, BluetoothHealthAppConfiguration config) {
-        Log.e(TAG, "getMainChannelFd(): BluetoothHealth is deprecated");
+        Log.m70e(TAG, "getMainChannelFd(): BluetoothHealth is deprecated");
         return null;
     }
 
+    @Override // android.bluetooth.BluetoothProfile
     public int getConnectionState(BluetoothDevice device) {
-        Log.e(TAG, "getConnectionState(): BluetoothHealth is deprecated");
+        Log.m70e(TAG, "getConnectionState(): BluetoothHealth is deprecated");
         return 0;
     }
 
+    @Override // android.bluetooth.BluetoothProfile
     public List<BluetoothDevice> getConnectedDevices() {
-        Log.e(TAG, "getConnectedDevices(): BluetoothHealth is deprecated");
+        Log.m70e(TAG, "getConnectedDevices(): BluetoothHealth is deprecated");
         return new ArrayList();
     }
 
+    @Override // android.bluetooth.BluetoothProfile
     public List<BluetoothDevice> getDevicesMatchingConnectionStates(int[] states) {
-        Log.e(TAG, "getDevicesMatchingConnectionStates(): BluetoothHealth is deprecated");
+        Log.m70e(TAG, "getDevicesMatchingConnectionStates(): BluetoothHealth is deprecated");
         return new ArrayList();
     }
 }

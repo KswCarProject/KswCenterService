@@ -2,10 +2,11 @@ package android.app;
 
 import android.annotation.UnsupportedAppUsage;
 import android.content.Intent;
-import android.os.Bundle;
+import android.p007os.Bundle;
 import java.util.HashMap;
 
 @Deprecated
+/* loaded from: classes.dex */
 public class ActivityGroup extends Activity {
     static final String PARENT_NON_CONFIG_INSTANCE_KEY = "android:parent_non_config_instance";
     private static final String STATES_KEY = "android:states";
@@ -20,20 +21,21 @@ public class ActivityGroup extends Activity {
         this.mLocalActivityManager = new LocalActivityManager(this, singleActivityMode);
     }
 
-    /* access modifiers changed from: protected */
-    public void onCreate(Bundle savedInstanceState) {
+    @Override // android.app.Activity
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.mLocalActivityManager.dispatchCreate(savedInstanceState != null ? savedInstanceState.getBundle(STATES_KEY) : null);
+        Bundle states = savedInstanceState != null ? savedInstanceState.getBundle(STATES_KEY) : null;
+        this.mLocalActivityManager.dispatchCreate(states);
     }
 
-    /* access modifiers changed from: protected */
-    public void onResume() {
+    @Override // android.app.Activity
+    protected void onResume() {
         super.onResume();
         this.mLocalActivityManager.dispatchResume();
     }
 
-    /* access modifiers changed from: protected */
-    public void onSaveInstanceState(Bundle outState) {
+    @Override // android.app.Activity
+    protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         Bundle state = this.mLocalActivityManager.saveInstanceState();
         if (state != null) {
@@ -41,24 +43,25 @@ public class ActivityGroup extends Activity {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onPause() {
+    @Override // android.app.Activity
+    protected void onPause() {
         super.onPause();
         this.mLocalActivityManager.dispatchPause(isFinishing());
     }
 
-    /* access modifiers changed from: protected */
-    public void onStop() {
+    @Override // android.app.Activity
+    protected void onStop() {
         super.onStop();
         this.mLocalActivityManager.dispatchStop();
     }
 
-    /* access modifiers changed from: protected */
-    public void onDestroy() {
+    @Override // android.app.Activity
+    protected void onDestroy() {
         super.onDestroy();
         this.mLocalActivityManager.dispatchDestroy(isFinishing());
     }
 
+    @Override // android.app.Activity
     public HashMap<String, Object> onRetainNonConfigurationChildInstances() {
         return this.mLocalActivityManager.dispatchRetainNonConfigurationInstance();
     }
@@ -71,13 +74,13 @@ public class ActivityGroup extends Activity {
         return this.mLocalActivityManager;
     }
 
-    /* access modifiers changed from: package-private */
-    public void dispatchActivityResult(String who, int requestCode, int resultCode, Intent data, String reason) {
+    @Override // android.app.Activity
+    void dispatchActivityResult(String who, int requestCode, int resultCode, Intent data, String reason) {
         Activity act;
-        if (who == null || (act = this.mLocalActivityManager.getActivity(who)) == null) {
-            super.dispatchActivityResult(who, requestCode, resultCode, data, reason);
-        } else {
+        if (who != null && (act = this.mLocalActivityManager.getActivity(who)) != null) {
             act.onActivityResult(requestCode, resultCode, data);
+        } else {
+            super.dispatchActivityResult(who, requestCode, resultCode, data, reason);
         }
     }
 }

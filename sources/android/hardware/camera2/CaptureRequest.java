@@ -15,8 +15,8 @@ import android.hardware.camera2.utils.HashCodeHelpers;
 import android.hardware.camera2.utils.SurfaceUtils;
 import android.hardware.camera2.utils.TypeReference;
 import android.location.Location;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.ArraySet;
 import android.util.Log;
 import android.util.Range;
@@ -32,17 +32,51 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+/* loaded from: classes.dex */
 public final class CaptureRequest extends CameraMetadata<Key<?>> implements Parcelable {
-    @PublicKey
-    public static final Key<Boolean> BLACK_LEVEL_LOCK = new Key<>("android.blackLevel.lock", Boolean.TYPE);
-    @PublicKey
-    public static final Key<Integer> COLOR_CORRECTION_ABERRATION_MODE = new Key<>("android.colorCorrection.aberrationMode", Integer.TYPE);
-    @PublicKey
-    public static final Key<RggbChannelVector> COLOR_CORRECTION_GAINS = new Key<>("android.colorCorrection.gains", RggbChannelVector.class);
+    public static final int REQUEST_TYPE_COUNT = 3;
+    public static final int REQUEST_TYPE_REGULAR = 0;
+    public static final int REQUEST_TYPE_REPROCESS = 1;
+    public static final int REQUEST_TYPE_ZSL_STILL = 2;
+    private final String TAG;
+    private boolean mIsPartOfCHSRequestList;
+    private boolean mIsReprocess;
+    private String mLogicalCameraId;
+    @UnsupportedAppUsage
+    private CameraMetadataNative mLogicalCameraSettings;
+    private final HashMap<String, CameraMetadataNative> mPhysicalCameraSettings;
+    private int mReprocessableSessionId;
+    private int mRequestType;
+    private int[] mStreamIdxArray;
+    private boolean mSurfaceConverted;
+    private int[] mSurfaceIdxArray;
+    private final ArraySet<Surface> mSurfaceSet;
+    private final Object mSurfacesLock;
+    private Object mUserTag;
+    private static final ArraySet<Surface> mEmptySurfaceSet = new ArraySet<>();
+    public static final Parcelable.Creator<CaptureRequest> CREATOR = new Parcelable.Creator<CaptureRequest>() { // from class: android.hardware.camera2.CaptureRequest.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public CaptureRequest createFromParcel(Parcel in) {
+            CaptureRequest request = new CaptureRequest();
+            request.readFromParcel(in);
+            return request;
+        }
+
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public CaptureRequest[] newArray(int size) {
+            return new CaptureRequest[size];
+        }
+    };
     @PublicKey
     public static final Key<Integer> COLOR_CORRECTION_MODE = new Key<>("android.colorCorrection.mode", Integer.TYPE);
     @PublicKey
     public static final Key<ColorSpaceTransform> COLOR_CORRECTION_TRANSFORM = new Key<>("android.colorCorrection.transform", ColorSpaceTransform.class);
+    @PublicKey
+    public static final Key<RggbChannelVector> COLOR_CORRECTION_GAINS = new Key<>("android.colorCorrection.gains", RggbChannelVector.class);
+    @PublicKey
+    public static final Key<Integer> COLOR_CORRECTION_ABERRATION_MODE = new Key<>("android.colorCorrection.aberrationMode", Integer.TYPE);
     @PublicKey
     public static final Key<Integer> CONTROL_AE_ANTIBANDING_MODE = new Key<>("android.control.aeAntibandingMode", Integer.TYPE);
     @PublicKey
@@ -52,12 +86,12 @@ public final class CaptureRequest extends CameraMetadata<Key<?>> implements Parc
     @PublicKey
     public static final Key<Integer> CONTROL_AE_MODE = new Key<>("android.control.aeMode", Integer.TYPE);
     @PublicKey
-    public static final Key<Integer> CONTROL_AE_PRECAPTURE_TRIGGER = new Key<>("android.control.aePrecaptureTrigger", Integer.TYPE);
-    @PublicKey
     public static final Key<MeteringRectangle[]> CONTROL_AE_REGIONS = new Key<>("android.control.aeRegions", MeteringRectangle[].class);
     @PublicKey
-    public static final Key<Range<Integer>> CONTROL_AE_TARGET_FPS_RANGE = new Key<>("android.control.aeTargetFpsRange", new TypeReference<Range<Integer>>() {
+    public static final Key<Range<Integer>> CONTROL_AE_TARGET_FPS_RANGE = new Key<>("android.control.aeTargetFpsRange", new TypeReference<Range<Integer>>() { // from class: android.hardware.camera2.CaptureRequest.2
     });
+    @PublicKey
+    public static final Key<Integer> CONTROL_AE_PRECAPTURE_TRIGGER = new Key<>("android.control.aePrecaptureTrigger", Integer.TYPE);
     @PublicKey
     public static final Key<Integer> CONTROL_AF_MODE = new Key<>("android.control.afMode", Integer.TYPE);
     @PublicKey
@@ -75,38 +109,25 @@ public final class CaptureRequest extends CameraMetadata<Key<?>> implements Parc
     @PublicKey
     public static final Key<Integer> CONTROL_EFFECT_MODE = new Key<>("android.control.effectMode", Integer.TYPE);
     @PublicKey
-    public static final Key<Boolean> CONTROL_ENABLE_ZSL = new Key<>("android.control.enableZsl", Boolean.TYPE);
-    @PublicKey
     public static final Key<Integer> CONTROL_MODE = new Key<>("android.control.mode", Integer.TYPE);
-    @PublicKey
-    public static final Key<Integer> CONTROL_POST_RAW_SENSITIVITY_BOOST = new Key<>("android.control.postRawSensitivityBoost", Integer.TYPE);
     @PublicKey
     public static final Key<Integer> CONTROL_SCENE_MODE = new Key<>("android.control.sceneMode", Integer.TYPE);
     @PublicKey
     public static final Key<Integer> CONTROL_VIDEO_STABILIZATION_MODE = new Key<>("android.control.videoStabilizationMode", Integer.TYPE);
-    public static final Parcelable.Creator<CaptureRequest> CREATOR = new Parcelable.Creator<CaptureRequest>() {
-        public CaptureRequest createFromParcel(Parcel in) {
-            CaptureRequest request = new CaptureRequest();
-            request.readFromParcel(in);
-            return request;
-        }
-
-        public CaptureRequest[] newArray(int size) {
-            return new CaptureRequest[size];
-        }
-    };
     @PublicKey
-    public static final Key<Integer> DISTORTION_CORRECTION_MODE = new Key<>("android.distortionCorrection.mode", Integer.TYPE);
+    public static final Key<Integer> CONTROL_POST_RAW_SENSITIVITY_BOOST = new Key<>("android.control.postRawSensitivityBoost", Integer.TYPE);
+    @PublicKey
+    public static final Key<Boolean> CONTROL_ENABLE_ZSL = new Key<>("android.control.enableZsl", Boolean.TYPE);
     @PublicKey
     public static final Key<Integer> EDGE_MODE = new Key<>("android.edge.mode", Integer.TYPE);
     @PublicKey
     public static final Key<Integer> FLASH_MODE = new Key<>("android.flash.mode", Integer.TYPE);
     @PublicKey
     public static final Key<Integer> HOT_PIXEL_MODE = new Key<>("android.hotPixel.mode", Integer.TYPE);
-    public static final Key<double[]> JPEG_GPS_COORDINATES = new Key<>("android.jpeg.gpsCoordinates", double[].class);
-    @PublicKey
     @SyntheticKey
+    @PublicKey
     public static final Key<Location> JPEG_GPS_LOCATION = new Key<>("android.jpeg.gpsLocation", Location.class);
+    public static final Key<double[]> JPEG_GPS_COORDINATES = new Key<>("android.jpeg.gpsCoordinates", double[].class);
     public static final Key<String> JPEG_GPS_PROCESSING_METHOD = new Key<>("android.jpeg.gpsProcessingMethod", String.class);
     public static final Key<Long> JPEG_GPS_TIMESTAMP = new Key<>("android.jpeg.gpsTimestamp", Long.TYPE);
     @PublicKey
@@ -117,7 +138,6 @@ public final class CaptureRequest extends CameraMetadata<Key<?>> implements Parc
     public static final Key<Byte> JPEG_THUMBNAIL_QUALITY = new Key<>("android.jpeg.thumbnailQuality", Byte.TYPE);
     @PublicKey
     public static final Key<Size> JPEG_THUMBNAIL_SIZE = new Key<>("android.jpeg.thumbnailSize", Size.class);
-    public static final Key<Boolean> LED_TRANSMIT = new Key<>("android.led.transmit", Boolean.TYPE);
     @PublicKey
     public static final Key<Float> LENS_APERTURE = new Key<>("android.lens.aperture", Float.TYPE);
     @PublicKey
@@ -130,13 +150,7 @@ public final class CaptureRequest extends CameraMetadata<Key<?>> implements Parc
     public static final Key<Integer> LENS_OPTICAL_STABILIZATION_MODE = new Key<>("android.lens.opticalStabilizationMode", Integer.TYPE);
     @PublicKey
     public static final Key<Integer> NOISE_REDUCTION_MODE = new Key<>("android.noiseReduction.mode", Integer.TYPE);
-    @PublicKey
-    public static final Key<Float> REPROCESS_EFFECTIVE_EXPOSURE_FACTOR = new Key<>("android.reprocess.effectiveExposureFactor", Float.TYPE);
     public static final Key<Integer> REQUEST_ID = new Key<>(RestrictionsManager.REQUEST_KEY_ID, Integer.TYPE);
-    public static final int REQUEST_TYPE_COUNT = 3;
-    public static final int REQUEST_TYPE_REGULAR = 0;
-    public static final int REQUEST_TYPE_REPROCESS = 1;
-    public static final int REQUEST_TYPE_ZSL_STILL = 2;
     @PublicKey
     public static final Key<Rect> SCALER_CROP_REGION = new Key<>("android.scaler.cropRegion", Rect.class);
     @PublicKey
@@ -159,40 +173,27 @@ public final class CaptureRequest extends CameraMetadata<Key<?>> implements Parc
     public static final Key<Integer> STATISTICS_LENS_SHADING_MAP_MODE = new Key<>("android.statistics.lensShadingMapMode", Integer.TYPE);
     @PublicKey
     public static final Key<Integer> STATISTICS_OIS_DATA_MODE = new Key<>("android.statistics.oisDataMode", Integer.TYPE);
-    @PublicKey
-    @SyntheticKey
-    public static final Key<TonemapCurve> TONEMAP_CURVE = new Key<>("android.tonemap.curve", TonemapCurve.class);
     public static final Key<float[]> TONEMAP_CURVE_BLUE = new Key<>("android.tonemap.curveBlue", float[].class);
     public static final Key<float[]> TONEMAP_CURVE_GREEN = new Key<>("android.tonemap.curveGreen", float[].class);
     public static final Key<float[]> TONEMAP_CURVE_RED = new Key<>("android.tonemap.curveRed", float[].class);
+    @SyntheticKey
     @PublicKey
-    public static final Key<Float> TONEMAP_GAMMA = new Key<>("android.tonemap.gamma", Float.TYPE);
+    public static final Key<TonemapCurve> TONEMAP_CURVE = new Key<>("android.tonemap.curve", TonemapCurve.class);
     @PublicKey
     public static final Key<Integer> TONEMAP_MODE = new Key<>("android.tonemap.mode", Integer.TYPE);
     @PublicKey
+    public static final Key<Float> TONEMAP_GAMMA = new Key<>("android.tonemap.gamma", Float.TYPE);
+    @PublicKey
     public static final Key<Integer> TONEMAP_PRESET_CURVE = new Key<>("android.tonemap.presetCurve", Integer.TYPE);
-    private static final ArraySet<Surface> mEmptySurfaceSet = new ArraySet<>();
-    private final String TAG;
-    /* access modifiers changed from: private */
-    public boolean mIsPartOfCHSRequestList;
-    private boolean mIsReprocess;
-    private String mLogicalCameraId;
-    /* access modifiers changed from: private */
-    @UnsupportedAppUsage
-    public CameraMetadataNative mLogicalCameraSettings;
-    /* access modifiers changed from: private */
-    public final HashMap<String, CameraMetadataNative> mPhysicalCameraSettings;
-    private int mReprocessableSessionId;
-    private int mRequestType;
-    private int[] mStreamIdxArray;
-    private boolean mSurfaceConverted;
-    private int[] mSurfaceIdxArray;
-    /* access modifiers changed from: private */
-    public final ArraySet<Surface> mSurfaceSet;
-    private final Object mSurfacesLock;
-    /* access modifiers changed from: private */
-    public Object mUserTag;
+    public static final Key<Boolean> LED_TRANSMIT = new Key<>("android.led.transmit", Boolean.TYPE);
+    @PublicKey
+    public static final Key<Boolean> BLACK_LEVEL_LOCK = new Key<>("android.blackLevel.lock", Boolean.TYPE);
+    @PublicKey
+    public static final Key<Float> REPROCESS_EFFECTIVE_EXPOSURE_FACTOR = new Key<>("android.reprocess.effectiveExposureFactor", Float.TYPE);
+    @PublicKey
+    public static final Key<Integer> DISTORTION_CORRECTION_MODE = new Key<>("android.distortionCorrection.mode", Integer.TYPE);
 
+    /* loaded from: classes.dex */
     public static final class Key<T> {
         private final CameraMetadataNative.Key<T> mKey;
 
@@ -227,7 +228,7 @@ public final class CaptureRequest extends CameraMetadata<Key<?>> implements Parc
         }
 
         public String toString() {
-            return String.format("CaptureRequest.Key(%s)", new Object[]{this.mKey.getName()});
+            return String.format("CaptureRequest.Key(%s)", this.mKey.getName());
         }
 
         @UnsupportedAppUsage
@@ -235,6 +236,7 @@ public final class CaptureRequest extends CameraMetadata<Key<?>> implements Parc
             return this.mKey;
         }
 
+        /* JADX WARN: Multi-variable type inference failed */
         Key(CameraMetadataNative.Key<?> nativeKey) {
             this.mKey = nativeKey;
         }
@@ -247,14 +249,13 @@ public final class CaptureRequest extends CameraMetadata<Key<?>> implements Parc
             } else {
                 Boolean enableZsl = (Boolean) this.mLogicalCameraSettings.get(CONTROL_ENABLE_ZSL);
                 boolean isZslStill = false;
-                int i = 2;
-                if (enableZsl != null && enableZsl.booleanValue() && ((Integer) this.mLogicalCameraSettings.get(CONTROL_CAPTURE_INTENT)).intValue() == 2) {
-                    isZslStill = true;
+                if (enableZsl != null && enableZsl.booleanValue()) {
+                    int captureIntent = ((Integer) this.mLogicalCameraSettings.get(CONTROL_CAPTURE_INTENT)).intValue();
+                    if (captureIntent == 2) {
+                        isZslStill = true;
+                    }
                 }
-                if (!isZslStill) {
-                    i = 0;
-                }
-                this.mRequestType = i;
+                this.mRequestType = isZslStill ? 2 : 0;
             }
         }
         return this.mRequestType;
@@ -286,7 +287,7 @@ public final class CaptureRequest extends CameraMetadata<Key<?>> implements Parc
         }
         this.mLogicalCameraSettings = this.mPhysicalCameraSettings.get(this.mLogicalCameraId);
         setNativeInstance(this.mLogicalCameraSettings);
-        this.mSurfaceSet.addAll(source.mSurfaceSet);
+        this.mSurfaceSet.addAll((ArraySet<? extends Surface>) source.mSurfaceSet);
         this.mIsReprocess = source.mIsReprocess;
         this.mIsPartOfCHSRequestList = source.mIsPartOfCHSRequestList;
         this.mReprocessableSessionId = source.mReprocessableSessionId;
@@ -301,43 +302,45 @@ public final class CaptureRequest extends CameraMetadata<Key<?>> implements Parc
         this.mPhysicalCameraSettings = new HashMap<>();
         this.mRequestType = -1;
         this.mIsPartOfCHSRequestList = false;
-        if (physicalCameraIdSet == null || !isReprocess) {
-            this.mLogicalCameraId = logicalCameraId;
-            this.mLogicalCameraSettings = CameraMetadataNative.move(settings);
-            this.mPhysicalCameraSettings.put(this.mLogicalCameraId, this.mLogicalCameraSettings);
-            if (physicalCameraIdSet != null) {
-                for (String physicalId : physicalCameraIdSet) {
-                    this.mPhysicalCameraSettings.put(physicalId, new CameraMetadataNative(this.mLogicalCameraSettings));
-                }
-            }
-            setNativeInstance(this.mLogicalCameraSettings);
-            this.mIsReprocess = isReprocess;
-            if (!isReprocess) {
-                this.mReprocessableSessionId = -1;
-            } else if (reprocessableSessionId != -1) {
-                this.mReprocessableSessionId = reprocessableSessionId;
-            } else {
-                throw new IllegalArgumentException("Create a reprocess capture request with an invalid session ID: " + reprocessableSessionId);
-            }
-        } else {
+        if (physicalCameraIdSet != null && isReprocess) {
             throw new IllegalArgumentException("Create a reprocess capture request with with more than one physical camera is not supported!");
         }
+        this.mLogicalCameraId = logicalCameraId;
+        this.mLogicalCameraSettings = CameraMetadataNative.move(settings);
+        this.mPhysicalCameraSettings.put(this.mLogicalCameraId, this.mLogicalCameraSettings);
+        if (physicalCameraIdSet != null) {
+            for (String physicalId : physicalCameraIdSet) {
+                this.mPhysicalCameraSettings.put(physicalId, new CameraMetadataNative(this.mLogicalCameraSettings));
+            }
+        }
+        setNativeInstance(this.mLogicalCameraSettings);
+        this.mIsReprocess = isReprocess;
+        if (isReprocess) {
+            if (reprocessableSessionId == -1) {
+                throw new IllegalArgumentException("Create a reprocess capture request with an invalid session ID: " + reprocessableSessionId);
+            }
+            this.mReprocessableSessionId = reprocessableSessionId;
+            return;
+        }
+        this.mReprocessableSessionId = -1;
     }
 
     public <T> T get(Key<T> key) {
-        return this.mLogicalCameraSettings.get(key);
+        return (T) this.mLogicalCameraSettings.get(key);
     }
 
-    /* access modifiers changed from: protected */
+    /* JADX INFO: Access modifiers changed from: protected */
+    @Override // android.hardware.camera2.CameraMetadata
     public <T> T getProtected(Key<?> key) {
-        return this.mLogicalCameraSettings.get(key);
+        return (T) this.mLogicalCameraSettings.get(key);
     }
 
-    /* access modifiers changed from: protected */
-    public Class<Key<?>> getKeyClass() {
+    @Override // android.hardware.camera2.CameraMetadata
+    protected Class<Key<?>> getKeyClass() {
         return Key.class;
     }
 
+    @Override // android.hardware.camera2.CameraMetadata
     public List<Key<?>> getKeys() {
         return super.getKeys();
     }
@@ -359,10 +362,10 @@ public final class CaptureRequest extends CameraMetadata<Key<?>> implements Parc
     }
 
     public int getReprocessableSessionId() {
-        if (this.mIsReprocess && this.mReprocessableSessionId != -1) {
-            return this.mReprocessableSessionId;
+        if (!this.mIsReprocess || this.mReprocessableSessionId == -1) {
+            throw new IllegalStateException("Getting the reprocessable session ID for a non-reprocess capture request is illegal.");
         }
-        throw new IllegalStateException("Getting the reprocessable session ID for a non-reprocess capture request is illegal.");
+        return this.mReprocessableSessionId;
     }
 
     public boolean equals(Object other) {
@@ -377,50 +380,51 @@ public final class CaptureRequest extends CameraMetadata<Key<?>> implements Parc
         return HashCodeHelpers.hashCodeGeneric(this.mPhysicalCameraSettings, this.mSurfaceSet, this.mUserTag);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void readFromParcel(Parcel in) {
         int physicalCameraCount = in.readInt();
-        if (physicalCameraCount > 0) {
-            this.mLogicalCameraId = in.readString();
-            this.mLogicalCameraSettings = new CameraMetadataNative();
-            this.mLogicalCameraSettings.readFromParcel(in);
-            setNativeInstance(this.mLogicalCameraSettings);
-            this.mPhysicalCameraSettings.put(this.mLogicalCameraId, this.mLogicalCameraSettings);
-            boolean z = true;
-            for (int i = 1; i < physicalCameraCount; i++) {
-                String physicalId = in.readString();
-                CameraMetadataNative physicalCameraSettings = new CameraMetadataNative();
-                physicalCameraSettings.readFromParcel(in);
-                this.mPhysicalCameraSettings.put(physicalId, physicalCameraSettings);
-            }
-            if (in.readInt() == 0) {
-                z = false;
-            }
-            this.mIsReprocess = z;
-            this.mReprocessableSessionId = -1;
-            synchronized (this.mSurfacesLock) {
-                this.mSurfaceSet.clear();
-                Parcelable[] parcelableArray = in.readParcelableArray(Surface.class.getClassLoader());
-                if (parcelableArray != null) {
-                    for (Parcelable p : parcelableArray) {
-                        this.mSurfaceSet.add((Surface) p);
-                    }
-                }
-                if (in.readInt() != 0) {
-                    throw new RuntimeException("Reading cached CaptureRequest is not supported");
-                }
-            }
-            return;
+        if (physicalCameraCount <= 0) {
+            throw new RuntimeException("Physical camera count" + physicalCameraCount + " should always be positive");
         }
-        throw new RuntimeException("Physical camera count" + physicalCameraCount + " should always be positive");
+        this.mLogicalCameraId = in.readString();
+        this.mLogicalCameraSettings = new CameraMetadataNative();
+        this.mLogicalCameraSettings.readFromParcel(in);
+        setNativeInstance(this.mLogicalCameraSettings);
+        this.mPhysicalCameraSettings.put(this.mLogicalCameraId, this.mLogicalCameraSettings);
+        for (int i = 1; i < physicalCameraCount; i++) {
+            String physicalId = in.readString();
+            CameraMetadataNative physicalCameraSettings = new CameraMetadataNative();
+            physicalCameraSettings.readFromParcel(in);
+            this.mPhysicalCameraSettings.put(physicalId, physicalCameraSettings);
+        }
+        int i2 = in.readInt();
+        this.mIsReprocess = i2 != 0;
+        this.mReprocessableSessionId = -1;
+        synchronized (this.mSurfacesLock) {
+            this.mSurfaceSet.clear();
+            Parcelable[] parcelableArray = in.readParcelableArray(Surface.class.getClassLoader());
+            if (parcelableArray != null) {
+                for (Parcelable p : parcelableArray) {
+                    Surface s = (Surface) p;
+                    this.mSurfaceSet.add(s);
+                }
+            }
+            int streamSurfaceSize = in.readInt();
+            if (streamSurfaceSize != 0) {
+                throw new RuntimeException("Reading cached CaptureRequest is not supported");
+            }
+        }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.mPhysicalCameraSettings.size());
+        int physicalCameraCount = this.mPhysicalCameraSettings.size();
+        dest.writeInt(physicalCameraCount);
         dest.writeString(this.mLogicalCameraId);
         this.mLogicalCameraSettings.writeToParcel(dest, flags);
         for (Map.Entry<String, CameraMetadataNative> entry : this.mPhysicalCameraSettings.entrySet()) {
@@ -465,91 +469,89 @@ public final class CaptureRequest extends CameraMetadata<Key<?>> implements Parc
     }
 
     public void convertSurfaceToStreamId(SparseArray<OutputConfiguration> configuredOutputs) {
-        SparseArray<OutputConfiguration> sparseArray = configuredOutputs;
         synchronized (this.mSurfacesLock) {
-            if (this.mSurfaceConverted) {
-                Log.v("CaptureRequest-JV", "Cannot convert already converted surfaces!");
-                return;
-            }
-            this.mStreamIdxArray = new int[this.mSurfaceSet.size()];
-            this.mSurfaceIdxArray = new int[this.mSurfaceSet.size()];
-            int i = 0;
-            Iterator<Surface> it = this.mSurfaceSet.iterator();
-            while (it.hasNext()) {
-                Surface s = it.next();
-                int streamId = 0;
-                boolean streamFound = false;
-                int i2 = i;
-                int j = 0;
-                while (true) {
-                    if (j >= configuredOutputs.size()) {
-                        break;
-                    }
-                    int streamId2 = sparseArray.keyAt(j);
-                    int surfaceId = 0;
-                    Iterator<Surface> it2 = sparseArray.valueAt(j).getSurfaces().iterator();
-                    while (true) {
-                        if (!it2.hasNext()) {
-                            break;
-                        } else if (s == it2.next()) {
-                            streamFound = true;
-                            this.mStreamIdxArray[i2] = streamId2;
-                            this.mSurfaceIdxArray[i2] = surfaceId;
-                            i2++;
-                            break;
-                        } else {
-                            surfaceId++;
-                        }
-                    }
-                    if (streamFound) {
-                        break;
-                    }
-                    j++;
-                }
-                if (!streamFound) {
-                    long reqSurfaceId = SurfaceUtils.getSurfaceId(s);
-                    while (true) {
-                        int j2 = streamId;
-                        if (j2 >= configuredOutputs.size()) {
-                            break;
-                        }
-                        int streamId3 = sparseArray.keyAt(j2);
-                        int surfaceId2 = 0;
-                        Iterator<Surface> it3 = sparseArray.valueAt(j2).getSurfaces().iterator();
+            if (!this.mSurfaceConverted) {
+                this.mStreamIdxArray = new int[this.mSurfaceSet.size()];
+                this.mSurfaceIdxArray = new int[this.mSurfaceSet.size()];
+                int i = 0;
+                Iterator<Surface> it = this.mSurfaceSet.iterator();
+                while (it.hasNext()) {
+                    Surface s = it.next();
+                    int streamId = 0;
+                    boolean streamFound = false;
+                    int i2 = i;
+                    for (int i3 = 0; i3 < configuredOutputs.size(); i3++) {
+                        int streamId2 = configuredOutputs.keyAt(i3);
+                        OutputConfiguration outConfig = configuredOutputs.valueAt(i3);
+                        int surfaceId = 0;
+                        Iterator<Surface> it2 = outConfig.getSurfaces().iterator();
                         while (true) {
-                            if (!it3.hasNext()) {
+                            if (!it2.hasNext()) {
                                 break;
-                            } else if (reqSurfaceId == SurfaceUtils.getSurfaceId(it3.next())) {
+                            }
+                            Surface outSurface = it2.next();
+                            if (s == outSurface) {
                                 streamFound = true;
-                                this.mStreamIdxArray[i2] = streamId3;
-                                this.mSurfaceIdxArray[i2] = surfaceId2;
+                                this.mStreamIdxArray[i2] = streamId2;
+                                this.mSurfaceIdxArray[i2] = surfaceId;
                                 i2++;
                                 break;
-                            } else {
-                                surfaceId2++;
                             }
+                            surfaceId++;
                         }
                         if (streamFound) {
                             break;
                         }
-                        streamId = j2 + 1;
+                    }
+                    if (!streamFound) {
+                        long reqSurfaceId = SurfaceUtils.getSurfaceId(s);
+                        while (true) {
+                            int j = streamId;
+                            if (j >= configuredOutputs.size()) {
+                                break;
+                            }
+                            int streamId3 = configuredOutputs.keyAt(j);
+                            OutputConfiguration outConfig2 = configuredOutputs.valueAt(j);
+                            int surfaceId2 = 0;
+                            Iterator<Surface> it3 = outConfig2.getSurfaces().iterator();
+                            while (true) {
+                                if (!it3.hasNext()) {
+                                    break;
+                                }
+                                Surface outSurface2 = it3.next();
+                                if (reqSurfaceId == SurfaceUtils.getSurfaceId(outSurface2)) {
+                                    streamFound = true;
+                                    this.mStreamIdxArray[i2] = streamId3;
+                                    this.mSurfaceIdxArray[i2] = surfaceId2;
+                                    i2++;
+                                    break;
+                                }
+                                surfaceId2++;
+                            }
+                            if (streamFound) {
+                                break;
+                            }
+                            streamId = j + 1;
+                        }
+                    }
+                    i = i2;
+                    if (!streamFound) {
+                        this.mStreamIdxArray = null;
+                        this.mSurfaceIdxArray = null;
+                        throw new IllegalArgumentException("CaptureRequest contains unconfigured Input/Output Surface!");
                     }
                 }
-                i = i2;
-                if (!streamFound) {
-                    this.mStreamIdxArray = null;
-                    this.mSurfaceIdxArray = null;
-                    throw new IllegalArgumentException("CaptureRequest contains unconfigured Input/Output Surface!");
-                }
+                this.mSurfaceConverted = true;
+                return;
             }
-            this.mSurfaceConverted = true;
+            Log.m66v("CaptureRequest-JV", "Cannot convert already converted surfaces!");
         }
     }
 
     public void recoverStreamIdToSurface() {
         synchronized (this.mSurfacesLock) {
             if (!this.mSurfaceConverted) {
-                Log.v("CaptureRequest-JV", "Cannot convert already converted surfaces!");
+                Log.m66v("CaptureRequest-JV", "Cannot convert already converted surfaces!");
                 return;
             }
             this.mStreamIdxArray = null;
@@ -558,6 +560,7 @@ public final class CaptureRequest extends CameraMetadata<Key<?>> implements Parc
         }
     }
 
+    /* loaded from: classes.dex */
     public static final class Builder {
         private final CaptureRequest mRequest;
 
@@ -574,16 +577,16 @@ public final class CaptureRequest extends CameraMetadata<Key<?>> implements Parc
         }
 
         public <T> void set(Key<T> key, T value) {
-            this.mRequest.mLogicalCameraSettings.set(key, value);
+            this.mRequest.mLogicalCameraSettings.set((Key<Key<T>>) key, (Key<T>) value);
         }
 
         public <T> T get(Key<T> key) {
-            return this.mRequest.mLogicalCameraSettings.get(key);
+            return (T) this.mRequest.mLogicalCameraSettings.get(key);
         }
 
         public <T> Builder setPhysicalCameraKey(Key<T> key, T value, String physicalCameraId) {
             if (this.mRequest.mPhysicalCameraSettings.containsKey(physicalCameraId)) {
-                ((CameraMetadataNative) this.mRequest.mPhysicalCameraSettings.get(physicalCameraId)).set(key, value);
+                ((CameraMetadataNative) this.mRequest.mPhysicalCameraSettings.get(physicalCameraId)).set((Key<Key<T>>) key, (Key<T>) value);
                 return this;
             }
             throw new IllegalArgumentException("Physical camera id: " + physicalCameraId + " is not valid!");
@@ -591,18 +594,18 @@ public final class CaptureRequest extends CameraMetadata<Key<?>> implements Parc
 
         public <T> T getPhysicalCameraKey(Key<T> key, String physicalCameraId) {
             if (this.mRequest.mPhysicalCameraSettings.containsKey(physicalCameraId)) {
-                return ((CameraMetadataNative) this.mRequest.mPhysicalCameraSettings.get(physicalCameraId)).get(key);
+                return (T) ((CameraMetadataNative) this.mRequest.mPhysicalCameraSettings.get(physicalCameraId)).get(key);
             }
             throw new IllegalArgumentException("Physical camera id: " + physicalCameraId + " is not valid!");
         }
 
         public void setTag(Object tag) {
-            Object unused = this.mRequest.mUserTag = tag;
+            this.mRequest.mUserTag = tag;
         }
 
         @UnsupportedAppUsage
         public void setPartOfCHSRequestList(boolean partOfCHSList) {
-            boolean unused = this.mRequest.mIsPartOfCHSRequestList = partOfCHSList;
+            this.mRequest.mIsPartOfCHSRequestList = partOfCHSList;
         }
 
         public CaptureRequest build() {

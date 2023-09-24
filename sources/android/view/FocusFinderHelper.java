@@ -2,6 +2,7 @@ package android.view;
 
 import android.graphics.Rect;
 
+/* loaded from: classes4.dex */
 public class FocusFinderHelper {
     private FocusFinder mFocusFinder;
 

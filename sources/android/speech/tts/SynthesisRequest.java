@@ -1,7 +1,8 @@
 package android.speech.tts;
 
-import android.os.Bundle;
+import android.p007os.Bundle;
 
+/* loaded from: classes3.dex */
 public final class SynthesisRequest {
     private int mCallerUid;
     private String mCountry;
@@ -64,30 +65,25 @@ public final class SynthesisRequest {
         return this.mCallerUid;
     }
 
-    /* access modifiers changed from: package-private */
-    public void setLanguage(String language, String country, String variant) {
+    void setLanguage(String language, String country, String variant) {
         this.mLanguage = language;
         this.mCountry = country;
         this.mVariant = variant;
     }
 
-    /* access modifiers changed from: package-private */
-    public void setVoiceName(String voiceName) {
+    void setVoiceName(String voiceName) {
         this.mVoiceName = voiceName;
     }
 
-    /* access modifiers changed from: package-private */
-    public void setSpeechRate(int speechRate) {
+    void setSpeechRate(int speechRate) {
         this.mSpeechRate = speechRate;
     }
 
-    /* access modifiers changed from: package-private */
-    public void setPitch(int pitch) {
+    void setPitch(int pitch) {
         this.mPitch = pitch;
     }
 
-    /* access modifiers changed from: package-private */
-    public void setCallerUid(int uid) {
+    void setCallerUid(int uid) {
         this.mCallerUid = uid;
     }
 }

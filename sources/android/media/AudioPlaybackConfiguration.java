@@ -4,25 +4,19 @@ import android.annotation.SystemApi;
 import android.media.AudioAttributes;
 import android.media.IPlayer;
 import android.media.PlayerBase;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.RemoteException;
+import android.util.Log;
 import java.io.PrintWriter;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Objects;
 
+/* loaded from: classes3.dex */
 public final class AudioPlaybackConfiguration implements Parcelable {
-    public static final Parcelable.Creator<AudioPlaybackConfiguration> CREATOR = new Parcelable.Creator<AudioPlaybackConfiguration>() {
-        public AudioPlaybackConfiguration createFromParcel(Parcel p) {
-            return new AudioPlaybackConfiguration(p);
-        }
-
-        public AudioPlaybackConfiguration[] newArray(int size) {
-            return new AudioPlaybackConfiguration[size];
-        }
-    };
     private static final boolean DEBUG = false;
     public static final int PLAYER_PIID_INVALID = -1;
     @SystemApi
@@ -53,27 +47,41 @@ public final class AudioPlaybackConfiguration implements Parcelable {
     @SystemApi
     public static final int PLAYER_TYPE_UNKNOWN = -1;
     public static final int PLAYER_UPID_INVALID = -1;
-    /* access modifiers changed from: private */
-    public static final String TAG = new String("AudioPlaybackConfiguration");
     public static PlayerDeathMonitor sPlayerDeathMonitor;
     private int mClientPid;
     private int mClientUid;
     private IPlayerShell mIPlayerShell;
     private AudioAttributes mPlayerAttr;
-    /* access modifiers changed from: private */
-    public final int mPlayerIId;
+    private final int mPlayerIId;
     private int mPlayerState;
     private int mPlayerType;
+    private static final String TAG = new String("AudioPlaybackConfiguration");
+    public static final Parcelable.Creator<AudioPlaybackConfiguration> CREATOR = new Parcelable.Creator<AudioPlaybackConfiguration>() { // from class: android.media.AudioPlaybackConfiguration.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public AudioPlaybackConfiguration createFromParcel(Parcel p) {
+            return new AudioPlaybackConfiguration(p);
+        }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public AudioPlaybackConfiguration[] newArray(int size) {
+            return new AudioPlaybackConfiguration[size];
+        }
+    };
+
+    /* loaded from: classes3.dex */
     public interface PlayerDeathMonitor {
         void playerDeath(int i);
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface PlayerState {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface PlayerType {
     }
 
@@ -89,10 +97,10 @@ public final class AudioPlaybackConfiguration implements Parcelable {
         this.mClientPid = pid;
         this.mPlayerState = 1;
         this.mPlayerAttr = pic.mAttributes;
-        if (sPlayerDeathMonitor == null || pic.mIPlayer == null) {
-            this.mIPlayerShell = null;
-        } else {
+        if (sPlayerDeathMonitor != null && pic.mIPlayer != null) {
             this.mIPlayerShell = new IPlayerShell(this, pic.mIPlayer);
+        } else {
+            this.mIPlayerShell = null;
         }
     }
 
@@ -107,12 +115,7 @@ public final class AudioPlaybackConfiguration implements Parcelable {
     public static AudioPlaybackConfiguration anonymizedCopy(AudioPlaybackConfiguration in) {
         AudioPlaybackConfiguration anonymCopy = new AudioPlaybackConfiguration(in.mPlayerIId);
         anonymCopy.mPlayerState = in.mPlayerState;
-        AudioAttributes.Builder flags = new AudioAttributes.Builder().setUsage(in.mPlayerAttr.getUsage()).setContentType(in.mPlayerAttr.getContentType()).setFlags(in.mPlayerAttr.getFlags());
-        int i = 1;
-        if (in.mPlayerAttr.getAllowedCapturePolicy() != 1) {
-            i = 3;
-        }
-        anonymCopy.mPlayerAttr = flags.setAllowedCapturePolicy(i).build();
+        anonymCopy.mPlayerAttr = new AudioAttributes.Builder().setUsage(in.mPlayerAttr.getUsage()).setContentType(in.mPlayerAttr.getContentType()).setFlags(in.mPlayerAttr.getFlags()).setAllowedCapturePolicy(in.mPlayerAttr.getAllowedCapturePolicy() != 1 ? 3 : 1).build();
         anonymCopy.mPlayerType = -1;
         anonymCopy.mClientUid = -1;
         anonymCopy.mClientPid = -1;
@@ -168,8 +171,7 @@ public final class AudioPlaybackConfiguration implements Parcelable {
         return new PlayerProxy(this);
     }
 
-    /* access modifiers changed from: package-private */
-    public IPlayer getIPlayer() {
+    IPlayer getIPlayer() {
         IPlayerShell ips;
         synchronized (this) {
             ips = this.mIPlayerShell;
@@ -199,7 +201,7 @@ public final class AudioPlaybackConfiguration implements Parcelable {
         return changed;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void playerDied() {
         if (sPlayerDeathMonitor != null) {
             sPlayerDeathMonitor.playerDeath(this.mPlayerIId);
@@ -207,10 +209,10 @@ public final class AudioPlaybackConfiguration implements Parcelable {
     }
 
     public boolean isActive() {
-        if (this.mPlayerState != 2) {
-            return false;
+        if (this.mPlayerState == 2) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     public void dump(PrintWriter pw) {
@@ -222,13 +224,15 @@ public final class AudioPlaybackConfiguration implements Parcelable {
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(this.mPlayerIId), Integer.valueOf(this.mPlayerType), Integer.valueOf(this.mClientUid), Integer.valueOf(this.mClientPid)});
+        return Objects.hash(Integer.valueOf(this.mPlayerIId), Integer.valueOf(this.mPlayerType), Integer.valueOf(this.mClientUid), Integer.valueOf(this.mClientPid));
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         IPlayerShell ips;
         dest.writeInt(this.mPlayerIId);
@@ -251,7 +255,7 @@ public final class AudioPlaybackConfiguration implements Parcelable {
         this.mPlayerState = in.readInt();
         this.mPlayerAttr = AudioAttributes.CREATOR.createFromParcel(in);
         IPlayer p = IPlayer.Stub.asInterface(in.readStrongBinder());
-        this.mIPlayerShell = p != null ? new IPlayerShell((AudioPlaybackConfiguration) null, p) : null;
+        this.mIPlayerShell = p != null ? new IPlayerShell(null, p) : null;
     }
 
     public boolean equals(Object o) {
@@ -268,6 +272,7 @@ public final class AudioPlaybackConfiguration implements Parcelable {
         return false;
     }
 
+    /* loaded from: classes3.dex */
     static final class IPlayerShell implements IBinder.DeathRecipient {
         private volatile IPlayer mIPlayer;
         final AudioPlaybackConfiguration mMonitor;
@@ -277,73 +282,40 @@ public final class AudioPlaybackConfiguration implements Parcelable {
             this.mIPlayer = iplayer;
         }
 
-        /* access modifiers changed from: package-private */
-        /* JADX WARNING: Code restructure failed: missing block: B:15:0x0040, code lost:
-            return;
-         */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public synchronized void monitorDeath() {
-            /*
-                r4 = this;
-                monitor-enter(r4)
-                android.media.IPlayer r0 = r4.mIPlayer     // Catch:{ all -> 0x0041 }
-                if (r0 != 0) goto L_0x0007
-                monitor-exit(r4)
-                return
-            L_0x0007:
-                android.media.IPlayer r0 = r4.mIPlayer     // Catch:{ RemoteException -> 0x0012 }
-                android.os.IBinder r0 = r0.asBinder()     // Catch:{ RemoteException -> 0x0012 }
-                r1 = 0
-                r0.linkToDeath(r4, r1)     // Catch:{ RemoteException -> 0x0012 }
-                goto L_0x003f
-            L_0x0012:
-                r0 = move-exception
-                android.media.AudioPlaybackConfiguration r1 = r4.mMonitor     // Catch:{ all -> 0x0041 }
-                if (r1 == 0) goto L_0x0036
-                java.lang.String r1 = android.media.AudioPlaybackConfiguration.TAG     // Catch:{ all -> 0x0041 }
-                java.lang.StringBuilder r2 = new java.lang.StringBuilder     // Catch:{ all -> 0x0041 }
-                r2.<init>()     // Catch:{ all -> 0x0041 }
-                java.lang.String r3 = "Could not link to client death for piid="
-                r2.append(r3)     // Catch:{ all -> 0x0041 }
-                android.media.AudioPlaybackConfiguration r3 = r4.mMonitor     // Catch:{ all -> 0x0041 }
-                int r3 = r3.mPlayerIId     // Catch:{ all -> 0x0041 }
-                r2.append(r3)     // Catch:{ all -> 0x0041 }
-                java.lang.String r2 = r2.toString()     // Catch:{ all -> 0x0041 }
-                android.util.Log.w(r1, r2, r0)     // Catch:{ all -> 0x0041 }
-                goto L_0x003f
-            L_0x0036:
-                java.lang.String r1 = android.media.AudioPlaybackConfiguration.TAG     // Catch:{ all -> 0x0041 }
-                java.lang.String r2 = "Could not link to client death"
-                android.util.Log.w(r1, r2, r0)     // Catch:{ all -> 0x0041 }
-            L_0x003f:
-                monitor-exit(r4)
-                return
-            L_0x0041:
-                r0 = move-exception
-                monitor-exit(r4)
-                throw r0
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.media.AudioPlaybackConfiguration.IPlayerShell.monitorDeath():void");
+        synchronized void monitorDeath() {
+            if (this.mIPlayer == null) {
+                return;
+            }
+            try {
+                this.mIPlayer.asBinder().linkToDeath(this, 0);
+            } catch (RemoteException e) {
+                if (this.mMonitor != null) {
+                    String str = AudioPlaybackConfiguration.TAG;
+                    Log.m63w(str, "Could not link to client death for piid=" + this.mMonitor.mPlayerIId, e);
+                } else {
+                    Log.m63w(AudioPlaybackConfiguration.TAG, "Could not link to client death", e);
+                }
+            }
         }
 
-        /* access modifiers changed from: package-private */
-        public IPlayer getIPlayer() {
+        IPlayer getIPlayer() {
             return this.mIPlayer;
         }
 
+        @Override // android.p007os.IBinder.DeathRecipient
         public void binderDied() {
             if (this.mMonitor != null) {
                 this.mMonitor.playerDied();
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public synchronized void release() {
-            if (this.mIPlayer != null) {
-                this.mIPlayer.asBinder().unlinkToDeath(this, 0);
-                this.mIPlayer = null;
-                Binder.flushPendingCommands();
+        synchronized void release() {
+            if (this.mIPlayer == null) {
+                return;
             }
+            this.mIPlayer.asBinder().unlinkToDeath(this, 0);
+            this.mIPlayer = null;
+            Binder.flushPendingCommands();
         }
     }
 

@@ -4,6 +4,7 @@ import android.app.ActivityThread;
 import android.util.Log;
 import java.util.UUID;
 
+/* loaded from: classes3.dex */
 public class SourceDefaultEffect extends DefaultEffect {
     private static final String TAG = "SourceDefaultEffect-JAVA";
 
@@ -19,7 +20,7 @@ public class SourceDefaultEffect extends DefaultEffect {
         int[] id = new int[1];
         int initResult = native_setup(type.toString(), uuid.toString(), priority, source, ActivityThread.currentOpPackageName(), id);
         if (initResult != 0) {
-            Log.e(TAG, "Error code " + initResult + " when initializing SourceDefaultEffect");
+            Log.m70e(TAG, "Error code " + initResult + " when initializing SourceDefaultEffect");
             switch (initResult) {
                 case -5:
                     throw new UnsupportedOperationException("Effect library not loaded");
@@ -28,17 +29,15 @@ public class SourceDefaultEffect extends DefaultEffect {
                 default:
                     throw new RuntimeException("Cannot initialize effect engine for type: " + type + " Error: " + initResult);
             }
-        } else {
-            this.mId = id[0];
         }
+        this.mId = id[0];
     }
 
     public void release() {
         native_release(this.mId);
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() {
+    protected void finalize() {
         release();
     }
 }

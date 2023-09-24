@@ -1,35 +1,40 @@
 package android.net;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public class WifiKey implements Parcelable {
+    public final String bssid;
+    public final String ssid;
+    private static final Pattern SSID_PATTERN = Pattern.compile("(\".*\")|(0x[\\p{XDigit}]+)", 32);
     private static final Pattern BSSID_PATTERN = Pattern.compile("([\\p{XDigit}]{2}:){5}[\\p{XDigit}]{2}");
-    public static final Parcelable.Creator<WifiKey> CREATOR = new Parcelable.Creator<WifiKey>() {
+    public static final Parcelable.Creator<WifiKey> CREATOR = new Parcelable.Creator<WifiKey>() { // from class: android.net.WifiKey.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WifiKey createFromParcel(Parcel in) {
             return new WifiKey(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WifiKey[] newArray(int size) {
             return new WifiKey[size];
         }
     };
-    private static final Pattern SSID_PATTERN = Pattern.compile("(\".*\")|(0x[\\p{XDigit}]+)", 32);
-    public final String bssid;
-    public final String ssid;
 
-    public WifiKey(String ssid2, String bssid2) {
-        if (ssid2 == null || !SSID_PATTERN.matcher(ssid2).matches()) {
-            throw new IllegalArgumentException("Invalid ssid: " + ssid2);
-        } else if (bssid2 == null || !BSSID_PATTERN.matcher(bssid2).matches()) {
-            throw new IllegalArgumentException("Invalid bssid: " + bssid2);
+    public WifiKey(String ssid, String bssid) {
+        if (ssid == null || !SSID_PATTERN.matcher(ssid).matches()) {
+            throw new IllegalArgumentException("Invalid ssid: " + ssid);
+        } else if (bssid == null || !BSSID_PATTERN.matcher(bssid).matches()) {
+            throw new IllegalArgumentException("Invalid bssid: " + bssid);
         } else {
-            this.ssid = ssid2;
-            this.bssid = bssid2;
+            this.ssid = ssid;
+            this.bssid = bssid;
         }
     }
 
@@ -38,10 +43,12 @@ public class WifiKey implements Parcelable {
         this.bssid = in.readString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(this.ssid);
         out.writeString(this.bssid);
@@ -55,14 +62,14 @@ public class WifiKey implements Parcelable {
             return false;
         }
         WifiKey wifiKey = (WifiKey) o;
-        if (!Objects.equals(this.ssid, wifiKey.ssid) || !Objects.equals(this.bssid, wifiKey.bssid)) {
-            return false;
+        if (Objects.equals(this.ssid, wifiKey.ssid) && Objects.equals(this.bssid, wifiKey.bssid)) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{this.ssid, this.bssid});
+        return Objects.hash(this.ssid, this.bssid);
     }
 
     public String toString() {

@@ -4,9 +4,10 @@ import com.ibm.icu.impl.Norm2AllModes;
 import com.ibm.icu.impl.Normalizer2Impl;
 
 @Deprecated
+/* loaded from: classes5.dex */
 public final class ComposedCharIter {
     @Deprecated
-    public static final char DONE = '￿';
+    public static final char DONE = '\uffff';
     private int curChar;
     private String decompBuf;
     private final Normalizer2Impl n2impl;
@@ -58,15 +59,16 @@ public final class ComposedCharIter {
         int c = this.curChar + 1;
         this.decompBuf = null;
         while (true) {
-            if (c >= 65535) {
+            if (c < 65535) {
+                this.decompBuf = this.n2impl.getDecomposition(c);
+                if (this.decompBuf != null) {
+                    break;
+                }
+                c++;
+            } else {
                 c = -1;
                 break;
             }
-            this.decompBuf = this.n2impl.getDecomposition(c);
-            if (this.decompBuf != null) {
-                break;
-            }
-            c++;
         }
         this.nextChar = c;
     }

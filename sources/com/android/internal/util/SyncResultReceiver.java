@@ -1,13 +1,14 @@
 package com.android.internal.util;
 
-import android.os.Bundle;
-import android.os.Parcelable;
-import com.android.internal.os.IResultReceiver;
+import android.p007os.Bundle;
+import android.p007os.Parcelable;
+import com.android.internal.p016os.IResultReceiver;
 import com.ibm.icu.text.DateFormat;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+/* loaded from: classes4.dex */
 public final class SyncResultReceiver extends IResultReceiver.Stub {
     private static final String EXTRA = "EXTRA";
     private Bundle mBundle;
@@ -21,7 +22,7 @@ public final class SyncResultReceiver extends IResultReceiver.Stub {
 
     private void waitResult() throws TimeoutException {
         try {
-            if (!this.mLatch.await((long) this.mTimeoutMs, TimeUnit.MILLISECONDS)) {
+            if (!this.mLatch.await(this.mTimeoutMs, TimeUnit.MILLISECONDS)) {
                 throw new TimeoutException("Not called in " + this.mTimeoutMs + DateFormat.MINUTE_SECOND);
             }
         } catch (InterruptedException e) {
@@ -56,7 +57,7 @@ public final class SyncResultReceiver extends IResultReceiver.Stub {
         if (this.mBundle == null) {
             return null;
         }
-        return this.mBundle.getParcelable(EXTRA);
+        return (P) this.mBundle.getParcelable(EXTRA);
     }
 
     public <P extends Parcelable> ArrayList<P> getParcelableListResult() throws TimeoutException {
@@ -75,6 +76,7 @@ public final class SyncResultReceiver extends IResultReceiver.Stub {
         return this.mBundle.getInt(EXTRA);
     }
 
+    @Override // com.android.internal.p016os.IResultReceiver
     public void send(int resultCode, Bundle resultData) {
         this.mResult = resultCode;
         this.mBundle = resultData;
@@ -111,6 +113,7 @@ public final class SyncResultReceiver extends IResultReceiver.Stub {
         return bundle;
     }
 
+    /* loaded from: classes4.dex */
     public static final class TimeoutException extends RuntimeException {
         private TimeoutException(String msg) {
             super(msg);

@@ -1,17 +1,19 @@
 package com.android.ims.internal;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.telephony.ims.ImsCallForwardInfo;
 import android.telephony.ims.ImsReasonInfo;
 import android.telephony.ims.ImsSsData;
 import android.telephony.ims.ImsSsInfo;
+import com.android.ims.internal.IImsUt;
 
+/* loaded from: classes4.dex */
 public interface IImsUtListener extends IInterface {
     void onSupplementaryServiceIndication(ImsSsData imsSsData) throws RemoteException;
 
@@ -36,36 +38,47 @@ public interface IImsUtListener extends IInterface {
     @UnsupportedAppUsage
     void utConfigurationUpdated(IImsUt iImsUt, int i) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IImsUtListener {
+        @Override // com.android.ims.internal.IImsUtListener
         public void utConfigurationUpdated(IImsUt ut, int id) throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.IImsUtListener
         public void utConfigurationUpdateFailed(IImsUt ut, int id, ImsReasonInfo error) throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.IImsUtListener
         public void utConfigurationQueried(IImsUt ut, int id, Bundle ssInfo) throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.IImsUtListener
         public void utConfigurationQueryFailed(IImsUt ut, int id, ImsReasonInfo error) throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.IImsUtListener
         public void utConfigurationCallBarringQueried(IImsUt ut, int id, ImsSsInfo[] cbInfo) throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.IImsUtListener
         public void utConfigurationCallForwardQueried(IImsUt ut, int id, ImsCallForwardInfo[] cfInfo) throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.IImsUtListener
         public void utConfigurationCallWaitingQueried(IImsUt ut, int id, ImsSsInfo[] cwInfo) throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.IImsUtListener
         public void onSupplementaryServiceIndication(ImsSsData ssData) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IImsUtListener {
         private static final String DESCRIPTOR = "com.android.ims.internal.IImsUtListener";
         static final int TRANSACTION_onSupplementaryServiceIndication = 8;
@@ -86,12 +99,13 @@ public interface IImsUtListener extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IImsUtListener)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IImsUtListener)) {
+                return (IImsUtListener) iin;
             }
-            return (IImsUtListener) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -119,144 +133,77 @@ public interface IImsUtListener extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v4, resolved type: android.telephony.ims.ImsReasonInfo} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v8, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v12, resolved type: android.telephony.ims.ImsReasonInfo} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v22, resolved type: android.telephony.ims.ImsSsData} */
-        /* JADX WARNING: type inference failed for: r1v1 */
-        /* JADX WARNING: type inference failed for: r1v27 */
-        /* JADX WARNING: type inference failed for: r1v28 */
-        /* JADX WARNING: type inference failed for: r1v29 */
-        /* JADX WARNING: type inference failed for: r1v30 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r7, android.os.Parcel r8, android.os.Parcel r9, int r10) throws android.os.RemoteException {
-            /*
-                r6 = this;
-                java.lang.String r0 = "com.android.ims.internal.IImsUtListener"
-                r1 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r2 = 1
-                if (r7 == r1) goto L_0x00f5
-                r1 = 0
-                switch(r7) {
-                    case 1: goto L_0x00e2;
-                    case 2: goto L_0x00bf;
-                    case 3: goto L_0x009c;
-                    case 4: goto L_0x0079;
-                    case 5: goto L_0x005e;
-                    case 6: goto L_0x0043;
-                    case 7: goto L_0x0028;
-                    case 8: goto L_0x0011;
-                    default: goto L_0x000c;
-                }
-            L_0x000c:
-                boolean r1 = super.onTransact(r7, r8, r9, r10)
-                return r1
-            L_0x0011:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x0023
-                android.os.Parcelable$Creator<android.telephony.ims.ImsSsData> r1 = android.telephony.ims.ImsSsData.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.telephony.ims.ImsSsData r1 = (android.telephony.ims.ImsSsData) r1
-                goto L_0x0024
-            L_0x0023:
-            L_0x0024:
-                r6.onSupplementaryServiceIndication(r1)
-                return r2
-            L_0x0028:
-                r8.enforceInterface(r0)
-                android.os.IBinder r1 = r8.readStrongBinder()
-                com.android.ims.internal.IImsUt r1 = com.android.ims.internal.IImsUt.Stub.asInterface(r1)
-                int r3 = r8.readInt()
-                android.os.Parcelable$Creator<android.telephony.ims.ImsSsInfo> r4 = android.telephony.ims.ImsSsInfo.CREATOR
-                java.lang.Object[] r4 = r8.createTypedArray(r4)
-                android.telephony.ims.ImsSsInfo[] r4 = (android.telephony.ims.ImsSsInfo[]) r4
-                r6.utConfigurationCallWaitingQueried(r1, r3, r4)
-                return r2
-            L_0x0043:
-                r8.enforceInterface(r0)
-                android.os.IBinder r1 = r8.readStrongBinder()
-                com.android.ims.internal.IImsUt r1 = com.android.ims.internal.IImsUt.Stub.asInterface(r1)
-                int r3 = r8.readInt()
-                android.os.Parcelable$Creator<android.telephony.ims.ImsCallForwardInfo> r4 = android.telephony.ims.ImsCallForwardInfo.CREATOR
-                java.lang.Object[] r4 = r8.createTypedArray(r4)
-                android.telephony.ims.ImsCallForwardInfo[] r4 = (android.telephony.ims.ImsCallForwardInfo[]) r4
-                r6.utConfigurationCallForwardQueried(r1, r3, r4)
-                return r2
-            L_0x005e:
-                r8.enforceInterface(r0)
-                android.os.IBinder r1 = r8.readStrongBinder()
-                com.android.ims.internal.IImsUt r1 = com.android.ims.internal.IImsUt.Stub.asInterface(r1)
-                int r3 = r8.readInt()
-                android.os.Parcelable$Creator<android.telephony.ims.ImsSsInfo> r4 = android.telephony.ims.ImsSsInfo.CREATOR
-                java.lang.Object[] r4 = r8.createTypedArray(r4)
-                android.telephony.ims.ImsSsInfo[] r4 = (android.telephony.ims.ImsSsInfo[]) r4
-                r6.utConfigurationCallBarringQueried(r1, r3, r4)
-                return r2
-            L_0x0079:
-                r8.enforceInterface(r0)
-                android.os.IBinder r3 = r8.readStrongBinder()
-                com.android.ims.internal.IImsUt r3 = com.android.ims.internal.IImsUt.Stub.asInterface(r3)
-                int r4 = r8.readInt()
-                int r5 = r8.readInt()
-                if (r5 == 0) goto L_0x0097
-                android.os.Parcelable$Creator<android.telephony.ims.ImsReasonInfo> r1 = android.telephony.ims.ImsReasonInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.telephony.ims.ImsReasonInfo r1 = (android.telephony.ims.ImsReasonInfo) r1
-                goto L_0x0098
-            L_0x0097:
-            L_0x0098:
-                r6.utConfigurationQueryFailed(r3, r4, r1)
-                return r2
-            L_0x009c:
-                r8.enforceInterface(r0)
-                android.os.IBinder r3 = r8.readStrongBinder()
-                com.android.ims.internal.IImsUt r3 = com.android.ims.internal.IImsUt.Stub.asInterface(r3)
-                int r4 = r8.readInt()
-                int r5 = r8.readInt()
-                if (r5 == 0) goto L_0x00ba
-                android.os.Parcelable$Creator<android.os.Bundle> r1 = android.os.Bundle.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.os.Bundle r1 = (android.os.Bundle) r1
-                goto L_0x00bb
-            L_0x00ba:
-            L_0x00bb:
-                r6.utConfigurationQueried(r3, r4, r1)
-                return r2
-            L_0x00bf:
-                r8.enforceInterface(r0)
-                android.os.IBinder r3 = r8.readStrongBinder()
-                com.android.ims.internal.IImsUt r3 = com.android.ims.internal.IImsUt.Stub.asInterface(r3)
-                int r4 = r8.readInt()
-                int r5 = r8.readInt()
-                if (r5 == 0) goto L_0x00dd
-                android.os.Parcelable$Creator<android.telephony.ims.ImsReasonInfo> r1 = android.telephony.ims.ImsReasonInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.telephony.ims.ImsReasonInfo r1 = (android.telephony.ims.ImsReasonInfo) r1
-                goto L_0x00de
-            L_0x00dd:
-            L_0x00de:
-                r6.utConfigurationUpdateFailed(r3, r4, r1)
-                return r2
-            L_0x00e2:
-                r8.enforceInterface(r0)
-                android.os.IBinder r1 = r8.readStrongBinder()
-                com.android.ims.internal.IImsUt r1 = com.android.ims.internal.IImsUt.Stub.asInterface(r1)
-                int r3 = r8.readInt()
-                r6.utConfigurationUpdated(r1, r3)
-                return r2
-            L_0x00f5:
-                r9.writeString(r0)
-                return r2
-            */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.ims.internal.IImsUtListener.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    IImsUt _arg0 = IImsUt.Stub.asInterface(data.readStrongBinder());
+                    int _arg1 = data.readInt();
+                    utConfigurationUpdated(_arg0, _arg1);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    IImsUt _arg02 = IImsUt.Stub.asInterface(data.readStrongBinder());
+                    int _arg12 = data.readInt();
+                    ImsReasonInfo _arg2 = data.readInt() != 0 ? ImsReasonInfo.CREATOR.createFromParcel(data) : null;
+                    utConfigurationUpdateFailed(_arg02, _arg12, _arg2);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    IImsUt _arg03 = IImsUt.Stub.asInterface(data.readStrongBinder());
+                    int _arg13 = data.readInt();
+                    Bundle _arg22 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    utConfigurationQueried(_arg03, _arg13, _arg22);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    IImsUt _arg04 = IImsUt.Stub.asInterface(data.readStrongBinder());
+                    int _arg14 = data.readInt();
+                    ImsReasonInfo _arg23 = data.readInt() != 0 ? ImsReasonInfo.CREATOR.createFromParcel(data) : null;
+                    utConfigurationQueryFailed(_arg04, _arg14, _arg23);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    IImsUt _arg05 = IImsUt.Stub.asInterface(data.readStrongBinder());
+                    int _arg15 = data.readInt();
+                    ImsSsInfo[] _arg24 = (ImsSsInfo[]) data.createTypedArray(ImsSsInfo.CREATOR);
+                    utConfigurationCallBarringQueried(_arg05, _arg15, _arg24);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    IImsUt _arg06 = IImsUt.Stub.asInterface(data.readStrongBinder());
+                    int _arg16 = data.readInt();
+                    ImsCallForwardInfo[] _arg25 = (ImsCallForwardInfo[]) data.createTypedArray(ImsCallForwardInfo.CREATOR);
+                    utConfigurationCallForwardQueried(_arg06, _arg16, _arg25);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    IImsUt _arg07 = IImsUt.Stub.asInterface(data.readStrongBinder());
+                    int _arg17 = data.readInt();
+                    ImsSsInfo[] _arg26 = (ImsSsInfo[]) data.createTypedArray(ImsSsInfo.CREATOR);
+                    utConfigurationCallWaitingQueried(_arg07, _arg17, _arg26);
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    ImsSsData _arg08 = data.readInt() != 0 ? ImsSsData.CREATOR.createFromParcel(data) : null;
+                    onSupplementaryServiceIndication(_arg08);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IImsUtListener {
             public static IImsUtListener sDefaultImpl;
             private IBinder mRemote;
@@ -265,6 +212,7 @@ public interface IImsUtListener extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -273,15 +221,15 @@ public interface IImsUtListener extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // com.android.ims.internal.IImsUtListener
             public void utConfigurationUpdated(IImsUt ut, int id) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(ut != null ? ut.asBinder() : null);
                     _data.writeInt(id);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().utConfigurationUpdated(ut, id);
                     }
                 } finally {
@@ -289,6 +237,7 @@ public interface IImsUtListener extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsUtListener
             public void utConfigurationUpdateFailed(IImsUt ut, int id, ImsReasonInfo error) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -301,9 +250,8 @@ public interface IImsUtListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().utConfigurationUpdateFailed(ut, id, error);
                     }
                 } finally {
@@ -311,6 +259,7 @@ public interface IImsUtListener extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsUtListener
             public void utConfigurationQueried(IImsUt ut, int id, Bundle ssInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -323,9 +272,8 @@ public interface IImsUtListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().utConfigurationQueried(ut, id, ssInfo);
                     }
                 } finally {
@@ -333,6 +281,7 @@ public interface IImsUtListener extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsUtListener
             public void utConfigurationQueryFailed(IImsUt ut, int id, ImsReasonInfo error) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -345,9 +294,8 @@ public interface IImsUtListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().utConfigurationQueryFailed(ut, id, error);
                     }
                 } finally {
@@ -355,6 +303,7 @@ public interface IImsUtListener extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsUtListener
             public void utConfigurationCallBarringQueried(IImsUt ut, int id, ImsSsInfo[] cbInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -362,9 +311,8 @@ public interface IImsUtListener extends IInterface {
                     _data.writeStrongBinder(ut != null ? ut.asBinder() : null);
                     _data.writeInt(id);
                     _data.writeTypedArray(cbInfo, 0);
-                    if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(5, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().utConfigurationCallBarringQueried(ut, id, cbInfo);
                     }
                 } finally {
@@ -372,6 +320,7 @@ public interface IImsUtListener extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsUtListener
             public void utConfigurationCallForwardQueried(IImsUt ut, int id, ImsCallForwardInfo[] cfInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -379,9 +328,8 @@ public interface IImsUtListener extends IInterface {
                     _data.writeStrongBinder(ut != null ? ut.asBinder() : null);
                     _data.writeInt(id);
                     _data.writeTypedArray(cfInfo, 0);
-                    if (this.mRemote.transact(6, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(6, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().utConfigurationCallForwardQueried(ut, id, cfInfo);
                     }
                 } finally {
@@ -389,6 +337,7 @@ public interface IImsUtListener extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsUtListener
             public void utConfigurationCallWaitingQueried(IImsUt ut, int id, ImsSsInfo[] cwInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -396,9 +345,8 @@ public interface IImsUtListener extends IInterface {
                     _data.writeStrongBinder(ut != null ? ut.asBinder() : null);
                     _data.writeInt(id);
                     _data.writeTypedArray(cwInfo, 0);
-                    if (this.mRemote.transact(7, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(7, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().utConfigurationCallWaitingQueried(ut, id, cwInfo);
                     }
                 } finally {
@@ -406,6 +354,7 @@ public interface IImsUtListener extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsUtListener
             public void onSupplementaryServiceIndication(ImsSsData ssData) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -416,9 +365,8 @@ public interface IImsUtListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(8, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(8, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onSupplementaryServiceIndication(ssData);
                     }
                 } finally {
@@ -428,11 +376,11 @@ public interface IImsUtListener extends IInterface {
         }
 
         public static boolean setDefaultImpl(IImsUtListener impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IImsUtListener getDefaultImpl() {

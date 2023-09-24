@@ -1,5 +1,6 @@
 package org.mozilla.universalchardet.prober.distributionanalysis;
 
+/* loaded from: classes5.dex */
 public abstract class CharDistributionAnalysis {
     public static final int ENOUGH_DATA_THRESHOLD = 1024;
     public static final int MINIMUM_DATA_THRESHOLD = 4;
@@ -20,7 +21,7 @@ public abstract class CharDistributionAnalysis {
             return 0.01f;
         }
         if (this.totalChars != this.freqChars) {
-            float f = ((float) (this.freqChars / (this.totalChars - this.freqChars))) * this.typicalDistributionRatio;
+            float f = (this.freqChars / (this.totalChars - this.freqChars)) * this.typicalDistributionRatio;
             if (f < 0.99f) {
                 return f;
             }
@@ -28,8 +29,7 @@ public abstract class CharDistributionAnalysis {
         return 0.99f;
     }
 
-    /* access modifiers changed from: protected */
-    public abstract int getOrder(byte[] bArr, int i);
+    protected abstract int getOrder(byte[] bArr, int i);
 
     public boolean gotEnoughData() {
         return this.totalChars > 1024;
@@ -42,9 +42,10 @@ public abstract class CharDistributionAnalysis {
         int order = i2 == 2 ? getOrder(bArr, i) : -1;
         if (order >= 0) {
             this.totalChars++;
-            if (order < this.charToFreqOrder.length && 512 > this.charToFreqOrder[order]) {
-                this.freqChars++;
+            if (order >= this.charToFreqOrder.length || 512 <= this.charToFreqOrder[order]) {
+                return;
             }
+            this.freqChars++;
         }
     }
 

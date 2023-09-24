@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+/* loaded from: classes4.dex */
 public class Recolor extends Transition {
     private static final String PROPNAME_BACKGROUND = "android:recolor:background";
     private static final String PROPNAME_TEXT_COLOR = "android:recolor:textColor";
@@ -28,14 +29,17 @@ public class Recolor extends Transition {
         }
     }
 
+    @Override // android.transition.Transition
     public void captureStartValues(TransitionValues transitionValues) {
         captureValues(transitionValues);
     }
 
+    @Override // android.transition.Transition
     public void captureEndValues(TransitionValues transitionValues) {
         captureValues(transitionValues);
     }
 
+    @Override // android.transition.Transition
     public Animator createAnimator(ViewGroup sceneRoot, TransitionValues startValues, TransitionValues endValues) {
         if (startValues == null || endValues == null) {
             return null;
@@ -48,7 +52,7 @@ public class Recolor extends Transition {
             ColorDrawable endColor = (ColorDrawable) endBackground;
             if (startColor.getColor() != endColor.getColor()) {
                 endColor.setColor(startColor.getColor());
-                return ObjectAnimator.ofArgb((Object) endBackground, "color", startColor.getColor(), endColor.getColor());
+                return ObjectAnimator.ofArgb(endBackground, "color", startColor.getColor(), endColor.getColor());
             }
         }
         if (view instanceof TextView) {
@@ -57,7 +61,7 @@ public class Recolor extends Transition {
             int end = ((Integer) endValues.values.get(PROPNAME_TEXT_COLOR)).intValue();
             if (start != end) {
                 textView.setTextColor(end);
-                return ObjectAnimator.ofArgb((Object) textView, "textColor", start, end);
+                return ObjectAnimator.ofArgb(textView, "textColor", start, end);
             }
         }
         return null;

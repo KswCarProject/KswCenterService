@@ -1,26 +1,26 @@
 package android.util;
 
-import android.os.SystemClock;
+import android.p007os.SystemClock;
 import com.android.internal.annotations.GuardedBy;
 import java.util.concurrent.TimeoutException;
 
+/* loaded from: classes4.dex */
 public abstract class TimedRemoteCaller<T> {
     public static final long DEFAULT_CALL_TIMEOUT_MILLIS = 5000;
-    @GuardedBy({"mLock"})
-    private final SparseIntArray mAwaitedCalls = new SparseIntArray(1);
     private final long mCallTimeoutMillis;
-    private final Object mLock = new Object();
-    @GuardedBy({"mLock"})
-    private final SparseArray<T> mReceivedCalls = new SparseArray<>(1);
     @GuardedBy({"mLock"})
     private int mSequenceCounter;
+    private final Object mLock = new Object();
+    @GuardedBy({"mLock"})
+    private final SparseIntArray mAwaitedCalls = new SparseIntArray(1);
+    @GuardedBy({"mLock"})
+    private final SparseArray<T> mReceivedCalls = new SparseArray<>(1);
 
     public TimedRemoteCaller(long callTimeoutMillis) {
         this.mCallTimeoutMillis = callTimeoutMillis;
     }
 
-    /* access modifiers changed from: protected */
-    public final int onBeforeRemoteCall() {
+    protected final int onBeforeRemoteCall() {
         int sequenceId;
         synchronized (this.mLock) {
             do {
@@ -32,10 +32,10 @@ public abstract class TimedRemoteCaller<T> {
         return sequenceId;
     }
 
-    /* access modifiers changed from: protected */
-    public final void onRemoteMethodResult(T result, int sequence) {
+    protected final void onRemoteMethodResult(T result, int sequence) {
         synchronized (this.mLock) {
-            if (this.mAwaitedCalls.get(sequence) != 0) {
+            boolean containedSequenceId = this.mAwaitedCalls.get(sequence) != 0;
+            if (containedSequenceId) {
                 this.mAwaitedCalls.delete(sequence);
                 this.mReceivedCalls.put(sequence, result);
                 this.mLock.notifyAll();
@@ -43,23 +43,21 @@ public abstract class TimedRemoteCaller<T> {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public final T getResultTimed(int sequence) throws TimeoutException {
+    protected final T getResultTimed(int sequence) throws TimeoutException {
         long startMillis = SystemClock.uptimeMillis();
         while (true) {
             try {
                 synchronized (this.mLock) {
                     if (this.mReceivedCalls.indexOfKey(sequence) >= 0) {
-                        T removeReturnOld = this.mReceivedCalls.removeReturnOld(sequence);
-                        return removeReturnOld;
+                        return this.mReceivedCalls.removeReturnOld(sequence);
                     }
-                    long waitMillis = this.mCallTimeoutMillis - (SystemClock.uptimeMillis() - startMillis);
-                    if (waitMillis > 0) {
-                        this.mLock.wait(waitMillis);
-                    } else {
+                    long elapsedMillis = SystemClock.uptimeMillis() - startMillis;
+                    long waitMillis = this.mCallTimeoutMillis - elapsedMillis;
+                    if (waitMillis <= 0) {
                         this.mAwaitedCalls.delete(sequence);
                         throw new TimeoutException("No response for sequence: " + sequence);
                     }
+                    this.mLock.wait(waitMillis);
                 }
             } catch (InterruptedException e) {
             }

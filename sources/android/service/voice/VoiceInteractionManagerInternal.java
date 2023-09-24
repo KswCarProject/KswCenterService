@@ -1,8 +1,9 @@
 package android.service.voice;
 
-import android.os.Bundle;
-import android.os.IBinder;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
 
+/* loaded from: classes3.dex */
 public abstract class VoiceInteractionManagerInternal {
     public abstract void startLocalVoiceInteraction(IBinder iBinder, Bundle bundle);
 

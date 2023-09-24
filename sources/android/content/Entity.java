@@ -5,6 +5,7 @@ import android.net.Uri;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+/* loaded from: classes.dex */
 public final class Entity {
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
     private final ArrayList<NamedContentValues> mSubValues = new ArrayList<>();
@@ -27,13 +28,14 @@ public final class Entity {
         this.mSubValues.add(new NamedContentValues(uri, values));
     }
 
+    /* loaded from: classes.dex */
     public static class NamedContentValues {
         public final Uri uri;
         public final ContentValues values;
 
-        public NamedContentValues(Uri uri2, ContentValues values2) {
-            this.uri = uri2;
-            this.values = values2;
+        public NamedContentValues(Uri uri, ContentValues values) {
+            this.uri = uri;
+            this.values = values;
         }
     }
 

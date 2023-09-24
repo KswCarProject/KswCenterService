@@ -1,7 +1,9 @@
 package android.stats.mediametrics;
 
+/* loaded from: classes3.dex */
 public final class Mediametrics {
 
+    /* loaded from: classes3.dex */
     public final class AudioPolicyData {
         public static final long ACTIVE_DEVICE = 1138166333449L;
         public static final long ACTIVE_PACKAGE = 1138166333447L;
@@ -17,6 +19,7 @@ public final class Mediametrics {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class AudioRecordData {
         public static final long ATTRIBUTES = 1138166333453L;
         public static final long CHANNELS = 1120986464261L;
@@ -38,6 +41,7 @@ public final class Mediametrics {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class AudioThreadData {
         public static final long ACTIVE_MILLIS = 1112396529673L;
         public static final long CHANNEL_MASK = 1112396529678L;
@@ -45,7 +49,9 @@ public final class Mediametrics {
         public static final long ENCODING = 1138166333455L;
         public static final long FRAMECOUNT = 1120986464258L;
         public static final long FRAME_COUNT = 1120986464272L;
-        public static final long ID = 1120986464267L;
+
+        /* renamed from: ID */
+        public static final long f255ID = 1120986464267L;
         public static final long INPUT_DEVICE = 1138166333458L;
         public static final long IO_JITTER_MEAN_MILLIS = 1103806595091L;
         public static final long IO_JITTER_STDDEV_MILLIS = 1103806595092L;
@@ -70,6 +76,7 @@ public final class Mediametrics {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class AudioTrackData {
         public static final long ATTRIBUTES = 1138166333451L;
         public static final long CHANNEL_MASK = 1112396529669L;
@@ -87,6 +94,7 @@ public final class Mediametrics {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class CodecData {
         public static final long CODEC = 1138166333441L;
         public static final long CRYPTO = 1120986464265L;
@@ -113,6 +121,7 @@ public final class Mediametrics {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class ExtractorData {
         public static final long FORMAT = 1138166333441L;
         public static final long MIME = 1138166333442L;
@@ -122,6 +131,7 @@ public final class Mediametrics {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class NuPlayerData {
         public static final long AUDIO_CODEC = 1138166333450L;
         public static final long AUDIO_MIME = 1138166333449L;
@@ -148,6 +158,7 @@ public final class Mediametrics {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class RecorderData {
         public static final long AUDIO_BITRATE = 1120986464270L;
         public static final long AUDIO_CHANNELS = 1120986464271L;

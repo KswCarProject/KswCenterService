@@ -7,5 +7,6 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.CONSTRUCTOR, ElementType.FIELD, ElementType.LOCAL_VARIABLE, ElementType.METHOD, ElementType.PACKAGE, ElementType.PARAMETER, ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
+/* loaded from: classes.dex */
 public @interface Condemned {
 }

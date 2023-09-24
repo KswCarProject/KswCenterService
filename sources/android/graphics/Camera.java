@@ -2,6 +2,7 @@ package android.graphics;
 
 import android.annotation.UnsupportedAppUsage;
 
+/* loaded from: classes.dex */
 public class Camera {
     @UnsupportedAppUsage
     long native_instance;
@@ -50,11 +51,10 @@ public class Camera {
         nativeApplyToCanvas(canvas.getNativeCanvasWrapper());
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         try {
             nativeDestructor();
-            this.native_instance = 0;
+            this.native_instance = 0L;
         } finally {
             super.finalize();
         }

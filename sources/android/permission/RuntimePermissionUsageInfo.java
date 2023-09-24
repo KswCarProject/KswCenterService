@@ -1,17 +1,22 @@
 package android.permission;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.util.Preconditions;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class RuntimePermissionUsageInfo implements Parcelable {
-    public static final Parcelable.Creator<RuntimePermissionUsageInfo> CREATOR = new Parcelable.Creator<RuntimePermissionUsageInfo>() {
+    public static final Parcelable.Creator<RuntimePermissionUsageInfo> CREATOR = new Parcelable.Creator<RuntimePermissionUsageInfo>() { // from class: android.permission.RuntimePermissionUsageInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RuntimePermissionUsageInfo createFromParcel(Parcel source) {
             return new RuntimePermissionUsageInfo(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RuntimePermissionUsageInfo[] newArray(int size) {
             return new RuntimePermissionUsageInfo[size];
         }
@@ -38,10 +43,12 @@ public final class RuntimePermissionUsageInfo implements Parcelable {
         return this.mName;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeString(this.mName);
         parcel.writeInt(this.mNumUsers);

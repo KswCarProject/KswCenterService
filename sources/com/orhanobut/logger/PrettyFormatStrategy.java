@@ -6,18 +6,19 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.android.internal.content.NativeLibraryHelper;
 
+/* loaded from: classes5.dex */
 public class PrettyFormatStrategy implements FormatStrategy {
-    private static final String BOTTOM_BORDER = "└────────────────────────────────────────────────────────────────────────────────────────────────────────────────";
-    private static final char BOTTOM_LEFT_CORNER = '└';
+    private static final String BOTTOM_BORDER = "\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500";
+    private static final char BOTTOM_LEFT_CORNER = '\u2514';
     private static final int CHUNK_SIZE = 4000;
-    private static final String DOUBLE_DIVIDER = "────────────────────────────────────────────────────────";
-    private static final char HORIZONTAL_LINE = '│';
-    private static final String MIDDLE_BORDER = "├┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄";
-    private static final char MIDDLE_CORNER = '├';
+    private static final String DOUBLE_DIVIDER = "\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500";
+    private static final char HORIZONTAL_LINE = '\u2502';
+    private static final String MIDDLE_BORDER = "\u251c\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504";
+    private static final char MIDDLE_CORNER = '\u251c';
     private static final int MIN_STACK_OFFSET = 5;
-    private static final String SINGLE_DIVIDER = "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄";
-    private static final String TOP_BORDER = "┌────────────────────────────────────────────────────────────────────────────────────────────────────────────────";
-    private static final char TOP_LEFT_CORNER = '┌';
+    private static final String SINGLE_DIVIDER = "\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504";
+    private static final String TOP_BORDER = "\u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500";
+    private static final char TOP_LEFT_CORNER = '\u250c';
     @NonNull
     private final LogStrategy logStrategy;
     private final int methodCount;
@@ -40,83 +41,88 @@ public class PrettyFormatStrategy implements FormatStrategy {
         return new Builder();
     }
 
+    @Override // com.orhanobut.logger.FormatStrategy
     public void log(int priority, @Nullable String onceOnlyTag, @NonNull String message) {
         Utils.checkNotNull(message);
-        String tag2 = formatTag(onceOnlyTag);
-        logTopBorder(priority, tag2);
-        logHeaderContent(priority, tag2, this.methodCount);
+        String tag = formatTag(onceOnlyTag);
+        logTopBorder(priority, tag);
+        logHeaderContent(priority, tag, this.methodCount);
         byte[] bytes = message.getBytes();
         int length = bytes.length;
         if (length <= 4000) {
             if (this.methodCount > 0) {
-                logDivider(priority, tag2);
+                logDivider(priority, tag);
             }
-            logContent(priority, tag2, message);
-            logBottomBorder(priority, tag2);
+            logContent(priority, tag, message);
+            logBottomBorder(priority, tag);
             return;
         }
         if (this.methodCount > 0) {
-            logDivider(priority, tag2);
+            logDivider(priority, tag);
         }
         for (int i = 0; i < length; i += 4000) {
-            logContent(priority, tag2, new String(bytes, i, Math.min(length - i, 4000)));
+            int count = Math.min(length - i, 4000);
+            logContent(priority, tag, new String(bytes, i, count));
         }
-        logBottomBorder(priority, tag2);
+        logBottomBorder(priority, tag);
     }
 
-    private void logTopBorder(int logType, @Nullable String tag2) {
-        logChunk(logType, tag2, TOP_BORDER);
+    private void logTopBorder(int logType, @Nullable String tag) {
+        logChunk(logType, tag, TOP_BORDER);
     }
 
-    private void logHeaderContent(int logType, @Nullable String tag2, int methodCount2) {
+    private void logHeaderContent(int logType, @Nullable String tag, int methodCount) {
         StackTraceElement[] trace = Thread.currentThread().getStackTrace();
         if (this.showThreadInfo) {
-            logChunk(logType, tag2, "│ Thread: " + Thread.currentThread().getName());
-            logDivider(logType, tag2);
+            logChunk(logType, tag, "\u2502 Thread: " + Thread.currentThread().getName());
+            logDivider(logType, tag);
         }
         int stackOffset = getStackOffset(trace) + this.methodOffset;
-        if (methodCount2 + stackOffset > trace.length) {
-            methodCount2 = (trace.length - stackOffset) - 1;
+        if (methodCount + stackOffset > trace.length) {
+            methodCount = (trace.length - stackOffset) - 1;
         }
         String level = "";
-        for (int i = methodCount2; i > 0; i--) {
+        for (int i = methodCount; i > 0; i--) {
             int stackIndex = i + stackOffset;
             if (stackIndex < trace.length) {
                 level = level + "   ";
-                logChunk(logType, tag2, HORIZONTAL_LINE + ' ' + level + getSimpleClassName(trace[stackIndex].getClassName()) + "." + trace[stackIndex].getMethodName() + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + " (" + trace[stackIndex].getFileName() + SettingsStringUtil.DELIMITER + trace[stackIndex].getLineNumber() + ")");
+                logChunk(logType, tag, HORIZONTAL_LINE + ' ' + level + getSimpleClassName(trace[stackIndex].getClassName()) + "." + trace[stackIndex].getMethodName() + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + " (" + trace[stackIndex].getFileName() + SettingsStringUtil.DELIMITER + trace[stackIndex].getLineNumber() + ")");
             }
         }
     }
 
-    private void logBottomBorder(int logType, @Nullable String tag2) {
-        logChunk(logType, tag2, BOTTOM_BORDER);
+    private void logBottomBorder(int logType, @Nullable String tag) {
+        logChunk(logType, tag, BOTTOM_BORDER);
     }
 
-    private void logDivider(int logType, @Nullable String tag2) {
-        logChunk(logType, tag2, MIDDLE_BORDER);
+    private void logDivider(int logType, @Nullable String tag) {
+        logChunk(logType, tag, MIDDLE_BORDER);
     }
 
-    private void logContent(int logType, @Nullable String tag2, @NonNull String chunk) {
+    private void logContent(int logType, @Nullable String tag, @NonNull String chunk) {
         Utils.checkNotNull(chunk);
-        for (String line : chunk.split(System.getProperty("line.separator"))) {
-            logChunk(logType, tag2, "│ " + line);
+        String[] lines = chunk.split(System.getProperty("line.separator"));
+        for (String line : lines) {
+            logChunk(logType, tag, "\u2502 " + line);
         }
     }
 
-    private void logChunk(int priority, @Nullable String tag2, @NonNull String chunk) {
+    private void logChunk(int priority, @Nullable String tag, @NonNull String chunk) {
         Utils.checkNotNull(chunk);
-        this.logStrategy.log(priority, tag2, chunk);
+        this.logStrategy.log(priority, tag, chunk);
     }
 
     private String getSimpleClassName(@NonNull String name) {
         Utils.checkNotNull(name);
-        return name.substring(name.lastIndexOf(".") + 1);
+        int lastIndex = name.lastIndexOf(".");
+        return name.substring(lastIndex + 1);
     }
 
     private int getStackOffset(@NonNull StackTraceElement[] trace) {
         Utils.checkNotNull(trace);
         for (int i = 5; i < trace.length; i++) {
-            String name = trace[i].getClassName();
+            StackTraceElement e = trace[i];
+            String name = e.getClassName();
             if (!name.equals(LoggerPrinter.class.getName()) && !name.equals(Logger.class.getName())) {
                 return i - 1;
             }
@@ -125,13 +131,14 @@ public class PrettyFormatStrategy implements FormatStrategy {
     }
 
     @Nullable
-    private String formatTag(@Nullable String tag2) {
-        if (Utils.isEmpty(tag2) || Utils.equals(this.tag, tag2)) {
-            return this.tag;
+    private String formatTag(@Nullable String tag) {
+        if (!Utils.isEmpty(tag) && !Utils.equals(this.tag, tag)) {
+            return this.tag + NativeLibraryHelper.CLEAR_ABI_OVERRIDE + tag;
         }
-        return this.tag + NativeLibraryHelper.CLEAR_ABI_OVERRIDE + tag2;
+        return this.tag;
     }
 
+    /* loaded from: classes5.dex */
     public static class Builder {
         @Nullable
         LogStrategy logStrategy;
@@ -173,8 +180,8 @@ public class PrettyFormatStrategy implements FormatStrategy {
         }
 
         @NonNull
-        public Builder tag(@Nullable String tag2) {
-            this.tag = tag2;
+        public Builder tag(@Nullable String tag) {
+            this.tag = tag;
             return this;
         }
 

@@ -1,14 +1,19 @@
 package com.android.ims;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes4.dex */
 public class RcsTypeIdPair implements Parcelable {
-    public static final Parcelable.Creator<RcsTypeIdPair> CREATOR = new Parcelable.Creator<RcsTypeIdPair>() {
+    public static final Parcelable.Creator<RcsTypeIdPair> CREATOR = new Parcelable.Creator<RcsTypeIdPair>() { // from class: com.android.ims.RcsTypeIdPair.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RcsTypeIdPair createFromParcel(Parcel in) {
             return new RcsTypeIdPair(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RcsTypeIdPair[] newArray(int size) {
             return new RcsTypeIdPair[size];
         }
@@ -42,10 +47,12 @@ public class RcsTypeIdPair implements Parcelable {
         this.mId = in.readInt();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mType);
         dest.writeInt(this.mId);

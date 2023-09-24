@@ -1,11 +1,12 @@
 package com.android.internal.policy;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes4.dex */
 public interface IKeyguardDismissCallback extends IInterface {
     void onDismissCancelled() throws RemoteException;
 
@@ -13,21 +14,27 @@ public interface IKeyguardDismissCallback extends IInterface {
 
     void onDismissSucceeded() throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IKeyguardDismissCallback {
+        @Override // com.android.internal.policy.IKeyguardDismissCallback
         public void onDismissError() throws RemoteException {
         }
 
+        @Override // com.android.internal.policy.IKeyguardDismissCallback
         public void onDismissSucceeded() throws RemoteException {
         }
 
+        @Override // com.android.internal.policy.IKeyguardDismissCallback
         public void onDismissCancelled() throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IKeyguardDismissCallback {
         private static final String DESCRIPTOR = "com.android.internal.policy.IKeyguardDismissCallback";
         static final int TRANSACTION_onDismissCancelled = 3;
@@ -43,12 +50,13 @@ public interface IKeyguardDismissCallback extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IKeyguardDismissCallback)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IKeyguardDismissCallback)) {
+                return (IKeyguardDismissCallback) iin;
             }
-            return (IKeyguardDismissCallback) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -66,34 +74,36 @@ public interface IKeyguardDismissCallback extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        onDismissError();
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        onDismissSucceeded();
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        onDismissCancelled();
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    onDismissError();
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    onDismissSucceeded();
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    onDismissCancelled();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IKeyguardDismissCallback {
             public static IKeyguardDismissCallback sDefaultImpl;
             private IBinder mRemote;
@@ -102,6 +112,7 @@ public interface IKeyguardDismissCallback extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -110,13 +121,13 @@ public interface IKeyguardDismissCallback extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // com.android.internal.policy.IKeyguardDismissCallback
             public void onDismissError() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onDismissError();
                     }
                 } finally {
@@ -124,13 +135,13 @@ public interface IKeyguardDismissCallback extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.policy.IKeyguardDismissCallback
             public void onDismissSucceeded() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onDismissSucceeded();
                     }
                 } finally {
@@ -138,13 +149,13 @@ public interface IKeyguardDismissCallback extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.policy.IKeyguardDismissCallback
             public void onDismissCancelled() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onDismissCancelled();
                     }
                 } finally {
@@ -154,11 +165,11 @@ public interface IKeyguardDismissCallback extends IInterface {
         }
 
         public static boolean setDefaultImpl(IKeyguardDismissCallback impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IKeyguardDismissCallback getDefaultImpl() {

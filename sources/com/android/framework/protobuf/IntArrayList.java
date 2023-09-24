@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.RandomAccess;
 
+/* loaded from: classes4.dex */
 final class IntArrayList extends AbstractProtobufList<Integer> implements Internal.IntList, RandomAccess {
     private static final IntArrayList EMPTY_LIST = new IntArrayList();
     private int[] array;
@@ -22,11 +23,12 @@ final class IntArrayList extends AbstractProtobufList<Integer> implements Intern
         this(new int[10], 0);
     }
 
-    private IntArrayList(int[] array2, int size2) {
-        this.array = array2;
-        this.size = size2;
+    private IntArrayList(int[] array, int size) {
+        this.array = array;
+        this.size = size;
     }
 
+    @Override // com.android.framework.protobuf.AbstractProtobufList, java.util.AbstractList, java.util.Collection, java.util.List
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -47,6 +49,7 @@ final class IntArrayList extends AbstractProtobufList<Integer> implements Intern
         return true;
     }
 
+    @Override // com.android.framework.protobuf.AbstractProtobufList, java.util.AbstractList, java.util.Collection, java.util.List
     public int hashCode() {
         int result = 1;
         for (int i = 0; i < this.size; i++) {
@@ -55,30 +58,37 @@ final class IntArrayList extends AbstractProtobufList<Integer> implements Intern
         return result;
     }
 
-    public Internal.IntList mutableCopyWithCapacity(int capacity) {
-        if (capacity >= this.size) {
-            return new IntArrayList(Arrays.copyOf(this.array, capacity), this.size);
+    @Override // com.android.framework.protobuf.Internal.ProtobufList, com.android.framework.protobuf.Internal.BooleanList
+    /* renamed from: mutableCopyWithCapacity */
+    public Internal.ProtobufList<Integer> mutableCopyWithCapacity2(int capacity) {
+        if (capacity < this.size) {
+            throw new IllegalArgumentException();
         }
-        throw new IllegalArgumentException();
+        return new IntArrayList(Arrays.copyOf(this.array, capacity), this.size);
     }
 
+    @Override // java.util.AbstractList, java.util.List
     public Integer get(int index) {
         return Integer.valueOf(getInt(index));
     }
 
+    @Override // com.android.framework.protobuf.Internal.IntList
     public int getInt(int index) {
         ensureIndexInRange(index);
         return this.array[index];
     }
 
+    @Override // java.util.AbstractCollection, java.util.Collection, java.util.List
     public int size() {
         return this.size;
     }
 
+    @Override // com.android.framework.protobuf.AbstractProtobufList, java.util.AbstractList, java.util.List
     public Integer set(int index, Integer element) {
         return Integer.valueOf(setInt(index, element.intValue()));
     }
 
+    @Override // com.android.framework.protobuf.Internal.IntList
     public int setInt(int index, int element) {
         ensureIsMutable();
         ensureIndexInRange(index);
@@ -87,10 +97,12 @@ final class IntArrayList extends AbstractProtobufList<Integer> implements Intern
         return previousValue;
     }
 
+    @Override // com.android.framework.protobuf.AbstractProtobufList, java.util.AbstractList, java.util.List
     public void add(int index, Integer element) {
         addInt(index, element.intValue());
     }
 
+    @Override // com.android.framework.protobuf.Internal.IntList
     public void addInt(int element) {
         addInt(this.size, element);
     }
@@ -103,7 +115,8 @@ final class IntArrayList extends AbstractProtobufList<Integer> implements Intern
         if (this.size < this.array.length) {
             System.arraycopy(this.array, index, this.array, index + 1, this.size - index);
         } else {
-            int[] newArray = new int[(((this.size * 3) / 2) + 1)];
+            int length = ((this.size * 3) / 2) + 1;
+            int[] newArray = new int[length];
             System.arraycopy(this.array, 0, newArray, 0, index);
             System.arraycopy(this.array, index, newArray, index + 1, this.size - index);
             this.array = newArray;
@@ -113,31 +126,34 @@ final class IntArrayList extends AbstractProtobufList<Integer> implements Intern
         this.modCount++;
     }
 
+    @Override // com.android.framework.protobuf.AbstractProtobufList, java.util.AbstractCollection, java.util.Collection, java.util.List
     public boolean addAll(Collection<? extends Integer> collection) {
         ensureIsMutable();
         if (collection == null) {
             throw new NullPointerException();
-        } else if (!(collection instanceof IntArrayList)) {
+        }
+        if (!(collection instanceof IntArrayList)) {
             return super.addAll(collection);
-        } else {
-            IntArrayList list = (IntArrayList) collection;
-            if (list.size == 0) {
-                return false;
-            }
-            if (Integer.MAX_VALUE - this.size >= list.size) {
-                int newSize = this.size + list.size;
-                if (newSize > this.array.length) {
-                    this.array = Arrays.copyOf(this.array, newSize);
-                }
-                System.arraycopy(list.array, 0, this.array, this.size, list.size);
-                this.size = newSize;
-                this.modCount++;
-                return true;
-            }
+        }
+        IntArrayList list = (IntArrayList) collection;
+        if (list.size == 0) {
+            return false;
+        }
+        int overflow = Integer.MAX_VALUE - this.size;
+        if (overflow < list.size) {
             throw new OutOfMemoryError();
         }
+        int newSize = this.size + list.size;
+        if (newSize > this.array.length) {
+            this.array = Arrays.copyOf(this.array, newSize);
+        }
+        System.arraycopy(list.array, 0, this.array, this.size, list.size);
+        this.size = newSize;
+        this.modCount++;
+        return true;
     }
 
+    @Override // com.android.framework.protobuf.AbstractProtobufList, java.util.AbstractCollection, java.util.Collection, java.util.List
     public boolean remove(Object o) {
         ensureIsMutable();
         for (int i = 0; i < this.size; i++) {
@@ -151,6 +167,7 @@ final class IntArrayList extends AbstractProtobufList<Integer> implements Intern
         return false;
     }
 
+    @Override // com.android.framework.protobuf.AbstractProtobufList, java.util.AbstractList, java.util.List
     public Integer remove(int index) {
         ensureIsMutable();
         ensureIndexInRange(index);

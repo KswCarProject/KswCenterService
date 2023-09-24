@@ -1,12 +1,13 @@
 package android.app.slice;
 
 import android.net.Uri;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes.dex */
 public interface ISliceManager extends IInterface {
     void applyRestore(byte[] bArr, int i) throws RemoteException;
 
@@ -30,50 +31,64 @@ public interface ISliceManager extends IInterface {
 
     void unpinSlice(String str, Uri uri, IBinder iBinder) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements ISliceManager {
+        @Override // android.app.slice.ISliceManager
         public void pinSlice(String pkg, Uri uri, SliceSpec[] specs, IBinder token) throws RemoteException {
         }
 
+        @Override // android.app.slice.ISliceManager
         public void unpinSlice(String pkg, Uri uri, IBinder token) throws RemoteException {
         }
 
+        @Override // android.app.slice.ISliceManager
         public boolean hasSliceAccess(String pkg) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.slice.ISliceManager
         public SliceSpec[] getPinnedSpecs(Uri uri, String pkg) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.slice.ISliceManager
         public Uri[] getPinnedSlices(String pkg) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.slice.ISliceManager
         public byte[] getBackupPayload(int user) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.slice.ISliceManager
         public void applyRestore(byte[] payload, int user) throws RemoteException {
         }
 
+        @Override // android.app.slice.ISliceManager
         public void grantSlicePermission(String callingPkg, String toPkg, Uri uri) throws RemoteException {
         }
 
+        @Override // android.app.slice.ISliceManager
         public void revokeSlicePermission(String callingPkg, String toPkg, Uri uri) throws RemoteException {
         }
 
+        @Override // android.app.slice.ISliceManager
         public int checkSlicePermission(Uri uri, String callingPkg, String pkg, int pid, int uid, String[] autoGrantPermissions) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.slice.ISliceManager
         public void grantPermissionFromUser(Uri uri, String pkg, String callingPkg, boolean allSlices) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements ISliceManager {
         private static final String DESCRIPTOR = "android.app.slice.ISliceManager";
         static final int TRANSACTION_applyRestore = 7;
@@ -97,12 +112,13 @@ public interface ISliceManager extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof ISliceManager)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof ISliceManager)) {
+                return (ISliceManager) iin;
             }
-            return (ISliceManager) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -136,113 +152,113 @@ public interface ISliceManager extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            int i = code;
-            Parcel parcel = data;
-            Parcel parcel2 = reply;
-            if (i != 1598968902) {
-                Uri _arg0 = null;
-                switch (i) {
-                    case 1:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        String _arg02 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg0 = Uri.CREATOR.createFromParcel(parcel);
-                        }
-                        pinSlice(_arg02, _arg0, (SliceSpec[]) parcel.createTypedArray(SliceSpec.CREATOR), data.readStrongBinder());
-                        reply.writeNoException();
-                        return true;
-                    case 2:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        String _arg03 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg0 = Uri.CREATOR.createFromParcel(parcel);
-                        }
-                        unpinSlice(_arg03, _arg0, data.readStrongBinder());
-                        reply.writeNoException();
-                        return true;
-                    case 3:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        boolean _result = hasSliceAccess(data.readString());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result);
-                        return true;
-                    case 4:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = Uri.CREATOR.createFromParcel(parcel);
-                        }
-                        SliceSpec[] _result2 = getPinnedSpecs(_arg0, data.readString());
-                        reply.writeNoException();
-                        parcel2.writeTypedArray(_result2, 1);
-                        return true;
-                    case 5:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        Uri[] _result3 = getPinnedSlices(data.readString());
-                        reply.writeNoException();
-                        parcel2.writeTypedArray(_result3, 1);
-                        return true;
-                    case 6:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        byte[] _result4 = getBackupPayload(data.readInt());
-                        reply.writeNoException();
-                        parcel2.writeByteArray(_result4);
-                        return true;
-                    case 7:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        applyRestore(data.createByteArray(), data.readInt());
-                        reply.writeNoException();
-                        return true;
-                    case 8:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        String _arg04 = data.readString();
-                        String _arg1 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg0 = Uri.CREATOR.createFromParcel(parcel);
-                        }
-                        grantSlicePermission(_arg04, _arg1, _arg0);
-                        reply.writeNoException();
-                        return true;
-                    case 9:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        String _arg05 = data.readString();
-                        String _arg12 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg0 = Uri.CREATOR.createFromParcel(parcel);
-                        }
-                        revokeSlicePermission(_arg05, _arg12, _arg0);
-                        reply.writeNoException();
-                        return true;
-                    case 10:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = Uri.CREATOR.createFromParcel(parcel);
-                        }
-                        int _result5 = checkSlicePermission(_arg0, data.readString(), data.readString(), data.readInt(), data.readInt(), data.createStringArray());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result5);
-                        return true;
-                    case 11:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = Uri.CREATOR.createFromParcel(parcel);
-                        }
-                        grantPermissionFromUser(_arg0, data.readString(), data.readString(), data.readInt() != 0);
-                        reply.writeNoException();
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
-                parcel2.writeString(DESCRIPTOR);
+            Uri _arg0;
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
                 return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg02 = data.readString();
+                    _arg0 = data.readInt() != 0 ? Uri.CREATOR.createFromParcel(data) : null;
+                    SliceSpec[] _arg2 = (SliceSpec[]) data.createTypedArray(SliceSpec.CREATOR);
+                    IBinder _arg3 = data.readStrongBinder();
+                    pinSlice(_arg02, _arg0, _arg2, _arg3);
+                    reply.writeNoException();
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg03 = data.readString();
+                    _arg0 = data.readInt() != 0 ? Uri.CREATOR.createFromParcel(data) : null;
+                    IBinder _arg22 = data.readStrongBinder();
+                    unpinSlice(_arg03, _arg0, _arg22);
+                    reply.writeNoException();
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean hasSliceAccess = hasSliceAccess(data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(hasSliceAccess ? 1 : 0);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0 ? Uri.CREATOR.createFromParcel(data) : null;
+                    String _arg1 = data.readString();
+                    SliceSpec[] _result = getPinnedSpecs(_arg0, _arg1);
+                    reply.writeNoException();
+                    reply.writeTypedArray(_result, 1);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    Uri[] _result2 = getPinnedSlices(data.readString());
+                    reply.writeNoException();
+                    reply.writeTypedArray(_result2, 1);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    byte[] _result3 = getBackupPayload(data.readInt());
+                    reply.writeNoException();
+                    reply.writeByteArray(_result3);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    byte[] _arg04 = data.createByteArray();
+                    int _arg12 = data.readInt();
+                    applyRestore(_arg04, _arg12);
+                    reply.writeNoException();
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg05 = data.readString();
+                    String _arg13 = data.readString();
+                    _arg0 = data.readInt() != 0 ? Uri.CREATOR.createFromParcel(data) : null;
+                    grantSlicePermission(_arg05, _arg13, _arg0);
+                    reply.writeNoException();
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg06 = data.readString();
+                    String _arg14 = data.readString();
+                    _arg0 = data.readInt() != 0 ? Uri.CREATOR.createFromParcel(data) : null;
+                    revokeSlicePermission(_arg06, _arg14, _arg0);
+                    reply.writeNoException();
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0 ? Uri.CREATOR.createFromParcel(data) : null;
+                    Uri _arg07 = _arg0;
+                    String _arg15 = data.readString();
+                    String _arg23 = data.readString();
+                    int _arg32 = data.readInt();
+                    int _arg4 = data.readInt();
+                    String[] _arg5 = data.createStringArray();
+                    int _result4 = checkSlicePermission(_arg07, _arg15, _arg23, _arg32, _arg4, _arg5);
+                    reply.writeNoException();
+                    reply.writeInt(_result4);
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0 ? Uri.CREATOR.createFromParcel(data) : null;
+                    String _arg16 = data.readString();
+                    String _arg24 = data.readString();
+                    boolean _arg33 = data.readInt() != 0;
+                    grantPermissionFromUser(_arg0, _arg16, _arg24, _arg33);
+                    reply.writeNoException();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
             }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements ISliceManager {
             public static ISliceManager sDefaultImpl;
             private IBinder mRemote;
@@ -251,6 +267,7 @@ public interface ISliceManager extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -259,6 +276,7 @@ public interface ISliceManager extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.app.slice.ISliceManager
             public void pinSlice(String pkg, Uri uri, SliceSpec[] specs, IBinder token) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -273,19 +291,19 @@ public interface ISliceManager extends IInterface {
                     }
                     _data.writeTypedArray(specs, 0);
                     _data.writeStrongBinder(token);
-                    if (this.mRemote.transact(1, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().pinSlice(pkg, uri, specs, token);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().pinSlice(pkg, uri, specs, token);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.slice.ISliceManager
             public void unpinSlice(String pkg, Uri uri, IBinder token) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -299,43 +317,39 @@ public interface ISliceManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeStrongBinder(token);
-                    if (this.mRemote.transact(2, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().unpinSlice(pkg, uri, token);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().unpinSlice(pkg, uri, token);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.slice.ISliceManager
             public boolean hasSliceAccess(String pkg) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(pkg);
-                    boolean z = false;
-                    if (!this.mRemote.transact(3, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().hasSliceAccess(pkg);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.slice.ISliceManager
             public SliceSpec[] getPinnedSpecs(Uri uri, String pkg) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -348,13 +362,12 @@ public interface ISliceManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(pkg);
-                    if (!this.mRemote.transact(4, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPinnedSpecs(uri, pkg);
                     }
                     _reply.readException();
                     SliceSpec[] _result = (SliceSpec[]) _reply.createTypedArray(SliceSpec.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -362,19 +375,19 @@ public interface ISliceManager extends IInterface {
                 }
             }
 
+            @Override // android.app.slice.ISliceManager
             public Uri[] getPinnedSlices(String pkg) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(pkg);
-                    if (!this.mRemote.transact(5, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPinnedSlices(pkg);
                     }
                     _reply.readException();
                     Uri[] _result = (Uri[]) _reply.createTypedArray(Uri.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -382,19 +395,19 @@ public interface ISliceManager extends IInterface {
                 }
             }
 
+            @Override // android.app.slice.ISliceManager
             public byte[] getBackupPayload(int user) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(user);
-                    if (!this.mRemote.transact(6, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getBackupPayload(user);
                     }
                     _reply.readException();
                     byte[] _result = _reply.createByteArray();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -402,6 +415,7 @@ public interface ISliceManager extends IInterface {
                 }
             }
 
+            @Override // android.app.slice.ISliceManager
             public void applyRestore(byte[] payload, int user) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -409,19 +423,19 @@ public interface ISliceManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeByteArray(payload);
                     _data.writeInt(user);
-                    if (this.mRemote.transact(7, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().applyRestore(payload, user);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().applyRestore(payload, user);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.slice.ISliceManager
             public void grantSlicePermission(String callingPkg, String toPkg, Uri uri) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -435,19 +449,19 @@ public interface ISliceManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(8, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().grantSlicePermission(callingPkg, toPkg, uri);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().grantSlicePermission(callingPkg, toPkg, uri);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.slice.ISliceManager
             public void revokeSlicePermission(String callingPkg, String toPkg, Uri uri) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -461,105 +475,88 @@ public interface ISliceManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(9, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(9, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().revokeSlicePermission(callingPkg, toPkg, uri);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().revokeSlicePermission(callingPkg, toPkg, uri);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.slice.ISliceManager
             public int checkSlicePermission(Uri uri, String callingPkg, String pkg, int pid, int uid, String[] autoGrantPermissions) throws RemoteException {
-                Uri uri2 = uri;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (uri2 != null) {
+                    if (uri != null) {
                         _data.writeInt(1);
-                        uri2.writeToParcel(_data, 0);
+                        uri.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    try {
-                        _data.writeString(callingPkg);
-                        try {
-                            _data.writeString(pkg);
-                        } catch (Throwable th) {
-                            th = th;
-                            int i = pid;
-                            int i2 = uid;
-                            String[] strArr = autoGrantPermissions;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                        try {
-                            _data.writeInt(pid);
-                            try {
-                                _data.writeInt(uid);
-                            } catch (Throwable th2) {
-                                th = th2;
-                                String[] strArr2 = autoGrantPermissions;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                            try {
-                                _data.writeStringArray(autoGrantPermissions);
-                                if (this.mRemote.transact(10, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                    _reply.readException();
-                                    int _result = _reply.readInt();
-                                    _reply.recycle();
-                                    _data.recycle();
-                                    return _result;
-                                }
-                                int checkSlicePermission = Stub.getDefaultImpl().checkSlicePermission(uri, callingPkg, pkg, pid, uid, autoGrantPermissions);
-                                _reply.recycle();
-                                _data.recycle();
-                                return checkSlicePermission;
-                            } catch (Throwable th3) {
-                                th = th3;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th4) {
-                            th = th4;
-                            int i22 = uid;
-                            String[] strArr22 = autoGrantPermissions;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                    } catch (Throwable th5) {
-                        th = th5;
-                        String str = pkg;
-                        int i3 = pid;
-                        int i222 = uid;
-                        String[] strArr222 = autoGrantPermissions;
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeString(callingPkg);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeString(pkg);
+                } catch (Throwable th3) {
+                    th = th3;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(pid);
+                } catch (Throwable th4) {
+                    th = th4;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(uid);
+                } catch (Throwable th5) {
+                    th = th5;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeStringArray(autoGrantPermissions);
+                    boolean _status = this.mRemote.transact(10, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        int checkSlicePermission = Stub.getDefaultImpl().checkSlicePermission(uri, callingPkg, pkg, pid, uid, autoGrantPermissions);
                         _reply.recycle();
                         _data.recycle();
-                        throw th;
+                        return checkSlicePermission;
                     }
+                    _reply.readException();
+                    int _result = _reply.readInt();
+                    _reply.recycle();
+                    _data.recycle();
+                    return _result;
                 } catch (Throwable th6) {
                     th = th6;
-                    String str2 = callingPkg;
-                    String str3 = pkg;
-                    int i32 = pid;
-                    int i2222 = uid;
-                    String[] strArr2222 = autoGrantPermissions;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.app.slice.ISliceManager
             public void grantPermissionFromUser(Uri uri, String pkg, String callingPkg, boolean allSlices) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -573,14 +570,13 @@ public interface ISliceManager extends IInterface {
                     }
                     _data.writeString(pkg);
                     _data.writeString(callingPkg);
-                    _data.writeInt(allSlices);
-                    if (this.mRemote.transact(11, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(allSlices ? 1 : 0);
+                    boolean _status = this.mRemote.transact(11, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().grantPermissionFromUser(uri, pkg, callingPkg, allSlices);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().grantPermissionFromUser(uri, pkg, callingPkg, allSlices);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -589,11 +585,11 @@ public interface ISliceManager extends IInterface {
         }
 
         public static boolean setDefaultImpl(ISliceManager impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static ISliceManager getDefaultImpl() {

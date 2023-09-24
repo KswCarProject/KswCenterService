@@ -1,29 +1,34 @@
 package android.security.keymaster;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/* loaded from: classes3.dex */
 public class KeymasterArguments implements Parcelable {
+    public static final long UINT32_MAX_VALUE = 4294967295L;
+    private static final long UINT32_RANGE = 4294967296L;
+    private List<KeymasterArgument> mArguments;
+    private static final BigInteger UINT64_RANGE = BigInteger.ONE.shiftLeft(64);
+    public static final BigInteger UINT64_MAX_VALUE = UINT64_RANGE.subtract(BigInteger.ONE);
     @UnsupportedAppUsage
-    public static final Parcelable.Creator<KeymasterArguments> CREATOR = new Parcelable.Creator<KeymasterArguments>() {
+    public static final Parcelable.Creator<KeymasterArguments> CREATOR = new Parcelable.Creator<KeymasterArguments>() { // from class: android.security.keymaster.KeymasterArguments.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public KeymasterArguments createFromParcel(Parcel in) {
             return new KeymasterArguments(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public KeymasterArguments[] newArray(int size) {
             return new KeymasterArguments[size];
         }
     };
-    public static final long UINT32_MAX_VALUE = 4294967295L;
-    private static final long UINT32_RANGE = 4294967296L;
-    public static final BigInteger UINT64_MAX_VALUE = UINT64_RANGE.subtract(BigInteger.ONE);
-    private static final BigInteger UINT64_RANGE = BigInteger.ONE.shiftLeft(64);
-    private List<KeymasterArgument> mArguments;
 
     @UnsupportedAppUsage
     public KeymasterArguments() {
@@ -37,45 +42,43 @@ public class KeymasterArguments implements Parcelable {
     @UnsupportedAppUsage
     public void addEnum(int tag, int value) {
         int tagType = KeymasterDefs.getTagType(tag);
-        if (tagType == 268435456 || tagType == 536870912) {
-            addEnumTag(tag, value);
-            return;
+        if (tagType != 268435456 && tagType != 536870912) {
+            throw new IllegalArgumentException("Not an enum or repeating enum tag: " + tag);
         }
-        throw new IllegalArgumentException("Not an enum or repeating enum tag: " + tag);
+        addEnumTag(tag, value);
     }
 
     public void addEnums(int tag, int... values) {
-        if (KeymasterDefs.getTagType(tag) == 536870912) {
-            for (int value : values) {
-                addEnumTag(tag, value);
-            }
-            return;
+        if (KeymasterDefs.getTagType(tag) != 536870912) {
+            throw new IllegalArgumentException("Not a repeating enum tag: " + tag);
         }
-        throw new IllegalArgumentException("Not a repeating enum tag: " + tag);
+        for (int value : values) {
+            addEnumTag(tag, value);
+        }
     }
 
     public int getEnum(int tag, int defaultValue) {
-        if (KeymasterDefs.getTagType(tag) == 268435456) {
-            KeymasterArgument arg = getArgumentByTag(tag);
-            if (arg == null) {
-                return defaultValue;
-            }
-            return getEnumTagValue(arg);
+        if (KeymasterDefs.getTagType(tag) != 268435456) {
+            throw new IllegalArgumentException("Not an enum tag: " + tag);
         }
-        throw new IllegalArgumentException("Not an enum tag: " + tag);
+        KeymasterArgument arg = getArgumentByTag(tag);
+        if (arg == null) {
+            return defaultValue;
+        }
+        return getEnumTagValue(arg);
     }
 
     public List<Integer> getEnums(int tag) {
-        if (KeymasterDefs.getTagType(tag) == 536870912) {
-            List<Integer> values = new ArrayList<>();
-            for (KeymasterArgument arg : this.mArguments) {
-                if (arg.tag == tag) {
-                    values.add(Integer.valueOf(getEnumTagValue(arg)));
-                }
-            }
-            return values;
+        if (KeymasterDefs.getTagType(tag) != 536870912) {
+            throw new IllegalArgumentException("Not a repeating enum tag: " + tag);
         }
-        throw new IllegalArgumentException("Not a repeating enum tag: " + tag);
+        List<Integer> values = new ArrayList<>();
+        for (KeymasterArgument arg : this.mArguments) {
+            if (arg.tag == tag) {
+                values.add(Integer.valueOf(getEnumTagValue(arg)));
+            }
+        }
+        return values;
     }
 
     private void addEnumTag(int tag, int value) {
@@ -99,37 +102,36 @@ public class KeymasterArguments implements Parcelable {
     }
 
     public long getUnsignedInt(int tag, long defaultValue) {
-        if (KeymasterDefs.getTagType(tag) == 805306368) {
-            KeymasterArgument arg = getArgumentByTag(tag);
-            if (arg == null) {
-                return defaultValue;
-            }
-            return ((long) ((KeymasterIntArgument) arg).value) & 4294967295L;
+        if (KeymasterDefs.getTagType(tag) != 805306368) {
+            throw new IllegalArgumentException("Not an int tag: " + tag);
         }
-        throw new IllegalArgumentException("Not an int tag: " + tag);
+        KeymasterArgument arg = getArgumentByTag(tag);
+        if (arg == null) {
+            return defaultValue;
+        }
+        return ((KeymasterIntArgument) arg).value & 4294967295L;
     }
 
     @UnsupportedAppUsage
     public void addUnsignedLong(int tag, BigInteger value) {
         int tagType = KeymasterDefs.getTagType(tag);
-        if (tagType == 1342177280 || tagType == -1610612736) {
-            addLongTag(tag, value);
-            return;
+        if (tagType != 1342177280 && tagType != -1610612736) {
+            throw new IllegalArgumentException("Not a long or repeating long tag: " + tag);
         }
-        throw new IllegalArgumentException("Not a long or repeating long tag: " + tag);
+        addLongTag(tag, value);
     }
 
     public List<BigInteger> getUnsignedLongs(int tag) {
-        if (KeymasterDefs.getTagType(tag) == -1610612736) {
-            List<BigInteger> values = new ArrayList<>();
-            for (KeymasterArgument arg : this.mArguments) {
-                if (arg.tag == tag) {
-                    values.add(getLongTagValue(arg));
-                }
-            }
-            return values;
+        if (KeymasterDefs.getTagType(tag) != -1610612736) {
+            throw new IllegalArgumentException("Tag is not a repeating long: " + tag);
         }
-        throw new IllegalArgumentException("Tag is not a repeating long: " + tag);
+        List<BigInteger> values = new ArrayList<>();
+        for (KeymasterArgument arg : this.mArguments) {
+            if (arg.tag == tag) {
+                values.add(getLongTagValue(arg));
+            }
+        }
+        return values;
     }
 
     private void addLongTag(int tag, BigInteger value) {
@@ -144,42 +146,42 @@ public class KeymasterArguments implements Parcelable {
     }
 
     public void addBoolean(int tag) {
-        if (KeymasterDefs.getTagType(tag) == 1879048192) {
-            this.mArguments.add(new KeymasterBooleanArgument(tag));
-            return;
+        if (KeymasterDefs.getTagType(tag) != 1879048192) {
+            throw new IllegalArgumentException("Not a boolean tag: " + tag);
         }
-        throw new IllegalArgumentException("Not a boolean tag: " + tag);
+        this.mArguments.add(new KeymasterBooleanArgument(tag));
     }
 
     public boolean getBoolean(int tag) {
         if (KeymasterDefs.getTagType(tag) != 1879048192) {
             throw new IllegalArgumentException("Not a boolean tag: " + tag);
-        } else if (getArgumentByTag(tag) == null) {
-            return false;
-        } else {
-            return true;
         }
+        KeymasterArgument arg = getArgumentByTag(tag);
+        if (arg == null) {
+            return false;
+        }
+        return true;
     }
 
     public void addBytes(int tag, byte[] value) {
         if (KeymasterDefs.getTagType(tag) != -1879048192) {
             throw new IllegalArgumentException("Not a bytes tag: " + tag);
-        } else if (value != null) {
-            this.mArguments.add(new KeymasterBlobArgument(tag, value));
-        } else {
+        } else if (value == null) {
             throw new NullPointerException("value == nulll");
+        } else {
+            this.mArguments.add(new KeymasterBlobArgument(tag, value));
         }
     }
 
     public byte[] getBytes(int tag, byte[] defaultValue) {
-        if (KeymasterDefs.getTagType(tag) == -1879048192) {
-            KeymasterArgument arg = getArgumentByTag(tag);
-            if (arg == null) {
-                return defaultValue;
-            }
-            return ((KeymasterBlobArgument) arg).blob;
+        if (KeymasterDefs.getTagType(tag) != -1879048192) {
+            throw new IllegalArgumentException("Not a bytes tag: " + tag);
         }
-        throw new IllegalArgumentException("Not a bytes tag: " + tag);
+        KeymasterArgument arg = getArgumentByTag(tag);
+        if (arg == null) {
+            return defaultValue;
+        }
+        return ((KeymasterBlobArgument) arg).blob;
     }
 
     public void addDate(int tag, Date value) {
@@ -187,10 +189,11 @@ public class KeymasterArguments implements Parcelable {
             throw new IllegalArgumentException("Not a date tag: " + tag);
         } else if (value == null) {
             throw new NullPointerException("value == nulll");
-        } else if (value.getTime() >= 0) {
-            this.mArguments.add(new KeymasterDateArgument(tag, value));
         } else {
-            throw new IllegalArgumentException("Date tag value out of range: " + value);
+            if (value.getTime() < 0) {
+                throw new IllegalArgumentException("Date tag value out of range: " + value);
+            }
+            this.mArguments.add(new KeymasterDateArgument(tag, value));
         }
     }
 
@@ -203,18 +206,18 @@ public class KeymasterArguments implements Parcelable {
     }
 
     public Date getDate(int tag, Date defaultValue) {
-        if (KeymasterDefs.getTagType(tag) == 1610612736) {
-            KeymasterArgument arg = getArgumentByTag(tag);
-            if (arg == null) {
-                return defaultValue;
-            }
-            Date result = ((KeymasterDateArgument) arg).date;
-            if (result.getTime() >= 0) {
-                return result;
-            }
+        if (KeymasterDefs.getTagType(tag) != 1610612736) {
+            throw new IllegalArgumentException("Tag is not a date type: " + tag);
+        }
+        KeymasterArgument arg = getArgumentByTag(tag);
+        if (arg == null) {
+            return defaultValue;
+        }
+        Date result = ((KeymasterDateArgument) arg).date;
+        if (result.getTime() < 0) {
             throw new IllegalArgumentException("Tag value too large. Tag: " + tag);
         }
-        throw new IllegalArgumentException("Tag is not a date type: " + tag);
+        return result;
     }
 
     private KeymasterArgument getArgumentByTag(int tag) {
@@ -234,6 +237,7 @@ public class KeymasterArguments implements Parcelable {
         return this.mArguments.size();
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeTypedList(this.mArguments);
     }
@@ -243,6 +247,7 @@ public class KeymasterArguments implements Parcelable {
         in.readTypedList(this.mArguments, KeymasterArgument.CREATOR);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

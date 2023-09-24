@@ -1,28 +1,36 @@
 package com.android.internal.statusbar;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes4.dex */
 public class NotificationVisibility implements Parcelable {
-    public static final Parcelable.Creator<NotificationVisibility> CREATOR = new Parcelable.Creator<NotificationVisibility>() {
-        public NotificationVisibility createFromParcel(Parcel parcel) {
-            return NotificationVisibility.obtain(parcel);
-        }
-
-        public NotificationVisibility[] newArray(int size) {
-            return new NotificationVisibility[size];
-        }
-    };
     private static final int MAX_POOL_SIZE = 25;
     private static final String TAG = "NoViz";
-    private static int sNexrId = 0;
     public int count;
-    int id;
+
+    /* renamed from: id */
+    int f2491id;
     public String key;
     public NotificationLocation location;
     public int rank;
     public boolean visible;
+    private static int sNexrId = 0;
+    public static final Parcelable.Creator<NotificationVisibility> CREATOR = new Parcelable.Creator<NotificationVisibility>() { // from class: com.android.internal.statusbar.NotificationVisibility.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public NotificationVisibility createFromParcel(Parcel parcel) {
+            return NotificationVisibility.obtain(parcel);
+        }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public NotificationVisibility[] newArray(int size) {
+            return new NotificationVisibility[size];
+        }
+    };
+
+    /* loaded from: classes4.dex */
     public enum NotificationLocation {
         LOCATION_UNKNOWN(0),
         LOCATION_FIRST_HEADS_UP(1),
@@ -34,7 +42,7 @@ public class NotificationVisibility implements Parcelable {
         
         private final int mMetricsEventNotificationLocation;
 
-        private NotificationLocation(int metricsEventNotificationLocation) {
+        NotificationLocation(int metricsEventNotificationLocation) {
             this.mMetricsEventNotificationLocation = metricsEventNotificationLocation;
         }
 
@@ -47,22 +55,22 @@ public class NotificationVisibility implements Parcelable {
         this.visible = true;
         int i = sNexrId;
         sNexrId = i + 1;
-        this.id = i;
+        this.f2491id = i;
     }
 
-    private NotificationVisibility(String key2, int rank2, int count2, boolean visible2, NotificationLocation location2) {
+    private NotificationVisibility(String key, int rank, int count, boolean visible, NotificationLocation location) {
         this();
-        this.key = key2;
-        this.rank = rank2;
-        this.count = count2;
-        this.visible = visible2;
-        this.location = location2;
+        this.key = key;
+        this.rank = rank;
+        this.count = count;
+        this.visible = visible;
+        this.location = location;
     }
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("NotificationVisibility(id=");
-        sb.append(this.id);
+        sb.append(this.f2491id);
         sb.append(" key=");
         sb.append(this.key);
         sb.append(" rank=");
@@ -76,7 +84,8 @@ public class NotificationVisibility implements Parcelable {
         return sb.toString();
     }
 
-    public NotificationVisibility clone() {
+    /* renamed from: clone */
+    public NotificationVisibility m193clone() {
         return obtain(this.key, this.rank, this.count, this.visible, this.location);
     }
 
@@ -88,20 +97,19 @@ public class NotificationVisibility implements Parcelable {
     }
 
     public boolean equals(Object that) {
-        if (!(that instanceof NotificationVisibility)) {
-            return false;
+        if (that instanceof NotificationVisibility) {
+            NotificationVisibility thatViz = (NotificationVisibility) that;
+            return (this.key == null && thatViz.key == null) || this.key.equals(thatViz.key);
         }
-        NotificationVisibility thatViz = (NotificationVisibility) that;
-        if ((this.key != null || thatViz.key != null) && !this.key.equals(thatViz.key)) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(this.key);
         out.writeInt(this.rank);
@@ -118,21 +126,21 @@ public class NotificationVisibility implements Parcelable {
         this.location = NotificationLocation.valueOf(in.readString());
     }
 
-    public static NotificationVisibility obtain(String key2, int rank2, int count2, boolean visible2) {
-        return obtain(key2, rank2, count2, visible2, NotificationLocation.LOCATION_UNKNOWN);
+    public static NotificationVisibility obtain(String key, int rank, int count, boolean visible) {
+        return obtain(key, rank, count, visible, NotificationLocation.LOCATION_UNKNOWN);
     }
 
-    public static NotificationVisibility obtain(String key2, int rank2, int count2, boolean visible2, NotificationLocation location2) {
+    public static NotificationVisibility obtain(String key, int rank, int count, boolean visible, NotificationLocation location) {
         NotificationVisibility vo = obtain();
-        vo.key = key2;
-        vo.rank = rank2;
-        vo.count = count2;
-        vo.visible = visible2;
-        vo.location = location2;
+        vo.key = key;
+        vo.rank = rank;
+        vo.count = count;
+        vo.visible = visible;
+        vo.location = location;
         return vo;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static NotificationVisibility obtain(Parcel in) {
         NotificationVisibility vo = obtain();
         vo.readFromParcel(in);

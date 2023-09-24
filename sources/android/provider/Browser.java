@@ -13,16 +13,15 @@ import android.net.Uri;
 import android.provider.BrowserContract;
 import android.util.SeempLog;
 import android.webkit.WebIconDatabase;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
+/* loaded from: classes3.dex */
 public class Browser {
-    public static final Uri BOOKMARKS_URI = Uri.parse("content://browser/bookmarks");
     public static final String EXTRA_APPLICATION_ID = "com.android.browser.application_id";
     public static final String EXTRA_CREATE_NEW_TAB = "create_new_tab";
     public static final String EXTRA_HEADERS = "com.android.browser.headers";
     public static final String EXTRA_SHARE_FAVICON = "share_favicon";
     public static final String EXTRA_SHARE_SCREENSHOT = "share_screenshot";
-    public static final String[] HISTORY_PROJECTION = {"_id", "url", "visits", "date", "bookmark", "title", "favicon", "thumbnail", "touch_icon", "user_entered"};
     public static final int HISTORY_PROJECTION_BOOKMARK_INDEX = 4;
     public static final int HISTORY_PROJECTION_DATE_INDEX = 3;
     public static final int HISTORY_PROJECTION_FAVICON_INDEX = 6;
@@ -35,14 +34,17 @@ public class Browser {
     public static final String INITIAL_ZOOM_LEVEL = "browser.initialZoomLevel";
     private static final String LOGTAG = "browser";
     private static final int MAX_HISTORY_COUNT = 250;
-    public static final String[] SEARCHES_PROJECTION = {"_id", "search", "date"};
     public static final int SEARCHES_PROJECTION_DATE_INDEX = 2;
     public static final int SEARCHES_PROJECTION_SEARCH_INDEX = 1;
-    public static final Uri SEARCHES_URI = Uri.parse("content://browser/searches");
-    public static final String[] TRUNCATE_HISTORY_PROJECTION = {"_id", "date"};
     public static final int TRUNCATE_HISTORY_PROJECTION_ID_INDEX = 0;
     public static final int TRUNCATE_N_OLDEST = 5;
+    public static final Uri BOOKMARKS_URI = Uri.parse("content://browser/bookmarks");
+    public static final String[] HISTORY_PROJECTION = {"_id", "url", "visits", "date", "bookmark", "title", "favicon", "thumbnail", "touch_icon", "user_entered"};
+    public static final String[] TRUNCATE_HISTORY_PROJECTION = {"_id", "date"};
+    public static final Uri SEARCHES_URI = Uri.parse("content://browser/searches");
+    public static final String[] SEARCHES_PROJECTION = {"_id", "search", "date"};
 
+    /* loaded from: classes3.dex */
     public static class BookmarkColumns implements BaseColumns {
         public static final String BOOKMARK = "bookmark";
         public static final String CREATED = "created";
@@ -56,6 +58,7 @@ public class Browser {
         public static final String VISITS = "visits";
     }
 
+    /* loaded from: classes3.dex */
     public static class SearchColumns implements BaseColumns {
         public static final String DATE = "date";
         public static final String SEARCH = "search";
@@ -67,7 +70,7 @@ public class Browser {
     }
 
     public static final void sendString(Context context, String string) {
-        sendString(context, string, context.getString(R.string.sendText));
+        sendString(context, string, context.getString(C3132R.string.sendText));
     }
 
     @UnsupportedAppUsage
@@ -127,14 +130,14 @@ public class Browser {
             addOrUrlEquals(whereClause);
             DatabaseUtils.appendEscapedSQLString(whereClause, "http://" + wwwString);
         }
-        return cr.query(BrowserContract.History.CONTENT_URI, new String[]{"_id", "visits"}, whereClause.toString(), (String[]) null, (String) null);
+        return cr.query(BrowserContract.History.CONTENT_URI, new String[]{"_id", "visits"}, whereClause.toString(), null, null);
     }
 
     public static final void updateVisitedHistory(ContentResolver cr, String url, boolean real) {
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public static final String[] getVisitedHistory(ContentResolver cr) {
         SeempLog.record(35);
         return new String[0];

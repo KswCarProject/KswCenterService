@@ -1,31 +1,37 @@
 package android.telephony.ims.stub;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.ArraySet;
 import java.util.Set;
 
 @SystemApi
+/* loaded from: classes4.dex */
 public final class ImsFeatureConfiguration implements Parcelable {
-    public static final Parcelable.Creator<ImsFeatureConfiguration> CREATOR = new Parcelable.Creator<ImsFeatureConfiguration>() {
+    public static final Parcelable.Creator<ImsFeatureConfiguration> CREATOR = new Parcelable.Creator<ImsFeatureConfiguration>() { // from class: android.telephony.ims.stub.ImsFeatureConfiguration.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ImsFeatureConfiguration createFromParcel(Parcel in) {
             return new ImsFeatureConfiguration(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ImsFeatureConfiguration[] newArray(int size) {
             return new ImsFeatureConfiguration[size];
         }
     };
     private final Set<FeatureSlotPair> mFeatures;
 
+    /* loaded from: classes4.dex */
     public static final class FeatureSlotPair {
         public final int featureType;
         public final int slotId;
 
-        public FeatureSlotPair(int slotId2, int featureType2) {
-            this.slotId = slotId2;
-            this.featureType = featureType2;
+        public FeatureSlotPair(int slotId, int featureType) {
+            this.slotId = slotId;
+            this.featureType = featureType;
         }
 
         public boolean equals(Object o) {
@@ -36,17 +42,15 @@ public final class ImsFeatureConfiguration implements Parcelable {
                 return false;
             }
             FeatureSlotPair that = (FeatureSlotPair) o;
-            if (this.slotId != that.slotId) {
-                return false;
-            }
-            if (this.featureType == that.featureType) {
+            if (this.slotId == that.slotId && this.featureType == that.featureType) {
                 return true;
             }
             return false;
         }
 
         public int hashCode() {
-            return (this.slotId * 31) + this.featureType;
+            int result = this.slotId;
+            return (result * 31) + this.featureType;
         }
 
         public String toString() {
@@ -54,6 +58,7 @@ public final class ImsFeatureConfiguration implements Parcelable {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class Builder {
         ImsFeatureConfiguration mConfig = new ImsFeatureConfiguration();
 
@@ -82,8 +87,7 @@ public final class ImsFeatureConfiguration implements Parcelable {
         return new ArraySet(this.mFeatures);
     }
 
-    /* access modifiers changed from: package-private */
-    public void addFeature(int slotId, int feature) {
+    void addFeature(int slotId, int feature) {
         this.mFeatures.add(new FeatureSlotPair(slotId, feature));
     }
 
@@ -95,10 +99,12 @@ public final class ImsFeatureConfiguration implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         FeatureSlotPair[] featureSlotPairs = new FeatureSlotPair[this.mFeatures.size()];
         this.mFeatures.toArray(featureSlotPairs);
@@ -113,10 +119,11 @@ public final class ImsFeatureConfiguration implements Parcelable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof ImsFeatureConfiguration)) {
-            return false;
+        if (o instanceof ImsFeatureConfiguration) {
+            ImsFeatureConfiguration that = (ImsFeatureConfiguration) o;
+            return this.mFeatures.equals(that.mFeatures);
         }
-        return this.mFeatures.equals(((ImsFeatureConfiguration) o).mFeatures);
+        return false;
     }
 
     public int hashCode() {

@@ -1,12 +1,14 @@
 package android.telecom.Logging;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.telecom.Log;
+import android.text.TextUtils;
 import com.android.internal.annotations.VisibleForTesting;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+/* loaded from: classes3.dex */
 public class Session {
     public static final String CONTINUE_SUBSESSION = "CONTINUE_SUBSESSION";
     public static final String CREATE_SUBSESSION = "CREATE_SUBSESSION";
@@ -19,25 +21,32 @@ public class Session {
     public static final String SUBSESSION_SEPARATION_CHAR = "->";
     public static final String TRUNCATE_STRING = "...";
     public static final int UNDEFINED = -1;
-    private int mChildCounter = 0;
     private ArrayList<Session> mChildSessions;
-    private long mExecutionEndTimeMs = -1;
     private long mExecutionStartTimeMs;
     private String mFullMethodPathCache;
-    private boolean mIsCompleted = false;
-    private boolean mIsExternal = false;
-    private boolean mIsStartedFromActiveSession = false;
+    private boolean mIsStartedFromActiveSession;
     private String mOwnerInfo;
     private Session mParentSession;
     private String mSessionId;
     private String mShortMethodName;
+    private long mExecutionEndTimeMs = -1;
+    private boolean mIsCompleted = false;
+    private boolean mIsExternal = false;
+    private int mChildCounter = 0;
 
+    /* loaded from: classes3.dex */
     public static class Info implements Parcelable {
-        public static final Parcelable.Creator<Info> CREATOR = new Parcelable.Creator<Info>() {
+        public static final Parcelable.Creator<Info> CREATOR = new Parcelable.Creator<Info>() { // from class: android.telecom.Logging.Session.Info.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public Info createFromParcel(Parcel source) {
-                return new Info(source.readString(), source.readString());
+                String id = source.readString();
+                String methodName = source.readString();
+                return new Info(id, methodName);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public Info[] newArray(int size) {
                 return new Info[size];
             }
@@ -54,10 +63,12 @@ public class Session {
             return new Info(s.getFullSessionId(), s.getFullMethodPath(!Log.DEBUG && s.isSessionExternal()));
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel destination, int flags) {
             destination.writeString(this.sessionId);
             destination.writeString(this.methodPath);
@@ -65,6 +76,7 @@ public class Session {
     }
 
     public Session(String sessionId, String shortMethodName, long startTimeMs, boolean isStartedFromActiveSession, String ownerInfo) {
+        this.mIsStartedFromActiveSession = false;
         setSessionId(sessionId);
         setShortMethodName(shortMethodName);
         this.mExecutionStartTimeMs = startTimeMs;
@@ -156,7 +168,7 @@ public class Session {
 
     public long getLocalExecutionTime() {
         if (this.mExecutionEndTimeMs == -1) {
-            return -1;
+            return -1L;
         }
         return this.mExecutionEndTimeMs - this.mExecutionStartTimeMs;
     }
@@ -168,16 +180,16 @@ public class Session {
         return String.valueOf(i);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public String getFullSessionId() {
         Session parentSession = this.mParentSession;
         if (parentSession == null) {
             return this.mSessionId;
         }
-        if (!Log.VERBOSE) {
-            return parentSession.getFullSessionId();
+        if (Log.VERBOSE) {
+            return parentSession.getFullSessionId() + SESSION_SEPARATION_CHAR_CHILD + this.mSessionId;
         }
-        return parentSession.getFullSessionId() + SESSION_SEPARATION_CHAR_CHILD + this.mSessionId;
+        return parentSession.getFullSessionId();
     }
 
     public String printFullSessionTree() {
@@ -203,7 +215,8 @@ public class Session {
             for (int i = 0; i <= tabI; i++) {
                 sb.append("\t");
             }
-            child.printSessionTree(tabI + 1, sb);
+            int i2 = tabI + 1;
+            child.printSessionTree(i2, sb);
         }
     }
 
@@ -213,69 +226,35 @@ public class Session {
         return sb.toString();
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:22:0x005a, code lost:
-        return;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    private synchronized void getFullMethodPath(java.lang.StringBuilder r5, boolean r6) {
-        /*
-            r4 = this;
-            monitor-enter(r4)
-            java.lang.String r0 = r4.mFullMethodPathCache     // Catch:{ all -> 0x005b }
-            boolean r0 = android.text.TextUtils.isEmpty(r0)     // Catch:{ all -> 0x005b }
-            if (r0 != 0) goto L_0x0012
-            if (r6 != 0) goto L_0x0012
-            java.lang.String r0 = r4.mFullMethodPathCache     // Catch:{ all -> 0x005b }
-            r5.append(r0)     // Catch:{ all -> 0x005b }
-            monitor-exit(r4)
-            return
-        L_0x0012:
-            android.telecom.Logging.Session r0 = r4.getParentSession()     // Catch:{ all -> 0x005b }
-            r1 = 0
-            if (r0 == 0) goto L_0x002c
-            java.lang.String r2 = r4.mShortMethodName     // Catch:{ all -> 0x005b }
-            java.lang.String r3 = r0.mShortMethodName     // Catch:{ all -> 0x005b }
-            boolean r2 = r2.equals(r3)     // Catch:{ all -> 0x005b }
-            r2 = r2 ^ 1
-            r1 = r2
-            r0.getFullMethodPath(r5, r6)     // Catch:{ all -> 0x005b }
-            java.lang.String r2 = "->"
-            r5.append(r2)     // Catch:{ all -> 0x005b }
-        L_0x002c:
-            boolean r2 = r4.isExternal()     // Catch:{ all -> 0x005b }
-            if (r2 == 0) goto L_0x004a
-            if (r6 == 0) goto L_0x003a
-            java.lang.String r2 = "..."
-            r5.append(r2)     // Catch:{ all -> 0x005b }
-            goto L_0x004f
-        L_0x003a:
-            java.lang.String r2 = "("
-            r5.append(r2)     // Catch:{ all -> 0x005b }
-            java.lang.String r2 = r4.mShortMethodName     // Catch:{ all -> 0x005b }
-            r5.append(r2)     // Catch:{ all -> 0x005b }
-            java.lang.String r2 = ")"
-            r5.append(r2)     // Catch:{ all -> 0x005b }
-            goto L_0x004f
-        L_0x004a:
-            java.lang.String r2 = r4.mShortMethodName     // Catch:{ all -> 0x005b }
-            r5.append(r2)     // Catch:{ all -> 0x005b }
-        L_0x004f:
-            if (r1 == 0) goto L_0x0059
-            if (r6 != 0) goto L_0x0059
-            java.lang.String r2 = r5.toString()     // Catch:{ all -> 0x005b }
-            r4.mFullMethodPathCache = r2     // Catch:{ all -> 0x005b }
-        L_0x0059:
-            monitor-exit(r4)
-            return
-        L_0x005b:
-            r5 = move-exception
-            monitor-exit(r4)
-            throw r5
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.telecom.Logging.Session.getFullMethodPath(java.lang.StringBuilder, boolean):void");
+    private synchronized void getFullMethodPath(StringBuilder sb, boolean truncatePath) {
+        if (!TextUtils.isEmpty(this.mFullMethodPathCache) && !truncatePath) {
+            sb.append(this.mFullMethodPathCache);
+            return;
+        }
+        Session parentSession = getParentSession();
+        boolean isSessionStarted = false;
+        if (parentSession != null) {
+            isSessionStarted = !this.mShortMethodName.equals(parentSession.mShortMethodName);
+            parentSession.getFullMethodPath(sb, truncatePath);
+            sb.append(SUBSESSION_SEPARATION_CHAR);
+        }
+        if (isExternal()) {
+            if (truncatePath) {
+                sb.append(TRUNCATE_STRING);
+            } else {
+                sb.append("(");
+                sb.append(this.mShortMethodName);
+                sb.append(")");
+            }
+        } else {
+            sb.append(this.mShortMethodName);
+        }
+        if (isSessionStarted && !truncatePath) {
+            this.mFullMethodPathCache = sb.toString();
+        }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public boolean isSessionExternal() {
         if (getParentSession() == null) {
             return isExternal();
@@ -284,12 +263,8 @@ public class Session {
     }
 
     public int hashCode() {
-        int i = 0;
-        int result = (((((((((((((((((this.mSessionId != null ? this.mSessionId.hashCode() : 0) * 31) + (this.mShortMethodName != null ? this.mShortMethodName.hashCode() : 0)) * 31) + ((int) (this.mExecutionStartTimeMs ^ (this.mExecutionStartTimeMs >>> 32)))) * 31) + ((int) (this.mExecutionEndTimeMs ^ (this.mExecutionEndTimeMs >>> 32)))) * 31) + (this.mParentSession != null ? this.mParentSession.hashCode() : 0)) * 31) + (this.mChildSessions != null ? this.mChildSessions.hashCode() : 0)) * 31) + (this.mIsCompleted ? 1 : 0)) * 31) + this.mChildCounter) * 31) + (this.mIsStartedFromActiveSession ? 1 : 0)) * 31;
-        if (this.mOwnerInfo != null) {
-            i = this.mOwnerInfo.hashCode();
-        }
-        return result + i;
+        int result = this.mSessionId != null ? this.mSessionId.hashCode() : 0;
+        return (((((((((((((((((result * 31) + (this.mShortMethodName != null ? this.mShortMethodName.hashCode() : 0)) * 31) + ((int) (this.mExecutionStartTimeMs ^ (this.mExecutionStartTimeMs >>> 32)))) * 31) + ((int) (this.mExecutionEndTimeMs ^ (this.mExecutionEndTimeMs >>> 32)))) * 31) + (this.mParentSession != null ? this.mParentSession.hashCode() : 0)) * 31) + (this.mChildSessions != null ? this.mChildSessions.hashCode() : 0)) * 31) + (this.mIsCompleted ? 1 : 0)) * 31) + this.mChildCounter) * 31) + (this.mIsStartedFromActiveSession ? 1 : 0)) * 31) + (this.mOwnerInfo != null ? this.mOwnerInfo.hashCode() : 0);
     }
 
     public boolean equals(Object o) {

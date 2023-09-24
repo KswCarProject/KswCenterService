@@ -1,5 +1,6 @@
 package android.filterpacks.videosink;
 
+/* loaded from: classes.dex */
 public class MediaRecorderStopException extends RuntimeException {
     private static final String TAG = "MediaRecorderStopException";
 

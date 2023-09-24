@@ -9,18 +9,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Icon;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Looper;
-import android.os.Message;
-import android.os.Parcelable;
-import android.os.RemoteException;
+import android.p007os.Handler;
+import android.p007os.IBinder;
+import android.p007os.Looper;
+import android.p007os.Message;
+import android.p007os.RemoteException;
 import android.service.quicksettings.IQSService;
 import android.service.quicksettings.IQSTileService;
 import android.util.Log;
 import android.view.View;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
+/* loaded from: classes3.dex */
 public class TileService extends Service {
     public static final String ACTION_QS_TILE = "android.service.quicksettings.action.QS_TILE";
     public static final String ACTION_QS_TILE_PREFERENCES = "android.service.quicksettings.action.QS_TILE_PREFERENCES";
@@ -31,20 +31,15 @@ public class TileService extends Service {
     public static final String EXTRA_TOKEN = "token";
     public static final String META_DATA_ACTIVE_TILE = "android.service.quicksettings.ACTIVE_TILE";
     private static final String TAG = "TileService";
-    /* access modifiers changed from: private */
-    public final H mHandler = new H(Looper.getMainLooper());
-    /* access modifiers changed from: private */
-    public boolean mListening = false;
-    /* access modifiers changed from: private */
-    public IQSService mService;
+    private final HandlerC1834H mHandler = new HandlerC1834H(Looper.getMainLooper());
+    private boolean mListening = false;
+    private IQSService mService;
     private Tile mTile;
-    /* access modifiers changed from: private */
-    public IBinder mTileToken;
-    /* access modifiers changed from: private */
-    public IBinder mToken;
-    /* access modifiers changed from: private */
-    public Runnable mUnlockRunnable;
+    private IBinder mTileToken;
+    private IBinder mToken;
+    private Runnable mUnlockRunnable;
 
+    @Override // android.app.Service
     public void onDestroy() {
         if (this.mListening) {
             onStopListening();
@@ -81,10 +76,12 @@ public class TileService extends Service {
     public final void showDialog(Dialog dialog) {
         dialog.getWindow().getAttributes().token = this.mToken;
         dialog.getWindow().setType(2035);
-        dialog.getWindow().getDecorView().addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+        dialog.getWindow().getDecorView().addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() { // from class: android.service.quicksettings.TileService.1
+            @Override // android.view.View.OnAttachStateChangeListener
             public void onViewAttachedToWindow(View v) {
             }
 
+            @Override // android.view.View.OnAttachStateChangeListener
             public void onViewDetachedFromWindow(View v) {
                 try {
                     TileService.this.mService.onDialogHidden(TileService.this.mTileToken);
@@ -135,6 +132,7 @@ public class TileService extends Service {
         return this.mTile;
     }
 
+    @Override // android.app.Service
     public IBinder onBind(Intent intent) {
         this.mService = IQSService.Stub.asInterface(intent.getIBinderExtra("service"));
         this.mTileToken = intent.getIBinderExtra(EXTRA_TOKEN);
@@ -144,27 +142,33 @@ public class TileService extends Service {
                 this.mTile.setService(this.mService, this.mTileToken);
                 this.mHandler.sendEmptyMessage(7);
             }
-            return new IQSTileService.Stub() {
+            return new IQSTileService.Stub() { // from class: android.service.quicksettings.TileService.2
+                @Override // android.service.quicksettings.IQSTileService
                 public void onTileRemoved() throws RemoteException {
                     TileService.this.mHandler.sendEmptyMessage(4);
                 }
 
+                @Override // android.service.quicksettings.IQSTileService
                 public void onTileAdded() throws RemoteException {
                     TileService.this.mHandler.sendEmptyMessage(3);
                 }
 
+                @Override // android.service.quicksettings.IQSTileService
                 public void onStopListening() throws RemoteException {
                     TileService.this.mHandler.sendEmptyMessage(2);
                 }
 
+                @Override // android.service.quicksettings.IQSTileService
                 public void onStartListening() throws RemoteException {
                     TileService.this.mHandler.sendEmptyMessage(1);
                 }
 
+                @Override // android.service.quicksettings.IQSTileService
                 public void onClick(IBinder wtoken) throws RemoteException {
                     TileService.this.mHandler.obtainMessage(5, wtoken).sendToTarget();
                 }
 
+                @Override // android.service.quicksettings.IQSTileService
                 public void onUnlockComplete() throws RemoteException {
                     TileService.this.mHandler.sendEmptyMessage(6);
                 }
@@ -174,7 +178,9 @@ public class TileService extends Service {
         }
     }
 
-    private class H extends Handler {
+    /* renamed from: android.service.quicksettings.TileService$H */
+    /* loaded from: classes3.dex */
+    private class HandlerC1834H extends Handler {
         private static final int MSG_START_LISTENING = 1;
         private static final int MSG_START_SUCCESS = 7;
         private static final int MSG_STOP_LISTENING = 2;
@@ -184,27 +190,28 @@ public class TileService extends Service {
         private static final int MSG_UNLOCK_COMPLETE = 6;
         private final String mTileServiceName;
 
-        public H(Looper looper) {
+        public HandlerC1834H(Looper looper) {
             super(looper);
             this.mTileServiceName = TileService.this.getClass().getSimpleName();
         }
 
         private void logMessage(String message) {
-            Log.d(TileService.TAG, this.mTileServiceName + " Handler - " + message);
+            Log.m72d(TileService.TAG, this.mTileServiceName + " Handler - " + message);
         }
 
+        @Override // android.p007os.Handler
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 1:
                     if (!TileService.this.mListening) {
-                        boolean unused = TileService.this.mListening = true;
+                        TileService.this.mListening = true;
                         TileService.this.onStartListening();
                         return;
                     }
                     return;
                 case 2:
                     if (TileService.this.mListening) {
-                        boolean unused2 = TileService.this.mListening = false;
+                        TileService.this.mListening = false;
                         TileService.this.onStopListening();
                         return;
                     }
@@ -214,13 +221,13 @@ public class TileService extends Service {
                     return;
                 case 4:
                     if (TileService.this.mListening) {
-                        boolean unused3 = TileService.this.mListening = false;
+                        TileService.this.mListening = false;
                         TileService.this.onStopListening();
                     }
                     TileService.this.onTileRemoved();
                     return;
                 case 5:
-                    IBinder unused4 = TileService.this.mToken = (IBinder) msg.obj;
+                    TileService.this.mToken = (IBinder) msg.obj;
                     TileService.this.onClick();
                     return;
                 case 6:
@@ -243,13 +250,13 @@ public class TileService extends Service {
     }
 
     public static boolean isQuickSettingsSupported() {
-        return Resources.getSystem().getBoolean(R.bool.config_quickSettingsSupported);
+        return Resources.getSystem().getBoolean(C3132R.bool.config_quickSettingsSupported);
     }
 
     public static final void requestListeningState(Context context, ComponentName component) {
         Intent intent = new Intent(ACTION_REQUEST_LISTENING);
-        intent.putExtra(Intent.EXTRA_COMPONENT_NAME, (Parcelable) component);
+        intent.putExtra(Intent.EXTRA_COMPONENT_NAME, component);
         intent.setPackage("com.android.systemui");
-        context.sendBroadcast(intent, Manifest.permission.BIND_QUICK_SETTINGS_TILE);
+        context.sendBroadcast(intent, Manifest.C0000permission.BIND_QUICK_SETTINGS_TILE);
     }
 }

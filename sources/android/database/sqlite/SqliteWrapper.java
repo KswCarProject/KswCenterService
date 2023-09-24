@@ -8,8 +8,9 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
+/* loaded from: classes.dex */
 public final class SqliteWrapper {
     private static final String SQLITE_EXCEPTION_DETAIL_MESSAGE = "unable to open database file";
     private static final String TAG = "SqliteWrapper";
@@ -24,7 +25,7 @@ public final class SqliteWrapper {
     @UnsupportedAppUsage
     public static void checkSQLiteException(Context context, SQLiteException e) {
         if (isLowMemory(e)) {
-            Toast.makeText(context, (int) R.string.low_memory, 0).show();
+            Toast.makeText(context, (int) C3132R.string.low_memory, 0).show();
             return;
         }
         throw e;
@@ -35,7 +36,7 @@ public final class SqliteWrapper {
         try {
             return resolver.query(uri, projection, selection, selectionArgs, sortOrder);
         } catch (SQLiteException e) {
-            Log.e(TAG, "Catch a SQLiteException when query: ", e);
+            Log.m69e(TAG, "Catch a SQLiteException when query: ", e);
             checkSQLiteException(context, e);
             return null;
         }
@@ -45,7 +46,7 @@ public final class SqliteWrapper {
         try {
             return cursor.requery();
         } catch (SQLiteException e) {
-            Log.e(TAG, "Catch a SQLiteException when requery: ", e);
+            Log.m69e(TAG, "Catch a SQLiteException when requery: ", e);
             checkSQLiteException(context, e);
             return false;
         }
@@ -56,7 +57,7 @@ public final class SqliteWrapper {
         try {
             return resolver.update(uri, values, where, selectionArgs);
         } catch (SQLiteException e) {
-            Log.e(TAG, "Catch a SQLiteException when update: ", e);
+            Log.m69e(TAG, "Catch a SQLiteException when update: ", e);
             checkSQLiteException(context, e);
             return -1;
         }
@@ -67,7 +68,7 @@ public final class SqliteWrapper {
         try {
             return resolver.delete(uri, where, selectionArgs);
         } catch (SQLiteException e) {
-            Log.e(TAG, "Catch a SQLiteException when delete: ", e);
+            Log.m69e(TAG, "Catch a SQLiteException when delete: ", e);
             checkSQLiteException(context, e);
             return -1;
         }
@@ -78,7 +79,7 @@ public final class SqliteWrapper {
         try {
             return resolver.insert(uri, values);
         } catch (SQLiteException e) {
-            Log.e(TAG, "Catch a SQLiteException when insert: ", e);
+            Log.m69e(TAG, "Catch a SQLiteException when insert: ", e);
             checkSQLiteException(context, e);
             return null;
         }

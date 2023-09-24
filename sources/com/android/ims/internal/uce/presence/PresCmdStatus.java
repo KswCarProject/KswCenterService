@@ -1,16 +1,21 @@
 package com.android.ims.internal.uce.presence;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.ims.internal.uce.common.StatusCode;
 
+/* loaded from: classes4.dex */
 public class PresCmdStatus implements Parcelable {
-    public static final Parcelable.Creator<PresCmdStatus> CREATOR = new Parcelable.Creator<PresCmdStatus>() {
+    public static final Parcelable.Creator<PresCmdStatus> CREATOR = new Parcelable.Creator<PresCmdStatus>() { // from class: com.android.ims.internal.uce.presence.PresCmdStatus.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PresCmdStatus createFromParcel(Parcel source) {
             return new PresCmdStatus(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PresCmdStatus[] newArray(int size) {
             return new PresCmdStatus[size];
         }
@@ -63,10 +68,12 @@ public class PresCmdStatus implements Parcelable {
         this.mStatus = new StatusCode();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mUserData);
         dest.writeInt(this.mRequestId);

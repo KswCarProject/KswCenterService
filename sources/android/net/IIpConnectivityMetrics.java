@@ -1,12 +1,13 @@
 package android.net;
 
 import android.net.INetdEventCallback;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes3.dex */
 public interface IIpConnectivityMetrics extends IInterface {
     boolean addNetdEventCallback(int i, INetdEventCallback iNetdEventCallback) throws RemoteException;
 
@@ -14,24 +15,30 @@ public interface IIpConnectivityMetrics extends IInterface {
 
     boolean removeNetdEventCallback(int i) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements IIpConnectivityMetrics {
+        @Override // android.net.IIpConnectivityMetrics
         public int logEvent(ConnectivityMetricsEvent event) throws RemoteException {
             return 0;
         }
 
+        @Override // android.net.IIpConnectivityMetrics
         public boolean addNetdEventCallback(int callerType, INetdEventCallback callback) throws RemoteException {
             return false;
         }
 
+        @Override // android.net.IIpConnectivityMetrics
         public boolean removeNetdEventCallback(int callerType) throws RemoteException {
             return false;
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements IIpConnectivityMetrics {
         private static final String DESCRIPTOR = "android.net.IIpConnectivityMetrics";
         static final int TRANSACTION_addNetdEventCallback = 2;
@@ -47,12 +54,13 @@ public interface IIpConnectivityMetrics extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IIpConnectivityMetrics)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IIpConnectivityMetrics)) {
+                return (IIpConnectivityMetrics) iin;
             }
-            return (IIpConnectivityMetrics) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -70,46 +78,51 @@ public interface IIpConnectivityMetrics extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
             ConnectivityMetricsEvent _arg0;
-            if (code != 1598968902) {
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = ConnectivityMetricsEvent.CREATOR.createFromParcel(data);
-                        } else {
-                            _arg0 = null;
-                        }
-                        int _result = logEvent(_arg0);
-                        reply.writeNoException();
-                        reply.writeInt(_result);
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        boolean _result2 = addNetdEventCallback(data.readInt(), INetdEventCallback.Stub.asInterface(data.readStrongBinder()));
-                        reply.writeNoException();
-                        reply.writeInt(_result2);
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        boolean _result3 = removeNetdEventCallback(data.readInt());
-                        reply.writeNoException();
-                        reply.writeInt(_result3);
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg0 = ConnectivityMetricsEvent.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg0 = null;
+                    }
+                    int _result = logEvent(_arg0);
+                    reply.writeNoException();
+                    reply.writeInt(_result);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    INetdEventCallback _arg1 = INetdEventCallback.Stub.asInterface(data.readStrongBinder());
+                    boolean addNetdEventCallback = addNetdEventCallback(_arg02, _arg1);
+                    reply.writeNoException();
+                    reply.writeInt(addNetdEventCallback ? 1 : 0);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg03 = data.readInt();
+                    boolean removeNetdEventCallback = removeNetdEventCallback(_arg03);
+                    reply.writeNoException();
+                    reply.writeInt(removeNetdEventCallback ? 1 : 0);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements IIpConnectivityMetrics {
             public static IIpConnectivityMetrics sDefaultImpl;
             private IBinder mRemote;
@@ -118,6 +131,7 @@ public interface IIpConnectivityMetrics extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -126,6 +140,7 @@ public interface IIpConnectivityMetrics extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.net.IIpConnectivityMetrics
             public int logEvent(ConnectivityMetricsEvent event) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -137,13 +152,12 @@ public interface IIpConnectivityMetrics extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(1, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().logEvent(event);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -151,6 +165,7 @@ public interface IIpConnectivityMetrics extends IInterface {
                 }
             }
 
+            @Override // android.net.IIpConnectivityMetrics
             public boolean addNetdEventCallback(int callerType, INetdEventCallback callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -158,42 +173,33 @@ public interface IIpConnectivityMetrics extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(callerType);
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                    boolean z = false;
-                    if (!this.mRemote.transact(2, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().addNetdEventCallback(callerType, callback);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.IIpConnectivityMetrics
             public boolean removeNetdEventCallback(int callerType) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(callerType);
-                    boolean z = false;
-                    if (!this.mRemote.transact(3, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().removeNetdEventCallback(callerType);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -202,11 +208,11 @@ public interface IIpConnectivityMetrics extends IInterface {
         }
 
         public static boolean setDefaultImpl(IIpConnectivityMetrics impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IIpConnectivityMetrics getDefaultImpl() {

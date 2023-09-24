@@ -1,10 +1,10 @@
 package android.telephony;
 
 import android.annotation.SystemApi;
-import android.content.pm.PackageInfo;
-import android.content.pm.Signature;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.content.p002pm.PackageInfo;
+import android.content.p002pm.Signature;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.security.keystore.KeyProperties;
 import android.text.TextUtils;
 import com.android.internal.telephony.uicc.IccUtils;
@@ -19,12 +19,17 @@ import java.util.Arrays;
 import java.util.Objects;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class UiccAccessRule implements Parcelable {
-    public static final Parcelable.Creator<UiccAccessRule> CREATOR = new Parcelable.Creator<UiccAccessRule>() {
+    public static final Parcelable.Creator<UiccAccessRule> CREATOR = new Parcelable.Creator<UiccAccessRule>() { // from class: android.telephony.UiccAccessRule.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public UiccAccessRule createFromParcel(Parcel in) {
             return new UiccAccessRule(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public UiccAccessRule[] newArray(int size) {
             return new UiccAccessRule[size];
         }
@@ -63,29 +68,29 @@ public final class UiccAccessRule implements Parcelable {
     }
 
     public static UiccAccessRule[] decodeRules(byte[] encodedRules) {
-        DataInputStream input;
         if (encodedRules == null) {
             return null;
         }
+        ByteArrayInputStream bais = new ByteArrayInputStream(encodedRules);
         try {
-            input = new DataInputStream(new ByteArrayInputStream(encodedRules));
+            DataInputStream input = new DataInputStream(bais);
             input.readInt();
             int count = input.readInt();
             UiccAccessRule[] accessRules = new UiccAccessRule[count];
             for (int i = 0; i < count; i++) {
-                byte[] certificateHash = new byte[input.readInt()];
+                int certificateHashLength = input.readInt();
+                byte[] certificateHash = new byte[certificateHashLength];
                 input.readFully(certificateHash);
-                accessRules[i] = new UiccAccessRule(certificateHash, input.readBoolean() ? input.readUTF() : null, input.readLong());
+                String packageName = input.readBoolean() ? input.readUTF() : null;
+                long accessType = input.readLong();
+                accessRules[i] = new UiccAccessRule(certificateHash, packageName, accessType);
             }
             input.close();
             input.close();
             return accessRules;
         } catch (IOException e) {
             throw new IllegalStateException("ByteArrayInputStream should never lead to an IOException", e);
-        } catch (Throwable th) {
-            r0.addSuppressed(th);
         }
-        throw th;
     }
 
     public UiccAccessRule(byte[] certificateHash, String packageName, long accessType) {
@@ -100,6 +105,7 @@ public final class UiccAccessRule implements Parcelable {
         this.mAccessType = in.readLong();
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeByteArray(this.mCertificateHash);
         dest.writeString(this.mPackageName);
@@ -115,6 +121,7 @@ public final class UiccAccessRule implements Parcelable {
     }
 
     public int getCarrierPrivilegeStatus(PackageInfo packageInfo) {
+        Signature[] signatureArr;
         if (packageInfo.signatures == null || packageInfo.signatures.length == 0) {
             throw new IllegalArgumentException("Must use GET_SIGNATURES when looking up package info");
         }
@@ -148,29 +155,32 @@ public final class UiccAccessRule implements Parcelable {
             return false;
         }
         UiccAccessRule that = (UiccAccessRule) obj;
-        if (!Arrays.equals(this.mCertificateHash, that.mCertificateHash) || !Objects.equals(this.mPackageName, that.mPackageName) || this.mAccessType != that.mAccessType) {
-            return false;
+        if (Arrays.equals(this.mCertificateHash, that.mCertificateHash) && Objects.equals(this.mPackageName, that.mPackageName) && this.mAccessType == that.mAccessType) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        return (((((1 * 31) + Arrays.hashCode(this.mCertificateHash)) * 31) + Objects.hashCode(this.mPackageName)) * 31) + Objects.hashCode(Long.valueOf(this.mAccessType));
+        int result = (1 * 31) + Arrays.hashCode(this.mCertificateHash);
+        return (((result * 31) + Objects.hashCode(this.mPackageName)) * 31) + Objects.hashCode(Long.valueOf(this.mAccessType));
     }
 
     public String toString() {
         return "cert: " + IccUtils.bytesToHexString(this.mCertificateHash) + " pkg: " + this.mPackageName + " access: " + this.mAccessType;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
     private static byte[] getCertHash(Signature signature, String algo) {
         try {
-            return MessageDigest.getInstance(algo).digest(signature.toByteArray());
+            MessageDigest md = MessageDigest.getInstance(algo);
+            return md.digest(signature.toByteArray());
         } catch (NoSuchAlgorithmException ex) {
-            Rlog.e(TAG, "NoSuchAlgorithmException: " + ex);
+            Rlog.m86e(TAG, "NoSuchAlgorithmException: " + ex);
             return null;
         }
     }

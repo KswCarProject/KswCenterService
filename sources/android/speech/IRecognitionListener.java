@@ -1,13 +1,14 @@
 package android.speech;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes3.dex */
 public interface IRecognitionListener extends IInterface {
     void onBeginningOfSpeech() throws RemoteException;
 
@@ -28,39 +29,51 @@ public interface IRecognitionListener extends IInterface {
 
     void onRmsChanged(float f) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements IRecognitionListener {
+        @Override // android.speech.IRecognitionListener
         public void onReadyForSpeech(Bundle params) throws RemoteException {
         }
 
+        @Override // android.speech.IRecognitionListener
         public void onBeginningOfSpeech() throws RemoteException {
         }
 
+        @Override // android.speech.IRecognitionListener
         public void onRmsChanged(float rmsdB) throws RemoteException {
         }
 
+        @Override // android.speech.IRecognitionListener
         public void onBufferReceived(byte[] buffer) throws RemoteException {
         }
 
+        @Override // android.speech.IRecognitionListener
         public void onEndOfSpeech() throws RemoteException {
         }
 
+        @Override // android.speech.IRecognitionListener
         public void onError(int error) throws RemoteException {
         }
 
+        @Override // android.speech.IRecognitionListener
         public void onResults(Bundle results) throws RemoteException {
         }
 
+        @Override // android.speech.IRecognitionListener
         public void onPartialResults(Bundle results) throws RemoteException {
         }
 
+        @Override // android.speech.IRecognitionListener
         public void onEvent(int eventType, Bundle params) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements IRecognitionListener {
         private static final String DESCRIPTOR = "android.speech.IRecognitionListener";
         static final int TRANSACTION_onBeginningOfSpeech = 2;
@@ -82,12 +95,13 @@ public interface IRecognitionListener extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IRecognitionListener)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IRecognitionListener)) {
+                return (IRecognitionListener) iin;
             }
-            return (IRecognitionListener) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -117,72 +131,69 @@ public interface IRecognitionListener extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                Bundle _arg1 = null;
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg1 = Bundle.CREATOR.createFromParcel(data);
-                        }
-                        onReadyForSpeech(_arg1);
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        onBeginningOfSpeech();
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        onRmsChanged(data.readFloat());
-                        return true;
-                    case 4:
-                        data.enforceInterface(DESCRIPTOR);
-                        onBufferReceived(data.createByteArray());
-                        return true;
-                    case 5:
-                        data.enforceInterface(DESCRIPTOR);
-                        onEndOfSpeech();
-                        return true;
-                    case 6:
-                        data.enforceInterface(DESCRIPTOR);
-                        onError(data.readInt());
-                        return true;
-                    case 7:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg1 = Bundle.CREATOR.createFromParcel(data);
-                        }
-                        onResults(_arg1);
-                        return true;
-                    case 8:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg1 = Bundle.CREATOR.createFromParcel(data);
-                        }
-                        onPartialResults(_arg1);
-                        return true;
-                    case 9:
-                        data.enforceInterface(DESCRIPTOR);
-                        int _arg0 = data.readInt();
-                        if (data.readInt() != 0) {
-                            _arg1 = Bundle.CREATOR.createFromParcel(data);
-                        }
-                        onEvent(_arg0, _arg1);
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            Bundle _arg1;
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg1 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    onReadyForSpeech(_arg1);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    onBeginningOfSpeech();
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    float _arg0 = data.readFloat();
+                    onRmsChanged(_arg0);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    byte[] _arg02 = data.createByteArray();
+                    onBufferReceived(_arg02);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    onEndOfSpeech();
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg03 = data.readInt();
+                    onError(_arg03);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg1 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    onResults(_arg1);
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg1 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    onPartialResults(_arg1);
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg04 = data.readInt();
+                    _arg1 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    onEvent(_arg04, _arg1);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements IRecognitionListener {
             public static IRecognitionListener sDefaultImpl;
             private IBinder mRemote;
@@ -191,6 +202,7 @@ public interface IRecognitionListener extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -199,6 +211,7 @@ public interface IRecognitionListener extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.speech.IRecognitionListener
             public void onReadyForSpeech(Bundle params) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -209,9 +222,8 @@ public interface IRecognitionListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onReadyForSpeech(params);
                     }
                 } finally {
@@ -219,13 +231,13 @@ public interface IRecognitionListener extends IInterface {
                 }
             }
 
+            @Override // android.speech.IRecognitionListener
             public void onBeginningOfSpeech() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onBeginningOfSpeech();
                     }
                 } finally {
@@ -233,14 +245,14 @@ public interface IRecognitionListener extends IInterface {
                 }
             }
 
+            @Override // android.speech.IRecognitionListener
             public void onRmsChanged(float rmsdB) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeFloat(rmsdB);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onRmsChanged(rmsdB);
                     }
                 } finally {
@@ -248,14 +260,14 @@ public interface IRecognitionListener extends IInterface {
                 }
             }
 
+            @Override // android.speech.IRecognitionListener
             public void onBufferReceived(byte[] buffer) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeByteArray(buffer);
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onBufferReceived(buffer);
                     }
                 } finally {
@@ -263,13 +275,13 @@ public interface IRecognitionListener extends IInterface {
                 }
             }
 
+            @Override // android.speech.IRecognitionListener
             public void onEndOfSpeech() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(5, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onEndOfSpeech();
                     }
                 } finally {
@@ -277,14 +289,14 @@ public interface IRecognitionListener extends IInterface {
                 }
             }
 
+            @Override // android.speech.IRecognitionListener
             public void onError(int error) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(error);
-                    if (this.mRemote.transact(6, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(6, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onError(error);
                     }
                 } finally {
@@ -292,6 +304,7 @@ public interface IRecognitionListener extends IInterface {
                 }
             }
 
+            @Override // android.speech.IRecognitionListener
             public void onResults(Bundle results) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -302,9 +315,8 @@ public interface IRecognitionListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(7, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(7, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onResults(results);
                     }
                 } finally {
@@ -312,6 +324,7 @@ public interface IRecognitionListener extends IInterface {
                 }
             }
 
+            @Override // android.speech.IRecognitionListener
             public void onPartialResults(Bundle results) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -322,9 +335,8 @@ public interface IRecognitionListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(8, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(8, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onPartialResults(results);
                     }
                 } finally {
@@ -332,6 +344,7 @@ public interface IRecognitionListener extends IInterface {
                 }
             }
 
+            @Override // android.speech.IRecognitionListener
             public void onEvent(int eventType, Bundle params) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -343,9 +356,8 @@ public interface IRecognitionListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(9, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(9, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onEvent(eventType, params);
                     }
                 } finally {
@@ -355,11 +367,11 @@ public interface IRecognitionListener extends IInterface {
         }
 
         public static boolean setDefaultImpl(IRecognitionListener impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IRecognitionListener getDefaultImpl() {

@@ -3,6 +3,7 @@ package android.hardware.thermal.V2_0;
 import android.bluetooth.BluetoothHeadset;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class CoolingType {
     public static final int BATTERY = 1;
     public static final int COMPONENT = 6;

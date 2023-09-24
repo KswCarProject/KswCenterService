@@ -6,6 +6,7 @@ import com.android.internal.util.Preconditions;
 import java.io.FileDescriptor;
 import java.io.IOException;
 
+/* loaded from: classes.dex */
 public final class ApkAssets {
     @GuardedBy({"this"})
     private final long mNativePtr;
@@ -70,8 +71,7 @@ public final class ApkAssets {
         return nativeGetAssetPath;
     }
 
-    /* access modifiers changed from: package-private */
-    public CharSequence getStringFromPool(int idx) {
+    CharSequence getStringFromPool(int idx) {
         CharSequence charSequence;
         synchronized (this) {
             charSequence = this.mStringBlock.get(idx);
@@ -79,70 +79,19 @@ public final class ApkAssets {
         return charSequence;
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:14:0x0026, code lost:
-        r4 = move-exception;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:18:0x002a, code lost:
-        if (r3 != null) goto L_0x002c;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:20:?, code lost:
-        r2.close();
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:21:0x0030, code lost:
-        r5 = move-exception;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:23:?, code lost:
-        r3.addSuppressed(r5);
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:24:0x0035, code lost:
-        r2.close();
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public android.content.res.XmlResourceParser openXml(java.lang.String r8) throws java.io.IOException {
-        /*
-            r7 = this;
-            java.lang.String r0 = "fileName"
-            com.android.internal.util.Preconditions.checkNotNull(r8, r0)
-            monitor-enter(r7)
-            long r0 = r7.mNativePtr     // Catch:{ all -> 0x0039 }
-            long r0 = nativeOpenXml(r0, r8)     // Catch:{ all -> 0x0039 }
-            android.content.res.XmlBlock r2 = new android.content.res.XmlBlock     // Catch:{ all -> 0x0039 }
-            r3 = 0
-            r2.<init>(r3, r0)     // Catch:{ all -> 0x0039 }
-            android.content.res.XmlResourceParser r4 = r2.newParser()     // Catch:{ Throwable -> 0x0028 }
-            if (r4 == 0) goto L_0x001e
-            r2.close()     // Catch:{ all -> 0x0039 }
-            monitor-exit(r7)     // Catch:{ all -> 0x0039 }
-            return r4
-        L_0x001e:
-            java.lang.AssertionError r5 = new java.lang.AssertionError     // Catch:{ Throwable -> 0x0028 }
-            java.lang.String r6 = "block.newParser() returned a null parser"
-            r5.<init>(r6)     // Catch:{ Throwable -> 0x0028 }
-            throw r5     // Catch:{ Throwable -> 0x0028 }
-        L_0x0026:
-            r4 = move-exception
-            goto L_0x002a
-        L_0x0028:
-            r3 = move-exception
-            throw r3     // Catch:{ all -> 0x0026 }
-        L_0x002a:
-            if (r3 == 0) goto L_0x0035
-            r2.close()     // Catch:{ Throwable -> 0x0030 }
-            goto L_0x0038
-        L_0x0030:
-            r5 = move-exception
-            r3.addSuppressed(r5)     // Catch:{ all -> 0x0039 }
-            goto L_0x0038
-        L_0x0035:
-            r2.close()     // Catch:{ all -> 0x0039 }
-        L_0x0038:
-            throw r4     // Catch:{ all -> 0x0039 }
-        L_0x0039:
-            r0 = move-exception
-            monitor-exit(r7)     // Catch:{ all -> 0x0039 }
-            throw r0
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.content.res.ApkAssets.openXml(java.lang.String):android.content.res.XmlResourceParser");
+    public XmlResourceParser openXml(String fileName) throws IOException {
+        XmlResourceParser parser;
+        Preconditions.checkNotNull(fileName, "fileName");
+        synchronized (this) {
+            long nativeXmlPtr = nativeOpenXml(this.mNativePtr, fileName);
+            XmlBlock block = new XmlBlock(null, nativeXmlPtr);
+            parser = block.newParser();
+            if (parser == null) {
+                throw new AssertionError("block.newParser() returned a null parser");
+            }
+            block.close();
+        }
+        return parser;
     }
 
     public boolean isUpToDate() {
@@ -157,8 +106,7 @@ public final class ApkAssets {
         return "ApkAssets{path=" + getAssetPath() + "}";
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         close();
     }
 

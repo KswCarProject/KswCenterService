@@ -1,26 +1,37 @@
 package android.telephony;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.telephony.RILConstants;
 
+/* loaded from: classes.dex */
 public class RadioAccessFamily implements Parcelable {
     private static final int CDMA = 72;
-    public static final Parcelable.Creator<RadioAccessFamily> CREATOR = new Parcelable.Creator<RadioAccessFamily>() {
+    public static final Parcelable.Creator<RadioAccessFamily> CREATOR = new Parcelable.Creator<RadioAccessFamily>() { // from class: android.telephony.RadioAccessFamily.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RadioAccessFamily createFromParcel(Parcel in) {
-            return new RadioAccessFamily(in.readInt(), in.readInt());
+            int phoneId = in.readInt();
+            int radioAccessFamily = in.readInt();
+            return new RadioAccessFamily(phoneId, radioAccessFamily);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RadioAccessFamily[] newArray(int size) {
             return new RadioAccessFamily[size];
         }
     };
     private static final int EVDO = 10288;
     private static final int GSM = 32771;
-    private static final int HS = 17280;
+
+    /* renamed from: HS */
+    private static final int f281HS = 17280;
     private static final int LTE = 266240;
-    private static final int NR = 524288;
+
+    /* renamed from: NR */
+    private static final int f282NR = 524288;
     public static final int RAF_1xRTT = 64;
     public static final int RAF_EDGE = 2;
     public static final int RAF_EHRPD = 8192;
@@ -62,13 +73,16 @@ public class RadioAccessFamily implements Parcelable {
     }
 
     public String toString() {
-        return "{ mPhoneId = " + this.mPhoneId + ", mRadioAccessFamily = " + this.mRadioAccessFamily + "}";
+        String ret = "{ mPhoneId = " + this.mPhoneId + ", mRadioAccessFamily = " + this.mRadioAccessFamily + "}";
+        return ret;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel outParcel, int flags) {
         outParcel.writeInt(this.mPhoneId);
         outParcel.writeInt(this.mRadioAccessFamily);
@@ -177,11 +191,11 @@ public class RadioAccessFamily implements Parcelable {
         switch (getAdjustedRaf(raf)) {
             case 72:
                 return 5;
-            case EVDO /*10288*/:
+            case EVDO /* 10288 */:
                 return 6;
             case 10360:
                 return 4;
-            case WCDMA /*17284*/:
+            case WCDMA /* 17284 */:
                 return 2;
             case 32771:
                 return 1;
@@ -246,284 +260,231 @@ public class RadioAccessFamily implements Parcelable {
         }
     }
 
-    /* JADX WARNING: Can't fix incorrect switch cases order */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public static int singleRafTypeFromString(java.lang.String r7) {
-        /*
-            int r0 = r7.hashCode()
-            r1 = 16
-            r2 = 4
-            r3 = 2
-            r4 = 1
-            r5 = 0
-            r6 = 8
-            switch(r0) {
-                case -2039427040: goto L_0x0107;
-                case -908593671: goto L_0x00fd;
-                case 2315: goto L_0x00f2;
-                case 2500: goto L_0x00e7;
-                case 70881: goto L_0x00dc;
-                case 75709: goto L_0x00d1;
-                case 2063797: goto L_0x00c6;
-                case 2123197: goto L_0x00bc;
-                case 2140412: goto L_0x00b1;
-                case 2194666: goto L_0x00a6;
-                case 2227260: goto L_0x009a;
-                case 2608919: goto L_0x008f;
-                case 47955627: goto L_0x0084;
-                case 65949251: goto L_0x0078;
-                case 69034058: goto L_0x006d;
-                case 69045140: goto L_0x0061;
-                case 69050395: goto L_0x0055;
-                case 69946171: goto L_0x004a;
-                case 69946172: goto L_0x003f;
-                case 82410124: goto L_0x0033;
-                case 2056938925: goto L_0x0028;
-                case 2056938942: goto L_0x001d;
-                case 2056938943: goto L_0x0011;
-                default: goto L_0x000f;
-            }
-        L_0x000f:
-            goto L_0x0112
-        L_0x0011:
-            java.lang.String r0 = "EVDO_B"
-            boolean r0 = r7.equals(r0)
-            if (r0 == 0) goto L_0x0112
-            r0 = 11
-            goto L_0x0113
-        L_0x001d:
-            java.lang.String r0 = "EVDO_A"
-            boolean r0 = r7.equals(r0)
-            if (r0 == 0) goto L_0x0112
-            r0 = 7
-            goto L_0x0113
-        L_0x0028:
-            java.lang.String r0 = "EVDO_0"
-            boolean r0 = r7.equals(r0)
-            if (r0 == 0) goto L_0x0112
-            r0 = 6
-            goto L_0x0113
-        L_0x0033:
-            java.lang.String r0 = "WCDMA"
-            boolean r0 = r7.equals(r0)
-            if (r0 == 0) goto L_0x0112
-            r0 = 20
-            goto L_0x0113
-        L_0x003f:
-            java.lang.String r0 = "IS95B"
-            boolean r0 = r7.equals(r0)
-            if (r0 == 0) goto L_0x0112
-            r0 = r2
-            goto L_0x0113
-        L_0x004a:
-            java.lang.String r0 = "IS95A"
-            boolean r0 = r7.equals(r0)
-            if (r0 == 0) goto L_0x0112
-            r0 = 3
-            goto L_0x0113
-        L_0x0055:
-            java.lang.String r0 = "HSUPA"
-            boolean r0 = r7.equals(r0)
-            if (r0 == 0) goto L_0x0112
-            r0 = 9
-            goto L_0x0113
-        L_0x0061:
-            java.lang.String r0 = "HSPAP"
-            boolean r0 = r7.equals(r0)
-            if (r0 == 0) goto L_0x0112
-            r0 = 14
-            goto L_0x0113
-        L_0x006d:
-            java.lang.String r0 = "HSDPA"
-            boolean r0 = r7.equals(r0)
-            if (r0 == 0) goto L_0x0112
-            r0 = r6
-            goto L_0x0113
-        L_0x0078:
-            java.lang.String r0 = "EHRPD"
-            boolean r0 = r7.equals(r0)
-            if (r0 == 0) goto L_0x0112
-            r0 = 12
-            goto L_0x0113
-        L_0x0084:
-            java.lang.String r0 = "1XRTT"
-            boolean r0 = r7.equals(r0)
-            if (r0 == 0) goto L_0x0112
-            r0 = 5
-            goto L_0x0113
-        L_0x008f:
-            java.lang.String r0 = "UMTS"
-            boolean r0 = r7.equals(r0)
-            if (r0 == 0) goto L_0x0112
-            r0 = r3
-            goto L_0x0113
-        L_0x009a:
-            java.lang.String r0 = "HSPA"
-            boolean r0 = r7.equals(r0)
-            if (r0 == 0) goto L_0x0112
-            r0 = 10
-            goto L_0x0113
-        L_0x00a6:
-            java.lang.String r0 = "GPRS"
-            boolean r0 = r7.equals(r0)
-            if (r0 == 0) goto L_0x0112
-            r0 = r5
-            goto L_0x0113
-        L_0x00b1:
-            java.lang.String r0 = "EVDO"
-            boolean r0 = r7.equals(r0)
-            if (r0 == 0) goto L_0x0112
-            r0 = 19
-            goto L_0x0113
-        L_0x00bc:
-            java.lang.String r0 = "EDGE"
-            boolean r0 = r7.equals(r0)
-            if (r0 == 0) goto L_0x0112
-            r0 = r4
-            goto L_0x0113
-        L_0x00c6:
-            java.lang.String r0 = "CDMA"
-            boolean r0 = r7.equals(r0)
-            if (r0 == 0) goto L_0x0112
-            r0 = 18
-            goto L_0x0113
-        L_0x00d1:
-            java.lang.String r0 = "LTE"
-            boolean r0 = r7.equals(r0)
-            if (r0 == 0) goto L_0x0112
-            r0 = 13
-            goto L_0x0113
-        L_0x00dc:
-            java.lang.String r0 = "GSM"
-            boolean r0 = r7.equals(r0)
-            if (r0 == 0) goto L_0x0112
-            r0 = 15
-            goto L_0x0113
-        L_0x00e7:
-            java.lang.String r0 = "NR"
-            boolean r0 = r7.equals(r0)
-            if (r0 == 0) goto L_0x0112
-            r0 = 22
-            goto L_0x0113
-        L_0x00f2:
-            java.lang.String r0 = "HS"
-            boolean r0 = r7.equals(r0)
-            if (r0 == 0) goto L_0x0112
-            r0 = 17
-            goto L_0x0113
-        L_0x00fd:
-            java.lang.String r0 = "TD_SCDMA"
-            boolean r0 = r7.equals(r0)
-            if (r0 == 0) goto L_0x0112
-            r0 = r1
-            goto L_0x0113
-        L_0x0107:
-            java.lang.String r0 = "LTE_CA"
-            boolean r0 = r7.equals(r0)
-            if (r0 == 0) goto L_0x0112
-            r0 = 21
-            goto L_0x0113
-        L_0x0112:
-            r0 = -1
-        L_0x0113:
-            switch(r0) {
-                case 0: goto L_0x0150;
-                case 1: goto L_0x014f;
-                case 2: goto L_0x014e;
-                case 3: goto L_0x014d;
-                case 4: goto L_0x014c;
-                case 5: goto L_0x0149;
-                case 6: goto L_0x0148;
-                case 7: goto L_0x0145;
-                case 8: goto L_0x0142;
-                case 9: goto L_0x013f;
-                case 10: goto L_0x013c;
-                case 11: goto L_0x0139;
-                case 12: goto L_0x0136;
-                case 13: goto L_0x0133;
-                case 14: goto L_0x0130;
-                case 15: goto L_0x012c;
-                case 16: goto L_0x0129;
-                case 17: goto L_0x0126;
-                case 18: goto L_0x0123;
-                case 19: goto L_0x0120;
-                case 20: goto L_0x011d;
-                case 21: goto L_0x011a;
-                case 22: goto L_0x0117;
-                default: goto L_0x0116;
-            }
-        L_0x0116:
-            return r5
-        L_0x0117:
-            r0 = 524288(0x80000, float:7.34684E-40)
-            return r0
-        L_0x011a:
-            r0 = 262144(0x40000, float:3.67342E-40)
-            return r0
-        L_0x011d:
-            r0 = 17284(0x4384, float:2.422E-41)
-            return r0
-        L_0x0120:
-            r0 = 10288(0x2830, float:1.4417E-41)
-            return r0
-        L_0x0123:
-            r0 = 72
-            return r0
-        L_0x0126:
-            r0 = 17280(0x4380, float:2.4214E-41)
-            return r0
-        L_0x0129:
-            r0 = 65536(0x10000, float:9.18355E-41)
-            return r0
-        L_0x012c:
-            r0 = 32768(0x8000, float:4.5918E-41)
-            return r0
-        L_0x0130:
-            r0 = 16384(0x4000, float:2.2959E-41)
-            return r0
-        L_0x0133:
-            r0 = 4096(0x1000, float:5.74E-42)
-            return r0
-        L_0x0136:
-            r0 = 8192(0x2000, float:1.14794E-41)
-            return r0
-        L_0x0139:
-            r0 = 2048(0x800, float:2.87E-42)
-            return r0
-        L_0x013c:
-            r0 = 512(0x200, float:7.175E-43)
-            return r0
-        L_0x013f:
-            r0 = 256(0x100, float:3.59E-43)
-            return r0
-        L_0x0142:
-            r0 = 128(0x80, float:1.794E-43)
-            return r0
-        L_0x0145:
-            r0 = 32
-            return r0
-        L_0x0148:
-            return r1
-        L_0x0149:
-            r0 = 64
-            return r0
-        L_0x014c:
-            return r6
-        L_0x014d:
-            return r6
-        L_0x014e:
-            return r2
-        L_0x014f:
-            return r3
-        L_0x0150:
-            return r4
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.telephony.RadioAccessFamily.singleRafTypeFromString(java.lang.String):int");
+    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
+    public static int singleRafTypeFromString(String rafString) {
+        char c;
+        switch (rafString.hashCode()) {
+            case -2039427040:
+                if (rafString.equals("LTE_CA")) {
+                    c = 21;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -908593671:
+                if (rafString.equals("TD_SCDMA")) {
+                    c = 16;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 2315:
+                if (rafString.equals("HS")) {
+                    c = 17;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case PreciseDisconnectCause.EPDG_TUNNEL_ESTABLISH_FAILURE /* 2500 */:
+                if (rafString.equals("NR")) {
+                    c = 22;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 70881:
+                if (rafString.equals("GSM")) {
+                    c = 15;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 75709:
+                if (rafString.equals("LTE")) {
+                    c = '\r';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 2063797:
+                if (rafString.equals("CDMA")) {
+                    c = 18;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 2123197:
+                if (rafString.equals("EDGE")) {
+                    c = 1;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 2140412:
+                if (rafString.equals("EVDO")) {
+                    c = 19;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 2194666:
+                if (rafString.equals("GPRS")) {
+                    c = 0;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 2227260:
+                if (rafString.equals("HSPA")) {
+                    c = '\n';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 2608919:
+                if (rafString.equals("UMTS")) {
+                    c = 2;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 47955627:
+                if (rafString.equals("1XRTT")) {
+                    c = 5;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 65949251:
+                if (rafString.equals("EHRPD")) {
+                    c = '\f';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 69034058:
+                if (rafString.equals("HSDPA")) {
+                    c = '\b';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 69045140:
+                if (rafString.equals("HSPAP")) {
+                    c = 14;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 69050395:
+                if (rafString.equals("HSUPA")) {
+                    c = '\t';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 69946171:
+                if (rafString.equals("IS95A")) {
+                    c = 3;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 69946172:
+                if (rafString.equals("IS95B")) {
+                    c = 4;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 82410124:
+                if (rafString.equals("WCDMA")) {
+                    c = 20;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 2056938925:
+                if (rafString.equals("EVDO_0")) {
+                    c = 6;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 2056938942:
+                if (rafString.equals("EVDO_A")) {
+                    c = 7;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 2056938943:
+                if (rafString.equals("EVDO_B")) {
+                    c = 11;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            default:
+                c = '\uffff';
+                break;
+        }
+        switch (c) {
+            case 0:
+                return 1;
+            case 1:
+                return 2;
+            case 2:
+                return 4;
+            case 3:
+                return 8;
+            case 4:
+                return 8;
+            case 5:
+                return 64;
+            case 6:
+                return 16;
+            case 7:
+                return 32;
+            case '\b':
+                return 128;
+            case '\t':
+                return 256;
+            case '\n':
+                return 512;
+            case 11:
+                return 2048;
+            case '\f':
+                return 8192;
+            case '\r':
+                return 4096;
+            case 14:
+                return 16384;
+            case 15:
+                return 32768;
+            case 16:
+                return 65536;
+            case 17:
+                return f281HS;
+            case 18:
+                return 72;
+            case 19:
+                return EVDO;
+            case 20:
+                return WCDMA;
+            case 21:
+                return 262144;
+            case 22:
+                return 524288;
+            default:
+                return 0;
+        }
     }
 
     public static int rafTypeFromString(String rafList) {
+        String[] rafs = rafList.toUpperCase().split("\\|");
         int result = 0;
-        for (String raf : rafList.toUpperCase().split("\\|")) {
+        for (String raf : rafs) {
             int rafType = singleRafTypeFromString(raf.trim());
             if (rafType == 0) {
                 return rafType;

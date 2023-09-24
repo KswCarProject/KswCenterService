@@ -6,6 +6,7 @@ import org.apache.harmony.dalvik.ddmc.Chunk;
 import org.apache.harmony.dalvik.ddmc.ChunkHandler;
 import org.apache.harmony.dalvik.ddmc.DdmServer;
 
+/* loaded from: classes.dex */
 public class DdmHandleAppName extends ChunkHandler {
     public static final int CHUNK_APNM = type("APNM");
     private static volatile String mAppName = "";
@@ -29,10 +30,11 @@ public class DdmHandleAppName extends ChunkHandler {
 
     @UnsupportedAppUsage
     public static void setAppName(String name, int userId) {
-        if (name != null && name.length() != 0) {
-            mAppName = name;
-            sendAPNM(name, userId);
+        if (name == null || name.length() == 0) {
+            return;
         }
+        mAppName = name;
+        sendAPNM(name, userId);
     }
 
     @UnsupportedAppUsage
@@ -46,6 +48,7 @@ public class DdmHandleAppName extends ChunkHandler {
         out.putInt(appName.length());
         putString(out, appName);
         out.putInt(userId);
-        DdmServer.sendChunk(new Chunk(CHUNK_APNM, out));
+        Chunk chunk = new Chunk(CHUNK_APNM, out);
+        DdmServer.sendChunk(chunk);
     }
 }

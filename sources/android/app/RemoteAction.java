@@ -1,17 +1,22 @@
 package android.app;
 
 import android.graphics.drawable.Icon;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.TextUtils;
 import java.io.PrintWriter;
 
+/* loaded from: classes.dex */
 public final class RemoteAction implements Parcelable {
-    public static final Parcelable.Creator<RemoteAction> CREATOR = new Parcelable.Creator<RemoteAction>() {
+    public static final Parcelable.Creator<RemoteAction> CREATOR = new Parcelable.Creator<RemoteAction>() { // from class: android.app.RemoteAction.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RemoteAction createFromParcel(Parcel in) {
             return new RemoteAction(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RemoteAction[] newArray(int size) {
             return new RemoteAction[size];
         }
@@ -77,17 +82,20 @@ public final class RemoteAction implements Parcelable {
         return this.mActionIntent;
     }
 
-    public RemoteAction clone() {
+    /* renamed from: clone */
+    public RemoteAction m152clone() {
         RemoteAction action = new RemoteAction(this.mIcon, this.mTitle, this.mContentDescription, this.mActionIntent);
         action.setEnabled(this.mEnabled);
         action.setShouldShowIcon(this.mShouldShowIcon);
         return action;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         this.mIcon.writeToParcel(out, 0);
         TextUtils.writeToParcel(this.mTitle, out, flags);
@@ -99,9 +107,9 @@ public final class RemoteAction implements Parcelable {
 
     public void dump(String prefix, PrintWriter pw) {
         pw.print(prefix);
-        pw.print("title=" + this.mTitle);
+        pw.print("title=" + ((Object) this.mTitle));
         pw.print(" enabled=" + this.mEnabled);
-        pw.print(" contentDescription=" + this.mContentDescription);
+        pw.print(" contentDescription=" + ((Object) this.mContentDescription));
         pw.print(" icon=" + this.mIcon);
         pw.print(" action=" + this.mActionIntent.getIntent());
         pw.print(" shouldShowIcon=" + this.mShouldShowIcon);

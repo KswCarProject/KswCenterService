@@ -3,13 +3,15 @@ package com.google.gson.internal;
 import java.io.ObjectStreamException;
 import java.math.BigDecimal;
 
+/* loaded from: classes4.dex */
 public final class LazilyParsedNumber extends Number {
     private final String value;
 
-    public LazilyParsedNumber(String value2) {
-        this.value = value2;
+    public LazilyParsedNumber(String value) {
+        this.value = value;
     }
 
+    @Override // java.lang.Number
     public int intValue() {
         try {
             return Integer.parseInt(this.value);
@@ -22,6 +24,7 @@ public final class LazilyParsedNumber extends Number {
         }
     }
 
+    @Override // java.lang.Number
     public long longValue() {
         try {
             return Long.parseLong(this.value);
@@ -30,10 +33,12 @@ public final class LazilyParsedNumber extends Number {
         }
     }
 
+    @Override // java.lang.Number
     public float floatValue() {
         return Float.parseFloat(this.value);
     }
 
+    @Override // java.lang.Number
     public double doubleValue() {
         return Double.parseDouble(this.value);
     }

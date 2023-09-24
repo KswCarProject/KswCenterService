@@ -1,21 +1,21 @@
 package android.security.keymaster;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
+import android.p007os.Parcel;
 
+/* loaded from: classes3.dex */
 class KeymasterLongArgument extends KeymasterArgument {
     @UnsupportedAppUsage
     public final long value;
 
     @UnsupportedAppUsage
-    public KeymasterLongArgument(int tag, long value2) {
+    public KeymasterLongArgument(int tag, long value) {
         super(tag);
         int tagType = KeymasterDefs.getTagType(tag);
-        if (tagType == -1610612736 || tagType == 1342177280) {
-            this.value = value2;
-            return;
+        if (tagType != -1610612736 && tagType != 1342177280) {
+            throw new IllegalArgumentException("Bad long tag " + tag);
         }
-        throw new IllegalArgumentException("Bad long tag " + tag);
+        this.value = value;
     }
 
     @UnsupportedAppUsage
@@ -24,6 +24,7 @@ class KeymasterLongArgument extends KeymasterArgument {
         this.value = in.readLong();
     }
 
+    @Override // android.security.keymaster.KeymasterArgument
     public void writeValue(Parcel out) {
         out.writeLong(this.value);
     }

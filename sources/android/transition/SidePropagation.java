@@ -4,6 +4,7 @@ import android.graphics.Rect;
 import android.view.View;
 import android.view.ViewGroup;
 
+/* loaded from: classes4.dex */
 public class SidePropagation extends VisibilityPropagation {
     private static final String TAG = "SlidePropagation";
     private float mPropagationSpeed = 3.0f;
@@ -14,24 +15,23 @@ public class SidePropagation extends VisibilityPropagation {
     }
 
     public void setPropagationSpeed(float propagationSpeed) {
-        if (propagationSpeed != 0.0f) {
-            this.mPropagationSpeed = propagationSpeed;
-            return;
+        if (propagationSpeed == 0.0f) {
+            throw new IllegalArgumentException("propagationSpeed may not be 0");
         }
-        throw new IllegalArgumentException("propagationSpeed may not be 0");
+        this.mPropagationSpeed = propagationSpeed;
     }
 
+    @Override // android.transition.TransitionPropagation
     public long getStartDelay(ViewGroup sceneRoot, Transition transition, TransitionValues startValues, TransitionValues endValues) {
         TransitionValues positionValues;
         int epicenterX;
         int epicenterY;
-        TransitionValues transitionValues = startValues;
-        if (transitionValues == null && endValues == null) {
-            return 0;
+        if (startValues == null && endValues == null) {
+            return 0L;
         }
         int directionMultiplier = 1;
         Rect epicenter = transition.getEpicenter();
-        if (endValues == null || getViewVisibility(transitionValues) == 0) {
+        if (endValues == null || getViewVisibility(startValues) == 0) {
             positionValues = startValues;
             directionMultiplier = -1;
         } else {
@@ -47,53 +47,54 @@ public class SidePropagation extends VisibilityPropagation {
         int top = loc[1] + Math.round(sceneRoot.getTranslationY());
         int right = left + sceneRoot.getWidth();
         int bottom = top + sceneRoot.getHeight();
-        if (epicenter != null) {
-            epicenterX = epicenter.centerX();
-            epicenterY = epicenter.centerY();
-        } else {
-            epicenterX = (left + right) / 2;
+        if (epicenter == null) {
+            int epicenterX2 = (left + right) / 2;
+            epicenterX = epicenterX2;
             epicenterY = (top + bottom) / 2;
+        } else {
+            int epicenterX3 = epicenter.centerX();
+            epicenterX = epicenterX3;
+            epicenterY = epicenter.centerY();
         }
-        int[] iArr = loc;
-        TransitionValues transitionValues2 = positionValues2;
-        int directionMultiplier3 = directionMultiplier2;
-        float distanceFraction = ((float) distance(sceneRoot, viewCenterX, viewCenterY, epicenterX, epicenterY, left, top, right, bottom)) / ((float) getMaxDistance(sceneRoot));
+        float distance = distance(sceneRoot, viewCenterX, viewCenterY, epicenterX, epicenterY, left, top, right, bottom);
+        float maxDistance = getMaxDistance(sceneRoot);
+        float distanceFraction = distance / maxDistance;
         long duration = transition.getDuration();
         if (duration < 0) {
             duration = 300;
         }
-        return (long) Math.round((((float) (((long) directionMultiplier3) * duration)) / this.mPropagationSpeed) * distanceFraction);
+        return Math.round((((float) (directionMultiplier2 * duration)) / this.mPropagationSpeed) * distanceFraction);
     }
 
     private int distance(View sceneRoot, int viewX, int viewY, int epicenterX, int epicenterY, int left, int top, int right, int bottom) {
         int side;
-        boolean isRtl = false;
         if (this.mSide == 8388611) {
-            if (sceneRoot.getLayoutDirection() == 1) {
-                isRtl = true;
-            }
+            boolean isRtl = sceneRoot.getLayoutDirection() == 1;
             side = isRtl ? 5 : 3;
-        } else if (this.mSide == 8388613) {
-            if (sceneRoot.getLayoutDirection() == 1) {
-                isRtl = true;
-            }
-            side = isRtl ? 3 : 5;
         } else {
-            side = this.mSide;
+            int side2 = this.mSide;
+            if (side2 == 8388613) {
+                boolean isRtl2 = sceneRoot.getLayoutDirection() == 1;
+                side = isRtl2 ? 3 : 5;
+            } else {
+                side = this.mSide;
+            }
         }
         if (side == 3) {
-            return (right - viewX) + Math.abs(epicenterY - viewY);
-        }
-        if (side == 5) {
-            return (viewX - left) + Math.abs(epicenterY - viewY);
-        }
-        if (side == 48) {
-            return (bottom - viewY) + Math.abs(epicenterX - viewX);
-        }
-        if (side != 80) {
+            int distance = (right - viewX) + Math.abs(epicenterY - viewY);
+            return distance;
+        } else if (side == 5) {
+            int distance2 = (viewX - left) + Math.abs(epicenterY - viewY);
+            return distance2;
+        } else if (side == 48) {
+            int distance3 = (bottom - viewY) + Math.abs(epicenterX - viewX);
+            return distance3;
+        } else if (side != 80) {
             return 0;
+        } else {
+            int distance4 = (viewY - top) + Math.abs(epicenterX - viewX);
+            return distance4;
         }
-        return (viewY - top) + Math.abs(epicenterX - viewX);
     }
 
     private int getMaxDistance(ViewGroup sceneRoot) {

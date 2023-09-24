@@ -4,14 +4,16 @@ import android.annotation.UnsupportedAppUsage;
 import android.app.Notification;
 import android.content.ComponentName;
 import android.hardware.biometrics.IBiometricServiceReceiverInternal;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.text.TextUtils;
+import com.android.internal.statusbar.IStatusBar;
 
+/* loaded from: classes4.dex */
 public interface IStatusBarService extends IInterface {
     void addTile(ComponentName componentName) throws RemoteException;
 
@@ -109,149 +111,197 @@ public interface IStatusBarService extends IInterface {
 
     void togglePanel() throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IStatusBarService {
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void expandNotificationsPanel() throws RemoteException {
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void collapsePanels() throws RemoteException {
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void togglePanel() throws RemoteException {
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void disable(int what, IBinder token, String pkg) throws RemoteException {
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void disableForUser(int what, IBinder token, String pkg, int userId) throws RemoteException {
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void disable2(int what, IBinder token, String pkg) throws RemoteException {
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void disable2ForUser(int what, IBinder token, String pkg, int userId) throws RemoteException {
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public int[] getDisableFlags(IBinder token, int userId) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void setIcon(String slot, String iconPackage, int iconId, int iconLevel, String contentDescription) throws RemoteException {
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void setIconVisibility(String slot, boolean visible) throws RemoteException {
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void removeIcon(String slot) throws RemoteException {
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void setImeWindowStatus(int displayId, IBinder token, int vis, int backDisposition, boolean showImeSwitcher) throws RemoteException {
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void expandSettingsPanel(String subPanel) throws RemoteException {
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public RegisterStatusBarResult registerStatusBar(IStatusBar callbacks) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void onPanelRevealed(boolean clearNotificationEffects, int numItems) throws RemoteException {
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void onPanelHidden() throws RemoteException {
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void clearNotificationEffects() throws RemoteException {
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void onNotificationClick(String key, NotificationVisibility nv) throws RemoteException {
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void onNotificationActionClick(String key, int actionIndex, Notification.Action action, NotificationVisibility nv, boolean generatedByAssistant) throws RemoteException {
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void onNotificationError(String pkg, String tag, int id, int uid, int initialPid, String message, int userId) throws RemoteException {
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void onClearAllNotifications(int userId) throws RemoteException {
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void onNotificationClear(String pkg, String tag, int id, int userId, String key, int dismissalSurface, int dismissalSentiment, NotificationVisibility nv) throws RemoteException {
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void onNotificationVisibilityChanged(NotificationVisibility[] newlyVisibleKeys, NotificationVisibility[] noLongerVisibleKeys) throws RemoteException {
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void onNotificationExpansionChanged(String key, boolean userAction, boolean expanded, int notificationLocation) throws RemoteException {
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void onNotificationDirectReplied(String key) throws RemoteException {
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void onNotificationSmartSuggestionsAdded(String key, int smartReplyCount, int smartActionCount, boolean generatedByAsssistant, boolean editBeforeSending) throws RemoteException {
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void onNotificationSmartReplySent(String key, int replyIndex, CharSequence reply, int notificationLocation, boolean modifiedBeforeSending) throws RemoteException {
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void onNotificationSettingsViewed(String key) throws RemoteException {
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void setSystemUiVisibility(int displayId, int vis, int mask, String cause) throws RemoteException {
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void onNotificationBubbleChanged(String key, boolean isBubble) throws RemoteException {
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void onGlobalActionsShown() throws RemoteException {
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void onGlobalActionsHidden() throws RemoteException {
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void shutdown() throws RemoteException {
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void reboot(boolean safeMode) throws RemoteException {
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void addTile(ComponentName tile) throws RemoteException {
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void remTile(ComponentName tile) throws RemoteException {
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void clickTile(ComponentName tile) throws RemoteException {
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void handleSystemKey(int key) throws RemoteException {
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void showPinningEnterExitToast(boolean entering) throws RemoteException {
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void showPinningEscapeToast() throws RemoteException {
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void showBiometricDialog(Bundle bundle, IBiometricServiceReceiverInternal receiver, int type, boolean requireConfirmation, int userId) throws RemoteException {
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void onBiometricAuthenticated(boolean authenticated, String failureReason) throws RemoteException {
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void onBiometricHelp(String message) throws RemoteException {
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void onBiometricError(String error) throws RemoteException {
         }
 
+        @Override // com.android.internal.statusbar.IStatusBarService
         public void hideBiometricDialog() throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IStatusBarService {
         private static final String DESCRIPTOR = "com.android.internal.statusbar.IStatusBarService";
         static final int TRANSACTION_addTile = 35;
@@ -309,12 +359,13 @@ public interface IStatusBarService extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IStatusBarService)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IStatusBarService)) {
+                return (IStatusBarService) iin;
             }
-            return (IStatusBarService) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -416,622 +467,356 @@ public interface IStatusBarService extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v17, resolved type: com.android.internal.statusbar.NotificationVisibility} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v53, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v57, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v61, resolved type: android.content.ComponentName} */
-        /* JADX WARNING: type inference failed for: r0v1 */
-        /* JADX WARNING: type inference failed for: r0v21 */
-        /* JADX WARNING: type inference failed for: r0v29 */
-        /* JADX WARNING: type inference failed for: r0v42 */
-        /* JADX WARNING: type inference failed for: r0v68 */
-        /* JADX WARNING: type inference failed for: r0v80 */
-        /* JADX WARNING: type inference failed for: r0v81 */
-        /* JADX WARNING: type inference failed for: r0v82 */
-        /* JADX WARNING: type inference failed for: r0v83 */
-        /* JADX WARNING: type inference failed for: r0v84 */
-        /* JADX WARNING: type inference failed for: r0v85 */
-        /* JADX WARNING: type inference failed for: r0v86 */
-        /* JADX WARNING: type inference failed for: r0v87 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r23, android.os.Parcel r24, android.os.Parcel r25, int r26) throws android.os.RemoteException {
-            /*
-                r22 = this;
-                r9 = r22
-                r10 = r23
-                r11 = r24
-                r12 = r25
-                java.lang.String r13 = "com.android.internal.statusbar.IStatusBarService"
-                r0 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r14 = 1
-                if (r10 == r0) goto L_0x046d
-                r0 = 0
-                r2 = 0
-                switch(r10) {
-                    case 1: goto L_0x0463;
-                    case 2: goto L_0x0459;
-                    case 3: goto L_0x044f;
-                    case 4: goto L_0x0439;
-                    case 5: goto L_0x041f;
-                    case 6: goto L_0x0409;
-                    case 7: goto L_0x03ef;
-                    case 8: goto L_0x03d9;
-                    case 9: goto L_0x03b3;
-                    case 10: goto L_0x039c;
-                    case 11: goto L_0x038e;
-                    case 12: goto L_0x0365;
-                    case 13: goto L_0x0357;
-                    case 14: goto L_0x0338;
-                    case 15: goto L_0x0321;
-                    case 16: goto L_0x0317;
-                    case 17: goto L_0x030d;
-                    case 18: goto L_0x02ef;
-                    case 19: goto L_0x02ae;
-                    case 20: goto L_0x027a;
-                    case 21: goto L_0x026c;
-                    case 22: goto L_0x0226;
-                    case 23: goto L_0x020c;
-                    case 24: goto L_0x01e9;
-                    case 25: goto L_0x01db;
-                    case 26: goto L_0x01ae;
-                    case 27: goto L_0x0179;
-                    case 28: goto L_0x016b;
-                    case 29: goto L_0x0151;
-                    case 30: goto L_0x013a;
-                    case 31: goto L_0x0130;
-                    case 32: goto L_0x0126;
-                    case 33: goto L_0x011c;
-                    case 34: goto L_0x0109;
-                    case 35: goto L_0x00ef;
-                    case 36: goto L_0x00d5;
-                    case 37: goto L_0x00bb;
-                    case 38: goto L_0x00ad;
-                    case 39: goto L_0x009a;
-                    case 40: goto L_0x0090;
-                    case 41: goto L_0x0057;
-                    case 42: goto L_0x0040;
-                    case 43: goto L_0x0032;
-                    case 44: goto L_0x0024;
-                    case 45: goto L_0x001a;
-                    default: goto L_0x0015;
-                }
-            L_0x0015:
-                boolean r0 = super.onTransact(r23, r24, r25, r26)
-                return r0
-            L_0x001a:
-                r11.enforceInterface(r13)
-                r22.hideBiometricDialog()
-                r25.writeNoException()
-                return r14
-            L_0x0024:
-                r11.enforceInterface(r13)
-                java.lang.String r0 = r24.readString()
-                r9.onBiometricError(r0)
-                r25.writeNoException()
-                return r14
-            L_0x0032:
-                r11.enforceInterface(r13)
-                java.lang.String r0 = r24.readString()
-                r9.onBiometricHelp(r0)
-                r25.writeNoException()
-                return r14
-            L_0x0040:
-                r11.enforceInterface(r13)
-                int r0 = r24.readInt()
-                if (r0 == 0) goto L_0x004b
-                r2 = r14
-            L_0x004b:
-                r0 = r2
-                java.lang.String r1 = r24.readString()
-                r9.onBiometricAuthenticated(r0, r1)
-                r25.writeNoException()
-                return r14
-            L_0x0057:
-                r11.enforceInterface(r13)
-                int r1 = r24.readInt()
-                if (r1 == 0) goto L_0x006a
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r11)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-            L_0x0068:
-                r1 = r0
-                goto L_0x006b
-            L_0x006a:
-                goto L_0x0068
-            L_0x006b:
-                android.os.IBinder r0 = r24.readStrongBinder()
-                android.hardware.biometrics.IBiometricServiceReceiverInternal r6 = android.hardware.biometrics.IBiometricServiceReceiverInternal.Stub.asInterface(r0)
-                int r7 = r24.readInt()
-                int r0 = r24.readInt()
-                if (r0 == 0) goto L_0x007f
-                r4 = r14
-                goto L_0x0080
-            L_0x007f:
-                r4 = r2
-            L_0x0080:
-                int r8 = r24.readInt()
-                r0 = r22
-                r2 = r6
-                r3 = r7
-                r5 = r8
-                r0.showBiometricDialog(r1, r2, r3, r4, r5)
-                r25.writeNoException()
-                return r14
-            L_0x0090:
-                r11.enforceInterface(r13)
-                r22.showPinningEscapeToast()
-                r25.writeNoException()
-                return r14
-            L_0x009a:
-                r11.enforceInterface(r13)
-                int r0 = r24.readInt()
-                if (r0 == 0) goto L_0x00a5
-                r2 = r14
-            L_0x00a5:
-                r0 = r2
-                r9.showPinningEnterExitToast(r0)
-                r25.writeNoException()
-                return r14
-            L_0x00ad:
-                r11.enforceInterface(r13)
-                int r0 = r24.readInt()
-                r9.handleSystemKey(r0)
-                r25.writeNoException()
-                return r14
-            L_0x00bb:
-                r11.enforceInterface(r13)
-                int r1 = r24.readInt()
-                if (r1 == 0) goto L_0x00cd
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r11)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x00ce
-            L_0x00cd:
-            L_0x00ce:
-                r9.clickTile(r0)
-                r25.writeNoException()
-                return r14
-            L_0x00d5:
-                r11.enforceInterface(r13)
-                int r1 = r24.readInt()
-                if (r1 == 0) goto L_0x00e7
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r11)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x00e8
-            L_0x00e7:
-            L_0x00e8:
-                r9.remTile(r0)
-                r25.writeNoException()
-                return r14
-            L_0x00ef:
-                r11.enforceInterface(r13)
-                int r1 = r24.readInt()
-                if (r1 == 0) goto L_0x0101
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r11)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0102
-            L_0x0101:
-            L_0x0102:
-                r9.addTile(r0)
-                r25.writeNoException()
-                return r14
-            L_0x0109:
-                r11.enforceInterface(r13)
-                int r0 = r24.readInt()
-                if (r0 == 0) goto L_0x0114
-                r2 = r14
-            L_0x0114:
-                r0 = r2
-                r9.reboot(r0)
-                r25.writeNoException()
-                return r14
-            L_0x011c:
-                r11.enforceInterface(r13)
-                r22.shutdown()
-                r25.writeNoException()
-                return r14
-            L_0x0126:
-                r11.enforceInterface(r13)
-                r22.onGlobalActionsHidden()
-                r25.writeNoException()
-                return r14
-            L_0x0130:
-                r11.enforceInterface(r13)
-                r22.onGlobalActionsShown()
-                r25.writeNoException()
-                return r14
-            L_0x013a:
-                r11.enforceInterface(r13)
-                java.lang.String r0 = r24.readString()
-                int r1 = r24.readInt()
-                if (r1 == 0) goto L_0x0149
-                r2 = r14
-            L_0x0149:
-                r1 = r2
-                r9.onNotificationBubbleChanged(r0, r1)
-                r25.writeNoException()
-                return r14
-            L_0x0151:
-                r11.enforceInterface(r13)
-                int r0 = r24.readInt()
-                int r1 = r24.readInt()
-                int r2 = r24.readInt()
-                java.lang.String r3 = r24.readString()
-                r9.setSystemUiVisibility(r0, r1, r2, r3)
-                r25.writeNoException()
-                return r14
-            L_0x016b:
-                r11.enforceInterface(r13)
-                java.lang.String r0 = r24.readString()
-                r9.onNotificationSettingsViewed(r0)
-                r25.writeNoException()
-                return r14
-            L_0x0179:
-                r11.enforceInterface(r13)
-                java.lang.String r6 = r24.readString()
-                int r7 = r24.readInt()
-                int r1 = r24.readInt()
-                if (r1 == 0) goto L_0x0194
-                android.os.Parcelable$Creator<java.lang.CharSequence> r0 = android.text.TextUtils.CHAR_SEQUENCE_CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r11)
-                java.lang.CharSequence r0 = (java.lang.CharSequence) r0
-            L_0x0192:
-                r3 = r0
-                goto L_0x0195
-            L_0x0194:
-                goto L_0x0192
-            L_0x0195:
-                int r8 = r24.readInt()
-                int r0 = r24.readInt()
-                if (r0 == 0) goto L_0x01a1
-                r5 = r14
-                goto L_0x01a2
-            L_0x01a1:
-                r5 = r2
-            L_0x01a2:
-                r0 = r22
-                r1 = r6
-                r2 = r7
-                r4 = r8
-                r0.onNotificationSmartReplySent(r1, r2, r3, r4, r5)
-                r25.writeNoException()
-                return r14
-            L_0x01ae:
-                r11.enforceInterface(r13)
-                java.lang.String r6 = r24.readString()
-                int r7 = r24.readInt()
-                int r8 = r24.readInt()
-                int r0 = r24.readInt()
-                if (r0 == 0) goto L_0x01c5
-                r4 = r14
-                goto L_0x01c6
-            L_0x01c5:
-                r4 = r2
-            L_0x01c6:
-                int r0 = r24.readInt()
-                if (r0 == 0) goto L_0x01ce
-                r5 = r14
-                goto L_0x01cf
-            L_0x01ce:
-                r5 = r2
-            L_0x01cf:
-                r0 = r22
-                r1 = r6
-                r2 = r7
-                r3 = r8
-                r0.onNotificationSmartSuggestionsAdded(r1, r2, r3, r4, r5)
-                r25.writeNoException()
-                return r14
-            L_0x01db:
-                r11.enforceInterface(r13)
-                java.lang.String r0 = r24.readString()
-                r9.onNotificationDirectReplied(r0)
-                r25.writeNoException()
-                return r14
-            L_0x01e9:
-                r11.enforceInterface(r13)
-                java.lang.String r0 = r24.readString()
-                int r1 = r24.readInt()
-                if (r1 == 0) goto L_0x01f8
-                r1 = r14
-                goto L_0x01f9
-            L_0x01f8:
-                r1 = r2
-            L_0x01f9:
-                int r3 = r24.readInt()
-                if (r3 == 0) goto L_0x0201
-                r2 = r14
-            L_0x0201:
-                int r3 = r24.readInt()
-                r9.onNotificationExpansionChanged(r0, r1, r2, r3)
-                r25.writeNoException()
-                return r14
-            L_0x020c:
-                r11.enforceInterface(r13)
-                android.os.Parcelable$Creator<com.android.internal.statusbar.NotificationVisibility> r0 = com.android.internal.statusbar.NotificationVisibility.CREATOR
-                java.lang.Object[] r0 = r11.createTypedArray(r0)
-                com.android.internal.statusbar.NotificationVisibility[] r0 = (com.android.internal.statusbar.NotificationVisibility[]) r0
-                android.os.Parcelable$Creator<com.android.internal.statusbar.NotificationVisibility> r1 = com.android.internal.statusbar.NotificationVisibility.CREATOR
-                java.lang.Object[] r1 = r11.createTypedArray(r1)
-                com.android.internal.statusbar.NotificationVisibility[] r1 = (com.android.internal.statusbar.NotificationVisibility[]) r1
-                r9.onNotificationVisibilityChanged(r0, r1)
-                r25.writeNoException()
-                return r14
-            L_0x0226:
-                r11.enforceInterface(r13)
-                java.lang.String r15 = r24.readString()
-                java.lang.String r16 = r24.readString()
-                int r17 = r24.readInt()
-                int r18 = r24.readInt()
-                java.lang.String r19 = r24.readString()
-                int r20 = r24.readInt()
-                int r21 = r24.readInt()
-                int r1 = r24.readInt()
-                if (r1 == 0) goto L_0x0255
-                android.os.Parcelable$Creator<com.android.internal.statusbar.NotificationVisibility> r0 = com.android.internal.statusbar.NotificationVisibility.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r11)
-                com.android.internal.statusbar.NotificationVisibility r0 = (com.android.internal.statusbar.NotificationVisibility) r0
-            L_0x0253:
-                r8 = r0
-                goto L_0x0256
-            L_0x0255:
-                goto L_0x0253
-            L_0x0256:
-                r0 = r22
-                r1 = r15
-                r2 = r16
-                r3 = r17
-                r4 = r18
-                r5 = r19
-                r6 = r20
-                r7 = r21
-                r0.onNotificationClear(r1, r2, r3, r4, r5, r6, r7, r8)
-                r25.writeNoException()
-                return r14
-            L_0x026c:
-                r11.enforceInterface(r13)
-                int r0 = r24.readInt()
-                r9.onClearAllNotifications(r0)
-                r25.writeNoException()
-                return r14
-            L_0x027a:
-                r11.enforceInterface(r13)
-                java.lang.String r8 = r24.readString()
-                java.lang.String r15 = r24.readString()
-                int r16 = r24.readInt()
-                int r17 = r24.readInt()
-                int r18 = r24.readInt()
-                java.lang.String r19 = r24.readString()
-                int r20 = r24.readInt()
-                r0 = r22
-                r1 = r8
-                r2 = r15
-                r3 = r16
-                r4 = r17
-                r5 = r18
-                r6 = r19
-                r7 = r20
-                r0.onNotificationError(r1, r2, r3, r4, r5, r6, r7)
-                r25.writeNoException()
-                return r14
-            L_0x02ae:
-                r11.enforceInterface(r13)
-                java.lang.String r6 = r24.readString()
-                int r7 = r24.readInt()
-                int r1 = r24.readInt()
-                if (r1 == 0) goto L_0x02c9
-                android.os.Parcelable$Creator<android.app.Notification$Action> r1 = android.app.Notification.Action.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r11)
-                android.app.Notification$Action r1 = (android.app.Notification.Action) r1
-                r3 = r1
-                goto L_0x02ca
-            L_0x02c9:
-                r3 = r0
-            L_0x02ca:
-                int r1 = r24.readInt()
-                if (r1 == 0) goto L_0x02da
-                android.os.Parcelable$Creator<com.android.internal.statusbar.NotificationVisibility> r0 = com.android.internal.statusbar.NotificationVisibility.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r11)
-                com.android.internal.statusbar.NotificationVisibility r0 = (com.android.internal.statusbar.NotificationVisibility) r0
-            L_0x02d8:
-                r4 = r0
-                goto L_0x02db
-            L_0x02da:
-                goto L_0x02d8
-            L_0x02db:
-                int r0 = r24.readInt()
-                if (r0 == 0) goto L_0x02e3
-                r5 = r14
-                goto L_0x02e4
-            L_0x02e3:
-                r5 = r2
-            L_0x02e4:
-                r0 = r22
-                r1 = r6
-                r2 = r7
-                r0.onNotificationActionClick(r1, r2, r3, r4, r5)
-                r25.writeNoException()
-                return r14
-            L_0x02ef:
-                r11.enforceInterface(r13)
-                java.lang.String r1 = r24.readString()
-                int r2 = r24.readInt()
-                if (r2 == 0) goto L_0x0305
-                android.os.Parcelable$Creator<com.android.internal.statusbar.NotificationVisibility> r0 = com.android.internal.statusbar.NotificationVisibility.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r11)
-                com.android.internal.statusbar.NotificationVisibility r0 = (com.android.internal.statusbar.NotificationVisibility) r0
-                goto L_0x0306
-            L_0x0305:
-            L_0x0306:
-                r9.onNotificationClick(r1, r0)
-                r25.writeNoException()
-                return r14
-            L_0x030d:
-                r11.enforceInterface(r13)
-                r22.clearNotificationEffects()
-                r25.writeNoException()
-                return r14
-            L_0x0317:
-                r11.enforceInterface(r13)
-                r22.onPanelHidden()
-                r25.writeNoException()
-                return r14
-            L_0x0321:
-                r11.enforceInterface(r13)
-                int r0 = r24.readInt()
-                if (r0 == 0) goto L_0x032c
-                r2 = r14
-            L_0x032c:
-                r0 = r2
-                int r1 = r24.readInt()
-                r9.onPanelRevealed(r0, r1)
-                r25.writeNoException()
-                return r14
-            L_0x0338:
-                r11.enforceInterface(r13)
-                android.os.IBinder r0 = r24.readStrongBinder()
-                com.android.internal.statusbar.IStatusBar r0 = com.android.internal.statusbar.IStatusBar.Stub.asInterface(r0)
-                com.android.internal.statusbar.RegisterStatusBarResult r1 = r9.registerStatusBar(r0)
-                r25.writeNoException()
-                if (r1 == 0) goto L_0x0353
-                r12.writeInt(r14)
-                r1.writeToParcel(r12, r14)
-                goto L_0x0356
-            L_0x0353:
-                r12.writeInt(r2)
-            L_0x0356:
-                return r14
-            L_0x0357:
-                r11.enforceInterface(r13)
-                java.lang.String r0 = r24.readString()
-                r9.expandSettingsPanel(r0)
-                r25.writeNoException()
-                return r14
-            L_0x0365:
-                r11.enforceInterface(r13)
-                int r6 = r24.readInt()
-                android.os.IBinder r7 = r24.readStrongBinder()
-                int r8 = r24.readInt()
-                int r15 = r24.readInt()
-                int r0 = r24.readInt()
-                if (r0 == 0) goto L_0x0380
-                r5 = r14
-                goto L_0x0381
-            L_0x0380:
-                r5 = r2
-            L_0x0381:
-                r0 = r22
-                r1 = r6
-                r2 = r7
-                r3 = r8
-                r4 = r15
-                r0.setImeWindowStatus(r1, r2, r3, r4, r5)
-                r25.writeNoException()
-                return r14
-            L_0x038e:
-                r11.enforceInterface(r13)
-                java.lang.String r0 = r24.readString()
-                r9.removeIcon(r0)
-                r25.writeNoException()
-                return r14
-            L_0x039c:
-                r11.enforceInterface(r13)
-                java.lang.String r0 = r24.readString()
-                int r1 = r24.readInt()
-                if (r1 == 0) goto L_0x03ab
-                r2 = r14
-            L_0x03ab:
-                r1 = r2
-                r9.setIconVisibility(r0, r1)
-                r25.writeNoException()
-                return r14
-            L_0x03b3:
-                r11.enforceInterface(r13)
-                java.lang.String r6 = r24.readString()
-                java.lang.String r7 = r24.readString()
-                int r8 = r24.readInt()
-                int r15 = r24.readInt()
-                java.lang.String r16 = r24.readString()
-                r0 = r22
-                r1 = r6
-                r2 = r7
-                r3 = r8
-                r4 = r15
-                r5 = r16
-                r0.setIcon(r1, r2, r3, r4, r5)
-                r25.writeNoException()
-                return r14
-            L_0x03d9:
-                r11.enforceInterface(r13)
-                android.os.IBinder r0 = r24.readStrongBinder()
-                int r1 = r24.readInt()
-                int[] r2 = r9.getDisableFlags(r0, r1)
-                r25.writeNoException()
-                r12.writeIntArray(r2)
-                return r14
-            L_0x03ef:
-                r11.enforceInterface(r13)
-                int r0 = r24.readInt()
-                android.os.IBinder r1 = r24.readStrongBinder()
-                java.lang.String r2 = r24.readString()
-                int r3 = r24.readInt()
-                r9.disable2ForUser(r0, r1, r2, r3)
-                r25.writeNoException()
-                return r14
-            L_0x0409:
-                r11.enforceInterface(r13)
-                int r0 = r24.readInt()
-                android.os.IBinder r1 = r24.readStrongBinder()
-                java.lang.String r2 = r24.readString()
-                r9.disable2(r0, r1, r2)
-                r25.writeNoException()
-                return r14
-            L_0x041f:
-                r11.enforceInterface(r13)
-                int r0 = r24.readInt()
-                android.os.IBinder r1 = r24.readStrongBinder()
-                java.lang.String r2 = r24.readString()
-                int r3 = r24.readInt()
-                r9.disableForUser(r0, r1, r2, r3)
-                r25.writeNoException()
-                return r14
-            L_0x0439:
-                r11.enforceInterface(r13)
-                int r0 = r24.readInt()
-                android.os.IBinder r1 = r24.readStrongBinder()
-                java.lang.String r2 = r24.readString()
-                r9.disable(r0, r1, r2)
-                r25.writeNoException()
-                return r14
-            L_0x044f:
-                r11.enforceInterface(r13)
-                r22.togglePanel()
-                r25.writeNoException()
-                return r14
-            L_0x0459:
-                r11.enforceInterface(r13)
-                r22.collapsePanels()
-                r25.writeNoException()
-                return r14
-            L_0x0463:
-                r11.enforceInterface(r13)
-                r22.expandNotificationsPanel()
-                r25.writeNoException()
-                return r14
-            L_0x046d:
-                r12.writeString(r13)
-                return r14
-            */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.internal.statusbar.IStatusBarService.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            boolean _arg2;
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    expandNotificationsPanel();
+                    reply.writeNoException();
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    collapsePanels();
+                    reply.writeNoException();
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    togglePanel();
+                    reply.writeNoException();
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0 = data.readInt();
+                    IBinder _arg1 = data.readStrongBinder();
+                    disable(_arg0, _arg1, data.readString());
+                    reply.writeNoException();
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    IBinder _arg12 = data.readStrongBinder();
+                    String _arg22 = data.readString();
+                    int _arg3 = data.readInt();
+                    disableForUser(_arg02, _arg12, _arg22, _arg3);
+                    reply.writeNoException();
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg03 = data.readInt();
+                    IBinder _arg13 = data.readStrongBinder();
+                    disable2(_arg03, _arg13, data.readString());
+                    reply.writeNoException();
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg04 = data.readInt();
+                    IBinder _arg14 = data.readStrongBinder();
+                    String _arg23 = data.readString();
+                    int _arg32 = data.readInt();
+                    disable2ForUser(_arg04, _arg14, _arg23, _arg32);
+                    reply.writeNoException();
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg05 = data.readStrongBinder();
+                    int _arg15 = data.readInt();
+                    int[] _result = getDisableFlags(_arg05, _arg15);
+                    reply.writeNoException();
+                    reply.writeIntArray(_result);
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg06 = data.readString();
+                    String _arg16 = data.readString();
+                    int _arg24 = data.readInt();
+                    int _arg33 = data.readInt();
+                    String _arg4 = data.readString();
+                    setIcon(_arg06, _arg16, _arg24, _arg33, _arg4);
+                    reply.writeNoException();
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg07 = data.readString();
+                    _arg2 = data.readInt() != 0;
+                    boolean _arg17 = _arg2;
+                    setIconVisibility(_arg07, _arg17);
+                    reply.writeNoException();
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg08 = data.readString();
+                    removeIcon(_arg08);
+                    reply.writeNoException();
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg09 = data.readInt();
+                    IBinder _arg18 = data.readStrongBinder();
+                    int _arg25 = data.readInt();
+                    int _arg34 = data.readInt();
+                    boolean _arg42 = data.readInt() != 0;
+                    setImeWindowStatus(_arg09, _arg18, _arg25, _arg34, _arg42);
+                    reply.writeNoException();
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg010 = data.readString();
+                    expandSettingsPanel(_arg010);
+                    reply.writeNoException();
+                    return true;
+                case 14:
+                    data.enforceInterface(DESCRIPTOR);
+                    IStatusBar _arg011 = IStatusBar.Stub.asInterface(data.readStrongBinder());
+                    RegisterStatusBarResult _result2 = registerStatusBar(_arg011);
+                    reply.writeNoException();
+                    if (_result2 != null) {
+                        reply.writeInt(1);
+                        _result2.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 15:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg2 = data.readInt() != 0;
+                    boolean _arg012 = _arg2;
+                    int _arg19 = data.readInt();
+                    onPanelRevealed(_arg012, _arg19);
+                    reply.writeNoException();
+                    return true;
+                case 16:
+                    data.enforceInterface(DESCRIPTOR);
+                    onPanelHidden();
+                    reply.writeNoException();
+                    return true;
+                case 17:
+                    data.enforceInterface(DESCRIPTOR);
+                    clearNotificationEffects();
+                    reply.writeNoException();
+                    return true;
+                case 18:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg013 = data.readString();
+                    NotificationVisibility _arg110 = data.readInt() != 0 ? NotificationVisibility.CREATOR.createFromParcel(data) : null;
+                    onNotificationClick(_arg013, _arg110);
+                    reply.writeNoException();
+                    return true;
+                case 19:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg014 = data.readString();
+                    int _arg111 = data.readInt();
+                    Notification.Action _arg26 = data.readInt() != 0 ? Notification.Action.CREATOR.createFromParcel(data) : null;
+                    NotificationVisibility _arg35 = data.readInt() != 0 ? NotificationVisibility.CREATOR.createFromParcel(data) : null;
+                    boolean _arg43 = data.readInt() != 0;
+                    onNotificationActionClick(_arg014, _arg111, _arg26, _arg35, _arg43);
+                    reply.writeNoException();
+                    return true;
+                case 20:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg015 = data.readString();
+                    String _arg112 = data.readString();
+                    int _arg27 = data.readInt();
+                    int _arg36 = data.readInt();
+                    int _arg44 = data.readInt();
+                    String _arg5 = data.readString();
+                    int _arg6 = data.readInt();
+                    onNotificationError(_arg015, _arg112, _arg27, _arg36, _arg44, _arg5, _arg6);
+                    reply.writeNoException();
+                    return true;
+                case 21:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg016 = data.readInt();
+                    onClearAllNotifications(_arg016);
+                    reply.writeNoException();
+                    return true;
+                case 22:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg017 = data.readString();
+                    String _arg113 = data.readString();
+                    int _arg28 = data.readInt();
+                    int _arg37 = data.readInt();
+                    String _arg45 = data.readString();
+                    int _arg52 = data.readInt();
+                    int _arg62 = data.readInt();
+                    NotificationVisibility _arg7 = data.readInt() != 0 ? NotificationVisibility.CREATOR.createFromParcel(data) : null;
+                    onNotificationClear(_arg017, _arg113, _arg28, _arg37, _arg45, _arg52, _arg62, _arg7);
+                    reply.writeNoException();
+                    return true;
+                case 23:
+                    data.enforceInterface(DESCRIPTOR);
+                    NotificationVisibility[] _arg018 = (NotificationVisibility[]) data.createTypedArray(NotificationVisibility.CREATOR);
+                    NotificationVisibility[] _arg114 = (NotificationVisibility[]) data.createTypedArray(NotificationVisibility.CREATOR);
+                    onNotificationVisibilityChanged(_arg018, _arg114);
+                    reply.writeNoException();
+                    return true;
+                case 24:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg019 = data.readString();
+                    boolean _arg115 = data.readInt() != 0;
+                    _arg2 = data.readInt() != 0;
+                    int _arg38 = data.readInt();
+                    onNotificationExpansionChanged(_arg019, _arg115, _arg2, _arg38);
+                    reply.writeNoException();
+                    return true;
+                case 25:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg020 = data.readString();
+                    onNotificationDirectReplied(_arg020);
+                    reply.writeNoException();
+                    return true;
+                case 26:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg021 = data.readString();
+                    int _arg116 = data.readInt();
+                    int _arg29 = data.readInt();
+                    boolean _arg39 = data.readInt() != 0;
+                    boolean _arg46 = data.readInt() != 0;
+                    onNotificationSmartSuggestionsAdded(_arg021, _arg116, _arg29, _arg39, _arg46);
+                    reply.writeNoException();
+                    return true;
+                case 27:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg022 = data.readString();
+                    int _arg117 = data.readInt();
+                    CharSequence _arg210 = data.readInt() != 0 ? TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(data) : null;
+                    int _arg310 = data.readInt();
+                    boolean _arg47 = data.readInt() != 0;
+                    onNotificationSmartReplySent(_arg022, _arg117, _arg210, _arg310, _arg47);
+                    reply.writeNoException();
+                    return true;
+                case 28:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg023 = data.readString();
+                    onNotificationSettingsViewed(_arg023);
+                    reply.writeNoException();
+                    return true;
+                case 29:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg024 = data.readInt();
+                    int _arg118 = data.readInt();
+                    int _arg211 = data.readInt();
+                    String _arg311 = data.readString();
+                    setSystemUiVisibility(_arg024, _arg118, _arg211, _arg311);
+                    reply.writeNoException();
+                    return true;
+                case 30:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg025 = data.readString();
+                    _arg2 = data.readInt() != 0;
+                    boolean _arg119 = _arg2;
+                    onNotificationBubbleChanged(_arg025, _arg119);
+                    reply.writeNoException();
+                    return true;
+                case 31:
+                    data.enforceInterface(DESCRIPTOR);
+                    onGlobalActionsShown();
+                    reply.writeNoException();
+                    return true;
+                case 32:
+                    data.enforceInterface(DESCRIPTOR);
+                    onGlobalActionsHidden();
+                    reply.writeNoException();
+                    return true;
+                case 33:
+                    data.enforceInterface(DESCRIPTOR);
+                    shutdown();
+                    reply.writeNoException();
+                    return true;
+                case 34:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg2 = data.readInt() != 0;
+                    boolean _arg026 = _arg2;
+                    reboot(_arg026);
+                    reply.writeNoException();
+                    return true;
+                case 35:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg027 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    addTile(_arg027);
+                    reply.writeNoException();
+                    return true;
+                case 36:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg028 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    remTile(_arg028);
+                    reply.writeNoException();
+                    return true;
+                case 37:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg029 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    clickTile(_arg029);
+                    reply.writeNoException();
+                    return true;
+                case 38:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg030 = data.readInt();
+                    handleSystemKey(_arg030);
+                    reply.writeNoException();
+                    return true;
+                case 39:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg2 = data.readInt() != 0;
+                    boolean _arg031 = _arg2;
+                    showPinningEnterExitToast(_arg031);
+                    reply.writeNoException();
+                    return true;
+                case 40:
+                    data.enforceInterface(DESCRIPTOR);
+                    showPinningEscapeToast();
+                    reply.writeNoException();
+                    return true;
+                case 41:
+                    data.enforceInterface(DESCRIPTOR);
+                    Bundle _arg032 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    IBiometricServiceReceiverInternal _arg120 = IBiometricServiceReceiverInternal.Stub.asInterface(data.readStrongBinder());
+                    int _arg212 = data.readInt();
+                    boolean _arg312 = data.readInt() != 0;
+                    int _arg48 = data.readInt();
+                    showBiometricDialog(_arg032, _arg120, _arg212, _arg312, _arg48);
+                    reply.writeNoException();
+                    return true;
+                case 42:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg2 = data.readInt() != 0;
+                    boolean _arg033 = _arg2;
+                    String _arg121 = data.readString();
+                    onBiometricAuthenticated(_arg033, _arg121);
+                    reply.writeNoException();
+                    return true;
+                case 43:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg034 = data.readString();
+                    onBiometricHelp(_arg034);
+                    reply.writeNoException();
+                    return true;
+                case 44:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg035 = data.readString();
+                    onBiometricError(_arg035);
+                    reply.writeNoException();
+                    return true;
+                case 45:
+                    data.enforceInterface(DESCRIPTOR);
+                    hideBiometricDialog();
+                    reply.writeNoException();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IStatusBarService {
             public static IStatusBarService sDefaultImpl;
             private IBinder mRemote;
@@ -1040,6 +825,7 @@ public interface IStatusBarService extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -1048,60 +834,61 @@ public interface IStatusBarService extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void expandNotificationsPanel() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(1, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().expandNotificationsPanel();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().expandNotificationsPanel();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void collapsePanels() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(2, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().collapsePanels();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().collapsePanels();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void togglePanel() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(3, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().togglePanel();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().togglePanel();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void disable(int what, IBinder token, String pkg) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1110,19 +897,19 @@ public interface IStatusBarService extends IInterface {
                     _data.writeInt(what);
                     _data.writeStrongBinder(token);
                     _data.writeString(pkg);
-                    if (this.mRemote.transact(4, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().disable(what, token, pkg);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().disable(what, token, pkg);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void disableForUser(int what, IBinder token, String pkg, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1132,19 +919,19 @@ public interface IStatusBarService extends IInterface {
                     _data.writeStrongBinder(token);
                     _data.writeString(pkg);
                     _data.writeInt(userId);
-                    if (this.mRemote.transact(5, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().disableForUser(what, token, pkg, userId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().disableForUser(what, token, pkg, userId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void disable2(int what, IBinder token, String pkg) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1153,19 +940,19 @@ public interface IStatusBarService extends IInterface {
                     _data.writeInt(what);
                     _data.writeStrongBinder(token);
                     _data.writeString(pkg);
-                    if (this.mRemote.transact(6, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().disable2(what, token, pkg);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().disable2(what, token, pkg);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void disable2ForUser(int what, IBinder token, String pkg, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1175,19 +962,19 @@ public interface IStatusBarService extends IInterface {
                     _data.writeStrongBinder(token);
                     _data.writeString(pkg);
                     _data.writeInt(userId);
-                    if (this.mRemote.transact(7, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().disable2ForUser(what, token, pkg, userId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().disable2ForUser(what, token, pkg, userId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public int[] getDisableFlags(IBinder token, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1195,13 +982,12 @@ public interface IStatusBarService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
                     _data.writeInt(userId);
-                    if (!this.mRemote.transact(8, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getDisableFlags(token, userId);
                     }
                     _reply.readException();
                     int[] _result = _reply.createIntArray();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1209,6 +995,7 @@ public interface IStatusBarService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void setIcon(String slot, String iconPackage, int iconId, int iconLevel, String contentDescription) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1219,58 +1006,58 @@ public interface IStatusBarService extends IInterface {
                     _data.writeInt(iconId);
                     _data.writeInt(iconLevel);
                     _data.writeString(contentDescription);
-                    if (this.mRemote.transact(9, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(9, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setIcon(slot, iconPackage, iconId, iconLevel, contentDescription);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setIcon(slot, iconPackage, iconId, iconLevel, contentDescription);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void setIconVisibility(String slot, boolean visible) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(slot);
-                    _data.writeInt(visible);
-                    if (this.mRemote.transact(10, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(visible ? 1 : 0);
+                    boolean _status = this.mRemote.transact(10, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setIconVisibility(slot, visible);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setIconVisibility(slot, visible);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void removeIcon(String slot) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(slot);
-                    if (this.mRemote.transact(11, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(11, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().removeIcon(slot);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().removeIcon(slot);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void setImeWindowStatus(int displayId, IBinder token, int vis, int backDisposition, boolean showImeSwitcher) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1280,39 +1067,39 @@ public interface IStatusBarService extends IInterface {
                     _data.writeStrongBinder(token);
                     _data.writeInt(vis);
                     _data.writeInt(backDisposition);
-                    _data.writeInt(showImeSwitcher);
-                    if (this.mRemote.transact(12, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(showImeSwitcher ? 1 : 0);
+                    boolean _status = this.mRemote.transact(12, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setImeWindowStatus(displayId, token, vis, backDisposition, showImeSwitcher);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setImeWindowStatus(displayId, token, vis, backDisposition, showImeSwitcher);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void expandSettingsPanel(String subPanel) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(subPanel);
-                    if (this.mRemote.transact(13, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(13, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().expandSettingsPanel(subPanel);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().expandSettingsPanel(subPanel);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public RegisterStatusBarResult registerStatusBar(IStatusBar callbacks) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1320,15 +1107,14 @@ public interface IStatusBarService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     RegisterStatusBarResult _result = null;
                     _data.writeStrongBinder(callbacks != null ? callbacks.asBinder() : null);
-                    if (!this.mRemote.transact(14, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(14, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().registerStatusBar(callbacks);
                     }
                     _reply.readException();
                     if (_reply.readInt() != 0) {
                         _result = RegisterStatusBarResult.CREATOR.createFromParcel(_reply);
                     }
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1336,62 +1122,63 @@ public interface IStatusBarService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void onPanelRevealed(boolean clearNotificationEffects, int numItems) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(clearNotificationEffects);
+                    _data.writeInt(clearNotificationEffects ? 1 : 0);
                     _data.writeInt(numItems);
-                    if (this.mRemote.transact(15, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(15, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().onPanelRevealed(clearNotificationEffects, numItems);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().onPanelRevealed(clearNotificationEffects, numItems);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void onPanelHidden() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(16, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(16, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().onPanelHidden();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().onPanelHidden();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void clearNotificationEffects() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(17, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(17, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().clearNotificationEffects();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().clearNotificationEffects();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void onNotificationClick(String key, NotificationVisibility nv) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1404,19 +1191,19 @@ public interface IStatusBarService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(18, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(18, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().onNotificationClick(key, nv);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().onNotificationClick(key, nv);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void onNotificationActionClick(String key, int actionIndex, Notification.Action action, NotificationVisibility nv, boolean generatedByAssistant) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1436,181 +1223,157 @@ public interface IStatusBarService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(generatedByAssistant);
-                    if (this.mRemote.transact(19, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(generatedByAssistant ? 1 : 0);
+                    boolean _status = this.mRemote.transact(19, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().onNotificationActionClick(key, actionIndex, action, nv, generatedByAssistant);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().onNotificationActionClick(key, actionIndex, action, nv, generatedByAssistant);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void onNotificationError(String pkg, String tag, int id, int uid, int initialPid, String message, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeString(pkg);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeString(tag);
                     try {
-                        _data.writeString(pkg);
-                        try {
-                            _data.writeString(tag);
-                        } catch (Throwable th) {
-                            th = th;
-                            int i = id;
-                            int i2 = uid;
-                            int i3 = initialPid;
+                        _data.writeInt(id);
+                    } catch (Throwable th3) {
+                        th = th3;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeInt(uid);
+                    } catch (Throwable th4) {
+                        th = th4;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeInt(initialPid);
+                        _data.writeString(message);
+                        _data.writeInt(userId);
+                        boolean _status = this.mRemote.transact(20, _data, _reply, 0);
+                        if (!_status && Stub.getDefaultImpl() != null) {
+                            Stub.getDefaultImpl().onNotificationError(pkg, tag, id, uid, initialPid, message, userId);
                             _reply.recycle();
                             _data.recycle();
-                            throw th;
+                            return;
                         }
-                        try {
-                            _data.writeInt(id);
-                            try {
-                                _data.writeInt(uid);
-                            } catch (Throwable th2) {
-                                th = th2;
-                                int i32 = initialPid;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                            try {
-                                _data.writeInt(initialPid);
-                                _data.writeString(message);
-                                _data.writeInt(userId);
-                                if (this.mRemote.transact(20, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                    _reply.readException();
-                                    _reply.recycle();
-                                    _data.recycle();
-                                    return;
-                                }
-                                Stub.getDefaultImpl().onNotificationError(pkg, tag, id, uid, initialPid, message, userId);
-                                _reply.recycle();
-                                _data.recycle();
-                            } catch (Throwable th3) {
-                                th = th3;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th4) {
-                            th = th4;
-                            int i22 = uid;
-                            int i322 = initialPid;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
+                        _reply.readException();
+                        _reply.recycle();
+                        _data.recycle();
                     } catch (Throwable th5) {
                         th = th5;
-                        String str = tag;
-                        int i4 = id;
-                        int i222 = uid;
-                        int i3222 = initialPid;
                         _reply.recycle();
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th6) {
                     th = th6;
-                    String str2 = pkg;
-                    String str3 = tag;
-                    int i42 = id;
-                    int i2222 = uid;
-                    int i32222 = initialPid;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void onClearAllNotifications(int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userId);
-                    if (this.mRemote.transact(21, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(21, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().onClearAllNotifications(userId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().onClearAllNotifications(userId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void onNotificationClear(String pkg, String tag, int id, int userId, String key, int dismissalSurface, int dismissalSentiment, NotificationVisibility nv) throws RemoteException {
-                NotificationVisibility notificationVisibility = nv;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeString(pkg);
                     try {
-                        _data.writeString(pkg);
-                        try {
-                            _data.writeString(tag);
-                        } catch (Throwable th) {
-                            th = th;
-                            int i = id;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
+                        _data.writeString(tag);
+                    } catch (Throwable th2) {
+                        th = th2;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeInt(id);
+                        _data.writeInt(userId);
+                        _data.writeString(key);
+                        _data.writeInt(dismissalSurface);
+                        _data.writeInt(dismissalSentiment);
+                        if (nv != null) {
+                            _data.writeInt(1);
+                            nv.writeToParcel(_data, 0);
+                        } else {
+                            _data.writeInt(0);
                         }
-                        try {
-                            _data.writeInt(id);
-                            _data.writeInt(userId);
-                            _data.writeString(key);
-                            _data.writeInt(dismissalSurface);
-                            _data.writeInt(dismissalSentiment);
-                            if (notificationVisibility != null) {
-                                _data.writeInt(1);
-                                notificationVisibility.writeToParcel(_data, 0);
-                            } else {
-                                _data.writeInt(0);
-                            }
-                            if (this.mRemote.transact(22, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                _reply.readException();
-                                _reply.recycle();
-                                _data.recycle();
-                                return;
-                            }
+                        boolean _status = this.mRemote.transact(22, _data, _reply, 0);
+                        if (!_status && Stub.getDefaultImpl() != null) {
                             Stub.getDefaultImpl().onNotificationClear(pkg, tag, id, userId, key, dismissalSurface, dismissalSentiment, nv);
                             _reply.recycle();
                             _data.recycle();
-                        } catch (Throwable th2) {
-                            th = th2;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
+                            return;
                         }
+                        _reply.readException();
+                        _reply.recycle();
+                        _data.recycle();
                     } catch (Throwable th3) {
                         th = th3;
-                        String str = tag;
-                        int i2 = id;
                         _reply.recycle();
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th4) {
                     th = th4;
-                    String str2 = pkg;
-                    String str3 = tag;
-                    int i22 = id;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void onNotificationVisibilityChanged(NotificationVisibility[] newlyVisibleKeys, NotificationVisibility[] noLongerVisibleKeys) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1618,60 +1381,60 @@ public interface IStatusBarService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeTypedArray(newlyVisibleKeys, 0);
                     _data.writeTypedArray(noLongerVisibleKeys, 0);
-                    if (this.mRemote.transact(23, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(23, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().onNotificationVisibilityChanged(newlyVisibleKeys, noLongerVisibleKeys);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().onNotificationVisibilityChanged(newlyVisibleKeys, noLongerVisibleKeys);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void onNotificationExpansionChanged(String key, boolean userAction, boolean expanded, int notificationLocation) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(key);
-                    _data.writeInt(userAction);
-                    _data.writeInt(expanded);
+                    _data.writeInt(userAction ? 1 : 0);
+                    _data.writeInt(expanded ? 1 : 0);
                     _data.writeInt(notificationLocation);
-                    if (this.mRemote.transact(24, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(24, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().onNotificationExpansionChanged(key, userAction, expanded, notificationLocation);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().onNotificationExpansionChanged(key, userAction, expanded, notificationLocation);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void onNotificationDirectReplied(String key) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(key);
-                    if (this.mRemote.transact(25, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(25, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().onNotificationDirectReplied(key);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().onNotificationDirectReplied(key);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void onNotificationSmartSuggestionsAdded(String key, int smartReplyCount, int smartActionCount, boolean generatedByAsssistant, boolean editBeforeSending) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1680,21 +1443,21 @@ public interface IStatusBarService extends IInterface {
                     _data.writeString(key);
                     _data.writeInt(smartReplyCount);
                     _data.writeInt(smartActionCount);
-                    _data.writeInt(generatedByAsssistant);
-                    _data.writeInt(editBeforeSending);
-                    if (this.mRemote.transact(26, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(generatedByAsssistant ? 1 : 0);
+                    _data.writeInt(editBeforeSending ? 1 : 0);
+                    boolean _status = this.mRemote.transact(26, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().onNotificationSmartSuggestionsAdded(key, smartReplyCount, smartActionCount, generatedByAsssistant, editBeforeSending);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().onNotificationSmartSuggestionsAdded(key, smartReplyCount, smartActionCount, generatedByAsssistant, editBeforeSending);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void onNotificationSmartReplySent(String key, int replyIndex, CharSequence reply, int notificationLocation, boolean modifiedBeforeSending) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1709,39 +1472,39 @@ public interface IStatusBarService extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(notificationLocation);
-                    _data.writeInt(modifiedBeforeSending);
-                    if (this.mRemote.transact(27, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(modifiedBeforeSending ? 1 : 0);
+                    boolean _status = this.mRemote.transact(27, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().onNotificationSmartReplySent(key, replyIndex, reply, notificationLocation, modifiedBeforeSending);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().onNotificationSmartReplySent(key, replyIndex, reply, notificationLocation, modifiedBeforeSending);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void onNotificationSettingsViewed(String key) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(key);
-                    if (this.mRemote.transact(28, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(28, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().onNotificationSettingsViewed(key);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().onNotificationSettingsViewed(key);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void setSystemUiVisibility(int displayId, int vis, int mask, String cause) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1751,112 +1514,112 @@ public interface IStatusBarService extends IInterface {
                     _data.writeInt(vis);
                     _data.writeInt(mask);
                     _data.writeString(cause);
-                    if (this.mRemote.transact(29, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(29, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setSystemUiVisibility(displayId, vis, mask, cause);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setSystemUiVisibility(displayId, vis, mask, cause);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void onNotificationBubbleChanged(String key, boolean isBubble) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(key);
-                    _data.writeInt(isBubble);
-                    if (this.mRemote.transact(30, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(isBubble ? 1 : 0);
+                    boolean _status = this.mRemote.transact(30, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().onNotificationBubbleChanged(key, isBubble);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().onNotificationBubbleChanged(key, isBubble);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void onGlobalActionsShown() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(31, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(31, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().onGlobalActionsShown();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().onGlobalActionsShown();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void onGlobalActionsHidden() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(32, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(32, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().onGlobalActionsHidden();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().onGlobalActionsHidden();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void shutdown() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(33, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(33, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().shutdown();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().shutdown();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void reboot(boolean safeMode) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(safeMode);
-                    if (this.mRemote.transact(34, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(safeMode ? 1 : 0);
+                    boolean _status = this.mRemote.transact(34, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().reboot(safeMode);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().reboot(safeMode);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void addTile(ComponentName tile) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1868,19 +1631,19 @@ public interface IStatusBarService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(35, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(35, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().addTile(tile);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().addTile(tile);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void remTile(ComponentName tile) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1892,19 +1655,19 @@ public interface IStatusBarService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(36, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(36, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().remTile(tile);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().remTile(tile);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void clickTile(ComponentName tile) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1916,75 +1679,75 @@ public interface IStatusBarService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(37, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(37, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().clickTile(tile);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().clickTile(tile);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void handleSystemKey(int key) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(key);
-                    if (this.mRemote.transact(38, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(38, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().handleSystemKey(key);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().handleSystemKey(key);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void showPinningEnterExitToast(boolean entering) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(entering);
-                    if (this.mRemote.transact(39, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(entering ? 1 : 0);
+                    boolean _status = this.mRemote.transact(39, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().showPinningEnterExitToast(entering);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().showPinningEnterExitToast(entering);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void showPinningEscapeToast() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(40, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(40, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().showPinningEscapeToast();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().showPinningEscapeToast();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void showBiometricDialog(Bundle bundle, IBiometricServiceReceiverInternal receiver, int type, boolean requireConfirmation, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1998,91 +1761,90 @@ public interface IStatusBarService extends IInterface {
                     }
                     _data.writeStrongBinder(receiver != null ? receiver.asBinder() : null);
                     _data.writeInt(type);
-                    _data.writeInt(requireConfirmation);
+                    _data.writeInt(requireConfirmation ? 1 : 0);
                     _data.writeInt(userId);
-                    if (this.mRemote.transact(41, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(41, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().showBiometricDialog(bundle, receiver, type, requireConfirmation, userId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().showBiometricDialog(bundle, receiver, type, requireConfirmation, userId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void onBiometricAuthenticated(boolean authenticated, String failureReason) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(authenticated);
+                    _data.writeInt(authenticated ? 1 : 0);
                     _data.writeString(failureReason);
-                    if (this.mRemote.transact(42, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(42, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().onBiometricAuthenticated(authenticated, failureReason);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().onBiometricAuthenticated(authenticated, failureReason);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void onBiometricHelp(String message) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(message);
-                    if (this.mRemote.transact(43, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(43, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().onBiometricHelp(message);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().onBiometricHelp(message);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void onBiometricError(String error) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(error);
-                    if (this.mRemote.transact(44, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(44, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().onBiometricError(error);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().onBiometricError(error);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.statusbar.IStatusBarService
             public void hideBiometricDialog() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(45, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(45, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().hideBiometricDialog();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().hideBiometricDialog();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -2091,11 +1853,11 @@ public interface IStatusBarService extends IInterface {
         }
 
         public static boolean setDefaultImpl(IStatusBarService impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IStatusBarService getDefaultImpl() {

@@ -6,27 +6,27 @@ import android.view.View;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public class StateListAnimator implements Cloneable {
     private AnimatorListenerAdapter mAnimatorListener;
     private int mChangingConfigurations;
-    /* access modifiers changed from: private */
-    public StateListAnimatorConstantState mConstantState;
-    private Tuple mLastMatch = null;
-    /* access modifiers changed from: private */
-    public Animator mRunningAnimator = null;
-    private ArrayList<Tuple> mTuples = new ArrayList<>();
+    private StateListAnimatorConstantState mConstantState;
     private WeakReference<View> mViewRef;
+    private ArrayList<Tuple> mTuples = new ArrayList<>();
+    private Tuple mLastMatch = null;
+    private Animator mRunningAnimator = null;
 
     public StateListAnimator() {
         initAnimatorListener();
     }
 
     private void initAnimatorListener() {
-        this.mAnimatorListener = new AnimatorListenerAdapter() {
+        this.mAnimatorListener = new AnimatorListenerAdapter() { // from class: android.animation.StateListAnimator.1
+            @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
             public void onAnimationEnd(Animator animation) {
-                animation.setTarget((Object) null);
+                animation.setTarget(null);
                 if (StateListAnimator.this.mRunningAnimator == animation) {
-                    Animator unused = StateListAnimator.this.mRunningAnimator = null;
+                    StateListAnimator.this.mRunningAnimator = null;
                 }
             }
         };
@@ -47,32 +47,34 @@ public class StateListAnimator implements Cloneable {
         if (this.mViewRef == null) {
             return null;
         }
-        return (View) this.mViewRef.get();
+        return this.mViewRef.get();
     }
 
     public void setTarget(View view) {
         View current = getTarget();
-        if (current != view) {
-            if (current != null) {
-                clearTarget();
-            }
-            if (view != null) {
-                this.mViewRef = new WeakReference<>(view);
-            }
+        if (current == view) {
+            return;
+        }
+        if (current != null) {
+            clearTarget();
+        }
+        if (view != null) {
+            this.mViewRef = new WeakReference<>(view);
         }
     }
 
     private void clearTarget() {
         int size = this.mTuples.size();
         for (int i = 0; i < size; i++) {
-            this.mTuples.get(i).mAnimator.setTarget((Object) null);
+            this.mTuples.get(i).mAnimator.setTarget(null);
         }
         this.mViewRef = null;
         this.mLastMatch = null;
         this.mRunningAnimator = null;
     }
 
-    public StateListAnimator clone() {
+    /* renamed from: clone */
+    public StateListAnimator m145clone() {
         try {
             StateListAnimator clone = (StateListAnimator) super.clone();
             clone.mTuples = new ArrayList<>(this.mTuples.size());
@@ -84,11 +86,12 @@ public class StateListAnimator implements Cloneable {
             int tupleSize = this.mTuples.size();
             for (int i = 0; i < tupleSize; i++) {
                 Tuple tuple = this.mTuples.get(i);
-                Animator animatorClone = tuple.mAnimator.clone();
+                Animator animatorClone = tuple.mAnimator.mo138clone();
                 animatorClone.removeListener(this.mAnimatorListener);
                 clone.addState(tuple.mSpecs, animatorClone);
             }
-            clone.setChangingConfigurations(getChangingConfigurations());
+            int i2 = getChangingConfigurations();
+            clone.setChangingConfigurations(i2);
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new AssertionError("cannot clone state list animator", e);
@@ -104,20 +107,22 @@ public class StateListAnimator implements Cloneable {
                 break;
             }
             Tuple tuple = this.mTuples.get(i);
-            if (StateSet.stateSetMatches(tuple.mSpecs, state)) {
+            if (!StateSet.stateSetMatches(tuple.mSpecs, state)) {
+                i++;
+            } else {
                 match = tuple;
                 break;
             }
-            i++;
         }
-        if (match != this.mLastMatch) {
-            if (this.mLastMatch != null) {
-                cancel();
-            }
-            this.mLastMatch = match;
-            if (match != null) {
-                start(match);
-            }
+        if (match == this.mLastMatch) {
+            return;
+        }
+        if (this.mLastMatch != null) {
+            cancel();
+        }
+        this.mLastMatch = match;
+        if (match != null) {
+            start(match);
         }
     }
 
@@ -160,6 +165,7 @@ public class StateListAnimator implements Cloneable {
         return new StateListAnimatorConstantState(this);
     }
 
+    /* loaded from: classes.dex */
     public static class Tuple {
         final Animator mAnimator;
         final int[] mSpecs;
@@ -178,22 +184,27 @@ public class StateListAnimator implements Cloneable {
         }
     }
 
+    /* loaded from: classes.dex */
     private static class StateListAnimatorConstantState extends ConstantState<StateListAnimator> {
         final StateListAnimator mAnimator;
-        int mChangingConf = this.mAnimator.getChangingConfigurations();
+        int mChangingConf;
 
         public StateListAnimatorConstantState(StateListAnimator animator) {
             this.mAnimator = animator;
-            StateListAnimatorConstantState unused = this.mAnimator.mConstantState = this;
+            this.mAnimator.mConstantState = this;
+            this.mChangingConf = this.mAnimator.getChangingConfigurations();
         }
 
+        @Override // android.content.res.ConstantState
         public int getChangingConfigurations() {
             return this.mChangingConf;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.content.res.ConstantState
         public StateListAnimator newInstance() {
-            StateListAnimator clone = this.mAnimator.clone();
-            StateListAnimatorConstantState unused = clone.mConstantState = this;
+            StateListAnimator clone = this.mAnimator.m145clone();
+            clone.mConstantState = this;
             return clone;
         }
     }

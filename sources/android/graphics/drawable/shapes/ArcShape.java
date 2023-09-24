@@ -5,6 +5,7 @@ import android.graphics.Outline;
 import android.graphics.Paint;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public class ArcShape extends RectShape {
     private final float mStartAngle;
     private final float mSweepAngle;
@@ -22,17 +23,22 @@ public class ArcShape extends RectShape {
         return this.mSweepAngle;
     }
 
+    @Override // android.graphics.drawable.shapes.RectShape, android.graphics.drawable.shapes.Shape
     public void draw(Canvas canvas, Paint paint) {
         canvas.drawArc(rect(), this.mStartAngle, this.mSweepAngle, true, paint);
     }
 
+    @Override // android.graphics.drawable.shapes.RectShape, android.graphics.drawable.shapes.Shape
     public void getOutline(Outline outline) {
     }
 
-    public ArcShape clone() throws CloneNotSupportedException {
-        return (ArcShape) super.clone();
+    @Override // android.graphics.drawable.shapes.RectShape, android.graphics.drawable.shapes.Shape
+    /* renamed from: clone */
+    public ArcShape mo159clone() throws CloneNotSupportedException {
+        return (ArcShape) super.mo159clone();
     }
 
+    @Override // android.graphics.drawable.shapes.RectShape, android.graphics.drawable.shapes.Shape
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -47,7 +53,8 @@ public class ArcShape extends RectShape {
         return false;
     }
 
+    @Override // android.graphics.drawable.shapes.RectShape, android.graphics.drawable.shapes.Shape
     public int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(super.hashCode()), Float.valueOf(this.mStartAngle), Float.valueOf(this.mSweepAngle)});
+        return Objects.hash(Integer.valueOf(super.hashCode()), Float.valueOf(this.mStartAngle), Float.valueOf(this.mSweepAngle));
     }
 }

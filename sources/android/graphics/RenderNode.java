@@ -3,10 +3,13 @@ package android.graphics;
 import android.view.NativeVectorDrawableAnimator;
 import android.view.RenderNodeAnimator;
 import com.android.internal.util.ArrayUtils;
+import dalvik.annotation.optimization.CriticalNative;
+import dalvik.annotation.optimization.FastNative;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import libcore.util.NativeAllocationRegistry;
 
+/* loaded from: classes.dex */
 public final class RenderNode {
     public static final int USAGE_BACKGROUND = 1;
     public static final int USAGE_UNKNOWN = 0;
@@ -15,6 +18,7 @@ public final class RenderNode {
     private RecordingCanvas mCurrentRecordingCanvas;
     public final long mNativeRenderNode;
 
+    /* loaded from: classes.dex */
     public interface AnimationHost {
         boolean isAttached();
 
@@ -23,6 +27,7 @@ public final class RenderNode {
         void registerVectorDrawableAnimator(NativeVectorDrawableAnimator nativeVectorDrawableAnimator);
     }
 
+    /* loaded from: classes.dex */
     public interface PositionUpdateListener {
         void positionChanged(long j, int i, int i2, int i3, int i4);
 
@@ -30,6 +35,7 @@ public final class RenderNode {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface UsageHint {
     }
 
@@ -39,176 +45,256 @@ public final class RenderNode {
 
     private static native void nEndAllAnimators(long j);
 
+    @CriticalNative
     private static native boolean nGetAllowForceDark(long j);
 
+    @CriticalNative
     private static native float nGetAlpha(long j);
 
+    @CriticalNative
     private static native int nGetAmbientShadowColor(long j);
 
+    @CriticalNative
     private static native boolean nGetAnimationMatrix(long j, long j2);
 
+    @CriticalNative
     private static native int nGetBottom(long j);
 
+    @CriticalNative
     private static native float nGetCameraDistance(long j);
 
+    @CriticalNative
     private static native boolean nGetClipToBounds(long j);
 
+    @CriticalNative
     private static native boolean nGetClipToOutline(long j);
 
     private static native int nGetDebugSize(long j);
 
+    @CriticalNative
     private static native float nGetElevation(long j);
 
+    @CriticalNative
     private static native int nGetHeight(long j);
 
+    @CriticalNative
     private static native void nGetInverseTransformMatrix(long j, long j2);
 
+    @CriticalNative
     private static native int nGetLayerType(long j);
 
+    @CriticalNative
     private static native int nGetLeft(long j);
 
-    /* access modifiers changed from: private */
-    public static native long nGetNativeFinalizer();
+    private static native long nGetNativeFinalizer();
 
+    @CriticalNative
     private static native float nGetPivotX(long j);
 
+    @CriticalNative
     private static native float nGetPivotY(long j);
 
+    @CriticalNative
     private static native int nGetRight(long j);
 
+    @CriticalNative
     private static native float nGetRotation(long j);
 
+    @CriticalNative
     private static native float nGetRotationX(long j);
 
+    @CriticalNative
     private static native float nGetRotationY(long j);
 
+    @CriticalNative
     private static native float nGetScaleX(long j);
 
+    @CriticalNative
     private static native float nGetScaleY(long j);
 
+    @CriticalNative
     private static native int nGetSpotShadowColor(long j);
 
+    @CriticalNative
     private static native int nGetTop(long j);
 
+    @CriticalNative
     private static native void nGetTransformMatrix(long j, long j2);
 
+    @CriticalNative
     private static native float nGetTranslationX(long j);
 
+    @CriticalNative
     private static native float nGetTranslationY(long j);
 
+    @CriticalNative
     private static native float nGetTranslationZ(long j);
 
+    @CriticalNative
     private static native long nGetUniqueId(long j);
 
+    @CriticalNative
     private static native int nGetWidth(long j);
 
+    @CriticalNative
     private static native boolean nHasIdentityMatrix(long j);
 
+    @CriticalNative
     private static native boolean nHasOverlappingRendering(long j);
 
+    @CriticalNative
     private static native boolean nHasShadow(long j);
 
+    @CriticalNative
     private static native boolean nIsPivotExplicitlySet(long j);
 
+    @CriticalNative
     private static native boolean nIsValid(long j);
 
+    @CriticalNative
     private static native boolean nOffsetLeftAndRight(long j, int i);
 
+    @CriticalNative
     private static native boolean nOffsetTopAndBottom(long j, int i);
 
     private static native void nOutput(long j);
 
     private static native void nRequestPositionUpdates(long j, PositionUpdateListener positionUpdateListener);
 
+    @CriticalNative
     private static native boolean nResetPivot(long j);
 
+    @CriticalNative
     private static native boolean nSetAllowForceDark(long j, boolean z);
 
+    @CriticalNative
     private static native boolean nSetAlpha(long j, float f);
 
+    @CriticalNative
     private static native boolean nSetAmbientShadowColor(long j, int i);
 
+    @CriticalNative
     private static native boolean nSetAnimationMatrix(long j, long j2);
 
+    @CriticalNative
     private static native boolean nSetBottom(long j, int i);
 
+    @CriticalNative
     private static native boolean nSetCameraDistance(long j, float f);
 
+    @CriticalNative
     private static native boolean nSetClipBounds(long j, int i, int i2, int i3, int i4);
 
+    @CriticalNative
     private static native boolean nSetClipBoundsEmpty(long j);
 
+    @CriticalNative
     private static native boolean nSetClipToBounds(long j, boolean z);
 
+    @CriticalNative
     private static native boolean nSetClipToOutline(long j, boolean z);
 
+    @FastNative
     private static native void nSetDisplayList(long j, long j2);
 
+    @CriticalNative
     private static native boolean nSetElevation(long j, float f);
 
+    @CriticalNative
     private static native boolean nSetHasOverlappingRendering(long j, boolean z);
 
+    @CriticalNative
     private static native boolean nSetLayerPaint(long j, long j2);
 
+    @CriticalNative
     private static native boolean nSetLayerType(long j, int i);
 
+    @CriticalNative
     private static native boolean nSetLeft(long j, int i);
 
+    @CriticalNative
     private static native boolean nSetLeftTopRightBottom(long j, int i, int i2, int i3, int i4);
 
+    @CriticalNative
     private static native boolean nSetOutlineConvexPath(long j, long j2, float f);
 
+    @CriticalNative
     private static native boolean nSetOutlineEmpty(long j);
 
+    @CriticalNative
     private static native boolean nSetOutlineNone(long j);
 
+    @CriticalNative
     private static native boolean nSetOutlineRoundRect(long j, int i, int i2, int i3, int i4, float f, float f2);
 
+    @CriticalNative
     private static native boolean nSetPivotX(long j, float f);
 
+    @CriticalNative
     private static native boolean nSetPivotY(long j, float f);
 
+    @CriticalNative
     private static native boolean nSetProjectBackwards(long j, boolean z);
 
+    @CriticalNative
     private static native boolean nSetProjectionReceiver(long j, boolean z);
 
+    @CriticalNative
     private static native boolean nSetRevealClip(long j, boolean z, float f, float f2, float f3);
 
+    @CriticalNative
     private static native boolean nSetRight(long j, int i);
 
+    @CriticalNative
     private static native boolean nSetRotation(long j, float f);
 
+    @CriticalNative
     private static native boolean nSetRotationX(long j, float f);
 
+    @CriticalNative
     private static native boolean nSetRotationY(long j, float f);
 
+    @CriticalNative
     private static native boolean nSetScaleX(long j, float f);
 
+    @CriticalNative
     private static native boolean nSetScaleY(long j, float f);
 
+    @CriticalNative
     private static native boolean nSetSpotShadowColor(long j, int i);
 
+    @CriticalNative
     private static native boolean nSetStaticMatrix(long j, long j2);
 
+    @CriticalNative
     private static native boolean nSetTop(long j, int i);
 
+    @CriticalNative
     private static native boolean nSetTranslationX(long j, float f);
 
+    @CriticalNative
     private static native boolean nSetTranslationY(long j, float f);
 
+    @CriticalNative
     private static native boolean nSetTranslationZ(long j, float f);
 
+    @CriticalNative
     private static native void nSetUsageHint(long j, int i);
 
+    static /* synthetic */ long access$000() {
+        return nGetNativeFinalizer();
+    }
+
+    /* loaded from: classes.dex */
     private static class NoImagePreloadHolder {
-        public static final NativeAllocationRegistry sRegistry = NativeAllocationRegistry.createMalloced(RenderNode.class.getClassLoader(), RenderNode.nGetNativeFinalizer());
+        public static final NativeAllocationRegistry sRegistry = NativeAllocationRegistry.createMalloced(RenderNode.class.getClassLoader(), RenderNode.access$000());
 
         private NoImagePreloadHolder() {
         }
     }
 
     public RenderNode(String name) {
-        this(name, (AnimationHost) null);
+        this(name, null);
     }
 
     private RenderNode(String name, AnimationHost animationHost) {
@@ -231,6 +317,7 @@ public final class RenderNode {
         return new RenderNode(nativePtr);
     }
 
+    /* loaded from: classes.dex */
     private static final class CompositePositionUpdateListener implements PositionUpdateListener {
         private static final PositionUpdateListener[] sEmpty = new PositionUpdateListener[0];
         private final PositionUpdateListener[] mListeners;
@@ -247,13 +334,17 @@ public final class RenderNode {
             return new CompositePositionUpdateListener((PositionUpdateListener[]) ArrayUtils.removeElement(PositionUpdateListener.class, this.mListeners, listener));
         }
 
+        @Override // android.graphics.RenderNode.PositionUpdateListener
         public void positionChanged(long frameNumber, int left, int top, int right, int bottom) {
+            PositionUpdateListener[] positionUpdateListenerArr;
             for (PositionUpdateListener pul : this.mListeners) {
                 pul.positionChanged(frameNumber, left, top, right, bottom);
             }
         }
 
+        @Override // android.graphics.RenderNode.PositionUpdateListener
         public void positionLost(long frameNumber) {
+            PositionUpdateListener[] positionUpdateListenerArr;
             for (PositionUpdateListener pul : this.mListeners) {
                 pul.positionLost(frameNumber);
             }
@@ -282,11 +373,11 @@ public final class RenderNode {
     }
 
     public RecordingCanvas beginRecording(int width, int height) {
-        if (this.mCurrentRecordingCanvas == null) {
-            this.mCurrentRecordingCanvas = RecordingCanvas.obtain(this, width, height);
-            return this.mCurrentRecordingCanvas;
+        if (this.mCurrentRecordingCanvas != null) {
+            throw new IllegalStateException("Recording currently in progress - missing #endRecording() call?");
         }
-        throw new IllegalStateException("Recording currently in progress - missing #endRecording() call?");
+        this.mCurrentRecordingCanvas = RecordingCanvas.obtain(this, width, height);
+        return this.mCurrentRecordingCanvas;
     }
 
     public RecordingCanvas beginRecording() {
@@ -294,14 +385,14 @@ public final class RenderNode {
     }
 
     public void endRecording() {
-        if (this.mCurrentRecordingCanvas != null) {
-            RecordingCanvas canvas = this.mCurrentRecordingCanvas;
-            this.mCurrentRecordingCanvas = null;
-            nSetDisplayList(this.mNativeRenderNode, canvas.finishRecording());
-            canvas.recycle();
-            return;
+        if (this.mCurrentRecordingCanvas == null) {
+            throw new IllegalStateException("No recording in progress, forgot to call #beginRecording()?");
         }
-        throw new IllegalStateException("No recording in progress, forgot to call #beginRecording()?");
+        RecordingCanvas canvas = this.mCurrentRecordingCanvas;
+        this.mCurrentRecordingCanvas = null;
+        long displayList = canvas.finishRecording();
+        nSetDisplayList(this.mNativeRenderNode, displayList);
+        canvas.recycle();
     }
 
     @Deprecated
@@ -311,15 +402,14 @@ public final class RenderNode {
 
     @Deprecated
     public void end(RecordingCanvas canvas) {
-        if (canvas == this.mCurrentRecordingCanvas) {
-            endRecording();
-            return;
+        if (canvas != this.mCurrentRecordingCanvas) {
+            throw new IllegalArgumentException("Wrong canvas");
         }
-        throw new IllegalArgumentException("Wrong canvas");
+        endRecording();
     }
 
     public void discardDisplayList() {
-        nSetDisplayList(this.mNativeRenderNode, 0);
+        nSetDisplayList(this.mNativeRenderNode, 0L);
     }
 
     public boolean hasDisplayList() {
@@ -345,11 +435,12 @@ public final class RenderNode {
 
     @Deprecated
     public boolean setLayerPaint(Paint paint) {
-        return nSetLayerPaint(this.mNativeRenderNode, paint != null ? paint.getNativeInstance() : 0);
+        return nSetLayerPaint(this.mNativeRenderNode, paint != null ? paint.getNativeInstance() : 0L);
     }
 
     public boolean setUseCompositingLayer(boolean forceToLayer, Paint paint) {
-        return nSetLayerType(this.mNativeRenderNode, forceToLayer ? 2 : 0) | nSetLayerPaint(this.mNativeRenderNode, paint != null ? paint.getNativeInstance() : 0);
+        boolean didChange = nSetLayerType(this.mNativeRenderNode, forceToLayer ? 2 : 0);
+        return didChange | nSetLayerPaint(this.mNativeRenderNode, paint != null ? paint.getNativeInstance() : 0L);
     }
 
     public boolean getUseCompositingLayer() {
@@ -432,7 +523,7 @@ public final class RenderNode {
     }
 
     public boolean setAnimationMatrix(Matrix matrix) {
-        return nSetAnimationMatrix(this.mNativeRenderNode, matrix != null ? matrix.native_instance : 0);
+        return nSetAnimationMatrix(this.mNativeRenderNode, matrix != null ? matrix.native_instance : 0L);
     }
 
     public Matrix getAnimationMatrix() {
@@ -560,10 +651,10 @@ public final class RenderNode {
     }
 
     public boolean setCameraDistance(float distance) {
-        if (Float.isFinite(distance) && distance >= 0.0f) {
-            return nSetCameraDistance(this.mNativeRenderNode, -distance);
+        if (!Float.isFinite(distance) || distance < 0.0f) {
+            throw new IllegalArgumentException("distance must be finite & positive, given=" + distance);
         }
-        throw new IllegalArgumentException("distance must be finite & positive, given=" + distance);
+        return nSetCameraDistance(this.mNativeRenderNode, -distance);
     }
 
     public float getCameraDistance() {
@@ -635,7 +726,7 @@ public final class RenderNode {
     }
 
     public long computeApproximateMemoryUsage() {
-        return (long) nGetDebugSize(this.mNativeRenderNode);
+        return nGetDebugSize(this.mNativeRenderNode);
     }
 
     public boolean setForceDarkAllowed(boolean allow) {
@@ -651,12 +742,11 @@ public final class RenderNode {
     }
 
     public void addAnimator(RenderNodeAnimator animator) {
-        if (isAttached()) {
-            nAddAnimator(this.mNativeRenderNode, animator.getNativeAnimator());
-            this.mAnimationHost.registerAnimatingRenderNode(this);
-            return;
+        if (!isAttached()) {
+            throw new IllegalStateException("Cannot start this animator on a detached view!");
         }
-        throw new IllegalStateException("Cannot start this animator on a detached view!");
+        nAddAnimator(this.mNativeRenderNode, animator.getNativeAnimator());
+        this.mAnimationHost.registerAnimatingRenderNode(this);
     }
 
     public boolean isAttached() {
@@ -664,11 +754,10 @@ public final class RenderNode {
     }
 
     public void registerVectorDrawableAnimator(NativeVectorDrawableAnimator animatorSet) {
-        if (isAttached()) {
-            this.mAnimationHost.registerVectorDrawableAnimator(animatorSet);
-            return;
+        if (!isAttached()) {
+            throw new IllegalStateException("Cannot start this animator on a detached view!");
         }
-        throw new IllegalStateException("Cannot start this animator on a detached view!");
+        this.mAnimationHost.registerVectorDrawableAnimator(animatorSet);
     }
 
     public void endAllAnimators() {

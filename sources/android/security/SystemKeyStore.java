@@ -1,7 +1,7 @@
 package android.security;
 
-import android.os.Environment;
-import android.os.FileUtils;
+import android.p007os.Environment;
+import android.p007os.FileUtils;
 import com.android.internal.logging.nano.MetricsProto;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -9,8 +9,10 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 import libcore.io.IoUtils;
 
+/* loaded from: classes3.dex */
 public class SystemKeyStore {
     private static final String KEY_FILE_EXTENSION = ".sks";
     private static final String SYSTEM_KEYSTORE_DIRECTORY = "misc/systemkeys";
@@ -28,7 +30,8 @@ public class SystemKeyStore {
             return null;
         }
         int length = keyData.length;
-        StringBuilder sb = new StringBuilder(keyData.length * 2);
+        int expectedStringLen = keyData.length * 2;
+        StringBuilder sb = new StringBuilder(expectedStringLen);
         for (byte b : keyData) {
             String hexStr = Integer.toString(b & 255, 16);
             if (hexStr.length() == 1) {
@@ -45,32 +48,34 @@ public class SystemKeyStore {
 
     public byte[] generateNewKey(int numBits, String algName, String keyName) throws NoSuchAlgorithmException {
         File keyFile = getKeyFile(keyName);
-        if (!keyFile.exists()) {
-            KeyGenerator skg = KeyGenerator.getInstance(algName);
-            skg.init(numBits, SecureRandom.getInstance("SHA1PRNG"));
-            byte[] retKey = skg.generateKey().getEncoded();
-            try {
-                if (keyFile.createNewFile()) {
-                    FileOutputStream fos = new FileOutputStream(keyFile);
-                    fos.write(retKey);
-                    fos.flush();
-                    FileUtils.sync(fos);
-                    fos.close();
-                    FileUtils.setPermissions(keyFile.getName(), (int) MetricsProto.MetricsEvent.ACTION_SHOW_SETTINGS_SUGGESTION, -1, -1);
-                    return retKey;
-                }
-                throw new IllegalArgumentException();
-            } catch (IOException e) {
-                return null;
-            }
-        } else {
+        if (keyFile.exists()) {
             throw new IllegalArgumentException();
+        }
+        KeyGenerator skg = KeyGenerator.getInstance(algName);
+        SecureRandom srng = SecureRandom.getInstance("SHA1PRNG");
+        skg.init(numBits, srng);
+        SecretKey sk = skg.generateKey();
+        byte[] retKey = sk.getEncoded();
+        try {
+            if (!keyFile.createNewFile()) {
+                throw new IllegalArgumentException();
+            }
+            FileOutputStream fos = new FileOutputStream(keyFile);
+            fos.write(retKey);
+            fos.flush();
+            FileUtils.sync(fos);
+            fos.close();
+            FileUtils.setPermissions(keyFile.getName(), (int) MetricsProto.MetricsEvent.ACTION_SHOW_SETTINGS_SUGGESTION, -1, -1);
+            return retKey;
+        } catch (IOException e) {
+            return null;
         }
     }
 
     private File getKeyFile(String keyName) {
         File sysKeystoreDir = new File(Environment.getDataDirectory(), SYSTEM_KEYSTORE_DIRECTORY);
-        return new File(sysKeystoreDir, keyName + KEY_FILE_EXTENSION);
+        File keyFile = new File(sysKeystoreDir, keyName + KEY_FILE_EXTENSION);
+        return keyFile;
     }
 
     public String retrieveKeyHexString(String keyName) throws IOException {
@@ -87,10 +92,9 @@ public class SystemKeyStore {
 
     public void deleteKey(String keyName) {
         File keyFile = getKeyFile(keyName);
-        if (keyFile.exists()) {
-            keyFile.delete();
-            return;
+        if (!keyFile.exists()) {
+            throw new IllegalArgumentException();
         }
-        throw new IllegalArgumentException();
+        keyFile.delete();
     }
 }

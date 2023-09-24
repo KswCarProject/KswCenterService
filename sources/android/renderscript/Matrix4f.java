@@ -2,15 +2,18 @@ package android.renderscript;
 
 import android.annotation.UnsupportedAppUsage;
 
+/* loaded from: classes3.dex */
 public class Matrix4f {
     @UnsupportedAppUsage
-    final float[] mMat = new float[16];
+    final float[] mMat;
 
     public Matrix4f() {
+        this.mMat = new float[16];
         loadIdentity();
     }
 
     public Matrix4f(float[] dataArray) {
+        this.mMat = new float[16];
         System.arraycopy(dataArray, 0, this.mMat, 0, this.mMat.length);
     }
 
@@ -69,9 +72,9 @@ public class Matrix4f {
     }
 
     public void loadRotate(float rot, float x, float y, float z) {
-        float z2;
-        float y2;
         float x2;
+        float y2;
+        float z2;
         this.mMat[3] = 0.0f;
         this.mMat[7] = 0.0f;
         this.mMat[11] = 0.0f;
@@ -80,9 +83,9 @@ public class Matrix4f {
         this.mMat[14] = 0.0f;
         this.mMat[15] = 1.0f;
         float rot2 = 0.017453292f * rot;
-        float c = (float) Math.cos((double) rot2);
-        float s = (float) Math.sin((double) rot2);
-        float len = (float) Math.sqrt((double) ((x * x) + (y * y) + (z * z)));
+        float c = (float) Math.cos(rot2);
+        float s = (float) Math.sin(rot2);
+        float len = (float) Math.sqrt((x * x) + (y * y) + (z * z));
         if (len == 1.0f) {
             float recipLen = 1.0f / len;
             x2 = x * recipLen;
@@ -128,19 +131,19 @@ public class Matrix4f {
     public void loadMultiply(Matrix4f lhs, Matrix4f rhs) {
         for (int i = 0; i < 4; i++) {
             float ri3 = 0.0f;
+            float ri32 = 0.0f;
             float ri2 = 0.0f;
             float ri1 = 0.0f;
-            float ri0 = 0.0f;
             for (int j = 0; j < 4; j++) {
                 float rhs_ij = rhs.get(i, j);
-                ri0 += lhs.get(j, 0) * rhs_ij;
-                ri1 += lhs.get(j, 1) * rhs_ij;
-                ri2 += lhs.get(j, 2) * rhs_ij;
+                ri1 += lhs.get(j, 0) * rhs_ij;
+                ri2 += lhs.get(j, 1) * rhs_ij;
+                ri32 += lhs.get(j, 2) * rhs_ij;
                 ri3 += lhs.get(j, 3) * rhs_ij;
             }
-            set(i, 0, ri0);
-            set(i, 1, ri1);
-            set(i, 2, ri2);
+            set(i, 0, ri1);
+            set(i, 1, ri2);
+            set(i, 2, ri32);
             set(i, 3, ri3);
         }
     }
@@ -149,14 +152,14 @@ public class Matrix4f {
         loadIdentity();
         this.mMat[0] = 2.0f / (r - l);
         this.mMat[5] = 2.0f / (t - b);
-        this.mMat[10] = -2.0f / (f - n);
+        this.mMat[10] = (-2.0f) / (f - n);
         this.mMat[12] = (-(r + l)) / (r - l);
         this.mMat[13] = (-(t + b)) / (t - b);
         this.mMat[14] = (-(f + n)) / (f - n);
     }
 
     public void loadOrthoWindow(int w, int h) {
-        loadOrtho(0.0f, (float) w, (float) h, 0.0f, -1.0f, 1.0f);
+        loadOrtho(0.0f, w, h, 0.0f, -1.0f, 1.0f);
     }
 
     public void loadFrustum(float l, float r, float b, float t, float n, float f) {
@@ -167,24 +170,26 @@ public class Matrix4f {
         this.mMat[9] = (t + b) / (t - b);
         this.mMat[10] = (-(f + n)) / (f - n);
         this.mMat[11] = -1.0f;
-        this.mMat[14] = ((-2.0f * f) * n) / (f - n);
+        this.mMat[14] = (((-2.0f) * f) * n) / (f - n);
         this.mMat[15] = 0.0f;
     }
 
     public void loadPerspective(float fovy, float aspect, float near, float far) {
-        float top = ((float) Math.tan((double) ((float) ((((double) fovy) * 3.141592653589793d) / 360.0d)))) * near;
+        float top = ((float) Math.tan((float) ((fovy * 3.141592653589793d) / 360.0d))) * near;
         float bottom = -top;
-        loadFrustum(bottom * aspect, top * aspect, bottom, top, near, far);
+        float left = bottom * aspect;
+        float right = top * aspect;
+        loadFrustum(left, right, bottom, top, near, far);
     }
 
     public void loadProjectionNormalized(int w, int h) {
         Matrix4f m1 = new Matrix4f();
         Matrix4f m2 = new Matrix4f();
         if (w > h) {
-            float aspect = ((float) w) / ((float) h);
+            float aspect = w / h;
             m1.loadFrustum(-aspect, aspect, -1.0f, 1.0f, 1.0f, 100.0f);
         } else {
-            float aspect2 = ((float) h) / ((float) w);
+            float aspect2 = h / w;
             m1.loadFrustum(-1.0f, 1.0f, -aspect2, aspect2, 1.0f, 100.0f);
         }
         m2.loadRotate(180.0f, 0.0f, 1.0f, 0.0f);
@@ -228,7 +233,11 @@ public class Matrix4f {
         int r1 = (j + 2) % 4;
         int r2 = (j + 3) % 4;
         float minor = ((this.mMat[(r0 * 4) + c0] * ((this.mMat[(r1 * 4) + c1] * this.mMat[(r2 * 4) + c2]) - (this.mMat[(r2 * 4) + c1] * this.mMat[(r1 * 4) + c2]))) - (this.mMat[(r1 * 4) + c0] * ((this.mMat[(r0 * 4) + c1] * this.mMat[(r2 * 4) + c2]) - (this.mMat[(r2 * 4) + c1] * this.mMat[(r0 * 4) + c2])))) + (this.mMat[(r2 * 4) + c0] * ((this.mMat[(r0 * 4) + c1] * this.mMat[(r1 * 4) + c2]) - (this.mMat[(r1 * 4) + c1] * this.mMat[(r0 * 4) + c2])));
-        return ((i + j) & 1) != 0 ? -minor : minor;
+        if (((i + j) & 1) != 0) {
+            float cofactor = -minor;
+            return cofactor;
+        }
+        return minor;
     }
 
     public boolean inverse() {
@@ -239,7 +248,7 @@ public class Matrix4f {
             }
         }
         float det = (this.mMat[0] * result.mMat[0]) + (this.mMat[4] * result.mMat[1]) + (this.mMat[8] * result.mMat[2]) + (this.mMat[12] * result.mMat[3]);
-        if (((double) Math.abs(det)) < 1.0E-6d) {
+        if (Math.abs(det) < 1.0E-6d) {
             return false;
         }
         float det2 = 1.0f / det;
@@ -257,7 +266,7 @@ public class Matrix4f {
             }
         }
         float det = (this.mMat[0] * result.mMat[0]) + (this.mMat[4] * result.mMat[4]) + (this.mMat[8] * result.mMat[8]) + (this.mMat[12] * result.mMat[12]);
-        if (((double) Math.abs(det)) < 1.0E-6d) {
+        if (Math.abs(det) < 1.0E-6d) {
             return false;
         }
         float det2 = 1.0f / det;

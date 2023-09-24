@@ -4,9 +4,10 @@ import android.content.res.Configuration;
 import com.wits.reflect.RefBoolean;
 import com.wits.reflect.RefClass;
 
+/* loaded from: classes2.dex */
 public class ConfigurationMirror {
     public static final String TAG = ConfigurationMirror.class.getSimpleName();
-    public static final Class<?> TYPE = RefClass.load((Class<?>) ConfigurationMirror.class, "android.content.res.Configuration");
+    public static final Class<?> TYPE = RefClass.load(ConfigurationMirror.class, "android.content.res.Configuration");
     public static RefBoolean userSetLocale;
     public Configuration mConfiguration;
 

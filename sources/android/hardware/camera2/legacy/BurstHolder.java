@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+/* loaded from: classes.dex */
 public class BurstHolder {
     private static final String TAG = "BurstHolder";
     private final boolean mRepeating;
@@ -40,7 +41,8 @@ public class BurstHolder {
         int i = 0;
         Iterator<RequestHolder.Builder> it = this.mRequestBuilders.iterator();
         while (it.hasNext()) {
-            holders.add(it.next().build(((long) i) + frameNumber));
+            RequestHolder.Builder b = it.next();
+            holders.add(b.build(i + frameNumber));
             i++;
         }
         return holders;

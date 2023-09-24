@@ -16,6 +16,7 @@ import java.util.TimeZone;
 import libcore.icu.ICU;
 import libcore.icu.LocaleData;
 
+/* loaded from: classes4.dex */
 public class DateFormat {
     @Deprecated
     public static final char AM_PM = 'a';
@@ -60,80 +61,27 @@ public class DateFormat {
         return is24HourLocale(context.getResources().getConfiguration().locale);
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:11:0x0014, code lost:
-        r1 = java.text.DateFormat.getTimeInstance(1, r4);
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:12:0x001b, code lost:
-        if ((r1 instanceof java.text.SimpleDateFormat) == false) goto L_0x002b;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:13:0x001d, code lost:
-        r0 = hasDesignator(((java.text.SimpleDateFormat) r1).toPattern(), 'H');
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:14:0x002b, code lost:
-        r0 = false;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:15:0x002c, code lost:
-        r2 = r0;
-        r3 = sLocaleLock;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:16:0x002f, code lost:
-        monitor-enter(r3);
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:18:?, code lost:
-        sIs24HourLocale = r4;
-        sIs24Hour = r2;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:19:0x0034, code lost:
-        monitor-exit(r3);
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:20:0x0035, code lost:
-        return r2;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public static boolean is24HourLocale(java.util.Locale r4) {
-        /*
-            java.lang.Object r0 = sLocaleLock
-            monitor-enter(r0)
-            java.util.Locale r1 = sIs24HourLocale     // Catch:{ all -> 0x0039 }
-            if (r1 == 0) goto L_0x0013
-            java.util.Locale r1 = sIs24HourLocale     // Catch:{ all -> 0x0039 }
-            boolean r1 = r1.equals(r4)     // Catch:{ all -> 0x0039 }
-            if (r1 == 0) goto L_0x0013
-            boolean r1 = sIs24Hour     // Catch:{ all -> 0x0039 }
-            monitor-exit(r0)     // Catch:{ all -> 0x0039 }
-            return r1
-        L_0x0013:
-            monitor-exit(r0)     // Catch:{ all -> 0x0039 }
-            r0 = 1
-            java.text.DateFormat r1 = java.text.DateFormat.getTimeInstance(r0, r4)
-            boolean r0 = r1 instanceof java.text.SimpleDateFormat
-            if (r0 == 0) goto L_0x002b
-            r0 = r1
-            java.text.SimpleDateFormat r0 = (java.text.SimpleDateFormat) r0
-            java.lang.String r2 = r0.toPattern()
-            r3 = 72
-            boolean r0 = hasDesignator(r2, r3)
-            goto L_0x002c
-        L_0x002b:
-            r0 = 0
-        L_0x002c:
-            r2 = r0
-            java.lang.Object r3 = sLocaleLock
-            monitor-enter(r3)
-            sIs24HourLocale = r4     // Catch:{ all -> 0x0036 }
-            sIs24Hour = r2     // Catch:{ all -> 0x0036 }
-            monitor-exit(r3)     // Catch:{ all -> 0x0036 }
-            return r2
-        L_0x0036:
-            r0 = move-exception
-            monitor-exit(r3)     // Catch:{ all -> 0x0036 }
-            throw r0
-        L_0x0039:
-            r1 = move-exception
-            monitor-exit(r0)     // Catch:{ all -> 0x0039 }
-            throw r1
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.text.format.DateFormat.is24HourLocale(java.util.Locale):boolean");
+    public static boolean is24HourLocale(Locale locale) {
+        boolean is24Hour;
+        synchronized (sLocaleLock) {
+            if (sIs24HourLocale != null && sIs24HourLocale.equals(locale)) {
+                return sIs24Hour;
+            }
+            java.text.DateFormat natural = java.text.DateFormat.getTimeInstance(1, locale);
+            if (natural instanceof SimpleDateFormat) {
+                SimpleDateFormat sdf = (SimpleDateFormat) natural;
+                String pattern = sdf.toPattern();
+                is24Hour = hasDesignator(pattern, 'H');
+            } else {
+                is24Hour = false;
+            }
+            boolean is24Hour2 = is24Hour;
+            synchronized (sLocaleLock) {
+                sIs24HourLocale = locale;
+                sIs24Hour = is24Hour2;
+            }
+            return is24Hour2;
+        }
     }
 
     public static String getBestDateTimePattern(Locale locale, String skeleton) {
@@ -141,7 +89,8 @@ public class DateFormat {
     }
 
     public static java.text.DateFormat getTimeFormat(Context context) {
-        return new SimpleDateFormat(getTimeFormatString(context), context.getResources().getConfiguration().locale);
+        Locale locale = context.getResources().getConfiguration().locale;
+        return new SimpleDateFormat(getTimeFormatString(context), locale);
     }
 
     @UnsupportedAppUsage
@@ -156,15 +105,18 @@ public class DateFormat {
     }
 
     public static java.text.DateFormat getDateFormat(Context context) {
-        return java.text.DateFormat.getDateInstance(3, context.getResources().getConfiguration().locale);
+        Locale locale = context.getResources().getConfiguration().locale;
+        return java.text.DateFormat.getDateInstance(3, locale);
     }
 
     public static java.text.DateFormat getLongDateFormat(Context context) {
-        return java.text.DateFormat.getDateInstance(1, context.getResources().getConfiguration().locale);
+        Locale locale = context.getResources().getConfiguration().locale;
+        return java.text.DateFormat.getDateInstance(1, locale);
     }
 
     public static java.text.DateFormat getMediumDateFormat(Context context) {
-        return java.text.DateFormat.getDateInstance(2, context.getResources().getConfiguration().locale);
+        Locale locale = context.getResources().getConfiguration().locale;
+        return java.text.DateFormat.getDateInstance(2, locale);
     }
 
     public static char[] getDateFormatOrder(Context context) {
@@ -172,7 +124,8 @@ public class DateFormat {
     }
 
     private static String getDateFormatString(Context context) {
-        java.text.DateFormat df = java.text.DateFormat.getDateInstance(3, context.getResources().getConfiguration().locale);
+        Locale locale = context.getResources().getConfiguration().locale;
+        java.text.DateFormat df = java.text.DateFormat.getDateInstance(3, locale);
         if (df instanceof SimpleDateFormat) {
             return ((SimpleDateFormat) df).toPattern();
         }
@@ -203,12 +156,8 @@ public class DateFormat {
         boolean insideQuote = false;
         for (int i = 0; i < length; i++) {
             char c = inFormat.charAt(i);
-            boolean z = true;
             if (c == '\'') {
-                if (insideQuote) {
-                    z = false;
-                }
-                insideQuote = z;
+                insideQuote = insideQuote ? false : true;
             } else if (!insideQuote && c == designator) {
                 return true;
             }
@@ -217,19 +166,20 @@ public class DateFormat {
     }
 
     public static CharSequence format(CharSequence inFormat, Calendar inDate) {
+        int count;
         String replacement;
         SpannableStringBuilder s = new SpannableStringBuilder(inFormat);
         LocaleData localeData = LocaleData.get(Locale.getDefault());
         int len = inFormat.length();
-        int i = 0;
-        while (i < len) {
-            int count = 1;
-            int c = s.charAt(i);
+        int len2 = len;
+        for (int len3 = 0; len3 < len2; len3 += count) {
+            count = 1;
+            int c = s.charAt(len3);
             if (c == 39) {
-                count = appendQuotedText(s, i);
-                len = s.length();
+                count = appendQuotedText(s, len3);
+                len2 = s.length();
             } else {
-                while (i + count < len && s.charAt(i + count) == c) {
+                while (len3 + count < len2 && s.charAt(len3 + count) == c) {
                     count++;
                 }
                 switch (c) {
@@ -277,14 +227,13 @@ public class DateFormat {
                         break;
                 }
                 if (replacement != null) {
-                    s.replace(i, i + count, (CharSequence) replacement);
+                    s.replace(len3, len3 + count, (CharSequence) replacement);
                     count = replacement.length();
-                    len = s.length();
+                    len2 = s.length();
                 }
             }
-            i += count;
         }
-        if ((inFormat instanceof Spanned) != 0) {
+        if (inFormat instanceof Spanned) {
             return new SpannedString(s);
         }
         return s.toString();
@@ -299,14 +248,13 @@ public class DateFormat {
         boolean standalone = kind == 76;
         if (count == 5) {
             return standalone ? ld.tinyStandAloneMonthNames[month] : ld.tinyMonthNames[month];
-        }
-        if (count == 4) {
+        } else if (count == 4) {
             return standalone ? ld.longStandAloneMonthNames[month] : ld.longMonthNames[month];
-        }
-        if (count == 3) {
+        } else if (count == 3) {
             return standalone ? ld.shortStandAloneMonthNames[month] : ld.shortMonthNames[month];
+        } else {
+            return zeroPad(month + 1, count);
         }
-        return zeroPad(month + 1, count);
     }
 
     private static String getTimeZoneString(Calendar inDate, int count) {
@@ -314,7 +262,8 @@ public class DateFormat {
         if (count < 2) {
             return formatZoneOffset(inDate.get(16) + inDate.get(15), count);
         }
-        return tz.getDisplayName(inDate.get(16) != 0, 0);
+        boolean dst = inDate.get(16) != 0;
+        return tz.getDisplayName(dst, 0);
     }
 
     private static String formatZoneOffset(int offset, int count) {
@@ -326,48 +275,48 @@ public class DateFormat {
         } else {
             tb.insert(0, "+");
         }
-        tb.append(zeroPad(offset2 / 3600, 2));
-        tb.append(zeroPad((offset2 % 3600) / 60, 2));
+        int hours = offset2 / 3600;
+        int minutes = (offset2 % 3600) / 60;
+        tb.append(zeroPad(hours, 2));
+        tb.append(zeroPad(minutes, 2));
         return tb.toString();
     }
 
     private static String getYearString(int year, int count) {
-        if (count <= 2) {
-            return zeroPad(year % 100, 2);
-        }
-        return String.format(Locale.getDefault(), "%d", new Object[]{Integer.valueOf(year)});
+        return count <= 2 ? zeroPad(year % 100, 2) : String.format(Locale.getDefault(), "%d", Integer.valueOf(year));
     }
 
     public static int appendQuotedText(SpannableStringBuilder formatString, int index) {
         int length = formatString.length();
-        if (index + 1 >= length || formatString.charAt(index + 1) != '\'') {
-            int count = 0;
+        if (index + 1 < length && formatString.charAt(index + 1) == '\'') {
             formatString.delete(index, index + 1);
-            int length2 = length - 1;
-            while (true) {
-                if (index >= length2) {
-                    break;
-                } else if (formatString.charAt(index) != '\'') {
-                    index++;
-                    count++;
-                } else if (index + 1 >= length2 || formatString.charAt(index + 1) != '\'') {
-                    formatString.delete(index, index + 1);
-                } else {
+            return 1;
+        }
+        int count = 0;
+        formatString.delete(index, index + 1);
+        int length2 = length - 1;
+        while (index < length2) {
+            char c = formatString.charAt(index);
+            if (c == '\'') {
+                if (index + 1 < length2 && formatString.charAt(index + 1) == '\'') {
                     formatString.delete(index, index + 1);
                     length2--;
                     count++;
                     index++;
+                } else {
+                    formatString.delete(index, index + 1);
+                    break;
                 }
+            } else {
+                index++;
+                count++;
             }
-            formatString.delete(index, index + 1);
-            return count;
         }
-        formatString.delete(index, index + 1);
-        return 1;
+        return count;
     }
 
     private static String zeroPad(int inValue, int inMinDigits) {
         Locale locale = Locale.getDefault();
-        return String.format(locale, "%0" + inMinDigits + com.ibm.icu.text.DateFormat.DAY, new Object[]{Integer.valueOf(inValue)});
+        return String.format(locale, "%0" + inMinDigits + com.ibm.icu.text.DateFormat.DAY, Integer.valueOf(inValue));
     }
 }

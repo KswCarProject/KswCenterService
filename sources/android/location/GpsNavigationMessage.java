@@ -1,35 +1,13 @@
 package android.location;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.security.InvalidParameterException;
 
 @SystemApi
+/* loaded from: classes.dex */
 public class GpsNavigationMessage implements Parcelable {
-    public static final Parcelable.Creator<GpsNavigationMessage> CREATOR = new Parcelable.Creator<GpsNavigationMessage>() {
-        public GpsNavigationMessage createFromParcel(Parcel parcel) {
-            GpsNavigationMessage navigationMessage = new GpsNavigationMessage();
-            navigationMessage.setType(parcel.readByte());
-            navigationMessage.setPrn(parcel.readByte());
-            navigationMessage.setMessageId((short) parcel.readInt());
-            navigationMessage.setSubmessageId((short) parcel.readInt());
-            byte[] data = new byte[parcel.readInt()];
-            parcel.readByteArray(data);
-            navigationMessage.setData(data);
-            if (parcel.dataAvail() >= 32) {
-                navigationMessage.setStatus((short) parcel.readInt());
-            } else {
-                navigationMessage.setStatus(0);
-            }
-            return navigationMessage;
-        }
-
-        public GpsNavigationMessage[] newArray(int size) {
-            return new GpsNavigationMessage[size];
-        }
-    };
-    private static final byte[] EMPTY_ARRAY = new byte[0];
     public static final short STATUS_PARITY_PASSED = 1;
     public static final short STATUS_PARITY_REBUILT = 2;
     public static final short STATUS_UNKNOWN = 0;
@@ -44,6 +22,35 @@ public class GpsNavigationMessage implements Parcelable {
     private short mStatus;
     private short mSubmessageId;
     private byte mType;
+    private static final byte[] EMPTY_ARRAY = new byte[0];
+    public static final Parcelable.Creator<GpsNavigationMessage> CREATOR = new Parcelable.Creator<GpsNavigationMessage>() { // from class: android.location.GpsNavigationMessage.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public GpsNavigationMessage createFromParcel(Parcel parcel) {
+            GpsNavigationMessage navigationMessage = new GpsNavigationMessage();
+            navigationMessage.setType(parcel.readByte());
+            navigationMessage.setPrn(parcel.readByte());
+            navigationMessage.setMessageId((short) parcel.readInt());
+            navigationMessage.setSubmessageId((short) parcel.readInt());
+            int dataLength = parcel.readInt();
+            byte[] data = new byte[dataLength];
+            parcel.readByteArray(data);
+            navigationMessage.setData(data);
+            if (parcel.dataAvail() >= 32) {
+                int status = parcel.readInt();
+                navigationMessage.setStatus((short) status);
+            } else {
+                navigationMessage.setStatus((short) 0);
+            }
+            return navigationMessage;
+        }
+
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public GpsNavigationMessage[] newArray(int size) {
+            return new GpsNavigationMessage[size];
+        }
+    };
 
     GpsNavigationMessage() {
         initialize();
@@ -83,7 +90,7 @@ public class GpsNavigationMessage implements Parcelable {
             case 4:
                 return "CNAV-2";
             default:
-                return "<Invalid:" + this.mType + ">";
+                return "<Invalid:" + ((int) this.mType) + ">";
         }
     }
 
@@ -116,11 +123,10 @@ public class GpsNavigationMessage implements Parcelable {
     }
 
     public void setData(byte[] value) {
-        if (value != null) {
-            this.mData = value;
-            return;
+        if (value == null) {
+            throw new InvalidParameterException("Data must be a non-null array");
         }
-        throw new InvalidParameterException("Data must be a non-null array");
+        this.mData = value;
     }
 
     public short getStatus() {
@@ -140,10 +146,11 @@ public class GpsNavigationMessage implements Parcelable {
             case 2:
                 return "ParityRebuilt";
             default:
-                return "<Invalid:" + this.mStatus + ">";
+                return "<Invalid:" + ((int) this.mStatus) + ">";
         }
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeByte(this.mType);
         parcel.writeByte(this.mPrn);
@@ -154,22 +161,24 @@ public class GpsNavigationMessage implements Parcelable {
         parcel.writeInt(this.mStatus);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
     public String toString() {
+        byte[] bArr;
         StringBuilder builder = new StringBuilder("GpsNavigationMessage:\n");
-        builder.append(String.format("   %-15s = %s\n", new Object[]{"Type", getTypeString()}));
-        builder.append(String.format("   %-15s = %s\n", new Object[]{"Prn", Byte.valueOf(this.mPrn)}));
-        builder.append(String.format("   %-15s = %s\n", new Object[]{"Status", getStatusString()}));
-        builder.append(String.format("   %-15s = %s\n", new Object[]{"MessageId", Short.valueOf(this.mMessageId)}));
-        builder.append(String.format("   %-15s = %s\n", new Object[]{"SubmessageId", Short.valueOf(this.mSubmessageId)}));
-        builder.append(String.format("   %-15s = %s\n", new Object[]{"Data", "{"}));
+        builder.append(String.format("   %-15s = %s\n", "Type", getTypeString()));
+        builder.append(String.format("   %-15s = %s\n", "Prn", Byte.valueOf(this.mPrn)));
+        builder.append(String.format("   %-15s = %s\n", "Status", getStatusString()));
+        builder.append(String.format("   %-15s = %s\n", "MessageId", Short.valueOf(this.mMessageId)));
+        builder.append(String.format("   %-15s = %s\n", "SubmessageId", Short.valueOf(this.mSubmessageId)));
+        builder.append(String.format("   %-15s = %s\n", "Data", "{"));
         String prefix = "        ";
         for (byte value : this.mData) {
             builder.append(prefix);
-            builder.append(value);
+            builder.append((int) value);
             prefix = ", ";
         }
         builder.append(" }");
@@ -177,11 +186,11 @@ public class GpsNavigationMessage implements Parcelable {
     }
 
     private void initialize() {
-        this.mType = 0;
-        this.mPrn = 0;
-        this.mMessageId = -1;
-        this.mSubmessageId = -1;
+        this.mType = (byte) 0;
+        this.mPrn = (byte) 0;
+        this.mMessageId = (short) -1;
+        this.mSubmessageId = (short) -1;
         this.mData = EMPTY_ARRAY;
-        this.mStatus = 0;
+        this.mStatus = (short) 0;
     }
 }

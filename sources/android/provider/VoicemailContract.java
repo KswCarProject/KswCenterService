@@ -8,6 +8,7 @@ import android.telecom.PhoneAccountHandle;
 import android.telecom.Voicemail;
 import java.util.List;
 
+/* loaded from: classes3.dex */
 public class VoicemailContract {
     public static final String ACTION_FETCH_VOICEMAIL = "android.intent.action.FETCH_VOICEMAIL";
     public static final String ACTION_NEW_VOICEMAIL = "android.intent.action.NEW_VOICEMAIL";
@@ -24,10 +25,10 @@ public class VoicemailContract {
     private VoicemailContract() {
     }
 
+    /* loaded from: classes3.dex */
     public static final class Voicemails implements BaseColumns, OpenableColumns {
         public static final String ARCHIVED = "archived";
         public static final String BACKED_UP = "backed_up";
-        public static final Uri CONTENT_URI = Uri.parse("content://com.android.voicemail/voicemail");
         public static final String DATE = "date";
         public static final String DELETED = "deleted";
         public static final String DIRTY = "dirty";
@@ -48,9 +49,6 @@ public class VoicemailContract {
         public static final String SOURCE_DATA = "source_data";
         public static final String SOURCE_PACKAGE = "source_package";
         public static final String STATE = "state";
-        public static int STATE_DELETED = 1;
-        public static int STATE_INBOX = 0;
-        public static int STATE_UNDELETED = 2;
         public static final String TRANSCRIPTION = "transcription";
         public static final int TRANSCRIPTION_AVAILABLE = 3;
         public static final int TRANSCRIPTION_FAILED = 2;
@@ -58,6 +56,10 @@ public class VoicemailContract {
         public static final int TRANSCRIPTION_NOT_STARTED = 0;
         public static final String TRANSCRIPTION_STATE = "transcription_state";
         public static final String _DATA = "_data";
+        public static final Uri CONTENT_URI = Uri.parse("content://com.android.voicemail/voicemail");
+        public static int STATE_INBOX = 0;
+        public static int STATE_DELETED = 1;
+        public static int STATE_UNDELETED = 2;
 
         private Voicemails() {
         }
@@ -67,14 +69,17 @@ public class VoicemailContract {
         }
 
         public static Uri insert(Context context, Voicemail voicemail) {
-            return context.getContentResolver().insert(buildSourceUri(context.getPackageName()), getContentValues(voicemail));
+            ContentResolver contentResolver = context.getContentResolver();
+            ContentValues contentValues = getContentValues(voicemail);
+            return contentResolver.insert(buildSourceUri(context.getPackageName()), contentValues);
         }
 
         public static int insert(Context context, List<Voicemail> voicemails) {
             ContentResolver contentResolver = context.getContentResolver();
             int count = voicemails.size();
             for (int i = 0; i < count; i++) {
-                contentResolver.insert(buildSourceUri(context.getPackageName()), getContentValues(voicemails.get(i)));
+                ContentValues contentValues = getContentValues(voicemails.get(i));
+                contentResolver.insert(buildSourceUri(context.getPackageName()), contentValues);
             }
             return count;
         }
@@ -103,6 +108,7 @@ public class VoicemailContract {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class Status implements BaseColumns {
         public static final String CONFIGURATION_STATE = "configuration_state";
         public static final int CONFIGURATION_STATE_CAN_BE_CONFIGURED = 2;

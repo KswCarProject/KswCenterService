@@ -1,25 +1,30 @@
 package android.hardware.input;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public class TouchCalibration implements Parcelable {
-    public static final Parcelable.Creator<TouchCalibration> CREATOR = new Parcelable.Creator<TouchCalibration>() {
-        public TouchCalibration createFromParcel(Parcel in) {
-            return new TouchCalibration(in);
-        }
-
-        public TouchCalibration[] newArray(int size) {
-            return new TouchCalibration[size];
-        }
-    };
-    public static final TouchCalibration IDENTITY = new TouchCalibration();
     private final float mXOffset;
     private final float mXScale;
     private final float mXYMix;
     private final float mYOffset;
     private final float mYScale;
     private final float mYXMix;
+    public static final TouchCalibration IDENTITY = new TouchCalibration();
+    public static final Parcelable.Creator<TouchCalibration> CREATOR = new Parcelable.Creator<TouchCalibration>() { // from class: android.hardware.input.TouchCalibration.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public TouchCalibration createFromParcel(Parcel in) {
+            return new TouchCalibration(in);
+        }
+
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public TouchCalibration[] newArray(int size) {
+            return new TouchCalibration[size];
+        }
+    };
 
     public TouchCalibration() {
         this(1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
@@ -43,6 +48,7 @@ public class TouchCalibration implements Parcelable {
         this.mYOffset = in.readFloat();
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeFloat(this.mXScale);
         dest.writeFloat(this.mXYMix);
@@ -52,6 +58,7 @@ public class TouchCalibration implements Parcelable {
         dest.writeFloat(this.mYOffset);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -64,12 +71,9 @@ public class TouchCalibration implements Parcelable {
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof TouchCalibration)) {
-            return false;
-        }
-        TouchCalibration cal = (TouchCalibration) obj;
-        if (cal.mXScale == this.mXScale && cal.mXYMix == this.mXYMix && cal.mXOffset == this.mXOffset && cal.mYXMix == this.mYXMix && cal.mYScale == this.mYScale && cal.mYOffset == this.mYOffset) {
-            return true;
+        if (obj instanceof TouchCalibration) {
+            TouchCalibration cal = (TouchCalibration) obj;
+            return cal.mXScale == this.mXScale && cal.mXYMix == this.mXYMix && cal.mXOffset == this.mXOffset && cal.mYXMix == this.mYXMix && cal.mYScale == this.mYScale && cal.mYOffset == this.mYOffset;
         }
         return false;
     }

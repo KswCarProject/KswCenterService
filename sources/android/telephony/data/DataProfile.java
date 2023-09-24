@@ -1,21 +1,26 @@
 package android.telephony.data;
 
 import android.annotation.SystemApi;
-import android.os.Build;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Build;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.TextUtils;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Objects;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class DataProfile implements Parcelable {
-    public static final Parcelable.Creator<DataProfile> CREATOR = new Parcelable.Creator<DataProfile>() {
+    public static final Parcelable.Creator<DataProfile> CREATOR = new Parcelable.Creator<DataProfile>() { // from class: android.telephony.data.DataProfile.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public DataProfile createFromParcel(Parcel source) {
             return new DataProfile(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public DataProfile[] newArray(int size) {
             return new DataProfile[size];
         }
@@ -42,6 +47,7 @@ public final class DataProfile implements Parcelable {
     private final int mWaitTime;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface Type {
     }
 
@@ -50,13 +56,10 @@ public final class DataProfile implements Parcelable {
         this.mProfileId = profileId;
         this.mApn = apn;
         this.mProtocolType = protocolType;
-        int i = authType;
-        if (i != -1) {
-            authType2 = i;
-        } else if (TextUtils.isEmpty(userName)) {
-            authType2 = 0;
+        if (authType == -1) {
+            authType2 = TextUtils.isEmpty(userName) ? 0 : 3;
         } else {
-            authType2 = 3;
+            authType2 = authType;
         }
         this.mAuthType = authType2;
         this.mUserName = userName;
@@ -162,6 +165,7 @@ public final class DataProfile implements Parcelable {
         return this.mPreferred;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -207,6 +211,7 @@ public final class DataProfile implements Parcelable {
         return sb.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mProfileId);
         dest.writeString(this.mApn);
@@ -242,9 +247,10 @@ public final class DataProfile implements Parcelable {
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(this.mProfileId), this.mApn, Integer.valueOf(this.mProtocolType), Integer.valueOf(this.mAuthType), this.mUserName, this.mPassword, Integer.valueOf(this.mType), Integer.valueOf(this.mMaxConnectionsTime), Integer.valueOf(this.mMaxConnections), Integer.valueOf(this.mWaitTime), Boolean.valueOf(this.mEnabled), Integer.valueOf(this.mSupportedApnTypesBitmask), Integer.valueOf(this.mRoamingProtocolType), Integer.valueOf(this.mBearerBitmask), Integer.valueOf(this.mMtu), Boolean.valueOf(this.mPersistent), Boolean.valueOf(this.mPreferred)});
+        return Objects.hash(Integer.valueOf(this.mProfileId), this.mApn, Integer.valueOf(this.mProtocolType), Integer.valueOf(this.mAuthType), this.mUserName, this.mPassword, Integer.valueOf(this.mType), Integer.valueOf(this.mMaxConnectionsTime), Integer.valueOf(this.mMaxConnections), Integer.valueOf(this.mWaitTime), Boolean.valueOf(this.mEnabled), Integer.valueOf(this.mSupportedApnTypesBitmask), Integer.valueOf(this.mRoamingProtocolType), Integer.valueOf(this.mBearerBitmask), Integer.valueOf(this.mMtu), Boolean.valueOf(this.mPersistent), Boolean.valueOf(this.mPreferred));
     }
 
+    /* loaded from: classes3.dex */
     public static final class Builder {
         private String mApn;
         private int mAuthType;

@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 @Deprecated
+/* loaded from: classes.dex */
 public class Movie {
     @UnsupportedAppUsage
     private long mNativeMovie;
@@ -34,19 +35,18 @@ public class Movie {
 
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
     private Movie(long nativeMovie) {
-        if (nativeMovie != 0) {
-            this.mNativeMovie = nativeMovie;
-            return;
+        if (nativeMovie == 0) {
+            throw new RuntimeException("native movie creation failed");
         }
-        throw new RuntimeException("native movie creation failed");
+        this.mNativeMovie = nativeMovie;
     }
 
     public void draw(Canvas canvas, float x, float y, Paint paint) {
-        nDraw(canvas.getNativeCanvasWrapper(), x, y, paint != null ? paint.getNativeInstance() : 0);
+        nDraw(canvas.getNativeCanvasWrapper(), x, y, paint != null ? paint.getNativeInstance() : 0L);
     }
 
     public void draw(Canvas canvas, float x, float y) {
-        nDraw(canvas.getNativeCanvasWrapper(), x, y, 0);
+        nDraw(canvas.getNativeCanvasWrapper(), x, y, 0L);
     }
 
     public static Movie decodeStream(InputStream is) {
@@ -54,24 +54,25 @@ public class Movie {
             return null;
         }
         if (is instanceof AssetManager.AssetInputStream) {
-            return nativeDecodeAsset(((AssetManager.AssetInputStream) is).getNativeAsset());
+            long asset = ((AssetManager.AssetInputStream) is).getNativeAsset();
+            return nativeDecodeAsset(asset);
         }
         return nativeDecodeStream(is);
     }
 
     public static Movie decodeFile(String pathName) {
         try {
-            return decodeTempStream(new FileInputStream(pathName));
+            InputStream is = new FileInputStream(pathName);
+            return decodeTempStream(is);
         } catch (FileNotFoundException e) {
             return null;
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         try {
             nativeDestructor(this.mNativeMovie);
-            this.mNativeMovie = 0;
+            this.mNativeMovie = 0L;
         } finally {
             super.finalize();
         }

@@ -5,10 +5,12 @@ import android.graphics.Rect;
 import android.hardware.HardwareBuffer;
 import java.nio.ByteBuffer;
 
+/* loaded from: classes3.dex */
 public abstract class Image implements AutoCloseable {
     private Rect mCropRect;
     protected boolean mIsImageValid = false;
 
+    @Override // java.lang.AutoCloseable
     public abstract void close();
 
     public abstract int getFormat();
@@ -29,8 +31,7 @@ public abstract class Image implements AutoCloseable {
     protected Image() {
     }
 
-    /* access modifiers changed from: protected */
-    public void throwISEIfImageIsInvalid() {
+    protected void throwISEIfImageIsInvalid() {
         if (!this.mIsImageValid) {
             throw new IllegalStateException("Image is already closed");
         }
@@ -64,24 +65,22 @@ public abstract class Image implements AutoCloseable {
         this.mCropRect = cropRect;
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean isAttachable() {
+    boolean isAttachable() {
         throwISEIfImageIsInvalid();
         return false;
     }
 
-    /* access modifiers changed from: package-private */
-    public Object getOwner() {
+    Object getOwner() {
         throwISEIfImageIsInvalid();
         return null;
     }
 
-    /* access modifiers changed from: package-private */
-    public long getNativeContext() {
+    long getNativeContext() {
         throwISEIfImageIsInvalid();
-        return 0;
+        return 0L;
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Plane {
         public abstract ByteBuffer getBuffer();
 

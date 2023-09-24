@@ -11,8 +11,9 @@ import android.graphics.drawable.AdaptiveIconDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.DrawableWrapper;
 import android.graphics.drawable.LayerDrawable;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
+/* loaded from: classes4.dex */
 public final class LauncherIcons {
     private static final int AMBIENT_SHADOW_ALPHA = 30;
     private static final float ICON_SIZE_BLUR_FACTOR = 0.010416667f;
@@ -31,7 +32,8 @@ public final class LauncherIcons {
         if (!(drawable instanceof AdaptiveIconDrawable)) {
             return drawable;
         }
-        return new ShadowDrawable(getShadowBitmap((AdaptiveIconDrawable) drawable), drawable);
+        Bitmap shadow = getShadowBitmap((AdaptiveIconDrawable) drawable);
+        return new ShadowDrawable(shadow, drawable);
     }
 
     private Bitmap getShadowBitmap(AdaptiveIconDrawable d) {
@@ -42,9 +44,9 @@ public final class LauncherIcons {
                 return shadow;
             }
             d.setBounds(0, 0, shadowSize, shadowSize);
-            float blur = ((float) shadowSize) * ICON_SIZE_BLUR_FACTOR;
-            float keyShadowDistance = ((float) shadowSize) * ICON_SIZE_KEY_SHADOW_DELTA_FACTOR;
-            int bitmapSize = (int) (((float) shadowSize) + (blur * 2.0f) + keyShadowDistance);
+            float blur = shadowSize * ICON_SIZE_BLUR_FACTOR;
+            float keyShadowDistance = shadowSize * ICON_SIZE_KEY_SHADOW_DELTA_FACTOR;
+            int bitmapSize = (int) (shadowSize + (blur * 2.0f) + keyShadowDistance);
             Bitmap shadow2 = Bitmap.createBitmap(bitmapSize, bitmapSize, Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(shadow2);
             canvas.translate((keyShadowDistance / 2.0f) + blur, blur);
@@ -55,7 +57,7 @@ public final class LauncherIcons {
             canvas.translate(0.0f, keyShadowDistance);
             paint.setShadowLayer(blur, 0.0f, 0.0f, 1023410176);
             canvas.drawPath(d.getIconMask(), paint);
-            canvas.setBitmap((Bitmap) null);
+            canvas.setBitmap(null);
             synchronized (this.mShadowCache) {
                 this.mShadowCache.put(shadowSize, shadow2);
             }
@@ -64,24 +66,20 @@ public final class LauncherIcons {
     }
 
     public Drawable getBadgeDrawable(int foregroundRes, int backgroundColor) {
-        return getBadgedDrawable((Drawable) null, foregroundRes, backgroundColor);
+        return getBadgedDrawable(null, foregroundRes, backgroundColor);
     }
 
     public Drawable getBadgedDrawable(Drawable base, int foregroundRes, int backgroundColor) {
-        Drawable[] drawables;
         Resources overlayableRes = ActivityThread.currentActivityThread().getApplication().getResources();
-        Drawable badgeShadow = overlayableRes.getDrawable(R.drawable.ic_corp_icon_badge_shadow);
-        Drawable badgeColor = overlayableRes.getDrawable(R.drawable.ic_corp_icon_badge_color).getConstantState().newDrawable().mutate();
+        Drawable badgeShadow = overlayableRes.getDrawable(C3132R.C3133drawable.ic_corp_icon_badge_shadow);
+        Drawable badgeColor = overlayableRes.getDrawable(C3132R.C3133drawable.ic_corp_icon_badge_color).getConstantState().newDrawable().mutate();
         Drawable badgeForeground = overlayableRes.getDrawable(foregroundRes);
         badgeForeground.setTint(backgroundColor);
-        if (base == null) {
-            drawables = new Drawable[]{badgeShadow, badgeColor, badgeForeground};
-        } else {
-            drawables = new Drawable[]{base, badgeShadow, badgeColor, badgeForeground};
-        }
+        Drawable[] drawables = base == null ? new Drawable[]{badgeShadow, badgeColor, badgeForeground} : new Drawable[]{base, badgeShadow, badgeColor, badgeForeground};
         return new LayerDrawable(drawables);
     }
 
+    /* loaded from: classes4.dex */
     private static class ShadowDrawable extends DrawableWrapper {
         final MyConstantState mState;
 
@@ -95,20 +93,23 @@ public final class LauncherIcons {
             this.mState = state;
         }
 
+        @Override // android.graphics.drawable.DrawableWrapper, android.graphics.drawable.Drawable
         public Drawable.ConstantState getConstantState() {
             return this.mState;
         }
 
+        @Override // android.graphics.drawable.DrawableWrapper, android.graphics.drawable.Drawable
         public void draw(Canvas canvas) {
             Rect bounds = getBounds();
             canvas.drawBitmap(this.mState.mShadow, (Rect) null, bounds, this.mState.mPaint);
             canvas.save();
-            canvas.translate(((float) bounds.width()) * 0.9599999f * LauncherIcons.ICON_SIZE_KEY_SHADOW_DELTA_FACTOR, ((float) bounds.height()) * 0.9599999f * LauncherIcons.ICON_SIZE_BLUR_FACTOR);
+            canvas.translate(bounds.width() * 0.9599999f * LauncherIcons.ICON_SIZE_KEY_SHADOW_DELTA_FACTOR, bounds.height() * 0.9599999f * LauncherIcons.ICON_SIZE_BLUR_FACTOR);
             canvas.scale(0.9599999f, 0.9599999f);
             super.draw(canvas);
             canvas.restore();
         }
 
+        /* loaded from: classes4.dex */
         private static class MyConstantState extends Drawable.ConstantState {
             final Drawable.ConstantState mChildState;
             final Paint mPaint = new Paint(2);
@@ -119,10 +120,12 @@ public final class LauncherIcons {
                 this.mChildState = childState;
             }
 
+            @Override // android.graphics.drawable.Drawable.ConstantState
             public Drawable newDrawable() {
                 return new ShadowDrawable(this);
             }
 
+            @Override // android.graphics.drawable.Drawable.ConstantState
             public int getChangingConfigurations() {
                 return this.mChildState.getChangingConfigurations();
             }

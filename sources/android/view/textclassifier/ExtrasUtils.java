@@ -3,13 +3,14 @@ package android.view.textclassifier;
 import android.app.RemoteAction;
 import android.content.Intent;
 import android.icu.util.ULocale;
-import android.os.Bundle;
+import android.p007os.Bundle;
 import android.view.textclassifier.TextLinks;
 import com.android.internal.util.ArrayUtils;
 import com.google.android.textclassifier.AnnotatorModel;
 import java.util.ArrayList;
 import java.util.List;
 
+/* loaded from: classes4.dex */
 public final class ExtrasUtils {
     private static final String ACTIONS_INTENTS = "actions-intents";
     private static final String ACTION_INTENT = "action-intent";
@@ -48,7 +49,8 @@ public final class ExtrasUtils {
     }
 
     static void putTopLanguageScores(Bundle container, EntityConfidence languageScores) {
-        String[] languages = (String[]) languageScores.getEntities().subList(0, Math.min(3, languageScores.getEntities().size())).toArray(new String[0]);
+        int maxSize = Math.min(3, languageScores.getEntities().size());
+        String[] languages = (String[]) languageScores.getEntities().subList(0, maxSize).toArray(new String[0]);
         float[] scores = new float[languages.length];
         for (int i = 0; i < languages.length; i++) {
             scores[i] = languageScores.getConfidenceScore(languages[i]);
@@ -122,7 +124,7 @@ public final class ExtrasUtils {
 
     public static RemoteAction findAction(TextClassification classification, String intentAction) {
         ArrayList<Intent> actionIntents;
-        if (!(classification == null || intentAction == null || (actionIntents = getActionsIntents(classification)) == null)) {
+        if (classification != null && intentAction != null && (actionIntents = getActionsIntents(classification)) != null) {
             int size = actionIntents.size();
             for (int i = 0; i < size; i++) {
                 Intent intent = actionIntents.get(i);
@@ -160,19 +162,20 @@ public final class ExtrasUtils {
     }
 
     public static void putEntities(Bundle container, AnnotatorModel.ClassificationResult[] classifications) {
-        if (!ArrayUtils.isEmpty((T[]) classifications)) {
-            ArrayList<Bundle> entitiesBundle = new ArrayList<>();
-            for (AnnotatorModel.ClassificationResult classification : classifications) {
-                if (classification != null) {
-                    Bundle entityBundle = new Bundle();
-                    entityBundle.putString(ENTITY_TYPE, classification.getCollection());
-                    entityBundle.putByteArray(SERIALIZED_ENTITIES_DATA, classification.getSerializedEntityData());
-                    entitiesBundle.add(entityBundle);
-                }
+        if (ArrayUtils.isEmpty(classifications)) {
+            return;
+        }
+        ArrayList<Bundle> entitiesBundle = new ArrayList<>();
+        for (AnnotatorModel.ClassificationResult classification : classifications) {
+            if (classification != null) {
+                Bundle entityBundle = new Bundle();
+                entityBundle.putString(ENTITY_TYPE, classification.getCollection());
+                entityBundle.putByteArray(SERIALIZED_ENTITIES_DATA, classification.getSerializedEntityData());
+                entitiesBundle.add(entityBundle);
             }
-            if (!entitiesBundle.isEmpty()) {
-                container.putParcelableArrayList("entities", entitiesBundle);
-            }
+        }
+        if (!entitiesBundle.isEmpty()) {
+            container.putParcelableArrayList("entities", entitiesBundle);
         }
     }
 

@@ -17,8 +17,10 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+/* loaded from: classes4.dex */
 public final class DateTypeAdapter extends TypeAdapter<Date> {
-    public static final TypeAdapterFactory FACTORY = new TypeAdapterFactory() {
+    public static final TypeAdapterFactory FACTORY = new TypeAdapterFactory() { // from class: com.google.gson.internal.bind.DateTypeAdapter.1
+        @Override // com.google.gson.TypeAdapterFactory
         public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> typeToken) {
             if (typeToken.getRawType() == Date.class) {
                 return new DateTypeAdapter();
@@ -27,21 +29,22 @@ public final class DateTypeAdapter extends TypeAdapter<Date> {
         }
     };
     private final DateFormat enUsFormat = DateFormat.getDateTimeInstance(2, 2, Locale.US);
-    private final DateFormat iso8601Format = buildIso8601Format();
     private final DateFormat localFormat = DateFormat.getDateTimeInstance(2, 2);
+    private final DateFormat iso8601Format = buildIso8601Format();
 
     private static DateFormat buildIso8601Format() {
-        DateFormat iso8601Format2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
-        iso8601Format2.setTimeZone(TimeZone.getTimeZone(Time.TIMEZONE_UTC));
-        return iso8601Format2;
+        DateFormat iso8601Format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
+        iso8601Format.setTimeZone(TimeZone.getTimeZone(Time.TIMEZONE_UTC));
+        return iso8601Format;
     }
 
+    @Override // com.google.gson.TypeAdapter
     public Date read(JsonReader in) throws IOException {
-        if (in.peek() != JsonToken.NULL) {
-            return deserializeToDate(in.nextString());
+        if (in.peek() == JsonToken.NULL) {
+            in.nextNull();
+            return null;
         }
-        in.nextNull();
-        return null;
+        return deserializeToDate(in.nextString());
     }
 
     private synchronized Date deserializeToDate(String json) {
@@ -60,11 +63,13 @@ public final class DateTypeAdapter extends TypeAdapter<Date> {
         return this.localFormat.parse(json);
     }
 
+    @Override // com.google.gson.TypeAdapter
     public synchronized void write(JsonWriter out, Date value) throws IOException {
         if (value == null) {
             out.nullValue();
-        } else {
-            out.value(this.enUsFormat.format(value));
+            return;
         }
+        String dateFormatAsString = this.enUsFormat.format(value);
+        out.value(dateFormatAsString);
     }
 }

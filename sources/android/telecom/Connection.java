@@ -4,21 +4,21 @@ import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
 import android.bluetooth.BluetoothDevice;
 import android.net.Uri;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Looper;
-import android.os.Message;
-import android.os.ParcelFileDescriptor;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.Handler;
+import android.p007os.IBinder;
+import android.p007os.Looper;
+import android.p007os.Message;
+import android.p007os.ParcelFileDescriptor;
+import android.p007os.RemoteException;
 import android.telecom.Conference;
 import android.telecom.Connection;
 import android.telecom.VideoProfile;
 import android.telephony.ServiceState;
 import android.util.ArraySet;
 import android.view.Surface;
-import com.android.internal.os.SomeArgs;
+import com.android.internal.p016os.SomeArgs;
 import com.android.internal.telecom.IVideoCallback;
 import com.android.internal.telecom.IVideoProvider;
 import com.android.internal.telephony.IccCardConstants;
@@ -37,6 +37,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
+/* loaded from: classes3.dex */
 public abstract class Connection extends Conferenceable {
     public static final int CAPABILITY_ADD_PARTICIPANT = 67108864;
     public static final int CAPABILITY_CANNOT_DOWNGRADE_VIDEO_TO_AUDIO = 8388608;
@@ -114,45 +115,46 @@ public abstract class Connection extends Conferenceable {
     private int mAddressPresentation;
     private boolean mAudioModeIsVoip;
     private CallAudioState mCallAudioState;
-    private int mCallDirection = -1;
     private String mCallerDisplayName;
     private int mCallerDisplayNamePresentation;
     private Conference mConference;
-    private final Conference.Listener mConferenceDeathListener = new Conference.Listener() {
-        public void onDestroyed(Conference c) {
-            if (Connection.this.mConferenceables.remove(c)) {
-                Connection.this.fireOnConferenceableConnectionsChanged();
-            }
-        }
-    };
-    /* access modifiers changed from: private */
-    public final List<Conferenceable> mConferenceables = new ArrayList();
-    private long mConnectElapsedTimeMillis = 0;
-    private long mConnectTimeMillis = 0;
     private int mConnectionCapabilities;
-    private final Listener mConnectionDeathListener = new Listener() {
+    private int mConnectionProperties;
+    private ConnectionService mConnectionService;
+    private DisconnectCause mDisconnectCause;
+    private Bundle mExtras;
+    private PhoneAccountHandle mPhoneAccountHandle;
+    private Set<String> mPreviousExtraKeys;
+    private StatusHints mStatusHints;
+    private String mTelecomCallId;
+    private VideoProvider mVideoProvider;
+    private int mVideoState;
+    private final Listener mConnectionDeathListener = new Listener() { // from class: android.telecom.Connection.1
+        @Override // android.telecom.Connection.Listener
         public void onDestroyed(Connection c) {
             if (Connection.this.mConferenceables.remove(c)) {
                 Connection.this.fireOnConferenceableConnectionsChanged();
             }
         }
     };
-    private int mConnectionProperties;
-    private ConnectionService mConnectionService;
-    private DisconnectCause mDisconnectCause;
-    private Bundle mExtras;
-    private final Object mExtrasLock = new Object();
+    private final Conference.Listener mConferenceDeathListener = new Conference.Listener() { // from class: android.telecom.Connection.2
+        @Override // android.telecom.Conference.Listener
+        public void onDestroyed(Conference c) {
+            if (Connection.this.mConferenceables.remove(c)) {
+                Connection.this.fireOnConferenceableConnectionsChanged();
+            }
+        }
+    };
     private final Set<Listener> mListeners = Collections.newSetFromMap(new ConcurrentHashMap(8, 0.9f, 1));
-    private PhoneAccountHandle mPhoneAccountHandle;
-    private Set<String> mPreviousExtraKeys;
-    private boolean mRingbackRequested = false;
-    private int mState = 1;
-    private StatusHints mStatusHints;
-    private int mSupportedAudioRoutes = 15;
-    private String mTelecomCallId;
+    private final List<Conferenceable> mConferenceables = new ArrayList();
     private final List<Conferenceable> mUnmodifiableConferenceables = Collections.unmodifiableList(this.mConferenceables);
-    private VideoProvider mVideoProvider;
-    private int mVideoState;
+    private int mState = 1;
+    private boolean mRingbackRequested = false;
+    private int mSupportedAudioRoutes = 15;
+    private long mConnectTimeMillis = 0;
+    private long mConnectElapsedTimeMillis = 0;
+    private final Object mExtrasLock = new Object();
+    private int mCallDirection = -1;
 
     public static boolean can(int capabilities, int capability) {
         return (capabilities & capability) == capability;
@@ -302,6 +304,7 @@ public abstract class Connection extends Conferenceable {
         return builder.toString();
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Listener {
         public void onStateChanged(Connection c, int state) {
         }
@@ -348,13 +351,13 @@ public abstract class Connection extends Conferenceable {
         public void onStatusHintsChanged(Connection c, StatusHints statusHints) {
         }
 
-        public void onConferenceablesChanged(Connection c, List<Conferenceable> list) {
+        public void onConferenceablesChanged(Connection c, List<Conferenceable> conferenceables) {
         }
 
         public void onConferenceChanged(Connection c, Conference conference) {
         }
 
-        public void onConferenceParticipantsChanged(Connection c, List<ConferenceParticipant> list) {
+        public void onConferenceParticipantsChanged(Connection c, List<ConferenceParticipant> participants) {
         }
 
         public void onConferenceStarted() {
@@ -366,7 +369,7 @@ public abstract class Connection extends Conferenceable {
         public void onExtrasChanged(Connection c, Bundle extras) {
         }
 
-        public void onExtrasRemoved(Connection c, List<String> list) {
+        public void onExtrasRemoved(Connection c, List<String> keys) {
         }
 
         public void onConnectionEvent(Connection c, String event, Bundle extras) {
@@ -397,6 +400,7 @@ public abstract class Connection extends Conferenceable {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class RttTextStream {
         private static final int READ_BUFFER_SIZE = 1000;
         private final ParcelFileDescriptor mFdFromInCall;
@@ -443,6 +447,7 @@ public abstract class Connection extends Conferenceable {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class RttModifyStatus {
         public static final int SESSION_MODIFY_REQUEST_FAIL = 2;
         public static final int SESSION_MODIFY_REQUEST_INVALID = 3;
@@ -454,6 +459,7 @@ public abstract class Connection extends Conferenceable {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class VideoProvider {
         private static final int MSG_ADD_VIDEO_CALLBACK = 1;
         private static final int MSG_REMOVE_VIDEO_CALLBACK = 12;
@@ -488,10 +494,8 @@ public abstract class Connection extends Conferenceable {
         public static final int SESSION_MODIFY_REQUEST_SUCCESS = 1;
         public static final int SESSION_MODIFY_REQUEST_TIMED_OUT = 4;
         private final VideoProviderBinder mBinder;
-        /* access modifiers changed from: private */
-        public VideoProviderHandler mMessageHandler;
-        /* access modifiers changed from: private */
-        public ConcurrentHashMap<IBinder, IVideoCallback> mVideoCallbacks;
+        private VideoProviderHandler mMessageHandler;
+        private ConcurrentHashMap<IBinder, IVideoCallback> mVideoCallbacks;
 
         public abstract void onRequestCameraCapabilities();
 
@@ -513,6 +517,7 @@ public abstract class Connection extends Conferenceable {
 
         public abstract void onSetZoom(float f);
 
+        /* loaded from: classes3.dex */
         private final class VideoProviderHandler extends Handler {
             public VideoProviderHandler() {
             }
@@ -521,29 +526,31 @@ public abstract class Connection extends Conferenceable {
                 super(looper);
             }
 
+            @Override // android.p007os.Handler
             public void handleMessage(Message msg) {
+                SomeArgs args;
                 switch (msg.what) {
                     case 1:
                         IBinder binder = (IBinder) msg.obj;
                         IVideoCallback callback = IVideoCallback.Stub.asInterface((IBinder) msg.obj);
-                        if (callback == null) {
-                            Log.w((Object) this, "addVideoProvider - skipped; callback is null.", new Object[0]);
-                            return;
-                        } else if (VideoProvider.this.mVideoCallbacks.containsKey(binder)) {
-                            Log.i((Object) this, "addVideoProvider - skipped; already present.", new Object[0]);
-                            return;
-                        } else {
-                            VideoProvider.this.mVideoCallbacks.put(binder, callback);
-                            return;
+                        if (callback != null) {
+                            if (!VideoProvider.this.mVideoCallbacks.containsKey(binder)) {
+                                VideoProvider.this.mVideoCallbacks.put(binder, callback);
+                                return;
+                            } else {
+                                Log.m94i(this, "addVideoProvider - skipped; already present.", new Object[0]);
+                                return;
+                            }
                         }
+                        Log.m90w(this, "addVideoProvider - skipped; callback is null.", new Object[0]);
+                        return;
                     case 2:
-                        SomeArgs args = (SomeArgs) msg.obj;
+                        args = (SomeArgs) msg.obj;
                         try {
                             VideoProvider.this.onSetCamera((String) args.arg1);
                             VideoProvider.this.onSetCamera((String) args.arg1, (String) args.arg2, args.argi1, args.argi2, args.argi3);
                             return;
                         } finally {
-                            args.recycle();
                         }
                     case 3:
                         VideoProvider.this.onSetPreviewSurface((Surface) msg.obj);
@@ -558,12 +565,11 @@ public abstract class Connection extends Conferenceable {
                         VideoProvider.this.onSetZoom(((Float) msg.obj).floatValue());
                         return;
                     case 7:
-                        SomeArgs args2 = (SomeArgs) msg.obj;
+                        args = (SomeArgs) msg.obj;
                         try {
-                            VideoProvider.this.onSendSessionModifyRequest((VideoProfile) args2.arg1, (VideoProfile) args2.arg2);
+                            VideoProvider.this.onSendSessionModifyRequest((VideoProfile) args.arg1, (VideoProfile) args.arg2);
                             return;
                         } finally {
-                            args2.recycle();
                         }
                     case 8:
                         VideoProvider.this.onSendSessionModifyResponse((VideoProfile) msg.obj);
@@ -579,12 +585,12 @@ public abstract class Connection extends Conferenceable {
                         return;
                     case 12:
                         IBinder binder2 = (IBinder) msg.obj;
-                        IVideoCallback asInterface = IVideoCallback.Stub.asInterface((IBinder) msg.obj);
-                        if (!VideoProvider.this.mVideoCallbacks.containsKey(binder2)) {
-                            Log.i((Object) this, "removeVideoProvider - skipped; not present.", new Object[0]);
+                        IVideoCallback.Stub.asInterface((IBinder) msg.obj);
+                        if (VideoProvider.this.mVideoCallbacks.containsKey(binder2)) {
+                            VideoProvider.this.mVideoCallbacks.remove(binder2);
                             return;
                         } else {
-                            VideoProvider.this.mVideoCallbacks.remove(binder2);
+                            Log.m94i(this, "removeVideoProvider - skipped; not present.", new Object[0]);
                             return;
                         }
                     default:
@@ -593,18 +599,22 @@ public abstract class Connection extends Conferenceable {
             }
         }
 
+        /* loaded from: classes3.dex */
         private final class VideoProviderBinder extends IVideoProvider.Stub {
             private VideoProviderBinder() {
             }
 
+            @Override // com.android.internal.telecom.IVideoProvider
             public void addVideoCallback(IBinder videoCallbackBinder) {
                 VideoProvider.this.mMessageHandler.obtainMessage(1, videoCallbackBinder).sendToTarget();
             }
 
+            @Override // com.android.internal.telecom.IVideoProvider
             public void removeVideoCallback(IBinder videoCallbackBinder) {
                 VideoProvider.this.mMessageHandler.obtainMessage(12, videoCallbackBinder).sendToTarget();
             }
 
+            @Override // com.android.internal.telecom.IVideoProvider
             public void setCamera(String cameraId, String callingPackageName, int targetSdkVersion) {
                 SomeArgs args = SomeArgs.obtain();
                 args.arg1 = cameraId;
@@ -615,22 +625,27 @@ public abstract class Connection extends Conferenceable {
                 VideoProvider.this.mMessageHandler.obtainMessage(2, args).sendToTarget();
             }
 
+            @Override // com.android.internal.telecom.IVideoProvider
             public void setPreviewSurface(Surface surface) {
                 VideoProvider.this.mMessageHandler.obtainMessage(3, surface).sendToTarget();
             }
 
+            @Override // com.android.internal.telecom.IVideoProvider
             public void setDisplaySurface(Surface surface) {
                 VideoProvider.this.mMessageHandler.obtainMessage(4, surface).sendToTarget();
             }
 
+            @Override // com.android.internal.telecom.IVideoProvider
             public void setDeviceOrientation(int rotation) {
                 VideoProvider.this.mMessageHandler.obtainMessage(5, rotation, 0).sendToTarget();
             }
 
+            @Override // com.android.internal.telecom.IVideoProvider
             public void setZoom(float value) {
                 VideoProvider.this.mMessageHandler.obtainMessage(6, Float.valueOf(value)).sendToTarget();
             }
 
+            @Override // com.android.internal.telecom.IVideoProvider
             public void sendSessionModifyRequest(VideoProfile fromProfile, VideoProfile toProfile) {
                 SomeArgs args = SomeArgs.obtain();
                 args.arg1 = fromProfile;
@@ -638,18 +653,22 @@ public abstract class Connection extends Conferenceable {
                 VideoProvider.this.mMessageHandler.obtainMessage(7, args).sendToTarget();
             }
 
+            @Override // com.android.internal.telecom.IVideoProvider
             public void sendSessionModifyResponse(VideoProfile responseProfile) {
                 VideoProvider.this.mMessageHandler.obtainMessage(8, responseProfile).sendToTarget();
             }
 
+            @Override // com.android.internal.telecom.IVideoProvider
             public void requestCameraCapabilities() {
                 VideoProvider.this.mMessageHandler.obtainMessage(9).sendToTarget();
             }
 
+            @Override // com.android.internal.telecom.IVideoProvider
             public void requestCallDataUsage() {
                 VideoProvider.this.mMessageHandler.obtainMessage(10).sendToTarget();
             }
 
+            @Override // com.android.internal.telecom.IVideoProvider
             public void setPauseImage(Uri uri) {
                 VideoProvider.this.mMessageHandler.obtainMessage(11, uri).sendToTarget();
             }
@@ -681,7 +700,7 @@ public abstract class Connection extends Conferenceable {
                     try {
                         callback.receiveSessionModifyRequest(videoProfile);
                     } catch (RemoteException ignored) {
-                        Log.w((Object) this, "receiveSessionModifyRequest callback failed", ignored);
+                        Log.m90w(this, "receiveSessionModifyRequest callback failed", ignored);
                     }
                 }
             }
@@ -693,7 +712,7 @@ public abstract class Connection extends Conferenceable {
                     try {
                         callback.receiveSessionModifyResponse(status, requestedProfile, responseProfile);
                     } catch (RemoteException ignored) {
-                        Log.w((Object) this, "receiveSessionModifyResponse callback failed", ignored);
+                        Log.m90w(this, "receiveSessionModifyResponse callback failed", ignored);
                     }
                 }
             }
@@ -705,7 +724,7 @@ public abstract class Connection extends Conferenceable {
                     try {
                         callback.handleCallSessionEvent(event);
                     } catch (RemoteException ignored) {
-                        Log.w((Object) this, "handleCallSessionEvent callback failed", ignored);
+                        Log.m90w(this, "handleCallSessionEvent callback failed", ignored);
                     }
                 }
             }
@@ -717,7 +736,7 @@ public abstract class Connection extends Conferenceable {
                     try {
                         callback.changePeerDimensions(width, height);
                     } catch (RemoteException ignored) {
-                        Log.w((Object) this, "changePeerDimensions callback failed", ignored);
+                        Log.m90w(this, "changePeerDimensions callback failed", ignored);
                     }
                 }
             }
@@ -729,7 +748,7 @@ public abstract class Connection extends Conferenceable {
                     try {
                         callback.changeCallDataUsage(dataUsage);
                     } catch (RemoteException ignored) {
-                        Log.w((Object) this, "setCallDataUsage callback failed", ignored);
+                        Log.m90w(this, "setCallDataUsage callback failed", ignored);
                     }
                 }
             }
@@ -745,7 +764,7 @@ public abstract class Connection extends Conferenceable {
                     try {
                         callback.changeCameraCapabilities(cameraCapabilities);
                     } catch (RemoteException ignored) {
-                        Log.w((Object) this, "changeCameraCapabilities callback failed", ignored);
+                        Log.m90w(this, "changeCameraCapabilities callback failed", ignored);
                     }
                 }
             }
@@ -757,7 +776,7 @@ public abstract class Connection extends Conferenceable {
                     try {
                         callback.changeVideoQuality(videoQuality);
                     } catch (RemoteException ignored) {
-                        Log.w((Object) this, "changeVideoQuality callback failed", ignored);
+                        Log.m90w(this, "changeVideoQuality callback failed", ignored);
                     }
                 }
             }
@@ -889,10 +908,9 @@ public abstract class Connection extends Conferenceable {
         this.mTelecomCallId = callId;
     }
 
-    /* access modifiers changed from: package-private */
-    public final void setCallAudioState(CallAudioState state) {
+    final void setCallAudioState(CallAudioState state) {
         checkImmutable();
-        Log.d((Object) this, "setAudioState %s", state);
+        Log.m98d(this, "setAudioState %s", state);
         this.mCallAudioState = state;
         onAudioStateChanged(getAudioState());
         onCallAudioStateChanged(state);
@@ -917,7 +935,7 @@ public abstract class Connection extends Conferenceable {
             case 7:
                 return "PULLING_CALL";
             default:
-                Log.wtf((Object) Connection.class, "Unknown state %d", Integer.valueOf(state));
+                Log.wtf(Connection.class, "Unknown state %d", Integer.valueOf(state));
                 return IccCardConstants.INTENT_VALUE_ICC_UNKNOWN;
         }
     }
@@ -936,7 +954,7 @@ public abstract class Connection extends Conferenceable {
 
     public final void setAddress(Uri address, int presentation) {
         checkImmutable();
-        Log.d((Object) this, "setAddress %s", address);
+        Log.m98d(this, "setAddress %s", address);
         this.mAddress = address;
         this.mAddressPresentation = presentation;
         for (Listener l : this.mListeners) {
@@ -946,7 +964,7 @@ public abstract class Connection extends Conferenceable {
 
     public final void setCallerDisplayName(String callerDisplayName, int presentation) {
         checkImmutable();
-        Log.d((Object) this, "setCallerDisplayName %s", callerDisplayName);
+        Log.m98d(this, "setCallerDisplayName %s", callerDisplayName);
         this.mCallerDisplayName = callerDisplayName;
         this.mCallerDisplayNamePresentation = presentation;
         for (Listener l : this.mListeners) {
@@ -956,7 +974,7 @@ public abstract class Connection extends Conferenceable {
 
     public final void setVideoState(int videoState) {
         checkImmutable();
-        Log.d((Object) this, "setVideoState %d", Integer.valueOf(videoState));
+        Log.m98d(this, "setVideoState %d", Integer.valueOf(videoState));
         this.mVideoState = videoState;
         for (Listener l : this.mListeners) {
             l.onVideoStateChanged(this, this.mVideoState);
@@ -1015,7 +1033,7 @@ public abstract class Connection extends Conferenceable {
         checkImmutable();
         this.mDisconnectCause = disconnectCause;
         setState(6);
-        Log.d((Object) this, "Disconnected with cause %s", disconnectCause);
+        Log.m98d(this, "Disconnected with cause %s", disconnectCause);
         for (Listener l : this.mListeners) {
             l.onDisconnected(this, disconnectCause);
         }
@@ -1068,7 +1086,8 @@ public abstract class Connection extends Conferenceable {
     public final void setSupportedAudioRoutes(int supportedAudioRoutes) {
         if ((supportedAudioRoutes & 9) == 0) {
             throw new IllegalArgumentException("supported audio routes must include either speaker or earpiece");
-        } else if (this.mSupportedAudioRoutes != supportedAudioRoutes) {
+        }
+        if (this.mSupportedAudioRoutes != supportedAudioRoutes) {
             this.mSupportedAudioRoutes = supportedAudioRoutes;
             for (Listener l : this.mListeners) {
                 l.onSupportedAudioRoutesChanged(this, this.mSupportedAudioRoutes);
@@ -1130,9 +1149,11 @@ public abstract class Connection extends Conferenceable {
         for (Conferenceable c : conferenceables) {
             if (!this.mConferenceables.contains(c)) {
                 if (c instanceof Connection) {
-                    ((Connection) c).addConnectionListener(this.mConnectionDeathListener);
+                    Connection connection = (Connection) c;
+                    connection.addConnectionListener(this.mConnectionDeathListener);
                 } else if (c instanceof Conference) {
-                    ((Conference) c).addListener(this.mConferenceDeathListener);
+                    Conference conference = (Conference) c;
+                    conference.addListener(this.mConferenceDeathListener);
                 }
                 this.mConferenceables.add(c);
             }
@@ -1153,7 +1174,7 @@ public abstract class Connection extends Conferenceable {
     public final void setConnectionService(ConnectionService connectionService) {
         checkImmutable();
         if (this.mConnectionService != null) {
-            Log.e((Object) this, (Throwable) new Exception(), "Trying to set ConnectionService on a connection which is already associated with another ConnectionService.", new Object[0]);
+            Log.m96e(this, new Exception(), "Trying to set ConnectionService on a connection which is already associated with another ConnectionService.", new Object[0]);
         } else {
             this.mConnectionService = connectionService;
         }
@@ -1161,7 +1182,7 @@ public abstract class Connection extends Conferenceable {
 
     public final void unsetConnectionService(ConnectionService connectionService) {
         if (this.mConnectionService != connectionService) {
-            Log.e((Object) this, (Throwable) new Exception(), "Trying to remove ConnectionService from a Connection that does not belong to the ConnectionService.", new Object[0]);
+            Log.m96e(this, new Exception(), "Trying to remove ConnectionService from a Connection that does not belong to the ConnectionService.", new Object[0]);
         } else {
             this.mConnectionService = null;
         }
@@ -1173,20 +1194,20 @@ public abstract class Connection extends Conferenceable {
 
     public final boolean setConference(Conference conference) {
         checkImmutable();
-        if (this.mConference != null) {
-            return false;
-        }
-        this.mConference = conference;
-        if (this.mConnectionService == null || !this.mConnectionService.containsConference(conference)) {
+        if (this.mConference == null) {
+            this.mConference = conference;
+            if (this.mConnectionService != null && this.mConnectionService.containsConference(conference)) {
+                fireConferenceChanged();
+                return true;
+            }
             return true;
         }
-        fireConferenceChanged();
-        return true;
+        return false;
     }
 
     public final void resetConference() {
         if (this.mConference != null) {
-            Log.d((Object) this, "Conference reset", new Object[0]);
+            Log.m98d(this, "Conference reset", new Object[0]);
             this.mConference = null;
             fireConferenceChanged();
         }
@@ -1218,17 +1239,18 @@ public abstract class Connection extends Conferenceable {
     public final void putExtras(Bundle extras) {
         Bundle listenerExtras;
         checkImmutable();
-        if (extras != null) {
-            synchronized (this.mExtrasLock) {
-                if (this.mExtras == null) {
-                    this.mExtras = new Bundle();
-                }
-                this.mExtras.putAll(extras);
-                listenerExtras = new Bundle(this.mExtras);
+        if (extras == null) {
+            return;
+        }
+        synchronized (this.mExtrasLock) {
+            if (this.mExtras == null) {
+                this.mExtras = new Bundle();
             }
-            for (Listener l : this.mListeners) {
-                l.onExtrasChanged(this, new Bundle(listenerExtras));
-            }
+            this.mExtras.putAll(extras);
+            listenerExtras = new Bundle(this.mExtras);
+        }
+        for (Listener l : this.mListeners) {
+            l.onExtrasChanged(this, new Bundle(listenerExtras));
         }
     }
 
@@ -1265,12 +1287,12 @@ public abstract class Connection extends Conferenceable {
     }
 
     public final void removeExtras(String... keys) {
-        removeExtras((List<String>) Arrays.asList(keys));
+        removeExtras(Arrays.asList(keys));
     }
 
     public final void setAudioRoute(int route) {
         for (Listener l : this.mListeners) {
-            l.onAudioRouteChanged(this, route, (String) null);
+            l.onAudioRouteChanged(this, route, null);
         }
     }
 
@@ -1281,29 +1303,26 @@ public abstract class Connection extends Conferenceable {
     }
 
     public final void sendRttInitiationSuccess() {
-        this.mListeners.forEach(new Consumer() {
+        this.mListeners.forEach(new Consumer() { // from class: android.telecom.-$$Lambda$Connection$8xeoCKtoHEwnDqv6gbuSfOMODH0
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
                 ((Connection.Listener) obj).onRttInitiationSuccess(Connection.this);
             }
         });
     }
 
-    public final void sendRttInitiationFailure(int reason) {
-        this.mListeners.forEach(new Consumer(reason) {
-            private final /* synthetic */ int f$1;
-
-            {
-                this.f$1 = r2;
-            }
-
+    public final void sendRttInitiationFailure(final int reason) {
+        this.mListeners.forEach(new Consumer() { // from class: android.telecom.-$$Lambda$Connection$noXZvls4rxmO_SOjgkFMZLLrfSg
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
-                ((Connection.Listener) obj).onRttInitiationFailure(Connection.this, this.f$1);
+                ((Connection.Listener) obj).onRttInitiationFailure(Connection.this, reason);
             }
         });
     }
 
     public final void sendRttSessionRemotelyTerminated() {
-        this.mListeners.forEach(new Consumer() {
+        this.mListeners.forEach(new Consumer() { // from class: android.telecom.-$$Lambda$Connection$SYsjtKchY2AYvOeGveCrqxSfKTU
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
                 ((Connection.Listener) obj).onRttSessionRemotelyTerminated(Connection.this);
             }
@@ -1311,7 +1330,8 @@ public abstract class Connection extends Conferenceable {
     }
 
     public final void sendRemoteRttRequest() {
-        this.mListeners.forEach(new Consumer() {
+        this.mListeners.forEach(new Consumer() { // from class: android.telecom.-$$Lambda$Connection$lnfFNF0t9fPLEf01JE291g4chSk
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
                 ((Connection.Listener) obj).onRemoteRttRequest(Connection.this);
             }
@@ -1421,9 +1441,9 @@ public abstract class Connection extends Conferenceable {
     private void setState(int state) {
         checkImmutable();
         if (this.mState == 6 && this.mState != state) {
-            Log.d((Object) this, "Connection already DISCONNECTED; cannot transition out of this state.", new Object[0]);
+            Log.m98d(this, "Connection already DISCONNECTED; cannot transition out of this state.", new Object[0]);
         } else if (this.mState != state) {
-            Log.d((Object) this, "setState: %s", stateToString(state));
+            Log.m98d(this, "setState: %s", stateToString(state));
             this.mState = state;
             onStateChanged(state);
             for (Listener l : this.mListeners) {
@@ -1432,14 +1452,17 @@ public abstract class Connection extends Conferenceable {
         }
     }
 
+    /* loaded from: classes3.dex */
     private static class FailureSignalingConnection extends Connection {
-        private boolean mImmutable = false;
+        private boolean mImmutable;
 
         public FailureSignalingConnection(DisconnectCause disconnectCause) {
+            this.mImmutable = false;
             setDisconnected(disconnectCause);
             this.mImmutable = true;
         }
 
+        @Override // android.telecom.Connection
         public void checkImmutable() {
             if (this.mImmutable) {
                 throw new UnsupportedOperationException("Connection is immutable");
@@ -1458,7 +1481,7 @@ public abstract class Connection extends Conferenceable {
         return new FailureSignalingConnection(new DisconnectCause(4));
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public final void fireOnConferenceableConnectionsChanged() {
         for (Listener l : this.mListeners) {
             l.onConferenceablesChanged(this, getConferenceables());
@@ -1474,16 +1497,17 @@ public abstract class Connection extends Conferenceable {
     private final void clearConferenceableList() {
         for (Conferenceable c : this.mConferenceables) {
             if (c instanceof Connection) {
-                ((Connection) c).removeConnectionListener(this.mConnectionDeathListener);
+                Connection connection = (Connection) c;
+                connection.removeConnectionListener(this.mConnectionDeathListener);
             } else if (c instanceof Conference) {
-                ((Conference) c).removeListener(this.mConferenceDeathListener);
+                Conference conference = (Conference) c;
+                conference.removeListener(this.mConferenceDeathListener);
             }
         }
         this.mConferenceables.clear();
     }
 
-    /* access modifiers changed from: package-private */
-    public final void handleExtrasChanged(Bundle extras) {
+    final void handleExtrasChanged(Bundle extras) {
         Bundle b = null;
         synchronized (this.mExtrasLock) {
             this.mExtras = extras;
@@ -1494,29 +1518,25 @@ public abstract class Connection extends Conferenceable {
         onExtrasChanged(b);
     }
 
-    /* access modifiers changed from: protected */
-    public final void notifyConferenceMergeFailed() {
+    protected final void notifyConferenceMergeFailed() {
         for (Listener l : this.mListeners) {
             l.onConferenceMergeFailed(this);
         }
     }
 
-    /* access modifiers changed from: protected */
-    public final void updateConferenceParticipants(List<ConferenceParticipant> conferenceParticipants) {
+    protected final void updateConferenceParticipants(List<ConferenceParticipant> conferenceParticipants) {
         for (Listener l : this.mListeners) {
             l.onConferenceParticipantsChanged(this, conferenceParticipants);
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void notifyConferenceStarted() {
+    protected void notifyConferenceStarted() {
         for (Listener l : this.mListeners) {
             l.onConferenceStarted();
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void notifyConferenceSupportedChanged(boolean isConferenceSupported) {
+    protected void notifyConferenceSupportedChanged(boolean isConferenceSupported) {
         for (Listener l : this.mListeners) {
             l.onConferenceSupportedChanged(this, isConferenceSupported);
         }

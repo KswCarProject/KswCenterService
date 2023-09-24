@@ -1,5 +1,6 @@
 package android.service.print;
 
+/* loaded from: classes3.dex */
 public final class PrintUserStateProto {
     public static final long ACTIVE_SERVICES = 2246267895812L;
     public static final long CACHED_PRINT_JOBS = 2246267895813L;

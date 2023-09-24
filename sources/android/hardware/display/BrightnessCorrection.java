@@ -1,8 +1,8 @@
 package android.hardware.display;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.MathUtils;
 import com.android.internal.util.XmlUtils;
 import java.io.IOException;
@@ -11,15 +11,21 @@ import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class BrightnessCorrection implements Parcelable {
-    public static final Parcelable.Creator<BrightnessCorrection> CREATOR = new Parcelable.Creator<BrightnessCorrection>() {
+    public static final Parcelable.Creator<BrightnessCorrection> CREATOR = new Parcelable.Creator<BrightnessCorrection>() { // from class: android.hardware.display.BrightnessCorrection.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public BrightnessCorrection createFromParcel(Parcel in) {
-            if (in.readInt() != 1) {
-                return null;
+            int type = in.readInt();
+            if (type == 1) {
+                return ScaleAndTranslateLog.readFromParcel(in);
             }
-            return ScaleAndTranslateLog.readFromParcel(in);
+            return null;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public BrightnessCorrection[] newArray(int size) {
             return new BrightnessCorrection[size];
         }
@@ -28,6 +34,7 @@ public final class BrightnessCorrection implements Parcelable {
     private static final String TAG_SCALE_AND_TRANSLATE_LOG = "scale-and-translate-log";
     private BrightnessCorrectionImplementation mImplementation;
 
+    /* loaded from: classes.dex */
     private interface BrightnessCorrectionImplementation {
         float apply(float f);
 
@@ -43,7 +50,8 @@ public final class BrightnessCorrection implements Parcelable {
     }
 
     public static BrightnessCorrection createScaleAndTranslateLog(float scale, float translate) {
-        return new BrightnessCorrection(new ScaleAndTranslateLog(scale, translate));
+        BrightnessCorrectionImplementation implementation = new ScaleAndTranslateLog(scale, translate);
+        return new BrightnessCorrection(implementation);
     }
 
     public float apply(float brightness) {
@@ -61,17 +69,20 @@ public final class BrightnessCorrection implements Parcelable {
         if (!(o instanceof BrightnessCorrection)) {
             return false;
         }
-        return ((BrightnessCorrection) o).mImplementation.equals(this.mImplementation);
+        BrightnessCorrection other = (BrightnessCorrection) o;
+        return other.mImplementation.equals(this.mImplementation);
     }
 
     public int hashCode() {
         return this.mImplementation.hashCode();
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         this.mImplementation.writeToParcel(dest);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -90,15 +101,17 @@ public final class BrightnessCorrection implements Parcelable {
         return null;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static float loadFloatFromXml(XmlPullParser parser, String attribute) {
+        String string = parser.getAttributeValue(null, attribute);
         try {
-            return Float.parseFloat(parser.getAttributeValue((String) null, attribute));
+            return Float.parseFloat(string);
         } catch (NullPointerException | NumberFormatException e) {
             return Float.NaN;
         }
     }
 
+    /* loaded from: classes.dex */
     private static class ScaleAndTranslateLog implements BrightnessCorrectionImplementation {
         private static final String ATTR_SCALE = "scale";
         private static final String ATTR_TRANSLATE = "translate";
@@ -117,10 +130,12 @@ public final class BrightnessCorrection implements Parcelable {
             this.mTranslate = MathUtils.constrain(translate, (float) MIN_TRANSLATE, (float) MAX_TRANSLATE);
         }
 
+        @Override // android.hardware.display.BrightnessCorrection.BrightnessCorrectionImplementation
         public float apply(float brightness) {
             return MathUtils.exp((this.mScale * MathUtils.log(brightness)) + this.mTranslate);
         }
 
+        @Override // android.hardware.display.BrightnessCorrection.BrightnessCorrectionImplementation
         public String toString() {
             return "ScaleAndTranslateLog(" + this.mScale + ", " + this.mTranslate + ")";
         }
@@ -129,39 +144,43 @@ public final class BrightnessCorrection implements Parcelable {
             if (o == this) {
                 return true;
             }
-            if (!(o instanceof ScaleAndTranslateLog)) {
-                return false;
-            }
-            ScaleAndTranslateLog other = (ScaleAndTranslateLog) o;
-            if (other.mScale == this.mScale && other.mTranslate == this.mTranslate) {
-                return true;
+            if (o instanceof ScaleAndTranslateLog) {
+                ScaleAndTranslateLog other = (ScaleAndTranslateLog) o;
+                return other.mScale == this.mScale && other.mTranslate == this.mTranslate;
             }
             return false;
         }
 
         public int hashCode() {
-            return (((1 * 31) + Float.hashCode(this.mScale)) * 31) + Float.hashCode(this.mTranslate);
+            int result = (1 * 31) + Float.hashCode(this.mScale);
+            return (result * 31) + Float.hashCode(this.mTranslate);
         }
 
+        @Override // android.hardware.display.BrightnessCorrection.BrightnessCorrectionImplementation
         public void writeToParcel(Parcel dest) {
             dest.writeInt(1);
             dest.writeFloat(this.mScale);
             dest.writeFloat(this.mTranslate);
         }
 
+        @Override // android.hardware.display.BrightnessCorrection.BrightnessCorrectionImplementation
         public void saveToXml(XmlSerializer serializer) throws IOException {
-            serializer.startTag((String) null, BrightnessCorrection.TAG_SCALE_AND_TRANSLATE_LOG);
-            serializer.attribute((String) null, "scale", Float.toString(this.mScale));
-            serializer.attribute((String) null, ATTR_TRANSLATE, Float.toString(this.mTranslate));
-            serializer.endTag((String) null, BrightnessCorrection.TAG_SCALE_AND_TRANSLATE_LOG);
+            serializer.startTag(null, BrightnessCorrection.TAG_SCALE_AND_TRANSLATE_LOG);
+            serializer.attribute(null, "scale", Float.toString(this.mScale));
+            serializer.attribute(null, ATTR_TRANSLATE, Float.toString(this.mTranslate));
+            serializer.endTag(null, BrightnessCorrection.TAG_SCALE_AND_TRANSLATE_LOG);
         }
 
         static BrightnessCorrection readFromParcel(Parcel in) {
-            return BrightnessCorrection.createScaleAndTranslateLog(in.readFloat(), in.readFloat());
+            float scale = in.readFloat();
+            float translate = in.readFloat();
+            return BrightnessCorrection.createScaleAndTranslateLog(scale, translate);
         }
 
         static BrightnessCorrection loadFromXml(XmlPullParser parser) throws IOException, XmlPullParserException {
-            return BrightnessCorrection.createScaleAndTranslateLog(BrightnessCorrection.loadFloatFromXml(parser, "scale"), BrightnessCorrection.loadFloatFromXml(parser, ATTR_TRANSLATE));
+            float scale = BrightnessCorrection.loadFloatFromXml(parser, "scale");
+            float translate = BrightnessCorrection.loadFloatFromXml(parser, ATTR_TRANSLATE);
+            return BrightnessCorrection.createScaleAndTranslateLog(scale, translate);
         }
     }
 }

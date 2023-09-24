@@ -1,8 +1,8 @@
 package android.service.autofill;
 
 import android.content.IntentSender;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.ArrayMap;
 import android.util.ArraySet;
 import android.util.DebugUtils;
@@ -14,38 +14,42 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Arrays;
 
+/* loaded from: classes3.dex */
 public final class SaveInfo implements Parcelable {
-    public static final Parcelable.Creator<SaveInfo> CREATOR = new Parcelable.Creator<SaveInfo>() {
+    public static final Parcelable.Creator<SaveInfo> CREATOR = new Parcelable.Creator<SaveInfo>() { // from class: android.service.autofill.SaveInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SaveInfo createFromParcel(Parcel parcel) {
             Builder builder;
             int type = parcel.readInt();
-            AutofillId[] requiredIds = (AutofillId[]) parcel.readParcelableArray((ClassLoader) null, AutofillId.class);
+            AutofillId[] requiredIds = (AutofillId[]) parcel.readParcelableArray(null, AutofillId.class);
             if (requiredIds != null) {
                 builder = new Builder(type, requiredIds);
             } else {
                 builder = new Builder(type);
             }
-            AutofillId[] optionalIds = (AutofillId[]) parcel.readParcelableArray((ClassLoader) null, AutofillId.class);
+            AutofillId[] optionalIds = (AutofillId[]) parcel.readParcelableArray(null, AutofillId.class);
             if (optionalIds != null) {
                 builder.setOptionalIds(optionalIds);
             }
-            builder.setNegativeAction(parcel.readInt(), (IntentSender) parcel.readParcelable((ClassLoader) null));
+            builder.setNegativeAction(parcel.readInt(), (IntentSender) parcel.readParcelable(null));
             builder.setDescription(parcel.readCharSequence());
-            CustomDescription customDescripton = (CustomDescription) parcel.readParcelable((ClassLoader) null);
+            CustomDescription customDescripton = (CustomDescription) parcel.readParcelable(null);
             if (customDescripton != null) {
                 builder.setCustomDescription(customDescripton);
             }
-            InternalValidator validator = (InternalValidator) parcel.readParcelable((ClassLoader) null);
+            InternalValidator validator = (InternalValidator) parcel.readParcelable(null);
             if (validator != null) {
                 builder.setValidator(validator);
             }
-            InternalSanitizer[] sanitizers = (InternalSanitizer[]) parcel.readParcelableArray((ClassLoader) null, InternalSanitizer.class);
+            InternalSanitizer[] sanitizers = (InternalSanitizer[]) parcel.readParcelableArray(null, InternalSanitizer.class);
             if (sanitizers != null) {
-                for (InternalSanitizer addSanitizer : sanitizers) {
-                    builder.addSanitizer(addSanitizer, (AutofillId[]) parcel.readParcelableArray((ClassLoader) null, AutofillId.class));
+                for (InternalSanitizer internalSanitizer : sanitizers) {
+                    AutofillId[] autofillIds = (AutofillId[]) parcel.readParcelableArray(null, AutofillId.class);
+                    builder.addSanitizer(internalSanitizer, autofillIds);
                 }
             }
-            AutofillId triggerId = (AutofillId) parcel.readParcelable((ClassLoader) null);
+            AutofillId triggerId = (AutofillId) parcel.readParcelable(null);
             if (triggerId != null) {
                 builder.setTriggerId(triggerId);
             }
@@ -53,6 +57,8 @@ public final class SaveInfo implements Parcelable {
             return builder.build();
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SaveInfo[] newArray(int size) {
             return new SaveInfo[size];
         }
@@ -82,14 +88,17 @@ public final class SaveInfo implements Parcelable {
     private final InternalValidator mValidator;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     @interface NegativeButtonStyle {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     @interface SaveDataType {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     @interface SaveInfoFlags {
     }
 
@@ -109,7 +118,7 @@ public final class SaveInfo implements Parcelable {
         } else {
             int size = builder.mSanitizers.size();
             this.mSanitizerKeys = new InternalSanitizer[size];
-            this.mSanitizerValues = new AutofillId[size][];
+            this.mSanitizerValues = new AutofillId[size];
             for (int i = 0; i < size; i++) {
                 this.mSanitizerKeys[i] = (InternalSanitizer) builder.mSanitizers.keyAt(i);
                 this.mSanitizerValues[i] = (AutofillId[]) builder.mSanitizers.valueAt(i);
@@ -166,38 +175,30 @@ public final class SaveInfo implements Parcelable {
         return this.mTriggerId;
     }
 
+    /* loaded from: classes3.dex */
     public static final class Builder {
-        /* access modifiers changed from: private */
-        public CustomDescription mCustomDescription;
-        /* access modifiers changed from: private */
-        public CharSequence mDescription;
+        private CustomDescription mCustomDescription;
+        private CharSequence mDescription;
         private boolean mDestroyed;
-        /* access modifiers changed from: private */
-        public int mFlags;
-        /* access modifiers changed from: private */
-        public IntentSender mNegativeActionListener;
-        /* access modifiers changed from: private */
-        public int mNegativeButtonStyle = 0;
-        /* access modifiers changed from: private */
-        public AutofillId[] mOptionalIds;
-        /* access modifiers changed from: private */
-        public final AutofillId[] mRequiredIds;
+        private int mFlags;
+        private IntentSender mNegativeActionListener;
+        private int mNegativeButtonStyle;
+        private AutofillId[] mOptionalIds;
+        private final AutofillId[] mRequiredIds;
         private ArraySet<AutofillId> mSanitizerIds;
-        /* access modifiers changed from: private */
-        public ArrayMap<InternalSanitizer, AutofillId[]> mSanitizers;
-        /* access modifiers changed from: private */
-        public AutofillId mTriggerId;
-        /* access modifiers changed from: private */
-        public final int mType;
-        /* access modifiers changed from: private */
-        public InternalValidator mValidator;
+        private ArrayMap<InternalSanitizer, AutofillId[]> mSanitizers;
+        private AutofillId mTriggerId;
+        private final int mType;
+        private InternalValidator mValidator;
 
         public Builder(int type, AutofillId[] requiredIds) {
+            this.mNegativeButtonStyle = 0;
             this.mType = type;
             this.mRequiredIds = AutofillServiceHelper.assertValid(requiredIds);
         }
 
         public Builder(int type) {
+            this.mNegativeButtonStyle = 0;
             this.mType = type;
             this.mRequiredIds = null;
         }
@@ -230,12 +231,12 @@ public final class SaveInfo implements Parcelable {
 
         public Builder setNegativeAction(int style, IntentSender listener) {
             throwIfDestroyed();
-            if (style == 0 || style == 1) {
-                this.mNegativeButtonStyle = style;
-                this.mNegativeActionListener = listener;
-                return this;
+            if (style != 0 && style != 1) {
+                throw new IllegalArgumentException("Invalid style: " + style);
             }
-            throw new IllegalArgumentException("Invalid style: " + style);
+            this.mNegativeButtonStyle = style;
+            this.mNegativeActionListener = listener;
+            return this;
         }
 
         public Builder setValidator(Validator validator) {
@@ -247,7 +248,7 @@ public final class SaveInfo implements Parcelable {
 
         public Builder addSanitizer(Sanitizer sanitizer, AutofillId... ids) {
             throwIfDestroyed();
-            Preconditions.checkArgument(!ArrayUtils.isEmpty((T[]) ids), "ids cannot be empty or null");
+            Preconditions.checkArgument(!ArrayUtils.isEmpty(ids), "ids cannot be empty or null");
             Preconditions.checkArgument(sanitizer instanceof InternalSanitizer, "not provided by Android System: " + sanitizer);
             if (this.mSanitizers == null) {
                 this.mSanitizers = new ArrayMap<>();
@@ -269,7 +270,7 @@ public final class SaveInfo implements Parcelable {
 
         public SaveInfo build() {
             throwIfDestroyed();
-            Preconditions.checkState(!ArrayUtils.isEmpty((T[]) this.mRequiredIds) || !ArrayUtils.isEmpty((T[]) this.mOptionalIds) || (this.mFlags & 4) != 0, "must have at least one required or optional id or FLAG_DELAYED_SAVE");
+            Preconditions.checkState((ArrayUtils.isEmpty(this.mRequiredIds) && ArrayUtils.isEmpty(this.mOptionalIds) && (this.mFlags & 4) == 0) ? false : true, "must have at least one required or optional id or FLAG_DELAYED_SAVE");
             this.mDestroyed = true;
             return new SaveInfo(this);
         }
@@ -282,55 +283,57 @@ public final class SaveInfo implements Parcelable {
     }
 
     public String toString() {
-        if (!Helper.sDebug) {
-            return super.toString();
+        if (Helper.sDebug) {
+            StringBuilder sb = new StringBuilder("SaveInfo: [type=");
+            sb.append(DebugUtils.flagsToString(SaveInfo.class, "SAVE_DATA_TYPE_", this.mType));
+            sb.append(", requiredIds=");
+            sb.append(Arrays.toString(this.mRequiredIds));
+            sb.append(", style=");
+            StringBuilder builder = sb.append(DebugUtils.flagsToString(SaveInfo.class, "NEGATIVE_BUTTON_STYLE_", this.mNegativeButtonStyle));
+            if (this.mOptionalIds != null) {
+                builder.append(", optionalIds=");
+                builder.append(Arrays.toString(this.mOptionalIds));
+            }
+            if (this.mDescription != null) {
+                builder.append(", description=");
+                builder.append(this.mDescription);
+            }
+            if (this.mFlags != 0) {
+                builder.append(", flags=");
+                builder.append(this.mFlags);
+            }
+            if (this.mCustomDescription != null) {
+                builder.append(", customDescription=");
+                builder.append(this.mCustomDescription);
+            }
+            if (this.mValidator != null) {
+                builder.append(", validator=");
+                builder.append(this.mValidator);
+            }
+            if (this.mSanitizerKeys != null) {
+                builder.append(", sanitizerKeys=");
+                builder.append(this.mSanitizerKeys.length);
+            }
+            if (this.mSanitizerValues != null) {
+                builder.append(", sanitizerValues=");
+                builder.append(this.mSanitizerValues.length);
+            }
+            if (this.mTriggerId != null) {
+                builder.append(", triggerId=");
+                builder.append(this.mTriggerId);
+            }
+            builder.append("]");
+            return builder.toString();
         }
-        StringBuilder sb = new StringBuilder("SaveInfo: [type=");
-        sb.append(DebugUtils.flagsToString(SaveInfo.class, "SAVE_DATA_TYPE_", this.mType));
-        sb.append(", requiredIds=");
-        sb.append(Arrays.toString(this.mRequiredIds));
-        sb.append(", style=");
-        StringBuilder builder = sb.append(DebugUtils.flagsToString(SaveInfo.class, "NEGATIVE_BUTTON_STYLE_", this.mNegativeButtonStyle));
-        if (this.mOptionalIds != null) {
-            builder.append(", optionalIds=");
-            builder.append(Arrays.toString(this.mOptionalIds));
-        }
-        if (this.mDescription != null) {
-            builder.append(", description=");
-            builder.append(this.mDescription);
-        }
-        if (this.mFlags != 0) {
-            builder.append(", flags=");
-            builder.append(this.mFlags);
-        }
-        if (this.mCustomDescription != null) {
-            builder.append(", customDescription=");
-            builder.append(this.mCustomDescription);
-        }
-        if (this.mValidator != null) {
-            builder.append(", validator=");
-            builder.append(this.mValidator);
-        }
-        if (this.mSanitizerKeys != null) {
-            builder.append(", sanitizerKeys=");
-            builder.append(this.mSanitizerKeys.length);
-        }
-        if (this.mSanitizerValues != null) {
-            builder.append(", sanitizerValues=");
-            builder.append(this.mSanitizerValues.length);
-        }
-        if (this.mTriggerId != null) {
-            builder.append(", triggerId=");
-            builder.append(this.mTriggerId);
-        }
-        builder.append("]");
-        return builder.toString();
+        return super.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeInt(this.mType);
         parcel.writeParcelableArray(this.mRequiredIds, flags);
@@ -342,8 +345,8 @@ public final class SaveInfo implements Parcelable {
         parcel.writeParcelable(this.mValidator, flags);
         parcel.writeParcelableArray(this.mSanitizerKeys, flags);
         if (this.mSanitizerKeys != null) {
-            for (AutofillId[] writeParcelableArray : this.mSanitizerValues) {
-                parcel.writeParcelableArray(writeParcelableArray, flags);
+            for (int i = 0; i < this.mSanitizerValues.length; i++) {
+                parcel.writeParcelableArray(this.mSanitizerValues[i], flags);
             }
         }
         parcel.writeParcelable(this.mTriggerId, flags);

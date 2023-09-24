@@ -2,18 +2,21 @@ package android.location;
 
 import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.SystemClock;
-import android.os.WorkSource;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.SystemClock;
+import android.p007os.WorkSource;
 import android.util.TimeUtils;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class LocationRequest implements Parcelable {
     public static final int ACCURACY_BLOCK = 102;
     public static final int ACCURACY_CITY = 104;
     public static final int ACCURACY_FINE = 100;
-    public static final Parcelable.Creator<LocationRequest> CREATOR = new Parcelable.Creator<LocationRequest>() {
+    public static final Parcelable.Creator<LocationRequest> CREATOR = new Parcelable.Creator<LocationRequest>() { // from class: android.location.LocationRequest.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public LocationRequest createFromParcel(Parcel in) {
             LocationRequest request = new LocationRequest();
             request.setQuality(in.readInt());
@@ -22,24 +25,22 @@ public final class LocationRequest implements Parcelable {
             request.setExpireAt(in.readLong());
             request.setNumUpdates(in.readInt());
             request.setSmallestDisplacement(in.readFloat());
-            boolean z = false;
             request.setHideFromAppOps(in.readInt() != 0);
             request.setLowPowerMode(in.readInt() != 0);
-            if (in.readInt() != 0) {
-                z = true;
-            }
-            request.setLocationSettingsIgnored(z);
+            request.setLocationSettingsIgnored(in.readInt() != 0);
             String provider = in.readString();
             if (provider != null) {
                 request.setProvider(provider);
             }
-            WorkSource workSource = (WorkSource) in.readParcelable((ClassLoader) null);
+            WorkSource workSource = (WorkSource) in.readParcelable(null);
             if (workSource != null) {
                 request.setWorkSource(workSource);
             }
             return request;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public LocationRequest[] newArray(int size) {
             return new LocationRequest[size];
         }
@@ -49,27 +50,27 @@ public final class LocationRequest implements Parcelable {
     public static final int POWER_LOW = 201;
     public static final int POWER_NONE = 200;
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
-    private long mExpireAt = Long.MAX_VALUE;
+    private long mExpireAt;
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
-    private boolean mExplicitFastestInterval = false;
+    private boolean mExplicitFastestInterval;
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
-    private long mFastestInterval = ((long) (((double) this.mInterval) / FASTEST_INTERVAL_FACTOR));
+    private long mFastestInterval;
     @UnsupportedAppUsage
-    private boolean mHideFromAppOps = false;
+    private boolean mHideFromAppOps;
     @UnsupportedAppUsage
-    private long mInterval = 3600000;
-    private boolean mLocationSettingsIgnored = false;
-    private boolean mLowPowerMode = false;
+    private long mInterval;
+    private boolean mLocationSettingsIgnored;
+    private boolean mLowPowerMode;
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
-    private int mNumUpdates = Integer.MAX_VALUE;
+    private int mNumUpdates;
     @UnsupportedAppUsage
-    private String mProvider = LocationManager.FUSED_PROVIDER;
+    private String mProvider;
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
-    private int mQuality = 201;
+    private int mQuality;
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
-    private float mSmallestDisplacement = 0.0f;
+    private float mSmallestDisplacement;
     @UnsupportedAppUsage
-    private WorkSource mWorkSource = null;
+    private WorkSource mWorkSource;
 
     public static LocationRequest create() {
         return new LocationRequest();
@@ -115,11 +116,11 @@ public final class LocationRequest implements Parcelable {
                 quality = 102;
                 break;
             default:
-                if (criteria.getPowerRequirement() != 3) {
-                    quality = 201;
+                if (criteria.getPowerRequirement() == 3) {
+                    quality = 203;
                     break;
                 } else {
-                    quality = 203;
+                    quality = 201;
                     break;
                 }
         }
@@ -131,9 +132,33 @@ public final class LocationRequest implements Parcelable {
     }
 
     public LocationRequest() {
+        this.mQuality = 201;
+        this.mInterval = 3600000L;
+        this.mFastestInterval = (long) (this.mInterval / FASTEST_INTERVAL_FACTOR);
+        this.mExplicitFastestInterval = false;
+        this.mExpireAt = Long.MAX_VALUE;
+        this.mNumUpdates = Integer.MAX_VALUE;
+        this.mSmallestDisplacement = 0.0f;
+        this.mWorkSource = null;
+        this.mHideFromAppOps = false;
+        this.mLocationSettingsIgnored = false;
+        this.mProvider = LocationManager.FUSED_PROVIDER;
+        this.mLowPowerMode = false;
     }
 
     public LocationRequest(LocationRequest src) {
+        this.mQuality = 201;
+        this.mInterval = 3600000L;
+        this.mFastestInterval = (long) (this.mInterval / FASTEST_INTERVAL_FACTOR);
+        this.mExplicitFastestInterval = false;
+        this.mExpireAt = Long.MAX_VALUE;
+        this.mNumUpdates = Integer.MAX_VALUE;
+        this.mSmallestDisplacement = 0.0f;
+        this.mWorkSource = null;
+        this.mHideFromAppOps = false;
+        this.mLocationSettingsIgnored = false;
+        this.mProvider = LocationManager.FUSED_PROVIDER;
+        this.mLowPowerMode = false;
         this.mQuality = src.mQuality;
         this.mInterval = src.mInterval;
         this.mFastestInterval = src.mFastestInterval;
@@ -162,7 +187,7 @@ public final class LocationRequest implements Parcelable {
         checkInterval(millis);
         this.mInterval = millis;
         if (!this.mExplicitFastestInterval) {
-            this.mFastestInterval = (long) (((double) this.mInterval) / FASTEST_INTERVAL_FACTOR);
+            this.mFastestInterval = (long) (this.mInterval / FASTEST_INTERVAL_FACTOR);
         }
         return this;
     }
@@ -210,7 +235,7 @@ public final class LocationRequest implements Parcelable {
             this.mExpireAt = millis + elapsedRealtime;
         }
         if (this.mExpireAt < 0) {
-            this.mExpireAt = 0;
+            this.mExpireAt = 0L;
         }
         return this;
     }
@@ -218,7 +243,7 @@ public final class LocationRequest implements Parcelable {
     public LocationRequest setExpireAt(long millis) {
         this.mExpireAt = millis;
         if (this.mExpireAt < 0) {
-            this.mExpireAt = 0;
+            this.mExpireAt = 0L;
         }
         return this;
     }
@@ -228,11 +253,11 @@ public final class LocationRequest implements Parcelable {
     }
 
     public LocationRequest setNumUpdates(int numUpdates) {
-        if (numUpdates > 0) {
-            this.mNumUpdates = numUpdates;
-            return this;
+        if (numUpdates <= 0) {
+            throw new IllegalArgumentException("invalid numUpdates: " + numUpdates);
         }
-        throw new IllegalArgumentException("invalid numUpdates: " + numUpdates);
+        this.mNumUpdates = numUpdates;
+        return this;
     }
 
     public int getNumUpdates() {
@@ -300,14 +325,15 @@ public final class LocationRequest implements Parcelable {
 
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
     private static void checkQuality(int quality) {
-        if (quality != 100 && quality != 102 && quality != 104 && quality != 203) {
-            switch (quality) {
-                case 200:
-                case 201:
-                    return;
-                default:
-                    throw new IllegalArgumentException("invalid quality: " + quality);
-            }
+        if (quality == 100 || quality == 102 || quality == 104 || quality == 203) {
+            return;
+        }
+        switch (quality) {
+            case 200:
+            case 201:
+                return;
+            default:
+                throw new IllegalArgumentException("invalid quality: " + quality);
         }
     }
 
@@ -325,10 +351,12 @@ public final class LocationRequest implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeInt(this.mQuality);
         parcel.writeLong(this.mFastestInterval);
@@ -344,26 +372,26 @@ public final class LocationRequest implements Parcelable {
     }
 
     public static String qualityToString(int quality) {
-        if (quality == 100) {
-            return "ACCURACY_FINE";
-        }
-        if (quality == 102) {
+        if (quality != 100) {
+            if (quality != 102) {
+                if (quality != 104) {
+                    if (quality != 203) {
+                        switch (quality) {
+                            case 200:
+                                return "POWER_NONE";
+                            case 201:
+                                return "POWER_LOW";
+                            default:
+                                return "???";
+                        }
+                    }
+                    return "POWER_HIGH";
+                }
+                return "ACCURACY_CITY";
+            }
             return "ACCURACY_BLOCK";
         }
-        if (quality == 104) {
-            return "ACCURACY_CITY";
-        }
-        if (quality == 203) {
-            return "POWER_HIGH";
-        }
-        switch (quality) {
-            case 200:
-                return "POWER_NONE";
-            case 201:
-                return "POWER_LOW";
-            default:
-                return "???";
-        }
+        return "ACCURACY_FINE";
     }
 
     public String toString() {
@@ -381,8 +409,9 @@ public final class LocationRequest implements Parcelable {
         s.append(" fastest=");
         TimeUtils.formatDuration(this.mFastestInterval, s);
         if (this.mExpireAt != Long.MAX_VALUE) {
+            long expireIn = this.mExpireAt - SystemClock.elapsedRealtime();
             s.append(" expireIn=");
-            TimeUtils.formatDuration(this.mExpireAt - SystemClock.elapsedRealtime(), s);
+            TimeUtils.formatDuration(expireIn, s);
         }
         if (this.mNumUpdates != Integer.MAX_VALUE) {
             s.append(" num=");

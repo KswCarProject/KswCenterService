@@ -7,15 +7,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.LocationManager;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
+import android.p007os.Bundle;
+import android.p007os.Handler;
+import android.p007os.Message;
 import android.util.Log;
 import android.widget.Toast;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import com.android.internal.app.AlertController;
 import com.android.internal.location.GpsNetInitiatedHandler;
 
+/* loaded from: classes4.dex */
 public class NetInitiatedActivity extends AlertActivity implements DialogInterface.OnClickListener {
     private static final boolean DEBUG = true;
     private static final int GPS_NO_RESPONSE_TIME_OUT = 1;
@@ -23,10 +24,21 @@ public class NetInitiatedActivity extends AlertActivity implements DialogInterfa
     private static final int POSITIVE_BUTTON = -1;
     private static final String TAG = "NetInitiatedActivity";
     private static final boolean VERBOSE = false;
-    /* access modifiers changed from: private */
-    public int default_response = -1;
+    private int notificationId = -1;
+    private int timeout = -1;
+    private int default_response = -1;
     private int default_response_timeout = 6;
-    private final Handler mHandler = new Handler() {
+    private BroadcastReceiver mNetInitiatedReceiver = new BroadcastReceiver() { // from class: com.android.internal.app.NetInitiatedActivity.1
+        @Override // android.content.BroadcastReceiver
+        public void onReceive(Context context, Intent intent) {
+            Log.m72d(NetInitiatedActivity.TAG, "NetInitiatedReceiver onReceive: " + intent.getAction());
+            if (intent.getAction() == GpsNetInitiatedHandler.ACTION_NI_VERIFY) {
+                NetInitiatedActivity.this.handleNIVerify(intent);
+            }
+        }
+    };
+    private final Handler mHandler = new Handler() { // from class: com.android.internal.app.NetInitiatedActivity.2
+        @Override // android.p007os.Handler
         public void handleMessage(Message msg) {
             if (msg.what == 1) {
                 if (NetInitiatedActivity.this.notificationId != -1) {
@@ -36,52 +48,42 @@ public class NetInitiatedActivity extends AlertActivity implements DialogInterfa
             }
         }
     };
-    private BroadcastReceiver mNetInitiatedReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            Log.d(NetInitiatedActivity.TAG, "NetInitiatedReceiver onReceive: " + intent.getAction());
-            if (intent.getAction() == GpsNetInitiatedHandler.ACTION_NI_VERIFY) {
-                NetInitiatedActivity.this.handleNIVerify(intent);
-            }
-        }
-    };
-    /* access modifiers changed from: private */
-    public int notificationId = -1;
-    private int timeout = -1;
 
-    /* access modifiers changed from: protected */
-    public void onCreate(Bundle savedInstanceState) {
+    @Override // com.android.internal.app.AlertActivity, android.app.Activity
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
         AlertController.AlertParams p = this.mAlertParams;
         Context context = getApplicationContext();
         p.mTitle = intent.getStringExtra("title");
         p.mMessage = intent.getStringExtra("message");
-        p.mPositiveButtonText = String.format(context.getString(R.string.gpsVerifYes), new Object[0]);
+        p.mPositiveButtonText = String.format(context.getString(C3132R.string.gpsVerifYes), new Object[0]);
         p.mPositiveButtonListener = this;
-        p.mNegativeButtonText = String.format(context.getString(R.string.gpsVerifNo), new Object[0]);
+        p.mNegativeButtonText = String.format(context.getString(C3132R.string.gpsVerifNo), new Object[0]);
         p.mNegativeButtonListener = this;
         this.notificationId = intent.getIntExtra("notif_id", -1);
         this.timeout = intent.getIntExtra(GpsNetInitiatedHandler.NI_INTENT_KEY_TIMEOUT, this.default_response_timeout);
         this.default_response = intent.getIntExtra(GpsNetInitiatedHandler.NI_INTENT_KEY_DEFAULT_RESPONSE, 1);
-        Log.d(TAG, "onCreate() : notificationId: " + this.notificationId + " timeout: " + this.timeout + " default_response:" + this.default_response);
+        Log.m72d(TAG, "onCreate() : notificationId: " + this.notificationId + " timeout: " + this.timeout + " default_response:" + this.default_response);
         this.mHandler.sendMessageDelayed(this.mHandler.obtainMessage(1), (long) (this.timeout * 1000));
         setupAlert();
     }
 
-    /* access modifiers changed from: protected */
-    public void onResume() {
+    @Override // android.app.Activity
+    protected void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume");
+        Log.m72d(TAG, "onResume");
         registerReceiver(this.mNetInitiatedReceiver, new IntentFilter(GpsNetInitiatedHandler.ACTION_NI_VERIFY));
     }
 
-    /* access modifiers changed from: protected */
-    public void onPause() {
+    @Override // android.app.Activity
+    protected void onPause() {
         super.onPause();
-        Log.d(TAG, "onPause");
+        Log.m72d(TAG, "onPause");
         unregisterReceiver(this.mNetInitiatedReceiver);
     }
 
+    @Override // android.content.DialogInterface.OnClickListener
     public void onClick(DialogInterface dialog, int which) {
         if (which == -1) {
             sendUserResponse(1);
@@ -93,20 +95,22 @@ public class NetInitiatedActivity extends AlertActivity implements DialogInterfa
         this.notificationId = -1;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void sendUserResponse(int response) {
-        Log.d(TAG, "sendUserResponse, response: " + response);
-        ((LocationManager) getSystemService("location")).sendNiResponse(this.notificationId, response);
+        Log.m72d(TAG, "sendUserResponse, response: " + response);
+        LocationManager locationManager = (LocationManager) getSystemService("location");
+        locationManager.sendNiResponse(this.notificationId, response);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     @UnsupportedAppUsage
     public void handleNIVerify(Intent intent) {
-        this.notificationId = intent.getIntExtra("notif_id", -1);
-        Log.d(TAG, "handleNIVerify action: " + intent.getAction());
+        int notifId = intent.getIntExtra("notif_id", -1);
+        this.notificationId = notifId;
+        Log.m72d(TAG, "handleNIVerify action: " + intent.getAction());
     }
 
     private void showNIError() {
-        Toast.makeText((Context) this, (CharSequence) "NI error", 1).show();
+        Toast.makeText(this, "NI error", 1).show();
     }
 }

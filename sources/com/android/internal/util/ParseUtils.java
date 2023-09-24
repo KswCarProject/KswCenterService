@@ -1,5 +1,6 @@
 package com.android.internal.util;
 
+/* loaded from: classes4.dex */
 public final class ParseUtils {
     private ParseUtils() {
     }
@@ -60,12 +61,6 @@ public final class ParseUtils {
         if ("true".equals(value)) {
             return true;
         }
-        if ("false".equals(value)) {
-            return false;
-        }
-        if (parseInt(value, defValue) != 0) {
-            return true;
-        }
-        return false;
+        return ("false".equals(value) || parseInt(value, defValue ? 1 : 0) == 0) ? false : true;
     }
 }

@@ -44,7 +44,7 @@
     <string name="install_app_done">Installation complete!</string>
     <string name="no_update">NO</string>
     <string name="ota_update">OTA UPDATE</string>
-    <string name="ota_update_message">Upgrade file detected.\10Do you want to upgrade now?</string>
+    <string name="ota_update_message">Upgrade file detected.\nDo you want to upgrade now?</string>
     <string name="search_menu_title">Search</string>
     <string name="status_bar_notification_info_overflow">999+</string>
     <string name="tp_update_fail">TP update fail!</string>

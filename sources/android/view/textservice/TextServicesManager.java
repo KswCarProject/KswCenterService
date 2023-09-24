@@ -2,15 +2,16 @@ package android.view.textservice;
 
 import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
-import android.os.Bundle;
-import android.os.RemoteException;
-import android.os.ServiceManager;
-import android.os.UserHandle;
+import android.p007os.Bundle;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
+import android.p007os.UserHandle;
 import android.view.textservice.SpellCheckerSession;
 import com.android.internal.textservice.ISpellCheckerSessionListener;
 import com.android.internal.textservice.ITextServicesManager;
 import java.util.Locale;
 
+/* loaded from: classes4.dex */
 public final class TextServicesManager {
     private static final boolean DBG = false;
     private static final String TAG = TextServicesManager.class.getSimpleName();
@@ -54,68 +55,72 @@ public final class TextServicesManager {
     public SpellCheckerSession newSpellCheckerSession(Bundle bundle, Locale locale, SpellCheckerSession.SpellCheckerSessionListener listener, boolean referToSpellCheckerLanguageSettings) {
         if (listener == null) {
             throw new NullPointerException();
-        } else if (!referToSpellCheckerLanguageSettings && locale == null) {
-            throw new IllegalArgumentException("Locale should not be null if you don't refer settings.");
-        } else if (referToSpellCheckerLanguageSettings && !isSpellCheckerEnabled()) {
-            return null;
-        } else {
-            try {
-                SpellCheckerInfo sci = this.mService.getCurrentSpellChecker(this.mUserId, (String) null);
-                if (sci == null) {
-                    return null;
-                }
-                SpellCheckerSubtype subtypeInUse = null;
-                if (!referToSpellCheckerLanguageSettings) {
-                    String localeStr = locale.toString();
-                    int i = 0;
-                    while (true) {
-                        if (i >= sci.getSubtypeCount()) {
-                            break;
-                        }
-                        SpellCheckerSubtype subtype = sci.getSubtypeAt(i);
-                        String tempSubtypeLocale = subtype.getLocale();
-                        String tempSubtypeLanguage = parseLanguageFromLocaleString(tempSubtypeLocale);
-                        if (tempSubtypeLocale.equals(localeStr)) {
-                            subtypeInUse = subtype;
-                            break;
-                        }
-                        if (tempSubtypeLanguage.length() >= 2 && locale.getLanguage().equals(tempSubtypeLanguage)) {
-                            subtypeInUse = subtype;
-                        }
-                        i++;
+        }
+        if (referToSpellCheckerLanguageSettings || locale != null) {
+            if (!referToSpellCheckerLanguageSettings || isSpellCheckerEnabled()) {
+                try {
+                    SpellCheckerInfo sci = this.mService.getCurrentSpellChecker(this.mUserId, null);
+                    if (sci == null) {
+                        return null;
                     }
-                } else {
-                    subtypeInUse = getCurrentSpellCheckerSubtype(true);
+                    SpellCheckerSubtype subtypeInUse = null;
+                    if (referToSpellCheckerLanguageSettings) {
+                        subtypeInUse = getCurrentSpellCheckerSubtype(true);
+                        if (subtypeInUse == null) {
+                            return null;
+                        }
+                        if (locale != null) {
+                            String subtypeLocale = subtypeInUse.getLocale();
+                            String subtypeLanguage = parseLanguageFromLocaleString(subtypeLocale);
+                            if (subtypeLanguage.length() < 2 || !locale.getLanguage().equals(subtypeLanguage)) {
+                                return null;
+                            }
+                        }
+                    } else {
+                        String localeStr = locale.toString();
+                        int i = 0;
+                        while (true) {
+                            if (i >= sci.getSubtypeCount()) {
+                                break;
+                            }
+                            SpellCheckerSubtype subtype = sci.getSubtypeAt(i);
+                            String tempSubtypeLocale = subtype.getLocale();
+                            String tempSubtypeLanguage = parseLanguageFromLocaleString(tempSubtypeLocale);
+                            if (!tempSubtypeLocale.equals(localeStr)) {
+                                if (tempSubtypeLanguage.length() >= 2 && locale.getLanguage().equals(tempSubtypeLanguage)) {
+                                    subtypeInUse = subtype;
+                                }
+                                i++;
+                            } else {
+                                subtypeInUse = subtype;
+                                break;
+                            }
+                        }
+                    }
                     if (subtypeInUse == null) {
                         return null;
                     }
-                    if (locale != null) {
-                        String subtypeLanguage = parseLanguageFromLocaleString(subtypeInUse.getLocale());
-                        if (subtypeLanguage.length() < 2 || !locale.getLanguage().equals(subtypeLanguage)) {
-                            return null;
-                        }
+                    SpellCheckerSession session = new SpellCheckerSession(sci, this, listener);
+                    try {
+                        this.mService.getSpellCheckerService(this.mUserId, sci.getId(), subtypeInUse.getLocale(), session.getTextServicesSessionListener(), session.getSpellCheckerSessionListener(), bundle);
+                        return session;
+                    } catch (RemoteException e) {
+                        throw e.rethrowFromSystemServer();
                     }
-                }
-                if (subtypeInUse == null) {
+                } catch (RemoteException e2) {
                     return null;
                 }
-                SpellCheckerSession session = new SpellCheckerSession(sci, this, listener);
-                try {
-                    this.mService.getSpellCheckerService(this.mUserId, sci.getId(), subtypeInUse.getLocale(), session.getTextServicesSessionListener(), session.getSpellCheckerSessionListener(), bundle);
-                    return session;
-                } catch (RemoteException e) {
-                    throw e.rethrowFromSystemServer();
-                }
-            } catch (RemoteException e2) {
-                return null;
             }
+            return null;
         }
+        throw new IllegalArgumentException("Locale should not be null if you don't refer settings.");
     }
 
     @UnsupportedAppUsage
     public SpellCheckerInfo[] getEnabledSpellCheckers() {
         try {
-            return this.mService.getEnabledSpellCheckers(this.mUserId);
+            SpellCheckerInfo[] retval = this.mService.getEnabledSpellCheckers(this.mUserId);
+            return retval;
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
         }
@@ -124,7 +129,7 @@ public final class TextServicesManager {
     @UnsupportedAppUsage
     public SpellCheckerInfo getCurrentSpellChecker() {
         try {
-            return this.mService.getCurrentSpellChecker(this.mUserId, (String) null);
+            return this.mService.getCurrentSpellChecker(this.mUserId, null);
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
         }
@@ -148,8 +153,7 @@ public final class TextServicesManager {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void finishSpellCheckerService(ISpellCheckerSessionListener listener) {
+    void finishSpellCheckerService(ISpellCheckerSessionListener listener) {
         try {
             this.mService.finishSpellCheckerService(this.mUserId, listener);
         } catch (RemoteException e) {

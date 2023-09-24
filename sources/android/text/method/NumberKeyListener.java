@@ -14,22 +14,21 @@ import java.util.Collection;
 import java.util.Locale;
 import libcore.icu.LocaleData;
 
+/* loaded from: classes4.dex */
 public abstract class NumberKeyListener extends BaseKeyListener implements InputFilter {
     private static final String DATE_TIME_FORMAT_SYMBOLS = "GyYuUrQqMLlwWdDFgEecabBhHKkjJCmsSAzZOvVXx";
     private static final char SINGLE_QUOTE = '\'';
 
-    /* access modifiers changed from: protected */
-    public abstract char[] getAcceptedChars();
+    protected abstract char[] getAcceptedChars();
 
-    /* access modifiers changed from: protected */
-    public int lookup(KeyEvent event, Spannable content) {
-        return event.getMatch(getAcceptedChars(), getMetaState((CharSequence) content, event));
+    protected int lookup(KeyEvent event, Spannable content) {
+        return event.getMatch(getAcceptedChars(), getMetaState(content, event));
     }
 
     public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
         char[] accept = getAcceptedChars();
         int i = start;
-        while (i < end && ok(accept, source.charAt(i))) {
+        while (i < end && m77ok(accept, source.charAt(i))) {
             i++;
         }
         if (i == end) {
@@ -43,14 +42,15 @@ public abstract class NumberKeyListener extends BaseKeyListener implements Input
         int end2 = end - start;
         int i3 = end2 - start;
         for (int j = end2 - 1; j >= i2; j--) {
-            if (!ok(accept, source.charAt(j))) {
+            if (!m77ok(accept, source.charAt(j))) {
                 filtered.delete(j, j + 1);
             }
         }
         return filtered;
     }
 
-    protected static boolean ok(char[] accept, char c) {
+    /* renamed from: ok */
+    protected static boolean m77ok(char[] accept, char c) {
         for (int i = accept.length - 1; i >= 0; i--) {
             if (accept[i] == c) {
                 return true;
@@ -59,36 +59,34 @@ public abstract class NumberKeyListener extends BaseKeyListener implements Input
         return false;
     }
 
+    @Override // android.text.method.BaseKeyListener, android.text.method.MetaKeyKeyListener, android.text.method.KeyListener
     public boolean onKeyDown(View view, Editable content, int keyCode, KeyEvent event) {
         int a = Selection.getSelectionStart(content);
         int b = Selection.getSelectionEnd(content);
         int selStart = Math.min(a, b);
         int selEnd = Math.max(a, b);
-        int repeatCount = 0;
         if (selStart < 0 || selEnd < 0) {
             selEnd = 0;
             selStart = 0;
             Selection.setSelection(content, 0);
         }
         int i = event != null ? lookup(event, content) : 0;
-        if (event != null) {
-            repeatCount = event.getRepeatCount();
-        }
+        int repeatCount = event != null ? event.getRepeatCount() : 0;
         if (repeatCount == 0) {
             if (i != 0) {
                 if (selStart != selEnd) {
                     Selection.setSelection(content, selEnd);
                 }
                 content.replace(selStart, selEnd, String.valueOf((char) i));
-                adjustMetaAfterKeypress((Spannable) content);
+                adjustMetaAfterKeypress(content);
                 return true;
             }
         } else if (i == 48 && repeatCount == 1 && selStart == selEnd && selEnd > 0 && content.charAt(selStart - 1) == '0') {
             content.replace(selStart - 1, selEnd, String.valueOf('+'));
-            adjustMetaAfterKeypress((Spannable) content);
+            adjustMetaAfterKeypress(content);
             return true;
         }
-        adjustMetaAfterKeypress((Spannable) content);
+        adjustMetaAfterKeypress(content);
         return super.onKeyDown(view, content, keyCode, event);
     }
 
@@ -114,7 +112,6 @@ public abstract class NumberKeyListener extends BaseKeyListener implements Input
         boolean outsideQuotes = true;
         int i = 0;
         while (true) {
-            boolean z = true;
             if (i >= pattern.length()) {
                 return true;
             }
@@ -123,10 +120,7 @@ public abstract class NumberKeyListener extends BaseKeyListener implements Input
                 return false;
             }
             if (ch == '\'') {
-                if (outsideQuotes) {
-                    z = false;
-                }
-                outsideQuotes = z;
+                outsideQuotes = outsideQuotes ? false : true;
                 if (i == 0) {
                     continue;
                 } else if (pattern.charAt(i - 1) != '\'') {
@@ -148,8 +142,9 @@ public abstract class NumberKeyListener extends BaseKeyListener implements Input
     }
 
     static boolean addFormatCharsFromSkeletons(Collection<Character> collection, Locale locale, String[] skeletons, String symbolsToIgnore) {
-        for (String addFormatCharsFromSkeleton : skeletons) {
-            if (!addFormatCharsFromSkeleton(collection, locale, addFormatCharsFromSkeleton, symbolsToIgnore)) {
+        for (String str : skeletons) {
+            boolean success = addFormatCharsFromSkeleton(collection, locale, str, symbolsToIgnore);
+            if (!success) {
                 return false;
             }
         }

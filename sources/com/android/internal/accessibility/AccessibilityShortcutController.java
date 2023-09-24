@@ -8,15 +8,14 @@ import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.pm.PackageManager;
+import android.content.p002pm.PackageManager;
 import android.database.ContentObserver;
 import android.media.AudioAttributes;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Vibrator;
+import android.p007os.Handler;
+import android.p007os.Vibrator;
 import android.provider.Settings;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.Voice;
@@ -27,44 +26,43 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.accessibility.AccessibilityManager;
 import android.widget.Toast;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import com.android.internal.accessibility.AccessibilityShortcutController;
 import com.android.internal.util.ArrayUtils;
 import com.android.internal.util.function.pooled.PooledLambda;
 import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
+import java.util.function.Consumer;
 
+/* loaded from: classes4.dex */
 public class AccessibilityShortcutController {
-    public static final ComponentName COLOR_INVERSION_COMPONENT_NAME = new ComponentName("com.android.server.accessibility", "ColorInversion");
-    public static final ComponentName DALTONIZER_COMPONENT_NAME = new ComponentName("com.android.server.accessibility", "Daltonizer");
     private static final String TAG = "AccessibilityShortcutController";
-    private static final AudioAttributes VIBRATION_ATTRIBUTES = new AudioAttributes.Builder().setContentType(4).setUsage(11).build();
     private static Map<ComponentName, ToggleableFrameworkFeatureInfo> sFrameworkShortcutFeaturesMap;
     private AlertDialog mAlertDialog;
-    /* access modifiers changed from: private */
-    public final Context mContext;
+    private final Context mContext;
     private boolean mEnabledOnLockScreen;
     public FrameworkObjectProvider mFrameworkObjectProvider = new FrameworkObjectProvider();
-    /* access modifiers changed from: private */
-    public final Handler mHandler;
+    private final Handler mHandler;
     private boolean mIsShortcutEnabled;
-    /* access modifiers changed from: private */
-    public int mUserId;
+    private int mUserId;
+    public static final ComponentName COLOR_INVERSION_COMPONENT_NAME = new ComponentName("com.android.server.accessibility", "ColorInversion");
+    public static final ComponentName DALTONIZER_COMPONENT_NAME = new ComponentName("com.android.server.accessibility", "Daltonizer");
+    private static final AudioAttributes VIBRATION_ATTRIBUTES = new AudioAttributes.Builder().setContentType(4).setUsage(11).build();
 
     public static String getTargetServiceComponentNameString(Context context, int userId) {
         String currentShortcutServiceId = Settings.Secure.getStringForUser(context.getContentResolver(), Settings.Secure.ACCESSIBILITY_SHORTCUT_TARGET_SERVICE, userId);
         if (currentShortcutServiceId != null) {
             return currentShortcutServiceId;
         }
-        return context.getString(R.string.config_defaultAccessibilityService);
+        return context.getString(C3132R.string.config_defaultAccessibilityService);
     }
 
     public static Map<ComponentName, ToggleableFrameworkFeatureInfo> getFrameworkShortcutFeaturesMap() {
         if (sFrameworkShortcutFeaturesMap == null) {
             Map<ComponentName, ToggleableFrameworkFeatureInfo> featuresMap = new ArrayMap<>(2);
-            featuresMap.put(COLOR_INVERSION_COMPONENT_NAME, new ToggleableFrameworkFeatureInfo(Settings.Secure.ACCESSIBILITY_DISPLAY_INVERSION_ENABLED, "1", "0", R.string.color_inversion_feature_name));
-            featuresMap.put(DALTONIZER_COMPONENT_NAME, new ToggleableFrameworkFeatureInfo(Settings.Secure.ACCESSIBILITY_DISPLAY_DALTONIZER_ENABLED, "1", "0", R.string.color_correction_feature_name));
+            featuresMap.put(COLOR_INVERSION_COMPONENT_NAME, new ToggleableFrameworkFeatureInfo(Settings.Secure.ACCESSIBILITY_DISPLAY_INVERSION_ENABLED, "1", "0", C3132R.string.color_inversion_feature_name));
+            featuresMap.put(DALTONIZER_COMPONENT_NAME, new ToggleableFrameworkFeatureInfo(Settings.Secure.ACCESSIBILITY_DISPLAY_DALTONIZER_ENABLED, "1", "0", C3132R.string.color_correction_feature_name));
             sFrameworkShortcutFeaturesMap = Collections.unmodifiableMap(featuresMap);
         }
         return sFrameworkShortcutFeaturesMap;
@@ -74,7 +72,8 @@ public class AccessibilityShortcutController {
         this.mContext = context;
         this.mHandler = handler;
         this.mUserId = initialUserId;
-        ContentObserver co = new ContentObserver(handler) {
+        ContentObserver co = new ContentObserver(handler) { // from class: com.android.internal.accessibility.AccessibilityShortcutController.1
+            @Override // android.database.ContentObserver
             public void onChange(boolean selfChange, Uri uri, int userId) {
                 if (userId == AccessibilityShortcutController.this.mUserId) {
                     AccessibilityShortcutController.this.onSettingsChanged();
@@ -102,7 +101,8 @@ public class AccessibilityShortcutController {
         boolean haveValidService = !TextUtils.isEmpty(getTargetServiceComponentNameString(this.mContext, this.mUserId));
         ContentResolver cr = this.mContext.getContentResolver();
         boolean enabled = Settings.Secure.getIntForUser(cr, Settings.Secure.ACCESSIBILITY_SHORTCUT_ENABLED, 1, this.mUserId) == 1;
-        this.mEnabledOnLockScreen = Settings.Secure.getIntForUser(cr, Settings.Secure.ACCESSIBILITY_SHORTCUT_ON_LOCK_SCREEN, Settings.Secure.getIntForUser(cr, Settings.Secure.ACCESSIBILITY_SHORTCUT_DIALOG_SHOWN, 0, this.mUserId), this.mUserId) == 1;
+        int dialogAlreadyShown = Settings.Secure.getIntForUser(cr, Settings.Secure.ACCESSIBILITY_SHORTCUT_DIALOG_SHOWN, 0, this.mUserId);
+        this.mEnabledOnLockScreen = Settings.Secure.getIntForUser(cr, Settings.Secure.ACCESSIBILITY_SHORTCUT_ON_LOCK_SCREEN, dialogAlreadyShown, this.mUserId) == 1;
         if (!enabled || !haveValidService) {
             z = false;
         }
@@ -111,28 +111,29 @@ public class AccessibilityShortcutController {
 
     public void performAccessibilityShortcut() {
         int i;
-        Slog.d(TAG, "Accessibility shortcut activated");
+        Slog.m58d(TAG, "Accessibility shortcut activated");
         ContentResolver cr = this.mContext.getContentResolver();
         int userId = ActivityManager.getCurrentUser();
         int dialogAlreadyShown = Settings.Secure.getIntForUser(cr, Settings.Secure.ACCESSIBILITY_SHORTCUT_DIALOG_SHOWN, 0, userId);
         Vibrator vibrator = (Vibrator) this.mContext.getSystemService(Context.VIBRATOR_SERVICE);
         if (vibrator != null && vibrator.hasVibrator()) {
-            vibrator.vibrate(ArrayUtils.convertToLongArray(this.mContext.getResources().getIntArray(R.array.config_longPressVibePattern)), -1, VIBRATION_ATTRIBUTES);
+            long[] vibePattern = ArrayUtils.convertToLongArray(this.mContext.getResources().getIntArray(C3132R.array.config_longPressVibePattern));
+            vibrator.vibrate(vibePattern, -1, VIBRATION_ATTRIBUTES);
         }
         if (dialogAlreadyShown == 0) {
             this.mAlertDialog = createShortcutWarningDialog(userId);
-            if (this.mAlertDialog != null) {
-                if (!performTtsPrompt(this.mAlertDialog)) {
-                    playNotificationTone();
-                }
-                Window w = this.mAlertDialog.getWindow();
-                WindowManager.LayoutParams attr = w.getAttributes();
-                attr.type = 2009;
-                w.setAttributes(attr);
-                this.mAlertDialog.show();
-                Settings.Secure.putIntForUser(cr, Settings.Secure.ACCESSIBILITY_SHORTCUT_DIALOG_SHOWN, 1, userId);
+            if (this.mAlertDialog == null) {
                 return;
             }
+            if (!performTtsPrompt(this.mAlertDialog)) {
+                playNotificationTone();
+            }
+            Window w = this.mAlertDialog.getWindow();
+            WindowManager.LayoutParams attr = w.getAttributes();
+            attr.type = 2009;
+            w.setAttributes(attr);
+            this.mAlertDialog.show();
+            Settings.Secure.putIntForUser(cr, Settings.Secure.ACCESSIBILITY_SHORTCUT_DIALOG_SHOWN, 1, userId);
             return;
         }
         playNotificationTone();
@@ -142,50 +143,44 @@ public class AccessibilityShortcutController {
         }
         String serviceName = getShortcutFeatureDescription(false);
         if (serviceName == null) {
-            Slog.e(TAG, "Accessibility shortcut set to invalid service");
+            Slog.m56e(TAG, "Accessibility shortcut set to invalid service");
             return;
         }
         AccessibilityServiceInfo serviceInfo = getInfoForTargetService();
         if (serviceInfo != null) {
             Context context = this.mContext;
             if (isServiceEnabled(serviceInfo)) {
-                i = R.string.accessibility_shortcut_disabling_service;
+                i = C3132R.string.accessibility_shortcut_disabling_service;
             } else {
-                i = R.string.accessibility_shortcut_enabling_service;
+                i = C3132R.string.accessibility_shortcut_enabling_service;
             }
-            Toast warningToast = this.mFrameworkObjectProvider.makeToastFromText(this.mContext, String.format(context.getString(i), new Object[]{serviceName}), 1);
+            String toastMessageFormatString = context.getString(i);
+            String toastMessage = String.format(toastMessageFormatString, serviceName);
+            Toast warningToast = this.mFrameworkObjectProvider.makeToastFromText(this.mContext, toastMessage, 1);
             warningToast.getWindowParams().privateFlags |= 16;
             warningToast.show();
         }
         this.mFrameworkObjectProvider.getAccessibilityManagerInstance(this.mContext).performAccessibilityShortcut();
     }
 
-    private AlertDialog createShortcutWarningDialog(int userId) {
+    private AlertDialog createShortcutWarningDialog(final int userId) {
         String serviceDescription = getShortcutFeatureDescription(true);
         if (serviceDescription == null) {
             return null;
         }
-        return this.mFrameworkObjectProvider.getAlertDialogBuilder(this.mFrameworkObjectProvider.getSystemUiContext()).setTitle((int) R.string.accessibility_shortcut_warning_dialog_title).setMessage((CharSequence) String.format(this.mContext.getString(R.string.accessibility_shortcut_toogle_warning), new Object[]{serviceDescription})).setCancelable(false).setPositiveButton((int) R.string.leave_accessibility_shortcut_on, (DialogInterface.OnClickListener) null).setNegativeButton((int) R.string.disable_accessibility_shortcut, (DialogInterface.OnClickListener) new DialogInterface.OnClickListener(userId) {
-            private final /* synthetic */ int f$1;
-
-            {
-                this.f$1 = r2;
-            }
-
+        String warningMessage = String.format(this.mContext.getString(C3132R.string.accessibility_shortcut_toogle_warning), serviceDescription);
+        AlertDialog alertDialog = this.mFrameworkObjectProvider.getAlertDialogBuilder(this.mFrameworkObjectProvider.getSystemUiContext()).setTitle(C3132R.string.accessibility_shortcut_warning_dialog_title).setMessage(warningMessage).setCancelable(false).setPositiveButton(C3132R.string.leave_accessibility_shortcut_on, (DialogInterface.OnClickListener) null).setNegativeButton(C3132R.string.disable_accessibility_shortcut, new DialogInterface.OnClickListener() { // from class: com.android.internal.accessibility.-$$Lambda$AccessibilityShortcutController$2NcDVJHkpsPbwr45v1_NfIM8row
+            @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
-                Settings.Secure.putStringForUser(AccessibilityShortcutController.this.mContext.getContentResolver(), Settings.Secure.ACCESSIBILITY_SHORTCUT_TARGET_SERVICE, "", this.f$1);
+                Settings.Secure.putStringForUser(AccessibilityShortcutController.this.mContext.getContentResolver(), Settings.Secure.ACCESSIBILITY_SHORTCUT_TARGET_SERVICE, "", userId);
             }
-        }).setOnCancelListener(new DialogInterface.OnCancelListener(userId) {
-            private final /* synthetic */ int f$1;
-
-            {
-                this.f$1 = r2;
-            }
-
+        }).setOnCancelListener(new DialogInterface.OnCancelListener() { // from class: com.android.internal.accessibility.-$$Lambda$AccessibilityShortcutController$T96D356-n5VObNOonEIYV8s83Fc
+            @Override // android.content.DialogInterface.OnCancelListener
             public final void onCancel(DialogInterface dialogInterface) {
-                Settings.Secure.putIntForUser(AccessibilityShortcutController.this.mContext.getContentResolver(), Settings.Secure.ACCESSIBILITY_SHORTCUT_DIALOG_SHOWN, 0, this.f$1);
+                Settings.Secure.putIntForUser(AccessibilityShortcutController.this.mContext.getContentResolver(), Settings.Secure.ACCESSIBILITY_SHORTCUT_DIALOG_SHOWN, 0, userId);
             }
         }).create();
+        return alertDialog;
     }
 
     private AccessibilityServiceInfo getInfoForTargetService() {
@@ -193,7 +188,8 @@ public class AccessibilityShortcutController {
         if (currentShortcutServiceString == null) {
             return null;
         }
-        return this.mFrameworkObjectProvider.getAccessibilityManagerInstance(this.mContext).getInstalledServiceInfoWithComponentName(ComponentName.unflattenFromString(currentShortcutServiceString));
+        AccessibilityManager accessibilityManager = this.mFrameworkObjectProvider.getAccessibilityManagerInstance(this.mContext);
+        return accessibilityManager.getInstalledServiceInfoWithComponentName(ComponentName.unflattenFromString(currentShortcutServiceString));
     }
 
     private String getShortcutFeatureDescription(boolean includeSummary) {
@@ -216,18 +212,19 @@ public class AccessibilityShortcutController {
         if (!includeSummary || TextUtils.isEmpty(summary)) {
             return label;
         }
-        return String.format("%s\n%s", new Object[]{label, summary});
+        return String.format("%s\n%s", label, summary);
     }
 
     private boolean isServiceEnabled(AccessibilityServiceInfo serviceInfo) {
-        return this.mFrameworkObjectProvider.getAccessibilityManagerInstance(this.mContext).getEnabledAccessibilityServiceList(-1).contains(serviceInfo);
+        AccessibilityManager accessibilityManager = this.mFrameworkObjectProvider.getAccessibilityManagerInstance(this.mContext);
+        return accessibilityManager.getEnabledAccessibilityServiceList(-1).contains(serviceInfo);
     }
 
     private boolean hasFeatureLeanback() {
         return this.mContext.getPackageManager().hasSystemFeature(PackageManager.FEATURE_LEANBACK);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void playNotificationTone() {
         int audioAttributesUsage;
         if (hasFeatureLeanback()) {
@@ -248,7 +245,9 @@ public class AccessibilityShortcutController {
         if (TextUtils.isEmpty(serviceName) || serviceInfo == null || (serviceInfo.flags & 1024) == 0) {
             return false;
         }
-        alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+        final TtsPrompt tts = new TtsPrompt(serviceName);
+        alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() { // from class: com.android.internal.accessibility.-$$Lambda$AccessibilityShortcutController$cQtLiNhDc4H3BvMBZy00zj21oKg
+            @Override // android.content.DialogInterface.OnDismissListener
             public final void onDismiss(DialogInterface dialogInterface) {
                 AccessibilityShortcutController.TtsPrompt.this.dismiss();
             }
@@ -256,41 +255,54 @@ public class AccessibilityShortcutController {
         return true;
     }
 
+    /* loaded from: classes4.dex */
     private class TtsPrompt implements TextToSpeech.OnInitListener {
         private boolean mDismiss;
         private final CharSequence mText;
         private TextToSpeech mTts;
 
         TtsPrompt(String serviceName) {
-            this.mText = AccessibilityShortcutController.this.mContext.getString(R.string.accessibility_shortcut_spoken_feedback, serviceName);
+            this.mText = AccessibilityShortcutController.this.mContext.getString(C3132R.string.accessibility_shortcut_spoken_feedback, serviceName);
             this.mTts = AccessibilityShortcutController.this.mFrameworkObjectProvider.getTextToSpeech(AccessibilityShortcutController.this.mContext, this);
         }
 
         public void dismiss() {
             this.mDismiss = true;
-            AccessibilityShortcutController.this.mHandler.sendMessage(PooledLambda.obtainMessage($$Lambda$qdzoyIBhDB17ZFWPp1Rf8ICvR8.INSTANCE, this.mTts));
+            AccessibilityShortcutController.this.mHandler.sendMessage(PooledLambda.obtainMessage(new Consumer() { // from class: com.android.internal.accessibility.-$$Lambda$qdzoyIBhDB17ZFWPp1Rf8ICv-R8
+                @Override // java.util.function.Consumer
+                public final void accept(Object obj) {
+                    ((TextToSpeech) obj).shutdown();
+                }
+            }, this.mTts));
         }
 
+        @Override // android.speech.tts.TextToSpeech.OnInitListener
         public void onInit(int status) {
-            if (status != 0) {
-                Slog.d(AccessibilityShortcutController.TAG, "Tts init fail, status=" + Integer.toString(status));
-                AccessibilityShortcutController.this.playNotificationTone();
+            if (status == 0) {
+                AccessibilityShortcutController.this.mHandler.sendMessage(PooledLambda.obtainMessage(new Consumer() { // from class: com.android.internal.accessibility.-$$Lambda$AccessibilityShortcutController$TtsPrompt$HwizF4cvqRFiaqAcMrC7W8y6zYA
+                    @Override // java.util.function.Consumer
+                    public final void accept(Object obj) {
+                        ((AccessibilityShortcutController.TtsPrompt) obj).play();
+                    }
+                }, this));
                 return;
             }
-            AccessibilityShortcutController.this.mHandler.sendMessage(PooledLambda.obtainMessage($$Lambda$AccessibilityShortcutController$TtsPrompt$HwizF4cvqRFiaqAcMrC7W8y6zYA.INSTANCE, this));
+            Slog.m58d(AccessibilityShortcutController.TAG, "Tts init fail, status=" + Integer.toString(status));
+            AccessibilityShortcutController.this.playNotificationTone();
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public void play() {
-            if (!this.mDismiss) {
-                int status = -1;
-                if (setLanguage(Locale.getDefault())) {
-                    status = this.mTts.speak(this.mText, 0, (Bundle) null, (String) null);
-                }
-                if (status != 0) {
-                    Slog.d(AccessibilityShortcutController.TAG, "Tts play fail");
-                    AccessibilityShortcutController.this.playNotificationTone();
-                }
+            if (this.mDismiss) {
+                return;
+            }
+            int status = -1;
+            if (setLanguage(Locale.getDefault())) {
+                status = this.mTts.speak(this.mText, 0, null, null);
+            }
+            if (status != 0) {
+                Slog.m58d(AccessibilityShortcutController.TAG, "Tts play fail");
+                AccessibilityShortcutController.this.playNotificationTone();
             }
         }
 
@@ -308,6 +320,7 @@ public class AccessibilityShortcutController {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class ToggleableFrameworkFeatureInfo {
         private int mIconDrawableId;
         private final int mLabelStringResourceId;
@@ -339,6 +352,7 @@ public class AccessibilityShortcutController {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class FrameworkObjectProvider {
         public AccessibilityManager getAccessibilityManagerInstance(Context context) {
             return AccessibilityManager.getInstance(context);

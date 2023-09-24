@@ -1,5 +1,6 @@
 package android.text;
 
+/* loaded from: classes4.dex */
 public interface InputType {
     public static final int TYPE_CLASS_DATETIME = 4;
     public static final int TYPE_CLASS_NUMBER = 2;

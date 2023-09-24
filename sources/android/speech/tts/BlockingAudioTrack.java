@@ -5,6 +5,7 @@ import android.media.AudioTrack;
 import android.speech.tts.TextToSpeechService;
 import android.util.Log;
 
+/* loaded from: classes3.dex */
 class BlockingAudioTrack {
     private static final boolean DBG = false;
     private static final long MAX_PROGRESS_WAIT_MS = 2500;
@@ -12,30 +13,27 @@ class BlockingAudioTrack {
     private static final int MIN_AUDIO_BUFFER_SIZE = 8192;
     private static final long MIN_SLEEP_TIME_MS = 20;
     private static final String TAG = "TTS.BlockingAudioTrack";
-    private int mAudioBufferSize;
     private final int mAudioFormat;
     private final TextToSpeechService.AudioOutputParams mAudioParams;
-    private AudioTrack mAudioTrack;
-    private Object mAudioTrackLock = new Object();
     private final int mBytesPerFrame;
-    private int mBytesWritten = 0;
+    private int mBytesWritten;
     private final int mChannelCount;
-    private boolean mIsShortUtterance;
     private final int mSampleRateInHz;
     private int mSessionId;
-    private volatile boolean mStopped;
+    private Object mAudioTrackLock = new Object();
+    private boolean mIsShortUtterance = false;
+    private int mAudioBufferSize = 0;
+    private AudioTrack mAudioTrack = null;
+    private volatile boolean mStopped = false;
 
     BlockingAudioTrack(TextToSpeechService.AudioOutputParams audioParams, int sampleRate, int audioFormat, int channelCount) {
+        this.mBytesWritten = 0;
         this.mAudioParams = audioParams;
         this.mSampleRateInHz = sampleRate;
         this.mAudioFormat = audioFormat;
         this.mChannelCount = channelCount;
         this.mBytesPerFrame = AudioFormat.getBytesPerSample(this.mAudioFormat) * this.mChannelCount;
-        this.mIsShortUtterance = false;
-        this.mAudioBufferSize = 0;
         this.mBytesWritten = 0;
-        this.mAudioTrack = null;
-        this.mStopped = false;
     }
 
     public boolean init() {
@@ -76,19 +74,20 @@ class BlockingAudioTrack {
         synchronized (this.mAudioTrackLock) {
             track = this.mAudioTrack;
         }
-        if (track != null) {
-            if (this.mBytesWritten < this.mAudioBufferSize && !this.mStopped) {
-                this.mIsShortUtterance = true;
-                track.stop();
-            }
-            if (!this.mStopped) {
-                blockUntilDone(this.mAudioTrack);
-            }
-            synchronized (this.mAudioTrackLock) {
-                this.mAudioTrack = null;
-            }
-            track.release();
+        if (track == null) {
+            return;
         }
+        if (this.mBytesWritten < this.mAudioBufferSize && !this.mStopped) {
+            this.mIsShortUtterance = true;
+            track.stop();
+        }
+        if (!this.mStopped) {
+            blockUntilDone(this.mAudioTrack);
+        }
+        synchronized (this.mAudioTrackLock) {
+            this.mAudioTrack = null;
+        }
+        track.release();
     }
 
     static int getChannelConfig(int channelCount) {
@@ -101,9 +100,10 @@ class BlockingAudioTrack {
         return 0;
     }
 
-    /* access modifiers changed from: package-private */
-    public long getAudioLengthMs(int numBytes) {
-        return (long) (((numBytes / this.mBytesPerFrame) * 1000) / this.mSampleRateInHz);
+    long getAudioLengthMs(int numBytes) {
+        int unconsumedFrames = numBytes / this.mBytesPerFrame;
+        long estimatedTimeMs = (unconsumedFrames * 1000) / this.mSampleRateInHz;
+        return estimatedTimeMs;
     }
 
     private static int writeToAudioTrack(AudioTrack audioTrack, byte[] bytes) {
@@ -120,10 +120,12 @@ class BlockingAudioTrack {
 
     private AudioTrack createStreamingAudioTrack() {
         int channelConfig = getChannelConfig(this.mChannelCount);
-        int bufferSizeInBytes = Math.max(8192, AudioTrack.getMinBufferSize(this.mSampleRateInHz, channelConfig, this.mAudioFormat));
-        AudioTrack audioTrack = new AudioTrack(this.mAudioParams.mAudioAttributes, new AudioFormat.Builder().setChannelMask(channelConfig).setEncoding(this.mAudioFormat).setSampleRate(this.mSampleRateInHz).build(), bufferSizeInBytes, 1, this.mAudioParams.mSessionId);
+        int minBufferSizeInBytes = AudioTrack.getMinBufferSize(this.mSampleRateInHz, channelConfig, this.mAudioFormat);
+        int bufferSizeInBytes = Math.max(8192, minBufferSizeInBytes);
+        AudioFormat audioFormat = new AudioFormat.Builder().setChannelMask(channelConfig).setEncoding(this.mAudioFormat).setSampleRate(this.mSampleRateInHz).build();
+        AudioTrack audioTrack = new AudioTrack(this.mAudioParams.mAudioAttributes, audioFormat, bufferSizeInBytes, 1, this.mAudioParams.mSessionId);
         if (audioTrack.getState() != 1) {
-            Log.w(TAG, "Unable to create audio track.");
+            Log.m64w(TAG, "Unable to create audio track.");
             audioTrack.release();
             return null;
         }
@@ -133,18 +135,21 @@ class BlockingAudioTrack {
     }
 
     private void blockUntilDone(AudioTrack audioTrack) {
-        if (this.mBytesWritten > 0) {
-            if (this.mIsShortUtterance) {
-                blockUntilEstimatedCompletion();
-            } else {
-                blockUntilCompletion(audioTrack);
-            }
+        if (this.mBytesWritten <= 0) {
+            return;
+        }
+        if (this.mIsShortUtterance) {
+            blockUntilEstimatedCompletion();
+        } else {
+            blockUntilCompletion(audioTrack);
         }
     }
 
     private void blockUntilEstimatedCompletion() {
+        int lengthInFrames = this.mBytesWritten / this.mBytesPerFrame;
+        long estimatedTimeMs = (lengthInFrames * 1000) / this.mSampleRateInHz;
         try {
-            Thread.sleep((long) (((this.mBytesWritten / this.mBytesPerFrame) * 1000) / this.mSampleRateInHz));
+            Thread.sleep(estimatedTimeMs);
         } catch (InterruptedException e) {
         }
     }
@@ -154,14 +159,14 @@ class BlockingAudioTrack {
         int previousPosition = -1;
         long blockedTimeMs = 0;
         while (true) {
-            int playbackHeadPosition = audioTrack.getPlaybackHeadPosition();
-            int currentPosition = playbackHeadPosition;
-            if (playbackHeadPosition < lengthInFrames && audioTrack.getPlayState() == 3 && !this.mStopped) {
-                long sleepTimeMs = clip((long) (((lengthInFrames - currentPosition) * 1000) / audioTrack.getSampleRate()), (long) MIN_SLEEP_TIME_MS, 2500);
+            int currentPosition = audioTrack.getPlaybackHeadPosition();
+            if (currentPosition < lengthInFrames && audioTrack.getPlayState() == 3 && !this.mStopped) {
+                long estimatedTimeMs = ((lengthInFrames - currentPosition) * 1000) / audioTrack.getSampleRate();
+                long sleepTimeMs = clip(estimatedTimeMs, (long) MIN_SLEEP_TIME_MS, 2500L);
                 if (currentPosition == previousPosition) {
                     blockedTimeMs += sleepTimeMs;
                     if (blockedTimeMs > 2500) {
-                        Log.w(TAG, "Waited unsuccessfully for 2500ms for AudioTrack to make progress, Aborting");
+                        Log.m64w(TAG, "Waited unsuccessfully for 2500ms for AudioTrack to make progress, Aborting");
                         return;
                     }
                 } else {
@@ -190,22 +195,16 @@ class BlockingAudioTrack {
             volRight *= 1.0f + panning;
         }
         if (audioTrack.setStereoVolume(volLeft, volRight) != 0) {
-            Log.e(TAG, "Failed to set volume");
+            Log.m70e(TAG, "Failed to set volume");
         }
     }
 
     private static final long clip(long value, long min, long max) {
-        if (value < min) {
-            return min;
-        }
-        return value < max ? value : max;
+        return value < min ? min : value < max ? value : max;
     }
 
     private static final float clip(float value, float min, float max) {
-        if (value < min) {
-            return min;
-        }
-        return value < max ? value : max;
+        return value < min ? min : value < max ? value : max;
     }
 
     public void setPlaybackPositionUpdateListener(AudioTrack.OnPlaybackPositionUpdateListener listener) {

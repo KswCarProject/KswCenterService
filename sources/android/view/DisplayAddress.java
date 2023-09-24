@@ -1,8 +1,9 @@
 package android.view;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes4.dex */
 public abstract class DisplayAddress implements Parcelable {
     public static Physical fromPhysicalDisplayId(long physicalDisplayId) {
         return new Physical(physicalDisplayId);
@@ -12,12 +13,17 @@ public abstract class DisplayAddress implements Parcelable {
         return new Network(macAddress);
     }
 
+    /* loaded from: classes4.dex */
     public static final class Physical extends DisplayAddress {
-        public static final Parcelable.Creator<Physical> CREATOR = new Parcelable.Creator<Physical>() {
+        public static final Parcelable.Creator<Physical> CREATOR = new Parcelable.Creator<Physical>() { // from class: android.view.DisplayAddress.Physical.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public Physical createFromParcel(Parcel in) {
                 return new Physical(in.readLong());
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public Physical[] newArray(int size) {
                 return new Physical[size];
             }
@@ -28,7 +34,7 @@ public abstract class DisplayAddress implements Parcelable {
         private final long mPhysicalDisplayId;
 
         public byte getPort() {
-            return (byte) ((int) this.mPhysicalDisplayId);
+            return (byte) this.mPhysicalDisplayId;
         }
 
         public Long getModel() {
@@ -60,6 +66,7 @@ public abstract class DisplayAddress implements Parcelable {
             return Long.hashCode(this.mPhysicalDisplayId);
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel out, int flags) {
             out.writeLong(this.mPhysicalDisplayId);
         }
@@ -69,12 +76,17 @@ public abstract class DisplayAddress implements Parcelable {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class Network extends DisplayAddress {
-        public static final Parcelable.Creator<Network> CREATOR = new Parcelable.Creator<Network>() {
+        public static final Parcelable.Creator<Network> CREATOR = new Parcelable.Creator<Network>() { // from class: android.view.DisplayAddress.Network.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public Network createFromParcel(Parcel in) {
                 return new Network(in.readString());
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public Network[] newArray(int size) {
                 return new Network[size];
             }
@@ -93,6 +105,7 @@ public abstract class DisplayAddress implements Parcelable {
             return this.mMacAddress.hashCode();
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel out, int flags) {
             out.writeString(this.mMacAddress);
         }
@@ -102,6 +115,7 @@ public abstract class DisplayAddress implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

@@ -2,32 +2,39 @@ package android.app.servertransaction;
 
 import android.app.ClientTransactionHandler;
 import android.content.res.Configuration;
-import android.os.IBinder;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.Trace;
+import android.p007os.IBinder;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.Trace;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public class ActivityConfigurationChangeItem extends ClientTransactionItem {
-    public static final Parcelable.Creator<ActivityConfigurationChangeItem> CREATOR = new Parcelable.Creator<ActivityConfigurationChangeItem>() {
+    public static final Parcelable.Creator<ActivityConfigurationChangeItem> CREATOR = new Parcelable.Creator<ActivityConfigurationChangeItem>() { // from class: android.app.servertransaction.ActivityConfigurationChangeItem.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ActivityConfigurationChangeItem createFromParcel(Parcel in) {
             return new ActivityConfigurationChangeItem(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ActivityConfigurationChangeItem[] newArray(int size) {
             return new ActivityConfigurationChangeItem[size];
         }
     };
     private Configuration mConfiguration;
 
+    @Override // android.app.servertransaction.BaseClientRequest
     public void preExecute(ClientTransactionHandler client, IBinder token) {
         client.updatePendingActivityConfiguration(token, this.mConfiguration);
     }
 
+    @Override // android.app.servertransaction.BaseClientRequest
     public void execute(ClientTransactionHandler client, IBinder token, PendingTransactionActions pendingActions) {
-        Trace.traceBegin(64, "activityConfigChanged");
+        Trace.traceBegin(64L, "activityConfigChanged");
         client.handleActivityConfigurationChanged(token, this.mConfiguration, -1);
-        Trace.traceEnd(64);
+        Trace.traceEnd(64L);
     }
 
     private ActivityConfigurationChangeItem() {
@@ -42,11 +49,13 @@ public class ActivityConfigurationChangeItem extends ClientTransactionItem {
         return instance;
     }
 
+    @Override // android.app.servertransaction.ObjectPoolItem
     public void recycle() {
         this.mConfiguration = null;
         ObjectPool.recycle(this);
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeTypedObject(this.mConfiguration, flags);
     }
@@ -62,7 +71,8 @@ public class ActivityConfigurationChangeItem extends ClientTransactionItem {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        return Objects.equals(this.mConfiguration, ((ActivityConfigurationChangeItem) o).mConfiguration);
+        ActivityConfigurationChangeItem other = (ActivityConfigurationChangeItem) o;
+        return Objects.equals(this.mConfiguration, other.mConfiguration);
     }
 
     public int hashCode() {

@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 @Deprecated
+/* loaded from: classes.dex */
 public final class GpsStatus {
     private static final int BEIDOU_SVID_OFFSET = 200;
     private static final int GLONASS_SVID_OFFSET = 64;
@@ -15,25 +16,28 @@ public final class GpsStatus {
     public static final int GPS_EVENT_STOPPED = 2;
     private static final int NUM_SATELLITES = 255;
     private static final int SBAS_SVID_OFFSET = -87;
-    private Iterable<GpsSatellite> mSatelliteList = new Iterable<GpsSatellite>() {
+    private int mTimeToFirstFix;
+    private final SparseArray<GpsSatellite> mSatellites = new SparseArray<>();
+    private Iterable<GpsSatellite> mSatelliteList = new Iterable<GpsSatellite>() { // from class: android.location.GpsStatus.1
+        @Override // java.lang.Iterable
         public Iterator<GpsSatellite> iterator() {
             return new SatelliteIterator();
         }
     };
-    /* access modifiers changed from: private */
-    public final SparseArray<GpsSatellite> mSatellites = new SparseArray<>();
-    private int mTimeToFirstFix;
 
     @Deprecated
+    /* loaded from: classes.dex */
     public interface Listener {
         void onGpsStatusChanged(int i);
     }
 
     @Deprecated
+    /* loaded from: classes.dex */
     public interface NmeaListener {
         void onNmeaReceived(long j, String str);
     }
 
+    /* loaded from: classes.dex */
     private final class SatelliteIterator implements Iterator<GpsSatellite> {
         private int mIndex = 0;
         private final int mSatellitesCount;
@@ -42,9 +46,11 @@ public final class GpsStatus {
             this.mSatellitesCount = GpsStatus.this.mSatellites.size();
         }
 
+        @Override // java.util.Iterator
         public boolean hasNext() {
             while (this.mIndex < this.mSatellitesCount) {
-                if (((GpsSatellite) GpsStatus.this.mSatellites.valueAt(this.mIndex)).mValid) {
+                GpsSatellite satellite = (GpsSatellite) GpsStatus.this.mSatellites.valueAt(this.mIndex);
+                if (satellite.mValid) {
                     return true;
                 }
                 this.mIndex++;
@@ -52,6 +58,8 @@ public final class GpsStatus {
             return false;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // java.util.Iterator
         public GpsSatellite next() {
             while (this.mIndex < this.mSatellitesCount) {
                 GpsSatellite satellite = (GpsSatellite) GpsStatus.this.mSatellites.valueAt(this.mIndex);
@@ -63,6 +71,7 @@ public final class GpsStatus {
             throw new NoSuchElementException();
         }
 
+        @Override // java.util.Iterator
         public void remove() {
             throw new UnsupportedOperationException();
         }
@@ -76,14 +85,13 @@ public final class GpsStatus {
         for (int i = 0; i < svCount; i++) {
             int constellationType = (svidWithFlags[i] >> 4) & 15;
             int prn = svidWithFlags[i] >> 8;
-            boolean z = true;
             if (constellationType == 3) {
                 prn += 64;
             } else if (constellationType == 5) {
                 prn += 200;
             } else if (constellationType == 2) {
                 prn += SBAS_SVID_OFFSET;
-            } else if (!(constellationType == 1 || constellationType == 4)) {
+            } else if (constellationType != 1 && constellationType != 4) {
             }
             if (prn > 0 && prn <= 255) {
                 GpsSatellite satellite = this.mSatellites.get(prn);
@@ -97,23 +105,18 @@ public final class GpsStatus {
                 satellite.mAzimuth = azimuths[i];
                 satellite.mHasEphemeris = (svidWithFlags[i] & 1) != 0;
                 satellite.mHasAlmanac = (2 & svidWithFlags[i]) != 0;
-                if ((4 & svidWithFlags[i]) == 0) {
-                    z = false;
-                }
-                satellite.mUsedInFix = z;
+                satellite.mUsedInFix = (4 & svidWithFlags[i]) != 0;
             }
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void setStatus(GnssStatus status, int timeToFirstFix) {
+    void setStatus(GnssStatus status, int timeToFirstFix) {
         this.mTimeToFirstFix = timeToFirstFix;
         setStatus(status.mSvCount, status.mSvidWithFlags, status.mCn0DbHz, status.mElevations, status.mAzimuths);
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
-    public void setTimeToFirstFix(int ttff) {
+    void setTimeToFirstFix(int ttff) {
         this.mTimeToFirstFix = ttff;
     }
 
@@ -132,7 +135,8 @@ public final class GpsStatus {
     private void clearSatellites() {
         int satellitesCount = this.mSatellites.size();
         for (int i = 0; i < satellitesCount; i++) {
-            this.mSatellites.valueAt(i).mValid = false;
+            GpsSatellite satellite = this.mSatellites.valueAt(i);
+            satellite.mValid = false;
         }
     }
 }

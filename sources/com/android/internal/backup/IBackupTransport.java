@@ -3,15 +3,16 @@ package com.android.internal.backup;
 import android.app.backup.RestoreDescription;
 import android.app.backup.RestoreSet;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.ParcelFileDescriptor;
-import android.os.RemoteException;
+import android.content.p002pm.PackageInfo;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.ParcelFileDescriptor;
+import android.p007os.RemoteException;
 import android.text.TextUtils;
 
+/* loaded from: classes4.dex */
 public interface IBackupTransport extends IInterface {
     int abortFullRestore() throws RemoteException;
 
@@ -67,118 +68,148 @@ public interface IBackupTransport extends IInterface {
 
     String transportDirName() throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IBackupTransport {
+        @Override // com.android.internal.backup.IBackupTransport
         public String name() throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public Intent configurationIntent() throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public String currentDestinationString() throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public Intent dataManagementIntent() throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public CharSequence dataManagementIntentLabel() throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public String transportDirName() throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public long requestBackupTime() throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public int initializeDevice() throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public int performBackup(PackageInfo packageInfo, ParcelFileDescriptor inFd, int flags) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public int clearBackupData(PackageInfo packageInfo) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public int finishBackup() throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public RestoreSet[] getAvailableRestoreSets() throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public long getCurrentRestoreSet() throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public int startRestore(long token, PackageInfo[] packages) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public RestoreDescription nextRestorePackage() throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public int getRestoreData(ParcelFileDescriptor outFd) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public void finishRestore() throws RemoteException {
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public long requestFullBackupTime() throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public int performFullBackup(PackageInfo targetPackage, ParcelFileDescriptor socket, int flags) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public int checkFullBackupSize(long size) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public int sendBackupData(int numBytes) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public void cancelFullBackup() throws RemoteException {
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public boolean isAppEligibleForBackup(PackageInfo targetPackage, boolean isFullBackup) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public long getBackupQuota(String packageName, boolean isFullBackup) throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public int getNextFullRestoreDataChunk(ParcelFileDescriptor socket) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public int abortFullRestore() throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public int getTransportFlags() throws RemoteException {
             return 0;
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IBackupTransport {
         private static final String DESCRIPTOR = "com.android.internal.backup.IBackupTransport";
         static final int TRANSACTION_abortFullRestore = 26;
@@ -218,12 +249,13 @@ public interface IBackupTransport extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IBackupTransport)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IBackupTransport)) {
+                return (IBackupTransport) iin;
             }
-            return (IBackupTransport) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -289,347 +321,231 @@ public interface IBackupTransport extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v27, resolved type: android.content.pm.PackageInfo} */
-        /* JADX WARNING: type inference failed for: r3v0 */
-        /* JADX WARNING: type inference failed for: r3v5, types: [android.os.ParcelFileDescriptor] */
-        /* JADX WARNING: type inference failed for: r3v9 */
-        /* JADX WARNING: type inference failed for: r3v16 */
-        /* JADX WARNING: type inference failed for: r3v21, types: [android.os.ParcelFileDescriptor] */
-        /* JADX WARNING: type inference failed for: r3v32 */
-        /* JADX WARNING: type inference failed for: r3v36 */
-        /* JADX WARNING: type inference failed for: r3v37 */
-        /* JADX WARNING: type inference failed for: r3v38 */
-        /* JADX WARNING: type inference failed for: r3v39 */
-        /* JADX WARNING: type inference failed for: r3v40 */
-        /* JADX WARNING: type inference failed for: r3v41 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r7, android.os.Parcel r8, android.os.Parcel r9, int r10) throws android.os.RemoteException {
-            /*
-                r6 = this;
-                java.lang.String r0 = "com.android.internal.backup.IBackupTransport"
-                r1 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r2 = 1
-                if (r7 == r1) goto L_0x025e
-                r1 = 0
-                r3 = 0
-                switch(r7) {
-                    case 1: goto L_0x0250;
-                    case 2: goto L_0x0239;
-                    case 3: goto L_0x022b;
-                    case 4: goto L_0x0214;
-                    case 5: goto L_0x01fd;
-                    case 6: goto L_0x01ef;
-                    case 7: goto L_0x01e1;
-                    case 8: goto L_0x01d3;
-                    case 9: goto L_0x01a1;
-                    case 10: goto L_0x0181;
-                    case 11: goto L_0x0173;
-                    case 12: goto L_0x0165;
-                    case 13: goto L_0x0157;
-                    case 14: goto L_0x013d;
-                    case 15: goto L_0x0126;
-                    case 16: goto L_0x0106;
-                    case 17: goto L_0x00fc;
-                    case 18: goto L_0x00ee;
-                    case 19: goto L_0x00bc;
-                    case 20: goto L_0x00aa;
-                    case 21: goto L_0x0098;
-                    case 22: goto L_0x008e;
-                    case 23: goto L_0x0068;
-                    case 24: goto L_0x004e;
-                    case 25: goto L_0x002e;
-                    case 26: goto L_0x0020;
-                    case 27: goto L_0x0012;
-                    default: goto L_0x000d;
-                }
-            L_0x000d:
-                boolean r1 = super.onTransact(r7, r8, r9, r10)
-                return r1
-            L_0x0012:
-                r8.enforceInterface(r0)
-                int r1 = r6.getTransportFlags()
-                r9.writeNoException()
-                r9.writeInt(r1)
-                return r2
-            L_0x0020:
-                r8.enforceInterface(r0)
-                int r1 = r6.abortFullRestore()
-                r9.writeNoException()
-                r9.writeInt(r1)
-                return r2
-            L_0x002e:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                if (r1 == 0) goto L_0x0041
-                android.os.Parcelable$Creator<android.os.ParcelFileDescriptor> r1 = android.os.ParcelFileDescriptor.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                r3 = r1
-                android.os.ParcelFileDescriptor r3 = (android.os.ParcelFileDescriptor) r3
-                goto L_0x0042
-            L_0x0041:
-            L_0x0042:
-                r1 = r3
-                int r3 = r6.getNextFullRestoreDataChunk(r1)
-                r9.writeNoException()
-                r9.writeInt(r3)
-                return r2
-            L_0x004e:
-                r8.enforceInterface(r0)
-                java.lang.String r3 = r8.readString()
-                int r4 = r8.readInt()
-                if (r4 == 0) goto L_0x005d
-                r1 = r2
-            L_0x005d:
-                long r4 = r6.getBackupQuota(r3, r1)
-                r9.writeNoException()
-                r9.writeLong(r4)
-                return r2
-            L_0x0068:
-                r8.enforceInterface(r0)
-                int r4 = r8.readInt()
-                if (r4 == 0) goto L_0x007a
-                android.os.Parcelable$Creator<android.content.pm.PackageInfo> r3 = android.content.pm.PackageInfo.CREATOR
-                java.lang.Object r3 = r3.createFromParcel(r8)
-                android.content.pm.PackageInfo r3 = (android.content.pm.PackageInfo) r3
-                goto L_0x007b
-            L_0x007a:
-            L_0x007b:
-                int r4 = r8.readInt()
-                if (r4 == 0) goto L_0x0083
-                r1 = r2
-            L_0x0083:
-                boolean r4 = r6.isAppEligibleForBackup(r3, r1)
-                r9.writeNoException()
-                r9.writeInt(r4)
-                return r2
-            L_0x008e:
-                r8.enforceInterface(r0)
-                r6.cancelFullBackup()
-                r9.writeNoException()
-                return r2
-            L_0x0098:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                int r3 = r6.sendBackupData(r1)
-                r9.writeNoException()
-                r9.writeInt(r3)
-                return r2
-            L_0x00aa:
-                r8.enforceInterface(r0)
-                long r3 = r8.readLong()
-                int r1 = r6.checkFullBackupSize(r3)
-                r9.writeNoException()
-                r9.writeInt(r1)
-                return r2
-            L_0x00bc:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                if (r1 == 0) goto L_0x00ce
-                android.os.Parcelable$Creator<android.content.pm.PackageInfo> r1 = android.content.pm.PackageInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.content.pm.PackageInfo r1 = (android.content.pm.PackageInfo) r1
-                goto L_0x00cf
-            L_0x00ce:
-                r1 = r3
-            L_0x00cf:
-                int r4 = r8.readInt()
-                if (r4 == 0) goto L_0x00de
-                android.os.Parcelable$Creator<android.os.ParcelFileDescriptor> r3 = android.os.ParcelFileDescriptor.CREATOR
-                java.lang.Object r3 = r3.createFromParcel(r8)
-                android.os.ParcelFileDescriptor r3 = (android.os.ParcelFileDescriptor) r3
-                goto L_0x00df
-            L_0x00de:
-            L_0x00df:
-                int r4 = r8.readInt()
-                int r5 = r6.performFullBackup(r1, r3, r4)
-                r9.writeNoException()
-                r9.writeInt(r5)
-                return r2
-            L_0x00ee:
-                r8.enforceInterface(r0)
-                long r3 = r6.requestFullBackupTime()
-                r9.writeNoException()
-                r9.writeLong(r3)
-                return r2
-            L_0x00fc:
-                r8.enforceInterface(r0)
-                r6.finishRestore()
-                r9.writeNoException()
-                return r2
-            L_0x0106:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                if (r1 == 0) goto L_0x0119
-                android.os.Parcelable$Creator<android.os.ParcelFileDescriptor> r1 = android.os.ParcelFileDescriptor.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                r3 = r1
-                android.os.ParcelFileDescriptor r3 = (android.os.ParcelFileDescriptor) r3
-                goto L_0x011a
-            L_0x0119:
-            L_0x011a:
-                r1 = r3
-                int r3 = r6.getRestoreData(r1)
-                r9.writeNoException()
-                r9.writeInt(r3)
-                return r2
-            L_0x0126:
-                r8.enforceInterface(r0)
-                android.app.backup.RestoreDescription r3 = r6.nextRestorePackage()
-                r9.writeNoException()
-                if (r3 == 0) goto L_0x0139
-                r9.writeInt(r2)
-                r3.writeToParcel(r9, r2)
-                goto L_0x013c
-            L_0x0139:
-                r9.writeInt(r1)
-            L_0x013c:
-                return r2
-            L_0x013d:
-                r8.enforceInterface(r0)
-                long r3 = r8.readLong()
-                android.os.Parcelable$Creator<android.content.pm.PackageInfo> r1 = android.content.pm.PackageInfo.CREATOR
-                java.lang.Object[] r1 = r8.createTypedArray(r1)
-                android.content.pm.PackageInfo[] r1 = (android.content.pm.PackageInfo[]) r1
-                int r5 = r6.startRestore(r3, r1)
-                r9.writeNoException()
-                r9.writeInt(r5)
-                return r2
-            L_0x0157:
-                r8.enforceInterface(r0)
-                long r3 = r6.getCurrentRestoreSet()
-                r9.writeNoException()
-                r9.writeLong(r3)
-                return r2
-            L_0x0165:
-                r8.enforceInterface(r0)
-                android.app.backup.RestoreSet[] r1 = r6.getAvailableRestoreSets()
-                r9.writeNoException()
-                r9.writeTypedArray(r1, r2)
-                return r2
-            L_0x0173:
-                r8.enforceInterface(r0)
-                int r1 = r6.finishBackup()
-                r9.writeNoException()
-                r9.writeInt(r1)
-                return r2
-            L_0x0181:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                if (r1 == 0) goto L_0x0194
-                android.os.Parcelable$Creator<android.content.pm.PackageInfo> r1 = android.content.pm.PackageInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                r3 = r1
-                android.content.pm.PackageInfo r3 = (android.content.pm.PackageInfo) r3
-                goto L_0x0195
-            L_0x0194:
-            L_0x0195:
-                r1 = r3
-                int r3 = r6.clearBackupData(r1)
-                r9.writeNoException()
-                r9.writeInt(r3)
-                return r2
-            L_0x01a1:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                if (r1 == 0) goto L_0x01b3
-                android.os.Parcelable$Creator<android.content.pm.PackageInfo> r1 = android.content.pm.PackageInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.content.pm.PackageInfo r1 = (android.content.pm.PackageInfo) r1
-                goto L_0x01b4
-            L_0x01b3:
-                r1 = r3
-            L_0x01b4:
-                int r4 = r8.readInt()
-                if (r4 == 0) goto L_0x01c3
-                android.os.Parcelable$Creator<android.os.ParcelFileDescriptor> r3 = android.os.ParcelFileDescriptor.CREATOR
-                java.lang.Object r3 = r3.createFromParcel(r8)
-                android.os.ParcelFileDescriptor r3 = (android.os.ParcelFileDescriptor) r3
-                goto L_0x01c4
-            L_0x01c3:
-            L_0x01c4:
-                int r4 = r8.readInt()
-                int r5 = r6.performBackup(r1, r3, r4)
-                r9.writeNoException()
-                r9.writeInt(r5)
-                return r2
-            L_0x01d3:
-                r8.enforceInterface(r0)
-                int r1 = r6.initializeDevice()
-                r9.writeNoException()
-                r9.writeInt(r1)
-                return r2
-            L_0x01e1:
-                r8.enforceInterface(r0)
-                long r3 = r6.requestBackupTime()
-                r9.writeNoException()
-                r9.writeLong(r3)
-                return r2
-            L_0x01ef:
-                r8.enforceInterface(r0)
-                java.lang.String r1 = r6.transportDirName()
-                r9.writeNoException()
-                r9.writeString(r1)
-                return r2
-            L_0x01fd:
-                r8.enforceInterface(r0)
-                java.lang.CharSequence r3 = r6.dataManagementIntentLabel()
-                r9.writeNoException()
-                if (r3 == 0) goto L_0x0210
-                r9.writeInt(r2)
-                android.text.TextUtils.writeToParcel(r3, r9, r2)
-                goto L_0x0213
-            L_0x0210:
-                r9.writeInt(r1)
-            L_0x0213:
-                return r2
-            L_0x0214:
-                r8.enforceInterface(r0)
-                android.content.Intent r3 = r6.dataManagementIntent()
-                r9.writeNoException()
-                if (r3 == 0) goto L_0x0227
-                r9.writeInt(r2)
-                r3.writeToParcel(r9, r2)
-                goto L_0x022a
-            L_0x0227:
-                r9.writeInt(r1)
-            L_0x022a:
-                return r2
-            L_0x022b:
-                r8.enforceInterface(r0)
-                java.lang.String r1 = r6.currentDestinationString()
-                r9.writeNoException()
-                r9.writeString(r1)
-                return r2
-            L_0x0239:
-                r8.enforceInterface(r0)
-                android.content.Intent r3 = r6.configurationIntent()
-                r9.writeNoException()
-                if (r3 == 0) goto L_0x024c
-                r9.writeInt(r2)
-                r3.writeToParcel(r9, r2)
-                goto L_0x024f
-            L_0x024c:
-                r9.writeInt(r1)
-            L_0x024f:
-                return r2
-            L_0x0250:
-                r8.enforceInterface(r0)
-                java.lang.String r1 = r6.name()
-                r9.writeNoException()
-                r9.writeString(r1)
-                return r2
-            L_0x025e:
-                r9.writeString(r0)
-                return r2
-            */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.internal.backup.IBackupTransport.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            PackageInfo _arg0;
+            PackageInfo _arg02;
+            boolean _arg1;
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _result = name();
+                    reply.writeNoException();
+                    reply.writeString(_result);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    Intent _result2 = configurationIntent();
+                    reply.writeNoException();
+                    if (_result2 != null) {
+                        reply.writeInt(1);
+                        _result2.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _result3 = currentDestinationString();
+                    reply.writeNoException();
+                    reply.writeString(_result3);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    Intent _result4 = dataManagementIntent();
+                    reply.writeNoException();
+                    if (_result4 != null) {
+                        reply.writeInt(1);
+                        _result4.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    CharSequence _result5 = dataManagementIntentLabel();
+                    reply.writeNoException();
+                    if (_result5 != null) {
+                        reply.writeInt(1);
+                        TextUtils.writeToParcel(_result5, reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _result6 = transportDirName();
+                    reply.writeNoException();
+                    reply.writeString(_result6);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _result7 = requestBackupTime();
+                    reply.writeNoException();
+                    reply.writeLong(_result7);
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result8 = initializeDevice();
+                    reply.writeNoException();
+                    reply.writeInt(_result8);
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg0 = PackageInfo.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg0 = null;
+                    }
+                    ParcelFileDescriptor _arg12 = data.readInt() != 0 ? ParcelFileDescriptor.CREATOR.createFromParcel(data) : null;
+                    int _arg2 = data.readInt();
+                    int _result9 = performBackup(_arg0, _arg12, _arg2);
+                    reply.writeNoException();
+                    reply.writeInt(_result9);
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    PackageInfo _arg03 = data.readInt() != 0 ? PackageInfo.CREATOR.createFromParcel(data) : null;
+                    int _result10 = clearBackupData(_arg03);
+                    reply.writeNoException();
+                    reply.writeInt(_result10);
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result11 = finishBackup();
+                    reply.writeNoException();
+                    reply.writeInt(_result11);
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    RestoreSet[] _result12 = getAvailableRestoreSets();
+                    reply.writeNoException();
+                    reply.writeTypedArray(_result12, 1);
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _result13 = getCurrentRestoreSet();
+                    reply.writeNoException();
+                    reply.writeLong(_result13);
+                    return true;
+                case 14:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _arg04 = data.readLong();
+                    int _result14 = startRestore(_arg04, (PackageInfo[]) data.createTypedArray(PackageInfo.CREATOR));
+                    reply.writeNoException();
+                    reply.writeInt(_result14);
+                    return true;
+                case 15:
+                    data.enforceInterface(DESCRIPTOR);
+                    RestoreDescription _result15 = nextRestorePackage();
+                    reply.writeNoException();
+                    if (_result15 != null) {
+                        reply.writeInt(1);
+                        _result15.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 16:
+                    data.enforceInterface(DESCRIPTOR);
+                    ParcelFileDescriptor _arg05 = data.readInt() != 0 ? ParcelFileDescriptor.CREATOR.createFromParcel(data) : null;
+                    int _result16 = getRestoreData(_arg05);
+                    reply.writeNoException();
+                    reply.writeInt(_result16);
+                    return true;
+                case 17:
+                    data.enforceInterface(DESCRIPTOR);
+                    finishRestore();
+                    reply.writeNoException();
+                    return true;
+                case 18:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _result17 = requestFullBackupTime();
+                    reply.writeNoException();
+                    reply.writeLong(_result17);
+                    return true;
+                case 19:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg02 = PackageInfo.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg02 = null;
+                    }
+                    ParcelFileDescriptor _arg13 = data.readInt() != 0 ? ParcelFileDescriptor.CREATOR.createFromParcel(data) : null;
+                    int _arg22 = data.readInt();
+                    int _result18 = performFullBackup(_arg02, _arg13, _arg22);
+                    reply.writeNoException();
+                    reply.writeInt(_result18);
+                    return true;
+                case 20:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _arg06 = data.readLong();
+                    int _result19 = checkFullBackupSize(_arg06);
+                    reply.writeNoException();
+                    reply.writeInt(_result19);
+                    return true;
+                case 21:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg07 = data.readInt();
+                    int _result20 = sendBackupData(_arg07);
+                    reply.writeNoException();
+                    reply.writeInt(_result20);
+                    return true;
+                case 22:
+                    data.enforceInterface(DESCRIPTOR);
+                    cancelFullBackup();
+                    reply.writeNoException();
+                    return true;
+                case 23:
+                    data.enforceInterface(DESCRIPTOR);
+                    PackageInfo _arg08 = data.readInt() != 0 ? PackageInfo.CREATOR.createFromParcel(data) : null;
+                    _arg1 = data.readInt() != 0;
+                    boolean isAppEligibleForBackup = isAppEligibleForBackup(_arg08, _arg1);
+                    reply.writeNoException();
+                    reply.writeInt(isAppEligibleForBackup ? 1 : 0);
+                    return true;
+                case 24:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg09 = data.readString();
+                    _arg1 = data.readInt() != 0;
+                    long _result21 = getBackupQuota(_arg09, _arg1);
+                    reply.writeNoException();
+                    reply.writeLong(_result21);
+                    return true;
+                case 25:
+                    data.enforceInterface(DESCRIPTOR);
+                    ParcelFileDescriptor _arg010 = data.readInt() != 0 ? ParcelFileDescriptor.CREATOR.createFromParcel(data) : null;
+                    int _result22 = getNextFullRestoreDataChunk(_arg010);
+                    reply.writeNoException();
+                    reply.writeInt(_result22);
+                    return true;
+                case 26:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result23 = abortFullRestore();
+                    reply.writeNoException();
+                    reply.writeInt(_result23);
+                    return true;
+                case 27:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result24 = getTransportFlags();
+                    reply.writeNoException();
+                    reply.writeInt(_result24);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IBackupTransport {
             public static IBackupTransport sDefaultImpl;
             private IBinder mRemote;
@@ -638,6 +554,7 @@ public interface IBackupTransport extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -646,18 +563,18 @@ public interface IBackupTransport extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // com.android.internal.backup.IBackupTransport
             public String name() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(1, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().name();
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -665,13 +582,15 @@ public interface IBackupTransport extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.backup.IBackupTransport
             public Intent configurationIntent() throws RemoteException {
                 Intent _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(2, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().configurationIntent();
                     }
                     _reply.readException();
@@ -680,28 +599,6 @@ public interface IBackupTransport extends IInterface {
                     } else {
                         _result = null;
                     }
-                    Intent _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public String currentDestinationString() throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(3, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
-                        return Stub.getDefaultImpl().currentDestinationString();
-                    }
-                    _reply.readException();
-                    String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -709,13 +606,34 @@ public interface IBackupTransport extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.backup.IBackupTransport
+            public String currentDestinationString() throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        return Stub.getDefaultImpl().currentDestinationString();
+                    }
+                    _reply.readException();
+                    String _result = _reply.readString();
+                    return _result;
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // com.android.internal.backup.IBackupTransport
             public Intent dataManagementIntent() throws RemoteException {
                 Intent _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(4, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().dataManagementIntent();
                     }
                     _reply.readException();
@@ -724,23 +642,22 @@ public interface IBackupTransport extends IInterface {
                     } else {
                         _result = null;
                     }
-                    Intent _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.backup.IBackupTransport
             public CharSequence dataManagementIntentLabel() throws RemoteException {
                 CharSequence _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(5, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().dataManagementIntentLabel();
                     }
                     _reply.readException();
@@ -749,28 +666,25 @@ public interface IBackupTransport extends IInterface {
                     } else {
                         _result = null;
                     }
-                    CharSequence _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.backup.IBackupTransport
             public String transportDirName() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(6, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().transportDirName();
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -778,18 +692,18 @@ public interface IBackupTransport extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.backup.IBackupTransport
             public long requestBackupTime() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(7, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().requestBackupTime();
                     }
                     _reply.readException();
                     long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -797,18 +711,18 @@ public interface IBackupTransport extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.backup.IBackupTransport
             public int initializeDevice() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(8, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().initializeDevice();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -816,6 +730,7 @@ public interface IBackupTransport extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.backup.IBackupTransport
             public int performBackup(PackageInfo packageInfo, ParcelFileDescriptor inFd, int flags) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -834,13 +749,12 @@ public interface IBackupTransport extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(flags);
-                    if (!this.mRemote.transact(9, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(9, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().performBackup(packageInfo, inFd, flags);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -848,6 +762,7 @@ public interface IBackupTransport extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.backup.IBackupTransport
             public int clearBackupData(PackageInfo packageInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -859,13 +774,12 @@ public interface IBackupTransport extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(10, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(10, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().clearBackupData(packageInfo);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -873,18 +787,18 @@ public interface IBackupTransport extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.backup.IBackupTransport
             public int finishBackup() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(11, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(11, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().finishBackup();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -892,18 +806,18 @@ public interface IBackupTransport extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.backup.IBackupTransport
             public RestoreSet[] getAvailableRestoreSets() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(12, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(12, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAvailableRestoreSets();
                     }
                     _reply.readException();
                     RestoreSet[] _result = (RestoreSet[]) _reply.createTypedArray(RestoreSet.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -911,18 +825,18 @@ public interface IBackupTransport extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.backup.IBackupTransport
             public long getCurrentRestoreSet() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(13, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(13, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCurrentRestoreSet();
                     }
                     _reply.readException();
                     long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -930,6 +844,7 @@ public interface IBackupTransport extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.backup.IBackupTransport
             public int startRestore(long token, PackageInfo[] packages) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -937,13 +852,12 @@ public interface IBackupTransport extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeLong(token);
                     _data.writeTypedArray(packages, 0);
-                    if (!this.mRemote.transact(14, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(14, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().startRestore(token, packages);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -951,13 +865,15 @@ public interface IBackupTransport extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.backup.IBackupTransport
             public RestoreDescription nextRestorePackage() throws RemoteException {
                 RestoreDescription _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(15, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(15, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().nextRestorePackage();
                     }
                     _reply.readException();
@@ -966,16 +882,14 @@ public interface IBackupTransport extends IInterface {
                     } else {
                         _result = null;
                     }
-                    RestoreDescription _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.backup.IBackupTransport
             public int getRestoreData(ParcelFileDescriptor outFd) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -987,13 +901,12 @@ public interface IBackupTransport extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(16, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(16, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getRestoreData(outFd);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1001,36 +914,36 @@ public interface IBackupTransport extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.backup.IBackupTransport
             public void finishRestore() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(17, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(17, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().finishRestore();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().finishRestore();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.backup.IBackupTransport
             public long requestFullBackupTime() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(18, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(18, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().requestFullBackupTime();
                     }
                     _reply.readException();
                     long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1038,6 +951,7 @@ public interface IBackupTransport extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.backup.IBackupTransport
             public int performFullBackup(PackageInfo targetPackage, ParcelFileDescriptor socket, int flags) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1056,13 +970,12 @@ public interface IBackupTransport extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(flags);
-                    if (!this.mRemote.transact(19, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(19, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().performFullBackup(targetPackage, socket, flags);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1070,19 +983,19 @@ public interface IBackupTransport extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.backup.IBackupTransport
             public int checkFullBackupSize(long size) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeLong(size);
-                    if (!this.mRemote.transact(20, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(20, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().checkFullBackupSize(size);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1090,19 +1003,19 @@ public interface IBackupTransport extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.backup.IBackupTransport
             public int sendBackupData(int numBytes) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(numBytes);
-                    if (!this.mRemote.transact(21, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(21, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().sendBackupData(numBytes);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1110,46 +1023,43 @@ public interface IBackupTransport extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.backup.IBackupTransport
             public void cancelFullBackup() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(22, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(22, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().cancelFullBackup();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().cancelFullBackup();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.backup.IBackupTransport
             public boolean isAppEligibleForBackup(PackageInfo targetPackage, boolean isFullBackup) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (targetPackage != null) {
                         _data.writeInt(1);
                         targetPackage.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(isFullBackup);
-                    if (!this.mRemote.transact(23, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(isFullBackup ? 1 : 0);
+                    boolean _status = this.mRemote.transact(23, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isAppEligibleForBackup(targetPackage, isFullBackup);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1157,20 +1067,20 @@ public interface IBackupTransport extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.backup.IBackupTransport
             public long getBackupQuota(String packageName, boolean isFullBackup) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(packageName);
-                    _data.writeInt(isFullBackup);
-                    if (!this.mRemote.transact(24, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(isFullBackup ? 1 : 0);
+                    boolean _status = this.mRemote.transact(24, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getBackupQuota(packageName, isFullBackup);
                     }
                     _reply.readException();
                     long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1178,6 +1088,7 @@ public interface IBackupTransport extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.backup.IBackupTransport
             public int getNextFullRestoreDataChunk(ParcelFileDescriptor socket) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1189,13 +1100,12 @@ public interface IBackupTransport extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(25, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(25, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getNextFullRestoreDataChunk(socket);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1203,18 +1113,18 @@ public interface IBackupTransport extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.backup.IBackupTransport
             public int abortFullRestore() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(26, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(26, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().abortFullRestore();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1222,18 +1132,18 @@ public interface IBackupTransport extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.backup.IBackupTransport
             public int getTransportFlags() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(27, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(27, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getTransportFlags();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1243,11 +1153,11 @@ public interface IBackupTransport extends IInterface {
         }
 
         public static boolean setDefaultImpl(IBackupTransport impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IBackupTransport getDefaultImpl() {

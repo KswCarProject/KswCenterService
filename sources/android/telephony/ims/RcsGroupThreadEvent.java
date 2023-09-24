@@ -1,5 +1,6 @@
 package android.telephony.ims;
 
+/* loaded from: classes4.dex */
 public abstract class RcsGroupThreadEvent extends RcsEvent {
     private final RcsParticipant mOriginatingParticipant;
     private final RcsGroupThread mRcsGroupThread;

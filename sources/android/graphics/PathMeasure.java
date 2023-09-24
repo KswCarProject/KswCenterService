@@ -1,5 +1,6 @@
 package android.graphics;
 
+/* loaded from: classes.dex */
 public class PathMeasure {
     public static final int POSITION_MATRIX_FLAG = 1;
     public static final int TANGENT_MATRIX_FLAG = 2;
@@ -26,17 +27,17 @@ public class PathMeasure {
 
     public PathMeasure() {
         this.mPath = null;
-        this.native_instance = native_create(0, false);
+        this.native_instance = native_create(0L, false);
     }
 
     public PathMeasure(Path path, boolean forceClosed) {
         this.mPath = path;
-        this.native_instance = native_create(path != null ? path.readOnlyNI() : 0, forceClosed);
+        this.native_instance = native_create(path != null ? path.readOnlyNI() : 0L, forceClosed);
     }
 
     public void setPath(Path path, boolean forceClosed) {
         this.mPath = path;
-        native_setPath(this.native_instance, path != null ? path.readOnlyNI() : 0, forceClosed);
+        native_setPath(this.native_instance, path != null ? path.readOnlyNI() : 0L, forceClosed);
     }
 
     public float getLength() {
@@ -44,10 +45,10 @@ public class PathMeasure {
     }
 
     public boolean getPosTan(float distance, float[] pos, float[] tan) {
-        if ((pos == null || pos.length >= 2) && (tan == null || tan.length >= 2)) {
-            return native_getPosTan(this.native_instance, distance, pos, tan);
+        if ((pos != null && pos.length < 2) || (tan != null && tan.length < 2)) {
+            throw new ArrayIndexOutOfBoundsException();
         }
-        throw new ArrayIndexOutOfBoundsException();
+        return native_getPosTan(this.native_instance, distance, pos, tan);
     }
 
     public boolean getMatrix(float distance, Matrix matrix, int flags) {
@@ -76,9 +77,8 @@ public class PathMeasure {
         return native_nextContour(this.native_instance);
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         native_destroy(this.native_instance);
-        this.native_instance = 0;
+        this.native_instance = 0L;
     }
 }

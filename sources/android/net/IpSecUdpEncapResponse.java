@@ -1,17 +1,22 @@
 package android.net;
 
-import android.os.Parcel;
-import android.os.ParcelFileDescriptor;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.ParcelFileDescriptor;
+import android.p007os.Parcelable;
 import java.io.FileDescriptor;
 import java.io.IOException;
 
+/* loaded from: classes3.dex */
 public final class IpSecUdpEncapResponse implements Parcelable {
-    public static final Parcelable.Creator<IpSecUdpEncapResponse> CREATOR = new Parcelable.Creator<IpSecUdpEncapResponse>() {
+    public static final Parcelable.Creator<IpSecUdpEncapResponse> CREATOR = new Parcelable.Creator<IpSecUdpEncapResponse>() { // from class: android.net.IpSecUdpEncapResponse.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public IpSecUdpEncapResponse createFromParcel(Parcel in) {
             return new IpSecUdpEncapResponse(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public IpSecUdpEncapResponse[] newArray(int size) {
             return new IpSecUdpEncapResponse[size];
         }
@@ -22,10 +27,12 @@ public final class IpSecUdpEncapResponse implements Parcelable {
     public final int resourceId;
     public final int status;
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return this.fileDescriptor != null ? 1 : 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(this.status);
         out.writeInt(this.resourceId);
@@ -34,14 +41,13 @@ public final class IpSecUdpEncapResponse implements Parcelable {
     }
 
     public IpSecUdpEncapResponse(int inStatus) {
-        if (inStatus != 0) {
-            this.status = inStatus;
-            this.resourceId = -1;
-            this.port = -1;
-            this.fileDescriptor = null;
-            return;
+        if (inStatus == 0) {
+            throw new IllegalArgumentException("Valid status implies other args must be provided");
         }
-        throw new IllegalArgumentException("Valid status implies other args must be provided");
+        this.status = inStatus;
+        this.resourceId = -1;
+        this.port = -1;
+        this.fileDescriptor = null;
     }
 
     public IpSecUdpEncapResponse(int inStatus, int inResourceId, int inPort, FileDescriptor inFd) throws IOException {

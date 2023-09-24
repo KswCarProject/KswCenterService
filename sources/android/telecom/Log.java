@@ -3,7 +3,7 @@ package android.telecom;
 import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
 import android.net.Uri;
-import android.os.Build;
+import android.p007os.Build;
 import android.provider.SettingsStringUtil;
 import android.telecom.Logging.EventManager;
 import android.telecom.Logging.Session;
@@ -17,100 +17,125 @@ import com.ibm.icu.text.PluralRules;
 import java.util.IllegalFormatException;
 import java.util.Locale;
 
+/* loaded from: classes3.dex */
 public class Log {
-    public static boolean DEBUG = isLoggable(3);
-    public static boolean ERROR = isLoggable(6);
+    public static boolean DEBUG = false;
+    public static boolean ERROR = false;
     private static final int EVENTS_TO_CACHE = 10;
     private static final int EVENTS_TO_CACHE_DEBUG = 20;
     private static final long EXTENDED_LOGGING_DURATION_MILLIS = 1800000;
     private static final boolean FORCE_LOGGING = false;
-    public static boolean INFO = isLoggable(4);
-    private static final int NUM_DIALABLE_DIGITS_TO_LOG = (Build.IS_USER ? 0 : 2);
+    public static boolean INFO;
+    private static final int NUM_DIALABLE_DIGITS_TO_LOG;
     @VisibleForTesting
-    public static String TAG = "TelecomFramework";
-    private static final boolean USER_BUILD = Build.IS_USER;
-    public static boolean VERBOSE = isLoggable(2);
-    public static boolean WARN = isLoggable(5);
+    public static String TAG;
+    private static final boolean USER_BUILD;
+    public static boolean VERBOSE;
+    public static boolean WARN;
     private static EventManager sEventManager;
-    private static boolean sIsUserExtendedLoggingEnabled = false;
+    private static boolean sIsUserExtendedLoggingEnabled;
     private static SessionManager sSessionManager;
-    private static final Object sSingletonSync = new Object();
-    private static long sUserExtendedLoggingStopTime = 0;
+    private static final Object sSingletonSync;
+    private static long sUserExtendedLoggingStopTime;
+
+    static {
+        NUM_DIALABLE_DIGITS_TO_LOG = Build.IS_USER ? 0 : 2;
+        TAG = "TelecomFramework";
+        DEBUG = isLoggable(3);
+        INFO = isLoggable(4);
+        VERBOSE = isLoggable(2);
+        WARN = isLoggable(5);
+        ERROR = isLoggable(6);
+        USER_BUILD = Build.IS_USER;
+        sSingletonSync = new Object();
+        sIsUserExtendedLoggingEnabled = false;
+        sUserExtendedLoggingStopTime = 0L;
+    }
 
     private Log() {
     }
 
-    public static void d(String prefix, String format, Object... args) {
+    /* renamed from: d */
+    public static void m97d(String prefix, String format, Object... args) {
         if (sIsUserExtendedLoggingEnabled) {
             maybeDisableLogging();
-            Slog.i(TAG, buildMessage(prefix, format, args));
+            Slog.m54i(TAG, buildMessage(prefix, format, args));
         } else if (DEBUG) {
-            Slog.d(TAG, buildMessage(prefix, format, args));
+            Slog.m58d(TAG, buildMessage(prefix, format, args));
         }
     }
 
-    public static void d(Object objectPrefix, String format, Object... args) {
+    /* renamed from: d */
+    public static void m98d(Object objectPrefix, String format, Object... args) {
         if (sIsUserExtendedLoggingEnabled) {
             maybeDisableLogging();
-            Slog.i(TAG, buildMessage(getPrefixFromObject(objectPrefix), format, args));
+            Slog.m54i(TAG, buildMessage(getPrefixFromObject(objectPrefix), format, args));
         } else if (DEBUG) {
-            Slog.d(TAG, buildMessage(getPrefixFromObject(objectPrefix), format, args));
+            Slog.m58d(TAG, buildMessage(getPrefixFromObject(objectPrefix), format, args));
         }
     }
 
     @UnsupportedAppUsage
-    public static void i(String prefix, String format, Object... args) {
+    /* renamed from: i */
+    public static void m93i(String prefix, String format, Object... args) {
         if (INFO) {
-            Slog.i(TAG, buildMessage(prefix, format, args));
+            Slog.m54i(TAG, buildMessage(prefix, format, args));
         }
     }
 
-    public static void i(Object objectPrefix, String format, Object... args) {
+    /* renamed from: i */
+    public static void m94i(Object objectPrefix, String format, Object... args) {
         if (INFO) {
-            Slog.i(TAG, buildMessage(getPrefixFromObject(objectPrefix), format, args));
+            Slog.m54i(TAG, buildMessage(getPrefixFromObject(objectPrefix), format, args));
         }
     }
 
-    public static void v(String prefix, String format, Object... args) {
+    /* renamed from: v */
+    public static void m91v(String prefix, String format, Object... args) {
         if (sIsUserExtendedLoggingEnabled) {
             maybeDisableLogging();
-            Slog.i(TAG, buildMessage(prefix, format, args));
+            Slog.m54i(TAG, buildMessage(prefix, format, args));
         } else if (VERBOSE) {
-            Slog.v(TAG, buildMessage(prefix, format, args));
+            Slog.m52v(TAG, buildMessage(prefix, format, args));
         }
     }
 
-    public static void v(Object objectPrefix, String format, Object... args) {
+    /* renamed from: v */
+    public static void m92v(Object objectPrefix, String format, Object... args) {
         if (sIsUserExtendedLoggingEnabled) {
             maybeDisableLogging();
-            Slog.i(TAG, buildMessage(getPrefixFromObject(objectPrefix), format, args));
+            Slog.m54i(TAG, buildMessage(getPrefixFromObject(objectPrefix), format, args));
         } else if (VERBOSE) {
-            Slog.v(TAG, buildMessage(getPrefixFromObject(objectPrefix), format, args));
+            Slog.m52v(TAG, buildMessage(getPrefixFromObject(objectPrefix), format, args));
         }
     }
 
     @UnsupportedAppUsage
-    public static void w(String prefix, String format, Object... args) {
+    /* renamed from: w */
+    public static void m89w(String prefix, String format, Object... args) {
         if (WARN) {
-            Slog.w(TAG, buildMessage(prefix, format, args));
+            Slog.m50w(TAG, buildMessage(prefix, format, args));
         }
     }
 
-    public static void w(Object objectPrefix, String format, Object... args) {
+    /* renamed from: w */
+    public static void m90w(Object objectPrefix, String format, Object... args) {
         if (WARN) {
-            Slog.w(TAG, buildMessage(getPrefixFromObject(objectPrefix), format, args));
+            Slog.m50w(TAG, buildMessage(getPrefixFromObject(objectPrefix), format, args));
         }
     }
 
-    public static void e(String prefix, Throwable tr, String format, Object... args) {
+    /* renamed from: e */
+    public static void m95e(String prefix, Throwable tr, String format, Object... args) {
         if (ERROR) {
-            Slog.e(TAG, buildMessage(prefix, format, args), tr);
+            Slog.m55e(TAG, buildMessage(prefix, format, args), tr);
         }
     }
 
-    public static void e(Object objectPrefix, Throwable tr, String format, Object... args) {
+    /* renamed from: e */
+    public static void m96e(Object objectPrefix, Throwable tr, String format, Object... args) {
         if (ERROR) {
-            Slog.e(TAG, buildMessage(getPrefixFromObject(objectPrefix), format, args), tr);
+            Slog.m55e(TAG, buildMessage(getPrefixFromObject(objectPrefix), format, args), tr);
         }
     }
 
@@ -137,11 +162,11 @@ public class Log {
     }
 
     public static void startSession(String shortMethodName) {
-        getSessionManager().startSession(shortMethodName, (String) null);
+        getSessionManager().startSession(shortMethodName, null);
     }
 
     public static void startSession(Session.Info info, String shortMethodName) {
-        getSessionManager().startSession(info, shortMethodName, (String) null);
+        getSessionManager().startSession(info, shortMethodName, null);
     }
 
     public static void startSession(String shortMethodName, String callerIdentification) {
@@ -178,16 +203,15 @@ public class Log {
 
     public static String getSessionId() {
         synchronized (sSingletonSync) {
-            if (sSessionManager == null) {
-                return "";
+            if (sSessionManager != null) {
+                return getSessionManager().getSessionId();
             }
-            String sessionId = getSessionManager().getSessionId();
-            return sessionId;
+            return "";
         }
     }
 
     public static void addEvent(EventManager.Loggable recordEntry, String event) {
-        getEventManager().event(recordEntry, event, (Object) null);
+        getEventManager().event(recordEntry, event, null);
     }
 
     public static void addEvent(EventManager.Loggable recordEntry, String event, Object data) {
@@ -227,16 +251,17 @@ public class Log {
     }
 
     public static void setIsExtendedLoggingEnabled(boolean isExtendedLoggingEnabled) {
-        if (sIsUserExtendedLoggingEnabled != isExtendedLoggingEnabled) {
-            if (sEventManager != null) {
-                sEventManager.changeEventCacheSize(isExtendedLoggingEnabled ? 20 : 10);
-            }
-            sIsUserExtendedLoggingEnabled = isExtendedLoggingEnabled;
-            if (sIsUserExtendedLoggingEnabled) {
-                sUserExtendedLoggingStopTime = System.currentTimeMillis() + 1800000;
-            } else {
-                sUserExtendedLoggingStopTime = 0;
-            }
+        if (sIsUserExtendedLoggingEnabled == isExtendedLoggingEnabled) {
+            return;
+        }
+        if (sEventManager != null) {
+            sEventManager.changeEventCacheSize(isExtendedLoggingEnabled ? 20 : 10);
+        }
+        sIsUserExtendedLoggingEnabled = isExtendedLoggingEnabled;
+        if (sIsUserExtendedLoggingEnabled) {
+            sUserExtendedLoggingStopTime = System.currentTimeMillis() + 1800000;
+        } else {
+            sUserExtendedLoggingStopTime = 0L;
         }
     }
 
@@ -244,9 +269,13 @@ public class Log {
         if (sEventManager == null) {
             synchronized (sSingletonSync) {
                 if (sEventManager == null) {
-                    sEventManager = new EventManager($$Lambda$qa4s1Fm2YuohEunaJUJcmJXDXG0.INSTANCE);
-                    EventManager eventManager = sEventManager;
-                    return eventManager;
+                    sEventManager = new EventManager(new SessionManager.ISessionIdQueryHandler() { // from class: android.telecom.-$$Lambda$qa4s1Fm2YuohEunaJUJcmJXDXG0
+                        @Override // android.telecom.Logging.SessionManager.ISessionIdQueryHandler
+                        public final String getSessionId() {
+                            return Log.getSessionId();
+                        }
+                    });
+                    return sEventManager;
                 }
             }
         }
@@ -259,8 +288,7 @@ public class Log {
             synchronized (sSingletonSync) {
                 if (sSessionManager == null) {
                     sSessionManager = new SessionManager();
-                    SessionManager sessionManager = sSessionManager;
-                    return sessionManager;
+                    return sSessionManager;
                 }
             }
         }
@@ -278,7 +306,7 @@ public class Log {
 
     private static void maybeDisableLogging() {
         if (sIsUserExtendedLoggingEnabled && sUserExtendedLoggingStopTime < System.currentTimeMillis()) {
-            sUserExtendedLoggingStopTime = 0;
+            sUserExtendedLoggingStopTime = 0L;
             sIsUserExtendedLoggingEnabled = false;
         }
     }
@@ -305,7 +333,7 @@ public class Log {
             } else if ("sip".equals(scheme)) {
                 for (int i = 0; i < textToObfuscate.length(); i++) {
                     char c = textToObfuscate.charAt(i);
-                    if (!(c == '@' || c == '.')) {
+                    if (c != '@' && c != '.') {
                         c = '*';
                     }
                     sb.append(c);
@@ -314,9 +342,11 @@ public class Log {
                 sb.append(pii(pii));
             }
         } else if (pii instanceof String) {
-            obfuscatePhoneNumber(sb, (String) pii);
+            String number = (String) pii;
+            obfuscatePhoneNumber(sb, number);
         }
-        return sb.toString();
+        String number2 = sb.toString();
+        return number2;
     }
 
     private static void obfuscatePhoneNumber(StringBuilder sb, String phoneNumber) {
@@ -332,6 +362,7 @@ public class Log {
     }
 
     private static int getDialableCount(String toCount) {
+        char[] charArray;
         int numDialable = 0;
         for (char c : toCount.toCharArray()) {
             if (PhoneNumberUtils.isDialable(c)) {
@@ -363,16 +394,16 @@ public class Log {
         }
         if (args != null) {
             try {
-                if (args.length != 0) {
-                    msg = String.format(Locale.US, format, args);
-                    return String.format(Locale.US, "%s: %s%s", new Object[]{prefix, msg, sessionPostfix});
-                }
             } catch (IllegalFormatException ife) {
-                e(TAG, (Throwable) ife, "Log: IllegalFormatException: formatString='%s' numArgs=%d", format, Integer.valueOf(args.length));
+                m95e(TAG, (Throwable) ife, "Log: IllegalFormatException: formatString='%s' numArgs=%d", format, Integer.valueOf(args.length));
                 msg = format + " (An error occurred while formatting the message.)";
+            }
+            if (args.length != 0) {
+                msg = String.format(Locale.US, format, args);
+                return String.format(Locale.US, "%s: %s%s", prefix, msg, sessionPostfix);
             }
         }
         msg = format;
-        return String.format(Locale.US, "%s: %s%s", new Object[]{prefix, msg, sessionPostfix});
+        return String.format(Locale.US, "%s: %s%s", prefix, msg, sessionPostfix);
     }
 }

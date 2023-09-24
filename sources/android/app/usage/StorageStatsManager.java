@@ -1,15 +1,16 @@
 package android.app.usage;
 
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.os.ParcelableException;
-import android.os.RemoteException;
-import android.os.UserHandle;
-import android.os.storage.StorageManager;
+import android.content.p002pm.PackageManager;
+import android.p007os.ParcelableException;
+import android.p007os.RemoteException;
+import android.p007os.UserHandle;
+import android.p007os.storage.StorageManager;
 import com.android.internal.util.Preconditions;
 import java.io.IOException;
 import java.util.UUID;
 
+/* loaded from: classes.dex */
 public class StorageStatsManager {
     private final Context mContext;
     private final IStorageStatsManager mService;

@@ -2,16 +2,26 @@ package android.hardware.location;
 
 import android.annotation.SystemApi;
 import android.location.Location;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
 @SystemApi
+/* loaded from: classes.dex */
 public class GeofenceHardwareMonitorEvent implements Parcelable {
-    public static final Parcelable.Creator<GeofenceHardwareMonitorEvent> CREATOR = new Parcelable.Creator<GeofenceHardwareMonitorEvent>() {
+    public static final Parcelable.Creator<GeofenceHardwareMonitorEvent> CREATOR = new Parcelable.Creator<GeofenceHardwareMonitorEvent>() { // from class: android.hardware.location.GeofenceHardwareMonitorEvent.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public GeofenceHardwareMonitorEvent createFromParcel(Parcel source) {
-            return new GeofenceHardwareMonitorEvent(source.readInt(), source.readInt(), source.readInt(), (Location) source.readParcelable(GeofenceHardwareMonitorEvent.class.getClassLoader()));
+            ClassLoader classLoader = GeofenceHardwareMonitorEvent.class.getClassLoader();
+            int monitoringType = source.readInt();
+            int monitoringStatus = source.readInt();
+            int sourceTechnologies = source.readInt();
+            Location location = (Location) source.readParcelable(classLoader);
+            return new GeofenceHardwareMonitorEvent(monitoringType, monitoringStatus, sourceTechnologies, location);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public GeofenceHardwareMonitorEvent[] newArray(int size) {
             return new GeofenceHardwareMonitorEvent[size];
         }
@@ -44,10 +54,12 @@ public class GeofenceHardwareMonitorEvent implements Parcelable {
         return this.mLocation;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeInt(this.mMonitoringType);
         parcel.writeInt(this.mMonitoringStatus);
@@ -56,6 +68,6 @@ public class GeofenceHardwareMonitorEvent implements Parcelable {
     }
 
     public String toString() {
-        return String.format("GeofenceHardwareMonitorEvent: type=%d, status=%d, sources=%d, location=%s", new Object[]{Integer.valueOf(this.mMonitoringType), Integer.valueOf(this.mMonitoringStatus), Integer.valueOf(this.mSourceTechnologies), this.mLocation});
+        return String.format("GeofenceHardwareMonitorEvent: type=%d, status=%d, sources=%d, location=%s", Integer.valueOf(this.mMonitoringType), Integer.valueOf(this.mMonitoringStatus), Integer.valueOf(this.mSourceTechnologies), this.mLocation);
     }
 }

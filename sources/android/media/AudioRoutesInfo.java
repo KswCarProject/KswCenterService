@@ -1,15 +1,20 @@
 package android.media;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.TextUtils;
 
+/* loaded from: classes3.dex */
 public class AudioRoutesInfo implements Parcelable {
-    public static final Parcelable.Creator<AudioRoutesInfo> CREATOR = new Parcelable.Creator<AudioRoutesInfo>() {
+    public static final Parcelable.Creator<AudioRoutesInfo> CREATOR = new Parcelable.Creator<AudioRoutesInfo>() { // from class: android.media.AudioRoutesInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AudioRoutesInfo createFromParcel(Parcel in) {
             return new AudioRoutesInfo(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AudioRoutesInfo[] newArray(int size) {
             return new AudioRoutesInfo[size];
         }
@@ -21,21 +26,25 @@ public class AudioRoutesInfo implements Parcelable {
     public static final int MAIN_SPEAKER = 0;
     public static final int MAIN_USB = 16;
     public CharSequence bluetoothName;
-    public int mainType = 0;
+    public int mainType;
 
     public AudioRoutesInfo() {
+        this.mainType = 0;
     }
 
     public AudioRoutesInfo(AudioRoutesInfo o) {
+        this.mainType = 0;
         this.bluetoothName = o.bluetoothName;
         this.mainType = o.mainType;
     }
 
     AudioRoutesInfo(Parcel src) {
+        this.mainType = 0;
         this.bluetoothName = TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(src);
         this.mainType = src.readInt();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -49,7 +58,7 @@ public class AudioRoutesInfo implements Parcelable {
         if (TextUtils.isEmpty(this.bluetoothName)) {
             str = "";
         } else {
-            str = ", bluetoothName=" + this.bluetoothName;
+            str = ", bluetoothName=" + ((Object) this.bluetoothName);
         }
         sb.append(str);
         sb.append(" }");
@@ -57,27 +66,10 @@ public class AudioRoutesInfo implements Parcelable {
     }
 
     private static String typeToString(int type) {
-        if (type == 0) {
-            return "SPEAKER";
-        }
-        if ((type & 1) != 0) {
-            return "HEADSET";
-        }
-        if ((type & 2) != 0) {
-            return "HEADPHONES";
-        }
-        if ((type & 4) != 0) {
-            return "DOCK_SPEAKERS";
-        }
-        if ((type & 8) != 0) {
-            return "HDMI";
-        }
-        if ((type & 16) != 0) {
-            return "USB";
-        }
-        return Integer.toHexString(type);
+        return type == 0 ? "SPEAKER" : (type & 1) != 0 ? "HEADSET" : (type & 2) != 0 ? "HEADPHONES" : (type & 4) != 0 ? "DOCK_SPEAKERS" : (type & 8) != 0 ? "HDMI" : (type & 16) != 0 ? "USB" : Integer.toHexString(type);
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         TextUtils.writeToParcel(this.bluetoothName, dest, flags);
         dest.writeInt(this.mainType);

@@ -2,8 +2,10 @@ package android.util;
 
 import android.annotation.UnsupportedAppUsage;
 
+/* loaded from: classes4.dex */
 public final class Pools {
 
+    /* loaded from: classes4.dex */
     public interface Pool<T> {
         @UnsupportedAppUsage
         T acquire();
@@ -15,6 +17,7 @@ public final class Pools {
     private Pools() {
     }
 
+    /* loaded from: classes4.dex */
     public static class SimplePool<T> implements Pool<T> {
         @UnsupportedAppUsage
         private final Object[] mPool;
@@ -22,36 +25,37 @@ public final class Pools {
 
         @UnsupportedAppUsage
         public SimplePool(int maxPoolSize) {
-            if (maxPoolSize > 0) {
-                this.mPool = new Object[maxPoolSize];
-                return;
+            if (maxPoolSize <= 0) {
+                throw new IllegalArgumentException("The max pool size must be > 0");
             }
-            throw new IllegalArgumentException("The max pool size must be > 0");
+            this.mPool = new Object[maxPoolSize];
         }
 
+        @Override // android.util.Pools.Pool
         @UnsupportedAppUsage
         public T acquire() {
-            if (this.mPoolSize <= 0) {
-                return null;
+            if (this.mPoolSize > 0) {
+                int lastPooledIndex = this.mPoolSize - 1;
+                T instance = (T) this.mPool[lastPooledIndex];
+                this.mPool[lastPooledIndex] = null;
+                this.mPoolSize--;
+                return instance;
             }
-            int lastPooledIndex = this.mPoolSize - 1;
-            T instance = this.mPool[lastPooledIndex];
-            this.mPool[lastPooledIndex] = null;
-            this.mPoolSize--;
-            return instance;
+            return null;
         }
 
+        @Override // android.util.Pools.Pool
         @UnsupportedAppUsage
         public boolean release(T instance) {
             if (isInPool(instance)) {
                 throw new IllegalStateException("Already in the pool!");
-            } else if (this.mPoolSize >= this.mPool.length) {
-                return false;
-            } else {
+            }
+            if (this.mPoolSize < this.mPool.length) {
                 this.mPool[this.mPoolSize] = instance;
                 this.mPoolSize++;
                 return true;
             }
+            return false;
         }
 
         private boolean isInPool(T instance) {
@@ -64,6 +68,7 @@ public final class Pools {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class SynchronizedPool<T> extends SimplePool<T> {
         private final Object mLock;
 
@@ -77,15 +82,17 @@ public final class Pools {
             this(maxPoolSize, new Object());
         }
 
+        @Override // android.util.Pools.SimplePool, android.util.Pools.Pool
         @UnsupportedAppUsage
         public T acquire() {
-            T acquire;
+            T t;
             synchronized (this.mLock) {
-                acquire = super.acquire();
+                t = (T) super.acquire();
             }
-            return acquire;
+            return t;
         }
 
+        @Override // android.util.Pools.SimplePool, android.util.Pools.Pool
         @UnsupportedAppUsage
         public boolean release(T element) {
             boolean release;

@@ -7,12 +7,13 @@ import java.util.Calendar;
 import java.util.Objects;
 import java.util.TimeZone;
 
+/* loaded from: classes3.dex */
 public class ScheduleCalendar {
     public static final boolean DEBUG = Log.isLoggable("ConditionProviders", 3);
     public static final String TAG = "ScheduleCalendar";
-    private final Calendar mCalendar = Calendar.getInstance();
-    private final ArraySet<Integer> mDays = new ArraySet<>();
     private ZenModeConfig.ScheduleInfo mSchedule;
+    private final ArraySet<Integer> mDays = new ArraySet<>();
+    private final Calendar mCalendar = Calendar.getInstance();
 
     public String toString() {
         return "ScheduleCalendar[mDays=" + this.mDays + ", mSchedule=" + this.mSchedule + "]";
@@ -23,16 +24,17 @@ public class ScheduleCalendar {
     }
 
     public void setSchedule(ZenModeConfig.ScheduleInfo schedule) {
-        if (!Objects.equals(this.mSchedule, schedule)) {
-            this.mSchedule = schedule;
-            updateDays();
+        if (Objects.equals(this.mSchedule, schedule)) {
+            return;
         }
+        this.mSchedule = schedule;
+        updateDays();
     }
 
     public void maybeSetNextAlarm(long now, long nextAlarm) {
         if (this.mSchedule != null && this.mSchedule.exitAtAlarm) {
             if (nextAlarm == 0) {
-                this.mSchedule.nextAlarm = 0;
+                this.mSchedule.nextAlarm = 0L;
             }
             if (nextAlarm > now) {
                 if (this.mSchedule.nextAlarm == 0 || this.mSchedule.nextAlarm < now) {
@@ -42,9 +44,9 @@ public class ScheduleCalendar {
                 this.mSchedule.nextAlarm = Math.min(this.mSchedule.nextAlarm, nextAlarm);
             } else if (this.mSchedule.nextAlarm < now) {
                 if (DEBUG) {
-                    Log.d(TAG, "All alarms are in the past " + this.mSchedule.nextAlarm);
+                    Log.m72d(TAG, "All alarms are in the past " + this.mSchedule.nextAlarm);
                 }
-                this.mSchedule.nextAlarm = 0;
+                this.mSchedule.nextAlarm = 0L;
             }
         }
     }
@@ -55,9 +57,12 @@ public class ScheduleCalendar {
 
     public long getNextChangeTime(long now) {
         if (this.mSchedule == null) {
-            return 0;
+            return 0L;
         }
-        return Math.min(getNextTime(now, this.mSchedule.startHour, this.mSchedule.startMinute), getNextTime(now, this.mSchedule.endHour, this.mSchedule.endMinute));
+        long nextStart = getNextTime(now, this.mSchedule.startHour, this.mSchedule.startMinute);
+        long nextEnd = getNextTime(now, this.mSchedule.endHour, this.mSchedule.endMinute);
+        long nextScheduleTime = Math.min(nextStart, nextEnd);
+        return nextScheduleTime;
     }
 
     private long getNextTime(long now, int hr, int min) {
@@ -75,53 +80,38 @@ public class ScheduleCalendar {
     }
 
     public boolean isInSchedule(long time) {
-        long j = time;
         if (this.mSchedule == null || this.mDays.size() == 0) {
             return false;
         }
-        long start = getTime(j, this.mSchedule.startHour, this.mSchedule.startMinute);
-        long end = getTime(j, this.mSchedule.endHour, this.mSchedule.endMinute);
+        long start = getTime(time, this.mSchedule.startHour, this.mSchedule.startMinute);
+        long end = getTime(time, this.mSchedule.endHour, this.mSchedule.endMinute);
         if (end <= start) {
             end = addDays(end, 1);
         }
         long end2 = end;
-        if (isInSchedule(-1, time, start, end2) || isInSchedule(0, time, start, end2)) {
-            return true;
-        }
-        return false;
+        return isInSchedule(-1, time, start, end2) || isInSchedule(0, time, start, end2);
     }
 
     public boolean isAlarmInSchedule(long alarm, long now) {
-        long j = alarm;
         if (this.mSchedule == null || this.mDays.size() == 0) {
             return false;
         }
-        long start = getTime(j, this.mSchedule.startHour, this.mSchedule.startMinute);
-        long end = getTime(j, this.mSchedule.endHour, this.mSchedule.endMinute);
+        long start = getTime(alarm, this.mSchedule.startHour, this.mSchedule.startMinute);
+        long end = getTime(alarm, this.mSchedule.endHour, this.mSchedule.endMinute);
         if (end <= start) {
             end = addDays(end, 1);
         }
         long end2 = end;
-        if ((!isInSchedule(-1, alarm, start, end2) || !isInSchedule(-1, now, start, end2)) && (!isInSchedule(0, alarm, start, end2) || !isInSchedule(0, now, start, end2))) {
-            return false;
-        }
-        return true;
+        return (isInSchedule(-1, alarm, start, end2) && isInSchedule(-1, now, start, end2)) || (isInSchedule(0, alarm, start, end2) && isInSchedule(0, now, start, end2));
     }
 
     public boolean shouldExitForAlarm(long time) {
-        if (this.mSchedule != null && this.mSchedule.exitAtAlarm && this.mSchedule.nextAlarm != 0 && time >= this.mSchedule.nextAlarm && isAlarmInSchedule(this.mSchedule.nextAlarm, time)) {
-            return true;
-        }
-        return false;
+        return this.mSchedule != null && this.mSchedule.exitAtAlarm && this.mSchedule.nextAlarm != 0 && time >= this.mSchedule.nextAlarm && isAlarmInSchedule(this.mSchedule.nextAlarm, time);
     }
 
     private boolean isInSchedule(int daysOffset, long time, long start, long end) {
-        long start2 = addDays(start, daysOffset);
-        long end2 = addDays(end, daysOffset);
-        if (!this.mDays.contains(Integer.valueOf(((((getDayOfWeek(time) - 1) + (daysOffset % 7)) + 7) % 7) + 1)) || time < start2 || time >= end2) {
-            return false;
-        }
-        return true;
+        int day = ((((getDayOfWeek(time) - 1) + (daysOffset % 7)) + 7) % 7) + 1;
+        return this.mDays.contains(Integer.valueOf(day)) && time >= addDays(start, daysOffset) && time < addDays(end, daysOffset);
     }
 
     private int getDayOfWeek(long time) {
@@ -132,8 +122,8 @@ public class ScheduleCalendar {
     private void updateDays() {
         this.mDays.clear();
         if (this.mSchedule != null && this.mSchedule.days != null) {
-            for (int valueOf : this.mSchedule.days) {
-                this.mDays.add(Integer.valueOf(valueOf));
+            for (int i = 0; i < this.mSchedule.days.length; i++) {
+                this.mDays.add(Integer.valueOf(this.mSchedule.days[i]));
             }
         }
     }

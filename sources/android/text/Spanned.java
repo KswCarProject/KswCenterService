@@ -1,5 +1,6 @@
 package android.text;
 
+/* loaded from: classes4.dex */
 public interface Spanned extends CharSequence {
     public static final int SPAN_COMPOSING = 256;
     public static final int SPAN_EXCLUSIVE_EXCLUSIVE = 33;

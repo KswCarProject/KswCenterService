@@ -2,32 +2,32 @@ package android.widget;
 
 import android.content.Context;
 import android.database.ContentObserver;
-import android.os.Handler;
-import android.os.SystemClock;
+import android.p007os.Handler;
+import android.p007os.SystemClock;
 import android.provider.Settings;
 import android.text.format.DateFormat;
 import android.util.AttributeSet;
 import java.util.Calendar;
 
 @Deprecated
+/* loaded from: classes4.dex */
 public class DigitalClock extends TextView {
     Calendar mCalendar;
     String mFormat;
     private FormatChangeObserver mFormatChangeObserver;
-    /* access modifiers changed from: private */
-    public Handler mHandler;
-    /* access modifiers changed from: private */
-    public Runnable mTicker;
-    /* access modifiers changed from: private */
-    public boolean mTickerStopped = false;
+    private Handler mHandler;
+    private Runnable mTicker;
+    private boolean mTickerStopped;
 
     public DigitalClock(Context context) {
         super(context);
+        this.mTickerStopped = false;
         initClock();
     }
 
     public DigitalClock(Context context, AttributeSet attrs) {
         super(context, attrs);
+        this.mTickerStopped = false;
         initClock();
     }
 
@@ -37,50 +37,56 @@ public class DigitalClock extends TextView {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onAttachedToWindow() {
+    @Override // android.widget.TextView, android.view.View
+    protected void onAttachedToWindow() {
         this.mTickerStopped = false;
         super.onAttachedToWindow();
         this.mFormatChangeObserver = new FormatChangeObserver();
         getContext().getContentResolver().registerContentObserver(Settings.System.CONTENT_URI, true, this.mFormatChangeObserver);
         setFormat();
         this.mHandler = new Handler();
-        this.mTicker = new Runnable() {
+        this.mTicker = new Runnable() { // from class: android.widget.DigitalClock.1
+            @Override // java.lang.Runnable
             public void run() {
-                if (!DigitalClock.this.mTickerStopped) {
-                    DigitalClock.this.mCalendar.setTimeInMillis(System.currentTimeMillis());
-                    DigitalClock.this.setText(DateFormat.format((CharSequence) DigitalClock.this.mFormat, DigitalClock.this.mCalendar));
-                    DigitalClock.this.invalidate();
-                    long now = SystemClock.uptimeMillis();
-                    DigitalClock.this.mHandler.postAtTime(DigitalClock.this.mTicker, (1000 - (now % 1000)) + now);
+                if (DigitalClock.this.mTickerStopped) {
+                    return;
                 }
+                DigitalClock.this.mCalendar.setTimeInMillis(System.currentTimeMillis());
+                DigitalClock.this.setText(DateFormat.format(DigitalClock.this.mFormat, DigitalClock.this.mCalendar));
+                DigitalClock.this.invalidate();
+                long now = SystemClock.uptimeMillis();
+                long next = (1000 - (now % 1000)) + now;
+                DigitalClock.this.mHandler.postAtTime(DigitalClock.this.mTicker, next);
             }
         };
         this.mTicker.run();
     }
 
-    /* access modifiers changed from: protected */
-    public void onDetachedFromWindow() {
+    @Override // android.view.View
+    protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         this.mTickerStopped = true;
         getContext().getContentResolver().unregisterContentObserver(this.mFormatChangeObserver);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void setFormat() {
         this.mFormat = DateFormat.getTimeFormatString(getContext());
     }
 
+    /* loaded from: classes4.dex */
     private class FormatChangeObserver extends ContentObserver {
         public FormatChangeObserver() {
             super(new Handler());
         }
 
+        @Override // android.database.ContentObserver
         public void onChange(boolean selfChange) {
             DigitalClock.this.setFormat();
         }
     }
 
+    @Override // android.widget.TextView, android.view.View
     public CharSequence getAccessibilityClassName() {
         return DigitalClock.class.getName();
     }

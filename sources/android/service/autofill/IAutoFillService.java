@@ -1,11 +1,14 @@
 package android.service.autofill;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
+import android.service.autofill.IFillCallback;
+import android.service.autofill.ISaveCallback;
 
+/* loaded from: classes3.dex */
 public interface IAutoFillService extends IInterface {
     void onConnectedStateChanged(boolean z) throws RemoteException;
 
@@ -13,21 +16,27 @@ public interface IAutoFillService extends IInterface {
 
     void onSaveRequest(SaveRequest saveRequest, ISaveCallback iSaveCallback) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements IAutoFillService {
+        @Override // android.service.autofill.IAutoFillService
         public void onConnectedStateChanged(boolean connected) throws RemoteException {
         }
 
+        @Override // android.service.autofill.IAutoFillService
         public void onFillRequest(FillRequest request, IFillCallback callback) throws RemoteException {
         }
 
+        @Override // android.service.autofill.IAutoFillService
         public void onSaveRequest(SaveRequest request, ISaveCallback callback) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements IAutoFillService {
         private static final String DESCRIPTOR = "android.service.autofill.IAutoFillService";
         static final int TRANSACTION_onConnectedStateChanged = 1;
@@ -43,12 +52,13 @@ public interface IAutoFillService extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IAutoFillService)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IAutoFillService)) {
+                return (IAutoFillService) iin;
             }
-            return (IAutoFillService) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -66,80 +76,41 @@ public interface IAutoFillService extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v6, resolved type: android.service.autofill.FillRequest} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v10, resolved type: android.service.autofill.SaveRequest} */
-        /* JADX WARNING: type inference failed for: r1v1 */
-        /* JADX WARNING: type inference failed for: r1v15 */
-        /* JADX WARNING: type inference failed for: r1v16 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r5, android.os.Parcel r6, android.os.Parcel r7, int r8) throws android.os.RemoteException {
-            /*
-                r4 = this;
-                java.lang.String r0 = "android.service.autofill.IAutoFillService"
-                r1 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r2 = 1
-                if (r5 == r1) goto L_0x005f
-                r1 = 0
-                switch(r5) {
-                    case 1: goto L_0x004f;
-                    case 2: goto L_0x0030;
-                    case 3: goto L_0x0011;
-                    default: goto L_0x000c;
-                }
-            L_0x000c:
-                boolean r1 = super.onTransact(r5, r6, r7, r8)
-                return r1
-            L_0x0011:
-                r6.enforceInterface(r0)
-                int r3 = r6.readInt()
-                if (r3 == 0) goto L_0x0023
-                android.os.Parcelable$Creator<android.service.autofill.SaveRequest> r1 = android.service.autofill.SaveRequest.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r6)
-                android.service.autofill.SaveRequest r1 = (android.service.autofill.SaveRequest) r1
-                goto L_0x0024
-            L_0x0023:
-            L_0x0024:
-                android.os.IBinder r3 = r6.readStrongBinder()
-                android.service.autofill.ISaveCallback r3 = android.service.autofill.ISaveCallback.Stub.asInterface(r3)
-                r4.onSaveRequest(r1, r3)
-                return r2
-            L_0x0030:
-                r6.enforceInterface(r0)
-                int r3 = r6.readInt()
-                if (r3 == 0) goto L_0x0042
-                android.os.Parcelable$Creator<android.service.autofill.FillRequest> r1 = android.service.autofill.FillRequest.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r6)
-                android.service.autofill.FillRequest r1 = (android.service.autofill.FillRequest) r1
-                goto L_0x0043
-            L_0x0042:
-            L_0x0043:
-                android.os.IBinder r3 = r6.readStrongBinder()
-                android.service.autofill.IFillCallback r3 = android.service.autofill.IFillCallback.Stub.asInterface(r3)
-                r4.onFillRequest(r1, r3)
-                return r2
-            L_0x004f:
-                r6.enforceInterface(r0)
-                int r1 = r6.readInt()
-                if (r1 == 0) goto L_0x005a
-                r1 = r2
-                goto L_0x005b
-            L_0x005a:
-                r1 = 0
-            L_0x005b:
-                r4.onConnectedStateChanged(r1)
-                return r2
-            L_0x005f:
-                r7.writeString(r0)
-                return r2
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.service.autofill.IAutoFillService.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean _arg0 = data.readInt() != 0;
+                    onConnectedStateChanged(_arg0);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    FillRequest _arg02 = data.readInt() != 0 ? FillRequest.CREATOR.createFromParcel(data) : null;
+                    IFillCallback _arg1 = IFillCallback.Stub.asInterface(data.readStrongBinder());
+                    onFillRequest(_arg02, _arg1);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    SaveRequest _arg03 = data.readInt() != 0 ? SaveRequest.CREATOR.createFromParcel(data) : null;
+                    ISaveCallback _arg12 = ISaveCallback.Stub.asInterface(data.readStrongBinder());
+                    onSaveRequest(_arg03, _arg12);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements IAutoFillService {
             public static IAutoFillService sDefaultImpl;
             private IBinder mRemote;
@@ -148,6 +119,7 @@ public interface IAutoFillService extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -156,14 +128,14 @@ public interface IAutoFillService extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.service.autofill.IAutoFillService
             public void onConnectedStateChanged(boolean connected) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(connected);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(connected ? 1 : 0);
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onConnectedStateChanged(connected);
                     }
                 } finally {
@@ -171,6 +143,7 @@ public interface IAutoFillService extends IInterface {
                 }
             }
 
+            @Override // android.service.autofill.IAutoFillService
             public void onFillRequest(FillRequest request, IFillCallback callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -182,9 +155,8 @@ public interface IAutoFillService extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onFillRequest(request, callback);
                     }
                 } finally {
@@ -192,6 +164,7 @@ public interface IAutoFillService extends IInterface {
                 }
             }
 
+            @Override // android.service.autofill.IAutoFillService
             public void onSaveRequest(SaveRequest request, ISaveCallback callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -203,9 +176,8 @@ public interface IAutoFillService extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onSaveRequest(request, callback);
                     }
                 } finally {
@@ -215,11 +187,11 @@ public interface IAutoFillService extends IInterface {
         }
 
         public static boolean setDefaultImpl(IAutoFillService impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IAutoFillService getDefaultImpl() {

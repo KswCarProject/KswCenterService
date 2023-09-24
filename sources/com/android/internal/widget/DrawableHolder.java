@@ -9,6 +9,7 @@ import android.view.animation.DecelerateInterpolator;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+/* loaded from: classes4.dex */
 public class DrawableHolder implements Animator.AnimatorListener {
     private static final boolean DBG = false;
     public static final DecelerateInterpolator EASE_OUT_INTERPOLATOR = new DecelerateInterpolator();
@@ -19,24 +20,28 @@ public class DrawableHolder implements Animator.AnimatorListener {
     private ArrayList<ObjectAnimator> mNeedToStart;
     private float mScaleX;
     private float mScaleY;
-    private float mX;
-    private float mY;
+
+    /* renamed from: mX */
+    private float f2496mX;
+
+    /* renamed from: mY */
+    private float f2497mY;
 
     public DrawableHolder(BitmapDrawable drawable) {
         this(drawable, 0.0f, 0.0f);
     }
 
     public DrawableHolder(BitmapDrawable drawable, float x, float y) {
-        this.mX = 0.0f;
-        this.mY = 0.0f;
+        this.f2496mX = 0.0f;
+        this.f2497mY = 0.0f;
         this.mScaleX = 1.0f;
         this.mScaleY = 1.0f;
         this.mAlpha = 1.0f;
         this.mAnimators = new ArrayList<>();
         this.mNeedToStart = new ArrayList<>();
         this.mDrawable = drawable;
-        this.mX = x;
-        this.mY = y;
+        this.f2496mX = x;
+        this.f2497mY = y;
         this.mDrawable.getPaint().setAntiAlias(true);
         this.mDrawable.setBounds(0, 0, this.mDrawable.getIntrinsicWidth(), this.mDrawable.getIntrinsicHeight());
     }
@@ -45,7 +50,7 @@ public class DrawableHolder implements Animator.AnimatorListener {
         if (replace) {
             removeAnimationFor(property);
         }
-        ObjectAnimator anim = ObjectAnimator.ofFloat((Object) this, property, toValue);
+        ObjectAnimator anim = ObjectAnimator.ofFloat(this, property, toValue);
         anim.setDuration(duration);
         anim.setStartDelay(delay);
         anim.setInterpolator(EASE_OUT_INTERPOLATOR);
@@ -54,7 +59,8 @@ public class DrawableHolder implements Animator.AnimatorListener {
     }
 
     public void removeAnimationFor(String property) {
-        Iterator<ObjectAnimator> it = ((ArrayList) this.mAnimators.clone()).iterator();
+        ArrayList<ObjectAnimator> removalList = (ArrayList) this.mAnimators.clone();
+        Iterator<ObjectAnimator> it = removalList.iterator();
         while (it.hasNext()) {
             ObjectAnimator currentAnim = it.next();
             if (property.equals(currentAnim.getPropertyName())) {
@@ -66,7 +72,8 @@ public class DrawableHolder implements Animator.AnimatorListener {
     public void clearAnimations() {
         Iterator<ObjectAnimator> it = this.mAnimators.iterator();
         while (it.hasNext()) {
-            it.next().cancel();
+            ObjectAnimator currentAnim = it.next();
+            currentAnim.cancel();
         }
         this.mAnimators.clear();
     }
@@ -80,15 +87,16 @@ public class DrawableHolder implements Animator.AnimatorListener {
     }
 
     public void draw(Canvas canvas) {
-        if (this.mAlpha > 0.00390625f) {
-            canvas.save(1);
-            canvas.translate(this.mX, this.mY);
-            canvas.scale(this.mScaleX, this.mScaleY);
-            canvas.translate(((float) getWidth()) * -0.5f, ((float) getHeight()) * -0.5f);
-            this.mDrawable.setAlpha(Math.round(this.mAlpha * 255.0f));
-            this.mDrawable.draw(canvas);
-            canvas.restore();
+        if (this.mAlpha <= 0.00390625f) {
+            return;
         }
+        canvas.save(1);
+        canvas.translate(this.f2496mX, this.f2497mY);
+        canvas.scale(this.mScaleX, this.mScaleY);
+        canvas.translate(getWidth() * (-0.5f), getHeight() * (-0.5f));
+        this.mDrawable.setAlpha(Math.round(this.mAlpha * 255.0f));
+        this.mDrawable.draw(canvas);
+        canvas.restore();
     }
 
     public void startAnimations(ValueAnimator.AnimatorUpdateListener listener) {
@@ -102,11 +110,11 @@ public class DrawableHolder implements Animator.AnimatorListener {
     }
 
     public void setX(float value) {
-        this.mX = value;
+        this.f2496mX = value;
     }
 
     public void setY(float value) {
-        this.mY = value;
+        this.f2497mY = value;
     }
 
     public void setScaleX(float value) {
@@ -122,11 +130,11 @@ public class DrawableHolder implements Animator.AnimatorListener {
     }
 
     public float getX() {
-        return this.mX;
+        return this.f2496mX;
     }
 
     public float getY() {
-        return this.mY;
+        return this.f2497mY;
     }
 
     public float getScaleX() {
@@ -153,16 +161,20 @@ public class DrawableHolder implements Animator.AnimatorListener {
         return this.mDrawable.getIntrinsicHeight();
     }
 
+    @Override // android.animation.Animator.AnimatorListener
     public void onAnimationCancel(Animator animation) {
     }
 
+    @Override // android.animation.Animator.AnimatorListener
     public void onAnimationEnd(Animator animation) {
         this.mAnimators.remove(animation);
     }
 
+    @Override // android.animation.Animator.AnimatorListener
     public void onAnimationRepeat(Animator animation) {
     }
 
+    @Override // android.animation.Animator.AnimatorListener
     public void onAnimationStart(Animator animation) {
     }
 }

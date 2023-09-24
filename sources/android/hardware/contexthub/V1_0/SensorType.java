@@ -2,6 +2,7 @@ package android.hardware.contexthub.V1_0;
 
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class SensorType {
     public static final int ACCELEROMETER = 1;
     public static final int AMBIENT_LIGHT_SENSOR = 6;

@@ -1,12 +1,15 @@
 package android.service.carrier;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.ArrayList;
 import java.util.List;
 
+/* loaded from: classes3.dex */
 public final class MessagePdu implements Parcelable {
-    public static final Parcelable.Creator<MessagePdu> CREATOR = new Parcelable.Creator<MessagePdu>() {
+    public static final Parcelable.Creator<MessagePdu> CREATOR = new Parcelable.Creator<MessagePdu>() { // from class: android.service.carrier.MessagePdu.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public MessagePdu createFromParcel(Parcel source) {
             List<byte[]> pduList;
             int size = source.readInt();
@@ -21,6 +24,8 @@ public final class MessagePdu implements Parcelable {
             return new MessagePdu(pduList);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public MessagePdu[] newArray(int size) {
             return new MessagePdu[size];
         }
@@ -29,7 +34,7 @@ public final class MessagePdu implements Parcelable {
     private final List<byte[]> mPduList;
 
     public MessagePdu(List<byte[]> pduList) {
-        if (pduList == null || pduList.contains((Object) null)) {
+        if (pduList == null || pduList.contains(null)) {
             throw new IllegalArgumentException("pduList must not be null or contain nulls");
         }
         this.mPduList = pduList;
@@ -39,10 +44,12 @@ public final class MessagePdu implements Parcelable {
         return this.mPduList;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         if (this.mPduList == null) {
             dest.writeInt(-1);

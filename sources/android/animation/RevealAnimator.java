@@ -3,6 +3,7 @@ package android.animation;
 import android.view.RenderNodeAnimator;
 import android.view.View;
 
+/* loaded from: classes.dex */
 public class RevealAnimator extends RenderNodeAnimator {
     private View mClipView;
 
@@ -12,8 +13,8 @@ public class RevealAnimator extends RenderNodeAnimator {
         setTarget(this.mClipView);
     }
 
-    /* access modifiers changed from: protected */
-    public void onFinished() {
+    @Override // android.view.RenderNodeAnimator
+    protected void onFinished() {
         this.mClipView.setRevealClip(false, 0.0f, 0.0f, 0.0f);
         super.onFinished();
     }

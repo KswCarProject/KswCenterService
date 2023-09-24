@@ -5,10 +5,11 @@ import android.metrics.LogMaker;
 import android.net.Uri;
 import com.android.internal.logging.MetricsLogger;
 
+/* loaded from: classes.dex */
 public class SliceMetrics {
     private static final String TAG = "SliceMetrics";
-    private LogMaker mLogMaker = new LogMaker(0);
     private MetricsLogger mMetricsLogger = new MetricsLogger();
+    private LogMaker mLogMaker = new LogMaker(0);
 
     public SliceMetrics(Context context, Uri uri) {
         this.mLogMaker.addTaggedData(1402, uri.getAuthority());

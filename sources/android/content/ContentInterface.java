@@ -3,13 +3,14 @@ package android.content;
 import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.CancellationSignal;
-import android.os.ParcelFileDescriptor;
-import android.os.RemoteException;
+import android.p007os.Bundle;
+import android.p007os.CancellationSignal;
+import android.p007os.ParcelFileDescriptor;
+import android.p007os.RemoteException;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public interface ContentInterface {
     ContentProviderResult[] applyBatch(String str, ArrayList<ContentProviderOperation> arrayList) throws RemoteException, OperationApplicationException;
 

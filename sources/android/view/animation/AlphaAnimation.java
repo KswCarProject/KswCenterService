@@ -3,15 +3,16 @@ package android.view.animation;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
+/* loaded from: classes4.dex */
 public class AlphaAnimation extends Animation {
     private float mFromAlpha;
     private float mToAlpha;
 
     public AlphaAnimation(Context context, AttributeSet attrs) {
         super(context, attrs);
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.AlphaAnimation);
+        TypedArray a = context.obtainStyledAttributes(attrs, C3132R.styleable.AlphaAnimation);
         this.mFromAlpha = a.getFloat(0, 1.0f);
         this.mToAlpha = a.getFloat(1, 1.0f);
         a.recycle();
@@ -22,20 +23,23 @@ public class AlphaAnimation extends Animation {
         this.mToAlpha = toAlpha;
     }
 
-    /* access modifiers changed from: protected */
-    public void applyTransformation(float interpolatedTime, Transformation t) {
+    @Override // android.view.animation.Animation
+    protected void applyTransformation(float interpolatedTime, Transformation t) {
         float alpha = this.mFromAlpha;
         t.setAlpha(((this.mToAlpha - alpha) * interpolatedTime) + alpha);
     }
 
+    @Override // android.view.animation.Animation
     public boolean willChangeTransformationMatrix() {
         return false;
     }
 
+    @Override // android.view.animation.Animation
     public boolean willChangeBounds() {
         return false;
     }
 
+    @Override // android.view.animation.Animation
     public boolean hasAlpha() {
         return true;
     }

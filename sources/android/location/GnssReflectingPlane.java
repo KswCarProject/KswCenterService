@@ -1,16 +1,22 @@
 package android.location;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class GnssReflectingPlane implements Parcelable {
-    public static final Parcelable.Creator<GnssReflectingPlane> CREATOR = new Parcelable.Creator<GnssReflectingPlane>() {
+    public static final Parcelable.Creator<GnssReflectingPlane> CREATOR = new Parcelable.Creator<GnssReflectingPlane>() { // from class: android.location.GnssReflectingPlane.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public GnssReflectingPlane createFromParcel(Parcel parcel) {
-            return new Builder().setLatitudeDegrees(parcel.readDouble()).setLongitudeDegrees(parcel.readDouble()).setAltitudeMeters(parcel.readDouble()).setAzimuthDegrees(parcel.readDouble()).build();
+            GnssReflectingPlane reflectingPlane = new Builder().setLatitudeDegrees(parcel.readDouble()).setLongitudeDegrees(parcel.readDouble()).setAltitudeMeters(parcel.readDouble()).setAzimuthDegrees(parcel.readDouble()).build();
+            return reflectingPlane;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public GnssReflectingPlane[] newArray(int i) {
             return new GnssReflectingPlane[i];
         }
@@ -43,14 +49,16 @@ public final class GnssReflectingPlane implements Parcelable {
         return this.mAzimuthDegrees;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
     public String toString() {
-        return "ReflectingPlane:\n" + String.format("   %-29s = %s\n", new Object[]{"LatitudeDegrees = ", Double.valueOf(this.mLatitudeDegrees)}) + String.format("   %-29s = %s\n", new Object[]{"LongitudeDegrees = ", Double.valueOf(this.mLongitudeDegrees)}) + String.format("   %-29s = %s\n", new Object[]{"AltitudeMeters = ", Double.valueOf(this.mAltitudeMeters)}) + String.format("   %-29s = %s\n", new Object[]{"AzimuthDegrees = ", Double.valueOf(this.mAzimuthDegrees)});
+        return "ReflectingPlane:\n" + String.format("   %-29s = %s\n", "LatitudeDegrees = ", Double.valueOf(this.mLatitudeDegrees)) + String.format("   %-29s = %s\n", "LongitudeDegrees = ", Double.valueOf(this.mLongitudeDegrees)) + String.format("   %-29s = %s\n", "AltitudeMeters = ", Double.valueOf(this.mAltitudeMeters)) + String.format("   %-29s = %s\n", "AzimuthDegrees = ", Double.valueOf(this.mAzimuthDegrees));
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeDouble(this.mLatitudeDegrees);
         parcel.writeDouble(this.mLongitudeDegrees);
@@ -58,15 +66,12 @@ public final class GnssReflectingPlane implements Parcelable {
         parcel.writeDouble(this.mAzimuthDegrees);
     }
 
+    /* loaded from: classes.dex */
     public static final class Builder {
-        /* access modifiers changed from: private */
-        public double mAltitudeMeters;
-        /* access modifiers changed from: private */
-        public double mAzimuthDegrees;
-        /* access modifiers changed from: private */
-        public double mLatitudeDegrees;
-        /* access modifiers changed from: private */
-        public double mLongitudeDegrees;
+        private double mAltitudeMeters;
+        private double mAzimuthDegrees;
+        private double mLatitudeDegrees;
+        private double mLongitudeDegrees;
 
         public Builder setLatitudeDegrees(double latitudeDegrees) {
             this.mLatitudeDegrees = latitudeDegrees;

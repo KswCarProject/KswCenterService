@@ -1,7 +1,7 @@
 package android.net.wifi.hotspot2.pps;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
 import java.nio.charset.StandardCharsets;
@@ -13,8 +13,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+/* loaded from: classes3.dex */
 public final class Policy implements Parcelable {
-    public static final Parcelable.Creator<Policy> CREATOR = new Parcelable.Creator<Policy>() {
+    public static final Parcelable.Creator<Policy> CREATOR = new Parcelable.Creator<Policy>() { // from class: android.net.wifi.hotspot2.pps.Policy.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Policy createFromParcel(Parcel in) {
             Policy policy = new Policy();
             policy.setMinHomeDownlinkBandwidth(in.readLong());
@@ -25,10 +28,12 @@ public final class Policy implements Parcelable {
             policy.setRequiredProtoPortMap(readProtoPortMap(in));
             policy.setMaximumBssLoadValue(in.readInt());
             policy.setPreferredRoamingPartnerList(readRoamingPartnerList(in));
-            policy.setPolicyUpdate((UpdateParameter) in.readParcelable((ClassLoader) null));
+            policy.setPolicyUpdate((UpdateParameter) in.readParcelable(null));
             return policy;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Policy[] newArray(int size) {
             return new Policy[size];
         }
@@ -41,7 +46,8 @@ public final class Policy implements Parcelable {
             Map<Integer, String> protoPortMap = new HashMap<>(size);
             for (int i = 0; i < size; i++) {
                 int key = in.readInt();
-                protoPortMap.put(Integer.valueOf(key), in.readString());
+                String value = in.readString();
+                protoPortMap.put(Integer.valueOf(key), value);
             }
             return protoPortMap;
         }
@@ -53,7 +59,7 @@ public final class Policy implements Parcelable {
             }
             List<RoamingPartner> partnerList = new ArrayList<>();
             for (int i = 0; i < size; i++) {
-                partnerList.add((RoamingPartner) in.readParcelable((ClassLoader) null));
+                partnerList.add((RoamingPartner) in.readParcelable(null));
             }
             return partnerList;
         }
@@ -63,15 +69,15 @@ public final class Policy implements Parcelable {
     private static final int MAX_SSID_BYTES = 32;
     private static final int NULL_VALUE = -1;
     private static final String TAG = "Policy";
-    private String[] mExcludedSsidList = null;
-    private int mMaximumBssLoadValue = Integer.MIN_VALUE;
-    private long mMinHomeDownlinkBandwidth = Long.MIN_VALUE;
-    private long mMinHomeUplinkBandwidth = Long.MIN_VALUE;
-    private long mMinRoamingDownlinkBandwidth = Long.MIN_VALUE;
-    private long mMinRoamingUplinkBandwidth = Long.MIN_VALUE;
-    private UpdateParameter mPolicyUpdate = null;
-    private List<RoamingPartner> mPreferredRoamingPartnerList = null;
-    private Map<Integer, String> mRequiredProtoPortMap = null;
+    private String[] mExcludedSsidList;
+    private int mMaximumBssLoadValue;
+    private long mMinHomeDownlinkBandwidth;
+    private long mMinHomeUplinkBandwidth;
+    private long mMinRoamingDownlinkBandwidth;
+    private long mMinRoamingUplinkBandwidth;
+    private UpdateParameter mPolicyUpdate;
+    private List<RoamingPartner> mPreferredRoamingPartnerList;
+    private Map<Integer, String> mRequiredProtoPortMap;
 
     public void setMinHomeDownlinkBandwidth(long minHomeDownlinkBandwidth) {
         this.mMinHomeDownlinkBandwidth = minHomeDownlinkBandwidth;
@@ -129,8 +135,11 @@ public final class Policy implements Parcelable {
         return this.mMaximumBssLoadValue;
     }
 
+    /* loaded from: classes3.dex */
     public static final class RoamingPartner implements Parcelable {
-        public static final Parcelable.Creator<RoamingPartner> CREATOR = new Parcelable.Creator<RoamingPartner>() {
+        public static final Parcelable.Creator<RoamingPartner> CREATOR = new Parcelable.Creator<RoamingPartner>() { // from class: android.net.wifi.hotspot2.pps.Policy.RoamingPartner.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public RoamingPartner createFromParcel(Parcel in) {
                 RoamingPartner roamingPartner = new RoamingPartner();
                 roamingPartner.setFqdn(in.readString());
@@ -140,14 +149,16 @@ public final class Policy implements Parcelable {
                 return roamingPartner;
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public RoamingPartner[] newArray(int size) {
                 return new RoamingPartner[size];
             }
         };
-        private String mCountries = null;
-        private String mFqdn = null;
-        private boolean mFqdnExactMatch = false;
-        private int mPriority = Integer.MIN_VALUE;
+        private String mCountries;
+        private String mFqdn;
+        private boolean mFqdnExactMatch;
+        private int mPriority;
 
         public void setFqdn(String fqdn) {
             this.mFqdn = fqdn;
@@ -182,9 +193,17 @@ public final class Policy implements Parcelable {
         }
 
         public RoamingPartner() {
+            this.mFqdn = null;
+            this.mFqdnExactMatch = false;
+            this.mPriority = Integer.MIN_VALUE;
+            this.mCountries = null;
         }
 
         public RoamingPartner(RoamingPartner source) {
+            this.mFqdn = null;
+            this.mFqdnExactMatch = false;
+            this.mPriority = Integer.MIN_VALUE;
+            this.mCountries = null;
             if (source != null) {
                 this.mFqdn = source.mFqdn;
                 this.mFqdnExactMatch = source.mFqdnExactMatch;
@@ -193,10 +212,12 @@ public final class Policy implements Parcelable {
             }
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeString(this.mFqdn);
             dest.writeInt(this.mFqdnExactMatch ? 1 : 0);
@@ -208,33 +229,30 @@ public final class Policy implements Parcelable {
             if (this == thatObject) {
                 return true;
             }
-            if (!(thatObject instanceof RoamingPartner)) {
-                return false;
+            if (thatObject instanceof RoamingPartner) {
+                RoamingPartner that = (RoamingPartner) thatObject;
+                return TextUtils.equals(this.mFqdn, that.mFqdn) && this.mFqdnExactMatch == that.mFqdnExactMatch && this.mPriority == that.mPriority && TextUtils.equals(this.mCountries, that.mCountries);
             }
-            RoamingPartner that = (RoamingPartner) thatObject;
-            if (!TextUtils.equals(this.mFqdn, that.mFqdn) || this.mFqdnExactMatch != that.mFqdnExactMatch || this.mPriority != that.mPriority || !TextUtils.equals(this.mCountries, that.mCountries)) {
-                return false;
-            }
-            return true;
+            return false;
         }
 
         public int hashCode() {
-            return Objects.hash(new Object[]{this.mFqdn, Boolean.valueOf(this.mFqdnExactMatch), Integer.valueOf(this.mPriority), this.mCountries});
+            return Objects.hash(this.mFqdn, Boolean.valueOf(this.mFqdnExactMatch), Integer.valueOf(this.mPriority), this.mCountries);
         }
 
         public String toString() {
-            return "FQDN: " + this.mFqdn + "\n" + "ExactMatch: " + "mFqdnExactMatch" + "\n" + "Priority: " + this.mPriority + "\n" + "Countries: " + this.mCountries + "\n";
+            return "FQDN: " + this.mFqdn + "\nExactMatch: mFqdnExactMatch\nPriority: " + this.mPriority + "\nCountries: " + this.mCountries + "\n";
         }
 
         public boolean validate() {
             if (TextUtils.isEmpty(this.mFqdn)) {
-                Log.d(Policy.TAG, "Missing FQDN");
+                Log.m72d(Policy.TAG, "Missing FQDN");
                 return false;
-            } else if (!TextUtils.isEmpty(this.mCountries)) {
-                return true;
+            } else if (TextUtils.isEmpty(this.mCountries)) {
+                Log.m72d(Policy.TAG, "Missing countries");
+                return false;
             } else {
-                Log.d(Policy.TAG, "Missing countries");
-                return false;
+                return true;
             }
         }
     }
@@ -256,34 +274,55 @@ public final class Policy implements Parcelable {
     }
 
     public Policy() {
+        this.mMinHomeDownlinkBandwidth = Long.MIN_VALUE;
+        this.mMinHomeUplinkBandwidth = Long.MIN_VALUE;
+        this.mMinRoamingDownlinkBandwidth = Long.MIN_VALUE;
+        this.mMinRoamingUplinkBandwidth = Long.MIN_VALUE;
+        this.mExcludedSsidList = null;
+        this.mRequiredProtoPortMap = null;
+        this.mMaximumBssLoadValue = Integer.MIN_VALUE;
+        this.mPreferredRoamingPartnerList = null;
+        this.mPolicyUpdate = null;
     }
 
     public Policy(Policy source) {
-        if (source != null) {
-            this.mMinHomeDownlinkBandwidth = source.mMinHomeDownlinkBandwidth;
-            this.mMinHomeUplinkBandwidth = source.mMinHomeUplinkBandwidth;
-            this.mMinRoamingDownlinkBandwidth = source.mMinRoamingDownlinkBandwidth;
-            this.mMinRoamingUplinkBandwidth = source.mMinRoamingUplinkBandwidth;
-            this.mMaximumBssLoadValue = source.mMaximumBssLoadValue;
-            if (source.mExcludedSsidList != null) {
-                this.mExcludedSsidList = (String[]) Arrays.copyOf(source.mExcludedSsidList, source.mExcludedSsidList.length);
-            }
-            if (source.mRequiredProtoPortMap != null) {
-                this.mRequiredProtoPortMap = Collections.unmodifiableMap(source.mRequiredProtoPortMap);
-            }
-            if (source.mPreferredRoamingPartnerList != null) {
-                this.mPreferredRoamingPartnerList = Collections.unmodifiableList(source.mPreferredRoamingPartnerList);
-            }
-            if (source.mPolicyUpdate != null) {
-                this.mPolicyUpdate = new UpdateParameter(source.mPolicyUpdate);
-            }
+        this.mMinHomeDownlinkBandwidth = Long.MIN_VALUE;
+        this.mMinHomeUplinkBandwidth = Long.MIN_VALUE;
+        this.mMinRoamingDownlinkBandwidth = Long.MIN_VALUE;
+        this.mMinRoamingUplinkBandwidth = Long.MIN_VALUE;
+        this.mExcludedSsidList = null;
+        this.mRequiredProtoPortMap = null;
+        this.mMaximumBssLoadValue = Integer.MIN_VALUE;
+        this.mPreferredRoamingPartnerList = null;
+        this.mPolicyUpdate = null;
+        if (source == null) {
+            return;
+        }
+        this.mMinHomeDownlinkBandwidth = source.mMinHomeDownlinkBandwidth;
+        this.mMinHomeUplinkBandwidth = source.mMinHomeUplinkBandwidth;
+        this.mMinRoamingDownlinkBandwidth = source.mMinRoamingDownlinkBandwidth;
+        this.mMinRoamingUplinkBandwidth = source.mMinRoamingUplinkBandwidth;
+        this.mMaximumBssLoadValue = source.mMaximumBssLoadValue;
+        if (source.mExcludedSsidList != null) {
+            this.mExcludedSsidList = (String[]) Arrays.copyOf(source.mExcludedSsidList, source.mExcludedSsidList.length);
+        }
+        if (source.mRequiredProtoPortMap != null) {
+            this.mRequiredProtoPortMap = Collections.unmodifiableMap(source.mRequiredProtoPortMap);
+        }
+        if (source.mPreferredRoamingPartnerList != null) {
+            this.mPreferredRoamingPartnerList = Collections.unmodifiableList(source.mPreferredRoamingPartnerList);
+        }
+        if (source.mPolicyUpdate != null) {
+            this.mPolicyUpdate = new UpdateParameter(source.mPolicyUpdate);
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(this.mMinHomeDownlinkBandwidth);
         dest.writeLong(this.mMinHomeUplinkBandwidth);
@@ -300,24 +339,24 @@ public final class Policy implements Parcelable {
         if (this == thatObject) {
             return true;
         }
-        if (!(thatObject instanceof Policy)) {
-            return false;
-        }
-        Policy that = (Policy) thatObject;
-        if (this.mMinHomeDownlinkBandwidth == that.mMinHomeDownlinkBandwidth && this.mMinHomeUplinkBandwidth == that.mMinHomeUplinkBandwidth && this.mMinRoamingDownlinkBandwidth == that.mMinRoamingDownlinkBandwidth && this.mMinRoamingUplinkBandwidth == that.mMinRoamingUplinkBandwidth && Arrays.equals(this.mExcludedSsidList, that.mExcludedSsidList) && (this.mRequiredProtoPortMap != null ? this.mRequiredProtoPortMap.equals(that.mRequiredProtoPortMap) : that.mRequiredProtoPortMap == null) && this.mMaximumBssLoadValue == that.mMaximumBssLoadValue && (this.mPreferredRoamingPartnerList != null ? this.mPreferredRoamingPartnerList.equals(that.mPreferredRoamingPartnerList) : that.mPreferredRoamingPartnerList == null)) {
-            if (this.mPolicyUpdate == null) {
-                if (that.mPolicyUpdate == null) {
+        if (thatObject instanceof Policy) {
+            Policy that = (Policy) thatObject;
+            if (this.mMinHomeDownlinkBandwidth == that.mMinHomeDownlinkBandwidth && this.mMinHomeUplinkBandwidth == that.mMinHomeUplinkBandwidth && this.mMinRoamingDownlinkBandwidth == that.mMinRoamingDownlinkBandwidth && this.mMinRoamingUplinkBandwidth == that.mMinRoamingUplinkBandwidth && Arrays.equals(this.mExcludedSsidList, that.mExcludedSsidList) && (this.mRequiredProtoPortMap != null ? this.mRequiredProtoPortMap.equals(that.mRequiredProtoPortMap) : that.mRequiredProtoPortMap == null) && this.mMaximumBssLoadValue == that.mMaximumBssLoadValue && (this.mPreferredRoamingPartnerList != null ? this.mPreferredRoamingPartnerList.equals(that.mPreferredRoamingPartnerList) : that.mPreferredRoamingPartnerList == null)) {
+                if (this.mPolicyUpdate == null) {
+                    if (that.mPolicyUpdate == null) {
+                        return true;
+                    }
+                } else if (this.mPolicyUpdate.equals(that.mPolicyUpdate)) {
                     return true;
                 }
-            } else if (this.mPolicyUpdate.equals(that.mPolicyUpdate)) {
-                return true;
             }
+            return false;
         }
         return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Long.valueOf(this.mMinHomeDownlinkBandwidth), Long.valueOf(this.mMinHomeUplinkBandwidth), Long.valueOf(this.mMinRoamingDownlinkBandwidth), Long.valueOf(this.mMinRoamingUplinkBandwidth), this.mExcludedSsidList, this.mRequiredProtoPortMap, Integer.valueOf(this.mMaximumBssLoadValue), this.mPreferredRoamingPartnerList, this.mPolicyUpdate});
+        return Objects.hash(Long.valueOf(this.mMinHomeDownlinkBandwidth), Long.valueOf(this.mMinHomeUplinkBandwidth), Long.valueOf(this.mMinRoamingDownlinkBandwidth), Long.valueOf(this.mMinRoamingUplinkBandwidth), this.mExcludedSsidList, this.mRequiredProtoPortMap, Integer.valueOf(this.mMaximumBssLoadValue), this.mPreferredRoamingPartnerList, this.mPolicyUpdate);
     }
 
     public String toString() {
@@ -355,20 +394,19 @@ public final class Policy implements Parcelable {
     }
 
     public boolean validate() {
+        String[] strArr;
         if (this.mPolicyUpdate == null) {
-            Log.d(TAG, "PolicyUpdate not specified");
+            Log.m72d(TAG, "PolicyUpdate not specified");
             return false;
-        } else if (!this.mPolicyUpdate.validate()) {
-            return false;
-        } else {
+        } else if (this.mPolicyUpdate.validate()) {
             if (this.mExcludedSsidList != null) {
                 if (this.mExcludedSsidList.length > 128) {
-                    Log.d(TAG, "SSID exclusion list size exceeded the max: " + this.mExcludedSsidList.length);
+                    Log.m72d(TAG, "SSID exclusion list size exceeded the max: " + this.mExcludedSsidList.length);
                     return false;
                 }
                 for (String ssid : this.mExcludedSsidList) {
                     if (ssid.getBytes(StandardCharsets.UTF_8).length > 32) {
-                        Log.d(TAG, "Invalid SSID: " + ssid);
+                        Log.m72d(TAG, "Invalid SSID: " + ssid);
                         return false;
                     }
                 }
@@ -377,20 +415,22 @@ public final class Policy implements Parcelable {
                 for (Map.Entry<Integer, String> entry : this.mRequiredProtoPortMap.entrySet()) {
                     String portNumber = entry.getValue();
                     if (portNumber.getBytes(StandardCharsets.UTF_8).length > 64) {
-                        Log.d(TAG, "PortNumber string bytes exceeded the max: " + portNumber);
+                        Log.m72d(TAG, "PortNumber string bytes exceeded the max: " + portNumber);
                         return false;
                     }
                 }
             }
-            if (this.mPreferredRoamingPartnerList == null) {
+            if (this.mPreferredRoamingPartnerList != null) {
+                for (RoamingPartner partner : this.mPreferredRoamingPartnerList) {
+                    if (!partner.validate()) {
+                        return false;
+                    }
+                }
                 return true;
             }
-            for (RoamingPartner partner : this.mPreferredRoamingPartnerList) {
-                if (!partner.validate()) {
-                    return false;
-                }
-            }
             return true;
+        } else {
+            return false;
         }
     }
 

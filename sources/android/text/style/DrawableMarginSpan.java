@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.text.Layout;
 import android.text.Spanned;
 
+/* loaded from: classes4.dex */
 public class DrawableMarginSpan implements LeadingMarginSpan, LineHeightSpan {
     private static final int STANDARD_PAD_WIDTH = 0;
     private final Drawable mDrawable;
@@ -20,19 +21,22 @@ public class DrawableMarginSpan implements LeadingMarginSpan, LineHeightSpan {
         this.mPad = pad;
     }
 
+    @Override // android.text.style.LeadingMarginSpan
     public int getLeadingMargin(boolean first) {
         return this.mDrawable.getIntrinsicWidth() + this.mPad;
     }
 
+    @Override // android.text.style.LeadingMarginSpan
     public void drawLeadingMargin(Canvas c, Paint p, int x, int dir, int top, int baseline, int bottom, CharSequence text, int start, int end, boolean first, Layout layout) {
-        Layout layout2 = layout;
-        int ix = x;
-        int itop = layout2.getLineTop(layout2.getLineForOffset(((Spanned) text).getSpanStart(this)));
-        this.mDrawable.setBounds(ix, itop, ix + this.mDrawable.getIntrinsicWidth(), itop + this.mDrawable.getIntrinsicHeight());
-        Canvas canvas = c;
+        int st = ((Spanned) text).getSpanStart(this);
+        int itop = layout.getLineTop(layout.getLineForOffset(st));
+        int dw = this.mDrawable.getIntrinsicWidth();
+        int dh = this.mDrawable.getIntrinsicHeight();
+        this.mDrawable.setBounds(x, itop, x + dw, itop + dh);
         this.mDrawable.draw(c);
     }
 
+    @Override // android.text.style.LineHeightSpan
     public void chooseHeight(CharSequence text, int start, int end, int istartv, int v, Paint.FontMetricsInt fm) {
         if (end == ((Spanned) text).getSpanEnd(this)) {
             int ht = this.mDrawable.getIntrinsicHeight();

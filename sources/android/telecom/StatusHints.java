@@ -5,17 +5,22 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.Objects;
 
+/* loaded from: classes3.dex */
 public final class StatusHints implements Parcelable {
-    public static final Parcelable.Creator<StatusHints> CREATOR = new Parcelable.Creator<StatusHints>() {
+    public static final Parcelable.Creator<StatusHints> CREATOR = new Parcelable.Creator<StatusHints>() { // from class: android.telecom.StatusHints.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public StatusHints createFromParcel(Parcel in) {
             return new StatusHints(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public StatusHints[] newArray(int size) {
             return new StatusHints[size];
         }
@@ -24,7 +29,6 @@ public final class StatusHints implements Parcelable {
     private final Icon mIcon;
     private final CharSequence mLabel;
 
-    /* JADX INFO: this call moved to the top of the method (can break code semantics) */
     @SystemApi
     @Deprecated
     public StatusHints(ComponentName packageName, CharSequence label, int iconResId, Bundle extras) {
@@ -67,10 +71,12 @@ public final class StatusHints implements Parcelable {
         return this.mExtras;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeCharSequence(this.mLabel);
         out.writeParcelable(this.mIcon, 0);
@@ -88,10 +94,7 @@ public final class StatusHints implements Parcelable {
             return false;
         }
         StatusHints otherHints = (StatusHints) other;
-        if (!Objects.equals(otherHints.getLabel(), getLabel()) || !Objects.equals(otherHints.getIcon(), getIcon()) || !Objects.equals(otherHints.getExtras(), getExtras())) {
-            return false;
-        }
-        return true;
+        return Objects.equals(otherHints.getLabel(), getLabel()) && Objects.equals(otherHints.getIcon(), getIcon()) && Objects.equals(otherHints.getExtras(), getExtras());
     }
 
     public int hashCode() {

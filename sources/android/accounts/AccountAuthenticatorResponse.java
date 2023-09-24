@@ -2,18 +2,23 @@ package android.accounts;
 
 import android.accounts.IAccountAuthenticatorResponse;
 import android.annotation.UnsupportedAppUsage;
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.RemoteException;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.RemoteException;
 import android.util.Log;
 
+/* loaded from: classes.dex */
 public class AccountAuthenticatorResponse implements Parcelable {
-    public static final Parcelable.Creator<AccountAuthenticatorResponse> CREATOR = new Parcelable.Creator<AccountAuthenticatorResponse>() {
+    public static final Parcelable.Creator<AccountAuthenticatorResponse> CREATOR = new Parcelable.Creator<AccountAuthenticatorResponse>() { // from class: android.accounts.AccountAuthenticatorResponse.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AccountAuthenticatorResponse createFromParcel(Parcel source) {
             return new AccountAuthenticatorResponse(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AccountAuthenticatorResponse[] newArray(int size) {
             return new AccountAuthenticatorResponse[size];
         }
@@ -33,7 +38,7 @@ public class AccountAuthenticatorResponse implements Parcelable {
     public void onResult(Bundle result) {
         if (Log.isLoggable(TAG, 2)) {
             result.keySet();
-            Log.v(TAG, "AccountAuthenticatorResponse.onResult: " + AccountManager.sanitizeResult(result));
+            Log.m66v(TAG, "AccountAuthenticatorResponse.onResult: " + AccountManager.sanitizeResult(result));
         }
         try {
             this.mAccountAuthenticatorResponse.onResult(result);
@@ -43,7 +48,7 @@ public class AccountAuthenticatorResponse implements Parcelable {
 
     public void onRequestContinued() {
         if (Log.isLoggable(TAG, 2)) {
-            Log.v(TAG, "AccountAuthenticatorResponse.onRequestContinued");
+            Log.m66v(TAG, "AccountAuthenticatorResponse.onRequestContinued");
         }
         try {
             this.mAccountAuthenticatorResponse.onRequestContinued();
@@ -53,7 +58,7 @@ public class AccountAuthenticatorResponse implements Parcelable {
 
     public void onError(int errorCode, String errorMessage) {
         if (Log.isLoggable(TAG, 2)) {
-            Log.v(TAG, "AccountAuthenticatorResponse.onError: " + errorCode + ", " + errorMessage);
+            Log.m66v(TAG, "AccountAuthenticatorResponse.onError: " + errorCode + ", " + errorMessage);
         }
         try {
             this.mAccountAuthenticatorResponse.onError(errorCode, errorMessage);
@@ -61,10 +66,12 @@ public class AccountAuthenticatorResponse implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeStrongBinder(this.mAccountAuthenticatorResponse.asBinder());
     }

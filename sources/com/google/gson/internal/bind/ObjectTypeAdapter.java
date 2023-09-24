@@ -6,14 +6,17 @@ import com.google.gson.TypeAdapterFactory;
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/* loaded from: classes4.dex */
 public final class ObjectTypeAdapter extends TypeAdapter<Object> {
-    public static final TypeAdapterFactory FACTORY = new TypeAdapterFactory() {
+    public static final TypeAdapterFactory FACTORY = new TypeAdapterFactory() { // from class: com.google.gson.internal.bind.ObjectTypeAdapter.1
+        @Override // com.google.gson.TypeAdapterFactory
         public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
             if (type.getRawType() == Object.class) {
                 return new ObjectTypeAdapter(gson);
@@ -23,12 +26,14 @@ public final class ObjectTypeAdapter extends TypeAdapter<Object> {
     };
     private final Gson gson;
 
-    private ObjectTypeAdapter(Gson gson2) {
-        this.gson = gson2;
+    private ObjectTypeAdapter(Gson gson) {
+        this.gson = gson;
     }
 
+    @Override // com.google.gson.TypeAdapter
     public Object read(JsonReader in) throws IOException {
-        switch (in.peek()) {
+        JsonToken token = in.peek();
+        switch (token) {
             case BEGIN_ARRAY:
                 List<Object> list = new ArrayList<>();
                 in.beginArray();
@@ -59,6 +64,7 @@ public final class ObjectTypeAdapter extends TypeAdapter<Object> {
         }
     }
 
+    @Override // com.google.gson.TypeAdapter
     public void write(JsonWriter out, Object value) throws IOException {
         if (value == null) {
             out.nullValue();

@@ -4,6 +4,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.SOURCE)
+/* loaded from: classes4.dex */
 public @interface StartInputFlags {
     public static final int FIRST_WINDOW_FOCUS_GAIN = 4;
     public static final int INITIAL_CONNECTION = 8;

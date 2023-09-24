@@ -1,16 +1,21 @@
 package android.telephony;
 
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.telecom.PhoneAccountHandle;
 
+/* loaded from: classes.dex */
 public final class VisualVoicemailSms implements Parcelable {
-    public static final Parcelable.Creator<VisualVoicemailSms> CREATOR = new Parcelable.Creator<VisualVoicemailSms>() {
+    public static final Parcelable.Creator<VisualVoicemailSms> CREATOR = new Parcelable.Creator<VisualVoicemailSms>() { // from class: android.telephony.VisualVoicemailSms.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public VisualVoicemailSms createFromParcel(Parcel in) {
-            return new Builder().setPhoneAccountHandle((PhoneAccountHandle) in.readParcelable((ClassLoader) null)).setPrefix(in.readString()).setFields(in.readBundle()).setMessageBody(in.readString()).build();
+            return new Builder().setPhoneAccountHandle((PhoneAccountHandle) in.readParcelable(null)).setPrefix(in.readString()).setFields(in.readBundle()).setMessageBody(in.readString()).build();
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public VisualVoicemailSms[] newArray(int size) {
             return new VisualVoicemailSms[size];
         }
@@ -43,15 +48,12 @@ public final class VisualVoicemailSms implements Parcelable {
         return this.mMessageBody;
     }
 
+    /* loaded from: classes.dex */
     public static class Builder {
-        /* access modifiers changed from: private */
-        public Bundle mFields;
-        /* access modifiers changed from: private */
-        public String mMessageBody;
-        /* access modifiers changed from: private */
-        public PhoneAccountHandle mPhoneAccountHandle;
-        /* access modifiers changed from: private */
-        public String mPrefix;
+        private Bundle mFields;
+        private String mMessageBody;
+        private PhoneAccountHandle mPhoneAccountHandle;
+        private String mPrefix;
 
         public VisualVoicemailSms build() {
             return new VisualVoicemailSms(this);
@@ -78,10 +80,12 @@ public final class VisualVoicemailSms implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(getPhoneAccountHandle(), flags);
         dest.writeString(getPrefix());

@@ -2,6 +2,7 @@ package android.security.keystore;
 
 import java.util.Date;
 
+/* loaded from: classes3.dex */
 abstract class Utils {
     private Utils() {
     }

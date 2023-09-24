@@ -2,18 +2,23 @@ package com.android.internal.net;
 
 import android.annotation.UnsupportedAppUsage;
 import android.net.ProxyInfo;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.TextUtils;
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
 
+/* loaded from: classes4.dex */
 public class VpnProfile implements Cloneable, Parcelable {
-    public static final Parcelable.Creator<VpnProfile> CREATOR = new Parcelable.Creator<VpnProfile>() {
+    public static final Parcelable.Creator<VpnProfile> CREATOR = new Parcelable.Creator<VpnProfile>() { // from class: com.android.internal.net.VpnProfile.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public VpnProfile createFromParcel(Parcel in) {
             return new VpnProfile(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public VpnProfile[] newArray(int size) {
             return new VpnProfile[size];
         }
@@ -53,7 +58,7 @@ public class VpnProfile implements Cloneable, Parcelable {
     @UnsupportedAppUsage
     public String username;
 
-    public VpnProfile(String key2) {
+    public VpnProfile(String key) {
         this.name = "";
         this.type = 0;
         this.server = "";
@@ -71,13 +76,13 @@ public class VpnProfile implements Cloneable, Parcelable {
         this.ipsecServerCert = "";
         this.proxy = null;
         this.saveLogin = false;
-        this.key = key2;
+        this.key = key;
     }
 
     @UnsupportedAppUsage
     public VpnProfile(Parcel in) {
+        boolean z;
         this.name = "";
-        boolean z = false;
         this.type = 0;
         this.server = "";
         this.username = "";
@@ -103,17 +108,23 @@ public class VpnProfile implements Cloneable, Parcelable {
         this.dnsServers = in.readString();
         this.searchDomains = in.readString();
         this.routes = in.readString();
-        this.mppe = in.readInt() != 0;
+        if (in.readInt() == 0) {
+            z = false;
+        } else {
+            z = true;
+        }
+        this.mppe = z;
         this.l2tpSecret = in.readString();
         this.ipsecIdentifier = in.readString();
         this.ipsecSecret = in.readString();
         this.ipsecUserCert = in.readString();
         this.ipsecCaCert = in.readString();
         this.ipsecServerCert = in.readString();
-        this.saveLogin = in.readInt() != 0 ? true : z;
-        this.proxy = (ProxyInfo) in.readParcelable((ClassLoader) null);
+        this.saveLogin = in.readInt() != 0;
+        this.proxy = (ProxyInfo) in.readParcelable(null);
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(this.key);
         out.writeString(this.name);
@@ -136,57 +147,52 @@ public class VpnProfile implements Cloneable, Parcelable {
     }
 
     @UnsupportedAppUsage
-    public static VpnProfile decode(String key2, byte[] value) {
-        if (key2 == null) {
+    public static VpnProfile decode(String key, byte[] value) {
+        if (key == null) {
             return null;
         }
         try {
             String[] values = new String(value, StandardCharsets.UTF_8).split("\u0000", -1);
-            if (values.length >= 14) {
-                if (values.length <= 19) {
-                    VpnProfile profile = new VpnProfile(key2);
-                    boolean z = false;
-                    profile.name = values[0];
-                    profile.type = Integer.parseInt(values[1]);
-                    if (profile.type >= 0) {
-                        if (profile.type <= 5) {
-                            profile.server = values[2];
-                            profile.username = values[3];
-                            profile.password = values[4];
-                            profile.dnsServers = values[5];
-                            profile.searchDomains = values[6];
-                            profile.routes = values[7];
-                            profile.mppe = Boolean.parseBoolean(values[8]);
-                            profile.l2tpSecret = values[9];
-                            profile.ipsecIdentifier = values[10];
-                            profile.ipsecSecret = values[11];
-                            profile.ipsecUserCert = values[12];
-                            profile.ipsecCaCert = values[13];
-                            profile.ipsecServerCert = values.length > 14 ? values[14] : "";
-                            if (values.length > 15) {
-                                String host = values.length > 15 ? values[15] : "";
-                                String port = values.length > 16 ? values[16] : "";
-                                String exclList = values.length > 17 ? values[17] : "";
-                                String pacFileUrl = values.length > 18 ? values[18] : "";
-                                if (pacFileUrl.isEmpty()) {
-                                    profile.proxy = new ProxyInfo(host, port.isEmpty() ? 0 : Integer.parseInt(port), exclList);
-                                } else {
-                                    profile.proxy = new ProxyInfo(pacFileUrl);
-                                }
-                            }
-                            if (profile.username.isEmpty()) {
-                                if (profile.password.isEmpty()) {
-                                    profile.saveLogin = z;
-                                    return profile;
-                                }
-                            }
-                            z = true;
-                            profile.saveLogin = z;
-                            return profile;
+            if (values.length >= 14 && values.length <= 19) {
+                VpnProfile profile = new VpnProfile(key);
+                boolean z = false;
+                profile.name = values[0];
+                profile.type = Integer.parseInt(values[1]);
+                if (profile.type >= 0 && profile.type <= 5) {
+                    profile.server = values[2];
+                    profile.username = values[3];
+                    profile.password = values[4];
+                    profile.dnsServers = values[5];
+                    profile.searchDomains = values[6];
+                    profile.routes = values[7];
+                    profile.mppe = Boolean.parseBoolean(values[8]);
+                    profile.l2tpSecret = values[9];
+                    profile.ipsecIdentifier = values[10];
+                    profile.ipsecSecret = values[11];
+                    profile.ipsecUserCert = values[12];
+                    profile.ipsecCaCert = values[13];
+                    profile.ipsecServerCert = values.length > 14 ? values[14] : "";
+                    if (values.length > 15) {
+                        String host = values.length > 15 ? values[15] : "";
+                        String port = values.length > 16 ? values[16] : "";
+                        String exclList = values.length > 17 ? values[17] : "";
+                        String pacFileUrl = values.length > 18 ? values[18] : "";
+                        if (pacFileUrl.isEmpty()) {
+                            profile.proxy = new ProxyInfo(host, port.isEmpty() ? 0 : Integer.parseInt(port), exclList);
+                        } else {
+                            profile.proxy = new ProxyInfo(pacFileUrl);
                         }
                     }
-                    return null;
+                    String host2 = profile.username;
+                    if (host2.isEmpty() && profile.password.isEmpty()) {
+                        profile.saveLogin = z;
+                        return profile;
+                    }
+                    z = true;
+                    profile.saveLogin = z;
+                    return profile;
                 }
+                return null;
             }
             return null;
         } catch (Exception e) {
@@ -196,42 +202,42 @@ public class VpnProfile implements Cloneable, Parcelable {
 
     public byte[] encode() {
         StringBuilder builder = new StringBuilder(this.name);
-        builder.append(0);
+        builder.append((char) 0);
         builder.append(this.type);
-        builder.append(0);
+        builder.append((char) 0);
         builder.append(this.server);
-        builder.append(0);
+        builder.append((char) 0);
         builder.append(this.saveLogin ? this.username : "");
-        builder.append(0);
+        builder.append((char) 0);
         builder.append(this.saveLogin ? this.password : "");
-        builder.append(0);
+        builder.append((char) 0);
         builder.append(this.dnsServers);
-        builder.append(0);
+        builder.append((char) 0);
         builder.append(this.searchDomains);
-        builder.append(0);
+        builder.append((char) 0);
         builder.append(this.routes);
-        builder.append(0);
+        builder.append((char) 0);
         builder.append(this.mppe);
-        builder.append(0);
+        builder.append((char) 0);
         builder.append(this.l2tpSecret);
-        builder.append(0);
+        builder.append((char) 0);
         builder.append(this.ipsecIdentifier);
-        builder.append(0);
+        builder.append((char) 0);
         builder.append(this.ipsecSecret);
-        builder.append(0);
+        builder.append((char) 0);
         builder.append(this.ipsecUserCert);
-        builder.append(0);
+        builder.append((char) 0);
         builder.append(this.ipsecCaCert);
-        builder.append(0);
+        builder.append((char) 0);
         builder.append(this.ipsecServerCert);
         if (this.proxy != null) {
-            builder.append(0);
+            builder.append((char) 0);
             builder.append(this.proxy.getHost() != null ? this.proxy.getHost() : "");
-            builder.append(0);
+            builder.append((char) 0);
             builder.append(this.proxy.getPort());
-            builder.append(0);
+            builder.append((char) 0);
             builder.append(this.proxy.getExclusionListAsString() != null ? this.proxy.getExclusionListAsString() : "");
-            builder.append(0);
+            builder.append((char) 0);
             builder.append(this.proxy.getPacFileUrl().toString());
         }
         return builder.toString().getBytes(StandardCharsets.UTF_8);
@@ -259,6 +265,7 @@ public class VpnProfile implements Cloneable, Parcelable {
     }
 
     public boolean areDnsAddressesNumeric() {
+        String[] split;
         try {
             for (String dnsServer : this.dnsServers.split(" +")) {
                 InetAddress.parseNumericAddress(dnsServer);
@@ -269,6 +276,7 @@ public class VpnProfile implements Cloneable, Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

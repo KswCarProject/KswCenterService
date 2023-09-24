@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.function.IntFunction;
 
+/* loaded from: classes4.dex */
 public final class BitUtils {
     private BitUtils() {
     }
@@ -44,7 +45,8 @@ public final class BitUtils {
     }
 
     public static int[] unpackBits(long val) {
-        int[] result = new int[Long.bitCount(val)];
+        int size = Long.bitCount(val);
+        int[] result = new int[size];
         int index = 0;
         int bitPos = 0;
         while (val > 0) {
@@ -61,7 +63,7 @@ public final class BitUtils {
     public static long packBits(int[] bits) {
         long packed = 0;
         for (int b : bits) {
-            packed |= (long) (1 << b);
+            packed |= 1 << b;
         }
         return packed;
     }
@@ -79,7 +81,7 @@ public final class BitUtils {
     }
 
     public static long uint32(int i) {
-        return ((long) i) & 4294967295L;
+        return i & 4294967295L;
     }
 
     public static int bytesToBEInt(byte[] bytes) {

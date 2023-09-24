@@ -2,12 +2,13 @@ package com.android.internal.util;
 
 import android.app.Service;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Message;
-import android.os.Messenger;
+import android.p007os.Handler;
+import android.p007os.IBinder;
+import android.p007os.Message;
+import android.p007os.Messenger;
 import android.util.Slog;
 
+/* loaded from: classes4.dex */
 public abstract class AsyncService extends Service {
     public static final int CMD_ASYNC_SERVICE_DESTROY = 16777216;
     public static final int CMD_ASYNC_SERVICE_ON_START_INTENT = 16777215;
@@ -17,6 +18,7 @@ public abstract class AsyncService extends Service {
     Handler mHandler;
     protected Messenger mMessenger;
 
+    /* loaded from: classes4.dex */
     public static final class AsyncServiceInfo {
         public Handler mHandler;
         public int mRestartFlags;
@@ -28,6 +30,7 @@ public abstract class AsyncService extends Service {
         return this.mHandler;
     }
 
+    @Override // android.app.Service
     public void onCreate() {
         super.onCreate();
         this.mAsyncServiceInfo = createHandler();
@@ -35,8 +38,9 @@ public abstract class AsyncService extends Service {
         this.mMessenger = new Messenger(this.mHandler);
     }
 
+    @Override // android.app.Service
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Slog.d(TAG, "onStartCommand");
+        Slog.m58d(TAG, "onStartCommand");
         Message msg = this.mHandler.obtainMessage();
         msg.what = 16777215;
         msg.arg1 = flags;
@@ -46,13 +50,15 @@ public abstract class AsyncService extends Service {
         return this.mAsyncServiceInfo.mRestartFlags;
     }
 
+    @Override // android.app.Service
     public void onDestroy() {
-        Slog.d(TAG, "onDestroy");
+        Slog.m58d(TAG, "onDestroy");
         Message msg = this.mHandler.obtainMessage();
         msg.what = 16777216;
         this.mHandler.sendMessage(msg);
     }
 
+    @Override // android.app.Service
     public IBinder onBind(Intent intent) {
         return this.mMessenger.getBinder();
     }

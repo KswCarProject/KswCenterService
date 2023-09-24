@@ -9,6 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 
+/* loaded from: classes4.dex */
 public final class MessageNanoPrinter {
     private static final String INDENT = "  ";
     private static final int MAX_STRING_LEN = 200;
@@ -22,7 +23,7 @@ public final class MessageNanoPrinter {
         }
         StringBuffer buf = new StringBuffer();
         try {
-            print((String) null, message, new StringBuffer(), buf);
+            print(null, message, new StringBuffer(), buf);
             return buf.toString();
         } catch (IllegalAccessException e) {
             return "Error printing proto: " + e.getMessage();
@@ -33,19 +34,17 @@ public final class MessageNanoPrinter {
 
     private static void print(String identifier, Object object, StringBuffer indentBuf, StringBuffer buf) throws IllegalAccessException, InvocationTargetException {
         Method[] methodArr;
-        int i;
+        Method hazzer;
         Field[] fieldArr;
-        Object obj = object;
-        StringBuffer stringBuffer = indentBuf;
-        StringBuffer stringBuffer2 = buf;
-        if (obj != null) {
-            if (obj instanceof MessageNano) {
+        int i;
+        if (object != null) {
+            if (object instanceof MessageNano) {
                 int origIndentBufLength = indentBuf.length();
                 if (identifier != null) {
-                    stringBuffer2.append(stringBuffer);
-                    stringBuffer2.append(deCamelCaseify(identifier));
-                    stringBuffer2.append(" <\n");
-                    stringBuffer.append(INDENT);
+                    buf.append(indentBuf);
+                    buf.append(deCamelCaseify(identifier));
+                    buf.append(" <\n");
+                    indentBuf.append(INDENT);
                 }
                 Class<?> clazz = object.getClass();
                 Field[] fields = clazz.getFields();
@@ -55,37 +54,40 @@ public final class MessageNanoPrinter {
                     Field field = fields[i2];
                     int modifiers = field.getModifiers();
                     String fieldName = field.getName();
-                    if (!"cachedSize".equals(fieldName) && (modifiers & 1) == 1 && (modifiers & 8) != 8 && !fieldName.startsWith(Session.SESSION_SEPARATION_CHAR_CHILD) && !fieldName.endsWith(Session.SESSION_SEPARATION_CHAR_CHILD)) {
+                    if ("cachedSize".equals(fieldName) || (modifiers & 1) != 1 || (modifiers & 8) == 8 || fieldName.startsWith(Session.SESSION_SEPARATION_CHAR_CHILD) || fieldName.endsWith(Session.SESSION_SEPARATION_CHAR_CHILD)) {
+                        fieldArr = fields;
+                        i = length;
+                    } else {
                         Class<?> fieldType = field.getType();
-                        Object value = field.get(obj);
+                        Object value = field.get(object);
                         if (fieldType.isArray()) {
-                            if (fieldType.getComponentType() != Byte.TYPE) {
+                            Class<?> arrayType = fieldType.getComponentType();
+                            if (arrayType == Byte.TYPE) {
+                                print(fieldName, value, indentBuf, buf);
+                                fieldArr = fields;
+                            } else {
                                 int len = value == null ? 0 : Array.getLength(value);
                                 int i3 = 0;
                                 while (true) {
-                                    fieldArr = fields;
                                     int i4 = i3;
+                                    fieldArr = fields;
                                     if (i4 >= len) {
                                         break;
                                     }
-                                    print(fieldName, Array.get(value, i4), stringBuffer, stringBuffer2);
+                                    int i5 = length;
+                                    Object elem = Array.get(value, i4);
+                                    print(fieldName, elem, indentBuf, buf);
                                     i3 = i4 + 1;
                                     fields = fieldArr;
-                                    length = length;
+                                    length = i5;
                                 }
-                            } else {
-                                print(fieldName, value, stringBuffer, stringBuffer2);
-                                fieldArr = fields;
                             }
                             i = length;
                         } else {
                             fieldArr = fields;
                             i = length;
-                            print(fieldName, value, stringBuffer, stringBuffer2);
+                            print(fieldName, value, indentBuf, buf);
                         }
-                    } else {
-                        fieldArr = fields;
-                        i = length;
                     }
                     i2++;
                     fields = fieldArr;
@@ -93,78 +95,80 @@ public final class MessageNanoPrinter {
                 }
                 Method[] methods = clazz.getMethods();
                 int length2 = methods.length;
-                int i5 = 0;
-                while (i5 < length2) {
-                    String name = methods[i5].getName();
+                int i6 = 0;
+                while (i6 < length2) {
+                    Method method = methods[i6];
+                    String name = method.getName();
                     if (name.startsWith("set")) {
                         String subfieldName = name.substring(3);
                         try {
                             try {
-                                if (((Boolean) clazz.getMethod("has" + subfieldName, new Class[0]).invoke(obj, new Object[0])).booleanValue()) {
-                                    try {
-                                        methodArr = methods;
-                                        try {
-                                            print(subfieldName, clazz.getMethod("get" + subfieldName, new Class[0]).invoke(obj, new Object[0]), stringBuffer, stringBuffer2);
-                                        } catch (NoSuchMethodException e) {
-                                        }
-                                    } catch (NoSuchMethodException e2) {
-                                        methodArr = methods;
-                                    }
-                                    i5++;
-                                    methods = methodArr;
-                                }
-                            } catch (NoSuchMethodException e3) {
+                                hazzer = clazz.getMethod("has" + subfieldName, new Class[0]);
+                            } catch (NoSuchMethodException e) {
                                 methodArr = methods;
                             }
-                        } catch (NoSuchMethodException e4) {
+                        } catch (NoSuchMethodException e2) {
                             methodArr = methods;
+                        }
+                        if (((Boolean) hazzer.invoke(object, new Object[0])).booleanValue()) {
+                            try {
+                                methodArr = methods;
+                                try {
+                                    Method getter = clazz.getMethod("get" + subfieldName, new Class[0]);
+                                    print(subfieldName, getter.invoke(object, new Object[0]), indentBuf, buf);
+                                } catch (NoSuchMethodException e3) {
+                                }
+                            } catch (NoSuchMethodException e4) {
+                                methodArr = methods;
+                            }
+                            i6++;
+                            methods = methodArr;
                         }
                     }
                     methodArr = methods;
-                    i5++;
+                    i6++;
                     methods = methodArr;
                 }
                 if (identifier != null) {
-                    stringBuffer.setLength(origIndentBufLength);
-                    stringBuffer2.append(stringBuffer);
-                    stringBuffer2.append(">\n");
+                    indentBuf.setLength(origIndentBufLength);
+                    buf.append(indentBuf);
+                    buf.append(">\n");
                 }
-            } else if (obj instanceof Map) {
+            } else if (object instanceof Map) {
+                Map<?, ?> map = (Map) object;
                 String identifier2 = deCamelCaseify(identifier);
-                for (Map.Entry<?, ?> entry : ((Map) obj).entrySet()) {
-                    stringBuffer2.append(stringBuffer);
-                    stringBuffer2.append(identifier2);
-                    stringBuffer2.append(" <\n");
+                for (Map.Entry<?, ?> entry : map.entrySet()) {
+                    buf.append(indentBuf);
+                    buf.append(identifier2);
+                    buf.append(" <\n");
                     int origIndentBufLength2 = indentBuf.length();
-                    stringBuffer.append(INDENT);
-                    print("key", entry.getKey(), stringBuffer, stringBuffer2);
-                    print("value", entry.getValue(), stringBuffer, stringBuffer2);
-                    stringBuffer.setLength(origIndentBufLength2);
-                    stringBuffer2.append(stringBuffer);
-                    stringBuffer2.append(">\n");
+                    indentBuf.append(INDENT);
+                    print("key", entry.getKey(), indentBuf, buf);
+                    print("value", entry.getValue(), indentBuf, buf);
+                    indentBuf.setLength(origIndentBufLength2);
+                    buf.append(indentBuf);
+                    buf.append(">\n");
                 }
-                return;
             } else {
                 String identifier3 = deCamelCaseify(identifier);
-                stringBuffer2.append(stringBuffer);
-                stringBuffer2.append(identifier3);
-                stringBuffer2.append(PluralRules.KEYWORD_RULE_SEPARATOR);
-                if (obj instanceof String) {
-                    String stringMessage = sanitizeString((String) obj);
-                    stringBuffer2.append("\"");
-                    stringBuffer2.append(stringMessage);
-                    stringBuffer2.append("\"");
-                } else if (obj instanceof byte[]) {
-                    appendQuotedBytes((byte[]) obj, stringBuffer2);
+                buf.append(indentBuf);
+                buf.append(identifier3);
+                buf.append(PluralRules.KEYWORD_RULE_SEPARATOR);
+                if (!(object instanceof String)) {
+                    if (object instanceof byte[]) {
+                        appendQuotedBytes((byte[]) object, buf);
+                    } else {
+                        buf.append(object);
+                    }
                 } else {
-                    stringBuffer2.append(obj);
+                    String stringMessage = sanitizeString((String) object);
+                    buf.append("\"");
+                    buf.append(stringMessage);
+                    buf.append("\"");
                 }
-                stringBuffer2.append("\n");
-                String str = identifier3;
-                return;
+                buf.append("\n");
             }
         }
-        String str2 = identifier;
     }
 
     private static String deCamelCaseify(String identifier) {
@@ -195,10 +199,10 @@ public final class MessageNanoPrinter {
         StringBuilder b = new StringBuilder(strLen);
         for (int i = 0; i < strLen; i++) {
             char original = str.charAt(i);
-            if (original < ' ' || original > '~' || original == '\"' || original == '\'') {
-                b.append(String.format("\\u%04x", new Object[]{Integer.valueOf(original)}));
-            } else {
+            if (original >= ' ' && original <= '~' && original != '\"' && original != '\'') {
                 b.append(original);
+            } else {
+                b.append(String.format("\\u%04x", Integer.valueOf(original)));
             }
         }
         return b.toString();
@@ -215,10 +219,10 @@ public final class MessageNanoPrinter {
             if (ch == 92 || ch == 34) {
                 builder.append('\\');
                 builder.append((char) ch);
-            } else if (ch < 32 || ch >= 127) {
-                builder.append(String.format("\\%03o", new Object[]{Integer.valueOf(ch)}));
-            } else {
+            } else if (ch >= 32 && ch < 127) {
                 builder.append((char) ch);
+            } else {
+                builder.append(String.format("\\%03o", Integer.valueOf(ch)));
             }
         }
         builder.append('\"');

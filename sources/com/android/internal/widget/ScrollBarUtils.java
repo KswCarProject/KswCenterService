@@ -2,11 +2,12 @@ package com.android.internal.widget;
 
 import android.annotation.UnsupportedAppUsage;
 
+/* loaded from: classes4.dex */
 public class ScrollBarUtils {
     @UnsupportedAppUsage
     public static int getThumbLength(int size, int thickness, int extent, int range) {
         int minLength = thickness * 2;
-        int length = Math.round((((float) size) * ((float) extent)) / ((float) range));
+        int length = Math.round((size * extent) / range);
         if (length < minLength) {
             return minLength;
         }
@@ -14,7 +15,7 @@ public class ScrollBarUtils {
     }
 
     public static int getThumbOffset(int size, int thumbLength, int extent, int range, int offset) {
-        int thumbOffset = Math.round((((float) (size - thumbLength)) * ((float) offset)) / ((float) (range - extent)));
+        int thumbOffset = Math.round(((size - thumbLength) * offset) / (range - extent));
         if (thumbOffset > size - thumbLength) {
             return size - thumbLength;
         }

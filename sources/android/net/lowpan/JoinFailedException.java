@@ -1,5 +1,6 @@
 package android.net.lowpan;
 
+/* loaded from: classes3.dex */
 public class JoinFailedException extends LowpanException {
     public JoinFailedException() {
     }

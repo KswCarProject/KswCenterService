@@ -2,6 +2,7 @@ package android.view;
 
 import android.annotation.UnsupportedAppUsage;
 
+/* loaded from: classes4.dex */
 public final class SurfaceSession {
     @UnsupportedAppUsage
     private long mNativeClient = nativeCreate();
@@ -12,8 +13,7 @@ public final class SurfaceSession {
 
     private static native void nativeKill(long j);
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         try {
             if (this.mNativeClient != 0) {
                 nativeDestroy(this.mNativeClient);

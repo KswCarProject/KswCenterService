@@ -3,6 +3,7 @@ package android.app.usage;
 import android.app.usage.UsageEvents;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public class EventList {
     private final ArrayList<UsageEvents.Event> mEvents = new ArrayList<>();
 
@@ -24,7 +25,8 @@ public class EventList {
             this.mEvents.add(event);
             return;
         }
-        this.mEvents.add(firstIndexOnOrAfter(event.mTimeStamp + 1), event);
+        int insertIndex = firstIndexOnOrAfter(event.mTimeStamp + 1);
+        this.mEvents.add(insertIndex, event);
     }
 
     public int firstIndexOnOrAfter(long timeStamp) {
@@ -34,7 +36,8 @@ public class EventList {
         int hi = size - 1;
         while (lo <= hi) {
             int mid = (lo + hi) >>> 1;
-            if (this.mEvents.get(mid).mTimeStamp >= timeStamp) {
+            long midTimeStamp = this.mEvents.get(mid).mTimeStamp;
+            if (midTimeStamp >= timeStamp) {
                 hi = mid - 1;
                 result = mid;
             } else {

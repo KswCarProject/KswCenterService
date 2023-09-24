@@ -1,14 +1,15 @@
 package android.view;
 
-import android.os.Handler;
+import android.p007os.Handler;
 import com.android.internal.util.GrowingArrayUtils;
 
+/* loaded from: classes4.dex */
 public class HandlerActionQueue {
     private HandlerAction[] mActions;
     private int mCount;
 
     public void post(Runnable action) {
-        postDelayed(action, 0);
+        postDelayed(action, 0L);
     }
 
     public void postDelayed(Runnable action, long delayMillis) {
@@ -17,7 +18,7 @@ public class HandlerActionQueue {
             if (this.mActions == null) {
                 this.mActions = new HandlerAction[4];
             }
-            this.mActions = (HandlerAction[]) GrowingArrayUtils.append((T[]) this.mActions, this.mCount, handlerAction);
+            this.mActions = (HandlerAction[]) GrowingArrayUtils.append(this.mActions, this.mCount, handlerAction);
             this.mCount++;
         }
     }
@@ -61,26 +62,27 @@ public class HandlerActionQueue {
     }
 
     public Runnable getRunnable(int index) {
-        if (index < this.mCount) {
-            return this.mActions[index].action;
+        if (index >= this.mCount) {
+            throw new IndexOutOfBoundsException();
         }
-        throw new IndexOutOfBoundsException();
+        return this.mActions[index].action;
     }
 
     public long getDelay(int index) {
-        if (index < this.mCount) {
-            return this.mActions[index].delay;
+        if (index >= this.mCount) {
+            throw new IndexOutOfBoundsException();
         }
-        throw new IndexOutOfBoundsException();
+        return this.mActions[index].delay;
     }
 
+    /* loaded from: classes4.dex */
     private static class HandlerAction {
         final Runnable action;
         final long delay;
 
-        public HandlerAction(Runnable action2, long delay2) {
-            this.action = action2;
-            this.delay = delay2;
+        public HandlerAction(Runnable action, long delay) {
+            this.action = action;
+            this.delay = delay;
         }
 
         public boolean matches(Runnable otherAction) {

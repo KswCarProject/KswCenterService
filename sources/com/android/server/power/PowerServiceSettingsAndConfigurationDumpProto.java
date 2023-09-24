@@ -1,5 +1,6 @@
 package com.android.server.power;
 
+/* loaded from: classes4.dex */
 public final class PowerServiceSettingsAndConfigurationDumpProto {
     public static final long ARE_DREAMS_ACTIVATED_ON_DOCK_BY_DEFAULT_CONFIG = 1133871366154L;
     public static final long ARE_DREAMS_ACTIVATED_ON_SLEEP_BY_DEFAULT_CONFIG = 1133871366153L;
@@ -38,6 +39,7 @@ public final class PowerServiceSettingsAndConfigurationDumpProto {
     public static final long STAY_ON_WHILE_PLUGGED_IN = 1146756268058L;
     public static final long USER_ACTIVITY_TIMEOUT_OVERRIDE_FROM_WINDOW_MANAGER_MS = 1176821039133L;
 
+    /* loaded from: classes4.dex */
     public final class StayOnWhilePluggedInProto {
         public static final long IS_STAY_ON_WHILE_PLUGGED_IN_AC = 1133871366145L;
         public static final long IS_STAY_ON_WHILE_PLUGGED_IN_USB = 1133871366146L;
@@ -47,6 +49,7 @@ public final class PowerServiceSettingsAndConfigurationDumpProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public final class ScreenBrightnessSettingLimitsProto {
         public static final long SETTING_DEFAULT = 1120986464259L;
         public static final long SETTING_MAXIMUM = 1120986464258L;

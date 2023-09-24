@@ -3,6 +3,7 @@ package android.media;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes3.dex */
 public final class AudioTimestamp {
     public static final int TIMEBASE_BOOTTIME = 1;
     public static final int TIMEBASE_MONOTONIC = 0;
@@ -10,6 +11,7 @@ public final class AudioTimestamp {
     public long nanoTime;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface Timebase {
     }
 }

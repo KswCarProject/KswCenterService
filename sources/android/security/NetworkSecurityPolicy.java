@@ -1,10 +1,11 @@
 package android.security;
 
 import android.content.Context;
-import android.content.pm.PackageManager;
+import android.content.p002pm.PackageManager;
 import android.security.net.config.ApplicationConfig;
 import android.security.net.config.ManifestConfigSource;
 
+/* loaded from: classes3.dex */
 public class NetworkSecurityPolicy {
     private static final NetworkSecurityPolicy INSTANCE = new NetworkSecurityPolicy();
 
@@ -24,7 +25,8 @@ public class NetworkSecurityPolicy {
     }
 
     public void setCleartextTrafficPermitted(boolean permitted) {
-        libcore.net.NetworkSecurityPolicy.setInstance(new FrameworkNetworkSecurityPolicy(permitted));
+        FrameworkNetworkSecurityPolicy policy = new FrameworkNetworkSecurityPolicy(permitted);
+        libcore.net.NetworkSecurityPolicy.setInstance(policy);
     }
 
     public void handleTrustStorageUpdate() {
@@ -35,6 +37,8 @@ public class NetworkSecurityPolicy {
     }
 
     public static ApplicationConfig getApplicationConfigForPackage(Context context, String packageName) throws PackageManager.NameNotFoundException {
-        return new ApplicationConfig(new ManifestConfigSource(context.createPackageContext(packageName, 0)));
+        Context appContext = context.createPackageContext(packageName, 0);
+        ManifestConfigSource source = new ManifestConfigSource(appContext);
+        return new ApplicationConfig(source);
     }
 }

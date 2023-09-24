@@ -1,5 +1,6 @@
 package android.hardware.display;
 
+/* loaded from: classes.dex */
 public final class DisplayedContentSamplingAttributes {
     private int mComponentMask;
     private int mDataspace;

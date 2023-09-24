@@ -4,6 +4,7 @@ import android.telecom.Logging.Session;
 import android.text.TextUtils;
 import java.util.Locale;
 
+/* loaded from: classes4.dex */
 public class SubtypeLocaleUtils {
     public static Locale constructLocaleFromString(String localeStr) {
         if (TextUtils.isEmpty(localeStr)) {

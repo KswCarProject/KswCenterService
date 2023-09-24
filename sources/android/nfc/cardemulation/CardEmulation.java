@@ -4,19 +4,19 @@ import android.app.Activity;
 import android.app.ActivityThread;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.pm.IPackageManager;
+import android.content.p002pm.IPackageManager;
 import android.nfc.INfcCardEmulation;
 import android.nfc.NfcAdapter;
-import android.os.RemoteException;
+import android.p007os.RemoteException;
 import android.provider.Settings;
 import android.util.Log;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
 
+/* loaded from: classes3.dex */
 public final class CardEmulation {
     public static final String ACTION_CHANGE_DEFAULT = "android.nfc.cardemulation.action.ACTION_CHANGE_DEFAULT";
-    private static final Pattern AID_PATTERN = Pattern.compile("[0-9A-Fa-f]{10,32}\\*?\\#?");
     public static final String CATEGORY_OTHER = "other";
     public static final String CATEGORY_PAYMENT = "payment";
     public static final String EXTRA_CATEGORY = "category";
@@ -25,10 +25,11 @@ public final class CardEmulation {
     public static final int SELECTION_MODE_ASK_IF_CONFLICT = 2;
     public static final int SELECTION_MODE_PREFER_DEFAULT = 0;
     static final String TAG = "CardEmulation";
-    static HashMap<Context, CardEmulation> sCardEmus = new HashMap<>();
-    static boolean sIsInitialized = false;
     static INfcCardEmulation sService;
     final Context mContext;
+    private static final Pattern AID_PATTERN = Pattern.compile("[0-9A-Fa-f]{10,32}\\*?\\#?");
+    static boolean sIsInitialized = false;
+    static HashMap<Context, CardEmulation> sCardEmus = new HashMap<>();
 
     private CardEmulation(Context context, INfcCardEmulation service) {
         this.mContext = context.getApplicationContext();
@@ -38,45 +39,40 @@ public final class CardEmulation {
     public static synchronized CardEmulation getInstance(NfcAdapter adapter) {
         CardEmulation manager;
         synchronized (CardEmulation.class) {
-            if (adapter != null) {
-                Context context = adapter.getContext();
-                if (context != null) {
-                    if (!sIsInitialized) {
-                        IPackageManager pm = ActivityThread.getPackageManager();
-                        if (pm != null) {
-                            try {
-                                if (pm.hasSystemFeature("android.hardware.nfc.hce", 0)) {
-                                    sIsInitialized = true;
-                                } else {
-                                    Log.e(TAG, "This device does not support card emulation");
-                                    throw new UnsupportedOperationException();
-                                }
-                            } catch (RemoteException e) {
-                                Log.e(TAG, "PackageManager query failed.");
-                                throw new UnsupportedOperationException();
-                            }
-                        } else {
-                            Log.e(TAG, "Cannot get PackageManager");
-                            throw new UnsupportedOperationException();
-                        }
-                    }
-                    manager = sCardEmus.get(context);
-                    if (manager == null) {
-                        INfcCardEmulation service = adapter.getCardEmulationService();
-                        if (service != null) {
-                            manager = new CardEmulation(context, service);
-                            sCardEmus.put(context, manager);
-                        } else {
-                            Log.e(TAG, "This device does not implement the INfcCardEmulation interface.");
-                            throw new UnsupportedOperationException();
-                        }
-                    }
-                } else {
-                    Log.e(TAG, "NfcAdapter context is null.");
+            if (adapter == null) {
+                throw new NullPointerException("NfcAdapter is null");
+            }
+            Context context = adapter.getContext();
+            if (context == null) {
+                Log.m70e(TAG, "NfcAdapter context is null.");
+                throw new UnsupportedOperationException();
+            }
+            if (!sIsInitialized) {
+                IPackageManager pm = ActivityThread.getPackageManager();
+                if (pm == null) {
+                    Log.m70e(TAG, "Cannot get PackageManager");
                     throw new UnsupportedOperationException();
                 }
-            } else {
-                throw new NullPointerException("NfcAdapter is null");
+                try {
+                    if (!pm.hasSystemFeature("android.hardware.nfc.hce", 0)) {
+                        Log.m70e(TAG, "This device does not support card emulation");
+                        throw new UnsupportedOperationException();
+                    }
+                    sIsInitialized = true;
+                } catch (RemoteException e) {
+                    Log.m70e(TAG, "PackageManager query failed.");
+                    throw new UnsupportedOperationException();
+                }
+            }
+            manager = sCardEmus.get(context);
+            if (manager == null) {
+                INfcCardEmulation service = adapter.getCardEmulationService();
+                if (service == null) {
+                    Log.m70e(TAG, "This device does not implement the INfcCardEmulation interface.");
+                    throw new UnsupportedOperationException();
+                }
+                manager = new CardEmulation(context, service);
+                sCardEmus.put(context, manager);
             }
         }
         return manager;
@@ -88,13 +84,13 @@ public final class CardEmulation {
         } catch (RemoteException e) {
             recoverService();
             if (sService == null) {
-                Log.e(TAG, "Failed to recover CardEmulationService.");
+                Log.m70e(TAG, "Failed to recover CardEmulationService.");
                 return false;
             }
             try {
                 return sService.isDefaultServiceForCategory(this.mContext.getUserId(), service, category);
             } catch (RemoteException e2) {
-                Log.e(TAG, "Failed to recover CardEmulationService.");
+                Log.m70e(TAG, "Failed to recover CardEmulationService.");
                 return false;
             }
         }
@@ -106,41 +102,39 @@ public final class CardEmulation {
         } catch (RemoteException e) {
             recoverService();
             if (sService == null) {
-                Log.e(TAG, "Failed to recover CardEmulationService.");
+                Log.m70e(TAG, "Failed to recover CardEmulationService.");
                 return false;
             }
             try {
                 return sService.isDefaultServiceForAid(this.mContext.getUserId(), service, aid);
             } catch (RemoteException e2) {
-                Log.e(TAG, "Failed to reach CardEmulationService.");
+                Log.m70e(TAG, "Failed to reach CardEmulationService.");
                 return false;
             }
         }
     }
 
     public boolean categoryAllowsForegroundPreference(String category) {
-        if (!CATEGORY_PAYMENT.equals(category)) {
-            return true;
-        }
-        boolean preferForeground = false;
-        try {
-            if (Settings.Secure.getInt(this.mContext.getContentResolver(), Settings.Secure.NFC_PAYMENT_FOREGROUND) != 0) {
-                preferForeground = true;
+        if (CATEGORY_PAYMENT.equals(category)) {
+            try {
+                boolean preferForeground = Settings.Secure.getInt(this.mContext.getContentResolver(), Settings.Secure.NFC_PAYMENT_FOREGROUND) != 0;
+                return preferForeground;
+            } catch (Settings.SettingNotFoundException e) {
+                return false;
             }
-            return preferForeground;
-        } catch (Settings.SettingNotFoundException e) {
-            return false;
         }
+        return true;
     }
 
     public int getSelectionModeForCategory(String category) {
-        if (!CATEGORY_PAYMENT.equals(category)) {
-            return 2;
+        if (CATEGORY_PAYMENT.equals(category)) {
+            String defaultComponent = Settings.Secure.getString(this.mContext.getContentResolver(), Settings.Secure.NFC_PAYMENT_DEFAULT_COMPONENT);
+            if (defaultComponent != null) {
+                return 0;
+            }
+            return 1;
         }
-        if (Settings.Secure.getString(this.mContext.getContentResolver(), Settings.Secure.NFC_PAYMENT_DEFAULT_COMPONENT) != null) {
-            return 0;
-        }
-        return 1;
+        return 2;
     }
 
     public boolean registerAidsForService(ComponentName service, String category, List<String> aids) {
@@ -150,20 +144,21 @@ public final class CardEmulation {
         } catch (RemoteException e) {
             recoverService();
             if (sService == null) {
-                Log.e(TAG, "Failed to recover CardEmulationService.");
+                Log.m70e(TAG, "Failed to recover CardEmulationService.");
                 return false;
             }
             try {
                 return sService.registerAidGroupForService(this.mContext.getUserId(), service, aidGroup);
             } catch (RemoteException e2) {
-                Log.e(TAG, "Failed to reach CardEmulationService.");
+                Log.m70e(TAG, "Failed to reach CardEmulationService.");
                 return false;
             }
         }
     }
 
     public boolean unsetOffHostForService(ComponentName service) {
-        if (NfcAdapter.getDefaultAdapter(this.mContext) == null) {
+        NfcAdapter adapter = NfcAdapter.getDefaultAdapter(this.mContext);
+        if (adapter == null) {
             return false;
         }
         try {
@@ -171,13 +166,13 @@ public final class CardEmulation {
         } catch (RemoteException e) {
             recoverService();
             if (sService == null) {
-                Log.e(TAG, "Failed to recover CardEmulationService.");
+                Log.m70e(TAG, "Failed to recover CardEmulationService.");
                 return false;
             }
             try {
                 return sService.unsetOffHostForService(this.mContext.getUserId(), service);
             } catch (RemoteException e2) {
-                Log.e(TAG, "Failed to reach CardEmulationService.");
+                Log.m70e(TAG, "Failed to reach CardEmulationService.");
                 return false;
             }
         }
@@ -205,13 +200,13 @@ public final class CardEmulation {
         } catch (RemoteException e) {
             recoverService();
             if (sService == null) {
-                Log.e(TAG, "Failed to recover CardEmulationService.");
+                Log.m70e(TAG, "Failed to recover CardEmulationService.");
                 return false;
             }
             try {
                 return sService.setOffHostForService(this.mContext.getUserId(), service, offHostSecureElement);
             } catch (RemoteException e2) {
-                Log.e(TAG, "Failed to reach CardEmulationService.");
+                Log.m70e(TAG, "Failed to reach CardEmulationService.");
                 return false;
             }
         }
@@ -227,7 +222,7 @@ public final class CardEmulation {
         } catch (RemoteException e) {
             recoverService();
             if (sService == null) {
-                Log.e(TAG, "Failed to recover CardEmulationService.");
+                Log.m70e(TAG, "Failed to recover CardEmulationService.");
                 return null;
             }
             try {
@@ -237,7 +232,7 @@ public final class CardEmulation {
                 }
                 return null;
             } catch (RemoteException e2) {
-                Log.e(TAG, "Failed to recover CardEmulationService.");
+                Log.m70e(TAG, "Failed to recover CardEmulationService.");
                 return null;
             }
         }
@@ -249,13 +244,13 @@ public final class CardEmulation {
         } catch (RemoteException e) {
             recoverService();
             if (sService == null) {
-                Log.e(TAG, "Failed to recover CardEmulationService.");
+                Log.m70e(TAG, "Failed to recover CardEmulationService.");
                 return false;
             }
             try {
                 return sService.removeAidGroupForService(this.mContext.getUserId(), service, category);
             } catch (RemoteException e2) {
-                Log.e(TAG, "Failed to reach CardEmulationService.");
+                Log.m70e(TAG, "Failed to reach CardEmulationService.");
                 return false;
             }
         }
@@ -264,48 +259,48 @@ public final class CardEmulation {
     public boolean setPreferredService(Activity activity, ComponentName service) {
         if (activity == null || service == null) {
             throw new NullPointerException("activity or service or category is null");
-        } else if (activity.isResumed()) {
+        }
+        if (!activity.isResumed()) {
+            throw new IllegalArgumentException("Activity must be resumed.");
+        }
+        try {
+            return sService.setPreferredService(service);
+        } catch (RemoteException e) {
+            recoverService();
+            if (sService == null) {
+                Log.m70e(TAG, "Failed to recover CardEmulationService.");
+                return false;
+            }
             try {
                 return sService.setPreferredService(service);
-            } catch (RemoteException e) {
-                recoverService();
-                if (sService == null) {
-                    Log.e(TAG, "Failed to recover CardEmulationService.");
-                    return false;
-                }
-                try {
-                    return sService.setPreferredService(service);
-                } catch (RemoteException e2) {
-                    Log.e(TAG, "Failed to reach CardEmulationService.");
-                    return false;
-                }
+            } catch (RemoteException e2) {
+                Log.m70e(TAG, "Failed to reach CardEmulationService.");
+                return false;
             }
-        } else {
-            throw new IllegalArgumentException("Activity must be resumed.");
         }
     }
 
     public boolean unsetPreferredService(Activity activity) {
         if (activity == null) {
             throw new NullPointerException("activity is null");
-        } else if (activity.isResumed()) {
+        }
+        if (!activity.isResumed()) {
+            throw new IllegalArgumentException("Activity must be resumed.");
+        }
+        try {
+            return sService.unsetPreferredService();
+        } catch (RemoteException e) {
+            recoverService();
+            if (sService == null) {
+                Log.m70e(TAG, "Failed to recover CardEmulationService.");
+                return false;
+            }
             try {
                 return sService.unsetPreferredService();
-            } catch (RemoteException e) {
-                recoverService();
-                if (sService == null) {
-                    Log.e(TAG, "Failed to recover CardEmulationService.");
-                    return false;
-                }
-                try {
-                    return sService.unsetPreferredService();
-                } catch (RemoteException e2) {
-                    Log.e(TAG, "Failed to reach CardEmulationService.");
-                    return false;
-                }
+            } catch (RemoteException e2) {
+                Log.m70e(TAG, "Failed to reach CardEmulationService.");
+                return false;
             }
-        } else {
-            throw new IllegalArgumentException("Activity must be resumed.");
         }
     }
 
@@ -315,13 +310,13 @@ public final class CardEmulation {
         } catch (RemoteException e) {
             recoverService();
             if (sService == null) {
-                Log.e(TAG, "Failed to recover CardEmulationService.");
+                Log.m70e(TAG, "Failed to recover CardEmulationService.");
                 return false;
             }
             try {
                 return sService.supportsAidPrefixRegistration();
             } catch (RemoteException e2) {
-                Log.e(TAG, "Failed to reach CardEmulationService.");
+                Log.m70e(TAG, "Failed to reach CardEmulationService.");
                 return false;
             }
         }
@@ -333,13 +328,13 @@ public final class CardEmulation {
         } catch (RemoteException e) {
             recoverService();
             if (sService == null) {
-                Log.e(TAG, "Failed to recover CardEmulationService.");
+                Log.m70e(TAG, "Failed to recover CardEmulationService.");
                 return false;
             }
             try {
                 return sService.setDefaultServiceForCategory(this.mContext.getUserId(), service, category);
             } catch (RemoteException e2) {
-                Log.e(TAG, "Failed to reach CardEmulationService.");
+                Log.m70e(TAG, "Failed to reach CardEmulationService.");
                 return false;
             }
         }
@@ -351,13 +346,13 @@ public final class CardEmulation {
         } catch (RemoteException e) {
             recoverService();
             if (sService == null) {
-                Log.e(TAG, "Failed to recover CardEmulationService.");
+                Log.m70e(TAG, "Failed to recover CardEmulationService.");
                 return false;
             }
             try {
                 return sService.setDefaultForNextTap(this.mContext.getUserId(), service);
             } catch (RemoteException e2) {
-                Log.e(TAG, "Failed to reach CardEmulationService.");
+                Log.m70e(TAG, "Failed to reach CardEmulationService.");
                 return false;
             }
         }
@@ -369,13 +364,13 @@ public final class CardEmulation {
         } catch (RemoteException e) {
             recoverService();
             if (sService == null) {
-                Log.e(TAG, "Failed to recover CardEmulationService.");
+                Log.m70e(TAG, "Failed to recover CardEmulationService.");
                 return null;
             }
             try {
                 return sService.getServices(this.mContext.getUserId(), category);
             } catch (RemoteException e2) {
-                Log.e(TAG, "Failed to reach CardEmulationService.");
+                Log.m70e(TAG, "Failed to reach CardEmulationService.");
                 return null;
             }
         }
@@ -386,21 +381,21 @@ public final class CardEmulation {
             return false;
         }
         if ((aid.endsWith("*") || aid.endsWith("#")) && aid.length() % 2 == 0) {
-            Log.e(TAG, "AID " + aid + " is not a valid AID.");
+            Log.m70e(TAG, "AID " + aid + " is not a valid AID.");
             return false;
         } else if (!aid.endsWith("*") && !aid.endsWith("#") && aid.length() % 2 != 0) {
-            Log.e(TAG, "AID " + aid + " is not a valid AID.");
+            Log.m70e(TAG, "AID " + aid + " is not a valid AID.");
             return false;
-        } else if (AID_PATTERN.matcher(aid).matches()) {
-            return true;
+        } else if (!AID_PATTERN.matcher(aid).matches()) {
+            Log.m70e(TAG, "AID " + aid + " is not a valid AID.");
+            return false;
         } else {
-            Log.e(TAG, "AID " + aid + " is not a valid AID.");
-            return false;
+            return true;
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void recoverService() {
-        sService = NfcAdapter.getDefaultAdapter(this.mContext).getCardEmulationService();
+    void recoverService() {
+        NfcAdapter adapter = NfcAdapter.getDefaultAdapter(this.mContext);
+        sService = adapter.getCardEmulationService();
     }
 }

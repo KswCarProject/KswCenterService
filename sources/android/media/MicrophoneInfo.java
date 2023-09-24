@@ -6,6 +6,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.List;
 
+/* loaded from: classes3.dex */
 public final class MicrophoneInfo {
     public static final int CHANNEL_MAPPING_DIRECT = 1;
     public static final int CHANNEL_MAPPING_PROCESSED = 2;
@@ -21,8 +22,6 @@ public final class MicrophoneInfo {
     public static final int LOCATION_MAINBODY_MOVABLE = 2;
     public static final int LOCATION_PERIPHERAL = 3;
     public static final int LOCATION_UNKNOWN = 0;
-    public static final Coordinate3F ORIENTATION_UNKNOWN = new Coordinate3F(0.0f, 0.0f, 0.0f);
-    public static final Coordinate3F POSITION_UNKNOWN = new Coordinate3F(-3.4028235E38f, -3.4028235E38f, -3.4028235E38f);
     public static final float SENSITIVITY_UNKNOWN = -3.4028235E38f;
     public static final float SPL_UNKNOWN = -3.4028235E38f;
     private String mAddress;
@@ -40,12 +39,16 @@ public final class MicrophoneInfo {
     private Coordinate3F mPosition;
     private float mSensitivity;
     private int mType;
+    public static final Coordinate3F POSITION_UNKNOWN = new Coordinate3F(-3.4028235E38f, -3.4028235E38f, -3.4028235E38f);
+    public static final Coordinate3F ORIENTATION_UNKNOWN = new Coordinate3F(0.0f, 0.0f, 0.0f);
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface MicrophoneDirectionality {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface MicrophoneLocation {
     }
 
@@ -139,27 +142,31 @@ public final class MicrophoneInfo {
         this.mChannelMapping = channelMapping;
     }
 
+    /* loaded from: classes3.dex */
     public static final class Coordinate3F {
-        public final float x;
-        public final float y;
-        public final float z;
 
-        Coordinate3F(float x2, float y2, float z2) {
-            this.x = x2;
-            this.y = y2;
-            this.z = z2;
+        /* renamed from: x */
+        public final float f122x;
+
+        /* renamed from: y */
+        public final float f123y;
+
+        /* renamed from: z */
+        public final float f124z;
+
+        Coordinate3F(float x, float y, float z) {
+            this.f122x = x;
+            this.f123y = y;
+            this.f124z = z;
         }
 
         public boolean equals(Object obj) {
             if (this == obj) {
                 return true;
             }
-            if (!(obj instanceof Coordinate3F)) {
-                return false;
-            }
-            Coordinate3F other = (Coordinate3F) obj;
-            if (this.x == other.x && this.y == other.y && this.z == other.z) {
-                return true;
+            if (obj instanceof Coordinate3F) {
+                Coordinate3F other = (Coordinate3F) obj;
+                return this.f122x == other.f122x && this.f123y == other.f123y && this.f124z == other.f124z;
             }
             return false;
         }

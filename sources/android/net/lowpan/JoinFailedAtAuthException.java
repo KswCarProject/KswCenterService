@@ -1,5 +1,6 @@
 package android.net.lowpan;
 
+/* loaded from: classes3.dex */
 public class JoinFailedAtAuthException extends JoinFailedException {
     public JoinFailedAtAuthException() {
     }

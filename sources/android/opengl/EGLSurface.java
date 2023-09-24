@@ -1,5 +1,6 @@
 package android.opengl;
 
+/* loaded from: classes3.dex */
 public class EGLSurface extends EGLObjectHandle {
     private EGLSurface(long handle) {
         super(handle);
@@ -9,11 +10,9 @@ public class EGLSurface extends EGLObjectHandle {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof EGLSurface)) {
-            return false;
-        }
-        if (getNativeHandle() == ((EGLSurface) o).getNativeHandle()) {
-            return true;
+        if (o instanceof EGLSurface) {
+            EGLSurface that = (EGLSurface) o;
+            return getNativeHandle() == that.getNativeHandle();
         }
         return false;
     }

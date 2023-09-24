@@ -1,17 +1,22 @@
 package android.app;
 
 import android.content.Context;
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.Log;
 
+/* loaded from: classes.dex */
 final class FragmentState implements Parcelable {
-    public static final Parcelable.Creator<FragmentState> CREATOR = new Parcelable.Creator<FragmentState>() {
+    public static final Parcelable.Creator<FragmentState> CREATOR = new Parcelable.Creator<FragmentState>() { // from class: android.app.FragmentState.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public FragmentState createFromParcel(Parcel in) {
             return new FragmentState(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public FragmentState[] newArray(int size) {
             return new FragmentState[size];
         }
@@ -45,7 +50,6 @@ final class FragmentState implements Parcelable {
     FragmentState(Parcel in) {
         this.mClassName = in.readString();
         this.mIndex = in.readInt();
-        boolean z = false;
         this.mFromLayout = in.readInt() != 0;
         this.mFragmentId = in.readInt();
         this.mContainerId = in.readInt();
@@ -53,7 +57,7 @@ final class FragmentState implements Parcelable {
         this.mRetainInstance = in.readInt() != 0;
         this.mDetached = in.readInt() != 0;
         this.mArguments = in.readBundle();
-        this.mHidden = in.readInt() != 0 ? true : z;
+        this.mHidden = in.readInt() != 0;
         this.mSavedFragmentState = in.readBundle();
     }
 
@@ -83,17 +87,19 @@ final class FragmentState implements Parcelable {
             this.mInstance.mHidden = this.mHidden;
             this.mInstance.mFragmentManager = host.mFragmentManager;
             if (FragmentManagerImpl.DEBUG) {
-                Log.v("FragmentManager", "Instantiated fragment " + this.mInstance);
+                Log.m66v("FragmentManager", "Instantiated fragment " + this.mInstance);
             }
         }
         this.mInstance.mChildNonConfig = childNonConfig;
         return this.mInstance;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.mClassName);
         dest.writeInt(this.mIndex);

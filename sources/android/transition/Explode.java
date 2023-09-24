@@ -9,21 +9,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
+/* loaded from: classes4.dex */
 public class Explode extends Visibility {
     private static final String PROPNAME_SCREEN_BOUNDS = "android:explode:screenBounds";
     private static final String TAG = "Explode";
-    private static final TimeInterpolator sAccelerate = new AccelerateInterpolator();
+    private int[] mTempLoc;
     private static final TimeInterpolator sDecelerate = new DecelerateInterpolator();
-    private int[] mTempLoc = new int[2];
+    private static final TimeInterpolator sAccelerate = new AccelerateInterpolator();
 
     public Explode() {
+        this.mTempLoc = new int[2];
         setPropagation(new CircularPropagation());
     }
 
     public Explode(Context context, AttributeSet attrs) {
         super(context, attrs);
+        this.mTempLoc = new int[2];
         setPropagation(new CircularPropagation());
     }
 
@@ -32,61 +35,63 @@ public class Explode extends Visibility {
         view.getLocationOnScreen(this.mTempLoc);
         int left = this.mTempLoc[0];
         int top = this.mTempLoc[1];
-        transitionValues.values.put(PROPNAME_SCREEN_BOUNDS, new Rect(left, top, view.getWidth() + left, view.getHeight() + top));
+        int right = view.getWidth() + left;
+        int bottom = view.getHeight() + top;
+        transitionValues.values.put(PROPNAME_SCREEN_BOUNDS, new Rect(left, top, right, bottom));
     }
 
+    @Override // android.transition.Visibility, android.transition.Transition
     public void captureStartValues(TransitionValues transitionValues) {
         super.captureStartValues(transitionValues);
         captureValues(transitionValues);
     }
 
+    @Override // android.transition.Visibility, android.transition.Transition
     public void captureEndValues(TransitionValues transitionValues) {
         super.captureEndValues(transitionValues);
         captureValues(transitionValues);
     }
 
+    @Override // android.transition.Visibility
     public Animator onAppear(ViewGroup sceneRoot, View view, TransitionValues startValues, TransitionValues endValues) {
-        TransitionValues transitionValues = endValues;
-        if (transitionValues == null) {
+        if (endValues == null) {
             return null;
         }
-        Rect bounds = (Rect) transitionValues.values.get(PROPNAME_SCREEN_BOUNDS);
+        Rect bounds = (Rect) endValues.values.get(PROPNAME_SCREEN_BOUNDS);
         float endX = view.getTranslationX();
         float endY = view.getTranslationY();
         calculateOut(sceneRoot, bounds, this.mTempLoc);
-        float startX = endX + ((float) this.mTempLoc[0]);
-        return TranslationAnimationCreator.createAnimation(view, endValues, bounds.left, bounds.top, startX, endY + ((float) this.mTempLoc[1]), endX, endY, sDecelerate, this);
+        float startX = endX + this.mTempLoc[0];
+        float startY = endY + this.mTempLoc[1];
+        return TranslationAnimationCreator.createAnimation(view, endValues, bounds.left, bounds.top, startX, startY, endX, endY, sDecelerate, this);
     }
 
+    @Override // android.transition.Visibility
     public Animator onDisappear(ViewGroup sceneRoot, View view, TransitionValues startValues, TransitionValues endValues) {
-        TransitionValues transitionValues = startValues;
-        if (transitionValues == null) {
+        if (startValues == null) {
             return null;
         }
-        Rect bounds = (Rect) transitionValues.values.get(PROPNAME_SCREEN_BOUNDS);
+        Rect bounds = (Rect) startValues.values.get(PROPNAME_SCREEN_BOUNDS);
         int viewPosX = bounds.left;
         int viewPosY = bounds.top;
         float startX = view.getTranslationX();
         float startY = view.getTranslationY();
         float endX = startX;
         float endY = startY;
-        int[] interruptedPosition = (int[]) transitionValues.view.getTag(R.id.transitionPosition);
+        int[] interruptedPosition = (int[]) startValues.view.getTag(C3132R.C3134id.transitionPosition);
         if (interruptedPosition != null) {
-            endX += (float) (interruptedPosition[0] - bounds.left);
-            endY += (float) (interruptedPosition[1] - bounds.top);
+            endX += interruptedPosition[0] - bounds.left;
+            endY += interruptedPosition[1] - bounds.top;
             bounds.offsetTo(interruptedPosition[0], interruptedPosition[1]);
         }
         calculateOut(sceneRoot, bounds, this.mTempLoc);
-        float endX2 = endX + ((float) this.mTempLoc[0]);
-        float endY2 = endY + ((float) this.mTempLoc[1]);
-        return TranslationAnimationCreator.createAnimation(view, startValues, viewPosX, viewPosY, startX, startY, endX2, endY2, sAccelerate, this);
+        return TranslationAnimationCreator.createAnimation(view, startValues, viewPosX, viewPosY, startX, startY, endX + this.mTempLoc[0], endY + this.mTempLoc[1], sAccelerate, this);
     }
 
     private void calculateOut(View sceneRoot, Rect bounds, int[] outVector) {
-        int focalY;
         int focalX;
-        View view = sceneRoot;
-        view.getLocationOnScreen(this.mTempLoc);
+        int focalY;
+        sceneRoot.getLocationOnScreen(this.mTempLoc);
         int sceneRootX = this.mTempLoc[0];
         int sceneRootY = this.mTempLoc[1];
         Rect epicenter = getEpicenter();
@@ -97,19 +102,23 @@ public class Explode extends Visibility {
             focalX = epicenter.centerX();
             focalY = epicenter.centerY();
         }
-        double xVector = (double) (bounds.centerX() - focalX);
-        double yVector = (double) (bounds.centerY() - focalY);
+        int centerX = bounds.centerX();
+        int centerY = bounds.centerY();
+        double xVector = centerX - focalX;
+        double yVector = centerY - focalY;
         if (xVector == 0.0d && yVector == 0.0d) {
             xVector = (Math.random() * 2.0d) - 1.0d;
             yVector = (Math.random() * 2.0d) - 1.0d;
         }
         double vectorSize = Math.hypot(xVector, yVector);
-        double maxDistance = calculateMaxDistance(view, focalX - sceneRootX, focalY - sceneRootY);
+        double maxDistance = calculateMaxDistance(sceneRoot, focalX - sceneRootX, focalY - sceneRootY);
         outVector[0] = (int) Math.round(maxDistance * (xVector / vectorSize));
         outVector[1] = (int) Math.round(maxDistance * (yVector / vectorSize));
     }
 
     private static double calculateMaxDistance(View sceneRoot, int focalX, int focalY) {
-        return Math.hypot((double) Math.max(focalX, sceneRoot.getWidth() - focalX), (double) Math.max(focalY, sceneRoot.getHeight() - focalY));
+        int maxX = Math.max(focalX, sceneRoot.getWidth() - focalX);
+        int maxY = Math.max(focalY, sceneRoot.getHeight() - focalY);
+        return Math.hypot(maxX, maxY);
     }
 }

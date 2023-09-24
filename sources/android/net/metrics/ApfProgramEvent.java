@@ -3,8 +3,8 @@ package android.net.metrics;
 import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
 import android.net.metrics.IpConnectivityLog;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.TextUtils;
 import android.util.SparseArray;
 import com.android.internal.util.MessageUtils;
@@ -16,12 +16,17 @@ import java.util.BitSet;
 import java.util.List;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class ApfProgramEvent implements IpConnectivityLog.Event {
-    public static final Parcelable.Creator<ApfProgramEvent> CREATOR = new Parcelable.Creator<ApfProgramEvent>() {
+    public static final Parcelable.Creator<ApfProgramEvent> CREATOR = new Parcelable.Creator<ApfProgramEvent>() { // from class: android.net.metrics.ApfProgramEvent.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ApfProgramEvent createFromParcel(Parcel in) {
             return new ApfProgramEvent(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ApfProgramEvent[] newArray(int size) {
             return new ApfProgramEvent[size];
         }
@@ -42,16 +47,17 @@ public final class ApfProgramEvent implements IpConnectivityLog.Event {
     public final int programLength;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface Flags {
     }
 
-    private ApfProgramEvent(long lifetime2, long actualLifetime2, int filteredRas2, int currentRas2, int programLength2, int flags2) {
-        this.lifetime = lifetime2;
-        this.actualLifetime = actualLifetime2;
-        this.filteredRas = filteredRas2;
-        this.currentRas = currentRas2;
-        this.programLength = programLength2;
-        this.flags = flags2;
+    private ApfProgramEvent(long lifetime, long actualLifetime, int filteredRas, int currentRas, int programLength, int flags) {
+        this.lifetime = lifetime;
+        this.actualLifetime = actualLifetime;
+        this.filteredRas = filteredRas;
+        this.currentRas = currentRas;
+        this.programLength = programLength;
+        this.flags = flags;
     }
 
     private ApfProgramEvent(Parcel in) {
@@ -63,6 +69,7 @@ public final class ApfProgramEvent implements IpConnectivityLog.Event {
         this.flags = in.readInt();
     }
 
+    /* loaded from: classes3.dex */
     public static final class Builder {
         private long mActualLifetime;
         private int mCurrentRas;
@@ -106,7 +113,8 @@ public final class ApfProgramEvent implements IpConnectivityLog.Event {
         }
     }
 
-    public void writeToParcel(Parcel out, int flags2) {
+    @Override // android.p007os.Parcelable
+    public void writeToParcel(Parcel out, int flags) {
         out.writeLong(this.lifetime);
         out.writeLong(this.actualLifetime);
         out.writeInt(this.filteredRas);
@@ -115,6 +123,7 @@ public final class ApfProgramEvent implements IpConnectivityLog.Event {
         out.writeInt(this.flags);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -126,7 +135,7 @@ public final class ApfProgramEvent implements IpConnectivityLog.Event {
         } else {
             lifetimeString = "forever";
         }
-        return String.format("ApfProgramEvent(%d/%d RAs %dB %ds/%s %s)", new Object[]{Integer.valueOf(this.filteredRas), Integer.valueOf(this.currentRas), Integer.valueOf(this.programLength), Long.valueOf(this.actualLifetime), lifetimeString, namesOf(this.flags)});
+        return String.format("ApfProgramEvent(%d/%d RAs %dB %ds/%s %s)", Integer.valueOf(this.filteredRas), Integer.valueOf(this.currentRas), Integer.valueOf(this.programLength), Long.valueOf(this.actualLifetime), lifetimeString, namesOf(this.flags));
     }
 
     public boolean equals(Object obj) {
@@ -134,10 +143,7 @@ public final class ApfProgramEvent implements IpConnectivityLog.Event {
             return false;
         }
         ApfProgramEvent other = (ApfProgramEvent) obj;
-        if (this.lifetime == other.lifetime && this.actualLifetime == other.actualLifetime && this.filteredRas == other.filteredRas && this.currentRas == other.currentRas && this.programLength == other.programLength && this.flags == other.flags) {
-            return true;
-        }
-        return false;
+        return this.lifetime == other.lifetime && this.actualLifetime == other.actualLifetime && this.filteredRas == other.filteredRas && this.currentRas == other.currentRas && this.programLength == other.programLength && this.flags == other.flags;
     }
 
     @UnsupportedAppUsage
@@ -154,13 +160,14 @@ public final class ApfProgramEvent implements IpConnectivityLog.Event {
 
     private static String namesOf(int bitfield) {
         List<String> names = new ArrayList<>(Integer.bitCount(bitfield));
-        BitSet set = BitSet.valueOf(new long[]{(long) (Integer.MAX_VALUE & bitfield)});
+        BitSet set = BitSet.valueOf(new long[]{Integer.MAX_VALUE & bitfield});
         for (int bit = set.nextSetBit(0); bit >= 0; bit = set.nextSetBit(bit + 1)) {
             names.add(Decoder.constants.get(bit));
         }
-        return TextUtils.join((CharSequence) "|", (Iterable) names);
+        return TextUtils.join("|", names);
     }
 
+    /* loaded from: classes3.dex */
     static final class Decoder {
         static final SparseArray<String> constants = MessageUtils.findMessageNames(new Class[]{ApfProgramEvent.class}, new String[]{"FLAG_"});
 

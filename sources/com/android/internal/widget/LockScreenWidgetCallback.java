@@ -2,6 +2,7 @@ package com.android.internal.widget;
 
 import android.view.View;
 
+/* loaded from: classes4.dex */
 public interface LockScreenWidgetCallback {
     boolean isVisible(View view);
 

@@ -1,30 +1,57 @@
 package com.wits.pms.custom;
 
+import android.bluetooth.BluetoothHidDevice;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.ContentObserver;
-import android.os.Handler;
-import android.os.PowerManager;
+import android.net.wifi.WifiScanner;
+import android.p007os.Build;
+import android.p007os.Handler;
+import android.p007os.PowerManager;
+import android.p007os.UserHandle;
 import android.provider.Settings;
+import android.provider.SettingsStringUtil;
 import android.text.TextUtils;
+import android.text.format.DateFormat;
 import android.util.Log;
+import android.widget.Toast;
+import com.android.internal.content.NativeLibraryHelper;
+import com.android.internal.midi.MidiConstants;
+import com.android.internal.telephony.GsmAlphabet;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.ibm.icu.text.SymbolTable;
+import com.wits.pms.C3580R;
 import com.wits.pms.core.CenterControlImpl;
 import com.wits.pms.core.PowerManagerAppService;
 import com.wits.pms.mcu.custom.KswMcuSender;
 import com.wits.pms.mcu.custom.utils.BrightnessUtils;
+import com.wits.pms.mirror.SystemProperties;
+import com.wits.pms.utils.CopyFile;
+import com.wits.pms.utils.LanguageUtil;
 import com.wits.pms.utils.SysConfigUtil;
+import com.wits.pms.utils.UsbUtil;
 import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileDescriptor;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
+import org.mozilla.universalchardet.prober.HebrewProber;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserFactory;
 
+/* loaded from: classes2.dex */
 public class KswSettings {
     private static final String CAN_ID = "CANBusProtocolID";
     private static final String CAR_DISPLAY_ID = "CarDisplayParamID";
@@ -36,53 +63,49 @@ public class KswSettings {
     private static final String TAG = "KswSettings";
     private static KswSettings settings = null;
     private static final String uiSave = "/mnt/vendor/persist/OEM/uiSave.ui";
-    /* access modifiers changed from: private */
-    public File defaultConfig = new File("/mnt/vendor/persist/OEM/factory_config.xml");
-    /* access modifiers changed from: private */
-    public File directUpdateFile;
-    private long initTime;
-    private Set<String> intKeys = null;
+    private File directUpdateFile;
     private boolean isSyncStatus;
-    /* access modifiers changed from: private */
-    public final Context mContext;
-    /* access modifiers changed from: private */
-    public FactorySettings mFactorySettings;
-    /* access modifiers changed from: private */
-    public final Handler mHandler;
-    private final InitConfigRunnable mInitConfigRunnable;
-    /* access modifiers changed from: private */
-    public boolean onlyLanguageId;
+    private final Context mContext;
+    private FactorySettings mFactorySettings;
+    private final Handler mHandler;
+    private boolean onlyLanguageId;
+    private File defaultConfig = new File("/mnt/vendor/persist/OEM/factory_config.xml");
     private Set<String> stringKeys = null;
+    private Set<String> intKeys = null;
+    private long initTime = System.currentTimeMillis();
+    private final InitConfigRunnable mInitConfigRunnable = new InitConfigRunnable();
 
     public static KswSettings init(Context context) {
         if (settings == null) {
-            settings = new KswSettings(context);
+            synchronized (KswSettings.class) {
+                if (settings == null) {
+                    settings = new KswSettings(context);
+                }
+            }
         }
         return settings;
     }
 
     public static KswSettings getSettings() {
-        if (settings != null) {
-            return settings;
+        if (settings == null) {
+            KswSettings init = init(PowerManagerAppService.serviceContext);
+            settings = init;
+            return init;
         }
-        KswSettings init = init(PowerManagerAppService.serviceContext);
-        settings = init;
-        return init;
+        return settings;
     }
 
     private KswSettings(Context context) {
         this.mContext = context;
         this.mHandler = new Handler(this.mContext.getMainLooper());
-        this.initTime = System.currentTimeMillis();
-        this.mInitConfigRunnable = new InitConfigRunnable();
         buildKswSettings();
     }
 
     private void buildKswSettings() {
         this.stringKeys = new HashSet(getStringKeysFromSp());
         this.intKeys = new HashSet(getIntKeysFromSp());
-        Log.i(TAG, "stringKeys size:" + this.stringKeys.size());
-        Log.i(TAG, "intKeys size:" + this.intKeys.size());
+        Log.m68i(TAG, "stringKeys size:" + this.stringKeys.size());
+        Log.m68i(TAG, "intKeys size:" + this.intKeys.size());
         if (this.stringKeys == null) {
             this.stringKeys = new HashSet();
         }
@@ -118,7 +141,7 @@ public class KswSettings {
         getSettingsSp().edit().clear().apply();
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void saveIntKeyToSp(String keyMap) {
         String keys1 = keyMap;
         String keys2 = "";
@@ -141,19 +164,25 @@ public class KswSettings {
     }
 
     private void obsSystemSettings() {
-        this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor(Settings.System.SCREEN_BRIGHTNESS), true, new ContentObserver(this.mHandler) {
+        this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor(Settings.System.SCREEN_BRIGHTNESS), true, new ContentObserver(this.mHandler) { // from class: com.wits.pms.custom.KswSettings.1
+            @Override // android.database.ContentObserver
             public void onChange(boolean selfChange) {
                 try {
-                    int progress = (int) Math.round(100.0d * BrightnessUtils.getPercentage((double) BrightnessUtils.convertLinearToGamma(Settings.System.getInt(KswSettings.this.mContext.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS), 10, 255), 0, 1023));
+                    int brightness = Settings.System.getInt(KswSettings.this.mContext.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS);
+                    int value = BrightnessUtils.convertLinearToGamma(brightness, 10, 255);
+                    double b = BrightnessUtils.getPercentage(value, 0, 1023);
+                    int progress = (int) Math.round(100.0d * b);
                     Settings.System.putInt(KswSettings.this.mContext.getContentResolver(), "Brightness", progress);
                     CenterControlImpl.getImpl().setBrightness(progress);
                 } catch (Settings.SettingNotFoundException e) {
                 }
             }
         });
-        this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor(Settings.System.TIME_12_24), true, new ContentObserver(this.mHandler) {
+        this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor(Settings.System.TIME_12_24), true, new ContentObserver(this.mHandler) { // from class: com.wits.pms.custom.KswSettings.2
+            @Override // android.database.ContentObserver
             public void onChange(boolean selfChange) {
-                KswSettings.this.setInt("TimeFormat", "12".equals(KswSettings.this.getSettingsString(Settings.System.TIME_12_24)) ? 1 : 0);
+                String time = KswSettings.this.getSettingsString(Settings.System.TIME_12_24);
+                KswSettings.this.setInt("TimeFormat", "12".equals(time) ? 1 : 0);
             }
         });
     }
@@ -177,12 +206,12 @@ public class KswSettings {
         if (this.mFactorySettings != null) {
             this.mFactorySettings.saveIntValue(key, value);
         }
-        Log.i(TAG, "setInt key:" + key + " - value:" + value);
+        Log.m68i(TAG, "setInt key:" + key + " - value:" + value);
     }
 
     public void setIntWithoutMCU(String key, int value) {
         Settings.System.putInt(this.mContext.getContentResolver(), key, value);
-        Log.i(TAG, "setIntWithoutMCU setInt key:" + key + " - value:" + value);
+        Log.m68i(TAG, "setIntWithoutMCU setInt key:" + key + " - value:" + value);
     }
 
     public void setString(String key, String value) {
@@ -192,21 +221,23 @@ public class KswSettings {
         if (this.mFactorySettings != null) {
             this.mFactorySettings.saveStringValue(key, value);
         }
-        Log.i(TAG, "setString key:" + key + " - value:" + value);
+        Log.m68i(TAG, "setString key:" + key + " - value:" + value);
     }
 
     private void saveIntKey(String key) {
-        Log.i(TAG, "saveIntKey key:" + key);
+        Log.m68i(TAG, "saveIntKey key:" + key);
         this.intKeys.add(key);
-        HashSet<String> intSetSave = new HashSet<>(getIntKeysFromSp());
+        Set<String> intSet = getIntKeysFromSp();
+        HashSet<String> intSetSave = new HashSet<>(intSet);
         intSetSave.add(key);
         getSettingsSp().edit().putStringSet(INT_KEY_MAP, intSetSave).apply();
     }
 
     private void saveStringKey(String key) {
-        Log.i(TAG, "saveStringKey key:" + key);
+        Log.m68i(TAG, "saveStringKey key:" + key);
         this.stringKeys.add(key);
-        HashSet<String> stringSetSave = new HashSet<>(getStringKeysFromSp());
+        Set<String> stringSet = getStringKeysFromSp();
+        HashSet<String> stringSetSave = new HashSet<>(stringSet);
         stringSetSave.add(key);
         getSettingsSp().edit().putStringSet(STRING_KEY_MAP, stringSetSave).apply();
     }
@@ -225,12 +256,12 @@ public class KswSettings {
 
     public void initConfig(boolean forConfig) {
         if (forConfig) {
-            Log.i(TAG, "initConfig");
+            Log.m68i(TAG, "initConfig");
             updateConfig(this.defaultConfig);
             return;
         }
         Settings.System.putString(this.mContext.getContentResolver(), "UiName", getSaveUiName());
-        Log.i(TAG, "sync UI:" + getSaveUiName());
+        Log.m68i(TAG, "sync UI:" + getSaveUiName());
         syncStatus();
         fixVersion();
     }
@@ -245,7 +276,7 @@ public class KswSettings {
 
     private void fixVersion() {
         if (TextUtils.isEmpty(getSettingsString(LANGUAGE_ID))) {
-            Log.i(TAG, "fixVersion");
+            Log.m68i(TAG, "fixVersion");
             this.onlyLanguageId = true;
             initConfig(true);
         }
@@ -263,1455 +294,944 @@ public class KswSettings {
     }
 
     public void syncStatus() {
-        Log.i(TAG, "syncStatus to Mcu");
+        Log.m68i(TAG, "syncStatus to Mcu");
         this.isSyncStatus = true;
         this.mFactorySettings = FactorySettings.getFactorySettings();
         boolean fixLocalFactory = false;
         if (this.mFactorySettings == null) {
-            Log.i("FactorySettings", "fix missing local factory settings file");
+            Log.m68i("FactorySettings", "fix missing local factory settings file");
             fixLocalFactory = true;
             this.mFactorySettings = new FactorySettings();
         }
-        Set<String> intKeys2 = getIntKeysFromSp();
-        Set<String> stringKeys2 = getStringKeysFromSp();
-        if (intKeys2.size() != 0 && stringKeys2.size() != 0) {
-            for (String key : intKeys2) {
-                if (!key.equals("USB_HOST") && !key.equals("Language") && !key.equals("Support_TXZ") && !key.equals("BenzPanelEnable") && !key.equals("benz_aux_switch") && !key.equals("benzClockSort")) {
-                    try {
-                        int value = getSettingsInt(key);
-                        handleConfig(key, value);
-                        if (fixLocalFactory) {
-                            Log.i("FactorySettings", "fix key:" + key + "-value:" + value);
-                            this.mFactorySettings.saveIntValue(key, value);
-                        }
-                    } catch (Settings.SettingNotFoundException e) {
-                    }
-                }
-            }
-            for (String key2 : stringKeys2) {
-                if (!key2.contains("UI")) {
-                    String value2 = getSettingsString(key2);
-                    handleConfig(key2, value2);
-                    if (fixLocalFactory) {
-                        Log.i("FactorySettings", "fix key:" + key2 + "-value:" + value2);
-                        this.mFactorySettings.saveStringValue(key2, value2);
-                    }
-                }
-            }
-            handleConfig("Brightness", getSettingsInt("Brightness", 60));
-            this.isSyncStatus = false;
+        Set<String> intKeys = getIntKeysFromSp();
+        Set<String> stringKeys = getStringKeysFromSp();
+        if (intKeys.size() == 0 || stringKeys.size() == 0) {
+            return;
         }
+        for (String key : intKeys) {
+            if (!key.equals("USB_HOST") && !key.equals("Language") && !key.equals("Support_TXZ") && !key.equals("BenzPanelEnable") && !key.equals("benz_aux_switch") && !key.equals("benzClockSort")) {
+                try {
+                    int value = getSettingsInt(key);
+                    handleConfig(key, value);
+                    if (fixLocalFactory) {
+                        Log.m68i("FactorySettings", "fix key:" + key + "-value:" + value);
+                        this.mFactorySettings.saveIntValue(key, value);
+                    }
+                } catch (Settings.SettingNotFoundException e) {
+                }
+            }
+        }
+        for (String key2 : stringKeys) {
+            if (!key2.contains("UI")) {
+                String value2 = getSettingsString(key2);
+                handleConfig(key2, value2);
+                if (fixLocalFactory) {
+                    Log.m68i("FactorySettings", "fix key:" + key2 + "-value:" + value2);
+                    this.mFactorySettings.saveStringValue(key2, value2);
+                }
+            }
+        }
+        handleConfig("Brightness", getSettingsInt("Brightness", 60));
+        this.isSyncStatus = false;
     }
 
     private void sendMcu(int cmdType, byte[] data) {
         KswMcuSender.getSender().sendMessage(cmdType, data);
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:27:0x0059  */
-    /* JADX WARNING: Removed duplicated region for block: B:39:0x00b0  */
-    /* JADX WARNING: Removed duplicated region for block: B:63:0x011b  */
-    /* JADX WARNING: Removed duplicated region for block: B:67:0x0139  */
-    /* JADX WARNING: Removed duplicated region for block: B:73:? A[RETURN, SYNTHETIC] */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    private void handleConfig(java.lang.String r11, java.lang.String r12) {
-        /*
-            r10 = this;
-            int r0 = r11.hashCode()
-            r1 = -1548945544(0xffffffffa3acf778, float:-1.8753084E-17)
-            r2 = 2
-            r3 = 3
-            r4 = 0
-            r5 = 1
-            if (r0 == r1) goto L_0x0049
-            r1 = -533217944(0xffffffffe037bd68, float:-5.295941E19)
-            if (r0 == r1) goto L_0x003f
-            r1 = 2708(0xa94, float:3.795E-42)
-            if (r0 == r1) goto L_0x0035
-            r1 = 91785770(0x5788a2a, float:1.1686281E-35)
-            if (r0 == r1) goto L_0x002b
-            r1 = 309639685(0x1274ba05, float:7.722211E-28)
-            if (r0 == r1) goto L_0x0021
-            goto L_0x0053
-        L_0x0021:
-            java.lang.String r0 = "UI_type"
-            boolean r0 = r11.equals(r0)
-            if (r0 == 0) goto L_0x0053
-            r0 = r3
-            goto L_0x0054
-        L_0x002b:
-            java.lang.String r0 = "Reverse_time"
-            boolean r0 = r11.equals(r0)
-            if (r0 == 0) goto L_0x0053
-            r0 = 4
-            goto L_0x0054
-        L_0x0035:
-            java.lang.String r0 = "UI"
-            boolean r0 = r11.equals(r0)
-            if (r0 == 0) goto L_0x0053
-            r0 = r2
-            goto L_0x0054
-        L_0x003f:
-            java.lang.String r0 = "TXZ_Wakeup"
-            boolean r0 = r11.equals(r0)
-            if (r0 == 0) goto L_0x0053
-            r0 = r4
-            goto L_0x0054
-        L_0x0049:
-            java.lang.String r0 = "Language"
-            boolean r0 = r11.equals(r0)
-            if (r0 == 0) goto L_0x0053
-            r0 = r5
-            goto L_0x0054
-        L_0x0053:
-            r0 = -1
-        L_0x0054:
-            switch(r0) {
-                case 0: goto L_0x0139;
-                case 1: goto L_0x011b;
-                case 2: goto L_0x00b0;
-                case 3: goto L_0x00b0;
-                case 4: goto L_0x0059;
-                default: goto L_0x0057;
+    private void handleConfig(String key, String value) {
+        char c;
+        int hashCode = key.hashCode();
+        boolean initKswConfig = true;
+        if (hashCode == -1548945544) {
+            if (key.equals("Language")) {
+                c = 1;
             }
-        L_0x0057:
-            goto L_0x0145
-        L_0x0059:
-            boolean r0 = android.text.TextUtils.isEmpty(r12)
-            r1 = 112(0x70, float:1.57E-43)
-            if (r0 == 0) goto L_0x006b
-            byte[] r0 = new byte[r3]
-            r0 = {30, 0, 0} // fill-array
-            r10.sendMcu(r1, r0)
-            goto L_0x0145
-        L_0x006b:
-            java.lang.String r0 = "-"
-            java.lang.String[] r0 = r12.split(r0)     // Catch:{ Exception -> 0x009b }
-            r6 = r0[r4]     // Catch:{ Exception -> 0x009b }
-            int r6 = java.lang.Integer.parseInt(r6)     // Catch:{ Exception -> 0x009b }
-            switch(r6) {
-                case 0: goto L_0x0090;
-                case 1: goto L_0x007b;
-                default: goto L_0x007a;
-            }     // Catch:{ Exception -> 0x009b }
-        L_0x007a:
-            goto L_0x0099
-        L_0x007b:
-            r7 = r0[r5]     // Catch:{ Exception -> 0x009b }
-            int r7 = java.lang.Integer.parseInt(r7)     // Catch:{ Exception -> 0x009b }
-            byte[] r8 = new byte[r3]     // Catch:{ Exception -> 0x009b }
-            r9 = 30
-            r8[r4] = r9     // Catch:{ Exception -> 0x009b }
-            r8[r5] = r5     // Catch:{ Exception -> 0x009b }
-            byte r4 = (byte) r7     // Catch:{ Exception -> 0x009b }
-            r8[r2] = r4     // Catch:{ Exception -> 0x009b }
-            r10.sendMcu(r1, r8)     // Catch:{ Exception -> 0x009b }
-            goto L_0x0099
-        L_0x0090:
-            byte[] r2 = new byte[r3]     // Catch:{ Exception -> 0x009b }
-            r2 = {30, 0, 0} // fill-array     // Catch:{ Exception -> 0x009b }
-            r10.sendMcu(r1, r2)     // Catch:{ Exception -> 0x009b }
-        L_0x0099:
-            goto L_0x0145
-        L_0x009b:
-            r0 = move-exception
-            r0.printStackTrace()
-            java.lang.String r2 = "KswSettings"
-            java.lang.String r4 = "handleConfig: set Reverse_time error set 0"
-            android.util.Log.e(r2, r4)
-            byte[] r2 = new byte[r3]
-            r2 = {30, 0, 0} // fill-array
-            r10.sendMcu(r1, r2)
-            goto L_0x0145
-        L_0x00b0:
-            java.lang.String r0 = "UI"
-            boolean r0 = r11.equals(r0)
-            if (r0 == 0) goto L_0x00c9
-            java.lang.String r0 = ""
-            java.util.List r0 = r10.getDataListFromJsonKey(r0)
-            int r1 = java.lang.Integer.parseInt(r12)
-            java.lang.Object r0 = r0.get(r1)
-            r12 = r0
-            java.lang.String r12 = (java.lang.String) r12
-        L_0x00c9:
-            java.lang.String r0 = "initKswConfig"
-            int r0 = r10.getSettingsInt(r0)     // Catch:{ SettingNotFoundException -> 0x00d5 }
-            if (r0 != 0) goto L_0x00d3
-            r4 = r5
-        L_0x00d3:
-            r5 = r4
-            goto L_0x00d7
-        L_0x00d5:
-            r0 = move-exception
-        L_0x00d7:
-            r0 = r5
-            if (r0 == 0) goto L_0x00f8
-            boolean r1 = r10.checkUi()
-            if (r1 != 0) goto L_0x00e6
-            java.lang.String r1 = "/mnt/vendor/persist/OEM/uiSave.ui"
-            com.wits.pms.utils.SysConfigUtil.writeArg(r12, r1)
-            goto L_0x00ec
-        L_0x00e6:
-            java.lang.String r1 = "/mnt/vendor/persist/OEM/uiSave.ui"
-            java.lang.String r12 = com.wits.pms.utils.SysConfigUtil.getArg(r1)
-        L_0x00ec:
-            android.content.Context r1 = r10.mContext
-            android.content.ContentResolver r1 = r1.getContentResolver()
-            java.lang.String r2 = "UiName"
-            android.provider.Settings.System.putString(r1, r2, r12)
-            goto L_0x0145
-        L_0x00f8:
-            android.content.Context r1 = r10.mContext
-            android.content.ContentResolver r1 = r1.getContentResolver()
-            java.lang.String r2 = "UiName"
-            android.provider.Settings.System.putString(r1, r2, r12)
-            java.io.File r1 = new java.io.File     // Catch:{ IOException -> 0x0119 }
-            java.lang.String r2 = "/mnt/vendor/persist/OEM/uiSave.ui"
-            r1.<init>(r2)     // Catch:{ IOException -> 0x0119 }
-            boolean r2 = r1.exists()     // Catch:{ IOException -> 0x0119 }
-            if (r2 != 0) goto L_0x0113
-            r1.createNewFile()     // Catch:{ IOException -> 0x0119 }
-        L_0x0113:
-            java.lang.String r2 = "/mnt/vendor/persist/OEM/uiSave.ui"
-            com.wits.pms.utils.SysConfigUtil.writeArg(r12, r2)     // Catch:{ IOException -> 0x0119 }
-            goto L_0x0145
-        L_0x0119:
-            r1 = move-exception
-            goto L_0x0145
-        L_0x011b:
-            java.lang.String r0 = "-"
-            java.lang.String[] r0 = r12.split(r0)
-            java.util.Locale r1 = new java.util.Locale
-            r3 = r0[r4]
-            r1.<init>(r3)
-            int r3 = r0.length
-            if (r3 != r2) goto L_0x0135
-            java.util.Locale r2 = new java.util.Locale
-            r3 = r0[r4]
-            r4 = r0[r5]
-            r2.<init>(r3, r4)
-            r1 = r2
-        L_0x0135:
-            com.wits.pms.utils.LanguageUtil.changeSystemLanguage(r1)
-            goto L_0x0145
-        L_0x0139:
-            android.content.Context r0 = r10.mContext
-            android.content.ContentResolver r0 = r0.getContentResolver()
-            java.lang.String r1 = "ksw_wakeup_keywords"
-            android.provider.Settings.System.putString(r0, r1, r12)
-        L_0x0145:
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.wits.pms.custom.KswSettings.handleConfig(java.lang.String, java.lang.String):void");
+            c = '\uffff';
+        } else if (hashCode == -533217944) {
+            if (key.equals("TXZ_Wakeup")) {
+                c = 0;
+            }
+            c = '\uffff';
+        } else if (hashCode == 2708) {
+            if (key.equals("UI")) {
+                c = 2;
+            }
+            c = '\uffff';
+        } else if (hashCode != 91785770) {
+            if (hashCode == 309639685 && key.equals("UI_type")) {
+                c = 3;
+            }
+            c = '\uffff';
+        } else {
+            if (key.equals("Reverse_time")) {
+                c = 4;
+            }
+            c = '\uffff';
+        }
+        switch (c) {
+            case 0:
+                Settings.System.putString(this.mContext.getContentResolver(), "ksw_wakeup_keywords", value);
+                return;
+            case 1:
+                String[] split = value.split(NativeLibraryHelper.CLEAR_ABI_OVERRIDE);
+                Locale locale = new Locale(split[0]);
+                if (split.length == 2) {
+                    locale = new Locale(split[0], split[1]);
+                }
+                LanguageUtil.changeSystemLanguage(locale);
+                return;
+            case 2:
+            case 3:
+                if (key.equals("UI")) {
+                    value = getDataListFromJsonKey("").get(Integer.parseInt(value));
+                }
+                try {
+                    initKswConfig = getSettingsInt("initKswConfig") == 0;
+                } catch (Settings.SettingNotFoundException e) {
+                }
+                if (initKswConfig) {
+                    if (!checkUi()) {
+                        SysConfigUtil.writeArg(value, uiSave);
+                    } else {
+                        value = SysConfigUtil.getArg(uiSave);
+                    }
+                    Settings.System.putString(this.mContext.getContentResolver(), "UiName", value);
+                    return;
+                }
+                Settings.System.putString(this.mContext.getContentResolver(), "UiName", value);
+                try {
+                    File file = new File(uiSave);
+                    if (!file.exists()) {
+                        file.createNewFile();
+                    }
+                    SysConfigUtil.writeArg(value, uiSave);
+                    return;
+                } catch (IOException e2) {
+                    return;
+                }
+            case 4:
+                if (TextUtils.isEmpty(value)) {
+                    sendMcu(112, new byte[]{30, 0, 0});
+                    return;
+                }
+                try {
+                    String[] reverseTimes = value.split(NativeLibraryHelper.CLEAR_ABI_OVERRIDE);
+                    int item = Integer.parseInt(reverseTimes[0]);
+                    switch (item) {
+                        case 0:
+                            sendMcu(112, new byte[]{30, 0, 0});
+                            break;
+                        case 1:
+                            int time = Integer.parseInt(reverseTimes[1]);
+                            sendMcu(112, new byte[]{30, 1, (byte) time});
+                            break;
+                    }
+                    return;
+                } catch (Exception e3) {
+                    e3.printStackTrace();
+                    Log.m70e(TAG, "handleConfig: set Reverse_time error set 0");
+                    sendMcu(112, new byte[]{30, 0, 0});
+                    return;
+                }
+            default:
+                return;
+        }
     }
 
-    /* JADX WARNING: Can't fix incorrect switch cases order */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    private int handleConfig(java.lang.String r17, int r18) {
-        /*
-            r16 = this;
-            r1 = r16
-            r2 = r17
-            r3 = r18
-            byte r4 = (byte) r3
-            int r0 = r17.hashCode()
-            r5 = 19
-            r6 = 17
-            r7 = 13
-            r9 = 5
-            r10 = 16
-            r11 = 4
-            r12 = 3
-            r13 = 2
-            r14 = 0
-            r15 = 1
-            switch(r0) {
-                case -2113780075: goto L_0x02da;
-                case -1997186328: goto L_0x02cf;
-                case -1885010620: goto L_0x02c5;
-                case -1793262372: goto L_0x02ba;
-                case -1669187502: goto L_0x02af;
-                case -1653340047: goto L_0x02a4;
-                case -1548945544: goto L_0x0299;
-                case -1528907729: goto L_0x028e;
-                case -1528907728: goto L_0x0283;
-                case -1282124803: goto L_0x0277;
-                case -1257575528: goto L_0x026b;
-                case -1181891355: goto L_0x025f;
-                case -1103831850: goto L_0x0253;
-                case -1091766978: goto L_0x0247;
-                case -1028676594: goto L_0x023b;
-                case -952414302: goto L_0x022f;
-                case -924519752: goto L_0x0223;
-                case -899948362: goto L_0x0217;
-                case -872647543: goto L_0x020b;
-                case -816518904: goto L_0x01ff;
-                case -801026034: goto L_0x01f3;
-                case -776702634: goto L_0x01e8;
-                case -738352606: goto L_0x01dc;
-                case -682449643: goto L_0x01d0;
-                case -677297959: goto L_0x01c4;
-                case -660995341: goto L_0x01b8;
-                case -602992886: goto L_0x01ad;
-                case -554769949: goto L_0x01a1;
-                case -519600940: goto L_0x0196;
-                case -294129095: goto L_0x018a;
-                case -220630678: goto L_0x017f;
-                case -183099962: goto L_0x0173;
-                case -114997240: goto L_0x0167;
-                case -63299011: goto L_0x015c;
-                case 88063465: goto L_0x0151;
-                case 90414126: goto L_0x0146;
-                case 106858821: goto L_0x013a;
-                case 214368532: goto L_0x012e;
-                case 241352631: goto L_0x0122;
-                case 252039837: goto L_0x0116;
-                case 340057703: goto L_0x010a;
-                case 400825784: goto L_0x00fe;
-                case 442866595: goto L_0x00f2;
-                case 642405998: goto L_0x00e6;
-                case 677993257: goto L_0x00db;
-                case 940906279: goto L_0x00cf;
-                case 985261490: goto L_0x00c3;
-                case 1010516114: goto L_0x00b8;
-                case 1031815915: goto L_0x00ac;
-                case 1060762673: goto L_0x00a0;
-                case 1071490530: goto L_0x0095;
-                case 1195313274: goto L_0x0089;
-                case 1374371814: goto L_0x007d;
-                case 1533443583: goto L_0x0071;
-                case 1598142665: goto L_0x0066;
-                case 1669187709: goto L_0x005a;
-                case 1757663793: goto L_0x004e;
-                case 1757664753: goto L_0x0042;
-                case 1857618170: goto L_0x0036;
-                case 2053143566: goto L_0x002a;
-                case 2103778808: goto L_0x001e;
-                default: goto L_0x001c;
-            }
-        L_0x001c:
-            goto L_0x02e5
-        L_0x001e:
-            java.lang.String r0 = "DashBoardUnit"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 27
-            goto L_0x02e6
-        L_0x002a:
-            java.lang.String r0 = "EQ_app"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 60
-            goto L_0x02e6
-        L_0x0036:
-            java.lang.String r0 = "cam360_video"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 40
-            goto L_0x02e6
-        L_0x0042:
-            java.lang.String r0 = "mic_gain_m600"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 56
-            goto L_0x02e6
-        L_0x004e:
-            java.lang.String r0 = "mic_gain_m501"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 55
-            goto L_0x02e6
-        L_0x005a:
-            java.lang.String r0 = "Front_left"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 58
-            goto L_0x02e6
-        L_0x0066:
-            java.lang.String r0 = "Front_view_camera"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 7
-            goto L_0x02e6
-        L_0x0071:
-            java.lang.String r0 = "benz_aux_switch"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 49
-            goto L_0x02e6
-        L_0x007d:
-            java.lang.String r0 = "Treble_value"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 22
-            goto L_0x02e6
-        L_0x0089:
-            java.lang.String r0 = "FuelUnit"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 10
-            goto L_0x02e6
-        L_0x0095:
-            java.lang.String r0 = "TimeSyncSoucrce"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = r10
-            goto L_0x02e6
-        L_0x00a0:
-            java.lang.String r0 = "Bass_value"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 20
-            goto L_0x02e6
-        L_0x00ac:
-            java.lang.String r0 = "DirtTravelSelection"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 25
-            goto L_0x02e6
-        L_0x00b8:
-            java.lang.String r0 = "Android_phone_vol"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = r7
-            goto L_0x02e6
-        L_0x00c3:
-            java.lang.String r0 = "Voice_key"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 37
-            goto L_0x02e6
-        L_0x00cf:
-            java.lang.String r0 = "BT_Type"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 30
-            goto L_0x02e6
-        L_0x00db:
-            java.lang.String r0 = "forwardCamMirror"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = r15
-            goto L_0x02e6
-        L_0x00e6:
-            java.lang.String r0 = "CarDisplay"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 34
-            goto L_0x02e6
-        L_0x00f2:
-            java.lang.String r0 = "USB_HOST"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 47
-            goto L_0x02e6
-        L_0x00fe:
-            java.lang.String r0 = "touch_continuous_send"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 50
-            goto L_0x02e6
-        L_0x010a:
-            java.lang.String r0 = "Middle_value"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 21
-            goto L_0x02e6
-        L_0x0116:
-            java.lang.String r0 = "CCC_IDrive"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 35
-            goto L_0x02e6
-        L_0x0122:
-            java.lang.String r0 = "Car_phone_vol"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 14
-            goto L_0x02e6
-        L_0x012e:
-            java.lang.String r0 = "HandsetAutomaticSelect"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 36
-            goto L_0x02e6
-        L_0x013a:
-            java.lang.String r0 = "RearCamType"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 8
-            goto L_0x02e6
-        L_0x0146:
-            java.lang.String r0 = "ShowTrack"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = r12
-            goto L_0x02e6
-        L_0x0151:
-            java.lang.String r0 = "ShowRadar"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = r11
-            goto L_0x02e6
-        L_0x015c:
-            java.lang.String r0 = "benzClockSort"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = r14
-            goto L_0x02e6
-        L_0x0167:
-            java.lang.String r0 = "Android_media_vol"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 12
-            goto L_0x02e6
-        L_0x0173:
-            java.lang.String r0 = "Support_TXZ"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 48
-            goto L_0x02e6
-        L_0x017f:
-            java.lang.String r0 = "DoNotPlayVideosWhileDriving"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = r9
-            goto L_0x02e6
-        L_0x018a:
-            java.lang.String r0 = "DVR_Type"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 31
-            goto L_0x02e6
-        L_0x0196:
-            java.lang.String r0 = "ReversingMuteSelect"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 6
-            goto L_0x02e6
-        L_0x01a1:
-            java.lang.String r0 = "Mode_key"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 39
-            goto L_0x02e6
-        L_0x01ad:
-            java.lang.String r0 = "RearCamMirror"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = r13
-            goto L_0x02e6
-        L_0x01b8:
-            java.lang.String r0 = "OLDBMWX"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 46
-            goto L_0x02e6
-        L_0x01c4:
-            java.lang.String r0 = "Default_PowerBoot"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 44
-            goto L_0x02e6
-        L_0x01d0:
-            java.lang.String r0 = "AMP_Type"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 32
-            goto L_0x02e6
-        L_0x01dc:
-            java.lang.String r0 = "CarAux_auto_method"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 28
-            goto L_0x02e6
-        L_0x01e8:
-            java.lang.String r0 = "EQ_mode"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = r5
-            goto L_0x02e6
-        L_0x01f3:
-            java.lang.String r0 = "AHD_cam_Select"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 45
-            goto L_0x02e6
-        L_0x01ff:
-            java.lang.String r0 = "GoogleAPP"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 57
-            goto L_0x02e6
-        L_0x020b:
-            java.lang.String r0 = "txz_oil"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 52
-            goto L_0x02e6
-        L_0x0217:
-            java.lang.String r0 = "NaviMix"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 18
-            goto L_0x02e6
-        L_0x0223:
-            java.lang.String r0 = "Protocol"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 24
-            goto L_0x02e6
-        L_0x022f:
-            java.lang.String r0 = "Backlight_auto_set"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 41
-            goto L_0x02e6
-        L_0x023b:
-            java.lang.String r0 = "phone_key"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 51
-            goto L_0x02e6
-        L_0x0247:
-            java.lang.String r0 = "txz_speed"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 53
-            goto L_0x02e6
-        L_0x0253:
-            java.lang.String r0 = "CarVideoDisplayStyle"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 26
-            goto L_0x02e6
-        L_0x025f:
-            java.lang.String r0 = "Car_navi_vol"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 15
-            goto L_0x02e6
-        L_0x026b:
-            java.lang.String r0 = "TempUnit"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 9
-            goto L_0x02e6
-        L_0x0277:
-            java.lang.String r0 = "txz_temp"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 54
-            goto L_0x02e6
-        L_0x0283:
-            java.lang.String r0 = "CarAuxIndex2"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 43
-            goto L_0x02e6
-        L_0x028e:
-            java.lang.String r0 = "CarAuxIndex1"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 42
-            goto L_0x02e6
-        L_0x0299:
-            java.lang.String r0 = "Language"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 23
-            goto L_0x02e6
-        L_0x02a4:
-            java.lang.String r0 = "Brightness"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 11
-            goto L_0x02e6
-        L_0x02af:
-            java.lang.String r0 = "Speed_type"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 59
-            goto L_0x02e6
-        L_0x02ba:
-            java.lang.String r0 = "Map_key"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 38
-            goto L_0x02e6
-        L_0x02c5:
-            java.lang.String r0 = "TimeFormat"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = r6
-            goto L_0x02e6
-        L_0x02cf:
-            java.lang.String r0 = "Front_view_camer1a"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 33
-            goto L_0x02e6
-        L_0x02da:
-            java.lang.String r0 = "CarAux_Operate"
-            boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x02e5
-            r0 = 29
-            goto L_0x02e6
-        L_0x02e5:
-            r0 = -1
-        L_0x02e6:
-            r8 = 112(0x70, float:1.57E-43)
-            switch(r0) {
-                case 0: goto L_0x07e5;
-                case 1: goto L_0x07d7;
-                case 2: goto L_0x07cb;
-                case 3: goto L_0x07bd;
-                case 4: goto L_0x07af;
-                case 5: goto L_0x07a1;
-                case 6: goto L_0x0795;
-                case 7: goto L_0x0786;
-                case 8: goto L_0x0777;
-                case 9: goto L_0x0768;
-                case 10: goto L_0x0759;
-                case 11: goto L_0x0735;
-                case 12: goto L_0x071f;
-                case 13: goto L_0x0709;
-                case 14: goto L_0x06f3;
-                case 15: goto L_0x06dd;
-                case 16: goto L_0x06c1;
-                case 17: goto L_0x066a;
-                case 18: goto L_0x0657;
-                case 19: goto L_0x05d1;
-                case 20: goto L_0x05d1;
-                case 21: goto L_0x05d1;
-                case 22: goto L_0x05d1;
-                case 23: goto L_0x0585;
-                case 24: goto L_0x0560;
-                case 25: goto L_0x0553;
-                case 26: goto L_0x0533;
-                case 27: goto L_0x0526;
-                case 28: goto L_0x0519;
-                case 29: goto L_0x050e;
-                case 30: goto L_0x0503;
-                case 31: goto L_0x04f8;
-                case 32: goto L_0x04ed;
-                case 33: goto L_0x04e2;
-                case 34: goto L_0x04d5;
-                case 35: goto L_0x04c9;
-                case 36: goto L_0x04bc;
-                case 37: goto L_0x04b1;
-                case 38: goto L_0x04a4;
-                case 39: goto L_0x0497;
-                case 40: goto L_0x048a;
-                case 41: goto L_0x047f;
-                case 42: goto L_0x0472;
-                case 43: goto L_0x0465;
-                case 44: goto L_0x0458;
-                case 45: goto L_0x044b;
-                case 46: goto L_0x0440;
-                case 47: goto L_0x043b;
-                case 48: goto L_0x042e;
-                case 49: goto L_0x0423;
-                case 50: goto L_0x0416;
-                case 51: goto L_0x0409;
-                case 52: goto L_0x03fc;
-                case 53: goto L_0x03ef;
-                case 54: goto L_0x03e2;
-                case 55: goto L_0x0395;
-                case 56: goto L_0x033e;
-                case 57: goto L_0x0314;
-                case 58: goto L_0x0307;
-                case 59: goto L_0x02fa;
-                case 60: goto L_0x02ed;
-                default: goto L_0x02eb;
-            }
-        L_0x02eb:
-            goto L_0x080b
-        L_0x02ed:
-            android.content.Context r0 = r1.mContext
-            android.content.ContentResolver r0 = r0.getContentResolver()
-            java.lang.String r5 = "EQ_app"
-            android.provider.Settings.System.putInt(r0, r5, r3)
-            goto L_0x080b
-        L_0x02fa:
-            byte[] r0 = new byte[r13]
-            r5 = 35
-            r0[r14] = r5
-            r0[r15] = r4
-            r1.sendMcu(r8, r0)
-            goto L_0x080b
-        L_0x0307:
-            byte[] r0 = new byte[r13]
-            r5 = 34
-            r0[r14] = r5
-            r0[r15] = r4
-            r1.sendMcu(r8, r0)
-            goto L_0x080b
-        L_0x0314:
-            java.lang.String r0 = "KswSettings"
-            java.lang.StringBuilder r5 = new java.lang.StringBuilder
-            r5.<init>()
-            java.lang.String r6 = "handleConfig:  GoogleAPP intValue = "
-            r5.append(r6)
-            r5.append(r3)
-            java.lang.String r5 = r5.toString()
-            android.util.Log.d(r0, r5)
-            if (r3 != 0) goto L_0x0335
-            java.lang.String r0 = "persist.install.type"
-            java.lang.String r5 = "chinese"
-            android.os.SystemProperties.set(r0, r5)
-            goto L_0x080b
-        L_0x0335:
-            java.lang.String r0 = "persist.install.type"
-            java.lang.String r5 = "foreign"
-            android.os.SystemProperties.set(r0, r5)
-            goto L_0x080b
-        L_0x033e:
-            java.lang.String r0 = "KswSettings"
-            java.lang.StringBuilder r5 = new java.lang.StringBuilder
-            r5.<init>()
-            java.lang.String r6 = "handleConfig mic_gain_m600  intValue = "
-            r5.append(r6)
-            r5.append(r3)
-            java.lang.String r5 = r5.toString()
-            android.util.Log.d(r0, r5)
-            java.lang.String r0 = android.os.Build.VERSION.RELEASE
-            int r0 = java.lang.Integer.parseInt(r0)
-            r5 = 10
-            if (r0 <= r5) goto L_0x080b
-            java.lang.String r0 = android.os.Build.DISPLAY
-            java.lang.String r5 = "M600"
-            boolean r0 = r0.contains(r5)
-            if (r0 == 0) goto L_0x080b
-            java.lang.String r0 = "KswSettings"
-            java.lang.String r5 = "handleConfig mic_gain_m600 set"
-            android.util.Log.d(r0, r5)
-            java.lang.String r0 = "persist.mic.gain"
-            java.lang.StringBuilder r5 = new java.lang.StringBuilder
-            r5.<init>()
-            r5.append(r3)
-            java.lang.String r6 = ""
-            r5.append(r6)
-            java.lang.String r5 = r5.toString()
-            com.wits.pms.mirror.SystemProperties.set(r0, r5)
-            java.lang.String r0 = "persist.micgain.change"
-            java.lang.String r5 = "0"
-            com.wits.pms.mirror.SystemProperties.set(r0, r5)
-            java.lang.String r0 = "persist.micgain.change"
-            java.lang.String r5 = "1"
-            com.wits.pms.mirror.SystemProperties.set(r0, r5)
-            goto L_0x080b
-        L_0x0395:
-            java.lang.String r0 = "KswSettings"
-            java.lang.StringBuilder r5 = new java.lang.StringBuilder
-            r5.<init>()
-            java.lang.String r6 = "handleConfig mic_gain_m501  intValue = "
-            r5.append(r6)
-            r5.append(r3)
-            java.lang.String r5 = r5.toString()
-            android.util.Log.d(r0, r5)
-            java.lang.String r0 = android.os.Build.VERSION.RELEASE
-            java.lang.String r5 = "10"
-            boolean r0 = r0.contains(r5)
-            if (r0 == 0) goto L_0x080b
-            java.lang.String r0 = "KswSettings"
-            java.lang.String r5 = "handleConfig mic_gain_m501 set"
-            android.util.Log.d(r0, r5)
-            java.lang.String r0 = "persist.mic.gain"
-            java.lang.StringBuilder r5 = new java.lang.StringBuilder
-            r5.<init>()
-            r5.append(r3)
-            java.lang.String r6 = ""
-            r5.append(r6)
-            java.lang.String r5 = r5.toString()
-            com.wits.pms.mirror.SystemProperties.set(r0, r5)
-            java.lang.String r0 = "persist.micgain.change"
-            java.lang.String r5 = "0"
-            com.wits.pms.mirror.SystemProperties.set(r0, r5)
-            java.lang.String r0 = "persist.micgain.change"
-            java.lang.String r5 = "1"
-            com.wits.pms.mirror.SystemProperties.set(r0, r5)
-            goto L_0x080b
-        L_0x03e2:
-            byte[] r0 = new byte[r13]
-            r5 = 33
-            r0[r14] = r5
-            r0[r15] = r4
-            r1.sendMcu(r8, r0)
-            goto L_0x080b
-        L_0x03ef:
-            byte[] r0 = new byte[r13]
-            r5 = 32
-            r0[r14] = r5
-            r0[r15] = r4
-            r1.sendMcu(r8, r0)
-            goto L_0x080b
-        L_0x03fc:
-            byte[] r0 = new byte[r13]
-            r5 = 31
-            r0[r14] = r5
-            r0[r15] = r4
-            r1.sendMcu(r8, r0)
-            goto L_0x080b
-        L_0x0409:
-            byte[] r0 = new byte[r13]
-            r5 = 29
-            r0[r14] = r5
-            r0[r15] = r4
-            r1.sendMcu(r8, r0)
-            goto L_0x080b
-        L_0x0416:
-            byte[] r0 = new byte[r13]
-            r5 = 28
-            r0[r14] = r5
-            r0[r15] = r4
-            r1.sendMcu(r8, r0)
-            goto L_0x080b
-        L_0x0423:
-            byte[] r0 = new byte[r13]
-            r0[r14] = r10
-            r0[r15] = r4
-            r1.sendMcu(r8, r0)
-            goto L_0x080b
-        L_0x042e:
-            com.wits.pms.core.CenterControlImpl r0 = com.wits.pms.core.CenterControlImpl.getImpl()
-            if (r4 != r15) goto L_0x0436
-            r14 = r15
-        L_0x0436:
-            r0.setTxzSwitch(r14)
-            goto L_0x080b
-        L_0x043b:
-            com.wits.pms.utils.UsbUtil.updateUsbMode((int) r4)
-            goto L_0x080b
-        L_0x0440:
-            java.lang.String r0 = "CarDisplay"
-            if (r4 != r15) goto L_0x0445
-            goto L_0x0446
-        L_0x0445:
-            r14 = r15
-        L_0x0446:
-            r1.handleConfig((java.lang.String) r0, (int) r14)
-            goto L_0x080b
-        L_0x044b:
-            byte[] r0 = new byte[r13]
-            r5 = 20
-            r0[r14] = r5
-            r0[r15] = r4
-            r1.sendMcu(r8, r0)
-            goto L_0x080b
-        L_0x0458:
-            byte[] r0 = new byte[r13]
-            r5 = 25
-            r0[r14] = r5
-            r0[r15] = r4
-            r1.sendMcu(r8, r0)
-            goto L_0x080b
-        L_0x0465:
-            byte[] r0 = new byte[r13]
-            r5 = 24
-            r0[r14] = r5
-            r0[r15] = r4
-            r1.sendMcu(r8, r0)
-            goto L_0x080b
-        L_0x0472:
-            byte[] r0 = new byte[r13]
-            r5 = 23
-            r0[r14] = r5
-            r0[r15] = r4
-            r1.sendMcu(r8, r0)
-            goto L_0x080b
-        L_0x047f:
-            byte[] r0 = new byte[r13]
-            r0[r14] = r5
-            r0[r15] = r4
-            r1.sendMcu(r8, r0)
-            goto L_0x080b
-        L_0x048a:
-            byte[] r0 = new byte[r13]
-            r5 = 18
-            r0[r14] = r5
-            r0[r15] = r4
-            r1.sendMcu(r8, r0)
-            goto L_0x080b
-        L_0x0497:
-            byte[] r0 = new byte[r13]
-            r5 = 22
-            r0[r14] = r5
-            r0[r15] = r4
-            r1.sendMcu(r8, r0)
-            goto L_0x080b
-        L_0x04a4:
-            byte[] r0 = new byte[r13]
-            r5 = 21
-            r0[r14] = r5
-            r0[r15] = r4
-            r1.sendMcu(r8, r0)
-            goto L_0x080b
-        L_0x04b1:
-            byte[] r0 = new byte[r13]
-            r0[r14] = r6
-            r0[r15] = r4
-            r1.sendMcu(r8, r0)
-            goto L_0x080b
-        L_0x04bc:
-            byte[] r0 = new byte[r13]
-            r5 = 9
-            r0[r14] = r5
-            r0[r15] = r4
-            r1.sendMcu(r8, r0)
-            goto L_0x080b
-        L_0x04c9:
-            byte[] r0 = new byte[r13]
-            r5 = 6
-            r0[r14] = r5
-            r0[r15] = r4
-            r1.sendMcu(r8, r0)
-            goto L_0x080b
-        L_0x04d5:
-            byte[] r0 = new byte[r13]
-            r5 = 14
-            r0[r14] = r5
-            r0[r15] = r4
-            r1.sendMcu(r8, r0)
-            goto L_0x080b
-        L_0x04e2:
-            byte[] r0 = new byte[r13]
-            r0[r14] = r7
-            r0[r15] = r4
-            r1.sendMcu(r8, r0)
-            goto L_0x080b
-        L_0x04ed:
-            byte[] r0 = new byte[r13]
-            r0[r14] = r13
-            r0[r15] = r4
-            r1.sendMcu(r8, r0)
-            goto L_0x080b
-        L_0x04f8:
-            byte[] r0 = new byte[r13]
-            r0[r14] = r11
-            r0[r15] = r4
-            r1.sendMcu(r8, r0)
-            goto L_0x080b
-        L_0x0503:
-            byte[] r0 = new byte[r13]
-            r0[r14] = r9
-            r0[r15] = r4
-            r1.sendMcu(r8, r0)
-            goto L_0x080b
-        L_0x050e:
-            byte[] r0 = new byte[r13]
-            r0[r14] = r12
-            r0[r15] = r4
-            r1.sendMcu(r8, r0)
-            goto L_0x080b
-        L_0x0519:
-            byte[] r0 = new byte[r13]
-            r5 = 12
-            r0[r14] = r5
-            r0[r15] = r4
-            r1.sendMcu(r8, r0)
-            goto L_0x080b
-        L_0x0526:
-            byte[] r0 = new byte[r13]
-            r5 = 26
-            r0[r14] = r5
-            r0[r15] = r4
-            r1.sendMcu(r8, r0)
-            goto L_0x080b
-        L_0x0533:
-            java.lang.String r0 = "CarDisplayParamID"
-            java.util.List r0 = r1.getDataListFromJsonKey(r0)     // Catch:{ Exception -> 0x0550 }
-            if (r0 == 0) goto L_0x054e
-            java.lang.Object r5 = r0.get(r4)     // Catch:{ Exception -> 0x0550 }
-            java.lang.String r5 = (java.lang.String) r5     // Catch:{ Exception -> 0x0550 }
-            byte r6 = java.lang.Byte.parseByte(r5)     // Catch:{ Exception -> 0x0550 }
-            byte[] r7 = new byte[r13]     // Catch:{ Exception -> 0x0550 }
-            r7[r14] = r15     // Catch:{ Exception -> 0x0550 }
-            r7[r15] = r6     // Catch:{ Exception -> 0x0550 }
-            r1.sendMcu(r8, r7)     // Catch:{ Exception -> 0x0550 }
-        L_0x054e:
-            goto L_0x080b
-        L_0x0550:
-            r0 = move-exception
-            goto L_0x080b
-        L_0x0553:
-            byte[] r0 = new byte[r13]
-            r5 = 27
-            r0[r14] = r5
-            r0[r15] = r4
-            r1.sendMcu(r8, r0)
-            goto L_0x080b
-        L_0x0560:
-            r0 = -1
-            if (r4 != r0) goto L_0x0564
-            r4 = 0
-        L_0x0564:
-            java.lang.String r0 = "CANBusProtocolID"
-            java.util.List r0 = r1.getDataListFromJsonKey(r0)     // Catch:{ Exception -> 0x0582 }
-            if (r0 == 0) goto L_0x0580
-            java.lang.Object r5 = r0.get(r4)     // Catch:{ Exception -> 0x0582 }
-            java.lang.String r5 = (java.lang.String) r5     // Catch:{ Exception -> 0x0582 }
-            byte r6 = java.lang.Byte.parseByte(r5)     // Catch:{ Exception -> 0x0582 }
-            byte[] r7 = new byte[r13]     // Catch:{ Exception -> 0x0582 }
-            r9 = 7
-            r7[r14] = r9     // Catch:{ Exception -> 0x0582 }
-            r7[r15] = r6     // Catch:{ Exception -> 0x0582 }
-            r1.sendMcu(r8, r7)     // Catch:{ Exception -> 0x0582 }
-        L_0x0580:
-            goto L_0x080b
-        L_0x0582:
-            r0 = move-exception
-            goto L_0x080b
-        L_0x0585:
-            java.lang.String r0 = "languageID"
-            java.util.List r0 = r1.getDataListFromJsonKey(r0)
-            java.lang.Object r0 = r0.get(r3)
-            java.lang.String r0 = (java.lang.String) r0
-            int r0 = java.lang.Integer.parseInt(r0)
-            if (r0 >= 0) goto L_0x0599
-            r5 = -1
-            return r5
-        L_0x0599:
-            com.wits.pms.custom.KswSettings$3 r5 = new com.wits.pms.custom.KswSettings$3
-            r5.<init>()
-            java.lang.String r6 = "KswSettings"
-            java.lang.StringBuilder r7 = new java.lang.StringBuilder
-            r7.<init>()
-            java.lang.String r8 = "Change Language@"
-            r7.append(r8)
-            java.lang.Object r8 = r5.get(r0)
-            java.util.Locale r8 = (java.util.Locale) r8
-            java.lang.String r8 = r8.getLanguage()
-            r7.append(r8)
-            java.lang.String r8 = " @index="
-            r7.append(r8)
-            r7.append(r0)
-            java.lang.String r7 = r7.toString()
-            android.util.Log.i(r6, r7)
-            java.lang.Object r6 = r5.get(r0)
-            java.util.Locale r6 = (java.util.Locale) r6
-            com.wits.pms.utils.LanguageUtil.changeSystemLanguage(r6)
-            goto L_0x080b
-        L_0x05d1:
-            java.lang.String r0 = "EQ_mode"
-            int r0 = r1.getSettingsInt(r0)     // Catch:{ SettingNotFoundException -> 0x0654 }
-            byte r0 = (byte) r0     // Catch:{ SettingNotFoundException -> 0x0654 }
-            r8 = 115(0x73, float:1.61E-43)
-            switch(r0) {
-                case 0: goto L_0x062f;
-                case 1: goto L_0x061f;
-                case 2: goto L_0x060f;
-                case 3: goto L_0x05fd;
-                case 4: goto L_0x05ef;
-                case 5: goto L_0x05df;
-                default: goto L_0x05dd;
-            }     // Catch:{ SettingNotFoundException -> 0x0654 }
-        L_0x05dd:
-            goto L_0x0652
-        L_0x05df:
-            byte[] r7 = new byte[r11]     // Catch:{ SettingNotFoundException -> 0x0654 }
-            r7[r14] = r6     // Catch:{ SettingNotFoundException -> 0x0654 }
-            r6 = 11
-            r7[r15] = r6     // Catch:{ SettingNotFoundException -> 0x0654 }
-            r7[r13] = r5     // Catch:{ SettingNotFoundException -> 0x0654 }
-            r7[r12] = r0     // Catch:{ SettingNotFoundException -> 0x0654 }
-            r1.sendMcu(r8, r7)     // Catch:{ SettingNotFoundException -> 0x0654 }
-            goto L_0x0652
-        L_0x05ef:
-            byte[] r5 = new byte[r11]     // Catch:{ SettingNotFoundException -> 0x0654 }
-            r5[r14] = r7     // Catch:{ SettingNotFoundException -> 0x0654 }
-            r5[r15] = r10     // Catch:{ SettingNotFoundException -> 0x0654 }
-            r5[r13] = r10     // Catch:{ SettingNotFoundException -> 0x0654 }
-            r5[r12] = r0     // Catch:{ SettingNotFoundException -> 0x0654 }
-            r1.sendMcu(r8, r5)     // Catch:{ SettingNotFoundException -> 0x0654 }
-            goto L_0x0652
-        L_0x05fd:
-            byte[] r5 = new byte[r11]     // Catch:{ SettingNotFoundException -> 0x0654 }
-            r7 = 15
-            r5[r14] = r7     // Catch:{ SettingNotFoundException -> 0x0654 }
-            r7 = 11
-            r5[r15] = r7     // Catch:{ SettingNotFoundException -> 0x0654 }
-            r5[r13] = r6     // Catch:{ SettingNotFoundException -> 0x0654 }
-            r5[r12] = r0     // Catch:{ SettingNotFoundException -> 0x0654 }
-            r1.sendMcu(r8, r5)     // Catch:{ SettingNotFoundException -> 0x0654 }
-            goto L_0x0652
-        L_0x060f:
-            byte[] r6 = new byte[r11]     // Catch:{ SettingNotFoundException -> 0x0654 }
-            r6[r14] = r5     // Catch:{ SettingNotFoundException -> 0x0654 }
-            r6[r15] = r7     // Catch:{ SettingNotFoundException -> 0x0654 }
-            r5 = 15
-            r6[r13] = r5     // Catch:{ SettingNotFoundException -> 0x0654 }
-            r6[r12] = r0     // Catch:{ SettingNotFoundException -> 0x0654 }
-            r1.sendMcu(r8, r6)     // Catch:{ SettingNotFoundException -> 0x0654 }
-            goto L_0x0652
-        L_0x061f:
-            byte[] r5 = new byte[r11]     // Catch:{ SettingNotFoundException -> 0x0654 }
-            r5[r14] = r10     // Catch:{ SettingNotFoundException -> 0x0654 }
-            r6 = 9
-            r5[r15] = r6     // Catch:{ SettingNotFoundException -> 0x0654 }
-            r5[r13] = r10     // Catch:{ SettingNotFoundException -> 0x0654 }
-            r5[r12] = r0     // Catch:{ SettingNotFoundException -> 0x0654 }
-            r1.sendMcu(r8, r5)     // Catch:{ SettingNotFoundException -> 0x0654 }
-            goto L_0x0652
-        L_0x062f:
-            java.lang.String r5 = "Bass_value"
-            int r5 = r1.getSettingsInt(r5)     // Catch:{ SettingNotFoundException -> 0x0654 }
-            byte r5 = (byte) r5     // Catch:{ SettingNotFoundException -> 0x0654 }
-            java.lang.String r6 = "Middle_value"
-            int r6 = r1.getSettingsInt(r6)     // Catch:{ SettingNotFoundException -> 0x0654 }
-            byte r6 = (byte) r6     // Catch:{ SettingNotFoundException -> 0x0654 }
-            java.lang.String r7 = "Treble_value"
-            int r7 = r1.getSettingsInt(r7)     // Catch:{ SettingNotFoundException -> 0x0654 }
-            byte r7 = (byte) r7     // Catch:{ SettingNotFoundException -> 0x0654 }
-            byte[] r9 = new byte[r11]     // Catch:{ SettingNotFoundException -> 0x0654 }
-            r9[r14] = r5     // Catch:{ SettingNotFoundException -> 0x0654 }
-            r9[r15] = r6     // Catch:{ SettingNotFoundException -> 0x0654 }
-            r9[r13] = r7     // Catch:{ SettingNotFoundException -> 0x0654 }
-            r9[r12] = r0     // Catch:{ SettingNotFoundException -> 0x0654 }
-            r1.sendMcu(r8, r9)     // Catch:{ SettingNotFoundException -> 0x0654 }
-        L_0x0652:
-            goto L_0x080b
-        L_0x0654:
-            r0 = move-exception
-            goto L_0x080b
-        L_0x0657:
-            int r0 = r3 + 1
-            float r0 = (float) r0
-            r5 = 1092616192(0x41200000, float:10.0)
-            float r0 = r0 / r5
-            android.content.Context r5 = r1.mContext
-            android.content.ContentResolver r5 = r5.getContentResolver()
-            java.lang.String r6 = "NaviMix"
-            android.provider.Settings.System.putFloat(r5, r6, r0)
-            goto L_0x080b
-        L_0x066a:
-            java.lang.String r0 = "TimeSyncSoucrce"
-            int r0 = r1.getSettingsInt(r0)     // Catch:{ SettingNotFoundException -> 0x06be }
-            if (r0 != 0) goto L_0x069d
-            android.content.Context r0 = r1.mContext     // Catch:{ SettingNotFoundException -> 0x06be }
-            android.content.ContentResolver r0 = r0.getContentResolver()     // Catch:{ SettingNotFoundException -> 0x06be }
-            java.lang.String r5 = "time_12_24"
-            if (r3 != r15) goto L_0x067f
-            java.lang.String r6 = "12"
-            goto L_0x0681
-        L_0x067f:
-            java.lang.String r6 = "24"
-        L_0x0681:
-            android.provider.Settings.System.putString(r0, r5, r6)     // Catch:{ SettingNotFoundException -> 0x06be }
-            android.content.Intent r0 = new android.content.Intent     // Catch:{ SettingNotFoundException -> 0x06be }
-            java.lang.String r5 = "android.intent.action.TIME_SET"
-            r0.<init>((java.lang.String) r5)     // Catch:{ SettingNotFoundException -> 0x06be }
-            android.content.Context r5 = r1.mContext     // Catch:{ SettingNotFoundException -> 0x06be }
-            android.content.Context r6 = r1.mContext     // Catch:{ SettingNotFoundException -> 0x06be }
-            android.content.pm.ApplicationInfo r6 = r6.getApplicationInfo()     // Catch:{ SettingNotFoundException -> 0x06be }
-            int r6 = r6.uid     // Catch:{ SettingNotFoundException -> 0x06be }
-            android.os.UserHandle r6 = android.os.UserHandle.getUserHandleForUid(r6)     // Catch:{ SettingNotFoundException -> 0x06be }
-            r5.sendBroadcastAsUser(r0, r6)     // Catch:{ SettingNotFoundException -> 0x06be }
-            goto L_0x06bc
-        L_0x069d:
-            android.content.Context r0 = r1.mContext     // Catch:{ SettingNotFoundException -> 0x06be }
-            android.content.ContentResolver r0 = r0.getContentResolver()     // Catch:{ SettingNotFoundException -> 0x06be }
-            java.lang.String r5 = "time_12_24"
-            if (r3 != r15) goto L_0x06aa
-            java.lang.String r6 = "12"
-            goto L_0x06ac
-        L_0x06aa:
-            java.lang.String r6 = "24"
-        L_0x06ac:
-            android.provider.Settings.System.putString(r0, r5, r6)     // Catch:{ SettingNotFoundException -> 0x06be }
-            byte[] r0 = new byte[r13]     // Catch:{ SettingNotFoundException -> 0x06be }
-            r5 = 15
-            r0[r14] = r5     // Catch:{ SettingNotFoundException -> 0x06be }
-            r0[r15] = r4     // Catch:{ SettingNotFoundException -> 0x06be }
-            r5 = 106(0x6a, float:1.49E-43)
-            r1.sendMcu(r5, r0)     // Catch:{ SettingNotFoundException -> 0x06be }
-        L_0x06bc:
-            goto L_0x080b
-        L_0x06be:
-            r0 = move-exception
-            goto L_0x080b
-        L_0x06c1:
-            byte[] r0 = new byte[r13]
-            r0[r14] = r10
-            r0[r15] = r4
-            r5 = 106(0x6a, float:1.49E-43)
-            r1.sendMcu(r5, r0)
-            android.content.Context r0 = r1.mContext
-            android.content.ContentResolver r0 = r0.getContentResolver()
-            java.lang.String r5 = "auto_time"
-            if (r4 != r15) goto L_0x06d7
-            goto L_0x06d8
-        L_0x06d7:
-            r14 = r15
-        L_0x06d8:
-            android.provider.Settings.Global.putInt(r0, r5, r14)
-            goto L_0x080b
-        L_0x06dd:
-            byte[] r0 = new byte[r9]
-            r0[r14] = r14
-            r0[r15] = r13
-            r0[r13] = r12
-            r0[r12] = r4
-            boolean r5 = r1.isSyncStatus
-            byte r5 = (byte) r5
-            r0[r11] = r5
-            r5 = 98
-            r1.sendMcu(r5, r0)
-            goto L_0x080b
-        L_0x06f3:
-            byte[] r0 = new byte[r9]
-            r0[r14] = r14
-            r0[r15] = r13
-            r0[r13] = r13
-            r0[r12] = r4
-            boolean r5 = r1.isSyncStatus
-            byte r5 = (byte) r5
-            r0[r11] = r5
-            r5 = 98
-            r1.sendMcu(r5, r0)
-            goto L_0x080b
-        L_0x0709:
-            byte[] r0 = new byte[r9]
-            r0[r14] = r14
-            r0[r15] = r15
-            r0[r13] = r13
-            r0[r12] = r4
-            boolean r5 = r1.isSyncStatus
-            byte r5 = (byte) r5
-            r0[r11] = r5
-            r5 = 98
-            r1.sendMcu(r5, r0)
-            goto L_0x080b
-        L_0x071f:
-            byte[] r0 = new byte[r9]
-            r0[r14] = r14
-            r0[r15] = r15
-            r0[r13] = r15
-            r0[r12] = r4
-            boolean r5 = r1.isSyncStatus
-            byte r5 = (byte) r5
-            r0[r11] = r5
-            r5 = 98
-            r1.sendMcu(r5, r0)
-            goto L_0x080b
-        L_0x0735:
-            int r0 = r3 * 1023
-            int r0 = r0 / 100
-            r5 = 10
-            r6 = 255(0xff, float:3.57E-43)
-            int r0 = com.wits.pms.mcu.custom.utils.BrightnessUtils.convertGammaToLinear(r0, r5, r6)
-            android.content.Context r5 = r1.mContext
-            android.content.ContentResolver r5 = r5.getContentResolver()
-            java.lang.String r6 = "screen_brightness"
-            android.provider.Settings.System.putInt(r5, r6, r0)
-            boolean r5 = r1.isSyncStatus
-            if (r5 == 0) goto L_0x080b
-            com.wits.pms.core.CenterControlImpl r5 = com.wits.pms.core.CenterControlImpl.getImpl()
-            r5.setBrightness(r3)
-            goto L_0x080b
-        L_0x0759:
-            byte[] r0 = new byte[r13]
-            r5 = 26
-            r0[r14] = r5
-            r0[r15] = r4
-            r5 = 106(0x6a, float:1.49E-43)
-            r1.sendMcu(r5, r0)
-            goto L_0x080b
-        L_0x0768:
-            r5 = 106(0x6a, float:1.49E-43)
-            byte[] r0 = new byte[r13]
-            r6 = 24
-            r0[r14] = r6
-            r0[r15] = r4
-            r1.sendMcu(r5, r0)
-            goto L_0x080b
-        L_0x0777:
-            r5 = 106(0x6a, float:1.49E-43)
-            byte[] r0 = new byte[r13]
-            r6 = 11
-            r0[r14] = r6
-            r0[r15] = r4
-            r1.sendMcu(r5, r0)
-            goto L_0x080b
-        L_0x0786:
-            r5 = 106(0x6a, float:1.49E-43)
-            byte[] r0 = new byte[r13]
-            r6 = 20
-            r0[r14] = r6
-            r0[r15] = r4
-            r1.sendMcu(r5, r0)
-            goto L_0x080b
-        L_0x0795:
-            byte[] r0 = new byte[r13]
-            r5 = 8
-            r0[r14] = r5
-            r0[r15] = r4
-            r1.sendMcu(r8, r0)
-            goto L_0x080b
-        L_0x07a1:
-            byte[] r0 = new byte[r13]
-            r5 = 14
-            r0[r14] = r5
-            r0[r15] = r4
-            r5 = 106(0x6a, float:1.49E-43)
-            r1.sendMcu(r5, r0)
-            goto L_0x080b
-        L_0x07af:
-            r5 = 106(0x6a, float:1.49E-43)
-            byte[] r0 = new byte[r13]
-            r6 = 23
-            r0[r14] = r6
-            r0[r15] = r4
-            r1.sendMcu(r5, r0)
-            goto L_0x080b
-        L_0x07bd:
-            r5 = 106(0x6a, float:1.49E-43)
-            byte[] r0 = new byte[r13]
-            r6 = 22
-            r0[r14] = r6
-            r0[r15] = r4
-            r1.sendMcu(r5, r0)
-            goto L_0x080b
-        L_0x07cb:
-            r5 = 106(0x6a, float:1.49E-43)
-            byte[] r0 = new byte[r13]
-            r0[r14] = r15
-            r0[r15] = r4
-            r1.sendMcu(r5, r0)
-            goto L_0x080b
-        L_0x07d7:
-            r5 = 106(0x6a, float:1.49E-43)
-            byte[] r0 = new byte[r13]
-            r6 = 27
-            r0[r14] = r6
-            r0[r15] = r4
-            r1.sendMcu(r5, r0)
-            goto L_0x080b
-        L_0x07e5:
-            java.lang.String r0 = "KswSettings"
-            java.lang.StringBuilder r5 = new java.lang.StringBuilder
-            r5.<init>()
-            java.lang.String r6 = "clock input handleConfig benzClockSort, key : "
-            r5.append(r6)
-            r5.append(r2)
-            java.lang.String r6 = ", value : "
-            r5.append(r6)
-            r5.append(r3)
-            java.lang.String r5 = r5.toString()
-            android.util.Log.d(r0, r5)
-            com.wits.pms.core.CenterControlImpl r0 = com.wits.pms.core.CenterControlImpl.getImpl()
-            r0.configDialByUser(r3)
-        L_0x080b:
-            return r3
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.wits.pms.custom.KswSettings.handleConfig(java.lang.String, int):int");
+    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
+    private int handleConfig(String key, int intValue) {
+        char c;
+        byte value = (byte) intValue;
+        switch (key.hashCode()) {
+            case -2113780075:
+                if (key.equals("CarAux_Operate")) {
+                    c = 31;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -1997186328:
+                if (key.equals("Front_view_camer1a")) {
+                    c = '#';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -1885010620:
+                if (key.equals("TimeFormat")) {
+                    c = 17;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -1793262372:
+                if (key.equals("Map_key")) {
+                    c = '(';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -1724865544:
+                if (key.equals("TurnSignalControl")) {
+                    c = 27;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -1669187502:
+                if (key.equals("Speed_type")) {
+                    c = '=';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -1653340047:
+                if (key.equals("Brightness")) {
+                    c = 11;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -1645198443:
+                if (key.equals("OriginalRadar")) {
+                    c = '?';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -1548945544:
+                if (key.equals("Language")) {
+                    c = 23;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -1528907729:
+                if (key.equals("CarAuxIndex1")) {
+                    c = ',';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -1528907728:
+                if (key.equals("CarAuxIndex2")) {
+                    c = '-';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -1282124803:
+                if (key.equals("txz_temp")) {
+                    c = '8';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -1257575528:
+                if (key.equals("TempUnit")) {
+                    c = '\t';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -1181891355:
+                if (key.equals("Car_navi_vol")) {
+                    c = 15;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -1103831850:
+                if (key.equals("CarVideoDisplayStyle")) {
+                    c = 28;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -1091766978:
+                if (key.equals("txz_speed")) {
+                    c = '7';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -1070793006:
+                if (key.equals("BootUpCamera")) {
+                    c = 26;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -1028676594:
+                if (key.equals("phone_key")) {
+                    c = '5';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -952414302:
+                if (key.equals("Backlight_auto_set")) {
+                    c = '+';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -924519752:
+                if (key.equals(PROTOCOL_KEY)) {
+                    c = 24;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -899948362:
+                if (key.equals("NaviMix")) {
+                    c = 18;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -872647543:
+                if (key.equals("txz_oil")) {
+                    c = '6';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -816518904:
+                if (key.equals("GoogleAPP")) {
+                    c = ';';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -801026034:
+                if (key.equals("AHD_cam_Select")) {
+                    c = '/';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -776702634:
+                if (key.equals("EQ_mode")) {
+                    c = 19;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -738352606:
+                if (key.equals("CarAux_auto_method")) {
+                    c = 30;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -682449643:
+                if (key.equals("AMP_Type")) {
+                    c = '\"';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -677297959:
+                if (key.equals("Default_PowerBoot")) {
+                    c = '.';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -660995341:
+                if (key.equals("OLDBMWX")) {
+                    c = '0';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -602992886:
+                if (key.equals("RearCamMirror")) {
+                    c = 2;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -554769949:
+                if (key.equals("Mode_key")) {
+                    c = ')';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -519600940:
+                if (key.equals("ReversingMuteSelect")) {
+                    c = 6;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -294129095:
+                if (key.equals("DVR_Type")) {
+                    c = '!';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -220630678:
+                if (key.equals("DoNotPlayVideosWhileDriving")) {
+                    c = 5;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -183099962:
+                if (key.equals("Support_TXZ")) {
+                    c = '2';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -114997240:
+                if (key.equals("Android_media_vol")) {
+                    c = '\f';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -63299011:
+                if (key.equals("benzClockSort")) {
+                    c = 0;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 88063465:
+                if (key.equals("ShowRadar")) {
+                    c = 4;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 90414126:
+                if (key.equals("ShowTrack")) {
+                    c = 3;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 106858821:
+                if (key.equals("RearCamType")) {
+                    c = '\b';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 214368532:
+                if (key.equals("HandsetAutomaticSelect")) {
+                    c = '&';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 241352631:
+                if (key.equals("Car_phone_vol")) {
+                    c = 14;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 252039837:
+                if (key.equals("CCC_IDrive")) {
+                    c = '%';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 304932150:
+                if (key.equals("MicControl")) {
+                    c = '>';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 340057703:
+                if (key.equals("Middle_value")) {
+                    c = 21;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 400825784:
+                if (key.equals("touch_continuous_send")) {
+                    c = '4';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 442866595:
+                if (key.equals("USB_HOST")) {
+                    c = '1';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 642405998:
+                if (key.equals("CarDisplay")) {
+                    c = SymbolTable.SYMBOL_REF;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 677993257:
+                if (key.equals("forwardCamMirror")) {
+                    c = 1;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 940906279:
+                if (key.equals("BT_Type")) {
+                    c = ' ';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 985261490:
+                if (key.equals("Voice_key")) {
+                    c = DateFormat.QUOTE;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 1010516114:
+                if (key.equals("Android_phone_vol")) {
+                    c = '\r';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 1031815915:
+                if (key.equals("DirtTravelSelection")) {
+                    c = 25;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 1060762673:
+                if (key.equals("Bass_value")) {
+                    c = 20;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 1071490530:
+                if (key.equals("TimeSyncSoucrce")) {
+                    c = 16;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 1195313274:
+                if (key.equals("FuelUnit")) {
+                    c = '\n';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 1374371814:
+                if (key.equals("Treble_value")) {
+                    c = 22;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 1533443583:
+                if (key.equals("benz_aux_switch")) {
+                    c = '3';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 1598142665:
+                if (key.equals("Front_view_camera")) {
+                    c = 7;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 1669187709:
+                if (key.equals("Front_left")) {
+                    c = '<';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 1757663793:
+                if (key.equals("mic_gain_m501")) {
+                    c = '9';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 1757664753:
+                if (key.equals("mic_gain_m600")) {
+                    c = ':';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 1857618170:
+                if (key.equals("cam360_video")) {
+                    c = '*';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 2053143566:
+                if (key.equals("EQ_app")) {
+                    c = '@';
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 2103778808:
+                if (key.equals("DashBoardUnit")) {
+                    c = 29;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            default:
+                c = '\uffff';
+                break;
+        }
+        switch (c) {
+            case 0:
+                Log.m72d(TAG, "clock input handleConfig benzClockSort, key : " + key + ", value : " + intValue);
+                CenterControlImpl.getImpl().configDialByUser(intValue);
+                break;
+            case 1:
+                sendMcu(106, new byte[]{GsmAlphabet.GSM_EXTENDED_ESCAPE, value});
+                break;
+            case 2:
+                sendMcu(106, new byte[]{1, value});
+                break;
+            case 3:
+                sendMcu(106, new byte[]{22, value});
+                break;
+            case 4:
+                sendMcu(106, new byte[]{23, value});
+                break;
+            case 5:
+                sendMcu(106, new byte[]{BluetoothHidDevice.ERROR_RSP_UNKNOWN, value});
+                break;
+            case 6:
+                sendMcu(112, new byte[]{8, value});
+                break;
+            case 7:
+                sendMcu(106, new byte[]{20, value});
+                break;
+            case '\b':
+                sendMcu(106, new byte[]{11, value});
+                break;
+            case '\t':
+                sendMcu(106, new byte[]{24, value});
+                break;
+            case '\n':
+                sendMcu(106, new byte[]{26, value});
+                break;
+            case 11:
+                int realBrightness = BrightnessUtils.convertGammaToLinear((intValue * 1023) / 100, 10, 255);
+                Settings.System.putInt(this.mContext.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, realBrightness);
+                if (this.isSyncStatus) {
+                    CenterControlImpl.getImpl().setBrightness(intValue);
+                    break;
+                }
+                break;
+            case '\f':
+                sendMcu(98, new byte[]{0, 1, 1, value, this.isSyncStatus ? (byte) 1 : (byte) 0});
+                break;
+            case '\r':
+                sendMcu(98, new byte[]{0, 1, 2, value, this.isSyncStatus ? (byte) 1 : (byte) 0});
+                break;
+            case 14:
+                sendMcu(98, new byte[]{0, 2, 2, value, this.isSyncStatus ? (byte) 1 : (byte) 0});
+                break;
+            case 15:
+                sendMcu(98, new byte[]{0, 2, 3, value, this.isSyncStatus ? (byte) 1 : (byte) 0});
+                break;
+            case 16:
+                sendMcu(106, new byte[]{WifiScanner.PnoSettings.PnoNetwork.FLAG_SAME_NETWORK, value});
+                Settings.Global.putInt(this.mContext.getContentResolver(), "auto_time", value != 1 ? 1 : 0);
+                break;
+            case 17:
+                try {
+                    if (getSettingsInt("TimeSyncSoucrce") == 0) {
+                        Settings.System.putString(this.mContext.getContentResolver(), Settings.System.TIME_12_24, intValue == 1 ? "12" : "24");
+                        Intent timeChanged = new Intent(Intent.ACTION_TIME_CHANGED);
+                        this.mContext.sendBroadcastAsUser(timeChanged, UserHandle.getUserHandleForUid(this.mContext.getApplicationInfo().uid));
+                    } else {
+                        Settings.System.putString(this.mContext.getContentResolver(), Settings.System.TIME_12_24, intValue == 1 ? "12" : "24");
+                        sendMcu(106, new byte[]{MidiConstants.STATUS_CHANNEL_MASK, value});
+                    }
+                    break;
+                } catch (Settings.SettingNotFoundException e) {
+                    break;
+                }
+            case 18:
+                float mixVolume = (intValue + 1) / 10.0f;
+                Settings.System.putFloat(this.mContext.getContentResolver(), "NaviMix", mixVolume);
+                break;
+            case 19:
+            case 20:
+            case 21:
+            case 22:
+                try {
+                    byte eqMode = (byte) getSettingsInt("EQ_mode");
+                    switch (eqMode) {
+                        case 0:
+                            byte bass = (byte) getSettingsInt("Bass_value");
+                            byte middle = (byte) getSettingsInt("Middle_value");
+                            byte treble = (byte) getSettingsInt("Treble_value");
+                            sendMcu(115, new byte[]{bass, middle, treble, eqMode});
+                            break;
+                        case 1:
+                            sendMcu(115, new byte[]{WifiScanner.PnoSettings.PnoNetwork.FLAG_SAME_NETWORK, 9, WifiScanner.PnoSettings.PnoNetwork.FLAG_SAME_NETWORK, eqMode});
+                            break;
+                        case 2:
+                            sendMcu(115, new byte[]{19, 13, MidiConstants.STATUS_CHANNEL_MASK, eqMode});
+                            break;
+                        case 3:
+                            sendMcu(115, new byte[]{MidiConstants.STATUS_CHANNEL_MASK, 11, 17, eqMode});
+                            break;
+                        case 4:
+                            sendMcu(115, new byte[]{13, WifiScanner.PnoSettings.PnoNetwork.FLAG_SAME_NETWORK, WifiScanner.PnoSettings.PnoNetwork.FLAG_SAME_NETWORK, eqMode});
+                            break;
+                        case 5:
+                            sendMcu(115, new byte[]{17, 11, 19, eqMode});
+                            break;
+                    }
+                    break;
+                } catch (Settings.SettingNotFoundException e2) {
+                    break;
+                }
+                break;
+            case 23:
+                int index = Integer.parseInt(getDataListFromJsonKey(LANGUAGE_ID).get(intValue));
+                if (index >= 0) {
+                    List<Locale> locales = new ArrayList<Locale>() { // from class: com.wits.pms.custom.KswSettings.3
+                        {
+                            add(new Locale("zh", "CN"));
+                            add(new Locale("zh", "TW"));
+                            add(new Locale("en"));
+                            add(new Locale("de"));
+                            add(new Locale("pt"));
+                            add(new Locale("es"));
+                            add(new Locale("ru"));
+                            add(new Locale("ja"));
+                            add(Locale.KOREA);
+                            add(new Locale("it"));
+                            add(new Locale("fi"));
+                            add(new Locale("tr"));
+                            add(new Locale("vi"));
+                            add(new Locale("nl"));
+                            add(new Locale("iw", "IL"));
+                            add(new Locale("fr"));
+                            add(new Locale("pl"));
+                            add(new Locale("ar"));
+                            add(new Locale("el"));
+                            add(new Locale("th"));
+                            add(new Locale("hr"));
+                        }
+                    };
+                    Log.m68i(TAG, "Change Language@" + locales.get(index).getLanguage() + " @index=" + index);
+                    LanguageUtil.changeSystemLanguage(locales.get(index));
+                    break;
+                } else {
+                    return -1;
+                }
+            case 24:
+                if (value == -1) {
+                    value = 0;
+                }
+                try {
+                    List<String> carDisplayParam = getDataListFromJsonKey(CAN_ID);
+                    if (carDisplayParam != null) {
+                        String s = carDisplayParam.get(value);
+                        byte id = Byte.parseByte(s);
+                        sendMcu(112, new byte[]{7, id});
+                        break;
+                    }
+                } catch (Exception e3) {
+                    break;
+                }
+                break;
+            case 25:
+                sendMcu(112, new byte[]{GsmAlphabet.GSM_EXTENDED_ESCAPE, value});
+                break;
+            case 26:
+                sendMcu(112, new byte[]{36, value});
+                break;
+            case 27:
+                sendMcu(112, new byte[]{37, value});
+                break;
+            case 28:
+                try {
+                    List<String> carDisplayParam2 = getDataListFromJsonKey(CAR_DISPLAY_ID);
+                    if (carDisplayParam2 != null) {
+                        String s2 = carDisplayParam2.get(value);
+                        byte id2 = Byte.parseByte(s2);
+                        sendMcu(112, new byte[]{1, id2});
+                        break;
+                    }
+                } catch (Exception e4) {
+                    break;
+                }
+                break;
+            case 29:
+                sendMcu(112, new byte[]{26, value});
+                break;
+            case 30:
+                sendMcu(112, new byte[]{12, value});
+                break;
+            case 31:
+                sendMcu(112, new byte[]{3, value});
+                break;
+            case ' ':
+                sendMcu(112, new byte[]{5, value});
+                break;
+            case '!':
+                sendMcu(112, new byte[]{4, value});
+                break;
+            case '\"':
+                sendMcu(112, new byte[]{2, value});
+                break;
+            case '#':
+                sendMcu(112, new byte[]{13, value});
+                break;
+            case '$':
+                sendMcu(112, new byte[]{BluetoothHidDevice.ERROR_RSP_UNKNOWN, value});
+                break;
+            case '%':
+                sendMcu(112, new byte[]{6, value});
+                break;
+            case '&':
+                sendMcu(112, new byte[]{9, value});
+                break;
+            case '\'':
+                sendMcu(112, new byte[]{17, value});
+                break;
+            case '(':
+                sendMcu(112, new byte[]{21, value});
+                break;
+            case ')':
+                sendMcu(112, new byte[]{22, value});
+                break;
+            case '*':
+                sendMcu(112, new byte[]{18, value});
+                break;
+            case '+':
+                sendMcu(112, new byte[]{19, value});
+                break;
+            case ',':
+                sendMcu(112, new byte[]{23, value});
+                break;
+            case '-':
+                sendMcu(112, new byte[]{24, value});
+                break;
+            case '.':
+                sendMcu(112, new byte[]{25, value});
+                break;
+            case '/':
+                sendMcu(112, new byte[]{20, value});
+                break;
+            case '0':
+                handleConfig("CarDisplay", value != 1 ? 1 : 0);
+                break;
+            case '1':
+                UsbUtil.updateUsbMode(value);
+                break;
+            case '2':
+                CenterControlImpl.getImpl().setTxzSwitch(value == 1);
+                break;
+            case '3':
+                sendMcu(112, new byte[]{WifiScanner.PnoSettings.PnoNetwork.FLAG_SAME_NETWORK, value});
+                break;
+            case '4':
+                sendMcu(112, new byte[]{28, value});
+                break;
+            case '5':
+                sendMcu(112, new byte[]{29, value});
+                break;
+            case '6':
+                sendMcu(112, new byte[]{31, value});
+                break;
+            case '7':
+                sendMcu(112, new byte[]{HebrewProber.SPACE, value});
+                break;
+            case '8':
+                sendMcu(112, new byte[]{33, value});
+                break;
+            case '9':
+                Log.m72d(TAG, "handleConfig mic_gain_m501  intValue = " + intValue);
+                if (Build.VERSION.RELEASE.contains("10")) {
+                    Log.m72d(TAG, "handleConfig mic_gain_m501 set");
+                    SystemProperties.set("persist.mic.gain", intValue + "");
+                    SystemProperties.set("persist.micgain.change", "0");
+                    SystemProperties.set("persist.micgain.change", "1");
+                    break;
+                }
+                break;
+            case ':':
+                Log.m72d(TAG, "handleConfig mic_gain_m600  intValue = " + intValue);
+                if (Integer.parseInt(Build.VERSION.RELEASE) > 10 && Build.DISPLAY.contains("M600")) {
+                    Log.m72d(TAG, "handleConfig mic_gain_m600 set");
+                    SystemProperties.set("persist.mic.gain", intValue + "");
+                    SystemProperties.set("persist.micgain.change", "0");
+                    SystemProperties.set("persist.micgain.change", "1");
+                    break;
+                }
+                break;
+            case ';':
+                Log.m72d(TAG, "handleConfig:  GoogleAPP intValue = " + intValue);
+                if (intValue == 0) {
+                    android.p007os.SystemProperties.set("persist.install.type", "chinese");
+                    break;
+                } else {
+                    android.p007os.SystemProperties.set("persist.install.type", "foreign");
+                    break;
+                }
+            case '<':
+                sendMcu(112, new byte[]{34, value});
+                break;
+            case '=':
+                sendMcu(112, new byte[]{35, value});
+                break;
+            case '>':
+                Log.m68i(TAG, "Task#17317 -- MicControl value = " + ((int) value));
+                sendMcu(112, new byte[]{38, value});
+                break;
+            case '?':
+                Log.m68i(TAG, "Task#17907 -- OriginalRadar value = " + ((int) value));
+                sendMcu(112, new byte[]{39, value});
+                break;
+            case '@':
+                Settings.System.putInt(this.mContext.getContentResolver(), "EQ_app", intValue);
+                break;
+        }
+        return intValue;
     }
 
     private void reboot() {
-        this.mHandler.postDelayed($$Lambda$KswSettings$5nUKr8yRkQeboAsX8u8qFJsh60E.INSTANCE, 500);
+        this.mHandler.postDelayed(new Runnable() { // from class: com.wits.pms.custom.-$$Lambda$KswSettings$5nUKr8yRkQeboAsX8u8qFJsh60E
+            @Override // java.lang.Runnable
+            public final void run() {
+                SystemProperties.set("sys.powerctl", "reboot");
+            }
+        }, 500L);
     }
 
     private boolean checkUi() {
-        if (new File(uiSave).exists()) {
+        File uiSign = new File(uiSave);
+        if (uiSign.exists()) {
             return !TextUtils.isEmpty(getSaveUiName());
         }
         return false;
@@ -1722,10 +1242,12 @@ public class KswSettings {
     }
 
     public List<String> getDataListFromJsonKey(String key) {
-        return (List) new Gson().fromJson(Settings.System.getString(this.mContext.getContentResolver(), key), new TypeToken<ArrayList<String>>() {
+        String json = Settings.System.getString(this.mContext.getContentResolver(), key);
+        return (List) new Gson().fromJson(json, new TypeToken<ArrayList<String>>() { // from class: com.wits.pms.custom.KswSettings.4
         }.getType());
     }
 
+    /* loaded from: classes2.dex */
     private class InitConfigRunnable implements Runnable {
         private boolean addFactorySettingsLocal;
         boolean canType;
@@ -1767,530 +1289,301 @@ public class KswSettings {
             Settings.System.putString(KswSettings.this.mContext.getContentResolver(), KswSettings.LANGUAGE_ID, "");
             Settings.System.putString(KswSettings.this.mContext.getContentResolver(), KswSettings.CODE_LIST, "");
             this.addFactorySettingsLocal = FactorySettings.getFactorySettings() == null;
-            Log.i("FactorySettings", "local factory data - " + this.addFactorySettingsLocal);
+            Log.m68i("FactorySettings", "local factory data - " + this.addFactorySettingsLocal);
             if (this.addFactorySettingsLocal) {
-                FactorySettings unused = KswSettings.this.mFactorySettings = new FactorySettings();
+                KswSettings.this.mFactorySettings = new FactorySettings();
             } else {
-                FactorySettings unused2 = KswSettings.this.mFactorySettings = FactorySettings.getFactorySettings();
+                KswSettings.this.mFactorySettings = FactorySettings.getFactorySettings();
             }
         }
 
-        /* JADX WARNING: Removed duplicated region for block: B:102:0x03bd A[Catch:{ Exception -> 0x046e }] */
-        /* JADX WARNING: Removed duplicated region for block: B:103:0x03c1 A[Catch:{ Exception -> 0x046e }] */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
+        /* JADX WARN: Removed duplicated region for block: B:112:0x03df A[Catch: all -> 0x04a5, Exception -> 0x04a8, TryCatch #2 {Exception -> 0x04a8, blocks: (B:3:0x0007, B:15:0x0029, B:18:0x0073, B:20:0x0091, B:24:0x009f, B:26:0x00a4, B:28:0x00b0, B:29:0x00b4, B:31:0x00c0, B:32:0x00c4, B:34:0x00d0, B:35:0x00e6, B:37:0x00f2, B:38:0x011a, B:40:0x0126, B:41:0x0155, B:43:0x0161, B:45:0x01a3, B:47:0x020a, B:46:0x01e3, B:48:0x021d, B:50:0x0229, B:51:0x023f, B:53:0x024b, B:54:0x0261, B:56:0x0265, B:59:0x026b, B:61:0x026f, B:64:0x0275, B:66:0x0279, B:69:0x027f, B:71:0x0283, B:110:0x03d3, B:112:0x03df, B:113:0x03e3, B:115:0x03ef, B:116:0x03f2, B:118:0x03fe, B:119:0x0401, B:121:0x040d, B:122:0x0410, B:124:0x041c, B:125:0x041f, B:127:0x042b, B:128:0x042e, B:130:0x043a, B:131:0x043d, B:133:0x0449, B:73:0x0287, B:75:0x028d, B:78:0x02a5, B:80:0x02be, B:81:0x02c8, B:83:0x02d6, B:84:0x02e3, B:86:0x02e7, B:88:0x02f5, B:89:0x0304, B:91:0x030a, B:92:0x0314, B:93:0x031f, B:95:0x0325, B:96:0x0331, B:98:0x0337, B:100:0x0343, B:101:0x036e, B:103:0x0372, B:105:0x0376, B:107:0x0386, B:108:0x03a2, B:109:0x03c6, B:135:0x044d, B:136:0x0456, B:138:0x0472, B:139:0x048b, B:19:0x0086), top: B:166:0x0007, outer: #0 }] */
+        /* JADX WARN: Removed duplicated region for block: B:113:0x03e3 A[Catch: all -> 0x04a5, Exception -> 0x04a8, TryCatch #2 {Exception -> 0x04a8, blocks: (B:3:0x0007, B:15:0x0029, B:18:0x0073, B:20:0x0091, B:24:0x009f, B:26:0x00a4, B:28:0x00b0, B:29:0x00b4, B:31:0x00c0, B:32:0x00c4, B:34:0x00d0, B:35:0x00e6, B:37:0x00f2, B:38:0x011a, B:40:0x0126, B:41:0x0155, B:43:0x0161, B:45:0x01a3, B:47:0x020a, B:46:0x01e3, B:48:0x021d, B:50:0x0229, B:51:0x023f, B:53:0x024b, B:54:0x0261, B:56:0x0265, B:59:0x026b, B:61:0x026f, B:64:0x0275, B:66:0x0279, B:69:0x027f, B:71:0x0283, B:110:0x03d3, B:112:0x03df, B:113:0x03e3, B:115:0x03ef, B:116:0x03f2, B:118:0x03fe, B:119:0x0401, B:121:0x040d, B:122:0x0410, B:124:0x041c, B:125:0x041f, B:127:0x042b, B:128:0x042e, B:130:0x043a, B:131:0x043d, B:133:0x0449, B:73:0x0287, B:75:0x028d, B:78:0x02a5, B:80:0x02be, B:81:0x02c8, B:83:0x02d6, B:84:0x02e3, B:86:0x02e7, B:88:0x02f5, B:89:0x0304, B:91:0x030a, B:92:0x0314, B:93:0x031f, B:95:0x0325, B:96:0x0331, B:98:0x0337, B:100:0x0343, B:101:0x036e, B:103:0x0372, B:105:0x0376, B:107:0x0386, B:108:0x03a2, B:109:0x03c6, B:135:0x044d, B:136:0x0456, B:138:0x0472, B:139:0x048b, B:19:0x0086), top: B:166:0x0007, outer: #0 }] */
+        @Override // java.lang.Runnable
+        /*
+            Code decompiled incorrectly, please refer to instructions dump.
+        */
         public void run() {
-            /*
-                r15 = this;
-                r15.clearData()
-                java.io.File r0 = r15.mConfig     // Catch:{ Exception -> 0x046e }
-                boolean r0 = r0.exists()     // Catch:{ Exception -> 0x046e }
-                if (r0 != 0) goto L_0x000c
-                return
-            L_0x000c:
-                com.wits.pms.custom.KswSettings r0 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x046e }
-                java.io.File r1 = r15.mConfig     // Catch:{ Exception -> 0x046e }
-                byte[] r0 = r0.fileToByteArray(r1)     // Catch:{ Exception -> 0x046e }
-                boolean r1 = com.wits.pms.custom.KswSettings.CheckBOM(r0)     // Catch:{ Exception -> 0x046e }
-                java.io.FileReader r2 = new java.io.FileReader     // Catch:{ Exception -> 0x046e }
-                java.io.File r3 = r15.mConfig     // Catch:{ Exception -> 0x046e }
-                r2.<init>(r3)     // Catch:{ Exception -> 0x046e }
-                java.lang.String r3 = r2.getEncoding()     // Catch:{ Exception -> 0x046e }
-                java.lang.String r4 = "KswSettings"
-                java.lang.StringBuilder r5 = new java.lang.StringBuilder     // Catch:{ Exception -> 0x046e }
-                r5.<init>()     // Catch:{ Exception -> 0x046e }
-                java.lang.String r6 = "config  isBom = "
-                r5.append(r6)     // Catch:{ Exception -> 0x046e }
-                r5.append(r1)     // Catch:{ Exception -> 0x046e }
-                java.lang.String r6 = "    encoding  = "
-                r5.append(r6)     // Catch:{ Exception -> 0x046e }
-                r5.append(r3)     // Catch:{ Exception -> 0x046e }
-                java.lang.String r5 = r5.toString()     // Catch:{ Exception -> 0x046e }
-                android.util.Log.d(r4, r5)     // Catch:{ Exception -> 0x046e }
-                org.xmlpull.v1.XmlPullParserFactory r4 = org.xmlpull.v1.XmlPullParserFactory.newInstance()     // Catch:{ Exception -> 0x046e }
-                org.xmlpull.v1.XmlPullParser r4 = r4.newPullParser()     // Catch:{ Exception -> 0x046e }
-                java.lang.String r5 = "UTF-8"
-                boolean r5 = r3.equals(r5)     // Catch:{ Exception -> 0x046e }
-                r6 = 3
-                r7 = 0
-                if (r5 == 0) goto L_0x0067
-                if (r1 == 0) goto L_0x0067
-                int r5 = r0.length     // Catch:{ Exception -> 0x046e }
-                int r5 = r5 - r6
-                byte[] r5 = new byte[r5]     // Catch:{ Exception -> 0x046e }
-                int r8 = r0.length     // Catch:{ Exception -> 0x046e }
-                int r8 = r8 - r6
-                java.lang.System.arraycopy(r0, r6, r5, r7, r8)     // Catch:{ Exception -> 0x046e }
-                java.io.ByteArrayInputStream r8 = new java.io.ByteArrayInputStream     // Catch:{ Exception -> 0x046e }
-                r8.<init>(r5)     // Catch:{ Exception -> 0x046e }
-                r4.setInput(r8, r3)     // Catch:{ Exception -> 0x046e }
-                goto L_0x0071
-            L_0x0067:
-                java.io.FileInputStream r5 = new java.io.FileInputStream     // Catch:{ Exception -> 0x046e }
-                java.io.File r8 = r15.mConfig     // Catch:{ Exception -> 0x046e }
-                r5.<init>(r8)     // Catch:{ Exception -> 0x046e }
-                r4.setInput(r5, r3)     // Catch:{ Exception -> 0x046e }
-            L_0x0071:
-                int r5 = r4.getEventType()     // Catch:{ Exception -> 0x046e }
-                com.google.gson.Gson r8 = new com.google.gson.Gson     // Catch:{ Exception -> 0x046e }
-                r8.<init>()     // Catch:{ Exception -> 0x046e }
-            L_0x007a:
-                r9 = 1
-                if (r5 == r9) goto L_0x0432
-                if (r5 == 0) goto L_0x042a
-                switch(r5) {
-                    case 2: goto L_0x0241;
-                    case 3: goto L_0x0084;
-                    default: goto L_0x0082;
-                }     // Catch:{ Exception -> 0x046e }
-            L_0x0082:
-                goto L_0x042b
-            L_0x0084:
-                java.lang.String r9 = r4.getName()     // Catch:{ Exception -> 0x046e }
-                java.lang.String r10 = "setings"
-                boolean r9 = r9.equalsIgnoreCase(r10)     // Catch:{ Exception -> 0x046e }
-                if (r9 == 0) goto L_0x0094
-                r15.setting = r7     // Catch:{ Exception -> 0x046e }
-                goto L_0x042b
-            L_0x0094:
-                java.lang.String r9 = r4.getName()     // Catch:{ Exception -> 0x046e }
-                java.lang.String r10 = "factory"
-                boolean r9 = r9.equalsIgnoreCase(r10)     // Catch:{ Exception -> 0x046e }
-                if (r9 == 0) goto L_0x00a4
-                r15.factory = r7     // Catch:{ Exception -> 0x046e }
-                goto L_0x042b
-            L_0x00a4:
-                java.lang.String r9 = r4.getName()     // Catch:{ Exception -> 0x046e }
-                java.lang.String r10 = "SupportNaviAppList"
-                boolean r9 = r9.equalsIgnoreCase(r10)     // Catch:{ Exception -> 0x046e }
-                if (r9 == 0) goto L_0x00c6
-                com.wits.pms.custom.KswSettings r9 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x046e }
-                java.lang.String r10 = "SupportNaviAppList"
-                java.util.ArrayList<java.lang.String> r11 = r15.dataList     // Catch:{ Exception -> 0x046e }
-                java.lang.String r11 = r8.toJson((java.lang.Object) r11)     // Catch:{ Exception -> 0x046e }
-                r9.saveJson(r10, r11)     // Catch:{ Exception -> 0x046e }
-                r15.naviList = r7     // Catch:{ Exception -> 0x046e }
-                java.util.ArrayList<java.lang.String> r9 = r15.dataList     // Catch:{ Exception -> 0x046e }
-                r9.clear()     // Catch:{ Exception -> 0x046e }
-                goto L_0x042b
-            L_0x00c6:
-                java.lang.String r9 = r4.getName()     // Catch:{ Exception -> 0x046e }
-                java.lang.String r10 = "CarDisplayParam"
-                boolean r9 = r9.equalsIgnoreCase(r10)     // Catch:{ Exception -> 0x046e }
-                if (r9 == 0) goto L_0x00fa
-                com.wits.pms.custom.KswSettings r9 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x046e }
-                java.lang.String r10 = "CarDisplayParam"
-                java.util.ArrayList<java.lang.String> r11 = r15.dataList     // Catch:{ Exception -> 0x046e }
-                java.lang.String r11 = r8.toJson((java.lang.Object) r11)     // Catch:{ Exception -> 0x046e }
-                r9.saveJson(r10, r11)     // Catch:{ Exception -> 0x046e }
-                com.wits.pms.custom.KswSettings r9 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x046e }
-                java.lang.String r10 = "CarDisplayParamID"
-                java.util.ArrayList<java.lang.String> r11 = r15.idList     // Catch:{ Exception -> 0x046e }
-                java.lang.String r11 = r8.toJson((java.lang.Object) r11)     // Catch:{ Exception -> 0x046e }
-                r9.saveJson(r10, r11)     // Catch:{ Exception -> 0x046e }
-                r15.carType = r7     // Catch:{ Exception -> 0x046e }
-                java.util.ArrayList<java.lang.String> r9 = r15.idList     // Catch:{ Exception -> 0x046e }
-                r9.clear()     // Catch:{ Exception -> 0x046e }
-                java.util.ArrayList<java.lang.String> r9 = r15.dataList     // Catch:{ Exception -> 0x046e }
-                r9.clear()     // Catch:{ Exception -> 0x046e }
-                goto L_0x042b
-            L_0x00fa:
-                java.lang.String r9 = r4.getName()     // Catch:{ Exception -> 0x046e }
-                java.lang.String r10 = "CANBusProtocol"
-                boolean r9 = r9.equalsIgnoreCase(r10)     // Catch:{ Exception -> 0x046e }
-                if (r9 == 0) goto L_0x0135
-                com.wits.pms.custom.KswSettings r9 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x046e }
-                java.lang.String r10 = "CANBusProtocol"
-                java.util.ArrayList<java.lang.String> r11 = r15.dataList     // Catch:{ Exception -> 0x046e }
-                java.lang.String r11 = r8.toJson((java.lang.Object) r11)     // Catch:{ Exception -> 0x046e }
-                r9.saveJson(r10, r11)     // Catch:{ Exception -> 0x046e }
-                com.wits.pms.custom.KswSettings r9 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x046e }
-                java.lang.String r10 = "CANBusProtocolID"
-                java.util.ArrayList<java.lang.String> r11 = r15.idList     // Catch:{ Exception -> 0x046e }
-                java.lang.String r11 = r8.toJson((java.lang.Object) r11)     // Catch:{ Exception -> 0x046e }
-                r9.saveJson(r10, r11)     // Catch:{ Exception -> 0x046e }
-                com.wits.pms.custom.KswSettings r9 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x046e }
-                java.util.ArrayList<java.lang.String> r10 = r15.idList     // Catch:{ Exception -> 0x046e }
-                r9.setUpProtocolForInit(r10)     // Catch:{ Exception -> 0x046e }
-                r15.canType = r7     // Catch:{ Exception -> 0x046e }
-                java.util.ArrayList<java.lang.String> r9 = r15.idList     // Catch:{ Exception -> 0x046e }
-                r9.clear()     // Catch:{ Exception -> 0x046e }
-                java.util.ArrayList<java.lang.String> r9 = r15.dataList     // Catch:{ Exception -> 0x046e }
-                r9.clear()     // Catch:{ Exception -> 0x046e }
-                goto L_0x042b
-            L_0x0135:
-                java.lang.String r9 = r4.getName()     // Catch:{ Exception -> 0x046e }
-                java.lang.String r10 = "SupportLanguageList"
-                boolean r9 = r9.equalsIgnoreCase(r10)     // Catch:{ Exception -> 0x046e }
-                if (r9 == 0) goto L_0x01fd
-                java.lang.String r9 = "KswSettings"
-                java.lang.StringBuilder r10 = new java.lang.StringBuilder     // Catch:{ Exception -> 0x046e }
-                r10.<init>()     // Catch:{ Exception -> 0x046e }
-                java.lang.String r11 = "dataList = "
-                r10.append(r11)     // Catch:{ Exception -> 0x046e }
-                java.util.ArrayList<java.lang.String> r11 = r15.dataList     // Catch:{ Exception -> 0x046e }
-                java.lang.String r11 = r8.toJson((java.lang.Object) r11)     // Catch:{ Exception -> 0x046e }
-                r10.append(r11)     // Catch:{ Exception -> 0x046e }
-                java.lang.String r11 = " codeList = "
-                r10.append(r11)     // Catch:{ Exception -> 0x046e }
-                java.util.ArrayList<java.lang.String> r11 = r15.codeList     // Catch:{ Exception -> 0x046e }
-                java.lang.String r11 = r8.toJson((java.lang.Object) r11)     // Catch:{ Exception -> 0x046e }
-                r10.append(r11)     // Catch:{ Exception -> 0x046e }
-                java.lang.String r11 = "   idList = "
-                r10.append(r11)     // Catch:{ Exception -> 0x046e }
-                java.util.ArrayList<java.lang.String> r11 = r15.idList     // Catch:{ Exception -> 0x046e }
-                java.lang.String r11 = r8.toJson((java.lang.Object) r11)     // Catch:{ Exception -> 0x046e }
-                r10.append(r11)     // Catch:{ Exception -> 0x046e }
-                java.lang.String r10 = r10.toString()     // Catch:{ Exception -> 0x046e }
-                android.util.Log.d(r9, r10)     // Catch:{ Exception -> 0x046e }
-                java.lang.String r9 = android.os.Build.DISPLAY     // Catch:{ Exception -> 0x046e }
-                java.lang.String r10 = "8937"
-                boolean r9 = r9.contains(r10)     // Catch:{ Exception -> 0x046e }
-                if (r9 == 0) goto L_0x01c3
-                java.util.ArrayList<java.lang.String> r9 = r15.dataList     // Catch:{ Exception -> 0x046e }
-                r9.clear()     // Catch:{ Exception -> 0x046e }
-                java.util.ArrayList<java.lang.String> r9 = r15.idList     // Catch:{ Exception -> 0x046e }
-                r9.clear()     // Catch:{ Exception -> 0x046e }
-                java.util.ArrayList<java.lang.String> r9 = r15.dataList     // Catch:{ Exception -> 0x046e }
-                java.lang.String r10 = "简体中文"
-                r9.add(r10)     // Catch:{ Exception -> 0x046e }
-                java.util.ArrayList<java.lang.String> r9 = r15.idList     // Catch:{ Exception -> 0x046e }
-                java.lang.String r10 = "0"
-                r9.add(r10)     // Catch:{ Exception -> 0x046e }
-                com.wits.pms.custom.KswSettings r9 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x046e }
-                java.lang.String r10 = "SupportLanguageList"
-                java.util.ArrayList<java.lang.String> r11 = r15.dataList     // Catch:{ Exception -> 0x046e }
-                java.lang.String r11 = r8.toJson((java.lang.Object) r11)     // Catch:{ Exception -> 0x046e }
-                r9.saveJson(r10, r11)     // Catch:{ Exception -> 0x046e }
-                com.wits.pms.custom.KswSettings r9 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x046e }
-                java.lang.String r10 = "codeList"
-                java.util.ArrayList<java.lang.String> r11 = r15.codeList     // Catch:{ Exception -> 0x046e }
-                java.lang.String r11 = r8.toJson((java.lang.Object) r11)     // Catch:{ Exception -> 0x046e }
-                r9.saveJson(r10, r11)     // Catch:{ Exception -> 0x046e }
-                com.wits.pms.custom.KswSettings r9 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x046e }
-                java.lang.String r10 = "languageID"
-                java.util.ArrayList<java.lang.String> r11 = r15.idList     // Catch:{ Exception -> 0x046e }
-                java.lang.String r11 = r8.toJson((java.lang.Object) r11)     // Catch:{ Exception -> 0x046e }
-                r9.saveJson(r10, r11)     // Catch:{ Exception -> 0x046e }
-                goto L_0x01ea
-            L_0x01c3:
-                com.wits.pms.custom.KswSettings r9 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x046e }
-                java.lang.String r10 = "SupportLanguageList"
-                java.util.ArrayList<java.lang.String> r11 = r15.dataList     // Catch:{ Exception -> 0x046e }
-                java.lang.String r11 = r8.toJson((java.lang.Object) r11)     // Catch:{ Exception -> 0x046e }
-                r9.saveJson(r10, r11)     // Catch:{ Exception -> 0x046e }
-                com.wits.pms.custom.KswSettings r9 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x046e }
-                java.lang.String r10 = "codeList"
-                java.util.ArrayList<java.lang.String> r11 = r15.codeList     // Catch:{ Exception -> 0x046e }
-                java.lang.String r11 = r8.toJson((java.lang.Object) r11)     // Catch:{ Exception -> 0x046e }
-                r9.saveJson(r10, r11)     // Catch:{ Exception -> 0x046e }
-                com.wits.pms.custom.KswSettings r9 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x046e }
-                java.lang.String r10 = "languageID"
-                java.util.ArrayList<java.lang.String> r11 = r15.idList     // Catch:{ Exception -> 0x046e }
-                java.lang.String r11 = r8.toJson((java.lang.Object) r11)     // Catch:{ Exception -> 0x046e }
-                r9.saveJson(r10, r11)     // Catch:{ Exception -> 0x046e }
-            L_0x01ea:
-                r15.language = r7     // Catch:{ Exception -> 0x046e }
-                java.util.ArrayList<java.lang.String> r9 = r15.dataList     // Catch:{ Exception -> 0x046e }
-                r9.clear()     // Catch:{ Exception -> 0x046e }
-                java.util.ArrayList<java.lang.String> r9 = r15.idList     // Catch:{ Exception -> 0x046e }
-                r9.clear()     // Catch:{ Exception -> 0x046e }
-                java.util.ArrayList<java.lang.String> r9 = r15.codeList     // Catch:{ Exception -> 0x046e }
-                r9.clear()     // Catch:{ Exception -> 0x046e }
-                goto L_0x042b
-            L_0x01fd:
-                java.lang.String r9 = r4.getName()     // Catch:{ Exception -> 0x046e }
-                java.lang.String r10 = "SupportUIList"
-                boolean r9 = r9.equalsIgnoreCase(r10)     // Catch:{ Exception -> 0x046e }
-                if (r9 == 0) goto L_0x021f
-                com.wits.pms.custom.KswSettings r9 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x046e }
-                java.lang.String r10 = "SupportUIList"
-                java.util.ArrayList<java.lang.String> r11 = r15.dataList     // Catch:{ Exception -> 0x046e }
-                java.lang.String r11 = r8.toJson((java.lang.Object) r11)     // Catch:{ Exception -> 0x046e }
-                r9.saveJson(r10, r11)     // Catch:{ Exception -> 0x046e }
-                r15.uiType = r7     // Catch:{ Exception -> 0x046e }
-                java.util.ArrayList<java.lang.String> r9 = r15.dataList     // Catch:{ Exception -> 0x046e }
-                r9.clear()     // Catch:{ Exception -> 0x046e }
-                goto L_0x042b
-            L_0x021f:
-                java.lang.String r9 = r4.getName()     // Catch:{ Exception -> 0x046e }
-                java.lang.String r10 = "SupportDvrAppList"
-                boolean r9 = r9.equalsIgnoreCase(r10)     // Catch:{ Exception -> 0x046e }
-                if (r9 == 0) goto L_0x042b
-                com.wits.pms.custom.KswSettings r9 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x046e }
-                java.lang.String r10 = "SupportDvrAppList"
-                java.util.ArrayList<java.lang.String> r11 = r15.dataList     // Catch:{ Exception -> 0x046e }
-                java.lang.String r11 = r8.toJson((java.lang.Object) r11)     // Catch:{ Exception -> 0x046e }
-                r9.saveJson(r10, r11)     // Catch:{ Exception -> 0x046e }
-                java.util.ArrayList<java.lang.String> r9 = r15.dataList     // Catch:{ Exception -> 0x046e }
-                r9.clear()     // Catch:{ Exception -> 0x046e }
-                r15.dvrList = r7     // Catch:{ Exception -> 0x046e }
-                goto L_0x042b
-            L_0x0241:
-                boolean r10 = r15.setting     // Catch:{ Exception -> 0x046e }
-                if (r10 != 0) goto L_0x030f
-                boolean r10 = r15.factory     // Catch:{ Exception -> 0x046e }
-                if (r10 == 0) goto L_0x024b
-                goto L_0x030f
-            L_0x024b:
-                boolean r10 = r15.naviList     // Catch:{ Exception -> 0x046e }
-                if (r10 != 0) goto L_0x02fe
-                boolean r10 = r15.dvrList     // Catch:{ Exception -> 0x046e }
-                if (r10 == 0) goto L_0x0255
-                goto L_0x02fe
-            L_0x0255:
-                boolean r10 = r15.canType     // Catch:{ Exception -> 0x046e }
-                if (r10 != 0) goto L_0x02e4
-                boolean r10 = r15.carType     // Catch:{ Exception -> 0x046e }
-                if (r10 == 0) goto L_0x025f
-                goto L_0x02e4
-            L_0x025f:
-                boolean r10 = r15.language     // Catch:{ Exception -> 0x046e }
-                if (r10 != 0) goto L_0x0267
-                boolean r10 = r15.uiType     // Catch:{ Exception -> 0x046e }
-                if (r10 == 0) goto L_0x03b1
-            L_0x0267:
-                java.lang.String r10 = r4.getName()     // Catch:{ Exception -> 0x046e }
-                if (r10 == 0) goto L_0x02a8
-                int r10 = r4.getAttributeCount()     // Catch:{ Exception -> 0x046e }
-                java.util.ArrayList<java.lang.String> r11 = r15.dataList     // Catch:{ Exception -> 0x046e }
-                java.lang.StringBuilder r12 = new java.lang.StringBuilder     // Catch:{ Exception -> 0x046e }
-                r12.<init>()     // Catch:{ Exception -> 0x046e }
-                java.lang.String r13 = r4.getAttributeValue(r9)     // Catch:{ Exception -> 0x046e }
-                r12.append(r13)     // Catch:{ Exception -> 0x046e }
-                boolean r13 = r15.uiType     // Catch:{ Exception -> 0x046e }
-                if (r13 == 0) goto L_0x029c
-                if (r10 != r6) goto L_0x029c
-                java.lang.StringBuilder r13 = new java.lang.StringBuilder     // Catch:{ Exception -> 0x046e }
-                r13.<init>()     // Catch:{ Exception -> 0x046e }
-                java.lang.String r14 = "&"
-                r13.append(r14)     // Catch:{ Exception -> 0x046e }
-                r14 = 2
-                java.lang.String r14 = r4.getAttributeValue(r14)     // Catch:{ Exception -> 0x046e }
-                r13.append(r14)     // Catch:{ Exception -> 0x046e }
-                java.lang.String r13 = r13.toString()     // Catch:{ Exception -> 0x046e }
-                goto L_0x029e
-            L_0x029c:
-                java.lang.String r13 = ""
-            L_0x029e:
-                r12.append(r13)     // Catch:{ Exception -> 0x046e }
-                java.lang.String r12 = r12.toString()     // Catch:{ Exception -> 0x046e }
-                r11.add(r12)     // Catch:{ Exception -> 0x046e }
-            L_0x02a8:
-                java.lang.String r10 = ""
-                java.lang.String r11 = "code"
-                java.lang.String r10 = r4.getAttributeValue(r10, r11)     // Catch:{ Exception -> 0x046e }
-                boolean r10 = android.text.TextUtils.isEmpty(r10)     // Catch:{ Exception -> 0x046e }
-                if (r10 != 0) goto L_0x02c3
-                java.util.ArrayList<java.lang.String> r10 = r15.codeList     // Catch:{ Exception -> 0x046e }
-                java.lang.String r11 = ""
-                java.lang.String r12 = "code"
-                java.lang.String r11 = r4.getAttributeValue(r11, r12)     // Catch:{ Exception -> 0x046e }
-                r10.add(r11)     // Catch:{ Exception -> 0x046e }
-            L_0x02c3:
-                boolean r10 = r15.language     // Catch:{ Exception -> 0x046e }
-                if (r10 == 0) goto L_0x03b1
-                java.lang.String r10 = ""
-                java.lang.String r11 = "id"
-                java.lang.String r10 = r4.getAttributeValue(r10, r11)     // Catch:{ Exception -> 0x046e }
-                boolean r10 = android.text.TextUtils.isEmpty(r10)     // Catch:{ Exception -> 0x046e }
-                if (r10 != 0) goto L_0x03b1
-                java.util.ArrayList<java.lang.String> r10 = r15.idList     // Catch:{ Exception -> 0x046e }
-                java.lang.String r11 = ""
-                java.lang.String r12 = "id"
-                java.lang.String r11 = r4.getAttributeValue(r11, r12)     // Catch:{ Exception -> 0x046e }
-                r10.add(r11)     // Catch:{ Exception -> 0x046e }
-                goto L_0x03b1
-            L_0x02e4:
-                java.lang.String r10 = r4.getName()     // Catch:{ Exception -> 0x046e }
-                if (r10 == 0) goto L_0x02f3
-                java.util.ArrayList<java.lang.String> r10 = r15.idList     // Catch:{ Exception -> 0x046e }
-                java.lang.String r11 = r4.getAttributeValue(r7)     // Catch:{ Exception -> 0x046e }
-                r10.add(r11)     // Catch:{ Exception -> 0x046e }
-            L_0x02f3:
-                java.util.ArrayList<java.lang.String> r10 = r15.dataList     // Catch:{ Exception -> 0x046e }
-                java.lang.String r11 = r4.nextText()     // Catch:{ Exception -> 0x046e }
-                r10.add(r11)     // Catch:{ Exception -> 0x046e }
-                goto L_0x03b1
-            L_0x02fe:
-                java.lang.String r10 = r4.getName()     // Catch:{ Exception -> 0x046e }
-                if (r10 == 0) goto L_0x03b1
-                java.util.ArrayList<java.lang.String> r10 = r15.dataList     // Catch:{ Exception -> 0x046e }
-                java.lang.String r11 = r4.getAttributeValue(r7)     // Catch:{ Exception -> 0x046e }
-                r10.add(r11)     // Catch:{ Exception -> 0x046e }
-                goto L_0x03b1
-            L_0x030f:
-                java.lang.String r10 = r4.getName()     // Catch:{ Exception -> 0x046e }
-                if (r10 == 0) goto L_0x03b1
-                java.lang.String r10 = r4.getName()     // Catch:{ Exception -> 0x046e }
-                java.lang.String r11 = "Language"
-                boolean r10 = r10.equals(r11)     // Catch:{ Exception -> 0x046e }
-                if (r10 == 0) goto L_0x034c
-                com.wits.pms.custom.KswSettings r10 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x046e }
-                java.lang.String r11 = r4.getName()     // Catch:{ Exception -> 0x046e }
-                java.lang.StringBuilder r12 = new java.lang.StringBuilder     // Catch:{ Exception -> 0x046e }
-                r12.<init>()     // Catch:{ Exception -> 0x046e }
-                java.lang.String r13 = ""
-                r12.append(r13)     // Catch:{ Exception -> 0x046e }
-                com.wits.pms.custom.KswSettings r13 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x046e }
-                java.lang.String r14 = "languageID"
-                java.util.List r13 = r13.getDataListFromJsonKey(r14)     // Catch:{ Exception -> 0x046e }
-                java.lang.String r14 = r4.nextText()     // Catch:{ Exception -> 0x046e }
-                int r13 = r13.indexOf(r14)     // Catch:{ Exception -> 0x046e }
-                r12.append(r13)     // Catch:{ Exception -> 0x046e }
-                java.lang.String r12 = r12.toString()     // Catch:{ Exception -> 0x046e }
-                r10.saveConfig(r11, r12)     // Catch:{ Exception -> 0x046e }
-                goto L_0x03b1
-            L_0x034c:
-                boolean r10 = r15.factory     // Catch:{ Exception -> 0x046e }
-                if (r10 == 0) goto L_0x03a4
-                boolean r10 = r15.addFactorySettingsLocal     // Catch:{ Exception -> 0x046e }
-                if (r10 != 0) goto L_0x03a4
-                java.lang.String r10 = r4.getName()     // Catch:{ Exception -> 0x046e }
-                com.wits.pms.custom.KswSettings r11 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x046e }
-                com.wits.pms.custom.FactorySettings r11 = r11.mFactorySettings     // Catch:{ Exception -> 0x046e }
-                java.lang.String r11 = r11.getStringValue(r10)     // Catch:{ Exception -> 0x046e }
-                if (r11 != 0) goto L_0x0380
-                java.lang.StringBuilder r12 = new java.lang.StringBuilder     // Catch:{ Exception -> 0x046e }
-                r12.<init>()     // Catch:{ Exception -> 0x046e }
-                com.wits.pms.custom.KswSettings r13 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x046e }
-                com.wits.pms.custom.FactorySettings r13 = r13.mFactorySettings     // Catch:{ Exception -> 0x046e }
-                int r13 = r13.getIntValue(r10)     // Catch:{ Exception -> 0x046e }
-                r12.append(r13)     // Catch:{ Exception -> 0x046e }
-                java.lang.String r13 = ""
-                r12.append(r13)     // Catch:{ Exception -> 0x046e }
-                java.lang.String r12 = r12.toString()     // Catch:{ Exception -> 0x046e }
-                r11 = r12
-            L_0x0380:
-                java.lang.String r12 = "FactorySettings"
-                java.lang.StringBuilder r13 = new java.lang.StringBuilder     // Catch:{ Exception -> 0x046e }
-                r13.<init>()     // Catch:{ Exception -> 0x046e }
-                java.lang.String r14 = "FactorySettings data key:"
-                r13.append(r14)     // Catch:{ Exception -> 0x046e }
-                r13.append(r10)     // Catch:{ Exception -> 0x046e }
-                java.lang.String r14 = " - value:"
-                r13.append(r14)     // Catch:{ Exception -> 0x046e }
-                r13.append(r11)     // Catch:{ Exception -> 0x046e }
-                java.lang.String r13 = r13.toString()     // Catch:{ Exception -> 0x046e }
-                android.util.Log.i(r12, r13)     // Catch:{ Exception -> 0x046e }
-                com.wits.pms.custom.KswSettings r12 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x046e }
-                r12.saveConfig(r10, r11)     // Catch:{ Exception -> 0x046e }
-                goto L_0x03b1
-            L_0x03a4:
-                com.wits.pms.custom.KswSettings r10 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x046e }
-                java.lang.String r11 = r4.getName()     // Catch:{ Exception -> 0x046e }
-                java.lang.String r12 = r4.nextText()     // Catch:{ Exception -> 0x046e }
-                r10.saveConfig(r11, r12)     // Catch:{ Exception -> 0x046e }
-            L_0x03b1:
-                java.lang.String r10 = r4.getName()     // Catch:{ Exception -> 0x046e }
-                java.lang.String r11 = "setings"
-                boolean r10 = r10.equalsIgnoreCase(r11)     // Catch:{ Exception -> 0x046e }
-                if (r10 == 0) goto L_0x03c1
-                r15.setting = r9     // Catch:{ Exception -> 0x046e }
-                goto L_0x042b
-            L_0x03c1:
-                java.lang.String r10 = r4.getName()     // Catch:{ Exception -> 0x046e }
-                java.lang.String r11 = "factory"
-                boolean r10 = r10.equalsIgnoreCase(r11)     // Catch:{ Exception -> 0x046e }
-                if (r10 == 0) goto L_0x03d0
-                r15.factory = r9     // Catch:{ Exception -> 0x046e }
-                goto L_0x042b
-            L_0x03d0:
-                java.lang.String r10 = r4.getName()     // Catch:{ Exception -> 0x046e }
-                java.lang.String r11 = "SupportNaviAppList"
-                boolean r10 = r10.equalsIgnoreCase(r11)     // Catch:{ Exception -> 0x046e }
-                if (r10 == 0) goto L_0x03df
-                r15.naviList = r9     // Catch:{ Exception -> 0x046e }
-                goto L_0x042b
-            L_0x03df:
-                java.lang.String r10 = r4.getName()     // Catch:{ Exception -> 0x046e }
-                java.lang.String r11 = "CarDisplayParam"
-                boolean r10 = r10.equalsIgnoreCase(r11)     // Catch:{ Exception -> 0x046e }
-                if (r10 == 0) goto L_0x03ee
-                r15.carType = r9     // Catch:{ Exception -> 0x046e }
-                goto L_0x042b
-            L_0x03ee:
-                java.lang.String r10 = r4.getName()     // Catch:{ Exception -> 0x046e }
-                java.lang.String r11 = "CANBusProtocol"
-                boolean r10 = r10.equalsIgnoreCase(r11)     // Catch:{ Exception -> 0x046e }
-                if (r10 == 0) goto L_0x03fd
-                r15.canType = r9     // Catch:{ Exception -> 0x046e }
-                goto L_0x042b
-            L_0x03fd:
-                java.lang.String r10 = r4.getName()     // Catch:{ Exception -> 0x046e }
-                java.lang.String r11 = "SupportLanguageList"
-                boolean r10 = r10.equalsIgnoreCase(r11)     // Catch:{ Exception -> 0x046e }
-                if (r10 == 0) goto L_0x040c
-                r15.language = r9     // Catch:{ Exception -> 0x046e }
-                goto L_0x042b
-            L_0x040c:
-                java.lang.String r10 = r4.getName()     // Catch:{ Exception -> 0x046e }
-                java.lang.String r11 = "SupportUIList"
-                boolean r10 = r10.equalsIgnoreCase(r11)     // Catch:{ Exception -> 0x046e }
-                if (r10 == 0) goto L_0x041b
-                r15.uiType = r9     // Catch:{ Exception -> 0x046e }
-                goto L_0x042b
-            L_0x041b:
-                java.lang.String r10 = r4.getName()     // Catch:{ Exception -> 0x046e }
-                java.lang.String r11 = "SupportDvrAppList"
-                boolean r10 = r10.equalsIgnoreCase(r11)     // Catch:{ Exception -> 0x046e }
-                if (r10 == 0) goto L_0x042b
-                r15.dvrList = r9     // Catch:{ Exception -> 0x046e }
-                goto L_0x042b
-            L_0x042a:
-            L_0x042b:
-                int r9 = r4.next()     // Catch:{ Exception -> 0x046e }
-                r5 = r9
-                goto L_0x007a
-            L_0x0432:
-                com.wits.pms.custom.KswSettings r6 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x046e }
-                boolean unused = r6.onlyLanguageId = r7     // Catch:{ Exception -> 0x046e }
-                java.io.File r6 = r15.mConfig     // Catch:{ Exception -> 0x046e }
-                java.lang.String r6 = r6.getAbsolutePath()     // Catch:{ Exception -> 0x046e }
-                com.wits.pms.custom.KswSettings r7 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x046e }
-                java.io.File r7 = r7.defaultConfig     // Catch:{ Exception -> 0x046e }
-                java.lang.String r7 = r7.getAbsolutePath()     // Catch:{ Exception -> 0x046e }
-                boolean r6 = r6.equals(r7)     // Catch:{ Exception -> 0x046e }
-                if (r6 != 0) goto L_0x0466
-                java.io.File r6 = r15.mConfig     // Catch:{ Exception -> 0x046e }
-                com.wits.pms.custom.KswSettings r7 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x046e }
-                java.io.File r7 = r7.defaultConfig     // Catch:{ Exception -> 0x046e }
-                com.wits.pms.utils.CopyFile.copyTo(r6, r7)     // Catch:{ Exception -> 0x046e }
-                com.wits.pms.custom.KswSettings r6 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x046e }
-                android.os.Handler r6 = r6.mHandler     // Catch:{ Exception -> 0x046e }
-                com.wits.pms.custom.-$$Lambda$KswSettings$InitConfigRunnable$_9H3V7Punr9ZRjsLwtgyMAkCm50 r7 = new com.wits.pms.custom.-$$Lambda$KswSettings$InitConfigRunnable$_9H3V7Punr9ZRjsLwtgyMAkCm50     // Catch:{ Exception -> 0x046e }
-                r7.<init>()     // Catch:{ Exception -> 0x046e }
-                r6.post(r7)     // Catch:{ Exception -> 0x046e }
-            L_0x0466:
-                com.wits.pms.custom.KswSettings r6 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x046e }
-                java.lang.String r7 = "initKswConfig"
-                r6.setInt(r7, r9)     // Catch:{ Exception -> 0x046e }
-                goto L_0x0476
-            L_0x046e:
-                r0 = move-exception
-                java.lang.String r1 = "KswSettings"
-                java.lang.String r2 = "error"
-                android.util.Log.e(r1, r2, r0)
-            L_0x0476:
-                return
-            */
-            throw new UnsupportedOperationException("Method not decompiled: com.wits.pms.custom.KswSettings.InitConfigRunnable.run():void");
+            String str;
+            clearData();
+            FileReader fr = null;
+            InputStream inputStream = null;
+            try {
+                try {
+                    try {
+                        if (!this.mConfig.exists()) {
+                            if (0 != 0) {
+                                try {
+                                    inputStream.close();
+                                } catch (Exception e) {
+                                    Log.m69e(KswSettings.TAG, "close error:", e);
+                                    return;
+                                }
+                            }
+                            if (0 != 0) {
+                                fr.close();
+                                return;
+                            }
+                            return;
+                        }
+                        byte[] fileBytes = KswSettings.this.fileToByteArray(this.mConfig);
+                        boolean isBom = KswSettings.CheckBOM(fileBytes);
+                        fr = new FileReader(this.mConfig);
+                        String encoding = fr.getEncoding();
+                        Log.m72d(KswSettings.TAG, "config  isBom = " + isBom + "    encoding  = " + encoding);
+                        XmlPullParser parser = XmlPullParserFactory.newInstance().newPullParser();
+                        int i = 3;
+                        boolean z = false;
+                        if (encoding.equals("UTF-8") && isBom) {
+                            byte[] noBomBytes = new byte[fileBytes.length - 3];
+                            System.arraycopy(fileBytes, 3, noBomBytes, 0, fileBytes.length - 3);
+                            inputStream = new ByteArrayInputStream(noBomBytes);
+                            parser.setInput(inputStream, encoding);
+                        } else {
+                            inputStream = new FileInputStream(this.mConfig);
+                            parser.setInput(inputStream, encoding);
+                        }
+                        int eventType = parser.getEventType();
+                        Gson gson = new Gson();
+                        while (eventType != 1) {
+                            if (eventType != 0) {
+                                switch (eventType) {
+                                    case 2:
+                                        if (!this.setting && !this.factory) {
+                                            if (!this.naviList && !this.dvrList) {
+                                                if (!this.canType && !this.carType) {
+                                                    if (this.language || this.uiType) {
+                                                        if (parser.getName() != null) {
+                                                            int attributeCount = parser.getAttributeCount();
+                                                            ArrayList<String> arrayList = this.dataList;
+                                                            StringBuilder sb = new StringBuilder();
+                                                            sb.append(parser.getAttributeValue(1));
+                                                            if (this.uiType && attributeCount == i) {
+                                                                str = "&" + parser.getAttributeValue(2);
+                                                            } else {
+                                                                str = "";
+                                                            }
+                                                            sb.append(str);
+                                                            arrayList.add(sb.toString());
+                                                        }
+                                                        if (!TextUtils.isEmpty(parser.getAttributeValue("", "code"))) {
+                                                            this.codeList.add(parser.getAttributeValue("", "code"));
+                                                        }
+                                                        if (this.language && !TextUtils.isEmpty(parser.getAttributeValue("", "id"))) {
+                                                            this.idList.add(parser.getAttributeValue("", "id"));
+                                                        }
+                                                    }
+                                                    if (!parser.getName().equalsIgnoreCase("setings")) {
+                                                        this.setting = true;
+                                                        continue;
+                                                    } else if (!parser.getName().equalsIgnoreCase("factory")) {
+                                                        if (!parser.getName().equalsIgnoreCase("SupportNaviAppList")) {
+                                                            if (!parser.getName().equalsIgnoreCase("CarDisplayParam")) {
+                                                                if (!parser.getName().equalsIgnoreCase("CANBusProtocol")) {
+                                                                    if (!parser.getName().equalsIgnoreCase("SupportLanguageList")) {
+                                                                        if (!parser.getName().equalsIgnoreCase("SupportUIList")) {
+                                                                            if (!parser.getName().equalsIgnoreCase("SupportDvrAppList")) {
+                                                                                break;
+                                                                            } else {
+                                                                                this.dvrList = true;
+                                                                                break;
+                                                                            }
+                                                                        } else {
+                                                                            this.uiType = true;
+                                                                            break;
+                                                                        }
+                                                                    } else {
+                                                                        this.language = true;
+                                                                        break;
+                                                                    }
+                                                                } else {
+                                                                    this.canType = true;
+                                                                    break;
+                                                                }
+                                                            } else {
+                                                                this.carType = true;
+                                                                break;
+                                                            }
+                                                        } else {
+                                                            this.naviList = true;
+                                                            break;
+                                                        }
+                                                    } else {
+                                                        this.factory = true;
+                                                        break;
+                                                    }
+                                                }
+                                                if (parser.getName() != null) {
+                                                    this.idList.add(parser.getAttributeValue(0));
+                                                }
+                                                this.dataList.add(parser.nextText());
+                                                if (!parser.getName().equalsIgnoreCase("setings")) {
+                                                }
+                                            }
+                                            if (parser.getName() != null) {
+                                                this.dataList.add(parser.getAttributeValue(0));
+                                            }
+                                            if (!parser.getName().equalsIgnoreCase("setings")) {
+                                            }
+                                        }
+                                        if (parser.getName() != null) {
+                                            if (parser.getName().equals("Language")) {
+                                                KswSettings.this.saveConfig(parser.getName(), "" + KswSettings.this.getDataListFromJsonKey(KswSettings.LANGUAGE_ID).indexOf(parser.nextText()));
+                                            } else if (!this.factory || this.addFactorySettingsLocal) {
+                                                KswSettings.this.saveConfig(parser.getName(), parser.nextText());
+                                            } else {
+                                                String key = parser.getName();
+                                                String value = KswSettings.this.mFactorySettings.getStringValue(key);
+                                                if (value == null) {
+                                                    value = KswSettings.this.mFactorySettings.getIntValue(key) + "";
+                                                }
+                                                Log.m68i("FactorySettings", "FactorySettings data key:" + key + " - value:" + value);
+                                                KswSettings.this.saveConfig(key, value);
+                                            }
+                                        }
+                                        if (!parser.getName().equalsIgnoreCase("setings")) {
+                                        }
+                                        break;
+                                    case 3:
+                                        if (!parser.getName().equalsIgnoreCase("setings")) {
+                                            if (!parser.getName().equalsIgnoreCase("factory")) {
+                                                if (!parser.getName().equalsIgnoreCase("SupportNaviAppList")) {
+                                                    if (!parser.getName().equalsIgnoreCase("CarDisplayParam")) {
+                                                        if (!parser.getName().equalsIgnoreCase("CANBusProtocol")) {
+                                                            if (!parser.getName().equalsIgnoreCase("SupportLanguageList")) {
+                                                                if (!parser.getName().equalsIgnoreCase("SupportUIList")) {
+                                                                    if (!parser.getName().equalsIgnoreCase("SupportDvrAppList")) {
+                                                                        break;
+                                                                    } else {
+                                                                        KswSettings.this.saveJson("SupportDvrAppList", gson.toJson(this.dataList));
+                                                                        this.dataList.clear();
+                                                                        this.dvrList = z;
+                                                                        break;
+                                                                    }
+                                                                } else {
+                                                                    KswSettings.this.saveJson("SupportUIList", gson.toJson(this.dataList));
+                                                                    this.uiType = z;
+                                                                    this.dataList.clear();
+                                                                    break;
+                                                                }
+                                                            } else {
+                                                                Log.m72d(KswSettings.TAG, "dataList = " + gson.toJson(this.dataList) + " codeList = " + gson.toJson(this.codeList) + "   idList = " + gson.toJson(this.idList));
+                                                                if (Build.DISPLAY.contains("8937")) {
+                                                                    this.dataList.clear();
+                                                                    this.idList.clear();
+                                                                    this.dataList.add("\u7b80\u4f53\u4e2d\u6587");
+                                                                    this.idList.add("0");
+                                                                    KswSettings.this.saveJson("SupportLanguageList", gson.toJson(this.dataList));
+                                                                    KswSettings.this.saveJson(KswSettings.CODE_LIST, gson.toJson(this.codeList));
+                                                                    KswSettings.this.saveJson(KswSettings.LANGUAGE_ID, gson.toJson(this.idList));
+                                                                } else {
+                                                                    KswSettings.this.saveJson("SupportLanguageList", gson.toJson(this.dataList));
+                                                                    KswSettings.this.saveJson(KswSettings.CODE_LIST, gson.toJson(this.codeList));
+                                                                    KswSettings.this.saveJson(KswSettings.LANGUAGE_ID, gson.toJson(this.idList));
+                                                                }
+                                                                this.language = z;
+                                                                this.dataList.clear();
+                                                                this.idList.clear();
+                                                                this.codeList.clear();
+                                                                break;
+                                                            }
+                                                        } else {
+                                                            KswSettings.this.saveJson("CANBusProtocol", gson.toJson(this.dataList));
+                                                            KswSettings.this.saveJson(KswSettings.CAN_ID, gson.toJson(this.idList));
+                                                            KswSettings.this.setUpProtocolForInit(this.idList);
+                                                            this.canType = z;
+                                                            this.idList.clear();
+                                                            this.dataList.clear();
+                                                            break;
+                                                        }
+                                                    } else {
+                                                        KswSettings.this.saveJson("CarDisplayParam", gson.toJson(this.dataList));
+                                                        KswSettings.this.saveJson(KswSettings.CAR_DISPLAY_ID, gson.toJson(this.idList));
+                                                        this.carType = z;
+                                                        this.idList.clear();
+                                                        this.dataList.clear();
+                                                        break;
+                                                    }
+                                                } else {
+                                                    KswSettings.this.saveJson("SupportNaviAppList", gson.toJson(this.dataList));
+                                                    this.naviList = z;
+                                                    this.dataList.clear();
+                                                    break;
+                                                }
+                                            } else {
+                                                this.factory = z;
+                                                break;
+                                            }
+                                        } else {
+                                            this.setting = z;
+                                            continue;
+                                        }
+                                    default:
+                                        continue;
+                                }
+                            }
+                            eventType = parser.next();
+                            i = 3;
+                            z = false;
+                        }
+                        KswSettings.this.onlyLanguageId = false;
+                        if (!this.mConfig.getAbsolutePath().equals(KswSettings.this.defaultConfig.getAbsolutePath())) {
+                            CopyFile.copyTo(this.mConfig, KswSettings.this.defaultConfig);
+                            KswSettings.this.mHandler.post(new Runnable() { // from class: com.wits.pms.custom.-$$Lambda$KswSettings$InitConfigRunnable$_9H3V7Punr9ZRjsLwtgyMAkCm50
+                                @Override // java.lang.Runnable
+                                public final void run() {
+                                    Toast.makeText(KswSettings.this.mContext, (int) C3580R.string.import_config_success, 1).show();
+                                }
+                            });
+                        }
+                        KswSettings.this.setInt("initKswConfig", 1);
+                        inputStream.close();
+                        fr.close();
+                    } catch (Exception e2) {
+                        Log.m69e(KswSettings.TAG, "error", e2);
+                        if (inputStream != null) {
+                            inputStream.close();
+                        }
+                        if (fr != null) {
+                            fr.close();
+                        }
+                    }
+                } catch (Exception e3) {
+                    Log.m69e(KswSettings.TAG, "close error:", e3);
+                }
+            } catch (Throwable th) {
+                if (0 != 0) {
+                    try {
+                        inputStream.close();
+                    } catch (Exception e4) {
+                        Log.m69e(KswSettings.TAG, "close error:", e4);
+                        throw th;
+                    }
+                }
+                if (0 != 0) {
+                    fr.close();
+                }
+                throw th;
+            }
         }
     }
 
+    /* JADX WARN: Type inference failed for: r0v0, types: [com.wits.pms.custom.KswSettings$5] */
     private void checkDirectUpdate() {
-        new Thread() {
+        new Thread() { // from class: com.wits.pms.custom.KswSettings.5
+            @Override // java.lang.Thread, java.lang.Runnable
             public void run() {
                 int i = 0;
                 while (i < 150) {
-                    if (KswSettings.this.directUpdateFile == null || !KswSettings.this.directUpdateFile.exists()) {
-                        i++;
-                        try {
-                            Thread.sleep(500);
-                        } catch (InterruptedException e) {
-                        }
-                    } else {
+                    if (KswSettings.this.directUpdateFile != null && KswSettings.this.directUpdateFile.exists()) {
                         KswSettings.this.updateConfig(KswSettings.this.directUpdateFile);
                         return;
+                    } else {
+                        i++;
+                        try {
+                            Thread.sleep(500L);
+                        } catch (InterruptedException e) {
+                        }
                     }
                 }
             }
@@ -2300,7 +1593,7 @@ public class KswSettings {
     public void check(Context context, String path) {
         File file = new File(path + "/OEM/factory_config.xml");
         if (file.exists()) {
-            Log.i(TAG, "Checking factory_config.xml go to update: " + file.getAbsolutePath());
+            Log.m68i(TAG, "Checking factory_config.xml go to update: " + file.getAbsolutePath());
             this.directUpdateFile = file;
         }
     }
@@ -2313,7 +1606,7 @@ public class KswSettings {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void setUpProtocolForInit(ArrayList<String> idList) {
         String protocolData = getSettingsString("ProtocolData");
         if (!TextUtils.isEmpty(protocolData)) {
@@ -2321,153 +1614,188 @@ public class KswSettings {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void saveConfig(String key, String value) {
-        if (!this.onlyLanguageId) {
-            char c = 65535;
-            switch (key.hashCode()) {
-                case -1548945544:
-                    if (key.equals("Language")) {
-                        c = 8;
-                        break;
-                    }
+        if (this.onlyLanguageId) {
+            return;
+        }
+        char c = '\uffff';
+        switch (key.hashCode()) {
+            case -1548945544:
+                if (key.equals("Language")) {
+                    c = '\b';
                     break;
-                case -1357712437:
-                    if (key.equals("client")) {
-                        c = 2;
-                        break;
-                    }
+                }
+                break;
+            case -1357712437:
+                if (key.equals("client")) {
+                    c = 2;
                     break;
-                case -899959685:
-                    if (key.equals("NaviApp")) {
-                        c = 0;
-                        break;
-                    }
+                }
+                break;
+            case -899959685:
+                if (key.equals("NaviApp")) {
+                    c = 0;
                     break;
-                case -533217944:
-                    if (key.equals("TXZ_Wakeup")) {
-                        c = 5;
-                        break;
-                    }
+                }
+                break;
+            case -533217944:
+                if (key.equals("TXZ_Wakeup")) {
+                    c = 5;
                     break;
-                case 116643:
-                    if (key.equals("ver")) {
-                        c = 1;
-                        break;
-                    }
+                }
+                break;
+            case 116643:
+                if (key.equals("ver")) {
+                    c = 1;
                     break;
-                case 91785770:
-                    if (key.equals("Reverse_time")) {
-                        c = 7;
-                        break;
-                    }
+                }
+                break;
+            case 91785770:
+                if (key.equals("Reverse_time")) {
+                    c = 7;
                     break;
-                case 309639685:
-                    if (key.equals("UI_type")) {
-                        c = 6;
-                        break;
-                    }
+                }
+                break;
+            case 309639685:
+                if (key.equals("UI_type")) {
+                    c = 6;
                     break;
-                case 1216985755:
-                    if (key.equals("password")) {
-                        c = 3;
-                        break;
-                    }
+                }
+                break;
+            case 1216985755:
+                if (key.equals("password")) {
+                    c = 3;
                     break;
-                case 1468806158:
-                    if (key.equals("DVRApk_PackageName")) {
-                        c = 4;
-                        break;
-                    }
+                }
+                break;
+            case 1468806158:
+                if (key.equals("DVRApk_PackageName")) {
+                    c = 4;
                     break;
-            }
-            switch (c) {
-                case 0:
-                case 1:
-                case 2:
-                case 3:
-                case 4:
-                case 5:
-                case 6:
-                case 7:
+                }
+                break;
+        }
+        switch (c) {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+                setString(key, value);
+                return;
+            case '\b':
+                try {
+                    int intValue = Integer.parseInt(value);
+                    setInt(key, intValue);
+                    return;
+                } catch (Exception e) {
                     setString(key, value);
                     return;
-                case 8:
-                    try {
-                        setInt(key, Integer.parseInt(value));
-                        return;
-                    } catch (Exception e) {
-                        setString(key, value);
-                        return;
-                    }
-                default:
-                    try {
-                        setInt(key, Integer.parseInt(value));
-                        return;
-                    } catch (Exception e2) {
-                        return;
-                    }
-            }
+                }
+            default:
+                try {
+                    int intValue2 = Integer.parseInt(value);
+                    setInt(key, intValue2);
+                    return;
+                } catch (Exception e2) {
+                    return;
+                }
         }
     }
 
     public byte[] fileToByteArray(File mFile) {
-        File file = mFile;
         FileInputStream fileInputStream = null;
         BufferedInputStream in = null;
+        ByteArrayOutputStream out = null;
         byte[] bt = null;
         try {
-            if (file.exists()) {
-                if (!file.isDirectory()) {
-                    FileInputStream fileInputStream2 = new FileInputStream(file);
-                    BufferedInputStream in2 = new BufferedInputStream(fileInputStream2);
-                    ByteArrayOutputStream out = new ByteArrayOutputStream();
-                    byte[] temp = new byte[1048576];
-                    while (true) {
-                        int read = in2.read(temp);
-                        int size = read;
-                        if (read == -1) {
-                            break;
+            try {
+                try {
+                } finally {
+                    if (out != null) {
+                        try {
+                            out.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
-                        out.write(temp, 0, size);
                     }
-                    bt = out.toByteArray();
-                    try {
-                        fileInputStream2.close();
-                        in2.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    if (fileInputStream != null) {
+                        fileInputStream.close();
                     }
-                    return bt;
+                    if (in != null) {
+                        in.close();
+                    }
+                }
+            } catch (Exception e2) {
+                e2.printStackTrace();
+                if (out != null) {
+                    out.close();
+                }
+                if (fileInputStream != null) {
+                    fileInputStream.close();
+                }
+                if (in != null) {
+                    in.close();
                 }
             }
-            try {
-                fileInputStream.close();
-                in.close();
-            } catch (IOException e2) {
-                e2.printStackTrace();
-            }
-            return null;
-        } catch (Exception e3) {
+        } catch (IOException e3) {
             e3.printStackTrace();
+        }
+        if (mFile.exists() && !mFile.isDirectory()) {
+            fileInputStream = new FileInputStream(mFile);
+            in = new BufferedInputStream(fileInputStream);
+            out = new ByteArrayOutputStream();
+            byte[] temp = new byte[1048576];
+            while (true) {
+                int size = in.read(temp);
+                if (size == -1) {
+                    break;
+                }
+                out.write(temp, 0, size);
+            }
+            bt = out.toByteArray();
+            out.close();
             fileInputStream.close();
             in.close();
-        } catch (Throwable th) {
-            try {
-                fileInputStream.close();
-                in.close();
-            } catch (IOException e4) {
-                e4.printStackTrace();
-            }
-            throw th;
+            return bt;
         }
+        return null;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static boolean CheckBOM(byte[] bytes) {
-        if (bytes.length > 3 && 239 == (bytes[0] & 255) && 187 == (bytes[1] & 255) && 191 == (bytes[2] & 255)) {
-            return true;
+        if (bytes.length <= 3 || 239 != (bytes[0] & 255) || 187 != (bytes[1] & 255) || 191 != (bytes[2] & 255)) {
+            return false;
         }
-        return false;
+        return true;
+    }
+
+    public String getUiSavePath() {
+        return uiSave;
+    }
+
+    public void dump(FileDescriptor fd, PrintWriter pw, String[] args) {
+        pw.println("KswSettings dump");
+        Set<String> iKeys = getIntKeysFromSp();
+        Set<String> sKeys = getStringKeysFromSp();
+        pw.println("intKeys size is " + iKeys.size() + SettingsStringUtil.DELIMITER);
+        int i = 0;
+        for (String key : iKeys) {
+            pw.println("intKeys[" + i + "]=" + key);
+            i++;
+        }
+        pw.println("");
+        pw.println("stringKeys size is " + sKeys.size() + SettingsStringUtil.DELIMITER);
+        int j = 0;
+        for (String key2 : sKeys) {
+            pw.println("stringKeys[" + j + "]=" + key2);
+            j++;
+        }
+        pw.println("");
+        pw.println("onlyLanguageId is " + this.onlyLanguageId);
     }
 }

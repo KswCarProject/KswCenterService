@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+/* loaded from: classes.dex */
 public abstract class CameraMetadata<TKey> {
     public static final int COLOR_CORRECTION_ABERRATION_MODE_FAST = 1;
     public static final int COLOR_CORRECTION_ABERRATION_MODE_HIGH_QUALITY = 2;
@@ -237,44 +238,39 @@ public abstract class CameraMetadata<TKey> {
     public static final int TONEMAP_PRESET_CURVE_SRGB = 0;
     private CameraMetadataNative mNativeInstance = null;
 
-    /* access modifiers changed from: protected */
-    public abstract Class<TKey> getKeyClass();
+    protected abstract Class<TKey> getKeyClass();
 
-    /* access modifiers changed from: protected */
-    public abstract <T> T getProtected(TKey tkey);
+    protected abstract <T> T getProtected(TKey tkey);
 
     protected CameraMetadata() {
     }
 
-    /* access modifiers changed from: protected */
-    public void setNativeInstance(CameraMetadataNative nativeInstance) {
+    protected void setNativeInstance(CameraMetadataNative nativeInstance) {
         this.mNativeInstance = nativeInstance;
     }
 
     public List<TKey> getKeys() {
-        return Collections.unmodifiableList(getKeys(getClass(), getKeyClass(), this, (int[]) null, true));
+        return Collections.unmodifiableList(getKeys(getClass(), getKeyClass(), this, null, true));
     }
 
-    /* access modifiers changed from: package-private */
-    public <TKey> ArrayList<TKey> getKeys(Class<?> type, Class<TKey> keyClass, CameraMetadata<TKey> instance, int[] filterTags, boolean includeSynthetic) {
-        ArrayList<K> allVendorKeys;
-        long vendorId;
+    /* JADX WARN: Multi-variable type inference failed */
+    <TKey> ArrayList<TKey> getKeys(Class<?> type, Class<TKey> keyClass, CameraMetadata<TKey> instance, int[] filterTags, boolean includeSynthetic) {
         String keyName;
-        boolean equals = type.equals(TotalCaptureResult.class);
-        Class<CaptureResult> type2 = type;
-        if (equals) {
-            type2 = CaptureResult.class;
+        long vendorId;
+        if (type.equals(TotalCaptureResult.class)) {
+            type = CaptureResult.class;
         }
         if (filterTags != null) {
             Arrays.sort(filterTags);
         }
-        ArrayList<TKey> keyList = new ArrayList<>();
-        for (Field field : type2.getDeclaredFields()) {
+        ArrayList<TKey> keyList = (ArrayList<TKey>) new ArrayList();
+        Field[] fields = type.getDeclaredFields();
+        for (Field field : fields) {
             if (field.getType().isAssignableFrom(keyClass) && (field.getModifiers() & 1) != 0) {
                 try {
-                    TKey key = field.get(instance);
-                    if ((instance == null || instance.getProtected(key) != null) && shouldKeyBeAdded(key, field, filterTags, includeSynthetic)) {
-                        keyList.add(key);
+                    Object obj = field.get(instance);
+                    if ((instance == 0 || instance.getProtected(obj) != null) && shouldKeyBeAdded(obj, field, filterTags, includeSynthetic)) {
+                        keyList.add(obj);
                     }
                 } catch (IllegalAccessException e) {
                     throw new AssertionError("Can't get IllegalAccessException", e);
@@ -283,22 +279,26 @@ public abstract class CameraMetadata<TKey> {
                 }
             }
         }
-        if (!(this.mNativeInstance == null || (allVendorKeys = this.mNativeInstance.getAllVendorKeys(keyClass)) == null)) {
-            Iterator<K> it = allVendorKeys.iterator();
+        if (this.mNativeInstance == null) {
+            return keyList;
+        }
+        ArrayList<TKey> vendorKeys = this.mNativeInstance.getAllVendorKeys(keyClass);
+        if (vendorKeys != null) {
+            Iterator<TKey> it = vendorKeys.iterator();
             while (it.hasNext()) {
-                K next = it.next();
-                if (next instanceof CaptureRequest.Key) {
-                    keyName = ((CaptureRequest.Key) next).getName();
-                    vendorId = ((CaptureRequest.Key) next).getVendorId();
-                } else if (next instanceof CaptureResult.Key) {
-                    keyName = ((CaptureResult.Key) next).getName();
-                    vendorId = ((CaptureResult.Key) next).getVendorId();
-                } else if (next instanceof CameraCharacteristics.Key) {
-                    keyName = ((CameraCharacteristics.Key) next).getName();
-                    vendorId = ((CameraCharacteristics.Key) next).getVendorId();
+                TKey k = it.next();
+                if (k instanceof CaptureRequest.Key) {
+                    keyName = ((CaptureRequest.Key) k).getName();
+                    vendorId = ((CaptureRequest.Key) k).getVendorId();
+                } else if (k instanceof CaptureResult.Key) {
+                    keyName = ((CaptureResult.Key) k).getName();
+                    vendorId = ((CaptureResult.Key) k).getVendorId();
+                } else if (k instanceof CameraCharacteristics.Key) {
+                    keyName = ((CameraCharacteristics.Key) k).getName();
+                    vendorId = ((CameraCharacteristics.Key) k).getVendorId();
                 }
                 if (filterTags == null || Arrays.binarySearch(filterTags, CameraMetadataNative.getTag(keyName, vendorId)) >= 0) {
-                    keyList.add(next);
+                    keyList.add(k);
                 }
             }
         }
@@ -307,30 +307,28 @@ public abstract class CameraMetadata<TKey> {
 
     private static <TKey> boolean shouldKeyBeAdded(TKey key, Field field, int[] filterTags, boolean includeSynthetic) {
         CameraMetadataNative.Key nativeKey;
-        if (key != null) {
-            if (key instanceof CameraCharacteristics.Key) {
-                nativeKey = ((CameraCharacteristics.Key) key).getNativeKey();
-            } else if (key instanceof CaptureResult.Key) {
-                nativeKey = ((CaptureResult.Key) key).getNativeKey();
-            } else if (key instanceof CaptureRequest.Key) {
-                nativeKey = ((CaptureRequest.Key) key).getNativeKey();
-            } else {
-                throw new IllegalArgumentException("key type must be that of a metadata key");
-            }
-            if (field.getAnnotation(PublicKey.class) == null) {
-                return false;
-            }
-            if (filterTags == null) {
-                return true;
-            }
-            if (field.getAnnotation(SyntheticKey.class) != null) {
-                return includeSynthetic;
-            }
-            if (Arrays.binarySearch(filterTags, nativeKey.getTag()) >= 0) {
-                return true;
-            }
+        if (key == null) {
+            throw new NullPointerException("key must not be null");
+        }
+        if (key instanceof CameraCharacteristics.Key) {
+            nativeKey = ((CameraCharacteristics.Key) key).getNativeKey();
+        } else if (key instanceof CaptureResult.Key) {
+            nativeKey = ((CaptureResult.Key) key).getNativeKey();
+        } else if (key instanceof CaptureRequest.Key) {
+            nativeKey = ((CaptureRequest.Key) key).getNativeKey();
+        } else {
+            throw new IllegalArgumentException("key type must be that of a metadata key");
+        }
+        if (field.getAnnotation(PublicKey.class) == null) {
             return false;
         }
-        throw new NullPointerException("key must not be null");
+        if (filterTags == null) {
+            return true;
+        }
+        if (field.getAnnotation(SyntheticKey.class) != null) {
+            return includeSynthetic;
+        }
+        int keyTag = nativeKey.getTag();
+        return Arrays.binarySearch(filterTags, keyTag) >= 0;
     }
 }

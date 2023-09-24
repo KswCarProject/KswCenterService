@@ -11,25 +11,31 @@ import android.filterfw.core.ShaderProgram;
 import android.filterfw.format.ImageFormat;
 import android.graphics.Bitmap;
 
+/* loaded from: classes.dex */
 public class BitmapOverlayFilter extends Filter {
     @GenerateFieldPort(name = "bitmap")
     private Bitmap mBitmap;
     private Frame mFrame;
-    private final String mOverlayShader = "precision mediump float;\nuniform sampler2D tex_sampler_0;\nuniform sampler2D tex_sampler_1;\nvarying vec2 v_texcoord;\nvoid main() {\n  vec4 original = texture2D(tex_sampler_0, v_texcoord);\n  vec4 mask = texture2D(tex_sampler_1, v_texcoord);\n  gl_FragColor = vec4(original.rgb * (1.0 - mask.a) + mask.rgb, 1.0);\n}\n";
+    private final String mOverlayShader;
     private Program mProgram;
-    private int mTarget = 0;
+    private int mTarget;
     @GenerateFieldPort(hasDefault = true, name = "tile_size")
-    private int mTileSize = 640;
+    private int mTileSize;
 
     public BitmapOverlayFilter(String name) {
         super(name);
+        this.mTileSize = 640;
+        this.mTarget = 0;
+        this.mOverlayShader = "precision mediump float;\nuniform sampler2D tex_sampler_0;\nuniform sampler2D tex_sampler_1;\nvarying vec2 v_texcoord;\nvoid main() {\n  vec4 original = texture2D(tex_sampler_0, v_texcoord);\n  vec4 mask = texture2D(tex_sampler_1, v_texcoord);\n  gl_FragColor = vec4(original.rgb * (1.0 - mask.a) + mask.rgb, 1.0);\n}\n";
     }
 
+    @Override // android.filterfw.core.Filter
     public void setupPorts() {
         addMaskedInputPort(SliceItem.FORMAT_IMAGE, ImageFormat.create(3));
         addOutputBasedOnInput(SliceItem.FORMAT_IMAGE, SliceItem.FORMAT_IMAGE);
     }
 
+    @Override // android.filterfw.core.Filter
     public FrameFormat getOutputFormat(String portName, FrameFormat inputFormat) {
         return inputFormat;
     }
@@ -45,6 +51,7 @@ public class BitmapOverlayFilter extends Filter {
         throw new RuntimeException("Filter FisheyeFilter does not support frames of target " + target + "!");
     }
 
+    @Override // android.filterfw.core.Filter
     public void tearDown(FilterContext context) {
         if (this.mFrame != null) {
             this.mFrame.release();
@@ -52,6 +59,7 @@ public class BitmapOverlayFilter extends Filter {
         }
     }
 
+    @Override // android.filterfw.core.Filter
     public void process(FilterContext context) {
         Frame input = pullInput(SliceItem.FORMAT_IMAGE);
         FrameFormat inputFormat = input.getFormat();
@@ -61,7 +69,8 @@ public class BitmapOverlayFilter extends Filter {
         }
         if (this.mBitmap != null) {
             Frame frame = createBitmapFrame(context);
-            this.mProgram.process(new Frame[]{input, frame}, output);
+            Frame[] inputs = {input, frame};
+            this.mProgram.process(inputs, output);
             frame.release();
         } else {
             output.setDataFromFrame(input);
@@ -71,7 +80,8 @@ public class BitmapOverlayFilter extends Filter {
     }
 
     private Frame createBitmapFrame(FilterContext context) {
-        Frame frame = context.getFrameManager().newFrame(ImageFormat.create(this.mBitmap.getWidth(), this.mBitmap.getHeight(), 3, 3));
+        FrameFormat format = ImageFormat.create(this.mBitmap.getWidth(), this.mBitmap.getHeight(), 3, 3);
+        Frame frame = context.getFrameManager().newFrame(format);
         frame.setBitmap(this.mBitmap);
         this.mBitmap.recycle();
         this.mBitmap = null;

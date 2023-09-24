@@ -5,6 +5,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public class PathShape extends Shape {
     private Path mPath;
     private float mScaleX;
@@ -18,6 +19,7 @@ public class PathShape extends Shape {
         this.mStdHeight = stdHeight;
     }
 
+    @Override // android.graphics.drawable.shapes.Shape
     public void draw(Canvas canvas, Paint paint) {
         canvas.save();
         canvas.scale(this.mScaleX, this.mScaleY);
@@ -25,18 +27,21 @@ public class PathShape extends Shape {
         canvas.restore();
     }
 
-    /* access modifiers changed from: protected */
-    public void onResize(float width, float height) {
+    @Override // android.graphics.drawable.shapes.Shape
+    protected void onResize(float width, float height) {
         this.mScaleX = width / this.mStdWidth;
         this.mScaleY = height / this.mStdHeight;
     }
 
-    public PathShape clone() throws CloneNotSupportedException {
-        PathShape shape = (PathShape) super.clone();
+    @Override // android.graphics.drawable.shapes.Shape
+    /* renamed from: clone */
+    public PathShape mo159clone() throws CloneNotSupportedException {
+        PathShape shape = (PathShape) super.mo159clone();
         shape.mPath = new Path(this.mPath);
         return shape;
     }
 
+    @Override // android.graphics.drawable.shapes.Shape
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -51,7 +56,8 @@ public class PathShape extends Shape {
         return false;
     }
 
+    @Override // android.graphics.drawable.shapes.Shape
     public int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(super.hashCode()), Float.valueOf(this.mStdWidth), Float.valueOf(this.mStdHeight), this.mPath, Float.valueOf(this.mScaleX), Float.valueOf(this.mScaleY)});
+        return Objects.hash(Integer.valueOf(super.hashCode()), Float.valueOf(this.mStdWidth), Float.valueOf(this.mStdHeight), this.mPath, Float.valueOf(this.mScaleX), Float.valueOf(this.mScaleY));
     }
 }

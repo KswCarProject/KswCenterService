@@ -2,8 +2,10 @@ package android.graphics;
 
 import android.annotation.UnsupportedAppUsage;
 
+/* loaded from: classes.dex */
 public class PorterDuff {
 
+    /* loaded from: classes.dex */
     public enum Mode {
         CLEAR(0),
         SRC(1),
@@ -27,8 +29,8 @@ public class PorterDuff {
         @UnsupportedAppUsage
         public final int nativeInt;
 
-        private Mode(int nativeInt2) {
-            this.nativeInt = nativeInt2;
+        Mode(int nativeInt) {
+            this.nativeInt = nativeInt;
         }
     }
 

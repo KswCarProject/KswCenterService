@@ -1,15 +1,24 @@
 package android.media.midi;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.telephony.SmsManager;
 
+/* loaded from: classes3.dex */
 public final class MidiDeviceStatus implements Parcelable {
-    public static final Parcelable.Creator<MidiDeviceStatus> CREATOR = new Parcelable.Creator<MidiDeviceStatus>() {
+    public static final Parcelable.Creator<MidiDeviceStatus> CREATOR = new Parcelable.Creator<MidiDeviceStatus>() { // from class: android.media.midi.MidiDeviceStatus.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public MidiDeviceStatus createFromParcel(Parcel in) {
-            return new MidiDeviceStatus((MidiDeviceInfo) in.readParcelable(MidiDeviceInfo.class.getClassLoader()), in.createBooleanArray(), in.createIntArray());
+            ClassLoader classLoader = MidiDeviceInfo.class.getClassLoader();
+            MidiDeviceInfo deviceInfo = (MidiDeviceInfo) in.readParcelable(classLoader);
+            boolean[] inputPortOpen = in.createBooleanArray();
+            int[] outputPortOpenCount = in.createIntArray();
+            return new MidiDeviceStatus(deviceInfo, inputPortOpen, outputPortOpenCount);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public MidiDeviceStatus[] newArray(int size) {
             return new MidiDeviceStatus[size];
         }
@@ -66,10 +75,12 @@ public final class MidiDeviceStatus implements Parcelable {
         return builder.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeParcelable(this.mDeviceInfo, flags);
         parcel.writeBooleanArray(this.mInputPortOpen);

@@ -1,17 +1,22 @@
 package android.media;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.Log;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes3.dex */
 public final class Rating implements Parcelable {
-    public static final Parcelable.Creator<Rating> CREATOR = new Parcelable.Creator<Rating>() {
+    public static final Parcelable.Creator<Rating> CREATOR = new Parcelable.Creator<Rating>() { // from class: android.media.Rating.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Rating createFromParcel(Parcel p) {
             return new Rating(p.readInt(), p.readFloat());
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Rating[] newArray(int size) {
             return new Rating[size];
         }
@@ -29,10 +34,12 @@ public final class Rating implements Parcelable {
     private final float mRatingValue;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface StarStyle {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface Style {
     }
 
@@ -50,10 +57,12 @@ public final class Rating implements Parcelable {
         return sb.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return this.mRatingStyle;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mRatingStyle);
         dest.writeFloat(this.mRatingValue);
@@ -94,22 +103,22 @@ public final class Rating implements Parcelable {
                 maxRating = 5.0f;
                 break;
             default:
-                Log.e(TAG, "Invalid rating style (" + starRatingStyle + ") for a star rating");
+                Log.m70e(TAG, "Invalid rating style (" + starRatingStyle + ") for a star rating");
                 return null;
         }
-        if (starRating >= 0.0f && starRating <= maxRating) {
-            return new Rating(starRatingStyle, starRating);
+        if (starRating < 0.0f || starRating > maxRating) {
+            Log.m70e(TAG, "Trying to set out of range star-based rating");
+            return null;
         }
-        Log.e(TAG, "Trying to set out of range star-based rating");
-        return null;
+        return new Rating(starRatingStyle, starRating);
     }
 
     public static Rating newPercentageRating(float percent) {
-        if (percent >= 0.0f && percent <= 100.0f) {
-            return new Rating(6, percent);
+        if (percent < 0.0f || percent > 100.0f) {
+            Log.m70e(TAG, "Invalid percentage-based rating value");
+            return null;
         }
-        Log.e(TAG, "Invalid percentage-based rating value");
-        return null;
+        return new Rating(6, percent);
     }
 
     public boolean isRated() {
@@ -121,17 +130,11 @@ public final class Rating implements Parcelable {
     }
 
     public boolean hasHeart() {
-        if (this.mRatingStyle == 1 && this.mRatingValue == 1.0f) {
-            return true;
-        }
-        return false;
+        return this.mRatingStyle == 1 && this.mRatingValue == 1.0f;
     }
 
     public boolean isThumbUp() {
-        if (this.mRatingStyle == 2 && this.mRatingValue == 1.0f) {
-            return true;
-        }
-        return false;
+        return this.mRatingStyle == 2 && this.mRatingValue == 1.0f;
     }
 
     public float getStarRating() {
@@ -139,10 +142,11 @@ public final class Rating implements Parcelable {
             case 3:
             case 4:
             case 5:
-                if (isRated()) {
-                    return this.mRatingValue;
+                if (!isRated()) {
+                    return -1.0f;
                 }
-                return -1.0f;
+                float ratingValue = this.mRatingValue;
+                return ratingValue;
             default:
                 return -1.0f;
         }

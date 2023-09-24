@@ -1,15 +1,20 @@
 package android.telephony;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public class CellConfigLte implements Parcelable {
-    public static final Parcelable.Creator<CellConfigLte> CREATOR = new Parcelable.Creator<CellConfigLte>() {
+    public static final Parcelable.Creator<CellConfigLte> CREATOR = new Parcelable.Creator<CellConfigLte>() { // from class: android.telephony.CellConfigLte.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public CellConfigLte createFromParcel(Parcel in) {
             return new CellConfigLte(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public CellConfigLte[] newArray(int size) {
             return new CellConfigLte[0];
         }
@@ -32,26 +37,28 @@ public class CellConfigLte implements Parcelable {
         this.mIsEndcAvailable = config.mIsEndcAvailable;
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean isEndcAvailable() {
+    boolean isEndcAvailable() {
         return this.mIsEndcAvailable;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Boolean.valueOf(this.mIsEndcAvailable)});
+        return Objects.hash(Boolean.valueOf(this.mIsEndcAvailable));
     }
 
     public boolean equals(Object other) {
-        if ((other instanceof CellConfigLte) && this.mIsEndcAvailable == ((CellConfigLte) other).mIsEndcAvailable) {
-            return true;
+        if (other instanceof CellConfigLte) {
+            CellConfigLte o = (CellConfigLte) other;
+            return this.mIsEndcAvailable == o.mIsEndcAvailable;
         }
         return false;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeBoolean(this.mIsEndcAvailable);
     }

@@ -5,11 +5,11 @@ import android.provider.MediaStore;
 import android.security.KeyChain;
 import com.ibm.icu.impl.ICUResourceBundle;
 import com.ibm.icu.impl.Utility;
+import com.ibm.icu.text.RuleBasedTransliterator;
 import com.ibm.icu.text.TransliteratorIDParser;
 import com.ibm.icu.util.CaseInsensitiveString;
 import com.ibm.icu.util.ULocale;
 import com.ibm.icu.util.UResourceBundle;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.Objects;
 
+/* loaded from: classes5.dex */
 public abstract class Transliterator implements StringTransform {
     static final boolean DEBUG = false;
     public static final int FORWARD = 0;
@@ -33,19 +34,22 @@ public abstract class Transliterator implements StringTransform {
     public static final int REVERSE = 1;
     private static final String ROOT = "root";
     static final char VARIANT_SEP = '/';
-    private static Map<CaseInsensitiveString, String> displayNameCache = Collections.synchronizedMap(new HashMap());
-    private static TransliteratorRegistry registry = new TransliteratorRegistry();
-    private String ID;
+
+    /* renamed from: ID */
+    private String f2564ID;
     private UnicodeSet filter;
     private int maximumContextLength = 0;
+    private static TransliteratorRegistry registry = new TransliteratorRegistry();
+    private static Map<CaseInsensitiveString, String> displayNameCache = Collections.synchronizedMap(new HashMap());
 
+    /* loaded from: classes5.dex */
     public interface Factory {
         Transliterator getInstance(String str);
     }
 
-    /* access modifiers changed from: protected */
-    public abstract void handleTransliterate(Replaceable replaceable, Position position, boolean z);
+    protected abstract void handleTransliterate(Replaceable replaceable, Position position, boolean z);
 
+    /* loaded from: classes5.dex */
     public static class Position {
         public int contextLimit;
         public int contextStart;
@@ -56,15 +60,15 @@ public abstract class Transliterator implements StringTransform {
             this(0, 0, 0, 0);
         }
 
-        public Position(int contextStart2, int contextLimit2, int start2) {
-            this(contextStart2, contextLimit2, start2, contextLimit2);
+        public Position(int contextStart, int contextLimit, int start) {
+            this(contextStart, contextLimit, start, contextLimit);
         }
 
-        public Position(int contextStart2, int contextLimit2, int start2, int limit2) {
-            this.contextStart = contextStart2;
-            this.contextLimit = contextLimit2;
-            this.start = start2;
-            this.limit = limit2;
+        public Position(int contextStart, int contextLimit, int start, int limit) {
+            this.contextStart = contextStart;
+            this.contextLimit = contextLimit;
+            this.start = start;
+            this.limit = limit;
         }
 
         public Position(Position pos) {
@@ -79,18 +83,15 @@ public abstract class Transliterator implements StringTransform {
         }
 
         public boolean equals(Object obj) {
-            if (!(obj instanceof Position)) {
-                return false;
-            }
-            Position pos = (Position) obj;
-            if (this.contextStart == pos.contextStart && this.contextLimit == pos.contextLimit && this.start == pos.start && this.limit == pos.limit) {
-                return true;
+            if (obj instanceof Position) {
+                Position pos = (Position) obj;
+                return this.contextStart == pos.contextStart && this.contextLimit == pos.contextLimit && this.start == pos.start && this.limit == pos.limit;
             }
             return false;
         }
 
         public int hashCode() {
-            return Objects.hash(new Object[]{Integer.valueOf(this.contextStart), Integer.valueOf(this.contextLimit), Integer.valueOf(this.start), Integer.valueOf(this.limit)});
+            return Objects.hash(Integer.valueOf(this.contextStart), Integer.valueOf(this.contextLimit), Integer.valueOf(this.start), Integer.valueOf(this.limit));
         }
 
         public String toString() {
@@ -104,13 +105,12 @@ public abstract class Transliterator implements StringTransform {
         }
     }
 
-    protected Transliterator(String ID2, UnicodeFilter filter2) {
-        if (ID2 != null) {
-            this.ID = ID2;
-            setFilter(filter2);
-            return;
+    protected Transliterator(String ID, UnicodeFilter filter) {
+        if (ID == null) {
+            throw new NullPointerException();
         }
-        throw new NullPointerException();
+        this.f2564ID = ID;
+        setFilter(filter);
     }
 
     public final int transliterate(Replaceable text, int start, int limit) {
@@ -128,7 +128,7 @@ public abstract class Transliterator implements StringTransform {
 
     public final String transliterate(String text) {
         ReplaceableString result = new ReplaceableString(text);
-        transliterate((Replaceable) result);
+        transliterate(result);
         return result.toString();
     }
 
@@ -139,9 +139,10 @@ public abstract class Transliterator implements StringTransform {
             index.limit += insertion.length();
             index.contextLimit += insertion.length();
         }
-        if (index.limit <= 0 || !UTF16.isLeadSurrogate(text.charAt(index.limit - 1))) {
-            filteredTransliterate(text, index, true, true);
+        if (index.limit > 0 && UTF16.isLeadSurrogate(text.charAt(index.limit - 1))) {
+            return;
         }
+        filteredTransliterate(text, index, true, true);
     }
 
     public final void transliterate(Replaceable text, Position index, int insertion) {
@@ -157,112 +158,114 @@ public abstract class Transliterator implements StringTransform {
         filteredTransliterate(text, index, false, true);
     }
 
+    /* JADX WARN: Code restructure failed: missing block: B:52:0x0125, code lost:
+        r23.limit = r4;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:53:0x0127, code lost:
+        return;
+     */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
     private void filteredTransliterate(Replaceable text, Position index, boolean incremental, boolean rollback) {
         StringBuffer log;
         int runLength;
-        Replaceable replaceable = text;
-        Position position = index;
-        if (this.filter != null || rollback) {
-            int globalLimit = position.limit;
-            StringBuffer log2 = null;
-            while (true) {
-                if (this.filter != null) {
-                    while (position.start < globalLimit) {
-                        UnicodeSet unicodeSet = this.filter;
-                        int char32At = replaceable.char32At(position.start);
-                        int c = char32At;
-                        if (unicodeSet.contains(char32At)) {
-                            break;
-                        }
-                        position.start += UTF16.getCharCount(c);
-                    }
-                    position.limit = position.start;
-                    while (position.limit < globalLimit) {
-                        UnicodeSet unicodeSet2 = this.filter;
-                        int char32At2 = replaceable.char32At(position.limit);
-                        int c2 = char32At2;
-                        if (!unicodeSet2.contains(char32At2)) {
-                            break;
-                        }
-                        position.limit += UTF16.getCharCount(c2);
-                    }
-                }
-                if (position.start != position.limit) {
-                    int totalDelta = 0;
-                    boolean isIncrementalRun = position.limit < globalLimit ? false : incremental;
-                    if (!rollback || !isIncrementalRun) {
-                        log = log2;
-                        int limit = position.limit;
-                        handleTransliterate(replaceable, position, isIncrementalRun);
-                        int delta = position.limit - limit;
-                        if (isIncrementalRun || position.start == position.limit) {
-                            globalLimit += delta;
-                        } else {
-                            throw new RuntimeException("ERROR: Incomplete non-incremental transliteration by " + getID());
-                        }
-                    } else {
-                        int runStart = position.start;
-                        int runLimit = position.limit;
-                        int runLength2 = runLimit - runStart;
-                        int rollbackOrigin = text.length();
-                        replaceable.copy(runStart, runLimit, rollbackOrigin);
-                        int passStart = runStart;
-                        int rollbackStart = rollbackOrigin;
-                        int passLimit = position.start;
-                        int uncommittedLength = 0;
-                        while (true) {
-                            int charLength = UTF16.getCharCount(replaceable.char32At(passLimit));
-                            passLimit += charLength;
-                            if (passLimit > runLimit) {
-                                break;
-                            }
-                            uncommittedLength += charLength;
-                            position.limit = passLimit;
-                            handleTransliterate(replaceable, position, true);
-                            int delta2 = position.limit - passLimit;
-                            StringBuffer log3 = log2;
-                            int runStart2 = runStart;
-                            if (position.start != position.limit) {
-                                int rs = (rollbackStart + delta2) - (position.limit - passStart);
-                                runLength = runLength2;
-                                replaceable.replace(passStart, position.limit, "");
-                                replaceable.copy(rs, rs + uncommittedLength, passStart);
-                                position.start = passStart;
-                                position.limit = passLimit;
-                                position.contextLimit -= delta2;
-                            } else {
-                                runLength = runLength2;
-                                int passStart2 = position.start;
-                                rollbackStart += delta2 + uncommittedLength;
-                                runLimit += delta2;
-                                totalDelta += delta2;
-                                passStart = passStart2;
-                                passLimit = passStart2;
-                                uncommittedLength = 0;
-                            }
-                            log2 = log3;
-                            runStart = runStart2;
-                            runLength2 = runLength;
-                        }
-                        int rollbackOrigin2 = rollbackOrigin + totalDelta;
-                        replaceable.replace(rollbackOrigin2, rollbackOrigin2 + runLength2, "");
-                        position.start = passStart;
-                        log = log2;
-                        globalLimit += totalDelta;
-                    }
-                    if (this.filter == null || isIncrementalRun) {
-                        break;
-                    }
-                    log2 = log;
-                } else {
-                    StringBuffer stringBuffer = log2;
-                    break;
-                }
-            }
-            position.limit = globalLimit;
+        if (this.filter == null && !rollback) {
+            handleTransliterate(text, index, incremental);
             return;
         }
-        handleTransliterate(text, index, incremental);
+        int globalLimit = index.limit;
+        StringBuffer log2 = null;
+        while (true) {
+            if (this.filter != null) {
+                while (index.start < globalLimit) {
+                    UnicodeSet unicodeSet = this.filter;
+                    int c = text.char32At(index.start);
+                    if (unicodeSet.contains(c)) {
+                        break;
+                    }
+                    index.start += UTF16.getCharCount(c);
+                }
+                index.limit = index.start;
+                while (index.limit < globalLimit) {
+                    UnicodeSet unicodeSet2 = this.filter;
+                    int c2 = text.char32At(index.limit);
+                    if (!unicodeSet2.contains(c2)) {
+                        break;
+                    }
+                    index.limit += UTF16.getCharCount(c2);
+                }
+            }
+            if (index.start != index.limit) {
+                int totalDelta = 0;
+                boolean isIncrementalRun = index.limit < globalLimit ? false : incremental;
+                if (rollback && isIncrementalRun) {
+                    int runStart = index.start;
+                    int runLimit = index.limit;
+                    int runLength2 = runLimit - runStart;
+                    int rollbackOrigin = text.length();
+                    text.copy(runStart, runLimit, rollbackOrigin);
+                    int passStart = runStart;
+                    int rollbackStart = rollbackOrigin;
+                    int passLimit = index.start;
+                    int uncommittedLength = 0;
+                    while (true) {
+                        int charLength = UTF16.getCharCount(text.char32At(passLimit));
+                        passLimit += charLength;
+                        if (passLimit > runLimit) {
+                            break;
+                        }
+                        uncommittedLength += charLength;
+                        index.limit = passLimit;
+                        handleTransliterate(text, index, true);
+                        int delta = index.limit - passLimit;
+                        StringBuffer log3 = log2;
+                        int runStart2 = runStart;
+                        if (index.start != index.limit) {
+                            int rs = (rollbackStart + delta) - (index.limit - passStart);
+                            runLength = runLength2;
+                            text.replace(passStart, index.limit, "");
+                            text.copy(rs, rs + uncommittedLength, passStart);
+                            index.start = passStart;
+                            index.limit = passLimit;
+                            index.contextLimit -= delta;
+                        } else {
+                            runLength = runLength2;
+                            int passStart2 = index.start;
+                            rollbackStart += delta + uncommittedLength;
+                            runLimit += delta;
+                            totalDelta += delta;
+                            passStart = passStart2;
+                            passLimit = passStart2;
+                            uncommittedLength = 0;
+                        }
+                        log2 = log3;
+                        runStart = runStart2;
+                        runLength2 = runLength;
+                    }
+                    int rollbackOrigin2 = rollbackOrigin + totalDelta;
+                    text.replace(rollbackOrigin2, rollbackOrigin2 + runLength2, "");
+                    index.start = passStart;
+                    log = log2;
+                    globalLimit += totalDelta;
+                } else {
+                    log = log2;
+                    int limit = index.limit;
+                    handleTransliterate(text, index, isIncrementalRun);
+                    int delta2 = index.limit - limit;
+                    if (!isIncrementalRun && index.start != index.limit) {
+                        throw new RuntimeException("ERROR: Incomplete non-incremental transliteration by " + getID());
+                    }
+                    globalLimit += delta2;
+                }
+                if (this.filter == null || isIncrementalRun) {
+                    break;
+                }
+                log2 = log;
+            } else {
+                break;
+            }
+        }
     }
 
     public void filteredTransliterate(Replaceable text, Position index, boolean incremental) {
@@ -273,26 +276,23 @@ public abstract class Transliterator implements StringTransform {
         return this.maximumContextLength;
     }
 
-    /* access modifiers changed from: protected */
-    public void setMaximumContextLength(int a) {
-        if (a >= 0) {
-            this.maximumContextLength = a;
-            return;
+    protected void setMaximumContextLength(int a) {
+        if (a < 0) {
+            throw new IllegalArgumentException("Invalid context length " + a);
         }
-        throw new IllegalArgumentException("Invalid context length " + a);
+        this.maximumContextLength = a;
     }
 
     public final String getID() {
-        return this.ID;
+        return this.f2564ID;
     }
 
-    /* access modifiers changed from: protected */
-    public final void setID(String id) {
-        this.ID = id;
+    protected final void setID(String id) {
+        this.f2564ID = id;
     }
 
-    public static final String getDisplayName(String ID2) {
-        return getDisplayName(ID2, ULocale.getDefault(ULocale.Category.DISPLAY));
+    public static final String getDisplayName(String ID) {
+        return getDisplayName(ID, ULocale.getDefault(ULocale.Category.DISPLAY));
     }
 
     public static String getDisplayName(String id, Locale inLocale) {
@@ -309,30 +309,33 @@ public abstract class Transliterator implements StringTransform {
         sb.append(stv[0]);
         sb.append(ID_SEP);
         sb.append(stv[1]);
-        String ID2 = sb.toString();
+        String ID = sb.toString();
         if (stv[2] != null && stv[2].length() > 0) {
-            ID2 = ID2 + VARIANT_SEP + stv[2];
+            ID = ID + VARIANT_SEP + stv[2];
         }
-        String n = displayNameCache.get(new CaseInsensitiveString(ID2));
+        String n = displayNameCache.get(new CaseInsensitiveString(ID));
         if (n != null) {
             return n;
         }
         try {
-            return bundle.getString(RB_DISPLAY_NAME_PREFIX + ID2);
+            return bundle.getString(RB_DISPLAY_NAME_PREFIX + ID);
         } catch (MissingResourceException e) {
             try {
-                MessageFormat format = new MessageFormat(bundle.getString(RB_DISPLAY_NAME_PATTERN));
-                Object[] args = {2, stv[0], stv[1]};
+                java.text.MessageFormat format = new java.text.MessageFormat(bundle.getString(RB_DISPLAY_NAME_PATTERN));
+                Object[] args = new Object[3];
+                args[0] = 2;
+                args[1] = stv[0];
+                args[2] = stv[1];
                 for (int j = 1; j <= 2; j++) {
                     try {
                         args[j] = bundle.getString(RB_SCRIPT_DISPLAY_NAME_PREFIX + ((String) args[j]));
                     } catch (MissingResourceException e2) {
                     }
                 }
-                if (stv[2].length() <= 0) {
-                    return format.format(args);
+                if (stv[2].length() > 0) {
+                    return format.format(args) + VARIANT_SEP + stv[2];
                 }
-                return format.format(args) + VARIANT_SEP + stv[2];
+                return format.format(args);
             } catch (MissingResourceException e3) {
                 throw new RuntimeException();
             }
@@ -343,43 +346,43 @@ public abstract class Transliterator implements StringTransform {
         return this.filter;
     }
 
-    public void setFilter(UnicodeFilter filter2) {
-        if (filter2 == null) {
+    public void setFilter(UnicodeFilter filter) {
+        if (filter == null) {
             this.filter = null;
             return;
         }
         try {
-            this.filter = new UnicodeSet((UnicodeSet) filter2).freeze();
+            this.filter = new UnicodeSet((UnicodeSet) filter).m211freeze();
         } catch (Exception e) {
             this.filter = new UnicodeSet();
-            filter2.addMatchSetTo(this.filter);
-            this.filter.freeze();
+            filter.addMatchSetTo(this.filter);
+            this.filter.m211freeze();
         }
     }
 
-    public static final Transliterator getInstance(String ID2) {
-        return getInstance(ID2, 0);
+    public static final Transliterator getInstance(String ID) {
+        return getInstance(ID, 0);
     }
 
-    public static Transliterator getInstance(String ID2, int dir) {
+    public static Transliterator getInstance(String ID, int dir) {
         Transliterator t;
         StringBuffer canonID = new StringBuffer();
         List<TransliteratorIDParser.SingleID> list = new ArrayList<>();
         UnicodeSet[] globalFilter = new UnicodeSet[1];
-        if (TransliteratorIDParser.parseCompoundID(ID2, dir, canonID, list, globalFilter)) {
-            List<Transliterator> translits = TransliteratorIDParser.instantiateList(list);
-            if (list.size() > 1 || canonID.indexOf(";") >= 0) {
-                t = new CompoundTransliterator(translits);
-            } else {
-                t = translits.get(0);
-            }
-            t.setID(canonID.toString());
-            if (globalFilter[0] != null) {
-                t.setFilter(globalFilter[0]);
-            }
-            return t;
+        if (!TransliteratorIDParser.parseCompoundID(ID, dir, canonID, list, globalFilter)) {
+            throw new IllegalArgumentException("Invalid ID " + ID);
         }
-        throw new IllegalArgumentException("Invalid ID " + ID2);
+        List<Transliterator> translits = TransliteratorIDParser.instantiateList(list);
+        if (list.size() > 1 || canonID.indexOf(";") >= 0) {
+            t = new CompoundTransliterator(translits);
+        } else {
+            t = translits.get(0);
+        }
+        t.setID(canonID.toString());
+        if (globalFilter[0] != null) {
+            t.setFilter(globalFilter[0]);
+        }
+        return t;
     }
 
     static Transliterator getBasicInstance(String id, String canonID) {
@@ -388,13 +391,13 @@ public abstract class Transliterator implements StringTransform {
         if (s.length() != 0) {
             t = getInstance(s.toString(), 0);
         }
-        if (!(t == null || canonID == null)) {
+        if (t != null && canonID != null) {
             t.setID(canonID);
         }
         return t;
     }
 
-    public static final Transliterator createFromRules(String ID2, String rules, int dir) {
+    public static final Transliterator createFromRules(String ID, String rules, int dir) {
         Transliterator t;
         TransliteratorParser parser = new TransliteratorParser();
         parser.parse(rules, dir);
@@ -402,7 +405,7 @@ public abstract class Transliterator implements StringTransform {
             return new NullTransliterator();
         }
         if (parser.idBlockVector.size() == 0 && parser.dataVector.size() == 1) {
-            return new RuleBasedTransliterator(ID2, parser.dataVector.get(0), parser.compoundFilter);
+            return new RuleBasedTransliterator(ID, parser.dataVector.get(0), parser.compoundFilter);
         }
         if (parser.idBlockVector.size() == 1 && parser.dataVector.size() == 0) {
             if (parser.compoundFilter != null) {
@@ -410,10 +413,10 @@ public abstract class Transliterator implements StringTransform {
             } else {
                 t = getInstance(parser.idBlockVector.get(0));
             }
-            if (t == null) {
+            if (t != null) {
+                t.setID(ID);
                 return t;
             }
-            t.setID(ID2);
             return t;
         }
         List<Transliterator> transliterators = new ArrayList<>();
@@ -422,25 +425,25 @@ public abstract class Transliterator implements StringTransform {
         for (int i = 0; i < limit; i++) {
             if (i < parser.idBlockVector.size()) {
                 String idBlock = parser.idBlockVector.get(i);
-                if (idBlock.length() > 0 && !(getInstance(idBlock) instanceof NullTransliterator)) {
-                    transliterators.add(getInstance(idBlock));
+                if (idBlock.length() > 0) {
+                    Transliterator temp = getInstance(idBlock);
+                    if (!(temp instanceof NullTransliterator)) {
+                        transliterators.add(getInstance(idBlock));
+                    }
                 }
             }
             if (i < parser.dataVector.size()) {
-                StringBuilder sb = new StringBuilder();
-                sb.append("%Pass");
-                int passNumber2 = passNumber + 1;
-                sb.append(passNumber);
-                transliterators.add(new RuleBasedTransliterator(sb.toString(), parser.dataVector.get(i), (UnicodeFilter) null));
-                passNumber = passNumber2;
+                RuleBasedTransliterator.Data data = parser.dataVector.get(i);
+                transliterators.add(new RuleBasedTransliterator("%Pass" + passNumber, data, null));
+                passNumber++;
             }
         }
         Transliterator t2 = new CompoundTransliterator(transliterators, passNumber - 1);
-        t2.setID(ID2);
-        if (parser.compoundFilter == null) {
+        t2.setID(ID);
+        if (parser.compoundFilter != null) {
+            t2.setFilter(parser.compoundFilter);
             return t2;
         }
-        t2.setFilter(parser.compoundFilter);
         return t2;
     }
 
@@ -448,8 +451,7 @@ public abstract class Transliterator implements StringTransform {
         return baseToRules(escapeUnprintable);
     }
 
-    /* access modifiers changed from: protected */
-    public final String baseToRules(boolean escapeUnprintable) {
+    protected final String baseToRules(boolean escapeUnprintable) {
         if (escapeUnprintable) {
             StringBuffer rulesSource = new StringBuffer();
             String id = getID();
@@ -488,8 +490,7 @@ public abstract class Transliterator implements StringTransform {
         return result;
     }
 
-    /* access modifiers changed from: protected */
-    public UnicodeSet handleGetSourceSet() {
+    protected UnicodeSet handleGetSourceSet() {
         return new UnicodeSet();
     }
 
@@ -501,14 +502,15 @@ public abstract class Transliterator implements StringTransform {
 
     @Deprecated
     public void addSourceTargetSet(UnicodeSet inputFilter, UnicodeSet sourceSet, UnicodeSet targetSet) {
-        UnicodeSet temp = new UnicodeSet(handleGetSourceSet()).retainAll(getFilterAsUnicodeSet(inputFilter));
+        UnicodeSet myFilter = getFilterAsUnicodeSet(inputFilter);
+        UnicodeSet temp = new UnicodeSet(handleGetSourceSet()).retainAll(myFilter);
         sourceSet.addAll(temp);
         Iterator<String> it = temp.iterator();
         while (it.hasNext()) {
             String s = it.next();
             String t = transliterate(s);
             if (!s.equals(t)) {
-                targetSet.addAll((CharSequence) t);
+                targetSet.addAll(t);
             }
         }
     }
@@ -528,22 +530,22 @@ public abstract class Transliterator implements StringTransform {
             unicodeSet.addMatchSetTo(temp2);
             temp = temp2;
         }
-        return filterSet.retainAll(temp).freeze();
+        return filterSet.retainAll(temp).m211freeze();
     }
 
     public final Transliterator getInverse() {
-        return getInstance(this.ID, 1);
+        return getInstance(this.f2564ID, 1);
     }
 
-    public static void registerClass(String ID2, Class<? extends Transliterator> transClass, String displayName) {
-        registry.put(ID2, transClass, true);
+    public static void registerClass(String ID, Class<? extends Transliterator> transClass, String displayName) {
+        registry.put(ID, transClass, true);
         if (displayName != null) {
-            displayNameCache.put(new CaseInsensitiveString(ID2), displayName);
+            displayNameCache.put(new CaseInsensitiveString(ID), displayName);
         }
     }
 
-    public static void registerFactory(String ID2, Factory factory) {
-        registry.put(ID2, factory, true);
+    public static void registerFactory(String ID, Factory factory) {
+        registry.put(ID, factory, true);
     }
 
     public static void registerInstance(Transliterator trans) {
@@ -562,9 +564,9 @@ public abstract class Transliterator implements StringTransform {
         TransliteratorIDParser.registerSpecialInverse(target, inverseTarget, bidirectional);
     }
 
-    public static void unregister(String ID2) {
-        displayNameCache.remove(new CaseInsensitiveString(ID2));
-        registry.remove(ID2);
+    public static void unregister(String ID) {
+        displayNameCache.remove(new CaseInsensitiveString(ID));
+        registry.remove(ID);
     }
 
     public static final Enumeration<String> getAvailableIDs() {
@@ -585,12 +587,13 @@ public abstract class Transliterator implements StringTransform {
 
     static {
         int dir;
-        UResourceBundle transIDs = UResourceBundle.getBundleInstance("com/ibm/icu/impl/data/icudt63b/translit", ROOT).get(RB_RULE_BASED_IDS);
+        UResourceBundle bundle = UResourceBundle.getBundleInstance("com/ibm/icu/impl/data/icudt63b/translit", ROOT);
+        UResourceBundle transIDs = bundle.get(RB_RULE_BASED_IDS);
         int maxRows = transIDs.getSize();
         for (int row = 0; row < maxRows; row++) {
             UResourceBundle colBund = transIDs.get(row);
-            String ID2 = colBund.getKey();
-            if (ID2.indexOf("-t-") < 0) {
+            String ID = colBund.getKey();
+            if (ID.indexOf("-t-") < 0) {
                 UResourceBundle res = colBund.get(0);
                 String type = res.getKey();
                 if (type.equals(ContentResolver.SCHEME_FILE) || type.equals(MediaStore.VOLUME_INTERNAL)) {
@@ -604,16 +607,17 @@ public abstract class Transliterator implements StringTransform {
                     } else {
                         throw new RuntimeException("Can't parse direction: " + direction);
                     }
-                    registry.put(ID2, resString, dir, true ^ type.equals(MediaStore.VOLUME_INTERNAL));
+                    registry.put(ID, resString, dir, true ^ type.equals(MediaStore.VOLUME_INTERNAL));
                 } else if (type.equals(KeyChain.EXTRA_ALIAS)) {
-                    registry.put(ID2, res.getString(), true);
+                    String resString2 = res.getString();
+                    registry.put(ID, resString2, true);
                 } else {
                     throw new RuntimeException("Unknow type: " + type);
                 }
             }
         }
         registerSpecialInverse("Null", "Null", false);
-        registerClass("Any-Null", NullTransliterator.class, (String) null);
+        registerClass("Any-Null", NullTransliterator.class, null);
         RemoveTransliterator.register();
         EscapeTransliterator.register();
         UnescapeTransliterator.register();
@@ -633,6 +637,7 @@ public abstract class Transliterator implements StringTransform {
         AnyTransliterator.register();
     }
 
+    @Override // com.ibm.icu.text.Transform
     public String transform(String source) {
         return transliterate(source);
     }

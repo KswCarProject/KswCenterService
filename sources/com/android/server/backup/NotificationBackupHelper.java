@@ -2,45 +2,49 @@ package com.android.server.backup;
 
 import android.app.INotificationManager;
 import android.app.backup.BlobBackupHelper;
-import android.os.ServiceManager;
+import android.p007os.ServiceManager;
 import android.util.Log;
 import android.util.Slog;
 
+/* loaded from: classes4.dex */
 public class NotificationBackupHelper extends BlobBackupHelper {
     static final int BLOB_VERSION = 1;
-    static final boolean DEBUG = Log.isLoggable(TAG, 3);
     static final String KEY_NOTIFICATIONS = "notifications";
-    static final String TAG = "NotifBackupHelper";
     private final int mUserId;
+    static final String TAG = "NotifBackupHelper";
+    static final boolean DEBUG = Log.isLoggable(TAG, 3);
 
     public NotificationBackupHelper(int userId) {
         super(1, KEY_NOTIFICATIONS);
         this.mUserId = userId;
     }
 
-    /* access modifiers changed from: protected */
-    public byte[] getBackupPayload(String key) {
+    @Override // android.app.backup.BlobBackupHelper
+    protected byte[] getBackupPayload(String key) {
         if (!KEY_NOTIFICATIONS.equals(key)) {
             return null;
         }
         try {
-            return INotificationManager.Stub.asInterface(ServiceManager.getService("notification")).getBackupPayload(this.mUserId);
+            INotificationManager nm = INotificationManager.Stub.asInterface(ServiceManager.getService("notification"));
+            byte[] newPayload = nm.getBackupPayload(this.mUserId);
+            return newPayload;
         } catch (Exception e) {
-            Slog.e(TAG, "Couldn't communicate with notification manager");
+            Slog.m56e(TAG, "Couldn't communicate with notification manager");
             return null;
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void applyRestoredPayload(String key, byte[] payload) {
+    @Override // android.app.backup.BlobBackupHelper
+    protected void applyRestoredPayload(String key, byte[] payload) {
         if (DEBUG) {
-            Slog.v(TAG, "Got restore of " + key);
+            Slog.m52v(TAG, "Got restore of " + key);
         }
         if (KEY_NOTIFICATIONS.equals(key)) {
             try {
-                INotificationManager.Stub.asInterface(ServiceManager.getService("notification")).applyRestore(payload, this.mUserId);
+                INotificationManager nm = INotificationManager.Stub.asInterface(ServiceManager.getService("notification"));
+                nm.applyRestore(payload, this.mUserId);
             } catch (Exception e) {
-                Slog.e(TAG, "Couldn't communicate with notification manager");
+                Slog.m56e(TAG, "Couldn't communicate with notification manager");
             }
         }
     }

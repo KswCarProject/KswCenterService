@@ -3,8 +3,10 @@ package android.app.admin;
 import android.content.Intent;
 import java.util.List;
 
+/* loaded from: classes.dex */
 public abstract class DevicePolicyManagerInternal {
 
+    /* loaded from: classes.dex */
     public interface OnCrossProfileWidgetProvidersChangeListener {
         void onCrossProfileWidgetProvidersChanged(int i, List<String> list);
     }
@@ -21,8 +23,7 @@ public abstract class DevicePolicyManagerInternal {
 
     public abstract List<String> getCrossProfileWidgetProviders(int i);
 
-    /* access modifiers changed from: protected */
-    public abstract DevicePolicyCache getDevicePolicyCache();
+    protected abstract DevicePolicyCache getDevicePolicyCache();
 
     public abstract CharSequence getPrintingDisabledReasonForUser(int i);
 

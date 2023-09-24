@@ -1,24 +1,29 @@
 package android.database;
 
 import android.net.Uri;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes.dex */
 public interface IContentObserver extends IInterface {
     void onChange(boolean z, Uri uri, int i) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements IContentObserver {
+        @Override // android.database.IContentObserver
         public void onChange(boolean selfUpdate, Uri uri, int userId) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements IContentObserver {
         private static final String DESCRIPTOR = "android.database.IContentObserver";
         static final int TRANSACTION_onChange = 1;
@@ -32,47 +37,52 @@ public interface IContentObserver extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IContentObserver)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IContentObserver)) {
+                return (IContentObserver) iin;
             }
-            return (IContentObserver) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
 
         public static String getDefaultTransactionName(int transactionCode) {
-            if (transactionCode != 1) {
-                return null;
+            if (transactionCode == 1) {
+                return "onChange";
             }
-            return "onChange";
+            return null;
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
             Uri _arg1;
-            if (code == 1) {
-                data.enforceInterface(DESCRIPTOR);
-                boolean _arg0 = data.readInt() != 0;
-                if (data.readInt() != 0) {
-                    _arg1 = Uri.CREATOR.createFromParcel(data);
-                } else {
-                    _arg1 = null;
+            if (code != 1) {
+                if (code == 1598968902) {
+                    reply.writeString(DESCRIPTOR);
+                    return true;
                 }
-                onChange(_arg0, _arg1, data.readInt());
-                return true;
-            } else if (code != 1598968902) {
                 return super.onTransact(code, data, reply, flags);
-            } else {
-                reply.writeString(DESCRIPTOR);
-                return true;
             }
+            data.enforceInterface(DESCRIPTOR);
+            boolean _arg0 = data.readInt() != 0;
+            if (data.readInt() != 0) {
+                _arg1 = Uri.CREATOR.createFromParcel(data);
+            } else {
+                _arg1 = null;
+            }
+            int _arg2 = data.readInt();
+            onChange(_arg0, _arg1, _arg2);
+            return true;
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements IContentObserver {
             public static IContentObserver sDefaultImpl;
             private IBinder mRemote;
@@ -81,6 +91,7 @@ public interface IContentObserver extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -89,11 +100,12 @@ public interface IContentObserver extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.database.IContentObserver
             public void onChange(boolean selfUpdate, Uri uri, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(selfUpdate);
+                    _data.writeInt(selfUpdate ? 1 : 0);
                     if (uri != null) {
                         _data.writeInt(1);
                         uri.writeToParcel(_data, 0);
@@ -101,9 +113,8 @@ public interface IContentObserver extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(userId);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onChange(selfUpdate, uri, userId);
                     }
                 } finally {
@@ -113,11 +124,11 @@ public interface IContentObserver extends IInterface {
         }
 
         public static boolean setDefaultImpl(IContentObserver impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IContentObserver getDefaultImpl() {

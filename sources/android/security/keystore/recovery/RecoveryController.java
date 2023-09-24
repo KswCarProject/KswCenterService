@@ -4,9 +4,9 @@ import android.annotation.SystemApi;
 import android.app.KeyguardManager;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.os.RemoteException;
-import android.os.ServiceManager;
-import android.os.ServiceSpecificException;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
+import android.p007os.ServiceSpecificException;
 import android.security.KeyStore;
 import android.security.keystore.AndroidKeyStoreProvider;
 import android.security.keystore.KeyPermanentlyInvalidatedException;
@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public class RecoveryController {
     public static final int ERROR_BAD_CERTIFICATE_FORMAT = 25;
     public static final int ERROR_DECRYPTION_FAILED = 26;
@@ -42,13 +43,13 @@ public class RecoveryController {
         this.mKeyStore = keystore;
     }
 
-    /* access modifiers changed from: package-private */
-    public ILockSettings getBinder() {
+    ILockSettings getBinder() {
         return this.mBinder;
     }
 
     public static RecoveryController getInstance(Context context) {
-        return new RecoveryController(ILockSettings.Stub.asInterface(ServiceManager.getService("lock_settings")), KeyStore.getInstance());
+        ILockSettings lockSettings = ILockSettings.Stub.asInterface(ServiceManager.getService("lock_settings"));
+        return new RecoveryController(lockSettings, KeyStore.getInstance());
     }
 
     public static boolean isRecoverableKeyStoreEnabled(Context context) {
@@ -64,11 +65,11 @@ public class RecoveryController {
         } catch (ServiceSpecificException e2) {
             if (e2.errorCode == 25 || e2.errorCode == 28) {
                 throw new CertificateException("Invalid certificate for recovery service", e2);
-            } else if (e2.errorCode == 29) {
-                throw new CertificateException("Downgrading certificate serial version isn't supported.", e2);
-            } else {
-                throw wrapUnexpectedServiceSpecificException(e2);
             }
+            if (e2.errorCode == 29) {
+                throw new CertificateException("Downgrading certificate serial version isn't supported.", e2);
+            }
+            throw wrapUnexpectedServiceSpecificException(e2);
         }
     }
 
@@ -107,7 +108,8 @@ public class RecoveryController {
 
     public List<String> getAliases() throws InternalRecoveryServiceException {
         try {
-            return new ArrayList(this.mBinder.getRecoveryStatus().keySet());
+            Map<String, Integer> allStatuses = this.mBinder.getRecoveryStatus();
+            return new ArrayList(allStatuses.keySet());
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
         } catch (ServiceSpecificException e2) {
@@ -127,7 +129,8 @@ public class RecoveryController {
 
     public int getRecoveryStatus(String alias) throws InternalRecoveryServiceException {
         try {
-            Integer status = this.mBinder.getRecoveryStatus().get(alias);
+            Map<String, Integer> allStatuses = this.mBinder.getRecoveryStatus();
+            Integer status = allStatuses.get(alias);
             if (status == null) {
                 return 3;
             }
@@ -163,38 +166,38 @@ public class RecoveryController {
     public Key generateKey(String alias) throws InternalRecoveryServiceException, LockScreenRequiredException {
         try {
             String grantAlias = this.mBinder.generateKey(alias);
-            if (grantAlias != null) {
-                return getKeyFromGrant(grantAlias);
+            if (grantAlias == null) {
+                throw new InternalRecoveryServiceException("null grant alias");
             }
-            throw new InternalRecoveryServiceException("null grant alias");
+            return getKeyFromGrant(grantAlias);
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
-        } catch (KeyPermanentlyInvalidatedException | UnrecoverableKeyException e2) {
-            throw new InternalRecoveryServiceException("Failed to get key from keystore", e2);
-        } catch (ServiceSpecificException e3) {
-            if (e3.errorCode == 23) {
-                throw new LockScreenRequiredException(e3.getMessage());
+        } catch (ServiceSpecificException e2) {
+            if (e2.errorCode == 23) {
+                throw new LockScreenRequiredException(e2.getMessage());
             }
-            throw wrapUnexpectedServiceSpecificException(e3);
+            throw wrapUnexpectedServiceSpecificException(e2);
+        } catch (KeyPermanentlyInvalidatedException | UnrecoverableKeyException e3) {
+            throw new InternalRecoveryServiceException("Failed to get key from keystore", e3);
         }
     }
 
     public Key generateKey(String alias, byte[] metadata) throws InternalRecoveryServiceException, LockScreenRequiredException {
         try {
             String grantAlias = this.mBinder.generateKeyWithMetadata(alias, metadata);
-            if (grantAlias != null) {
-                return getKeyFromGrant(grantAlias);
+            if (grantAlias == null) {
+                throw new InternalRecoveryServiceException("null grant alias");
             }
-            throw new InternalRecoveryServiceException("null grant alias");
+            return getKeyFromGrant(grantAlias);
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
-        } catch (KeyPermanentlyInvalidatedException | UnrecoverableKeyException e2) {
-            throw new InternalRecoveryServiceException("Failed to get key from keystore", e2);
-        } catch (ServiceSpecificException e3) {
-            if (e3.errorCode == 23) {
-                throw new LockScreenRequiredException(e3.getMessage());
+        } catch (ServiceSpecificException e2) {
+            if (e2.errorCode == 23) {
+                throw new LockScreenRequiredException(e2.getMessage());
             }
-            throw wrapUnexpectedServiceSpecificException(e3);
+            throw wrapUnexpectedServiceSpecificException(e2);
+        } catch (KeyPermanentlyInvalidatedException | UnrecoverableKeyException e3) {
+            throw new InternalRecoveryServiceException("Failed to get key from keystore", e3);
         }
     }
 
@@ -202,62 +205,58 @@ public class RecoveryController {
     public Key importKey(String alias, byte[] keyBytes) throws InternalRecoveryServiceException, LockScreenRequiredException {
         try {
             String grantAlias = this.mBinder.importKey(alias, keyBytes);
-            if (grantAlias != null) {
-                return getKeyFromGrant(grantAlias);
+            if (grantAlias == null) {
+                throw new InternalRecoveryServiceException("Null grant alias");
             }
-            throw new InternalRecoveryServiceException("Null grant alias");
+            return getKeyFromGrant(grantAlias);
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
-        } catch (KeyPermanentlyInvalidatedException | UnrecoverableKeyException e2) {
-            throw new InternalRecoveryServiceException("Failed to get key from keystore", e2);
-        } catch (ServiceSpecificException e3) {
-            if (e3.errorCode == 23) {
-                throw new LockScreenRequiredException(e3.getMessage());
+        } catch (ServiceSpecificException e2) {
+            if (e2.errorCode == 23) {
+                throw new LockScreenRequiredException(e2.getMessage());
             }
-            throw wrapUnexpectedServiceSpecificException(e3);
+            throw wrapUnexpectedServiceSpecificException(e2);
+        } catch (KeyPermanentlyInvalidatedException | UnrecoverableKeyException e3) {
+            throw new InternalRecoveryServiceException("Failed to get key from keystore", e3);
         }
     }
 
     public Key importKey(String alias, byte[] keyBytes, byte[] metadata) throws InternalRecoveryServiceException, LockScreenRequiredException {
         try {
             String grantAlias = this.mBinder.importKeyWithMetadata(alias, keyBytes, metadata);
-            if (grantAlias != null) {
-                return getKeyFromGrant(grantAlias);
+            if (grantAlias == null) {
+                throw new InternalRecoveryServiceException("Null grant alias");
             }
-            throw new InternalRecoveryServiceException("Null grant alias");
+            return getKeyFromGrant(grantAlias);
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
-        } catch (KeyPermanentlyInvalidatedException | UnrecoverableKeyException e2) {
-            throw new InternalRecoveryServiceException("Failed to get key from keystore", e2);
-        } catch (ServiceSpecificException e3) {
-            if (e3.errorCode == 23) {
-                throw new LockScreenRequiredException(e3.getMessage());
+        } catch (ServiceSpecificException e2) {
+            if (e2.errorCode == 23) {
+                throw new LockScreenRequiredException(e2.getMessage());
             }
-            throw wrapUnexpectedServiceSpecificException(e3);
+            throw wrapUnexpectedServiceSpecificException(e2);
+        } catch (KeyPermanentlyInvalidatedException | UnrecoverableKeyException e3) {
+            throw new InternalRecoveryServiceException("Failed to get key from keystore", e3);
         }
     }
 
     public Key getKey(String alias) throws InternalRecoveryServiceException, UnrecoverableKeyException {
         try {
             String grantAlias = this.mBinder.getKey(alias);
-            if (grantAlias == null) {
-                return null;
+            if (grantAlias != null && !"".equals(grantAlias)) {
+                return getKeyFromGrant(grantAlias);
             }
-            if ("".equals(grantAlias)) {
-                return null;
-            }
-            return getKeyFromGrant(grantAlias);
+            return null;
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
-        } catch (KeyPermanentlyInvalidatedException | UnrecoverableKeyException e2) {
-            throw new UnrecoverableKeyException(e2.getMessage());
-        } catch (ServiceSpecificException e3) {
-            throw wrapUnexpectedServiceSpecificException(e3);
+        } catch (ServiceSpecificException e2) {
+            throw wrapUnexpectedServiceSpecificException(e2);
+        } catch (KeyPermanentlyInvalidatedException | UnrecoverableKeyException e3) {
+            throw new UnrecoverableKeyException(e3.getMessage());
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public Key getKeyFromGrant(String grantAlias) throws UnrecoverableKeyException, KeyPermanentlyInvalidatedException {
+    Key getKeyFromGrant(String grantAlias) throws UnrecoverableKeyException, KeyPermanentlyInvalidatedException {
         return AndroidKeyStoreProvider.loadAndroidKeyStoreKeyFromKeystore(this.mKeyStore, grantAlias, -1);
     }
 
@@ -279,8 +278,7 @@ public class RecoveryController {
         return TrustedRootCertificates.getRootCertificates();
     }
 
-    /* access modifiers changed from: package-private */
-    public InternalRecoveryServiceException wrapUnexpectedServiceSpecificException(ServiceSpecificException e) {
+    InternalRecoveryServiceException wrapUnexpectedServiceSpecificException(ServiceSpecificException e) {
         if (e.errorCode == 22) {
             return new InternalRecoveryServiceException(e.getMessage());
         }

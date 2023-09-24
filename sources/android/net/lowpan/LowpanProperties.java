@@ -1,5 +1,6 @@
 package android.net.lowpan;
 
+/* loaded from: classes3.dex */
 public final class LowpanProperties {
     public static final LowpanProperty<int[]> KEY_CHANNEL_MASK = new LowpanStandardProperty(ILowpanInterface.KEY_CHANNEL_MASK, int[].class);
     public static final LowpanProperty<Integer> KEY_MAX_TX_POWER = new LowpanStandardProperty(ILowpanInterface.KEY_MAX_TX_POWER, Integer.class);
@@ -7,6 +8,7 @@ public final class LowpanProperties {
     private LowpanProperties() {
     }
 
+    /* loaded from: classes3.dex */
     static final class LowpanStandardProperty<T> extends LowpanProperty<T> {
         private final String mName;
         private final Class<T> mType;
@@ -16,10 +18,12 @@ public final class LowpanProperties {
             this.mType = type;
         }
 
+        @Override // android.net.lowpan.LowpanProperty
         public String getName() {
             return this.mName;
         }
 
+        @Override // android.net.lowpan.LowpanProperty
         public Class<T> getType() {
             return this.mType;
         }

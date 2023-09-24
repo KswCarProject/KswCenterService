@@ -1,10 +1,13 @@
 package android.net.wifi;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes3.dex */
 public class WifiDppConfig implements Parcelable {
-    public static final Parcelable.Creator<WifiDppConfig> CREATOR = new Parcelable.Creator<WifiDppConfig>() {
+    public static final Parcelable.Creator<WifiDppConfig> CREATOR = new Parcelable.Creator<WifiDppConfig>() { // from class: android.net.wifi.WifiDppConfig.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WifiDppConfig createFromParcel(Parcel in) {
             WifiDppConfig config = new WifiDppConfig();
             config.peer_bootstrap_id = in.readInt();
@@ -26,6 +29,8 @@ public class WifiDppConfig implements Parcelable {
             return config;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WifiDppConfig[] newArray(int size) {
             return new WifiDppConfig[size];
         }
@@ -36,23 +41,22 @@ public class WifiDppConfig implements Parcelable {
     public static final int DPP_TYPE_NAN_BOOTSTRAP = 1;
     public static final int DPP_TYPE_QR_CODE = 0;
     private static final String TAG = "WifiDppConfig";
-    public int bootstrap_type = -1;
-    public String chan_list = null;
-    public int conf_id = -1;
-    public String curve = null;
+    private DppResult mEventResult = new DppResult();
+    public int peer_bootstrap_id = -1;
+    public int own_bootstrap_id = -1;
     public int dpp_role = -1;
-    public int expiry = 0;
-    public String info = null;
     public int isAp = -1;
     public int isDpp = -1;
-    public String key = null;
-    /* access modifiers changed from: private */
-    public DppResult mEventResult = new DppResult();
-    public String mac_addr = null;
-    public int own_bootstrap_id = -1;
-    public String passphrase = null;
-    public int peer_bootstrap_id = -1;
+    public int conf_id = -1;
+    public int bootstrap_type = -1;
+    public int expiry = 0;
     public String ssid = null;
+    public String passphrase = null;
+    public String chan_list = null;
+    public String mac_addr = null;
+    public String info = null;
+    public String curve = null;
+    public String key = null;
 
     public DppResult getDppResult() {
         return this.mEventResult;
@@ -68,10 +72,12 @@ public class WifiDppConfig implements Parcelable {
     public void readFromParcel(Parcel in) {
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.peer_bootstrap_id);
         dest.writeInt(this.own_bootstrap_id);
@@ -91,6 +97,7 @@ public class WifiDppConfig implements Parcelable {
         this.mEventResult.writeToParcel(dest);
     }
 
+    /* loaded from: classes3.dex */
     public static class DppResult {
         public static final int DPP_CONF_EVENT_TYPE_FAILED = 0;
         public static final int DPP_CONF_EVENT_TYPE_RECEIVED = 2;
@@ -102,19 +109,19 @@ public class WifiDppConfig implements Parcelable {
         public static final int DPP_EVENT_NOT_COMPATIBLE = 1;
         public static final int DPP_EVENT_RESPONSE_PENDING = 2;
         public static final int DPP_EVENT_SCAN_PEER_QRCODE = 3;
-        public byte authMissingParam = 0;
-        public String cSignKey = null;
-        public byte capab = 0;
-        public byte configEventType = 0;
-        public String connector = null;
-        public String iBootstrapData = null;
         public boolean initiator = false;
+        public int netID = -1;
+        public byte capab = 0;
+        public byte authMissingParam = 0;
+        public byte configEventType = 0;
+        public String iBootstrapData = null;
+        public String ssid = null;
+        public String connector = null;
+        public String cSignKey = null;
         public String netAccessKey = null;
         public int netAccessKeyExpiry = 0;
-        public int netID = -1;
         public String passphrase = null;
         public String psk = null;
-        public String ssid = null;
 
         public void writeToParcel(Parcel dest) {
             dest.writeInt(this.initiator ? 1 : 0);

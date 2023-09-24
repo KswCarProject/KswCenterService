@@ -5,6 +5,7 @@ import dalvik.system.CloseGuard;
 import java.io.UnsupportedEncodingException;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+/* loaded from: classes3.dex */
 public class BaseObj {
     final CloseGuard guard = CloseGuard.get();
     private boolean mDestroyed;
@@ -20,31 +21,28 @@ public class BaseObj {
         this.mDestroyed = false;
     }
 
-    /* access modifiers changed from: package-private */
-    public void setID(long id) {
-        if (this.mID == 0) {
-            this.mID = id;
-            return;
+    void setID(long id) {
+        if (this.mID != 0) {
+            throw new RSRuntimeException("Internal Error, reset of object ID.");
         }
-        throw new RSRuntimeException("Internal Error, reset of object ID.");
+        this.mID = id;
     }
 
-    /* access modifiers changed from: package-private */
-    public long getID(RenderScript rs) {
+    long getID(RenderScript rs) {
         this.mRS.validate();
         if (this.mDestroyed) {
             throw new RSInvalidStateException("using a destroyed object.");
-        } else if (this.mID == 0) {
+        }
+        if (this.mID == 0) {
             throw new RSRuntimeException("Internal error: Object id 0.");
-        } else if (rs == null || rs == this.mRS) {
-            return this.mID;
-        } else {
+        }
+        if (rs != null && rs != this.mRS) {
             throw new RSInvalidStateException("using object with mismatched context.");
         }
+        return this.mID;
     }
 
-    /* access modifiers changed from: package-private */
-    public void checkValid() {
+    void checkValid() {
         if (this.mID == 0) {
             throw new RSIllegalArgumentException("Invalid object.");
         }
@@ -53,17 +51,19 @@ public class BaseObj {
     public void setName(String name) {
         if (name == null) {
             throw new RSIllegalArgumentException("setName requires a string of non-zero length.");
-        } else if (name.length() < 1) {
+        }
+        if (name.length() < 1) {
             throw new RSIllegalArgumentException("setName does not accept a zero length string.");
-        } else if (this.mName == null) {
-            try {
-                this.mRS.nAssignName(this.mID, name.getBytes("UTF-8"));
-                this.mName = name;
-            } catch (UnsupportedEncodingException e) {
-                throw new RuntimeException(e);
-            }
-        } else {
+        }
+        if (this.mName != null) {
             throw new RSIllegalArgumentException("setName object already has a name.");
+        }
+        try {
+            byte[] bytes = name.getBytes("UTF-8");
+            this.mRS.nAssignName(this.mID, bytes);
+            this.mName = name;
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -88,12 +88,11 @@ public class BaseObj {
             }
             rlock.unlock();
             this.mRS = null;
-            this.mID = 0;
+            this.mID = 0L;
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         try {
             if (this.guard != null) {
                 this.guard.warnIfOpen();
@@ -105,15 +104,13 @@ public class BaseObj {
     }
 
     public void destroy() {
-        if (!this.mDestroyed) {
-            helpDestroy();
-            return;
+        if (this.mDestroyed) {
+            throw new RSInvalidStateException("Object already destroyed.");
         }
-        throw new RSInvalidStateException("Object already destroyed.");
+        helpDestroy();
     }
 
-    /* access modifiers changed from: package-private */
-    public void updateFromNative() {
+    void updateFromNative() {
         this.mRS.validate();
         this.mName = this.mRS.nGetName(getID(this.mRS));
     }
@@ -129,7 +126,8 @@ public class BaseObj {
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        if (this.mID == ((BaseObj) obj).mID) {
+        BaseObj b = (BaseObj) obj;
+        if (this.mID == b.mID) {
             return true;
         }
         return false;

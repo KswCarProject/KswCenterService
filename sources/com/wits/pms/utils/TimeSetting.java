@@ -8,6 +8,7 @@ import android.provider.SettingsStringUtil;
 import android.util.Log;
 import java.util.Calendar;
 
+/* loaded from: classes2.dex */
 public class TimeSetting {
     public static void setTimeTo12(Context context) {
         Settings.System.putString(context.getContentResolver(), Settings.System.TIME_12_24, "12");
@@ -25,9 +26,9 @@ public class TimeSetting {
     }
 
     public static void setTime(Context context, int year, int month, int day, int hour, int min, int sec) {
-        Log.i("TimeSettings", (year + 2000) + "/" + month + "/" + day + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + hour + SettingsStringUtil.DELIMITER + min + SettingsStringUtil.DELIMITER + sec);
+        Log.m68i("TimeSettings", (year + 2000) + "/" + month + "/" + day + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + hour + SettingsStringUtil.DELIMITER + min + SettingsStringUtil.DELIMITER + sec);
         Calendar calendar = Calendar.getInstance();
-        calendar.set(year + 2000, month + -1, day, hour, min, sec);
+        calendar.set(year + 2000, month + (-1), day, hour, min, sec);
         setTime(context, calendar);
     }
 }

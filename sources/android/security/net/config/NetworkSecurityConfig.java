@@ -1,6 +1,6 @@
 package android.security.net.config;
 
-import android.content.pm.ApplicationInfo;
+import android.content.p002pm.ApplicationInfo;
 import android.util.ArrayMap;
 import android.util.ArraySet;
 import java.security.cert.X509Certificate;
@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/* loaded from: classes3.dex */
 public final class NetworkSecurityConfig {
     public static final boolean DEFAULT_CLEARTEXT_TRAFFIC_PERMITTED = true;
     public static final boolean DEFAULT_HSTS_ENFORCED = false;
@@ -31,7 +32,8 @@ public final class NetworkSecurityConfig {
         this.mHstsEnforced = hstsEnforced;
         this.mPins = pins;
         this.mCertificatesEntryRefs = certificatesEntryRefs;
-        Collections.sort(this.mCertificatesEntryRefs, new Comparator<CertificatesEntryRef>() {
+        Collections.sort(this.mCertificatesEntryRefs, new Comparator<CertificatesEntryRef>() { // from class: android.security.net.config.NetworkSecurityConfig.1
+            @Override // java.util.Comparator
             public int compare(CertificatesEntryRef lhs, CertificatesEntryRef rhs) {
                 return lhs.overridesPins() ? rhs.overridesPins() ? 0 : -1 : rhs.overridesPins() ? 1 : 0;
             }
@@ -41,8 +43,7 @@ public final class NetworkSecurityConfig {
     public Set<TrustAnchor> getTrustAnchors() {
         synchronized (this.mAnchorsLock) {
             if (this.mAnchors != null) {
-                Set<TrustAnchor> set = this.mAnchors;
-                return set;
+                return this.mAnchors;
             }
             Map<X509Certificate, TrustAnchor> anchorMap = new ArrayMap<>();
             for (CertificatesEntryRef ref : this.mCertificatesEntryRefs) {
@@ -54,10 +55,9 @@ public final class NetworkSecurityConfig {
                 }
             }
             ArraySet<TrustAnchor> anchors = new ArraySet<>(anchorMap.size());
-            anchors.addAll((Collection<? extends TrustAnchor>) anchorMap.values());
+            anchors.addAll(anchorMap.values());
             this.mAnchors = anchors;
-            Set<TrustAnchor> set2 = this.mAnchors;
-            return set2;
+            return this.mAnchors;
         }
     }
 
@@ -124,28 +124,27 @@ public final class NetworkSecurityConfig {
 
     public static Builder getDefaultBuilder(ApplicationInfo info) {
         Builder builder = new Builder().setHstsEnforced(false).addCertificatesEntryRef(new CertificatesEntryRef(SystemCertificateSource.getInstance(), false));
-        builder.setCleartextTrafficPermitted(info.targetSdkVersion < 28 && !info.isInstantApp());
+        boolean cleartextTrafficPermitted = info.targetSdkVersion < 28 && !info.isInstantApp();
+        builder.setCleartextTrafficPermitted(cleartextTrafficPermitted);
         if (info.targetSdkVersion <= 23 && !info.isPrivilegedApp()) {
             builder.addCertificatesEntryRef(new CertificatesEntryRef(UserCertificateSource.getInstance(), false));
         }
         return builder;
     }
 
+    /* loaded from: classes3.dex */
     public static final class Builder {
         private List<CertificatesEntryRef> mCertificatesEntryRefs;
-        private boolean mCleartextTrafficPermitted = true;
-        private boolean mCleartextTrafficPermittedSet = false;
-        private boolean mHstsEnforced = false;
-        private boolean mHstsEnforcedSet = false;
         private Builder mParentBuilder;
         private PinSet mPinSet;
+        private boolean mCleartextTrafficPermitted = true;
+        private boolean mHstsEnforced = false;
+        private boolean mCleartextTrafficPermittedSet = false;
+        private boolean mHstsEnforcedSet = false;
 
         public Builder setParent(Builder parent) {
-            Builder current = parent;
-            while (current != null) {
-                if (current != this) {
-                    current = current.getParent();
-                } else {
+            for (Builder current = parent; current != null; current = current.getParent()) {
+                if (current == this) {
                     throw new IllegalArgumentException("Loops are not allowed in Builder parents");
                 }
             }
@@ -234,13 +233,16 @@ public final class NetworkSecurityConfig {
             return this.mCertificatesEntryRefs != null;
         }
 
-        /* access modifiers changed from: package-private */
-        public List<CertificatesEntryRef> getCertificatesEntryRefs() {
+        List<CertificatesEntryRef> getCertificatesEntryRefs() {
             return this.mCertificatesEntryRefs;
         }
 
         public NetworkSecurityConfig build() {
-            return new NetworkSecurityConfig(getEffectiveCleartextTrafficPermitted(), getEffectiveHstsEnforced(), getEffectivePinSet(), getEffectiveCertificatesEntryRefs());
+            boolean cleartextPermitted = getEffectiveCleartextTrafficPermitted();
+            boolean hstsEnforced = getEffectiveHstsEnforced();
+            PinSet pinSet = getEffectivePinSet();
+            List<CertificatesEntryRef> entryRefs = getEffectiveCertificatesEntryRefs();
+            return new NetworkSecurityConfig(cleartextPermitted, hstsEnforced, pinSet, entryRefs);
         }
     }
 }

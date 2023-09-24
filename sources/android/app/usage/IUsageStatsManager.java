@@ -2,13 +2,14 @@ package android.app.usage;
 
 import android.annotation.UnsupportedAppUsage;
 import android.app.PendingIntent;
-import android.content.pm.ParceledListSlice;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.content.p002pm.ParceledListSlice;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes.dex */
 public interface IUsageStatsManager extends IInterface {
     void forceUsageSourceSettingRead() throws RemoteException;
 
@@ -68,104 +69,134 @@ public interface IUsageStatsManager extends IInterface {
 
     void whitelistAppTemporarily(String str, long j, int i) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements IUsageStatsManager {
+        @Override // android.app.usage.IUsageStatsManager
         public ParceledListSlice queryUsageStats(int bucketType, long beginTime, long endTime, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.usage.IUsageStatsManager
         public ParceledListSlice queryConfigurationStats(int bucketType, long beginTime, long endTime, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.usage.IUsageStatsManager
         public ParceledListSlice queryEventStats(int bucketType, long beginTime, long endTime, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.usage.IUsageStatsManager
         public UsageEvents queryEvents(long beginTime, long endTime, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.usage.IUsageStatsManager
         public UsageEvents queryEventsForPackage(long beginTime, long endTime, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.usage.IUsageStatsManager
         public UsageEvents queryEventsForUser(long beginTime, long endTime, int userId, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.usage.IUsageStatsManager
         public UsageEvents queryEventsForPackageForUser(long beginTime, long endTime, int userId, String pkg, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.usage.IUsageStatsManager
         public void setAppInactive(String packageName, boolean inactive, int userId) throws RemoteException {
         }
 
+        @Override // android.app.usage.IUsageStatsManager
         public boolean isAppInactive(String packageName, int userId) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.usage.IUsageStatsManager
         public void whitelistAppTemporarily(String packageName, long duration, int userId) throws RemoteException {
         }
 
+        @Override // android.app.usage.IUsageStatsManager
         public void onCarrierPrivilegedAppsChanged() throws RemoteException {
         }
 
+        @Override // android.app.usage.IUsageStatsManager
         public void reportChooserSelection(String packageName, int userId, String contentType, String[] annotations, String action) throws RemoteException {
         }
 
+        @Override // android.app.usage.IUsageStatsManager
         public int getAppStandbyBucket(String packageName, String callingPackage, int userId) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.usage.IUsageStatsManager
         public void setAppStandbyBucket(String packageName, int bucket, int userId) throws RemoteException {
         }
 
+        @Override // android.app.usage.IUsageStatsManager
         public ParceledListSlice getAppStandbyBuckets(String callingPackage, int userId) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.usage.IUsageStatsManager
         public void setAppStandbyBuckets(ParceledListSlice appBuckets, int userId) throws RemoteException {
         }
 
+        @Override // android.app.usage.IUsageStatsManager
         public void registerAppUsageObserver(int observerId, String[] packages, long timeLimitMs, PendingIntent callback, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.app.usage.IUsageStatsManager
         public void unregisterAppUsageObserver(int observerId, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.app.usage.IUsageStatsManager
         public void registerUsageSessionObserver(int sessionObserverId, String[] observed, long timeLimitMs, long sessionThresholdTimeMs, PendingIntent limitReachedCallbackIntent, PendingIntent sessionEndCallbackIntent, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.app.usage.IUsageStatsManager
         public void unregisterUsageSessionObserver(int sessionObserverId, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.app.usage.IUsageStatsManager
         public void registerAppUsageLimitObserver(int observerId, String[] packages, long timeLimitMs, long timeUsedMs, PendingIntent callback, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.app.usage.IUsageStatsManager
         public void unregisterAppUsageLimitObserver(int observerId, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.app.usage.IUsageStatsManager
         public void reportUsageStart(IBinder activity, String token, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.app.usage.IUsageStatsManager
         public void reportPastUsageStart(IBinder activity, String token, long timeAgoMs, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.app.usage.IUsageStatsManager
         public void reportUsageStop(IBinder activity, String token, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.app.usage.IUsageStatsManager
         public int getUsageSource() throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.usage.IUsageStatsManager
         public void forceUsageSourceSettingRead() throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements IUsageStatsManager {
         private static final String DESCRIPTOR = "android.app.usage.IUsageStatsManager";
         static final int TRANSACTION_forceUsageSourceSettingRead = 27;
@@ -205,12 +236,13 @@ public interface IUsageStatsManager extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IUsageStatsManager)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IUsageStatsManager)) {
+                return (IUsageStatsManager) iin;
             }
-            return (IUsageStatsManager) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -276,470 +308,294 @@ public interface IUsageStatsManager extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v1, resolved type: android.content.pm.ParceledListSlice} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v23, resolved type: android.content.pm.ParceledListSlice} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v27, resolved type: android.content.pm.ParceledListSlice} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r5v5, resolved type: android.app.PendingIntent} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v33, resolved type: android.content.pm.ParceledListSlice} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r8v5, resolved type: android.app.PendingIntent} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v39, resolved type: android.content.pm.ParceledListSlice} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r7v10, resolved type: android.app.PendingIntent} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v50, resolved type: android.content.pm.ParceledListSlice} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v51, resolved type: android.content.pm.ParceledListSlice} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v52, resolved type: android.content.pm.ParceledListSlice} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v53, resolved type: android.content.pm.ParceledListSlice} */
-        /* JADX WARNING: type inference failed for: r0v31, types: [android.app.PendingIntent] */
-        /* JADX WARNING: type inference failed for: r0v37, types: [android.app.PendingIntent] */
-        /* JADX WARNING: type inference failed for: r0v43, types: [android.app.PendingIntent] */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r24, android.os.Parcel r25, android.os.Parcel r26, int r27) throws android.os.RemoteException {
-            /*
-                r23 = this;
-                r10 = r23
-                r11 = r24
-                r12 = r25
-                r13 = r26
-                java.lang.String r14 = "android.app.usage.IUsageStatsManager"
-                r0 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r15 = 1
-                if (r11 == r0) goto L_0x0395
-                r0 = 0
-                r8 = 0
-                switch(r11) {
-                    case 1: goto L_0x0366;
-                    case 2: goto L_0x0337;
-                    case 3: goto L_0x0308;
-                    case 4: goto L_0x02df;
-                    case 5: goto L_0x02b6;
-                    case 6: goto L_0x0287;
-                    case 7: goto L_0x0251;
-                    case 8: goto L_0x0236;
-                    case 9: goto L_0x0220;
-                    case 10: goto L_0x020a;
-                    case 11: goto L_0x0200;
-                    case 12: goto L_0x01da;
-                    case 13: goto L_0x01c0;
-                    case 14: goto L_0x01aa;
-                    case 15: goto L_0x018b;
-                    case 16: goto L_0x016d;
-                    case 17: goto L_0x013b;
-                    case 18: goto L_0x0129;
-                    case 19: goto L_0x00dd;
-                    case 20: goto L_0x00cb;
-                    case 21: goto L_0x0091;
-                    case 22: goto L_0x007f;
-                    case 23: goto L_0x0069;
-                    case 24: goto L_0x0048;
-                    case 25: goto L_0x0032;
-                    case 26: goto L_0x0024;
-                    case 27: goto L_0x001a;
-                    default: goto L_0x0015;
-                }
-            L_0x0015:
-                boolean r0 = super.onTransact(r24, r25, r26, r27)
-                return r0
-            L_0x001a:
-                r12.enforceInterface(r14)
-                r23.forceUsageSourceSettingRead()
-                r26.writeNoException()
-                return r15
-            L_0x0024:
-                r12.enforceInterface(r14)
-                int r0 = r23.getUsageSource()
-                r26.writeNoException()
-                r13.writeInt(r0)
-                return r15
-            L_0x0032:
-                r12.enforceInterface(r14)
-                android.os.IBinder r0 = r25.readStrongBinder()
-                java.lang.String r1 = r25.readString()
-                java.lang.String r2 = r25.readString()
-                r10.reportUsageStop(r0, r1, r2)
-                r26.writeNoException()
-                return r15
-            L_0x0048:
-                r12.enforceInterface(r14)
-                android.os.IBinder r6 = r25.readStrongBinder()
-                java.lang.String r7 = r25.readString()
-                long r8 = r25.readLong()
-                java.lang.String r16 = r25.readString()
-                r0 = r23
-                r1 = r6
-                r2 = r7
-                r3 = r8
-                r5 = r16
-                r0.reportPastUsageStart(r1, r2, r3, r5)
-                r26.writeNoException()
-                return r15
-            L_0x0069:
-                r12.enforceInterface(r14)
-                android.os.IBinder r0 = r25.readStrongBinder()
-                java.lang.String r1 = r25.readString()
-                java.lang.String r2 = r25.readString()
-                r10.reportUsageStart(r0, r1, r2)
-                r26.writeNoException()
-                return r15
-            L_0x007f:
-                r12.enforceInterface(r14)
-                int r0 = r25.readInt()
-                java.lang.String r1 = r25.readString()
-                r10.unregisterAppUsageLimitObserver(r0, r1)
-                r26.writeNoException()
-                return r15
-            L_0x0091:
-                r12.enforceInterface(r14)
-                int r9 = r25.readInt()
-                java.lang.String[] r16 = r25.createStringArray()
-                long r17 = r25.readLong()
-                long r19 = r25.readLong()
-                int r1 = r25.readInt()
-                if (r1 == 0) goto L_0x00b4
-                android.os.Parcelable$Creator<android.app.PendingIntent> r0 = android.app.PendingIntent.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r12)
-                android.app.PendingIntent r0 = (android.app.PendingIntent) r0
-            L_0x00b2:
-                r7 = r0
-                goto L_0x00b5
-            L_0x00b4:
-                goto L_0x00b2
-            L_0x00b5:
-                java.lang.String r21 = r25.readString()
-                r0 = r23
-                r1 = r9
-                r2 = r16
-                r3 = r17
-                r5 = r19
-                r8 = r21
-                r0.registerAppUsageLimitObserver(r1, r2, r3, r5, r7, r8)
-                r26.writeNoException()
-                return r15
-            L_0x00cb:
-                r12.enforceInterface(r14)
-                int r0 = r25.readInt()
-                java.lang.String r1 = r25.readString()
-                r10.unregisterUsageSessionObserver(r0, r1)
-                r26.writeNoException()
-                return r15
-            L_0x00dd:
-                r12.enforceInterface(r14)
-                int r16 = r25.readInt()
-                java.lang.String[] r17 = r25.createStringArray()
-                long r18 = r25.readLong()
-                long r20 = r25.readLong()
-                int r1 = r25.readInt()
-                if (r1 == 0) goto L_0x0100
-                android.os.Parcelable$Creator<android.app.PendingIntent> r1 = android.app.PendingIntent.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r12)
-                android.app.PendingIntent r1 = (android.app.PendingIntent) r1
-                r7 = r1
-                goto L_0x0101
-            L_0x0100:
-                r7 = r0
-            L_0x0101:
-                int r1 = r25.readInt()
-                if (r1 == 0) goto L_0x0111
-                android.os.Parcelable$Creator<android.app.PendingIntent> r0 = android.app.PendingIntent.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r12)
-                android.app.PendingIntent r0 = (android.app.PendingIntent) r0
-            L_0x010f:
-                r8 = r0
-                goto L_0x0112
-            L_0x0111:
-                goto L_0x010f
-            L_0x0112:
-                java.lang.String r22 = r25.readString()
-                r0 = r23
-                r1 = r16
-                r2 = r17
-                r3 = r18
-                r5 = r20
-                r9 = r22
-                r0.registerUsageSessionObserver(r1, r2, r3, r5, r7, r8, r9)
-                r26.writeNoException()
-                return r15
-            L_0x0129:
-                r12.enforceInterface(r14)
-                int r0 = r25.readInt()
-                java.lang.String r1 = r25.readString()
-                r10.unregisterAppUsageObserver(r0, r1)
-                r26.writeNoException()
-                return r15
-            L_0x013b:
-                r12.enforceInterface(r14)
-                int r7 = r25.readInt()
-                java.lang.String[] r8 = r25.createStringArray()
-                long r16 = r25.readLong()
-                int r1 = r25.readInt()
-                if (r1 == 0) goto L_0x015a
-                android.os.Parcelable$Creator<android.app.PendingIntent> r0 = android.app.PendingIntent.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r12)
-                android.app.PendingIntent r0 = (android.app.PendingIntent) r0
-            L_0x0158:
-                r5 = r0
-                goto L_0x015b
-            L_0x015a:
-                goto L_0x0158
-            L_0x015b:
-                java.lang.String r9 = r25.readString()
-                r0 = r23
-                r1 = r7
-                r2 = r8
-                r3 = r16
-                r6 = r9
-                r0.registerAppUsageObserver(r1, r2, r3, r5, r6)
-                r26.writeNoException()
-                return r15
-            L_0x016d:
-                r12.enforceInterface(r14)
-                int r1 = r25.readInt()
-                if (r1 == 0) goto L_0x017f
-                android.os.Parcelable$ClassLoaderCreator<android.content.pm.ParceledListSlice> r0 = android.content.pm.ParceledListSlice.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r12)
-                android.content.pm.ParceledListSlice r0 = (android.content.pm.ParceledListSlice) r0
-                goto L_0x0180
-            L_0x017f:
-            L_0x0180:
-                int r1 = r25.readInt()
-                r10.setAppStandbyBuckets(r0, r1)
-                r26.writeNoException()
-                return r15
-            L_0x018b:
-                r12.enforceInterface(r14)
-                java.lang.String r0 = r25.readString()
-                int r1 = r25.readInt()
-                android.content.pm.ParceledListSlice r2 = r10.getAppStandbyBuckets(r0, r1)
-                r26.writeNoException()
-                if (r2 == 0) goto L_0x01a6
-                r13.writeInt(r15)
-                r2.writeToParcel(r13, r15)
-                goto L_0x01a9
-            L_0x01a6:
-                r13.writeInt(r8)
-            L_0x01a9:
-                return r15
-            L_0x01aa:
-                r12.enforceInterface(r14)
-                java.lang.String r0 = r25.readString()
-                int r1 = r25.readInt()
-                int r2 = r25.readInt()
-                r10.setAppStandbyBucket(r0, r1, r2)
-                r26.writeNoException()
-                return r15
-            L_0x01c0:
-                r12.enforceInterface(r14)
-                java.lang.String r0 = r25.readString()
-                java.lang.String r1 = r25.readString()
-                int r2 = r25.readInt()
-                int r3 = r10.getAppStandbyBucket(r0, r1, r2)
-                r26.writeNoException()
-                r13.writeInt(r3)
-                return r15
-            L_0x01da:
-                r12.enforceInterface(r14)
-                java.lang.String r6 = r25.readString()
-                int r7 = r25.readInt()
-                java.lang.String r8 = r25.readString()
-                java.lang.String[] r9 = r25.createStringArray()
-                java.lang.String r16 = r25.readString()
-                r0 = r23
-                r1 = r6
-                r2 = r7
-                r3 = r8
-                r4 = r9
-                r5 = r16
-                r0.reportChooserSelection(r1, r2, r3, r4, r5)
-                r26.writeNoException()
-                return r15
-            L_0x0200:
-                r12.enforceInterface(r14)
-                r23.onCarrierPrivilegedAppsChanged()
-                r26.writeNoException()
-                return r15
-            L_0x020a:
-                r12.enforceInterface(r14)
-                java.lang.String r0 = r25.readString()
-                long r1 = r25.readLong()
-                int r3 = r25.readInt()
-                r10.whitelistAppTemporarily(r0, r1, r3)
-                r26.writeNoException()
-                return r15
-            L_0x0220:
-                r12.enforceInterface(r14)
-                java.lang.String r0 = r25.readString()
-                int r1 = r25.readInt()
-                boolean r2 = r10.isAppInactive(r0, r1)
-                r26.writeNoException()
-                r13.writeInt(r2)
-                return r15
-            L_0x0236:
-                r12.enforceInterface(r14)
-                java.lang.String r0 = r25.readString()
-                int r1 = r25.readInt()
-                if (r1 == 0) goto L_0x0245
-                r8 = r15
-            L_0x0245:
-                r1 = r8
-                int r2 = r25.readInt()
-                r10.setAppInactive(r0, r1, r2)
-                r26.writeNoException()
-                return r15
-            L_0x0251:
-                r12.enforceInterface(r14)
-                long r16 = r25.readLong()
-                long r18 = r25.readLong()
-                int r9 = r25.readInt()
-                java.lang.String r20 = r25.readString()
-                java.lang.String r21 = r25.readString()
-                r0 = r23
-                r1 = r16
-                r3 = r18
-                r5 = r9
-                r6 = r20
-                r7 = r21
-                android.app.usage.UsageEvents r0 = r0.queryEventsForPackageForUser(r1, r3, r5, r6, r7)
-                r26.writeNoException()
-                if (r0 == 0) goto L_0x0283
-                r13.writeInt(r15)
-                r0.writeToParcel(r13, r15)
-                goto L_0x0286
-            L_0x0283:
-                r13.writeInt(r8)
-            L_0x0286:
-                return r15
-            L_0x0287:
-                r12.enforceInterface(r14)
-                long r16 = r25.readLong()
-                long r18 = r25.readLong()
-                int r7 = r25.readInt()
-                java.lang.String r9 = r25.readString()
-                r0 = r23
-                r1 = r16
-                r3 = r18
-                r5 = r7
-                r6 = r9
-                android.app.usage.UsageEvents r0 = r0.queryEventsForUser(r1, r3, r5, r6)
-                r26.writeNoException()
-                if (r0 == 0) goto L_0x02b2
-                r13.writeInt(r15)
-                r0.writeToParcel(r13, r15)
-                goto L_0x02b5
-            L_0x02b2:
-                r13.writeInt(r8)
-            L_0x02b5:
-                return r15
-            L_0x02b6:
-                r12.enforceInterface(r14)
-                long r6 = r25.readLong()
-                long r16 = r25.readLong()
-                java.lang.String r9 = r25.readString()
-                r0 = r23
-                r1 = r6
-                r3 = r16
-                r5 = r9
-                android.app.usage.UsageEvents r0 = r0.queryEventsForPackage(r1, r3, r5)
-                r26.writeNoException()
-                if (r0 == 0) goto L_0x02db
-                r13.writeInt(r15)
-                r0.writeToParcel(r13, r15)
-                goto L_0x02de
-            L_0x02db:
-                r13.writeInt(r8)
-            L_0x02de:
-                return r15
-            L_0x02df:
-                r12.enforceInterface(r14)
-                long r6 = r25.readLong()
-                long r16 = r25.readLong()
-                java.lang.String r9 = r25.readString()
-                r0 = r23
-                r1 = r6
-                r3 = r16
-                r5 = r9
-                android.app.usage.UsageEvents r0 = r0.queryEvents(r1, r3, r5)
-                r26.writeNoException()
-                if (r0 == 0) goto L_0x0304
-                r13.writeInt(r15)
-                r0.writeToParcel(r13, r15)
-                goto L_0x0307
-            L_0x0304:
-                r13.writeInt(r8)
-            L_0x0307:
-                return r15
-            L_0x0308:
-                r12.enforceInterface(r14)
-                int r7 = r25.readInt()
-                long r16 = r25.readLong()
-                long r18 = r25.readLong()
-                java.lang.String r9 = r25.readString()
-                r0 = r23
-                r1 = r7
-                r2 = r16
-                r4 = r18
-                r6 = r9
-                android.content.pm.ParceledListSlice r0 = r0.queryEventStats(r1, r2, r4, r6)
-                r26.writeNoException()
-                if (r0 == 0) goto L_0x0333
-                r13.writeInt(r15)
-                r0.writeToParcel(r13, r15)
-                goto L_0x0336
-            L_0x0333:
-                r13.writeInt(r8)
-            L_0x0336:
-                return r15
-            L_0x0337:
-                r12.enforceInterface(r14)
-                int r7 = r25.readInt()
-                long r16 = r25.readLong()
-                long r18 = r25.readLong()
-                java.lang.String r9 = r25.readString()
-                r0 = r23
-                r1 = r7
-                r2 = r16
-                r4 = r18
-                r6 = r9
-                android.content.pm.ParceledListSlice r0 = r0.queryConfigurationStats(r1, r2, r4, r6)
-                r26.writeNoException()
-                if (r0 == 0) goto L_0x0362
-                r13.writeInt(r15)
-                r0.writeToParcel(r13, r15)
-                goto L_0x0365
-            L_0x0362:
-                r13.writeInt(r8)
-            L_0x0365:
-                return r15
-            L_0x0366:
-                r12.enforceInterface(r14)
-                int r7 = r25.readInt()
-                long r16 = r25.readLong()
-                long r18 = r25.readLong()
-                java.lang.String r9 = r25.readString()
-                r0 = r23
-                r1 = r7
-                r2 = r16
-                r4 = r18
-                r6 = r9
-                android.content.pm.ParceledListSlice r0 = r0.queryUsageStats(r1, r2, r4, r6)
-                r26.writeNoException()
-                if (r0 == 0) goto L_0x0391
-                r13.writeInt(r15)
-                r0.writeToParcel(r13, r15)
-                goto L_0x0394
-            L_0x0391:
-                r13.writeInt(r8)
-            L_0x0394:
-                return r15
-            L_0x0395:
-                r13.writeString(r14)
-                return r15
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.app.usage.IUsageStatsManager.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0 = data.readInt();
+                    long _arg1 = data.readLong();
+                    long _arg2 = data.readLong();
+                    String _arg3 = data.readString();
+                    ParceledListSlice _result = queryUsageStats(_arg0, _arg1, _arg2, _arg3);
+                    reply.writeNoException();
+                    if (_result != null) {
+                        reply.writeInt(1);
+                        _result.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    long _arg12 = data.readLong();
+                    long _arg22 = data.readLong();
+                    String _arg32 = data.readString();
+                    ParceledListSlice _result2 = queryConfigurationStats(_arg02, _arg12, _arg22, _arg32);
+                    reply.writeNoException();
+                    if (_result2 != null) {
+                        reply.writeInt(1);
+                        _result2.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg03 = data.readInt();
+                    long _arg13 = data.readLong();
+                    long _arg23 = data.readLong();
+                    String _arg33 = data.readString();
+                    ParceledListSlice _result3 = queryEventStats(_arg03, _arg13, _arg23, _arg33);
+                    reply.writeNoException();
+                    if (_result3 != null) {
+                        reply.writeInt(1);
+                        _result3.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _arg04 = data.readLong();
+                    long _arg14 = data.readLong();
+                    String _arg24 = data.readString();
+                    UsageEvents _result4 = queryEvents(_arg04, _arg14, _arg24);
+                    reply.writeNoException();
+                    if (_result4 != null) {
+                        reply.writeInt(1);
+                        _result4.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _arg05 = data.readLong();
+                    long _arg15 = data.readLong();
+                    String _arg25 = data.readString();
+                    UsageEvents _result5 = queryEventsForPackage(_arg05, _arg15, _arg25);
+                    reply.writeNoException();
+                    if (_result5 != null) {
+                        reply.writeInt(1);
+                        _result5.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _arg06 = data.readLong();
+                    long _arg16 = data.readLong();
+                    int _arg26 = data.readInt();
+                    String _arg34 = data.readString();
+                    UsageEvents _result6 = queryEventsForUser(_arg06, _arg16, _arg26, _arg34);
+                    reply.writeNoException();
+                    if (_result6 != null) {
+                        reply.writeInt(1);
+                        _result6.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _arg07 = data.readLong();
+                    long _arg17 = data.readLong();
+                    int _arg27 = data.readInt();
+                    String _arg35 = data.readString();
+                    String _arg4 = data.readString();
+                    UsageEvents _result7 = queryEventsForPackageForUser(_arg07, _arg17, _arg27, _arg35, _arg4);
+                    reply.writeNoException();
+                    if (_result7 != null) {
+                        reply.writeInt(1);
+                        _result7.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg08 = data.readString();
+                    boolean _arg18 = data.readInt() != 0;
+                    int _arg28 = data.readInt();
+                    setAppInactive(_arg08, _arg18, _arg28);
+                    reply.writeNoException();
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg09 = data.readString();
+                    int _arg19 = data.readInt();
+                    boolean isAppInactive = isAppInactive(_arg09, _arg19);
+                    reply.writeNoException();
+                    reply.writeInt(isAppInactive ? 1 : 0);
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg010 = data.readString();
+                    long _arg110 = data.readLong();
+                    int _arg29 = data.readInt();
+                    whitelistAppTemporarily(_arg010, _arg110, _arg29);
+                    reply.writeNoException();
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    onCarrierPrivilegedAppsChanged();
+                    reply.writeNoException();
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg011 = data.readString();
+                    int _arg111 = data.readInt();
+                    String _arg210 = data.readString();
+                    String[] _arg36 = data.createStringArray();
+                    String _arg42 = data.readString();
+                    reportChooserSelection(_arg011, _arg111, _arg210, _arg36, _arg42);
+                    reply.writeNoException();
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg012 = data.readString();
+                    String _arg112 = data.readString();
+                    int _arg211 = data.readInt();
+                    int _result8 = getAppStandbyBucket(_arg012, _arg112, _arg211);
+                    reply.writeNoException();
+                    reply.writeInt(_result8);
+                    return true;
+                case 14:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg013 = data.readString();
+                    int _arg113 = data.readInt();
+                    int _arg212 = data.readInt();
+                    setAppStandbyBucket(_arg013, _arg113, _arg212);
+                    reply.writeNoException();
+                    return true;
+                case 15:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg014 = data.readString();
+                    int _arg114 = data.readInt();
+                    ParceledListSlice _result9 = getAppStandbyBuckets(_arg014, _arg114);
+                    reply.writeNoException();
+                    if (_result9 != null) {
+                        reply.writeInt(1);
+                        _result9.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 16:
+                    data.enforceInterface(DESCRIPTOR);
+                    ParceledListSlice _arg015 = data.readInt() != 0 ? ParceledListSlice.CREATOR.createFromParcel(data) : null;
+                    int _arg115 = data.readInt();
+                    setAppStandbyBuckets(_arg015, _arg115);
+                    reply.writeNoException();
+                    return true;
+                case 17:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg016 = data.readInt();
+                    String[] _arg116 = data.createStringArray();
+                    long _arg213 = data.readLong();
+                    PendingIntent _arg37 = data.readInt() != 0 ? PendingIntent.CREATOR.createFromParcel(data) : null;
+                    String _arg43 = data.readString();
+                    registerAppUsageObserver(_arg016, _arg116, _arg213, _arg37, _arg43);
+                    reply.writeNoException();
+                    return true;
+                case 18:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg017 = data.readInt();
+                    String _arg117 = data.readString();
+                    unregisterAppUsageObserver(_arg017, _arg117);
+                    reply.writeNoException();
+                    return true;
+                case 19:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg018 = data.readInt();
+                    String[] _arg118 = data.createStringArray();
+                    long _arg214 = data.readLong();
+                    long _arg38 = data.readLong();
+                    PendingIntent _arg44 = data.readInt() != 0 ? PendingIntent.CREATOR.createFromParcel(data) : null;
+                    PendingIntent _arg5 = data.readInt() != 0 ? PendingIntent.CREATOR.createFromParcel(data) : null;
+                    String _arg6 = data.readString();
+                    registerUsageSessionObserver(_arg018, _arg118, _arg214, _arg38, _arg44, _arg5, _arg6);
+                    reply.writeNoException();
+                    return true;
+                case 20:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg019 = data.readInt();
+                    String _arg119 = data.readString();
+                    unregisterUsageSessionObserver(_arg019, _arg119);
+                    reply.writeNoException();
+                    return true;
+                case 21:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg020 = data.readInt();
+                    String[] _arg120 = data.createStringArray();
+                    long _arg215 = data.readLong();
+                    long _arg39 = data.readLong();
+                    PendingIntent _arg45 = data.readInt() != 0 ? PendingIntent.CREATOR.createFromParcel(data) : null;
+                    String _arg52 = data.readString();
+                    registerAppUsageLimitObserver(_arg020, _arg120, _arg215, _arg39, _arg45, _arg52);
+                    reply.writeNoException();
+                    return true;
+                case 22:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg021 = data.readInt();
+                    String _arg121 = data.readString();
+                    unregisterAppUsageLimitObserver(_arg021, _arg121);
+                    reply.writeNoException();
+                    return true;
+                case 23:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg022 = data.readStrongBinder();
+                    String _arg122 = data.readString();
+                    String _arg216 = data.readString();
+                    reportUsageStart(_arg022, _arg122, _arg216);
+                    reply.writeNoException();
+                    return true;
+                case 24:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg023 = data.readStrongBinder();
+                    String _arg123 = data.readString();
+                    long _arg217 = data.readLong();
+                    String _arg310 = data.readString();
+                    reportPastUsageStart(_arg023, _arg123, _arg217, _arg310);
+                    reply.writeNoException();
+                    return true;
+                case 25:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg024 = data.readStrongBinder();
+                    String _arg124 = data.readString();
+                    String _arg218 = data.readString();
+                    reportUsageStop(_arg024, _arg124, _arg218);
+                    reply.writeNoException();
+                    return true;
+                case 26:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result10 = getUsageSource();
+                    reply.writeNoException();
+                    reply.writeInt(_result10);
+                    return true;
+                case 27:
+                    data.enforceInterface(DESCRIPTOR);
+                    forceUsageSourceSettingRead();
+                    reply.writeNoException();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements IUsageStatsManager {
             public static IUsageStatsManager sDefaultImpl;
             private IBinder mRemote;
@@ -748,6 +604,7 @@ public interface IUsageStatsManager extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -756,6 +613,7 @@ public interface IUsageStatsManager extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.app.usage.IUsageStatsManager
             public ParceledListSlice queryUsageStats(int bucketType, long beginTime, long endTime, String callingPackage) throws RemoteException {
                 ParceledListSlice _result;
                 Parcel _data = Parcel.obtain();
@@ -764,70 +622,59 @@ public interface IUsageStatsManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     try {
                         _data.writeInt(bucketType);
-                        try {
-                            _data.writeLong(beginTime);
-                        } catch (Throwable th) {
-                            th = th;
-                            long j = endTime;
-                            String str = callingPackage;
+                    } catch (Throwable th) {
+                        th = th;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeLong(beginTime);
+                    } catch (Throwable th2) {
+                        th = th2;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeLong(endTime);
+                    } catch (Throwable th3) {
+                        th = th3;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeString(callingPackage);
+                        boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                        if (!_status && Stub.getDefaultImpl() != null) {
+                            ParceledListSlice queryUsageStats = Stub.getDefaultImpl().queryUsageStats(bucketType, beginTime, endTime, callingPackage);
                             _reply.recycle();
                             _data.recycle();
-                            throw th;
+                            return queryUsageStats;
                         }
-                        try {
-                            _data.writeLong(endTime);
-                            try {
-                                _data.writeString(callingPackage);
-                                if (this.mRemote.transact(1, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                    _reply.readException();
-                                    if (_reply.readInt() != 0) {
-                                        _result = ParceledListSlice.CREATOR.createFromParcel(_reply);
-                                    } else {
-                                        _result = null;
-                                    }
-                                    ParceledListSlice _result2 = _result;
-                                    _reply.recycle();
-                                    _data.recycle();
-                                    return _result2;
-                                }
-                                ParceledListSlice queryUsageStats = Stub.getDefaultImpl().queryUsageStats(bucketType, beginTime, endTime, callingPackage);
-                                _reply.recycle();
-                                _data.recycle();
-                                return queryUsageStats;
-                            } catch (Throwable th2) {
-                                th = th2;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th3) {
-                            th = th3;
-                            String str2 = callingPackage;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
+                        _reply.readException();
+                        if (_reply.readInt() != 0) {
+                            _result = ParceledListSlice.CREATOR.createFromParcel(_reply);
+                        } else {
+                            _result = null;
                         }
+                        ParceledListSlice _result2 = _result;
+                        _reply.recycle();
+                        _data.recycle();
+                        return _result2;
                     } catch (Throwable th4) {
                         th = th4;
-                        long j2 = beginTime;
-                        long j3 = endTime;
-                        String str22 = callingPackage;
                         _reply.recycle();
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th5) {
                     th = th5;
-                    int i = bucketType;
-                    long j22 = beginTime;
-                    long j32 = endTime;
-                    String str222 = callingPackage;
-                    _reply.recycle();
-                    _data.recycle();
-                    throw th;
                 }
             }
 
+            @Override // android.app.usage.IUsageStatsManager
             public ParceledListSlice queryConfigurationStats(int bucketType, long beginTime, long endTime, String callingPackage) throws RemoteException {
                 ParceledListSlice _result;
                 Parcel _data = Parcel.obtain();
@@ -836,70 +683,59 @@ public interface IUsageStatsManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     try {
                         _data.writeInt(bucketType);
-                        try {
-                            _data.writeLong(beginTime);
-                        } catch (Throwable th) {
-                            th = th;
-                            long j = endTime;
-                            String str = callingPackage;
+                    } catch (Throwable th) {
+                        th = th;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeLong(beginTime);
+                    } catch (Throwable th2) {
+                        th = th2;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeLong(endTime);
+                    } catch (Throwable th3) {
+                        th = th3;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeString(callingPackage);
+                        boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                        if (!_status && Stub.getDefaultImpl() != null) {
+                            ParceledListSlice queryConfigurationStats = Stub.getDefaultImpl().queryConfigurationStats(bucketType, beginTime, endTime, callingPackage);
                             _reply.recycle();
                             _data.recycle();
-                            throw th;
+                            return queryConfigurationStats;
                         }
-                        try {
-                            _data.writeLong(endTime);
-                            try {
-                                _data.writeString(callingPackage);
-                                if (this.mRemote.transact(2, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                    _reply.readException();
-                                    if (_reply.readInt() != 0) {
-                                        _result = ParceledListSlice.CREATOR.createFromParcel(_reply);
-                                    } else {
-                                        _result = null;
-                                    }
-                                    ParceledListSlice _result2 = _result;
-                                    _reply.recycle();
-                                    _data.recycle();
-                                    return _result2;
-                                }
-                                ParceledListSlice queryConfigurationStats = Stub.getDefaultImpl().queryConfigurationStats(bucketType, beginTime, endTime, callingPackage);
-                                _reply.recycle();
-                                _data.recycle();
-                                return queryConfigurationStats;
-                            } catch (Throwable th2) {
-                                th = th2;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th3) {
-                            th = th3;
-                            String str2 = callingPackage;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
+                        _reply.readException();
+                        if (_reply.readInt() != 0) {
+                            _result = ParceledListSlice.CREATOR.createFromParcel(_reply);
+                        } else {
+                            _result = null;
                         }
+                        ParceledListSlice _result2 = _result;
+                        _reply.recycle();
+                        _data.recycle();
+                        return _result2;
                     } catch (Throwable th4) {
                         th = th4;
-                        long j2 = beginTime;
-                        long j3 = endTime;
-                        String str22 = callingPackage;
                         _reply.recycle();
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th5) {
                     th = th5;
-                    int i = bucketType;
-                    long j22 = beginTime;
-                    long j32 = endTime;
-                    String str222 = callingPackage;
-                    _reply.recycle();
-                    _data.recycle();
-                    throw th;
                 }
             }
 
+            @Override // android.app.usage.IUsageStatsManager
             public ParceledListSlice queryEventStats(int bucketType, long beginTime, long endTime, String callingPackage) throws RemoteException {
                 ParceledListSlice _result;
                 Parcel _data = Parcel.obtain();
@@ -908,70 +744,59 @@ public interface IUsageStatsManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     try {
                         _data.writeInt(bucketType);
-                        try {
-                            _data.writeLong(beginTime);
-                        } catch (Throwable th) {
-                            th = th;
-                            long j = endTime;
-                            String str = callingPackage;
+                    } catch (Throwable th) {
+                        th = th;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeLong(beginTime);
+                    } catch (Throwable th2) {
+                        th = th2;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeLong(endTime);
+                    } catch (Throwable th3) {
+                        th = th3;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeString(callingPackage);
+                        boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                        if (!_status && Stub.getDefaultImpl() != null) {
+                            ParceledListSlice queryEventStats = Stub.getDefaultImpl().queryEventStats(bucketType, beginTime, endTime, callingPackage);
                             _reply.recycle();
                             _data.recycle();
-                            throw th;
+                            return queryEventStats;
                         }
-                        try {
-                            _data.writeLong(endTime);
-                            try {
-                                _data.writeString(callingPackage);
-                                if (this.mRemote.transact(3, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                    _reply.readException();
-                                    if (_reply.readInt() != 0) {
-                                        _result = ParceledListSlice.CREATOR.createFromParcel(_reply);
-                                    } else {
-                                        _result = null;
-                                    }
-                                    ParceledListSlice _result2 = _result;
-                                    _reply.recycle();
-                                    _data.recycle();
-                                    return _result2;
-                                }
-                                ParceledListSlice queryEventStats = Stub.getDefaultImpl().queryEventStats(bucketType, beginTime, endTime, callingPackage);
-                                _reply.recycle();
-                                _data.recycle();
-                                return queryEventStats;
-                            } catch (Throwable th2) {
-                                th = th2;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th3) {
-                            th = th3;
-                            String str2 = callingPackage;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
+                        _reply.readException();
+                        if (_reply.readInt() != 0) {
+                            _result = ParceledListSlice.CREATOR.createFromParcel(_reply);
+                        } else {
+                            _result = null;
                         }
+                        ParceledListSlice _result2 = _result;
+                        _reply.recycle();
+                        _data.recycle();
+                        return _result2;
                     } catch (Throwable th4) {
                         th = th4;
-                        long j2 = beginTime;
-                        long j3 = endTime;
-                        String str22 = callingPackage;
                         _reply.recycle();
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th5) {
                     th = th5;
-                    int i = bucketType;
-                    long j22 = beginTime;
-                    long j32 = endTime;
-                    String str222 = callingPackage;
-                    _reply.recycle();
-                    _data.recycle();
-                    throw th;
                 }
             }
 
+            @Override // android.app.usage.IUsageStatsManager
             public UsageEvents queryEvents(long beginTime, long endTime, String callingPackage) throws RemoteException {
                 UsageEvents _result;
                 Parcel _data = Parcel.obtain();
@@ -981,7 +806,8 @@ public interface IUsageStatsManager extends IInterface {
                     _data.writeLong(beginTime);
                     _data.writeLong(endTime);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(4, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().queryEvents(beginTime, endTime, callingPackage);
                     }
                     _reply.readException();
@@ -990,16 +816,14 @@ public interface IUsageStatsManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    UsageEvents _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.usage.IUsageStatsManager
             public UsageEvents queryEventsForPackage(long beginTime, long endTime, String callingPackage) throws RemoteException {
                 UsageEvents _result;
                 Parcel _data = Parcel.obtain();
@@ -1009,7 +833,8 @@ public interface IUsageStatsManager extends IInterface {
                     _data.writeLong(beginTime);
                     _data.writeLong(endTime);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(5, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().queryEventsForPackage(beginTime, endTime, callingPackage);
                     }
                     _reply.readException();
@@ -1018,16 +843,14 @@ public interface IUsageStatsManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    UsageEvents _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.usage.IUsageStatsManager
             public UsageEvents queryEventsForUser(long beginTime, long endTime, int userId, String callingPackage) throws RemoteException {
                 UsageEvents _result;
                 Parcel _data = Parcel.obtain();
@@ -1036,153 +859,135 @@ public interface IUsageStatsManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     try {
                         _data.writeLong(beginTime);
-                        try {
-                            _data.writeLong(endTime);
-                        } catch (Throwable th) {
-                            th = th;
-                            int i = userId;
-                            String str = callingPackage;
+                    } catch (Throwable th) {
+                        th = th;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeLong(endTime);
+                    } catch (Throwable th2) {
+                        th = th2;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeInt(userId);
+                    } catch (Throwable th3) {
+                        th = th3;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeString(callingPackage);
+                        boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                        if (!_status && Stub.getDefaultImpl() != null) {
+                            UsageEvents queryEventsForUser = Stub.getDefaultImpl().queryEventsForUser(beginTime, endTime, userId, callingPackage);
                             _reply.recycle();
                             _data.recycle();
-                            throw th;
+                            return queryEventsForUser;
                         }
-                        try {
-                            _data.writeInt(userId);
-                            try {
-                                _data.writeString(callingPackage);
-                                if (this.mRemote.transact(6, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                    _reply.readException();
-                                    if (_reply.readInt() != 0) {
-                                        _result = UsageEvents.CREATOR.createFromParcel(_reply);
-                                    } else {
-                                        _result = null;
-                                    }
-                                    UsageEvents _result2 = _result;
-                                    _reply.recycle();
-                                    _data.recycle();
-                                    return _result2;
-                                }
-                                UsageEvents queryEventsForUser = Stub.getDefaultImpl().queryEventsForUser(beginTime, endTime, userId, callingPackage);
-                                _reply.recycle();
-                                _data.recycle();
-                                return queryEventsForUser;
-                            } catch (Throwable th2) {
-                                th = th2;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th3) {
-                            th = th3;
-                            String str2 = callingPackage;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
+                        _reply.readException();
+                        if (_reply.readInt() != 0) {
+                            _result = UsageEvents.CREATOR.createFromParcel(_reply);
+                        } else {
+                            _result = null;
                         }
+                        UsageEvents _result2 = _result;
+                        _reply.recycle();
+                        _data.recycle();
+                        return _result2;
                     } catch (Throwable th4) {
                         th = th4;
-                        long j = endTime;
-                        int i2 = userId;
-                        String str22 = callingPackage;
                         _reply.recycle();
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th5) {
                     th = th5;
-                    long j2 = beginTime;
-                    long j3 = endTime;
-                    int i22 = userId;
-                    String str222 = callingPackage;
-                    _reply.recycle();
-                    _data.recycle();
-                    throw th;
                 }
             }
 
+            @Override // android.app.usage.IUsageStatsManager
             public UsageEvents queryEventsForPackageForUser(long beginTime, long endTime, int userId, String pkg, String callingPackage) throws RemoteException {
                 UsageEvents _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeLong(beginTime);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeLong(endTime);
                     try {
-                        _data.writeLong(beginTime);
-                        try {
-                            _data.writeLong(endTime);
-                        } catch (Throwable th) {
-                            th = th;
-                            int i = userId;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                        try {
-                            _data.writeInt(userId);
-                            _data.writeString(pkg);
-                            _data.writeString(callingPackage);
-                            if (this.mRemote.transact(7, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                _reply.readException();
-                                if (_reply.readInt() != 0) {
-                                    _result = UsageEvents.CREATOR.createFromParcel(_reply);
-                                } else {
-                                    _result = null;
-                                }
-                                UsageEvents _result2 = _result;
-                                _reply.recycle();
-                                _data.recycle();
-                                return _result2;
-                            }
+                        _data.writeInt(userId);
+                        _data.writeString(pkg);
+                        _data.writeString(callingPackage);
+                        boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                        if (!_status && Stub.getDefaultImpl() != null) {
                             UsageEvents queryEventsForPackageForUser = Stub.getDefaultImpl().queryEventsForPackageForUser(beginTime, endTime, userId, pkg, callingPackage);
                             _reply.recycle();
                             _data.recycle();
                             return queryEventsForPackageForUser;
-                        } catch (Throwable th2) {
-                            th = th2;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
                         }
+                        _reply.readException();
+                        if (_reply.readInt() != 0) {
+                            _result = UsageEvents.CREATOR.createFromParcel(_reply);
+                        } else {
+                            _result = null;
+                        }
+                        UsageEvents _result2 = _result;
+                        _reply.recycle();
+                        _data.recycle();
+                        return _result2;
                     } catch (Throwable th3) {
                         th = th3;
-                        long j = endTime;
-                        int i2 = userId;
                         _reply.recycle();
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th4) {
                     th = th4;
-                    long j2 = beginTime;
-                    long j3 = endTime;
-                    int i22 = userId;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.app.usage.IUsageStatsManager
             public void setAppInactive(String packageName, boolean inactive, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(packageName);
-                    _data.writeInt(inactive);
+                    _data.writeInt(inactive ? 1 : 0);
                     _data.writeInt(userId);
-                    if (this.mRemote.transact(8, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setAppInactive(packageName, inactive, userId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setAppInactive(packageName, inactive, userId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.usage.IUsageStatsManager
             public boolean isAppInactive(String packageName, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1190,24 +995,20 @@ public interface IUsageStatsManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(packageName);
                     _data.writeInt(userId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(9, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(9, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isAppInactive(packageName, userId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.usage.IUsageStatsManager
             public void whitelistAppTemporarily(String packageName, long duration, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1216,37 +1017,37 @@ public interface IUsageStatsManager extends IInterface {
                     _data.writeString(packageName);
                     _data.writeLong(duration);
                     _data.writeInt(userId);
-                    if (this.mRemote.transact(10, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(10, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().whitelistAppTemporarily(packageName, duration, userId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().whitelistAppTemporarily(packageName, duration, userId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.usage.IUsageStatsManager
             public void onCarrierPrivilegedAppsChanged() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(11, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(11, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().onCarrierPrivilegedAppsChanged();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().onCarrierPrivilegedAppsChanged();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.usage.IUsageStatsManager
             public void reportChooserSelection(String packageName, int userId, String contentType, String[] annotations, String action) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1257,19 +1058,19 @@ public interface IUsageStatsManager extends IInterface {
                     _data.writeString(contentType);
                     _data.writeStringArray(annotations);
                     _data.writeString(action);
-                    if (this.mRemote.transact(12, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(12, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().reportChooserSelection(packageName, userId, contentType, annotations, action);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().reportChooserSelection(packageName, userId, contentType, annotations, action);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.usage.IUsageStatsManager
             public int getAppStandbyBucket(String packageName, String callingPackage, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1278,13 +1079,12 @@ public interface IUsageStatsManager extends IInterface {
                     _data.writeString(packageName);
                     _data.writeString(callingPackage);
                     _data.writeInt(userId);
-                    if (!this.mRemote.transact(13, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(13, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAppStandbyBucket(packageName, callingPackage, userId);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1292,6 +1092,7 @@ public interface IUsageStatsManager extends IInterface {
                 }
             }
 
+            @Override // android.app.usage.IUsageStatsManager
             public void setAppStandbyBucket(String packageName, int bucket, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1300,19 +1101,19 @@ public interface IUsageStatsManager extends IInterface {
                     _data.writeString(packageName);
                     _data.writeInt(bucket);
                     _data.writeInt(userId);
-                    if (this.mRemote.transact(14, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(14, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setAppStandbyBucket(packageName, bucket, userId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setAppStandbyBucket(packageName, bucket, userId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.usage.IUsageStatsManager
             public ParceledListSlice getAppStandbyBuckets(String callingPackage, int userId) throws RemoteException {
                 ParceledListSlice _result;
                 Parcel _data = Parcel.obtain();
@@ -1321,7 +1122,8 @@ public interface IUsageStatsManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPackage);
                     _data.writeInt(userId);
-                    if (!this.mRemote.transact(15, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(15, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAppStandbyBuckets(callingPackage, userId);
                     }
                     _reply.readException();
@@ -1330,16 +1132,14 @@ public interface IUsageStatsManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    ParceledListSlice _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.usage.IUsageStatsManager
             public void setAppStandbyBuckets(ParceledListSlice appBuckets, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1352,90 +1152,78 @@ public interface IUsageStatsManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(userId);
-                    if (this.mRemote.transact(16, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(16, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setAppStandbyBuckets(appBuckets, userId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setAppStandbyBuckets(appBuckets, userId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.usage.IUsageStatsManager
             public void registerAppUsageObserver(int observerId, String[] packages, long timeLimitMs, PendingIntent callback, String callingPackage) throws RemoteException {
-                PendingIntent pendingIntent = callback;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    try {
-                        _data.writeInt(observerId);
-                        try {
-                            _data.writeStringArray(packages);
-                        } catch (Throwable th) {
-                            th = th;
-                            long j = timeLimitMs;
-                            String str = callingPackage;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                        try {
-                            _data.writeLong(timeLimitMs);
-                            if (pendingIntent != null) {
-                                _data.writeInt(1);
-                                pendingIntent.writeToParcel(_data, 0);
-                            } else {
-                                _data.writeInt(0);
-                            }
-                            try {
-                                _data.writeString(callingPackage);
-                                if (this.mRemote.transact(17, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                    _reply.readException();
-                                    _reply.recycle();
-                                    _data.recycle();
-                                    return;
-                                }
-                                Stub.getDefaultImpl().registerAppUsageObserver(observerId, packages, timeLimitMs, callback, callingPackage);
-                                _reply.recycle();
-                                _data.recycle();
-                            } catch (Throwable th2) {
-                                th = th2;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th3) {
-                            th = th3;
-                            String str2 = callingPackage;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                    } catch (Throwable th4) {
-                        th = th4;
-                        String[] strArr = packages;
-                        long j2 = timeLimitMs;
-                        String str22 = callingPackage;
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeInt(observerId);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeStringArray(packages);
+                } catch (Throwable th3) {
+                    th = th3;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeLong(timeLimitMs);
+                    if (callback != null) {
+                        _data.writeInt(1);
+                        callback.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
+                    }
+                } catch (Throwable th4) {
+                    th = th4;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeString(callingPackage);
+                    boolean _status = this.mRemote.transact(17, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().registerAppUsageObserver(observerId, packages, timeLimitMs, callback, callingPackage);
                         _reply.recycle();
                         _data.recycle();
-                        throw th;
+                        return;
                     }
+                    _reply.readException();
+                    _reply.recycle();
+                    _data.recycle();
                 } catch (Throwable th5) {
                     th = th5;
-                    int i = observerId;
-                    String[] strArr2 = packages;
-                    long j22 = timeLimitMs;
-                    String str222 = callingPackage;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.app.usage.IUsageStatsManager
             public void unregisterAppUsageObserver(int observerId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1443,22 +1231,20 @@ public interface IUsageStatsManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(observerId);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(18, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(18, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().unregisterAppUsageObserver(observerId, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().unregisterAppUsageObserver(observerId, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.usage.IUsageStatsManager
             public void registerUsageSessionObserver(int sessionObserverId, String[] observed, long timeLimitMs, long sessionThresholdTimeMs, PendingIntent limitReachedCallbackIntent, PendingIntent sessionEndCallbackIntent, String callingPackage) throws RemoteException {
-                PendingIntent pendingIntent = limitReachedCallbackIntent;
-                PendingIntent pendingIntent2 = sessionEndCallbackIntent;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
@@ -1468,26 +1254,27 @@ public interface IUsageStatsManager extends IInterface {
                         _data.writeStringArray(observed);
                         _data.writeLong(timeLimitMs);
                         _data.writeLong(sessionThresholdTimeMs);
-                        if (pendingIntent != null) {
+                        if (limitReachedCallbackIntent != null) {
                             _data.writeInt(1);
-                            pendingIntent.writeToParcel(_data, 0);
+                            limitReachedCallbackIntent.writeToParcel(_data, 0);
                         } else {
                             _data.writeInt(0);
                         }
-                        if (pendingIntent2 != null) {
+                        if (sessionEndCallbackIntent != null) {
                             _data.writeInt(1);
-                            pendingIntent2.writeToParcel(_data, 0);
+                            sessionEndCallbackIntent.writeToParcel(_data, 0);
                         } else {
                             _data.writeInt(0);
                         }
                         _data.writeString(callingPackage);
-                        if (this.mRemote.transact(19, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                            _reply.readException();
+                        boolean _status = this.mRemote.transact(19, _data, _reply, 0);
+                        if (!_status && Stub.getDefaultImpl() != null) {
+                            Stub.getDefaultImpl().registerUsageSessionObserver(sessionObserverId, observed, timeLimitMs, sessionThresholdTimeMs, limitReachedCallbackIntent, sessionEndCallbackIntent, callingPackage);
                             _reply.recycle();
                             _data.recycle();
                             return;
                         }
-                        Stub.getDefaultImpl().registerUsageSessionObserver(sessionObserverId, observed, timeLimitMs, sessionThresholdTimeMs, limitReachedCallbackIntent, sessionEndCallbackIntent, callingPackage);
+                        _reply.readException();
                         _reply.recycle();
                         _data.recycle();
                     } catch (Throwable th) {
@@ -1498,13 +1285,10 @@ public interface IUsageStatsManager extends IInterface {
                     }
                 } catch (Throwable th2) {
                     th = th2;
-                    int i = sessionObserverId;
-                    _reply.recycle();
-                    _data.recycle();
-                    throw th;
                 }
             }
 
+            @Override // android.app.usage.IUsageStatsManager
             public void unregisterUsageSessionObserver(int sessionObserverId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1512,80 +1296,72 @@ public interface IUsageStatsManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(sessionObserverId);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(20, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(20, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().unregisterUsageSessionObserver(sessionObserverId, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().unregisterUsageSessionObserver(sessionObserverId, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.usage.IUsageStatsManager
             public void registerAppUsageLimitObserver(int observerId, String[] packages, long timeLimitMs, long timeUsedMs, PendingIntent callback, String callingPackage) throws RemoteException {
-                PendingIntent pendingIntent = callback;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeInt(observerId);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeStringArray(packages);
+                    _data.writeLong(timeLimitMs);
+                    _data.writeLong(timeUsedMs);
+                    if (callback != null) {
+                        _data.writeInt(1);
+                        callback.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
+                    }
                     try {
-                        _data.writeInt(observerId);
-                        try {
-                            _data.writeStringArray(packages);
-                            _data.writeLong(timeLimitMs);
-                            _data.writeLong(timeUsedMs);
-                            if (pendingIntent != null) {
-                                _data.writeInt(1);
-                                pendingIntent.writeToParcel(_data, 0);
-                            } else {
-                                _data.writeInt(0);
-                            }
-                        } catch (Throwable th) {
-                            th = th;
-                            String str = callingPackage;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                        try {
-                            _data.writeString(callingPackage);
-                            if (this.mRemote.transact(21, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                _reply.readException();
-                                _reply.recycle();
-                                _data.recycle();
-                                return;
-                            }
+                        _data.writeString(callingPackage);
+                        boolean _status = this.mRemote.transact(21, _data, _reply, 0);
+                        if (!_status && Stub.getDefaultImpl() != null) {
                             Stub.getDefaultImpl().registerAppUsageLimitObserver(observerId, packages, timeLimitMs, timeUsedMs, callback, callingPackage);
                             _reply.recycle();
                             _data.recycle();
-                        } catch (Throwable th2) {
-                            th = th2;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
+                            return;
                         }
+                        _reply.readException();
+                        _reply.recycle();
+                        _data.recycle();
                     } catch (Throwable th3) {
                         th = th3;
-                        String[] strArr = packages;
-                        String str2 = callingPackage;
                         _reply.recycle();
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th4) {
                     th = th4;
-                    int i = observerId;
-                    String[] strArr2 = packages;
-                    String str22 = callingPackage;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.app.usage.IUsageStatsManager
             public void unregisterAppUsageLimitObserver(int observerId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1593,19 +1369,19 @@ public interface IUsageStatsManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(observerId);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(22, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(22, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().unregisterAppUsageLimitObserver(observerId, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().unregisterAppUsageLimitObserver(observerId, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.usage.IUsageStatsManager
             public void reportUsageStart(IBinder activity, String token, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1614,19 +1390,19 @@ public interface IUsageStatsManager extends IInterface {
                     _data.writeStrongBinder(activity);
                     _data.writeString(token);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(23, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(23, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().reportUsageStart(activity, token, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().reportUsageStart(activity, token, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.usage.IUsageStatsManager
             public void reportPastUsageStart(IBinder activity, String token, long timeAgoMs, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1636,19 +1412,19 @@ public interface IUsageStatsManager extends IInterface {
                     _data.writeString(token);
                     _data.writeLong(timeAgoMs);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(24, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(24, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().reportPastUsageStart(activity, token, timeAgoMs, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().reportPastUsageStart(activity, token, timeAgoMs, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.usage.IUsageStatsManager
             public void reportUsageStop(IBinder activity, String token, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1657,31 +1433,30 @@ public interface IUsageStatsManager extends IInterface {
                     _data.writeStrongBinder(activity);
                     _data.writeString(token);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(25, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(25, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().reportUsageStop(activity, token, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().reportUsageStop(activity, token, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.usage.IUsageStatsManager
             public int getUsageSource() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(26, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(26, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getUsageSource();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1689,18 +1464,18 @@ public interface IUsageStatsManager extends IInterface {
                 }
             }
 
+            @Override // android.app.usage.IUsageStatsManager
             public void forceUsageSourceSettingRead() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(27, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(27, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().forceUsageSourceSettingRead();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().forceUsageSourceSettingRead();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -1709,11 +1484,11 @@ public interface IUsageStatsManager extends IInterface {
         }
 
         public static boolean setDefaultImpl(IUsageStatsManager impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IUsageStatsManager getDefaultImpl() {

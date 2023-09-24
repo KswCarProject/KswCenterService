@@ -5,6 +5,7 @@ import org.apache.harmony.dalvik.ddmc.Chunk;
 import org.apache.harmony.dalvik.ddmc.ChunkHandler;
 import org.apache.harmony.dalvik.ddmc.DdmServer;
 
+/* loaded from: classes.dex */
 public class DdmHandleNativeHeap extends ChunkHandler {
     public static final int CHUNK_NHGT = type("NHGT");
     private static DdmHandleNativeHeap mInstance = new DdmHandleNativeHeap();
@@ -25,7 +26,7 @@ public class DdmHandleNativeHeap extends ChunkHandler {
     }
 
     public Chunk handleChunk(Chunk request) {
-        Log.i("ddm-nativeheap", "Handling " + name(request.type) + " chunk");
+        Log.m68i("ddm-nativeheap", "Handling " + name(request.type) + " chunk");
         int type = request.type;
         if (type == CHUNK_NHGT) {
             return handleNHGT(request);
@@ -35,10 +36,10 @@ public class DdmHandleNativeHeap extends ChunkHandler {
 
     private Chunk handleNHGT(Chunk request) {
         byte[] data = getLeakInfo();
-        if (data == null) {
-            return createFailChunk(1, "Something went wrong");
+        if (data != null) {
+            Log.m68i("ddm-nativeheap", "Sending " + data.length + " bytes");
+            return new Chunk(ChunkHandler.type("NHGT"), data, 0, data.length);
         }
-        Log.i("ddm-nativeheap", "Sending " + data.length + " bytes");
-        return new Chunk(ChunkHandler.type("NHGT"), data, 0, data.length);
+        return createFailChunk(1, "Something went wrong");
     }
 }

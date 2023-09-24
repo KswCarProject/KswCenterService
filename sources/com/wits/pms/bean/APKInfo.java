@@ -1,5 +1,6 @@
 package com.wits.pms.bean;
 
+/* loaded from: classes2.dex */
 public class APKInfo {
     String apkPath;
     String pkgName;
@@ -9,39 +10,39 @@ public class APKInfo {
     public APKInfo() {
     }
 
-    public APKInfo(String pkgName2, String versionName2, String apkPath2, long versionCode2) {
-        this.apkPath = apkPath2;
-        this.pkgName = pkgName2;
-        this.versionName = versionName2;
-        this.versionCode = versionCode2;
+    public APKInfo(String pkgName, String versionName, String apkPath, long versionCode) {
+        this.apkPath = apkPath;
+        this.pkgName = pkgName;
+        this.versionName = versionName;
+        this.versionCode = versionCode;
     }
 
-    public void setPkgName(String pkgName2) {
-        this.pkgName = pkgName2;
+    public void setPkgName(String pkgName) {
+        this.pkgName = pkgName;
     }
 
     public String getPkgName() {
         return this.pkgName;
     }
 
-    public void setVersionName(String versionName2) {
-        this.versionName = versionName2;
+    public void setVersionName(String versionName) {
+        this.versionName = versionName;
     }
 
     public String getVersionName() {
         return this.versionName;
     }
 
-    public void setVersionCode(long versionCode2) {
-        this.versionCode = versionCode2;
+    public void setVersionCode(long versionCode) {
+        this.versionCode = versionCode;
     }
 
     public long getVersionCode() {
         return this.versionCode;
     }
 
-    public void setApkPath(String apkPath2) {
-        this.apkPath = apkPath2;
+    public void setApkPath(String apkPath) {
+        this.apkPath = apkPath;
     }
 
     public String getApkPath() {

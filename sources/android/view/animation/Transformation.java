@@ -5,6 +5,7 @@ import android.graphics.Matrix;
 import android.graphics.Rect;
 import java.io.PrintWriter;
 
+/* loaded from: classes4.dex */
 public class Transformation {
     public static final int TYPE_ALPHA = 1;
     public static final int TYPE_BOTH = 3;

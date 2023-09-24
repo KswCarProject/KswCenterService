@@ -1,13 +1,16 @@
 package android.hardware.usb;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.util.Preconditions;
 
+/* loaded from: classes.dex */
 public class UsbConfiguration implements Parcelable {
     private static final int ATTR_REMOTE_WAKEUP = 32;
     private static final int ATTR_SELF_POWERED = 64;
-    public static final Parcelable.Creator<UsbConfiguration> CREATOR = new Parcelable.Creator<UsbConfiguration>() {
+    public static final Parcelable.Creator<UsbConfiguration> CREATOR = new Parcelable.Creator<UsbConfiguration>() { // from class: android.hardware.usb.UsbConfiguration.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public UsbConfiguration createFromParcel(Parcel in) {
             int id = in.readInt();
             String name = in.readString();
@@ -19,6 +22,8 @@ public class UsbConfiguration implements Parcelable {
             return configuration;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public UsbConfiguration[] newArray(int size) {
             return new UsbConfiguration[size];
         }
@@ -74,18 +79,20 @@ public class UsbConfiguration implements Parcelable {
 
     public String toString() {
         StringBuilder builder = new StringBuilder("UsbConfiguration[mId=" + this.mId + ",mName=" + this.mName + ",mAttributes=" + this.mAttributes + ",mMaxPower=" + this.mMaxPower + ",mInterfaces=[");
-        for (Parcelable obj : this.mInterfaces) {
+        for (int i = 0; i < this.mInterfaces.length; i++) {
             builder.append("\n");
-            builder.append(obj.toString());
+            builder.append(this.mInterfaces[i].toString());
         }
         builder.append("]");
         return builder.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeInt(this.mId);
         parcel.writeString(this.mName);

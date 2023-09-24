@@ -4,13 +4,14 @@ import android.annotation.UnsupportedAppUsage;
 import android.app.trust.ITrustListener;
 import android.app.trust.ITrustManager;
 import android.hardware.biometrics.BiometricSourceType;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Looper;
-import android.os.Message;
-import android.os.RemoteException;
+import android.p007os.Handler;
+import android.p007os.IBinder;
+import android.p007os.Looper;
+import android.p007os.Message;
+import android.p007os.RemoteException;
 import android.util.ArrayMap;
 
+/* loaded from: classes.dex */
 public class TrustManager {
     private static final String DATA_FLAGS = "initiatedByUser";
     private static final String DATA_MESSAGE = "message";
@@ -18,37 +19,30 @@ public class TrustManager {
     private static final int MSG_TRUST_ERROR = 3;
     private static final int MSG_TRUST_MANAGED_CHANGED = 2;
     private static final String TAG = "TrustManager";
-    /* access modifiers changed from: private */
-    public final Handler mHandler = new Handler(Looper.getMainLooper()) {
+    private final ITrustManager mService;
+    private final Handler mHandler = new Handler(Looper.getMainLooper()) { // from class: android.app.trust.TrustManager.2
+        @Override // android.p007os.Handler
         public void handleMessage(Message msg) {
-            boolean z = true;
             switch (msg.what) {
                 case 1:
                     int flags = msg.peekData() != null ? msg.peekData().getInt(TrustManager.DATA_FLAGS) : 0;
-                    TrustListener trustListener = (TrustListener) msg.obj;
-                    if (msg.arg1 == 0) {
-                        z = false;
-                    }
-                    trustListener.onTrustChanged(z, msg.arg2, flags);
+                    ((TrustListener) msg.obj).onTrustChanged(msg.arg1 != 0, msg.arg2, flags);
                     return;
                 case 2:
-                    TrustListener trustListener2 = (TrustListener) msg.obj;
-                    if (msg.arg1 == 0) {
-                        z = false;
-                    }
-                    trustListener2.onTrustManagedChanged(z, msg.arg2);
+                    ((TrustListener) msg.obj).onTrustManagedChanged(msg.arg1 != 0, msg.arg2);
                     return;
                 case 3:
-                    ((TrustListener) msg.obj).onTrustError(msg.peekData().getCharSequence("message"));
+                    CharSequence message = msg.peekData().getCharSequence("message");
+                    ((TrustListener) msg.obj).onTrustError(message);
                     return;
                 default:
                     return;
             }
         }
     };
-    private final ITrustManager mService;
-    private final ArrayMap<TrustListener, ITrustListener> mTrustListeners;
+    private final ArrayMap<TrustListener, ITrustListener> mTrustListeners = new ArrayMap<>();
 
+    /* loaded from: classes.dex */
     public interface TrustListener {
         void onTrustChanged(boolean z, int i, int i2);
 
@@ -59,7 +53,6 @@ public class TrustManager {
 
     public TrustManager(IBinder b) {
         this.mService = ITrustManager.Stub.asInterface(b);
-        this.mTrustListeners = new ArrayMap<>();
     }
 
     public void setDeviceLockedForUser(int userId, boolean locked) {
@@ -105,19 +98,22 @@ public class TrustManager {
 
     public void registerTrustListener(final TrustListener trustListener) {
         try {
-            ITrustListener.Stub iTrustListener = new ITrustListener.Stub() {
+            ITrustListener.Stub iTrustListener = new ITrustListener.Stub() { // from class: android.app.trust.TrustManager.1
+                @Override // android.app.trust.ITrustListener
                 public void onTrustChanged(boolean enabled, int userId, int flags) {
-                    Message m = TrustManager.this.mHandler.obtainMessage(1, enabled, userId, trustListener);
+                    Message m = TrustManager.this.mHandler.obtainMessage(1, enabled ? 1 : 0, userId, trustListener);
                     if (flags != 0) {
                         m.getData().putInt(TrustManager.DATA_FLAGS, flags);
                     }
                     m.sendToTarget();
                 }
 
+                @Override // android.app.trust.ITrustListener
                 public void onTrustManagedChanged(boolean managed, int userId) {
-                    TrustManager.this.mHandler.obtainMessage(2, managed, userId, trustListener).sendToTarget();
+                    TrustManager.this.mHandler.obtainMessage(2, managed ? 1 : 0, userId, trustListener).sendToTarget();
                 }
 
+                @Override // android.app.trust.ITrustListener
                 public void onTrustError(CharSequence message) {
                     Message m = TrustManager.this.mHandler.obtainMessage(3);
                     m.getData().putCharSequence("message", message);

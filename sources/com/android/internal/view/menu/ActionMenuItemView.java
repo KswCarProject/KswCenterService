@@ -6,7 +6,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
-import android.os.Parcelable;
+import android.p007os.Parcelable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -15,10 +15,11 @@ import android.view.accessibility.AccessibilityEvent;
 import android.widget.ActionMenuView;
 import android.widget.ForwardingListener;
 import android.widget.TextView;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import com.android.internal.view.menu.MenuBuilder;
 import com.android.internal.view.menu.MenuView;
 
+/* loaded from: classes4.dex */
 public class ActionMenuItemView extends TextView implements MenuView.ItemView, View.OnClickListener, ActionMenuView.ActionMenuChildView {
     private static final int MAX_ICON_SIZE = 32;
     private static final String TAG = "ActionMenuItemView";
@@ -26,23 +27,21 @@ public class ActionMenuItemView extends TextView implements MenuView.ItemView, V
     private boolean mExpandedFormat;
     private ForwardingListener mForwardingListener;
     private Drawable mIcon;
-    /* access modifiers changed from: private */
-    public MenuItemImpl mItemData;
-    /* access modifiers changed from: private */
-    public MenuBuilder.ItemInvoker mItemInvoker;
+    private MenuItemImpl mItemData;
+    private MenuBuilder.ItemInvoker mItemInvoker;
     private int mMaxIconSize;
     private int mMinWidth;
-    /* access modifiers changed from: private */
-    public PopupCallback mPopupCallback;
+    private PopupCallback mPopupCallback;
     private int mSavedPaddingLeft;
     private CharSequence mTitle;
 
+    /* loaded from: classes4.dex */
     public static abstract class PopupCallback {
         public abstract ShowableListMenu getPopup();
     }
 
     public ActionMenuItemView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public ActionMenuItemView(Context context, AttributeSet attrs) {
@@ -57,15 +56,17 @@ public class ActionMenuItemView extends TextView implements MenuView.ItemView, V
         super(context, attrs, defStyleAttr, defStyleRes);
         Resources res = context.getResources();
         this.mAllowTextWithIcon = shouldAllowTextWithIcon();
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ActionMenuItemView, defStyleAttr, defStyleRes);
+        TypedArray a = context.obtainStyledAttributes(attrs, C3132R.styleable.ActionMenuItemView, defStyleAttr, defStyleRes);
         this.mMinWidth = a.getDimensionPixelSize(0, 0);
         a.recycle();
-        this.mMaxIconSize = (int) ((32.0f * res.getDisplayMetrics().density) + 0.5f);
+        float density = res.getDisplayMetrics().density;
+        this.mMaxIconSize = (int) ((32.0f * density) + 0.5f);
         setOnClickListener(this);
         this.mSavedPaddingLeft = -1;
         setSaveEnabled(false);
     }
 
+    @Override // android.widget.TextView, android.view.View
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         this.mAllowTextWithIcon = shouldAllowTextWithIcon();
@@ -75,18 +76,22 @@ public class ActionMenuItemView extends TextView implements MenuView.ItemView, V
     private boolean shouldAllowTextWithIcon() {
         Configuration configuration = getContext().getResources().getConfiguration();
         int width = configuration.screenWidthDp;
-        return width >= 480 || (width >= 640 && configuration.screenHeightDp >= 480) || configuration.orientation == 2;
+        int height = configuration.screenHeightDp;
+        return width >= 480 || (width >= 640 && height >= 480) || configuration.orientation == 2;
     }
 
+    @Override // android.widget.TextView, android.view.View
     public void setPadding(int l, int t, int r, int b) {
         this.mSavedPaddingLeft = l;
         super.setPadding(l, t, r, b);
     }
 
+    @Override // com.android.internal.view.menu.MenuView.ItemView
     public MenuItemImpl getItemData() {
         return this.mItemData;
     }
 
+    @Override // com.android.internal.view.menu.MenuView.ItemView
     public void initialize(MenuItemImpl itemData, int menuType) {
         this.mItemData = itemData;
         setIcon(itemData.getIcon());
@@ -99,13 +104,15 @@ public class ActionMenuItemView extends TextView implements MenuView.ItemView, V
         }
     }
 
+    @Override // android.widget.TextView, android.view.View
     public boolean onTouchEvent(MotionEvent e) {
-        if (!this.mItemData.hasSubMenu() || this.mForwardingListener == null || !this.mForwardingListener.onTouch(this, e)) {
-            return super.onTouchEvent(e);
+        if (this.mItemData.hasSubMenu() && this.mForwardingListener != null && this.mForwardingListener.onTouch(this, e)) {
+            return true;
         }
-        return true;
+        return super.onTouchEvent(e);
     }
 
+    @Override // android.view.View.OnClickListener
     public void onClick(View v) {
         if (this.mItemInvoker != null) {
             this.mItemInvoker.invokeItem(this.mItemData);
@@ -120,13 +127,16 @@ public class ActionMenuItemView extends TextView implements MenuView.ItemView, V
         this.mPopupCallback = popupCallback;
     }
 
+    @Override // com.android.internal.view.menu.MenuView.ItemView
     public boolean prefersCondensedTitle() {
         return true;
     }
 
+    @Override // com.android.internal.view.menu.MenuView.ItemView
     public void setCheckable(boolean checkable) {
     }
 
+    @Override // com.android.internal.view.menu.MenuView.ItemView
     public void setChecked(boolean checked) {
     }
 
@@ -146,7 +156,6 @@ public class ActionMenuItemView extends TextView implements MenuView.ItemView, V
             z = false;
         }
         boolean visible2 = visible & z;
-        CharSequence charSequence = null;
         setText(visible2 ? this.mTitle : null);
         CharSequence contentDescription = this.mItemData.getContentDescription();
         if (TextUtils.isEmpty(contentDescription)) {
@@ -156,33 +165,31 @@ public class ActionMenuItemView extends TextView implements MenuView.ItemView, V
         }
         CharSequence tooltipText = this.mItemData.getTooltipText();
         if (TextUtils.isEmpty(tooltipText)) {
-            if (!visible2) {
-                charSequence = this.mItemData.getTitle();
-            }
-            setTooltipText(charSequence);
-            return;
+            setTooltipText(visible2 ? null : this.mItemData.getTitle());
+        } else {
+            setTooltipText(tooltipText);
         }
-        setTooltipText(tooltipText);
     }
 
+    @Override // com.android.internal.view.menu.MenuView.ItemView
     public void setIcon(Drawable icon) {
         this.mIcon = icon;
         if (icon != null) {
             int width = icon.getIntrinsicWidth();
             int height = icon.getIntrinsicHeight();
             if (width > this.mMaxIconSize) {
-                float scale = ((float) this.mMaxIconSize) / ((float) width);
+                float scale = this.mMaxIconSize / width;
                 width = this.mMaxIconSize;
-                height = (int) (((float) height) * scale);
+                height = (int) (height * scale);
             }
             if (height > this.mMaxIconSize) {
-                float scale2 = ((float) this.mMaxIconSize) / ((float) height);
+                float scale2 = this.mMaxIconSize / height;
                 height = this.mMaxIconSize;
-                width = (int) (((float) width) * scale2);
+                width = (int) (width * scale2);
             }
             icon.setBounds(0, 0, width, height);
         }
-        setCompoundDrawables(icon, (Drawable) null, (Drawable) null, (Drawable) null);
+        setCompoundDrawables(icon, null, null, null);
         updateTextButtonVisibility();
     }
 
@@ -191,19 +198,23 @@ public class ActionMenuItemView extends TextView implements MenuView.ItemView, V
         return !TextUtils.isEmpty(getText());
     }
 
+    @Override // com.android.internal.view.menu.MenuView.ItemView
     public void setShortcut(boolean showShortcut, char shortcutKey) {
     }
 
+    @Override // com.android.internal.view.menu.MenuView.ItemView
     public void setTitle(CharSequence title) {
         this.mTitle = title;
         updateTextButtonVisibility();
     }
 
+    @Override // android.view.View
     public boolean dispatchPopulateAccessibilityEventInternal(AccessibilityEvent event) {
         onPopulateAccessibilityEvent(event);
         return true;
     }
 
+    @Override // android.widget.TextView, android.view.View
     public void onPopulateAccessibilityEventInternal(AccessibilityEvent event) {
         super.onPopulateAccessibilityEventInternal(event);
         CharSequence cdesc = getContentDescription();
@@ -212,25 +223,28 @@ public class ActionMenuItemView extends TextView implements MenuView.ItemView, V
         }
     }
 
+    @Override // android.view.View
     public boolean dispatchHoverEvent(MotionEvent event) {
         return onHoverEvent(event);
     }
 
+    @Override // com.android.internal.view.menu.MenuView.ItemView
     public boolean showsIcon() {
         return true;
     }
 
+    @Override // android.widget.ActionMenuView.ActionMenuChildView
     public boolean needsDividerBefore() {
         return hasText() && this.mItemData.getIcon() == null;
     }
 
+    @Override // android.widget.ActionMenuView.ActionMenuChildView
     public boolean needsDividerAfter() {
         return hasText();
     }
 
-    /* access modifiers changed from: protected */
-    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int targetWidth;
+    @Override // android.widget.TextView, android.view.View
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         boolean textVisible = hasText();
         if (textVisible && this.mSavedPaddingLeft >= 0) {
             super.setPadding(this.mSavedPaddingLeft, getPaddingTop(), getPaddingRight(), getPaddingBottom());
@@ -239,24 +253,24 @@ public class ActionMenuItemView extends TextView implements MenuView.ItemView, V
         int widthMode = View.MeasureSpec.getMode(widthMeasureSpec);
         int widthSize = View.MeasureSpec.getSize(widthMeasureSpec);
         int oldMeasuredWidth = getMeasuredWidth();
-        if (widthMode == Integer.MIN_VALUE) {
-            targetWidth = Math.min(widthSize, this.mMinWidth);
-        } else {
-            targetWidth = this.mMinWidth;
-        }
+        int targetWidth = widthMode == Integer.MIN_VALUE ? Math.min(widthSize, this.mMinWidth) : this.mMinWidth;
         if (widthMode != 1073741824 && this.mMinWidth > 0 && oldMeasuredWidth < targetWidth) {
             super.onMeasure(View.MeasureSpec.makeMeasureSpec(targetWidth, 1073741824), heightMeasureSpec);
         }
         if (!textVisible && this.mIcon != null) {
-            super.setPadding((getMeasuredWidth() - this.mIcon.getBounds().width()) / 2, getPaddingTop(), getPaddingRight(), getPaddingBottom());
+            int w = getMeasuredWidth();
+            int dw = this.mIcon.getBounds().width();
+            super.setPadding((w - dw) / 2, getPaddingTop(), getPaddingRight(), getPaddingBottom());
         }
     }
 
+    /* loaded from: classes4.dex */
     private class ActionMenuItemForwardingListener extends ForwardingListener {
         public ActionMenuItemForwardingListener() {
             super(ActionMenuItemView.this);
         }
 
+        @Override // android.widget.ForwardingListener
         public ShowableListMenu getPopup() {
             if (ActionMenuItemView.this.mPopupCallback != null) {
                 return ActionMenuItemView.this.mPopupCallback.getPopup();
@@ -264,17 +278,15 @@ public class ActionMenuItemView extends TextView implements MenuView.ItemView, V
             return null;
         }
 
-        /* access modifiers changed from: protected */
-        public boolean onForwardingStarted() {
+        @Override // android.widget.ForwardingListener
+        protected boolean onForwardingStarted() {
             ShowableListMenu popup;
-            if (ActionMenuItemView.this.mItemInvoker == null || !ActionMenuItemView.this.mItemInvoker.invokeItem(ActionMenuItemView.this.mItemData) || (popup = getPopup()) == null || !popup.isShowing()) {
-                return false;
-            }
-            return true;
+            return ActionMenuItemView.this.mItemInvoker != null && ActionMenuItemView.this.mItemInvoker.invokeItem(ActionMenuItemView.this.mItemData) && (popup = getPopup()) != null && popup.isShowing();
         }
     }
 
+    @Override // android.widget.TextView, android.view.View
     public void onRestoreInstanceState(Parcelable state) {
-        super.onRestoreInstanceState((Parcelable) null);
+        super.onRestoreInstanceState(null);
     }
 }

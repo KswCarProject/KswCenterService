@@ -1,55 +1,30 @@
 package android.net;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.annotations.VisibleForTesting;
 import java.util.EnumMap;
 
 @Deprecated
+/* loaded from: classes3.dex */
 public class NetworkInfo implements Parcelable {
-    public static final Parcelable.Creator<NetworkInfo> CREATOR = new Parcelable.Creator<NetworkInfo>() {
-        public NetworkInfo createFromParcel(Parcel in) {
-            NetworkInfo netInfo = new NetworkInfo(in.readInt(), in.readInt(), in.readString(), in.readString());
-            State unused = netInfo.mState = State.valueOf(in.readString());
-            DetailedState unused2 = netInfo.mDetailedState = DetailedState.valueOf(in.readString());
-            boolean z = false;
-            boolean unused3 = netInfo.mIsFailover = in.readInt() != 0;
-            boolean unused4 = netInfo.mIsAvailable = in.readInt() != 0;
-            if (in.readInt() != 0) {
-                z = true;
-            }
-            boolean unused5 = netInfo.mIsRoaming = z;
-            String unused6 = netInfo.mReason = in.readString();
-            String unused7 = netInfo.mExtraInfo = in.readString();
-            return netInfo;
-        }
-
-        public NetworkInfo[] newArray(int size) {
-            return new NetworkInfo[size];
-        }
-    };
+    public static final Parcelable.Creator<NetworkInfo> CREATOR;
     private static final EnumMap<DetailedState, State> stateMap = new EnumMap<>(DetailedState.class);
-    /* access modifiers changed from: private */
-    public DetailedState mDetailedState;
-    /* access modifiers changed from: private */
-    public String mExtraInfo;
-    /* access modifiers changed from: private */
-    public boolean mIsAvailable;
-    /* access modifiers changed from: private */
-    public boolean mIsFailover;
-    /* access modifiers changed from: private */
-    public boolean mIsRoaming;
+    private DetailedState mDetailedState;
+    private String mExtraInfo;
+    private boolean mIsAvailable;
+    private boolean mIsFailover;
+    private boolean mIsRoaming;
     private int mNetworkType;
-    /* access modifiers changed from: private */
-    public String mReason;
-    /* access modifiers changed from: private */
-    public State mState;
+    private String mReason;
+    private State mState;
     private int mSubtype;
     private String mSubtypeName;
     private String mTypeName;
 
     @Deprecated
+    /* loaded from: classes3.dex */
     public enum DetailedState {
         IDLE,
         SCANNING,
@@ -67,6 +42,7 @@ public class NetworkInfo implements Parcelable {
     }
 
     @Deprecated
+    /* loaded from: classes3.dex */
     public enum State {
         CONNECTING,
         CONNECTED,
@@ -77,33 +53,57 @@ public class NetworkInfo implements Parcelable {
     }
 
     static {
-        stateMap.put(DetailedState.IDLE, State.DISCONNECTED);
-        stateMap.put(DetailedState.SCANNING, State.DISCONNECTED);
-        stateMap.put(DetailedState.CONNECTING, State.CONNECTING);
-        stateMap.put(DetailedState.AUTHENTICATING, State.CONNECTING);
-        stateMap.put(DetailedState.OBTAINING_IPADDR, State.CONNECTING);
-        stateMap.put(DetailedState.VERIFYING_POOR_LINK, State.CONNECTING);
-        stateMap.put(DetailedState.CAPTIVE_PORTAL_CHECK, State.CONNECTING);
-        stateMap.put(DetailedState.CONNECTED, State.CONNECTED);
-        stateMap.put(DetailedState.SUSPENDED, State.SUSPENDED);
-        stateMap.put(DetailedState.DISCONNECTING, State.DISCONNECTING);
-        stateMap.put(DetailedState.DISCONNECTED, State.DISCONNECTED);
-        stateMap.put(DetailedState.FAILED, State.DISCONNECTED);
-        stateMap.put(DetailedState.BLOCKED, State.DISCONNECTED);
+        stateMap.put((EnumMap<DetailedState, State>) DetailedState.IDLE, (DetailedState) State.DISCONNECTED);
+        stateMap.put((EnumMap<DetailedState, State>) DetailedState.SCANNING, (DetailedState) State.DISCONNECTED);
+        stateMap.put((EnumMap<DetailedState, State>) DetailedState.CONNECTING, (DetailedState) State.CONNECTING);
+        stateMap.put((EnumMap<DetailedState, State>) DetailedState.AUTHENTICATING, (DetailedState) State.CONNECTING);
+        stateMap.put((EnumMap<DetailedState, State>) DetailedState.OBTAINING_IPADDR, (DetailedState) State.CONNECTING);
+        stateMap.put((EnumMap<DetailedState, State>) DetailedState.VERIFYING_POOR_LINK, (DetailedState) State.CONNECTING);
+        stateMap.put((EnumMap<DetailedState, State>) DetailedState.CAPTIVE_PORTAL_CHECK, (DetailedState) State.CONNECTING);
+        stateMap.put((EnumMap<DetailedState, State>) DetailedState.CONNECTED, (DetailedState) State.CONNECTED);
+        stateMap.put((EnumMap<DetailedState, State>) DetailedState.SUSPENDED, (DetailedState) State.SUSPENDED);
+        stateMap.put((EnumMap<DetailedState, State>) DetailedState.DISCONNECTING, (DetailedState) State.DISCONNECTING);
+        stateMap.put((EnumMap<DetailedState, State>) DetailedState.DISCONNECTED, (DetailedState) State.DISCONNECTED);
+        stateMap.put((EnumMap<DetailedState, State>) DetailedState.FAILED, (DetailedState) State.DISCONNECTED);
+        stateMap.put((EnumMap<DetailedState, State>) DetailedState.BLOCKED, (DetailedState) State.DISCONNECTED);
+        CREATOR = new Parcelable.Creator<NetworkInfo>() { // from class: android.net.NetworkInfo.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
+            public NetworkInfo createFromParcel(Parcel in) {
+                int netType = in.readInt();
+                int subtype = in.readInt();
+                String typeName = in.readString();
+                String subtypeName = in.readString();
+                NetworkInfo netInfo = new NetworkInfo(netType, subtype, typeName, subtypeName);
+                netInfo.mState = State.valueOf(in.readString());
+                netInfo.mDetailedState = DetailedState.valueOf(in.readString());
+                netInfo.mIsFailover = in.readInt() != 0;
+                netInfo.mIsAvailable = in.readInt() != 0;
+                netInfo.mIsRoaming = in.readInt() != 0;
+                netInfo.mReason = in.readString();
+                netInfo.mExtraInfo = in.readString();
+                return netInfo;
+            }
+
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
+            public NetworkInfo[] newArray(int size) {
+                return new NetworkInfo[size];
+            }
+        };
     }
 
     @UnsupportedAppUsage
     public NetworkInfo(int type, int subtype, String typeName, String subtypeName) {
-        if (ConnectivityManager.isNetworkTypeValid(type) || type == -1) {
-            this.mNetworkType = type;
-            this.mSubtype = subtype;
-            this.mTypeName = typeName;
-            this.mSubtypeName = subtypeName;
-            setDetailedState(DetailedState.IDLE, (String) null, (String) null);
-            this.mState = State.UNKNOWN;
-            return;
+        if (!ConnectivityManager.isNetworkTypeValid(type) && type != -1) {
+            throw new IllegalArgumentException("Invalid network type: " + type);
         }
-        throw new IllegalArgumentException("Invalid network type: " + type);
+        this.mNetworkType = type;
+        this.mSubtype = subtype;
+        this.mTypeName = typeName;
+        this.mSubtypeName = subtypeName;
+        setDetailedState(DetailedState.IDLE, null, null);
+        this.mState = State.UNKNOWN;
     }
 
     @UnsupportedAppUsage
@@ -180,12 +180,7 @@ public class NetworkInfo implements Parcelable {
     public boolean isConnectedOrConnecting() {
         boolean z;
         synchronized (this) {
-            if (this.mState != State.CONNECTED) {
-                if (this.mState != State.CONNECTING) {
-                    z = false;
-                }
-            }
-            z = true;
+            z = this.mState == State.CONNECTED || this.mState == State.CONNECTING;
         }
         return z;
     }
@@ -208,8 +203,8 @@ public class NetworkInfo implements Parcelable {
         return z;
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public void setIsAvailable(boolean isAvailable) {
         synchronized (this) {
             this.mIsAvailable = isAvailable;
@@ -225,8 +220,8 @@ public class NetworkInfo implements Parcelable {
         return z;
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public void setFailover(boolean isFailover) {
         synchronized (this) {
             this.mIsFailover = isFailover;
@@ -242,9 +237,9 @@ public class NetworkInfo implements Parcelable {
         return z;
     }
 
+    @UnsupportedAppUsage
     @VisibleForTesting
     @Deprecated
-    @UnsupportedAppUsage
     public void setRoaming(boolean isRoaming) {
         synchronized (this) {
             this.mIsRoaming = isRoaming;
@@ -269,8 +264,8 @@ public class NetworkInfo implements Parcelable {
         return detailedState;
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public void setDetailedState(DetailedState detailedState, String reason, String extraInfo) {
         synchronized (this) {
             this.mDetailedState = detailedState;
@@ -332,10 +327,12 @@ public class NetworkInfo implements Parcelable {
         return sb;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         synchronized (this) {
             dest.writeInt(this.mNetworkType);

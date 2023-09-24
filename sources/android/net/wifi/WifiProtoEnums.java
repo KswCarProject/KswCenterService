@@ -1,5 +1,6 @@
 package android.net.wifi;
 
+/* loaded from: classes3.dex */
 public final class WifiProtoEnums {
     public static final int WIFI_MODE_FULL = 1;
     public static final int WIFI_MODE_FULL_HIGH_PERF = 3;

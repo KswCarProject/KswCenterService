@@ -2,7 +2,7 @@ package android.telephony;
 
 import android.annotation.SystemApi;
 import android.content.Context;
-import android.os.PersistableBundle;
+import android.p007os.PersistableBundle;
 import android.security.keystore.KeyProperties;
 import com.android.internal.telephony.IccCardConstants;
 import com.android.internal.util.ArrayUtils;
@@ -16,6 +16,7 @@ import java.util.Set;
 import java.util.function.IntPredicate;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class DataFailCause {
     public static final int ACCESS_ATTEMPT_ALREADY_IN_PROGRESS = 2219;
     public static final int ACCESS_BLOCK = 2087;
@@ -362,9 +363,10 @@ public final class DataFailCause {
     public static final int VSNCP_SUBSCRIBER_LIMITATION = 2247;
     public static final int VSNCP_TIMEOUT = 2236;
     private static final Map<Integer, String> sFailCauseMap = new HashMap();
-    private static final HashMap<Integer, Set<Integer>> sPermanentFailureCache = new HashMap<>();
+    private static final HashMap<Integer, Set<Integer>> sPermanentFailureCache;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface FailCause {
     }
 
@@ -711,34 +713,30 @@ public final class DataFailCause {
         sFailCauseMap.put(65538, "UNACCEPTABLE_NETWORK_PARAMETER");
         sFailCauseMap.put(65539, "CONNECTION_TO_DATACONNECTIONAC_BROKEN");
         sFailCauseMap.put(65540, "LOST_CONNECTION");
-        sFailCauseMap.put(Integer.valueOf(RESET_BY_FRAMEWORK), "RESET_BY_FRAMEWORK");
+        sFailCauseMap.put(Integer.valueOf((int) RESET_BY_FRAMEWORK), "RESET_BY_FRAMEWORK");
+        sPermanentFailureCache = new HashMap<>();
     }
 
     private DataFailCause() {
     }
 
-    public static boolean isRadioRestartFailure(Context context, int cause, int subId) {
+    public static boolean isRadioRestartFailure(Context context, final int cause, int subId) {
         PersistableBundle b;
         CarrierConfigManager configManager = (CarrierConfigManager) context.getSystemService(Context.CARRIER_CONFIG_SERVICE);
-        if (configManager == null || (b = configManager.getConfigForSubId(subId)) == null) {
+        if (configManager != null && (b = configManager.getConfigForSubId(subId)) != null) {
+            if (cause == 36 && b.getBoolean(CarrierConfigManager.KEY_RESTART_RADIO_ON_PDP_FAIL_REGULAR_DEACTIVATION_BOOL)) {
+                return true;
+            }
+            int[] causeCodes = b.getIntArray(CarrierConfigManager.KEY_RADIO_RESTART_FAILURE_CAUSES_INT_ARRAY);
+            if (causeCodes != null) {
+                return Arrays.stream(causeCodes).anyMatch(new IntPredicate() { // from class: android.telephony.-$$Lambda$DataFailCause$djkZSxdG-s-w2L5rQKiGu6OudyY
+                    @Override // java.util.function.IntPredicate
+                    public final boolean test(int i) {
+                        return DataFailCause.lambda$isRadioRestartFailure$0(cause, i);
+                    }
+                });
+            }
             return false;
-        }
-        if (cause == 36 && b.getBoolean(CarrierConfigManager.KEY_RESTART_RADIO_ON_PDP_FAIL_REGULAR_DEACTIVATION_BOOL)) {
-            return true;
-        }
-        int[] causeCodes = b.getIntArray(CarrierConfigManager.KEY_RADIO_RESTART_FAILURE_CAUSES_INT_ARRAY);
-        if (causeCodes != null) {
-            return Arrays.stream(causeCodes).anyMatch(new IntPredicate(cause) {
-                private final /* synthetic */ int f$0;
-
-                {
-                    this.f$0 = r1;
-                }
-
-                public final boolean test(int i) {
-                    return DataFailCause.lambda$isRadioRestartFailure$0(this.f$0, i);
-                }
-            });
         }
         return false;
     }
@@ -755,16 +753,16 @@ public final class DataFailCause {
             Set<Integer> permanentFailureSet = sPermanentFailureCache.get(Integer.valueOf(subId));
             if (permanentFailureSet == null) {
                 CarrierConfigManager configManager = (CarrierConfigManager) context.getSystemService(Context.CARRIER_CONFIG_SERVICE);
-                if (!(configManager == null || (b = configManager.getConfigForSubId(subId)) == null || (permanentFailureStrings = b.getStringArray(CarrierConfigManager.KEY_CARRIER_DATA_CALL_PERMANENT_FAILURE_STRINGS)) == null)) {
-                    permanentFailureSet = new HashSet<>();
+                if (configManager != null && (b = configManager.getConfigForSubId(subId)) != null && (permanentFailureStrings = b.getStringArray(CarrierConfigManager.KEY_CARRIER_DATA_CALL_PERMANENT_FAILURE_STRINGS)) != null) {
+                    permanentFailureSet = new HashSet();
                     for (Map.Entry<Integer, String> e : sFailCauseMap.entrySet()) {
-                        if (ArrayUtils.contains((T[]) permanentFailureStrings, e.getValue())) {
+                        if (ArrayUtils.contains(permanentFailureStrings, e.getValue())) {
                             permanentFailureSet.add(e.getKey());
                         }
                     }
                 }
                 if (permanentFailureSet == null) {
-                    permanentFailureSet = new HashSet<Integer>() {
+                    permanentFailureSet = new HashSet<Integer>() { // from class: android.telephony.DataFailCause.1
                         {
                             add(8);
                             add(27);
@@ -798,10 +796,10 @@ public final class DataFailCause {
 
     public static String toString(int dataFailCause) {
         int cause = getFailCause(dataFailCause);
-        if (cause != 65536) {
-            return sFailCauseMap.get(Integer.valueOf(cause));
+        if (cause == 65536) {
+            return "UNKNOWN(" + dataFailCause + ")";
         }
-        return "UNKNOWN(" + dataFailCause + ")";
+        return sFailCauseMap.get(Integer.valueOf(cause));
     }
 
     public static int getFailCause(int failCause) {

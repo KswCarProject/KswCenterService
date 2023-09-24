@@ -5,9 +5,9 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
+/* loaded from: classes2.dex */
 public class SystemStatus {
     public static final int TYPE_SYSTEM_STATUS = 1;
-    public int acc;
     public int ccd;
     public boolean dormant;
     public int epb;
@@ -15,55 +15,66 @@ public class SystemStatus {
     public int ill;
     public int lastMode;
     public int rlight;
-    public int screenSwitch;
     public String topApp;
-    public String topClass;
+    public String topClass = "";
+    public int acc = 2;
+    public int screenSwitch = 2;
 
+    /* loaded from: classes2.dex */
     public static final class ACC {
         public static final int NORMAL = 2;
         public static final int OFF = 0;
-        public static final int ON = 1;
+
+        /* renamed from: ON */
+        public static final int f2581ON = 1;
     }
 
+    /* loaded from: classes2.dex */
     public static final class CCD {
         public static final int NORMAL = 0;
         public static final int REVER = 1;
     }
 
+    /* loaded from: classes2.dex */
     public static final class EPB {
         public static final int TURN_OFF = 0;
         public static final int TURN_ON = 1;
     }
 
+    /* loaded from: classes2.dex */
     public static final class ILL {
         public static final int TURN_OFF = 0;
         public static final int TURN_ON = 1;
     }
 
+    /* loaded from: classes2.dex */
     public static final class MODE {
         public static final int AUX = 2;
-        public static final int FM = 0;
+
+        /* renamed from: FM */
+        public static final int f2582FM = 0;
         public static final int MEDIA = 1;
         public static final int NAVI = 3;
         public static final int OTHER = 4;
     }
 
+    /* loaded from: classes2.dex */
     public static final class RLIGHT {
         public static final int NORMAL = 0;
         public static final int OPEN = 1;
     }
 
+    /* loaded from: classes2.dex */
     public static final class SCREEN {
         public static final int NORMAL = 2;
         public static final int OFF = 0;
-        public static final int ON = 1;
+
+        /* renamed from: ON */
+        public static final int f2583ON = 1;
     }
 
     public SystemStatus() {
         this.topApp = "";
-        this.topClass = "";
-        this.acc = 2;
-        this.screenSwitch = 2;
         this.topApp = "";
     }
 
@@ -103,83 +114,83 @@ public class SystemStatus {
         return this.acc;
     }
 
-    public void setAcc(int acc2) {
-        this.acc = acc2;
+    public void setAcc(int acc) {
+        this.acc = acc;
     }
 
     public KeyEvent getEvent() {
         return this.event;
     }
 
-    public void setEvent(KeyEvent event2) {
-        this.event = event2;
+    public void setEvent(KeyEvent event) {
+        this.event = event;
     }
 
     public String getTopApp() {
         return this.topApp;
     }
 
-    public void setTopApp(String topApp2) {
-        this.topApp = topApp2;
+    public void setTopApp(String topApp) {
+        this.topApp = topApp;
     }
 
     public boolean isDormant() {
         return this.dormant;
     }
 
-    public void setDormant(boolean dormant2) {
-        this.dormant = dormant2;
+    public void setDormant(boolean dormant) {
+        this.dormant = dormant;
     }
 
     public int getLastMode() {
         return this.lastMode;
     }
 
-    public void setLastMode(int lastMode2) {
-        this.lastMode = lastMode2;
+    public void setLastMode(int lastMode) {
+        this.lastMode = lastMode;
     }
 
     public int getScreenSwitch() {
         return this.screenSwitch;
     }
 
-    public void setScreenSwitch(int screenSwitch2) {
-        this.screenSwitch = screenSwitch2;
+    public void setScreenSwitch(int screenSwitch) {
+        this.screenSwitch = screenSwitch;
     }
 
     public static SystemStatus getStatusFormJson(String jsonArg) {
-        return (SystemStatus) new Gson().fromJson(jsonArg, SystemStatus.class);
+        return (SystemStatus) new Gson().fromJson(jsonArg, (Class<Object>) SystemStatus.class);
     }
 
     public int getRlight() {
         return this.rlight;
     }
 
-    public void setRlight(int rlight2) {
-        this.rlight = rlight2;
+    public void setRlight(int rlight) {
+        this.rlight = rlight;
     }
 
     public int getCcd() {
         return this.ccd;
     }
 
-    public void setCcd(int ccd2) {
-        this.ccd = ccd2;
+    public void setCcd(int ccd) {
+        this.ccd = ccd;
     }
 
     public int getIll() {
         return this.ill;
     }
 
-    public void setIll(int ill2) {
-        this.ill = ill2;
+    public void setIll(int ill) {
+        this.ill = ill;
     }
 
     public int getEpb() {
         return this.epb;
     }
 
-    public void setEpb(int epb2) {
-        this.epb = epb2;
+    public void setEpb(int epb) {
+        this.epb = epb;
     }
 }

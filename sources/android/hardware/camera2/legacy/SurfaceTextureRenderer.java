@@ -13,8 +13,8 @@ import android.opengl.EGLSurface;
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
-import android.os.Environment;
-import android.os.SystemProperties;
+import android.p007os.Environment;
+import android.p007os.SystemProperties;
 import android.provider.SettingsStringUtil;
 import android.text.format.Time;
 import android.util.Log;
@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/* loaded from: classes.dex */
 public class SurfaceTextureRenderer {
     private static final boolean DEBUG = false;
     private static final int EGL_COLOR_BITLENGTH = 8;
@@ -44,39 +45,40 @@ public class SurfaceTextureRenderer {
     private static final int GL_MATRIX_SIZE = 16;
     private static final String LEGACY_PERF_PROPERTY = "persist.camera.legacy_perf";
     private static final int PBUFFER_PIXEL_BYTES = 4;
-    private static final String TAG = SurfaceTextureRenderer.class.getSimpleName();
     private static final int TRIANGLE_VERTICES_DATA_POS_OFFSET = 0;
     private static final int TRIANGLE_VERTICES_DATA_STRIDE_BYTES = 20;
     private static final int TRIANGLE_VERTICES_DATA_UV_OFFSET = 3;
     private static final int VERTEX_POS_SIZE = 3;
     private static final String VERTEX_SHADER = "uniform mat4 uMVPMatrix;\nuniform mat4 uSTMatrix;\nattribute vec4 aPosition;\nattribute vec4 aTextureCoord;\nvarying vec2 vTextureCoord;\nvoid main() {\n  gl_Position = uMVPMatrix * aPosition;\n  vTextureCoord = (uSTMatrix * aTextureCoord).xy;\n}\n";
     private static final int VERTEX_UV_SIZE = 2;
-    private static final float[] sBothFlipTriangleVertices = {-1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, -1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f};
-    private static final float[] sHorizontalFlipTriangleVertices = {-1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f};
-    private static final float[] sRegularTriangleVertices = {-1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f, -1.0f, 0.0f, 1.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f};
-    private static final float[] sVerticalFlipTriangleVertices = {-1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f, -1.0f, 0.0f, 1.0f, 1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f};
     private FloatBuffer mBothFlipTriangleVertices;
     private EGLConfig mConfigs;
-    private List<EGLSurfaceHolder> mConversionSurfaces = new ArrayList();
-    private EGLContext mEGLContext = EGL14.EGL_NO_CONTEXT;
-    private EGLDisplay mEGLDisplay = EGL14.EGL_NO_DISPLAY;
     private final int mFacing;
     private FloatBuffer mHorizontalFlipTriangleVertices;
-    private float[] mMVPMatrix = new float[16];
     private ByteBuffer mPBufferPixels;
-    private PerfMeasurement mPerfMeasurer = null;
     private int mProgram;
-    private FloatBuffer mRegularTriangleVertices;
-    private float[] mSTMatrix = new float[16];
     private volatile SurfaceTexture mSurfaceTexture;
-    private List<EGLSurfaceHolder> mSurfaces = new ArrayList();
-    private int mTextureID = 0;
     private FloatBuffer mVerticalFlipTriangleVertices;
     private int maPositionHandle;
     private int maTextureHandle;
     private int muMVPMatrixHandle;
     private int muSTMatrixHandle;
+    private static final String TAG = SurfaceTextureRenderer.class.getSimpleName();
+    private static final float[] sHorizontalFlipTriangleVertices = {-1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f};
+    private static final float[] sVerticalFlipTriangleVertices = {-1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f, -1.0f, 0.0f, 1.0f, 1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f};
+    private static final float[] sBothFlipTriangleVertices = {-1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, -1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f};
+    private static final float[] sRegularTriangleVertices = {-1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f, -1.0f, 0.0f, 1.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f};
+    private EGLDisplay mEGLDisplay = EGL14.EGL_NO_DISPLAY;
+    private EGLContext mEGLContext = EGL14.EGL_NO_CONTEXT;
+    private List<EGLSurfaceHolder> mSurfaces = new ArrayList();
+    private List<EGLSurfaceHolder> mConversionSurfaces = new ArrayList();
+    private float[] mMVPMatrix = new float[16];
+    private float[] mSTMatrix = new float[16];
+    private int mTextureID = 0;
+    private PerfMeasurement mPerfMeasurer = null;
+    private FloatBuffer mRegularTriangleVertices = ByteBuffer.allocateDirect(sRegularTriangleVertices.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
 
+    /* loaded from: classes.dex */
     private class EGLSurfaceHolder {
         EGLSurface eglSurface;
         int height;
@@ -89,7 +91,6 @@ public class SurfaceTextureRenderer {
 
     public SurfaceTextureRenderer(int facing) {
         this.mFacing = facing;
-        this.mRegularTriangleVertices = ByteBuffer.allocateDirect(sRegularTriangleVertices.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
         this.mRegularTriangleVertices.put(sRegularTriangleVertices).position(0);
         this.mHorizontalFlipTriangleVertices = ByteBuffer.allocateDirect(sHorizontalFlipTriangleVertices.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
         this.mHorizontalFlipTriangleVertices.put(sHorizontalFlipTriangleVertices).position(0);
@@ -107,15 +108,15 @@ public class SurfaceTextureRenderer {
         GLES20.glCompileShader(shader);
         int[] compiled = new int[1];
         GLES20.glGetShaderiv(shader, GLES20.GL_COMPILE_STATUS, compiled, 0);
-        if (compiled[0] != 0) {
-            return shader;
+        if (compiled[0] == 0) {
+            String str = TAG;
+            Log.m70e(str, "Could not compile shader " + shaderType + SettingsStringUtil.DELIMITER);
+            String str2 = TAG;
+            Log.m70e(str2, WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + GLES20.glGetShaderInfoLog(shader));
+            GLES20.glDeleteShader(shader);
+            throw new IllegalStateException("Could not compile shader " + shaderType);
         }
-        String str = TAG;
-        Log.e(str, "Could not compile shader " + shaderType + SettingsStringUtil.DELIMITER);
-        String str2 = TAG;
-        Log.e(str2, WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + GLES20.glGetShaderInfoLog(shader));
-        GLES20.glDeleteShader(shader);
-        throw new IllegalStateException("Could not compile shader " + shaderType);
+        return shader;
     }
 
     private int createProgram(String vertexSource, String fragmentSource) {
@@ -127,7 +128,7 @@ public class SurfaceTextureRenderer {
         int program = GLES20.glCreateProgram();
         checkGlError("glCreateProgram");
         if (program == 0) {
-            Log.e(TAG, "Could not create program");
+            Log.m70e(TAG, "Could not create program");
         }
         GLES20.glAttachShader(program, vertexShader);
         checkGlError("glAttachShader");
@@ -136,36 +137,36 @@ public class SurfaceTextureRenderer {
         GLES20.glLinkProgram(program);
         int[] linkStatus = new int[1];
         GLES20.glGetProgramiv(program, GLES20.GL_LINK_STATUS, linkStatus, 0);
-        if (linkStatus[0] == 1) {
-            return program;
+        if (linkStatus[0] != 1) {
+            Log.m70e(TAG, "Could not link program: ");
+            Log.m70e(TAG, GLES20.glGetProgramInfoLog(program));
+            GLES20.glDeleteProgram(program);
+            throw new IllegalStateException("Could not link program");
         }
-        Log.e(TAG, "Could not link program: ");
-        Log.e(TAG, GLES20.glGetProgramInfoLog(program));
-        GLES20.glDeleteProgram(program);
-        throw new IllegalStateException("Could not link program");
+        return program;
     }
 
     private void drawFrame(SurfaceTexture st, int width, int height, int flipType) throws LegacyExceptionUtils.BufferQueueAbandonedException {
         FloatBuffer triangleVertices;
-        int i = width;
-        int i2 = height;
         checkGlError("onDrawFrame start");
         st.getTransformMatrix(this.mSTMatrix);
         Matrix.setIdentityM(this.mMVPMatrix, 0);
         try {
             Size dimens = LegacyCameraDevice.getTextureSize(st);
-            float texWidth = (float) dimens.getWidth();
-            float texHeight = (float) dimens.getHeight();
+            float texWidth = dimens.getWidth();
+            float texHeight = dimens.getHeight();
             if (texWidth <= 0.0f || texHeight <= 0.0f) {
                 throw new IllegalStateException("Illegal intermediate texture with dimension of 0");
             }
             RectF intermediate = new RectF(0.0f, 0.0f, texWidth, texHeight);
-            RectF output = new RectF(0.0f, 0.0f, (float) i, (float) i2);
+            RectF output = new RectF(0.0f, 0.0f, width, height);
             android.graphics.Matrix boxingXform = new android.graphics.Matrix();
             boxingXform.setRectToRect(output, intermediate, Matrix.ScaleToFit.CENTER);
             boxingXform.mapRect(output);
-            android.opengl.Matrix.scaleM(this.mMVPMatrix, 0, intermediate.width() / output.width(), intermediate.height() / output.height(), 1.0f);
-            GLES20.glViewport(0, 0, i, i2);
+            float scaleX = intermediate.width() / output.width();
+            float scaleY = intermediate.height() / output.height();
+            android.opengl.Matrix.scaleM(this.mMVPMatrix, 0, scaleX, scaleY, 1.0f);
+            GLES20.glViewport(0, 0, width, height);
             GLES20.glUseProgram(this.mProgram);
             checkGlError("glUseProgram");
             GLES20.glActiveTexture(33984);
@@ -195,7 +196,6 @@ public class SurfaceTextureRenderer {
             checkGlError("glVertexAttribPointer maTextureHandle");
             GLES20.glEnableVertexAttribArray(this.maTextureHandle);
             checkGlError("glEnableVertexAttribArray maTextureHandle");
-            Size size = dimens;
             GLES20.glUniformMatrix4fv(this.muMVPMatrixHandle, 1, false, this.mMVPMatrix, 0);
             GLES20.glUniformMatrix4fv(this.muSTMatrixHandle, 1, false, this.mSTMatrix, 0);
             GLES20.glDrawArrays(5, 0, 4);
@@ -207,40 +207,39 @@ public class SurfaceTextureRenderer {
 
     private void initializeGLState() {
         this.mProgram = createProgram(VERTEX_SHADER, FRAGMENT_SHADER);
-        if (this.mProgram != 0) {
-            this.maPositionHandle = GLES20.glGetAttribLocation(this.mProgram, "aPosition");
-            checkGlError("glGetAttribLocation aPosition");
-            if (this.maPositionHandle != -1) {
-                this.maTextureHandle = GLES20.glGetAttribLocation(this.mProgram, "aTextureCoord");
-                checkGlError("glGetAttribLocation aTextureCoord");
-                if (this.maTextureHandle != -1) {
-                    this.muMVPMatrixHandle = GLES20.glGetUniformLocation(this.mProgram, "uMVPMatrix");
-                    checkGlError("glGetUniformLocation uMVPMatrix");
-                    if (this.muMVPMatrixHandle != -1) {
-                        this.muSTMatrixHandle = GLES20.glGetUniformLocation(this.mProgram, "uSTMatrix");
-                        checkGlError("glGetUniformLocation uSTMatrix");
-                        if (this.muSTMatrixHandle != -1) {
-                            int[] textures = new int[1];
-                            GLES20.glGenTextures(1, textures, 0);
-                            this.mTextureID = textures[0];
-                            GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, this.mTextureID);
-                            checkGlError("glBindTexture mTextureID");
-                            GLES20.glTexParameterf(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, 10241, 9728.0f);
-                            GLES20.glTexParameterf(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, 10240, 9729.0f);
-                            GLES20.glTexParameteri(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, 10242, 33071);
-                            GLES20.glTexParameteri(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, 10243, 33071);
-                            checkGlError("glTexParameter");
-                            return;
-                        }
-                        throw new IllegalStateException("Could not get attrib location for uSTMatrix");
-                    }
-                    throw new IllegalStateException("Could not get attrib location for uMVPMatrix");
-                }
-                throw new IllegalStateException("Could not get attrib location for aTextureCoord");
-            }
+        if (this.mProgram == 0) {
+            throw new IllegalStateException("failed creating program");
+        }
+        this.maPositionHandle = GLES20.glGetAttribLocation(this.mProgram, "aPosition");
+        checkGlError("glGetAttribLocation aPosition");
+        if (this.maPositionHandle == -1) {
             throw new IllegalStateException("Could not get attrib location for aPosition");
         }
-        throw new IllegalStateException("failed creating program");
+        this.maTextureHandle = GLES20.glGetAttribLocation(this.mProgram, "aTextureCoord");
+        checkGlError("glGetAttribLocation aTextureCoord");
+        if (this.maTextureHandle == -1) {
+            throw new IllegalStateException("Could not get attrib location for aTextureCoord");
+        }
+        this.muMVPMatrixHandle = GLES20.glGetUniformLocation(this.mProgram, "uMVPMatrix");
+        checkGlError("glGetUniformLocation uMVPMatrix");
+        if (this.muMVPMatrixHandle == -1) {
+            throw new IllegalStateException("Could not get attrib location for uMVPMatrix");
+        }
+        this.muSTMatrixHandle = GLES20.glGetUniformLocation(this.mProgram, "uSTMatrix");
+        checkGlError("glGetUniformLocation uSTMatrix");
+        if (this.muSTMatrixHandle == -1) {
+            throw new IllegalStateException("Could not get attrib location for uSTMatrix");
+        }
+        int[] textures = new int[1];
+        GLES20.glGenTextures(1, textures, 0);
+        this.mTextureID = textures[0];
+        GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, this.mTextureID);
+        checkGlError("glBindTexture mTextureID");
+        GLES20.glTexParameterf(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, 10241, 9728.0f);
+        GLES20.glTexParameterf(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, 10240, 9729.0f);
+        GLES20.glTexParameteri(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, 10242, 33071);
+        GLES20.glTexParameteri(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, 10243, 33071);
+        checkGlError("glTexParameter");
     }
 
     private int getTextureId() {
@@ -253,7 +252,7 @@ public class SurfaceTextureRenderer {
             try {
                 LegacyCameraDevice.disconnectSurface(holder.surface);
             } catch (LegacyExceptionUtils.BufferQueueAbandonedException e) {
-                Log.w(TAG, "Surface abandoned, skipping...", e);
+                Log.m63w(TAG, "Surface abandoned, skipping...", e);
             }
         }
         this.mConversionSurfaces.clear();
@@ -266,23 +265,25 @@ public class SurfaceTextureRenderer {
 
     private void configureEGLContext() {
         this.mEGLDisplay = EGL14.eglGetDisplay(0);
-        if (this.mEGLDisplay != EGL14.EGL_NO_DISPLAY) {
-            int[] version = new int[2];
-            if (EGL14.eglInitialize(this.mEGLDisplay, version, 0, version, 1)) {
-                EGLConfig[] configs = new EGLConfig[1];
-                EGL14.eglChooseConfig(this.mEGLDisplay, new int[]{12324, 8, 12323, 8, 12322, 8, 12352, 4, 12610, 1, 12339, 5, 12344}, 0, configs, 0, configs.length, new int[1], 0);
-                checkEglError("eglCreateContext RGB888+recordable ES2");
-                this.mConfigs = configs[0];
-                this.mEGLContext = EGL14.eglCreateContext(this.mEGLDisplay, configs[0], EGL14.EGL_NO_CONTEXT, new int[]{12440, 2, 12344}, 0);
-                checkEglError("eglCreateContext");
-                if (this.mEGLContext == EGL14.EGL_NO_CONTEXT) {
-                    throw new IllegalStateException("No EGLContext could be made");
-                }
-                return;
-            }
+        if (this.mEGLDisplay == EGL14.EGL_NO_DISPLAY) {
+            throw new IllegalStateException("No EGL14 display");
+        }
+        int[] version = new int[2];
+        if (!EGL14.eglInitialize(this.mEGLDisplay, version, 0, version, 1)) {
             throw new IllegalStateException("Cannot initialize EGL14");
         }
-        throw new IllegalStateException("No EGL14 display");
+        int[] attribList = {12324, 8, 12323, 8, 12322, 8, 12352, 4, 12610, 1, 12339, 5, 12344};
+        EGLConfig[] configs = new EGLConfig[1];
+        int[] numConfigs = new int[1];
+        EGL14.eglChooseConfig(this.mEGLDisplay, attribList, 0, configs, 0, configs.length, numConfigs, 0);
+        checkEglError("eglCreateContext RGB888+recordable ES2");
+        this.mConfigs = configs[0];
+        int[] attrib_list = {12440, 2, 12344};
+        this.mEGLContext = EGL14.eglCreateContext(this.mEGLDisplay, configs[0], EGL14.EGL_NO_CONTEXT, attrib_list, 0);
+        checkEglError("eglCreateContext");
+        if (this.mEGLContext == EGL14.EGL_NO_CONTEXT) {
+            throw new IllegalStateException("No EGLContext could be made");
+        }
     }
 
     private void configureEGLOutputSurfaces(Collection<EGLSurfaceHolder> surfaces) {
@@ -304,7 +305,8 @@ public class SurfaceTextureRenderer {
         for (EGLSurfaceHolder holder : surfaces) {
             int length = holder.width * holder.height;
             maxLength = length > maxLength ? length : maxLength;
-            holder.eglSurface = EGL14.eglCreatePbufferSurface(this.mEGLDisplay, this.mConfigs, new int[]{12375, holder.width, 12374, holder.height, 12344}, 0);
+            int[] surfaceAttribs = {12375, holder.width, 12374, holder.height, 12344};
+            holder.eglSurface = EGL14.eglCreatePbufferSurface(this.mEGLDisplay, this.mConfigs, surfaceAttribs, 0);
             checkEglError("eglCreatePbufferSurface");
         }
         this.mPBufferPixels = ByteBuffer.allocateDirect(maxLength * 4).order(ByteOrder.nativeOrder());
@@ -346,41 +348,35 @@ public class SurfaceTextureRenderer {
     private boolean swapBuffers(EGLSurface surface) throws LegacyExceptionUtils.BufferQueueAbandonedException {
         boolean result = EGL14.eglSwapBuffers(this.mEGLDisplay, surface);
         int error = EGL14.eglGetError();
-        if (error == 12288) {
-            return result;
+        if (error != 12288) {
+            if (error == 12299 || error == 12301) {
+                throw new LegacyExceptionUtils.BufferQueueAbandonedException();
+            }
+            throw new IllegalStateException("swapBuffers: EGL error: 0x" + Integer.toHexString(error));
         }
-        if (error == 12299 || error == 12301) {
-            throw new LegacyExceptionUtils.BufferQueueAbandonedException();
-        }
-        throw new IllegalStateException("swapBuffers: EGL error: 0x" + Integer.toHexString(error));
+        return result;
     }
 
     private void checkEglDrawError(String msg) throws LegacyExceptionUtils.BufferQueueAbandonedException {
-        int eglGetError = EGL14.eglGetError();
-        int i = eglGetError;
-        if (eglGetError != 12299) {
-            int eglGetError2 = EGL14.eglGetError();
-            int error = eglGetError2;
-            if (eglGetError2 != 12288) {
-                throw new IllegalStateException(msg + ": EGL error: 0x" + Integer.toHexString(error));
-            }
-            return;
+        if (EGL14.eglGetError() == 12299) {
+            throw new LegacyExceptionUtils.BufferQueueAbandonedException();
         }
-        throw new LegacyExceptionUtils.BufferQueueAbandonedException();
+        int error = EGL14.eglGetError();
+        if (error != 12288) {
+            throw new IllegalStateException(msg + ": EGL error: 0x" + Integer.toHexString(error));
+        }
     }
 
     private void checkEglError(String msg) {
-        int eglGetError = EGL14.eglGetError();
-        int error = eglGetError;
-        if (eglGetError != 12288) {
+        int error = EGL14.eglGetError();
+        if (error != 12288) {
             throw new IllegalStateException(msg + ": EGL error: 0x" + Integer.toHexString(error));
         }
     }
 
     private void checkGlError(String msg) {
-        int glGetError = GLES20.glGetError();
-        int error = glGetError;
-        if (glGetError != 0) {
+        int error = GLES20.glGetError();
+        if (error != 0) {
             throw new IllegalStateException(msg + ": GLES20 error: 0x" + Integer.toHexString(error));
         }
     }
@@ -390,9 +386,8 @@ public class SurfaceTextureRenderer {
         boolean surfaceAbandoned = false;
         boolean glError = false;
         while (true) {
-            int glGetError = GLES20.glGetError();
-            error = glGetError;
-            if (glGetError == 0) {
+            error = GLES20.glGetError();
+            if (error == 0) {
                 break;
             } else if (error == 1285) {
                 surfaceAbandoned = true;
@@ -408,57 +403,61 @@ public class SurfaceTextureRenderer {
     }
 
     private void dumpGlTiming() {
-        if (this.mPerfMeasurer != null) {
-            File legacyStorageDir = new File(Environment.getExternalStorageDirectory(), "CameraLegacy");
-            if (legacyStorageDir.exists() || legacyStorageDir.mkdirs()) {
-                StringBuilder path = new StringBuilder(legacyStorageDir.getPath());
-                path.append(File.separator);
-                path.append("durations_");
-                Time now = new Time();
-                now.setToNow();
-                path.append(now.format2445());
-                path.append("_S");
-                for (EGLSurfaceHolder surface : this.mSurfaces) {
-                    path.append(String.format("_%d_%d", new Object[]{Integer.valueOf(surface.width), Integer.valueOf(surface.height)}));
-                }
-                path.append("_C");
-                for (EGLSurfaceHolder surface2 : this.mConversionSurfaces) {
-                    path.append(String.format("_%d_%d", new Object[]{Integer.valueOf(surface2.width), Integer.valueOf(surface2.height)}));
-                }
-                path.append(".txt");
-                this.mPerfMeasurer.dumpPerformanceData(path.toString());
-                return;
-            }
-            Log.e(TAG, "Failed to create directory for data dump");
+        if (this.mPerfMeasurer == null) {
+            return;
         }
+        File legacyStorageDir = new File(Environment.getExternalStorageDirectory(), "CameraLegacy");
+        if (!legacyStorageDir.exists() && !legacyStorageDir.mkdirs()) {
+            Log.m70e(TAG, "Failed to create directory for data dump");
+            return;
+        }
+        StringBuilder path = new StringBuilder(legacyStorageDir.getPath());
+        path.append(File.separator);
+        path.append("durations_");
+        Time now = new Time();
+        now.setToNow();
+        path.append(now.format2445());
+        path.append("_S");
+        for (EGLSurfaceHolder surface : this.mSurfaces) {
+            path.append(String.format("_%d_%d", Integer.valueOf(surface.width), Integer.valueOf(surface.height)));
+        }
+        path.append("_C");
+        for (EGLSurfaceHolder surface2 : this.mConversionSurfaces) {
+            path.append(String.format("_%d_%d", Integer.valueOf(surface2.width), Integer.valueOf(surface2.height)));
+        }
+        path.append(".txt");
+        this.mPerfMeasurer.dumpPerformanceData(path.toString());
     }
 
     private void setupGlTiming() {
         if (PerfMeasurement.isGlTimingSupported()) {
-            Log.d(TAG, "Enabling GL performance measurement");
+            Log.m72d(TAG, "Enabling GL performance measurement");
             this.mPerfMeasurer = new PerfMeasurement();
             return;
         }
-        Log.d(TAG, "GL performance measurement not supported on this device");
+        Log.m72d(TAG, "GL performance measurement not supported on this device");
         this.mPerfMeasurer = null;
     }
 
     private void beginGlTiming() {
-        if (this.mPerfMeasurer != null) {
-            this.mPerfMeasurer.startTimer();
+        if (this.mPerfMeasurer == null) {
+            return;
         }
+        this.mPerfMeasurer.startTimer();
     }
 
     private void addGlTimestamp(long timestamp) {
-        if (this.mPerfMeasurer != null) {
-            this.mPerfMeasurer.addTimestamp(timestamp);
+        if (this.mPerfMeasurer == null) {
+            return;
         }
+        this.mPerfMeasurer.addTimestamp(timestamp);
     }
 
     private void endGlTiming() {
-        if (this.mPerfMeasurer != null) {
-            this.mPerfMeasurer.stopTimer();
+        if (this.mPerfMeasurer == null) {
+            return;
         }
+        this.mPerfMeasurer.stopTimer();
     }
 
     public SurfaceTexture getSurfaceTexture() {
@@ -466,15 +465,14 @@ public class SurfaceTextureRenderer {
     }
 
     public void configureSurfaces(Collection<Pair<Surface, Size>> surfaces) {
-        EGLSurface eGLSurface;
         releaseEGLContext();
         if (surfaces == null || surfaces.size() == 0) {
-            Log.w(TAG, "No output surfaces configured for GL drawing.");
+            Log.m64w(TAG, "No output surfaces configured for GL drawing.");
             return;
         }
         for (Pair<Surface, Size> p : surfaces) {
-            Surface s = (Surface) p.first;
-            Size surfaceSize = (Size) p.second;
+            Surface s = p.first;
+            Size surfaceSize = p.second;
             try {
                 EGLSurfaceHolder holder = new EGLSurfaceHolder();
                 holder.surface = s;
@@ -487,7 +485,7 @@ public class SurfaceTextureRenderer {
                     this.mSurfaces.add(holder);
                 }
             } catch (LegacyExceptionUtils.BufferQueueAbandonedException e) {
-                Log.w(TAG, "Surface abandoned, skipping configuration... ", e);
+                Log.m63w(TAG, "Surface abandoned, skipping configuration... ", e);
             }
         }
         configureEGLContext();
@@ -498,14 +496,9 @@ public class SurfaceTextureRenderer {
             configureEGLPbufferSurfaces(this.mConversionSurfaces);
         }
         try {
-            if (this.mSurfaces.size() > 0) {
-                eGLSurface = this.mSurfaces.get(0).eglSurface;
-            } else {
-                eGLSurface = this.mConversionSurfaces.get(0).eglSurface;
-            }
-            makeCurrent(eGLSurface);
+            makeCurrent(this.mSurfaces.size() > 0 ? this.mSurfaces.get(0).eglSurface : this.mConversionSurfaces.get(0).eglSurface);
         } catch (LegacyExceptionUtils.BufferQueueAbandonedException e2) {
-            Log.w(TAG, "Surface abandoned, skipping configuration... ", e2);
+            Log.m63w(TAG, "Surface abandoned, skipping configuration... ", e2);
         }
         initializeGLState();
         this.mSurfaceTexture = new SurfaceTexture(getTextureId());
@@ -516,7 +509,6 @@ public class SurfaceTextureRenderer {
 
     public void drawIntoSurfaces(CaptureCollector targetCollector) {
         if ((this.mSurfaces == null || this.mSurfaces.size() == 0) && (this.mConversionSurfaces == null || this.mConversionSurfaces.size() == 0)) {
-            CaptureCollector captureCollector = targetCollector;
             return;
         }
         boolean doTiming = targetCollector.hasPendingPreviewCaptures();
@@ -527,60 +519,63 @@ public class SurfaceTextureRenderer {
         this.mSurfaceTexture.updateTexImage();
         long timestamp = this.mSurfaceTexture.getTimestamp();
         Pair<RequestHolder, Long> captureHolder = targetCollector.previewCaptured(timestamp);
-        if (captureHolder != null) {
-            RequestHolder request = (RequestHolder) captureHolder.first;
-            Collection<Surface> targetSurfaces = request.getHolderTargets();
-            if (doTiming) {
-                addGlTimestamp(timestamp);
-            }
-            List<Long> targetSurfaceIds = new ArrayList<>();
-            try {
-                targetSurfaceIds = LegacyCameraDevice.getSurfaceIds(targetSurfaces);
-            } catch (LegacyExceptionUtils.BufferQueueAbandonedException e) {
-                Log.w(TAG, "Surface abandoned, dropping frame. ", e);
-                request.setOutputAbandoned();
-            }
-            for (EGLSurfaceHolder holder : this.mSurfaces) {
-                if (LegacyCameraDevice.containsSurfaceId(holder.surface, targetSurfaceIds)) {
-                    try {
-                        LegacyCameraDevice.setSurfaceDimens(holder.surface, holder.width, holder.height);
-                        makeCurrent(holder.eglSurface);
-                        LegacyCameraDevice.setNextTimestamp(holder.surface, ((Long) captureHolder.second).longValue());
-                        drawFrame(this.mSurfaceTexture, holder.width, holder.height, this.mFacing == 0 ? 1 : 0);
-                        swapBuffers(holder.eglSurface);
-                    } catch (LegacyExceptionUtils.BufferQueueAbandonedException e2) {
-                        Log.w(TAG, "Surface abandoned, dropping frame. ", e2);
-                        request.setOutputAbandoned();
-                    }
-                }
-            }
-            for (EGLSurfaceHolder holder2 : this.mConversionSurfaces) {
-                if (LegacyCameraDevice.containsSurfaceId(holder2.surface, targetSurfaceIds)) {
-                    try {
-                        makeCurrent(holder2.eglSurface);
-                        drawFrame(this.mSurfaceTexture, holder2.width, holder2.height, this.mFacing == 0 ? 3 : 2);
-                        this.mPBufferPixels.clear();
-                        GLES20.glReadPixels(0, 0, holder2.width, holder2.height, 6408, 5121, this.mPBufferPixels);
-                        checkGlError("glReadPixels");
-                        try {
-                            int format = LegacyCameraDevice.detectSurfaceType(holder2.surface);
-                            LegacyCameraDevice.setSurfaceDimens(holder2.surface, holder2.width, holder2.height);
-                            LegacyCameraDevice.setNextTimestamp(holder2.surface, ((Long) captureHolder.second).longValue());
-                            LegacyCameraDevice.produceFrame(holder2.surface, this.mPBufferPixels.array(), holder2.width, holder2.height, format);
-                        } catch (LegacyExceptionUtils.BufferQueueAbandonedException e3) {
-                            Log.w(TAG, "Surface abandoned, dropping frame. ", e3);
-                            request.setOutputAbandoned();
-                        }
-                    } catch (LegacyExceptionUtils.BufferQueueAbandonedException e4) {
-                        throw new IllegalStateException("Surface abandoned, skipping drawFrame...", e4);
-                    }
-                }
-            }
-            targetCollector.previewProduced();
+        if (captureHolder == null) {
             if (doTiming) {
                 endGlTiming();
+                return;
             }
-        } else if (doTiming) {
+            return;
+        }
+        RequestHolder request = captureHolder.first;
+        Collection<Surface> targetSurfaces = request.getHolderTargets();
+        if (doTiming) {
+            addGlTimestamp(timestamp);
+        }
+        List<Long> targetSurfaceIds = new ArrayList<>();
+        try {
+            targetSurfaceIds = LegacyCameraDevice.getSurfaceIds(targetSurfaces);
+        } catch (LegacyExceptionUtils.BufferQueueAbandonedException e) {
+            Log.m63w(TAG, "Surface abandoned, dropping frame. ", e);
+            request.setOutputAbandoned();
+        }
+        for (EGLSurfaceHolder holder : this.mSurfaces) {
+            if (LegacyCameraDevice.containsSurfaceId(holder.surface, targetSurfaceIds)) {
+                try {
+                    LegacyCameraDevice.setSurfaceDimens(holder.surface, holder.width, holder.height);
+                    makeCurrent(holder.eglSurface);
+                    LegacyCameraDevice.setNextTimestamp(holder.surface, captureHolder.second.longValue());
+                    drawFrame(this.mSurfaceTexture, holder.width, holder.height, this.mFacing == 0 ? 1 : 0);
+                    swapBuffers(holder.eglSurface);
+                } catch (LegacyExceptionUtils.BufferQueueAbandonedException e2) {
+                    Log.m63w(TAG, "Surface abandoned, dropping frame. ", e2);
+                    request.setOutputAbandoned();
+                }
+            }
+        }
+        for (EGLSurfaceHolder holder2 : this.mConversionSurfaces) {
+            if (LegacyCameraDevice.containsSurfaceId(holder2.surface, targetSurfaceIds)) {
+                try {
+                    makeCurrent(holder2.eglSurface);
+                    drawFrame(this.mSurfaceTexture, holder2.width, holder2.height, this.mFacing == 0 ? 3 : 2);
+                    this.mPBufferPixels.clear();
+                    GLES20.glReadPixels(0, 0, holder2.width, holder2.height, 6408, 5121, this.mPBufferPixels);
+                    checkGlError("glReadPixels");
+                    try {
+                        int format = LegacyCameraDevice.detectSurfaceType(holder2.surface);
+                        LegacyCameraDevice.setSurfaceDimens(holder2.surface, holder2.width, holder2.height);
+                        LegacyCameraDevice.setNextTimestamp(holder2.surface, captureHolder.second.longValue());
+                        LegacyCameraDevice.produceFrame(holder2.surface, this.mPBufferPixels.array(), holder2.width, holder2.height, format);
+                    } catch (LegacyExceptionUtils.BufferQueueAbandonedException e3) {
+                        Log.m63w(TAG, "Surface abandoned, dropping frame. ", e3);
+                        request.setOutputAbandoned();
+                    }
+                } catch (LegacyExceptionUtils.BufferQueueAbandonedException e4) {
+                    throw new IllegalStateException("Surface abandoned, skipping drawFrame...", e4);
+                }
+            }
+        }
+        targetCollector.previewProduced();
+        if (doTiming) {
             endGlTiming();
         }
     }
@@ -590,6 +585,6 @@ public class SurfaceTextureRenderer {
     }
 
     public void flush() {
-        Log.e(TAG, "Flush not yet implemented.");
+        Log.m70e(TAG, "Flush not yet implemented.");
     }
 }

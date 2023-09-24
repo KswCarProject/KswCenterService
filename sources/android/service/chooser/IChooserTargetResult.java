@@ -1,24 +1,29 @@
 package android.service.chooser;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import java.util.List;
 
+/* loaded from: classes3.dex */
 public interface IChooserTargetResult extends IInterface {
     void sendResult(List<ChooserTarget> list) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements IChooserTargetResult {
-        public void sendResult(List<ChooserTarget> list) throws RemoteException {
+        @Override // android.service.chooser.IChooserTargetResult
+        public void sendResult(List<ChooserTarget> targets) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements IChooserTargetResult {
         private static final String DESCRIPTOR = "android.service.chooser.IChooserTargetResult";
         static final int TRANSACTION_sendResult = 1;
@@ -32,40 +37,45 @@ public interface IChooserTargetResult extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IChooserTargetResult)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IChooserTargetResult)) {
+                return (IChooserTargetResult) iin;
             }
-            return (IChooserTargetResult) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
 
         public static String getDefaultTransactionName(int transactionCode) {
-            if (transactionCode != 1) {
-                return null;
+            if (transactionCode == 1) {
+                return "sendResult";
             }
-            return "sendResult";
+            return null;
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code == 1) {
-                data.enforceInterface(DESCRIPTOR);
-                sendResult(data.createTypedArrayList(ChooserTarget.CREATOR));
-                return true;
-            } else if (code != 1598968902) {
+            if (code != 1) {
+                if (code == 1598968902) {
+                    reply.writeString(DESCRIPTOR);
+                    return true;
+                }
                 return super.onTransact(code, data, reply, flags);
-            } else {
-                reply.writeString(DESCRIPTOR);
-                return true;
             }
+            data.enforceInterface(DESCRIPTOR);
+            List<ChooserTarget> _arg0 = data.createTypedArrayList(ChooserTarget.CREATOR);
+            sendResult(_arg0);
+            return true;
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements IChooserTargetResult {
             public static IChooserTargetResult sDefaultImpl;
             private IBinder mRemote;
@@ -74,6 +84,7 @@ public interface IChooserTargetResult extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -82,14 +93,14 @@ public interface IChooserTargetResult extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.service.chooser.IChooserTargetResult
             public void sendResult(List<ChooserTarget> targets) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeTypedList(targets);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().sendResult(targets);
                     }
                 } finally {
@@ -99,11 +110,11 @@ public interface IChooserTargetResult extends IInterface {
         }
 
         public static boolean setDefaultImpl(IChooserTargetResult impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IChooserTargetResult getDefaultImpl() {

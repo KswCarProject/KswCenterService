@@ -1,23 +1,28 @@
 package android.hardware.hdmi;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes.dex */
 public interface IHdmiDeviceEventListener extends IInterface {
     void onStatusChanged(HdmiDeviceInfo hdmiDeviceInfo, int i) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements IHdmiDeviceEventListener {
+        @Override // android.hardware.hdmi.IHdmiDeviceEventListener
         public void onStatusChanged(HdmiDeviceInfo deviceInfo, int status) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements IHdmiDeviceEventListener {
         private static final String DESCRIPTOR = "android.hardware.hdmi.IHdmiDeviceEventListener";
         static final int TRANSACTION_onStatusChanged = 1;
@@ -31,46 +36,51 @@ public interface IHdmiDeviceEventListener extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IHdmiDeviceEventListener)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IHdmiDeviceEventListener)) {
+                return (IHdmiDeviceEventListener) iin;
             }
-            return (IHdmiDeviceEventListener) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
 
         public static String getDefaultTransactionName(int transactionCode) {
-            if (transactionCode != 1) {
-                return null;
+            if (transactionCode == 1) {
+                return "onStatusChanged";
             }
-            return "onStatusChanged";
+            return null;
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
             HdmiDeviceInfo _arg0;
-            if (code == 1) {
-                data.enforceInterface(DESCRIPTOR);
-                if (data.readInt() != 0) {
-                    _arg0 = HdmiDeviceInfo.CREATOR.createFromParcel(data);
-                } else {
-                    _arg0 = null;
+            if (code != 1) {
+                if (code == 1598968902) {
+                    reply.writeString(DESCRIPTOR);
+                    return true;
                 }
-                onStatusChanged(_arg0, data.readInt());
-                return true;
-            } else if (code != 1598968902) {
                 return super.onTransact(code, data, reply, flags);
-            } else {
-                reply.writeString(DESCRIPTOR);
-                return true;
             }
+            data.enforceInterface(DESCRIPTOR);
+            if (data.readInt() != 0) {
+                _arg0 = HdmiDeviceInfo.CREATOR.createFromParcel(data);
+            } else {
+                _arg0 = null;
+            }
+            int _arg1 = data.readInt();
+            onStatusChanged(_arg0, _arg1);
+            return true;
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements IHdmiDeviceEventListener {
             public static IHdmiDeviceEventListener sDefaultImpl;
             private IBinder mRemote;
@@ -79,6 +89,7 @@ public interface IHdmiDeviceEventListener extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -87,6 +98,7 @@ public interface IHdmiDeviceEventListener extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.hardware.hdmi.IHdmiDeviceEventListener
             public void onStatusChanged(HdmiDeviceInfo deviceInfo, int status) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -98,9 +110,8 @@ public interface IHdmiDeviceEventListener extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(status);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onStatusChanged(deviceInfo, status);
                     }
                 } finally {
@@ -110,11 +121,11 @@ public interface IHdmiDeviceEventListener extends IInterface {
         }
 
         public static boolean setDefaultImpl(IHdmiDeviceEventListener impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IHdmiDeviceEventListener getDefaultImpl() {

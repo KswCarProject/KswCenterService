@@ -2,6 +2,7 @@ package android.hardware.radio.V1_0;
 
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class Clir {
     public static final int DEFAULT = 0;
     public static final int INVOCATION = 1;

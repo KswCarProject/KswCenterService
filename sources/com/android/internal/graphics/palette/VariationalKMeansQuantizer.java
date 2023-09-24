@@ -2,12 +2,13 @@ package com.android.internal.graphics.palette;
 
 import com.android.internal.graphics.ColorUtils;
 import com.android.internal.graphics.palette.Palette;
-import com.android.internal.ml.clustering.KMeans;
+import com.android.internal.p015ml.clustering.KMeans;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/* loaded from: classes4.dex */
 public class VariationalKMeansQuantizer implements Quantizer {
     private static final boolean DEBUG = false;
     private static final String TAG = "KMeansQuantizer";
@@ -25,19 +26,19 @@ public class VariationalKMeansQuantizer implements Quantizer {
     }
 
     public VariationalKMeansQuantizer(float minClusterDistance, int initializations) {
-        this.mKMeans = new KMeans(new Random(0), 30, 0.0f);
+        this.mKMeans = new KMeans(new Random(0L), 30, 0.0f);
         this.mMinClusterSqDistance = minClusterDistance * minClusterDistance;
         this.mInitializations = initializations;
     }
 
+    @Override // com.android.internal.graphics.palette.Quantizer
     public void quantize(int[] pixels, int maxColors, Palette.Filter[] filters) {
-        int i;
         float[] hsl;
-        int[] iArr = pixels;
+        int i;
         float[] hsl2 = {0.0f, 0.0f, 0.0f};
-        float[][] hslPixels = (float[][]) Array.newInstance(float.class, new int[]{iArr.length, 3});
-        for (int i2 = 0; i2 < iArr.length; i2++) {
-            ColorUtils.colorToHSL(iArr[i2], hsl2);
+        float[][] hslPixels = (float[][]) Array.newInstance(float.class, pixels.length, 3);
+        for (int i2 = 0; i2 < pixels.length; i2++) {
+            ColorUtils.colorToHSL(pixels[i2], hsl2);
             hslPixels[i2][0] = hsl2[0] / 360.0f;
             hslPixels[i2][1] = hsl2[1];
             hslPixels[i2][2] = hsl2[2];
@@ -51,12 +52,16 @@ public class VariationalKMeansQuantizer implements Quantizer {
             while (j < optimalMeans.size()) {
                 KMeans.Mean compareTo = optimalMeans.get(j);
                 float[] compareToCentroid = compareTo.getCentroid();
-                if (KMeans.sqDistance(currentCentroid, compareToCentroid) < this.mMinClusterSqDistance) {
+                float sqDistance = KMeans.sqDistance(currentCentroid, compareToCentroid);
+                if (sqDistance >= this.mMinClusterSqDistance) {
+                    hsl = hsl2;
+                    i = i3;
+                } else {
                     optimalMeans.remove(compareTo);
                     current.getItems().addAll(compareTo.getItems());
                     int k = 0;
                     while (k < currentCentroid.length) {
-                        currentCentroid[k] = (float) (((double) currentCentroid[k]) + (((double) (compareToCentroid[k] - currentCentroid[k])) / 2.0d));
+                        currentCentroid[k] = (float) (currentCentroid[k] + ((compareToCentroid[k] - currentCentroid[k]) / 2.0d));
                         k++;
                         hsl2 = hsl2;
                         i3 = i3;
@@ -64,9 +69,6 @@ public class VariationalKMeansQuantizer implements Quantizer {
                     hsl = hsl2;
                     i = i3;
                     j--;
-                } else {
-                    hsl = hsl2;
-                    i = i3;
                 }
                 j++;
                 hsl2 = hsl;
@@ -97,6 +99,7 @@ public class VariationalKMeansQuantizer implements Quantizer {
         return optimal;
     }
 
+    @Override // com.android.internal.graphics.palette.Quantizer
     public List<Palette.Swatch> getQuantizedColors() {
         return this.mQuantizedColors;
     }

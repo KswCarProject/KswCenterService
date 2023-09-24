@@ -1,8 +1,8 @@
 package android.service.autofill;
 
 import android.icu.text.DateFormat;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.Log;
 import android.view.autofill.AutofillId;
 import android.view.autofill.AutofillValue;
@@ -12,12 +12,17 @@ import com.android.internal.util.Preconditions;
 import com.ibm.icu.text.PluralRules;
 import java.util.Date;
 
+/* loaded from: classes3.dex */
 public final class DateTransformation extends InternalTransformation implements Transformation, Parcelable {
-    public static final Parcelable.Creator<DateTransformation> CREATOR = new Parcelable.Creator<DateTransformation>() {
+    public static final Parcelable.Creator<DateTransformation> CREATOR = new Parcelable.Creator<DateTransformation>() { // from class: android.service.autofill.DateTransformation.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public DateTransformation createFromParcel(Parcel parcel) {
-            return new DateTransformation((AutofillId) parcel.readParcelable((ClassLoader) null), (DateFormat) parcel.readSerializable());
+            return new DateTransformation((AutofillId) parcel.readParcelable(null), (DateFormat) parcel.readSerializable());
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public DateTransformation[] newArray(int size) {
             return new DateTransformation[size];
         }
@@ -31,37 +36,40 @@ public final class DateTransformation extends InternalTransformation implements 
         this.mDateFormat = (DateFormat) Preconditions.checkNotNull(dateFormat);
     }
 
+    @Override // android.service.autofill.InternalTransformation
     public void apply(ValueFinder finder, RemoteViews parentTemplate, int childViewId) throws Exception {
         AutofillValue value = finder.findRawValueByAutofillId(this.mFieldId);
         if (value == null) {
-            Log.w(TAG, "No value for id " + this.mFieldId);
+            Log.m64w(TAG, "No value for id " + this.mFieldId);
         } else if (!value.isDate()) {
-            Log.w(TAG, "Value for " + this.mFieldId + " is not date: " + value);
+            Log.m64w(TAG, "Value for " + this.mFieldId + " is not date: " + value);
         } else {
             try {
                 Date date = new Date(value.getDateValue());
                 String transformed = this.mDateFormat.format(date);
                 if (Helper.sDebug) {
-                    Log.d(TAG, "Transformed " + date + " to " + transformed);
+                    Log.m72d(TAG, "Transformed " + date + " to " + transformed);
                 }
                 parentTemplate.setCharSequence(childViewId, "setText", transformed);
             } catch (Exception e) {
-                Log.w(TAG, "Could not apply " + this.mDateFormat + " to " + value + PluralRules.KEYWORD_RULE_SEPARATOR + e);
+                Log.m64w(TAG, "Could not apply " + this.mDateFormat + " to " + value + PluralRules.KEYWORD_RULE_SEPARATOR + e);
             }
         }
     }
 
     public String toString() {
-        if (!Helper.sDebug) {
-            return super.toString();
+        if (Helper.sDebug) {
+            return "DateTransformation: [id=" + this.mFieldId + ", format=" + this.mDateFormat + "]";
         }
-        return "DateTransformation: [id=" + this.mFieldId + ", format=" + this.mDateFormat + "]";
+        return super.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeParcelable(this.mFieldId, flags);
         parcel.writeSerializable(this.mDateFormat);

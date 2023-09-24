@@ -1,5 +1,6 @@
 package android.hardware.display;
 
+/* loaded from: classes.dex */
 public final class DisplayedContentSample {
     private long mNumFrames;
     private long[] mSamplesComponent0;
@@ -7,6 +8,7 @@ public final class DisplayedContentSample {
     private long[] mSamplesComponent2;
     private long[] mSamplesComponent3;
 
+    /* loaded from: classes.dex */
     public enum ColorComponent {
         CHANNEL0,
         CHANNEL1,

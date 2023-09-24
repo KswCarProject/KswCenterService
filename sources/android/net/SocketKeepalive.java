@@ -2,14 +2,15 @@ package android.net;
 
 import android.net.ISocketKeepaliveCallback;
 import android.net.SocketKeepalive;
-import android.os.Binder;
-import android.os.ParcelFileDescriptor;
+import android.p007os.Binder;
+import android.p007os.ParcelFileDescriptor;
 import com.android.internal.util.FunctionalUtils;
 import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.concurrent.Executor;
 
+/* loaded from: classes3.dex */
 public abstract class SocketKeepalive implements AutoCloseable {
     public static final int BINDER_DIED = -10;
     public static final int DATA_RECEIVED = -2;
@@ -37,28 +38,29 @@ public abstract class SocketKeepalive implements AutoCloseable {
     Integer mSlot;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface ErrorCode {
     }
 
-    /* access modifiers changed from: package-private */
-    public abstract void startImpl(int i);
+    abstract void startImpl(int i);
 
-    /* access modifiers changed from: package-private */
-    public abstract void stopImpl();
+    abstract void stopImpl();
 
+    /* loaded from: classes3.dex */
     public static class ErrorCodeException extends Exception {
         public final int error;
 
-        public ErrorCodeException(int error2, Throwable e) {
+        public ErrorCodeException(int error, Throwable e) {
             super(e);
-            this.error = error2;
+            this.error = error;
         }
 
-        public ErrorCodeException(int error2) {
-            this.error = error2;
+        public ErrorCodeException(int error) {
+            this.error = error;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class InvalidSocketException extends ErrorCodeException {
         public InvalidSocketException(int error, Throwable e) {
             super(error, e);
@@ -69,148 +71,118 @@ public abstract class SocketKeepalive implements AutoCloseable {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class InvalidPacketException extends ErrorCodeException {
         public InvalidPacketException(int error) {
             super(error);
         }
     }
 
-    SocketKeepalive(IConnectivityManager service, Network network, ParcelFileDescriptor pfd, final Executor executor, final Callback callback) {
+    SocketKeepalive(IConnectivityManager service, Network network, ParcelFileDescriptor pfd, Executor executor, Callback callback) {
         this.mService = service;
         this.mNetwork = network;
         this.mPfd = pfd;
         this.mExecutor = executor;
-        this.mCallback = new ISocketKeepaliveCallback.Stub() {
-            public void onStarted(int slot) {
-                Binder.withCleanCallingIdentity((FunctionalUtils.ThrowingRunnable) new FunctionalUtils.ThrowingRunnable(slot, callback) {
-                    private final /* synthetic */ int f$1;
-                    private final /* synthetic */ SocketKeepalive.Callback f$2;
+        this.mCallback = new BinderC13151(callback, executor);
+    }
 
-                    {
-                        this.f$1 = r2;
-                        this.f$2 = r3;
-                    }
+    /* renamed from: android.net.SocketKeepalive$1 */
+    /* loaded from: classes3.dex */
+    class BinderC13151 extends ISocketKeepaliveCallback.Stub {
+        final /* synthetic */ Callback val$callback;
+        final /* synthetic */ Executor val$executor;
 
-                    public final void runOrThrow() {
-                        SocketKeepalive.this.mExecutor.execute(new Runnable(this.f$1, this.f$2) {
-                            private final /* synthetic */ int f$1;
-                            private final /* synthetic */ SocketKeepalive.Callback f$2;
+        BinderC13151(Callback callback, Executor executor) {
+            this.val$callback = callback;
+            this.val$executor = executor;
+        }
 
-                            {
-                                this.f$1 = r2;
-                                this.f$2 = r3;
-                            }
+        @Override // android.net.ISocketKeepaliveCallback
+        public void onStarted(final int slot) {
+            final Callback callback = this.val$callback;
+            Binder.withCleanCallingIdentity(new FunctionalUtils.ThrowingRunnable() { // from class: android.net.-$$Lambda$SocketKeepalive$1$m-VPtyb2YaC8aWd5gXQYgFGhVbM
+                @Override // com.android.internal.util.FunctionalUtils.ThrowingRunnable
+                public final void runOrThrow() {
+                    SocketKeepalive.this.mExecutor.execute(new Runnable() { // from class: android.net.-$$Lambda$SocketKeepalive$1$nDWCSiqzvu6z8lptsLq-qY42hTk
+                        @Override // java.lang.Runnable
+                        public final void run() {
+                            SocketKeepalive.BinderC13151.lambda$onStarted$0(SocketKeepalive.BinderC13151.this, r2, r3);
+                        }
+                    });
+                }
+            });
+        }
 
-                            public final void run() {
-                                SocketKeepalive.AnonymousClass1.lambda$onStarted$0(SocketKeepalive.AnonymousClass1.this, this.f$1, this.f$2);
-                            }
-                        });
-                    }
-                });
-            }
+        public static /* synthetic */ void lambda$onStarted$0(BinderC13151 binderC13151, int slot, Callback callback) {
+            SocketKeepalive.this.mSlot = Integer.valueOf(slot);
+            callback.onStarted();
+        }
 
-            public static /* synthetic */ void lambda$onStarted$0(AnonymousClass1 r2, int slot, Callback callback) {
-                SocketKeepalive.this.mSlot = Integer.valueOf(slot);
-                callback.onStarted();
-            }
+        @Override // android.net.ISocketKeepaliveCallback
+        public void onStopped() {
+            final Executor executor = this.val$executor;
+            final Callback callback = this.val$callback;
+            Binder.withCleanCallingIdentity(new FunctionalUtils.ThrowingRunnable() { // from class: android.net.-$$Lambda$SocketKeepalive$1$GQbcC2yhPzv5xknkQV01K3_QTNA
+                @Override // com.android.internal.util.FunctionalUtils.ThrowingRunnable
+                public final void runOrThrow() {
+                    executor.execute(new Runnable() { // from class: android.net.-$$Lambda$SocketKeepalive$1$Ghy-awbQuJd8C-GZAjeZCXMiaUw
+                        @Override // java.lang.Runnable
+                        public final void run() {
+                            SocketKeepalive.BinderC13151.lambda$onStopped$2(SocketKeepalive.BinderC13151.this, r2);
+                        }
+                    });
+                }
+            });
+        }
 
-            public void onStopped() {
-                Binder.withCleanCallingIdentity((FunctionalUtils.ThrowingRunnable) new FunctionalUtils.ThrowingRunnable(executor, callback) {
-                    private final /* synthetic */ Executor f$1;
-                    private final /* synthetic */ SocketKeepalive.Callback f$2;
+        public static /* synthetic */ void lambda$onStopped$2(BinderC13151 binderC13151, Callback callback) {
+            SocketKeepalive.this.mSlot = null;
+            callback.onStopped();
+        }
 
-                    {
-                        this.f$1 = r2;
-                        this.f$2 = r3;
-                    }
+        @Override // android.net.ISocketKeepaliveCallback
+        public void onError(final int error) {
+            final Executor executor = this.val$executor;
+            final Callback callback = this.val$callback;
+            Binder.withCleanCallingIdentity(new FunctionalUtils.ThrowingRunnable() { // from class: android.net.-$$Lambda$SocketKeepalive$1$0jK7H49vYYFjBANIXTac00ocnSo
+                @Override // com.android.internal.util.FunctionalUtils.ThrowingRunnable
+                public final void runOrThrow() {
+                    executor.execute(new Runnable() { // from class: android.net.-$$Lambda$SocketKeepalive$1$xxwNi85oVXVQ_ILhrZNWwo4ppA8
+                        @Override // java.lang.Runnable
+                        public final void run() {
+                            SocketKeepalive.BinderC13151.lambda$onError$4(SocketKeepalive.BinderC13151.this, r2, r3);
+                        }
+                    });
+                }
+            });
+        }
 
-                    public final void runOrThrow() {
-                        this.f$1.execute(new Runnable(this.f$2) {
-                            private final /* synthetic */ SocketKeepalive.Callback f$1;
+        public static /* synthetic */ void lambda$onError$4(BinderC13151 binderC13151, Callback callback, int error) {
+            SocketKeepalive.this.mSlot = null;
+            callback.onError(error);
+        }
 
-                            {
-                                this.f$1 = r2;
-                            }
+        @Override // android.net.ISocketKeepaliveCallback
+        public void onDataReceived() {
+            final Executor executor = this.val$executor;
+            final Callback callback = this.val$callback;
+            Binder.withCleanCallingIdentity(new FunctionalUtils.ThrowingRunnable() { // from class: android.net.-$$Lambda$SocketKeepalive$1$nPQMIWzmX3WEJCjp1qnz_O7qaxs
+                @Override // com.android.internal.util.FunctionalUtils.ThrowingRunnable
+                public final void runOrThrow() {
+                    executor.execute(new Runnable() { // from class: android.net.-$$Lambda$SocketKeepalive$1$yVvEaumPDc_celEzvlSEH2FU0nc
+                        @Override // java.lang.Runnable
+                        public final void run() {
+                            SocketKeepalive.BinderC13151.lambda$onDataReceived$6(SocketKeepalive.BinderC13151.this, r2);
+                        }
+                    });
+                }
+            });
+        }
 
-                            public final void run() {
-                                SocketKeepalive.AnonymousClass1.lambda$onStopped$2(SocketKeepalive.AnonymousClass1.this, this.f$1);
-                            }
-                        });
-                    }
-                });
-            }
-
-            public static /* synthetic */ void lambda$onStopped$2(AnonymousClass1 r2, Callback callback) {
-                SocketKeepalive.this.mSlot = null;
-                callback.onStopped();
-            }
-
-            public void onError(int error) {
-                Binder.withCleanCallingIdentity((FunctionalUtils.ThrowingRunnable) new FunctionalUtils.ThrowingRunnable(executor, callback, error) {
-                    private final /* synthetic */ Executor f$1;
-                    private final /* synthetic */ SocketKeepalive.Callback f$2;
-                    private final /* synthetic */ int f$3;
-
-                    {
-                        this.f$1 = r2;
-                        this.f$2 = r3;
-                        this.f$3 = r4;
-                    }
-
-                    public final void runOrThrow() {
-                        this.f$1.execute(new Runnable(this.f$2, this.f$3) {
-                            private final /* synthetic */ SocketKeepalive.Callback f$1;
-                            private final /* synthetic */ int f$2;
-
-                            {
-                                this.f$1 = r2;
-                                this.f$2 = r3;
-                            }
-
-                            public final void run() {
-                                SocketKeepalive.AnonymousClass1.lambda$onError$4(SocketKeepalive.AnonymousClass1.this, this.f$1, this.f$2);
-                            }
-                        });
-                    }
-                });
-            }
-
-            public static /* synthetic */ void lambda$onError$4(AnonymousClass1 r2, Callback callback, int error) {
-                SocketKeepalive.this.mSlot = null;
-                callback.onError(error);
-            }
-
-            public void onDataReceived() {
-                Binder.withCleanCallingIdentity((FunctionalUtils.ThrowingRunnable) new FunctionalUtils.ThrowingRunnable(executor, callback) {
-                    private final /* synthetic */ Executor f$1;
-                    private final /* synthetic */ SocketKeepalive.Callback f$2;
-
-                    {
-                        this.f$1 = r2;
-                        this.f$2 = r3;
-                    }
-
-                    public final void runOrThrow() {
-                        this.f$1.execute(new Runnable(this.f$2) {
-                            private final /* synthetic */ SocketKeepalive.Callback f$1;
-
-                            {
-                                this.f$1 = r2;
-                            }
-
-                            public final void run() {
-                                SocketKeepalive.AnonymousClass1.lambda$onDataReceived$6(SocketKeepalive.AnonymousClass1.this, this.f$1);
-                            }
-                        });
-                    }
-                });
-            }
-
-            public static /* synthetic */ void lambda$onDataReceived$6(AnonymousClass1 r2, Callback callback) {
-                SocketKeepalive.this.mSlot = null;
-                callback.onDataReceived();
-            }
-        };
+        public static /* synthetic */ void lambda$onDataReceived$6(BinderC13151 binderC13151, Callback callback) {
+            SocketKeepalive.this.mSlot = null;
+            callback.onDataReceived();
+        }
     }
 
     public final void start(int intervalSec) {
@@ -221,6 +193,7 @@ public abstract class SocketKeepalive implements AutoCloseable {
         stopImpl();
     }
 
+    @Override // java.lang.AutoCloseable
     public final void close() {
         stop();
         try {
@@ -229,6 +202,7 @@ public abstract class SocketKeepalive implements AutoCloseable {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class Callback {
         public void onStarted() {
         }

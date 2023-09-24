@@ -1,15 +1,20 @@
 package android.app;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.util.Preconditions;
 
+/* loaded from: classes.dex */
 public final class AuthenticationRequiredException extends SecurityException implements Parcelable {
-    public static final Parcelable.Creator<AuthenticationRequiredException> CREATOR = new Parcelable.Creator<AuthenticationRequiredException>() {
+    public static final Parcelable.Creator<AuthenticationRequiredException> CREATOR = new Parcelable.Creator<AuthenticationRequiredException>() { // from class: android.app.AuthenticationRequiredException.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AuthenticationRequiredException createFromParcel(Parcel source) {
             return new AuthenticationRequiredException(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AuthenticationRequiredException[] newArray(int size) {
             return new AuthenticationRequiredException[size];
         }
@@ -30,10 +35,12 @@ public final class AuthenticationRequiredException extends SecurityException imp
         return this.mUserAction;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(getMessage());
         this.mUserAction.writeToParcel(dest, flags);

@@ -3,24 +3,25 @@ package com.wits.pms;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.ContentObserver;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.RemoteException;
+import android.p007os.Handler;
+import android.p007os.IBinder;
+import android.p007os.RemoteException;
 import android.provider.Settings;
 import android.util.Log;
 import com.wits.pms.IPowerManagerAppService;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 
+/* loaded from: classes5.dex */
 public class PowerManagerApp {
-    /* access modifiers changed from: private */
-    public static ICmdListener cmdListener;
+    private static ICmdListener cmdListener;
     private static Context context;
-    /* access modifiers changed from: private */
-    public static final HashMap<String, IContentObserver> maps = new HashMap<>();
+    private static final HashMap<String, IContentObserver> maps = new HashMap<>();
 
     public static void init(Context context2) {
         context = context2;
-        context2.getContentResolver().registerContentObserver(Settings.System.getUriFor("bootTimes"), true, new ContentObserver(new Handler(context2.getMainLooper())) {
+        context2.getContentResolver().registerContentObserver(Settings.System.getUriFor("bootTimes"), true, new ContentObserver(new Handler(context2.getMainLooper())) { // from class: com.wits.pms.PowerManagerApp.1
+            @Override // android.database.ContentObserver
             public void onChange(boolean selfChange) {
                 super.onChange(selfChange);
                 if (PowerManagerApp.cmdListener != null) {
@@ -40,20 +41,22 @@ public class PowerManagerApp {
     public static void registerICmdListener(ICmdListener listener) {
         try {
             cmdListener = listener;
-            if (getManager() != null) {
-                getManager().registerCmdListener(listener);
+            if (getManager() == null) {
+                return;
             }
+            getManager().registerCmdListener(listener);
         } catch (RemoteException e) {
         }
     }
 
     public static void registerIContentObserver(String key, IContentObserver contentObserver) {
-        Log.i("IPowerManagerService", contentObserver.getClass().getName());
+        Log.m68i("IPowerManagerService", contentObserver.getClass().getName());
         try {
             maps.put(key, contentObserver);
-            if (getManager() != null) {
-                getManager().registerObserver(key, contentObserver);
+            if (getManager() == null) {
+                return;
             }
+            getManager().registerObserver(key, contentObserver);
         } catch (RemoteException e) {
         }
     }
@@ -65,9 +68,10 @@ public class PowerManagerApp {
                     maps.remove(key, contentObserver);
                 }
             }
-            if (getManager() != null) {
-                getManager().unregisterObserver(contentObserver);
+            if (getManager() == null) {
+                return;
             }
+            getManager().unregisterObserver(contentObserver);
         } catch (RemoteException e) {
         }
     }
@@ -76,10 +80,11 @@ public class PowerManagerApp {
     public static IBinder getService(String serviceName) {
         try {
             Class<?> serviceManager = Class.forName("android.os.ServiceManager");
-            return (IBinder) serviceManager.getMethod("getService", new Class[]{String.class}).invoke(serviceManager, new Object[]{serviceName});
+            Method getService = serviceManager.getMethod("getService", String.class);
+            return (IBinder) getService.invoke(serviceManager, serviceName);
         } catch (Exception e) {
             String name = PowerManagerApp.class.getName();
-            Log.e(name, "error service init - " + serviceName, e);
+            Log.m69e(name, "error service init - " + serviceName, e);
             return null;
         }
     }
@@ -88,7 +93,7 @@ public class PowerManagerApp {
         try {
             return getManager().sendCommand(jsonMsg);
         } catch (RemoteException e) {
-            Log.i(getManager().getClass().getName(), "error sendCommand", e);
+            Log.m67i(getManager().getClass().getName(), "error sendCommand", e);
             return false;
         }
     }

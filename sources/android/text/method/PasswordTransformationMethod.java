@@ -2,8 +2,8 @@ package android.text.method;
 
 import android.annotation.UnsupportedAppUsage;
 import android.graphics.Rect;
-import android.os.Handler;
-import android.os.SystemClock;
+import android.p007os.Handler;
+import android.p007os.SystemClock;
 import android.text.Editable;
 import android.text.GetChars;
 import android.text.NoCopySpan;
@@ -15,19 +15,20 @@ import android.text.style.UpdateLayout;
 import android.view.View;
 import java.lang.ref.WeakReference;
 
+/* loaded from: classes4.dex */
 public class PasswordTransformationMethod implements TransformationMethod, TextWatcher {
-    /* access modifiers changed from: private */
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
-    public static char DOT = 8226;
+    private static char DOT = '\u2022';
     @UnsupportedAppUsage
     private static PasswordTransformationMethod sInstance;
 
+    @Override // android.text.method.TransformationMethod
     public CharSequence getTransformation(CharSequence source, View view) {
         if (source instanceof Spannable) {
             Spannable sp = (Spannable) source;
             ViewReference[] vr = (ViewReference[]) sp.getSpans(0, sp.length(), ViewReference.class);
-            for (ViewReference removeSpan : vr) {
-                sp.removeSpan(removeSpan);
+            for (ViewReference viewReference : vr) {
+                sp.removeSpan(viewReference);
             }
             removeVisibleSpans(sp);
             sp.setSpan(new ViewReference(view), 0, 0, 34);
@@ -43,70 +44,44 @@ public class PasswordTransformationMethod implements TransformationMethod, TextW
         return sInstance;
     }
 
+    @Override // android.text.TextWatcher
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
     }
 
-    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r4v6, resolved type: java.lang.Object} */
-    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v4, resolved type: android.view.View} */
-    /* JADX WARNING: Multi-variable type inference failed */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void onTextChanged(java.lang.CharSequence r8, int r9, int r10, int r11) {
-        /*
-            r7 = this;
-            boolean r0 = r8 instanceof android.text.Spannable
-            if (r0 == 0) goto L_0x0052
-            r0 = r8
-            android.text.Spannable r0 = (android.text.Spannable) r0
-            int r1 = r8.length()
-            java.lang.Class<android.text.method.PasswordTransformationMethod$ViewReference> r2 = android.text.method.PasswordTransformationMethod.ViewReference.class
-            r3 = 0
-            java.lang.Object[] r1 = r0.getSpans(r3, r1, r2)
-            android.text.method.PasswordTransformationMethod$ViewReference[] r1 = (android.text.method.PasswordTransformationMethod.ViewReference[]) r1
-            int r2 = r1.length
-            if (r2 != 0) goto L_0x0018
-            return
-        L_0x0018:
-            r2 = 0
-        L_0x001a:
-            if (r2 != 0) goto L_0x002b
-            int r4 = r1.length
-            if (r3 >= r4) goto L_0x002b
-            r4 = r1[r3]
-            java.lang.Object r4 = r4.get()
-            r2 = r4
-            android.view.View r2 = (android.view.View) r2
-            int r3 = r3 + 1
-            goto L_0x001a
-        L_0x002b:
-            if (r2 != 0) goto L_0x002e
-            return
-        L_0x002e:
-            android.text.method.TextKeyListener r3 = android.text.method.TextKeyListener.getInstance()
-            android.content.Context r4 = r2.getContext()
-            int r3 = r3.getPrefs(r4)
-            r4 = r3 & 8
-            if (r4 == 0) goto L_0x0052
-            if (r11 <= 0) goto L_0x0052
-            removeVisibleSpans(r0)
-            r4 = 1
-            if (r11 != r4) goto L_0x0052
-            android.text.method.PasswordTransformationMethod$Visible r4 = new android.text.method.PasswordTransformationMethod$Visible
-            r4.<init>(r0, r7)
-            int r5 = r9 + r11
-            r6 = 33
-            r0.setSpan(r4, r9, r5, r6)
-        L_0x0052:
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.text.method.PasswordTransformationMethod.onTextChanged(java.lang.CharSequence, int, int, int):void");
+    @Override // android.text.TextWatcher
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        if (s instanceof Spannable) {
+            Spannable sp = (Spannable) s;
+            ViewReference[] vr = (ViewReference[]) sp.getSpans(0, s.length(), ViewReference.class);
+            if (vr.length == 0) {
+                return;
+            }
+            View v = null;
+            for (int i = 0; v == null && i < vr.length; i++) {
+                v = (View) vr[i].get();
+            }
+            if (v == null) {
+                return;
+            }
+            int pref = TextKeyListener.getInstance().getPrefs(v.getContext());
+            if ((pref & 8) != 0 && count > 0) {
+                removeVisibleSpans(sp);
+                if (count == 1) {
+                    sp.setSpan(new Visible(sp, this), start, start + count, 33);
+                }
+            }
+        }
     }
 
+    @Override // android.text.TextWatcher
     public void afterTextChanged(Editable s) {
     }
 
+    @Override // android.text.method.TransformationMethod
     public void onFocusChanged(View view, CharSequence sourceText, boolean focused, int direction, Rect previouslyFocusedRect) {
         if (!focused && (sourceText instanceof Spannable)) {
-            removeVisibleSpans((Spannable) sourceText);
+            Spannable sp = (Spannable) sourceText;
+            removeVisibleSpans(sp);
         }
     }
 
@@ -115,7 +90,8 @@ public class PasswordTransformationMethod implements TransformationMethod, TextW
         Visible[] old = (Visible[]) sp.getSpans(0, sp.length(), Visible.class);
         while (true) {
             int i2 = i;
-            if (i2 < old.length) {
+            int i3 = old.length;
+            if (i2 < i3) {
                 sp.removeSpan(old[i2]);
                 i = i2 + 1;
             } else {
@@ -124,6 +100,7 @@ public class PasswordTransformationMethod implements TransformationMethod, TextW
         }
     }
 
+    /* loaded from: classes4.dex */
     private static class PasswordCharSequence implements CharSequence, GetChars {
         private CharSequence mSource;
 
@@ -131,49 +108,54 @@ public class PasswordTransformationMethod implements TransformationMethod, TextW
             this.mSource = source;
         }
 
+        @Override // java.lang.CharSequence
         public int length() {
             return this.mSource.length();
         }
 
+        @Override // java.lang.CharSequence
         public char charAt(int i) {
             if (this.mSource instanceof Spanned) {
                 Spanned sp = (Spanned) this.mSource;
                 int st = sp.getSpanStart(TextKeyListener.ACTIVE);
                 int en = sp.getSpanEnd(TextKeyListener.ACTIVE);
-                if (i < st || i >= en) {
-                    int a = 0;
-                    Visible[] visible = (Visible[]) sp.getSpans(0, sp.length(), Visible.class);
-                    while (true) {
-                        int a2 = a;
-                        if (a2 >= visible.length) {
-                            break;
-                        }
-                        if (sp.getSpanStart(visible[a2].mTransformer) >= 0) {
-                            int st2 = sp.getSpanStart(visible[a2]);
-                            int en2 = sp.getSpanEnd(visible[a2]);
-                            if (i >= st2 && i < en2) {
-                                return this.mSource.charAt(i);
-                            }
-                        }
-                        a = a2 + 1;
-                    }
-                } else {
+                if (i >= st && i < en) {
                     return this.mSource.charAt(i);
+                }
+                int a = 0;
+                Visible[] visible = (Visible[]) sp.getSpans(0, sp.length(), Visible.class);
+                while (true) {
+                    int a2 = a;
+                    int a3 = visible.length;
+                    if (a2 >= a3) {
+                        break;
+                    }
+                    if (sp.getSpanStart(visible[a2].mTransformer) >= 0) {
+                        int st2 = sp.getSpanStart(visible[a2]);
+                        int en2 = sp.getSpanEnd(visible[a2]);
+                        if (i >= st2 && i < en2) {
+                            return this.mSource.charAt(i);
+                        }
+                    }
+                    a = a2 + 1;
                 }
             }
             return PasswordTransformationMethod.DOT;
         }
 
+        @Override // java.lang.CharSequence
         public CharSequence subSequence(int start, int end) {
-            char[] buf = new char[(end - start)];
+            char[] buf = new char[end - start];
             getChars(start, end, buf, 0);
             return new String(buf);
         }
 
+        @Override // java.lang.CharSequence
         public String toString() {
             return subSequence(0, length()).toString();
         }
 
+        @Override // android.text.GetChars
         public void getChars(int start, int end, char[] dest, int off) {
             TextUtils.getChars(this.mSource, start, end, dest, off);
             int st = -1;
@@ -201,13 +183,12 @@ public class PasswordTransformationMethod implements TransformationMethod, TextW
                     boolean visible2 = false;
                     int a = 0;
                     while (true) {
-                        if (a < nvisible) {
-                            if (i2 >= starts[a] && i2 < ends[a]) {
-                                visible2 = true;
-                                break;
-                            }
+                        if (a >= nvisible) {
+                            break;
+                        } else if (i2 < starts[a] || i2 >= ends[a]) {
                             a++;
                         } else {
+                            visible2 = true;
                             break;
                         }
                     }
@@ -219,10 +200,10 @@ public class PasswordTransformationMethod implements TransformationMethod, TextW
         }
     }
 
+    /* loaded from: classes4.dex */
     private static class Visible extends Handler implements UpdateLayout, Runnable {
         private Spannable mText;
-        /* access modifiers changed from: private */
-        public PasswordTransformationMethod mTransformer;
+        private PasswordTransformationMethod mTransformer;
 
         public Visible(Spannable sp, PasswordTransformationMethod ptm) {
             this.mText = sp;
@@ -230,11 +211,13 @@ public class PasswordTransformationMethod implements TransformationMethod, TextW
             postAtTime(this, SystemClock.uptimeMillis() + 1500);
         }
 
+        @Override // java.lang.Runnable
         public void run() {
             this.mText.removeSpan(this);
         }
     }
 
+    /* loaded from: classes4.dex */
     private static class ViewReference extends WeakReference<View> implements NoCopySpan {
         public ViewReference(View v) {
             super(v);

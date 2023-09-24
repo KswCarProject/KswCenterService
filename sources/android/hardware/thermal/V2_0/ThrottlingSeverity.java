@@ -3,6 +3,7 @@ package android.hardware.thermal.V2_0;
 import android.security.keystore.KeyProperties;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class ThrottlingSeverity {
     public static final int CRITICAL = 4;
     public static final int EMERGENCY = 5;

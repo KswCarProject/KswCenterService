@@ -1,5 +1,6 @@
 package android.animation;
 
+/* loaded from: classes.dex */
 public class FloatArrayEvaluator implements TypeEvaluator<float[]> {
     private float[] mArray;
 
@@ -10,6 +11,7 @@ public class FloatArrayEvaluator implements TypeEvaluator<float[]> {
         this.mArray = reuseArray;
     }
 
+    @Override // android.animation.TypeEvaluator
     public float[] evaluate(float fraction, float[] startValue, float[] endValue) {
         float[] array = this.mArray;
         if (array == null) {
@@ -17,7 +19,8 @@ public class FloatArrayEvaluator implements TypeEvaluator<float[]> {
         }
         for (int i = 0; i < array.length; i++) {
             float start = startValue[i];
-            array[i] = ((endValue[i] - start) * fraction) + start;
+            float end = endValue[i];
+            array[i] = ((end - start) * fraction) + start;
         }
         return array;
     }

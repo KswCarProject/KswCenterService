@@ -1,5 +1,6 @@
 package com.android.server.job;
 
+/* loaded from: classes4.dex */
 public final class MaxJobCountsPerMemoryTrimLevelProto {
     public static final long CRITICAL = 1146756268036L;
     public static final long LOW = 1146756268035L;

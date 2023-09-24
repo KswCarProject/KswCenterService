@@ -5,19 +5,21 @@ import android.graphics.Path;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes.dex */
 public final class Outline {
     public static final int MODE_CONVEX_PATH = 2;
     public static final int MODE_EMPTY = 0;
     public static final int MODE_ROUND_RECT = 1;
     private static final float RADIUS_UNDEFINED = Float.NEGATIVE_INFINITY;
     public float mAlpha;
-    public int mMode = 0;
     public Path mPath;
-    public float mRadius = RADIUS_UNDEFINED;
+    public int mMode = 0;
     @UnsupportedAppUsage
     public final Rect mRect = new Rect();
+    public float mRadius = RADIUS_UNDEFINED;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface Mode {
     }
 
@@ -107,7 +109,7 @@ public final class Outline {
         if (left >= right || top >= bottom) {
             setEmpty();
         } else if (bottom - top == right - left) {
-            setRoundRect(left, top, right, bottom, ((float) (bottom - top)) / 2.0f);
+            setRoundRect(left, top, right, bottom, (bottom - top) / 2.0f);
         } else {
             if (this.mPath == null) {
                 this.mPath = new Path();
@@ -115,7 +117,7 @@ public final class Outline {
                 this.mPath.rewind();
             }
             this.mMode = 2;
-            this.mPath.addOval((float) left, (float) top, (float) right, (float) bottom, Path.Direction.CW);
+            this.mPath.addOval(left, top, right, bottom, Path.Direction.CW);
             this.mRect.setEmpty();
             this.mRadius = RADIUS_UNDEFINED;
         }
@@ -143,7 +145,7 @@ public final class Outline {
         if (this.mMode == 1) {
             this.mRect.offset(dx, dy);
         } else if (this.mMode == 2) {
-            this.mPath.offset((float) dx, (float) dy);
+            this.mPath.offset(dx, dy);
         }
     }
 }

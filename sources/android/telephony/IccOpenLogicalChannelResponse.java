@@ -1,14 +1,19 @@
 package android.telephony;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public class IccOpenLogicalChannelResponse implements Parcelable {
-    public static final Parcelable.Creator<IccOpenLogicalChannelResponse> CREATOR = new Parcelable.Creator<IccOpenLogicalChannelResponse>() {
+    public static final Parcelable.Creator<IccOpenLogicalChannelResponse> CREATOR = new Parcelable.Creator<IccOpenLogicalChannelResponse>() { // from class: android.telephony.IccOpenLogicalChannelResponse.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public IccOpenLogicalChannelResponse createFromParcel(Parcel in) {
             return new IccOpenLogicalChannelResponse(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public IccOpenLogicalChannelResponse[] newArray(int size) {
             return new IccOpenLogicalChannelResponse[size];
         }
@@ -52,19 +57,21 @@ public class IccOpenLogicalChannelResponse implements Parcelable {
         return this.mSelectResponse;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(this.mChannel);
         out.writeInt(this.mStatus);
-        if (this.mSelectResponse == null || this.mSelectResponse.length <= 0) {
-            out.writeInt(0);
+        if (this.mSelectResponse != null && this.mSelectResponse.length > 0) {
+            out.writeInt(this.mSelectResponse.length);
+            out.writeByteArray(this.mSelectResponse);
             return;
         }
-        out.writeInt(this.mSelectResponse.length);
-        out.writeByteArray(this.mSelectResponse);
+        out.writeInt(0);
     }
 
     public String toString() {

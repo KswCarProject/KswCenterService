@@ -2,8 +2,8 @@ package com.wits.pms.statuscontrol;
 
 import android.content.Context;
 import android.database.ContentObserver;
-import android.os.Handler;
-import android.os.RemoteException;
+import android.p007os.Handler;
+import android.p007os.RemoteException;
 import android.provider.Settings;
 import android.util.Log;
 import com.google.gson.Gson;
@@ -16,16 +16,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/* loaded from: classes2.dex */
 public class PowerManagerApp {
-    /* access modifiers changed from: private */
-    public static ICmdListener cmdListener;
+    private static ICmdListener cmdListener;
     private static Context context;
-    /* access modifiers changed from: private */
-    public static final HashMap<String, IContentObserver> maps = new HashMap<>();
+    private static final HashMap<String, IContentObserver> maps = new HashMap<>();
 
     public static void init(Context context2) {
         context = context2;
-        context2.getContentResolver().registerContentObserver(Settings.System.getUriFor("bootTimes"), true, new ContentObserver(new Handler(context2.getMainLooper())) {
+        context2.getContentResolver().registerContentObserver(Settings.System.getUriFor("bootTimes"), true, new ContentObserver(new Handler(context2.getMainLooper())) { // from class: com.wits.pms.statuscontrol.PowerManagerApp.1
+            @Override // android.database.ContentObserver
             public void onChange(boolean selfChange) {
                 super.onChange(selfChange);
                 if (PowerManagerApp.cmdListener != null) {
@@ -45,29 +45,32 @@ public class PowerManagerApp {
     public static void registerICmdListener(ICmdListener listener) {
         try {
             cmdListener = listener;
-            if (getManager() != null) {
-                getManager().registerCmdListener(listener);
+            if (getManager() == null) {
+                return;
             }
+            getManager().registerCmdListener(listener);
         } catch (RemoteException e) {
         }
     }
 
     public static void registerIContentObserver(String key, IContentObserver contentObserver) {
-        Log.i("IPowerManagerService registerIContentObserver", contentObserver.getClass().getName());
+        Log.m68i("IPowerManagerService registerIContentObserver", contentObserver.getClass().getName());
         try {
-            if (getManager() != null) {
-                getManager().registerObserver(key, contentObserver);
+            if (getManager() == null) {
+                return;
             }
+            getManager().registerObserver(key, contentObserver);
         } catch (RemoteException e) {
         }
     }
 
     public static void unRegisterIContentObserver(IContentObserver contentObserver) {
         try {
-            Log.i("IPowerManagerService unRegisterIContentObserver", contentObserver.getClass().getName());
-            if (getManager() != null) {
-                getManager().unregisterObserver(contentObserver);
+            Log.m68i("IPowerManagerService unRegisterIContentObserver", contentObserver.getClass().getName());
+            if (getManager() == null) {
+                return;
             }
+            getManager().unregisterObserver(contentObserver);
         } catch (RemoteException e) {
         }
     }
@@ -76,7 +79,7 @@ public class PowerManagerApp {
         try {
             return getManager().sendCommand(jsonMsg);
         } catch (RemoteException e) {
-            Log.i(getManager().getClass().getName(), "error sendCommand", e);
+            Log.m67i(getManager().getClass().getName(), "error sendCommand", e);
             return false;
         }
     }
@@ -84,14 +87,15 @@ public class PowerManagerApp {
     public static void sendStatus(WitsStatus witsStatus) {
         if (getManager() != null) {
             try {
-                getManager().sendStatus(new Gson().toJson((Object) witsStatus));
+                getManager().sendStatus(new Gson().toJson(witsStatus));
             } catch (RemoteException e) {
             }
         }
     }
 
     public static List<String> getDataListFromJsonKey(String key) {
-        return (List) new Gson().fromJson(Settings.System.getString(context.getContentResolver(), key), new TypeToken<ArrayList<String>>() {
+        String json = Settings.System.getString(context.getContentResolver(), key);
+        return (List) new Gson().fromJson(json, new TypeToken<ArrayList<String>>() { // from class: com.wits.pms.statuscontrol.PowerManagerApp.2
         }.getType());
     }
 

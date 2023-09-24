@@ -6,10 +6,11 @@ import android.app.Activity;
 import android.app.PendingIntent;
 import android.app.backup.FullBackup;
 import android.content.Context;
-import android.content.pm.ParceledListSlice;
-import android.os.IncidentManager;
-import android.os.RemoteException;
-import android.os.UserHandle;
+import android.content.p002pm.ParceledListSlice;
+import android.media.TtmlUtils;
+import android.p007os.IncidentManager;
+import android.p007os.RemoteException;
+import android.p007os.UserHandle;
 import android.util.ArrayMap;
 import com.ibm.icu.text.DateFormat;
 import java.lang.annotation.Retention;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+/* loaded from: classes.dex */
 public final class UsageStatsManager {
     @SystemApi
     public static final String EXTRA_OBSERVER_ID = "android.app.usage.extra.OBSERVER_ID";
@@ -77,10 +79,12 @@ public final class UsageStatsManager {
     private final IUsageStatsManager mService;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface StandbyBuckets {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface UsageSource {
     }
 
@@ -207,7 +211,8 @@ public final class UsageStatsManager {
     @SystemApi
     public Map<String, Integer> getAppStandbyBuckets() {
         try {
-            List<AppStandbyInfo> bucketList = this.mService.getAppStandbyBuckets(this.mContext.getOpPackageName(), this.mContext.getUserId()).getList();
+            ParceledListSlice<AppStandbyInfo> slice = this.mService.getAppStandbyBuckets(this.mContext.getOpPackageName(), this.mContext.getUserId());
+            List<AppStandbyInfo> bucketList = slice.getList();
             ArrayMap<String, Integer> bucketMap = new ArrayMap<>();
             int n = bucketList.size();
             for (int i = 0; i < n; i++) {
@@ -222,16 +227,18 @@ public final class UsageStatsManager {
 
     @SystemApi
     public void setAppStandbyBuckets(Map<String, Integer> appBuckets) {
-        if (appBuckets != null) {
-            List<AppStandbyInfo> bucketInfoList = new ArrayList<>(appBuckets.size());
-            for (Map.Entry<String, Integer> bucketEntry : appBuckets.entrySet()) {
-                bucketInfoList.add(new AppStandbyInfo(bucketEntry.getKey(), bucketEntry.getValue().intValue()));
-            }
-            try {
-                this.mService.setAppStandbyBuckets(new ParceledListSlice<>(bucketInfoList), this.mContext.getUserId());
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
+        if (appBuckets == null) {
+            return;
+        }
+        List<AppStandbyInfo> bucketInfoList = new ArrayList<>(appBuckets.size());
+        for (Map.Entry<String, Integer> bucketEntry : appBuckets.entrySet()) {
+            bucketInfoList.add(new AppStandbyInfo(bucketEntry.getKey(), bucketEntry.getValue().intValue()));
+        }
+        ParceledListSlice<AppStandbyInfo> slice = new ParceledListSlice<>(bucketInfoList);
+        try {
+            this.mService.setAppStandbyBuckets(slice, this.mContext.getUserId());
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
         }
     }
 
@@ -338,66 +345,64 @@ public final class UsageStatsManager {
         int i = 65280 & standbyReason;
         if (i == 256) {
             sb.append(DateFormat.DAY);
-        } else if (i != 512) {
-            if (i == 768) {
-                sb.append("u");
-                switch (standbyReason & 255) {
-                    case 1:
-                        sb.append("-si");
-                        break;
-                    case 2:
-                        sb.append("-ns");
-                        break;
-                    case 3:
-                        sb.append("-ui");
-                        break;
-                    case 4:
-                        sb.append("-mf");
-                        break;
-                    case 5:
-                        sb.append("-mb");
-                        break;
-                    case 6:
-                        sb.append("-su");
-                        break;
-                    case 7:
-                        sb.append("-at");
-                        break;
-                    case 8:
-                        sb.append("-sa");
-                        break;
-                    case 9:
-                        sb.append("-lp");
-                        break;
-                    case 10:
-                        sb.append("-lv");
-                        break;
-                    case 11:
-                        sb.append("-en");
-                        break;
-                    case 12:
-                        sb.append("-ed");
-                        break;
-                    case 13:
-                        sb.append("-es");
-                        break;
-                    case 14:
-                        sb.append("-uss");
-                        break;
-                    case 15:
-                        sb.append("-fss");
-                        break;
-                }
-            } else if (i == 1024) {
-                sb.append(FullBackup.FILES_TREE_TOKEN);
-            } else if (i == 1280) {
-                sb.append(TtmlUtils.TAG_P);
-                if ((standbyReason & 255) == 1) {
-                    sb.append("-r");
-                }
-            }
-        } else {
+        } else if (i == 512) {
             sb.append(IncidentManager.URI_PARAM_TIMESTAMP);
+        } else if (i == 768) {
+            sb.append("u");
+            switch (standbyReason & 255) {
+                case 1:
+                    sb.append("-si");
+                    break;
+                case 2:
+                    sb.append("-ns");
+                    break;
+                case 3:
+                    sb.append("-ui");
+                    break;
+                case 4:
+                    sb.append("-mf");
+                    break;
+                case 5:
+                    sb.append("-mb");
+                    break;
+                case 6:
+                    sb.append("-su");
+                    break;
+                case 7:
+                    sb.append("-at");
+                    break;
+                case 8:
+                    sb.append("-sa");
+                    break;
+                case 9:
+                    sb.append("-lp");
+                    break;
+                case 10:
+                    sb.append("-lv");
+                    break;
+                case 11:
+                    sb.append("-en");
+                    break;
+                case 12:
+                    sb.append("-ed");
+                    break;
+                case 13:
+                    sb.append("-es");
+                    break;
+                case 14:
+                    sb.append("-uss");
+                    break;
+                case 15:
+                    sb.append("-fss");
+                    break;
+            }
+        } else if (i == 1024) {
+            sb.append(FullBackup.FILES_TREE_TOKEN);
+        } else if (i == 1280) {
+            sb.append(TtmlUtils.TAG_P);
+            if ((standbyReason & 255) == 1) {
+                sb.append("-r");
+            }
         }
         return sb.toString();
     }

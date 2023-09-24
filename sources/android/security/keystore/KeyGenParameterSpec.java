@@ -7,11 +7,8 @@ import java.security.spec.AlgorithmParameterSpec;
 import java.util.Date;
 import javax.security.auth.x500.X500Principal;
 
+/* loaded from: classes3.dex */
 public final class KeyGenParameterSpec implements AlgorithmParameterSpec, UserAuthArgs {
-    private static final Date DEFAULT_CERT_NOT_AFTER = new Date(2461449600000L);
-    private static final Date DEFAULT_CERT_NOT_BEFORE = new Date(0);
-    private static final BigInteger DEFAULT_CERT_SERIAL_NUMBER = new BigInteger("1");
-    private static final X500Principal DEFAULT_CERT_SUBJECT = new X500Principal("CN=fake");
     private final byte[] mAttestationChallenge;
     private final String[] mBlockModes;
     private final Date mCertificateNotAfter;
@@ -39,91 +36,69 @@ public final class KeyGenParameterSpec implements AlgorithmParameterSpec, UserAu
     private final int mUserAuthenticationValidityDurationSeconds;
     private final boolean mUserConfirmationRequired;
     private final boolean mUserPresenceRequired;
+    private static final X500Principal DEFAULT_CERT_SUBJECT = new X500Principal("CN=fake");
+    private static final BigInteger DEFAULT_CERT_SERIAL_NUMBER = new BigInteger("1");
+    private static final Date DEFAULT_CERT_NOT_BEFORE = new Date(0);
+    private static final Date DEFAULT_CERT_NOT_AFTER = new Date(2461449600000L);
 
     public KeyGenParameterSpec(String keyStoreAlias, int uid, int keySize, AlgorithmParameterSpec spec, X500Principal certificateSubject, BigInteger certificateSerialNumber, Date certificateNotBefore, Date certificateNotAfter, Date keyValidityStart, Date keyValidityForOriginationEnd, Date keyValidityForConsumptionEnd, int purposes, String[] digests, String[] encryptionPaddings, String[] signaturePaddings, String[] blockModes, boolean randomizedEncryptionRequired, boolean userAuthenticationRequired, int userAuthenticationValidityDurationSeconds, boolean userPresenceRequired, byte[] attestationChallenge, boolean uniqueIdIncluded, boolean userAuthenticationValidWhileOnBody, boolean invalidatedByBiometricEnrollment, boolean isStrongBoxBacked, boolean userConfirmationRequired, boolean unlockedDeviceRequired) {
         X500Principal certificateSubject2;
         Date certificateNotBefore2;
         Date certificateNotAfter2;
         BigInteger certificateSerialNumber2;
-        if (!TextUtils.isEmpty(keyStoreAlias)) {
-            if (certificateSubject == null) {
-                certificateSubject2 = DEFAULT_CERT_SUBJECT;
-            } else {
-                certificateSubject2 = certificateSubject;
-            }
-            if (certificateNotBefore == null) {
-                certificateNotBefore2 = DEFAULT_CERT_NOT_BEFORE;
-            } else {
-                certificateNotBefore2 = certificateNotBefore;
-            }
-            if (certificateNotAfter == null) {
-                certificateNotAfter2 = DEFAULT_CERT_NOT_AFTER;
-            } else {
-                certificateNotAfter2 = certificateNotAfter;
-            }
-            if (certificateSerialNumber == null) {
-                certificateSerialNumber2 = DEFAULT_CERT_SERIAL_NUMBER;
-            } else {
-                certificateSerialNumber2 = certificateSerialNumber;
-            }
-            if (!certificateNotAfter2.before(certificateNotBefore2)) {
-                this.mKeystoreAlias = keyStoreAlias;
-                this.mUid = uid;
-                this.mKeySize = keySize;
-                this.mSpec = spec;
-                this.mCertificateSubject = certificateSubject2;
-                this.mCertificateSerialNumber = certificateSerialNumber2;
-                this.mCertificateNotBefore = Utils.cloneIfNotNull(certificateNotBefore2);
-                this.mCertificateNotAfter = Utils.cloneIfNotNull(certificateNotAfter2);
-                this.mKeyValidityStart = Utils.cloneIfNotNull(keyValidityStart);
-                this.mKeyValidityForOriginationEnd = Utils.cloneIfNotNull(keyValidityForOriginationEnd);
-                this.mKeyValidityForConsumptionEnd = Utils.cloneIfNotNull(keyValidityForConsumptionEnd);
-                this.mPurposes = purposes;
-                this.mDigests = ArrayUtils.cloneIfNotEmpty(digests);
-                this.mEncryptionPaddings = ArrayUtils.cloneIfNotEmpty(ArrayUtils.nullToEmpty(encryptionPaddings));
-                this.mSignaturePaddings = ArrayUtils.cloneIfNotEmpty(ArrayUtils.nullToEmpty(signaturePaddings));
-                this.mBlockModes = ArrayUtils.cloneIfNotEmpty(ArrayUtils.nullToEmpty(blockModes));
-                this.mRandomizedEncryptionRequired = randomizedEncryptionRequired;
-                this.mUserAuthenticationRequired = userAuthenticationRequired;
-                this.mUserPresenceRequired = userPresenceRequired;
-                this.mUserAuthenticationValidityDurationSeconds = userAuthenticationValidityDurationSeconds;
-                this.mAttestationChallenge = Utils.cloneIfNotNull(attestationChallenge);
-                this.mUniqueIdIncluded = uniqueIdIncluded;
-                this.mUserAuthenticationValidWhileOnBody = userAuthenticationValidWhileOnBody;
-                X500Principal x500Principal = certificateSubject2;
-                this.mInvalidatedByBiometricEnrollment = invalidatedByBiometricEnrollment;
-                this.mIsStrongBoxBacked = isStrongBoxBacked;
-                this.mUserConfirmationRequired = userConfirmationRequired;
-                this.mUnlockedDeviceRequired = unlockedDeviceRequired;
-                return;
-            }
-            String str = keyStoreAlias;
-            int i = uid;
-            int i2 = keySize;
-            AlgorithmParameterSpec algorithmParameterSpec = spec;
-            int i3 = purposes;
-            boolean z = randomizedEncryptionRequired;
-            boolean z2 = userAuthenticationRequired;
-            int i4 = userAuthenticationValidityDurationSeconds;
-            boolean z3 = userPresenceRequired;
-            boolean z4 = uniqueIdIncluded;
-            boolean z5 = userAuthenticationValidWhileOnBody;
-            X500Principal x500Principal2 = certificateSubject2;
-            boolean z6 = unlockedDeviceRequired;
+        if (TextUtils.isEmpty(keyStoreAlias)) {
+            throw new IllegalArgumentException("keyStoreAlias must not be empty");
+        }
+        if (certificateSubject == null) {
+            certificateSubject2 = DEFAULT_CERT_SUBJECT;
+        } else {
+            certificateSubject2 = certificateSubject;
+        }
+        if (certificateNotBefore == null) {
+            certificateNotBefore2 = DEFAULT_CERT_NOT_BEFORE;
+        } else {
+            certificateNotBefore2 = certificateNotBefore;
+        }
+        if (certificateNotAfter == null) {
+            certificateNotAfter2 = DEFAULT_CERT_NOT_AFTER;
+        } else {
+            certificateNotAfter2 = certificateNotAfter;
+        }
+        if (certificateSerialNumber == null) {
+            certificateSerialNumber2 = DEFAULT_CERT_SERIAL_NUMBER;
+        } else {
+            certificateSerialNumber2 = certificateSerialNumber;
+        }
+        if (certificateNotAfter2.before(certificateNotBefore2)) {
             throw new IllegalArgumentException("certificateNotAfter < certificateNotBefore");
         }
-        String str2 = keyStoreAlias;
-        int i5 = uid;
-        int i6 = keySize;
-        AlgorithmParameterSpec algorithmParameterSpec2 = spec;
-        int i7 = purposes;
-        boolean z7 = randomizedEncryptionRequired;
-        boolean z8 = userAuthenticationRequired;
-        int i8 = userAuthenticationValidityDurationSeconds;
-        boolean z9 = userPresenceRequired;
-        boolean z10 = uniqueIdIncluded;
-        boolean z11 = userAuthenticationValidWhileOnBody;
-        throw new IllegalArgumentException("keyStoreAlias must not be empty");
+        this.mKeystoreAlias = keyStoreAlias;
+        this.mUid = uid;
+        this.mKeySize = keySize;
+        this.mSpec = spec;
+        this.mCertificateSubject = certificateSubject2;
+        this.mCertificateSerialNumber = certificateSerialNumber2;
+        this.mCertificateNotBefore = Utils.cloneIfNotNull(certificateNotBefore2);
+        this.mCertificateNotAfter = Utils.cloneIfNotNull(certificateNotAfter2);
+        this.mKeyValidityStart = Utils.cloneIfNotNull(keyValidityStart);
+        this.mKeyValidityForOriginationEnd = Utils.cloneIfNotNull(keyValidityForOriginationEnd);
+        this.mKeyValidityForConsumptionEnd = Utils.cloneIfNotNull(keyValidityForConsumptionEnd);
+        this.mPurposes = purposes;
+        this.mDigests = ArrayUtils.cloneIfNotEmpty(digests);
+        this.mEncryptionPaddings = ArrayUtils.cloneIfNotEmpty(ArrayUtils.nullToEmpty(encryptionPaddings));
+        this.mSignaturePaddings = ArrayUtils.cloneIfNotEmpty(ArrayUtils.nullToEmpty(signaturePaddings));
+        this.mBlockModes = ArrayUtils.cloneIfNotEmpty(ArrayUtils.nullToEmpty(blockModes));
+        this.mRandomizedEncryptionRequired = randomizedEncryptionRequired;
+        this.mUserAuthenticationRequired = userAuthenticationRequired;
+        this.mUserPresenceRequired = userPresenceRequired;
+        this.mUserAuthenticationValidityDurationSeconds = userAuthenticationValidityDurationSeconds;
+        this.mAttestationChallenge = Utils.cloneIfNotNull(attestationChallenge);
+        this.mUniqueIdIncluded = uniqueIdIncluded;
+        this.mUserAuthenticationValidWhileOnBody = userAuthenticationValidWhileOnBody;
+        this.mInvalidatedByBiometricEnrollment = invalidatedByBiometricEnrollment;
+        this.mIsStrongBoxBacked = isStrongBoxBacked;
+        this.mUserConfirmationRequired = userConfirmationRequired;
+        this.mUnlockedDeviceRequired = unlockedDeviceRequired;
     }
 
     public String getKeystoreAlias() {
@@ -176,10 +151,10 @@ public final class KeyGenParameterSpec implements AlgorithmParameterSpec, UserAu
     }
 
     public String[] getDigests() {
-        if (this.mDigests != null) {
-            return ArrayUtils.cloneIfNotEmpty(this.mDigests);
+        if (this.mDigests == null) {
+            throw new IllegalStateException("Digests not specified");
         }
-        throw new IllegalStateException("Digests not specified");
+        return ArrayUtils.cloneIfNotEmpty(this.mDigests);
     }
 
     public boolean isDigestsSpecified() {
@@ -202,18 +177,22 @@ public final class KeyGenParameterSpec implements AlgorithmParameterSpec, UserAu
         return this.mRandomizedEncryptionRequired;
     }
 
+    @Override // android.security.keystore.UserAuthArgs
     public boolean isUserAuthenticationRequired() {
         return this.mUserAuthenticationRequired;
     }
 
+    @Override // android.security.keystore.UserAuthArgs
     public boolean isUserConfirmationRequired() {
         return this.mUserConfirmationRequired;
     }
 
+    @Override // android.security.keystore.UserAuthArgs
     public int getUserAuthenticationValidityDurationSeconds() {
         return this.mUserAuthenticationValidityDurationSeconds;
     }
 
+    @Override // android.security.keystore.UserAuthArgs
     public boolean isUserPresenceRequired() {
         return this.mUserPresenceRequired;
     }
@@ -227,10 +206,12 @@ public final class KeyGenParameterSpec implements AlgorithmParameterSpec, UserAu
         return this.mUniqueIdIncluded;
     }
 
+    @Override // android.security.keystore.UserAuthArgs
     public boolean isUserAuthenticationValidWhileOnBody() {
         return this.mUserAuthenticationValidWhileOnBody;
     }
 
+    @Override // android.security.keystore.UserAuthArgs
     public boolean isInvalidatedByBiometricEnrollment() {
         return this.mInvalidatedByBiometricEnrollment;
     }
@@ -239,14 +220,17 @@ public final class KeyGenParameterSpec implements AlgorithmParameterSpec, UserAu
         return this.mIsStrongBoxBacked;
     }
 
+    @Override // android.security.keystore.UserAuthArgs
     public boolean isUnlockedDeviceRequired() {
         return this.mUnlockedDeviceRequired;
     }
 
+    @Override // android.security.keystore.UserAuthArgs
     public long getBoundToSpecificSecureUserId() {
-        return 0;
+        return 0L;
     }
 
+    /* loaded from: classes3.dex */
     public static final class Builder {
         private byte[] mAttestationChallenge;
         private String[] mBlockModes;
@@ -289,12 +273,12 @@ public final class KeyGenParameterSpec implements AlgorithmParameterSpec, UserAu
             this.mUnlockedDeviceRequired = false;
             if (keystoreAlias == null) {
                 throw new NullPointerException("keystoreAlias == null");
-            } else if (!keystoreAlias.isEmpty()) {
-                this.mKeystoreAlias = keystoreAlias;
-                this.mPurposes = purposes;
-            } else {
+            }
+            if (keystoreAlias.isEmpty()) {
                 throw new IllegalArgumentException("keystoreAlias must not be empty");
             }
+            this.mKeystoreAlias = keystoreAlias;
+            this.mPurposes = purposes;
         }
 
         public Builder(KeyGenParameterSpec sourceSpec) {
@@ -335,51 +319,51 @@ public final class KeyGenParameterSpec implements AlgorithmParameterSpec, UserAu
         }
 
         public Builder setKeySize(int keySize) {
-            if (keySize >= 0) {
-                this.mKeySize = keySize;
-                return this;
+            if (keySize < 0) {
+                throw new IllegalArgumentException("keySize < 0");
             }
-            throw new IllegalArgumentException("keySize < 0");
+            this.mKeySize = keySize;
+            return this;
         }
 
         public Builder setAlgorithmParameterSpec(AlgorithmParameterSpec spec) {
-            if (spec != null) {
-                this.mSpec = spec;
-                return this;
+            if (spec == null) {
+                throw new NullPointerException("spec == null");
             }
-            throw new NullPointerException("spec == null");
+            this.mSpec = spec;
+            return this;
         }
 
         public Builder setCertificateSubject(X500Principal subject) {
-            if (subject != null) {
-                this.mCertificateSubject = subject;
-                return this;
+            if (subject == null) {
+                throw new NullPointerException("subject == null");
             }
-            throw new NullPointerException("subject == null");
+            this.mCertificateSubject = subject;
+            return this;
         }
 
         public Builder setCertificateSerialNumber(BigInteger serialNumber) {
-            if (serialNumber != null) {
-                this.mCertificateSerialNumber = serialNumber;
-                return this;
+            if (serialNumber == null) {
+                throw new NullPointerException("serialNumber == null");
             }
-            throw new NullPointerException("serialNumber == null");
+            this.mCertificateSerialNumber = serialNumber;
+            return this;
         }
 
         public Builder setCertificateNotBefore(Date date) {
-            if (date != null) {
-                this.mCertificateNotBefore = Utils.cloneIfNotNull(date);
-                return this;
+            if (date == null) {
+                throw new NullPointerException("date == null");
             }
-            throw new NullPointerException("date == null");
+            this.mCertificateNotBefore = Utils.cloneIfNotNull(date);
+            return this;
         }
 
         public Builder setCertificateNotAfter(Date date) {
-            if (date != null) {
-                this.mCertificateNotAfter = Utils.cloneIfNotNull(date);
-                return this;
+            if (date == null) {
+                throw new NullPointerException("date == null");
             }
-            throw new NullPointerException("date == null");
+            this.mCertificateNotAfter = Utils.cloneIfNotNull(date);
+            return this;
         }
 
         public Builder setKeyValidityStart(Date startDate) {
@@ -439,11 +423,11 @@ public final class KeyGenParameterSpec implements AlgorithmParameterSpec, UserAu
         }
 
         public Builder setUserAuthenticationValidityDurationSeconds(int seconds) {
-            if (seconds >= -1) {
-                this.mUserAuthenticationValidityDurationSeconds = seconds;
-                return this;
+            if (seconds < -1) {
+                throw new IllegalArgumentException("seconds must be -1 or larger");
             }
-            throw new IllegalArgumentException("seconds must be -1 or larger");
+            this.mUserAuthenticationValidityDurationSeconds = seconds;
+            return this;
         }
 
         public Builder setUserPresenceRequired(boolean required) {

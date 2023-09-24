@@ -1,22 +1,27 @@
 package android.content.res;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.ParcelFileDescriptor;
-import android.os.Parcelable;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.ParcelFileDescriptor;
+import android.p007os.Parcelable;
 import java.io.Closeable;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+/* loaded from: classes.dex */
 public class AssetFileDescriptor implements Parcelable, Closeable {
-    public static final Parcelable.Creator<AssetFileDescriptor> CREATOR = new Parcelable.Creator<AssetFileDescriptor>() {
+    public static final Parcelable.Creator<AssetFileDescriptor> CREATOR = new Parcelable.Creator<AssetFileDescriptor>() { // from class: android.content.res.AssetFileDescriptor.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AssetFileDescriptor createFromParcel(Parcel in) {
             return new AssetFileDescriptor(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AssetFileDescriptor[] newArray(int size) {
             return new AssetFileDescriptor[size];
         }
@@ -31,20 +36,20 @@ public class AssetFileDescriptor implements Parcelable, Closeable {
     private final long mStartOffset;
 
     public AssetFileDescriptor(ParcelFileDescriptor fd, long startOffset, long length) {
-        this(fd, startOffset, length, (Bundle) null);
+        this(fd, startOffset, length, null);
     }
 
     public AssetFileDescriptor(ParcelFileDescriptor fd, long startOffset, long length, Bundle extras) {
         if (fd == null) {
             throw new IllegalArgumentException("fd must not be null");
-        } else if (length >= 0 || startOffset == 0) {
-            this.mFd = fd;
-            this.mStartOffset = startOffset;
-            this.mLength = length;
-            this.mExtras = extras;
-        } else {
+        }
+        if (length < 0 && startOffset != 0) {
             throw new IllegalArgumentException("startOffset must be 0 when using UNKNOWN_LENGTH");
         }
+        this.mFd = fd;
+        this.mStartOffset = startOffset;
+        this.mLength = length;
+        this.mExtras = extras;
     }
 
     public ParcelFileDescriptor getParcelFileDescriptor() {
@@ -71,13 +76,14 @@ public class AssetFileDescriptor implements Parcelable, Closeable {
         if (len >= 0) {
             return len;
         }
-        return -1;
+        return -1L;
     }
 
     public long getDeclaredLength() {
         return this.mLength;
     }
 
+    @Override // java.io.Closeable, java.lang.AutoCloseable
     public void close() throws IOException {
         this.mFd.close();
     }
@@ -100,77 +106,87 @@ public class AssetFileDescriptor implements Parcelable, Closeable {
         return "{AssetFileDescriptor: " + this.mFd + " start=" + this.mStartOffset + " len=" + this.mLength + "}";
     }
 
+    /* loaded from: classes.dex */
     public static class AutoCloseInputStream extends ParcelFileDescriptor.AutoCloseInputStream {
         private long mRemaining;
 
         public AutoCloseInputStream(AssetFileDescriptor fd) throws IOException {
             super(fd.getParcelFileDescriptor());
             super.skip(fd.getStartOffset());
-            this.mRemaining = (long) ((int) fd.getLength());
+            this.mRemaining = (int) fd.getLength();
         }
 
+        @Override // java.io.FileInputStream, java.io.InputStream
         public int available() throws IOException {
-            if (this.mRemaining < 0) {
-                return super.available();
+            if (this.mRemaining >= 0) {
+                if (this.mRemaining < 2147483647L) {
+                    return (int) this.mRemaining;
+                }
+                return Integer.MAX_VALUE;
             }
-            if (this.mRemaining < 2147483647L) {
-                return (int) this.mRemaining;
-            }
-            return Integer.MAX_VALUE;
+            return super.available();
         }
 
+        @Override // android.p007os.ParcelFileDescriptor.AutoCloseInputStream, java.io.FileInputStream, java.io.InputStream
         public int read() throws IOException {
             byte[] buffer = new byte[1];
-            if (read(buffer, 0, 1) == -1) {
-                return -1;
+            int result = read(buffer, 0, 1);
+            if (result != -1) {
+                return buffer[0] & 255;
             }
-            return buffer[0] & 255;
+            return -1;
         }
 
+        @Override // android.p007os.ParcelFileDescriptor.AutoCloseInputStream, java.io.FileInputStream, java.io.InputStream
         public int read(byte[] buffer, int offset, int count) throws IOException {
-            if (this.mRemaining < 0) {
-                return super.read(buffer, offset, count);
+            if (this.mRemaining >= 0) {
+                if (this.mRemaining == 0) {
+                    return -1;
+                }
+                if (count > this.mRemaining) {
+                    count = (int) this.mRemaining;
+                }
+                int res = super.read(buffer, offset, count);
+                if (res >= 0) {
+                    this.mRemaining -= res;
+                }
+                return res;
             }
-            if (this.mRemaining == 0) {
-                return -1;
-            }
-            if (((long) count) > this.mRemaining) {
-                count = (int) this.mRemaining;
-            }
-            int res = super.read(buffer, offset, count);
-            if (res >= 0) {
-                this.mRemaining -= (long) res;
-            }
-            return res;
+            return super.read(buffer, offset, count);
         }
 
+        @Override // android.p007os.ParcelFileDescriptor.AutoCloseInputStream, java.io.FileInputStream, java.io.InputStream
         public int read(byte[] buffer) throws IOException {
             return read(buffer, 0, buffer.length);
         }
 
+        @Override // java.io.FileInputStream, java.io.InputStream
         public long skip(long count) throws IOException {
-            if (this.mRemaining < 0) {
-                return super.skip(count);
+            if (this.mRemaining >= 0) {
+                if (this.mRemaining == 0) {
+                    return -1L;
+                }
+                if (count > this.mRemaining) {
+                    count = this.mRemaining;
+                }
+                long res = super.skip(count);
+                if (res >= 0) {
+                    this.mRemaining -= res;
+                }
+                return res;
             }
-            if (this.mRemaining == 0) {
-                return -1;
-            }
-            if (count > this.mRemaining) {
-                count = this.mRemaining;
-            }
-            long res = super.skip(count);
-            if (res >= 0) {
-                this.mRemaining -= res;
-            }
-            return res;
+            return super.skip(count);
         }
 
+        @Override // java.io.InputStream
         public void mark(int readlimit) {
-            if (this.mRemaining < 0) {
-                super.mark(readlimit);
+            if (this.mRemaining >= 0) {
+                return;
             }
+            super.mark(readlimit);
         }
 
+        @Override // java.io.InputStream
         public boolean markSupported() {
             if (this.mRemaining >= 0) {
                 return false;
@@ -178,64 +194,80 @@ public class AssetFileDescriptor implements Parcelable, Closeable {
             return super.markSupported();
         }
 
+        @Override // java.io.InputStream
         public synchronized void reset() throws IOException {
-            if (this.mRemaining < 0) {
-                super.reset();
+            if (this.mRemaining >= 0) {
+                return;
             }
+            super.reset();
         }
     }
 
+    /* loaded from: classes.dex */
     public static class AutoCloseOutputStream extends ParcelFileDescriptor.AutoCloseOutputStream {
         private long mRemaining;
 
         public AutoCloseOutputStream(AssetFileDescriptor fd) throws IOException {
             super(fd.getParcelFileDescriptor());
-            if (fd.getParcelFileDescriptor().seekTo(fd.getStartOffset()) >= 0) {
-                this.mRemaining = (long) ((int) fd.getLength());
+            if (fd.getParcelFileDescriptor().seekTo(fd.getStartOffset()) < 0) {
+                throw new IOException("Unable to seek");
+            }
+            this.mRemaining = (int) fd.getLength();
+        }
+
+        @Override // java.io.FileOutputStream, java.io.OutputStream
+        public void write(byte[] buffer, int offset, int count) throws IOException {
+            if (this.mRemaining >= 0) {
+                if (this.mRemaining == 0) {
+                    return;
+                }
+                if (count > this.mRemaining) {
+                    count = (int) this.mRemaining;
+                }
+                super.write(buffer, offset, count);
+                this.mRemaining -= count;
                 return;
             }
-            throw new IOException("Unable to seek");
+            super.write(buffer, offset, count);
         }
 
-        public void write(byte[] buffer, int offset, int count) throws IOException {
-            if (this.mRemaining < 0) {
-                super.write(buffer, offset, count);
-            } else if (this.mRemaining != 0) {
-                if (((long) count) > this.mRemaining) {
-                    count = (int) this.mRemaining;
-                }
-                super.write(buffer, offset, count);
-                this.mRemaining -= (long) count;
-            }
-        }
-
+        @Override // java.io.FileOutputStream, java.io.OutputStream
         public void write(byte[] buffer) throws IOException {
-            if (this.mRemaining < 0) {
-                super.write(buffer);
-            } else if (this.mRemaining != 0) {
+            if (this.mRemaining >= 0) {
+                if (this.mRemaining == 0) {
+                    return;
+                }
                 int count = buffer.length;
-                if (((long) count) > this.mRemaining) {
+                if (count > this.mRemaining) {
                     count = (int) this.mRemaining;
                 }
                 super.write(buffer);
-                this.mRemaining -= (long) count;
+                this.mRemaining -= count;
+                return;
             }
+            super.write(buffer);
         }
 
+        @Override // java.io.FileOutputStream, java.io.OutputStream
         public void write(int oneByte) throws IOException {
-            if (this.mRemaining < 0) {
-                super.write(oneByte);
-            } else if (this.mRemaining != 0) {
+            if (this.mRemaining >= 0) {
+                if (this.mRemaining == 0) {
+                    return;
+                }
                 super.write(oneByte);
                 this.mRemaining--;
+                return;
             }
+            super.write(oneByte);
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return this.mFd.describeContents();
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         this.mFd.writeToParcel(out, flags);
         out.writeLong(this.mStartOffset);

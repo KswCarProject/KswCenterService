@@ -11,8 +11,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
+import java.util.function.Function;
 
 @VisibleForTesting(visibility = VisibleForTesting.Visibility.PACKAGE)
+/* loaded from: classes4.dex */
 public final class GenerateLinksLogger {
     private static final String LOG_TAG = "GenerateLinksLogger";
     private static final String ZERO = "0";
@@ -38,20 +40,26 @@ public final class GenerateLinksLogger {
         Preconditions.checkNotNull(text);
         Preconditions.checkNotNull(links);
         Preconditions.checkNotNull(callingPackageName);
-        if (shouldLog()) {
-            LinkifyStats totalStats = new LinkifyStats();
-            Map<String, LinkifyStats> perEntityTypeStats = new ArrayMap<>();
-            for (TextLinks.TextLink link : links.getLinks()) {
-                if (link.getEntityCount() != 0 && (entityType = link.getEntity(0)) != null && !"other".equals(entityType) && !"".equals(entityType)) {
-                    totalStats.countLink(link);
-                    perEntityTypeStats.computeIfAbsent(entityType, $$Lambda$GenerateLinksLogger$vmbT_h7MLlbrIm0lJJwAeHQhXk.INSTANCE).countLink(link);
-                }
+        if (!shouldLog()) {
+            return;
+        }
+        LinkifyStats totalStats = new LinkifyStats();
+        Map<String, LinkifyStats> perEntityTypeStats = new ArrayMap<>();
+        for (TextLinks.TextLink link : links.getLinks()) {
+            if (link.getEntityCount() != 0 && (entityType = link.getEntity(0)) != null && !"other".equals(entityType) && !"".equals(entityType)) {
+                totalStats.countLink(link);
+                perEntityTypeStats.computeIfAbsent(entityType, new Function() { // from class: android.view.textclassifier.-$$Lambda$GenerateLinksLogger$vmbT_h7MLlbrIm0lJJwA-eHQhXk
+                    @Override // java.util.function.Function
+                    public final Object apply(Object obj) {
+                        return GenerateLinksLogger.lambda$logGenerateLinks$0((String) obj);
+                    }
+                }).countLink(link);
             }
-            String callId = UUID.randomUUID().toString();
-            writeStats(callId, callingPackageName, (String) null, totalStats, text, latencyMs);
-            for (Map.Entry<String, LinkifyStats> entry : perEntityTypeStats.entrySet()) {
-                writeStats(callId, callingPackageName, entry.getKey(), entry.getValue(), text, latencyMs);
-            }
+        }
+        String callId = UUID.randomUUID().toString();
+        writeStats(callId, callingPackageName, null, totalStats, text, latencyMs);
+        for (Map.Entry<String, LinkifyStats> entry : perEntityTypeStats.entrySet()) {
+            writeStats(callId, callingPackageName, entry.getKey(), entry.getValue(), text, latencyMs);
         }
     }
 
@@ -60,10 +68,7 @@ public final class GenerateLinksLogger {
     }
 
     private boolean shouldLog() {
-        if (this.mSampleRate > 1 && this.mRng.nextInt(this.mSampleRate) != 0) {
-            return false;
-        }
-        return true;
+        return this.mSampleRate <= 1 || this.mRng.nextInt(this.mSampleRate) == 0;
     }
 
     private void writeStats(String callId, String callingPackageName, String entityType, LinkifyStats stats, CharSequence text, long latencyMs) {
@@ -76,17 +81,19 @@ public final class GenerateLinksLogger {
     }
 
     private static void debugLog(LogMaker log) {
-        if (Log.ENABLE_FULL_LOGGING) {
-            String callId = Objects.toString(log.getTaggedData(1319), "");
-            String entityType = Objects.toString(log.getTaggedData(1318), "ANY_ENTITY");
-            int numLinks = Integer.parseInt(Objects.toString(log.getTaggedData(1316), "0"));
-            int linkLength = Integer.parseInt(Objects.toString(log.getTaggedData(1317), "0"));
-            int textLength = Integer.parseInt(Objects.toString(log.getTaggedData(1315), "0"));
-            int latencyMs = Integer.parseInt(Objects.toString(log.getTaggedData(1314), "0"));
-            Log.v(LOG_TAG, String.format(Locale.US, "%s:%s %d links (%d/%d chars) %dms %s", new Object[]{callId, entityType, Integer.valueOf(numLinks), Integer.valueOf(linkLength), Integer.valueOf(textLength), Integer.valueOf(latencyMs), log.getPackageName()}));
+        if (!Log.ENABLE_FULL_LOGGING) {
+            return;
         }
+        String callId = Objects.toString(log.getTaggedData(1319), "");
+        String entityType = Objects.toString(log.getTaggedData(1318), "ANY_ENTITY");
+        int numLinks = Integer.parseInt(Objects.toString(log.getTaggedData(1316), "0"));
+        int linkLength = Integer.parseInt(Objects.toString(log.getTaggedData(1317), "0"));
+        int textLength = Integer.parseInt(Objects.toString(log.getTaggedData(1315), "0"));
+        int latencyMs = Integer.parseInt(Objects.toString(log.getTaggedData(1314), "0"));
+        Log.m38v(LOG_TAG, String.format(Locale.US, "%s:%s %d links (%d/%d chars) %dms %s", callId, entityType, Integer.valueOf(numLinks), Integer.valueOf(linkLength), Integer.valueOf(textLength), Integer.valueOf(latencyMs), log.getPackageName()));
     }
 
+    /* loaded from: classes4.dex */
     private static final class LinkifyStats {
         int mNumLinks;
         int mNumLinksTextLength;
@@ -94,8 +101,7 @@ public final class GenerateLinksLogger {
         private LinkifyStats() {
         }
 
-        /* access modifiers changed from: package-private */
-        public void countLink(TextLinks.TextLink link) {
+        void countLink(TextLinks.TextLink link) {
             this.mNumLinks++;
             this.mNumLinksTextLength += link.getEnd() - link.getStart();
         }

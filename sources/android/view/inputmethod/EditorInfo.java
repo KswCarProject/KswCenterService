@@ -1,17 +1,20 @@
 package android.view.inputmethod;
 
-import android.os.Bundle;
-import android.os.LocaleList;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.UserHandle;
+import android.p007os.Bundle;
+import android.p007os.LocaleList;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.UserHandle;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Printer;
 import java.util.Arrays;
 
+/* loaded from: classes4.dex */
 public class EditorInfo implements InputType, Parcelable {
-    public static final Parcelable.Creator<EditorInfo> CREATOR = new Parcelable.Creator<EditorInfo>() {
+    public static final Parcelable.Creator<EditorInfo> CREATOR = new Parcelable.Creator<EditorInfo>() { // from class: android.view.inputmethod.EditorInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public EditorInfo createFromParcel(Parcel source) {
             EditorInfo res = new EditorInfo();
             res.inputType = source.readInt();
@@ -35,6 +38,8 @@ public class EditorInfo implements InputType, Parcelable {
             return res;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public EditorInfo[] newArray(int size) {
             return new EditorInfo[size];
         }
@@ -57,22 +62,22 @@ public class EditorInfo implements InputType, Parcelable {
     public static final int IME_FLAG_NO_PERSONALIZED_LEARNING = 16777216;
     public static final int IME_MASK_ACTION = 255;
     public static final int IME_NULL = 0;
-    public int actionId = 0;
-    public CharSequence actionLabel = null;
-    public String[] contentMimeTypes = null;
     public Bundle extras;
     public int fieldId;
     public String fieldName;
-    public LocaleList hintLocales = null;
     public CharSequence hintText;
-    public int imeOptions = 0;
-    public int initialCapsMode = 0;
-    public int initialSelEnd = -1;
-    public int initialSelStart = -1;
-    public int inputType = 0;
     public CharSequence label;
     public String packageName;
+    public int inputType = 0;
+    public int imeOptions = 0;
     public String privateImeOptions = null;
+    public CharSequence actionLabel = null;
+    public int actionId = 0;
+    public int initialSelStart = -1;
+    public int initialSelEnd = -1;
+    public int initialCapsMode = 0;
+    public LocaleList hintLocales = null;
+    public String[] contentMimeTypes = null;
     public UserHandle targetInputMethodUser = null;
 
     public final void makeCompatible(int targetSdkVersion) {
@@ -93,7 +98,7 @@ public class EditorInfo implements InputType, Parcelable {
         StringBuilder sb = new StringBuilder();
         sb.append(prefix);
         sb.append("actionLabel=");
-        sb.append(this.actionLabel);
+        sb.append((Object) this.actionLabel);
         sb.append(" actionId=");
         sb.append(this.actionId);
         pw.println(sb.toString());
@@ -101,9 +106,9 @@ public class EditorInfo implements InputType, Parcelable {
         StringBuilder sb2 = new StringBuilder();
         sb2.append(prefix);
         sb2.append("hintText=");
-        sb2.append(this.hintText);
+        sb2.append((Object) this.hintText);
         sb2.append(" label=");
-        sb2.append(this.label);
+        sb2.append((Object) this.label);
         pw.println(sb2.toString());
         pw.println(prefix + "packageName=" + this.packageName + " fieldId=" + this.fieldId + " fieldName=" + this.fieldName);
         StringBuilder sb3 = new StringBuilder();
@@ -118,6 +123,7 @@ public class EditorInfo implements InputType, Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.inputType);
         dest.writeInt(this.imeOptions);
@@ -142,6 +148,7 @@ public class EditorInfo implements InputType, Parcelable {
         UserHandle.writeToParcel(this.targetInputMethodUser, dest);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

@@ -2,13 +2,15 @@ package android.hardware.camera2.impl;
 
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.impl.CallbackProxies;
-import android.os.Binder;
+import android.p007os.Binder;
 import android.view.Surface;
 import com.android.internal.util.Preconditions;
 import java.util.concurrent.Executor;
 
+/* loaded from: classes.dex */
 public class CallbackProxies {
 
+    /* loaded from: classes.dex */
     public static class SessionStateCallbackProxy extends CameraCaptureSession.StateCallback {
         private final CameraCaptureSession.StateCallback mCallback;
         private final Executor mExecutor;
@@ -18,18 +20,14 @@ public class CallbackProxies {
             this.mCallback = (CameraCaptureSession.StateCallback) Preconditions.checkNotNull(callback, "callback must not be null");
         }
 
-        public void onConfigured(CameraCaptureSession session) {
+        @Override // android.hardware.camera2.CameraCaptureSession.StateCallback
+        public void onConfigured(final CameraCaptureSession session) {
             long ident = Binder.clearCallingIdentity();
             try {
-                this.mExecutor.execute(new Runnable(session) {
-                    private final /* synthetic */ CameraCaptureSession f$1;
-
-                    {
-                        this.f$1 = r2;
-                    }
-
+                this.mExecutor.execute(new Runnable() { // from class: android.hardware.camera2.impl.-$$Lambda$CallbackProxies$SessionStateCallbackProxy$soW0qC12Osypoky6AfL3P2-TeDw
+                    @Override // java.lang.Runnable
                     public final void run() {
-                        CallbackProxies.SessionStateCallbackProxy.this.mCallback.onConfigured(this.f$1);
+                        CallbackProxies.SessionStateCallbackProxy.this.mCallback.onConfigured(session);
                     }
                 });
             } finally {
@@ -37,18 +35,14 @@ public class CallbackProxies {
             }
         }
 
-        public void onConfigureFailed(CameraCaptureSession session) {
+        @Override // android.hardware.camera2.CameraCaptureSession.StateCallback
+        public void onConfigureFailed(final CameraCaptureSession session) {
             long ident = Binder.clearCallingIdentity();
             try {
-                this.mExecutor.execute(new Runnable(session) {
-                    private final /* synthetic */ CameraCaptureSession f$1;
-
-                    {
-                        this.f$1 = r2;
-                    }
-
+                this.mExecutor.execute(new Runnable() { // from class: android.hardware.camera2.impl.-$$Lambda$CallbackProxies$SessionStateCallbackProxy$gvbTsp9UPpKJAbdycdci_ZW5BeI
+                    @Override // java.lang.Runnable
                     public final void run() {
-                        CallbackProxies.SessionStateCallbackProxy.this.mCallback.onConfigureFailed(this.f$1);
+                        CallbackProxies.SessionStateCallbackProxy.this.mCallback.onConfigureFailed(session);
                     }
                 });
             } finally {
@@ -56,18 +50,14 @@ public class CallbackProxies {
             }
         }
 
-        public void onReady(CameraCaptureSession session) {
+        @Override // android.hardware.camera2.CameraCaptureSession.StateCallback
+        public void onReady(final CameraCaptureSession session) {
             long ident = Binder.clearCallingIdentity();
             try {
-                this.mExecutor.execute(new Runnable(session) {
-                    private final /* synthetic */ CameraCaptureSession f$1;
-
-                    {
-                        this.f$1 = r2;
-                    }
-
+                this.mExecutor.execute(new Runnable() { // from class: android.hardware.camera2.impl.-$$Lambda$CallbackProxies$SessionStateCallbackProxy$Hoz-iT1tD_pl7sCGu4flyo-xB90
+                    @Override // java.lang.Runnable
                     public final void run() {
-                        CallbackProxies.SessionStateCallbackProxy.this.mCallback.onReady(this.f$1);
+                        CallbackProxies.SessionStateCallbackProxy.this.mCallback.onReady(session);
                     }
                 });
             } finally {
@@ -75,18 +65,14 @@ public class CallbackProxies {
             }
         }
 
-        public void onActive(CameraCaptureSession session) {
+        @Override // android.hardware.camera2.CameraCaptureSession.StateCallback
+        public void onActive(final CameraCaptureSession session) {
             long ident = Binder.clearCallingIdentity();
             try {
-                this.mExecutor.execute(new Runnable(session) {
-                    private final /* synthetic */ CameraCaptureSession f$1;
-
-                    {
-                        this.f$1 = r2;
-                    }
-
+                this.mExecutor.execute(new Runnable() { // from class: android.hardware.camera2.impl.-$$Lambda$CallbackProxies$SessionStateCallbackProxy$ISQyEhLUI1khcOCin3OIsRyTUoU
+                    @Override // java.lang.Runnable
                     public final void run() {
-                        CallbackProxies.SessionStateCallbackProxy.this.mCallback.onActive(this.f$1);
+                        CallbackProxies.SessionStateCallbackProxy.this.mCallback.onActive(session);
                     }
                 });
             } finally {
@@ -94,18 +80,14 @@ public class CallbackProxies {
             }
         }
 
-        public void onCaptureQueueEmpty(CameraCaptureSession session) {
+        @Override // android.hardware.camera2.CameraCaptureSession.StateCallback
+        public void onCaptureQueueEmpty(final CameraCaptureSession session) {
             long ident = Binder.clearCallingIdentity();
             try {
-                this.mExecutor.execute(new Runnable(session) {
-                    private final /* synthetic */ CameraCaptureSession f$1;
-
-                    {
-                        this.f$1 = r2;
-                    }
-
+                this.mExecutor.execute(new Runnable() { // from class: android.hardware.camera2.impl.-$$Lambda$CallbackProxies$SessionStateCallbackProxy$hoQOYc189Bss2NBtrutabMRw4VU
+                    @Override // java.lang.Runnable
                     public final void run() {
-                        CallbackProxies.SessionStateCallbackProxy.this.mCallback.onCaptureQueueEmpty(this.f$1);
+                        CallbackProxies.SessionStateCallbackProxy.this.mCallback.onCaptureQueueEmpty(session);
                     }
                 });
             } finally {
@@ -113,18 +95,14 @@ public class CallbackProxies {
             }
         }
 
-        public void onClosed(CameraCaptureSession session) {
+        @Override // android.hardware.camera2.CameraCaptureSession.StateCallback
+        public void onClosed(final CameraCaptureSession session) {
             long ident = Binder.clearCallingIdentity();
             try {
-                this.mExecutor.execute(new Runnable(session) {
-                    private final /* synthetic */ CameraCaptureSession f$1;
-
-                    {
-                        this.f$1 = r2;
-                    }
-
+                this.mExecutor.execute(new Runnable() { // from class: android.hardware.camera2.impl.-$$Lambda$CallbackProxies$SessionStateCallbackProxy$9H0ZdANdMrdpoq2bfIL2l3DVsKk
+                    @Override // java.lang.Runnable
                     public final void run() {
-                        CallbackProxies.SessionStateCallbackProxy.this.mCallback.onClosed(this.f$1);
+                        CallbackProxies.SessionStateCallbackProxy.this.mCallback.onClosed(session);
                     }
                 });
             } finally {
@@ -132,20 +110,14 @@ public class CallbackProxies {
             }
         }
 
-        public void onSurfacePrepared(CameraCaptureSession session, Surface surface) {
+        @Override // android.hardware.camera2.CameraCaptureSession.StateCallback
+        public void onSurfacePrepared(final CameraCaptureSession session, final Surface surface) {
             long ident = Binder.clearCallingIdentity();
             try {
-                this.mExecutor.execute(new Runnable(session, surface) {
-                    private final /* synthetic */ CameraCaptureSession f$1;
-                    private final /* synthetic */ Surface f$2;
-
-                    {
-                        this.f$1 = r2;
-                        this.f$2 = r3;
-                    }
-
+                this.mExecutor.execute(new Runnable() { // from class: android.hardware.camera2.impl.-$$Lambda$CallbackProxies$SessionStateCallbackProxy$tuajQwbKz3BV5CZZJdjl97HF6Tw
+                    @Override // java.lang.Runnable
                     public final void run() {
-                        CallbackProxies.SessionStateCallbackProxy.this.mCallback.onSurfacePrepared(this.f$1, this.f$2);
+                        CallbackProxies.SessionStateCallbackProxy.this.mCallback.onSurfacePrepared(session, surface);
                     }
                 });
             } finally {

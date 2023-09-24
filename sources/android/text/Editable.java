@@ -1,10 +1,14 @@
 package android.text;
 
+/* loaded from: classes4.dex */
 public interface Editable extends CharSequence, GetChars, Spannable, Appendable {
+    @Override // java.lang.Appendable
     Editable append(char c);
 
+    @Override // java.lang.Appendable
     Editable append(CharSequence charSequence);
 
+    @Override // java.lang.Appendable
     Editable append(CharSequence charSequence, int i, int i2);
 
     void clear();
@@ -25,6 +29,7 @@ public interface Editable extends CharSequence, GetChars, Spannable, Appendable 
 
     void setFilters(InputFilter[] inputFilterArr);
 
+    /* loaded from: classes4.dex */
     public static class Factory {
         private static Factory sInstance = new Factory();
 

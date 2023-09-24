@@ -12,8 +12,9 @@ import android.view.PointerIcon;
 import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.LinearLayout;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
+/* loaded from: classes4.dex */
 public class TabWidget extends LinearLayout implements View.OnFocusChangeListener {
     private final Rect mBounds;
     @UnsupportedAppUsage
@@ -24,16 +25,16 @@ public class TabWidget extends LinearLayout implements View.OnFocusChangeListene
     private Drawable mRightStrip;
     @UnsupportedAppUsage
     private int mSelectedTab;
-    /* access modifiers changed from: private */
-    public OnTabSelectionChanged mSelectionChangedListener;
+    private OnTabSelectionChanged mSelectionChangedListener;
     private boolean mStripMoved;
 
+    /* loaded from: classes4.dex */
     interface OnTabSelectionChanged {
         void onTabSelectionChanged(int i, boolean z);
     }
 
     public TabWidget(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public TabWidget(Context context, AttributeSet attrs) {
@@ -50,36 +51,38 @@ public class TabWidget extends LinearLayout implements View.OnFocusChangeListene
         this.mSelectedTab = -1;
         this.mDrawBottomStrips = true;
         this.mImposedTabsHeight = -1;
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.TabWidget, defStyleAttr, defStyleRes);
-        saveAttributeDataForStyleable(context, R.styleable.TabWidget, attrs, a, defStyleAttr, defStyleRes);
+        TypedArray a = context.obtainStyledAttributes(attrs, C3132R.styleable.TabWidget, defStyleAttr, defStyleRes);
+        saveAttributeDataForStyleable(context, C3132R.styleable.TabWidget, attrs, a, defStyleAttr, defStyleRes);
         this.mDrawBottomStrips = a.getBoolean(3, this.mDrawBottomStrips);
         boolean isTargetSdkDonutOrLower = context.getApplicationInfo().targetSdkVersion <= 4;
-        if (a.hasValueOrEmpty(1)) {
+        boolean hasExplicitLeft = a.hasValueOrEmpty(1);
+        if (hasExplicitLeft) {
             this.mLeftStrip = a.getDrawable(1);
         } else if (isTargetSdkDonutOrLower) {
-            this.mLeftStrip = context.getDrawable(R.drawable.tab_bottom_left_v4);
+            this.mLeftStrip = context.getDrawable(C3132R.C3133drawable.tab_bottom_left_v4);
         } else {
-            this.mLeftStrip = context.getDrawable(R.drawable.tab_bottom_left);
+            this.mLeftStrip = context.getDrawable(C3132R.C3133drawable.tab_bottom_left);
         }
-        if (a.hasValueOrEmpty(2)) {
+        boolean hasExplicitRight = a.hasValueOrEmpty(2);
+        if (hasExplicitRight) {
             this.mRightStrip = a.getDrawable(2);
         } else if (isTargetSdkDonutOrLower) {
-            this.mRightStrip = context.getDrawable(R.drawable.tab_bottom_right_v4);
+            this.mRightStrip = context.getDrawable(C3132R.C3133drawable.tab_bottom_right_v4);
         } else {
-            this.mRightStrip = context.getDrawable(R.drawable.tab_bottom_right);
+            this.mRightStrip = context.getDrawable(C3132R.C3133drawable.tab_bottom_right);
         }
         a.recycle();
         setChildrenDrawingOrderEnabled(true);
     }
 
-    /* access modifiers changed from: protected */
-    public void onSizeChanged(int w, int h, int oldw, int oldh) {
+    @Override // android.view.View
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         this.mStripMoved = true;
         super.onSizeChanged(w, h, oldw, oldh);
     }
 
-    /* access modifiers changed from: protected */
-    public int getChildDrawingOrder(int childCount, int i) {
+    @Override // android.view.ViewGroup
+    protected int getChildDrawingOrder(int childCount, int i) {
         if (this.mSelectedTab == -1) {
             return i;
         }
@@ -92,8 +95,8 @@ public class TabWidget extends LinearLayout implements View.OnFocusChangeListene
         return i;
     }
 
-    /* access modifiers changed from: package-private */
-    public void measureChildBeforeLayout(View child, int childIndex, int widthMeasureSpec, int totalWidth, int heightMeasureSpec, int totalHeight) {
+    @Override // android.widget.LinearLayout
+    void measureChildBeforeLayout(View child, int childIndex, int widthMeasureSpec, int totalWidth, int heightMeasureSpec, int totalHeight) {
         if (!isMeasureWithLargestChildEnabled() && this.mImposedTabsHeight >= 0) {
             widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(this.mImposedTabWidths[childIndex] + totalWidth, 1073741824);
             heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(this.mImposedTabsHeight, 1073741824);
@@ -101,8 +104,8 @@ public class TabWidget extends LinearLayout implements View.OnFocusChangeListene
         super.measureChildBeforeLayout(child, childIndex, widthMeasureSpec, totalWidth, heightMeasureSpec, totalHeight);
     }
 
-    /* access modifiers changed from: package-private */
-    public void measureHorizontal(int widthMeasureSpec, int heightMeasureSpec) {
+    @Override // android.widget.LinearLayout
+    void measureHorizontal(int widthMeasureSpec, int heightMeasureSpec) {
         if (View.MeasureSpec.getMode(widthMeasureSpec) == 0) {
             super.measureHorizontal(widthMeasureSpec, heightMeasureSpec);
             return;
@@ -115,8 +118,8 @@ public class TabWidget extends LinearLayout implements View.OnFocusChangeListene
         if (extraWidth > 0) {
             int count = getChildCount();
             int childCount = 0;
-            for (int i = 0; i < count; i++) {
-                if (getChildAt(i).getVisibility() != 8) {
+            for (int childCount2 = 0; childCount2 < count; childCount2++) {
+                if (getChildAt(childCount2).getVisibility() != 8) {
                     childCount++;
                 }
             }
@@ -125,18 +128,18 @@ public class TabWidget extends LinearLayout implements View.OnFocusChangeListene
                     this.mImposedTabWidths = new int[count];
                 }
                 int extraWidth2 = extraWidth;
-                for (int i2 = 0; i2 < count; i2++) {
-                    View child = getChildAt(i2);
+                for (int extraWidth3 = 0; extraWidth3 < count; extraWidth3++) {
+                    View child = getChildAt(extraWidth3);
                     if (child.getVisibility() != 8) {
                         int childWidth = child.getMeasuredWidth();
-                        int newWidth = Math.max(0, childWidth - (extraWidth2 / childCount));
-                        this.mImposedTabWidths[i2] = newWidth;
+                        int delta = extraWidth2 / childCount;
+                        int newWidth = Math.max(0, childWidth - delta);
+                        this.mImposedTabWidths[extraWidth3] = newWidth;
                         extraWidth2 -= childWidth - newWidth;
                         childCount--;
                         this.mImposedTabsHeight = Math.max(this.mImposedTabsHeight, child.getMeasuredHeight());
                     }
                 }
-                int i3 = extraWidth2;
             }
         }
         super.measureHorizontal(widthMeasureSpec, heightMeasureSpec);
@@ -150,6 +153,7 @@ public class TabWidget extends LinearLayout implements View.OnFocusChangeListene
         return getChildCount();
     }
 
+    @Override // android.widget.LinearLayout
     public void setDividerDrawable(Drawable drawable) {
         super.setDividerDrawable(drawable);
     }
@@ -195,6 +199,7 @@ public class TabWidget extends LinearLayout implements View.OnFocusChangeListene
         return this.mDrawBottomStrips;
     }
 
+    @Override // android.view.ViewGroup, android.view.ViewParent
     public void childDrawableStateChanged(View child) {
         if (getTabCount() > 0 && child == getChildTabViewAt(this.mSelectedTab)) {
             invalidate();
@@ -202,55 +207,60 @@ public class TabWidget extends LinearLayout implements View.OnFocusChangeListene
         super.childDrawableStateChanged(child);
     }
 
+    @Override // android.view.ViewGroup, android.view.View
     public void dispatchDraw(Canvas canvas) {
         super.dispatchDraw(canvas);
-        if (getTabCount() != 0 && this.mDrawBottomStrips) {
-            View selectedChild = getChildTabViewAt(this.mSelectedTab);
-            Drawable leftStrip = this.mLeftStrip;
-            Drawable rightStrip = this.mRightStrip;
+        if (getTabCount() == 0 || !this.mDrawBottomStrips) {
+            return;
+        }
+        View selectedChild = getChildTabViewAt(this.mSelectedTab);
+        Drawable leftStrip = this.mLeftStrip;
+        Drawable rightStrip = this.mRightStrip;
+        if (leftStrip != null) {
+            leftStrip.setState(selectedChild.getDrawableState());
+        }
+        if (rightStrip != null) {
+            rightStrip.setState(selectedChild.getDrawableState());
+        }
+        if (this.mStripMoved) {
+            Rect bounds = this.mBounds;
+            bounds.left = selectedChild.getLeft();
+            bounds.right = selectedChild.getRight();
+            int myHeight = getHeight();
             if (leftStrip != null) {
-                leftStrip.setState(selectedChild.getDrawableState());
+                leftStrip.setBounds(Math.min(0, bounds.left - leftStrip.getIntrinsicWidth()), myHeight - leftStrip.getIntrinsicHeight(), bounds.left, myHeight);
             }
             if (rightStrip != null) {
-                rightStrip.setState(selectedChild.getDrawableState());
+                rightStrip.setBounds(bounds.right, myHeight - rightStrip.getIntrinsicHeight(), Math.max(getWidth(), bounds.right + rightStrip.getIntrinsicWidth()), myHeight);
             }
-            if (this.mStripMoved) {
-                Rect bounds = this.mBounds;
-                bounds.left = selectedChild.getLeft();
-                bounds.right = selectedChild.getRight();
-                int myHeight = getHeight();
-                if (leftStrip != null) {
-                    leftStrip.setBounds(Math.min(0, bounds.left - leftStrip.getIntrinsicWidth()), myHeight - leftStrip.getIntrinsicHeight(), bounds.left, myHeight);
-                }
-                if (rightStrip != null) {
-                    rightStrip.setBounds(bounds.right, myHeight - rightStrip.getIntrinsicHeight(), Math.max(getWidth(), bounds.right + rightStrip.getIntrinsicWidth()), myHeight);
-                }
-                this.mStripMoved = false;
-            }
-            if (leftStrip != null) {
-                leftStrip.draw(canvas);
-            }
-            if (rightStrip != null) {
-                rightStrip.draw(canvas);
-            }
+            this.mStripMoved = false;
+        }
+        if (leftStrip != null) {
+            leftStrip.draw(canvas);
+        }
+        if (rightStrip != null) {
+            rightStrip.draw(canvas);
         }
     }
 
     public void setCurrentTab(int index) {
-        if (index >= 0 && index < getTabCount() && index != this.mSelectedTab) {
-            if (this.mSelectedTab != -1) {
-                getChildTabViewAt(this.mSelectedTab).setSelected(false);
-            }
-            this.mSelectedTab = index;
-            getChildTabViewAt(this.mSelectedTab).setSelected(true);
-            this.mStripMoved = true;
+        if (index < 0 || index >= getTabCount() || index == this.mSelectedTab) {
+            return;
         }
+        if (this.mSelectedTab != -1) {
+            getChildTabViewAt(this.mSelectedTab).setSelected(false);
+        }
+        this.mSelectedTab = index;
+        getChildTabViewAt(this.mSelectedTab).setSelected(true);
+        this.mStripMoved = true;
     }
 
+    @Override // android.widget.LinearLayout, android.view.ViewGroup, android.view.View
     public CharSequence getAccessibilityClassName() {
         return TabWidget.class.getName();
     }
 
+    @Override // android.view.View
     public void onInitializeAccessibilityEventInternal(AccessibilityEvent event) {
         super.onInitializeAccessibilityEventInternal(event);
         event.setItemCount(getTabCount());
@@ -265,14 +275,17 @@ public class TabWidget extends LinearLayout implements View.OnFocusChangeListene
         }
     }
 
+    @Override // android.view.View
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
         int count = getTabCount();
         for (int i = 0; i < count; i++) {
-            getChildTabViewAt(i).setEnabled(enabled);
+            View child = getChildTabViewAt(i);
+            child.setEnabled(enabled);
         }
     }
 
+    @Override // android.view.ViewGroup
     public void addView(View child) {
         if (child.getLayoutParams() == null) {
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, -1, 1.0f);
@@ -288,11 +301,13 @@ public class TabWidget extends LinearLayout implements View.OnFocusChangeListene
         child.setOnClickListener(new TabClickListener(getTabCount() - 1));
     }
 
+    @Override // android.view.ViewGroup
     public void removeAllViews() {
         super.removeAllViews();
         this.mSelectedTab = -1;
     }
 
+    @Override // android.view.ViewGroup, android.view.View
     public PointerIcon onResolvePointerIcon(MotionEvent event, int pointerIndex) {
         if (!isEnabled()) {
             return null;
@@ -300,15 +315,16 @@ public class TabWidget extends LinearLayout implements View.OnFocusChangeListene
         return super.onResolvePointerIcon(event, pointerIndex);
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void setTabSelectionListener(OnTabSelectionChanged listener) {
+    void setTabSelectionListener(OnTabSelectionChanged listener) {
         this.mSelectionChangedListener = listener;
     }
 
+    @Override // android.view.View.OnFocusChangeListener
     public void onFocusChange(View v, boolean hasFocus) {
     }
 
+    /* loaded from: classes4.dex */
     private class TabClickListener implements View.OnClickListener {
         private final int mTabIndex;
 
@@ -316,6 +332,7 @@ public class TabWidget extends LinearLayout implements View.OnFocusChangeListene
             this.mTabIndex = tabIndex;
         }
 
+        @Override // android.view.View.OnClickListener
         public void onClick(View v) {
             TabWidget.this.mSelectionChangedListener.onTabSelectionChanged(this.mTabIndex, true);
         }

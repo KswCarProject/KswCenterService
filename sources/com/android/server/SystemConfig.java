@@ -1,29 +1,41 @@
 package com.android.server;
 
+import android.accounts.GrantCredentialsPermissionActivity;
+import android.app.ActivityManager;
 import android.content.ComponentName;
-import android.content.pm.FeatureInfo;
+import android.content.ContentResolver;
+import android.content.p002pm.FeatureInfo;
+import android.content.p002pm.PackageManager;
 import android.net.wifi.WifiConfiguration;
-import android.os.Build;
-import android.os.Environment;
-import android.os.Process;
-import android.os.SystemProperties;
+import android.p007os.Build;
+import android.p007os.Environment;
+import android.p007os.Process;
+import android.p007os.SystemProperties;
+import android.p007os.storage.StorageManager;
 import android.permission.PermissionManager;
+import android.provider.SettingsStringUtil;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.util.ArraySet;
 import android.util.Slog;
 import android.util.SparseArray;
+import android.util.Xml;
 import com.android.internal.util.ArrayUtils;
 import com.android.internal.util.XmlUtils;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import libcore.io.IoUtils;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+/* loaded from: classes4.dex */
 public class SystemConfig {
     private static final int ALLOW_ALL = -1;
     private static final int ALLOW_APP_CONFIGS = 8;
@@ -37,59 +49,61 @@ public class SystemConfig {
     private static final String SKU_PROPERTY = "ro.boot.product.hardware.sku";
     static final String TAG = "SystemConfig";
     static SystemConfig sInstance;
+    int[] mGlobalGids;
+    final SparseArray<ArraySet<String>> mSystemPermissions = new SparseArray<>();
+    final ArrayList<PermissionManager.SplitPermissionInfo> mSplitPermissions = new ArrayList<>();
+    final ArrayMap<String, SharedLibraryEntry> mSharedLibraries = new ArrayMap<>();
+    final ArrayMap<String, FeatureInfo> mAvailableFeatures = new ArrayMap<>();
+    final ArraySet<String> mUnavailableFeatures = new ArraySet<>();
+    final ArrayMap<String, PermissionEntry> mPermissions = new ArrayMap<>();
+    final ArraySet<String> mAllowInPowerSaveExceptIdle = new ArraySet<>();
+    final ArraySet<String> mAllowInPowerSave = new ArraySet<>();
+    final ArraySet<String> mAllowInDataUsageSave = new ArraySet<>();
+    final ArraySet<String> mAllowUnthrottledLocation = new ArraySet<>();
     final ArraySet<String> mAllowIgnoreLocationSettings = new ArraySet<>();
     final ArraySet<String> mAllowImplicitBroadcasts = new ArraySet<>();
-    final ArraySet<String> mAllowInDataUsageSave = new ArraySet<>();
-    final ArraySet<String> mAllowInPowerSave = new ArraySet<>();
-    final ArraySet<String> mAllowInPowerSaveExceptIdle = new ArraySet<>();
-    final ArraySet<String> mAllowUnthrottledLocation = new ArraySet<>();
-    final ArrayMap<String, ArraySet<String>> mAllowedAssociations = new ArrayMap<>();
-    final ArrayMap<String, FeatureInfo> mAvailableFeatures = new ArrayMap<>();
-    final ArraySet<ComponentName> mBackupTransportWhitelist = new ArraySet<>();
-    private final ArraySet<String> mBugreportWhitelistedPackages = new ArraySet<>();
+    final ArraySet<String> mLinkedApps = new ArraySet<>();
+    final ArraySet<String> mSystemUserWhitelistedApps = new ArraySet<>();
+    final ArraySet<String> mSystemUserBlacklistedApps = new ArraySet<>();
     final ArraySet<ComponentName> mDefaultVrComponents = new ArraySet<>();
+    final ArraySet<ComponentName> mBackupTransportWhitelist = new ArraySet<>();
+    final ArraySet<String> mHiddenApiPackageWhitelist = new ArraySet<>();
     final ArraySet<String> mDisabledUntilUsedPreinstalledCarrierApps = new ArraySet<>();
     final ArrayMap<String, List<String>> mDisabledUntilUsedPreinstalledCarrierAssociatedApps = new ArrayMap<>();
-    int[] mGlobalGids;
-    final ArraySet<String> mHiddenApiPackageWhitelist = new ArraySet<>();
-    final ArraySet<String> mLinkedApps = new ArraySet<>();
-    final ArrayMap<String, ArrayMap<String, Boolean>> mOemPermissions = new ArrayMap<>();
-    final ArrayMap<String, PermissionEntry> mPermissions = new ArrayMap<>();
-    final ArrayMap<String, ArraySet<String>> mPrivAppDenyPermissions = new ArrayMap<>();
     final ArrayMap<String, ArraySet<String>> mPrivAppPermissions = new ArrayMap<>();
-    final ArrayMap<String, ArraySet<String>> mProductPrivAppDenyPermissions = new ArrayMap<>();
-    final ArrayMap<String, ArraySet<String>> mProductPrivAppPermissions = new ArrayMap<>();
-    final ArrayMap<String, ArraySet<String>> mProductServicesPrivAppDenyPermissions = new ArrayMap<>();
-    final ArrayMap<String, ArraySet<String>> mProductServicesPrivAppPermissions = new ArrayMap<>();
-    final ArrayMap<String, SharedLibraryEntry> mSharedLibraries = new ArrayMap<>();
-    final ArrayList<PermissionManager.SplitPermissionInfo> mSplitPermissions = new ArrayList<>();
-    final SparseArray<ArraySet<String>> mSystemPermissions = new SparseArray<>();
-    final ArraySet<String> mSystemUserBlacklistedApps = new ArraySet<>();
-    final ArraySet<String> mSystemUserWhitelistedApps = new ArraySet<>();
-    final ArraySet<String> mUnavailableFeatures = new ArraySet<>();
-    final ArrayMap<String, ArraySet<String>> mVendorPrivAppDenyPermissions = new ArrayMap<>();
+    final ArrayMap<String, ArraySet<String>> mPrivAppDenyPermissions = new ArrayMap<>();
     final ArrayMap<String, ArraySet<String>> mVendorPrivAppPermissions = new ArrayMap<>();
+    final ArrayMap<String, ArraySet<String>> mVendorPrivAppDenyPermissions = new ArrayMap<>();
+    final ArrayMap<String, ArraySet<String>> mProductPrivAppPermissions = new ArrayMap<>();
+    final ArrayMap<String, ArraySet<String>> mProductPrivAppDenyPermissions = new ArrayMap<>();
+    final ArrayMap<String, ArraySet<String>> mProductServicesPrivAppPermissions = new ArrayMap<>();
+    final ArrayMap<String, ArraySet<String>> mProductServicesPrivAppDenyPermissions = new ArrayMap<>();
+    final ArrayMap<String, ArrayMap<String, Boolean>> mOemPermissions = new ArrayMap<>();
+    final ArrayMap<String, ArraySet<String>> mAllowedAssociations = new ArrayMap<>();
+    private final ArraySet<String> mBugreportWhitelistedPackages = new ArraySet<>();
 
+    /* loaded from: classes4.dex */
     public static final class SharedLibraryEntry {
         public final String[] dependencies;
         public final String filename;
         public final String name;
 
-        SharedLibraryEntry(String name2, String filename2, String[] dependencies2) {
-            this.name = name2;
-            this.filename = filename2;
-            this.dependencies = dependencies2;
+        SharedLibraryEntry(String name, String filename, String[] dependencies) {
+            this.name = name;
+            this.filename = filename;
+            this.dependencies = dependencies;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class PermissionEntry {
         public int[] gids;
         public final String name;
         public boolean perUser;
 
-        PermissionEntry(String name2, boolean perUser2) {
-            this.name = name2;
-            this.perUser = perUser2;
+        PermissionEntry(String name, boolean perUser) {
+            this.name = name;
+            this.perUser = perUser;
         }
     }
 
@@ -255,14 +269,14 @@ public class SystemConfig {
         readPermissions(Environment.buildPath(Environment.getProductServicesDirectory(), "etc", "permissions"), -1);
     }
 
-    /* access modifiers changed from: package-private */
-    public void readPermissions(File libraryDir, int permissionFlag) {
+    void readPermissions(File libraryDir, int permissionFlag) {
+        File[] listFiles;
         if (!libraryDir.exists() || !libraryDir.isDirectory()) {
             if (permissionFlag == -1) {
-                Slog.w(TAG, "No directory " + libraryDir + ", skipping");
+                Slog.m50w(TAG, "No directory " + libraryDir + ", skipping");
             }
         } else if (!libraryDir.canRead()) {
-            Slog.w(TAG, "Directory " + libraryDir + " cannot be read");
+            Slog.m50w(TAG, "Directory " + libraryDir + " cannot be read");
         } else {
             File platformFile = null;
             for (File f : libraryDir.listFiles()) {
@@ -270,9 +284,9 @@ public class SystemConfig {
                     if (f.getPath().endsWith("etc/permissions/platform.xml")) {
                         platformFile = f;
                     } else if (!f.getPath().endsWith(".xml")) {
-                        Slog.i(TAG, "Non-xml file " + f + " in " + libraryDir + " directory, ignoring");
+                        Slog.m54i(TAG, "Non-xml file " + f + " in " + libraryDir + " directory, ignoring");
                     } else if (!f.canRead()) {
-                        Slog.w(TAG, "Permissions library file " + f + " cannot be read");
+                        Slog.m50w(TAG, "Permissions library file " + f + " cannot be read");
                     } else {
                         readPermissionsFromXml(f, permissionFlag);
                     }
@@ -285,1532 +299,779 @@ public class SystemConfig {
     }
 
     private void logNotAllowedInPartition(String name, File permFile, XmlPullParser parser) {
-        Slog.w(TAG, "<" + name + "> not allowed in partition of " + permFile + " at " + parser.getPositionDescription());
+        Slog.m50w(TAG, "<" + name + "> not allowed in partition of " + permFile + " at " + parser.getPositionDescription());
     }
 
-    /* JADX WARNING: Can't fix incorrect switch cases order */
-    /* JADX WARNING: Code restructure failed: missing block: B:146:0x0240, code lost:
-        r22 = r9;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:147:0x0242, code lost:
-        r23 = r10;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:360:0x09b7, code lost:
-        r4 = null;
-     */
-    /* JADX WARNING: Removed duplicated region for block: B:11:0x0028 A[Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d, all -> 0x0b7a }] */
-    /* JADX WARNING: Removed duplicated region for block: B:185:0x03fa A[Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d, all -> 0x0b7a }] */
-    /* JADX WARNING: Removed duplicated region for block: B:186:0x0402 A[Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d, all -> 0x0b7a }] */
-    /* JADX WARNING: Removed duplicated region for block: B:397:0x0b70 A[Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d, all -> 0x0b7a }] */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    private void readPermissionsFromXml(java.io.File r25, int r26) {
-        /*
-            r24 = this;
-            r1 = r24
-            r2 = r25
-            r3 = r26
-            r4 = 0
-            r5 = r4
-            java.io.FileReader r6 = new java.io.FileReader     // Catch:{ FileNotFoundException -> 0x0bde }
-            r6.<init>(r2)     // Catch:{ FileNotFoundException -> 0x0bde }
-            r5 = r6
-            boolean r6 = android.app.ActivityManager.isLowRamDeviceStatic()
-            org.xmlpull.v1.XmlPullParser r8 = android.util.Xml.newPullParser()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r8.setInput(r5)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x001a:
-            int r9 = r8.next()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r10 = r9
-            r11 = 2
-            r12 = 1
-            if (r9 == r11) goto L_0x0026
-            if (r10 == r12) goto L_0x0026
-            goto L_0x001a
-        L_0x0026:
-            if (r10 != r11) goto L_0x0b70
-            java.lang.String r9 = r8.getName()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r13 = "permissions"
-            boolean r9 = r9.equals(r13)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r9 != 0) goto L_0x006a
-            java.lang.String r9 = r8.getName()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r13 = "config"
-            boolean r9 = r9.equals(r13)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r9 == 0) goto L_0x0042
-            goto L_0x006a
-        L_0x0042:
-            org.xmlpull.v1.XmlPullParserException r4 = new org.xmlpull.v1.XmlPullParserException     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.StringBuilder r9 = new java.lang.StringBuilder     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r9.<init>()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r11 = "Unexpected start tag in "
-            r9.append(r11)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r9.append(r2)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r11 = ": found "
-            r9.append(r11)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r11 = r8.getName()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r9.append(r11)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r11 = ", expected 'permissions' or 'config'"
-            r9.append(r11)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = r9.toString()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r4.<init>(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            throw r4     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x006a:
-            r9 = -1
-            if (r3 != r9) goto L_0x006f
-            r13 = r12
-            goto L_0x0070
-        L_0x006f:
-            r13 = 0
-        L_0x0070:
-            r14 = r3 & 2
-            if (r14 == 0) goto L_0x0076
-            r14 = r12
-            goto L_0x0077
-        L_0x0076:
-            r14 = 0
-        L_0x0077:
-            r15 = r3 & 1
-            if (r15 == 0) goto L_0x007d
-            r15 = r12
-            goto L_0x007e
-        L_0x007d:
-            r15 = 0
-        L_0x007e:
-            r16 = r3 & 4
-            if (r16 == 0) goto L_0x0085
-            r16 = r12
-            goto L_0x0087
-        L_0x0085:
-            r16 = 0
-        L_0x0087:
-            r17 = r3 & 8
-            if (r17 == 0) goto L_0x008e
-            r17 = r12
-            goto L_0x0090
-        L_0x008e:
-            r17 = 0
-        L_0x0090:
-            r18 = r3 & 16
-            if (r18 == 0) goto L_0x0097
-            r18 = r12
-            goto L_0x0099
-        L_0x0097:
-            r18 = 0
-        L_0x0099:
-            r19 = r3 & 32
-            if (r19 == 0) goto L_0x00a0
-            r19 = r12
-            goto L_0x00a2
-        L_0x00a0:
-            r19 = 0
-        L_0x00a2:
-            r20 = r3 & 64
-            if (r20 == 0) goto L_0x00a9
-            r20 = r12
-            goto L_0x00ab
-        L_0x00a9:
-            r20 = 0
-        L_0x00ab:
-            r9 = r3 & 128(0x80, float:1.794E-43)
-            if (r9 == 0) goto L_0x00b1
-            r9 = r12
-            goto L_0x00b2
-        L_0x00b1:
-            r9 = 0
-        L_0x00b2:
-            com.android.internal.util.XmlUtils.nextElement(r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            int r11 = r8.getEventType()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r11 != r12) goto L_0x00bd
-            goto L_0x0b90
-        L_0x00bd:
-            java.lang.String r11 = r8.getName()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r11 != 0) goto L_0x00cd
-            com.android.internal.util.XmlUtils.skipCurrentTag(r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r22 = r9
-            r23 = r10
-            goto L_0x0b66
-        L_0x00cd:
-            int r21 = r11.hashCode()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            switch(r21) {
-                case -2040330235: goto L_0x01ec;
-                case -1882490007: goto L_0x01e1;
-                case -1005864890: goto L_0x01d6;
-                case -980620291: goto L_0x01cb;
-                case -979207434: goto L_0x01c1;
-                case -851582420: goto L_0x01b5;
-                case -828905863: goto L_0x01aa;
-                case -642819164: goto L_0x01a0;
-                case -560717308: goto L_0x0195;
-                case -517618225: goto L_0x018a;
-                case 98629247: goto L_0x017f;
-                case 166208699: goto L_0x0174;
-                case 180165796: goto L_0x0168;
-                case 347247519: goto L_0x015c;
-                case 508457430: goto L_0x014f;
-                case 802332808: goto L_0x0143;
-                case 953292141: goto L_0x0138;
-                case 1044015374: goto L_0x012b;
-                case 1121420326: goto L_0x011f;
-                case 1269564002: goto L_0x0113;
-                case 1567330472: goto L_0x0107;
-                case 1633270165: goto L_0x00fb;
-                case 1723146313: goto L_0x00ee;
-                case 1723586945: goto L_0x00e2;
-                case 1954925533: goto L_0x00d6;
-                default: goto L_0x00d4;
-            }     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x00d4:
-            goto L_0x01f7
-        L_0x00d6:
-            java.lang.String r12 = "allow-implicit-broadcast"
-            boolean r12 = r11.equals(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r12 == 0) goto L_0x01f7
-            r12 = 12
-            goto L_0x01f8
-        L_0x00e2:
-            java.lang.String r12 = "bugreport-whitelisted"
-            boolean r12 = r11.equals(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r12 == 0) goto L_0x01f7
-            r12 = 24
-            goto L_0x01f8
-        L_0x00ee:
-            java.lang.String r12 = "privapp-permissions"
-            boolean r12 = r11.equals(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r12 == 0) goto L_0x01f7
-            r12 = 20
-            goto L_0x01f8
-        L_0x00fb:
-            java.lang.String r12 = "disabled-until-used-preinstalled-carrier-associated-app"
-            boolean r12 = r11.equals(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r12 == 0) goto L_0x01f7
-            r12 = 18
-            goto L_0x01f8
-        L_0x0107:
-            java.lang.String r12 = "default-enabled-vr-app"
-            boolean r12 = r11.equals(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r12 == 0) goto L_0x01f7
-            r12 = 16
-            goto L_0x01f8
-        L_0x0113:
-            java.lang.String r12 = "split-permission"
-            boolean r12 = r11.equals(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r12 == 0) goto L_0x01f7
-            r12 = 3
-            goto L_0x01f8
-        L_0x011f:
-            java.lang.String r12 = "app-link"
-            boolean r12 = r11.equals(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r12 == 0) goto L_0x01f7
-            r12 = 13
-            goto L_0x01f8
-        L_0x012b:
-            java.lang.String r12 = "oem-permissions"
-            boolean r12 = r11.equals(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r12 == 0) goto L_0x01f7
-            r12 = 21
-            goto L_0x01f8
-        L_0x0138:
-            java.lang.String r12 = "assign-permission"
-            boolean r12 = r11.equals(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r12 == 0) goto L_0x01f7
-            r12 = 2
-            goto L_0x01f8
-        L_0x0143:
-            java.lang.String r12 = "allow-in-data-usage-save"
-            boolean r12 = r11.equals(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r12 == 0) goto L_0x01f7
-            r12 = 9
-            goto L_0x01f8
-        L_0x014f:
-            java.lang.String r12 = "system-user-whitelisted-app"
-            boolean r12 = r11.equals(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r12 == 0) goto L_0x01f7
-            r12 = 14
-            goto L_0x01f8
-        L_0x015c:
-            java.lang.String r12 = "backup-transport-whitelisted-service"
-            boolean r12 = r11.equals(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r12 == 0) goto L_0x01f7
-            r12 = 17
-            goto L_0x01f8
-        L_0x0168:
-            java.lang.String r12 = "hidden-api-whitelisted-app"
-            boolean r12 = r11.equals(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r12 == 0) goto L_0x01f7
-            r12 = 22
-            goto L_0x01f8
-        L_0x0174:
-            java.lang.String r12 = "library"
-            boolean r12 = r11.equals(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r12 == 0) goto L_0x01f7
-            r12 = 4
-            goto L_0x01f8
-        L_0x017f:
-            java.lang.String r12 = "group"
-            boolean r12 = r11.equals(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r12 == 0) goto L_0x01f7
-            r12 = 0
-            goto L_0x01f8
-        L_0x018a:
-            java.lang.String r12 = "permission"
-            boolean r12 = r11.equals(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r12 == 0) goto L_0x01f7
-            r12 = 1
-            goto L_0x01f8
-        L_0x0195:
-            java.lang.String r12 = "allow-ignore-location-settings"
-            boolean r12 = r11.equals(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r12 == 0) goto L_0x01f7
-            r12 = 11
-            goto L_0x01f8
-        L_0x01a0:
-            java.lang.String r12 = "allow-in-power-save-except-idle"
-            boolean r12 = r11.equals(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r12 == 0) goto L_0x01f7
-            r12 = 7
-            goto L_0x01f8
-        L_0x01aa:
-            java.lang.String r12 = "unavailable-feature"
-            boolean r12 = r11.equals(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r12 == 0) goto L_0x01f7
-            r12 = 6
-            goto L_0x01f8
-        L_0x01b5:
-            java.lang.String r12 = "system-user-blacklisted-app"
-            boolean r12 = r11.equals(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r12 == 0) goto L_0x01f7
-            r12 = 15
-            goto L_0x01f8
-        L_0x01c1:
-            java.lang.String r12 = "feature"
-            boolean r12 = r11.equals(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r12 == 0) goto L_0x01f7
-            r12 = 5
-            goto L_0x01f8
-        L_0x01cb:
-            java.lang.String r12 = "allow-association"
-            boolean r12 = r11.equals(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r12 == 0) goto L_0x01f7
-            r12 = 23
-            goto L_0x01f8
-        L_0x01d6:
-            java.lang.String r12 = "disabled-until-used-preinstalled-carrier-app"
-            boolean r12 = r11.equals(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r12 == 0) goto L_0x01f7
-            r12 = 19
-            goto L_0x01f8
-        L_0x01e1:
-            java.lang.String r12 = "allow-in-power-save"
-            boolean r12 = r11.equals(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r12 == 0) goto L_0x01f7
-            r12 = 8
-            goto L_0x01f8
-        L_0x01ec:
-            java.lang.String r12 = "allow-unthrottled-location"
-            boolean r12 = r11.equals(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r12 == 0) goto L_0x01f7
-            r12 = 10
-            goto L_0x01f8
-        L_0x01f7:
-            r12 = -1
-        L_0x01f8:
-            switch(r12) {
-                case 0: goto L_0x0aeb;
-                case 1: goto L_0x0a9a;
-                case 2: goto L_0x09c1;
-                case 3: goto L_0x09ae;
-                case 4: goto L_0x091b;
-                case 5: goto L_0x08b3;
-                case 6: goto L_0x086a;
-                case 7: goto L_0x0821;
-                case 8: goto L_0x07d8;
-                case 9: goto L_0x078f;
-                case 10: goto L_0x0746;
-                case 11: goto L_0x06fd;
-                case 12: goto L_0x06b5;
-                case 13: goto L_0x066c;
-                case 14: goto L_0x0623;
-                case 15: goto L_0x05da;
-                case 16: goto L_0x0558;
-                case 17: goto L_0x04d6;
-                case 18: goto L_0x0470;
-                case 19: goto L_0x0427;
-                case 20: goto L_0x0366;
-                case 21: goto L_0x0353;
-                case 22: goto L_0x030a;
-                case 23: goto L_0x0246;
-                case 24: goto L_0x0203;
-                default: goto L_0x01fb;
-            }     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x01fb:
-            r22 = r9
-            r23 = r10
-            java.lang.String r3 = "SystemConfig"
-            goto L_0x0b3a
-        L_0x0203:
-            java.lang.String r12 = "package"
-            java.lang.String r12 = r8.getAttributeValue(r4, r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r12 != 0) goto L_0x0237
-            java.lang.String r7 = "SystemConfig"
-            java.lang.StringBuilder r4 = new java.lang.StringBuilder     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r4.<init>()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r3 = "<"
-            r4.append(r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r4.append(r11)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r3 = "> without package in "
-            r4.append(r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r4.append(r2)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r3 = " at "
-            r4.append(r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r3 = r8.getPositionDescription()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r4.append(r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r3 = r4.toString()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            android.util.Slog.w((java.lang.String) r7, (java.lang.String) r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x023c
-        L_0x0237:
-            android.util.ArraySet<java.lang.String> r3 = r1.mBugreportWhitelistedPackages     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r3.add(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x023c:
-            com.android.internal.util.XmlUtils.skipCurrentTag(r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x0240:
-            r22 = r9
-        L_0x0242:
-            r23 = r10
-            goto L_0x09b7
-        L_0x0246:
-            if (r9 == 0) goto L_0x02fe
-            java.lang.String r3 = "target"
-            r4 = 0
-            java.lang.String r3 = r8.getAttributeValue(r4, r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r3 != 0) goto L_0x0280
-            java.lang.String r4 = "SystemConfig"
-            java.lang.StringBuilder r7 = new java.lang.StringBuilder     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.<init>()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r12 = "<"
-            r7.append(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r11)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r12 = "> without target in "
-            r7.append(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r2)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r12 = " at "
-            r7.append(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r12 = r8.getPositionDescription()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r7 = r7.toString()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            android.util.Slog.w((java.lang.String) r4, (java.lang.String) r7)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            com.android.internal.util.XmlUtils.skipCurrentTag(r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x0240
-        L_0x0280:
-            java.lang.String r4 = "allowed"
-            r7 = 0
-            java.lang.String r4 = r8.getAttributeValue(r7, r4)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r4 != 0) goto L_0x02b9
-            java.lang.String r7 = "SystemConfig"
-            java.lang.StringBuilder r12 = new java.lang.StringBuilder     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r12.<init>()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r22 = r9
-            java.lang.String r9 = "<"
-            r12.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r12.append(r11)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = "> without allowed in "
-            r12.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r12.append(r2)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = " at "
-            r12.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = r8.getPositionDescription()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r12.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = r12.toString()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            android.util.Slog.w((java.lang.String) r7, (java.lang.String) r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            com.android.internal.util.XmlUtils.skipCurrentTag(r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x0242
-        L_0x02b9:
-            r22 = r9
-            java.lang.String r7 = r3.intern()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r3 = r7
-            java.lang.String r7 = r4.intern()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r4 = r7
-            android.util.ArrayMap<java.lang.String, android.util.ArraySet<java.lang.String>> r7 = r1.mAllowedAssociations     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.Object r7 = r7.get(r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            android.util.ArraySet r7 = (android.util.ArraySet) r7     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r7 != 0) goto L_0x02da
-            android.util.ArraySet r9 = new android.util.ArraySet     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r9.<init>()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7 = r9
-            android.util.ArrayMap<java.lang.String, android.util.ArraySet<java.lang.String>> r9 = r1.mAllowedAssociations     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r9.put(r3, r7)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x02da:
-            java.lang.String r9 = "SystemConfig"
-            java.lang.StringBuilder r12 = new java.lang.StringBuilder     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r12.<init>()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r23 = r10
-            java.lang.String r10 = "Adding association: "
-            r12.append(r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r12.append(r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r10 = " <- "
-            r12.append(r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r12.append(r4)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r10 = r12.toString()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            android.util.Slog.i(r9, r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.add(r4)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x0305
-        L_0x02fe:
-            r22 = r9
-            r23 = r10
-            r1.logNotAllowedInPartition(r11, r2, r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x0305:
-            com.android.internal.util.XmlUtils.skipCurrentTag(r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x09b7
-        L_0x030a:
-            r22 = r9
-            r23 = r10
-            if (r20 == 0) goto L_0x034b
-            java.lang.String r3 = "package"
-            r4 = 0
-            java.lang.String r3 = r8.getAttributeValue(r4, r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r3 != 0) goto L_0x0345
-            java.lang.String r4 = "SystemConfig"
-            java.lang.StringBuilder r7 = new java.lang.StringBuilder     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.<init>()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = "<"
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r11)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = "> without package in "
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r2)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = " at "
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = r8.getPositionDescription()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r7 = r7.toString()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            android.util.Slog.w((java.lang.String) r4, (java.lang.String) r7)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x034a
-        L_0x0345:
-            android.util.ArraySet<java.lang.String> r4 = r1.mHiddenApiPackageWhitelist     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r4.add(r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x034a:
-            goto L_0x034e
-        L_0x034b:
-            r1.logNotAllowedInPartition(r11, r2, r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x034e:
-            com.android.internal.util.XmlUtils.skipCurrentTag(r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x09b7
-        L_0x0353:
-            r22 = r9
-            r23 = r10
-            if (r19 == 0) goto L_0x035e
-            r1.readOemPermissions(r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x09b7
-        L_0x035e:
-            r1.logNotAllowedInPartition(r11, r2, r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            com.android.internal.util.XmlUtils.skipCurrentTag(r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x09b7
-        L_0x0366:
-            r22 = r9
-            r23 = r10
-            if (r18 == 0) goto L_0x041f
-            java.nio.file.Path r3 = r25.toPath()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.StringBuilder r4 = new java.lang.StringBuilder     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r4.<init>()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.io.File r7 = android.os.Environment.getVendorDirectory()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.nio.file.Path r7 = r7.toPath()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r4.append(r7)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r7 = "/"
-            r4.append(r7)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r4 = r4.toString()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            boolean r3 = r3.startsWith(r4)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r3 != 0) goto L_0x03b5
-            java.nio.file.Path r3 = r25.toPath()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.StringBuilder r4 = new java.lang.StringBuilder     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r4.<init>()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.io.File r7 = android.os.Environment.getOdmDirectory()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.nio.file.Path r7 = r7.toPath()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r4.append(r7)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r7 = "/"
-            r4.append(r7)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r4 = r4.toString()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            boolean r3 = r3.startsWith(r4)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r3 == 0) goto L_0x03b3
-            goto L_0x03b5
-        L_0x03b3:
-            r3 = 0
-            goto L_0x03b6
-        L_0x03b5:
-            r3 = 1
-        L_0x03b6:
-            java.nio.file.Path r4 = r25.toPath()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.StringBuilder r7 = new java.lang.StringBuilder     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.<init>()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.io.File r9 = android.os.Environment.getProductDirectory()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.nio.file.Path r9 = r9.toPath()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = "/"
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r7 = r7.toString()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            boolean r4 = r4.startsWith(r7)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.nio.file.Path r7 = r25.toPath()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.StringBuilder r9 = new java.lang.StringBuilder     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r9.<init>()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.io.File r10 = android.os.Environment.getProductServicesDirectory()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.nio.file.Path r10 = r10.toPath()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r9.append(r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r10 = "/"
-            r9.append(r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = r9.toString()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            boolean r7 = r7.startsWith(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r3 == 0) goto L_0x0402
-            android.util.ArrayMap<java.lang.String, android.util.ArraySet<java.lang.String>> r9 = r1.mVendorPrivAppPermissions     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            android.util.ArrayMap<java.lang.String, android.util.ArraySet<java.lang.String>> r10 = r1.mVendorPrivAppDenyPermissions     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r1.readPrivAppPermissions(r8, r9, r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x041d
-        L_0x0402:
-            if (r4 == 0) goto L_0x040c
-            android.util.ArrayMap<java.lang.String, android.util.ArraySet<java.lang.String>> r9 = r1.mProductPrivAppPermissions     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            android.util.ArrayMap<java.lang.String, android.util.ArraySet<java.lang.String>> r10 = r1.mProductPrivAppDenyPermissions     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r1.readPrivAppPermissions(r8, r9, r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x041d
-        L_0x040c:
-            if (r7 == 0) goto L_0x0416
-            android.util.ArrayMap<java.lang.String, android.util.ArraySet<java.lang.String>> r9 = r1.mProductServicesPrivAppPermissions     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            android.util.ArrayMap<java.lang.String, android.util.ArraySet<java.lang.String>> r10 = r1.mProductServicesPrivAppDenyPermissions     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r1.readPrivAppPermissions(r8, r9, r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x041d
-        L_0x0416:
-            android.util.ArrayMap<java.lang.String, android.util.ArraySet<java.lang.String>> r9 = r1.mPrivAppPermissions     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            android.util.ArrayMap<java.lang.String, android.util.ArraySet<java.lang.String>> r10 = r1.mPrivAppDenyPermissions     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r1.readPrivAppPermissions(r8, r9, r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x041d:
-            goto L_0x09b7
-        L_0x041f:
-            r1.logNotAllowedInPartition(r11, r2, r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            com.android.internal.util.XmlUtils.skipCurrentTag(r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x09b7
-        L_0x0427:
-            r22 = r9
-            r23 = r10
-            if (r17 == 0) goto L_0x0468
-            java.lang.String r3 = "package"
-            r4 = 0
-            java.lang.String r3 = r8.getAttributeValue(r4, r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r3 != 0) goto L_0x0462
-            java.lang.String r4 = "SystemConfig"
-            java.lang.StringBuilder r7 = new java.lang.StringBuilder     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.<init>()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = "<"
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r11)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = "> without package in "
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r2)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = " at "
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = r8.getPositionDescription()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r7 = r7.toString()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            android.util.Slog.w((java.lang.String) r4, (java.lang.String) r7)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x0467
-        L_0x0462:
-            android.util.ArraySet<java.lang.String> r4 = r1.mDisabledUntilUsedPreinstalledCarrierApps     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r4.add(r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x0467:
-            goto L_0x046b
-        L_0x0468:
-            r1.logNotAllowedInPartition(r11, r2, r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x046b:
-            com.android.internal.util.XmlUtils.skipCurrentTag(r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x09b7
-        L_0x0470:
-            r22 = r9
-            r23 = r10
-            if (r17 == 0) goto L_0x04ce
-            java.lang.String r3 = "package"
-            r4 = 0
-            java.lang.String r3 = r8.getAttributeValue(r4, r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r7 = "carrierAppPackage"
-            java.lang.String r7 = r8.getAttributeValue(r4, r7)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r4 = r7
-            if (r3 == 0) goto L_0x04a3
-            if (r4 != 0) goto L_0x048a
-            goto L_0x04a3
-        L_0x048a:
-            android.util.ArrayMap<java.lang.String, java.util.List<java.lang.String>> r7 = r1.mDisabledUntilUsedPreinstalledCarrierAssociatedApps     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.Object r7 = r7.get(r4)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.util.List r7 = (java.util.List) r7     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r7 != 0) goto L_0x049f
-            java.util.ArrayList r9 = new java.util.ArrayList     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r9.<init>()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7 = r9
-            android.util.ArrayMap<java.lang.String, java.util.List<java.lang.String>> r9 = r1.mDisabledUntilUsedPreinstalledCarrierAssociatedApps     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r9.put(r4, r7)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x049f:
-            r7.add(r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x04cd
-        L_0x04a3:
-            java.lang.String r7 = "SystemConfig"
-            java.lang.StringBuilder r9 = new java.lang.StringBuilder     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r9.<init>()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r10 = "<"
-            r9.append(r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r9.append(r11)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r10 = "> without package or carrierAppPackage in "
-            r9.append(r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r9.append(r2)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r10 = " at "
-            r9.append(r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r10 = r8.getPositionDescription()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r9.append(r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = r9.toString()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            android.util.Slog.w((java.lang.String) r7, (java.lang.String) r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x04cd:
-            goto L_0x04d1
-        L_0x04ce:
-            r1.logNotAllowedInPartition(r11, r2, r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x04d1:
-            com.android.internal.util.XmlUtils.skipCurrentTag(r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x09b7
-        L_0x04d6:
-            r22 = r9
-            r23 = r10
-            if (r15 == 0) goto L_0x0550
-            java.lang.String r3 = "service"
-            r4 = 0
-            java.lang.String r3 = r8.getAttributeValue(r4, r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r3 != 0) goto L_0x0511
-            java.lang.String r4 = "SystemConfig"
-            java.lang.StringBuilder r7 = new java.lang.StringBuilder     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.<init>()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = "<"
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r11)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = "> without service in "
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r2)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = " at "
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = r8.getPositionDescription()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r7 = r7.toString()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            android.util.Slog.w((java.lang.String) r4, (java.lang.String) r7)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x054f
-        L_0x0511:
-            android.content.ComponentName r4 = android.content.ComponentName.unflattenFromString(r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r4 != 0) goto L_0x054a
-            java.lang.String r7 = "SystemConfig"
-            java.lang.StringBuilder r9 = new java.lang.StringBuilder     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r9.<init>()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r10 = "<"
-            r9.append(r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r9.append(r11)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r10 = "> with invalid service name "
-            r9.append(r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r9.append(r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r10 = " in "
-            r9.append(r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r9.append(r2)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r10 = " at "
-            r9.append(r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r10 = r8.getPositionDescription()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r9.append(r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = r9.toString()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            android.util.Slog.w((java.lang.String) r7, (java.lang.String) r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x054f
-        L_0x054a:
-            android.util.ArraySet<android.content.ComponentName> r7 = r1.mBackupTransportWhitelist     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.add(r4)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x054f:
-            goto L_0x0553
-        L_0x0550:
-            r1.logNotAllowedInPartition(r11, r2, r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x0553:
-            com.android.internal.util.XmlUtils.skipCurrentTag(r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x09b7
-        L_0x0558:
-            r22 = r9
-            r23 = r10
-            if (r17 == 0) goto L_0x05d2
-            java.lang.String r3 = "package"
-            r4 = 0
-            java.lang.String r3 = r8.getAttributeValue(r4, r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r7 = "class"
-            java.lang.String r7 = r8.getAttributeValue(r4, r7)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r4 = r7
-            if (r3 != 0) goto L_0x059a
-            java.lang.String r7 = "SystemConfig"
-            java.lang.StringBuilder r9 = new java.lang.StringBuilder     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r9.<init>()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r10 = "<"
-            r9.append(r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r9.append(r11)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r10 = "> without package in "
-            r9.append(r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r9.append(r2)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r10 = " at "
-            r9.append(r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r10 = r8.getPositionDescription()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r9.append(r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = r9.toString()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            android.util.Slog.w((java.lang.String) r7, (java.lang.String) r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x05d1
-        L_0x059a:
-            if (r4 != 0) goto L_0x05c7
-            java.lang.String r7 = "SystemConfig"
-            java.lang.StringBuilder r9 = new java.lang.StringBuilder     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r9.<init>()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r10 = "<"
-            r9.append(r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r9.append(r11)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r10 = "> without class in "
-            r9.append(r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r9.append(r2)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r10 = " at "
-            r9.append(r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r10 = r8.getPositionDescription()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r9.append(r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = r9.toString()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            android.util.Slog.w((java.lang.String) r7, (java.lang.String) r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x05d1
-        L_0x05c7:
-            android.util.ArraySet<android.content.ComponentName> r7 = r1.mDefaultVrComponents     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            android.content.ComponentName r9 = new android.content.ComponentName     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r9.<init>((java.lang.String) r3, (java.lang.String) r4)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.add(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x05d1:
-            goto L_0x05d5
-        L_0x05d2:
-            r1.logNotAllowedInPartition(r11, r2, r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x05d5:
-            com.android.internal.util.XmlUtils.skipCurrentTag(r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x09b7
-        L_0x05da:
-            r22 = r9
-            r23 = r10
-            if (r17 == 0) goto L_0x061b
-            java.lang.String r3 = "package"
-            r4 = 0
-            java.lang.String r3 = r8.getAttributeValue(r4, r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r3 != 0) goto L_0x0615
-            java.lang.String r4 = "SystemConfig"
-            java.lang.StringBuilder r7 = new java.lang.StringBuilder     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.<init>()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = "<"
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r11)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = "> without package in "
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r2)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = " at "
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = r8.getPositionDescription()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r7 = r7.toString()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            android.util.Slog.w((java.lang.String) r4, (java.lang.String) r7)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x061a
-        L_0x0615:
-            android.util.ArraySet<java.lang.String> r4 = r1.mSystemUserBlacklistedApps     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r4.add(r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x061a:
-            goto L_0x061e
-        L_0x061b:
-            r1.logNotAllowedInPartition(r11, r2, r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x061e:
-            com.android.internal.util.XmlUtils.skipCurrentTag(r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x09b7
-        L_0x0623:
-            r22 = r9
-            r23 = r10
-            if (r17 == 0) goto L_0x0664
-            java.lang.String r3 = "package"
-            r4 = 0
-            java.lang.String r3 = r8.getAttributeValue(r4, r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r3 != 0) goto L_0x065e
-            java.lang.String r4 = "SystemConfig"
-            java.lang.StringBuilder r7 = new java.lang.StringBuilder     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.<init>()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = "<"
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r11)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = "> without package in "
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r2)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = " at "
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = r8.getPositionDescription()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r7 = r7.toString()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            android.util.Slog.w((java.lang.String) r4, (java.lang.String) r7)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x0663
-        L_0x065e:
-            android.util.ArraySet<java.lang.String> r4 = r1.mSystemUserWhitelistedApps     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r4.add(r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x0663:
-            goto L_0x0667
-        L_0x0664:
-            r1.logNotAllowedInPartition(r11, r2, r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x0667:
-            com.android.internal.util.XmlUtils.skipCurrentTag(r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x09b7
-        L_0x066c:
-            r22 = r9
-            r23 = r10
-            if (r17 == 0) goto L_0x06ad
-            java.lang.String r3 = "package"
-            r4 = 0
-            java.lang.String r3 = r8.getAttributeValue(r4, r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r3 != 0) goto L_0x06a7
-            java.lang.String r4 = "SystemConfig"
-            java.lang.StringBuilder r7 = new java.lang.StringBuilder     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.<init>()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = "<"
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r11)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = "> without package in "
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r2)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = " at "
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = r8.getPositionDescription()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r7 = r7.toString()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            android.util.Slog.w((java.lang.String) r4, (java.lang.String) r7)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x06ac
-        L_0x06a7:
-            android.util.ArraySet<java.lang.String> r4 = r1.mLinkedApps     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r4.add(r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x06ac:
-            goto L_0x06b0
-        L_0x06ad:
-            r1.logNotAllowedInPartition(r11, r2, r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x06b0:
-            com.android.internal.util.XmlUtils.skipCurrentTag(r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x09b7
-        L_0x06b5:
-            r22 = r9
-            r23 = r10
-            if (r13 == 0) goto L_0x06f5
-            java.lang.String r3 = "action"
-            r4 = 0
-            java.lang.String r3 = r8.getAttributeValue(r4, r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r3 != 0) goto L_0x06ef
-            java.lang.String r4 = "SystemConfig"
-            java.lang.StringBuilder r7 = new java.lang.StringBuilder     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.<init>()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = "<"
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r11)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = "> without action in "
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r2)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = " at "
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = r8.getPositionDescription()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r7 = r7.toString()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            android.util.Slog.w((java.lang.String) r4, (java.lang.String) r7)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x06f4
-        L_0x06ef:
-            android.util.ArraySet<java.lang.String> r4 = r1.mAllowImplicitBroadcasts     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r4.add(r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x06f4:
-            goto L_0x06f8
-        L_0x06f5:
-            r1.logNotAllowedInPartition(r11, r2, r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x06f8:
-            com.android.internal.util.XmlUtils.skipCurrentTag(r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x09b7
-        L_0x06fd:
-            r22 = r9
-            r23 = r10
-            if (r13 == 0) goto L_0x073e
-            java.lang.String r3 = "package"
-            r4 = 0
-            java.lang.String r3 = r8.getAttributeValue(r4, r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r3 != 0) goto L_0x0738
-            java.lang.String r4 = "SystemConfig"
-            java.lang.StringBuilder r7 = new java.lang.StringBuilder     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.<init>()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = "<"
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r11)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = "> without package in "
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r2)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = " at "
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = r8.getPositionDescription()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r7 = r7.toString()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            android.util.Slog.w((java.lang.String) r4, (java.lang.String) r7)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x073d
-        L_0x0738:
-            android.util.ArraySet<java.lang.String> r4 = r1.mAllowIgnoreLocationSettings     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r4.add(r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x073d:
-            goto L_0x0741
-        L_0x073e:
-            r1.logNotAllowedInPartition(r11, r2, r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x0741:
-            com.android.internal.util.XmlUtils.skipCurrentTag(r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x09b7
-        L_0x0746:
-            r22 = r9
-            r23 = r10
-            if (r13 == 0) goto L_0x0787
-            java.lang.String r3 = "package"
-            r4 = 0
-            java.lang.String r3 = r8.getAttributeValue(r4, r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r3 != 0) goto L_0x0781
-            java.lang.String r4 = "SystemConfig"
-            java.lang.StringBuilder r7 = new java.lang.StringBuilder     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.<init>()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = "<"
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r11)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = "> without package in "
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r2)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = " at "
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = r8.getPositionDescription()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r7 = r7.toString()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            android.util.Slog.w((java.lang.String) r4, (java.lang.String) r7)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x0786
-        L_0x0781:
-            android.util.ArraySet<java.lang.String> r4 = r1.mAllowUnthrottledLocation     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r4.add(r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x0786:
-            goto L_0x078a
-        L_0x0787:
-            r1.logNotAllowedInPartition(r11, r2, r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x078a:
-            com.android.internal.util.XmlUtils.skipCurrentTag(r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x09b7
-        L_0x078f:
-            r22 = r9
-            r23 = r10
-            if (r13 == 0) goto L_0x07d0
-            java.lang.String r3 = "package"
-            r4 = 0
-            java.lang.String r3 = r8.getAttributeValue(r4, r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r3 != 0) goto L_0x07ca
-            java.lang.String r4 = "SystemConfig"
-            java.lang.StringBuilder r7 = new java.lang.StringBuilder     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.<init>()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = "<"
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r11)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = "> without package in "
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r2)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = " at "
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = r8.getPositionDescription()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r7 = r7.toString()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            android.util.Slog.w((java.lang.String) r4, (java.lang.String) r7)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x07cf
-        L_0x07ca:
-            android.util.ArraySet<java.lang.String> r4 = r1.mAllowInDataUsageSave     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r4.add(r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x07cf:
-            goto L_0x07d3
-        L_0x07d0:
-            r1.logNotAllowedInPartition(r11, r2, r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x07d3:
-            com.android.internal.util.XmlUtils.skipCurrentTag(r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x09b7
-        L_0x07d8:
-            r22 = r9
-            r23 = r10
-            if (r13 == 0) goto L_0x0819
-            java.lang.String r3 = "package"
-            r4 = 0
-            java.lang.String r3 = r8.getAttributeValue(r4, r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r3 != 0) goto L_0x0813
-            java.lang.String r4 = "SystemConfig"
-            java.lang.StringBuilder r7 = new java.lang.StringBuilder     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.<init>()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = "<"
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r11)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = "> without package in "
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r2)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = " at "
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = r8.getPositionDescription()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r7 = r7.toString()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            android.util.Slog.w((java.lang.String) r4, (java.lang.String) r7)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x0818
-        L_0x0813:
-            android.util.ArraySet<java.lang.String> r4 = r1.mAllowInPowerSave     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r4.add(r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x0818:
-            goto L_0x081c
-        L_0x0819:
-            r1.logNotAllowedInPartition(r11, r2, r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x081c:
-            com.android.internal.util.XmlUtils.skipCurrentTag(r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x09b7
-        L_0x0821:
-            r22 = r9
-            r23 = r10
-            if (r13 == 0) goto L_0x0862
-            java.lang.String r3 = "package"
-            r4 = 0
-            java.lang.String r3 = r8.getAttributeValue(r4, r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r3 != 0) goto L_0x085c
-            java.lang.String r4 = "SystemConfig"
-            java.lang.StringBuilder r7 = new java.lang.StringBuilder     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.<init>()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = "<"
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r11)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = "> without package in "
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r2)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = " at "
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = r8.getPositionDescription()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r7 = r7.toString()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            android.util.Slog.w((java.lang.String) r4, (java.lang.String) r7)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x0861
-        L_0x085c:
-            android.util.ArraySet<java.lang.String> r4 = r1.mAllowInPowerSaveExceptIdle     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r4.add(r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x0861:
-            goto L_0x0865
-        L_0x0862:
-            r1.logNotAllowedInPartition(r11, r2, r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x0865:
-            com.android.internal.util.XmlUtils.skipCurrentTag(r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x09b7
-        L_0x086a:
-            r22 = r9
-            r23 = r10
-            if (r15 == 0) goto L_0x08ab
-            java.lang.String r3 = "name"
-            r4 = 0
-            java.lang.String r3 = r8.getAttributeValue(r4, r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r3 != 0) goto L_0x08a5
-            java.lang.String r4 = "SystemConfig"
-            java.lang.StringBuilder r7 = new java.lang.StringBuilder     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.<init>()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = "<"
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r11)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = "> without name in "
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r2)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = " at "
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = r8.getPositionDescription()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r7 = r7.toString()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            android.util.Slog.w((java.lang.String) r4, (java.lang.String) r7)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x08aa
-        L_0x08a5:
-            android.util.ArraySet<java.lang.String> r4 = r1.mUnavailableFeatures     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r4.add(r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x08aa:
-            goto L_0x08ae
-        L_0x08ab:
-            r1.logNotAllowedInPartition(r11, r2, r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x08ae:
-            com.android.internal.util.XmlUtils.skipCurrentTag(r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x09b7
-        L_0x08b3:
-            r22 = r9
-            r23 = r10
-            if (r15 == 0) goto L_0x0913
-            java.lang.String r3 = "name"
-            r4 = 0
-            java.lang.String r3 = r8.getAttributeValue(r4, r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r4 = "version"
-            r7 = 0
-            int r4 = com.android.internal.util.XmlUtils.readIntAttribute(r8, r4, r7)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r6 != 0) goto L_0x08ce
-            r7 = 1
-            r10 = 1
-            goto L_0x08e0
-        L_0x08ce:
-            java.lang.String r7 = "notLowRam"
-            r9 = 0
-            java.lang.String r7 = r8.getAttributeValue(r9, r7)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = "true"
-            boolean r9 = r9.equals(r7)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r10 = 1
-            r9 = r9 ^ r10
-            r7 = r9
-        L_0x08e0:
-            if (r3 != 0) goto L_0x090d
-            java.lang.String r9 = "SystemConfig"
-            java.lang.StringBuilder r12 = new java.lang.StringBuilder     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r12.<init>()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r10 = "<"
-            r12.append(r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r12.append(r11)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r10 = "> without name in "
-            r12.append(r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r12.append(r2)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r10 = " at "
-            r12.append(r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r10 = r8.getPositionDescription()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r12.append(r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r10 = r12.toString()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            android.util.Slog.w((java.lang.String) r9, (java.lang.String) r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x0912
-        L_0x090d:
-            if (r7 == 0) goto L_0x0912
-            r1.addFeature(r3, r4)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x0912:
-            goto L_0x0916
-        L_0x0913:
-            r1.logNotAllowedInPartition(r11, r2, r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x0916:
-            com.android.internal.util.XmlUtils.skipCurrentTag(r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x09b7
-        L_0x091b:
-            r22 = r9
-            r23 = r10
-            if (r14 == 0) goto L_0x09a7
-            java.lang.String r3 = "name"
-            r4 = 0
-            java.lang.String r3 = r8.getAttributeValue(r4, r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r7 = "file"
-            java.lang.String r7 = r8.getAttributeValue(r4, r7)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = "dependency"
-            java.lang.String r9 = r8.getAttributeValue(r4, r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r4 = r9
-            if (r3 != 0) goto L_0x0963
-            java.lang.String r9 = "SystemConfig"
-            java.lang.StringBuilder r10 = new java.lang.StringBuilder     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r10.<init>()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r12 = "<"
-            r10.append(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r10.append(r11)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r12 = "> without name in "
-            r10.append(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r10.append(r2)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r12 = " at "
-            r10.append(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r12 = r8.getPositionDescription()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r10.append(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r10 = r10.toString()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            android.util.Slog.w((java.lang.String) r9, (java.lang.String) r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x09a6
-        L_0x0963:
-            if (r7 != 0) goto L_0x0990
-            java.lang.String r9 = "SystemConfig"
-            java.lang.StringBuilder r10 = new java.lang.StringBuilder     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r10.<init>()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r12 = "<"
-            r10.append(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r10.append(r11)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r12 = "> without file in "
-            r10.append(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r10.append(r2)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r12 = " at "
-            r10.append(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r12 = r8.getPositionDescription()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r10.append(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r10 = r10.toString()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            android.util.Slog.w((java.lang.String) r9, (java.lang.String) r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x09a6
-        L_0x0990:
-            com.android.server.SystemConfig$SharedLibraryEntry r9 = new com.android.server.SystemConfig$SharedLibraryEntry     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r4 != 0) goto L_0x0998
-            r10 = 0
-            java.lang.String[] r12 = new java.lang.String[r10]     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x099e
-        L_0x0998:
-            java.lang.String r10 = ":"
-            java.lang.String[] r12 = r4.split(r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x099e:
-            r9.<init>(r3, r7, r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            android.util.ArrayMap<java.lang.String, com.android.server.SystemConfig$SharedLibraryEntry> r10 = r1.mSharedLibraries     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r10.put(r3, r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x09a6:
-            goto L_0x09aa
-        L_0x09a7:
-            r1.logNotAllowedInPartition(r11, r2, r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x09aa:
-            com.android.internal.util.XmlUtils.skipCurrentTag(r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x09b7
-        L_0x09ae:
-            r22 = r9
-            r23 = r10
-            if (r16 == 0) goto L_0x09ba
-            r1.readSplitPermission(r8, r2)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x09b7:
-            r4 = 0
-            goto L_0x0b65
-        L_0x09ba:
-            r1.logNotAllowedInPartition(r11, r2, r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            com.android.internal.util.XmlUtils.skipCurrentTag(r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x09b7
-        L_0x09c1:
-            r22 = r9
-            r23 = r10
-            if (r16 == 0) goto L_0x0a92
-            java.lang.String r3 = "name"
-            r4 = 0
-            java.lang.String r3 = r8.getAttributeValue(r4, r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r3 != 0) goto L_0x09ff
-            java.lang.String r4 = "SystemConfig"
-            java.lang.StringBuilder r7 = new java.lang.StringBuilder     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.<init>()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = "<"
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r11)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = "> without name in "
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r2)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = " at "
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = r8.getPositionDescription()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r7 = r7.toString()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            android.util.Slog.w((java.lang.String) r4, (java.lang.String) r7)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            com.android.internal.util.XmlUtils.skipCurrentTag(r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x09b7
-        L_0x09ff:
-            java.lang.String r4 = "uid"
-            r7 = 0
-            java.lang.String r4 = r8.getAttributeValue(r7, r4)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r4 != 0) goto L_0x0a37
-            java.lang.String r7 = "SystemConfig"
-            java.lang.StringBuilder r9 = new java.lang.StringBuilder     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r9.<init>()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r10 = "<"
-            r9.append(r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r9.append(r11)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r10 = "> without uid in "
-            r9.append(r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r9.append(r2)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r10 = " at "
-            r9.append(r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r10 = r8.getPositionDescription()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r9.append(r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = r9.toString()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            android.util.Slog.w((java.lang.String) r7, (java.lang.String) r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            com.android.internal.util.XmlUtils.skipCurrentTag(r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x09b7
-        L_0x0a37:
-            int r7 = android.os.Process.getUidForName(r4)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r7 >= 0) goto L_0x0a74
-            java.lang.String r9 = "SystemConfig"
-            java.lang.StringBuilder r10 = new java.lang.StringBuilder     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r10.<init>()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r12 = "<"
-            r10.append(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r10.append(r11)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r12 = "> with unknown uid \""
-            r10.append(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r10.append(r4)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r12 = "  in "
-            r10.append(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r10.append(r2)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r12 = " at "
-            r10.append(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r12 = r8.getPositionDescription()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r10.append(r12)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r10 = r10.toString()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            android.util.Slog.w((java.lang.String) r9, (java.lang.String) r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            com.android.internal.util.XmlUtils.skipCurrentTag(r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x09b7
-        L_0x0a74:
-            java.lang.String r9 = r3.intern()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r3 = r9
-            android.util.SparseArray<android.util.ArraySet<java.lang.String>> r9 = r1.mSystemPermissions     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.Object r9 = r9.get(r7)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            android.util.ArraySet r9 = (android.util.ArraySet) r9     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r9 != 0) goto L_0x0a8e
-            android.util.ArraySet r10 = new android.util.ArraySet     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r10.<init>()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r9 = r10
-            android.util.SparseArray<android.util.ArraySet<java.lang.String>> r10 = r1.mSystemPermissions     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r10.put(r7, r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x0a8e:
-            r9.add(r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x0a95
-        L_0x0a92:
-            r1.logNotAllowedInPartition(r11, r2, r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x0a95:
-            com.android.internal.util.XmlUtils.skipCurrentTag(r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x09b7
-        L_0x0a9a:
-            r22 = r9
-            r23 = r10
-            if (r16 == 0) goto L_0x0ae3
-            java.lang.String r3 = "name"
-            r4 = 0
-            java.lang.String r3 = r8.getAttributeValue(r4, r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r3 != 0) goto L_0x0ad9
-            java.lang.String r4 = "SystemConfig"
-            java.lang.StringBuilder r7 = new java.lang.StringBuilder     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.<init>()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = "<"
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r11)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = "> without name in "
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r2)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = " at "
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = r8.getPositionDescription()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r7 = r7.toString()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            android.util.Slog.w((java.lang.String) r4, (java.lang.String) r7)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            com.android.internal.util.XmlUtils.skipCurrentTag(r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x09b7
-        L_0x0ad9:
-            java.lang.String r4 = r3.intern()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r3 = r4
-            r1.readPermission(r8, r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x09b7
-        L_0x0ae3:
-            r1.logNotAllowedInPartition(r11, r2, r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            com.android.internal.util.XmlUtils.skipCurrentTag(r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x09b7
-        L_0x0aeb:
-            r22 = r9
-            r23 = r10
-            if (r13 == 0) goto L_0x0b32
-            java.lang.String r3 = "gid"
-            r4 = 0
-            java.lang.String r3 = r8.getAttributeValue(r4, r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            if (r3 == 0) goto L_0x0b07
-            int r7 = android.os.Process.getGidForName(r3)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            int[] r9 = r1.mGlobalGids     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            int[] r9 = com.android.internal.util.ArrayUtils.appendInt(r9, r7)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r1.mGlobalGids = r9     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x0b31
-        L_0x0b07:
-            java.lang.String r7 = "SystemConfig"
-            java.lang.StringBuilder r9 = new java.lang.StringBuilder     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r9.<init>()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r10 = "<"
-            r9.append(r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r9.append(r11)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r10 = "> without gid in "
-            r9.append(r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r9.append(r2)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r10 = " at "
-            r9.append(r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r10 = r8.getPositionDescription()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r9.append(r10)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = r9.toString()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            android.util.Slog.w((java.lang.String) r7, (java.lang.String) r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x0b31:
-            goto L_0x0b36
-        L_0x0b32:
-            r4 = 0
-            r1.logNotAllowedInPartition(r11, r2, r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x0b36:
-            com.android.internal.util.XmlUtils.skipCurrentTag(r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            goto L_0x0b65
-        L_0x0b3a:
-            java.lang.StringBuilder r7 = new java.lang.StringBuilder     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.<init>()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = "Tag "
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r11)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = " is unknown in "
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r2)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = " at "
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r9 = r8.getPositionDescription()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            r7.append(r9)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r7 = r7.toString()     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            android.util.Slog.w((java.lang.String) r3, (java.lang.String) r7)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            com.android.internal.util.XmlUtils.skipCurrentTag(r8)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x0b65:
-        L_0x0b66:
-            r9 = r22
-            r10 = r23
-            r3 = r26
-            r11 = 2
-            r12 = 1
-            goto L_0x00b2
-        L_0x0b70:
-            r23 = r10
-            org.xmlpull.v1.XmlPullParserException r3 = new org.xmlpull.v1.XmlPullParserException     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            java.lang.String r4 = "No start tag found"
-            r3.<init>(r4)     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-            throw r3     // Catch:{ XmlPullParserException -> 0x0b87, IOException -> 0x0b7d }
-        L_0x0b7a:
-            r0 = move-exception
-            r3 = r0
-            goto L_0x0bda
-        L_0x0b7d:
-            r0 = move-exception
-            r3 = r0
-            java.lang.String r4 = "SystemConfig"
-            java.lang.String r7 = "Got exception parsing permissions."
-            android.util.Slog.w(r4, r7, r3)     // Catch:{ all -> 0x0b7a }
-            goto L_0x0b90
-        L_0x0b87:
-            r0 = move-exception
-            r3 = r0
-            java.lang.String r4 = "SystemConfig"
-            java.lang.String r7 = "Got exception parsing permissions."
-            android.util.Slog.w(r4, r7, r3)     // Catch:{ all -> 0x0b7a }
-        L_0x0b90:
-            libcore.io.IoUtils.closeQuietly(r5)
-            boolean r3 = android.os.storage.StorageManager.isFileEncryptedNativeOnly()
-            if (r3 == 0) goto L_0x0ba6
-            java.lang.String r3 = "android.software.file_based_encryption"
-            r4 = 0
-            r1.addFeature(r3, r4)
-            java.lang.String r3 = "android.software.securely_removes_users"
-            r1.addFeature(r3, r4)
-            goto L_0x0ba7
-        L_0x0ba6:
-            r4 = 0
-        L_0x0ba7:
-            boolean r3 = android.os.storage.StorageManager.hasAdoptable()
-            if (r3 == 0) goto L_0x0bb2
-            java.lang.String r3 = "android.software.adoptable_storage"
-            r1.addFeature(r3, r4)
-        L_0x0bb2:
-            boolean r3 = android.app.ActivityManager.isLowRamDeviceStatic()
-            if (r3 == 0) goto L_0x0bbe
-            java.lang.String r3 = "android.hardware.ram.low"
-            r1.addFeature(r3, r4)
-            goto L_0x0bc3
-        L_0x0bbe:
-            java.lang.String r3 = "android.hardware.ram.normal"
-            r1.addFeature(r3, r4)
-        L_0x0bc3:
-            android.util.ArraySet<java.lang.String> r3 = r1.mUnavailableFeatures
-            java.util.Iterator r3 = r3.iterator()
-        L_0x0bc9:
-            boolean r4 = r3.hasNext()
-            if (r4 == 0) goto L_0x0bd9
-            java.lang.Object r4 = r3.next()
-            java.lang.String r4 = (java.lang.String) r4
-            r1.removeFeature(r4)
-            goto L_0x0bc9
-        L_0x0bd9:
-            return
-        L_0x0bda:
-            libcore.io.IoUtils.closeQuietly(r5)
-            throw r3
-        L_0x0bde:
-            r0 = move-exception
-            r3 = r0
-            java.lang.String r4 = "SystemConfig"
-            java.lang.StringBuilder r6 = new java.lang.StringBuilder
-            r6.<init>()
-            java.lang.String r7 = "Couldn't find or open permissions file "
-            r6.append(r7)
-            r6.append(r2)
-            java.lang.String r6 = r6.toString()
-            android.util.Slog.w((java.lang.String) r4, (java.lang.String) r6)
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.server.SystemConfig.readPermissionsFromXml(java.io.File, int):void");
+    /* JADX WARN: Removed duplicated region for block: B:185:0x03fa A[Catch: all -> 0x0b7a, IOException -> 0x0b7d, XmlPullParserException -> 0x0b87, TryCatch #2 {IOException -> 0x0b7d, blocks: (B:5:0x0013, B:6:0x001a, B:11:0x0028, B:13:0x0035, B:16:0x0042, B:17:0x0069, B:22:0x0070, B:26:0x0077, B:30:0x007e, B:34:0x0087, B:38:0x0090, B:42:0x0099, B:46:0x00a2, B:50:0x00ab, B:54:0x00b2, B:57:0x00bd, B:59:0x00c3, B:60:0x00cd, B:61:0x00d1, B:139:0x01f8, B:395:0x0b3a, B:141:0x0203, B:143:0x020c, B:145:0x023c, B:144:0x0237, B:149:0x0248, B:151:0x0252, B:152:0x0280, B:154:0x0289, B:155:0x02b9, B:157:0x02cf, B:158:0x02da, B:160:0x0305, B:159:0x02fe, B:163:0x0310, B:165:0x031a, B:169:0x034e, B:166:0x0345, B:168:0x034b, B:172:0x0359, B:173:0x035e, B:176:0x036c, B:178:0x038f, B:183:0x03b6, B:185:0x03fa, B:187:0x0404, B:189:0x040e, B:190:0x0416, B:192:0x041f, B:195:0x042d, B:197:0x0437, B:201:0x046b, B:198:0x0462, B:200:0x0468, B:204:0x0476, B:208:0x048a, B:210:0x0494, B:211:0x049f, B:215:0x04d1, B:212:0x04a3, B:214:0x04ce, B:218:0x04dc, B:220:0x04e6, B:227:0x0553, B:221:0x0511, B:223:0x0517, B:224:0x054a, B:226:0x0550, B:230:0x055e, B:232:0x056f, B:238:0x05d5, B:234:0x059c, B:235:0x05c7, B:237:0x05d2, B:241:0x05e0, B:243:0x05ea, B:247:0x061e, B:244:0x0615, B:246:0x061b, B:250:0x0629, B:252:0x0633, B:256:0x0667, B:253:0x065e, B:255:0x0664, B:259:0x0672, B:261:0x067c, B:265:0x06b0, B:262:0x06a7, B:264:0x06ad, B:268:0x06bb, B:270:0x06c4, B:274:0x06f8, B:271:0x06ef, B:273:0x06f5, B:277:0x0703, B:279:0x070d, B:283:0x0741, B:280:0x0738, B:282:0x073e, B:286:0x074c, B:288:0x0756, B:292:0x078a, B:289:0x0781, B:291:0x0787, B:295:0x0795, B:297:0x079f, B:301:0x07d3, B:298:0x07ca, B:300:0x07d0, B:304:0x07de, B:306:0x07e8, B:310:0x081c, B:307:0x0813, B:309:0x0819, B:313:0x0827, B:315:0x0831, B:319:0x0865, B:316:0x085c, B:318:0x0862, B:322:0x0870, B:324:0x087a, B:328:0x08ae, B:325:0x08a5, B:327:0x08ab, B:331:0x08b9, B:336:0x08e2, B:341:0x0916, B:338:0x090f, B:334:0x08ce, B:340:0x0913, B:344:0x0921, B:346:0x0938, B:356:0x09aa, B:348:0x0965, B:349:0x0990, B:351:0x0994, B:353:0x099e, B:352:0x0998, B:355:0x09a7, B:359:0x09b4, B:361:0x09ba, B:364:0x09c7, B:366:0x09d1, B:367:0x09ff, B:369:0x0a09, B:370:0x0a37, B:372:0x0a3d, B:373:0x0a74, B:375:0x0a83, B:376:0x0a8e, B:378:0x0a95, B:377:0x0a92, B:381:0x0aa0, B:383:0x0aaa, B:384:0x0ad9, B:385:0x0ae3, B:388:0x0af1, B:390:0x0afa, B:394:0x0b36, B:391:0x0b07, B:393:0x0b32, B:63:0x00d6, B:66:0x00e2, B:69:0x00ee, B:72:0x00fb, B:75:0x0107, B:78:0x0113, B:81:0x011f, B:84:0x012b, B:87:0x0138, B:90:0x0143, B:93:0x014f, B:96:0x015c, B:99:0x0168, B:102:0x0174, B:105:0x017f, B:108:0x018a, B:111:0x0195, B:114:0x01a0, B:117:0x01aa, B:120:0x01b5, B:123:0x01c1, B:126:0x01cb, B:129:0x01d6, B:132:0x01e1, B:135:0x01ec, B:398:0x0b70, B:399:0x0b79), top: B:430:0x0013, outer: #1 }] */
+    /* JADX WARN: Removed duplicated region for block: B:186:0x0402  */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    private void readPermissionsFromXml(File permFile, int permissionFlag) {
+        int i;
+        XmlPullParser parser;
+        int type;
+        int i2;
+        char c;
+        boolean allowAssociations;
+        int type2;
+        boolean allowed;
+        boolean vendor;
+        String str = null;
+        try {
+            FileReader permReader = new FileReader(permFile);
+            boolean lowRam = ActivityManager.isLowRamDeviceStatic();
+            try {
+                try {
+                    try {
+                        parser = Xml.newPullParser();
+                        parser.setInput(permReader);
+                        while (true) {
+                            int next = parser.next();
+                            type = next;
+                            i2 = 1;
+                            if (next == 2 || type == 1) {
+                                break;
+                            }
+                        }
+                    } catch (XmlPullParserException e) {
+                        Slog.m49w(TAG, "Got exception parsing permissions.", e);
+                    }
+                } catch (IOException e2) {
+                    Slog.m49w(TAG, "Got exception parsing permissions.", e2);
+                }
+                if (type != 2) {
+                    throw new XmlPullParserException("No start tag found");
+                }
+                if (!parser.getName().equals("permissions") && !parser.getName().equals("config")) {
+                    throw new XmlPullParserException("Unexpected start tag in " + permFile + ": found " + parser.getName() + ", expected 'permissions' or 'config'");
+                }
+                boolean allowAll = permissionFlag == -1;
+                boolean allowLibs = (permissionFlag & 2) != 0;
+                boolean allowFeatures = (permissionFlag & 1) != 0;
+                boolean allowPermissions = (permissionFlag & 4) != 0;
+                boolean allowAppConfigs = (permissionFlag & 8) != 0;
+                boolean allowPrivappPermissions = (permissionFlag & 16) != 0;
+                boolean allowOemPermissions = (permissionFlag & 32) != 0;
+                boolean allowApiWhitelisting = (permissionFlag & 64) != 0;
+                boolean allowAssociations2 = (permissionFlag & 128) != 0;
+                while (true) {
+                    XmlUtils.nextElement(parser);
+                    if (parser.getEventType() != i2) {
+                        String name = parser.getName();
+                        if (name == null) {
+                            XmlUtils.skipCurrentTag(parser);
+                            allowAssociations = allowAssociations2;
+                            type2 = type;
+                        } else {
+                            switch (name.hashCode()) {
+                                case -2040330235:
+                                    if (name.equals("allow-unthrottled-location")) {
+                                        c = '\n';
+                                        break;
+                                    }
+                                    c = '\uffff';
+                                    break;
+                                case -1882490007:
+                                    if (name.equals("allow-in-power-save")) {
+                                        c = '\b';
+                                        break;
+                                    }
+                                    c = '\uffff';
+                                    break;
+                                case -1005864890:
+                                    if (name.equals("disabled-until-used-preinstalled-carrier-app")) {
+                                        c = 19;
+                                        break;
+                                    }
+                                    c = '\uffff';
+                                    break;
+                                case -980620291:
+                                    if (name.equals("allow-association")) {
+                                        c = 23;
+                                        break;
+                                    }
+                                    c = '\uffff';
+                                    break;
+                                case -979207434:
+                                    if (name.equals("feature")) {
+                                        c = 5;
+                                        break;
+                                    }
+                                    c = '\uffff';
+                                    break;
+                                case -851582420:
+                                    if (name.equals("system-user-blacklisted-app")) {
+                                        c = 15;
+                                        break;
+                                    }
+                                    c = '\uffff';
+                                    break;
+                                case -828905863:
+                                    if (name.equals("unavailable-feature")) {
+                                        c = 6;
+                                        break;
+                                    }
+                                    c = '\uffff';
+                                    break;
+                                case -642819164:
+                                    if (name.equals("allow-in-power-save-except-idle")) {
+                                        c = 7;
+                                        break;
+                                    }
+                                    c = '\uffff';
+                                    break;
+                                case -560717308:
+                                    if (name.equals("allow-ignore-location-settings")) {
+                                        c = 11;
+                                        break;
+                                    }
+                                    c = '\uffff';
+                                    break;
+                                case -517618225:
+                                    if (name.equals("permission")) {
+                                        c = 1;
+                                        break;
+                                    }
+                                    c = '\uffff';
+                                    break;
+                                case 98629247:
+                                    if (name.equals(WifiConfiguration.GroupCipher.varName)) {
+                                        c = 0;
+                                        break;
+                                    }
+                                    c = '\uffff';
+                                    break;
+                                case 166208699:
+                                    if (name.equals("library")) {
+                                        c = 4;
+                                        break;
+                                    }
+                                    c = '\uffff';
+                                    break;
+                                case 180165796:
+                                    if (name.equals("hidden-api-whitelisted-app")) {
+                                        c = 22;
+                                        break;
+                                    }
+                                    c = '\uffff';
+                                    break;
+                                case 347247519:
+                                    if (name.equals("backup-transport-whitelisted-service")) {
+                                        c = 17;
+                                        break;
+                                    }
+                                    c = '\uffff';
+                                    break;
+                                case 508457430:
+                                    if (name.equals("system-user-whitelisted-app")) {
+                                        c = 14;
+                                        break;
+                                    }
+                                    c = '\uffff';
+                                    break;
+                                case 802332808:
+                                    if (name.equals("allow-in-data-usage-save")) {
+                                        c = '\t';
+                                        break;
+                                    }
+                                    c = '\uffff';
+                                    break;
+                                case 953292141:
+                                    if (name.equals("assign-permission")) {
+                                        c = 2;
+                                        break;
+                                    }
+                                    c = '\uffff';
+                                    break;
+                                case 1044015374:
+                                    if (name.equals("oem-permissions")) {
+                                        c = 21;
+                                        break;
+                                    }
+                                    c = '\uffff';
+                                    break;
+                                case 1121420326:
+                                    if (name.equals("app-link")) {
+                                        c = '\r';
+                                        break;
+                                    }
+                                    c = '\uffff';
+                                    break;
+                                case 1269564002:
+                                    if (name.equals("split-permission")) {
+                                        c = 3;
+                                        break;
+                                    }
+                                    c = '\uffff';
+                                    break;
+                                case 1567330472:
+                                    if (name.equals("default-enabled-vr-app")) {
+                                        c = 16;
+                                        break;
+                                    }
+                                    c = '\uffff';
+                                    break;
+                                case 1633270165:
+                                    if (name.equals("disabled-until-used-preinstalled-carrier-associated-app")) {
+                                        c = 18;
+                                        break;
+                                    }
+                                    c = '\uffff';
+                                    break;
+                                case 1723146313:
+                                    if (name.equals("privapp-permissions")) {
+                                        c = 20;
+                                        break;
+                                    }
+                                    c = '\uffff';
+                                    break;
+                                case 1723586945:
+                                    if (name.equals("bugreport-whitelisted")) {
+                                        c = 24;
+                                        break;
+                                    }
+                                    c = '\uffff';
+                                    break;
+                                case 1954925533:
+                                    if (name.equals("allow-implicit-broadcast")) {
+                                        c = '\f';
+                                        break;
+                                    }
+                                    c = '\uffff';
+                                    break;
+                                default:
+                                    c = '\uffff';
+                                    break;
+                            }
+                            switch (c) {
+                                case 0:
+                                    allowAssociations = allowAssociations2;
+                                    type2 = type;
+                                    if (allowAll) {
+                                        str = null;
+                                        String gidStr = parser.getAttributeValue(null, "gid");
+                                        if (gidStr != null) {
+                                            int gid = Process.getGidForName(gidStr);
+                                            this.mGlobalGids = ArrayUtils.appendInt(this.mGlobalGids, gid);
+                                        } else {
+                                            Slog.m50w(TAG, "<" + name + "> without gid in " + permFile + " at " + parser.getPositionDescription());
+                                        }
+                                    } else {
+                                        str = null;
+                                        logNotAllowedInPartition(name, permFile, parser);
+                                    }
+                                    XmlUtils.skipCurrentTag(parser);
+                                    break;
+                                case 1:
+                                    allowAssociations = allowAssociations2;
+                                    type2 = type;
+                                    if (allowPermissions) {
+                                        String perm = parser.getAttributeValue(null, "name");
+                                        if (perm == null) {
+                                            Slog.m50w(TAG, "<" + name + "> without name in " + permFile + " at " + parser.getPositionDescription());
+                                            XmlUtils.skipCurrentTag(parser);
+                                        } else {
+                                            readPermission(parser, perm.intern());
+                                        }
+                                    } else {
+                                        logNotAllowedInPartition(name, permFile, parser);
+                                        XmlUtils.skipCurrentTag(parser);
+                                    }
+                                    str = null;
+                                    break;
+                                case 2:
+                                    allowAssociations = allowAssociations2;
+                                    type2 = type;
+                                    if (allowPermissions) {
+                                        String perm2 = parser.getAttributeValue(null, "name");
+                                        if (perm2 == null) {
+                                            Slog.m50w(TAG, "<" + name + "> without name in " + permFile + " at " + parser.getPositionDescription());
+                                            XmlUtils.skipCurrentTag(parser);
+                                        } else {
+                                            String uidStr = parser.getAttributeValue(null, GrantCredentialsPermissionActivity.EXTRAS_REQUESTING_UID);
+                                            if (uidStr == null) {
+                                                Slog.m50w(TAG, "<" + name + "> without uid in " + permFile + " at " + parser.getPositionDescription());
+                                                XmlUtils.skipCurrentTag(parser);
+                                            } else {
+                                                int uid = Process.getUidForName(uidStr);
+                                                if (uid < 0) {
+                                                    Slog.m50w(TAG, "<" + name + "> with unknown uid \"" + uidStr + "  in " + permFile + " at " + parser.getPositionDescription());
+                                                    XmlUtils.skipCurrentTag(parser);
+                                                } else {
+                                                    String perm3 = perm2.intern();
+                                                    ArraySet<String> perms = this.mSystemPermissions.get(uid);
+                                                    if (perms == null) {
+                                                        perms = new ArraySet<>();
+                                                        this.mSystemPermissions.put(uid, perms);
+                                                    }
+                                                    perms.add(perm3);
+                                                }
+                                            }
+                                        }
+                                        str = null;
+                                        break;
+                                    } else {
+                                        logNotAllowedInPartition(name, permFile, parser);
+                                    }
+                                    XmlUtils.skipCurrentTag(parser);
+                                    str = null;
+                                case 3:
+                                    allowAssociations = allowAssociations2;
+                                    type2 = type;
+                                    if (allowPermissions) {
+                                        readSplitPermission(parser, permFile);
+                                    } else {
+                                        logNotAllowedInPartition(name, permFile, parser);
+                                        XmlUtils.skipCurrentTag(parser);
+                                    }
+                                    str = null;
+                                    break;
+                                case 4:
+                                    allowAssociations = allowAssociations2;
+                                    type2 = type;
+                                    if (allowLibs) {
+                                        String lname = parser.getAttributeValue(null, "name");
+                                        String lfile = parser.getAttributeValue(null, ContentResolver.SCHEME_FILE);
+                                        String ldependency = parser.getAttributeValue(null, "dependency");
+                                        if (lname == null) {
+                                            Slog.m50w(TAG, "<" + name + "> without name in " + permFile + " at " + parser.getPositionDescription());
+                                        } else if (lfile == null) {
+                                            Slog.m50w(TAG, "<" + name + "> without file in " + permFile + " at " + parser.getPositionDescription());
+                                        } else {
+                                            SharedLibraryEntry entry = new SharedLibraryEntry(lname, lfile, ldependency == null ? new String[0] : ldependency.split(SettingsStringUtil.DELIMITER));
+                                            this.mSharedLibraries.put(lname, entry);
+                                        }
+                                    } else {
+                                        logNotAllowedInPartition(name, permFile, parser);
+                                    }
+                                    XmlUtils.skipCurrentTag(parser);
+                                    str = null;
+                                    break;
+                                case 5:
+                                    allowAssociations = allowAssociations2;
+                                    type2 = type;
+                                    if (allowFeatures) {
+                                        String fname = parser.getAttributeValue(null, "name");
+                                        int fversion = XmlUtils.readIntAttribute(parser, "version", 0);
+                                        if (!lowRam) {
+                                            allowed = true;
+                                        } else {
+                                            String notLowRam = parser.getAttributeValue(null, "notLowRam");
+                                            allowed = !"true".equals(notLowRam);
+                                        }
+                                        if (fname == null) {
+                                            Slog.m50w(TAG, "<" + name + "> without name in " + permFile + " at " + parser.getPositionDescription());
+                                        } else if (allowed) {
+                                            addFeature(fname, fversion);
+                                        }
+                                    } else {
+                                        logNotAllowedInPartition(name, permFile, parser);
+                                    }
+                                    XmlUtils.skipCurrentTag(parser);
+                                    str = null;
+                                    break;
+                                case 6:
+                                    allowAssociations = allowAssociations2;
+                                    type2 = type;
+                                    if (allowFeatures) {
+                                        String fname2 = parser.getAttributeValue(null, "name");
+                                        if (fname2 == null) {
+                                            Slog.m50w(TAG, "<" + name + "> without name in " + permFile + " at " + parser.getPositionDescription());
+                                        } else {
+                                            this.mUnavailableFeatures.add(fname2);
+                                        }
+                                    } else {
+                                        logNotAllowedInPartition(name, permFile, parser);
+                                    }
+                                    XmlUtils.skipCurrentTag(parser);
+                                    str = null;
+                                    break;
+                                case 7:
+                                    allowAssociations = allowAssociations2;
+                                    type2 = type;
+                                    if (allowAll) {
+                                        String pkgname = parser.getAttributeValue(null, "package");
+                                        if (pkgname == null) {
+                                            Slog.m50w(TAG, "<" + name + "> without package in " + permFile + " at " + parser.getPositionDescription());
+                                        } else {
+                                            this.mAllowInPowerSaveExceptIdle.add(pkgname);
+                                        }
+                                    } else {
+                                        logNotAllowedInPartition(name, permFile, parser);
+                                    }
+                                    XmlUtils.skipCurrentTag(parser);
+                                    str = null;
+                                    break;
+                                case '\b':
+                                    allowAssociations = allowAssociations2;
+                                    type2 = type;
+                                    if (allowAll) {
+                                        String pkgname2 = parser.getAttributeValue(null, "package");
+                                        if (pkgname2 == null) {
+                                            Slog.m50w(TAG, "<" + name + "> without package in " + permFile + " at " + parser.getPositionDescription());
+                                        } else {
+                                            this.mAllowInPowerSave.add(pkgname2);
+                                        }
+                                    } else {
+                                        logNotAllowedInPartition(name, permFile, parser);
+                                    }
+                                    XmlUtils.skipCurrentTag(parser);
+                                    str = null;
+                                    break;
+                                case '\t':
+                                    allowAssociations = allowAssociations2;
+                                    type2 = type;
+                                    if (allowAll) {
+                                        String pkgname3 = parser.getAttributeValue(null, "package");
+                                        if (pkgname3 == null) {
+                                            Slog.m50w(TAG, "<" + name + "> without package in " + permFile + " at " + parser.getPositionDescription());
+                                        } else {
+                                            this.mAllowInDataUsageSave.add(pkgname3);
+                                        }
+                                    } else {
+                                        logNotAllowedInPartition(name, permFile, parser);
+                                    }
+                                    XmlUtils.skipCurrentTag(parser);
+                                    str = null;
+                                    break;
+                                case '\n':
+                                    allowAssociations = allowAssociations2;
+                                    type2 = type;
+                                    if (allowAll) {
+                                        String pkgname4 = parser.getAttributeValue(null, "package");
+                                        if (pkgname4 == null) {
+                                            Slog.m50w(TAG, "<" + name + "> without package in " + permFile + " at " + parser.getPositionDescription());
+                                        } else {
+                                            this.mAllowUnthrottledLocation.add(pkgname4);
+                                        }
+                                    } else {
+                                        logNotAllowedInPartition(name, permFile, parser);
+                                    }
+                                    XmlUtils.skipCurrentTag(parser);
+                                    str = null;
+                                    break;
+                                case 11:
+                                    allowAssociations = allowAssociations2;
+                                    type2 = type;
+                                    if (allowAll) {
+                                        String pkgname5 = parser.getAttributeValue(null, "package");
+                                        if (pkgname5 == null) {
+                                            Slog.m50w(TAG, "<" + name + "> without package in " + permFile + " at " + parser.getPositionDescription());
+                                        } else {
+                                            this.mAllowIgnoreLocationSettings.add(pkgname5);
+                                        }
+                                    } else {
+                                        logNotAllowedInPartition(name, permFile, parser);
+                                    }
+                                    XmlUtils.skipCurrentTag(parser);
+                                    str = null;
+                                    break;
+                                case '\f':
+                                    allowAssociations = allowAssociations2;
+                                    type2 = type;
+                                    if (allowAll) {
+                                        String action = parser.getAttributeValue(null, "action");
+                                        if (action == null) {
+                                            Slog.m50w(TAG, "<" + name + "> without action in " + permFile + " at " + parser.getPositionDescription());
+                                        } else {
+                                            this.mAllowImplicitBroadcasts.add(action);
+                                        }
+                                    } else {
+                                        logNotAllowedInPartition(name, permFile, parser);
+                                    }
+                                    XmlUtils.skipCurrentTag(parser);
+                                    str = null;
+                                    break;
+                                case '\r':
+                                    allowAssociations = allowAssociations2;
+                                    type2 = type;
+                                    if (allowAppConfigs) {
+                                        String pkgname6 = parser.getAttributeValue(null, "package");
+                                        if (pkgname6 == null) {
+                                            Slog.m50w(TAG, "<" + name + "> without package in " + permFile + " at " + parser.getPositionDescription());
+                                        } else {
+                                            this.mLinkedApps.add(pkgname6);
+                                        }
+                                    } else {
+                                        logNotAllowedInPartition(name, permFile, parser);
+                                    }
+                                    XmlUtils.skipCurrentTag(parser);
+                                    str = null;
+                                    break;
+                                case 14:
+                                    allowAssociations = allowAssociations2;
+                                    type2 = type;
+                                    if (allowAppConfigs) {
+                                        String pkgname7 = parser.getAttributeValue(null, "package");
+                                        if (pkgname7 == null) {
+                                            Slog.m50w(TAG, "<" + name + "> without package in " + permFile + " at " + parser.getPositionDescription());
+                                        } else {
+                                            this.mSystemUserWhitelistedApps.add(pkgname7);
+                                        }
+                                    } else {
+                                        logNotAllowedInPartition(name, permFile, parser);
+                                    }
+                                    XmlUtils.skipCurrentTag(parser);
+                                    str = null;
+                                    break;
+                                case 15:
+                                    allowAssociations = allowAssociations2;
+                                    type2 = type;
+                                    if (allowAppConfigs) {
+                                        String pkgname8 = parser.getAttributeValue(null, "package");
+                                        if (pkgname8 == null) {
+                                            Slog.m50w(TAG, "<" + name + "> without package in " + permFile + " at " + parser.getPositionDescription());
+                                        } else {
+                                            this.mSystemUserBlacklistedApps.add(pkgname8);
+                                        }
+                                    } else {
+                                        logNotAllowedInPartition(name, permFile, parser);
+                                    }
+                                    XmlUtils.skipCurrentTag(parser);
+                                    str = null;
+                                    break;
+                                case 16:
+                                    allowAssociations = allowAssociations2;
+                                    type2 = type;
+                                    if (allowAppConfigs) {
+                                        String pkgname9 = parser.getAttributeValue(null, "package");
+                                        String clsname = parser.getAttributeValue(null, "class");
+                                        if (pkgname9 == null) {
+                                            Slog.m50w(TAG, "<" + name + "> without package in " + permFile + " at " + parser.getPositionDescription());
+                                        } else if (clsname == null) {
+                                            Slog.m50w(TAG, "<" + name + "> without class in " + permFile + " at " + parser.getPositionDescription());
+                                        } else {
+                                            this.mDefaultVrComponents.add(new ComponentName(pkgname9, clsname));
+                                        }
+                                    } else {
+                                        logNotAllowedInPartition(name, permFile, parser);
+                                    }
+                                    XmlUtils.skipCurrentTag(parser);
+                                    str = null;
+                                    break;
+                                case 17:
+                                    allowAssociations = allowAssociations2;
+                                    type2 = type;
+                                    if (allowFeatures) {
+                                        String serviceName = parser.getAttributeValue(null, "service");
+                                        if (serviceName == null) {
+                                            Slog.m50w(TAG, "<" + name + "> without service in " + permFile + " at " + parser.getPositionDescription());
+                                        } else {
+                                            ComponentName cn = ComponentName.unflattenFromString(serviceName);
+                                            if (cn == null) {
+                                                Slog.m50w(TAG, "<" + name + "> with invalid service name " + serviceName + " in " + permFile + " at " + parser.getPositionDescription());
+                                            } else {
+                                                this.mBackupTransportWhitelist.add(cn);
+                                            }
+                                        }
+                                    } else {
+                                        logNotAllowedInPartition(name, permFile, parser);
+                                    }
+                                    XmlUtils.skipCurrentTag(parser);
+                                    str = null;
+                                    break;
+                                case 18:
+                                    allowAssociations = allowAssociations2;
+                                    type2 = type;
+                                    if (allowAppConfigs) {
+                                        String pkgname10 = parser.getAttributeValue(null, "package");
+                                        String carrierPkgname = parser.getAttributeValue(null, "carrierAppPackage");
+                                        if (pkgname10 != null && carrierPkgname != null) {
+                                            List<String> associatedPkgs = this.mDisabledUntilUsedPreinstalledCarrierAssociatedApps.get(carrierPkgname);
+                                            if (associatedPkgs == null) {
+                                                associatedPkgs = new ArrayList();
+                                                this.mDisabledUntilUsedPreinstalledCarrierAssociatedApps.put(carrierPkgname, associatedPkgs);
+                                            }
+                                            associatedPkgs.add(pkgname10);
+                                        }
+                                        Slog.m50w(TAG, "<" + name + "> without package or carrierAppPackage in " + permFile + " at " + parser.getPositionDescription());
+                                    } else {
+                                        logNotAllowedInPartition(name, permFile, parser);
+                                    }
+                                    XmlUtils.skipCurrentTag(parser);
+                                    str = null;
+                                    break;
+                                case 19:
+                                    allowAssociations = allowAssociations2;
+                                    type2 = type;
+                                    if (allowAppConfigs) {
+                                        String pkgname11 = parser.getAttributeValue(null, "package");
+                                        if (pkgname11 == null) {
+                                            Slog.m50w(TAG, "<" + name + "> without package in " + permFile + " at " + parser.getPositionDescription());
+                                        } else {
+                                            this.mDisabledUntilUsedPreinstalledCarrierApps.add(pkgname11);
+                                        }
+                                    } else {
+                                        logNotAllowedInPartition(name, permFile, parser);
+                                    }
+                                    XmlUtils.skipCurrentTag(parser);
+                                    str = null;
+                                    break;
+                                case 20:
+                                    allowAssociations = allowAssociations2;
+                                    type2 = type;
+                                    if (allowPrivappPermissions) {
+                                        if (!permFile.toPath().startsWith(Environment.getVendorDirectory().toPath() + "/")) {
+                                            if (!permFile.toPath().startsWith(Environment.getOdmDirectory().toPath() + "/")) {
+                                                vendor = false;
+                                                boolean product = permFile.toPath().startsWith(Environment.getProductDirectory().toPath() + "/");
+                                                boolean productServices = permFile.toPath().startsWith(Environment.getProductServicesDirectory().toPath() + "/");
+                                                if (!vendor) {
+                                                    readPrivAppPermissions(parser, this.mVendorPrivAppPermissions, this.mVendorPrivAppDenyPermissions);
+                                                } else if (product) {
+                                                    readPrivAppPermissions(parser, this.mProductPrivAppPermissions, this.mProductPrivAppDenyPermissions);
+                                                } else if (productServices) {
+                                                    readPrivAppPermissions(parser, this.mProductServicesPrivAppPermissions, this.mProductServicesPrivAppDenyPermissions);
+                                                } else {
+                                                    readPrivAppPermissions(parser, this.mPrivAppPermissions, this.mPrivAppDenyPermissions);
+                                                }
+                                            }
+                                        }
+                                        vendor = true;
+                                        boolean product2 = permFile.toPath().startsWith(Environment.getProductDirectory().toPath() + "/");
+                                        boolean productServices2 = permFile.toPath().startsWith(Environment.getProductServicesDirectory().toPath() + "/");
+                                        if (!vendor) {
+                                        }
+                                    } else {
+                                        logNotAllowedInPartition(name, permFile, parser);
+                                        XmlUtils.skipCurrentTag(parser);
+                                    }
+                                    str = null;
+                                    break;
+                                case 21:
+                                    allowAssociations = allowAssociations2;
+                                    type2 = type;
+                                    if (allowOemPermissions) {
+                                        readOemPermissions(parser);
+                                    } else {
+                                        logNotAllowedInPartition(name, permFile, parser);
+                                        XmlUtils.skipCurrentTag(parser);
+                                    }
+                                    str = null;
+                                    break;
+                                case 22:
+                                    allowAssociations = allowAssociations2;
+                                    type2 = type;
+                                    if (allowApiWhitelisting) {
+                                        String pkgname12 = parser.getAttributeValue(null, "package");
+                                        if (pkgname12 == null) {
+                                            Slog.m50w(TAG, "<" + name + "> without package in " + permFile + " at " + parser.getPositionDescription());
+                                        } else {
+                                            this.mHiddenApiPackageWhitelist.add(pkgname12);
+                                        }
+                                    } else {
+                                        logNotAllowedInPartition(name, permFile, parser);
+                                    }
+                                    XmlUtils.skipCurrentTag(parser);
+                                    str = null;
+                                    break;
+                                case 23:
+                                    if (allowAssociations2) {
+                                        String target = parser.getAttributeValue(null, "target");
+                                        if (target == null) {
+                                            Slog.m50w(TAG, "<" + name + "> without target in " + permFile + " at " + parser.getPositionDescription());
+                                            XmlUtils.skipCurrentTag(parser);
+                                            allowAssociations = allowAssociations2;
+                                            type2 = type;
+                                            str = null;
+                                            break;
+                                        } else {
+                                            String allowed2 = parser.getAttributeValue(null, "allowed");
+                                            if (allowed2 == null) {
+                                                StringBuilder sb = new StringBuilder();
+                                                allowAssociations = allowAssociations2;
+                                                sb.append("<");
+                                                sb.append(name);
+                                                sb.append("> without allowed in ");
+                                                sb.append(permFile);
+                                                sb.append(" at ");
+                                                sb.append(parser.getPositionDescription());
+                                                Slog.m50w(TAG, sb.toString());
+                                                XmlUtils.skipCurrentTag(parser);
+                                                type2 = type;
+                                                str = null;
+                                            } else {
+                                                allowAssociations = allowAssociations2;
+                                                String target2 = target.intern();
+                                                String allowed3 = allowed2.intern();
+                                                ArraySet<String> associations = this.mAllowedAssociations.get(target2);
+                                                if (associations == null) {
+                                                    associations = new ArraySet<>();
+                                                    this.mAllowedAssociations.put(target2, associations);
+                                                }
+                                                StringBuilder sb2 = new StringBuilder();
+                                                type2 = type;
+                                                sb2.append("Adding association: ");
+                                                sb2.append(target2);
+                                                sb2.append(" <- ");
+                                                sb2.append(allowed3);
+                                                Slog.m54i(TAG, sb2.toString());
+                                                associations.add(allowed3);
+                                            }
+                                        }
+                                    } else {
+                                        allowAssociations = allowAssociations2;
+                                        type2 = type;
+                                        logNotAllowedInPartition(name, permFile, parser);
+                                    }
+                                    XmlUtils.skipCurrentTag(parser);
+                                    str = null;
+                                case 24:
+                                    String pkgname13 = parser.getAttributeValue(str, "package");
+                                    if (pkgname13 == null) {
+                                        Slog.m50w(TAG, "<" + name + "> without package in " + permFile + " at " + parser.getPositionDescription());
+                                    } else {
+                                        this.mBugreportWhitelistedPackages.add(pkgname13);
+                                    }
+                                    XmlUtils.skipCurrentTag(parser);
+                                    allowAssociations = allowAssociations2;
+                                    type2 = type;
+                                    str = null;
+                                    break;
+                                default:
+                                    allowAssociations = allowAssociations2;
+                                    type2 = type;
+                                    Slog.m50w(TAG, "Tag " + name + " is unknown in " + permFile + " at " + parser.getPositionDescription());
+                                    XmlUtils.skipCurrentTag(parser);
+                                    break;
+                            }
+                        }
+                        allowAssociations2 = allowAssociations;
+                        type = type2;
+                        i2 = 1;
+                    } else {
+                        IoUtils.closeQuietly(permReader);
+                        if (StorageManager.isFileEncryptedNativeOnly()) {
+                            i = 0;
+                            addFeature(PackageManager.FEATURE_FILE_BASED_ENCRYPTION, 0);
+                            addFeature(PackageManager.FEATURE_SECURELY_REMOVES_USERS, 0);
+                        } else {
+                            i = 0;
+                        }
+                        if (StorageManager.hasAdoptable()) {
+                            addFeature(PackageManager.FEATURE_ADOPTABLE_STORAGE, i);
+                        }
+                        if (ActivityManager.isLowRamDeviceStatic()) {
+                            addFeature(PackageManager.FEATURE_RAM_LOW, i);
+                        } else {
+                            addFeature(PackageManager.FEATURE_RAM_NORMAL, i);
+                        }
+                        Iterator<String> it = this.mUnavailableFeatures.iterator();
+                        while (it.hasNext()) {
+                            String featureName = it.next();
+                            removeFeature(featureName);
+                        }
+                        return;
+                    }
+                }
+            } catch (Throwable th) {
+                IoUtils.closeQuietly(permReader);
+                throw th;
+            }
+        } catch (FileNotFoundException e3) {
+            Slog.m50w(TAG, "Couldn't find or open permissions file " + permFile);
+        }
     }
 
     private void addFeature(String name, int version) {
@@ -1827,46 +1088,48 @@ public class SystemConfig {
 
     private void removeFeature(String name) {
         if (this.mAvailableFeatures.remove(name) != null) {
-            Slog.d(TAG, "Removed unavailable feature " + name);
+            Slog.m58d(TAG, "Removed unavailable feature " + name);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void readPermission(XmlPullParser parser, String name) throws IOException, XmlPullParserException {
-        if (!this.mPermissions.containsKey(name)) {
-            PermissionEntry perm = new PermissionEntry(name, XmlUtils.readBooleanAttribute(parser, "perUser", false));
-            this.mPermissions.put(name, perm);
-            int outerDepth = parser.getDepth();
-            while (true) {
-                int next = parser.next();
-                int type = next;
-                if (next == 1) {
-                    return;
-                }
-                if (type == 3 && parser.getDepth() <= outerDepth) {
-                    return;
-                }
-                if (!(type == 3 || type == 4)) {
-                    if (WifiConfiguration.GroupCipher.varName.equals(parser.getName())) {
-                        String gidStr = parser.getAttributeValue((String) null, "gid");
-                        if (gidStr != null) {
-                            perm.gids = ArrayUtils.appendInt(perm.gids, Process.getGidForName(gidStr));
-                        } else {
-                            Slog.w(TAG, "<group> without gid at " + parser.getPositionDescription());
-                        }
-                    }
-                    XmlUtils.skipCurrentTag(parser);
-                }
-            }
-        } else {
+    void readPermission(XmlPullParser parser, String name) throws IOException, XmlPullParserException {
+        if (this.mPermissions.containsKey(name)) {
             throw new IllegalStateException("Duplicate permission definition for " + name);
+        }
+        boolean perUser = XmlUtils.readBooleanAttribute(parser, "perUser", false);
+        PermissionEntry perm = new PermissionEntry(name, perUser);
+        this.mPermissions.put(name, perm);
+        int outerDepth = parser.getDepth();
+        while (true) {
+            int type = parser.next();
+            if (type != 1) {
+                if (type != 3 || parser.getDepth() > outerDepth) {
+                    if (type != 3 && type != 4) {
+                        String tagName = parser.getName();
+                        if (WifiConfiguration.GroupCipher.varName.equals(tagName)) {
+                            String gidStr = parser.getAttributeValue(null, "gid");
+                            if (gidStr != null) {
+                                int gid = Process.getGidForName(gidStr);
+                                perm.gids = ArrayUtils.appendInt(perm.gids, gid);
+                            } else {
+                                Slog.m50w(TAG, "<group> without gid at " + parser.getPositionDescription());
+                            }
+                        }
+                        XmlUtils.skipCurrentTag(parser);
+                    }
+                } else {
+                    return;
+                }
+            } else {
+                return;
+            }
         }
     }
 
     private void readPrivAppPermissions(XmlPullParser parser, ArrayMap<String, ArraySet<String>> grantMap, ArrayMap<String, ArraySet<String>> denyMap) throws IOException, XmlPullParserException {
-        String packageName = parser.getAttributeValue((String) null, "package");
+        String packageName = parser.getAttributeValue(null, "package");
         if (TextUtils.isEmpty(packageName)) {
-            Slog.w(TAG, "package is required for <privapp-permissions> in " + parser.getPositionDescription());
+            Slog.m50w(TAG, "package is required for <privapp-permissions> in " + parser.getPositionDescription());
             return;
         }
         ArraySet<String> permissions = grantMap.get(packageName);
@@ -1878,16 +1141,16 @@ public class SystemConfig {
         while (XmlUtils.nextElementWithin(parser, depth)) {
             String name = parser.getName();
             if ("permission".equals(name)) {
-                String permName = parser.getAttributeValue((String) null, "name");
+                String permName = parser.getAttributeValue(null, "name");
                 if (TextUtils.isEmpty(permName)) {
-                    Slog.w(TAG, "name is required for <permission> in " + parser.getPositionDescription());
+                    Slog.m50w(TAG, "name is required for <permission> in " + parser.getPositionDescription());
                 } else {
                     permissions.add(permName);
                 }
             } else if ("deny-permission".equals(name)) {
-                String permName2 = parser.getAttributeValue((String) null, "name");
+                String permName2 = parser.getAttributeValue(null, "name");
                 if (TextUtils.isEmpty(permName2)) {
-                    Slog.w(TAG, "name is required for <deny-permission> in " + parser.getPositionDescription());
+                    Slog.m50w(TAG, "name is required for <deny-permission> in " + parser.getPositionDescription());
                 } else {
                     if (denyPermissions == null) {
                         denyPermissions = new ArraySet<>();
@@ -1902,11 +1165,10 @@ public class SystemConfig {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void readOemPermissions(XmlPullParser parser) throws IOException, XmlPullParserException {
-        String packageName = parser.getAttributeValue((String) null, "package");
+    void readOemPermissions(XmlPullParser parser) throws IOException, XmlPullParserException {
+        String packageName = parser.getAttributeValue(null, "package");
         if (TextUtils.isEmpty(packageName)) {
-            Slog.w(TAG, "package is required for <oem-permissions> in " + parser.getPositionDescription());
+            Slog.m50w(TAG, "package is required for <oem-permissions> in " + parser.getPositionDescription());
             return;
         }
         ArrayMap<String, Boolean> permissions = this.mOemPermissions.get(packageName);
@@ -1917,16 +1179,16 @@ public class SystemConfig {
         while (XmlUtils.nextElementWithin(parser, depth)) {
             String name = parser.getName();
             if ("permission".equals(name)) {
-                String permName = parser.getAttributeValue((String) null, "name");
+                String permName = parser.getAttributeValue(null, "name");
                 if (TextUtils.isEmpty(permName)) {
-                    Slog.w(TAG, "name is required for <permission> in " + parser.getPositionDescription());
+                    Slog.m50w(TAG, "name is required for <permission> in " + parser.getPositionDescription());
                 } else {
                     permissions.put(permName, Boolean.TRUE);
                 }
             } else if ("deny-permission".equals(name)) {
-                String permName2 = parser.getAttributeValue((String) null, "name");
+                String permName2 = parser.getAttributeValue(null, "name");
                 if (TextUtils.isEmpty(permName2)) {
-                    Slog.w(TAG, "name is required for <deny-permission> in " + parser.getPositionDescription());
+                    Slog.m50w(TAG, "name is required for <deny-permission> in " + parser.getPositionDescription());
                 } else {
                     permissions.put(permName2, Boolean.FALSE);
                 }
@@ -1936,19 +1198,19 @@ public class SystemConfig {
     }
 
     private void readSplitPermission(XmlPullParser parser, File permFile) throws IOException, XmlPullParserException {
-        String splitPerm = parser.getAttributeValue((String) null, "name");
+        String splitPerm = parser.getAttributeValue(null, "name");
         if (splitPerm == null) {
-            Slog.w(TAG, "<split-permission> without name in " + permFile + " at " + parser.getPositionDescription());
+            Slog.m50w(TAG, "<split-permission> without name in " + permFile + " at " + parser.getPositionDescription());
             XmlUtils.skipCurrentTag(parser);
             return;
         }
-        String targetSdkStr = parser.getAttributeValue((String) null, "targetSdk");
+        String targetSdkStr = parser.getAttributeValue(null, "targetSdk");
         int targetSdk = 10001;
         if (!TextUtils.isEmpty(targetSdkStr)) {
             try {
                 targetSdk = Integer.parseInt(targetSdkStr);
             } catch (NumberFormatException e) {
-                Slog.w(TAG, "<split-permission> targetSdk not an integer in " + permFile + " at " + parser.getPositionDescription());
+                Slog.m50w(TAG, "<split-permission> targetSdk not an integer in " + permFile + " at " + parser.getPositionDescription());
                 XmlUtils.skipCurrentTag(parser);
                 return;
             }
@@ -1956,10 +1218,11 @@ public class SystemConfig {
         int depth = parser.getDepth();
         List<String> newPermissions = new ArrayList<>();
         while (XmlUtils.nextElementWithin(parser, depth)) {
-            if ("new-permission".equals(parser.getName())) {
-                String newName = parser.getAttributeValue((String) null, "name");
+            String name = parser.getName();
+            if ("new-permission".equals(name)) {
+                String newName = parser.getAttributeValue(null, "name");
                 if (TextUtils.isEmpty(newName)) {
-                    Slog.w(TAG, "name is required for <new-permission> in " + parser.getPositionDescription());
+                    Slog.m50w(TAG, "name is required for <new-permission> in " + parser.getPositionDescription());
                 } else {
                     newPermissions.add(newName);
                 }

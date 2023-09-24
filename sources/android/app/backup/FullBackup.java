@@ -3,13 +3,13 @@ package android.app.backup;
 import android.annotation.UnsupportedAppUsage;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.pm.PackageManager;
+import android.content.p002pm.PackageManager;
 import android.content.res.XmlResourceParser;
 import android.net.wifi.WifiEnterpriseConfig;
-import android.os.ParcelFileDescriptor;
-import android.os.Process;
-import android.os.storage.StorageManager;
-import android.os.storage.StorageVolume;
+import android.p007os.ParcelFileDescriptor;
+import android.p007os.Process;
+import android.p007os.storage.StorageManager;
+import android.p007os.storage.StorageVolume;
 import android.provider.MediaStore;
 import android.system.ErrnoException;
 import android.system.Os;
@@ -27,6 +27,7 @@ import java.util.Set;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+/* loaded from: classes.dex */
 public class FullBackup {
     public static final String APK_TREE_TOKEN = "a";
     public static final String APPS_PREFIX = "apps/";
@@ -80,28 +81,25 @@ public class FullBackup {
     }
 
     public static void restoreFile(ParcelFileDescriptor data, long size, int type, long mode, long mtime, File outFile) throws IOException {
-        File file = outFile;
         long j = 0;
         if (type == 2) {
-            if (file != null) {
+            if (outFile != null) {
                 outFile.mkdirs();
             }
-            long j2 = size;
         } else {
             FileOutputStream out = null;
-            if (file != null) {
+            if (outFile != null) {
                 try {
                     File parent = outFile.getParentFile();
                     if (!parent.exists()) {
                         parent.mkdirs();
                     }
-                    out = new FileOutputStream(file);
+                    out = new FileOutputStream(outFile);
                 } catch (IOException e) {
-                    Log.e(TAG, "Unable to create/open file " + outFile.getPath(), e);
+                    Log.m69e(TAG, "Unable to create/open file " + outFile.getPath(), e);
                 }
             }
             byte[] buffer = new byte[32768];
-            long origSize = size;
             FileInputStream in = new FileInputStream(data.getFileDescriptor());
             long size2 = size;
             while (true) {
@@ -109,33 +107,31 @@ public class FullBackup {
                 if (size2 <= j) {
                     break;
                 }
-                int got = in2.read(buffer, 0, size2 > ((long) buffer.length) ? buffer.length : (int) size2);
+                int toRead = size2 > ((long) buffer.length) ? buffer.length : (int) size2;
+                int got = in2.read(buffer, 0, toRead);
                 if (got <= 0) {
-                    Log.w(TAG, "Incomplete read: expected " + size2 + " but got " + (origSize - size2));
+                    Log.m64w(TAG, "Incomplete read: expected " + size2 + " but got " + (size - size2));
                     break;
                 }
                 if (out != null) {
                     try {
                         out.write(buffer, 0, got);
                     } catch (IOException e2) {
-                        Log.e(TAG, "Unable to write to file " + outFile.getPath(), e2);
+                        Log.m69e(TAG, "Unable to write to file " + outFile.getPath(), e2);
                         out.close();
                         outFile.delete();
                         out = null;
                     }
                 }
-                size2 -= (long) got;
+                size2 -= got;
                 in = in2;
                 j = 0;
-                int i = type;
             }
             if (out != null) {
                 out.close();
             }
         }
-        if (mode < 0 || file == null) {
-            long j3 = mtime;
-            long j4 = mode;
+        if (mode < 0 || outFile == null) {
             return;
         }
         try {
@@ -143,10 +139,11 @@ public class FullBackup {
         } catch (ErrnoException e3) {
             e3.rethrowAsIOException();
         }
-        file.setLastModified(mtime);
+        outFile.setLastModified(mtime);
     }
 
     @VisibleForTesting
+    /* loaded from: classes.dex */
     public static class BackupScheme {
         private static final String TAG_EXCLUDE = "exclude";
         private static final String TAG_INCLUDE = "include";
@@ -171,8 +168,7 @@ public class FullBackup {
         final StorageManager mStorageManager;
         private StorageVolume[] mVolumes = null;
 
-        /* access modifiers changed from: package-private */
-        public String tokenToDirectoryPath(String domainToken) {
+        String tokenToDirectoryPath(String domainToken) {
             try {
                 if (domainToken.equals(FullBackup.FILES_TREE_TOKEN)) {
                     return this.FILES_DIR.getCanonicalPath();
@@ -211,18 +207,18 @@ public class FullBackup {
                     return this.DEVICE_NOBACKUP_DIR.getCanonicalPath();
                 }
                 if (domainToken.equals(FullBackup.MANAGED_EXTERNAL_TREE_TOKEN)) {
-                    if (this.EXTERNAL_DIR != null) {
-                        return this.EXTERNAL_DIR.getCanonicalPath();
+                    if (this.EXTERNAL_DIR == null) {
+                        return null;
                     }
-                    return null;
+                    return this.EXTERNAL_DIR.getCanonicalPath();
                 } else if (domainToken.startsWith(FullBackup.SHARED_PREFIX)) {
                     return sharedDomainToPath(domainToken);
                 } else {
-                    Log.i(FullBackup.TAG, "Unrecognized domain " + domainToken);
+                    Log.m68i(FullBackup.TAG, "Unrecognized domain " + domainToken);
                     return null;
                 }
             } catch (Exception e) {
-                Log.i(FullBackup.TAG, "Error reading directory for domain: " + domainToken);
+                Log.m68i(FullBackup.TAG, "Error reading directory for domain: " + domainToken);
                 return null;
             }
         }
@@ -238,14 +234,17 @@ public class FullBackup {
         }
 
         private StorageVolume[] getVolumeList() {
-            if (this.mStorageManager == null) {
-                Log.e(FullBackup.TAG, "Unable to access Storage Manager");
-            } else if (this.mVolumes == null) {
-                this.mVolumes = this.mStorageManager.getVolumeList();
+            if (this.mStorageManager != null) {
+                if (this.mVolumes == null) {
+                    this.mVolumes = this.mStorageManager.getVolumeList();
+                }
+            } else {
+                Log.m70e(FullBackup.TAG, "Unable to access Storage Manager");
             }
             return this.mVolumes;
         }
 
+        /* loaded from: classes.dex */
         public static class PathWithRequiredFlags {
             private final String mPath;
             private final int mRequiredFlags;
@@ -284,22 +283,21 @@ public class FullBackup {
             this.DEVICE_CACHE_DIR = deContext.getCacheDir();
             this.DEVICE_NOBACKUP_DIR = deContext.getNoBackupFilesDir();
             if (Process.myUid() != 1000) {
-                this.EXTERNAL_DIR = context.getExternalFilesDir((String) null);
+                this.EXTERNAL_DIR = context.getExternalFilesDir(null);
             } else {
                 this.EXTERNAL_DIR = null;
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public boolean isFullBackupContentEnabled() {
-            if (this.mFullBackupContent >= 0) {
-                return true;
-            }
-            if (!Log.isLoggable(FullBackup.TAG_XML_PARSER, 2)) {
+        boolean isFullBackupContentEnabled() {
+            if (this.mFullBackupContent < 0) {
+                if (Log.isLoggable(FullBackup.TAG_XML_PARSER, 2)) {
+                    Log.m66v(FullBackup.TAG_XML_PARSER, "android:fullBackupContent - \"false\"");
+                    return false;
+                }
                 return false;
             }
-            Log.v(FullBackup.TAG_XML_PARSER, "android:fullBackupContent - \"false\"");
-            return false;
+            return true;
         }
 
         public synchronized Map<String, Set<PathWithRequiredFlags>> maybeParseAndGetCanonicalIncludePaths() throws IOException, XmlPullParserException {
@@ -319,27 +317,28 @@ public class FullBackup {
         private void maybeParseBackupSchemeLocked() throws IOException, XmlPullParserException {
             this.mIncludes = new ArrayMap();
             this.mExcludes = new ArraySet<>();
-            if (this.mFullBackupContent != 0) {
+            if (this.mFullBackupContent == 0) {
                 if (Log.isLoggable(FullBackup.TAG_XML_PARSER, 2)) {
-                    Log.v(FullBackup.TAG_XML_PARSER, "android:fullBackupContent - found xml resource");
+                    Log.m66v(FullBackup.TAG_XML_PARSER, "android:fullBackupContent - \"true\"");
+                    return;
                 }
-                XmlResourceParser parser = null;
+                return;
+            }
+            if (Log.isLoggable(FullBackup.TAG_XML_PARSER, 2)) {
+                Log.m66v(FullBackup.TAG_XML_PARSER, "android:fullBackupContent - found xml resource");
+            }
+            XmlResourceParser parser = null;
+            try {
                 try {
                     parser = this.mPackageManager.getResourcesForApplication(this.mPackageName).getXml(this.mFullBackupContent);
                     parseBackupSchemeFromXmlLocked(parser, this.mExcludes, this.mIncludes);
-                    if (parser != null) {
-                        parser.close();
-                    }
                 } catch (PackageManager.NameNotFoundException e) {
                     throw new IOException(e);
-                } catch (Throwable th) {
-                    if (parser != null) {
-                        parser.close();
-                    }
-                    throw th;
                 }
-            } else if (Log.isLoggable(FullBackup.TAG_XML_PARSER, 2)) {
-                Log.v(FullBackup.TAG_XML_PARSER, "android:fullBackupContent - \"true\"");
+            } finally {
+                if (parser != null) {
+                    parser.close();
+                }
             }
         }
 
@@ -351,84 +350,85 @@ public class FullBackup {
             }
             if ("full-backup-content".equals(parser.getName())) {
                 if (Log.isLoggable(FullBackup.TAG_XML_PARSER, 2)) {
-                    Log.v(FullBackup.TAG_XML_PARSER, "\n");
-                    Log.v(FullBackup.TAG_XML_PARSER, "====================================================");
-                    Log.v(FullBackup.TAG_XML_PARSER, "Found valid fullBackupContent; parsing xml resource.");
-                    Log.v(FullBackup.TAG_XML_PARSER, "====================================================");
-                    Log.v(FullBackup.TAG_XML_PARSER, "");
+                    Log.m66v(FullBackup.TAG_XML_PARSER, "\n");
+                    Log.m66v(FullBackup.TAG_XML_PARSER, "====================================================");
+                    Log.m66v(FullBackup.TAG_XML_PARSER, "Found valid fullBackupContent; parsing xml resource.");
+                    Log.m66v(FullBackup.TAG_XML_PARSER, "====================================================");
+                    Log.m66v(FullBackup.TAG_XML_PARSER, "");
                 }
                 while (true) {
-                    int next = parser.next();
-                    int event2 = next;
-                    if (next == 1) {
+                    int event2 = parser.next();
+                    if (event2 == 1) {
                         break;
                     } else if (event2 == 2) {
                         validateInnerTagContents(parser);
-                        String domainFromXml = parser.getAttributeValue((String) null, "domain");
+                        String domainFromXml = parser.getAttributeValue(null, "domain");
                         File domainDirectory = getDirectoryForCriteriaDomain(domainFromXml);
-                        if (domainDirectory != null) {
-                            File canonicalFile = extractCanonicalFile(domainDirectory, parser.getAttributeValue((String) null, "path"));
+                        if (domainDirectory == null) {
+                            if (Log.isLoggable(FullBackup.TAG_XML_PARSER, 2)) {
+                                Log.m66v(FullBackup.TAG_XML_PARSER, "...parsing \"" + parser.getName() + "\": domain=\"" + domainFromXml + "\" invalid; skipping");
+                            }
+                        } else {
+                            File canonicalFile = extractCanonicalFile(domainDirectory, parser.getAttributeValue(null, "path"));
                             if (canonicalFile != null) {
                                 int requiredFlags = 0;
                                 if (TAG_INCLUDE.equals(parser.getName())) {
-                                    requiredFlags = getRequiredFlagsFromString(parser.getAttributeValue((String) null, "requireFlags"));
+                                    requiredFlags = getRequiredFlagsFromString(parser.getAttributeValue(null, "requireFlags"));
                                 }
                                 Set<PathWithRequiredFlags> activeSet = parseCurrentTagForDomain(parser, excludes, includes, domainFromXml);
                                 activeSet.add(new PathWithRequiredFlags(canonicalFile.getCanonicalPath(), requiredFlags));
                                 if (Log.isLoggable(FullBackup.TAG_XML_PARSER, 2)) {
-                                    Log.v(FullBackup.TAG_XML_PARSER, "...parsed " + canonicalFile.getCanonicalPath() + " for domain \"" + domainFromXml + "\", requiredFlags + \"" + requiredFlags + "\"");
+                                    Log.m66v(FullBackup.TAG_XML_PARSER, "...parsed " + canonicalFile.getCanonicalPath() + " for domain \"" + domainFromXml + "\", requiredFlags + \"" + requiredFlags + "\"");
                                 }
                                 if ("database".equals(domainFromXml) && !canonicalFile.isDirectory()) {
                                     String canonicalJournalPath = canonicalFile.getCanonicalPath() + "-journal";
                                     activeSet.add(new PathWithRequiredFlags(canonicalJournalPath, requiredFlags));
                                     if (Log.isLoggable(FullBackup.TAG_XML_PARSER, 2)) {
-                                        Log.v(FullBackup.TAG_XML_PARSER, "...automatically generated " + canonicalJournalPath + ". Ignore if nonexistent.");
+                                        Log.m66v(FullBackup.TAG_XML_PARSER, "...automatically generated " + canonicalJournalPath + ". Ignore if nonexistent.");
                                     }
                                     String canonicalWalPath = canonicalFile.getCanonicalPath() + "-wal";
                                     activeSet.add(new PathWithRequiredFlags(canonicalWalPath, requiredFlags));
                                     if (Log.isLoggable(FullBackup.TAG_XML_PARSER, 2)) {
-                                        Log.v(FullBackup.TAG_XML_PARSER, "...automatically generated " + canonicalWalPath + ". Ignore if nonexistent.");
+                                        Log.m66v(FullBackup.TAG_XML_PARSER, "...automatically generated " + canonicalWalPath + ". Ignore if nonexistent.");
                                     }
                                 }
                                 if ("sharedpref".equals(domainFromXml) && !canonicalFile.isDirectory() && !canonicalFile.getCanonicalPath().endsWith(".xml")) {
                                     String canonicalXmlPath = canonicalFile.getCanonicalPath() + ".xml";
                                     activeSet.add(new PathWithRequiredFlags(canonicalXmlPath, requiredFlags));
                                     if (Log.isLoggable(FullBackup.TAG_XML_PARSER, 2)) {
-                                        Log.v(FullBackup.TAG_XML_PARSER, "...automatically generated " + canonicalXmlPath + ". Ignore if nonexistent.");
+                                        Log.m66v(FullBackup.TAG_XML_PARSER, "...automatically generated " + canonicalXmlPath + ". Ignore if nonexistent.");
                                     }
                                 }
                             }
-                        } else if (Log.isLoggable(FullBackup.TAG_XML_PARSER, 2)) {
-                            Log.v(FullBackup.TAG_XML_PARSER, "...parsing \"" + parser.getName() + "\": domain=\"" + domainFromXml + "\" invalid; skipping");
                         }
                     }
                 }
                 if (Log.isLoggable(FullBackup.TAG_XML_PARSER, 2)) {
-                    Log.v(FullBackup.TAG_XML_PARSER, "\n");
-                    Log.v(FullBackup.TAG_XML_PARSER, "Xml resource parsing complete.");
-                    Log.v(FullBackup.TAG_XML_PARSER, "Final tally.");
-                    Log.v(FullBackup.TAG_XML_PARSER, "Includes:");
+                    Log.m66v(FullBackup.TAG_XML_PARSER, "\n");
+                    Log.m66v(FullBackup.TAG_XML_PARSER, "Xml resource parsing complete.");
+                    Log.m66v(FullBackup.TAG_XML_PARSER, "Final tally.");
+                    Log.m66v(FullBackup.TAG_XML_PARSER, "Includes:");
                     if (includes.isEmpty()) {
-                        Log.v(FullBackup.TAG_XML_PARSER, "  ...nothing specified (This means the entirety of app data minus excludes)");
+                        Log.m66v(FullBackup.TAG_XML_PARSER, "  ...nothing specified (This means the entirety of app data minus excludes)");
                     } else {
                         for (Map.Entry<String, Set<PathWithRequiredFlags>> entry : includes.entrySet()) {
-                            Log.v(FullBackup.TAG_XML_PARSER, "  domain=" + entry.getKey());
+                            Log.m66v(FullBackup.TAG_XML_PARSER, "  domain=" + entry.getKey());
                             for (PathWithRequiredFlags includeData : entry.getValue()) {
-                                Log.v(FullBackup.TAG_XML_PARSER, " path: " + includeData.getPath() + " requiredFlags: " + includeData.getRequiredFlags());
+                                Log.m66v(FullBackup.TAG_XML_PARSER, " path: " + includeData.getPath() + " requiredFlags: " + includeData.getRequiredFlags());
                             }
                         }
                     }
-                    Log.v(FullBackup.TAG_XML_PARSER, "Excludes:");
+                    Log.m66v(FullBackup.TAG_XML_PARSER, "Excludes:");
                     if (excludes.isEmpty()) {
-                        Log.v(FullBackup.TAG_XML_PARSER, "  ...nothing to exclude.");
+                        Log.m66v(FullBackup.TAG_XML_PARSER, "  ...nothing to exclude.");
                     } else {
                         for (PathWithRequiredFlags excludeData : excludes) {
-                            Log.v(FullBackup.TAG_XML_PARSER, " path: " + excludeData.getPath() + " requiredFlags: " + excludeData.getRequiredFlags());
+                            Log.m66v(FullBackup.TAG_XML_PARSER, " path: " + excludeData.getPath() + " requiredFlags: " + excludeData.getRequiredFlags());
                         }
                     }
-                    Log.v(FullBackup.TAG_XML_PARSER, "  ");
-                    Log.v(FullBackup.TAG_XML_PARSER, "====================================================");
-                    Log.v(FullBackup.TAG_XML_PARSER, "\n");
+                    Log.m66v(FullBackup.TAG_XML_PARSER, "  ");
+                    Log.m66v(FullBackup.TAG_XML_PARSER, "====================================================");
+                    Log.m66v(FullBackup.TAG_XML_PARSER, "\n");
                     return;
                 }
                 return;
@@ -440,9 +440,10 @@ public class FullBackup {
             if (requiredFlags == null || requiredFlags.length() == 0) {
                 return 0;
             }
+            String[] flagsStr = requiredFlags.split("\\|");
             int flags = 0;
-            for (String f : requiredFlags.split("\\|")) {
-                char c = 65535;
+            for (String f : flagsStr) {
+                char c = '\uffff';
                 int hashCode = f.hashCode();
                 if (hashCode != 482744282) {
                     if (hashCode != 1499007205) {
@@ -466,7 +467,7 @@ public class FullBackup {
                         flags |= Integer.MIN_VALUE;
                         break;
                 }
-                Log.w(FullBackup.TAG, "Unrecognized requiredFlag provided, value: \"" + f + "\"");
+                Log.m64w(FullBackup.TAG, "Unrecognized requiredFlag provided, value: \"" + f + "\"");
             }
             return flags;
         }
@@ -475,17 +476,17 @@ public class FullBackup {
             if (TAG_INCLUDE.equals(parser.getName())) {
                 String domainToken = getTokenForXmlDomain(domain);
                 Set<PathWithRequiredFlags> includeSet = includes.get(domainToken);
-                if (includeSet != null) {
-                    return includeSet;
+                if (includeSet == null) {
+                    Set<PathWithRequiredFlags> includeSet2 = new ArraySet<>();
+                    includes.put(domainToken, includeSet2);
+                    return includeSet2;
                 }
-                Set<PathWithRequiredFlags> includeSet2 = new ArraySet<>();
-                includes.put(domainToken, includeSet2);
-                return includeSet2;
+                return includeSet;
             } else if (TAG_EXCLUDE.equals(parser.getName())) {
                 return excludes;
             } else {
                 if (Log.isLoggable(FullBackup.TAG_XML_PARSER, 2)) {
-                    Log.v(FullBackup.TAG_XML_PARSER, "Invalid tag found in xml \"" + parser.getName() + "\"; aborting operation.");
+                    Log.m66v(FullBackup.TAG_XML_PARSER, "Invalid tag found in xml \"" + parser.getName() + "\"; aborting operation.");
                 }
                 throw new XmlPullParserException("Unrecognised tag in backup criteria xml (" + parser.getName() + ")");
             }
@@ -528,16 +529,16 @@ public class FullBackup {
             }
             if (filePathFromXml.contains("..")) {
                 if (Log.isLoggable(FullBackup.TAG_XML_PARSER, 2)) {
-                    Log.v(FullBackup.TAG_XML_PARSER, "...resolved \"" + domain.getPath() + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + filePathFromXml + "\", but the \"..\" path is not permitted; skipping.");
+                    Log.m66v(FullBackup.TAG_XML_PARSER, "...resolved \"" + domain.getPath() + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + filePathFromXml + "\", but the \"..\" path is not permitted; skipping.");
                 }
                 return null;
-            } else if (!filePathFromXml.contains("//")) {
-                return new File(domain, filePathFromXml);
-            } else {
+            } else if (filePathFromXml.contains("//")) {
                 if (Log.isLoggable(FullBackup.TAG_XML_PARSER, 2)) {
-                    Log.v(FullBackup.TAG_XML_PARSER, "...resolved \"" + domain.getPath() + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + filePathFromXml + "\", which contains the invalid \"//\" sequence; skipping.");
+                    Log.m66v(FullBackup.TAG_XML_PARSER, "...resolved \"" + domain.getPath() + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + filePathFromXml + "\", which contains the invalid \"//\" sequence; skipping.");
                 }
                 return null;
+            } else {
+                return new File(domain, filePathFromXml);
             }
         }
 
@@ -576,31 +577,32 @@ public class FullBackup {
         }
 
         private void validateInnerTagContents(XmlPullParser parser) throws XmlPullParserException {
-            if (parser != null) {
-                String name = parser.getName();
-                char c = 65535;
-                int hashCode = name.hashCode();
-                if (hashCode != -1321148966) {
-                    if (hashCode == 1942574248 && name.equals(TAG_INCLUDE)) {
-                        c = 0;
+            if (parser == null) {
+                return;
+            }
+            String name = parser.getName();
+            char c = '\uffff';
+            int hashCode = name.hashCode();
+            if (hashCode != -1321148966) {
+                if (hashCode == 1942574248 && name.equals(TAG_INCLUDE)) {
+                    c = 0;
+                }
+            } else if (name.equals(TAG_EXCLUDE)) {
+                c = 1;
+            }
+            switch (c) {
+                case 0:
+                    if (parser.getAttributeCount() > 3) {
+                        throw new XmlPullParserException("At most 3 tag attributes allowed for \"include\" tag (\"domain\" & \"path\" & optional \"requiredFlags\").");
                     }
-                } else if (name.equals(TAG_EXCLUDE)) {
-                    c = 1;
-                }
-                switch (c) {
-                    case 0:
-                        if (parser.getAttributeCount() > 3) {
-                            throw new XmlPullParserException("At most 3 tag attributes allowed for \"include\" tag (\"domain\" & \"path\" & optional \"requiredFlags\").");
-                        }
-                        return;
-                    case 1:
-                        if (parser.getAttributeCount() > 2) {
-                            throw new XmlPullParserException("At most 2 tag attributes allowed for \"exclude\" tag (\"domain\" & \"path\".");
-                        }
-                        return;
-                    default:
-                        throw new XmlPullParserException("A valid tag is one of \"<include/>\" or \"<exclude/>. You provided \"" + parser.getName() + "\"");
-                }
+                    return;
+                case 1:
+                    if (parser.getAttributeCount() > 2) {
+                        throw new XmlPullParserException("At most 2 tag attributes allowed for \"exclude\" tag (\"domain\" & \"path\".");
+                    }
+                    return;
+                default:
+                    throw new XmlPullParserException("A valid tag is one of \"<include/>\" or \"<exclude/>. You provided \"" + parser.getName() + "\"");
             }
         }
     }

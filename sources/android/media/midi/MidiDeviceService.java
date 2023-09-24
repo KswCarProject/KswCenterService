@@ -4,19 +4,22 @@ import android.app.Service;
 import android.content.Intent;
 import android.media.midi.IMidiManager;
 import android.media.midi.MidiDeviceServer;
-import android.os.IBinder;
-import android.os.RemoteException;
-import android.os.ServiceManager;
+import android.p007os.IBinder;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
 import android.util.Log;
 
+/* loaded from: classes3.dex */
 public abstract class MidiDeviceService extends Service {
     public static final String SERVICE_INTERFACE = "android.media.midi.MidiDeviceService";
     private static final String TAG = "MidiDeviceService";
-    private final MidiDeviceServer.Callback mCallback = new MidiDeviceServer.Callback() {
+    private final MidiDeviceServer.Callback mCallback = new MidiDeviceServer.Callback() { // from class: android.media.midi.MidiDeviceService.1
+        @Override // android.media.midi.MidiDeviceServer.Callback
         public void onDeviceStatusChanged(MidiDeviceServer server, MidiDeviceStatus status) {
             MidiDeviceService.this.onDeviceStatusChanged(status);
         }
 
+        @Override // android.media.midi.MidiDeviceServer.Callback
         public void onClose() {
             MidiDeviceService.this.onClose();
         }
@@ -27,26 +30,28 @@ public abstract class MidiDeviceService extends Service {
 
     public abstract MidiReceiver[] onGetInputPortReceivers();
 
+    @Override // android.app.Service
     public void onCreate() {
         MidiDeviceServer server;
+        MidiDeviceInfo deviceInfo;
         this.mMidiManager = IMidiManager.Stub.asInterface(ServiceManager.getService("midi"));
         try {
-            MidiDeviceInfo deviceInfo = this.mMidiManager.getServiceDeviceInfo(getPackageName(), getClass().getName());
-            if (deviceInfo == null) {
-                Log.e(TAG, "Could not find MidiDeviceInfo for MidiDeviceService " + this);
-                return;
-            }
-            this.mDeviceInfo = deviceInfo;
-            MidiReceiver[] inputPortReceivers = onGetInputPortReceivers();
-            if (inputPortReceivers == null) {
-                inputPortReceivers = new MidiReceiver[0];
-            }
-            server = new MidiDeviceServer(this.mMidiManager, inputPortReceivers, deviceInfo, this.mCallback);
-            this.mServer = server;
+            deviceInfo = this.mMidiManager.getServiceDeviceInfo(getPackageName(), getClass().getName());
         } catch (RemoteException e) {
-            Log.e(TAG, "RemoteException in IMidiManager.getServiceDeviceInfo");
+            Log.m70e(TAG, "RemoteException in IMidiManager.getServiceDeviceInfo");
             server = null;
         }
+        if (deviceInfo == null) {
+            Log.m70e(TAG, "Could not find MidiDeviceInfo for MidiDeviceService " + this);
+            return;
+        }
+        this.mDeviceInfo = deviceInfo;
+        MidiReceiver[] inputPortReceivers = onGetInputPortReceivers();
+        if (inputPortReceivers == null) {
+            inputPortReceivers = new MidiReceiver[0];
+        }
+        server = new MidiDeviceServer(this.mMidiManager, inputPortReceivers, deviceInfo, this.mCallback);
+        this.mServer = server;
     }
 
     public final MidiReceiver[] getOutputPortReceivers() {
@@ -66,10 +71,11 @@ public abstract class MidiDeviceService extends Service {
     public void onClose() {
     }
 
+    @Override // android.app.Service
     public IBinder onBind(Intent intent) {
-        if (!SERVICE_INTERFACE.equals(intent.getAction()) || this.mServer == null) {
-            return null;
+        if (SERVICE_INTERFACE.equals(intent.getAction()) && this.mServer != null) {
+            return this.mServer.getBinderInterface().asBinder();
         }
-        return this.mServer.getBinderInterface().asBinder();
+        return null;
     }
 }

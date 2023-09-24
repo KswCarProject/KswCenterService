@@ -1,8 +1,7 @@
 package android.security;
 
-import libcore.net.NetworkSecurityPolicy;
-
-public class FrameworkNetworkSecurityPolicy extends NetworkSecurityPolicy {
+/* loaded from: classes3.dex */
+public class FrameworkNetworkSecurityPolicy extends libcore.net.NetworkSecurityPolicy {
     private final boolean mCleartextTrafficPermitted;
 
     public FrameworkNetworkSecurityPolicy(boolean cleartextTrafficPermitted) {

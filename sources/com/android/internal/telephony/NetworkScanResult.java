@@ -1,18 +1,23 @@
 package com.android.internal.telephony;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.telephony.CellInfo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/* loaded from: classes4.dex */
 public final class NetworkScanResult implements Parcelable {
-    public static final Parcelable.Creator<NetworkScanResult> CREATOR = new Parcelable.Creator<NetworkScanResult>() {
+    public static final Parcelable.Creator<NetworkScanResult> CREATOR = new Parcelable.Creator<NetworkScanResult>() { // from class: com.android.internal.telephony.NetworkScanResult.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NetworkScanResult createFromParcel(Parcel in) {
             return new NetworkScanResult(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NetworkScanResult[] newArray(int size) {
             return new NetworkScanResult[size];
         }
@@ -23,16 +28,18 @@ public final class NetworkScanResult implements Parcelable {
     public int scanError;
     public int scanStatus;
 
-    public NetworkScanResult(int scanStatus2, int scanError2, List<CellInfo> networkInfos2) {
-        this.scanStatus = scanStatus2;
-        this.scanError = scanError2;
-        this.networkInfos = networkInfos2;
+    public NetworkScanResult(int scanStatus, int scanError, List<CellInfo> networkInfos) {
+        this.scanStatus = scanStatus;
+        this.scanError = scanError;
+        this.networkInfos = networkInfos;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.scanStatus);
         dest.writeInt(this.scanError);
@@ -42,18 +49,15 @@ public final class NetworkScanResult implements Parcelable {
     private NetworkScanResult(Parcel in) {
         this.scanStatus = in.readInt();
         this.scanError = in.readInt();
-        List<CellInfo> ni = new ArrayList<>();
-        in.readParcelableList(ni, Object.class.getClassLoader());
-        this.networkInfos = ni;
+        ArrayList arrayList = new ArrayList();
+        in.readParcelableList(arrayList, Object.class.getClassLoader());
+        this.networkInfos = arrayList;
     }
 
     public boolean equals(Object o) {
         try {
             NetworkScanResult nsr = (NetworkScanResult) o;
-            if (o != null && this.scanStatus == nsr.scanStatus && this.scanError == nsr.scanError && this.networkInfos.equals(nsr.networkInfos)) {
-                return true;
-            }
-            return false;
+            return o != null && this.scanStatus == nsr.scanStatus && this.scanError == nsr.scanError && this.networkInfos.equals(nsr.networkInfos);
         } catch (ClassCastException e) {
             return false;
         }

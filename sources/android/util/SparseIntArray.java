@@ -6,6 +6,7 @@ import com.android.internal.util.GrowingArrayUtils;
 import java.util.Arrays;
 import libcore.util.EmptyArray;
 
+/* loaded from: classes4.dex */
 public class SparseIntArray implements Cloneable {
     @UnsupportedAppUsage(maxTargetSdk = 28)
     private int[] mKeys;
@@ -29,7 +30,8 @@ public class SparseIntArray implements Cloneable {
         this.mSize = 0;
     }
 
-    public SparseIntArray clone() {
+    /* renamed from: clone */
+    public SparseIntArray m179clone() {
         SparseIntArray clone = null;
         try {
             clone = (SparseIntArray) super.clone();
@@ -83,25 +85,24 @@ public class SparseIntArray implements Cloneable {
     }
 
     public int keyAt(int index) {
-        if (index < this.mSize || !UtilConfig.sThrowExceptionForUpperArrayOutOfBounds) {
-            return this.mKeys[index];
+        if (index >= this.mSize && UtilConfig.sThrowExceptionForUpperArrayOutOfBounds) {
+            throw new ArrayIndexOutOfBoundsException(index);
         }
-        throw new ArrayIndexOutOfBoundsException(index);
+        return this.mKeys[index];
     }
 
     public int valueAt(int index) {
-        if (index < this.mSize || !UtilConfig.sThrowExceptionForUpperArrayOutOfBounds) {
-            return this.mValues[index];
+        if (index >= this.mSize && UtilConfig.sThrowExceptionForUpperArrayOutOfBounds) {
+            throw new ArrayIndexOutOfBoundsException(index);
         }
-        throw new ArrayIndexOutOfBoundsException(index);
+        return this.mValues[index];
     }
 
     public void setValueAt(int index, int value) {
-        if (index < this.mSize || !UtilConfig.sThrowExceptionForUpperArrayOutOfBounds) {
-            this.mValues[index] = value;
-            return;
+        if (index >= this.mSize && UtilConfig.sThrowExceptionForUpperArrayOutOfBounds) {
+            throw new ArrayIndexOutOfBoundsException(index);
         }
-        throw new ArrayIndexOutOfBoundsException(index);
+        this.mValues[index] = value;
     }
 
     public int indexOfKey(int key) {
@@ -122,13 +123,13 @@ public class SparseIntArray implements Cloneable {
     }
 
     public void append(int key, int value) {
-        if (this.mSize == 0 || key > this.mKeys[this.mSize - 1]) {
-            this.mKeys = GrowingArrayUtils.append(this.mKeys, this.mSize, key);
-            this.mValues = GrowingArrayUtils.append(this.mValues, this.mSize, value);
-            this.mSize++;
+        if (this.mSize != 0 && key <= this.mKeys[this.mSize - 1]) {
+            put(key, value);
             return;
         }
-        put(key, value);
+        this.mKeys = GrowingArrayUtils.append(this.mKeys, this.mSize, key);
+        this.mValues = GrowingArrayUtils.append(this.mValues, this.mSize, value);
+        this.mSize++;
     }
 
     public int[] copyKeys() {
@@ -148,9 +149,11 @@ public class SparseIntArray implements Cloneable {
             if (i > 0) {
                 buffer.append(", ");
             }
-            buffer.append(keyAt(i));
+            int key = keyAt(i);
+            buffer.append(key);
             buffer.append('=');
-            buffer.append(valueAt(i));
+            int value = valueAt(i);
+            buffer.append(value);
         }
         buffer.append('}');
         return buffer.toString();

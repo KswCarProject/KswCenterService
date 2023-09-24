@@ -12,7 +12,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
+/* loaded from: classes3.dex */
 public final class MediaFormat {
     public static final int COLOR_RANGE_FULL = 1;
     public static final int COLOR_RANGE_LIMITED = 2;
@@ -133,23 +135,26 @@ public final class MediaFormat {
     public static final int TYPE_LONG = 2;
     public static final int TYPE_NULL = 0;
     public static final int TYPE_STRING = 4;
-    /* access modifiers changed from: private */
     @UnsupportedAppUsage
-    public Map<String, Object> mMap;
+    private Map<String, Object> mMap;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface ColorRange {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface ColorStandard {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface ColorTransfer {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface Type {
     }
 
@@ -161,9 +166,8 @@ public final class MediaFormat {
         this.mMap = new HashMap();
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public Map<String, Object> getMap() {
+    Map<String, Object> getMap() {
         return this.mMap;
     }
 
@@ -302,285 +306,96 @@ public final class MediaFormat {
         map.remove(KEY_FEATURE_ + name);
     }
 
+    /* loaded from: classes3.dex */
     private abstract class FilteredMappedKeySet extends AbstractSet<String> {
-        /* access modifiers changed from: private */
-        public Set<String> mKeys;
+        private Set<String> mKeys;
 
-        /* access modifiers changed from: protected */
+        /* JADX INFO: Access modifiers changed from: protected */
         public abstract boolean keepKey(String str);
 
-        /* access modifiers changed from: protected */
-        public abstract String mapItemToKey(String str);
+        protected abstract String mapItemToKey(String str);
 
-        /* access modifiers changed from: protected */
-        public abstract String mapKeyToItem(String str);
+        protected abstract String mapKeyToItem(String str);
 
         public FilteredMappedKeySet() {
             this.mKeys = MediaFormat.this.mMap.keySet();
         }
 
+        @Override // java.util.AbstractCollection, java.util.Collection, java.util.Set
         public boolean contains(Object o) {
-            if (!(o instanceof String)) {
-                return false;
+            if (o instanceof String) {
+                String key = mapItemToKey((String) o);
+                return keepKey(key) && this.mKeys.contains(key);
             }
-            String key = mapItemToKey((String) o);
-            if (!keepKey(key) || !this.mKeys.contains(key)) {
-                return false;
-            }
-            return true;
+            return false;
         }
 
+        @Override // java.util.AbstractCollection, java.util.Collection, java.util.Set
         public boolean remove(Object o) {
-            if (!(o instanceof String)) {
+            if (o instanceof String) {
+                String key = mapItemToKey((String) o);
+                if (keepKey(key) && this.mKeys.remove(key)) {
+                    MediaFormat.this.mMap.remove(key);
+                    return true;
+                }
                 return false;
             }
-            String key = mapItemToKey((String) o);
-            if (!keepKey(key) || !this.mKeys.remove(key)) {
-                return false;
-            }
-            MediaFormat.this.mMap.remove(key);
-            return true;
+            return false;
         }
 
+        /* loaded from: classes3.dex */
         private class KeyIterator implements Iterator<String> {
             Iterator<String> mIterator;
             String mLast;
 
             public KeyIterator() {
-                this.mIterator = ((List) FilteredMappedKeySet.this.mKeys.stream().filter(
-                /*  JADX ERROR: Method code generation error
-                    jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x0025: IPUT  
-                      (wrap: java.util.Iterator<java.lang.String> : 0x0021: INVOKE  (r2v6 java.util.Iterator<java.lang.String>) = 
-                      (wrap: java.util.List : 0x001f: CHECK_CAST  (r2v5 java.util.List) = (java.util.List) (wrap: java.lang.Object : 0x001b: INVOKE  (r2v4 java.lang.Object) = 
-                      (wrap: java.util.stream.Stream : 0x0013: INVOKE  (r2v3 java.util.stream.Stream) = 
-                      (wrap: java.util.stream.Stream : 0x000a: INVOKE  (r2v2 java.util.stream.Stream) = 
-                      (wrap: java.util.Set : 0x0006: INVOKE  (r2v1 java.util.Set) = 
-                      (wrap: ? : ?: IGET  
-                      (r1v0 'this' android.media.MediaFormat$FilteredMappedKeySet$KeyIterator A[THIS])
-                     android.media.MediaFormat.FilteredMappedKeySet.KeyIterator.this$1 android.media.MediaFormat$FilteredMappedKeySet)
-                     android.media.MediaFormat.FilteredMappedKeySet.access$100(android.media.MediaFormat$FilteredMappedKeySet):java.util.Set type: STATIC)
-                     java.util.Set.stream():java.util.stream.Stream type: INTERFACE)
-                      (wrap: android.media.-$$Lambda$MediaFormat$FilteredMappedKeySet$KeyIterator$3C8D_OYFyxgHLBDv-csQxBIPlfc : 0x0010: CONSTRUCTOR  (r0v0 android.media.-$$Lambda$MediaFormat$FilteredMappedKeySet$KeyIterator$3C8D_OYFyxgHLBDv-csQxBIPlfc) = 
-                      (r1v0 'this' android.media.MediaFormat$FilteredMappedKeySet$KeyIterator A[THIS])
-                     call: android.media.-$$Lambda$MediaFormat$FilteredMappedKeySet$KeyIterator$3C8D_OYFyxgHLBDv-csQxBIPlfc.<init>(android.media.MediaFormat$FilteredMappedKeySet$KeyIterator):void type: CONSTRUCTOR)
-                     java.util.stream.Stream.filter(java.util.function.Predicate):java.util.stream.Stream type: INTERFACE)
-                      (wrap: java.util.stream.Collector : 0x0017: INVOKE  (r0v1 java.util.stream.Collector) =  java.util.stream.Collectors.toList():java.util.stream.Collector type: STATIC)
-                     java.util.stream.Stream.collect(java.util.stream.Collector):java.lang.Object type: INTERFACE))
-                     java.util.List.iterator():java.util.Iterator type: INTERFACE)
-                      (r1v0 'this' android.media.MediaFormat$FilteredMappedKeySet$KeyIterator A[THIS])
-                     android.media.MediaFormat.FilteredMappedKeySet.KeyIterator.mIterator java.util.Iterator in method: android.media.MediaFormat.FilteredMappedKeySet.KeyIterator.<init>(android.media.MediaFormat$FilteredMappedKeySet):void, dex: classes3.dex
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:221)
-                    	at jadx.core.codegen.RegionGen.makeSimpleBlock(RegionGen.java:109)
-                    	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:55)
-                    	at jadx.core.codegen.RegionGen.makeSimpleRegion(RegionGen.java:92)
-                    	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:58)
-                    	at jadx.core.codegen.MethodGen.addRegionInsns(MethodGen.java:211)
-                    	at jadx.core.codegen.MethodGen.addInstructions(MethodGen.java:204)
-                    	at jadx.core.codegen.ClassGen.addMethodCode(ClassGen.java:318)
-                    	at jadx.core.codegen.ClassGen.addMethod(ClassGen.java:271)
-                    	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:240)
-                    	at java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
-                    	at java.util.ArrayList.forEach(ArrayList.java:1259)
-                    	at java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
-                    	at java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                    	at java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:483)
-                    	at java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:472)
-                    	at java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
-                    	at java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
-                    	at java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                    	at java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:485)
-                    	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
-                    	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
-                    	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)
-                    	at jadx.core.codegen.ClassGen.addInnerClass(ClassGen.java:249)
-                    	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:238)
-                    	at java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
-                    	at java.util.ArrayList.forEach(ArrayList.java:1259)
-                    	at java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
-                    	at java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                    	at java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:483)
-                    	at java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:472)
-                    	at java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
-                    	at java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
-                    	at java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                    	at java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:485)
-                    	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
-                    	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
-                    	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)
-                    	at jadx.core.codegen.ClassGen.addInnerClass(ClassGen.java:249)
-                    	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:238)
-                    	at java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
-                    	at java.util.ArrayList.forEach(ArrayList.java:1259)
-                    	at java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
-                    	at java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                    	at java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:483)
-                    	at java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:472)
-                    	at java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
-                    	at java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
-                    	at java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                    	at java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:485)
-                    	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
-                    	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
-                    	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)
-                    	at jadx.core.codegen.ClassGen.makeClass(ClassGen.java:78)
-                    	at jadx.core.codegen.CodeGen.wrapCodeGen(CodeGen.java:44)
-                    	at jadx.core.codegen.CodeGen.generateJavaCode(CodeGen.java:33)
-                    	at jadx.core.codegen.CodeGen.generate(CodeGen.java:21)
-                    	at jadx.core.ProcessClass.generateCode(ProcessClass.java:61)
-                    	at jadx.core.dex.nodes.ClassNode.decompile(ClassNode.java:273)
-                    Caused by: jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x0021: INVOKE  (r2v6 java.util.Iterator<java.lang.String>) = 
-                      (wrap: java.util.List : 0x001f: CHECK_CAST  (r2v5 java.util.List) = (java.util.List) (wrap: java.lang.Object : 0x001b: INVOKE  (r2v4 java.lang.Object) = 
-                      (wrap: java.util.stream.Stream : 0x0013: INVOKE  (r2v3 java.util.stream.Stream) = 
-                      (wrap: java.util.stream.Stream : 0x000a: INVOKE  (r2v2 java.util.stream.Stream) = 
-                      (wrap: java.util.Set : 0x0006: INVOKE  (r2v1 java.util.Set) = 
-                      (wrap: ? : ?: IGET  
-                      (r1v0 'this' android.media.MediaFormat$FilteredMappedKeySet$KeyIterator A[THIS])
-                     android.media.MediaFormat.FilteredMappedKeySet.KeyIterator.this$1 android.media.MediaFormat$FilteredMappedKeySet)
-                     android.media.MediaFormat.FilteredMappedKeySet.access$100(android.media.MediaFormat$FilteredMappedKeySet):java.util.Set type: STATIC)
-                     java.util.Set.stream():java.util.stream.Stream type: INTERFACE)
-                      (wrap: android.media.-$$Lambda$MediaFormat$FilteredMappedKeySet$KeyIterator$3C8D_OYFyxgHLBDv-csQxBIPlfc : 0x0010: CONSTRUCTOR  (r0v0 android.media.-$$Lambda$MediaFormat$FilteredMappedKeySet$KeyIterator$3C8D_OYFyxgHLBDv-csQxBIPlfc) = 
-                      (r1v0 'this' android.media.MediaFormat$FilteredMappedKeySet$KeyIterator A[THIS])
-                     call: android.media.-$$Lambda$MediaFormat$FilteredMappedKeySet$KeyIterator$3C8D_OYFyxgHLBDv-csQxBIPlfc.<init>(android.media.MediaFormat$FilteredMappedKeySet$KeyIterator):void type: CONSTRUCTOR)
-                     java.util.stream.Stream.filter(java.util.function.Predicate):java.util.stream.Stream type: INTERFACE)
-                      (wrap: java.util.stream.Collector : 0x0017: INVOKE  (r0v1 java.util.stream.Collector) =  java.util.stream.Collectors.toList():java.util.stream.Collector type: STATIC)
-                     java.util.stream.Stream.collect(java.util.stream.Collector):java.lang.Object type: INTERFACE))
-                     java.util.List.iterator():java.util.Iterator type: INTERFACE in method: android.media.MediaFormat.FilteredMappedKeySet.KeyIterator.<init>(android.media.MediaFormat$FilteredMappedKeySet):void, dex: classes3.dex
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
-                    	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
-                    	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)
-                    	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:429)
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:250)
-                    	... 59 more
-                    Caused by: jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x001f: CHECK_CAST  (r2v5 java.util.List) = (java.util.List) (wrap: java.lang.Object : 0x001b: INVOKE  (r2v4 java.lang.Object) = 
-                      (wrap: java.util.stream.Stream : 0x0013: INVOKE  (r2v3 java.util.stream.Stream) = 
-                      (wrap: java.util.stream.Stream : 0x000a: INVOKE  (r2v2 java.util.stream.Stream) = 
-                      (wrap: java.util.Set : 0x0006: INVOKE  (r2v1 java.util.Set) = 
-                      (wrap: ? : ?: IGET  
-                      (r1v0 'this' android.media.MediaFormat$FilteredMappedKeySet$KeyIterator A[THIS])
-                     android.media.MediaFormat.FilteredMappedKeySet.KeyIterator.this$1 android.media.MediaFormat$FilteredMappedKeySet)
-                     android.media.MediaFormat.FilteredMappedKeySet.access$100(android.media.MediaFormat$FilteredMappedKeySet):java.util.Set type: STATIC)
-                     java.util.Set.stream():java.util.stream.Stream type: INTERFACE)
-                      (wrap: android.media.-$$Lambda$MediaFormat$FilteredMappedKeySet$KeyIterator$3C8D_OYFyxgHLBDv-csQxBIPlfc : 0x0010: CONSTRUCTOR  (r0v0 android.media.-$$Lambda$MediaFormat$FilteredMappedKeySet$KeyIterator$3C8D_OYFyxgHLBDv-csQxBIPlfc) = 
-                      (r1v0 'this' android.media.MediaFormat$FilteredMappedKeySet$KeyIterator A[THIS])
-                     call: android.media.-$$Lambda$MediaFormat$FilteredMappedKeySet$KeyIterator$3C8D_OYFyxgHLBDv-csQxBIPlfc.<init>(android.media.MediaFormat$FilteredMappedKeySet$KeyIterator):void type: CONSTRUCTOR)
-                     java.util.stream.Stream.filter(java.util.function.Predicate):java.util.stream.Stream type: INTERFACE)
-                      (wrap: java.util.stream.Collector : 0x0017: INVOKE  (r0v1 java.util.stream.Collector) =  java.util.stream.Collectors.toList():java.util.stream.Collector type: STATIC)
-                     java.util.stream.Stream.collect(java.util.stream.Collector):java.lang.Object type: INTERFACE) in method: android.media.MediaFormat.FilteredMappedKeySet.KeyIterator.<init>(android.media.MediaFormat$FilteredMappedKeySet):void, dex: classes3.dex
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
-                    	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
-                    	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)
-                    	at jadx.core.codegen.InsnGen.addArgDot(InsnGen.java:91)
-                    	at jadx.core.codegen.InsnGen.makeInvoke(InsnGen.java:697)
-                    	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:368)
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:231)
-                    	... 63 more
-                    Caused by: jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x001b: INVOKE  (r2v4 java.lang.Object) = 
-                      (wrap: java.util.stream.Stream : 0x0013: INVOKE  (r2v3 java.util.stream.Stream) = 
-                      (wrap: java.util.stream.Stream : 0x000a: INVOKE  (r2v2 java.util.stream.Stream) = 
-                      (wrap: java.util.Set : 0x0006: INVOKE  (r2v1 java.util.Set) = 
-                      (wrap: ? : ?: IGET  
-                      (r1v0 'this' android.media.MediaFormat$FilteredMappedKeySet$KeyIterator A[THIS])
-                     android.media.MediaFormat.FilteredMappedKeySet.KeyIterator.this$1 android.media.MediaFormat$FilteredMappedKeySet)
-                     android.media.MediaFormat.FilteredMappedKeySet.access$100(android.media.MediaFormat$FilteredMappedKeySet):java.util.Set type: STATIC)
-                     java.util.Set.stream():java.util.stream.Stream type: INTERFACE)
-                      (wrap: android.media.-$$Lambda$MediaFormat$FilteredMappedKeySet$KeyIterator$3C8D_OYFyxgHLBDv-csQxBIPlfc : 0x0010: CONSTRUCTOR  (r0v0 android.media.-$$Lambda$MediaFormat$FilteredMappedKeySet$KeyIterator$3C8D_OYFyxgHLBDv-csQxBIPlfc) = 
-                      (r1v0 'this' android.media.MediaFormat$FilteredMappedKeySet$KeyIterator A[THIS])
-                     call: android.media.-$$Lambda$MediaFormat$FilteredMappedKeySet$KeyIterator$3C8D_OYFyxgHLBDv-csQxBIPlfc.<init>(android.media.MediaFormat$FilteredMappedKeySet$KeyIterator):void type: CONSTRUCTOR)
-                     java.util.stream.Stream.filter(java.util.function.Predicate):java.util.stream.Stream type: INTERFACE)
-                      (wrap: java.util.stream.Collector : 0x0017: INVOKE  (r0v1 java.util.stream.Collector) =  java.util.stream.Collectors.toList():java.util.stream.Collector type: STATIC)
-                     java.util.stream.Stream.collect(java.util.stream.Collector):java.lang.Object type: INTERFACE in method: android.media.MediaFormat.FilteredMappedKeySet.KeyIterator.<init>(android.media.MediaFormat$FilteredMappedKeySet):void, dex: classes3.dex
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
-                    	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
-                    	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)
-                    	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:291)
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:231)
-                    	... 69 more
-                    Caused by: jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x0013: INVOKE  (r2v3 java.util.stream.Stream) = 
-                      (wrap: java.util.stream.Stream : 0x000a: INVOKE  (r2v2 java.util.stream.Stream) = 
-                      (wrap: java.util.Set : 0x0006: INVOKE  (r2v1 java.util.Set) = 
-                      (wrap: ? : ?: IGET  
-                      (r1v0 'this' android.media.MediaFormat$FilteredMappedKeySet$KeyIterator A[THIS])
-                     android.media.MediaFormat.FilteredMappedKeySet.KeyIterator.this$1 android.media.MediaFormat$FilteredMappedKeySet)
-                     android.media.MediaFormat.FilteredMappedKeySet.access$100(android.media.MediaFormat$FilteredMappedKeySet):java.util.Set type: STATIC)
-                     java.util.Set.stream():java.util.stream.Stream type: INTERFACE)
-                      (wrap: android.media.-$$Lambda$MediaFormat$FilteredMappedKeySet$KeyIterator$3C8D_OYFyxgHLBDv-csQxBIPlfc : 0x0010: CONSTRUCTOR  (r0v0 android.media.-$$Lambda$MediaFormat$FilteredMappedKeySet$KeyIterator$3C8D_OYFyxgHLBDv-csQxBIPlfc) = 
-                      (r1v0 'this' android.media.MediaFormat$FilteredMappedKeySet$KeyIterator A[THIS])
-                     call: android.media.-$$Lambda$MediaFormat$FilteredMappedKeySet$KeyIterator$3C8D_OYFyxgHLBDv-csQxBIPlfc.<init>(android.media.MediaFormat$FilteredMappedKeySet$KeyIterator):void type: CONSTRUCTOR)
-                     java.util.stream.Stream.filter(java.util.function.Predicate):java.util.stream.Stream type: INTERFACE in method: android.media.MediaFormat.FilteredMappedKeySet.KeyIterator.<init>(android.media.MediaFormat$FilteredMappedKeySet):void, dex: classes3.dex
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
-                    	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
-                    	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)
-                    	at jadx.core.codegen.InsnGen.addArgDot(InsnGen.java:91)
-                    	at jadx.core.codegen.InsnGen.makeInvoke(InsnGen.java:697)
-                    	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:368)
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:231)
-                    	... 73 more
-                    Caused by: jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x0010: CONSTRUCTOR  (r0v0 android.media.-$$Lambda$MediaFormat$FilteredMappedKeySet$KeyIterator$3C8D_OYFyxgHLBDv-csQxBIPlfc) = 
-                      (r1v0 'this' android.media.MediaFormat$FilteredMappedKeySet$KeyIterator A[THIS])
-                     call: android.media.-$$Lambda$MediaFormat$FilteredMappedKeySet$KeyIterator$3C8D_OYFyxgHLBDv-csQxBIPlfc.<init>(android.media.MediaFormat$FilteredMappedKeySet$KeyIterator):void type: CONSTRUCTOR in method: android.media.MediaFormat.FilteredMappedKeySet.KeyIterator.<init>(android.media.MediaFormat$FilteredMappedKeySet):void, dex: classes3.dex
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
-                    	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
-                    	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)
-                    	at jadx.core.codegen.InsnGen.generateMethodArguments(InsnGen.java:787)
-                    	at jadx.core.codegen.InsnGen.makeInvoke(InsnGen.java:728)
-                    	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:368)
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:231)
-                    	... 79 more
-                    Caused by: jadx.core.utils.exceptions.JadxRuntimeException: Expected class to be processed at this point, class: android.media.-$$Lambda$MediaFormat$FilteredMappedKeySet$KeyIterator$3C8D_OYFyxgHLBDv-csQxBIPlfc, state: NOT_LOADED
-                    	at jadx.core.dex.nodes.ClassNode.ensureProcessed(ClassNode.java:260)
-                    	at jadx.core.codegen.InsnGen.makeConstructor(InsnGen.java:606)
-                    	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:364)
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:231)
-                    	... 85 more
-                    */
-                /*
-                    this = this;
-                    android.media.MediaFormat.FilteredMappedKeySet.this = r2
-                    r1.<init>()
-                    java.util.Set r2 = r2.mKeys
-                    java.util.stream.Stream r2 = r2.stream()
-                    android.media.-$$Lambda$MediaFormat$FilteredMappedKeySet$KeyIterator$3C8D_OYFyxgHLBDv-csQxBIPlfc r0 = new android.media.-$$Lambda$MediaFormat$FilteredMappedKeySet$KeyIterator$3C8D_OYFyxgHLBDv-csQxBIPlfc
-                    r0.<init>(r1)
-                    java.util.stream.Stream r2 = r2.filter(r0)
-                    java.util.stream.Collector r0 = java.util.stream.Collectors.toList()
-                    java.lang.Object r2 = r2.collect(r0)
-                    java.util.List r2 = (java.util.List) r2
-                    java.util.Iterator r2 = r2.iterator()
-                    r1.mIterator = r2
-                    return
-                */
-                throw new UnsupportedOperationException("Method not decompiled: android.media.MediaFormat.FilteredMappedKeySet.KeyIterator.<init>(android.media.MediaFormat$FilteredMappedKeySet):void");
+                this.mIterator = ((List) FilteredMappedKeySet.this.mKeys.stream().filter(new Predicate() { // from class: android.media.-$$Lambda$MediaFormat$FilteredMappedKeySet$KeyIterator$3C8D_OYFyxgHLBDv-csQxBIPlfc
+                    @Override // java.util.function.Predicate
+                    public final boolean test(Object obj) {
+                        boolean keepKey;
+                        keepKey = MediaFormat.FilteredMappedKeySet.this.keepKey((String) obj);
+                        return keepKey;
+                    }
+                }).collect(Collectors.toList())).iterator();
             }
 
+            @Override // java.util.Iterator
             public boolean hasNext() {
                 return this.mIterator.hasNext();
             }
 
+            @Override // java.util.Iterator
             public String next() {
                 this.mLast = this.mIterator.next();
                 return FilteredMappedKeySet.this.mapKeyToItem(this.mLast);
             }
 
+            @Override // java.util.Iterator
             public void remove() {
                 this.mIterator.remove();
                 MediaFormat.this.mMap.remove(this.mLast);
             }
         }
 
+        @Override // java.util.AbstractCollection, java.util.Collection, java.lang.Iterable, java.util.Set
         public Iterator<String> iterator() {
             return new KeyIterator();
         }
 
+        @Override // java.util.AbstractCollection, java.util.Collection, java.util.Set
         public int size() {
-            return (int) this.mKeys.stream().filter(new Predicate() {
+            return (int) this.mKeys.stream().filter(new Predicate() { // from class: android.media.-$$Lambda$MediaFormat$FilteredMappedKeySet$S0dX0CM54Hgdu801GLdPbYKEcds
+                @Override // java.util.function.Predicate
                 public final boolean test(Object obj) {
-                    return MediaFormat.FilteredMappedKeySet.this.keepKey((String) obj);
+                    boolean keepKey;
+                    keepKey = MediaFormat.FilteredMappedKeySet.this.keepKey((String) obj);
+                    return keepKey;
                 }
             }).count();
         }
     }
 
+    /* loaded from: classes3.dex */
     private class UnprefixedKeySet extends FilteredMappedKeySet {
         private String mPrefix;
 
@@ -589,22 +404,23 @@ public final class MediaFormat {
             this.mPrefix = prefix;
         }
 
-        /* access modifiers changed from: protected */
-        public boolean keepKey(String key) {
+        @Override // android.media.MediaFormat.FilteredMappedKeySet
+        protected boolean keepKey(String key) {
             return !key.startsWith(this.mPrefix);
         }
 
-        /* access modifiers changed from: protected */
-        public String mapKeyToItem(String key) {
+        @Override // android.media.MediaFormat.FilteredMappedKeySet
+        protected String mapKeyToItem(String key) {
             return key;
         }
 
-        /* access modifiers changed from: protected */
-        public String mapItemToKey(String item) {
+        @Override // android.media.MediaFormat.FilteredMappedKeySet
+        protected String mapItemToKey(String item) {
             return item;
         }
     }
 
+    /* loaded from: classes3.dex */
     private class PrefixedKeySetWithPrefixRemoved extends FilteredMappedKeySet {
         private String mPrefix;
         private int mPrefixLength;
@@ -615,18 +431,18 @@ public final class MediaFormat {
             this.mPrefixLength = prefix.length();
         }
 
-        /* access modifiers changed from: protected */
-        public boolean keepKey(String key) {
+        @Override // android.media.MediaFormat.FilteredMappedKeySet
+        protected boolean keepKey(String key) {
             return key.startsWith(this.mPrefix);
         }
 
-        /* access modifiers changed from: protected */
-        public String mapKeyToItem(String key) {
+        @Override // android.media.MediaFormat.FilteredMappedKeySet
+        protected String mapKeyToItem(String key) {
             return key.substring(this.mPrefixLength);
         }
 
-        /* access modifiers changed from: protected */
-        public String mapItemToKey(String item) {
+        @Override // android.media.MediaFormat.FilteredMappedKeySet
+        protected String mapItemToKey(String item) {
             return this.mPrefix + item;
         }
     }
@@ -645,7 +461,7 @@ public final class MediaFormat {
     }
 
     public void setFeatureEnabled(String feature, boolean enabled) {
-        setInteger(KEY_FEATURE_ + feature, enabled);
+        setInteger(KEY_FEATURE_ + feature, enabled ? 1 : 0);
     }
 
     public static final MediaFormat createAudioFormat(String mime, int sampleRate, int channelCount) {

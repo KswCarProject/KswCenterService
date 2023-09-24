@@ -1,7 +1,7 @@
 package android.location;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.security.InvalidParameterException;
@@ -9,14 +9,22 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
+/* loaded from: classes.dex */
 public final class GnssMeasurementsEvent implements Parcelable {
-    public static final Parcelable.Creator<GnssMeasurementsEvent> CREATOR = new Parcelable.Creator<GnssMeasurementsEvent>() {
+    public static final Parcelable.Creator<GnssMeasurementsEvent> CREATOR = new Parcelable.Creator<GnssMeasurementsEvent>() { // from class: android.location.GnssMeasurementsEvent.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public GnssMeasurementsEvent createFromParcel(Parcel in) {
-            GnssMeasurement[] measurementsArray = new GnssMeasurement[in.readInt()];
+            ClassLoader classLoader = getClass().getClassLoader();
+            GnssClock clock = (GnssClock) in.readParcelable(classLoader);
+            int measurementsLength = in.readInt();
+            GnssMeasurement[] measurementsArray = new GnssMeasurement[measurementsLength];
             in.readTypedArray(measurementsArray, GnssMeasurement.CREATOR);
-            return new GnssMeasurementsEvent((GnssClock) in.readParcelable(getClass().getClassLoader()), measurementsArray);
+            return new GnssMeasurementsEvent(clock, measurementsArray);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public GnssMeasurementsEvent[] newArray(int size) {
             return new GnssMeasurementsEvent[size];
         }
@@ -24,6 +32,7 @@ public final class GnssMeasurementsEvent implements Parcelable {
     private final GnssClock mClock;
     private final Collection<GnssMeasurement> mReadOnlyMeasurements;
 
+    /* loaded from: classes.dex */
     public static abstract class Callback {
         public static final int STATUS_LOCATION_DISABLED = 2;
         public static final int STATUS_NOT_ALLOWED = 3;
@@ -31,6 +40,7 @@ public final class GnssMeasurementsEvent implements Parcelable {
         public static final int STATUS_READY = 1;
 
         @Retention(RetentionPolicy.SOURCE)
+        /* loaded from: classes.dex */
         public @interface GnssMeasurementsStatus {
         }
 
@@ -42,16 +52,17 @@ public final class GnssMeasurementsEvent implements Parcelable {
     }
 
     public GnssMeasurementsEvent(GnssClock clock, GnssMeasurement[] measurements) {
-        if (clock != null) {
-            if (measurements == null || measurements.length == 0) {
-                this.mReadOnlyMeasurements = Collections.emptyList();
-            } else {
-                this.mReadOnlyMeasurements = Collections.unmodifiableCollection(Arrays.asList(measurements));
-            }
-            this.mClock = clock;
-            return;
+        if (clock == null) {
+            throw new InvalidParameterException("Parameter 'clock' must not be null.");
         }
-        throw new InvalidParameterException("Parameter 'clock' must not be null.");
+        if (measurements == null || measurements.length == 0) {
+            Collection<GnssMeasurement> measurementCollection = Collections.emptyList();
+            this.mReadOnlyMeasurements = measurementCollection;
+        } else {
+            Collection<GnssMeasurement> measurementCollection2 = Arrays.asList(measurements);
+            this.mReadOnlyMeasurements = Collections.unmodifiableCollection(measurementCollection2);
+        }
+        this.mClock = clock;
     }
 
     public GnssClock getClock() {
@@ -62,13 +73,16 @@ public final class GnssMeasurementsEvent implements Parcelable {
         return this.mReadOnlyMeasurements;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeParcelable(this.mClock, flags);
-        GnssMeasurement[] measurementsArray = (GnssMeasurement[]) this.mReadOnlyMeasurements.toArray(new GnssMeasurement[this.mReadOnlyMeasurements.size()]);
+        int measurementsCount = this.mReadOnlyMeasurements.size();
+        GnssMeasurement[] measurementsArray = (GnssMeasurement[]) this.mReadOnlyMeasurements.toArray(new GnssMeasurement[measurementsCount]);
         parcel.writeInt(measurementsArray.length);
         parcel.writeTypedArray(measurementsArray, flags);
     }

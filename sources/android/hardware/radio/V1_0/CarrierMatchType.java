@@ -2,6 +2,7 @@ package android.hardware.radio.V1_0;
 
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class CarrierMatchType {
     public static final int ALL = 0;
     public static final int GID1 = 3;

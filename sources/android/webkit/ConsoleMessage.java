@@ -2,6 +2,7 @@ package android.webkit;
 
 import android.annotation.UnsupportedAppUsage;
 
+/* loaded from: classes4.dex */
 public class ConsoleMessage {
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
     private MessageLevel mLevel;
@@ -12,6 +13,7 @@ public class ConsoleMessage {
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
     private String mSourceId;
 
+    /* loaded from: classes4.dex */
     public enum MessageLevel {
         TIP,
         LOG,

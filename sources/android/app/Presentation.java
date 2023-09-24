@@ -4,10 +4,10 @@ import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
 import android.content.res.Resources;
 import android.hardware.display.DisplayManager;
-import android.os.Binder;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Message;
+import android.p007os.Binder;
+import android.p007os.Handler;
+import android.p007os.IBinder;
+import android.p007os.Message;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -17,11 +17,11 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.WindowManagerImpl;
 
+/* loaded from: classes.dex */
 public class Presentation extends Dialog {
     private static final int MSG_CANCEL = 1;
     private static final String TAG = "Presentation";
-    /* access modifiers changed from: private */
-    public final Display mDisplay;
+    private final Display mDisplay;
     private final DisplayManager.DisplayListener mDisplayListener;
     private final DisplayManager mDisplayManager;
     private final Handler mHandler;
@@ -34,23 +34,27 @@ public class Presentation extends Dialog {
     public Presentation(Context outerContext, Display display, int theme) {
         super(createPresentationContext(outerContext, display, theme), theme, false);
         this.mToken = new Binder();
-        this.mDisplayListener = new DisplayManager.DisplayListener() {
+        this.mDisplayListener = new DisplayManager.DisplayListener() { // from class: android.app.Presentation.2
+            @Override // android.hardware.display.DisplayManager.DisplayListener
             public void onDisplayAdded(int displayId) {
             }
 
+            @Override // android.hardware.display.DisplayManager.DisplayListener
             public void onDisplayRemoved(int displayId) {
                 if (displayId == Presentation.this.mDisplay.getDisplayId()) {
                     Presentation.this.handleDisplayRemoved();
                 }
             }
 
+            @Override // android.hardware.display.DisplayManager.DisplayListener
             public void onDisplayChanged(int displayId) {
                 if (displayId == Presentation.this.mDisplay.getDisplayId()) {
                     Presentation.this.handleDisplayChanged();
                 }
             }
         };
-        this.mHandler = new Handler() {
+        this.mHandler = new Handler() { // from class: android.app.Presentation.3
+            @Override // android.p007os.Handler
             public void handleMessage(Message msg) {
                 if (msg.what == 1) {
                     Presentation.this.cancel();
@@ -76,22 +80,23 @@ public class Presentation extends Dialog {
         return getContext().getResources();
     }
 
-    /* access modifiers changed from: protected */
-    public void onStart() {
+    @Override // android.app.Dialog
+    protected void onStart() {
         super.onStart();
         this.mDisplayManager.registerDisplayListener(this.mDisplayListener, this.mHandler);
         if (!isConfigurationStillValid()) {
-            Log.i(TAG, "Presentation is being dismissed because the display metrics have changed since it was created.");
+            Log.m68i(TAG, "Presentation is being dismissed because the display metrics have changed since it was created.");
             this.mHandler.sendEmptyMessage(1);
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onStop() {
+    @Override // android.app.Dialog
+    protected void onStop() {
         this.mDisplayManager.unregisterDisplayListener(this.mDisplayListener);
         super.onStop();
     }
 
+    @Override // android.app.Dialog
     public void show() {
         super.show();
     }
@@ -102,17 +107,17 @@ public class Presentation extends Dialog {
     public void onDisplayChanged() {
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void handleDisplayRemoved() {
         onDisplayRemoved();
         cancel();
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void handleDisplayChanged() {
         onDisplayChanged();
         if (!isConfigurationStillValid()) {
-            Log.i(TAG, "Presentation is being dismissed because the display metrics have changed since it was created.");
+            Log.m68i(TAG, "Presentation is being dismissed because the display metrics have changed since it was created.");
             cancel();
         }
     }
@@ -127,24 +132,26 @@ public class Presentation extends Dialog {
     private static Context createPresentationContext(Context outerContext, Display display, int theme) {
         if (outerContext == null) {
             throw new IllegalArgumentException("outerContext must not be null");
-        } else if (display != null) {
-            Context displayContext = outerContext.createDisplayContext(display);
-            if (theme == 0) {
-                TypedValue outValue = new TypedValue();
-                displayContext.getTheme().resolveAttribute(16843712, outValue, true);
-                theme = outValue.resourceId;
-            }
-            final WindowManagerImpl displayWindowManager = ((WindowManagerImpl) outerContext.getSystemService(Context.WINDOW_SERVICE)).createPresentationWindowManager(displayContext);
-            return new ContextThemeWrapper(displayContext, theme) {
-                public Object getSystemService(String name) {
-                    if (Context.WINDOW_SERVICE.equals(name)) {
-                        return displayWindowManager;
-                    }
-                    return super.getSystemService(name);
-                }
-            };
-        } else {
+        }
+        if (display == null) {
             throw new IllegalArgumentException("display must not be null");
         }
+        Context displayContext = outerContext.createDisplayContext(display);
+        if (theme == 0) {
+            TypedValue outValue = new TypedValue();
+            displayContext.getTheme().resolveAttribute(16843712, outValue, true);
+            theme = outValue.resourceId;
+        }
+        WindowManagerImpl outerWindowManager = (WindowManagerImpl) outerContext.getSystemService(Context.WINDOW_SERVICE);
+        final WindowManagerImpl displayWindowManager = outerWindowManager.createPresentationWindowManager(displayContext);
+        return new ContextThemeWrapper(displayContext, theme) { // from class: android.app.Presentation.1
+            @Override // android.view.ContextThemeWrapper, android.content.ContextWrapper, android.content.Context
+            public Object getSystemService(String name) {
+                if (Context.WINDOW_SERVICE.equals(name)) {
+                    return displayWindowManager;
+                }
+                return super.getSystemService(name);
+            }
+        };
     }
 }

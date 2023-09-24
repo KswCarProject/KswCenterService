@@ -10,6 +10,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+/* loaded from: classes4.dex */
 public class UsageStatsBackupHelper extends BlobBackupHelper {
     static final int BLOB_VERSION = 1;
     static final boolean DEBUG = false;
@@ -20,31 +21,31 @@ public class UsageStatsBackupHelper extends BlobBackupHelper {
         super(1, KEY_USAGE_STATS);
     }
 
-    /* access modifiers changed from: protected */
-    public byte[] getBackupPayload(String key) {
-        if (!KEY_USAGE_STATS.equals(key)) {
-            return null;
+    @Override // android.app.backup.BlobBackupHelper
+    protected byte[] getBackupPayload(String key) {
+        if (KEY_USAGE_STATS.equals(key)) {
+            UsageStatsManagerInternal localUsageStatsManager = (UsageStatsManagerInternal) LocalServices.getService(UsageStatsManagerInternal.class);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            DataOutputStream out = new DataOutputStream(baos);
+            try {
+                out.writeInt(0);
+                out.write(localUsageStatsManager.getBackupPayload(0, key));
+            } catch (IOException e) {
+                baos.reset();
+            }
+            return baos.toByteArray();
         }
-        UsageStatsManagerInternal localUsageStatsManager = (UsageStatsManagerInternal) LocalServices.getService(UsageStatsManagerInternal.class);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        DataOutputStream out = new DataOutputStream(baos);
-        try {
-            out.writeInt(0);
-            out.write(localUsageStatsManager.getBackupPayload(0, key));
-        } catch (IOException e) {
-            baos.reset();
-        }
-        return baos.toByteArray();
+        return null;
     }
 
-    /* access modifiers changed from: protected */
-    public void applyRestoredPayload(String key, byte[] payload) {
+    @Override // android.app.backup.BlobBackupHelper
+    protected void applyRestoredPayload(String key, byte[] payload) {
         if (KEY_USAGE_STATS.equals(key)) {
             UsageStatsManagerInternal localUsageStatsManager = (UsageStatsManagerInternal) LocalServices.getService(UsageStatsManagerInternal.class);
             DataInputStream in = new DataInputStream(new ByteArrayInputStream(payload));
             try {
                 int user = in.readInt();
-                byte[] restoreData = new byte[(payload.length - 4)];
+                byte[] restoreData = new byte[payload.length - 4];
                 in.read(restoreData, 0, restoreData.length);
                 localUsageStatsManager.applyRestoredPayload(user, key, restoreData);
             } catch (IOException e) {

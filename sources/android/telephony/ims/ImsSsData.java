@@ -1,8 +1,8 @@
 package android.telephony.ims;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.telephony.Rlog;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -11,16 +11,8 @@ import java.util.Arrays;
 import java.util.List;
 
 @SystemApi
+/* loaded from: classes4.dex */
 public final class ImsSsData implements Parcelable {
-    public static final Parcelable.Creator<ImsSsData> CREATOR = new Parcelable.Creator<ImsSsData>() {
-        public ImsSsData createFromParcel(Parcel in) {
-            return new ImsSsData(in);
-        }
-
-        public ImsSsData[] newArray(int size) {
-            return new ImsSsData[size];
-        }
-    };
     public static final int RESULT_SUCCESS = 0;
     public static final int SERVICE_CLASS_DATA = 2;
     public static final int SERVICE_CLASS_DATA_CIRCUIT_ASYNC = 32;
@@ -65,34 +57,50 @@ public final class ImsSsData implements Parcelable {
     public static final int SS_SMS_SERVICES = 4;
     public static final int SS_TELEPHONY = 2;
     public static final int SS_WAIT = 12;
-    private static final String TAG = ImsSsData.class.getCanonicalName();
-    /* access modifiers changed from: private */
-    public List<ImsCallForwardInfo> mCfInfo;
-    /* access modifiers changed from: private */
-    public List<ImsSsInfo> mImsSsInfo;
+    private List<ImsCallForwardInfo> mCfInfo;
+    private List<ImsSsInfo> mImsSsInfo;
     private int[] mSsInfo;
     public final int requestType;
     public final int result;
     public final int serviceClass;
     public final int serviceType;
     public final int teleserviceType;
+    private static final String TAG = ImsSsData.class.getCanonicalName();
+    public static final Parcelable.Creator<ImsSsData> CREATOR = new Parcelable.Creator<ImsSsData>() { // from class: android.telephony.ims.ImsSsData.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public ImsSsData createFromParcel(Parcel in) {
+            return new ImsSsData(in);
+        }
+
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public ImsSsData[] newArray(int size) {
+            return new ImsSsData[size];
+        }
+    };
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface RequestType {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface ServiceClassFlags {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface ServiceType {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface TeleserviceType {
     }
 
+    /* loaded from: classes4.dex */
     public static final class Builder {
         private ImsSsData mImsSsData;
 
@@ -101,12 +109,12 @@ public final class ImsSsData implements Parcelable {
         }
 
         public Builder setSuppServiceInfo(List<ImsSsInfo> imsSsInfos) {
-            List unused = this.mImsSsData.mImsSsInfo = imsSsInfos;
+            this.mImsSsData.mImsSsInfo = imsSsInfos;
             return this;
         }
 
         public Builder setCallForwardingInfo(List<ImsCallForwardInfo> imsCallForwardInfos) {
-            List unused = this.mImsSsData.mCfInfo = imsCallForwardInfos;
+            this.mImsSsData.mCfInfo = imsCallForwardInfos;
             return this;
         }
 
@@ -115,12 +123,12 @@ public final class ImsSsData implements Parcelable {
         }
     }
 
-    public ImsSsData(int serviceType2, int requestType2, int teleserviceType2, int serviceClass2, int result2) {
-        this.serviceType = serviceType2;
-        this.requestType = requestType2;
-        this.teleserviceType = teleserviceType2;
-        this.serviceClass = serviceClass2;
-        this.result = result2;
+    public ImsSsData(int serviceType, int requestType, int teleserviceType, int serviceClass, int result) {
+        this.serviceType = serviceType;
+        this.requestType = requestType;
+        this.teleserviceType = teleserviceType;
+        this.serviceClass = serviceClass;
+        this.result = result;
     }
 
     private ImsSsData(Parcel in) {
@@ -134,6 +142,7 @@ public final class ImsSsData implements Parcelable {
         this.mImsSsInfo = in.readParcelableList(new ArrayList(), getClass().getClassLoader());
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(getServiceType());
         out.writeInt(getRequestType());
@@ -145,15 +154,13 @@ public final class ImsSsData implements Parcelable {
         out.writeParcelableList(this.mImsSsInfo, 0);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
     public boolean isTypeCF() {
-        if (getServiceType() == 0 || getServiceType() == 1 || getServiceType() == 2 || getServiceType() == 3 || getServiceType() == 4 || getServiceType() == 5) {
-            return true;
-        }
-        return false;
+        return getServiceType() == 0 || getServiceType() == 1 || getServiceType() == 2 || getServiceType() == 3 || getServiceType() == 4 || getServiceType() == 5;
     }
 
     public boolean isTypeCf() {
@@ -236,21 +243,21 @@ public final class ImsSsData implements Parcelable {
         if (this.mSsInfo != null) {
             return this.mSsInfo;
         }
-        int[] result2 = new int[2];
+        int[] result = new int[2];
         if (this.mImsSsInfo == null || this.mImsSsInfo.size() == 0) {
-            Rlog.e(TAG, "getSuppServiceInfoCompat: Could not parse mImsSsInfo, returning empty int[]");
-            return result2;
+            Rlog.m86e(TAG, "getSuppServiceInfoCompat: Could not parse mImsSsInfo, returning empty int[]");
+            return result;
         } else if (isTypeClir()) {
-            result2[0] = this.mImsSsInfo.get(0).getClirOutgoingState();
-            result2[1] = this.mImsSsInfo.get(0).getClirInterrogationStatus();
-            return result2;
+            result[0] = this.mImsSsInfo.get(0).getClirOutgoingState();
+            result[1] = this.mImsSsInfo.get(0).getClirInterrogationStatus();
+            return result;
         } else {
             if (isTypeColr()) {
-                result2[0] = this.mImsSsInfo.get(0).getProvisionStatus();
+                result[0] = this.mImsSsInfo.get(0).getProvisionStatus();
             }
-            result2[0] = this.mImsSsInfo.get(0).getStatus();
-            result2[1] = this.mImsSsInfo.get(0).getProvisionStatus();
-            return result2;
+            result[0] = this.mImsSsInfo.get(0).getStatus();
+            result[1] = this.mImsSsInfo.get(0).getProvisionStatus();
+            return result;
         }
     }
 

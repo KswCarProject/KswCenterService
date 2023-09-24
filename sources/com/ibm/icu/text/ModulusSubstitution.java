@@ -2,7 +2,8 @@ package com.ibm.icu.text;
 
 import java.text.ParsePosition;
 
-/* compiled from: NFSubstitution */
+/* compiled from: NFSubstitution.java */
+/* loaded from: classes5.dex */
 class ModulusSubstitution extends NFSubstitution {
     long divisor;
     private final NFRule ruleToUse;
@@ -19,75 +20,86 @@ class ModulusSubstitution extends NFSubstitution {
         }
     }
 
+    @Override // com.ibm.icu.text.NFSubstitution
     public void setDivisor(int radix, short exponent) {
-        this.divisor = NFRule.power((long) radix, exponent);
+        this.divisor = NFRule.power(radix, exponent);
         if (this.divisor == 0) {
             throw new IllegalStateException("Substitution with bad divisor");
         }
     }
 
+    @Override // com.ibm.icu.text.NFSubstitution
     public boolean equals(Object that) {
-        if (!super.equals(that) || this.divisor != ((ModulusSubstitution) that).divisor) {
-            return false;
+        if (super.equals(that)) {
+            ModulusSubstitution that2 = (ModulusSubstitution) that;
+            return this.divisor == that2.divisor;
         }
-        return true;
+        return false;
     }
 
+    @Override // com.ibm.icu.text.NFSubstitution
     public void doSubstitution(long number, StringBuilder toInsertInto, int position, int recursionCount) {
         if (this.ruleToUse == null) {
             super.doSubstitution(number, toInsertInto, position, recursionCount);
             return;
         }
-        this.ruleToUse.doFormat(transformNumber(number), toInsertInto, position + this.pos, recursionCount);
+        long numberToFormat = transformNumber(number);
+        this.ruleToUse.doFormat(numberToFormat, toInsertInto, position + this.pos, recursionCount);
     }
 
+    @Override // com.ibm.icu.text.NFSubstitution
     public void doSubstitution(double number, StringBuilder toInsertInto, int position, int recursionCount) {
         if (this.ruleToUse == null) {
             super.doSubstitution(number, toInsertInto, position, recursionCount);
             return;
         }
-        this.ruleToUse.doFormat(transformNumber(number), toInsertInto, position + this.pos, recursionCount);
+        double numberToFormat = transformNumber(number);
+        this.ruleToUse.doFormat(numberToFormat, toInsertInto, position + this.pos, recursionCount);
     }
 
+    @Override // com.ibm.icu.text.NFSubstitution
     public long transformNumber(long number) {
         return number % this.divisor;
     }
 
+    @Override // com.ibm.icu.text.NFSubstitution
     public double transformNumber(double number) {
-        return Math.floor(number % ((double) this.divisor));
+        return Math.floor(number % this.divisor);
     }
 
+    @Override // com.ibm.icu.text.NFSubstitution
     public Number doParse(String text, ParsePosition parsePosition, double baseValue, double upperBound, boolean lenientParse, int nonNumericalExecutedRuleMask) {
         if (this.ruleToUse == null) {
             return super.doParse(text, parsePosition, baseValue, upperBound, lenientParse, nonNumericalExecutedRuleMask);
         }
         Number tempResult = this.ruleToUse.doParse(text, parsePosition, false, upperBound, nonNumericalExecutedRuleMask);
         if (parsePosition.getIndex() != 0) {
-            double d = baseValue;
             double result = composeRuleValue(tempResult.doubleValue(), baseValue);
-            if (result == ((double) ((long) result))) {
+            if (result == ((long) result)) {
                 return Long.valueOf((long) result);
             }
             return new Double(result);
         }
-        double d2 = baseValue;
         return tempResult;
     }
 
+    @Override // com.ibm.icu.text.NFSubstitution
     public double composeRuleValue(double newRuleValue, double oldRuleValue) {
-        return (oldRuleValue - (oldRuleValue % ((double) this.divisor))) + newRuleValue;
+        return (oldRuleValue - (oldRuleValue % this.divisor)) + newRuleValue;
     }
 
+    @Override // com.ibm.icu.text.NFSubstitution
     public double calcUpperBound(double oldUpperBound) {
-        return (double) this.divisor;
+        return this.divisor;
     }
 
+    @Override // com.ibm.icu.text.NFSubstitution
     public boolean isModulusSubstitution() {
         return true;
     }
 
-    /* access modifiers changed from: package-private */
-    public char tokenChar() {
+    @Override // com.ibm.icu.text.NFSubstitution
+    char tokenChar() {
         return '>';
     }
 }

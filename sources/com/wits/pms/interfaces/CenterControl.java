@@ -1,7 +1,8 @@
 package com.wits.pms.interfaces;
 
-import android.os.RemoteException;
+import android.p007os.RemoteException;
 
+/* loaded from: classes2.dex */
 public interface CenterControl {
     void acceptPhone();
 

@@ -4,17 +4,18 @@ import android.Manifest;
 import android.app.Service;
 import android.content.Intent;
 import android.content.PermissionChecker;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Message;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.Handler;
+import android.p007os.IBinder;
+import android.p007os.Message;
+import android.p007os.RemoteException;
 import android.speech.IRecognitionService;
 import android.util.Log;
 import java.lang.ref.WeakReference;
 import java.util.Objects;
 
+/* loaded from: classes3.dex */
 public abstract class RecognitionService extends Service {
     private static final boolean DBG = false;
     private static final int MSG_CANCEL = 3;
@@ -26,8 +27,8 @@ public abstract class RecognitionService extends Service {
     private static final String TAG = "RecognitionService";
     private RecognitionServiceBinder mBinder = new RecognitionServiceBinder(this);
     private Callback mCurrentCallback = null;
-    /* access modifiers changed from: private */
-    public final Handler mHandler = new Handler() {
+    private final Handler mHandler = new Handler() { // from class: android.speech.RecognitionService.1
+        @Override // android.p007os.Handler
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 1:
@@ -49,73 +50,74 @@ public abstract class RecognitionService extends Service {
         }
     };
 
-    /* access modifiers changed from: protected */
-    public abstract void onCancel(Callback callback);
+    protected abstract void onCancel(Callback callback);
 
-    /* access modifiers changed from: protected */
-    public abstract void onStartListening(Intent intent, Callback callback);
+    protected abstract void onStartListening(Intent intent, Callback callback);
 
-    /* access modifiers changed from: protected */
-    public abstract void onStopListening(Callback callback);
+    protected abstract void onStopListening(Callback callback);
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void dispatchStartListening(Intent intent, final IRecognitionListener listener, int callingUid) {
         if (this.mCurrentCallback == null) {
             try {
-                listener.asBinder().linkToDeath(new IBinder.DeathRecipient() {
+                listener.asBinder().linkToDeath(new IBinder.DeathRecipient() { // from class: android.speech.RecognitionService.2
+                    @Override // android.p007os.IBinder.DeathRecipient
                     public void binderDied() {
                         RecognitionService.this.mHandler.sendMessage(RecognitionService.this.mHandler.obtainMessage(3, listener));
                     }
                 }, 0);
                 this.mCurrentCallback = new Callback(listener, callingUid);
                 onStartListening(intent, this.mCurrentCallback);
+                return;
             } catch (RemoteException e) {
-                Log.e(TAG, "dead listener on startListening");
+                Log.m70e(TAG, "dead listener on startListening");
+                return;
             }
-        } else {
-            try {
-                listener.onError(8);
-            } catch (RemoteException e2) {
-                Log.d(TAG, "onError call from startListening failed");
-            }
-            Log.i(TAG, "concurrent startListening received - ignoring this call");
         }
+        try {
+            listener.onError(8);
+        } catch (RemoteException e2) {
+            Log.m72d(TAG, "onError call from startListening failed");
+        }
+        Log.m68i(TAG, "concurrent startListening received - ignoring this call");
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void dispatchStopListening(IRecognitionListener listener) {
         try {
             if (this.mCurrentCallback == null) {
                 listener.onError(5);
-                Log.w(TAG, "stopListening called with no preceding startListening - ignoring");
+                Log.m64w(TAG, "stopListening called with no preceding startListening - ignoring");
             } else if (this.mCurrentCallback.mListener.asBinder() != listener.asBinder()) {
                 listener.onError(8);
-                Log.w(TAG, "stopListening called by other caller than startListening - ignoring");
+                Log.m64w(TAG, "stopListening called by other caller than startListening - ignoring");
             } else {
                 onStopListening(this.mCurrentCallback);
             }
         } catch (RemoteException e) {
-            Log.d(TAG, "onError call from stopListening failed");
+            Log.m72d(TAG, "onError call from stopListening failed");
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void dispatchCancel(IRecognitionListener listener) {
-        if (this.mCurrentCallback != null) {
-            if (this.mCurrentCallback.mListener.asBinder() != listener.asBinder()) {
-                Log.w(TAG, "cancel called by client who did not call startListening - ignoring");
-                return;
-            }
-            onCancel(this.mCurrentCallback);
-            this.mCurrentCallback = null;
+        if (this.mCurrentCallback == null) {
+            return;
         }
+        if (this.mCurrentCallback.mListener.asBinder() != listener.asBinder()) {
+            Log.m64w(TAG, "cancel called by client who did not call startListening - ignoring");
+            return;
+        }
+        onCancel(this.mCurrentCallback);
+        this.mCurrentCallback = null;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void dispatchClearCallback() {
         this.mCurrentCallback = null;
     }
 
+    /* loaded from: classes3.dex */
     private class StartListeningArgs {
         public final int mCallingUid;
         public final Intent mIntent;
@@ -128,35 +130,37 @@ public abstract class RecognitionService extends Service {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public boolean checkPermissions(IRecognitionListener listener) {
-        if (PermissionChecker.checkCallingOrSelfPermission(this, Manifest.permission.RECORD_AUDIO) == 0) {
+        if (PermissionChecker.checkCallingOrSelfPermission(this, Manifest.C0000permission.RECORD_AUDIO) == 0) {
             return true;
         }
         try {
-            Log.e(TAG, "call for recognition service without RECORD_AUDIO permissions");
+            Log.m70e(TAG, "call for recognition service without RECORD_AUDIO permissions");
             listener.onError(9);
             return false;
         } catch (RemoteException re) {
-            Log.e(TAG, "sending ERROR_INSUFFICIENT_PERMISSIONS message failed", re);
+            Log.m69e(TAG, "sending ERROR_INSUFFICIENT_PERMISSIONS message failed", re);
             return false;
         }
     }
 
+    @Override // android.app.Service
     public final IBinder onBind(Intent intent) {
         return this.mBinder;
     }
 
+    @Override // android.app.Service
     public void onDestroy() {
         this.mCurrentCallback = null;
         this.mBinder.clearReference();
         super.onDestroy();
     }
 
+    /* loaded from: classes3.dex */
     public class Callback {
         private final int mCallingUid;
-        /* access modifiers changed from: private */
-        public final IRecognitionListener mListener;
+        private final IRecognitionListener mListener;
 
         private Callback(IRecognitionListener listener, int callingUid) {
             this.mListener = listener;
@@ -202,6 +206,7 @@ public abstract class RecognitionService extends Service {
         }
     }
 
+    /* loaded from: classes3.dex */
     private static final class RecognitionServiceBinder extends IRecognitionService.Stub {
         private final WeakReference<RecognitionService> mServiceRef;
 
@@ -209,25 +214,28 @@ public abstract class RecognitionService extends Service {
             this.mServiceRef = new WeakReference<>(service);
         }
 
+        @Override // android.speech.IRecognitionService
         public void startListening(Intent recognizerIntent, IRecognitionListener listener) {
-            RecognitionService service = (RecognitionService) this.mServiceRef.get();
+            RecognitionService service = this.mServiceRef.get();
             if (service != null && service.checkPermissions(listener)) {
-                Handler access$400 = service.mHandler;
-                Handler access$4002 = service.mHandler;
+                Handler handler = service.mHandler;
+                Handler handler2 = service.mHandler;
                 Objects.requireNonNull(service);
-                access$400.sendMessage(Message.obtain(access$4002, 1, new StartListeningArgs(recognizerIntent, listener, Binder.getCallingUid())));
+                handler.sendMessage(Message.obtain(handler2, 1, new StartListeningArgs(recognizerIntent, listener, Binder.getCallingUid())));
             }
         }
 
+        @Override // android.speech.IRecognitionService
         public void stopListening(IRecognitionListener listener) {
-            RecognitionService service = (RecognitionService) this.mServiceRef.get();
+            RecognitionService service = this.mServiceRef.get();
             if (service != null && service.checkPermissions(listener)) {
                 service.mHandler.sendMessage(Message.obtain(service.mHandler, 2, listener));
             }
         }
 
+        @Override // android.speech.IRecognitionService
         public void cancel(IRecognitionListener listener) {
-            RecognitionService service = (RecognitionService) this.mServiceRef.get();
+            RecognitionService service = this.mServiceRef.get();
             if (service != null && service.checkPermissions(listener)) {
                 service.mHandler.sendMessage(Message.obtain(service.mHandler, 3, listener));
             }

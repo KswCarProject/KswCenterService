@@ -2,6 +2,7 @@ package android.util.proto;
 
 import java.io.IOException;
 
+/* loaded from: classes4.dex */
 public class ProtoUtils {
     public static void toAggStatsProto(ProtoOutputStream proto, long fieldId, long min, long average, long max) {
         long aggStatsToken = proto.start(fieldId);
@@ -19,20 +20,19 @@ public class ProtoUtils {
     }
 
     public static void writeBitWiseFlagsToProtoEnum(ProtoOutputStream proto, long fieldId, int flags, int[] origEnums, int[] protoEnums) {
-        if (protoEnums.length == origEnums.length) {
-            int len = origEnums.length;
-            for (int i = 0; i < len; i++) {
-                if (origEnums[i] == 0 && flags == 0) {
-                    proto.write(fieldId, protoEnums[i]);
-                    return;
-                }
-                if ((origEnums[i] & flags) != 0) {
-                    proto.write(fieldId, protoEnums[i]);
-                }
-            }
-            return;
+        if (protoEnums.length != origEnums.length) {
+            throw new IllegalArgumentException("The length of origEnums must match protoEnums");
         }
-        throw new IllegalArgumentException("The length of origEnums must match protoEnums");
+        int len = origEnums.length;
+        for (int i = 0; i < len; i++) {
+            if (origEnums[i] == 0 && flags == 0) {
+                proto.write(fieldId, protoEnums[i]);
+                return;
+            }
+            if ((origEnums[i] & flags) != 0) {
+                proto.write(fieldId, protoEnums[i]);
+            }
+        }
     }
 
     public static String currentFieldToString(ProtoInputStream proto) throws IOException {

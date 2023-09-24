@@ -1,18 +1,23 @@
 package android.hardware.location;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
 @SystemApi
 @Deprecated
+/* loaded from: classes.dex */
 public class NanoAppFilter implements Parcelable {
     public static final int APP_ANY = -1;
-    public static final Parcelable.Creator<NanoAppFilter> CREATOR = new Parcelable.Creator<NanoAppFilter>() {
+    public static final Parcelable.Creator<NanoAppFilter> CREATOR = new Parcelable.Creator<NanoAppFilter>() { // from class: android.hardware.location.NanoAppFilter.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NanoAppFilter createFromParcel(Parcel in) {
             return new NanoAppFilter(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NanoAppFilter[] newArray(int size) {
             return new NanoAppFilter[size];
         }
@@ -38,10 +43,12 @@ public class NanoAppFilter implements Parcelable {
         this.mAppIdVendorMask = in.readLong();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeLong(this.mAppId);
         out.writeInt(this.mAppVersion);

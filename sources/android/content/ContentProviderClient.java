@@ -6,16 +6,15 @@ import android.content.res.AssetFileDescriptor;
 import android.database.CrossProcessCursorWrapper;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.CancellationSignal;
-import android.os.DeadObjectException;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.ICancellationSignal;
-import android.os.Looper;
-import android.os.ParcelFileDescriptor;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.CancellationSignal;
+import android.p007os.DeadObjectException;
+import android.p007os.Handler;
+import android.p007os.ICancellationSignal;
+import android.p007os.Looper;
+import android.p007os.ParcelFileDescriptor;
+import android.p007os.RemoteException;
 import android.provider.CalendarContract;
 import android.provider.ContactsContract;
 import android.util.Log;
@@ -28,6 +27,7 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import libcore.io.IoUtils;
 
+/* loaded from: classes.dex */
 public class ContentProviderClient implements ContentInterface, AutoCloseable {
     private static final String TAG = "ContentProviderClient";
     @GuardedBy({"ContentProviderClient.class"})
@@ -37,11 +37,9 @@ public class ContentProviderClient implements ContentInterface, AutoCloseable {
     private final String mAuthority;
     private final CloseGuard mCloseGuard;
     private final AtomicBoolean mClosed;
-    /* access modifiers changed from: private */
     @UnsupportedAppUsage
-    public final IContentProvider mContentProvider;
-    /* access modifiers changed from: private */
-    public final ContentResolver mContentResolver;
+    private final IContentProvider mContentProvider;
+    private final ContentResolver mContentResolver;
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
     private final String mPackageName;
     private final boolean mStable;
@@ -71,7 +69,7 @@ public class ContentProviderClient implements ContentInterface, AutoCloseable {
                     this.mAnrRunnable = new NotRespondingRunnable();
                 }
                 if (sAnrHandler == null) {
-                    sAnrHandler = new Handler(Looper.getMainLooper(), (Handler.Callback) null, true);
+                    sAnrHandler = new Handler(Looper.getMainLooper(), null, true);
                 }
                 Binder.allowBlocking(this.mContentProvider.asBinder());
             } else {
@@ -94,27 +92,31 @@ public class ContentProviderClient implements ContentInterface, AutoCloseable {
     }
 
     public Cursor query(Uri url, String[] projection, String selection, String[] selectionArgs, String sortOrder) throws RemoteException {
-        return query(url, projection, selection, selectionArgs, sortOrder, (CancellationSignal) null);
+        return query(url, projection, selection, selectionArgs, sortOrder, null);
     }
 
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder, CancellationSignal cancellationSignal) throws RemoteException {
-        return query(uri, projection, ContentResolver.createSqlQueryBundle(selection, selectionArgs, sortOrder), cancellationSignal);
+        Bundle queryArgs = ContentResolver.createSqlQueryBundle(selection, selectionArgs, sortOrder);
+        return query(uri, projection, queryArgs, cancellationSignal);
     }
 
+    @Override // android.content.ContentInterface
     public Cursor query(Uri uri, String[] projection, Bundle queryArgs, CancellationSignal cancellationSignal) throws RemoteException {
         Preconditions.checkNotNull(uri, "url");
         beforeRemote();
         ICancellationSignal remoteCancellationSignal = null;
         if (cancellationSignal != null) {
             try {
-                cancellationSignal.throwIfCanceled();
-                remoteCancellationSignal = this.mContentProvider.createCancellationSignal();
-                cancellationSignal.setRemote(remoteCancellationSignal);
-            } catch (DeadObjectException e) {
-                if (!this.mStable) {
-                    this.mContentResolver.unstableProviderDied(this.mContentProvider);
+                try {
+                    cancellationSignal.throwIfCanceled();
+                    remoteCancellationSignal = this.mContentProvider.createCancellationSignal();
+                    cancellationSignal.setRemote(remoteCancellationSignal);
+                } catch (DeadObjectException e) {
+                    if (!this.mStable) {
+                        this.mContentResolver.unstableProviderDied(this.mContentProvider);
+                    }
+                    throw e;
                 }
-                throw e;
             } catch (Throwable th) {
                 afterRemote();
                 throw th;
@@ -130,93 +132,96 @@ public class ContentProviderClient implements ContentInterface, AutoCloseable {
         return cursorWrapperInner;
     }
 
+    @Override // android.content.ContentInterface
     public String getType(Uri url) throws RemoteException {
         Preconditions.checkNotNull(url, "url");
         beforeRemote();
         try {
-            String type = this.mContentProvider.getType(url);
-            afterRemote();
-            return type;
-        } catch (DeadObjectException e) {
-            if (!this.mStable) {
-                this.mContentResolver.unstableProviderDied(this.mContentProvider);
+            try {
+                return this.mContentProvider.getType(url);
+            } catch (DeadObjectException e) {
+                if (!this.mStable) {
+                    this.mContentResolver.unstableProviderDied(this.mContentProvider);
+                }
+                throw e;
             }
-            throw e;
-        } catch (Throwable th) {
+        } finally {
             afterRemote();
-            throw th;
         }
     }
 
+    @Override // android.content.ContentInterface
     public String[] getStreamTypes(Uri url, String mimeTypeFilter) throws RemoteException {
         Preconditions.checkNotNull(url, "url");
         Preconditions.checkNotNull(mimeTypeFilter, "mimeTypeFilter");
         beforeRemote();
         try {
-            String[] streamTypes = this.mContentProvider.getStreamTypes(url, mimeTypeFilter);
-            afterRemote();
-            return streamTypes;
-        } catch (DeadObjectException e) {
-            if (!this.mStable) {
-                this.mContentResolver.unstableProviderDied(this.mContentProvider);
+            try {
+                return this.mContentProvider.getStreamTypes(url, mimeTypeFilter);
+            } catch (DeadObjectException e) {
+                if (!this.mStable) {
+                    this.mContentResolver.unstableProviderDied(this.mContentProvider);
+                }
+                throw e;
             }
-            throw e;
-        } catch (Throwable th) {
+        } finally {
             afterRemote();
-            throw th;
         }
     }
 
+    @Override // android.content.ContentInterface
     public final Uri canonicalize(Uri url) throws RemoteException {
         Preconditions.checkNotNull(url, "url");
         beforeRemote();
         try {
-            Uri canonicalize = this.mContentProvider.canonicalize(this.mPackageName, url);
-            afterRemote();
-            return canonicalize;
-        } catch (DeadObjectException e) {
-            if (!this.mStable) {
-                this.mContentResolver.unstableProviderDied(this.mContentProvider);
+            try {
+                return this.mContentProvider.canonicalize(this.mPackageName, url);
+            } catch (DeadObjectException e) {
+                if (!this.mStable) {
+                    this.mContentResolver.unstableProviderDied(this.mContentProvider);
+                }
+                throw e;
             }
-            throw e;
-        } catch (Throwable th) {
+        } finally {
             afterRemote();
-            throw th;
         }
     }
 
+    @Override // android.content.ContentInterface
     public final Uri uncanonicalize(Uri url) throws RemoteException {
         Preconditions.checkNotNull(url, "url");
         beforeRemote();
         try {
-            Uri uncanonicalize = this.mContentProvider.uncanonicalize(this.mPackageName, url);
-            afterRemote();
-            return uncanonicalize;
-        } catch (DeadObjectException e) {
-            if (!this.mStable) {
-                this.mContentResolver.unstableProviderDied(this.mContentProvider);
+            try {
+                return this.mContentProvider.uncanonicalize(this.mPackageName, url);
+            } catch (DeadObjectException e) {
+                if (!this.mStable) {
+                    this.mContentResolver.unstableProviderDied(this.mContentProvider);
+                }
+                throw e;
             }
-            throw e;
-        } catch (Throwable th) {
+        } finally {
             afterRemote();
-            throw th;
         }
     }
 
+    @Override // android.content.ContentInterface
     public boolean refresh(Uri url, Bundle args, CancellationSignal cancellationSignal) throws RemoteException {
         Preconditions.checkNotNull(url, "url");
         beforeRemote();
         ICancellationSignal remoteCancellationSignal = null;
         if (cancellationSignal != null) {
             try {
-                cancellationSignal.throwIfCanceled();
-                remoteCancellationSignal = this.mContentProvider.createCancellationSignal();
-                cancellationSignal.setRemote(remoteCancellationSignal);
-            } catch (DeadObjectException e) {
-                if (!this.mStable) {
-                    this.mContentResolver.unstableProviderDied(this.mContentProvider);
+                try {
+                    cancellationSignal.throwIfCanceled();
+                    remoteCancellationSignal = this.mContentProvider.createCancellationSignal();
+                    cancellationSignal.setRemote(remoteCancellationSignal);
+                } catch (DeadObjectException e) {
+                    if (!this.mStable) {
+                        this.mContentResolver.unstableProviderDied(this.mContentProvider);
+                    }
+                    throw e;
                 }
-                throw e;
             } catch (Throwable th) {
                 afterRemote();
                 throw th;
@@ -227,83 +232,84 @@ public class ContentProviderClient implements ContentInterface, AutoCloseable {
         return refresh;
     }
 
+    @Override // android.content.ContentInterface
     public Uri insert(Uri url, ContentValues initialValues) throws RemoteException {
         Preconditions.checkNotNull(url, "url");
         beforeRemote();
         try {
-            Uri insert = this.mContentProvider.insert(this.mPackageName, url, initialValues);
-            afterRemote();
-            return insert;
-        } catch (DeadObjectException e) {
-            if (!this.mStable) {
-                this.mContentResolver.unstableProviderDied(this.mContentProvider);
+            try {
+                return this.mContentProvider.insert(this.mPackageName, url, initialValues);
+            } catch (DeadObjectException e) {
+                if (!this.mStable) {
+                    this.mContentResolver.unstableProviderDied(this.mContentProvider);
+                }
+                throw e;
             }
-            throw e;
-        } catch (Throwable th) {
+        } finally {
             afterRemote();
-            throw th;
         }
     }
 
+    @Override // android.content.ContentInterface
     public int bulkInsert(Uri url, ContentValues[] initialValues) throws RemoteException {
         Preconditions.checkNotNull(url, "url");
         Preconditions.checkNotNull(initialValues, "initialValues");
         beforeRemote();
         try {
-            int bulkInsert = this.mContentProvider.bulkInsert(this.mPackageName, url, initialValues);
-            afterRemote();
-            return bulkInsert;
-        } catch (DeadObjectException e) {
-            if (!this.mStable) {
-                this.mContentResolver.unstableProviderDied(this.mContentProvider);
+            try {
+                return this.mContentProvider.bulkInsert(this.mPackageName, url, initialValues);
+            } catch (DeadObjectException e) {
+                if (!this.mStable) {
+                    this.mContentResolver.unstableProviderDied(this.mContentProvider);
+                }
+                throw e;
             }
-            throw e;
-        } catch (Throwable th) {
+        } finally {
             afterRemote();
-            throw th;
         }
     }
 
+    @Override // android.content.ContentInterface
     public int delete(Uri url, String selection, String[] selectionArgs) throws RemoteException {
         Preconditions.checkNotNull(url, "url");
         beforeRemote();
         try {
-            int delete = this.mContentProvider.delete(this.mPackageName, url, selection, selectionArgs);
-            afterRemote();
-            return delete;
-        } catch (DeadObjectException e) {
-            if (!this.mStable) {
-                this.mContentResolver.unstableProviderDied(this.mContentProvider);
+            try {
+                return this.mContentProvider.delete(this.mPackageName, url, selection, selectionArgs);
+            } catch (DeadObjectException e) {
+                if (!this.mStable) {
+                    this.mContentResolver.unstableProviderDied(this.mContentProvider);
+                }
+                throw e;
             }
-            throw e;
-        } catch (Throwable th) {
+        } finally {
             afterRemote();
-            throw th;
         }
     }
 
+    @Override // android.content.ContentInterface
     public int update(Uri url, ContentValues values, String selection, String[] selectionArgs) throws RemoteException {
         Preconditions.checkNotNull(url, "url");
         beforeRemote();
         try {
-            int update = this.mContentProvider.update(this.mPackageName, url, values, selection, selectionArgs);
-            afterRemote();
-            return update;
-        } catch (DeadObjectException e) {
-            if (!this.mStable) {
-                this.mContentResolver.unstableProviderDied(this.mContentProvider);
+            try {
+                return this.mContentProvider.update(this.mPackageName, url, values, selection, selectionArgs);
+            } catch (DeadObjectException e) {
+                if (!this.mStable) {
+                    this.mContentResolver.unstableProviderDied(this.mContentProvider);
+                }
+                throw e;
             }
-            throw e;
-        } catch (Throwable th) {
+        } finally {
             afterRemote();
-            throw th;
         }
     }
 
     public ParcelFileDescriptor openFile(Uri url, String mode) throws RemoteException, FileNotFoundException {
-        return openFile(url, mode, (CancellationSignal) null);
+        return openFile(url, mode, null);
     }
 
+    @Override // android.content.ContentInterface
     public ParcelFileDescriptor openFile(Uri url, String mode, CancellationSignal signal) throws RemoteException, FileNotFoundException {
         Preconditions.checkNotNull(url, "url");
         Preconditions.checkNotNull(mode, "mode");
@@ -311,28 +317,31 @@ public class ContentProviderClient implements ContentInterface, AutoCloseable {
         ICancellationSignal remoteSignal = null;
         if (signal != null) {
             try {
-                signal.throwIfCanceled();
-                remoteSignal = this.mContentProvider.createCancellationSignal();
-                signal.setRemote(remoteSignal);
-            } catch (DeadObjectException e) {
-                if (!this.mStable) {
-                    this.mContentResolver.unstableProviderDied(this.mContentProvider);
+                try {
+                    signal.throwIfCanceled();
+                    remoteSignal = this.mContentProvider.createCancellationSignal();
+                    signal.setRemote(remoteSignal);
+                } catch (DeadObjectException e) {
+                    if (!this.mStable) {
+                        this.mContentResolver.unstableProviderDied(this.mContentProvider);
+                    }
+                    throw e;
                 }
-                throw e;
             } catch (Throwable th) {
                 afterRemote();
                 throw th;
             }
         }
-        ParcelFileDescriptor openFile = this.mContentProvider.openFile(this.mPackageName, url, mode, remoteSignal, (IBinder) null);
+        ParcelFileDescriptor openFile = this.mContentProvider.openFile(this.mPackageName, url, mode, remoteSignal, null);
         afterRemote();
         return openFile;
     }
 
     public AssetFileDescriptor openAssetFile(Uri url, String mode) throws RemoteException, FileNotFoundException {
-        return openAssetFile(url, mode, (CancellationSignal) null);
+        return openAssetFile(url, mode, null);
     }
 
+    @Override // android.content.ContentInterface
     public AssetFileDescriptor openAssetFile(Uri url, String mode, CancellationSignal signal) throws RemoteException, FileNotFoundException {
         Preconditions.checkNotNull(url, "url");
         Preconditions.checkNotNull(mode, "mode");
@@ -340,14 +349,16 @@ public class ContentProviderClient implements ContentInterface, AutoCloseable {
         ICancellationSignal remoteSignal = null;
         if (signal != null) {
             try {
-                signal.throwIfCanceled();
-                remoteSignal = this.mContentProvider.createCancellationSignal();
-                signal.setRemote(remoteSignal);
-            } catch (DeadObjectException e) {
-                if (!this.mStable) {
-                    this.mContentResolver.unstableProviderDied(this.mContentProvider);
+                try {
+                    signal.throwIfCanceled();
+                    remoteSignal = this.mContentProvider.createCancellationSignal();
+                    signal.setRemote(remoteSignal);
+                } catch (DeadObjectException e) {
+                    if (!this.mStable) {
+                        this.mContentResolver.unstableProviderDied(this.mContentProvider);
+                    }
+                    throw e;
                 }
-                throw e;
             } catch (Throwable th) {
                 afterRemote();
                 throw th;
@@ -359,13 +370,14 @@ public class ContentProviderClient implements ContentInterface, AutoCloseable {
     }
 
     public final AssetFileDescriptor openTypedAssetFileDescriptor(Uri uri, String mimeType, Bundle opts) throws RemoteException, FileNotFoundException {
-        return openTypedAssetFileDescriptor(uri, mimeType, opts, (CancellationSignal) null);
+        return openTypedAssetFileDescriptor(uri, mimeType, opts, null);
     }
 
     public final AssetFileDescriptor openTypedAssetFileDescriptor(Uri uri, String mimeType, Bundle opts, CancellationSignal signal) throws RemoteException, FileNotFoundException {
         return openTypedAssetFile(uri, mimeType, opts, signal);
     }
 
+    @Override // android.content.ContentInterface
     public final AssetFileDescriptor openTypedAssetFile(Uri uri, String mimeTypeFilter, Bundle opts, CancellationSignal signal) throws RemoteException, FileNotFoundException {
         Preconditions.checkNotNull(uri, "uri");
         Preconditions.checkNotNull(mimeTypeFilter, "mimeTypeFilter");
@@ -373,14 +385,16 @@ public class ContentProviderClient implements ContentInterface, AutoCloseable {
         ICancellationSignal remoteSignal = null;
         if (signal != null) {
             try {
-                signal.throwIfCanceled();
-                remoteSignal = this.mContentProvider.createCancellationSignal();
-                signal.setRemote(remoteSignal);
-            } catch (DeadObjectException e) {
-                if (!this.mStable) {
-                    this.mContentResolver.unstableProviderDied(this.mContentProvider);
+                try {
+                    signal.throwIfCanceled();
+                    remoteSignal = this.mContentProvider.createCancellationSignal();
+                    signal.setRemote(remoteSignal);
+                } catch (DeadObjectException e) {
+                    if (!this.mStable) {
+                        this.mContentResolver.unstableProviderDied(this.mContentProvider);
+                    }
+                    throw e;
                 }
-                throw e;
             } catch (Throwable th) {
                 afterRemote();
                 throw th;
@@ -395,21 +409,21 @@ public class ContentProviderClient implements ContentInterface, AutoCloseable {
         return applyBatch(this.mAuthority, operations);
     }
 
+    @Override // android.content.ContentInterface
     public ContentProviderResult[] applyBatch(String authority, ArrayList<ContentProviderOperation> operations) throws RemoteException, OperationApplicationException {
         Preconditions.checkNotNull(operations, "operations");
         beforeRemote();
         try {
-            ContentProviderResult[] applyBatch = this.mContentProvider.applyBatch(this.mPackageName, authority, operations);
-            afterRemote();
-            return applyBatch;
-        } catch (DeadObjectException e) {
-            if (!this.mStable) {
-                this.mContentResolver.unstableProviderDied(this.mContentProvider);
+            try {
+                return this.mContentProvider.applyBatch(this.mPackageName, authority, operations);
+            } catch (DeadObjectException e) {
+                if (!this.mStable) {
+                    this.mContentResolver.unstableProviderDied(this.mContentProvider);
+                }
+                throw e;
             }
-            throw e;
-        } catch (Throwable th) {
+        } finally {
             afterRemote();
-            throw th;
         }
     }
 
@@ -417,25 +431,26 @@ public class ContentProviderClient implements ContentInterface, AutoCloseable {
         return call(this.mAuthority, method, arg, extras);
     }
 
+    @Override // android.content.ContentInterface
     public Bundle call(String authority, String method, String arg, Bundle extras) throws RemoteException {
         Preconditions.checkNotNull(authority, ContactsContract.Directory.DIRECTORY_AUTHORITY);
         Preconditions.checkNotNull(method, CalendarContract.RemindersColumns.METHOD);
         beforeRemote();
         try {
-            Bundle call = this.mContentProvider.call(this.mPackageName, authority, method, arg, extras);
-            afterRemote();
-            return call;
-        } catch (DeadObjectException e) {
-            if (!this.mStable) {
-                this.mContentResolver.unstableProviderDied(this.mContentProvider);
+            try {
+                return this.mContentProvider.call(this.mPackageName, authority, method, arg, extras);
+            } catch (DeadObjectException e) {
+                if (!this.mStable) {
+                    this.mContentResolver.unstableProviderDied(this.mContentProvider);
+                }
+                throw e;
             }
-            throw e;
-        } catch (Throwable th) {
+        } finally {
             afterRemote();
-            throw th;
         }
     }
 
+    @Override // java.lang.AutoCloseable
     public void close() {
         closeInternal();
     }
@@ -447,18 +462,17 @@ public class ContentProviderClient implements ContentInterface, AutoCloseable {
 
     private boolean closeInternal() {
         this.mCloseGuard.close();
-        if (!this.mClosed.compareAndSet(false, true)) {
-            return false;
+        if (this.mClosed.compareAndSet(false, true)) {
+            setDetectNotResponding(0L);
+            if (this.mStable) {
+                return this.mContentResolver.releaseProvider(this.mContentProvider);
+            }
+            return this.mContentResolver.releaseUnstableProvider(this.mContentProvider);
         }
-        setDetectNotResponding(0);
-        if (this.mStable) {
-            return this.mContentResolver.releaseProvider(this.mContentProvider);
-        }
-        return this.mContentResolver.releaseUnstableProvider(this.mContentProvider);
+        return false;
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         try {
             if (this.mCloseGuard != null) {
                 this.mCloseGuard.warnIfOpen();
@@ -483,31 +497,35 @@ public class ContentProviderClient implements ContentInterface, AutoCloseable {
         IoUtils.closeQuietly(client);
     }
 
+    /* loaded from: classes.dex */
     private class NotRespondingRunnable implements Runnable {
         private NotRespondingRunnable() {
         }
 
+        @Override // java.lang.Runnable
         public void run() {
-            Log.w(ContentProviderClient.TAG, "Detected provider not responding: " + ContentProviderClient.this.mContentProvider);
+            Log.m64w(ContentProviderClient.TAG, "Detected provider not responding: " + ContentProviderClient.this.mContentProvider);
             ContentProviderClient.this.mContentResolver.appNotRespondingViaProvider(ContentProviderClient.this.mContentProvider);
         }
     }
 
+    /* loaded from: classes.dex */
     private final class CursorWrapperInner extends CrossProcessCursorWrapper {
-        private final CloseGuard mCloseGuard = CloseGuard.get();
+        private final CloseGuard mCloseGuard;
 
         CursorWrapperInner(Cursor cursor) {
             super(cursor);
+            this.mCloseGuard = CloseGuard.get();
             this.mCloseGuard.open("close");
         }
 
+        @Override // android.database.CursorWrapper, android.database.Cursor, java.io.Closeable, java.lang.AutoCloseable
         public void close() {
             this.mCloseGuard.close();
             super.close();
         }
 
-        /* access modifiers changed from: protected */
-        public void finalize() throws Throwable {
+        protected void finalize() throws Throwable {
             try {
                 if (this.mCloseGuard != null) {
                     this.mCloseGuard.warnIfOpen();

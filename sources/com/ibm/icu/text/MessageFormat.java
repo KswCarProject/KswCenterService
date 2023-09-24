@@ -1,6 +1,6 @@
 package com.ibm.icu.text;
 
-import android.os.DropBoxManager;
+import android.p007os.DropBoxManager;
 import com.ibm.icu.impl.PatternProps;
 import com.ibm.icu.number.NumberFormatter;
 import com.ibm.icu.text.MessagePattern;
@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+/* loaded from: classes5.dex */
 public class MessageFormat extends UFormat {
     static final /* synthetic */ boolean $assertionsDisabled = false;
     private static final char CURLY_BRACE_LEFT = '{';
@@ -54,21 +55,19 @@ public class MessageFormat extends UFormat {
     private static final int TYPE_ORDINAL = 4;
     private static final int TYPE_SPELLOUT = 3;
     private static final int TYPE_TIME = 2;
-    private static final String[] dateModifierList = {"", "short", "medium", "long", "full"};
-    private static final String[] modifierList = {"", "currency", "percent", "integer"};
-    private static final Locale rootLocale = new Locale("");
     static final long serialVersionUID = 7136212545847378652L;
-    private static final String[] typeList = {"number", "date", DropBoxManager.EXTRA_TIME, "spellout", "ordinal", "duration"};
-    /* access modifiers changed from: private */
-    public transient Map<Integer, Format> cachedFormatters;
+    private transient Map<Integer, Format> cachedFormatters;
     private transient Set<Integer> customFormatArgStarts;
     private transient MessagePattern msgPattern;
     private transient PluralSelectorProvider ordinalProvider;
     private transient PluralSelectorProvider pluralProvider;
     private transient DateFormat stockDateFormatter;
     private transient NumberFormat stockNumberFormatter;
-    /* access modifiers changed from: private */
-    public transient ULocale ulocale;
+    private transient ULocale ulocale;
+    private static final String[] typeList = {"number", "date", DropBoxManager.EXTRA_TIME, "spellout", "ordinal", "duration"};
+    private static final String[] modifierList = {"", "currency", "percent", "integer"};
+    private static final String[] dateModifierList = {"", "short", "medium", "long", "full"};
+    private static final Locale rootLocale = new Locale("");
 
     public MessageFormat(String pattern) {
         this.ulocale = ULocale.getDefault(ULocale.Category.FORMAT);
@@ -136,36 +135,12 @@ public class MessageFormat extends UFormat {
         return this.msgPattern.getApostropheMode();
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:5:0x000b, code lost:
-        r0 = r2.msgPattern.getPatternString();
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public java.lang.String toPattern() {
-        /*
-            r2 = this;
-            java.util.Set<java.lang.Integer> r0 = r2.customFormatArgStarts
-            if (r0 != 0) goto L_0x0018
-            com.ibm.icu.text.MessagePattern r0 = r2.msgPattern
-            if (r0 != 0) goto L_0x000b
-            java.lang.String r0 = ""
-            return r0
-        L_0x000b:
-            com.ibm.icu.text.MessagePattern r0 = r2.msgPattern
-            java.lang.String r0 = r0.getPatternString()
-            if (r0 != 0) goto L_0x0016
-            java.lang.String r1 = ""
-            goto L_0x0017
-        L_0x0016:
-            r1 = r0
-        L_0x0017:
-            return r1
-        L_0x0018:
-            java.lang.IllegalStateException r0 = new java.lang.IllegalStateException
-            java.lang.String r1 = "toPattern() is not supported after custom Format objects have been set via setFormat() or similar APIs"
-            r0.<init>(r1)
-            throw r0
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.ibm.icu.text.MessageFormat.toPattern():java.lang.String");
+    public String toPattern() {
+        String originalPattern;
+        if (this.customFormatArgStarts == null) {
+            return (this.msgPattern == null || (originalPattern = this.msgPattern.getPatternString()) == null) ? "" : originalPattern;
+        }
+        throw new IllegalStateException("toPattern() is not supported after custom Format objects have been set via setFormat() or similar APIs");
     }
 
     private int nextTopLevelArgStart(int partIndex) {
@@ -200,22 +175,21 @@ public class MessageFormat extends UFormat {
     }
 
     public void setFormatsByArgumentIndex(Format[] newFormats) {
-        if (!this.msgPattern.hasNamedArguments()) {
-            int partIndex = 0;
-            while (true) {
-                int nextTopLevelArgStart = nextTopLevelArgStart(partIndex);
-                partIndex = nextTopLevelArgStart;
-                if (nextTopLevelArgStart >= 0) {
-                    int argNumber = this.msgPattern.getPart(partIndex + 1).getValue();
-                    if (argNumber < newFormats.length) {
-                        setCustomArgStartFormat(partIndex, newFormats[argNumber]);
-                    }
-                } else {
-                    return;
-                }
-            }
-        } else {
+        if (this.msgPattern.hasNamedArguments()) {
             throw new IllegalArgumentException("This method is not available in MessageFormat objects that use alphanumeric argument names.");
+        }
+        int partIndex = 0;
+        while (true) {
+            int nextTopLevelArgStart = nextTopLevelArgStart(partIndex);
+            partIndex = nextTopLevelArgStart;
+            if (nextTopLevelArgStart >= 0) {
+                int argNumber = this.msgPattern.getPart(partIndex + 1).getValue();
+                if (argNumber < newFormats.length) {
+                    setCustomArgStartFormat(partIndex, newFormats[argNumber]);
+                }
+            } else {
+                return;
+            }
         }
     }
 
@@ -236,14 +210,12 @@ public class MessageFormat extends UFormat {
     }
 
     public void setFormats(Format[] newFormats) {
-        int formatNumber = 0;
         int partIndex = 0;
-        while (formatNumber < newFormats.length) {
+        for (Format format : newFormats) {
             int nextTopLevelArgStart = nextTopLevelArgStart(partIndex);
             partIndex = nextTopLevelArgStart;
             if (nextTopLevelArgStart >= 0) {
-                setCustomArgStartFormat(partIndex, newFormats[formatNumber]);
-                formatNumber++;
+                setCustomArgStartFormat(partIndex, format);
             } else {
                 return;
             }
@@ -251,36 +223,38 @@ public class MessageFormat extends UFormat {
     }
 
     public void setFormatByArgumentIndex(int argumentIndex, Format newFormat) {
-        if (!this.msgPattern.hasNamedArguments()) {
-            int partIndex = 0;
-            while (true) {
-                int nextTopLevelArgStart = nextTopLevelArgStart(partIndex);
-                partIndex = nextTopLevelArgStart;
-                if (nextTopLevelArgStart < 0) {
-                    return;
-                }
+        if (this.msgPattern.hasNamedArguments()) {
+            throw new IllegalArgumentException("This method is not available in MessageFormat objects that use alphanumeric argument names.");
+        }
+        int partIndex = 0;
+        while (true) {
+            int nextTopLevelArgStart = nextTopLevelArgStart(partIndex);
+            partIndex = nextTopLevelArgStart;
+            if (nextTopLevelArgStart >= 0) {
                 if (this.msgPattern.getPart(partIndex + 1).getValue() == argumentIndex) {
                     setCustomArgStartFormat(partIndex, newFormat);
                 }
+            } else {
+                return;
             }
-        } else {
-            throw new IllegalArgumentException("This method is not available in MessageFormat objects that use alphanumeric argument names.");
         }
     }
 
     public void setFormatByArgumentName(String argumentName, Format newFormat) {
         int argNumber = MessagePattern.validateArgumentName(argumentName);
-        if (argNumber >= -1) {
-            int partIndex = 0;
-            while (true) {
-                int nextTopLevelArgStart = nextTopLevelArgStart(partIndex);
-                partIndex = nextTopLevelArgStart;
-                if (nextTopLevelArgStart < 0) {
-                    return;
-                }
+        if (argNumber < -1) {
+            return;
+        }
+        int partIndex = 0;
+        while (true) {
+            int nextTopLevelArgStart = nextTopLevelArgStart(partIndex);
+            partIndex = nextTopLevelArgStart;
+            if (nextTopLevelArgStart >= 0) {
                 if (argNameMatches(partIndex + 1, argumentName, argNumber)) {
                     setCustomArgStartFormat(partIndex, newFormat);
                 }
+            } else {
+                return;
             }
         }
     }
@@ -291,43 +265,45 @@ public class MessageFormat extends UFormat {
         while (true) {
             int nextTopLevelArgStart = nextTopLevelArgStart(partIndex);
             partIndex = nextTopLevelArgStart;
-            if (nextTopLevelArgStart < 0) {
-                throw new ArrayIndexOutOfBoundsException(formatElementIndex);
-            } else if (formatNumber == formatElementIndex) {
-                setCustomArgStartFormat(partIndex, newFormat);
-                return;
-            } else {
+            if (nextTopLevelArgStart >= 0) {
+                if (formatNumber == formatElementIndex) {
+                    setCustomArgStartFormat(partIndex, newFormat);
+                    return;
+                }
                 formatNumber++;
+            } else {
+                throw new ArrayIndexOutOfBoundsException(formatElementIndex);
             }
         }
     }
 
     public Format[] getFormatsByArgumentIndex() {
         Format format;
-        if (!this.msgPattern.hasNamedArguments()) {
-            ArrayList<Format> list = new ArrayList<>();
-            int partIndex = 0;
-            while (true) {
-                int nextTopLevelArgStart = nextTopLevelArgStart(partIndex);
-                partIndex = nextTopLevelArgStart;
-                if (nextTopLevelArgStart < 0) {
-                    return (Format[]) list.toArray(new Format[list.size()]);
-                }
+        if (this.msgPattern.hasNamedArguments()) {
+            throw new IllegalArgumentException("This method is not available in MessageFormat objects that use alphanumeric argument names.");
+        }
+        ArrayList<Format> list = new ArrayList<>();
+        int partIndex = 0;
+        while (true) {
+            int nextTopLevelArgStart = nextTopLevelArgStart(partIndex);
+            partIndex = nextTopLevelArgStart;
+            if (nextTopLevelArgStart >= 0) {
                 int argNumber = this.msgPattern.getPart(partIndex + 1).getValue();
                 while (true) {
                     format = null;
                     if (argNumber < list.size()) {
                         break;
                     }
-                    list.add((Object) null);
+                    list.add(null);
                 }
                 if (this.cachedFormatters != null) {
                     format = this.cachedFormatters.get(Integer.valueOf(partIndex));
                 }
                 list.set(argNumber, format);
+            } else {
+                int partIndex2 = list.size();
+                return (Format[]) list.toArray(new Format[partIndex2]);
             }
-        } else {
-            throw new IllegalArgumentException("This method is not available in MessageFormat objects that use alphanumeric argument names.");
         }
     }
 
@@ -337,10 +313,12 @@ public class MessageFormat extends UFormat {
         while (true) {
             int nextTopLevelArgStart = nextTopLevelArgStart(partIndex);
             partIndex = nextTopLevelArgStart;
-            if (nextTopLevelArgStart < 0) {
-                return (Format[]) list.toArray(new Format[list.size()]);
+            if (nextTopLevelArgStart >= 0) {
+                list.add(this.cachedFormatters == null ? null : this.cachedFormatters.get(Integer.valueOf(partIndex)));
+            } else {
+                int partIndex2 = list.size();
+                return (Format[]) list.toArray(new Format[partIndex2]);
             }
-            list.add(this.cachedFormatters == null ? null : this.cachedFormatters.get(Integer.valueOf(partIndex)));
         }
     }
 
@@ -350,375 +328,306 @@ public class MessageFormat extends UFormat {
         while (true) {
             int nextTopLevelArgStart = nextTopLevelArgStart(partIndex);
             partIndex = nextTopLevelArgStart;
-            if (nextTopLevelArgStart < 0) {
+            if (nextTopLevelArgStart >= 0) {
+                result.add(getArgName(partIndex + 1));
+            } else {
                 return result;
             }
-            result.add(getArgName(partIndex + 1));
         }
     }
 
     public Format getFormatByArgumentName(String argumentName) {
         int argNumber;
-        if (this.cachedFormatters == null || (argNumber = MessagePattern.validateArgumentName(argumentName)) < -1) {
-            return null;
+        if (this.cachedFormatters != null && (argNumber = MessagePattern.validateArgumentName(argumentName)) >= -1) {
+            int partIndex = 0;
+            do {
+                int nextTopLevelArgStart = nextTopLevelArgStart(partIndex);
+                partIndex = nextTopLevelArgStart;
+                if (nextTopLevelArgStart < 0) {
+                    return null;
+                }
+            } while (!argNameMatches(partIndex + 1, argumentName, argNumber));
+            return this.cachedFormatters.get(Integer.valueOf(partIndex));
         }
-        int partIndex = 0;
-        do {
-            int nextTopLevelArgStart = nextTopLevelArgStart(partIndex);
-            partIndex = nextTopLevelArgStart;
-            if (nextTopLevelArgStart < 0) {
-                return null;
-            }
-        } while (!argNameMatches(partIndex + 1, argumentName, argNumber));
-        return this.cachedFormatters.get(Integer.valueOf(partIndex));
+        return null;
     }
 
     public final StringBuffer format(Object[] arguments, StringBuffer result, FieldPosition pos) {
-        format(arguments, (Map<String, Object>) null, new AppendableWrapper(result), pos);
+        format(arguments, null, new AppendableWrapper(result), pos);
         return result;
     }
 
     public final StringBuffer format(Map<String, Object> arguments, StringBuffer result, FieldPosition pos) {
-        format((Object[]) null, arguments, new AppendableWrapper(result), pos);
+        format(null, arguments, new AppendableWrapper(result), pos);
         return result;
     }
 
     public static String format(String pattern, Object... arguments) {
-        return new MessageFormat(pattern).format(arguments);
+        MessageFormat temp = new MessageFormat(pattern);
+        return temp.format(arguments);
     }
 
     public static String format(String pattern, Map<String, Object> arguments) {
-        return new MessageFormat(pattern).format(arguments);
+        MessageFormat temp = new MessageFormat(pattern);
+        return temp.format(arguments);
     }
 
     public boolean usesNamedArguments() {
         return this.msgPattern.hasNamedArguments();
     }
 
+    @Override // java.text.Format
     public final StringBuffer format(Object arguments, StringBuffer result, FieldPosition pos) {
         format(arguments, new AppendableWrapper(result), pos);
         return result;
     }
 
+    @Override // java.text.Format
     public AttributedCharacterIterator formatToCharacterIterator(Object arguments) {
-        if (arguments != null) {
-            StringBuilder result = new StringBuilder();
-            AppendableWrapper wrapper = new AppendableWrapper(result);
-            wrapper.useAttributes();
-            format(arguments, wrapper, (FieldPosition) null);
-            AttributedString as = new AttributedString(result.toString());
-            for (AttributeAndPosition a : wrapper.attributes) {
-                as.addAttribute(a.key, a.value, a.start, a.limit);
-            }
-            return as.getIterator();
+        if (arguments == null) {
+            throw new NullPointerException("formatToCharacterIterator must be passed non-null object");
         }
-        throw new NullPointerException("formatToCharacterIterator must be passed non-null object");
+        StringBuilder result = new StringBuilder();
+        AppendableWrapper wrapper = new AppendableWrapper(result);
+        wrapper.useAttributes();
+        format(arguments, wrapper, (FieldPosition) null);
+        AttributedString as = new AttributedString(result.toString());
+        for (AttributeAndPosition a : wrapper.attributes) {
+            as.addAttribute(a.key, a.value, a.start, a.limit);
+        }
+        return as.getIterator();
     }
 
     public Object[] parse(String source, ParsePosition pos) {
-        if (!this.msgPattern.hasNamedArguments()) {
-            int maxArgId = -1;
-            int partIndex = 0;
-            while (true) {
-                int nextTopLevelArgStart = nextTopLevelArgStart(partIndex);
-                partIndex = nextTopLevelArgStart;
-                if (nextTopLevelArgStart < 0) {
-                    break;
-                }
-                int argNumber = this.msgPattern.getPart(partIndex + 1).getValue();
-                if (argNumber > maxArgId) {
-                    maxArgId = argNumber;
-                }
-            }
-            Object[] resultArray = new Object[(maxArgId + 1)];
-            int backupStartPos = pos.getIndex();
-            parse(0, source, pos, resultArray, (Map<String, Object>) null);
-            if (pos.getIndex() == backupStartPos) {
-                return null;
-            }
-            return resultArray;
+        if (this.msgPattern.hasNamedArguments()) {
+            throw new IllegalArgumentException("This method is not available in MessageFormat objects that use named argument.");
         }
-        throw new IllegalArgumentException("This method is not available in MessageFormat objects that use named argument.");
-    }
-
-    public Map<String, Object> parseToMap(String source, ParsePosition pos) {
-        HashMap hashMap = new HashMap();
+        int maxArgId = -1;
+        int partIndex = 0;
+        while (true) {
+            int nextTopLevelArgStart = nextTopLevelArgStart(partIndex);
+            partIndex = nextTopLevelArgStart;
+            if (nextTopLevelArgStart < 0) {
+                break;
+            }
+            int argNumber = this.msgPattern.getPart(partIndex + 1).getValue();
+            if (argNumber > maxArgId) {
+                maxArgId = argNumber;
+            }
+        }
+        int partIndex2 = maxArgId + 1;
+        Object[] resultArray = new Object[partIndex2];
         int backupStartPos = pos.getIndex();
-        parse(0, source, pos, (Object[]) null, hashMap);
+        parse(0, source, pos, resultArray, null);
         if (pos.getIndex() == backupStartPos) {
             return null;
         }
-        return hashMap;
+        return resultArray;
+    }
+
+    public Map<String, Object> parseToMap(String source, ParsePosition pos) {
+        Map<String, Object> result = new HashMap<>();
+        int backupStartPos = pos.getIndex();
+        parse(0, source, pos, null, result);
+        if (pos.getIndex() == backupStartPos) {
+            return null;
+        }
+        return result;
     }
 
     public Object[] parse(String source) throws ParseException {
         ParsePosition pos = new ParsePosition(0);
         Object[] result = parse(source, pos);
-        if (pos.getIndex() != 0) {
-            return result;
+        if (pos.getIndex() == 0) {
+            throw new ParseException("MessageFormat parse error!", pos.getErrorIndex());
         }
-        throw new ParseException("MessageFormat parse error!", pos.getErrorIndex());
+        return result;
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:77:0x01b5  */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    private void parse(int r31, java.lang.String r32, java.text.ParsePosition r33, java.lang.Object[] r34, java.util.Map<java.lang.String, java.lang.Object> r35) {
-        /*
-            r30 = this;
-            r0 = r30
-            r1 = r31
-            r2 = r32
-            r3 = r33
-            r4 = r35
-            if (r2 != 0) goto L_0x000d
-            return
-        L_0x000d:
-            com.ibm.icu.text.MessagePattern r5 = r0.msgPattern
-            java.lang.String r5 = r5.getPatternString()
-            com.ibm.icu.text.MessagePattern r6 = r0.msgPattern
-            com.ibm.icu.text.MessagePattern$Part r6 = r6.getPart(r1)
-            int r6 = r6.getLimit()
-            int r7 = r33.getIndex()
-            java.text.ParsePosition r8 = new java.text.ParsePosition
-            r9 = 0
-            r8.<init>(r9)
-            int r9 = r1 + 1
-        L_0x0029:
-            com.ibm.icu.text.MessagePattern r10 = r0.msgPattern
-            com.ibm.icu.text.MessagePattern$Part r10 = r10.getPart(r9)
-            com.ibm.icu.text.MessagePattern$Part$Type r11 = r10.getType()
-            int r12 = r10.getIndex()
-            int r13 = r12 - r6
-            if (r13 == 0) goto L_0x0046
-            boolean r14 = r5.regionMatches(r6, r2, r7, r13)
-            if (r14 == 0) goto L_0x0042
-            goto L_0x0046
-        L_0x0042:
-            r3.setErrorIndex(r7)
-            return
-        L_0x0046:
-            int r7 = r7 + r13
-            int r6 = r6 + r13
-            com.ibm.icu.text.MessagePattern$Part$Type r14 = com.ibm.icu.text.MessagePattern.Part.Type.MSG_LIMIT
-            if (r11 != r14) goto L_0x0050
-            r3.setIndex(r7)
-            return
-        L_0x0050:
-            com.ibm.icu.text.MessagePattern$Part$Type r14 = com.ibm.icu.text.MessagePattern.Part.Type.SKIP_SYNTAX
-            if (r11 == r14) goto L_0x01cb
-            com.ibm.icu.text.MessagePattern$Part$Type r14 = com.ibm.icu.text.MessagePattern.Part.Type.INSERT_CHAR
-            if (r11 != r14) goto L_0x0061
-            r15 = r5
-            r18 = r6
-            r28 = r8
-            r23 = r11
-            goto L_0x01d2
-        L_0x0061:
-            com.ibm.icu.text.MessagePattern r14 = r0.msgPattern
-            int r14 = r14.getLimitPartIndex(r9)
-            com.ibm.icu.text.MessagePattern$ArgType r1 = r10.getArgType()
-            r15 = r5
-            com.ibm.icu.text.MessagePattern r5 = r0.msgPattern
-            int r9 = r9 + 1
-            com.ibm.icu.text.MessagePattern$Part r5 = r5.getPart(r9)
-            r10 = 0
-            r16 = 0
-            r17 = 0
-            if (r34 == 0) goto L_0x0089
-            int r16 = r5.getValue()
-            java.lang.Integer r10 = java.lang.Integer.valueOf(r16)
-            r18 = r6
-        L_0x0086:
-            r6 = r17
-            goto L_0x00aa
-        L_0x0089:
-            r18 = r6
-            com.ibm.icu.text.MessagePattern$Part$Type r6 = r5.getType()
-            r19 = r10
-            com.ibm.icu.text.MessagePattern$Part$Type r10 = com.ibm.icu.text.MessagePattern.Part.Type.ARG_NAME
-            if (r6 != r10) goto L_0x009e
-            com.ibm.icu.text.MessagePattern r6 = r0.msgPattern
-            java.lang.String r6 = r6.getSubstring(r5)
-        L_0x009b:
-            r17 = r6
-            goto L_0x00a7
-        L_0x009e:
-            int r6 = r5.getValue()
-            java.lang.String r6 = java.lang.Integer.toString(r6)
-            goto L_0x009b
-        L_0x00a7:
-            r10 = r17
-            goto L_0x0086
-        L_0x00aa:
-            int r9 = r9 + 1
-            r17 = 0
-            r19 = 0
-            r20 = 0
-            r21 = r5
-            java.util.Map<java.lang.Integer, java.text.Format> r5 = r0.cachedFormatters
-            if (r5 == 0) goto L_0x00ee
-            java.util.Map<java.lang.Integer, java.text.Format> r5 = r0.cachedFormatters
-            int r22 = r9 + -2
-            r23 = r11
-            java.lang.Integer r11 = java.lang.Integer.valueOf(r22)
-            java.lang.Object r5 = r5.get(r11)
-            java.text.Format r5 = (java.text.Format) r5
-            r11 = r5
-            if (r5 == 0) goto L_0x00f2
-            r8.setIndex(r7)
-            java.lang.Object r5 = r11.parseObject(r2, r8)
-            r24 = r5
-            int r5 = r8.getIndex()
-            if (r5 != r7) goto L_0x00de
-            r3.setErrorIndex(r7)
-            return
-        L_0x00de:
-            r5 = 1
-            int r7 = r8.getIndex()
-            r29 = r1
-            r28 = r8
-            r25 = r11
-            r11 = r5
-            r5 = r24
-            goto L_0x01b3
-        L_0x00ee:
-            r23 = r11
-            r11 = r17
-        L_0x00f2:
-            com.ibm.icu.text.MessagePattern$ArgType r5 = com.ibm.icu.text.MessagePattern.ArgType.NONE
-            if (r1 == r5) goto L_0x0166
-            java.util.Map<java.lang.Integer, java.text.Format> r5 = r0.cachedFormatters
-            if (r5 == 0) goto L_0x010d
-            java.util.Map<java.lang.Integer, java.text.Format> r5 = r0.cachedFormatters
-            int r17 = r9 + -2
-            r25 = r11
-            java.lang.Integer r11 = java.lang.Integer.valueOf(r17)
-            boolean r5 = r5.containsKey(r11)
-            if (r5 == 0) goto L_0x010f
-            r28 = r8
-            goto L_0x016a
-        L_0x010d:
-            r25 = r11
-        L_0x010f:
-            com.ibm.icu.text.MessagePattern$ArgType r5 = com.ibm.icu.text.MessagePattern.ArgType.CHOICE
-            if (r1 != r5) goto L_0x0136
-            r8.setIndex(r7)
-            com.ibm.icu.text.MessagePattern r5 = r0.msgPattern
-            double r26 = parseChoiceArgument(r5, r9, r2, r8)
-            int r5 = r8.getIndex()
-            if (r5 != r7) goto L_0x0126
-            r3.setErrorIndex(r7)
-            return
-        L_0x0126:
-            java.lang.Double r5 = java.lang.Double.valueOf(r26)
-            r11 = 1
-            int r7 = r8.getIndex()
-            r29 = r1
-            r28 = r8
-            goto L_0x01b3
-        L_0x0136:
-            boolean r5 = r1.hasPluralStyle()
-            if (r5 != 0) goto L_0x015c
-            com.ibm.icu.text.MessagePattern$ArgType r5 = com.ibm.icu.text.MessagePattern.ArgType.SELECT
-            if (r1 != r5) goto L_0x0143
-            r28 = r8
-            goto L_0x015e
-        L_0x0143:
-            java.lang.IllegalStateException r5 = new java.lang.IllegalStateException
-            java.lang.StringBuilder r11 = new java.lang.StringBuilder
-            r11.<init>()
-            r28 = r8
-            java.lang.String r8 = "unexpected argType "
-            r11.append(r8)
-            r11.append(r1)
-            java.lang.String r8 = r11.toString()
-            r5.<init>(r8)
-            throw r5
-        L_0x015c:
-            r28 = r8
-        L_0x015e:
-            java.lang.UnsupportedOperationException r5 = new java.lang.UnsupportedOperationException
-            java.lang.String r8 = "Parsing of plural/select/selectordinal argument is not supported."
-            r5.<init>(r8)
-            throw r5
-        L_0x0166:
-            r28 = r8
-            r25 = r11
-        L_0x016a:
-            java.lang.String r5 = r0.getLiteralStringUntilNextArgument(r14)
-            int r8 = r5.length()
-            if (r8 == 0) goto L_0x0179
-            int r8 = r2.indexOf(r5, r7)
-            goto L_0x017d
-        L_0x0179:
-            int r8 = r32.length()
-        L_0x017d:
-            if (r8 >= 0) goto L_0x0183
-            r3.setErrorIndex(r7)
-            return
-        L_0x0183:
-            java.lang.String r11 = r2.substring(r7, r8)
-            r29 = r1
-            java.lang.StringBuilder r1 = new java.lang.StringBuilder
-            r1.<init>()
-            java.lang.String r2 = "{"
-            r1.append(r2)
-            java.lang.String r2 = r10.toString()
-            r1.append(r2)
-            java.lang.String r2 = "}"
-            r1.append(r2)
-            java.lang.String r1 = r1.toString()
-            boolean r1 = r11.equals(r1)
-            if (r1 != 0) goto L_0x01ad
-            r19 = 1
-            r20 = r11
-        L_0x01ad:
-            r7 = r8
-            r11 = r19
-            r5 = r20
-        L_0x01b3:
-            if (r11 == 0) goto L_0x01bf
-            if (r34 == 0) goto L_0x01ba
-            r34[r16] = r5
-            goto L_0x01bf
-        L_0x01ba:
-            if (r4 == 0) goto L_0x01bf
-            r4.put(r6, r5)
-        L_0x01bf:
-            com.ibm.icu.text.MessagePattern r1 = r0.msgPattern
-            com.ibm.icu.text.MessagePattern$Part r1 = r1.getPart(r14)
-            int r1 = r1.getLimit()
-            r9 = r14
-            goto L_0x01d7
-        L_0x01cb:
-            r15 = r5
-            r18 = r6
-            r28 = r8
-            r23 = r11
-        L_0x01d2:
-            int r1 = r10.getLimit()
-        L_0x01d7:
-            r6 = r1
-            int r9 = r9 + 1
-            r5 = r15
-            r8 = r28
-            r1 = r31
-            r2 = r32
-            goto L_0x0029
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.ibm.icu.text.MessageFormat.parse(int, java.lang.String, java.text.ParsePosition, java.lang.Object[], java.util.Map):void");
+    /* JADX WARN: Removed duplicated region for block: B:80:0x01b5  */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    private void parse(int msgStart, String source, ParsePosition pos, Object[] args, Map<String, Object> argsMap) {
+        String msgString;
+        ParsePosition tempStatus;
+        int prevIndex;
+        String num;
+        Object argId;
+        Format formatter;
+        int next;
+        boolean haveArgResult;
+        Object argResult;
+        String str = source;
+        if (str == null) {
+            return;
+        }
+        String msgString2 = this.msgPattern.getPatternString();
+        int prevIndex2 = this.msgPattern.getPart(msgStart).getLimit();
+        int sourceOffset = pos.getIndex();
+        ParsePosition tempStatus2 = new ParsePosition(0);
+        int i = msgStart + 1;
+        while (true) {
+            MessagePattern.Part part = this.msgPattern.getPart(i);
+            MessagePattern.Part.Type type = part.getType();
+            int index = part.getIndex();
+            int len = index - prevIndex2;
+            if (len == 0 || msgString2.regionMatches(prevIndex2, str, sourceOffset, len)) {
+                sourceOffset += len;
+                int i2 = prevIndex2 + len;
+                if (type == MessagePattern.Part.Type.MSG_LIMIT) {
+                    pos.setIndex(sourceOffset);
+                    return;
+                }
+                if (type == MessagePattern.Part.Type.SKIP_SYNTAX) {
+                    msgString = msgString2;
+                    tempStatus = tempStatus2;
+                } else if (type == MessagePattern.Part.Type.INSERT_CHAR) {
+                    msgString = msgString2;
+                    tempStatus = tempStatus2;
+                } else {
+                    int argLimit = this.msgPattern.getLimitPartIndex(i);
+                    MessagePattern.ArgType argType = part.getArgType();
+                    msgString = msgString2;
+                    int i3 = i + 1;
+                    MessagePattern.Part part2 = this.msgPattern.getPart(i3);
+                    int argNumber = 0;
+                    String key = null;
+                    if (args != null) {
+                        argNumber = part2.getValue();
+                        argId = Integer.valueOf(argNumber);
+                    } else {
+                        Object type2 = part2.getType();
+                        Object argId2 = MessagePattern.Part.Type.ARG_NAME;
+                        if (type2 == argId2) {
+                            num = this.msgPattern.getSubstring(part2);
+                        } else {
+                            num = Integer.toString(part2.getValue());
+                        }
+                        key = num;
+                        argId = key;
+                    }
+                    String key2 = key;
+                    int i4 = i3 + 1;
+                    boolean haveArgResult2 = false;
+                    Object argResult2 = null;
+                    if (this.cachedFormatters != null) {
+                        Format format = this.cachedFormatters.get(Integer.valueOf(i4 - 2));
+                        formatter = format;
+                        if (format != null) {
+                            tempStatus2.setIndex(sourceOffset);
+                            Object argResult3 = formatter.parseObject(str, tempStatus2);
+                            if (tempStatus2.getIndex() == sourceOffset) {
+                                pos.setErrorIndex(sourceOffset);
+                                return;
+                            }
+                            sourceOffset = tempStatus2.getIndex();
+                            tempStatus = tempStatus2;
+                            haveArgResult = true;
+                            argResult = argResult3;
+                            if (haveArgResult) {
+                                if (args != null) {
+                                    args[argNumber] = argResult;
+                                } else if (argsMap != null) {
+                                    argsMap.put(key2, argResult);
+                                }
+                            }
+                            prevIndex = this.msgPattern.getPart(argLimit).getLimit();
+                            i = argLimit;
+                            prevIndex2 = prevIndex;
+                            i++;
+                            msgString2 = msgString;
+                            tempStatus2 = tempStatus;
+                            str = source;
+                        }
+                    } else {
+                        formatter = null;
+                    }
+                    if (argType != MessagePattern.ArgType.NONE) {
+                        if (this.cachedFormatters != null && this.cachedFormatters.containsKey(Integer.valueOf(i4 - 2))) {
+                            tempStatus = tempStatus2;
+                        }
+                        if (argType == MessagePattern.ArgType.CHOICE) {
+                            tempStatus2.setIndex(sourceOffset);
+                            double choiceResult = parseChoiceArgument(this.msgPattern, i4, str, tempStatus2);
+                            if (tempStatus2.getIndex() == sourceOffset) {
+                                pos.setErrorIndex(sourceOffset);
+                                return;
+                            }
+                            argResult = Double.valueOf(choiceResult);
+                            haveArgResult = true;
+                            sourceOffset = tempStatus2.getIndex();
+                            tempStatus = tempStatus2;
+                            if (haveArgResult) {
+                            }
+                            prevIndex = this.msgPattern.getPart(argLimit).getLimit();
+                            i = argLimit;
+                            prevIndex2 = prevIndex;
+                            i++;
+                            msgString2 = msgString;
+                            tempStatus2 = tempStatus;
+                            str = source;
+                        } else {
+                            if (!argType.hasPluralStyle() && argType != MessagePattern.ArgType.SELECT) {
+                                throw new IllegalStateException("unexpected argType " + argType);
+                            }
+                            throw new UnsupportedOperationException("Parsing of plural/select/selectordinal argument is not supported.");
+                        }
+                    } else {
+                        tempStatus = tempStatus2;
+                    }
+                    String stringAfterArgument = getLiteralStringUntilNextArgument(argLimit);
+                    if (stringAfterArgument.length() != 0) {
+                        next = str.indexOf(stringAfterArgument, sourceOffset);
+                    } else {
+                        next = source.length();
+                    }
+                    if (next < 0) {
+                        pos.setErrorIndex(sourceOffset);
+                        return;
+                    }
+                    String strValue = str.substring(sourceOffset, next);
+                    if (!strValue.equals("{" + argId.toString() + "}")) {
+                        haveArgResult2 = true;
+                        argResult2 = strValue;
+                    }
+                    sourceOffset = next;
+                    haveArgResult = haveArgResult2;
+                    argResult = argResult2;
+                    if (haveArgResult) {
+                    }
+                    prevIndex = this.msgPattern.getPart(argLimit).getLimit();
+                    i = argLimit;
+                    prevIndex2 = prevIndex;
+                    i++;
+                    msgString2 = msgString;
+                    tempStatus2 = tempStatus;
+                    str = source;
+                }
+                prevIndex = part.getLimit();
+                prevIndex2 = prevIndex;
+                i++;
+                msgString2 = msgString;
+                tempStatus2 = tempStatus;
+                str = source;
+            } else {
+                pos.setErrorIndex(sourceOffset);
+                return;
+            }
+        }
     }
 
     public Map<String, Object> parseToMap(String source) throws ParseException {
         ParsePosition pos = new ParsePosition(0);
         Map<String, Object> result = new HashMap<>();
-        parse(0, source, pos, (Object[]) null, result);
+        parse(0, source, pos, null, result);
         if (pos.getIndex() != 0) {
             return result;
         }
         throw new ParseException("MessageFormat parse error!", pos.getErrorIndex());
     }
 
+    @Override // java.text.Format
     public Object parseObject(String source, ParsePosition pos) {
         if (!this.msgPattern.hasNamedArguments()) {
             return parse(source, pos);
@@ -726,6 +635,7 @@ public class MessageFormat extends UFormat {
         return parseToMap(source, pos);
     }
 
+    @Override // java.text.Format
     public Object clone() {
         MessageFormat other = (MessageFormat) super.clone();
         if (this.customFormatArgStarts != null) {
@@ -760,16 +670,17 @@ public class MessageFormat extends UFormat {
             return false;
         }
         MessageFormat other = (MessageFormat) obj;
-        if (!Objects.equals(this.ulocale, other.ulocale) || !Objects.equals(this.msgPattern, other.msgPattern) || !Objects.equals(this.cachedFormatters, other.cachedFormatters) || !Objects.equals(this.customFormatArgStarts, other.customFormatArgStarts)) {
-            return false;
+        if (Objects.equals(this.ulocale, other.ulocale) && Objects.equals(this.msgPattern, other.msgPattern) && Objects.equals(this.cachedFormatters, other.cachedFormatters) && Objects.equals(this.customFormatArgStarts, other.customFormatArgStarts)) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     public int hashCode() {
         return this.msgPattern.getPatternString().hashCode();
     }
 
+    /* loaded from: classes5.dex */
     public static class Field extends Format.Field {
         public static final Field ARGUMENT = new Field("message argument field");
         private static final long serialVersionUID = 7510380454602616157L;
@@ -778,15 +689,15 @@ public class MessageFormat extends UFormat {
             super(name);
         }
 
-        /* access modifiers changed from: protected */
-        public Object readResolve() throws InvalidObjectException {
+        @Override // java.text.AttributedCharacterIterator.Attribute
+        protected Object readResolve() throws InvalidObjectException {
             if (getClass() != Field.class) {
                 throw new InvalidObjectException("A subclass of MessageFormat.Field must implement readResolve.");
-            } else if (getName().equals(ARGUMENT.getName())) {
-                return ARGUMENT;
-            } else {
-                throw new InvalidObjectException("Unknown attribute name.");
             }
+            if (getName().equals(ARGUMENT.getName())) {
+                return ARGUMENT;
+            }
+            throw new InvalidObjectException("Unknown attribute name.");
         }
     }
 
@@ -797,7 +708,7 @@ public class MessageFormat extends UFormat {
         return this.stockDateFormatter;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public NumberFormat getStockNumberFormatter() {
         if (this.stockNumberFormatter == null) {
             this.stockNumberFormatter = NumberFormat.getInstance(this.ulocale);
@@ -807,410 +718,351 @@ public class MessageFormat extends UFormat {
 
     private void format(int msgStart, PluralSelectorContext pluralNumber, Object[] args, Map<String, Object> argsMap, AppendableWrapper dest, FieldPosition fp) {
         String msgString;
-        AppendableWrapper appendableWrapper;
-        int prevDestLength;
-        String msgString2;
-        Object arg;
-        int prevDestLength2;
         Object argId;
-        int index;
-        FieldPosition fp2;
-        String argName;
-        MessagePattern.ArgType argType;
-        int prevDestLength3;
-        Object arg2;
-        int prevDestLength4;
-        int index2;
-        String msgString3;
-        PluralSelectorProvider pluralSelectorProvider;
+        Object arg;
+        int prevDestLength;
         Object argId2;
-        FieldPosition fp3;
-        MessagePattern.ArgType argType2;
-        int prevDestLength5;
-        int i = msgStart;
+        Object argType;
+        FieldPosition fp2;
+        Object arg2;
+        int prevDestLength2;
+        int index;
+        String msgString2;
+        AppendableWrapper appendableWrapper;
+        PluralSelectorProvider pluralSelectorProvider;
+        int prevDestLength3;
+        Object argType2;
+        String argName;
+        int prevDestLength4;
         PluralSelectorContext pluralSelectorContext = pluralNumber;
         Object[] objArr = args;
         Map<String, Object> map = argsMap;
         AppendableWrapper appendableWrapper2 = dest;
-        String msgString4 = this.msgPattern.getPatternString();
-        int i2 = this.msgPattern.getPart(i).getLimit();
-        int i3 = i + 1;
-        FieldPosition fp4 = fp;
+        String msgString3 = this.msgPattern.getPatternString();
+        int i = this.msgPattern.getPart(msgStart).getLimit();
+        int i2 = msgStart + 1;
+        FieldPosition fp3 = fp;
         while (true) {
-            MessagePattern.Part part = this.msgPattern.getPart(i3);
+            MessagePattern.Part part = this.msgPattern.getPart(i2);
             MessagePattern.Part.Type type = part.getType();
-            int index3 = part.getIndex();
-            appendableWrapper2.append(msgString4, i2, index3);
-            if (type != MessagePattern.Part.Type.MSG_LIMIT) {
-                int prevIndex = part.getLimit();
-                if (type == MessagePattern.Part.Type.REPLACE_NUMBER) {
-                    if (pluralSelectorContext.forReplaceNumber) {
-                        appendableWrapper2.formatAndAppend(pluralSelectorContext.formatter, pluralSelectorContext.number, pluralSelectorContext.numberString);
+            int index2 = part.getIndex();
+            appendableWrapper2.append(msgString3, i, index2);
+            if (type == MessagePattern.Part.Type.MSG_LIMIT) {
+                return;
+            }
+            int prevIndex = part.getLimit();
+            if (type == MessagePattern.Part.Type.REPLACE_NUMBER) {
+                if (pluralSelectorContext.forReplaceNumber) {
+                    appendableWrapper2.formatAndAppend(pluralSelectorContext.formatter, pluralSelectorContext.number, pluralSelectorContext.numberString);
+                } else {
+                    appendableWrapper2.formatAndAppend(getStockNumberFormatter(), pluralSelectorContext.number);
+                }
+            } else if (type == MessagePattern.Part.Type.ARG_START) {
+                int argLimit = this.msgPattern.getLimitPartIndex(i2);
+                Object argType3 = part.getArgType();
+                int i3 = i2 + 1;
+                MessagePattern.Part part2 = this.msgPattern.getPart(i3);
+                boolean noArg = false;
+                String argName2 = this.msgPattern.getSubstring(part2);
+                if (objArr != null) {
+                    msgString = msgString3;
+                    int argNumber = part2.getValue();
+                    argId = dest.attributes != null ? Integer.valueOf(argNumber) : null;
+                    if (argNumber < 0 || argNumber >= objArr.length) {
+                        arg = null;
+                        noArg = true;
                     } else {
-                        appendableWrapper2.formatAndAppend(getStockNumberFormatter(), pluralSelectorContext.number);
+                        arg = objArr[argNumber];
                     }
-                } else if (type == MessagePattern.Part.Type.ARG_START) {
-                    int argLimit = this.msgPattern.getLimitPartIndex(i3);
-                    MessagePattern.ArgType argType3 = part.getArgType();
-                    int i4 = i3 + 1;
-                    MessagePattern.Part part2 = this.msgPattern.getPart(i4);
-                    boolean noArg = false;
-                    Object argId3 = null;
-                    int argLimit2 = argLimit;
-                    String argName2 = this.msgPattern.getSubstring(part2);
-                    if (objArr != null) {
-                        msgString2 = msgString4;
-                        int argNumber = part2.getValue();
-                        if (dest.attributes != null) {
-                            argId3 = Integer.valueOf(argNumber);
-                        }
-                        if (argNumber < 0 || argNumber >= objArr.length) {
-                            arg = null;
-                            noArg = true;
-                        } else {
-                            arg = objArr[argNumber];
-                        }
+                } else {
+                    msgString = msgString3;
+                    argId = argName2;
+                    if (map == null || !map.containsKey(argName2)) {
+                        arg = null;
+                        noArg = true;
                     } else {
-                        msgString2 = msgString4;
-                        argId3 = argName2;
-                        if (map == null || !map.containsKey(argName2)) {
-                            arg = null;
-                            noArg = true;
-                        } else {
-                            arg = map.get(argName2);
-                        }
+                        arg = map.get(argName2);
                     }
-                    Object arg3 = arg;
-                    boolean noArg2 = noArg;
-                    int i5 = i4 + 1;
-                    int prevDestLength6 = dest.length;
-                    if (noArg2) {
-                        appendableWrapper2.append((CharSequence) "{" + argName2 + "}");
-                    } else if (arg3 == null) {
-                        appendableWrapper2.append((CharSequence) "null");
-                    } else if (pluralSelectorContext == null || pluralSelectorContext.numberArgIndex != i5 - 2) {
-                        String argName3 = argName2;
-                        if (this.cachedFormatters != null) {
-                            Format format = this.cachedFormatters.get(Integer.valueOf(i5 - 2));
-                            Format formatter = format;
-                            if (format != null) {
-                                if ((formatter instanceof ChoiceFormat) || (formatter instanceof PluralFormat) || (formatter instanceof SelectFormat)) {
-                                    String subMsgString = formatter.format(arg3);
-                                    if (subMsgString.indexOf(123) >= 0 || (subMsgString.indexOf(39) >= 0 && !this.msgPattern.jdkAposMode())) {
-                                        prevDestLength5 = prevDestLength6;
-                                        argId = argId3;
-                                        MessagePattern.Part part3 = part2;
-                                        argType2 = argType3;
-                                        int i6 = index3;
-                                        MessagePattern.Part.Type type2 = type;
-                                        boolean z = noArg2;
-                                        fp2 = fp4;
-                                        new MessageFormat(subMsgString, this.ulocale).format(0, (PluralSelectorContext) null, args, argsMap, dest, (FieldPosition) null);
-                                    } else {
-                                        if (dest.attributes == null) {
-                                            appendableWrapper2.append((CharSequence) subMsgString);
-                                        } else {
-                                            appendableWrapper2.formatAndAppend(formatter, arg3);
-                                        }
-                                        prevDestLength5 = prevDestLength6;
-                                        argId = argId3;
-                                        argType2 = argType3;
-                                        fp2 = fp4;
-                                    }
-                                } else {
-                                    appendableWrapper2.formatAndAppend(formatter, arg3);
-                                    boolean z2 = noArg2;
-                                    prevDestLength5 = prevDestLength6;
-                                    argId = argId3;
-                                    MessagePattern.Part part4 = part2;
+                }
+                Object arg3 = arg;
+                boolean noArg2 = noArg;
+                int i4 = i3 + 1;
+                int prevDestLength5 = dest.length;
+                if (noArg2) {
+                    appendableWrapper2.append("{" + argName2 + "}");
+                } else if (arg3 == null) {
+                    appendableWrapper2.append("null");
+                } else if (pluralSelectorContext == null || pluralSelectorContext.numberArgIndex != i4 - 2) {
+                    if (this.cachedFormatters != null) {
+                        Format formatter = this.cachedFormatters.get(Integer.valueOf(i4 - 2));
+                        if (formatter != null) {
+                            if ((formatter instanceof ChoiceFormat) || (formatter instanceof PluralFormat) || (formatter instanceof SelectFormat)) {
+                                String subMsgString = formatter.format(arg3);
+                                if (subMsgString.indexOf(123) >= 0 || (subMsgString.indexOf(39) >= 0 && !this.msgPattern.jdkAposMode())) {
+                                    MessageFormat subMsgFormat = new MessageFormat(subMsgString, this.ulocale);
+                                    prevDestLength3 = prevDestLength5;
+                                    argId2 = argId;
                                     argType2 = argType3;
-                                    int i7 = index3;
-                                    MessagePattern.Part.Type type3 = type;
-                                    fp2 = fp4;
-                                }
-                                int i8 = i5;
-                                Object obj = arg3;
-                                prevDestLength2 = prevDestLength5;
-                                Format format2 = formatter;
-                                Object argId4 = argType2;
-                                index = argLimit2;
-                                msgString = msgString2;
-                                String str = argName3;
-                                appendableWrapper = dest;
-                                prevDestLength = index;
-                                fp4 = updateMetaData(appendableWrapper, prevDestLength2, fp2, argId);
-                                prevIndex = this.msgPattern.getPart(index).getLimit();
-                                objArr = args;
-                                map = argsMap;
-                                appendableWrapper2 = appendableWrapper;
-                                msgString4 = msgString;
-                                int i9 = msgStart;
-                                pluralSelectorContext = pluralNumber;
-                                i3 = prevDestLength + 1;
-                                i2 = prevIndex;
-                            } else {
-                                prevDestLength3 = prevDestLength6;
-                                argId2 = argId3;
-                                MessagePattern.Part part5 = part2;
-                                argType = argType3;
-                                int i10 = index3;
-                                MessagePattern.Part.Type type4 = type;
-                                fp3 = fp4;
-                                Format format3 = formatter;
-                            }
-                        } else {
-                            boolean z3 = noArg2;
-                            prevDestLength3 = prevDestLength6;
-                            argId2 = argId3;
-                            MessagePattern.Part part6 = part2;
-                            argType = argType3;
-                            int i11 = index3;
-                            MessagePattern.Part.Type type5 = type;
-                            fp3 = fp4;
-                        }
-                        if (argType == MessagePattern.ArgType.NONE) {
-                            arg2 = arg3;
-                            prevDestLength4 = prevDestLength3;
-                            MessagePattern.ArgType argType4 = argType;
-                            index2 = argLimit2;
-                            msgString3 = msgString2;
-                            String str2 = argName3;
-                        } else if (this.cachedFormatters == null || !this.cachedFormatters.containsKey(Integer.valueOf(i5 - 2))) {
-                            if (argType != MessagePattern.ArgType.CHOICE) {
-                                int i12 = i5;
-                                Object arg4 = arg3;
-                                prevDestLength2 = prevDestLength3;
-                                MessagePattern.ArgType argType5 = argType;
-                                index = argLimit2;
-                                msgString = msgString2;
-                                String argName4 = argName3;
-                                if (!argType5.hasPluralStyle()) {
-                                    MessagePattern.ArgType argType6 = argType5;
-                                    if (argType6 == MessagePattern.ArgType.SELECT) {
-                                        formatComplexSubMessage(SelectFormat.findSubMessage(this.msgPattern, i12, arg4.toString()), (PluralSelectorContext) null, args, argsMap, dest);
-                                    } else {
-                                        throw new IllegalStateException("unexpected argType " + argType6);
-                                    }
-                                } else if (arg4 instanceof Number) {
-                                    if (argType5 == MessagePattern.ArgType.PLURAL) {
-                                        if (this.pluralProvider == null) {
-                                            this.pluralProvider = new PluralSelectorProvider(this, PluralRules.PluralType.CARDINAL);
-                                        }
-                                        pluralSelectorProvider = this.pluralProvider;
-                                    } else {
-                                        if (this.ordinalProvider == null) {
-                                            this.ordinalProvider = new PluralSelectorProvider(this, PluralRules.PluralType.ORDINAL);
-                                        }
-                                        pluralSelectorProvider = this.ordinalProvider;
-                                    }
-                                    PluralSelectorProvider selector = pluralSelectorProvider;
-                                    Number number = (Number) arg4;
-                                    PluralSelectorContext pluralSelectorContext2 = new PluralSelectorContext(i12, argName4, number, this.msgPattern.getPluralOffset(i12));
-                                    formatComplexSubMessage(PluralFormat.findSubMessage(this.msgPattern, i12, selector, pluralSelectorContext2, number.doubleValue()), pluralSelectorContext2, args, argsMap, dest);
+                                    fp2 = fp3;
+                                    subMsgFormat.format(0, null, args, argsMap, dest, null);
                                 } else {
-                                    throw new IllegalArgumentException("'" + arg4 + "' is not a Number");
+                                    if (dest.attributes == null) {
+                                        appendableWrapper2.append(subMsgString);
+                                    } else {
+                                        appendableWrapper2.formatAndAppend(formatter, arg3);
+                                    }
+                                    prevDestLength3 = prevDestLength5;
+                                    argId2 = argId;
+                                    argType2 = argType3;
+                                    fp2 = fp3;
                                 }
-                            } else if (arg3 instanceof Number) {
-                                index = argLimit2;
-                                String str3 = argName3;
-                                int i13 = i5;
-                                Object obj2 = arg3;
-                                msgString = msgString2;
-                                prevDestLength2 = prevDestLength3;
-                                AppendableWrapper appendableWrapper3 = dest;
-                                formatComplexSubMessage(findChoiceSubMessage(this.msgPattern, i5, ((Number) arg3).doubleValue()), (PluralSelectorContext) null, args, argsMap, dest);
-                                MessagePattern.ArgType argType7 = argType;
                             } else {
-                                int i14 = prevDestLength3;
-                                MessagePattern.ArgType argType8 = argType;
-                                int i15 = argLimit2;
-                                String str4 = msgString2;
-                                String str5 = argName3;
-                                throw new IllegalArgumentException("'" + arg3 + "' is not a Number");
+                                appendableWrapper2.formatAndAppend(formatter, arg3);
+                                prevDestLength3 = prevDestLength5;
+                                argId2 = argId;
+                                argType2 = argType3;
+                                fp2 = fp3;
                             }
+                            prevDestLength2 = prevDestLength3;
+                            index = argLimit;
+                            msgString2 = msgString;
                             appendableWrapper = dest;
-                            prevDestLength = index;
-                            fp4 = updateMetaData(appendableWrapper, prevDestLength2, fp2, argId);
-                            prevIndex = this.msgPattern.getPart(index).getLimit();
+                            FieldPosition fp4 = updateMetaData(appendableWrapper, prevDestLength2, fp2, argId2);
+                            int prevIndex2 = this.msgPattern.getPart(index).getLimit();
+                            prevDestLength4 = index;
+                            fp3 = fp4;
+                            prevIndex = prevIndex2;
+                            int i5 = prevDestLength4 + 1;
                             objArr = args;
                             map = argsMap;
                             appendableWrapper2 = appendableWrapper;
-                            msgString4 = msgString;
-                            int i92 = msgStart;
-                            pluralSelectorContext = pluralNumber;
-                            i3 = prevDestLength + 1;
-                            i2 = prevIndex;
-                        } else {
-                            int i16 = i5;
-                            arg2 = arg3;
-                            prevDestLength4 = prevDestLength3;
-                            MessagePattern.ArgType argType9 = argType;
-                            index2 = argLimit2;
                             msgString3 = msgString2;
-                            String str6 = argName3;
-                        }
-                        if (arg2 instanceof Number) {
-                            appendableWrapper = dest;
-                            appendableWrapper.formatAndAppend(getStockNumberFormatter(), arg2);
+                            pluralSelectorContext = pluralNumber;
+                            i2 = i5;
+                            i = prevIndex;
                         } else {
-                            appendableWrapper = dest;
-                            if (arg2 instanceof Date) {
-                                appendableWrapper.formatAndAppend(getStockDateFormatter(), arg2);
-                            } else {
-                                appendableWrapper.append((CharSequence) arg2.toString());
-                            }
+                            prevDestLength = prevDestLength5;
+                            argId2 = argId;
+                            argType = argType3;
+                            fp2 = fp3;
                         }
-                        prevDestLength = index;
-                        fp4 = updateMetaData(appendableWrapper, prevDestLength2, fp2, argId);
-                        prevIndex = this.msgPattern.getPart(index).getLimit();
-                        objArr = args;
-                        map = argsMap;
-                        appendableWrapper2 = appendableWrapper;
-                        msgString4 = msgString;
-                        int i922 = msgStart;
-                        pluralSelectorContext = pluralNumber;
-                        i3 = prevDestLength + 1;
-                        i2 = prevIndex;
                     } else {
-                        if (pluralSelectorContext.offset == 0.0d) {
-                            argName = argName2;
-                            appendableWrapper2.formatAndAppend(pluralSelectorContext.formatter, pluralSelectorContext.number, pluralSelectorContext.numberString);
+                        prevDestLength = prevDestLength5;
+                        argId2 = argId;
+                        argType = argType3;
+                        fp2 = fp3;
+                    }
+                    if (argType == MessagePattern.ArgType.NONE) {
+                        arg2 = arg3;
+                        prevDestLength2 = prevDestLength;
+                        index = argLimit;
+                        msgString2 = msgString;
+                    } else if (this.cachedFormatters == null || !this.cachedFormatters.containsKey(Integer.valueOf(i4 - 2))) {
+                        if (argType != MessagePattern.ArgType.CHOICE) {
+                            prevDestLength2 = prevDestLength;
+                            MessagePattern.ArgType argType4 = argType;
+                            index = argLimit;
+                            msgString2 = msgString;
+                            if (argType4.hasPluralStyle()) {
+                                if (!(arg3 instanceof Number)) {
+                                    throw new IllegalArgumentException("'" + arg3 + "' is not a Number");
+                                }
+                                if (argType4 == MessagePattern.ArgType.PLURAL) {
+                                    if (this.pluralProvider == null) {
+                                        this.pluralProvider = new PluralSelectorProvider(this, PluralRules.PluralType.CARDINAL);
+                                    }
+                                    pluralSelectorProvider = this.pluralProvider;
+                                } else {
+                                    if (this.ordinalProvider == null) {
+                                        this.ordinalProvider = new PluralSelectorProvider(this, PluralRules.PluralType.ORDINAL);
+                                    }
+                                    pluralSelectorProvider = this.ordinalProvider;
+                                }
+                                PluralSelectorProvider selector = pluralSelectorProvider;
+                                Number number = (Number) arg3;
+                                double offset = this.msgPattern.getPluralOffset(i4);
+                                PluralSelectorContext context = new PluralSelectorContext(i4, argName2, number, offset);
+                                int subMsgStart = PluralFormat.findSubMessage(this.msgPattern, i4, selector, context, number.doubleValue());
+                                formatComplexSubMessage(subMsgStart, context, args, argsMap, dest);
+                            } else if (argType4 != MessagePattern.ArgType.SELECT) {
+                                throw new IllegalStateException("unexpected argType " + argType4);
+                            } else {
+                                int subMsgStart2 = SelectFormat.findSubMessage(this.msgPattern, i4, arg3.toString());
+                                formatComplexSubMessage(subMsgStart2, null, args, argsMap, dest);
+                            }
+                        } else if (!(arg3 instanceof Number)) {
+                            throw new IllegalArgumentException("'" + arg3 + "' is not a Number");
                         } else {
-                            argName = argName2;
-                            appendableWrapper2.formatAndAppend(pluralSelectorContext.formatter, arg3);
+                            int subMsgStart3 = findChoiceSubMessage(this.msgPattern, i4, ((Number) arg3).doubleValue());
+                            index = argLimit;
+                            msgString2 = msgString;
+                            prevDestLength2 = prevDestLength;
+                            formatComplexSubMessage(subMsgStart3, null, args, argsMap, dest);
                         }
-                        Object obj3 = arg3;
-                        boolean z4 = noArg2;
-                        prevDestLength2 = prevDestLength6;
-                        argId = argId3;
-                        MessagePattern.Part part7 = part2;
-                        MessagePattern.ArgType argId5 = argType3;
-                        int i17 = index3;
-                        MessagePattern.Part.Type type6 = type;
-                        fp2 = fp4;
-                        index = argLimit2;
-                        msgString = msgString2;
-                        String str7 = argName;
-                        int i18 = i5;
-                        appendableWrapper = appendableWrapper2;
-                        prevDestLength = index;
-                        fp4 = updateMetaData(appendableWrapper, prevDestLength2, fp2, argId);
-                        prevIndex = this.msgPattern.getPart(index).getLimit();
+                        appendableWrapper = dest;
+                        FieldPosition fp42 = updateMetaData(appendableWrapper, prevDestLength2, fp2, argId2);
+                        int prevIndex22 = this.msgPattern.getPart(index).getLimit();
+                        prevDestLength4 = index;
+                        fp3 = fp42;
+                        prevIndex = prevIndex22;
+                        int i52 = prevDestLength4 + 1;
                         objArr = args;
                         map = argsMap;
                         appendableWrapper2 = appendableWrapper;
-                        msgString4 = msgString;
-                        int i9222 = msgStart;
+                        msgString3 = msgString2;
                         pluralSelectorContext = pluralNumber;
-                        i3 = prevDestLength + 1;
-                        i2 = prevIndex;
+                        i2 = i52;
+                        i = prevIndex;
+                    } else {
+                        arg2 = arg3;
+                        prevDestLength2 = prevDestLength;
+                        index = argLimit;
+                        msgString2 = msgString;
                     }
-                    argName = argName2;
-                    Object obj32 = arg3;
-                    boolean z42 = noArg2;
-                    prevDestLength2 = prevDestLength6;
-                    argId = argId3;
-                    MessagePattern.Part part72 = part2;
-                    MessagePattern.ArgType argId52 = argType3;
-                    int i172 = index3;
-                    MessagePattern.Part.Type type62 = type;
-                    fp2 = fp4;
-                    index = argLimit2;
-                    msgString = msgString2;
-                    String str72 = argName;
-                    int i182 = i5;
-                    appendableWrapper = appendableWrapper2;
-                    prevDestLength = index;
-                    fp4 = updateMetaData(appendableWrapper, prevDestLength2, fp2, argId);
-                    prevIndex = this.msgPattern.getPart(index).getLimit();
+                    if (arg2 instanceof Number) {
+                        appendableWrapper = dest;
+                        appendableWrapper.formatAndAppend(getStockNumberFormatter(), arg2);
+                    } else {
+                        appendableWrapper = dest;
+                        if (arg2 instanceof Date) {
+                            appendableWrapper.formatAndAppend(getStockDateFormatter(), arg2);
+                        } else {
+                            appendableWrapper.append(arg2.toString());
+                        }
+                    }
+                    FieldPosition fp422 = updateMetaData(appendableWrapper, prevDestLength2, fp2, argId2);
+                    int prevIndex222 = this.msgPattern.getPart(index).getLimit();
+                    prevDestLength4 = index;
+                    fp3 = fp422;
+                    prevIndex = prevIndex222;
+                    int i522 = prevDestLength4 + 1;
                     objArr = args;
                     map = argsMap;
                     appendableWrapper2 = appendableWrapper;
-                    msgString4 = msgString;
-                    int i92222 = msgStart;
+                    msgString3 = msgString2;
                     pluralSelectorContext = pluralNumber;
-                    i3 = prevDestLength + 1;
-                    i2 = prevIndex;
+                    i2 = i522;
+                    i = prevIndex;
+                } else {
+                    if (pluralSelectorContext.offset == 0.0d) {
+                        argName = argName2;
+                        appendableWrapper2.formatAndAppend(pluralSelectorContext.formatter, pluralSelectorContext.number, pluralSelectorContext.numberString);
+                    } else {
+                        argName = argName2;
+                        appendableWrapper2.formatAndAppend(pluralSelectorContext.formatter, arg3);
+                    }
+                    prevDestLength2 = prevDestLength5;
+                    argId2 = argId;
+                    fp2 = fp3;
+                    index = argLimit;
+                    msgString2 = msgString;
+                    appendableWrapper = appendableWrapper2;
+                    FieldPosition fp4222 = updateMetaData(appendableWrapper, prevDestLength2, fp2, argId2);
+                    int prevIndex2222 = this.msgPattern.getPart(index).getLimit();
+                    prevDestLength4 = index;
+                    fp3 = fp4222;
+                    prevIndex = prevIndex2222;
+                    int i5222 = prevDestLength4 + 1;
+                    objArr = args;
+                    map = argsMap;
+                    appendableWrapper2 = appendableWrapper;
+                    msgString3 = msgString2;
+                    pluralSelectorContext = pluralNumber;
+                    i2 = i5222;
+                    i = prevIndex;
                 }
-                prevDestLength = i3;
-                msgString = msgString4;
+                argName = argName2;
+                prevDestLength2 = prevDestLength5;
+                argId2 = argId;
+                fp2 = fp3;
+                index = argLimit;
+                msgString2 = msgString;
                 appendableWrapper = appendableWrapper2;
+                FieldPosition fp42222 = updateMetaData(appendableWrapper, prevDestLength2, fp2, argId2);
+                int prevIndex22222 = this.msgPattern.getPart(index).getLimit();
+                prevDestLength4 = index;
+                fp3 = fp42222;
+                prevIndex = prevIndex22222;
+                int i52222 = prevDestLength4 + 1;
                 objArr = args;
                 map = argsMap;
                 appendableWrapper2 = appendableWrapper;
-                msgString4 = msgString;
-                int i922222 = msgStart;
+                msgString3 = msgString2;
                 pluralSelectorContext = pluralNumber;
-                i3 = prevDestLength + 1;
-                i2 = prevIndex;
-            } else {
-                return;
+                i2 = i52222;
+                i = prevIndex;
             }
+            prevDestLength4 = i2;
+            msgString2 = msgString3;
+            appendableWrapper = appendableWrapper2;
+            int i522222 = prevDestLength4 + 1;
+            objArr = args;
+            map = argsMap;
+            appendableWrapper2 = appendableWrapper;
+            msgString3 = msgString2;
+            pluralSelectorContext = pluralNumber;
+            i2 = i522222;
+            i = prevIndex;
         }
     }
 
     private void formatComplexSubMessage(int msgStart, PluralSelectorContext pluralNumber, Object[] args, Map<String, Object> argsMap, AppendableWrapper dest) {
         int index;
         String subMsgString;
-        PluralSelectorContext pluralSelectorContext = pluralNumber;
         if (!this.msgPattern.jdkAposMode()) {
-            format(msgStart, pluralNumber, args, argsMap, dest, (FieldPosition) null);
+            format(msgStart, pluralNumber, args, argsMap, dest, null);
             return;
         }
         String msgString = this.msgPattern.getPatternString();
-        int i = msgStart;
-        int prevIndex = this.msgPattern.getPart(i).getLimit();
+        int prevIndex = this.msgPattern.getPart(msgStart).getLimit();
+        int prevIndex2 = prevIndex;
         StringBuilder sb = null;
-        int i2 = i;
+        int i = msgStart;
         while (true) {
-            i2++;
-            MessagePattern.Part part = this.msgPattern.getPart(i2);
+            i++;
+            MessagePattern.Part part = this.msgPattern.getPart(i);
             MessagePattern.Part.Type type = part.getType();
             index = part.getIndex();
             if (type == MessagePattern.Part.Type.MSG_LIMIT) {
                 break;
-            }
-            AppendableWrapper appendableWrapper = dest;
-            if (type == MessagePattern.Part.Type.REPLACE_NUMBER || type == MessagePattern.Part.Type.SKIP_SYNTAX) {
+            } else if (type == MessagePattern.Part.Type.REPLACE_NUMBER || type == MessagePattern.Part.Type.SKIP_SYNTAX) {
                 if (sb == null) {
                     sb = new StringBuilder();
                 }
-                sb.append(msgString, prevIndex, index);
+                sb.append((CharSequence) msgString, prevIndex2, index);
                 if (type == MessagePattern.Part.Type.REPLACE_NUMBER) {
-                    if (pluralSelectorContext.forReplaceNumber) {
-                        sb.append(pluralSelectorContext.numberString);
+                    if (pluralNumber.forReplaceNumber) {
+                        sb.append(pluralNumber.numberString);
                     } else {
-                        sb.append(getStockNumberFormatter().format(pluralSelectorContext.number));
+                        sb.append(getStockNumberFormatter().format(pluralNumber.number));
                     }
                 }
-                prevIndex = part.getLimit();
+                prevIndex2 = part.getLimit();
             } else if (type == MessagePattern.Part.Type.ARG_START) {
                 if (sb == null) {
                     sb = new StringBuilder();
                 }
-                sb.append(msgString, prevIndex, index);
-                int prevIndex2 = index;
-                i2 = this.msgPattern.getLimitPartIndex(i2);
-                int index2 = this.msgPattern.getPart(i2).getLimit();
-                MessagePattern.appendReducedApostrophes(msgString, prevIndex2, index2, sb);
-                prevIndex = index2;
+                sb.append((CharSequence) msgString, prevIndex2, index);
+                i = this.msgPattern.getLimitPartIndex(i);
+                int index2 = this.msgPattern.getPart(i).getLimit();
+                MessagePattern.appendReducedApostrophes(msgString, index, index2, sb);
+                prevIndex2 = index2;
             }
         }
         if (sb == null) {
-            subMsgString = msgString.substring(prevIndex, index);
+            subMsgString = msgString.substring(prevIndex2, index);
         } else {
-            sb.append(msgString, prevIndex, index);
+            sb.append((CharSequence) msgString, prevIndex2, index);
             subMsgString = sb.toString();
         }
         String subMsgString2 = subMsgString;
         if (subMsgString2.indexOf(123) >= 0) {
             MessageFormat subMsgFormat = new MessageFormat("", this.ulocale);
             subMsgFormat.applyPattern(subMsgString2, MessagePattern.ApostropheMode.DOUBLE_REQUIRED);
-            subMsgFormat.format(0, (PluralSelectorContext) null, args, argsMap, dest, (FieldPosition) null);
-            AppendableWrapper appendableWrapper2 = dest;
+            subMsgFormat.format(0, null, args, argsMap, dest, null);
             return;
         }
-        dest.append((CharSequence) subMsgString2);
+        dest.append(subMsgString2);
     }
 
     private String getLiteralStringUntilNextArgument(int from) {
@@ -1221,11 +1073,13 @@ public class MessageFormat extends UFormat {
         while (true) {
             MessagePattern.Part part = this.msgPattern.getPart(i);
             MessagePattern.Part.Type type = part.getType();
-            b.append(msgString, prevIndex, part.getIndex());
-            if (type != MessagePattern.Part.Type.ARG_START && type != MessagePattern.Part.Type.MSG_LIMIT) {
-                prevIndex = part.getLimit();
-                i++;
+            int index = part.getIndex();
+            b.append((CharSequence) msgString, prevIndex, index);
+            if (type == MessagePattern.Part.Type.ARG_START || type == MessagePattern.Part.Type.MSG_LIMIT) {
+                break;
             }
+            prevIndex = part.getLimit();
+            i++;
         }
         return b.toString();
     }
@@ -1234,45 +1088,44 @@ public class MessageFormat extends UFormat {
         if (dest.attributes != null && prevLength < dest.length) {
             dest.attributes.add(new AttributeAndPosition(argId, prevLength, dest.length));
         }
-        if (fp == null || !Field.ARGUMENT.equals(fp.getFieldAttribute())) {
-            return fp;
+        if (fp != null && Field.ARGUMENT.equals(fp.getFieldAttribute())) {
+            fp.setBeginIndex(prevLength);
+            fp.setEndIndex(dest.length);
+            return null;
         }
-        fp.setBeginIndex(prevLength);
-        fp.setEndIndex(dest.length);
-        return null;
+        return fp;
     }
 
     private static int findChoiceSubMessage(MessagePattern pattern, int partIndex, double number) {
         int msgStart;
-        int partIndex2;
         int count = pattern.countParts();
-        int partIndex3 = partIndex + 2;
+        int partIndex2 = partIndex + 2;
         while (true) {
-            msgStart = partIndex3;
-            int partIndex4 = pattern.getLimitPartIndex(partIndex3) + 1;
-            if (partIndex4 >= count) {
+            msgStart = partIndex2;
+            int partIndex3 = pattern.getLimitPartIndex(partIndex2) + 1;
+            if (partIndex3 >= count) {
                 break;
             }
-            int partIndex5 = partIndex4 + 1;
-            MessagePattern.Part part = pattern.getPart(partIndex4);
-            if (part.getType() == MessagePattern.Part.Type.ARG_LIMIT) {
-                int i = partIndex5;
+            int partIndex4 = partIndex3 + 1;
+            MessagePattern.Part part = pattern.getPart(partIndex3);
+            MessagePattern.Part.Type type = part.getType();
+            if (type == MessagePattern.Part.Type.ARG_LIMIT) {
                 break;
             }
             double boundary = pattern.getNumericValue(part);
-            partIndex2 = partIndex5 + 1;
-            if (pattern.getPatternString().charAt(pattern.getPatternIndex(partIndex5)) == '<') {
+            int partIndex5 = partIndex4 + 1;
+            char boundaryChar = pattern.getPatternString().charAt(pattern.getPatternIndex(partIndex4));
+            if (boundaryChar == '<') {
                 if (number <= boundary) {
                     break;
                 }
-                partIndex3 = partIndex2;
+                partIndex2 = partIndex5;
             } else if (number < boundary) {
                 break;
             } else {
-                partIndex3 = partIndex2;
+                partIndex2 = partIndex5;
             }
         }
-        int i2 = partIndex2;
         return msgStart;
     }
 
@@ -1311,7 +1164,8 @@ public class MessageFormat extends UFormat {
             partIndex++;
             MessagePattern.Part part = pattern.getPart(partIndex);
             if (partIndex == limitPartIndex || part.getType() == MessagePattern.Part.Type.SKIP_SYNTAX) {
-                int length = part.getIndex() - prevIndex;
+                int index = part.getIndex();
+                int length = index - prevIndex;
                 if (length != 0 && !source.regionMatches(sourceOffset, msgString, prevIndex, length)) {
                     return -1;
                 }
@@ -1324,7 +1178,7 @@ public class MessageFormat extends UFormat {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public int findOtherSubMessage(int partIndex) {
         int count = this.msgPattern.countParts();
         if (this.msgPattern.getPart(partIndex).getType().hasNumericValue()) {
@@ -1333,22 +1187,23 @@ public class MessageFormat extends UFormat {
         do {
             int partIndex2 = partIndex + 1;
             MessagePattern.Part part = this.msgPattern.getPart(partIndex);
-            if (part.getType() == MessagePattern.Part.Type.ARG_LIMIT) {
-                int i = partIndex2;
-                return 0;
-            } else if (this.msgPattern.partSubstringMatches(part, "other")) {
-                return partIndex2;
-            } else {
+            MessagePattern.Part.Type type = part.getType();
+            if (type != MessagePattern.Part.Type.ARG_LIMIT) {
+                if (this.msgPattern.partSubstringMatches(part, "other")) {
+                    return partIndex2;
+                }
                 if (this.msgPattern.getPartType(partIndex2).hasNumericValue()) {
                     partIndex2++;
                 }
                 partIndex = this.msgPattern.getLimitPartIndex(partIndex2) + 1;
+            } else {
+                return 0;
             }
         } while (partIndex < count);
         return 0;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public int findFirstPluralNumberArg(int msgStart, String argName) {
         int i = msgStart + 1;
         while (true) {
@@ -1373,6 +1228,7 @@ public class MessageFormat extends UFormat {
         }
     }
 
+    /* loaded from: classes5.dex */
     private static final class PluralSelectorContext {
         String argName;
         boolean forReplaceNumber;
@@ -1399,27 +1255,26 @@ public class MessageFormat extends UFormat {
         }
     }
 
+    /* loaded from: classes5.dex */
     private static final class PluralSelectorProvider implements PluralFormat.PluralSelector {
         static final /* synthetic */ boolean $assertionsDisabled = false;
         private MessageFormat msgFormat;
         private PluralRules rules;
         private PluralRules.PluralType type;
 
-        static {
-            Class<MessageFormat> cls = MessageFormat.class;
-        }
-
-        public PluralSelectorProvider(MessageFormat mf, PluralRules.PluralType type2) {
+        public PluralSelectorProvider(MessageFormat mf, PluralRules.PluralType type) {
             this.msgFormat = mf;
-            this.type = type2;
+            this.type = type;
         }
 
+        @Override // com.ibm.icu.text.PluralFormat.PluralSelector
         public String select(Object ctx, double number) {
             if (this.rules == null) {
                 this.rules = PluralRules.forLocale(this.msgFormat.ulocale, this.type);
             }
             PluralSelectorContext context = (PluralSelectorContext) ctx;
-            context.numberArgIndex = this.msgFormat.findFirstPluralNumberArg(this.msgFormat.findOtherSubMessage(context.startIndex), context.argName);
+            int otherIndex = this.msgFormat.findOtherSubMessage(context.startIndex);
+            context.numberArgIndex = this.msgFormat.findFirstPluralNumberArg(otherIndex, context.argName);
             if (context.numberArgIndex > 0 && this.msgFormat.cachedFormatters != null) {
                 context.formatter = (Format) this.msgFormat.cachedFormatters.get(Integer.valueOf(context.numberArgIndex));
             }
@@ -1428,27 +1283,27 @@ public class MessageFormat extends UFormat {
                 context.forReplaceNumber = true;
             }
             context.numberString = context.formatter.format(context.number);
-            if (!(context.formatter instanceof DecimalFormat)) {
-                return this.rules.select(number);
+            if (context.formatter instanceof DecimalFormat) {
+                PluralRules.IFixedDecimal dec = ((DecimalFormat) context.formatter).getFixedDecimal(number);
+                return this.rules.select(dec);
             }
-            return this.rules.select(((DecimalFormat) context.formatter).getFixedDecimal(number));
+            return this.rules.select(number);
         }
     }
 
     private void format(Object arguments, AppendableWrapper result, FieldPosition fp) {
         if (arguments == null || (arguments instanceof Map)) {
-            format((Object[]) null, (Map) arguments, result, fp);
+            format(null, (Map) arguments, result, fp);
         } else {
-            format((Object[]) arguments, (Map<String, Object>) null, result, fp);
+            format((Object[]) arguments, null, result, fp);
         }
     }
 
     private void format(Object[] arguments, Map<String, Object> argsMap, AppendableWrapper dest, FieldPosition fp) {
-        if (arguments == null || !this.msgPattern.hasNamedArguments()) {
-            format(0, (PluralSelectorContext) null, arguments, argsMap, dest, fp);
-            return;
+        if (arguments != null && this.msgPattern.hasNamedArguments()) {
+            throw new IllegalArgumentException("This method is not available in MessageFormat objects that use alphanumeric argument names.");
         }
-        throw new IllegalArgumentException("This method is not available in MessageFormat objects that use alphanumeric argument names.");
+        format(0, null, arguments, argsMap, dest, fp);
     }
 
     private void resetPattern() {
@@ -1462,56 +1317,75 @@ public class MessageFormat extends UFormat {
     }
 
     private Format createAppropriateFormat(String type, String style) {
-        switch (findKeyword(type, typeList)) {
+        int subformatType = findKeyword(type, typeList);
+        switch (subformatType) {
             case 0:
                 switch (findKeyword(style, modifierList)) {
                     case 0:
-                        return NumberFormat.getInstance(this.ulocale);
+                        Format newFormat = NumberFormat.getInstance(this.ulocale);
+                        return newFormat;
                     case 1:
-                        return NumberFormat.getCurrencyInstance(this.ulocale);
+                        Format newFormat2 = NumberFormat.getCurrencyInstance(this.ulocale);
+                        return newFormat2;
                     case 2:
-                        return NumberFormat.getPercentInstance(this.ulocale);
+                        Format newFormat3 = NumberFormat.getPercentInstance(this.ulocale);
+                        return newFormat3;
                     case 3:
-                        return NumberFormat.getIntegerInstance(this.ulocale);
+                        Format newFormat4 = NumberFormat.getIntegerInstance(this.ulocale);
+                        return newFormat4;
                     default:
                         int i = 0;
                         while (PatternProps.isWhiteSpace(style.charAt(i))) {
                             i++;
                         }
                         if (style.regionMatches(i, "::", 0, 2)) {
-                            return NumberFormatter.forSkeleton(style.substring(i + 2)).locale(this.ulocale).toFormat();
+                            Format newFormat5 = NumberFormatter.forSkeleton(style.substring(i + 2)).locale(this.ulocale).toFormat();
+                            return newFormat5;
                         }
-                        return new DecimalFormat(style, new DecimalFormatSymbols(this.ulocale));
+                        Format newFormat6 = new DecimalFormat(style, new DecimalFormatSymbols(this.ulocale));
+                        return newFormat6;
                 }
             case 1:
                 switch (findKeyword(style, dateModifierList)) {
                     case 0:
-                        return DateFormat.getDateInstance(2, this.ulocale);
+                        Format newFormat7 = DateFormat.getDateInstance(2, this.ulocale);
+                        return newFormat7;
                     case 1:
-                        return DateFormat.getDateInstance(3, this.ulocale);
+                        Format newFormat8 = DateFormat.getDateInstance(3, this.ulocale);
+                        return newFormat8;
                     case 2:
-                        return DateFormat.getDateInstance(2, this.ulocale);
+                        Format newFormat9 = DateFormat.getDateInstance(2, this.ulocale);
+                        return newFormat9;
                     case 3:
-                        return DateFormat.getDateInstance(1, this.ulocale);
+                        Format newFormat10 = DateFormat.getDateInstance(1, this.ulocale);
+                        return newFormat10;
                     case 4:
-                        return DateFormat.getDateInstance(0, this.ulocale);
+                        Format newFormat11 = DateFormat.getDateInstance(0, this.ulocale);
+                        return newFormat11;
                     default:
-                        return new SimpleDateFormat(style, this.ulocale);
+                        Format newFormat12 = new SimpleDateFormat(style, this.ulocale);
+                        return newFormat12;
                 }
             case 2:
                 switch (findKeyword(style, dateModifierList)) {
                     case 0:
-                        return DateFormat.getTimeInstance(2, this.ulocale);
+                        Format newFormat13 = DateFormat.getTimeInstance(2, this.ulocale);
+                        return newFormat13;
                     case 1:
-                        return DateFormat.getTimeInstance(3, this.ulocale);
+                        Format newFormat14 = DateFormat.getTimeInstance(3, this.ulocale);
+                        return newFormat14;
                     case 2:
-                        return DateFormat.getTimeInstance(2, this.ulocale);
+                        Format newFormat15 = DateFormat.getTimeInstance(2, this.ulocale);
+                        return newFormat15;
                     case 3:
-                        return DateFormat.getTimeInstance(1, this.ulocale);
+                        Format newFormat16 = DateFormat.getTimeInstance(1, this.ulocale);
+                        return newFormat16;
                     case 4:
-                        return DateFormat.getTimeInstance(0, this.ulocale);
+                        Format newFormat17 = DateFormat.getTimeInstance(0, this.ulocale);
+                        return newFormat17;
                     default:
-                        return new SimpleDateFormat(style, this.ulocale);
+                        Format newFormat18 = new SimpleDateFormat(style, this.ulocale);
+                        return newFormat18;
                 }
             case 3:
                 RuleBasedNumberFormat rbnf = new RuleBasedNumberFormat(this.ulocale, 1);
@@ -1566,7 +1440,9 @@ public class MessageFormat extends UFormat {
         }
         out.writeObject(this.msgPattern.getApostropheMode());
         out.writeObject(this.msgPattern.getPatternString());
-        if (this.customFormatArgStarts != null && !this.customFormatArgStarts.isEmpty()) {
+        if (this.customFormatArgStarts == null || this.customFormatArgStarts.isEmpty()) {
+            out.writeInt(0);
+        } else {
             out.writeInt(this.customFormatArgStarts.size());
             int formatIndex = 0;
             int partIndex = 0;
@@ -1582,15 +1458,14 @@ public class MessageFormat extends UFormat {
                 }
                 formatIndex++;
             }
-        } else {
-            out.writeInt(0);
         }
         out.writeInt(0);
     }
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
-        this.ulocale = ULocale.forLanguageTag((String) in.readObject());
+        String languageTag = (String) in.readObject();
+        this.ulocale = ULocale.forLanguageTag(languageTag);
         MessagePattern.ApostropheMode aposMode = (MessagePattern.ApostropheMode) in.readObject();
         if (this.msgPattern == null || aposMode != this.msgPattern.getApostropheMode()) {
             this.msgPattern = new MessagePattern(aposMode);
@@ -1600,7 +1475,9 @@ public class MessageFormat extends UFormat {
             applyPattern(msg);
         }
         for (int numFormatters = in.readInt(); numFormatters > 0; numFormatters--) {
-            setFormat(in.readInt(), (Format) in.readObject());
+            int formatIndex = in.readInt();
+            Format formatter = (Format) in.readObject();
+            setFormat(formatIndex, formatter);
         }
         for (int numPairs = in.readInt(); numPairs > 0; numPairs--) {
             in.readInt();
@@ -1617,20 +1494,23 @@ public class MessageFormat extends UFormat {
         int i = 1;
         while (i < limit) {
             MessagePattern.Part part = this.msgPattern.getPart(i);
-            if (part.getType() == MessagePattern.Part.Type.ARG_START && part.getArgType() == MessagePattern.ArgType.SIMPLE) {
-                int index = i;
-                int i2 = i + 2;
-                int i3 = i2 + 1;
-                String explicitType = this.msgPattern.getSubstring(this.msgPattern.getPart(i2));
-                String style = "";
-                MessagePattern.Part part2 = this.msgPattern.getPart(i3);
-                MessagePattern.Part part3 = part2;
-                if (part2.getType() == MessagePattern.Part.Type.ARG_STYLE) {
-                    style = this.msgPattern.getSubstring(part3);
-                    i3++;
+            if (part.getType() == MessagePattern.Part.Type.ARG_START) {
+                MessagePattern.ArgType argType = part.getArgType();
+                if (argType == MessagePattern.ArgType.SIMPLE) {
+                    int index = i;
+                    int i2 = i + 2;
+                    int i3 = i2 + 1;
+                    String explicitType = this.msgPattern.getSubstring(this.msgPattern.getPart(i2));
+                    String style = "";
+                    MessagePattern.Part part2 = this.msgPattern.getPart(i3);
+                    if (part2.getType() == MessagePattern.Part.Type.ARG_STYLE) {
+                        style = this.msgPattern.getSubstring(part2);
+                        i3++;
+                    }
+                    Format formatter = createAppropriateFormat(explicitType, style);
+                    setArgStartFormat(index, formatter);
+                    i = i3;
                 }
-                setArgStartFormat(index, createAppropriateFormat(explicitType, style));
-                i = i3;
             }
             i++;
         }
@@ -1661,11 +1541,11 @@ public class MessageFormat extends UFormat {
             switch (state) {
                 case 0:
                     if (c != '\'') {
-                        if (c == '{') {
-                            state = 3;
-                            braceCount++;
+                        if (c != '{') {
                             break;
                         } else {
+                            state = 3;
+                            braceCount++;
                             break;
                         }
                     } else {
@@ -1674,12 +1554,12 @@ public class MessageFormat extends UFormat {
                     }
                 case 1:
                     if (c != '\'') {
-                        if (c != '{' && c != '}') {
-                            buf.append('\'');
-                            state = 0;
+                        if (c == '{' || c == '}') {
+                            state = 2;
                             break;
                         } else {
-                            state = 2;
+                            buf.append('\'');
+                            state = 0;
                             break;
                         }
                     } else {
@@ -1687,10 +1567,10 @@ public class MessageFormat extends UFormat {
                         break;
                     }
                 case 2:
-                    if (c == '\'') {
-                        state = 0;
+                    if (c != '\'') {
                         break;
                     } else {
+                        state = 0;
                         break;
                     }
                 case 3:
@@ -1703,6 +1583,7 @@ public class MessageFormat extends UFormat {
                         braceCount++;
                         break;
                     }
+                    break;
             }
             buf.append(c);
         }
@@ -1712,12 +1593,11 @@ public class MessageFormat extends UFormat {
         return new String(buf);
     }
 
+    /* loaded from: classes5.dex */
     private static final class AppendableWrapper {
         private Appendable app;
-        /* access modifiers changed from: private */
-        public List<AttributeAndPosition> attributes = null;
-        /* access modifiers changed from: private */
-        public int length;
+        private List<AttributeAndPosition> attributes = null;
+        private int length;
 
         public AppendableWrapper(StringBuilder sb) {
             this.app = sb;
@@ -1759,7 +1639,7 @@ public class MessageFormat extends UFormat {
             try {
                 int start = iterator.getBeginIndex();
                 int limit = iterator.getEndIndex();
-                int length2 = limit - start;
+                int length = limit - start;
                 if (start < limit) {
                     result.append(iterator.first());
                     while (true) {
@@ -1770,7 +1650,7 @@ public class MessageFormat extends UFormat {
                         result.append(iterator.next());
                     }
                 }
-                return length2;
+                return length;
             } catch (IOException e) {
                 throw new ICUUncheckedIOException(e);
             }
@@ -1778,12 +1658,12 @@ public class MessageFormat extends UFormat {
 
         public void formatAndAppend(Format formatter, Object arg) {
             if (this.attributes == null) {
-                append((CharSequence) formatter.format(arg));
+                append(formatter.format(arg));
                 return;
             }
             AttributedCharacterIterator formattedArg = formatter.formatToCharacterIterator(arg);
             int prevLength = this.length;
-            append((CharacterIterator) formattedArg);
+            append(formattedArg);
             formattedArg.first();
             int start = formattedArg.getIndex();
             int limit = formattedArg.getEndIndex();
@@ -1802,23 +1682,20 @@ public class MessageFormat extends UFormat {
         }
 
         public void formatAndAppend(Format formatter, Object arg, String argString) {
-            if (this.attributes != null || argString == null) {
-                formatAndAppend(formatter, arg);
+            if (this.attributes == null && argString != null) {
+                append(argString);
             } else {
-                append((CharSequence) argString);
+                formatAndAppend(formatter, arg);
             }
         }
     }
 
+    /* loaded from: classes5.dex */
     private static final class AttributeAndPosition {
-        /* access modifiers changed from: private */
-        public AttributedCharacterIterator.Attribute key;
-        /* access modifiers changed from: private */
-        public int limit;
-        /* access modifiers changed from: private */
-        public int start;
-        /* access modifiers changed from: private */
-        public Object value;
+        private AttributedCharacterIterator.Attribute key;
+        private int limit;
+        private int start;
+        private Object value;
 
         public AttributeAndPosition(Object fieldValue, int startIndex, int limitIndex) {
             init(Field.ARGUMENT, fieldValue, startIndex, limitIndex);

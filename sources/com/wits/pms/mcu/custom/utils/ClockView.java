@@ -10,9 +10,10 @@ import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.WindowManager;
-import com.wits.pms.R;
+import com.wits.pms.C3580R;
 import java.util.Calendar;
 
+/* loaded from: classes2.dex */
 public class ClockView extends View {
     private static String TAG = ClockView.class.getSimpleName();
     private Bitmap mClockBitmap;
@@ -39,6 +40,7 @@ public class ClockView extends View {
     private Paint paint;
     WindowManager windowManager;
 
+    /* loaded from: classes2.dex */
     class MyTime {
         private Calendar mCalendar;
         int mHour = 0;
@@ -65,11 +67,11 @@ public class ClockView extends View {
     }
 
     public ClockView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public ClockView(Context context, AttributeSet attrs) {
-        this(context, (AttributeSet) null, 0);
+        this(context, null, 0);
     }
 
     public ClockView(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -82,7 +84,7 @@ public class ClockView extends View {
         this.paint = new Paint();
         this.paint.setAntiAlias(true);
         this.paint.setDither(true);
-        this.mClockBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.clock_bk);
+        this.mClockBitmap = BitmapFactory.decodeResource(getResources(), C3580R.mipmap.clock_bk);
         this.mClockBitmapWidth = this.mClockBitmap.getWidth();
         this.mClockBitmapHeight = this.mClockBitmap.getHeight();
         DisplayMetrics metrics = new DisplayMetrics();
@@ -91,9 +93,9 @@ public class ClockView extends View {
         this.mClockY = (metrics.heightPixels / 2) - (this.mClockBitmapHeight / 2);
         this.mClockCenterX = (this.mClockX + (this.mClockBitmapWidth / 2)) - 2;
         this.mClockCenterY = this.mClockY + (this.mClockBitmapHeight / 2);
-        this.mHourBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.hour);
-        this.mMinuteBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.minute);
-        this.mSecondBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.second);
+        this.mHourBitmap = BitmapFactory.decodeResource(getResources(), C3580R.mipmap.hour);
+        this.mMinuteBitmap = BitmapFactory.decodeResource(getResources(), C3580R.mipmap.minute);
+        this.mSecondBitmap = BitmapFactory.decodeResource(getResources(), C3580R.mipmap.second);
         calcHandPosition();
         this.mCurTime = new MyTime();
         this.mCurTime.updateTime();
@@ -121,8 +123,8 @@ public class ClockView extends View {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onDraw(Canvas canvas) {
+    @Override // android.view.View
+    protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if (this.mViewInitComplete) {
             canvas.setDrawFilter(new PaintFlagsDrawFilter(0, 3));
@@ -137,16 +139,16 @@ public class ClockView extends View {
 
     public void drawClockBk(Canvas canvas) {
         if (this.mClockBitmap != null) {
-            canvas.drawBitmap(this.mClockBitmap, (float) this.mClockX, (float) this.mClockY, (Paint) null);
+            canvas.drawBitmap(this.mClockBitmap, this.mClockX, this.mClockY, (Paint) null);
         }
     }
 
     private void drawHourHand(Canvas canvas) {
         if (this.mHourBitmap != null) {
             canvas.save();
-            canvas.translate((float) this.mClockCenterX, (float) this.mClockCenterY);
-            canvas.rotate((float) this.mCurTime.mHourDegree);
-            canvas.drawBitmap(this.mHourBitmap, (float) this.mHourBitmapPosX, (float) this.mHourBitmapPosY, this.paint);
+            canvas.translate(this.mClockCenterX, this.mClockCenterY);
+            canvas.rotate(this.mCurTime.mHourDegree);
+            canvas.drawBitmap(this.mHourBitmap, this.mHourBitmapPosX, this.mHourBitmapPosY, this.paint);
             canvas.restore();
         }
     }
@@ -154,9 +156,9 @@ public class ClockView extends View {
     public void drawMinuteHand(Canvas canvas) {
         if (this.mMinuteBitmap != null) {
             canvas.save();
-            canvas.translate((float) this.mClockCenterX, (float) this.mClockCenterY);
-            canvas.rotate((float) this.mCurTime.mMinuteDegree);
-            canvas.drawBitmap(this.mMinuteBitmap, (float) this.mMinuteBitmapPosX, (float) this.mMinuteBitmapPosY, this.paint);
+            canvas.translate(this.mClockCenterX, this.mClockCenterY);
+            canvas.rotate(this.mCurTime.mMinuteDegree);
+            canvas.drawBitmap(this.mMinuteBitmap, this.mMinuteBitmapPosX, this.mMinuteBitmapPosY, this.paint);
             canvas.restore();
         }
     }
@@ -164,9 +166,9 @@ public class ClockView extends View {
     public void drawSecondHand(Canvas canvas) {
         if (this.mSecondBitmap != null) {
             canvas.save();
-            canvas.translate((float) this.mClockCenterX, (float) this.mClockCenterY);
-            canvas.rotate((float) this.mCurTime.mSecondDegree);
-            canvas.drawBitmap(this.mSecondBitmap, (float) this.mSecondBitmapPosX, (float) this.mSecondBitmapPosY, this.paint);
+            canvas.translate(this.mClockCenterX, this.mClockCenterY);
+            canvas.rotate(this.mCurTime.mSecondDegree);
+            canvas.drawBitmap(this.mSecondBitmap, this.mSecondBitmapPosX, this.mSecondBitmapPosY, this.paint);
             canvas.restore();
         }
     }

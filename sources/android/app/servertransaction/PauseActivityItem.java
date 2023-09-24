@@ -2,18 +2,23 @@ package android.app.servertransaction;
 
 import android.app.ActivityTaskManager;
 import android.app.ClientTransactionHandler;
-import android.os.IBinder;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.RemoteException;
-import android.os.Trace;
+import android.p007os.IBinder;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.RemoteException;
+import android.p007os.Trace;
 
+/* loaded from: classes.dex */
 public class PauseActivityItem extends ActivityLifecycleItem {
-    public static final Parcelable.Creator<PauseActivityItem> CREATOR = new Parcelable.Creator<PauseActivityItem>() {
+    public static final Parcelable.Creator<PauseActivityItem> CREATOR = new Parcelable.Creator<PauseActivityItem>() { // from class: android.app.servertransaction.PauseActivityItem.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PauseActivityItem createFromParcel(Parcel in) {
             return new PauseActivityItem(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PauseActivityItem[] newArray(int size) {
             return new PauseActivityItem[size];
         }
@@ -24,23 +29,27 @@ public class PauseActivityItem extends ActivityLifecycleItem {
     private boolean mFinished;
     private boolean mUserLeaving;
 
+    @Override // android.app.servertransaction.BaseClientRequest
     public void execute(ClientTransactionHandler client, IBinder token, PendingTransactionActions pendingActions) {
-        Trace.traceBegin(64, "activityPause");
+        Trace.traceBegin(64L, "activityPause");
         client.handlePauseActivity(token, this.mFinished, this.mUserLeaving, this.mConfigChanges, pendingActions, "PAUSE_ACTIVITY_ITEM");
-        Trace.traceEnd(64);
+        Trace.traceEnd(64L);
     }
 
+    @Override // android.app.servertransaction.ActivityLifecycleItem
     public int getTargetState() {
         return 4;
     }
 
+    @Override // android.app.servertransaction.BaseClientRequest
     public void postExecute(ClientTransactionHandler client, IBinder token, PendingTransactionActions pendingActions) {
-        if (!this.mDontReport) {
-            try {
-                ActivityTaskManager.getService().activityPaused(token);
-            } catch (RemoteException ex) {
-                throw ex.rethrowFromSystemServer();
-            }
+        if (this.mDontReport) {
+            return;
+        }
+        try {
+            ActivityTaskManager.getService().activityPaused(token);
+        } catch (RemoteException ex) {
+            throw ex.rethrowFromSystemServer();
         }
     }
 
@@ -71,6 +80,7 @@ public class PauseActivityItem extends ActivityLifecycleItem {
         return instance;
     }
 
+    @Override // android.app.servertransaction.ActivityLifecycleItem, android.app.servertransaction.ObjectPoolItem
     public void recycle() {
         super.recycle();
         this.mFinished = false;
@@ -80,6 +90,7 @@ public class PauseActivityItem extends ActivityLifecycleItem {
         ObjectPool.recycle(this);
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeBoolean(this.mFinished);
         dest.writeBoolean(this.mUserLeaving);
@@ -109,7 +120,8 @@ public class PauseActivityItem extends ActivityLifecycleItem {
     }
 
     public int hashCode() {
-        return (((((((17 * 31) + (this.mFinished ? 1 : 0)) * 31) + (this.mUserLeaving ? 1 : 0)) * 31) + this.mConfigChanges) * 31) + (this.mDontReport ? 1 : 0);
+        int result = (17 * 31) + (this.mFinished ? 1 : 0);
+        return (((((result * 31) + (this.mUserLeaving ? 1 : 0)) * 31) + this.mConfigChanges) * 31) + (this.mDontReport ? 1 : 0);
     }
 
     public String toString() {

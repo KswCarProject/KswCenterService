@@ -1,35 +1,38 @@
 package android.print;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.TextUtils;
 import com.android.internal.util.Preconditions;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes3.dex */
 public final class PrintDocumentInfo implements Parcelable {
     public static final int CONTENT_TYPE_DOCUMENT = 0;
     public static final int CONTENT_TYPE_PHOTO = 1;
     public static final int CONTENT_TYPE_UNKNOWN = -1;
-    public static final Parcelable.Creator<PrintDocumentInfo> CREATOR = new Parcelable.Creator<PrintDocumentInfo>() {
+    public static final Parcelable.Creator<PrintDocumentInfo> CREATOR = new Parcelable.Creator<PrintDocumentInfo>() { // from class: android.print.PrintDocumentInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PrintDocumentInfo createFromParcel(Parcel parcel) {
             return new PrintDocumentInfo(parcel);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PrintDocumentInfo[] newArray(int size) {
             return new PrintDocumentInfo[size];
         }
     };
     public static final int PAGE_COUNT_UNKNOWN = -1;
-    /* access modifiers changed from: private */
-    public int mContentType;
+    private int mContentType;
     private long mDataSize;
-    /* access modifiers changed from: private */
-    public String mName;
-    /* access modifiers changed from: private */
-    public int mPageCount;
+    private String mName;
+    private int mPageCount;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface ContentType {
     }
 
@@ -71,10 +74,12 @@ public final class PrintDocumentInfo implements Parcelable {
         this.mDataSize = dataSize;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeString(this.mName);
         parcel.writeInt(this.mPageCount);
@@ -83,7 +88,8 @@ public final class PrintDocumentInfo implements Parcelable {
     }
 
     public int hashCode() {
-        return (((((((((1 * 31) + (this.mName != null ? this.mName.hashCode() : 0)) * 31) + this.mContentType) * 31) + this.mPageCount) * 31) + ((int) this.mDataSize)) * 31) + ((int) (this.mDataSize >> 32));
+        int result = (1 * 31) + (this.mName != null ? this.mName.hashCode() : 0);
+        return (((((((result * 31) + this.mContentType) * 31) + this.mPageCount) * 31) + ((int) this.mDataSize)) * 31) + ((int) (this.mDataSize >> 32));
     }
 
     public boolean equals(Object obj) {
@@ -101,7 +107,7 @@ public final class PrintDocumentInfo implements Parcelable {
     }
 
     public String toString() {
-        return "PrintDocumentInfo{" + "name=" + this.mName + ", pageCount=" + this.mPageCount + ", contentType=" + contentTypeToString(this.mContentType) + ", dataSize=" + this.mDataSize + "}";
+        return "PrintDocumentInfo{name=" + this.mName + ", pageCount=" + this.mPageCount + ", contentType=" + contentTypeToString(this.mContentType) + ", dataSize=" + this.mDataSize + "}";
     }
 
     private String contentTypeToString(int contentType) {
@@ -115,34 +121,34 @@ public final class PrintDocumentInfo implements Parcelable {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class Builder {
         private final PrintDocumentInfo mPrototype;
 
         public Builder(String name) {
-            if (!TextUtils.isEmpty(name)) {
-                this.mPrototype = new PrintDocumentInfo();
-                String unused = this.mPrototype.mName = name;
-                return;
+            if (TextUtils.isEmpty(name)) {
+                throw new IllegalArgumentException("name cannot be empty");
             }
-            throw new IllegalArgumentException("name cannot be empty");
+            this.mPrototype = new PrintDocumentInfo();
+            this.mPrototype.mName = name;
         }
 
         public Builder setPageCount(int pageCount) {
             if (pageCount >= 0 || pageCount == -1) {
-                int unused = this.mPrototype.mPageCount = pageCount;
+                this.mPrototype.mPageCount = pageCount;
                 return this;
             }
             throw new IllegalArgumentException("pageCount must be greater than or equal to zero or DocumentInfo#PAGE_COUNT_UNKNOWN");
         }
 
         public Builder setContentType(int type) {
-            int unused = this.mPrototype.mContentType = type;
+            this.mPrototype.mContentType = type;
             return this;
         }
 
         public PrintDocumentInfo build() {
             if (this.mPrototype.mPageCount == 0) {
-                int unused = this.mPrototype.mPageCount = -1;
+                this.mPrototype.mPageCount = -1;
             }
             return new PrintDocumentInfo();
         }

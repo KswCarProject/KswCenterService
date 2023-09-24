@@ -3,6 +3,7 @@ package android.hardware.radio.V1_0;
 import android.security.keystore.KeyProperties;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class ApnTypes {
     public static final int ALL = 1023;
     public static final int CBS = 128;
@@ -11,7 +12,9 @@ public final class ApnTypes {
     public static final int EMERGENCY = 512;
     public static final int FOTA = 32;
     public static final int HIPRI = 16;
-    public static final int IA = 256;
+
+    /* renamed from: IA */
+    public static final int f83IA = 256;
     public static final int IMS = 64;
     public static final int MMS = 2;
     public static final int NONE = 0;

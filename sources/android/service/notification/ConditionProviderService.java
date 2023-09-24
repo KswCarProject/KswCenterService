@@ -5,15 +5,16 @@ import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Message;
-import android.os.RemoteException;
-import android.os.ServiceManager;
+import android.p007os.Handler;
+import android.p007os.IBinder;
+import android.p007os.Message;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
 import android.service.notification.IConditionProvider;
 import android.util.Log;
 
 @Deprecated
+/* loaded from: classes3.dex */
 public abstract class ConditionProviderService extends Service {
     @Deprecated
     public static final String EXTRA_RULE_ID = "android.service.notification.extra.RULE_ID";
@@ -24,10 +25,8 @@ public abstract class ConditionProviderService extends Service {
     @Deprecated
     public static final String META_DATA_RULE_TYPE = "android.service.zen.automatic.ruleType";
     public static final String SERVICE_INTERFACE = "android.service.notification.ConditionProviderService";
-    /* access modifiers changed from: private */
-    public final String TAG = (ConditionProviderService.class.getSimpleName() + "[" + getClass().getSimpleName() + "]");
-    /* access modifiers changed from: private */
-    public final H mHandler = new H();
+    private final String TAG = ConditionProviderService.class.getSimpleName() + "[" + getClass().getSimpleName() + "]";
+    private final HandlerC1819H mHandler = new HandlerC1819H();
     boolean mIsConnected;
     private INotificationManager mNoMan;
     private Provider mProvider;
@@ -49,16 +48,18 @@ public abstract class ConditionProviderService extends Service {
     }
 
     public static final void requestRebind(ComponentName componentName) {
+        INotificationManager noMan = INotificationManager.Stub.asInterface(ServiceManager.getService("notification"));
         try {
-            INotificationManager.Stub.asInterface(ServiceManager.getService("notification")).requestBindProvider(componentName);
+            noMan.requestBindProvider(componentName);
         } catch (RemoteException ex) {
             throw ex.rethrowFromSystemServer();
         }
     }
 
     public final void requestUnbind() {
+        INotificationManager noMan = getNotificationInterface();
         try {
-            getNotificationInterface().requestUnbindProvider(this.mProvider);
+            noMan.requestUnbindProvider(this.mProvider);
             this.mIsConnected = false;
         } catch (RemoteException ex) {
             throw ex.rethrowFromSystemServer();
@@ -67,22 +68,25 @@ public abstract class ConditionProviderService extends Service {
 
     @Deprecated
     public final void notifyCondition(Condition condition) {
-        if (condition != null) {
-            notifyConditions(condition);
+        if (condition == null) {
+            return;
         }
+        notifyConditions(condition);
     }
 
     @Deprecated
     public final void notifyConditions(Condition... conditions) {
-        if (isBound() && conditions != null) {
-            try {
-                getNotificationInterface().notifyConditions(getPackageName(), this.mProvider, conditions);
-            } catch (RemoteException ex) {
-                Log.v(this.TAG, "Unable to contact notification manager", ex);
-            }
+        if (!isBound() || conditions == null) {
+            return;
+        }
+        try {
+            getNotificationInterface().notifyConditions(getPackageName(), this.mProvider, conditions);
+        } catch (RemoteException ex) {
+            Log.m65v(this.TAG, "Unable to contact notification manager", ex);
         }
     }
 
+    @Override // android.app.Service
     public IBinder onBind(Intent intent) {
         if (this.mProvider == null) {
             this.mProvider = new Provider();
@@ -92,62 +96,69 @@ public abstract class ConditionProviderService extends Service {
 
     public boolean isBound() {
         if (!this.mIsConnected) {
-            Log.w(this.TAG, "Condition provider service not yet bound.");
+            Log.m64w(this.TAG, "Condition provider service not yet bound.");
         }
         return this.mIsConnected;
     }
 
+    /* loaded from: classes3.dex */
     private final class Provider extends IConditionProvider.Stub {
         private Provider() {
         }
 
+        @Override // android.service.notification.IConditionProvider
         public void onConnected() {
             ConditionProviderService.this.mIsConnected = true;
             ConditionProviderService.this.mHandler.obtainMessage(1).sendToTarget();
         }
 
+        @Override // android.service.notification.IConditionProvider
         public void onSubscribe(Uri conditionId) {
             ConditionProviderService.this.mHandler.obtainMessage(3, conditionId).sendToTarget();
         }
 
+        @Override // android.service.notification.IConditionProvider
         public void onUnsubscribe(Uri conditionId) {
             ConditionProviderService.this.mHandler.obtainMessage(4, conditionId).sendToTarget();
         }
     }
 
-    private final class H extends Handler {
+    /* renamed from: android.service.notification.ConditionProviderService$H */
+    /* loaded from: classes3.dex */
+    private final class HandlerC1819H extends Handler {
         private static final int ON_CONNECTED = 1;
         private static final int ON_SUBSCRIBE = 3;
         private static final int ON_UNSUBSCRIBE = 4;
 
-        private H() {
+        private HandlerC1819H() {
         }
 
+        @Override // android.p007os.Handler
         public void handleMessage(Message msg) {
-            if (ConditionProviderService.this.mIsConnected) {
-                try {
-                    int i = msg.what;
-                    if (i != 1) {
-                        switch (i) {
-                            case 3:
-                                String name = "onSubscribe";
-                                ConditionProviderService.this.onSubscribe((Uri) msg.obj);
-                                return;
-                            case 4:
-                                String name2 = "onUnsubscribe";
-                                ConditionProviderService.this.onUnsubscribe((Uri) msg.obj);
-                                return;
-                            default:
-                                return;
-                        }
-                    } else {
-                        String name3 = "onConnected";
-                        ConditionProviderService.this.onConnected();
+            String name = null;
+            if (!ConditionProviderService.this.mIsConnected) {
+                return;
+            }
+            try {
+                int i = msg.what;
+                if (i == 1) {
+                    name = "onConnected";
+                    ConditionProviderService.this.onConnected();
+                } else {
+                    switch (i) {
+                        case 3:
+                            name = "onSubscribe";
+                            ConditionProviderService.this.onSubscribe((Uri) msg.obj);
+                            break;
+                        case 4:
+                            name = "onUnsubscribe";
+                            ConditionProviderService.this.onUnsubscribe((Uri) msg.obj);
+                            break;
                     }
-                } catch (Throwable t) {
-                    String access$300 = ConditionProviderService.this.TAG;
-                    Log.w(access$300, "Error running " + null, t);
                 }
+            } catch (Throwable t) {
+                String str = ConditionProviderService.this.TAG;
+                Log.m63w(str, "Error running " + name, t);
             }
         }
     }

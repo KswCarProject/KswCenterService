@@ -7,12 +7,13 @@ import android.media.MediaMetadata;
 import android.media.session.MediaSession;
 import android.media.session.MediaSessionLegacyHelper;
 import android.media.session.PlaybackState;
-import android.os.Bundle;
-import android.os.Looper;
-import android.os.SystemClock;
+import android.p007os.Bundle;
+import android.p007os.Looper;
+import android.p007os.SystemClock;
 import android.util.Log;
 
 @Deprecated
+/* loaded from: classes3.dex */
 public class RemoteControlClient {
     private static final boolean DEBUG = false;
     public static final int DEFAULT_PLAYBACK_VOLUME = 15;
@@ -66,35 +67,30 @@ public class RemoteControlClient {
     private static final long POSITION_REFRESH_PERIOD_PLAYING_MS = 15000;
     public static final int RCSE_ID_UNREGISTERED = -1;
     private static final String TAG = "RemoteControlClient";
-    /* access modifiers changed from: private */
-    public final Object mCacheLock = new Object();
-    /* access modifiers changed from: private */
-    public int mCurrentClientGenId = -1;
-    /* access modifiers changed from: private */
-    public MediaMetadata mMediaMetadata;
-    /* access modifiers changed from: private */
-    public Bundle mMetadata = new Bundle();
+    private MediaMetadata mMediaMetadata;
     private OnMetadataUpdateListener mMetadataUpdateListener;
-    private boolean mNeedsPositionSync = false;
-    /* access modifiers changed from: private */
-    public Bitmap mOriginalArtwork;
-    private long mPlaybackPositionMs = -1;
-    private float mPlaybackSpeed = 1.0f;
-    private int mPlaybackState = 0;
-    private long mPlaybackStateChangeTimeMs = 0;
+    private Bitmap mOriginalArtwork;
     private OnGetPlaybackPositionListener mPositionProvider;
     private OnPlaybackPositionUpdateListener mPositionUpdateListener;
     private final PendingIntent mRcMediaIntent;
-    /* access modifiers changed from: private */
-    public MediaSession mSession;
+    private MediaSession mSession;
+    private final Object mCacheLock = new Object();
+    private int mPlaybackState = 0;
+    private long mPlaybackStateChangeTimeMs = 0;
+    private long mPlaybackPositionMs = -1;
+    private float mPlaybackSpeed = 1.0f;
+    private int mTransportControlFlags = 0;
+    private Bundle mMetadata = new Bundle();
+    private int mCurrentClientGenId = -1;
+    private boolean mNeedsPositionSync = false;
     private PlaybackState mSessionPlaybackState = null;
-    /* access modifiers changed from: private */
-    public int mTransportControlFlags = 0;
-    private MediaSession.Callback mTransportListener = new MediaSession.Callback() {
+    private MediaSession.Callback mTransportListener = new MediaSession.Callback() { // from class: android.media.RemoteControlClient.1
+        @Override // android.media.session.MediaSession.Callback
         public void onSeekTo(long pos) {
             RemoteControlClient.this.onSeekTo(RemoteControlClient.this.mCurrentClientGenId, pos);
         }
 
+        @Override // android.media.session.MediaSession.Callback
         public void onSetRating(Rating rating) {
             if ((RemoteControlClient.this.mTransportControlFlags & 512) != 0) {
                 RemoteControlClient.this.onUpdateMetadata(RemoteControlClient.this.mCurrentClientGenId, MediaMetadataEditor.RATING_KEY_BY_USER, rating);
@@ -102,14 +98,17 @@ public class RemoteControlClient {
         }
     };
 
+    /* loaded from: classes3.dex */
     public interface OnGetPlaybackPositionListener {
         long onGetPlaybackPosition();
     }
 
+    /* loaded from: classes3.dex */
     public interface OnMetadataUpdateListener {
         void onMetadataUpdate(int i, Object obj);
     }
 
+    /* loaded from: classes3.dex */
     public interface OnPlaybackPositionUpdateListener {
         void onPlaybackPositionUpdate(long j);
     }
@@ -138,6 +137,7 @@ public class RemoteControlClient {
     }
 
     @Deprecated
+    /* loaded from: classes3.dex */
     public class MetadataEditor extends MediaMetadataEditor {
         public static final int BITMAP_KEY_ARTWORK = 100;
         public static final int METADATA_KEY_ARTWORK = 100;
@@ -149,33 +149,37 @@ public class RemoteControlClient {
             throw new CloneNotSupportedException();
         }
 
+        @Override // android.media.MediaMetadataEditor
         public synchronized MetadataEditor putString(int key, String value) throws IllegalArgumentException {
             String metadataKey;
             super.putString(key, value);
-            if (!(this.mMetadataBuilder == null || (metadataKey = MediaMetadata.getKeyFromMetadataEditorKey(key)) == null)) {
+            if (this.mMetadataBuilder != null && (metadataKey = MediaMetadata.getKeyFromMetadataEditorKey(key)) != null) {
                 this.mMetadataBuilder.putText(metadataKey, value);
             }
             return this;
         }
 
+        @Override // android.media.MediaMetadataEditor
         public synchronized MetadataEditor putLong(int key, long value) throws IllegalArgumentException {
             String metadataKey;
             super.putLong(key, value);
-            if (!(this.mMetadataBuilder == null || (metadataKey = MediaMetadata.getKeyFromMetadataEditorKey(key)) == null)) {
+            if (this.mMetadataBuilder != null && (metadataKey = MediaMetadata.getKeyFromMetadataEditorKey(key)) != null) {
                 this.mMetadataBuilder.putLong(metadataKey, value);
             }
             return this;
         }
 
+        @Override // android.media.MediaMetadataEditor
         public synchronized MetadataEditor putBitmap(int key, Bitmap bitmap) throws IllegalArgumentException {
             String metadataKey;
             super.putBitmap(key, bitmap);
-            if (!(this.mMetadataBuilder == null || (metadataKey = MediaMetadata.getKeyFromMetadataEditorKey(key)) == null)) {
+            if (this.mMetadataBuilder != null && (metadataKey = MediaMetadata.getKeyFromMetadataEditorKey(key)) != null) {
                 this.mMetadataBuilder.putBitmap(metadataKey, bitmap);
             }
             return this;
         }
 
+        @Override // android.media.MediaMetadataEditor
         public synchronized MetadataEditor putObject(int key, Object object) throws IllegalArgumentException {
             String metadataKey;
             super.putObject(key, object);
@@ -185,29 +189,31 @@ public class RemoteControlClient {
             return this;
         }
 
+        @Override // android.media.MediaMetadataEditor
         public synchronized void clear() {
             super.clear();
         }
 
+        @Override // android.media.MediaMetadataEditor
         public synchronized void apply() {
-            if (this.mApplied) {
-                Log.e(RemoteControlClient.TAG, "Can't apply a previously applied MetadataEditor");
+            if (!this.mApplied) {
+                synchronized (RemoteControlClient.this.mCacheLock) {
+                    RemoteControlClient.this.mMetadata = new Bundle(this.mEditorMetadata);
+                    RemoteControlClient.this.mMetadata.putLong(String.valueOf((int) MediaMetadataEditor.KEY_EDITABLE_MASK), this.mEditableKeys);
+                    if (RemoteControlClient.this.mOriginalArtwork != null && !RemoteControlClient.this.mOriginalArtwork.equals(this.mEditorArtwork)) {
+                        RemoteControlClient.this.mOriginalArtwork.recycle();
+                    }
+                    RemoteControlClient.this.mOriginalArtwork = this.mEditorArtwork;
+                    this.mEditorArtwork = null;
+                    if (RemoteControlClient.this.mSession != null && this.mMetadataBuilder != null) {
+                        RemoteControlClient.this.mMediaMetadata = this.mMetadataBuilder.build();
+                        RemoteControlClient.this.mSession.setMetadata(RemoteControlClient.this.mMediaMetadata);
+                    }
+                    this.mApplied = true;
+                }
                 return;
             }
-            synchronized (RemoteControlClient.this.mCacheLock) {
-                Bundle unused = RemoteControlClient.this.mMetadata = new Bundle(this.mEditorMetadata);
-                RemoteControlClient.this.mMetadata.putLong(String.valueOf(MediaMetadataEditor.KEY_EDITABLE_MASK), this.mEditableKeys);
-                if (RemoteControlClient.this.mOriginalArtwork != null && !RemoteControlClient.this.mOriginalArtwork.equals(this.mEditorArtwork)) {
-                    RemoteControlClient.this.mOriginalArtwork.recycle();
-                }
-                Bitmap unused2 = RemoteControlClient.this.mOriginalArtwork = this.mEditorArtwork;
-                this.mEditorArtwork = null;
-                if (!(RemoteControlClient.this.mSession == null || this.mMetadataBuilder == null)) {
-                    MediaMetadata unused3 = RemoteControlClient.this.mMediaMetadata = this.mMetadataBuilder.build();
-                    RemoteControlClient.this.mSession.setMetadata(RemoteControlClient.this.mMediaMetadata);
-                }
-                this.mApplied = true;
-            }
+            Log.m70e(RemoteControlClient.TAG, "Can't apply a previously applied MetadataEditor");
         }
     }
 
@@ -218,7 +224,7 @@ public class RemoteControlClient {
             editor.mEditorArtwork = null;
             editor.mMetadataChanged = true;
             editor.mArtworkChanged = true;
-            editor.mEditableKeys = 0;
+            editor.mEditableKeys = 0L;
         } else {
             editor.mEditorMetadata = new Bundle(this.mMetadata);
             editor.mEditorArtwork = this.mOriginalArtwork;
@@ -242,21 +248,18 @@ public class RemoteControlClient {
     }
 
     private void setPlaybackStateInt(int state, long timeInMs, float playbackSpeed, boolean hasPosition) {
-        int i = state;
-        long j = timeInMs;
-        float f = playbackSpeed;
         synchronized (this.mCacheLock) {
-            if (!(this.mPlaybackState == i && this.mPlaybackPositionMs == j && this.mPlaybackSpeed == f)) {
-                this.mPlaybackState = i;
+            if (this.mPlaybackState != state || this.mPlaybackPositionMs != timeInMs || this.mPlaybackSpeed != playbackSpeed) {
+                this.mPlaybackState = state;
                 long position = -1;
                 if (!hasPosition) {
                     this.mPlaybackPositionMs = PLAYBACK_POSITION_ALWAYS_UNKNOWN;
-                } else if (j < 0) {
-                    this.mPlaybackPositionMs = -1;
+                } else if (timeInMs < 0) {
+                    this.mPlaybackPositionMs = -1L;
                 } else {
-                    this.mPlaybackPositionMs = j;
+                    this.mPlaybackPositionMs = timeInMs;
                 }
-                this.mPlaybackSpeed = f;
+                this.mPlaybackSpeed = playbackSpeed;
                 this.mPlaybackStateChangeTimeMs = SystemClock.elapsedRealtime();
                 if (this.mSession != null) {
                     int pbState = getStateFromRccState(state);
@@ -265,7 +268,7 @@ public class RemoteControlClient {
                     }
                     PlaybackState.Builder bob = new PlaybackState.Builder(this.mSessionPlaybackState);
                     bob.setState(pbState, position, playbackSpeed, SystemClock.elapsedRealtime());
-                    bob.setErrorMessage((CharSequence) null);
+                    bob.setErrorMessage(null);
                     this.mSessionPlaybackState = bob.build();
                     this.mSession.setPlaybackState(this.mSessionPlaybackState);
                 }
@@ -307,7 +310,7 @@ public class RemoteControlClient {
         return this.mRcMediaIntent;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void onSeekTo(int generationId, long timeMs) {
         synchronized (this.mCacheLock) {
             if (this.mCurrentClientGenId == generationId && this.mPositionUpdateListener != null) {
@@ -316,7 +319,7 @@ public class RemoteControlClient {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void onUpdateMetadata(int generationId, int key, Object value) {
         synchronized (this.mCacheLock) {
             if (this.mCurrentClientGenId == generationId && this.mMetadataUpdateListener != null) {
@@ -334,6 +337,9 @@ public class RemoteControlClient {
             case 8:
             case 9:
                 return false;
+            case 3:
+            case 4:
+            case 5:
             default:
                 return true;
         }
@@ -343,7 +349,7 @@ public class RemoteControlClient {
         if (Math.abs(speed) <= 1.0f) {
             return POSITION_REFRESH_PERIOD_PLAYING_MS;
         }
-        return Math.max((long) (15000.0f / Math.abs(speed)), POSITION_REFRESH_PERIOD_MIN_MS);
+        return Math.max(15000.0f / Math.abs(speed), (long) POSITION_REFRESH_PERIOD_MIN_MS);
     }
 
     private static int getStateFromRccState(int rccState) {
@@ -391,19 +397,20 @@ public class RemoteControlClient {
                 return 8;
             case 7:
                 return 9;
+            case 8:
+            default:
+                return -1;
             case 9:
                 return 7;
             case 10:
                 return 6;
-            default:
-                return -1;
         }
     }
 
     private static long getActionsFromRccControlFlags(int rccFlags) {
         long actions = 0;
-        for (long flag = 1; flag <= ((long) rccFlags); flag <<= 1) {
-            if ((((long) rccFlags) & flag) != 0) {
+        for (long flag = 1; flag <= rccFlags; flag <<= 1) {
+            if ((rccFlags & flag) != 0) {
                 actions |= getActionForRccFlag((int) flag);
             }
         }
@@ -412,84 +419,82 @@ public class RemoteControlClient {
 
     static int getRccControlFlagsFromActions(long actions) {
         int rccFlags = 0;
-        long action = 1;
-        while (action <= actions && action < 2147483647L) {
+        for (long action = 1; action <= actions && action < 2147483647L; action <<= 1) {
             if ((action & actions) != 0) {
                 rccFlags |= getRccFlagForAction(action);
             }
-            action <<= 1;
         }
         return rccFlags;
     }
 
     private static long getActionForRccFlag(int flag) {
-        if (flag == 4) {
-            return 4;
+        if (flag != 4) {
+            if (flag != 8) {
+                if (flag != 16) {
+                    if (flag != 32) {
+                        if (flag != 64) {
+                            if (flag != 128) {
+                                if (flag != 256) {
+                                    if (flag != 512) {
+                                        switch (flag) {
+                                            case 1:
+                                                return 16L;
+                                            case 2:
+                                                return 8L;
+                                            default:
+                                                return 0L;
+                                        }
+                                    }
+                                    return 128L;
+                                }
+                                return 256L;
+                            }
+                            return 32L;
+                        }
+                        return 64L;
+                    }
+                    return 1L;
+                }
+                return 2L;
+            }
+            return 512L;
         }
-        if (flag == 8) {
-            return 512;
-        }
-        if (flag == 16) {
-            return 2;
-        }
-        if (flag == 32) {
-            return 1;
-        }
-        if (flag == 64) {
-            return 64;
-        }
-        if (flag == 128) {
-            return 32;
-        }
-        if (flag == 256) {
-            return 256;
-        }
-        if (flag == 512) {
-            return 128;
-        }
-        switch (flag) {
-            case 1:
-                return 16;
-            case 2:
-                return 8;
-            default:
-                return 0;
-        }
+        return 4L;
     }
 
     private static int getRccFlagForAction(long action) {
         int testAction = action < 2147483647L ? (int) action : 0;
-        if (testAction == 4) {
-            return 4;
-        }
-        if (testAction == 8) {
+        if (testAction != 4) {
+            if (testAction != 8) {
+                if (testAction != 16) {
+                    if (testAction != 32) {
+                        if (testAction != 64) {
+                            if (testAction != 128) {
+                                if (testAction != 256) {
+                                    if (testAction != 512) {
+                                        switch (testAction) {
+                                            case 1:
+                                                return 32;
+                                            case 2:
+                                                return 16;
+                                            default:
+                                                return 0;
+                                        }
+                                    }
+                                    return 8;
+                                }
+                                return 256;
+                            }
+                            return 512;
+                        }
+                        return 64;
+                    }
+                    return 128;
+                }
+                return 1;
+            }
             return 2;
         }
-        if (testAction == 16) {
-            return 1;
-        }
-        if (testAction == 32) {
-            return 128;
-        }
-        if (testAction == 64) {
-            return 64;
-        }
-        if (testAction == 128) {
-            return 512;
-        }
-        if (testAction == 256) {
-            return 256;
-        }
-        if (testAction == 512) {
-            return 8;
-        }
-        switch (testAction) {
-            case 1:
-                return 32;
-            case 2:
-                return 16;
-            default:
-                return 0;
-        }
+        return 4;
     }
 }

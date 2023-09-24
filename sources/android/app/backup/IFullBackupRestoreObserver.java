@@ -1,11 +1,12 @@
 package android.app.backup;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes.dex */
 public interface IFullBackupRestoreObserver extends IInterface {
     void onBackupPackage(String str) throws RemoteException;
 
@@ -21,33 +22,43 @@ public interface IFullBackupRestoreObserver extends IInterface {
 
     void onTimeout() throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements IFullBackupRestoreObserver {
+        @Override // android.app.backup.IFullBackupRestoreObserver
         public void onStartBackup() throws RemoteException {
         }
 
+        @Override // android.app.backup.IFullBackupRestoreObserver
         public void onBackupPackage(String name) throws RemoteException {
         }
 
+        @Override // android.app.backup.IFullBackupRestoreObserver
         public void onEndBackup() throws RemoteException {
         }
 
+        @Override // android.app.backup.IFullBackupRestoreObserver
         public void onStartRestore() throws RemoteException {
         }
 
+        @Override // android.app.backup.IFullBackupRestoreObserver
         public void onRestorePackage(String name) throws RemoteException {
         }
 
+        @Override // android.app.backup.IFullBackupRestoreObserver
         public void onEndRestore() throws RemoteException {
         }
 
+        @Override // android.app.backup.IFullBackupRestoreObserver
         public void onTimeout() throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements IFullBackupRestoreObserver {
         private static final String DESCRIPTOR = "android.app.backup.IFullBackupRestoreObserver";
         static final int TRANSACTION_onBackupPackage = 2;
@@ -67,12 +78,13 @@ public interface IFullBackupRestoreObserver extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IFullBackupRestoreObserver)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IFullBackupRestoreObserver)) {
+                return (IFullBackupRestoreObserver) iin;
             }
-            return (IFullBackupRestoreObserver) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -98,50 +110,54 @@ public interface IFullBackupRestoreObserver extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        onStartBackup();
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        onBackupPackage(data.readString());
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        onEndBackup();
-                        return true;
-                    case 4:
-                        data.enforceInterface(DESCRIPTOR);
-                        onStartRestore();
-                        return true;
-                    case 5:
-                        data.enforceInterface(DESCRIPTOR);
-                        onRestorePackage(data.readString());
-                        return true;
-                    case 6:
-                        data.enforceInterface(DESCRIPTOR);
-                        onEndRestore();
-                        return true;
-                    case 7:
-                        data.enforceInterface(DESCRIPTOR);
-                        onTimeout();
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    onStartBackup();
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0 = data.readString();
+                    onBackupPackage(_arg0);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    onEndBackup();
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    onStartRestore();
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg02 = data.readString();
+                    onRestorePackage(_arg02);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    onEndRestore();
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    onTimeout();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements IFullBackupRestoreObserver {
             public static IFullBackupRestoreObserver sDefaultImpl;
             private IBinder mRemote;
@@ -150,6 +166,7 @@ public interface IFullBackupRestoreObserver extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -158,13 +175,13 @@ public interface IFullBackupRestoreObserver extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.app.backup.IFullBackupRestoreObserver
             public void onStartBackup() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onStartBackup();
                     }
                 } finally {
@@ -172,14 +189,14 @@ public interface IFullBackupRestoreObserver extends IInterface {
                 }
             }
 
+            @Override // android.app.backup.IFullBackupRestoreObserver
             public void onBackupPackage(String name) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(name);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onBackupPackage(name);
                     }
                 } finally {
@@ -187,13 +204,13 @@ public interface IFullBackupRestoreObserver extends IInterface {
                 }
             }
 
+            @Override // android.app.backup.IFullBackupRestoreObserver
             public void onEndBackup() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onEndBackup();
                     }
                 } finally {
@@ -201,13 +218,13 @@ public interface IFullBackupRestoreObserver extends IInterface {
                 }
             }
 
+            @Override // android.app.backup.IFullBackupRestoreObserver
             public void onStartRestore() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onStartRestore();
                     }
                 } finally {
@@ -215,14 +232,14 @@ public interface IFullBackupRestoreObserver extends IInterface {
                 }
             }
 
+            @Override // android.app.backup.IFullBackupRestoreObserver
             public void onRestorePackage(String name) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(name);
-                    if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(5, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onRestorePackage(name);
                     }
                 } finally {
@@ -230,13 +247,13 @@ public interface IFullBackupRestoreObserver extends IInterface {
                 }
             }
 
+            @Override // android.app.backup.IFullBackupRestoreObserver
             public void onEndRestore() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(6, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(6, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onEndRestore();
                     }
                 } finally {
@@ -244,13 +261,13 @@ public interface IFullBackupRestoreObserver extends IInterface {
                 }
             }
 
+            @Override // android.app.backup.IFullBackupRestoreObserver
             public void onTimeout() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(7, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(7, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onTimeout();
                     }
                 } finally {
@@ -260,11 +277,11 @@ public interface IFullBackupRestoreObserver extends IInterface {
         }
 
         public static boolean setDefaultImpl(IFullBackupRestoreObserver impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IFullBackupRestoreObserver getDefaultImpl() {

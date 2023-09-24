@@ -1,18 +1,19 @@
 package android.app;
 
-import android.os.Bundle;
-import android.os.IRemoteCallback;
-import android.os.RemoteException;
+import android.p007os.IRemoteCallback;
+import android.p007os.RemoteException;
 
+/* loaded from: classes.dex */
 public abstract class SynchronousUserSwitchObserver extends UserSwitchObserver {
     public abstract void onUserSwitching(int i) throws RemoteException;
 
+    @Override // android.app.UserSwitchObserver, android.app.IUserSwitchObserver
     public final void onUserSwitching(int newUserId, IRemoteCallback reply) throws RemoteException {
         try {
             onUserSwitching(newUserId);
         } finally {
             if (reply != null) {
-                reply.sendResult((Bundle) null);
+                reply.sendResult(null);
             }
         }
     }

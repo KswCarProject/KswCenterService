@@ -5,6 +5,7 @@ import android.security.keystore.KeyProperties;
 import com.android.internal.util.BitUtils;
 import java.util.StringJoiner;
 
+/* loaded from: classes3.dex */
 public class DefaultNetworkEvent {
     public final long creationTimeMs;
     public long durationMs;
@@ -31,7 +32,8 @@ public class DefaultNetworkEvent {
         int[] unpackBits = BitUtils.unpackBits((long) this.transports);
         int length = unpackBits.length;
         for (int i = 0; i < length; i++) {
-            j.add(NetworkCapabilities.transportNameOf(unpackBits[i]));
+            int t = unpackBits[i];
+            j.add(NetworkCapabilities.transportNameOf(t));
         }
         j.add("ip=" + ipSupport());
         if (this.initialScore > 0) {
@@ -40,8 +42,8 @@ public class DefaultNetworkEvent {
         if (this.finalScore > 0) {
             j.add("final_score=" + this.finalScore);
         }
-        j.add(String.format("duration=%.0fs", new Object[]{Double.valueOf(((double) this.durationMs) / 1000.0d)}));
-        j.add(String.format("validation=%04.1f%%", new Object[]{Double.valueOf((((double) this.validatedMs) * 100.0d) / ((double) this.durationMs))}));
+        j.add(String.format("duration=%.0fs", Double.valueOf(this.durationMs / 1000.0d)));
+        j.add(String.format("validation=%04.1f%%", Double.valueOf((this.validatedMs * 100.0d) / this.durationMs)));
         return j.toString();
     }
 

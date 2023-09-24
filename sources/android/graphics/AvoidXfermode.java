@@ -1,16 +1,18 @@
 package android.graphics;
 
 @Deprecated
+/* loaded from: classes.dex */
 public class AvoidXfermode extends Xfermode {
 
+    /* loaded from: classes.dex */
     public enum Mode {
         AVOID(0),
         TARGET(1);
         
         final int nativeInt;
 
-        private Mode(int nativeInt2) {
-            this.nativeInt = nativeInt2;
+        Mode(int nativeInt) {
+            this.nativeInt = nativeInt;
         }
     }
 

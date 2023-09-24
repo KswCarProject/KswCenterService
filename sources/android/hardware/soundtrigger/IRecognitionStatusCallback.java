@@ -1,12 +1,13 @@
 package android.hardware.soundtrigger;
 
 import android.hardware.soundtrigger.SoundTrigger;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes.dex */
 public interface IRecognitionStatusCallback extends IInterface {
     void onError(int i) throws RemoteException;
 
@@ -18,27 +19,35 @@ public interface IRecognitionStatusCallback extends IInterface {
 
     void onRecognitionResumed() throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements IRecognitionStatusCallback {
+        @Override // android.hardware.soundtrigger.IRecognitionStatusCallback
         public void onKeyphraseDetected(SoundTrigger.KeyphraseRecognitionEvent recognitionEvent) throws RemoteException {
         }
 
+        @Override // android.hardware.soundtrigger.IRecognitionStatusCallback
         public void onGenericSoundTriggerDetected(SoundTrigger.GenericRecognitionEvent recognitionEvent) throws RemoteException {
         }
 
+        @Override // android.hardware.soundtrigger.IRecognitionStatusCallback
         public void onError(int status) throws RemoteException {
         }
 
+        @Override // android.hardware.soundtrigger.IRecognitionStatusCallback
         public void onRecognitionPaused() throws RemoteException {
         }
 
+        @Override // android.hardware.soundtrigger.IRecognitionStatusCallback
         public void onRecognitionResumed() throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements IRecognitionStatusCallback {
         private static final String DESCRIPTOR = "android.hardware.soundtrigger.IRecognitionStatusCallback";
         static final int TRANSACTION_onError = 3;
@@ -56,12 +65,13 @@ public interface IRecognitionStatusCallback extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IRecognitionStatusCallback)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IRecognitionStatusCallback)) {
+                return (IRecognitionStatusCallback) iin;
             }
-            return (IRecognitionStatusCallback) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -83,80 +93,47 @@ public interface IRecognitionStatusCallback extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v2, resolved type: android.hardware.soundtrigger.SoundTrigger$KeyphraseRecognitionEvent} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v6, resolved type: android.hardware.soundtrigger.SoundTrigger$GenericRecognitionEvent} */
-        /* JADX WARNING: type inference failed for: r1v1 */
-        /* JADX WARNING: type inference failed for: r1v12 */
-        /* JADX WARNING: type inference failed for: r1v13 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r5, android.os.Parcel r6, android.os.Parcel r7, int r8) throws android.os.RemoteException {
-            /*
-                r4 = this;
-                java.lang.String r0 = "android.hardware.soundtrigger.IRecognitionStatusCallback"
-                r1 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r2 = 1
-                if (r5 == r1) goto L_0x0058
-                r1 = 0
-                switch(r5) {
-                    case 1: goto L_0x0041;
-                    case 2: goto L_0x002a;
-                    case 3: goto L_0x001f;
-                    case 4: goto L_0x0018;
-                    case 5: goto L_0x0011;
-                    default: goto L_0x000c;
-                }
-            L_0x000c:
-                boolean r1 = super.onTransact(r5, r6, r7, r8)
-                return r1
-            L_0x0011:
-                r6.enforceInterface(r0)
-                r4.onRecognitionResumed()
-                return r2
-            L_0x0018:
-                r6.enforceInterface(r0)
-                r4.onRecognitionPaused()
-                return r2
-            L_0x001f:
-                r6.enforceInterface(r0)
-                int r1 = r6.readInt()
-                r4.onError(r1)
-                return r2
-            L_0x002a:
-                r6.enforceInterface(r0)
-                int r3 = r6.readInt()
-                if (r3 == 0) goto L_0x003c
-                android.os.Parcelable$Creator<android.hardware.soundtrigger.SoundTrigger$GenericRecognitionEvent> r1 = android.hardware.soundtrigger.SoundTrigger.GenericRecognitionEvent.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r6)
-                android.hardware.soundtrigger.SoundTrigger$GenericRecognitionEvent r1 = (android.hardware.soundtrigger.SoundTrigger.GenericRecognitionEvent) r1
-                goto L_0x003d
-            L_0x003c:
-            L_0x003d:
-                r4.onGenericSoundTriggerDetected(r1)
-                return r2
-            L_0x0041:
-                r6.enforceInterface(r0)
-                int r3 = r6.readInt()
-                if (r3 == 0) goto L_0x0053
-                android.os.Parcelable$Creator<android.hardware.soundtrigger.SoundTrigger$KeyphraseRecognitionEvent> r1 = android.hardware.soundtrigger.SoundTrigger.KeyphraseRecognitionEvent.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r6)
-                android.hardware.soundtrigger.SoundTrigger$KeyphraseRecognitionEvent r1 = (android.hardware.soundtrigger.SoundTrigger.KeyphraseRecognitionEvent) r1
-                goto L_0x0054
-            L_0x0053:
-            L_0x0054:
-                r4.onKeyphraseDetected(r1)
-                return r2
-            L_0x0058:
-                r7.writeString(r0)
-                return r2
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.hardware.soundtrigger.IRecognitionStatusCallback.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    SoundTrigger.KeyphraseRecognitionEvent _arg0 = data.readInt() != 0 ? SoundTrigger.KeyphraseRecognitionEvent.CREATOR.createFromParcel(data) : null;
+                    onKeyphraseDetected(_arg0);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    SoundTrigger.GenericRecognitionEvent _arg02 = data.readInt() != 0 ? SoundTrigger.GenericRecognitionEvent.CREATOR.createFromParcel(data) : null;
+                    onGenericSoundTriggerDetected(_arg02);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg03 = data.readInt();
+                    onError(_arg03);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    onRecognitionPaused();
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    onRecognitionResumed();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements IRecognitionStatusCallback {
             public static IRecognitionStatusCallback sDefaultImpl;
             private IBinder mRemote;
@@ -165,6 +142,7 @@ public interface IRecognitionStatusCallback extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -173,6 +151,7 @@ public interface IRecognitionStatusCallback extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.hardware.soundtrigger.IRecognitionStatusCallback
             public void onKeyphraseDetected(SoundTrigger.KeyphraseRecognitionEvent recognitionEvent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -183,9 +162,8 @@ public interface IRecognitionStatusCallback extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onKeyphraseDetected(recognitionEvent);
                     }
                 } finally {
@@ -193,6 +171,7 @@ public interface IRecognitionStatusCallback extends IInterface {
                 }
             }
 
+            @Override // android.hardware.soundtrigger.IRecognitionStatusCallback
             public void onGenericSoundTriggerDetected(SoundTrigger.GenericRecognitionEvent recognitionEvent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -203,9 +182,8 @@ public interface IRecognitionStatusCallback extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onGenericSoundTriggerDetected(recognitionEvent);
                     }
                 } finally {
@@ -213,14 +191,14 @@ public interface IRecognitionStatusCallback extends IInterface {
                 }
             }
 
+            @Override // android.hardware.soundtrigger.IRecognitionStatusCallback
             public void onError(int status) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(status);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onError(status);
                     }
                 } finally {
@@ -228,13 +206,13 @@ public interface IRecognitionStatusCallback extends IInterface {
                 }
             }
 
+            @Override // android.hardware.soundtrigger.IRecognitionStatusCallback
             public void onRecognitionPaused() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onRecognitionPaused();
                     }
                 } finally {
@@ -242,13 +220,13 @@ public interface IRecognitionStatusCallback extends IInterface {
                 }
             }
 
+            @Override // android.hardware.soundtrigger.IRecognitionStatusCallback
             public void onRecognitionResumed() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(5, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onRecognitionResumed();
                     }
                 } finally {
@@ -258,11 +236,11 @@ public interface IRecognitionStatusCallback extends IInterface {
         }
 
         public static boolean setDefaultImpl(IRecognitionStatusCallback impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IRecognitionStatusCallback getDefaultImpl() {

@@ -7,18 +7,19 @@ import android.net.DataUsageRequest;
 import android.net.INetworkStatsService;
 import android.net.NetworkIdentity;
 import android.net.NetworkTemplate;
-import android.os.Binder;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.os.Messenger;
-import android.os.RemoteException;
-import android.os.ServiceManager;
+import android.p007os.Binder;
+import android.p007os.Handler;
+import android.p007os.Looper;
+import android.p007os.Message;
+import android.p007os.Messenger;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
 import android.util.DataUnit;
 import android.util.Log;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.util.Preconditions;
 
+/* loaded from: classes.dex */
 public class NetworkStatsManager {
     public static final int CALLBACK_LIMIT_REACHED = 0;
     public static final int CALLBACK_RELEASED = 1;
@@ -31,13 +32,6 @@ public class NetworkStatsManager {
     private final Context mContext;
     private int mFlags;
     private final INetworkStatsService mService;
-
-    public static abstract class UsageCallback {
-        /* access modifiers changed from: private */
-        public DataUsageRequest request;
-
-        public abstract void onThresholdReached(int i, String str);
-    }
 
     @UnsupportedAppUsage
     public NetworkStatsManager(Context context) throws ServiceManager.ServiceNotFoundException {
@@ -84,7 +78,8 @@ public class NetworkStatsManager {
 
     public NetworkStats.Bucket querySummaryForDevice(int networkType, String subscriberId, long startTime, long endTime) throws SecurityException, RemoteException {
         try {
-            return querySummaryForDevice(createTemplate(networkType, subscriberId), startTime, endTime);
+            NetworkTemplate template = createTemplate(networkType, subscriberId);
+            return querySummaryForDevice(template, startTime, endTime);
         } catch (IllegalArgumentException e) {
             return null;
         }
@@ -92,19 +87,20 @@ public class NetworkStatsManager {
 
     public NetworkStats.Bucket querySummaryForUser(int networkType, String subscriberId, long startTime, long endTime) throws SecurityException, RemoteException {
         try {
-            NetworkStats networkStats = new NetworkStats(this.mContext, createTemplate(networkType, subscriberId), this.mFlags, startTime, endTime, this.mService);
-            networkStats.startSummaryEnumeration();
-            networkStats.close();
-            return networkStats.getSummaryAggregate();
+            NetworkTemplate template = createTemplate(networkType, subscriberId);
+            NetworkStats stats = new NetworkStats(this.mContext, template, this.mFlags, startTime, endTime, this.mService);
+            stats.startSummaryEnumeration();
+            stats.close();
+            return stats.getSummaryAggregate();
         } catch (IllegalArgumentException e) {
-            IllegalArgumentException illegalArgumentException = e;
             return null;
         }
     }
 
     public NetworkStats querySummary(int networkType, String subscriberId, long startTime, long endTime) throws SecurityException, RemoteException {
         try {
-            return querySummary(createTemplate(networkType, subscriberId), startTime, endTime);
+            NetworkTemplate template = createTemplate(networkType, subscriberId);
+            return querySummary(template, startTime, endTime);
         } catch (IllegalArgumentException e) {
             return null;
         }
@@ -129,30 +125,28 @@ public class NetworkStatsManager {
     }
 
     public NetworkStats queryDetailsForUidTagState(int networkType, String subscriberId, long startTime, long endTime, int uid, int tag, int state) throws SecurityException {
-        return queryDetailsForUidTagState(createTemplate(networkType, subscriberId), startTime, endTime, uid, tag, state);
+        NetworkTemplate template = createTemplate(networkType, subscriberId);
+        return queryDetailsForUidTagState(template, startTime, endTime, uid, tag, state);
     }
 
     public NetworkStats queryDetailsForUidTagState(NetworkTemplate template, long startTime, long endTime, int uid, int tag, int state) throws SecurityException {
-        int i = uid;
-        int i2 = tag;
-        int i3 = state;
         try {
-            NetworkStats networkStats = new NetworkStats(this.mContext, template, this.mFlags, startTime, endTime, this.mService);
-            networkStats.startHistoryEnumeration(i, i2, i3);
-            return networkStats;
+            NetworkStats result = new NetworkStats(this.mContext, template, this.mFlags, startTime, endTime, this.mService);
+            result.startHistoryEnumeration(uid, tag, state);
+            return result;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error while querying stats for uid=" + i + " tag=" + i2 + " state=" + i3, e);
+            Log.m69e(TAG, "Error while querying stats for uid=" + uid + " tag=" + tag + " state=" + state, e);
             return null;
         }
     }
 
     public NetworkStats queryDetails(int networkType, String subscriberId, long startTime, long endTime) throws SecurityException, RemoteException {
         try {
-            NetworkStats networkStats = new NetworkStats(this.mContext, createTemplate(networkType, subscriberId), this.mFlags, startTime, endTime, this.mService);
-            networkStats.startUserUidEnumeration();
-            return networkStats;
+            NetworkTemplate template = createTemplate(networkType, subscriberId);
+            NetworkStats result = new NetworkStats(this.mContext, template, this.mFlags, startTime, endTime, this.mService);
+            result.startUserUidEnumeration();
+            return result;
         } catch (IllegalArgumentException e) {
-            IllegalArgumentException illegalArgumentException = e;
             return null;
         }
     }
@@ -167,9 +161,10 @@ public class NetworkStatsManager {
         }
         DataUsageRequest request = new DataUsageRequest(0, template, thresholdBytes);
         try {
-            DataUsageRequest unused = callback.request = this.mService.registerUsageCallback(this.mContext.getOpPackageName(), request, new Messenger((Handler) new CallbackHandler(looper, networkType, template.getSubscriberId(), callback)), new Binder());
+            CallbackHandler callbackHandler = new CallbackHandler(looper, networkType, template.getSubscriberId(), callback);
+            callback.request = this.mService.registerUsageCallback(this.mContext.getOpPackageName(), request, new Messenger(callbackHandler), new Binder());
             if (callback.request == null) {
-                Log.e(TAG, "Request from callback is null; should not happen");
+                Log.m70e(TAG, "Request from callback is null; should not happen");
             }
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
@@ -181,7 +176,8 @@ public class NetworkStatsManager {
     }
 
     public void registerUsageCallback(int networkType, String subscriberId, long thresholdBytes, UsageCallback callback, Handler handler) {
-        registerUsageCallback(createTemplate(networkType, subscriberId), networkType, thresholdBytes, callback, handler);
+        NetworkTemplate template = createTemplate(networkType, subscriberId);
+        registerUsageCallback(template, networkType, thresholdBytes, callback, handler);
     }
 
     public void unregisterUsageCallback(UsageCallback callback) {
@@ -195,20 +191,31 @@ public class NetworkStatsManager {
         }
     }
 
+    /* loaded from: classes.dex */
+    public static abstract class UsageCallback {
+        private DataUsageRequest request;
+
+        public abstract void onThresholdReached(int i, String str);
+    }
+
     private static NetworkTemplate createTemplate(int networkType, String subscriberId) {
         switch (networkType) {
             case 0:
                 if (subscriberId == null) {
-                    return NetworkTemplate.buildTemplateMobileWildcard();
+                    NetworkTemplate template = NetworkTemplate.buildTemplateMobileWildcard();
+                    return template;
                 }
-                return NetworkTemplate.buildTemplateMobileAll(subscriberId);
+                NetworkTemplate template2 = NetworkTemplate.buildTemplateMobileAll(subscriberId);
+                return template2;
             case 1:
-                return NetworkTemplate.buildTemplateWifiWildcard();
+                NetworkTemplate template3 = NetworkTemplate.buildTemplateWifiWildcard();
+                return template3;
             default:
                 throw new IllegalArgumentException("Cannot create template for network type " + networkType + ", subscriberId '" + NetworkIdentity.scrubSubscriberId(subscriberId) + "'.");
         }
     }
 
+    /* loaded from: classes.dex */
     private static class CallbackHandler extends Handler {
         private UsageCallback mCallback;
         private final int mNetworkType;
@@ -221,6 +228,7 @@ public class NetworkStatsManager {
             this.mCallback = callback;
         }
 
+        @Override // android.p007os.Handler
         public void handleMessage(Message message) {
             DataUsageRequest request = (DataUsageRequest) getObject(message, DataUsageRequest.PARCELABLE_KEY);
             switch (message.what) {
@@ -229,7 +237,7 @@ public class NetworkStatsManager {
                         this.mCallback.onThresholdReached(this.mNetworkType, this.mSubscriberId);
                         return;
                     }
-                    Log.e(NetworkStatsManager.TAG, "limit reached with released callback for " + request);
+                    Log.m70e(NetworkStatsManager.TAG, "limit reached with released callback for " + request);
                     return;
                 case 1:
                     this.mCallback = null;

@@ -2,31 +2,41 @@ package android.content;
 
 import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
+import android.app.AppGlobals;
+import android.app.backup.FullBackup;
 import android.content.ClipData;
-import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
+import android.content.p002pm.ActivityInfo;
+import android.content.p002pm.PackageManager;
+import android.content.p002pm.ResolveInfo;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.Process;
-import android.os.ShellCommand;
-import android.os.UserHandle;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.IncidentManager;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.Process;
+import android.p007os.ShellCommand;
+import android.p007os.StrictMode;
+import android.p007os.UserHandle;
+import android.p007os.storage.StorageManager;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
+import android.provider.SettingsStringUtil;
+import android.telephony.SmsManager;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.util.ArraySet;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.proto.ProtoOutputStream;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import com.android.internal.util.XmlUtils;
 import com.ibm.icu.text.PluralRules;
+import com.ibm.icu.text.SymbolTable;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Serializable;
@@ -34,6 +44,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -43,6 +54,7 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
 
+/* loaded from: classes.dex */
 public class Intent implements Parcelable, Cloneable {
     public static final String ACTION_ADVANCED_SETTINGS_CHANGED = "android.intent.action.ADVANCED_SETTINGS";
     public static final String ACTION_AIRPLANE_MODE_CHANGED = "android.intent.action.AIRPLANE_MODE";
@@ -351,11 +363,15 @@ public class Intent implements Parcelable, Cloneable {
     private static final int COPY_MODE_ALL = 0;
     private static final int COPY_MODE_FILTER = 1;
     private static final int COPY_MODE_HISTORY = 2;
-    public static final Parcelable.Creator<Intent> CREATOR = new Parcelable.Creator<Intent>() {
+    public static final Parcelable.Creator<Intent> CREATOR = new Parcelable.Creator<Intent>() { // from class: android.content.Intent.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Intent createFromParcel(Parcel in) {
             return new Intent(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Intent[] newArray(int size) {
             return new Intent[size];
         }
@@ -669,39 +685,50 @@ public class Intent implements Parcelable, Cloneable {
     private String mType;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface AccessUriMode {
     }
 
+    /* loaded from: classes.dex */
     public interface CommandOptionHandler {
         boolean handleOption(String str, ShellCommand shellCommand);
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface CopyMode {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface FillInFlags {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface Flags {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface GrantUriMode {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface MutableFlags {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface UriFlags {
     }
 
+    /* loaded from: classes.dex */
     public static class ShortcutIconResource implements Parcelable {
-        public static final Parcelable.Creator<ShortcutIconResource> CREATOR = new Parcelable.Creator<ShortcutIconResource>() {
+        public static final Parcelable.Creator<ShortcutIconResource> CREATOR = new Parcelable.Creator<ShortcutIconResource>() { // from class: android.content.Intent.ShortcutIconResource.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public ShortcutIconResource createFromParcel(Parcel source) {
                 ShortcutIconResource icon = new ShortcutIconResource();
                 icon.packageName = source.readString();
@@ -709,6 +736,8 @@ public class Intent implements Parcelable, Cloneable {
                 return icon;
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public ShortcutIconResource[] newArray(int size) {
                 return new ShortcutIconResource[size];
             }
@@ -723,10 +752,12 @@ public class Intent implements Parcelable, Cloneable {
             return icon;
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeString(this.packageName);
             dest.writeString(this.resourceName);
@@ -738,23 +769,25 @@ public class Intent implements Parcelable, Cloneable {
     }
 
     public static Intent createChooser(Intent target, CharSequence title) {
-        return createChooser(target, title, (IntentSender) null);
+        return createChooser(target, title, null);
     }
 
     public static Intent createChooser(Intent target, CharSequence title, IntentSender sender) {
         Intent intent = new Intent(ACTION_CHOOSER);
-        intent.putExtra(EXTRA_INTENT, (Parcelable) target);
+        intent.putExtra(EXTRA_INTENT, target);
         if (title != null) {
             intent.putExtra(EXTRA_TITLE, title);
         }
         if (sender != null) {
-            intent.putExtra(EXTRA_CHOSEN_COMPONENT_INTENT_SENDER, (Parcelable) sender);
+            intent.putExtra(EXTRA_CHOSEN_COMPONENT_INTENT_SENDER, sender);
         }
         int permFlags = target.getFlags() & 195;
         if (permFlags != 0) {
             ClipData targetClipData = target.getClipData();
             if (targetClipData == null && target.getData() != null) {
-                targetClipData = new ClipData((CharSequence) null, target.getType() != null ? new String[]{target.getType()} : new String[0], new ClipData.Item(target.getData()));
+                ClipData.Item item = new ClipData.Item(target.getData());
+                String[] mimeTypes = target.getType() != null ? new String[]{target.getType()} : new String[0];
+                targetClipData = new ClipData(null, mimeTypes, item);
             }
             if (targetClipData != null) {
                 intent.setClipData(targetClipData);
@@ -869,1782 +902,1216 @@ public class Intent implements Parcelable, Cloneable {
         return parseUri(uri, 0);
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:169:0x0327 A[SYNTHETIC, Splitter:B:169:0x0327] */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public static android.content.Intent parseUri(java.lang.String r18, int r19) throws java.net.URISyntaxException {
-        /*
-            r1 = r18
-            r0 = 0
-            r3 = r0
-            java.lang.String r4 = "android-app:"
-            boolean r4 = r1.startsWith(r4)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r5 = r19 & 3
-            if (r5 == 0) goto L_0x0034
-            java.lang.String r5 = "intent:"
-            boolean r5 = r1.startsWith(r5)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            if (r5 != 0) goto L_0x0034
-            if (r4 != 0) goto L_0x0034
-            android.content.Intent r0 = new android.content.Intent     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            java.lang.String r5 = "android.intent.action.VIEW"
-            r0.<init>((java.lang.String) r5)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r5 = r0
-            android.net.Uri r0 = android.net.Uri.parse(r18)     // Catch:{ IllegalArgumentException -> 0x0029 }
-            r5.setData(r0)     // Catch:{ IllegalArgumentException -> 0x0029 }
-            return r5
-        L_0x0029:
-            r0 = move-exception
-            java.net.URISyntaxException r6 = new java.net.URISyntaxException     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            java.lang.String r7 = r0.getMessage()     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r6.<init>(r1, r7)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            throw r6     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-        L_0x0034:
-            java.lang.String r5 = "#"
-            int r5 = r1.lastIndexOf(r5)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r3 = r5
-            r5 = -1
-            if (r3 != r5) goto L_0x004c
-            if (r4 != 0) goto L_0x005c
-            android.content.Intent r0 = new android.content.Intent     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            java.lang.String r5 = "android.intent.action.VIEW"
-            android.net.Uri r6 = android.net.Uri.parse(r18)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r0.<init>((java.lang.String) r5, (android.net.Uri) r6)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            return r0
-        L_0x004c:
-            java.lang.String r5 = "#Intent;"
-            boolean r5 = r1.startsWith(r5, r3)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            if (r5 != 0) goto L_0x005c
-            if (r4 != 0) goto L_0x005b
-            android.content.Intent r0 = getIntentOld(r18, r19)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            return r0
-        L_0x005b:
-            r3 = -1
-        L_0x005c:
-            android.content.Intent r5 = new android.content.Intent     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            java.lang.String r6 = "android.intent.action.VIEW"
-            r5.<init>((java.lang.String) r6)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r6 = r5
-            r7 = 0
-            r8 = 0
-            r9 = 0
-            if (r3 < 0) goto L_0x0070
-            java.lang.String r10 = r1.substring(r0, r3)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            int r3 = r3 + 8
-            goto L_0x0071
-        L_0x0070:
-            r10 = r1
-        L_0x0071:
-            if (r3 < 0) goto L_0x022d
-            java.lang.String r11 = "end"
-            boolean r11 = r1.startsWith(r11, r3)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            if (r11 != 0) goto L_0x022d
-            r11 = 61
-            int r11 = r1.indexOf(r11, r3)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            if (r11 >= 0) goto L_0x0085
-            int r11 = r3 + -1
-        L_0x0085:
-            r12 = 59
-            int r12 = r1.indexOf(r12, r3)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            if (r11 >= r12) goto L_0x0098
-            int r13 = r11 + 1
-            java.lang.String r13 = r1.substring(r13, r12)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            java.lang.String r13 = android.net.Uri.decode(r13)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            goto L_0x009a
-        L_0x0098:
-            java.lang.String r13 = ""
-        L_0x009a:
-            java.lang.String r14 = "action="
-            boolean r14 = r1.startsWith(r14, r3)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            if (r14 == 0) goto L_0x00b2
-            r5.setAction(r13)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            if (r8 != 0) goto L_0x00ac
-            r7 = 1
-        L_0x00a8:
-            r16 = r10
-            goto L_0x021c
-        L_0x00ac:
-            r17 = r9
-            r16 = r10
-            goto L_0x021a
-        L_0x00b2:
-            java.lang.String r14 = "category="
-            boolean r14 = r1.startsWith(r14, r3)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            if (r14 == 0) goto L_0x00be
-            r5.addCategory(r13)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            goto L_0x00ac
-        L_0x00be:
-            java.lang.String r14 = "type="
-            boolean r14 = r1.startsWith(r14, r3)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            if (r14 == 0) goto L_0x00ca
-            r5.mType = r13     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            goto L_0x00ac
-        L_0x00ca:
-            java.lang.String r14 = "identifier="
-            boolean r14 = r1.startsWith(r14, r3)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            if (r14 == 0) goto L_0x00d5
-            r5.mIdentifier = r13     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            goto L_0x00ac
-        L_0x00d5:
-            java.lang.String r14 = "launchFlags="
-            boolean r14 = r1.startsWith(r14, r3)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            if (r14 == 0) goto L_0x00f2
-            java.lang.Integer r14 = java.lang.Integer.decode(r13)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            int r14 = r14.intValue()     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r5.mFlags = r14     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r14 = r19 & 4
-            if (r14 != 0) goto L_0x00ac
-            int r14 = r5.mFlags     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r14 = r14 & -196(0xffffffffffffff3c, float:NaN)
-            r5.mFlags = r14     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            goto L_0x00ac
-        L_0x00f2:
-            java.lang.String r14 = "package="
-            boolean r14 = r1.startsWith(r14, r3)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            if (r14 == 0) goto L_0x00fe
-            r5.mPackage = r13     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            goto L_0x00ac
-        L_0x00fe:
-            java.lang.String r14 = "component="
-            boolean r14 = r1.startsWith(r14, r3)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            if (r14 == 0) goto L_0x010d
-            android.content.ComponentName r14 = android.content.ComponentName.unflattenFromString(r13)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r5.mComponent = r14     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            goto L_0x00ac
-        L_0x010d:
-            java.lang.String r14 = "scheme="
-            boolean r14 = r1.startsWith(r14, r3)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            if (r14 == 0) goto L_0x0134
-            if (r8 == 0) goto L_0x0131
-            java.lang.StringBuilder r14 = new java.lang.StringBuilder     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r14.<init>()     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r14.append(r13)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            java.lang.String r15 = ":"
-            r14.append(r15)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            java.lang.String r14 = r14.toString()     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            android.net.Uri r14 = android.net.Uri.parse(r14)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r5.mData = r14     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            goto L_0x00ac
-        L_0x0131:
-            r9 = r13
-            goto L_0x00a8
-        L_0x0134:
-            java.lang.String r14 = "sourceBounds="
-            boolean r14 = r1.startsWith(r14, r3)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            if (r14 == 0) goto L_0x0145
-            android.graphics.Rect r14 = android.graphics.Rect.unflattenFromString(r13)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r5.mSourceBounds = r14     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            goto L_0x00ac
-        L_0x0145:
-            int r14 = r3 + 3
-            if (r12 != r14) goto L_0x015a
-            java.lang.String r14 = "SEL"
-            boolean r14 = r1.startsWith(r14, r3)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            if (r14 == 0) goto L_0x015a
-            android.content.Intent r14 = new android.content.Intent     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r14.<init>()     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r5 = r14
-            r8 = 1
-            goto L_0x00a8
-        L_0x015a:
-            int r14 = r3 + 2
-            java.lang.String r14 = r1.substring(r14, r11)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            java.lang.String r14 = android.net.Uri.decode(r14)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            android.os.Bundle r15 = r5.mExtras     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            if (r15 != 0) goto L_0x016f
-            android.os.Bundle r15 = new android.os.Bundle     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r15.<init>()     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r5.mExtras = r15     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-        L_0x016f:
-            android.os.Bundle r15 = r5.mExtras     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            java.lang.String r0 = "S."
-            boolean r0 = r1.startsWith(r0, r3)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            if (r0 == 0) goto L_0x017e
-            r15.putString(r14, r13)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            goto L_0x00ac
-        L_0x017e:
-            java.lang.String r0 = "B."
-            boolean r0 = r1.startsWith(r0, r3)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            if (r0 == 0) goto L_0x018f
-            boolean r0 = java.lang.Boolean.parseBoolean(r13)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r15.putBoolean(r14, r0)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            goto L_0x00ac
-        L_0x018f:
-            java.lang.String r0 = "b."
-            boolean r0 = r1.startsWith(r0, r3)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            if (r0 == 0) goto L_0x01a0
-            byte r0 = java.lang.Byte.parseByte(r13)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r15.putByte(r14, r0)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            goto L_0x00ac
-        L_0x01a0:
-            java.lang.String r0 = "c."
-            boolean r0 = r1.startsWith(r0, r3)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            if (r0 == 0) goto L_0x01b2
-            r0 = 0
-            char r2 = r13.charAt(r0)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r15.putChar(r14, r2)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            goto L_0x00ac
-        L_0x01b2:
-            r0 = 0
-            java.lang.String r2 = "d."
-            boolean r2 = r1.startsWith(r2, r3)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            if (r2 == 0) goto L_0x01ce
-            double r0 = java.lang.Double.parseDouble(r13)     // Catch:{ IndexOutOfBoundsException -> 0x01c9 }
-            r15.putDouble(r14, r0)     // Catch:{ IndexOutOfBoundsException -> 0x01c9 }
-            r17 = r9
-            r16 = r10
-            r1 = r18
-            goto L_0x021a
-        L_0x01c9:
-            r0 = move-exception
-            r1 = r18
-            goto L_0x0341
-        L_0x01ce:
-            java.lang.String r0 = "f."
-            r1 = r18
-            boolean r0 = r1.startsWith(r0, r3)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            if (r0 == 0) goto L_0x01e1
-            float r0 = java.lang.Float.parseFloat(r13)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r15.putFloat(r14, r0)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            goto L_0x00ac
-        L_0x01e1:
-            java.lang.String r0 = "i."
-            boolean r0 = r1.startsWith(r0, r3)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            if (r0 == 0) goto L_0x01f2
-            int r0 = java.lang.Integer.parseInt(r13)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r15.putInt(r14, r0)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            goto L_0x00ac
-        L_0x01f2:
-            java.lang.String r0 = "l."
-            boolean r0 = r1.startsWith(r0, r3)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            if (r0 == 0) goto L_0x0206
-            r17 = r9
-            r16 = r10
-            long r9 = java.lang.Long.parseLong(r13)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r15.putLong(r14, r9)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            goto L_0x021a
-        L_0x0206:
-            r17 = r9
-            r16 = r10
-            java.lang.String r0 = "s."
-            boolean r0 = r1.startsWith(r0, r3)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            if (r0 == 0) goto L_0x0224
-            short r0 = java.lang.Short.parseShort(r13)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r15.putShort(r14, r0)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-        L_0x021a:
-            r9 = r17
-        L_0x021c:
-            int r3 = r12 + 1
-            r10 = r16
-            r0 = 0
-            goto L_0x0071
-        L_0x0224:
-            java.net.URISyntaxException r0 = new java.net.URISyntaxException     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            java.lang.String r2 = "unknown EXTRA type"
-            r0.<init>(r1, r2, r3)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            throw r0     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-        L_0x022d:
-            r17 = r9
-            r16 = r10
-            if (r8 == 0) goto L_0x023b
-            java.lang.String r0 = r6.mPackage     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            if (r0 != 0) goto L_0x023a
-            r6.setSelector(r5)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-        L_0x023a:
-            r5 = r6
-        L_0x023b:
-            if (r16 == 0) goto L_0x033b
-            java.lang.String r0 = "intent:"
-            r2 = r16
-            boolean r0 = r2.startsWith(r0)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            if (r0 == 0) goto L_0x026c
-            r0 = 7
-            java.lang.String r0 = r2.substring(r0)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            if (r17 == 0) goto L_0x0267
-            java.lang.StringBuilder r2 = new java.lang.StringBuilder     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r2.<init>()     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r9 = r17
-            r2.append(r9)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r10 = 58
-            r2.append(r10)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r2.append(r0)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            java.lang.String r2 = r2.toString()     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r0 = r2
-            goto L_0x031e
-        L_0x0267:
-            r9 = r17
-            r10 = r0
-            goto L_0x0321
-        L_0x026c:
-            r9 = r17
-            java.lang.String r0 = "android-app:"
-            boolean r0 = r2.startsWith(r0)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            if (r0 == 0) goto L_0x0320
-            r0 = 12
-            char r0 = r2.charAt(r0)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r10 = 47
-            if (r0 != r10) goto L_0x031c
-            r0 = 13
-            char r0 = r2.charAt(r0)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            if (r0 != r10) goto L_0x031c
-            r0 = 14
-            int r11 = r2.indexOf(r10, r0)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            if (r11 >= 0) goto L_0x02a1
-            java.lang.String r0 = r2.substring(r0)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r5.mPackage = r0     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            if (r7 != 0) goto L_0x029d
-            java.lang.String r0 = "android.intent.action.MAIN"
-            r5.setAction(r0)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-        L_0x029d:
-            java.lang.String r0 = ""
-            goto L_0x031b
-        L_0x02a1:
-            r12 = 0
-            java.lang.String r0 = r2.substring(r0, r11)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r5.mPackage = r0     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            int r0 = r11 + 1
-            int r13 = r2.length()     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            if (r0 >= r13) goto L_0x02e0
-            int r0 = r11 + 1
-            int r0 = r2.indexOf(r10, r0)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r13 = r0
-            if (r0 < 0) goto L_0x02d9
-            int r0 = r11 + 1
-            java.lang.String r0 = r2.substring(r0, r13)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r9 = r0
-            r11 = r13
-            int r0 = r2.length()     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            if (r11 >= r0) goto L_0x02e0
-            int r0 = r11 + 1
-            int r0 = r2.indexOf(r10, r0)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r10 = r0
-            if (r0 < 0) goto L_0x02e0
-            int r0 = r11 + 1
-            java.lang.String r0 = r2.substring(r0, r10)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r12 = r0
-            r11 = r10
-            goto L_0x02e0
-        L_0x02d9:
-            int r0 = r11 + 1
-            java.lang.String r0 = r2.substring(r0)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r9 = r0
-        L_0x02e0:
-            if (r9 != 0) goto L_0x02ec
-            if (r7 != 0) goto L_0x02e9
-            java.lang.String r0 = "android.intent.action.MAIN"
-            r5.setAction(r0)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-        L_0x02e9:
-            java.lang.String r0 = ""
-            goto L_0x031b
-        L_0x02ec:
-            if (r12 != 0) goto L_0x0300
-            java.lang.StringBuilder r0 = new java.lang.StringBuilder     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r0.<init>()     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r0.append(r9)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            java.lang.String r10 = ":"
-            r0.append(r10)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            java.lang.String r0 = r0.toString()     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            goto L_0x031b
-        L_0x0300:
-            java.lang.StringBuilder r0 = new java.lang.StringBuilder     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r0.<init>()     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r0.append(r9)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            java.lang.String r10 = "://"
-            r0.append(r10)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r0.append(r12)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            java.lang.String r10 = r2.substring(r11)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r0.append(r10)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            java.lang.String r0 = r0.toString()     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-        L_0x031b:
-            goto L_0x031e
-        L_0x031c:
-            java.lang.String r0 = ""
-        L_0x031e:
-            r10 = r0
-            goto L_0x0321
-        L_0x0320:
-            r10 = r2
-        L_0x0321:
-            int r0 = r10.length()     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            if (r0 <= 0) goto L_0x0339
-            android.net.Uri r0 = android.net.Uri.parse(r10)     // Catch:{ IllegalArgumentException -> 0x032e }
-            r5.mData = r0     // Catch:{ IllegalArgumentException -> 0x032e }
-            goto L_0x0339
-        L_0x032e:
-            r0 = move-exception
-            java.net.URISyntaxException r2 = new java.net.URISyntaxException     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            java.lang.String r11 = r0.getMessage()     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            r2.<init>(r1, r11)     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-            throw r2     // Catch:{ IndexOutOfBoundsException -> 0x0340 }
-        L_0x0339:
-            r2 = r10
-            goto L_0x033f
-        L_0x033b:
-            r2 = r16
-            r9 = r17
-        L_0x033f:
-            return r5
-        L_0x0340:
-            r0 = move-exception
-        L_0x0341:
-            java.net.URISyntaxException r2 = new java.net.URISyntaxException
-            java.lang.String r4 = "illegal Intent URI format"
-            r2.<init>(r1, r4, r3)
-            throw r2
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.content.Intent.parseUri(java.lang.String, int):android.content.Intent");
+    /* JADX WARN: Removed duplicated region for block: B:179:0x0327 A[EXC_TOP_SPLITTER, SYNTHETIC] */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public static Intent parseUri(String uri, int flags) throws URISyntaxException {
+        String data;
+        String data2;
+        String data3;
+        int newEnd;
+        String scheme;
+        String data4;
+        String str = uri;
+        int i = 0;
+        try {
+            boolean androidApp = str.startsWith("android-app:");
+            if ((flags & 3) != 0 && !str.startsWith("intent:") && !androidApp) {
+                Intent intent = new Intent("android.intent.action.VIEW");
+                try {
+                    intent.setData(Uri.parse(uri));
+                    return intent;
+                } catch (IllegalArgumentException e) {
+                    throw new URISyntaxException(str, e.getMessage());
+                }
+            }
+            i = str.lastIndexOf("#");
+            if (i == -1) {
+                if (!androidApp) {
+                    return new Intent("android.intent.action.VIEW", Uri.parse(uri));
+                }
+            } else if (!str.startsWith("#Intent;", i)) {
+                if (!androidApp) {
+                    return getIntentOld(uri, flags);
+                }
+                i = -1;
+            }
+            Intent intent2 = new Intent("android.intent.action.VIEW");
+            boolean explicitAction = false;
+            boolean inSelector = false;
+            String scheme2 = null;
+            if (i >= 0) {
+                data = str.substring(0, i);
+                i += 8;
+            } else {
+                data = str;
+            }
+            while (i >= 0 && !str.startsWith("end", i)) {
+                int eq = str.indexOf(61, i);
+                if (eq < 0) {
+                    eq = i - 1;
+                }
+                int semi = str.indexOf(59, i);
+                String value = eq < semi ? Uri.decode(str.substring(eq + 1, semi)) : "";
+                if (str.startsWith("action=", i)) {
+                    intent2.setAction(value);
+                    if (!inSelector) {
+                        explicitAction = true;
+                        data4 = data;
+                    }
+                    scheme = scheme2;
+                    data4 = data;
+                    scheme2 = scheme;
+                } else {
+                    if (str.startsWith("category=", i)) {
+                        intent2.addCategory(value);
+                    } else if (str.startsWith("type=", i)) {
+                        intent2.mType = value;
+                    } else if (str.startsWith("identifier=", i)) {
+                        intent2.mIdentifier = value;
+                    } else if (str.startsWith("launchFlags=", i)) {
+                        intent2.mFlags = Integer.decode(value).intValue();
+                        if ((flags & 4) == 0) {
+                            intent2.mFlags &= -196;
+                        }
+                    } else if (str.startsWith("package=", i)) {
+                        intent2.mPackage = value;
+                    } else if (str.startsWith("component=", i)) {
+                        intent2.mComponent = ComponentName.unflattenFromString(value);
+                    } else if (str.startsWith("scheme=", i)) {
+                        if (inSelector) {
+                            intent2.mData = Uri.parse(value + SettingsStringUtil.DELIMITER);
+                        } else {
+                            scheme2 = value;
+                            data4 = data;
+                        }
+                    } else if (str.startsWith("sourceBounds=", i)) {
+                        intent2.mSourceBounds = Rect.unflattenFromString(value);
+                    } else if (semi == i + 3 && str.startsWith("SEL", i)) {
+                        intent2 = new Intent();
+                        inSelector = true;
+                        data4 = data;
+                    } else {
+                        String key = Uri.decode(str.substring(i + 2, eq));
+                        if (intent2.mExtras == null) {
+                            intent2.mExtras = new Bundle();
+                        }
+                        Bundle b = intent2.mExtras;
+                        if (str.startsWith("S.", i)) {
+                            b.putString(key, value);
+                        } else if (str.startsWith("B.", i)) {
+                            b.putBoolean(key, Boolean.parseBoolean(value));
+                        } else if (str.startsWith("b.", i)) {
+                            b.putByte(key, Byte.parseByte(value));
+                        } else if (str.startsWith("c.", i)) {
+                            b.putChar(key, value.charAt(0));
+                        } else {
+                            if (!str.startsWith("d.", i)) {
+                                str = uri;
+                                if (str.startsWith("f.", i)) {
+                                    b.putFloat(key, Float.parseFloat(value));
+                                } else if (str.startsWith("i.", i)) {
+                                    b.putInt(key, Integer.parseInt(value));
+                                } else if (str.startsWith("l.", i)) {
+                                    scheme = scheme2;
+                                    data4 = data;
+                                    b.putLong(key, Long.parseLong(value));
+                                } else {
+                                    scheme = scheme2;
+                                    data4 = data;
+                                    if (!str.startsWith("s.", i)) {
+                                        throw new URISyntaxException(str, "unknown EXTRA type", i);
+                                    }
+                                    b.putShort(key, Short.parseShort(value));
+                                }
+                            } else {
+                                try {
+                                    b.putDouble(key, Double.parseDouble(value));
+                                    scheme = scheme2;
+                                    data4 = data;
+                                    str = uri;
+                                } catch (IndexOutOfBoundsException e2) {
+                                    str = uri;
+                                }
+                            }
+                            scheme2 = scheme;
+                        }
+                    }
+                    scheme = scheme2;
+                    data4 = data;
+                    scheme2 = scheme;
+                }
+                i = semi + 1;
+                data = data4;
+            }
+            String scheme3 = scheme2;
+            String data5 = data;
+            if (inSelector) {
+                if (intent2.mPackage == null) {
+                    intent2.setSelector(intent2);
+                }
+                intent2 = intent2;
+            }
+            if (data5 != null) {
+                if (data5.startsWith("intent:")) {
+                    String data6 = data5.substring(7);
+                    if (scheme3 != null) {
+                        data3 = scheme3 + ':' + data6;
+                        data2 = data3;
+                        if (data2.length() > 0) {
+                            try {
+                                intent2.mData = Uri.parse(data2);
+                            } catch (IllegalArgumentException e3) {
+                                throw new URISyntaxException(str, e3.getMessage());
+                            }
+                        }
+                    } else {
+                        data2 = data6;
+                        if (data2.length() > 0) {
+                        }
+                    }
+                } else {
+                    String scheme4 = scheme3;
+                    if (data5.startsWith("android-app:")) {
+                        if (data5.charAt(12) == '/' && data5.charAt(13) == '/') {
+                            int end = data5.indexOf(47, 14);
+                            if (end < 0) {
+                                intent2.mPackage = data5.substring(14);
+                                if (!explicitAction) {
+                                    intent2.setAction(ACTION_MAIN);
+                                }
+                                data3 = "";
+                            } else {
+                                String authority = null;
+                                intent2.mPackage = data5.substring(14, end);
+                                if (end + 1 < data5.length()) {
+                                    int newEnd2 = data5.indexOf(47, end + 1);
+                                    if (newEnd2 >= 0) {
+                                        scheme4 = data5.substring(end + 1, newEnd2);
+                                        end = newEnd2;
+                                        if (end < data5.length() && (newEnd = data5.indexOf(47, end + 1)) >= 0) {
+                                            authority = data5.substring(end + 1, newEnd);
+                                            end = newEnd;
+                                        }
+                                    } else {
+                                        scheme4 = data5.substring(end + 1);
+                                    }
+                                }
+                                if (scheme4 == null) {
+                                    if (!explicitAction) {
+                                        intent2.setAction(ACTION_MAIN);
+                                    }
+                                    data3 = "";
+                                } else if (authority == null) {
+                                    data3 = scheme4 + SettingsStringUtil.DELIMITER;
+                                } else {
+                                    data3 = scheme4 + "://" + authority + data5.substring(end);
+                                }
+                            }
+                        } else {
+                            data3 = "";
+                        }
+                        data2 = data3;
+                        if (data2.length() > 0) {
+                        }
+                    } else {
+                        data2 = data5;
+                        if (data2.length() > 0) {
+                        }
+                    }
+                }
+            }
+            return intent2;
+        } catch (IndexOutOfBoundsException e4) {
+        }
+        throw new URISyntaxException(str, "illegal Intent URI format", i);
     }
 
     public static Intent getIntentOld(String uri) throws URISyntaxException {
         return getIntentOld(uri, 0);
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:97:0x01e2, code lost:
-        throw new java.net.URISyntaxException(r1, "EXTRA missing '='", r0);
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    private static android.content.Intent getIntentOld(java.lang.String r17, int r18) throws java.net.URISyntaxException {
-        /*
-            r1 = r17
-            r0 = 35
-            int r0 = r1.lastIndexOf(r0)
-            if (r0 < 0) goto L_0x0207
-            r2 = 0
-            r3 = r0
-            r4 = 0
-            int r0 = r0 + 1
-            java.lang.String r5 = "action("
-            r6 = 7
-            r7 = 0
-            boolean r5 = r1.regionMatches(r0, r5, r7, r6)
-            r8 = 41
-            if (r5 == 0) goto L_0x0028
-            r4 = 1
-            int r0 = r0 + 7
-            int r5 = r1.indexOf(r8, r0)
-            java.lang.String r2 = r1.substring(r0, r5)
-            int r0 = r5 + 1
-        L_0x0028:
-            android.content.Intent r5 = new android.content.Intent
-            r5.<init>((java.lang.String) r2)
-            java.lang.String r9 = "categories("
-            r10 = 11
-            boolean r9 = r1.regionMatches(r0, r9, r7, r10)
-            r10 = 33
-            if (r9 == 0) goto L_0x0059
-            r4 = 1
-            int r0 = r0 + 11
-            int r9 = r1.indexOf(r8, r0)
-        L_0x0040:
-            if (r0 >= r9) goto L_0x0057
-            int r11 = r1.indexOf(r10, r0)
-            if (r11 < 0) goto L_0x004a
-            if (r11 <= r9) goto L_0x004b
-        L_0x004a:
-            r11 = r9
-        L_0x004b:
-            if (r0 >= r11) goto L_0x0054
-            java.lang.String r12 = r1.substring(r0, r11)
-            r5.addCategory(r12)
-        L_0x0054:
-            int r0 = r11 + 1
-            goto L_0x0040
-        L_0x0057:
-            int r0 = r9 + 1
-        L_0x0059:
-            java.lang.String r9 = "type("
-            r11 = 5
-            boolean r9 = r1.regionMatches(r0, r9, r7, r11)
-            if (r9 == 0) goto L_0x0072
-            r4 = 1
-            int r0 = r0 + 5
-            int r9 = r1.indexOf(r8, r0)
-            java.lang.String r11 = r1.substring(r0, r9)
-            r5.mType = r11
-            int r0 = r9 + 1
-        L_0x0072:
-            java.lang.String r9 = "launchFlags("
-            r11 = 12
-            boolean r9 = r1.regionMatches(r0, r9, r7, r11)
-            if (r9 == 0) goto L_0x009d
-            r4 = 1
-            int r0 = r0 + 12
-            int r9 = r1.indexOf(r8, r0)
-            java.lang.String r11 = r1.substring(r0, r9)
-            java.lang.Integer r11 = java.lang.Integer.decode(r11)
-            int r11 = r11.intValue()
-            r5.mFlags = r11
-            r12 = r18 & 4
-            if (r12 != 0) goto L_0x009b
-            int r12 = r5.mFlags
-            r12 = r12 & -196(0xffffffffffffff3c, float:NaN)
-            r5.mFlags = r12
-        L_0x009b:
-            int r0 = r9 + 1
-        L_0x009d:
-            java.lang.String r9 = "component("
-            r12 = 10
-            boolean r9 = r1.regionMatches(r0, r9, r7, r12)
-            if (r9 == 0) goto L_0x00c9
-            r4 = 1
-            int r0 = r0 + 10
-            int r9 = r1.indexOf(r8, r0)
-            int r12 = r1.indexOf(r10, r0)
-            if (r12 < 0) goto L_0x00c7
-            if (r12 >= r9) goto L_0x00c7
-            java.lang.String r13 = r1.substring(r0, r12)
-            int r14 = r12 + 1
-            java.lang.String r14 = r1.substring(r14, r9)
-            android.content.ComponentName r15 = new android.content.ComponentName
-            r15.<init>((java.lang.String) r13, (java.lang.String) r14)
-            r5.mComponent = r15
-        L_0x00c7:
-            int r0 = r9 + 1
-        L_0x00c9:
-            java.lang.String r9 = "extras("
-            boolean r6 = r1.regionMatches(r0, r9, r7, r6)
-            if (r6 == 0) goto L_0x01eb
-            r4 = 1
-            int r0 = r0 + 7
-            int r6 = r1.indexOf(r8, r0)
-            r9 = -1
-            if (r6 == r9) goto L_0x01e3
-        L_0x00db:
-            if (r0 >= r6) goto L_0x01eb
-            r12 = 61
-            int r12 = r1.indexOf(r12, r0)
-            int r13 = r0 + 1
-            if (r12 <= r13) goto L_0x01db
-            if (r0 >= r6) goto L_0x01db
-            char r13 = r1.charAt(r0)
-            int r0 = r0 + 1
-            java.lang.String r14 = r1.substring(r0, r12)
-            int r0 = r12 + 1
-            int r12 = r1.indexOf(r10, r0)
-            if (r12 == r9) goto L_0x00fd
-            if (r12 < r6) goto L_0x00fe
-        L_0x00fd:
-            r12 = r6
-        L_0x00fe:
-            if (r0 >= r12) goto L_0x01d3
-            java.lang.String r15 = r1.substring(r0, r12)
-            r16 = r12
-            android.os.Bundle r0 = r5.mExtras
-            if (r0 != 0) goto L_0x0111
-            android.os.Bundle r0 = new android.os.Bundle
-            r0.<init>()
-            r5.mExtras = r0
-        L_0x0111:
-            r0 = 66
-            if (r13 == r0) goto L_0x01a3
-            r0 = 83
-            if (r13 == r0) goto L_0x0197
-            r0 = 102(0x66, float:1.43E-43)
-            if (r13 == r0) goto L_0x018b
-            r0 = 105(0x69, float:1.47E-43)
-            if (r13 == r0) goto L_0x017f
-            r0 = 108(0x6c, float:1.51E-43)
-            if (r13 == r0) goto L_0x0173
-            r0 = 115(0x73, float:1.61E-43)
-            if (r13 == r0) goto L_0x0167
-            switch(r13) {
-                case 98: goto L_0x015b;
-                case 99: goto L_0x014b;
-                case 100: goto L_0x013f;
-                default: goto L_0x012c;
+    private static Intent getIntentOld(String uri, int flags) throws URISyntaxException {
+        Intent intent;
+        int i;
+        int i2 = uri.lastIndexOf(35);
+        if (i2 >= 0) {
+            String action = null;
+            boolean isIntentFragment = false;
+            int i3 = i2 + 1;
+            if (uri.regionMatches(i3, "action(", 0, 7)) {
+                isIntentFragment = true;
+                int i4 = i3 + 7;
+                int j = uri.indexOf(41, i4);
+                action = uri.substring(i4, j);
+                i3 = j + 1;
             }
-        L_0x012c:
-            java.net.URISyntaxException r0 = new java.net.URISyntaxException     // Catch:{ NumberFormatException -> 0x013a }
-            java.lang.String r7 = "EXTRA has unknown type"
-            r8 = r16
-            r0.<init>(r1, r7, r8)     // Catch:{ NumberFormatException -> 0x0136 }
-            throw r0     // Catch:{ NumberFormatException -> 0x0136 }
-        L_0x0136:
-            r0 = move-exception
-            r9 = r8
-            goto L_0x01cb
-        L_0x013a:
-            r0 = move-exception
-            r9 = r16
-            goto L_0x01cb
-        L_0x013f:
-            r9 = r16
-            android.os.Bundle r0 = r5.mExtras     // Catch:{ NumberFormatException -> 0x01ca }
-            double r10 = java.lang.Double.parseDouble(r15)     // Catch:{ NumberFormatException -> 0x01ca }
-            r0.putDouble(r14, r10)     // Catch:{ NumberFormatException -> 0x01ca }
-            goto L_0x01af
-        L_0x014b:
-            r9 = r16
-            android.os.Bundle r0 = r5.mExtras     // Catch:{ NumberFormatException -> 0x01ca }
-            java.lang.String r10 = android.net.Uri.decode(r15)     // Catch:{ NumberFormatException -> 0x01ca }
-            char r10 = r10.charAt(r7)     // Catch:{ NumberFormatException -> 0x01ca }
-            r0.putChar(r14, r10)     // Catch:{ NumberFormatException -> 0x01ca }
-            goto L_0x01af
-        L_0x015b:
-            r9 = r16
-            android.os.Bundle r0 = r5.mExtras     // Catch:{ NumberFormatException -> 0x01ca }
-            byte r10 = java.lang.Byte.parseByte(r15)     // Catch:{ NumberFormatException -> 0x01ca }
-            r0.putByte(r14, r10)     // Catch:{ NumberFormatException -> 0x01ca }
-            goto L_0x01af
-        L_0x0167:
-            r9 = r16
-            android.os.Bundle r0 = r5.mExtras     // Catch:{ NumberFormatException -> 0x01ca }
-            short r10 = java.lang.Short.parseShort(r15)     // Catch:{ NumberFormatException -> 0x01ca }
-            r0.putShort(r14, r10)     // Catch:{ NumberFormatException -> 0x01ca }
-            goto L_0x01af
-        L_0x0173:
-            r9 = r16
-            android.os.Bundle r0 = r5.mExtras     // Catch:{ NumberFormatException -> 0x01ca }
-            long r10 = java.lang.Long.parseLong(r15)     // Catch:{ NumberFormatException -> 0x01ca }
-            r0.putLong(r14, r10)     // Catch:{ NumberFormatException -> 0x01ca }
-            goto L_0x01af
-        L_0x017f:
-            r9 = r16
-            android.os.Bundle r0 = r5.mExtras     // Catch:{ NumberFormatException -> 0x01ca }
-            int r10 = java.lang.Integer.parseInt(r15)     // Catch:{ NumberFormatException -> 0x01ca }
-            r0.putInt(r14, r10)     // Catch:{ NumberFormatException -> 0x01ca }
-            goto L_0x01af
-        L_0x018b:
-            r9 = r16
-            android.os.Bundle r0 = r5.mExtras     // Catch:{ NumberFormatException -> 0x01ca }
-            float r10 = java.lang.Float.parseFloat(r15)     // Catch:{ NumberFormatException -> 0x01ca }
-            r0.putFloat(r14, r10)     // Catch:{ NumberFormatException -> 0x01ca }
-            goto L_0x01af
-        L_0x0197:
-            r9 = r16
-            android.os.Bundle r0 = r5.mExtras     // Catch:{ NumberFormatException -> 0x01ca }
-            java.lang.String r10 = android.net.Uri.decode(r15)     // Catch:{ NumberFormatException -> 0x01ca }
-            r0.putString(r14, r10)     // Catch:{ NumberFormatException -> 0x01ca }
-            goto L_0x01af
-        L_0x01a3:
-            r9 = r16
-            android.os.Bundle r0 = r5.mExtras     // Catch:{ NumberFormatException -> 0x01ca }
-            boolean r10 = java.lang.Boolean.parseBoolean(r15)     // Catch:{ NumberFormatException -> 0x01ca }
-            r0.putBoolean(r14, r10)     // Catch:{ NumberFormatException -> 0x01ca }
-        L_0x01af:
-            char r0 = r1.charAt(r9)
-            if (r0 != r8) goto L_0x01b8
-            r0 = r9
-            goto L_0x01eb
-        L_0x01b8:
-            r10 = 33
-            if (r0 != r10) goto L_0x01c2
-            int r0 = r9 + 1
-            r9 = -1
-            goto L_0x00db
-        L_0x01c2:
-            java.net.URISyntaxException r7 = new java.net.URISyntaxException
-            java.lang.String r8 = "EXTRA missing '!'"
-            r7.<init>(r1, r8, r9)
-            throw r7
-        L_0x01ca:
-            r0 = move-exception
-        L_0x01cb:
-            java.net.URISyntaxException r7 = new java.net.URISyntaxException
-            java.lang.String r8 = "EXTRA value can't be parsed"
-            r7.<init>(r1, r8, r9)
-            throw r7
-        L_0x01d3:
-            java.net.URISyntaxException r7 = new java.net.URISyntaxException
-            java.lang.String r8 = "EXTRA missing '!'"
-            r7.<init>(r1, r8, r0)
-            throw r7
-        L_0x01db:
-            java.net.URISyntaxException r7 = new java.net.URISyntaxException
-            java.lang.String r8 = "EXTRA missing '='"
-            r7.<init>(r1, r8, r0)
-            throw r7
-        L_0x01e3:
-            java.net.URISyntaxException r7 = new java.net.URISyntaxException
-            java.lang.String r8 = "EXTRA missing trailing ')'"
-            r7.<init>(r1, r8, r0)
-            throw r7
-        L_0x01eb:
-            if (r4 == 0) goto L_0x01f8
-            java.lang.String r6 = r1.substring(r7, r3)
-            android.net.Uri r6 = android.net.Uri.parse(r6)
-            r5.mData = r6
-            goto L_0x01fe
-        L_0x01f8:
-            android.net.Uri r6 = android.net.Uri.parse(r17)
-            r5.mData = r6
-        L_0x01fe:
-            java.lang.String r6 = r5.mAction
-            if (r6 != 0) goto L_0x0206
-            java.lang.String r6 = "android.intent.action.VIEW"
-            r5.mAction = r6
-        L_0x0206:
-            goto L_0x0212
-        L_0x0207:
-            android.content.Intent r5 = new android.content.Intent
-            java.lang.String r2 = "android.intent.action.VIEW"
-            android.net.Uri r3 = android.net.Uri.parse(r17)
-            r5.<init>((java.lang.String) r2, (android.net.Uri) r3)
-        L_0x0212:
-            r2 = r5
-            return r2
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.content.Intent.getIntentOld(java.lang.String, int):android.content.Intent");
+            intent = new Intent(action);
+            int i5 = 33;
+            if (uri.regionMatches(i3, "categories(", 0, 11)) {
+                isIntentFragment = true;
+                int i6 = i3 + 11;
+                int j2 = uri.indexOf(41, i6);
+                while (i6 < j2) {
+                    int sep = uri.indexOf(33, i6);
+                    if (sep < 0 || sep > j2) {
+                        sep = j2;
+                    }
+                    if (i6 < sep) {
+                        intent.addCategory(uri.substring(i6, sep));
+                    }
+                    i6 = sep + 1;
+                }
+                i3 = j2 + 1;
+            }
+            if (uri.regionMatches(i3, "type(", 0, 5)) {
+                isIntentFragment = true;
+                int i7 = i3 + 5;
+                int j3 = uri.indexOf(41, i7);
+                intent.mType = uri.substring(i7, j3);
+                i3 = j3 + 1;
+            }
+            if (uri.regionMatches(i3, "launchFlags(", 0, 12)) {
+                isIntentFragment = true;
+                int i8 = i3 + 12;
+                int j4 = uri.indexOf(41, i8);
+                intent.mFlags = Integer.decode(uri.substring(i8, j4)).intValue();
+                if ((flags & 4) == 0) {
+                    intent.mFlags &= -196;
+                }
+                i3 = j4 + 1;
+            }
+            if (uri.regionMatches(i3, "component(", 0, 10)) {
+                isIntentFragment = true;
+                int i9 = i3 + 10;
+                int j5 = uri.indexOf(41, i9);
+                int sep2 = uri.indexOf(33, i9);
+                if (sep2 >= 0 && sep2 < j5) {
+                    String pkg = uri.substring(i9, sep2);
+                    String cls = uri.substring(sep2 + 1, j5);
+                    intent.mComponent = new ComponentName(pkg, cls);
+                }
+                i3 = j5 + 1;
+            }
+            if (uri.regionMatches(i3, "extras(", 0, 7)) {
+                isIntentFragment = true;
+                int i10 = i3 + 7;
+                int closeParen = uri.indexOf(41, i10);
+                int i11 = -1;
+                if (closeParen == -1) {
+                    throw new URISyntaxException(uri, "EXTRA missing trailing ')'", i10);
+                }
+                while (i10 < closeParen) {
+                    int j6 = uri.indexOf(61, i10);
+                    if (j6 <= i10 + 1 || i10 >= closeParen) {
+                        throw new URISyntaxException(uri, "EXTRA missing '='", i10);
+                    }
+                    char type = uri.charAt(i10);
+                    String key = uri.substring(i10 + 1, j6);
+                    int i12 = j6 + 1;
+                    int j7 = uri.indexOf(i5, i12);
+                    if (j7 == i11 || j7 >= closeParen) {
+                        j7 = closeParen;
+                    }
+                    if (i12 >= j7) {
+                        throw new URISyntaxException(uri, "EXTRA missing '!'", i12);
+                    }
+                    String value = uri.substring(i12, j7);
+                    int i13 = j7;
+                    if (intent.mExtras == null) {
+                        intent.mExtras = new Bundle();
+                    }
+                    if (type == 'B') {
+                        i = i13;
+                        intent.mExtras.putBoolean(key, Boolean.parseBoolean(value));
+                    } else if (type == 'S') {
+                        i = i13;
+                        intent.mExtras.putString(key, Uri.decode(value));
+                    } else if (type == 'f') {
+                        i = i13;
+                        intent.mExtras.putFloat(key, Float.parseFloat(value));
+                    } else if (type == 'i') {
+                        i = i13;
+                        intent.mExtras.putInt(key, Integer.parseInt(value));
+                    } else if (type == 'l') {
+                        i = i13;
+                        intent.mExtras.putLong(key, Long.parseLong(value));
+                    } else if (type != 's') {
+                        switch (type) {
+                            case 'b':
+                                i = i13;
+                                intent.mExtras.putByte(key, Byte.parseByte(value));
+                                break;
+                            case 'c':
+                                i = i13;
+                                intent.mExtras.putChar(key, Uri.decode(value).charAt(0));
+                                break;
+                            case 'd':
+                                i = i13;
+                                try {
+                                    intent.mExtras.putDouble(key, Double.parseDouble(value));
+                                    break;
+                                } catch (NumberFormatException e) {
+                                    throw new URISyntaxException(uri, "EXTRA value can't be parsed", i);
+                                }
+                            default:
+                                try {
+                                } catch (NumberFormatException e2) {
+                                    i = i13;
+                                }
+                                try {
+                                    throw new URISyntaxException(uri, "EXTRA has unknown type", i13);
+                                } catch (NumberFormatException e3) {
+                                    i = i13;
+                                    throw new URISyntaxException(uri, "EXTRA value can't be parsed", i);
+                                }
+                        }
+                    } else {
+                        i = i13;
+                        intent.mExtras.putShort(key, Short.parseShort(value));
+                    }
+                    char ch = uri.charAt(i);
+                    if (ch != ')') {
+                        i5 = 33;
+                        if (ch != '!') {
+                            throw new URISyntaxException(uri, "EXTRA missing '!'", i);
+                        }
+                        i10 = i + 1;
+                        i11 = -1;
+                    }
+                }
+            }
+            if (isIntentFragment) {
+                intent.mData = Uri.parse(uri.substring(0, i2));
+            } else {
+                intent.mData = Uri.parse(uri);
+            }
+            if (intent.mAction == null) {
+                intent.mAction = "android.intent.action.VIEW";
+            }
+        } else {
+            intent = new Intent("android.intent.action.VIEW", Uri.parse(uri));
+        }
+        return intent;
     }
 
-    /* JADX WARNING: Can't fix incorrect switch cases order */
-    /* JADX WARNING: Code restructure failed: missing block: B:206:0x037b, code lost:
-        r5 = r17;
+    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
+    /* JADX WARN: Code restructure failed: missing block: B:312:0x0634, code lost:
+        throw new java.lang.IllegalArgumentException("Unknown option: " + r0);
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:249:0x04ab, code lost:
-        r5 = r17;
-        r6 = r0;
+    /* JADX WARN: Code restructure failed: missing block: B:46:0x00c1, code lost:
+        if (r0.equals("--activity-match-external") != false) goto L10;
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:298:0x0619, code lost:
-        r0 = r7;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:43:0x00c1, code lost:
-        if (r8.equals("--activity-match-external") != false) goto L_0x029d;
-     */
-    @android.annotation.UnsupportedAppUsage
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public static android.content.Intent parseCommandArgs(android.os.ShellCommand r17, android.content.Intent.CommandOptionHandler r18) throws java.net.URISyntaxException {
-        /*
-            r1 = r18
-            android.content.Intent r0 = new android.content.Intent
-            r0.<init>()
-            r2 = r0
-            r3 = 0
-            r4 = 0
-            r6 = r3
-            r3 = r0
-            r0 = 0
-        L_0x000d:
-            r7 = r0
-            java.lang.String r0 = r17.getNextOption()
-            r8 = r0
-            r9 = 47
-            r10 = 7
-            if (r0 == 0) goto L_0x0635
-            int r13 = r8.hashCode()
-            r14 = 8
-            r15 = 32
-            r0 = 16
-            r11 = 2
-            switch(r13) {
-                case 1494: goto L_0x0292;
-                case 1495: goto L_0x0288;
-                case 1496: goto L_0x027e;
-                case 1497: goto L_0x0273;
-                default: goto L_0x0026;
+    @UnsupportedAppUsage
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public static Intent parseCommandArgs(ShellCommand cmd, CommandOptionHandler optionHandler) throws URISyntaxException {
+        boolean hasIntentInfo;
+        Intent intent = new Intent();
+        Uri data = null;
+        boolean hasIntentInfo2 = false;
+        Intent intent2 = intent;
+        String type = null;
+        while (true) {
+            String type2 = type;
+            String opt = cmd.getNextOption();
+            char c = '/';
+            if (opt == null) {
+                intent2.setDataAndType(data, type2);
+                boolean hasSelector = intent2 != intent;
+                if (hasSelector) {
+                    intent.setSelector(intent2);
+                    intent2 = intent;
+                }
+                String arg = cmd.getNextArg();
+                Intent baseIntent = null;
+                if (arg == null) {
+                    if (hasSelector) {
+                        baseIntent = new Intent(ACTION_MAIN);
+                        baseIntent.addCategory(CATEGORY_LAUNCHER);
+                    }
+                } else if (arg.indexOf(58) >= 0) {
+                    baseIntent = parseUri(arg, 7);
+                } else if (arg.indexOf(47) >= 0) {
+                    baseIntent = new Intent(ACTION_MAIN);
+                    baseIntent.addCategory(CATEGORY_LAUNCHER);
+                    baseIntent.setComponent(ComponentName.unflattenFromString(arg));
+                } else {
+                    baseIntent = new Intent(ACTION_MAIN);
+                    baseIntent.addCategory(CATEGORY_LAUNCHER);
+                    baseIntent.setPackage(arg);
+                }
+                if (baseIntent != null) {
+                    Bundle extras = intent2.getExtras();
+                    Bundle bundle = null;
+                    intent2.replaceExtras(bundle);
+                    Bundle uriExtras = baseIntent.getExtras();
+                    baseIntent.replaceExtras(bundle);
+                    if (intent2.getAction() != null && baseIntent.getCategories() != null) {
+                        HashSet<String> cats = new HashSet<>(baseIntent.getCategories());
+                        Iterator<String> it = cats.iterator();
+                        while (it.hasNext()) {
+                            String c2 = it.next();
+                            baseIntent.removeCategory(c2);
+                        }
+                    }
+                    intent2.fillIn(baseIntent, 72);
+                    if (extras == null) {
+                        extras = uriExtras;
+                    } else if (uriExtras != null) {
+                        uriExtras.putAll(extras);
+                        extras = uriExtras;
+                    }
+                    intent2.replaceExtras(extras);
+                    hasIntentInfo2 = true;
+                }
+                if (hasIntentInfo2) {
+                    return intent2;
+                }
+                throw new IllegalArgumentException("No intent supplied");
             }
-        L_0x0026:
-            switch(r13) {
-                case -2147394086: goto L_0x0268;
-                case -2118172637: goto L_0x025d;
-                case -1630559130: goto L_0x0252;
-                case -1252939549: goto L_0x0247;
-                case -1069446353: goto L_0x023c;
-                case -848214457: goto L_0x0231;
-                case -833172539: goto L_0x0226;
-                case -792169302: goto L_0x021a;
-                case -780160399: goto L_0x020e;
-                case 1492: goto L_0x0203;
-                case 1500: goto L_0x01f8;
-                case 1505: goto L_0x01ec;
-                case 1507: goto L_0x01e0;
-                case 1511: goto L_0x01d5;
-                case 1387073: goto L_0x01ca;
-                case 1387076: goto L_0x01bf;
-                case 1387079: goto L_0x01b3;
-                case 1387086: goto L_0x01a8;
-                case 1387088: goto L_0x019c;
-                case 1387093: goto L_0x0190;
-                case 42999280: goto L_0x0184;
-                case 42999360: goto L_0x0178;
-                case 42999453: goto L_0x016c;
-                case 42999546: goto L_0x0160;
-                case 42999763: goto L_0x0154;
-                case 42999776: goto L_0x0149;
-                case 69120454: goto L_0x013d;
-                case 88747734: goto L_0x0131;
-                case 190913209: goto L_0x0125;
-                case 236677687: goto L_0x0119;
-                case 429439306: goto L_0x010d;
-                case 436286937: goto L_0x0101;
-                case 438531630: goto L_0x00f5;
-                case 527014976: goto L_0x00e9;
-                case 580418080: goto L_0x00dd;
-                case 749648146: goto L_0x00d1;
-                case 775126336: goto L_0x00c5;
-                case 1110195121: goto L_0x00bb;
-                case 1207327103: goto L_0x00af;
-                case 1332980268: goto L_0x00a3;
-                case 1332983151: goto L_0x0097;
-                case 1332986034: goto L_0x008b;
-                case 1332992761: goto L_0x007f;
-                case 1353919836: goto L_0x0073;
-                case 1398403374: goto L_0x0067;
-                case 1453225122: goto L_0x005b;
-                case 1652786753: goto L_0x004f;
-                case 1742380566: goto L_0x0043;
-                case 1765369476: goto L_0x0037;
-                case 1816558127: goto L_0x002b;
-                default: goto L_0x0029;
+            int hashCode = opt.hashCode();
+            switch (hashCode) {
+                case 1494:
+                    if (opt.equals("-c")) {
+                        c = 4;
+                        break;
+                    }
+                    c = '\uffff';
+                    break;
+                case 1495:
+                    if (opt.equals("-d")) {
+                        c = 1;
+                        break;
+                    }
+                    c = '\uffff';
+                    break;
+                case 1496:
+                    if (opt.equals("-e")) {
+                        c = 5;
+                        break;
+                    }
+                    c = '\uffff';
+                    break;
+                case 1497:
+                    if (opt.equals("-f")) {
+                        c = 24;
+                        break;
+                    }
+                    c = '\uffff';
+                    break;
+                default:
+                    switch (hashCode) {
+                        case -2147394086:
+                            if (opt.equals("--grant-prefix-uri-permission")) {
+                                c = 28;
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case -2118172637:
+                            if (opt.equals("--activity-task-on-home")) {
+                                c = '.';
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case -1630559130:
+                            if (opt.equals("--activity-no-history")) {
+                                c = DateFormat.QUOTE;
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case -1252939549:
+                            if (opt.equals("--activity-clear-task")) {
+                                c = '-';
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case -1069446353:
+                            if (opt.equals("--debug-log-resolution")) {
+                                c = 31;
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case -848214457:
+                            if (opt.equals("--activity-reorder-to-front")) {
+                                c = '*';
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case -833172539:
+                            if (opt.equals("--activity-brought-to-front")) {
+                                c = ' ';
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case -792169302:
+                            if (opt.equals("--activity-previous-is-top")) {
+                                c = ')';
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case -780160399:
+                            if (opt.equals("--receiver-include-background")) {
+                                c = '4';
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case 1492:
+                            if (opt.equals("-a")) {
+                                c = 0;
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case 1500:
+                            if (opt.equals("-i")) {
+                                c = 3;
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case 1505:
+                            if (opt.equals("-n")) {
+                                c = 22;
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case 1507:
+                            if (opt.equals("-p")) {
+                                c = 23;
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case 1511:
+                            if (opt.equals("-t")) {
+                                c = 2;
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case 1387073:
+                            if (opt.equals("--ef")) {
+                                c = 16;
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case 1387076:
+                            if (opt.equals("--ei")) {
+                                c = '\b';
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case 1387079:
+                            if (opt.equals("--el")) {
+                                c = '\r';
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case 1387086:
+                            if (opt.equals("--es")) {
+                                c = 6;
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case 1387088:
+                            if (opt.equals("--eu")) {
+                                c = '\t';
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case 1387093:
+                            if (opt.equals("--ez")) {
+                                c = 21;
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case 42999280:
+                            if (opt.equals("--ecn")) {
+                                c = '\n';
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case 42999360:
+                            if (opt.equals("--efa")) {
+                                c = 17;
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case 42999453:
+                            if (opt.equals("--eia")) {
+                                c = 11;
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case 42999546:
+                            if (opt.equals("--ela")) {
+                                c = 14;
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case 42999763:
+                            if (opt.equals("--esa")) {
+                                c = 19;
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case 42999776:
+                            if (opt.equals("--esn")) {
+                                c = 7;
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case 69120454:
+                            if (opt.equals("--activity-exclude-from-recents")) {
+                                c = '#';
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case 88747734:
+                            if (opt.equals("--activity-no-animation")) {
+                                c = '&';
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case 190913209:
+                            if (opt.equals("--activity-reset-task-if-needed")) {
+                                c = '+';
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case 236677687:
+                            if (opt.equals("--activity-clear-top")) {
+                                c = '!';
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case 429439306:
+                            if (opt.equals("--activity-no-user-action")) {
+                                c = '(';
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case 436286937:
+                            if (opt.equals("--receiver-registered-only")) {
+                                c = '0';
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case 438531630:
+                            if (opt.equals("--activity-single-top")) {
+                                c = ',';
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case 527014976:
+                            if (opt.equals("--grant-persistable-uri-permission")) {
+                                c = 27;
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case 580418080:
+                            if (opt.equals("--exclude-stopped-packages")) {
+                                c = 29;
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case 749648146:
+                            if (opt.equals("--include-stopped-packages")) {
+                                c = 30;
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case 775126336:
+                            if (opt.equals("--receiver-replace-pending")) {
+                                c = '1';
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case 1110195121:
+                            break;
+                        case 1207327103:
+                            if (opt.equals("--selector")) {
+                                c = '5';
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case 1332980268:
+                            if (opt.equals("--efal")) {
+                                c = 18;
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case 1332983151:
+                            if (opt.equals("--eial")) {
+                                c = '\f';
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case 1332986034:
+                            if (opt.equals("--elal")) {
+                                c = 15;
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case 1332992761:
+                            if (opt.equals("--esal")) {
+                                c = 20;
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case 1353919836:
+                            if (opt.equals("--activity-clear-when-task-reset")) {
+                                c = '\"';
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case 1398403374:
+                            if (opt.equals("--activity-launched-from-history")) {
+                                c = SymbolTable.SYMBOL_REF;
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case 1453225122:
+                            if (opt.equals("--receiver-no-abort")) {
+                                c = '3';
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case 1652786753:
+                            if (opt.equals("--receiver-foreground")) {
+                                c = '2';
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case 1742380566:
+                            if (opt.equals("--grant-read-uri-permission")) {
+                                c = 25;
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case 1765369476:
+                            if (opt.equals("--activity-multiple-task")) {
+                                c = '%';
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        case 1816558127:
+                            if (opt.equals("--grant-write-uri-permission")) {
+                                c = 26;
+                                break;
+                            }
+                            c = '\uffff';
+                            break;
+                        default:
+                            c = '\uffff';
+                            break;
+                    }
             }
-        L_0x0029:
-            goto L_0x029c
-        L_0x002b:
-            java.lang.String r9 = "--grant-write-uri-permission"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 26
-            goto L_0x029d
-        L_0x0037:
-            java.lang.String r9 = "--activity-multiple-task"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 37
-            goto L_0x029d
-        L_0x0043:
-            java.lang.String r9 = "--grant-read-uri-permission"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 25
-            goto L_0x029d
-        L_0x004f:
-            java.lang.String r9 = "--receiver-foreground"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 50
-            goto L_0x029d
-        L_0x005b:
-            java.lang.String r9 = "--receiver-no-abort"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 51
-            goto L_0x029d
-        L_0x0067:
-            java.lang.String r9 = "--activity-launched-from-history"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 36
-            goto L_0x029d
-        L_0x0073:
-            java.lang.String r9 = "--activity-clear-when-task-reset"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 34
-            goto L_0x029d
-        L_0x007f:
-            java.lang.String r9 = "--esal"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 20
-            goto L_0x029d
-        L_0x008b:
-            java.lang.String r9 = "--elal"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 15
-            goto L_0x029d
-        L_0x0097:
-            java.lang.String r9 = "--eial"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 12
-            goto L_0x029d
-        L_0x00a3:
-            java.lang.String r9 = "--efal"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 18
-            goto L_0x029d
-        L_0x00af:
-            java.lang.String r9 = "--selector"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 53
-            goto L_0x029d
-        L_0x00bb:
-            java.lang.String r10 = "--activity-match-external"
-            boolean r10 = r8.equals(r10)
-            if (r10 == 0) goto L_0x029c
-            goto L_0x029d
-        L_0x00c5:
-            java.lang.String r9 = "--receiver-replace-pending"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 49
-            goto L_0x029d
-        L_0x00d1:
-            java.lang.String r9 = "--include-stopped-packages"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 30
-            goto L_0x029d
-        L_0x00dd:
-            java.lang.String r9 = "--exclude-stopped-packages"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 29
-            goto L_0x029d
-        L_0x00e9:
-            java.lang.String r9 = "--grant-persistable-uri-permission"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 27
-            goto L_0x029d
-        L_0x00f5:
-            java.lang.String r9 = "--activity-single-top"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 44
-            goto L_0x029d
-        L_0x0101:
-            java.lang.String r9 = "--receiver-registered-only"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 48
-            goto L_0x029d
-        L_0x010d:
-            java.lang.String r9 = "--activity-no-user-action"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 40
-            goto L_0x029d
-        L_0x0119:
-            java.lang.String r9 = "--activity-clear-top"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 33
-            goto L_0x029d
-        L_0x0125:
-            java.lang.String r9 = "--activity-reset-task-if-needed"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 43
-            goto L_0x029d
-        L_0x0131:
-            java.lang.String r9 = "--activity-no-animation"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 38
-            goto L_0x029d
-        L_0x013d:
-            java.lang.String r9 = "--activity-exclude-from-recents"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 35
-            goto L_0x029d
-        L_0x0149:
-            java.lang.String r9 = "--esn"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = r10
-            goto L_0x029d
-        L_0x0154:
-            java.lang.String r9 = "--esa"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 19
-            goto L_0x029d
-        L_0x0160:
-            java.lang.String r9 = "--ela"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 14
-            goto L_0x029d
-        L_0x016c:
-            java.lang.String r9 = "--eia"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 11
-            goto L_0x029d
-        L_0x0178:
-            java.lang.String r9 = "--efa"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 17
-            goto L_0x029d
-        L_0x0184:
-            java.lang.String r9 = "--ecn"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 10
-            goto L_0x029d
-        L_0x0190:
-            java.lang.String r9 = "--ez"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 21
-            goto L_0x029d
-        L_0x019c:
-            java.lang.String r9 = "--eu"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 9
-            goto L_0x029d
-        L_0x01a8:
-            java.lang.String r9 = "--es"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 6
-            goto L_0x029d
-        L_0x01b3:
-            java.lang.String r9 = "--el"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 13
-            goto L_0x029d
-        L_0x01bf:
-            java.lang.String r9 = "--ei"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = r14
-            goto L_0x029d
-        L_0x01ca:
-            java.lang.String r9 = "--ef"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = r0
-            goto L_0x029d
-        L_0x01d5:
-            java.lang.String r9 = "-t"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = r11
-            goto L_0x029d
-        L_0x01e0:
-            java.lang.String r9 = "-p"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 23
-            goto L_0x029d
-        L_0x01ec:
-            java.lang.String r9 = "-n"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 22
-            goto L_0x029d
-        L_0x01f8:
-            java.lang.String r9 = "-i"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 3
-            goto L_0x029d
-        L_0x0203:
-            java.lang.String r9 = "-a"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 0
-            goto L_0x029d
-        L_0x020e:
-            java.lang.String r9 = "--receiver-include-background"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 52
-            goto L_0x029d
-        L_0x021a:
-            java.lang.String r9 = "--activity-previous-is-top"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 41
-            goto L_0x029d
-        L_0x0226:
-            java.lang.String r9 = "--activity-brought-to-front"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = r15
-            goto L_0x029d
-        L_0x0231:
-            java.lang.String r9 = "--activity-reorder-to-front"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 42
-            goto L_0x029d
-        L_0x023c:
-            java.lang.String r9 = "--debug-log-resolution"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 31
-            goto L_0x029d
-        L_0x0247:
-            java.lang.String r9 = "--activity-clear-task"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 45
-            goto L_0x029d
-        L_0x0252:
-            java.lang.String r9 = "--activity-no-history"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 39
-            goto L_0x029d
-        L_0x025d:
-            java.lang.String r9 = "--activity-task-on-home"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 46
-            goto L_0x029d
-        L_0x0268:
-            java.lang.String r9 = "--grant-prefix-uri-permission"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 28
-            goto L_0x029d
-        L_0x0273:
-            java.lang.String r9 = "-f"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 24
-            goto L_0x029d
-        L_0x027e:
-            java.lang.String r9 = "-e"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 5
-            goto L_0x029d
-        L_0x0288:
-            java.lang.String r9 = "-d"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 1
-            goto L_0x029d
-        L_0x0292:
-            java.lang.String r9 = "-c"
-            boolean r9 = r8.equals(r9)
-            if (r9 == 0) goto L_0x029c
-            r9 = 4
-            goto L_0x029d
-        L_0x029c:
-            r9 = -1
-        L_0x029d:
-            r10 = 536870912(0x20000000, float:1.0842022E-19)
-            r13 = 16777216(0x1000000, float:2.3509887E-38)
-            r5 = 1073741824(0x40000000, float:2.0)
-            r12 = 134217728(0x8000000, float:3.85186E-34)
-            switch(r9) {
-                case 0: goto L_0x060d;
-                case 1: goto L_0x05fa;
-                case 2: goto L_0x05ef;
-                case 3: goto L_0x05e3;
-                case 4: goto L_0x05d7;
-                case 5: goto L_0x05ca;
-                case 6: goto L_0x05ca;
-                case 7: goto L_0x05bd;
-                case 8: goto L_0x05ac;
-                case 9: goto L_0x059b;
-                case 10: goto L_0x0571;
-                case 11: goto L_0x0545;
-                case 12: goto L_0x0519;
-                case 13: goto L_0x0508;
-                case 14: goto L_0x04dc;
-                case 15: goto L_0x04b0;
-                case 16: goto L_0x049a;
-                case 17: goto L_0x046e;
-                case 18: goto L_0x0442;
-                case 19: goto L_0x042f;
-                case 20: goto L_0x0406;
-                case 21: goto L_0x03a7;
-                case 22: goto L_0x037f;
-                case 23: goto L_0x0370;
-                case 24: goto L_0x0360;
-                case 25: goto L_0x035b;
-                case 26: goto L_0x0357;
-                case 27: goto L_0x0351;
-                case 28: goto L_0x034b;
-                case 29: goto L_0x0347;
-                case 30: goto L_0x0343;
-                case 31: goto L_0x033f;
-                case 32: goto L_0x0339;
-                case 33: goto L_0x0333;
-                case 34: goto L_0x032d;
-                case 35: goto L_0x0327;
-                case 36: goto L_0x0321;
-                case 37: goto L_0x031d;
-                case 38: goto L_0x0317;
-                case 39: goto L_0x0312;
-                case 40: goto L_0x030b;
-                case 41: goto L_0x0306;
-                case 42: goto L_0x02ff;
-                case 43: goto L_0x02f8;
-                case 44: goto L_0x02f3;
-                case 45: goto L_0x02eb;
-                case 46: goto L_0x02e4;
-                case 47: goto L_0x02dd;
-                case 48: goto L_0x02d8;
-                case 49: goto L_0x02d3;
-                case 50: goto L_0x02cc;
-                case 51: goto L_0x02c7;
-                case 52: goto L_0x02c2;
-                case 53: goto L_0x02b4;
-                default: goto L_0x02a8;
+            switch (c) {
+                case 0:
+                    String type3 = cmd.getNextArgRequired();
+                    intent2.setAction(type3);
+                    if (intent2 == intent) {
+                        hasIntentInfo = true;
+                        hasIntentInfo2 = hasIntentInfo;
+                        break;
+                    }
+                    break;
+                case 1:
+                    String type4 = cmd.getNextArgRequired();
+                    Uri data2 = Uri.parse(type4);
+                    if (intent2 == intent) {
+                        hasIntentInfo2 = true;
+                    }
+                    data = data2;
+                    break;
+                case 2:
+                    type = cmd.getNextArgRequired();
+                    if (intent2 == intent) {
+                        hasIntentInfo2 = true;
+                    }
+                    continue;
+                case 3:
+                    intent2.setIdentifier(cmd.getNextArgRequired());
+                    if (intent2 == intent) {
+                        hasIntentInfo = true;
+                        hasIntentInfo2 = hasIntentInfo;
+                        break;
+                    }
+                    break;
+                case 4:
+                    intent2.addCategory(cmd.getNextArgRequired());
+                    if (intent2 == intent) {
+                        hasIntentInfo = true;
+                        hasIntentInfo2 = hasIntentInfo;
+                        break;
+                    }
+                    break;
+                case 5:
+                case 6:
+                    String key = cmd.getNextArgRequired();
+                    String value = cmd.getNextArgRequired();
+                    intent2.putExtra(key, value);
+                    break;
+                case 7:
+                    String key2 = cmd.getNextArgRequired();
+                    intent2.putExtra(key2, (String) null);
+                    break;
+                case '\b':
+                    String key3 = cmd.getNextArgRequired();
+                    String value2 = cmd.getNextArgRequired();
+                    intent2.putExtra(key3, Integer.decode(value2));
+                    break;
+                case '\t':
+                    String key4 = cmd.getNextArgRequired();
+                    String value3 = cmd.getNextArgRequired();
+                    intent2.putExtra(key4, Uri.parse(value3));
+                    break;
+                case '\n':
+                    String key5 = cmd.getNextArgRequired();
+                    String value4 = cmd.getNextArgRequired();
+                    ComponentName cn = ComponentName.unflattenFromString(value4);
+                    if (cn == null) {
+                        throw new IllegalArgumentException("Bad component name: " + value4);
+                    }
+                    intent2.putExtra(key5, cn);
+                    break;
+                case 11:
+                    String key6 = cmd.getNextArgRequired();
+                    String value5 = cmd.getNextArgRequired();
+                    String[] strings = value5.split(SmsManager.REGEX_PREFIX_DELIMITER);
+                    int[] list = new int[strings.length];
+                    int i = 0;
+                    while (true) {
+                        int i2 = i;
+                        if (i2 >= strings.length) {
+                            intent2.putExtra(key6, list);
+                            break;
+                        } else {
+                            list[i2] = Integer.decode(strings[i2]).intValue();
+                            i = i2 + 1;
+                        }
+                    }
+                case '\f':
+                    String key7 = cmd.getNextArgRequired();
+                    String value6 = cmd.getNextArgRequired();
+                    String[] strings2 = value6.split(SmsManager.REGEX_PREFIX_DELIMITER);
+                    ArrayList<Integer> list2 = new ArrayList<>(strings2.length);
+                    int i3 = 0;
+                    while (true) {
+                        int i4 = i3;
+                        if (i4 >= strings2.length) {
+                            intent2.putExtra(key7, list2);
+                            break;
+                        } else {
+                            list2.add(Integer.decode(strings2[i4]));
+                            i3 = i4 + 1;
+                        }
+                    }
+                case '\r':
+                    String key8 = cmd.getNextArgRequired();
+                    String value7 = cmd.getNextArgRequired();
+                    intent2.putExtra(key8, Long.valueOf(value7));
+                    break;
+                case 14:
+                    String key9 = cmd.getNextArgRequired();
+                    String value8 = cmd.getNextArgRequired();
+                    String[] strings3 = value8.split(SmsManager.REGEX_PREFIX_DELIMITER);
+                    long[] list3 = new long[strings3.length];
+                    int i5 = 0;
+                    while (true) {
+                        int i6 = i5;
+                        if (i6 >= strings3.length) {
+                            intent2.putExtra(key9, list3);
+                            hasIntentInfo = true;
+                            hasIntentInfo2 = hasIntentInfo;
+                            break;
+                        } else {
+                            list3[i6] = Long.valueOf(strings3[i6]).longValue();
+                            i5 = i6 + 1;
+                        }
+                    }
+                case 15:
+                    String key10 = cmd.getNextArgRequired();
+                    String value9 = cmd.getNextArgRequired();
+                    String[] strings4 = value9.split(SmsManager.REGEX_PREFIX_DELIMITER);
+                    ArrayList<Long> list4 = new ArrayList<>(strings4.length);
+                    int i7 = 0;
+                    while (true) {
+                        int i8 = i7;
+                        if (i8 >= strings4.length) {
+                            intent2.putExtra(key10, list4);
+                            hasIntentInfo = true;
+                            hasIntentInfo2 = hasIntentInfo;
+                            break;
+                        } else {
+                            list4.add(Long.valueOf(strings4[i8]));
+                            i7 = i8 + 1;
+                        }
+                    }
+                case 16:
+                    String key11 = cmd.getNextArgRequired();
+                    String value10 = cmd.getNextArgRequired();
+                    intent2.putExtra(key11, Float.valueOf(value10));
+                    hasIntentInfo = true;
+                    hasIntentInfo2 = hasIntentInfo;
+                    break;
+                case 17:
+                    String key12 = cmd.getNextArgRequired();
+                    String value11 = cmd.getNextArgRequired();
+                    String[] strings5 = value11.split(SmsManager.REGEX_PREFIX_DELIMITER);
+                    float[] list5 = new float[strings5.length];
+                    int i9 = 0;
+                    while (true) {
+                        int i10 = i9;
+                        if (i10 >= strings5.length) {
+                            intent2.putExtra(key12, list5);
+                            hasIntentInfo = true;
+                            hasIntentInfo2 = hasIntentInfo;
+                            break;
+                        } else {
+                            list5[i10] = Float.valueOf(strings5[i10]).floatValue();
+                            i9 = i10 + 1;
+                        }
+                    }
+                case 18:
+                    String key13 = cmd.getNextArgRequired();
+                    String value12 = cmd.getNextArgRequired();
+                    String[] strings6 = value12.split(SmsManager.REGEX_PREFIX_DELIMITER);
+                    ArrayList<Float> list6 = new ArrayList<>(strings6.length);
+                    int i11 = 0;
+                    while (true) {
+                        int i12 = i11;
+                        if (i12 >= strings6.length) {
+                            intent2.putExtra(key13, list6);
+                            hasIntentInfo = true;
+                            hasIntentInfo2 = hasIntentInfo;
+                            break;
+                        } else {
+                            list6.add(Float.valueOf(strings6[i12]));
+                            i11 = i12 + 1;
+                        }
+                    }
+                case 19:
+                    String key14 = cmd.getNextArgRequired();
+                    String value13 = cmd.getNextArgRequired();
+                    intent2.putExtra(key14, value13.split("(?<!\\\\),"));
+                    hasIntentInfo = true;
+                    hasIntentInfo2 = hasIntentInfo;
+                    break;
+                case 20:
+                    String key15 = cmd.getNextArgRequired();
+                    String value14 = cmd.getNextArgRequired();
+                    String[] strings7 = value14.split("(?<!\\\\),");
+                    ArrayList<String> list7 = new ArrayList<>(strings7.length);
+                    int i13 = 0;
+                    while (true) {
+                        int i14 = i13;
+                        if (i14 >= strings7.length) {
+                            intent2.putExtra(key15, list7);
+                            hasIntentInfo = true;
+                            hasIntentInfo2 = hasIntentInfo;
+                            break;
+                        } else {
+                            list7.add(strings7[i14]);
+                            i13 = i14 + 1;
+                        }
+                    }
+                case 21:
+                    boolean arg2 = true;
+                    String key16 = cmd.getNextArgRequired();
+                    String value15 = cmd.getNextArgRequired().toLowerCase();
+                    if ("true".equals(value15) || IncidentManager.URI_PARAM_TIMESTAMP.equals(value15)) {
+                        arg2 = true;
+                    } else if ("false".equals(value15) || FullBackup.FILES_TREE_TOKEN.equals(value15)) {
+                        arg2 = false;
+                    } else {
+                        try {
+                            if (Integer.decode(value15).intValue() == 0) {
+                                arg2 = false;
+                            }
+                        } catch (NumberFormatException e) {
+                            throw new IllegalArgumentException("Invalid boolean value: " + value15);
+                        }
+                    }
+                    intent2.putExtra(key16, arg2);
+                    break;
+                case 22:
+                    String str = cmd.getNextArgRequired();
+                    ComponentName cn2 = ComponentName.unflattenFromString(str);
+                    if (cn2 == null) {
+                        throw new IllegalArgumentException("Bad component name: " + str);
+                    }
+                    intent2.setComponent(cn2);
+                    if (intent2 == intent) {
+                        hasIntentInfo2 = true;
+                    }
+                    break;
+                case 23:
+                    intent2.setPackage(cmd.getNextArgRequired());
+                    if (intent2 == intent) {
+                        hasIntentInfo2 = true;
+                    }
+                    break;
+                case 24:
+                    intent2.setFlags(Integer.decode(cmd.getNextArgRequired()).intValue());
+                    break;
+                case 25:
+                    intent2.addFlags(1);
+                    break;
+                case 26:
+                    intent2.addFlags(2);
+                    break;
+                case 27:
+                    intent2.addFlags(64);
+                    break;
+                case 28:
+                    intent2.addFlags(128);
+                    break;
+                case 29:
+                    intent2.addFlags(16);
+                    break;
+                case 30:
+                    intent2.addFlags(32);
+                    break;
+                case 31:
+                    intent2.addFlags(8);
+                    break;
+                case ' ':
+                    intent2.addFlags(4194304);
+                    break;
+                case '!':
+                    intent2.addFlags(67108864);
+                    break;
+                case '\"':
+                    intent2.addFlags(524288);
+                    break;
+                case '#':
+                    intent2.addFlags(8388608);
+                    break;
+                case '$':
+                    intent2.addFlags(1048576);
+                    break;
+                case '%':
+                    intent2.addFlags(134217728);
+                    break;
+                case '&':
+                    intent2.addFlags(65536);
+                    break;
+                case '\'':
+                    intent2.addFlags(1073741824);
+                    break;
+                case '(':
+                    intent2.addFlags(262144);
+                    break;
+                case ')':
+                    intent2.addFlags(16777216);
+                    break;
+                case '*':
+                    intent2.addFlags(131072);
+                    break;
+                case '+':
+                    intent2.addFlags(2097152);
+                    break;
+                case ',':
+                    intent2.addFlags(536870912);
+                    break;
+                case '-':
+                    intent2.addFlags(32768);
+                    break;
+                case '.':
+                    intent2.addFlags(16384);
+                    break;
+                case '/':
+                    intent2.addFlags(2048);
+                    break;
+                case '0':
+                    intent2.addFlags(1073741824);
+                    break;
+                case '1':
+                    intent2.addFlags(536870912);
+                    break;
+                case '2':
+                    intent2.addFlags(268435456);
+                    break;
+                case '3':
+                    intent2.addFlags(134217728);
+                    break;
+                case '4':
+                    intent2.addFlags(16777216);
+                    break;
+                case '5':
+                    intent2.setDataAndType(data, type2);
+                    intent2 = new Intent();
+                    break;
+                default:
+                    if (optionHandler != null) {
+                        if (!optionHandler.handleOption(opt, cmd)) {
+                            break;
+                        }
+                    } else {
+                        break;
+                    }
+                    break;
             }
-        L_0x02a8:
-            if (r1 == 0) goto L_0x061c
-            r5 = r17
-            boolean r0 = r1.handleOption(r8, r5)
-            if (r0 == 0) goto L_0x061e
-            goto L_0x0619
-        L_0x02b4:
-            r3.setDataAndType(r4, r7)
-            android.content.Intent r0 = new android.content.Intent
-            r0.<init>()
-            r5 = r17
-            r3 = r0
-            goto L_0x0619
-        L_0x02c2:
-            r3.addFlags(r13)
-            goto L_0x037b
-        L_0x02c7:
-            r3.addFlags(r12)
-            goto L_0x037b
-        L_0x02cc:
-            r0 = 268435456(0x10000000, float:2.5243549E-29)
-            r3.addFlags(r0)
-            goto L_0x037b
-        L_0x02d3:
-            r3.addFlags(r10)
-            goto L_0x037b
-        L_0x02d8:
-            r3.addFlags(r5)
-            goto L_0x037b
-        L_0x02dd:
-            r0 = 2048(0x800, float:2.87E-42)
-            r3.addFlags(r0)
-            goto L_0x037b
-        L_0x02e4:
-            r0 = 16384(0x4000, float:2.2959E-41)
-            r3.addFlags(r0)
-            goto L_0x037b
-        L_0x02eb:
-            r0 = 32768(0x8000, float:4.5918E-41)
-            r3.addFlags(r0)
-            goto L_0x037b
-        L_0x02f3:
-            r3.addFlags(r10)
-            goto L_0x037b
-        L_0x02f8:
-            r0 = 2097152(0x200000, float:2.938736E-39)
-            r3.addFlags(r0)
-            goto L_0x037b
-        L_0x02ff:
-            r0 = 131072(0x20000, float:1.83671E-40)
-            r3.addFlags(r0)
-            goto L_0x037b
-        L_0x0306:
-            r3.addFlags(r13)
-            goto L_0x037b
-        L_0x030b:
-            r0 = 262144(0x40000, float:3.67342E-40)
-            r3.addFlags(r0)
-            goto L_0x037b
-        L_0x0312:
-            r3.addFlags(r5)
-            goto L_0x037b
-        L_0x0317:
-            r0 = 65536(0x10000, float:9.18355E-41)
-            r3.addFlags(r0)
-            goto L_0x037b
-        L_0x031d:
-            r3.addFlags(r12)
-            goto L_0x037b
-        L_0x0321:
-            r0 = 1048576(0x100000, float:1.469368E-39)
-            r3.addFlags(r0)
-            goto L_0x037b
-        L_0x0327:
-            r0 = 8388608(0x800000, float:1.17549435E-38)
-            r3.addFlags(r0)
-            goto L_0x037b
-        L_0x032d:
-            r0 = 524288(0x80000, float:7.34684E-40)
-            r3.addFlags(r0)
-            goto L_0x037b
-        L_0x0333:
-            r0 = 67108864(0x4000000, float:1.5046328E-36)
-            r3.addFlags(r0)
-            goto L_0x037b
-        L_0x0339:
-            r0 = 4194304(0x400000, float:5.877472E-39)
-            r3.addFlags(r0)
-            goto L_0x037b
-        L_0x033f:
-            r3.addFlags(r14)
-            goto L_0x037b
-        L_0x0343:
-            r3.addFlags(r15)
-            goto L_0x037b
-        L_0x0347:
-            r3.addFlags(r0)
-            goto L_0x037b
-        L_0x034b:
-            r0 = 128(0x80, float:1.794E-43)
-            r3.addFlags(r0)
-            goto L_0x037b
-        L_0x0351:
-            r0 = 64
-            r3.addFlags(r0)
-            goto L_0x037b
-        L_0x0357:
-            r3.addFlags(r11)
-            goto L_0x037b
-        L_0x035b:
-            r0 = 1
-            r3.addFlags(r0)
-            goto L_0x037b
-        L_0x0360:
-            java.lang.String r0 = r17.getNextArgRequired()
-            java.lang.Integer r5 = java.lang.Integer.decode(r0)
-            int r5 = r5.intValue()
-            r3.setFlags(r5)
-            goto L_0x037b
-        L_0x0370:
-            java.lang.String r0 = r17.getNextArgRequired()
-            r3.setPackage(r0)
-            if (r3 != r2) goto L_0x037a
-            r6 = 1
-        L_0x037a:
-        L_0x037b:
-            r5 = r17
-            goto L_0x0619
-        L_0x037f:
-            java.lang.String r0 = r17.getNextArgRequired()
-            android.content.ComponentName r5 = android.content.ComponentName.unflattenFromString(r0)
-            if (r5 == 0) goto L_0x0390
-            r3.setComponent(r5)
-            if (r3 != r2) goto L_0x038f
-            r6 = 1
-        L_0x038f:
-            goto L_0x037b
-        L_0x0390:
-            java.lang.IllegalArgumentException r9 = new java.lang.IllegalArgumentException
-            java.lang.StringBuilder r10 = new java.lang.StringBuilder
-            r10.<init>()
-            java.lang.String r11 = "Bad component name: "
-            r10.append(r11)
-            r10.append(r0)
-            java.lang.String r10 = r10.toString()
-            r9.<init>(r10)
-            throw r9
-        L_0x03a7:
-            r0 = 1
-            java.lang.String r5 = r17.getNextArgRequired()
-            java.lang.String r9 = r17.getNextArgRequired()
-            java.lang.String r9 = r9.toLowerCase()
-            java.lang.String r10 = "true"
-            boolean r10 = r10.equals(r9)
-            if (r10 != 0) goto L_0x03ff
-            java.lang.String r10 = "t"
-            boolean r10 = r10.equals(r9)
-            if (r10 == 0) goto L_0x03c7
-            goto L_0x03ff
-        L_0x03c7:
-            java.lang.String r10 = "false"
-            boolean r10 = r10.equals(r9)
-            if (r10 != 0) goto L_0x03fd
-            java.lang.String r10 = "f"
-            boolean r10 = r10.equals(r9)
-            if (r10 == 0) goto L_0x03d8
-            goto L_0x03fd
-        L_0x03d8:
-            java.lang.Integer r10 = java.lang.Integer.decode(r9)     // Catch:{ NumberFormatException -> 0x03e5 }
-            int r10 = r10.intValue()     // Catch:{ NumberFormatException -> 0x03e5 }
-            if (r10 == 0) goto L_0x03e3
-            goto L_0x03e4
-        L_0x03e3:
-            r0 = 0
-        L_0x03e4:
-            goto L_0x0400
-        L_0x03e5:
-            r0 = move-exception
-            java.lang.IllegalArgumentException r10 = new java.lang.IllegalArgumentException
-            java.lang.StringBuilder r11 = new java.lang.StringBuilder
-            r11.<init>()
-            java.lang.String r12 = "Invalid boolean value: "
-            r11.append(r12)
-            r11.append(r9)
-            java.lang.String r11 = r11.toString()
-            r10.<init>(r11)
-            throw r10
-        L_0x03fd:
-            r0 = 0
-            goto L_0x0400
-        L_0x03ff:
-            r0 = 1
-        L_0x0400:
-            r3.putExtra((java.lang.String) r5, (boolean) r0)
-            goto L_0x037b
-        L_0x0406:
-            java.lang.String r0 = r17.getNextArgRequired()
-            java.lang.String r5 = r17.getNextArgRequired()
-            java.lang.String r9 = "(?<!\\\\),"
-            java.lang.String[] r9 = r5.split(r9)
-            java.util.ArrayList r10 = new java.util.ArrayList
-            int r11 = r9.length
-            r10.<init>(r11)
-            r16 = 0
-        L_0x041c:
-            r11 = r16
-            int r12 = r9.length
-            if (r11 >= r12) goto L_0x0429
-            r12 = r9[r11]
-            r10.add(r12)
-            int r16 = r11 + 1
-            goto L_0x041c
-        L_0x0429:
-            r3.putExtra((java.lang.String) r0, (java.io.Serializable) r10)
-            r0 = 1
-            goto L_0x04ab
-        L_0x042f:
-            java.lang.String r0 = r17.getNextArgRequired()
-            java.lang.String r5 = r17.getNextArgRequired()
-            java.lang.String r9 = "(?<!\\\\),"
-            java.lang.String[] r9 = r5.split(r9)
-            r3.putExtra((java.lang.String) r0, (java.lang.String[]) r9)
-            r0 = 1
-            goto L_0x04ab
-        L_0x0442:
-            java.lang.String r0 = r17.getNextArgRequired()
-            java.lang.String r5 = r17.getNextArgRequired()
-            java.lang.String r9 = ","
-            java.lang.String[] r9 = r5.split(r9)
-            java.util.ArrayList r10 = new java.util.ArrayList
-            int r11 = r9.length
-            r10.<init>(r11)
-            r16 = 0
-        L_0x0458:
-            r11 = r16
-            int r12 = r9.length
-            if (r11 >= r12) goto L_0x0469
-            r12 = r9[r11]
-            java.lang.Float r12 = java.lang.Float.valueOf(r12)
-            r10.add(r12)
-            int r16 = r11 + 1
-            goto L_0x0458
-        L_0x0469:
-            r3.putExtra((java.lang.String) r0, (java.io.Serializable) r10)
-            r0 = 1
-            goto L_0x04ab
-        L_0x046e:
-            java.lang.String r0 = r17.getNextArgRequired()
-            java.lang.String r5 = r17.getNextArgRequired()
-            java.lang.String r9 = ","
-            java.lang.String[] r9 = r5.split(r9)
-            int r10 = r9.length
-            float[] r10 = new float[r10]
-            r16 = 0
-        L_0x0481:
-            r11 = r16
-            int r12 = r9.length
-            if (r11 >= r12) goto L_0x0495
-            r12 = r9[r11]
-            java.lang.Float r12 = java.lang.Float.valueOf(r12)
-            float r12 = r12.floatValue()
-            r10[r11] = r12
-            int r16 = r11 + 1
-            goto L_0x0481
-        L_0x0495:
-            r3.putExtra((java.lang.String) r0, (float[]) r10)
-            r0 = 1
-            goto L_0x04ab
-        L_0x049a:
-            java.lang.String r0 = r17.getNextArgRequired()
-            java.lang.String r5 = r17.getNextArgRequired()
-            java.lang.Float r9 = java.lang.Float.valueOf(r5)
-            r3.putExtra((java.lang.String) r0, (java.io.Serializable) r9)
-            r0 = 1
-        L_0x04ab:
-            r5 = r17
-            r6 = r0
-            goto L_0x0619
-        L_0x04b0:
-            java.lang.String r0 = r17.getNextArgRequired()
-            java.lang.String r5 = r17.getNextArgRequired()
-            java.lang.String r9 = ","
-            java.lang.String[] r9 = r5.split(r9)
-            java.util.ArrayList r10 = new java.util.ArrayList
-            int r11 = r9.length
-            r10.<init>(r11)
-            r16 = 0
-        L_0x04c6:
-            r11 = r16
-            int r12 = r9.length
-            if (r11 >= r12) goto L_0x04d7
-            r12 = r9[r11]
-            java.lang.Long r12 = java.lang.Long.valueOf(r12)
-            r10.add(r12)
-            int r16 = r11 + 1
-            goto L_0x04c6
-        L_0x04d7:
-            r3.putExtra((java.lang.String) r0, (java.io.Serializable) r10)
-            r0 = 1
-            goto L_0x04ab
-        L_0x04dc:
-            java.lang.String r0 = r17.getNextArgRequired()
-            java.lang.String r5 = r17.getNextArgRequired()
-            java.lang.String r9 = ","
-            java.lang.String[] r9 = r5.split(r9)
-            int r10 = r9.length
-            long[] r10 = new long[r10]
-            r16 = 0
-        L_0x04ef:
-            r11 = r16
-            int r12 = r9.length
-            if (r11 >= r12) goto L_0x0503
-            r12 = r9[r11]
-            java.lang.Long r12 = java.lang.Long.valueOf(r12)
-            long r12 = r12.longValue()
-            r10[r11] = r12
-            int r16 = r11 + 1
-            goto L_0x04ef
-        L_0x0503:
-            r3.putExtra((java.lang.String) r0, (long[]) r10)
-            r0 = 1
-            goto L_0x04ab
-        L_0x0508:
-            java.lang.String r0 = r17.getNextArgRequired()
-            java.lang.String r5 = r17.getNextArgRequired()
-            java.lang.Long r9 = java.lang.Long.valueOf(r5)
-            r3.putExtra((java.lang.String) r0, (java.io.Serializable) r9)
-            goto L_0x037b
-        L_0x0519:
-            java.lang.String r0 = r17.getNextArgRequired()
-            java.lang.String r5 = r17.getNextArgRequired()
-            java.lang.String r9 = ","
-            java.lang.String[] r9 = r5.split(r9)
-            java.util.ArrayList r10 = new java.util.ArrayList
-            int r11 = r9.length
-            r10.<init>(r11)
-            r16 = 0
-        L_0x052f:
-            r11 = r16
-            int r12 = r9.length
-            if (r11 >= r12) goto L_0x0540
-            r12 = r9[r11]
-            java.lang.Integer r12 = java.lang.Integer.decode(r12)
-            r10.add(r12)
-            int r16 = r11 + 1
-            goto L_0x052f
-        L_0x0540:
-            r3.putExtra((java.lang.String) r0, (java.io.Serializable) r10)
-            goto L_0x037b
-        L_0x0545:
-            java.lang.String r0 = r17.getNextArgRequired()
-            java.lang.String r5 = r17.getNextArgRequired()
-            java.lang.String r9 = ","
-            java.lang.String[] r9 = r5.split(r9)
-            int r10 = r9.length
-            int[] r10 = new int[r10]
-            r16 = 0
-        L_0x0558:
-            r11 = r16
-            int r12 = r9.length
-            if (r11 >= r12) goto L_0x056c
-            r12 = r9[r11]
-            java.lang.Integer r12 = java.lang.Integer.decode(r12)
-            int r12 = r12.intValue()
-            r10[r11] = r12
-            int r16 = r11 + 1
-            goto L_0x0558
-        L_0x056c:
-            r3.putExtra((java.lang.String) r0, (int[]) r10)
-            goto L_0x037b
-        L_0x0571:
-            java.lang.String r0 = r17.getNextArgRequired()
-            java.lang.String r5 = r17.getNextArgRequired()
-            android.content.ComponentName r9 = android.content.ComponentName.unflattenFromString(r5)
-            if (r9 == 0) goto L_0x0584
-            r3.putExtra((java.lang.String) r0, (android.os.Parcelable) r9)
-            goto L_0x037b
-        L_0x0584:
-            java.lang.IllegalArgumentException r10 = new java.lang.IllegalArgumentException
-            java.lang.StringBuilder r11 = new java.lang.StringBuilder
-            r11.<init>()
-            java.lang.String r12 = "Bad component name: "
-            r11.append(r12)
-            r11.append(r5)
-            java.lang.String r11 = r11.toString()
-            r10.<init>(r11)
-            throw r10
-        L_0x059b:
-            java.lang.String r0 = r17.getNextArgRequired()
-            java.lang.String r5 = r17.getNextArgRequired()
-            android.net.Uri r9 = android.net.Uri.parse(r5)
-            r3.putExtra((java.lang.String) r0, (android.os.Parcelable) r9)
-            goto L_0x037b
-        L_0x05ac:
-            java.lang.String r0 = r17.getNextArgRequired()
-            java.lang.String r5 = r17.getNextArgRequired()
-            java.lang.Integer r9 = java.lang.Integer.decode(r5)
-            r3.putExtra((java.lang.String) r0, (java.io.Serializable) r9)
-            goto L_0x037b
-        L_0x05bd:
-            java.lang.String r0 = r17.getNextArgRequired()
-            r5 = 0
-            r9 = r5
-            java.lang.String r9 = (java.lang.String) r9
-            r3.putExtra((java.lang.String) r0, (java.lang.String) r9)
-            goto L_0x037b
-        L_0x05ca:
-            java.lang.String r0 = r17.getNextArgRequired()
-            java.lang.String r5 = r17.getNextArgRequired()
-            r3.putExtra((java.lang.String) r0, (java.lang.String) r5)
-            goto L_0x037b
-        L_0x05d7:
-            java.lang.String r0 = r17.getNextArgRequired()
-            r3.addCategory(r0)
-            if (r3 != r2) goto L_0x037b
-            r0 = 1
-            goto L_0x04ab
-        L_0x05e3:
-            java.lang.String r0 = r17.getNextArgRequired()
-            r3.setIdentifier(r0)
-            if (r3 != r2) goto L_0x037b
-            r0 = 1
-            goto L_0x04ab
-        L_0x05ef:
-            java.lang.String r0 = r17.getNextArgRequired()
-            if (r3 != r2) goto L_0x05f7
-            r5 = 1
-            r6 = r5
-        L_0x05f7:
-            r5 = r17
-            goto L_0x061a
-        L_0x05fa:
-            java.lang.String r0 = r17.getNextArgRequired()
-            android.net.Uri r0 = android.net.Uri.parse(r0)
-            if (r3 != r2) goto L_0x0609
-            r4 = 1
-            r5 = r17
-            r6 = r4
-            goto L_0x060b
-        L_0x0609:
-            r5 = r17
-        L_0x060b:
-            r4 = r0
-            goto L_0x0619
-        L_0x060d:
-            java.lang.String r0 = r17.getNextArgRequired()
-            r3.setAction(r0)
-            if (r3 != r2) goto L_0x037b
-            r0 = 1
-            goto L_0x04ab
-        L_0x0619:
-            r0 = r7
-        L_0x061a:
-            goto L_0x000d
-        L_0x061c:
-            r5 = r17
-        L_0x061e:
-            java.lang.IllegalArgumentException r0 = new java.lang.IllegalArgumentException
-            java.lang.StringBuilder r9 = new java.lang.StringBuilder
-            r9.<init>()
-            java.lang.String r10 = "Unknown option: "
-            r9.append(r10)
-            r9.append(r8)
-            java.lang.String r9 = r9.toString()
-            r0.<init>(r9)
-            throw r0
-        L_0x0635:
-            r0 = 1
-            r5 = r17
-            r3.setDataAndType(r4, r7)
-            if (r3 == r2) goto L_0x063e
-            goto L_0x063f
-        L_0x063e:
-            r0 = 0
-        L_0x063f:
-            if (r0 == 0) goto L_0x0645
-            r2.setSelector(r3)
-            r3 = r2
-        L_0x0645:
-            java.lang.String r11 = r17.getNextArg()
-            r2 = 0
-            if (r11 != 0) goto L_0x065c
-            if (r0 == 0) goto L_0x0694
-            android.content.Intent r9 = new android.content.Intent
-            java.lang.String r10 = "android.intent.action.MAIN"
-            r9.<init>((java.lang.String) r10)
-            r2 = r9
-            java.lang.String r9 = "android.intent.category.LAUNCHER"
-            r2.addCategory(r9)
-            goto L_0x0694
-        L_0x065c:
-            r12 = 58
-            int r12 = r11.indexOf(r12)
-            if (r12 < 0) goto L_0x0669
-            android.content.Intent r2 = parseUri(r11, r10)
-            goto L_0x0694
-        L_0x0669:
-            int r9 = r11.indexOf(r9)
-            if (r9 < 0) goto L_0x0684
-            android.content.Intent r9 = new android.content.Intent
-            java.lang.String r10 = "android.intent.action.MAIN"
-            r9.<init>((java.lang.String) r10)
-            r2 = r9
-            java.lang.String r9 = "android.intent.category.LAUNCHER"
-            r2.addCategory(r9)
-            android.content.ComponentName r9 = android.content.ComponentName.unflattenFromString(r11)
-            r2.setComponent(r9)
-            goto L_0x0694
-        L_0x0684:
-            android.content.Intent r9 = new android.content.Intent
-            java.lang.String r10 = "android.intent.action.MAIN"
-            r9.<init>((java.lang.String) r10)
-            r2 = r9
-            java.lang.String r9 = "android.intent.category.LAUNCHER"
-            r2.addCategory(r9)
-            r2.setPackage(r11)
-        L_0x0694:
-            if (r2 == 0) goto L_0x06e3
-            android.os.Bundle r9 = r3.getExtras()
-            r10 = 0
-            android.os.Bundle r10 = (android.os.Bundle) r10
-            r3.replaceExtras((android.os.Bundle) r10)
-            android.os.Bundle r12 = r2.getExtras()
-            r2.replaceExtras((android.os.Bundle) r10)
-            java.lang.String r10 = r3.getAction()
-            if (r10 == 0) goto L_0x06d0
-            java.util.Set r10 = r2.getCategories()
-            if (r10 == 0) goto L_0x06d0
-            java.util.HashSet r10 = new java.util.HashSet
-            java.util.Set r13 = r2.getCategories()
-            r10.<init>(r13)
-            java.util.Iterator r13 = r10.iterator()
-        L_0x06c0:
-            boolean r14 = r13.hasNext()
-            if (r14 == 0) goto L_0x06d0
-            java.lang.Object r14 = r13.next()
-            java.lang.String r14 = (java.lang.String) r14
-            r2.removeCategory(r14)
-            goto L_0x06c0
-        L_0x06d0:
-            r10 = 72
-            r3.fillIn(r2, r10)
-            if (r9 != 0) goto L_0x06d9
-            r9 = r12
-            goto L_0x06df
-        L_0x06d9:
-            if (r12 == 0) goto L_0x06df
-            r12.putAll(r9)
-            r9 = r12
-        L_0x06df:
-            r3.replaceExtras((android.os.Bundle) r9)
-            r6 = 1
-        L_0x06e3:
-            if (r6 == 0) goto L_0x06e6
-            return r3
-        L_0x06e6:
-            java.lang.IllegalArgumentException r9 = new java.lang.IllegalArgumentException
-            java.lang.String r10 = "No intent supplied"
-            r9.<init>(r10)
-            throw r9
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.content.Intent.parseCommandArgs(android.os.ShellCommand, android.content.Intent$CommandOptionHandler):android.content.Intent");
+            type = type2;
+        }
     }
 
     @UnsupportedAppUsage
     public static void printIntentArgsHelp(PrintWriter pw, String prefix) {
-        for (String line : new String[]{"<INTENT> specifications include these flags and arguments:", "    [-a <ACTION>] [-d <DATA_URI>] [-t <MIME_TYPE>] [-i <IDENTIFIER>]", "    [-c <CATEGORY> [-c <CATEGORY>] ...]", "    [-n <COMPONENT_NAME>]", "    [-e|--es <EXTRA_KEY> <EXTRA_STRING_VALUE> ...]", "    [--esn <EXTRA_KEY> ...]", "    [--ez <EXTRA_KEY> <EXTRA_BOOLEAN_VALUE> ...]", "    [--ei <EXTRA_KEY> <EXTRA_INT_VALUE> ...]", "    [--el <EXTRA_KEY> <EXTRA_LONG_VALUE> ...]", "    [--ef <EXTRA_KEY> <EXTRA_FLOAT_VALUE> ...]", "    [--eu <EXTRA_KEY> <EXTRA_URI_VALUE> ...]", "    [--ecn <EXTRA_KEY> <EXTRA_COMPONENT_NAME_VALUE>]", "    [--eia <EXTRA_KEY> <EXTRA_INT_VALUE>[,<EXTRA_INT_VALUE...]]", "        (mutiple extras passed as Integer[])", "    [--eial <EXTRA_KEY> <EXTRA_INT_VALUE>[,<EXTRA_INT_VALUE...]]", "        (mutiple extras passed as List<Integer>)", "    [--ela <EXTRA_KEY> <EXTRA_LONG_VALUE>[,<EXTRA_LONG_VALUE...]]", "        (mutiple extras passed as Long[])", "    [--elal <EXTRA_KEY> <EXTRA_LONG_VALUE>[,<EXTRA_LONG_VALUE...]]", "        (mutiple extras passed as List<Long>)", "    [--efa <EXTRA_KEY> <EXTRA_FLOAT_VALUE>[,<EXTRA_FLOAT_VALUE...]]", "        (mutiple extras passed as Float[])", "    [--efal <EXTRA_KEY> <EXTRA_FLOAT_VALUE>[,<EXTRA_FLOAT_VALUE...]]", "        (mutiple extras passed as List<Float>)", "    [--esa <EXTRA_KEY> <EXTRA_STRING_VALUE>[,<EXTRA_STRING_VALUE...]]", "        (mutiple extras passed as String[]; to embed a comma into a string,", "         escape it using \"\\,\")", "    [--esal <EXTRA_KEY> <EXTRA_STRING_VALUE>[,<EXTRA_STRING_VALUE...]]", "        (mutiple extras passed as List<String>; to embed a comma into a string,", "         escape it using \"\\,\")", "    [-f <FLAG>]", "    [--grant-read-uri-permission] [--grant-write-uri-permission]", "    [--grant-persistable-uri-permission] [--grant-prefix-uri-permission]", "    [--debug-log-resolution] [--exclude-stopped-packages]", "    [--include-stopped-packages]", "    [--activity-brought-to-front] [--activity-clear-top]", "    [--activity-clear-when-task-reset] [--activity-exclude-from-recents]", "    [--activity-launched-from-history] [--activity-multiple-task]", "    [--activity-no-animation] [--activity-no-history]", "    [--activity-no-user-action] [--activity-previous-is-top]", "    [--activity-reorder-to-front] [--activity-reset-task-if-needed]", "    [--activity-single-top] [--activity-clear-task]", "    [--activity-task-on-home] [--activity-match-external]", "    [--receiver-registered-only] [--receiver-replace-pending]", "    [--receiver-foreground] [--receiver-no-abort]", "    [--receiver-include-background]", "    [--selector]", "    [<URI> | <PACKAGE> | <COMPONENT>]"}) {
+        String[] lines = {"<INTENT> specifications include these flags and arguments:", "    [-a <ACTION>] [-d <DATA_URI>] [-t <MIME_TYPE>] [-i <IDENTIFIER>]", "    [-c <CATEGORY> [-c <CATEGORY>] ...]", "    [-n <COMPONENT_NAME>]", "    [-e|--es <EXTRA_KEY> <EXTRA_STRING_VALUE> ...]", "    [--esn <EXTRA_KEY> ...]", "    [--ez <EXTRA_KEY> <EXTRA_BOOLEAN_VALUE> ...]", "    [--ei <EXTRA_KEY> <EXTRA_INT_VALUE> ...]", "    [--el <EXTRA_KEY> <EXTRA_LONG_VALUE> ...]", "    [--ef <EXTRA_KEY> <EXTRA_FLOAT_VALUE> ...]", "    [--eu <EXTRA_KEY> <EXTRA_URI_VALUE> ...]", "    [--ecn <EXTRA_KEY> <EXTRA_COMPONENT_NAME_VALUE>]", "    [--eia <EXTRA_KEY> <EXTRA_INT_VALUE>[,<EXTRA_INT_VALUE...]]", "        (mutiple extras passed as Integer[])", "    [--eial <EXTRA_KEY> <EXTRA_INT_VALUE>[,<EXTRA_INT_VALUE...]]", "        (mutiple extras passed as List<Integer>)", "    [--ela <EXTRA_KEY> <EXTRA_LONG_VALUE>[,<EXTRA_LONG_VALUE...]]", "        (mutiple extras passed as Long[])", "    [--elal <EXTRA_KEY> <EXTRA_LONG_VALUE>[,<EXTRA_LONG_VALUE...]]", "        (mutiple extras passed as List<Long>)", "    [--efa <EXTRA_KEY> <EXTRA_FLOAT_VALUE>[,<EXTRA_FLOAT_VALUE...]]", "        (mutiple extras passed as Float[])", "    [--efal <EXTRA_KEY> <EXTRA_FLOAT_VALUE>[,<EXTRA_FLOAT_VALUE...]]", "        (mutiple extras passed as List<Float>)", "    [--esa <EXTRA_KEY> <EXTRA_STRING_VALUE>[,<EXTRA_STRING_VALUE...]]", "        (mutiple extras passed as String[]; to embed a comma into a string,", "         escape it using \"\\,\")", "    [--esal <EXTRA_KEY> <EXTRA_STRING_VALUE>[,<EXTRA_STRING_VALUE...]]", "        (mutiple extras passed as List<String>; to embed a comma into a string,", "         escape it using \"\\,\")", "    [-f <FLAG>]", "    [--grant-read-uri-permission] [--grant-write-uri-permission]", "    [--grant-persistable-uri-permission] [--grant-prefix-uri-permission]", "    [--debug-log-resolution] [--exclude-stopped-packages]", "    [--include-stopped-packages]", "    [--activity-brought-to-front] [--activity-clear-top]", "    [--activity-clear-when-task-reset] [--activity-exclude-from-recents]", "    [--activity-launched-from-history] [--activity-multiple-task]", "    [--activity-no-animation] [--activity-no-history]", "    [--activity-no-user-action] [--activity-previous-is-top]", "    [--activity-reorder-to-front] [--activity-reset-task-if-needed]", "    [--activity-single-top] [--activity-clear-task]", "    [--activity-task-on-home] [--activity-match-external]", "    [--receiver-registered-only] [--receiver-replace-pending]", "    [--receiver-foreground] [--receiver-no-abort]", "    [--receiver-include-background]", "    [--selector]", "    [<URI> | <PACKAGE> | <COMPONENT>]"};
+        for (String line : lines) {
             pw.print(prefix);
             pw.println(line);
         }
-        PrintWriter printWriter = pw;
     }
 
     public String getAction() {
@@ -2681,10 +2148,10 @@ public class Intent implements Parcelable, Cloneable {
         if (this.mType != null) {
             return this.mType;
         }
-        if (this.mData == null || !"content".equals(this.mData.getScheme())) {
-            return null;
+        if (this.mData != null && "content".equals(this.mData.getScheme())) {
+            return resolver.getType(this.mData);
         }
-        return resolver.getType(this.mData);
+        return null;
     }
 
     public String resolveTypeIfNeeded(ContentResolver resolver) {
@@ -2753,66 +2220,42 @@ public class Intent implements Parcelable, Cloneable {
         }
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public Object getExtra(String name) {
-        return getExtra(name, (Object) null);
+        return getExtra(name, null);
     }
 
     public boolean getBooleanExtra(String name, boolean defaultValue) {
-        if (this.mExtras == null) {
-            return defaultValue;
-        }
-        return this.mExtras.getBoolean(name, defaultValue);
+        return this.mExtras == null ? defaultValue : this.mExtras.getBoolean(name, defaultValue);
     }
 
     public byte getByteExtra(String name, byte defaultValue) {
-        if (this.mExtras == null) {
-            return defaultValue;
-        }
-        return this.mExtras.getByte(name, defaultValue).byteValue();
+        return this.mExtras == null ? defaultValue : this.mExtras.getByte(name, defaultValue).byteValue();
     }
 
     public short getShortExtra(String name, short defaultValue) {
-        if (this.mExtras == null) {
-            return defaultValue;
-        }
-        return this.mExtras.getShort(name, defaultValue);
+        return this.mExtras == null ? defaultValue : this.mExtras.getShort(name, defaultValue);
     }
 
     public char getCharExtra(String name, char defaultValue) {
-        if (this.mExtras == null) {
-            return defaultValue;
-        }
-        return this.mExtras.getChar(name, defaultValue);
+        return this.mExtras == null ? defaultValue : this.mExtras.getChar(name, defaultValue);
     }
 
     public int getIntExtra(String name, int defaultValue) {
-        if (this.mExtras == null) {
-            return defaultValue;
-        }
-        return this.mExtras.getInt(name, defaultValue);
+        return this.mExtras == null ? defaultValue : this.mExtras.getInt(name, defaultValue);
     }
 
     public long getLongExtra(String name, long defaultValue) {
-        if (this.mExtras == null) {
-            return defaultValue;
-        }
-        return this.mExtras.getLong(name, defaultValue);
+        return this.mExtras == null ? defaultValue : this.mExtras.getLong(name, defaultValue);
     }
 
     public float getFloatExtra(String name, float defaultValue) {
-        if (this.mExtras == null) {
-            return defaultValue;
-        }
-        return this.mExtras.getFloat(name, defaultValue);
+        return this.mExtras == null ? defaultValue : this.mExtras.getFloat(name, defaultValue);
     }
 
     public double getDoubleExtra(String name, double defaultValue) {
-        if (this.mExtras == null) {
-            return defaultValue;
-        }
-        return this.mExtras.getDouble(name, defaultValue);
+        return this.mExtras == null ? defaultValue : this.mExtras.getDouble(name, defaultValue);
     }
 
     public String getStringExtra(String name) {
@@ -2833,7 +2276,7 @@ public class Intent implements Parcelable, Cloneable {
         if (this.mExtras == null) {
             return null;
         }
-        return this.mExtras.getParcelable(name);
+        return (T) this.mExtras.getParcelable(name);
     }
 
     public Parcelable[] getParcelableArrayExtra(String name) {
@@ -2955,8 +2398,8 @@ public class Intent implements Parcelable, Cloneable {
         return this.mExtras.getBundle(name);
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public IBinder getIBinderExtra(String name) {
         if (this.mExtras == null) {
             return null;
@@ -2964,13 +2407,12 @@ public class Intent implements Parcelable, Cloneable {
         return this.mExtras.getIBinder(name);
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public Object getExtra(String name, Object defaultValue) {
         Object result2;
-        Object result = defaultValue;
         if (this.mExtras == null || (result2 = this.mExtras.get(name)) == null) {
-            return result;
+            return defaultValue;
         }
         return result2;
     }
@@ -3034,17 +2476,18 @@ public class Intent implements Parcelable, Cloneable {
     public ActivityInfo resolveActivityInfo(PackageManager pm, int flags) {
         if (this.mComponent != null) {
             try {
-                return pm.getActivityInfo(this.mComponent, flags);
+                ActivityInfo ai = pm.getActivityInfo(this.mComponent, flags);
+                return ai;
             } catch (PackageManager.NameNotFoundException e) {
                 return null;
             }
-        } else {
-            ResolveInfo info = pm.resolveActivity(this, 65536 | flags);
-            if (info != null) {
-                return info.activityInfo;
-            }
+        }
+        ResolveInfo info = pm.resolveActivity(this, 65536 | flags);
+        if (info == null) {
             return null;
         }
+        ActivityInfo ai2 = info.activityInfo;
+        return ai2;
     }
 
     @UnsupportedAppUsage
@@ -3061,11 +2504,10 @@ public class Intent implements Parcelable, Cloneable {
             ResolveInfo ri = results.get(i);
             if ((ri.serviceInfo.applicationInfo.flags & 1) != 0) {
                 ComponentName foundComp = new ComponentName(ri.serviceInfo.applicationInfo.packageName, ri.serviceInfo.name);
-                if (comp == null) {
-                    comp = foundComp;
-                } else {
+                if (comp != null) {
                     throw new IllegalStateException("Multiple system services handle " + this + PluralRules.KEYWORD_RULE_SEPARATOR + comp + ", " + foundComp);
                 }
+                comp = foundComp;
             }
         }
         return comp;
@@ -3131,11 +2573,11 @@ public class Intent implements Parcelable, Cloneable {
     public void setSelector(Intent selector) {
         if (selector == this) {
             throw new IllegalArgumentException("Intent being set as a selector of itself");
-        } else if (selector == null || this.mPackage == null) {
-            this.mSelector = selector;
-        } else {
+        }
+        if (selector != null && this.mPackage != null) {
             throw new IllegalArgumentException("Can't set selector when package name is already set");
         }
+        this.mSelector = selector;
     }
 
     public void setClipData(ClipData clip) {
@@ -3372,8 +2814,8 @@ public class Intent implements Parcelable, Cloneable {
         return this;
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public Intent putExtra(String name, IBinder value) {
         if (this.mExtras == null) {
             this.mExtras = new Bundle();
@@ -3435,11 +2877,11 @@ public class Intent implements Parcelable, Cloneable {
     }
 
     public Intent setPackage(String packageName) {
-        if (packageName == null || this.mSelector == null) {
-            this.mPackage = packageName;
-            return this;
+        if (packageName != null && this.mSelector != null) {
+            throw new IllegalArgumentException("Can't set package name when selector is already set");
         }
-        throw new IllegalArgumentException("Can't set package name when selector is already set");
+        this.mPackage = packageName;
+        return this;
     }
 
     public Intent setComponent(ComponentName component) {
@@ -3477,7 +2919,7 @@ public class Intent implements Parcelable, Cloneable {
             this.mAction = other.mAction;
             changes = 0 | 1;
         }
-        if (!(other.mData == null && other.mType == null) && ((this.mData == null && this.mType == null) || (flags & 2) != 0)) {
+        if ((other.mData != null || other.mType != null) && ((this.mData == null && this.mType == null) || (flags & 2) != 0)) {
             this.mData = other.mData;
             this.mType = other.mType;
             changes |= 2;
@@ -3497,7 +2939,7 @@ public class Intent implements Parcelable, Cloneable {
             this.mPackage = other.mPackage;
             changes |= 16;
         }
-        if (!(other.mSelector == null || (flags & 64) == 0 || this.mPackage != null)) {
+        if (other.mSelector != null && (flags & 64) != 0 && this.mPackage == null) {
             this.mSelector = new Intent(other.mSelector);
             this.mPackage = null;
             changes |= 64;
@@ -3507,7 +2949,7 @@ public class Intent implements Parcelable, Cloneable {
             changes |= 128;
             mayHaveCopiedUris = true;
         }
-        if (!(other.mComponent == null || (flags & 8) == 0)) {
+        if (other.mComponent != null && (flags & 8) != 0) {
             this.mComponent = other.mComponent;
             changes |= 8;
         }
@@ -3528,7 +2970,7 @@ public class Intent implements Parcelable, Cloneable {
                 this.mExtras = newb;
                 mayHaveCopiedUris = true;
             } catch (RuntimeException e) {
-                Log.w(TAG, "Failure filling in extras", e);
+                Log.m63w(TAG, "Failure filling in extras", e);
             }
         }
         if (mayHaveCopiedUris && this.mContentUserHint == -2 && other.mContentUserHint != -2) {
@@ -3537,6 +2979,7 @@ public class Intent implements Parcelable, Cloneable {
         return changes;
     }
 
+    /* loaded from: classes.dex */
     public static final class FilterComparison {
         private final int mHashCode;
         private final Intent mIntent;
@@ -3551,10 +2994,11 @@ public class Intent implements Parcelable, Cloneable {
         }
 
         public boolean equals(Object obj) {
-            if (!(obj instanceof FilterComparison)) {
-                return false;
+            if (obj instanceof FilterComparison) {
+                Intent other = ((FilterComparison) obj).mIntent;
+                return this.mIntent.filterEquals(other);
             }
-            return this.mIntent.filterEquals(((FilterComparison) obj).mIntent);
+            return false;
         }
 
         public int hashCode() {
@@ -3563,17 +3007,14 @@ public class Intent implements Parcelable, Cloneable {
     }
 
     public boolean filterEquals(Intent other) {
-        if (other != null && Objects.equals(this.mAction, other.mAction) && Objects.equals(this.mData, other.mData) && Objects.equals(this.mType, other.mType) && Objects.equals(this.mIdentifier, other.mIdentifier) && Objects.equals(this.mPackage, other.mPackage) && Objects.equals(this.mComponent, other.mComponent) && Objects.equals(this.mCategories, other.mCategories)) {
-            return true;
+        if (other == null || !Objects.equals(this.mAction, other.mAction) || !Objects.equals(this.mData, other.mData) || !Objects.equals(this.mType, other.mType) || !Objects.equals(this.mIdentifier, other.mIdentifier) || !Objects.equals(this.mPackage, other.mPackage) || !Objects.equals(this.mComponent, other.mComponent) || !Objects.equals(this.mCategories, other.mCategories)) {
+            return false;
         }
-        return false;
+        return true;
     }
 
     public int filterHashCode() {
-        int code = 0;
-        if (this.mAction != null) {
-            code = 0 + this.mAction.hashCode();
-        }
+        int code = this.mAction != null ? 0 + this.mAction.hashCode() : 0;
         if (this.mData != null) {
             code += this.mData.hashCode();
         }
@@ -3627,18 +3068,17 @@ public class Intent implements Parcelable, Cloneable {
     }
 
     public void toShortString(StringBuilder b, boolean secure, boolean comp, boolean extras, boolean clip) {
-        boolean first;
-        boolean first2 = true;
+        boolean first = true;
         if (this.mAction != null) {
             b.append("act=");
             b.append(this.mAction);
-            first2 = false;
+            first = false;
         }
         if (this.mCategories != null) {
-            if (!first2) {
+            if (!first) {
                 b.append(' ');
             }
-            first2 = false;
+            first = false;
             b.append("cat=[");
             for (int i = 0; i < this.mCategories.size(); i++) {
                 if (i > 0) {
@@ -3649,10 +3089,10 @@ public class Intent implements Parcelable, Cloneable {
             b.append("]");
         }
         if (this.mData != null) {
-            if (!first2) {
+            if (!first) {
                 b.append(' ');
             }
-            first2 = false;
+            first = false;
             b.append("dat=");
             if (secure) {
                 b.append(this.mData.toSafeString());
@@ -3661,80 +3101,76 @@ public class Intent implements Parcelable, Cloneable {
             }
         }
         if (this.mType != null) {
-            if (!first2) {
+            if (!first) {
                 b.append(' ');
             }
-            first2 = false;
+            first = false;
             b.append("typ=");
             b.append(this.mType);
         }
         if (this.mIdentifier != null) {
-            if (!first2) {
+            if (!first) {
                 b.append(' ');
             }
-            first2 = false;
+            first = false;
             b.append("id=");
             b.append(this.mIdentifier);
         }
         if (this.mFlags != 0) {
-            if (!first2) {
+            if (!first) {
                 b.append(' ');
             }
-            first2 = false;
+            first = false;
             b.append("flg=0x");
             b.append(Integer.toHexString(this.mFlags));
         }
         if (this.mPackage != null) {
-            if (!first2) {
+            if (!first) {
                 b.append(' ');
             }
-            first2 = false;
+            first = false;
             b.append("pkg=");
             b.append(this.mPackage);
         }
         if (comp && this.mComponent != null) {
-            if (!first2) {
+            if (!first) {
                 b.append(' ');
             }
-            first2 = false;
+            first = false;
             b.append("cmp=");
             b.append(this.mComponent.flattenToShortString());
         }
         if (this.mSourceBounds != null) {
-            if (!first2) {
+            if (!first) {
                 b.append(' ');
             }
-            first2 = false;
+            first = false;
             b.append("bnds=");
             b.append(this.mSourceBounds.toShortString());
         }
         if (this.mClipData != null) {
-            if (!first2) {
+            if (!first) {
                 b.append(' ');
             }
             b.append("clip={");
             if (clip) {
                 this.mClipData.toShortString(b);
             } else {
-                if (this.mClipData.getDescription() != null) {
-                    first = !this.mClipData.getDescription().toShortStringTypesOnly(b);
-                } else {
-                    first = true;
-                }
-                this.mClipData.toShortStringShortItems(b, first);
+                boolean first2 = this.mClipData.getDescription() != null ? !this.mClipData.getDescription().toShortStringTypesOnly(b) : true;
+                this.mClipData.toShortStringShortItems(b, first2);
             }
-            first2 = false;
+            first = false;
             b.append('}');
         }
         if (extras && this.mExtras != null) {
-            if (!first2) {
+            if (!first) {
                 b.append(' ');
             }
-            first2 = false;
+            first = false;
             b.append("(has extras)");
         }
         if (this.mContentUserHint != -2) {
-            if (!first2) {
+            if (!first) {
                 b.append(' ');
             }
             b.append("u=");
@@ -3768,7 +3204,8 @@ public class Intent implements Parcelable, Cloneable {
         if (this.mCategories != null) {
             Iterator<String> it = this.mCategories.iterator();
             while (it.hasNext()) {
-                proto.write(2237677961218L, it.next());
+                String category = it.next();
+                proto.write(2237677961218L, category);
             }
         }
         if (this.mData != null) {
@@ -3819,40 +3256,16 @@ public class Intent implements Parcelable, Cloneable {
 
     public String toUri(int flags) {
         StringBuilder uri = new StringBuilder(128);
-        if ((flags & 2) == 0) {
-            String scheme = null;
-            if (this.mData != null) {
-                String data = this.mData.toString();
-                if ((flags & 1) != 0) {
-                    int N = data.length();
-                    int i = 0;
-                    while (true) {
-                        if (i >= N) {
-                            break;
-                        }
-                        char c = data.charAt(i);
-                        if ((c >= 'a' && c <= 'z') || ((c >= 'A' && c <= 'Z') || ((c >= '0' && c <= '9') || c == '.' || c == '-' || c == '+'))) {
-                            i++;
-                        } else if (c == ':' && i > 0) {
-                            scheme = data.substring(0, i);
-                            uri.append("intent:");
-                            data = data.substring(i + 1);
-                        }
-                    }
-                }
-                uri.append(data);
-            } else if ((flags & 1) != 0) {
-                uri.append("intent:");
+        if ((flags & 2) != 0) {
+            if (this.mPackage == null) {
+                throw new IllegalArgumentException("Intent must include an explicit package name to build an android-app: " + this);
             }
-            toUriFragment(uri, scheme, "android.intent.action.VIEW", (String) null, flags);
-            return uri.toString();
-        } else if (this.mPackage != null) {
             uri.append("android-app://");
             uri.append(this.mPackage);
-            String scheme2 = null;
-            if (!(this.mData == null || (scheme2 = this.mData.getScheme()) == null)) {
+            String scheme = null;
+            if (this.mData != null && (scheme = this.mData.getScheme()) != null) {
                 uri.append('/');
-                uri.append(scheme2);
+                uri.append(scheme);
                 String authority = this.mData.getEncodedAuthority();
                 if (authority != null) {
                     uri.append('/');
@@ -3873,11 +3286,35 @@ public class Intent implements Parcelable, Cloneable {
                     }
                 }
             }
-            toUriFragment(uri, (String) null, scheme2 == null ? ACTION_MAIN : "android.intent.action.VIEW", this.mPackage, flags);
+            toUriFragment(uri, null, scheme == null ? ACTION_MAIN : "android.intent.action.VIEW", this.mPackage, flags);
             return uri.toString();
-        } else {
-            throw new IllegalArgumentException("Intent must include an explicit package name to build an android-app: " + this);
         }
+        String scheme2 = null;
+        if (this.mData != null) {
+            String data = this.mData.toString();
+            if ((flags & 1) != 0) {
+                int N = data.length();
+                int i = 0;
+                while (true) {
+                    if (i >= N) {
+                        break;
+                    }
+                    char c = data.charAt(i);
+                    if ((c >= 'a' && c <= 'z') || ((c >= 'A' && c <= 'Z') || ((c >= '0' && c <= '9') || c == '.' || c == '-' || c == '+'))) {
+                        i++;
+                    } else if (c == ':' && i > 0) {
+                        scheme2 = data.substring(0, i);
+                        uri.append("intent:");
+                        data = data.substring(i + 1);
+                    }
+                }
+            }
+            uri.append(data);
+        } else if ((flags & 1) != 0) {
+            uri.append("intent:");
+        }
+        toUriFragment(uri, scheme2, "android.intent.action.VIEW", null, flags);
+        return uri.toString();
     }
 
     private void toUriFragment(StringBuilder uri, String scheme, String defAction, String defPackage, int flags) {
@@ -3885,11 +3322,11 @@ public class Intent implements Parcelable, Cloneable {
         toUriInner(frag, scheme, defAction, defPackage, flags);
         if (this.mSelector != null) {
             frag.append("SEL;");
-            this.mSelector.toUriInner(frag, this.mSelector.mData != null ? this.mSelector.mData.getScheme() : null, (String) null, (String) null, flags);
+            this.mSelector.toUriInner(frag, this.mSelector.mData != null ? this.mSelector.mData.getScheme() : null, null, null, flags);
         }
         if (frag.length() > 0) {
             uri.append("#Intent;");
-            uri.append(frag);
+            uri.append((CharSequence) frag);
             uri.append("end");
         }
     }
@@ -3962,10 +3399,8 @@ public class Intent implements Parcelable, Cloneable {
                     entryType = 'i';
                 } else if (value instanceof Long) {
                     entryType = 'l';
-                } else if (value instanceof Short) {
-                    entryType = 's';
                 } else {
-                    entryType = 0;
+                    entryType = value instanceof Short ? 's' : (char) 0;
                 }
                 if (entryType != 0) {
                     uri.append(entryType);
@@ -3979,6 +3414,7 @@ public class Intent implements Parcelable, Cloneable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         if (this.mExtras != null) {
             return this.mExtras.describeContents();
@@ -3986,6 +3422,7 @@ public class Intent implements Parcelable, Cloneable {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(this.mAction);
         Uri.writeToParcel(out, this.mData);
@@ -4061,32 +3498,30 @@ public class Intent implements Parcelable, Cloneable {
     }
 
     public static Intent parseIntent(Resources resources, XmlPullParser parser, AttributeSet attrs) throws XmlPullParserException, IOException {
-        Resources resources2 = resources;
-        AttributeSet attributeSet = attrs;
         Intent intent = new Intent();
-        TypedArray sa = resources2.obtainAttributes(attributeSet, R.styleable.Intent);
+        TypedArray sa = resources.obtainAttributes(attrs, C3132R.styleable.Intent);
         intent.setAction(sa.getString(2));
         int i = 3;
         String data = sa.getString(3);
-        intent.setDataAndType(data != null ? Uri.parse(data) : null, sa.getString(1));
+        String mimeType = sa.getString(1);
+        intent.setDataAndType(data != null ? Uri.parse(data) : null, mimeType);
         intent.setIdentifier(sa.getString(5));
         String packageName = sa.getString(0);
         String className = sa.getString(4);
-        if (!(packageName == null || className == null)) {
+        if (packageName != null && className != null) {
             intent.setComponent(new ComponentName(packageName, className));
         }
         sa.recycle();
         int outerDepth = parser.getDepth();
         while (true) {
-            int next = parser.next();
-            int type = next;
-            if (next == 1 || (type == i && parser.getDepth() <= outerDepth)) {
-                return intent;
+            int type = parser.next();
+            if (type == 1 || (type == i && parser.getDepth() <= outerDepth)) {
+                break;
             }
-            if (!(type == i || type == 4)) {
+            if (type != i && type != 4) {
                 String nodeName = parser.getName();
                 if (nodeName.equals(TAG_CATEGORIES)) {
-                    TypedArray sa2 = resources2.obtainAttributes(attributeSet, R.styleable.IntentCategory);
+                    TypedArray sa2 = resources.obtainAttributes(attrs, C3132R.styleable.IntentCategory);
                     String cat = sa2.getString(0);
                     sa2.recycle();
                     if (cat != null) {
@@ -4097,7 +3532,7 @@ public class Intent implements Parcelable, Cloneable {
                     if (intent.mExtras == null) {
                         intent.mExtras = new Bundle();
                     }
-                    resources2.parseBundleExtra(TAG_EXTRA, attributeSet, intent.mExtras);
+                    resources.parseBundleExtra(TAG_EXTRA, attrs, intent.mExtras);
                     XmlUtils.skipCurrentTag(parser);
                 } else {
                     XmlUtils.skipCurrentTag(parser);
@@ -4110,34 +3545,35 @@ public class Intent implements Parcelable, Cloneable {
 
     public void saveToXml(XmlSerializer out) throws IOException {
         if (this.mAction != null) {
-            out.attribute((String) null, "action", this.mAction);
+            out.attribute(null, "action", this.mAction);
         }
         if (this.mData != null) {
-            out.attribute((String) null, "data", this.mData.toString());
+            out.attribute(null, "data", this.mData.toString());
         }
         if (this.mType != null) {
-            out.attribute((String) null, "type", this.mType);
+            out.attribute(null, "type", this.mType);
         }
         if (this.mIdentifier != null) {
-            out.attribute((String) null, ATTR_IDENTIFIER, this.mIdentifier);
+            out.attribute(null, ATTR_IDENTIFIER, this.mIdentifier);
         }
         if (this.mComponent != null) {
-            out.attribute((String) null, "component", this.mComponent.flattenToShortString());
+            out.attribute(null, "component", this.mComponent.flattenToShortString());
         }
-        out.attribute((String) null, "flags", Integer.toHexString(getFlags()));
+        out.attribute(null, "flags", Integer.toHexString(getFlags()));
         if (this.mCategories != null) {
-            out.startTag((String) null, TAG_CATEGORIES);
+            out.startTag(null, TAG_CATEGORIES);
             for (int categoryNdx = this.mCategories.size() - 1; categoryNdx >= 0; categoryNdx--) {
-                out.attribute((String) null, "category", this.mCategories.valueAt(categoryNdx));
+                out.attribute(null, "category", this.mCategories.valueAt(categoryNdx));
             }
-            out.endTag((String) null, TAG_CATEGORIES);
+            out.endTag(null, TAG_CATEGORIES);
         }
     }
 
     public static Intent restoreFromXml(XmlPullParser in) throws IOException, XmlPullParserException {
         Intent intent = new Intent();
         int outerDepth = in.getDepth();
-        for (int attrNdx = in.getAttributeCount() - 1; attrNdx >= 0; attrNdx--) {
+        int attrCount = in.getAttributeCount();
+        for (int attrNdx = attrCount - 1; attrNdx >= 0; attrNdx--) {
             String attrName = in.getAttributeName(attrNdx);
             String attrValue = in.getAttributeValue(attrNdx);
             if ("action".equals(attrName)) {
@@ -4153,23 +3589,22 @@ public class Intent implements Parcelable, Cloneable {
             } else if ("flags".equals(attrName)) {
                 intent.setFlags(Integer.parseInt(attrValue, 16));
             } else {
-                Log.e(TAG, "restoreFromXml: unknown attribute=" + attrName);
+                Log.m70e(TAG, "restoreFromXml: unknown attribute=" + attrName);
             }
         }
         while (true) {
-            int attrNdx2 = in.next();
-            int event = attrNdx2;
-            if (attrNdx2 == 1 || (event == 3 && in.getDepth() >= outerDepth)) {
-                return intent;
-            }
-            if (event == 2) {
+            int event = in.next();
+            if (event == 1 || (event == 3 && in.getDepth() >= outerDepth)) {
+                break;
+            } else if (event == 2) {
                 String name = in.getName();
                 if (TAG_CATEGORIES.equals(name)) {
-                    for (int attrNdx3 = in.getAttributeCount() - 1; attrNdx3 >= 0; attrNdx3--) {
-                        intent.addCategory(in.getAttributeValue(attrNdx3));
+                    int attrCount2 = in.getAttributeCount();
+                    for (int attrNdx2 = attrCount2 - 1; attrNdx2 >= 0; attrNdx2--) {
+                        intent.addCategory(in.getAttributeValue(attrNdx2));
                     }
                 } else {
-                    Log.w(TAG, "restoreFromXml: unknown name=" + name);
+                    Log.m64w(TAG, "restoreFromXml: unknown name=" + name);
                     XmlUtils.skipCurrentTag(in);
                 }
             }
@@ -4191,293 +3626,219 @@ public class Intent implements Parcelable, Cloneable {
 
     @UnsupportedAppUsage
     public void prepareToLeaveProcess(Context context) {
-        prepareToLeaveProcess(this.mComponent == null || !Objects.equals(this.mComponent.getPackageName(), context.getPackageName()));
+        boolean leavingPackage = this.mComponent == null || !Objects.equals(this.mComponent.getPackageName(), context.getPackageName());
+        prepareToLeaveProcess(leavingPackage);
     }
 
-    /* JADX WARNING: Can't fix incorrect switch cases order */
-    /* JADX WARNING: Code restructure failed: missing block: B:88:0x0144, code lost:
-        if (r1.equals(ACTION_PROVIDER_CHANGED) == false) goto L_0x0151;
+    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
+    /* JADX WARN: Code restructure failed: missing block: B:93:0x0144, code lost:
+        if (r1.equals(android.content.Intent.ACTION_PROVIDER_CHANGED) == false) goto L92;
      */
-    /* JADX WARNING: Removed duplicated region for block: B:94:0x0155  */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void prepareToLeaveProcess(boolean r7) {
-        /*
-            r6 = this;
-            r0 = 0
-            r6.setAllowFds(r0)
-            android.content.Intent r1 = r6.mSelector
-            if (r1 == 0) goto L_0x000d
-            android.content.Intent r1 = r6.mSelector
-            r1.prepareToLeaveProcess((boolean) r7)
-        L_0x000d:
-            android.content.ClipData r1 = r6.mClipData
-            if (r1 == 0) goto L_0x001a
-            android.content.ClipData r1 = r6.mClipData
-            int r2 = r6.getFlags()
-            r1.prepareToLeaveProcess(r7, r2)
-        L_0x001a:
-            android.os.Bundle r1 = r6.mExtras
-            if (r1 == 0) goto L_0x0038
-            android.os.Bundle r1 = r6.mExtras
-            boolean r1 = r1.isParcelled()
-            if (r1 != 0) goto L_0x0038
-            android.os.Bundle r1 = r6.mExtras
-            java.lang.String r2 = "android.intent.extra.INTENT"
-            java.lang.Object r1 = r1.get(r2)
-            boolean r2 = r1 instanceof android.content.Intent
-            if (r2 == 0) goto L_0x0038
-            r2 = r1
-            android.content.Intent r2 = (android.content.Intent) r2
-            r2.prepareToLeaveProcess((boolean) r7)
-        L_0x0038:
-            java.lang.String r1 = r6.mAction
-            r2 = 1
-            r3 = -1
-            if (r1 == 0) goto L_0x011d
-            android.net.Uri r1 = r6.mData
-            if (r1 == 0) goto L_0x011d
-            boolean r1 = android.os.StrictMode.vmFileUriExposureEnabled()
-            if (r1 == 0) goto L_0x011d
-            if (r7 == 0) goto L_0x011d
-            java.lang.String r1 = r6.mAction
-            int r4 = r1.hashCode()
-            switch(r4) {
-                case -1823790459: goto L_0x0106;
-                case -1665311200: goto L_0x00fc;
-                case -1514214344: goto L_0x00f2;
-                case -1142424621: goto L_0x00e7;
-                case -963871873: goto L_0x00dd;
-                case -808646005: goto L_0x00d2;
-                case -625887599: goto L_0x00c7;
-                case 257177710: goto L_0x00bd;
-                case 410719838: goto L_0x00b3;
-                case 582421979: goto L_0x00a7;
-                case 852070077: goto L_0x009b;
-                case 1412829408: goto L_0x008f;
-                case 1431947322: goto L_0x0083;
-                case 1599438242: goto L_0x0077;
-                case 1920444806: goto L_0x006b;
-                case 1964681210: goto L_0x0060;
-                case 2045140818: goto L_0x0055;
-                default: goto L_0x0053;
+    /* JADX WARN: Removed duplicated region for block: B:100:0x0155  */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public void prepareToLeaveProcess(boolean leavingPackage) {
+        char c;
+        boolean z = false;
+        setAllowFds(false);
+        if (this.mSelector != null) {
+            this.mSelector.prepareToLeaveProcess(leavingPackage);
+        }
+        if (this.mClipData != null) {
+            this.mClipData.prepareToLeaveProcess(leavingPackage, getFlags());
+        }
+        if (this.mExtras != null && !this.mExtras.isParcelled()) {
+            Object intent = this.mExtras.get(EXTRA_INTENT);
+            if (intent instanceof Intent) {
+                ((Intent) intent).prepareToLeaveProcess(leavingPackage);
             }
-        L_0x0053:
-            goto L_0x0110
-        L_0x0055:
-            java.lang.String r4 = "android.intent.action.MEDIA_BAD_REMOVAL"
-            boolean r1 = r1.equals(r4)
-            if (r1 == 0) goto L_0x0110
-            r1 = 7
-            goto L_0x0111
-        L_0x0060:
-            java.lang.String r4 = "android.intent.action.MEDIA_CHECKING"
-            boolean r1 = r1.equals(r4)
-            if (r1 == 0) goto L_0x0110
-            r1 = 2
-            goto L_0x0111
-        L_0x006b:
-            java.lang.String r4 = "android.intent.action.PACKAGE_VERIFIED"
-            boolean r1 = r1.equals(r4)
-            if (r1 == 0) goto L_0x0110
-            r1 = 15
-            goto L_0x0111
-        L_0x0077:
-            java.lang.String r4 = "android.intent.action.PACKAGE_ENABLE_ROLLBACK"
-            boolean r1 = r1.equals(r4)
-            if (r1 == 0) goto L_0x0110
-            r1 = 16
-            goto L_0x0111
-        L_0x0083:
-            java.lang.String r4 = "android.intent.action.MEDIA_UNMOUNTABLE"
-            boolean r1 = r1.equals(r4)
-            if (r1 == 0) goto L_0x0110
-            r1 = 8
-            goto L_0x0111
-        L_0x008f:
-            java.lang.String r4 = "android.intent.action.MEDIA_SCANNER_STARTED"
-            boolean r1 = r1.equals(r4)
-            if (r1 == 0) goto L_0x0110
-            r1 = 10
-            goto L_0x0111
-        L_0x009b:
-            java.lang.String r4 = "android.intent.action.MEDIA_SCANNER_SCAN_FILE"
-            boolean r1 = r1.equals(r4)
-            if (r1 == 0) goto L_0x0110
-            r1 = 12
-            goto L_0x0111
-        L_0x00a7:
-            java.lang.String r4 = "android.intent.action.PACKAGE_NEEDS_VERIFICATION"
-            boolean r1 = r1.equals(r4)
-            if (r1 == 0) goto L_0x0110
-            r1 = 13
-            goto L_0x0111
-        L_0x00b3:
-            java.lang.String r4 = "android.intent.action.MEDIA_UNSHARED"
-            boolean r1 = r1.equals(r4)
-            if (r1 == 0) goto L_0x0110
-            r1 = 6
-            goto L_0x0111
-        L_0x00bd:
-            java.lang.String r4 = "android.intent.action.MEDIA_NOFS"
-            boolean r1 = r1.equals(r4)
-            if (r1 == 0) goto L_0x0110
-            r1 = 3
-            goto L_0x0111
-        L_0x00c7:
-            java.lang.String r4 = "android.intent.action.MEDIA_EJECT"
-            boolean r1 = r1.equals(r4)
-            if (r1 == 0) goto L_0x0110
-            r1 = 9
-            goto L_0x0111
-        L_0x00d2:
-            java.lang.String r4 = "com.qualcomm.qti.intent.action.PACKAGE_NEEDS_OPTIONAL_VERIFICATION"
-            boolean r1 = r1.equals(r4)
-            if (r1 == 0) goto L_0x0110
-            r1 = 14
-            goto L_0x0111
-        L_0x00dd:
-            java.lang.String r4 = "android.intent.action.MEDIA_UNMOUNTED"
-            boolean r1 = r1.equals(r4)
-            if (r1 == 0) goto L_0x0110
-            r1 = r2
-            goto L_0x0111
-        L_0x00e7:
-            java.lang.String r4 = "android.intent.action.MEDIA_SCANNER_FINISHED"
-            boolean r1 = r1.equals(r4)
-            if (r1 == 0) goto L_0x0110
-            r1 = 11
-            goto L_0x0111
-        L_0x00f2:
-            java.lang.String r4 = "android.intent.action.MEDIA_MOUNTED"
-            boolean r1 = r1.equals(r4)
-            if (r1 == 0) goto L_0x0110
-            r1 = 4
-            goto L_0x0111
-        L_0x00fc:
-            java.lang.String r4 = "android.intent.action.MEDIA_REMOVED"
-            boolean r1 = r1.equals(r4)
-            if (r1 == 0) goto L_0x0110
-            r1 = r0
-            goto L_0x0111
-        L_0x0106:
-            java.lang.String r4 = "android.intent.action.MEDIA_SHARED"
-            boolean r1 = r1.equals(r4)
-            if (r1 == 0) goto L_0x0110
-            r1 = 5
-            goto L_0x0111
-        L_0x0110:
-            r1 = r3
-        L_0x0111:
-            switch(r1) {
-                case 0: goto L_0x011c;
-                case 1: goto L_0x011c;
-                case 2: goto L_0x011c;
-                case 3: goto L_0x011c;
-                case 4: goto L_0x011c;
-                case 5: goto L_0x011c;
-                case 6: goto L_0x011c;
-                case 7: goto L_0x011c;
-                case 8: goto L_0x011c;
-                case 9: goto L_0x011c;
-                case 10: goto L_0x011c;
-                case 11: goto L_0x011c;
-                case 12: goto L_0x011c;
-                case 13: goto L_0x011c;
-                case 14: goto L_0x011c;
-                case 15: goto L_0x011c;
-                case 16: goto L_0x011c;
-                default: goto L_0x0114;
+        }
+        if (this.mAction != null && this.mData != null && StrictMode.vmFileUriExposureEnabled() && leavingPackage) {
+            String str = this.mAction;
+            switch (str.hashCode()) {
+                case -1823790459:
+                    if (str.equals(ACTION_MEDIA_SHARED)) {
+                        c = 5;
+                        break;
+                    }
+                    c = '\uffff';
+                    break;
+                case -1665311200:
+                    if (str.equals(ACTION_MEDIA_REMOVED)) {
+                        c = 0;
+                        break;
+                    }
+                    c = '\uffff';
+                    break;
+                case -1514214344:
+                    if (str.equals(ACTION_MEDIA_MOUNTED)) {
+                        c = 4;
+                        break;
+                    }
+                    c = '\uffff';
+                    break;
+                case -1142424621:
+                    if (str.equals(ACTION_MEDIA_SCANNER_FINISHED)) {
+                        c = 11;
+                        break;
+                    }
+                    c = '\uffff';
+                    break;
+                case -963871873:
+                    if (str.equals(ACTION_MEDIA_UNMOUNTED)) {
+                        c = 1;
+                        break;
+                    }
+                    c = '\uffff';
+                    break;
+                case -808646005:
+                    if (str.equals(ACTION_PACKAGE_NEEDS_OPTIONAL_VERIFICATION)) {
+                        c = 14;
+                        break;
+                    }
+                    c = '\uffff';
+                    break;
+                case -625887599:
+                    if (str.equals(ACTION_MEDIA_EJECT)) {
+                        c = '\t';
+                        break;
+                    }
+                    c = '\uffff';
+                    break;
+                case 257177710:
+                    if (str.equals(ACTION_MEDIA_NOFS)) {
+                        c = 3;
+                        break;
+                    }
+                    c = '\uffff';
+                    break;
+                case 410719838:
+                    if (str.equals(ACTION_MEDIA_UNSHARED)) {
+                        c = 6;
+                        break;
+                    }
+                    c = '\uffff';
+                    break;
+                case 582421979:
+                    if (str.equals(ACTION_PACKAGE_NEEDS_VERIFICATION)) {
+                        c = '\r';
+                        break;
+                    }
+                    c = '\uffff';
+                    break;
+                case 852070077:
+                    if (str.equals(ACTION_MEDIA_SCANNER_SCAN_FILE)) {
+                        c = '\f';
+                        break;
+                    }
+                    c = '\uffff';
+                    break;
+                case 1412829408:
+                    if (str.equals(ACTION_MEDIA_SCANNER_STARTED)) {
+                        c = '\n';
+                        break;
+                    }
+                    c = '\uffff';
+                    break;
+                case 1431947322:
+                    if (str.equals(ACTION_MEDIA_UNMOUNTABLE)) {
+                        c = '\b';
+                        break;
+                    }
+                    c = '\uffff';
+                    break;
+                case 1599438242:
+                    if (str.equals(ACTION_PACKAGE_ENABLE_ROLLBACK)) {
+                        c = 16;
+                        break;
+                    }
+                    c = '\uffff';
+                    break;
+                case 1920444806:
+                    if (str.equals(ACTION_PACKAGE_VERIFIED)) {
+                        c = 15;
+                        break;
+                    }
+                    c = '\uffff';
+                    break;
+                case 1964681210:
+                    if (str.equals(ACTION_MEDIA_CHECKING)) {
+                        c = 2;
+                        break;
+                    }
+                    c = '\uffff';
+                    break;
+                case 2045140818:
+                    if (str.equals(ACTION_MEDIA_BAD_REMOVAL)) {
+                        c = 7;
+                        break;
+                    }
+                    c = '\uffff';
+                    break;
+                default:
+                    c = '\uffff';
+                    break;
             }
-        L_0x0114:
-            android.net.Uri r1 = r6.mData
-            java.lang.String r4 = "Intent.getData()"
-            r1.checkFileUriExposed(r4)
-            goto L_0x011d
-        L_0x011c:
-        L_0x011d:
-            java.lang.String r1 = r6.mAction
-            if (r1 == 0) goto L_0x0162
-            android.net.Uri r1 = r6.mData
-            if (r1 == 0) goto L_0x0162
-            boolean r1 = android.os.StrictMode.vmContentUriWithoutPermissionEnabled()
-            if (r1 == 0) goto L_0x0162
-            if (r7 == 0) goto L_0x0162
-            java.lang.String r1 = r6.mAction
-            int r4 = r1.hashCode()
-            r5 = -577088908(0xffffffffdd9a5274, float:-1.39000975E18)
-            if (r4 == r5) goto L_0x0147
-            r2 = 1662413067(0x6316690b, float:2.7745808E21)
-            if (r4 == r2) goto L_0x013e
-            goto L_0x0151
-        L_0x013e:
-            java.lang.String r2 = "android.intent.action.PROVIDER_CHANGED"
-            boolean r1 = r1.equals(r2)
-            if (r1 == 0) goto L_0x0151
-            goto L_0x0152
-        L_0x0147:
-            java.lang.String r0 = "android.provider.action.QUICK_CONTACT"
-            boolean r0 = r1.equals(r0)
-            if (r0 == 0) goto L_0x0151
-            r0 = r2
-            goto L_0x0152
-        L_0x0151:
-            r0 = r3
-        L_0x0152:
-            switch(r0) {
-                case 0: goto L_0x0161;
-                case 1: goto L_0x0161;
-                default: goto L_0x0155;
+            switch (c) {
+                case 0:
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                case 6:
+                case 7:
+                case '\b':
+                case '\t':
+                case '\n':
+                case 11:
+                case '\f':
+                case '\r':
+                case 14:
+                case 15:
+                case 16:
+                    break;
+                default:
+                    this.mData.checkFileUriExposed("Intent.getData()");
+                    break;
             }
-        L_0x0155:
-            android.net.Uri r0 = r6.mData
-            java.lang.String r1 = "Intent.getData()"
-            int r2 = r6.getFlags()
-            r0.checkContentUriWithoutPermission(r1, r2)
-            goto L_0x0162
-        L_0x0161:
-        L_0x0162:
-            java.lang.String r0 = "android.intent.action.MEDIA_SCANNER_SCAN_FILE"
-            java.lang.String r1 = r6.mAction
-            boolean r0 = r0.equals(r1)
-            if (r0 == 0) goto L_0x01ce
-            android.net.Uri r0 = r6.mData
-            if (r0 == 0) goto L_0x01ce
-            java.lang.String r0 = "file"
-            android.net.Uri r1 = r6.mData
-            java.lang.String r1 = r1.getScheme()
-            boolean r0 = r0.equals(r1)
-            if (r0 == 0) goto L_0x01ce
-            if (r7 == 0) goto L_0x01ce
-            android.app.Application r0 = android.app.AppGlobals.getInitialApplication()
-            java.lang.Class<android.os.storage.StorageManager> r1 = android.os.storage.StorageManager.class
-            java.lang.Object r0 = r0.getSystemService(r1)
-            android.os.storage.StorageManager r0 = (android.os.storage.StorageManager) r0
-            java.io.File r1 = new java.io.File
-            android.net.Uri r2 = r6.mData
-            java.lang.String r2 = r2.getPath()
-            r1.<init>(r2)
-            int r2 = android.os.Process.myPid()
-            int r3 = android.os.Process.myUid()
-            java.io.File r2 = r0.translateAppToSystem(r1, r2, r3)
-            boolean r3 = java.util.Objects.equals(r1, r2)
-            if (r3 != 0) goto L_0x01ce
-            java.lang.String r3 = "Intent"
-            java.lang.StringBuilder r4 = new java.lang.StringBuilder
-            r4.<init>()
-            java.lang.String r5 = "Translated "
-            r4.append(r5)
-            r4.append(r1)
-            java.lang.String r5 = " to "
-            r4.append(r5)
-            r4.append(r2)
-            java.lang.String r4 = r4.toString()
-            android.util.Log.v(r3, r4)
-            android.net.Uri r3 = android.net.Uri.fromFile(r2)
-            r6.mData = r3
-        L_0x01ce:
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.content.Intent.prepareToLeaveProcess(boolean):void");
+        }
+        if (this.mAction != null && this.mData != null && StrictMode.vmContentUriWithoutPermissionEnabled() && leavingPackage) {
+            String str2 = this.mAction;
+            int hashCode = str2.hashCode();
+            if (hashCode != -577088908) {
+                if (hashCode == 1662413067) {
+                }
+                z = true;
+                switch (z) {
+                    case false:
+                    case true:
+                        break;
+                    default:
+                        this.mData.checkContentUriWithoutPermission("Intent.getData()", getFlags());
+                        break;
+                }
+            } else {
+                if (str2.equals(ContactsContract.QuickContact.ACTION_QUICK_CONTACT)) {
+                    z = true;
+                    switch (z) {
+                    }
+                }
+                z = true;
+                switch (z) {
+                }
+            }
+        }
+        if (ACTION_MEDIA_SCANNER_SCAN_FILE.equals(this.mAction) && this.mData != null && ContentResolver.SCHEME_FILE.equals(this.mData.getScheme()) && leavingPackage) {
+            StorageManager sm = (StorageManager) AppGlobals.getInitialApplication().getSystemService(StorageManager.class);
+            File before = new File(this.mData.getPath());
+            File after = sm.translateAppToSystem(before, Process.myPid(), Process.myUid());
+            if (!Objects.equals(before, after)) {
+                Log.m66v(TAG, "Translated " + before + " to " + after);
+                this.mData = Uri.fromFile(after);
+            }
+        }
     }
 
     public void prepareToEnterProcess() {
@@ -4502,10 +3863,7 @@ public class Intent implements Parcelable, Cloneable {
         if (TextUtils.isEmpty(scheme)) {
             return false;
         }
-        if (scheme.equals(IntentFilter.SCHEME_HTTP) || scheme.equals(IntentFilter.SCHEME_HTTPS)) {
-            return true;
-        }
-        return false;
+        return scheme.equals(IntentFilter.SCHEME_HTTP) || scheme.equals(IntentFilter.SCHEME_HTTPS);
     }
 
     public boolean isWebIntent() {
@@ -4525,7 +3883,7 @@ public class Intent implements Parcelable, Cloneable {
         if (ACTION_SEND.equals(action)) {
             Uri stream = (Uri) getParcelableExtra(EXTRA_STREAM);
             if (stream != null) {
-                putExtra(EXTRA_STREAM, (Parcelable) ContentProvider.maybeAddUserId(stream, contentUserHint));
+                putExtra(EXTRA_STREAM, ContentProvider.maybeAddUserId(stream, contentUserHint));
             }
         } else if (ACTION_SEND_MULTIPLE.equals(action)) {
             ArrayList<Uri> streams = getParcelableArrayListExtra(EXTRA_STREAM);
@@ -4537,93 +3895,93 @@ public class Intent implements Parcelable, Cloneable {
                 putParcelableArrayListExtra(EXTRA_STREAM, newStreams);
             }
         } else if ((MediaStore.ACTION_IMAGE_CAPTURE.equals(action) || MediaStore.ACTION_IMAGE_CAPTURE_SECURE.equals(action) || MediaStore.ACTION_VIDEO_CAPTURE.equals(action)) && (output = (Uri) getParcelableExtra(MediaStore.EXTRA_OUTPUT)) != null) {
-            putExtra(MediaStore.EXTRA_OUTPUT, (Parcelable) ContentProvider.maybeAddUserId(output, contentUserHint));
+            putExtra(MediaStore.EXTRA_OUTPUT, ContentProvider.maybeAddUserId(output, contentUserHint));
         }
     }
 
     public boolean migrateExtraStreamToClipData() {
-        if ((this.mExtras != null && this.mExtras.isParcelled()) || getClipData() != null) {
-            return false;
-        }
-        String action = getAction();
-        if (ACTION_CHOOSER.equals(action)) {
-            boolean migrated = false;
-            try {
-                Intent intent = (Intent) getParcelableExtra(EXTRA_INTENT);
-                if (intent != null) {
-                    migrated = false | intent.migrateExtraStreamToClipData();
+        if ((this.mExtras == null || !this.mExtras.isParcelled()) && getClipData() == null) {
+            String action = getAction();
+            if (ACTION_CHOOSER.equals(action)) {
+                boolean migrated = false;
+                try {
+                    Intent intent = (Intent) getParcelableExtra(EXTRA_INTENT);
+                    if (intent != null) {
+                        migrated = false | intent.migrateExtraStreamToClipData();
+                    }
+                } catch (ClassCastException e) {
                 }
-            } catch (ClassCastException e) {
-            }
-            try {
-                Parcelable[] intents = getParcelableArrayExtra(EXTRA_INITIAL_INTENTS);
-                if (intents != null) {
-                    for (Parcelable parcelable : intents) {
-                        Intent intent2 = (Intent) parcelable;
-                        if (intent2 != null) {
-                            migrated |= intent2.migrateExtraStreamToClipData();
+                try {
+                    Parcelable[] intents = getParcelableArrayExtra(EXTRA_INITIAL_INTENTS);
+                    if (intents != null) {
+                        for (Parcelable parcelable : intents) {
+                            Intent intent2 = (Intent) parcelable;
+                            if (intent2 != null) {
+                                migrated |= intent2.migrateExtraStreamToClipData();
+                            }
                         }
                     }
+                } catch (ClassCastException e2) {
                 }
-            } catch (ClassCastException e2) {
+                return migrated;
             }
-            return migrated;
-        }
-        if (ACTION_SEND.equals(action)) {
-            try {
-                Uri stream = (Uri) getParcelableExtra(EXTRA_STREAM);
-                CharSequence text = getCharSequenceExtra(EXTRA_TEXT);
-                String htmlText = getStringExtra("android.intent.extra.HTML_TEXT");
-                if (!(stream == null && text == null && htmlText == null)) {
-                    setClipData(new ClipData((CharSequence) null, new String[]{getType()}, new ClipData.Item(text, htmlText, (Intent) null, stream)));
-                    addFlags(1);
-                    return true;
-                }
-            } catch (ClassCastException e3) {
-            }
-        } else if (ACTION_SEND_MULTIPLE.equals(action)) {
-            try {
-                ArrayList<Uri> streams = getParcelableArrayListExtra(EXTRA_STREAM);
-                ArrayList<CharSequence> texts = getCharSequenceArrayListExtra(EXTRA_TEXT);
-                ArrayList<String> htmlTexts = getStringArrayListExtra("android.intent.extra.HTML_TEXT");
-                int num = -1;
-                if (streams != null) {
-                    num = streams.size();
-                }
-                if (texts != null) {
-                    if (num >= 0 && num != texts.size()) {
-                        return false;
+            if (ACTION_SEND.equals(action)) {
+                try {
+                    Uri stream = (Uri) getParcelableExtra(EXTRA_STREAM);
+                    CharSequence text = getCharSequenceExtra(EXTRA_TEXT);
+                    String htmlText = getStringExtra("android.intent.extra.HTML_TEXT");
+                    if (stream != null || text != null || htmlText != null) {
+                        setClipData(new ClipData(null, new String[]{getType()}, new ClipData.Item(text, htmlText, null, stream)));
+                        addFlags(1);
+                        return true;
                     }
-                    num = texts.size();
+                } catch (ClassCastException e3) {
                 }
-                if (htmlTexts != null) {
-                    if (num >= 0 && num != htmlTexts.size()) {
-                        return false;
+            } else if (ACTION_SEND_MULTIPLE.equals(action)) {
+                try {
+                    ArrayList<Uri> streams = getParcelableArrayListExtra(EXTRA_STREAM);
+                    ArrayList<CharSequence> texts = getCharSequenceArrayListExtra(EXTRA_TEXT);
+                    ArrayList<String> htmlTexts = getStringArrayListExtra("android.intent.extra.HTML_TEXT");
+                    int num = -1;
+                    if (streams != null) {
+                        num = streams.size();
                     }
-                    num = htmlTexts.size();
-                }
-                if (num > 0) {
-                    ClipData clipData = new ClipData((CharSequence) null, new String[]{getType()}, makeClipItem(streams, texts, htmlTexts, 0));
-                    for (int i = 1; i < num; i++) {
-                        clipData.addItem(makeClipItem(streams, texts, htmlTexts, i));
+                    if (texts != null) {
+                        if (num >= 0 && num != texts.size()) {
+                            return false;
+                        }
+                        num = texts.size();
                     }
-                    setClipData(clipData);
-                    addFlags(1);
-                    return true;
+                    if (htmlTexts != null) {
+                        if (num >= 0 && num != htmlTexts.size()) {
+                            return false;
+                        }
+                        num = htmlTexts.size();
+                    }
+                    if (num > 0) {
+                        ClipData clipData = new ClipData(null, new String[]{getType()}, makeClipItem(streams, texts, htmlTexts, 0));
+                        for (int i = 1; i < num; i++) {
+                            clipData.addItem(makeClipItem(streams, texts, htmlTexts, i));
+                        }
+                        setClipData(clipData);
+                        addFlags(1);
+                        return true;
+                    }
+                } catch (ClassCastException e4) {
                 }
-            } catch (ClassCastException e4) {
-            }
-        } else if (MediaStore.ACTION_IMAGE_CAPTURE.equals(action) || MediaStore.ACTION_IMAGE_CAPTURE_SECURE.equals(action) || MediaStore.ACTION_VIDEO_CAPTURE.equals(action)) {
-            try {
-                Uri output = (Uri) getParcelableExtra(MediaStore.EXTRA_OUTPUT);
-                if (output != null) {
-                    setClipData(ClipData.newRawUri("", output));
-                    addFlags(3);
-                    return true;
+            } else if (MediaStore.ACTION_IMAGE_CAPTURE.equals(action) || MediaStore.ACTION_IMAGE_CAPTURE_SECURE.equals(action) || MediaStore.ACTION_VIDEO_CAPTURE.equals(action)) {
+                try {
+                    Uri output = (Uri) getParcelableExtra(MediaStore.EXTRA_OUTPUT);
+                    if (output != null) {
+                        setClipData(ClipData.newRawUri("", output));
+                        addFlags(3);
+                        return true;
+                    }
+                } catch (ClassCastException e5) {
+                    return false;
                 }
-            } catch (ClassCastException e5) {
-                return false;
             }
+            return false;
         }
         return false;
     }
@@ -4646,7 +4004,10 @@ public class Intent implements Parcelable, Cloneable {
     }
 
     private static ClipData.Item makeClipItem(ArrayList<Uri> streams, ArrayList<CharSequence> texts, ArrayList<String> htmlTexts, int which) {
-        return new ClipData.Item(texts != null ? texts.get(which) : null, htmlTexts != null ? htmlTexts.get(which) : null, (Intent) null, streams != null ? streams.get(which) : null);
+        Uri uri = streams != null ? streams.get(which) : null;
+        CharSequence text = texts != null ? texts.get(which) : null;
+        String htmlText = htmlTexts != null ? htmlTexts.get(which) : null;
+        return new ClipData.Item(text, htmlText, null, uri);
     }
 
     public boolean isDocument() {

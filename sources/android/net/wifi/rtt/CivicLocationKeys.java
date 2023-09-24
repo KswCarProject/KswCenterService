@@ -3,6 +3,7 @@ package android.net.wifi.rtt;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes3.dex */
 public class CivicLocationKeys {
     public static final int ADDITIONAL_CODE = 32;
     public static final int APT = 26;
@@ -38,6 +39,7 @@ public class CivicLocationKeys {
     public static final int TYPE_OF_PLACE = 29;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface CivicLocationKeysType {
     }
 

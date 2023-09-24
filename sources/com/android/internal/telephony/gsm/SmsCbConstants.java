@@ -1,5 +1,6 @@
 package com.android.internal.telephony.gsm;
 
+/* loaded from: classes4.dex */
 public class SmsCbConstants {
     public static final int MESSAGE_ID_CMAS_ALERT_CHILD_ABDUCTION_EMERGENCY = 4379;
     public static final int MESSAGE_ID_CMAS_ALERT_CHILD_ABDUCTION_EMERGENCY_LANGUAGE = 4392;

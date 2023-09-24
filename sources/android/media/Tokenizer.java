@@ -3,23 +3,19 @@ package android.media;
 import android.net.wifi.WifiEnterpriseConfig;
 import android.util.Log;
 
-/* compiled from: WebVttRenderer */
+/* compiled from: WebVttRenderer.java */
+/* loaded from: classes3.dex */
 class Tokenizer {
     private static final String TAG = "Tokenizer";
-    /* access modifiers changed from: private */
-    public TokenizerPhase mDataTokenizer = new DataTokenizer();
-    /* access modifiers changed from: private */
-    public int mHandledLen;
-    /* access modifiers changed from: private */
-    public String mLine;
-    /* access modifiers changed from: private */
-    public OnTokenListener mListener;
-    /* access modifiers changed from: private */
-    public TokenizerPhase mPhase;
-    /* access modifiers changed from: private */
-    public TokenizerPhase mTagTokenizer = new TagTokenizer();
+    private int mHandledLen;
+    private String mLine;
+    private OnTokenListener mListener;
+    private TokenizerPhase mPhase;
+    private TokenizerPhase mDataTokenizer = new DataTokenizer();
+    private TokenizerPhase mTagTokenizer = new TagTokenizer();
 
-    /* compiled from: WebVttRenderer */
+    /* compiled from: WebVttRenderer.java */
+    /* loaded from: classes3.dex */
     interface OnTokenListener {
         void onData(String str);
 
@@ -32,7 +28,8 @@ class Tokenizer {
         void onTimeStamp(long j);
     }
 
-    /* compiled from: WebVttRenderer */
+    /* compiled from: WebVttRenderer.java */
+    /* loaded from: classes3.dex */
     interface TokenizerPhase {
         TokenizerPhase start();
 
@@ -51,29 +48,32 @@ class Tokenizer {
         return i;
     }
 
-    /* compiled from: WebVttRenderer */
+    /* compiled from: WebVttRenderer.java */
+    /* loaded from: classes3.dex */
     class DataTokenizer implements TokenizerPhase {
         private StringBuilder mData;
 
         DataTokenizer() {
         }
 
+        @Override // android.media.Tokenizer.TokenizerPhase
         public TokenizerPhase start() {
             this.mData = new StringBuilder();
             return this;
         }
 
         private boolean replaceEscape(String escape, String replacement, int pos) {
-            if (!Tokenizer.this.mLine.startsWith(escape, pos)) {
-                return false;
+            if (Tokenizer.this.mLine.startsWith(escape, pos)) {
+                this.mData.append(Tokenizer.this.mLine.substring(Tokenizer.this.mHandledLen, pos));
+                this.mData.append(replacement);
+                Tokenizer.this.mHandledLen = escape.length() + pos;
+                int i = Tokenizer.this.mHandledLen - 1;
+                return true;
             }
-            this.mData.append(Tokenizer.this.mLine.substring(Tokenizer.this.mHandledLen, pos));
-            this.mData.append(replacement);
-            int unused = Tokenizer.this.mHandledLen = escape.length() + pos;
-            int access$100 = Tokenizer.this.mHandledLen - 1;
-            return true;
+            return false;
         }
 
+        @Override // android.media.Tokenizer.TokenizerPhase
         public void tokenize() {
             int end = Tokenizer.this.mLine.length();
             int pos = Tokenizer.this.mHandledLen;
@@ -81,24 +81,25 @@ class Tokenizer {
                 if (pos >= Tokenizer.this.mLine.length()) {
                     break;
                 }
-                if (Tokenizer.this.mLine.charAt(pos) == '&') {
-                    if (!replaceEscape("&amp;", "&", pos) && !replaceEscape("&lt;", "<", pos) && !replaceEscape("&gt;", ">", pos) && !replaceEscape("&lrm;", "‎", pos) && !replaceEscape("&rlm;", "‏", pos) && !replaceEscape("&nbsp;", " ", pos)) {
+                if (Tokenizer.this.mLine.charAt(pos) != '&') {
+                    if (Tokenizer.this.mLine.charAt(pos) == '<') {
+                        end = pos;
+                        Tokenizer.this.mPhase = Tokenizer.this.mTagTokenizer.start();
+                        break;
                     }
-                } else if (Tokenizer.this.mLine.charAt(pos) == '<') {
-                    end = pos;
-                    TokenizerPhase unused = Tokenizer.this.mPhase = Tokenizer.this.mTagTokenizer.start();
-                    break;
+                } else if (!replaceEscape("&amp;", "&", pos) && !replaceEscape("&lt;", "<", pos) && !replaceEscape("&gt;", ">", pos) && !replaceEscape("&lrm;", "\u200e", pos) && !replaceEscape("&rlm;", "\u200f", pos) && !replaceEscape("&nbsp;", "\u00a0", pos)) {
                 }
                 pos++;
             }
             this.mData.append(Tokenizer.this.mLine.substring(Tokenizer.this.mHandledLen, end));
             Tokenizer.this.mListener.onData(this.mData.toString());
             this.mData.delete(0, this.mData.length());
-            int unused2 = Tokenizer.this.mHandledLen = end;
+            Tokenizer.this.mHandledLen = end;
         }
     }
 
-    /* compiled from: WebVttRenderer */
+    /* compiled from: WebVttRenderer.java */
+    /* loaded from: classes3.dex */
     class TagTokenizer implements TokenizerPhase {
         private String mAnnotation;
         private boolean mAtAnnotation;
@@ -107,6 +108,7 @@ class Tokenizer {
         TagTokenizer() {
         }
 
+        @Override // android.media.Tokenizer.TokenizerPhase
         public TokenizerPhase start() {
             this.mAnnotation = "";
             this.mName = "";
@@ -114,17 +116,13 @@ class Tokenizer {
             return this;
         }
 
+        @Override // android.media.Tokenizer.TokenizerPhase
         public void tokenize() {
-            String[] parts;
             if (!this.mAtAnnotation) {
                 Tokenizer.access$108(Tokenizer.this);
             }
             if (Tokenizer.this.mHandledLen < Tokenizer.this.mLine.length()) {
-                if (this.mAtAnnotation || Tokenizer.this.mLine.charAt(Tokenizer.this.mHandledLen) == '/') {
-                    parts = Tokenizer.this.mLine.substring(Tokenizer.this.mHandledLen).split(">");
-                } else {
-                    parts = Tokenizer.this.mLine.substring(Tokenizer.this.mHandledLen).split("[\t\f >]");
-                }
+                String[] parts = (this.mAtAnnotation || Tokenizer.this.mLine.charAt(Tokenizer.this.mHandledLen) == '/') ? Tokenizer.this.mLine.substring(Tokenizer.this.mHandledLen).split(">") : Tokenizer.this.mLine.substring(Tokenizer.this.mHandledLen).split("[\t\f >]");
                 String part = Tokenizer.this.mLine.substring(Tokenizer.this.mHandledLen, Tokenizer.this.mHandledLen + parts[0].length());
                 Tokenizer.access$112(Tokenizer.this, parts[0].length());
                 if (this.mAtAnnotation) {
@@ -136,7 +134,7 @@ class Tokenizer {
             this.mAtAnnotation = true;
             if (Tokenizer.this.mHandledLen < Tokenizer.this.mLine.length() && Tokenizer.this.mLine.charAt(Tokenizer.this.mHandledLen) == '>') {
                 yield_tag();
-                TokenizerPhase unused = Tokenizer.this.mPhase = Tokenizer.this.mDataTokenizer.start();
+                Tokenizer.this.mPhase = Tokenizer.this.mDataTokenizer.start();
                 Tokenizer.access$108(Tokenizer.this);
             }
         }
@@ -144,7 +142,14 @@ class Tokenizer {
         private void yield_tag() {
             if (this.mName.startsWith("/")) {
                 Tokenizer.this.mListener.onEnd(this.mName.substring(1));
-            } else if (this.mName.length() <= 0 || !Character.isDigit(this.mName.charAt(0))) {
+            } else if (this.mName.length() > 0 && Character.isDigit(this.mName.charAt(0))) {
+                try {
+                    long timestampMs = WebVttParser.parseTimestampMs(this.mName);
+                    Tokenizer.this.mListener.onTimeStamp(timestampMs);
+                } catch (NumberFormatException e) {
+                    Log.m72d(Tokenizer.TAG, "invalid timestamp tag: <" + this.mName + ">");
+                }
+            } else {
                 this.mAnnotation = this.mAnnotation.replaceAll("\\s+", WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER);
                 if (this.mAnnotation.startsWith(WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER)) {
                     this.mAnnotation = this.mAnnotation.substring(1);
@@ -159,12 +164,6 @@ class Tokenizer {
                     this.mName = this.mName.substring(0, dotAt);
                 }
                 Tokenizer.this.mListener.onStart(this.mName, classes, this.mAnnotation);
-            } else {
-                try {
-                    Tokenizer.this.mListener.onTimeStamp(WebVttParser.parseTimestampMs(this.mName));
-                } catch (NumberFormatException e) {
-                    Log.d(Tokenizer.TAG, "invalid timestamp tag: <" + this.mName + ">");
-                }
             }
         }
     }
@@ -174,13 +173,11 @@ class Tokenizer {
         this.mListener = listener;
     }
 
-    /* access modifiers changed from: package-private */
-    public void reset() {
+    void reset() {
         this.mPhase = this.mDataTokenizer.start();
     }
 
-    /* access modifiers changed from: package-private */
-    public void tokenize(String s) {
+    void tokenize(String s) {
         this.mHandledLen = 0;
         this.mLine = s;
         while (this.mHandledLen < this.mLine.length()) {

@@ -9,11 +9,11 @@ import android.hardware.location.IContextHubCallback;
 import android.hardware.location.IContextHubClientCallback;
 import android.hardware.location.IContextHubService;
 import android.hardware.location.IContextHubTransactionCallback;
-import android.os.Handler;
-import android.os.HandlerExecutor;
-import android.os.Looper;
-import android.os.RemoteException;
-import android.os.ServiceManager;
+import android.p007os.Handler;
+import android.p007os.HandlerExecutor;
+import android.p007os.Looper;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
 import android.util.Log;
 import com.android.internal.util.Preconditions;
 import java.lang.annotation.Retention;
@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.concurrent.Executor;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class ContextHubManager {
     public static final int EVENT_HUB_RESET = 6;
     public static final int EVENT_NANOAPP_ABORTED = 4;
@@ -36,51 +37,27 @@ public final class ContextHubManager {
     public static final String EXTRA_NANOAPP_ABORT_CODE = "android.hardware.location.extra.NANOAPP_ABORT_CODE";
     public static final String EXTRA_NANOAPP_ID = "android.hardware.location.extra.NANOAPP_ID";
     private static final String TAG = "ContextHubManager";
-    /* access modifiers changed from: private */
-    public Callback mCallback;
-    /* access modifiers changed from: private */
-    public Handler mCallbackHandler;
-    private final IContextHubCallback.Stub mClientCallback = new IContextHubCallback.Stub() {
-        public void onMessageReceipt(int hubId, int nanoAppId, ContextHubMessage message) {
-            synchronized (ContextHubManager.this) {
-                if (ContextHubManager.this.mCallback != null) {
-                    ContextHubManager.this.mCallbackHandler.post(new Runnable(hubId, nanoAppId, message) {
-                        private final /* synthetic */ int f$1;
-                        private final /* synthetic */ int f$2;
-                        private final /* synthetic */ ContextHubMessage f$3;
-
-                        {
-                            this.f$1 = r2;
-                            this.f$2 = r3;
-                            this.f$3 = r4;
-                        }
-
-                        public final void run() {
-                            ContextHubManager.this.invokeOnMessageReceiptCallback(this.f$1, this.f$2, this.f$3);
-                        }
-                    });
-                } else if (ContextHubManager.this.mLocalCallback != null) {
-                    ContextHubManager.this.mLocalCallback.onMessageReceipt(hubId, nanoAppId, message);
-                }
-            }
-        }
-    };
-    /* access modifiers changed from: private */
+    private Callback mCallback;
+    private Handler mCallbackHandler;
     @Deprecated
-    public ICallback mLocalCallback;
+    private ICallback mLocalCallback;
     private final Looper mMainLooper;
-    private final IContextHubService mService;
+    private final IContextHubCallback.Stub mClientCallback = new BinderC09074();
+    private final IContextHubService mService = IContextHubService.Stub.asInterface(ServiceManager.getServiceOrThrow(Context.CONTEXTHUB_SERVICE));
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface Event {
     }
 
     @Deprecated
+    /* loaded from: classes.dex */
     public interface ICallback {
         void onMessageReceipt(int i, int i2, ContextHubMessage contextHubMessage);
     }
 
     @Deprecated
+    /* loaded from: classes.dex */
     public static abstract class Callback {
         public abstract void onMessageReceipt(int i, int i2, ContextHubMessage contextHubMessage);
 
@@ -160,12 +137,14 @@ public final class ContextHubManager {
     }
 
     private IContextHubTransactionCallback createTransactionCallback(final ContextHubTransaction<Void> transaction) {
-        return new IContextHubTransactionCallback.Stub() {
-            public void onQueryResponse(int result, List<NanoAppState> list) {
-                Log.e(ContextHubManager.TAG, "Received a query callback on a non-query request");
+        return new IContextHubTransactionCallback.Stub() { // from class: android.hardware.location.ContextHubManager.1
+            @Override // android.hardware.location.IContextHubTransactionCallback
+            public void onQueryResponse(int result, List<NanoAppState> nanoappList) {
+                Log.m70e(ContextHubManager.TAG, "Received a query callback on a non-query request");
                 transaction.setResponse(new ContextHubTransaction.Response(7, null));
             }
 
+            @Override // android.hardware.location.IContextHubTransactionCallback
             public void onTransactionComplete(int result) {
                 transaction.setResponse(new ContextHubTransaction.Response(result, null));
             }
@@ -173,13 +152,15 @@ public final class ContextHubManager {
     }
 
     private IContextHubTransactionCallback createQueryCallback(final ContextHubTransaction<List<NanoAppState>> transaction) {
-        return new IContextHubTransactionCallback.Stub() {
+        return new IContextHubTransactionCallback.Stub() { // from class: android.hardware.location.ContextHubManager.2
+            @Override // android.hardware.location.IContextHubTransactionCallback
             public void onQueryResponse(int result, List<NanoAppState> nanoappList) {
                 transaction.setResponse(new ContextHubTransaction.Response(result, nanoappList));
             }
 
+            @Override // android.hardware.location.IContextHubTransactionCallback
             public void onTransactionComplete(int result) {
-                Log.e(ContextHubManager.TAG, "Received a non-query callback on a query request");
+                Log.m70e(ContextHubManager.TAG, "Received a non-query callback on a query request");
                 transaction.setResponse(new ContextHubTransaction.Response(7, null));
             }
         };
@@ -189,8 +170,9 @@ public final class ContextHubManager {
         Preconditions.checkNotNull(hubInfo, "ContextHubInfo cannot be null");
         Preconditions.checkNotNull(appBinary, "NanoAppBinary cannot be null");
         ContextHubTransaction<Void> transaction = new ContextHubTransaction<>(0);
+        IContextHubTransactionCallback callback = createTransactionCallback(transaction);
         try {
-            this.mService.loadNanoAppOnHub(hubInfo.getId(), createTransactionCallback(transaction), appBinary);
+            this.mService.loadNanoAppOnHub(hubInfo.getId(), callback, appBinary);
             return transaction;
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
@@ -200,8 +182,9 @@ public final class ContextHubManager {
     public ContextHubTransaction<Void> unloadNanoApp(ContextHubInfo hubInfo, long nanoAppId) {
         Preconditions.checkNotNull(hubInfo, "ContextHubInfo cannot be null");
         ContextHubTransaction<Void> transaction = new ContextHubTransaction<>(1);
+        IContextHubTransactionCallback callback = createTransactionCallback(transaction);
         try {
-            this.mService.unloadNanoAppFromHub(hubInfo.getId(), createTransactionCallback(transaction), nanoAppId);
+            this.mService.unloadNanoAppFromHub(hubInfo.getId(), callback, nanoAppId);
             return transaction;
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
@@ -211,8 +194,9 @@ public final class ContextHubManager {
     public ContextHubTransaction<Void> enableNanoApp(ContextHubInfo hubInfo, long nanoAppId) {
         Preconditions.checkNotNull(hubInfo, "ContextHubInfo cannot be null");
         ContextHubTransaction<Void> transaction = new ContextHubTransaction<>(2);
+        IContextHubTransactionCallback callback = createTransactionCallback(transaction);
         try {
-            this.mService.enableNanoApp(hubInfo.getId(), createTransactionCallback(transaction), nanoAppId);
+            this.mService.enableNanoApp(hubInfo.getId(), callback, nanoAppId);
             return transaction;
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
@@ -222,8 +206,9 @@ public final class ContextHubManager {
     public ContextHubTransaction<Void> disableNanoApp(ContextHubInfo hubInfo, long nanoAppId) {
         Preconditions.checkNotNull(hubInfo, "ContextHubInfo cannot be null");
         ContextHubTransaction<Void> transaction = new ContextHubTransaction<>(3);
+        IContextHubTransactionCallback callback = createTransactionCallback(transaction);
         try {
-            this.mService.disableNanoApp(hubInfo.getId(), createTransactionCallback(transaction), nanoAppId);
+            this.mService.disableNanoApp(hubInfo.getId(), callback, nanoAppId);
             return transaction;
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
@@ -233,8 +218,9 @@ public final class ContextHubManager {
     public ContextHubTransaction<List<NanoAppState>> queryNanoApps(ContextHubInfo hubInfo) {
         Preconditions.checkNotNull(hubInfo, "ContextHubInfo cannot be null");
         ContextHubTransaction<List<NanoAppState>> transaction = new ContextHubTransaction<>(4);
+        IContextHubTransactionCallback callback = createQueryCallback(transaction);
         try {
-            this.mService.queryNanoApps(hubInfo.getId(), createQueryCallback(transaction));
+            this.mService.queryNanoApps(hubInfo.getId(), callback);
             return transaction;
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
@@ -244,13 +230,13 @@ public final class ContextHubManager {
     @SuppressLint({"Doclava125"})
     @Deprecated
     public int registerCallback(Callback callback) {
-        return registerCallback(callback, (Handler) null);
+        return registerCallback(callback, null);
     }
 
     @Deprecated
     public int registerCallback(ICallback callback) {
         if (this.mLocalCallback != null) {
-            Log.w(TAG, "Max number of local callbacks reached!");
+            Log.m64w(TAG, "Max number of local callbacks reached!");
             return -1;
         }
         this.mLocalCallback = callback;
@@ -262,7 +248,7 @@ public final class ContextHubManager {
     public int registerCallback(Callback callback, Handler handler) {
         synchronized (this) {
             if (this.mCallback != null) {
-                Log.w(TAG, "Max number of callbacks reached!");
+                Log.m64w(TAG, "Max number of callbacks reached!");
                 return -1;
             }
             this.mCallback = callback;
@@ -271,120 +257,113 @@ public final class ContextHubManager {
         }
     }
 
-    private IContextHubClientCallback createClientCallback(final ContextHubClient client, final ContextHubClientCallback callback, final Executor executor) {
-        return new IContextHubClientCallback.Stub() {
-            public void onMessageFromNanoApp(NanoAppMessage message) {
-                executor.execute(new Runnable(client, message) {
-                    private final /* synthetic */ ContextHubClient f$1;
-                    private final /* synthetic */ NanoAppMessage f$2;
+    /* renamed from: android.hardware.location.ContextHubManager$3 */
+    /* loaded from: classes.dex */
+    class BinderC09063 extends IContextHubClientCallback.Stub {
+        final /* synthetic */ ContextHubClientCallback val$callback;
+        final /* synthetic */ ContextHubClient val$client;
+        final /* synthetic */ Executor val$executor;
 
-                    {
-                        this.f$1 = r2;
-                        this.f$2 = r3;
-                    }
+        BinderC09063(Executor executor, ContextHubClientCallback contextHubClientCallback, ContextHubClient contextHubClient) {
+            this.val$executor = executor;
+            this.val$callback = contextHubClientCallback;
+            this.val$client = contextHubClient;
+        }
 
-                    public final void run() {
-                        ContextHubClientCallback.this.onMessageFromNanoApp(this.f$1, this.f$2);
-                    }
-                });
-            }
+        @Override // android.hardware.location.IContextHubClientCallback
+        public void onMessageFromNanoApp(final NanoAppMessage message) {
+            Executor executor = this.val$executor;
+            final ContextHubClientCallback contextHubClientCallback = this.val$callback;
+            final ContextHubClient contextHubClient = this.val$client;
+            executor.execute(new Runnable() { // from class: android.hardware.location.-$$Lambda$ContextHubManager$3$U9x_HK_GdADIEQ3mS5mDWMNWMu8
+                @Override // java.lang.Runnable
+                public final void run() {
+                    ContextHubClientCallback.this.onMessageFromNanoApp(contextHubClient, message);
+                }
+            });
+        }
 
-            public void onHubReset() {
-                executor.execute(new Runnable(client) {
-                    private final /* synthetic */ ContextHubClient f$1;
+        @Override // android.hardware.location.IContextHubClientCallback
+        public void onHubReset() {
+            Executor executor = this.val$executor;
+            final ContextHubClientCallback contextHubClientCallback = this.val$callback;
+            final ContextHubClient contextHubClient = this.val$client;
+            executor.execute(new Runnable() { // from class: android.hardware.location.-$$Lambda$ContextHubManager$3$kLhhBRChCeue1LKohd5lK_lfKTU
+                @Override // java.lang.Runnable
+                public final void run() {
+                    ContextHubClientCallback.this.onHubReset(contextHubClient);
+                }
+            });
+        }
 
-                    {
-                        this.f$1 = r2;
-                    }
+        @Override // android.hardware.location.IContextHubClientCallback
+        public void onNanoAppAborted(final long nanoAppId, final int abortCode) {
+            Executor executor = this.val$executor;
+            final ContextHubClientCallback contextHubClientCallback = this.val$callback;
+            final ContextHubClient contextHubClient = this.val$client;
+            executor.execute(new Runnable() { // from class: android.hardware.location.-$$Lambda$ContextHubManager$3$hASoxw9hzmd9l2NpC91O5tXLzxU
+                @Override // java.lang.Runnable
+                public final void run() {
+                    ContextHubClientCallback.this.onNanoAppAborted(contextHubClient, nanoAppId, abortCode);
+                }
+            });
+        }
 
-                    public final void run() {
-                        ContextHubClientCallback.this.onHubReset(this.f$1);
-                    }
-                });
-            }
+        @Override // android.hardware.location.IContextHubClientCallback
+        public void onNanoAppLoaded(final long nanoAppId) {
+            Executor executor = this.val$executor;
+            final ContextHubClientCallback contextHubClientCallback = this.val$callback;
+            final ContextHubClient contextHubClient = this.val$client;
+            executor.execute(new Runnable() { // from class: android.hardware.location.-$$Lambda$ContextHubManager$3$5yx25kUuvL9qy3uBcIzI3sQQoL8
+                @Override // java.lang.Runnable
+                public final void run() {
+                    ContextHubClientCallback.this.onNanoAppLoaded(contextHubClient, nanoAppId);
+                }
+            });
+        }
 
-            public void onNanoAppAborted(long nanoAppId, int abortCode) {
-                executor.execute(new Runnable(client, nanoAppId, abortCode) {
-                    private final /* synthetic */ ContextHubClient f$1;
-                    private final /* synthetic */ long f$2;
-                    private final /* synthetic */ int f$3;
+        @Override // android.hardware.location.IContextHubClientCallback
+        public void onNanoAppUnloaded(final long nanoAppId) {
+            Executor executor = this.val$executor;
+            final ContextHubClientCallback contextHubClientCallback = this.val$callback;
+            final ContextHubClient contextHubClient = this.val$client;
+            executor.execute(new Runnable() { // from class: android.hardware.location.-$$Lambda$ContextHubManager$3$KgVQePwT_QpjU9EQTp2L3LsHE5Y
+                @Override // java.lang.Runnable
+                public final void run() {
+                    ContextHubClientCallback.this.onNanoAppUnloaded(contextHubClient, nanoAppId);
+                }
+            });
+        }
 
-                    {
-                        this.f$1 = r2;
-                        this.f$2 = r3;
-                        this.f$3 = r5;
-                    }
+        @Override // android.hardware.location.IContextHubClientCallback
+        public void onNanoAppEnabled(final long nanoAppId) {
+            Executor executor = this.val$executor;
+            final ContextHubClientCallback contextHubClientCallback = this.val$callback;
+            final ContextHubClient contextHubClient = this.val$client;
+            executor.execute(new Runnable() { // from class: android.hardware.location.-$$Lambda$ContextHubManager$3$8oeFzBAC_VuH1d32Kod8BVn0Os8
+                @Override // java.lang.Runnable
+                public final void run() {
+                    ContextHubClientCallback.this.onNanoAppEnabled(contextHubClient, nanoAppId);
+                }
+            });
+        }
 
-                    public final void run() {
-                        ContextHubClientCallback.this.onNanoAppAborted(this.f$1, this.f$2, this.f$3);
-                    }
-                });
-            }
+        @Override // android.hardware.location.IContextHubClientCallback
+        public void onNanoAppDisabled(final long nanoAppId) {
+            Executor executor = this.val$executor;
+            final ContextHubClientCallback contextHubClientCallback = this.val$callback;
+            final ContextHubClient contextHubClient = this.val$client;
+            executor.execute(new Runnable() { // from class: android.hardware.location.-$$Lambda$ContextHubManager$3$On2Q5Obzm4-zLY0UP3Xs4E3P-V0
+                @Override // java.lang.Runnable
+                public final void run() {
+                    ContextHubClientCallback.this.onNanoAppDisabled(contextHubClient, nanoAppId);
+                }
+            });
+        }
+    }
 
-            public void onNanoAppLoaded(long nanoAppId) {
-                executor.execute(new Runnable(client, nanoAppId) {
-                    private final /* synthetic */ ContextHubClient f$1;
-                    private final /* synthetic */ long f$2;
-
-                    {
-                        this.f$1 = r2;
-                        this.f$2 = r3;
-                    }
-
-                    public final void run() {
-                        ContextHubClientCallback.this.onNanoAppLoaded(this.f$1, this.f$2);
-                    }
-                });
-            }
-
-            public void onNanoAppUnloaded(long nanoAppId) {
-                executor.execute(new Runnable(client, nanoAppId) {
-                    private final /* synthetic */ ContextHubClient f$1;
-                    private final /* synthetic */ long f$2;
-
-                    {
-                        this.f$1 = r2;
-                        this.f$2 = r3;
-                    }
-
-                    public final void run() {
-                        ContextHubClientCallback.this.onNanoAppUnloaded(this.f$1, this.f$2);
-                    }
-                });
-            }
-
-            public void onNanoAppEnabled(long nanoAppId) {
-                executor.execute(new Runnable(client, nanoAppId) {
-                    private final /* synthetic */ ContextHubClient f$1;
-                    private final /* synthetic */ long f$2;
-
-                    {
-                        this.f$1 = r2;
-                        this.f$2 = r3;
-                    }
-
-                    public final void run() {
-                        ContextHubClientCallback.this.onNanoAppEnabled(this.f$1, this.f$2);
-                    }
-                });
-            }
-
-            public void onNanoAppDisabled(long nanoAppId) {
-                executor.execute(new Runnable(client, nanoAppId) {
-                    private final /* synthetic */ ContextHubClient f$1;
-                    private final /* synthetic */ long f$2;
-
-                    {
-                        this.f$1 = r2;
-                        this.f$2 = r3;
-                    }
-
-                    public final void run() {
-                        ContextHubClientCallback.this.onNanoAppDisabled(this.f$1, this.f$2);
-                    }
-                });
-            }
-        };
+    private IContextHubClientCallback createClientCallback(ContextHubClient client, ContextHubClientCallback callback, Executor executor) {
+        return new BinderC09063(executor, callback, client);
     }
 
     public ContextHubClient createClient(ContextHubInfo hubInfo, ContextHubClientCallback callback, Executor executor) {
@@ -392,8 +371,10 @@ public final class ContextHubManager {
         Preconditions.checkNotNull(hubInfo, "ContextHubInfo cannot be null");
         Preconditions.checkNotNull(executor, "Executor cannot be null");
         ContextHubClient client = new ContextHubClient(hubInfo, false);
+        IContextHubClientCallback clientInterface = createClientCallback(client, callback, executor);
         try {
-            client.setClientProxy(this.mService.createClient(hubInfo.getId(), createClientCallback(client, callback, executor)));
+            IContextHubClient clientProxy = this.mService.createClient(hubInfo.getId(), clientInterface);
+            client.setClientProxy(clientProxy);
             return client;
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
@@ -401,7 +382,7 @@ public final class ContextHubManager {
     }
 
     public ContextHubClient createClient(ContextHubInfo hubInfo, ContextHubClientCallback callback) {
-        return createClient(hubInfo, callback, (Executor) new HandlerExecutor(Handler.getMain()));
+        return createClient(hubInfo, callback, new HandlerExecutor(Handler.getMain()));
     }
 
     public ContextHubClient createClient(ContextHubInfo hubInfo, PendingIntent pendingIntent, long nanoAppId) {
@@ -409,7 +390,8 @@ public final class ContextHubManager {
         Preconditions.checkNotNull(hubInfo);
         ContextHubClient client = new ContextHubClient(hubInfo, true);
         try {
-            client.setClientProxy(this.mService.createPendingIntentClient(hubInfo.getId(), pendingIntent, nanoAppId));
+            IContextHubClient clientProxy = this.mService.createPendingIntentClient(hubInfo.getId(), pendingIntent, nanoAppId);
+            client.setClientProxy(clientProxy);
             return client;
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
@@ -421,7 +403,7 @@ public final class ContextHubManager {
     public int unregisterCallback(Callback callback) {
         synchronized (this) {
             if (callback != this.mCallback) {
-                Log.w(TAG, "Cannot recognize callback!");
+                Log.m64w(TAG, "Cannot recognize callback!");
                 return -1;
             }
             this.mCallback = null;
@@ -433,23 +415,45 @@ public final class ContextHubManager {
     @Deprecated
     public synchronized int unregisterCallback(ICallback callback) {
         if (callback != this.mLocalCallback) {
-            Log.w(TAG, "Cannot recognize local callback!");
+            Log.m64w(TAG, "Cannot recognize local callback!");
             return -1;
         }
         this.mLocalCallback = null;
         return 0;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public synchronized void invokeOnMessageReceiptCallback(int hubId, int nanoAppId, ContextHubMessage message) {
         if (this.mCallback != null) {
             this.mCallback.onMessageReceipt(hubId, nanoAppId, message);
         }
     }
 
+    /* renamed from: android.hardware.location.ContextHubManager$4 */
+    /* loaded from: classes.dex */
+    class BinderC09074 extends IContextHubCallback.Stub {
+        BinderC09074() {
+        }
+
+        @Override // android.hardware.location.IContextHubCallback
+        public void onMessageReceipt(final int hubId, final int nanoAppId, final ContextHubMessage message) {
+            synchronized (ContextHubManager.this) {
+                if (ContextHubManager.this.mCallback != null) {
+                    ContextHubManager.this.mCallbackHandler.post(new Runnable() { // from class: android.hardware.location.-$$Lambda$ContextHubManager$4$sylEfC1Rx_cxuQRnKuthZXmV8KI
+                        @Override // java.lang.Runnable
+                        public final void run() {
+                            ContextHubManager.this.invokeOnMessageReceiptCallback(hubId, nanoAppId, message);
+                        }
+                    });
+                } else if (ContextHubManager.this.mLocalCallback != null) {
+                    ContextHubManager.this.mLocalCallback.onMessageReceipt(hubId, nanoAppId, message);
+                }
+            }
+        }
+    }
+
     public ContextHubManager(Context context, Looper mainLooper) throws ServiceManager.ServiceNotFoundException {
         this.mMainLooper = mainLooper;
-        this.mService = IContextHubService.Stub.asInterface(ServiceManager.getServiceOrThrow(Context.CONTEXTHUB_SERVICE));
         try {
             this.mService.registerCallback(this.mClientCallback);
         } catch (RemoteException e) {

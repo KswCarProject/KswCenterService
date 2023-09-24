@@ -2,6 +2,7 @@ package android.hardware.radio.V1_0;
 
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class DataProfileId {
     public static final int CBS = 4;
     public static final int DEFAULT = 0;
@@ -60,7 +61,7 @@ public final class DataProfileId {
             list.add("OEM_BASE");
             flipped |= 1000;
         }
-        if ((o & -1) == -1) {
+        if ((o & (-1)) == -1) {
             list.add("INVALID");
             flipped |= -1;
         }

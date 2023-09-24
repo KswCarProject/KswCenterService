@@ -4,8 +4,8 @@ import android.annotation.UnsupportedAppUsage;
 import android.content.res.CompatibilityInfo;
 import android.content.res.Configuration;
 import android.graphics.Rect;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.telephony.SmsManager;
 import android.util.ArraySet;
 import android.util.DisplayMetrics;
@@ -16,12 +16,17 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Objects;
 
+/* loaded from: classes4.dex */
 public final class DisplayInfo implements Parcelable {
-    public static final Parcelable.Creator<DisplayInfo> CREATOR = new Parcelable.Creator<DisplayInfo>() {
+    public static final Parcelable.Creator<DisplayInfo> CREATOR = new Parcelable.Creator<DisplayInfo>() { // from class: android.view.DisplayInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public DisplayInfo createFromParcel(Parcel source) {
             return new DisplayInfo(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public DisplayInfo[] newArray(int size) {
             return new DisplayInfo[size];
         }
@@ -144,7 +149,7 @@ public final class DisplayInfo implements Parcelable {
         this.flags = source.readInt();
         this.type = source.readInt();
         this.displayId = source.readInt();
-        this.address = (DisplayAddress) source.readParcelable((ClassLoader) null);
+        this.address = (DisplayAddress) source.readParcelable(null);
         this.name = source.readString();
         this.appWidth = source.readInt();
         this.appHeight = source.readInt();
@@ -167,13 +172,14 @@ public final class DisplayInfo implements Parcelable {
         for (int i = 0; i < nModes; i++) {
             this.supportedModes[i] = Display.Mode.CREATOR.createFromParcel(source);
         }
-        this.colorMode = source.readInt();
+        int i2 = source.readInt();
+        this.colorMode = i2;
         int nColorModes = source.readInt();
         this.supportedColorModes = new int[nColorModes];
-        for (int i2 = 0; i2 < nColorModes; i2++) {
-            this.supportedColorModes[i2] = source.readInt();
+        for (int i3 = 0; i3 < nColorModes; i3++) {
+            this.supportedColorModes[i3] = source.readInt();
         }
-        this.hdrCapabilities = (Display.HdrCapabilities) source.readParcelable((ClassLoader) null);
+        this.hdrCapabilities = (Display.HdrCapabilities) source.readParcelable(null);
         this.logicalDensityDpi = source.readInt();
         this.physicalXDpi = source.readFloat();
         this.physicalYDpi = source.readFloat();
@@ -186,12 +192,13 @@ public final class DisplayInfo implements Parcelable {
         this.removeMode = source.readInt();
     }
 
-    public void writeToParcel(Parcel dest, int flags2) {
+    @Override // android.p007os.Parcelable
+    public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.layerStack);
         dest.writeInt(this.flags);
         dest.writeInt(this.type);
         dest.writeInt(this.displayId);
-        dest.writeParcelable(this.address, flags2);
+        dest.writeParcelable(this.address, flags);
         dest.writeString(this.name);
         dest.writeInt(this.appWidth);
         dest.writeInt(this.appHeight);
@@ -205,20 +212,21 @@ public final class DisplayInfo implements Parcelable {
         dest.writeInt(this.overscanTop);
         dest.writeInt(this.overscanRight);
         dest.writeInt(this.overscanBottom);
-        DisplayCutout.ParcelableWrapper.writeCutoutToParcel(this.displayCutout, dest, flags2);
+        DisplayCutout.ParcelableWrapper.writeCutoutToParcel(this.displayCutout, dest, flags);
         dest.writeInt(this.rotation);
         dest.writeInt(this.modeId);
         dest.writeInt(this.defaultModeId);
         dest.writeInt(this.supportedModes.length);
-        for (Display.Mode writeToParcel : this.supportedModes) {
-            writeToParcel.writeToParcel(dest, flags2);
+        for (int i = 0; i < this.supportedModes.length; i++) {
+            this.supportedModes[i].writeToParcel(dest, flags);
         }
-        dest.writeInt(this.colorMode);
+        int i2 = this.colorMode;
+        dest.writeInt(i2);
         dest.writeInt(this.supportedColorModes.length);
-        for (int writeInt : this.supportedColorModes) {
-            dest.writeInt(writeInt);
+        for (int i3 = 0; i3 < this.supportedColorModes.length; i3++) {
+            dest.writeInt(this.supportedColorModes[i3]);
         }
-        dest.writeParcelable(this.hdrCapabilities, flags2);
+        dest.writeParcelable(this.hdrCapabilities, flags);
         dest.writeInt(this.logicalDensityDpi);
         dest.writeFloat(this.physicalXDpi);
         dest.writeFloat(this.physicalYDpi);
@@ -231,6 +239,7 @@ public final class DisplayInfo implements Parcelable {
         dest.writeInt(this.removeMode);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -272,18 +281,20 @@ public final class DisplayInfo implements Parcelable {
                 rates.add(Float.valueOf(mode.getRefreshRate()));
             }
         }
-        float[] result = new float[rates.size()];
-        int i = 0;
+        int i = rates.size();
+        float[] result = new float[i];
+        int i2 = 0;
         Iterator<Float> it = rates.iterator();
         while (it.hasNext()) {
-            result[i] = it.next().floatValue();
-            i++;
+            Float rate = it.next();
+            result[i2] = rate.floatValue();
+            i2++;
         }
         return result;
     }
 
     public void getAppMetrics(DisplayMetrics outMetrics) {
-        getAppMetrics(outMetrics, CompatibilityInfo.DEFAULT_COMPATIBILITY_INFO, (Configuration) null);
+        getAppMetrics(outMetrics, CompatibilityInfo.DEFAULT_COMPATIBILITY_INFO, null);
     }
 
     public void getAppMetrics(DisplayMetrics outMetrics, DisplayAdjustments displayAdjustments) {
@@ -312,8 +323,9 @@ public final class DisplayInfo implements Parcelable {
     }
 
     public boolean isWideColorGamut() {
-        for (int colorMode2 : this.supportedColorModes) {
-            if (colorMode2 == 6 || colorMode2 > 7) {
+        int[] iArr;
+        for (int colorMode : this.supportedColorModes) {
+            if (colorMode == 6 || colorMode > 7) {
                 return true;
             }
         }
@@ -328,7 +340,7 @@ public final class DisplayInfo implements Parcelable {
         int i = this.logicalDensityDpi;
         outMetrics.noncompatDensityDpi = i;
         outMetrics.densityDpi = i;
-        float f = ((float) this.logicalDensityDpi) * 0.00625f;
+        float f = this.logicalDensityDpi * 0.00625f;
         outMetrics.noncompatDensity = f;
         outMetrics.density = f;
         float f2 = outMetrics.density;
@@ -368,7 +380,7 @@ public final class DisplayInfo implements Parcelable {
         sb.append(this.logicalWidth);
         sb.append(" x ");
         sb.append(this.logicalHeight);
-        if (!(this.overscanLeft == 0 && this.overscanTop == 0 && this.overscanRight == 0 && this.overscanBottom == 0)) {
+        if (this.overscanLeft != 0 || this.overscanTop != 0 || this.overscanRight != 0 || this.overscanBottom != 0) {
             sb.append(", overscan (");
             sb.append(this.overscanLeft);
             sb.append(SmsManager.REGEX_PREFIX_DELIMITER);
@@ -421,7 +433,7 @@ public final class DisplayInfo implements Parcelable {
         }
         sb.append(", state ");
         sb.append(Display.stateToString(this.state));
-        if (!(this.ownerUid == 0 && this.ownerPackageName == null)) {
+        if (this.ownerUid != 0 || this.ownerPackageName != null) {
             sb.append(", owner ");
             sb.append(this.ownerPackageName);
             sb.append(" (uid ");
@@ -445,24 +457,24 @@ public final class DisplayInfo implements Parcelable {
         protoOutputStream.end(token);
     }
 
-    private static String flagsToString(int flags2) {
+    private static String flagsToString(int flags) {
         StringBuilder result = new StringBuilder();
-        if ((flags2 & 2) != 0) {
+        if ((flags & 2) != 0) {
             result.append(", FLAG_SECURE");
         }
-        if ((flags2 & 1) != 0) {
+        if ((flags & 1) != 0) {
             result.append(", FLAG_SUPPORTS_PROTECTED_BUFFERS");
         }
-        if ((flags2 & 4) != 0) {
+        if ((flags & 4) != 0) {
             result.append(", FLAG_PRIVATE");
         }
-        if ((flags2 & 8) != 0) {
+        if ((flags & 8) != 0) {
             result.append(", FLAG_PRESENTATION");
         }
-        if ((1073741824 & flags2) != 0) {
+        if ((1073741824 & flags) != 0) {
             result.append(", FLAG_SCALING_DISABLED");
         }
-        if ((flags2 & 16) != 0) {
+        if ((flags & 16) != 0) {
             result.append(", FLAG_ROUND");
         }
         return result.toString();

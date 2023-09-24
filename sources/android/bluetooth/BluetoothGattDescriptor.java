@@ -1,24 +1,13 @@
 package android.bluetooth;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.ParcelUuid;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.ParcelUuid;
+import android.p007os.Parcelable;
 import java.util.UUID;
 
+/* loaded from: classes.dex */
 public class BluetoothGattDescriptor implements Parcelable {
-    public static final Parcelable.Creator<BluetoothGattDescriptor> CREATOR = new Parcelable.Creator<BluetoothGattDescriptor>() {
-        public BluetoothGattDescriptor createFromParcel(Parcel in) {
-            return new BluetoothGattDescriptor(in);
-        }
-
-        public BluetoothGattDescriptor[] newArray(int size) {
-            return new BluetoothGattDescriptor[size];
-        }
-    };
-    public static final byte[] DISABLE_NOTIFICATION_VALUE = {0, 0};
-    public static final byte[] ENABLE_INDICATION_VALUE = {2, 0};
-    public static final byte[] ENABLE_NOTIFICATION_VALUE = {1, 0};
     public static final int PERMISSION_READ = 1;
     public static final int PERMISSION_READ_ENCRYPTED = 2;
     public static final int PERMISSION_READ_ENCRYPTED_MITM = 4;
@@ -34,9 +23,25 @@ public class BluetoothGattDescriptor implements Parcelable {
     protected int mPermissions;
     protected UUID mUuid;
     protected byte[] mValue;
+    public static final byte[] ENABLE_NOTIFICATION_VALUE = {1, 0};
+    public static final byte[] ENABLE_INDICATION_VALUE = {2, 0};
+    public static final byte[] DISABLE_NOTIFICATION_VALUE = {0, 0};
+    public static final Parcelable.Creator<BluetoothGattDescriptor> CREATOR = new Parcelable.Creator<BluetoothGattDescriptor>() { // from class: android.bluetooth.BluetoothGattDescriptor.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public BluetoothGattDescriptor createFromParcel(Parcel in) {
+            return new BluetoothGattDescriptor(in);
+        }
+
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public BluetoothGattDescriptor[] newArray(int size) {
+            return new BluetoothGattDescriptor[size];
+        }
+    };
 
     public BluetoothGattDescriptor(UUID uuid, int permissions) {
-        initDescriptor((BluetoothGattCharacteristic) null, uuid, 0, permissions);
+        initDescriptor(null, uuid, 0, permissions);
     }
 
     BluetoothGattDescriptor(BluetoothGattCharacteristic characteristic, UUID uuid, int instance, int permissions) {
@@ -44,7 +49,7 @@ public class BluetoothGattDescriptor implements Parcelable {
     }
 
     public BluetoothGattDescriptor(UUID uuid, int instance, int permissions) {
-        initDescriptor((BluetoothGattCharacteristic) null, uuid, instance, permissions);
+        initDescriptor(null, uuid, instance, permissions);
     }
 
     private void initDescriptor(BluetoothGattCharacteristic characteristic, UUID uuid, int instance, int permissions) {
@@ -54,10 +59,12 @@ public class BluetoothGattDescriptor implements Parcelable {
         this.mPermissions = permissions;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeParcelable(new ParcelUuid(this.mUuid), 0);
         out.writeInt(this.mInstance);
@@ -65,7 +72,7 @@ public class BluetoothGattDescriptor implements Parcelable {
     }
 
     private BluetoothGattDescriptor(Parcel in) {
-        this.mUuid = ((ParcelUuid) in.readParcelable((ClassLoader) null)).getUuid();
+        this.mUuid = ((ParcelUuid) in.readParcelable(null)).getUuid();
         this.mInstance = in.readInt();
         this.mPermissions = in.readInt();
     }
@@ -74,9 +81,8 @@ public class BluetoothGattDescriptor implements Parcelable {
         return this.mCharacteristic;
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void setCharacteristic(BluetoothGattCharacteristic characteristic) {
+    void setCharacteristic(BluetoothGattCharacteristic characteristic) {
         this.mCharacteristic = characteristic;
     }
 

@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+/* loaded from: classes4.dex */
 final class MessageLiteToString {
     private static final String BUILDER_LIST_SUFFIX = "OrBuilderList";
     private static final String BYTES_SUFFIX = "Bytes";
@@ -27,14 +28,13 @@ final class MessageLiteToString {
         return buffer.toString();
     }
 
+    /* JADX WARN: Multi-variable type inference failed */
     private static void reflectivePrintWithIndent(MessageLite messageLite, StringBuilder buffer, int indent) {
-        MessageLite messageLite2 = messageLite;
-        StringBuilder sb = buffer;
-        int i = indent;
+        Method[] declaredMethods;
         Map<String, Method> nameToNoArgMethod = new HashMap<>();
         Map<String, Method> nameToMethod = new HashMap<>();
         Set<String> getters = new TreeSet<>();
-        int i2 = 0;
+        int i = 0;
         for (Method method : messageLite.getClass().getDeclaredMethods()) {
             nameToMethod.put(method.getName(), method);
             if (method.getParameterTypes().length == 0) {
@@ -46,45 +46,46 @@ final class MessageLiteToString {
         }
         for (String getter : getters) {
             String suffix = getter.replaceFirst("get", "");
-            int i3 = 1;
+            boolean hasValue = true;
             if (suffix.endsWith(LIST_SUFFIX) && !suffix.endsWith(BUILDER_LIST_SUFFIX)) {
-                String camelCase = suffix.substring(i2, 1).toLowerCase() + suffix.substring(1, suffix.length() - LIST_SUFFIX.length());
+                String camelCase = suffix.substring(i, 1).toLowerCase() + suffix.substring(1, suffix.length() - LIST_SUFFIX.length());
                 Method listMethod = nameToNoArgMethod.get("get" + suffix);
                 if (listMethod != null) {
-                    printField(sb, i, camelCaseToSnakeCase(camelCase), GeneratedMessageLite.invokeOrDie(listMethod, messageLite2, new Object[i2]));
+                    printField(buffer, indent, camelCaseToSnakeCase(camelCase), GeneratedMessageLite.invokeOrDie(listMethod, messageLite, new Object[i]));
                 }
             }
-            if (nameToMethod.get("set" + suffix) != null) {
+            Method setter = nameToMethod.get("set" + suffix);
+            if (setter != null) {
                 if (suffix.endsWith(BYTES_SUFFIX)) {
-                    if (nameToNoArgMethod.containsKey("get" + suffix.substring(i2, suffix.length() - BYTES_SUFFIX.length()))) {
+                    if (nameToNoArgMethod.containsKey("get" + suffix.substring(i, suffix.length() - BYTES_SUFFIX.length()))) {
                     }
                 }
-                String camelCase2 = suffix.substring(i2, 1).toLowerCase() + suffix.substring(1);
+                String camelCase2 = suffix.substring(i, 1).toLowerCase() + suffix.substring(1);
                 Method getMethod = nameToNoArgMethod.get("get" + suffix);
                 Method hasMethod = nameToNoArgMethod.get("has" + suffix);
                 if (getMethod != null) {
-                    Object value = GeneratedMessageLite.invokeOrDie(getMethod, messageLite2, new Object[i2]);
+                    Object value = GeneratedMessageLite.invokeOrDie(getMethod, messageLite, new Object[i]);
                     if (hasMethod != null) {
-                        i3 = ((Boolean) GeneratedMessageLite.invokeOrDie(hasMethod, messageLite2, new Object[i2])).booleanValue();
+                        hasValue = ((Boolean) GeneratedMessageLite.invokeOrDie(hasMethod, messageLite, new Object[i])).booleanValue();
                     } else if (isDefaultValue(value)) {
-                        i3 = i2;
+                        hasValue = i;
                     }
-                    if (i3 != 0) {
-                        printField(sb, i, camelCaseToSnakeCase(camelCase2), value);
+                    if (hasValue) {
+                        printField(buffer, indent, camelCaseToSnakeCase(camelCase2), value);
                     }
                 }
-                i2 = 0;
+                i = 0;
             }
         }
-        if (messageLite2 instanceof GeneratedMessageLite.ExtendableMessage) {
-            Iterator<Map.Entry<GeneratedMessageLite.ExtensionDescriptor, Object>> iter = ((GeneratedMessageLite.ExtendableMessage) messageLite2).extensions.iterator();
+        if (messageLite instanceof GeneratedMessageLite.ExtendableMessage) {
+            Iterator<Map.Entry<GeneratedMessageLite.ExtensionDescriptor, Object>> iter = ((GeneratedMessageLite.ExtendableMessage) messageLite).extensions.iterator();
             while (iter.hasNext()) {
                 Map.Entry<GeneratedMessageLite.ExtensionDescriptor, Object> entry = iter.next();
-                printField(sb, i, "[" + entry.getKey().getNumber() + "]", entry.getValue());
+                printField(buffer, indent, "[" + entry.getKey().getNumber() + "]", entry.getValue());
             }
         }
-        if (((GeneratedMessageLite) messageLite2).unknownFields != null) {
-            ((GeneratedMessageLite) messageLite2).unknownFields.printWithIndent(sb, i);
+        if (((GeneratedMessageLite) messageLite).unknownFields != null) {
+            ((GeneratedMessageLite) messageLite).unknownFields.printWithIndent(buffer, indent);
         }
     }
 
@@ -93,50 +94,30 @@ final class MessageLiteToString {
             return !((Boolean) o).booleanValue();
         }
         if (o instanceof Integer) {
-            if (((Integer) o).intValue() == 0) {
-                return true;
-            }
-            return false;
+            return ((Integer) o).intValue() == 0;
         } else if (o instanceof Float) {
-            if (((Float) o).floatValue() == 0.0f) {
-                return true;
-            }
-            return false;
+            return ((Float) o).floatValue() == 0.0f;
         } else if (o instanceof Double) {
-            if (((Double) o).doubleValue() == 0.0d) {
-                return true;
-            }
-            return false;
+            return ((Double) o).doubleValue() == 0.0d;
         } else if (o instanceof String) {
             return o.equals("");
         } else {
             if (o instanceof ByteString) {
                 return o.equals(ByteString.EMPTY);
             }
-            if (o instanceof MessageLite) {
-                if (o == ((MessageLite) o).getDefaultInstanceForType()) {
-                    return true;
-                }
-                return false;
-            } else if (!(o instanceof Enum)) {
-                return false;
-            } else {
-                if (((Enum) o).ordinal() == 0) {
-                    return true;
-                }
-                return false;
-            }
+            return o instanceof MessageLite ? o == ((MessageLite) o).getDefaultInstanceForType() : (o instanceof Enum) && ((Enum) o).ordinal() == 0;
         }
     }
 
     static final void printField(StringBuilder buffer, int indent, String name, Object object) {
         if (object instanceof List) {
-            for (Object entry : (List) object) {
+            List<?> list = (List) object;
+            for (Object entry : list) {
                 printField(buffer, indent, name, entry);
             }
             return;
         }
-        buffer.append(10);
+        buffer.append('\n');
         for (int i = 0; i < indent; i++) {
             buffer.append(' ');
         }

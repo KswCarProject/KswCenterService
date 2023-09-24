@@ -1,15 +1,20 @@
 package com.android.ims.internal.uce.common;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes4.dex */
 public class CapInfo implements Parcelable {
-    public static final Parcelable.Creator<CapInfo> CREATOR = new Parcelable.Creator<CapInfo>() {
+    public static final Parcelable.Creator<CapInfo> CREATOR = new Parcelable.Creator<CapInfo>() { // from class: com.android.ims.internal.uce.common.CapInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public CapInfo createFromParcel(Parcel source) {
             return new CapInfo(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public CapInfo[] newArray(int size) {
             return new CapInfo[size];
         }
@@ -74,7 +79,7 @@ public class CapInfo implements Parcelable {
         this.mChatbotSupported = false;
         this.mChatbotRoleSupported = false;
         this.mExts = new String[10];
-        this.mCapTimestamp = 0;
+        this.mCapTimestamp = 0L;
     }
 
     @UnsupportedAppUsage
@@ -366,10 +371,12 @@ public class CapInfo implements Parcelable {
         this.mCapTimestamp = capTimestamp;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mImSupported ? 1 : 0);
         dest.writeInt(this.mFtSupported ? 1 : 0);
@@ -431,12 +438,11 @@ public class CapInfo implements Parcelable {
         this.mChatbotSupported = false;
         this.mChatbotRoleSupported = false;
         this.mExts = new String[10];
-        this.mCapTimestamp = 0;
+        this.mCapTimestamp = 0L;
         readFromParcel(source);
     }
 
     public void readFromParcel(Parcel source) {
-        boolean z = true;
         this.mImSupported = source.readInt() != 0;
         this.mFtSupported = source.readInt() != 0;
         this.mFtThumbSupported = source.readInt() != 0;
@@ -463,10 +469,7 @@ public class CapInfo implements Parcelable {
         this.mChatbotRoleSupported = source.readInt() != 0;
         this.mRcsIpVoiceCallSupported = source.readInt() != 0;
         this.mRcsIpVideoCallSupported = source.readInt() != 0;
-        if (source.readInt() == 0) {
-            z = false;
-        }
-        this.mRcsIpVideoOnlyCallSupported = z;
+        this.mRcsIpVideoOnlyCallSupported = source.readInt() != 0;
         this.mExts = source.createStringArray();
         this.mCapTimestamp = source.readLong();
     }

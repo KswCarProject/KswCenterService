@@ -5,6 +5,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public final class FontStyle {
     public static final int FONT_SLANT_ITALIC = 1;
     public static final int FONT_SLANT_UPRIGHT = 0;
@@ -24,6 +25,7 @@ public final class FontStyle {
     private final int mWeight;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface FontSlant {
     }
 
@@ -67,7 +69,7 @@ public final class FontStyle {
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(this.mWeight), Integer.valueOf(this.mSlant)});
+        return Objects.hash(Integer.valueOf(this.mWeight), Integer.valueOf(this.mSlant));
     }
 
     public String toString() {

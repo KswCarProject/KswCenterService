@@ -1,5 +1,6 @@
 package android.service.notification;
 
+/* loaded from: classes3.dex */
 public final class ManagedServicesProto {
     public static final long APPROVED = 2246267895810L;
     public static final long CAPTION = 1138166333441L;
@@ -7,6 +8,7 @@ public final class ManagedServicesProto {
     public static final long LIVE_SERVICES = 2246267895812L;
     public static final long SNOOZED = 2246267895813L;
 
+    /* loaded from: classes3.dex */
     public final class ServiceProto {
         public static final long IS_PRIMARY = 1133871366147L;
         public static final long NAME = 2237677961217L;

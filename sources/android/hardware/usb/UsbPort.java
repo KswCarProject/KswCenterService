@@ -5,6 +5,7 @@ import android.app.slice.Slice;
 import com.android.internal.util.Preconditions;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class UsbPort {
     private static final int NUM_DATA_ROLES = 3;
     private static final int POWER_ROLE_OFFSET = 0;
@@ -61,7 +62,8 @@ public final class UsbPort {
 
     public static int combineRolesAsBit(int powerRole, int dataRole) {
         checkRoles(powerRole, dataRole);
-        return 1 << (((powerRole + 0) * 3) + dataRole);
+        int index = ((powerRole + 0) * 3) + dataRole;
+        return 1 << index;
     }
 
     public static String modeToString(int mode) {
@@ -170,10 +172,7 @@ public final class UsbPort {
     }
 
     public boolean isModeSupported(int mode) {
-        if ((this.mSupportedModes & mode) == mode) {
-            return true;
-        }
-        return false;
+        return (this.mSupportedModes & mode) == mode;
     }
 
     public String toString() {

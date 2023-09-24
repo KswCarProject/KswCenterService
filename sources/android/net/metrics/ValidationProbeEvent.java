@@ -2,8 +2,8 @@ package android.net.metrics;
 
 import android.annotation.SystemApi;
 import android.net.metrics.IpConnectivityLog;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.SparseArray;
 import com.android.internal.telephony.IccCardConstants;
 import com.android.internal.util.MessageUtils;
@@ -11,12 +11,17 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class ValidationProbeEvent implements IpConnectivityLog.Event {
-    public static final Parcelable.Creator<ValidationProbeEvent> CREATOR = new Parcelable.Creator<ValidationProbeEvent>() {
+    public static final Parcelable.Creator<ValidationProbeEvent> CREATOR = new Parcelable.Creator<ValidationProbeEvent>() { // from class: android.net.metrics.ValidationProbeEvent.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ValidationProbeEvent createFromParcel(Parcel in) {
             return new ValidationProbeEvent(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ValidationProbeEvent[] newArray(int size) {
             return new ValidationProbeEvent[size];
         }
@@ -36,13 +41,14 @@ public final class ValidationProbeEvent implements IpConnectivityLog.Event {
     public final int returnCode;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface ReturnCode {
     }
 
-    private ValidationProbeEvent(long durationMs2, int probeType2, int returnCode2) {
-        this.durationMs = durationMs2;
-        this.probeType = probeType2;
-        this.returnCode = returnCode2;
+    private ValidationProbeEvent(long durationMs, int probeType, int returnCode) {
+        this.durationMs = durationMs;
+        this.probeType = probeType;
+        this.returnCode = returnCode;
     }
 
     private ValidationProbeEvent(Parcel in) {
@@ -51,6 +57,7 @@ public final class ValidationProbeEvent implements IpConnectivityLog.Event {
         this.returnCode = in.readInt();
     }
 
+    /* loaded from: classes3.dex */
     public static final class Builder {
         private long mDurationMs;
         private int mProbeType;
@@ -76,31 +83,33 @@ public final class ValidationProbeEvent implements IpConnectivityLog.Event {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeLong(this.durationMs);
         out.writeInt(this.probeType);
         out.writeInt(this.returnCode);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
-    /* access modifiers changed from: private */
-    public static int makeProbeType(int probeType2, boolean firstValidation) {
-        return (probeType2 & 255) | (firstValidation ? 256 : 512);
+    /* JADX INFO: Access modifiers changed from: private */
+    public static int makeProbeType(int probeType, boolean firstValidation) {
+        return (probeType & 255) | (firstValidation ? 256 : 512);
     }
 
-    public static String getProbeName(int probeType2) {
-        return Decoder.constants.get(probeType2 & 255, "PROBE_???");
+    public static String getProbeName(int probeType) {
+        return Decoder.constants.get(probeType & 255, "PROBE_???");
     }
 
-    private static String getValidationStage(int probeType2) {
-        return Decoder.constants.get(65280 & probeType2, IccCardConstants.INTENT_VALUE_ICC_UNKNOWN);
+    private static String getValidationStage(int probeType) {
+        return Decoder.constants.get(65280 & probeType, IccCardConstants.INTENT_VALUE_ICC_UNKNOWN);
     }
 
     public String toString() {
-        return String.format("ValidationProbeEvent(%s:%d %s, %dms)", new Object[]{getProbeName(this.probeType), Integer.valueOf(this.returnCode), getValidationStage(this.probeType), Long.valueOf(this.durationMs)});
+        return String.format("ValidationProbeEvent(%s:%d %s, %dms)", getProbeName(this.probeType), Integer.valueOf(this.returnCode), getValidationStage(this.probeType), Long.valueOf(this.durationMs));
     }
 
     public boolean equals(Object obj) {
@@ -108,12 +117,10 @@ public final class ValidationProbeEvent implements IpConnectivityLog.Event {
             return false;
         }
         ValidationProbeEvent other = (ValidationProbeEvent) obj;
-        if (this.durationMs == other.durationMs && this.probeType == other.probeType && this.returnCode == other.returnCode) {
-            return true;
-        }
-        return false;
+        return this.durationMs == other.durationMs && this.probeType == other.probeType && this.returnCode == other.returnCode;
     }
 
+    /* loaded from: classes3.dex */
     static final class Decoder {
         static final SparseArray<String> constants = MessageUtils.findMessageNames(new Class[]{ValidationProbeEvent.class}, new String[]{"PROBE_", "FIRST_", "REVALIDATION"});
 

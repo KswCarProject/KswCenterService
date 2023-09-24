@@ -1,30 +1,36 @@
 package android.telecom;
 
 import android.bluetooth.BluetoothDevice;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.telephony.IccCardConstants;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/* loaded from: classes3.dex */
 public final class CallAudioState implements Parcelable {
-    public static final Parcelable.Creator<CallAudioState> CREATOR = new Parcelable.Creator<CallAudioState>() {
+    public static final Parcelable.Creator<CallAudioState> CREATOR = new Parcelable.Creator<CallAudioState>() { // from class: android.telecom.CallAudioState.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public CallAudioState createFromParcel(Parcel source) {
             boolean isMuted = source.readByte() != 0;
             int route = source.readInt();
             int supportedRouteMask = source.readInt();
-            List<BluetoothDevice> supportedBluetoothDevices = new ArrayList<>();
-            source.readParcelableList(supportedBluetoothDevices, ClassLoader.getSystemClassLoader());
-            return new CallAudioState(isMuted, route, supportedRouteMask, (BluetoothDevice) source.readParcelable(ClassLoader.getSystemClassLoader()), supportedBluetoothDevices);
+            BluetoothDevice activeBluetoothDevice = (BluetoothDevice) source.readParcelable(ClassLoader.getSystemClassLoader());
+            ArrayList arrayList = new ArrayList();
+            source.readParcelableList(arrayList, ClassLoader.getSystemClassLoader());
+            return new CallAudioState(isMuted, route, supportedRouteMask, activeBluetoothDevice, arrayList);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public CallAudioState[] newArray(int size) {
             return new CallAudioState[size];
         }
@@ -42,19 +48,20 @@ public final class CallAudioState implements Parcelable {
     private final int supportedRouteMask;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface CallAudioRoute {
     }
 
-    public CallAudioState(boolean muted, int route2, int supportedRouteMask2) {
-        this(muted, route2, supportedRouteMask2, (BluetoothDevice) null, Collections.emptyList());
+    public CallAudioState(boolean muted, int route, int supportedRouteMask) {
+        this(muted, route, supportedRouteMask, null, Collections.emptyList());
     }
 
-    public CallAudioState(boolean isMuted2, int route2, int supportedRouteMask2, BluetoothDevice activeBluetoothDevice2, Collection<BluetoothDevice> supportedBluetoothDevices2) {
-        this.isMuted = isMuted2;
-        this.route = route2;
-        this.supportedRouteMask = supportedRouteMask2;
-        this.activeBluetoothDevice = activeBluetoothDevice2;
-        this.supportedBluetoothDevices = supportedBluetoothDevices2;
+    public CallAudioState(boolean isMuted, int route, int supportedRouteMask, BluetoothDevice activeBluetoothDevice, Collection<BluetoothDevice> supportedBluetoothDevices) {
+        this.isMuted = isMuted;
+        this.route = route;
+        this.supportedRouteMask = supportedRouteMask;
+        this.activeBluetoothDevice = activeBluetoothDevice;
+        this.supportedBluetoothDevices = supportedBluetoothDevices;
     }
 
     public CallAudioState(CallAudioState state) {
@@ -86,14 +93,17 @@ public final class CallAudioState implements Parcelable {
                 return false;
             }
         }
-        if (Objects.equals(this.activeBluetoothDevice, state.activeBluetoothDevice) && isMuted() == state.isMuted() && getRoute() == state.getRoute() && getSupportedRouteMask() == state.getSupportedRouteMask()) {
-            return true;
-        }
-        return false;
+        return Objects.equals(this.activeBluetoothDevice, state.activeBluetoothDevice) && isMuted() == state.isMuted() && getRoute() == state.getRoute() && getSupportedRouteMask() == state.getSupportedRouteMask();
     }
 
     public String toString() {
-        return String.format(Locale.US, "[AudioState isMuted: %b, route: %s, supportedRouteMask: %s, activeBluetoothDevice: [%s], supportedBluetoothDevices: [%s]]", new Object[]{Boolean.valueOf(this.isMuted), audioRouteToString(this.route), audioRouteToString(this.supportedRouteMask), this.activeBluetoothDevice, (String) this.supportedBluetoothDevices.stream().map($$Lambda$cyYWqCYT05eM23eLVm4oQ5DrYjw.INSTANCE).collect(Collectors.joining(", "))});
+        String bluetoothDeviceList = (String) this.supportedBluetoothDevices.stream().map(new Function() { // from class: android.telecom.-$$Lambda$cyYWqCYT05eM23eLVm4oQ5DrYjw
+            @Override // java.util.function.Function
+            public final Object apply(Object obj) {
+                return ((BluetoothDevice) obj).getAddress();
+            }
+        }).collect(Collectors.joining(", "));
+        return String.format(Locale.US, "[AudioState isMuted: %b, route: %s, supportedRouteMask: %s, activeBluetoothDevice: [%s], supportedBluetoothDevices: [%s]]", Boolean.valueOf(this.isMuted), audioRouteToString(this.route), audioRouteToString(this.supportedRouteMask), this.activeBluetoothDevice, bluetoothDeviceList);
     }
 
     public boolean isMuted() {
@@ -116,32 +126,34 @@ public final class CallAudioState implements Parcelable {
         return this.supportedBluetoothDevices;
     }
 
-    public static String audioRouteToString(int route2) {
-        if (route2 == 0 || (route2 & -16) != 0) {
+    public static String audioRouteToString(int route) {
+        if (route == 0 || (route & (-16)) != 0) {
             return IccCardConstants.INTENT_VALUE_ICC_UNKNOWN;
         }
         StringBuffer buffer = new StringBuffer();
-        if ((route2 & 1) == 1) {
+        if ((route & 1) == 1) {
             listAppend(buffer, "EARPIECE");
         }
-        if ((route2 & 2) == 2) {
+        if ((route & 2) == 2) {
             listAppend(buffer, "BLUETOOTH");
         }
-        if ((route2 & 4) == 4) {
+        if ((route & 4) == 4) {
             listAppend(buffer, "WIRED_HEADSET");
         }
-        if ((route2 & 8) == 8) {
+        if ((route & 8) == 8) {
             listAppend(buffer, "SPEAKER");
         }
         return buffer.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel destination, int flags) {
-        destination.writeByte(this.isMuted ? (byte) 1 : 0);
+        destination.writeByte(this.isMuted ? (byte) 1 : (byte) 0);
         destination.writeInt(this.route);
         destination.writeInt(this.supportedRouteMask);
         destination.writeParcelable(this.activeBluetoothDevice, 0);

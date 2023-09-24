@@ -1,18 +1,22 @@
 package android.telephony;
 
-import android.hardware.radio.V1_0.CellInfo;
 import android.net.wifi.WifiEnterpriseConfig;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public final class CellInfoWcdma extends CellInfo implements Parcelable {
-    public static final Parcelable.Creator<CellInfoWcdma> CREATOR = new Parcelable.Creator<CellInfoWcdma>() {
+    public static final Parcelable.Creator<CellInfoWcdma> CREATOR = new Parcelable.Creator<CellInfoWcdma>() { // from class: android.telephony.CellInfoWcdma.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public CellInfoWcdma createFromParcel(Parcel in) {
             in.readInt();
             return CellInfoWcdma.createFromParcelBody(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public CellInfoWcdma[] newArray(int size) {
             return new CellInfoWcdma[size];
         }
@@ -28,12 +32,12 @@ public final class CellInfoWcdma extends CellInfo implements Parcelable {
     }
 
     public CellInfoWcdma(CellInfoWcdma ci) {
-        super((CellInfo) ci);
+        super(ci);
         this.mCellIdentityWcdma = ci.mCellIdentityWcdma.copy();
         this.mCellSignalStrengthWcdma = ci.mCellSignalStrengthWcdma.copy();
     }
 
-    public CellInfoWcdma(CellInfo ci) {
+    public CellInfoWcdma(android.hardware.radio.V1_0.CellInfo ci) {
         super(ci);
         android.hardware.radio.V1_0.CellInfoWcdma ciw = ci.wcdma.get(0);
         this.mCellIdentityWcdma = new CellIdentityWcdma(ciw.cellIdentityWcdma);
@@ -54,6 +58,7 @@ public final class CellInfoWcdma extends CellInfo implements Parcelable {
         this.mCellSignalStrengthWcdma = new CellSignalStrengthWcdma(ciw.signalStrengthWcdma);
     }
 
+    @Override // android.telephony.CellInfo
     public CellIdentityWcdma getCellIdentity() {
         return this.mCellIdentityWcdma;
     }
@@ -62,10 +67,12 @@ public final class CellInfoWcdma extends CellInfo implements Parcelable {
         this.mCellIdentityWcdma = cid;
     }
 
+    @Override // android.telephony.CellInfo
     public CellSignalStrengthWcdma getCellSignalStrength() {
         return this.mCellSignalStrengthWcdma;
     }
 
+    @Override // android.telephony.CellInfo
     public CellInfo sanitizeLocationInfo() {
         CellInfoWcdma result = new CellInfoWcdma(this);
         result.mCellIdentityWcdma = this.mCellIdentityWcdma.sanitizeLocationInfo();
@@ -76,25 +83,28 @@ public final class CellInfoWcdma extends CellInfo implements Parcelable {
         this.mCellSignalStrengthWcdma = css;
     }
 
+    @Override // android.telephony.CellInfo
     public int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(super.hashCode()), this.mCellIdentityWcdma, this.mCellSignalStrengthWcdma});
+        return Objects.hash(Integer.valueOf(super.hashCode()), this.mCellIdentityWcdma, this.mCellSignalStrengthWcdma);
     }
 
+    @Override // android.telephony.CellInfo
     public boolean equals(Object other) {
-        if (!super.equals(other)) {
-            return false;
-        }
-        try {
-            CellInfoWcdma o = (CellInfoWcdma) other;
-            if (!this.mCellIdentityWcdma.equals(o.mCellIdentityWcdma) || !this.mCellSignalStrengthWcdma.equals(o.mCellSignalStrengthWcdma)) {
+        if (super.equals(other)) {
+            try {
+                CellInfoWcdma o = (CellInfoWcdma) other;
+                if (this.mCellIdentityWcdma.equals(o.mCellIdentityWcdma)) {
+                    return this.mCellSignalStrengthWcdma.equals(o.mCellSignalStrengthWcdma);
+                }
+                return false;
+            } catch (ClassCastException e) {
                 return false;
             }
-            return true;
-        } catch (ClassCastException e) {
-            return false;
         }
+        return false;
     }
 
+    @Override // android.telephony.CellInfo
     public String toString() {
         StringBuffer sb = new StringBuffer();
         sb.append("CellInfoWcdma:{");
@@ -107,10 +117,12 @@ public final class CellInfoWcdma extends CellInfo implements Parcelable {
         return sb.toString();
     }
 
+    @Override // android.telephony.CellInfo, android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.telephony.CellInfo, android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags, 4);
         this.mCellIdentityWcdma.writeToParcel(dest, flags);
@@ -128,6 +140,6 @@ public final class CellInfoWcdma extends CellInfo implements Parcelable {
     }
 
     private static void log(String s) {
-        Rlog.w(LOG_TAG, s);
+        Rlog.m80w(LOG_TAG, s);
     }
 }

@@ -1,6 +1,6 @@
 package android.ddm;
 
-import android.os.Debug;
+import android.p007os.Debug;
 import android.util.Log;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -9,16 +9,17 @@ import org.apache.harmony.dalvik.ddmc.ChunkHandler;
 import org.apache.harmony.dalvik.ddmc.DdmServer;
 import org.apache.harmony.dalvik.ddmc.DdmVmInternal;
 
+/* loaded from: classes.dex */
 public class DdmHandleHeap extends ChunkHandler {
-    public static final int CHUNK_HPDS = type("HPDS");
-    public static final int CHUNK_HPDU = type("HPDU");
-    public static final int CHUNK_HPGC = type("HPGC");
     public static final int CHUNK_HPIF = type("HPIF");
     public static final int CHUNK_HPSG = type("HPSG");
+    public static final int CHUNK_HPDU = type("HPDU");
+    public static final int CHUNK_HPDS = type("HPDS");
     public static final int CHUNK_NHSG = type("NHSG");
+    public static final int CHUNK_HPGC = type("HPGC");
     public static final int CHUNK_REAE = type("REAE");
-    public static final int CHUNK_REAL = type("REAL");
     public static final int CHUNK_REAQ = type("REAQ");
+    public static final int CHUNK_REAL = type("REAL");
     private static DdmHandleHeap mInstance = new DdmHandleHeap();
 
     private DdmHandleHeap() {
@@ -75,7 +76,10 @@ public class DdmHandleHeap extends ChunkHandler {
     }
 
     private Chunk handleHPIF(Chunk request) {
-        if (!DdmVmInternal.heapInfoNotify(wrapChunk(request).get())) {
+        ByteBuffer in = wrapChunk(request);
+        int when = in.get();
+        boolean ok = DdmVmInternal.heapInfoNotify(when);
+        if (!ok) {
             return createFailChunk(1, "Unsupported HPIF what");
         }
         return null;
@@ -83,7 +87,10 @@ public class DdmHandleHeap extends ChunkHandler {
 
     private Chunk handleHPSGNHSG(Chunk request, boolean isNative) {
         ByteBuffer in = wrapChunk(request);
-        if (!DdmVmInternal.heapSegmentNotify(in.get(), in.get(), isNative)) {
+        int when = in.get();
+        int what = in.get();
+        boolean ok = DdmVmInternal.heapSegmentNotify(when, what, isNative);
+        if (!ok) {
             return createFailChunk(1, "Unsupported HPSG what/when");
         }
         return null;
@@ -92,13 +99,15 @@ public class DdmHandleHeap extends ChunkHandler {
     private Chunk handleHPDU(Chunk request) {
         byte result;
         ByteBuffer in = wrapChunk(request);
+        int len = in.getInt();
+        String fileName = getString(in, len);
         try {
-            Debug.dumpHprofData(getString(in, in.getInt()));
+            Debug.dumpHprofData(fileName);
             result = 0;
-        } catch (UnsupportedOperationException e) {
-            Log.w("ddm-heap", "hprof dumps not supported in this VM");
+        } catch (IOException e) {
             result = -1;
-        } catch (IOException e2) {
+        } catch (UnsupportedOperationException e2) {
+            Log.m64w("ddm-heap", "hprof dumps not supported in this VM");
             result = -1;
         } catch (RuntimeException e3) {
             result = -1;
@@ -108,7 +117,7 @@ public class DdmHandleHeap extends ChunkHandler {
     }
 
     private Chunk handleHPDS(Chunk request) {
-        ByteBuffer wrapChunk = wrapChunk(request);
+        wrapChunk(request);
         String failMsg = null;
         try {
             Debug.dumpHprofDataDdms();
@@ -120,7 +129,7 @@ public class DdmHandleHeap extends ChunkHandler {
         if (failMsg == null) {
             return null;
         }
-        Log.w("ddm-heap", failMsg);
+        Log.m64w("ddm-heap", failMsg);
         return createFailChunk(1, failMsg);
     }
 
@@ -130,7 +139,9 @@ public class DdmHandleHeap extends ChunkHandler {
     }
 
     private Chunk handleREAE(Chunk request) {
-        DdmVmInternal.enableRecentAllocations(wrapChunk(request).get() != 0);
+        ByteBuffer in = wrapChunk(request);
+        boolean enable = in.get() != 0;
+        DdmVmInternal.enableRecentAllocations(enable);
         return null;
     }
 

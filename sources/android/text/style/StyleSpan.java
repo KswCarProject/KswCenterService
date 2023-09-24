@@ -2,10 +2,11 @@ package android.text.style;
 
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.os.Parcel;
+import android.p007os.Parcel;
 import android.text.ParcelableSpan;
 import android.text.TextPaint;
 
+/* loaded from: classes4.dex */
 public class StyleSpan extends MetricAffectingSpan implements ParcelableSpan {
     private final int mStyle;
 
@@ -17,22 +18,27 @@ public class StyleSpan extends MetricAffectingSpan implements ParcelableSpan {
         this.mStyle = src.readInt();
     }
 
+    @Override // android.text.ParcelableSpan
     public int getSpanTypeId() {
         return getSpanTypeIdInternal();
     }
 
+    @Override // android.text.ParcelableSpan
     public int getSpanTypeIdInternal() {
         return 7;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         writeToParcelInternal(dest, flags);
     }
 
+    @Override // android.text.ParcelableSpan
     public void writeToParcelInternal(Parcel dest, int flags) {
         dest.writeInt(this.mStyle);
     }
@@ -41,10 +47,12 @@ public class StyleSpan extends MetricAffectingSpan implements ParcelableSpan {
         return this.mStyle;
     }
 
+    @Override // android.text.style.CharacterStyle
     public void updateDrawState(TextPaint ds) {
         apply(ds, this.mStyle);
     }
 
+    @Override // android.text.style.MetricAffectingSpan
     public void updateMeasureState(TextPaint paint) {
         apply(paint, this.mStyle);
     }

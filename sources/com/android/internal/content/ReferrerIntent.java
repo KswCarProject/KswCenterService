@@ -2,16 +2,21 @@ package com.android.internal.content;
 
 import android.annotation.UnsupportedAppUsage;
 import android.content.Intent;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.Objects;
 
+/* loaded from: classes4.dex */
 public class ReferrerIntent extends Intent {
-    public static final Parcelable.Creator<ReferrerIntent> CREATOR = new Parcelable.Creator<ReferrerIntent>() {
+    public static final Parcelable.Creator<ReferrerIntent> CREATOR = new Parcelable.Creator<ReferrerIntent>() { // from class: com.android.internal.content.ReferrerIntent.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ReferrerIntent createFromParcel(Parcel source) {
             return new ReferrerIntent(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ReferrerIntent[] newArray(int size) {
             return new ReferrerIntent[size];
         }
@@ -25,6 +30,7 @@ public class ReferrerIntent extends Intent {
         this.mReferrer = referrer;
     }
 
+    @Override // android.content.Intent, android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int parcelableFlags) {
         super.writeToParcel(dest, parcelableFlags);
         dest.writeString(this.mReferrer);
@@ -40,13 +46,11 @@ public class ReferrerIntent extends Intent {
             return false;
         }
         ReferrerIntent other = (ReferrerIntent) obj;
-        if (!filterEquals(other) || !Objects.equals(this.mReferrer, other.mReferrer)) {
-            return false;
-        }
-        return true;
+        return filterEquals(other) && Objects.equals(this.mReferrer, other.mReferrer);
     }
 
     public int hashCode() {
-        return (((17 * 31) + filterHashCode()) * 31) + Objects.hashCode(this.mReferrer);
+        int result = (17 * 31) + filterHashCode();
+        return (result * 31) + Objects.hashCode(this.mReferrer);
     }
 }

@@ -7,39 +7,42 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.RemoteException;
+import android.p007os.RemoteException;
 import android.util.Pair;
 
+/* loaded from: classes3.dex */
 public class SyncStateContract {
 
+    /* loaded from: classes3.dex */
     public interface Columns extends BaseColumns {
         public static final String ACCOUNT_NAME = "account_name";
         public static final String ACCOUNT_TYPE = "account_type";
         public static final String DATA = "data";
     }
 
+    /* loaded from: classes3.dex */
     public static class Constants implements Columns {
         public static final String CONTENT_DIRECTORY = "syncstate";
     }
 
+    /* loaded from: classes3.dex */
     public static final class Helpers {
         private static final String[] DATA_PROJECTION = {"data", "_id"};
         private static final String SELECT_BY_ACCOUNT = "account_name=? AND account_type=?";
 
         public static byte[] get(ContentProviderClient provider, Uri uri, Account account) throws RemoteException {
-            Cursor c = provider.query(uri, DATA_PROJECTION, SELECT_BY_ACCOUNT, new String[]{account.name, account.type}, (String) null);
-            if (c != null) {
-                try {
-                    if (c.moveToNext()) {
-                        return c.getBlob(c.getColumnIndexOrThrow("data"));
-                    }
-                    c.close();
-                    return null;
-                } finally {
-                    c.close();
-                }
-            } else {
+            Cursor c = provider.query(uri, DATA_PROJECTION, SELECT_BY_ACCOUNT, new String[]{account.name, account.type}, null);
+            if (c == null) {
                 throw new RemoteException();
+            }
+            try {
+                if (c.moveToNext()) {
+                    return c.getBlob(c.getColumnIndexOrThrow("data"));
+                }
+                c.close();
+                return null;
+            } finally {
+                c.close();
             }
         }
 
@@ -62,24 +65,24 @@ public class SyncStateContract {
         public static void update(ContentProviderClient provider, Uri uri, byte[] data) throws RemoteException {
             ContentValues values = new ContentValues();
             values.put("data", data);
-            provider.update(uri, values, (String) null, (String[]) null);
+            provider.update(uri, values, null, null);
         }
 
         public static Pair<Uri, byte[]> getWithUri(ContentProviderClient provider, Uri uri, Account account) throws RemoteException {
-            Cursor c = provider.query(uri, DATA_PROJECTION, SELECT_BY_ACCOUNT, new String[]{account.name, account.type}, (String) null);
-            if (c != null) {
-                try {
-                    if (c.moveToNext()) {
-                        long rowId = c.getLong(1);
-                        return Pair.create(ContentUris.withAppendedId(uri, rowId), c.getBlob(c.getColumnIndexOrThrow("data")));
-                    }
-                    c.close();
-                    return null;
-                } finally {
-                    c.close();
-                }
-            } else {
+            Cursor c = provider.query(uri, DATA_PROJECTION, SELECT_BY_ACCOUNT, new String[]{account.name, account.type}, null);
+            if (c == null) {
                 throw new RemoteException();
+            }
+            try {
+                if (c.moveToNext()) {
+                    long rowId = c.getLong(1);
+                    byte[] blob = c.getBlob(c.getColumnIndexOrThrow("data"));
+                    return Pair.create(ContentUris.withAppendedId(uri, rowId), blob);
+                }
+                c.close();
+                return null;
+            } finally {
+                c.close();
             }
         }
 

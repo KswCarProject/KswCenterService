@@ -1,43 +1,42 @@
 package android.net;
 
 import android.net.SocketKeepalive;
-import android.os.ParcelFileDescriptor;
-import android.os.RemoteException;
+import android.p007os.ParcelFileDescriptor;
+import android.p007os.RemoteException;
 import android.util.Log;
+import java.io.FileDescriptor;
 import java.util.concurrent.Executor;
 
+/* loaded from: classes3.dex */
 final class TcpSocketKeepalive extends SocketKeepalive {
     TcpSocketKeepalive(IConnectivityManager service, Network network, ParcelFileDescriptor pfd, Executor executor, SocketKeepalive.Callback callback) {
         super(service, network, pfd, executor, callback);
     }
 
-    /* access modifiers changed from: package-private */
-    public void startImpl(int intervalSec) {
-        this.mExecutor.execute(new Runnable(intervalSec) {
-            private final /* synthetic */ int f$1;
-
-            {
-                this.f$1 = r2;
-            }
-
+    @Override // android.net.SocketKeepalive
+    void startImpl(final int intervalSec) {
+        this.mExecutor.execute(new Runnable() { // from class: android.net.-$$Lambda$TcpSocketKeepalive$E1MP45uBTM6jPfrxAAqXFllEmAA
+            @Override // java.lang.Runnable
             public final void run() {
-                TcpSocketKeepalive.lambda$startImpl$0(TcpSocketKeepalive.this, this.f$1);
+                TcpSocketKeepalive.lambda$startImpl$0(TcpSocketKeepalive.this, intervalSec);
             }
         });
     }
 
     public static /* synthetic */ void lambda$startImpl$0(TcpSocketKeepalive tcpSocketKeepalive, int intervalSec) {
         try {
-            tcpSocketKeepalive.mService.startTcpKeepalive(tcpSocketKeepalive.mNetwork, tcpSocketKeepalive.mPfd.getFileDescriptor(), intervalSec, tcpSocketKeepalive.mCallback);
+            FileDescriptor fd = tcpSocketKeepalive.mPfd.getFileDescriptor();
+            tcpSocketKeepalive.mService.startTcpKeepalive(tcpSocketKeepalive.mNetwork, fd, intervalSec, tcpSocketKeepalive.mCallback);
         } catch (RemoteException e) {
-            Log.e("SocketKeepalive", "Error starting packet keepalive: ", e);
+            Log.m69e("SocketKeepalive", "Error starting packet keepalive: ", e);
             throw e.rethrowFromSystemServer();
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void stopImpl() {
-        this.mExecutor.execute(new Runnable() {
+    @Override // android.net.SocketKeepalive
+    void stopImpl() {
+        this.mExecutor.execute(new Runnable() { // from class: android.net.-$$Lambda$TcpSocketKeepalive$XcFd1FxqMQjF6WWgzFIVR4hV2xk
+            @Override // java.lang.Runnable
             public final void run() {
                 TcpSocketKeepalive.lambda$stopImpl$1(TcpSocketKeepalive.this);
             }
@@ -50,7 +49,7 @@ final class TcpSocketKeepalive extends SocketKeepalive {
                 tcpSocketKeepalive.mService.stopKeepalive(tcpSocketKeepalive.mNetwork, tcpSocketKeepalive.mSlot.intValue());
             }
         } catch (RemoteException e) {
-            Log.e("SocketKeepalive", "Error stopping packet keepalive: ", e);
+            Log.m69e("SocketKeepalive", "Error stopping packet keepalive: ", e);
             throw e.rethrowFromSystemServer();
         }
     }

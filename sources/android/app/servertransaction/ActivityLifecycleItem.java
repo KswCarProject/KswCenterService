@@ -3,6 +3,7 @@ package android.app.servertransaction;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes.dex */
 public abstract class ActivityLifecycleItem extends ClientTransactionItem {
     public static final int ON_CREATE = 1;
     public static final int ON_DESTROY = 6;
@@ -15,11 +16,13 @@ public abstract class ActivityLifecycleItem extends ClientTransactionItem {
     public static final int UNDEFINED = -1;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface LifecycleState {
     }
 
     public abstract int getTargetState();
 
+    @Override // android.app.servertransaction.ObjectPoolItem
     public void recycle() {
     }
 }

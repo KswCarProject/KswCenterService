@@ -4,8 +4,10 @@ import android.annotation.UnsupportedAppUsage;
 import android.net.wifi.WifiEnterpriseConfig;
 import com.android.internal.util.ArrayUtils;
 import com.android.internal.util.GrowingArrayUtils;
+import java.lang.reflect.Array;
 import libcore.util.EmptyArray;
 
+/* loaded from: classes4.dex */
 abstract class SpannableStringInternal {
     @UnsupportedAppUsage
     private static final int COLUMNS = 3;
@@ -34,13 +36,12 @@ abstract class SpannableStringInternal {
         }
         this.mSpans = EmptyArray.OBJECT;
         this.mSpanData = EmptyArray.INT;
-        if (!(source instanceof Spanned)) {
-            return;
-        }
-        if (source instanceof SpannableStringInternal) {
-            copySpans((SpannableStringInternal) source, start, end, ignoreNoCopySpan);
-        } else {
-            copySpans((Spanned) source, start, end, ignoreNoCopySpan);
+        if (source instanceof Spanned) {
+            if (source instanceof SpannableStringInternal) {
+                copySpans((SpannableStringInternal) source, start, end, ignoreNoCopySpan);
+            } else {
+                copySpans((Spanned) source, start, end, ignoreNoCopySpan);
+            }
         }
     }
 
@@ -68,17 +69,14 @@ abstract class SpannableStringInternal {
     }
 
     private void copySpans(SpannableStringInternal src, int start, int end, boolean ignoreNoCopySpan) {
-        SpannableStringInternal spannableStringInternal = src;
-        int i = start;
-        int i2 = end;
-        int[] srcData = spannableStringInternal.mSpanData;
-        Object[] srcSpans = spannableStringInternal.mSpans;
-        int limit = spannableStringInternal.mSpanCount;
+        int[] srcData = src.mSpanData;
+        Object[] srcSpans = src.mSpans;
+        int limit = src.mSpanCount;
         boolean hasNoCopySpan = false;
         int count = 0;
-        for (int i3 = 0; i3 < limit; i3++) {
-            if (!isOutOfCopyRange(i, i2, srcData[(i3 * 3) + 0], srcData[(i3 * 3) + 1])) {
-                if (srcSpans[i3] instanceof NoCopySpan) {
+        for (int count2 = 0; count2 < limit; count2++) {
+            if (!isOutOfCopyRange(start, end, srcData[(count2 * 3) + 0], srcData[(count2 * 3) + 1])) {
+                if (srcSpans[count2] instanceof NoCopySpan) {
                     hasNoCopySpan = true;
                     if (ignoreNoCopySpan) {
                     }
@@ -86,35 +84,36 @@ abstract class SpannableStringInternal {
                 count++;
             }
         }
-        if (count != 0) {
-            if (!hasNoCopySpan && i == 0 && i2 == src.length()) {
-                this.mSpans = ArrayUtils.newUnpaddedObjectArray(spannableStringInternal.mSpans.length);
-                this.mSpanData = new int[spannableStringInternal.mSpanData.length];
-                this.mSpanCount = spannableStringInternal.mSpanCount;
-                System.arraycopy(spannableStringInternal.mSpans, 0, this.mSpans, 0, spannableStringInternal.mSpans.length);
-                System.arraycopy(spannableStringInternal.mSpanData, 0, this.mSpanData, 0, this.mSpanData.length);
-                return;
-            }
-            this.mSpanCount = count;
-            this.mSpans = ArrayUtils.newUnpaddedObjectArray(this.mSpanCount);
-            this.mSpanData = new int[(this.mSpans.length * 3)];
-            int j = 0;
-            for (int i4 = 0; i4 < limit; i4++) {
-                int spanStart = srcData[(i4 * 3) + 0];
-                int spanEnd = srcData[(i4 * 3) + 1];
-                if (!isOutOfCopyRange(i, i2, spanStart, spanEnd) && (!ignoreNoCopySpan || !(srcSpans[i4] instanceof NoCopySpan))) {
-                    if (spanStart < i) {
-                        spanStart = start;
-                    }
-                    if (spanEnd > i2) {
-                        spanEnd = end;
-                    }
-                    this.mSpans[j] = srcSpans[i4];
-                    this.mSpanData[(j * 3) + 0] = spanStart - i;
-                    this.mSpanData[(j * 3) + 1] = spanEnd - i;
-                    this.mSpanData[(j * 3) + 2] = srcData[(i4 * 3) + 2];
-                    j++;
+        if (count == 0) {
+            return;
+        }
+        if (!hasNoCopySpan && start == 0 && end == src.length()) {
+            this.mSpans = ArrayUtils.newUnpaddedObjectArray(src.mSpans.length);
+            this.mSpanData = new int[src.mSpanData.length];
+            this.mSpanCount = src.mSpanCount;
+            System.arraycopy(src.mSpans, 0, this.mSpans, 0, src.mSpans.length);
+            System.arraycopy(src.mSpanData, 0, this.mSpanData, 0, this.mSpanData.length);
+            return;
+        }
+        this.mSpanCount = count;
+        this.mSpans = ArrayUtils.newUnpaddedObjectArray(this.mSpanCount);
+        this.mSpanData = new int[this.mSpans.length * 3];
+        int j = 0;
+        for (int i = 0; i < limit; i++) {
+            int spanStart = srcData[(i * 3) + 0];
+            int spanEnd = srcData[(i * 3) + 1];
+            if (!isOutOfCopyRange(start, end, spanStart, spanEnd) && (!ignoreNoCopySpan || !(srcSpans[i] instanceof NoCopySpan))) {
+                if (spanStart < start) {
+                    spanStart = start;
                 }
+                if (spanEnd > end) {
+                    spanEnd = end;
+                }
+                this.mSpans[j] = srcSpans[i];
+                this.mSpanData[(j * 3) + 0] = spanStart - start;
+                this.mSpanData[(j * 3) + 1] = spanEnd - start;
+                this.mSpanData[(j * 3) + 2] = srcData[(i * 3) + 2];
+                j++;
             }
         }
     }
@@ -124,11 +123,11 @@ abstract class SpannableStringInternal {
         if (spanStart > end || spanEnd < start) {
             return true;
         }
-        if (spanStart == spanEnd || start == end) {
+        if (spanStart != spanEnd && start != end) {
+            if (spanStart == end || spanEnd == start) {
+                return true;
+            }
             return false;
-        }
-        if (spanStart == end || spanEnd == start) {
-            return true;
         }
         return false;
     }
@@ -149,83 +148,73 @@ abstract class SpannableStringInternal {
         this.mText.getChars(start, end, dest, off);
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void setSpan(Object what, int start, int end, int flags) {
+    void setSpan(Object what, int start, int end, int flags) {
         setSpan(what, start, end, flags, true);
     }
 
     @UnsupportedAppUsage
     private boolean isIndexFollowsNextLine(int index) {
-        return (index == 0 || index == length() || charAt(index + -1) == 10) ? false : true;
+        return (index == 0 || index == length() || charAt(index + (-1)) == '\n') ? false : true;
     }
 
     @UnsupportedAppUsage
     private void setSpan(Object what, int start, int end, int flags, boolean enforceParagraph) {
-        Object obj = what;
-        int i = start;
-        int i2 = end;
-        int nstart = start;
-        int nend = end;
-        checkRange("setSpan", i, i2);
+        checkRange("setSpan", start, end);
         if ((flags & 51) == 51) {
-            if (isIndexFollowsNextLine(i)) {
-                if (enforceParagraph) {
-                    throw new RuntimeException("PARAGRAPH span must start at paragraph boundary (" + i + " follows " + charAt(i - 1) + ")");
+            if (isIndexFollowsNextLine(start)) {
+                if (!enforceParagraph) {
+                    return;
                 }
-                return;
-            } else if (isIndexFollowsNextLine(i2)) {
-                if (enforceParagraph) {
-                    throw new RuntimeException("PARAGRAPH span must end at paragraph boundary (" + i2 + " follows " + charAt(i2 - 1) + ")");
+                throw new RuntimeException("PARAGRAPH span must start at paragraph boundary (" + start + " follows " + charAt(start - 1) + ")");
+            } else if (isIndexFollowsNextLine(end)) {
+                if (!enforceParagraph) {
+                    return;
                 }
-                return;
+                throw new RuntimeException("PARAGRAPH span must end at paragraph boundary (" + end + " follows " + charAt(end - 1) + ")");
             }
         }
         int count = this.mSpanCount;
         Object[] spans = this.mSpans;
         int[] data = this.mSpanData;
-        int i3 = 0;
+        int i = 0;
         while (true) {
-            int i4 = i3;
-            if (i4 >= count) {
+            int i2 = i;
+            if (i2 >= count) {
                 if (this.mSpanCount + 1 >= this.mSpans.length) {
                     Object[] newtags = ArrayUtils.newUnpaddedObjectArray(GrowingArrayUtils.growSize(this.mSpanCount));
-                    int[] newdata = new int[(newtags.length * 3)];
+                    int[] newdata = new int[newtags.length * 3];
                     System.arraycopy(this.mSpans, 0, newtags, 0, this.mSpanCount);
                     System.arraycopy(this.mSpanData, 0, newdata, 0, this.mSpanCount * 3);
                     this.mSpans = newtags;
                     this.mSpanData = newdata;
                 }
-                this.mSpans[this.mSpanCount] = obj;
-                this.mSpanData[(this.mSpanCount * 3) + 0] = i;
-                this.mSpanData[(this.mSpanCount * 3) + 1] = i2;
+                this.mSpans[this.mSpanCount] = what;
+                this.mSpanData[(this.mSpanCount * 3) + 0] = start;
+                this.mSpanData[(this.mSpanCount * 3) + 1] = end;
                 this.mSpanData[(this.mSpanCount * 3) + 2] = flags;
                 this.mSpanCount++;
                 if (this instanceof Spannable) {
-                    sendSpanAdded(obj, nstart, nend);
+                    sendSpanAdded(what, start, end);
                     return;
                 }
                 return;
-            } else if (spans[i4] == obj) {
-                int ostart = data[(i4 * 3) + 0];
-                int oend = data[(i4 * 3) + 1];
-                data[(i4 * 3) + 0] = i;
-                data[(i4 * 3) + 1] = i2;
-                data[(i4 * 3) + 2] = flags;
-                int i5 = i4;
-                int[] iArr = data;
-                sendSpanChanged(what, ostart, oend, nstart, nend);
+            } else if (spans[i2] == what) {
+                int ostart = data[(i2 * 3) + 0];
+                int oend = data[(i2 * 3) + 1];
+                data[(i2 * 3) + 0] = start;
+                data[(i2 * 3) + 1] = end;
+                data[(i2 * 3) + 2] = flags;
+                sendSpanChanged(what, ostart, oend, start, end);
                 return;
             } else {
-                int[] iArr2 = data;
-                i3 = i4 + 1;
+                i = i2 + 1;
             }
         }
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void removeSpan(Object what) {
+    void removeSpan(Object what) {
         removeSpan(what, 0);
     }
 
@@ -289,135 +278,73 @@ abstract class SpannableStringInternal {
         return 0;
     }
 
-    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r12v5, resolved type: java.lang.Object} */
-    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r9v5, resolved type: T[]} */
-    /* JADX WARNING: Multi-variable type inference failed */
-    @android.annotation.UnsupportedAppUsage
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public <T> T[] getSpans(int r19, int r20, java.lang.Class<T> r21) {
-        /*
-            r18 = this;
-            r0 = r18
-            r1 = r19
-            r2 = r20
-            r3 = r21
-            r4 = 0
-            int r5 = r0.mSpanCount
-            java.lang.Object[] r6 = r0.mSpans
-            int[] r7 = r0.mSpanData
-            r8 = 0
-            r9 = 0
-            r10 = 0
-            r11 = r9
-            r9 = r8
-            r8 = r4
-            r4 = r10
-        L_0x0016:
-            r12 = 1
-            if (r4 >= r5) goto L_0x0098
-            int r13 = r4 * 3
-            int r13 = r13 + r10
-            r13 = r7[r13]
-            int r14 = r4 * 3
-            int r14 = r14 + r12
-            r14 = r7[r14]
-            if (r13 <= r2) goto L_0x0027
-            goto L_0x0091
-        L_0x0027:
-            if (r14 >= r1) goto L_0x002b
-            goto L_0x0091
-        L_0x002b:
-            if (r13 == r14) goto L_0x0035
-            if (r1 == r2) goto L_0x0035
-            if (r13 != r2) goto L_0x0032
-            goto L_0x0091
-        L_0x0032:
-            if (r14 != r1) goto L_0x0035
-            goto L_0x0091
-        L_0x0035:
-            if (r3 == 0) goto L_0x0044
-            java.lang.Class<java.lang.Object> r15 = java.lang.Object.class
-            if (r3 == r15) goto L_0x0044
-            r15 = r6[r4]
-            boolean r15 = r3.isInstance(r15)
-            if (r15 != 0) goto L_0x0044
-            goto L_0x0091
-        L_0x0044:
-            if (r8 != 0) goto L_0x004b
-            r11 = r6[r4]
-            int r8 = r8 + 1
-            goto L_0x0091
-        L_0x004b:
-            if (r8 != r12) goto L_0x0059
-            int r15 = r5 - r4
-            int r15 = r15 + r12
-            java.lang.Object r12 = java.lang.reflect.Array.newInstance(r3, r15)
-            r9 = r12
-            java.lang.Object[] r9 = (java.lang.Object[]) r9
-            r9[r10] = r11
-        L_0x0059:
-            int r12 = r4 * 3
-            int r12 = r12 + 2
-            r12 = r7[r12]
-            r15 = 16711680(0xff0000, float:2.3418052E-38)
-            r12 = r12 & r15
-            if (r12 == 0) goto L_0x008a
-            r16 = r10
-        L_0x0066:
-            r17 = r16
-            r10 = r17
-            if (r10 >= r8) goto L_0x007c
-            r1 = r9[r10]
-            int r1 = r0.getSpanFlags(r1)
-            r1 = r1 & r15
-            if (r12 <= r1) goto L_0x0076
-            goto L_0x007c
-        L_0x0076:
-            int r16 = r10 + 1
-            r1 = r19
-            r10 = 0
-            goto L_0x0066
-        L_0x007c:
-            int r1 = r10 + 1
-            int r15 = r8 - r10
-            java.lang.System.arraycopy(r9, r10, r9, r1, r15)
-            r1 = r6[r4]
-            r9[r10] = r1
-            int r8 = r8 + 1
-            goto L_0x0091
-        L_0x008a:
-            int r1 = r8 + 1
-            r10 = r6[r4]
-            r9[r8] = r10
-            r8 = r1
-        L_0x0091:
-            int r4 = r4 + 1
-            r1 = r19
-            r10 = 0
-            goto L_0x0016
-        L_0x0098:
-            if (r8 != 0) goto L_0x009f
-            java.lang.Object[] r1 = com.android.internal.util.ArrayUtils.emptyArray(r21)
-            return r1
-        L_0x009f:
-            if (r8 != r12) goto L_0x00ab
-            java.lang.Object r1 = java.lang.reflect.Array.newInstance(r3, r12)
-            java.lang.Object[] r1 = (java.lang.Object[]) r1
-            r4 = 0
-            r1[r4] = r11
-            return r1
-        L_0x00ab:
-            int r1 = r9.length
-            if (r8 != r1) goto L_0x00af
-            return r9
-        L_0x00af:
-            java.lang.Object r1 = java.lang.reflect.Array.newInstance(r3, r8)
-            java.lang.Object[] r1 = (java.lang.Object[]) r1
-            r4 = 0
-            java.lang.System.arraycopy(r9, r4, r1, r4, r8)
-            return r1
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.text.SpannableStringInternal.getSpans(int, int, java.lang.Class):java.lang.Object[]");
+    @UnsupportedAppUsage
+    public <T> T[] getSpans(int queryStart, int queryEnd, Class<T> kind) {
+        int j;
+        int i = queryStart;
+        int spanCount = this.mSpanCount;
+        Object[] spans = this.mSpans;
+        int[] data = this.mSpanData;
+        int i2 = 0;
+        Object ret1 = null;
+        Object ret12 = null;
+        Object[] ret = (T[]) ret12;
+        int count = 0;
+        int count2 = 0;
+        while (count2 < spanCount) {
+            int spanStart = data[(count2 * 3) + i2];
+            int spanEnd = data[(count2 * 3) + 1];
+            if (spanStart <= queryEnd && spanEnd >= i && ((spanStart == spanEnd || i == queryEnd || (spanStart != queryEnd && spanEnd != i)) && (kind == null || kind == Object.class || kind.isInstance(spans[count2])))) {
+                if (count == 0) {
+                    ret1 = spans[count2];
+                    count++;
+                } else {
+                    if (count == 1) {
+                        Object[] ret2 = (Object[]) Array.newInstance((Class<?>) kind, (spanCount - count2) + 1);
+                        ret = (T[]) ret2;
+                        ret[i2] = ret1;
+                    }
+                    int prio = data[(count2 * 3) + 2] & Spanned.SPAN_PRIORITY;
+                    if (prio != 0) {
+                        int j2 = i2;
+                        while (true) {
+                            j = j2;
+                            if (j >= count) {
+                                break;
+                            }
+                            int p = getSpanFlags(ret[j]) & Spanned.SPAN_PRIORITY;
+                            if (prio > p) {
+                                break;
+                            }
+                            j2 = j + 1;
+                        }
+                        System.arraycopy(ret, j, ret, j + 1, count - j);
+                        ret[j] = spans[count2];
+                        count++;
+                    } else {
+                        ret[count] = spans[count2];
+                        count++;
+                    }
+                }
+            }
+            count2++;
+            i = queryStart;
+            i2 = 0;
+        }
+        if (count == 0) {
+            return (T[]) ArrayUtils.emptyArray(kind);
+        }
+        if (count == 1) {
+            T[] tArr = (T[]) ((Object[]) Array.newInstance((Class<?>) kind, 1));
+            tArr[0] = ret1;
+            return tArr;
+        } else if (count == ret.length) {
+            return (T[]) ret;
+        } else {
+            T[] tArr2 = (T[]) ((Object[]) Array.newInstance((Class<?>) kind, count));
+            System.arraycopy(ret, 0, tArr2, 0, count);
+            return tArr2;
+        }
     }
 
     @UnsupportedAppUsage
@@ -429,13 +356,13 @@ abstract class SpannableStringInternal {
             kind = Object.class;
         }
         int limit2 = limit;
-        for (int i = 0; i < count; i++) {
-            int st = data[(i * 3) + 0];
-            int en = data[(i * 3) + 1];
-            if (st > start && st < limit2 && kind.isInstance(spans[i])) {
+        for (int limit3 = 0; limit3 < count; limit3++) {
+            int st = data[(limit3 * 3) + 0];
+            int en = data[(limit3 * 3) + 1];
+            if (st > start && st < limit2 && kind.isInstance(spans[limit3])) {
                 limit2 = st;
             }
-            if (en > start && en < limit2 && kind.isInstance(spans[i])) {
+            if (en > start && en < limit2 && kind.isInstance(spans[limit3])) {
                 limit2 = en;
             }
         }
@@ -444,22 +371,25 @@ abstract class SpannableStringInternal {
 
     @UnsupportedAppUsage
     private void sendSpanAdded(Object what, int start, int end) {
-        for (SpanWatcher onSpanAdded : (SpanWatcher[]) getSpans(start, end, SpanWatcher.class)) {
-            onSpanAdded.onSpanAdded((Spannable) this, what, start, end);
+        SpanWatcher[] recip = (SpanWatcher[]) getSpans(start, end, SpanWatcher.class);
+        for (SpanWatcher spanWatcher : recip) {
+            spanWatcher.onSpanAdded((Spannable) this, what, start, end);
         }
     }
 
     @UnsupportedAppUsage
     private void sendSpanRemoved(Object what, int start, int end) {
-        for (SpanWatcher onSpanRemoved : (SpanWatcher[]) getSpans(start, end, SpanWatcher.class)) {
-            onSpanRemoved.onSpanRemoved((Spannable) this, what, start, end);
+        SpanWatcher[] recip = (SpanWatcher[]) getSpans(start, end, SpanWatcher.class);
+        for (SpanWatcher spanWatcher : recip) {
+            spanWatcher.onSpanRemoved((Spannable) this, what, start, end);
         }
     }
 
     @UnsupportedAppUsage
     private void sendSpanChanged(Object what, int s, int e, int st, int en) {
-        for (SpanWatcher onSpanChanged : (SpanWatcher[]) getSpans(Math.min(s, st), Math.max(e, en), SpanWatcher.class)) {
-            onSpanChanged.onSpanChanged((Spannable) this, what, s, e, st, en);
+        SpanWatcher[] recip = (SpanWatcher[]) getSpans(Math.min(s, st), Math.max(e, en), SpanWatcher.class);
+        for (SpanWatcher spanWatcher : recip) {
+            spanWatcher.onSpanChanged((Spannable) this, what, s, e, st, en);
         }
     }
 
@@ -470,15 +400,14 @@ abstract class SpannableStringInternal {
 
     @UnsupportedAppUsage
     private void checkRange(String operation, int start, int end) {
-        if (end >= start) {
-            int len = length();
-            if (start > len || end > len) {
-                throw new IndexOutOfBoundsException(operation + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + region(start, end) + " ends beyond length " + len);
-            } else if (start < 0 || end < 0) {
-                throw new IndexOutOfBoundsException(operation + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + region(start, end) + " starts before 0");
-            }
-        } else {
+        if (end < start) {
             throw new IndexOutOfBoundsException(operation + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + region(start, end) + " has end before start");
+        }
+        int len = length();
+        if (start > len || end > len) {
+            throw new IndexOutOfBoundsException(operation + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + region(start, end) + " ends beyond length " + len);
+        } else if (start < 0 || end < 0) {
+            throw new IndexOutOfBoundsException(operation + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + region(start, end) + " starts before 0");
         }
     }
 
@@ -506,15 +435,16 @@ abstract class SpannableStringInternal {
     }
 
     public int hashCode() {
-        int hash = (toString().hashCode() * 31) + this.mSpanCount;
+        int hash = toString().hashCode();
+        int hash2 = (hash * 31) + this.mSpanCount;
         for (int i = 0; i < this.mSpanCount; i++) {
             Object span = this.mSpans[i];
             if (span != this) {
-                hash = (hash * 31) + span.hashCode();
+                hash2 = (hash2 * 31) + span.hashCode();
             }
-            hash = (((((hash * 31) + getSpanStart(span)) * 31) + getSpanEnd(span)) * 31) + getSpanFlags(span);
+            hash2 = (((((hash2 * 31) + getSpanStart(span)) * 31) + getSpanEnd(span)) * 31) + getSpanFlags(span);
         }
-        return hash;
+        return hash2;
     }
 
     @UnsupportedAppUsage

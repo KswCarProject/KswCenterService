@@ -1,11 +1,12 @@
 package com.android.internal.policy;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes4.dex */
 public interface IKeyguardStateCallback extends IInterface {
     void onHasLockscreenWallpaperChanged(boolean z) throws RemoteException;
 
@@ -17,27 +18,35 @@ public interface IKeyguardStateCallback extends IInterface {
 
     void onTrustedChanged(boolean z) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IKeyguardStateCallback {
+        @Override // com.android.internal.policy.IKeyguardStateCallback
         public void onShowingStateChanged(boolean showing) throws RemoteException {
         }
 
+        @Override // com.android.internal.policy.IKeyguardStateCallback
         public void onSimSecureStateChanged(boolean simSecure) throws RemoteException {
         }
 
+        @Override // com.android.internal.policy.IKeyguardStateCallback
         public void onInputRestrictedStateChanged(boolean inputRestricted) throws RemoteException {
         }
 
+        @Override // com.android.internal.policy.IKeyguardStateCallback
         public void onTrustedChanged(boolean trusted) throws RemoteException {
         }
 
+        @Override // com.android.internal.policy.IKeyguardStateCallback
         public void onHasLockscreenWallpaperChanged(boolean hasLockscreenWallpaper) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IKeyguardStateCallback {
         private static final String DESCRIPTOR = "com.android.internal.policy.IKeyguardStateCallback";
         static final int TRANSACTION_onHasLockscreenWallpaperChanged = 5;
@@ -55,12 +64,13 @@ public interface IKeyguardStateCallback extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IKeyguardStateCallback)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IKeyguardStateCallback)) {
+                return (IKeyguardStateCallback) iin;
             }
-            return (IKeyguardStateCallback) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -82,63 +92,55 @@ public interface IKeyguardStateCallback extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                boolean _arg0 = false;
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = true;
-                        }
-                        onShowingStateChanged(_arg0);
-                        reply.writeNoException();
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = true;
-                        }
-                        onSimSecureStateChanged(_arg0);
-                        reply.writeNoException();
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = true;
-                        }
-                        onInputRestrictedStateChanged(_arg0);
-                        reply.writeNoException();
-                        return true;
-                    case 4:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = true;
-                        }
-                        onTrustedChanged(_arg0);
-                        reply.writeNoException();
-                        return true;
-                    case 5:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = true;
-                        }
-                        onHasLockscreenWallpaperChanged(_arg0);
-                        reply.writeNoException();
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            boolean _arg0;
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0;
+                    onShowingStateChanged(_arg0);
+                    reply.writeNoException();
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0;
+                    onSimSecureStateChanged(_arg0);
+                    reply.writeNoException();
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0;
+                    onInputRestrictedStateChanged(_arg0);
+                    reply.writeNoException();
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0;
+                    onTrustedChanged(_arg0);
+                    reply.writeNoException();
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0;
+                    onHasLockscreenWallpaperChanged(_arg0);
+                    reply.writeNoException();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IKeyguardStateCallback {
             public static IKeyguardStateCallback sDefaultImpl;
             private IBinder mRemote;
@@ -147,6 +149,7 @@ public interface IKeyguardStateCallback extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -155,95 +158,95 @@ public interface IKeyguardStateCallback extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // com.android.internal.policy.IKeyguardStateCallback
             public void onShowingStateChanged(boolean showing) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(showing);
-                    if (this.mRemote.transact(1, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(showing ? 1 : 0);
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().onShowingStateChanged(showing);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().onShowingStateChanged(showing);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.policy.IKeyguardStateCallback
             public void onSimSecureStateChanged(boolean simSecure) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(simSecure);
-                    if (this.mRemote.transact(2, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(simSecure ? 1 : 0);
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().onSimSecureStateChanged(simSecure);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().onSimSecureStateChanged(simSecure);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.policy.IKeyguardStateCallback
             public void onInputRestrictedStateChanged(boolean inputRestricted) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(inputRestricted);
-                    if (this.mRemote.transact(3, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(inputRestricted ? 1 : 0);
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().onInputRestrictedStateChanged(inputRestricted);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().onInputRestrictedStateChanged(inputRestricted);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.policy.IKeyguardStateCallback
             public void onTrustedChanged(boolean trusted) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(trusted);
-                    if (this.mRemote.transact(4, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(trusted ? 1 : 0);
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().onTrustedChanged(trusted);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().onTrustedChanged(trusted);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.policy.IKeyguardStateCallback
             public void onHasLockscreenWallpaperChanged(boolean hasLockscreenWallpaper) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(hasLockscreenWallpaper);
-                    if (this.mRemote.transact(5, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(hasLockscreenWallpaper ? 1 : 0);
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().onHasLockscreenWallpaperChanged(hasLockscreenWallpaper);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().onHasLockscreenWallpaperChanged(hasLockscreenWallpaper);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -252,11 +255,11 @@ public interface IKeyguardStateCallback extends IInterface {
         }
 
         public static boolean setDefaultImpl(IKeyguardStateCallback impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IKeyguardStateCallback getDefaultImpl() {

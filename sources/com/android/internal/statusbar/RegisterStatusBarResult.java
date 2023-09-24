@@ -1,18 +1,36 @@
 package com.android.internal.statusbar;
 
 import android.graphics.Rect;
-import android.os.IBinder;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.IBinder;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.ArrayMap;
 
+/* loaded from: classes4.dex */
 public final class RegisterStatusBarResult implements Parcelable {
-    public static final Parcelable.Creator<RegisterStatusBarResult> CREATOR = new Parcelable.Creator<RegisterStatusBarResult>() {
+    public static final Parcelable.Creator<RegisterStatusBarResult> CREATOR = new Parcelable.Creator<RegisterStatusBarResult>() { // from class: com.android.internal.statusbar.RegisterStatusBarResult.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RegisterStatusBarResult createFromParcel(Parcel source) {
-            Parcel parcel = source;
-            return new RegisterStatusBarResult(parcel.createTypedArrayMap(StatusBarIcon.CREATOR), source.readInt(), source.readInt(), source.readBoolean(), source.readInt(), source.readInt(), source.readBoolean(), source.readInt(), source.readInt(), source.readInt(), source.readStrongBinder(), (Rect) parcel.readTypedObject(Rect.CREATOR), (Rect) parcel.readTypedObject(Rect.CREATOR), source.readBoolean());
+            ArrayMap<String, StatusBarIcon> icons = source.createTypedArrayMap(StatusBarIcon.CREATOR);
+            int disabledFlags1 = source.readInt();
+            int systemUiVisibility = source.readInt();
+            boolean menuVisible = source.readBoolean();
+            int imeWindowVis = source.readInt();
+            int imeBackDisposition = source.readInt();
+            boolean showImeSwitcher = source.readBoolean();
+            int disabledFlags2 = source.readInt();
+            int fullscreenStackSysUiVisibility = source.readInt();
+            int dockedStackSysUiVisibility = source.readInt();
+            IBinder imeToken = source.readStrongBinder();
+            Rect fullscreenStackBounds = (Rect) source.readTypedObject(Rect.CREATOR);
+            Rect dockedStackBounds = (Rect) source.readTypedObject(Rect.CREATOR);
+            boolean navbarColorManagedByIme = source.readBoolean();
+            return new RegisterStatusBarResult(icons, disabledFlags1, systemUiVisibility, menuVisible, imeWindowVis, imeBackDisposition, showImeSwitcher, disabledFlags2, fullscreenStackSysUiVisibility, dockedStackSysUiVisibility, imeToken, fullscreenStackBounds, dockedStackBounds, navbarColorManagedByIme);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RegisterStatusBarResult[] newArray(int size) {
             return new RegisterStatusBarResult[size];
         }
@@ -49,10 +67,12 @@ public final class RegisterStatusBarResult implements Parcelable {
         this.mNavbarColorManagedByIme = navbarColorManagedByIme;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeTypedArrayMap(this.mIcons, flags);
         dest.writeInt(this.mDisabledFlags1);

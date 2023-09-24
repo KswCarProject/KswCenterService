@@ -6,16 +6,17 @@ import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 
+/* loaded from: classes4.dex */
 public final class Rational extends Number implements Comparable<Rational> {
-    public static final Rational NEGATIVE_INFINITY = new Rational(-1, 0);
-    public static final Rational NaN = new Rational(0, 0);
-    public static final Rational POSITIVE_INFINITY = new Rational(1, 0);
-    public static final Rational ZERO = new Rational(0, 1);
     private static final long serialVersionUID = 1;
     @UnsupportedAppUsage
     private final int mDenominator;
     @UnsupportedAppUsage
     private final int mNumerator;
+    public static final Rational NaN = new Rational(0, 0);
+    public static final Rational POSITIVE_INFINITY = new Rational(1, 0);
+    public static final Rational NEGATIVE_INFINITY = new Rational(-1, 0);
+    public static final Rational ZERO = new Rational(0, 1);
 
     public Rational(int numerator, int denominator) {
         if (denominator < 0) {
@@ -99,28 +100,36 @@ public final class Rational extends Number implements Comparable<Rational> {
     }
 
     public int hashCode() {
-        return this.mDenominator ^ ((this.mNumerator << 16) | (this.mNumerator >>> 16));
+        int numeratorFlipped = (this.mNumerator << 16) | (this.mNumerator >>> 16);
+        return this.mDenominator ^ numeratorFlipped;
     }
 
     public static int gcd(int numerator, int denominator) {
         int a = numerator;
-        int b = denominator;
-        while (b != 0) {
-            int oldB = b;
-            b = a % b;
+        int a2 = denominator;
+        while (a2 != 0) {
+            int oldB = a2;
+            a2 = a % a2;
             a = oldB;
         }
         return Math.abs(a);
     }
 
+    @Override // java.lang.Number
     public double doubleValue() {
-        return ((double) this.mNumerator) / ((double) this.mDenominator);
+        double num = this.mNumerator;
+        double den = this.mDenominator;
+        return num / den;
     }
 
+    @Override // java.lang.Number
     public float floatValue() {
-        return ((float) this.mNumerator) / ((float) this.mDenominator);
+        float num = this.mNumerator;
+        float den = this.mDenominator;
+        return num / den;
     }
 
+    @Override // java.lang.Number
     public int intValue() {
         if (isPosInf()) {
             return Integer.MAX_VALUE;
@@ -134,6 +143,7 @@ public final class Rational extends Number implements Comparable<Rational> {
         return this.mNumerator / this.mDenominator;
     }
 
+    @Override // java.lang.Number
     public long longValue() {
         if (isPosInf()) {
             return Long.MAX_VALUE;
@@ -142,15 +152,17 @@ public final class Rational extends Number implements Comparable<Rational> {
             return Long.MIN_VALUE;
         }
         if (isNaN()) {
-            return 0;
+            return 0L;
         }
-        return (long) (this.mNumerator / this.mDenominator);
+        return this.mNumerator / this.mDenominator;
     }
 
+    @Override // java.lang.Number
     public short shortValue() {
         return (short) intValue();
     }
 
+    @Override // java.lang.Comparable
     public int compareTo(Rational another) {
         Preconditions.checkNotNull(another, "another must not be null");
         if (equals(another)) {
@@ -168,27 +180,26 @@ public final class Rational extends Number implements Comparable<Rational> {
         if (isNegInf() || another.isPosInf()) {
             return -1;
         }
-        long thisNumerator = ((long) this.mNumerator) * ((long) another.mDenominator);
-        long otherNumerator = ((long) another.mNumerator) * ((long) this.mDenominator);
+        long thisNumerator = this.mNumerator * another.mDenominator;
+        long otherNumerator = another.mNumerator * this.mDenominator;
         if (thisNumerator < otherNumerator) {
             return -1;
         }
-        if (thisNumerator > otherNumerator) {
-            return 1;
-        }
-        return 0;
+        return thisNumerator > otherNumerator ? 1 : 0;
     }
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         if (this.mNumerator == 0) {
-            if (this.mDenominator != 1 && this.mDenominator != 0) {
-                throw new InvalidObjectException("Rational must be deserialized from a reduced form for zero values");
+            if (this.mDenominator == 1 || this.mDenominator == 0) {
+                return;
             }
+            throw new InvalidObjectException("Rational must be deserialized from a reduced form for zero values");
         } else if (this.mDenominator == 0) {
-            if (this.mNumerator != 1 && this.mNumerator != -1) {
-                throw new InvalidObjectException("Rational must be deserialized from a reduced form for infinity values");
+            if (this.mNumerator == 1 || this.mNumerator == -1) {
+                return;
             }
+            throw new InvalidObjectException("Rational must be deserialized from a reduced form for infinity values");
         } else if (gcd(this.mNumerator, this.mDenominator) > 1) {
             throw new InvalidObjectException("Rational must be deserialized from a reduced form for finite values");
         }
@@ -213,13 +224,13 @@ public final class Rational extends Number implements Comparable<Rational> {
         if (sep_ix < 0) {
             sep_ix = string.indexOf(47);
         }
-        if (sep_ix >= 0) {
-            try {
-                return new Rational(Integer.parseInt(string.substring(0, sep_ix)), Integer.parseInt(string.substring(sep_ix + 1)));
-            } catch (NumberFormatException e) {
-                throw invalidRational(string);
-            }
-        } else {
+        if (sep_ix < 0) {
+            NumberFormatException e = invalidRational(string);
+            throw e;
+        }
+        try {
+            return new Rational(Integer.parseInt(string.substring(0, sep_ix)), Integer.parseInt(string.substring(sep_ix + 1)));
+        } catch (NumberFormatException e2) {
             throw invalidRational(string);
         }
     }

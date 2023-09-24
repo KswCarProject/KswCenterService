@@ -2,8 +2,9 @@ package android.graphics;
 
 import android.annotation.UnsupportedAppUsage;
 import android.graphics.fonts.FontVariationAxis;
-import android.media.tv.TvContract;
-import android.os.DropBoxManager;
+import android.media.TtmlUtils;
+import android.media.p006tv.TvContract;
+import android.p007os.DropBoxManager;
 import android.security.KeyChain;
 import android.speech.tts.TextToSpeech;
 import android.text.FontConfig;
@@ -16,6 +17,7 @@ import java.util.regex.Pattern;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+/* loaded from: classes.dex */
 public class FontListParser {
     private static final Pattern FILENAME_WHITESPACE_PATTERN = Pattern.compile("^[ \\n\\r\\t]+|[ \\n\\r\\t]+$");
 
@@ -27,7 +29,7 @@ public class FontListParser {
     public static FontConfig parse(InputStream in, String fontDir) throws XmlPullParserException, IOException {
         try {
             XmlPullParser parser = Xml.newPullParser();
-            parser.setInput(in, (String) null);
+            parser.setInput(in, null);
             parser.nextTag();
             return readFamilies(parser, fontDir);
         } finally {
@@ -38,7 +40,7 @@ public class FontListParser {
     private static FontConfig readFamilies(XmlPullParser parser, String fontDir) throws XmlPullParserException, IOException {
         List<FontConfig.Family> families = new ArrayList<>();
         List<FontConfig.Alias> aliases = new ArrayList<>();
-        parser.require(2, (String) null, "familyset");
+        parser.require(2, null, "familyset");
         while (parser.next() != 3) {
             if (parser.getEventType() == 2) {
                 String tag = parser.getName();
@@ -55,13 +57,14 @@ public class FontListParser {
     }
 
     public static FontConfig.Family readFamily(XmlPullParser parser, String fontDir) throws XmlPullParserException, IOException {
-        String name = parser.getAttributeValue((String) null, "name");
+        String name = parser.getAttributeValue(null, "name");
         String lang = parser.getAttributeValue("", "lang");
-        String variant = parser.getAttributeValue((String) null, TextToSpeech.Engine.KEY_PARAM_VARIANT);
+        String variant = parser.getAttributeValue(null, TextToSpeech.Engine.KEY_PARAM_VARIANT);
         List<FontConfig.Font> fonts = new ArrayList<>();
         while (parser.next() != 3) {
             if (parser.getEventType() == 2) {
-                if (parser.getName().equals("font")) {
+                String tag = parser.getName();
+                if (tag.equals("font")) {
                     fonts.add(readFont(parser, fontDir));
                 } else {
                     skip(parser);
@@ -80,14 +83,13 @@ public class FontListParser {
     }
 
     private static FontConfig.Font readFont(XmlPullParser parser, String fontDir) throws XmlPullParserException, IOException {
-        XmlPullParser xmlPullParser = parser;
-        String indexStr = xmlPullParser.getAttributeValue((String) null, "index");
+        String indexStr = parser.getAttributeValue(null, "index");
         int index = indexStr == null ? 0 : Integer.parseInt(indexStr);
         List<FontVariationAxis> axes = new ArrayList<>();
-        String weightStr = xmlPullParser.getAttributeValue((String) null, TvContract.PreviewPrograms.COLUMN_WEIGHT);
+        String weightStr = parser.getAttributeValue(null, TvContract.PreviewPrograms.COLUMN_WEIGHT);
         int weight = weightStr == null ? 400 : Integer.parseInt(weightStr);
-        boolean isItalic = "italic".equals(xmlPullParser.getAttributeValue((String) null, TtmlUtils.TAG_STYLE));
-        String fallbackFor = xmlPullParser.getAttributeValue((String) null, "fallbackFor");
+        boolean isItalic = "italic".equals(parser.getAttributeValue(null, TtmlUtils.TAG_STYLE));
+        String fallbackFor = parser.getAttributeValue(null, "fallbackFor");
         StringBuilder filename = new StringBuilder();
         while (true) {
             StringBuilder filename2 = filename;
@@ -96,7 +98,8 @@ public class FontListParser {
                     filename2.append(parser.getText());
                 }
                 if (parser.getEventType() == 2) {
-                    if (parser.getName().equals("axis")) {
+                    String tag = parser.getName();
+                    if (tag.equals("axis")) {
                         axes.add(readAxis(parser));
                     } else {
                         skip(parser);
@@ -111,17 +114,17 @@ public class FontListParser {
     }
 
     private static FontVariationAxis readAxis(XmlPullParser parser) throws XmlPullParserException, IOException {
-        String tagStr = parser.getAttributeValue((String) null, DropBoxManager.EXTRA_TAG);
-        String styleValueStr = parser.getAttributeValue((String) null, "stylevalue");
+        String tagStr = parser.getAttributeValue(null, DropBoxManager.EXTRA_TAG);
+        String styleValueStr = parser.getAttributeValue(null, "stylevalue");
         skip(parser);
         return new FontVariationAxis(tagStr, Float.parseFloat(styleValueStr));
     }
 
     public static FontConfig.Alias readAlias(XmlPullParser parser) throws XmlPullParserException, IOException {
         int weight;
-        String name = parser.getAttributeValue((String) null, "name");
-        String toName = parser.getAttributeValue((String) null, "to");
-        String weightStr = parser.getAttributeValue((String) null, TvContract.PreviewPrograms.COLUMN_WEIGHT);
+        String name = parser.getAttributeValue(null, "name");
+        String toName = parser.getAttributeValue(null, "to");
+        String weightStr = parser.getAttributeValue(null, TvContract.PreviewPrograms.COLUMN_WEIGHT);
         if (weightStr == null) {
             weight = 400;
         } else {

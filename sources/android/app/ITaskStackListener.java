@@ -2,12 +2,13 @@ package android.app;
 
 import android.app.ActivityManager;
 import android.content.ComponentName;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes.dex */
 public interface ITaskStackListener extends IInterface {
     public static final int FORCED_RESIZEABLE_REASON_SECONDARY_DISPLAY = 2;
     public static final int FORCED_RESIZEABLE_REASON_SPLIT_SCREEN = 1;
@@ -54,75 +55,99 @@ public interface ITaskStackListener extends IInterface {
 
     void onTaskStackChanged() throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements ITaskStackListener {
+        @Override // android.app.ITaskStackListener
         public void onTaskStackChanged() throws RemoteException {
         }
 
+        @Override // android.app.ITaskStackListener
         public void onActivityPinned(String packageName, int userId, int taskId, int stackId) throws RemoteException {
         }
 
+        @Override // android.app.ITaskStackListener
         public void onActivityUnpinned() throws RemoteException {
         }
 
+        @Override // android.app.ITaskStackListener
         public void onPinnedActivityRestartAttempt(boolean clearedTask) throws RemoteException {
         }
 
+        @Override // android.app.ITaskStackListener
         public void onPinnedStackAnimationStarted() throws RemoteException {
         }
 
+        @Override // android.app.ITaskStackListener
         public void onPinnedStackAnimationEnded() throws RemoteException {
         }
 
+        @Override // android.app.ITaskStackListener
         public void onActivityForcedResizable(String packageName, int taskId, int reason) throws RemoteException {
         }
 
+        @Override // android.app.ITaskStackListener
         public void onActivityDismissingDockedStack() throws RemoteException {
         }
 
+        @Override // android.app.ITaskStackListener
         public void onActivityLaunchOnSecondaryDisplayFailed(ActivityManager.RunningTaskInfo taskInfo, int requestedDisplayId) throws RemoteException {
         }
 
+        @Override // android.app.ITaskStackListener
         public void onActivityLaunchOnSecondaryDisplayRerouted(ActivityManager.RunningTaskInfo taskInfo, int requestedDisplayId) throws RemoteException {
         }
 
+        @Override // android.app.ITaskStackListener
         public void onTaskCreated(int taskId, ComponentName componentName) throws RemoteException {
         }
 
+        @Override // android.app.ITaskStackListener
         public void onTaskRemoved(int taskId) throws RemoteException {
         }
 
+        @Override // android.app.ITaskStackListener
         public void onTaskMovedToFront(ActivityManager.RunningTaskInfo taskInfo) throws RemoteException {
         }
 
+        @Override // android.app.ITaskStackListener
         public void onTaskDescriptionChanged(ActivityManager.RunningTaskInfo taskInfo) throws RemoteException {
         }
 
+        @Override // android.app.ITaskStackListener
         public void onActivityRequestedOrientationChanged(int taskId, int requestedOrientation) throws RemoteException {
         }
 
+        @Override // android.app.ITaskStackListener
         public void onTaskRemovalStarted(ActivityManager.RunningTaskInfo taskInfo) throws RemoteException {
         }
 
+        @Override // android.app.ITaskStackListener
         public void onTaskProfileLocked(int taskId, int userId) throws RemoteException {
         }
 
+        @Override // android.app.ITaskStackListener
         public void onTaskSnapshotChanged(int taskId, ActivityManager.TaskSnapshot snapshot) throws RemoteException {
         }
 
+        @Override // android.app.ITaskStackListener
         public void onSizeCompatModeActivityChanged(int displayId, IBinder activityToken) throws RemoteException {
         }
 
+        @Override // android.app.ITaskStackListener
         public void onBackPressedOnTaskRoot(ActivityManager.RunningTaskInfo taskInfo) throws RemoteException {
         }
 
+        @Override // android.app.ITaskStackListener
         public void onTaskDisplayChanged(int taskId, int newDisplayId) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements ITaskStackListener {
         private static final String DESCRIPTOR = "android.app.ITaskStackListener";
         static final int TRANSACTION_onActivityDismissingDockedStack = 8;
@@ -156,12 +181,13 @@ public interface ITaskStackListener extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof ITaskStackListener)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof ITaskStackListener)) {
+                return (ITaskStackListener) iin;
             }
-            return (ITaskStackListener) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -215,246 +241,137 @@ public interface ITaskStackListener extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v8, resolved type: android.app.ActivityManager$RunningTaskInfo} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v12, resolved type: android.app.ActivityManager$RunningTaskInfo} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v16, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v21, resolved type: android.app.ActivityManager$RunningTaskInfo} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v25, resolved type: android.app.ActivityManager$RunningTaskInfo} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v30, resolved type: android.app.ActivityManager$RunningTaskInfo} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v35, resolved type: android.app.ActivityManager$TaskSnapshot} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v40, resolved type: android.app.ActivityManager$RunningTaskInfo} */
-        /* JADX WARNING: type inference failed for: r1v1 */
-        /* JADX WARNING: type inference failed for: r1v46 */
-        /* JADX WARNING: type inference failed for: r1v47 */
-        /* JADX WARNING: type inference failed for: r1v48 */
-        /* JADX WARNING: type inference failed for: r1v49 */
-        /* JADX WARNING: type inference failed for: r1v50 */
-        /* JADX WARNING: type inference failed for: r1v51 */
-        /* JADX WARNING: type inference failed for: r1v52 */
-        /* JADX WARNING: type inference failed for: r1v53 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r7, android.os.Parcel r8, android.os.Parcel r9, int r10) throws android.os.RemoteException {
-            /*
-                r6 = this;
-                java.lang.String r0 = "android.app.ITaskStackListener"
-                r1 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r2 = 1
-                if (r7 == r1) goto L_0x017d
-                r1 = 0
-                switch(r7) {
-                    case 1: goto L_0x0176;
-                    case 2: goto L_0x015f;
-                    case 3: goto L_0x0158;
-                    case 4: goto L_0x0148;
-                    case 5: goto L_0x0141;
-                    case 6: goto L_0x013a;
-                    case 7: goto L_0x0127;
-                    case 8: goto L_0x0120;
-                    case 9: goto L_0x0105;
-                    case 10: goto L_0x00ea;
-                    case 11: goto L_0x00cf;
-                    case 12: goto L_0x00c4;
-                    case 13: goto L_0x00ad;
-                    case 14: goto L_0x0096;
-                    case 15: goto L_0x0087;
-                    case 16: goto L_0x0070;
-                    case 17: goto L_0x0061;
-                    case 18: goto L_0x0046;
-                    case 19: goto L_0x0037;
-                    case 20: goto L_0x0020;
-                    case 21: goto L_0x0011;
-                    default: goto L_0x000c;
-                }
-            L_0x000c:
-                boolean r1 = super.onTransact(r7, r8, r9, r10)
-                return r1
-            L_0x0011:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                int r3 = r8.readInt()
-                r6.onTaskDisplayChanged(r1, r3)
-                return r2
-            L_0x0020:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x0032
-                android.os.Parcelable$Creator<android.app.ActivityManager$RunningTaskInfo> r1 = android.app.ActivityManager.RunningTaskInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.app.ActivityManager$RunningTaskInfo r1 = (android.app.ActivityManager.RunningTaskInfo) r1
-                goto L_0x0033
-            L_0x0032:
-            L_0x0033:
-                r6.onBackPressedOnTaskRoot(r1)
-                return r2
-            L_0x0037:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                android.os.IBinder r3 = r8.readStrongBinder()
-                r6.onSizeCompatModeActivityChanged(r1, r3)
-                return r2
-            L_0x0046:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                int r4 = r8.readInt()
-                if (r4 == 0) goto L_0x005c
-                android.os.Parcelable$Creator<android.app.ActivityManager$TaskSnapshot> r1 = android.app.ActivityManager.TaskSnapshot.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.app.ActivityManager$TaskSnapshot r1 = (android.app.ActivityManager.TaskSnapshot) r1
-                goto L_0x005d
-            L_0x005c:
-            L_0x005d:
-                r6.onTaskSnapshotChanged(r3, r1)
-                return r2
-            L_0x0061:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                int r3 = r8.readInt()
-                r6.onTaskProfileLocked(r1, r3)
-                return r2
-            L_0x0070:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x0082
-                android.os.Parcelable$Creator<android.app.ActivityManager$RunningTaskInfo> r1 = android.app.ActivityManager.RunningTaskInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.app.ActivityManager$RunningTaskInfo r1 = (android.app.ActivityManager.RunningTaskInfo) r1
-                goto L_0x0083
-            L_0x0082:
-            L_0x0083:
-                r6.onTaskRemovalStarted(r1)
-                return r2
-            L_0x0087:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                int r3 = r8.readInt()
-                r6.onActivityRequestedOrientationChanged(r1, r3)
-                return r2
-            L_0x0096:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x00a8
-                android.os.Parcelable$Creator<android.app.ActivityManager$RunningTaskInfo> r1 = android.app.ActivityManager.RunningTaskInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.app.ActivityManager$RunningTaskInfo r1 = (android.app.ActivityManager.RunningTaskInfo) r1
-                goto L_0x00a9
-            L_0x00a8:
-            L_0x00a9:
-                r6.onTaskDescriptionChanged(r1)
-                return r2
-            L_0x00ad:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x00bf
-                android.os.Parcelable$Creator<android.app.ActivityManager$RunningTaskInfo> r1 = android.app.ActivityManager.RunningTaskInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.app.ActivityManager$RunningTaskInfo r1 = (android.app.ActivityManager.RunningTaskInfo) r1
-                goto L_0x00c0
-            L_0x00bf:
-            L_0x00c0:
-                r6.onTaskMovedToFront(r1)
-                return r2
-            L_0x00c4:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                r6.onTaskRemoved(r1)
-                return r2
-            L_0x00cf:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                int r4 = r8.readInt()
-                if (r4 == 0) goto L_0x00e5
-                android.os.Parcelable$Creator<android.content.ComponentName> r1 = android.content.ComponentName.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.content.ComponentName r1 = (android.content.ComponentName) r1
-                goto L_0x00e6
-            L_0x00e5:
-            L_0x00e6:
-                r6.onTaskCreated(r3, r1)
-                return r2
-            L_0x00ea:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x00fc
-                android.os.Parcelable$Creator<android.app.ActivityManager$RunningTaskInfo> r1 = android.app.ActivityManager.RunningTaskInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.app.ActivityManager$RunningTaskInfo r1 = (android.app.ActivityManager.RunningTaskInfo) r1
-                goto L_0x00fd
-            L_0x00fc:
-            L_0x00fd:
-                int r3 = r8.readInt()
-                r6.onActivityLaunchOnSecondaryDisplayRerouted(r1, r3)
-                return r2
-            L_0x0105:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x0117
-                android.os.Parcelable$Creator<android.app.ActivityManager$RunningTaskInfo> r1 = android.app.ActivityManager.RunningTaskInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.app.ActivityManager$RunningTaskInfo r1 = (android.app.ActivityManager.RunningTaskInfo) r1
-                goto L_0x0118
-            L_0x0117:
-            L_0x0118:
-                int r3 = r8.readInt()
-                r6.onActivityLaunchOnSecondaryDisplayFailed(r1, r3)
-                return r2
-            L_0x0120:
-                r8.enforceInterface(r0)
-                r6.onActivityDismissingDockedStack()
-                return r2
-            L_0x0127:
-                r8.enforceInterface(r0)
-                java.lang.String r1 = r8.readString()
-                int r3 = r8.readInt()
-                int r4 = r8.readInt()
-                r6.onActivityForcedResizable(r1, r3, r4)
-                return r2
-            L_0x013a:
-                r8.enforceInterface(r0)
-                r6.onPinnedStackAnimationEnded()
-                return r2
-            L_0x0141:
-                r8.enforceInterface(r0)
-                r6.onPinnedStackAnimationStarted()
-                return r2
-            L_0x0148:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                if (r1 == 0) goto L_0x0153
-                r1 = r2
-                goto L_0x0154
-            L_0x0153:
-                r1 = 0
-            L_0x0154:
-                r6.onPinnedActivityRestartAttempt(r1)
-                return r2
-            L_0x0158:
-                r8.enforceInterface(r0)
-                r6.onActivityUnpinned()
-                return r2
-            L_0x015f:
-                r8.enforceInterface(r0)
-                java.lang.String r1 = r8.readString()
-                int r3 = r8.readInt()
-                int r4 = r8.readInt()
-                int r5 = r8.readInt()
-                r6.onActivityPinned(r1, r3, r4, r5)
-                return r2
-            L_0x0176:
-                r8.enforceInterface(r0)
-                r6.onTaskStackChanged()
-                return r2
-            L_0x017d:
-                r9.writeString(r0)
-                return r2
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.app.ITaskStackListener.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    onTaskStackChanged();
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0 = data.readString();
+                    int _arg1 = data.readInt();
+                    int _arg2 = data.readInt();
+                    int _arg3 = data.readInt();
+                    onActivityPinned(_arg0, _arg1, _arg2, _arg3);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    onActivityUnpinned();
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean _arg02 = data.readInt() != 0;
+                    onPinnedActivityRestartAttempt(_arg02);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    onPinnedStackAnimationStarted();
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    onPinnedStackAnimationEnded();
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg03 = data.readString();
+                    int _arg12 = data.readInt();
+                    int _arg22 = data.readInt();
+                    onActivityForcedResizable(_arg03, _arg12, _arg22);
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    onActivityDismissingDockedStack();
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    ActivityManager.RunningTaskInfo _arg04 = data.readInt() != 0 ? ActivityManager.RunningTaskInfo.CREATOR.createFromParcel(data) : null;
+                    int _arg13 = data.readInt();
+                    onActivityLaunchOnSecondaryDisplayFailed(_arg04, _arg13);
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    ActivityManager.RunningTaskInfo _arg05 = data.readInt() != 0 ? ActivityManager.RunningTaskInfo.CREATOR.createFromParcel(data) : null;
+                    int _arg14 = data.readInt();
+                    onActivityLaunchOnSecondaryDisplayRerouted(_arg05, _arg14);
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg06 = data.readInt();
+                    ComponentName _arg15 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    onTaskCreated(_arg06, _arg15);
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg07 = data.readInt();
+                    onTaskRemoved(_arg07);
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    ActivityManager.RunningTaskInfo _arg08 = data.readInt() != 0 ? ActivityManager.RunningTaskInfo.CREATOR.createFromParcel(data) : null;
+                    onTaskMovedToFront(_arg08);
+                    return true;
+                case 14:
+                    data.enforceInterface(DESCRIPTOR);
+                    ActivityManager.RunningTaskInfo _arg09 = data.readInt() != 0 ? ActivityManager.RunningTaskInfo.CREATOR.createFromParcel(data) : null;
+                    onTaskDescriptionChanged(_arg09);
+                    return true;
+                case 15:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg010 = data.readInt();
+                    int _arg16 = data.readInt();
+                    onActivityRequestedOrientationChanged(_arg010, _arg16);
+                    return true;
+                case 16:
+                    data.enforceInterface(DESCRIPTOR);
+                    ActivityManager.RunningTaskInfo _arg011 = data.readInt() != 0 ? ActivityManager.RunningTaskInfo.CREATOR.createFromParcel(data) : null;
+                    onTaskRemovalStarted(_arg011);
+                    return true;
+                case 17:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg012 = data.readInt();
+                    int _arg17 = data.readInt();
+                    onTaskProfileLocked(_arg012, _arg17);
+                    return true;
+                case 18:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg013 = data.readInt();
+                    ActivityManager.TaskSnapshot _arg18 = data.readInt() != 0 ? ActivityManager.TaskSnapshot.CREATOR.createFromParcel(data) : null;
+                    onTaskSnapshotChanged(_arg013, _arg18);
+                    return true;
+                case 19:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg014 = data.readInt();
+                    IBinder _arg19 = data.readStrongBinder();
+                    onSizeCompatModeActivityChanged(_arg014, _arg19);
+                    return true;
+                case 20:
+                    data.enforceInterface(DESCRIPTOR);
+                    ActivityManager.RunningTaskInfo _arg015 = data.readInt() != 0 ? ActivityManager.RunningTaskInfo.CREATOR.createFromParcel(data) : null;
+                    onBackPressedOnTaskRoot(_arg015);
+                    return true;
+                case 21:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg016 = data.readInt();
+                    int _arg110 = data.readInt();
+                    onTaskDisplayChanged(_arg016, _arg110);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements ITaskStackListener {
             public static ITaskStackListener sDefaultImpl;
             private IBinder mRemote;
@@ -463,6 +380,7 @@ public interface ITaskStackListener extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -471,13 +389,13 @@ public interface ITaskStackListener extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.app.ITaskStackListener
             public void onTaskStackChanged() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onTaskStackChanged();
                     }
                 } finally {
@@ -485,6 +403,7 @@ public interface ITaskStackListener extends IInterface {
                 }
             }
 
+            @Override // android.app.ITaskStackListener
             public void onActivityPinned(String packageName, int userId, int taskId, int stackId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -493,9 +412,8 @@ public interface ITaskStackListener extends IInterface {
                     _data.writeInt(userId);
                     _data.writeInt(taskId);
                     _data.writeInt(stackId);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onActivityPinned(packageName, userId, taskId, stackId);
                     }
                 } finally {
@@ -503,13 +421,13 @@ public interface ITaskStackListener extends IInterface {
                 }
             }
 
+            @Override // android.app.ITaskStackListener
             public void onActivityUnpinned() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onActivityUnpinned();
                     }
                 } finally {
@@ -517,14 +435,14 @@ public interface ITaskStackListener extends IInterface {
                 }
             }
 
+            @Override // android.app.ITaskStackListener
             public void onPinnedActivityRestartAttempt(boolean clearedTask) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(clearedTask);
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(clearedTask ? 1 : 0);
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onPinnedActivityRestartAttempt(clearedTask);
                     }
                 } finally {
@@ -532,13 +450,13 @@ public interface ITaskStackListener extends IInterface {
                 }
             }
 
+            @Override // android.app.ITaskStackListener
             public void onPinnedStackAnimationStarted() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(5, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onPinnedStackAnimationStarted();
                     }
                 } finally {
@@ -546,13 +464,13 @@ public interface ITaskStackListener extends IInterface {
                 }
             }
 
+            @Override // android.app.ITaskStackListener
             public void onPinnedStackAnimationEnded() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(6, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(6, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onPinnedStackAnimationEnded();
                     }
                 } finally {
@@ -560,6 +478,7 @@ public interface ITaskStackListener extends IInterface {
                 }
             }
 
+            @Override // android.app.ITaskStackListener
             public void onActivityForcedResizable(String packageName, int taskId, int reason) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -567,9 +486,8 @@ public interface ITaskStackListener extends IInterface {
                     _data.writeString(packageName);
                     _data.writeInt(taskId);
                     _data.writeInt(reason);
-                    if (this.mRemote.transact(7, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(7, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onActivityForcedResizable(packageName, taskId, reason);
                     }
                 } finally {
@@ -577,13 +495,13 @@ public interface ITaskStackListener extends IInterface {
                 }
             }
 
+            @Override // android.app.ITaskStackListener
             public void onActivityDismissingDockedStack() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(8, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(8, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onActivityDismissingDockedStack();
                     }
                 } finally {
@@ -591,6 +509,7 @@ public interface ITaskStackListener extends IInterface {
                 }
             }
 
+            @Override // android.app.ITaskStackListener
             public void onActivityLaunchOnSecondaryDisplayFailed(ActivityManager.RunningTaskInfo taskInfo, int requestedDisplayId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -602,9 +521,8 @@ public interface ITaskStackListener extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(requestedDisplayId);
-                    if (this.mRemote.transact(9, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(9, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onActivityLaunchOnSecondaryDisplayFailed(taskInfo, requestedDisplayId);
                     }
                 } finally {
@@ -612,6 +530,7 @@ public interface ITaskStackListener extends IInterface {
                 }
             }
 
+            @Override // android.app.ITaskStackListener
             public void onActivityLaunchOnSecondaryDisplayRerouted(ActivityManager.RunningTaskInfo taskInfo, int requestedDisplayId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -623,9 +542,8 @@ public interface ITaskStackListener extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(requestedDisplayId);
-                    if (this.mRemote.transact(10, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(10, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onActivityLaunchOnSecondaryDisplayRerouted(taskInfo, requestedDisplayId);
                     }
                 } finally {
@@ -633,6 +551,7 @@ public interface ITaskStackListener extends IInterface {
                 }
             }
 
+            @Override // android.app.ITaskStackListener
             public void onTaskCreated(int taskId, ComponentName componentName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -644,9 +563,8 @@ public interface ITaskStackListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(11, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(11, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onTaskCreated(taskId, componentName);
                     }
                 } finally {
@@ -654,14 +572,14 @@ public interface ITaskStackListener extends IInterface {
                 }
             }
 
+            @Override // android.app.ITaskStackListener
             public void onTaskRemoved(int taskId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(taskId);
-                    if (this.mRemote.transact(12, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(12, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onTaskRemoved(taskId);
                     }
                 } finally {
@@ -669,6 +587,7 @@ public interface ITaskStackListener extends IInterface {
                 }
             }
 
+            @Override // android.app.ITaskStackListener
             public void onTaskMovedToFront(ActivityManager.RunningTaskInfo taskInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -679,9 +598,8 @@ public interface ITaskStackListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(13, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(13, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onTaskMovedToFront(taskInfo);
                     }
                 } finally {
@@ -689,6 +607,7 @@ public interface ITaskStackListener extends IInterface {
                 }
             }
 
+            @Override // android.app.ITaskStackListener
             public void onTaskDescriptionChanged(ActivityManager.RunningTaskInfo taskInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -699,9 +618,8 @@ public interface ITaskStackListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(14, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(14, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onTaskDescriptionChanged(taskInfo);
                     }
                 } finally {
@@ -709,15 +627,15 @@ public interface ITaskStackListener extends IInterface {
                 }
             }
 
+            @Override // android.app.ITaskStackListener
             public void onActivityRequestedOrientationChanged(int taskId, int requestedOrientation) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(taskId);
                     _data.writeInt(requestedOrientation);
-                    if (this.mRemote.transact(15, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(15, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onActivityRequestedOrientationChanged(taskId, requestedOrientation);
                     }
                 } finally {
@@ -725,6 +643,7 @@ public interface ITaskStackListener extends IInterface {
                 }
             }
 
+            @Override // android.app.ITaskStackListener
             public void onTaskRemovalStarted(ActivityManager.RunningTaskInfo taskInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -735,9 +654,8 @@ public interface ITaskStackListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(16, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(16, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onTaskRemovalStarted(taskInfo);
                     }
                 } finally {
@@ -745,15 +663,15 @@ public interface ITaskStackListener extends IInterface {
                 }
             }
 
+            @Override // android.app.ITaskStackListener
             public void onTaskProfileLocked(int taskId, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(taskId);
                     _data.writeInt(userId);
-                    if (this.mRemote.transact(17, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(17, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onTaskProfileLocked(taskId, userId);
                     }
                 } finally {
@@ -761,6 +679,7 @@ public interface ITaskStackListener extends IInterface {
                 }
             }
 
+            @Override // android.app.ITaskStackListener
             public void onTaskSnapshotChanged(int taskId, ActivityManager.TaskSnapshot snapshot) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -772,9 +691,8 @@ public interface ITaskStackListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(18, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(18, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onTaskSnapshotChanged(taskId, snapshot);
                     }
                 } finally {
@@ -782,15 +700,15 @@ public interface ITaskStackListener extends IInterface {
                 }
             }
 
+            @Override // android.app.ITaskStackListener
             public void onSizeCompatModeActivityChanged(int displayId, IBinder activityToken) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(displayId);
                     _data.writeStrongBinder(activityToken);
-                    if (this.mRemote.transact(19, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(19, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onSizeCompatModeActivityChanged(displayId, activityToken);
                     }
                 } finally {
@@ -798,6 +716,7 @@ public interface ITaskStackListener extends IInterface {
                 }
             }
 
+            @Override // android.app.ITaskStackListener
             public void onBackPressedOnTaskRoot(ActivityManager.RunningTaskInfo taskInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -808,9 +727,8 @@ public interface ITaskStackListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(20, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(20, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onBackPressedOnTaskRoot(taskInfo);
                     }
                 } finally {
@@ -818,15 +736,15 @@ public interface ITaskStackListener extends IInterface {
                 }
             }
 
+            @Override // android.app.ITaskStackListener
             public void onTaskDisplayChanged(int taskId, int newDisplayId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(taskId);
                     _data.writeInt(newDisplayId);
-                    if (this.mRemote.transact(21, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(21, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onTaskDisplayChanged(taskId, newDisplayId);
                     }
                 } finally {
@@ -836,11 +754,11 @@ public interface ITaskStackListener extends IInterface {
         }
 
         public static boolean setDefaultImpl(ITaskStackListener impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static ITaskStackListener getDefaultImpl() {

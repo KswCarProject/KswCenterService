@@ -8,6 +8,7 @@ import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.logging.nano.MetricsProto;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public class LogMaker {
     @VisibleForTesting
     public static final int MAX_SERIALIZED_SIZE = 4000;
@@ -131,15 +132,15 @@ public class LogMaker {
         if (value == null) {
             return clearTaggedData(tag);
         }
-        if (isValidValue(value)) {
-            if (value.toString().getBytes().length > 4000) {
-                Log.i(TAG, "Log value too long, omitted: " + value.toString());
-            } else {
-                this.entries.put(tag, value);
-            }
-            return this;
+        if (!isValidValue(value)) {
+            throw new IllegalArgumentException("Value must be loggable type - int, long, float, String");
         }
-        throw new IllegalArgumentException("Value must be loggable type - int, long, float, String");
+        if (value.toString().getBytes().length > 4000) {
+            Log.m68i(TAG, "Log value too long, omitted: " + value.toString());
+        } else {
+            this.entries.put(tag, value);
+        }
+        return this;
     }
 
     public LogMaker clearTaggedData(int tag) {
@@ -184,7 +185,7 @@ public class LogMaker {
         if (obj instanceof Long) {
             return ((Long) obj).longValue();
         }
-        return 0;
+        return 0L;
     }
 
     public String getPackageName() {
@@ -224,11 +225,12 @@ public class LogMaker {
         if (obj instanceof Number) {
             return ((Number) obj).longValue();
         }
-        return 0;
+        return 0L;
     }
 
     public boolean isLongCounterBucket() {
-        return this.entries.get(801) instanceof Long;
+        Object obj = this.entries.get(801);
+        return obj instanceof Long;
     }
 
     public int getCounterValue() {
@@ -240,24 +242,23 @@ public class LogMaker {
     }
 
     public Object[] serialize() {
-        Object[] out = new Object[(this.entries.size() * 2)];
+        Object[] out = new Object[this.entries.size() * 2];
         for (int i = 0; i < this.entries.size(); i++) {
             out[i * 2] = Integer.valueOf(this.entries.keyAt(i));
             out[(i * 2) + 1] = this.entries.valueAt(i);
         }
         int size = out.toString().getBytes().length;
-        if (size <= 4000) {
-            return out;
+        if (size > 4000) {
+            Log.m68i(TAG, "Log line too long, did not emit: " + size + " bytes.");
+            throw new RuntimeException();
         }
-        Log.i(TAG, "Log line too long, did not emit: " + size + " bytes.");
-        throw new RuntimeException();
+        return out;
     }
 
     public void deserialize(Object[] items) {
         int i;
         Object value;
-        int i2 = 0;
-        while (items != null && i2 < items.length) {
+        for (int i2 = 0; items != null && i2 < items.length; i2 = i) {
             int i3 = i2 + 1;
             Object key = items[i2];
             if (i3 < items.length) {
@@ -273,9 +274,8 @@ public class LogMaker {
                 StringBuilder sb = new StringBuilder();
                 sb.append("Invalid key ");
                 sb.append(key == null ? "null" : key.toString());
-                Log.i(TAG, sb.toString());
+                Log.m68i(TAG, sb.toString());
             }
-            i2 = i;
         }
     }
 

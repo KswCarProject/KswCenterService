@@ -1,17 +1,18 @@
 package android.text.method;
 
+/* loaded from: classes4.dex */
 public class SingleLineTransformationMethod extends ReplacementTransformationMethod {
-    private static char[] ORIGINAL = {10, 13};
-    private static char[] REPLACEMENT = {' ', 65279};
+    private static char[] ORIGINAL = {'\n', '\r'};
+    private static char[] REPLACEMENT = {' ', '\ufeff'};
     private static SingleLineTransformationMethod sInstance;
 
-    /* access modifiers changed from: protected */
-    public char[] getOriginal() {
+    @Override // android.text.method.ReplacementTransformationMethod
+    protected char[] getOriginal() {
         return ORIGINAL;
     }
 
-    /* access modifiers changed from: protected */
-    public char[] getReplacement() {
+    @Override // android.text.method.ReplacementTransformationMethod
+    protected char[] getReplacement() {
         return REPLACEMENT;
     }
 

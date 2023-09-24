@@ -16,8 +16,9 @@ import android.util.Property;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
+/* loaded from: classes4.dex */
 public class EpicenterTranslateClipReveal extends Visibility {
     private static final String PROPNAME_BOUNDS = "android:epicenterReveal:bounds";
     private static final String PROPNAME_CLIP = "android:epicenterReveal:clip";
@@ -37,7 +38,7 @@ public class EpicenterTranslateClipReveal extends Visibility {
 
     public EpicenterTranslateClipReveal(Context context, AttributeSet attrs) {
         super(context, attrs);
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.EpicenterTranslateClipReveal, 0, 0);
+        TypedArray a = context.obtainStyledAttributes(attrs, C3132R.styleable.EpicenterTranslateClipReveal, 0, 0);
         int interpolatorX = a.getResourceId(0, 0);
         if (interpolatorX != 0) {
             this.mInterpolatorX = AnimationUtils.loadInterpolator(context, interpolatorX);
@@ -59,11 +60,13 @@ public class EpicenterTranslateClipReveal extends Visibility {
         a.recycle();
     }
 
+    @Override // android.transition.Visibility, android.transition.Transition
     public void captureStartValues(TransitionValues transitionValues) {
         super.captureStartValues(transitionValues);
         captureValues(transitionValues);
     }
 
+    @Override // android.transition.Visibility, android.transition.Transition
     public void captureEndValues(TransitionValues transitionValues) {
         super.captureEndValues(transitionValues);
         captureValues(transitionValues);
@@ -71,86 +74,66 @@ public class EpicenterTranslateClipReveal extends Visibility {
 
     private void captureValues(TransitionValues values) {
         View view = values.view;
-        if (view.getVisibility() != 8) {
-            values.values.put(PROPNAME_BOUNDS, new Rect(0, 0, view.getWidth(), view.getHeight()));
-            values.values.put(PROPNAME_TRANSLATE_X, Float.valueOf(view.getTranslationX()));
-            values.values.put(PROPNAME_TRANSLATE_Y, Float.valueOf(view.getTranslationY()));
-            values.values.put(PROPNAME_TRANSLATE_Z, Float.valueOf(view.getTranslationZ()));
-            values.values.put(PROPNAME_Z, Float.valueOf(view.getZ()));
-            values.values.put(PROPNAME_CLIP, view.getClipBounds());
+        if (view.getVisibility() == 8) {
+            return;
         }
+        Rect bounds = new Rect(0, 0, view.getWidth(), view.getHeight());
+        values.values.put(PROPNAME_BOUNDS, bounds);
+        values.values.put(PROPNAME_TRANSLATE_X, Float.valueOf(view.getTranslationX()));
+        values.values.put(PROPNAME_TRANSLATE_Y, Float.valueOf(view.getTranslationY()));
+        values.values.put(PROPNAME_TRANSLATE_Z, Float.valueOf(view.getTranslationZ()));
+        values.values.put(PROPNAME_Z, Float.valueOf(view.getZ()));
+        Rect clip = view.getClipBounds();
+        values.values.put(PROPNAME_CLIP, clip);
     }
 
+    @Override // android.transition.Visibility
     public Animator onAppear(ViewGroup sceneRoot, View view, TransitionValues startValues, TransitionValues endValues) {
-        View view2 = view;
-        TransitionValues transitionValues = endValues;
-        if (transitionValues == null) {
+        if (endValues == null) {
             return null;
         }
-        Rect endBounds = (Rect) transitionValues.values.get(PROPNAME_BOUNDS);
+        Rect endBounds = (Rect) endValues.values.get(PROPNAME_BOUNDS);
         Rect startBounds = getEpicenterOrCenter(endBounds);
-        float startX = (float) (startBounds.centerX() - endBounds.centerX());
-        float startY = (float) (startBounds.centerY() - endBounds.centerY());
-        float startZ = 0.0f - ((Float) transitionValues.values.get(PROPNAME_Z)).floatValue();
-        view2.setTranslationX(startX);
-        view2.setTranslationY(startY);
-        view2.setTranslationZ(startZ);
-        float endX = ((Float) transitionValues.values.get(PROPNAME_TRANSLATE_X)).floatValue();
-        float endY = ((Float) transitionValues.values.get(PROPNAME_TRANSLATE_Y)).floatValue();
-        float endZ = ((Float) transitionValues.values.get(PROPNAME_TRANSLATE_Z)).floatValue();
-        Rect endClip = getBestRect(transitionValues);
+        float startX = startBounds.centerX() - endBounds.centerX();
+        float startY = startBounds.centerY() - endBounds.centerY();
+        float startZ = 0.0f - ((Float) endValues.values.get(PROPNAME_Z)).floatValue();
+        view.setTranslationX(startX);
+        view.setTranslationY(startY);
+        view.setTranslationZ(startZ);
+        float endX = ((Float) endValues.values.get(PROPNAME_TRANSLATE_X)).floatValue();
+        float endY = ((Float) endValues.values.get(PROPNAME_TRANSLATE_Y)).floatValue();
+        float endZ = ((Float) endValues.values.get(PROPNAME_TRANSLATE_Z)).floatValue();
+        Rect endClip = getBestRect(endValues);
         Rect startClip = getEpicenterOrCenter(endClip);
-        view2.setClipBounds(startClip);
+        view.setClipBounds(startClip);
         State startStateX = new State(startClip.left, startClip.right, startX);
         State endStateX = new State(endClip.left, endClip.right, endX);
-        float f = endX;
         State startStateY = new State(startClip.top, startClip.bottom, startY);
-        Rect rect = startClip;
         State endStateY = new State(endClip.top, endClip.bottom, endY);
-        TimeInterpolator timeInterpolator = this.mInterpolatorX;
-        float f2 = startX;
-        TimeInterpolator timeInterpolator2 = this.mInterpolatorY;
-        Rect rect2 = endClip;
-        float f3 = startZ;
-        float f4 = endY;
-        TimeInterpolator timeInterpolator3 = timeInterpolator;
-        float f5 = startZ;
-        TimeInterpolator timeInterpolator4 = timeInterpolator3;
-        float f6 = startY;
-        return createRectAnimator(view, startStateX, startStateY, f3, endStateX, endStateY, endZ, endValues, timeInterpolator4, timeInterpolator2, this.mInterpolatorZ);
+        return createRectAnimator(view, startStateX, startStateY, startZ, endStateX, endStateY, endZ, endValues, this.mInterpolatorX, this.mInterpolatorY, this.mInterpolatorZ);
     }
 
+    @Override // android.transition.Visibility
     public Animator onDisappear(ViewGroup sceneRoot, View view, TransitionValues startValues, TransitionValues endValues) {
-        TransitionValues transitionValues = startValues;
-        TransitionValues transitionValues2 = endValues;
-        if (transitionValues == null) {
+        if (startValues == null) {
             return null;
         }
-        Rect startBounds = (Rect) transitionValues2.values.get(PROPNAME_BOUNDS);
+        Rect startBounds = (Rect) endValues.values.get(PROPNAME_BOUNDS);
         Rect endBounds = getEpicenterOrCenter(startBounds);
-        float endX = (float) (endBounds.centerX() - startBounds.centerX());
-        float endY = (float) (endBounds.centerY() - startBounds.centerY());
-        float endZ = 0.0f - ((Float) transitionValues.values.get(PROPNAME_Z)).floatValue();
-        float startX = ((Float) transitionValues2.values.get(PROPNAME_TRANSLATE_X)).floatValue();
-        float startY = ((Float) transitionValues2.values.get(PROPNAME_TRANSLATE_Y)).floatValue();
-        float startZ = ((Float) transitionValues2.values.get(PROPNAME_TRANSLATE_Z)).floatValue();
-        Rect startClip = getBestRect(transitionValues);
+        float endX = endBounds.centerX() - startBounds.centerX();
+        float endY = endBounds.centerY() - startBounds.centerY();
+        float endZ = 0.0f - ((Float) startValues.values.get(PROPNAME_Z)).floatValue();
+        float startX = ((Float) endValues.values.get(PROPNAME_TRANSLATE_X)).floatValue();
+        float startY = ((Float) endValues.values.get(PROPNAME_TRANSLATE_Y)).floatValue();
+        float startZ = ((Float) endValues.values.get(PROPNAME_TRANSLATE_Z)).floatValue();
+        Rect startClip = getBestRect(startValues);
         Rect endClip = getEpicenterOrCenter(startClip);
         view.setClipBounds(startClip);
         State startStateX = new State(startClip.left, startClip.right, startX);
         State endStateX = new State(endClip.left, endClip.right, endX);
         State startStateY = new State(startClip.top, startClip.bottom, startY);
         State endStateY = new State(endClip.top, endClip.bottom, endY);
-        TimeInterpolator timeInterpolator = this.mInterpolatorX;
-        float f = endX;
-        TimeInterpolator timeInterpolator2 = this.mInterpolatorY;
-        Rect rect = endClip;
-        Rect rect2 = startClip;
-        float f2 = startY;
-        float f3 = startX;
-        TimeInterpolator timeInterpolator3 = timeInterpolator;
-        float f4 = endY;
-        return createRectAnimator(view, startStateX, startStateY, startZ, endStateX, endStateY, endZ, endValues, timeInterpolator3, timeInterpolator2, this.mInterpolatorZ);
+        return createRectAnimator(view, startStateX, startStateY, startZ, endStateX, endStateY, endZ, endValues, this.mInterpolatorX, this.mInterpolatorY, this.mInterpolatorZ);
     }
 
     private Rect getEpicenterOrCenter(Rect bestRect) {
@@ -171,37 +154,36 @@ public class EpicenterTranslateClipReveal extends Visibility {
         return clipRect;
     }
 
-    private static Animator createRectAnimator(View view, State startX, State startY, float startZ, State endX, State endY, float endZ, TransitionValues endValues, TimeInterpolator interpolatorX, TimeInterpolator interpolatorY, TimeInterpolator interpolatorZ) {
-        final View view2 = view;
-        TimeInterpolator timeInterpolator = interpolatorX;
-        TimeInterpolator timeInterpolator2 = interpolatorY;
-        TimeInterpolator timeInterpolator3 = interpolatorZ;
+    private static Animator createRectAnimator(final View view, State startX, State startY, float startZ, State endX, State endY, float endZ, TransitionValues endValues, TimeInterpolator interpolatorX, TimeInterpolator interpolatorY, TimeInterpolator interpolatorZ) {
         StateEvaluator evaluator = new StateEvaluator();
-        ObjectAnimator animZ = ObjectAnimator.ofFloat(view2, View.TRANSLATION_Z, startZ, endZ);
-        if (timeInterpolator3 != null) {
-            animZ.setInterpolator(timeInterpolator3);
+        ObjectAnimator animZ = ObjectAnimator.ofFloat(view, View.TRANSLATION_Z, startZ, endZ);
+        if (interpolatorZ != null) {
+            animZ.setInterpolator(interpolatorZ);
         }
-        ObjectAnimator animX = ObjectAnimator.ofObject(view2, new StateProperty(StateProperty.TARGET_X), evaluator, (V[]) new State[]{startX, endX});
-        if (timeInterpolator != null) {
-            animX.setInterpolator(timeInterpolator);
+        StateProperty propX = new StateProperty(StateProperty.TARGET_X);
+        ObjectAnimator animX = ObjectAnimator.ofObject(view, propX, evaluator, startX, endX);
+        if (interpolatorX != null) {
+            animX.setInterpolator(interpolatorX);
         }
-        ObjectAnimator animY = ObjectAnimator.ofObject(view2, new StateProperty('y'), evaluator, (V[]) new State[]{startY, endY});
-        if (timeInterpolator2 != null) {
-            animY.setInterpolator(timeInterpolator2);
+        StateProperty propY = new StateProperty('y');
+        ObjectAnimator animY = ObjectAnimator.ofObject(view, propY, evaluator, startY, endY);
+        if (interpolatorY != null) {
+            animY.setInterpolator(interpolatorY);
         }
         final Rect terminalClip = (Rect) endValues.values.get(PROPNAME_CLIP);
-        AnimatorListenerAdapter animatorListener = new AnimatorListenerAdapter() {
+        AnimatorListenerAdapter animatorListener = new AnimatorListenerAdapter() { // from class: com.android.internal.transition.EpicenterTranslateClipReveal.1
+            @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
             public void onAnimationEnd(Animator animation) {
                 View.this.setClipBounds(terminalClip);
             }
         };
-        Rect rect = terminalClip;
         AnimatorSet animSet = new AnimatorSet();
         animSet.playTogether(animX, animY, animZ);
         animSet.addListener(animatorListener);
         return animSet;
     }
 
+    /* loaded from: classes4.dex */
     private static class State {
         int lower;
         float trans;
@@ -210,13 +192,14 @@ public class EpicenterTranslateClipReveal extends Visibility {
         public State() {
         }
 
-        public State(int lower2, int upper2, float trans2) {
-            this.lower = lower2;
-            this.upper = upper2;
-            this.trans = trans2;
+        public State(int lower, int upper, float trans) {
+            this.lower = lower;
+            this.upper = upper;
+            this.trans = trans;
         }
     }
 
+    /* loaded from: classes4.dex */
     private static class StateEvaluator implements TypeEvaluator<State> {
         private final State mTemp;
 
@@ -224,26 +207,31 @@ public class EpicenterTranslateClipReveal extends Visibility {
             this.mTemp = new State();
         }
 
+        @Override // android.animation.TypeEvaluator
         public State evaluate(float fraction, State startValue, State endValue) {
-            this.mTemp.upper = startValue.upper + ((int) (((float) (endValue.upper - startValue.upper)) * fraction));
-            this.mTemp.lower = startValue.lower + ((int) (((float) (endValue.lower - startValue.lower)) * fraction));
-            this.mTemp.trans = startValue.trans + ((float) ((int) ((endValue.trans - startValue.trans) * fraction)));
+            this.mTemp.upper = startValue.upper + ((int) ((endValue.upper - startValue.upper) * fraction));
+            this.mTemp.lower = startValue.lower + ((int) ((endValue.lower - startValue.lower) * fraction));
+            this.mTemp.trans = startValue.trans + ((int) ((endValue.trans - startValue.trans) * fraction));
             return this.mTemp;
         }
     }
 
+    /* loaded from: classes4.dex */
     private static class StateProperty extends Property<View, State> {
         public static final char TARGET_X = 'x';
         public static final char TARGET_Y = 'y';
         private final int mTargetDimension;
-        private final Rect mTempRect = new Rect();
-        private final State mTempState = new State();
+        private final Rect mTempRect;
+        private final State mTempState;
 
         public StateProperty(char targetDimension) {
             super(State.class, "state_" + targetDimension);
+            this.mTempRect = new Rect();
+            this.mTempState = new State();
             this.mTargetDimension = targetDimension;
         }
 
+        @Override // android.util.Property
         public State get(View object) {
             Rect tempRect = this.mTempRect;
             if (!object.getClipBounds(tempRect)) {
@@ -262,6 +250,7 @@ public class EpicenterTranslateClipReveal extends Visibility {
             return tempState;
         }
 
+        @Override // android.util.Property
         public void set(View object, State value) {
             Rect tempRect = this.mTempRect;
             if (object.getClipBounds(tempRect)) {

@@ -4,28 +4,38 @@ import android.Manifest;
 import android.app.AppOpsManager;
 import android.app.admin.DevicePolicyManager;
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.os.Binder;
-import android.os.RemoteException;
-import android.os.UserHandle;
+import android.content.p002pm.ApplicationInfo;
+import android.content.p002pm.PackageManager;
+import android.p007os.Binder;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
+import android.p007os.UserHandle;
 import android.provider.SettingsStringUtil;
 import android.telephony.Rlog;
 import android.telephony.SubscriptionManager;
 import android.util.Log;
 import android.util.StatsLog;
 import com.android.internal.annotations.VisibleForTesting;
+import com.android.internal.telephony.ITelephony;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
 
+/* loaded from: classes4.dex */
 public final class TelephonyPermissions {
     private static final boolean DBG = false;
     private static final String LOG_TAG = "TelephonyPermissions";
     private static final String PROPERTY_DEVICE_IDENTIFIER_ACCESS_RESTRICTIONS_DISABLED = "device_identifier_access_restrictions_disabled";
-    private static final Supplier<ITelephony> TELEPHONY_SUPPLIER = $$Lambda$TelephonyPermissions$LxEEC4irBSbjD1lSC4EeVLgFY9I.INSTANCE;
+    private static final Supplier<ITelephony> TELEPHONY_SUPPLIER = new Supplier() { // from class: com.android.internal.telephony.-$$Lambda$TelephonyPermissions$LxEEC4irBSbjD1lSC4EeVLgFY9I
+        @Override // java.util.function.Supplier
+        public final Object get() {
+            ITelephony asInterface;
+            asInterface = ITelephony.Stub.asInterface(ServiceManager.getService("phone"));
+            return asInterface;
+        }
+    };
     private static final Map<String, Set<String>> sReportedDeviceIDPackages = new HashMap();
 
     private TelephonyPermissions() {
@@ -48,24 +58,19 @@ public final class TelephonyPermissions {
     }
 
     public static boolean checkCarrierPrivilegeForSubId(int subId) {
-        if (!SubscriptionManager.isValidSubscriptionId(subId) || getCarrierPrivilegeStatus(TELEPHONY_SUPPLIER, subId, Binder.getCallingUid()) != 1) {
-            return false;
-        }
-        return true;
+        return SubscriptionManager.isValidSubscriptionId(subId) && getCarrierPrivilegeStatus(TELEPHONY_SUPPLIER, subId, Binder.getCallingUid()) == 1;
     }
 
     @VisibleForTesting
     public static boolean checkReadPhoneState(Context context, Supplier<ITelephony> telephonySupplier, int subId, int pid, int uid, String callingPackage, String message) {
         try {
-            context.enforcePermission(Manifest.permission.READ_PRIVILEGED_PHONE_STATE, pid, uid, message);
+            context.enforcePermission(Manifest.C0000permission.READ_PRIVILEGED_PHONE_STATE, pid, uid, message);
             return true;
         } catch (SecurityException e) {
             try {
-                context.enforcePermission(Manifest.permission.READ_PHONE_STATE, pid, uid, message);
-                if (((AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE)).noteOp(51, uid, callingPackage) == 0) {
-                    return true;
-                }
-                return false;
+                context.enforcePermission(Manifest.C0000permission.READ_PHONE_STATE, pid, uid, message);
+                AppOpsManager appOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+                return appOps.noteOp(51, uid, callingPackage) == 0;
             } catch (SecurityException phoneStateException) {
                 if (SubscriptionManager.isValidSubscriptionId(subId)) {
                     enforceCarrierPrivilege(telephonySupplier, subId, uid, message);
@@ -83,15 +88,13 @@ public final class TelephonyPermissions {
     @VisibleForTesting
     public static boolean checkReadPhoneStateOnAnyActiveSub(Context context, Supplier<ITelephony> telephonySupplier, int pid, int uid, String callingPackage, String message) {
         try {
-            context.enforcePermission(Manifest.permission.READ_PRIVILEGED_PHONE_STATE, pid, uid, message);
+            context.enforcePermission(Manifest.C0000permission.READ_PRIVILEGED_PHONE_STATE, pid, uid, message);
             return true;
         } catch (SecurityException e) {
             try {
-                context.enforcePermission(Manifest.permission.READ_PHONE_STATE, pid, uid, message);
-                if (((AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE)).noteOp(51, uid, callingPackage) == 0) {
-                    return true;
-                }
-                return false;
+                context.enforcePermission(Manifest.C0000permission.READ_PHONE_STATE, pid, uid, message);
+                AppOpsManager appOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+                return appOps.noteOp(51, uid, callingPackage) == 0;
             } catch (SecurityException e2) {
                 return checkCarrierPrivilegeForAnySubId(context, telephonySupplier, uid);
             }
@@ -113,13 +116,14 @@ public final class TelephonyPermissions {
     @VisibleForTesting
     public static boolean checkReadDeviceIdentifiers(Context context, Supplier<ITelephony> telephonySupplier, int subId, int pid, int uid, String callingPackage, String message) {
         int appId = UserHandle.getAppId(uid);
-        if (appId == 1000 || appId == 0 || context.checkPermission(Manifest.permission.READ_PRIVILEGED_PHONE_STATE, pid, uid) == 0 || checkCarrierPrivilegeForAnySubId(context, telephonySupplier, uid)) {
+        if (appId == 1000 || appId == 0 || context.checkPermission(Manifest.C0000permission.READ_PRIVILEGED_PHONE_STATE, pid, uid) == 0 || checkCarrierPrivilegeForAnySubId(context, telephonySupplier, uid)) {
             return true;
         }
         if (callingPackage != null) {
             long token = Binder.clearCallingIdentity();
+            AppOpsManager appOpsManager = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
             try {
-                if (((AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE)).noteOpNoThrow(AppOpsManager.OPSTR_READ_DEVICE_IDENTIFIERS, uid, callingPackage) == 0) {
+                if (appOpsManager.noteOpNoThrow(AppOpsManager.OPSTR_READ_DEVICE_IDENTIFIERS, uid, callingPackage) == 0) {
                     return true;
                 }
                 Binder.restoreCallingIdentity(token);
@@ -148,7 +152,7 @@ public final class TelephonyPermissions {
                 }
             }
         } catch (PackageManager.NameNotFoundException e) {
-            Log.e(LOG_TAG, "Exception caught obtaining package info for package " + callingPackage, e);
+            Log.m69e(LOG_TAG, "Exception caught obtaining package info for package " + callingPackage, e);
         }
         boolean packageReported = sReportedDeviceIDPackages.containsKey(callingPackage);
         if (!packageReported || !sReportedDeviceIDPackages.get(callingPackage).contains(message)) {
@@ -161,8 +165,8 @@ public final class TelephonyPermissions {
             invokedMethods.add(message);
             StatsLog.write(172, callingPackage, message, isPreinstalled, isPrivApp);
         }
-        Log.w(LOG_TAG, "reportAccessDeniedToReadIdentifiers:" + callingPackage + SettingsStringUtil.DELIMITER + message + ":isPreinstalled=" + isPreinstalled + ":isPrivApp=" + isPrivApp);
-        if (callingPackageInfo != null && callingPackageInfo.targetSdkVersion < 29 && (context.checkPermission(Manifest.permission.READ_PHONE_STATE, pid, uid) == 0 || checkCarrierPrivilegeForSubId(subId))) {
+        Log.m64w(LOG_TAG, "reportAccessDeniedToReadIdentifiers:" + callingPackage + SettingsStringUtil.DELIMITER + message + ":isPreinstalled=" + isPreinstalled + ":isPrivApp=" + isPrivApp);
+        if (callingPackageInfo != null && callingPackageInfo.targetSdkVersion < 29 && (context.checkPermission(Manifest.C0000permission.READ_PHONE_STATE, pid, uid) == 0 || checkCarrierPrivilegeForSubId(subId))) {
             return false;
         }
         throw new SecurityException(message + ": The user " + uid + " does not meet the requirements to access device identifiers.");
@@ -174,17 +178,15 @@ public final class TelephonyPermissions {
 
     @VisibleForTesting
     public static boolean checkReadCallLog(Context context, Supplier<ITelephony> telephonySupplier, int subId, int pid, int uid, String callingPackage) {
-        if (context.checkPermission(Manifest.permission.READ_CALL_LOG, pid, uid) != 0) {
-            if (!SubscriptionManager.isValidSubscriptionId(subId)) {
-                return false;
+        if (context.checkPermission(Manifest.C0000permission.READ_CALL_LOG, pid, uid) != 0) {
+            if (SubscriptionManager.isValidSubscriptionId(subId)) {
+                enforceCarrierPrivilege(telephonySupplier, subId, uid, "readCallLog");
+                return true;
             }
-            enforceCarrierPrivilege(telephonySupplier, subId, uid, "readCallLog");
-            return true;
-        } else if (((AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE)).noteOp(6, uid, callingPackage) == 0) {
-            return true;
-        } else {
             return false;
         }
+        AppOpsManager appOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+        return appOps.noteOp(6, uid, callingPackage) == 0;
     }
 
     public static boolean checkCallingOrSelfReadPhoneNumber(Context context, int subId, String callingPackage, String message) {
@@ -201,49 +203,47 @@ public final class TelephonyPermissions {
             return checkReadPhoneState(context, telephonySupplier, subId, pid, uid, callingPackage, message);
         } catch (SecurityException e) {
             try {
-                context.enforcePermission(Manifest.permission.READ_SMS, pid, uid, message);
-                int opCode = AppOpsManager.permissionToOpCode(Manifest.permission.READ_SMS);
-                if (opCode == -1) {
-                    return true;
+                context.enforcePermission(Manifest.C0000permission.READ_SMS, pid, uid, message);
+                int opCode = AppOpsManager.permissionToOpCode(Manifest.C0000permission.READ_SMS);
+                if (opCode != -1) {
+                    return appOps.noteOp(opCode, uid, callingPackage) == 0;
                 }
-                if (appOps.noteOp(opCode, uid, callingPackage) == 0) {
-                    return true;
-                }
-                return false;
+                return true;
             } catch (SecurityException e2) {
                 try {
-                    context.enforcePermission(Manifest.permission.READ_PHONE_NUMBERS, pid, uid, message);
-                    int opCode2 = AppOpsManager.permissionToOpCode(Manifest.permission.READ_PHONE_NUMBERS);
-                    if (opCode2 == -1) {
-                        return true;
+                    context.enforcePermission(Manifest.C0000permission.READ_PHONE_NUMBERS, pid, uid, message);
+                    int opCode2 = AppOpsManager.permissionToOpCode(Manifest.C0000permission.READ_PHONE_NUMBERS);
+                    if (opCode2 != -1) {
+                        return appOps.noteOp(opCode2, uid, callingPackage) == 0;
                     }
-                    if (appOps.noteOp(opCode2, uid, callingPackage) == 0) {
-                        return true;
-                    }
-                    return false;
+                    return true;
                 } catch (SecurityException e3) {
-                    throw new SecurityException(message + ": Neither user " + uid + " nor current process has " + Manifest.permission.READ_PHONE_STATE + ", " + Manifest.permission.READ_SMS + ", or " + Manifest.permission.READ_PHONE_NUMBERS);
+                    throw new SecurityException(message + ": Neither user " + uid + " nor current process has " + Manifest.C0000permission.READ_PHONE_STATE + ", " + Manifest.C0000permission.READ_SMS + ", or " + Manifest.C0000permission.READ_PHONE_NUMBERS);
                 }
             }
         }
     }
 
     public static void enforceCallingOrSelfModifyPermissionOrCarrierPrivilege(Context context, int subId, String message) {
-        if (context.checkCallingOrSelfPermission(Manifest.permission.MODIFY_PHONE_STATE) != 0) {
-            enforceCallingOrSelfCarrierPrivilege(subId, message);
+        if (context.checkCallingOrSelfPermission(Manifest.C0000permission.MODIFY_PHONE_STATE) == 0) {
+            return;
         }
+        enforceCallingOrSelfCarrierPrivilege(subId, message);
     }
 
     public static void enforeceCallingOrSelfReadPhoneStatePermissionOrCarrierPrivilege(Context context, int subId, String message) {
-        if (context.checkCallingOrSelfPermission(Manifest.permission.READ_PHONE_STATE) != 0) {
-            enforceCallingOrSelfCarrierPrivilege(subId, message);
+        if (context.checkCallingOrSelfPermission(Manifest.C0000permission.READ_PHONE_STATE) == 0) {
+            return;
         }
+        enforceCallingOrSelfCarrierPrivilege(subId, message);
     }
 
-    public static void enforeceCallingOrSelfReadPrivilegedPhoneStatePermissionOrCarrierPrivilege(Context context, int subId, String message) {
-        if (context.checkCallingOrSelfPermission(Manifest.permission.READ_PRIVILEGED_PHONE_STATE) != 0) {
-            enforceCallingOrSelfCarrierPrivilege(subId, message);
+    /* renamed from: enforeceCallingOrSelfReadPrivilegedPhoneStatePermissionOrCarrierPrivilege */
+    public static void m28x35b8b2a3(Context context, int subId, String message) {
+        if (context.checkCallingOrSelfPermission(Manifest.C0000permission.READ_PRIVILEGED_PHONE_STATE) == 0) {
+            return;
         }
+        enforceCallingOrSelfCarrierPrivilege(subId, message);
     }
 
     public static void enforceCallingOrSelfCarrierPrivilege(int subId, String message) {
@@ -261,7 +261,8 @@ public final class TelephonyPermissions {
     }
 
     private static boolean checkCarrierPrivilegeForAnySubId(Context context, Supplier<ITelephony> telephonySupplier, int uid) {
-        int[] activeSubIds = ((SubscriptionManager) context.getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE)).getActiveSubscriptionIdList();
+        SubscriptionManager sm = (SubscriptionManager) context.getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE);
+        int[] activeSubIds = sm.getActiveSubscriptionIdList();
         if (activeSubIds != null) {
             for (int activeSubId : activeSubIds) {
                 if (getCarrierPrivilegeStatus(telephonySupplier, activeSubId, uid) == 1) {
@@ -280,13 +281,14 @@ public final class TelephonyPermissions {
             } catch (RemoteException e) {
             }
         }
-        Rlog.e(LOG_TAG, "Phone process is down, cannot check carrier privileges");
+        Rlog.m86e(LOG_TAG, "Phone process is down, cannot check carrier privileges");
         return 0;
     }
 
     public static void enforceShellOnly(int callingUid, String message) {
-        if (callingUid != 2000 && callingUid != 0) {
-            throw new SecurityException(message + ": Only shell user can call it");
+        if (callingUid == 2000 || callingUid == 0) {
+            return;
         }
+        throw new SecurityException(message + ": Only shell user can call it");
     }
 }

@@ -2,8 +2,8 @@ package android.security;
 
 import android.content.ContentResolver;
 import android.content.Context;
-import android.os.IBinder;
-import android.os.RemoteException;
+import android.p007os.IBinder;
+import android.p007os.RemoteException;
 import android.provider.Settings;
 import android.security.IConfirmationPromptCallback;
 import android.text.TextUtils;
@@ -11,21 +11,20 @@ import android.util.Log;
 import java.util.Locale;
 import java.util.concurrent.Executor;
 
+/* loaded from: classes3.dex */
 public class ConfirmationPrompt {
     private static final String TAG = "ConfirmationPrompt";
     private static final int UI_OPTION_ACCESSIBILITY_INVERTED_FLAG = 1;
     private static final int UI_OPTION_ACCESSIBILITY_MAGNIFIED_FLAG = 2;
-    /* access modifiers changed from: private */
-    public ConfirmationCallback mCallback;
+    private ConfirmationCallback mCallback;
     private final IBinder mCallbackBinder;
     private Context mContext;
-    /* access modifiers changed from: private */
-    public Executor mExecutor;
+    private Executor mExecutor;
     private byte[] mExtraData;
     private final KeyStore mKeyStore;
     private CharSequence mPromptText;
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void doCallback(int responseCode, byte[] dataThatWasConfirmed, ConfirmationCallback callback) {
         if (responseCode != 5) {
             switch (responseCode) {
@@ -42,11 +41,11 @@ public class ConfirmationPrompt {
                     callback.onError(new Exception("Unexpected responseCode=" + responseCode + " from onConfirmtionPromptCompleted() callback."));
                     return;
             }
-        } else {
-            callback.onError(new Exception("System error returned by ConfirmationUI."));
         }
+        callback.onError(new Exception("System error returned by ConfirmationUI."));
     }
 
+    /* loaded from: classes3.dex */
     public static final class Builder {
         private Context mContext;
         private byte[] mExtraData;
@@ -69,27 +68,29 @@ public class ConfirmationPrompt {
         public ConfirmationPrompt build() {
             if (TextUtils.isEmpty(this.mPromptText)) {
                 throw new IllegalArgumentException("prompt text must be set and non-empty");
-            } else if (this.mExtraData != null) {
-                return new ConfirmationPrompt(this.mContext, this.mPromptText, this.mExtraData);
-            } else {
+            }
+            if (this.mExtraData == null) {
                 throw new IllegalArgumentException("extraData must be set");
             }
+            return new ConfirmationPrompt(this.mContext, this.mPromptText, this.mExtraData);
         }
     }
 
     private ConfirmationPrompt(Context context, CharSequence promptText, byte[] extraData) {
         this.mKeyStore = KeyStore.getInstance();
-        this.mCallbackBinder = new IConfirmationPromptCallback.Stub() {
+        this.mCallbackBinder = new IConfirmationPromptCallback.Stub() { // from class: android.security.ConfirmationPrompt.1
+            @Override // android.security.IConfirmationPromptCallback
             public void onConfirmationPromptCompleted(final int responseCode, final byte[] dataThatWasConfirmed) throws RemoteException {
                 if (ConfirmationPrompt.this.mCallback != null) {
                     final ConfirmationCallback callback = ConfirmationPrompt.this.mCallback;
                     Executor executor = ConfirmationPrompt.this.mExecutor;
-                    ConfirmationCallback unused = ConfirmationPrompt.this.mCallback = null;
-                    Executor unused2 = ConfirmationPrompt.this.mExecutor = null;
+                    ConfirmationPrompt.this.mCallback = null;
+                    ConfirmationPrompt.this.mExecutor = null;
                     if (executor == null) {
                         ConfirmationPrompt.this.doCallback(responseCode, dataThatWasConfirmed, callback);
                     } else {
-                        executor.execute(new Runnable() {
+                        executor.execute(new Runnable() { // from class: android.security.ConfirmationPrompt.1.1
+                            @Override // java.lang.Runnable
                             public void run() {
                                 ConfirmationPrompt.this.doCallback(responseCode, dataThatWasConfirmed, callback);
                             }
@@ -107,27 +108,31 @@ public class ConfirmationPrompt {
         int uiOptionsAsFlags = 0;
         try {
             ContentResolver contentResolver = this.mContext.getContentResolver();
-            if (Settings.Secure.getInt(contentResolver, Settings.Secure.ACCESSIBILITY_DISPLAY_INVERSION_ENABLED) == 1) {
+            int inversionEnabled = Settings.Secure.getInt(contentResolver, Settings.Secure.ACCESSIBILITY_DISPLAY_INVERSION_ENABLED);
+            if (inversionEnabled == 1) {
                 uiOptionsAsFlags = 0 | 1;
             }
-            if (((double) Settings.System.getFloat(contentResolver, Settings.System.FONT_SCALE)) > 1.0d) {
+            float fontScale = Settings.System.getFloat(contentResolver, Settings.System.FONT_SCALE);
+            if (fontScale > 1.0d) {
                 return uiOptionsAsFlags | 2;
             }
             return uiOptionsAsFlags;
         } catch (Settings.SettingNotFoundException e) {
-            Log.w(TAG, "Unexpected SettingNotFoundException");
-            return 0;
+            Log.m64w(TAG, "Unexpected SettingNotFoundException");
+            return uiOptionsAsFlags;
         }
     }
 
     private static boolean isAccessibilityServiceRunning(Context context) {
         try {
-            if (Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.ACCESSIBILITY_ENABLED) == 1) {
-                return true;
+            ContentResolver contentResolver = context.getContentResolver();
+            int a11yEnabled = Settings.Secure.getInt(contentResolver, Settings.Secure.ACCESSIBILITY_ENABLED);
+            if (a11yEnabled != 1) {
+                return false;
             }
-            return false;
+            return true;
         } catch (Settings.SettingNotFoundException e) {
-            Log.w(TAG, "Unexpected SettingNotFoundException");
+            Log.m64w(TAG, "Unexpected SettingNotFoundException");
             e.printStackTrace();
             return false;
         }
@@ -136,38 +141,40 @@ public class ConfirmationPrompt {
     public void presentPrompt(Executor executor, ConfirmationCallback callback) throws ConfirmationAlreadyPresentingException, ConfirmationNotAvailableException {
         if (this.mCallback != null) {
             throw new ConfirmationAlreadyPresentingException();
-        } else if (!isAccessibilityServiceRunning(this.mContext)) {
-            this.mCallback = callback;
-            this.mExecutor = executor;
-            int uiOptionsAsFlags = getUiOptionsAsFlags();
-            int responseCode = this.mKeyStore.presentConfirmationPrompt(this.mCallbackBinder, this.mPromptText.toString(), this.mExtraData, Locale.getDefault().toLanguageTag(), uiOptionsAsFlags);
-            if (responseCode == 0) {
-                return;
-            }
+        }
+        if (isAccessibilityServiceRunning(this.mContext)) {
+            throw new ConfirmationNotAvailableException();
+        }
+        this.mCallback = callback;
+        this.mExecutor = executor;
+        int uiOptionsAsFlags = getUiOptionsAsFlags();
+        String locale = Locale.getDefault().toLanguageTag();
+        int responseCode = this.mKeyStore.presentConfirmationPrompt(this.mCallbackBinder, this.mPromptText.toString(), this.mExtraData, locale, uiOptionsAsFlags);
+        if (responseCode != 0) {
             if (responseCode == 3) {
                 throw new ConfirmationAlreadyPresentingException();
-            } else if (responseCode == 6) {
+            }
+            if (responseCode == 6) {
                 throw new ConfirmationNotAvailableException();
-            } else if (responseCode != 65536) {
-                Log.w(TAG, "Unexpected responseCode=" + responseCode + " from presentConfirmationPrompt() call.");
-                throw new IllegalArgumentException();
-            } else {
+            }
+            if (responseCode == 65536) {
                 throw new IllegalArgumentException();
             }
-        } else {
-            throw new ConfirmationNotAvailableException();
+            Log.m64w(TAG, "Unexpected responseCode=" + responseCode + " from presentConfirmationPrompt() call.");
+            throw new IllegalArgumentException();
         }
     }
 
     public void cancelPrompt() {
         int responseCode = this.mKeyStore.cancelConfirmationPrompt(this.mCallbackBinder);
-        if (responseCode != 0) {
-            if (responseCode == 3) {
-                throw new IllegalStateException();
-            }
-            Log.w(TAG, "Unexpected responseCode=" + responseCode + " from cancelConfirmationPrompt() call.");
+        if (responseCode == 0) {
+            return;
+        }
+        if (responseCode == 3) {
             throw new IllegalStateException();
         }
+        Log.m64w(TAG, "Unexpected responseCode=" + responseCode + " from cancelConfirmationPrompt() call.");
+        throw new IllegalStateException();
     }
 
     public static boolean isSupported(Context context) {

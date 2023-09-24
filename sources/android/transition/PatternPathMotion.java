@@ -7,8 +7,9 @@ import android.graphics.Path;
 import android.graphics.PathMeasure;
 import android.util.AttributeSet;
 import android.util.PathParser;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
+/* loaded from: classes4.dex */
 public class PatternPathMotion extends PathMotion {
     private Path mOriginalPatternPath;
     private final Path mPatternPath = new Path();
@@ -20,14 +21,14 @@ public class PatternPathMotion extends PathMotion {
     }
 
     public PatternPathMotion(Context context, AttributeSet attrs) {
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.PatternPathMotion);
+        TypedArray a = context.obtainStyledAttributes(attrs, C3132R.styleable.PatternPathMotion);
         try {
             String pathData = a.getString(0);
-            if (pathData != null) {
-                setPatternPath(PathParser.createPathFromPathData(pathData));
-                return;
+            if (pathData == null) {
+                throw new RuntimeException("pathData must be supplied for patternPathMotion");
             }
-            throw new RuntimeException("pathData must be supplied for patternPathMotion");
+            Path pattern = PathParser.createPathFromPathData(pathData);
+            setPatternPath(pattern);
         } finally {
             a.recycle();
         }
@@ -42,14 +43,13 @@ public class PatternPathMotion extends PathMotion {
     }
 
     public void setPatternPath(Path patternPath) {
-        Path path = patternPath;
-        PathMeasure pathMeasure = new PathMeasure(path, false);
+        PathMeasure pathMeasure = new PathMeasure(patternPath, false);
         float length = pathMeasure.getLength();
         float[] pos = new float[2];
-        pathMeasure.getPosTan(length, pos, (float[]) null);
+        pathMeasure.getPosTan(length, pos, null);
         float endX = pos[0];
         float endY = pos[1];
-        pathMeasure.getPosTan(0.0f, pos, (float[]) null);
+        pathMeasure.getPosTan(0.0f, pos, null);
         float startX = pos[0];
         float startY = pos[1];
         if (startX == endX && startY == endY) {
@@ -58,20 +58,19 @@ public class PatternPathMotion extends PathMotion {
         this.mTempMatrix.setTranslate(-startX, -startY);
         float dx = endX - startX;
         float dy = endY - startY;
-        float scale = 1.0f / ((float) Math.hypot((double) dx, (double) dy));
+        float distance = (float) Math.hypot(dx, dy);
+        float scale = 1.0f / distance;
         this.mTempMatrix.postScale(scale, scale);
-        PathMeasure pathMeasure2 = pathMeasure;
-        float f = startX;
-        float f2 = length;
-        float[] fArr = pos;
-        this.mTempMatrix.postRotate((float) Math.toDegrees(-Math.atan2((double) dy, (double) dx)));
-        path.transform(this.mTempMatrix, this.mPatternPath);
-        this.mOriginalPatternPath = path;
+        double angle = Math.atan2(dy, dx);
+        this.mTempMatrix.postRotate((float) Math.toDegrees(-angle));
+        patternPath.transform(this.mTempMatrix, this.mPatternPath);
+        this.mOriginalPatternPath = patternPath;
     }
 
+    @Override // android.transition.PathMotion
     public Path getPath(float startX, float startY, float endX, float endY) {
-        double dx = (double) (endX - startX);
-        double dy = (double) (endY - startY);
+        double dx = endX - startX;
+        double dy = endY - startY;
         float length = (float) Math.hypot(dx, dy);
         double angle = Math.atan2(dy, dx);
         this.mTempMatrix.setScale(length, length);

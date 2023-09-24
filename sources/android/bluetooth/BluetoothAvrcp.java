@@ -1,5 +1,6 @@
 package android.bluetooth;
 
+/* loaded from: classes.dex */
 public final class BluetoothAvrcp {
     public static final int PASSTHROUGH_ID_0 = 32;
     public static final int PASSTHROUGH_ID_1 = 33;

@@ -2,10 +2,10 @@ package android.location;
 
 import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.SystemClock;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.SystemClock;
 import android.provider.SettingsStringUtil;
 import android.util.Printer;
 import android.util.TimeUtils;
@@ -14,31 +14,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.StringTokenizer;
 
+/* loaded from: classes.dex */
 public class Location implements Parcelable {
-    public static final Parcelable.Creator<Location> CREATOR = new Parcelable.Creator<Location>() {
-        public Location createFromParcel(Parcel in) {
-            Location l = new Location(in.readString());
-            long unused = l.mTime = in.readLong();
-            long unused2 = l.mElapsedRealtimeNanos = in.readLong();
-            double unused3 = l.mElapsedRealtimeUncertaintyNanos = in.readDouble();
-            int unused4 = l.mFieldsMask = in.readInt();
-            double unused5 = l.mLatitude = in.readDouble();
-            double unused6 = l.mLongitude = in.readDouble();
-            double unused7 = l.mAltitude = in.readDouble();
-            float unused8 = l.mSpeed = in.readFloat();
-            float unused9 = l.mBearing = in.readFloat();
-            float unused10 = l.mHorizontalAccuracyMeters = in.readFloat();
-            float unused11 = l.mVerticalAccuracyMeters = in.readFloat();
-            float unused12 = l.mSpeedAccuracyMetersPerSecond = in.readFloat();
-            float unused13 = l.mBearingAccuracyDegrees = in.readFloat();
-            Bundle unused14 = l.mExtras = Bundle.setDefusable(in.readBundle(), true);
-            return l;
-        }
-
-        public Location[] newArray(int size) {
-            return new Location[size];
-        }
-    };
     public static final String EXTRA_COARSE_LOCATION = "coarseLocation";
     public static final String EXTRA_NO_GPS_LOCATION = "noGPSLocation";
     public static final int FORMAT_DEGREES = 0;
@@ -53,43 +30,60 @@ public class Location implements Parcelable {
     private static final int HAS_SPEED_ACCURACY_MASK = 64;
     private static final int HAS_SPEED_MASK = 2;
     private static final int HAS_VERTICAL_ACCURACY_MASK = 32;
-    private static ThreadLocal<BearingDistanceCache> sBearingDistanceCache = new ThreadLocal<BearingDistanceCache>() {
-        /* access modifiers changed from: protected */
+    @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
+    private String mProvider;
+    private static ThreadLocal<BearingDistanceCache> sBearingDistanceCache = new ThreadLocal<BearingDistanceCache>() { // from class: android.location.Location.1
+        /* JADX INFO: Access modifiers changed from: protected */
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // java.lang.ThreadLocal
         public BearingDistanceCache initialValue() {
             return new BearingDistanceCache();
         }
     };
-    /* access modifiers changed from: private */
-    public double mAltitude = 0.0d;
-    /* access modifiers changed from: private */
-    public float mBearing = 0.0f;
-    /* access modifiers changed from: private */
-    public float mBearingAccuracyDegrees = 0.0f;
-    /* access modifiers changed from: private */
+    public static final Parcelable.Creator<Location> CREATOR = new Parcelable.Creator<Location>() { // from class: android.location.Location.2
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public Location createFromParcel(Parcel in) {
+            String provider = in.readString();
+            Location l = new Location(provider);
+            l.mTime = in.readLong();
+            l.mElapsedRealtimeNanos = in.readLong();
+            l.mElapsedRealtimeUncertaintyNanos = in.readDouble();
+            l.mFieldsMask = in.readInt();
+            l.mLatitude = in.readDouble();
+            l.mLongitude = in.readDouble();
+            l.mAltitude = in.readDouble();
+            l.mSpeed = in.readFloat();
+            l.mBearing = in.readFloat();
+            l.mHorizontalAccuracyMeters = in.readFloat();
+            l.mVerticalAccuracyMeters = in.readFloat();
+            l.mSpeedAccuracyMetersPerSecond = in.readFloat();
+            l.mBearingAccuracyDegrees = in.readFloat();
+            l.mExtras = Bundle.setDefusable(in.readBundle(), true);
+            return l;
+        }
+
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public Location[] newArray(int size) {
+            return new Location[size];
+        }
+    };
+    private long mTime = 0;
     @UnsupportedAppUsage
-    public long mElapsedRealtimeNanos = 0;
-    /* access modifiers changed from: private */
-    public double mElapsedRealtimeUncertaintyNanos = 0.0d;
-    /* access modifiers changed from: private */
-    public Bundle mExtras = null;
-    /* access modifiers changed from: private */
-    public int mFieldsMask = 0;
-    /* access modifiers changed from: private */
-    public float mHorizontalAccuracyMeters = 0.0f;
-    /* access modifiers changed from: private */
-    public double mLatitude = 0.0d;
-    /* access modifiers changed from: private */
-    public double mLongitude = 0.0d;
-    @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
-    private String mProvider;
-    /* access modifiers changed from: private */
-    public float mSpeed = 0.0f;
-    /* access modifiers changed from: private */
-    public float mSpeedAccuracyMetersPerSecond = 0.0f;
-    /* access modifiers changed from: private */
-    public long mTime = 0;
-    /* access modifiers changed from: private */
-    public float mVerticalAccuracyMeters = 0.0f;
+    private long mElapsedRealtimeNanos = 0;
+    private double mElapsedRealtimeUncertaintyNanos = 0.0d;
+    private double mLatitude = 0.0d;
+    private double mLongitude = 0.0d;
+    private double mAltitude = 0.0d;
+    private float mSpeed = 0.0f;
+    private float mBearing = 0.0f;
+    private float mHorizontalAccuracyMeters = 0.0f;
+    private float mVerticalAccuracyMeters = 0.0f;
+    private float mSpeedAccuracyMetersPerSecond = 0.0f;
+    private float mBearingAccuracyDegrees = 0.0f;
+    private Bundle mExtras = null;
+    private int mFieldsMask = 0;
 
     public Location(String provider) {
         this.mProvider = provider;
@@ -119,8 +113,8 @@ public class Location implements Parcelable {
 
     public void reset() {
         this.mProvider = null;
-        this.mTime = 0;
-        this.mElapsedRealtimeNanos = 0;
+        this.mTime = 0L;
+        this.mElapsedRealtimeNanos = 0L;
         this.mElapsedRealtimeUncertaintyNanos = 0.0d;
         this.mFieldsMask = 0;
         this.mLatitude = 0.0d;
@@ -138,7 +132,9 @@ public class Location implements Parcelable {
     public static String convert(double coordinate, int outputType) {
         if (coordinate < -180.0d || coordinate > 180.0d || Double.isNaN(coordinate)) {
             throw new IllegalArgumentException("coordinate=" + coordinate);
-        } else if (outputType == 0 || outputType == 1 || outputType == 2) {
+        } else if (outputType != 0 && outputType != 1 && outputType != 2) {
+            throw new IllegalArgumentException("outputType=" + outputType);
+        } else {
             StringBuilder sb = new StringBuilder();
             if (coordinate < 0.0d) {
                 sb.append('-');
@@ -149,83 +145,74 @@ public class Location implements Parcelable {
                 int degrees = (int) Math.floor(coordinate);
                 sb.append(degrees);
                 sb.append(':');
-                coordinate = (coordinate - ((double) degrees)) * 60.0d;
+                coordinate = (coordinate - degrees) * 60.0d;
                 if (outputType == 2) {
                     int minutes = (int) Math.floor(coordinate);
                     sb.append(minutes);
                     sb.append(':');
-                    coordinate = (coordinate - ((double) minutes)) * 60.0d;
+                    coordinate = (coordinate - minutes) * 60.0d;
                 }
             }
             sb.append(df.format(coordinate));
             return sb.toString();
-        } else {
-            throw new IllegalArgumentException("outputType=" + outputType);
         }
     }
 
     public static double convert(String coordinate) {
         double min;
         String coordinate2 = coordinate;
-        if (coordinate2 != null) {
-            boolean negative = false;
-            if (coordinate2.charAt(0) == '-') {
-                coordinate2 = coordinate2.substring(1);
-                negative = true;
-            }
-            boolean negative2 = negative;
-            String coordinate3 = coordinate2;
-            StringTokenizer st = new StringTokenizer(coordinate3, SettingsStringUtil.DELIMITER);
-            int tokens = st.countTokens();
-            if (tokens >= 1) {
+        if (coordinate2 == null) {
+            throw new NullPointerException("coordinate");
+        }
+        boolean negative = false;
+        if (coordinate2.charAt(0) == '-') {
+            coordinate2 = coordinate2.substring(1);
+            negative = true;
+        }
+        boolean negative2 = negative;
+        String coordinate3 = coordinate2;
+        StringTokenizer st = new StringTokenizer(coordinate3, SettingsStringUtil.DELIMITER);
+        int tokens = st.countTokens();
+        if (tokens < 1) {
+            throw new IllegalArgumentException("coordinate=" + coordinate3);
+        }
+        try {
+            String degrees = st.nextToken();
+            try {
+                if (tokens == 1) {
+                    double val = Double.parseDouble(degrees);
+                    return negative2 ? -val : val;
+                }
+                String minutes = st.nextToken();
+                int deg = Integer.parseInt(degrees);
+                double sec = 0.0d;
+                boolean secPresent = false;
+                if (st.hasMoreTokens()) {
+                    min = Integer.parseInt(minutes);
+                    String seconds = st.nextToken();
+                    sec = Double.parseDouble(seconds);
+                    secPresent = true;
+                } else {
+                    min = Double.parseDouble(minutes);
+                }
+                boolean isNegative180 = negative2 && deg == 180 && min == 0.0d && sec == 0.0d;
                 try {
-                    String degrees = st.nextToken();
-                    if (tokens == 1) {
-                        try {
-                            double val = Double.parseDouble(degrees);
-                            return negative2 ? -val : val;
-                        } catch (NumberFormatException e) {
-                            StringTokenizer stringTokenizer = st;
-                            throw new IllegalArgumentException("coordinate=" + coordinate3);
-                        }
+                    if (deg < 0.0d || (deg > 179 && !isNegative180)) {
+                        throw new IllegalArgumentException("coordinate=" + coordinate3);
+                    } else if (min < 0.0d || min >= 60.0d || (secPresent && min > 59.0d)) {
+                        throw new IllegalArgumentException("coordinate=" + coordinate3);
+                    } else if (sec < 0.0d || sec >= 60.0d) {
+                        throw new IllegalArgumentException("coordinate=" + coordinate3);
                     } else {
-                        String minutes = st.nextToken();
-                        int deg = Integer.parseInt(degrees);
-                        double sec = 0.0d;
-                        boolean secPresent = false;
-                        if (st.hasMoreTokens()) {
-                            min = (double) Integer.parseInt(minutes);
-                            sec = Double.parseDouble(st.nextToken());
-                            secPresent = true;
-                        } else {
-                            min = Double.parseDouble(minutes);
-                        }
-                        boolean isNegative180 = negative2 && deg == 180 && min == 0.0d && sec == 0.0d;
-                        StringTokenizer stringTokenizer2 = st;
-                        if (((double) deg) < 0.0d || (deg > 179 && !isNegative180)) {
-                            throw new IllegalArgumentException("coordinate=" + coordinate3);
-                        } else if (min < 0.0d || min >= 60.0d || (secPresent && min > 59.0d)) {
-                            throw new IllegalArgumentException("coordinate=" + coordinate3);
-                        } else if (sec < 0.0d || sec >= 60.0d) {
-                            try {
-                                throw new IllegalArgumentException("coordinate=" + coordinate3);
-                            } catch (NumberFormatException e2) {
-                                throw new IllegalArgumentException("coordinate=" + coordinate3);
-                            }
-                        } else {
-                            double val2 = (((((double) deg) * 3600.0d) + (60.0d * min)) + sec) / 3600.0d;
-                            return negative2 ? -val2 : val2;
-                        }
+                        double val2 = (((deg * 3600.0d) + (60.0d * min)) + sec) / 3600.0d;
+                        return negative2 ? -val2 : val2;
                     }
-                } catch (NumberFormatException e3) {
-                    StringTokenizer stringTokenizer3 = st;
+                } catch (NumberFormatException e) {
                     throw new IllegalArgumentException("coordinate=" + coordinate3);
                 }
-            } else {
-                throw new IllegalArgumentException("coordinate=" + coordinate3);
+            } catch (NumberFormatException e2) {
             }
-        } else {
-            throw new NullPointerException("coordinate");
+        } catch (NumberFormatException e3) {
         }
     }
 
@@ -233,7 +220,6 @@ public class Location implements Parcelable {
         double lon22;
         double lat22;
         double lon12;
-        BearingDistanceCache bearingDistanceCache = results;
         double lat12 = lat1 * 0.017453292519943295d;
         double cosSigma = lat2 * 0.017453292519943295d;
         double sinSigma = lon1 * 0.017453292519943295d;
@@ -246,10 +232,10 @@ public class Location implements Parcelable {
         double U2 = Math.atan((1.0d - f) * Math.tan(cosSigma));
         double cosU1 = Math.cos(U1);
         double cosU2 = Math.cos(U2);
-        double a = Math.sin(U1);
+        double sinU1 = Math.sin(U1);
         double sinU2 = Math.sin(U2);
         double cosU1cosU2 = cosU1 * cosU2;
-        double sinU1sinU2 = a * sinU2;
+        double sinU1sinU2 = sinU1 * sinU2;
         double sigma = 0.0d;
         double deltaSigma = 0.0d;
         double sinSigma2 = 0.0d;
@@ -258,85 +244,79 @@ public class Location implements Parcelable {
         double lambda = L;
         int iter = 0;
         while (true) {
-            lon22 = lon23;
             int iter2 = iter;
-            if (iter2 >= 20) {
+            lon22 = lon23;
+            if (iter2 < 20) {
+                double lambdaOrig = lambda;
+                cosLambda = Math.cos(lambda);
+                sinLambda = Math.sin(lambda);
+                double t1 = cosU2 * sinLambda;
+                double t2 = (cosU1 * sinU2) - ((sinU1 * cosU2) * cosLambda);
+                double sinSqSigma = (t1 * t1) + (t2 * t2);
+                lon12 = sinSigma;
+                double sinSigma3 = Math.sqrt(sinSqSigma);
+                lat22 = cosSigma;
+                double lat23 = sinU1sinU2 + (cosU1cosU2 * cosLambda);
+                sigma = Math.atan2(sinSigma3, lat23);
+                double d = 0.0d;
+                double sinAlpha = sinSigma3 == 0.0d ? 0.0d : (cosU1cosU2 * sinLambda) / sinSigma3;
+                double cosSqAlpha = 1.0d - (sinAlpha * sinAlpha);
+                if (cosSqAlpha != 0.0d) {
+                    d = lat23 - ((sinU1sinU2 * 2.0d) / cosSqAlpha);
+                }
+                double cos2SM = d;
+                double uSquared = cosSqAlpha * aSqMinusBSqOverBSq;
+                A = ((uSquared / 16384.0d) * (((((320.0d - (175.0d * uSquared)) * uSquared) - 768.0d) * uSquared) + 4096.0d)) + 1.0d;
+                double B = (uSquared / 1024.0d) * (((((74.0d - (47.0d * uSquared)) * uSquared) - 128.0d) * uSquared) + 256.0d);
+                double C = (f / 16.0d) * cosSqAlpha * (((4.0d - (3.0d * cosSqAlpha)) * f) + 4.0d);
+                double cos2SMSq = cos2SM * cos2SM;
+                deltaSigma = B * sinSigma3 * (cos2SM + ((B / 4.0d) * ((((cos2SMSq * 2.0d) - 1.0d) * lat23) - ((((B / 6.0d) * cos2SM) * (((sinSigma3 * 4.0d) * sinSigma3) - 3.0d)) * ((4.0d * cos2SMSq) - 3.0d)))));
+                lambda = L + ((1.0d - C) * f * sinAlpha * (sigma + (C * sinSigma3 * (cos2SM + (C * lat23 * (((2.0d * cos2SM) * cos2SM) - 1.0d))))));
+                double delta = (lambda - lambdaOrig) / lambda;
+                if (Math.abs(delta) < 1.0E-12d) {
+                    break;
+                }
+                iter = iter2 + 1;
+                sinSigma2 = sinSigma3;
+                lon23 = lon22;
+                sinSigma = lon12;
+                cosSigma = lat22;
+            } else {
                 lat22 = cosSigma;
                 lon12 = sinSigma;
-                double lon13 = sinSigma2;
                 break;
             }
-            double lambdaOrig = lambda;
-            cosLambda = Math.cos(lambda);
-            sinLambda = Math.sin(lambda);
-            double t1 = cosU2 * sinLambda;
-            double t2 = (cosU1 * sinU2) - ((a * cosU2) * cosLambda);
-            lon12 = sinSigma;
-            double sinSigma3 = Math.sqrt((t1 * t1) + (t2 * t2));
-            lat22 = cosSigma;
-            double cosSigma2 = sinU1sinU2 + (cosU1cosU2 * cosLambda);
-            sigma = Math.atan2(sinSigma3, cosSigma2);
-            double d = 0.0d;
-            double sinAlpha = sinSigma3 == 0.0d ? 0.0d : (cosU1cosU2 * sinLambda) / sinSigma3;
-            double cosSqAlpha = 1.0d - (sinAlpha * sinAlpha);
-            if (cosSqAlpha != 0.0d) {
-                d = cosSigma2 - ((sinU1sinU2 * 2.0d) / cosSqAlpha);
-            }
-            double cos2SM = d;
-            double uSquared = cosSqAlpha * aSqMinusBSqOverBSq;
-            A = ((uSquared / 16384.0d) * (((((320.0d - (175.0d * uSquared)) * uSquared) - 0.005859375d) * uSquared) + 4096.0d)) + 1.0d;
-            double B = (uSquared / 1024.0d) * (((((74.0d - (47.0d * uSquared)) * uSquared) - 0.03125d) * uSquared) + 256.0d);
-            double C = (f / 16.0d) * cosSqAlpha * (((4.0d - (3.0d * cosSqAlpha)) * f) + 4.0d);
-            double cos2SMSq = cos2SM * cos2SM;
-            deltaSigma = B * sinSigma3 * (cos2SM + ((B / 4.0d) * ((((cos2SMSq * 2.0d) - 4.0d) * cosSigma2) - ((((B / 6.0d) * cos2SM) * (((sinSigma3 * 4.0d) * sinSigma3) - 1.5d)) * ((4.0d * cos2SMSq) - 1.5d)))));
-            lambda = L + ((1.0d - C) * f * sinAlpha * (sigma + (C * sinSigma3 * (cos2SM + (C * cosSigma2 * (((2.0d * cos2SM) * cos2SM) - 4.0d))))));
-            if (Math.abs((lambda - lambdaOrig) / lambda) < 1.0E-12d) {
-                double uSquared2 = cosSigma2;
-                break;
-            }
-            iter = iter2 + 1;
-            double d2 = cosSigma2;
-            sinSigma2 = sinSigma3;
-            lon23 = lon22;
-            sinSigma = lon12;
-            cosSigma = lat22;
         }
         float distance = (float) (6356752.3142d * A * (sigma - deltaSigma));
-        float unused = bearingDistanceCache.mDistance = distance;
-        float f2 = distance;
-        float initialBearing = (float) (((double) ((float) Math.atan2(cosU2 * sinLambda, (cosU1 * sinU2) - ((a * cosU2) * cosLambda)))) * 57.29577951308232d);
-        float unused2 = bearingDistanceCache.mInitialBearing = initialBearing;
-        float finalBearing = (float) (((double) ((float) Math.atan2(cosU1 * sinLambda, ((-a) * cosU2) + (cosU1 * sinU2 * cosLambda)))) * 57.29577951308232d);
-        float unused3 = bearingDistanceCache.mFinalBearing = finalBearing;
-        double unused4 = bearingDistanceCache.mLat1 = lat12;
-        double unused5 = bearingDistanceCache.mLat2 = lat22;
-        float f3 = initialBearing;
-        float f4 = finalBearing;
-        double lon14 = lon12;
-        double unused6 = bearingDistanceCache.mLon1 = lon14;
-        double d3 = lon14;
-        double unused7 = bearingDistanceCache.mLon2 = lon22;
+        results.mDistance = distance;
+        float initialBearing = (float) Math.atan2(cosU2 * sinLambda, (cosU1 * sinU2) - ((sinU1 * cosU2) * cosLambda));
+        results.mInitialBearing = (float) (initialBearing * 57.29577951308232d);
+        float finalBearing = (float) Math.atan2(cosU1 * sinLambda, ((-sinU1) * cosU2) + (cosU1 * sinU2 * cosLambda));
+        results.mFinalBearing = (float) (finalBearing * 57.29577951308232d);
+        results.mLat1 = lat12;
+        results.mLat2 = lat22;
+        results.mLon1 = lon12;
+        results.mLon2 = lon22;
     }
 
     public static void distanceBetween(double startLatitude, double startLongitude, double endLatitude, double endLongitude, float[] results) {
-        float[] fArr = results;
-        if (fArr == null || fArr.length < 1) {
+        if (results == null || results.length < 1) {
             throw new IllegalArgumentException("results is null or has length < 1");
         }
         BearingDistanceCache cache = sBearingDistanceCache.get();
         computeDistanceAndBearing(startLatitude, startLongitude, endLatitude, endLongitude, cache);
-        fArr[0] = cache.mDistance;
-        if (fArr.length > 1) {
-            fArr[1] = cache.mInitialBearing;
-            if (fArr.length > 2) {
-                fArr[2] = cache.mFinalBearing;
+        results[0] = cache.mDistance;
+        if (results.length > 1) {
+            results[1] = cache.mInitialBearing;
+            if (results.length > 2) {
+                results[2] = cache.mFinalBearing;
             }
         }
     }
 
     public float distanceTo(Location dest) {
         BearingDistanceCache cache = sBearingDistanceCache.get();
-        if (!(this.mLatitude == cache.mLat1 && this.mLongitude == cache.mLon1 && dest.mLatitude == cache.mLat2 && dest.mLongitude == cache.mLon2)) {
+        if (this.mLatitude != cache.mLat1 || this.mLongitude != cache.mLon1 || dest.mLatitude != cache.mLat2 || dest.mLongitude != cache.mLon2) {
             computeDistanceAndBearing(this.mLatitude, this.mLongitude, dest.mLatitude, dest.mLongitude, cache);
         }
         return cache.mDistance;
@@ -344,7 +324,7 @@ public class Location implements Parcelable {
 
     public float bearingTo(Location dest) {
         BearingDistanceCache cache = sBearingDistanceCache.get();
-        if (!(this.mLatitude == cache.mLat1 && this.mLongitude == cache.mLon1 && dest.mLatitude == cache.mLat2 && dest.mLongitude == cache.mLon2)) {
+        if (this.mLatitude != cache.mLat1 || this.mLongitude != cache.mLon1 || dest.mLatitude != cache.mLat2 || dest.mLongitude != cache.mLon2) {
             computeDistanceAndBearing(this.mLatitude, this.mLongitude, dest.mLatitude, dest.mLongitude, cache);
         }
         return cache.mInitialBearing;
@@ -369,7 +349,9 @@ public class Location implements Parcelable {
     private String getGpsLocalTime(long gpsTime) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(gpsTime);
-        return new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(calendar.getTime());
+        SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        String datestring = df.format(calendar.getTime());
+        return datestring;
     }
 
     public long getElapsedRealtimeNanos() {
@@ -550,10 +532,7 @@ public class Location implements Parcelable {
 
     @SystemApi
     public boolean isComplete() {
-        if (this.mProvider == null || !hasAccuracy() || this.mTime == 0 || this.mElapsedRealtimeNanos == 0) {
-            return false;
-        }
-        return true;
+        return (this.mProvider == null || !hasAccuracy() || this.mTime == 0 || this.mElapsedRealtimeNanos == 0) ? false : true;
     }
 
     @SystemApi
@@ -585,9 +564,9 @@ public class Location implements Parcelable {
         StringBuilder s = new StringBuilder();
         s.append("Location[");
         s.append(this.mProvider);
-        s.append(String.format(" %.6f,%.6f", new Object[]{Double.valueOf(this.mLatitude), Double.valueOf(this.mLongitude)}));
+        s.append(String.format(" %.6f,%.6f", Double.valueOf(this.mLatitude), Double.valueOf(this.mLongitude)));
         if (hasAccuracy()) {
-            s.append(String.format(" hAcc=%.0f", new Object[]{Float.valueOf(this.mHorizontalAccuracyMeters)}));
+            s.append(String.format(" hAcc=%.0f", Float.valueOf(this.mHorizontalAccuracyMeters)));
         } else {
             s.append(" hAcc=???");
         }
@@ -617,17 +596,17 @@ public class Location implements Parcelable {
             s.append(this.mBearing);
         }
         if (hasVerticalAccuracy()) {
-            s.append(String.format(" vAcc=%.0f", new Object[]{Float.valueOf(this.mVerticalAccuracyMeters)}));
+            s.append(String.format(" vAcc=%.0f", Float.valueOf(this.mVerticalAccuracyMeters)));
         } else {
             s.append(" vAcc=???");
         }
         if (hasSpeedAccuracy()) {
-            s.append(String.format(" sAcc=%.0f", new Object[]{Float.valueOf(this.mSpeedAccuracyMetersPerSecond)}));
+            s.append(String.format(" sAcc=%.0f", Float.valueOf(this.mSpeedAccuracyMetersPerSecond)));
         } else {
             s.append(" sAcc=???");
         }
         if (hasBearingAccuracy()) {
-            s.append(String.format(" bAcc=%.0f", new Object[]{Float.valueOf(this.mBearingAccuracyDegrees)}));
+            s.append(String.format(" bAcc=%.0f", Float.valueOf(this.mBearingAccuracyDegrees)));
         } else {
             s.append(" bAcc=???");
         }
@@ -647,10 +626,12 @@ public class Location implements Parcelable {
         pw.println(prefix + toString());
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeString(this.mProvider);
         parcel.writeLong(this.mTime);
@@ -670,12 +651,12 @@ public class Location implements Parcelable {
     }
 
     public Location getExtraLocation(String key) {
-        if (this.mExtras == null) {
+        if (this.mExtras != null) {
+            Parcelable value = this.mExtras.getParcelable(key);
+            if (value instanceof Location) {
+                return (Location) value;
+            }
             return null;
-        }
-        Parcelable value = this.mExtras.getParcelable(key);
-        if (value instanceof Location) {
-            return (Location) value;
         }
         return null;
     }
@@ -701,21 +682,15 @@ public class Location implements Parcelable {
         }
     }
 
+    /* loaded from: classes.dex */
     private static class BearingDistanceCache {
-        /* access modifiers changed from: private */
-        public float mDistance;
-        /* access modifiers changed from: private */
-        public float mFinalBearing;
-        /* access modifiers changed from: private */
-        public float mInitialBearing;
-        /* access modifiers changed from: private */
-        public double mLat1;
-        /* access modifiers changed from: private */
-        public double mLat2;
-        /* access modifiers changed from: private */
-        public double mLon1;
-        /* access modifiers changed from: private */
-        public double mLon2;
+        private float mDistance;
+        private float mFinalBearing;
+        private float mInitialBearing;
+        private double mLat1;
+        private double mLat2;
+        private double mLon1;
+        private double mLon2;
 
         private BearingDistanceCache() {
             this.mLat1 = 0.0d;

@@ -1,5 +1,6 @@
 package android.hardware.biometrics;
 
+/* loaded from: classes.dex */
 public final class BiometricsProtoEnums {
     public static final int ACTION_AUTHENTICATE = 2;
     public static final int ACTION_ENROLL = 1;

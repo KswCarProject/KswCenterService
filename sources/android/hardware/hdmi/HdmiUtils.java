@@ -3,6 +3,7 @@ package android.hardware.hdmi;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes.dex */
 public final class HdmiUtils {
     public static final int HDMI_RELATIVE_POSITION_ABOVE = 5;
     public static final int HDMI_RELATIVE_POSITION_BELOW = 2;
@@ -17,6 +18,7 @@ public final class HdmiUtils {
     static final int TARGET_SAME_PHYSICAL_ADDRESS = 0;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface HdmiAddressRelativePosition {
     }
 
@@ -28,18 +30,19 @@ public final class HdmiUtils {
             return 0;
         }
         int finalMask = 61440;
-        int mask = 61440;
+        int finalMask2 = 61440;
         int maskedAddress = myPhysicalAddress;
         while (maskedAddress != 0) {
-            maskedAddress = myPhysicalAddress & mask;
-            finalMask |= mask;
-            mask >>= 4;
+            maskedAddress = myPhysicalAddress & finalMask2;
+            finalMask |= finalMask2;
+            finalMask2 >>= 4;
         }
         int portAddress = targetPhysicalAddress & finalMask;
         if (((finalMask << 4) & portAddress) != myPhysicalAddress) {
             return -1;
         }
-        int port = portAddress & (mask << 4);
+        int mask = finalMask2 << 4;
+        int port = portAddress & mask;
         while ((port >> 4) != 0) {
             port >>= 4;
         }
@@ -52,7 +55,7 @@ public final class HdmiUtils {
         }
         boolean hasZero = false;
         int mask = 61440;
-        for (int i = 0; i < 4; i++) {
+        for (int mask2 = 0; mask2 < 4; mask2++) {
             if ((address & mask) == 0) {
                 hasZero = true;
             } else if (hasZero) {
@@ -75,10 +78,7 @@ public final class HdmiUtils {
             int mask = 61440 >> (firstDiffPos * 4);
             int nextPos = firstDiffPos + 1;
             if ((src & mask) == 0) {
-                if (nextPos == 4 || ((61440 >> (nextPos * 4)) & dest) == 0) {
-                    return 4;
-                }
-                return 5;
+                return (nextPos == 4 || ((61440 >> (nextPos * 4)) & dest) == 0) ? 4 : 5;
             } else if ((dest & mask) == 0) {
                 if (nextPos == 4 || ((61440 >> (nextPos * 4)) & src) == 0) {
                     return 1;
@@ -100,7 +100,9 @@ public final class HdmiUtils {
     private static int physicalAddressFirstDifferentDigitPos(int address1, int address2) throws IllegalArgumentException {
         if (!isValidPhysicalAddress(address1)) {
             throw new IllegalArgumentException(address1 + " is not a valid address.");
-        } else if (isValidPhysicalAddress(address2)) {
+        } else if (!isValidPhysicalAddress(address2)) {
+            throw new IllegalArgumentException(address2 + " is not a valid address.");
+        } else {
             int mask = 61440;
             for (int i = 0; i < 4; i++) {
                 if ((address1 & mask) != (address2 & mask)) {
@@ -109,8 +111,6 @@ public final class HdmiUtils {
                 mask >>= 4;
             }
             return -1;
-        } else {
-            throw new IllegalArgumentException(address2 + " is not a valid address.");
         }
     }
 }

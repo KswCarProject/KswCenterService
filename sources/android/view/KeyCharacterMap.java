@@ -2,13 +2,14 @@ package android.view;
 
 import android.annotation.UnsupportedAppUsage;
 import android.hardware.input.InputManager;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.AndroidRuntimeException;
 import android.util.SparseIntArray;
 import com.android.internal.logging.nano.MetricsProto;
 import java.text.Normalizer;
 
+/* loaded from: classes4.dex */
 public class KeyCharacterMap implements Parcelable {
     private static final int ACCENT_ACUTE = 180;
     private static final int ACCENT_BREVE = 728;
@@ -43,31 +44,24 @@ public class KeyCharacterMap implements Parcelable {
     private static final int CHAR_SPACE = 32;
     public static final int COMBINING_ACCENT = Integer.MIN_VALUE;
     public static final int COMBINING_ACCENT_MASK = Integer.MAX_VALUE;
-    public static final Parcelable.Creator<KeyCharacterMap> CREATOR = new Parcelable.Creator<KeyCharacterMap>() {
-        public KeyCharacterMap createFromParcel(Parcel in) {
-            return new KeyCharacterMap(in);
-        }
-
-        public KeyCharacterMap[] newArray(int size) {
-            return new KeyCharacterMap[size];
-        }
-    };
+    public static final Parcelable.Creator<KeyCharacterMap> CREATOR;
     public static final int FULL = 4;
-    public static final char HEX_INPUT = '';
+    public static final char HEX_INPUT = '\uef00';
     public static final int MODIFIER_BEHAVIOR_CHORDED = 0;
     public static final int MODIFIER_BEHAVIOR_CHORDED_OR_TOGGLED = 1;
     public static final int NUMERIC = 1;
-    public static final char PICKER_DIALOG_INPUT = '';
+    public static final char PICKER_DIALOG_INPUT = '\uef01';
     public static final int PREDICTIVE = 2;
     public static final int SPECIAL_FUNCTION = 5;
     public static final int VIRTUAL_KEYBOARD = -1;
-    private static final SparseIntArray sAccentToCombining = new SparseIntArray();
-    private static final SparseIntArray sCombiningToAccent = new SparseIntArray();
-    private static final StringBuilder sDeadKeyBuilder = new StringBuilder();
-    private static final SparseIntArray sDeadKeyCache = new SparseIntArray();
+    private static final StringBuilder sDeadKeyBuilder;
+    private static final SparseIntArray sDeadKeyCache;
     private long mPtr;
+    private static final SparseIntArray sCombiningToAccent = new SparseIntArray();
+    private static final SparseIntArray sAccentToCombining = new SparseIntArray();
 
     @Deprecated
+    /* loaded from: classes4.dex */
     public static class KeyData {
         public static final int META_LENGTH = 4;
         public char displayLabel;
@@ -126,6 +120,8 @@ public class KeyCharacterMap implements Parcelable {
         sAccentToCombining.append(96, 768);
         sAccentToCombining.append(94, 770);
         sAccentToCombining.append(126, 771);
+        sDeadKeyCache = new SparseIntArray();
+        sDeadKeyBuilder = new StringBuilder();
         addDeadKey(45, 68, 272);
         addDeadKey(45, 71, MetricsProto.MetricsEvent.ACTION_SUPPORT_DISCLAIMER_OK);
         addDeadKey(45, 72, 294);
@@ -140,6 +136,19 @@ public class KeyCharacterMap implements Parcelable {
         addDeadKey(45, 108, 322);
         addDeadKey(45, 111, 248);
         addDeadKey(45, 116, MetricsProto.MetricsEvent.ACTION_QS_EDIT_RESET);
+        CREATOR = new Parcelable.Creator<KeyCharacterMap>() { // from class: android.view.KeyCharacterMap.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
+            public KeyCharacterMap createFromParcel(Parcel in) {
+                return new KeyCharacterMap(in);
+            }
+
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
+            public KeyCharacterMap[] newArray(int size) {
+                return new KeyCharacterMap[size];
+            }
+        };
     }
 
     private static void addCombining(int combining, int accent) {
@@ -149,22 +158,21 @@ public class KeyCharacterMap implements Parcelable {
 
     private static void addDeadKey(int accent, int c, int result) {
         int combining = sAccentToCombining.get(accent);
-        if (combining != 0) {
-            sDeadKeyCache.put((combining << 16) | c, result);
-            return;
+        if (combining == 0) {
+            throw new IllegalStateException("Invalid dead key declaration.");
         }
-        throw new IllegalStateException("Invalid dead key declaration.");
+        int combination = (combining << 16) | c;
+        sDeadKeyCache.put(combination, result);
     }
 
     private KeyCharacterMap(Parcel in) {
-        if (in != null) {
-            this.mPtr = nativeReadFromParcel(in);
-            if (this.mPtr == 0) {
-                throw new RuntimeException("Could not read KeyCharacterMap from parcel.");
-            }
-            return;
+        if (in == null) {
+            throw new IllegalArgumentException("parcel must not be null");
         }
-        throw new IllegalArgumentException("parcel must not be null");
+        this.mPtr = nativeReadFromParcel(in);
+        if (this.mPtr == 0) {
+            throw new RuntimeException("Could not read KeyCharacterMap from parcel.");
+        }
     }
 
     @UnsupportedAppUsage
@@ -172,21 +180,20 @@ public class KeyCharacterMap implements Parcelable {
         this.mPtr = ptr;
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         if (this.mPtr != 0) {
             nativeDispose(this.mPtr);
-            this.mPtr = 0;
+            this.mPtr = 0L;
         }
     }
 
     public static KeyCharacterMap load(int deviceId) {
         InputManager im = InputManager.getInstance();
         InputDevice inputDevice = im.getInputDevice(deviceId);
-        if (inputDevice != null || (inputDevice = im.getInputDevice(-1)) != null) {
-            return inputDevice.getKeyCharacterMap();
+        if (inputDevice == null && (inputDevice = im.getInputDevice(-1)) == null) {
+            throw new UnavailableException("Could not load key character map for device " + deviceId);
         }
-        throw new UnavailableException("Could not load key character map for device " + deviceId);
+        return inputDevice.getKeyCharacterMap();
     }
 
     public int get(int keyCode, int metaState) {
@@ -217,10 +224,10 @@ public class KeyCharacterMap implements Parcelable {
     }
 
     public char getMatch(int keyCode, char[] chars, int metaState) {
-        if (chars != null) {
-            return nativeGetMatch(this.mPtr, keyCode, chars, KeyEvent.normalizeMetaState(metaState));
+        if (chars == null) {
+            throw new IllegalArgumentException("chars must not be null.");
         }
-        throw new IllegalArgumentException("chars must not be null.");
+        return nativeGetMatch(this.mPtr, keyCode, chars, KeyEvent.normalizeMetaState(metaState));
     }
 
     public char getDisplayLabel(int keyCode) {
@@ -257,31 +264,32 @@ public class KeyCharacterMap implements Parcelable {
 
     @Deprecated
     public boolean getKeyData(int keyCode, KeyData results) {
-        if (results.meta.length >= 4) {
-            char displayLabel = nativeGetDisplayLabel(this.mPtr, keyCode);
-            if (displayLabel == 0) {
-                return false;
-            }
-            results.displayLabel = displayLabel;
-            results.number = nativeGetNumber(this.mPtr, keyCode);
-            results.meta[0] = nativeGetCharacter(this.mPtr, keyCode, 0);
-            results.meta[1] = nativeGetCharacter(this.mPtr, keyCode, 1);
-            results.meta[2] = nativeGetCharacter(this.mPtr, keyCode, 2);
-            results.meta[3] = nativeGetCharacter(this.mPtr, keyCode, 3);
-            return true;
+        if (results.meta.length < 4) {
+            throw new IndexOutOfBoundsException("results.meta.length must be >= 4");
         }
-        throw new IndexOutOfBoundsException("results.meta.length must be >= 4");
+        char displayLabel = nativeGetDisplayLabel(this.mPtr, keyCode);
+        if (displayLabel == 0) {
+            return false;
+        }
+        results.displayLabel = displayLabel;
+        results.number = nativeGetNumber(this.mPtr, keyCode);
+        results.meta[0] = nativeGetCharacter(this.mPtr, keyCode, 0);
+        results.meta[1] = nativeGetCharacter(this.mPtr, keyCode, 1);
+        results.meta[2] = nativeGetCharacter(this.mPtr, keyCode, 2);
+        results.meta[3] = nativeGetCharacter(this.mPtr, keyCode, 3);
+        return true;
     }
 
     public KeyEvent[] getEvents(char[] chars) {
-        if (chars != null) {
-            return nativeGetEvents(this.mPtr, chars);
+        if (chars == null) {
+            throw new IllegalArgumentException("chars must not be null.");
         }
-        throw new IllegalArgumentException("chars must not be null.");
+        return nativeGetEvents(this.mPtr, chars);
     }
 
     public boolean isPrintingKey(int keyCode) {
-        switch (Character.getType(nativeGetDisplayLabel(this.mPtr, keyCode))) {
+        int type = Character.getType(nativeGetDisplayLabel(this.mPtr, keyCode));
+        switch (type) {
             case 12:
             case 13:
             case 14:
@@ -315,24 +323,27 @@ public class KeyCharacterMap implements Parcelable {
         return InputManager.getInstance().deviceHasKeys(keyCodes);
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
-        if (out != null) {
-            nativeWriteToParcel(this.mPtr, out);
-            return;
+        if (out == null) {
+            throw new IllegalArgumentException("parcel must not be null");
         }
-        throw new IllegalArgumentException("parcel must not be null");
+        nativeWriteToParcel(this.mPtr, out);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    /* loaded from: classes4.dex */
     public static class UnavailableException extends AndroidRuntimeException {
         public UnavailableException(String msg) {
             super(msg);
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class FallbackAction {
         private static final int MAX_RECYCLED = 10;
         private static FallbackAction sRecycleBin;

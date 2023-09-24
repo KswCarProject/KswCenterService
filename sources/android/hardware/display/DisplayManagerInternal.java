@@ -1,15 +1,17 @@
 package android.hardware.display;
 
 import android.hardware.SensorManager;
-import android.os.Handler;
+import android.p007os.Handler;
 import android.util.IntArray;
 import android.util.SparseArray;
 import android.view.Display;
 import android.view.DisplayInfo;
 import android.view.SurfaceControl;
 
+/* loaded from: classes.dex */
 public abstract class DisplayManagerInternal {
 
+    /* loaded from: classes.dex */
     public interface DisplayPowerCallbacks {
         void acquireSuspendBlocker();
 
@@ -24,6 +26,7 @@ public abstract class DisplayManagerInternal {
         void releaseSuspendBlocker();
     }
 
+    /* loaded from: classes.dex */
     public interface DisplayTransactionListener {
         void onDisplayTransaction(SurfaceControl.Transaction transaction);
     }
@@ -66,6 +69,7 @@ public abstract class DisplayManagerInternal {
 
     public abstract void unregisterDisplayTransactionListener(DisplayTransactionListener displayTransactionListener);
 
+    /* loaded from: classes.dex */
     public static final class DisplayPowerRequest {
         public static final int POLICY_BRIGHT = 3;
         public static final int POLICY_DIM = 2;
@@ -142,8 +146,8 @@ public abstract class DisplayManagerInternal {
             return "policy=" + policyToString(this.policy) + ", useProximitySensor=" + this.useProximitySensor + ", screenBrightnessOverride=" + this.screenBrightnessOverride + ", useAutoBrightness=" + this.useAutoBrightness + ", screenAutoBrightnessAdjustmentOverride=" + this.screenAutoBrightnessAdjustmentOverride + ", screenLowPowerBrightnessFactor=" + this.screenLowPowerBrightnessFactor + ", blockScreenOn=" + this.blockScreenOn + ", lowPowerMode=" + this.lowPowerMode + ", boostScreenBrightness=" + this.boostScreenBrightness + ", dozeScreenBrightness=" + this.dozeScreenBrightness + ", dozeScreenState=" + Display.stateToString(this.dozeScreenState);
         }
 
-        public static String policyToString(int policy2) {
-            switch (policy2) {
+        public static String policyToString(int policy) {
+            switch (policy) {
                 case 0:
                     return "OFF";
                 case 1:
@@ -155,7 +159,7 @@ public abstract class DisplayManagerInternal {
                 case 4:
                     return "VR";
                 default:
-                    return Integer.toString(policy2);
+                    return Integer.toString(policy);
             }
         }
     }

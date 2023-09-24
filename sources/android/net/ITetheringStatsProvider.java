@@ -1,11 +1,12 @@
 package android.net;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes3.dex */
 public interface ITetheringStatsProvider extends IInterface {
     public static final int QUOTA_UNLIMITED = -1;
 
@@ -13,19 +14,24 @@ public interface ITetheringStatsProvider extends IInterface {
 
     void setInterfaceQuota(String str, long j) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements ITetheringStatsProvider {
+        @Override // android.net.ITetheringStatsProvider
         public NetworkStats getTetherStats(int how) throws RemoteException {
             return null;
         }
 
+        @Override // android.net.ITetheringStatsProvider
         public void setInterfaceQuota(String iface, long quotaBytes) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements ITetheringStatsProvider {
         private static final String DESCRIPTOR = "android.net.ITetheringStatsProvider";
         static final int TRANSACTION_getTetherStats = 1;
@@ -40,12 +46,13 @@ public interface ITetheringStatsProvider extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof ITetheringStatsProvider)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof ITetheringStatsProvider)) {
+                return (ITetheringStatsProvider) iin;
             }
-            return (ITetheringStatsProvider) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -61,38 +68,43 @@ public interface ITetheringStatsProvider extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        NetworkStats _result = getTetherStats(data.readInt());
-                        reply.writeNoException();
-                        if (_result != null) {
-                            reply.writeInt(1);
-                            _result.writeToParcel(reply, 1);
-                        } else {
-                            reply.writeInt(0);
-                        }
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        setInterfaceQuota(data.readString(), data.readLong());
-                        reply.writeNoException();
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0 = data.readInt();
+                    NetworkStats _result = getTetherStats(_arg0);
+                    reply.writeNoException();
+                    if (_result != null) {
+                        reply.writeInt(1);
+                        _result.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg02 = data.readString();
+                    long _arg1 = data.readLong();
+                    setInterfaceQuota(_arg02, _arg1);
+                    reply.writeNoException();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements ITetheringStatsProvider {
             public static ITetheringStatsProvider sDefaultImpl;
             private IBinder mRemote;
@@ -101,6 +113,7 @@ public interface ITetheringStatsProvider extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -109,6 +122,7 @@ public interface ITetheringStatsProvider extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.net.ITetheringStatsProvider
             public NetworkStats getTetherStats(int how) throws RemoteException {
                 NetworkStats _result;
                 Parcel _data = Parcel.obtain();
@@ -116,7 +130,8 @@ public interface ITetheringStatsProvider extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(how);
-                    if (!this.mRemote.transact(1, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getTetherStats(how);
                     }
                     _reply.readException();
@@ -125,16 +140,14 @@ public interface ITetheringStatsProvider extends IInterface {
                     } else {
                         _result = null;
                     }
-                    NetworkStats _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.ITetheringStatsProvider
             public void setInterfaceQuota(String iface, long quotaBytes) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -142,13 +155,12 @@ public interface ITetheringStatsProvider extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(iface);
                     _data.writeLong(quotaBytes);
-                    if (this.mRemote.transact(2, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setInterfaceQuota(iface, quotaBytes);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setInterfaceQuota(iface, quotaBytes);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -157,11 +169,11 @@ public interface ITetheringStatsProvider extends IInterface {
         }
 
         public static boolean setDefaultImpl(ITetheringStatsProvider impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static ITetheringStatsProvider getDefaultImpl() {

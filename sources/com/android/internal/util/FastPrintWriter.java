@@ -15,6 +15,7 @@ import java.nio.charset.CharsetEncoder;
 import java.nio.charset.CoderResult;
 import java.nio.charset.CodingErrorAction;
 
+/* loaded from: classes4.dex */
 public class FastPrintWriter extends PrintWriter {
     private final boolean mAutoFlush;
     private final int mBufferLen;
@@ -28,18 +29,23 @@ public class FastPrintWriter extends PrintWriter {
     private final char[] mText;
     private final Writer mWriter;
 
+    /* loaded from: classes4.dex */
     private static class DummyWriter extends Writer {
         private DummyWriter() {
         }
 
+        @Override // java.io.Writer, java.io.Closeable, java.lang.AutoCloseable
         public void close() throws IOException {
-            throw new UnsupportedOperationException("Shouldn't be here");
+            UnsupportedOperationException ex = new UnsupportedOperationException("Shouldn't be here");
+            throw ex;
         }
 
+        @Override // java.io.Writer, java.io.Flushable
         public void flush() throws IOException {
             close();
         }
 
+        @Override // java.io.Writer
         public void write(char[] buf, int offset, int count) throws IOException {
             close();
         }
@@ -56,19 +62,18 @@ public class FastPrintWriter extends PrintWriter {
 
     public FastPrintWriter(OutputStream out, boolean autoFlush, int bufferLen) {
         super(new DummyWriter(), autoFlush);
-        if (out != null) {
-            this.mBufferLen = bufferLen;
-            this.mText = new char[bufferLen];
-            this.mBytes = ByteBuffer.allocate(this.mBufferLen);
-            this.mOutputStream = out;
-            this.mWriter = null;
-            this.mPrinter = null;
-            this.mAutoFlush = autoFlush;
-            this.mSeparator = System.lineSeparator();
-            initDefaultEncoder();
-            return;
+        if (out == null) {
+            throw new NullPointerException("out is null");
         }
-        throw new NullPointerException("out is null");
+        this.mBufferLen = bufferLen;
+        this.mText = new char[bufferLen];
+        this.mBytes = ByteBuffer.allocate(this.mBufferLen);
+        this.mOutputStream = out;
+        this.mWriter = null;
+        this.mPrinter = null;
+        this.mAutoFlush = autoFlush;
+        this.mSeparator = System.lineSeparator();
+        initDefaultEncoder();
     }
 
     public FastPrintWriter(Writer wr) {
@@ -81,19 +86,18 @@ public class FastPrintWriter extends PrintWriter {
 
     public FastPrintWriter(Writer wr, boolean autoFlush, int bufferLen) {
         super(new DummyWriter(), autoFlush);
-        if (wr != null) {
-            this.mBufferLen = bufferLen;
-            this.mText = new char[bufferLen];
-            this.mBytes = null;
-            this.mOutputStream = null;
-            this.mWriter = wr;
-            this.mPrinter = null;
-            this.mAutoFlush = autoFlush;
-            this.mSeparator = System.lineSeparator();
-            initDefaultEncoder();
-            return;
+        if (wr == null) {
+            throw new NullPointerException("wr is null");
         }
-        throw new NullPointerException("wr is null");
+        this.mBufferLen = bufferLen;
+        this.mText = new char[bufferLen];
+        this.mBytes = null;
+        this.mOutputStream = null;
+        this.mWriter = wr;
+        this.mPrinter = null;
+        this.mAutoFlush = autoFlush;
+        this.mSeparator = System.lineSeparator();
+        initDefaultEncoder();
     }
 
     public FastPrintWriter(Printer pr) {
@@ -101,20 +105,19 @@ public class FastPrintWriter extends PrintWriter {
     }
 
     public FastPrintWriter(Printer pr, int bufferLen) {
-        super(new DummyWriter(), true);
-        if (pr != null) {
-            this.mBufferLen = bufferLen;
-            this.mText = new char[bufferLen];
-            this.mBytes = null;
-            this.mOutputStream = null;
-            this.mWriter = null;
-            this.mPrinter = pr;
-            this.mAutoFlush = true;
-            this.mSeparator = System.lineSeparator();
-            initDefaultEncoder();
-            return;
+        super((Writer) new DummyWriter(), true);
+        if (pr == null) {
+            throw new NullPointerException("pr is null");
         }
-        throw new NullPointerException("pr is null");
+        this.mBufferLen = bufferLen;
+        this.mText = new char[bufferLen];
+        this.mBytes = null;
+        this.mOutputStream = null;
+        this.mWriter = null;
+        this.mPrinter = pr;
+        this.mAutoFlush = true;
+        this.mSeparator = System.lineSeparator();
+        initDefaultEncoder();
     }
 
     private final void initEncoder(String csn) throws UnsupportedEncodingException {
@@ -127,6 +130,7 @@ public class FastPrintWriter extends PrintWriter {
         }
     }
 
+    @Override // java.io.PrintWriter
     public boolean checkError() {
         boolean z;
         flush();
@@ -136,15 +140,15 @@ public class FastPrintWriter extends PrintWriter {
         return z;
     }
 
-    /* access modifiers changed from: protected */
-    public void clearError() {
+    @Override // java.io.PrintWriter
+    protected void clearError() {
         synchronized (this.lock) {
             this.mIoError = false;
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void setError() {
+    @Override // java.io.PrintWriter
+    protected void setError() {
         synchronized (this.lock) {
             this.mIoError = true;
         }
@@ -207,14 +211,11 @@ public class FastPrintWriter extends PrintWriter {
     }
 
     private void flushBytesLocked() throws IOException {
-        if (!this.mIoError) {
-            int position = this.mBytes.position();
-            int position2 = position;
-            if (position > 0) {
-                this.mBytes.flip();
-                this.mOutputStream.write(this.mBytes.array(), 0, position2);
-                this.mBytes.clear();
-            }
+        int position;
+        if (!this.mIoError && (position = this.mBytes.position()) > 0) {
+            this.mBytes.flip();
+            this.mOutputStream.write(this.mBytes.array(), 0, position);
+            this.mBytes.clear();
         }
     }
 
@@ -224,21 +225,25 @@ public class FastPrintWriter extends PrintWriter {
                 CharBuffer charBuffer = CharBuffer.wrap(this.mText, 0, this.mPos);
                 CoderResult result = this.mCharset.encode(charBuffer, this.mBytes, true);
                 while (!this.mIoError) {
-                    if (!result.isError()) {
-                        if (!result.isOverflow()) {
-                            break;
-                        }
-                        flushBytesLocked();
-                        result = this.mCharset.encode(charBuffer, this.mBytes, true);
-                    } else {
+                    if (result.isError()) {
                         throw new IOException(result.toString());
                     }
+                    if (!result.isOverflow()) {
+                        break;
+                    }
+                    flushBytesLocked();
+                    result = this.mCharset.encode(charBuffer, this.mBytes, true);
                 }
                 if (!this.mIoError) {
                     flushBytesLocked();
                     this.mOutputStream.flush();
                 }
-            } else if (this.mWriter == null) {
+            } else if (this.mWriter != null) {
+                if (!this.mIoError) {
+                    this.mWriter.write(this.mText, 0, this.mPos);
+                    this.mWriter.flush();
+                }
+            } else {
                 int nonEolOff = 0;
                 int sepLen = this.mSeparator.length();
                 int len = sepLen < this.mPos ? sepLen : this.mPos;
@@ -250,14 +255,12 @@ public class FastPrintWriter extends PrintWriter {
                 } else {
                     this.mPrinter.println(new String(this.mText, 0, this.mPos - nonEolOff));
                 }
-            } else if (!this.mIoError) {
-                this.mWriter.write(this.mText, 0, this.mPos);
-                this.mWriter.flush();
             }
             this.mPos = 0;
         }
     }
 
+    @Override // java.io.PrintWriter, java.io.Writer, java.io.Flushable
     public void flush() {
         synchronized (this.lock) {
             try {
@@ -270,12 +273,13 @@ public class FastPrintWriter extends PrintWriter {
                     }
                 }
             } catch (IOException e) {
-                Log.w("FastPrintWriter", "Write failure", e);
+                Log.m63w("FastPrintWriter", "Write failure", e);
                 setError();
             }
         }
     }
 
+    @Override // java.io.PrintWriter, java.io.Writer, java.io.Closeable, java.lang.AutoCloseable
     public void close() {
         synchronized (this.lock) {
             try {
@@ -286,34 +290,37 @@ public class FastPrintWriter extends PrintWriter {
                     this.mWriter.close();
                 }
             } catch (IOException e) {
-                Log.w("FastPrintWriter", "Write failure", e);
+                Log.m63w("FastPrintWriter", "Write failure", e);
                 setError();
             }
         }
     }
 
+    @Override // java.io.PrintWriter
     public void print(char[] charArray) {
         synchronized (this.lock) {
             try {
                 appendLocked(charArray, 0, charArray.length);
             } catch (IOException e) {
-                Log.w("FastPrintWriter", "Write failure", e);
+                Log.m63w("FastPrintWriter", "Write failure", e);
                 setError();
             }
         }
     }
 
+    @Override // java.io.PrintWriter
     public void print(char ch) {
         synchronized (this.lock) {
             try {
                 appendLocked(ch);
             } catch (IOException e) {
-                Log.w("FastPrintWriter", "Write failure", e);
+                Log.m63w("FastPrintWriter", "Write failure", e);
                 setError();
             }
         }
     }
 
+    @Override // java.io.PrintWriter
     public void print(String str) {
         if (str == null) {
             str = String.valueOf((Object) null);
@@ -322,12 +329,13 @@ public class FastPrintWriter extends PrintWriter {
             try {
                 appendLocked(str, 0, str.length());
             } catch (IOException e) {
-                Log.w("FastPrintWriter", "Write failure", e);
+                Log.m63w("FastPrintWriter", "Write failure", e);
                 setError();
             }
         }
     }
 
+    @Override // java.io.PrintWriter
     public void print(int inum) {
         if (inum == 0) {
             print("0");
@@ -336,6 +344,7 @@ public class FastPrintWriter extends PrintWriter {
         }
     }
 
+    @Override // java.io.PrintWriter
     public void print(long lnum) {
         if (lnum == 0) {
             print("0");
@@ -344,6 +353,7 @@ public class FastPrintWriter extends PrintWriter {
         }
     }
 
+    @Override // java.io.PrintWriter
     public void println() {
         synchronized (this.lock) {
             try {
@@ -352,12 +362,13 @@ public class FastPrintWriter extends PrintWriter {
                     flushLocked();
                 }
             } catch (IOException e) {
-                Log.w("FastPrintWriter", "Write failure", e);
+                Log.m63w("FastPrintWriter", "Write failure", e);
                 setError();
             }
         }
     }
 
+    @Override // java.io.PrintWriter
     public void println(int inum) {
         if (inum == 0) {
             println("0");
@@ -366,6 +377,7 @@ public class FastPrintWriter extends PrintWriter {
         }
     }
 
+    @Override // java.io.PrintWriter
     public void println(long lnum) {
         if (lnum == 0) {
             println("0");
@@ -374,60 +386,67 @@ public class FastPrintWriter extends PrintWriter {
         }
     }
 
+    @Override // java.io.PrintWriter
     public void println(char[] chars) {
         print(chars);
         println();
     }
 
+    @Override // java.io.PrintWriter
     public void println(char c) {
         print(c);
         println();
     }
 
+    @Override // java.io.PrintWriter, java.io.Writer
     public void write(char[] buf, int offset, int count) {
         synchronized (this.lock) {
             try {
                 appendLocked(buf, offset, count);
             } catch (IOException e) {
-                Log.w("FastPrintWriter", "Write failure", e);
+                Log.m63w("FastPrintWriter", "Write failure", e);
                 setError();
             }
         }
     }
 
+    @Override // java.io.PrintWriter, java.io.Writer
     public void write(int oneChar) {
         synchronized (this.lock) {
             try {
                 appendLocked((char) oneChar);
             } catch (IOException e) {
-                Log.w("FastPrintWriter", "Write failure", e);
+                Log.m63w("FastPrintWriter", "Write failure", e);
                 setError();
             }
         }
     }
 
+    @Override // java.io.PrintWriter, java.io.Writer
     public void write(String str) {
         synchronized (this.lock) {
             try {
                 appendLocked(str, 0, str.length());
             } catch (IOException e) {
-                Log.w("FastPrintWriter", "Write failure", e);
+                Log.m63w("FastPrintWriter", "Write failure", e);
                 setError();
             }
         }
     }
 
+    @Override // java.io.PrintWriter, java.io.Writer
     public void write(String str, int offset, int count) {
         synchronized (this.lock) {
             try {
                 appendLocked(str, offset, count);
             } catch (IOException e) {
-                Log.w("FastPrintWriter", "Write failure", e);
+                Log.m63w("FastPrintWriter", "Write failure", e);
                 setError();
             }
         }
     }
 
+    @Override // java.io.PrintWriter, java.io.Writer, java.lang.Appendable
     public PrintWriter append(CharSequence csq, int start, int end) {
         if (csq == null) {
             csq = "null";

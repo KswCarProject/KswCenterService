@@ -1,22 +1,27 @@
 package android.app.admin;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.util.Preconditions;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes.dex */
 public class PasswordMetrics implements Parcelable {
     private static final int CHAR_DIGIT = 2;
     private static final int CHAR_LOWER_CASE = 0;
     private static final int CHAR_SYMBOL = 3;
     private static final int CHAR_UPPER_CASE = 1;
-    public static final Parcelable.Creator<PasswordMetrics> CREATOR = new Parcelable.Creator<PasswordMetrics>() {
+    public static final Parcelable.Creator<PasswordMetrics> CREATOR = new Parcelable.Creator<PasswordMetrics>() { // from class: android.app.admin.PasswordMetrics.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PasswordMetrics createFromParcel(Parcel in) {
             return new PasswordMetrics(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PasswordMetrics[] newArray(int size) {
             return new PasswordMetrics[size];
         }
@@ -32,6 +37,7 @@ public class PasswordMetrics implements Parcelable {
     public int upperCase;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     private @interface CharacterCatagory {
     }
 
@@ -46,7 +52,7 @@ public class PasswordMetrics implements Parcelable {
         this.nonLetter = 0;
     }
 
-    public PasswordMetrics(int quality2) {
+    public PasswordMetrics(int quality) {
         this.quality = 0;
         this.length = 0;
         this.letters = 0;
@@ -55,10 +61,10 @@ public class PasswordMetrics implements Parcelable {
         this.numeric = 0;
         this.symbols = 0;
         this.nonLetter = 0;
-        this.quality = quality2;
+        this.quality = quality;
     }
 
-    public PasswordMetrics(int quality2, int length2) {
+    public PasswordMetrics(int quality, int length) {
         this.quality = 0;
         this.length = 0;
         this.letters = 0;
@@ -67,18 +73,18 @@ public class PasswordMetrics implements Parcelable {
         this.numeric = 0;
         this.symbols = 0;
         this.nonLetter = 0;
-        this.quality = quality2;
-        this.length = length2;
+        this.quality = quality;
+        this.length = length;
     }
 
-    public PasswordMetrics(int quality2, int length2, int letters2, int upperCase2, int lowerCase2, int numeric2, int symbols2, int nonLetter2) {
-        this(quality2, length2);
-        this.letters = letters2;
-        this.upperCase = upperCase2;
-        this.lowerCase = lowerCase2;
-        this.numeric = numeric2;
-        this.symbols = symbols2;
-        this.nonLetter = nonLetter2;
+    public PasswordMetrics(int quality, int length, int letters, int upperCase, int lowerCase, int numeric, int symbols, int nonLetter) {
+        this(quality, length);
+        this.letters = letters;
+        this.upperCase = upperCase;
+        this.lowerCase = lowerCase;
+        this.numeric = numeric;
+        this.symbols = symbols;
+        this.nonLetter = nonLetter;
     }
 
     private PasswordMetrics(Parcel in) {
@@ -105,11 +111,13 @@ public class PasswordMetrics implements Parcelable {
     }
 
     public static PasswordMetrics getMinimumMetrics(int complexityLevel, int userEnteredPasswordQuality, int requestedQuality, boolean requiresNumeric, boolean requiresLettersOrSymbols) {
-        return getTargetQualityMetrics(complexityLevel, Math.max(userEnteredPasswordQuality, getActualRequiredQuality(requestedQuality, requiresNumeric, requiresLettersOrSymbols)));
+        int targetQuality = Math.max(userEnteredPasswordQuality, getActualRequiredQuality(requestedQuality, requiresNumeric, requiresLettersOrSymbols));
+        return getTargetQualityMetrics(complexityLevel, targetQuality);
     }
 
     @VisibleForTesting
     public static PasswordMetrics getTargetQualityMetrics(int complexityLevel, int targetQuality) {
+        PasswordMetrics[] passwordMetricsArr;
         PasswordComplexityBucket targetBucket = PasswordComplexityBucket.complexityLevelToBucket(complexityLevel);
         for (PasswordMetrics metrics : targetBucket.mMetrics) {
             if (targetQuality == metrics.quality) {
@@ -144,10 +152,12 @@ public class PasswordMetrics implements Parcelable {
         return this.quality == 0 && this.length == 0 && this.letters == 0 && this.upperCase == 0 && this.lowerCase == 0 && this.numeric == 0 && this.symbols == 0 && this.nonLetter == 0;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.quality);
         dest.writeInt(this.length);
@@ -172,40 +182,36 @@ public class PasswordMetrics implements Parcelable {
 
     public static PasswordMetrics computeForPassword(byte[] password) {
         int i;
-        byte[] bArr = password;
-        int lowerCase2 = 0;
-        int numeric2 = 0;
-        int nonLetter2 = 0;
-        int length2 = bArr.length;
-        int quality2 = 0;
+        int lowerCase = 0;
+        int numeric = 0;
+        int nonLetter = 0;
+        int length = password.length;
+        int quality = 0;
+        int symbols = 0;
         int symbols2 = 0;
-        int upperCase2 = 0;
-        int letters2 = 0;
-        for (byte b : bArr) {
+        int upperCase = 0;
+        for (byte b : password) {
             switch (categoryChar((char) b)) {
                 case 0:
-                    letters2++;
-                    lowerCase2++;
+                    upperCase++;
+                    lowerCase++;
                     break;
                 case 1:
-                    letters2++;
-                    upperCase2++;
+                    upperCase++;
+                    symbols2++;
                     break;
                 case 2:
-                    numeric2++;
-                    nonLetter2++;
+                    numeric++;
+                    nonLetter++;
                     break;
                 case 3:
-                    symbols2++;
-                    nonLetter2++;
+                    symbols++;
+                    nonLetter++;
                     break;
             }
         }
-        boolean hasNonNumeric = true;
-        boolean hasNumeric = numeric2 > 0;
-        if (letters2 + symbols2 <= 0) {
-            hasNonNumeric = false;
-        }
+        boolean hasNumeric = numeric > 0;
+        boolean hasNonNumeric = upperCase + symbols > 0;
         if (hasNonNumeric && hasNumeric) {
             i = 327680;
         } else if (hasNonNumeric) {
@@ -218,36 +224,26 @@ public class PasswordMetrics implements Parcelable {
                     i = 196608;
                 }
             }
-            int i2 = length2;
-            return new PasswordMetrics(quality2, length2, letters2, upperCase2, lowerCase2, numeric2, symbols2, nonLetter2);
+            int length2 = nonLetter;
+            return new PasswordMetrics(quality, length, upperCase, symbols2, lowerCase, numeric, symbols, length2);
         }
-        quality2 = i;
-        int i22 = length2;
-        return new PasswordMetrics(quality2, length2, letters2, upperCase2, lowerCase2, numeric2, symbols2, nonLetter2);
+        quality = i;
+        int length22 = nonLetter;
+        return new PasswordMetrics(quality, length, upperCase, symbols2, lowerCase, numeric, symbols, length22);
     }
 
     public boolean equals(Object other) {
-        if (!(other instanceof PasswordMetrics)) {
-            return false;
-        }
-        PasswordMetrics o = (PasswordMetrics) other;
-        if (this.quality == o.quality && this.length == o.length && this.letters == o.letters && this.upperCase == o.upperCase && this.lowerCase == o.lowerCase && this.numeric == o.numeric && this.symbols == o.symbols && this.nonLetter == o.nonLetter) {
-            return true;
+        if (other instanceof PasswordMetrics) {
+            PasswordMetrics o = (PasswordMetrics) other;
+            return this.quality == o.quality && this.length == o.length && this.letters == o.letters && this.upperCase == o.upperCase && this.lowerCase == o.lowerCase && this.numeric == o.numeric && this.symbols == o.symbols && this.nonLetter == o.nonLetter;
         }
         return false;
     }
 
     private boolean satisfiesBucket(PasswordMetrics... bucket) {
-        int length2 = bucket.length;
-        int i = 0;
-        while (i < length2) {
-            PasswordMetrics metrics = bucket[i];
-            if (this.quality != metrics.quality) {
-                i++;
-            } else if (this.length >= metrics.length) {
-                return true;
-            } else {
-                return false;
+        for (PasswordMetrics metrics : bucket) {
+            if (this.quality == metrics.quality) {
+                return this.length >= metrics.length;
             }
         }
         return false;
@@ -282,20 +278,18 @@ public class PasswordMetrics implements Parcelable {
             }
             previousChar = currentChar;
         }
-        return Math.max(maxLength, bytes.length - startSequence);
+        int current2 = bytes.length;
+        return Math.max(maxLength, current2 - startSequence);
     }
 
     private static int categoryChar(char c) {
-        if ('a' <= c && c <= 'z') {
-            return 0;
-        }
-        if ('A' <= c && c <= 'Z') {
+        if ('a' > c || c > 'z') {
+            if ('A' > c || c > 'Z') {
+                return ('0' > c || c > '9') ? 3 : 2;
+            }
             return 1;
         }
-        if ('0' > c || c > '9') {
-            return 3;
-        }
-        return 2;
+        return 0;
     }
 
     private static int maxDiffCategory(int category) {
@@ -311,6 +305,7 @@ public class PasswordMetrics implements Parcelable {
     }
 
     public int determineComplexity() {
+        PasswordComplexityBucket[] passwordComplexityBucketArr;
         for (PasswordComplexityBucket bucket : PasswordComplexityBucket.BUCKETS) {
             if (satisfiesBucket(bucket.mMetrics)) {
                 return bucket.mComplexityLevel;
@@ -319,37 +314,31 @@ public class PasswordMetrics implements Parcelable {
         return 0;
     }
 
+    /* loaded from: classes.dex */
     private static class PasswordComplexityBucket {
-        /* access modifiers changed from: private */
-        public static final PasswordComplexityBucket[] BUCKETS = {HIGH, MEDIUM, LOW};
+        private final int mComplexityLevel;
+        private final PasswordMetrics[] mMetrics;
         private static final PasswordComplexityBucket HIGH = new PasswordComplexityBucket(327680, new PasswordMetrics(196608, 8), new PasswordMetrics(262144, 6), new PasswordMetrics(327680, 6));
-        private static final PasswordComplexityBucket LOW = new PasswordComplexityBucket(65536, new PasswordMetrics(65536), new PasswordMetrics(131072), new PasswordMetrics(196608), new PasswordMetrics(262144), new PasswordMetrics(327680));
         private static final PasswordComplexityBucket MEDIUM = new PasswordComplexityBucket(196608, new PasswordMetrics(196608, 4), new PasswordMetrics(262144, 4), new PasswordMetrics(327680, 4));
+        private static final PasswordComplexityBucket LOW = new PasswordComplexityBucket(65536, new PasswordMetrics(65536), new PasswordMetrics(131072), new PasswordMetrics(196608), new PasswordMetrics(262144), new PasswordMetrics(327680));
         private static final PasswordComplexityBucket NONE = new PasswordComplexityBucket(0, new PasswordMetrics());
-        /* access modifiers changed from: private */
-        public final int mComplexityLevel;
-        /* access modifiers changed from: private */
-        public final PasswordMetrics[] mMetrics;
+        private static final PasswordComplexityBucket[] BUCKETS = {HIGH, MEDIUM, LOW};
 
         private PasswordComplexityBucket(int complexityLevel, PasswordMetrics... metricsArray) {
             int previousQuality = 0;
-            int length = metricsArray.length;
-            int i = 0;
-            while (i < length) {
-                PasswordMetrics metrics = metricsArray[i];
-                if (metrics.quality >= previousQuality) {
-                    previousQuality = metrics.quality;
-                    i++;
-                } else {
+            for (PasswordMetrics metrics : metricsArray) {
+                if (metrics.quality < previousQuality) {
                     throw new IllegalArgumentException("metricsArray must be sorted in ascending order of quality");
                 }
+                previousQuality = metrics.quality;
             }
             this.mMetrics = metricsArray;
             this.mComplexityLevel = complexityLevel;
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public static PasswordComplexityBucket complexityLevelToBucket(int complexityLevel) {
+            PasswordComplexityBucket[] passwordComplexityBucketArr;
             for (PasswordComplexityBucket bucket : BUCKETS) {
                 if (bucket.mComplexityLevel == complexityLevel) {
                     return bucket;

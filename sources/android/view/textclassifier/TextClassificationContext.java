@@ -1,16 +1,21 @@
 package android.view.textclassifier;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.util.Preconditions;
 import java.util.Locale;
 
+/* loaded from: classes4.dex */
 public final class TextClassificationContext implements Parcelable {
-    public static final Parcelable.Creator<TextClassificationContext> CREATOR = new Parcelable.Creator<TextClassificationContext>() {
+    public static final Parcelable.Creator<TextClassificationContext> CREATOR = new Parcelable.Creator<TextClassificationContext>() { // from class: android.view.textclassifier.TextClassificationContext.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public TextClassificationContext createFromParcel(Parcel parcel) {
             return new TextClassificationContext(parcel);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public TextClassificationContext[] newArray(int size) {
             return new TextClassificationContext[size];
         }
@@ -38,9 +43,10 @@ public final class TextClassificationContext implements Parcelable {
     }
 
     public String toString() {
-        return String.format(Locale.US, "TextClassificationContext{packageName=%s, widgetType=%s, widgetVersion=%s}", new Object[]{this.mPackageName, this.mWidgetType, this.mWidgetVersion});
+        return String.format(Locale.US, "TextClassificationContext{packageName=%s, widgetType=%s, widgetVersion=%s}", this.mPackageName, this.mWidgetType, this.mWidgetVersion);
     }
 
+    /* loaded from: classes4.dex */
     public static final class Builder {
         private final String mPackageName;
         private final String mWidgetType;
@@ -61,10 +67,12 @@ public final class TextClassificationContext implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeString(this.mPackageName);
         parcel.writeString(this.mWidgetType);

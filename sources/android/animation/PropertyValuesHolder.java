@@ -15,14 +15,8 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 
+/* loaded from: classes.dex */
 public class PropertyValuesHolder implements Cloneable {
-    private static Class[] DOUBLE_VARIANTS = {Double.TYPE, Double.class, Float.TYPE, Integer.TYPE, Float.class, Integer.class};
-    private static Class[] FLOAT_VARIANTS = {Float.TYPE, Float.class, Double.TYPE, Integer.TYPE, Double.class, Integer.class};
-    private static Class[] INTEGER_VARIANTS = {Integer.TYPE, Integer.class, Float.TYPE, Double.TYPE, Float.class, Double.class};
-    private static final TypeEvaluator sFloatEvaluator = new FloatEvaluator();
-    private static final HashMap<Class, HashMap<String, Method>> sGetterPropertyMap = new HashMap<>();
-    private static final TypeEvaluator sIntEvaluator = new IntEvaluator();
-    private static final HashMap<Class, HashMap<String, Method>> sSetterPropertyMap = new HashMap<>();
     private Object mAnimatedValue;
     private TypeConverter mConverter;
     private TypeEvaluator mEvaluator;
@@ -33,41 +27,48 @@ public class PropertyValuesHolder implements Cloneable {
     Method mSetter;
     final Object[] mTmpValueArray;
     Class mValueType;
+    private static final TypeEvaluator sIntEvaluator = new IntEvaluator();
+    private static final TypeEvaluator sFloatEvaluator = new FloatEvaluator();
+    private static Class[] FLOAT_VARIANTS = {Float.TYPE, Float.class, Double.TYPE, Integer.TYPE, Double.class, Integer.class};
+    private static Class[] INTEGER_VARIANTS = {Integer.TYPE, Integer.class, Float.TYPE, Double.TYPE, Float.class, Double.class};
+    private static Class[] DOUBLE_VARIANTS = {Double.TYPE, Double.class, Float.TYPE, Integer.TYPE, Float.class, Integer.class};
+    private static final HashMap<Class, HashMap<String, Method>> sSetterPropertyMap = new HashMap<>();
+    private static final HashMap<Class, HashMap<String, Method>> sGetterPropertyMap = new HashMap<>();
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static native void nCallFloatMethod(Object obj, long j, float f);
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static native void nCallFourFloatMethod(Object obj, long j, float f, float f2, float f3, float f4);
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static native void nCallFourIntMethod(Object obj, long j, int i, int i2, int i3, int i4);
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static native void nCallIntMethod(Object obj, long j, int i);
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static native void nCallMultipleFloatMethod(Object obj, long j, float[] fArr);
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static native void nCallMultipleIntMethod(Object obj, long j, int[] iArr);
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static native void nCallTwoFloatMethod(Object obj, long j, float f, float f2);
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static native void nCallTwoIntMethod(Object obj, long j, int i, int i2);
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static native long nGetFloatMethod(Class cls, String str);
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static native long nGetIntMethod(Class cls, String str);
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static native long nGetMultipleFloatMethod(Class cls, String str, int i);
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static native long nGetMultipleIntMethod(Class cls, String str, int i);
 
     private PropertyValuesHolder(String propertyName) {
@@ -94,42 +95,43 @@ public class PropertyValuesHolder implements Cloneable {
     }
 
     public static PropertyValuesHolder ofInt(Property<?, Integer> property, int... values) {
-        return new IntPropertyValuesHolder((Property) property, values);
+        return new IntPropertyValuesHolder(property, values);
     }
 
     public static PropertyValuesHolder ofMultiInt(String propertyName, int[][] values) {
-        if (values.length >= 2) {
-            int numParameters = 0;
-            int i = 0;
-            while (i < values.length) {
-                if (values[i] != null) {
-                    int length = values[i].length;
-                    if (i == 0) {
-                        numParameters = length;
-                    } else if (length != numParameters) {
-                        throw new IllegalArgumentException("Values must all have the same length");
-                    }
-                    i++;
-                } else {
-                    throw new IllegalArgumentException("values must not be null");
-                }
-            }
-            return new MultiIntValuesHolder(propertyName, (TypeConverter) null, (TypeEvaluator) new IntArrayEvaluator(new int[numParameters]), (Object[]) values);
+        if (values.length < 2) {
+            throw new IllegalArgumentException("At least 2 values must be supplied");
         }
-        throw new IllegalArgumentException("At least 2 values must be supplied");
+        int numParameters = 0;
+        for (int i = 0; i < values.length; i++) {
+            if (values[i] == null) {
+                throw new IllegalArgumentException("values must not be null");
+            }
+            int length = values[i].length;
+            if (i == 0) {
+                numParameters = length;
+            } else if (length != numParameters) {
+                throw new IllegalArgumentException("Values must all have the same length");
+            }
+        }
+        IntArrayEvaluator evaluator = new IntArrayEvaluator(new int[numParameters]);
+        return new MultiIntValuesHolder(propertyName, (TypeConverter) null, evaluator, values);
     }
 
     public static PropertyValuesHolder ofMultiInt(String propertyName, Path path) {
-        return new MultiIntValuesHolder(propertyName, (TypeConverter) new PointFToIntArray(), (TypeEvaluator) null, KeyframeSet.ofPath(path));
+        Keyframes keyframes = KeyframeSet.ofPath(path);
+        PointFToIntArray converter = new PointFToIntArray();
+        return new MultiIntValuesHolder(propertyName, converter, (TypeEvaluator) null, keyframes);
     }
 
     @SafeVarargs
     public static <V> PropertyValuesHolder ofMultiInt(String propertyName, TypeConverter<V, int[]> converter, TypeEvaluator<V> evaluator, V... values) {
-        return new MultiIntValuesHolder(propertyName, (TypeConverter) converter, (TypeEvaluator) evaluator, (Object[]) values);
+        return new MultiIntValuesHolder(propertyName, converter, evaluator, values);
     }
 
     public static <T> PropertyValuesHolder ofMultiInt(String propertyName, TypeConverter<T, int[]> converter, TypeEvaluator<T> evaluator, Keyframe... values) {
-        return new MultiIntValuesHolder(propertyName, (TypeConverter) converter, (TypeEvaluator) evaluator, (Keyframes) KeyframeSet.ofKeyframe(values));
+        KeyframeSet keyframeSet = KeyframeSet.ofKeyframe(values);
+        return new MultiIntValuesHolder(propertyName, converter, evaluator, keyframeSet);
     }
 
     public static PropertyValuesHolder ofFloat(String propertyName, float... values) {
@@ -137,42 +139,43 @@ public class PropertyValuesHolder implements Cloneable {
     }
 
     public static PropertyValuesHolder ofFloat(Property<?, Float> property, float... values) {
-        return new FloatPropertyValuesHolder((Property) property, values);
+        return new FloatPropertyValuesHolder(property, values);
     }
 
     public static PropertyValuesHolder ofMultiFloat(String propertyName, float[][] values) {
-        if (values.length >= 2) {
-            int numParameters = 0;
-            int i = 0;
-            while (i < values.length) {
-                if (values[i] != null) {
-                    int length = values[i].length;
-                    if (i == 0) {
-                        numParameters = length;
-                    } else if (length != numParameters) {
-                        throw new IllegalArgumentException("Values must all have the same length");
-                    }
-                    i++;
-                } else {
-                    throw new IllegalArgumentException("values must not be null");
-                }
-            }
-            return new MultiFloatValuesHolder(propertyName, (TypeConverter) null, (TypeEvaluator) new FloatArrayEvaluator(new float[numParameters]), (Object[]) values);
+        if (values.length < 2) {
+            throw new IllegalArgumentException("At least 2 values must be supplied");
         }
-        throw new IllegalArgumentException("At least 2 values must be supplied");
+        int numParameters = 0;
+        for (int i = 0; i < values.length; i++) {
+            if (values[i] == null) {
+                throw new IllegalArgumentException("values must not be null");
+            }
+            int length = values[i].length;
+            if (i == 0) {
+                numParameters = length;
+            } else if (length != numParameters) {
+                throw new IllegalArgumentException("Values must all have the same length");
+            }
+        }
+        FloatArrayEvaluator evaluator = new FloatArrayEvaluator(new float[numParameters]);
+        return new MultiFloatValuesHolder(propertyName, (TypeConverter) null, evaluator, values);
     }
 
     public static PropertyValuesHolder ofMultiFloat(String propertyName, Path path) {
-        return new MultiFloatValuesHolder(propertyName, (TypeConverter) new PointFToFloatArray(), (TypeEvaluator) null, KeyframeSet.ofPath(path));
+        Keyframes keyframes = KeyframeSet.ofPath(path);
+        PointFToFloatArray converter = new PointFToFloatArray();
+        return new MultiFloatValuesHolder(propertyName, converter, (TypeEvaluator) null, keyframes);
     }
 
     @SafeVarargs
     public static <V> PropertyValuesHolder ofMultiFloat(String propertyName, TypeConverter<V, float[]> converter, TypeEvaluator<V> evaluator, V... values) {
-        return new MultiFloatValuesHolder(propertyName, (TypeConverter) converter, (TypeEvaluator) evaluator, (Object[]) values);
+        return new MultiFloatValuesHolder(propertyName, converter, evaluator, values);
     }
 
     public static <T> PropertyValuesHolder ofMultiFloat(String propertyName, TypeConverter<T, float[]> converter, TypeEvaluator<T> evaluator, Keyframe... values) {
-        return new MultiFloatValuesHolder(propertyName, (TypeConverter) converter, (TypeEvaluator) evaluator, (Keyframes) KeyframeSet.ofKeyframe(values));
+        KeyframeSet keyframeSet = KeyframeSet.ofKeyframe(values);
+        return new MultiFloatValuesHolder(propertyName, converter, evaluator, keyframeSet);
     }
 
     public static PropertyValuesHolder ofObject(String propertyName, TypeEvaluator evaluator, Object... values) {
@@ -200,7 +203,7 @@ public class PropertyValuesHolder implements Cloneable {
 
     @SafeVarargs
     public static <T, V> PropertyValuesHolder ofObject(Property<?, V> property, TypeConverter<T, V> converter, TypeEvaluator<T> evaluator, T... values) {
-        PropertyValuesHolder pvh = new PropertyValuesHolder((Property) property);
+        PropertyValuesHolder pvh = new PropertyValuesHolder(property);
         pvh.setConverter(converter);
         pvh.setObjectValues(values);
         pvh.setEvaluator(evaluator);
@@ -208,7 +211,7 @@ public class PropertyValuesHolder implements Cloneable {
     }
 
     public static <V> PropertyValuesHolder ofObject(Property<?, V> property, TypeConverter<PointF, V> converter, Path path) {
-        PropertyValuesHolder pvh = new PropertyValuesHolder((Property) property);
+        PropertyValuesHolder pvh = new PropertyValuesHolder(property);
         pvh.mKeyframes = KeyframeSet.ofPath(path);
         pvh.mValueType = PointF.class;
         pvh.setConverter(converter);
@@ -216,11 +219,13 @@ public class PropertyValuesHolder implements Cloneable {
     }
 
     public static PropertyValuesHolder ofKeyframe(String propertyName, Keyframe... values) {
-        return ofKeyframes(propertyName, (Keyframes) KeyframeSet.ofKeyframe(values));
+        KeyframeSet keyframeSet = KeyframeSet.ofKeyframe(values);
+        return ofKeyframes(propertyName, keyframeSet);
     }
 
     public static PropertyValuesHolder ofKeyframe(Property property, Keyframe... values) {
-        return ofKeyframes(property, (Keyframes) KeyframeSet.ofKeyframe(values));
+        KeyframeSet keyframeSet = KeyframeSet.ofKeyframe(values);
+        return ofKeyframes(property, keyframeSet);
     }
 
     static PropertyValuesHolder ofKeyframes(String propertyName, Keyframes keyframes) {
@@ -281,13 +286,14 @@ public class PropertyValuesHolder implements Cloneable {
         this.mConverter = converter;
     }
 
+    /* JADX WARN: Multi-variable type inference failed */
     private Method getPropertyFunction(Class targetClass, String prefix, Class valueType) {
         Class[] typeVariants;
         Method returnVal = null;
         String methodName = getMethodName(prefix, this.mPropertyName);
         if (valueType == null) {
             try {
-                returnVal = targetClass.getMethod(methodName, (Class[]) null);
+                returnVal = targetClass.getMethod(methodName, null);
             } catch (NoSuchMethodException e) {
             }
         } else {
@@ -299,84 +305,56 @@ public class PropertyValuesHolder implements Cloneable {
             } else {
                 typeVariants = valueType.equals(Double.class) ? DOUBLE_VARIANTS : new Class[]{valueType};
             }
-            int length = typeVariants.length;
-            int i = 0;
-            while (i < length) {
-                Class typeVariant = typeVariants[i];
+            Method returnVal2 = null;
+            for (Class typeVariant : typeVariants) {
                 args[0] = typeVariant;
                 try {
-                    Method returnVal2 = targetClass.getMethod(methodName, args);
+                    returnVal2 = targetClass.getMethod(methodName, args);
                     if (this.mConverter == null) {
                         this.mValueType = typeVariant;
                     }
                     return returnVal2;
                 } catch (NoSuchMethodException e2) {
-                    i++;
                 }
             }
-            returnVal = null;
+            returnVal = returnVal2;
         }
         if (returnVal == null) {
-            Log.w("PropertyValuesHolder", "Method " + getMethodName(prefix, this.mPropertyName) + "() with type " + valueType + " not found on target class " + targetClass);
+            Log.m64w("PropertyValuesHolder", "Method " + getMethodName(prefix, this.mPropertyName) + "() with type " + valueType + " not found on target class " + targetClass);
         }
         return returnVal;
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:5:0x000b, code lost:
-        r2 = r1.containsKey(r4.mPropertyName);
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    private java.lang.reflect.Method setupSetterOrGetter(java.lang.Class r5, java.util.HashMap<java.lang.Class, java.util.HashMap<java.lang.String, java.lang.reflect.Method>> r6, java.lang.String r7, java.lang.Class r8) {
-        /*
-            r4 = this;
-            r0 = 0
-            monitor-enter(r6)
-            java.lang.Object r1 = r6.get(r5)     // Catch:{ all -> 0x0036 }
-            java.util.HashMap r1 = (java.util.HashMap) r1     // Catch:{ all -> 0x0036 }
-            r2 = 0
-            if (r1 == 0) goto L_0x001d
-            java.lang.String r3 = r4.mPropertyName     // Catch:{ all -> 0x0036 }
-            boolean r3 = r1.containsKey(r3)     // Catch:{ all -> 0x0036 }
-            r2 = r3
-            if (r2 == 0) goto L_0x001d
-            java.lang.String r3 = r4.mPropertyName     // Catch:{ all -> 0x0036 }
-            java.lang.Object r3 = r1.get(r3)     // Catch:{ all -> 0x0036 }
-            java.lang.reflect.Method r3 = (java.lang.reflect.Method) r3     // Catch:{ all -> 0x0036 }
-            r0 = r3
-        L_0x001d:
-            if (r2 != 0) goto L_0x0034
-            java.lang.reflect.Method r3 = r4.getPropertyFunction(r5, r7, r8)     // Catch:{ all -> 0x0036 }
-            r0 = r3
-            if (r1 != 0) goto L_0x002f
-            java.util.HashMap r3 = new java.util.HashMap     // Catch:{ all -> 0x0036 }
-            r3.<init>()     // Catch:{ all -> 0x0036 }
-            r1 = r3
-            r6.put(r5, r1)     // Catch:{ all -> 0x0036 }
-        L_0x002f:
-            java.lang.String r3 = r4.mPropertyName     // Catch:{ all -> 0x0036 }
-            r1.put(r3, r0)     // Catch:{ all -> 0x0036 }
-        L_0x0034:
-            monitor-exit(r6)     // Catch:{ all -> 0x0036 }
-            return r0
-        L_0x0036:
-            r1 = move-exception
-            monitor-exit(r6)     // Catch:{ all -> 0x0036 }
-            throw r1
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.animation.PropertyValuesHolder.setupSetterOrGetter(java.lang.Class, java.util.HashMap, java.lang.String, java.lang.Class):java.lang.reflect.Method");
+    private Method setupSetterOrGetter(Class targetClass, HashMap<Class, HashMap<String, Method>> propertyMapMap, String prefix, Class valueType) {
+        Method setterOrGetter = null;
+        synchronized (propertyMapMap) {
+            HashMap<String, Method> propertyMap = propertyMapMap.get(targetClass);
+            boolean wasInMap = false;
+            if (propertyMap != null && (wasInMap = propertyMap.containsKey(this.mPropertyName))) {
+                setterOrGetter = propertyMap.get(this.mPropertyName);
+            }
+            if (!wasInMap) {
+                setterOrGetter = getPropertyFunction(targetClass, prefix, valueType);
+                if (propertyMap == null) {
+                    propertyMap = new HashMap<>();
+                    propertyMapMap.put(targetClass, propertyMap);
+                }
+                propertyMap.put(this.mPropertyName, setterOrGetter);
+            }
+        }
+        return setterOrGetter;
     }
 
-    /* access modifiers changed from: package-private */
-    public void setupSetter(Class targetClass) {
-        this.mSetter = setupSetterOrGetter(targetClass, sSetterPropertyMap, "set", this.mConverter == null ? this.mValueType : this.mConverter.getTargetType());
+    void setupSetter(Class targetClass) {
+        Class<?> propertyType = this.mConverter == null ? this.mValueType : this.mConverter.getTargetType();
+        this.mSetter = setupSetterOrGetter(targetClass, sSetterPropertyMap, "set", propertyType);
     }
 
     private void setupGetter(Class targetClass) {
-        this.mGetter = setupSetterOrGetter(targetClass, sGetterPropertyMap, "get", (Class) null);
+        this.mGetter = setupSetterOrGetter(targetClass, sGetterPropertyMap, "get", null);
     }
 
-    /* access modifiers changed from: package-private */
-    public void setupSetterAndGetter(Object target) {
+    void setupSetterAndGetter(Object target) {
         if (this.mProperty != null) {
             try {
                 List<Keyframe> keyframes = this.mKeyframes.getKeyframes();
@@ -394,7 +372,7 @@ public class PropertyValuesHolder implements Cloneable {
                 }
                 return;
             } catch (ClassCastException e) {
-                Log.w("PropertyValuesHolder", "No such property (" + this.mProperty.getName() + ") on target object " + target + ". Trying reflection instead");
+                Log.m64w("PropertyValuesHolder", "No such property (" + this.mProperty.getName() + ") on target object " + target + ". Trying reflection instead");
                 this.mProperty = null;
             }
         }
@@ -415,12 +393,13 @@ public class PropertyValuesHolder implements Cloneable {
                         }
                     }
                     try {
-                        kf2.setValue(convertBack(this.mGetter.invoke(target, new Object[0])));
+                        Object value = convertBack(this.mGetter.invoke(target, new Object[0]));
+                        kf2.setValue(value);
                         kf2.setValueWasSetOnStart(true);
-                    } catch (InvocationTargetException e2) {
-                        Log.e("PropertyValuesHolder", e2.toString());
-                    } catch (IllegalAccessException e3) {
-                        Log.e("PropertyValuesHolder", e3.toString());
+                    } catch (IllegalAccessException e2) {
+                        Log.m70e("PropertyValuesHolder", e2.toString());
+                    } catch (InvocationTargetException e3) {
+                        Log.m70e("PropertyValuesHolder", e3.toString());
                     }
                 }
             }
@@ -428,52 +407,55 @@ public class PropertyValuesHolder implements Cloneable {
     }
 
     private Object convertBack(Object value) {
-        if (this.mConverter == null) {
-            return value;
-        }
-        if (this.mConverter instanceof BidirectionalTypeConverter) {
+        if (this.mConverter != null) {
+            if (!(this.mConverter instanceof BidirectionalTypeConverter)) {
+                throw new IllegalArgumentException("Converter " + this.mConverter.getClass().getName() + " must be a BidirectionalTypeConverter");
+            }
             return ((BidirectionalTypeConverter) this.mConverter).convertBack(value);
         }
-        throw new IllegalArgumentException("Converter " + this.mConverter.getClass().getName() + " must be a BidirectionalTypeConverter");
+        return value;
     }
 
     private void setupValue(Object target, Keyframe kf) {
         if (this.mProperty != null) {
-            kf.setValue(convertBack(this.mProperty.get(target)));
+            Object value = convertBack(this.mProperty.get(target));
+            kf.setValue(value);
             return;
         }
         try {
             if (this.mGetter == null) {
-                setupGetter(target.getClass());
+                Class targetClass = target.getClass();
+                setupGetter(targetClass);
                 if (this.mGetter == null) {
                     return;
                 }
             }
-            kf.setValue(convertBack(this.mGetter.invoke(target, new Object[0])));
-        } catch (InvocationTargetException e) {
-            Log.e("PropertyValuesHolder", e.toString());
-        } catch (IllegalAccessException e2) {
-            Log.e("PropertyValuesHolder", e2.toString());
+            Object value2 = convertBack(this.mGetter.invoke(target, new Object[0]));
+            kf.setValue(value2);
+        } catch (IllegalAccessException e) {
+            Log.m70e("PropertyValuesHolder", e.toString());
+        } catch (InvocationTargetException e2) {
+            Log.m70e("PropertyValuesHolder", e2.toString());
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void setupStartValue(Object target) {
+    void setupStartValue(Object target) {
         List<Keyframe> keyframes = this.mKeyframes.getKeyframes();
         if (!keyframes.isEmpty()) {
             setupValue(target, keyframes.get(0));
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void setupEndValue(Object target) {
+    void setupEndValue(Object target) {
         List<Keyframe> keyframes = this.mKeyframes.getKeyframes();
         if (!keyframes.isEmpty()) {
             setupValue(target, keyframes.get(keyframes.size() - 1));
         }
     }
 
-    public PropertyValuesHolder clone() {
+    @Override // 
+    /* renamed from: clone */
+    public PropertyValuesHolder mo144clone() {
         try {
             PropertyValuesHolder newPVH = (PropertyValuesHolder) super.clone();
             newPVH.mPropertyName = this.mPropertyName;
@@ -486,8 +468,7 @@ public class PropertyValuesHolder implements Cloneable {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void setAnimatedValue(Object target) {
+    void setAnimatedValue(Object target) {
         if (this.mProperty != null) {
             this.mProperty.set(target, getAnimatedValue());
         }
@@ -495,24 +476,21 @@ public class PropertyValuesHolder implements Cloneable {
             try {
                 this.mTmpValueArray[0] = getAnimatedValue();
                 this.mSetter.invoke(target, this.mTmpValueArray);
-            } catch (InvocationTargetException e) {
-                Log.e("PropertyValuesHolder", e.toString());
-            } catch (IllegalAccessException e2) {
-                Log.e("PropertyValuesHolder", e2.toString());
+            } catch (IllegalAccessException e) {
+                Log.m70e("PropertyValuesHolder", e.toString());
+            } catch (InvocationTargetException e2) {
+                Log.m70e("PropertyValuesHolder", e2.toString());
             }
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void init() {
+    void init() {
         TypeEvaluator typeEvaluator;
         if (this.mEvaluator == null) {
             if (this.mValueType == Integer.class) {
                 typeEvaluator = sIntEvaluator;
-            } else if (this.mValueType == Float.class) {
-                typeEvaluator = sFloatEvaluator;
             } else {
-                typeEvaluator = null;
+                typeEvaluator = this.mValueType == Float.class ? sFloatEvaluator : null;
             }
             this.mEvaluator = typeEvaluator;
         }
@@ -526,8 +504,7 @@ public class PropertyValuesHolder implements Cloneable {
         this.mKeyframes.setEvaluator(evaluator);
     }
 
-    /* access modifiers changed from: package-private */
-    public void calculateValue(float fraction) {
+    void calculateValue(float fraction) {
         Object value = this.mKeyframes.getValue(fraction);
         this.mAnimatedValue = this.mConverter == null ? value : this.mConverter.convert(value);
     }
@@ -544,8 +521,7 @@ public class PropertyValuesHolder implements Cloneable {
         return this.mPropertyName;
     }
 
-    /* access modifiers changed from: package-private */
-    public Object getAnimatedValue() {
+    Object getAnimatedValue() {
         return this.mAnimatedValue;
     }
 
@@ -562,7 +538,8 @@ public class PropertyValuesHolder implements Cloneable {
             values.endValue = new PathParser.PathData((PathParser.PathData) values.endValue);
         }
         if ((this.mKeyframes instanceof PathKeyframes.FloatKeyframesBase) || (this.mKeyframes instanceof PathKeyframes.IntKeyframesBase) || (this.mKeyframes.getKeyframes() != null && this.mKeyframes.getKeyframes().size() > 2)) {
-            values.dataSource = new PropertyValues.DataSource() {
+            values.dataSource = new PropertyValues.DataSource() { // from class: android.animation.PropertyValuesHolder.1
+                @Override // android.animation.PropertyValuesHolder.PropertyValues.DataSource
                 public Object getValueAtFraction(float fraction) {
                     return PropertyValuesHolder.this.mKeyframes.getValue(fraction);
                 }
@@ -589,6 +566,7 @@ public class PropertyValuesHolder implements Cloneable {
         return prefix + firstLetter + theRest;
     }
 
+    /* loaded from: classes.dex */
     static class IntPropertyValuesHolder extends PropertyValuesHolder {
         private static final HashMap<Class, HashMap<String, Long>> sJNISetterPropertyMap = new HashMap<>();
         int mIntAnimatedValue;
@@ -626,37 +604,41 @@ public class PropertyValuesHolder implements Cloneable {
             }
         }
 
+        @Override // android.animation.PropertyValuesHolder
         public void setProperty(Property property) {
             if (property instanceof IntProperty) {
                 this.mIntProperty = (IntProperty) property;
             } else {
-                PropertyValuesHolder.super.setProperty(property);
+                super.setProperty(property);
             }
         }
 
+        @Override // android.animation.PropertyValuesHolder
         public void setIntValues(int... values) {
-            PropertyValuesHolder.super.setIntValues(values);
+            super.setIntValues(values);
             this.mIntKeyframes = (Keyframes.IntKeyframes) this.mKeyframes;
         }
 
-        /* access modifiers changed from: package-private */
-        public void calculateValue(float fraction) {
+        @Override // android.animation.PropertyValuesHolder
+        void calculateValue(float fraction) {
             this.mIntAnimatedValue = this.mIntKeyframes.getIntValue(fraction);
         }
 
-        /* access modifiers changed from: package-private */
-        public Object getAnimatedValue() {
+        @Override // android.animation.PropertyValuesHolder
+        Object getAnimatedValue() {
             return Integer.valueOf(this.mIntAnimatedValue);
         }
 
-        public IntPropertyValuesHolder clone() {
-            IntPropertyValuesHolder newPVH = (IntPropertyValuesHolder) PropertyValuesHolder.super.clone();
+        @Override // android.animation.PropertyValuesHolder
+        /* renamed from: clone */
+        public IntPropertyValuesHolder mo144clone() {
+            IntPropertyValuesHolder newPVH = (IntPropertyValuesHolder) super.mo144clone();
             newPVH.mIntKeyframes = (Keyframes.IntKeyframes) newPVH.mKeyframes;
             return newPVH;
         }
 
-        /* access modifiers changed from: package-private */
-        public void setAnimatedValue(Object target) {
+        @Override // android.animation.PropertyValuesHolder
+        void setAnimatedValue(Object target) {
             if (this.mIntProperty != null) {
                 this.mIntProperty.setValue(target, this.mIntAnimatedValue);
             } else if (this.mProperty != null) {
@@ -667,83 +649,46 @@ public class PropertyValuesHolder implements Cloneable {
                 try {
                     this.mTmpValueArray[0] = Integer.valueOf(this.mIntAnimatedValue);
                     this.mSetter.invoke(target, this.mTmpValueArray);
-                } catch (InvocationTargetException e) {
-                    Log.e("PropertyValuesHolder", e.toString());
-                } catch (IllegalAccessException e2) {
-                    Log.e("PropertyValuesHolder", e2.toString());
+                } catch (IllegalAccessException e) {
+                    Log.m70e("PropertyValuesHolder", e.toString());
+                } catch (InvocationTargetException e2) {
+                    Log.m70e("PropertyValuesHolder", e2.toString());
                 }
             }
         }
 
-        /* access modifiers changed from: package-private */
-        /* JADX WARNING: Code restructure failed: missing block: B:8:0x0013, code lost:
-            r2 = r1.containsKey(r7.mPropertyName);
-         */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public void setupSetter(java.lang.Class r8) {
-            /*
-                r7 = this;
-                android.util.Property r0 = r7.mProperty
-                if (r0 == 0) goto L_0x0005
-                return
-            L_0x0005:
-                java.util.HashMap<java.lang.Class, java.util.HashMap<java.lang.String, java.lang.Long>> r0 = sJNISetterPropertyMap
-                monitor-enter(r0)
-                java.util.HashMap<java.lang.Class, java.util.HashMap<java.lang.String, java.lang.Long>> r1 = sJNISetterPropertyMap     // Catch:{ all -> 0x0064 }
-                java.lang.Object r1 = r1.get(r8)     // Catch:{ all -> 0x0064 }
-                java.util.HashMap r1 = (java.util.HashMap) r1     // Catch:{ all -> 0x0064 }
-                r2 = 0
-                if (r1 == 0) goto L_0x002c
-                java.lang.String r3 = r7.mPropertyName     // Catch:{ all -> 0x0064 }
-                boolean r3 = r1.containsKey(r3)     // Catch:{ all -> 0x0064 }
-                r2 = r3
-                if (r2 == 0) goto L_0x002c
-                java.lang.String r3 = r7.mPropertyName     // Catch:{ all -> 0x0064 }
-                java.lang.Object r3 = r1.get(r3)     // Catch:{ all -> 0x0064 }
-                java.lang.Long r3 = (java.lang.Long) r3     // Catch:{ all -> 0x0064 }
-                if (r3 == 0) goto L_0x002c
-                long r4 = r3.longValue()     // Catch:{ all -> 0x0064 }
-                r7.mJniSetter = r4     // Catch:{ all -> 0x0064 }
-            L_0x002c:
-                if (r2 != 0) goto L_0x0057
-                java.lang.String r3 = "set"
-                java.lang.String r4 = r7.mPropertyName     // Catch:{ all -> 0x0064 }
-                java.lang.String r3 = getMethodName(r3, r4)     // Catch:{ all -> 0x0064 }
-                long r4 = android.animation.PropertyValuesHolder.nGetIntMethod(r8, r3)     // Catch:{ NoSuchMethodError -> 0x003e }
-                r7.mJniSetter = r4     // Catch:{ NoSuchMethodError -> 0x003e }
-                goto L_0x003f
-            L_0x003e:
-                r4 = move-exception
-            L_0x003f:
-                if (r1 != 0) goto L_0x004c
-                java.util.HashMap r4 = new java.util.HashMap     // Catch:{ all -> 0x0064 }
-                r4.<init>()     // Catch:{ all -> 0x0064 }
-                r1 = r4
-                java.util.HashMap<java.lang.Class, java.util.HashMap<java.lang.String, java.lang.Long>> r4 = sJNISetterPropertyMap     // Catch:{ all -> 0x0064 }
-                r4.put(r8, r1)     // Catch:{ all -> 0x0064 }
-            L_0x004c:
-                java.lang.String r4 = r7.mPropertyName     // Catch:{ all -> 0x0064 }
-                long r5 = r7.mJniSetter     // Catch:{ all -> 0x0064 }
-                java.lang.Long r5 = java.lang.Long.valueOf(r5)     // Catch:{ all -> 0x0064 }
-                r1.put(r4, r5)     // Catch:{ all -> 0x0064 }
-            L_0x0057:
-                monitor-exit(r0)     // Catch:{ all -> 0x0064 }
-                long r0 = r7.mJniSetter
-                r2 = 0
-                int r0 = (r0 > r2 ? 1 : (r0 == r2 ? 0 : -1))
-                if (r0 != 0) goto L_0x0063
-                android.animation.PropertyValuesHolder.super.setupSetter(r8)
-            L_0x0063:
-                return
-            L_0x0064:
-                r1 = move-exception
-                monitor-exit(r0)     // Catch:{ all -> 0x0064 }
-                throw r1
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.animation.PropertyValuesHolder.IntPropertyValuesHolder.setupSetter(java.lang.Class):void");
+        @Override // android.animation.PropertyValuesHolder
+        void setupSetter(Class targetClass) {
+            Long jniSetter;
+            if (this.mProperty != null) {
+                return;
+            }
+            synchronized (sJNISetterPropertyMap) {
+                HashMap<String, Long> propertyMap = sJNISetterPropertyMap.get(targetClass);
+                boolean wasInMap = false;
+                if (propertyMap != null && (wasInMap = propertyMap.containsKey(this.mPropertyName)) && (jniSetter = propertyMap.get(this.mPropertyName)) != null) {
+                    this.mJniSetter = jniSetter.longValue();
+                }
+                if (!wasInMap) {
+                    String methodName = getMethodName("set", this.mPropertyName);
+                    try {
+                        this.mJniSetter = PropertyValuesHolder.nGetIntMethod(targetClass, methodName);
+                    } catch (NoSuchMethodError e) {
+                    }
+                    if (propertyMap == null) {
+                        propertyMap = new HashMap<>();
+                        sJNISetterPropertyMap.put(targetClass, propertyMap);
+                    }
+                    propertyMap.put(this.mPropertyName, Long.valueOf(this.mJniSetter));
+                }
+            }
+            if (this.mJniSetter == 0) {
+                super.setupSetter(targetClass);
+            }
         }
     }
 
+    /* loaded from: classes.dex */
     static class FloatPropertyValuesHolder extends PropertyValuesHolder {
         private static final HashMap<Class, HashMap<String, Long>> sJNISetterPropertyMap = new HashMap<>();
         float mFloatAnimatedValue;
@@ -781,37 +726,41 @@ public class PropertyValuesHolder implements Cloneable {
             }
         }
 
+        @Override // android.animation.PropertyValuesHolder
         public void setProperty(Property property) {
             if (property instanceof FloatProperty) {
                 this.mFloatProperty = (FloatProperty) property;
             } else {
-                PropertyValuesHolder.super.setProperty(property);
+                super.setProperty(property);
             }
         }
 
+        @Override // android.animation.PropertyValuesHolder
         public void setFloatValues(float... values) {
-            PropertyValuesHolder.super.setFloatValues(values);
+            super.setFloatValues(values);
             this.mFloatKeyframes = (Keyframes.FloatKeyframes) this.mKeyframes;
         }
 
-        /* access modifiers changed from: package-private */
-        public void calculateValue(float fraction) {
+        @Override // android.animation.PropertyValuesHolder
+        void calculateValue(float fraction) {
             this.mFloatAnimatedValue = this.mFloatKeyframes.getFloatValue(fraction);
         }
 
-        /* access modifiers changed from: package-private */
-        public Object getAnimatedValue() {
+        @Override // android.animation.PropertyValuesHolder
+        Object getAnimatedValue() {
             return Float.valueOf(this.mFloatAnimatedValue);
         }
 
-        public FloatPropertyValuesHolder clone() {
-            FloatPropertyValuesHolder newPVH = (FloatPropertyValuesHolder) PropertyValuesHolder.super.clone();
+        @Override // android.animation.PropertyValuesHolder
+        /* renamed from: clone */
+        public FloatPropertyValuesHolder mo144clone() {
+            FloatPropertyValuesHolder newPVH = (FloatPropertyValuesHolder) super.mo144clone();
             newPVH.mFloatKeyframes = (Keyframes.FloatKeyframes) newPVH.mKeyframes;
             return newPVH;
         }
 
-        /* access modifiers changed from: package-private */
-        public void setAnimatedValue(Object target) {
+        @Override // android.animation.PropertyValuesHolder
+        void setAnimatedValue(Object target) {
             if (this.mFloatProperty != null) {
                 this.mFloatProperty.setValue(target, this.mFloatAnimatedValue);
             } else if (this.mProperty != null) {
@@ -822,83 +771,46 @@ public class PropertyValuesHolder implements Cloneable {
                 try {
                     this.mTmpValueArray[0] = Float.valueOf(this.mFloatAnimatedValue);
                     this.mSetter.invoke(target, this.mTmpValueArray);
-                } catch (InvocationTargetException e) {
-                    Log.e("PropertyValuesHolder", e.toString());
-                } catch (IllegalAccessException e2) {
-                    Log.e("PropertyValuesHolder", e2.toString());
+                } catch (IllegalAccessException e) {
+                    Log.m70e("PropertyValuesHolder", e.toString());
+                } catch (InvocationTargetException e2) {
+                    Log.m70e("PropertyValuesHolder", e2.toString());
                 }
             }
         }
 
-        /* access modifiers changed from: package-private */
-        /* JADX WARNING: Code restructure failed: missing block: B:8:0x0013, code lost:
-            r2 = r1.containsKey(r7.mPropertyName);
-         */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public void setupSetter(java.lang.Class r8) {
-            /*
-                r7 = this;
-                android.util.Property r0 = r7.mProperty
-                if (r0 == 0) goto L_0x0005
-                return
-            L_0x0005:
-                java.util.HashMap<java.lang.Class, java.util.HashMap<java.lang.String, java.lang.Long>> r0 = sJNISetterPropertyMap
-                monitor-enter(r0)
-                java.util.HashMap<java.lang.Class, java.util.HashMap<java.lang.String, java.lang.Long>> r1 = sJNISetterPropertyMap     // Catch:{ all -> 0x0064 }
-                java.lang.Object r1 = r1.get(r8)     // Catch:{ all -> 0x0064 }
-                java.util.HashMap r1 = (java.util.HashMap) r1     // Catch:{ all -> 0x0064 }
-                r2 = 0
-                if (r1 == 0) goto L_0x002c
-                java.lang.String r3 = r7.mPropertyName     // Catch:{ all -> 0x0064 }
-                boolean r3 = r1.containsKey(r3)     // Catch:{ all -> 0x0064 }
-                r2 = r3
-                if (r2 == 0) goto L_0x002c
-                java.lang.String r3 = r7.mPropertyName     // Catch:{ all -> 0x0064 }
-                java.lang.Object r3 = r1.get(r3)     // Catch:{ all -> 0x0064 }
-                java.lang.Long r3 = (java.lang.Long) r3     // Catch:{ all -> 0x0064 }
-                if (r3 == 0) goto L_0x002c
-                long r4 = r3.longValue()     // Catch:{ all -> 0x0064 }
-                r7.mJniSetter = r4     // Catch:{ all -> 0x0064 }
-            L_0x002c:
-                if (r2 != 0) goto L_0x0057
-                java.lang.String r3 = "set"
-                java.lang.String r4 = r7.mPropertyName     // Catch:{ all -> 0x0064 }
-                java.lang.String r3 = getMethodName(r3, r4)     // Catch:{ all -> 0x0064 }
-                long r4 = android.animation.PropertyValuesHolder.nGetFloatMethod(r8, r3)     // Catch:{ NoSuchMethodError -> 0x003e }
-                r7.mJniSetter = r4     // Catch:{ NoSuchMethodError -> 0x003e }
-                goto L_0x003f
-            L_0x003e:
-                r4 = move-exception
-            L_0x003f:
-                if (r1 != 0) goto L_0x004c
-                java.util.HashMap r4 = new java.util.HashMap     // Catch:{ all -> 0x0064 }
-                r4.<init>()     // Catch:{ all -> 0x0064 }
-                r1 = r4
-                java.util.HashMap<java.lang.Class, java.util.HashMap<java.lang.String, java.lang.Long>> r4 = sJNISetterPropertyMap     // Catch:{ all -> 0x0064 }
-                r4.put(r8, r1)     // Catch:{ all -> 0x0064 }
-            L_0x004c:
-                java.lang.String r4 = r7.mPropertyName     // Catch:{ all -> 0x0064 }
-                long r5 = r7.mJniSetter     // Catch:{ all -> 0x0064 }
-                java.lang.Long r5 = java.lang.Long.valueOf(r5)     // Catch:{ all -> 0x0064 }
-                r1.put(r4, r5)     // Catch:{ all -> 0x0064 }
-            L_0x0057:
-                monitor-exit(r0)     // Catch:{ all -> 0x0064 }
-                long r0 = r7.mJniSetter
-                r2 = 0
-                int r0 = (r0 > r2 ? 1 : (r0 == r2 ? 0 : -1))
-                if (r0 != 0) goto L_0x0063
-                android.animation.PropertyValuesHolder.super.setupSetter(r8)
-            L_0x0063:
-                return
-            L_0x0064:
-                r1 = move-exception
-                monitor-exit(r0)     // Catch:{ all -> 0x0064 }
-                throw r1
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.animation.PropertyValuesHolder.FloatPropertyValuesHolder.setupSetter(java.lang.Class):void");
+        @Override // android.animation.PropertyValuesHolder
+        void setupSetter(Class targetClass) {
+            Long jniSetter;
+            if (this.mProperty != null) {
+                return;
+            }
+            synchronized (sJNISetterPropertyMap) {
+                HashMap<String, Long> propertyMap = sJNISetterPropertyMap.get(targetClass);
+                boolean wasInMap = false;
+                if (propertyMap != null && (wasInMap = propertyMap.containsKey(this.mPropertyName)) && (jniSetter = propertyMap.get(this.mPropertyName)) != null) {
+                    this.mJniSetter = jniSetter.longValue();
+                }
+                if (!wasInMap) {
+                    String methodName = getMethodName("set", this.mPropertyName);
+                    try {
+                        this.mJniSetter = PropertyValuesHolder.nGetFloatMethod(targetClass, methodName);
+                    } catch (NoSuchMethodError e) {
+                    }
+                    if (propertyMap == null) {
+                        propertyMap = new HashMap<>();
+                        sJNISetterPropertyMap.put(targetClass, propertyMap);
+                    }
+                    propertyMap.put(this.mPropertyName, Long.valueOf(this.mJniSetter));
+                }
+            }
+            if (this.mJniSetter == 0) {
+                super.setupSetter(targetClass);
+            }
         }
     }
 
+    /* loaded from: classes.dex */
     static class MultiFloatValuesHolder extends PropertyValuesHolder {
         private static final HashMap<Class, HashMap<String, Long>> sJNISetterPropertyMap = new HashMap<>();
         private long mJniSetter;
@@ -917,111 +829,69 @@ public class PropertyValuesHolder implements Cloneable {
             setEvaluator(evaluator);
         }
 
-        /* access modifiers changed from: package-private */
-        public void setAnimatedValue(Object target) {
+        @Override // android.animation.PropertyValuesHolder
+        void setAnimatedValue(Object target) {
             float[] values = (float[]) getAnimatedValue();
             int numParameters = values.length;
-            if (this.mJniSetter == 0) {
-                return;
-            }
-            if (numParameters != 4) {
-                switch (numParameters) {
-                    case 1:
-                        PropertyValuesHolder.nCallFloatMethod(target, this.mJniSetter, values[0]);
-                        return;
-                    case 2:
-                        PropertyValuesHolder.nCallTwoFloatMethod(target, this.mJniSetter, values[0], values[1]);
-                        return;
-                    default:
-                        PropertyValuesHolder.nCallMultipleFloatMethod(target, this.mJniSetter, values);
-                        return;
+            if (this.mJniSetter != 0) {
+                if (numParameters != 4) {
+                    switch (numParameters) {
+                        case 1:
+                            PropertyValuesHolder.nCallFloatMethod(target, this.mJniSetter, values[0]);
+                            return;
+                        case 2:
+                            PropertyValuesHolder.nCallTwoFloatMethod(target, this.mJniSetter, values[0], values[1]);
+                            return;
+                        default:
+                            PropertyValuesHolder.nCallMultipleFloatMethod(target, this.mJniSetter, values);
+                            return;
+                    }
                 }
-            } else {
                 PropertyValuesHolder.nCallFourFloatMethod(target, this.mJniSetter, values[0], values[1], values[2], values[3]);
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public void setupSetterAndGetter(Object target) {
+        @Override // android.animation.PropertyValuesHolder
+        void setupSetterAndGetter(Object target) {
             setupSetter(target.getClass());
         }
 
-        /* access modifiers changed from: package-private */
-        /* JADX WARNING: Code restructure failed: missing block: B:8:0x0017, code lost:
-            r2 = r1.containsKey(r9.mPropertyName);
-         */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public void setupSetter(java.lang.Class r10) {
-            /*
-                r9 = this;
-                long r0 = r9.mJniSetter
-                r2 = 0
-                int r0 = (r0 > r2 ? 1 : (r0 == r2 ? 0 : -1))
-                if (r0 == 0) goto L_0x0009
-                return
-            L_0x0009:
-                java.util.HashMap<java.lang.Class, java.util.HashMap<java.lang.String, java.lang.Long>> r0 = sJNISetterPropertyMap
-                monitor-enter(r0)
-                java.util.HashMap<java.lang.Class, java.util.HashMap<java.lang.String, java.lang.Long>> r1 = sJNISetterPropertyMap     // Catch:{ all -> 0x0072 }
-                java.lang.Object r1 = r1.get(r10)     // Catch:{ all -> 0x0072 }
-                java.util.HashMap r1 = (java.util.HashMap) r1     // Catch:{ all -> 0x0072 }
-                r2 = 0
-                if (r1 == 0) goto L_0x0030
-                java.lang.String r3 = r9.mPropertyName     // Catch:{ all -> 0x0072 }
-                boolean r3 = r1.containsKey(r3)     // Catch:{ all -> 0x0072 }
-                r2 = r3
-                if (r2 == 0) goto L_0x0030
-                java.lang.String r3 = r9.mPropertyName     // Catch:{ all -> 0x0072 }
-                java.lang.Object r3 = r1.get(r3)     // Catch:{ all -> 0x0072 }
-                java.lang.Long r3 = (java.lang.Long) r3     // Catch:{ all -> 0x0072 }
-                if (r3 == 0) goto L_0x0030
-                long r4 = r3.longValue()     // Catch:{ all -> 0x0072 }
-                r9.mJniSetter = r4     // Catch:{ all -> 0x0072 }
-            L_0x0030:
-                if (r2 != 0) goto L_0x0070
-                java.lang.String r3 = "set"
-                java.lang.String r4 = r9.mPropertyName     // Catch:{ all -> 0x0072 }
-                java.lang.String r3 = getMethodName(r3, r4)     // Catch:{ all -> 0x0072 }
-                r4 = 0
-                r9.calculateValue(r4)     // Catch:{ all -> 0x0072 }
-                java.lang.Object r4 = r9.getAnimatedValue()     // Catch:{ all -> 0x0072 }
-                float[] r4 = (float[]) r4     // Catch:{ all -> 0x0072 }
-                int r5 = r4.length     // Catch:{ all -> 0x0072 }
-                long r6 = android.animation.PropertyValuesHolder.nGetMultipleFloatMethod(r10, r3, r5)     // Catch:{ NoSuchMethodError -> 0x004d }
-                r9.mJniSetter = r6     // Catch:{ NoSuchMethodError -> 0x004d }
-                goto L_0x0058
-            L_0x004d:
-                r6 = move-exception
-                java.lang.String r7 = r9.mPropertyName     // Catch:{ NoSuchMethodError -> 0x0057 }
-                long r7 = android.animation.PropertyValuesHolder.nGetMultipleFloatMethod(r10, r7, r5)     // Catch:{ NoSuchMethodError -> 0x0057 }
-                r9.mJniSetter = r7     // Catch:{ NoSuchMethodError -> 0x0057 }
-                goto L_0x0058
-            L_0x0057:
-                r7 = move-exception
-            L_0x0058:
-                if (r1 != 0) goto L_0x0065
-                java.util.HashMap r6 = new java.util.HashMap     // Catch:{ all -> 0x0072 }
-                r6.<init>()     // Catch:{ all -> 0x0072 }
-                r1 = r6
-                java.util.HashMap<java.lang.Class, java.util.HashMap<java.lang.String, java.lang.Long>> r6 = sJNISetterPropertyMap     // Catch:{ all -> 0x0072 }
-                r6.put(r10, r1)     // Catch:{ all -> 0x0072 }
-            L_0x0065:
-                java.lang.String r6 = r9.mPropertyName     // Catch:{ all -> 0x0072 }
-                long r7 = r9.mJniSetter     // Catch:{ all -> 0x0072 }
-                java.lang.Long r7 = java.lang.Long.valueOf(r7)     // Catch:{ all -> 0x0072 }
-                r1.put(r6, r7)     // Catch:{ all -> 0x0072 }
-            L_0x0070:
-                monitor-exit(r0)     // Catch:{ all -> 0x0072 }
-                return
-            L_0x0072:
-                r1 = move-exception
-                monitor-exit(r0)     // Catch:{ all -> 0x0072 }
-                throw r1
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.animation.PropertyValuesHolder.MultiFloatValuesHolder.setupSetter(java.lang.Class):void");
+        @Override // android.animation.PropertyValuesHolder
+        void setupSetter(Class targetClass) {
+            Long jniSetter;
+            if (this.mJniSetter != 0) {
+                return;
+            }
+            synchronized (sJNISetterPropertyMap) {
+                HashMap<String, Long> propertyMap = sJNISetterPropertyMap.get(targetClass);
+                boolean wasInMap = false;
+                if (propertyMap != null && (wasInMap = propertyMap.containsKey(this.mPropertyName)) && (jniSetter = propertyMap.get(this.mPropertyName)) != null) {
+                    this.mJniSetter = jniSetter.longValue();
+                }
+                if (!wasInMap) {
+                    String methodName = getMethodName("set", this.mPropertyName);
+                    calculateValue(0.0f);
+                    float[] values = (float[]) getAnimatedValue();
+                    int numParams = values.length;
+                    try {
+                        this.mJniSetter = PropertyValuesHolder.nGetMultipleFloatMethod(targetClass, methodName, numParams);
+                    } catch (NoSuchMethodError e) {
+                        try {
+                            this.mJniSetter = PropertyValuesHolder.nGetMultipleFloatMethod(targetClass, this.mPropertyName, numParams);
+                        } catch (NoSuchMethodError e2) {
+                        }
+                    }
+                    if (propertyMap == null) {
+                        propertyMap = new HashMap<>();
+                        sJNISetterPropertyMap.put(targetClass, propertyMap);
+                    }
+                    propertyMap.put(this.mPropertyName, Long.valueOf(this.mJniSetter));
+                }
+            }
         }
     }
 
+    /* loaded from: classes.dex */
     static class MultiIntValuesHolder extends PropertyValuesHolder {
         private static final HashMap<Class, HashMap<String, Long>> sJNISetterPropertyMap = new HashMap<>();
         private long mJniSetter;
@@ -1040,139 +910,103 @@ public class PropertyValuesHolder implements Cloneable {
             setEvaluator(evaluator);
         }
 
-        /* access modifiers changed from: package-private */
-        public void setAnimatedValue(Object target) {
+        @Override // android.animation.PropertyValuesHolder
+        void setAnimatedValue(Object target) {
             int[] values = (int[]) getAnimatedValue();
             int numParameters = values.length;
-            if (this.mJniSetter == 0) {
-                return;
-            }
-            if (numParameters != 4) {
-                switch (numParameters) {
-                    case 1:
-                        PropertyValuesHolder.nCallIntMethod(target, this.mJniSetter, values[0]);
-                        return;
-                    case 2:
-                        PropertyValuesHolder.nCallTwoIntMethod(target, this.mJniSetter, values[0], values[1]);
-                        return;
-                    default:
-                        PropertyValuesHolder.nCallMultipleIntMethod(target, this.mJniSetter, values);
-                        return;
+            if (this.mJniSetter != 0) {
+                if (numParameters != 4) {
+                    switch (numParameters) {
+                        case 1:
+                            PropertyValuesHolder.nCallIntMethod(target, this.mJniSetter, values[0]);
+                            return;
+                        case 2:
+                            PropertyValuesHolder.nCallTwoIntMethod(target, this.mJniSetter, values[0], values[1]);
+                            return;
+                        default:
+                            PropertyValuesHolder.nCallMultipleIntMethod(target, this.mJniSetter, values);
+                            return;
+                    }
                 }
-            } else {
                 PropertyValuesHolder.nCallFourIntMethod(target, this.mJniSetter, values[0], values[1], values[2], values[3]);
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public void setupSetterAndGetter(Object target) {
+        @Override // android.animation.PropertyValuesHolder
+        void setupSetterAndGetter(Object target) {
             setupSetter(target.getClass());
         }
 
-        /* access modifiers changed from: package-private */
-        /* JADX WARNING: Code restructure failed: missing block: B:8:0x0017, code lost:
-            r2 = r1.containsKey(r9.mPropertyName);
-         */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public void setupSetter(java.lang.Class r10) {
-            /*
-                r9 = this;
-                long r0 = r9.mJniSetter
-                r2 = 0
-                int r0 = (r0 > r2 ? 1 : (r0 == r2 ? 0 : -1))
-                if (r0 == 0) goto L_0x0009
-                return
-            L_0x0009:
-                java.util.HashMap<java.lang.Class, java.util.HashMap<java.lang.String, java.lang.Long>> r0 = sJNISetterPropertyMap
-                monitor-enter(r0)
-                java.util.HashMap<java.lang.Class, java.util.HashMap<java.lang.String, java.lang.Long>> r1 = sJNISetterPropertyMap     // Catch:{ all -> 0x0072 }
-                java.lang.Object r1 = r1.get(r10)     // Catch:{ all -> 0x0072 }
-                java.util.HashMap r1 = (java.util.HashMap) r1     // Catch:{ all -> 0x0072 }
-                r2 = 0
-                if (r1 == 0) goto L_0x0030
-                java.lang.String r3 = r9.mPropertyName     // Catch:{ all -> 0x0072 }
-                boolean r3 = r1.containsKey(r3)     // Catch:{ all -> 0x0072 }
-                r2 = r3
-                if (r2 == 0) goto L_0x0030
-                java.lang.String r3 = r9.mPropertyName     // Catch:{ all -> 0x0072 }
-                java.lang.Object r3 = r1.get(r3)     // Catch:{ all -> 0x0072 }
-                java.lang.Long r3 = (java.lang.Long) r3     // Catch:{ all -> 0x0072 }
-                if (r3 == 0) goto L_0x0030
-                long r4 = r3.longValue()     // Catch:{ all -> 0x0072 }
-                r9.mJniSetter = r4     // Catch:{ all -> 0x0072 }
-            L_0x0030:
-                if (r2 != 0) goto L_0x0070
-                java.lang.String r3 = "set"
-                java.lang.String r4 = r9.mPropertyName     // Catch:{ all -> 0x0072 }
-                java.lang.String r3 = getMethodName(r3, r4)     // Catch:{ all -> 0x0072 }
-                r4 = 0
-                r9.calculateValue(r4)     // Catch:{ all -> 0x0072 }
-                java.lang.Object r4 = r9.getAnimatedValue()     // Catch:{ all -> 0x0072 }
-                int[] r4 = (int[]) r4     // Catch:{ all -> 0x0072 }
-                int r5 = r4.length     // Catch:{ all -> 0x0072 }
-                long r6 = android.animation.PropertyValuesHolder.nGetMultipleIntMethod(r10, r3, r5)     // Catch:{ NoSuchMethodError -> 0x004d }
-                r9.mJniSetter = r6     // Catch:{ NoSuchMethodError -> 0x004d }
-                goto L_0x0058
-            L_0x004d:
-                r6 = move-exception
-                java.lang.String r7 = r9.mPropertyName     // Catch:{ NoSuchMethodError -> 0x0057 }
-                long r7 = android.animation.PropertyValuesHolder.nGetMultipleIntMethod(r10, r7, r5)     // Catch:{ NoSuchMethodError -> 0x0057 }
-                r9.mJniSetter = r7     // Catch:{ NoSuchMethodError -> 0x0057 }
-                goto L_0x0058
-            L_0x0057:
-                r7 = move-exception
-            L_0x0058:
-                if (r1 != 0) goto L_0x0065
-                java.util.HashMap r6 = new java.util.HashMap     // Catch:{ all -> 0x0072 }
-                r6.<init>()     // Catch:{ all -> 0x0072 }
-                r1 = r6
-                java.util.HashMap<java.lang.Class, java.util.HashMap<java.lang.String, java.lang.Long>> r6 = sJNISetterPropertyMap     // Catch:{ all -> 0x0072 }
-                r6.put(r10, r1)     // Catch:{ all -> 0x0072 }
-            L_0x0065:
-                java.lang.String r6 = r9.mPropertyName     // Catch:{ all -> 0x0072 }
-                long r7 = r9.mJniSetter     // Catch:{ all -> 0x0072 }
-                java.lang.Long r7 = java.lang.Long.valueOf(r7)     // Catch:{ all -> 0x0072 }
-                r1.put(r6, r7)     // Catch:{ all -> 0x0072 }
-            L_0x0070:
-                monitor-exit(r0)     // Catch:{ all -> 0x0072 }
-                return
-            L_0x0072:
-                r1 = move-exception
-                monitor-exit(r0)     // Catch:{ all -> 0x0072 }
-                throw r1
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.animation.PropertyValuesHolder.MultiIntValuesHolder.setupSetter(java.lang.Class):void");
+        @Override // android.animation.PropertyValuesHolder
+        void setupSetter(Class targetClass) {
+            Long jniSetter;
+            if (this.mJniSetter != 0) {
+                return;
+            }
+            synchronized (sJNISetterPropertyMap) {
+                HashMap<String, Long> propertyMap = sJNISetterPropertyMap.get(targetClass);
+                boolean wasInMap = false;
+                if (propertyMap != null && (wasInMap = propertyMap.containsKey(this.mPropertyName)) && (jniSetter = propertyMap.get(this.mPropertyName)) != null) {
+                    this.mJniSetter = jniSetter.longValue();
+                }
+                if (!wasInMap) {
+                    String methodName = getMethodName("set", this.mPropertyName);
+                    calculateValue(0.0f);
+                    int[] values = (int[]) getAnimatedValue();
+                    int numParams = values.length;
+                    try {
+                        this.mJniSetter = PropertyValuesHolder.nGetMultipleIntMethod(targetClass, methodName, numParams);
+                    } catch (NoSuchMethodError e) {
+                        try {
+                            this.mJniSetter = PropertyValuesHolder.nGetMultipleIntMethod(targetClass, this.mPropertyName, numParams);
+                        } catch (NoSuchMethodError e2) {
+                        }
+                    }
+                    if (propertyMap == null) {
+                        propertyMap = new HashMap<>();
+                        sJNISetterPropertyMap.put(targetClass, propertyMap);
+                    }
+                    propertyMap.put(this.mPropertyName, Long.valueOf(this.mJniSetter));
+                }
+            }
         }
     }
 
+    /* loaded from: classes.dex */
     private static class PointFToFloatArray extends TypeConverter<PointF, float[]> {
-        private float[] mCoordinates = new float[2];
+        private float[] mCoordinates;
 
         public PointFToFloatArray() {
             super(PointF.class, float[].class);
+            this.mCoordinates = new float[2];
         }
 
+        @Override // android.animation.TypeConverter
         public float[] convert(PointF value) {
-            this.mCoordinates[0] = value.x;
-            this.mCoordinates[1] = value.y;
+            this.mCoordinates[0] = value.f61x;
+            this.mCoordinates[1] = value.f62y;
             return this.mCoordinates;
         }
     }
 
+    /* loaded from: classes.dex */
     private static class PointFToIntArray extends TypeConverter<PointF, int[]> {
-        private int[] mCoordinates = new int[2];
+        private int[] mCoordinates;
 
         public PointFToIntArray() {
             super(PointF.class, int[].class);
+            this.mCoordinates = new int[2];
         }
 
+        @Override // android.animation.TypeConverter
         public int[] convert(PointF value) {
-            this.mCoordinates[0] = Math.round(value.x);
-            this.mCoordinates[1] = Math.round(value.y);
+            this.mCoordinates[0] = Math.round(value.f61x);
+            this.mCoordinates[1] = Math.round(value.f62y);
             return this.mCoordinates;
         }
     }
 
+    /* loaded from: classes.dex */
     public static class PropertyValues {
         public DataSource dataSource = null;
         public Object endValue;
@@ -1180,6 +1014,7 @@ public class PropertyValuesHolder implements Cloneable {
         public Object startValue;
         public Class type;
 
+        /* loaded from: classes.dex */
         public interface DataSource {
             Object getValueAtFraction(float f);
         }

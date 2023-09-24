@@ -1,16 +1,21 @@
 package android.bluetooth;
 
-import android.os.Parcel;
-import android.os.ParcelUuid;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.ParcelUuid;
+import android.p007os.Parcelable;
 import java.util.UUID;
 
+/* loaded from: classes.dex */
 public class BluetoothGattIncludedService implements Parcelable {
-    public static final Parcelable.Creator<BluetoothGattIncludedService> CREATOR = new Parcelable.Creator<BluetoothGattIncludedService>() {
+    public static final Parcelable.Creator<BluetoothGattIncludedService> CREATOR = new Parcelable.Creator<BluetoothGattIncludedService>() { // from class: android.bluetooth.BluetoothGattIncludedService.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public BluetoothGattIncludedService createFromParcel(Parcel in) {
             return new BluetoothGattIncludedService(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public BluetoothGattIncludedService[] newArray(int size) {
             return new BluetoothGattIncludedService[size];
         }
@@ -25,10 +30,12 @@ public class BluetoothGattIncludedService implements Parcelable {
         this.mServiceType = serviceType;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeParcelable(new ParcelUuid(this.mUuid), 0);
         out.writeInt(this.mInstanceId);
@@ -36,7 +43,7 @@ public class BluetoothGattIncludedService implements Parcelable {
     }
 
     private BluetoothGattIncludedService(Parcel in) {
-        this.mUuid = ((ParcelUuid) in.readParcelable((ClassLoader) null)).getUuid();
+        this.mUuid = ((ParcelUuid) in.readParcelable(null)).getUuid();
         this.mInstanceId = in.readInt();
         this.mServiceType = in.readInt();
     }

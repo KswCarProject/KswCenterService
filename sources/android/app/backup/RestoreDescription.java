@@ -1,31 +1,35 @@
 package android.app.backup;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
 @SystemApi
+/* loaded from: classes.dex */
 public class RestoreDescription implements Parcelable {
-    public static final Parcelable.Creator<RestoreDescription> CREATOR = new Parcelable.Creator<RestoreDescription>() {
+    public static final int TYPE_FULL_STREAM = 2;
+    public static final int TYPE_KEY_VALUE = 1;
+    private final int mDataType;
+    private final String mPackageName;
+    private static final String NO_MORE_PACKAGES_SENTINEL = "NO_MORE_PACKAGES";
+    public static final RestoreDescription NO_MORE_PACKAGES = new RestoreDescription(NO_MORE_PACKAGES_SENTINEL, 0);
+    public static final Parcelable.Creator<RestoreDescription> CREATOR = new Parcelable.Creator<RestoreDescription>() { // from class: android.app.backup.RestoreDescription.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RestoreDescription createFromParcel(Parcel in) {
             RestoreDescription unparceled = new RestoreDescription(in);
-            if (RestoreDescription.NO_MORE_PACKAGES_SENTINEL.equals(unparceled.mPackageName)) {
-                return RestoreDescription.NO_MORE_PACKAGES;
+            if (!RestoreDescription.NO_MORE_PACKAGES_SENTINEL.equals(unparceled.mPackageName)) {
+                return unparceled;
             }
-            return unparceled;
+            return RestoreDescription.NO_MORE_PACKAGES;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RestoreDescription[] newArray(int size) {
             return new RestoreDescription[size];
         }
     };
-    public static final RestoreDescription NO_MORE_PACKAGES = new RestoreDescription(NO_MORE_PACKAGES_SENTINEL, 0);
-    private static final String NO_MORE_PACKAGES_SENTINEL = "NO_MORE_PACKAGES";
-    public static final int TYPE_FULL_STREAM = 2;
-    public static final int TYPE_KEY_VALUE = 1;
-    private final int mDataType;
-    /* access modifiers changed from: private */
-    public final String mPackageName;
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -50,10 +54,12 @@ public class RestoreDescription implements Parcelable {
         return this.mDataType;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(this.mPackageName);
         out.writeInt(this.mDataType);

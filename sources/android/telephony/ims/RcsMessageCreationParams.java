@@ -1,7 +1,8 @@
 package android.telephony.ims;
 
-import android.os.Parcel;
+import android.p007os.Parcel;
 
+/* loaded from: classes4.dex */
 public class RcsMessageCreationParams {
     private final double mLatitude;
     private final double mLongitude;
@@ -39,21 +40,15 @@ public class RcsMessageCreationParams {
         return this.mLongitude;
     }
 
+    /* loaded from: classes4.dex */
     public static class Builder {
-        /* access modifiers changed from: private */
-        public double mLatitude = Double.MIN_VALUE;
-        /* access modifiers changed from: private */
-        public double mLongitude = Double.MIN_VALUE;
-        /* access modifiers changed from: private */
-        public int mMessageStatus;
-        /* access modifiers changed from: private */
-        public long mOriginationTimestamp;
-        /* access modifiers changed from: private */
-        public String mRcsMessageGlobalId;
-        /* access modifiers changed from: private */
-        public int mSubId;
-        /* access modifiers changed from: private */
-        public String mText;
+        private double mLatitude = Double.MIN_VALUE;
+        private double mLongitude = Double.MIN_VALUE;
+        private int mMessageStatus;
+        private long mOriginationTimestamp;
+        private String mRcsMessageGlobalId;
+        private int mSubId;
+        private String mText;
 
         public Builder(long originationTimestamp, int subscriptionId) {
             this.mOriginationTimestamp = originationTimestamp;

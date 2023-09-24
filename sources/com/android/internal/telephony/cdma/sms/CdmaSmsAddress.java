@@ -5,6 +5,7 @@ import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.telephony.SmsAddress;
 import com.android.internal.util.HexDump;
 
+/* loaded from: classes4.dex */
 public class CdmaSmsAddress extends SmsAddress {
     public static final int DIGIT_MODE_4BIT_DTMF = 0;
     public static final int DIGIT_MODE_8BIT_CHAR = 1;
@@ -22,13 +23,13 @@ public class CdmaSmsAddress extends SmsAddress {
     public static final int TON_RESERVED = 7;
     public static final int TON_SUBSCRIBER = 4;
     public static final int TON_UNKNOWN = 0;
-    private static final SparseBooleanArray numericCharDialableMap = new SparseBooleanArray(numericCharsDialable.length + numericCharsSugar.length);
-    private static final char[] numericCharsDialable = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '#'};
-    private static final char[] numericCharsSugar = {'(', ')', ' ', '-', '+', '.', '/', '\\'};
     public int digitMode;
     public int numberMode;
     public int numberOfDigits;
     public int numberPlan;
+    private static final char[] numericCharsDialable = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '#'};
+    private static final char[] numericCharsSugar = {'(', ')', ' ', '-', '+', '.', '/', '\\'};
+    private static final SparseBooleanArray numericCharDialableMap = new SparseBooleanArray(numericCharsDialable.length + numericCharsSugar.length);
 
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -71,11 +72,11 @@ public class CdmaSmsAddress extends SmsAddress {
     }
 
     static {
-        for (char put : numericCharsDialable) {
-            numericCharDialableMap.put(put, true);
+        for (int i = 0; i < numericCharsDialable.length; i++) {
+            numericCharDialableMap.put(numericCharsDialable[i], true);
         }
-        for (char put2 : numericCharsSugar) {
-            numericCharDialableMap.put(put2, false);
+        for (int i2 = 0; i2 < numericCharsSugar.length; i2++) {
+            numericCharDialableMap.put(numericCharsSugar[i2], false);
         }
     }
 
@@ -100,7 +101,7 @@ public class CdmaSmsAddress extends SmsAddress {
         int len = address.length();
         for (int i = 0; i < len; i++) {
             char c = address.charAt(i);
-            if (!(c == ' ' || c == 13 || c == 10 || c == 9)) {
+            if (c != ' ' && c != '\r' && c != '\n' && c != '\t') {
                 builder.append(c);
             }
         }

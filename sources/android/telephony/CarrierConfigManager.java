@@ -5,15 +5,16 @@ import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
 import android.app.job.JobInfo;
 import android.content.Context;
-import android.content.pm.PackageManager;
+import android.content.p002pm.PackageManager;
 import android.media.MediaPlayer;
-import android.os.PersistableBundle;
-import android.os.RemoteException;
-import android.os.ServiceManager;
+import android.p007os.PersistableBundle;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
 import com.android.internal.telephony.ICarrierConfigLoader;
 import com.android.internal.telephony.PhoneConstants;
 import com.ibm.icu.text.PluralRules;
 
+/* loaded from: classes.dex */
 public class CarrierConfigManager {
     public static final String ACTION_CARRIER_CONFIG_CHANGED = "android.telephony.action.CARRIER_CONFIG_CHANGED";
     public static final int DATA_CYCLE_THRESHOLD_DISABLED = -2;
@@ -43,7 +44,9 @@ public class CarrierConfigManager {
     public static final String KEY_ALWAYS_PLAY_REMOTE_HOLD_TONE_BOOL = "always_play_remote_hold_tone_bool";
     public static final String KEY_ALWAYS_SHOW_DATA_RAT_ICON_BOOL = "always_show_data_rat_icon_bool";
     public static final String KEY_ALWAYS_SHOW_EMERGENCY_ALERT_ONOFF_BOOL = "always_show_emergency_alert_onoff_bool";
-    public static final String KEY_ALWAYS_SHOW_PRIMARY_SIGNAL_BAR_IN_OPPORTUNISTIC_NETWORK_BOOLEAN = "always_show_primary_signal_bar_in_opportunistic_network_boolean";
+
+    /* renamed from: KEY_ALWAYS_SHOW_PRIMARY_SIGNAL_BAR_IN_OPPORTUNISTIC_NETWORK_BOOLEAN */
+    public static final String f279x12969fb = "always_show_primary_signal_bar_in_opportunistic_network_boolean";
     public static final String KEY_APN_EXPAND_BOOL = "apn_expand_bool";
     public static final String KEY_ASCII_7_BIT_SUPPORT_FOR_LONG_MESSAGE_BOOL = "ascii_7_bit_support_for_long_message_bool";
     public static final String KEY_AUTO_CANCEL_CS_REJECT_NOTIFICATION = "carrier_auto_cancel_cs_notification";
@@ -163,7 +166,9 @@ public class CarrierConfigManager {
     @UnsupportedAppUsage
     public static final String KEY_DISABLE_VOICE_BARRING_NOTIFICATION_BOOL = "disable_voice_barring_notification_bool";
     public static final String KEY_DISPLAY_HD_AUDIO_PROPERTY_BOOL = "display_hd_audio_property_bool";
-    public static final String KEY_DISPLAY_VOICEMAIL_NUMBER_AS_DEFAULT_CALL_FORWARDING_NUMBER_BOOL = "display_voicemail_number_as_default_call_forwarding_number";
+
+    /* renamed from: KEY_DISPLAY_VOICEMAIL_NUMBER_AS_DEFAULT_CALL_FORWARDING_NUMBER_BOOL */
+    public static final String f280x6ee79b57 = "display_voicemail_number_as_default_call_forwarding_number";
     public static final String KEY_DROP_VIDEO_CALL_WHEN_ANSWERING_AUDIO_CALL_BOOL = "drop_video_call_when_answering_audio_call_bool";
     public static final String KEY_DTMF_TYPE_ENABLED_BOOL = "dtmf_type_enabled_bool";
     public static final String KEY_DURATION_BLOCKING_DISABLED_AFTER_EMERGENCY_INT = "duration_blocking_disabled_after_emergency_int";
@@ -371,6 +376,7 @@ public class CarrierConfigManager {
         this.mContext = context;
     }
 
+    /* loaded from: classes.dex */
     public static final class Gps {
         public static final String KEY_A_GLONASS_POS_PROTOCOL_SELECT_STRING = "gps.a_glonass_pos_protocol_select";
         public static final String KEY_ES_EXTENSION_SEC_STRING = "gps.es_extension_sec";
@@ -390,8 +396,11 @@ public class CarrierConfigManager {
         public static final int SUPL_EMERGENCY_MODE_TYPE_CP_ONLY = 0;
         public static final int SUPL_EMERGENCY_MODE_TYPE_DP_ONLY = 2;
 
-        /* access modifiers changed from: private */
-        public static PersistableBundle getDefaults() {
+        static /* synthetic */ PersistableBundle access$000() {
+            return getDefaults();
+        }
+
+        private static PersistableBundle getDefaults() {
             PersistableBundle defaults = new PersistableBundle();
             defaults.putBoolean(KEY_PERSIST_LPP_MODE_BOOL, true);
             defaults.putString(KEY_SUPL_HOST_STRING, "supl.google.com");
@@ -410,6 +419,7 @@ public class CarrierConfigManager {
         }
     }
 
+    /* loaded from: classes.dex */
     public static final class Wifi {
         public static final String KEY_CARRIER_CONNECTION_MANAGER_PACKAGE_STRING = "wifi.carrier_connection_manager_package_string";
         public static final String KEY_CARRIER_PROFILES_VERSION_INT = "wifi.carrier_profiles_version_int";
@@ -417,13 +427,16 @@ public class CarrierConfigManager {
         public static final String KEY_PASSPOINT_PROFILES_STRING_ARRAY = "wifi.passpoint_profiles_string_array";
         public static final String KEY_PREFIX = "wifi.";
 
-        /* access modifiers changed from: private */
-        public static PersistableBundle getDefaults() {
+        static /* synthetic */ PersistableBundle access$100() {
+            return getDefaults();
+        }
+
+        private static PersistableBundle getDefaults() {
             PersistableBundle defaults = new PersistableBundle();
             defaults.putInt(KEY_CARRIER_PROFILES_VERSION_INT, -1);
-            defaults.putString(KEY_CARRIER_CONNECTION_MANAGER_PACKAGE_STRING, (String) null);
-            defaults.putStringArray(KEY_NETWORK_PROFILES_STRING_ARRAY, (String[]) null);
-            defaults.putStringArray(KEY_PASSPOINT_PROFILES_STRING_ARRAY, (String[]) null);
+            defaults.putString(KEY_CARRIER_CONNECTION_MANAGER_PACKAGE_STRING, null);
+            defaults.putStringArray(KEY_NETWORK_PROFILES_STRING_ARRAY, null);
+            defaults.putStringArray(KEY_PASSPOINT_PROFILES_STRING_ARRAY, null);
             return defaults;
         }
 
@@ -439,7 +452,7 @@ public class CarrierConfigManager {
         sDefaults.putBoolean(KEY_AUTO_RETRY_FAILED_WIFI_EMERGENCY_CALL, false);
         sDefaults.putBoolean(KEY_ADDITIONAL_CALL_SETTING_BOOL, true);
         sDefaults.putBoolean(KEY_ALLOW_EMERGENCY_NUMBERS_IN_CALL_LOG_BOOL, false);
-        sDefaults.putStringArray(KEY_UNLOGGABLE_NUMBERS_STRING_ARRAY, (String[]) null);
+        sDefaults.putStringArray(KEY_UNLOGGABLE_NUMBERS_STRING_ARRAY, null);
         sDefaults.putBoolean(KEY_ALLOW_LOCAL_DTMF_TONES_BOOL, true);
         sDefaults.putBoolean(KEY_PLAY_CALL_RECORDING_TONE_BOOL, false);
         sDefaults.putBoolean(KEY_APN_EXPAND_BOOL, true);
@@ -527,11 +540,11 @@ public class CarrierConfigManager {
         sDefaults.putBoolean(KEY_VVM_CELLULAR_DATA_REQUIRED_BOOL, false);
         sDefaults.putString(KEY_VVM_CLIENT_PREFIX_STRING, VisualVoicemailSmsFilterSettings.DEFAULT_CLIENT_PREFIX);
         sDefaults.putBoolean(KEY_VVM_SSL_ENABLED_BOOL, false);
-        sDefaults.putStringArray(KEY_VVM_DISABLED_CAPABILITIES_STRING_ARRAY, (String[]) null);
+        sDefaults.putStringArray(KEY_VVM_DISABLED_CAPABILITIES_STRING_ARRAY, null);
         sDefaults.putBoolean(KEY_VVM_LEGACY_MODE_ENABLED_BOOL, false);
         sDefaults.putBoolean(KEY_VVM_PREFETCH_BOOL, true);
         sDefaults.putString(KEY_CARRIER_VVM_PACKAGE_NAME_STRING, "");
-        sDefaults.putStringArray(KEY_CARRIER_VVM_PACKAGE_NAME_STRING_ARRAY, (String[]) null);
+        sDefaults.putStringArray(KEY_CARRIER_VVM_PACKAGE_NAME_STRING_ARRAY, null);
         sDefaults.putBoolean(KEY_SHOW_ICCID_IN_SIM_STATUS_BOOL, false);
         sDefaults.putBoolean(KEY_SHOW_SIGNAL_STRENGTH_IN_SIM_STATUS_BOOL, true);
         sDefaults.putBoolean(KEY_CI_ACTION_ON_SYS_UPDATE_BOOL, false);
@@ -541,14 +554,14 @@ public class CarrierConfigManager {
         sDefaults.putBoolean(KEY_CSP_ENABLED_BOOL, false);
         sDefaults.putBoolean(KEY_ALLOW_ADDING_APNS_BOOL, true);
         sDefaults.putStringArray(KEY_READ_ONLY_APN_TYPES_STRING_ARRAY, new String[]{PhoneConstants.APN_TYPE_DUN});
-        sDefaults.putStringArray(KEY_READ_ONLY_APN_FIELDS_STRING_ARRAY, (String[]) null);
+        sDefaults.putStringArray(KEY_READ_ONLY_APN_FIELDS_STRING_ARRAY, null);
         sDefaults.putBoolean(KEY_BROADCAST_EMERGENCY_CALL_STATE_CHANGES_BOOL, false);
         sDefaults.putBoolean(KEY_ALWAYS_SHOW_EMERGENCY_ALERT_ONOFF_BOOL, false);
         sDefaults.putBoolean(KEY_DISABLE_SEVERE_WHEN_EXTREME_DISABLED_BOOL, true);
-        sDefaults.putLong(KEY_MESSAGE_EXPIRATION_TIME_LONG, 86400000);
+        sDefaults.putLong(KEY_MESSAGE_EXPIRATION_TIME_LONG, 86400000L);
         sDefaults.putStringArray(KEY_CARRIER_DATA_CALL_RETRY_CONFIG_STRINGS, new String[]{"default:default_randomization=2000,5000,10000,20000,40000,80000:5000,160000:5000,320000:5000,640000:5000,1280000:5000,1800000:5000", "mms:default_randomization=2000,5000,10000,20000,40000,80000:5000,160000:5000,320000:5000,640000:5000,1280000:5000,1800000:5000", "others:max_retries=3, 5000, 5000, 5000"});
-        sDefaults.putLong(KEY_CARRIER_DATA_CALL_APN_DELAY_DEFAULT_LONG, 20000);
-        sDefaults.putLong(KEY_CARRIER_DATA_CALL_APN_DELAY_FASTER_LONG, 3000);
+        sDefaults.putLong(KEY_CARRIER_DATA_CALL_APN_DELAY_DEFAULT_LONG, 20000L);
+        sDefaults.putLong(KEY_CARRIER_DATA_CALL_APN_DELAY_FASTER_LONG, 3000L);
         sDefaults.putLong(KEY_CARRIER_DATA_CALL_APN_RETRY_AFTER_DISCONNECT_LONG, JobInfo.MIN_BACKOFF_MILLIS);
         sDefaults.putString(KEY_CARRIER_ERI_FILE_NAME_STRING, "eri.xml");
         sDefaults.putInt(KEY_DURATION_BLOCKING_DISABLED_AFTER_EMERGENCY_INT, 7200);
@@ -558,12 +571,12 @@ public class CarrierConfigManager {
         sDefaults.putStringArray(KEY_CARRIER_WWAN_DISALLOWED_APN_TYPES_STRING_ARRAY, new String[]{""});
         sDefaults.putStringArray(KEY_CARRIER_WLAN_DISALLOWED_APN_TYPES_STRING_ARRAY, new String[]{""});
         sDefaults.putIntArray(KEY_ONLY_SINGLE_DC_ALLOWED_INT_ARRAY, new int[]{4, 5, 6, 7, 8, 12});
-        sDefaults.putStringArray(KEY_GSM_ROAMING_NETWORKS_STRING_ARRAY, (String[]) null);
-        sDefaults.putStringArray(KEY_GSM_NONROAMING_NETWORKS_STRING_ARRAY, (String[]) null);
-        sDefaults.putString(KEY_CONFIG_IMS_PACKAGE_OVERRIDE_STRING, (String) null);
-        sDefaults.putStringArray(KEY_CDMA_ROAMING_NETWORKS_STRING_ARRAY, (String[]) null);
-        sDefaults.putStringArray(KEY_CDMA_NONROAMING_NETWORKS_STRING_ARRAY, (String[]) null);
-        sDefaults.putStringArray(KEY_DIAL_STRING_REPLACE_STRING_ARRAY, (String[]) null);
+        sDefaults.putStringArray(KEY_GSM_ROAMING_NETWORKS_STRING_ARRAY, null);
+        sDefaults.putStringArray(KEY_GSM_NONROAMING_NETWORKS_STRING_ARRAY, null);
+        sDefaults.putString(KEY_CONFIG_IMS_PACKAGE_OVERRIDE_STRING, null);
+        sDefaults.putStringArray(KEY_CDMA_ROAMING_NETWORKS_STRING_ARRAY, null);
+        sDefaults.putStringArray(KEY_CDMA_NONROAMING_NETWORKS_STRING_ARRAY, null);
+        sDefaults.putStringArray(KEY_DIAL_STRING_REPLACE_STRING_ARRAY, null);
         sDefaults.putBoolean(KEY_FORCE_HOME_NETWORK_BOOL, false);
         sDefaults.putInt(KEY_GSM_DTMF_TONE_DELAY_INT, 0);
         sDefaults.putInt(KEY_IMS_DTMF_TONE_DELAY_INT, 0);
@@ -584,9 +597,9 @@ public class CarrierConfigManager {
         sDefaults.putBoolean(KEY_HIDE_IMS_APN_BOOL, false);
         sDefaults.putBoolean(KEY_HIDE_PREFERRED_NETWORK_TYPE_BOOL, false);
         sDefaults.putBoolean(KEY_ALLOW_EMERGENCY_VIDEO_CALLS_BOOL, false);
-        sDefaults.putStringArray(KEY_ENABLE_APPS_STRING_ARRAY, (String[]) null);
+        sDefaults.putStringArray(KEY_ENABLE_APPS_STRING_ARRAY, null);
         sDefaults.putBoolean(KEY_EDITABLE_WFC_MODE_BOOL, true);
-        sDefaults.putStringArray(KEY_WFC_OPERATOR_ERROR_CODES_STRING_ARRAY, (String[]) null);
+        sDefaults.putStringArray(KEY_WFC_OPERATOR_ERROR_CODES_STRING_ARRAY, null);
         sDefaults.putInt(KEY_WFC_SPN_FORMAT_IDX_INT, 0);
         sDefaults.putInt(KEY_WFC_DATA_SPN_FORMAT_IDX_INT, 0);
         sDefaults.putInt(KEY_WFC_FLIGHT_MODE_SPN_FORMAT_IDX_INT, -1);
@@ -596,15 +609,15 @@ public class CarrierConfigManager {
         sDefaults.putBoolean(KEY_CARRIER_NAME_OVERRIDE_BOOL, false);
         sDefaults.putString(KEY_CARRIER_NAME_STRING, "");
         sDefaults.putInt(KEY_SPN_DISPLAY_CONDITION_OVERRIDE_INT, -1);
-        sDefaults.putStringArray(KEY_SPDI_OVERRIDE_STRING_ARRAY, (String[]) null);
-        sDefaults.putStringArray(KEY_PNN_OVERRIDE_STRING_ARRAY, (String[]) null);
-        sDefaults.putStringArray(KEY_OPL_OVERRIDE_STRING_ARRAY, (String[]) null);
-        sDefaults.putStringArray(KEY_EHPLMN_OVERRIDE_STRING_ARRAY, (String[]) null);
+        sDefaults.putStringArray(KEY_SPDI_OVERRIDE_STRING_ARRAY, null);
+        sDefaults.putStringArray(KEY_PNN_OVERRIDE_STRING_ARRAY, null);
+        sDefaults.putStringArray(KEY_OPL_OVERRIDE_STRING_ARRAY, null);
+        sDefaults.putStringArray(KEY_EHPLMN_OVERRIDE_STRING_ARRAY, null);
         sDefaults.putBoolean(KEY_ALLOW_ERI_BOOL, false);
         sDefaults.putBoolean(KEY_ENABLE_CARRIER_DISPLAY_NAME_RESOLVER_BOOL, false);
         sDefaults.putString(KEY_SIM_COUNTRY_ISO_OVERRIDE_STRING, "");
         sDefaults.putString(KEY_CARRIER_CALL_SCREENING_APP_STRING, "");
-        sDefaults.putString(KEY_CALL_REDIRECTION_SERVICE_COMPONENT_NAME_STRING, (String) null);
+        sDefaults.putString(KEY_CALL_REDIRECTION_SERVICE_COMPONENT_NAME_STRING, null);
         sDefaults.putBoolean(KEY_CDMA_HOME_REGISTERED_PLMN_NAME_OVERRIDE_BOOL, false);
         sDefaults.putString(KEY_CDMA_HOME_REGISTERED_PLMN_NAME_STRING, "");
         sDefaults.putBoolean(KEY_SUPPORT_DIRECT_FDN_DIALING_BOOL, false);
@@ -651,17 +664,16 @@ public class CarrierConfigManager {
         sDefaults.putString(KEY_RCS_CONFIG_SERVER_URL_STRING, "");
         sDefaults.putString(KEY_CARRIER_SETUP_APP_STRING, "");
         sDefaults.putStringArray(KEY_CARRIER_APP_WAKE_SIGNAL_CONFIG_STRING_ARRAY, new String[]{"com.android.carrierdefaultapp/.CarrierDefaultBroadcastReceiver:com.android.internal.telephony.CARRIER_SIGNAL_RESET"});
-        sDefaults.putStringArray(KEY_CARRIER_APP_NO_WAKE_SIGNAL_CONFIG_STRING_ARRAY, (String[]) null);
+        sDefaults.putStringArray(KEY_CARRIER_APP_NO_WAKE_SIGNAL_CONFIG_STRING_ARRAY, null);
         sDefaults.putBoolean(KEY_CARRIER_APP_REQUIRED_DURING_SIM_SETUP_BOOL, false);
         sDefaults.putStringArray(KEY_CARRIER_DEFAULT_ACTIONS_ON_REDIRECTION_STRING_ARRAY, new String[]{"9, 4, 1"});
         sDefaults.putStringArray(KEY_CARRIER_DEFAULT_ACTIONS_ON_RESET, new String[]{"6, 8"});
-        PersistableBundle persistableBundle = sDefaults;
-        persistableBundle.putStringArray(KEY_CARRIER_DEFAULT_ACTIONS_ON_DEFAULT_NETWORK_AVAILABLE, new String[]{String.valueOf(false) + ": 7", String.valueOf(true) + ": 8"});
-        sDefaults.putStringArray(KEY_CARRIER_DEFAULT_REDIRECTION_URL_STRING_ARRAY, (String[]) null);
+        sDefaults.putStringArray(KEY_CARRIER_DEFAULT_ACTIONS_ON_DEFAULT_NETWORK_AVAILABLE, new String[]{String.valueOf(false) + ": 7", String.valueOf(true) + ": 8"});
+        sDefaults.putStringArray(KEY_CARRIER_DEFAULT_REDIRECTION_URL_STRING_ARRAY, null);
         sDefaults.putInt(KEY_MONTHLY_DATA_CYCLE_DAY_INT, -1);
-        sDefaults.putLong(KEY_DATA_WARNING_THRESHOLD_BYTES_LONG, -1);
+        sDefaults.putLong(KEY_DATA_WARNING_THRESHOLD_BYTES_LONG, -1L);
         sDefaults.putBoolean(KEY_DATA_WARNING_NOTIFICATION_BOOL, true);
-        sDefaults.putLong(KEY_DATA_LIMIT_THRESHOLD_BYTES_LONG, -1);
+        sDefaults.putLong(KEY_DATA_LIMIT_THRESHOLD_BYTES_LONG, -1L);
         sDefaults.putBoolean(KEY_DATA_LIMIT_NOTIFICATION_BOOL, true);
         sDefaults.putBoolean(KEY_DATA_RAPID_NOTIFICATION_BOOL, true);
         sDefaults.putStringArray(KEY_RATCHET_RAT_FAMILIES, new String[]{"1,2", "7,8,12", "3,11,9,10,15", "14,19"});
@@ -674,42 +686,42 @@ public class CarrierConfigManager {
         sDefaults.putBoolean(KEY_VIDEO_CALLS_CAN_BE_HD_AUDIO, true);
         sDefaults.putBoolean(KEY_GSM_CDMA_CALLS_CAN_BE_HD_AUDIO, false);
         sDefaults.putBoolean(KEY_ALLOW_VIDEO_CALLING_FALLBACK_BOOL, true);
-        sDefaults.putStringArray(KEY_IMS_REASONINFO_MAPPING_STRING_ARRAY, (String[]) null);
+        sDefaults.putStringArray(KEY_IMS_REASONINFO_MAPPING_STRING_ARRAY, null);
         sDefaults.putBoolean(KEY_ENHANCED_4G_LTE_TITLE_VARIANT_BOOL, false);
         sDefaults.putInt(KEY_ENHANCED_4G_LTE_TITLE_VARIANT_INT, 0);
         sDefaults.putBoolean(KEY_NOTIFY_VT_HANDOVER_TO_WIFI_FAILURE_BOOL, false);
-        sDefaults.putStringArray(KEY_FILTERED_CNAP_NAMES_STRING_ARRAY, (String[]) null);
+        sDefaults.putStringArray(KEY_FILTERED_CNAP_NAMES_STRING_ARRAY, null);
         sDefaults.putBoolean(KEY_EDITABLE_WFC_ROAMING_MODE_BOOL, false);
         sDefaults.putBoolean(KEY_SHOW_BLOCKING_PAY_PHONE_OPTION_BOOL, false);
         sDefaults.putBoolean(KEY_USE_WFC_HOME_NETWORK_MODE_IN_ROAMING_NETWORK_BOOL, false);
         sDefaults.putBoolean(KEY_STK_DISABLE_LAUNCH_BROWSER_BOOL, false);
         sDefaults.putBoolean(KEY_ALLOW_METERED_NETWORK_FOR_CERT_DOWNLOAD_BOOL, false);
-        sDefaults.putStringArray(KEY_CARRIER_WIFI_STRING_ARRAY, (String[]) null);
+        sDefaults.putStringArray(KEY_CARRIER_WIFI_STRING_ARRAY, null);
         sDefaults.putInt(KEY_PREF_NETWORK_NOTIFICATION_DELAY_INT, -1);
         sDefaults.putInt(KEY_EMERGENCY_NOTIFICATION_DELAY_INT, -1);
         sDefaults.putBoolean(KEY_ALLOW_USSD_REQUESTS_VIA_TELEPHONY_MANAGER_BOOL, true);
         sDefaults.putBoolean(KEY_SUPPORT_3GPP_CALL_FORWARDING_WHILE_ROAMING_BOOL, true);
-        sDefaults.putBoolean(KEY_DISPLAY_VOICEMAIL_NUMBER_AS_DEFAULT_CALL_FORWARDING_NUMBER_BOOL, false);
+        sDefaults.putBoolean(f280x6ee79b57, false);
         sDefaults.putBoolean(KEY_NOTIFY_INTERNATIONAL_CALL_ON_WFC_BOOL, false);
         sDefaults.putBoolean(KEY_HIDE_PRESET_APN_DETAILS_BOOL, false);
         sDefaults.putBoolean(KEY_SHOW_VIDEO_CALL_CHARGES_ALERT_DIALOG_BOOL, false);
-        sDefaults.putStringArray(KEY_CALL_FORWARDING_BLOCKS_WHILE_ROAMING_STRING_ARRAY, (String[]) null);
+        sDefaults.putStringArray(KEY_CALL_FORWARDING_BLOCKS_WHILE_ROAMING_STRING_ARRAY, null);
         sDefaults.putInt(KEY_LTE_EARFCNS_RSRP_BOOST_INT, 0);
-        sDefaults.putStringArray(KEY_BOOSTED_LTE_EARFCNS_STRING_ARRAY, (String[]) null);
+        sDefaults.putStringArray(KEY_BOOSTED_LTE_EARFCNS_STRING_ARRAY, null);
         sDefaults.putBoolean(KEY_USE_ONLY_RSRP_FOR_LTE_SIGNAL_BAR_BOOL, false);
         sDefaults.putBoolean(KEY_DISABLE_VOICE_BARRING_NOTIFICATION_BOOL, false);
         sDefaults.putInt(IMSI_KEY_AVAILABILITY_INT, 0);
-        sDefaults.putString(IMSI_KEY_DOWNLOAD_URL_STRING, (String) null);
+        sDefaults.putString(IMSI_KEY_DOWNLOAD_URL_STRING, null);
         sDefaults.putBoolean(KEY_CONVERT_CDMA_CALLER_ID_MMI_CODES_WHILE_ROAMING_ON_3GPP_BOOL, false);
-        sDefaults.putStringArray(KEY_NON_ROAMING_OPERATOR_STRING_ARRAY, (String[]) null);
-        sDefaults.putStringArray(KEY_ROAMING_OPERATOR_STRING_ARRAY, (String[]) null);
+        sDefaults.putStringArray(KEY_NON_ROAMING_OPERATOR_STRING_ARRAY, null);
+        sDefaults.putStringArray(KEY_ROAMING_OPERATOR_STRING_ARRAY, null);
         sDefaults.putBoolean(KEY_SHOW_IMS_REGISTRATION_STATUS_BOOL, false);
         sDefaults.putBoolean(KEY_RTT_SUPPORTED_BOOL, false);
         sDefaults.putBoolean(KEY_RTT_ALWAYS_ENABLED_BOOL, false);
         sDefaults.putBoolean(KEY_TTY_SUPPORTED_BOOL, true);
         sDefaults.putBoolean(KEY_DISABLE_CHARGE_INDICATION_BOOL, false);
         sDefaults.putBoolean(KEY_SUPPORT_NO_REPLY_TIMER_FOR_CFNRY_BOOL, true);
-        sDefaults.putStringArray(KEY_FEATURE_ACCESS_CODES_STRING_ARRAY, (String[]) null);
+        sDefaults.putStringArray(KEY_FEATURE_ACCESS_CODES_STRING_ARRAY, null);
         sDefaults.putBoolean(KEY_IDENTIFY_HIGH_DEFINITION_CALLS_IN_CALL_LOG_BOOL, false);
         sDefaults.putBoolean(KEY_SHOW_PRECISE_FAILED_CAUSE_BOOL, false);
         sDefaults.putBoolean(KEY_SPN_DISPLAY_RULE_USE_ROAMING_FROM_SERVICE_STATE_BOOL, false);
@@ -720,7 +732,7 @@ public class CarrierConfigManager {
         sDefaults.putBoolean(KEY_HIDE_LTE_PLUS_DATA_ICON_BOOL, true);
         sDefaults.putBoolean(KEY_LTE_ENABLED_BOOL, true);
         sDefaults.putBoolean(KEY_SUPPORT_TDSCDMA_BOOL, false);
-        sDefaults.putStringArray(KEY_SUPPORT_TDSCDMA_ROAMING_NETWORKS_STRING_ARRAY, (String[]) null);
+        sDefaults.putStringArray(KEY_SUPPORT_TDSCDMA_ROAMING_NETWORKS_STRING_ARRAY, null);
         sDefaults.putBoolean(KEY_WORLD_MODE_ENABLED_BOOL, false);
         sDefaults.putString(KEY_CARRIER_SETTINGS_ACTIVITY_COMPONENT_NAME_STRING, "");
         sDefaults.putBoolean(KEY_CARRIER_CONFIG_APPLIED_BOOL, false);
@@ -748,15 +760,15 @@ public class CarrierConfigManager {
         sDefaults.putInt(KEY_OPPORTUNISTIC_NETWORK_ENTRY_THRESHOLD_BANDWIDTH_INT, 1024);
         sDefaults.putLong(KEY_OPPORTUNISTIC_NETWORK_ENTRY_OR_EXIT_HYSTERESIS_TIME_LONG, JobInfo.MIN_BACKOFF_MILLIS);
         sDefaults.putLong(KEY_OPPORTUNISTIC_NETWORK_DATA_SWITCH_HYSTERESIS_TIME_LONG, JobInfo.MIN_BACKOFF_MILLIS);
-        sDefaults.putAll(Gps.getDefaults());
-        sDefaults.putAll(Wifi.getDefaults());
+        sDefaults.putAll(Gps.access$000());
+        sDefaults.putAll(Wifi.access$100());
         sDefaults.putIntArray(KEY_CDMA_ENHANCED_ROAMING_INDICATOR_FOR_HOME_NETWORK_INT_ARRAY, new int[]{1});
         sDefaults.putStringArray(KEY_EMERGENCY_NUMBER_PREFIX_STRING_ARRAY, new String[0]);
         sDefaults.putBoolean(KEY_USE_USIM_BOOL, false);
         sDefaults.putBoolean(KEY_SHOW_WFC_LOCATION_PRIVACY_POLICY_BOOL, false);
         sDefaults.putBoolean(KEY_AUTO_CANCEL_CS_REJECT_NOTIFICATION, false);
         sDefaults.putString(KEY_SMART_FORWARDING_CONFIG_COMPONENT_NAME_STRING, "");
-        sDefaults.putBoolean(KEY_ALWAYS_SHOW_PRIMARY_SIGNAL_BAR_IN_OPPORTUNISTIC_NETWORK_BOOLEAN, false);
+        sDefaults.putBoolean(f279x12969fb, false);
         sDefaults.putString(KEY_SUBSCRIPTION_GROUP_UUID_STRING, "");
         sDefaults.putBoolean(KEY_IS_OPPORTUNISTIC_SUBSCRIPTION_BOOL, false);
         sDefaults.putIntArray(KEY_GSM_RSSI_THRESHOLDS_INT_ARRAY, new int[]{PackageManager.INSTALL_PARSE_FAILED_BAD_SHARED_USER_ID, PackageManager.INSTALL_PARSE_FAILED_NO_CERTIFICATES, -97, -89});
@@ -766,13 +778,13 @@ public class CarrierConfigManager {
     public PersistableBundle getConfigForSubId(int subId) {
         try {
             ICarrierConfigLoader loader = getICarrierConfigLoader();
-            if (loader != null) {
-                return loader.getConfigForSubId(subId, this.mContext.getOpPackageName());
+            if (loader == null) {
+                Rlog.m80w(TAG, "Error getting config for subId " + subId + " ICarrierConfigLoader is null");
+                return null;
             }
-            Rlog.w(TAG, "Error getting config for subId " + subId + " ICarrierConfigLoader is null");
-            return null;
+            return loader.getConfigForSubId(subId, this.mContext.getOpPackageName());
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "Error getting config for subId " + subId + PluralRules.KEYWORD_RULE_SEPARATOR + ex.toString());
+            Rlog.m86e(TAG, "Error getting config for subId " + subId + PluralRules.KEYWORD_RULE_SEPARATOR + ex.toString());
             return null;
         }
     }
@@ -782,12 +794,12 @@ public class CarrierConfigManager {
         try {
             ICarrierConfigLoader loader = getICarrierConfigLoader();
             if (loader == null) {
-                Rlog.w(TAG, "Error setting config for subId " + subscriptionId + " ICarrierConfigLoader is null");
+                Rlog.m80w(TAG, "Error setting config for subId " + subscriptionId + " ICarrierConfigLoader is null");
                 return;
             }
             loader.overrideConfig(subscriptionId, overrideValues);
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "Error setting config for subId " + subscriptionId + PluralRules.KEYWORD_RULE_SEPARATOR + ex.toString());
+            Rlog.m86e(TAG, "Error setting config for subId " + subscriptionId + PluralRules.KEYWORD_RULE_SEPARATOR + ex.toString());
         }
     }
 
@@ -803,12 +815,12 @@ public class CarrierConfigManager {
         try {
             ICarrierConfigLoader loader = getICarrierConfigLoader();
             if (loader == null) {
-                Rlog.w(TAG, "Error reloading config for subId=" + subId + " ICarrierConfigLoader is null");
+                Rlog.m80w(TAG, "Error reloading config for subId=" + subId + " ICarrierConfigLoader is null");
                 return;
             }
             loader.notifyConfigChangedForSubId(subId);
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "Error reloading config for subId=" + subId + PluralRules.KEYWORD_RULE_SEPARATOR + ex.toString());
+            Rlog.m86e(TAG, "Error reloading config for subId=" + subId + PluralRules.KEYWORD_RULE_SEPARATOR + ex.toString());
         }
     }
 
@@ -817,12 +829,12 @@ public class CarrierConfigManager {
         try {
             ICarrierConfigLoader loader = getICarrierConfigLoader();
             if (loader == null) {
-                Rlog.w(TAG, "Error updating config for phoneId=" + phoneId + " ICarrierConfigLoader is null");
+                Rlog.m80w(TAG, "Error updating config for phoneId=" + phoneId + " ICarrierConfigLoader is null");
                 return;
             }
             loader.updateConfigForPhoneId(phoneId, simState);
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "Error updating config for phoneId=" + phoneId + PluralRules.KEYWORD_RULE_SEPARATOR + ex.toString());
+            Rlog.m86e(TAG, "Error updating config for phoneId=" + phoneId + PluralRules.KEYWORD_RULE_SEPARATOR + ex.toString());
         }
     }
 
@@ -834,8 +846,8 @@ public class CarrierConfigManager {
         }
     }
 
-    @SuppressLint({"Doclava125"})
     @SystemApi
+    @SuppressLint({"Doclava125"})
     public static PersistableBundle getDefaultConfig() {
         return new PersistableBundle(sDefaults);
     }

@@ -4,13 +4,14 @@ import android.hardware.camera2.utils.HashCodeHelpers;
 import com.android.internal.util.Preconditions;
 import java.lang.Comparable;
 
+/* loaded from: classes4.dex */
 public final class Range<T extends Comparable<? super T>> {
     private final T mLower;
     private final T mUpper;
 
     public Range(T lower, T upper) {
-        this.mLower = (Comparable) Preconditions.checkNotNull(lower, "lower must not be null");
-        this.mUpper = (Comparable) Preconditions.checkNotNull(upper, "upper must not be null");
+        this.mLower = (T) Preconditions.checkNotNull(lower, "lower must not be null");
+        this.mUpper = (T) Preconditions.checkNotNull(upper, "upper must not be null");
         if (lower.compareTo(upper) > 0) {
             throw new IllegalArgumentException("lower must be less than or equal to upper");
         }
@@ -32,20 +33,14 @@ public final class Range<T extends Comparable<? super T>> {
         Preconditions.checkNotNull(value, "value must not be null");
         boolean gteLower = value.compareTo(this.mLower) >= 0;
         boolean lteUpper = value.compareTo(this.mUpper) <= 0;
-        if (!gteLower || !lteUpper) {
-            return false;
-        }
-        return true;
+        return gteLower && lteUpper;
     }
 
     public boolean contains(Range<T> range) {
         Preconditions.checkNotNull(range, "value must not be null");
         boolean gteLower = range.mLower.compareTo(this.mLower) >= 0;
         boolean lteUpper = range.mUpper.compareTo(this.mUpper) <= 0;
-        if (!gteLower || !lteUpper) {
-            return false;
-        }
-        return true;
+        return gteLower && lteUpper;
     }
 
     public boolean equals(Object obj) {
@@ -90,26 +85,14 @@ public final class Range<T extends Comparable<? super T>> {
     }
 
     public Range<T> intersect(T lower, T upper) {
-        T t;
-        T t2;
         Preconditions.checkNotNull(lower, "lower must not be null");
         Preconditions.checkNotNull(upper, "upper must not be null");
         int cmpLower = lower.compareTo(this.mLower);
         int cmpUpper = upper.compareTo(this.mUpper);
-        if (cmpLower <= 0 && cmpUpper >= 0) {
-            return this;
+        if (cmpLower > 0 || cmpUpper < 0) {
+            return create(cmpLower <= 0 ? this.mLower : lower, cmpUpper >= 0 ? this.mUpper : upper);
         }
-        if (cmpLower <= 0) {
-            t = this.mLower;
-        } else {
-            t = lower;
-        }
-        if (cmpUpper >= 0) {
-            t2 = this.mUpper;
-        } else {
-            t2 = upper;
-        }
-        return create(t, t2);
+        return this;
     }
 
     public Range<T> extend(Range<T> range) {
@@ -126,26 +109,14 @@ public final class Range<T extends Comparable<? super T>> {
     }
 
     public Range<T> extend(T lower, T upper) {
-        T t;
-        T t2;
         Preconditions.checkNotNull(lower, "lower must not be null");
         Preconditions.checkNotNull(upper, "upper must not be null");
         int cmpLower = lower.compareTo(this.mLower);
         int cmpUpper = upper.compareTo(this.mUpper);
-        if (cmpLower >= 0 && cmpUpper <= 0) {
-            return this;
+        if (cmpLower < 0 || cmpUpper > 0) {
+            return create(cmpLower >= 0 ? this.mLower : lower, cmpUpper <= 0 ? this.mUpper : upper);
         }
-        if (cmpLower >= 0) {
-            t = this.mLower;
-        } else {
-            t = lower;
-        }
-        if (cmpUpper <= 0) {
-            t2 = this.mUpper;
-        } else {
-            t2 = upper;
-        }
-        return create(t, t2);
+        return this;
     }
 
     public Range<T> extend(T value) {
@@ -154,7 +125,7 @@ public final class Range<T extends Comparable<? super T>> {
     }
 
     public String toString() {
-        return String.format("[%s, %s]", new Object[]{this.mLower, this.mUpper});
+        return String.format("[%s, %s]", this.mLower, this.mUpper);
     }
 
     public int hashCode() {

@@ -8,6 +8,7 @@ import android.text.CharSequenceCharacterIterator;
 import android.text.Selection;
 import java.util.Locale;
 
+/* loaded from: classes4.dex */
 public class WordIterator implements Selection.PositionIterator {
     private static final int WINDOW_WIDTH = 50;
     private CharSequence mCharSeq;
@@ -26,40 +27,39 @@ public class WordIterator implements Selection.PositionIterator {
 
     @UnsupportedAppUsage
     public void setCharSequence(CharSequence charSequence, int start, int end) {
-        if (start < 0 || end > charSequence.length()) {
-            throw new IndexOutOfBoundsException("input indexes are outside the CharSequence");
+        if (start >= 0 && end <= charSequence.length()) {
+            this.mCharSeq = charSequence;
+            this.mStart = Math.max(0, start - 50);
+            this.mEnd = Math.min(charSequence.length(), end + 50);
+            this.mIterator.setText(new CharSequenceCharacterIterator(charSequence, this.mStart, this.mEnd));
+            return;
         }
-        this.mCharSeq = charSequence;
-        this.mStart = Math.max(0, start - 50);
-        this.mEnd = Math.min(charSequence.length(), end + 50);
-        this.mIterator.setText(new CharSequenceCharacterIterator(charSequence, this.mStart, this.mEnd));
+        throw new IndexOutOfBoundsException("input indexes are outside the CharSequence");
     }
 
+    @Override // android.text.Selection.PositionIterator
     @UnsupportedAppUsage
     public int preceding(int offset) {
         checkOffsetIsValid(offset);
         do {
             offset = this.mIterator.preceding(offset);
-            if (offset == -1 || isOnLetterOrDigit(offset)) {
-                return offset;
+            if (offset == -1) {
+                break;
             }
-            offset = this.mIterator.preceding(offset);
-            break;
-        } while (isOnLetterOrDigit(offset));
+        } while (!isOnLetterOrDigit(offset));
         return offset;
     }
 
+    @Override // android.text.Selection.PositionIterator
     @UnsupportedAppUsage
     public int following(int offset) {
         checkOffsetIsValid(offset);
         do {
             offset = this.mIterator.following(offset);
-            if (offset == -1 || isAfterLetterOrDigit(offset)) {
-                return offset;
+            if (offset == -1) {
+                break;
             }
-            offset = this.mIterator.following(offset);
-            break;
-        } while (isAfterLetterOrDigit(offset));
+        } while (!isAfterLetterOrDigit(offset));
         return offset;
     }
 
@@ -104,10 +104,10 @@ public class WordIterator implements Selection.PositionIterator {
     private int getBeginning(int offset, boolean getPrevWordBeginningOnTwoWordsBoundary) {
         checkOffsetIsValid(offset);
         if (isOnLetterOrDigit(offset)) {
-            if (!this.mIterator.isBoundary(offset) || (isAfterLetterOrDigit(offset) && getPrevWordBeginningOnTwoWordsBoundary)) {
-                return this.mIterator.preceding(offset);
+            if (this.mIterator.isBoundary(offset) && (!isAfterLetterOrDigit(offset) || !getPrevWordBeginningOnTwoWordsBoundary)) {
+                return offset;
             }
-            return offset;
+            return this.mIterator.preceding(offset);
         } else if (isAfterLetterOrDigit(offset)) {
             return this.mIterator.preceding(offset);
         } else {
@@ -118,10 +118,10 @@ public class WordIterator implements Selection.PositionIterator {
     private int getEnd(int offset, boolean getNextWordEndOnTwoWordBoundary) {
         checkOffsetIsValid(offset);
         if (isAfterLetterOrDigit(offset)) {
-            if (!this.mIterator.isBoundary(offset) || (isOnLetterOrDigit(offset) && getNextWordEndOnTwoWordBoundary)) {
-                return this.mIterator.following(offset);
+            if (this.mIterator.isBoundary(offset) && (!isOnLetterOrDigit(offset) || !getNextWordEndOnTwoWordBoundary)) {
+                return offset;
             }
-            return offset;
+            return this.mIterator.following(offset);
         } else if (isOnLetterOrDigit(offset)) {
             return this.mIterator.following(offset);
         } else {
@@ -149,18 +149,20 @@ public class WordIterator implements Selection.PositionIterator {
 
     @UnsupportedAppUsage
     public boolean isAfterPunctuation(int offset) {
-        if (this.mStart >= offset || offset > this.mEnd) {
-            return false;
+        if (this.mStart < offset && offset <= this.mEnd) {
+            int codePoint = Character.codePointBefore(this.mCharSeq, offset);
+            return isPunctuation(codePoint);
         }
-        return isPunctuation(Character.codePointBefore(this.mCharSeq, offset));
+        return false;
     }
 
     @UnsupportedAppUsage
     public boolean isOnPunctuation(int offset) {
-        if (this.mStart > offset || offset >= this.mEnd) {
-            return false;
+        if (this.mStart <= offset && offset < this.mEnd) {
+            int codePoint = Character.codePointAt(this.mCharSeq, offset);
+            return isPunctuation(codePoint);
         }
-        return isPunctuation(Character.codePointAt(this.mCharSeq, offset));
+        return false;
     }
 
     public static boolean isMidWordPunctuation(Locale locale, int codePoint) {
@@ -182,17 +184,19 @@ public class WordIterator implements Selection.PositionIterator {
     }
 
     private boolean isAfterLetterOrDigit(int offset) {
-        if (this.mStart >= offset || offset > this.mEnd || !Character.isLetterOrDigit(Character.codePointBefore(this.mCharSeq, offset))) {
-            return false;
+        if (this.mStart < offset && offset <= this.mEnd) {
+            int codePoint = Character.codePointBefore(this.mCharSeq, offset);
+            return Character.isLetterOrDigit(codePoint);
         }
-        return true;
+        return false;
     }
 
     private boolean isOnLetterOrDigit(int offset) {
-        if (this.mStart > offset || offset >= this.mEnd || !Character.isLetterOrDigit(Character.codePointAt(this.mCharSeq, offset))) {
-            return false;
+        if (this.mStart <= offset && offset < this.mEnd) {
+            int codePoint = Character.codePointAt(this.mCharSeq, offset);
+            return Character.isLetterOrDigit(codePoint);
         }
-        return true;
+        return false;
     }
 
     private void checkOffsetIsValid(int offset) {

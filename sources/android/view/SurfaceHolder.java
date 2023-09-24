@@ -3,6 +3,7 @@ package android.view;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
+/* loaded from: classes4.dex */
 public interface SurfaceHolder {
     @Deprecated
     public static final int SURFACE_TYPE_GPU = 2;
@@ -13,6 +14,7 @@ public interface SurfaceHolder {
     @Deprecated
     public static final int SURFACE_TYPE_PUSH_BUFFERS = 3;
 
+    /* loaded from: classes4.dex */
     public interface Callback {
         void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i2, int i3);
 
@@ -48,6 +50,7 @@ public interface SurfaceHolder {
 
     void unlockCanvasAndPost(Canvas canvas);
 
+    /* loaded from: classes4.dex */
     public static class BadSurfaceTypeException extends RuntimeException {
         public BadSurfaceTypeException() {
         }
@@ -57,16 +60,17 @@ public interface SurfaceHolder {
         }
     }
 
+    /* loaded from: classes4.dex */
     public interface Callback2 extends Callback {
         void surfaceRedrawNeeded(SurfaceHolder surfaceHolder);
 
-        void surfaceRedrawNeededAsync(SurfaceHolder holder, Runnable drawingFinished) {
+        default void surfaceRedrawNeededAsync(SurfaceHolder holder, Runnable drawingFinished) {
             surfaceRedrawNeeded(holder);
             drawingFinished.run();
         }
     }
 
-    Canvas lockHardwareCanvas() {
+    default Canvas lockHardwareCanvas() {
         throw new IllegalStateException("This SurfaceHolder doesn't support lockHardwareCanvas");
     }
 }

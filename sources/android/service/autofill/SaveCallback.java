@@ -1,10 +1,11 @@
 package android.service.autofill;
 
 import android.content.IntentSender;
-import android.os.RemoteException;
+import android.p007os.RemoteException;
 import android.util.Log;
 import com.android.internal.util.Preconditions;
 
+/* loaded from: classes3.dex */
 public final class SaveCallback {
     private static final String TAG = "SaveCallback";
     private final ISaveCallback mCallback;
@@ -15,7 +16,7 @@ public final class SaveCallback {
     }
 
     public void onSuccess() {
-        onSuccessInternal((IntentSender) null);
+        onSuccessInternal(null);
     }
 
     public void onSuccess(IntentSender intentSender) {
@@ -33,7 +34,7 @@ public final class SaveCallback {
     }
 
     public void onFailure(CharSequence message) {
-        Log.w(TAG, "onFailure(): " + message);
+        Log.m64w(TAG, "onFailure(): " + ((Object) message));
         assertNotCalled();
         this.mCalled = true;
         try {

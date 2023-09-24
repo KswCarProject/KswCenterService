@@ -1,5 +1,6 @@
 package android.service;
 
+/* loaded from: classes3.dex */
 public final class NetworkStatsServiceDumpProto {
     public static final long ACTIVE_INTERFACES = 2246267895809L;
     public static final long ACTIVE_UID_INTERFACES = 2246267895810L;

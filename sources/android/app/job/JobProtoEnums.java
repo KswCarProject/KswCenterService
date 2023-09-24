@@ -1,5 +1,6 @@
 package android.app.job;
 
+/* loaded from: classes.dex */
 public final class JobProtoEnums {
     public static final int STOP_REASON_CANCELLED = 0;
     public static final int STOP_REASON_CONSTRAINTS_NOT_SATISFIED = 1;

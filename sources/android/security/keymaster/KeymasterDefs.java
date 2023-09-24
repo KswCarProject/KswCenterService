@@ -3,6 +3,7 @@ package android.security.keymaster;
 import java.util.HashMap;
 import java.util.Map;
 
+/* loaded from: classes3.dex */
 public final class KeymasterDefs {
     public static final int HW_AUTH_BIOMETRIC = 2;
     public static final int HW_AUTH_PASSWORD = 1;
@@ -214,7 +215,7 @@ public final class KeymasterDefs {
     }
 
     public static int getTagType(int tag) {
-        return -268435456 & tag;
+        return (-268435456) & tag;
     }
 
     public static String getErrorMessage(int errorCode) {

@@ -1,6 +1,5 @@
 package android.view;
 
-import android.graphics.Point;
 import android.graphics.Rect;
 import com.android.internal.util.Preconditions;
 import java.lang.ref.WeakReference;
@@ -9,12 +8,13 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+/* loaded from: classes4.dex */
 class GestureExclusionTracker {
-    private List<Rect> mGestureExclusionRects = Collections.emptyList();
-    private List<GestureExclusionViewInfo> mGestureExclusionViewInfos = new ArrayList();
     private boolean mGestureExclusionViewsChanged = false;
-    private List<Rect> mRootGestureExclusionRects = Collections.emptyList();
     private boolean mRootGestureExclusionRectsChanged = false;
+    private List<Rect> mRootGestureExclusionRects = Collections.emptyList();
+    private List<GestureExclusionViewInfo> mGestureExclusionViewInfos = new ArrayList();
+    private List<Rect> mGestureExclusionRects = Collections.emptyList();
 
     GestureExclusionTracker() {
     }
@@ -53,8 +53,6 @@ class GestureExclusionTracker {
                 case 0:
                     changed = true;
                     break;
-                case 1:
-                    break;
                 case 2:
                     this.mGestureExclusionViewsChanged = true;
                     i.remove();
@@ -62,16 +60,16 @@ class GestureExclusionTracker {
             }
             rects.addAll(info.mExclusionRects);
         }
-        if (!changed && !this.mGestureExclusionViewsChanged) {
+        if (changed || this.mGestureExclusionViewsChanged) {
+            this.mGestureExclusionViewsChanged = false;
+            this.mRootGestureExclusionRectsChanged = false;
+            if (!this.mGestureExclusionRects.equals(rects)) {
+                this.mGestureExclusionRects = rects;
+                return rects;
+            }
             return null;
         }
-        this.mGestureExclusionViewsChanged = false;
-        this.mRootGestureExclusionRectsChanged = false;
-        if (this.mGestureExclusionRects.equals(rects)) {
-            return null;
-        }
-        this.mGestureExclusionRects = rects;
-        return rects;
+        return null;
     }
 
     public void setRootSystemGestureExclusionRects(List<Rect> rects) {
@@ -84,6 +82,7 @@ class GestureExclusionTracker {
         return this.mRootGestureExclusionRects;
     }
 
+    /* loaded from: classes4.dex */
     private static class GestureExclusionViewInfo {
         public static final int CHANGED = 0;
         public static final int GONE = 2;
@@ -97,7 +96,7 @@ class GestureExclusionTracker {
         }
 
         public View getView() {
-            return (View) this.mView.get();
+            return this.mView.get();
         }
 
         public int update() {
@@ -110,7 +109,7 @@ class GestureExclusionTracker {
             for (Rect src : localRects) {
                 Rect mappedRect = new Rect(src);
                 ViewParent p = excludedView.getParent();
-                if (p != null && p.getChildVisibleRect(excludedView, mappedRect, (Point) null)) {
+                if (p != null && p.getChildVisibleRect(excludedView, mappedRect, null)) {
                     newRects.add(mappedRect);
                 }
             }

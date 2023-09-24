@@ -1,13 +1,14 @@
 package com.android.ims.internal.uce.presence;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import com.android.ims.internal.uce.common.StatusCode;
 
+/* loaded from: classes4.dex */
 public interface IPresenceListener extends IInterface {
     @UnsupportedAppUsage
     void capInfoReceived(String str, PresTupleInfo[] presTupleInfoArr) throws RemoteException;
@@ -36,39 +37,51 @@ public interface IPresenceListener extends IInterface {
     @UnsupportedAppUsage
     void unpublishMessageSent() throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IPresenceListener {
+        @Override // com.android.ims.internal.uce.presence.IPresenceListener
         public void getVersionCb(String version) throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.uce.presence.IPresenceListener
         public void serviceAvailable(StatusCode statusCode) throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.uce.presence.IPresenceListener
         public void serviceUnAvailable(StatusCode statusCode) throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.uce.presence.IPresenceListener
         public void publishTriggering(PresPublishTriggerType publishTrigger) throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.uce.presence.IPresenceListener
         public void cmdStatus(PresCmdStatus cmdStatus) throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.uce.presence.IPresenceListener
         public void sipResponseReceived(PresSipResponse sipResponse) throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.uce.presence.IPresenceListener
         public void capInfoReceived(String presentityURI, PresTupleInfo[] tupleInfo) throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.uce.presence.IPresenceListener
         public void listCapInfoReceived(PresRlmiInfo rlmiInfo, PresResInfo[] resInfo) throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.uce.presence.IPresenceListener
         public void unpublishMessageSent() throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IPresenceListener {
         private static final String DESCRIPTOR = "com.android.ims.internal.uce.presence.IPresenceListener";
         static final int TRANSACTION_capInfoReceived = 7;
@@ -90,12 +103,13 @@ public interface IPresenceListener extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IPresenceListener)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IPresenceListener)) {
+                return (IPresenceListener) iin;
             }
-            return (IPresenceListener) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -125,156 +139,79 @@ public interface IPresenceListener extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v3, resolved type: com.android.ims.internal.uce.common.StatusCode} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v7, resolved type: com.android.ims.internal.uce.common.StatusCode} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v11, resolved type: com.android.ims.internal.uce.presence.PresPublishTriggerType} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v15, resolved type: com.android.ims.internal.uce.presence.PresCmdStatus} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v19, resolved type: com.android.ims.internal.uce.presence.PresSipResponse} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v24, resolved type: com.android.ims.internal.uce.presence.PresRlmiInfo} */
-        /* JADX WARNING: type inference failed for: r1v1 */
-        /* JADX WARNING: type inference failed for: r1v29 */
-        /* JADX WARNING: type inference failed for: r1v30 */
-        /* JADX WARNING: type inference failed for: r1v31 */
-        /* JADX WARNING: type inference failed for: r1v32 */
-        /* JADX WARNING: type inference failed for: r1v33 */
-        /* JADX WARNING: type inference failed for: r1v34 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r5, android.os.Parcel r6, android.os.Parcel r7, int r8) throws android.os.RemoteException {
-            /*
-                r4 = this;
-                java.lang.String r0 = "com.android.ims.internal.uce.presence.IPresenceListener"
-                r1 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r2 = 1
-                if (r5 == r1) goto L_0x00e3
-                r1 = 0
-                switch(r5) {
-                    case 1: goto L_0x00d5;
-                    case 2: goto L_0x00bb;
-                    case 3: goto L_0x00a1;
-                    case 4: goto L_0x0087;
-                    case 5: goto L_0x006d;
-                    case 6: goto L_0x0053;
-                    case 7: goto L_0x003d;
-                    case 8: goto L_0x001b;
-                    case 9: goto L_0x0011;
-                    default: goto L_0x000c;
-                }
-            L_0x000c:
-                boolean r1 = super.onTransact(r5, r6, r7, r8)
-                return r1
-            L_0x0011:
-                r6.enforceInterface(r0)
-                r4.unpublishMessageSent()
-                r7.writeNoException()
-                return r2
-            L_0x001b:
-                r6.enforceInterface(r0)
-                int r3 = r6.readInt()
-                if (r3 == 0) goto L_0x002d
-                android.os.Parcelable$Creator<com.android.ims.internal.uce.presence.PresRlmiInfo> r1 = com.android.ims.internal.uce.presence.PresRlmiInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r6)
-                com.android.ims.internal.uce.presence.PresRlmiInfo r1 = (com.android.ims.internal.uce.presence.PresRlmiInfo) r1
-                goto L_0x002e
-            L_0x002d:
-            L_0x002e:
-                android.os.Parcelable$Creator<com.android.ims.internal.uce.presence.PresResInfo> r3 = com.android.ims.internal.uce.presence.PresResInfo.CREATOR
-                java.lang.Object[] r3 = r6.createTypedArray(r3)
-                com.android.ims.internal.uce.presence.PresResInfo[] r3 = (com.android.ims.internal.uce.presence.PresResInfo[]) r3
-                r4.listCapInfoReceived(r1, r3)
-                r7.writeNoException()
-                return r2
-            L_0x003d:
-                r6.enforceInterface(r0)
-                java.lang.String r1 = r6.readString()
-                android.os.Parcelable$Creator<com.android.ims.internal.uce.presence.PresTupleInfo> r3 = com.android.ims.internal.uce.presence.PresTupleInfo.CREATOR
-                java.lang.Object[] r3 = r6.createTypedArray(r3)
-                com.android.ims.internal.uce.presence.PresTupleInfo[] r3 = (com.android.ims.internal.uce.presence.PresTupleInfo[]) r3
-                r4.capInfoReceived(r1, r3)
-                r7.writeNoException()
-                return r2
-            L_0x0053:
-                r6.enforceInterface(r0)
-                int r3 = r6.readInt()
-                if (r3 == 0) goto L_0x0065
-                android.os.Parcelable$Creator<com.android.ims.internal.uce.presence.PresSipResponse> r1 = com.android.ims.internal.uce.presence.PresSipResponse.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r6)
-                com.android.ims.internal.uce.presence.PresSipResponse r1 = (com.android.ims.internal.uce.presence.PresSipResponse) r1
-                goto L_0x0066
-            L_0x0065:
-            L_0x0066:
-                r4.sipResponseReceived(r1)
-                r7.writeNoException()
-                return r2
-            L_0x006d:
-                r6.enforceInterface(r0)
-                int r3 = r6.readInt()
-                if (r3 == 0) goto L_0x007f
-                android.os.Parcelable$Creator<com.android.ims.internal.uce.presence.PresCmdStatus> r1 = com.android.ims.internal.uce.presence.PresCmdStatus.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r6)
-                com.android.ims.internal.uce.presence.PresCmdStatus r1 = (com.android.ims.internal.uce.presence.PresCmdStatus) r1
-                goto L_0x0080
-            L_0x007f:
-            L_0x0080:
-                r4.cmdStatus(r1)
-                r7.writeNoException()
-                return r2
-            L_0x0087:
-                r6.enforceInterface(r0)
-                int r3 = r6.readInt()
-                if (r3 == 0) goto L_0x0099
-                android.os.Parcelable$Creator<com.android.ims.internal.uce.presence.PresPublishTriggerType> r1 = com.android.ims.internal.uce.presence.PresPublishTriggerType.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r6)
-                com.android.ims.internal.uce.presence.PresPublishTriggerType r1 = (com.android.ims.internal.uce.presence.PresPublishTriggerType) r1
-                goto L_0x009a
-            L_0x0099:
-            L_0x009a:
-                r4.publishTriggering(r1)
-                r7.writeNoException()
-                return r2
-            L_0x00a1:
-                r6.enforceInterface(r0)
-                int r3 = r6.readInt()
-                if (r3 == 0) goto L_0x00b3
-                android.os.Parcelable$Creator<com.android.ims.internal.uce.common.StatusCode> r1 = com.android.ims.internal.uce.common.StatusCode.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r6)
-                com.android.ims.internal.uce.common.StatusCode r1 = (com.android.ims.internal.uce.common.StatusCode) r1
-                goto L_0x00b4
-            L_0x00b3:
-            L_0x00b4:
-                r4.serviceUnAvailable(r1)
-                r7.writeNoException()
-                return r2
-            L_0x00bb:
-                r6.enforceInterface(r0)
-                int r3 = r6.readInt()
-                if (r3 == 0) goto L_0x00cd
-                android.os.Parcelable$Creator<com.android.ims.internal.uce.common.StatusCode> r1 = com.android.ims.internal.uce.common.StatusCode.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r6)
-                com.android.ims.internal.uce.common.StatusCode r1 = (com.android.ims.internal.uce.common.StatusCode) r1
-                goto L_0x00ce
-            L_0x00cd:
-            L_0x00ce:
-                r4.serviceAvailable(r1)
-                r7.writeNoException()
-                return r2
-            L_0x00d5:
-                r6.enforceInterface(r0)
-                java.lang.String r1 = r6.readString()
-                r4.getVersionCb(r1)
-                r7.writeNoException()
-                return r2
-            L_0x00e3:
-                r7.writeString(r0)
-                return r2
-            */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.ims.internal.uce.presence.IPresenceListener.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0 = data.readString();
+                    getVersionCb(_arg0);
+                    reply.writeNoException();
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    StatusCode _arg02 = data.readInt() != 0 ? StatusCode.CREATOR.createFromParcel(data) : null;
+                    serviceAvailable(_arg02);
+                    reply.writeNoException();
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    StatusCode _arg03 = data.readInt() != 0 ? StatusCode.CREATOR.createFromParcel(data) : null;
+                    serviceUnAvailable(_arg03);
+                    reply.writeNoException();
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    PresPublishTriggerType _arg04 = data.readInt() != 0 ? PresPublishTriggerType.CREATOR.createFromParcel(data) : null;
+                    publishTriggering(_arg04);
+                    reply.writeNoException();
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    PresCmdStatus _arg05 = data.readInt() != 0 ? PresCmdStatus.CREATOR.createFromParcel(data) : null;
+                    cmdStatus(_arg05);
+                    reply.writeNoException();
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    PresSipResponse _arg06 = data.readInt() != 0 ? PresSipResponse.CREATOR.createFromParcel(data) : null;
+                    sipResponseReceived(_arg06);
+                    reply.writeNoException();
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg07 = data.readString();
+                    PresTupleInfo[] _arg1 = (PresTupleInfo[]) data.createTypedArray(PresTupleInfo.CREATOR);
+                    capInfoReceived(_arg07, _arg1);
+                    reply.writeNoException();
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    PresRlmiInfo _arg08 = data.readInt() != 0 ? PresRlmiInfo.CREATOR.createFromParcel(data) : null;
+                    PresResInfo[] _arg12 = (PresResInfo[]) data.createTypedArray(PresResInfo.CREATOR);
+                    listCapInfoReceived(_arg08, _arg12);
+                    reply.writeNoException();
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    unpublishMessageSent();
+                    reply.writeNoException();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IPresenceListener {
             public static IPresenceListener sDefaultImpl;
             private IBinder mRemote;
@@ -283,6 +220,7 @@ public interface IPresenceListener extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -291,25 +229,26 @@ public interface IPresenceListener extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // com.android.ims.internal.uce.presence.IPresenceListener
             public void getVersionCb(String version) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(version);
-                    if (this.mRemote.transact(1, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().getVersionCb(version);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().getVersionCb(version);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.ims.internal.uce.presence.IPresenceListener
             public void serviceAvailable(StatusCode statusCode) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -321,19 +260,19 @@ public interface IPresenceListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(2, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().serviceAvailable(statusCode);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().serviceAvailable(statusCode);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.ims.internal.uce.presence.IPresenceListener
             public void serviceUnAvailable(StatusCode statusCode) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -345,19 +284,19 @@ public interface IPresenceListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(3, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().serviceUnAvailable(statusCode);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().serviceUnAvailable(statusCode);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.ims.internal.uce.presence.IPresenceListener
             public void publishTriggering(PresPublishTriggerType publishTrigger) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -369,19 +308,19 @@ public interface IPresenceListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(4, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().publishTriggering(publishTrigger);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().publishTriggering(publishTrigger);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.ims.internal.uce.presence.IPresenceListener
             public void cmdStatus(PresCmdStatus cmdStatus) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -393,19 +332,19 @@ public interface IPresenceListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(5, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().cmdStatus(cmdStatus);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().cmdStatus(cmdStatus);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.ims.internal.uce.presence.IPresenceListener
             public void sipResponseReceived(PresSipResponse sipResponse) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -417,19 +356,19 @@ public interface IPresenceListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(6, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().sipResponseReceived(sipResponse);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().sipResponseReceived(sipResponse);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.ims.internal.uce.presence.IPresenceListener
             public void capInfoReceived(String presentityURI, PresTupleInfo[] tupleInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -437,19 +376,19 @@ public interface IPresenceListener extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(presentityURI);
                     _data.writeTypedArray(tupleInfo, 0);
-                    if (this.mRemote.transact(7, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().capInfoReceived(presentityURI, tupleInfo);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().capInfoReceived(presentityURI, tupleInfo);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.ims.internal.uce.presence.IPresenceListener
             public void listCapInfoReceived(PresRlmiInfo rlmiInfo, PresResInfo[] resInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -462,31 +401,30 @@ public interface IPresenceListener extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeTypedArray(resInfo, 0);
-                    if (this.mRemote.transact(8, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().listCapInfoReceived(rlmiInfo, resInfo);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().listCapInfoReceived(rlmiInfo, resInfo);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.ims.internal.uce.presence.IPresenceListener
             public void unpublishMessageSent() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(9, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(9, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().unpublishMessageSent();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().unpublishMessageSent();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -495,11 +433,11 @@ public interface IPresenceListener extends IInterface {
         }
 
         public static boolean setDefaultImpl(IPresenceListener impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IPresenceListener getDefaultImpl() {

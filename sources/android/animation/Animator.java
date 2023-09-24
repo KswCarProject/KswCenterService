@@ -4,15 +4,16 @@ import android.annotation.UnsupportedAppUsage;
 import android.content.res.ConstantState;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public abstract class Animator implements Cloneable {
     public static final long DURATION_INFINITE = -1;
-    int mChangingConfigurations = 0;
-    /* access modifiers changed from: private */
-    public AnimatorConstantState mConstantState;
+    private AnimatorConstantState mConstantState;
     ArrayList<AnimatorListener> mListeners = null;
     ArrayList<AnimatorPauseListener> mPauseListeners = null;
     boolean mPaused = false;
+    int mChangingConfigurations = 0;
 
+    /* loaded from: classes.dex */
     public interface AnimatorPauseListener {
         void onAnimationPause(Animator animator);
 
@@ -73,7 +74,7 @@ public abstract class Animator implements Cloneable {
     public long getTotalDuration() {
         long duration = getDuration();
         if (duration == -1) {
-            return -1;
+            return -1L;
         }
         return getStartDelay() + duration;
     }
@@ -94,11 +95,12 @@ public abstract class Animator implements Cloneable {
     }
 
     public void removeListener(AnimatorListener listener) {
-        if (this.mListeners != null) {
-            this.mListeners.remove(listener);
-            if (this.mListeners.size() == 0) {
-                this.mListeners = null;
-            }
+        if (this.mListeners == null) {
+            return;
+        }
+        this.mListeners.remove(listener);
+        if (this.mListeners.size() == 0) {
+            this.mListeners = null;
         }
     }
 
@@ -114,11 +116,12 @@ public abstract class Animator implements Cloneable {
     }
 
     public void removePauseListener(AnimatorPauseListener listener) {
-        if (this.mPauseListeners != null) {
-            this.mPauseListeners.remove(listener);
-            if (this.mPauseListeners.size() == 0) {
-                this.mPauseListeners = null;
-            }
+        if (this.mPauseListeners == null) {
+            return;
+        }
+        this.mPauseListeners.remove(listener);
+        if (this.mPauseListeners.size() == 0) {
+            this.mPauseListeners = null;
         }
     }
 
@@ -149,7 +152,9 @@ public abstract class Animator implements Cloneable {
         return new AnimatorConstantState(this);
     }
 
-    public Animator clone() {
+    @Override // 
+    /* renamed from: clone */
+    public Animator mo138clone() {
         try {
             Animator anim = (Animator) super.clone();
             if (this.mListeners != null) {
@@ -182,13 +187,11 @@ public abstract class Animator implements Cloneable {
         throw new IllegalStateException("Reverse is not supported");
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean pulseAnimationFrame(long frameTime) {
+    boolean pulseAnimationFrame(long frameTime) {
         return false;
     }
 
-    /* access modifiers changed from: package-private */
-    public void startWithoutPulsing(boolean inReverse) {
+    void startWithoutPulsing(boolean inReverse) {
         if (inReverse) {
             reverse();
         } else {
@@ -196,19 +199,17 @@ public abstract class Animator implements Cloneable {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void skipToEndValue(boolean inReverse) {
+    void skipToEndValue(boolean inReverse) {
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean isInitialized() {
+    boolean isInitialized() {
         return true;
     }
 
-    /* access modifiers changed from: package-private */
-    public void animateBasedOnPlayTime(long currentPlayTime, long lastPlayTime, boolean inReverse) {
+    void animateBasedOnPlayTime(long currentPlayTime, long lastPlayTime, boolean inReverse) {
     }
 
+    /* loaded from: classes.dex */
     public interface AnimatorListener {
         void onAnimationCancel(Animator animator);
 
@@ -218,11 +219,11 @@ public abstract class Animator implements Cloneable {
 
         void onAnimationStart(Animator animator);
 
-        void onAnimationStart(Animator animation, boolean isReverse) {
+        default void onAnimationStart(Animator animation, boolean isReverse) {
             onAnimationStart(animation);
         }
 
-        void onAnimationEnd(Animator animation, boolean isReverse) {
+        default void onAnimationEnd(Animator animation, boolean isReverse) {
             onAnimationEnd(animation);
         }
     }
@@ -230,22 +231,27 @@ public abstract class Animator implements Cloneable {
     public void setAllowRunningAsynchronously(boolean mayRunAsync) {
     }
 
+    /* loaded from: classes.dex */
     private static class AnimatorConstantState extends ConstantState<Animator> {
         final Animator mAnimator;
-        int mChangingConf = this.mAnimator.getChangingConfigurations();
+        int mChangingConf;
 
         public AnimatorConstantState(Animator animator) {
             this.mAnimator = animator;
-            AnimatorConstantState unused = this.mAnimator.mConstantState = this;
+            this.mAnimator.mConstantState = this;
+            this.mChangingConf = this.mAnimator.getChangingConfigurations();
         }
 
+        @Override // android.content.res.ConstantState
         public int getChangingConfigurations() {
             return this.mChangingConf;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.content.res.ConstantState
         public Animator newInstance() {
-            Animator clone = this.mAnimator.clone();
-            AnimatorConstantState unused = clone.mConstantState = this;
+            Animator clone = this.mAnimator.mo138clone();
+            clone.mConstantState = this;
             return clone;
         }
     }

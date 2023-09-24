@@ -3,8 +3,10 @@ package android.content;
 import java.util.Map;
 import java.util.Set;
 
+/* loaded from: classes.dex */
 public interface SharedPreferences {
 
+    /* loaded from: classes.dex */
     public interface Editor {
         void apply();
 
@@ -27,6 +29,7 @@ public interface SharedPreferences {
         Editor remove(String str);
     }
 
+    /* loaded from: classes.dex */
     public interface OnSharedPreferenceChangeListener {
         void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String str);
     }

@@ -8,11 +8,12 @@ import android.graphics.Rect;
 import android.graphics.drawable.DrawableWrapper;
 import android.util.AttributeSet;
 import android.view.Gravity;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.io.IOException;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+/* loaded from: classes.dex */
 public class ClipDrawable extends DrawableWrapper {
     public static final int HORIZONTAL = 1;
     private static final int MAX_LEVEL = 10000;
@@ -22,38 +23,41 @@ public class ClipDrawable extends DrawableWrapper {
     private final Rect mTmpRect;
 
     ClipDrawable() {
-        this(new ClipState((ClipState) null, (Resources) null), (Resources) null);
+        this(new ClipState(null, null), null);
     }
 
     public ClipDrawable(Drawable drawable, int gravity, int orientation) {
-        this(new ClipState((ClipState) null, (Resources) null), (Resources) null);
+        this(new ClipState(null, null), null);
         this.mState.mGravity = gravity;
         this.mState.mOrientation = orientation;
         setDrawable(drawable);
     }
 
+    @Override // android.graphics.drawable.DrawableWrapper, android.graphics.drawable.Drawable
     public void inflate(Resources r, XmlPullParser parser, AttributeSet attrs, Resources.Theme theme) throws XmlPullParserException, IOException {
-        TypedArray a = obtainAttributes(r, theme, attrs, R.styleable.ClipDrawable);
+        TypedArray a = obtainAttributes(r, theme, attrs, C3132R.styleable.ClipDrawable);
         super.inflate(r, parser, attrs, theme);
         updateStateFromTypedArray(a);
         verifyRequiredAttributes(a);
         a.recycle();
     }
 
+    @Override // android.graphics.drawable.DrawableWrapper, android.graphics.drawable.Drawable
     public void applyTheme(Resources.Theme t) {
         super.applyTheme(t);
         ClipState state = this.mState;
-        if (state != null && state.mThemeAttrs != null) {
-            TypedArray a = t.resolveAttributes(state.mThemeAttrs, R.styleable.ClipDrawable);
+        if (state == null || state.mThemeAttrs == null) {
+            return;
+        }
+        TypedArray a = t.resolveAttributes(state.mThemeAttrs, C3132R.styleable.ClipDrawable);
+        try {
             try {
                 updateStateFromTypedArray(a);
                 verifyRequiredAttributes(a);
             } catch (XmlPullParserException e) {
                 rethrowAsRuntimeException(e);
-            } catch (Throwable th) {
-                a.recycle();
-                throw th;
             }
+        } finally {
             a.recycle();
         }
     }
@@ -69,79 +73,88 @@ public class ClipDrawable extends DrawableWrapper {
 
     private void updateStateFromTypedArray(TypedArray a) {
         ClipState state = this.mState;
-        if (state != null) {
-            state.mChangingConfigurations |= a.getChangingConfigurations();
-            int[] unused = state.mThemeAttrs = a.extractThemeAttrs();
-            state.mOrientation = a.getInt(2, state.mOrientation);
-            state.mGravity = a.getInt(0, state.mGravity);
+        if (state == null) {
+            return;
         }
+        state.mChangingConfigurations |= a.getChangingConfigurations();
+        state.mThemeAttrs = a.extractThemeAttrs();
+        state.mOrientation = a.getInt(2, state.mOrientation);
+        state.mGravity = a.getInt(0, state.mGravity);
     }
 
-    /* access modifiers changed from: protected */
-    public boolean onLevelChange(int level) {
+    @Override // android.graphics.drawable.DrawableWrapper, android.graphics.drawable.Drawable
+    protected boolean onLevelChange(int level) {
         super.onLevelChange(level);
         invalidateSelf();
         return true;
     }
 
+    @Override // android.graphics.drawable.DrawableWrapper, android.graphics.drawable.Drawable
     public int getOpacity() {
         Drawable dr = getDrawable();
-        if (dr.getOpacity() == -2 || dr.getLevel() == 0) {
+        int opacity = dr.getOpacity();
+        if (opacity == -2 || dr.getLevel() == 0) {
             return -2;
         }
-        if (getLevel() >= 10000) {
+        int level = getLevel();
+        if (level >= 10000) {
             return dr.getOpacity();
         }
         return -3;
     }
 
+    @Override // android.graphics.drawable.DrawableWrapper, android.graphics.drawable.Drawable
     public void draw(Canvas canvas) {
-        Canvas canvas2 = canvas;
         Drawable dr = getDrawable();
-        if (dr.getLevel() != 0) {
-            Rect r = this.mTmpRect;
-            Rect bounds = getBounds();
-            int level = getLevel();
-            int w = bounds.width();
-            if ((this.mState.mOrientation & 1) != 0) {
-                w -= ((w + 0) * (10000 - level)) / 10000;
-            }
-            int w2 = w;
-            int h = bounds.height();
-            if ((this.mState.mOrientation & 2) != 0) {
-                h -= ((h + 0) * (10000 - level)) / 10000;
-            }
-            int h2 = h;
-            Gravity.apply(this.mState.mGravity, w2, h2, bounds, r, getLayoutDirection());
-            if (w2 > 0 && h2 > 0) {
-                canvas.save();
-                canvas2.clipRect(r);
-                dr.draw(canvas2);
-                canvas.restore();
-            }
+        if (dr.getLevel() == 0) {
+            return;
+        }
+        Rect r = this.mTmpRect;
+        Rect bounds = getBounds();
+        int level = getLevel();
+        int w = bounds.width();
+        if ((this.mState.mOrientation & 1) != 0) {
+            w -= ((w + 0) * (10000 - level)) / 10000;
+        }
+        int w2 = w;
+        int h = bounds.height();
+        if ((this.mState.mOrientation & 2) != 0) {
+            h -= ((h + 0) * (10000 - level)) / 10000;
+        }
+        int h2 = h;
+        int layoutDirection = getLayoutDirection();
+        Gravity.apply(this.mState.mGravity, w2, h2, bounds, r, layoutDirection);
+        if (w2 > 0 && h2 > 0) {
+            canvas.save();
+            canvas.clipRect(r);
+            dr.draw(canvas);
+            canvas.restore();
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public DrawableWrapper.DrawableWrapperState mutateConstantState() {
-        this.mState = new ClipState(this.mState, (Resources) null);
+    @Override // android.graphics.drawable.DrawableWrapper
+    DrawableWrapper.DrawableWrapperState mutateConstantState() {
+        this.mState = new ClipState(this.mState, null);
         return this.mState;
     }
 
+    /* loaded from: classes.dex */
     static final class ClipState extends DrawableWrapper.DrawableWrapperState {
-        int mGravity = 3;
-        int mOrientation = 1;
-        /* access modifiers changed from: private */
-        public int[] mThemeAttrs;
+        int mGravity;
+        int mOrientation;
+        private int[] mThemeAttrs;
 
         ClipState(ClipState orig, Resources res) {
             super(orig, res);
+            this.mOrientation = 1;
+            this.mGravity = 3;
             if (orig != null) {
                 this.mOrientation = orig.mOrientation;
                 this.mGravity = orig.mGravity;
             }
         }
 
+        @Override // android.graphics.drawable.DrawableWrapper.DrawableWrapperState, android.graphics.drawable.Drawable.ConstantState
         public Drawable newDrawable(Resources res) {
             return new ClipDrawable(this, res);
         }

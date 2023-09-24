@@ -4,6 +4,7 @@ import android.nfc.Tag;
 import java.io.Closeable;
 import java.io.IOException;
 
+/* loaded from: classes3.dex */
 public interface TagTechnology extends Closeable {
     public static final int ISO_DEP = 3;
     public static final int MIFARE_CLASSIC = 8;
@@ -16,6 +17,7 @@ public interface TagTechnology extends Closeable {
     public static final int NFC_F = 4;
     public static final int NFC_V = 5;
 
+    @Override // java.io.Closeable, java.lang.AutoCloseable
     void close() throws IOException;
 
     void connect() throws IOException;

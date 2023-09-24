@@ -4,9 +4,9 @@ import android.annotation.SystemApi;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.net.wifi.WifiEnterpriseConfig;
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.TextUtils;
 import com.ibm.icu.text.DateFormat;
 import java.util.ArrayList;
@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+/* loaded from: classes3.dex */
 public final class PhoneAccount implements Parcelable {
     public static final int CAPABILITY_CALL_PROVIDER = 2;
     public static final int CAPABILITY_CALL_SUBJECT = 64;
@@ -30,11 +31,15 @@ public final class PhoneAccount implements Parcelable {
     public static final int CAPABILITY_SUPPORTS_VIDEO_CALLING = 1024;
     public static final int CAPABILITY_VIDEO_CALLING = 8;
     public static final int CAPABILITY_VIDEO_CALLING_RELIES_ON_PRESENCE = 256;
-    public static final Parcelable.Creator<PhoneAccount> CREATOR = new Parcelable.Creator<PhoneAccount>() {
+    public static final Parcelable.Creator<PhoneAccount> CREATOR = new Parcelable.Creator<PhoneAccount>() { // from class: android.telecom.PhoneAccount.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PhoneAccount createFromParcel(Parcel in) {
             return new PhoneAccount(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PhoneAccount[] newArray(int size) {
             return new PhoneAccount[size];
         }
@@ -77,37 +82,48 @@ public final class PhoneAccount implements Parcelable {
             return false;
         }
         PhoneAccount that = (PhoneAccount) o;
-        if (this.mCapabilities != that.mCapabilities || this.mHighlightColor != that.mHighlightColor || this.mSupportedAudioRoutes != that.mSupportedAudioRoutes || this.mIsEnabled != that.mIsEnabled || !Objects.equals(this.mAccountHandle, that.mAccountHandle) || !Objects.equals(this.mAddress, that.mAddress) || !Objects.equals(this.mSubscriptionAddress, that.mSubscriptionAddress) || !Objects.equals(this.mLabel, that.mLabel) || !Objects.equals(this.mShortDescription, that.mShortDescription) || !Objects.equals(this.mSupportedUriSchemes, that.mSupportedUriSchemes) || !areBundlesEqual(this.mExtras, that.mExtras) || !Objects.equals(this.mGroupId, that.mGroupId)) {
-            return false;
+        if (this.mCapabilities == that.mCapabilities && this.mHighlightColor == that.mHighlightColor && this.mSupportedAudioRoutes == that.mSupportedAudioRoutes && this.mIsEnabled == that.mIsEnabled && Objects.equals(this.mAccountHandle, that.mAccountHandle) && Objects.equals(this.mAddress, that.mAddress) && Objects.equals(this.mSubscriptionAddress, that.mSubscriptionAddress) && Objects.equals(this.mLabel, that.mLabel) && Objects.equals(this.mShortDescription, that.mShortDescription) && Objects.equals(this.mSupportedUriSchemes, that.mSupportedUriSchemes) && areBundlesEqual(this.mExtras, that.mExtras) && Objects.equals(this.mGroupId, that.mGroupId)) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{this.mAccountHandle, this.mAddress, this.mSubscriptionAddress, Integer.valueOf(this.mCapabilities), Integer.valueOf(this.mHighlightColor), this.mLabel, this.mShortDescription, this.mSupportedUriSchemes, Integer.valueOf(this.mSupportedAudioRoutes), this.mExtras, Boolean.valueOf(this.mIsEnabled), this.mGroupId});
+        return Objects.hash(this.mAccountHandle, this.mAddress, this.mSubscriptionAddress, Integer.valueOf(this.mCapabilities), Integer.valueOf(this.mHighlightColor), this.mLabel, this.mShortDescription, this.mSupportedUriSchemes, Integer.valueOf(this.mSupportedAudioRoutes), this.mExtras, Boolean.valueOf(this.mIsEnabled), this.mGroupId);
     }
 
+    /* loaded from: classes3.dex */
     public static class Builder {
         private PhoneAccountHandle mAccountHandle;
         private Uri mAddress;
         private int mCapabilities;
         private Bundle mExtras;
-        private String mGroupId = "";
-        private int mHighlightColor = 0;
+        private String mGroupId;
+        private int mHighlightColor;
         private Icon mIcon;
-        private boolean mIsEnabled = false;
+        private boolean mIsEnabled;
         private CharSequence mLabel;
         private CharSequence mShortDescription;
         private Uri mSubscriptionAddress;
-        private int mSupportedAudioRoutes = 15;
-        private List<String> mSupportedUriSchemes = new ArrayList();
+        private int mSupportedAudioRoutes;
+        private List<String> mSupportedUriSchemes;
 
         public Builder(PhoneAccountHandle accountHandle, CharSequence label) {
+            this.mSupportedAudioRoutes = 15;
+            this.mHighlightColor = 0;
+            this.mSupportedUriSchemes = new ArrayList();
+            this.mIsEnabled = false;
+            this.mGroupId = "";
             this.mAccountHandle = accountHandle;
             this.mLabel = label;
         }
 
         public Builder(PhoneAccount phoneAccount) {
+            this.mSupportedAudioRoutes = 15;
+            this.mHighlightColor = 0;
+            this.mSupportedUriSchemes = new ArrayList();
+            this.mIsEnabled = false;
+            this.mGroupId = "";
             this.mAccountHandle = phoneAccount.getAccountHandle();
             this.mAddress = phoneAccount.getAddress();
             this.mSubscriptionAddress = phoneAccount.getSubscriptionAddress();
@@ -311,10 +327,12 @@ public final class PhoneAccount implements Parcelable {
         return (this.mCapabilities & 2048) == 2048;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         if (this.mAccountHandle == null) {
             out.writeInt(0);
@@ -345,7 +363,7 @@ public final class PhoneAccount implements Parcelable {
             out.writeInt(1);
             this.mIcon.writeToParcel(out, flags);
         }
-        out.writeByte(this.mIsEnabled ? (byte) 1 : 0);
+        out.writeByte(this.mIsEnabled ? (byte) 1 : (byte) 0);
         out.writeBundle(this.mExtras);
         out.writeString(this.mGroupId);
         out.writeInt(this.mSupportedAudioRoutes);
@@ -377,7 +395,7 @@ public final class PhoneAccount implements Parcelable {
         } else {
             this.mIcon = null;
         }
-        this.mIsEnabled = in.readByte() != 1 ? false : true;
+        this.mIsEnabled = in.readByte() == 1;
         this.mExtras = in.readBundle();
         this.mGroupId = in.readString();
         this.mSupportedAudioRoutes = in.readInt();
@@ -472,16 +490,17 @@ public final class PhoneAccount implements Parcelable {
 
     private static boolean areBundlesEqual(Bundle extras, Bundle newExtras) {
         if (extras == null || newExtras == null) {
-            if (extras == newExtras) {
-                return true;
-            }
-            return false;
+            return extras == newExtras;
         } else if (extras.size() != newExtras.size()) {
             return false;
         } else {
             for (String key : extras.keySet()) {
-                if (key != null && !Objects.equals(extras.get(key), newExtras.get(key))) {
-                    return false;
+                if (key != null) {
+                    Object value = extras.get(key);
+                    Object newValue = newExtras.get(key);
+                    if (!Objects.equals(value, newValue)) {
+                        return false;
+                    }
                 }
             }
             return true;

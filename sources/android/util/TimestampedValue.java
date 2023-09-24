@@ -1,8 +1,9 @@
 package android.util;
 
-import android.os.Parcel;
+import android.p007os.Parcel;
 import java.util.Objects;
 
+/* loaded from: classes4.dex */
 public final class TimestampedValue<T> {
     private final long mReferenceTimeMillis;
     private final T mValue;
@@ -28,14 +29,14 @@ public final class TimestampedValue<T> {
             return false;
         }
         TimestampedValue<?> that = (TimestampedValue) o;
-        if (this.mReferenceTimeMillis != that.mReferenceTimeMillis || !Objects.equals(this.mValue, that.mValue)) {
-            return false;
+        if (this.mReferenceTimeMillis == that.mReferenceTimeMillis && Objects.equals(this.mValue, that.mValue)) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Long.valueOf(this.mReferenceTimeMillis), this.mValue});
+        return Objects.hash(Long.valueOf(this.mReferenceTimeMillis), this.mValue);
     }
 
     public String toString() {
@@ -44,19 +45,19 @@ public final class TimestampedValue<T> {
 
     public static <T> TimestampedValue<T> readFromParcel(Parcel in, ClassLoader classLoader, Class<? extends T> valueClass) {
         long referenceTimeMillis = in.readLong();
-        T value = in.readValue(classLoader);
-        if (value == null || valueClass.isAssignableFrom(value.getClass())) {
-            return new TimestampedValue<>(referenceTimeMillis, value);
+        Object readValue = in.readValue(classLoader);
+        if (readValue != null && !valueClass.isAssignableFrom(readValue.getClass())) {
+            throw new RuntimeException("Value was of type " + readValue.getClass() + " is not assignable to " + valueClass);
         }
-        throw new RuntimeException("Value was of type " + value.getClass() + " is not assignable to " + valueClass);
+        return new TimestampedValue<>(referenceTimeMillis, readValue);
     }
 
     public static void writeToParcel(Parcel dest, TimestampedValue<?> timestampedValue) {
-        dest.writeLong(timestampedValue.mReferenceTimeMillis);
-        dest.writeValue(timestampedValue.mValue);
+        dest.writeLong(((TimestampedValue) timestampedValue).mReferenceTimeMillis);
+        dest.writeValue(((TimestampedValue) timestampedValue).mValue);
     }
 
     public static long referenceTimeDifference(TimestampedValue<?> one, TimestampedValue<?> two) {
-        return one.mReferenceTimeMillis - two.mReferenceTimeMillis;
+        return ((TimestampedValue) one).mReferenceTimeMillis - ((TimestampedValue) two).mReferenceTimeMillis;
     }
 }

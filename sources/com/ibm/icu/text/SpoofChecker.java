@@ -27,37 +27,34 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/* loaded from: classes5.dex */
 public class SpoofChecker {
     static final /* synthetic */ boolean $assertionsDisabled = false;
     public static final int ALL_CHECKS = -1;
     @Deprecated
     public static final int ANY_CASE = 8;
-    static final UnicodeSet ASCII = new UnicodeSet(0, 127).freeze();
     public static final int CHAR_LIMIT = 64;
     public static final int CONFUSABLE = 7;
     public static final int HIDDEN_OVERLAY = 256;
-    public static final UnicodeSet INCLUSION = new UnicodeSet("['\\-.\\:\\u00B7\\u0375\\u058A\\u05F3\\u05F4\\u06FD\\u06FE\\u0F0B\\u200C\\u200D\\u2010\\u2019\\u2027\\u30A0\\u30FB]").freeze();
     public static final int INVISIBLE = 32;
     public static final int MIXED_NUMBERS = 128;
     public static final int MIXED_SCRIPT_CONFUSABLE = 2;
-    public static final UnicodeSet RECOMMENDED = new UnicodeSet("[0-9A-Z_a-z\\u00C0-\\u00D6\\u00D8-\\u00F6\\u00F8-\\u0131\\u0134-\\u013E\\u0141-\\u0148\\u014A-\\u017E\\u018F\\u01A0\\u01A1\\u01AF\\u01B0\\u01CD-\\u01DC\\u01DE-\\u01E3\\u01E6-\\u01F0\\u01F4\\u01F5\\u01F8-\\u021B\\u021E\\u021F\\u0226-\\u0233\\u0259\\u02BB\\u02BC\\u02EC\\u0300-\\u0304\\u0306-\\u030C\\u030F-\\u0311\\u0313\\u0314\\u031B\\u0323-\\u0328\\u032D\\u032E\\u0330\\u0331\\u0335\\u0338\\u0339\\u0342\\u0345\\u037B-\\u037D\\u0386\\u0388-\\u038A\\u038C\\u038E-\\u03A1\\u03A3-\\u03CE\\u03FC-\\u045F\\u048A-\\u0529\\u052E\\u052F\\u0531-\\u0556\\u0559\\u0560-\\u0586\\u0588\\u05B4\\u05D0-\\u05EA\\u05EF-\\u05F2\\u0620-\\u063F\\u0641-\\u0655\\u0660-\\u0669\\u0670-\\u0672\\u0674\\u0679-\\u068D\\u068F-\\u06D3\\u06D5\\u06E5\\u06E6\\u06EE-\\u06FC\\u06FF\\u0750-\\u07B1\\u08A0-\\u08AC\\u08B2\\u08B6-\\u08BD\\u0901-\\u094D\\u094F\\u0950\\u0956\\u0957\\u0960-\\u0963\\u0966-\\u096F\\u0971-\\u0977\\u0979-\\u097F\\u0981-\\u0983\\u0985-\\u098C\\u098F\\u0990\\u0993-\\u09A8\\u09AA-\\u09B0\\u09B2\\u09B6-\\u09B9\\u09BC-\\u09C4\\u09C7\\u09C8\\u09CB-\\u09CE\\u09D7\\u09E0-\\u09E3\\u09E6-\\u09F1\\u09FC\\u09FE\\u0A01-\\u0A03\\u0A05-\\u0A0A\\u0A0F\\u0A10\\u0A13-\\u0A28\\u0A2A-\\u0A30\\u0A32\\u0A35\\u0A38\\u0A39\\u0A3C\\u0A3E-\\u0A42\\u0A47\\u0A48\\u0A4B-\\u0A4D\\u0A5C\\u0A66-\\u0A74\\u0A81-\\u0A83\\u0A85-\\u0A8D\\u0A8F-\\u0A91\\u0A93-\\u0AA8\\u0AAA-\\u0AB0\\u0AB2\\u0AB3\\u0AB5-\\u0AB9\\u0ABC-\\u0AC5\\u0AC7-\\u0AC9\\u0ACB-\\u0ACD\\u0AD0\\u0AE0-\\u0AE3\\u0AE6-\\u0AEF\\u0AFA-\\u0AFF\\u0B01-\\u0B03\\u0B05-\\u0B0C\\u0B0F\\u0B10\\u0B13-\\u0B28\\u0B2A-\\u0B30\\u0B32\\u0B33\\u0B35-\\u0B39\\u0B3C-\\u0B43\\u0B47\\u0B48\\u0B4B-\\u0B4D\\u0B56\\u0B57\\u0B5F-\\u0B61\\u0B66-\\u0B6F\\u0B71\\u0B82\\u0B83\\u0B85-\\u0B8A\\u0B8E-\\u0B90\\u0B92-\\u0B95\\u0B99\\u0B9A\\u0B9C\\u0B9E\\u0B9F\\u0BA3\\u0BA4\\u0BA8-\\u0BAA\\u0BAE-\\u0BB9\\u0BBE-\\u0BC2\\u0BC6-\\u0BC8\\u0BCA-\\u0BCD\\u0BD0\\u0BD7\\u0BE6-\\u0BEF\\u0C01-\\u0C0C\\u0C0E-\\u0C10\\u0C12-\\u0C28\\u0C2A-\\u0C33\\u0C35-\\u0C39\\u0C3D-\\u0C44\\u0C46-\\u0C48\\u0C4A-\\u0C4D\\u0C55\\u0C56\\u0C60\\u0C61\\u0C66-\\u0C6F\\u0C80\\u0C82\\u0C83\\u0C85-\\u0C8C\\u0C8E-\\u0C90\\u0C92-\\u0CA8\\u0CAA-\\u0CB3\\u0CB5-\\u0CB9\\u0CBC-\\u0CC4\\u0CC6-\\u0CC8\\u0CCA-\\u0CCD\\u0CD5\\u0CD6\\u0CE0-\\u0CE3\\u0CE6-\\u0CEF\\u0CF1\\u0CF2\\u0D00\\u0D02\\u0D03\\u0D05-\\u0D0C\\u0D0E-\\u0D10\\u0D12-\\u0D43\\u0D46-\\u0D48\\u0D4A-\\u0D4E\\u0D54-\\u0D57\\u0D60\\u0D61\\u0D66-\\u0D6F\\u0D7A-\\u0D7F\\u0D82\\u0D83\\u0D85-\\u0D8E\\u0D91-\\u0D96\\u0D9A-\\u0DA5\\u0DA7-\\u0DB1\\u0DB3-\\u0DBB\\u0DBD\\u0DC0-\\u0DC6\\u0DCA\\u0DCF-\\u0DD4\\u0DD6\\u0DD8-\\u0DDE\\u0DF2\\u0E01-\\u0E32\\u0E34-\\u0E3A\\u0E40-\\u0E4E\\u0E50-\\u0E59\\u0E81\\u0E82\\u0E84\\u0E87\\u0E88\\u0E8A\\u0E8D\\u0E94-\\u0E97\\u0E99-\\u0E9F\\u0EA1-\\u0EA3\\u0EA5\\u0EA7\\u0EAA\\u0EAB\\u0EAD-\\u0EB2\\u0EB4-\\u0EB9\\u0EBB-\\u0EBD\\u0EC0-\\u0EC4\\u0EC6\\u0EC8-\\u0ECD\\u0ED0-\\u0ED9\\u0EDE\\u0EDF\\u0F00\\u0F20-\\u0F29\\u0F35\\u0F37\\u0F3E-\\u0F42\\u0F44-\\u0F47\\u0F49-\\u0F4C\\u0F4E-\\u0F51\\u0F53-\\u0F56\\u0F58-\\u0F5B\\u0F5D-\\u0F68\\u0F6A-\\u0F6C\\u0F71\\u0F72\\u0F74\\u0F7A-\\u0F80\\u0F82-\\u0F84\\u0F86-\\u0F92\\u0F94-\\u0F97\\u0F99-\\u0F9C\\u0F9E-\\u0FA1\\u0FA3-\\u0FA6\\u0FA8-\\u0FAB\\u0FAD-\\u0FB8\\u0FBA-\\u0FBC\\u0FC6\\u1000-\\u1049\\u1050-\\u109D\\u10C7\\u10CD\\u10D0-\\u10F0\\u10F7-\\u10FA\\u10FD-\\u10FF\\u1200-\\u1248\\u124A-\\u124D\\u1250-\\u1256\\u1258\\u125A-\\u125D\\u1260-\\u1288\\u128A-\\u128D\\u1290-\\u12B0\\u12B2-\\u12B5\\u12B8-\\u12BE\\u12C0\\u12C2-\\u12C5\\u12C8-\\u12D6\\u12D8-\\u1310\\u1312-\\u1315\\u1318-\\u135A\\u135D-\\u135F\\u1380-\\u138F\\u1780-\\u17A2\\u17A5-\\u17A7\\u17A9-\\u17B3\\u17B6-\\u17CA\\u17D2\\u17D7\\u17DC\\u17E0-\\u17E9\\u1C80-\\u1C88\\u1C90-\\u1CBA\\u1CBD-\\u1CBF\\u1E00-\\u1E99\\u1E9E\\u1EA0-\\u1EF9\\u1F00-\\u1F15\\u1F18-\\u1F1D\\u1F20-\\u1F45\\u1F48-\\u1F4D\\u1F50-\\u1F57\\u1F59\\u1F5B\\u1F5D\\u1F5F-\\u1F70\\u1F72\\u1F74\\u1F76\\u1F78\\u1F7A\\u1F7C\\u1F80-\\u1FB4\\u1FB6-\\u1FBA\\u1FBC\\u1FC2-\\u1FC4\\u1FC6-\\u1FC8\\u1FCA\\u1FCC\\u1FD0-\\u1FD2\\u1FD6-\\u1FDA\\u1FE0-\\u1FE2\\u1FE4-\\u1FEA\\u1FEC\\u1FF2-\\u1FF4\\u1FF6-\\u1FF8\\u1FFA\\u1FFC\\u2D27\\u2D2D\\u2D80-\\u2D96\\u2DA0-\\u2DA6\\u2DA8-\\u2DAE\\u2DB0-\\u2DB6\\u2DB8-\\u2DBE\\u2DC0-\\u2DC6\\u2DC8-\\u2DCE\\u2DD0-\\u2DD6\\u2DD8-\\u2DDE\\u3005-\\u3007\\u3041-\\u3096\\u3099\\u309A\\u309D\\u309E\\u30A1-\\u30FA\\u30FC-\\u30FE\\u3105-\\u312F\\u31A0-\\u31BA\\u3400-\\u4DB5\\u4E00-\\u9FEF\\uA660\\uA661\\uA674-\\uA67B\\uA67F\\uA69F\\uA717-\\uA71F\\uA788\\uA78D\\uA78E\\uA790-\\uA793\\uA7A0-\\uA7AA\\uA7AE\\uA7AF\\uA7B8\\uA7B9\\uA7FA\\uA9E7-\\uA9FE\\uAA60-\\uAA76\\uAA7A-\\uAA7F\\uAB01-\\uAB06\\uAB09-\\uAB0E\\uAB11-\\uAB16\\uAB20-\\uAB26\\uAB28-\\uAB2E\\uAC00-\\uD7A3\\uFA0E\\uFA0F\\uFA11\\uFA13\\uFA14\\uFA1F\\uFA21\\uFA23\\uFA24\\uFA27-\\uFA29\\U0001133B\\U0001B002-\\U0001B11E\\U00020000-\\U0002A6D6\\U0002A700-\\U0002B734\\U0002B740-\\U0002B81D\\U0002B820-\\U0002CEA1\\U0002CEB0-\\U0002EBE0]").freeze();
     public static final int RESTRICTION_LEVEL = 16;
     @Deprecated
     public static final int SINGLE_SCRIPT = 16;
     public static final int SINGLE_SCRIPT_CONFUSABLE = 1;
     public static final int WHOLE_SCRIPT_CONFUSABLE = 4;
+    private UnicodeSet fAllowedCharsSet;
+    private Set<ULocale> fAllowedLocales;
+    private int fChecks;
+    private RestrictionLevel fRestrictionLevel;
+    private SpoofData fSpoofData;
+    public static final UnicodeSet INCLUSION = new UnicodeSet("['\\-.\\:\\u00B7\\u0375\\u058A\\u05F3\\u05F4\\u06FD\\u06FE\\u0F0B\\u200C\\u200D\\u2010\\u2019\\u2027\\u30A0\\u30FB]").m211freeze();
+    public static final UnicodeSet RECOMMENDED = new UnicodeSet("[0-9A-Z_a-z\\u00C0-\\u00D6\\u00D8-\\u00F6\\u00F8-\\u0131\\u0134-\\u013E\\u0141-\\u0148\\u014A-\\u017E\\u018F\\u01A0\\u01A1\\u01AF\\u01B0\\u01CD-\\u01DC\\u01DE-\\u01E3\\u01E6-\\u01F0\\u01F4\\u01F5\\u01F8-\\u021B\\u021E\\u021F\\u0226-\\u0233\\u0259\\u02BB\\u02BC\\u02EC\\u0300-\\u0304\\u0306-\\u030C\\u030F-\\u0311\\u0313\\u0314\\u031B\\u0323-\\u0328\\u032D\\u032E\\u0330\\u0331\\u0335\\u0338\\u0339\\u0342\\u0345\\u037B-\\u037D\\u0386\\u0388-\\u038A\\u038C\\u038E-\\u03A1\\u03A3-\\u03CE\\u03FC-\\u045F\\u048A-\\u0529\\u052E\\u052F\\u0531-\\u0556\\u0559\\u0560-\\u0586\\u0588\\u05B4\\u05D0-\\u05EA\\u05EF-\\u05F2\\u0620-\\u063F\\u0641-\\u0655\\u0660-\\u0669\\u0670-\\u0672\\u0674\\u0679-\\u068D\\u068F-\\u06D3\\u06D5\\u06E5\\u06E6\\u06EE-\\u06FC\\u06FF\\u0750-\\u07B1\\u08A0-\\u08AC\\u08B2\\u08B6-\\u08BD\\u0901-\\u094D\\u094F\\u0950\\u0956\\u0957\\u0960-\\u0963\\u0966-\\u096F\\u0971-\\u0977\\u0979-\\u097F\\u0981-\\u0983\\u0985-\\u098C\\u098F\\u0990\\u0993-\\u09A8\\u09AA-\\u09B0\\u09B2\\u09B6-\\u09B9\\u09BC-\\u09C4\\u09C7\\u09C8\\u09CB-\\u09CE\\u09D7\\u09E0-\\u09E3\\u09E6-\\u09F1\\u09FC\\u09FE\\u0A01-\\u0A03\\u0A05-\\u0A0A\\u0A0F\\u0A10\\u0A13-\\u0A28\\u0A2A-\\u0A30\\u0A32\\u0A35\\u0A38\\u0A39\\u0A3C\\u0A3E-\\u0A42\\u0A47\\u0A48\\u0A4B-\\u0A4D\\u0A5C\\u0A66-\\u0A74\\u0A81-\\u0A83\\u0A85-\\u0A8D\\u0A8F-\\u0A91\\u0A93-\\u0AA8\\u0AAA-\\u0AB0\\u0AB2\\u0AB3\\u0AB5-\\u0AB9\\u0ABC-\\u0AC5\\u0AC7-\\u0AC9\\u0ACB-\\u0ACD\\u0AD0\\u0AE0-\\u0AE3\\u0AE6-\\u0AEF\\u0AFA-\\u0AFF\\u0B01-\\u0B03\\u0B05-\\u0B0C\\u0B0F\\u0B10\\u0B13-\\u0B28\\u0B2A-\\u0B30\\u0B32\\u0B33\\u0B35-\\u0B39\\u0B3C-\\u0B43\\u0B47\\u0B48\\u0B4B-\\u0B4D\\u0B56\\u0B57\\u0B5F-\\u0B61\\u0B66-\\u0B6F\\u0B71\\u0B82\\u0B83\\u0B85-\\u0B8A\\u0B8E-\\u0B90\\u0B92-\\u0B95\\u0B99\\u0B9A\\u0B9C\\u0B9E\\u0B9F\\u0BA3\\u0BA4\\u0BA8-\\u0BAA\\u0BAE-\\u0BB9\\u0BBE-\\u0BC2\\u0BC6-\\u0BC8\\u0BCA-\\u0BCD\\u0BD0\\u0BD7\\u0BE6-\\u0BEF\\u0C01-\\u0C0C\\u0C0E-\\u0C10\\u0C12-\\u0C28\\u0C2A-\\u0C33\\u0C35-\\u0C39\\u0C3D-\\u0C44\\u0C46-\\u0C48\\u0C4A-\\u0C4D\\u0C55\\u0C56\\u0C60\\u0C61\\u0C66-\\u0C6F\\u0C80\\u0C82\\u0C83\\u0C85-\\u0C8C\\u0C8E-\\u0C90\\u0C92-\\u0CA8\\u0CAA-\\u0CB3\\u0CB5-\\u0CB9\\u0CBC-\\u0CC4\\u0CC6-\\u0CC8\\u0CCA-\\u0CCD\\u0CD5\\u0CD6\\u0CE0-\\u0CE3\\u0CE6-\\u0CEF\\u0CF1\\u0CF2\\u0D00\\u0D02\\u0D03\\u0D05-\\u0D0C\\u0D0E-\\u0D10\\u0D12-\\u0D43\\u0D46-\\u0D48\\u0D4A-\\u0D4E\\u0D54-\\u0D57\\u0D60\\u0D61\\u0D66-\\u0D6F\\u0D7A-\\u0D7F\\u0D82\\u0D83\\u0D85-\\u0D8E\\u0D91-\\u0D96\\u0D9A-\\u0DA5\\u0DA7-\\u0DB1\\u0DB3-\\u0DBB\\u0DBD\\u0DC0-\\u0DC6\\u0DCA\\u0DCF-\\u0DD4\\u0DD6\\u0DD8-\\u0DDE\\u0DF2\\u0E01-\\u0E32\\u0E34-\\u0E3A\\u0E40-\\u0E4E\\u0E50-\\u0E59\\u0E81\\u0E82\\u0E84\\u0E87\\u0E88\\u0E8A\\u0E8D\\u0E94-\\u0E97\\u0E99-\\u0E9F\\u0EA1-\\u0EA3\\u0EA5\\u0EA7\\u0EAA\\u0EAB\\u0EAD-\\u0EB2\\u0EB4-\\u0EB9\\u0EBB-\\u0EBD\\u0EC0-\\u0EC4\\u0EC6\\u0EC8-\\u0ECD\\u0ED0-\\u0ED9\\u0EDE\\u0EDF\\u0F00\\u0F20-\\u0F29\\u0F35\\u0F37\\u0F3E-\\u0F42\\u0F44-\\u0F47\\u0F49-\\u0F4C\\u0F4E-\\u0F51\\u0F53-\\u0F56\\u0F58-\\u0F5B\\u0F5D-\\u0F68\\u0F6A-\\u0F6C\\u0F71\\u0F72\\u0F74\\u0F7A-\\u0F80\\u0F82-\\u0F84\\u0F86-\\u0F92\\u0F94-\\u0F97\\u0F99-\\u0F9C\\u0F9E-\\u0FA1\\u0FA3-\\u0FA6\\u0FA8-\\u0FAB\\u0FAD-\\u0FB8\\u0FBA-\\u0FBC\\u0FC6\\u1000-\\u1049\\u1050-\\u109D\\u10C7\\u10CD\\u10D0-\\u10F0\\u10F7-\\u10FA\\u10FD-\\u10FF\\u1200-\\u1248\\u124A-\\u124D\\u1250-\\u1256\\u1258\\u125A-\\u125D\\u1260-\\u1288\\u128A-\\u128D\\u1290-\\u12B0\\u12B2-\\u12B5\\u12B8-\\u12BE\\u12C0\\u12C2-\\u12C5\\u12C8-\\u12D6\\u12D8-\\u1310\\u1312-\\u1315\\u1318-\\u135A\\u135D-\\u135F\\u1380-\\u138F\\u1780-\\u17A2\\u17A5-\\u17A7\\u17A9-\\u17B3\\u17B6-\\u17CA\\u17D2\\u17D7\\u17DC\\u17E0-\\u17E9\\u1C80-\\u1C88\\u1C90-\\u1CBA\\u1CBD-\\u1CBF\\u1E00-\\u1E99\\u1E9E\\u1EA0-\\u1EF9\\u1F00-\\u1F15\\u1F18-\\u1F1D\\u1F20-\\u1F45\\u1F48-\\u1F4D\\u1F50-\\u1F57\\u1F59\\u1F5B\\u1F5D\\u1F5F-\\u1F70\\u1F72\\u1F74\\u1F76\\u1F78\\u1F7A\\u1F7C\\u1F80-\\u1FB4\\u1FB6-\\u1FBA\\u1FBC\\u1FC2-\\u1FC4\\u1FC6-\\u1FC8\\u1FCA\\u1FCC\\u1FD0-\\u1FD2\\u1FD6-\\u1FDA\\u1FE0-\\u1FE2\\u1FE4-\\u1FEA\\u1FEC\\u1FF2-\\u1FF4\\u1FF6-\\u1FF8\\u1FFA\\u1FFC\\u2D27\\u2D2D\\u2D80-\\u2D96\\u2DA0-\\u2DA6\\u2DA8-\\u2DAE\\u2DB0-\\u2DB6\\u2DB8-\\u2DBE\\u2DC0-\\u2DC6\\u2DC8-\\u2DCE\\u2DD0-\\u2DD6\\u2DD8-\\u2DDE\\u3005-\\u3007\\u3041-\\u3096\\u3099\\u309A\\u309D\\u309E\\u30A1-\\u30FA\\u30FC-\\u30FE\\u3105-\\u312F\\u31A0-\\u31BA\\u3400-\\u4DB5\\u4E00-\\u9FEF\\uA660\\uA661\\uA674-\\uA67B\\uA67F\\uA69F\\uA717-\\uA71F\\uA788\\uA78D\\uA78E\\uA790-\\uA793\\uA7A0-\\uA7AA\\uA7AE\\uA7AF\\uA7B8\\uA7B9\\uA7FA\\uA9E7-\\uA9FE\\uAA60-\\uAA76\\uAA7A-\\uAA7F\\uAB01-\\uAB06\\uAB09-\\uAB0E\\uAB11-\\uAB16\\uAB20-\\uAB26\\uAB28-\\uAB2E\\uAC00-\\uD7A3\\uFA0E\\uFA0F\\uFA11\\uFA13\\uFA14\\uFA1F\\uFA21\\uFA23\\uFA24\\uFA27-\\uFA29\\U0001133B\\U0001B002-\\U0001B11E\\U00020000-\\U0002A6D6\\U0002A700-\\U0002B734\\U0002B740-\\U0002B81D\\U0002B820-\\U0002CEA1\\U0002CEB0-\\U0002EBE0]").m211freeze();
+    static final UnicodeSet ASCII = new UnicodeSet(0, 127).m211freeze();
     private static Normalizer2 nfdNormalizer = Normalizer2.getNFDInstance();
-    /* access modifiers changed from: private */
-    public UnicodeSet fAllowedCharsSet;
-    /* access modifiers changed from: private */
-    public Set<ULocale> fAllowedLocales;
-    /* access modifiers changed from: private */
-    public int fChecks;
-    /* access modifiers changed from: private */
-    public RestrictionLevel fRestrictionLevel;
-    /* access modifiers changed from: private */
-    public SpoofData fSpoofData;
 
+    /* loaded from: classes5.dex */
     public enum RestrictionLevel {
         ASCII,
         SINGLE_SCRIPT_RESTRICTIVE,
@@ -70,6 +67,7 @@ public class SpoofChecker {
     private SpoofChecker() {
     }
 
+    /* loaded from: classes5.dex */
     public static class Builder {
         final UnicodeSet fAllowedCharsSet;
         final Set<ULocale> fAllowedLocales;
@@ -100,12 +98,12 @@ public class SpoofChecker {
                 this.fSpoofData = SpoofData.getDefault();
             }
             SpoofChecker result = new SpoofChecker();
-            int unused = result.fChecks = this.fChecks;
-            SpoofData unused2 = result.fSpoofData = this.fSpoofData;
-            UnicodeSet unused3 = result.fAllowedCharsSet = (UnicodeSet) this.fAllowedCharsSet.clone();
-            result.fAllowedCharsSet.freeze();
-            Set unused4 = result.fAllowedLocales = new HashSet(this.fAllowedLocales);
-            RestrictionLevel unused5 = result.fRestrictionLevel = this.fRestrictionLevel;
+            result.fChecks = this.fChecks;
+            result.fSpoofData = this.fSpoofData;
+            result.fAllowedCharsSet = (UnicodeSet) this.fAllowedCharsSet.clone();
+            result.fAllowedCharsSet.m211freeze();
+            result.fAllowedLocales = new HashSet(this.fAllowedLocales);
+            result.fRestrictionLevel = this.fRestrictionLevel;
             return result;
         }
 
@@ -122,11 +120,11 @@ public class SpoofChecker {
         }
 
         public Builder setChecks(int checks) {
-            if ((checks & 0) == 0) {
-                this.fChecks = checks & -1;
-                return this;
+            if ((checks & 0) != 0) {
+                throw new IllegalArgumentException("Bad Spoof Checks value.");
             }
-            throw new IllegalArgumentException("Bad Spoof Checks value.");
+            this.fChecks = checks & (-1);
+            return this;
         }
 
         public Builder setAllowedLocales(Set<ULocale> locales) {
@@ -163,8 +161,8 @@ public class SpoofChecker {
             int[] scripts = UScript.getCode(locale);
             if (scripts != null) {
                 UnicodeSet tmpSet = new UnicodeSet();
-                for (int applyIntPropertyValue : scripts) {
-                    tmpSet.applyIntPropertyValue(4106, applyIntPropertyValue);
+                for (int i : scripts) {
+                    tmpSet.applyIntPropertyValue(4106, i);
                     allowedChars.addAll(tmpSet);
                 }
             }
@@ -183,28 +181,23 @@ public class SpoofChecker {
             return this;
         }
 
+        /* loaded from: classes5.dex */
         private static class ConfusabledataBuilder {
             static final /* synthetic */ boolean $assertionsDisabled = false;
-            private UnicodeSet fKeySet = new UnicodeSet();
-            private ArrayList<Integer> fKeyVec = new ArrayList<>();
             private int fLineNum;
             private Pattern fParseHexNum;
             private Pattern fParseLine;
             private StringBuffer fStringTable;
             private Hashtable<Integer, SPUString> fTable = new Hashtable<>();
+            private UnicodeSet fKeySet = new UnicodeSet();
+            private ArrayList<Integer> fKeyVec = new ArrayList<>();
             private ArrayList<Integer> fValueVec = new ArrayList<>();
             private SPUStringPool stringPool = new SPUStringPool();
-
-            static {
-                Class<SpoofChecker> cls = SpoofChecker.class;
-            }
 
             ConfusabledataBuilder() {
             }
 
-            /* access modifiers changed from: package-private */
-            public void build(Reader confusables, SpoofData dest) throws ParseException, IOException {
-                SpoofData spoofData = dest;
+            void build(Reader confusables, SpoofData dest) throws ParseException, IOException {
                 StringBuffer fInput = new StringBuffer();
                 LineNumberReader lnr = new LineNumberReader(confusables);
                 while (true) {
@@ -213,39 +206,37 @@ public class SpoofChecker {
                         break;
                     }
                     fInput.append(line);
-                    fInput.append(10);
+                    fInput.append('\n');
                 }
                 this.fParseLine = Pattern.compile("(?m)^[ \\t]*([0-9A-Fa-f]+)[ \\t]+;[ \\t]*([0-9A-Fa-f]+(?:[ \\t]+[0-9A-Fa-f]+)*)[ \\t]*;\\s*(?:(SL)|(SA)|(ML)|(MA))[ \\t]*(?:#.*?)?$|^([ \\t]*(?:#.*?)?)$|^(.*?)$");
                 this.fParseHexNum = Pattern.compile("\\s*([0-9A-F]+)");
                 int i = 0;
-                if (fInput.charAt(0) == 65279) {
+                if (fInput.charAt(0) == '\ufeff') {
                     fInput.setCharAt(0, ' ');
                 }
                 Matcher matcher = this.fParseLine.matcher(fInput);
                 while (matcher.find()) {
                     this.fLineNum++;
                     if (matcher.start(7) < 0) {
-                        if (matcher.start(8) < 0) {
-                            int keyChar = Integer.parseInt(matcher.group(1), 16);
-                            if (keyChar <= 1114111) {
-                                Matcher m = this.fParseHexNum.matcher(matcher.group(2));
-                                StringBuilder mapString = new StringBuilder();
-                                while (m.find()) {
-                                    int c = Integer.parseInt(m.group(1), 16);
-                                    if (c <= 1114111) {
-                                        mapString.appendCodePoint(c);
-                                    } else {
-                                        throw new ParseException("Confusables, line " + this.fLineNum + ": Bad code point: " + Integer.toString(c, 16), matcher.start(2));
-                                    }
-                                }
-                                this.fTable.put(Integer.valueOf(keyChar), this.stringPool.addString(mapString.toString()));
-                                this.fKeySet.add(keyChar);
-                            } else {
-                                throw new ParseException("Confusables, line " + this.fLineNum + ": Bad code point: " + matcher.group(1), matcher.start(1));
-                            }
-                        } else {
+                        if (matcher.start(8) >= 0) {
                             throw new ParseException("Confusables, line " + this.fLineNum + ": Unrecognized Line: " + matcher.group(8), matcher.start(8));
                         }
+                        int keyChar = Integer.parseInt(matcher.group(1), 16);
+                        if (keyChar > 1114111) {
+                            throw new ParseException("Confusables, line " + this.fLineNum + ": Bad code point: " + matcher.group(1), matcher.start(1));
+                        }
+                        Matcher m = this.fParseHexNum.matcher(matcher.group(2));
+                        StringBuilder mapString = new StringBuilder();
+                        while (m.find()) {
+                            int c = Integer.parseInt(m.group(1), 16);
+                            if (c > 1114111) {
+                                throw new ParseException("Confusables, line " + this.fLineNum + ": Bad code point: " + Integer.toString(c, 16), matcher.start(2));
+                            }
+                            mapString.appendCodePoint(c);
+                        }
+                        SPUString smapString = this.stringPool.addString(mapString.toString());
+                        this.fTable.put(Integer.valueOf(keyChar), smapString);
+                        this.fKeySet.add(keyChar);
                     }
                 }
                 this.stringPool.sort();
@@ -264,40 +255,43 @@ public class SpoofChecker {
                 }
                 Iterator<String> it = this.fKeySet.iterator();
                 while (it.hasNext()) {
-                    int keyChar2 = it.next().codePointAt(i);
+                    String keyCharStr = it.next();
+                    int keyChar2 = keyCharStr.codePointAt(i);
                     SPUString targetMapping = this.fTable.get(Integer.valueOf(keyChar2));
-                    if (targetMapping.fStr.length() <= 256) {
-                        int key = ConfusableDataUtils.codePointAndLengthToKey(keyChar2, targetMapping.fStr.length());
-                        int value = targetMapping.fCharOrStrTableIndex;
-                        this.fKeyVec.add(Integer.valueOf(key));
-                        this.fValueVec.add(Integer.valueOf(value));
-                        i = 0;
-                    } else {
+                    if (targetMapping.fStr.length() > 256) {
                         throw new IllegalArgumentException("Confusable prototypes cannot be longer than 256 entries.");
                     }
+                    int key = ConfusableDataUtils.codePointAndLengthToKey(keyChar2, targetMapping.fStr.length());
+                    int value = targetMapping.fCharOrStrTableIndex;
+                    this.fKeyVec.add(Integer.valueOf(key));
+                    this.fValueVec.add(Integer.valueOf(value));
+                    i = 0;
                 }
                 int numKeys = this.fKeyVec.size();
-                spoofData.fCFUKeys = new int[numKeys];
+                dest.fCFUKeys = new int[numKeys];
                 for (int i3 = 0; i3 < numKeys; i3++) {
                     int key2 = this.fKeyVec.get(i3).intValue();
-                    int codePoint = ConfusableDataUtils.keyToCodePoint(key2);
-                    spoofData.fCFUKeys[i3] = key2;
-                    int previousCodePoint = codePoint;
+                    ConfusableDataUtils.keyToCodePoint(key2);
+                    dest.fCFUKeys[i3] = key2;
                 }
-                spoofData.fCFUValues = new short[this.fValueVec.size()];
+                int numValues = this.fValueVec.size();
+                dest.fCFUValues = new short[numValues];
                 int i4 = 0;
                 Iterator<Integer> it2 = this.fValueVec.iterator();
                 while (it2.hasNext()) {
-                    spoofData.fCFUValues[i4] = (short) it2.next().intValue();
+                    int value2 = it2.next().intValue();
+                    dest.fCFUValues[i4] = (short) value2;
                     i4++;
                 }
-                spoofData.fCFUStrings = this.fStringTable.toString();
+                dest.fCFUStrings = this.fStringTable.toString();
             }
 
             public static void buildConfusableData(Reader confusables, SpoofData dest) throws IOException, ParseException {
-                new ConfusabledataBuilder().build(confusables, dest);
+                ConfusabledataBuilder builder = new ConfusabledataBuilder();
+                builder.build(confusables, dest);
             }
 
+            /* loaded from: classes5.dex */
             private static class SPUString {
                 int fCharOrStrTableIndex = 0;
                 String fStr;
@@ -307,12 +301,14 @@ public class SpoofChecker {
                 }
             }
 
+            /* loaded from: classes5.dex */
             private static class SPUStringComparator implements Comparator<SPUString> {
                 static final SPUStringComparator INSTANCE = new SPUStringComparator();
 
                 private SPUStringComparator() {
                 }
 
+                @Override // java.util.Comparator
                 public int compare(SPUString sL, SPUString sR) {
                     int lenL = sL.fStr.length();
                     int lenR = sR.fStr.length();
@@ -326,27 +322,29 @@ public class SpoofChecker {
                 }
             }
 
+            /* loaded from: classes5.dex */
             private static class SPUStringPool {
-                private Hashtable<String, SPUString> fHash = new Hashtable<>();
                 private Vector<SPUString> fVec = new Vector<>();
+                private Hashtable<String, SPUString> fHash = new Hashtable<>();
 
                 public int size() {
                     return this.fVec.size();
                 }
 
                 public SPUString getByIndex(int index) {
-                    return this.fVec.elementAt(index);
+                    SPUString retString = this.fVec.elementAt(index);
+                    return retString;
                 }
 
                 public SPUString addString(String src) {
                     SPUString hashedString = this.fHash.get(src);
-                    if (hashedString != null) {
-                        return hashedString;
+                    if (hashedString == null) {
+                        SPUString hashedString2 = new SPUString(src);
+                        this.fHash.put(src, hashedString2);
+                        this.fVec.addElement(hashedString2);
+                        return hashedString2;
                     }
-                    SPUString hashedString2 = new SPUString(src);
-                    this.fHash.put(src, hashedString2);
-                    this.fVec.addElement(hashedString2);
-                    return hashedString2;
+                    return hashedString;
                 }
 
                 public void sort() {
@@ -381,12 +379,13 @@ public class SpoofChecker {
         return this.fAllowedCharsSet;
     }
 
+    /* loaded from: classes5.dex */
     public static class CheckResult {
-        public int checks = 0;
         public UnicodeSet numerics;
+        public RestrictionLevel restrictionLevel;
+        public int checks = 0;
         @Deprecated
         public int position = 0;
-        public RestrictionLevel restrictionLevel;
 
         public String toString() {
             StringBuilder sb = new StringBuilder();
@@ -458,10 +457,14 @@ public class SpoofChecker {
                 checkResult.numerics = numerics;
             }
         }
-        if (!((this.fChecks & 256) == 0 || findHiddenOverlay(text) == -1)) {
-            result |= 256;
+        if ((this.fChecks & 256) != 0) {
+            int index = findHiddenOverlay(text);
+            if (index != -1) {
+                result |= 256;
+            }
         }
-        if ((this.fChecks & 64) != 0) {
+        int index2 = this.fChecks;
+        if ((index2 & 64) != 0) {
             int i = 0;
             while (true) {
                 if (i >= length) {
@@ -475,18 +478,19 @@ public class SpoofChecker {
                 }
             }
         }
-        if ((this.fChecks & 32) != 0) {
+        int i2 = this.fChecks;
+        if ((i2 & 32) != 0) {
             String nfdText = nfdNormalizer.normalize(text);
             UnicodeSet marksSeenSoFar = new UnicodeSet();
             boolean haveMultipleMarks = false;
             int firstNonspacingMark = 0;
-            int i2 = 0;
+            int i3 = 0;
             while (true) {
-                if (i2 >= length) {
+                if (i3 >= length) {
                     break;
                 }
-                int c2 = Character.codePointAt(nfdText, i2);
-                i2 = Character.offsetByCodePoints(nfdText, i2, 1);
+                int c2 = Character.codePointAt(nfdText, i3);
+                i3 = Character.offsetByCodePoints(nfdText, i3, 1);
                 if (Character.getType(c2) != 6) {
                     firstNonspacingMark = 0;
                     if (haveMultipleMarks) {
@@ -511,37 +515,36 @@ public class SpoofChecker {
         if (checkResult != null) {
             checkResult.checks = result;
         }
-        if (result != 0) {
-            return true;
-        }
-        return false;
+        return result != 0;
     }
 
     public boolean failsChecks(String text) {
-        return failsChecks(text, (CheckResult) null);
+        return failsChecks(text, null);
     }
 
     public int areConfusable(String s1, String s2) {
         int result;
         if ((this.fChecks & 7) == 0) {
             throw new IllegalArgumentException("No confusable checks are enabled.");
-        } else if (!getSkeleton(s1).equals(getSkeleton(s2))) {
-            return 0;
-        } else {
-            ScriptSet s1RSS = new ScriptSet();
-            getResolvedScriptSet(s1, s1RSS);
-            ScriptSet s2RSS = new ScriptSet();
-            getResolvedScriptSet(s2, s2RSS);
-            if (s1RSS.intersects(s2RSS)) {
-                result = 0 | 1;
-            } else {
-                result = 0 | 2;
-                if (!s1RSS.isEmpty() && !s2RSS.isEmpty()) {
-                    result |= 4;
-                }
-            }
-            return result & this.fChecks;
         }
+        String s1Skeleton = getSkeleton(s1);
+        String s2Skeleton = getSkeleton(s2);
+        if (!s1Skeleton.equals(s2Skeleton)) {
+            return 0;
+        }
+        ScriptSet s1RSS = new ScriptSet();
+        getResolvedScriptSet(s1, s1RSS);
+        ScriptSet s2RSS = new ScriptSet();
+        getResolvedScriptSet(s2, s2RSS);
+        if (s1RSS.intersects(s2RSS)) {
+            result = 0 | 1;
+        } else {
+            result = 0 | 2;
+            if (!s1RSS.isEmpty() && !s2RSS.isEmpty()) {
+                result |= 4;
+            }
+        }
+        return result & this.fChecks;
     }
 
     public String getSkeleton(CharSequence str) {
@@ -554,7 +557,8 @@ public class SpoofChecker {
             inputIndex += Character.charCount(c);
             this.fSpoofData.confusableLookup(c, skelSB);
         }
-        return nfdNormalizer.normalize(skelSB.toString());
+        String skelStr = skelSB.toString();
+        return nfdNormalizer.normalize(skelStr);
     }
 
     @Deprecated
@@ -563,18 +567,15 @@ public class SpoofChecker {
     }
 
     public boolean equals(Object other) {
-        if (!(other instanceof SpoofChecker)) {
+        if (other instanceof SpoofChecker) {
+            SpoofChecker otherSC = (SpoofChecker) other;
+            if ((this.fSpoofData == otherSC.fSpoofData || this.fSpoofData == null || this.fSpoofData.equals(otherSC.fSpoofData)) && this.fChecks == otherSC.fChecks) {
+                if (this.fAllowedLocales == otherSC.fAllowedLocales || this.fAllowedLocales == null || this.fAllowedLocales.equals(otherSC.fAllowedLocales)) {
+                    return (this.fAllowedCharsSet == otherSC.fAllowedCharsSet || this.fAllowedCharsSet == null || this.fAllowedCharsSet.equals(otherSC.fAllowedCharsSet)) && this.fRestrictionLevel == otherSC.fRestrictionLevel;
+                }
+                return false;
+            }
             return false;
-        }
-        SpoofChecker otherSC = (SpoofChecker) other;
-        if ((this.fSpoofData != otherSC.fSpoofData && this.fSpoofData != null && !this.fSpoofData.equals(otherSC.fSpoofData)) || this.fChecks != otherSC.fChecks) {
-            return false;
-        }
-        if (this.fAllowedLocales != otherSC.fAllowedLocales && this.fAllowedLocales != null && !this.fAllowedLocales.equals(otherSC.fAllowedLocales)) {
-            return false;
-        }
-        if ((this.fAllowedCharsSet == otherSC.fAllowedCharsSet || this.fAllowedCharsSet == null || this.fAllowedCharsSet.equals(otherSC.fAllowedCharsSet)) && this.fRestrictionLevel == otherSC.fRestrictionLevel) {
-            return true;
         }
         return false;
     }
@@ -655,14 +656,13 @@ public class SpoofChecker {
         if (resolvedNoLatn.get(172) || resolvedNoLatn.get(105) || resolvedNoLatn.get(119)) {
             return RestrictionLevel.HIGHLY_RESTRICTIVE;
         }
-        if (resolvedNoLatn.isEmpty() || resolvedNoLatn.get(8) || resolvedNoLatn.get(14) || resolvedNoLatn.get(6)) {
-            return RestrictionLevel.MINIMALLY_RESTRICTIVE;
+        if (!resolvedNoLatn.isEmpty() && !resolvedNoLatn.get(8) && !resolvedNoLatn.get(14) && !resolvedNoLatn.get(6)) {
+            return RestrictionLevel.MODERATELY_RESTRICTIVE;
         }
-        return RestrictionLevel.MODERATELY_RESTRICTIVE;
+        return RestrictionLevel.MINIMALLY_RESTRICTIVE;
     }
 
-    /* access modifiers changed from: package-private */
-    public int findHiddenOverlay(String input) {
+    int findHiddenOverlay(String input) {
         boolean sawLeadCharacter = false;
         StringBuilder sb = new StringBuilder();
         int i = 0;
@@ -680,32 +680,24 @@ public class SpoofChecker {
         return -1;
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean isIllegalCombiningDotLeadCharacterNoLookup(int cp) {
+    boolean isIllegalCombiningDotLeadCharacterNoLookup(int cp) {
         return cp == 105 || cp == 106 || cp == 305 || cp == 567 || cp == 108 || UCharacter.hasBinaryProperty(cp, 27);
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean isIllegalCombiningDotLeadCharacter(int cp, StringBuilder sb) {
+    boolean isIllegalCombiningDotLeadCharacter(int cp, StringBuilder sb) {
         if (isIllegalCombiningDotLeadCharacterNoLookup(cp)) {
             return true;
         }
         sb.setLength(0);
         this.fSpoofData.confusableLookup(cp, sb);
         int finalCp = UCharacter.codePointBefore(sb, sb.length());
-        if (finalCp == cp || !isIllegalCombiningDotLeadCharacterNoLookup(finalCp)) {
-            return false;
-        }
-        return true;
+        return finalCp != cp && isIllegalCombiningDotLeadCharacterNoLookup(finalCp);
     }
 
+    /* loaded from: classes5.dex */
     private static final class ConfusableDataUtils {
         static final /* synthetic */ boolean $assertionsDisabled = false;
         public static final int FORMAT_VERSION = 2;
-
-        static {
-            Class<SpoofChecker> cls = SpoofChecker.class;
-        }
 
         private ConfusableDataUtils() {
         }
@@ -715,7 +707,7 @@ public class SpoofChecker {
         }
 
         public static final int keyToLength(int key) {
-            return ((-16777216 & key) >> 24) + 1;
+            return (((-16777216) & key) >> 24) + 1;
         }
 
         public static final int codePointAndLengthToKey(int codePoint, int length) {
@@ -723,6 +715,7 @@ public class SpoofChecker {
         }
     }
 
+    /* loaded from: classes5.dex */
     private static class SpoofData {
         private static final int DATA_FORMAT = 1130788128;
         private static final IsAcceptable IS_ACCEPTABLE = new IsAcceptable();
@@ -730,6 +723,7 @@ public class SpoofChecker {
         String fCFUStrings;
         short[] fCFUValues;
 
+        /* loaded from: classes5.dex */
         private static final class IsAcceptable implements ICUBinary.Authenticate {
             private IsAcceptable() {
             }
@@ -739,11 +733,10 @@ public class SpoofChecker {
             }
         }
 
+        /* loaded from: classes5.dex */
         private static final class DefaultData {
-            /* access modifiers changed from: private */
-            public static IOException EXCEPTION;
-            /* access modifiers changed from: private */
-            public static SpoofData INSTANCE;
+            private static IOException EXCEPTION;
+            private static SpoofData INSTANCE;
 
             private DefaultData() {
             }
@@ -770,21 +763,18 @@ public class SpoofChecker {
         }
 
         private SpoofData(ByteBuffer bytes) throws IOException {
-            ICUBinary.readHeader(bytes, DATA_FORMAT, IS_ACCEPTABLE);
+            ICUBinary.readHeader(bytes, (int) DATA_FORMAT, IS_ACCEPTABLE);
             bytes.mark();
             readData(bytes);
         }
 
         public boolean equals(Object other) {
-            if (!(other instanceof SpoofData)) {
+            if (other instanceof SpoofData) {
+                SpoofData otherData = (SpoofData) other;
+                if (Arrays.equals(this.fCFUKeys, otherData.fCFUKeys) && Arrays.equals(this.fCFUValues, otherData.fCFUValues)) {
+                    return Utility.sameObjects(this.fCFUStrings, otherData.fCFUStrings) || this.fCFUStrings == null || this.fCFUStrings.equals(otherData.fCFUStrings);
+                }
                 return false;
-            }
-            SpoofData otherData = (SpoofData) other;
-            if (!Arrays.equals(this.fCFUKeys, otherData.fCFUKeys) || !Arrays.equals(this.fCFUValues, otherData.fCFUValues)) {
-                return false;
-            }
-            if (Utility.sameObjects(this.fCFUStrings, otherData.fCFUStrings) || this.fCFUStrings == null || this.fCFUStrings.equals(otherData.fCFUStrings)) {
-                return true;
             }
             return false;
         }
@@ -794,27 +784,27 @@ public class SpoofChecker {
         }
 
         private void readData(ByteBuffer bytes) throws IOException {
-            if (bytes.getInt() == 944111087) {
-                int i = bytes.getInt();
-                int i2 = bytes.getInt();
-                int CFUKeysOffset = bytes.getInt();
-                int CFUKeysSize = bytes.getInt();
-                int CFUValuesOffset = bytes.getInt();
-                int CFUValuesSize = bytes.getInt();
-                int CFUStringTableOffset = bytes.getInt();
-                int CFUStringTableSize = bytes.getInt();
-                bytes.reset();
-                ICUBinary.skipBytes(bytes, CFUKeysOffset);
-                this.fCFUKeys = ICUBinary.getInts(bytes, CFUKeysSize, 0);
-                bytes.reset();
-                ICUBinary.skipBytes(bytes, CFUValuesOffset);
-                this.fCFUValues = ICUBinary.getShorts(bytes, CFUValuesSize, 0);
-                bytes.reset();
-                ICUBinary.skipBytes(bytes, CFUStringTableOffset);
-                this.fCFUStrings = ICUBinary.getString(bytes, CFUStringTableSize, 0);
-                return;
+            int magic = bytes.getInt();
+            if (magic != 944111087) {
+                throw new IllegalArgumentException("Bad Spoof Check Data.");
             }
-            throw new IllegalArgumentException("Bad Spoof Check Data.");
+            bytes.getInt();
+            bytes.getInt();
+            int CFUKeysOffset = bytes.getInt();
+            int CFUKeysSize = bytes.getInt();
+            int CFUValuesOffset = bytes.getInt();
+            int CFUValuesSize = bytes.getInt();
+            int CFUStringTableOffset = bytes.getInt();
+            int CFUStringTableSize = bytes.getInt();
+            bytes.reset();
+            ICUBinary.skipBytes(bytes, CFUKeysOffset);
+            this.fCFUKeys = ICUBinary.getInts(bytes, CFUKeysSize, 0);
+            bytes.reset();
+            ICUBinary.skipBytes(bytes, CFUValuesOffset);
+            this.fCFUValues = ICUBinary.getShorts(bytes, CFUValuesSize, 0);
+            bytes.reset();
+            ICUBinary.skipBytes(bytes, CFUStringTableOffset);
+            this.fCFUStrings = ICUBinary.getString(bytes, CFUStringTableSize, 0);
         }
 
         public void confusableLookup(int inChar, StringBuilder dest) {
@@ -822,14 +812,13 @@ public class SpoofChecker {
             int hi = length();
             while (true) {
                 int mid = (lo + hi) / 2;
-                if (codePointAt(mid) <= inChar) {
-                    if (codePointAt(mid) >= inChar) {
-                        lo = mid;
-                        break;
-                    }
+                if (codePointAt(mid) > inChar) {
+                    hi = mid;
+                } else if (codePointAt(mid) < inChar) {
                     lo = mid;
                 } else {
-                    hi = mid;
+                    lo = mid;
+                    break;
                 }
                 if (hi - lo <= 1) {
                     break;
@@ -856,11 +845,12 @@ public class SpoofChecker {
             if (stringLength == 1) {
                 dest.append((char) value);
             } else {
-                dest.append(this.fCFUStrings, value, value + stringLength);
+                dest.append((CharSequence) this.fCFUStrings, (int) value, value + stringLength);
             }
         }
     }
 
+    /* loaded from: classes5.dex */
     static class ScriptSet extends BitSet {
         private static final long serialVersionUID = 1;
 
@@ -897,6 +887,7 @@ public class SpoofChecker {
             sb.append("}");
         }
 
+        @Override // java.util.BitSet
         public String toString() {
             StringBuilder sb = new StringBuilder();
             sb.append("<ScriptSet ");

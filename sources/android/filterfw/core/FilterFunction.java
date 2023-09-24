@@ -2,15 +2,17 @@ package android.filterfw.core;
 
 import java.util.Map;
 
+/* loaded from: classes.dex */
 public class FilterFunction {
     private Filter mFilter;
     private FilterContext mFilterContext;
     private boolean mFilterIsSetup = false;
     private FrameHolderPort[] mResultHolders;
 
+    /* loaded from: classes.dex */
     private class FrameHolderPort extends StreamPort {
         public FrameHolderPort() {
-            super((Filter) null, "holder");
+            super(null, "holder");
         }
     }
 
@@ -21,38 +23,38 @@ public class FilterFunction {
 
     public Frame execute(KeyValueMap inputMap) {
         int filterOutCount = this.mFilter.getNumberOfOutputs();
-        if (filterOutCount <= 1) {
-            if (!this.mFilterIsSetup) {
-                connectFilterOutputs();
-                this.mFilterIsSetup = true;
-            }
-            boolean didActivateGLEnv = false;
-            GLEnvironment glEnv = this.mFilterContext.getGLEnvironment();
-            if (glEnv != null && !glEnv.isActive()) {
-                glEnv.activate();
-                didActivateGLEnv = true;
-            }
-            for (Map.Entry<String, Object> entry : inputMap.entrySet()) {
-                if (entry.getValue() instanceof Frame) {
-                    this.mFilter.pushInputFrame(entry.getKey(), (Frame) entry.getValue());
-                } else {
-                    this.mFilter.pushInputValue(entry.getKey(), entry.getValue());
-                }
-            }
-            if (this.mFilter.getStatus() != 3) {
-                this.mFilter.openOutputs();
-            }
-            this.mFilter.performProcess(this.mFilterContext);
-            Frame result = null;
-            if (filterOutCount == 1 && this.mResultHolders[0].hasFrame()) {
-                result = this.mResultHolders[0].pullFrame();
-            }
-            if (didActivateGLEnv) {
-                glEnv.deactivate();
-            }
-            return result;
+        if (filterOutCount > 1) {
+            throw new RuntimeException("Calling execute on filter " + this.mFilter + " with multiple outputs! Use executeMulti() instead!");
         }
-        throw new RuntimeException("Calling execute on filter " + this.mFilter + " with multiple outputs! Use executeMulti() instead!");
+        if (!this.mFilterIsSetup) {
+            connectFilterOutputs();
+            this.mFilterIsSetup = true;
+        }
+        boolean didActivateGLEnv = false;
+        GLEnvironment glEnv = this.mFilterContext.getGLEnvironment();
+        if (glEnv != null && !glEnv.isActive()) {
+            glEnv.activate();
+            didActivateGLEnv = true;
+        }
+        for (Map.Entry<String, Object> entry : inputMap.entrySet()) {
+            if (entry.getValue() instanceof Frame) {
+                this.mFilter.pushInputFrame(entry.getKey(), (Frame) entry.getValue());
+            } else {
+                this.mFilter.pushInputValue(entry.getKey(), entry.getValue());
+            }
+        }
+        if (this.mFilter.getStatus() != 3) {
+            this.mFilter.openOutputs();
+        }
+        this.mFilter.performProcess(this.mFilterContext);
+        Frame result = null;
+        if (filterOutCount == 1 && this.mResultHolders[0].hasFrame()) {
+            result = this.mResultHolders[0].pullFrame();
+        }
+        if (didActivateGLEnv) {
+            glEnv.deactivate();
+        }
+        return result;
     }
 
     public Frame executeWithArgList(Object... inputs) {

@@ -1,5 +1,6 @@
 package android.service;
 
+/* loaded from: classes3.dex */
 public final class NetworkStatsHistoryBucketProto {
     public static final long BUCKET_START_MS = 1112396529665L;
     public static final long OPERATIONS = 1112396529670L;

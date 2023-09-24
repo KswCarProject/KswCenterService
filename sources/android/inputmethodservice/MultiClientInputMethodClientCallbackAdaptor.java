@@ -1,11 +1,12 @@
 package android.inputmethodservice;
 
 import android.graphics.Rect;
+import android.inputmethodservice.MultiClientInputMethodClientCallbackAdaptor;
 import android.inputmethodservice.MultiClientInputMethodServiceDelegate;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.ResultReceiver;
+import android.p007os.Bundle;
+import android.p007os.Handler;
+import android.p007os.Looper;
+import android.p007os.ResultReceiver;
 import android.view.InputChannel;
 import android.view.InputEvent;
 import android.view.InputEventReceiver;
@@ -17,11 +18,18 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.ExtractedText;
 import com.android.internal.annotations.GuardedBy;
 import com.android.internal.inputmethod.IMultiClientInputMethodSession;
-import com.android.internal.os.SomeArgs;
+import com.android.internal.p016os.SomeArgs;
+import com.android.internal.util.function.TriConsumer;
+import com.android.internal.util.function.pooled.PooledLambda;
+import com.android.internal.view.IInputContext;
 import com.android.internal.view.IInputMethodSession;
 import com.android.internal.view.InputConnectionWrapper;
+import java.lang.ref.WeakReference;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
+/* loaded from: classes.dex */
 final class MultiClientInputMethodClientCallbackAdaptor {
     static final boolean DEBUG = false;
     static final String TAG = MultiClientInputMethodClientCallbackAdaptor.class.getSimpleName();
@@ -29,18 +37,16 @@ final class MultiClientInputMethodClientCallbackAdaptor {
     CallbackImpl mCallbackImpl;
     @GuardedBy({"mSessionLock"})
     KeyEvent.DispatcherState mDispatcherState;
-    private final AtomicBoolean mFinished = new AtomicBoolean(false);
     @GuardedBy({"mSessionLock"})
     Handler mHandler;
     @GuardedBy({"mSessionLock"})
     InputEventReceiver mInputEventReceiver;
     @GuardedBy({"mSessionLock"})
     InputChannel mReadChannel;
-    /* access modifiers changed from: private */
-    public final Object mSessionLock = new Object();
+    private final Object mSessionLock = new Object();
+    private final AtomicBoolean mFinished = new AtomicBoolean(false);
 
-    /* access modifiers changed from: package-private */
-    public IInputMethodSession.Stub createIInputMethodSession() {
+    IInputMethodSession.Stub createIInputMethodSession() {
         InputMethodSessionImpl inputMethodSessionImpl;
         synchronized (this.mSessionLock) {
             inputMethodSessionImpl = new InputMethodSessionImpl(this.mSessionLock, this.mCallbackImpl, this.mHandler, this.mFinished);
@@ -48,8 +54,7 @@ final class MultiClientInputMethodClientCallbackAdaptor {
         return inputMethodSessionImpl;
     }
 
-    /* access modifiers changed from: package-private */
-    public IMultiClientInputMethodSession.Stub createIMultiClientInputMethodSession() {
+    IMultiClientInputMethodSession.Stub createIMultiClientInputMethodSession() {
         MultiClientInputMethodSessionImpl multiClientInputMethodSessionImpl;
         synchronized (this.mSessionLock) {
             multiClientInputMethodSessionImpl = new MultiClientInputMethodSessionImpl(this.mSessionLock, this.mCallbackImpl, this.mHandler, this.mFinished);
@@ -61,12 +66,13 @@ final class MultiClientInputMethodClientCallbackAdaptor {
         synchronized (this.mSessionLock) {
             this.mCallbackImpl = new CallbackImpl(this, clientCallback);
             this.mDispatcherState = dispatcherState;
-            this.mHandler = new Handler(looper, (Handler.Callback) null, true);
+            this.mHandler = new Handler(looper, null, true);
             this.mReadChannel = readChannel;
             this.mInputEventReceiver = new ImeInputEventReceiver(this.mReadChannel, this.mHandler.getLooper(), this.mFinished, this.mDispatcherState, this.mCallbackImpl.mOriginalCallback);
         }
     }
 
+    /* loaded from: classes.dex */
     private static final class KeyEventCallbackAdaptor implements KeyEvent.Callback {
         private final MultiClientInputMethodServiceDelegate.ClientCallback mLocalCallback;
 
@@ -74,23 +80,28 @@ final class MultiClientInputMethodClientCallbackAdaptor {
             this.mLocalCallback = callback;
         }
 
+        @Override // android.view.KeyEvent.Callback
         public boolean onKeyDown(int keyCode, KeyEvent event) {
             return this.mLocalCallback.onKeyDown(keyCode, event);
         }
 
+        @Override // android.view.KeyEvent.Callback
         public boolean onKeyLongPress(int keyCode, KeyEvent event) {
             return this.mLocalCallback.onKeyLongPress(keyCode, event);
         }
 
+        @Override // android.view.KeyEvent.Callback
         public boolean onKeyUp(int keyCode, KeyEvent event) {
             return this.mLocalCallback.onKeyUp(keyCode, event);
         }
 
+        @Override // android.view.KeyEvent.Callback
         public boolean onKeyMultiple(int keyCode, int count, KeyEvent event) {
             return this.mLocalCallback.onKeyMultiple(keyCode, event);
         }
     }
 
+    /* loaded from: classes.dex */
     private static final class ImeInputEventReceiver extends InputEventReceiver {
         private final MultiClientInputMethodServiceDelegate.ClientCallback mClientCallback;
         private final KeyEvent.DispatcherState mDispatcherState;
@@ -105,16 +116,17 @@ final class MultiClientInputMethodClientCallbackAdaptor {
             this.mKeyEventCallbackAdaptor = new KeyEventCallbackAdaptor(callback);
         }
 
+        @Override // android.view.InputEventReceiver
         public void onInputEvent(InputEvent event) {
             boolean handled;
+            boolean handled2 = false;
             if (this.mFinished.get()) {
-                finishInputEvent(event, false);
                 return;
             }
-            boolean handled2 = false;
             try {
                 if (event instanceof KeyEvent) {
-                    handled = ((KeyEvent) event).dispatch(this.mKeyEventCallbackAdaptor, this.mDispatcherState, this.mKeyEventCallbackAdaptor);
+                    KeyEvent keyEvent = (KeyEvent) event;
+                    handled = keyEvent.dispatch(this.mKeyEventCallbackAdaptor, this.mDispatcherState, this.mKeyEventCallbackAdaptor);
                 } else {
                     MotionEvent motionEvent = (MotionEvent) event;
                     if (motionEvent.isFromSource(4)) {
@@ -129,6 +141,7 @@ final class MultiClientInputMethodClientCallbackAdaptor {
         }
     }
 
+    /* loaded from: classes.dex */
     private static final class InputMethodSessionImpl extends IInputMethodSession.Stub {
         @GuardedBy({"mSessionLock"})
         private CallbackImpl mCallbackImpl;
@@ -144,236 +157,122 @@ final class MultiClientInputMethodClientCallbackAdaptor {
             this.mSessionFinished = sessionFinished;
         }
 
+        @Override // com.android.internal.view.IInputMethodSession
         public void updateExtractedText(int token, ExtractedText text) {
             MultiClientInputMethodClientCallbackAdaptor.reportNotSupported();
         }
 
-        /* JADX WARNING: Code restructure failed: missing block: B:12:0x002c, code lost:
-            return;
-         */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public void updateSelection(int r6, int r7, int r8, int r9, int r10, int r11) {
-            /*
-                r5 = this;
-                java.lang.Object r0 = r5.mSessionLock
-                monitor-enter(r0)
-                android.inputmethodservice.MultiClientInputMethodClientCallbackAdaptor$CallbackImpl r1 = r5.mCallbackImpl     // Catch:{ all -> 0x002d }
-                if (r1 == 0) goto L_0x002b
-                android.os.Handler r1 = r5.mHandler     // Catch:{ all -> 0x002d }
-                if (r1 != 0) goto L_0x000c
-                goto L_0x002b
-            L_0x000c:
-                com.android.internal.os.SomeArgs r1 = com.android.internal.os.SomeArgs.obtain()     // Catch:{ all -> 0x002d }
-                r1.argi1 = r6     // Catch:{ all -> 0x002d }
-                r1.argi2 = r7     // Catch:{ all -> 0x002d }
-                r1.argi3 = r8     // Catch:{ all -> 0x002d }
-                r1.argi4 = r9     // Catch:{ all -> 0x002d }
-                r1.argi5 = r10     // Catch:{ all -> 0x002d }
-                r1.argi6 = r11     // Catch:{ all -> 0x002d }
-                android.os.Handler r2 = r5.mHandler     // Catch:{ all -> 0x002d }
-                android.inputmethodservice.-$$Lambda$zVy_pAXuQfncxA_AL_8DWyVpYXc r3 = android.inputmethodservice.$$Lambda$zVy_pAXuQfncxA_AL_8DWyVpYXc.INSTANCE     // Catch:{ all -> 0x002d }
-                android.inputmethodservice.MultiClientInputMethodClientCallbackAdaptor$CallbackImpl r4 = r5.mCallbackImpl     // Catch:{ all -> 0x002d }
-                android.os.Message r3 = com.android.internal.util.function.pooled.PooledLambda.obtainMessage(r3, r4, r1)     // Catch:{ all -> 0x002d }
-                r2.sendMessage(r3)     // Catch:{ all -> 0x002d }
-                monitor-exit(r0)     // Catch:{ all -> 0x002d }
-                return
-            L_0x002b:
-                monitor-exit(r0)     // Catch:{ all -> 0x002d }
-                return
-            L_0x002d:
-                r1 = move-exception
-                monitor-exit(r0)     // Catch:{ all -> 0x002d }
-                throw r1
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.inputmethodservice.MultiClientInputMethodClientCallbackAdaptor.InputMethodSessionImpl.updateSelection(int, int, int, int, int, int):void");
+        @Override // com.android.internal.view.IInputMethodSession
+        public void updateSelection(int oldSelStart, int oldSelEnd, int newSelStart, int newSelEnd, int candidatesStart, int candidatesEnd) {
+            synchronized (this.mSessionLock) {
+                if (this.mCallbackImpl != null && this.mHandler != null) {
+                    SomeArgs args = SomeArgs.obtain();
+                    args.argi1 = oldSelStart;
+                    args.argi2 = oldSelEnd;
+                    args.argi3 = newSelStart;
+                    args.argi4 = newSelEnd;
+                    args.argi5 = candidatesStart;
+                    args.argi6 = candidatesEnd;
+                    this.mHandler.sendMessage(PooledLambda.obtainMessage(new BiConsumer() { // from class: android.inputmethodservice.-$$Lambda$zVy_pAXuQfncxA_AL_8DWyVpYXc
+                        @Override // java.util.function.BiConsumer
+                        public final void accept(Object obj, Object obj2) {
+                            ((MultiClientInputMethodClientCallbackAdaptor.CallbackImpl) obj).updateSelection((SomeArgs) obj2);
+                        }
+                    }, this.mCallbackImpl, args));
+                }
+            }
         }
 
+        @Override // com.android.internal.view.IInputMethodSession
         public void viewClicked(boolean focusChanged) {
             MultiClientInputMethodClientCallbackAdaptor.reportNotSupported();
         }
 
+        @Override // com.android.internal.view.IInputMethodSession
         public void updateCursor(Rect newCursor) {
             MultiClientInputMethodClientCallbackAdaptor.reportNotSupported();
         }
 
-        /* JADX WARNING: Code restructure failed: missing block: B:12:0x001c, code lost:
-            return;
-         */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public void displayCompletions(android.view.inputmethod.CompletionInfo[] r5) {
-            /*
-                r4 = this;
-                java.lang.Object r0 = r4.mSessionLock
-                monitor-enter(r0)
-                android.inputmethodservice.MultiClientInputMethodClientCallbackAdaptor$CallbackImpl r1 = r4.mCallbackImpl     // Catch:{ all -> 0x001d }
-                if (r1 == 0) goto L_0x001b
-                android.os.Handler r1 = r4.mHandler     // Catch:{ all -> 0x001d }
-                if (r1 != 0) goto L_0x000c
-                goto L_0x001b
-            L_0x000c:
-                android.os.Handler r1 = r4.mHandler     // Catch:{ all -> 0x001d }
-                android.inputmethodservice.-$$Lambda$RawqPImrGiEy8dXqjapbiFcFS9w r2 = android.inputmethodservice.$$Lambda$RawqPImrGiEy8dXqjapbiFcFS9w.INSTANCE     // Catch:{ all -> 0x001d }
-                android.inputmethodservice.MultiClientInputMethodClientCallbackAdaptor$CallbackImpl r3 = r4.mCallbackImpl     // Catch:{ all -> 0x001d }
-                android.os.Message r2 = com.android.internal.util.function.pooled.PooledLambda.obtainMessage(r2, r3, r5)     // Catch:{ all -> 0x001d }
-                r1.sendMessage(r2)     // Catch:{ all -> 0x001d }
-                monitor-exit(r0)     // Catch:{ all -> 0x001d }
-                return
-            L_0x001b:
-                monitor-exit(r0)     // Catch:{ all -> 0x001d }
-                return
-            L_0x001d:
-                r1 = move-exception
-                monitor-exit(r0)     // Catch:{ all -> 0x001d }
-                throw r1
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.inputmethodservice.MultiClientInputMethodClientCallbackAdaptor.InputMethodSessionImpl.displayCompletions(android.view.inputmethod.CompletionInfo[]):void");
+        @Override // com.android.internal.view.IInputMethodSession
+        public void displayCompletions(CompletionInfo[] completions) {
+            synchronized (this.mSessionLock) {
+                if (this.mCallbackImpl != null && this.mHandler != null) {
+                    this.mHandler.sendMessage(PooledLambda.obtainMessage(new BiConsumer() { // from class: android.inputmethodservice.-$$Lambda$RawqPImrGiEy8dXqjapbiFcFS9w
+                        @Override // java.util.function.BiConsumer
+                        public final void accept(Object obj, Object obj2) {
+                            ((MultiClientInputMethodClientCallbackAdaptor.CallbackImpl) obj).displayCompletions((CompletionInfo[]) obj2);
+                        }
+                    }, this.mCallbackImpl, completions));
+                }
+            }
         }
 
-        /* JADX WARNING: Code restructure failed: missing block: B:12:0x001c, code lost:
-            return;
-         */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public void appPrivateCommand(java.lang.String r5, android.os.Bundle r6) {
-            /*
-                r4 = this;
-                java.lang.Object r0 = r4.mSessionLock
-                monitor-enter(r0)
-                android.inputmethodservice.MultiClientInputMethodClientCallbackAdaptor$CallbackImpl r1 = r4.mCallbackImpl     // Catch:{ all -> 0x001d }
-                if (r1 == 0) goto L_0x001b
-                android.os.Handler r1 = r4.mHandler     // Catch:{ all -> 0x001d }
-                if (r1 != 0) goto L_0x000c
-                goto L_0x001b
-            L_0x000c:
-                android.os.Handler r1 = r4.mHandler     // Catch:{ all -> 0x001d }
-                android.inputmethodservice.-$$Lambda$nzQNVb4Z0e33hB95nNP1BM-A3r4 r2 = android.inputmethodservice.$$Lambda$nzQNVb4Z0e33hB95nNP1BMA3r4.INSTANCE     // Catch:{ all -> 0x001d }
-                android.inputmethodservice.MultiClientInputMethodClientCallbackAdaptor$CallbackImpl r3 = r4.mCallbackImpl     // Catch:{ all -> 0x001d }
-                android.os.Message r2 = com.android.internal.util.function.pooled.PooledLambda.obtainMessage(r2, r3, r5, r6)     // Catch:{ all -> 0x001d }
-                r1.sendMessage(r2)     // Catch:{ all -> 0x001d }
-                monitor-exit(r0)     // Catch:{ all -> 0x001d }
-                return
-            L_0x001b:
-                monitor-exit(r0)     // Catch:{ all -> 0x001d }
-                return
-            L_0x001d:
-                r1 = move-exception
-                monitor-exit(r0)     // Catch:{ all -> 0x001d }
-                throw r1
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.inputmethodservice.MultiClientInputMethodClientCallbackAdaptor.InputMethodSessionImpl.appPrivateCommand(java.lang.String, android.os.Bundle):void");
+        @Override // com.android.internal.view.IInputMethodSession
+        public void appPrivateCommand(String action, Bundle data) {
+            synchronized (this.mSessionLock) {
+                if (this.mCallbackImpl != null && this.mHandler != null) {
+                    this.mHandler.sendMessage(PooledLambda.obtainMessage(new TriConsumer() { // from class: android.inputmethodservice.-$$Lambda$nzQNVb4Z0e33hB95nNP1BM-A3r4
+                        @Override // com.android.internal.util.function.TriConsumer
+                        public final void accept(Object obj, Object obj2, Object obj3) {
+                            ((MultiClientInputMethodClientCallbackAdaptor.CallbackImpl) obj).appPrivateCommand((String) obj2, (Bundle) obj3);
+                        }
+                    }, this.mCallbackImpl, action, data));
+                }
+            }
         }
 
-        /* JADX WARNING: Code restructure failed: missing block: B:12:0x0024, code lost:
-            return;
-         */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public void toggleSoftInput(int r7, int r8) {
-            /*
-                r6 = this;
-                java.lang.Object r0 = r6.mSessionLock
-                monitor-enter(r0)
-                android.inputmethodservice.MultiClientInputMethodClientCallbackAdaptor$CallbackImpl r1 = r6.mCallbackImpl     // Catch:{ all -> 0x0025 }
-                if (r1 == 0) goto L_0x0023
-                android.os.Handler r1 = r6.mHandler     // Catch:{ all -> 0x0025 }
-                if (r1 != 0) goto L_0x000c
-                goto L_0x0023
-            L_0x000c:
-                android.os.Handler r1 = r6.mHandler     // Catch:{ all -> 0x0025 }
-                android.inputmethodservice.-$$Lambda$GapYa6Lyify6RwP-rgkklzmDV8I r2 = android.inputmethodservice.$$Lambda$GapYa6Lyify6RwPrgkklzmDV8I.INSTANCE     // Catch:{ all -> 0x0025 }
-                android.inputmethodservice.MultiClientInputMethodClientCallbackAdaptor$CallbackImpl r3 = r6.mCallbackImpl     // Catch:{ all -> 0x0025 }
-                java.lang.Integer r4 = java.lang.Integer.valueOf(r7)     // Catch:{ all -> 0x0025 }
-                java.lang.Integer r5 = java.lang.Integer.valueOf(r8)     // Catch:{ all -> 0x0025 }
-                android.os.Message r2 = com.android.internal.util.function.pooled.PooledLambda.obtainMessage(r2, r3, r4, r5)     // Catch:{ all -> 0x0025 }
-                r1.sendMessage(r2)     // Catch:{ all -> 0x0025 }
-                monitor-exit(r0)     // Catch:{ all -> 0x0025 }
-                return
-            L_0x0023:
-                monitor-exit(r0)     // Catch:{ all -> 0x0025 }
-                return
-            L_0x0025:
-                r1 = move-exception
-                monitor-exit(r0)     // Catch:{ all -> 0x0025 }
-                throw r1
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.inputmethodservice.MultiClientInputMethodClientCallbackAdaptor.InputMethodSessionImpl.toggleSoftInput(int, int):void");
+        @Override // com.android.internal.view.IInputMethodSession
+        public void toggleSoftInput(int showFlags, int hideFlags) {
+            synchronized (this.mSessionLock) {
+                if (this.mCallbackImpl != null && this.mHandler != null) {
+                    this.mHandler.sendMessage(PooledLambda.obtainMessage(new TriConsumer() { // from class: android.inputmethodservice.-$$Lambda$GapYa6Lyify6RwP-rgkklzmDV8I
+                        @Override // com.android.internal.util.function.TriConsumer
+                        public final void accept(Object obj, Object obj2, Object obj3) {
+                            ((MultiClientInputMethodClientCallbackAdaptor.CallbackImpl) obj).toggleSoftInput(((Integer) obj2).intValue(), ((Integer) obj3).intValue());
+                        }
+                    }, this.mCallbackImpl, Integer.valueOf(showFlags), Integer.valueOf(hideFlags)));
+                }
+            }
         }
 
-        /* JADX WARNING: Code restructure failed: missing block: B:12:0x0027, code lost:
-            return;
-         */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
+        @Override // com.android.internal.view.IInputMethodSession
         public void finishSession() {
-            /*
-                r4 = this;
-                java.lang.Object r0 = r4.mSessionLock
-                monitor-enter(r0)
-                android.inputmethodservice.MultiClientInputMethodClientCallbackAdaptor$CallbackImpl r1 = r4.mCallbackImpl     // Catch:{ all -> 0x0028 }
-                if (r1 == 0) goto L_0x0026
-                android.os.Handler r1 = r4.mHandler     // Catch:{ all -> 0x0028 }
-                if (r1 != 0) goto L_0x000c
-                goto L_0x0026
-            L_0x000c:
-                java.util.concurrent.atomic.AtomicBoolean r1 = r4.mSessionFinished     // Catch:{ all -> 0x0028 }
-                r2 = 1
-                r1.set(r2)     // Catch:{ all -> 0x0028 }
-                android.os.Handler r1 = r4.mHandler     // Catch:{ all -> 0x0028 }
-                android.inputmethodservice.-$$Lambda$50K3nJOOPDYkhKRI6jLQ5NjnbLU r2 = android.inputmethodservice.$$Lambda$50K3nJOOPDYkhKRI6jLQ5NjnbLU.INSTANCE     // Catch:{ all -> 0x0028 }
-                android.inputmethodservice.MultiClientInputMethodClientCallbackAdaptor$CallbackImpl r3 = r4.mCallbackImpl     // Catch:{ all -> 0x0028 }
-                android.os.Message r2 = com.android.internal.util.function.pooled.PooledLambda.obtainMessage(r2, r3)     // Catch:{ all -> 0x0028 }
-                r1.sendMessage(r2)     // Catch:{ all -> 0x0028 }
-                r1 = 0
-                r4.mCallbackImpl = r1     // Catch:{ all -> 0x0028 }
-                r4.mHandler = r1     // Catch:{ all -> 0x0028 }
-                monitor-exit(r0)     // Catch:{ all -> 0x0028 }
-                return
-            L_0x0026:
-                monitor-exit(r0)     // Catch:{ all -> 0x0028 }
-                return
-            L_0x0028:
-                r1 = move-exception
-                monitor-exit(r0)     // Catch:{ all -> 0x0028 }
-                throw r1
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.inputmethodservice.MultiClientInputMethodClientCallbackAdaptor.InputMethodSessionImpl.finishSession():void");
+            synchronized (this.mSessionLock) {
+                if (this.mCallbackImpl != null && this.mHandler != null) {
+                    this.mSessionFinished.set(true);
+                    this.mHandler.sendMessage(PooledLambda.obtainMessage(new Consumer() { // from class: android.inputmethodservice.-$$Lambda$50K3nJOOPDYkhKRI6jLQ5NjnbLU
+                        @Override // java.util.function.Consumer
+                        public final void accept(Object obj) {
+                            ((MultiClientInputMethodClientCallbackAdaptor.CallbackImpl) obj).finishSession();
+                        }
+                    }, this.mCallbackImpl));
+                    this.mCallbackImpl = null;
+                    this.mHandler = null;
+                }
+            }
         }
 
-        /* JADX WARNING: Code restructure failed: missing block: B:12:0x001c, code lost:
-            return;
-         */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public void updateCursorAnchorInfo(android.view.inputmethod.CursorAnchorInfo r5) {
-            /*
-                r4 = this;
-                java.lang.Object r0 = r4.mSessionLock
-                monitor-enter(r0)
-                android.inputmethodservice.MultiClientInputMethodClientCallbackAdaptor$CallbackImpl r1 = r4.mCallbackImpl     // Catch:{ all -> 0x001d }
-                if (r1 == 0) goto L_0x001b
-                android.os.Handler r1 = r4.mHandler     // Catch:{ all -> 0x001d }
-                if (r1 != 0) goto L_0x000c
-                goto L_0x001b
-            L_0x000c:
-                android.os.Handler r1 = r4.mHandler     // Catch:{ all -> 0x001d }
-                android.inputmethodservice.-$$Lambda$BAvs3tw1MzE4gOJqYOA5MCJasPE r2 = android.inputmethodservice.$$Lambda$BAvs3tw1MzE4gOJqYOA5MCJasPE.INSTANCE     // Catch:{ all -> 0x001d }
-                android.inputmethodservice.MultiClientInputMethodClientCallbackAdaptor$CallbackImpl r3 = r4.mCallbackImpl     // Catch:{ all -> 0x001d }
-                android.os.Message r2 = com.android.internal.util.function.pooled.PooledLambda.obtainMessage(r2, r3, r5)     // Catch:{ all -> 0x001d }
-                r1.sendMessage(r2)     // Catch:{ all -> 0x001d }
-                monitor-exit(r0)     // Catch:{ all -> 0x001d }
-                return
-            L_0x001b:
-                monitor-exit(r0)     // Catch:{ all -> 0x001d }
-                return
-            L_0x001d:
-                r1 = move-exception
-                monitor-exit(r0)     // Catch:{ all -> 0x001d }
-                throw r1
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.inputmethodservice.MultiClientInputMethodClientCallbackAdaptor.InputMethodSessionImpl.updateCursorAnchorInfo(android.view.inputmethod.CursorAnchorInfo):void");
+        @Override // com.android.internal.view.IInputMethodSession
+        public void updateCursorAnchorInfo(CursorAnchorInfo info) {
+            synchronized (this.mSessionLock) {
+                if (this.mCallbackImpl != null && this.mHandler != null) {
+                    this.mHandler.sendMessage(PooledLambda.obtainMessage(new BiConsumer() { // from class: android.inputmethodservice.-$$Lambda$BAvs3tw1MzE4gOJqYOA5MCJasPE
+                        @Override // java.util.function.BiConsumer
+                        public final void accept(Object obj, Object obj2) {
+                            ((MultiClientInputMethodClientCallbackAdaptor.CallbackImpl) obj).updateCursorAnchorInfo((CursorAnchorInfo) obj2);
+                        }
+                    }, this.mCallbackImpl, info));
+                }
+            }
         }
 
+        @Override // com.android.internal.view.IInputMethodSession
         public final void notifyImeHidden() {
             MultiClientInputMethodClientCallbackAdaptor.reportNotSupported();
         }
     }
 
+    /* loaded from: classes.dex */
     private static final class MultiClientInputMethodSessionImpl extends IMultiClientInputMethodSession.Stub {
         @GuardedBy({"mSessionLock"})
         private CallbackImpl mCallbackImpl;
@@ -389,222 +288,158 @@ final class MultiClientInputMethodClientCallbackAdaptor {
             this.mSessionFinished = sessionFinished;
         }
 
-        /* JADX WARNING: Code restructure failed: missing block: B:16:0x003a, code lost:
-            return;
-         */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public void startInputOrWindowGainedFocus(com.android.internal.view.IInputContext r7, int r8, android.view.inputmethod.EditorInfo r9, int r10, int r11, int r12) {
-            /*
-                r6 = this;
-                java.lang.Object r0 = r6.mSessionLock
-                monitor-enter(r0)
-                android.inputmethodservice.MultiClientInputMethodClientCallbackAdaptor$CallbackImpl r1 = r6.mCallbackImpl     // Catch:{ all -> 0x003b }
-                if (r1 == 0) goto L_0x0039
-                android.os.Handler r1 = r6.mHandler     // Catch:{ all -> 0x003b }
-                if (r1 != 0) goto L_0x000c
-                goto L_0x0039
-            L_0x000c:
-                com.android.internal.os.SomeArgs r1 = com.android.internal.os.SomeArgs.obtain()     // Catch:{ all -> 0x003b }
-                java.lang.ref.WeakReference r2 = new java.lang.ref.WeakReference     // Catch:{ all -> 0x003b }
-                r3 = 0
-                r2.<init>(r3)     // Catch:{ all -> 0x003b }
-                if (r7 != 0) goto L_0x0019
-                goto L_0x0020
-            L_0x0019:
-                com.android.internal.view.InputConnectionWrapper r3 = new com.android.internal.view.InputConnectionWrapper     // Catch:{ all -> 0x003b }
-                java.util.concurrent.atomic.AtomicBoolean r4 = r6.mSessionFinished     // Catch:{ all -> 0x003b }
-                r3.<init>(r2, r7, r8, r4)     // Catch:{ all -> 0x003b }
-            L_0x0020:
-                r1.arg1 = r3     // Catch:{ all -> 0x003b }
-                r1.arg2 = r9     // Catch:{ all -> 0x003b }
-                r1.argi1 = r10     // Catch:{ all -> 0x003b }
-                r1.argi2 = r11     // Catch:{ all -> 0x003b }
-                r1.argi3 = r12     // Catch:{ all -> 0x003b }
-                android.os.Handler r3 = r6.mHandler     // Catch:{ all -> 0x003b }
-                android.inputmethodservice.-$$Lambda$Xt9K6cDxkSefTfR7zi9ni-dRFZ8 r4 = android.inputmethodservice.$$Lambda$Xt9K6cDxkSefTfR7zi9nidRFZ8.INSTANCE     // Catch:{ all -> 0x003b }
-                android.inputmethodservice.MultiClientInputMethodClientCallbackAdaptor$CallbackImpl r5 = r6.mCallbackImpl     // Catch:{ all -> 0x003b }
-                android.os.Message r4 = com.android.internal.util.function.pooled.PooledLambda.obtainMessage(r4, r5, r1)     // Catch:{ all -> 0x003b }
-                r3.sendMessage(r4)     // Catch:{ all -> 0x003b }
-                monitor-exit(r0)     // Catch:{ all -> 0x003b }
-                return
-            L_0x0039:
-                monitor-exit(r0)     // Catch:{ all -> 0x003b }
-                return
-            L_0x003b:
-                r1 = move-exception
-                monitor-exit(r0)     // Catch:{ all -> 0x003b }
-                throw r1
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.inputmethodservice.MultiClientInputMethodClientCallbackAdaptor.MultiClientInputMethodSessionImpl.startInputOrWindowGainedFocus(com.android.internal.view.IInputContext, int, android.view.inputmethod.EditorInfo, int, int, int):void");
+        @Override // com.android.internal.inputmethod.IMultiClientInputMethodSession
+        public void startInputOrWindowGainedFocus(IInputContext inputContext, int missingMethods, EditorInfo editorInfo, int controlFlags, int softInputMode, int windowHandle) {
+            synchronized (this.mSessionLock) {
+                if (this.mCallbackImpl != null && this.mHandler != null) {
+                    SomeArgs args = SomeArgs.obtain();
+                    InputConnectionWrapper inputConnectionWrapper = null;
+                    WeakReference<AbstractInputMethodService> fakeIMS = new WeakReference<>(null);
+                    if (inputContext != null) {
+                        inputConnectionWrapper = new InputConnectionWrapper(fakeIMS, inputContext, missingMethods, this.mSessionFinished);
+                    }
+                    args.arg1 = inputConnectionWrapper;
+                    args.arg2 = editorInfo;
+                    args.argi1 = controlFlags;
+                    args.argi2 = softInputMode;
+                    args.argi3 = windowHandle;
+                    this.mHandler.sendMessage(PooledLambda.obtainMessage(new BiConsumer() { // from class: android.inputmethodservice.-$$Lambda$Xt9K6cDxkSefTfR7zi9ni-dRFZ8
+                        @Override // java.util.function.BiConsumer
+                        public final void accept(Object obj, Object obj2) {
+                            ((MultiClientInputMethodClientCallbackAdaptor.CallbackImpl) obj).startInputOrWindowGainedFocus((SomeArgs) obj2);
+                        }
+                    }, this.mCallbackImpl, args));
+                }
+            }
         }
 
-        /* JADX WARNING: Code restructure failed: missing block: B:12:0x0020, code lost:
-            return;
-         */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public void showSoftInput(int r6, android.os.ResultReceiver r7) {
-            /*
-                r5 = this;
-                java.lang.Object r0 = r5.mSessionLock
-                monitor-enter(r0)
-                android.inputmethodservice.MultiClientInputMethodClientCallbackAdaptor$CallbackImpl r1 = r5.mCallbackImpl     // Catch:{ all -> 0x0021 }
-                if (r1 == 0) goto L_0x001f
-                android.os.Handler r1 = r5.mHandler     // Catch:{ all -> 0x0021 }
-                if (r1 != 0) goto L_0x000c
-                goto L_0x001f
-            L_0x000c:
-                android.os.Handler r1 = r5.mHandler     // Catch:{ all -> 0x0021 }
-                android.inputmethodservice.-$$Lambda$m1uOlwS-mRsg9KSUY6vV9l9ksWc r2 = android.inputmethodservice.$$Lambda$m1uOlwSmRsg9KSUY6vV9l9ksWc.INSTANCE     // Catch:{ all -> 0x0021 }
-                android.inputmethodservice.MultiClientInputMethodClientCallbackAdaptor$CallbackImpl r3 = r5.mCallbackImpl     // Catch:{ all -> 0x0021 }
-                java.lang.Integer r4 = java.lang.Integer.valueOf(r6)     // Catch:{ all -> 0x0021 }
-                android.os.Message r2 = com.android.internal.util.function.pooled.PooledLambda.obtainMessage(r2, r3, r4, r7)     // Catch:{ all -> 0x0021 }
-                r1.sendMessage(r2)     // Catch:{ all -> 0x0021 }
-                monitor-exit(r0)     // Catch:{ all -> 0x0021 }
-                return
-            L_0x001f:
-                monitor-exit(r0)     // Catch:{ all -> 0x0021 }
-                return
-            L_0x0021:
-                r1 = move-exception
-                monitor-exit(r0)     // Catch:{ all -> 0x0021 }
-                throw r1
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.inputmethodservice.MultiClientInputMethodClientCallbackAdaptor.MultiClientInputMethodSessionImpl.showSoftInput(int, android.os.ResultReceiver):void");
+        @Override // com.android.internal.inputmethod.IMultiClientInputMethodSession
+        public void showSoftInput(int flags, ResultReceiver resultReceiver) {
+            synchronized (this.mSessionLock) {
+                if (this.mCallbackImpl != null && this.mHandler != null) {
+                    this.mHandler.sendMessage(PooledLambda.obtainMessage(new TriConsumer() { // from class: android.inputmethodservice.-$$Lambda$m1uOlwS-mRsg9KSUY6vV9l9ksWc
+                        @Override // com.android.internal.util.function.TriConsumer
+                        public final void accept(Object obj, Object obj2, Object obj3) {
+                            ((MultiClientInputMethodClientCallbackAdaptor.CallbackImpl) obj).showSoftInput(((Integer) obj2).intValue(), (ResultReceiver) obj3);
+                        }
+                    }, this.mCallbackImpl, Integer.valueOf(flags), resultReceiver));
+                }
+            }
         }
 
-        /* JADX WARNING: Code restructure failed: missing block: B:12:0x0020, code lost:
-            return;
-         */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public void hideSoftInput(int r6, android.os.ResultReceiver r7) {
-            /*
-                r5 = this;
-                java.lang.Object r0 = r5.mSessionLock
-                monitor-enter(r0)
-                android.inputmethodservice.MultiClientInputMethodClientCallbackAdaptor$CallbackImpl r1 = r5.mCallbackImpl     // Catch:{ all -> 0x0021 }
-                if (r1 == 0) goto L_0x001f
-                android.os.Handler r1 = r5.mHandler     // Catch:{ all -> 0x0021 }
-                if (r1 != 0) goto L_0x000c
-                goto L_0x001f
-            L_0x000c:
-                android.os.Handler r1 = r5.mHandler     // Catch:{ all -> 0x0021 }
-                android.inputmethodservice.-$$Lambda$0tnQSRQlZ73hLobz1ZfjUIoiCl0 r2 = android.inputmethodservice.$$Lambda$0tnQSRQlZ73hLobz1ZfjUIoiCl0.INSTANCE     // Catch:{ all -> 0x0021 }
-                android.inputmethodservice.MultiClientInputMethodClientCallbackAdaptor$CallbackImpl r3 = r5.mCallbackImpl     // Catch:{ all -> 0x0021 }
-                java.lang.Integer r4 = java.lang.Integer.valueOf(r6)     // Catch:{ all -> 0x0021 }
-                android.os.Message r2 = com.android.internal.util.function.pooled.PooledLambda.obtainMessage(r2, r3, r4, r7)     // Catch:{ all -> 0x0021 }
-                r1.sendMessage(r2)     // Catch:{ all -> 0x0021 }
-                monitor-exit(r0)     // Catch:{ all -> 0x0021 }
-                return
-            L_0x001f:
-                monitor-exit(r0)     // Catch:{ all -> 0x0021 }
-                return
-            L_0x0021:
-                r1 = move-exception
-                monitor-exit(r0)     // Catch:{ all -> 0x0021 }
-                throw r1
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.inputmethodservice.MultiClientInputMethodClientCallbackAdaptor.MultiClientInputMethodSessionImpl.hideSoftInput(int, android.os.ResultReceiver):void");
+        @Override // com.android.internal.inputmethod.IMultiClientInputMethodSession
+        public void hideSoftInput(int flags, ResultReceiver resultReceiver) {
+            synchronized (this.mSessionLock) {
+                if (this.mCallbackImpl != null && this.mHandler != null) {
+                    this.mHandler.sendMessage(PooledLambda.obtainMessage(new TriConsumer() { // from class: android.inputmethodservice.-$$Lambda$0tnQSRQlZ73hLobz1ZfjUIoiCl0
+                        @Override // com.android.internal.util.function.TriConsumer
+                        public final void accept(Object obj, Object obj2, Object obj3) {
+                            ((MultiClientInputMethodClientCallbackAdaptor.CallbackImpl) obj).hideSoftInput(((Integer) obj2).intValue(), (ResultReceiver) obj3);
+                        }
+                    }, this.mCallbackImpl, Integer.valueOf(flags), resultReceiver));
+                }
+            }
         }
     }
 
+    /* loaded from: classes.dex */
     private static final class CallbackImpl {
         private final MultiClientInputMethodClientCallbackAdaptor mCallbackAdaptor;
         private boolean mFinished = false;
-        /* access modifiers changed from: private */
-        public final MultiClientInputMethodServiceDelegate.ClientCallback mOriginalCallback;
+        private final MultiClientInputMethodServiceDelegate.ClientCallback mOriginalCallback;
 
         CallbackImpl(MultiClientInputMethodClientCallbackAdaptor callbackAdaptor, MultiClientInputMethodServiceDelegate.ClientCallback callback) {
             this.mCallbackAdaptor = callbackAdaptor;
             this.mOriginalCallback = callback;
         }
 
-        /* access modifiers changed from: package-private */
-        public void updateSelection(SomeArgs args) {
+        void updateSelection(SomeArgs args) {
             try {
-                if (!this.mFinished) {
-                    this.mOriginalCallback.onUpdateSelection(args.argi1, args.argi2, args.argi3, args.argi4, args.argi5, args.argi6);
-                    args.recycle();
+                if (this.mFinished) {
+                    return;
                 }
+                this.mOriginalCallback.onUpdateSelection(args.argi1, args.argi2, args.argi3, args.argi4, args.argi5, args.argi6);
             } finally {
                 args.recycle();
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public void displayCompletions(CompletionInfo[] completions) {
-            if (!this.mFinished) {
-                this.mOriginalCallback.onDisplayCompletions(completions);
+        void displayCompletions(CompletionInfo[] completions) {
+            if (this.mFinished) {
+                return;
             }
+            this.mOriginalCallback.onDisplayCompletions(completions);
         }
 
-        /* access modifiers changed from: package-private */
-        public void appPrivateCommand(String action, Bundle data) {
-            if (!this.mFinished) {
-                this.mOriginalCallback.onAppPrivateCommand(action, data);
+        void appPrivateCommand(String action, Bundle data) {
+            if (this.mFinished) {
+                return;
             }
+            this.mOriginalCallback.onAppPrivateCommand(action, data);
         }
 
-        /* access modifiers changed from: package-private */
-        public void toggleSoftInput(int showFlags, int hideFlags) {
-            if (!this.mFinished) {
-                this.mOriginalCallback.onToggleSoftInput(showFlags, hideFlags);
+        void toggleSoftInput(int showFlags, int hideFlags) {
+            if (this.mFinished) {
+                return;
             }
+            this.mOriginalCallback.onToggleSoftInput(showFlags, hideFlags);
         }
 
-        /* access modifiers changed from: package-private */
-        public void finishSession() {
-            if (!this.mFinished) {
-                this.mFinished = true;
-                this.mOriginalCallback.onFinishSession();
-                synchronized (this.mCallbackAdaptor.mSessionLock) {
-                    this.mCallbackAdaptor.mDispatcherState = null;
-                    if (this.mCallbackAdaptor.mReadChannel != null) {
-                        this.mCallbackAdaptor.mReadChannel.dispose();
-                        this.mCallbackAdaptor.mReadChannel = null;
-                    }
-                    this.mCallbackAdaptor.mInputEventReceiver = null;
+        void finishSession() {
+            if (this.mFinished) {
+                return;
+            }
+            this.mFinished = true;
+            this.mOriginalCallback.onFinishSession();
+            synchronized (this.mCallbackAdaptor.mSessionLock) {
+                this.mCallbackAdaptor.mDispatcherState = null;
+                if (this.mCallbackAdaptor.mReadChannel != null) {
+                    this.mCallbackAdaptor.mReadChannel.dispose();
+                    this.mCallbackAdaptor.mReadChannel = null;
                 }
+                this.mCallbackAdaptor.mInputEventReceiver = null;
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public void updateCursorAnchorInfo(CursorAnchorInfo info) {
-            if (!this.mFinished) {
-                this.mOriginalCallback.onUpdateCursorAnchorInfo(info);
+        void updateCursorAnchorInfo(CursorAnchorInfo info) {
+            if (this.mFinished) {
+                return;
             }
+            this.mOriginalCallback.onUpdateCursorAnchorInfo(info);
         }
 
-        /* access modifiers changed from: package-private */
-        public void startInputOrWindowGainedFocus(SomeArgs args) {
+        void startInputOrWindowGainedFocus(SomeArgs args) {
             try {
-                if (!this.mFinished) {
-                    int startInputFlags = args.argi1;
-                    int softInputMode = args.argi2;
-                    int windowHandle = args.argi3;
-                    this.mOriginalCallback.onStartInputOrWindowGainedFocus((InputConnectionWrapper) args.arg1, (EditorInfo) args.arg2, startInputFlags, softInputMode, windowHandle);
-                    args.recycle();
+                if (this.mFinished) {
+                    return;
                 }
+                InputConnectionWrapper inputConnection = (InputConnectionWrapper) args.arg1;
+                EditorInfo editorInfo = (EditorInfo) args.arg2;
+                int startInputFlags = args.argi1;
+                int softInputMode = args.argi2;
+                int windowHandle = args.argi3;
+                this.mOriginalCallback.onStartInputOrWindowGainedFocus(inputConnection, editorInfo, startInputFlags, softInputMode, windowHandle);
             } finally {
                 args.recycle();
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public void showSoftInput(int flags, ResultReceiver resultReceiver) {
-            if (!this.mFinished) {
-                this.mOriginalCallback.onShowSoftInput(flags, resultReceiver);
+        void showSoftInput(int flags, ResultReceiver resultReceiver) {
+            if (this.mFinished) {
+                return;
             }
+            this.mOriginalCallback.onShowSoftInput(flags, resultReceiver);
         }
 
-        /* access modifiers changed from: package-private */
-        public void hideSoftInput(int flags, ResultReceiver resultReceiver) {
-            if (!this.mFinished) {
-                this.mOriginalCallback.onHideSoftInput(flags, resultReceiver);
+        void hideSoftInput(int flags, ResultReceiver resultReceiver) {
+            if (this.mFinished) {
+                return;
             }
+            this.mOriginalCallback.onHideSoftInput(flags, resultReceiver);
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static void reportNotSupported() {
     }
 }

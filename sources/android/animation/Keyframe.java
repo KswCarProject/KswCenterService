@@ -1,5 +1,6 @@
 package android.animation;
 
+/* loaded from: classes.dex */
 public abstract class Keyframe implements Cloneable {
     float mFraction;
     boolean mHasValue;
@@ -7,7 +8,9 @@ public abstract class Keyframe implements Cloneable {
     Class mValueType;
     boolean mValueWasSetOnStart;
 
-    public abstract Keyframe clone();
+    @Override // 
+    /* renamed from: clone */
+    public abstract Keyframe mo141clone();
 
     public abstract Object getValue();
 
@@ -34,20 +37,18 @@ public abstract class Keyframe implements Cloneable {
     }
 
     public static Keyframe ofObject(float fraction) {
-        return new ObjectKeyframe(fraction, (Object) null);
+        return new ObjectKeyframe(fraction, null);
     }
 
     public boolean hasValue() {
         return this.mHasValue;
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean valueWasSetOnStart() {
+    boolean valueWasSetOnStart() {
         return this.mValueWasSetOnStart;
     }
 
-    /* access modifiers changed from: package-private */
-    public void setValueWasSetOnStart(boolean valueWasSetOnStart) {
+    void setValueWasSetOnStart(boolean valueWasSetOnStart) {
         this.mValueWasSetOnStart = valueWasSetOnStart;
     }
 
@@ -71,6 +72,7 @@ public abstract class Keyframe implements Cloneable {
         return this.mValueType;
     }
 
+    /* loaded from: classes.dex */
     static class ObjectKeyframe extends Keyframe {
         Object mValue;
 
@@ -81,16 +83,20 @@ public abstract class Keyframe implements Cloneable {
             this.mValueType = this.mHasValue ? value.getClass() : Object.class;
         }
 
+        @Override // android.animation.Keyframe
         public Object getValue() {
             return this.mValue;
         }
 
+        @Override // android.animation.Keyframe
         public void setValue(Object value) {
             this.mValue = value;
             this.mHasValue = value != null;
         }
 
-        public ObjectKeyframe clone() {
+        @Override // android.animation.Keyframe
+        /* renamed from: clone */
+        public ObjectKeyframe mo141clone() {
             ObjectKeyframe kfClone = new ObjectKeyframe(getFraction(), hasValue() ? this.mValue : null);
             kfClone.mValueWasSetOnStart = this.mValueWasSetOnStart;
             kfClone.setInterpolator(getInterpolator());
@@ -98,6 +104,7 @@ public abstract class Keyframe implements Cloneable {
         }
     }
 
+    /* loaded from: classes.dex */
     static class IntKeyframe extends Keyframe {
         int mValue;
 
@@ -117,10 +124,12 @@ public abstract class Keyframe implements Cloneable {
             return this.mValue;
         }
 
+        @Override // android.animation.Keyframe
         public Object getValue() {
             return Integer.valueOf(this.mValue);
         }
 
+        @Override // android.animation.Keyframe
         public void setValue(Object value) {
             if (value != null && value.getClass() == Integer.class) {
                 this.mValue = ((Integer) value).intValue();
@@ -128,7 +137,9 @@ public abstract class Keyframe implements Cloneable {
             }
         }
 
-        public IntKeyframe clone() {
+        @Override // android.animation.Keyframe
+        /* renamed from: clone */
+        public IntKeyframe mo141clone() {
             IntKeyframe kfClone;
             if (this.mHasValue) {
                 kfClone = new IntKeyframe(getFraction(), this.mValue);
@@ -141,6 +152,7 @@ public abstract class Keyframe implements Cloneable {
         }
     }
 
+    /* loaded from: classes.dex */
     static class FloatKeyframe extends Keyframe {
         float mValue;
 
@@ -160,10 +172,12 @@ public abstract class Keyframe implements Cloneable {
             return this.mValue;
         }
 
+        @Override // android.animation.Keyframe
         public Object getValue() {
             return Float.valueOf(this.mValue);
         }
 
+        @Override // android.animation.Keyframe
         public void setValue(Object value) {
             if (value != null && value.getClass() == Float.class) {
                 this.mValue = ((Float) value).floatValue();
@@ -171,7 +185,9 @@ public abstract class Keyframe implements Cloneable {
             }
         }
 
-        public FloatKeyframe clone() {
+        @Override // android.animation.Keyframe
+        /* renamed from: clone */
+        public FloatKeyframe mo141clone() {
             FloatKeyframe kfClone;
             if (this.mHasValue) {
                 kfClone = new FloatKeyframe(getFraction(), this.mValue);

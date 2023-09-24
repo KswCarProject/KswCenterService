@@ -4,25 +4,29 @@ import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.XmlResourceParser;
-import android.os.BatteryManager;
-import android.os.SystemClock;
+import android.p007os.BatteryManager;
+import android.p007os.SystemClock;
 import android.util.AttributeSet;
 import android.util.Xml;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.io.IOException;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+/* loaded from: classes4.dex */
 public class AnimationUtils {
     private static final int SEQUENTIALLY = 1;
     private static final int TOGETHER = 0;
-    private static ThreadLocal<AnimationState> sAnimationState = new ThreadLocal<AnimationState>() {
-        /* access modifiers changed from: protected */
+    private static ThreadLocal<AnimationState> sAnimationState = new ThreadLocal<AnimationState>() { // from class: android.view.animation.AnimationUtils.1
+        /* JADX INFO: Access modifiers changed from: protected */
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // java.lang.ThreadLocal
         public AnimationState initialValue() {
             return new AnimationState();
         }
     };
 
+    /* loaded from: classes4.dex */
     private static class AnimationState {
         boolean animationClockLocked;
         long currentVsyncTimeMillis;
@@ -54,40 +58,44 @@ public class AnimationUtils {
     public static Animation loadAnimation(Context context, int id) throws Resources.NotFoundException {
         XmlResourceParser parser = null;
         try {
-            XmlResourceParser parser2 = context.getResources().getAnimation(id);
-            Animation createAnimationFromXml = createAnimationFromXml(context, parser2);
-            if (parser2 != null) {
-                parser2.close();
+            try {
+                try {
+                    parser = context.getResources().getAnimation(id);
+                    return createAnimationFromXml(context, parser);
+                } catch (XmlPullParserException ex) {
+                    Resources.NotFoundException rnf = new Resources.NotFoundException("Can't load animation resource ID #0x" + Integer.toHexString(id));
+                    rnf.initCause(ex);
+                    throw rnf;
+                }
+            } catch (IOException ex2) {
+                Resources.NotFoundException rnf2 = new Resources.NotFoundException("Can't load animation resource ID #0x" + Integer.toHexString(id));
+                rnf2.initCause(ex2);
+                throw rnf2;
             }
-            return createAnimationFromXml;
-        } catch (XmlPullParserException ex) {
-            Resources.NotFoundException rnf = new Resources.NotFoundException("Can't load animation resource ID #0x" + Integer.toHexString(id));
-            rnf.initCause(ex);
-            throw rnf;
-        } catch (IOException ex2) {
-            Resources.NotFoundException rnf2 = new Resources.NotFoundException("Can't load animation resource ID #0x" + Integer.toHexString(id));
-            rnf2.initCause(ex2);
-            throw rnf2;
-        } catch (Throwable th) {
+        } finally {
             if (parser != null) {
                 parser.close();
             }
-            throw th;
         }
     }
 
     private static Animation createAnimationFromXml(Context c, XmlPullParser parser) throws XmlPullParserException, IOException {
-        return createAnimationFromXml(c, parser, (AnimationSet) null, Xml.asAttributeSet(parser));
+        return createAnimationFromXml(c, parser, null, Xml.asAttributeSet(parser));
     }
 
+    /* JADX WARN: Code restructure failed: missing block: B:35:0x00a3, code lost:
+        return r0;
+     */
     @UnsupportedAppUsage
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
     private static Animation createAnimationFromXml(Context c, XmlPullParser parser, AnimationSet parent, AttributeSet attrs) throws XmlPullParserException, IOException {
         Animation anim = null;
         int depth = parser.getDepth();
         while (true) {
-            int next = parser.next();
-            int type = next;
-            if ((next != 3 || parser.getDepth() > depth) && type != 1) {
+            int type = parser.next();
+            if ((type != 3 || parser.getDepth() > depth) && type != 1) {
                 if (type == 2) {
                     String name = parser.getName();
                     if (name.equals("set")) {
@@ -112,31 +120,29 @@ public class AnimationUtils {
                 }
             }
         }
-        return anim;
     }
 
     public static LayoutAnimationController loadLayoutAnimation(Context context, int id) throws Resources.NotFoundException {
         XmlResourceParser parser = null;
         try {
-            XmlResourceParser parser2 = context.getResources().getAnimation(id);
-            LayoutAnimationController createLayoutAnimationFromXml = createLayoutAnimationFromXml(context, parser2);
-            if (parser2 != null) {
-                parser2.close();
+            try {
+                try {
+                    parser = context.getResources().getAnimation(id);
+                    return createLayoutAnimationFromXml(context, parser);
+                } catch (XmlPullParserException ex) {
+                    Resources.NotFoundException rnf = new Resources.NotFoundException("Can't load animation resource ID #0x" + Integer.toHexString(id));
+                    rnf.initCause(ex);
+                    throw rnf;
+                }
+            } catch (IOException ex2) {
+                Resources.NotFoundException rnf2 = new Resources.NotFoundException("Can't load animation resource ID #0x" + Integer.toHexString(id));
+                rnf2.initCause(ex2);
+                throw rnf2;
             }
-            return createLayoutAnimationFromXml;
-        } catch (XmlPullParserException ex) {
-            Resources.NotFoundException rnf = new Resources.NotFoundException("Can't load animation resource ID #0x" + Integer.toHexString(id));
-            rnf.initCause(ex);
-            throw rnf;
-        } catch (IOException ex2) {
-            Resources.NotFoundException rnf2 = new Resources.NotFoundException("Can't load animation resource ID #0x" + Integer.toHexString(id));
-            rnf2.initCause(ex2);
-            throw rnf2;
-        } catch (Throwable th) {
+        } finally {
             if (parser != null) {
                 parser.close();
             }
-            throw th;
         }
     }
 
@@ -148,9 +154,8 @@ public class AnimationUtils {
         LayoutAnimationController controller = null;
         int depth = parser.getDepth();
         while (true) {
-            int next = parser.next();
-            int type = next;
-            if ((next != 3 || parser.getDepth() > depth) && type != 1) {
+            int type = parser.next();
+            if ((type != 3 || parser.getDepth() > depth) && type != 1) {
                 if (type == 2) {
                     String name = parser.getName();
                     if ("layoutAnimation".equals(name)) {
@@ -171,7 +176,7 @@ public class AnimationUtils {
         if (fromLeft) {
             a = loadAnimation(c, 17432578);
         } else {
-            a = loadAnimation(c, R.anim.slide_in_right);
+            a = loadAnimation(c, C3132R.anim.slide_in_right);
         }
         a.setInterpolator(new DecelerateInterpolator());
         a.setStartTime(currentAnimationTimeMillis());
@@ -183,7 +188,7 @@ public class AnimationUtils {
         if (toRight) {
             a = loadAnimation(c, 17432579);
         } else {
-            a = loadAnimation(c, R.anim.slide_out_left);
+            a = loadAnimation(c, C3132R.anim.slide_out_left);
         }
         a.setInterpolator(new AccelerateInterpolator());
         a.setStartTime(currentAnimationTimeMillis());
@@ -191,7 +196,7 @@ public class AnimationUtils {
     }
 
     public static Animation makeInChildBottomAnimation(Context c) {
-        Animation a = loadAnimation(c, R.anim.slide_in_child_bottom);
+        Animation a = loadAnimation(c, C3132R.anim.slide_in_child_bottom);
         a.setInterpolator(new AccelerateInterpolator());
         a.setStartTime(currentAnimationTimeMillis());
         return a;
@@ -200,60 +205,61 @@ public class AnimationUtils {
     public static Interpolator loadInterpolator(Context context, int id) throws Resources.NotFoundException {
         XmlResourceParser parser = null;
         try {
-            XmlResourceParser parser2 = context.getResources().getAnimation(id);
-            Interpolator createInterpolatorFromXml = createInterpolatorFromXml(context.getResources(), context.getTheme(), parser2);
-            if (parser2 != null) {
-                parser2.close();
+            try {
+                parser = context.getResources().getAnimation(id);
+                return createInterpolatorFromXml(context.getResources(), context.getTheme(), parser);
+            } catch (IOException ex) {
+                Resources.NotFoundException rnf = new Resources.NotFoundException("Can't load animation resource ID #0x" + Integer.toHexString(id));
+                rnf.initCause(ex);
+                throw rnf;
+            } catch (XmlPullParserException ex2) {
+                Resources.NotFoundException rnf2 = new Resources.NotFoundException("Can't load animation resource ID #0x" + Integer.toHexString(id));
+                rnf2.initCause(ex2);
+                throw rnf2;
             }
-            return createInterpolatorFromXml;
-        } catch (XmlPullParserException ex) {
-            Resources.NotFoundException rnf = new Resources.NotFoundException("Can't load animation resource ID #0x" + Integer.toHexString(id));
-            rnf.initCause(ex);
-            throw rnf;
-        } catch (IOException ex2) {
-            Resources.NotFoundException rnf2 = new Resources.NotFoundException("Can't load animation resource ID #0x" + Integer.toHexString(id));
-            rnf2.initCause(ex2);
-            throw rnf2;
-        } catch (Throwable th) {
+        } finally {
             if (parser != null) {
                 parser.close();
             }
-            throw th;
         }
     }
 
     public static Interpolator loadInterpolator(Resources res, Resources.Theme theme, int id) throws Resources.NotFoundException {
         XmlResourceParser parser = null;
         try {
-            XmlResourceParser parser2 = res.getAnimation(id);
-            Interpolator createInterpolatorFromXml = createInterpolatorFromXml(res, theme, parser2);
-            if (parser2 != null) {
-                parser2.close();
+            try {
+                try {
+                    parser = res.getAnimation(id);
+                    return createInterpolatorFromXml(res, theme, parser);
+                } catch (IOException ex) {
+                    Resources.NotFoundException rnf = new Resources.NotFoundException("Can't load animation resource ID #0x" + Integer.toHexString(id));
+                    rnf.initCause(ex);
+                    throw rnf;
+                }
+            } catch (XmlPullParserException ex2) {
+                Resources.NotFoundException rnf2 = new Resources.NotFoundException("Can't load animation resource ID #0x" + Integer.toHexString(id));
+                rnf2.initCause(ex2);
+                throw rnf2;
             }
-            return createInterpolatorFromXml;
-        } catch (XmlPullParserException ex) {
-            Resources.NotFoundException rnf = new Resources.NotFoundException("Can't load animation resource ID #0x" + Integer.toHexString(id));
-            rnf.initCause(ex);
-            throw rnf;
-        } catch (IOException ex2) {
-            Resources.NotFoundException rnf2 = new Resources.NotFoundException("Can't load animation resource ID #0x" + Integer.toHexString(id));
-            rnf2.initCause(ex2);
-            throw rnf2;
-        } catch (Throwable th) {
+        } finally {
             if (parser != null) {
                 parser.close();
             }
-            throw th;
         }
     }
 
+    /* JADX WARN: Code restructure failed: missing block: B:45:0x00d9, code lost:
+        return r0;
+     */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
     private static Interpolator createInterpolatorFromXml(Resources res, Resources.Theme theme, XmlPullParser parser) throws XmlPullParserException, IOException {
         BaseInterpolator interpolator = null;
         int depth = parser.getDepth();
         while (true) {
-            int next = parser.next();
-            int type = next;
-            if ((next != 3 || parser.getDepth() > depth) && type != 1) {
+            int type = parser.next();
+            if ((type != 3 || parser.getDepth() > depth) && type != 1) {
                 if (type == 2) {
                     AttributeSet attrs = Xml.asAttributeSet(parser);
                     String name = parser.getName();
@@ -283,6 +289,5 @@ public class AnimationUtils {
                 }
             }
         }
-        return interpolator;
     }
 }

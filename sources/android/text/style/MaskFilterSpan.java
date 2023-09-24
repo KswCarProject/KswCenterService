@@ -3,6 +3,7 @@ package android.text.style;
 import android.graphics.MaskFilter;
 import android.text.TextPaint;
 
+/* loaded from: classes4.dex */
 public class MaskFilterSpan extends CharacterStyle implements UpdateAppearance {
     private MaskFilter mFilter;
 
@@ -14,6 +15,7 @@ public class MaskFilterSpan extends CharacterStyle implements UpdateAppearance {
         return this.mFilter;
     }
 
+    @Override // android.text.style.CharacterStyle
     public void updateDrawState(TextPaint ds) {
         ds.setMaskFilter(this.mFilter);
     }

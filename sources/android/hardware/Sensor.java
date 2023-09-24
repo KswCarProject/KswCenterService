@@ -4,6 +4,7 @@ import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
 import java.util.UUID;
 
+/* loaded from: classes.dex */
 public final class Sensor {
     private static final int ADDITIONAL_INFO_MASK = 64;
     private static final int ADDITIONAL_INFO_SHIFT = 6;
@@ -136,15 +137,9 @@ public final class Sensor {
     public boolean isDirectChannelTypeSupported(int sharedMemType) {
         switch (sharedMemType) {
             case 1:
-                if ((this.mFlags & 1024) > 0) {
-                    return true;
-                }
-                return false;
+                return (this.mFlags & 1024) > 0;
             case 2:
-                if ((this.mFlags & 2048) > 0) {
-                    return true;
-                }
-                return false;
+                return (this.mFlags & 2048) > 0;
             default:
                 return false;
         }
@@ -247,8 +242,7 @@ public final class Sensor {
         return ((this.mFlags & 16) >> 4) != 0;
     }
 
-    /* access modifiers changed from: package-private */
-    public void setRange(float max, float res) {
+    void setRange(float max, float res) {
         this.mMaxRange = max;
         this.mResolution = res;
     }

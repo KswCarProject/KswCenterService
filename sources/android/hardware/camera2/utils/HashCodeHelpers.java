@@ -2,6 +2,7 @@ package android.hardware.camera2.utils;
 
 import android.annotation.UnsupportedAppUsage;
 
+/* loaded from: classes.dex */
 public final class HashCodeHelpers {
     @UnsupportedAppUsage
     public static int hashCode(int... array) {
@@ -21,7 +22,8 @@ public final class HashCodeHelpers {
         }
         int h = 1;
         for (float f : array) {
-            h = ((h << 5) - h) ^ Float.floatToIntBits(f);
+            int x = Float.floatToIntBits(f);
+            h = ((h << 5) - h) ^ x;
         }
         return h;
     }
@@ -34,7 +36,8 @@ public final class HashCodeHelpers {
         int h = 1;
         for (int h2 = 0; h2 < length; h2++) {
             T o = array[h2];
-            h = ((h << 5) - h) ^ (o == null ? 0 : o.hashCode());
+            int x = o == null ? 0 : o.hashCode();
+            h = ((h << 5) - h) ^ x;
         }
         return h;
     }

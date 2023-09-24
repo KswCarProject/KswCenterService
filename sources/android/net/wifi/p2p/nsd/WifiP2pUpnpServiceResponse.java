@@ -6,6 +6,7 @@ import android.telephony.SmsManager;
 import java.util.ArrayList;
 import java.util.List;
 
+/* loaded from: classes3.dex */
 public class WifiP2pUpnpServiceResponse extends WifiP2pServiceResponse {
     private List<String> mUniqueServiceNames;
     private int mVersion;
@@ -41,6 +42,7 @@ public class WifiP2pUpnpServiceResponse extends WifiP2pServiceResponse {
         return true;
     }
 
+    @Override // android.net.wifi.p2p.nsd.WifiP2pServiceResponse
     public String toString() {
         StringBuffer sbuf = new StringBuffer();
         sbuf.append("serviceType:UPnP(");
@@ -51,7 +53,7 @@ public class WifiP2pUpnpServiceResponse extends WifiP2pServiceResponse {
         sbuf.append(" srcAddr:");
         sbuf.append(this.mDevice.deviceAddress);
         sbuf.append(" version:");
-        sbuf.append(String.format("%02x", new Object[]{Integer.valueOf(this.mVersion)}));
+        sbuf.append(String.format("%02x", Integer.valueOf(this.mVersion)));
         if (this.mUniqueServiceNames != null) {
             for (String name : this.mUniqueServiceNames) {
                 sbuf.append(" usn:");
@@ -63,7 +65,7 @@ public class WifiP2pUpnpServiceResponse extends WifiP2pServiceResponse {
 
     static WifiP2pUpnpServiceResponse newInstance(int status, int transId, WifiP2pDevice device, byte[] data) {
         if (status != 0) {
-            return new WifiP2pUpnpServiceResponse(status, transId, device, (byte[]) null);
+            return new WifiP2pUpnpServiceResponse(status, transId, device, null);
         }
         try {
             return new WifiP2pUpnpServiceResponse(status, transId, device, data);

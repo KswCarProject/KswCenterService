@@ -1,10 +1,11 @@
 package android.util;
 
 @Deprecated
+/* loaded from: classes4.dex */
 public final class MutableBoolean {
     public boolean value;
 
-    public MutableBoolean(boolean value2) {
-        this.value = value2;
+    public MutableBoolean(boolean value) {
+        this.value = value;
     }
 }

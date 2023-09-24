@@ -3,9 +3,11 @@ package android.webkit;
 import android.annotation.SystemApi;
 import android.graphics.Bitmap;
 
+/* loaded from: classes4.dex */
 public abstract class WebHistoryItem implements Cloneable {
-    /* access modifiers changed from: protected */
-    public abstract WebHistoryItem clone();
+    /* JADX INFO: Access modifiers changed from: protected */
+    /* renamed from: clone */
+    public abstract WebHistoryItem m185clone();
 
     public abstract Bitmap getFavicon();
 

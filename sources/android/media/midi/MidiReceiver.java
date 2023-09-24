@@ -2,6 +2,7 @@ package android.media.midi;
 
 import java.io.IOException;
 
+/* loaded from: classes3.dex */
 public abstract class MidiReceiver {
     private final int mMaxMessageSize;
 
@@ -27,7 +28,7 @@ public abstract class MidiReceiver {
     }
 
     public void send(byte[] msg, int offset, int count) throws IOException {
-        send(msg, offset, count, 0);
+        send(msg, offset, count, 0L);
     }
 
     public void send(byte[] msg, int offset, int count, long timestamp) throws IOException {

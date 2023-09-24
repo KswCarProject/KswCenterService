@@ -2,13 +2,14 @@ package android.media.session;
 
 import android.content.ComponentName;
 import android.media.session.MediaSession;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.view.KeyEvent;
 
+/* loaded from: classes3.dex */
 public interface ICallback extends IInterface {
     void onAddressedPlayerChangedToMediaButtonReceiver(ComponentName componentName) throws RemoteException;
 
@@ -18,24 +19,31 @@ public interface ICallback extends IInterface {
 
     void onMediaKeyEventDispatchedToMediaSession(KeyEvent keyEvent, MediaSession.Token token) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements ICallback {
+        @Override // android.media.session.ICallback
         public void onMediaKeyEventDispatchedToMediaSession(KeyEvent event, MediaSession.Token sessionToken) throws RemoteException {
         }
 
+        @Override // android.media.session.ICallback
         public void onMediaKeyEventDispatchedToMediaButtonReceiver(KeyEvent event, ComponentName mediaButtonReceiver) throws RemoteException {
         }
 
+        @Override // android.media.session.ICallback
         public void onAddressedPlayerChangedToMediaSession(MediaSession.Token sessionToken) throws RemoteException {
         }
 
+        @Override // android.media.session.ICallback
         public void onAddressedPlayerChangedToMediaButtonReceiver(ComponentName mediaButtonReceiver) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements ICallback {
         private static final String DESCRIPTOR = "android.media.session.ICallback";
         static final int TRANSACTION_onAddressedPlayerChangedToMediaButtonReceiver = 4;
@@ -52,12 +60,13 @@ public interface ICallback extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof ICallback)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof ICallback)) {
+                return (ICallback) iin;
             }
-            return (ICallback) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -77,112 +86,56 @@ public interface ICallback extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v2, resolved type: android.media.session.MediaSession$Token} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v6, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v10, resolved type: android.media.session.MediaSession$Token} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v14, resolved type: android.content.ComponentName} */
-        /* JADX WARNING: type inference failed for: r1v1 */
-        /* JADX WARNING: type inference failed for: r1v19 */
-        /* JADX WARNING: type inference failed for: r1v20 */
-        /* JADX WARNING: type inference failed for: r1v21 */
-        /* JADX WARNING: type inference failed for: r1v22 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r6, android.os.Parcel r7, android.os.Parcel r8, int r9) throws android.os.RemoteException {
-            /*
-                r5 = this;
-                java.lang.String r0 = "android.media.session.ICallback"
-                r1 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r2 = 1
-                if (r6 == r1) goto L_0x008d
-                r1 = 0
-                switch(r6) {
-                    case 1: goto L_0x0066;
-                    case 2: goto L_0x003f;
-                    case 3: goto L_0x0028;
-                    case 4: goto L_0x0011;
-                    default: goto L_0x000c;
-                }
-            L_0x000c:
-                boolean r1 = super.onTransact(r6, r7, r8, r9)
-                return r1
-            L_0x0011:
-                r7.enforceInterface(r0)
-                int r3 = r7.readInt()
-                if (r3 == 0) goto L_0x0023
-                android.os.Parcelable$Creator<android.content.ComponentName> r1 = android.content.ComponentName.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r7)
-                android.content.ComponentName r1 = (android.content.ComponentName) r1
-                goto L_0x0024
-            L_0x0023:
-            L_0x0024:
-                r5.onAddressedPlayerChangedToMediaButtonReceiver(r1)
-                return r2
-            L_0x0028:
-                r7.enforceInterface(r0)
-                int r3 = r7.readInt()
-                if (r3 == 0) goto L_0x003a
-                android.os.Parcelable$Creator<android.media.session.MediaSession$Token> r1 = android.media.session.MediaSession.Token.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r7)
-                android.media.session.MediaSession$Token r1 = (android.media.session.MediaSession.Token) r1
-                goto L_0x003b
-            L_0x003a:
-            L_0x003b:
-                r5.onAddressedPlayerChangedToMediaSession(r1)
-                return r2
-            L_0x003f:
-                r7.enforceInterface(r0)
-                int r3 = r7.readInt()
-                if (r3 == 0) goto L_0x0051
-                android.os.Parcelable$Creator<android.view.KeyEvent> r3 = android.view.KeyEvent.CREATOR
-                java.lang.Object r3 = r3.createFromParcel(r7)
-                android.view.KeyEvent r3 = (android.view.KeyEvent) r3
-                goto L_0x0052
-            L_0x0051:
-                r3 = r1
-            L_0x0052:
-                int r4 = r7.readInt()
-                if (r4 == 0) goto L_0x0061
-                android.os.Parcelable$Creator<android.content.ComponentName> r1 = android.content.ComponentName.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r7)
-                android.content.ComponentName r1 = (android.content.ComponentName) r1
-                goto L_0x0062
-            L_0x0061:
-            L_0x0062:
-                r5.onMediaKeyEventDispatchedToMediaButtonReceiver(r3, r1)
-                return r2
-            L_0x0066:
-                r7.enforceInterface(r0)
-                int r3 = r7.readInt()
-                if (r3 == 0) goto L_0x0078
-                android.os.Parcelable$Creator<android.view.KeyEvent> r3 = android.view.KeyEvent.CREATOR
-                java.lang.Object r3 = r3.createFromParcel(r7)
-                android.view.KeyEvent r3 = (android.view.KeyEvent) r3
-                goto L_0x0079
-            L_0x0078:
-                r3 = r1
-            L_0x0079:
-                int r4 = r7.readInt()
-                if (r4 == 0) goto L_0x0088
-                android.os.Parcelable$Creator<android.media.session.MediaSession$Token> r1 = android.media.session.MediaSession.Token.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r7)
-                android.media.session.MediaSession$Token r1 = (android.media.session.MediaSession.Token) r1
-                goto L_0x0089
-            L_0x0088:
-            L_0x0089:
-                r5.onMediaKeyEventDispatchedToMediaSession(r3, r1)
-                return r2
-            L_0x008d:
-                r8.writeString(r0)
-                return r2
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.media.session.ICallback.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            KeyEvent _arg0;
+            KeyEvent _arg02;
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg0 = KeyEvent.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg0 = null;
+                    }
+                    MediaSession.Token _arg1 = data.readInt() != 0 ? MediaSession.Token.CREATOR.createFromParcel(data) : null;
+                    onMediaKeyEventDispatchedToMediaSession(_arg0, _arg1);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg02 = KeyEvent.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg02 = null;
+                    }
+                    ComponentName _arg12 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    onMediaKeyEventDispatchedToMediaButtonReceiver(_arg02, _arg12);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    MediaSession.Token _arg03 = data.readInt() != 0 ? MediaSession.Token.CREATOR.createFromParcel(data) : null;
+                    onAddressedPlayerChangedToMediaSession(_arg03);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg04 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    onAddressedPlayerChangedToMediaButtonReceiver(_arg04);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements ICallback {
             public static ICallback sDefaultImpl;
             private IBinder mRemote;
@@ -191,6 +144,7 @@ public interface ICallback extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -199,6 +153,7 @@ public interface ICallback extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.media.session.ICallback
             public void onMediaKeyEventDispatchedToMediaSession(KeyEvent event, MediaSession.Token sessionToken) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -215,9 +170,8 @@ public interface ICallback extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onMediaKeyEventDispatchedToMediaSession(event, sessionToken);
                     }
                 } finally {
@@ -225,6 +179,7 @@ public interface ICallback extends IInterface {
                 }
             }
 
+            @Override // android.media.session.ICallback
             public void onMediaKeyEventDispatchedToMediaButtonReceiver(KeyEvent event, ComponentName mediaButtonReceiver) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -241,9 +196,8 @@ public interface ICallback extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onMediaKeyEventDispatchedToMediaButtonReceiver(event, mediaButtonReceiver);
                     }
                 } finally {
@@ -251,6 +205,7 @@ public interface ICallback extends IInterface {
                 }
             }
 
+            @Override // android.media.session.ICallback
             public void onAddressedPlayerChangedToMediaSession(MediaSession.Token sessionToken) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -261,9 +216,8 @@ public interface ICallback extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onAddressedPlayerChangedToMediaSession(sessionToken);
                     }
                 } finally {
@@ -271,6 +225,7 @@ public interface ICallback extends IInterface {
                 }
             }
 
+            @Override // android.media.session.ICallback
             public void onAddressedPlayerChangedToMediaButtonReceiver(ComponentName mediaButtonReceiver) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -281,9 +236,8 @@ public interface ICallback extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onAddressedPlayerChangedToMediaButtonReceiver(mediaButtonReceiver);
                     }
                 } finally {
@@ -293,11 +247,11 @@ public interface ICallback extends IInterface {
         }
 
         public static boolean setDefaultImpl(ICallback impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static ICallback getDefaultImpl() {

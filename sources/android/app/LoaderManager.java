@@ -1,14 +1,16 @@
 package android.app;
 
 import android.content.Loader;
-import android.os.Bundle;
+import android.p007os.Bundle;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 
 @Deprecated
+/* loaded from: classes.dex */
 public abstract class LoaderManager {
 
     @Deprecated
+    /* loaded from: classes.dex */
     public interface LoaderCallbacks<D> {
         Loader<D> onCreateLoader(int i, Bundle bundle);
 

@@ -1,18 +1,23 @@
 package android.app;
 
 import android.graphics.Rect;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.Rational;
 import java.util.ArrayList;
 import java.util.List;
 
+/* loaded from: classes.dex */
 public final class PictureInPictureParams implements Parcelable {
-    public static final Parcelable.Creator<PictureInPictureParams> CREATOR = new Parcelable.Creator<PictureInPictureParams>() {
+    public static final Parcelable.Creator<PictureInPictureParams> CREATOR = new Parcelable.Creator<PictureInPictureParams>() { // from class: android.app.PictureInPictureParams.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PictureInPictureParams createFromParcel(Parcel in) {
             return new PictureInPictureParams(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PictureInPictureParams[] newArray(int size) {
             return new PictureInPictureParams[size];
         }
@@ -21,6 +26,7 @@ public final class PictureInPictureParams implements Parcelable {
     private Rect mSourceRectHint;
     private List<RemoteAction> mUserActions;
 
+    /* loaded from: classes.dex */
     public static class Builder {
         private Rational mAspectRatio;
         private Rect mSourceRectHint;
@@ -51,7 +57,8 @@ public final class PictureInPictureParams implements Parcelable {
         }
 
         public PictureInPictureParams build() {
-            return new PictureInPictureParams(this.mAspectRatio, this.mUserActions, this.mSourceRectHint);
+            PictureInPictureParams params = new PictureInPictureParams(this.mAspectRatio, this.mUserActions, this.mSourceRectHint);
+            return params;
         }
     }
 
@@ -123,13 +130,15 @@ public final class PictureInPictureParams implements Parcelable {
     }
 
     public boolean hasSourceBoundsHint() {
-        return this.mSourceRectHint != null && !this.mSourceRectHint.isEmpty();
+        return (this.mSourceRectHint == null || this.mSourceRectHint.isEmpty()) ? false : true;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         if (this.mAspectRatio != null) {
             out.writeInt(1);

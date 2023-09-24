@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+/* loaded from: classes.dex */
 public class GestureStore {
     private static final short FILE_FORMAT_VERSION = 1;
     public static final int ORIENTATION_INVARIANT = 1;
@@ -22,11 +23,11 @@ public class GestureStore {
     private static final boolean PROFILE_LOADING_SAVING = false;
     public static final int SEQUENCE_INVARIANT = 1;
     public static final int SEQUENCE_SENSITIVE = 2;
+    private int mSequenceType = 2;
+    private int mOrientationStyle = 2;
+    private final HashMap<String, ArrayList<Gesture>> mNamedGestures = new HashMap<>();
     private boolean mChanged = false;
     private Learner mClassifier = new InstanceLearner();
-    private final HashMap<String, ArrayList<Gesture>> mNamedGestures = new HashMap<>();
-    private int mOrientationStyle = 2;
-    private int mSequenceType = 2;
 
     public void setOrientationStyle(int style) {
         this.mOrientationStyle = style;
@@ -49,32 +50,35 @@ public class GestureStore {
     }
 
     public ArrayList<Prediction> recognize(Gesture gesture) {
-        return this.mClassifier.classify(this.mSequenceType, this.mOrientationStyle, Instance.createInstance(this.mSequenceType, this.mOrientationStyle, gesture, (String) null).vector);
+        Instance instance = Instance.createInstance(this.mSequenceType, this.mOrientationStyle, gesture, null);
+        return this.mClassifier.classify(this.mSequenceType, this.mOrientationStyle, instance.vector);
     }
 
     public void addGesture(String entryName, Gesture gesture) {
-        if (entryName != null && entryName.length() != 0) {
-            ArrayList<Gesture> gestures = this.mNamedGestures.get(entryName);
-            if (gestures == null) {
-                gestures = new ArrayList<>();
-                this.mNamedGestures.put(entryName, gestures);
-            }
-            gestures.add(gesture);
-            this.mClassifier.addInstance(Instance.createInstance(this.mSequenceType, this.mOrientationStyle, gesture, entryName));
-            this.mChanged = true;
+        if (entryName == null || entryName.length() == 0) {
+            return;
         }
+        ArrayList<Gesture> gestures = this.mNamedGestures.get(entryName);
+        if (gestures == null) {
+            gestures = new ArrayList<>();
+            this.mNamedGestures.put(entryName, gestures);
+        }
+        gestures.add(gesture);
+        this.mClassifier.addInstance(Instance.createInstance(this.mSequenceType, this.mOrientationStyle, gesture, entryName));
+        this.mChanged = true;
     }
 
     public void removeGesture(String entryName, Gesture gesture) {
         ArrayList<Gesture> gestures = this.mNamedGestures.get(entryName);
-        if (gestures != null) {
-            gestures.remove(gesture);
-            if (gestures.isEmpty()) {
-                this.mNamedGestures.remove(entryName);
-            }
-            this.mClassifier.removeInstance(gesture.getID());
-            this.mChanged = true;
+        if (gestures == null) {
+            return;
         }
+        gestures.remove(gesture);
+        if (gestures.isEmpty()) {
+            this.mNamedGestures.remove(entryName);
+        }
+        this.mClassifier.removeInstance(gesture.getID());
+        this.mChanged = true;
     }
 
     public void removeEntry(String entryName) {
@@ -112,9 +116,10 @@ public class GestureStore {
                     break;
                 }
                 Map.Entry<String, ArrayList<Gesture>> entry = it.next();
+                String key = entry.getKey();
                 ArrayList<Gesture> examples = entry.getValue();
                 int count = examples.size();
-                out.writeUTF(entry.getKey());
+                out.writeUTF(key);
                 out.writeInt(count);
                 for (int i = 0; i < count; i++) {
                     examples.get(i).serialize(out);
@@ -137,7 +142,8 @@ public class GestureStore {
         DataInputStream in = null;
         try {
             in = new DataInputStream(stream instanceof BufferedInputStream ? stream : new BufferedInputStream(stream, 32768));
-            if (in.readShort() == 1) {
+            short versionNumber = in.readShort();
+            if (versionNumber == 1) {
                 readFormatV1(in);
             }
         } finally {
@@ -165,8 +171,7 @@ public class GestureStore {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public Learner getLearner() {
+    Learner getLearner() {
         return this.mClassifier;
     }
 }

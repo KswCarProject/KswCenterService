@@ -7,6 +7,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.view.ContextMenu;
 
+/* loaded from: classes4.dex */
 public interface MenuItem {
     public static final int SHOW_AS_ACTION_ALWAYS = 2;
     public static final int SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW = 8;
@@ -14,12 +15,14 @@ public interface MenuItem {
     public static final int SHOW_AS_ACTION_NEVER = 0;
     public static final int SHOW_AS_ACTION_WITH_TEXT = 4;
 
+    /* loaded from: classes4.dex */
     public interface OnActionExpandListener {
         boolean onMenuItemActionCollapse(MenuItem menuItem);
 
         boolean onMenuItemActionExpand(MenuItem menuItem);
     }
 
+    /* loaded from: classes4.dex */
     public interface OnMenuItemClickListener {
         boolean onMenuItemClick(MenuItem menuItem);
     }
@@ -106,19 +109,19 @@ public interface MenuItem {
 
     MenuItem setVisible(boolean z);
 
-    MenuItem setIconTintList(ColorStateList tint) {
+    default MenuItem setIconTintList(ColorStateList tint) {
         return this;
     }
 
-    ColorStateList getIconTintList() {
+    default ColorStateList getIconTintList() {
         return null;
     }
 
-    MenuItem setIconTintMode(PorterDuff.Mode tintMode) {
+    default MenuItem setIconTintMode(PorterDuff.Mode tintMode) {
         return this;
     }
 
-    MenuItem setIconTintBlendMode(BlendMode blendMode) {
+    default MenuItem setIconTintBlendMode(BlendMode blendMode) {
         PorterDuff.Mode mode = BlendMode.blendModeToPorterDuffMode(blendMode);
         if (mode != null) {
             return setIconTintMode(mode);
@@ -126,11 +129,11 @@ public interface MenuItem {
         return this;
     }
 
-    PorterDuff.Mode getIconTintMode() {
+    default PorterDuff.Mode getIconTintMode() {
         return null;
     }
 
-    BlendMode getIconTintBlendMode() {
+    default BlendMode getIconTintBlendMode() {
         PorterDuff.Mode mode = getIconTintMode();
         if (mode != null) {
             return BlendMode.fromValue(mode.nativeInt);
@@ -138,56 +141,56 @@ public interface MenuItem {
         return null;
     }
 
-    MenuItem setShortcut(char numericChar, char alphaChar, int numericModifiers, int alphaModifiers) {
+    default MenuItem setShortcut(char numericChar, char alphaChar, int numericModifiers, int alphaModifiers) {
         if ((alphaModifiers & 69647) == 4096 && (69647 & numericModifiers) == 4096) {
             return setShortcut(numericChar, alphaChar);
         }
         return this;
     }
 
-    MenuItem setNumericShortcut(char numericChar, int numericModifiers) {
+    default MenuItem setNumericShortcut(char numericChar, int numericModifiers) {
         if ((69647 & numericModifiers) == 4096) {
             return setNumericShortcut(numericChar);
         }
         return this;
     }
 
-    int getNumericModifiers() {
+    default int getNumericModifiers() {
         return 4096;
     }
 
-    MenuItem setAlphabeticShortcut(char alphaChar, int alphaModifiers) {
+    default MenuItem setAlphabeticShortcut(char alphaChar, int alphaModifiers) {
         if ((69647 & alphaModifiers) == 4096) {
             return setAlphabeticShortcut(alphaChar);
         }
         return this;
     }
 
-    int getAlphabeticModifiers() {
+    default int getAlphabeticModifiers() {
         return 4096;
     }
 
-    MenuItem setContentDescription(CharSequence contentDescription) {
+    default MenuItem setContentDescription(CharSequence contentDescription) {
         return this;
     }
 
-    CharSequence getContentDescription() {
+    default CharSequence getContentDescription() {
         return null;
     }
 
-    MenuItem setTooltipText(CharSequence tooltipText) {
+    default MenuItem setTooltipText(CharSequence tooltipText) {
         return this;
     }
 
-    CharSequence getTooltipText() {
+    default CharSequence getTooltipText() {
         return null;
     }
 
-    boolean requiresActionButton() {
+    default boolean requiresActionButton() {
         return false;
     }
 
-    boolean requiresOverflow() {
+    default boolean requiresOverflow() {
         return true;
     }
 }

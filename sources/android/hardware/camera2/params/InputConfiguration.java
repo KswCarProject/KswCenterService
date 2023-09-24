@@ -2,6 +2,7 @@ package android.hardware.camera2.params;
 
 import android.hardware.camera2.utils.HashCodeHelpers;
 
+/* loaded from: classes.dex */
 public final class InputConfiguration {
     private final int mFormat;
     private final int mHeight;
@@ -26,12 +27,9 @@ public final class InputConfiguration {
     }
 
     public boolean equals(Object obj) {
-        if (!(obj instanceof InputConfiguration)) {
-            return false;
-        }
-        InputConfiguration otherInputConfig = (InputConfiguration) obj;
-        if (otherInputConfig.getWidth() == this.mWidth && otherInputConfig.getHeight() == this.mHeight && otherInputConfig.getFormat() == this.mFormat) {
-            return true;
+        if (obj instanceof InputConfiguration) {
+            InputConfiguration otherInputConfig = (InputConfiguration) obj;
+            return otherInputConfig.getWidth() == this.mWidth && otherInputConfig.getHeight() == this.mHeight && otherInputConfig.getFormat() == this.mFormat;
         }
         return false;
     }
@@ -41,6 +39,6 @@ public final class InputConfiguration {
     }
 
     public String toString() {
-        return String.format("InputConfiguration(w:%d, h:%d, format:%d)", new Object[]{Integer.valueOf(this.mWidth), Integer.valueOf(this.mHeight), Integer.valueOf(this.mFormat)});
+        return String.format("InputConfiguration(w:%d, h:%d, format:%d)", Integer.valueOf(this.mWidth), Integer.valueOf(this.mHeight), Integer.valueOf(this.mFormat));
     }
 }

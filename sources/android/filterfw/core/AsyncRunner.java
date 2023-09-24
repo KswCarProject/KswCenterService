@@ -1,22 +1,21 @@
 package android.filterfw.core;
 
 import android.filterfw.core.GraphRunner;
-import android.os.AsyncTask;
+import android.p007os.AsyncTask;
 import android.util.Log;
 
+/* loaded from: classes.dex */
 public class AsyncRunner extends GraphRunner {
     private static final String TAG = "AsyncRunner";
     private boolean isProcessing;
-    /* access modifiers changed from: private */
-    public GraphRunner.OnRunnerDoneListener mDoneListener;
+    private GraphRunner.OnRunnerDoneListener mDoneListener;
     private Exception mException;
-    /* access modifiers changed from: private */
-    public boolean mLogVerbose;
+    private boolean mLogVerbose;
     private AsyncRunnerTask mRunTask;
-    /* access modifiers changed from: private */
-    public SyncRunner mRunner;
+    private SyncRunner mRunner;
     private Class mSchedulerClass;
 
+    /* loaded from: classes.dex */
     private class RunnerResult {
         public Exception exception;
         public int status;
@@ -26,69 +25,73 @@ public class AsyncRunner extends GraphRunner {
         }
     }
 
+    /* loaded from: classes.dex */
     private class AsyncRunnerTask extends AsyncTask<SyncRunner, Void, RunnerResult> {
         private static final String TAG = "AsyncRunnerTask";
 
         private AsyncRunnerTask() {
         }
 
-        /* access modifiers changed from: protected */
+        /* JADX INFO: Access modifiers changed from: protected */
+        @Override // android.p007os.AsyncTask
         public RunnerResult doInBackground(SyncRunner... runner) {
             RunnerResult result = new RunnerResult();
             try {
-                if (runner.length <= 1) {
-                    runner[0].assertReadyToStep();
-                    if (AsyncRunner.this.mLogVerbose) {
-                        Log.v(TAG, "Starting background graph processing.");
-                    }
-                    AsyncRunner.this.activateGlContext();
-                    if (AsyncRunner.this.mLogVerbose) {
-                        Log.v(TAG, "Preparing filter graph for processing.");
-                    }
-                    runner[0].beginProcessing();
-                    if (AsyncRunner.this.mLogVerbose) {
-                        Log.v(TAG, "Running graph.");
-                    }
-                    result.status = 1;
-                    while (!isCancelled() && result.status == 1) {
-                        if (!runner[0].performStep()) {
-                            result.status = runner[0].determinePostRunState();
-                            if (result.status == 3) {
-                                runner[0].waitUntilWake();
-                                result.status = 1;
-                            }
-                        }
-                    }
-                    if (isCancelled()) {
-                        result.status = 5;
-                    }
-                    try {
-                        AsyncRunner.this.deactivateGlContext();
-                    } catch (Exception exception) {
-                        result.exception = exception;
-                        result.status = 6;
-                    }
-                    if (AsyncRunner.this.mLogVerbose) {
-                        Log.v(TAG, "Done with background graph processing.");
-                    }
-                    return result;
-                }
+            } catch (Exception exception) {
+                result.exception = exception;
+                result.status = 6;
+            }
+            if (runner.length > 1) {
                 throw new RuntimeException("More than one runner received!");
+            }
+            runner[0].assertReadyToStep();
+            if (AsyncRunner.this.mLogVerbose) {
+                Log.m66v(TAG, "Starting background graph processing.");
+            }
+            AsyncRunner.this.activateGlContext();
+            if (AsyncRunner.this.mLogVerbose) {
+                Log.m66v(TAG, "Preparing filter graph for processing.");
+            }
+            runner[0].beginProcessing();
+            if (AsyncRunner.this.mLogVerbose) {
+                Log.m66v(TAG, "Running graph.");
+            }
+            result.status = 1;
+            while (!isCancelled() && result.status == 1) {
+                if (!runner[0].performStep()) {
+                    result.status = runner[0].determinePostRunState();
+                    if (result.status == 3) {
+                        runner[0].waitUntilWake();
+                        result.status = 1;
+                    }
+                }
+            }
+            if (isCancelled()) {
+                result.status = 5;
+            }
+            try {
+                AsyncRunner.this.deactivateGlContext();
             } catch (Exception exception2) {
                 result.exception = exception2;
                 result.status = 6;
             }
+            if (AsyncRunner.this.mLogVerbose) {
+                Log.m66v(TAG, "Done with background graph processing.");
+            }
+            return result;
         }
 
-        /* access modifiers changed from: protected */
+        /* JADX INFO: Access modifiers changed from: protected */
+        @Override // android.p007os.AsyncTask
         public void onCancelled(RunnerResult result) {
             onPostExecute(result);
         }
 
-        /* access modifiers changed from: protected */
+        /* JADX INFO: Access modifiers changed from: protected */
+        @Override // android.p007os.AsyncTask
         public void onPostExecute(RunnerResult result) {
             if (AsyncRunner.this.mLogVerbose) {
-                Log.v(TAG, "Starting post-execute.");
+                Log.m66v(TAG, "Starting post-execute.");
             }
             AsyncRunner.this.setRunning(false);
             if (result == null) {
@@ -98,7 +101,7 @@ public class AsyncRunner extends GraphRunner {
             AsyncRunner.this.setException(result.exception);
             if (result.status == 5 || result.status == 6) {
                 if (AsyncRunner.this.mLogVerbose) {
-                    Log.v(TAG, "Closing filters.");
+                    Log.m66v(TAG, "Closing filters.");
                 }
                 try {
                     AsyncRunner.this.mRunner.close();
@@ -109,12 +112,12 @@ public class AsyncRunner extends GraphRunner {
             }
             if (AsyncRunner.this.mDoneListener != null) {
                 if (AsyncRunner.this.mLogVerbose) {
-                    Log.v(TAG, "Calling graph done callback.");
+                    Log.m66v(TAG, "Calling graph done callback.");
                 }
                 AsyncRunner.this.mDoneListener.onRunnerDone(result.status);
             }
             if (AsyncRunner.this.mLogVerbose) {
-                Log.v(TAG, "Completed post-execute.");
+                Log.m66v(TAG, "Completed post-execute.");
             }
         }
     }
@@ -131,18 +134,19 @@ public class AsyncRunner extends GraphRunner {
         this.mLogVerbose = Log.isLoggable(TAG, 2);
     }
 
+    @Override // android.filterfw.core.GraphRunner
     public void setDoneCallback(GraphRunner.OnRunnerDoneListener listener) {
         this.mDoneListener = listener;
     }
 
     public synchronized void setGraph(FilterGraph graph) {
-        if (!isRunning()) {
-            this.mRunner = new SyncRunner(this.mFilterContext, graph, this.mSchedulerClass);
-        } else {
+        if (isRunning()) {
             throw new RuntimeException("Graph is already running!");
         }
+        this.mRunner = new SyncRunner(this.mFilterContext, graph, this.mSchedulerClass);
     }
 
+    @Override // android.filterfw.core.GraphRunner
     public FilterGraph getGraph() {
         if (this.mRunner != null) {
             return this.mRunner.getGraph();
@@ -150,56 +154,60 @@ public class AsyncRunner extends GraphRunner {
         return null;
     }
 
+    @Override // android.filterfw.core.GraphRunner
     public synchronized void run() {
         if (this.mLogVerbose) {
-            Log.v(TAG, "Running graph.");
+            Log.m66v(TAG, "Running graph.");
         }
-        setException((Exception) null);
+        setException(null);
         if (isRunning()) {
             throw new RuntimeException("Graph is already running!");
-        } else if (this.mRunner != null) {
-            this.mRunTask = new AsyncRunnerTask();
-            setRunning(true);
-            this.mRunTask.execute((Params[]) new SyncRunner[]{this.mRunner});
-        } else {
+        }
+        if (this.mRunner == null) {
             throw new RuntimeException("Cannot run before a graph is set!");
         }
+        this.mRunTask = new AsyncRunnerTask();
+        setRunning(true);
+        this.mRunTask.execute(this.mRunner);
     }
 
+    @Override // android.filterfw.core.GraphRunner
     public synchronized void stop() {
         if (this.mRunTask != null && !this.mRunTask.isCancelled()) {
             if (this.mLogVerbose) {
-                Log.v(TAG, "Stopping graph.");
+                Log.m66v(TAG, "Stopping graph.");
             }
             this.mRunTask.cancel(false);
         }
     }
 
+    @Override // android.filterfw.core.GraphRunner
     public synchronized void close() {
-        if (!isRunning()) {
-            if (this.mLogVerbose) {
-                Log.v(TAG, "Closing filters.");
-            }
-            this.mRunner.close();
-        } else {
+        if (isRunning()) {
             throw new RuntimeException("Cannot close graph while it is running!");
         }
+        if (this.mLogVerbose) {
+            Log.m66v(TAG, "Closing filters.");
+        }
+        this.mRunner.close();
     }
 
+    @Override // android.filterfw.core.GraphRunner
     public synchronized boolean isRunning() {
         return this.isProcessing;
     }
 
+    @Override // android.filterfw.core.GraphRunner
     public synchronized Exception getError() {
         return this.mException;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public synchronized void setRunning(boolean running) {
         this.isProcessing = running;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public synchronized void setException(Exception exception) {
         this.mException = exception;
     }

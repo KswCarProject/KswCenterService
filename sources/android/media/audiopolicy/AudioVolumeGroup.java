@@ -3,8 +3,8 @@ package android.media.audiopolicy;
 import android.annotation.SystemApi;
 import android.media.AudioAttributes;
 import android.net.wifi.WifiEnterpriseConfig;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.Log;
 import com.android.internal.annotations.GuardedBy;
 import com.android.internal.util.Preconditions;
@@ -13,8 +13,20 @@ import java.util.Arrays;
 import java.util.List;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class AudioVolumeGroup implements Parcelable {
-    public static final Parcelable.Creator<AudioVolumeGroup> CREATOR = new Parcelable.Creator<AudioVolumeGroup>() {
+    public static final int DEFAULT_VOLUME_GROUP = -1;
+    private static final String TAG = "AudioVolumeGroup";
+    @GuardedBy({"sLock"})
+    private static List<AudioVolumeGroup> sAudioVolumeGroups;
+    private final AudioAttributes[] mAudioAttributes;
+    private int mId;
+    private int[] mLegacyStreamTypes;
+    private final String mName;
+    private static final Object sLock = new Object();
+    public static final Parcelable.Creator<AudioVolumeGroup> CREATOR = new Parcelable.Creator<AudioVolumeGroup>() { // from class: android.media.audiopolicy.AudioVolumeGroup.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AudioVolumeGroup createFromParcel(Parcel in) {
             Preconditions.checkNotNull(in, "in Parcel must not be null");
             String name = in.readString();
@@ -24,27 +36,20 @@ public final class AudioVolumeGroup implements Parcelable {
             for (int index = 0; index < nbAttributes; index++) {
                 audioAttributes[index] = AudioAttributes.CREATOR.createFromParcel(in);
             }
-            int index2 = in.readInt();
-            int[] streamTypes = new int[index2];
-            for (int index3 = 0; index3 < index2; index3++) {
-                streamTypes[index3] = in.readInt();
+            int nbStreamTypes = in.readInt();
+            int[] streamTypes = new int[nbStreamTypes];
+            for (int index2 = 0; index2 < nbStreamTypes; index2++) {
+                streamTypes[index2] = in.readInt();
             }
             return new AudioVolumeGroup(name, id, audioAttributes, streamTypes);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AudioVolumeGroup[] newArray(int size) {
             return new AudioVolumeGroup[size];
         }
     };
-    public static final int DEFAULT_VOLUME_GROUP = -1;
-    private static final String TAG = "AudioVolumeGroup";
-    @GuardedBy({"sLock"})
-    private static List<AudioVolumeGroup> sAudioVolumeGroups;
-    private static final Object sLock = new Object();
-    private final AudioAttributes[] mAudioAttributes;
-    private int mId;
-    private int[] mLegacyStreamTypes;
-    private final String mName;
 
     private static native int native_list_audio_volume_groups(ArrayList<AudioVolumeGroup> arrayList);
 
@@ -61,8 +66,9 @@ public final class AudioVolumeGroup implements Parcelable {
 
     private static List<AudioVolumeGroup> initializeAudioVolumeGroups() {
         ArrayList<AudioVolumeGroup> avgList = new ArrayList<>();
-        if (native_list_audio_volume_groups(avgList) != 0) {
-            Log.w(TAG, ": listAudioVolumeGroups failed");
+        int status = native_list_audio_volume_groups(avgList);
+        if (status != 0) {
+            Log.m64w(TAG, ": listAudioVolumeGroups failed");
         }
         return avgList;
     }
@@ -107,11 +113,15 @@ public final class AudioVolumeGroup implements Parcelable {
         return this.mId;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
+        AudioAttributes[] audioAttributesArr;
+        int[] iArr;
         dest.writeString(this.mName);
         dest.writeInt(this.mId);
         dest.writeInt(this.mAudioAttributes.length);
@@ -125,6 +135,8 @@ public final class AudioVolumeGroup implements Parcelable {
     }
 
     public String toString() {
+        AudioAttributes[] audioAttributesArr;
+        int[] iArr;
         StringBuilder s = new StringBuilder();
         s.append("\n Name: ");
         s.append(this.mName);

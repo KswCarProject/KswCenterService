@@ -5,6 +5,7 @@ import com.android.internal.telephony.IccCardConstants;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes.dex */
 public final class AccessNetworkConstants {
     @SystemApi
     public static final int TRANSPORT_TYPE_INVALID = -1;
@@ -14,6 +15,7 @@ public final class AccessNetworkConstants {
     public static final int TRANSPORT_TYPE_WWAN = 1;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface TransportType {
     }
 
@@ -28,6 +30,7 @@ public final class AccessNetworkConstants {
         }
     }
 
+    /* loaded from: classes.dex */
     public static final class AccessNetworkType {
         public static final int CDMA2000 = 4;
         public static final int EUTRAN = 3;
@@ -59,6 +62,7 @@ public final class AccessNetworkConstants {
         }
     }
 
+    /* loaded from: classes.dex */
     public static final class GeranBand {
         public static final int BAND_450 = 3;
         public static final int BAND_480 = 4;
@@ -79,6 +83,7 @@ public final class AccessNetworkConstants {
         }
     }
 
+    /* loaded from: classes.dex */
     public static final class UtranBand {
         public static final int BAND_1 = 1;
         public static final int BAND_10 = 10;
@@ -105,6 +110,7 @@ public final class AccessNetworkConstants {
         }
     }
 
+    /* loaded from: classes.dex */
     public static final class EutranBand {
         public static final int BAND_1 = 1;
         public static final int BAND_10 = 10;
@@ -159,6 +165,7 @@ public final class AccessNetworkConstants {
         }
     }
 
+    /* loaded from: classes.dex */
     public static final class CdmaBands {
         public static final int BAND_0 = 1;
         public static final int BAND_1 = 2;

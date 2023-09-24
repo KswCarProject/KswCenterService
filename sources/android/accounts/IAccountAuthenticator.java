@@ -1,13 +1,15 @@
 package android.accounts;
 
+import android.accounts.IAccountAuthenticatorResponse;
 import android.annotation.UnsupportedAppUsage;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes.dex */
 public interface IAccountAuthenticator extends IInterface {
     @UnsupportedAppUsage
     void addAccount(IAccountAuthenticatorResponse iAccountAuthenticatorResponse, String str, String str2, String[] strArr, Bundle bundle) throws RemoteException;
@@ -45,54 +47,71 @@ public interface IAccountAuthenticator extends IInterface {
     @UnsupportedAppUsage
     void updateCredentials(IAccountAuthenticatorResponse iAccountAuthenticatorResponse, Account account, String str, Bundle bundle) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements IAccountAuthenticator {
+        @Override // android.accounts.IAccountAuthenticator
         public void addAccount(IAccountAuthenticatorResponse response, String accountType, String authTokenType, String[] requiredFeatures, Bundle options) throws RemoteException {
         }
 
+        @Override // android.accounts.IAccountAuthenticator
         public void confirmCredentials(IAccountAuthenticatorResponse response, Account account, Bundle options) throws RemoteException {
         }
 
+        @Override // android.accounts.IAccountAuthenticator
         public void getAuthToken(IAccountAuthenticatorResponse response, Account account, String authTokenType, Bundle options) throws RemoteException {
         }
 
+        @Override // android.accounts.IAccountAuthenticator
         public void getAuthTokenLabel(IAccountAuthenticatorResponse response, String authTokenType) throws RemoteException {
         }
 
+        @Override // android.accounts.IAccountAuthenticator
         public void updateCredentials(IAccountAuthenticatorResponse response, Account account, String authTokenType, Bundle options) throws RemoteException {
         }
 
+        @Override // android.accounts.IAccountAuthenticator
         public void editProperties(IAccountAuthenticatorResponse response, String accountType) throws RemoteException {
         }
 
+        @Override // android.accounts.IAccountAuthenticator
         public void hasFeatures(IAccountAuthenticatorResponse response, Account account, String[] features) throws RemoteException {
         }
 
+        @Override // android.accounts.IAccountAuthenticator
         public void getAccountRemovalAllowed(IAccountAuthenticatorResponse response, Account account) throws RemoteException {
         }
 
+        @Override // android.accounts.IAccountAuthenticator
         public void getAccountCredentialsForCloning(IAccountAuthenticatorResponse response, Account account) throws RemoteException {
         }
 
+        @Override // android.accounts.IAccountAuthenticator
         public void addAccountFromCredentials(IAccountAuthenticatorResponse response, Account account, Bundle accountCredentials) throws RemoteException {
         }
 
+        @Override // android.accounts.IAccountAuthenticator
         public void startAddAccountSession(IAccountAuthenticatorResponse response, String accountType, String authTokenType, String[] requiredFeatures, Bundle options) throws RemoteException {
         }
 
+        @Override // android.accounts.IAccountAuthenticator
         public void startUpdateCredentialsSession(IAccountAuthenticatorResponse response, Account account, String authTokenType, Bundle options) throws RemoteException {
         }
 
+        @Override // android.accounts.IAccountAuthenticator
         public void finishSession(IAccountAuthenticatorResponse response, String accountType, Bundle sessionBundle) throws RemoteException {
         }
 
+        @Override // android.accounts.IAccountAuthenticator
         public void isCredentialsUpdateSuggested(IAccountAuthenticatorResponse response, Account account, String statusToken) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements IAccountAuthenticator {
         private static final String DESCRIPTOR = "android.accounts.IAccountAuthenticator";
         static final int TRANSACTION_addAccount = 1;
@@ -119,12 +138,13 @@ public interface IAccountAuthenticator extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IAccountAuthenticator)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IAccountAuthenticator)) {
+                return (IAccountAuthenticator) iin;
             }
-            return (IAccountAuthenticator) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -164,331 +184,150 @@ public interface IAccountAuthenticator extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v8, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v12, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v18, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v24, resolved type: android.accounts.Account} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v28, resolved type: android.accounts.Account} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v32, resolved type: android.accounts.Account} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v36, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v45, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v49, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v53, resolved type: android.accounts.Account} */
-        /* JADX WARNING: type inference failed for: r0v2 */
-        /* JADX WARNING: type inference failed for: r0v3 */
-        /* JADX WARNING: type inference failed for: r0v40 */
-        /* JADX WARNING: type inference failed for: r0v58 */
-        /* JADX WARNING: type inference failed for: r0v59 */
-        /* JADX WARNING: type inference failed for: r0v60 */
-        /* JADX WARNING: type inference failed for: r0v61 */
-        /* JADX WARNING: type inference failed for: r0v62 */
-        /* JADX WARNING: type inference failed for: r0v63 */
-        /* JADX WARNING: type inference failed for: r0v64 */
-        /* JADX WARNING: type inference failed for: r0v65 */
-        /* JADX WARNING: type inference failed for: r0v66 */
-        /* JADX WARNING: type inference failed for: r0v67 */
-        /* JADX WARNING: type inference failed for: r0v68 */
-        /* JADX WARNING: type inference failed for: r0v69 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r16, android.os.Parcel r17, android.os.Parcel r18, int r19) throws android.os.RemoteException {
-            /*
-                r15 = this;
-                r6 = r15
-                r7 = r16
-                r8 = r17
-                java.lang.String r9 = "android.accounts.IAccountAuthenticator"
-                r0 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r10 = 1
-                if (r7 == r0) goto L_0x023c
-                r0 = 0
-                switch(r7) {
-                    case 1: goto L_0x020b;
-                    case 2: goto L_0x01dc;
-                    case 3: goto L_0x01a9;
-                    case 4: goto L_0x0196;
-                    case 5: goto L_0x0163;
-                    case 6: goto L_0x0150;
-                    case 7: goto L_0x012d;
-                    case 8: goto L_0x010e;
-                    case 9: goto L_0x00ef;
-                    case 10: goto L_0x00c0;
-                    case 11: goto L_0x008f;
-                    case 12: goto L_0x005c;
-                    case 13: goto L_0x0039;
-                    case 14: goto L_0x0016;
-                    default: goto L_0x0011;
-                }
-            L_0x0011:
-                boolean r0 = super.onTransact(r16, r17, r18, r19)
-                return r0
-            L_0x0016:
-                r8.enforceInterface(r9)
-                android.os.IBinder r1 = r17.readStrongBinder()
-                android.accounts.IAccountAuthenticatorResponse r1 = android.accounts.IAccountAuthenticatorResponse.Stub.asInterface(r1)
-                int r2 = r17.readInt()
-                if (r2 == 0) goto L_0x0030
-                android.os.Parcelable$Creator<android.accounts.Account> r0 = android.accounts.Account.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                android.accounts.Account r0 = (android.accounts.Account) r0
-                goto L_0x0031
-            L_0x0030:
-            L_0x0031:
-                java.lang.String r2 = r17.readString()
-                r15.isCredentialsUpdateSuggested(r1, r0, r2)
-                return r10
-            L_0x0039:
-                r8.enforceInterface(r9)
-                android.os.IBinder r1 = r17.readStrongBinder()
-                android.accounts.IAccountAuthenticatorResponse r1 = android.accounts.IAccountAuthenticatorResponse.Stub.asInterface(r1)
-                java.lang.String r2 = r17.readString()
-                int r3 = r17.readInt()
-                if (r3 == 0) goto L_0x0057
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-                goto L_0x0058
-            L_0x0057:
-            L_0x0058:
-                r15.finishSession(r1, r2, r0)
-                return r10
-            L_0x005c:
-                r8.enforceInterface(r9)
-                android.os.IBinder r1 = r17.readStrongBinder()
-                android.accounts.IAccountAuthenticatorResponse r1 = android.accounts.IAccountAuthenticatorResponse.Stub.asInterface(r1)
-                int r2 = r17.readInt()
-                if (r2 == 0) goto L_0x0076
-                android.os.Parcelable$Creator<android.accounts.Account> r2 = android.accounts.Account.CREATOR
-                java.lang.Object r2 = r2.createFromParcel(r8)
-                android.accounts.Account r2 = (android.accounts.Account) r2
-                goto L_0x0077
-            L_0x0076:
-                r2 = r0
-            L_0x0077:
-                java.lang.String r3 = r17.readString()
-                int r4 = r17.readInt()
-                if (r4 == 0) goto L_0x008a
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-                goto L_0x008b
-            L_0x008a:
-            L_0x008b:
-                r15.startUpdateCredentialsSession(r1, r2, r3, r0)
-                return r10
-            L_0x008f:
-                r8.enforceInterface(r9)
-                android.os.IBinder r1 = r17.readStrongBinder()
-                android.accounts.IAccountAuthenticatorResponse r11 = android.accounts.IAccountAuthenticatorResponse.Stub.asInterface(r1)
-                java.lang.String r12 = r17.readString()
-                java.lang.String r13 = r17.readString()
-                java.lang.String[] r14 = r17.createStringArray()
-                int r1 = r17.readInt()
-                if (r1 == 0) goto L_0x00b6
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-            L_0x00b4:
-                r5 = r0
-                goto L_0x00b7
-            L_0x00b6:
-                goto L_0x00b4
-            L_0x00b7:
-                r0 = r15
-                r1 = r11
-                r2 = r12
-                r3 = r13
-                r4 = r14
-                r0.startAddAccountSession(r1, r2, r3, r4, r5)
-                return r10
-            L_0x00c0:
-                r8.enforceInterface(r9)
-                android.os.IBinder r1 = r17.readStrongBinder()
-                android.accounts.IAccountAuthenticatorResponse r1 = android.accounts.IAccountAuthenticatorResponse.Stub.asInterface(r1)
-                int r2 = r17.readInt()
-                if (r2 == 0) goto L_0x00da
-                android.os.Parcelable$Creator<android.accounts.Account> r2 = android.accounts.Account.CREATOR
-                java.lang.Object r2 = r2.createFromParcel(r8)
-                android.accounts.Account r2 = (android.accounts.Account) r2
-                goto L_0x00db
-            L_0x00da:
-                r2 = r0
-            L_0x00db:
-                int r3 = r17.readInt()
-                if (r3 == 0) goto L_0x00ea
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-                goto L_0x00eb
-            L_0x00ea:
-            L_0x00eb:
-                r15.addAccountFromCredentials(r1, r2, r0)
-                return r10
-            L_0x00ef:
-                r8.enforceInterface(r9)
-                android.os.IBinder r1 = r17.readStrongBinder()
-                android.accounts.IAccountAuthenticatorResponse r1 = android.accounts.IAccountAuthenticatorResponse.Stub.asInterface(r1)
-                int r2 = r17.readInt()
-                if (r2 == 0) goto L_0x0109
-                android.os.Parcelable$Creator<android.accounts.Account> r0 = android.accounts.Account.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                android.accounts.Account r0 = (android.accounts.Account) r0
-                goto L_0x010a
-            L_0x0109:
-            L_0x010a:
-                r15.getAccountCredentialsForCloning(r1, r0)
-                return r10
-            L_0x010e:
-                r8.enforceInterface(r9)
-                android.os.IBinder r1 = r17.readStrongBinder()
-                android.accounts.IAccountAuthenticatorResponse r1 = android.accounts.IAccountAuthenticatorResponse.Stub.asInterface(r1)
-                int r2 = r17.readInt()
-                if (r2 == 0) goto L_0x0128
-                android.os.Parcelable$Creator<android.accounts.Account> r0 = android.accounts.Account.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                android.accounts.Account r0 = (android.accounts.Account) r0
-                goto L_0x0129
-            L_0x0128:
-            L_0x0129:
-                r15.getAccountRemovalAllowed(r1, r0)
-                return r10
-            L_0x012d:
-                r8.enforceInterface(r9)
-                android.os.IBinder r1 = r17.readStrongBinder()
-                android.accounts.IAccountAuthenticatorResponse r1 = android.accounts.IAccountAuthenticatorResponse.Stub.asInterface(r1)
-                int r2 = r17.readInt()
-                if (r2 == 0) goto L_0x0147
-                android.os.Parcelable$Creator<android.accounts.Account> r0 = android.accounts.Account.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                android.accounts.Account r0 = (android.accounts.Account) r0
-                goto L_0x0148
-            L_0x0147:
-            L_0x0148:
-                java.lang.String[] r2 = r17.createStringArray()
-                r15.hasFeatures(r1, r0, r2)
-                return r10
-            L_0x0150:
-                r8.enforceInterface(r9)
-                android.os.IBinder r0 = r17.readStrongBinder()
-                android.accounts.IAccountAuthenticatorResponse r0 = android.accounts.IAccountAuthenticatorResponse.Stub.asInterface(r0)
-                java.lang.String r1 = r17.readString()
-                r15.editProperties(r0, r1)
-                return r10
-            L_0x0163:
-                r8.enforceInterface(r9)
-                android.os.IBinder r1 = r17.readStrongBinder()
-                android.accounts.IAccountAuthenticatorResponse r1 = android.accounts.IAccountAuthenticatorResponse.Stub.asInterface(r1)
-                int r2 = r17.readInt()
-                if (r2 == 0) goto L_0x017d
-                android.os.Parcelable$Creator<android.accounts.Account> r2 = android.accounts.Account.CREATOR
-                java.lang.Object r2 = r2.createFromParcel(r8)
-                android.accounts.Account r2 = (android.accounts.Account) r2
-                goto L_0x017e
-            L_0x017d:
-                r2 = r0
-            L_0x017e:
-                java.lang.String r3 = r17.readString()
-                int r4 = r17.readInt()
-                if (r4 == 0) goto L_0x0191
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-                goto L_0x0192
-            L_0x0191:
-            L_0x0192:
-                r15.updateCredentials(r1, r2, r3, r0)
-                return r10
-            L_0x0196:
-                r8.enforceInterface(r9)
-                android.os.IBinder r0 = r17.readStrongBinder()
-                android.accounts.IAccountAuthenticatorResponse r0 = android.accounts.IAccountAuthenticatorResponse.Stub.asInterface(r0)
-                java.lang.String r1 = r17.readString()
-                r15.getAuthTokenLabel(r0, r1)
-                return r10
-            L_0x01a9:
-                r8.enforceInterface(r9)
-                android.os.IBinder r1 = r17.readStrongBinder()
-                android.accounts.IAccountAuthenticatorResponse r1 = android.accounts.IAccountAuthenticatorResponse.Stub.asInterface(r1)
-                int r2 = r17.readInt()
-                if (r2 == 0) goto L_0x01c3
-                android.os.Parcelable$Creator<android.accounts.Account> r2 = android.accounts.Account.CREATOR
-                java.lang.Object r2 = r2.createFromParcel(r8)
-                android.accounts.Account r2 = (android.accounts.Account) r2
-                goto L_0x01c4
-            L_0x01c3:
-                r2 = r0
-            L_0x01c4:
-                java.lang.String r3 = r17.readString()
-                int r4 = r17.readInt()
-                if (r4 == 0) goto L_0x01d7
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-                goto L_0x01d8
-            L_0x01d7:
-            L_0x01d8:
-                r15.getAuthToken(r1, r2, r3, r0)
-                return r10
-            L_0x01dc:
-                r8.enforceInterface(r9)
-                android.os.IBinder r1 = r17.readStrongBinder()
-                android.accounts.IAccountAuthenticatorResponse r1 = android.accounts.IAccountAuthenticatorResponse.Stub.asInterface(r1)
-                int r2 = r17.readInt()
-                if (r2 == 0) goto L_0x01f6
-                android.os.Parcelable$Creator<android.accounts.Account> r2 = android.accounts.Account.CREATOR
-                java.lang.Object r2 = r2.createFromParcel(r8)
-                android.accounts.Account r2 = (android.accounts.Account) r2
-                goto L_0x01f7
-            L_0x01f6:
-                r2 = r0
-            L_0x01f7:
-                int r3 = r17.readInt()
-                if (r3 == 0) goto L_0x0206
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-                goto L_0x0207
-            L_0x0206:
-            L_0x0207:
-                r15.confirmCredentials(r1, r2, r0)
-                return r10
-            L_0x020b:
-                r8.enforceInterface(r9)
-                android.os.IBinder r1 = r17.readStrongBinder()
-                android.accounts.IAccountAuthenticatorResponse r11 = android.accounts.IAccountAuthenticatorResponse.Stub.asInterface(r1)
-                java.lang.String r12 = r17.readString()
-                java.lang.String r13 = r17.readString()
-                java.lang.String[] r14 = r17.createStringArray()
-                int r1 = r17.readInt()
-                if (r1 == 0) goto L_0x0232
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-            L_0x0230:
-                r5 = r0
-                goto L_0x0233
-            L_0x0232:
-                goto L_0x0230
-            L_0x0233:
-                r0 = r15
-                r1 = r11
-                r2 = r12
-                r3 = r13
-                r4 = r14
-                r0.addAccount(r1, r2, r3, r4, r5)
-                return r10
-            L_0x023c:
-                r0 = r18
-                r0.writeString(r9)
-                return r10
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.accounts.IAccountAuthenticator.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            Account _arg1;
+            Account _arg12;
+            Account _arg13;
+            Account _arg14;
+            Account _arg15;
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAccountAuthenticatorResponse _arg0 = IAccountAuthenticatorResponse.Stub.asInterface(data.readStrongBinder());
+                    String _arg16 = data.readString();
+                    String _arg2 = data.readString();
+                    String[] _arg3 = data.createStringArray();
+                    Bundle _arg4 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    addAccount(_arg0, _arg16, _arg2, _arg3, _arg4);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAccountAuthenticatorResponse _arg02 = IAccountAuthenticatorResponse.Stub.asInterface(data.readStrongBinder());
+                    if (data.readInt() != 0) {
+                        _arg1 = Account.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg1 = null;
+                    }
+                    Bundle _arg22 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    confirmCredentials(_arg02, _arg1, _arg22);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAccountAuthenticatorResponse _arg03 = IAccountAuthenticatorResponse.Stub.asInterface(data.readStrongBinder());
+                    if (data.readInt() != 0) {
+                        _arg12 = Account.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg12 = null;
+                    }
+                    String _arg23 = data.readString();
+                    Bundle _arg32 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    getAuthToken(_arg03, _arg12, _arg23, _arg32);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAccountAuthenticatorResponse _arg04 = IAccountAuthenticatorResponse.Stub.asInterface(data.readStrongBinder());
+                    String _arg17 = data.readString();
+                    getAuthTokenLabel(_arg04, _arg17);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAccountAuthenticatorResponse _arg05 = IAccountAuthenticatorResponse.Stub.asInterface(data.readStrongBinder());
+                    if (data.readInt() != 0) {
+                        _arg13 = Account.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg13 = null;
+                    }
+                    String _arg24 = data.readString();
+                    Bundle _arg33 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    updateCredentials(_arg05, _arg13, _arg24, _arg33);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAccountAuthenticatorResponse _arg06 = IAccountAuthenticatorResponse.Stub.asInterface(data.readStrongBinder());
+                    String _arg18 = data.readString();
+                    editProperties(_arg06, _arg18);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAccountAuthenticatorResponse _arg07 = IAccountAuthenticatorResponse.Stub.asInterface(data.readStrongBinder());
+                    Account _arg19 = data.readInt() != 0 ? Account.CREATOR.createFromParcel(data) : null;
+                    String[] _arg25 = data.createStringArray();
+                    hasFeatures(_arg07, _arg19, _arg25);
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAccountAuthenticatorResponse _arg08 = IAccountAuthenticatorResponse.Stub.asInterface(data.readStrongBinder());
+                    Account _arg110 = data.readInt() != 0 ? Account.CREATOR.createFromParcel(data) : null;
+                    getAccountRemovalAllowed(_arg08, _arg110);
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAccountAuthenticatorResponse _arg09 = IAccountAuthenticatorResponse.Stub.asInterface(data.readStrongBinder());
+                    Account _arg111 = data.readInt() != 0 ? Account.CREATOR.createFromParcel(data) : null;
+                    getAccountCredentialsForCloning(_arg09, _arg111);
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAccountAuthenticatorResponse _arg010 = IAccountAuthenticatorResponse.Stub.asInterface(data.readStrongBinder());
+                    if (data.readInt() != 0) {
+                        _arg14 = Account.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg14 = null;
+                    }
+                    Bundle _arg26 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    addAccountFromCredentials(_arg010, _arg14, _arg26);
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAccountAuthenticatorResponse _arg011 = IAccountAuthenticatorResponse.Stub.asInterface(data.readStrongBinder());
+                    String _arg112 = data.readString();
+                    String _arg27 = data.readString();
+                    String[] _arg34 = data.createStringArray();
+                    Bundle _arg42 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    startAddAccountSession(_arg011, _arg112, _arg27, _arg34, _arg42);
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAccountAuthenticatorResponse _arg012 = IAccountAuthenticatorResponse.Stub.asInterface(data.readStrongBinder());
+                    if (data.readInt() != 0) {
+                        _arg15 = Account.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg15 = null;
+                    }
+                    String _arg28 = data.readString();
+                    Bundle _arg35 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    startUpdateCredentialsSession(_arg012, _arg15, _arg28, _arg35);
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAccountAuthenticatorResponse _arg013 = IAccountAuthenticatorResponse.Stub.asInterface(data.readStrongBinder());
+                    String _arg113 = data.readString();
+                    Bundle _arg29 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    finishSession(_arg013, _arg113, _arg29);
+                    return true;
+                case 14:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAccountAuthenticatorResponse _arg014 = IAccountAuthenticatorResponse.Stub.asInterface(data.readStrongBinder());
+                    Account _arg114 = data.readInt() != 0 ? Account.CREATOR.createFromParcel(data) : null;
+                    String _arg210 = data.readString();
+                    isCredentialsUpdateSuggested(_arg014, _arg114, _arg210);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements IAccountAuthenticator {
             public static IAccountAuthenticator sDefaultImpl;
             private IBinder mRemote;
@@ -497,6 +336,7 @@ public interface IAccountAuthenticator extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -505,6 +345,7 @@ public interface IAccountAuthenticator extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.accounts.IAccountAuthenticator
             public void addAccount(IAccountAuthenticatorResponse response, String accountType, String authTokenType, String[] requiredFeatures, Bundle options) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -519,9 +360,8 @@ public interface IAccountAuthenticator extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().addAccount(response, accountType, authTokenType, requiredFeatures, options);
                     }
                 } finally {
@@ -529,6 +369,7 @@ public interface IAccountAuthenticator extends IInterface {
                 }
             }
 
+            @Override // android.accounts.IAccountAuthenticator
             public void confirmCredentials(IAccountAuthenticatorResponse response, Account account, Bundle options) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -546,9 +387,8 @@ public interface IAccountAuthenticator extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().confirmCredentials(response, account, options);
                     }
                 } finally {
@@ -556,6 +396,7 @@ public interface IAccountAuthenticator extends IInterface {
                 }
             }
 
+            @Override // android.accounts.IAccountAuthenticator
             public void getAuthToken(IAccountAuthenticatorResponse response, Account account, String authTokenType, Bundle options) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -574,9 +415,8 @@ public interface IAccountAuthenticator extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().getAuthToken(response, account, authTokenType, options);
                     }
                 } finally {
@@ -584,15 +424,15 @@ public interface IAccountAuthenticator extends IInterface {
                 }
             }
 
+            @Override // android.accounts.IAccountAuthenticator
             public void getAuthTokenLabel(IAccountAuthenticatorResponse response, String authTokenType) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(response != null ? response.asBinder() : null);
                     _data.writeString(authTokenType);
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().getAuthTokenLabel(response, authTokenType);
                     }
                 } finally {
@@ -600,6 +440,7 @@ public interface IAccountAuthenticator extends IInterface {
                 }
             }
 
+            @Override // android.accounts.IAccountAuthenticator
             public void updateCredentials(IAccountAuthenticatorResponse response, Account account, String authTokenType, Bundle options) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -618,9 +459,8 @@ public interface IAccountAuthenticator extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(5, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().updateCredentials(response, account, authTokenType, options);
                     }
                 } finally {
@@ -628,15 +468,15 @@ public interface IAccountAuthenticator extends IInterface {
                 }
             }
 
+            @Override // android.accounts.IAccountAuthenticator
             public void editProperties(IAccountAuthenticatorResponse response, String accountType) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(response != null ? response.asBinder() : null);
                     _data.writeString(accountType);
-                    if (this.mRemote.transact(6, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(6, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().editProperties(response, accountType);
                     }
                 } finally {
@@ -644,6 +484,7 @@ public interface IAccountAuthenticator extends IInterface {
                 }
             }
 
+            @Override // android.accounts.IAccountAuthenticator
             public void hasFeatures(IAccountAuthenticatorResponse response, Account account, String[] features) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -656,9 +497,8 @@ public interface IAccountAuthenticator extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeStringArray(features);
-                    if (this.mRemote.transact(7, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(7, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().hasFeatures(response, account, features);
                     }
                 } finally {
@@ -666,6 +506,7 @@ public interface IAccountAuthenticator extends IInterface {
                 }
             }
 
+            @Override // android.accounts.IAccountAuthenticator
             public void getAccountRemovalAllowed(IAccountAuthenticatorResponse response, Account account) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -677,9 +518,8 @@ public interface IAccountAuthenticator extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(8, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(8, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().getAccountRemovalAllowed(response, account);
                     }
                 } finally {
@@ -687,6 +527,7 @@ public interface IAccountAuthenticator extends IInterface {
                 }
             }
 
+            @Override // android.accounts.IAccountAuthenticator
             public void getAccountCredentialsForCloning(IAccountAuthenticatorResponse response, Account account) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -698,9 +539,8 @@ public interface IAccountAuthenticator extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(9, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(9, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().getAccountCredentialsForCloning(response, account);
                     }
                 } finally {
@@ -708,6 +548,7 @@ public interface IAccountAuthenticator extends IInterface {
                 }
             }
 
+            @Override // android.accounts.IAccountAuthenticator
             public void addAccountFromCredentials(IAccountAuthenticatorResponse response, Account account, Bundle accountCredentials) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -725,9 +566,8 @@ public interface IAccountAuthenticator extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(10, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(10, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().addAccountFromCredentials(response, account, accountCredentials);
                     }
                 } finally {
@@ -735,6 +575,7 @@ public interface IAccountAuthenticator extends IInterface {
                 }
             }
 
+            @Override // android.accounts.IAccountAuthenticator
             public void startAddAccountSession(IAccountAuthenticatorResponse response, String accountType, String authTokenType, String[] requiredFeatures, Bundle options) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -749,9 +590,8 @@ public interface IAccountAuthenticator extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(11, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(11, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().startAddAccountSession(response, accountType, authTokenType, requiredFeatures, options);
                     }
                 } finally {
@@ -759,6 +599,7 @@ public interface IAccountAuthenticator extends IInterface {
                 }
             }
 
+            @Override // android.accounts.IAccountAuthenticator
             public void startUpdateCredentialsSession(IAccountAuthenticatorResponse response, Account account, String authTokenType, Bundle options) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -777,9 +618,8 @@ public interface IAccountAuthenticator extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(12, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(12, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().startUpdateCredentialsSession(response, account, authTokenType, options);
                     }
                 } finally {
@@ -787,6 +627,7 @@ public interface IAccountAuthenticator extends IInterface {
                 }
             }
 
+            @Override // android.accounts.IAccountAuthenticator
             public void finishSession(IAccountAuthenticatorResponse response, String accountType, Bundle sessionBundle) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -799,9 +640,8 @@ public interface IAccountAuthenticator extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(13, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(13, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().finishSession(response, accountType, sessionBundle);
                     }
                 } finally {
@@ -809,6 +649,7 @@ public interface IAccountAuthenticator extends IInterface {
                 }
             }
 
+            @Override // android.accounts.IAccountAuthenticator
             public void isCredentialsUpdateSuggested(IAccountAuthenticatorResponse response, Account account, String statusToken) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -821,9 +662,8 @@ public interface IAccountAuthenticator extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(statusToken);
-                    if (this.mRemote.transact(14, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(14, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().isCredentialsUpdateSuggested(response, account, statusToken);
                     }
                 } finally {
@@ -833,11 +673,11 @@ public interface IAccountAuthenticator extends IInterface {
         }
 
         public static boolean setDefaultImpl(IAccountAuthenticator impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IAccountAuthenticator getDefaultImpl() {

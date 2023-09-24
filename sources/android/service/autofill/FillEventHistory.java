@@ -1,8 +1,8 @@
 package android.service.autofill;
 
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.ArrayMap;
 import android.util.ArraySet;
 import android.util.Log;
@@ -14,17 +14,18 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/* loaded from: classes3.dex */
 public final class FillEventHistory implements Parcelable {
-    public static final Parcelable.Creator<FillEventHistory> CREATOR = new Parcelable.Creator<FillEventHistory>() {
+    public static final Parcelable.Creator<FillEventHistory> CREATOR = new Parcelable.Creator<FillEventHistory>() { // from class: android.service.autofill.FillEventHistory.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public FillEventHistory createFromParcel(Parcel parcel) {
             ArrayList<ArrayList<String>> manuallyFilledDatasetIds;
-            Parcel parcel2 = parcel;
             int i = 0;
             FillEventHistory selection = new FillEventHistory(0, parcel.readBundle());
             int numEvents = parcel.readInt();
@@ -34,34 +35,35 @@ public final class FillEventHistory implements Parcelable {
                 String datasetId = parcel.readString();
                 Bundle clientState = parcel.readBundle();
                 ArrayList<String> selectedDatasetIds = parcel.createStringArrayList();
-                FieldClassification[] detectedFieldClassifications = null;
-                ArraySet<? extends Object> readArraySet = parcel2.readArraySet((ClassLoader) null);
-                ArrayList<AutofillId> changedFieldIds = parcel2.createTypedArrayList(AutofillId.CREATOR);
+                FieldClassification[] fieldClassificationArr = null;
+                ArraySet<? extends Object> readArraySet = parcel.readArraySet(null);
+                ArrayList<AutofillId> changedFieldIds = parcel.createTypedArrayList(AutofillId.CREATOR);
                 ArrayList<String> changedDatasetIds = parcel.createStringArrayList();
-                ArrayList<AutofillId> manuallyFilledFieldIds = parcel2.createTypedArrayList(AutofillId.CREATOR);
-                if (manuallyFilledFieldIds != null) {
+                ArrayList<AutofillId> manuallyFilledFieldIds = parcel.createTypedArrayList(AutofillId.CREATOR);
+                if (manuallyFilledFieldIds == null) {
+                    manuallyFilledDatasetIds = null;
+                } else {
                     int size = manuallyFilledFieldIds.size();
                     ArrayList<ArrayList<String>> manuallyFilledDatasetIds2 = new ArrayList<>(size);
                     for (int j = i; j < size; j++) {
                         manuallyFilledDatasetIds2.add(parcel.createStringArrayList());
                     }
                     manuallyFilledDatasetIds = manuallyFilledDatasetIds2;
-                } else {
-                    manuallyFilledDatasetIds = null;
                 }
-                AutofillId[] detectedFieldIds = (AutofillId[]) parcel2.readParcelableArray((ClassLoader) null, AutofillId.class);
+                AutofillId[] detectedFieldIds = (AutofillId[]) parcel.readParcelableArray(null, AutofillId.class);
                 if (detectedFieldIds != null) {
-                    detectedFieldClassifications = FieldClassification.readArrayFromParcel(parcel);
+                    fieldClassificationArr = FieldClassification.readArrayFromParcel(parcel);
                 }
-                Event event = r5;
-                Event event2 = new Event(eventType, datasetId, clientState, selectedDatasetIds, readArraySet, changedFieldIds, changedDatasetIds, manuallyFilledFieldIds, manuallyFilledDatasetIds, detectedFieldIds, detectedFieldClassifications);
-                selection.addEvent(event);
+                FieldClassification[] detectedFieldClassifications = fieldClassificationArr;
+                selection.addEvent(new Event(eventType, datasetId, clientState, selectedDatasetIds, readArraySet, changedFieldIds, changedDatasetIds, manuallyFilledFieldIds, manuallyFilledDatasetIds, detectedFieldIds, detectedFieldClassifications));
                 i2++;
                 i = 0;
             }
             return selection;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public FillEventHistory[] newArray(int size) {
             return new FillEventHistory[size];
         }
@@ -100,10 +102,12 @@ public final class FillEventHistory implements Parcelable {
         return this.mEvents == null ? "no events" : this.mEvents.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeBundle(this.mClientState);
         if (this.mEvents == null) {
@@ -136,36 +140,27 @@ public final class FillEventHistory implements Parcelable {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class Event {
         public static final int TYPE_AUTHENTICATION_SELECTED = 2;
         public static final int TYPE_CONTEXT_COMMITTED = 4;
         public static final int TYPE_DATASET_AUTHENTICATION_SELECTED = 1;
         public static final int TYPE_DATASET_SELECTED = 0;
         public static final int TYPE_SAVE_SHOWN = 3;
-        /* access modifiers changed from: private */
-        public final ArrayList<String> mChangedDatasetIds;
-        /* access modifiers changed from: private */
-        public final ArrayList<AutofillId> mChangedFieldIds;
-        /* access modifiers changed from: private */
-        public final Bundle mClientState;
-        /* access modifiers changed from: private */
-        public final String mDatasetId;
-        /* access modifiers changed from: private */
-        public final FieldClassification[] mDetectedFieldClassifications;
-        /* access modifiers changed from: private */
-        public final AutofillId[] mDetectedFieldIds;
-        /* access modifiers changed from: private */
-        public final int mEventType;
-        /* access modifiers changed from: private */
-        public final ArraySet<String> mIgnoredDatasetIds;
-        /* access modifiers changed from: private */
-        public final ArrayList<ArrayList<String>> mManuallyFilledDatasetIds;
-        /* access modifiers changed from: private */
-        public final ArrayList<AutofillId> mManuallyFilledFieldIds;
-        /* access modifiers changed from: private */
-        public final List<String> mSelectedDatasetIds;
+        private final ArrayList<String> mChangedDatasetIds;
+        private final ArrayList<AutofillId> mChangedFieldIds;
+        private final Bundle mClientState;
+        private final String mDatasetId;
+        private final FieldClassification[] mDetectedFieldClassifications;
+        private final AutofillId[] mDetectedFieldIds;
+        private final int mEventType;
+        private final ArraySet<String> mIgnoredDatasetIds;
+        private final ArrayList<ArrayList<String>> mManuallyFilledDatasetIds;
+        private final ArrayList<AutofillId> mManuallyFilledFieldIds;
+        private final List<String> mSelectedDatasetIds;
 
         @Retention(RetentionPolicy.SOURCE)
+        /* loaded from: classes3.dex */
         @interface EventIds {
         }
 
@@ -182,10 +177,7 @@ public final class FillEventHistory implements Parcelable {
         }
 
         public Set<String> getSelectedDatasetIds() {
-            if (this.mSelectedDatasetIds == null) {
-                return Collections.emptySet();
-            }
-            return new ArraySet(this.mSelectedDatasetIds);
+            return this.mSelectedDatasetIds == null ? Collections.emptySet() : new ArraySet(this.mSelectedDatasetIds);
         }
 
         public Set<String> getIgnoredDatasetIds() {
@@ -214,7 +206,7 @@ public final class FillEventHistory implements Parcelable {
                 AutofillId id = this.mDetectedFieldIds[i];
                 FieldClassification fc = this.mDetectedFieldClassifications[i];
                 if (Helper.sVerbose) {
-                    Log.v(FillEventHistory.TAG, "getFieldsClassification[" + i + "]: id=" + id + ", fc=" + fc);
+                    Log.m66v(FillEventHistory.TAG, "getFieldsClassification[" + i + "]: id=" + id + ", fc=" + fc);
                 }
                 map.put(id, fc);
             }
@@ -228,7 +220,9 @@ public final class FillEventHistory implements Parcelable {
             int size = this.mManuallyFilledFieldIds.size();
             Map<AutofillId, Set<String>> manuallyFilledFields = new ArrayMap<>(size);
             for (int i = 0; i < size; i++) {
-                manuallyFilledFields.put(this.mManuallyFilledFieldIds.get(i), new ArraySet(this.mManuallyFilledDatasetIds.get(i)));
+                AutofillId fieldId = this.mManuallyFilledFieldIds.get(i);
+                ArrayList<String> datasetIds = this.mManuallyFilledDatasetIds.get(i);
+                manuallyFilledFields.put(fieldId, new ArraySet<>(datasetIds));
             }
             return manuallyFilledFields;
         }
@@ -241,12 +235,12 @@ public final class FillEventHistory implements Parcelable {
             this.mIgnoredDatasetIds = ignoredDatasetIds;
             boolean z = true;
             if (changedFieldIds != null) {
-                Preconditions.checkArgument(!ArrayUtils.isEmpty((Collection<?>) changedFieldIds) && changedDatasetIds != null && changedFieldIds.size() == changedDatasetIds.size(), "changed ids must have same length and not be empty");
+                Preconditions.checkArgument((ArrayUtils.isEmpty(changedFieldIds) || changedDatasetIds == null || changedFieldIds.size() != changedDatasetIds.size()) ? false : true, "changed ids must have same length and not be empty");
             }
             this.mChangedFieldIds = changedFieldIds;
             this.mChangedDatasetIds = changedDatasetIds;
             if (manuallyFilledFieldIds != null) {
-                Preconditions.checkArgument((ArrayUtils.isEmpty((Collection<?>) manuallyFilledFieldIds) || manuallyFilledDatasetIds == null || manuallyFilledFieldIds.size() != manuallyFilledDatasetIds.size()) ? false : z, "manually filled ids must have same length and not be empty");
+                Preconditions.checkArgument((ArrayUtils.isEmpty(manuallyFilledFieldIds) || manuallyFilledDatasetIds == null || manuallyFilledFieldIds.size() != manuallyFilledDatasetIds.size()) ? false : z, "manually filled ids must have same length and not be empty");
             }
             this.mManuallyFilledFieldIds = manuallyFilledFieldIds;
             this.mManuallyFilledDatasetIds = manuallyFilledDatasetIds;

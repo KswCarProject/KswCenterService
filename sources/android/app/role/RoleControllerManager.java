@@ -7,13 +7,14 @@ import android.app.role.RoleManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.RemoteCallback;
-import android.os.RemoteException;
+import android.content.p002pm.PackageManager;
+import android.content.p002pm.ResolveInfo;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.Handler;
+import android.p007os.IBinder;
+import android.p007os.RemoteCallback;
+import android.p007os.RemoteException;
 import android.util.Log;
 import android.util.SparseArray;
 import com.android.internal.annotations.GuardedBy;
@@ -22,14 +23,14 @@ import com.android.internal.infra.AbstractRemoteService;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 
+/* loaded from: classes.dex */
 public class RoleControllerManager {
-    /* access modifiers changed from: private */
-    public static final String LOG_TAG = RoleControllerManager.class.getSimpleName();
     private static volatile ComponentName sRemoteServiceComponentName;
+    private final RemoteService mRemoteService;
+    private static final String LOG_TAG = RoleControllerManager.class.getSimpleName();
+    private static final Object sRemoteServicesLock = new Object();
     @GuardedBy({"sRemoteServicesLock"})
     private static final SparseArray<RemoteService> sRemoteServices = new SparseArray<>();
-    private static final Object sRemoteServicesLock = new Object();
-    private final RemoteService mRemoteService;
 
     public static void initializeRemoteServiceComponentName(Context context) {
         sRemoteServiceComponentName = getRemoteServiceComponentName(context);
@@ -59,7 +60,8 @@ public class RoleControllerManager {
         Intent intent = new Intent(RoleControllerService.SERVICE_INTERFACE);
         PackageManager packageManager = context.getPackageManager();
         intent.setPackage(packageManager.getPermissionControllerPackageName());
-        return packageManager.resolveService(intent, 0).getComponentInfo().getComponentName();
+        ResolveInfo resolveInfo = packageManager.resolveService(intent, 0);
+        return resolveInfo.getComponentInfo().getComponentName();
     }
 
     public void grantDefaultRoles(Executor executor, Consumer<Boolean> callback) {
@@ -86,47 +88,57 @@ public class RoleControllerManager {
         this.mRemoteService.scheduleRequest(new IsRoleVisibleRequest(this.mRemoteService, roleName, executor, callback));
     }
 
+    /* loaded from: classes.dex */
     private static final class RemoteService extends AbstractMultiplePendingRequestsRemoteService<RemoteService, IRoleController> {
         private static final long REQUEST_TIMEOUT_MILLIS = 15000;
         private static final long UNBIND_DELAY_MILLIS = 15000;
 
         RemoteService(Context context, ComponentName componentName, Handler handler, int userId) {
-            super(context, RoleControllerService.SERVICE_INTERFACE, componentName, userId, $$Lambda$RoleControllerManager$RemoteService$45dMO3SdHJhfBB_YKrC44Sznmoo.INSTANCE, handler, 0, false, 1);
+            super(context, RoleControllerService.SERVICE_INTERFACE, componentName, userId, new AbstractRemoteService.VultureCallback() { // from class: android.app.role.-$$Lambda$RoleControllerManager$RemoteService$45dMO3SdHJhfBB_YKrC44Sznmoo
+                @Override // com.android.internal.infra.AbstractRemoteService.VultureCallback
+                public final void onServiceDied(Object obj) {
+                    RoleControllerManager.RemoteService.lambda$new$0((RoleControllerManager.RemoteService) obj);
+                }
+            }, handler, 0, false, 1);
         }
 
         static /* synthetic */ void lambda$new$0(RemoteService service) {
-            String access$600 = RoleControllerManager.LOG_TAG;
-            Log.e(access$600, "RemoteService " + service + " died");
+            String str = RoleControllerManager.LOG_TAG;
+            Log.m70e(str, "RemoteService " + service + " died");
         }
 
         public Handler getHandler() {
             return this.mHandler;
         }
 
-        /* access modifiers changed from: protected */
+        /* JADX INFO: Access modifiers changed from: protected */
+        @Override // com.android.internal.infra.AbstractRemoteService
         public IRoleController getServiceInterface(IBinder binder) {
             return IRoleController.Stub.asInterface(binder);
         }
 
-        /* access modifiers changed from: protected */
-        public long getTimeoutIdleBindMillis() {
-            return 15000;
+        @Override // com.android.internal.infra.AbstractRemoteService
+        protected long getTimeoutIdleBindMillis() {
+            return 15000L;
         }
 
-        /* access modifiers changed from: protected */
-        public long getRemoteRequestMillis() {
-            return 15000;
+        @Override // com.android.internal.infra.AbstractRemoteService
+        protected long getRemoteRequestMillis() {
+            return 15000L;
         }
 
+        @Override // com.android.internal.infra.AbstractRemoteService
         public void scheduleRequest(AbstractRemoteService.BasePendingRequest<RemoteService, IRoleController> pendingRequest) {
             super.scheduleRequest(pendingRequest);
         }
 
+        @Override // com.android.internal.infra.AbstractRemoteService
         public void scheduleAsyncRequest(AbstractRemoteService.AsyncRequest<IRoleController> request) {
             super.scheduleAsyncRequest(request);
         }
     }
 
+    /* loaded from: classes.dex */
     private static final class GrantDefaultRolesRequest extends AbstractRemoteService.PendingRequest<RemoteService, IRoleController> {
         private final Consumer<Boolean> mCallback;
         private final Executor mExecutor;
@@ -136,17 +148,13 @@ public class RoleControllerManager {
             super(service);
             this.mExecutor = executor;
             this.mCallback = callback;
-            this.mRemoteCallback = new RemoteCallback((RemoteCallback.OnResultListener) new RemoteCallback.OnResultListener() {
+            this.mRemoteCallback = new RemoteCallback(new RemoteCallback.OnResultListener() { // from class: android.app.role.-$$Lambda$RoleControllerManager$GrantDefaultRolesRequest$uMND2yv3BzXWyrtureF8K8b0f0A
+                @Override // android.p007os.RemoteCallback.OnResultListener
                 public final void onResult(Bundle bundle) {
-                    RoleControllerManager.GrantDefaultRolesRequest.this.mExecutor.execute(new Runnable(bundle) {
-                        private final /* synthetic */ Bundle f$1;
-
-                        {
-                            this.f$1 = r2;
-                        }
-
+                    r0.mExecutor.execute(new Runnable() { // from class: android.app.role.-$$Lambda$RoleControllerManager$GrantDefaultRolesRequest$Qrnu382yknLH4_TvruMvYuK_N8M
+                        @Override // java.lang.Runnable
                         public final void run() {
-                            RoleControllerManager.GrantDefaultRolesRequest.lambda$new$0(RoleControllerManager.GrantDefaultRolesRequest.this, this.f$1);
+                            RoleControllerManager.GrantDefaultRolesRequest.lambda$new$0(RoleControllerManager.GrantDefaultRolesRequest.this, bundle);
                         }
                     });
                 }
@@ -155,37 +163,42 @@ public class RoleControllerManager {
 
         public static /* synthetic */ void lambda$new$0(GrantDefaultRolesRequest grantDefaultRolesRequest, Bundle result) {
             long token = Binder.clearCallingIdentity();
+            boolean successful = result != null;
             try {
-                grantDefaultRolesRequest.mCallback.accept(Boolean.valueOf(result != null));
+                grantDefaultRolesRequest.mCallback.accept(Boolean.valueOf(successful));
             } finally {
                 Binder.restoreCallingIdentity(token);
                 grantDefaultRolesRequest.finish();
             }
         }
 
-        /* access modifiers changed from: protected */
+        /* JADX INFO: Access modifiers changed from: protected */
+        @Override // com.android.internal.infra.AbstractRemoteService.PendingRequest
         public void onTimeout(RemoteService remoteService) {
-            this.mExecutor.execute(new Runnable() {
+            this.mExecutor.execute(new Runnable() { // from class: android.app.role.-$$Lambda$RoleControllerManager$GrantDefaultRolesRequest$0iOorSSTMKMxorImfJcxQ8hscBs
+                @Override // java.lang.Runnable
                 public final void run() {
                     RoleControllerManager.GrantDefaultRolesRequest.this.mCallback.accept(false);
                 }
             });
         }
 
+        @Override // java.lang.Runnable
         public void run() {
             try {
                 ((IRoleController) ((RemoteService) getService()).getServiceInterface()).grantDefaultRoles(this.mRemoteCallback);
             } catch (RemoteException e) {
-                Log.e(RoleControllerManager.LOG_TAG, "Error calling grantDefaultRoles()", e);
+                Log.m69e(RoleControllerManager.LOG_TAG, "Error calling grantDefaultRoles()", e);
             }
         }
 
-        /* access modifiers changed from: protected */
-        public void onFailed() {
-            this.mRemoteCallback.sendResult((Bundle) null);
+        @Override // com.android.internal.infra.AbstractRemoteService.BasePendingRequest
+        protected void onFailed() {
+            this.mRemoteCallback.sendResult(null);
         }
     }
 
+    /* loaded from: classes.dex */
     private static final class OnAddRoleHolderRequest extends AbstractRemoteService.PendingRequest<RemoteService, IRoleController> {
         private final RemoteCallback mCallback;
         @RoleManager.ManageHoldersFlags
@@ -200,7 +213,8 @@ public class RoleControllerManager {
             this.mPackageName = packageName;
             this.mFlags = flags;
             this.mCallback = callback;
-            this.mRemoteCallback = new RemoteCallback((RemoteCallback.OnResultListener) new RemoteCallback.OnResultListener() {
+            this.mRemoteCallback = new RemoteCallback(new RemoteCallback.OnResultListener() { // from class: android.app.role.-$$Lambda$RoleControllerManager$OnAddRoleHolderRequest$JT1k7eyE31b1Ili2aD3HPTU4d_Y
+                @Override // android.p007os.RemoteCallback.OnResultListener
                 public final void onResult(Bundle bundle) {
                     RoleControllerManager.OnAddRoleHolderRequest.lambda$new$0(RoleControllerManager.OnAddRoleHolderRequest.this, bundle);
                 }
@@ -217,20 +231,23 @@ public class RoleControllerManager {
             }
         }
 
-        /* access modifiers changed from: protected */
+        /* JADX INFO: Access modifiers changed from: protected */
+        @Override // com.android.internal.infra.AbstractRemoteService.PendingRequest
         public void onTimeout(RemoteService remoteService) {
-            this.mCallback.sendResult((Bundle) null);
+            this.mCallback.sendResult(null);
         }
 
+        @Override // java.lang.Runnable
         public void run() {
             try {
                 ((IRoleController) ((RemoteService) getService()).getServiceInterface()).onAddRoleHolder(this.mRoleName, this.mPackageName, this.mFlags, this.mRemoteCallback);
             } catch (RemoteException e) {
-                Log.e(RoleControllerManager.LOG_TAG, "Error calling onAddRoleHolder()", e);
+                Log.m69e(RoleControllerManager.LOG_TAG, "Error calling onAddRoleHolder()", e);
             }
         }
     }
 
+    /* loaded from: classes.dex */
     private static final class OnRemoveRoleHolderRequest extends AbstractRemoteService.PendingRequest<RemoteService, IRoleController> {
         private final RemoteCallback mCallback;
         @RoleManager.ManageHoldersFlags
@@ -245,7 +262,8 @@ public class RoleControllerManager {
             this.mPackageName = packageName;
             this.mFlags = flags;
             this.mCallback = callback;
-            this.mRemoteCallback = new RemoteCallback((RemoteCallback.OnResultListener) new RemoteCallback.OnResultListener() {
+            this.mRemoteCallback = new RemoteCallback(new RemoteCallback.OnResultListener() { // from class: android.app.role.-$$Lambda$RoleControllerManager$OnRemoveRoleHolderRequest$LtJIC2bE0p8jKF_FXl69Scqp5HE
+                @Override // android.p007os.RemoteCallback.OnResultListener
                 public final void onResult(Bundle bundle) {
                     RoleControllerManager.OnRemoveRoleHolderRequest.lambda$new$0(RoleControllerManager.OnRemoveRoleHolderRequest.this, bundle);
                 }
@@ -262,20 +280,23 @@ public class RoleControllerManager {
             }
         }
 
-        /* access modifiers changed from: protected */
+        /* JADX INFO: Access modifiers changed from: protected */
+        @Override // com.android.internal.infra.AbstractRemoteService.PendingRequest
         public void onTimeout(RemoteService remoteService) {
-            this.mCallback.sendResult((Bundle) null);
+            this.mCallback.sendResult(null);
         }
 
+        @Override // java.lang.Runnable
         public void run() {
             try {
                 ((IRoleController) ((RemoteService) getService()).getServiceInterface()).onRemoveRoleHolder(this.mRoleName, this.mPackageName, this.mFlags, this.mRemoteCallback);
             } catch (RemoteException e) {
-                Log.e(RoleControllerManager.LOG_TAG, "Error calling onRemoveRoleHolder()", e);
+                Log.m69e(RoleControllerManager.LOG_TAG, "Error calling onRemoveRoleHolder()", e);
             }
         }
     }
 
+    /* loaded from: classes.dex */
     private static final class OnClearRoleHoldersRequest extends AbstractRemoteService.PendingRequest<RemoteService, IRoleController> {
         private final RemoteCallback mCallback;
         @RoleManager.ManageHoldersFlags
@@ -288,7 +309,8 @@ public class RoleControllerManager {
             this.mRoleName = roleName;
             this.mFlags = flags;
             this.mCallback = callback;
-            this.mRemoteCallback = new RemoteCallback((RemoteCallback.OnResultListener) new RemoteCallback.OnResultListener() {
+            this.mRemoteCallback = new RemoteCallback(new RemoteCallback.OnResultListener() { // from class: android.app.role.-$$Lambda$RoleControllerManager$OnClearRoleHoldersRequest$WFtkA3AVOOzGz5tXwMpks5Iic-o
+                @Override // android.p007os.RemoteCallback.OnResultListener
                 public final void onResult(Bundle bundle) {
                     RoleControllerManager.OnClearRoleHoldersRequest.lambda$new$0(RoleControllerManager.OnClearRoleHoldersRequest.this, bundle);
                 }
@@ -305,20 +327,23 @@ public class RoleControllerManager {
             }
         }
 
-        /* access modifiers changed from: protected */
+        /* JADX INFO: Access modifiers changed from: protected */
+        @Override // com.android.internal.infra.AbstractRemoteService.PendingRequest
         public void onTimeout(RemoteService remoteService) {
-            this.mCallback.sendResult((Bundle) null);
+            this.mCallback.sendResult(null);
         }
 
+        @Override // java.lang.Runnable
         public void run() {
             try {
                 ((IRoleController) ((RemoteService) getService()).getServiceInterface()).onClearRoleHolders(this.mRoleName, this.mFlags, this.mRemoteCallback);
             } catch (RemoteException e) {
-                Log.e(RoleControllerManager.LOG_TAG, "Error calling onClearRoleHolders()", e);
+                Log.m69e(RoleControllerManager.LOG_TAG, "Error calling onClearRoleHolders()", e);
             }
         }
     }
 
+    /* loaded from: classes.dex */
     private static final class IsApplicationQualifiedForRoleRequest extends AbstractRemoteService.PendingRequest<RemoteService, IRoleController> {
         private final Consumer<Boolean> mCallback;
         private final Executor mExecutor;
@@ -332,17 +357,13 @@ public class RoleControllerManager {
             this.mPackageName = packageName;
             this.mExecutor = executor;
             this.mCallback = callback;
-            this.mRemoteCallback = new RemoteCallback((RemoteCallback.OnResultListener) new RemoteCallback.OnResultListener() {
+            this.mRemoteCallback = new RemoteCallback(new RemoteCallback.OnResultListener() { // from class: android.app.role.-$$Lambda$RoleControllerManager$IsApplicationQualifiedForRoleRequest$YqB5KyJlcDUM5urf3ImMD1odxhI
+                @Override // android.p007os.RemoteCallback.OnResultListener
                 public final void onResult(Bundle bundle) {
-                    RoleControllerManager.IsApplicationQualifiedForRoleRequest.this.mExecutor.execute(new Runnable(bundle) {
-                        private final /* synthetic */ Bundle f$1;
-
-                        {
-                            this.f$1 = r2;
-                        }
-
+                    r0.mExecutor.execute(new Runnable() { // from class: android.app.role.-$$Lambda$RoleControllerManager$IsApplicationQualifiedForRoleRequest$pbhRqekkSEnYlxVcT_rMcU6hV-E
+                        @Override // java.lang.Runnable
                         public final void run() {
-                            RoleControllerManager.IsApplicationQualifiedForRoleRequest.lambda$new$0(RoleControllerManager.IsApplicationQualifiedForRoleRequest.this, this.f$1);
+                            RoleControllerManager.IsApplicationQualifiedForRoleRequest.lambda$new$0(RoleControllerManager.IsApplicationQualifiedForRoleRequest.this, bundle);
                         }
                     });
                 }
@@ -351,32 +372,37 @@ public class RoleControllerManager {
 
         public static /* synthetic */ void lambda$new$0(IsApplicationQualifiedForRoleRequest isApplicationQualifiedForRoleRequest, Bundle result) {
             long token = Binder.clearCallingIdentity();
+            boolean qualified = result != null;
             try {
-                isApplicationQualifiedForRoleRequest.mCallback.accept(Boolean.valueOf(result != null));
+                isApplicationQualifiedForRoleRequest.mCallback.accept(Boolean.valueOf(qualified));
             } finally {
                 Binder.restoreCallingIdentity(token);
                 isApplicationQualifiedForRoleRequest.finish();
             }
         }
 
-        /* access modifiers changed from: protected */
+        /* JADX INFO: Access modifiers changed from: protected */
+        @Override // com.android.internal.infra.AbstractRemoteService.PendingRequest
         public void onTimeout(RemoteService remoteService) {
-            this.mExecutor.execute(new Runnable() {
+            this.mExecutor.execute(new Runnable() { // from class: android.app.role.-$$Lambda$RoleControllerManager$IsApplicationQualifiedForRoleRequest$9YPce2vGDOZP97XHsgR7kBf64jQ
+                @Override // java.lang.Runnable
                 public final void run() {
                     RoleControllerManager.IsApplicationQualifiedForRoleRequest.this.mCallback.accept(false);
                 }
             });
         }
 
+        @Override // java.lang.Runnable
         public void run() {
             try {
                 ((IRoleController) ((RemoteService) getService()).getServiceInterface()).isApplicationQualifiedForRole(this.mRoleName, this.mPackageName, this.mRemoteCallback);
             } catch (RemoteException e) {
-                Log.e(RoleControllerManager.LOG_TAG, "Error calling isApplicationQualifiedForRole()", e);
+                Log.m69e(RoleControllerManager.LOG_TAG, "Error calling isApplicationQualifiedForRole()", e);
             }
         }
     }
 
+    /* loaded from: classes.dex */
     private static final class IsRoleVisibleRequest extends AbstractRemoteService.PendingRequest<RemoteService, IRoleController> {
         private final Consumer<Boolean> mCallback;
         private final Executor mExecutor;
@@ -388,17 +414,13 @@ public class RoleControllerManager {
             this.mRoleName = roleName;
             this.mExecutor = executor;
             this.mCallback = callback;
-            this.mRemoteCallback = new RemoteCallback((RemoteCallback.OnResultListener) new RemoteCallback.OnResultListener() {
+            this.mRemoteCallback = new RemoteCallback(new RemoteCallback.OnResultListener() { // from class: android.app.role.-$$Lambda$RoleControllerManager$IsRoleVisibleRequest$oEPzdmOwBqsdvIknZm3f9_oOiE8
+                @Override // android.p007os.RemoteCallback.OnResultListener
                 public final void onResult(Bundle bundle) {
-                    RoleControllerManager.IsRoleVisibleRequest.this.mExecutor.execute(new Runnable(bundle) {
-                        private final /* synthetic */ Bundle f$1;
-
-                        {
-                            this.f$1 = r2;
-                        }
-
+                    r0.mExecutor.execute(new Runnable() { // from class: android.app.role.-$$Lambda$RoleControllerManager$IsRoleVisibleRequest$i7aWmxVK8GGR464ms-cqfIN7ou8
+                        @Override // java.lang.Runnable
                         public final void run() {
-                            RoleControllerManager.IsRoleVisibleRequest.lambda$new$0(RoleControllerManager.IsRoleVisibleRequest.this, this.f$1);
+                            RoleControllerManager.IsRoleVisibleRequest.lambda$new$0(RoleControllerManager.IsRoleVisibleRequest.this, bundle);
                         }
                     });
                 }
@@ -407,28 +429,32 @@ public class RoleControllerManager {
 
         public static /* synthetic */ void lambda$new$0(IsRoleVisibleRequest isRoleVisibleRequest, Bundle result) {
             long token = Binder.clearCallingIdentity();
+            boolean visible = result != null;
             try {
-                isRoleVisibleRequest.mCallback.accept(Boolean.valueOf(result != null));
+                isRoleVisibleRequest.mCallback.accept(Boolean.valueOf(visible));
             } finally {
                 Binder.restoreCallingIdentity(token);
                 isRoleVisibleRequest.finish();
             }
         }
 
-        /* access modifiers changed from: protected */
+        /* JADX INFO: Access modifiers changed from: protected */
+        @Override // com.android.internal.infra.AbstractRemoteService.PendingRequest
         public void onTimeout(RemoteService remoteService) {
-            this.mExecutor.execute(new Runnable() {
+            this.mExecutor.execute(new Runnable() { // from class: android.app.role.-$$Lambda$RoleControllerManager$IsRoleVisibleRequest$mPvdI6Jc9sQbLKyjDLv3TR6mmlM
+                @Override // java.lang.Runnable
                 public final void run() {
                     RoleControllerManager.IsRoleVisibleRequest.this.mCallback.accept(false);
                 }
             });
         }
 
+        @Override // java.lang.Runnable
         public void run() {
             try {
                 ((IRoleController) ((RemoteService) getService()).getServiceInterface()).isRoleVisible(this.mRoleName, this.mRemoteCallback);
             } catch (RemoteException e) {
-                Log.e(RoleControllerManager.LOG_TAG, "Error calling isRoleVisible()", e);
+                Log.m69e(RoleControllerManager.LOG_TAG, "Error calling isRoleVisible()", e);
             }
         }
     }

@@ -1,16 +1,21 @@
 package android.app.prediction;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class AppTargetId implements Parcelable {
-    public static final Parcelable.Creator<AppTargetId> CREATOR = new Parcelable.Creator<AppTargetId>() {
+    public static final Parcelable.Creator<AppTargetId> CREATOR = new Parcelable.Creator<AppTargetId>() { // from class: android.app.prediction.AppTargetId.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AppTargetId createFromParcel(Parcel parcel) {
             return new AppTargetId(parcel);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AppTargetId[] newArray(int size) {
             return new AppTargetId[size];
         }
@@ -31,20 +36,23 @@ public final class AppTargetId implements Parcelable {
     }
 
     public boolean equals(Object o) {
-        if (!getClass().equals(o != null ? o.getClass() : null)) {
-            return false;
+        if (getClass().equals(o != null ? o.getClass() : null)) {
+            AppTargetId other = (AppTargetId) o;
+            return this.mId.equals(other.mId);
         }
-        return this.mId.equals(((AppTargetId) o).mId);
+        return false;
     }
 
     public int hashCode() {
         return this.mId.hashCode();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.mId);
     }

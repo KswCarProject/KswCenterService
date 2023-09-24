@@ -1,156 +1,189 @@
 package android.graphics;
 
 import android.annotation.UnsupportedAppUsage;
+import dalvik.annotation.optimization.CriticalNative;
+import dalvik.annotation.optimization.FastNative;
 import java.io.PrintWriter;
 import libcore.util.NativeAllocationRegistry;
 
+/* loaded from: classes.dex */
 public class Matrix {
     @UnsupportedAppUsage
-    public static final Matrix IDENTITY_MATRIX = new Matrix() {
-        /* access modifiers changed from: package-private */
-        public void oops() {
+    public static final Matrix IDENTITY_MATRIX = new Matrix() { // from class: android.graphics.Matrix.1
+        void oops() {
             throw new IllegalStateException("Matrix can not be modified");
         }
 
+        @Override // android.graphics.Matrix
         public void set(Matrix src) {
             oops();
         }
 
+        @Override // android.graphics.Matrix
         public void reset() {
             oops();
         }
 
+        @Override // android.graphics.Matrix
         public void setTranslate(float dx, float dy) {
             oops();
         }
 
+        @Override // android.graphics.Matrix
         public void setScale(float sx, float sy, float px, float py) {
             oops();
         }
 
+        @Override // android.graphics.Matrix
         public void setScale(float sx, float sy) {
             oops();
         }
 
+        @Override // android.graphics.Matrix
         public void setRotate(float degrees, float px, float py) {
             oops();
         }
 
+        @Override // android.graphics.Matrix
         public void setRotate(float degrees) {
             oops();
         }
 
+        @Override // android.graphics.Matrix
         public void setSinCos(float sinValue, float cosValue, float px, float py) {
             oops();
         }
 
+        @Override // android.graphics.Matrix
         public void setSinCos(float sinValue, float cosValue) {
             oops();
         }
 
+        @Override // android.graphics.Matrix
         public void setSkew(float kx, float ky, float px, float py) {
             oops();
         }
 
+        @Override // android.graphics.Matrix
         public void setSkew(float kx, float ky) {
             oops();
         }
 
+        @Override // android.graphics.Matrix
         public boolean setConcat(Matrix a, Matrix b) {
             oops();
             return false;
         }
 
+        @Override // android.graphics.Matrix
         public boolean preTranslate(float dx, float dy) {
             oops();
             return false;
         }
 
+        @Override // android.graphics.Matrix
         public boolean preScale(float sx, float sy, float px, float py) {
             oops();
             return false;
         }
 
+        @Override // android.graphics.Matrix
         public boolean preScale(float sx, float sy) {
             oops();
             return false;
         }
 
+        @Override // android.graphics.Matrix
         public boolean preRotate(float degrees, float px, float py) {
             oops();
             return false;
         }
 
+        @Override // android.graphics.Matrix
         public boolean preRotate(float degrees) {
             oops();
             return false;
         }
 
+        @Override // android.graphics.Matrix
         public boolean preSkew(float kx, float ky, float px, float py) {
             oops();
             return false;
         }
 
+        @Override // android.graphics.Matrix
         public boolean preSkew(float kx, float ky) {
             oops();
             return false;
         }
 
+        @Override // android.graphics.Matrix
         public boolean preConcat(Matrix other) {
             oops();
             return false;
         }
 
+        @Override // android.graphics.Matrix
         public boolean postTranslate(float dx, float dy) {
             oops();
             return false;
         }
 
+        @Override // android.graphics.Matrix
         public boolean postScale(float sx, float sy, float px, float py) {
             oops();
             return false;
         }
 
+        @Override // android.graphics.Matrix
         public boolean postScale(float sx, float sy) {
             oops();
             return false;
         }
 
+        @Override // android.graphics.Matrix
         public boolean postRotate(float degrees, float px, float py) {
             oops();
             return false;
         }
 
+        @Override // android.graphics.Matrix
         public boolean postRotate(float degrees) {
             oops();
             return false;
         }
 
+        @Override // android.graphics.Matrix
         public boolean postSkew(float kx, float ky, float px, float py) {
             oops();
             return false;
         }
 
+        @Override // android.graphics.Matrix
         public boolean postSkew(float kx, float ky) {
             oops();
             return false;
         }
 
+        @Override // android.graphics.Matrix
         public boolean postConcat(Matrix other) {
             oops();
             return false;
         }
 
+        @Override // android.graphics.Matrix
         public boolean setRectToRect(RectF src, RectF dst, ScaleToFit stf) {
             oops();
             return false;
         }
 
+        @Override // android.graphics.Matrix
         public boolean setPolyToPoly(float[] src, int srcIndex, float[] dst, int dstIndex, int pointCount) {
             oops();
             return false;
         }
 
+        @Override // android.graphics.Matrix
         public void setValues(float[] values) {
             oops();
         }
@@ -169,103 +202,147 @@ public class Matrix {
 
     private static native long nCreate(long j);
 
+    @CriticalNative
     private static native boolean nEquals(long j, long j2);
 
-    /* access modifiers changed from: private */
-    public static native long nGetNativeFinalizer();
+    private static native long nGetNativeFinalizer();
 
+    @FastNative
     private static native void nGetValues(long j, float[] fArr);
 
+    @CriticalNative
     private static native boolean nInvert(long j, long j2);
 
+    @CriticalNative
     private static native boolean nIsAffine(long j);
 
+    @CriticalNative
     private static native boolean nIsIdentity(long j);
 
+    @FastNative
     private static native void nMapPoints(long j, float[] fArr, int i, float[] fArr2, int i2, int i3, boolean z);
 
+    @CriticalNative
     private static native float nMapRadius(long j, float f);
 
+    @FastNative
     private static native boolean nMapRect(long j, RectF rectF, RectF rectF2);
 
+    @CriticalNative
     private static native void nPostConcat(long j, long j2);
 
+    @CriticalNative
     private static native void nPostRotate(long j, float f);
 
+    @CriticalNative
     private static native void nPostRotate(long j, float f, float f2, float f3);
 
+    @CriticalNative
     private static native void nPostScale(long j, float f, float f2);
 
+    @CriticalNative
     private static native void nPostScale(long j, float f, float f2, float f3, float f4);
 
+    @CriticalNative
     private static native void nPostSkew(long j, float f, float f2);
 
+    @CriticalNative
     private static native void nPostSkew(long j, float f, float f2, float f3, float f4);
 
+    @CriticalNative
     private static native void nPostTranslate(long j, float f, float f2);
 
+    @CriticalNative
     private static native void nPreConcat(long j, long j2);
 
+    @CriticalNative
     private static native void nPreRotate(long j, float f);
 
+    @CriticalNative
     private static native void nPreRotate(long j, float f, float f2, float f3);
 
+    @CriticalNative
     private static native void nPreScale(long j, float f, float f2);
 
+    @CriticalNative
     private static native void nPreScale(long j, float f, float f2, float f3, float f4);
 
+    @CriticalNative
     private static native void nPreSkew(long j, float f, float f2);
 
+    @CriticalNative
     private static native void nPreSkew(long j, float f, float f2, float f3, float f4);
 
+    @CriticalNative
     private static native void nPreTranslate(long j, float f, float f2);
 
+    @CriticalNative
     private static native boolean nRectStaysRect(long j);
 
+    @CriticalNative
     private static native void nReset(long j);
 
+    @CriticalNative
     private static native void nSet(long j, long j2);
 
+    @CriticalNative
     private static native void nSetConcat(long j, long j2, long j3);
 
+    @FastNative
     private static native boolean nSetPolyToPoly(long j, float[] fArr, int i, float[] fArr2, int i2, int i3);
 
+    @FastNative
     private static native boolean nSetRectToRect(long j, RectF rectF, RectF rectF2, int i);
 
+    @CriticalNative
     private static native void nSetRotate(long j, float f);
 
+    @CriticalNative
     private static native void nSetRotate(long j, float f, float f2, float f3);
 
+    @CriticalNative
     private static native void nSetScale(long j, float f, float f2);
 
+    @CriticalNative
     private static native void nSetScale(long j, float f, float f2, float f3, float f4);
 
+    @CriticalNative
     private static native void nSetSinCos(long j, float f, float f2);
 
+    @CriticalNative
     private static native void nSetSinCos(long j, float f, float f2, float f3, float f4);
 
+    @CriticalNative
     private static native void nSetSkew(long j, float f, float f2);
 
+    @CriticalNative
     private static native void nSetSkew(long j, float f, float f2, float f3, float f4);
 
+    @CriticalNative
     private static native void nSetTranslate(long j, float f, float f2);
 
+    @FastNative
     private static native void nSetValues(long j, float[] fArr);
 
+    static /* synthetic */ long access$000() {
+        return nGetNativeFinalizer();
+    }
+
+    /* loaded from: classes.dex */
     private static class NoImagePreloadHolder {
-        public static final NativeAllocationRegistry sRegistry = NativeAllocationRegistry.createMalloced(Matrix.class.getClassLoader(), Matrix.nGetNativeFinalizer());
+        public static final NativeAllocationRegistry sRegistry = NativeAllocationRegistry.createMalloced(Matrix.class.getClassLoader(), Matrix.access$000());
 
         private NoImagePreloadHolder() {
         }
     }
 
     public Matrix() {
-        this.native_instance = nCreate(0);
+        this.native_instance = nCreate(0L);
         NoImagePreloadHolder.sRegistry.registerNativeAllocation(this, this.native_instance);
     }
 
     public Matrix(Matrix src) {
-        this.native_instance = nCreate(src != null ? src.native_instance : 0);
+        this.native_instance = nCreate(src != null ? src.native_instance : 0L);
         NoImagePreloadHolder.sRegistry.registerNativeAllocation(this, this.native_instance);
     }
 
@@ -425,6 +502,7 @@ public class Matrix {
         return true;
     }
 
+    /* loaded from: classes.dex */
     public enum ScaleToFit {
         FILL(0),
         START(1),
@@ -433,16 +511,16 @@ public class Matrix {
         
         final int nativeInt;
 
-        private ScaleToFit(int nativeInt2) {
-            this.nativeInt = nativeInt2;
+        ScaleToFit(int nativeInt) {
+            this.nativeInt = nativeInt;
         }
     }
 
     public boolean setRectToRect(RectF src, RectF dst, ScaleToFit stf) {
-        if (dst != null && src != null) {
-            return nSetRectToRect(this.native_instance, src, dst, stf.nativeInt);
+        if (dst == null || src == null) {
+            throw new NullPointerException();
         }
-        throw new NullPointerException();
+        return nSetRectToRect(this.native_instance, src, dst, stf.nativeInt);
     }
 
     private static void checkPointArrays(float[] src, int srcIndex, float[] dst, int dstIndex, int pointCount) {
@@ -454,11 +532,11 @@ public class Matrix {
     }
 
     public boolean setPolyToPoly(float[] src, int srcIndex, float[] dst, int dstIndex, int pointCount) {
-        if (pointCount <= 4) {
-            checkPointArrays(src, srcIndex, dst, dstIndex, pointCount);
-            return nSetPolyToPoly(this.native_instance, src, srcIndex, dst, dstIndex, pointCount);
+        if (pointCount > 4) {
+            throw new IllegalArgumentException();
         }
-        throw new IllegalArgumentException();
+        checkPointArrays(src, srcIndex, dst, dstIndex, pointCount);
+        return nSetPolyToPoly(this.native_instance, src, srcIndex, dst, dstIndex, pointCount);
     }
 
     public boolean invert(Matrix inverse) {
@@ -476,19 +554,17 @@ public class Matrix {
     }
 
     public void mapPoints(float[] dst, float[] src) {
-        if (dst.length == src.length) {
-            mapPoints(dst, 0, src, 0, dst.length >> 1);
-            return;
+        if (dst.length != src.length) {
+            throw new ArrayIndexOutOfBoundsException();
         }
-        throw new ArrayIndexOutOfBoundsException();
+        mapPoints(dst, 0, src, 0, dst.length >> 1);
     }
 
     public void mapVectors(float[] dst, float[] src) {
-        if (dst.length == src.length) {
-            mapVectors(dst, 0, src, 0, dst.length >> 1);
-            return;
+        if (dst.length != src.length) {
+            throw new ArrayIndexOutOfBoundsException();
         }
-        throw new ArrayIndexOutOfBoundsException();
+        mapVectors(dst, 0, src, 0, dst.length >> 1);
     }
 
     public void mapPoints(float[] pts) {
@@ -500,10 +576,10 @@ public class Matrix {
     }
 
     public boolean mapRect(RectF dst, RectF src) {
-        if (dst != null && src != null) {
-            return nMapRect(this.native_instance, dst, src);
+        if (dst == null || src == null) {
+            throw new NullPointerException();
         }
-        throw new NullPointerException();
+        return nMapRect(this.native_instance, dst, src);
     }
 
     public boolean mapRect(RectF rect) {
@@ -515,19 +591,17 @@ public class Matrix {
     }
 
     public void getValues(float[] values) {
-        if (values.length >= 9) {
-            nGetValues(this.native_instance, values);
-            return;
+        if (values.length < 9) {
+            throw new ArrayIndexOutOfBoundsException();
         }
-        throw new ArrayIndexOutOfBoundsException();
+        nGetValues(this.native_instance, values);
     }
 
     public void setValues(float[] values) {
-        if (values.length >= 9) {
-            nSetValues(this.native_instance, values);
-            return;
+        if (values.length < 9) {
+            throw new ArrayIndexOutOfBoundsException();
         }
-        throw new ArrayIndexOutOfBoundsException();
+        nSetValues(this.native_instance, values);
     }
 
     public String toString() {
@@ -592,7 +666,8 @@ public class Matrix {
         pw.print(']');
     }
 
-    public final long ni() {
+    /* renamed from: ni */
+    public final long m130ni() {
         return this.native_instance;
     }
 }

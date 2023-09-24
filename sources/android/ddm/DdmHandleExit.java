@@ -1,9 +1,11 @@
 package android.ddm;
 
+import java.nio.ByteBuffer;
 import org.apache.harmony.dalvik.ddmc.Chunk;
 import org.apache.harmony.dalvik.ddmc.ChunkHandler;
 import org.apache.harmony.dalvik.ddmc.DdmServer;
 
+/* loaded from: classes.dex */
 public class DdmHandleExit extends ChunkHandler {
     public static final int CHUNK_EXIT = type("EXIT");
     private static DdmHandleExit mInstance = new DdmHandleExit();
@@ -22,7 +24,9 @@ public class DdmHandleExit extends ChunkHandler {
     }
 
     public Chunk handleChunk(Chunk request) {
-        Runtime.getRuntime().halt(wrapChunk(request).getInt());
+        ByteBuffer in = wrapChunk(request);
+        int statusCode = in.getInt();
+        Runtime.getRuntime().halt(statusCode);
         return null;
     }
 }

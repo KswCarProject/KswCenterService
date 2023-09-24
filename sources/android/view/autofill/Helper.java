@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
+/* loaded from: classes4.dex */
 public final class Helper {
     public static boolean sDebug = false;
     public static boolean sVerbose = false;
@@ -27,7 +28,7 @@ public final class Helper {
         builder.append("[");
         for (String value : values) {
             builder.append(" '");
-            appendRedacted(builder, (CharSequence) value);
+            appendRedacted(builder, value);
             builder.append("'");
         }
         builder.append(" ]");

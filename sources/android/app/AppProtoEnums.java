@@ -1,5 +1,6 @@
 package android.app;
 
+/* loaded from: classes.dex */
 public final class AppProtoEnums {
     public static final int APP_TRANSITION_REASON_UNKNOWN = 0;
     public static final int APP_TRANSITION_RECENTS_ANIM = 5;

@@ -3,27 +3,27 @@ package android.drm;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+/* loaded from: classes.dex */
 public class DrmSupportInfo {
-    private String mDescription = "";
     private final ArrayList<String> mFileSuffixList = new ArrayList<>();
     private final ArrayList<String> mMimeTypeList = new ArrayList<>();
+    private String mDescription = "";
 
     public void addMimeType(String mimeType) {
         if (mimeType == null) {
             throw new IllegalArgumentException("mimeType is null");
-        } else if (mimeType != "") {
-            this.mMimeTypeList.add(mimeType);
-        } else {
+        }
+        if (mimeType == "") {
             throw new IllegalArgumentException("mimeType is an empty string");
         }
+        this.mMimeTypeList.add(mimeType);
     }
 
     public void addFileSuffix(String fileSuffix) {
-        if (fileSuffix != "") {
-            this.mFileSuffixList.add(fileSuffix);
-            return;
+        if (fileSuffix == "") {
+            throw new IllegalArgumentException("fileSuffix is an empty string");
         }
-        throw new IllegalArgumentException("fileSuffix is an empty string");
+        this.mFileSuffixList.add(fileSuffix);
     }
 
     public Iterator<String> getMimeTypeIterator() {
@@ -37,11 +37,11 @@ public class DrmSupportInfo {
     public void setDescription(String description) {
         if (description == null) {
             throw new IllegalArgumentException("description is null");
-        } else if (description != "") {
-            this.mDescription = description;
-        } else {
+        }
+        if (description == "") {
             throw new IllegalArgumentException("description is an empty string");
         }
+        this.mDescription = description;
     }
 
     public String getDescriprition() {
@@ -57,21 +57,18 @@ public class DrmSupportInfo {
     }
 
     public boolean equals(Object object) {
-        if (!(object instanceof DrmSupportInfo)) {
-            return false;
+        if (object instanceof DrmSupportInfo) {
+            DrmSupportInfo info = (DrmSupportInfo) object;
+            return this.mFileSuffixList.equals(info.mFileSuffixList) && this.mMimeTypeList.equals(info.mMimeTypeList) && this.mDescription.equals(info.mDescription);
         }
-        DrmSupportInfo info = (DrmSupportInfo) object;
-        if (!this.mFileSuffixList.equals(info.mFileSuffixList) || !this.mMimeTypeList.equals(info.mMimeTypeList) || !this.mDescription.equals(info.mDescription)) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean isSupportedMimeType(String mimeType) {
+    boolean isSupportedMimeType(String mimeType) {
         if (mimeType != null && !mimeType.equals("")) {
             for (int i = 0; i < this.mMimeTypeList.size(); i++) {
-                if (this.mMimeTypeList.get(i).startsWith(mimeType)) {
+                String completeMimeType = this.mMimeTypeList.get(i);
+                if (completeMimeType.startsWith(mimeType)) {
                     return true;
                 }
             }
@@ -79,8 +76,7 @@ public class DrmSupportInfo {
         return false;
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean isSupportedFileSuffix(String fileSuffix) {
+    boolean isSupportedFileSuffix(String fileSuffix) {
         return this.mFileSuffixList.contains(fileSuffix);
     }
 }

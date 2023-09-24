@@ -1,12 +1,13 @@
 package android.hardware;
 
 import android.hardware.ISensorPrivacyListener;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes.dex */
 public interface ISensorPrivacyManager extends IInterface {
     void addSensorPrivacyListener(ISensorPrivacyListener iSensorPrivacyListener) throws RemoteException;
 
@@ -16,25 +17,32 @@ public interface ISensorPrivacyManager extends IInterface {
 
     void setSensorPrivacy(boolean z) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements ISensorPrivacyManager {
+        @Override // android.hardware.ISensorPrivacyManager
         public void addSensorPrivacyListener(ISensorPrivacyListener listener) throws RemoteException {
         }
 
+        @Override // android.hardware.ISensorPrivacyManager
         public void removeSensorPrivacyListener(ISensorPrivacyListener listener) throws RemoteException {
         }
 
+        @Override // android.hardware.ISensorPrivacyManager
         public boolean isSensorPrivacyEnabled() throws RemoteException {
             return false;
         }
 
+        @Override // android.hardware.ISensorPrivacyManager
         public void setSensorPrivacy(boolean enable) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements ISensorPrivacyManager {
         private static final String DESCRIPTOR = "android.hardware.ISensorPrivacyManager";
         static final int TRANSACTION_addSensorPrivacyListener = 1;
@@ -51,12 +59,13 @@ public interface ISensorPrivacyManager extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof ISensorPrivacyManager)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof ISensorPrivacyManager)) {
+                return (ISensorPrivacyManager) iin;
             }
-            return (ISensorPrivacyManager) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -76,43 +85,48 @@ public interface ISensorPrivacyManager extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        addSensorPrivacyListener(ISensorPrivacyListener.Stub.asInterface(data.readStrongBinder()));
-                        reply.writeNoException();
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        removeSensorPrivacyListener(ISensorPrivacyListener.Stub.asInterface(data.readStrongBinder()));
-                        reply.writeNoException();
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        boolean _result = isSensorPrivacyEnabled();
-                        reply.writeNoException();
-                        reply.writeInt(_result);
-                        return true;
-                    case 4:
-                        data.enforceInterface(DESCRIPTOR);
-                        setSensorPrivacy(data.readInt() != 0);
-                        reply.writeNoException();
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    ISensorPrivacyListener _arg0 = ISensorPrivacyListener.Stub.asInterface(data.readStrongBinder());
+                    addSensorPrivacyListener(_arg0);
+                    reply.writeNoException();
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    ISensorPrivacyListener _arg02 = ISensorPrivacyListener.Stub.asInterface(data.readStrongBinder());
+                    removeSensorPrivacyListener(_arg02);
+                    reply.writeNoException();
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isSensorPrivacyEnabled = isSensorPrivacyEnabled();
+                    reply.writeNoException();
+                    reply.writeInt(isSensorPrivacyEnabled ? 1 : 0);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean _arg03 = data.readInt() != 0;
+                    setSensorPrivacy(_arg03);
+                    reply.writeNoException();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements ISensorPrivacyManager {
             public static ISensorPrivacyManager sDefaultImpl;
             private IBinder mRemote;
@@ -121,6 +135,7 @@ public interface ISensorPrivacyManager extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -129,80 +144,76 @@ public interface ISensorPrivacyManager extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.hardware.ISensorPrivacyManager
             public void addSensorPrivacyListener(ISensorPrivacyListener listener) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(listener != null ? listener.asBinder() : null);
-                    if (this.mRemote.transact(1, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().addSensorPrivacyListener(listener);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().addSensorPrivacyListener(listener);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.ISensorPrivacyManager
             public void removeSensorPrivacyListener(ISensorPrivacyListener listener) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(listener != null ? listener.asBinder() : null);
-                    if (this.mRemote.transact(2, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().removeSensorPrivacyListener(listener);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().removeSensorPrivacyListener(listener);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.ISensorPrivacyManager
             public boolean isSensorPrivacyEnabled() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(3, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isSensorPrivacyEnabled();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.ISensorPrivacyManager
             public void setSensorPrivacy(boolean enable) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(enable);
-                    if (this.mRemote.transact(4, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(enable ? 1 : 0);
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setSensorPrivacy(enable);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setSensorPrivacy(enable);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -211,11 +222,11 @@ public interface ISensorPrivacyManager extends IInterface {
         }
 
         public static boolean setDefaultImpl(ISensorPrivacyManager impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static ISensorPrivacyManager getDefaultImpl() {

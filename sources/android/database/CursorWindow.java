@@ -3,37 +3,47 @@ package android.database;
 import android.annotation.UnsupportedAppUsage;
 import android.content.res.Resources;
 import android.database.sqlite.SQLiteClosable;
-import android.os.Binder;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Binder;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.Process;
 import android.util.Log;
 import android.util.LongSparseArray;
-import com.android.internal.R;
+import android.util.SparseIntArray;
+import com.android.internal.C3132R;
+import dalvik.annotation.optimization.FastNative;
 import dalvik.system.CloseGuard;
 
+/* loaded from: classes.dex */
 public class CursorWindow extends SQLiteClosable implements Parcelable {
-    public static final Parcelable.Creator<CursorWindow> CREATOR = new Parcelable.Creator<CursorWindow>() {
-        public CursorWindow createFromParcel(Parcel source) {
-            return new CursorWindow(source);
-        }
-
-        public CursorWindow[] newArray(int size) {
-            return new CursorWindow[size];
-        }
-    };
     private static final String STATS_TAG = "CursorWindowStats";
-    @UnsupportedAppUsage
-    private static int sCursorWindowSize = -1;
-    @UnsupportedAppUsage
-    private static final LongSparseArray<Integer> sWindowToPidMap = new LongSparseArray<>();
     private final CloseGuard mCloseGuard;
     private final String mName;
     private int mStartPos;
     @UnsupportedAppUsage
     public long mWindowPtr;
+    @UnsupportedAppUsage
+    private static int sCursorWindowSize = -1;
+    public static final Parcelable.Creator<CursorWindow> CREATOR = new Parcelable.Creator<CursorWindow>() { // from class: android.database.CursorWindow.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public CursorWindow createFromParcel(Parcel source) {
+            return new CursorWindow(source);
+        }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public CursorWindow[] newArray(int size) {
+            return new CursorWindow[size];
+        }
+    };
+    @UnsupportedAppUsage
+    private static final LongSparseArray<Integer> sWindowToPidMap = new LongSparseArray<>();
+
+    @FastNative
     private static native boolean nativeAllocRow(long j);
 
+    @FastNative
     private static native void nativeClear(long j);
 
     private static native void nativeCopyStringToBuffer(long j, int i, int i2, CharArrayBuffer charArrayBuffer);
@@ -44,38 +54,47 @@ public class CursorWindow extends SQLiteClosable implements Parcelable {
 
     private static native void nativeDispose(long j);
 
+    @FastNative
     private static native void nativeFreeLastRow(long j);
 
     private static native byte[] nativeGetBlob(long j, int i, int i2);
 
+    @FastNative
     private static native double nativeGetDouble(long j, int i, int i2);
 
+    @FastNative
     private static native long nativeGetLong(long j, int i, int i2);
 
     private static native String nativeGetName(long j);
 
+    @FastNative
     private static native int nativeGetNumRows(long j);
 
     private static native String nativeGetString(long j, int i, int i2);
 
+    @FastNative
     private static native int nativeGetType(long j, int i, int i2);
 
     private static native boolean nativePutBlob(long j, byte[] bArr, int i, int i2);
 
+    @FastNative
     private static native boolean nativePutDouble(long j, double d, int i, int i2);
 
+    @FastNative
     private static native boolean nativePutLong(long j, long j2, int i, int i2);
 
+    @FastNative
     private static native boolean nativePutNull(long j, int i, int i2);
 
     private static native boolean nativePutString(long j, String str, int i, int i2);
 
+    @FastNative
     private static native boolean nativeSetNumColumns(long j, int i);
 
     private static native void nativeWriteToParcel(long j, Parcel parcel);
 
     public CursorWindow(String name) {
-        this(name, (long) getCursorWindowSize());
+        this(name, getCursorWindowSize());
     }
 
     public CursorWindow(String name, long windowSizeBytes) {
@@ -83,12 +102,11 @@ public class CursorWindow extends SQLiteClosable implements Parcelable {
         this.mStartPos = 0;
         this.mName = (name == null || name.length() == 0) ? "<unnamed>" : name;
         this.mWindowPtr = nativeCreate(this.mName, (int) windowSizeBytes);
-        if (this.mWindowPtr != 0) {
-            this.mCloseGuard.open("close");
-            recordNewWindow(Binder.getCallingPid(), this.mWindowPtr);
-            return;
+        if (this.mWindowPtr == 0) {
+            throw new AssertionError();
         }
-        throw new AssertionError();
+        this.mCloseGuard.open("close");
+        recordNewWindow(Binder.getCallingPid(), this.mWindowPtr);
     }
 
     @Deprecated
@@ -100,16 +118,14 @@ public class CursorWindow extends SQLiteClosable implements Parcelable {
         this.mCloseGuard = CloseGuard.get();
         this.mStartPos = source.readInt();
         this.mWindowPtr = nativeCreateFromParcel(source);
-        if (this.mWindowPtr != 0) {
-            this.mName = nativeGetName(this.mWindowPtr);
-            this.mCloseGuard.open("close");
-            return;
+        if (this.mWindowPtr == 0) {
+            throw new AssertionError();
         }
-        throw new AssertionError();
+        this.mName = nativeGetName(this.mWindowPtr);
+        this.mCloseGuard.open("close");
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         try {
             if (this.mCloseGuard != null) {
                 this.mCloseGuard.warnIfOpen();
@@ -127,7 +143,7 @@ public class CursorWindow extends SQLiteClosable implements Parcelable {
         if (this.mWindowPtr != 0) {
             recordClosingOfWindow(this.mWindowPtr);
             nativeDispose(this.mWindowPtr);
-            this.mWindowPtr = 0;
+            this.mWindowPtr = 0L;
         }
     }
 
@@ -244,15 +260,14 @@ public class CursorWindow extends SQLiteClosable implements Parcelable {
     }
 
     public void copyStringToBuffer(int row, int column, CharArrayBuffer buffer) {
-        if (buffer != null) {
-            acquireReference();
-            try {
-                nativeCopyStringToBuffer(this.mWindowPtr, row - this.mStartPos, column, buffer);
-            } finally {
-                releaseReference();
-            }
-        } else {
+        if (buffer == null) {
             throw new IllegalArgumentException("CharArrayBuffer should not be null");
+        }
+        acquireReference();
+        try {
+            nativeCopyStringToBuffer(this.mWindowPtr, row - this.mStartPos, column, buffer);
+        } finally {
+            releaseReference();
         }
     }
 
@@ -275,7 +290,7 @@ public class CursorWindow extends SQLiteClosable implements Parcelable {
     }
 
     public short getShort(int row, int column) {
-        return (short) ((int) getLong(row, column));
+        return (short) getLong(row, column);
     }
 
     public int getInt(int row, int column) {
@@ -335,11 +350,12 @@ public class CursorWindow extends SQLiteClosable implements Parcelable {
         return CREATOR.createFromParcel(p);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
-    /* JADX INFO: finally extract failed */
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         acquireReference();
         try {
@@ -347,16 +363,14 @@ public class CursorWindow extends SQLiteClosable implements Parcelable {
             nativeWriteToParcel(this.mWindowPtr, dest);
             releaseReference();
             if ((flags & 1) != 0) {
-                releaseReference();
             }
-        } catch (Throwable th) {
+        } finally {
             releaseReference();
-            throw th;
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onAllReferencesReleased() {
+    @Override // android.database.sqlite.SQLiteClosable
+    protected void onAllReferencesReleased() {
         dispose();
     }
 
@@ -364,155 +378,58 @@ public class CursorWindow extends SQLiteClosable implements Parcelable {
         synchronized (sWindowToPidMap) {
             sWindowToPidMap.put(window, Integer.valueOf(pid));
             if (Log.isLoggable(STATS_TAG, 2)) {
-                Log.i(STATS_TAG, "Created a new Cursor. " + printStats());
+                Log.m68i(STATS_TAG, "Created a new Cursor. " + printStats());
             }
         }
     }
 
     private void recordClosingOfWindow(long window) {
         synchronized (sWindowToPidMap) {
-            if (sWindowToPidMap.size() != 0) {
-                sWindowToPidMap.delete(window);
+            if (sWindowToPidMap.size() == 0) {
+                return;
             }
+            sWindowToPidMap.delete(window);
         }
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:12:0x003b, code lost:
-        r4 = r3.size();
-        r5 = 0;
-        r2 = 0;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:13:0x0041, code lost:
-        if (r2 >= r4) goto L_0x008b;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:14:0x0043, code lost:
-        r0.append(" (# cursors opened by ");
-        r7 = r3.keyAt(r2);
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:15:0x004c, code lost:
-        if (r7 != r1) goto L_0x0055;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:16:0x004e, code lost:
-        r0.append("this proc=");
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:17:0x0055, code lost:
-        r0.append("pid " + r7 + "=");
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:18:0x006f, code lost:
-        r8 = r3.get(r7);
-        r0.append(r8 + ")");
-        r5 = r5 + r8;
-        r2 = r2 + 1;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:20:0x0091, code lost:
-        if (r0.length() <= 980) goto L_0x0098;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:21:0x0093, code lost:
-        r2 = r0.substring(0, 980);
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:22:0x0098, code lost:
-        r2 = r0.toString();
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:24:0x00b0, code lost:
-        return "# Open Cursors=" + r5 + r2;
-     */
-    @android.annotation.UnsupportedAppUsage
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    private java.lang.String printStats() {
-        /*
-            r11 = this;
-            java.lang.StringBuilder r0 = new java.lang.StringBuilder
-            r0.<init>()
-            int r1 = android.os.Process.myPid()
-            r2 = 0
-            android.util.SparseIntArray r3 = new android.util.SparseIntArray
-            r3.<init>()
-            android.util.LongSparseArray<java.lang.Integer> r4 = sWindowToPidMap
-            monitor-enter(r4)
-            android.util.LongSparseArray<java.lang.Integer> r5 = sWindowToPidMap     // Catch:{ all -> 0x00b1 }
-            int r5 = r5.size()     // Catch:{ all -> 0x00b1 }
-            if (r5 != 0) goto L_0x001e
-            java.lang.String r6 = ""
-            monitor-exit(r4)     // Catch:{ all -> 0x00b1 }
-            return r6
-        L_0x001e:
-            r6 = 0
-            r7 = r6
-        L_0x0020:
-            if (r7 >= r5) goto L_0x003a
-            android.util.LongSparseArray<java.lang.Integer> r8 = sWindowToPidMap     // Catch:{ all -> 0x00b1 }
-            java.lang.Object r8 = r8.valueAt(r7)     // Catch:{ all -> 0x00b1 }
-            java.lang.Integer r8 = (java.lang.Integer) r8     // Catch:{ all -> 0x00b1 }
-            int r8 = r8.intValue()     // Catch:{ all -> 0x00b1 }
-            int r9 = r3.get(r8)     // Catch:{ all -> 0x00b1 }
-            int r9 = r9 + 1
-            r3.put(r8, r9)     // Catch:{ all -> 0x00b1 }
-            int r7 = r7 + 1
-            goto L_0x0020
-        L_0x003a:
-            monitor-exit(r4)     // Catch:{ all -> 0x00b1 }
-            int r4 = r3.size()
-            r5 = r2
-            r2 = r6
-        L_0x0041:
-            if (r2 >= r4) goto L_0x008b
-            java.lang.String r7 = " (# cursors opened by "
-            r0.append(r7)
-            int r7 = r3.keyAt(r2)
-            if (r7 != r1) goto L_0x0055
-            java.lang.String r8 = "this proc="
-            r0.append(r8)
-            goto L_0x006f
-        L_0x0055:
-            java.lang.StringBuilder r8 = new java.lang.StringBuilder
-            r8.<init>()
-            java.lang.String r9 = "pid "
-            r8.append(r9)
-            r8.append(r7)
-            java.lang.String r9 = "="
-            r8.append(r9)
-            java.lang.String r8 = r8.toString()
-            r0.append(r8)
-        L_0x006f:
-            int r8 = r3.get(r7)
-            java.lang.StringBuilder r9 = new java.lang.StringBuilder
-            r9.<init>()
-            r9.append(r8)
-            java.lang.String r10 = ")"
-            r9.append(r10)
-            java.lang.String r9 = r9.toString()
-            r0.append(r9)
-            int r5 = r5 + r8
-            int r2 = r2 + 1
-            goto L_0x0041
-        L_0x008b:
-            int r2 = r0.length()
-            r7 = 980(0x3d4, float:1.373E-42)
-            if (r2 <= r7) goto L_0x0098
-            java.lang.String r2 = r0.substring(r6, r7)
-            goto L_0x009c
-        L_0x0098:
-            java.lang.String r2 = r0.toString()
-        L_0x009c:
-            java.lang.StringBuilder r6 = new java.lang.StringBuilder
-            r6.<init>()
-            java.lang.String r7 = "# Open Cursors="
-            r6.append(r7)
-            r6.append(r5)
-            r6.append(r2)
-            java.lang.String r6 = r6.toString()
-            return r6
-        L_0x00b1:
-            r5 = move-exception
-            monitor-exit(r4)     // Catch:{ all -> 0x00b1 }
-            throw r5
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.database.CursorWindow.printStats():java.lang.String");
+    @UnsupportedAppUsage
+    private String printStats() {
+        StringBuilder buff = new StringBuilder();
+        int myPid = Process.myPid();
+        SparseIntArray pidCounts = new SparseIntArray();
+        synchronized (sWindowToPidMap) {
+            int size = sWindowToPidMap.size();
+            if (size == 0) {
+                return "";
+            }
+            for (int indx = 0; indx < size; indx++) {
+                int pid = sWindowToPidMap.valueAt(indx).intValue();
+                int value = pidCounts.get(pid);
+                pidCounts.put(pid, value + 1);
+            }
+            int numPids = pidCounts.size();
+            int total = 0;
+            for (int total2 = 0; total2 < numPids; total2++) {
+                buff.append(" (# cursors opened by ");
+                int pid2 = pidCounts.keyAt(total2);
+                if (pid2 == myPid) {
+                    buff.append("this proc=");
+                } else {
+                    buff.append("pid " + pid2 + "=");
+                }
+                int num = pidCounts.get(pid2);
+                buff.append(num + ")");
+                total += num;
+            }
+            int i = buff.length();
+            String s = i > 980 ? buff.substring(0, 980) : buff.toString();
+            return "# Open Cursors=" + total + s;
+        }
     }
 
     private static int getCursorWindowSize() {
         if (sCursorWindowSize < 0) {
-            sCursorWindowSize = Resources.getSystem().getInteger(R.integer.config_cursorWindowSize) * 1024;
+            sCursorWindowSize = Resources.getSystem().getInteger(C3132R.integer.config_cursorWindowSize) * 1024;
         }
         return sCursorWindowSize;
     }

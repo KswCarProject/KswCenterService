@@ -3,49 +3,15 @@ package android.net.wifi.rtt;
 import android.annotation.SystemApi;
 import android.net.MacAddress;
 import android.net.wifi.aware.PeerHandle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Arrays;
 import java.util.Objects;
 
+/* loaded from: classes3.dex */
 public final class RangingResult implements Parcelable {
-    public static final Parcelable.Creator<RangingResult> CREATOR = new Parcelable.Creator<RangingResult>() {
-        public RangingResult[] newArray(int size) {
-            return new RangingResult[size];
-        }
-
-        public RangingResult createFromParcel(Parcel in) {
-            Parcel parcel = in;
-            int status = in.readInt();
-            MacAddress mac = null;
-            if (in.readBoolean()) {
-                mac = MacAddress.CREATOR.createFromParcel(parcel);
-            }
-            MacAddress mac2 = mac;
-            boolean peerHandlePresent = in.readBoolean();
-            PeerHandle peerHandle = null;
-            if (peerHandlePresent) {
-                peerHandle = new PeerHandle(in.readInt());
-            }
-            PeerHandle peerHandle2 = peerHandle;
-            int distanceMm = in.readInt();
-            int distanceStdDevMm = in.readInt();
-            int rssi = in.readInt();
-            int numAttemptedMeasurements = in.readInt();
-            int numSuccessfulMeasurements = in.readInt();
-            byte[] lci = in.createByteArray();
-            byte[] lcr = in.createByteArray();
-            ResponderLocation responderLocation = (ResponderLocation) parcel.readParcelable(getClass().getClassLoader());
-            long timestamp = in.readLong();
-            if (peerHandlePresent) {
-                return new RangingResult(status, peerHandle2, distanceMm, distanceStdDevMm, rssi, numAttemptedMeasurements, numSuccessfulMeasurements, lci, lcr, responderLocation, timestamp);
-            }
-            return new RangingResult(status, mac2, distanceMm, distanceStdDevMm, rssi, numAttemptedMeasurements, numSuccessfulMeasurements, lci, lcr, responderLocation, timestamp);
-        }
-    };
-    private static final byte[] EMPTY_BYTE_ARRAY = new byte[0];
     public static final int STATUS_FAIL = 1;
     public static final int STATUS_RESPONDER_DOES_NOT_SUPPORT_IEEE80211MC = 2;
     public static final int STATUS_SUCCESS = 0;
@@ -62,8 +28,49 @@ public final class RangingResult implements Parcelable {
     private final int mRssi;
     private final int mStatus;
     private final long mTimestamp;
+    private static final byte[] EMPTY_BYTE_ARRAY = new byte[0];
+    public static final Parcelable.Creator<RangingResult> CREATOR = new Parcelable.Creator<RangingResult>() { // from class: android.net.wifi.rtt.RangingResult.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public RangingResult[] newArray(int size) {
+            return new RangingResult[size];
+        }
+
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public RangingResult createFromParcel(Parcel in) {
+            int status = in.readInt();
+            boolean macAddressPresent = in.readBoolean();
+            MacAddress mac = null;
+            if (macAddressPresent) {
+                MacAddress mac2 = MacAddress.CREATOR.createFromParcel(in);
+                mac = mac2;
+            }
+            MacAddress mac3 = mac;
+            boolean peerHandlePresent = in.readBoolean();
+            PeerHandle peerHandle = null;
+            if (peerHandlePresent) {
+                peerHandle = new PeerHandle(in.readInt());
+            }
+            PeerHandle peerHandle2 = peerHandle;
+            int distanceMm = in.readInt();
+            int distanceStdDevMm = in.readInt();
+            int rssi = in.readInt();
+            int numAttemptedMeasurements = in.readInt();
+            int numSuccessfulMeasurements = in.readInt();
+            byte[] lci = in.createByteArray();
+            byte[] lcr = in.createByteArray();
+            ResponderLocation responderLocation = (ResponderLocation) in.readParcelable(getClass().getClassLoader());
+            long timestamp = in.readLong();
+            if (peerHandlePresent) {
+                return new RangingResult(status, peerHandle2, distanceMm, distanceStdDevMm, rssi, numAttemptedMeasurements, numSuccessfulMeasurements, lci, lcr, responderLocation, timestamp);
+            }
+            return new RangingResult(status, mac3, distanceMm, distanceStdDevMm, rssi, numAttemptedMeasurements, numSuccessfulMeasurements, lci, lcr, responderLocation, timestamp);
+        }
+    };
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface RangeResultStatus {
     }
 
@@ -110,74 +117,76 @@ public final class RangingResult implements Parcelable {
     }
 
     public int getDistanceMm() {
-        if (this.mStatus == 0) {
-            return this.mDistanceMm;
+        if (this.mStatus != 0) {
+            throw new IllegalStateException("getDistanceMm(): invoked on an invalid result: getStatus()=" + this.mStatus);
         }
-        throw new IllegalStateException("getDistanceMm(): invoked on an invalid result: getStatus()=" + this.mStatus);
+        return this.mDistanceMm;
     }
 
     public int getDistanceStdDevMm() {
-        if (this.mStatus == 0) {
-            return this.mDistanceStdDevMm;
+        if (this.mStatus != 0) {
+            throw new IllegalStateException("getDistanceStdDevMm(): invoked on an invalid result: getStatus()=" + this.mStatus);
         }
-        throw new IllegalStateException("getDistanceStdDevMm(): invoked on an invalid result: getStatus()=" + this.mStatus);
+        return this.mDistanceStdDevMm;
     }
 
     public int getRssi() {
-        if (this.mStatus == 0) {
-            return this.mRssi;
+        if (this.mStatus != 0) {
+            throw new IllegalStateException("getRssi(): invoked on an invalid result: getStatus()=" + this.mStatus);
         }
-        throw new IllegalStateException("getRssi(): invoked on an invalid result: getStatus()=" + this.mStatus);
+        return this.mRssi;
     }
 
     public int getNumAttemptedMeasurements() {
-        if (this.mStatus == 0) {
-            return this.mNumAttemptedMeasurements;
+        if (this.mStatus != 0) {
+            throw new IllegalStateException("getNumAttemptedMeasurements(): invoked on an invalid result: getStatus()=" + this.mStatus);
         }
-        throw new IllegalStateException("getNumAttemptedMeasurements(): invoked on an invalid result: getStatus()=" + this.mStatus);
+        return this.mNumAttemptedMeasurements;
     }
 
     public int getNumSuccessfulMeasurements() {
-        if (this.mStatus == 0) {
-            return this.mNumSuccessfulMeasurements;
+        if (this.mStatus != 0) {
+            throw new IllegalStateException("getNumSuccessfulMeasurements(): invoked on an invalid result: getStatus()=" + this.mStatus);
         }
-        throw new IllegalStateException("getNumSuccessfulMeasurements(): invoked on an invalid result: getStatus()=" + this.mStatus);
+        return this.mNumSuccessfulMeasurements;
     }
 
     public ResponderLocation getUnverifiedResponderLocation() {
-        if (this.mStatus == 0) {
-            return this.mResponderLocation;
+        if (this.mStatus != 0) {
+            throw new IllegalStateException("getUnverifiedResponderLocation(): invoked on an invalid result: getStatus()=" + this.mStatus);
         }
-        throw new IllegalStateException("getUnverifiedResponderLocation(): invoked on an invalid result: getStatus()=" + this.mStatus);
+        return this.mResponderLocation;
     }
 
     @SystemApi
     public byte[] getLci() {
-        if (this.mStatus == 0) {
-            return this.mLci;
+        if (this.mStatus != 0) {
+            throw new IllegalStateException("getLci(): invoked on an invalid result: getStatus()=" + this.mStatus);
         }
-        throw new IllegalStateException("getLci(): invoked on an invalid result: getStatus()=" + this.mStatus);
+        return this.mLci;
     }
 
     @SystemApi
     public byte[] getLcr() {
-        if (this.mStatus == 0) {
-            return this.mLcr;
+        if (this.mStatus != 0) {
+            throw new IllegalStateException("getReportedLocationCivic(): invoked on an invalid result: getStatus()=" + this.mStatus);
         }
-        throw new IllegalStateException("getReportedLocationCivic(): invoked on an invalid result: getStatus()=" + this.mStatus);
+        return this.mLcr;
     }
 
     public long getRangingTimestampMillis() {
-        if (this.mStatus == 0) {
-            return this.mTimestamp;
+        if (this.mStatus != 0) {
+            throw new IllegalStateException("getRangingTimestampMillis(): invoked on an invalid result: getStatus()=" + this.mStatus);
         }
-        throw new IllegalStateException("getRangingTimestampMillis(): invoked on an invalid result: getStatus()=" + this.mStatus);
+        return this.mTimestamp;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mStatus);
         if (this.mMac == null) {
@@ -236,17 +245,14 @@ public final class RangingResult implements Parcelable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof RangingResult)) {
-            return false;
-        }
-        RangingResult lhs = (RangingResult) o;
-        if (this.mStatus == lhs.mStatus && Objects.equals(this.mMac, lhs.mMac) && Objects.equals(this.mPeerHandle, lhs.mPeerHandle) && this.mDistanceMm == lhs.mDistanceMm && this.mDistanceStdDevMm == lhs.mDistanceStdDevMm && this.mRssi == lhs.mRssi && this.mNumAttemptedMeasurements == lhs.mNumAttemptedMeasurements && this.mNumSuccessfulMeasurements == lhs.mNumSuccessfulMeasurements && Arrays.equals(this.mLci, lhs.mLci) && Arrays.equals(this.mLcr, lhs.mLcr) && this.mTimestamp == lhs.mTimestamp && Objects.equals(this.mResponderLocation, lhs.mResponderLocation)) {
-            return true;
+        if (o instanceof RangingResult) {
+            RangingResult lhs = (RangingResult) o;
+            return this.mStatus == lhs.mStatus && Objects.equals(this.mMac, lhs.mMac) && Objects.equals(this.mPeerHandle, lhs.mPeerHandle) && this.mDistanceMm == lhs.mDistanceMm && this.mDistanceStdDevMm == lhs.mDistanceStdDevMm && this.mRssi == lhs.mRssi && this.mNumAttemptedMeasurements == lhs.mNumAttemptedMeasurements && this.mNumSuccessfulMeasurements == lhs.mNumSuccessfulMeasurements && Arrays.equals(this.mLci, lhs.mLci) && Arrays.equals(this.mLcr, lhs.mLcr) && this.mTimestamp == lhs.mTimestamp && Objects.equals(this.mResponderLocation, lhs.mResponderLocation);
         }
         return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(this.mStatus), this.mMac, this.mPeerHandle, Integer.valueOf(this.mDistanceMm), Integer.valueOf(this.mDistanceStdDevMm), Integer.valueOf(this.mRssi), Integer.valueOf(this.mNumAttemptedMeasurements), Integer.valueOf(this.mNumSuccessfulMeasurements), this.mLci, this.mLcr, this.mResponderLocation, Long.valueOf(this.mTimestamp)});
+        return Objects.hash(Integer.valueOf(this.mStatus), this.mMac, this.mPeerHandle, Integer.valueOf(this.mDistanceMm), Integer.valueOf(this.mDistanceStdDevMm), Integer.valueOf(this.mRssi), Integer.valueOf(this.mNumAttemptedMeasurements), Integer.valueOf(this.mNumSuccessfulMeasurements), this.mLci, this.mLcr, this.mResponderLocation, Long.valueOf(this.mTimestamp));
     }
 }

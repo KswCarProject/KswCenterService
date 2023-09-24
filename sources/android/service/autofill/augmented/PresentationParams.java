@@ -6,9 +6,9 @@ import android.service.autofill.augmented.AugmentedAutofillService;
 import java.io.PrintWriter;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public abstract class PresentationParams {
-    /* access modifiers changed from: package-private */
-    public abstract void dump(String str, PrintWriter printWriter);
+    abstract void dump(String str, PrintWriter printWriter);
 
     PresentationParams() {
     }
@@ -18,12 +18,13 @@ public abstract class PresentationParams {
     }
 
     @SystemApi
+    /* loaded from: classes3.dex */
     public static abstract class Area {
         private final Rect mBounds;
         public final AugmentedAutofillService.AutofillProxy proxy;
 
-        private Area(AugmentedAutofillService.AutofillProxy proxy2, Rect bounds) {
-            this.proxy = proxy2;
+        private Area(AugmentedAutofillService.AutofillProxy proxy, Rect bounds) {
+            this.proxy = proxy;
             this.mBounds = bounds;
         }
 
@@ -36,20 +37,22 @@ public abstract class PresentationParams {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class SystemPopupPresentationParams extends PresentationParams {
         private final Area mSuggestionArea;
 
         public SystemPopupPresentationParams(AugmentedAutofillService.AutofillProxy proxy, Rect rect) {
-            this.mSuggestionArea = new Area(proxy, rect) {
+            this.mSuggestionArea = new Area(proxy, rect) { // from class: android.service.autofill.augmented.PresentationParams.SystemPopupPresentationParams.1
             };
         }
 
+        @Override // android.service.autofill.augmented.PresentationParams
         public Area getSuggestionArea() {
             return this.mSuggestionArea;
         }
 
-        /* access modifiers changed from: package-private */
-        public void dump(String prefix, PrintWriter pw) {
+        @Override // android.service.autofill.augmented.PresentationParams
+        void dump(String prefix, PrintWriter pw) {
             pw.print(prefix);
             pw.print("area: ");
             pw.println(this.mSuggestionArea);

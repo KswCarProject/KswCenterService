@@ -6,15 +6,16 @@ import android.app.ActivityThread;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.ParcelFileDescriptor;
-import android.os.RemoteCallback;
-import android.os.RemoteException;
-import android.os.UserHandle;
+import android.content.p002pm.ResolveInfo;
+import android.p007os.AsyncTask;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.Handler;
+import android.p007os.IBinder;
+import android.p007os.ParcelFileDescriptor;
+import android.p007os.RemoteCallback;
+import android.p007os.RemoteException;
+import android.p007os.UserHandle;
 import android.permission.IPermissionController;
 import android.permission.PermissionControllerManager;
 import android.util.ArrayMap;
@@ -24,7 +25,10 @@ import com.android.internal.annotations.GuardedBy;
 import com.android.internal.infra.AbstractMultiplePendingRequestsRemoteService;
 import com.android.internal.infra.AbstractRemoteService;
 import com.android.internal.util.Preconditions;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
@@ -36,14 +40,14 @@ import java.util.function.Consumer;
 import libcore.io.IoUtils;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class PermissionControllerManager {
     public static final int COUNT_ONLY_WHEN_GRANTED = 1;
     public static final int COUNT_WHEN_SYSTEM = 2;
     public static final String KEY_RESULT = "android.permission.PermissionControllerManager.key.result";
     public static final int REASON_INSTALLER_POLICY_VIOLATION = 2;
     public static final int REASON_MALWARE = 1;
-    /* access modifiers changed from: private */
-    public static final String TAG = PermissionControllerManager.class.getSimpleName();
+    private static final String TAG = PermissionControllerManager.class.getSimpleName();
     private static final Object sLock = new Object();
     @GuardedBy({"sLock"})
     private static ArrayMap<Pair<Integer, Thread>, RemoteService> sRemoteServices = new ArrayMap<>(1);
@@ -51,30 +55,37 @@ public final class PermissionControllerManager {
     private final RemoteService mRemoteService;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface CountPermissionAppsFlag {
     }
 
+    /* loaded from: classes3.dex */
     public interface OnCountPermissionAppsResultCallback {
         void onCountPermissionApps(int i);
     }
 
+    /* loaded from: classes3.dex */
     public interface OnGetAppPermissionResultCallback {
         void onGetAppPermissions(List<RuntimePermissionPresentationInfo> list);
     }
 
+    /* loaded from: classes3.dex */
     public interface OnGetRuntimePermissionBackupCallback {
         void onGetRuntimePermissionsBackup(byte[] bArr);
     }
 
+    /* loaded from: classes3.dex */
     public interface OnPermissionUsageResultCallback {
         void onPermissionUsageResult(List<RuntimePermissionUsageInfo> list);
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class OnRevokeRuntimePermissionsCallback {
         public abstract void onRevokeRuntimePermissions(Map<String, List<String>> map);
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface Reason {
     }
 
@@ -85,7 +96,8 @@ public final class PermissionControllerManager {
             if (remoteService == null) {
                 Intent intent = new Intent(PermissionControllerService.SERVICE_INTERFACE);
                 intent.setPackage(context.getPackageManager().getPermissionControllerPackageName());
-                remoteService = new RemoteService(ActivityThread.currentApplication(), context.getPackageManager().resolveService(intent, 0).getComponentInfo().getComponentName(), handler, context.getUser());
+                ResolveInfo serviceInfo = context.getPackageManager().resolveService(intent, 0);
+                remoteService = new RemoteService(ActivityThread.currentApplication(), serviceInfo.getComponentInfo().getComponentName(), handler, context.getUser());
                 sRemoteServices.put(key, remoteService);
             }
             this.mRemoteService = remoteService;
@@ -101,20 +113,18 @@ public final class PermissionControllerManager {
             Preconditions.checkNotNull(appRequest.getKey());
             Preconditions.checkCollectionElementsNotNull(appRequest.getValue(), "permissions");
         }
-        if (this.mContext.checkSelfPermission(Manifest.permission.REVOKE_RUNTIME_PERMISSIONS) == 0) {
-            this.mRemoteService.scheduleRequest(new PendingRevokeRuntimePermissionRequest(this.mRemoteService, request, doDryRun, reason, this.mContext.getPackageName(), executor, callback));
-            return;
+        if (this.mContext.checkSelfPermission(Manifest.C0000permission.REVOKE_RUNTIME_PERMISSIONS) != 0) {
+            throw new SecurityException("android.permission.REVOKE_RUNTIME_PERMISSIONS required");
         }
-        throw new SecurityException("android.permission.REVOKE_RUNTIME_PERMISSIONS required");
+        this.mRemoteService.scheduleRequest(new PendingRevokeRuntimePermissionRequest(this.mRemoteService, request, doDryRun, reason, this.mContext.getPackageName(), executor, callback));
     }
 
     public void setRuntimePermissionGrantStateByDeviceAdmin(String callerPackageName, String packageName, String permission, int grantState, Executor executor, Consumer<Boolean> callback) {
-        int i = grantState;
         Preconditions.checkStringNotEmpty(callerPackageName);
         Preconditions.checkStringNotEmpty(packageName);
         Preconditions.checkStringNotEmpty(permission);
         boolean z = true;
-        if (!(i == 1 || i == 2 || i == 0)) {
+        if (grantState != 1 && grantState != 2 && grantState != 0) {
             z = false;
         }
         Preconditions.checkArgument(z);
@@ -174,48 +184,57 @@ public final class PermissionControllerManager {
         this.mRemoteService.scheduleRequest(new PendingGrantOrUpgradeDefaultRuntimePermissionsRequest(this.mRemoteService, executor, callback));
     }
 
+    /* loaded from: classes3.dex */
     static final class RemoteService extends AbstractMultiplePendingRequestsRemoteService<RemoteService, IPermissionController> {
         private static final long MESSAGE_TIMEOUT_MILLIS = 30000;
         private static final long UNBIND_TIMEOUT_MILLIS = 10000;
 
         RemoteService(Context context, ComponentName componentName, Handler handler, UserHandle user) {
-            super(context, PermissionControllerService.SERVICE_INTERFACE, componentName, user.getIdentifier(), $$Lambda$PermissionControllerManager$RemoteService$L8NTbqIPWKu7tyiOxbu_00YKss.INSTANCE, handler, 0, false, 1);
+            super(context, PermissionControllerService.SERVICE_INTERFACE, componentName, user.getIdentifier(), new AbstractRemoteService.VultureCallback() { // from class: android.permission.-$$Lambda$PermissionControllerManager$RemoteService$L8N-TbqIPWKu7tyiOxbu_00YKss
+                @Override // com.android.internal.infra.AbstractRemoteService.VultureCallback
+                public final void onServiceDied(Object obj) {
+                    PermissionControllerManager.RemoteService.lambda$new$0((PermissionControllerManager.RemoteService) obj);
+                }
+            }, handler, 0, false, 1);
         }
 
         static /* synthetic */ void lambda$new$0(RemoteService service) {
-            String access$1000 = PermissionControllerManager.TAG;
-            Log.e(access$1000, "RemoteService " + service + " died");
+            String str = PermissionControllerManager.TAG;
+            Log.m70e(str, "RemoteService " + service + " died");
         }
 
-        /* access modifiers changed from: package-private */
-        public Handler getHandler() {
+        Handler getHandler() {
             return this.mHandler;
         }
 
-        /* access modifiers changed from: protected */
+        /* JADX INFO: Access modifiers changed from: protected */
+        @Override // com.android.internal.infra.AbstractRemoteService
         public IPermissionController getServiceInterface(IBinder binder) {
             return IPermissionController.Stub.asInterface(binder);
         }
 
-        /* access modifiers changed from: protected */
-        public long getTimeoutIdleBindMillis() {
-            return 10000;
+        @Override // com.android.internal.infra.AbstractRemoteService
+        protected long getTimeoutIdleBindMillis() {
+            return 10000L;
         }
 
-        /* access modifiers changed from: protected */
-        public long getRemoteRequestMillis() {
-            return 30000;
+        @Override // com.android.internal.infra.AbstractRemoteService
+        protected long getRemoteRequestMillis() {
+            return 30000L;
         }
 
+        @Override // com.android.internal.infra.AbstractRemoteService
         public void scheduleRequest(AbstractRemoteService.BasePendingRequest<RemoteService, IPermissionController> pendingRequest) {
             super.scheduleRequest(pendingRequest);
         }
 
+        @Override // com.android.internal.infra.AbstractRemoteService
         public void scheduleAsyncRequest(AbstractRemoteService.AsyncRequest<IPermissionController> request) {
             super.scheduleAsyncRequest(request);
         }
     }
 
+    /* loaded from: classes3.dex */
     private static class FileReaderTask<Callback extends Consumer<byte[]>> extends AsyncTask<Void, Void, byte[]> {
         private final Callback mCallback;
         private ParcelFileDescriptor mLocalPipe;
@@ -225,112 +244,58 @@ public final class PermissionControllerManager {
             this.mCallback = callback;
         }
 
-        /* access modifiers changed from: protected */
-        public void onPreExecute() {
+        @Override // android.p007os.AsyncTask
+        protected void onPreExecute() {
             try {
                 ParcelFileDescriptor[] pipe = ParcelFileDescriptor.createPipe();
                 this.mLocalPipe = pipe[0];
                 this.mRemotePipe = pipe[1];
             } catch (IOException e) {
-                Log.e(PermissionControllerManager.TAG, "Could not create pipe needed to get runtime permission backup", e);
+                Log.m69e(PermissionControllerManager.TAG, "Could not create pipe needed to get runtime permission backup", e);
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public ParcelFileDescriptor getRemotePipe() {
+        ParcelFileDescriptor getRemotePipe() {
             return this.mRemotePipe;
         }
 
-        /* access modifiers changed from: protected */
-        /* JADX WARNING: Code restructure failed: missing block: B:21:0x0032, code lost:
-            r4 = move-exception;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:23:?, code lost:
-            r2.addSuppressed(r4);
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:26:0x003b, code lost:
-            r1 = move-exception;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:27:0x003c, code lost:
-            android.util.Log.e(android.permission.PermissionControllerManager.access$1000(), "Error reading runtime permission backup", r1);
-            r0.reset();
-         */
-        /* JADX WARNING: Failed to process nested try/catch */
-        /* JADX WARNING: Removed duplicated region for block: B:26:0x003b A[EDGE_INSN: B:13:?->B:26:0x003b ?: BREAK  , ExcHandler: IOException | NullPointerException (r1v1 'e' java.lang.Exception A[CUSTOM_DECLARE]), Splitter:B:1:0x0005] */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public byte[] doInBackground(java.lang.Void... r7) {
-            /*
-                r6 = this;
-                java.io.ByteArrayOutputStream r0 = new java.io.ByteArrayOutputStream
-                r0.<init>()
-                android.os.ParcelFileDescriptor$AutoCloseInputStream r1 = new android.os.ParcelFileDescriptor$AutoCloseInputStream     // Catch:{ IOException | NullPointerException -> 0x003b }
-                android.os.ParcelFileDescriptor r2 = r6.mLocalPipe     // Catch:{ IOException | NullPointerException -> 0x003b }
-                r1.<init>(r2)     // Catch:{ IOException | NullPointerException -> 0x003b }
-                r2 = 0
-                r3 = 16384(0x4000, float:2.2959E-41)
-                byte[] r3 = new byte[r3]     // Catch:{ Throwable -> 0x002a }
-            L_0x0011:
-                boolean r4 = r6.isCancelled()     // Catch:{ Throwable -> 0x002a }
-                if (r4 != 0) goto L_0x0024
-                int r4 = r1.read(r3)     // Catch:{ Throwable -> 0x002a }
-                r5 = -1
-                if (r4 != r5) goto L_0x001f
-                goto L_0x0024
-            L_0x001f:
-                r5 = 0
-                r0.write(r3, r5, r4)     // Catch:{ Throwable -> 0x002a }
-                goto L_0x0011
-            L_0x0024:
-                r1.close()     // Catch:{ IOException | NullPointerException -> 0x003b }
-                goto L_0x0048
-            L_0x0028:
-                r3 = move-exception
-                goto L_0x002c
-            L_0x002a:
-                r2 = move-exception
-                throw r2     // Catch:{ all -> 0x0028 }
-            L_0x002c:
-                if (r2 == 0) goto L_0x0037
-                r1.close()     // Catch:{ Throwable -> 0x0032, IOException | NullPointerException -> 0x003b }
-                goto L_0x003a
-            L_0x0032:
-                r4 = move-exception
-                r2.addSuppressed(r4)     // Catch:{ IOException | NullPointerException -> 0x003b }
-                goto L_0x003a
-            L_0x0037:
-                r1.close()     // Catch:{ IOException | NullPointerException -> 0x003b }
-            L_0x003a:
-                throw r3     // Catch:{ IOException | NullPointerException -> 0x003b }
-            L_0x003b:
-                r1 = move-exception
-                java.lang.String r2 = android.permission.PermissionControllerManager.TAG
-                java.lang.String r3 = "Error reading runtime permission backup"
-                android.util.Log.e(r2, r3, r1)
-                r0.reset()
-            L_0x0048:
-                byte[] r1 = r0.toByteArray()
-                return r1
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.permission.PermissionControllerManager.FileReaderTask.doInBackground(java.lang.Void[]):byte[]");
+        /* JADX INFO: Access modifiers changed from: protected */
+        @Override // android.p007os.AsyncTask
+        public byte[] doInBackground(Void... ignored) {
+            int numRead;
+            ByteArrayOutputStream combinedBuffer = new ByteArrayOutputStream();
+            try {
+                InputStream in = new ParcelFileDescriptor.AutoCloseInputStream(this.mLocalPipe);
+                byte[] buffer = new byte[16384];
+                while (!isCancelled() && (numRead = in.read(buffer)) != -1) {
+                    combinedBuffer.write(buffer, 0, numRead);
+                }
+                in.close();
+            } catch (IOException | NullPointerException e) {
+                Log.m69e(PermissionControllerManager.TAG, "Error reading runtime permission backup", e);
+                combinedBuffer.reset();
+            }
+            return combinedBuffer.toByteArray();
         }
 
-        /* access modifiers changed from: package-private */
-        public void interruptRead() {
+        void interruptRead() {
             IoUtils.closeQuietly(this.mLocalPipe);
         }
 
-        /* access modifiers changed from: protected */
-        public void onCancelled() {
+        @Override // android.p007os.AsyncTask
+        protected void onCancelled() {
             onPostExecute(new byte[0]);
         }
 
-        /* access modifiers changed from: protected */
+        /* JADX INFO: Access modifiers changed from: protected */
+        @Override // android.p007os.AsyncTask
         public void onPostExecute(byte[] backup) {
             IoUtils.closeQuietly(this.mLocalPipe);
             this.mCallback.accept(backup);
         }
     }
 
+    /* loaded from: classes3.dex */
     private static class FileWriterTask extends AsyncTask<byte[], Void, Void> {
         private static final int CHUNK_SIZE = 4096;
         private ParcelFileDescriptor mLocalPipe;
@@ -339,125 +304,54 @@ public final class PermissionControllerManager {
         private FileWriterTask() {
         }
 
-        /* access modifiers changed from: protected */
-        public void onPreExecute() {
+        @Override // android.p007os.AsyncTask
+        protected void onPreExecute() {
             try {
                 ParcelFileDescriptor[] pipe = ParcelFileDescriptor.createPipe();
                 this.mRemotePipe = pipe[0];
                 this.mLocalPipe = pipe[1];
             } catch (IOException e) {
-                Log.e(PermissionControllerManager.TAG, "Could not create pipe needed to send runtime permission backup", e);
+                Log.m69e(PermissionControllerManager.TAG, "Could not create pipe needed to send runtime permission backup", e);
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public ParcelFileDescriptor getRemotePipe() {
+        ParcelFileDescriptor getRemotePipe() {
             return this.mRemotePipe;
         }
 
-        /* access modifiers changed from: protected */
-        /* JADX WARNING: Code restructure failed: missing block: B:10:0x0021, code lost:
-            r0 = th;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:11:0x0022, code lost:
-            r4 = null;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:15:0x0026, code lost:
-            r4 = move-exception;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:16:0x0027, code lost:
-            r6 = r4;
-            r4 = r0;
-            r0 = r6;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:20:0x0030, code lost:
-            r5 = move-exception;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:22:?, code lost:
-            r4.addSuppressed(r5);
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:25:0x0039, code lost:
-            r0 = move-exception;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:26:0x003a, code lost:
-            android.util.Log.e(android.permission.PermissionControllerManager.access$1000(), "Error sending runtime permission backup", r0);
-         */
-        /* JADX WARNING: Failed to process nested try/catch */
-        /* JADX WARNING: Removed duplicated region for block: B:25:0x0039 A[ExcHandler: IOException | NullPointerException (r0v1 'e' java.lang.Exception A[CUSTOM_DECLARE]), Splitter:B:1:0x0004] */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public java.lang.Void doInBackground(byte[]... r8) {
-            /*
-                r7 = this;
-                r0 = 0
-                r1 = r8[r0]
-                r2 = 0
-                android.os.ParcelFileDescriptor$AutoCloseOutputStream r3 = new android.os.ParcelFileDescriptor$AutoCloseOutputStream     // Catch:{ IOException | NullPointerException -> 0x0039 }
-                android.os.ParcelFileDescriptor r4 = r7.mLocalPipe     // Catch:{ IOException | NullPointerException -> 0x0039 }
-                r3.<init>(r4)     // Catch:{ IOException | NullPointerException -> 0x0039 }
-            L_0x000c:
-                int r4 = r1.length     // Catch:{ Throwable -> 0x0024, all -> 0x0021 }
-                if (r0 >= r4) goto L_0x001d
-                int r4 = r1.length     // Catch:{ Throwable -> 0x0024, all -> 0x0021 }
-                int r4 = r4 - r0
-                r5 = 4096(0x1000, float:5.74E-42)
-                int r4 = java.lang.Math.min(r5, r4)     // Catch:{ Throwable -> 0x0024, all -> 0x0021 }
-                r3.write(r1, r0, r4)     // Catch:{ Throwable -> 0x0024, all -> 0x0021 }
-                int r0 = r0 + 4096
-                goto L_0x000c
-            L_0x001d:
-                r3.close()     // Catch:{ IOException | NullPointerException -> 0x0039 }
-                goto L_0x0043
-            L_0x0021:
-                r0 = move-exception
-                r4 = r2
-                goto L_0x002a
-            L_0x0024:
-                r0 = move-exception
-                throw r0     // Catch:{ all -> 0x0026 }
-            L_0x0026:
-                r4 = move-exception
-                r6 = r4
-                r4 = r0
-                r0 = r6
-            L_0x002a:
-                if (r4 == 0) goto L_0x0035
-                r3.close()     // Catch:{ Throwable -> 0x0030, IOException | NullPointerException -> 0x0039 }
-                goto L_0x0038
-            L_0x0030:
-                r5 = move-exception
-                r4.addSuppressed(r5)     // Catch:{ IOException | NullPointerException -> 0x0039 }
-                goto L_0x0038
-            L_0x0035:
-                r3.close()     // Catch:{ IOException | NullPointerException -> 0x0039 }
-            L_0x0038:
-                throw r0     // Catch:{ IOException | NullPointerException -> 0x0039 }
-            L_0x0039:
-                r0 = move-exception
-                java.lang.String r3 = android.permission.PermissionControllerManager.TAG
-                java.lang.String r4 = "Error sending runtime permission backup"
-                android.util.Log.e(r3, r4, r0)
-            L_0x0043:
-                return r2
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.permission.PermissionControllerManager.FileWriterTask.doInBackground(byte[][]):java.lang.Void");
+        /* JADX INFO: Access modifiers changed from: protected */
+        @Override // android.p007os.AsyncTask
+        public Void doInBackground(byte[]... in) {
+            byte[] buffer = in[0];
+            try {
+                OutputStream out = new ParcelFileDescriptor.AutoCloseOutputStream(this.mLocalPipe);
+                for (int offset = 0; offset < buffer.length; offset += 4096) {
+                    out.write(buffer, offset, Math.min(4096, buffer.length - offset));
+                }
+                out.close();
+            } catch (IOException | NullPointerException e) {
+                Log.m69e(PermissionControllerManager.TAG, "Error sending runtime permission backup", e);
+            }
+            return null;
         }
 
-        /* access modifiers changed from: package-private */
-        public void interruptWrite() {
+        void interruptWrite() {
             IoUtils.closeQuietly(this.mLocalPipe);
         }
 
-        /* access modifiers changed from: protected */
-        public void onCancelled() {
+        @Override // android.p007os.AsyncTask
+        protected void onCancelled() {
             onPostExecute((Void) null);
         }
 
-        /* access modifiers changed from: protected */
+        /* JADX INFO: Access modifiers changed from: protected */
+        @Override // android.p007os.AsyncTask
         public void onPostExecute(Void ignored) {
             IoUtils.closeQuietly(this.mLocalPipe);
         }
     }
 
+    /* loaded from: classes3.dex */
     private static final class PendingRevokeRuntimePermissionRequest extends AbstractRemoteService.PendingRequest<RemoteService, IPermissionController> {
         private final OnRevokeRuntimePermissionsCallback mCallback;
         private final String mCallingPackage;
@@ -467,7 +361,7 @@ public final class PermissionControllerManager {
         private final RemoteCallback mRemoteCallback;
         private final Map<String, List<String>> mRequest;
 
-        private PendingRevokeRuntimePermissionRequest(RemoteService service, Map<String, List<String>> request, boolean doDryRun, int reason, String callingPackage, Executor executor, OnRevokeRuntimePermissionsCallback callback) {
+        private PendingRevokeRuntimePermissionRequest(RemoteService service, Map<String, List<String>> request, boolean doDryRun, int reason, String callingPackage, final Executor executor, final OnRevokeRuntimePermissionsCallback callback) {
             super(service);
             this.mRequest = request;
             this.mDoDryRun = doDryRun;
@@ -475,62 +369,48 @@ public final class PermissionControllerManager {
             this.mCallingPackage = callingPackage;
             this.mExecutor = executor;
             this.mCallback = callback;
-            this.mRemoteCallback = new RemoteCallback(new RemoteCallback.OnResultListener(executor, callback) {
-                private final /* synthetic */ Executor f$1;
-                private final /* synthetic */ PermissionControllerManager.OnRevokeRuntimePermissionsCallback f$2;
-
-                {
-                    this.f$1 = r2;
-                    this.f$2 = r3;
-                }
-
+            this.mRemoteCallback = new RemoteCallback(new RemoteCallback.OnResultListener() { // from class: android.permission.-$$Lambda$PermissionControllerManager$PendingRevokeRuntimePermissionRequest$StUWUj0fmNRuCwuUzh3M5C7e_o0
+                @Override // android.p007os.RemoteCallback.OnResultListener
                 public final void onResult(Bundle bundle) {
-                    this.f$1.execute(new Runnable(bundle, this.f$2) {
-                        private final /* synthetic */ Bundle f$1;
-                        private final /* synthetic */ PermissionControllerManager.OnRevokeRuntimePermissionsCallback f$2;
-
-                        {
-                            this.f$1 = r2;
-                            this.f$2 = r3;
-                        }
-
+                    executor.execute(new Runnable() { // from class: android.permission.-$$Lambda$PermissionControllerManager$PendingRevokeRuntimePermissionRequest$RY69_9rYfdoaXdLj_Ux-62tZUXg
+                        @Override // java.lang.Runnable
                         public final void run() {
-                            PermissionControllerManager.PendingRevokeRuntimePermissionRequest.lambda$new$0(PermissionControllerManager.PendingRevokeRuntimePermissionRequest.this, this.f$1, this.f$2);
+                            PermissionControllerManager.PendingRevokeRuntimePermissionRequest.lambda$new$0(PermissionControllerManager.PendingRevokeRuntimePermissionRequest.this, bundle, r3);
                         }
                     });
                 }
-            }, (Handler) null);
+            }, null);
         }
 
         public static /* synthetic */ void lambda$new$0(PendingRevokeRuntimePermissionRequest pendingRevokeRuntimePermissionRequest, Bundle result, OnRevokeRuntimePermissionsCallback callback) {
-            Map<String, List<String>> revoked;
             long token = Binder.clearCallingIdentity();
             try {
-                revoked = new ArrayMap<>();
-                Bundle bundleizedRevoked = result.getBundle(PermissionControllerManager.KEY_RESULT);
-                for (String packageName : bundleizedRevoked.keySet()) {
-                    Preconditions.checkNotNull(packageName);
-                    ArrayList<String> permissions = bundleizedRevoked.getStringArrayList(packageName);
-                    Preconditions.checkCollectionElementsNotNull(permissions, "permissions");
-                    revoked.put(packageName, permissions);
+                Map<String, List<String>> revoked = new ArrayMap<>();
+                try {
+                    Bundle bundleizedRevoked = result.getBundle(PermissionControllerManager.KEY_RESULT);
+                    for (String packageName : bundleizedRevoked.keySet()) {
+                        Preconditions.checkNotNull(packageName);
+                        ArrayList<String> permissions = bundleizedRevoked.getStringArrayList(packageName);
+                        Preconditions.checkCollectionElementsNotNull(permissions, "permissions");
+                        revoked.put(packageName, permissions);
+                    }
+                } catch (Exception e) {
+                    Log.m69e(PermissionControllerManager.TAG, "Could not read result when revoking runtime permissions", e);
                 }
-            } catch (Exception e) {
-                Log.e(PermissionControllerManager.TAG, "Could not read result when revoking runtime permissions", e);
-            } catch (Throwable th) {
+                callback.onRevokeRuntimePermissions(revoked);
+            } finally {
                 Binder.restoreCallingIdentity(token);
                 pendingRevokeRuntimePermissionRequest.finish();
-                throw th;
             }
-            callback.onRevokeRuntimePermissions(revoked);
-            Binder.restoreCallingIdentity(token);
-            pendingRevokeRuntimePermissionRequest.finish();
         }
 
-        /* access modifiers changed from: protected */
+        /* JADX INFO: Access modifiers changed from: protected */
+        @Override // com.android.internal.infra.AbstractRemoteService.PendingRequest
         public void onTimeout(RemoteService remoteService) {
             long token = Binder.clearCallingIdentity();
             try {
-                this.mExecutor.execute(new Runnable() {
+                this.mExecutor.execute(new Runnable() { // from class: android.permission.-$$Lambda$PermissionControllerManager$PendingRevokeRuntimePermissionRequest$HQXgA6xx0k7jv6y22RQn3Fx34QQ
+                    @Override // java.lang.Runnable
                     public final void run() {
                         PermissionControllerManager.PendingRevokeRuntimePermissionRequest.this.mCallback.onRevokeRuntimePermissions(Collections.emptyMap());
                     }
@@ -540,19 +420,21 @@ public final class PermissionControllerManager {
             }
         }
 
+        @Override // java.lang.Runnable
         public void run() {
             Bundle bundledizedRequest = new Bundle();
             for (Map.Entry<String, List<String>> appRequest : this.mRequest.entrySet()) {
-                bundledizedRequest.putStringArrayList(appRequest.getKey(), new ArrayList(appRequest.getValue()));
+                bundledizedRequest.putStringArrayList(appRequest.getKey(), new ArrayList<>(appRequest.getValue()));
             }
             try {
                 ((IPermissionController) ((RemoteService) getService()).getServiceInterface()).revokeRuntimePermissions(bundledizedRequest, this.mDoDryRun, this.mReason, this.mCallingPackage, this.mRemoteCallback);
             } catch (RemoteException e) {
-                Log.e(PermissionControllerManager.TAG, "Error revoking runtime permission", e);
+                Log.m69e(PermissionControllerManager.TAG, "Error revoking runtime permission", e);
             }
         }
     }
 
+    /* loaded from: classes3.dex */
     private static final class PendingGetRuntimePermissionBackup extends AbstractRemoteService.PendingRequest<RemoteService, IPermissionController> implements Consumer<byte[]> {
         private final FileReaderTask<PendingGetRuntimePermissionBackup> mBackupReader;
         private final OnGetRuntimePermissionBackupCallback mCallback;
@@ -567,41 +449,39 @@ public final class PermissionControllerManager {
             this.mBackupReader = new FileReaderTask<>(this);
         }
 
-        /* access modifiers changed from: protected */
+        /* JADX INFO: Access modifiers changed from: protected */
+        @Override // com.android.internal.infra.AbstractRemoteService.PendingRequest
         public void onTimeout(RemoteService remoteService) {
             this.mBackupReader.cancel(true);
             this.mBackupReader.interruptRead();
         }
 
+        @Override // java.lang.Runnable
         public void run() {
-            if (this.mBackupReader.getStatus() == AsyncTask.Status.PENDING) {
-                this.mBackupReader.execute((Params[]) new Void[0]);
-                ParcelFileDescriptor remotePipe = this.mBackupReader.getRemotePipe();
+            if (this.mBackupReader.getStatus() != AsyncTask.Status.PENDING) {
+                return;
+            }
+            this.mBackupReader.execute(new Void[0]);
+            ParcelFileDescriptor remotePipe = this.mBackupReader.getRemotePipe();
+            try {
                 try {
                     ((IPermissionController) ((RemoteService) getService()).getServiceInterface()).getRuntimePermissionBackup(this.mUser, remotePipe);
                 } catch (RemoteException e) {
-                    Log.e(PermissionControllerManager.TAG, "Error getting runtime permission backup", e);
-                } catch (Throwable th) {
-                    IoUtils.closeQuietly(remotePipe);
-                    throw th;
+                    Log.m69e(PermissionControllerManager.TAG, "Error getting runtime permission backup", e);
                 }
+            } finally {
                 IoUtils.closeQuietly(remotePipe);
             }
         }
 
-        /* JADX INFO: finally extract failed */
-        public void accept(byte[] backup) {
+        @Override // java.util.function.Consumer
+        public void accept(final byte[] backup) {
             long token = Binder.clearCallingIdentity();
             try {
-                this.mExecutor.execute(new Runnable(backup) {
-                    private final /* synthetic */ byte[] f$1;
-
-                    {
-                        this.f$1 = r2;
-                    }
-
+                this.mExecutor.execute(new Runnable() { // from class: android.permission.-$$Lambda$PermissionControllerManager$PendingGetRuntimePermissionBackup$TnLX6gxZCMF3D0czwj_XwNhPIgE
+                    @Override // java.lang.Runnable
                     public final void run() {
-                        PermissionControllerManager.PendingGetRuntimePermissionBackup.this.mCallback.onGetRuntimePermissionsBackup(this.f$1);
+                        PermissionControllerManager.PendingGetRuntimePermissionBackup.this.mCallback.onGetRuntimePermissionsBackup(backup);
                     }
                 });
                 Binder.restoreCallingIdentity(token);
@@ -613,6 +493,7 @@ public final class PermissionControllerManager {
         }
     }
 
+    /* loaded from: classes3.dex */
     private static final class PendingSetRuntimePermissionGrantStateByDeviceAdmin extends AbstractRemoteService.PendingRequest<RemoteService, IPermissionController> {
         private final Consumer<Boolean> mCallback;
         private final String mCallerPackageName;
@@ -622,7 +503,7 @@ public final class PermissionControllerManager {
         private final String mPermission;
         private final RemoteCallback mRemoteCallback;
 
-        private PendingSetRuntimePermissionGrantStateByDeviceAdmin(RemoteService service, String callerPackageName, String packageName, String permission, int grantState, Executor executor, Consumer<Boolean> callback) {
+        private PendingSetRuntimePermissionGrantStateByDeviceAdmin(RemoteService service, String callerPackageName, String packageName, String permission, int grantState, final Executor executor, final Consumer<Boolean> callback) {
             super(service);
             this.mCallerPackageName = callerPackageName;
             this.mPackageName = packageName;
@@ -630,31 +511,17 @@ public final class PermissionControllerManager {
             this.mGrantState = grantState;
             this.mExecutor = executor;
             this.mCallback = callback;
-            this.mRemoteCallback = new RemoteCallback(new RemoteCallback.OnResultListener(executor, callback) {
-                private final /* synthetic */ Executor f$1;
-                private final /* synthetic */ Consumer f$2;
-
-                {
-                    this.f$1 = r2;
-                    this.f$2 = r3;
-                }
-
+            this.mRemoteCallback = new RemoteCallback(new RemoteCallback.OnResultListener() { // from class: android.permission.-$$Lambda$PermissionControllerManager$PendingSetRuntimePermissionGrantStateByDeviceAdmin$9CrKvc4Mj43M641VzAbk1z_vjck
+                @Override // android.p007os.RemoteCallback.OnResultListener
                 public final void onResult(Bundle bundle) {
-                    this.f$1.execute(new Runnable(this.f$2, bundle) {
-                        private final /* synthetic */ Consumer f$1;
-                        private final /* synthetic */ Bundle f$2;
-
-                        {
-                            this.f$1 = r2;
-                            this.f$2 = r3;
-                        }
-
+                    executor.execute(new Runnable() { // from class: android.permission.-$$Lambda$PermissionControllerManager$PendingSetRuntimePermissionGrantStateByDeviceAdmin$L3EtiNpasfEGf-E2sSUKhk-dYUg
+                        @Override // java.lang.Runnable
                         public final void run() {
-                            PermissionControllerManager.PendingSetRuntimePermissionGrantStateByDeviceAdmin.lambda$new$0(PermissionControllerManager.PendingSetRuntimePermissionGrantStateByDeviceAdmin.this, this.f$1, this.f$2);
+                            PermissionControllerManager.PendingSetRuntimePermissionGrantStateByDeviceAdmin.lambda$new$0(PermissionControllerManager.PendingSetRuntimePermissionGrantStateByDeviceAdmin.this, r2, bundle);
                         }
                     });
                 }
-            }, (Handler) null);
+            }, null);
         }
 
         public static /* synthetic */ void lambda$new$0(PendingSetRuntimePermissionGrantStateByDeviceAdmin pendingSetRuntimePermissionGrantStateByDeviceAdmin, Consumer callback, Bundle result) {
@@ -667,11 +534,13 @@ public final class PermissionControllerManager {
             }
         }
 
-        /* access modifiers changed from: protected */
+        /* JADX INFO: Access modifiers changed from: protected */
+        @Override // com.android.internal.infra.AbstractRemoteService.PendingRequest
         public void onTimeout(RemoteService remoteService) {
             long token = Binder.clearCallingIdentity();
             try {
-                this.mExecutor.execute(new Runnable() {
+                this.mExecutor.execute(new Runnable() { // from class: android.permission.-$$Lambda$PermissionControllerManager$PendingSetRuntimePermissionGrantStateByDeviceAdmin$cgbsG1socgf6wsJmCUAPmh-jKmw
+                    @Override // java.lang.Runnable
                     public final void run() {
                         PermissionControllerManager.PendingSetRuntimePermissionGrantStateByDeviceAdmin.this.mCallback.accept(false);
                     }
@@ -681,16 +550,18 @@ public final class PermissionControllerManager {
             }
         }
 
+        @Override // java.lang.Runnable
         public void run() {
             try {
                 ((IPermissionController) ((RemoteService) getService()).getServiceInterface()).setRuntimePermissionGrantStateByDeviceAdmin(this.mCallerPackageName, this.mPackageName, this.mPermission, this.mGrantState, this.mRemoteCallback);
             } catch (RemoteException e) {
-                String access$1000 = PermissionControllerManager.TAG;
-                Log.e(access$1000, "Error setting permissions state for device admin " + this.mPackageName, e);
+                String str = PermissionControllerManager.TAG;
+                Log.m69e(str, "Error setting permissions state for device admin " + this.mPackageName, e);
             }
         }
     }
 
+    /* loaded from: classes3.dex */
     private static final class PendingRestoreRuntimePermissionBackup implements AbstractRemoteService.AsyncRequest<IPermissionController> {
         private final byte[] mBackup;
         private final FileWriterTask mBackupSender;
@@ -702,25 +573,28 @@ public final class PermissionControllerManager {
             this.mBackupSender = new FileWriterTask();
         }
 
+        @Override // com.android.internal.infra.AbstractRemoteService.AsyncRequest
         public void run(IPermissionController service) {
-            if (this.mBackupSender.getStatus() == AsyncTask.Status.PENDING) {
-                this.mBackupSender.execute((Params[]) new byte[][]{this.mBackup});
-                ParcelFileDescriptor remotePipe = this.mBackupSender.getRemotePipe();
+            if (this.mBackupSender.getStatus() != AsyncTask.Status.PENDING) {
+                return;
+            }
+            this.mBackupSender.execute(this.mBackup);
+            ParcelFileDescriptor remotePipe = this.mBackupSender.getRemotePipe();
+            try {
                 try {
                     service.restoreRuntimePermissionBackup(this.mUser, remotePipe);
                 } catch (RemoteException e) {
-                    Log.e(PermissionControllerManager.TAG, "Error sending runtime permission backup", e);
+                    Log.m69e(PermissionControllerManager.TAG, "Error sending runtime permission backup", e);
                     this.mBackupSender.cancel(false);
                     this.mBackupSender.interruptWrite();
-                } catch (Throwable th) {
-                    IoUtils.closeQuietly(remotePipe);
-                    throw th;
                 }
+            } finally {
                 IoUtils.closeQuietly(remotePipe);
             }
         }
     }
 
+    /* loaded from: classes3.dex */
     private static final class PendingRestoreDelayedRuntimePermissionBackup extends AbstractRemoteService.PendingRequest<RemoteService, IPermissionController> {
         private final Consumer<Boolean> mCallback;
         private final Executor mExecutor;
@@ -728,37 +602,23 @@ public final class PermissionControllerManager {
         private final RemoteCallback mRemoteCallback;
         private final UserHandle mUser;
 
-        private PendingRestoreDelayedRuntimePermissionBackup(RemoteService service, String packageName, UserHandle user, Executor executor, Consumer<Boolean> callback) {
+        private PendingRestoreDelayedRuntimePermissionBackup(RemoteService service, String packageName, UserHandle user, final Executor executor, final Consumer<Boolean> callback) {
             super(service);
             this.mPackageName = packageName;
             this.mUser = user;
             this.mExecutor = executor;
             this.mCallback = callback;
-            this.mRemoteCallback = new RemoteCallback(new RemoteCallback.OnResultListener(executor, callback) {
-                private final /* synthetic */ Executor f$1;
-                private final /* synthetic */ Consumer f$2;
-
-                {
-                    this.f$1 = r2;
-                    this.f$2 = r3;
-                }
-
+            this.mRemoteCallback = new RemoteCallback(new RemoteCallback.OnResultListener() { // from class: android.permission.-$$Lambda$PermissionControllerManager$PendingRestoreDelayedRuntimePermissionBackup$S_BIiPaqfMH7CNqPH_RO6xHRCeQ
+                @Override // android.p007os.RemoteCallback.OnResultListener
                 public final void onResult(Bundle bundle) {
-                    this.f$1.execute(new Runnable(this.f$2, bundle) {
-                        private final /* synthetic */ Consumer f$1;
-                        private final /* synthetic */ Bundle f$2;
-
-                        {
-                            this.f$1 = r2;
-                            this.f$2 = r3;
-                        }
-
+                    executor.execute(new Runnable() { // from class: android.permission.-$$Lambda$PermissionControllerManager$PendingRestoreDelayedRuntimePermissionBackup$ZGmiW-2RcTI6YZLE1JgWr0ufJGk
+                        @Override // java.lang.Runnable
                         public final void run() {
-                            PermissionControllerManager.PendingRestoreDelayedRuntimePermissionBackup.lambda$new$0(PermissionControllerManager.PendingRestoreDelayedRuntimePermissionBackup.this, this.f$1, this.f$2);
+                            PermissionControllerManager.PendingRestoreDelayedRuntimePermissionBackup.lambda$new$0(PermissionControllerManager.PendingRestoreDelayedRuntimePermissionBackup.this, r2, bundle);
                         }
                     });
                 }
-            }, (Handler) null);
+            }, null);
         }
 
         public static /* synthetic */ void lambda$new$0(PendingRestoreDelayedRuntimePermissionBackup pendingRestoreDelayedRuntimePermissionBackup, Consumer callback, Bundle result) {
@@ -771,11 +631,13 @@ public final class PermissionControllerManager {
             }
         }
 
-        /* access modifiers changed from: protected */
+        /* JADX INFO: Access modifiers changed from: protected */
+        @Override // com.android.internal.infra.AbstractRemoteService.PendingRequest
         public void onTimeout(RemoteService remoteService) {
             long token = Binder.clearCallingIdentity();
             try {
-                this.mExecutor.execute(new Runnable() {
+                this.mExecutor.execute(new Runnable() { // from class: android.permission.-$$Lambda$PermissionControllerManager$PendingRestoreDelayedRuntimePermissionBackup$eZmglu-5wkoNFQT0fHebFoNMze8
+                    @Override // java.lang.Runnable
                     public final void run() {
                         PermissionControllerManager.PendingRestoreDelayedRuntimePermissionBackup.this.mCallback.accept(true);
                     }
@@ -785,34 +647,31 @@ public final class PermissionControllerManager {
             }
         }
 
+        @Override // java.lang.Runnable
         public void run() {
             try {
                 ((IPermissionController) ((RemoteService) getService()).getServiceInterface()).restoreDelayedRuntimePermissionBackup(this.mPackageName, this.mUser, this.mRemoteCallback);
             } catch (RemoteException e) {
-                String access$1000 = PermissionControllerManager.TAG;
-                Log.e(access$1000, "Error restoring delayed permissions for " + this.mPackageName, e);
+                String str = PermissionControllerManager.TAG;
+                Log.m69e(str, "Error restoring delayed permissions for " + this.mPackageName, e);
             }
         }
     }
 
+    /* loaded from: classes3.dex */
     private static final class PendingGetAppPermissionRequest extends AbstractRemoteService.PendingRequest<RemoteService, IPermissionController> {
         private final OnGetAppPermissionResultCallback mCallback;
         private final String mPackageName;
         private final RemoteCallback mRemoteCallback;
 
-        private PendingGetAppPermissionRequest(RemoteService service, String packageName, OnGetAppPermissionResultCallback callback, Handler handler) {
+        private PendingGetAppPermissionRequest(RemoteService service, String packageName, final OnGetAppPermissionResultCallback callback, Handler handler) {
             super(service);
             this.mPackageName = packageName;
             this.mCallback = callback;
-            this.mRemoteCallback = new RemoteCallback(new RemoteCallback.OnResultListener(callback) {
-                private final /* synthetic */ PermissionControllerManager.OnGetAppPermissionResultCallback f$1;
-
-                {
-                    this.f$1 = r2;
-                }
-
+            this.mRemoteCallback = new RemoteCallback(new RemoteCallback.OnResultListener() { // from class: android.permission.-$$Lambda$PermissionControllerManager$PendingGetAppPermissionRequest$7R0rGbvqPEHrjxlrMX66LMgfTj4
+                @Override // android.p007os.RemoteCallback.OnResultListener
                 public final void onResult(Bundle bundle) {
-                    PermissionControllerManager.PendingGetAppPermissionRequest.lambda$new$0(PermissionControllerManager.PendingGetAppPermissionRequest.this, this.f$1, bundle);
+                    PermissionControllerManager.PendingGetAppPermissionRequest.lambda$new$0(PermissionControllerManager.PendingGetAppPermissionRequest.this, callback, bundle);
                 }
             }, handler);
         }
@@ -825,24 +684,28 @@ public final class PermissionControllerManager {
             if (permissions == null) {
                 permissions = Collections.emptyList();
             }
-            callback.onGetAppPermissions(permissions);
+            List<RuntimePermissionPresentationInfo> reportedPermissions = permissions;
+            callback.onGetAppPermissions(reportedPermissions);
             pendingGetAppPermissionRequest.finish();
         }
 
-        /* access modifiers changed from: protected */
+        /* JADX INFO: Access modifiers changed from: protected */
+        @Override // com.android.internal.infra.AbstractRemoteService.PendingRequest
         public void onTimeout(RemoteService remoteService) {
             this.mCallback.onGetAppPermissions(Collections.emptyList());
         }
 
+        @Override // java.lang.Runnable
         public void run() {
             try {
                 ((IPermissionController) ((RemoteService) getService()).getServiceInterface()).getAppPermissions(this.mPackageName, this.mRemoteCallback);
             } catch (RemoteException e) {
-                Log.e(PermissionControllerManager.TAG, "Error getting app permission", e);
+                Log.m69e(PermissionControllerManager.TAG, "Error getting app permission", e);
             }
         }
     }
 
+    /* loaded from: classes3.dex */
     private static final class PendingRevokeAppPermissionRequest implements AbstractRemoteService.AsyncRequest<IPermissionController> {
         private final String mPackageName;
         private final String mPermissionName;
@@ -852,35 +715,32 @@ public final class PermissionControllerManager {
             this.mPermissionName = permissionName;
         }
 
+        @Override // com.android.internal.infra.AbstractRemoteService.AsyncRequest
         public void run(IPermissionController remoteInterface) {
             try {
                 remoteInterface.revokeRuntimePermission(this.mPackageName, this.mPermissionName);
             } catch (RemoteException e) {
-                Log.e(PermissionControllerManager.TAG, "Error revoking app permission", e);
+                Log.m69e(PermissionControllerManager.TAG, "Error revoking app permission", e);
             }
         }
     }
 
+    /* loaded from: classes3.dex */
     private static final class PendingCountPermissionAppsRequest extends AbstractRemoteService.PendingRequest<RemoteService, IPermissionController> {
         private final OnCountPermissionAppsResultCallback mCallback;
         private final int mFlags;
         private final List<String> mPermissionNames;
         private final RemoteCallback mRemoteCallback;
 
-        private PendingCountPermissionAppsRequest(RemoteService service, List<String> permissionNames, int flags, OnCountPermissionAppsResultCallback callback, Handler handler) {
+        private PendingCountPermissionAppsRequest(RemoteService service, List<String> permissionNames, int flags, final OnCountPermissionAppsResultCallback callback, Handler handler) {
             super(service);
             this.mPermissionNames = permissionNames;
             this.mFlags = flags;
             this.mCallback = callback;
-            this.mRemoteCallback = new RemoteCallback(new RemoteCallback.OnResultListener(callback) {
-                private final /* synthetic */ PermissionControllerManager.OnCountPermissionAppsResultCallback f$1;
-
-                {
-                    this.f$1 = r2;
-                }
-
+            this.mRemoteCallback = new RemoteCallback(new RemoteCallback.OnResultListener() { // from class: android.permission.-$$Lambda$PermissionControllerManager$PendingCountPermissionAppsRequest$5yk4p2I96nUHJ1QRErjoF1iiLLY
+                @Override // android.p007os.RemoteCallback.OnResultListener
                 public final void onResult(Bundle bundle) {
-                    PermissionControllerManager.PendingCountPermissionAppsRequest.lambda$new$0(PermissionControllerManager.PendingCountPermissionAppsRequest.this, this.f$1, bundle);
+                    PermissionControllerManager.PendingCountPermissionAppsRequest.lambda$new$0(PermissionControllerManager.PendingCountPermissionAppsRequest.this, callback, bundle);
                 }
             }, handler);
         }
@@ -896,123 +756,102 @@ public final class PermissionControllerManager {
             pendingCountPermissionAppsRequest.finish();
         }
 
-        /* access modifiers changed from: protected */
+        /* JADX INFO: Access modifiers changed from: protected */
+        @Override // com.android.internal.infra.AbstractRemoteService.PendingRequest
         public void onTimeout(RemoteService remoteService) {
             this.mCallback.onCountPermissionApps(0);
         }
 
+        @Override // java.lang.Runnable
         public void run() {
             try {
                 ((IPermissionController) ((RemoteService) getService()).getServiceInterface()).countPermissionApps(this.mPermissionNames, this.mFlags, this.mRemoteCallback);
             } catch (RemoteException e) {
-                Log.e(PermissionControllerManager.TAG, "Error counting permission apps", e);
+                Log.m69e(PermissionControllerManager.TAG, "Error counting permission apps", e);
             }
         }
     }
 
+    /* loaded from: classes3.dex */
     private static final class PendingGetPermissionUsagesRequest extends AbstractRemoteService.PendingRequest<RemoteService, IPermissionController> {
         private final OnPermissionUsageResultCallback mCallback;
         private final boolean mCountSystem;
         private final long mNumMillis;
         private final RemoteCallback mRemoteCallback;
 
-        private PendingGetPermissionUsagesRequest(RemoteService service, boolean countSystem, long numMillis, Executor executor, OnPermissionUsageResultCallback callback) {
+        private PendingGetPermissionUsagesRequest(RemoteService service, boolean countSystem, long numMillis, final Executor executor, final OnPermissionUsageResultCallback callback) {
             super(service);
             this.mCountSystem = countSystem;
             this.mNumMillis = numMillis;
             this.mCallback = callback;
-            this.mRemoteCallback = new RemoteCallback(new RemoteCallback.OnResultListener(executor, callback) {
-                private final /* synthetic */ Executor f$1;
-                private final /* synthetic */ PermissionControllerManager.OnPermissionUsageResultCallback f$2;
-
-                {
-                    this.f$1 = r2;
-                    this.f$2 = r3;
-                }
-
+            this.mRemoteCallback = new RemoteCallback(new RemoteCallback.OnResultListener() { // from class: android.permission.-$$Lambda$PermissionControllerManager$PendingGetPermissionUsagesRequest$M0RAdfneqBIIFQEhfWzd068mi7g
+                @Override // android.p007os.RemoteCallback.OnResultListener
                 public final void onResult(Bundle bundle) {
-                    this.f$1.execute(new Runnable(bundle, this.f$2) {
-                        private final /* synthetic */ Bundle f$1;
-                        private final /* synthetic */ PermissionControllerManager.OnPermissionUsageResultCallback f$2;
-
-                        {
-                            this.f$1 = r2;
-                            this.f$2 = r3;
-                        }
-
+                    executor.execute(new Runnable() { // from class: android.permission.-$$Lambda$PermissionControllerManager$PendingGetPermissionUsagesRequest$WBIc65bpG47GE1DYeIzY6NX7Oyw
+                        @Override // java.lang.Runnable
                         public final void run() {
-                            PermissionControllerManager.PendingGetPermissionUsagesRequest.lambda$new$0(PermissionControllerManager.PendingGetPermissionUsagesRequest.this, this.f$1, this.f$2);
+                            PermissionControllerManager.PendingGetPermissionUsagesRequest.lambda$new$0(PermissionControllerManager.PendingGetPermissionUsagesRequest.this, bundle, r3);
                         }
                     });
                 }
-            }, (Handler) null);
+            }, null);
         }
 
         public static /* synthetic */ void lambda$new$0(PendingGetPermissionUsagesRequest pendingGetPermissionUsagesRequest, Bundle result, OnPermissionUsageResultCallback callback) {
             List<RuntimePermissionUsageInfo> users;
             long token = Binder.clearCallingIdentity();
-            if (result != null) {
-                try {
+            try {
+                if (result != null) {
                     users = result.getParcelableArrayList(PermissionControllerManager.KEY_RESULT);
-                } catch (Throwable th) {
-                    Binder.restoreCallingIdentity(token);
-                    pendingGetPermissionUsagesRequest.finish();
-                    throw th;
+                } else {
+                    users = Collections.emptyList();
                 }
-            } else {
-                users = Collections.emptyList();
+                List<RuntimePermissionUsageInfo> reportedUsers = users;
+                callback.onPermissionUsageResult(reportedUsers);
+                Binder.restoreCallingIdentity(token);
+                pendingGetPermissionUsagesRequest.finish();
+            } catch (Throwable th) {
+                Binder.restoreCallingIdentity(token);
+                pendingGetPermissionUsagesRequest.finish();
+                throw th;
             }
-            callback.onPermissionUsageResult(users);
-            Binder.restoreCallingIdentity(token);
-            pendingGetPermissionUsagesRequest.finish();
         }
 
-        /* access modifiers changed from: protected */
+        /* JADX INFO: Access modifiers changed from: protected */
+        @Override // com.android.internal.infra.AbstractRemoteService.PendingRequest
         public void onTimeout(RemoteService remoteService) {
             this.mCallback.onPermissionUsageResult(Collections.emptyList());
         }
 
+        @Override // java.lang.Runnable
         public void run() {
             try {
                 ((IPermissionController) ((RemoteService) getService()).getServiceInterface()).getPermissionUsages(this.mCountSystem, this.mNumMillis, this.mRemoteCallback);
             } catch (RemoteException e) {
-                Log.e(PermissionControllerManager.TAG, "Error counting permission users", e);
+                Log.m69e(PermissionControllerManager.TAG, "Error counting permission users", e);
             }
         }
     }
 
+    /* loaded from: classes3.dex */
     private static final class PendingGrantOrUpgradeDefaultRuntimePermissionsRequest extends AbstractRemoteService.PendingRequest<RemoteService, IPermissionController> {
         private final Consumer<Boolean> mCallback;
         private final RemoteCallback mRemoteCallback;
 
-        private PendingGrantOrUpgradeDefaultRuntimePermissionsRequest(RemoteService service, Executor executor, Consumer<Boolean> callback) {
+        private PendingGrantOrUpgradeDefaultRuntimePermissionsRequest(RemoteService service, final Executor executor, final Consumer<Boolean> callback) {
             super(service);
             this.mCallback = callback;
-            this.mRemoteCallback = new RemoteCallback(new RemoteCallback.OnResultListener(executor, callback) {
-                private final /* synthetic */ Executor f$1;
-                private final /* synthetic */ Consumer f$2;
-
-                {
-                    this.f$1 = r2;
-                    this.f$2 = r3;
-                }
-
+            this.mRemoteCallback = new RemoteCallback(new RemoteCallback.OnResultListener() { // from class: android.permission.-$$Lambda$PermissionControllerManager$PendingGrantOrUpgradeDefaultRuntimePermissionsRequest$khE8_2qLkPzjjwzPXI9vCg1JiSo
+                @Override // android.p007os.RemoteCallback.OnResultListener
                 public final void onResult(Bundle bundle) {
-                    this.f$1.execute(new Runnable(this.f$2, bundle) {
-                        private final /* synthetic */ Consumer f$1;
-                        private final /* synthetic */ Bundle f$2;
-
-                        {
-                            this.f$1 = r2;
-                            this.f$2 = r3;
-                        }
-
+                    executor.execute(new Runnable() { // from class: android.permission.-$$Lambda$PermissionControllerManager$PendingGrantOrUpgradeDefaultRuntimePermissionsRequest$LF2T0wqhyO211uMsePvWLLBRNHc
+                        @Override // java.lang.Runnable
                         public final void run() {
-                            PermissionControllerManager.PendingGrantOrUpgradeDefaultRuntimePermissionsRequest.lambda$new$0(PermissionControllerManager.PendingGrantOrUpgradeDefaultRuntimePermissionsRequest.this, this.f$1, this.f$2);
+                            PermissionControllerManager.PendingGrantOrUpgradeDefaultRuntimePermissionsRequest.lambda$new$0(PermissionControllerManager.PendingGrantOrUpgradeDefaultRuntimePermissionsRequest.this, r2, bundle);
                         }
                     });
                 }
-            }, (Handler) null);
+            }, null);
         }
 
         public static /* synthetic */ void lambda$new$0(PendingGrantOrUpgradeDefaultRuntimePermissionsRequest pendingGrantOrUpgradeDefaultRuntimePermissionsRequest, Consumer callback, Bundle result) {
@@ -1025,7 +864,8 @@ public final class PermissionControllerManager {
             }
         }
 
-        /* access modifiers changed from: protected */
+        /* JADX INFO: Access modifiers changed from: protected */
+        @Override // com.android.internal.infra.AbstractRemoteService.PendingRequest
         public void onTimeout(RemoteService remoteService) {
             long token = Binder.clearCallingIdentity();
             try {
@@ -1035,11 +875,12 @@ public final class PermissionControllerManager {
             }
         }
 
+        @Override // java.lang.Runnable
         public void run() {
             try {
                 ((IPermissionController) ((RemoteService) getService()).getServiceInterface()).grantOrUpgradeDefaultRuntimePermissions(this.mRemoteCallback);
             } catch (RemoteException e) {
-                Log.e(PermissionControllerManager.TAG, "Error granting or upgrading runtime permissions", e);
+                Log.m69e(PermissionControllerManager.TAG, "Error granting or upgrading runtime permissions", e);
             }
         }
     }

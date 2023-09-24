@@ -2,6 +2,7 @@ package android.media;
 
 import java.util.UUID;
 
+/* loaded from: classes3.dex */
 public final class MediaCrypto {
     private long mNativeContext;
 
@@ -28,8 +29,8 @@ public final class MediaCrypto {
         long lsb = uuid.getLeastSignificantBits();
         byte[] uuidBytes = new byte[16];
         for (int i = 0; i < 8; i++) {
-            uuidBytes[i] = (byte) ((int) (msb >>> ((7 - i) * 8)));
-            uuidBytes[i + 8] = (byte) ((int) (lsb >>> ((7 - i) * 8)));
+            uuidBytes[i] = (byte) (msb >>> ((7 - i) * 8));
+            uuidBytes[i + 8] = (byte) (lsb >>> ((7 - i) * 8));
         }
         return uuidBytes;
     }
@@ -38,8 +39,7 @@ public final class MediaCrypto {
         native_setup(getByteArrayFromUUID(uuid), sessionId);
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() {
+    protected void finalize() {
         native_finalize();
     }
 

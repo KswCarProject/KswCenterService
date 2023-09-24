@@ -7,12 +7,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import libcore.io.Memory;
 
+/* loaded from: classes3.dex */
 public class TlvBufferUtils {
     private TlvBufferUtils() {
     }
 
+    /* loaded from: classes3.dex */
     public static class TlvConstructor {
         private byte[] mArray;
         private int mArrayLength;
@@ -177,21 +180,21 @@ public class TlvBufferUtils {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class TlvElement {
         public ByteOrder byteOrder;
         public int length;
-        /* access modifiers changed from: private */
-        public byte[] mRefArray;
+        private byte[] mRefArray;
         public int offset;
         public int type;
 
-        private TlvElement(int type2, int length2, byte[] refArray, int offset2) {
+        private TlvElement(int type, int length, byte[] refArray, int offset) {
             this.byteOrder = ByteOrder.BIG_ENDIAN;
-            this.type = type2;
-            this.length = length2;
+            this.type = type;
+            this.length = length;
             this.mRefArray = refArray;
-            this.offset = offset2;
-            if (offset2 + length2 > refArray.length) {
+            this.offset = offset;
+            if (offset + length > refArray.length) {
                 throw new BufferOverflowException();
             }
         }
@@ -201,24 +204,24 @@ public class TlvBufferUtils {
         }
 
         public byte getByte() {
-            if (this.length == 1) {
-                return this.mRefArray[this.offset];
+            if (this.length != 1) {
+                throw new IllegalArgumentException("Accesing a byte from a TLV element of length " + this.length);
             }
-            throw new IllegalArgumentException("Accesing a byte from a TLV element of length " + this.length);
+            return this.mRefArray[this.offset];
         }
 
         public short getShort() {
-            if (this.length == 2) {
-                return Memory.peekShort(this.mRefArray, this.offset, this.byteOrder);
+            if (this.length != 2) {
+                throw new IllegalArgumentException("Accesing a short from a TLV element of length " + this.length);
             }
-            throw new IllegalArgumentException("Accesing a short from a TLV element of length " + this.length);
+            return Memory.peekShort(this.mRefArray, this.offset, this.byteOrder);
         }
 
         public int getInt() {
-            if (this.length == 4) {
-                return Memory.peekInt(this.mRefArray, this.offset, this.byteOrder);
+            if (this.length != 4) {
+                throw new IllegalArgumentException("Accesing an int from a TLV element of length " + this.length);
             }
-            throw new IllegalArgumentException("Accesing an int from a TLV element of length " + this.length);
+            return Memory.peekInt(this.mRefArray, this.offset, this.byteOrder);
         }
 
         public String getString() {
@@ -226,17 +229,13 @@ public class TlvBufferUtils {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class TlvIterable implements Iterable<TlvElement> {
-        /* access modifiers changed from: private */
-        public byte[] mArray;
-        /* access modifiers changed from: private */
-        public int mArrayLength;
-        /* access modifiers changed from: private */
-        public ByteOrder mByteOrder = ByteOrder.BIG_ENDIAN;
-        /* access modifiers changed from: private */
-        public int mLengthSize;
-        /* access modifiers changed from: private */
-        public int mTypeSize;
+        private byte[] mArray;
+        private int mArrayLength;
+        private ByteOrder mByteOrder = ByteOrder.BIG_ENDIAN;
+        private int mLengthSize;
+        private int mTypeSize;
 
         public TlvIterable(int typeSize, int lengthSize, byte[] array) {
             if (typeSize < 0 || typeSize > 2 || lengthSize <= 0 || lengthSize > 2) {
@@ -271,9 +270,9 @@ public class TlvBufferUtils {
                 if (tlv.length == 0) {
                     builder.append("<null>");
                 } else if (tlv.length == 1) {
-                    builder.append(tlv.getByte());
+                    builder.append((int) tlv.getByte());
                 } else if (tlv.length == 2) {
-                    builder.append(tlv.getShort());
+                    builder.append((int) tlv.getShort());
                 } else if (tlv.length == 4) {
                     builder.append(tlv.getInt());
                 } else {
@@ -297,102 +296,43 @@ public class TlvBufferUtils {
             return list;
         }
 
+        @Override // java.lang.Iterable
         public Iterator<TlvElement> iterator() {
-            return new Iterator<TlvElement>() {
+            return new Iterator<TlvElement>() { // from class: android.net.wifi.aware.TlvBufferUtils.TlvIterable.1
                 private int mOffset = 0;
 
+                @Override // java.util.Iterator
                 public boolean hasNext() {
                     return this.mOffset < TlvIterable.this.mArrayLength;
                 }
 
-                /* JADX WARNING: type inference failed for: r2v7, types: [byte[]] */
-                /* JADX WARNING: type inference failed for: r1v7, types: [byte] */
-                /* JADX WARNING: type inference failed for: r1v13, types: [byte[]] */
-                /* JADX WARNING: type inference failed for: r0v5, types: [byte] */
-                /* JADX WARNING: Incorrect type for immutable var: ssa=byte, code=int, for r0v5, types: [byte] */
-                /* JADX WARNING: Incorrect type for immutable var: ssa=byte, code=int, for r1v7, types: [byte] */
-                /* Code decompiled incorrectly, please refer to instructions dump. */
-                public android.net.wifi.aware.TlvBufferUtils.TlvElement next() {
-                    /*
-                        r10 = this;
-                        boolean r0 = r10.hasNext()
-                        if (r0 == 0) goto L_0x0099
-                        r0 = 0
-                        android.net.wifi.aware.TlvBufferUtils$TlvIterable r1 = android.net.wifi.aware.TlvBufferUtils.TlvIterable.this
-                        int r1 = r1.mTypeSize
-                        r2 = 2
-                        r3 = 1
-                        if (r1 != r3) goto L_0x001c
-                        android.net.wifi.aware.TlvBufferUtils$TlvIterable r1 = android.net.wifi.aware.TlvBufferUtils.TlvIterable.this
-                        byte[] r1 = r1.mArray
-                        int r4 = r10.mOffset
-                        byte r0 = r1[r4]
-                        goto L_0x0036
-                    L_0x001c:
-                        android.net.wifi.aware.TlvBufferUtils$TlvIterable r1 = android.net.wifi.aware.TlvBufferUtils.TlvIterable.this
-                        int r1 = r1.mTypeSize
-                        if (r1 != r2) goto L_0x0036
-                        android.net.wifi.aware.TlvBufferUtils$TlvIterable r1 = android.net.wifi.aware.TlvBufferUtils.TlvIterable.this
-                        byte[] r1 = r1.mArray
-                        int r4 = r10.mOffset
-                        android.net.wifi.aware.TlvBufferUtils$TlvIterable r5 = android.net.wifi.aware.TlvBufferUtils.TlvIterable.this
-                        java.nio.ByteOrder r5 = r5.mByteOrder
-                        short r0 = libcore.io.Memory.peekShort(r1, r4, r5)
-                    L_0x0036:
-                        int r1 = r10.mOffset
-                        android.net.wifi.aware.TlvBufferUtils$TlvIterable r4 = android.net.wifi.aware.TlvBufferUtils.TlvIterable.this
-                        int r4 = r4.mTypeSize
-                        int r1 = r1 + r4
-                        r10.mOffset = r1
-                        r1 = 0
-                        android.net.wifi.aware.TlvBufferUtils$TlvIterable r4 = android.net.wifi.aware.TlvBufferUtils.TlvIterable.this
-                        int r4 = r4.mLengthSize
-                        if (r4 != r3) goto L_0x0055
-                        android.net.wifi.aware.TlvBufferUtils$TlvIterable r2 = android.net.wifi.aware.TlvBufferUtils.TlvIterable.this
-                        byte[] r2 = r2.mArray
-                        int r3 = r10.mOffset
-                        byte r1 = r2[r3]
-                        goto L_0x006f
-                    L_0x0055:
-                        android.net.wifi.aware.TlvBufferUtils$TlvIterable r3 = android.net.wifi.aware.TlvBufferUtils.TlvIterable.this
-                        int r3 = r3.mLengthSize
-                        if (r3 != r2) goto L_0x006f
-                        android.net.wifi.aware.TlvBufferUtils$TlvIterable r2 = android.net.wifi.aware.TlvBufferUtils.TlvIterable.this
-                        byte[] r2 = r2.mArray
-                        int r3 = r10.mOffset
-                        android.net.wifi.aware.TlvBufferUtils$TlvIterable r4 = android.net.wifi.aware.TlvBufferUtils.TlvIterable.this
-                        java.nio.ByteOrder r4 = r4.mByteOrder
-                        short r1 = libcore.io.Memory.peekShort(r2, r3, r4)
-                    L_0x006f:
-                        int r2 = r10.mOffset
-                        android.net.wifi.aware.TlvBufferUtils$TlvIterable r3 = android.net.wifi.aware.TlvBufferUtils.TlvIterable.this
-                        int r3 = r3.mLengthSize
-                        int r2 = r2 + r3
-                        r10.mOffset = r2
-                        android.net.wifi.aware.TlvBufferUtils$TlvElement r2 = new android.net.wifi.aware.TlvBufferUtils$TlvElement
-                        android.net.wifi.aware.TlvBufferUtils$TlvIterable r3 = android.net.wifi.aware.TlvBufferUtils.TlvIterable.this
-                        byte[] r7 = r3.mArray
-                        int r8 = r10.mOffset
-                        r9 = 0
-                        r4 = r2
-                        r5 = r0
-                        r6 = r1
-                        r4.<init>(r5, r6, r7, r8)
-                        android.net.wifi.aware.TlvBufferUtils$TlvIterable r3 = android.net.wifi.aware.TlvBufferUtils.TlvIterable.this
-                        java.nio.ByteOrder r3 = r3.mByteOrder
-                        r2.byteOrder = r3
-                        int r3 = r10.mOffset
-                        int r3 = r3 + r1
-                        r10.mOffset = r3
-                        return r2
-                    L_0x0099:
-                        java.util.NoSuchElementException r0 = new java.util.NoSuchElementException
-                        r0.<init>()
-                        throw r0
-                    */
-                    throw new UnsupportedOperationException("Method not decompiled: android.net.wifi.aware.TlvBufferUtils.TlvIterable.AnonymousClass1.next():android.net.wifi.aware.TlvBufferUtils$TlvElement");
+                /* JADX WARN: Can't rename method to resolve collision */
+                @Override // java.util.Iterator
+                public TlvElement next() {
+                    if (!hasNext()) {
+                        throw new NoSuchElementException();
+                    }
+                    short s = 0;
+                    if (TlvIterable.this.mTypeSize == 1) {
+                        s = TlvIterable.this.mArray[this.mOffset];
+                    } else if (TlvIterable.this.mTypeSize == 2) {
+                        s = Memory.peekShort(TlvIterable.this.mArray, this.mOffset, TlvIterable.this.mByteOrder);
+                    }
+                    this.mOffset += TlvIterable.this.mTypeSize;
+                    short s2 = 0;
+                    if (TlvIterable.this.mLengthSize == 1) {
+                        s2 = TlvIterable.this.mArray[this.mOffset];
+                    } else if (TlvIterable.this.mLengthSize == 2) {
+                        s2 = Memory.peekShort(TlvIterable.this.mArray, this.mOffset, TlvIterable.this.mByteOrder);
+                    }
+                    this.mOffset += TlvIterable.this.mLengthSize;
+                    TlvElement tlv = new TlvElement(s, s2, TlvIterable.this.mArray, this.mOffset);
+                    tlv.byteOrder = TlvIterable.this.mByteOrder;
+                    this.mOffset += s2;
+                    return tlv;
                 }
 
+                @Override // java.util.Iterator
                 public void remove() {
                     throw new UnsupportedOperationException();
                 }

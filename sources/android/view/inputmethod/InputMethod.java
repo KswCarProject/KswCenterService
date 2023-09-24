@@ -1,15 +1,17 @@
 package android.view.inputmethod;
 
-import android.os.IBinder;
-import android.os.ResultReceiver;
+import android.p007os.IBinder;
+import android.p007os.ResultReceiver;
 import com.android.internal.inputmethod.IInputMethodPrivilegedOperations;
 
+/* loaded from: classes4.dex */
 public interface InputMethod {
     public static final String SERVICE_INTERFACE = "android.view.InputMethod";
     public static final String SERVICE_META_DATA = "android.view.im";
     public static final int SHOW_EXPLICIT = 1;
     public static final int SHOW_FORCED = 2;
 
+    /* loaded from: classes4.dex */
     public interface SessionCallback {
         void sessionCreated(InputMethodSession inputMethodSession);
     }
@@ -36,15 +38,15 @@ public interface InputMethod {
 
     void unbindInput();
 
-    void initializeInternal(IBinder token, int displayId, IInputMethodPrivilegedOperations privilegedOperations) {
+    default void initializeInternal(IBinder token, int displayId, IInputMethodPrivilegedOperations privilegedOperations) {
         updateInputMethodDisplay(displayId);
         attachToken(token);
     }
 
-    void updateInputMethodDisplay(int displayId) {
+    default void updateInputMethodDisplay(int displayId) {
     }
 
-    void dispatchStartInputWithToken(InputConnection inputConnection, EditorInfo editorInfo, boolean restarting, IBinder startInputToken, boolean shouldPreRenderIme) {
+    default void dispatchStartInputWithToken(InputConnection inputConnection, EditorInfo editorInfo, boolean restarting, IBinder startInputToken, boolean shouldPreRenderIme) {
         if (restarting) {
             restartInput(inputConnection, editorInfo);
         } else {

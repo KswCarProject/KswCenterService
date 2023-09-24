@@ -2,10 +2,11 @@ package android.app.usage;
 
 import android.content.ComponentName;
 import android.content.res.Configuration;
-import android.os.UserHandle;
+import android.p007os.UserHandle;
 import java.util.List;
 import java.util.Set;
 
+/* loaded from: classes.dex */
 public abstract class UsageStatsManagerInternal {
     public abstract void addAppIdleStateChangeListener(AppIdleStateChangeListener appIdleStateChangeListener);
 
@@ -59,6 +60,7 @@ public abstract class UsageStatsManagerInternal {
 
     public abstract void setLastJobRunTime(String str, int i, long j);
 
+    /* loaded from: classes.dex */
     public static abstract class AppIdleStateChangeListener {
         public abstract void onAppIdleStateChanged(String str, int i, boolean z, int i2, int i3);
 
@@ -68,6 +70,7 @@ public abstract class UsageStatsManagerInternal {
         }
     }
 
+    /* loaded from: classes.dex */
     public static class AppUsageLimitData {
         private final long mTotalUsageLimit;
         private final long mUsageRemaining;

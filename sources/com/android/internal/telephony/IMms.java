@@ -3,13 +3,14 @@ package com.android.internal.telephony;
 import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.net.Uri;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes4.dex */
 public interface IMms extends IInterface {
     Uri addMultimediaMessageDraft(String str, Uri uri) throws RemoteException;
 
@@ -39,64 +40,81 @@ public interface IMms extends IInterface {
 
     boolean updateStoredMessageStatus(String str, Uri uri, ContentValues contentValues) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IMms {
+        @Override // com.android.internal.telephony.IMms
         public void sendMessage(int subId, String callingPkg, Uri contentUri, String locationUrl, Bundle configOverrides, PendingIntent sentIntent) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.IMms
         public void downloadMessage(int subId, String callingPkg, String locationUrl, Uri contentUri, Bundle configOverrides, PendingIntent downloadedIntent) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.IMms
         public Bundle getCarrierConfigValues(int subId) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.IMms
         public Uri importTextMessage(String callingPkg, String address, int type, String text, long timestampMillis, boolean seen, boolean read) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.IMms
         public Uri importMultimediaMessage(String callingPkg, Uri contentUri, String messageId, long timestampSecs, boolean seen, boolean read) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.IMms
         public boolean deleteStoredMessage(String callingPkg, Uri messageUri) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.IMms
         public boolean deleteStoredConversation(String callingPkg, long conversationId) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.IMms
         public boolean updateStoredMessageStatus(String callingPkg, Uri messageUri, ContentValues statusValues) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.IMms
         public boolean archiveStoredConversation(String callingPkg, long conversationId, boolean archived) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.IMms
         public Uri addTextMessageDraft(String callingPkg, String address, String text) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.IMms
         public Uri addMultimediaMessageDraft(String callingPkg, Uri contentUri) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.IMms
         public void sendStoredMessage(int subId, String callingPkg, Uri messageUri, Bundle configOverrides, PendingIntent sentIntent) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.IMms
         public void setAutoPersisting(String callingPkg, boolean enabled) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.IMms
         public boolean getAutoPersisting() throws RemoteException {
             return false;
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IMms {
         private static final String DESCRIPTOR = "com.android.internal.telephony.IMms";
         static final int TRANSACTION_addMultimediaMessageDraft = 11;
@@ -123,12 +141,13 @@ public interface IMms extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IMms)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IMms)) {
+                return (IMms) iin;
             }
-            return (IMms) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -168,401 +187,182 @@ public interface IMms extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v30, resolved type: android.content.ContentValues} */
-        /* JADX WARNING: type inference failed for: r0v1 */
-        /* JADX WARNING: type inference failed for: r0v2 */
-        /* JADX WARNING: type inference failed for: r0v7 */
-        /* JADX WARNING: type inference failed for: r0v17 */
-        /* JADX WARNING: type inference failed for: r0v25, types: [android.net.Uri] */
-        /* JADX WARNING: type inference failed for: r0v36, types: [android.net.Uri] */
-        /* JADX WARNING: type inference failed for: r0v40 */
-        /* JADX WARNING: type inference failed for: r0v48 */
-        /* JADX WARNING: type inference failed for: r0v49 */
-        /* JADX WARNING: type inference failed for: r0v50 */
-        /* JADX WARNING: type inference failed for: r0v51 */
-        /* JADX WARNING: type inference failed for: r0v52 */
-        /* JADX WARNING: type inference failed for: r0v53 */
-        /* JADX WARNING: type inference failed for: r0v54 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r23, android.os.Parcel r24, android.os.Parcel r25, int r26) throws android.os.RemoteException {
-            /*
-                r22 = this;
-                r9 = r22
-                r10 = r23
-                r11 = r24
-                r12 = r25
-                java.lang.String r13 = "com.android.internal.telephony.IMms"
-                r0 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r14 = 1
-                if (r10 == r0) goto L_0x02ac
-                r15 = 0
-                r0 = 0
-                switch(r10) {
-                    case 1: goto L_0x025e;
-                    case 2: goto L_0x0210;
-                    case 3: goto L_0x01f5;
-                    case 4: goto L_0x01ac;
-                    case 5: goto L_0x015f;
-                    case 6: goto L_0x013d;
-                    case 7: goto L_0x0127;
-                    case 8: goto L_0x00f5;
-                    case 9: goto L_0x00d6;
-                    case 10: goto L_0x00b3;
-                    case 11: goto L_0x0088;
-                    case 12: goto L_0x003f;
-                    case 13: goto L_0x0028;
-                    case 14: goto L_0x001a;
-                    default: goto L_0x0015;
-                }
-            L_0x0015:
-                boolean r0 = super.onTransact(r23, r24, r25, r26)
-                return r0
-            L_0x001a:
-                r11.enforceInterface(r13)
-                boolean r0 = r22.getAutoPersisting()
-                r25.writeNoException()
-                r12.writeInt(r0)
-                return r14
-            L_0x0028:
-                r11.enforceInterface(r13)
-                java.lang.String r0 = r24.readString()
-                int r1 = r24.readInt()
-                if (r1 == 0) goto L_0x0037
-                r15 = r14
-            L_0x0037:
-                r1 = r15
-                r9.setAutoPersisting(r0, r1)
-                r25.writeNoException()
-                return r14
-            L_0x003f:
-                r11.enforceInterface(r13)
-                int r6 = r24.readInt()
-                java.lang.String r7 = r24.readString()
-                int r1 = r24.readInt()
-                if (r1 == 0) goto L_0x005a
-                android.os.Parcelable$Creator<android.net.Uri> r1 = android.net.Uri.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r11)
-                android.net.Uri r1 = (android.net.Uri) r1
-                r3 = r1
-                goto L_0x005b
-            L_0x005a:
-                r3 = r0
-            L_0x005b:
-                int r1 = r24.readInt()
-                if (r1 == 0) goto L_0x006b
-                android.os.Parcelable$Creator<android.os.Bundle> r1 = android.os.Bundle.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r11)
-                android.os.Bundle r1 = (android.os.Bundle) r1
-                r4 = r1
-                goto L_0x006c
-            L_0x006b:
-                r4 = r0
-            L_0x006c:
-                int r1 = r24.readInt()
-                if (r1 == 0) goto L_0x007c
-                android.os.Parcelable$Creator<android.app.PendingIntent> r0 = android.app.PendingIntent.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r11)
-                android.app.PendingIntent r0 = (android.app.PendingIntent) r0
-            L_0x007a:
-                r5 = r0
-                goto L_0x007d
-            L_0x007c:
-                goto L_0x007a
-            L_0x007d:
-                r0 = r22
-                r1 = r6
-                r2 = r7
-                r0.sendStoredMessage(r1, r2, r3, r4, r5)
-                r25.writeNoException()
-                return r14
-            L_0x0088:
-                r11.enforceInterface(r13)
-                java.lang.String r1 = r24.readString()
-                int r2 = r24.readInt()
-                if (r2 == 0) goto L_0x009e
-                android.os.Parcelable$Creator<android.net.Uri> r0 = android.net.Uri.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r11)
-                android.net.Uri r0 = (android.net.Uri) r0
-                goto L_0x009f
-            L_0x009e:
-            L_0x009f:
-                android.net.Uri r2 = r9.addMultimediaMessageDraft(r1, r0)
-                r25.writeNoException()
-                if (r2 == 0) goto L_0x00af
-                r12.writeInt(r14)
-                r2.writeToParcel(r12, r14)
-                goto L_0x00b2
-            L_0x00af:
-                r12.writeInt(r15)
-            L_0x00b2:
-                return r14
-            L_0x00b3:
-                r11.enforceInterface(r13)
-                java.lang.String r0 = r24.readString()
-                java.lang.String r1 = r24.readString()
-                java.lang.String r2 = r24.readString()
-                android.net.Uri r3 = r9.addTextMessageDraft(r0, r1, r2)
-                r25.writeNoException()
-                if (r3 == 0) goto L_0x00d2
-                r12.writeInt(r14)
-                r3.writeToParcel(r12, r14)
-                goto L_0x00d5
-            L_0x00d2:
-                r12.writeInt(r15)
-            L_0x00d5:
-                return r14
-            L_0x00d6:
-                r11.enforceInterface(r13)
-                java.lang.String r0 = r24.readString()
-                long r1 = r24.readLong()
-                int r3 = r24.readInt()
-                if (r3 == 0) goto L_0x00e9
-                r15 = r14
-            L_0x00e9:
-                r3 = r15
-                boolean r4 = r9.archiveStoredConversation(r0, r1, r3)
-                r25.writeNoException()
-                r12.writeInt(r4)
-                return r14
-            L_0x00f5:
-                r11.enforceInterface(r13)
-                java.lang.String r1 = r24.readString()
-                int r2 = r24.readInt()
-                if (r2 == 0) goto L_0x010b
-                android.os.Parcelable$Creator<android.net.Uri> r2 = android.net.Uri.CREATOR
-                java.lang.Object r2 = r2.createFromParcel(r11)
-                android.net.Uri r2 = (android.net.Uri) r2
-                goto L_0x010c
-            L_0x010b:
-                r2 = r0
-            L_0x010c:
-                int r3 = r24.readInt()
-                if (r3 == 0) goto L_0x011b
-                android.os.Parcelable$Creator<android.content.ContentValues> r0 = android.content.ContentValues.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r11)
-                android.content.ContentValues r0 = (android.content.ContentValues) r0
-                goto L_0x011c
-            L_0x011b:
-            L_0x011c:
-                boolean r3 = r9.updateStoredMessageStatus(r1, r2, r0)
-                r25.writeNoException()
-                r12.writeInt(r3)
-                return r14
-            L_0x0127:
-                r11.enforceInterface(r13)
-                java.lang.String r0 = r24.readString()
-                long r1 = r24.readLong()
-                boolean r3 = r9.deleteStoredConversation(r0, r1)
-                r25.writeNoException()
-                r12.writeInt(r3)
-                return r14
-            L_0x013d:
-                r11.enforceInterface(r13)
-                java.lang.String r1 = r24.readString()
-                int r2 = r24.readInt()
-                if (r2 == 0) goto L_0x0153
-                android.os.Parcelable$Creator<android.net.Uri> r0 = android.net.Uri.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r11)
-                android.net.Uri r0 = (android.net.Uri) r0
-                goto L_0x0154
-            L_0x0153:
-            L_0x0154:
-                boolean r2 = r9.deleteStoredMessage(r1, r0)
-                r25.writeNoException()
-                r12.writeInt(r2)
-                return r14
-            L_0x015f:
-                r11.enforceInterface(r13)
-                java.lang.String r8 = r24.readString()
-                int r1 = r24.readInt()
-                if (r1 == 0) goto L_0x0176
-                android.os.Parcelable$Creator<android.net.Uri> r0 = android.net.Uri.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r11)
-                android.net.Uri r0 = (android.net.Uri) r0
-            L_0x0174:
-                r2 = r0
-                goto L_0x0177
-            L_0x0176:
-                goto L_0x0174
-            L_0x0177:
-                java.lang.String r16 = r24.readString()
-                long r17 = r24.readLong()
-                int r0 = r24.readInt()
-                if (r0 == 0) goto L_0x0187
-                r6 = r14
-                goto L_0x0188
-            L_0x0187:
-                r6 = r15
-            L_0x0188:
-                int r0 = r24.readInt()
-                if (r0 == 0) goto L_0x0190
-                r7 = r14
-                goto L_0x0191
-            L_0x0190:
-                r7 = r15
-            L_0x0191:
-                r0 = r22
-                r1 = r8
-                r3 = r16
-                r4 = r17
-                android.net.Uri r0 = r0.importMultimediaMessage(r1, r2, r3, r4, r6, r7)
-                r25.writeNoException()
-                if (r0 == 0) goto L_0x01a8
-                r12.writeInt(r14)
-                r0.writeToParcel(r12, r14)
-                goto L_0x01ab
-            L_0x01a8:
-                r12.writeInt(r15)
-            L_0x01ab:
-                return r14
-            L_0x01ac:
-                r11.enforceInterface(r13)
-                java.lang.String r16 = r24.readString()
-                java.lang.String r17 = r24.readString()
-                int r18 = r24.readInt()
-                java.lang.String r19 = r24.readString()
-                long r20 = r24.readLong()
-                int r0 = r24.readInt()
-                if (r0 == 0) goto L_0x01cb
-                r7 = r14
-                goto L_0x01cc
-            L_0x01cb:
-                r7 = r15
-            L_0x01cc:
-                int r0 = r24.readInt()
-                if (r0 == 0) goto L_0x01d4
-                r8 = r14
-                goto L_0x01d5
-            L_0x01d4:
-                r8 = r15
-            L_0x01d5:
-                r0 = r22
-                r1 = r16
-                r2 = r17
-                r3 = r18
-                r4 = r19
-                r5 = r20
-                android.net.Uri r0 = r0.importTextMessage(r1, r2, r3, r4, r5, r7, r8)
-                r25.writeNoException()
-                if (r0 == 0) goto L_0x01f1
-                r12.writeInt(r14)
-                r0.writeToParcel(r12, r14)
-                goto L_0x01f4
-            L_0x01f1:
-                r12.writeInt(r15)
-            L_0x01f4:
-                return r14
-            L_0x01f5:
-                r11.enforceInterface(r13)
-                int r0 = r24.readInt()
-                android.os.Bundle r1 = r9.getCarrierConfigValues(r0)
-                r25.writeNoException()
-                if (r1 == 0) goto L_0x020c
-                r12.writeInt(r14)
-                r1.writeToParcel(r12, r14)
-                goto L_0x020f
-            L_0x020c:
-                r12.writeInt(r15)
-            L_0x020f:
-                return r14
-            L_0x0210:
-                r11.enforceInterface(r13)
-                int r7 = r24.readInt()
-                java.lang.String r8 = r24.readString()
-                java.lang.String r15 = r24.readString()
-                int r1 = r24.readInt()
-                if (r1 == 0) goto L_0x022f
-                android.os.Parcelable$Creator<android.net.Uri> r1 = android.net.Uri.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r11)
-                android.net.Uri r1 = (android.net.Uri) r1
-                r4 = r1
-                goto L_0x0230
-            L_0x022f:
-                r4 = r0
-            L_0x0230:
-                int r1 = r24.readInt()
-                if (r1 == 0) goto L_0x0240
-                android.os.Parcelable$Creator<android.os.Bundle> r1 = android.os.Bundle.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r11)
-                android.os.Bundle r1 = (android.os.Bundle) r1
-                r5 = r1
-                goto L_0x0241
-            L_0x0240:
-                r5 = r0
-            L_0x0241:
-                int r1 = r24.readInt()
-                if (r1 == 0) goto L_0x0251
-                android.os.Parcelable$Creator<android.app.PendingIntent> r0 = android.app.PendingIntent.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r11)
-                android.app.PendingIntent r0 = (android.app.PendingIntent) r0
-            L_0x024f:
-                r6 = r0
-                goto L_0x0252
-            L_0x0251:
-                goto L_0x024f
-            L_0x0252:
-                r0 = r22
-                r1 = r7
-                r2 = r8
-                r3 = r15
-                r0.downloadMessage(r1, r2, r3, r4, r5, r6)
-                r25.writeNoException()
-                return r14
-            L_0x025e:
-                r11.enforceInterface(r13)
-                int r7 = r24.readInt()
-                java.lang.String r8 = r24.readString()
-                int r1 = r24.readInt()
-                if (r1 == 0) goto L_0x0279
-                android.os.Parcelable$Creator<android.net.Uri> r1 = android.net.Uri.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r11)
-                android.net.Uri r1 = (android.net.Uri) r1
-                r3 = r1
-                goto L_0x027a
-            L_0x0279:
-                r3 = r0
-            L_0x027a:
-                java.lang.String r15 = r24.readString()
-                int r1 = r24.readInt()
-                if (r1 == 0) goto L_0x028e
-                android.os.Parcelable$Creator<android.os.Bundle> r1 = android.os.Bundle.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r11)
-                android.os.Bundle r1 = (android.os.Bundle) r1
-                r5 = r1
-                goto L_0x028f
-            L_0x028e:
-                r5 = r0
-            L_0x028f:
-                int r1 = r24.readInt()
-                if (r1 == 0) goto L_0x029f
-                android.os.Parcelable$Creator<android.app.PendingIntent> r0 = android.app.PendingIntent.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r11)
-                android.app.PendingIntent r0 = (android.app.PendingIntent) r0
-            L_0x029d:
-                r6 = r0
-                goto L_0x02a0
-            L_0x029f:
-                goto L_0x029d
-            L_0x02a0:
-                r0 = r22
-                r1 = r7
-                r2 = r8
-                r4 = r15
-                r0.sendMessage(r1, r2, r3, r4, r5, r6)
-                r25.writeNoException()
-                return r14
-            L_0x02ac:
-                r12.writeString(r13)
-                return r14
-            */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.internal.telephony.IMms.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            Uri _arg1;
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0 = data.readInt();
+                    String _arg12 = data.readString();
+                    Uri _arg2 = data.readInt() != 0 ? Uri.CREATOR.createFromParcel(data) : null;
+                    String _arg3 = data.readString();
+                    Bundle _arg4 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    PendingIntent _arg5 = data.readInt() != 0 ? PendingIntent.CREATOR.createFromParcel(data) : null;
+                    sendMessage(_arg0, _arg12, _arg2, _arg3, _arg4, _arg5);
+                    reply.writeNoException();
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    String _arg13 = data.readString();
+                    String _arg22 = data.readString();
+                    Uri _arg32 = data.readInt() != 0 ? Uri.CREATOR.createFromParcel(data) : null;
+                    Bundle _arg42 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    PendingIntent _arg52 = data.readInt() != 0 ? PendingIntent.CREATOR.createFromParcel(data) : null;
+                    downloadMessage(_arg02, _arg13, _arg22, _arg32, _arg42, _arg52);
+                    reply.writeNoException();
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg03 = data.readInt();
+                    Bundle _result = getCarrierConfigValues(_arg03);
+                    reply.writeNoException();
+                    if (_result != null) {
+                        reply.writeInt(1);
+                        _result.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg04 = data.readString();
+                    String _arg14 = data.readString();
+                    int _arg23 = data.readInt();
+                    String _arg33 = data.readString();
+                    long _arg43 = data.readLong();
+                    boolean _arg53 = data.readInt() != 0;
+                    boolean _arg6 = data.readInt() != 0;
+                    Uri _result2 = importTextMessage(_arg04, _arg14, _arg23, _arg33, _arg43, _arg53, _arg6);
+                    reply.writeNoException();
+                    if (_result2 != null) {
+                        reply.writeInt(1);
+                        _result2.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg05 = data.readString();
+                    Uri _arg15 = data.readInt() != 0 ? Uri.CREATOR.createFromParcel(data) : null;
+                    String _arg24 = data.readString();
+                    long _arg34 = data.readLong();
+                    boolean _arg44 = data.readInt() != 0;
+                    boolean _arg54 = data.readInt() != 0;
+                    Uri _result3 = importMultimediaMessage(_arg05, _arg15, _arg24, _arg34, _arg44, _arg54);
+                    reply.writeNoException();
+                    if (_result3 != null) {
+                        reply.writeInt(1);
+                        _result3.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg06 = data.readString();
+                    Uri _arg16 = data.readInt() != 0 ? Uri.CREATOR.createFromParcel(data) : null;
+                    boolean deleteStoredMessage = deleteStoredMessage(_arg06, _arg16);
+                    reply.writeNoException();
+                    reply.writeInt(deleteStoredMessage ? 1 : 0);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg07 = data.readString();
+                    long _arg17 = data.readLong();
+                    boolean deleteStoredConversation = deleteStoredConversation(_arg07, _arg17);
+                    reply.writeNoException();
+                    reply.writeInt(deleteStoredConversation ? 1 : 0);
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg08 = data.readString();
+                    if (data.readInt() != 0) {
+                        _arg1 = Uri.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg1 = null;
+                    }
+                    ContentValues _arg25 = data.readInt() != 0 ? ContentValues.CREATOR.createFromParcel(data) : null;
+                    boolean updateStoredMessageStatus = updateStoredMessageStatus(_arg08, _arg1, _arg25);
+                    reply.writeNoException();
+                    reply.writeInt(updateStoredMessageStatus ? 1 : 0);
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg09 = data.readString();
+                    long _arg18 = data.readLong();
+                    boolean _arg26 = data.readInt() != 0;
+                    boolean archiveStoredConversation = archiveStoredConversation(_arg09, _arg18, _arg26);
+                    reply.writeNoException();
+                    reply.writeInt(archiveStoredConversation ? 1 : 0);
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg010 = data.readString();
+                    String _arg19 = data.readString();
+                    String _arg27 = data.readString();
+                    Uri _result4 = addTextMessageDraft(_arg010, _arg19, _arg27);
+                    reply.writeNoException();
+                    if (_result4 != null) {
+                        reply.writeInt(1);
+                        _result4.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg011 = data.readString();
+                    Uri _arg110 = data.readInt() != 0 ? Uri.CREATOR.createFromParcel(data) : null;
+                    Uri _result5 = addMultimediaMessageDraft(_arg011, _arg110);
+                    reply.writeNoException();
+                    if (_result5 != null) {
+                        reply.writeInt(1);
+                        _result5.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg012 = data.readInt();
+                    String _arg111 = data.readString();
+                    Uri _arg28 = data.readInt() != 0 ? Uri.CREATOR.createFromParcel(data) : null;
+                    Bundle _arg35 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    PendingIntent _arg45 = data.readInt() != 0 ? PendingIntent.CREATOR.createFromParcel(data) : null;
+                    sendStoredMessage(_arg012, _arg111, _arg28, _arg35, _arg45);
+                    reply.writeNoException();
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg013 = data.readString();
+                    boolean _arg112 = data.readInt() != 0;
+                    setAutoPersisting(_arg013, _arg112);
+                    reply.writeNoException();
+                    return true;
+                case 14:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean autoPersisting = getAutoPersisting();
+                    reply.writeNoException();
+                    reply.writeInt(autoPersisting ? 1 : 0);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IMms {
             public static IMms sDefaultImpl;
             private IBinder mRemote;
@@ -571,6 +371,7 @@ public interface IMms extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -579,133 +380,53 @@ public interface IMms extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // com.android.internal.telephony.IMms
             public void sendMessage(int subId, String callingPkg, Uri contentUri, String locationUrl, Bundle configOverrides, PendingIntent sentIntent) throws RemoteException {
-                Uri uri = contentUri;
-                Bundle bundle = configOverrides;
-                PendingIntent pendingIntent = sentIntent;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    try {
-                        _data.writeInt(subId);
-                    } catch (Throwable th) {
-                        th = th;
-                        String str = callingPkg;
-                        String str2 = locationUrl;
-                        _reply.recycle();
-                        _data.recycle();
-                        throw th;
-                    }
-                    try {
-                        _data.writeString(callingPkg);
-                        if (uri != null) {
-                            _data.writeInt(1);
-                            uri.writeToParcel(_data, 0);
-                        } else {
-                            _data.writeInt(0);
-                        }
-                        try {
-                            _data.writeString(locationUrl);
-                            if (bundle != null) {
-                                _data.writeInt(1);
-                                bundle.writeToParcel(_data, 0);
-                            } else {
-                                _data.writeInt(0);
-                            }
-                            if (pendingIntent != null) {
-                                _data.writeInt(1);
-                                pendingIntent.writeToParcel(_data, 0);
-                            } else {
-                                _data.writeInt(0);
-                            }
-                            if (this.mRemote.transact(1, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                _reply.readException();
-                                _reply.recycle();
-                                _data.recycle();
-                                return;
-                            }
-                            Stub.getDefaultImpl().sendMessage(subId, callingPkg, contentUri, locationUrl, configOverrides, sentIntent);
-                            _reply.recycle();
-                            _data.recycle();
-                        } catch (Throwable th2) {
-                            th = th2;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                    } catch (Throwable th3) {
-                        th = th3;
-                        String str22 = locationUrl;
-                        _reply.recycle();
-                        _data.recycle();
-                        throw th;
-                    }
-                } catch (Throwable th4) {
-                    th = th4;
-                    int i = subId;
-                    String str3 = callingPkg;
-                    String str222 = locationUrl;
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeInt(subId);
+                } catch (Throwable th2) {
+                    th = th2;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
-            }
-
-            public void downloadMessage(int subId, String callingPkg, String locationUrl, Uri contentUri, Bundle configOverrides, PendingIntent downloadedIntent) throws RemoteException {
-                Uri uri = contentUri;
-                Bundle bundle = configOverrides;
-                PendingIntent pendingIntent = downloadedIntent;
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
                 try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    try {
-                        _data.writeInt(subId);
-                    } catch (Throwable th) {
-                        th = th;
-                        String str = callingPkg;
-                        String str2 = locationUrl;
-                        _reply.recycle();
-                        _data.recycle();
-                        throw th;
-                    }
-                    try {
-                        _data.writeString(callingPkg);
-                    } catch (Throwable th2) {
-                        th = th2;
-                        String str22 = locationUrl;
-                        _reply.recycle();
-                        _data.recycle();
-                        throw th;
+                    _data.writeString(callingPkg);
+                    if (contentUri != null) {
+                        _data.writeInt(1);
+                        contentUri.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
                     }
                     try {
                         _data.writeString(locationUrl);
-                        if (uri != null) {
+                        if (configOverrides != null) {
                             _data.writeInt(1);
-                            uri.writeToParcel(_data, 0);
+                            configOverrides.writeToParcel(_data, 0);
                         } else {
                             _data.writeInt(0);
                         }
-                        if (bundle != null) {
+                        if (sentIntent != null) {
                             _data.writeInt(1);
-                            bundle.writeToParcel(_data, 0);
+                            sentIntent.writeToParcel(_data, 0);
                         } else {
                             _data.writeInt(0);
                         }
-                        if (pendingIntent != null) {
-                            _data.writeInt(1);
-                            pendingIntent.writeToParcel(_data, 0);
-                        } else {
-                            _data.writeInt(0);
-                        }
-                        if (this.mRemote.transact(2, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                            _reply.readException();
+                        boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                        if (!_status && Stub.getDefaultImpl() != null) {
+                            Stub.getDefaultImpl().sendMessage(subId, callingPkg, contentUri, locationUrl, configOverrides, sentIntent);
                             _reply.recycle();
                             _data.recycle();
                             return;
                         }
-                        Stub.getDefaultImpl().downloadMessage(subId, callingPkg, locationUrl, contentUri, configOverrides, downloadedIntent);
+                        _reply.readException();
                         _reply.recycle();
                         _data.recycle();
                     } catch (Throwable th3) {
@@ -716,15 +437,76 @@ public interface IMms extends IInterface {
                     }
                 } catch (Throwable th4) {
                     th = th4;
-                    int i = subId;
-                    String str3 = callingPkg;
-                    String str222 = locationUrl;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // com.android.internal.telephony.IMms
+            public void downloadMessage(int subId, String callingPkg, String locationUrl, Uri contentUri, Bundle configOverrides, PendingIntent downloadedIntent) throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeInt(subId);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeString(callingPkg);
+                    try {
+                        _data.writeString(locationUrl);
+                        if (contentUri != null) {
+                            _data.writeInt(1);
+                            contentUri.writeToParcel(_data, 0);
+                        } else {
+                            _data.writeInt(0);
+                        }
+                        if (configOverrides != null) {
+                            _data.writeInt(1);
+                            configOverrides.writeToParcel(_data, 0);
+                        } else {
+                            _data.writeInt(0);
+                        }
+                        if (downloadedIntent != null) {
+                            _data.writeInt(1);
+                            downloadedIntent.writeToParcel(_data, 0);
+                        } else {
+                            _data.writeInt(0);
+                        }
+                        boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                        if (!_status && Stub.getDefaultImpl() != null) {
+                            Stub.getDefaultImpl().downloadMessage(subId, callingPkg, locationUrl, contentUri, configOverrides, downloadedIntent);
+                            _reply.recycle();
+                            _data.recycle();
+                            return;
+                        }
+                        _reply.readException();
+                        _reply.recycle();
+                        _data.recycle();
+                    } catch (Throwable th3) {
+                        th = th3;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                } catch (Throwable th4) {
+                    th = th4;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+            }
+
+            @Override // com.android.internal.telephony.IMms
             public Bundle getCarrierConfigValues(int subId) throws RemoteException {
                 Bundle _result;
                 Parcel _data = Parcel.obtain();
@@ -732,7 +514,8 @@ public interface IMms extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    if (!this.mRemote.transact(3, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCarrierConfigValues(subId);
                     }
                     _reply.readException();
@@ -741,182 +524,6 @@ public interface IMms extends IInterface {
                     } else {
                         _result = null;
                     }
-                    Bundle _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public Uri importTextMessage(String callingPkg, String address, int type, String text, long timestampMillis, boolean seen, boolean read) throws RemoteException {
-                Uri _result;
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    try {
-                        _data.writeString(callingPkg);
-                        try {
-                            _data.writeString(address);
-                        } catch (Throwable th) {
-                            th = th;
-                            int i = type;
-                            String str = text;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                        try {
-                            _data.writeInt(type);
-                            try {
-                                _data.writeString(text);
-                                _data.writeLong(timestampMillis);
-                                _data.writeInt(seen ? 1 : 0);
-                                _data.writeInt(read ? 1 : 0);
-                                if (this.mRemote.transact(4, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                    _reply.readException();
-                                    if (_reply.readInt() != 0) {
-                                        _result = Uri.CREATOR.createFromParcel(_reply);
-                                    } else {
-                                        _result = null;
-                                    }
-                                    Uri _result2 = _result;
-                                    _reply.recycle();
-                                    _data.recycle();
-                                    return _result2;
-                                }
-                                Uri importTextMessage = Stub.getDefaultImpl().importTextMessage(callingPkg, address, type, text, timestampMillis, seen, read);
-                                _reply.recycle();
-                                _data.recycle();
-                                return importTextMessage;
-                            } catch (Throwable th2) {
-                                th = th2;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th3) {
-                            th = th3;
-                            String str2 = text;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                    } catch (Throwable th4) {
-                        th = th4;
-                        String str3 = address;
-                        int i2 = type;
-                        String str22 = text;
-                        _reply.recycle();
-                        _data.recycle();
-                        throw th;
-                    }
-                } catch (Throwable th5) {
-                    th = th5;
-                    String str4 = callingPkg;
-                    String str32 = address;
-                    int i22 = type;
-                    String str222 = text;
-                    _reply.recycle();
-                    _data.recycle();
-                    throw th;
-                }
-            }
-
-            public Uri importMultimediaMessage(String callingPkg, Uri contentUri, String messageId, long timestampSecs, boolean seen, boolean read) throws RemoteException {
-                Uri _result;
-                Uri uri = contentUri;
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    try {
-                        _data.writeString(callingPkg);
-                        if (uri != null) {
-                            _data.writeInt(1);
-                            uri.writeToParcel(_data, 0);
-                        } else {
-                            _data.writeInt(0);
-                        }
-                        try {
-                            _data.writeString(messageId);
-                        } catch (Throwable th) {
-                            th = th;
-                            long j = timestampSecs;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                    } catch (Throwable th2) {
-                        th = th2;
-                        String str = messageId;
-                        long j2 = timestampSecs;
-                        _reply.recycle();
-                        _data.recycle();
-                        throw th;
-                    }
-                    try {
-                        _data.writeLong(timestampSecs);
-                        _data.writeInt(seen ? 1 : 0);
-                        _data.writeInt(read ? 1 : 0);
-                        if (this.mRemote.transact(5, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                            _reply.readException();
-                            if (_reply.readInt() != 0) {
-                                _result = Uri.CREATOR.createFromParcel(_reply);
-                            } else {
-                                _result = null;
-                            }
-                            Uri _result2 = _result;
-                            _reply.recycle();
-                            _data.recycle();
-                            return _result2;
-                        }
-                        Uri importMultimediaMessage = Stub.getDefaultImpl().importMultimediaMessage(callingPkg, contentUri, messageId, timestampSecs, seen, read);
-                        _reply.recycle();
-                        _data.recycle();
-                        return importMultimediaMessage;
-                    } catch (Throwable th3) {
-                        th = th3;
-                        _reply.recycle();
-                        _data.recycle();
-                        throw th;
-                    }
-                } catch (Throwable th4) {
-                    th = th4;
-                    String str2 = callingPkg;
-                    String str3 = messageId;
-                    long j22 = timestampSecs;
-                    _reply.recycle();
-                    _data.recycle();
-                    throw th;
-                }
-            }
-
-            public boolean deleteStoredMessage(String callingPkg, Uri messageUri) throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeString(callingPkg);
-                    boolean _result = true;
-                    if (messageUri != null) {
-                        _data.writeInt(1);
-                        messageUri.writeToParcel(_data, 0);
-                    } else {
-                        _data.writeInt(0);
-                    }
-                    if (!this.mRemote.transact(6, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
-                        return Stub.getDefaultImpl().deleteStoredMessage(callingPkg, messageUri);
-                    }
-                    _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -924,6 +531,158 @@ public interface IMms extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.IMms
+            public Uri importTextMessage(String callingPkg, String address, int type, String text, long timestampMillis, boolean seen, boolean read) throws RemoteException {
+                Uri _result;
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeString(callingPkg);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeString(address);
+                    try {
+                        _data.writeInt(type);
+                    } catch (Throwable th3) {
+                        th = th3;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeString(text);
+                        _data.writeLong(timestampMillis);
+                        _data.writeInt(seen ? 1 : 0);
+                        _data.writeInt(read ? 1 : 0);
+                        boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                        if (!_status && Stub.getDefaultImpl() != null) {
+                            Uri importTextMessage = Stub.getDefaultImpl().importTextMessage(callingPkg, address, type, text, timestampMillis, seen, read);
+                            _reply.recycle();
+                            _data.recycle();
+                            return importTextMessage;
+                        }
+                        _reply.readException();
+                        if (_reply.readInt() != 0) {
+                            _result = Uri.CREATOR.createFromParcel(_reply);
+                        } else {
+                            _result = null;
+                        }
+                        Uri _result2 = _result;
+                        _reply.recycle();
+                        _data.recycle();
+                        return _result2;
+                    } catch (Throwable th4) {
+                        th = th4;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                } catch (Throwable th5) {
+                    th = th5;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+            }
+
+            @Override // com.android.internal.telephony.IMms
+            public Uri importMultimediaMessage(String callingPkg, Uri contentUri, String messageId, long timestampSecs, boolean seen, boolean read) throws RemoteException {
+                Uri _result;
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeString(callingPkg);
+                    if (contentUri != null) {
+                        _data.writeInt(1);
+                        contentUri.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
+                    }
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeString(messageId);
+                } catch (Throwable th3) {
+                    th = th3;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeLong(timestampSecs);
+                    _data.writeInt(seen ? 1 : 0);
+                    _data.writeInt(read ? 1 : 0);
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Uri importMultimediaMessage = Stub.getDefaultImpl().importMultimediaMessage(callingPkg, contentUri, messageId, timestampSecs, seen, read);
+                        _reply.recycle();
+                        _data.recycle();
+                        return importMultimediaMessage;
+                    }
+                    _reply.readException();
+                    if (_reply.readInt() != 0) {
+                        _result = Uri.CREATOR.createFromParcel(_reply);
+                    } else {
+                        _result = null;
+                    }
+                    Uri _result2 = _result;
+                    _reply.recycle();
+                    _data.recycle();
+                    return _result2;
+                } catch (Throwable th4) {
+                    th = th4;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+            }
+
+            @Override // com.android.internal.telephony.IMms
+            public boolean deleteStoredMessage(String callingPkg, Uri messageUri) throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    _data.writeString(callingPkg);
+                    if (messageUri != null) {
+                        _data.writeInt(1);
+                        messageUri.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
+                    }
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        return Stub.getDefaultImpl().deleteStoredMessage(callingPkg, messageUri);
+                    }
+                    _reply.readException();
+                    boolean _result = _reply.readInt() != 0;
+                    return _result;
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // com.android.internal.telephony.IMms
             public boolean deleteStoredConversation(String callingPkg, long conversationId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -931,31 +690,26 @@ public interface IMms extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPkg);
                     _data.writeLong(conversationId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(7, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().deleteStoredConversation(callingPkg, conversationId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.IMms
             public boolean updateStoredMessageStatus(String callingPkg, Uri messageUri, ContentValues statusValues) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPkg);
-                    boolean _result = true;
                     if (messageUri != null) {
                         _data.writeInt(1);
                         messageUri.writeToParcel(_data, 0);
@@ -968,15 +722,12 @@ public interface IMms extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(8, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().updateStoredMessageStatus(callingPkg, messageUri, statusValues);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -984,6 +735,7 @@ public interface IMms extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.IMms
             public boolean archiveStoredConversation(String callingPkg, long conversationId, boolean archived) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -991,25 +743,21 @@ public interface IMms extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPkg);
                     _data.writeLong(conversationId);
-                    _data.writeInt(archived);
-                    boolean z = false;
-                    if (!this.mRemote.transact(9, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(archived ? 1 : 0);
+                    boolean _status = this.mRemote.transact(9, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().archiveStoredConversation(callingPkg, conversationId, archived);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.IMms
             public Uri addTextMessageDraft(String callingPkg, String address, String text) throws RemoteException {
                 Uri _result;
                 Parcel _data = Parcel.obtain();
@@ -1019,7 +767,8 @@ public interface IMms extends IInterface {
                     _data.writeString(callingPkg);
                     _data.writeString(address);
                     _data.writeString(text);
-                    if (!this.mRemote.transact(10, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(10, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().addTextMessageDraft(callingPkg, address, text);
                     }
                     _reply.readException();
@@ -1028,16 +777,14 @@ public interface IMms extends IInterface {
                     } else {
                         _result = null;
                     }
-                    Uri _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.IMms
             public Uri addMultimediaMessageDraft(String callingPkg, Uri contentUri) throws RemoteException {
                 Uri _result;
                 Parcel _data = Parcel.obtain();
@@ -1051,7 +798,8 @@ public interface IMms extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(11, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(11, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().addMultimediaMessageDraft(callingPkg, contentUri);
                     }
                     _reply.readException();
@@ -1060,16 +808,14 @@ public interface IMms extends IInterface {
                     } else {
                         _result = null;
                     }
-                    Uri _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.IMms
             public void sendStoredMessage(int subId, String callingPkg, Uri messageUri, Bundle configOverrides, PendingIntent sentIntent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1095,56 +841,51 @@ public interface IMms extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(12, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(12, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().sendStoredMessage(subId, callingPkg, messageUri, configOverrides, sentIntent);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().sendStoredMessage(subId, callingPkg, messageUri, configOverrides, sentIntent);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.IMms
             public void setAutoPersisting(String callingPkg, boolean enabled) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPkg);
-                    _data.writeInt(enabled);
-                    if (this.mRemote.transact(13, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(enabled ? 1 : 0);
+                    boolean _status = this.mRemote.transact(13, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setAutoPersisting(callingPkg, enabled);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setAutoPersisting(callingPkg, enabled);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.IMms
             public boolean getAutoPersisting() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(14, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(14, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAutoPersisting();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -1153,11 +894,11 @@ public interface IMms extends IInterface {
         }
 
         public static boolean setDefaultImpl(IMms impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IMms getDefaultImpl() {

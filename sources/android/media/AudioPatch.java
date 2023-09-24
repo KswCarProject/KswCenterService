@@ -2,6 +2,7 @@ package android.media;
 
 import android.annotation.UnsupportedAppUsage;
 
+/* loaded from: classes3.dex */
 public class AudioPatch {
     @UnsupportedAppUsage
     private final AudioHandle mHandle;
@@ -25,11 +26,14 @@ public class AudioPatch {
         return this.mSinks;
     }
 
-    public int id() {
-        return this.mHandle.id();
+    /* renamed from: id */
+    public int m115id() {
+        return this.mHandle.m116id();
     }
 
     public String toString() {
+        AudioPortConfig[] audioPortConfigArr;
+        AudioPortConfig[] audioPortConfigArr2;
         StringBuilder s = new StringBuilder();
         s.append("mHandle: ");
         s.append(this.mHandle.toString());

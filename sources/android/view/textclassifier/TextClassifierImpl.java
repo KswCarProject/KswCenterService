@@ -3,10 +3,11 @@ package android.view.textclassifier;
 import android.app.RemoteAction;
 import android.content.Context;
 import android.content.Intent;
+import android.content.p002pm.ResolveInfo;
 import android.icu.util.ULocale;
-import android.os.Bundle;
-import android.os.LocaleList;
-import android.os.ParcelFileDescriptor;
+import android.p007os.Bundle;
+import android.p007os.LocaleList;
+import android.p007os.ParcelFileDescriptor;
 import android.telephony.SmsManager;
 import android.util.ArrayMap;
 import android.util.ArraySet;
@@ -47,16 +48,13 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+/* loaded from: classes4.dex */
 public final class TextClassifierImpl implements TextClassifier {
     private static final String ACTIONS_FACTORY_MODEL_FILENAME_REGEX = "actions_suggestions\\.(.*)\\.model";
     private static final String ANNOTATOR_FACTORY_MODEL_FILENAME_REGEX = "textclassifier\\.(.*)\\.model";
-    private static final File ANNOTATOR_UPDATED_MODEL_FILE = new File("/data/misc/textclassifier/textclassifier.model");
     private static final boolean DEBUG = false;
-    private static final File FACTORY_MODEL_DIR = new File("/etc/textclassifier/");
     private static final String LANG_ID_FACTORY_MODEL_FILENAME_REGEX = "lang_id.model";
     private static final String LOG_TAG = "androidtc";
-    private static final File UPDATED_ACTIONS_MODEL = new File("/data/misc/textclassifier/actions_suggestions.model");
-    private static final File UPDATED_LANG_ID_MODEL_FILE = new File("/data/misc/textclassifier/lang_id.model");
     @GuardedBy({"mLock"})
     private ModelFileManager.ModelFile mActionModelInUse;
     @GuardedBy({"mLock"})
@@ -82,9 +80,13 @@ public final class TextClassifierImpl implements TextClassifier {
     private final TextClassificationConstants mSettings;
     private final TemplateIntentFactory mTemplateIntentFactory;
     private final TextClassifierEventTronLogger mTextClassifierEventTronLogger;
+    private static final File FACTORY_MODEL_DIR = new File("/etc/textclassifier/");
+    private static final File ANNOTATOR_UPDATED_MODEL_FILE = new File("/data/misc/textclassifier/textclassifier.model");
+    private static final File UPDATED_LANG_ID_MODEL_FILE = new File("/data/misc/textclassifier/lang_id.model");
+    private static final File UPDATED_ACTIONS_MODEL = new File("/data/misc/textclassifier/actions_suggestions.model");
 
     public TextClassifierImpl(Context context, TextClassificationConstants settings, TextClassifier fallback) {
-        ClassificationIntentFactory classificationIntentFactory;
+        ClassificationIntentFactory legacyClassificationIntentFactory;
         this.mLock = new Object();
         this.mSessionLogger = new SelectionSessionLogger();
         this.mTextClassifierEventTronLogger = new TextClassifierEventTronLogger();
@@ -92,17 +94,58 @@ public final class TextClassifierImpl implements TextClassifier {
         this.mFallback = (TextClassifier) Preconditions.checkNotNull(fallback);
         this.mSettings = (TextClassificationConstants) Preconditions.checkNotNull(settings);
         this.mGenerateLinksLogger = new GenerateLinksLogger(this.mSettings.getGenerateLinksLogSampleRate());
-        this.mAnnotatorModelFileManager = new ModelFileManager(new ModelFileManager.ModelFileSupplierImpl(FACTORY_MODEL_DIR, ANNOTATOR_FACTORY_MODEL_FILENAME_REGEX, ANNOTATOR_UPDATED_MODEL_FILE, $$Lambda$TextClassifierImpl$jJq8RXuVdjYF3lPq77PEw1NJLM.INSTANCE, $$Lambda$TextClassifierImpl$NxwbyZSxofZ4Z5SQhfXmtLQ1nxk.INSTANCE));
-        this.mLangIdModelFileManager = new ModelFileManager(new ModelFileManager.ModelFileSupplierImpl(FACTORY_MODEL_DIR, LANG_ID_FACTORY_MODEL_FILENAME_REGEX, UPDATED_LANG_ID_MODEL_FILE, $$Lambda$TextClassifierImpl$0biFK4yZBmWN1EO2wtnXskzuEcE.INSTANCE, $$Lambda$TextClassifierImpl$RRbXefHgcUymI9P95ArUyMvfbw.INSTANCE));
-        this.mActionsModelFileManager = new ModelFileManager(new ModelFileManager.ModelFileSupplierImpl(FACTORY_MODEL_DIR, ACTIONS_FACTORY_MODEL_FILENAME_REGEX, UPDATED_ACTIONS_MODEL, $$Lambda$TextClassifierImpl$9N8WImc0VBjy2oxI_Gk5_Pbye_A.INSTANCE, $$Lambda$TextClassifierImpl$XeE_KI7QgMKzF9vYRSoFWAolyuA.INSTANCE));
+        this.mAnnotatorModelFileManager = new ModelFileManager(new ModelFileManager.ModelFileSupplierImpl(FACTORY_MODEL_DIR, ANNOTATOR_FACTORY_MODEL_FILENAME_REGEX, ANNOTATOR_UPDATED_MODEL_FILE, new Function() { // from class: android.view.textclassifier.-$$Lambda$TextClassifierImpl$jJq8RXuVdjYF3lPq-77PEw1NJLM
+            @Override // java.util.function.Function
+            public final Object apply(Object obj) {
+                int version;
+                version = AnnotatorModel.getVersion(((Integer) obj).intValue());
+                return Integer.valueOf(version);
+            }
+        }, new Function() { // from class: android.view.textclassifier.-$$Lambda$TextClassifierImpl$NxwbyZSxofZ4Z5SQhfXmtLQ1nxk
+            @Override // java.util.function.Function
+            public final Object apply(Object obj) {
+                String locales;
+                locales = AnnotatorModel.getLocales(((Integer) obj).intValue());
+                return locales;
+            }
+        }));
+        this.mLangIdModelFileManager = new ModelFileManager(new ModelFileManager.ModelFileSupplierImpl(FACTORY_MODEL_DIR, LANG_ID_FACTORY_MODEL_FILENAME_REGEX, UPDATED_LANG_ID_MODEL_FILE, new Function() { // from class: android.view.textclassifier.-$$Lambda$TextClassifierImpl$0biFK4yZBmWN1EO2wtnXskzuEcE
+            @Override // java.util.function.Function
+            public final Object apply(Object obj) {
+                int version;
+                version = LangIdModel.getVersion(((Integer) obj).intValue());
+                return Integer.valueOf(version);
+            }
+        }, new Function() { // from class: android.view.textclassifier.-$$Lambda$TextClassifierImpl$RRbXefHgcUymI9-P95ArUyMvfbw
+            @Override // java.util.function.Function
+            public final Object apply(Object obj) {
+                return TextClassifierImpl.lambda$new$0((Integer) obj);
+            }
+        }));
+        this.mActionsModelFileManager = new ModelFileManager(new ModelFileManager.ModelFileSupplierImpl(FACTORY_MODEL_DIR, ACTIONS_FACTORY_MODEL_FILENAME_REGEX, UPDATED_ACTIONS_MODEL, new Function() { // from class: android.view.textclassifier.-$$Lambda$TextClassifierImpl$9N8WImc0VBjy2oxI_Gk5_Pbye_A
+            @Override // java.util.function.Function
+            public final Object apply(Object obj) {
+                int version;
+                version = ActionsSuggestionsModel.getVersion(((Integer) obj).intValue());
+                return Integer.valueOf(version);
+            }
+        }, new Function() { // from class: android.view.textclassifier.-$$Lambda$TextClassifierImpl$XeE_KI7QgMKzF9vYRSoFWAolyuA
+            @Override // java.util.function.Function
+            public final Object apply(Object obj) {
+                String locales;
+                locales = ActionsSuggestionsModel.getLocales(((Integer) obj).intValue());
+                return locales;
+            }
+        }));
         this.mTemplateIntentFactory = new TemplateIntentFactory();
         if (this.mSettings.isTemplateIntentFactoryEnabled()) {
-            classificationIntentFactory = new TemplateClassificationIntentFactory(this.mTemplateIntentFactory, new LegacyClassificationIntentFactory());
+            legacyClassificationIntentFactory = new TemplateClassificationIntentFactory(this.mTemplateIntentFactory, new LegacyClassificationIntentFactory());
         } else {
-            classificationIntentFactory = new LegacyClassificationIntentFactory();
+            legacyClassificationIntentFactory = new LegacyClassificationIntentFactory();
         }
-        this.mClassificationIntentFactory = classificationIntentFactory;
-        this.mActionsModelParamsSupplier = new ActionsModelParamsSupplier(this.mContext, new Runnable() {
+        this.mClassificationIntentFactory = legacyClassificationIntentFactory;
+        this.mActionsModelParamsSupplier = new ActionsModelParamsSupplier(this.mContext, new Runnable() { // from class: android.view.textclassifier.-$$Lambda$TextClassifierImpl$iSt_Guet-O6Vtdk0MA4z-Z4lzaM
+            @Override // java.lang.Runnable
             public final void run() {
                 TextClassifierImpl.lambda$new$1(TextClassifierImpl.this);
             }
@@ -124,6 +167,7 @@ public final class TextClassifierImpl implements TextClassifier {
         this(context, settings, TextClassifier.NO_OP);
     }
 
+    @Override // android.view.textclassifier.TextClassifier
     public TextSelection suggestSelection(TextSelection.Request request) {
         int start;
         int start2;
@@ -137,40 +181,42 @@ public final class TextClassifierImpl implements TextClassifier {
                 String detectLanguageTags = detectLanguageTagsFromText(request.getText());
                 ZonedDateTime refTime = ZonedDateTime.now();
                 AnnotatorModel annotatorImpl = getAnnotatorImpl(request.getDefaultLocales());
-                if (!this.mSettings.isModelDarkLaunchEnabled() || request.isDarkLaunchAllowed()) {
-                    int[] startEnd = annotatorImpl.suggestSelection(string, request.getStartIndex(), request.getEndIndex(), new AnnotatorModel.SelectionOptions(localesString, detectLanguageTags));
-                    start = startEnd[0];
-                    start2 = startEnd[1];
-                } else {
+                if (this.mSettings.isModelDarkLaunchEnabled() && !request.isDarkLaunchAllowed()) {
                     int start3 = request.getStartIndex();
                     start2 = request.getEndIndex();
                     start = start3;
+                } else {
+                    int[] startEnd = annotatorImpl.suggestSelection(string, request.getStartIndex(), request.getEndIndex(), new AnnotatorModel.SelectionOptions(localesString, detectLanguageTags));
+                    int start4 = startEnd[0];
+                    start = start4;
+                    start2 = startEnd[1];
                 }
                 int end = start2;
                 if (start >= end || start < 0 || end > string.length() || start > request.getStartIndex() || end < request.getEndIndex()) {
-                    Log.d("androidtc", "Got bad indices for input text. Ignoring result.");
+                    Log.m40d("androidtc", "Got bad indices for input text. Ignoring result.");
                 } else {
                     TextSelection.Builder tsBuilder = new TextSelection.Builder(start, end);
-                    int end2 = end;
-                    AnnotatorModel.ClassificationResult[] results = annotatorImpl.classifyText(string, start, end2, new AnnotatorModel.ClassificationOptions(refTime.toInstant().toEpochMilli(), refTime.getZone().getId(), localesString, detectLanguageTags), (Object) null, (String) null);
+                    AnnotatorModel.ClassificationResult[] results = annotatorImpl.classifyText(string, start, end, new AnnotatorModel.ClassificationOptions(refTime.toInstant().toEpochMilli(), refTime.getZone().getId(), localesString, detectLanguageTags), (Object) null, (String) null);
                     int size = results.length;
                     int i = 0;
                     while (true) {
                         int i2 = i;
-                        if (i2 >= size) {
+                        if (i2 < size) {
+                            tsBuilder.setEntityType(results[i2].getCollection(), results[i2].getScore());
+                            i = i2 + 1;
+                        } else {
                             return tsBuilder.setId(createId(string, request.getStartIndex(), request.getEndIndex())).build();
                         }
-                        tsBuilder.setEntityType(results[i2].getCollection(), results[i2].getScore());
-                        i = i2 + 1;
                     }
                 }
             }
         } catch (Throwable t) {
-            Log.e("androidtc", "Error suggesting selection for text. No changes to selection suggested.", t);
+            Log.m39e("androidtc", "Error suggesting selection for text. No changes to selection suggested.", t);
         }
         return this.mFallback.suggestSelection(request);
     }
 
+    @Override // android.view.textclassifier.TextClassifier
     public TextClassification classifyText(TextClassification.Request request) {
         Preconditions.checkNotNull(request);
         TextClassifier.Utils.checkMainThread();
@@ -187,11 +233,12 @@ public final class TextClassifierImpl implements TextClassifier {
                 }
             }
         } catch (Throwable t) {
-            Log.e("androidtc", "Error getting text classification info.", t);
+            Log.m39e("androidtc", "Error getting text classification info.", t);
         }
         return this.mFallback.classifyText(request);
     }
 
+    @Override // android.view.textclassifier.TextClassifier
     public TextLinks generateLinks(TextLinks.Request request) {
         Collection<String> entitiesToIdentify;
         String callingPackageName;
@@ -215,29 +262,23 @@ public final class TextClassifierImpl implements TextClassifier {
             String detectLanguageTags = detectLanguageTagsFromText(request.getText());
             AnnotatorModel annotatorImpl = getAnnotatorImpl(request.getDefaultLocales());
             boolean isSerializedEntityDataEnabled = ExtrasUtils.isSerializedEntityDataEnabled(request);
-            ZonedDateTime zonedDateTime = refTime;
-            AnnotatorModel.AnnotationOptions annotationOptions = r7;
-            long startTimeMs2 = startTimeMs;
-            AnnotatorModel.AnnotationOptions annotationOptions2 = new AnnotatorModel.AnnotationOptions(refTime.toInstant().toEpochMilli(), refTime.getZone().getId(), localesString, detectLanguageTags, entitiesToIdentify, AnnotatorModel.AnnotationUsecase.SMART.getValue(), isSerializedEntityDataEnabled);
-            AnnotatorModel.AnnotatedSpan[] annotations = annotatorImpl.annotate(textString, annotationOptions);
+            AnnotatorModel.AnnotatedSpan[] annotations = annotatorImpl.annotate(textString, new AnnotatorModel.AnnotationOptions(refTime.toInstant().toEpochMilli(), refTime.getZone().getId(), localesString, detectLanguageTags, entitiesToIdentify, AnnotatorModel.AnnotationUsecase.SMART.getValue(), isSerializedEntityDataEnabled));
             int length = annotations.length;
             int i = 0;
             int i2 = 0;
             while (i2 < length) {
                 AnnotatorModel.AnnotatedSpan span = annotations[i2];
                 AnnotatorModel.ClassificationResult[] results = span.getClassification();
-                if (results.length != 0) {
-                    if (entitiesToIdentify.contains(results[i].getCollection())) {
-                        Map<String, Float> entityScores = new ArrayMap<>();
-                        for (int i3 = i; i3 < results.length; i3++) {
-                            entityScores.put(results[i3].getCollection(), Float.valueOf(results[i3].getScore()));
-                        }
-                        Bundle extras = new Bundle();
-                        if (isSerializedEntityDataEnabled) {
-                            ExtrasUtils.putEntities(extras, results);
-                        }
-                        builder.addLink(span.getStartIndex(), span.getEndIndex(), entityScores, extras);
+                if (results.length != 0 && entitiesToIdentify.contains(results[i].getCollection())) {
+                    Map<String, Float> entityScores = new ArrayMap<>();
+                    for (int i3 = i; i3 < results.length; i3++) {
+                        entityScores.put(results[i3].getCollection(), Float.valueOf(results[i3].getScore()));
                     }
+                    Bundle extras = new Bundle();
+                    if (isSerializedEntityDataEnabled) {
+                        ExtrasUtils.putEntities(extras, results);
+                    }
+                    builder.addLink(span.getStartIndex(), span.getEndIndex(), entityScores, extras);
                 }
                 i2++;
                 i = 0;
@@ -249,21 +290,25 @@ public final class TextClassifierImpl implements TextClassifier {
             } else {
                 callingPackageName = request.getCallingPackageName();
             }
-            this.mGenerateLinksLogger.logGenerateLinks(request.getText(), links, callingPackageName, endTimeMs - startTimeMs2);
+            String callingPackageName2 = callingPackageName;
+            this.mGenerateLinksLogger.logGenerateLinks(request.getText(), links, callingPackageName2, endTimeMs - startTimeMs);
             return links;
         } catch (Throwable t) {
-            Log.e("androidtc", "Error getting links info.", t);
+            Log.m39e("androidtc", "Error getting links info.", t);
             return this.mFallback.generateLinks(request);
         }
     }
 
+    @Override // android.view.textclassifier.TextClassifier
     public int getMaxGenerateLinksTextLength() {
         return this.mSettings.getGenerateLinksMaxTextLength();
     }
 
     private Collection<String> getEntitiesForHints(Collection<String> hints) {
         boolean editable = hints.contains(TextClassifier.HINT_TEXT_IS_EDITABLE);
-        if (editable == hints.contains(TextClassifier.HINT_TEXT_IS_NOT_EDITABLE)) {
+        boolean notEditable = hints.contains(TextClassifier.HINT_TEXT_IS_NOT_EDITABLE);
+        boolean useDefault = editable == notEditable;
+        if (useDefault) {
             return this.mSettings.getEntityListDefault();
         }
         if (editable) {
@@ -272,10 +317,12 @@ public final class TextClassifierImpl implements TextClassifier {
         return this.mSettings.getEntityListNotEditable();
     }
 
+    @Override // android.view.textclassifier.TextClassifier
     public void onSelectionEvent(SelectionEvent event) {
         this.mSessionLogger.writeEvent(event);
     }
 
+    @Override // android.view.textclassifier.TextClassifier
     public void onTextClassifierEvent(TextClassifierEvent event) {
         try {
             SelectionEvent selEvent = event.toSelectionEvent();
@@ -285,10 +332,11 @@ public final class TextClassifierImpl implements TextClassifier {
                 this.mTextClassifierEventTronLogger.writeEvent(event);
             }
         } catch (Exception e) {
-            Log.e("androidtc", "Error writing event", e);
+            Log.m39e("androidtc", "Error writing event", e);
         }
     }
 
+    @Override // android.view.textclassifier.TextClassifier
     public TextLanguage detectLanguage(TextLanguage.Request request) {
         Preconditions.checkNotNull(request);
         TextClassifier.Utils.checkMainThread();
@@ -300,11 +348,12 @@ public final class TextClassifierImpl implements TextClassifier {
             }
             return builder.build();
         } catch (Throwable t) {
-            Log.e("androidtc", "Error detecting text language.", t);
+            Log.m39e("androidtc", "Error detecting text language.", t);
             return this.mFallback.detectLanguage(request);
         }
     }
 
+    @Override // android.view.textclassifier.TextClassifier
     public ConversationActions suggestConversationActions(ConversationActions.Request request) {
         Preconditions.checkNotNull(request);
         TextClassifier.Utils.checkMainThread();
@@ -313,17 +362,22 @@ public final class TextClassifierImpl implements TextClassifier {
             if (actionsImpl == null) {
                 return this.mFallback.suggestConversationActions(request);
             }
-            ActionsSuggestionsModel.ConversationMessage[] nativeMessages = ActionsSuggestionsHelper.toNativeMessages(request.getConversation(), new Function() {
+            ActionsSuggestionsModel.ConversationMessage[] nativeMessages = ActionsSuggestionsHelper.toNativeMessages(request.getConversation(), new Function() { // from class: android.view.textclassifier.-$$Lambda$TextClassifierImpl$ftq-sQqJYwUdrdbbr9jz3p4AWos
+                @Override // java.util.function.Function
                 public final Object apply(Object obj) {
-                    return TextClassifierImpl.this.detectLanguageTagsFromText((CharSequence) obj);
+                    String detectLanguageTagsFromText;
+                    detectLanguageTagsFromText = TextClassifierImpl.this.detectLanguageTagsFromText((CharSequence) obj);
+                    return detectLanguageTagsFromText;
                 }
             });
             if (nativeMessages.length == 0) {
                 return this.mFallback.suggestConversationActions(request);
             }
-            return createConversationActionResult(request, actionsImpl.suggestActionsWithIntents(new ActionsSuggestionsModel.Conversation(nativeMessages), (ActionsSuggestionsModel.ActionSuggestionOptions) null, this.mContext, getResourceLocalesString(), getAnnotatorImpl(LocaleList.getDefault())));
+            ActionsSuggestionsModel.Conversation nativeConversation = new ActionsSuggestionsModel.Conversation(nativeMessages);
+            ActionsSuggestionsModel.ActionSuggestion[] nativeSuggestions = actionsImpl.suggestActionsWithIntents(nativeConversation, (ActionsSuggestionsModel.ActionSuggestionOptions) null, this.mContext, getResourceLocalesString(), getAnnotatorImpl(LocaleList.getDefault()));
+            return createConversationActionResult(request, nativeSuggestions);
         } catch (Throwable t) {
-            Log.e("androidtc", "Error suggesting conversation actions.", t);
+            Log.m39e("androidtc", "Error suggesting conversation actions.", t);
             return this.mFallback.suggestConversationActions(request);
         }
     }
@@ -350,33 +404,35 @@ public final class TextClassifierImpl implements TextClassifier {
         if (request.getMaxSuggestions() >= 0 && conversationActions2.size() > request.getMaxSuggestions()) {
             conversationActions2 = conversationActions2.subList(0, request.getMaxSuggestions());
         }
-        return new ConversationActions(conversationActions2, ActionsSuggestionsHelper.createResultId(this.mContext, request.getConversation(), this.mActionModelInUse.getVersion(), this.mActionModelInUse.getSupportedLocales()));
+        String resultId = ActionsSuggestionsHelper.createResultId(this.mContext, request.getConversation(), this.mActionModelInUse.getVersion(), this.mActionModelInUse.getSupportedLocales());
+        return new ConversationActions(conversationActions2, resultId);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public String detectLanguageTagsFromText(CharSequence text) {
-        if (!this.mSettings.isDetectLanguagesFromTextEnabled()) {
-            return null;
-        }
-        float threshold = getLangIdThreshold();
-        if (threshold < 0.0f || threshold > 1.0f) {
-            Log.w("androidtc", "[detectLanguageTagsFromText] unexpected threshold is found: " + threshold);
-            return null;
-        }
-        TextLanguage textLanguage = detectLanguage(new TextLanguage.Request.Builder(text).build());
-        int localeHypothesisCount = textLanguage.getLocaleHypothesisCount();
-        List<String> languageTags = new ArrayList<>();
-        for (int i = 0; i < localeHypothesisCount; i++) {
-            ULocale locale = textLanguage.getLocale(i);
-            if (textLanguage.getConfidenceScore(locale) < threshold) {
-                break;
+        if (this.mSettings.isDetectLanguagesFromTextEnabled()) {
+            float threshold = getLangIdThreshold();
+            if (threshold < 0.0f || threshold > 1.0f) {
+                Log.m37w("androidtc", "[detectLanguageTagsFromText] unexpected threshold is found: " + threshold);
+                return null;
             }
-            languageTags.add(locale.toLanguageTag());
+            TextLanguage.Request request = new TextLanguage.Request.Builder(text).build();
+            TextLanguage textLanguage = detectLanguage(request);
+            int localeHypothesisCount = textLanguage.getLocaleHypothesisCount();
+            List<String> languageTags = new ArrayList<>();
+            for (int i = 0; i < localeHypothesisCount; i++) {
+                ULocale locale = textLanguage.getLocale(i);
+                if (textLanguage.getConfidenceScore(locale) < threshold) {
+                    break;
+                }
+                languageTags.add(locale.toLanguageTag());
+            }
+            if (languageTags.isEmpty()) {
+                return null;
+            }
+            return String.join(SmsManager.REGEX_PREFIX_DELIMITER, languageTags);
         }
-        if (languageTags.isEmpty() != 0) {
-            return null;
-        }
-        return String.join(SmsManager.REGEX_PREFIX_DELIMITER, languageTags);
+        return null;
     }
 
     private Collection<String> resolveActionTypesFromRequest(ConversationActions.Request request) {
@@ -391,63 +447,55 @@ public final class TextClassifierImpl implements TextClassifier {
 
     private AnnotatorModel getAnnotatorImpl(LocaleList localeList) throws FileNotFoundException {
         LocaleList localeList2;
-        ParcelFileDescriptor pfd;
-        ParcelFileDescriptor pfd2;
+        AnnotatorModel annotatorModel;
         synchronized (this.mLock) {
-            if (localeList == null) {
+            if (localeList != null) {
+                localeList2 = localeList;
+            } else {
                 try {
                     localeList2 = LocaleList.getDefault();
                 } catch (Throwable th) {
                     throw th;
                 }
-            } else {
-                localeList2 = localeList;
             }
             LocaleList localeList3 = localeList2;
             ModelFileManager.ModelFile bestModel = this.mAnnotatorModelFileManager.findBestModelFile(localeList3);
-            if (bestModel != null) {
-                if (this.mAnnotatorImpl == null || !Objects.equals(this.mAnnotatorModelInUse, bestModel)) {
-                    Log.d("androidtc", "Loading " + bestModel);
-                    pfd2 = ParcelFileDescriptor.open(new File(bestModel.getPath()), 268435456);
-                    if (pfd2 != null) {
-                        this.mAnnotatorImpl = new AnnotatorModel(pfd2.getFd());
-                        this.mAnnotatorModelInUse = bestModel;
-                    }
-                    maybeCloseAndLogError(pfd2);
-                }
-                pfd = this.mAnnotatorImpl;
-            } else {
+            if (bestModel == null) {
                 throw new FileNotFoundException("No annotator model for " + localeList3.toLanguageTags());
             }
+            if (this.mAnnotatorImpl == null || !Objects.equals(this.mAnnotatorModelInUse, bestModel)) {
+                Log.m40d("androidtc", "Loading " + bestModel);
+                ParcelFileDescriptor pfd = ParcelFileDescriptor.open(new File(bestModel.getPath()), 268435456);
+                if (pfd != null) {
+                    this.mAnnotatorImpl = new AnnotatorModel(pfd.getFd());
+                    this.mAnnotatorModelInUse = bestModel;
+                }
+                maybeCloseAndLogError(pfd);
+            }
+            annotatorModel = this.mAnnotatorImpl;
         }
-        return pfd;
+        return annotatorModel;
     }
 
     private LangIdModel getLangIdImpl() throws FileNotFoundException {
-        ParcelFileDescriptor pfd;
+        LangIdModel langIdModel;
         synchronized (this.mLock) {
-            ModelFileManager.ModelFile bestModel = this.mLangIdModelFileManager.findBestModelFile((LocaleList) null);
-            if (bestModel != null) {
-                if (this.mLangIdImpl == null || !Objects.equals(this.mLangIdModelInUse, bestModel)) {
-                    Log.d("androidtc", "Loading " + bestModel);
-                    ParcelFileDescriptor pfd2 = ParcelFileDescriptor.open(new File(bestModel.getPath()), 268435456);
-                    if (pfd2 != null) {
-                        try {
-                            this.mLangIdImpl = new LangIdModel(pfd2.getFd());
-                            this.mLangIdModelInUse = bestModel;
-                        } catch (Throwable th) {
-                            maybeCloseAndLogError(pfd2);
-                            throw th;
-                        }
-                    }
-                    maybeCloseAndLogError(pfd2);
-                }
-                pfd = this.mLangIdImpl;
-            } else {
+            ModelFileManager.ModelFile bestModel = this.mLangIdModelFileManager.findBestModelFile(null);
+            if (bestModel == null) {
                 throw new FileNotFoundException("No LangID model is found");
             }
+            if (this.mLangIdImpl == null || !Objects.equals(this.mLangIdModelInUse, bestModel)) {
+                Log.m40d("androidtc", "Loading " + bestModel);
+                ParcelFileDescriptor pfd = ParcelFileDescriptor.open(new File(bestModel.getPath()), 268435456);
+                if (pfd != null) {
+                    this.mLangIdImpl = new LangIdModel(pfd.getFd());
+                    this.mLangIdModelInUse = bestModel;
+                }
+                maybeCloseAndLogError(pfd);
+            }
+            langIdModel = this.mLangIdImpl;
         }
-        return pfd;
+        return langIdModel;
     }
 
     private ActionsSuggestionsModel getActionsImpl() throws FileNotFoundException {
@@ -457,23 +505,19 @@ public final class TextClassifierImpl implements TextClassifier {
                 return null;
             }
             if (this.mActionsImpl == null || !Objects.equals(this.mActionModelInUse, bestModel)) {
-                Log.d("androidtc", "Loading " + bestModel);
+                Log.m40d("androidtc", "Loading " + bestModel);
                 ParcelFileDescriptor pfd = ParcelFileDescriptor.open(new File(bestModel.getPath()), 268435456);
                 if (pfd == null) {
-                    try {
-                        Log.d("androidtc", "Failed to read the model file: " + bestModel.getPath());
-                        return null;
-                    } finally {
-                        maybeCloseAndLogError(pfd);
-                    }
-                } else {
-                    this.mActionsImpl = new ActionsSuggestionsModel(pfd.getFd(), this.mActionsModelParamsSupplier.get().getSerializedPreconditions(bestModel));
-                    this.mActionModelInUse = bestModel;
+                    Log.m40d("androidtc", "Failed to read the model file: " + bestModel.getPath());
                     maybeCloseAndLogError(pfd);
+                    return null;
                 }
+                ActionsModelParamsSupplier.ActionsModelParams params = this.mActionsModelParamsSupplier.get();
+                this.mActionsImpl = new ActionsSuggestionsModel(pfd.getFd(), params.getSerializedPreconditions(bestModel));
+                this.mActionModelInUse = bestModel;
+                maybeCloseAndLogError(pfd);
             }
-            ActionsSuggestionsModel actionsSuggestionsModel = this.mActionsImpl;
-            return actionsSuggestionsModel;
+            return this.mActionsImpl;
         }
     }
 
@@ -490,37 +534,34 @@ public final class TextClassifierImpl implements TextClassifier {
     }
 
     private TextClassification createClassificationResult(AnnotatorModel.ClassificationResult[] classifications, String text, int start, int end, Instant referenceTime) {
-        LabeledIntent.TitleChooser titleChooser;
         List<LabeledIntent> labeledIntents;
-        AnnotatorModel.ClassificationResult[] classificationResultArr = classifications;
-        String str = text;
-        int i = start;
-        int i2 = end;
+        LabeledIntent.TitleChooser titleChooser;
         String classifiedText = text.substring(start, end);
         TextClassification.Builder builder = new TextClassification.Builder().setText(classifiedText);
-        int typeCount = classificationResultArr.length;
-        boolean z = false;
-        AnnotatorModel.ClassificationResult highestScoringResult = typeCount > 0 ? classificationResultArr[0] : null;
-        for (int i3 = 0; i3 < typeCount; i3++) {
-            builder.setEntityType(classificationResultArr[i3]);
-            if (classificationResultArr[i3].getScore() > highestScoringResult.getScore()) {
-                highestScoringResult = classificationResultArr[i3];
+        int typeCount = classifications.length;
+        AnnotatorModel.ClassificationResult highestScoringResult = typeCount > 0 ? classifications[0] : null;
+        AnnotatorModel.ClassificationResult highestScoringResult2 = highestScoringResult;
+        for (int i = 0; i < typeCount; i++) {
+            builder.setEntityType(classifications[i]);
+            if (classifications[i].getScore() > highestScoringResult2.getScore()) {
+                highestScoringResult2 = classifications[i];
             }
         }
-        Pair<Bundle, Bundle> languagesBundles = generateLanguageBundles(str, i, i2);
-        Bundle textLanguagesBundle = (Bundle) languagesBundles.first;
-        Bundle foreignLanguageBundle = (Bundle) languagesBundles.second;
+        Pair<Bundle, Bundle> languagesBundles = generateLanguageBundles(text, start, end);
+        Bundle textLanguagesBundle = languagesBundles.first;
+        Bundle foreignLanguageBundle = languagesBundles.second;
         builder.setForeignLanguageExtra(foreignLanguageBundle);
         boolean isPrimaryAction = true;
-        ClassificationIntentFactory classificationIntentFactory = this.mClassificationIntentFactory;
-        Context context = this.mContext;
-        if (foreignLanguageBundle != null) {
-            z = true;
-        }
-        Bundle bundle = foreignLanguageBundle;
         Bundle textLanguagesBundle2 = textLanguagesBundle;
-        List<LabeledIntent> labeledIntents2 = classificationIntentFactory.create(context, classifiedText, z, referenceTime, highestScoringResult);
-        LabeledIntent.TitleChooser titleChooser2 = $$Lambda$TextClassifierImpl$naj1VfHYH1Qfut8yLHu8DlsggQE.INSTANCE;
+        List<LabeledIntent> labeledIntents2 = this.mClassificationIntentFactory.create(this.mContext, classifiedText, foreignLanguageBundle != null, referenceTime, highestScoringResult2);
+        LabeledIntent.TitleChooser titleChooser2 = new LabeledIntent.TitleChooser() { // from class: android.view.textclassifier.-$$Lambda$TextClassifierImpl$naj1VfHYH1Qfut8yLHu8DlsggQE
+            @Override // android.view.textclassifier.intent.LabeledIntent.TitleChooser
+            public final CharSequence chooseTitle(LabeledIntent labeledIntent, ResolveInfo resolveInfo) {
+                CharSequence charSequence;
+                charSequence = labeledIntent.titleWithoutEntity;
+                return charSequence;
+            }
+        };
         for (LabeledIntent labeledIntent : labeledIntents2) {
             LabeledIntent.Result result = labeledIntent.resolve(this.mContext, titleChooser2, textLanguagesBundle2);
             if (result != null) {
@@ -545,19 +586,14 @@ public final class TextClassifierImpl implements TextClassifier {
                 titleChooser2 = titleChooser;
             }
         }
-        List<LabeledIntent> list = labeledIntents2;
-        LabeledIntent.TitleChooser titleChooser3 = titleChooser2;
-        return builder.setId(createId(str, i, i2)).build();
+        return builder.setId(createId(text, start, end)).build();
     }
 
     private Pair<Bundle, Bundle> generateLanguageBundles(String context, int start, int end) {
-        if (!this.mSettings.isTranslateInClassificationEnabled()) {
-            return null;
-        }
-        try {
-            float threshold = getLangIdThreshold();
-            if (threshold >= 0.0f) {
-                if (threshold <= 1.0f) {
+        if (this.mSettings.isTranslateInClassificationEnabled()) {
+            try {
+                float threshold = getLangIdThreshold();
+                if (threshold >= 0.0f && threshold <= 1.0f) {
                     EntityConfidence languageScores = detectLanguages(context, start, end);
                     if (languageScores.getEntities().isEmpty()) {
                         return Pair.create(null, null);
@@ -569,7 +605,7 @@ public final class TextClassifierImpl implements TextClassifier {
                     if (score < threshold) {
                         return Pair.create(textLanguagesBundle, null);
                     }
-                    Log.v("androidtc", String.format(Locale.US, "Language detected: <%s:%.2f>", new Object[]{language, Float.valueOf(score)}));
+                    Log.m38v("androidtc", String.format(Locale.US, "Language detected: <%s:%.2f>", language, Float.valueOf(score)));
                     Locale detected = new Locale(language);
                     LocaleList deviceLocales = LocaleList.getDefault();
                     int size = deviceLocales.size();
@@ -578,57 +614,58 @@ public final class TextClassifierImpl implements TextClassifier {
                             return Pair.create(textLanguagesBundle, null);
                         }
                     }
-                    return Pair.create(textLanguagesBundle, ExtrasUtils.createForeignLanguageExtra(detected.getLanguage(), score, getLangIdImpl().getVersion()));
+                    Bundle foreignLanguageBundle = ExtrasUtils.createForeignLanguageExtra(detected.getLanguage(), score, getLangIdImpl().getVersion());
+                    return Pair.create(textLanguagesBundle, foreignLanguageBundle);
                 }
+                Log.m37w("androidtc", "[detectForeignLanguage] unexpected threshold is found: " + threshold);
+                return Pair.create(null, null);
+            } catch (Throwable t) {
+                Log.m39e("androidtc", "Error generating language bundles.", t);
+                return Pair.create(null, null);
             }
-            Log.w("androidtc", "[detectForeignLanguage] unexpected threshold is found: " + threshold);
-            return Pair.create(null, null);
-        } catch (Throwable t) {
-            Log.e("androidtc", "Error generating language bundles.", t);
-            return Pair.create(null, null);
         }
+        return null;
     }
 
     private EntityConfidence detectLanguages(String text, int start, int end) throws FileNotFoundException {
         EntityConfidence moreTextScores;
-        int i = start;
-        int i2 = end;
-        Preconditions.checkArgument(i >= 0);
-        Preconditions.checkArgument(i2 <= text.length());
-        Preconditions.checkArgument(i <= i2);
+        Preconditions.checkArgument(start >= 0);
+        Preconditions.checkArgument(end <= text.length());
+        Preconditions.checkArgument(start <= end);
         float[] langIdContextSettings = this.mSettings.getLangIdContextSettings();
         int minimumTextSize = (int) langIdContextSettings[0];
         float penalizeRatio = langIdContextSettings[1];
         float subjectTextScoreRatio = langIdContextSettings[2];
         float moreTextScoreRatio = 1.0f - subjectTextScoreRatio;
-        Log.v("androidtc", String.format(Locale.US, "LangIdContextSettings: minimumTextSize=%d, penalizeRatio=%.2f, subjectTextScoreRatio=%.2f, moreTextScoreRatio=%.2f", new Object[]{Integer.valueOf(minimumTextSize), Float.valueOf(penalizeRatio), Float.valueOf(subjectTextScoreRatio), Float.valueOf(moreTextScoreRatio)}));
-        if (i2 - i < minimumTextSize && penalizeRatio <= 0.0f) {
-            return new EntityConfidence((Map<String, Float>) Collections.emptyMap());
+        Log.m38v("androidtc", String.format(Locale.US, "LangIdContextSettings: minimumTextSize=%d, penalizeRatio=%.2f, subjectTextScoreRatio=%.2f, moreTextScoreRatio=%.2f", Integer.valueOf(minimumTextSize), Float.valueOf(penalizeRatio), Float.valueOf(subjectTextScoreRatio), Float.valueOf(moreTextScoreRatio)));
+        if (end - start < minimumTextSize && penalizeRatio <= 0.0f) {
+            return new EntityConfidence(Collections.emptyMap());
         }
         String subject = text.substring(start, end);
         EntityConfidence scores = detectLanguages(subject);
         if (subject.length() >= minimumTextSize || subject.length() == text.length() || subjectTextScoreRatio * penalizeRatio >= 1.0f) {
-            String str = text;
             return scores;
         }
         if (moreTextScoreRatio >= 0.0f) {
-            moreTextScores = detectLanguages(TextClassifier.Utils.getSubString(text, i, i2, minimumTextSize));
+            String moreText = TextClassifier.Utils.getSubString(text, start, end, minimumTextSize);
+            moreTextScores = detectLanguages(moreText);
         } else {
-            String str2 = text;
-            moreTextScores = new EntityConfidence((Map<String, Float>) Collections.emptyMap());
+            moreTextScores = new EntityConfidence(Collections.emptyMap());
         }
         Map<String, Float> newScores = new ArrayMap<>();
         Set<String> languages = new ArraySet<>();
         languages.addAll(scores.getEntities());
         languages.addAll(moreTextScores.getEntities());
         for (String language : languages) {
-            newScores.put(language, Float.valueOf(((scores.getConfidenceScore(language) * subjectTextScoreRatio) + (moreTextScores.getConfidenceScore(language) * moreTextScoreRatio)) * penalizeRatio));
+            float score = ((scores.getConfidenceScore(language) * subjectTextScoreRatio) + (moreTextScores.getConfidenceScore(language) * moreTextScoreRatio)) * penalizeRatio;
+            newScores.put(language, Float.valueOf(score));
         }
         return new EntityConfidence(newScores);
     }
 
     private EntityConfidence detectLanguages(String text) throws FileNotFoundException {
-        LangIdModel.LanguageResult[] langResults = getLangIdImpl().detectLanguages(text);
+        LangIdModel langId = getLangIdImpl();
+        LangIdModel.LanguageResult[] langResults = langId.detectLanguages(text);
         Map<String, Float> languagesMap = new ArrayMap<>();
         for (LangIdModel.LanguageResult langResult : langResults) {
             languagesMap.put(langResult.getLanguage(), Float.valueOf(langResult.getScore()));
@@ -643,11 +680,12 @@ public final class TextClassifierImpl implements TextClassifier {
             }
             return getLangIdImpl().getLangIdThreshold();
         } catch (FileNotFoundException e) {
-            Log.v("androidtc", "Using default foreign language threshold: 0.5");
+            Log.m38v("androidtc", "Using default foreign language threshold: 0.5");
             return 0.5f;
         }
     }
 
+    @Override // android.view.textclassifier.TextClassifier
     public void dump(IndentingPrintWriter printWriter) {
         synchronized (this.mLock) {
             printWriter.println("TextClassifierImpl:");
@@ -670,19 +708,20 @@ public final class TextClassifierImpl implements TextClassifier {
                 printWriter.println(modelFile3.toString());
             }
             printWriter.decreaseIndent();
-            printWriter.printPair("mFallback", (Object) this.mFallback);
+            printWriter.printPair("mFallback", this.mFallback);
             printWriter.decreaseIndent();
             printWriter.println();
         }
     }
 
     private static void maybeCloseAndLogError(ParcelFileDescriptor fd) {
-        if (fd != null) {
-            try {
-                fd.close();
-            } catch (IOException e) {
-                Log.e("androidtc", "Error closing file.", e);
-            }
+        if (fd == null) {
+            return;
+        }
+        try {
+            fd.close();
+        } catch (IOException e) {
+            Log.m39e("androidtc", "Error closing file.", e);
         }
     }
 

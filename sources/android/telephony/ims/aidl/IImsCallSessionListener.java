@@ -1,10 +1,10 @@
 package android.telephony.ims.aidl;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.telephony.CallQuality;
 import android.telephony.ims.ImsCallProfile;
 import android.telephony.ims.ImsConferenceState;
@@ -13,6 +13,7 @@ import android.telephony.ims.ImsStreamMediaProfile;
 import android.telephony.ims.ImsSuppServiceNotification;
 import com.android.ims.internal.IImsCallSession;
 
+/* loaded from: classes4.dex */
 public interface IImsCallSessionListener extends IInterface {
     void callQualityChanged(CallQuality callQuality) throws RemoteException;
 
@@ -86,120 +87,159 @@ public interface IImsCallSessionListener extends IInterface {
 
     void callSessionUssdMessageReceived(int i, String str) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IImsCallSessionListener {
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionProgressing(ImsStreamMediaProfile profile) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionInitiated(ImsCallProfile profile) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionInitiatedFailed(ImsReasonInfo reasonInfo) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionTerminated(ImsReasonInfo reasonInfo) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionHeld(ImsCallProfile profile) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionHoldFailed(ImsReasonInfo reasonInfo) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionHoldReceived(ImsCallProfile profile) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionResumed(ImsCallProfile profile) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionResumeFailed(ImsReasonInfo reasonInfo) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionResumeReceived(ImsCallProfile profile) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionMergeStarted(IImsCallSession newSession, ImsCallProfile profile) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionMergeComplete(IImsCallSession session) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionMergeFailed(ImsReasonInfo reasonInfo) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionUpdated(ImsCallProfile profile) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionUpdateFailed(ImsReasonInfo reasonInfo) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionUpdateReceived(ImsCallProfile profile) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionConferenceExtended(IImsCallSession newSession, ImsCallProfile profile) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionConferenceExtendFailed(ImsReasonInfo reasonInfo) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionConferenceExtendReceived(IImsCallSession newSession, ImsCallProfile profile) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionInviteParticipantsRequestDelivered() throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionInviteParticipantsRequestFailed(ImsReasonInfo reasonInfo) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionRemoveParticipantsRequestDelivered() throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionRemoveParticipantsRequestFailed(ImsReasonInfo reasonInfo) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionConferenceStateUpdated(ImsConferenceState state) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionUssdMessageReceived(int mode, String ussdMessage) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionHandover(int srcAccessTech, int targetAccessTech, ImsReasonInfo reasonInfo) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionHandoverFailed(int srcAccessTech, int targetAccessTech, ImsReasonInfo reasonInfo) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionMayHandover(int srcAccessTech, int targetAccessTech) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionTtyModeReceived(int mode) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionMultipartyStateChanged(boolean isMultiParty) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionSuppServiceReceived(ImsSuppServiceNotification suppSrvNotification) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionRttModifyRequestReceived(ImsCallProfile callProfile) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionRttModifyResponseReceived(int status) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionRttMessageReceived(String rttMessage) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionRttAudioIndicatorChanged(ImsStreamMediaProfile profile) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callQualityChanged(CallQuality callQuality) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IImsCallSessionListener {
         private static final String DESCRIPTOR = "android.telephony.ims.aidl.IImsCallSessionListener";
         static final int TRANSACTION_callQualityChanged = 36;
@@ -248,12 +288,13 @@ public interface IImsCallSessionListener extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IImsCallSessionListener)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IImsCallSessionListener)) {
+                return (IImsCallSessionListener) iin;
             }
-            return (IImsCallSessionListener) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -337,510 +378,211 @@ public interface IImsCallSessionListener extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v2, resolved type: android.telephony.ims.ImsStreamMediaProfile} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v6, resolved type: android.telephony.ims.ImsCallProfile} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v10, resolved type: android.telephony.ims.ImsReasonInfo} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v14, resolved type: android.telephony.ims.ImsReasonInfo} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v18, resolved type: android.telephony.ims.ImsCallProfile} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v22, resolved type: android.telephony.ims.ImsReasonInfo} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v26, resolved type: android.telephony.ims.ImsCallProfile} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v30, resolved type: android.telephony.ims.ImsCallProfile} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v34, resolved type: android.telephony.ims.ImsReasonInfo} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v38, resolved type: android.telephony.ims.ImsCallProfile} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v42, resolved type: android.telephony.ims.ImsCallProfile} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v48, resolved type: android.telephony.ims.ImsReasonInfo} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v52, resolved type: android.telephony.ims.ImsCallProfile} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v56, resolved type: android.telephony.ims.ImsReasonInfo} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v60, resolved type: android.telephony.ims.ImsCallProfile} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v64, resolved type: android.telephony.ims.ImsCallProfile} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v68, resolved type: android.telephony.ims.ImsReasonInfo} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v72, resolved type: android.telephony.ims.ImsCallProfile} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v76, resolved type: android.telephony.ims.ImsReasonInfo} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v80, resolved type: android.telephony.ims.ImsReasonInfo} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v84, resolved type: android.telephony.ims.ImsConferenceState} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v89, resolved type: android.telephony.ims.ImsReasonInfo} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v93, resolved type: android.telephony.ims.ImsReasonInfo} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v103, resolved type: android.telephony.ims.ImsSuppServiceNotification} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v107, resolved type: android.telephony.ims.ImsCallProfile} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v113, resolved type: android.telephony.ims.ImsStreamMediaProfile} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v117, resolved type: android.telephony.CallQuality} */
-        /* JADX WARNING: type inference failed for: r1v1 */
-        /* JADX WARNING: type inference failed for: r1v122 */
-        /* JADX WARNING: type inference failed for: r1v123 */
-        /* JADX WARNING: type inference failed for: r1v124 */
-        /* JADX WARNING: type inference failed for: r1v125 */
-        /* JADX WARNING: type inference failed for: r1v126 */
-        /* JADX WARNING: type inference failed for: r1v127 */
-        /* JADX WARNING: type inference failed for: r1v128 */
-        /* JADX WARNING: type inference failed for: r1v129 */
-        /* JADX WARNING: type inference failed for: r1v130 */
-        /* JADX WARNING: type inference failed for: r1v131 */
-        /* JADX WARNING: type inference failed for: r1v132 */
-        /* JADX WARNING: type inference failed for: r1v133 */
-        /* JADX WARNING: type inference failed for: r1v134 */
-        /* JADX WARNING: type inference failed for: r1v135 */
-        /* JADX WARNING: type inference failed for: r1v136 */
-        /* JADX WARNING: type inference failed for: r1v137 */
-        /* JADX WARNING: type inference failed for: r1v138 */
-        /* JADX WARNING: type inference failed for: r1v139 */
-        /* JADX WARNING: type inference failed for: r1v140 */
-        /* JADX WARNING: type inference failed for: r1v141 */
-        /* JADX WARNING: type inference failed for: r1v142 */
-        /* JADX WARNING: type inference failed for: r1v143 */
-        /* JADX WARNING: type inference failed for: r1v144 */
-        /* JADX WARNING: type inference failed for: r1v145 */
-        /* JADX WARNING: type inference failed for: r1v146 */
-        /* JADX WARNING: type inference failed for: r1v147 */
-        /* JADX WARNING: type inference failed for: r1v148 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r7, android.os.Parcel r8, android.os.Parcel r9, int r10) throws android.os.RemoteException {
-            /*
-                r6 = this;
-                java.lang.String r0 = "android.telephony.ims.aidl.IImsCallSessionListener"
-                r1 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r2 = 1
-                if (r7 == r1) goto L_0x0312
-                r1 = 0
-                switch(r7) {
-                    case 1: goto L_0x02fb;
-                    case 2: goto L_0x02e4;
-                    case 3: goto L_0x02cd;
-                    case 4: goto L_0x02b6;
-                    case 5: goto L_0x029f;
-                    case 6: goto L_0x0288;
-                    case 7: goto L_0x0271;
-                    case 8: goto L_0x025a;
-                    case 9: goto L_0x0243;
-                    case 10: goto L_0x022c;
-                    case 11: goto L_0x020d;
-                    case 12: goto L_0x01fe;
-                    case 13: goto L_0x01e7;
-                    case 14: goto L_0x01d0;
-                    case 15: goto L_0x01b9;
-                    case 16: goto L_0x01a2;
-                    case 17: goto L_0x0183;
-                    case 18: goto L_0x016c;
-                    case 19: goto L_0x014d;
-                    case 20: goto L_0x0146;
-                    case 21: goto L_0x012f;
-                    case 22: goto L_0x0128;
-                    case 23: goto L_0x0111;
-                    case 24: goto L_0x00fa;
-                    case 25: goto L_0x00eb;
-                    case 26: goto L_0x00cc;
-                    case 27: goto L_0x00ad;
-                    case 28: goto L_0x009e;
-                    case 29: goto L_0x0093;
-                    case 30: goto L_0x0083;
-                    case 31: goto L_0x006c;
-                    case 32: goto L_0x0055;
-                    case 33: goto L_0x004a;
-                    case 34: goto L_0x003f;
-                    case 35: goto L_0x0028;
-                    case 36: goto L_0x0011;
-                    default: goto L_0x000c;
-                }
-            L_0x000c:
-                boolean r1 = super.onTransact(r7, r8, r9, r10)
-                return r1
-            L_0x0011:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x0023
-                android.os.Parcelable$Creator<android.telephony.CallQuality> r1 = android.telephony.CallQuality.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.telephony.CallQuality r1 = (android.telephony.CallQuality) r1
-                goto L_0x0024
-            L_0x0023:
-            L_0x0024:
-                r6.callQualityChanged(r1)
-                return r2
-            L_0x0028:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x003a
-                android.os.Parcelable$Creator<android.telephony.ims.ImsStreamMediaProfile> r1 = android.telephony.ims.ImsStreamMediaProfile.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.telephony.ims.ImsStreamMediaProfile r1 = (android.telephony.ims.ImsStreamMediaProfile) r1
-                goto L_0x003b
-            L_0x003a:
-            L_0x003b:
-                r6.callSessionRttAudioIndicatorChanged(r1)
-                return r2
-            L_0x003f:
-                r8.enforceInterface(r0)
-                java.lang.String r1 = r8.readString()
-                r6.callSessionRttMessageReceived(r1)
-                return r2
-            L_0x004a:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                r6.callSessionRttModifyResponseReceived(r1)
-                return r2
-            L_0x0055:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x0067
-                android.os.Parcelable$Creator<android.telephony.ims.ImsCallProfile> r1 = android.telephony.ims.ImsCallProfile.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.telephony.ims.ImsCallProfile r1 = (android.telephony.ims.ImsCallProfile) r1
-                goto L_0x0068
-            L_0x0067:
-            L_0x0068:
-                r6.callSessionRttModifyRequestReceived(r1)
-                return r2
-            L_0x006c:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x007e
-                android.os.Parcelable$Creator<android.telephony.ims.ImsSuppServiceNotification> r1 = android.telephony.ims.ImsSuppServiceNotification.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.telephony.ims.ImsSuppServiceNotification r1 = (android.telephony.ims.ImsSuppServiceNotification) r1
-                goto L_0x007f
-            L_0x007e:
-            L_0x007f:
-                r6.callSessionSuppServiceReceived(r1)
-                return r2
-            L_0x0083:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                if (r1 == 0) goto L_0x008e
-                r1 = r2
-                goto L_0x008f
-            L_0x008e:
-                r1 = 0
-            L_0x008f:
-                r6.callSessionMultipartyStateChanged(r1)
-                return r2
-            L_0x0093:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                r6.callSessionTtyModeReceived(r1)
-                return r2
-            L_0x009e:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                int r3 = r8.readInt()
-                r6.callSessionMayHandover(r1, r3)
-                return r2
-            L_0x00ad:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                int r4 = r8.readInt()
-                int r5 = r8.readInt()
-                if (r5 == 0) goto L_0x00c7
-                android.os.Parcelable$Creator<android.telephony.ims.ImsReasonInfo> r1 = android.telephony.ims.ImsReasonInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.telephony.ims.ImsReasonInfo r1 = (android.telephony.ims.ImsReasonInfo) r1
-                goto L_0x00c8
-            L_0x00c7:
-            L_0x00c8:
-                r6.callSessionHandoverFailed(r3, r4, r1)
-                return r2
-            L_0x00cc:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                int r4 = r8.readInt()
-                int r5 = r8.readInt()
-                if (r5 == 0) goto L_0x00e6
-                android.os.Parcelable$Creator<android.telephony.ims.ImsReasonInfo> r1 = android.telephony.ims.ImsReasonInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.telephony.ims.ImsReasonInfo r1 = (android.telephony.ims.ImsReasonInfo) r1
-                goto L_0x00e7
-            L_0x00e6:
-            L_0x00e7:
-                r6.callSessionHandover(r3, r4, r1)
-                return r2
-            L_0x00eb:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                java.lang.String r3 = r8.readString()
-                r6.callSessionUssdMessageReceived(r1, r3)
-                return r2
-            L_0x00fa:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x010c
-                android.os.Parcelable$Creator<android.telephony.ims.ImsConferenceState> r1 = android.telephony.ims.ImsConferenceState.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.telephony.ims.ImsConferenceState r1 = (android.telephony.ims.ImsConferenceState) r1
-                goto L_0x010d
-            L_0x010c:
-            L_0x010d:
-                r6.callSessionConferenceStateUpdated(r1)
-                return r2
-            L_0x0111:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x0123
-                android.os.Parcelable$Creator<android.telephony.ims.ImsReasonInfo> r1 = android.telephony.ims.ImsReasonInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.telephony.ims.ImsReasonInfo r1 = (android.telephony.ims.ImsReasonInfo) r1
-                goto L_0x0124
-            L_0x0123:
-            L_0x0124:
-                r6.callSessionRemoveParticipantsRequestFailed(r1)
-                return r2
-            L_0x0128:
-                r8.enforceInterface(r0)
-                r6.callSessionRemoveParticipantsRequestDelivered()
-                return r2
-            L_0x012f:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x0141
-                android.os.Parcelable$Creator<android.telephony.ims.ImsReasonInfo> r1 = android.telephony.ims.ImsReasonInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.telephony.ims.ImsReasonInfo r1 = (android.telephony.ims.ImsReasonInfo) r1
-                goto L_0x0142
-            L_0x0141:
-            L_0x0142:
-                r6.callSessionInviteParticipantsRequestFailed(r1)
-                return r2
-            L_0x0146:
-                r8.enforceInterface(r0)
-                r6.callSessionInviteParticipantsRequestDelivered()
-                return r2
-            L_0x014d:
-                r8.enforceInterface(r0)
-                android.os.IBinder r3 = r8.readStrongBinder()
-                com.android.ims.internal.IImsCallSession r3 = com.android.ims.internal.IImsCallSession.Stub.asInterface(r3)
-                int r4 = r8.readInt()
-                if (r4 == 0) goto L_0x0167
-                android.os.Parcelable$Creator<android.telephony.ims.ImsCallProfile> r1 = android.telephony.ims.ImsCallProfile.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.telephony.ims.ImsCallProfile r1 = (android.telephony.ims.ImsCallProfile) r1
-                goto L_0x0168
-            L_0x0167:
-            L_0x0168:
-                r6.callSessionConferenceExtendReceived(r3, r1)
-                return r2
-            L_0x016c:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x017e
-                android.os.Parcelable$Creator<android.telephony.ims.ImsReasonInfo> r1 = android.telephony.ims.ImsReasonInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.telephony.ims.ImsReasonInfo r1 = (android.telephony.ims.ImsReasonInfo) r1
-                goto L_0x017f
-            L_0x017e:
-            L_0x017f:
-                r6.callSessionConferenceExtendFailed(r1)
-                return r2
-            L_0x0183:
-                r8.enforceInterface(r0)
-                android.os.IBinder r3 = r8.readStrongBinder()
-                com.android.ims.internal.IImsCallSession r3 = com.android.ims.internal.IImsCallSession.Stub.asInterface(r3)
-                int r4 = r8.readInt()
-                if (r4 == 0) goto L_0x019d
-                android.os.Parcelable$Creator<android.telephony.ims.ImsCallProfile> r1 = android.telephony.ims.ImsCallProfile.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.telephony.ims.ImsCallProfile r1 = (android.telephony.ims.ImsCallProfile) r1
-                goto L_0x019e
-            L_0x019d:
-            L_0x019e:
-                r6.callSessionConferenceExtended(r3, r1)
-                return r2
-            L_0x01a2:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x01b4
-                android.os.Parcelable$Creator<android.telephony.ims.ImsCallProfile> r1 = android.telephony.ims.ImsCallProfile.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.telephony.ims.ImsCallProfile r1 = (android.telephony.ims.ImsCallProfile) r1
-                goto L_0x01b5
-            L_0x01b4:
-            L_0x01b5:
-                r6.callSessionUpdateReceived(r1)
-                return r2
-            L_0x01b9:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x01cb
-                android.os.Parcelable$Creator<android.telephony.ims.ImsReasonInfo> r1 = android.telephony.ims.ImsReasonInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.telephony.ims.ImsReasonInfo r1 = (android.telephony.ims.ImsReasonInfo) r1
-                goto L_0x01cc
-            L_0x01cb:
-            L_0x01cc:
-                r6.callSessionUpdateFailed(r1)
-                return r2
-            L_0x01d0:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x01e2
-                android.os.Parcelable$Creator<android.telephony.ims.ImsCallProfile> r1 = android.telephony.ims.ImsCallProfile.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.telephony.ims.ImsCallProfile r1 = (android.telephony.ims.ImsCallProfile) r1
-                goto L_0x01e3
-            L_0x01e2:
-            L_0x01e3:
-                r6.callSessionUpdated(r1)
-                return r2
-            L_0x01e7:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x01f9
-                android.os.Parcelable$Creator<android.telephony.ims.ImsReasonInfo> r1 = android.telephony.ims.ImsReasonInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.telephony.ims.ImsReasonInfo r1 = (android.telephony.ims.ImsReasonInfo) r1
-                goto L_0x01fa
-            L_0x01f9:
-            L_0x01fa:
-                r6.callSessionMergeFailed(r1)
-                return r2
-            L_0x01fe:
-                r8.enforceInterface(r0)
-                android.os.IBinder r1 = r8.readStrongBinder()
-                com.android.ims.internal.IImsCallSession r1 = com.android.ims.internal.IImsCallSession.Stub.asInterface(r1)
-                r6.callSessionMergeComplete(r1)
-                return r2
-            L_0x020d:
-                r8.enforceInterface(r0)
-                android.os.IBinder r3 = r8.readStrongBinder()
-                com.android.ims.internal.IImsCallSession r3 = com.android.ims.internal.IImsCallSession.Stub.asInterface(r3)
-                int r4 = r8.readInt()
-                if (r4 == 0) goto L_0x0227
-                android.os.Parcelable$Creator<android.telephony.ims.ImsCallProfile> r1 = android.telephony.ims.ImsCallProfile.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.telephony.ims.ImsCallProfile r1 = (android.telephony.ims.ImsCallProfile) r1
-                goto L_0x0228
-            L_0x0227:
-            L_0x0228:
-                r6.callSessionMergeStarted(r3, r1)
-                return r2
-            L_0x022c:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x023e
-                android.os.Parcelable$Creator<android.telephony.ims.ImsCallProfile> r1 = android.telephony.ims.ImsCallProfile.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.telephony.ims.ImsCallProfile r1 = (android.telephony.ims.ImsCallProfile) r1
-                goto L_0x023f
-            L_0x023e:
-            L_0x023f:
-                r6.callSessionResumeReceived(r1)
-                return r2
-            L_0x0243:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x0255
-                android.os.Parcelable$Creator<android.telephony.ims.ImsReasonInfo> r1 = android.telephony.ims.ImsReasonInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.telephony.ims.ImsReasonInfo r1 = (android.telephony.ims.ImsReasonInfo) r1
-                goto L_0x0256
-            L_0x0255:
-            L_0x0256:
-                r6.callSessionResumeFailed(r1)
-                return r2
-            L_0x025a:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x026c
-                android.os.Parcelable$Creator<android.telephony.ims.ImsCallProfile> r1 = android.telephony.ims.ImsCallProfile.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.telephony.ims.ImsCallProfile r1 = (android.telephony.ims.ImsCallProfile) r1
-                goto L_0x026d
-            L_0x026c:
-            L_0x026d:
-                r6.callSessionResumed(r1)
-                return r2
-            L_0x0271:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x0283
-                android.os.Parcelable$Creator<android.telephony.ims.ImsCallProfile> r1 = android.telephony.ims.ImsCallProfile.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.telephony.ims.ImsCallProfile r1 = (android.telephony.ims.ImsCallProfile) r1
-                goto L_0x0284
-            L_0x0283:
-            L_0x0284:
-                r6.callSessionHoldReceived(r1)
-                return r2
-            L_0x0288:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x029a
-                android.os.Parcelable$Creator<android.telephony.ims.ImsReasonInfo> r1 = android.telephony.ims.ImsReasonInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.telephony.ims.ImsReasonInfo r1 = (android.telephony.ims.ImsReasonInfo) r1
-                goto L_0x029b
-            L_0x029a:
-            L_0x029b:
-                r6.callSessionHoldFailed(r1)
-                return r2
-            L_0x029f:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x02b1
-                android.os.Parcelable$Creator<android.telephony.ims.ImsCallProfile> r1 = android.telephony.ims.ImsCallProfile.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.telephony.ims.ImsCallProfile r1 = (android.telephony.ims.ImsCallProfile) r1
-                goto L_0x02b2
-            L_0x02b1:
-            L_0x02b2:
-                r6.callSessionHeld(r1)
-                return r2
-            L_0x02b6:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x02c8
-                android.os.Parcelable$Creator<android.telephony.ims.ImsReasonInfo> r1 = android.telephony.ims.ImsReasonInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.telephony.ims.ImsReasonInfo r1 = (android.telephony.ims.ImsReasonInfo) r1
-                goto L_0x02c9
-            L_0x02c8:
-            L_0x02c9:
-                r6.callSessionTerminated(r1)
-                return r2
-            L_0x02cd:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x02df
-                android.os.Parcelable$Creator<android.telephony.ims.ImsReasonInfo> r1 = android.telephony.ims.ImsReasonInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.telephony.ims.ImsReasonInfo r1 = (android.telephony.ims.ImsReasonInfo) r1
-                goto L_0x02e0
-            L_0x02df:
-            L_0x02e0:
-                r6.callSessionInitiatedFailed(r1)
-                return r2
-            L_0x02e4:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x02f6
-                android.os.Parcelable$Creator<android.telephony.ims.ImsCallProfile> r1 = android.telephony.ims.ImsCallProfile.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.telephony.ims.ImsCallProfile r1 = (android.telephony.ims.ImsCallProfile) r1
-                goto L_0x02f7
-            L_0x02f6:
-            L_0x02f7:
-                r6.callSessionInitiated(r1)
-                return r2
-            L_0x02fb:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x030d
-                android.os.Parcelable$Creator<android.telephony.ims.ImsStreamMediaProfile> r1 = android.telephony.ims.ImsStreamMediaProfile.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.telephony.ims.ImsStreamMediaProfile r1 = (android.telephony.ims.ImsStreamMediaProfile) r1
-                goto L_0x030e
-            L_0x030d:
-            L_0x030e:
-                r6.callSessionProgressing(r1)
-                return r2
-            L_0x0312:
-                r9.writeString(r0)
-                return r2
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.telephony.ims.aidl.IImsCallSessionListener.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    ImsStreamMediaProfile _arg0 = data.readInt() != 0 ? ImsStreamMediaProfile.CREATOR.createFromParcel(data) : null;
+                    callSessionProgressing(_arg0);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    ImsCallProfile _arg02 = data.readInt() != 0 ? ImsCallProfile.CREATOR.createFromParcel(data) : null;
+                    callSessionInitiated(_arg02);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    ImsReasonInfo _arg03 = data.readInt() != 0 ? ImsReasonInfo.CREATOR.createFromParcel(data) : null;
+                    callSessionInitiatedFailed(_arg03);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    ImsReasonInfo _arg04 = data.readInt() != 0 ? ImsReasonInfo.CREATOR.createFromParcel(data) : null;
+                    callSessionTerminated(_arg04);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    ImsCallProfile _arg05 = data.readInt() != 0 ? ImsCallProfile.CREATOR.createFromParcel(data) : null;
+                    callSessionHeld(_arg05);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    ImsReasonInfo _arg06 = data.readInt() != 0 ? ImsReasonInfo.CREATOR.createFromParcel(data) : null;
+                    callSessionHoldFailed(_arg06);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    ImsCallProfile _arg07 = data.readInt() != 0 ? ImsCallProfile.CREATOR.createFromParcel(data) : null;
+                    callSessionHoldReceived(_arg07);
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    ImsCallProfile _arg08 = data.readInt() != 0 ? ImsCallProfile.CREATOR.createFromParcel(data) : null;
+                    callSessionResumed(_arg08);
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    ImsReasonInfo _arg09 = data.readInt() != 0 ? ImsReasonInfo.CREATOR.createFromParcel(data) : null;
+                    callSessionResumeFailed(_arg09);
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    ImsCallProfile _arg010 = data.readInt() != 0 ? ImsCallProfile.CREATOR.createFromParcel(data) : null;
+                    callSessionResumeReceived(_arg010);
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    IImsCallSession _arg011 = IImsCallSession.Stub.asInterface(data.readStrongBinder());
+                    ImsCallProfile _arg1 = data.readInt() != 0 ? ImsCallProfile.CREATOR.createFromParcel(data) : null;
+                    callSessionMergeStarted(_arg011, _arg1);
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    IImsCallSession _arg012 = IImsCallSession.Stub.asInterface(data.readStrongBinder());
+                    callSessionMergeComplete(_arg012);
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    ImsReasonInfo _arg013 = data.readInt() != 0 ? ImsReasonInfo.CREATOR.createFromParcel(data) : null;
+                    callSessionMergeFailed(_arg013);
+                    return true;
+                case 14:
+                    data.enforceInterface(DESCRIPTOR);
+                    ImsCallProfile _arg014 = data.readInt() != 0 ? ImsCallProfile.CREATOR.createFromParcel(data) : null;
+                    callSessionUpdated(_arg014);
+                    return true;
+                case 15:
+                    data.enforceInterface(DESCRIPTOR);
+                    ImsReasonInfo _arg015 = data.readInt() != 0 ? ImsReasonInfo.CREATOR.createFromParcel(data) : null;
+                    callSessionUpdateFailed(_arg015);
+                    return true;
+                case 16:
+                    data.enforceInterface(DESCRIPTOR);
+                    ImsCallProfile _arg016 = data.readInt() != 0 ? ImsCallProfile.CREATOR.createFromParcel(data) : null;
+                    callSessionUpdateReceived(_arg016);
+                    return true;
+                case 17:
+                    data.enforceInterface(DESCRIPTOR);
+                    IImsCallSession _arg017 = IImsCallSession.Stub.asInterface(data.readStrongBinder());
+                    ImsCallProfile _arg12 = data.readInt() != 0 ? ImsCallProfile.CREATOR.createFromParcel(data) : null;
+                    callSessionConferenceExtended(_arg017, _arg12);
+                    return true;
+                case 18:
+                    data.enforceInterface(DESCRIPTOR);
+                    ImsReasonInfo _arg018 = data.readInt() != 0 ? ImsReasonInfo.CREATOR.createFromParcel(data) : null;
+                    callSessionConferenceExtendFailed(_arg018);
+                    return true;
+                case 19:
+                    data.enforceInterface(DESCRIPTOR);
+                    IImsCallSession _arg019 = IImsCallSession.Stub.asInterface(data.readStrongBinder());
+                    ImsCallProfile _arg13 = data.readInt() != 0 ? ImsCallProfile.CREATOR.createFromParcel(data) : null;
+                    callSessionConferenceExtendReceived(_arg019, _arg13);
+                    return true;
+                case 20:
+                    data.enforceInterface(DESCRIPTOR);
+                    callSessionInviteParticipantsRequestDelivered();
+                    return true;
+                case 21:
+                    data.enforceInterface(DESCRIPTOR);
+                    ImsReasonInfo _arg020 = data.readInt() != 0 ? ImsReasonInfo.CREATOR.createFromParcel(data) : null;
+                    callSessionInviteParticipantsRequestFailed(_arg020);
+                    return true;
+                case 22:
+                    data.enforceInterface(DESCRIPTOR);
+                    callSessionRemoveParticipantsRequestDelivered();
+                    return true;
+                case 23:
+                    data.enforceInterface(DESCRIPTOR);
+                    ImsReasonInfo _arg021 = data.readInt() != 0 ? ImsReasonInfo.CREATOR.createFromParcel(data) : null;
+                    callSessionRemoveParticipantsRequestFailed(_arg021);
+                    return true;
+                case 24:
+                    data.enforceInterface(DESCRIPTOR);
+                    ImsConferenceState _arg022 = data.readInt() != 0 ? ImsConferenceState.CREATOR.createFromParcel(data) : null;
+                    callSessionConferenceStateUpdated(_arg022);
+                    return true;
+                case 25:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg023 = data.readInt();
+                    String _arg14 = data.readString();
+                    callSessionUssdMessageReceived(_arg023, _arg14);
+                    return true;
+                case 26:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg024 = data.readInt();
+                    int _arg15 = data.readInt();
+                    ImsReasonInfo _arg2 = data.readInt() != 0 ? ImsReasonInfo.CREATOR.createFromParcel(data) : null;
+                    callSessionHandover(_arg024, _arg15, _arg2);
+                    return true;
+                case 27:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg025 = data.readInt();
+                    int _arg16 = data.readInt();
+                    ImsReasonInfo _arg22 = data.readInt() != 0 ? ImsReasonInfo.CREATOR.createFromParcel(data) : null;
+                    callSessionHandoverFailed(_arg025, _arg16, _arg22);
+                    return true;
+                case 28:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg026 = data.readInt();
+                    int _arg17 = data.readInt();
+                    callSessionMayHandover(_arg026, _arg17);
+                    return true;
+                case 29:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg027 = data.readInt();
+                    callSessionTtyModeReceived(_arg027);
+                    return true;
+                case 30:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean _arg028 = data.readInt() != 0;
+                    callSessionMultipartyStateChanged(_arg028);
+                    return true;
+                case 31:
+                    data.enforceInterface(DESCRIPTOR);
+                    ImsSuppServiceNotification _arg029 = data.readInt() != 0 ? ImsSuppServiceNotification.CREATOR.createFromParcel(data) : null;
+                    callSessionSuppServiceReceived(_arg029);
+                    return true;
+                case 32:
+                    data.enforceInterface(DESCRIPTOR);
+                    ImsCallProfile _arg030 = data.readInt() != 0 ? ImsCallProfile.CREATOR.createFromParcel(data) : null;
+                    callSessionRttModifyRequestReceived(_arg030);
+                    return true;
+                case 33:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg031 = data.readInt();
+                    callSessionRttModifyResponseReceived(_arg031);
+                    return true;
+                case 34:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg032 = data.readString();
+                    callSessionRttMessageReceived(_arg032);
+                    return true;
+                case 35:
+                    data.enforceInterface(DESCRIPTOR);
+                    ImsStreamMediaProfile _arg033 = data.readInt() != 0 ? ImsStreamMediaProfile.CREATOR.createFromParcel(data) : null;
+                    callSessionRttAudioIndicatorChanged(_arg033);
+                    return true;
+                case 36:
+                    data.enforceInterface(DESCRIPTOR);
+                    CallQuality _arg034 = data.readInt() != 0 ? CallQuality.CREATOR.createFromParcel(data) : null;
+                    callQualityChanged(_arg034);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IImsCallSessionListener {
             public static IImsCallSessionListener sDefaultImpl;
             private IBinder mRemote;
@@ -849,6 +591,7 @@ public interface IImsCallSessionListener extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -857,6 +600,7 @@ public interface IImsCallSessionListener extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.telephony.ims.aidl.IImsCallSessionListener
             public void callSessionProgressing(ImsStreamMediaProfile profile) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -867,9 +611,8 @@ public interface IImsCallSessionListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().callSessionProgressing(profile);
                     }
                 } finally {
@@ -877,6 +620,7 @@ public interface IImsCallSessionListener extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsCallSessionListener
             public void callSessionInitiated(ImsCallProfile profile) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -887,9 +631,8 @@ public interface IImsCallSessionListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().callSessionInitiated(profile);
                     }
                 } finally {
@@ -897,6 +640,7 @@ public interface IImsCallSessionListener extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsCallSessionListener
             public void callSessionInitiatedFailed(ImsReasonInfo reasonInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -907,9 +651,8 @@ public interface IImsCallSessionListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().callSessionInitiatedFailed(reasonInfo);
                     }
                 } finally {
@@ -917,6 +660,7 @@ public interface IImsCallSessionListener extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsCallSessionListener
             public void callSessionTerminated(ImsReasonInfo reasonInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -927,9 +671,8 @@ public interface IImsCallSessionListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().callSessionTerminated(reasonInfo);
                     }
                 } finally {
@@ -937,6 +680,7 @@ public interface IImsCallSessionListener extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsCallSessionListener
             public void callSessionHeld(ImsCallProfile profile) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -947,9 +691,8 @@ public interface IImsCallSessionListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(5, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().callSessionHeld(profile);
                     }
                 } finally {
@@ -957,6 +700,7 @@ public interface IImsCallSessionListener extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsCallSessionListener
             public void callSessionHoldFailed(ImsReasonInfo reasonInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -967,9 +711,8 @@ public interface IImsCallSessionListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(6, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(6, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().callSessionHoldFailed(reasonInfo);
                     }
                 } finally {
@@ -977,6 +720,7 @@ public interface IImsCallSessionListener extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsCallSessionListener
             public void callSessionHoldReceived(ImsCallProfile profile) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -987,9 +731,8 @@ public interface IImsCallSessionListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(7, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(7, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().callSessionHoldReceived(profile);
                     }
                 } finally {
@@ -997,6 +740,7 @@ public interface IImsCallSessionListener extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsCallSessionListener
             public void callSessionResumed(ImsCallProfile profile) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1007,9 +751,8 @@ public interface IImsCallSessionListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(8, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(8, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().callSessionResumed(profile);
                     }
                 } finally {
@@ -1017,6 +760,7 @@ public interface IImsCallSessionListener extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsCallSessionListener
             public void callSessionResumeFailed(ImsReasonInfo reasonInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1027,9 +771,8 @@ public interface IImsCallSessionListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(9, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(9, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().callSessionResumeFailed(reasonInfo);
                     }
                 } finally {
@@ -1037,6 +780,7 @@ public interface IImsCallSessionListener extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsCallSessionListener
             public void callSessionResumeReceived(ImsCallProfile profile) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1047,9 +791,8 @@ public interface IImsCallSessionListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(10, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(10, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().callSessionResumeReceived(profile);
                     }
                 } finally {
@@ -1057,6 +800,7 @@ public interface IImsCallSessionListener extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsCallSessionListener
             public void callSessionMergeStarted(IImsCallSession newSession, ImsCallProfile profile) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1068,9 +812,8 @@ public interface IImsCallSessionListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(11, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(11, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().callSessionMergeStarted(newSession, profile);
                     }
                 } finally {
@@ -1078,14 +821,14 @@ public interface IImsCallSessionListener extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsCallSessionListener
             public void callSessionMergeComplete(IImsCallSession session) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(session != null ? session.asBinder() : null);
-                    if (this.mRemote.transact(12, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(12, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().callSessionMergeComplete(session);
                     }
                 } finally {
@@ -1093,6 +836,7 @@ public interface IImsCallSessionListener extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsCallSessionListener
             public void callSessionMergeFailed(ImsReasonInfo reasonInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1103,9 +847,8 @@ public interface IImsCallSessionListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(13, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(13, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().callSessionMergeFailed(reasonInfo);
                     }
                 } finally {
@@ -1113,6 +856,7 @@ public interface IImsCallSessionListener extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsCallSessionListener
             public void callSessionUpdated(ImsCallProfile profile) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1123,9 +867,8 @@ public interface IImsCallSessionListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(14, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(14, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().callSessionUpdated(profile);
                     }
                 } finally {
@@ -1133,6 +876,7 @@ public interface IImsCallSessionListener extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsCallSessionListener
             public void callSessionUpdateFailed(ImsReasonInfo reasonInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1143,9 +887,8 @@ public interface IImsCallSessionListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(15, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(15, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().callSessionUpdateFailed(reasonInfo);
                     }
                 } finally {
@@ -1153,6 +896,7 @@ public interface IImsCallSessionListener extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsCallSessionListener
             public void callSessionUpdateReceived(ImsCallProfile profile) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1163,9 +907,8 @@ public interface IImsCallSessionListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(16, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(16, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().callSessionUpdateReceived(profile);
                     }
                 } finally {
@@ -1173,6 +916,7 @@ public interface IImsCallSessionListener extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsCallSessionListener
             public void callSessionConferenceExtended(IImsCallSession newSession, ImsCallProfile profile) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1184,9 +928,8 @@ public interface IImsCallSessionListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(17, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(17, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().callSessionConferenceExtended(newSession, profile);
                     }
                 } finally {
@@ -1194,6 +937,7 @@ public interface IImsCallSessionListener extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsCallSessionListener
             public void callSessionConferenceExtendFailed(ImsReasonInfo reasonInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1204,9 +948,8 @@ public interface IImsCallSessionListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(18, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(18, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().callSessionConferenceExtendFailed(reasonInfo);
                     }
                 } finally {
@@ -1214,6 +957,7 @@ public interface IImsCallSessionListener extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsCallSessionListener
             public void callSessionConferenceExtendReceived(IImsCallSession newSession, ImsCallProfile profile) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1225,9 +969,8 @@ public interface IImsCallSessionListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(19, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(19, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().callSessionConferenceExtendReceived(newSession, profile);
                     }
                 } finally {
@@ -1235,13 +978,13 @@ public interface IImsCallSessionListener extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsCallSessionListener
             public void callSessionInviteParticipantsRequestDelivered() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(20, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(20, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().callSessionInviteParticipantsRequestDelivered();
                     }
                 } finally {
@@ -1249,6 +992,7 @@ public interface IImsCallSessionListener extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsCallSessionListener
             public void callSessionInviteParticipantsRequestFailed(ImsReasonInfo reasonInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1259,9 +1003,8 @@ public interface IImsCallSessionListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(21, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(21, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().callSessionInviteParticipantsRequestFailed(reasonInfo);
                     }
                 } finally {
@@ -1269,13 +1012,13 @@ public interface IImsCallSessionListener extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsCallSessionListener
             public void callSessionRemoveParticipantsRequestDelivered() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(22, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(22, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().callSessionRemoveParticipantsRequestDelivered();
                     }
                 } finally {
@@ -1283,6 +1026,7 @@ public interface IImsCallSessionListener extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsCallSessionListener
             public void callSessionRemoveParticipantsRequestFailed(ImsReasonInfo reasonInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1293,9 +1037,8 @@ public interface IImsCallSessionListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(23, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(23, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().callSessionRemoveParticipantsRequestFailed(reasonInfo);
                     }
                 } finally {
@@ -1303,6 +1046,7 @@ public interface IImsCallSessionListener extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsCallSessionListener
             public void callSessionConferenceStateUpdated(ImsConferenceState state) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1313,9 +1057,8 @@ public interface IImsCallSessionListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(24, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(24, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().callSessionConferenceStateUpdated(state);
                     }
                 } finally {
@@ -1323,15 +1066,15 @@ public interface IImsCallSessionListener extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsCallSessionListener
             public void callSessionUssdMessageReceived(int mode, String ussdMessage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(mode);
                     _data.writeString(ussdMessage);
-                    if (this.mRemote.transact(25, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(25, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().callSessionUssdMessageReceived(mode, ussdMessage);
                     }
                 } finally {
@@ -1339,6 +1082,7 @@ public interface IImsCallSessionListener extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsCallSessionListener
             public void callSessionHandover(int srcAccessTech, int targetAccessTech, ImsReasonInfo reasonInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1351,9 +1095,8 @@ public interface IImsCallSessionListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(26, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(26, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().callSessionHandover(srcAccessTech, targetAccessTech, reasonInfo);
                     }
                 } finally {
@@ -1361,6 +1104,7 @@ public interface IImsCallSessionListener extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsCallSessionListener
             public void callSessionHandoverFailed(int srcAccessTech, int targetAccessTech, ImsReasonInfo reasonInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1373,9 +1117,8 @@ public interface IImsCallSessionListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(27, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(27, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().callSessionHandoverFailed(srcAccessTech, targetAccessTech, reasonInfo);
                     }
                 } finally {
@@ -1383,15 +1126,15 @@ public interface IImsCallSessionListener extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsCallSessionListener
             public void callSessionMayHandover(int srcAccessTech, int targetAccessTech) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(srcAccessTech);
                     _data.writeInt(targetAccessTech);
-                    if (this.mRemote.transact(28, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(28, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().callSessionMayHandover(srcAccessTech, targetAccessTech);
                     }
                 } finally {
@@ -1399,14 +1142,14 @@ public interface IImsCallSessionListener extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsCallSessionListener
             public void callSessionTtyModeReceived(int mode) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(mode);
-                    if (this.mRemote.transact(29, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(29, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().callSessionTtyModeReceived(mode);
                     }
                 } finally {
@@ -1414,14 +1157,14 @@ public interface IImsCallSessionListener extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsCallSessionListener
             public void callSessionMultipartyStateChanged(boolean isMultiParty) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(isMultiParty);
-                    if (this.mRemote.transact(30, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(isMultiParty ? 1 : 0);
+                    boolean _status = this.mRemote.transact(30, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().callSessionMultipartyStateChanged(isMultiParty);
                     }
                 } finally {
@@ -1429,6 +1172,7 @@ public interface IImsCallSessionListener extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsCallSessionListener
             public void callSessionSuppServiceReceived(ImsSuppServiceNotification suppSrvNotification) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1439,9 +1183,8 @@ public interface IImsCallSessionListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(31, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(31, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().callSessionSuppServiceReceived(suppSrvNotification);
                     }
                 } finally {
@@ -1449,6 +1192,7 @@ public interface IImsCallSessionListener extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsCallSessionListener
             public void callSessionRttModifyRequestReceived(ImsCallProfile callProfile) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1459,9 +1203,8 @@ public interface IImsCallSessionListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(32, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(32, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().callSessionRttModifyRequestReceived(callProfile);
                     }
                 } finally {
@@ -1469,14 +1212,14 @@ public interface IImsCallSessionListener extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsCallSessionListener
             public void callSessionRttModifyResponseReceived(int status) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(status);
-                    if (this.mRemote.transact(33, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(33, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().callSessionRttModifyResponseReceived(status);
                     }
                 } finally {
@@ -1484,14 +1227,14 @@ public interface IImsCallSessionListener extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsCallSessionListener
             public void callSessionRttMessageReceived(String rttMessage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(rttMessage);
-                    if (this.mRemote.transact(34, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(34, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().callSessionRttMessageReceived(rttMessage);
                     }
                 } finally {
@@ -1499,6 +1242,7 @@ public interface IImsCallSessionListener extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsCallSessionListener
             public void callSessionRttAudioIndicatorChanged(ImsStreamMediaProfile profile) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1509,9 +1253,8 @@ public interface IImsCallSessionListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(35, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(35, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().callSessionRttAudioIndicatorChanged(profile);
                     }
                 } finally {
@@ -1519,6 +1262,7 @@ public interface IImsCallSessionListener extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsCallSessionListener
             public void callQualityChanged(CallQuality callQuality) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1529,9 +1273,8 @@ public interface IImsCallSessionListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(36, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(36, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().callQualityChanged(callQuality);
                     }
                 } finally {
@@ -1541,11 +1284,11 @@ public interface IImsCallSessionListener extends IInterface {
         }
 
         public static boolean setDefaultImpl(IImsCallSessionListener impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IImsCallSessionListener getDefaultImpl() {

@@ -10,7 +10,7 @@ import android.app.UriGrantsManager;
 import android.content.IContentService;
 import android.content.ISyncStatusObserver;
 import android.content.SyncRequest;
-import android.content.pm.PackageManager;
+import android.content.p002pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.Resources;
 import android.database.ContentObserver;
@@ -24,16 +24,17 @@ import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.CancellationSignal;
-import android.os.DeadObjectException;
-import android.os.ICancellationSignal;
-import android.os.ParcelFileDescriptor;
-import android.os.RemoteException;
-import android.os.ServiceManager;
-import android.os.SystemClock;
-import android.os.UserHandle;
-import android.os.storage.StorageManager;
+import android.p007os.Bundle;
+import android.p007os.CancellationSignal;
+import android.p007os.DeadObjectException;
+import android.p007os.IBinder;
+import android.p007os.ICancellationSignal;
+import android.p007os.ParcelFileDescriptor;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
+import android.p007os.SystemClock;
+import android.p007os.UserHandle;
+import android.p007os.storage.StorageManager;
 import android.provider.CalendarContract;
 import android.provider.ContactsContract;
 import android.provider.DocumentsContract;
@@ -60,13 +61,12 @@ import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/* loaded from: classes.dex */
 public abstract class ContentResolver implements ContentInterface {
-    public static final Intent ACTION_SYNC_CONN_STATUS_CHANGED = new Intent("com.android.sync.SYNC_CONN_STATUS_CHANGED");
     public static final String ANY_CURSOR_ITEM_TYPE = "vnd.android.cursor.item/*";
     public static final String CONTENT_SERVICE_NAME = "content";
     public static final String CURSOR_DIR_BASE_TYPE = "vnd.android.cursor.dir";
     public static final String CURSOR_ITEM_BASE_TYPE = "vnd.android.cursor.item";
-    public static final boolean DEPRECATE_DATA_COLUMNS = StorageManager.hasIsolatedStorage();
     public static final String DEPRECATE_DATA_PREFIX = "/mnt/content/";
     private static final boolean ENABLE_CONTENT_SAMPLE = false;
     public static final String EXTRA_HONORED_ARGS = "android.content.extra.HONORED_ARGS";
@@ -97,7 +97,6 @@ public abstract class ContentResolver implements ContentInterface {
     public static final int SYNC_ERROR_CONFLICT = 5;
     public static final int SYNC_ERROR_INTERNAL = 8;
     public static final int SYNC_ERROR_IO = 3;
-    private static final String[] SYNC_ERROR_NAMES = {"already-in-progress", "authentication-error", "io-error", "parse-error", "conflict", "too-many-deletions", "too-many-retries", "internal-error"};
     public static final int SYNC_ERROR_PARSE = 4;
     @UnsupportedAppUsage
     public static final int SYNC_ERROR_SYNC_ALREADY_IN_PROGRESS = 1;
@@ -141,30 +140,35 @@ public abstract class ContentResolver implements ContentInterface {
     private final Random mRandom;
     final int mTargetSdkVersion;
     final ContentInterface mWrapped;
+    public static final boolean DEPRECATE_DATA_COLUMNS = StorageManager.hasIsolatedStorage();
+    public static final Intent ACTION_SYNC_CONN_STATUS_CHANGED = new Intent("com.android.sync.SYNC_CONN_STATUS_CHANGED");
+    private static final String[] SYNC_ERROR_NAMES = {"already-in-progress", "authentication-error", "io-error", "parse-error", "conflict", "too-many-deletions", "too-many-retries", "internal-error"};
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface NotifyFlags {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface QueryCollator {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface SortDirection {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface SyncExemption {
     }
 
-    /* access modifiers changed from: protected */
     @UnsupportedAppUsage
-    public abstract IContentProvider acquireProvider(Context context, String str);
+    protected abstract IContentProvider acquireProvider(Context context, String str);
 
-    /* access modifiers changed from: protected */
     @UnsupportedAppUsage
-    public abstract IContentProvider acquireUnstableProvider(Context context, String str);
+    protected abstract IContentProvider acquireUnstableProvider(Context context, String str);
 
     @UnsupportedAppUsage
     public abstract boolean releaseProvider(IContentProvider iContentProvider);
@@ -189,19 +193,19 @@ public abstract class ContentResolver implements ContentInterface {
                 return i + 1;
             }
         }
-        if (error == null) {
-            return 0;
+        if (error != null) {
+            try {
+                return Integer.parseInt(error);
+            } catch (NumberFormatException e) {
+                Log.m72d(TAG, "error parsing sync error: " + error);
+                return 0;
+            }
         }
-        try {
-            return Integer.parseInt(error);
-        } catch (NumberFormatException e) {
-            Log.d(TAG, "error parsing sync error: " + error);
-            return 0;
-        }
+        return 0;
     }
 
     public ContentResolver(Context context) {
-        this(context, (ContentInterface) null);
+        this(context, null);
     }
 
     public ContentResolver(Context context, ContentInterface wrapped) {
@@ -214,26 +218,29 @@ public abstract class ContentResolver implements ContentInterface {
 
     public static ContentResolver wrap(ContentInterface wrapped) {
         Preconditions.checkNotNull(wrapped);
-        return new ContentResolver((Context) null, wrapped) {
+        return new ContentResolver(null, wrapped) { // from class: android.content.ContentResolver.1
+            @Override // android.content.ContentResolver
             public void unstableProviderDied(IContentProvider icp) {
                 throw new UnsupportedOperationException();
             }
 
+            @Override // android.content.ContentResolver
             public boolean releaseUnstableProvider(IContentProvider icp) {
                 throw new UnsupportedOperationException();
             }
 
+            @Override // android.content.ContentResolver
             public boolean releaseProvider(IContentProvider icp) {
                 throw new UnsupportedOperationException();
             }
 
-            /* access modifiers changed from: protected */
-            public IContentProvider acquireUnstableProvider(Context c, String name) {
+            @Override // android.content.ContentResolver
+            protected IContentProvider acquireUnstableProvider(Context c, String name) {
                 throw new UnsupportedOperationException();
             }
 
-            /* access modifiers changed from: protected */
-            public IContentProvider acquireProvider(Context c, String name) {
+            @Override // android.content.ContentResolver
+            protected IContentProvider acquireProvider(Context c, String name) {
                 throw new UnsupportedOperationException();
             }
         };
@@ -247,9 +254,8 @@ public abstract class ContentResolver implements ContentInterface {
         return wrap((ContentInterface) wrapped);
     }
 
-    /* access modifiers changed from: protected */
     @UnsupportedAppUsage
-    public IContentProvider acquireExistingProvider(Context c, String name) {
+    protected IContentProvider acquireExistingProvider(Context c, String name) {
         return acquireProvider(c, name);
     }
 
@@ -257,6 +263,7 @@ public abstract class ContentResolver implements ContentInterface {
         throw new UnsupportedOperationException("appNotRespondingViaProvider");
     }
 
+    @Override // android.content.ContentInterface
     public final String getType(Uri url) {
         Preconditions.checkNotNull(url, "url");
         try {
@@ -264,34 +271,43 @@ public abstract class ContentResolver implements ContentInterface {
                 return this.mWrapped.getType(url);
             }
             IContentProvider provider = acquireExistingProvider(url);
-            if (provider != null) {
-                try {
-                    return provider.getType(url);
-                } catch (RemoteException e) {
+            try {
+                if (provider != null) {
+                    try {
+                        String type = provider.getType(url);
+                        releaseProvider(provider);
+                        return type;
+                    } catch (RemoteException e) {
+                        releaseProvider(provider);
+                        return null;
+                    } catch (Exception e2) {
+                        Log.m64w(TAG, "Failed to get type for: " + url + " (" + e2.getMessage() + ")");
+                        releaseProvider(provider);
+                        return null;
+                    }
+                } else if ("content".equals(url.getScheme())) {
+                    try {
+                        String type2 = ActivityManager.getService().getProviderMimeType(ContentProvider.getUriWithoutUserId(url), resolveUserId(url));
+                        return type2;
+                    } catch (RemoteException e3) {
+                        throw e3.rethrowFromSystemServer();
+                    } catch (Exception e4) {
+                        Log.m64w(TAG, "Failed to get type for: " + url + " (" + e4.getMessage() + ")");
+                        return null;
+                    }
+                } else {
                     return null;
-                } catch (Exception e2) {
-                    Log.w(TAG, "Failed to get type for: " + url + " (" + e2.getMessage() + ")");
-                    return null;
-                } finally {
-                    releaseProvider(provider);
                 }
-            } else if (!"content".equals(url.getScheme())) {
-                return null;
-            } else {
-                try {
-                    return ActivityManager.getService().getProviderMimeType(ContentProvider.getUriWithoutUserId(url), resolveUserId(url));
-                } catch (RemoteException e3) {
-                    throw e3.rethrowFromSystemServer();
-                } catch (Exception e4) {
-                    Log.w(TAG, "Failed to get type for: " + url + " (" + e4.getMessage() + ")");
-                    return null;
-                }
+            } catch (Throwable th) {
+                releaseProvider(provider);
+                throw th;
             }
         } catch (RemoteException e5) {
             return null;
         }
     }
 
+    @Override // android.content.ContentInterface
     public String[] getStreamTypes(Uri url, String mimeTypeFilter) {
         Preconditions.checkNotNull(url, "url");
         Preconditions.checkNotNull(mimeTypeFilter, "mimeTypeFilter");
@@ -317,73 +333,53 @@ public abstract class ContentResolver implements ContentInterface {
 
     public final Cursor query(@RequiresPermission.Read Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         SeempLog.record_uri(13, uri);
-        return query(uri, projection, selection, selectionArgs, sortOrder, (CancellationSignal) null);
+        return query(uri, projection, selection, selectionArgs, sortOrder, null);
     }
 
     public final Cursor query(@RequiresPermission.Read Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder, CancellationSignal cancellationSignal) {
-        return query(uri, projection, createSqlQueryBundle(selection, selectionArgs, sortOrder), cancellationSignal);
+        Bundle queryArgs = createSqlQueryBundle(selection, selectionArgs, sortOrder);
+        return query(uri, projection, queryArgs, cancellationSignal);
     }
 
+    @Override // android.content.ContentInterface
     public final Cursor query(@RequiresPermission.Read Uri uri, String[] projection, Bundle queryArgs, CancellationSignal cancellationSignal) {
         Cursor qCursor;
-        Uri uri2 = uri;
-        CancellationSignal cancellationSignal2 = cancellationSignal;
-        SeempLog.record_uri(13, uri2);
-        Preconditions.checkNotNull(uri2, "uri");
+        SeempLog.record_uri(13, uri);
+        Preconditions.checkNotNull(uri, "uri");
         try {
             if (this.mWrapped != null) {
                 try {
-                    return this.mWrapped.query(uri2, projection, queryArgs, cancellationSignal2);
+                    return this.mWrapped.query(uri, projection, queryArgs, cancellationSignal);
                 } catch (RemoteException e) {
                     return null;
                 }
-            } else {
-                String[] strArr = projection;
-                Bundle bundle = queryArgs;
-                IContentProvider unstableProvider = acquireUnstableProvider(uri);
-                if (unstableProvider == null) {
-                    return null;
+            }
+            IContentProvider unstableProvider = acquireUnstableProvider(uri);
+            if (unstableProvider == null) {
+                return null;
+            }
+            IContentProvider stableProvider = null;
+            Cursor qCursor2 = null;
+            try {
+                long startTime = SystemClock.uptimeMillis();
+                ICancellationSignal remoteCancellationSignal = null;
+                if (cancellationSignal != null) {
+                    cancellationSignal.throwIfCanceled();
+                    remoteCancellationSignal = unstableProvider.createCancellationSignal();
+                    cancellationSignal.setRemote(remoteCancellationSignal);
                 }
-                IContentProvider stableProvider = null;
-                Cursor qCursor2 = null;
+                ICancellationSignal remoteCancellationSignal2 = remoteCancellationSignal;
                 try {
-                    long startTime = SystemClock.uptimeMillis();
-                    ICancellationSignal remoteCancellationSignal = null;
-                    if (cancellationSignal2 != null) {
-                        cancellationSignal.throwIfCanceled();
-                        remoteCancellationSignal = unstableProvider.createCancellationSignal();
-                        cancellationSignal2.setRemote(remoteCancellationSignal);
-                    }
-                    ICancellationSignal remoteCancellationSignal2 = remoteCancellationSignal;
-                    try {
-                        qCursor = unstableProvider.query(this.mPackageName, uri, projection, queryArgs, remoteCancellationSignal2);
-                    } catch (DeadObjectException e2) {
-                        unstableProviderDied(unstableProvider);
-                        stableProvider = acquireProvider(uri);
-                        if (stableProvider == null) {
-                            if (qCursor2 != null) {
-                                qCursor2.close();
-                            }
-                            if (cancellationSignal2 != null) {
-                                cancellationSignal2.setRemote((ICancellationSignal) null);
-                            }
-                            if (unstableProvider != null) {
-                                releaseUnstableProvider(unstableProvider);
-                            }
-                            if (stableProvider != null) {
-                                releaseProvider(stableProvider);
-                            }
-                            return null;
-                        }
-                        qCursor = stableProvider.query(this.mPackageName, uri, projection, queryArgs, remoteCancellationSignal2);
-                    }
-                    qCursor2 = qCursor;
-                    if (qCursor2 == null) {
-                        if (qCursor2 != null) {
+                    qCursor = unstableProvider.query(this.mPackageName, uri, projection, queryArgs, remoteCancellationSignal2);
+                } catch (DeadObjectException e2) {
+                    unstableProviderDied(unstableProvider);
+                    stableProvider = acquireProvider(uri);
+                    if (stableProvider == null) {
+                        if (0 != 0) {
                             qCursor2.close();
                         }
-                        if (cancellationSignal2 != null) {
-                            cancellationSignal2.setRemote((ICancellationSignal) null);
+                        if (cancellationSignal != null) {
+                            cancellationSignal.setRemote(null);
                         }
                         if (unstableProvider != null) {
                             releaseUnstableProvider(unstableProvider);
@@ -393,29 +389,15 @@ public abstract class ContentResolver implements ContentInterface {
                         }
                         return null;
                     }
-                    qCursor2.getCount();
-                    maybeLogQueryToEventLog(SystemClock.uptimeMillis() - startTime, uri, projection, queryArgs);
-                    CursorWrapperInner wrapper = new CursorWrapperInner(qCursor2, stableProvider != null ? stableProvider : acquireProvider(uri));
-                    Cursor qCursor3 = null;
-                    if (qCursor3 != null) {
-                        qCursor3.close();
-                    }
-                    if (cancellationSignal2 != null) {
-                        cancellationSignal2.setRemote((ICancellationSignal) null);
-                    }
-                    if (unstableProvider != null) {
-                        releaseUnstableProvider(unstableProvider);
-                    }
-                    if (0 != 0) {
-                        releaseProvider((IContentProvider) null);
-                    }
-                    return wrapper;
-                } catch (RemoteException e3) {
+                    qCursor = stableProvider.query(this.mPackageName, uri, projection, queryArgs, remoteCancellationSignal2);
+                }
+                qCursor2 = qCursor;
+                if (qCursor2 == null) {
                     if (qCursor2 != null) {
                         qCursor2.close();
                     }
-                    if (cancellationSignal2 != null) {
-                        cancellationSignal2.setRemote((ICancellationSignal) null);
+                    if (cancellationSignal != null) {
+                        cancellationSignal.setRemote(null);
                     }
                     if (unstableProvider != null) {
                         releaseUnstableProvider(unstableProvider);
@@ -424,26 +406,56 @@ public abstract class ContentResolver implements ContentInterface {
                         releaseProvider(stableProvider);
                     }
                     return null;
-                } catch (Throwable th) {
-                    if (qCursor2 != null) {
-                        qCursor2.close();
-                    }
-                    if (cancellationSignal2 != null) {
-                        cancellationSignal2.setRemote((ICancellationSignal) null);
-                    }
-                    if (unstableProvider != null) {
-                        releaseUnstableProvider(unstableProvider);
-                    }
-                    if (stableProvider != null) {
-                        releaseProvider(stableProvider);
-                    }
-                    throw th;
                 }
+                qCursor2.getCount();
+                long durationMillis = SystemClock.uptimeMillis() - startTime;
+                maybeLogQueryToEventLog(durationMillis, uri, projection, queryArgs);
+                IContentProvider provider = stableProvider != null ? stableProvider : acquireProvider(uri);
+                CursorWrapperInner wrapper = new CursorWrapperInner(qCursor2, provider);
+                Cursor qCursor3 = null;
+                if (0 != 0) {
+                    qCursor3.close();
+                }
+                if (cancellationSignal != null) {
+                    cancellationSignal.setRemote(null);
+                }
+                if (unstableProvider != null) {
+                    releaseUnstableProvider(unstableProvider);
+                }
+                if (0 != 0) {
+                    releaseProvider(null);
+                }
+                return wrapper;
+            } catch (RemoteException e3) {
+                if (qCursor2 != null) {
+                    qCursor2.close();
+                }
+                if (cancellationSignal != null) {
+                    cancellationSignal.setRemote(null);
+                }
+                if (unstableProvider != null) {
+                    releaseUnstableProvider(unstableProvider);
+                }
+                if (stableProvider != null) {
+                    releaseProvider(stableProvider);
+                }
+                return null;
+            } catch (Throwable th) {
+                if (qCursor2 != null) {
+                    qCursor2.close();
+                }
+                if (cancellationSignal != null) {
+                    cancellationSignal.setRemote(null);
+                }
+                if (unstableProvider != null) {
+                    releaseUnstableProvider(unstableProvider);
+                }
+                if (stableProvider != null) {
+                    releaseProvider(stableProvider);
+                }
+                throw th;
             }
         } catch (RemoteException e4) {
-            String[] strArr2 = projection;
-            Bundle bundle2 = queryArgs;
-            return null;
         }
     }
 
@@ -452,6 +464,7 @@ public abstract class ContentResolver implements ContentInterface {
         return res != null ? res : uri;
     }
 
+    @Override // android.content.ContentInterface
     public final Uri canonicalize(Uri url) {
         Preconditions.checkNotNull(url, "url");
         try {
@@ -474,6 +487,7 @@ public abstract class ContentResolver implements ContentInterface {
         }
     }
 
+    @Override // android.content.ContentInterface
     public final Uri uncanonicalize(Uri url) {
         Preconditions.checkNotNull(url, "url");
         try {
@@ -496,6 +510,7 @@ public abstract class ContentResolver implements ContentInterface {
         }
     }
 
+    @Override // android.content.ContentInterface
     public final boolean refresh(Uri url, Bundle args, CancellationSignal cancellationSignal) {
         Preconditions.checkNotNull(url, "url");
         try {
@@ -534,22 +549,23 @@ public abstract class ContentResolver implements ContentInterface {
         if (SCHEME_ANDROID_RESOURCE.equals(scheme)) {
             OpenResourceIdResult r = getResourceId(uri);
             try {
-                return r.r.openRawResource(r.id);
+                InputStream stream = r.f25r.openRawResource(r.f24id);
+                return stream;
             } catch (Resources.NotFoundException e) {
                 throw new FileNotFoundException("Resource does not exist: " + uri);
             }
         } else if (SCHEME_FILE.equals(scheme)) {
             return new FileInputStream(uri.getPath());
         } else {
-            AssetFileDescriptor fd = openAssetFileDescriptor(uri, "r", (CancellationSignal) null);
-            if (fd == null) {
-                return null;
+            AssetFileDescriptor fd = openAssetFileDescriptor(uri, "r", null);
+            if (fd != null) {
+                try {
+                    return fd.createInputStream();
+                } catch (IOException e2) {
+                    throw new FileNotFoundException("Unable to create stream");
+                }
             }
-            try {
-                return fd.createInputStream();
-            } catch (IOException e2) {
-                throw new FileNotFoundException("Unable to create stream");
-            }
+            return null;
         }
     }
 
@@ -558,7 +574,7 @@ public abstract class ContentResolver implements ContentInterface {
     }
 
     public final OutputStream openOutputStream(Uri uri, String mode) throws FileNotFoundException {
-        AssetFileDescriptor fd = openAssetFileDescriptor(uri, mode, (CancellationSignal) null);
+        AssetFileDescriptor fd = openAssetFileDescriptor(uri, mode, null);
         if (fd == null) {
             return null;
         }
@@ -569,19 +585,17 @@ public abstract class ContentResolver implements ContentInterface {
         }
     }
 
+    @Override // android.content.ContentInterface
     public final ParcelFileDescriptor openFile(Uri uri, String mode, CancellationSignal signal) throws FileNotFoundException {
         try {
-            if (this.mWrapped != null) {
-                return this.mWrapped.openFile(uri, mode, signal);
-            }
-            return openFileDescriptor(uri, mode, signal);
+            return this.mWrapped != null ? this.mWrapped.openFile(uri, mode, signal) : openFileDescriptor(uri, mode, signal);
         } catch (RemoteException e) {
             return null;
         }
     }
 
     public final ParcelFileDescriptor openFileDescriptor(Uri uri, String mode) throws FileNotFoundException {
-        return openFileDescriptor(uri, mode, (CancellationSignal) null);
+        return openFileDescriptor(uri, mode, null);
     }
 
     public final ParcelFileDescriptor openFileDescriptor(Uri uri, String mode, CancellationSignal cancellationSignal) throws FileNotFoundException {
@@ -606,87 +620,76 @@ public abstract class ContentResolver implements ContentInterface {
         }
     }
 
+    @Override // android.content.ContentInterface
     public final AssetFileDescriptor openAssetFile(Uri uri, String mode, CancellationSignal signal) throws FileNotFoundException {
         try {
-            if (this.mWrapped != null) {
-                return this.mWrapped.openAssetFile(uri, mode, signal);
-            }
-            return openAssetFileDescriptor(uri, mode, signal);
+            return this.mWrapped != null ? this.mWrapped.openAssetFile(uri, mode, signal) : openAssetFileDescriptor(uri, mode, signal);
         } catch (RemoteException e) {
             return null;
         }
     }
 
     public final AssetFileDescriptor openAssetFileDescriptor(Uri uri, String mode) throws FileNotFoundException {
-        return openAssetFileDescriptor(uri, mode, (CancellationSignal) null);
+        return openAssetFileDescriptor(uri, mode, null);
     }
 
     public final AssetFileDescriptor openAssetFileDescriptor(Uri uri, String mode, CancellationSignal cancellationSignal) throws FileNotFoundException {
-        ICancellationSignal remoteCancellationSignal;
         AssetFileDescriptor fd;
-        Uri uri2 = uri;
-        String str = mode;
-        CancellationSignal cancellationSignal2 = cancellationSignal;
-        Preconditions.checkNotNull(uri2, "uri");
-        Preconditions.checkNotNull(str, "mode");
+        AssetFileDescriptor fd2;
+        Preconditions.checkNotNull(uri, "uri");
+        Preconditions.checkNotNull(mode, "mode");
         try {
             if (this.mWrapped != null) {
-                return this.mWrapped.openAssetFile(uri2, str, cancellationSignal2);
+                return this.mWrapped.openAssetFile(uri, mode, cancellationSignal);
             }
             String scheme = uri.getScheme();
             if (SCHEME_ANDROID_RESOURCE.equals(scheme)) {
-                if ("r".equals(str)) {
-                    OpenResourceIdResult r = getResourceId(uri);
-                    try {
-                        return r.r.openRawResourceFd(r.id);
-                    } catch (Resources.NotFoundException e) {
-                        throw new FileNotFoundException("Resource does not exist: " + uri2);
-                    }
-                } else {
-                    throw new FileNotFoundException("Can't write resources: " + uri2);
+                if (!"r".equals(mode)) {
+                    throw new FileNotFoundException("Can't write resources: " + uri);
+                }
+                OpenResourceIdResult r = getResourceId(uri);
+                try {
+                    return r.f25r.openRawResourceFd(r.f24id);
+                } catch (Resources.NotFoundException e) {
+                    throw new FileNotFoundException("Resource does not exist: " + uri);
                 }
             } else if (SCHEME_FILE.equals(scheme)) {
-                return new AssetFileDescriptor(ParcelFileDescriptor.open(new File(uri.getPath()), ParcelFileDescriptor.parseMode(mode)), 0, -1);
+                ParcelFileDescriptor pfd = ParcelFileDescriptor.open(new File(uri.getPath()), ParcelFileDescriptor.parseMode(mode));
+                return new AssetFileDescriptor(pfd, 0L, -1L);
+            } else if ("r".equals(mode)) {
+                return openTypedAssetFileDescriptor(uri, "*/*", null, cancellationSignal);
             } else {
-                if ("r".equals(str)) {
-                    return openTypedAssetFileDescriptor(uri2, "*/*", (Bundle) null, cancellationSignal2);
-                }
                 IContentProvider unstableProvider = acquireUnstableProvider(uri);
-                if (unstableProvider != null) {
-                    IContentProvider stableProvider = null;
-                    ICancellationSignal remoteCancellationSignal2 = null;
-                    if (cancellationSignal2 != null) {
+                if (unstableProvider == null) {
+                    throw new FileNotFoundException("No content provider: " + uri);
+                }
+                IContentProvider stableProvider = null;
+                ICancellationSignal remoteCancellationSignal = null;
+                try {
+                    if (cancellationSignal != null) {
                         try {
                             cancellationSignal.throwIfCanceled();
-                            remoteCancellationSignal2 = unstableProvider.createCancellationSignal();
-                            cancellationSignal2.setRemote(remoteCancellationSignal2);
-                        } catch (DeadObjectException e2) {
-                            unstableProviderDied(unstableProvider);
-                            stableProvider = acquireProvider(uri);
-                            if (stableProvider != null) {
-                                fd = stableProvider.openAssetFile(this.mPackageName, uri2, str, remoteCancellationSignal);
-                                if (fd == null) {
-                                    if (cancellationSignal2 != null) {
-                                        cancellationSignal2.setRemote((ICancellationSignal) null);
-                                    }
-                                    if (stableProvider != null) {
-                                        releaseProvider(stableProvider);
-                                    }
-                                    if (unstableProvider != null) {
-                                        releaseUnstableProvider(unstableProvider);
-                                    }
-                                    return null;
-                                }
-                            } else {
-                                throw new FileNotFoundException("No content provider: " + uri2);
-                            }
-                        } catch (RemoteException e3) {
-                            throw new FileNotFoundException("Failed opening content provider: " + uri2);
-                        } catch (FileNotFoundException e4) {
-                            throw e4;
-                        } catch (Throwable th) {
-                            if (cancellationSignal2 != null) {
-                                cancellationSignal2.setRemote((ICancellationSignal) null);
+                            remoteCancellationSignal = unstableProvider.createCancellationSignal();
+                            cancellationSignal.setRemote(remoteCancellationSignal);
+                        } catch (RemoteException e2) {
+                            throw new FileNotFoundException("Failed opening content provider: " + uri);
+                        } catch (FileNotFoundException e3) {
+                            throw e3;
+                        }
+                    }
+                    ICancellationSignal remoteCancellationSignal2 = remoteCancellationSignal;
+                    try {
+                        fd2 = unstableProvider.openAssetFile(this.mPackageName, uri, mode, remoteCancellationSignal2);
+                    } catch (DeadObjectException e4) {
+                        unstableProviderDied(unstableProvider);
+                        stableProvider = acquireProvider(uri);
+                        if (stableProvider == null) {
+                            throw new FileNotFoundException("No content provider: " + uri);
+                        }
+                        fd = stableProvider.openAssetFile(this.mPackageName, uri, mode, remoteCancellationSignal2);
+                        if (fd == null) {
+                            if (cancellationSignal != null) {
+                                cancellationSignal.setRemote(null);
                             }
                             if (stableProvider != null) {
                                 releaseProvider(stableProvider);
@@ -694,21 +697,10 @@ public abstract class ContentResolver implements ContentInterface {
                             if (unstableProvider != null) {
                                 releaseUnstableProvider(unstableProvider);
                             }
-                            throw th;
+                            return null;
                         }
                     }
-                    remoteCancellationSignal = remoteCancellationSignal2;
-                    AssetFileDescriptor fd2 = unstableProvider.openAssetFile(this.mPackageName, uri2, str, remoteCancellationSignal);
                     if (fd2 == null) {
-                        if (cancellationSignal2 != null) {
-                            cancellationSignal2.setRemote((ICancellationSignal) null);
-                        }
-                        if (0 != 0) {
-                            releaseProvider((IContentProvider) null);
-                        }
-                        if (unstableProvider != null) {
-                            releaseUnstableProvider(unstableProvider);
-                        }
                         return null;
                     }
                     fd = fd2;
@@ -716,25 +708,36 @@ public abstract class ContentResolver implements ContentInterface {
                         stableProvider = acquireProvider(uri);
                     }
                     releaseUnstableProvider(unstableProvider);
-                    AssetFileDescriptor assetFileDescriptor = new AssetFileDescriptor(new ParcelFileDescriptorInner(fd.getParcelFileDescriptor(), stableProvider), fd.getStartOffset(), fd.getDeclaredLength());
-                    if (cancellationSignal2 != null) {
-                        cancellationSignal2.setRemote((ICancellationSignal) null);
+                    ParcelFileDescriptor pfd2 = new ParcelFileDescriptorInner(fd.getParcelFileDescriptor(), stableProvider);
+                    AssetFileDescriptor assetFileDescriptor = new AssetFileDescriptor(pfd2, fd.getStartOffset(), fd.getDeclaredLength());
+                    if (cancellationSignal != null) {
+                        cancellationSignal.setRemote(null);
                     }
                     if (0 != 0) {
-                        releaseProvider((IContentProvider) null);
+                        releaseProvider(null);
                     }
                     if (0 != 0) {
-                        releaseUnstableProvider((IContentProvider) null);
+                        releaseUnstableProvider(null);
                     }
                     return assetFileDescriptor;
+                } finally {
+                    if (cancellationSignal != null) {
+                        cancellationSignal.setRemote(null);
+                    }
+                    if (0 != 0) {
+                        releaseProvider(null);
+                    }
+                    if (unstableProvider != null) {
+                        releaseUnstableProvider(unstableProvider);
+                    }
                 }
-                throw new FileNotFoundException("No content provider: " + uri2);
             }
         } catch (RemoteException e5) {
             return null;
         }
     }
 
+    @Override // android.content.ContentInterface
     public final AssetFileDescriptor openTypedAssetFile(Uri uri, String mimeTypeFilter, Bundle opts, CancellationSignal signal) throws FileNotFoundException {
         try {
             if (this.mWrapped != null) {
@@ -747,81 +750,56 @@ public abstract class ContentResolver implements ContentInterface {
     }
 
     public final AssetFileDescriptor openTypedAssetFileDescriptor(Uri uri, String mimeType, Bundle opts) throws FileNotFoundException {
-        return openTypedAssetFileDescriptor(uri, mimeType, opts, (CancellationSignal) null);
+        return openTypedAssetFileDescriptor(uri, mimeType, opts, null);
     }
 
     public final AssetFileDescriptor openTypedAssetFileDescriptor(Uri uri, String mimeType, Bundle opts, CancellationSignal cancellationSignal) throws FileNotFoundException {
-        ICancellationSignal remoteCancellationSignal;
         AssetFileDescriptor fd;
-        Uri uri2 = uri;
-        String str = mimeType;
-        CancellationSignal cancellationSignal2 = cancellationSignal;
-        Preconditions.checkNotNull(uri2, "uri");
-        Preconditions.checkNotNull(str, "mimeType");
+        AssetFileDescriptor fd2;
+        Preconditions.checkNotNull(uri, "uri");
+        Preconditions.checkNotNull(mimeType, "mimeType");
         try {
             if (this.mWrapped != null) {
                 try {
-                    return this.mWrapped.openTypedAssetFile(uri2, str, opts, cancellationSignal2);
+                    return this.mWrapped.openTypedAssetFile(uri, mimeType, opts, cancellationSignal);
                 } catch (RemoteException e) {
                     return null;
                 }
-            } else {
-                Bundle bundle = opts;
-                IContentProvider unstableProvider = acquireUnstableProvider(uri);
-                if (unstableProvider != null) {
-                    IContentProvider stableProvider = null;
-                    ICancellationSignal remoteCancellationSignal2 = null;
-                    if (cancellationSignal2 != null) {
-                        try {
-                            cancellationSignal.throwIfCanceled();
-                            remoteCancellationSignal2 = unstableProvider.createCancellationSignal();
-                            cancellationSignal2.setRemote(remoteCancellationSignal2);
-                        } catch (DeadObjectException e2) {
-                            unstableProviderDied(unstableProvider);
-                            stableProvider = acquireProvider(uri);
-                            if (stableProvider != null) {
-                                AssetFileDescriptor fd2 = stableProvider.openTypedAssetFile(this.mPackageName, uri, mimeType, opts, remoteCancellationSignal);
-                                if (fd2 == null) {
-                                    if (cancellationSignal2 != null) {
-                                        cancellationSignal2.setRemote((ICancellationSignal) null);
-                                    }
-                                    if (stableProvider != null) {
-                                        releaseProvider(stableProvider);
-                                    }
-                                    if (unstableProvider != null) {
-                                        releaseUnstableProvider(unstableProvider);
-                                    }
-                                    return null;
-                                }
-                                fd = fd2;
-                            } else {
-                                throw new FileNotFoundException("No content provider: " + uri2);
-                            }
-                        } catch (RemoteException e3) {
-                            throw new FileNotFoundException("Failed opening content provider: " + uri2);
-                        } catch (FileNotFoundException e4) {
-                            throw e4;
-                        } catch (Throwable th) {
-                            if (cancellationSignal2 != null) {
-                                cancellationSignal2.setRemote((ICancellationSignal) null);
-                            }
-                            if (stableProvider != null) {
-                                releaseProvider(stableProvider);
-                            }
-                            if (unstableProvider != null) {
-                                releaseUnstableProvider(unstableProvider);
-                            }
-                            throw th;
-                        }
+            }
+            IContentProvider unstableProvider = acquireUnstableProvider(uri);
+            if (unstableProvider == null) {
+                throw new FileNotFoundException("No content provider: " + uri);
+            }
+            IContentProvider stableProvider = null;
+            ICancellationSignal remoteCancellationSignal = null;
+            try {
+                if (cancellationSignal != null) {
+                    try {
+                        cancellationSignal.throwIfCanceled();
+                        remoteCancellationSignal = unstableProvider.createCancellationSignal();
+                        cancellationSignal.setRemote(remoteCancellationSignal);
+                    } catch (RemoteException e2) {
+                        throw new FileNotFoundException("Failed opening content provider: " + uri);
+                    } catch (FileNotFoundException e3) {
+                        throw e3;
                     }
-                    remoteCancellationSignal = remoteCancellationSignal2;
-                    AssetFileDescriptor fd3 = unstableProvider.openTypedAssetFile(this.mPackageName, uri, mimeType, opts, remoteCancellationSignal);
+                }
+                ICancellationSignal remoteCancellationSignal2 = remoteCancellationSignal;
+                try {
+                    fd2 = unstableProvider.openTypedAssetFile(this.mPackageName, uri, mimeType, opts, remoteCancellationSignal2);
+                } catch (DeadObjectException e4) {
+                    unstableProviderDied(unstableProvider);
+                    stableProvider = acquireProvider(uri);
+                    if (stableProvider == null) {
+                        throw new FileNotFoundException("No content provider: " + uri);
+                    }
+                    AssetFileDescriptor fd3 = stableProvider.openTypedAssetFile(this.mPackageName, uri, mimeType, opts, remoteCancellationSignal2);
                     if (fd3 == null) {
-                        if (cancellationSignal2 != null) {
-                            cancellationSignal2.setRemote((ICancellationSignal) null);
+                        if (cancellationSignal != null) {
+                            cancellationSignal.setRemote(null);
                         }
-                        if (0 != 0) {
-                            releaseProvider((IContentProvider) null);
+                        if (stableProvider != null) {
+                            releaseProvider(stableProvider);
                         }
                         if (unstableProvider != null) {
                             releaseUnstableProvider(unstableProvider);
@@ -829,35 +807,52 @@ public abstract class ContentResolver implements ContentInterface {
                         return null;
                     }
                     fd = fd3;
-                    if (stableProvider == null) {
-                        stableProvider = acquireProvider(uri);
-                    }
-                    releaseUnstableProvider(unstableProvider);
-                    AssetFileDescriptor assetFileDescriptor = new AssetFileDescriptor(new ParcelFileDescriptorInner(fd.getParcelFileDescriptor(), stableProvider), fd.getStartOffset(), fd.getDeclaredLength());
-                    if (cancellationSignal2 != null) {
-                        cancellationSignal2.setRemote((ICancellationSignal) null);
-                    }
-                    if (0 != 0) {
-                        releaseProvider((IContentProvider) null);
-                    }
-                    if (0 != 0) {
-                        releaseUnstableProvider((IContentProvider) null);
-                    }
-                    return assetFileDescriptor;
                 }
-                throw new FileNotFoundException("No content provider: " + uri2);
+                if (fd2 == null) {
+                    return null;
+                }
+                fd = fd2;
+                if (stableProvider == null) {
+                    stableProvider = acquireProvider(uri);
+                }
+                releaseUnstableProvider(unstableProvider);
+                ParcelFileDescriptor pfd = new ParcelFileDescriptorInner(fd.getParcelFileDescriptor(), stableProvider);
+                AssetFileDescriptor assetFileDescriptor = new AssetFileDescriptor(pfd, fd.getStartOffset(), fd.getDeclaredLength());
+                if (cancellationSignal != null) {
+                    cancellationSignal.setRemote(null);
+                }
+                if (0 != 0) {
+                    releaseProvider(null);
+                }
+                if (0 != 0) {
+                    releaseUnstableProvider(null);
+                }
+                return assetFileDescriptor;
+            } finally {
+                if (cancellationSignal != null) {
+                    cancellationSignal.setRemote(null);
+                }
+                if (0 != 0) {
+                    releaseProvider(null);
+                }
+                if (unstableProvider != null) {
+                    releaseUnstableProvider(unstableProvider);
+                }
             }
         } catch (RemoteException e5) {
-            Bundle bundle2 = opts;
-            return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public class OpenResourceIdResult {
         @UnsupportedAppUsage
-        public int id;
+
+        /* renamed from: id */
+        public int f24id;
         @UnsupportedAppUsage
-        public Resources r;
+
+        /* renamed from: r */
+        public Resources f25r;
 
         public OpenResourceIdResult() {
         }
@@ -867,40 +862,40 @@ public abstract class ContentResolver implements ContentInterface {
     public OpenResourceIdResult getResourceId(Uri uri) throws FileNotFoundException {
         int id;
         String authority = uri.getAuthority();
-        if (!TextUtils.isEmpty(authority)) {
-            try {
-                Resources r = this.mContext.getPackageManager().getResourcesForApplication(authority);
-                List<String> path = uri.getPathSegments();
-                if (path != null) {
-                    int len = path.size();
-                    if (len == 1) {
-                        try {
-                            id = Integer.parseInt(path.get(0));
-                        } catch (NumberFormatException e) {
-                            throw new FileNotFoundException("Single path segment is not a resource ID: " + uri);
-                        }
-                    } else if (len == 2) {
-                        id = r.getIdentifier(path.get(1), path.get(0), authority);
-                    } else {
-                        throw new FileNotFoundException("More than two path segments: " + uri);
-                    }
-                    if (id != 0) {
-                        OpenResourceIdResult res = new OpenResourceIdResult();
-                        res.r = r;
-                        res.id = id;
-                        return res;
-                    }
-                    throw new FileNotFoundException("No resource found for: " + uri);
-                }
-                throw new FileNotFoundException("No path: " + uri);
-            } catch (PackageManager.NameNotFoundException e2) {
-                throw new FileNotFoundException("No package found for authority: " + uri);
-            }
-        } else {
+        if (TextUtils.isEmpty(authority)) {
             throw new FileNotFoundException("No authority: " + uri);
+        }
+        try {
+            Resources r = this.mContext.getPackageManager().getResourcesForApplication(authority);
+            List<String> path = uri.getPathSegments();
+            if (path == null) {
+                throw new FileNotFoundException("No path: " + uri);
+            }
+            int len = path.size();
+            if (len == 1) {
+                try {
+                    id = Integer.parseInt(path.get(0));
+                } catch (NumberFormatException e) {
+                    throw new FileNotFoundException("Single path segment is not a resource ID: " + uri);
+                }
+            } else if (len == 2) {
+                id = r.getIdentifier(path.get(1), path.get(0), authority);
+            } else {
+                throw new FileNotFoundException("More than two path segments: " + uri);
+            }
+            if (id == 0) {
+                throw new FileNotFoundException("No resource found for: " + uri);
+            }
+            OpenResourceIdResult res = new OpenResourceIdResult();
+            res.f25r = r;
+            res.f24id = id;
+            return res;
+        } catch (PackageManager.NameNotFoundException e2) {
+            throw new FileNotFoundException("No package found for authority: " + uri);
         }
     }
 
+    @Override // android.content.ContentInterface
     public final Uri insert(@RequiresPermission.Write Uri url, ContentValues values) {
         SeempLog.record_uri(37, url);
         Preconditions.checkNotNull(url, "url");
@@ -909,25 +904,26 @@ public abstract class ContentResolver implements ContentInterface {
                 return this.mWrapped.insert(url, values);
             }
             IContentProvider provider = acquireProvider(url);
-            if (provider != null) {
-                try {
-                    long startTime = SystemClock.uptimeMillis();
-                    Uri createdRow = provider.insert(this.mPackageName, url, values);
-                    maybeLogUpdateToEventLog(SystemClock.uptimeMillis() - startTime, url, "insert", (String) null);
-                    return createdRow;
-                } catch (RemoteException e) {
-                    return null;
-                } finally {
-                    releaseProvider(provider);
-                }
-            } else {
+            if (provider == null) {
                 throw new IllegalArgumentException("Unknown URL " + url);
+            }
+            try {
+                long startTime = SystemClock.uptimeMillis();
+                Uri createdRow = provider.insert(this.mPackageName, url, values);
+                long durationMillis = SystemClock.uptimeMillis() - startTime;
+                maybeLogUpdateToEventLog(durationMillis, url, "insert", null);
+                return createdRow;
+            } catch (RemoteException e) {
+                return null;
+            } finally {
+                releaseProvider(provider);
             }
         } catch (RemoteException e2) {
             return null;
         }
     }
 
+    @Override // android.content.ContentInterface
     public ContentProviderResult[] applyBatch(String authority, ArrayList<ContentProviderOperation> operations) throws RemoteException, OperationApplicationException {
         Preconditions.checkNotNull(authority, ContactsContract.Directory.DIRECTORY_AUTHORITY);
         Preconditions.checkNotNull(operations, "operations");
@@ -936,20 +932,20 @@ public abstract class ContentResolver implements ContentInterface {
                 return this.mWrapped.applyBatch(authority, operations);
             }
             ContentProviderClient provider = acquireContentProviderClient(authority);
-            if (provider != null) {
-                try {
-                    return provider.applyBatch(operations);
-                } finally {
-                    provider.release();
-                }
-            } else {
+            if (provider == null) {
                 throw new IllegalArgumentException("Unknown authority " + authority);
+            }
+            try {
+                return provider.applyBatch(operations);
+            } finally {
+                provider.release();
             }
         } catch (RemoteException e) {
             return null;
         }
     }
 
+    @Override // android.content.ContentInterface
     public final int bulkInsert(@RequiresPermission.Write Uri url, ContentValues[] values) {
         Preconditions.checkNotNull(url, "url");
         Preconditions.checkNotNull(values, "values");
@@ -958,25 +954,26 @@ public abstract class ContentResolver implements ContentInterface {
                 return this.mWrapped.bulkInsert(url, values);
             }
             IContentProvider provider = acquireProvider(url);
-            if (provider != null) {
-                try {
-                    long startTime = SystemClock.uptimeMillis();
-                    int rowsCreated = provider.bulkInsert(this.mPackageName, url, values);
-                    maybeLogUpdateToEventLog(SystemClock.uptimeMillis() - startTime, url, "bulkinsert", (String) null);
-                    return rowsCreated;
-                } catch (RemoteException e) {
-                    return 0;
-                } finally {
-                    releaseProvider(provider);
-                }
-            } else {
+            if (provider == null) {
                 throw new IllegalArgumentException("Unknown URL " + url);
+            }
+            try {
+                long startTime = SystemClock.uptimeMillis();
+                int rowsCreated = provider.bulkInsert(this.mPackageName, url, values);
+                long durationMillis = SystemClock.uptimeMillis() - startTime;
+                maybeLogUpdateToEventLog(durationMillis, url, "bulkinsert", null);
+                return rowsCreated;
+            } catch (RemoteException e) {
+                return 0;
+            } finally {
+                releaseProvider(provider);
             }
         } catch (RemoteException e2) {
             return 0;
         }
     }
 
+    @Override // android.content.ContentInterface
     public final int delete(@RequiresPermission.Write Uri url, String where, String[] selectionArgs) {
         Preconditions.checkNotNull(url, "url");
         try {
@@ -984,59 +981,52 @@ public abstract class ContentResolver implements ContentInterface {
                 return this.mWrapped.delete(url, where, selectionArgs);
             }
             IContentProvider provider = acquireProvider(url);
-            if (provider != null) {
-                try {
-                    long startTime = SystemClock.uptimeMillis();
-                    int rowsDeleted = provider.delete(this.mPackageName, url, where, selectionArgs);
-                    maybeLogUpdateToEventLog(SystemClock.uptimeMillis() - startTime, url, "delete", where);
-                    return rowsDeleted;
-                } catch (RemoteException e) {
-                    return -1;
-                } finally {
-                    releaseProvider(provider);
-                }
-            } else {
+            if (provider == null) {
                 throw new IllegalArgumentException("Unknown URL " + url);
+            }
+            try {
+                long startTime = SystemClock.uptimeMillis();
+                int rowsDeleted = provider.delete(this.mPackageName, url, where, selectionArgs);
+                long durationMillis = SystemClock.uptimeMillis() - startTime;
+                maybeLogUpdateToEventLog(durationMillis, url, "delete", where);
+                return rowsDeleted;
+            } catch (RemoteException e) {
+                return -1;
+            } finally {
+                releaseProvider(provider);
             }
         } catch (RemoteException e2) {
             return 0;
         }
     }
 
+    @Override // android.content.ContentInterface
     public final int update(@RequiresPermission.Write Uri uri, ContentValues values, String where, String[] selectionArgs) {
-        Uri uri2 = uri;
-        Preconditions.checkNotNull(uri2, "uri");
+        Preconditions.checkNotNull(uri, "uri");
         try {
             if (this.mWrapped != null) {
                 try {
-                    return this.mWrapped.update(uri2, values, where, selectionArgs);
+                    return this.mWrapped.update(uri, values, where, selectionArgs);
                 } catch (RemoteException e) {
                     return 0;
                 }
-            } else {
-                ContentValues contentValues = values;
-                String str = where;
-                String[] strArr = selectionArgs;
-                IContentProvider provider = acquireProvider(uri);
-                if (provider != null) {
-                    try {
-                        long startTime = SystemClock.uptimeMillis();
-                        int rowsUpdated = provider.update(this.mPackageName, uri, values, where, selectionArgs);
-                        maybeLogUpdateToEventLog(SystemClock.uptimeMillis() - startTime, uri, "update", where);
-                        return rowsUpdated;
-                    } catch (RemoteException e2) {
-                        return -1;
-                    } finally {
-                        releaseProvider(provider);
-                    }
-                } else {
-                    throw new IllegalArgumentException("Unknown URI " + uri2);
-                }
+            }
+            IContentProvider provider = acquireProvider(uri);
+            if (provider == null) {
+                throw new IllegalArgumentException("Unknown URI " + uri);
+            }
+            try {
+                long startTime = SystemClock.uptimeMillis();
+                int rowsUpdated = provider.update(this.mPackageName, uri, values, where, selectionArgs);
+                long durationMillis = SystemClock.uptimeMillis() - startTime;
+                maybeLogUpdateToEventLog(durationMillis, uri, "update", where);
+                return rowsUpdated;
+            } catch (RemoteException e2) {
+                return -1;
+            } finally {
+                releaseProvider(provider);
             }
         } catch (RemoteException e3) {
-            ContentValues contentValues2 = values;
-            String str2 = where;
-            String[] strArr2 = selectionArgs;
             return 0;
         }
     }
@@ -1045,6 +1035,7 @@ public abstract class ContentResolver implements ContentInterface {
         return call(uri.getAuthority(), method, arg, extras);
     }
 
+    @Override // android.content.ContentInterface
     public final Bundle call(String authority, String method, String arg, Bundle extras) {
         Preconditions.checkNotNull(authority, ContactsContract.Directory.DIRECTORY_AUTHORITY);
         Preconditions.checkNotNull(method, CalendarContract.RemindersColumns.METHOD);
@@ -1053,18 +1044,17 @@ public abstract class ContentResolver implements ContentInterface {
                 return this.mWrapped.call(authority, method, arg, extras);
             }
             IContentProvider provider = acquireProvider(authority);
-            if (provider != null) {
-                try {
-                    Bundle res = provider.call(this.mPackageName, authority, method, arg, extras);
-                    Bundle.setDefusable(res, true);
-                    return res;
-                } catch (RemoteException e) {
-                    return null;
-                } finally {
-                    releaseProvider(provider);
-                }
-            } else {
+            if (provider == null) {
                 throw new IllegalArgumentException("Unknown authority " + authority);
+            }
+            try {
+                Bundle res = provider.call(this.mPackageName, authority, method, arg, extras);
+                Bundle.setDefusable(res, true);
+                return res;
+            } catch (RemoteException e) {
+                return null;
+            } finally {
+                releaseProvider(provider);
             }
         } catch (RemoteException e2) {
             return null;
@@ -1098,8 +1088,12 @@ public abstract class ContentResolver implements ContentInterface {
     }
 
     public final IContentProvider acquireUnstableProvider(Uri uri) {
-        if ("content".equals(uri.getScheme()) && uri.getAuthority() != null) {
-            return acquireUnstableProvider(this.mContext, uri.getAuthority());
+        if ("content".equals(uri.getScheme())) {
+            String auth = uri.getAuthority();
+            if (auth != null) {
+                return acquireUnstableProvider(this.mContext, uri.getAuthority());
+            }
+            return null;
         }
         return null;
     }
@@ -1208,7 +1202,7 @@ public abstract class ContentResolver implements ContentInterface {
     public void takePersistableUriPermission(Uri uri, int modeFlags) {
         Preconditions.checkNotNull(uri, "uri");
         try {
-            UriGrantsManager.getService().takePersistableUriPermission(ContentProvider.getUriWithoutUserId(uri), modeFlags, (String) null, resolveUserId(uri));
+            UriGrantsManager.getService().takePersistableUriPermission(ContentProvider.getUriWithoutUserId(uri), modeFlags, null, resolveUserId(uri));
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
         }
@@ -1228,7 +1222,7 @@ public abstract class ContentResolver implements ContentInterface {
     public void releasePersistableUriPermission(Uri uri, int modeFlags) {
         Preconditions.checkNotNull(uri, "uri");
         try {
-            UriGrantsManager.getService().releasePersistableUriPermission(ContentProvider.getUriWithoutUserId(uri), modeFlags, (String) null, resolveUserId(uri));
+            UriGrantsManager.getService().releasePersistableUriPermission(ContentProvider.getUriWithoutUserId(uri), modeFlags, null, resolveUserId(uri));
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
         }
@@ -1276,14 +1270,14 @@ public abstract class ContentResolver implements ContentInterface {
     }
 
     public static void requestSyncAsUser(Account account, String authority, int userId, Bundle extras) {
-        if (extras != null) {
-            try {
-                getContentService().syncAsUser(new SyncRequest.Builder().setSyncAdapter(account, authority).setExtras(extras).syncOnce().build(), userId, ActivityThread.currentPackageName());
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
-        } else {
+        if (extras == null) {
             throw new IllegalArgumentException("Must specify extras.");
+        }
+        SyncRequest request = new SyncRequest.Builder().setSyncAdapter(account, authority).setExtras(extras).syncOnce().build();
+        try {
+            getContentService().syncAsUser(request, userId, ActivityThread.currentPackageName());
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
         }
     }
 
@@ -1299,22 +1293,8 @@ public abstract class ContentResolver implements ContentInterface {
         try {
             for (String key : extras.keySet()) {
                 Object value = extras.get(key);
-                if (value != null) {
-                    if (!(value instanceof Long)) {
-                        if (!(value instanceof Integer)) {
-                            if (!(value instanceof Boolean)) {
-                                if (!(value instanceof Float)) {
-                                    if (!(value instanceof Double)) {
-                                        if (!(value instanceof String)) {
-                                            if (!(value instanceof Account)) {
-                                                throw new IllegalArgumentException("unexpected value type: " + value.getClass().getName());
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                if (value != null && !(value instanceof Long) && !(value instanceof Integer) && !(value instanceof Boolean) && !(value instanceof Float) && !(value instanceof Double) && !(value instanceof String) && !(value instanceof Account)) {
+                    throw new IllegalArgumentException("unexpected value type: " + value.getClass().getName());
                 }
             }
         } catch (IllegalArgumentException e) {
@@ -1326,12 +1306,12 @@ public abstract class ContentResolver implements ContentInterface {
 
     @Deprecated
     public void cancelSync(Uri uri) {
-        cancelSync((Account) null, uri != null ? uri.getAuthority() : null);
+        cancelSync(null, uri != null ? uri.getAuthority() : null);
     }
 
     public static void cancelSync(Account account, String authority) {
         try {
-            getContentService().cancelSync(account, authority, (ComponentName) null);
+            getContentService().cancelSync(account, authority, null);
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
         }
@@ -1339,7 +1319,7 @@ public abstract class ContentResolver implements ContentInterface {
 
     public static void cancelSyncAsUser(Account account, String authority, int userId) {
         try {
-            getContentService().cancelSyncAsUser(account, authority, (ComponentName) null, userId);
+            getContentService().cancelSyncAsUser(account, authority, null, userId);
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
         }
@@ -1399,22 +1379,18 @@ public abstract class ContentResolver implements ContentInterface {
 
     public static void addPeriodicSync(Account account, String authority, Bundle extras, long pollFrequency) {
         validateSyncExtrasBundle(extras);
-        if (!invalidPeriodicExtras(extras)) {
-            try {
-                getContentService().addPeriodicSync(account, authority, extras, pollFrequency);
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
-        } else {
+        if (invalidPeriodicExtras(extras)) {
             throw new IllegalArgumentException("illegal extras were set");
+        }
+        try {
+            getContentService().addPeriodicSync(account, authority, extras, pollFrequency);
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
         }
     }
 
     public static boolean invalidPeriodicExtras(Bundle extras) {
-        if (extras.getBoolean("force", false) || extras.getBoolean(SYNC_EXTRAS_DO_NOT_RETRY, false) || extras.getBoolean(SYNC_EXTRAS_IGNORE_BACKOFF, false) || extras.getBoolean(SYNC_EXTRAS_IGNORE_SETTINGS, false) || extras.getBoolean(SYNC_EXTRAS_INITIALIZE, false) || extras.getBoolean("force", false) || extras.getBoolean(SYNC_EXTRAS_EXPEDITED, false)) {
-            return true;
-        }
-        return false;
+        return extras.getBoolean("force", false) || extras.getBoolean(SYNC_EXTRAS_DO_NOT_RETRY, false) || extras.getBoolean(SYNC_EXTRAS_IGNORE_BACKOFF, false) || extras.getBoolean(SYNC_EXTRAS_IGNORE_SETTINGS, false) || extras.getBoolean(SYNC_EXTRAS_INITIALIZE, false) || extras.getBoolean("force", false) || extras.getBoolean(SYNC_EXTRAS_EXPEDITED, false);
     }
 
     public static void removePeriodicSync(Account account, String authority, Bundle extras) {
@@ -1427,20 +1403,19 @@ public abstract class ContentResolver implements ContentInterface {
     }
 
     public static void cancelSync(SyncRequest request) {
-        if (request != null) {
-            try {
-                getContentService().cancelRequest(request);
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
-        } else {
+        if (request == null) {
             throw new IllegalArgumentException("request cannot be null");
+        }
+        try {
+            getContentService().cancelRequest(request);
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
         }
     }
 
     public static List<PeriodicSync> getPeriodicSyncs(Account account, String authority) {
         try {
-            return getContentService().getPeriodicSyncs(account, authority, (ComponentName) null);
+            return getContentService().getPeriodicSyncs(account, authority, null);
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
         }
@@ -1509,14 +1484,14 @@ public abstract class ContentResolver implements ContentInterface {
     public static boolean isSyncActive(Account account, String authority) {
         if (account == null) {
             throw new IllegalArgumentException("account must not be null");
-        } else if (authority != null) {
-            try {
-                return getContentService().isSyncActive(account, authority, (ComponentName) null);
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
-        } else {
+        }
+        if (authority == null) {
             throw new IllegalArgumentException("authority must not be null");
+        }
+        try {
+            return getContentService().isSyncActive(account, authority, null);
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
         }
     }
 
@@ -1552,7 +1527,7 @@ public abstract class ContentResolver implements ContentInterface {
     @UnsupportedAppUsage
     public static SyncStatusInfo getSyncStatus(Account account, String authority) {
         try {
-            return getContentService().getSyncStatus(account, authority, (ComponentName) null);
+            return getContentService().getSyncStatus(account, authority, null);
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
         }
@@ -1561,7 +1536,7 @@ public abstract class ContentResolver implements ContentInterface {
     @UnsupportedAppUsage
     public static SyncStatusInfo getSyncStatusAsUser(Account account, String authority, int userId) {
         try {
-            return getContentService().getSyncStatusAsUser(account, authority, (ComponentName) null, userId);
+            return getContentService().getSyncStatusAsUser(account, authority, null, userId);
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
         }
@@ -1573,39 +1548,38 @@ public abstract class ContentResolver implements ContentInterface {
 
     public static boolean isSyncPendingAsUser(Account account, String authority, int userId) {
         try {
-            return getContentService().isSyncPendingAsUser(account, authority, (ComponentName) null, userId);
+            return getContentService().isSyncPendingAsUser(account, authority, null, userId);
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
         }
     }
 
     public static Object addStatusChangeListener(int mask, final SyncStatusObserver callback) {
-        if (callback != null) {
-            try {
-                ISyncStatusObserver.Stub observer = new ISyncStatusObserver.Stub() {
-                    public void onStatusChanged(int which) throws RemoteException {
-                        SyncStatusObserver.this.onStatusChanged(which);
-                    }
-                };
-                getContentService().addStatusChangeListener(mask, observer);
-                return observer;
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
-        } else {
+        if (callback == null) {
             throw new IllegalArgumentException("you passed in a null callback");
+        }
+        try {
+            ISyncStatusObserver.Stub observer = new ISyncStatusObserver.Stub() { // from class: android.content.ContentResolver.2
+                @Override // android.content.ISyncStatusObserver
+                public void onStatusChanged(int which) throws RemoteException {
+                    SyncStatusObserver.this.onStatusChanged(which);
+                }
+            };
+            getContentService().addStatusChangeListener(mask, observer);
+            return observer;
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
         }
     }
 
     public static void removeStatusChangeListener(Object handle) {
-        if (handle != null) {
-            try {
-                getContentService().removeStatusChangeListener((ISyncStatusObserver.Stub) handle);
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
-        } else {
+        if (handle == null) {
             throw new IllegalArgumentException("you passed in a null handle");
+        }
+        try {
+            getContentService().removeStatusChangeListener((ISyncStatusObserver.Stub) handle);
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
         }
     }
 
@@ -1636,10 +1610,10 @@ public abstract class ContentResolver implements ContentInterface {
     }
 
     private int samplePercentForDuration(long durationMillis) {
-        if (durationMillis >= 500) {
-            return 100;
+        if (durationMillis < 500) {
+            return ((int) ((100 * durationMillis) / 500)) + 1;
         }
-        return ((int) ((100 * durationMillis) / 500)) + 1;
+        return 100;
     }
 
     private void maybeLogQueryToEventLog(long durationMillis, Uri uri, String[] projection, Bundle queryArgs) {
@@ -1648,17 +1622,21 @@ public abstract class ContentResolver implements ContentInterface {
     private void maybeLogUpdateToEventLog(long durationMillis, Uri uri, String operation, String selection) {
     }
 
+    /* loaded from: classes.dex */
     private final class CursorWrapperInner extends CrossProcessCursorWrapper {
-        private final CloseGuard mCloseGuard = CloseGuard.get();
+        private final CloseGuard mCloseGuard;
         private final IContentProvider mContentProvider;
-        private final AtomicBoolean mProviderReleased = new AtomicBoolean();
+        private final AtomicBoolean mProviderReleased;
 
         CursorWrapperInner(Cursor cursor, IContentProvider contentProvider) {
             super(cursor);
+            this.mProviderReleased = new AtomicBoolean();
+            this.mCloseGuard = CloseGuard.get();
             this.mContentProvider = contentProvider;
             this.mCloseGuard.open("close");
         }
 
+        @Override // android.database.CursorWrapper, android.database.Cursor, java.io.Closeable, java.lang.AutoCloseable
         public void close() {
             this.mCloseGuard.close();
             super.close();
@@ -1667,8 +1645,7 @@ public abstract class ContentResolver implements ContentInterface {
             }
         }
 
-        /* access modifiers changed from: protected */
-        public void finalize() throws Throwable {
+        protected void finalize() throws Throwable {
             try {
                 if (this.mCloseGuard != null) {
                     this.mCloseGuard.warnIfOpen();
@@ -1680,15 +1657,18 @@ public abstract class ContentResolver implements ContentInterface {
         }
     }
 
+    /* loaded from: classes.dex */
     private final class ParcelFileDescriptorInner extends ParcelFileDescriptor {
         private final IContentProvider mContentProvider;
-        private final AtomicBoolean mProviderReleased = new AtomicBoolean();
+        private final AtomicBoolean mProviderReleased;
 
         ParcelFileDescriptorInner(ParcelFileDescriptor pfd, IContentProvider icp) {
             super(pfd);
+            this.mProviderReleased = new AtomicBoolean();
             this.mContentProvider = icp;
         }
 
+        @Override // android.p007os.ParcelFileDescriptor
         public void releaseResources() {
             if (this.mProviderReleased.compareAndSet(false, true)) {
                 ContentResolver.this.releaseProvider(this.mContentProvider);
@@ -1701,7 +1681,8 @@ public abstract class ContentResolver implements ContentInterface {
         if (sContentService != null) {
             return sContentService;
         }
-        sContentService = IContentService.Stub.asInterface(ServiceManager.getService("content"));
+        IBinder b = ServiceManager.getService("content");
+        sContentService = IContentService.Stub.asInterface(b);
         return sContentService;
     }
 
@@ -1728,6 +1709,7 @@ public abstract class ContentResolver implements ContentInterface {
         return MimeIconUtils.getTypeInfo(mimeType);
     }
 
+    /* loaded from: classes.dex */
     public static final class MimeTypeInfo {
         private final CharSequence mContentDescription;
         private final Icon mIcon;
@@ -1774,86 +1756,61 @@ public abstract class ContentResolver implements ContentInterface {
         if (columns == null || columns.length == 0) {
             throw new IllegalArgumentException("Can't create sort clause without columns.");
         }
-        String query = TextUtils.join((CharSequence) ", ", (Object[]) columns);
+        String query = TextUtils.join(", ", columns);
         int collation = queryArgs.getInt(QUERY_ARG_SORT_COLLATION, 3);
         if (collation == 0 || collation == 1) {
             query = query + " COLLATE NOCASE";
         }
         int sortDir = queryArgs.getInt(QUERY_ARG_SORT_DIRECTION, Integer.MIN_VALUE);
-        if (sortDir == Integer.MIN_VALUE) {
-            return query;
+        if (sortDir != Integer.MIN_VALUE) {
+            switch (sortDir) {
+                case 0:
+                    return query + " ASC";
+                case 1:
+                    return query + " DESC";
+                default:
+                    throw new IllegalArgumentException("Unsupported sort direction value. See ContentResolver documentation for details.");
+            }
         }
-        switch (sortDir) {
-            case 0:
-                return query + " ASC";
-            case 1:
-                return query + " DESC";
-            default:
-                throw new IllegalArgumentException("Unsupported sort direction value. See ContentResolver documentation for details.");
-        }
+        return query;
     }
 
     public Bitmap loadThumbnail(Uri uri, Size size, CancellationSignal signal) throws IOException {
         return loadThumbnail(this, uri, size, signal, 1);
     }
 
-    public static Bitmap loadThumbnail(ContentInterface content, Uri uri, Size size, CancellationSignal signal, int allocator) throws IOException {
+    public static Bitmap loadThumbnail(final ContentInterface content, final Uri uri, final Size size, final CancellationSignal signal, final int allocator) throws IOException {
         Objects.requireNonNull(content);
         Objects.requireNonNull(uri);
         Objects.requireNonNull(size);
-        Bundle opts = new Bundle();
+        final Bundle opts = new Bundle();
         opts.putParcelable(EXTRA_SIZE, Point.convert(size));
-        Int32Ref orientation = new Int32Ref(0);
-        int i = allocator;
-        Bitmap bitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource((Callable<AssetFileDescriptor>) new Callable(uri, opts, signal, orientation) {
-            private final /* synthetic */ Uri f$1;
-            private final /* synthetic */ Bundle f$2;
-            private final /* synthetic */ CancellationSignal f$3;
-            private final /* synthetic */ Int32Ref f$4;
-
-            {
-                this.f$1 = r2;
-                this.f$2 = r3;
-                this.f$3 = r4;
-                this.f$4 = r5;
-            }
-
+        final Int32Ref orientation = new Int32Ref(0);
+        Bitmap bitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(new Callable() { // from class: android.content.-$$Lambda$ContentResolver$7ILY1SWNxC2xhk-fQUG6tAXW9Ik
+            @Override // java.util.concurrent.Callable
             public final Object call() {
-                return ContentResolver.lambda$loadThumbnail$0(ContentInterface.this, this.f$1, this.f$2, this.f$3, this.f$4);
+                return ContentResolver.lambda$loadThumbnail$0(ContentInterface.this, uri, opts, signal, orientation);
             }
-        }), new ImageDecoder.OnHeaderDecodedListener(i, signal, size) {
-            private final /* synthetic */ int f$0;
-            private final /* synthetic */ CancellationSignal f$1;
-            private final /* synthetic */ Size f$2;
-
-            {
-                this.f$0 = r1;
-                this.f$1 = r2;
-                this.f$2 = r3;
-            }
-
+        }), new ImageDecoder.OnHeaderDecodedListener() { // from class: android.content.-$$Lambda$ContentResolver$RVw7W0M7r0cGmbYi8rAG5GKxq4M
+            @Override // android.graphics.ImageDecoder.OnHeaderDecodedListener
             public final void onHeaderDecoded(ImageDecoder imageDecoder, ImageDecoder.ImageInfo imageInfo, ImageDecoder.Source source) {
-                ContentResolver.lambda$loadThumbnail$1(this.f$0, this.f$1, this.f$2, imageDecoder, imageInfo, source);
+                ContentResolver.lambda$loadThumbnail$1(allocator, signal, size, imageDecoder, imageInfo, source);
             }
         });
-        if (orientation.value == 0) {
-            return bitmap;
+        if (orientation.value != 0) {
+            int width = bitmap.getWidth();
+            int height = bitmap.getHeight();
+            Matrix m = new Matrix();
+            m.setRotate(orientation.value, width / 2, height / 2);
+            return Bitmap.createBitmap(bitmap, 0, 0, width, height, m, false);
         }
-        int width = bitmap.getWidth();
-        int height = bitmap.getHeight();
-        Matrix m = new Matrix();
-        m.setRotate((float) orientation.value, (float) (width / 2), (float) (height / 2));
-        return Bitmap.createBitmap(bitmap, 0, 0, width, height, m, false);
+        return bitmap;
     }
 
     static /* synthetic */ AssetFileDescriptor lambda$loadThumbnail$0(ContentInterface content, Uri uri, Bundle opts, CancellationSignal signal, Int32Ref orientation) throws Exception {
         AssetFileDescriptor afd = content.openTypedAssetFile(uri, "image/*", opts, signal);
         Bundle extras = afd.getExtras();
-        int i = 0;
-        if (extras != null) {
-            i = extras.getInt(DocumentsContract.EXTRA_ORIENTATION, 0);
-        }
-        orientation.value = i;
+        orientation.value = extras != null ? extras.getInt(DocumentsContract.EXTRA_ORIENTATION, 0) : 0;
         return afd;
     }
 
@@ -1862,7 +1819,9 @@ public abstract class ContentResolver implements ContentInterface {
         if (signal != null) {
             signal.throwIfCanceled();
         }
-        int sample = Math.min(info.getSize().getWidth() / size.getWidth(), info.getSize().getHeight() / size.getHeight());
+        int widthSample = info.getSize().getWidth() / size.getWidth();
+        int heightSample = info.getSize().getHeight() / size.getHeight();
+        int sample = Math.min(widthSample, heightSample);
         if (sample > 1) {
             decoder.setTargetSampleSize(sample);
         }
@@ -1877,7 +1836,8 @@ public abstract class ContentResolver implements ContentInterface {
     }
 
     public static Uri translateDeprecatedDataPath(String path) {
-        return Uri.parse(new Uri.Builder().scheme("content").encodedOpaquePart("//" + path.substring(DEPRECATE_DATA_PREFIX.length())).build().toString());
+        String ssp = "//" + path.substring(DEPRECATE_DATA_PREFIX.length());
+        return Uri.parse(new Uri.Builder().scheme("content").encodedOpaquePart(ssp).build().toString());
     }
 
     public static String translateDeprecatedDataPath(Uri uri) {

@@ -2,13 +2,14 @@ package android.net.wifi.rtt;
 
 import android.location.Address;
 import android.net.wifi.WifiEnterpriseConfig;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.SparseArray;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.Objects;
 
+/* loaded from: classes3.dex */
 public final class CivicLocation implements Parcelable {
     private static final int ADDRESS_LINE_0_ROOM_DESK_FLOOR = 0;
     private static final int ADDRESS_LINE_1_NUMBER_ROAD_SUFFIX_APT = 1;
@@ -17,11 +18,15 @@ public final class CivicLocation implements Parcelable {
     private static final int ADDRESS_LINE_4_COUNTRY = 4;
     private static final int BYTE_MASK = 255;
     private static final int COUNTRY_CODE_LENGTH = 2;
-    public static final Parcelable.Creator<CivicLocation> CREATOR = new Parcelable.Creator<CivicLocation>() {
+    public static final Parcelable.Creator<CivicLocation> CREATOR = new Parcelable.Creator<CivicLocation>() { // from class: android.net.wifi.rtt.CivicLocation.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public CivicLocation createFromParcel(Parcel in) {
             return new CivicLocation(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public CivicLocation[] newArray(int size) {
             return new CivicLocation[size];
         }
@@ -56,12 +61,14 @@ public final class CivicLocation implements Parcelable {
         this.mCivicAddressElements = in.readSparseArray(getClass().getClassLoader());
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeByte(this.mIsValid ? (byte) 1 : 0);
+        parcel.writeByte(this.mIsValid ? (byte) 1 : (byte) 0);
         parcel.writeString(this.mCountryCode);
         parcel.writeSparseArray(this.mCivicAddressElements);
     }
@@ -71,7 +78,7 @@ public final class CivicLocation implements Parcelable {
         int bufferLength = civicTLVs.length;
         while (bufferPtr < bufferLength) {
             int civicAddressType = civicTLVs[bufferPtr + 0] & 255;
-            byte civicAddressTypeLength = civicTLVs[bufferPtr + 1];
+            int civicAddressTypeLength = civicTLVs[bufferPtr + 1];
             if (civicAddressTypeLength != 0) {
                 if (bufferPtr + 2 + civicAddressTypeLength > bufferLength) {
                     return false;
@@ -109,15 +116,16 @@ public final class CivicLocation implements Parcelable {
         String roadSuffix = formatAddressElement(WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER, getCivicElementValue(18));
         String apt = formatAddressElement(", Apt: ", getCivicElementValue(26));
         String city = formatAddressElement("", getCivicElementValue(3));
+        String state = formatAddressElement("", getCivicElementValue(1));
+        String postalCode = formatAddressElement(WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER, getCivicElementValue(24));
         String addressLine0 = room + desk + floor;
-        String str = room;
+        String addressLine1 = houseNumber + houseNumberSuffix + road + roadSuffix + apt;
+        String addressLine3 = state + postalCode;
         String room2 = this.mCountryCode;
-        String str2 = desk;
         address.setAddressLine(0, addressLine0);
-        address.setAddressLine(1, houseNumber + houseNumberSuffix + road + roadSuffix + apt);
-        String str3 = floor;
+        address.setAddressLine(1, addressLine1);
         address.setAddressLine(2, city);
-        address.setAddressLine(3, formatAddressElement("", getCivicElementValue(1)) + formatAddressElement(WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER, getCivicElementValue(24)));
+        address.setAddressLine(3, addressLine3);
         address.setAddressLine(4, room2);
         address.setFeatureName(getCivicElementValue(23));
         address.setSubThoroughfare(getCivicElementValue(19));
@@ -131,28 +139,27 @@ public final class CivicLocation implements Parcelable {
     }
 
     private String formatAddressElement(String label, String value) {
-        if (value == null) {
-            return "";
+        if (value != null) {
+            return label + value;
         }
-        return label + value;
+        return "";
     }
 
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }
-        if (!(obj instanceof CivicLocation)) {
-            return false;
+        if (obj instanceof CivicLocation) {
+            CivicLocation other = (CivicLocation) obj;
+            return this.mIsValid == other.mIsValid && Objects.equals(this.mCountryCode, other.mCountryCode) && isSparseArrayStringEqual(this.mCivicAddressElements, other.mCivicAddressElements);
         }
-        CivicLocation other = (CivicLocation) obj;
-        if (this.mIsValid != other.mIsValid || !Objects.equals(this.mCountryCode, other.mCountryCode) || !isSparseArrayStringEqual(this.mCivicAddressElements, other.mCivicAddressElements)) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Boolean.valueOf(this.mIsValid), this.mCountryCode, getSparseArrayKeys(this.mCivicAddressElements), getSparseArrayValues(this.mCivicAddressElements)});
+        int[] civicAddressKeys = getSparseArrayKeys(this.mCivicAddressElements);
+        String[] civicAddressValues = getSparseArrayValues(this.mCivicAddressElements);
+        return Objects.hash(Boolean.valueOf(this.mIsValid), this.mCountryCode, civicAddressKeys, civicAddressValues);
     }
 
     public boolean isValid() {
@@ -165,7 +172,9 @@ public final class CivicLocation implements Parcelable {
             return false;
         }
         for (int i = 0; i < size; i++) {
-            if (!sa1.valueAt(i).equals(sa2.valueAt(i))) {
+            String sa1Value = sa1.valueAt(i);
+            String sa2Value = sa2.valueAt(i);
+            if (!sa1Value.equals(sa2Value)) {
                 return false;
             }
         }

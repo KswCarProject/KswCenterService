@@ -8,16 +8,13 @@ import java.util.Map;
 import java.util.Set;
 import libcore.util.EmptyArray;
 
+/* loaded from: classes4.dex */
 public final class ArrayMap<K, V> implements Map<K, V> {
     private static final int BASE_SIZE = 4;
     @UnsupportedAppUsage(maxTargetSdk = 28)
     private static final int CACHE_SIZE = 10;
     private static final boolean CONCURRENT_MODIFICATION_EXCEPTIONS = true;
     private static final boolean DEBUG = false;
-    @UnsupportedAppUsage(maxTargetSdk = 28)
-    public static final ArrayMap EMPTY = new ArrayMap(-1);
-    @UnsupportedAppUsage(maxTargetSdk = 28)
-    static final int[] EMPTY_IMMUTABLE_INTS = new int[0];
     private static final String TAG = "ArrayMap";
     @UnsupportedAppUsage(maxTargetSdk = 28)
     static Object[] mBaseCache;
@@ -35,6 +32,10 @@ public final class ArrayMap<K, V> implements Map<K, V> {
     final boolean mIdentityHashCode;
     @UnsupportedAppUsage(maxTargetSdk = 28)
     int mSize;
+    @UnsupportedAppUsage(maxTargetSdk = 28)
+    static final int[] EMPTY_IMMUTABLE_INTS = new int[0];
+    @UnsupportedAppUsage(maxTargetSdk = 28)
+    public static final ArrayMap EMPTY = new ArrayMap(-1);
 
     private static int binarySearchHashes(int[] hashes, int N, int hash) {
         try {
@@ -44,15 +45,17 @@ public final class ArrayMap<K, V> implements Map<K, V> {
         }
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage(maxTargetSdk = 28)
-    public int indexOf(Object key, int hash) {
+    int indexOf(Object key, int hash) {
         int N = this.mSize;
         if (N == 0) {
             return -1;
         }
         int index = binarySearchHashes(this.mHashes, N, hash);
-        if (index < 0 || key.equals(this.mArray[index << 1])) {
+        if (index < 0) {
+            return index;
+        }
+        if (key.equals(this.mArray[index << 1])) {
             return index;
         }
         int end = index + 1;
@@ -62,25 +65,26 @@ public final class ArrayMap<K, V> implements Map<K, V> {
             }
             end++;
         }
-        int i = index - 1;
-        while (i >= 0 && this.mHashes[i] == hash) {
+        for (int i = index - 1; i >= 0 && this.mHashes[i] == hash; i--) {
             if (key.equals(this.mArray[i << 1])) {
                 return i;
             }
-            i--;
         }
-        return ~end;
+        int i2 = ~end;
+        return i2;
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage(maxTargetSdk = 28)
-    public int indexOfNull() {
+    int indexOfNull() {
         int N = this.mSize;
         if (N == 0) {
             return -1;
         }
         int index = binarySearchHashes(this.mHashes, N, 0);
-        if (index < 0 || this.mArray[index << 1] == null) {
+        if (index < 0) {
+            return index;
+        }
+        if (this.mArray[index << 1] == null) {
             return index;
         }
         int end = index + 1;
@@ -90,51 +94,49 @@ public final class ArrayMap<K, V> implements Map<K, V> {
             }
             end++;
         }
-        int i = index - 1;
-        while (i >= 0 && this.mHashes[i] == 0) {
+        for (int i = index - 1; i >= 0 && this.mHashes[i] == 0; i--) {
             if (this.mArray[i << 1] == null) {
                 return i;
             }
-            i--;
         }
-        return ~end;
+        int i2 = ~end;
+        return i2;
     }
 
     @UnsupportedAppUsage(maxTargetSdk = 28)
     private void allocArrays(int size) {
-        if (this.mHashes != EMPTY_IMMUTABLE_INTS) {
-            if (size == 8) {
-                synchronized (ArrayMap.class) {
-                    if (mTwiceBaseCache != null) {
-                        Object[] array = mTwiceBaseCache;
-                        this.mArray = array;
-                        mTwiceBaseCache = (Object[]) array[0];
-                        this.mHashes = (int[]) array[1];
-                        array[1] = null;
-                        array[0] = null;
-                        mTwiceBaseCacheSize--;
-                        return;
-                    }
-                }
-            } else if (size == 4) {
-                synchronized (ArrayMap.class) {
-                    if (mBaseCache != null) {
-                        Object[] array2 = mBaseCache;
-                        this.mArray = array2;
-                        mBaseCache = (Object[]) array2[0];
-                        this.mHashes = (int[]) array2[1];
-                        array2[1] = null;
-                        array2[0] = null;
-                        mBaseCacheSize--;
-                        return;
-                    }
+        if (this.mHashes == EMPTY_IMMUTABLE_INTS) {
+            throw new UnsupportedOperationException("ArrayMap is immutable");
+        }
+        if (size == 8) {
+            synchronized (ArrayMap.class) {
+                if (mTwiceBaseCache != null) {
+                    Object[] array = mTwiceBaseCache;
+                    this.mArray = array;
+                    mTwiceBaseCache = (Object[]) array[0];
+                    this.mHashes = (int[]) array[1];
+                    array[1] = null;
+                    array[0] = null;
+                    mTwiceBaseCacheSize--;
+                    return;
                 }
             }
-            this.mHashes = new int[size];
-            this.mArray = new Object[(size << 1)];
-            return;
+        } else if (size == 4) {
+            synchronized (ArrayMap.class) {
+                if (mBaseCache != null) {
+                    Object[] array2 = mBaseCache;
+                    this.mArray = array2;
+                    mBaseCache = (Object[]) array2[0];
+                    this.mHashes = (int[]) array2[1];
+                    array2[1] = null;
+                    array2[0] = null;
+                    mBaseCacheSize--;
+                    return;
+                }
+            }
         }
-        throw new UnsupportedOperationException("ArrayMap is immutable");
+        this.mHashes = new int[size];
+        this.mArray = new Object[size << 1];
     }
 
     @UnsupportedAppUsage(maxTargetSdk = 28)
@@ -188,13 +190,15 @@ public final class ArrayMap<K, V> implements Map<K, V> {
         this.mSize = 0;
     }
 
+    /* JADX WARN: Multi-variable type inference failed */
     public ArrayMap(ArrayMap<K, V> map) {
         this();
-        if (map != null) {
-            putAll(map);
+        if (map != 0) {
+            putAll((ArrayMap) map);
         }
     }
 
+    @Override // java.util.Map
     public void clear() {
         if (this.mSize > 0) {
             int[] ohashes = this.mHashes;
@@ -238,6 +242,7 @@ public final class ArrayMap<K, V> implements Map<K, V> {
         }
     }
 
+    @Override // java.util.Map
     public boolean containsKey(Object key) {
         return indexOfKey(key) >= 0;
     }
@@ -255,76 +260,82 @@ public final class ArrayMap<K, V> implements Map<K, V> {
         int i = 1;
         if (value == null) {
             while (i < N) {
-                if (array[i] == null) {
+                if (array[i] != null) {
+                    i += 2;
+                } else {
                     return i >> 1;
                 }
-                i += 2;
             }
             return -1;
         }
         while (i < N) {
-            if (value.equals(array[i])) {
+            if (!value.equals(array[i])) {
+                i += 2;
+            } else {
                 return i >> 1;
             }
-            i += 2;
         }
         return -1;
     }
 
+    @Override // java.util.Map
     public boolean containsValue(Object value) {
         return indexOfValue(value) >= 0;
     }
 
+    @Override // java.util.Map
     public V get(Object key) {
         int index = indexOfKey(key);
         if (index >= 0) {
-            return this.mArray[(index << 1) + 1];
+            return (V) this.mArray[(index << 1) + 1];
         }
         return null;
     }
 
     public K keyAt(int index) {
-        if (index < this.mSize || !UtilConfig.sThrowExceptionForUpperArrayOutOfBounds) {
-            return this.mArray[index << 1];
+        if (index >= this.mSize && UtilConfig.sThrowExceptionForUpperArrayOutOfBounds) {
+            throw new ArrayIndexOutOfBoundsException(index);
         }
-        throw new ArrayIndexOutOfBoundsException(index);
+        return (K) this.mArray[index << 1];
     }
 
     public V valueAt(int index) {
-        if (index < this.mSize || !UtilConfig.sThrowExceptionForUpperArrayOutOfBounds) {
-            return this.mArray[(index << 1) + 1];
+        if (index >= this.mSize && UtilConfig.sThrowExceptionForUpperArrayOutOfBounds) {
+            throw new ArrayIndexOutOfBoundsException(index);
         }
-        throw new ArrayIndexOutOfBoundsException(index);
+        return (V) this.mArray[(index << 1) + 1];
     }
 
     public V setValueAt(int index, V value) {
-        if (index < this.mSize || !UtilConfig.sThrowExceptionForUpperArrayOutOfBounds) {
-            int index2 = (index << 1) + 1;
-            V old = this.mArray[index2];
-            this.mArray[index2] = value;
-            return old;
+        if (index >= this.mSize && UtilConfig.sThrowExceptionForUpperArrayOutOfBounds) {
+            throw new ArrayIndexOutOfBoundsException(index);
         }
-        throw new ArrayIndexOutOfBoundsException(index);
+        int index2 = (index << 1) + 1;
+        V old = (V) this.mArray[index2];
+        this.mArray[index2] = value;
+        return old;
     }
 
+    @Override // java.util.Map
     public boolean isEmpty() {
         return this.mSize <= 0;
     }
 
+    @Override // java.util.Map
     public V put(K key, V value) {
-        int index;
         int hash;
+        int index;
         int osize = this.mSize;
         if (key == null) {
             hash = 0;
             index = indexOfNull();
         } else {
-            hash = this.mIdentityHashCode != 0 ? System.identityHashCode(key) : key.hashCode();
+            hash = this.mIdentityHashCode ? System.identityHashCode(key) : key.hashCode();
             index = indexOf(key, hash);
         }
         if (index >= 0) {
             int index2 = (index << 1) + 1;
-            V old = this.mArray[index2];
+            V old = (V) this.mArray[index2];
             this.mArray[index2] = value;
             return old;
         }
@@ -339,15 +350,14 @@ public final class ArrayMap<K, V> implements Map<K, V> {
             int[] ohashes = this.mHashes;
             Object[] oarray = this.mArray;
             allocArrays(n);
-            if (osize == this.mSize) {
-                if (this.mHashes.length > 0) {
-                    System.arraycopy(ohashes, 0, this.mHashes, 0, ohashes.length);
-                    System.arraycopy(oarray, 0, this.mArray, 0, oarray.length);
-                }
-                freeArrays(ohashes, oarray, osize);
-            } else {
+            if (osize != this.mSize) {
                 throw new ConcurrentModificationException();
             }
+            if (this.mHashes.length > 0) {
+                System.arraycopy(ohashes, 0, this.mHashes, 0, ohashes.length);
+                System.arraycopy(oarray, 0, this.mArray, 0, oarray.length);
+            }
+            freeArrays(ohashes, oarray, osize);
         }
         if (index3 < osize) {
             System.arraycopy(this.mHashes, index3, this.mHashes, index3 + 1, osize - index3);
@@ -374,45 +384,44 @@ public final class ArrayMap<K, V> implements Map<K, V> {
         }
         if (index >= this.mHashes.length) {
             throw new IllegalStateException("Array is full");
-        } else if (index <= 0 || this.mHashes[index - 1] <= hash) {
-            this.mSize = index + 1;
-            this.mHashes[index] = hash;
-            int index2 = index << 1;
-            this.mArray[index2] = key;
-            this.mArray[index2 + 1] = value;
-        } else {
+        }
+        if (index > 0 && this.mHashes[index - 1] > hash) {
             RuntimeException e = new RuntimeException("here");
             e.fillInStackTrace();
-            Log.w(TAG, "New hash " + hash + " is before end of array hash " + this.mHashes[index - 1] + " at index " + index + " key " + key, e);
+            Log.m63w(TAG, "New hash " + hash + " is before end of array hash " + this.mHashes[index - 1] + " at index " + index + " key " + key, e);
             put(key, value);
+            return;
         }
+        this.mSize = index + 1;
+        this.mHashes[index] = hash;
+        int index2 = index << 1;
+        this.mArray[index2] = key;
+        this.mArray[index2 + 1] = value;
     }
 
     public void validate() {
         int N = this.mSize;
-        if (N > 1) {
-            int basehash = this.mHashes[0];
-            int basei = 0;
-            for (int i = 1; i < N; i++) {
-                int hash = this.mHashes[i];
-                if (hash != basehash) {
-                    basehash = hash;
-                    basei = i;
-                } else {
-                    Object cur = this.mArray[i << 1];
-                    int j = i - 1;
-                    while (j >= basei) {
-                        Object prev = this.mArray[j << 1];
-                        if (cur == prev) {
-                            throw new IllegalArgumentException("Duplicate key in ArrayMap: " + cur);
-                        } else if (cur == null || prev == null || !cur.equals(prev)) {
-                            j--;
-                        } else {
-                            throw new IllegalArgumentException("Duplicate key in ArrayMap: " + cur);
-                        }
+        if (N <= 1) {
+            return;
+        }
+        int basehash = this.mHashes[0];
+        int basei = 0;
+        for (int i = 1; i < N; i++) {
+            int hash = this.mHashes[i];
+            if (hash != basehash) {
+                basehash = hash;
+                basei = i;
+            } else {
+                Object cur = this.mArray[i << 1];
+                for (int j = i - 1; j >= basei; j--) {
+                    Object prev = this.mArray[j << 1];
+                    if (cur == prev) {
+                        throw new IllegalArgumentException("Duplicate key in ArrayMap: " + cur);
+                    } else if (cur != null && prev != null && cur.equals(prev)) {
+                        throw new IllegalArgumentException("Duplicate key in ArrayMap: " + cur);
                     }
-                    continue;
                 }
+                continue;
             }
         }
     }
@@ -421,23 +430,27 @@ public final class ArrayMap<K, V> implements Map<K, V> {
         int N = array.mSize;
         ensureCapacity(this.mSize + N);
         int i = 0;
-        if (this.mSize != 0) {
-            while (true) {
-                int i2 = i;
-                if (i2 < N) {
-                    put(array.keyAt(i2), array.valueAt(i2));
-                    i = i2 + 1;
-                } else {
-                    return;
-                }
+        if (this.mSize == 0) {
+            if (N > 0) {
+                System.arraycopy(array.mHashes, 0, this.mHashes, 0, N);
+                System.arraycopy(array.mArray, 0, this.mArray, 0, N << 1);
+                this.mSize = N;
+                return;
             }
-        } else if (N > 0) {
-            System.arraycopy(array.mHashes, 0, this.mHashes, 0, N);
-            System.arraycopy(array.mArray, 0, this.mArray, 0, N << 1);
-            this.mSize = N;
+            return;
+        }
+        while (true) {
+            int i2 = i;
+            if (i2 < N) {
+                put(array.keyAt(i2), array.valueAt(i2));
+                i = i2 + 1;
+            } else {
+                return;
+            }
         }
     }
 
+    @Override // java.util.Map
     public V remove(Object key) {
         int index = indexOfKey(key);
         if (index >= 0) {
@@ -448,96 +461,92 @@ public final class ArrayMap<K, V> implements Map<K, V> {
 
     public V removeAt(int index) {
         int nsize;
-        if (index < this.mSize || !UtilConfig.sThrowExceptionForUpperArrayOutOfBounds) {
-            Object old = this.mArray[(index << 1) + 1];
-            int osize = this.mSize;
-            if (osize <= 1) {
-                int[] ohashes = this.mHashes;
-                Object[] oarray = this.mArray;
-                this.mHashes = EmptyArray.INT;
-                this.mArray = EmptyArray.OBJECT;
-                freeArrays(ohashes, oarray, osize);
-                nsize = 0;
-            } else {
-                int nsize2 = osize - 1;
-                int i = 8;
-                if (this.mHashes.length <= 8 || this.mSize >= this.mHashes.length / 3) {
-                    if (index < nsize2) {
-                        System.arraycopy(this.mHashes, index + 1, this.mHashes, index, nsize2 - index);
-                        System.arraycopy(this.mArray, (index + 1) << 1, this.mArray, index << 1, (nsize2 - index) << 1);
-                    }
-                    this.mArray[nsize2 << 1] = null;
-                    this.mArray[(nsize2 << 1) + 1] = null;
-                } else {
-                    if (osize > 8) {
-                        i = osize + (osize >> 1);
-                    }
-                    int n = i;
-                    int[] ohashes2 = this.mHashes;
-                    Object[] oarray2 = this.mArray;
-                    allocArrays(n);
-                    if (osize == this.mSize) {
-                        if (index > 0) {
-                            System.arraycopy(ohashes2, 0, this.mHashes, 0, index);
-                            System.arraycopy(oarray2, 0, this.mArray, 0, index << 1);
-                        }
-                        if (index < nsize2) {
-                            System.arraycopy(ohashes2, index + 1, this.mHashes, index, nsize2 - index);
-                            System.arraycopy(oarray2, (index + 1) << 1, this.mArray, index << 1, (nsize2 - index) << 1);
-                        }
-                    } else {
-                        throw new ConcurrentModificationException();
-                    }
+        if (index >= this.mSize && UtilConfig.sThrowExceptionForUpperArrayOutOfBounds) {
+            throw new ArrayIndexOutOfBoundsException(index);
+        }
+        V v = (V) this.mArray[(index << 1) + 1];
+        int osize = this.mSize;
+        if (osize <= 1) {
+            int[] ohashes = this.mHashes;
+            Object[] oarray = this.mArray;
+            this.mHashes = EmptyArray.INT;
+            this.mArray = EmptyArray.OBJECT;
+            freeArrays(ohashes, oarray, osize);
+            nsize = 0;
+        } else {
+            int nsize2 = osize - 1;
+            if (this.mHashes.length > 8 && this.mSize < this.mHashes.length / 3) {
+                int n = osize > 8 ? osize + (osize >> 1) : 8;
+                int[] ohashes2 = this.mHashes;
+                Object[] oarray2 = this.mArray;
+                allocArrays(n);
+                if (osize != this.mSize) {
+                    throw new ConcurrentModificationException();
                 }
-                nsize = nsize2;
+                if (index > 0) {
+                    System.arraycopy(ohashes2, 0, this.mHashes, 0, index);
+                    System.arraycopy(oarray2, 0, this.mArray, 0, index << 1);
+                }
+                if (index < nsize2) {
+                    System.arraycopy(ohashes2, index + 1, this.mHashes, index, nsize2 - index);
+                    System.arraycopy(oarray2, (index + 1) << 1, this.mArray, index << 1, (nsize2 - index) << 1);
+                }
+            } else {
+                if (index < nsize2) {
+                    System.arraycopy(this.mHashes, index + 1, this.mHashes, index, nsize2 - index);
+                    System.arraycopy(this.mArray, (index + 1) << 1, this.mArray, index << 1, (nsize2 - index) << 1);
+                }
+                this.mArray[nsize2 << 1] = null;
+                this.mArray[(nsize2 << 1) + 1] = null;
             }
-            if (osize == this.mSize) {
-                this.mSize = nsize;
-                return old;
-            }
+            nsize = nsize2;
+        }
+        if (osize != this.mSize) {
             throw new ConcurrentModificationException();
         }
-        throw new ArrayIndexOutOfBoundsException(index);
+        this.mSize = nsize;
+        return v;
     }
 
+    @Override // java.util.Map
     public int size() {
         return this.mSize;
     }
 
+    @Override // java.util.Map
     public boolean equals(Object object) {
         if (this == object) {
             return true;
         }
-        if (!(object instanceof Map)) {
-            return false;
-        }
-        Map<?, ?> map = (Map) object;
-        if (size() != map.size()) {
-            return false;
-        }
-        int i = 0;
-        while (i < this.mSize) {
-            try {
-                K key = keyAt(i);
-                V mine = valueAt(i);
-                Object theirs = map.get(key);
-                if (mine == null) {
-                    if (theirs != null || !map.containsKey(key)) {
-                        return false;
-                    }
-                } else if (!mine.equals(theirs)) {
-                    return false;
-                }
-                i++;
-            } catch (NullPointerException e) {
-                return false;
-            } catch (ClassCastException e2) {
+        if (object instanceof Map) {
+            Map<?, ?> map = (Map) object;
+            if (size() != map.size()) {
                 return false;
             }
+            for (int i = 0; i < this.mSize; i++) {
+                try {
+                    K key = keyAt(i);
+                    V mine = valueAt(i);
+                    Object theirs = map.get(key);
+                    if (mine == null) {
+                        if (theirs != null || !map.containsKey(key)) {
+                            return false;
+                        }
+                    } else if (!mine.equals(theirs)) {
+                        return false;
+                    }
+                } catch (ClassCastException e) {
+                    return false;
+                } catch (NullPointerException e2) {
+                    return false;
+                }
+            }
+            return true;
         }
-        return true;
+        return false;
     }
 
+    @Override // java.util.Map
     public int hashCode() {
         int[] hashes = this.mHashes;
         Object[] array = this.mArray;
@@ -584,49 +593,49 @@ public final class ArrayMap<K, V> implements Map<K, V> {
 
     private MapCollections<K, V> getCollection() {
         if (this.mCollections == null) {
-            this.mCollections = new MapCollections<K, V>() {
-                /* access modifiers changed from: protected */
-                public int colGetSize() {
+            this.mCollections = new MapCollections<K, V>() { // from class: android.util.ArrayMap.1
+                @Override // android.util.MapCollections
+                protected int colGetSize() {
                     return ArrayMap.this.mSize;
                 }
 
-                /* access modifiers changed from: protected */
-                public Object colGetEntry(int index, int offset) {
+                @Override // android.util.MapCollections
+                protected Object colGetEntry(int index, int offset) {
                     return ArrayMap.this.mArray[(index << 1) + offset];
                 }
 
-                /* access modifiers changed from: protected */
-                public int colIndexOfKey(Object key) {
+                @Override // android.util.MapCollections
+                protected int colIndexOfKey(Object key) {
                     return ArrayMap.this.indexOfKey(key);
                 }
 
-                /* access modifiers changed from: protected */
-                public int colIndexOfValue(Object value) {
+                @Override // android.util.MapCollections
+                protected int colIndexOfValue(Object value) {
                     return ArrayMap.this.indexOfValue(value);
                 }
 
-                /* access modifiers changed from: protected */
-                public Map<K, V> colGetMap() {
+                @Override // android.util.MapCollections
+                protected Map<K, V> colGetMap() {
                     return ArrayMap.this;
                 }
 
-                /* access modifiers changed from: protected */
-                public void colPut(K key, V value) {
+                @Override // android.util.MapCollections
+                protected void colPut(K key, V value) {
                     ArrayMap.this.put(key, value);
                 }
 
-                /* access modifiers changed from: protected */
-                public V colSetValue(int index, V value) {
-                    return ArrayMap.this.setValueAt(index, value);
+                @Override // android.util.MapCollections
+                protected V colSetValue(int index, V value) {
+                    return (V) ArrayMap.this.setValueAt(index, value);
                 }
 
-                /* access modifiers changed from: protected */
-                public void colRemoveAt(int index) {
+                @Override // android.util.MapCollections
+                protected void colRemoveAt(int index) {
                     ArrayMap.this.removeAt(index);
                 }
 
-                /* access modifiers changed from: protected */
-                public void colClear() {
+                @Override // android.util.MapCollections
+                protected void colClear() {
                     ArrayMap.this.clear();
                 }
             };
@@ -638,6 +647,7 @@ public final class ArrayMap<K, V> implements Map<K, V> {
         return MapCollections.containsAllHelper(this, collection);
     }
 
+    @Override // java.util.Map
     public void putAll(Map<? extends K, ? extends V> map) {
         ensureCapacity(this.mSize + map.size());
         for (Map.Entry<? extends K, ? extends V> entry : map.entrySet()) {
@@ -653,14 +663,17 @@ public final class ArrayMap<K, V> implements Map<K, V> {
         return MapCollections.retainAllHelper(this, collection);
     }
 
+    @Override // java.util.Map
     public Set<Map.Entry<K, V>> entrySet() {
         return getCollection().getEntrySet();
     }
 
+    @Override // java.util.Map
     public Set<K> keySet() {
         return getCollection().getKeySet();
     }
 
+    @Override // java.util.Map
     public Collection<V> values() {
         return getCollection().getValues();
     }

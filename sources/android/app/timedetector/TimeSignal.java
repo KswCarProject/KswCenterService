@@ -1,17 +1,22 @@
 package android.app.timedetector;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.format.DateFormat;
 import android.util.TimestampedValue;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public final class TimeSignal implements Parcelable {
-    public static final Parcelable.Creator<TimeSignal> CREATOR = new Parcelable.Creator<TimeSignal>() {
+    public static final Parcelable.Creator<TimeSignal> CREATOR = new Parcelable.Creator<TimeSignal>() { // from class: android.app.timedetector.TimeSignal.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public TimeSignal createFromParcel(Parcel in) {
             return TimeSignal.createFromParcel(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public TimeSignal[] newArray(int size) {
             return new TimeSignal[size];
         }
@@ -20,33 +25,24 @@ public final class TimeSignal implements Parcelable {
     private final String mSourceId;
     private final TimestampedValue<Long> mUtcTime;
 
-    /* JADX WARNING: type inference failed for: r3v0, types: [android.util.TimestampedValue<java.lang.Long>, java.lang.Object] */
-    /* JADX WARNING: Unknown variable types count: 1 */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public TimeSignal(java.lang.String r2, android.util.TimestampedValue<java.lang.Long> r3) {
-        /*
-            r1 = this;
-            r1.<init>()
-            java.lang.Object r0 = java.util.Objects.requireNonNull(r2)
-            java.lang.String r0 = (java.lang.String) r0
-            r1.mSourceId = r0
-            java.lang.Object r0 = java.util.Objects.requireNonNull(r3)
-            android.util.TimestampedValue r0 = (android.util.TimestampedValue) r0
-            r1.mUtcTime = r0
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.app.timedetector.TimeSignal.<init>(java.lang.String, android.util.TimestampedValue):void");
+    public TimeSignal(String sourceId, TimestampedValue<Long> utcTime) {
+        this.mSourceId = (String) Objects.requireNonNull(sourceId);
+        this.mUtcTime = (TimestampedValue) Objects.requireNonNull(utcTime);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static TimeSignal createFromParcel(Parcel in) {
-        return new TimeSignal(in.readString(), TimestampedValue.readFromParcel(in, (ClassLoader) null, Long.class));
+        String sourceId = in.readString();
+        TimestampedValue<Long> utcTime = TimestampedValue.readFromParcel(in, null, Long.class);
+        return new TimeSignal(sourceId, utcTime);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.mSourceId);
         TimestampedValue.writeToParcel(dest, this.mUtcTime);
@@ -68,14 +64,14 @@ public final class TimeSignal implements Parcelable {
             return false;
         }
         TimeSignal that = (TimeSignal) o;
-        if (!Objects.equals(this.mSourceId, that.mSourceId) || !Objects.equals(this.mUtcTime, that.mUtcTime)) {
-            return false;
+        if (Objects.equals(this.mSourceId, that.mSourceId) && Objects.equals(this.mUtcTime, that.mUtcTime)) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{this.mSourceId, this.mUtcTime});
+        return Objects.hash(this.mSourceId, this.mUtcTime);
     }
 
     public String toString() {

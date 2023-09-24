@@ -3,22 +3,18 @@ package android.media;
 import android.annotation.SystemApi;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
-import android.os.Bundle;
-import android.os.Handler;
+import android.p007os.Bundle;
+import android.p007os.Handler;
 
+/* loaded from: classes3.dex */
 public final class AudioFocusRequest {
-    /* access modifiers changed from: private */
-    public static final AudioAttributes FOCUS_DEFAULT_ATTR = new AudioAttributes.Builder().setUsage(1).build();
+    private static final AudioAttributes FOCUS_DEFAULT_ATTR = new AudioAttributes.Builder().setUsage(1).build();
     public static final String KEY_ACCESSIBILITY_FORCE_FOCUS_DUCKING = "a11y_force_ducking";
-    /* access modifiers changed from: private */
-    public final AudioAttributes mAttr;
+    private final AudioAttributes mAttr;
     private final int mFlags;
-    /* access modifiers changed from: private */
-    public final int mFocusGain;
-    /* access modifiers changed from: private */
-    public final AudioManager.OnAudioFocusChangeListener mFocusListener;
-    /* access modifiers changed from: private */
-    public final Handler mListenerHandler;
+    private final int mFocusGain;
+    private final AudioManager.OnAudioFocusChangeListener mFocusListener;
+    private final Handler mListenerHandler;
 
     private AudioFocusRequest(AudioManager.OnAudioFocusChangeListener listener, Handler handler, AudioAttributes attr, int focusGain, int flags) {
         this.mFocusListener = listener;
@@ -69,26 +65,36 @@ public final class AudioFocusRequest {
         return (this.mFlags & 4) == 4;
     }
 
-    /* access modifiers changed from: package-private */
-    public int getFlags() {
+    int getFlags() {
         return this.mFlags;
     }
 
+    /* loaded from: classes3.dex */
     public static final class Builder {
-        private boolean mA11yForceDucking = false;
-        private AudioAttributes mAttr = AudioFocusRequest.FOCUS_DEFAULT_ATTR;
-        private boolean mDelayedFocus = false;
+        private boolean mA11yForceDucking;
+        private AudioAttributes mAttr;
+        private boolean mDelayedFocus;
         private int mFocusGain;
         private AudioManager.OnAudioFocusChangeListener mFocusListener;
-        private boolean mFocusLocked = false;
+        private boolean mFocusLocked;
         private Handler mListenerHandler;
-        private boolean mPausesOnDuck = false;
+        private boolean mPausesOnDuck;
 
         public Builder(int focusGain) {
+            this.mAttr = AudioFocusRequest.FOCUS_DEFAULT_ATTR;
+            this.mPausesOnDuck = false;
+            this.mDelayedFocus = false;
+            this.mFocusLocked = false;
+            this.mA11yForceDucking = false;
             setFocusGain(focusGain);
         }
 
         public Builder(AudioFocusRequest requestToCopy) {
+            this.mAttr = AudioFocusRequest.FOCUS_DEFAULT_ATTR;
+            this.mPausesOnDuck = false;
+            this.mDelayedFocus = false;
+            this.mFocusLocked = false;
+            this.mA11yForceDucking = false;
             if (requestToCopy != null) {
                 this.mAttr = requestToCopy.mAttr;
                 this.mFocusListener = requestToCopy.mFocusListener;
@@ -102,24 +108,23 @@ public final class AudioFocusRequest {
         }
 
         public Builder setFocusGain(int focusGain) {
-            if (AudioFocusRequest.isValidFocusGain(focusGain)) {
-                this.mFocusGain = focusGain;
-                return this;
+            if (!AudioFocusRequest.isValidFocusGain(focusGain)) {
+                throw new IllegalArgumentException("Illegal audio focus gain type " + focusGain);
             }
-            throw new IllegalArgumentException("Illegal audio focus gain type " + focusGain);
+            this.mFocusGain = focusGain;
+            return this;
         }
 
         public Builder setOnAudioFocusChangeListener(AudioManager.OnAudioFocusChangeListener listener) {
-            if (listener != null) {
-                this.mFocusListener = listener;
-                this.mListenerHandler = null;
-                return this;
+            if (listener == null) {
+                throw new NullPointerException("Illegal null focus listener");
             }
-            throw new NullPointerException("Illegal null focus listener");
+            this.mFocusListener = listener;
+            this.mListenerHandler = null;
+            return this;
         }
 
-        /* access modifiers changed from: package-private */
-        public Builder setOnAudioFocusChangeListenerInt(AudioManager.OnAudioFocusChangeListener listener, Handler handler) {
+        Builder setOnAudioFocusChangeListenerInt(AudioManager.OnAudioFocusChangeListener listener, Handler handler) {
             this.mFocusListener = listener;
             this.mListenerHandler = handler;
             return this;
@@ -135,11 +140,11 @@ public final class AudioFocusRequest {
         }
 
         public Builder setAudioAttributes(AudioAttributes attributes) {
-            if (attributes != null) {
-                this.mAttr = attributes;
-                return this;
+            if (attributes == null) {
+                throw new NullPointerException("Illegal null AudioAttributes");
             }
-            throw new NullPointerException("Illegal null AudioAttributes");
+            this.mAttr = attributes;
+            return this;
         }
 
         public Builder setWillPauseWhenDucked(boolean pauseOnDuck) {
@@ -177,12 +182,8 @@ public final class AudioFocusRequest {
                 extraInfo.putBoolean(AudioFocusRequest.KEY_ACCESSIBILITY_FORCE_FOCUS_DUCKING, true);
                 this.mAttr = new AudioAttributes.Builder(this.mAttr).addBundle(extraInfo).build();
             }
-            int i = 0;
-            int i2 = this.mDelayedFocus | 0 | (this.mPausesOnDuck ? 2 : 0);
-            if (this.mFocusLocked) {
-                i = 4;
-            }
-            return new AudioFocusRequest(this.mFocusListener, this.mListenerHandler, this.mAttr, this.mFocusGain, (int) (i2 | i));
+            int flags = (this.mDelayedFocus ? 1 : 0) | 0 | (this.mPausesOnDuck ? 2 : 0) | (this.mFocusLocked ? 4 : 0);
+            return new AudioFocusRequest(this.mFocusListener, this.mListenerHandler, this.mAttr, this.mFocusGain, flags);
         }
     }
 }

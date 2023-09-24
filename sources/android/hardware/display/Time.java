@@ -1,15 +1,20 @@
 package android.hardware.display;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.time.LocalTime;
 
+/* loaded from: classes.dex */
 public final class Time implements Parcelable {
-    public static final Parcelable.Creator<Time> CREATOR = new Parcelable.Creator<Time>() {
+    public static final Parcelable.Creator<Time> CREATOR = new Parcelable.Creator<Time>() { // from class: android.hardware.display.Time.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Time createFromParcel(Parcel source) {
             return new Time(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Time[] newArray(int size) {
             return new Time[size];
         }
@@ -33,10 +38,12 @@ public final class Time implements Parcelable {
         this.mNano = parcel.readInt();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int parcelableFlags) {
         parcel.writeInt(this.mHour);
         parcel.writeInt(this.mMinute);

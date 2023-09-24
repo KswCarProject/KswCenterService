@@ -2,6 +2,7 @@ package android.net.lowpan;
 
 import java.util.Map;
 
+/* loaded from: classes3.dex */
 public abstract class LowpanProperty<T> {
     public abstract String getName();
 
@@ -12,6 +13,6 @@ public abstract class LowpanProperty<T> {
     }
 
     public T getFromMap(Map map) {
-        return map.get(getName());
+        return (T) map.get(getName());
     }
 }

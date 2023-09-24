@@ -1,15 +1,18 @@
 package android.hardware.location;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.Log;
 
+/* loaded from: classes.dex */
 public final class GeofenceHardwareRequestParcelable implements Parcelable {
-    public static final Parcelable.Creator<GeofenceHardwareRequestParcelable> CREATOR = new Parcelable.Creator<GeofenceHardwareRequestParcelable>() {
+    public static final Parcelable.Creator<GeofenceHardwareRequestParcelable> CREATOR = new Parcelable.Creator<GeofenceHardwareRequestParcelable>() { // from class: android.hardware.location.GeofenceHardwareRequestParcelable.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public GeofenceHardwareRequestParcelable createFromParcel(Parcel parcel) {
             int geofenceType = parcel.readInt();
             if (geofenceType != 0) {
-                Log.e("GeofenceHardwareRequest", String.format("Invalid Geofence type: %d", new Object[]{Integer.valueOf(geofenceType)}));
+                Log.m70e("GeofenceHardwareRequest", String.format("Invalid Geofence type: %d", Integer.valueOf(geofenceType)));
                 return null;
             }
             GeofenceHardwareRequest request = GeofenceHardwareRequest.createCircularGeofence(parcel.readDouble(), parcel.readDouble(), parcel.readDouble());
@@ -18,9 +21,12 @@ public final class GeofenceHardwareRequestParcelable implements Parcelable {
             request.setUnknownTimer(parcel.readInt());
             request.setNotificationResponsiveness(parcel.readInt());
             request.setSourceTechnologies(parcel.readInt());
-            return new GeofenceHardwareRequestParcelable(parcel.readInt(), request);
+            int id = parcel.readInt();
+            return new GeofenceHardwareRequestParcelable(id, request);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public GeofenceHardwareRequestParcelable[] newArray(int size) {
             return new GeofenceHardwareRequestParcelable[size];
         }
@@ -65,13 +71,11 @@ public final class GeofenceHardwareRequestParcelable implements Parcelable {
         return this.mRequest.getLastTransition();
     }
 
-    /* access modifiers changed from: package-private */
-    public int getType() {
+    int getType() {
         return this.mRequest.getType();
     }
 
-    /* access modifiers changed from: package-private */
-    public int getSourceTechnologies() {
+    int getSourceTechnologies() {
         return this.mRequest.getSourceTechnologies();
     }
 
@@ -79,10 +83,12 @@ public final class GeofenceHardwareRequestParcelable implements Parcelable {
         return "id=" + this.mId + ", type=" + this.mRequest.getType() + ", latitude=" + this.mRequest.getLatitude() + ", longitude=" + this.mRequest.getLongitude() + ", radius=" + this.mRequest.getRadius() + ", lastTransition=" + this.mRequest.getLastTransition() + ", unknownTimer=" + this.mRequest.getUnknownTimer() + ", monitorTransitions=" + this.mRequest.getMonitorTransitions() + ", notificationResponsiveness=" + this.mRequest.getNotificationResponsiveness() + ", sourceTechnologies=" + this.mRequest.getSourceTechnologies();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeInt(getType());
         parcel.writeDouble(getLatitude());

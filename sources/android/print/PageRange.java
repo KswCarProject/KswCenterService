@@ -1,16 +1,21 @@
 package android.print;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes3.dex */
 public final class PageRange implements Parcelable {
     public static final PageRange ALL_PAGES = new PageRange(0, Integer.MAX_VALUE);
     public static final PageRange[] ALL_PAGES_ARRAY = {ALL_PAGES};
-    public static final Parcelable.Creator<PageRange> CREATOR = new Parcelable.Creator<PageRange>() {
+    public static final Parcelable.Creator<PageRange> CREATOR = new Parcelable.Creator<PageRange>() { // from class: android.print.PageRange.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PageRange createFromParcel(Parcel parcel) {
             return new PageRange(parcel);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PageRange[] newArray(int size) {
             return new PageRange[size];
         }
@@ -21,14 +26,15 @@ public final class PageRange implements Parcelable {
     public PageRange(int start, int end) {
         if (start < 0) {
             throw new IllegalArgumentException("start cannot be less than zero.");
-        } else if (end < 0) {
+        }
+        if (end < 0) {
             throw new IllegalArgumentException("end cannot be less than zero.");
-        } else if (start <= end) {
-            this.mStart = start;
-            this.mEnd = end;
-        } else {
+        }
+        if (start > end) {
             throw new IllegalArgumentException("start must be lesser than end.");
         }
+        this.mStart = start;
+        this.mEnd = end;
     }
 
     private PageRange(Parcel parcel) {
@@ -51,17 +57,20 @@ public final class PageRange implements Parcelable {
         return (this.mEnd - this.mStart) + 1;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeInt(this.mStart);
         parcel.writeInt(this.mEnd);
     }
 
     public int hashCode() {
-        return (((1 * 31) + this.mEnd) * 31) + this.mStart;
+        int result = (1 * 31) + this.mEnd;
+        return (result * 31) + this.mStart;
     }
 
     public boolean equals(Object obj) {

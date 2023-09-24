@@ -2,20 +2,30 @@ package android.net;
 
 import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.Process;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.Process;
 import android.text.TextUtils;
 import android.util.proto.ProtoOutputStream;
 import java.util.Objects;
 import java.util.Set;
 
+/* loaded from: classes3.dex */
 public class NetworkRequest implements Parcelable {
-    public static final Parcelable.Creator<NetworkRequest> CREATOR = new Parcelable.Creator<NetworkRequest>() {
+    public static final Parcelable.Creator<NetworkRequest> CREATOR = new Parcelable.Creator<NetworkRequest>() { // from class: android.net.NetworkRequest.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NetworkRequest createFromParcel(Parcel in) {
-            return new NetworkRequest(NetworkCapabilities.CREATOR.createFromParcel(in), in.readInt(), in.readInt(), Type.valueOf(in.readString()));
+            NetworkCapabilities nc = NetworkCapabilities.CREATOR.createFromParcel(in);
+            int legacyType = in.readInt();
+            int requestId = in.readInt();
+            Type type = Type.valueOf(in.readString());
+            NetworkRequest result = new NetworkRequest(nc, legacyType, requestId, type);
+            return result;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NetworkRequest[] newArray(int size) {
             return new NetworkRequest[size];
         }
@@ -28,6 +38,7 @@ public class NetworkRequest implements Parcelable {
     public final int requestId;
     public final Type type;
 
+    /* loaded from: classes3.dex */
     public enum Type {
         NONE,
         LISTEN,
@@ -36,15 +47,14 @@ public class NetworkRequest implements Parcelable {
         BACKGROUND_REQUEST
     }
 
-    public NetworkRequest(NetworkCapabilities nc, int legacyType2, int rId, Type type2) {
-        if (nc != null) {
-            this.requestId = rId;
-            this.networkCapabilities = nc;
-            this.legacyType = legacyType2;
-            this.type = type2;
-            return;
+    public NetworkRequest(NetworkCapabilities nc, int legacyType, int rId, Type type) {
+        if (nc == null) {
+            throw new NullPointerException();
         }
-        throw new NullPointerException();
+        this.requestId = rId;
+        this.networkCapabilities = nc;
+        this.legacyType = legacyType;
+        this.type = type;
     }
 
     public NetworkRequest(NetworkRequest that) {
@@ -54,6 +64,7 @@ public class NetworkRequest implements Parcelable {
         this.type = that.type;
     }
 
+    /* loaded from: classes3.dex */
     public static class Builder {
         private final NetworkCapabilities mNetworkCapabilities = new NetworkCapabilities();
 
@@ -119,13 +130,7 @@ public class NetworkRequest implements Parcelable {
         }
 
         public Builder setNetworkSpecifier(String networkSpecifier) {
-            StringNetworkSpecifier stringNetworkSpecifier;
-            if (TextUtils.isEmpty(networkSpecifier)) {
-                stringNetworkSpecifier = null;
-            } else {
-                stringNetworkSpecifier = new StringNetworkSpecifier(networkSpecifier);
-            }
-            return setNetworkSpecifier((NetworkSpecifier) stringNetworkSpecifier);
+            return setNetworkSpecifier(TextUtils.isEmpty(networkSpecifier) ? null : new StringNetworkSpecifier(networkSpecifier));
         }
 
         public Builder setNetworkSpecifier(NetworkSpecifier networkSpecifier) {
@@ -141,10 +146,12 @@ public class NetworkRequest implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         this.networkCapabilities.writeToParcel(dest, flags);
         dest.writeInt(this.legacyType);
@@ -226,17 +233,14 @@ public class NetworkRequest implements Parcelable {
     }
 
     public boolean equals(Object obj) {
-        if (!(obj instanceof NetworkRequest)) {
-            return false;
-        }
-        NetworkRequest that = (NetworkRequest) obj;
-        if (that.legacyType == this.legacyType && that.requestId == this.requestId && that.type == this.type && Objects.equals(that.networkCapabilities, this.networkCapabilities)) {
-            return true;
+        if (obj instanceof NetworkRequest) {
+            NetworkRequest that = (NetworkRequest) obj;
+            return that.legacyType == this.legacyType && that.requestId == this.requestId && that.type == this.type && Objects.equals(that.networkCapabilities, this.networkCapabilities);
         }
         return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(this.requestId), Integer.valueOf(this.legacyType), this.networkCapabilities, this.type});
+        return Objects.hash(Integer.valueOf(this.requestId), Integer.valueOf(this.legacyType), this.networkCapabilities, this.type);
     }
 }

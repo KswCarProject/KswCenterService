@@ -1,9 +1,10 @@
 package android.view.inputmethod;
 
-import android.os.Bundle;
-import android.os.Handler;
+import android.p007os.Bundle;
+import android.p007os.Handler;
 import android.view.KeyEvent;
 
+/* loaded from: classes4.dex */
 public interface InputConnection {
     public static final int CURSOR_UPDATE_IMMEDIATE = 1;
     public static final int CURSOR_UPDATE_MONITOR = 2;

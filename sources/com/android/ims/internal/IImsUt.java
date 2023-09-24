@@ -1,13 +1,14 @@
 package com.android.ims.internal;
 
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import com.android.ims.internal.IImsUtListener;
 
+/* loaded from: classes4.dex */
 public interface IImsUt extends IInterface {
     void close() throws RemoteException;
 
@@ -49,90 +50,113 @@ public interface IImsUt extends IInterface {
 
     int updateCallWaiting(boolean z, int i) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IImsUt {
+        @Override // com.android.ims.internal.IImsUt
         public void close() throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.IImsUt
         public int queryCallBarring(int cbType) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.ims.internal.IImsUt
         public int queryCallForward(int condition, String number) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.ims.internal.IImsUt
         public int queryCallWaiting() throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.ims.internal.IImsUt
         public int queryCLIR() throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.ims.internal.IImsUt
         public int queryCLIP() throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.ims.internal.IImsUt
         public int queryCOLR() throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.ims.internal.IImsUt
         public int queryCOLP() throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.ims.internal.IImsUt
         public int transact(Bundle ssInfo) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.ims.internal.IImsUt
         public int updateCallBarring(int cbType, int action, String[] barrList) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.ims.internal.IImsUt
         public int updateCallForward(int action, int condition, String number, int serviceClass, int timeSeconds) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.ims.internal.IImsUt
         public int updateCallWaiting(boolean enable, int serviceClass) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.ims.internal.IImsUt
         public int updateCLIR(int clirMode) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.ims.internal.IImsUt
         public int updateCLIP(boolean enable) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.ims.internal.IImsUt
         public int updateCOLR(int presentation) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.ims.internal.IImsUt
         public int updateCOLP(boolean enable) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.ims.internal.IImsUt
         public void setListener(IImsUtListener listener) throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.IImsUt
         public int queryCallBarringForServiceClass(int cbType, int serviceClass) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.ims.internal.IImsUt
         public int updateCallBarringForServiceClass(int cbType, int action, String[] barrList, int serviceClass) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.ims.internal.IImsUt
         public int queryCFForServiceClass(int condition, String number, int serviceClass) throws RemoteException {
             return 0;
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IImsUt {
         private static final String DESCRIPTOR = "com.android.ims.internal.IImsUt";
         static final int TRANSACTION_close = 1;
@@ -165,12 +189,13 @@ public interface IImsUt extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IImsUt)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IImsUt)) {
+                return (IImsUt) iin;
             }
-            return (IImsUt) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -222,159 +247,172 @@ public interface IImsUt extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
             Bundle _arg0;
-            int i = code;
-            Parcel parcel = data;
-            Parcel parcel2 = reply;
-            if (i != 1598968902) {
-                boolean _arg02 = false;
-                switch (i) {
-                    case 1:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        close();
-                        reply.writeNoException();
-                        return true;
-                    case 2:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _result = queryCallBarring(data.readInt());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result);
-                        return true;
-                    case 3:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _result2 = queryCallForward(data.readInt(), data.readString());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result2);
-                        return true;
-                    case 4:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _result3 = queryCallWaiting();
-                        reply.writeNoException();
-                        parcel2.writeInt(_result3);
-                        return true;
-                    case 5:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _result4 = queryCLIR();
-                        reply.writeNoException();
-                        parcel2.writeInt(_result4);
-                        return true;
-                    case 6:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _result5 = queryCLIP();
-                        reply.writeNoException();
-                        parcel2.writeInt(_result5);
-                        return true;
-                    case 7:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _result6 = queryCOLR();
-                        reply.writeNoException();
-                        parcel2.writeInt(_result6);
-                        return true;
-                    case 8:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _result7 = queryCOLP();
-                        reply.writeNoException();
-                        parcel2.writeInt(_result7);
-                        return true;
-                    case 9:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = Bundle.CREATOR.createFromParcel(parcel);
-                        } else {
-                            _arg0 = null;
-                        }
-                        int _result8 = transact(_arg0);
-                        reply.writeNoException();
-                        parcel2.writeInt(_result8);
-                        return true;
-                    case 10:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _result9 = updateCallBarring(data.readInt(), data.readInt(), data.createStringArray());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result9);
-                        return true;
-                    case 11:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _result10 = updateCallForward(data.readInt(), data.readInt(), data.readString(), data.readInt(), data.readInt());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result10);
-                        return true;
-                    case 12:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg02 = true;
-                        }
-                        int _result11 = updateCallWaiting(_arg02, data.readInt());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result11);
-                        return true;
-                    case 13:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _result12 = updateCLIR(data.readInt());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result12);
-                        return true;
-                    case 14:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg02 = true;
-                        }
-                        int _result13 = updateCLIP(_arg02);
-                        reply.writeNoException();
-                        parcel2.writeInt(_result13);
-                        return true;
-                    case 15:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _result14 = updateCOLR(data.readInt());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result14);
-                        return true;
-                    case 16:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg02 = true;
-                        }
-                        int _result15 = updateCOLP(_arg02);
-                        reply.writeNoException();
-                        parcel2.writeInt(_result15);
-                        return true;
-                    case 17:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        setListener(IImsUtListener.Stub.asInterface(data.readStrongBinder()));
-                        reply.writeNoException();
-                        return true;
-                    case 18:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _result16 = queryCallBarringForServiceClass(data.readInt(), data.readInt());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result16);
-                        return true;
-                    case 19:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _result17 = updateCallBarringForServiceClass(data.readInt(), data.readInt(), data.createStringArray(), data.readInt());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result17);
-                        return true;
-                    case 20:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _result18 = queryCFForServiceClass(data.readInt(), data.readString(), data.readInt());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result18);
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
-                parcel2.writeString(DESCRIPTOR);
+            boolean _arg02;
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
                 return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    close();
+                    reply.writeNoException();
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result = queryCallBarring(data.readInt());
+                    reply.writeNoException();
+                    reply.writeInt(_result);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg03 = data.readInt();
+                    String _arg1 = data.readString();
+                    int _result2 = queryCallForward(_arg03, _arg1);
+                    reply.writeNoException();
+                    reply.writeInt(_result2);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result3 = queryCallWaiting();
+                    reply.writeNoException();
+                    reply.writeInt(_result3);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result4 = queryCLIR();
+                    reply.writeNoException();
+                    reply.writeInt(_result4);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result5 = queryCLIP();
+                    reply.writeNoException();
+                    reply.writeInt(_result5);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result6 = queryCOLR();
+                    reply.writeNoException();
+                    reply.writeInt(_result6);
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result7 = queryCOLP();
+                    reply.writeNoException();
+                    reply.writeInt(_result7);
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg0 = Bundle.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg0 = null;
+                    }
+                    int _result8 = transact(_arg0);
+                    reply.writeNoException();
+                    reply.writeInt(_result8);
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg04 = data.readInt();
+                    int _arg12 = data.readInt();
+                    String[] _arg2 = data.createStringArray();
+                    int _result9 = updateCallBarring(_arg04, _arg12, _arg2);
+                    reply.writeNoException();
+                    reply.writeInt(_result9);
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg05 = data.readInt();
+                    int _arg13 = data.readInt();
+                    String _arg22 = data.readString();
+                    int _arg3 = data.readInt();
+                    int _arg4 = data.readInt();
+                    int _result10 = updateCallForward(_arg05, _arg13, _arg22, _arg3, _arg4);
+                    reply.writeNoException();
+                    reply.writeInt(_result10);
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg02 = data.readInt() != 0;
+                    int _arg14 = data.readInt();
+                    int _result11 = updateCallWaiting(_arg02, _arg14);
+                    reply.writeNoException();
+                    reply.writeInt(_result11);
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result12 = updateCLIR(data.readInt());
+                    reply.writeNoException();
+                    reply.writeInt(_result12);
+                    return true;
+                case 14:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg02 = data.readInt() != 0;
+                    int _result13 = updateCLIP(_arg02);
+                    reply.writeNoException();
+                    reply.writeInt(_result13);
+                    return true;
+                case 15:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result14 = updateCOLR(data.readInt());
+                    reply.writeNoException();
+                    reply.writeInt(_result14);
+                    return true;
+                case 16:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg02 = data.readInt() != 0;
+                    int _result15 = updateCOLP(_arg02);
+                    reply.writeNoException();
+                    reply.writeInt(_result15);
+                    return true;
+                case 17:
+                    data.enforceInterface(DESCRIPTOR);
+                    setListener(IImsUtListener.Stub.asInterface(data.readStrongBinder()));
+                    reply.writeNoException();
+                    return true;
+                case 18:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg06 = data.readInt();
+                    int _arg15 = data.readInt();
+                    int _result16 = queryCallBarringForServiceClass(_arg06, _arg15);
+                    reply.writeNoException();
+                    reply.writeInt(_result16);
+                    return true;
+                case 19:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg07 = data.readInt();
+                    int _arg16 = data.readInt();
+                    String[] _arg23 = data.createStringArray();
+                    int _arg32 = data.readInt();
+                    int _result17 = updateCallBarringForServiceClass(_arg07, _arg16, _arg23, _arg32);
+                    reply.writeNoException();
+                    reply.writeInt(_result17);
+                    return true;
+                case 20:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg08 = data.readInt();
+                    String _arg17 = data.readString();
+                    int _arg24 = data.readInt();
+                    int _result18 = queryCFForServiceClass(_arg08, _arg17, _arg24);
+                    reply.writeNoException();
+                    reply.writeInt(_result18);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
             }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IImsUt {
             public static IImsUt sDefaultImpl;
             private IBinder mRemote;
@@ -383,6 +421,7 @@ public interface IImsUt extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -391,37 +430,37 @@ public interface IImsUt extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // com.android.ims.internal.IImsUt
             public void close() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(1, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().close();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().close();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.ims.internal.IImsUt
             public int queryCallBarring(int cbType) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(cbType);
-                    if (!this.mRemote.transact(2, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().queryCallBarring(cbType);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -429,6 +468,7 @@ public interface IImsUt extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsUt
             public int queryCallForward(int condition, String number) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -436,13 +476,12 @@ public interface IImsUt extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(condition);
                     _data.writeString(number);
-                    if (!this.mRemote.transact(3, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().queryCallForward(condition, number);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -450,18 +489,18 @@ public interface IImsUt extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsUt
             public int queryCallWaiting() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(4, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().queryCallWaiting();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -469,18 +508,18 @@ public interface IImsUt extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsUt
             public int queryCLIR() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(5, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().queryCLIR();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -488,18 +527,18 @@ public interface IImsUt extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsUt
             public int queryCLIP() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(6, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().queryCLIP();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -507,18 +546,18 @@ public interface IImsUt extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsUt
             public int queryCOLR() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(7, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().queryCOLR();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -526,18 +565,18 @@ public interface IImsUt extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsUt
             public int queryCOLP() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(8, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().queryCOLP();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -545,6 +584,7 @@ public interface IImsUt extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsUt
             public int transact(Bundle ssInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -556,13 +596,12 @@ public interface IImsUt extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(9, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(9, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().transact(ssInfo);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -570,6 +609,7 @@ public interface IImsUt extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsUt
             public int updateCallBarring(int cbType, int action, String[] barrList) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -578,13 +618,12 @@ public interface IImsUt extends IInterface {
                     _data.writeInt(cbType);
                     _data.writeInt(action);
                     _data.writeStringArray(barrList);
-                    if (!this.mRemote.transact(10, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(10, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().updateCallBarring(cbType, action, barrList);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -592,6 +631,7 @@ public interface IImsUt extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsUt
             public int updateCallForward(int action, int condition, String number, int serviceClass, int timeSeconds) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -602,13 +642,12 @@ public interface IImsUt extends IInterface {
                     _data.writeString(number);
                     _data.writeInt(serviceClass);
                     _data.writeInt(timeSeconds);
-                    if (!this.mRemote.transact(11, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(11, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().updateCallForward(action, condition, number, serviceClass, timeSeconds);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -616,20 +655,20 @@ public interface IImsUt extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsUt
             public int updateCallWaiting(boolean enable, int serviceClass) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(enable);
+                    _data.writeInt(enable ? 1 : 0);
                     _data.writeInt(serviceClass);
-                    if (!this.mRemote.transact(12, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(12, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().updateCallWaiting(enable, serviceClass);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -637,19 +676,19 @@ public interface IImsUt extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsUt
             public int updateCLIR(int clirMode) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(clirMode);
-                    if (!this.mRemote.transact(13, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(13, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().updateCLIR(clirMode);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -657,19 +696,19 @@ public interface IImsUt extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsUt
             public int updateCLIP(boolean enable) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(enable);
-                    if (!this.mRemote.transact(14, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(enable ? 1 : 0);
+                    boolean _status = this.mRemote.transact(14, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().updateCLIP(enable);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -677,19 +716,19 @@ public interface IImsUt extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsUt
             public int updateCOLR(int presentation) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(presentation);
-                    if (!this.mRemote.transact(15, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(15, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().updateCOLR(presentation);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -697,19 +736,19 @@ public interface IImsUt extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsUt
             public int updateCOLP(boolean enable) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(enable);
-                    if (!this.mRemote.transact(16, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(enable ? 1 : 0);
+                    boolean _status = this.mRemote.transact(16, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().updateCOLP(enable);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -717,25 +756,26 @@ public interface IImsUt extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsUt
             public void setListener(IImsUtListener listener) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(listener != null ? listener.asBinder() : null);
-                    if (this.mRemote.transact(17, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(17, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setListener(listener);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setListener(listener);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.ims.internal.IImsUt
             public int queryCallBarringForServiceClass(int cbType, int serviceClass) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -743,13 +783,12 @@ public interface IImsUt extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(cbType);
                     _data.writeInt(serviceClass);
-                    if (!this.mRemote.transact(18, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(18, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().queryCallBarringForServiceClass(cbType, serviceClass);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -757,6 +796,7 @@ public interface IImsUt extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsUt
             public int updateCallBarringForServiceClass(int cbType, int action, String[] barrList, int serviceClass) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -766,13 +806,12 @@ public interface IImsUt extends IInterface {
                     _data.writeInt(action);
                     _data.writeStringArray(barrList);
                     _data.writeInt(serviceClass);
-                    if (!this.mRemote.transact(19, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(19, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().updateCallBarringForServiceClass(cbType, action, barrList, serviceClass);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -780,6 +819,7 @@ public interface IImsUt extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsUt
             public int queryCFForServiceClass(int condition, String number, int serviceClass) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -788,13 +828,12 @@ public interface IImsUt extends IInterface {
                     _data.writeInt(condition);
                     _data.writeString(number);
                     _data.writeInt(serviceClass);
-                    if (!this.mRemote.transact(20, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(20, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().queryCFForServiceClass(condition, number, serviceClass);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -804,11 +843,11 @@ public interface IImsUt extends IInterface {
         }
 
         public static boolean setDefaultImpl(IImsUt impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IImsUt getDefaultImpl() {

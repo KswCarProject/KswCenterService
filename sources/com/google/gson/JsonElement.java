@@ -7,9 +7,9 @@ import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+/* loaded from: classes4.dex */
 public abstract class JsonElement {
-    /* access modifiers changed from: package-private */
-    public abstract JsonElement deepCopy();
+    abstract JsonElement deepCopy();
 
     public boolean isJsonArray() {
         return this instanceof JsonArray;
@@ -59,8 +59,7 @@ public abstract class JsonElement {
         throw new UnsupportedOperationException(getClass().getSimpleName());
     }
 
-    /* access modifiers changed from: package-private */
-    public Boolean getAsBooleanWrapper() {
+    Boolean getAsBooleanWrapper() {
         throw new UnsupportedOperationException(getClass().getSimpleName());
     }
 

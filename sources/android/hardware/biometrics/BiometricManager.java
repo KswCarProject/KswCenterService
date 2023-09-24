@@ -1,10 +1,11 @@
 package android.hardware.biometrics;
 
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.os.RemoteException;
+import android.content.p002pm.PackageManager;
+import android.p007os.RemoteException;
 import android.util.Slog;
 
+/* loaded from: classes.dex */
 public class BiometricManager {
     public static final int BIOMETRIC_ERROR_HW_UNAVAILABLE = 1;
     public static final int BIOMETRIC_ERROR_NONE_ENROLLED = 11;
@@ -15,6 +16,7 @@ public class BiometricManager {
     private final boolean mHasHardware;
     private final IBiometricService mService;
 
+    /* loaded from: classes.dex */
     @interface BiometricError {
     }
 
@@ -40,7 +42,7 @@ public class BiometricManager {
         } else if (!this.mHasHardware) {
             return 12;
         } else {
-            Slog.w(TAG, "hasEnrolledBiometrics(): Service not connected");
+            Slog.m50w(TAG, "hasEnrolledBiometrics(): Service not connected");
             return 1;
         }
     }
@@ -49,71 +51,71 @@ public class BiometricManager {
         if (this.mService != null) {
             try {
                 this.mService.registerEnabledOnKeyguardCallback(callback);
+                return;
             } catch (RemoteException e) {
                 throw e.rethrowFromSystemServer();
             }
-        } else {
-            Slog.w(TAG, "registerEnabledOnKeyguardCallback(): Service not connected");
         }
+        Slog.m50w(TAG, "registerEnabledOnKeyguardCallback(): Service not connected");
     }
 
     public void setActiveUser(int userId) {
         if (this.mService != null) {
             try {
                 this.mService.setActiveUser(userId);
+                return;
             } catch (RemoteException e) {
                 throw e.rethrowFromSystemServer();
             }
-        } else {
-            Slog.w(TAG, "setActiveUser(): Service not connected");
         }
+        Slog.m50w(TAG, "setActiveUser(): Service not connected");
     }
 
     public void resetLockout(byte[] token) {
         if (this.mService != null) {
             try {
                 this.mService.resetLockout(token);
+                return;
             } catch (RemoteException e) {
                 throw e.rethrowFromSystemServer();
             }
-        } else {
-            Slog.w(TAG, "resetLockout(): Service not connected");
         }
+        Slog.m50w(TAG, "resetLockout(): Service not connected");
     }
 
     public void onConfirmDeviceCredentialSuccess() {
         if (this.mService != null) {
             try {
                 this.mService.onConfirmDeviceCredentialSuccess();
+                return;
             } catch (RemoteException e) {
                 throw e.rethrowFromSystemServer();
             }
-        } else {
-            Slog.w(TAG, "onConfirmDeviceCredentialSuccess(): Service not connected");
         }
+        Slog.m50w(TAG, "onConfirmDeviceCredentialSuccess(): Service not connected");
     }
 
     public void onConfirmDeviceCredentialError(int error, String message) {
         if (this.mService != null) {
             try {
                 this.mService.onConfirmDeviceCredentialError(error, message);
+                return;
             } catch (RemoteException e) {
                 throw e.rethrowFromSystemServer();
             }
-        } else {
-            Slog.w(TAG, "onConfirmDeviceCredentialError(): Service not connected");
         }
+        Slog.m50w(TAG, "onConfirmDeviceCredentialError(): Service not connected");
     }
 
     public void registerCancellationCallback(IBiometricConfirmDeviceCredentialCallback callback) {
         if (this.mService != null) {
             try {
                 this.mService.registerCancellationCallback(callback);
+                return;
             } catch (RemoteException e) {
                 throw e.rethrowFromSystemServer();
             }
-        } else {
-            Slog.w(TAG, "registerCancellationCallback(): Service not connected");
         }
+        Slog.m50w(TAG, "registerCancellationCallback(): Service not connected");
     }
 }

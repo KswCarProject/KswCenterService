@@ -2,10 +2,11 @@ package android.graphics.fonts;
 
 import android.content.res.AssetManager;
 import android.content.res.Resources;
-import android.os.LocaleList;
-import android.os.ParcelFileDescriptor;
+import android.p007os.LocaleList;
+import android.p007os.ParcelFileDescriptor;
 import android.util.TypedValue;
 import com.android.internal.util.Preconditions;
+import dalvik.annotation.optimization.CriticalNative;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -16,6 +17,7 @@ import java.util.Arrays;
 import java.util.Objects;
 import libcore.util.NativeAllocationRegistry;
 
+/* loaded from: classes.dex */
 public final class Font {
     private static final int NOT_SPECIFIED = -1;
     private static final int STYLE_ITALIC = 1;
@@ -29,6 +31,7 @@ public final class Font {
     private final long mNativePtr;
     private final int mTtcIndex;
 
+    /* loaded from: classes.dex */
     public static final class Builder {
         private static final NativeAllocationRegistry sAssetByteBufferRegistry = NativeAllocationRegistry.createMalloced(ByteBuffer.class.getClassLoader(), nGetReleaseNativeAssetFunc());
         private static final NativeAllocationRegistry sFontRegistry = NativeAllocationRegistry.createMalloced(Font.class.getClassLoader(), nGetReleaseNativeFont());
@@ -41,6 +44,7 @@ public final class Font {
         private int mTtcIndex;
         private int mWeight;
 
+        @CriticalNative
         private static native void nAddAxis(long j, int i, float f);
 
         private static native long nBuild(long j, ByteBuffer byteBuffer, String str, int i, boolean z, int i2);
@@ -49,8 +53,10 @@ public final class Font {
 
         private static native long nGetNativeAsset(AssetManager assetManager, String str, boolean z, int i);
 
+        @CriticalNative
         private static native long nGetReleaseNativeAssetFunc();
 
+        @CriticalNative
         private static native long nGetReleaseNativeFont();
 
         private static native long nInitBuilder();
@@ -62,11 +68,10 @@ public final class Font {
             this.mTtcIndex = 0;
             this.mAxes = null;
             Preconditions.checkNotNull(buffer, "buffer can not be null");
-            if (buffer.isDirect()) {
-                this.mBuffer = buffer;
-                return;
+            if (!buffer.isDirect()) {
+                throw new IllegalArgumentException("Only direct buffer can be used as the source of font data.");
             }
-            throw new IllegalArgumentException("Only direct buffer can be used as the source of font data.");
+            this.mBuffer = buffer;
         }
 
         public Builder(ByteBuffer buffer, File path, String localeList) {
@@ -76,7 +81,6 @@ public final class Font {
         }
 
         public Builder(File path) {
-            FileInputStream fis;
             this.mLocaleList = "";
             this.mWeight = -1;
             this.mItalic = -1;
@@ -84,75 +88,60 @@ public final class Font {
             this.mAxes = null;
             Preconditions.checkNotNull(path, "path can not be null");
             try {
-                fis = new FileInputStream(path);
+                FileInputStream fis = new FileInputStream(path);
                 FileChannel fc = fis.getChannel();
-                this.mBuffer = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
-                $closeResource((Throwable) null, fis);
+                this.mBuffer = fc.map(FileChannel.MapMode.READ_ONLY, 0L, fc.size());
+                $closeResource(null, fis);
             } catch (IOException e) {
                 this.mException = e;
-            } catch (Throwable th) {
-                $closeResource(r0, fis);
-                throw th;
             }
             this.mFile = path;
         }
 
         private static /* synthetic */ void $closeResource(Throwable x0, AutoCloseable x1) {
-            if (x0 != null) {
-                try {
-                    x1.close();
-                } catch (Throwable th) {
-                    x0.addSuppressed(th);
-                }
-            } else {
+            if (x0 == null) {
                 x1.close();
+                return;
+            }
+            try {
+                x1.close();
+            } catch (Throwable th) {
+                x0.addSuppressed(th);
             }
         }
 
         public Builder(ParcelFileDescriptor fd) {
-            this(fd, 0, -1);
+            this(fd, 0L, -1L);
         }
 
         public Builder(ParcelFileDescriptor fd, long offset, long size) {
-            long size2;
+            FileChannel fc;
             this.mLocaleList = "";
             this.mWeight = -1;
             this.mItalic = -1;
             this.mTtcIndex = 0;
-            th = null;
             this.mAxes = null;
             try {
                 FileInputStream fis = new FileInputStream(fd.getFileDescriptor());
                 try {
-                    FileChannel fc = fis.getChannel();
-                    size2 = size == -1 ? fc.size() - offset : size;
+                    fc = fis.getChannel();
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    this.mBuffer = fc.map(FileChannel.MapMode.READ_ONLY, offset, size == -1 ? fc.size() - offset : size);
                     try {
-                        this.mBuffer = fc.map(FileChannel.MapMode.READ_ONLY, offset, size2);
-                        try {
-                            $closeResource((Throwable) null, fis);
-                            long j = size2;
-                        } catch (IOException e) {
-                            e = e;
-                            long j2 = size2;
-                            this.mException = e;
-                        }
-                    } catch (Throwable th) {
-                        th = th;
-                        try {
-                            throw th;
-                        } catch (Throwable th2) {
-                            th = th2;
-                            long j3 = size2;
-                        }
+                        $closeResource(null, fis);
+                    } catch (IOException e) {
+                        e = e;
+                        this.mException = e;
                     }
-                } catch (Throwable th3) {
-                    th = th3;
-                    $closeResource(th, fis);
+                } catch (Throwable th2) {
+                    th = th2;
                     throw th;
                 }
             } catch (IOException e2) {
                 e = e2;
-                this.mException = e;
             }
         }
 
@@ -193,30 +182,27 @@ public final class Font {
                 return;
             }
             String str = value.string.toString();
-            if (str.toLowerCase().endsWith(".xml")) {
-                this.mException = new FileNotFoundException(resId + " must be font file.");
+            if (!str.toLowerCase().endsWith(".xml")) {
+                long nativeAsset = nGetNativeAsset(res.getAssets(), str, false, value.assetCookie);
+                if (nativeAsset == 0) {
+                    this.mException = new FileNotFoundException("Unable to open " + str);
+                    return;
+                }
+                ByteBuffer b = nGetAssetBuffer(nativeAsset);
+                sAssetByteBufferRegistry.registerNativeAllocation(b, nativeAsset);
+                if (b == null) {
+                    this.mException = new FileNotFoundException(str + " not found");
+                    return;
+                }
+                this.mBuffer = b;
                 return;
             }
-            long nativeAsset = nGetNativeAsset(res.getAssets(), str, false, value.assetCookie);
-            if (nativeAsset == 0) {
-                this.mException = new FileNotFoundException("Unable to open " + str);
-                return;
-            }
-            ByteBuffer b = nGetAssetBuffer(nativeAsset);
-            sAssetByteBufferRegistry.registerNativeAllocation(b, nativeAsset);
-            if (b == null) {
-                this.mException = new FileNotFoundException(str + " not found");
-                return;
-            }
-            this.mBuffer = b;
+            this.mException = new FileNotFoundException(resId + " must be font file.");
         }
 
         public Builder setWeight(int weight) {
             boolean z = true;
-            if (1 > weight || weight > 1000) {
-                z = false;
-            }
-            Preconditions.checkArgument(z);
+            Preconditions.checkArgument((1 > weight || weight > 1000) ? false : false);
             this.mWeight = weight;
             return this;
         }
@@ -242,41 +228,39 @@ public final class Font {
         }
 
         public Font build() throws IOException {
-            if (this.mException == null) {
-                if (this.mWeight == -1 || this.mItalic == -1) {
-                    int packed = FontFileUtil.analyzeStyle(this.mBuffer, this.mTtcIndex, this.mAxes);
-                    if (FontFileUtil.isSuccess(packed)) {
-                        if (this.mWeight == -1) {
-                            this.mWeight = FontFileUtil.unpackWeight(packed);
-                        }
-                        if (this.mItalic == -1) {
-                            this.mItalic = FontFileUtil.unpackItalic(packed) ? 1 : 0;
-                        }
-                    } else {
-                        this.mWeight = 400;
-                        this.mItalic = 0;
-                    }
-                }
-                int i = 1;
-                this.mWeight = Math.max(1, Math.min(1000, this.mWeight));
-                boolean italic = this.mItalic == 1;
-                if (this.mItalic != 1) {
-                    i = 0;
-                }
-                int slant = i;
-                long builderPtr = nInitBuilder();
-                if (this.mAxes != null) {
-                    for (FontVariationAxis axis : this.mAxes) {
-                        nAddAxis(builderPtr, axis.getOpenTypeTagValue(), axis.getStyleValue());
-                    }
-                }
-                ByteBuffer readonlyBuffer = this.mBuffer.asReadOnlyBuffer();
-                long ptr = nBuild(builderPtr, readonlyBuffer, this.mFile == null ? "" : this.mFile.getAbsolutePath(), this.mWeight, italic, this.mTtcIndex);
-                Font font = new Font(ptr, readonlyBuffer, this.mFile, new FontStyle(this.mWeight, slant), this.mTtcIndex, this.mAxes, this.mLocaleList);
-                sFontRegistry.registerNativeAllocation(font, ptr);
-                return font;
+            FontVariationAxis[] fontVariationAxisArr;
+            if (this.mException != null) {
+                throw new IOException("Failed to read font contents", this.mException);
             }
-            throw new IOException("Failed to read font contents", this.mException);
+            if (this.mWeight == -1 || this.mItalic == -1) {
+                int packed = FontFileUtil.analyzeStyle(this.mBuffer, this.mTtcIndex, this.mAxes);
+                if (!FontFileUtil.isSuccess(packed)) {
+                    this.mWeight = 400;
+                    this.mItalic = 0;
+                } else {
+                    if (this.mWeight == -1) {
+                        this.mWeight = FontFileUtil.unpackWeight(packed);
+                    }
+                    if (this.mItalic == -1) {
+                        this.mItalic = FontFileUtil.unpackItalic(packed) ? 1 : 0;
+                    }
+                }
+            }
+            this.mWeight = Math.max(1, Math.min(1000, this.mWeight));
+            boolean italic = this.mItalic == 1;
+            int slant = this.mItalic != 1 ? 0 : 1;
+            long builderPtr = nInitBuilder();
+            if (this.mAxes != null) {
+                for (FontVariationAxis axis : this.mAxes) {
+                    nAddAxis(builderPtr, axis.getOpenTypeTagValue(), axis.getStyleValue());
+                }
+            }
+            ByteBuffer readonlyBuffer = this.mBuffer.asReadOnlyBuffer();
+            String filePath = this.mFile == null ? "" : this.mFile.getAbsolutePath();
+            long ptr = nBuild(builderPtr, readonlyBuffer, filePath, this.mWeight, italic, this.mTtcIndex);
+            Font font = new Font(ptr, readonlyBuffer, this.mFile, new FontStyle(this.mWeight, slant), this.mTtcIndex, this.mAxes, this.mLocaleList);
+            sFontRegistry.registerNativeAllocation(font, ptr);
+            return font;
         }
     }
 
@@ -329,14 +313,14 @@ public final class Font {
             return false;
         }
         Font f = (Font) o;
-        if (!this.mFontStyle.equals(f.mFontStyle) || f.mTtcIndex != this.mTtcIndex || !Arrays.equals(f.mAxes, this.mAxes) || !f.mBuffer.equals(this.mBuffer)) {
-            return false;
+        if (this.mFontStyle.equals(f.mFontStyle) && f.mTtcIndex == this.mTtcIndex && Arrays.equals(f.mAxes, this.mAxes) && f.mBuffer.equals(this.mBuffer)) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{this.mFontStyle, Integer.valueOf(this.mTtcIndex), Integer.valueOf(Arrays.hashCode(this.mAxes)), this.mBuffer});
+        return Objects.hash(this.mFontStyle, Integer.valueOf(this.mTtcIndex), Integer.valueOf(Arrays.hashCode(this.mAxes)), this.mBuffer);
     }
 
     public String toString() {

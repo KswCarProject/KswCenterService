@@ -1,7 +1,9 @@
 package android.hardware.usb.V1_1;
 
+/* loaded from: classes.dex */
 public class Constants {
 
+    /* loaded from: classes.dex */
     public final class PortMode_1_1 {
         public static final int AUDIO_ACCESSORY = 4;
         public static final int DEBUG_ACCESSORY = 8;

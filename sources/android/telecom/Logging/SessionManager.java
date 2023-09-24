@@ -1,8 +1,9 @@
 package android.telecom.Logging;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
+import android.p007os.Handler;
+import android.p007os.Looper;
+import android.p007os.Process;
 import android.provider.Settings;
 import android.telecom.Log;
 import android.telecom.Logging.Session;
@@ -16,50 +17,62 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/* loaded from: classes3.dex */
 public class SessionManager {
     private static final long DEFAULT_SESSION_TIMEOUT_MS = 30000;
     private static final String LOGGING_TAG = "Logging";
     private static final long SESSION_ID_ROLLOVER_THRESHOLD = 262144;
     private static final String TIMEOUTS_PREFIX = "telecom.";
+    private Context mContext;
+    private int sCodeEntryCounter = 0;
     @VisibleForTesting
-    public Runnable mCleanStaleSessions = new Runnable() {
+    public ConcurrentHashMap<Integer, Session> mSessionMapper = new ConcurrentHashMap<>(100);
+    @VisibleForTesting
+    public java.lang.Runnable mCleanStaleSessions = new java.lang.Runnable() { // from class: android.telecom.Logging.-$$Lambda$SessionManager$VyH2gT1EjIvzDy_C9JfTT60CISM
+        @Override // java.lang.Runnable
         public final void run() {
-            SessionManager.this.cleanupStaleSessions(SessionManager.this.getSessionCleanupTimeoutMs());
+            r0.cleanupStaleSessions(SessionManager.this.getSessionCleanupTimeoutMs());
         }
     };
-    private Context mContext;
-    @VisibleForTesting
-    public ICurrentThreadId mCurrentThreadId = $$Lambda$L5F_SL2jOCUETYvgdB36aGwY50E.INSTANCE;
     private Handler mSessionCleanupHandler = new Handler(Looper.getMainLooper());
-    private ISessionCleanupTimeoutMs mSessionCleanupTimeoutMs = new ISessionCleanupTimeoutMs() {
+    @VisibleForTesting
+    public ICurrentThreadId mCurrentThreadId = new ICurrentThreadId() { // from class: android.telecom.Logging.-$$Lambda$L5F_SL2jOCUETYvgdB36aGwY50E
+        @Override // android.telecom.Logging.SessionManager.ICurrentThreadId
+        public final int get() {
+            return Process.myTid();
+        }
+    };
+    private ISessionCleanupTimeoutMs mSessionCleanupTimeoutMs = new ISessionCleanupTimeoutMs() { // from class: android.telecom.Logging.-$$Lambda$SessionManager$hhtZwTEbvO-fLNlAvB6Do9_2gW4
+        @Override // android.telecom.Logging.SessionManager.ISessionCleanupTimeoutMs
         public final long get() {
             return SessionManager.lambda$new$1(SessionManager.this);
         }
     };
     private List<ISessionListener> mSessionListeners = new ArrayList();
-    @VisibleForTesting
-    public ConcurrentHashMap<Integer, Session> mSessionMapper = new ConcurrentHashMap<>(100);
-    private int sCodeEntryCounter = 0;
 
+    /* loaded from: classes3.dex */
     public interface ICurrentThreadId {
         int get();
     }
 
+    /* loaded from: classes3.dex */
     private interface ISessionCleanupTimeoutMs {
         long get();
     }
 
+    /* loaded from: classes3.dex */
     public interface ISessionIdQueryHandler {
         String getSessionId();
     }
 
+    /* loaded from: classes3.dex */
     public interface ISessionListener {
         void sessionComplete(String str, long j);
     }
 
     public static /* synthetic */ long lambda$new$1(SessionManager sessionManager) {
         if (sessionManager.mContext == null) {
-            return 30000;
+            return 30000L;
         }
         return sessionManager.getCleanupTimeout(sessionManager.mContext);
     }
@@ -73,290 +86,156 @@ public class SessionManager {
     }
 
     private synchronized void resetStaleSessionTimer() {
-        this.mSessionCleanupHandler.removeCallbacksAndMessages((Object) null);
+        this.mSessionCleanupHandler.removeCallbacksAndMessages(null);
         if (this.mCleanStaleSessions != null) {
             this.mSessionCleanupHandler.postDelayed(this.mCleanStaleSessions, getSessionCleanupTimeoutMs());
         }
     }
 
     public synchronized void startSession(Session.Info info, String shortMethodName, String callerIdentification) {
-        if (info == null) {
-            try {
+        try {
+            if (info == null) {
                 startSession(shortMethodName, callerIdentification);
-            } catch (Throwable th) {
-                throw th;
+            } else {
+                startExternalSession(info, shortMethodName);
             }
-        } else {
-            startExternalSession(info, shortMethodName);
+        } catch (Throwable th) {
+            throw th;
         }
     }
 
     public synchronized void startSession(String shortMethodName, String callerIdentification) {
         resetStaleSessionTimer();
         int threadId = getCallingThreadId();
-        if (this.mSessionMapper.get(Integer.valueOf(threadId)) != null) {
-            continueSession(createSubsession(true), shortMethodName);
+        Session activeSession = this.mSessionMapper.get(Integer.valueOf(threadId));
+        if (activeSession != null) {
+            Session childSession = createSubsession(true);
+            continueSession(childSession, shortMethodName);
             return;
         }
-        Log.d(LOGGING_TAG, Session.START_SESSION, new Object[0]);
-        this.mSessionMapper.put(Integer.valueOf(threadId), new Session(getNextSessionID(), shortMethodName, System.currentTimeMillis(), false, callerIdentification));
+        Log.m97d(LOGGING_TAG, Session.START_SESSION, new Object[0]);
+        Session newSession = new Session(getNextSessionID(), shortMethodName, System.currentTimeMillis(), false, callerIdentification);
+        this.mSessionMapper.put(Integer.valueOf(threadId), newSession);
     }
 
     public synchronized void startExternalSession(Session.Info sessionInfo, String shortMethodName) {
-        if (sessionInfo != null) {
-            int threadId = getCallingThreadId();
-            if (this.mSessionMapper.get(Integer.valueOf(threadId)) != null) {
-                Log.w(LOGGING_TAG, "trying to start an external session with a session already active.", new Object[0]);
-                return;
-            }
-            Log.d(LOGGING_TAG, Session.START_EXTERNAL_SESSION, new Object[0]);
-            Session session = new Session(Session.EXTERNAL_INDICATOR + sessionInfo.sessionId, sessionInfo.methodPath, System.currentTimeMillis(), false, (String) null);
-            session.setIsExternal(true);
-            session.markSessionCompleted(-1);
-            this.mSessionMapper.put(Integer.valueOf(threadId), session);
-            continueSession(createSubsession(), shortMethodName);
+        if (sessionInfo == null) {
+            return;
         }
+        int threadId = getCallingThreadId();
+        Session threadSession = this.mSessionMapper.get(Integer.valueOf(threadId));
+        if (threadSession != null) {
+            Log.m89w(LOGGING_TAG, "trying to start an external session with a session already active.", new Object[0]);
+            return;
+        }
+        Log.m97d(LOGGING_TAG, Session.START_EXTERNAL_SESSION, new Object[0]);
+        Session externalSession = new Session(Session.EXTERNAL_INDICATOR + sessionInfo.sessionId, sessionInfo.methodPath, System.currentTimeMillis(), false, null);
+        externalSession.setIsExternal(true);
+        externalSession.markSessionCompleted(-1L);
+        this.mSessionMapper.put(Integer.valueOf(threadId), externalSession);
+        Session childSession = createSubsession();
+        continueSession(childSession, shortMethodName);
     }
 
     public Session createSubsession() {
         return createSubsession(false);
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:14:0x0064, code lost:
-        return r3;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    private synchronized android.telecom.Logging.Session createSubsession(boolean r12) {
-        /*
-            r11 = this;
-            monitor-enter(r11)
-            int r0 = r11.getCallingThreadId()     // Catch:{ all -> 0x0065 }
-            java.util.concurrent.ConcurrentHashMap<java.lang.Integer, android.telecom.Logging.Session> r1 = r11.mSessionMapper     // Catch:{ all -> 0x0065 }
-            java.lang.Integer r2 = java.lang.Integer.valueOf(r0)     // Catch:{ all -> 0x0065 }
-            java.lang.Object r1 = r1.get(r2)     // Catch:{ all -> 0x0065 }
-            android.telecom.Logging.Session r1 = (android.telecom.Logging.Session) r1     // Catch:{ all -> 0x0065 }
-            r2 = 0
-            if (r1 != 0) goto L_0x0020
-            java.lang.String r3 = "Logging"
-            java.lang.String r4 = "Log.createSubsession was called with no session active."
-            java.lang.Object[] r2 = new java.lang.Object[r2]     // Catch:{ all -> 0x0065 }
-            android.telecom.Log.d((java.lang.String) r3, (java.lang.String) r4, (java.lang.Object[]) r2)     // Catch:{ all -> 0x0065 }
-            r2 = 0
-            monitor-exit(r11)
-            return r2
-        L_0x0020:
-            android.telecom.Logging.Session r10 = new android.telecom.Logging.Session     // Catch:{ all -> 0x0065 }
-            java.lang.String r4 = r1.getNextChildId()     // Catch:{ all -> 0x0065 }
-            java.lang.String r5 = r1.getShortMethodName()     // Catch:{ all -> 0x0065 }
-            long r6 = java.lang.System.currentTimeMillis()     // Catch:{ all -> 0x0065 }
-            r9 = 0
-            r3 = r10
-            r8 = r12
-            r3.<init>(r4, r5, r6, r8, r9)     // Catch:{ all -> 0x0065 }
-            r3 = r10
-            r1.addChild(r3)     // Catch:{ all -> 0x0065 }
-            r3.setParentSession(r1)     // Catch:{ all -> 0x0065 }
-            if (r12 != 0) goto L_0x005a
-            java.lang.String r4 = "Logging"
-            java.lang.StringBuilder r5 = new java.lang.StringBuilder     // Catch:{ all -> 0x0065 }
-            r5.<init>()     // Catch:{ all -> 0x0065 }
-            java.lang.String r6 = "CREATE_SUBSESSION "
-            r5.append(r6)     // Catch:{ all -> 0x0065 }
-            java.lang.String r6 = r3.toString()     // Catch:{ all -> 0x0065 }
-            r5.append(r6)     // Catch:{ all -> 0x0065 }
-            java.lang.String r5 = r5.toString()     // Catch:{ all -> 0x0065 }
-            java.lang.Object[] r2 = new java.lang.Object[r2]     // Catch:{ all -> 0x0065 }
-            android.telecom.Log.v((java.lang.String) r4, (java.lang.String) r5, (java.lang.Object[]) r2)     // Catch:{ all -> 0x0065 }
-            goto L_0x0063
-        L_0x005a:
-            java.lang.String r4 = "Logging"
-            java.lang.String r5 = "CREATE_SUBSESSION (Invisible subsession)"
-            java.lang.Object[] r2 = new java.lang.Object[r2]     // Catch:{ all -> 0x0065 }
-            android.telecom.Log.v((java.lang.String) r4, (java.lang.String) r5, (java.lang.Object[]) r2)     // Catch:{ all -> 0x0065 }
-        L_0x0063:
-            monitor-exit(r11)
-            return r3
-        L_0x0065:
-            r12 = move-exception
-            monitor-exit(r11)
-            throw r12
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.telecom.Logging.SessionManager.createSubsession(boolean):android.telecom.Logging.Session");
+    private synchronized Session createSubsession(boolean isStartedFromActiveSession) {
+        int threadId = getCallingThreadId();
+        Session threadSession = this.mSessionMapper.get(Integer.valueOf(threadId));
+        if (threadSession == null) {
+            Log.m97d(LOGGING_TAG, "Log.createSubsession was called with no session active.", new Object[0]);
+            return null;
+        }
+        Session newSubsession = new Session(threadSession.getNextChildId(), threadSession.getShortMethodName(), System.currentTimeMillis(), isStartedFromActiveSession, null);
+        threadSession.addChild(newSubsession);
+        newSubsession.setParentSession(threadSession);
+        if (!isStartedFromActiveSession) {
+            Log.m91v(LOGGING_TAG, "CREATE_SUBSESSION " + newSubsession.toString(), new Object[0]);
+        } else {
+            Log.m91v(LOGGING_TAG, "CREATE_SUBSESSION (Invisible subsession)", new Object[0]);
+        }
+        return newSubsession;
     }
 
     public synchronized Session.Info getExternalSession() {
-        Session threadSession = this.mSessionMapper.get(Integer.valueOf(getCallingThreadId()));
+        int threadId = getCallingThreadId();
+        Session threadSession = this.mSessionMapper.get(Integer.valueOf(threadId));
         if (threadSession == null) {
-            Log.d(LOGGING_TAG, "Log.getExternalSession was called with no session active.", new Object[0]);
+            Log.m97d(LOGGING_TAG, "Log.getExternalSession was called with no session active.", new Object[0]);
             return null;
         }
         return threadSession.getInfo();
     }
 
     public synchronized void cancelSubsession(Session subsession) {
-        if (subsession != null) {
-            subsession.markSessionCompleted(-1);
-            endParentSessions(subsession);
+        if (subsession == null) {
+            return;
+        }
+        subsession.markSessionCompleted(-1L);
+        endParentSessions(subsession);
+    }
+
+    public synchronized void continueSession(Session subsession, String shortMethodName) {
+        if (subsession == null) {
+            return;
+        }
+        resetStaleSessionTimer();
+        subsession.setShortMethodName(shortMethodName);
+        subsession.setExecutionStartTimeMs(System.currentTimeMillis());
+        Session parentSession = subsession.getParentSession();
+        if (parentSession == null) {
+            Log.m93i(LOGGING_TAG, "Log.continueSession was called with no session active for method " + shortMethodName, new Object[0]);
+            return;
+        }
+        this.mSessionMapper.put(Integer.valueOf(getCallingThreadId()), subsession);
+        if (!subsession.isStartedFromActiveSession()) {
+            Log.m91v(LOGGING_TAG, Session.CONTINUE_SUBSESSION, new Object[0]);
+        } else {
+            Log.m91v(LOGGING_TAG, "CONTINUE_SUBSESSION (Invisible Subsession) with Method " + shortMethodName, new Object[0]);
         }
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:16:0x0069, code lost:
-        return;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public synchronized void continueSession(android.telecom.Logging.Session r6, java.lang.String r7) {
-        /*
-            r5 = this;
-            monitor-enter(r5)
-            if (r6 != 0) goto L_0x0005
-            monitor-exit(r5)
-            return
-        L_0x0005:
-            r5.resetStaleSessionTimer()     // Catch:{ all -> 0x006a }
-            r6.setShortMethodName(r7)     // Catch:{ all -> 0x006a }
-            long r0 = java.lang.System.currentTimeMillis()     // Catch:{ all -> 0x006a }
-            r6.setExecutionStartTimeMs(r0)     // Catch:{ all -> 0x006a }
-            android.telecom.Logging.Session r0 = r6.getParentSession()     // Catch:{ all -> 0x006a }
-            r1 = 0
-            if (r0 != 0) goto L_0x0033
-            java.lang.String r2 = "Logging"
-            java.lang.StringBuilder r3 = new java.lang.StringBuilder     // Catch:{ all -> 0x006a }
-            r3.<init>()     // Catch:{ all -> 0x006a }
-            java.lang.String r4 = "Log.continueSession was called with no session active for method "
-            r3.append(r4)     // Catch:{ all -> 0x006a }
-            r3.append(r7)     // Catch:{ all -> 0x006a }
-            java.lang.String r3 = r3.toString()     // Catch:{ all -> 0x006a }
-            java.lang.Object[] r1 = new java.lang.Object[r1]     // Catch:{ all -> 0x006a }
-            android.telecom.Log.i((java.lang.String) r2, (java.lang.String) r3, (java.lang.Object[]) r1)     // Catch:{ all -> 0x006a }
-            monitor-exit(r5)
-            return
-        L_0x0033:
-            java.util.concurrent.ConcurrentHashMap<java.lang.Integer, android.telecom.Logging.Session> r2 = r5.mSessionMapper     // Catch:{ all -> 0x006a }
-            int r3 = r5.getCallingThreadId()     // Catch:{ all -> 0x006a }
-            java.lang.Integer r3 = java.lang.Integer.valueOf(r3)     // Catch:{ all -> 0x006a }
-            r2.put(r3, r6)     // Catch:{ all -> 0x006a }
-            boolean r2 = r6.isStartedFromActiveSession()     // Catch:{ all -> 0x006a }
-            if (r2 != 0) goto L_0x0050
-            java.lang.String r2 = "Logging"
-            java.lang.String r3 = "CONTINUE_SUBSESSION"
-            java.lang.Object[] r1 = new java.lang.Object[r1]     // Catch:{ all -> 0x006a }
-            android.telecom.Log.v((java.lang.String) r2, (java.lang.String) r3, (java.lang.Object[]) r1)     // Catch:{ all -> 0x006a }
-            goto L_0x0068
-        L_0x0050:
-            java.lang.String r2 = "Logging"
-            java.lang.StringBuilder r3 = new java.lang.StringBuilder     // Catch:{ all -> 0x006a }
-            r3.<init>()     // Catch:{ all -> 0x006a }
-            java.lang.String r4 = "CONTINUE_SUBSESSION (Invisible Subsession) with Method "
-            r3.append(r4)     // Catch:{ all -> 0x006a }
-            r3.append(r7)     // Catch:{ all -> 0x006a }
-            java.lang.String r3 = r3.toString()     // Catch:{ all -> 0x006a }
-            java.lang.Object[] r1 = new java.lang.Object[r1]     // Catch:{ all -> 0x006a }
-            android.telecom.Log.v((java.lang.String) r2, (java.lang.String) r3, (java.lang.Object[]) r1)     // Catch:{ all -> 0x006a }
-        L_0x0068:
-            monitor-exit(r5)
-            return
-        L_0x006a:
-            r6 = move-exception
-            monitor-exit(r5)
-            throw r6
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.telecom.Logging.SessionManager.continueSession(android.telecom.Logging.Session, java.lang.String):void");
-    }
-
-    /* JADX WARNING: Code restructure failed: missing block: B:20:0x0097, code lost:
-        return;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
     public synchronized void endSession() {
-        /*
-            r7 = this;
-            monitor-enter(r7)
-            int r0 = r7.getCallingThreadId()     // Catch:{ all -> 0x0098 }
-            java.util.concurrent.ConcurrentHashMap<java.lang.Integer, android.telecom.Logging.Session> r1 = r7.mSessionMapper     // Catch:{ all -> 0x0098 }
-            java.lang.Integer r2 = java.lang.Integer.valueOf(r0)     // Catch:{ all -> 0x0098 }
-            java.lang.Object r1 = r1.get(r2)     // Catch:{ all -> 0x0098 }
-            android.telecom.Logging.Session r1 = (android.telecom.Logging.Session) r1     // Catch:{ all -> 0x0098 }
-            r2 = 0
-            if (r1 != 0) goto L_0x001f
-            java.lang.String r3 = "Logging"
-            java.lang.String r4 = "Log.endSession was called with no session active."
-            java.lang.Object[] r2 = new java.lang.Object[r2]     // Catch:{ all -> 0x0098 }
-            android.telecom.Log.w((java.lang.String) r3, (java.lang.String) r4, (java.lang.Object[]) r2)     // Catch:{ all -> 0x0098 }
-            monitor-exit(r7)
-            return
-        L_0x001f:
-            long r3 = java.lang.System.currentTimeMillis()     // Catch:{ all -> 0x0098 }
-            r1.markSessionCompleted(r3)     // Catch:{ all -> 0x0098 }
-            boolean r3 = r1.isStartedFromActiveSession()     // Catch:{ all -> 0x0098 }
-            if (r3 != 0) goto L_0x004e
-            java.lang.String r3 = "Logging"
-            java.lang.StringBuilder r4 = new java.lang.StringBuilder     // Catch:{ all -> 0x0098 }
-            r4.<init>()     // Catch:{ all -> 0x0098 }
-            java.lang.String r5 = "END_SUBSESSION (dur: "
-            r4.append(r5)     // Catch:{ all -> 0x0098 }
-            long r5 = r1.getLocalExecutionTime()     // Catch:{ all -> 0x0098 }
-            r4.append(r5)     // Catch:{ all -> 0x0098 }
-            java.lang.String r5 = " mS)"
-            r4.append(r5)     // Catch:{ all -> 0x0098 }
-            java.lang.String r4 = r4.toString()     // Catch:{ all -> 0x0098 }
-            java.lang.Object[] r2 = new java.lang.Object[r2]     // Catch:{ all -> 0x0098 }
-            android.telecom.Log.v((java.lang.String) r3, (java.lang.String) r4, (java.lang.Object[]) r2)     // Catch:{ all -> 0x0098 }
-            goto L_0x006f
-        L_0x004e:
-            java.lang.String r3 = "Logging"
-            java.lang.StringBuilder r4 = new java.lang.StringBuilder     // Catch:{ all -> 0x0098 }
-            r4.<init>()     // Catch:{ all -> 0x0098 }
-            java.lang.String r5 = "END_SUBSESSION (Invisible Subsession) (dur: "
-            r4.append(r5)     // Catch:{ all -> 0x0098 }
-            long r5 = r1.getLocalExecutionTime()     // Catch:{ all -> 0x0098 }
-            r4.append(r5)     // Catch:{ all -> 0x0098 }
-            java.lang.String r5 = " ms)"
-            r4.append(r5)     // Catch:{ all -> 0x0098 }
-            java.lang.String r4 = r4.toString()     // Catch:{ all -> 0x0098 }
-            java.lang.Object[] r2 = new java.lang.Object[r2]     // Catch:{ all -> 0x0098 }
-            android.telecom.Log.v((java.lang.String) r3, (java.lang.String) r4, (java.lang.Object[]) r2)     // Catch:{ all -> 0x0098 }
-        L_0x006f:
-            android.telecom.Logging.Session r2 = r1.getParentSession()     // Catch:{ all -> 0x0098 }
-            java.util.concurrent.ConcurrentHashMap<java.lang.Integer, android.telecom.Logging.Session> r3 = r7.mSessionMapper     // Catch:{ all -> 0x0098 }
-            java.lang.Integer r4 = java.lang.Integer.valueOf(r0)     // Catch:{ all -> 0x0098 }
-            r3.remove(r4)     // Catch:{ all -> 0x0098 }
-            r7.endParentSessions(r1)     // Catch:{ all -> 0x0098 }
-            if (r2 == 0) goto L_0x0096
-            boolean r3 = r2.isSessionCompleted()     // Catch:{ all -> 0x0098 }
-            if (r3 != 0) goto L_0x0096
-            boolean r3 = r1.isStartedFromActiveSession()     // Catch:{ all -> 0x0098 }
-            if (r3 == 0) goto L_0x0096
-            java.util.concurrent.ConcurrentHashMap<java.lang.Integer, android.telecom.Logging.Session> r3 = r7.mSessionMapper     // Catch:{ all -> 0x0098 }
-            java.lang.Integer r4 = java.lang.Integer.valueOf(r0)     // Catch:{ all -> 0x0098 }
-            r3.put(r4, r2)     // Catch:{ all -> 0x0098 }
-        L_0x0096:
-            monitor-exit(r7)
-            return
-        L_0x0098:
-            r0 = move-exception
-            monitor-exit(r7)
-            throw r0
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.telecom.Logging.SessionManager.endSession():void");
+        int threadId = getCallingThreadId();
+        Session completedSession = this.mSessionMapper.get(Integer.valueOf(threadId));
+        if (completedSession == null) {
+            Log.m89w(LOGGING_TAG, "Log.endSession was called with no session active.", new Object[0]);
+            return;
+        }
+        completedSession.markSessionCompleted(System.currentTimeMillis());
+        if (!completedSession.isStartedFromActiveSession()) {
+            Log.m91v(LOGGING_TAG, "END_SUBSESSION (dur: " + completedSession.getLocalExecutionTime() + " mS)", new Object[0]);
+        } else {
+            Log.m91v(LOGGING_TAG, "END_SUBSESSION (Invisible Subsession) (dur: " + completedSession.getLocalExecutionTime() + " ms)", new Object[0]);
+        }
+        Session parentSession = completedSession.getParentSession();
+        this.mSessionMapper.remove(Integer.valueOf(threadId));
+        endParentSessions(completedSession);
+        if (parentSession != null && !parentSession.isSessionCompleted() && completedSession.isStartedFromActiveSession()) {
+            this.mSessionMapper.put(Integer.valueOf(threadId), parentSession);
+        }
     }
 
     private void endParentSessions(Session subsession) {
-        if (subsession.isSessionCompleted() && subsession.getChildSessions().size() == 0) {
-            Session parentSession = subsession.getParentSession();
-            if (parentSession != null) {
-                subsession.setParentSession((Session) null);
-                parentSession.removeChild(subsession);
-                if (parentSession.isExternal()) {
-                    notifySessionCompleteListeners(subsession.getShortMethodName(), System.currentTimeMillis() - subsession.getExecutionStartTimeMilliseconds());
-                }
-                endParentSessions(parentSession);
-                return;
+        if (!subsession.isSessionCompleted() || subsession.getChildSessions().size() != 0) {
+            return;
+        }
+        Session parentSession = subsession.getParentSession();
+        if (parentSession != null) {
+            subsession.setParentSession(null);
+            parentSession.removeChild(subsession);
+            if (parentSession.isExternal()) {
+                notifySessionCompleteListeners(subsession.getShortMethodName(), System.currentTimeMillis() - subsession.getExecutionStartTimeMilliseconds());
             }
-            long fullSessionTimeMs = System.currentTimeMillis() - subsession.getExecutionStartTimeMilliseconds();
-            Log.d(LOGGING_TAG, "END_SESSION (dur: " + fullSessionTimeMs + " ms): " + subsession.toString(), new Object[0]);
-            if (!subsession.isExternal()) {
-                notifySessionCompleteListeners(subsession.getShortMethodName(), fullSessionTimeMs);
-            }
+            endParentSessions(parentSession);
+            return;
+        }
+        long fullSessionTimeMs = System.currentTimeMillis() - subsession.getExecutionStartTimeMilliseconds();
+        Log.m97d(LOGGING_TAG, "END_SESSION (dur: " + fullSessionTimeMs + " ms): " + subsession.toString(), new Object[0]);
+        if (!subsession.isExternal()) {
+            notifySessionCompleteListeners(subsession.getShortMethodName(), fullSessionTimeMs);
         }
     }
 
@@ -371,7 +250,6 @@ public class SessionManager {
         return currentSession != null ? currentSession.toString() : "";
     }
 
-    /* Debug info: failed to restart local var, previous not found, register: 1 */
     public synchronized void registerSessionListener(ISessionListener l) {
         if (l != null) {
             this.mSessionListeners.add(l);
@@ -383,7 +261,7 @@ public class SessionManager {
         int i = this.sCodeEntryCounter;
         this.sCodeEntryCounter = i + 1;
         nextId = Integer.valueOf(i);
-        if (((long) nextId.intValue()) >= 262144) {
+        if (nextId.intValue() >= 262144) {
             restartSessionCounter();
             int i2 = this.sCodeEntryCounter;
             this.sCodeEntryCounter = i2 + 1;
@@ -397,7 +275,8 @@ public class SessionManager {
     }
 
     private String getBase64Encoding(int number) {
-        return Base64.encodeToString(Arrays.copyOfRange(ByteBuffer.allocate(4).putInt(number).array(), 2, 4), 3);
+        byte[] idByteArray = ByteBuffer.allocate(4).putInt(number).array();
+        return Base64.encodeToString(Arrays.copyOfRange(idByteArray, 2, 4), 3);
     }
 
     private int getCallingThreadId() {
@@ -411,7 +290,8 @@ public class SessionManager {
         long currentTimeMs = System.currentTimeMillis();
         Iterator<Map.Entry<Integer, Session>> it = this.mSessionMapper.entrySet().iterator();
         while (it.hasNext()) {
-            Session session = it.next().getValue();
+            Map.Entry<Integer, Session> entry = it.next();
+            Session session = entry.getValue();
             if (currentTimeMs - session.getExecutionStartTimeMilliseconds() > timeoutMs) {
                 it.remove();
                 logMessage = logMessage + session.printFullSessionTree() + "\n";
@@ -419,13 +299,13 @@ public class SessionManager {
             }
         }
         if (isSessionsStale) {
-            Log.w(LOGGING_TAG, logMessage, new Object[0]);
+            Log.m89w(LOGGING_TAG, logMessage, new Object[0]);
         } else {
-            Log.v(LOGGING_TAG, "No stale logging sessions needed to be cleaned...", new Object[0]);
+            Log.m91v(LOGGING_TAG, "No stale logging sessions needed to be cleaned...", new Object[0]);
         }
     }
 
     private long getCleanupTimeout(Context context) {
-        return Settings.Secure.getLong(context.getContentResolver(), "telecom.stale_session_cleanup_timeout_millis", 30000);
+        return Settings.Secure.getLong(context.getContentResolver(), "telecom.stale_session_cleanup_timeout_millis", 30000L);
     }
 }

@@ -3,6 +3,7 @@ package android.graphics;
 import android.annotation.UnsupportedAppUsage;
 import android.graphics.Shader;
 
+/* loaded from: classes.dex */
 public class BitmapShader extends Shader {
     @UnsupportedAppUsage
     public Bitmap mBitmap;
@@ -20,15 +21,17 @@ public class BitmapShader extends Shader {
     private BitmapShader(Bitmap bitmap, int tileX, int tileY) {
         if (bitmap == null) {
             throw new IllegalArgumentException("Bitmap must be non-null");
-        } else if (bitmap != this.mBitmap || tileX != this.mTileX || tileY != this.mTileY) {
-            this.mBitmap = bitmap;
-            this.mTileX = tileX;
-            this.mTileY = tileY;
         }
+        if (bitmap == this.mBitmap && tileX == this.mTileX && tileY == this.mTileY) {
+            return;
+        }
+        this.mBitmap = bitmap;
+        this.mTileX = tileX;
+        this.mTileY = tileY;
     }
 
-    /* access modifiers changed from: package-private */
-    public long createNativeInstance(long nativeMatrix) {
+    @Override // android.graphics.Shader
+    long createNativeInstance(long nativeMatrix) {
         return nativeCreate(nativeMatrix, this.mBitmap.getNativeInstance(), this.mTileX, this.mTileY);
     }
 }

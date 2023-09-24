@@ -1,11 +1,12 @@
 package android.service.quicksettings;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes3.dex */
 public interface IQSTileService extends IInterface {
     void onClick(IBinder iBinder) throws RemoteException;
 
@@ -19,30 +20,39 @@ public interface IQSTileService extends IInterface {
 
     void onUnlockComplete() throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements IQSTileService {
+        @Override // android.service.quicksettings.IQSTileService
         public void onTileAdded() throws RemoteException {
         }
 
+        @Override // android.service.quicksettings.IQSTileService
         public void onTileRemoved() throws RemoteException {
         }
 
+        @Override // android.service.quicksettings.IQSTileService
         public void onStartListening() throws RemoteException {
         }
 
+        @Override // android.service.quicksettings.IQSTileService
         public void onStopListening() throws RemoteException {
         }
 
+        @Override // android.service.quicksettings.IQSTileService
         public void onClick(IBinder wtoken) throws RemoteException {
         }
 
+        @Override // android.service.quicksettings.IQSTileService
         public void onUnlockComplete() throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements IQSTileService {
         private static final String DESCRIPTOR = "android.service.quicksettings.IQSTileService";
         static final int TRANSACTION_onClick = 5;
@@ -61,12 +71,13 @@ public interface IQSTileService extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IQSTileService)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IQSTileService)) {
+                return (IQSTileService) iin;
             }
-            return (IQSTileService) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -90,46 +101,49 @@ public interface IQSTileService extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        onTileAdded();
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        onTileRemoved();
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        onStartListening();
-                        return true;
-                    case 4:
-                        data.enforceInterface(DESCRIPTOR);
-                        onStopListening();
-                        return true;
-                    case 5:
-                        data.enforceInterface(DESCRIPTOR);
-                        onClick(data.readStrongBinder());
-                        return true;
-                    case 6:
-                        data.enforceInterface(DESCRIPTOR);
-                        onUnlockComplete();
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    onTileAdded();
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    onTileRemoved();
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    onStartListening();
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    onStopListening();
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg0 = data.readStrongBinder();
+                    onClick(_arg0);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    onUnlockComplete();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements IQSTileService {
             public static IQSTileService sDefaultImpl;
             private IBinder mRemote;
@@ -138,6 +152,7 @@ public interface IQSTileService extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -146,13 +161,13 @@ public interface IQSTileService extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.service.quicksettings.IQSTileService
             public void onTileAdded() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onTileAdded();
                     }
                 } finally {
@@ -160,13 +175,13 @@ public interface IQSTileService extends IInterface {
                 }
             }
 
+            @Override // android.service.quicksettings.IQSTileService
             public void onTileRemoved() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onTileRemoved();
                     }
                 } finally {
@@ -174,13 +189,13 @@ public interface IQSTileService extends IInterface {
                 }
             }
 
+            @Override // android.service.quicksettings.IQSTileService
             public void onStartListening() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onStartListening();
                     }
                 } finally {
@@ -188,13 +203,13 @@ public interface IQSTileService extends IInterface {
                 }
             }
 
+            @Override // android.service.quicksettings.IQSTileService
             public void onStopListening() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onStopListening();
                     }
                 } finally {
@@ -202,14 +217,14 @@ public interface IQSTileService extends IInterface {
                 }
             }
 
+            @Override // android.service.quicksettings.IQSTileService
             public void onClick(IBinder wtoken) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(wtoken);
-                    if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(5, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onClick(wtoken);
                     }
                 } finally {
@@ -217,13 +232,13 @@ public interface IQSTileService extends IInterface {
                 }
             }
 
+            @Override // android.service.quicksettings.IQSTileService
             public void onUnlockComplete() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(6, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(6, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onUnlockComplete();
                     }
                 } finally {
@@ -233,11 +248,11 @@ public interface IQSTileService extends IInterface {
         }
 
         public static boolean setDefaultImpl(IQSTileService impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IQSTileService getDefaultImpl() {

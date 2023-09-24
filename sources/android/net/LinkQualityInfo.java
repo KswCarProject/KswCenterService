@@ -1,11 +1,14 @@
 package android.net;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes3.dex */
 public class LinkQualityInfo implements Parcelable {
-    public static final Parcelable.Creator<LinkQualityInfo> CREATOR = new Parcelable.Creator<LinkQualityInfo>() {
+    public static final Parcelable.Creator<LinkQualityInfo> CREATOR = new Parcelable.Creator<LinkQualityInfo>() { // from class: android.net.LinkQualityInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public LinkQualityInfo createFromParcel(Parcel in) {
             int objectType = in.readInt();
             if (objectType == 1) {
@@ -22,6 +25,8 @@ public class LinkQualityInfo implements Parcelable {
             }
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public LinkQualityInfo[] newArray(int size) {
             return new LinkQualityInfo[size];
         }
@@ -34,20 +39,22 @@ public class LinkQualityInfo implements Parcelable {
     protected static final int OBJECT_TYPE_WIFI_LINK_QUALITY_INFO = 2;
     public static final int UNKNOWN_INT = Integer.MAX_VALUE;
     public static final long UNKNOWN_LONG = Long.MAX_VALUE;
-    private int mDataSampleDuration = Integer.MAX_VALUE;
-    private long mLastDataSampleTime = Long.MAX_VALUE;
     private int mNetworkType = -1;
     private int mNormalizedSignalStrength = Integer.MAX_VALUE;
     private long mPacketCount = Long.MAX_VALUE;
     private long mPacketErrorCount = Long.MAX_VALUE;
-    private int mTheoreticalLatency = Integer.MAX_VALUE;
-    private int mTheoreticalRxBandwidth = Integer.MAX_VALUE;
     private int mTheoreticalTxBandwidth = Integer.MAX_VALUE;
+    private int mTheoreticalRxBandwidth = Integer.MAX_VALUE;
+    private int mTheoreticalLatency = Integer.MAX_VALUE;
+    private long mLastDataSampleTime = Long.MAX_VALUE;
+    private int mDataSampleDuration = Integer.MAX_VALUE;
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         writeToParcel(dest, flags, 1);
     }
@@ -65,8 +72,7 @@ public class LinkQualityInfo implements Parcelable {
         dest.writeInt(this.mDataSampleDuration);
     }
 
-    /* access modifiers changed from: protected */
-    public void initializeFromParcel(Parcel in) {
+    protected void initializeFromParcel(Parcel in) {
         this.mNetworkType = in.readInt();
         this.mNormalizedSignalStrength = in.readInt();
         this.mPacketCount = in.readLong();

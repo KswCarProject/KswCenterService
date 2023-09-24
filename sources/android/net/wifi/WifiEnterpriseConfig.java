@@ -2,8 +2,8 @@ package android.net.wifi;
 
 import android.annotation.UnsupportedAppUsage;
 import android.net.wifi.hotspot2.pps.Credential;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.security.Credentials;
 import android.telecom.Logging.Session;
 import android.text.TextUtils;
@@ -17,81 +17,83 @@ import java.util.List;
 import java.util.Map;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 
+/* loaded from: classes3.dex */
 public class WifiEnterpriseConfig implements Parcelable {
-    public static final String ALTSUBJECT_MATCH_KEY = "altsubject_match";
-    public static final String ANON_IDENTITY_KEY = "anonymous_identity";
     public static final String CA_CERT_ALIAS_DELIMITER = " ";
-    public static final String CA_CERT_KEY = "ca_cert";
     public static final String CA_CERT_PREFIX = "keystore://CACERT_";
-    public static final String CA_PATH_KEY = "ca_path";
-    public static final String CLIENT_CERT_KEY = "client_cert";
     public static final String CLIENT_CERT_PREFIX = "keystore://USRCERT_";
-    public static final Parcelable.Creator<WifiEnterpriseConfig> CREATOR = new Parcelable.Creator<WifiEnterpriseConfig>() {
-        public WifiEnterpriseConfig createFromParcel(Parcel in) {
-            WifiEnterpriseConfig enterpriseConfig = new WifiEnterpriseConfig();
-            int count = in.readInt();
-            for (int i = 0; i < count; i++) {
-                enterpriseConfig.mFields.put(in.readString(), in.readString());
-            }
-            int unused = enterpriseConfig.mEapMethod = in.readInt();
-            int unused2 = enterpriseConfig.mPhase2Method = in.readInt();
-            X509Certificate[] unused3 = enterpriseConfig.mCaCerts = ParcelUtil.readCertificates(in);
-            PrivateKey unused4 = enterpriseConfig.mClientPrivateKey = ParcelUtil.readPrivateKey(in);
-            X509Certificate[] unused5 = enterpriseConfig.mClientCertificateChain = ParcelUtil.readCertificates(in);
-            boolean unused6 = enterpriseConfig.mIsAppInstalledDeviceKeyAndCert = in.readBoolean();
-            boolean unused7 = enterpriseConfig.mIsAppInstalledCaCert = in.readBoolean();
-            return enterpriseConfig;
-        }
-
-        public WifiEnterpriseConfig[] newArray(int size) {
-            return new WifiEnterpriseConfig[size];
-        }
-    };
-    public static final String DOM_SUFFIX_MATCH_KEY = "domain_suffix_match";
-    public static final String EAP_ERP = "eap_erp";
     public static final String EAP_KEY = "eap";
     public static final String EMPTY_VALUE = "NULL";
     public static final String ENGINE_DISABLE = "0";
     public static final String ENGINE_ENABLE = "1";
-    public static final String ENGINE_ID_KEY = "engine_id";
     public static final String ENGINE_ID_KEYSTORE = "keystore";
     public static final String ENGINE_KEY = "engine";
-    public static final String IDENTITY_KEY = "identity";
     public static final String KEYSTORES_URI = "keystores://";
     public static final String KEYSTORE_URI = "keystore://";
     public static final String KEY_SIMNUM = "sim_num";
-    public static final String OPP_KEY_CACHING = "proactive_key_caching";
     public static final String PASSWORD_KEY = "password";
     public static final String PHASE2_KEY = "phase2";
     public static final String PLMN_KEY = "plmn";
-    public static final String PRIVATE_KEY_ID_KEY = "key_id";
     public static final String REALM_KEY = "realm";
-    public static final String SUBJECT_MATCH_KEY = "subject_match";
-    private static final String[] SUPPLICANT_CONFIG_KEYS = {IDENTITY_KEY, ANON_IDENTITY_KEY, "password", CLIENT_CERT_KEY, CA_CERT_KEY, SUBJECT_MATCH_KEY, "engine", ENGINE_ID_KEY, PRIVATE_KEY_ID_KEY, ALTSUBJECT_MATCH_KEY, DOM_SUFFIX_MATCH_KEY, CA_PATH_KEY};
     private static final String TAG = "WifiEnterpriseConfig";
-    private static final List<String> UNQUOTED_KEYS = Arrays.asList(new String[]{"engine", OPP_KEY_CACHING, EAP_ERP});
-    /* access modifiers changed from: private */
-    public X509Certificate[] mCaCerts;
-    /* access modifiers changed from: private */
-    public X509Certificate[] mClientCertificateChain;
-    /* access modifiers changed from: private */
-    public PrivateKey mClientPrivateKey;
-    /* access modifiers changed from: private */
-    public int mEapMethod = -1;
-    /* access modifiers changed from: private */
-    @UnsupportedAppUsage
-    public HashMap<String, String> mFields = new HashMap<>();
-    /* access modifiers changed from: private */
-    public boolean mIsAppInstalledCaCert = false;
-    /* access modifiers changed from: private */
-    public boolean mIsAppInstalledDeviceKeyAndCert = false;
-    /* access modifiers changed from: private */
-    public int mPhase2Method = 0;
+    private X509Certificate[] mCaCerts;
+    private X509Certificate[] mClientCertificateChain;
+    private PrivateKey mClientPrivateKey;
+    public static final String IDENTITY_KEY = "identity";
+    public static final String ANON_IDENTITY_KEY = "anonymous_identity";
+    public static final String CLIENT_CERT_KEY = "client_cert";
+    public static final String CA_CERT_KEY = "ca_cert";
+    public static final String SUBJECT_MATCH_KEY = "subject_match";
+    public static final String ENGINE_ID_KEY = "engine_id";
+    public static final String PRIVATE_KEY_ID_KEY = "key_id";
+    public static final String ALTSUBJECT_MATCH_KEY = "altsubject_match";
+    public static final String DOM_SUFFIX_MATCH_KEY = "domain_suffix_match";
+    public static final String CA_PATH_KEY = "ca_path";
+    private static final String[] SUPPLICANT_CONFIG_KEYS = {IDENTITY_KEY, ANON_IDENTITY_KEY, "password", CLIENT_CERT_KEY, CA_CERT_KEY, SUBJECT_MATCH_KEY, "engine", ENGINE_ID_KEY, PRIVATE_KEY_ID_KEY, ALTSUBJECT_MATCH_KEY, DOM_SUFFIX_MATCH_KEY, CA_PATH_KEY};
+    public static final String OPP_KEY_CACHING = "proactive_key_caching";
+    public static final String EAP_ERP = "eap_erp";
+    private static final List<String> UNQUOTED_KEYS = Arrays.asList("engine", OPP_KEY_CACHING, EAP_ERP);
+    public static final Parcelable.Creator<WifiEnterpriseConfig> CREATOR = new Parcelable.Creator<WifiEnterpriseConfig>() { // from class: android.net.wifi.WifiEnterpriseConfig.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public WifiEnterpriseConfig createFromParcel(Parcel in) {
+            WifiEnterpriseConfig enterpriseConfig = new WifiEnterpriseConfig();
+            int count = in.readInt();
+            for (int i = 0; i < count; i++) {
+                String key = in.readString();
+                String value = in.readString();
+                enterpriseConfig.mFields.put(key, value);
+            }
+            int i2 = in.readInt();
+            enterpriseConfig.mEapMethod = i2;
+            enterpriseConfig.mPhase2Method = in.readInt();
+            enterpriseConfig.mCaCerts = ParcelUtil.readCertificates(in);
+            enterpriseConfig.mClientPrivateKey = ParcelUtil.readPrivateKey(in);
+            enterpriseConfig.mClientCertificateChain = ParcelUtil.readCertificates(in);
+            enterpriseConfig.mIsAppInstalledDeviceKeyAndCert = in.readBoolean();
+            enterpriseConfig.mIsAppInstalledCaCert = in.readBoolean();
+            return enterpriseConfig;
+        }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public WifiEnterpriseConfig[] newArray(int size) {
+            return new WifiEnterpriseConfig[size];
+        }
+    };
+    @UnsupportedAppUsage
+    private HashMap<String, String> mFields = new HashMap<>();
+    private int mEapMethod = -1;
+    private int mPhase2Method = 0;
+    private boolean mIsAppInstalledDeviceKeyAndCert = false;
+    private boolean mIsAppInstalledCaCert = false;
+
+    /* loaded from: classes3.dex */
     public interface SupplicantLoader {
         String loadValue(String str);
     }
 
+    /* loaded from: classes3.dex */
     public interface SupplicantSaver {
         boolean saveValue(String str, String str2);
     }
@@ -130,10 +132,12 @@ public class WifiEnterpriseConfig implements Parcelable {
         copyFrom(externalConfig, true, convertToQuotedString(mask));
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mFields.size());
         for (Map.Entry<String, String> entry : this.mFields.entrySet()) {
@@ -149,6 +153,7 @@ public class WifiEnterpriseConfig implements Parcelable {
         dest.writeBoolean(this.mIsAppInstalledCaCert);
     }
 
+    /* loaded from: classes3.dex */
     public static final class Eap {
         public static final int AKA = 5;
         public static final int AKA_PRIME = 6;
@@ -165,6 +170,7 @@ public class WifiEnterpriseConfig implements Parcelable {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class Phase2 {
         public static final int AKA = 6;
         public static final int AKA_PRIME = 7;
@@ -184,32 +190,37 @@ public class WifiEnterpriseConfig implements Parcelable {
 
     public boolean saveToSupplicant(SupplicantSaver saver) {
         boolean is_autheap = false;
-        if (!isEapMethodValid()) {
-            return false;
-        }
-        boolean shouldNotWriteAnonIdentity = this.mEapMethod == 4 || this.mEapMethod == 5 || this.mEapMethod == 6;
-        for (String key : this.mFields.keySet()) {
-            if ((!shouldNotWriteAnonIdentity || !ANON_IDENTITY_KEY.equals(key)) && !saver.saveValue(key, this.mFields.get(key))) {
-                return false;
+        if (isEapMethodValid()) {
+            boolean shouldNotWriteAnonIdentity = this.mEapMethod == 4 || this.mEapMethod == 5 || this.mEapMethod == 6;
+            for (String key : this.mFields.keySet()) {
+                if (!shouldNotWriteAnonIdentity || !ANON_IDENTITY_KEY.equals(key)) {
+                    if (!saver.saveValue(key, this.mFields.get(key))) {
+                        return false;
+                    }
+                }
             }
-        }
-        if (!saver.saveValue(EAP_KEY, Eap.strings[this.mEapMethod])) {
-            return false;
-        }
-        if (this.mEapMethod != 1 && this.mPhase2Method != 0) {
-            if (this.mEapMethod == 2 && this.mPhase2Method == 4) {
-                is_autheap = true;
+            if (saver.saveValue(EAP_KEY, Eap.strings[this.mEapMethod])) {
+                if (this.mEapMethod != 1 && this.mPhase2Method != 0) {
+                    if (this.mEapMethod == 2 && this.mPhase2Method == 4) {
+                        is_autheap = true;
+                    }
+                    String prefix = is_autheap ? "autheap=" : "auth=";
+                    String value = convertToQuotedString(prefix + Phase2.strings[this.mPhase2Method]);
+                    return saver.saveValue(PHASE2_KEY, value);
+                } else if (this.mPhase2Method == 0) {
+                    return saver.saveValue(PHASE2_KEY, null);
+                } else {
+                    Log.m70e(TAG, "WiFi enterprise configuration is invalid as it supplies a phase 2 method but the phase1 method does not support it.");
+                    return false;
+                }
             }
-            return saver.saveValue(PHASE2_KEY, convertToQuotedString((is_autheap ? "autheap=" : "auth=") + Phase2.strings[this.mPhase2Method]));
-        } else if (this.mPhase2Method == 0) {
-            return saver.saveValue(PHASE2_KEY, (String) null);
-        } else {
-            Log.e(TAG, "WiFi enterprise configuration is invalid as it supplies a phase 2 method but the phase1 method does not support it.");
             return false;
         }
+        return false;
     }
 
     public void loadFromSupplicant(SupplicantLoader loader) {
+        String[] strArr;
         for (String key : SUPPLICANT_CONFIG_KEYS) {
             String value = loader.loadValue(key);
             if (value == null) {
@@ -218,7 +229,8 @@ public class WifiEnterpriseConfig implements Parcelable {
                 this.mFields.put(key, value);
             }
         }
-        this.mEapMethod = getStringIndex(Eap.strings, loader.loadValue(EAP_KEY), -1);
+        String eapMethod = loader.loadValue(EAP_KEY);
+        this.mEapMethod = getStringIndex(Eap.strings, eapMethod, -1);
         String phase2Method = removeDoubleQuotes(loader.loadValue(PHASE2_KEY));
         if (phase2Method.startsWith("auth=")) {
             phase2Method = phase2Method.substring("auth=".length());
@@ -237,12 +249,12 @@ public class WifiEnterpriseConfig implements Parcelable {
             case 5:
             case 6:
                 break;
+            default:
+                throw new IllegalArgumentException("Unknown EAP method");
             case 1:
             case 7:
                 setPhase2Method(0);
                 break;
-            default:
-                throw new IllegalArgumentException("Unknown EAP method");
         }
         this.mEapMethod = eapMethod;
         setFieldValue(OPP_KEY_CACHING, "1");
@@ -308,15 +320,14 @@ public class WifiEnterpriseConfig implements Parcelable {
     public static String encodeCaCertificateAlias(String alias) {
         byte[] bytes = alias.getBytes(StandardCharsets.UTF_8);
         StringBuilder sb = new StringBuilder(bytes.length * 2);
-        int length = bytes.length;
-        for (int i = 0; i < length; i++) {
-            sb.append(String.format("%02x", new Object[]{Integer.valueOf(bytes[i] & 255)}));
+        for (byte o : bytes) {
+            sb.append(String.format("%02x", Integer.valueOf(o & 255)));
         }
         return sb.toString();
     }
 
     public static String decodeCaCertificateAlias(String alias) {
-        byte[] data = new byte[(alias.length() >> 1)];
+        byte[] data = new byte[alias.length() >> 1];
         int n = 0;
         int position = 0;
         while (n < alias.length()) {
@@ -339,7 +350,7 @@ public class WifiEnterpriseConfig implements Parcelable {
 
     public void setCaCertificateAliases(String[] aliases) {
         if (aliases == null) {
-            setFieldValue(CA_CERT_KEY, (String) null, CA_CERT_PREFIX);
+            setFieldValue(CA_CERT_KEY, null, CA_CERT_PREFIX);
             return;
         }
         if (aliases.length == 1) {
@@ -365,15 +376,18 @@ public class WifiEnterpriseConfig implements Parcelable {
         String value = getFieldValue(CA_CERT_KEY);
         if (value.startsWith(CA_CERT_PREFIX)) {
             return new String[]{getFieldValue(CA_CERT_KEY, CA_CERT_PREFIX)};
-        } else if (value.startsWith(KEYSTORES_URI)) {
-            String[] aliases = TextUtils.split(value.substring(KEYSTORES_URI.length()), CA_CERT_ALIAS_DELIMITER);
+        }
+        if (value.startsWith(KEYSTORES_URI)) {
+            String values = value.substring(KEYSTORES_URI.length());
+            String[] aliases = TextUtils.split(values, CA_CERT_ALIAS_DELIMITER);
             for (int i = 0; i < aliases.length; i++) {
                 aliases[i] = decodeCaCertificateAlias(aliases[i]);
                 if (aliases[i].startsWith(Credentials.CA_CERTIFICATE)) {
                     aliases[i] = aliases[i].substring(Credentials.CA_CERTIFICATE.length());
                 }
             }
-            if (aliases.length != 0) {
+            int i2 = aliases.length;
+            if (i2 != 0) {
                 return aliases;
             }
             return null;
@@ -385,32 +399,31 @@ public class WifiEnterpriseConfig implements Parcelable {
     }
 
     public void setCaCertificate(X509Certificate cert) {
-        if (cert == null) {
-            this.mCaCerts = null;
-        } else if (cert.getBasicConstraints() >= 0) {
-            this.mIsAppInstalledCaCert = true;
-            this.mCaCerts = new X509Certificate[]{cert};
-        } else {
+        if (cert != null) {
+            if (cert.getBasicConstraints() >= 0) {
+                this.mIsAppInstalledCaCert = true;
+                this.mCaCerts = new X509Certificate[]{cert};
+                return;
+            }
             this.mCaCerts = null;
             throw new IllegalArgumentException("Not a CA certificate");
         }
+        this.mCaCerts = null;
     }
 
     public X509Certificate getCaCertificate() {
-        if (this.mCaCerts == null || this.mCaCerts.length <= 0) {
-            return null;
+        if (this.mCaCerts != null && this.mCaCerts.length > 0) {
+            return this.mCaCerts[0];
         }
-        return this.mCaCerts[0];
+        return null;
     }
 
     public void setCaCertificates(X509Certificate[] certs) {
         if (certs != null) {
             X509Certificate[] newCerts = new X509Certificate[certs.length];
-            int i = 0;
-            while (i < certs.length) {
+            for (int i = 0; i < certs.length; i++) {
                 if (certs[i].getBasicConstraints() >= 0) {
                     newCerts[i] = certs[i];
-                    i++;
                 } else {
                     this.mCaCerts = null;
                     throw new IllegalArgumentException("Not a CA certificate");
@@ -424,10 +437,10 @@ public class WifiEnterpriseConfig implements Parcelable {
     }
 
     public X509Certificate[] getCaCertificates() {
-        if (this.mCaCerts == null || this.mCaCerts.length <= 0) {
-            return null;
+        if (this.mCaCerts != null && this.mCaCerts.length > 0) {
+            return this.mCaCerts;
         }
-        return this.mCaCerts;
+        return null;
     }
 
     public void resetCaCertificate() {
@@ -461,88 +474,47 @@ public class WifiEnterpriseConfig implements Parcelable {
     }
 
     public void setClientKeyEntry(PrivateKey privateKey, X509Certificate clientCertificate) {
-        X509Certificate[] clientCertificates = null;
-        if (clientCertificate != null) {
-            clientCertificates = new X509Certificate[]{clientCertificate};
-        }
+        X509Certificate[] clientCertificates = clientCertificate != null ? new X509Certificate[]{clientCertificate} : null;
         setClientKeyEntryWithCertificateChain(privateKey, clientCertificates);
     }
 
-    /* JADX WARNING: type inference failed for: r2v8, types: [java.lang.Object[]] */
-    /* JADX WARNING: Multi-variable type inference failed */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void setClientKeyEntryWithCertificateChain(java.security.PrivateKey r6, java.security.cert.X509Certificate[] r7) {
-        /*
-            r5 = this;
-            r0 = 0
-            r1 = 1
-            if (r7 == 0) goto L_0x0051
-            int r2 = r7.length
-            if (r2 <= 0) goto L_0x0051
-            r2 = 0
-            r2 = r7[r2]
-            int r2 = r2.getBasicConstraints()
-            r3 = -1
-            if (r2 != r3) goto L_0x0049
-            r2 = r1
-        L_0x0012:
-            int r4 = r7.length
-            if (r2 >= r4) goto L_0x0028
-            r4 = r7[r2]
-            int r4 = r4.getBasicConstraints()
-            if (r4 == r3) goto L_0x0020
-            int r2 = r2 + 1
-            goto L_0x0012
-        L_0x0020:
-            java.lang.IllegalArgumentException r1 = new java.lang.IllegalArgumentException
-            java.lang.String r3 = "All certificates following the first must be CA certificates"
-            r1.<init>(r3)
-            throw r1
-        L_0x0028:
-            int r2 = r7.length
-            java.lang.Object[] r2 = java.util.Arrays.copyOf(r7, r2)
-            r0 = r2
-            java.security.cert.X509Certificate[] r0 = (java.security.cert.X509Certificate[]) r0
-            if (r6 == 0) goto L_0x0041
-            byte[] r2 = r6.getEncoded()
-            if (r2 == 0) goto L_0x0039
-            goto L_0x0051
-        L_0x0039:
-            java.lang.IllegalArgumentException r1 = new java.lang.IllegalArgumentException
-            java.lang.String r2 = "Private key cannot be encoded"
-            r1.<init>(r2)
-            throw r1
-        L_0x0041:
-            java.lang.IllegalArgumentException r1 = new java.lang.IllegalArgumentException
-            java.lang.String r2 = "Client cert without a private key"
-            r1.<init>(r2)
-            throw r1
-        L_0x0049:
-            java.lang.IllegalArgumentException r1 = new java.lang.IllegalArgumentException
-            java.lang.String r2 = "First certificate in the chain must be a client end certificate"
-            r1.<init>(r2)
-            throw r1
-        L_0x0051:
-            r5.mClientPrivateKey = r6
-            r5.mClientCertificateChain = r0
-            r5.mIsAppInstalledDeviceKeyAndCert = r1
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.net.wifi.WifiEnterpriseConfig.setClientKeyEntryWithCertificateChain(java.security.PrivateKey, java.security.cert.X509Certificate[]):void");
+    public void setClientKeyEntryWithCertificateChain(PrivateKey privateKey, X509Certificate[] clientCertificateChain) {
+        X509Certificate[] newCerts = null;
+        if (clientCertificateChain != null && clientCertificateChain.length > 0) {
+            if (clientCertificateChain[0].getBasicConstraints() != -1) {
+                throw new IllegalArgumentException("First certificate in the chain must be a client end certificate");
+            }
+            for (int i = 1; i < clientCertificateChain.length; i++) {
+                if (clientCertificateChain[i].getBasicConstraints() == -1) {
+                    throw new IllegalArgumentException("All certificates following the first must be CA certificates");
+                }
+            }
+            int i2 = clientCertificateChain.length;
+            newCerts = (X509Certificate[]) Arrays.copyOf(clientCertificateChain, i2);
+            if (privateKey == null) {
+                throw new IllegalArgumentException("Client cert without a private key");
+            }
+            if (privateKey.getEncoded() == null) {
+                throw new IllegalArgumentException("Private key cannot be encoded");
+            }
+        }
+        this.mClientPrivateKey = privateKey;
+        this.mClientCertificateChain = newCerts;
+        this.mIsAppInstalledDeviceKeyAndCert = true;
     }
 
     public X509Certificate getClientCertificate() {
-        if (this.mClientCertificateChain == null || this.mClientCertificateChain.length <= 0) {
-            return null;
+        if (this.mClientCertificateChain != null && this.mClientCertificateChain.length > 0) {
+            return this.mClientCertificateChain[0];
         }
-        return this.mClientCertificateChain[0];
+        return null;
     }
 
     public X509Certificate[] getClientCertificateChain() {
-        if (this.mClientCertificateChain == null || this.mClientCertificateChain.length <= 0) {
-            return null;
+        if (this.mClientCertificateChain != null && this.mClientCertificateChain.length > 0) {
+            return this.mClientCertificateChain;
         }
-        return this.mClientCertificateChain;
+        return null;
     }
 
     public void resetClientKeyEntry() {
@@ -596,12 +568,12 @@ public class WifiEnterpriseConfig implements Parcelable {
 
     public String getKeyId(WifiEnterpriseConfig current) {
         if (this.mEapMethod == -1) {
-            return current != null ? current.getKeyId((WifiEnterpriseConfig) null) : EMPTY_VALUE;
-        }
-        if (!isEapMethodValid()) {
+            return current != null ? current.getKeyId(null) : EMPTY_VALUE;
+        } else if (!isEapMethodValid()) {
             return EMPTY_VALUE;
+        } else {
+            return Eap.strings[this.mEapMethod] + Session.SESSION_SEPARATION_CHAR_CHILD + Phase2.strings[this.mPhase2Method];
         }
-        return Eap.strings[this.mEapMethod] + Session.SESSION_SEPARATION_CHAR_CHILD + Phase2.strings[this.mPhase2Method];
     }
 
     private String removeDoubleQuotes(String string) {
@@ -689,16 +661,16 @@ public class WifiEnterpriseConfig implements Parcelable {
 
     private boolean isEapMethodValid() {
         if (this.mEapMethod == -1) {
-            Log.e(TAG, "WiFi enterprise configuration is invalid as it supplies no EAP method.");
+            Log.m70e(TAG, "WiFi enterprise configuration is invalid as it supplies no EAP method.");
             return false;
         } else if (this.mEapMethod < 0 || this.mEapMethod >= Eap.strings.length) {
-            Log.e(TAG, "mEapMethod is invald for WiFi enterprise configuration: " + this.mEapMethod);
+            Log.m70e(TAG, "mEapMethod is invald for WiFi enterprise configuration: " + this.mEapMethod);
             return false;
-        } else if (this.mPhase2Method >= 0 && this.mPhase2Method < Phase2.strings.length) {
-            return true;
+        } else if (this.mPhase2Method < 0 || this.mPhase2Method >= Phase2.strings.length) {
+            Log.m70e(TAG, "mPhase2Method is invald for WiFi enterprise configuration: " + this.mPhase2Method);
+            return false;
         } else {
-            Log.e(TAG, "mPhase2Method is invald for WiFi enterprise configuration: " + this.mPhase2Method);
-            return false;
+            return true;
         }
     }
 

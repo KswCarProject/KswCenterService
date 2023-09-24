@@ -1,23 +1,28 @@
 package android.bluetooth;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes.dex */
 public interface IBluetoothStateChangeCallback extends IInterface {
     void onBluetoothStateChange(boolean z) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements IBluetoothStateChangeCallback {
+        @Override // android.bluetooth.IBluetoothStateChangeCallback
         public void onBluetoothStateChange(boolean on) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements IBluetoothStateChangeCallback {
         private static final String DESCRIPTOR = "android.bluetooth.IBluetoothStateChangeCallback";
         static final int TRANSACTION_onBluetoothStateChange = 1;
@@ -31,40 +36,45 @@ public interface IBluetoothStateChangeCallback extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IBluetoothStateChangeCallback)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IBluetoothStateChangeCallback)) {
+                return (IBluetoothStateChangeCallback) iin;
             }
-            return (IBluetoothStateChangeCallback) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
 
         public static String getDefaultTransactionName(int transactionCode) {
-            if (transactionCode != 1) {
-                return null;
+            if (transactionCode == 1) {
+                return "onBluetoothStateChange";
             }
-            return "onBluetoothStateChange";
+            return null;
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code == 1) {
-                data.enforceInterface(DESCRIPTOR);
-                onBluetoothStateChange(data.readInt() != 0);
-                return true;
-            } else if (code != 1598968902) {
+            if (code != 1) {
+                if (code == 1598968902) {
+                    reply.writeString(DESCRIPTOR);
+                    return true;
+                }
                 return super.onTransact(code, data, reply, flags);
-            } else {
-                reply.writeString(DESCRIPTOR);
-                return true;
             }
+            data.enforceInterface(DESCRIPTOR);
+            boolean _arg0 = data.readInt() != 0;
+            onBluetoothStateChange(_arg0);
+            return true;
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements IBluetoothStateChangeCallback {
             public static IBluetoothStateChangeCallback sDefaultImpl;
             private IBinder mRemote;
@@ -73,6 +83,7 @@ public interface IBluetoothStateChangeCallback extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -81,14 +92,14 @@ public interface IBluetoothStateChangeCallback extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.bluetooth.IBluetoothStateChangeCallback
             public void onBluetoothStateChange(boolean on) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(on);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(on ? 1 : 0);
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onBluetoothStateChange(on);
                     }
                 } finally {
@@ -98,11 +109,11 @@ public interface IBluetoothStateChangeCallback extends IInterface {
         }
 
         public static boolean setDefaultImpl(IBluetoothStateChangeCallback impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IBluetoothStateChangeCallback getDefaultImpl() {

@@ -11,6 +11,7 @@ import java.util.MissingResourceException;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+/* loaded from: classes5.dex */
 class AnyTransliterator extends Transliterator {
     static final String ANY = "Any";
     static final String LATIN_PIVOT = "-Latin;Latin-";
@@ -20,10 +21,10 @@ class AnyTransliterator extends Transliterator {
     private ConcurrentHashMap<Integer, Transliterator> cache;
     private String target;
     private int targetScript;
-    private Transliterator widthFix = Transliterator.getInstance("[[:dt=Nar:][:dt=Wide:]] nfkd");
+    private Transliterator widthFix;
 
-    /* access modifiers changed from: protected */
-    public void handleTransliterate(Replaceable text, Transliterator.Position pos, boolean isIncremental) {
+    @Override // com.ibm.icu.text.Transliterator
+    protected void handleTransliterate(Replaceable text, Transliterator.Position pos, boolean isIncremental) {
         int allStart = pos.start;
         int allLimit = pos.limit;
         ScriptRunIterator it = new ScriptRunIterator(text, pos.contextStart, pos.contextLimit);
@@ -51,7 +52,8 @@ class AnyTransliterator extends Transliterator {
     }
 
     private AnyTransliterator(String id, String theTarget, String theVariant, int theTargetScript) {
-        super(id, (UnicodeFilter) null);
+        super(id, null);
+        this.widthFix = Transliterator.getInstance("[[:dt=Nar:][:dt=Wide:]] nfkd");
         this.targetScript = theTargetScript;
         this.cache = new ConcurrentHashMap<>();
         this.target = theTarget;
@@ -62,51 +64,54 @@ class AnyTransliterator extends Transliterator {
 
     public AnyTransliterator(String id, UnicodeFilter filter, String target2, int targetScript2, Transliterator widthFix2, ConcurrentHashMap<Integer, Transliterator> cache2) {
         super(id, filter);
+        this.widthFix = Transliterator.getInstance("[[:dt=Nar:][:dt=Wide:]] nfkd");
         this.targetScript = targetScript2;
         this.cache = cache2;
         this.target = target2;
     }
 
     private Transliterator getTransliterator(int source) {
-        if (source != this.targetScript && source != -1) {
-            Integer key = Integer.valueOf(source);
-            Transliterator t = this.cache.get(key);
-            if (t != null) {
-                return t;
+        if (source == this.targetScript || source == -1) {
+            if (isWide(this.targetScript)) {
+                return null;
             }
+            return this.widthFix;
+        }
+        Integer key = Integer.valueOf(source);
+        Transliterator t = this.cache.get(key);
+        if (t == null) {
             String sourceName = UScript.getName(source);
+            String id = sourceName + TARGET_SEP + this.target;
             try {
-                t = Transliterator.getInstance(sourceName + TARGET_SEP + this.target, 0);
+                t = Transliterator.getInstance(id, 0);
             } catch (RuntimeException e) {
             }
             if (t == null) {
+                String id2 = sourceName + LATIN_PIVOT + this.target;
                 try {
-                    t = Transliterator.getInstance(sourceName + LATIN_PIVOT + this.target, 0);
+                    t = Transliterator.getInstance(id2, 0);
                 } catch (RuntimeException e2) {
                 }
             }
-            if (t != null) {
+            if (t == null) {
                 if (!isWide(this.targetScript)) {
-                    List<Transliterator> v = new ArrayList<>();
-                    v.add(this.widthFix);
-                    v.add(t);
-                    t = new CompoundTransliterator(v);
+                    return this.widthFix;
                 }
-                Transliterator prevCachedT = this.cache.putIfAbsent(key, t);
-                if (prevCachedT != null) {
-                    return prevCachedT;
-                }
-                return t;
-            } else if (!isWide(this.targetScript)) {
-                return this.widthFix;
-            } else {
                 return t;
             }
-        } else if (isWide(this.targetScript)) {
-            return null;
-        } else {
-            return this.widthFix;
+            if (!isWide(this.targetScript)) {
+                List<Transliterator> v = new ArrayList<>();
+                v.add(this.widthFix);
+                v.add(t);
+                t = new CompoundTransliterator(v);
+            }
+            Transliterator prevCachedT = this.cache.putIfAbsent(key, t);
+            if (prevCachedT != null) {
+                return prevCachedT;
+            }
+            return t;
         }
+        return t;
     }
 
     private boolean isWide(int script) {
@@ -121,22 +126,24 @@ class AnyTransliterator extends Transliterator {
             if (!source.equalsIgnoreCase(ANY)) {
                 Enumeration<String> t = Transliterator.getAvailableTargets(source);
                 while (t.hasMoreElements()) {
-                    String target2 = t.nextElement();
-                    int targetScript2 = scriptNameToCode(target2);
-                    if (targetScript2 != -1) {
-                        Set<String> seenVariants = seen.get(target2);
+                    String target = t.nextElement();
+                    int targetScript = scriptNameToCode(target);
+                    if (targetScript != -1) {
+                        Set<String> seenVariants = seen.get(target);
                         if (seenVariants == null) {
                             Set<String> hashSet = new HashSet<>();
                             seenVariants = hashSet;
-                            seen.put(target2, hashSet);
+                            seen.put(target, hashSet);
                         }
-                        Enumeration<String> v = Transliterator.getAvailableVariants(source, target2);
+                        Enumeration<String> v = Transliterator.getAvailableVariants(source, target);
                         while (v.hasMoreElements()) {
                             String variant = v.nextElement();
                             if (!seenVariants.contains(variant)) {
                                 seenVariants.add(variant);
-                                Transliterator.registerInstance(new AnyTransliterator(TransliteratorIDParser.STVtoID(ANY, target2, variant), target2, variant, targetScript2));
-                                Transliterator.registerSpecialInverse(target2, NULL_ID, false);
+                                String id = TransliteratorIDParser.STVtoID(ANY, target, variant);
+                                AnyTransliterator trans = new AnyTransliterator(id, target, variant, targetScript);
+                                Transliterator.registerInstance(trans);
+                                Transliterator.registerSpecialInverse(target, NULL_ID, false);
                             }
                         }
                     }
@@ -157,6 +164,7 @@ class AnyTransliterator extends Transliterator {
         }
     }
 
+    /* loaded from: classes5.dex */
     private static class ScriptRunIterator {
         public int limit;
         public int scriptCode;
@@ -165,28 +173,38 @@ class AnyTransliterator extends Transliterator {
         private int textLimit;
         private int textStart;
 
-        public ScriptRunIterator(Replaceable text2, int start2, int limit2) {
-            this.text = text2;
-            this.textStart = start2;
-            this.textLimit = limit2;
-            this.limit = start2;
+        public ScriptRunIterator(Replaceable text, int start, int limit) {
+            this.text = text;
+            this.textStart = start;
+            this.textLimit = limit;
+            this.limit = start;
         }
 
+        /* JADX WARN: Incorrect condition in loop: B:13:0x0031 */
+        /*
+            Code decompiled incorrectly, please refer to instructions dump.
+        */
         public boolean next() {
             this.scriptCode = -1;
             this.start = this.limit;
             if (this.start == this.textLimit) {
                 return false;
             }
-            while (this.start > this.textStart && ((s = UScript.getScript(this.text.char32At(this.start - 1))) == 0 || s == 1)) {
+            while (this.start > this.textStart) {
+                int ch = this.text.char32At(this.start - 1);
+                int s = UScript.getScript(ch);
+                if (s != 0 && s != 1) {
+                    break;
+                }
                 this.start--;
             }
-            while (this.limit < this.textLimit) {
-                int s = UScript.getScript(this.text.char32At(this.limit));
-                if (!(s == 0 || s == 1)) {
+            while (ch < this.textLimit) {
+                int ch2 = this.text.char32At(this.limit);
+                int s2 = UScript.getScript(ch2);
+                if (s2 != 0 && s2 != 1) {
                     if (this.scriptCode == -1) {
-                        this.scriptCode = s;
-                    } else if (s != this.scriptCode) {
+                        this.scriptCode = s2;
+                    } else if (s2 != this.scriptCode) {
                         break;
                     }
                 }
@@ -209,6 +227,7 @@ class AnyTransliterator extends Transliterator {
         return new AnyTransliterator(getID(), filter, this.target, this.targetScript, this.widthFix, this.cache);
     }
 
+    @Override // com.ibm.icu.text.Transliterator
     public void addSourceTargetSet(UnicodeSet inputFilter, UnicodeSet sourceSet, UnicodeSet targetSet) {
         UnicodeSet myFilter = getFilterAsUnicodeSet(inputFilter);
         sourceSet.addAll(myFilter);

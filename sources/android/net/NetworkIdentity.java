@@ -4,12 +4,13 @@ import android.content.Context;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.os.Build;
+import android.p007os.Build;
 import android.telecom.Logging.Session;
 import android.util.Slog;
 import android.util.proto.ProtoOutputStream;
 import java.util.Objects;
 
+/* loaded from: classes3.dex */
 public class NetworkIdentity implements Comparable<NetworkIdentity> {
     @Deprecated
     public static final boolean COMBINE_SUBTYPE_ENABLED = true;
@@ -33,16 +34,13 @@ public class NetworkIdentity implements Comparable<NetworkIdentity> {
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(this.mType), Integer.valueOf(this.mSubType), this.mSubscriberId, this.mNetworkId, Boolean.valueOf(this.mRoaming), Boolean.valueOf(this.mMetered), Boolean.valueOf(this.mDefaultNetwork)});
+        return Objects.hash(Integer.valueOf(this.mType), Integer.valueOf(this.mSubType), this.mSubscriberId, this.mNetworkId, Boolean.valueOf(this.mRoaming), Boolean.valueOf(this.mMetered), Boolean.valueOf(this.mDefaultNetwork));
     }
 
     public boolean equals(Object obj) {
-        if (!(obj instanceof NetworkIdentity)) {
-            return false;
-        }
-        NetworkIdentity ident = (NetworkIdentity) obj;
-        if (this.mType == ident.mType && this.mSubType == ident.mSubType && this.mRoaming == ident.mRoaming && Objects.equals(this.mSubscriberId, ident.mSubscriberId) && Objects.equals(this.mNetworkId, ident.mNetworkId) && this.mMetered == ident.mMetered && this.mDefaultNetwork == ident.mDefaultNetwork) {
-            return true;
+        if (obj instanceof NetworkIdentity) {
+            NetworkIdentity ident = (NetworkIdentity) obj;
+            return this.mType == ident.mType && this.mSubType == ident.mSubType && this.mRoaming == ident.mRoaming && Objects.equals(this.mSubscriberId, ident.mSubscriberId) && Objects.equals(this.mNetworkId, ident.mNetworkId) && this.mMetered == ident.mMetered && this.mDefaultNetwork == ident.mDefaultNetwork;
         }
         return false;
     }
@@ -117,10 +115,10 @@ public class NetworkIdentity implements Comparable<NetworkIdentity> {
         if (Build.IS_ENG) {
             return subscriberId;
         }
-        if (subscriberId == null) {
-            return "null";
+        if (subscriberId != null) {
+            return subscriberId.substring(0, Math.min(6, subscriberId.length())) + Session.TRUNCATE_STRING;
         }
-        return subscriberId.substring(0, Math.min(6, subscriberId.length())) + Session.TRUNCATE_STRING;
+        return "null";
     }
 
     public static String[] scrubSubscriberId(String[] subscriberId) {
@@ -142,30 +140,32 @@ public class NetworkIdentity implements Comparable<NetworkIdentity> {
         boolean roaming = !state.networkCapabilities.hasCapability(18);
         boolean metered = !state.networkCapabilities.hasCapability(11);
         if (ConnectivityManager.isNetworkTypeMobile(type)) {
-            if (!(state.subscriberId != null || state.networkInfo.getState() == NetworkInfo.State.DISCONNECTED || state.networkInfo.getState() == NetworkInfo.State.UNKNOWN)) {
-                Slog.w(TAG, "Active mobile network without subscriber! ni = " + state.networkInfo);
+            if (state.subscriberId == null && state.networkInfo.getState() != NetworkInfo.State.DISCONNECTED && state.networkInfo.getState() != NetworkInfo.State.UNKNOWN) {
+                Slog.m50w(TAG, "Active mobile network without subscriber! ni = " + state.networkInfo);
             }
             subscriberId = state.subscriberId;
         } else if (type == 1) {
             if (state.networkId != null) {
                 networkId = state.networkId;
             } else {
-                WifiInfo info = ((WifiManager) context.getSystemService("wifi")).getConnectionInfo();
+                WifiManager wifi = (WifiManager) context.getSystemService("wifi");
+                WifiInfo info = wifi.getConnectionInfo();
                 networkId = info != null ? info.getSSID() : null;
             }
         }
         return new NetworkIdentity(type, subType, subscriberId, networkId, roaming, metered, defaultNetwork);
     }
 
+    @Override // java.lang.Comparable
     public int compareTo(NetworkIdentity another) {
         int res = Integer.compare(this.mType, another.mType);
         if (res == 0) {
             res = Integer.compare(this.mSubType, another.mSubType);
         }
-        if (!(res != 0 || this.mSubscriberId == null || another.mSubscriberId == null)) {
+        if (res == 0 && this.mSubscriberId != null && another.mSubscriberId != null) {
             res = this.mSubscriberId.compareTo(another.mSubscriberId);
         }
-        if (!(res != 0 || this.mNetworkId == null || another.mNetworkId == null)) {
+        if (res == 0 && this.mNetworkId != null && another.mNetworkId != null) {
             res = this.mNetworkId.compareTo(another.mNetworkId);
         }
         if (res == 0) {

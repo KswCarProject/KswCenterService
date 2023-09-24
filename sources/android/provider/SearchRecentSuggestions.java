@@ -8,22 +8,23 @@ import android.text.TextUtils;
 import android.util.Log;
 import java.util.concurrent.Semaphore;
 
+/* loaded from: classes3.dex */
 public class SearchRecentSuggestions {
     private static final String LOG_TAG = "SearchSuggestions";
     private static final int MAX_HISTORY_COUNT = 250;
-    public static final String[] QUERIES_PROJECTION_1LINE = {"_id", "date", "query", SuggestionColumns.DISPLAY1};
-    public static final String[] QUERIES_PROJECTION_2LINE = {"_id", "date", "query", SuggestionColumns.DISPLAY1, SuggestionColumns.DISPLAY2};
     public static final int QUERIES_PROJECTION_DATE_INDEX = 1;
     public static final int QUERIES_PROJECTION_DISPLAY1_INDEX = 3;
     public static final int QUERIES_PROJECTION_DISPLAY2_INDEX = 4;
     public static final int QUERIES_PROJECTION_QUERY_INDEX = 2;
-    /* access modifiers changed from: private */
-    public static final Semaphore sWritesInProgress = new Semaphore(0);
     private final String mAuthority;
     private final Context mContext;
     private final Uri mSuggestionsUri;
     private final boolean mTwoLineDisplay;
+    public static final String[] QUERIES_PROJECTION_1LINE = {"_id", "date", "query", SuggestionColumns.DISPLAY1};
+    public static final String[] QUERIES_PROJECTION_2LINE = {"_id", "date", "query", SuggestionColumns.DISPLAY1, SuggestionColumns.DISPLAY2};
+    private static final Semaphore sWritesInProgress = new Semaphore(0);
 
+    /* loaded from: classes3.dex */
     private static class SuggestionColumns implements BaseColumns {
         public static final String DATE = "date";
         public static final String DISPLAY1 = "display1";
@@ -44,29 +45,30 @@ public class SearchRecentSuggestions {
         this.mSuggestionsUri = Uri.parse("content://" + this.mAuthority + "/suggestions");
     }
 
+    /* JADX WARN: Type inference failed for: r0v2, types: [android.provider.SearchRecentSuggestions$1] */
     public void saveRecentQuery(final String queryString, final String line2) {
-        if (!TextUtils.isEmpty(queryString)) {
-            if (this.mTwoLineDisplay || TextUtils.isEmpty(line2)) {
-                new Thread("saveRecentQuery") {
-                    public void run() {
-                        SearchRecentSuggestions.this.saveRecentQueryBlocking(queryString, line2);
-                        SearchRecentSuggestions.sWritesInProgress.release();
-                    }
-                }.start();
-                return;
-            }
+        if (TextUtils.isEmpty(queryString)) {
+            return;
+        }
+        if (!this.mTwoLineDisplay && !TextUtils.isEmpty(line2)) {
             throw new IllegalArgumentException();
         }
+        new Thread("saveRecentQuery") { // from class: android.provider.SearchRecentSuggestions.1
+            @Override // java.lang.Thread, java.lang.Runnable
+            public void run() {
+                SearchRecentSuggestions.this.saveRecentQueryBlocking(queryString, line2);
+                SearchRecentSuggestions.sWritesInProgress.release();
+            }
+        }.start();
     }
 
-    /* access modifiers changed from: package-private */
-    public void waitForSave() {
+    void waitForSave() {
         do {
             sWritesInProgress.acquireUninterruptibly();
         } while (sWritesInProgress.availablePermits() > 0);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void saveRecentQueryBlocking(String queryString, String line2) {
         ContentResolver cr = this.mContext.getContentResolver();
         long now = System.currentTimeMillis();
@@ -80,30 +82,29 @@ public class SearchRecentSuggestions {
             values.put("date", Long.valueOf(now));
             cr.insert(this.mSuggestionsUri, values);
         } catch (RuntimeException e) {
-            Log.e(LOG_TAG, "saveRecentQuery", e);
+            Log.m69e(LOG_TAG, "saveRecentQuery", e);
         }
         truncateHistory(cr, 250);
     }
 
     public void clearHistory() {
-        truncateHistory(this.mContext.getContentResolver(), 0);
+        ContentResolver cr = this.mContext.getContentResolver();
+        truncateHistory(cr, 0);
     }
 
-    /* access modifiers changed from: protected */
-    public void truncateHistory(ContentResolver cr, int maxEntries) {
-        if (maxEntries >= 0) {
-            String selection = null;
-            if (maxEntries > 0) {
-                try {
-                    selection = "_id IN (SELECT _id FROM suggestions ORDER BY date DESC LIMIT -1 OFFSET " + String.valueOf(maxEntries) + ")";
-                } catch (RuntimeException e) {
-                    Log.e(LOG_TAG, "truncateHistory", e);
-                    return;
-                }
-            }
-            cr.delete(this.mSuggestionsUri, selection, (String[]) null);
-            return;
+    protected void truncateHistory(ContentResolver cr, int maxEntries) {
+        if (maxEntries < 0) {
+            throw new IllegalArgumentException();
         }
-        throw new IllegalArgumentException();
+        String selection = null;
+        if (maxEntries > 0) {
+            try {
+                selection = "_id IN (SELECT _id FROM suggestions ORDER BY date DESC LIMIT -1 OFFSET " + String.valueOf(maxEntries) + ")";
+            } catch (RuntimeException e) {
+                Log.m69e(LOG_TAG, "truncateHistory", e);
+                return;
+            }
+        }
+        cr.delete(this.mSuggestionsUri, selection, null);
     }
 }

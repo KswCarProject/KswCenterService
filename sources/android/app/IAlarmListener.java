@@ -1,24 +1,29 @@
 package android.app;
 
 import android.app.IAlarmCompleteListener;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes.dex */
 public interface IAlarmListener extends IInterface {
     void doAlarm(IAlarmCompleteListener iAlarmCompleteListener) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements IAlarmListener {
+        @Override // android.app.IAlarmListener
         public void doAlarm(IAlarmCompleteListener callback) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements IAlarmListener {
         private static final String DESCRIPTOR = "android.app.IAlarmListener";
         static final int TRANSACTION_doAlarm = 1;
@@ -32,40 +37,45 @@ public interface IAlarmListener extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IAlarmListener)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IAlarmListener)) {
+                return (IAlarmListener) iin;
             }
-            return (IAlarmListener) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
 
         public static String getDefaultTransactionName(int transactionCode) {
-            if (transactionCode != 1) {
-                return null;
+            if (transactionCode == 1) {
+                return "doAlarm";
             }
-            return "doAlarm";
+            return null;
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code == 1) {
-                data.enforceInterface(DESCRIPTOR);
-                doAlarm(IAlarmCompleteListener.Stub.asInterface(data.readStrongBinder()));
-                return true;
-            } else if (code != 1598968902) {
+            if (code != 1) {
+                if (code == 1598968902) {
+                    reply.writeString(DESCRIPTOR);
+                    return true;
+                }
                 return super.onTransact(code, data, reply, flags);
-            } else {
-                reply.writeString(DESCRIPTOR);
-                return true;
             }
+            data.enforceInterface(DESCRIPTOR);
+            IAlarmCompleteListener _arg0 = IAlarmCompleteListener.Stub.asInterface(data.readStrongBinder());
+            doAlarm(_arg0);
+            return true;
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements IAlarmListener {
             public static IAlarmListener sDefaultImpl;
             private IBinder mRemote;
@@ -74,6 +84,7 @@ public interface IAlarmListener extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -82,14 +93,14 @@ public interface IAlarmListener extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.app.IAlarmListener
             public void doAlarm(IAlarmCompleteListener callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().doAlarm(callback);
                     }
                 } finally {
@@ -99,11 +110,11 @@ public interface IAlarmListener extends IInterface {
         }
 
         public static boolean setDefaultImpl(IAlarmListener impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IAlarmListener getDefaultImpl() {

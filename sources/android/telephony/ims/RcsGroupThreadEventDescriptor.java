@@ -1,7 +1,8 @@
 package android.telephony.ims;
 
-import android.os.Parcel;
+import android.p007os.Parcel;
 
+/* loaded from: classes4.dex */
 public abstract class RcsGroupThreadEventDescriptor extends RcsEventDescriptor {
     protected final int mOriginatingParticipantId;
     protected final int mRcsGroupThreadId;
@@ -18,6 +19,7 @@ public abstract class RcsGroupThreadEventDescriptor extends RcsEventDescriptor {
         this.mOriginatingParticipantId = in.readInt();
     }
 
+    @Override // android.telephony.ims.RcsEventDescriptor, android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
         dest.writeInt(this.mRcsGroupThreadId);

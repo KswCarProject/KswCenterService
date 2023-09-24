@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 
+/* loaded from: classes4.dex */
 public final class ViewTreeObserver {
     private static boolean sIllegalOnDrawModificationIsFatal;
     private boolean mAlive = true;
@@ -34,52 +35,64 @@ public final class ViewTreeObserver {
     private CopyOnWriteArray<OnWindowShownListener> mOnWindowShownListeners;
     private boolean mWindowShown;
 
+    /* loaded from: classes4.dex */
     public interface OnComputeInternalInsetsListener {
         void onComputeInternalInsets(InternalInsetsInfo internalInsetsInfo);
     }
 
+    /* loaded from: classes4.dex */
     public interface OnDrawListener {
         void onDraw();
     }
 
+    /* loaded from: classes4.dex */
     public interface OnEnterAnimationCompleteListener {
         void onEnterAnimationComplete();
     }
 
+    /* loaded from: classes4.dex */
     public interface OnGlobalFocusChangeListener {
         void onGlobalFocusChanged(View view, View view2);
     }
 
+    /* loaded from: classes4.dex */
     public interface OnGlobalLayoutListener {
         void onGlobalLayout();
     }
 
+    /* loaded from: classes4.dex */
     public interface OnPreDrawListener {
         boolean onPreDraw();
     }
 
+    /* loaded from: classes4.dex */
     public interface OnScrollChangedListener {
         void onScrollChanged();
     }
 
+    /* loaded from: classes4.dex */
     public interface OnTouchModeChangeListener {
         void onTouchModeChanged(boolean z);
     }
 
+    /* loaded from: classes4.dex */
     public interface OnWindowAttachListener {
         void onWindowAttached();
 
         void onWindowDetached();
     }
 
+    /* loaded from: classes4.dex */
     public interface OnWindowFocusChangeListener {
         void onWindowFocusChanged(boolean z);
     }
 
+    /* loaded from: classes4.dex */
     public interface OnWindowShownListener {
         void onWindowShown();
     }
 
+    /* loaded from: classes4.dex */
     public static final class InternalInsetsInfo {
         public static final int TOUCHABLE_INSETS_CONTENT = 1;
         public static final int TOUCHABLE_INSETS_FRAME = 0;
@@ -87,34 +100,33 @@ public final class ViewTreeObserver {
         public static final int TOUCHABLE_INSETS_REGION = 3;
         public static final int TOUCHABLE_INSETS_VISIBLE = 2;
         @UnsupportedAppUsage
-        public final Rect contentInsets = new Rect();
-        @UnsupportedAppUsage
         int mTouchableInsets;
         @UnsupportedAppUsage
-        public final Region touchableRegion = new Region();
+        public final Rect contentInsets = new Rect();
         @UnsupportedAppUsage
         public final Rect visibleInsets = new Rect();
+        @UnsupportedAppUsage
+        public final Region touchableRegion = new Region();
 
         @UnsupportedAppUsage
         public void setTouchableInsets(int val) {
             this.mTouchableInsets = val;
         }
 
-        /* access modifiers changed from: package-private */
-        public void reset() {
+        void reset() {
             this.contentInsets.setEmpty();
             this.visibleInsets.setEmpty();
             this.touchableRegion.setEmpty();
             this.mTouchableInsets = 0;
         }
 
-        /* access modifiers changed from: package-private */
-        public boolean isEmpty() {
+        boolean isEmpty() {
             return this.contentInsets.isEmpty() && this.visibleInsets.isEmpty() && this.touchableRegion.isEmpty() && this.mTouchableInsets == 0;
         }
 
         public int hashCode() {
-            return (((((this.contentInsets.hashCode() * 31) + this.visibleInsets.hashCode()) * 31) + this.touchableRegion.hashCode()) * 31) + this.mTouchableInsets;
+            int result = this.contentInsets.hashCode();
+            return (((((result * 31) + this.visibleInsets.hashCode()) * 31) + this.touchableRegion.hashCode()) * 31) + this.mTouchableInsets;
         }
 
         public boolean equals(Object o) {
@@ -125,15 +137,14 @@ public final class ViewTreeObserver {
                 return false;
             }
             InternalInsetsInfo other = (InternalInsetsInfo) o;
-            if (this.mTouchableInsets != other.mTouchableInsets || !this.contentInsets.equals(other.contentInsets) || !this.visibleInsets.equals(other.visibleInsets) || !this.touchableRegion.equals(other.touchableRegion)) {
-                return false;
+            if (this.mTouchableInsets == other.mTouchableInsets && this.contentInsets.equals(other.contentInsets) && this.visibleInsets.equals(other.visibleInsets) && this.touchableRegion.equals(other.touchableRegion)) {
+                return true;
             }
-            return true;
+            return false;
         }
 
-        /* access modifiers changed from: package-private */
         @UnsupportedAppUsage
-        public void set(InternalInsetsInfo other) {
+        void set(InternalInsetsInfo other) {
             this.contentInsets.set(other.contentInsets);
             this.visibleInsets.set(other.visibleInsets);
             this.touchableRegion.set(other.touchableRegion);
@@ -142,12 +153,10 @@ public final class ViewTreeObserver {
     }
 
     ViewTreeObserver(Context context) {
-        boolean z = true;
-        sIllegalOnDrawModificationIsFatal = context.getApplicationInfo().targetSdkVersion < 26 ? false : z;
+        sIllegalOnDrawModificationIsFatal = context.getApplicationInfo().targetSdkVersion >= 26;
     }
 
-    /* access modifiers changed from: package-private */
-    public void merge(ViewTreeObserver observer) {
+    void merge(ViewTreeObserver observer) {
         if (observer.mOnWindowAttachListeners != null) {
             if (this.mOnWindowAttachListeners != null) {
                 this.mOnWindowAttachListeners.addAll(observer.mOnWindowAttachListeners);
@@ -245,9 +254,10 @@ public final class ViewTreeObserver {
 
     public void removeOnWindowAttachListener(OnWindowAttachListener victim) {
         checkIsAlive();
-        if (this.mOnWindowAttachListeners != null) {
-            this.mOnWindowAttachListeners.remove(victim);
+        if (this.mOnWindowAttachListeners == null) {
+            return;
         }
+        this.mOnWindowAttachListeners.remove(victim);
     }
 
     public void addOnWindowFocusChangeListener(OnWindowFocusChangeListener listener) {
@@ -260,9 +270,10 @@ public final class ViewTreeObserver {
 
     public void removeOnWindowFocusChangeListener(OnWindowFocusChangeListener victim) {
         checkIsAlive();
-        if (this.mOnWindowFocusListeners != null) {
-            this.mOnWindowFocusListeners.remove(victim);
+        if (this.mOnWindowFocusListeners == null) {
+            return;
         }
+        this.mOnWindowFocusListeners.remove(victim);
     }
 
     public void addOnGlobalFocusChangeListener(OnGlobalFocusChangeListener listener) {
@@ -275,9 +286,10 @@ public final class ViewTreeObserver {
 
     public void removeOnGlobalFocusChangeListener(OnGlobalFocusChangeListener victim) {
         checkIsAlive();
-        if (this.mOnGlobalFocusListeners != null) {
-            this.mOnGlobalFocusListeners.remove(victim);
+        if (this.mOnGlobalFocusListeners == null) {
+            return;
         }
+        this.mOnGlobalFocusListeners.remove(victim);
     }
 
     public void addOnGlobalLayoutListener(OnGlobalLayoutListener listener) {
@@ -295,9 +307,10 @@ public final class ViewTreeObserver {
 
     public void removeOnGlobalLayoutListener(OnGlobalLayoutListener victim) {
         checkIsAlive();
-        if (this.mOnGlobalLayoutListeners != null) {
-            this.mOnGlobalLayoutListeners.remove(victim);
+        if (this.mOnGlobalLayoutListeners == null) {
+            return;
         }
+        this.mOnGlobalLayoutListeners.remove(victim);
     }
 
     public void addOnPreDrawListener(OnPreDrawListener listener) {
@@ -310,9 +323,10 @@ public final class ViewTreeObserver {
 
     public void removeOnPreDrawListener(OnPreDrawListener victim) {
         checkIsAlive();
-        if (this.mOnPreDrawListeners != null) {
-            this.mOnPreDrawListeners.remove(victim);
+        if (this.mOnPreDrawListeners == null) {
+            return;
         }
+        this.mOnPreDrawListeners.remove(victim);
     }
 
     public void addOnWindowShownListener(OnWindowShownListener listener) {
@@ -328,9 +342,10 @@ public final class ViewTreeObserver {
 
     public void removeOnWindowShownListener(OnWindowShownListener victim) {
         checkIsAlive();
-        if (this.mOnWindowShownListeners != null) {
-            this.mOnWindowShownListeners.remove(victim);
+        if (this.mOnWindowShownListeners == null) {
+            return;
         }
+        this.mOnWindowShownListeners.remove(victim);
     }
 
     public void addOnDrawListener(OnDrawListener listener) {
@@ -340,28 +355,27 @@ public final class ViewTreeObserver {
         }
         if (this.mInDispatchOnDraw) {
             IllegalStateException ex = new IllegalStateException("Cannot call addOnDrawListener inside of onDraw");
-            if (!sIllegalOnDrawModificationIsFatal) {
-                Log.e("ViewTreeObserver", ex.getMessage(), ex);
-            } else {
+            if (sIllegalOnDrawModificationIsFatal) {
                 throw ex;
             }
+            Log.m69e("ViewTreeObserver", ex.getMessage(), ex);
         }
         this.mOnDrawListeners.add(listener);
     }
 
     public void removeOnDrawListener(OnDrawListener victim) {
         checkIsAlive();
-        if (this.mOnDrawListeners != null) {
-            if (this.mInDispatchOnDraw) {
-                IllegalStateException ex = new IllegalStateException("Cannot call removeOnDrawListener inside of onDraw");
-                if (!sIllegalOnDrawModificationIsFatal) {
-                    Log.e("ViewTreeObserver", ex.getMessage(), ex);
-                } else {
-                    throw ex;
-                }
-            }
-            this.mOnDrawListeners.remove(victim);
+        if (this.mOnDrawListeners == null) {
+            return;
         }
+        if (this.mInDispatchOnDraw) {
+            IllegalStateException ex = new IllegalStateException("Cannot call removeOnDrawListener inside of onDraw");
+            if (sIllegalOnDrawModificationIsFatal) {
+                throw ex;
+            }
+            Log.m69e("ViewTreeObserver", ex.getMessage(), ex);
+        }
+        this.mOnDrawListeners.remove(victim);
     }
 
     public void registerFrameCommitCallback(Runnable callback) {
@@ -372,8 +386,7 @@ public final class ViewTreeObserver {
         this.mOnFrameCommitListeners.add(callback);
     }
 
-    /* access modifiers changed from: package-private */
-    public ArrayList<Runnable> captureFrameCommitCallbacks() {
+    ArrayList<Runnable> captureFrameCommitCallbacks() {
         ArrayList<Runnable> ret = this.mOnFrameCommitListeners;
         this.mOnFrameCommitListeners = null;
         return ret;
@@ -397,9 +410,10 @@ public final class ViewTreeObserver {
 
     public void removeOnScrollChangedListener(OnScrollChangedListener victim) {
         checkIsAlive();
-        if (this.mOnScrollChangedListeners != null) {
-            this.mOnScrollChangedListeners.remove(victim);
+        if (this.mOnScrollChangedListeners == null) {
+            return;
         }
+        this.mOnScrollChangedListeners.remove(victim);
     }
 
     public void addOnTouchModeChangeListener(OnTouchModeChangeListener listener) {
@@ -412,9 +426,10 @@ public final class ViewTreeObserver {
 
     public void removeOnTouchModeChangeListener(OnTouchModeChangeListener victim) {
         checkIsAlive();
-        if (this.mOnTouchModeChangeListeners != null) {
-            this.mOnTouchModeChangeListeners.remove(victim);
+        if (this.mOnTouchModeChangeListeners == null) {
+            return;
         }
+        this.mOnTouchModeChangeListeners.remove(victim);
     }
 
     @UnsupportedAppUsage
@@ -429,9 +444,10 @@ public final class ViewTreeObserver {
     @UnsupportedAppUsage
     public void removeOnComputeInternalInsetsListener(OnComputeInternalInsetsListener victim) {
         checkIsAlive();
-        if (this.mOnComputeInternalInsetsListeners != null) {
-            this.mOnComputeInternalInsetsListeners.remove(victim);
+        if (this.mOnComputeInternalInsetsListeners == null) {
+            return;
         }
+        this.mOnComputeInternalInsetsListeners.remove(victim);
     }
 
     public void addOnEnterAnimationCompleteListener(OnEnterAnimationCompleteListener listener) {
@@ -444,9 +460,10 @@ public final class ViewTreeObserver {
 
     public void removeOnEnterAnimationCompleteListener(OnEnterAnimationCompleteListener listener) {
         checkIsAlive();
-        if (this.mOnEnterAnimationCompleteListeners != null) {
-            this.mOnEnterAnimationCompleteListeners.remove(listener);
+        if (this.mOnEnterAnimationCompleteListeners == null) {
+            return;
         }
+        this.mOnEnterAnimationCompleteListeners.remove(listener);
     }
 
     public void addOnSystemGestureExclusionRectsChangedListener(Consumer<List<Rect>> listener) {
@@ -459,9 +476,10 @@ public final class ViewTreeObserver {
 
     public void removeOnSystemGestureExclusionRectsChangedListener(Consumer<List<Rect>> listener) {
         checkIsAlive();
-        if (this.mGestureExclusionListeners != null) {
-            this.mGestureExclusionListeners.remove(listener);
+        if (this.mGestureExclusionListeners == null) {
+            return;
         }
+        this.mGestureExclusionListeners.remove(listener);
     }
 
     private void checkIsAlive() {
@@ -478,8 +496,7 @@ public final class ViewTreeObserver {
         this.mAlive = false;
     }
 
-    /* access modifiers changed from: package-private */
-    public final void dispatchOnWindowAttachedChange(boolean attached) {
+    final void dispatchOnWindowAttachedChange(boolean attached) {
         CopyOnWriteArrayList<OnWindowAttachListener> listeners = this.mOnWindowAttachListeners;
         if (listeners != null && listeners.size() > 0) {
             Iterator<OnWindowAttachListener> it = listeners.iterator();
@@ -494,25 +511,25 @@ public final class ViewTreeObserver {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public final void dispatchOnWindowFocusChange(boolean hasFocus) {
+    final void dispatchOnWindowFocusChange(boolean hasFocus) {
         CopyOnWriteArrayList<OnWindowFocusChangeListener> listeners = this.mOnWindowFocusListeners;
         if (listeners != null && listeners.size() > 0) {
             Iterator<OnWindowFocusChangeListener> it = listeners.iterator();
             while (it.hasNext()) {
-                it.next().onWindowFocusChanged(hasFocus);
+                OnWindowFocusChangeListener listener = it.next();
+                listener.onWindowFocusChanged(hasFocus);
             }
         }
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public final void dispatchOnGlobalFocusChange(View oldFocus, View newFocus) {
+    final void dispatchOnGlobalFocusChange(View oldFocus, View newFocus) {
         CopyOnWriteArrayList<OnGlobalFocusChangeListener> listeners = this.mOnGlobalFocusListeners;
         if (listeners != null && listeners.size() > 0) {
             Iterator<OnGlobalFocusChangeListener> it = listeners.iterator();
             while (it.hasNext()) {
-                it.next().onGlobalFocusChanged(oldFocus, newFocus);
+                OnGlobalFocusChangeListener listener = it.next();
+                listener.onGlobalFocusChanged(oldFocus, newFocus);
             }
         }
     }
@@ -532,8 +549,7 @@ public final class ViewTreeObserver {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public final boolean hasOnPreDrawListeners() {
+    final boolean hasOnPreDrawListeners() {
         return this.mOnPreDrawListeners != null && this.mOnPreDrawListeners.size() > 0;
     }
 
@@ -582,21 +598,20 @@ public final class ViewTreeObserver {
         }
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public final void dispatchOnTouchModeChanged(boolean inTouchMode) {
+    final void dispatchOnTouchModeChanged(boolean inTouchMode) {
         CopyOnWriteArrayList<OnTouchModeChangeListener> listeners = this.mOnTouchModeChangeListeners;
         if (listeners != null && listeners.size() > 0) {
             Iterator<OnTouchModeChangeListener> it = listeners.iterator();
             while (it.hasNext()) {
-                it.next().onTouchModeChanged(inTouchMode);
+                OnTouchModeChangeListener listener = it.next();
+                listener.onTouchModeChanged(inTouchMode);
             }
         }
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public final void dispatchOnScrollChanged() {
+    final void dispatchOnScrollChanged() {
         CopyOnWriteArray<OnScrollChangedListener> listeners = this.mOnScrollChangedListeners;
         if (listeners != null && listeners.size() > 0) {
             CopyOnWriteArray.Access<OnScrollChangedListener> access = listeners.start();
@@ -611,16 +626,14 @@ public final class ViewTreeObserver {
         }
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public final boolean hasComputeInternalInsetsListeners() {
+    final boolean hasComputeInternalInsetsListeners() {
         CopyOnWriteArray<OnComputeInternalInsetsListener> listeners = this.mOnComputeInternalInsetsListeners;
         return listeners != null && listeners.size() > 0;
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public final void dispatchOnComputeInternalInsets(InternalInsetsInfo inoutInfo) {
+    final void dispatchOnComputeInternalInsets(InternalInsetsInfo inoutInfo) {
         CopyOnWriteArray<OnComputeInternalInsetsListener> listeners = this.mOnComputeInternalInsetsListeners;
         if (listeners != null && listeners.size() > 0) {
             CopyOnWriteArray.Access<OnComputeInternalInsetsListener> access = listeners.start();
@@ -640,13 +653,13 @@ public final class ViewTreeObserver {
         if (listeners != null && !listeners.isEmpty()) {
             Iterator<OnEnterAnimationCompleteListener> it = listeners.iterator();
             while (it.hasNext()) {
-                it.next().onEnterAnimationComplete();
+                OnEnterAnimationCompleteListener listener = it.next();
+                listener.onEnterAnimationComplete();
             }
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void dispatchOnSystemGestureExclusionRectsChanged(List<Rect> rects) {
+    void dispatchOnSystemGestureExclusionRectsChanged(List<Rect> rects) {
         CopyOnWriteArray<Consumer<List<Rect>>> listeners = this.mGestureExclusionListeners;
         if (listeners != null && listeners.size() > 0) {
             CopyOnWriteArray.Access<Consumer<List<Rect>>> access = listeners.start();
@@ -661,28 +674,26 @@ public final class ViewTreeObserver {
         }
     }
 
+    /* loaded from: classes4.dex */
     static class CopyOnWriteArray<T> {
-        private final Access<T> mAccess = new Access<>();
-        private ArrayList<T> mData = new ArrayList<>();
         private ArrayList<T> mDataCopy;
         private boolean mStart;
+        private ArrayList<T> mData = new ArrayList<>();
+        private final Access<T> mAccess = new Access<>();
 
+        /* loaded from: classes4.dex */
         static class Access<T> {
-            /* access modifiers changed from: private */
-            public ArrayList<T> mData;
-            /* access modifiers changed from: private */
-            public int mSize;
+            private ArrayList<T> mData;
+            private int mSize;
 
             Access() {
             }
 
-            /* access modifiers changed from: package-private */
-            public T get(int index) {
+            T get(int index) {
                 return this.mData.get(index);
             }
 
-            /* access modifiers changed from: package-private */
-            public int size() {
+            int size() {
                 return this.mSize;
             }
         }
@@ -691,64 +702,56 @@ public final class ViewTreeObserver {
         }
 
         private ArrayList<T> getArray() {
-            if (!this.mStart) {
-                return this.mData;
-            }
-            if (this.mDataCopy == null) {
-                this.mDataCopy = new ArrayList<>(this.mData);
-            }
-            return this.mDataCopy;
-        }
-
-        /* access modifiers changed from: package-private */
-        public Access<T> start() {
-            if (!this.mStart) {
-                this.mStart = true;
-                this.mDataCopy = null;
-                ArrayList unused = this.mAccess.mData = this.mData;
-                int unused2 = this.mAccess.mSize = this.mData.size();
-                return this.mAccess;
-            }
-            throw new IllegalStateException("Iteration already started");
-        }
-
-        /* access modifiers changed from: package-private */
-        public void end() {
             if (this.mStart) {
-                this.mStart = false;
-                if (this.mDataCopy != null) {
-                    this.mData = this.mDataCopy;
-                    this.mAccess.mData.clear();
-                    int unused = this.mAccess.mSize = 0;
+                if (this.mDataCopy == null) {
+                    this.mDataCopy = new ArrayList<>(this.mData);
                 }
-                this.mDataCopy = null;
-                return;
+                return this.mDataCopy;
             }
-            throw new IllegalStateException("Iteration not started");
+            return this.mData;
         }
 
-        /* access modifiers changed from: package-private */
-        public int size() {
+        Access<T> start() {
+            if (this.mStart) {
+                throw new IllegalStateException("Iteration already started");
+            }
+            this.mStart = true;
+            this.mDataCopy = null;
+            ((Access) this.mAccess).mData = this.mData;
+            ((Access) this.mAccess).mSize = this.mData.size();
+            return this.mAccess;
+        }
+
+        void end() {
+            if (!this.mStart) {
+                throw new IllegalStateException("Iteration not started");
+            }
+            this.mStart = false;
+            if (this.mDataCopy != null) {
+                this.mData = this.mDataCopy;
+                ((Access) this.mAccess).mData.clear();
+                ((Access) this.mAccess).mSize = 0;
+            }
+            this.mDataCopy = null;
+        }
+
+        int size() {
             return getArray().size();
         }
 
-        /* access modifiers changed from: package-private */
-        public void add(T item) {
+        void add(T item) {
             getArray().add(item);
         }
 
-        /* access modifiers changed from: package-private */
-        public void addAll(CopyOnWriteArray<T> array) {
+        void addAll(CopyOnWriteArray<T> array) {
             getArray().addAll(array.mData);
         }
 
-        /* access modifiers changed from: package-private */
-        public void remove(T item) {
+        void remove(T item) {
             getArray().remove(item);
         }
 
-        /* access modifiers changed from: package-private */
-        public void clear() {
+        void clear() {
             getArray().clear();
         }
     }

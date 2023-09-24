@@ -7,6 +7,7 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.FIELD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
+/* loaded from: classes4.dex */
 public @interface Since {
     double value();
 }

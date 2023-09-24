@@ -4,8 +4,8 @@ import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
+import android.content.p002pm.PackageManager;
+import android.content.p002pm.ResolveInfo;
 import android.content.res.Resources;
 import android.net.IpPrefix;
 import android.net.LinkAddress;
@@ -13,19 +13,21 @@ import android.net.Network;
 import android.net.ProxyInfo;
 import android.net.RouteInfo;
 import android.net.wifi.WifiEnterpriseConfig;
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.UserHandle;
-import com.android.internal.R;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.UserHandle;
+import com.android.internal.C3132R;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/* loaded from: classes4.dex */
 public class VpnConfig implements Parcelable {
-    public static final Parcelable.Creator<VpnConfig> CREATOR = new Parcelable.Creator<VpnConfig>() {
+    public static final Parcelable.Creator<VpnConfig> CREATOR = new Parcelable.Creator<VpnConfig>() { // from class: com.android.internal.net.VpnConfig.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public VpnConfig createFromParcel(Parcel in) {
             VpnConfig config = new VpnConfig();
             config.user = in.readString();
@@ -38,23 +40,21 @@ public class VpnConfig implements Parcelable {
             config.searchDomains = in.createStringArrayList();
             config.allowedApplications = in.createStringArrayList();
             config.disallowedApplications = in.createStringArrayList();
-            config.configureIntent = (PendingIntent) in.readParcelable((ClassLoader) null);
+            config.configureIntent = (PendingIntent) in.readParcelable(null);
             config.startTime = in.readLong();
-            boolean z = false;
             config.legacy = in.readInt() != 0;
             config.blocking = in.readInt() != 0;
             config.allowBypass = in.readInt() != 0;
             config.allowIPv4 = in.readInt() != 0;
             config.allowIPv6 = in.readInt() != 0;
-            if (in.readInt() != 0) {
-                z = true;
-            }
-            config.isMetered = z;
+            config.isMetered = in.readInt() != 0;
             config.underlyingNetworks = (Network[]) in.createTypedArray(Network.CREATOR);
-            config.proxyInfo = (ProxyInfo) in.readParcelable((ClassLoader) null);
+            config.proxyInfo = (ProxyInfo) in.readParcelable(null);
             return config;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public VpnConfig[] newArray(int size) {
             return new VpnConfig[size];
         }
@@ -62,7 +62,6 @@ public class VpnConfig implements Parcelable {
     public static final String DIALOGS_PACKAGE = "com.android.vpndialogs";
     public static final String LEGACY_VPN = "[Legacy VPN]";
     public static final String SERVICE_INTERFACE = "android.net.VpnService";
-    public List<LinkAddress> addresses = new ArrayList();
     public boolean allowBypass;
     public boolean allowIPv4;
     public boolean allowIPv6;
@@ -72,20 +71,21 @@ public class VpnConfig implements Parcelable {
     public List<String> disallowedApplications;
     public List<String> dnsServers;
     public String interfaze;
-    public boolean isMetered = true;
     public boolean legacy;
-    public int mtu = -1;
     public ProxyInfo proxyInfo;
-    public List<RouteInfo> routes = new ArrayList();
     public List<String> searchDomains;
     public String session;
-    public long startTime = -1;
     public Network[] underlyingNetworks;
     public String user;
+    public int mtu = -1;
+    public List<LinkAddress> addresses = new ArrayList();
+    public List<RouteInfo> routes = new ArrayList();
+    public long startTime = -1;
+    public boolean isMetered = true;
 
     public static Intent getIntentForConfirmation() {
         Intent intent = new Intent();
-        ComponentName componentName = ComponentName.unflattenFromString(Resources.getSystem().getString(R.string.config_customVpnConfirmDialogComponent));
+        ComponentName componentName = ComponentName.unflattenFromString(Resources.getSystem().getString(C3132R.string.config_customVpnConfirmDialogComponent));
         intent.setClassName(componentName.getPackageName(), componentName.getClassName());
         return intent;
     }
@@ -94,7 +94,7 @@ public class VpnConfig implements Parcelable {
         Intent intent = new Intent();
         intent.setClassName(DIALOGS_PACKAGE, "com.android.vpndialogs.ManageDialog");
         intent.addFlags(1350565888);
-        return PendingIntent.getActivityAsUser(context, 0, intent, 0, (Bundle) null, UserHandle.CURRENT);
+        return PendingIntent.getActivityAsUser(context, 0, intent, 0, null, UserHandle.CURRENT);
     }
 
     public static CharSequence getVpnLabel(Context context, String packageName) throws PackageManager.NameNotFoundException {
@@ -102,10 +102,10 @@ public class VpnConfig implements Parcelable {
         Intent intent = new Intent("android.net.VpnService");
         intent.setPackage(packageName);
         List<ResolveInfo> services = pm.queryIntentServices(intent, 0);
-        if (services == null || services.size() != 1) {
-            return pm.getApplicationInfo(packageName, 0).loadLabel(pm);
+        if (services != null && services.size() == 1) {
+            return services.get(0).loadLabel(pm);
         }
-        return services.get(0).loadLabel(pm);
+        return pm.getApplicationInfo(packageName, 0).loadLabel(pm);
     }
 
     public void updateAllowedFamilies(InetAddress address) {
@@ -117,29 +117,35 @@ public class VpnConfig implements Parcelable {
     }
 
     public void addLegacyRoutes(String routesStr) {
-        if (!routesStr.trim().equals("")) {
-            for (String route : routesStr.trim().split(WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER)) {
-                RouteInfo info = new RouteInfo(new IpPrefix(route), (InetAddress) null);
-                this.routes.add(info);
-                updateAllowedFamilies(info.getDestination().getAddress());
-            }
+        if (routesStr.trim().equals("")) {
+            return;
+        }
+        String[] routes = routesStr.trim().split(WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER);
+        for (String route : routes) {
+            RouteInfo info = new RouteInfo(new IpPrefix(route), (InetAddress) null);
+            this.routes.add(info);
+            updateAllowedFamilies(info.getDestination().getAddress());
         }
     }
 
     public void addLegacyAddresses(String addressesStr) {
-        if (!addressesStr.trim().equals("")) {
-            for (String address : addressesStr.trim().split(WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER)) {
-                LinkAddress addr = new LinkAddress(address);
-                this.addresses.add(addr);
-                updateAllowedFamilies(addr.getAddress());
-            }
+        if (addressesStr.trim().equals("")) {
+            return;
+        }
+        String[] addresses = addressesStr.trim().split(WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER);
+        for (String address : addresses) {
+            LinkAddress addr = new LinkAddress(address);
+            this.addresses.add(addr);
+            updateAllowedFamilies(addr.getAddress());
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(this.user);
         out.writeString(this.interfaze);
@@ -164,7 +170,7 @@ public class VpnConfig implements Parcelable {
     }
 
     public String toString() {
-        return "VpnConfig" + "{ user=" + this.user + ", interface=" + this.interfaze + ", session=" + this.session + ", mtu=" + this.mtu + ", addresses=" + toString(this.addresses) + ", routes=" + toString(this.routes) + ", dns=" + toString(this.dnsServers) + ", searchDomains=" + toString(this.searchDomains) + ", allowedApps=" + toString(this.allowedApplications) + ", disallowedApps=" + toString(this.disallowedApplications) + ", configureIntent=" + this.configureIntent + ", startTime=" + this.startTime + ", legacy=" + this.legacy + ", blocking=" + this.blocking + ", allowBypass=" + this.allowBypass + ", allowIPv4=" + this.allowIPv4 + ", allowIPv6=" + this.allowIPv6 + ", underlyingNetworks=" + Arrays.toString(this.underlyingNetworks) + ", proxyInfo=" + this.proxyInfo.toString() + "}";
+        return "VpnConfig{ user=" + this.user + ", interface=" + this.interfaze + ", session=" + this.session + ", mtu=" + this.mtu + ", addresses=" + toString(this.addresses) + ", routes=" + toString(this.routes) + ", dns=" + toString(this.dnsServers) + ", searchDomains=" + toString(this.searchDomains) + ", allowedApps=" + toString(this.allowedApplications) + ", disallowedApps=" + toString(this.disallowedApplications) + ", configureIntent=" + this.configureIntent + ", startTime=" + this.startTime + ", legacy=" + this.legacy + ", blocking=" + this.blocking + ", allowBypass=" + this.allowBypass + ", allowIPv4=" + this.allowIPv4 + ", allowIPv6=" + this.allowIPv6 + ", underlyingNetworks=" + Arrays.toString(this.underlyingNetworks) + ", proxyInfo=" + this.proxyInfo.toString() + "}";
     }
 
     static <T> String toString(List<T> ls) {

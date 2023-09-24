@@ -1,16 +1,21 @@
 package android.service.euicc;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class DownloadSubscriptionResult implements Parcelable {
-    public static final Parcelable.Creator<DownloadSubscriptionResult> CREATOR = new Parcelable.Creator<DownloadSubscriptionResult>() {
+    public static final Parcelable.Creator<DownloadSubscriptionResult> CREATOR = new Parcelable.Creator<DownloadSubscriptionResult>() { // from class: android.service.euicc.DownloadSubscriptionResult.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public DownloadSubscriptionResult createFromParcel(Parcel in) {
             return new DownloadSubscriptionResult(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public DownloadSubscriptionResult[] newArray(int size) {
             return new DownloadSubscriptionResult[size];
         }
@@ -37,12 +42,14 @@ public final class DownloadSubscriptionResult implements Parcelable {
         return this.mCardId;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mResult);
         dest.writeInt(this.mResolvableErrors);
         dest.writeInt(this.mCardId);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

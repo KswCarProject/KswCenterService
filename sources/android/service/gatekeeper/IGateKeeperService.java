@@ -1,11 +1,12 @@
 package android.service.gatekeeper;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes3.dex */
 public interface IGateKeeperService extends IInterface {
     void clearSecureUserId(int i) throws RemoteException;
 
@@ -19,34 +20,43 @@ public interface IGateKeeperService extends IInterface {
 
     GateKeeperResponse verifyChallenge(int i, long j, byte[] bArr, byte[] bArr2) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements IGateKeeperService {
+        @Override // android.service.gatekeeper.IGateKeeperService
         public GateKeeperResponse enroll(int uid, byte[] currentPasswordHandle, byte[] currentPassword, byte[] desiredPassword) throws RemoteException {
             return null;
         }
 
+        @Override // android.service.gatekeeper.IGateKeeperService
         public GateKeeperResponse verify(int uid, byte[] enrolledPasswordHandle, byte[] providedPassword) throws RemoteException {
             return null;
         }
 
+        @Override // android.service.gatekeeper.IGateKeeperService
         public GateKeeperResponse verifyChallenge(int uid, long challenge, byte[] enrolledPasswordHandle, byte[] providedPassword) throws RemoteException {
             return null;
         }
 
+        @Override // android.service.gatekeeper.IGateKeeperService
         public long getSecureUserId(int uid) throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // android.service.gatekeeper.IGateKeeperService
         public void clearSecureUserId(int uid) throws RemoteException {
         }
 
+        @Override // android.service.gatekeeper.IGateKeeperService
         public void reportDeviceSetupComplete() throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements IGateKeeperService {
         private static final String DESCRIPTOR = "android.service.gatekeeper.IGateKeeperService";
         static final int TRANSACTION_clearSecureUserId = 5;
@@ -65,12 +75,13 @@ public interface IGateKeeperService extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface("android.service.gatekeeper.IGateKeeperService");
-            if (iin == null || !(iin instanceof IGateKeeperService)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IGateKeeperService)) {
+                return (IGateKeeperService) iin;
             }
-            return (IGateKeeperService) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -94,74 +105,86 @@ public interface IGateKeeperService extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            int i = code;
-            Parcel parcel = data;
-            Parcel parcel2 = reply;
-            if (i != 1598968902) {
-                switch (i) {
-                    case 1:
-                        parcel.enforceInterface("android.service.gatekeeper.IGateKeeperService");
-                        GateKeeperResponse _result = enroll(data.readInt(), data.createByteArray(), data.createByteArray(), data.createByteArray());
-                        reply.writeNoException();
-                        if (_result != null) {
-                            parcel2.writeInt(1);
-                            _result.writeToParcel(parcel2, 1);
-                        } else {
-                            parcel2.writeInt(0);
-                        }
-                        return true;
-                    case 2:
-                        parcel.enforceInterface("android.service.gatekeeper.IGateKeeperService");
-                        GateKeeperResponse _result2 = verify(data.readInt(), data.createByteArray(), data.createByteArray());
-                        reply.writeNoException();
-                        if (_result2 != null) {
-                            parcel2.writeInt(1);
-                            _result2.writeToParcel(parcel2, 1);
-                        } else {
-                            parcel2.writeInt(0);
-                        }
-                        return true;
-                    case 3:
-                        parcel.enforceInterface("android.service.gatekeeper.IGateKeeperService");
-                        GateKeeperResponse _result3 = verifyChallenge(data.readInt(), data.readLong(), data.createByteArray(), data.createByteArray());
-                        reply.writeNoException();
-                        if (_result3 != null) {
-                            parcel2.writeInt(1);
-                            _result3.writeToParcel(parcel2, 1);
-                        } else {
-                            parcel2.writeInt(0);
-                        }
-                        return true;
-                    case 4:
-                        parcel.enforceInterface("android.service.gatekeeper.IGateKeeperService");
-                        long _result4 = getSecureUserId(data.readInt());
-                        reply.writeNoException();
-                        parcel2.writeLong(_result4);
-                        return true;
-                    case 5:
-                        parcel.enforceInterface("android.service.gatekeeper.IGateKeeperService");
-                        clearSecureUserId(data.readInt());
-                        reply.writeNoException();
-                        return true;
-                    case 6:
-                        parcel.enforceInterface("android.service.gatekeeper.IGateKeeperService");
-                        reportDeviceSetupComplete();
-                        reply.writeNoException();
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
-                parcel2.writeString("android.service.gatekeeper.IGateKeeperService");
+            if (code == 1598968902) {
+                reply.writeString("android.service.gatekeeper.IGateKeeperService");
                 return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface("android.service.gatekeeper.IGateKeeperService");
+                    int _arg0 = data.readInt();
+                    byte[] _arg1 = data.createByteArray();
+                    byte[] _arg2 = data.createByteArray();
+                    byte[] _arg3 = data.createByteArray();
+                    GateKeeperResponse _result = enroll(_arg0, _arg1, _arg2, _arg3);
+                    reply.writeNoException();
+                    if (_result != null) {
+                        reply.writeInt(1);
+                        _result.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 2:
+                    data.enforceInterface("android.service.gatekeeper.IGateKeeperService");
+                    int _arg02 = data.readInt();
+                    byte[] _arg12 = data.createByteArray();
+                    byte[] _arg22 = data.createByteArray();
+                    GateKeeperResponse _result2 = verify(_arg02, _arg12, _arg22);
+                    reply.writeNoException();
+                    if (_result2 != null) {
+                        reply.writeInt(1);
+                        _result2.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 3:
+                    data.enforceInterface("android.service.gatekeeper.IGateKeeperService");
+                    int _arg03 = data.readInt();
+                    long _arg13 = data.readLong();
+                    byte[] _arg23 = data.createByteArray();
+                    byte[] _arg32 = data.createByteArray();
+                    GateKeeperResponse _result3 = verifyChallenge(_arg03, _arg13, _arg23, _arg32);
+                    reply.writeNoException();
+                    if (_result3 != null) {
+                        reply.writeInt(1);
+                        _result3.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 4:
+                    data.enforceInterface("android.service.gatekeeper.IGateKeeperService");
+                    int _arg04 = data.readInt();
+                    long _result4 = getSecureUserId(_arg04);
+                    reply.writeNoException();
+                    reply.writeLong(_result4);
+                    return true;
+                case 5:
+                    data.enforceInterface("android.service.gatekeeper.IGateKeeperService");
+                    int _arg05 = data.readInt();
+                    clearSecureUserId(_arg05);
+                    reply.writeNoException();
+                    return true;
+                case 6:
+                    data.enforceInterface("android.service.gatekeeper.IGateKeeperService");
+                    reportDeviceSetupComplete();
+                    reply.writeNoException();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
             }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements IGateKeeperService {
             public static IGateKeeperService sDefaultImpl;
             private IBinder mRemote;
@@ -170,6 +193,7 @@ public interface IGateKeeperService extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -178,6 +202,7 @@ public interface IGateKeeperService extends IInterface {
                 return "android.service.gatekeeper.IGateKeeperService";
             }
 
+            @Override // android.service.gatekeeper.IGateKeeperService
             public GateKeeperResponse enroll(int uid, byte[] currentPasswordHandle, byte[] currentPassword, byte[] desiredPassword) throws RemoteException {
                 GateKeeperResponse _result;
                 Parcel _data = Parcel.obtain();
@@ -188,7 +213,8 @@ public interface IGateKeeperService extends IInterface {
                     _data.writeByteArray(currentPasswordHandle);
                     _data.writeByteArray(currentPassword);
                     _data.writeByteArray(desiredPassword);
-                    if (!this.mRemote.transact(1, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().enroll(uid, currentPasswordHandle, currentPassword, desiredPassword);
                     }
                     _reply.readException();
@@ -197,16 +223,14 @@ public interface IGateKeeperService extends IInterface {
                     } else {
                         _result = null;
                     }
-                    GateKeeperResponse _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.service.gatekeeper.IGateKeeperService
             public GateKeeperResponse verify(int uid, byte[] enrolledPasswordHandle, byte[] providedPassword) throws RemoteException {
                 GateKeeperResponse _result;
                 Parcel _data = Parcel.obtain();
@@ -216,7 +240,8 @@ public interface IGateKeeperService extends IInterface {
                     _data.writeInt(uid);
                     _data.writeByteArray(enrolledPasswordHandle);
                     _data.writeByteArray(providedPassword);
-                    if (!this.mRemote.transact(2, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().verify(uid, enrolledPasswordHandle, providedPassword);
                     }
                     _reply.readException();
@@ -225,16 +250,14 @@ public interface IGateKeeperService extends IInterface {
                     } else {
                         _result = null;
                     }
-                    GateKeeperResponse _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.service.gatekeeper.IGateKeeperService
             public GateKeeperResponse verifyChallenge(int uid, long challenge, byte[] enrolledPasswordHandle, byte[] providedPassword) throws RemoteException {
                 GateKeeperResponse _result;
                 Parcel _data = Parcel.obtain();
@@ -245,7 +268,8 @@ public interface IGateKeeperService extends IInterface {
                     _data.writeLong(challenge);
                     _data.writeByteArray(enrolledPasswordHandle);
                     _data.writeByteArray(providedPassword);
-                    if (!this.mRemote.transact(3, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().verifyChallenge(uid, challenge, enrolledPasswordHandle, providedPassword);
                     }
                     _reply.readException();
@@ -254,29 +278,6 @@ public interface IGateKeeperService extends IInterface {
                     } else {
                         _result = null;
                     }
-                    GateKeeperResponse _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public long getSecureUserId(int uid) throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken("android.service.gatekeeper.IGateKeeperService");
-                    _data.writeInt(uid);
-                    if (!this.mRemote.transact(4, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
-                        return Stub.getDefaultImpl().getSecureUserId(uid);
-                    }
-                    _reply.readException();
-                    long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -284,37 +285,57 @@ public interface IGateKeeperService extends IInterface {
                 }
             }
 
-            public void clearSecureUserId(int uid) throws RemoteException {
+            @Override // android.service.gatekeeper.IGateKeeperService
+            public long getSecureUserId(int uid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken("android.service.gatekeeper.IGateKeeperService");
                     _data.writeInt(uid);
-                    if (this.mRemote.transact(5, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                        _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        return Stub.getDefaultImpl().getSecureUserId(uid);
                     }
-                    Stub.getDefaultImpl().clearSecureUserId(uid);
+                    _reply.readException();
+                    long _result = _reply.readLong();
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.service.gatekeeper.IGateKeeperService
+            public void clearSecureUserId(int uid) throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken("android.service.gatekeeper.IGateKeeperService");
+                    _data.writeInt(uid);
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().clearSecureUserId(uid);
+                    } else {
+                        _reply.readException();
+                    }
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // android.service.gatekeeper.IGateKeeperService
             public void reportDeviceSetupComplete() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken("android.service.gatekeeper.IGateKeeperService");
-                    if (this.mRemote.transact(6, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().reportDeviceSetupComplete();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().reportDeviceSetupComplete();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -323,11 +344,11 @@ public interface IGateKeeperService extends IInterface {
         }
 
         public static boolean setDefaultImpl(IGateKeeperService impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IGateKeeperService getDefaultImpl() {

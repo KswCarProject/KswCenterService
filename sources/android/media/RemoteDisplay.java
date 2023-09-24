@@ -1,21 +1,22 @@
 package android.media;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Handler;
+import android.p007os.Handler;
 import android.view.Surface;
 import dalvik.system.CloseGuard;
 
+/* loaded from: classes3.dex */
 public final class RemoteDisplay {
     public static final int DISPLAY_ERROR_CONNECTION_DROPPED = 2;
     public static final int DISPLAY_ERROR_UNKOWN = 1;
     public static final int DISPLAY_FLAG_SECURE = 1;
     private final CloseGuard mGuard = CloseGuard.get();
     private final Handler mHandler;
-    /* access modifiers changed from: private */
-    public final Listener mListener;
+    private final Listener mListener;
     private final String mOpPackageName;
     private long mPtr;
 
+    /* loaded from: classes3.dex */
     public interface Listener {
         void onDisplayConnected(Surface surface, int i, int i2, int i3, int i4);
 
@@ -38,8 +39,7 @@ public final class RemoteDisplay {
         this.mOpPackageName = opPackageName;
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         try {
             dispose(true);
         } finally {
@@ -50,15 +50,16 @@ public final class RemoteDisplay {
     public static RemoteDisplay listen(String iface, Listener listener, Handler handler, String opPackageName) {
         if (iface == null) {
             throw new IllegalArgumentException("iface must not be null");
-        } else if (listener == null) {
+        }
+        if (listener == null) {
             throw new IllegalArgumentException("listener must not be null");
-        } else if (handler != null) {
-            RemoteDisplay display = new RemoteDisplay(listener, handler, opPackageName);
-            display.startListening(iface);
-            return display;
-        } else {
+        }
+        if (handler == null) {
             throw new IllegalArgumentException("handler must not be null");
         }
+        RemoteDisplay display = new RemoteDisplay(listener, handler, opPackageName);
+        display.startListening(iface);
+        return display;
     }
 
     @UnsupportedAppUsage
@@ -84,36 +85,32 @@ public final class RemoteDisplay {
                 }
             }
             nativeDispose(this.mPtr);
-            this.mPtr = 0;
+            this.mPtr = 0L;
         }
     }
 
     private void startListening(String iface) {
         this.mPtr = nativeListen(iface, this.mOpPackageName);
-        if (this.mPtr != 0) {
-            this.mGuard.open("dispose");
-            return;
+        if (this.mPtr == 0) {
+            throw new IllegalStateException("Could not start listening for remote display connection on \"" + iface + "\"");
         }
-        throw new IllegalStateException("Could not start listening for remote display connection on \"" + iface + "\"");
+        this.mGuard.open("dispose");
     }
 
     @UnsupportedAppUsage
-    private void notifyDisplayConnected(Surface surface, int width, int height, int flags, int session) {
-        final Surface surface2 = surface;
-        final int i = width;
-        final int i2 = height;
-        final int i3 = flags;
-        final int i4 = session;
-        this.mHandler.post(new Runnable() {
+    private void notifyDisplayConnected(final Surface surface, final int width, final int height, final int flags, final int session) {
+        this.mHandler.post(new Runnable() { // from class: android.media.RemoteDisplay.1
+            @Override // java.lang.Runnable
             public void run() {
-                RemoteDisplay.this.mListener.onDisplayConnected(surface2, i, i2, i3, i4);
+                RemoteDisplay.this.mListener.onDisplayConnected(surface, width, height, flags, session);
             }
         });
     }
 
     @UnsupportedAppUsage
     private void notifyDisplayDisconnected() {
-        this.mHandler.post(new Runnable() {
+        this.mHandler.post(new Runnable() { // from class: android.media.RemoteDisplay.2
+            @Override // java.lang.Runnable
             public void run() {
                 RemoteDisplay.this.mListener.onDisplayDisconnected();
             }
@@ -122,7 +119,8 @@ public final class RemoteDisplay {
 
     @UnsupportedAppUsage
     private void notifyDisplayError(final int error) {
-        this.mHandler.post(new Runnable() {
+        this.mHandler.post(new Runnable() { // from class: android.media.RemoteDisplay.3
+            @Override // java.lang.Runnable
             public void run() {
                 RemoteDisplay.this.mListener.onDisplayError(error);
             }

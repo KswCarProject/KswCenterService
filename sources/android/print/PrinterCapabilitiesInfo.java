@@ -1,7 +1,7 @@
 package android.print;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.print.PrintAttributes;
 import com.android.internal.util.Preconditions;
 import java.util.ArrayList;
@@ -10,35 +10,34 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.IntConsumer;
 
+/* loaded from: classes3.dex */
 public final class PrinterCapabilitiesInfo implements Parcelable {
-    public static final Parcelable.Creator<PrinterCapabilitiesInfo> CREATOR = new Parcelable.Creator<PrinterCapabilitiesInfo>() {
-        public PrinterCapabilitiesInfo createFromParcel(Parcel parcel) {
-            return new PrinterCapabilitiesInfo(parcel);
-        }
-
-        public PrinterCapabilitiesInfo[] newArray(int size) {
-            return new PrinterCapabilitiesInfo[size];
-        }
-    };
-    private static final PrintAttributes.Margins DEFAULT_MARGINS = new PrintAttributes.Margins(0, 0, 0, 0);
     public static final int DEFAULT_UNDEFINED = -1;
     private static final int PROPERTY_COLOR_MODE = 2;
     private static final int PROPERTY_COUNT = 4;
     private static final int PROPERTY_DUPLEX_MODE = 3;
     private static final int PROPERTY_MEDIA_SIZE = 0;
     private static final int PROPERTY_RESOLUTION = 1;
-    /* access modifiers changed from: private */
-    public int mColorModes;
-    /* access modifiers changed from: private */
-    public final int[] mDefaults;
-    /* access modifiers changed from: private */
-    public int mDuplexModes;
-    /* access modifiers changed from: private */
-    public List<PrintAttributes.MediaSize> mMediaSizes;
-    /* access modifiers changed from: private */
-    public PrintAttributes.Margins mMinMargins;
-    /* access modifiers changed from: private */
-    public List<PrintAttributes.Resolution> mResolutions;
+    private int mColorModes;
+    private final int[] mDefaults;
+    private int mDuplexModes;
+    private List<PrintAttributes.MediaSize> mMediaSizes;
+    private PrintAttributes.Margins mMinMargins;
+    private List<PrintAttributes.Resolution> mResolutions;
+    private static final PrintAttributes.Margins DEFAULT_MARGINS = new PrintAttributes.Margins(0, 0, 0, 0);
+    public static final Parcelable.Creator<PrinterCapabilitiesInfo> CREATOR = new Parcelable.Creator<PrinterCapabilitiesInfo>() { // from class: android.print.PrinterCapabilitiesInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public PrinterCapabilitiesInfo createFromParcel(Parcel parcel) {
+            return new PrinterCapabilitiesInfo(parcel);
+        }
+
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public PrinterCapabilitiesInfo[] newArray(int size) {
+            return new PrinterCapabilitiesInfo[size];
+        }
+    };
 
     public PrinterCapabilitiesInfo() {
         this.mMinMargins = DEFAULT_MARGINS;
@@ -53,30 +52,35 @@ public final class PrinterCapabilitiesInfo implements Parcelable {
     }
 
     public void copyFrom(PrinterCapabilitiesInfo other) {
-        if (this != other) {
-            this.mMinMargins = other.mMinMargins;
-            if (other.mMediaSizes == null) {
-                this.mMediaSizes = null;
-            } else if (this.mMediaSizes != null) {
+        if (this == other) {
+            return;
+        }
+        this.mMinMargins = other.mMinMargins;
+        if (other.mMediaSizes != null) {
+            if (this.mMediaSizes != null) {
                 this.mMediaSizes.clear();
                 this.mMediaSizes.addAll(other.mMediaSizes);
             } else {
                 this.mMediaSizes = new ArrayList(other.mMediaSizes);
             }
-            if (other.mResolutions == null) {
-                this.mResolutions = null;
-            } else if (this.mResolutions != null) {
+        } else {
+            this.mMediaSizes = null;
+        }
+        if (other.mResolutions != null) {
+            if (this.mResolutions != null) {
                 this.mResolutions.clear();
                 this.mResolutions.addAll(other.mResolutions);
             } else {
                 this.mResolutions = new ArrayList(other.mResolutions);
             }
-            this.mColorModes = other.mColorModes;
-            this.mDuplexModes = other.mDuplexModes;
-            int defaultCount = other.mDefaults.length;
-            for (int i = 0; i < defaultCount; i++) {
-                this.mDefaults[i] = other.mDefaults[i];
-            }
+        } else {
+            this.mResolutions = null;
+        }
+        this.mColorModes = other.mColorModes;
+        this.mDuplexModes = other.mDuplexModes;
+        int defaultCount = other.mDefaults.length;
+        for (int i = 0; i < defaultCount; i++) {
+            this.mDefaults[i] = other.mDefaults[i];
         }
     }
 
@@ -122,7 +126,7 @@ public final class PrinterCapabilitiesInfo implements Parcelable {
         return builder.build();
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static void enforceValidMask(int mask, IntConsumer enforceSingle) {
         int current = mask;
         while (current > 0) {
@@ -139,19 +143,30 @@ public final class PrinterCapabilitiesInfo implements Parcelable {
         readMediaSizes(parcel);
         readResolutions(parcel);
         this.mColorModes = parcel.readInt();
-        enforceValidMask(this.mColorModes, $$Lambda$PrinterCapabilitiesInfo$2mJhwjGC7Dgi0vwDsnG83V2s6sE.INSTANCE);
+        enforceValidMask(this.mColorModes, new IntConsumer() { // from class: android.print.-$$Lambda$PrinterCapabilitiesInfo$2mJhwjGC7Dgi0vwDsnG83V2s6sE
+            @Override // java.util.function.IntConsumer
+            public final void accept(int i) {
+                PrintAttributes.enforceValidColorMode(i);
+            }
+        });
         this.mDuplexModes = parcel.readInt();
-        enforceValidMask(this.mDuplexModes, $$Lambda$PrinterCapabilitiesInfo$TL1SYHyXTbqj2Nseol9bDJQOn3U.INSTANCE);
+        enforceValidMask(this.mDuplexModes, new IntConsumer() { // from class: android.print.-$$Lambda$PrinterCapabilitiesInfo$TL1SYHyXTbqj2Nseol9bDJQOn3U
+            @Override // java.util.function.IntConsumer
+            public final void accept(int i) {
+                PrintAttributes.enforceValidDuplexMode(i);
+            }
+        });
         readDefaults(parcel);
-        boolean z = false;
         Preconditions.checkArgument(this.mMediaSizes.size() > this.mDefaults[0]);
-        Preconditions.checkArgument(this.mResolutions.size() > this.mDefaults[1] ? true : z);
+        Preconditions.checkArgument(this.mResolutions.size() > this.mDefaults[1]);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         writeMargins(this.mMinMargins, parcel);
         writeMediaSizes(parcel);
@@ -162,12 +177,8 @@ public final class PrinterCapabilitiesInfo implements Parcelable {
     }
 
     public int hashCode() {
-        int i = 0;
-        int result = ((((1 * 31) + (this.mMinMargins == null ? 0 : this.mMinMargins.hashCode())) * 31) + (this.mMediaSizes == null ? 0 : this.mMediaSizes.hashCode())) * 31;
-        if (this.mResolutions != null) {
-            i = this.mResolutions.hashCode();
-        }
-        return ((((((result + i) * 31) + this.mColorModes) * 31) + this.mDuplexModes) * 31) + Arrays.hashCode(this.mDefaults);
+        int result = (1 * 31) + (this.mMinMargins == null ? 0 : this.mMinMargins.hashCode());
+        return (((((((((result * 31) + (this.mMediaSizes == null ? 0 : this.mMediaSizes.hashCode())) * 31) + (this.mResolutions != null ? this.mResolutions.hashCode() : 0)) * 31) + this.mColorModes) * 31) + this.mDuplexModes) * 31) + Arrays.hashCode(this.mDefaults);
     }
 
     public boolean equals(Object obj) {
@@ -206,7 +217,7 @@ public final class PrinterCapabilitiesInfo implements Parcelable {
     }
 
     public String toString() {
-        return "PrinterInfo{" + "minMargins=" + this.mMinMargins + ", mediaSizes=" + this.mMediaSizes + ", resolutions=" + this.mResolutions + ", colorModes=" + colorModesToString() + ", duplexModes=" + duplexModesToString() + "\"}";
+        return "PrinterInfo{minMargins=" + this.mMinMargins + ", mediaSizes=" + this.mMediaSizes + ", resolutions=" + this.mResolutions + ", colorModes=" + colorModesToString() + ", duplexModes=" + duplexModesToString() + "\"}";
     }
 
     private String colorModesToString() {
@@ -309,26 +320,27 @@ public final class PrinterCapabilitiesInfo implements Parcelable {
     }
 
     private void writeDefaults(Parcel parcel) {
+        int defaultCount = this.mDefaults.length;
         parcel.writeInt(defaultCount);
-        for (int writeInt : this.mDefaults) {
-            parcel.writeInt(writeInt);
+        for (int i = 0; i < defaultCount; i++) {
+            parcel.writeInt(this.mDefaults[i]);
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class Builder {
         private final PrinterCapabilitiesInfo mPrototype;
 
         public Builder(PrinterId printerId) {
-            if (printerId != null) {
-                this.mPrototype = new PrinterCapabilitiesInfo();
-                return;
+            if (printerId == null) {
+                throw new IllegalArgumentException("printerId cannot be null.");
             }
-            throw new IllegalArgumentException("printerId cannot be null.");
+            this.mPrototype = new PrinterCapabilitiesInfo();
         }
 
         public Builder addMediaSize(PrintAttributes.MediaSize mediaSize, boolean isDefault) {
             if (this.mPrototype.mMediaSizes == null) {
-                List unused = this.mPrototype.mMediaSizes = new ArrayList();
+                this.mPrototype.mMediaSizes = new ArrayList();
             }
             int insertionIndex = this.mPrototype.mMediaSizes.size();
             this.mPrototype.mMediaSizes.add(mediaSize);
@@ -341,7 +353,7 @@ public final class PrinterCapabilitiesInfo implements Parcelable {
 
         public Builder addResolution(PrintAttributes.Resolution resolution, boolean isDefault) {
             if (this.mPrototype.mResolutions == null) {
-                List unused = this.mPrototype.mResolutions = new ArrayList();
+                this.mPrototype.mResolutions = new ArrayList();
             }
             int insertionIndex = this.mPrototype.mResolutions.size();
             this.mPrototype.mResolutions.add(resolution);
@@ -354,50 +366,64 @@ public final class PrinterCapabilitiesInfo implements Parcelable {
 
         public Builder setMinMargins(PrintAttributes.Margins margins) {
             if (margins != null) {
-                PrintAttributes.Margins unused = this.mPrototype.mMinMargins = margins;
+                this.mPrototype.mMinMargins = margins;
                 return this;
             }
             throw new IllegalArgumentException("margins cannot be null");
         }
 
         public Builder setColorModes(int colorModes, int defaultColorMode) {
-            PrinterCapabilitiesInfo.enforceValidMask(colorModes, $$Lambda$PrinterCapabilitiesInfo$Builder$dbsSt8pZfd6hqZ6hGCnpzhPK6Uk.INSTANCE);
+            PrinterCapabilitiesInfo.enforceValidMask(colorModes, new IntConsumer() { // from class: android.print.-$$Lambda$PrinterCapabilitiesInfo$Builder$dbsSt8pZfd6hqZ6hGCnpzhPK6Uk
+                @Override // java.util.function.IntConsumer
+                public final void accept(int i) {
+                    PrintAttributes.enforceValidColorMode(i);
+                }
+            });
             PrintAttributes.enforceValidColorMode(defaultColorMode);
-            int unused = this.mPrototype.mColorModes = colorModes;
+            this.mPrototype.mColorModes = colorModes;
             this.mPrototype.mDefaults[2] = defaultColorMode;
             return this;
         }
 
         public Builder setDuplexModes(int duplexModes, int defaultDuplexMode) {
-            PrinterCapabilitiesInfo.enforceValidMask(duplexModes, $$Lambda$PrinterCapabilitiesInfo$Builder$gsgXbNHGWpWENdPzemgHcCY8HnE.INSTANCE);
+            PrinterCapabilitiesInfo.enforceValidMask(duplexModes, new IntConsumer() { // from class: android.print.-$$Lambda$PrinterCapabilitiesInfo$Builder$gsgXbNHGWpWENdPzemgHcCY8HnE
+                @Override // java.util.function.IntConsumer
+                public final void accept(int i) {
+                    PrintAttributes.enforceValidDuplexMode(i);
+                }
+            });
             PrintAttributes.enforceValidDuplexMode(defaultDuplexMode);
-            int unused = this.mPrototype.mDuplexModes = duplexModes;
+            this.mPrototype.mDuplexModes = duplexModes;
             this.mPrototype.mDefaults[3] = defaultDuplexMode;
             return this;
         }
 
         public PrinterCapabilitiesInfo build() {
-            if (this.mPrototype.mMediaSizes == null || this.mPrototype.mMediaSizes.isEmpty()) {
-                throw new IllegalStateException("No media size specified.");
-            } else if (this.mPrototype.mDefaults[0] == -1) {
+            if (this.mPrototype.mMediaSizes != null && !this.mPrototype.mMediaSizes.isEmpty()) {
+                if (this.mPrototype.mDefaults[0] != -1) {
+                    if (this.mPrototype.mResolutions != null && !this.mPrototype.mResolutions.isEmpty()) {
+                        if (this.mPrototype.mDefaults[1] != -1) {
+                            if (this.mPrototype.mColorModes != 0) {
+                                if (this.mPrototype.mDefaults[2] != -1) {
+                                    if (this.mPrototype.mDuplexModes == 0) {
+                                        setDuplexModes(1, 1);
+                                    }
+                                    if (this.mPrototype.mMinMargins == null) {
+                                        throw new IllegalArgumentException("margins cannot be null");
+                                    }
+                                    return this.mPrototype;
+                                }
+                                throw new IllegalStateException("No default color mode specified.");
+                            }
+                            throw new IllegalStateException("No color mode specified.");
+                        }
+                        throw new IllegalStateException("No default resolution specified.");
+                    }
+                    throw new IllegalStateException("No resolution specified.");
+                }
                 throw new IllegalStateException("No default media size specified.");
-            } else if (this.mPrototype.mResolutions == null || this.mPrototype.mResolutions.isEmpty()) {
-                throw new IllegalStateException("No resolution specified.");
-            } else if (this.mPrototype.mDefaults[1] == -1) {
-                throw new IllegalStateException("No default resolution specified.");
-            } else if (this.mPrototype.mColorModes == 0) {
-                throw new IllegalStateException("No color mode specified.");
-            } else if (this.mPrototype.mDefaults[2] != -1) {
-                if (this.mPrototype.mDuplexModes == 0) {
-                    setDuplexModes(1, 1);
-                }
-                if (this.mPrototype.mMinMargins != null) {
-                    return this.mPrototype;
-                }
-                throw new IllegalArgumentException("margins cannot be null");
-            } else {
-                throw new IllegalStateException("No default color mode specified.");
             }
+            throw new IllegalStateException("No media size specified.");
         }
 
         private void throwIfDefaultAlreadySpecified(int propertyIndex) {

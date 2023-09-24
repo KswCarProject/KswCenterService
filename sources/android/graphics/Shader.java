@@ -3,17 +3,22 @@ package android.graphics;
 import android.annotation.UnsupportedAppUsage;
 import libcore.util.NativeAllocationRegistry;
 
+/* loaded from: classes.dex */
 public class Shader {
     private Runnable mCleaner;
     private final ColorSpace mColorSpace;
     private Matrix mLocalMatrix;
     private long mNativeInstance;
 
-    /* access modifiers changed from: private */
-    public static native long nativeGetFinalizer();
+    private static native long nativeGetFinalizer();
 
+    static /* synthetic */ long access$000() {
+        return nativeGetFinalizer();
+    }
+
+    /* loaded from: classes.dex */
     private static class NoImagePreloadHolder {
-        public static final NativeAllocationRegistry sRegistry = NativeAllocationRegistry.createMalloced(Shader.class.getClassLoader(), Shader.nativeGetFinalizer());
+        public static final NativeAllocationRegistry sRegistry = NativeAllocationRegistry.createMalloced(Shader.class.getClassLoader(), Shader.access$000());
 
         private NoImagePreloadHolder() {
         }
@@ -26,18 +31,17 @@ public class Shader {
 
     public Shader(ColorSpace colorSpace) {
         this.mColorSpace = colorSpace;
-        if (colorSpace != null) {
-            this.mColorSpace.getNativeInstance();
-            return;
+        if (colorSpace == null) {
+            throw new IllegalArgumentException("Use Shader() to create a Shader with no ColorSpace");
         }
-        throw new IllegalArgumentException("Use Shader() to create a Shader with no ColorSpace");
+        this.mColorSpace.getNativeInstance();
     }
 
-    /* access modifiers changed from: protected */
-    public ColorSpace colorSpace() {
+    protected ColorSpace colorSpace() {
         return this.mColorSpace;
     }
 
+    /* loaded from: classes.dex */
     public enum TileMode {
         CLAMP(0),
         REPEAT(1),
@@ -46,17 +50,17 @@ public class Shader {
         @UnsupportedAppUsage
         final int nativeInt;
 
-        private TileMode(int nativeInt2) {
-            this.nativeInt = nativeInt2;
+        TileMode(int nativeInt) {
+            this.nativeInt = nativeInt;
         }
     }
 
     public boolean getLocalMatrix(Matrix localM) {
-        if (this.mLocalMatrix == null) {
-            return false;
+        if (this.mLocalMatrix != null) {
+            localM.set(this.mLocalMatrix);
+            return true;
         }
-        localM.set(this.mLocalMatrix);
-        return true;
+        return false;
     }
 
     public void setLocalMatrix(Matrix localM) {
@@ -74,22 +78,19 @@ public class Shader {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public long createNativeInstance(long nativeMatrix) {
-        return 0;
+    long createNativeInstance(long nativeMatrix) {
+        return 0L;
     }
 
-    /* access modifiers changed from: protected */
-    public final void discardNativeInstance() {
+    protected final void discardNativeInstance() {
         if (this.mNativeInstance != 0) {
             this.mCleaner.run();
             this.mCleaner = null;
-            this.mNativeInstance = 0;
+            this.mNativeInstance = 0L;
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void verifyNativeInstance() {
+    protected void verifyNativeInstance() {
     }
 
     public final long getNativeInstance() {
@@ -110,29 +111,26 @@ public class Shader {
     }
 
     public static long[] convertColors(int[] colors) {
-        if (colors.length >= 2) {
-            long[] colorLongs = new long[colors.length];
-            for (int i = 0; i < colors.length; i++) {
-                colorLongs[i] = Color.pack(colors[i]);
-            }
-            return colorLongs;
+        if (colors.length < 2) {
+            throw new IllegalArgumentException("needs >= 2 number of colors");
         }
-        throw new IllegalArgumentException("needs >= 2 number of colors");
+        long[] colorLongs = new long[colors.length];
+        for (int i = 0; i < colors.length; i++) {
+            colorLongs[i] = Color.pack(colors[i]);
+        }
+        return colorLongs;
     }
 
     public static ColorSpace detectColorSpace(long[] colors) {
-        if (colors.length >= 2) {
-            ColorSpace colorSpace = Color.colorSpace(colors[0]);
-            int i = 1;
-            while (i < colors.length) {
-                if (Color.colorSpace(colors[i]) == colorSpace) {
-                    i++;
-                } else {
-                    throw new IllegalArgumentException("All colors must be in the same ColorSpace!");
-                }
-            }
-            return colorSpace;
+        if (colors.length < 2) {
+            throw new IllegalArgumentException("needs >= 2 number of colors");
         }
-        throw new IllegalArgumentException("needs >= 2 number of colors");
+        ColorSpace colorSpace = Color.colorSpace(colors[0]);
+        for (int i = 1; i < colors.length; i++) {
+            if (Color.colorSpace(colors[i]) != colorSpace) {
+                throw new IllegalArgumentException("All colors must be in the same ColorSpace!");
+            }
+        }
+        return colorSpace;
     }
 }

@@ -2,6 +2,7 @@ package com.wits.pms.bean;
 
 import android.content.Intent;
 
+/* loaded from: classes2.dex */
 public class EcarMessage {
     public static final String ECAR_NORMAL_ACTION = "com.android.ecar.send";
     public String cmdType;

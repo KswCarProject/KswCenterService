@@ -1,12 +1,13 @@
 package android.accessibilityservice;
 
 import android.accessibilityservice.FingerprintGestureController;
-import android.os.Handler;
-import android.os.RemoteException;
+import android.p007os.Handler;
+import android.p007os.RemoteException;
 import android.util.ArrayMap;
 import android.util.Log;
 import com.android.internal.annotations.VisibleForTesting;
 
+/* loaded from: classes.dex */
 public final class FingerprintGestureController {
     public static final int FINGERPRINT_GESTURE_SWIPE_DOWN = 8;
     public static final int FINGERPRINT_GESTURE_SWIPE_LEFT = 2;
@@ -14,8 +15,8 @@ public final class FingerprintGestureController {
     public static final int FINGERPRINT_GESTURE_SWIPE_UP = 4;
     private static final String LOG_TAG = "FingerprintGestureController";
     private final IAccessibilityServiceConnection mAccessibilityServiceConnection;
-    private final ArrayMap<FingerprintGestureCallback, Handler> mCallbackHandlerMap = new ArrayMap<>(1);
     private final Object mLock = new Object();
+    private final ArrayMap<FingerprintGestureCallback, Handler> mCallbackHandlerMap = new ArrayMap<>(1);
 
     @VisibleForTesting
     public FingerprintGestureController(IAccessibilityServiceConnection connection) {
@@ -26,7 +27,7 @@ public final class FingerprintGestureController {
         try {
             return this.mAccessibilityServiceConnection.isFingerprintGestureDetectionAvailable();
         } catch (RemoteException re) {
-            Log.w(LOG_TAG, "Failed to check if fingerprint gestures are active", re);
+            Log.m63w(LOG_TAG, "Failed to check if fingerprint gestures are active", re);
             re.rethrowFromSystemServer();
             return false;
         }
@@ -44,25 +45,20 @@ public final class FingerprintGestureController {
         }
     }
 
-    public void onGestureDetectionActiveChanged(boolean active) {
+    public void onGestureDetectionActiveChanged(final boolean active) {
         ArrayMap<FingerprintGestureCallback, Handler> handlerMap;
         synchronized (this.mLock) {
             handlerMap = new ArrayMap<>(this.mCallbackHandlerMap);
         }
         int numListeners = handlerMap.size();
         for (int i = 0; i < numListeners; i++) {
-            FingerprintGestureCallback callback = handlerMap.keyAt(i);
+            final FingerprintGestureCallback callback = handlerMap.keyAt(i);
             Handler handler = handlerMap.valueAt(i);
             if (handler != null) {
-                handler.post(new Runnable(active) {
-                    private final /* synthetic */ boolean f$1;
-
-                    {
-                        this.f$1 = r2;
-                    }
-
+                handler.post(new Runnable() { // from class: android.accessibilityservice.-$$Lambda$FingerprintGestureController$M-ZApqp96G6ZF2WdWrGDJ8Qsfck
+                    @Override // java.lang.Runnable
                     public final void run() {
-                        FingerprintGestureController.FingerprintGestureCallback.this.onGestureDetectionAvailabilityChanged(this.f$1);
+                        FingerprintGestureController.FingerprintGestureCallback.this.onGestureDetectionAvailabilityChanged(active);
                     }
                 });
             } else {
@@ -71,25 +67,20 @@ public final class FingerprintGestureController {
         }
     }
 
-    public void onGesture(int gesture) {
+    public void onGesture(final int gesture) {
         ArrayMap<FingerprintGestureCallback, Handler> handlerMap;
         synchronized (this.mLock) {
             handlerMap = new ArrayMap<>(this.mCallbackHandlerMap);
         }
         int numListeners = handlerMap.size();
         for (int i = 0; i < numListeners; i++) {
-            FingerprintGestureCallback callback = handlerMap.keyAt(i);
+            final FingerprintGestureCallback callback = handlerMap.keyAt(i);
             Handler handler = handlerMap.valueAt(i);
             if (handler != null) {
-                handler.post(new Runnable(gesture) {
-                    private final /* synthetic */ int f$1;
-
-                    {
-                        this.f$1 = r2;
-                    }
-
+                handler.post(new Runnable() { // from class: android.accessibilityservice.-$$Lambda$FingerprintGestureController$BQjrQQom4K3C98FNiI0fi7SvHfY
+                    @Override // java.lang.Runnable
                     public final void run() {
-                        FingerprintGestureController.FingerprintGestureCallback.this.onGestureDetected(this.f$1);
+                        FingerprintGestureController.FingerprintGestureCallback.this.onGestureDetected(gesture);
                     }
                 });
             } else {
@@ -98,6 +89,7 @@ public final class FingerprintGestureController {
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class FingerprintGestureCallback {
         public void onGestureDetectionAvailabilityChanged(boolean available) {
         }

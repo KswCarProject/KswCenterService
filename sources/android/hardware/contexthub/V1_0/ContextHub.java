@@ -1,28 +1,29 @@
 package android.hardware.contexthub.V1_0;
 
-import android.os.HidlSupport;
-import android.os.HwBlob;
-import android.os.HwParcel;
+import android.p007os.HidlSupport;
+import android.p007os.HwBlob;
+import android.p007os.HwParcel;
 import java.util.ArrayList;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public final class ContextHub {
     public byte chreApiMajorVersion;
     public byte chreApiMinorVersion;
     public short chrePatchVersion;
     public long chrePlatformId;
-    public ArrayList<PhysicalSensor> connectedSensors = new ArrayList<>();
     public int hubId;
     public int maxSupportedMsgLen;
-    public String name = new String();
     public float peakMips;
     public float peakPowerDrawMw;
     public int platformVersion;
     public float sleepPowerDrawMw;
     public float stoppedPowerDrawMw;
-    public String toolchain = new String();
     public int toolchainVersion;
+    public String name = new String();
     public String vendor = new String();
+    public String toolchain = new String();
+    public ArrayList<PhysicalSensor> connectedSensors = new ArrayList<>();
 
     public final boolean equals(Object otherObject) {
         if (this == otherObject) {
@@ -39,78 +40,77 @@ public final class ContextHub {
     }
 
     public final int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(HidlSupport.deepHashCode(this.name)), Integer.valueOf(HidlSupport.deepHashCode(this.vendor)), Integer.valueOf(HidlSupport.deepHashCode(this.toolchain)), Integer.valueOf(HidlSupport.deepHashCode(Integer.valueOf(this.platformVersion))), Integer.valueOf(HidlSupport.deepHashCode(Integer.valueOf(this.toolchainVersion))), Integer.valueOf(HidlSupport.deepHashCode(Integer.valueOf(this.hubId))), Integer.valueOf(HidlSupport.deepHashCode(Float.valueOf(this.peakMips))), Integer.valueOf(HidlSupport.deepHashCode(Float.valueOf(this.stoppedPowerDrawMw))), Integer.valueOf(HidlSupport.deepHashCode(Float.valueOf(this.sleepPowerDrawMw))), Integer.valueOf(HidlSupport.deepHashCode(Float.valueOf(this.peakPowerDrawMw))), Integer.valueOf(HidlSupport.deepHashCode(this.connectedSensors)), Integer.valueOf(HidlSupport.deepHashCode(Integer.valueOf(this.maxSupportedMsgLen))), Integer.valueOf(HidlSupport.deepHashCode(Long.valueOf(this.chrePlatformId))), Integer.valueOf(HidlSupport.deepHashCode(Byte.valueOf(this.chreApiMajorVersion))), Integer.valueOf(HidlSupport.deepHashCode(Byte.valueOf(this.chreApiMinorVersion))), Integer.valueOf(HidlSupport.deepHashCode(Short.valueOf(this.chrePatchVersion)))});
+        return Objects.hash(Integer.valueOf(HidlSupport.deepHashCode(this.name)), Integer.valueOf(HidlSupport.deepHashCode(this.vendor)), Integer.valueOf(HidlSupport.deepHashCode(this.toolchain)), Integer.valueOf(HidlSupport.deepHashCode(Integer.valueOf(this.platformVersion))), Integer.valueOf(HidlSupport.deepHashCode(Integer.valueOf(this.toolchainVersion))), Integer.valueOf(HidlSupport.deepHashCode(Integer.valueOf(this.hubId))), Integer.valueOf(HidlSupport.deepHashCode(Float.valueOf(this.peakMips))), Integer.valueOf(HidlSupport.deepHashCode(Float.valueOf(this.stoppedPowerDrawMw))), Integer.valueOf(HidlSupport.deepHashCode(Float.valueOf(this.sleepPowerDrawMw))), Integer.valueOf(HidlSupport.deepHashCode(Float.valueOf(this.peakPowerDrawMw))), Integer.valueOf(HidlSupport.deepHashCode(this.connectedSensors)), Integer.valueOf(HidlSupport.deepHashCode(Integer.valueOf(this.maxSupportedMsgLen))), Integer.valueOf(HidlSupport.deepHashCode(Long.valueOf(this.chrePlatformId))), Integer.valueOf(HidlSupport.deepHashCode(Byte.valueOf(this.chreApiMajorVersion))), Integer.valueOf(HidlSupport.deepHashCode(Byte.valueOf(this.chreApiMinorVersion))), Integer.valueOf(HidlSupport.deepHashCode(Short.valueOf(this.chrePatchVersion))));
     }
 
     public final String toString() {
-        return "{" + ".name = " + this.name + ", .vendor = " + this.vendor + ", .toolchain = " + this.toolchain + ", .platformVersion = " + this.platformVersion + ", .toolchainVersion = " + this.toolchainVersion + ", .hubId = " + this.hubId + ", .peakMips = " + this.peakMips + ", .stoppedPowerDrawMw = " + this.stoppedPowerDrawMw + ", .sleepPowerDrawMw = " + this.sleepPowerDrawMw + ", .peakPowerDrawMw = " + this.peakPowerDrawMw + ", .connectedSensors = " + this.connectedSensors + ", .maxSupportedMsgLen = " + this.maxSupportedMsgLen + ", .chrePlatformId = " + this.chrePlatformId + ", .chreApiMajorVersion = " + this.chreApiMajorVersion + ", .chreApiMinorVersion = " + this.chreApiMinorVersion + ", .chrePatchVersion = " + this.chrePatchVersion + "}";
+        return "{.name = " + this.name + ", .vendor = " + this.vendor + ", .toolchain = " + this.toolchain + ", .platformVersion = " + this.platformVersion + ", .toolchainVersion = " + this.toolchainVersion + ", .hubId = " + this.hubId + ", .peakMips = " + this.peakMips + ", .stoppedPowerDrawMw = " + this.stoppedPowerDrawMw + ", .sleepPowerDrawMw = " + this.sleepPowerDrawMw + ", .peakPowerDrawMw = " + this.peakPowerDrawMw + ", .connectedSensors = " + this.connectedSensors + ", .maxSupportedMsgLen = " + this.maxSupportedMsgLen + ", .chrePlatformId = " + this.chrePlatformId + ", .chreApiMajorVersion = " + ((int) this.chreApiMajorVersion) + ", .chreApiMinorVersion = " + ((int) this.chreApiMinorVersion) + ", .chrePatchVersion = " + ((int) this.chrePatchVersion) + "}";
     }
 
     public final void readFromParcel(HwParcel parcel) {
-        readEmbeddedFromParcel(parcel, parcel.readBuffer(120), 0);
+        HwBlob blob = parcel.readBuffer(120L);
+        readEmbeddedFromParcel(parcel, blob, 0L);
     }
 
     public static final ArrayList<ContextHub> readVectorFromParcel(HwParcel parcel) {
         ArrayList<ContextHub> _hidl_vec = new ArrayList<>();
-        HwBlob _hidl_blob = parcel.readBuffer(16);
-        int _hidl_vec_size = _hidl_blob.getInt32(8);
-        HwBlob childBlob = parcel.readEmbeddedBuffer((long) (_hidl_vec_size * 120), _hidl_blob.handle(), 0, true);
+        HwBlob _hidl_blob = parcel.readBuffer(16L);
+        int _hidl_vec_size = _hidl_blob.getInt32(8L);
+        HwBlob childBlob = parcel.readEmbeddedBuffer(_hidl_vec_size * 120, _hidl_blob.handle(), 0L, true);
         _hidl_vec.clear();
         for (int _hidl_index_0 = 0; _hidl_index_0 < _hidl_vec_size; _hidl_index_0++) {
             ContextHub _hidl_vec_element = new ContextHub();
-            _hidl_vec_element.readEmbeddedFromParcel(parcel, childBlob, (long) (_hidl_index_0 * 120));
+            _hidl_vec_element.readEmbeddedFromParcel(parcel, childBlob, _hidl_index_0 * 120);
             _hidl_vec.add(_hidl_vec_element);
         }
         return _hidl_vec;
     }
 
     public final void readEmbeddedFromParcel(HwParcel parcel, HwBlob _hidl_blob, long _hidl_offset) {
-        HwBlob hwBlob = _hidl_blob;
-        this.name = hwBlob.getString(_hidl_offset + 0);
-        parcel.readEmbeddedBuffer((long) (this.name.getBytes().length + 1), _hidl_blob.handle(), _hidl_offset + 0 + 0, false);
-        this.vendor = hwBlob.getString(_hidl_offset + 16);
-        parcel.readEmbeddedBuffer((long) (this.vendor.getBytes().length + 1), _hidl_blob.handle(), _hidl_offset + 16 + 0, false);
-        this.toolchain = hwBlob.getString(_hidl_offset + 32);
-        parcel.readEmbeddedBuffer((long) (this.toolchain.getBytes().length + 1), _hidl_blob.handle(), _hidl_offset + 32 + 0, false);
-        this.platformVersion = hwBlob.getInt32(_hidl_offset + 48);
-        this.toolchainVersion = hwBlob.getInt32(_hidl_offset + 52);
-        this.hubId = hwBlob.getInt32(_hidl_offset + 56);
-        this.peakMips = hwBlob.getFloat(_hidl_offset + 60);
-        this.stoppedPowerDrawMw = hwBlob.getFloat(_hidl_offset + 64);
-        this.sleepPowerDrawMw = hwBlob.getFloat(_hidl_offset + 68);
-        this.peakPowerDrawMw = hwBlob.getFloat(_hidl_offset + 72);
-        int _hidl_vec_size = hwBlob.getInt32(_hidl_offset + 80 + 8);
-        HwBlob childBlob = parcel.readEmbeddedBuffer((long) (_hidl_vec_size * 96), _hidl_blob.handle(), _hidl_offset + 80 + 0, true);
+        this.name = _hidl_blob.getString(_hidl_offset + 0);
+        parcel.readEmbeddedBuffer(this.name.getBytes().length + 1, _hidl_blob.handle(), _hidl_offset + 0 + 0, false);
+        this.vendor = _hidl_blob.getString(_hidl_offset + 16);
+        parcel.readEmbeddedBuffer(this.vendor.getBytes().length + 1, _hidl_blob.handle(), _hidl_offset + 16 + 0, false);
+        this.toolchain = _hidl_blob.getString(_hidl_offset + 32);
+        parcel.readEmbeddedBuffer(this.toolchain.getBytes().length + 1, _hidl_blob.handle(), _hidl_offset + 32 + 0, false);
+        this.platformVersion = _hidl_blob.getInt32(_hidl_offset + 48);
+        this.toolchainVersion = _hidl_blob.getInt32(_hidl_offset + 52);
+        this.hubId = _hidl_blob.getInt32(_hidl_offset + 56);
+        this.peakMips = _hidl_blob.getFloat(_hidl_offset + 60);
+        this.stoppedPowerDrawMw = _hidl_blob.getFloat(_hidl_offset + 64);
+        this.sleepPowerDrawMw = _hidl_blob.getFloat(_hidl_offset + 68);
+        this.peakPowerDrawMw = _hidl_blob.getFloat(_hidl_offset + 72);
+        int _hidl_vec_size = _hidl_blob.getInt32(_hidl_offset + 80 + 8);
+        HwBlob childBlob = parcel.readEmbeddedBuffer(_hidl_vec_size * 96, _hidl_blob.handle(), _hidl_offset + 80 + 0, true);
         this.connectedSensors.clear();
         for (int _hidl_index_0 = 0; _hidl_index_0 < _hidl_vec_size; _hidl_index_0++) {
             PhysicalSensor _hidl_vec_element = new PhysicalSensor();
-            _hidl_vec_element.readEmbeddedFromParcel(parcel, childBlob, (long) (_hidl_index_0 * 96));
+            _hidl_vec_element.readEmbeddedFromParcel(parcel, childBlob, _hidl_index_0 * 96);
             this.connectedSensors.add(_hidl_vec_element);
         }
-        HwParcel hwParcel = parcel;
-        this.maxSupportedMsgLen = hwBlob.getInt32(_hidl_offset + 96);
-        this.chrePlatformId = hwBlob.getInt64(_hidl_offset + 104);
-        this.chreApiMajorVersion = hwBlob.getInt8(_hidl_offset + 112);
-        this.chreApiMinorVersion = hwBlob.getInt8(_hidl_offset + 113);
-        this.chrePatchVersion = hwBlob.getInt16(_hidl_offset + 114);
+        this.maxSupportedMsgLen = _hidl_blob.getInt32(_hidl_offset + 96);
+        this.chrePlatformId = _hidl_blob.getInt64(_hidl_offset + 104);
+        this.chreApiMajorVersion = _hidl_blob.getInt8(_hidl_offset + 112);
+        this.chreApiMinorVersion = _hidl_blob.getInt8(_hidl_offset + 113);
+        this.chrePatchVersion = _hidl_blob.getInt16(_hidl_offset + 114);
     }
 
     public final void writeToParcel(HwParcel parcel) {
         HwBlob _hidl_blob = new HwBlob(120);
-        writeEmbeddedToBlob(_hidl_blob, 0);
+        writeEmbeddedToBlob(_hidl_blob, 0L);
         parcel.writeBuffer(_hidl_blob);
     }
 
     public static final void writeVectorToParcel(HwParcel parcel, ArrayList<ContextHub> _hidl_vec) {
         HwBlob _hidl_blob = new HwBlob(16);
         int _hidl_vec_size = _hidl_vec.size();
-        _hidl_blob.putInt32(8, _hidl_vec_size);
-        _hidl_blob.putBool(12, false);
+        _hidl_blob.putInt32(8L, _hidl_vec_size);
+        _hidl_blob.putBool(12L, false);
         HwBlob childBlob = new HwBlob(_hidl_vec_size * 120);
         for (int _hidl_index_0 = 0; _hidl_index_0 < _hidl_vec_size; _hidl_index_0++) {
-            _hidl_vec.get(_hidl_index_0).writeEmbeddedToBlob(childBlob, (long) (_hidl_index_0 * 120));
+            _hidl_vec.get(_hidl_index_0).writeEmbeddedToBlob(childBlob, _hidl_index_0 * 120);
         }
-        _hidl_blob.putBlob(0, childBlob);
+        _hidl_blob.putBlob(0L, childBlob);
         parcel.writeBuffer(_hidl_blob);
     }
 
@@ -132,10 +132,7 @@ public final class ContextHub {
         HwBlob childBlob = new HwBlob(_hidl_vec_size * 96);
         while (true) {
             int _hidl_index_02 = _hidl_index_0;
-            if (_hidl_index_02 < _hidl_vec_size) {
-                this.connectedSensors.get(_hidl_index_02).writeEmbeddedToBlob(childBlob, (long) (_hidl_index_02 * 96));
-                _hidl_index_0 = _hidl_index_02 + 1;
-            } else {
+            if (_hidl_index_02 >= _hidl_vec_size) {
                 _hidl_blob.putBlob(80 + _hidl_offset + 0, childBlob);
                 _hidl_blob.putInt32(96 + _hidl_offset, this.maxSupportedMsgLen);
                 _hidl_blob.putInt64(104 + _hidl_offset, this.chrePlatformId);
@@ -144,6 +141,8 @@ public final class ContextHub {
                 _hidl_blob.putInt16(114 + _hidl_offset, this.chrePatchVersion);
                 return;
             }
+            this.connectedSensors.get(_hidl_index_02).writeEmbeddedToBlob(childBlob, _hidl_index_02 * 96);
+            _hidl_index_0 = _hidl_index_02 + 1;
         }
     }
 }

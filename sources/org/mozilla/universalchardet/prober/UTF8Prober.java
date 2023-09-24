@@ -6,70 +6,73 @@ import org.mozilla.universalchardet.prober.statemachine.CodingStateMachine;
 import org.mozilla.universalchardet.prober.statemachine.SMModel;
 import org.mozilla.universalchardet.prober.statemachine.UTF8SMModel;
 
+/* loaded from: classes5.dex */
 public class UTF8Prober extends CharsetProber {
     public static final float ONE_CHAR_PROB = 0.5f;
     private static final SMModel smModel = new UTF8SMModel();
-    private CodingStateMachine codingSM = new CodingStateMachine(smModel);
-    private int numOfMBChar = 0;
     private CharsetProber.ProbingState state;
+    private int numOfMBChar = 0;
+    private CodingStateMachine codingSM = new CodingStateMachine(smModel);
 
     public UTF8Prober() {
         reset();
     }
 
+    @Override // org.mozilla.universalchardet.prober.CharsetProber
     public String getCharSetName() {
         return Constants.CHARSET_UTF_8;
     }
 
+    @Override // org.mozilla.universalchardet.prober.CharsetProber
     public float getConfidence() {
         float f = 0.99f;
-        if (this.numOfMBChar >= 6) {
-            return 0.99f;
+        if (this.numOfMBChar < 6) {
+            for (int i = 0; i < this.numOfMBChar; i++) {
+                f *= 0.5f;
+            }
+            return 1.0f - f;
         }
-        for (int i = 0; i < this.numOfMBChar; i++) {
-            f *= 0.5f;
-        }
-        return 1.0f - f;
+        return 0.99f;
     }
 
+    @Override // org.mozilla.universalchardet.prober.CharsetProber
     public CharsetProber.ProbingState getState() {
         return this.state;
     }
 
+    @Override // org.mozilla.universalchardet.prober.CharsetProber
     public CharsetProber.ProbingState handleData(byte[] bArr, int i, int i2) {
         CharsetProber.ProbingState probingState;
         int i3 = i2 + i;
-        while (true) {
-            if (i >= i3) {
-                break;
-            }
+        while (i < i3) {
             int nextState = this.codingSM.nextState(bArr[i]);
             if (nextState == 1) {
                 probingState = CharsetProber.ProbingState.NOT_ME;
-                break;
             } else if (nextState == 2) {
                 probingState = CharsetProber.ProbingState.FOUND_IT;
-                break;
             } else {
                 if (nextState == 0 && this.codingSM.getCurrentCharLen() >= 2) {
                     this.numOfMBChar++;
                 }
                 i++;
             }
+            this.state = probingState;
+            break;
         }
-        this.state = probingState;
         if (this.state == CharsetProber.ProbingState.DETECTING && getConfidence() > 0.95f) {
             this.state = CharsetProber.ProbingState.FOUND_IT;
         }
         return this.state;
     }
 
+    @Override // org.mozilla.universalchardet.prober.CharsetProber
     public void reset() {
         this.codingSM.reset();
         this.numOfMBChar = 0;
         this.state = CharsetProber.ProbingState.DETECTING;
     }
 
+    @Override // org.mozilla.universalchardet.prober.CharsetProber
     public void setOption() {
     }
 }

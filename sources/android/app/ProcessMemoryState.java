@@ -1,14 +1,19 @@
 package android.app;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public final class ProcessMemoryState implements Parcelable {
-    public static final Parcelable.Creator<ProcessMemoryState> CREATOR = new Parcelable.Creator<ProcessMemoryState>() {
+    public static final Parcelable.Creator<ProcessMemoryState> CREATOR = new Parcelable.Creator<ProcessMemoryState>() { // from class: android.app.ProcessMemoryState.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ProcessMemoryState createFromParcel(Parcel in) {
             return new ProcessMemoryState(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ProcessMemoryState[] newArray(int size) {
             return new ProcessMemoryState[size];
         }
@@ -18,11 +23,11 @@ public final class ProcessMemoryState implements Parcelable {
     public final String processName;
     public final int uid;
 
-    public ProcessMemoryState(int uid2, int pid2, String processName2, int oomScore2) {
-        this.uid = uid2;
-        this.pid = pid2;
-        this.processName = processName2;
-        this.oomScore = oomScore2;
+    public ProcessMemoryState(int uid, int pid, String processName, int oomScore) {
+        this.uid = uid;
+        this.pid = pid;
+        this.processName = processName;
+        this.oomScore = oomScore;
     }
 
     private ProcessMemoryState(Parcel in) {
@@ -32,10 +37,12 @@ public final class ProcessMemoryState implements Parcelable {
         this.oomScore = in.readInt();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeInt(this.uid);
         parcel.writeInt(this.pid);

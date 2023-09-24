@@ -1,12 +1,14 @@
 package android.util;
 
+/* loaded from: classes4.dex */
 public abstract class Property<T, V> {
     private final String mName;
     private final Class<V> mType;
 
     public abstract V get(T t);
 
-    public static <T, V> Property<T, V> of(Class<T> hostType, Class<V> valueType, String name) {
+    /* renamed from: of */
+    public static <T, V> Property<T, V> m59of(Class<T> hostType, Class<V> valueType, String name) {
         return new ReflectiveProperty(hostType, valueType, name);
     }
 
@@ -19,7 +21,7 @@ public abstract class Property<T, V> {
         return false;
     }
 
-    public void set(T t, V v) {
+    public void set(T object, V value) {
         throw new UnsupportedOperationException("Property " + getName() + " is read-only");
     }
 

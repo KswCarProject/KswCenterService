@@ -3,12 +3,14 @@ package android.webkit;
 import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
 
+/* loaded from: classes4.dex */
 public class JsResult {
     @UnsupportedAppUsage
     private final ResultReceiver mReceiver;
     private boolean mResult;
 
     @SystemApi
+    /* loaded from: classes4.dex */
     public interface ResultReceiver {
         void onJsResultComplete(JsResult jsResult);
     }

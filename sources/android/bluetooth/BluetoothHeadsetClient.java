@@ -4,14 +4,15 @@ import android.annotation.UnsupportedAppUsage;
 import android.bluetooth.BluetoothProfile;
 import android.bluetooth.IBluetoothHeadsetClient;
 import android.content.Context;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.RemoteException;
 import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+/* loaded from: classes.dex */
 public final class BluetoothHeadsetClient implements BluetoothProfile {
     public static final String ACTION_AG_EVENT = "android.bluetooth.headsetclient.profile.action.AG_EVENT";
     public static final String ACTION_AUDIO_STATE_CHANGED = "android.bluetooth.headsetclient.profile.action.AUDIO_STATE_CHANGED";
@@ -101,19 +102,19 @@ public final class BluetoothHeadsetClient implements BluetoothProfile {
     public static final int STATE_AUDIO_DISCONNECTED = 0;
     private static final String TAG = "BluetoothHeadsetClient";
     private static final boolean VDBG = false;
-    private BluetoothAdapter mAdapter = BluetoothAdapter.getDefaultAdapter();
-    private final BluetoothProfileConnector<IBluetoothHeadsetClient> mProfileConnector = new BluetoothProfileConnector(this, 16, TAG, IBluetoothHeadsetClient.class.getName()) {
+    private final BluetoothProfileConnector<IBluetoothHeadsetClient> mProfileConnector = new BluetoothProfileConnector(this, 16, TAG, IBluetoothHeadsetClient.class.getName()) { // from class: android.bluetooth.BluetoothHeadsetClient.1
+        @Override // android.bluetooth.BluetoothProfileConnector
         public IBluetoothHeadsetClient getServiceInterface(IBinder service) {
             return IBluetoothHeadsetClient.Stub.asInterface(Binder.allowBlocking(service));
         }
     };
+    private BluetoothAdapter mAdapter = BluetoothAdapter.getDefaultAdapter();
 
     BluetoothHeadsetClient(Context context, BluetoothProfile.ServiceListener listener) {
         this.mProfileConnector.connect(context, listener);
     }
 
-    /* access modifiers changed from: package-private */
-    public void close() {
+    void close() {
         this.mProfileConnector.disconnect();
     }
 
@@ -125,120 +126,123 @@ public final class BluetoothHeadsetClient implements BluetoothProfile {
     public boolean connect(BluetoothDevice device) {
         log("connect(" + device + ")");
         IBluetoothHeadsetClient service = getService();
-        if (service == null || !isEnabled() || !isValidDevice(device)) {
-            if (service == null) {
-                Log.w(TAG, "Proxy not attached to service");
+        if (service != null && isEnabled() && isValidDevice(device)) {
+            try {
+                return service.connect(device);
+            } catch (RemoteException e) {
+                Log.m70e(TAG, Log.getStackTraceString(new Throwable()));
+                return false;
             }
-            return false;
         }
-        try {
-            return service.connect(device);
-        } catch (RemoteException e) {
-            Log.e(TAG, Log.getStackTraceString(new Throwable()));
-            return false;
+        if (service == null) {
+            Log.m64w(TAG, "Proxy not attached to service");
         }
+        return false;
     }
 
     @UnsupportedAppUsage
     public boolean disconnect(BluetoothDevice device) {
         log("disconnect(" + device + ")");
         IBluetoothHeadsetClient service = getService();
-        if (service == null || !isEnabled() || !isValidDevice(device)) {
-            if (service == null) {
-                Log.w(TAG, "Proxy not attached to service");
+        if (service != null && isEnabled() && isValidDevice(device)) {
+            try {
+                return service.disconnect(device);
+            } catch (RemoteException e) {
+                Log.m70e(TAG, Log.getStackTraceString(new Throwable()));
+                return false;
             }
-            return false;
         }
-        try {
-            return service.disconnect(device);
-        } catch (RemoteException e) {
-            Log.e(TAG, Log.getStackTraceString(new Throwable()));
-            return false;
+        if (service == null) {
+            Log.m64w(TAG, "Proxy not attached to service");
         }
+        return false;
     }
 
+    @Override // android.bluetooth.BluetoothProfile
     public List<BluetoothDevice> getConnectedDevices() {
         IBluetoothHeadsetClient service = getService();
-        if (service == null || !isEnabled()) {
-            if (service == null) {
-                Log.w(TAG, "Proxy not attached to service");
+        if (service != null && isEnabled()) {
+            try {
+                return service.getConnectedDevices();
+            } catch (RemoteException e) {
+                Log.m70e(TAG, Log.getStackTraceString(new Throwable()));
+                return new ArrayList();
             }
-            return new ArrayList();
         }
-        try {
-            return service.getConnectedDevices();
-        } catch (RemoteException e) {
-            Log.e(TAG, Log.getStackTraceString(new Throwable()));
-            return new ArrayList();
+        if (service == null) {
+            Log.m64w(TAG, "Proxy not attached to service");
         }
+        return new ArrayList();
     }
 
+    @Override // android.bluetooth.BluetoothProfile
     public List<BluetoothDevice> getDevicesMatchingConnectionStates(int[] states) {
         IBluetoothHeadsetClient service = getService();
-        if (service == null || !isEnabled()) {
-            if (service == null) {
-                Log.w(TAG, "Proxy not attached to service");
+        if (service != null && isEnabled()) {
+            try {
+                return service.getDevicesMatchingConnectionStates(states);
+            } catch (RemoteException e) {
+                Log.m70e(TAG, Log.getStackTraceString(new Throwable()));
+                return new ArrayList();
             }
-            return new ArrayList();
         }
-        try {
-            return service.getDevicesMatchingConnectionStates(states);
-        } catch (RemoteException e) {
-            Log.e(TAG, Log.getStackTraceString(new Throwable()));
-            return new ArrayList();
+        if (service == null) {
+            Log.m64w(TAG, "Proxy not attached to service");
         }
+        return new ArrayList();
     }
 
+    @Override // android.bluetooth.BluetoothProfile
     public int getConnectionState(BluetoothDevice device) {
         IBluetoothHeadsetClient service = getService();
-        if (service == null || !isEnabled() || !isValidDevice(device)) {
-            if (service == null) {
-                Log.w(TAG, "Proxy not attached to service");
+        if (service != null && isEnabled() && isValidDevice(device)) {
+            try {
+                return service.getConnectionState(device);
+            } catch (RemoteException e) {
+                Log.m70e(TAG, Log.getStackTraceString(new Throwable()));
+                return 0;
             }
-            return 0;
         }
-        try {
-            return service.getConnectionState(device);
-        } catch (RemoteException e) {
-            Log.e(TAG, Log.getStackTraceString(new Throwable()));
-            return 0;
+        if (service == null) {
+            Log.m64w(TAG, "Proxy not attached to service");
         }
+        return 0;
     }
 
     public boolean setPriority(BluetoothDevice device, int priority) {
         log("setPriority(" + device + ", " + priority + ")");
         IBluetoothHeadsetClient service = getService();
-        if (service == null || !isEnabled() || !isValidDevice(device)) {
-            if (service == null) {
-                Log.w(TAG, "Proxy not attached to service");
+        if (service != null && isEnabled() && isValidDevice(device)) {
+            if (priority != 0 && priority != 100) {
+                return false;
             }
-            return false;
-        } else if (priority != 0 && priority != 100) {
-            return false;
-        } else {
             try {
                 return service.setPriority(device, priority);
             } catch (RemoteException e) {
-                Log.e(TAG, Log.getStackTraceString(new Throwable()));
+                Log.m70e(TAG, Log.getStackTraceString(new Throwable()));
                 return false;
             }
         }
+        if (service == null) {
+            Log.m64w(TAG, "Proxy not attached to service");
+        }
+        return false;
     }
 
     public int getPriority(BluetoothDevice device) {
         IBluetoothHeadsetClient service = getService();
-        if (service == null || !isEnabled() || !isValidDevice(device)) {
-            if (service == null) {
-                Log.w(TAG, "Proxy not attached to service");
+        if (service != null && isEnabled() && isValidDevice(device)) {
+            try {
+                return service.getPriority(device);
+            } catch (RemoteException e) {
+                Log.m70e(TAG, Log.getStackTraceString(new Throwable()));
+                return 0;
             }
-            return 0;
         }
-        try {
-            return service.getPriority(device);
-        } catch (RemoteException e) {
-            Log.e(TAG, Log.getStackTraceString(new Throwable()));
-            return 0;
+        if (service == null) {
+            Log.m64w(TAG, "Proxy not attached to service");
         }
+        return 0;
     }
 
     public boolean startVoiceRecognition(BluetoothDevice device) {
@@ -248,13 +252,13 @@ public final class BluetoothHeadsetClient implements BluetoothProfile {
             try {
                 return service.startVoiceRecognition(device);
             } catch (RemoteException e) {
-                Log.e(TAG, Log.getStackTraceString(new Throwable()));
+                Log.m70e(TAG, Log.getStackTraceString(new Throwable()));
             }
         }
-        if (service != null) {
+        if (service == null) {
+            Log.m64w(TAG, "Proxy not attached to service");
             return false;
         }
-        Log.w(TAG, "Proxy not attached to service");
         return false;
     }
 
@@ -265,13 +269,13 @@ public final class BluetoothHeadsetClient implements BluetoothProfile {
             try {
                 return service.stopVoiceRecognition(device);
             } catch (RemoteException e) {
-                Log.e(TAG, Log.getStackTraceString(new Throwable()));
+                Log.m70e(TAG, Log.getStackTraceString(new Throwable()));
             }
         }
-        if (service != null) {
+        if (service == null) {
+            Log.m64w(TAG, "Proxy not attached to service");
             return false;
         }
-        Log.w(TAG, "Proxy not attached to service");
         return false;
     }
 
@@ -282,13 +286,13 @@ public final class BluetoothHeadsetClient implements BluetoothProfile {
             try {
                 return service.getCurrentCalls(device);
             } catch (RemoteException e) {
-                Log.e(TAG, Log.getStackTraceString(new Throwable()));
+                Log.m70e(TAG, Log.getStackTraceString(new Throwable()));
             }
         }
-        if (service != null) {
+        if (service == null) {
+            Log.m64w(TAG, "Proxy not attached to service");
             return null;
         }
-        Log.w(TAG, "Proxy not attached to service");
         return null;
     }
 
@@ -299,13 +303,13 @@ public final class BluetoothHeadsetClient implements BluetoothProfile {
             try {
                 return service.getCurrentAgEvents(device);
             } catch (RemoteException e) {
-                Log.e(TAG, Log.getStackTraceString(new Throwable()));
+                Log.m70e(TAG, Log.getStackTraceString(new Throwable()));
             }
         }
-        if (service != null) {
+        if (service == null) {
+            Log.m64w(TAG, "Proxy not attached to service");
             return null;
         }
-        Log.w(TAG, "Proxy not attached to service");
         return null;
     }
 
@@ -317,13 +321,13 @@ public final class BluetoothHeadsetClient implements BluetoothProfile {
             try {
                 return service.acceptCall(device, flag);
             } catch (RemoteException e) {
-                Log.e(TAG, Log.getStackTraceString(new Throwable()));
+                Log.m70e(TAG, Log.getStackTraceString(new Throwable()));
             }
         }
-        if (service != null) {
+        if (service == null) {
+            Log.m64w(TAG, "Proxy not attached to service");
             return false;
         }
-        Log.w(TAG, "Proxy not attached to service");
         return false;
     }
 
@@ -334,13 +338,13 @@ public final class BluetoothHeadsetClient implements BluetoothProfile {
             try {
                 return service.holdCall(device);
             } catch (RemoteException e) {
-                Log.e(TAG, Log.getStackTraceString(new Throwable()));
+                Log.m70e(TAG, Log.getStackTraceString(new Throwable()));
             }
         }
-        if (service != null) {
+        if (service == null) {
+            Log.m64w(TAG, "Proxy not attached to service");
             return false;
         }
-        Log.w(TAG, "Proxy not attached to service");
         return false;
     }
 
@@ -352,13 +356,13 @@ public final class BluetoothHeadsetClient implements BluetoothProfile {
             try {
                 return service.rejectCall(device);
             } catch (RemoteException e) {
-                Log.e(TAG, Log.getStackTraceString(new Throwable()));
+                Log.m70e(TAG, Log.getStackTraceString(new Throwable()));
             }
         }
-        if (service != null) {
+        if (service == null) {
+            Log.m64w(TAG, "Proxy not attached to service");
             return false;
         }
-        Log.w(TAG, "Proxy not attached to service");
         return false;
     }
 
@@ -369,13 +373,13 @@ public final class BluetoothHeadsetClient implements BluetoothProfile {
             try {
                 return service.terminateCall(device, call);
             } catch (RemoteException e) {
-                Log.e(TAG, Log.getStackTraceString(new Throwable()));
+                Log.m70e(TAG, Log.getStackTraceString(new Throwable()));
             }
         }
-        if (service != null) {
+        if (service == null) {
+            Log.m64w(TAG, "Proxy not attached to service");
             return false;
         }
-        Log.w(TAG, "Proxy not attached to service");
         return false;
     }
 
@@ -386,13 +390,13 @@ public final class BluetoothHeadsetClient implements BluetoothProfile {
             try {
                 return service.enterPrivateMode(device, index);
             } catch (RemoteException e) {
-                Log.e(TAG, Log.getStackTraceString(new Throwable()));
+                Log.m70e(TAG, Log.getStackTraceString(new Throwable()));
             }
         }
-        if (service != null) {
+        if (service == null) {
+            Log.m64w(TAG, "Proxy not attached to service");
             return false;
         }
-        Log.w(TAG, "Proxy not attached to service");
         return false;
     }
 
@@ -403,13 +407,13 @@ public final class BluetoothHeadsetClient implements BluetoothProfile {
             try {
                 return service.explicitCallTransfer(device);
             } catch (RemoteException e) {
-                Log.e(TAG, Log.getStackTraceString(new Throwable()));
+                Log.m70e(TAG, Log.getStackTraceString(new Throwable()));
             }
         }
-        if (service != null) {
+        if (service == null) {
+            Log.m64w(TAG, "Proxy not attached to service");
             return false;
         }
-        Log.w(TAG, "Proxy not attached to service");
         return false;
     }
 
@@ -420,13 +424,13 @@ public final class BluetoothHeadsetClient implements BluetoothProfile {
             try {
                 return service.dial(device, number);
             } catch (RemoteException e) {
-                Log.e(TAG, Log.getStackTraceString(new Throwable()));
+                Log.m70e(TAG, Log.getStackTraceString(new Throwable()));
             }
         }
-        if (service != null) {
+        if (service == null) {
+            Log.m64w(TAG, "Proxy not attached to service");
             return null;
         }
-        Log.w(TAG, "Proxy not attached to service");
         return null;
     }
 
@@ -437,13 +441,13 @@ public final class BluetoothHeadsetClient implements BluetoothProfile {
             try {
                 return service.sendDTMF(device, code);
             } catch (RemoteException e) {
-                Log.e(TAG, Log.getStackTraceString(new Throwable()));
+                Log.m70e(TAG, Log.getStackTraceString(new Throwable()));
             }
         }
-        if (service != null) {
+        if (service == null) {
+            Log.m64w(TAG, "Proxy not attached to service");
             return false;
         }
-        Log.w(TAG, "Proxy not attached to service");
         return false;
     }
 
@@ -454,104 +458,105 @@ public final class BluetoothHeadsetClient implements BluetoothProfile {
             try {
                 return service.getLastVoiceTagNumber(device);
             } catch (RemoteException e) {
-                Log.e(TAG, Log.getStackTraceString(new Throwable()));
+                Log.m70e(TAG, Log.getStackTraceString(new Throwable()));
             }
         }
-        if (service != null) {
+        if (service == null) {
+            Log.m64w(TAG, "Proxy not attached to service");
             return false;
         }
-        Log.w(TAG, "Proxy not attached to service");
         return false;
     }
 
     @UnsupportedAppUsage
     public int getAudioState(BluetoothDevice device) {
         IBluetoothHeadsetClient service = getService();
-        if (service == null || !isEnabled()) {
-            Log.w(TAG, "Proxy not attached to service");
-            Log.d(TAG, Log.getStackTraceString(new Throwable()));
-            return 0;
+        if (service != null && isEnabled()) {
+            try {
+                return service.getAudioState(device);
+            } catch (RemoteException e) {
+                Log.m70e(TAG, e.toString());
+                return 0;
+            }
         }
-        try {
-            return service.getAudioState(device);
-        } catch (RemoteException e) {
-            Log.e(TAG, e.toString());
-            return 0;
-        }
+        Log.m64w(TAG, "Proxy not attached to service");
+        Log.m72d(TAG, Log.getStackTraceString(new Throwable()));
+        return 0;
     }
 
     public void setAudioRouteAllowed(BluetoothDevice device, boolean allowed) {
         IBluetoothHeadsetClient service = getService();
-        if (service == null || !isEnabled()) {
-            Log.w(TAG, "Proxy not attached to service");
-            Log.d(TAG, Log.getStackTraceString(new Throwable()));
-            return;
+        if (service != null && isEnabled()) {
+            try {
+                service.setAudioRouteAllowed(device, allowed);
+                return;
+            } catch (RemoteException e) {
+                Log.m70e(TAG, e.toString());
+                return;
+            }
         }
-        try {
-            service.setAudioRouteAllowed(device, allowed);
-        } catch (RemoteException e) {
-            Log.e(TAG, e.toString());
-        }
+        Log.m64w(TAG, "Proxy not attached to service");
+        Log.m72d(TAG, Log.getStackTraceString(new Throwable()));
     }
 
     public boolean getAudioRouteAllowed(BluetoothDevice device) {
         IBluetoothHeadsetClient service = getService();
-        if (service == null || !isEnabled()) {
-            Log.w(TAG, "Proxy not attached to service");
-            Log.d(TAG, Log.getStackTraceString(new Throwable()));
-            return false;
+        if (service != null && isEnabled()) {
+            try {
+                return service.getAudioRouteAllowed(device);
+            } catch (RemoteException e) {
+                Log.m70e(TAG, e.toString());
+                return false;
+            }
         }
-        try {
-            return service.getAudioRouteAllowed(device);
-        } catch (RemoteException e) {
-            Log.e(TAG, e.toString());
-            return false;
-        }
+        Log.m64w(TAG, "Proxy not attached to service");
+        Log.m72d(TAG, Log.getStackTraceString(new Throwable()));
+        return false;
     }
 
     public boolean connectAudio(BluetoothDevice device) {
         IBluetoothHeadsetClient service = getService();
-        if (service == null || !isEnabled()) {
-            Log.w(TAG, "Proxy not attached to service");
-            Log.d(TAG, Log.getStackTraceString(new Throwable()));
-            return false;
+        if (service != null && isEnabled()) {
+            try {
+                return service.connectAudio(device);
+            } catch (RemoteException e) {
+                Log.m70e(TAG, e.toString());
+                return false;
+            }
         }
-        try {
-            return service.connectAudio(device);
-        } catch (RemoteException e) {
-            Log.e(TAG, e.toString());
-            return false;
-        }
+        Log.m64w(TAG, "Proxy not attached to service");
+        Log.m72d(TAG, Log.getStackTraceString(new Throwable()));
+        return false;
     }
 
     public boolean disconnectAudio(BluetoothDevice device) {
         IBluetoothHeadsetClient service = getService();
-        if (service == null || !isEnabled()) {
-            Log.w(TAG, "Proxy not attached to service");
-            Log.d(TAG, Log.getStackTraceString(new Throwable()));
-            return false;
+        if (service != null && isEnabled()) {
+            try {
+                return service.disconnectAudio(device);
+            } catch (RemoteException e) {
+                Log.m70e(TAG, e.toString());
+                return false;
+            }
         }
-        try {
-            return service.disconnectAudio(device);
-        } catch (RemoteException e) {
-            Log.e(TAG, e.toString());
-            return false;
-        }
+        Log.m64w(TAG, "Proxy not attached to service");
+        Log.m72d(TAG, Log.getStackTraceString(new Throwable()));
+        return false;
     }
 
     public Bundle getCurrentAgFeatures(BluetoothDevice device) {
         IBluetoothHeadsetClient service = getService();
-        if (service == null || !isEnabled()) {
-            Log.w(TAG, "Proxy not attached to service");
-            Log.d(TAG, Log.getStackTraceString(new Throwable()));
-            return null;
+        if (service != null && isEnabled()) {
+            try {
+                return service.getCurrentAgFeatures(device);
+            } catch (RemoteException e) {
+                Log.m70e(TAG, e.toString());
+                return null;
+            }
         }
-        try {
-            return service.getCurrentAgFeatures(device);
-        } catch (RemoteException e) {
-            Log.e(TAG, e.toString());
-            return null;
-        }
+        Log.m64w(TAG, "Proxy not attached to service");
+        Log.m72d(TAG, Log.getStackTraceString(new Throwable()));
+        return null;
     }
 
     private boolean isEnabled() {
@@ -563,6 +568,6 @@ public final class BluetoothHeadsetClient implements BluetoothProfile {
     }
 
     private static void log(String msg) {
-        Log.d(TAG, msg);
+        Log.m72d(TAG, msg);
     }
 }

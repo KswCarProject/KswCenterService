@@ -6,16 +6,17 @@ import android.app.servertransaction.ClientTransactionItem;
 import android.app.servertransaction.PendingTransactionActions;
 import android.app.servertransaction.TransactionExecutor;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
+import android.content.p002pm.ApplicationInfo;
 import android.content.res.CompatibilityInfo;
 import android.content.res.Configuration;
-import android.os.IBinder;
+import android.p007os.IBinder;
 import android.util.MergedConfiguration;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.content.ReferrerIntent;
 import java.util.List;
 import java.util.Map;
 
+/* loaded from: classes.dex */
 public abstract class ClientTransactionHandler {
     public abstract void countLaunchingActivities(int i);
 
@@ -27,8 +28,7 @@ public abstract class ClientTransactionHandler {
 
     public abstract LoadedApk getPackageInfoNoCheck(ApplicationInfo applicationInfo, CompatibilityInfo compatibilityInfo);
 
-    /* access modifiers changed from: package-private */
-    public abstract TransactionExecutor getTransactionExecutor();
+    abstract TransactionExecutor getTransactionExecutor();
 
     public abstract void handleActivityConfigurationChanged(IBinder iBinder, Configuration configuration, int i);
 
@@ -68,8 +68,7 @@ public abstract class ClientTransactionHandler {
 
     public abstract void reportStop(PendingTransactionActions pendingTransactionActions);
 
-    /* access modifiers changed from: package-private */
-    public abstract void sendMessage(int i, Object obj);
+    abstract void sendMessage(int i, Object obj);
 
     public abstract void updatePendingActivityConfiguration(IBinder iBinder, Configuration configuration);
 
@@ -77,8 +76,7 @@ public abstract class ClientTransactionHandler {
 
     public abstract void updateProcessState(int i, boolean z);
 
-    /* access modifiers changed from: package-private */
-    public void scheduleTransaction(ClientTransaction transaction) {
+    void scheduleTransaction(ClientTransaction transaction) {
         transaction.preExecute(this);
         sendMessage(159, transaction);
     }

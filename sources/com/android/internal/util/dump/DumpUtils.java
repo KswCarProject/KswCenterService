@@ -1,8 +1,9 @@
 package com.android.internal.util.dump;
 
 import android.content.ComponentName;
-import android.media.tv.TvContract;
+import android.media.p006tv.TvContract;
 
+/* loaded from: classes4.dex */
 public class DumpUtils {
     public static void writeStringIfNotNull(DualDumpOutputStream proto, String idName, long id, String string) {
         if (string != null) {

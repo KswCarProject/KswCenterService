@@ -1,249 +1,258 @@
 package android.renderscript;
 
+/* loaded from: classes3.dex */
 public class Short4 {
-    public short w;
-    public short x;
-    public short y;
-    public short z;
+
+    /* renamed from: w */
+    public short f231w;
+
+    /* renamed from: x */
+    public short f232x;
+
+    /* renamed from: y */
+    public short f233y;
+
+    /* renamed from: z */
+    public short f234z;
 
     public Short4() {
     }
 
     public Short4(short i) {
-        this.w = i;
-        this.z = i;
-        this.y = i;
-        this.x = i;
+        this.f231w = i;
+        this.f234z = i;
+        this.f233y = i;
+        this.f232x = i;
     }
 
-    public Short4(short x2, short y2, short z2, short w2) {
-        this.x = x2;
-        this.y = y2;
-        this.z = z2;
-        this.w = w2;
+    public Short4(short x, short y, short z, short w) {
+        this.f232x = x;
+        this.f233y = y;
+        this.f234z = z;
+        this.f231w = w;
     }
 
     public Short4(Short4 source) {
-        this.x = source.x;
-        this.y = source.y;
-        this.z = source.z;
-        this.w = source.w;
+        this.f232x = source.f232x;
+        this.f233y = source.f233y;
+        this.f234z = source.f234z;
+        this.f231w = source.f231w;
     }
 
     public void add(Short4 a) {
-        this.x = (short) (this.x + a.x);
-        this.y = (short) (this.y + a.y);
-        this.z = (short) (this.z + a.z);
-        this.w = (short) (this.w + a.w);
+        this.f232x = (short) (this.f232x + a.f232x);
+        this.f233y = (short) (this.f233y + a.f233y);
+        this.f234z = (short) (this.f234z + a.f234z);
+        this.f231w = (short) (this.f231w + a.f231w);
     }
 
     public static Short4 add(Short4 a, Short4 b) {
         Short4 result = new Short4();
-        result.x = (short) (a.x + b.x);
-        result.y = (short) (a.y + b.y);
-        result.z = (short) (a.z + b.z);
-        result.w = (short) (a.w + b.w);
+        result.f232x = (short) (a.f232x + b.f232x);
+        result.f233y = (short) (a.f233y + b.f233y);
+        result.f234z = (short) (a.f234z + b.f234z);
+        result.f231w = (short) (a.f231w + b.f231w);
         return result;
     }
 
     public void add(short value) {
-        this.x = (short) (this.x + value);
-        this.y = (short) (this.y + value);
-        this.z = (short) (this.z + value);
-        this.w = (short) (this.w + value);
+        this.f232x = (short) (this.f232x + value);
+        this.f233y = (short) (this.f233y + value);
+        this.f234z = (short) (this.f234z + value);
+        this.f231w = (short) (this.f231w + value);
     }
 
     public static Short4 add(Short4 a, short b) {
         Short4 result = new Short4();
-        result.x = (short) (a.x + b);
-        result.y = (short) (a.y + b);
-        result.z = (short) (a.z + b);
-        result.w = (short) (a.w + b);
+        result.f232x = (short) (a.f232x + b);
+        result.f233y = (short) (a.f233y + b);
+        result.f234z = (short) (a.f234z + b);
+        result.f231w = (short) (a.f231w + b);
         return result;
     }
 
     public void sub(Short4 a) {
-        this.x = (short) (this.x - a.x);
-        this.y = (short) (this.y - a.y);
-        this.z = (short) (this.z - a.z);
-        this.w = (short) (this.w - a.w);
+        this.f232x = (short) (this.f232x - a.f232x);
+        this.f233y = (short) (this.f233y - a.f233y);
+        this.f234z = (short) (this.f234z - a.f234z);
+        this.f231w = (short) (this.f231w - a.f231w);
     }
 
     public static Short4 sub(Short4 a, Short4 b) {
         Short4 result = new Short4();
-        result.x = (short) (a.x - b.x);
-        result.y = (short) (a.y - b.y);
-        result.z = (short) (a.z - b.z);
-        result.w = (short) (a.w - b.w);
+        result.f232x = (short) (a.f232x - b.f232x);
+        result.f233y = (short) (a.f233y - b.f233y);
+        result.f234z = (short) (a.f234z - b.f234z);
+        result.f231w = (short) (a.f231w - b.f231w);
         return result;
     }
 
     public void sub(short value) {
-        this.x = (short) (this.x - value);
-        this.y = (short) (this.y - value);
-        this.z = (short) (this.z - value);
-        this.w = (short) (this.w - value);
+        this.f232x = (short) (this.f232x - value);
+        this.f233y = (short) (this.f233y - value);
+        this.f234z = (short) (this.f234z - value);
+        this.f231w = (short) (this.f231w - value);
     }
 
     public static Short4 sub(Short4 a, short b) {
         Short4 result = new Short4();
-        result.x = (short) (a.x - b);
-        result.y = (short) (a.y - b);
-        result.z = (short) (a.z - b);
-        result.w = (short) (a.w - b);
+        result.f232x = (short) (a.f232x - b);
+        result.f233y = (short) (a.f233y - b);
+        result.f234z = (short) (a.f234z - b);
+        result.f231w = (short) (a.f231w - b);
         return result;
     }
 
     public void mul(Short4 a) {
-        this.x = (short) (this.x * a.x);
-        this.y = (short) (this.y * a.y);
-        this.z = (short) (this.z * a.z);
-        this.w = (short) (this.w * a.w);
+        this.f232x = (short) (this.f232x * a.f232x);
+        this.f233y = (short) (this.f233y * a.f233y);
+        this.f234z = (short) (this.f234z * a.f234z);
+        this.f231w = (short) (this.f231w * a.f231w);
     }
 
     public static Short4 mul(Short4 a, Short4 b) {
         Short4 result = new Short4();
-        result.x = (short) (a.x * b.x);
-        result.y = (short) (a.y * b.y);
-        result.z = (short) (a.z * b.z);
-        result.w = (short) (a.w * b.w);
+        result.f232x = (short) (a.f232x * b.f232x);
+        result.f233y = (short) (a.f233y * b.f233y);
+        result.f234z = (short) (a.f234z * b.f234z);
+        result.f231w = (short) (a.f231w * b.f231w);
         return result;
     }
 
     public void mul(short value) {
-        this.x = (short) (this.x * value);
-        this.y = (short) (this.y * value);
-        this.z = (short) (this.z * value);
-        this.w = (short) (this.w * value);
+        this.f232x = (short) (this.f232x * value);
+        this.f233y = (short) (this.f233y * value);
+        this.f234z = (short) (this.f234z * value);
+        this.f231w = (short) (this.f231w * value);
     }
 
     public static Short4 mul(Short4 a, short b) {
         Short4 result = new Short4();
-        result.x = (short) (a.x * b);
-        result.y = (short) (a.y * b);
-        result.z = (short) (a.z * b);
-        result.w = (short) (a.w * b);
+        result.f232x = (short) (a.f232x * b);
+        result.f233y = (short) (a.f233y * b);
+        result.f234z = (short) (a.f234z * b);
+        result.f231w = (short) (a.f231w * b);
         return result;
     }
 
     public void div(Short4 a) {
-        this.x = (short) (this.x / a.x);
-        this.y = (short) (this.y / a.y);
-        this.z = (short) (this.z / a.z);
-        this.w = (short) (this.w / a.w);
+        this.f232x = (short) (this.f232x / a.f232x);
+        this.f233y = (short) (this.f233y / a.f233y);
+        this.f234z = (short) (this.f234z / a.f234z);
+        this.f231w = (short) (this.f231w / a.f231w);
     }
 
     public static Short4 div(Short4 a, Short4 b) {
         Short4 result = new Short4();
-        result.x = (short) (a.x / b.x);
-        result.y = (short) (a.y / b.y);
-        result.z = (short) (a.z / b.z);
-        result.w = (short) (a.w / b.w);
+        result.f232x = (short) (a.f232x / b.f232x);
+        result.f233y = (short) (a.f233y / b.f233y);
+        result.f234z = (short) (a.f234z / b.f234z);
+        result.f231w = (short) (a.f231w / b.f231w);
         return result;
     }
 
     public void div(short value) {
-        this.x = (short) (this.x / value);
-        this.y = (short) (this.y / value);
-        this.z = (short) (this.z / value);
-        this.w = (short) (this.w / value);
+        this.f232x = (short) (this.f232x / value);
+        this.f233y = (short) (this.f233y / value);
+        this.f234z = (short) (this.f234z / value);
+        this.f231w = (short) (this.f231w / value);
     }
 
     public static Short4 div(Short4 a, short b) {
         Short4 result = new Short4();
-        result.x = (short) (a.x / b);
-        result.y = (short) (a.y / b);
-        result.z = (short) (a.z / b);
-        result.w = (short) (a.w / b);
+        result.f232x = (short) (a.f232x / b);
+        result.f233y = (short) (a.f233y / b);
+        result.f234z = (short) (a.f234z / b);
+        result.f231w = (short) (a.f231w / b);
         return result;
     }
 
     public void mod(Short4 a) {
-        this.x = (short) (this.x % a.x);
-        this.y = (short) (this.y % a.y);
-        this.z = (short) (this.z % a.z);
-        this.w = (short) (this.w % a.w);
+        this.f232x = (short) (this.f232x % a.f232x);
+        this.f233y = (short) (this.f233y % a.f233y);
+        this.f234z = (short) (this.f234z % a.f234z);
+        this.f231w = (short) (this.f231w % a.f231w);
     }
 
     public static Short4 mod(Short4 a, Short4 b) {
         Short4 result = new Short4();
-        result.x = (short) (a.x % b.x);
-        result.y = (short) (a.y % b.y);
-        result.z = (short) (a.z % b.z);
-        result.w = (short) (a.w % b.w);
+        result.f232x = (short) (a.f232x % b.f232x);
+        result.f233y = (short) (a.f233y % b.f233y);
+        result.f234z = (short) (a.f234z % b.f234z);
+        result.f231w = (short) (a.f231w % b.f231w);
         return result;
     }
 
     public void mod(short value) {
-        this.x = (short) (this.x % value);
-        this.y = (short) (this.y % value);
-        this.z = (short) (this.z % value);
-        this.w = (short) (this.w % value);
+        this.f232x = (short) (this.f232x % value);
+        this.f233y = (short) (this.f233y % value);
+        this.f234z = (short) (this.f234z % value);
+        this.f231w = (short) (this.f231w % value);
     }
 
     public static Short4 mod(Short4 a, short b) {
         Short4 result = new Short4();
-        result.x = (short) (a.x % b);
-        result.y = (short) (a.y % b);
-        result.z = (short) (a.z % b);
-        result.w = (short) (a.w % b);
+        result.f232x = (short) (a.f232x % b);
+        result.f233y = (short) (a.f233y % b);
+        result.f234z = (short) (a.f234z % b);
+        result.f231w = (short) (a.f231w % b);
         return result;
     }
 
     public short length() {
-        return 4;
+        return (short) 4;
     }
 
     public void negate() {
-        this.x = (short) (-this.x);
-        this.y = (short) (-this.y);
-        this.z = (short) (-this.z);
-        this.w = (short) (-this.w);
+        this.f232x = (short) (-this.f232x);
+        this.f233y = (short) (-this.f233y);
+        this.f234z = (short) (-this.f234z);
+        this.f231w = (short) (-this.f231w);
     }
 
     public short dotProduct(Short4 a) {
-        return (short) ((this.x * a.x) + (this.y * a.y) + (this.z * a.z) + (this.w * a.w));
+        return (short) ((this.f232x * a.f232x) + (this.f233y * a.f233y) + (this.f234z * a.f234z) + (this.f231w * a.f231w));
     }
 
     public static short dotProduct(Short4 a, Short4 b) {
-        return (short) ((b.x * a.x) + (b.y * a.y) + (b.z * a.z) + (b.w * a.w));
+        return (short) ((b.f232x * a.f232x) + (b.f233y * a.f233y) + (b.f234z * a.f234z) + (b.f231w * a.f231w));
     }
 
     public void addMultiple(Short4 a, short factor) {
-        this.x = (short) (this.x + (a.x * factor));
-        this.y = (short) (this.y + (a.y * factor));
-        this.z = (short) (this.z + (a.z * factor));
-        this.w = (short) (this.w + (a.w * factor));
+        this.f232x = (short) (this.f232x + (a.f232x * factor));
+        this.f233y = (short) (this.f233y + (a.f233y * factor));
+        this.f234z = (short) (this.f234z + (a.f234z * factor));
+        this.f231w = (short) (this.f231w + (a.f231w * factor));
     }
 
     public void set(Short4 a) {
-        this.x = a.x;
-        this.y = a.y;
-        this.z = a.z;
-        this.w = a.w;
+        this.f232x = a.f232x;
+        this.f233y = a.f233y;
+        this.f234z = a.f234z;
+        this.f231w = a.f231w;
     }
 
     public void setValues(short a, short b, short c, short d) {
-        this.x = a;
-        this.y = b;
-        this.z = c;
-        this.w = d;
+        this.f232x = a;
+        this.f233y = b;
+        this.f234z = c;
+        this.f231w = d;
     }
 
     public short elementSum() {
-        return (short) (this.x + this.y + this.z + this.w);
+        return (short) (this.f232x + this.f233y + this.f234z + this.f231w);
     }
 
     public short get(int i) {
         switch (i) {
             case 0:
-                return this.x;
+                return this.f232x;
             case 1:
-                return this.y;
+                return this.f233y;
             case 2:
-                return this.z;
+                return this.f234z;
             case 3:
-                return this.w;
+                return this.f231w;
             default:
                 throw new IndexOutOfBoundsException("Index: i");
         }
@@ -252,16 +261,16 @@ public class Short4 {
     public void setAt(int i, short value) {
         switch (i) {
             case 0:
-                this.x = value;
+                this.f232x = value;
                 return;
             case 1:
-                this.y = value;
+                this.f233y = value;
                 return;
             case 2:
-                this.z = value;
+                this.f234z = value;
                 return;
             case 3:
-                this.w = value;
+                this.f231w = value;
                 return;
             default:
                 throw new IndexOutOfBoundsException("Index: i");
@@ -271,16 +280,16 @@ public class Short4 {
     public void addAt(int i, short value) {
         switch (i) {
             case 0:
-                this.x = (short) (this.x + value);
+                this.f232x = (short) (this.f232x + value);
                 return;
             case 1:
-                this.y = (short) (this.y + value);
+                this.f233y = (short) (this.f233y + value);
                 return;
             case 2:
-                this.z = (short) (this.z + value);
+                this.f234z = (short) (this.f234z + value);
                 return;
             case 3:
-                this.w = (short) (this.w + value);
+                this.f231w = (short) (this.f231w + value);
                 return;
             default:
                 throw new IndexOutOfBoundsException("Index: i");
@@ -288,9 +297,9 @@ public class Short4 {
     }
 
     public void copyTo(short[] data, int offset) {
-        data[offset] = this.x;
-        data[offset + 1] = this.y;
-        data[offset + 2] = this.z;
-        data[offset + 3] = this.w;
+        data[offset] = this.f232x;
+        data[offset + 1] = this.f233y;
+        data[offset + 2] = this.f234z;
+        data[offset + 3] = this.f231w;
     }
 }

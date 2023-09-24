@@ -3,8 +3,7 @@ package android.database;
 import android.annotation.UnsupportedAppUsage;
 import android.content.ContentResolver;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
+import android.p007os.Bundle;
 import android.util.Log;
 import com.android.internal.util.Preconditions;
 import java.lang.ref.WeakReference;
@@ -13,68 +12,82 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/* loaded from: classes.dex */
 public abstract class AbstractCursor implements CrossProcessCursor {
     private static final String TAG = "Cursor";
     @Deprecated
     protected boolean mClosed;
-    private final ContentObservable mContentObservable = new ContentObservable();
     @Deprecated
     protected ContentResolver mContentResolver;
     protected Long mCurrentRowID;
-    private final DataSetObservable mDataSetObservable = new DataSetObservable();
-    @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
-    private Bundle mExtras = Bundle.EMPTY;
     @UnsupportedAppUsage
     private Uri mNotifyUri;
     private List<Uri> mNotifyUris;
-    @Deprecated
-    protected int mPos = -1;
     protected int mRowIdColumnIndex;
     private ContentObserver mSelfObserver;
-    private final Object mSelfObserverLock = new Object();
     private boolean mSelfObserverRegistered;
     protected HashMap<Long, Map<String, Object>> mUpdatedRows;
+    private final Object mSelfObserverLock = new Object();
+    private final DataSetObservable mDataSetObservable = new DataSetObservable();
+    private final ContentObservable mContentObservable = new ContentObservable();
+    @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
+    private Bundle mExtras = Bundle.EMPTY;
+    @Deprecated
+    protected int mPos = -1;
 
+    @Override // android.database.Cursor
     public abstract String[] getColumnNames();
 
+    @Override // android.database.Cursor
     public abstract int getCount();
 
+    @Override // android.database.Cursor
     public abstract double getDouble(int i);
 
+    @Override // android.database.Cursor
     public abstract float getFloat(int i);
 
+    @Override // android.database.Cursor
     public abstract int getInt(int i);
 
+    @Override // android.database.Cursor
     public abstract long getLong(int i);
 
+    @Override // android.database.Cursor
     public abstract short getShort(int i);
 
+    @Override // android.database.Cursor
     public abstract String getString(int i);
 
+    @Override // android.database.Cursor
     public abstract boolean isNull(int i);
 
+    @Override // android.database.Cursor
     public int getType(int column) {
         return 3;
     }
 
+    @Override // android.database.Cursor
     public byte[] getBlob(int column) {
         throw new UnsupportedOperationException("getBlob is not supported");
     }
 
+    @Override // android.database.CrossProcessCursor
     public CursorWindow getWindow() {
         return null;
     }
 
+    @Override // android.database.Cursor
     public int getColumnCount() {
         return getColumnNames().length;
     }
 
+    @Override // android.database.Cursor
     public void deactivate() {
         onDeactivateOrClose();
     }
 
-    /* access modifiers changed from: protected */
-    public void onDeactivateOrClose() {
+    protected void onDeactivateOrClose() {
         if (this.mSelfObserver != null) {
             this.mContentResolver.unregisterContentObserver(this.mSelfObserver);
             this.mSelfObserverRegistered = false;
@@ -82,11 +95,13 @@ public abstract class AbstractCursor implements CrossProcessCursor {
         this.mDataSetObservable.notifyInvalidated();
     }
 
+    @Override // android.database.Cursor
     public boolean requery() {
         if (this.mSelfObserver != null && !this.mSelfObserverRegistered) {
             int size = this.mNotifyUris.size();
             for (int i = 0; i < size; i++) {
-                this.mContentResolver.registerContentObserver(this.mNotifyUris.get(i), true, this.mSelfObserver);
+                Uri notifyUri = this.mNotifyUris.get(i);
+                this.mContentResolver.registerContentObserver(notifyUri, true, this.mSelfObserver);
             }
             this.mSelfObserverRegistered = true;
         }
@@ -94,28 +109,32 @@ public abstract class AbstractCursor implements CrossProcessCursor {
         return true;
     }
 
+    @Override // android.database.Cursor
     public boolean isClosed() {
         return this.mClosed;
     }
 
+    @Override // android.database.Cursor, java.io.Closeable, java.lang.AutoCloseable
     public void close() {
         this.mClosed = true;
         this.mContentObservable.unregisterAll();
         onDeactivateOrClose();
     }
 
+    @Override // android.database.CrossProcessCursor
     public boolean onMove(int oldPosition, int newPosition) {
         return true;
     }
 
+    @Override // android.database.Cursor
     public void copyStringToBuffer(int columnIndex, CharArrayBuffer buffer) {
         String result = getString(columnIndex);
         if (result != null) {
             char[] data = buffer.data;
-            if (data == null || data.length < result.length()) {
-                buffer.data = result.toCharArray();
-            } else {
+            if (data != null && data.length >= result.length()) {
                 result.getChars(0, result.length(), data, 0);
+            } else {
+                buffer.data = result.toCharArray();
             }
             buffer.sizeCopied = result.length();
             return;
@@ -123,10 +142,12 @@ public abstract class AbstractCursor implements CrossProcessCursor {
         buffer.sizeCopied = 0;
     }
 
+    @Override // android.database.Cursor
     public final int getPosition() {
         return this.mPos;
     }
 
+    @Override // android.database.Cursor
     public final boolean moveToPosition(int position) {
         int count = getCount();
         if (position >= count) {
@@ -148,58 +169,63 @@ public abstract class AbstractCursor implements CrossProcessCursor {
         }
     }
 
+    @Override // android.database.CrossProcessCursor
     public void fillWindow(int position, CursorWindow window) {
         DatabaseUtils.cursorFillWindow(this, position, window);
     }
 
+    @Override // android.database.Cursor
     public final boolean move(int offset) {
         return moveToPosition(this.mPos + offset);
     }
 
+    @Override // android.database.Cursor
     public final boolean moveToFirst() {
         return moveToPosition(0);
     }
 
+    @Override // android.database.Cursor
     public final boolean moveToLast() {
         return moveToPosition(getCount() - 1);
     }
 
+    @Override // android.database.Cursor
     public final boolean moveToNext() {
         return moveToPosition(this.mPos + 1);
     }
 
+    @Override // android.database.Cursor
     public final boolean moveToPrevious() {
         return moveToPosition(this.mPos - 1);
     }
 
+    @Override // android.database.Cursor
     public final boolean isFirst() {
         return this.mPos == 0 && getCount() != 0;
     }
 
+    @Override // android.database.Cursor
     public final boolean isLast() {
         int cnt = getCount();
-        return this.mPos == cnt + -1 && cnt != 0;
+        return this.mPos == cnt + (-1) && cnt != 0;
     }
 
+    @Override // android.database.Cursor
     public final boolean isBeforeFirst() {
-        if (getCount() == 0 || this.mPos == -1) {
-            return true;
-        }
-        return false;
+        return getCount() == 0 || this.mPos == -1;
     }
 
+    @Override // android.database.Cursor
     public final boolean isAfterLast() {
-        if (getCount() == 0 || this.mPos == getCount()) {
-            return true;
-        }
-        return false;
+        return getCount() == 0 || this.mPos == getCount();
     }
 
+    @Override // android.database.Cursor
     public int getColumnIndex(String columnName) {
         int periodIndex = columnName.lastIndexOf(46);
         if (periodIndex != -1) {
             Exception e = new Exception();
-            Log.e(TAG, "requesting column name with table name -- " + columnName, e);
+            Log.m69e(TAG, "requesting column name with table name -- " + columnName, e);
             columnName = columnName.substring(periodIndex + 1);
         }
         String[] columnNames = getColumnNames();
@@ -212,59 +238,67 @@ public abstract class AbstractCursor implements CrossProcessCursor {
         return -1;
     }
 
+    @Override // android.database.Cursor
     public int getColumnIndexOrThrow(String columnName) {
         int index = getColumnIndex(columnName);
-        if (index >= 0) {
-            return index;
+        if (index < 0) {
+            String availableColumns = "";
+            try {
+                availableColumns = Arrays.toString(getColumnNames());
+            } catch (Exception e) {
+                Log.m71d(TAG, "Cannot collect column names for debug purposes", e);
+            }
+            throw new IllegalArgumentException("column '" + columnName + "' does not exist. Available columns: " + availableColumns);
         }
-        String availableColumns = "";
-        try {
-            availableColumns = Arrays.toString(getColumnNames());
-        } catch (Exception e) {
-            Log.d(TAG, "Cannot collect column names for debug purposes", e);
-        }
-        throw new IllegalArgumentException("column '" + columnName + "' does not exist. Available columns: " + availableColumns);
+        return index;
     }
 
+    @Override // android.database.Cursor
     public String getColumnName(int columnIndex) {
         return getColumnNames()[columnIndex];
     }
 
+    @Override // android.database.Cursor
     public void registerContentObserver(ContentObserver observer) {
         this.mContentObservable.registerObserver(observer);
     }
 
+    @Override // android.database.Cursor
     public void unregisterContentObserver(ContentObserver observer) {
         if (!this.mClosed) {
             this.mContentObservable.unregisterObserver(observer);
         }
     }
 
+    @Override // android.database.Cursor
     public void registerDataSetObserver(DataSetObserver observer) {
         this.mDataSetObservable.registerObserver(observer);
     }
 
+    @Override // android.database.Cursor
     public void unregisterDataSetObserver(DataSetObserver observer) {
         this.mDataSetObservable.unregisterObserver(observer);
     }
 
-    /* access modifiers changed from: protected */
-    public void onChange(boolean selfChange) {
+    protected void onChange(boolean selfChange) {
         synchronized (this.mSelfObserverLock) {
-            this.mContentObservable.dispatchChange(selfChange, (Uri) null);
+            this.mContentObservable.dispatchChange(selfChange, null);
             if (this.mNotifyUris != null && selfChange) {
                 int size = this.mNotifyUris.size();
                 for (int i = 0; i < size; i++) {
-                    this.mContentResolver.notifyChange(this.mNotifyUris.get(i), this.mSelfObserver);
+                    Uri notifyUri = this.mNotifyUris.get(i);
+                    this.mContentResolver.notifyChange(notifyUri, this.mSelfObserver);
                 }
             }
         }
     }
 
+    @Override // android.database.Cursor
     public void setNotificationUri(ContentResolver cr, Uri notifyUri) {
-        setNotificationUris(cr, Arrays.asList(new Uri[]{notifyUri}));
+        setNotificationUris(cr, Arrays.asList(notifyUri));
     }
 
+    @Override // android.database.Cursor
     public void setNotificationUris(ContentResolver cr, List<Uri> notifyUris) {
         Preconditions.checkNotNull(cr);
         Preconditions.checkNotNull(notifyUris);
@@ -284,13 +318,15 @@ public abstract class AbstractCursor implements CrossProcessCursor {
                 this.mSelfObserver = new SelfContentObserver(this);
                 int size = this.mNotifyUris.size();
                 for (int i = 0; i < size; i++) {
-                    this.mContentResolver.registerContentObserver(this.mNotifyUris.get(i), true, this.mSelfObserver, userHandle);
+                    Uri notifyUri = this.mNotifyUris.get(i);
+                    this.mContentResolver.registerContentObserver(notifyUri, true, this.mSelfObserver, userHandle);
                 }
                 this.mSelfObserverRegistered = true;
             }
         }
     }
 
+    @Override // android.database.Cursor
     public Uri getNotificationUri() {
         Uri uri;
         synchronized (this.mSelfObserverLock) {
@@ -299,6 +335,7 @@ public abstract class AbstractCursor implements CrossProcessCursor {
         return uri;
     }
 
+    @Override // android.database.Cursor
     public List<Uri> getNotificationUris() {
         List<Uri> list;
         synchronized (this.mSelfObserverLock) {
@@ -307,43 +344,43 @@ public abstract class AbstractCursor implements CrossProcessCursor {
         return list;
     }
 
+    @Override // android.database.Cursor
     public boolean getWantsAllOnMoveCalls() {
         return false;
     }
 
+    @Override // android.database.Cursor
     public void setExtras(Bundle extras) {
         this.mExtras = extras == null ? Bundle.EMPTY : extras;
     }
 
+    @Override // android.database.Cursor
     public Bundle getExtras() {
         return this.mExtras;
     }
 
+    @Override // android.database.Cursor
     public Bundle respond(Bundle extras) {
         return Bundle.EMPTY;
     }
 
-    /* access modifiers changed from: protected */
     @Deprecated
-    public boolean isFieldUpdated(int columnIndex) {
+    protected boolean isFieldUpdated(int columnIndex) {
         return false;
     }
 
-    /* access modifiers changed from: protected */
     @Deprecated
-    public Object getUpdatedField(int columnIndex) {
+    protected Object getUpdatedField(int columnIndex) {
         return null;
     }
 
-    /* access modifiers changed from: protected */
-    public void checkPosition() {
+    protected void checkPosition() {
         if (-1 == this.mPos || getCount() == this.mPos) {
             throw new CursorIndexOutOfBoundsException(this.mPos, getCount());
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() {
+    protected void finalize() {
         if (this.mSelfObserver != null && this.mSelfObserverRegistered) {
             this.mContentResolver.unregisterContentObserver(this.mSelfObserver);
         }
@@ -355,20 +392,23 @@ public abstract class AbstractCursor implements CrossProcessCursor {
         }
     }
 
+    /* loaded from: classes.dex */
     protected static class SelfContentObserver extends ContentObserver {
         WeakReference<AbstractCursor> mCursor;
 
         public SelfContentObserver(AbstractCursor cursor) {
-            super((Handler) null);
+            super(null);
             this.mCursor = new WeakReference<>(cursor);
         }
 
+        @Override // android.database.ContentObserver
         public boolean deliverSelfNotifications() {
             return false;
         }
 
+        @Override // android.database.ContentObserver
         public void onChange(boolean selfChange) {
-            AbstractCursor cursor = (AbstractCursor) this.mCursor.get();
+            AbstractCursor cursor = this.mCursor.get();
             if (cursor != null) {
                 cursor.onChange(false);
             }

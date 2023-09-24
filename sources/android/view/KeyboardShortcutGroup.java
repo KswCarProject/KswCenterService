@@ -1,19 +1,24 @@
 package android.view;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.util.Preconditions;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+/* loaded from: classes4.dex */
 public final class KeyboardShortcutGroup implements Parcelable {
-    public static final Parcelable.Creator<KeyboardShortcutGroup> CREATOR = new Parcelable.Creator<KeyboardShortcutGroup>() {
+    public static final Parcelable.Creator<KeyboardShortcutGroup> CREATOR = new Parcelable.Creator<KeyboardShortcutGroup>() { // from class: android.view.KeyboardShortcutGroup.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public KeyboardShortcutGroup createFromParcel(Parcel source) {
             return new KeyboardShortcutGroup(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public KeyboardShortcutGroup[] newArray(int size) {
             return new KeyboardShortcutGroup[size];
         }
@@ -28,7 +33,7 @@ public final class KeyboardShortcutGroup implements Parcelable {
     }
 
     public KeyboardShortcutGroup(CharSequence label) {
-        this(label, (List<KeyboardShortcutInfo>) Collections.emptyList());
+        this(label, Collections.emptyList());
     }
 
     public KeyboardShortcutGroup(CharSequence label, List<KeyboardShortcutInfo> items, boolean isSystemGroup) {
@@ -45,7 +50,7 @@ public final class KeyboardShortcutGroup implements Parcelable {
         this.mItems = new ArrayList();
         this.mLabel = source.readCharSequence();
         source.readTypedList(this.mItems, KeyboardShortcutInfo.CREATOR);
-        this.mSystemGroup = source.readInt() != 1 ? false : true;
+        this.mSystemGroup = source.readInt() == 1;
     }
 
     public CharSequence getLabel() {
@@ -64,10 +69,12 @@ public final class KeyboardShortcutGroup implements Parcelable {
         this.mItems.add(item);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeCharSequence(this.mLabel);
         dest.writeTypedList(this.mItems);

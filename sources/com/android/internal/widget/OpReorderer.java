@@ -3,9 +3,11 @@ package com.android.internal.widget;
 import com.android.internal.widget.AdapterHelper;
 import java.util.List;
 
+/* loaded from: classes4.dex */
 class OpReorderer {
     final Callback mCallback;
 
+    /* loaded from: classes4.dex */
     interface Callback {
         AdapterHelper.UpdateOp obtainUpdateOp(int i, int i2, int i3, Object obj);
 
@@ -16,12 +18,10 @@ class OpReorderer {
         this.mCallback = callback;
     }
 
-    /* access modifiers changed from: package-private */
-    public void reorderOps(List<AdapterHelper.UpdateOp> ops) {
+    void reorderOps(List<AdapterHelper.UpdateOp> ops) {
         while (true) {
-            int lastMoveOutOfOrder = getLastMoveOutOfOrder(ops);
-            int badMove = lastMoveOutOfOrder;
-            if (lastMoveOutOfOrder != -1) {
+            int badMove = getLastMoveOutOfOrder(ops);
+            if (badMove != -1) {
                 swapMoveOp(ops, badMove, badMove + 1);
             } else {
                 return;
@@ -44,13 +44,11 @@ class OpReorderer {
                 default:
                     return;
             }
-        } else {
-            swapMoveUpdate(list, badMove, moveOp, next, nextOp);
         }
+        swapMoveUpdate(list, badMove, moveOp, next, nextOp);
     }
 
-    /* access modifiers changed from: package-private */
-    public void swapMoveRemove(List<AdapterHelper.UpdateOp> list, int movePos, AdapterHelper.UpdateOp moveOp, int removePos, AdapterHelper.UpdateOp removeOp) {
+    void swapMoveRemove(List<AdapterHelper.UpdateOp> list, int movePos, AdapterHelper.UpdateOp moveOp, int removePos, AdapterHelper.UpdateOp removeOp) {
         boolean moveIsBackwards;
         AdapterHelper.UpdateOp extraRm = null;
         boolean revertedMove = false;
@@ -81,7 +79,8 @@ class OpReorderer {
         if (moveOp.positionStart <= removeOp.positionStart) {
             removeOp.positionStart++;
         } else if (moveOp.positionStart < removeOp.positionStart + removeOp.itemCount) {
-            extraRm = this.mCallback.obtainUpdateOp(2, moveOp.positionStart + 1, (removeOp.positionStart + removeOp.itemCount) - moveOp.positionStart, (Object) null);
+            int remaining = (removeOp.positionStart + removeOp.itemCount) - moveOp.positionStart;
+            extraRm = this.mCallback.obtainUpdateOp(2, moveOp.positionStart + 1, remaining, null);
             removeOp.itemCount = moveOp.positionStart - removeOp.positionStart;
         }
         if (revertedMove) {
@@ -151,8 +150,7 @@ class OpReorderer {
         list.set(add, moveOp);
     }
 
-    /* access modifiers changed from: package-private */
-    public void swapMoveUpdate(List<AdapterHelper.UpdateOp> list, int move, AdapterHelper.UpdateOp moveOp, int update, AdapterHelper.UpdateOp updateOp) {
+    void swapMoveUpdate(List<AdapterHelper.UpdateOp> list, int move, AdapterHelper.UpdateOp moveOp, int update, AdapterHelper.UpdateOp updateOp) {
         AdapterHelper.UpdateOp extraUp1 = null;
         AdapterHelper.UpdateOp extraUp2 = null;
         if (moveOp.itemCount < updateOp.positionStart) {
@@ -186,10 +184,13 @@ class OpReorderer {
     private int getLastMoveOutOfOrder(List<AdapterHelper.UpdateOp> list) {
         boolean foundNonMove = false;
         for (int i = list.size() - 1; i >= 0; i--) {
-            if (list.get(i).cmd != 8) {
+            AdapterHelper.UpdateOp op1 = list.get(i);
+            if (op1.cmd == 8) {
+                if (foundNonMove) {
+                    return i;
+                }
+            } else {
                 foundNonMove = true;
-            } else if (foundNonMove) {
-                return i;
             }
         }
         return -1;

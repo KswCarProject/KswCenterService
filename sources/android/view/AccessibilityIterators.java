@@ -6,14 +6,17 @@ import android.view.ViewRootImpl;
 import java.text.BreakIterator;
 import java.util.Locale;
 
+/* loaded from: classes4.dex */
 public final class AccessibilityIterators {
 
+    /* loaded from: classes4.dex */
     public interface TextSegmentIterator {
         int[] following(int i);
 
         int[] preceding(int i);
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class AbstractTextSegmentIterator implements TextSegmentIterator {
         private final int[] mSegment = new int[2];
         @UnsupportedAppUsage
@@ -23,8 +26,7 @@ public final class AccessibilityIterators {
             this.mText = text;
         }
 
-        /* access modifiers changed from: protected */
-        public int[] getRange(int start, int end) {
+        protected int[] getRange(int start, int end) {
             if (start < 0 || end < 0 || start == end) {
                 return null;
             }
@@ -34,6 +36,7 @@ public final class AccessibilityIterators {
         }
     }
 
+    /* loaded from: classes4.dex */
     static class CharacterTextSegmentIterator extends AbstractTextSegmentIterator implements ViewRootImpl.ConfigChangedCallback {
         private static CharacterTextSegmentIterator sInstance;
         protected BreakIterator mImpl;
@@ -52,11 +55,13 @@ public final class AccessibilityIterators {
             ViewRootImpl.addConfigCallback(this);
         }
 
+        @Override // android.view.AccessibilityIterators.AbstractTextSegmentIterator
         public void initialize(String text) {
             super.initialize(text);
             this.mImpl.setText(text);
         }
 
+        @Override // android.view.AccessibilityIterators.TextSegmentIterator
         public int[] following(int offset) {
             int textLegth = this.mText.length();
             if (textLegth <= 0 || offset >= textLegth) {
@@ -79,6 +84,7 @@ public final class AccessibilityIterators {
             return getRange(start, end);
         }
 
+        @Override // android.view.AccessibilityIterators.TextSegmentIterator
         public int[] preceding(int offset) {
             int textLegth = this.mText.length();
             if (textLegth <= 0 || offset <= 0) {
@@ -101,6 +107,7 @@ public final class AccessibilityIterators {
             return getRange(start, end);
         }
 
+        @Override // android.view.ViewRootImpl.ConfigChangedCallback
         public void onConfigurationChanged(Configuration globalConfig) {
             Locale locale = globalConfig.getLocales().get(0);
             if (locale != null && !this.mLocale.equals(locale)) {
@@ -109,12 +116,12 @@ public final class AccessibilityIterators {
             }
         }
 
-        /* access modifiers changed from: protected */
-        public void onLocaleChanged(Locale locale) {
+        protected void onLocaleChanged(Locale locale) {
             this.mImpl = BreakIterator.getCharacterInstance(locale);
         }
     }
 
+    /* loaded from: classes4.dex */
     static class WordTextSegmentIterator extends CharacterTextSegmentIterator {
         private static WordTextSegmentIterator sInstance;
 
@@ -129,13 +136,15 @@ public final class AccessibilityIterators {
             super(locale);
         }
 
-        /* access modifiers changed from: protected */
-        public void onLocaleChanged(Locale locale) {
+        @Override // android.view.AccessibilityIterators.CharacterTextSegmentIterator
+        protected void onLocaleChanged(Locale locale) {
             this.mImpl = BreakIterator.getWordInstance(locale);
         }
 
+        @Override // android.view.AccessibilityIterators.CharacterTextSegmentIterator, android.view.AccessibilityIterators.TextSegmentIterator
         public int[] following(int offset) {
-            if (this.mText.length() <= 0 || offset >= this.mText.length()) {
+            int textLegth = this.mText.length();
+            if (textLegth <= 0 || offset >= this.mText.length()) {
                 return null;
             }
             int start = offset;
@@ -155,6 +164,7 @@ public final class AccessibilityIterators {
             return getRange(start, end);
         }
 
+        @Override // android.view.AccessibilityIterators.CharacterTextSegmentIterator, android.view.AccessibilityIterators.TextSegmentIterator
         public int[] preceding(int offset) {
             int textLegth = this.mText.length();
             if (textLegth <= 0 || offset <= 0) {
@@ -178,27 +188,29 @@ public final class AccessibilityIterators {
         }
 
         private boolean isStartBoundary(int index) {
-            if (!isLetterOrDigit(index) || (index != 0 && isLetterOrDigit(index - 1))) {
-                return false;
+            if (isLetterOrDigit(index) && (index == 0 || !isLetterOrDigit(index - 1))) {
+                return true;
             }
-            return true;
+            return false;
         }
 
         private boolean isEndBoundary(int index) {
-            if (index <= 0 || !isLetterOrDigit(index - 1) || (index != this.mText.length() && isLetterOrDigit(index))) {
-                return false;
+            if (index > 0 && isLetterOrDigit(index - 1) && (index == this.mText.length() || !isLetterOrDigit(index))) {
+                return true;
             }
-            return true;
+            return false;
         }
 
         private boolean isLetterOrDigit(int index) {
-            if (index < 0 || index >= this.mText.length()) {
-                return false;
+            if (index >= 0 && index < this.mText.length()) {
+                int codePoint = this.mText.codePointAt(index);
+                return Character.isLetterOrDigit(codePoint);
             }
-            return Character.isLetterOrDigit(this.mText.codePointAt(index));
+            return false;
         }
     }
 
+    /* loaded from: classes4.dex */
     static class ParagraphTextSegmentIterator extends AbstractTextSegmentIterator {
         private static ParagraphTextSegmentIterator sInstance;
 
@@ -212,6 +224,13 @@ public final class AccessibilityIterators {
             return sInstance;
         }
 
+        /* JADX WARN: Code restructure failed: missing block: B:17:0x0028, code lost:
+            return null;
+         */
+        @Override // android.view.AccessibilityIterators.TextSegmentIterator
+        /*
+            Code decompiled incorrectly, please refer to instructions dump.
+        */
         public int[] following(int offset) {
             int textLength = this.mText.length();
             if (textLength <= 0 || offset >= textLength) {
@@ -221,11 +240,8 @@ public final class AccessibilityIterators {
             if (start < 0) {
                 start = 0;
             }
-            while (start < textLength && this.mText.charAt(start) == 10 && !isStartBoundary(start)) {
+            while (start < textLength && this.mText.charAt(start) == '\n' && !isStartBoundary(start)) {
                 start++;
-            }
-            if (start >= textLength) {
-                return null;
             }
             int end = start + 1;
             while (end < textLength && !isEndBoundary(end)) {
@@ -234,6 +250,13 @@ public final class AccessibilityIterators {
             return getRange(start, end);
         }
 
+        /* JADX WARN: Code restructure failed: missing block: B:17:0x002a, code lost:
+            return null;
+         */
+        @Override // android.view.AccessibilityIterators.TextSegmentIterator
+        /*
+            Code decompiled incorrectly, please refer to instructions dump.
+        */
         public int[] preceding(int offset) {
             int textLength = this.mText.length();
             if (textLength <= 0 || offset <= 0) {
@@ -243,11 +266,8 @@ public final class AccessibilityIterators {
             if (end > textLength) {
                 end = textLength;
             }
-            while (end > 0 && this.mText.charAt(end - 1) == 10 && !isEndBoundary(end)) {
+            while (end > 0 && this.mText.charAt(end - 1) == '\n' && !isEndBoundary(end)) {
                 end--;
-            }
-            if (end <= 0) {
-                return null;
             }
             int start = end - 1;
             while (start > 0 && !isStartBoundary(start)) {
@@ -257,17 +277,17 @@ public final class AccessibilityIterators {
         }
 
         private boolean isStartBoundary(int index) {
-            if (this.mText.charAt(index) == 10 || (index != 0 && this.mText.charAt(index - 1) != 10)) {
-                return false;
+            if (this.mText.charAt(index) != '\n' && (index == 0 || this.mText.charAt(index - 1) == '\n')) {
+                return true;
             }
-            return true;
+            return false;
         }
 
         private boolean isEndBoundary(int index) {
-            if (index <= 0 || this.mText.charAt(index - 1) == 10 || (index != this.mText.length() && this.mText.charAt(index) != 10)) {
-                return false;
+            if (index > 0 && this.mText.charAt(index - 1) != '\n' && (index == this.mText.length() || this.mText.charAt(index) == '\n')) {
+                return true;
             }
-            return true;
+            return false;
         }
     }
 }

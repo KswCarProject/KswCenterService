@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.view.View;
 
+/* loaded from: classes4.dex */
 public abstract class SimpleCursorTreeAdapter extends ResourceCursorTreeAdapter {
     private int[] mChildFrom;
     private String[] mChildFromNames;
@@ -14,14 +15,13 @@ public abstract class SimpleCursorTreeAdapter extends ResourceCursorTreeAdapter 
     private int[] mGroupTo;
     private ViewBinder mViewBinder;
 
+    /* loaded from: classes4.dex */
     public interface ViewBinder {
         boolean setViewValue(View view, Cursor cursor, int i);
     }
 
     public SimpleCursorTreeAdapter(Context context, Cursor cursor, int collapsedGroupLayout, int expandedGroupLayout, String[] groupFrom, int[] groupTo, int childLayout, int lastChildLayout, String[] childFrom, int[] childTo) {
         super(context, cursor, collapsedGroupLayout, expandedGroupLayout, childLayout, lastChildLayout);
-        String[] strArr = groupFrom;
-        int[] iArr = groupTo;
         init(groupFrom, groupTo, childFrom, childTo);
     }
 
@@ -84,8 +84,8 @@ public abstract class SimpleCursorTreeAdapter extends ResourceCursorTreeAdapter 
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void bindChildView(View view, Context context, Cursor cursor, boolean isLastChild) {
+    @Override // android.widget.CursorTreeAdapter
+    protected void bindChildView(View view, Context context, Cursor cursor, boolean isLastChild) {
         if (this.mChildFrom == null) {
             this.mChildFrom = new int[this.mChildFromNames.length];
             initFromColumns(cursor, this.mChildFromNames, this.mChildFrom);
@@ -93,8 +93,8 @@ public abstract class SimpleCursorTreeAdapter extends ResourceCursorTreeAdapter 
         bindView(view, context, cursor, this.mChildFrom, this.mChildTo);
     }
 
-    /* access modifiers changed from: protected */
-    public void bindGroupView(View view, Context context, Cursor cursor, boolean isExpanded) {
+    @Override // android.widget.CursorTreeAdapter
+    protected void bindGroupView(View view, Context context, Cursor cursor, boolean isExpanded) {
         if (this.mGroupFrom == null) {
             this.mGroupFrom = new int[this.mGroupFromNames.length];
             initFromColumns(cursor, this.mGroupFromNames, this.mGroupFrom);
@@ -102,8 +102,7 @@ public abstract class SimpleCursorTreeAdapter extends ResourceCursorTreeAdapter 
         bindView(view, context, cursor, this.mGroupFrom, this.mGroupTo);
     }
 
-    /* access modifiers changed from: protected */
-    public void setViewImage(ImageView v, String value) {
+    protected void setViewImage(ImageView v, String value) {
         try {
             v.setImageResource(Integer.parseInt(value));
         } catch (NumberFormatException e) {
@@ -112,6 +111,6 @@ public abstract class SimpleCursorTreeAdapter extends ResourceCursorTreeAdapter 
     }
 
     public void setViewText(TextView v, String text) {
-        v.setText((CharSequence) text);
+        v.setText(text);
     }
 }

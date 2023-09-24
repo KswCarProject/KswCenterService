@@ -1,7 +1,8 @@
 package android.media;
 
-import android.os.Parcel;
+import android.p007os.Parcel;
 
+/* loaded from: classes3.dex */
 public final class SubtitleData {
     private static final String TAG = "SubtitleData";
     private byte[] mData;
@@ -16,14 +17,13 @@ public final class SubtitleData {
     }
 
     public SubtitleData(int trackIndex, long startTimeUs, long durationUs, byte[] data) {
-        if (data != null) {
-            this.mTrackIndex = trackIndex;
-            this.mStartTimeUs = startTimeUs;
-            this.mDurationUs = durationUs;
-            this.mData = data;
-            return;
+        if (data == null) {
+            throw new IllegalArgumentException("null data is not allowed");
         }
-        throw new IllegalArgumentException("null data is not allowed");
+        this.mTrackIndex = trackIndex;
+        this.mStartTimeUs = startTimeUs;
+        this.mDurationUs = durationUs;
+        this.mData = data;
     }
 
     public int getTrackIndex() {

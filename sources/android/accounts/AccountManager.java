@@ -12,20 +12,18 @@ import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.res.Resources;
 import android.database.SQLException;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Looper;
-import android.os.Parcelable;
-import android.os.RemoteException;
-import android.os.UserHandle;
+import android.p007os.Bundle;
+import android.p007os.Handler;
+import android.p007os.Looper;
+import android.p007os.Parcelable;
+import android.p007os.RemoteException;
+import android.p007os.UserHandle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.SeempLog;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import com.google.android.collect.Maps;
 import java.io.IOException;
-import java.io.Serializable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
@@ -42,6 +40,7 @@ import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+/* loaded from: classes.dex */
 public class AccountManager {
     public static final String ACCOUNT_ACCESS_TOKEN_TYPE = "com.android.AccountManager.ACCOUNT_ACCESS_TOKEN_TYPE";
     public static final String ACTION_ACCOUNT_REMOVED = "android.accounts.action.ACCOUNT_REMOVED";
@@ -91,7 +90,14 @@ public class AccountManager {
     public static final int VISIBILITY_USER_MANAGED_NOT_VISIBLE = 4;
     public static final int VISIBILITY_USER_MANAGED_VISIBLE = 2;
     public static final int VISIBILITY_VISIBLE = 1;
-    private final BroadcastReceiver mAccountsChangedBroadcastReceiver = new BroadcastReceiver() {
+    @UnsupportedAppUsage
+    private final Context mContext;
+    private final Handler mMainHandler;
+    private final IAccountManager mService;
+    private final HashMap<OnAccountsUpdateListener, Handler> mAccountsUpdatedListeners = Maps.newHashMap();
+    private final HashMap<OnAccountsUpdateListener, Set<String>> mAccountsUpdatedListenersTypes = Maps.newHashMap();
+    private final BroadcastReceiver mAccountsChangedBroadcastReceiver = new BroadcastReceiver() { // from class: android.accounts.AccountManager.20
+        @Override // android.content.BroadcastReceiver
         public void onReceive(Context context, Intent intent) {
             Account[] accounts = AccountManager.this.getAccounts();
             synchronized (AccountManager.this.mAccountsUpdatedListeners) {
@@ -101,19 +107,9 @@ public class AccountManager {
             }
         }
     };
-    /* access modifiers changed from: private */
-    public final HashMap<OnAccountsUpdateListener, Handler> mAccountsUpdatedListeners = Maps.newHashMap();
-    /* access modifiers changed from: private */
-    public final HashMap<OnAccountsUpdateListener, Set<String>> mAccountsUpdatedListenersTypes = Maps.newHashMap();
-    /* access modifiers changed from: private */
-    @UnsupportedAppUsage
-    public final Context mContext;
-    /* access modifiers changed from: private */
-    public final Handler mMainHandler;
-    /* access modifiers changed from: private */
-    public final IAccountManager mService;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface AccountVisibility {
     }
 
@@ -132,31 +128,30 @@ public class AccountManager {
     }
 
     public static Bundle sanitizeResult(Bundle result) {
-        if (result == null || !result.containsKey(KEY_AUTHTOKEN) || TextUtils.isEmpty(result.getString(KEY_AUTHTOKEN))) {
-            return result;
+        if (result != null && result.containsKey(KEY_AUTHTOKEN) && !TextUtils.isEmpty(result.getString(KEY_AUTHTOKEN))) {
+            Bundle newResult = new Bundle(result);
+            newResult.putString(KEY_AUTHTOKEN, "<omitted for logging purposes>");
+            return newResult;
         }
-        Bundle newResult = new Bundle(result);
-        newResult.putString(KEY_AUTHTOKEN, "<omitted for logging purposes>");
-        return newResult;
+        return result;
     }
 
     public static AccountManager get(Context context) {
-        if (context != null) {
-            return (AccountManager) context.getSystemService("account");
+        if (context == null) {
+            throw new IllegalArgumentException("context is null");
         }
-        throw new IllegalArgumentException("context is null");
+        return (AccountManager) context.getSystemService("account");
     }
 
     public String getPassword(Account account) {
         SeempLog.record(22);
-        if (account != null) {
-            try {
-                return this.mService.getPassword(account);
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
-        } else {
+        if (account == null) {
             throw new IllegalArgumentException("account is null");
+        }
+        try {
+            return this.mService.getPassword(account);
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
         }
     }
 
@@ -164,14 +159,14 @@ public class AccountManager {
         SeempLog.record(23);
         if (account == null) {
             throw new IllegalArgumentException("account is null");
-        } else if (key != null) {
-            try {
-                return this.mService.getUserData(account, key);
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
-        } else {
+        }
+        if (key == null) {
             throw new IllegalArgumentException("key is null");
+        }
+        try {
+            return this.mService.getUserData(account, key);
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
         }
     }
 
@@ -193,7 +188,7 @@ public class AccountManager {
 
     public Account[] getAccounts() {
         try {
-            return this.mService.getAccounts((String) null, this.mContext.getOpPackageName());
+            return this.mService.getAccounts(null, this.mContext.getOpPackageName());
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
         }
@@ -201,7 +196,7 @@ public class AccountManager {
 
     public Account[] getAccountsAsUser(int userId) {
         try {
-            return this.mService.getAccountsAsUser((String) null, userId, this.mContext.getOpPackageName());
+            return this.mService.getAccountsAsUser(null, userId, this.mContext.getOpPackageName());
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
         }
@@ -244,289 +239,286 @@ public class AccountManager {
         }
     }
 
-    public AccountManagerFuture<String> getAuthTokenLabel(String accountType, String authTokenType, AccountManagerCallback<String> callback, Handler handler) {
+    public AccountManagerFuture<String> getAuthTokenLabel(final String accountType, final String authTokenType, AccountManagerCallback<String> callback, Handler handler) {
         if (accountType == null) {
             throw new IllegalArgumentException("accountType is null");
-        } else if (authTokenType != null) {
-            final String str = accountType;
-            final String str2 = authTokenType;
-            return new Future2Task<String>(handler, callback) {
-                public void doWork() throws RemoteException {
-                    SeempLog.record(31);
-                    AccountManager.this.mService.getAuthTokenLabel(this.mResponse, str, str2);
-                }
-
-                public String bundleToResult(Bundle bundle) throws AuthenticatorException {
-                    if (bundle.containsKey(AccountManager.KEY_AUTH_TOKEN_LABEL)) {
-                        return bundle.getString(AccountManager.KEY_AUTH_TOKEN_LABEL);
-                    }
-                    throw new AuthenticatorException("no result in response");
-                }
-            }.start();
-        } else {
+        }
+        if (authTokenType == null) {
             throw new IllegalArgumentException("authTokenType is null");
         }
+        return new Future2Task<String>(handler, callback) { // from class: android.accounts.AccountManager.1
+            @Override // android.accounts.AccountManager.BaseFutureTask
+            public void doWork() throws RemoteException {
+                SeempLog.record(31);
+                AccountManager.this.mService.getAuthTokenLabel(this.mResponse, accountType, authTokenType);
+            }
+
+            @Override // android.accounts.AccountManager.BaseFutureTask
+            public String bundleToResult(Bundle bundle) throws AuthenticatorException {
+                if (!bundle.containsKey(AccountManager.KEY_AUTH_TOKEN_LABEL)) {
+                    throw new AuthenticatorException("no result in response");
+                }
+                return bundle.getString(AccountManager.KEY_AUTH_TOKEN_LABEL);
+            }
+        }.start();
     }
 
-    public AccountManagerFuture<Boolean> hasFeatures(Account account, String[] features, AccountManagerCallback<Boolean> callback, Handler handler) {
+    public AccountManagerFuture<Boolean> hasFeatures(final Account account, final String[] features, AccountManagerCallback<Boolean> callback, Handler handler) {
         if (account == null) {
             throw new IllegalArgumentException("account is null");
-        } else if (features != null) {
-            final Account account2 = account;
-            final String[] strArr = features;
-            return new Future2Task<Boolean>(handler, callback) {
-                public void doWork() throws RemoteException {
-                    SeempLog.record(31);
-                    AccountManager.this.mService.hasFeatures(this.mResponse, account2, strArr, AccountManager.this.mContext.getOpPackageName());
-                }
-
-                public Boolean bundleToResult(Bundle bundle) throws AuthenticatorException {
-                    if (bundle.containsKey(AccountManager.KEY_BOOLEAN_RESULT)) {
-                        return Boolean.valueOf(bundle.getBoolean(AccountManager.KEY_BOOLEAN_RESULT));
-                    }
-                    throw new AuthenticatorException("no result in response");
-                }
-            }.start();
-        } else {
+        }
+        if (features == null) {
             throw new IllegalArgumentException("features is null");
         }
-    }
+        return new Future2Task<Boolean>(handler, callback) { // from class: android.accounts.AccountManager.2
+            @Override // android.accounts.AccountManager.BaseFutureTask
+            public void doWork() throws RemoteException {
+                SeempLog.record(31);
+                AccountManager.this.mService.hasFeatures(this.mResponse, account, features, AccountManager.this.mContext.getOpPackageName());
+            }
 
-    public AccountManagerFuture<Account[]> getAccountsByTypeAndFeatures(String type, String[] features, AccountManagerCallback<Account[]> callback, Handler handler) {
-        if (type != null) {
-            final String str = type;
-            final String[] strArr = features;
-            return new Future2Task<Account[]>(handler, callback) {
-                public void doWork() throws RemoteException {
-                    SeempLog.record(31);
-                    AccountManager.this.mService.getAccountsByFeatures(this.mResponse, str, strArr, AccountManager.this.mContext.getOpPackageName());
-                }
-
-                public Account[] bundleToResult(Bundle bundle) throws AuthenticatorException {
-                    if (bundle.containsKey(AccountManager.KEY_ACCOUNTS)) {
-                        Parcelable[] parcelables = bundle.getParcelableArray(AccountManager.KEY_ACCOUNTS);
-                        Account[] descs = new Account[parcelables.length];
-                        for (int i = 0; i < parcelables.length; i++) {
-                            descs[i] = (Account) parcelables[i];
-                        }
-                        return descs;
-                    }
+            @Override // android.accounts.AccountManager.BaseFutureTask
+            public Boolean bundleToResult(Bundle bundle) throws AuthenticatorException {
+                if (!bundle.containsKey(AccountManager.KEY_BOOLEAN_RESULT)) {
                     throw new AuthenticatorException("no result in response");
                 }
-            }.start();
+                return Boolean.valueOf(bundle.getBoolean(AccountManager.KEY_BOOLEAN_RESULT));
+            }
+        }.start();
+    }
+
+    public AccountManagerFuture<Account[]> getAccountsByTypeAndFeatures(final String type, final String[] features, AccountManagerCallback<Account[]> callback, Handler handler) {
+        if (type == null) {
+            throw new IllegalArgumentException("type is null");
         }
-        throw new IllegalArgumentException("type is null");
+        return new Future2Task<Account[]>(handler, callback) { // from class: android.accounts.AccountManager.3
+            @Override // android.accounts.AccountManager.BaseFutureTask
+            public void doWork() throws RemoteException {
+                SeempLog.record(31);
+                AccountManager.this.mService.getAccountsByFeatures(this.mResponse, type, features, AccountManager.this.mContext.getOpPackageName());
+            }
+
+            @Override // android.accounts.AccountManager.BaseFutureTask
+            public Account[] bundleToResult(Bundle bundle) throws AuthenticatorException {
+                if (!bundle.containsKey(AccountManager.KEY_ACCOUNTS)) {
+                    throw new AuthenticatorException("no result in response");
+                }
+                Parcelable[] parcelables = bundle.getParcelableArray(AccountManager.KEY_ACCOUNTS);
+                Account[] descs = new Account[parcelables.length];
+                for (int i = 0; i < parcelables.length; i++) {
+                    descs[i] = (Account) parcelables[i];
+                }
+                return descs;
+            }
+        }.start();
     }
 
     public boolean addAccountExplicitly(Account account, String password, Bundle userdata) {
         SeempLog.record(24);
-        if (account != null) {
-            try {
-                return this.mService.addAccountExplicitly(account, password, userdata);
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
-        } else {
+        if (account == null) {
             throw new IllegalArgumentException("account is null");
+        }
+        try {
+            return this.mService.addAccountExplicitly(account, password, userdata);
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
         }
     }
 
     public boolean addAccountExplicitly(Account account, String password, Bundle extras, Map<String, Integer> visibility) {
-        if (account != null) {
-            try {
-                return this.mService.addAccountExplicitlyWithVisibility(account, password, extras, visibility);
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
-        } else {
+        if (account == null) {
             throw new IllegalArgumentException("account is null");
+        }
+        try {
+            return this.mService.addAccountExplicitlyWithVisibility(account, password, extras, visibility);
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
         }
     }
 
     public Map<String, Integer> getPackagesAndVisibilityForAccount(Account account) {
-        if (account != null) {
-            try {
-                return this.mService.getPackagesAndVisibilityForAccount(account);
-            } catch (RemoteException re) {
-                throw re.rethrowFromSystemServer();
+        try {
+            if (account == null) {
+                throw new IllegalArgumentException("account is null");
             }
-        } else {
-            throw new IllegalArgumentException("account is null");
+            Map<String, Integer> result = this.mService.getPackagesAndVisibilityForAccount(account);
+            return result;
+        } catch (RemoteException re) {
+            throw re.rethrowFromSystemServer();
         }
     }
 
     public Map<Account, Integer> getAccountsAndVisibilityForPackage(String packageName, String accountType) {
         try {
-            return this.mService.getAccountsAndVisibilityForPackage(packageName, accountType);
+            Map<Account, Integer> result = this.mService.getAccountsAndVisibilityForPackage(packageName, accountType);
+            return result;
         } catch (RemoteException re) {
             throw re.rethrowFromSystemServer();
         }
     }
 
     public boolean setAccountVisibility(Account account, String packageName, int visibility) {
-        if (account != null) {
-            try {
-                return this.mService.setAccountVisibility(account, packageName, visibility);
-            } catch (RemoteException re) {
-                throw re.rethrowFromSystemServer();
-            }
-        } else {
+        if (account == null) {
             throw new IllegalArgumentException("account is null");
+        }
+        try {
+            return this.mService.setAccountVisibility(account, packageName, visibility);
+        } catch (RemoteException re) {
+            throw re.rethrowFromSystemServer();
         }
     }
 
     public int getAccountVisibility(Account account, String packageName) {
-        if (account != null) {
-            try {
-                return this.mService.getAccountVisibility(account, packageName);
-            } catch (RemoteException re) {
-                throw re.rethrowFromSystemServer();
-            }
-        } else {
+        if (account == null) {
             throw new IllegalArgumentException("account is null");
+        }
+        try {
+            return this.mService.getAccountVisibility(account, packageName);
+        } catch (RemoteException re) {
+            throw re.rethrowFromSystemServer();
         }
     }
 
     public boolean notifyAccountAuthenticated(Account account) {
-        if (account != null) {
-            try {
-                return this.mService.accountAuthenticated(account);
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
-        } else {
+        if (account == null) {
             throw new IllegalArgumentException("account is null");
+        }
+        try {
+            return this.mService.accountAuthenticated(account);
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
         }
     }
 
-    public AccountManagerFuture<Account> renameAccount(Account account, String newName, AccountManagerCallback<Account> callback, Handler handler) {
+    public AccountManagerFuture<Account> renameAccount(final Account account, final String newName, AccountManagerCallback<Account> callback, Handler handler) {
         if (account == null) {
             throw new IllegalArgumentException("account is null.");
-        } else if (!TextUtils.isEmpty(newName)) {
-            final Account account2 = account;
-            final String str = newName;
-            return new Future2Task<Account>(handler, callback) {
-                public void doWork() throws RemoteException {
-                    SeempLog.record(31);
-                    AccountManager.this.mService.renameAccount(this.mResponse, account2, str);
-                }
-
-                public Account bundleToResult(Bundle bundle) throws AuthenticatorException {
-                    return new Account(bundle.getString(AccountManager.KEY_ACCOUNT_NAME), bundle.getString("accountType"), bundle.getString(AccountManager.KEY_ACCOUNT_ACCESS_ID));
-                }
-            }.start();
-        } else {
+        }
+        if (TextUtils.isEmpty(newName)) {
             throw new IllegalArgumentException("newName is empty or null.");
         }
+        return new Future2Task<Account>(handler, callback) { // from class: android.accounts.AccountManager.4
+            @Override // android.accounts.AccountManager.BaseFutureTask
+            public void doWork() throws RemoteException {
+                SeempLog.record(31);
+                AccountManager.this.mService.renameAccount(this.mResponse, account, newName);
+            }
+
+            @Override // android.accounts.AccountManager.BaseFutureTask
+            public Account bundleToResult(Bundle bundle) throws AuthenticatorException {
+                String name = bundle.getString(AccountManager.KEY_ACCOUNT_NAME);
+                String type = bundle.getString("accountType");
+                String accessId = bundle.getString(AccountManager.KEY_ACCOUNT_ACCESS_ID);
+                return new Account(name, type, accessId);
+            }
+        }.start();
     }
 
     public String getPreviousName(Account account) {
-        if (account != null) {
-            try {
-                return this.mService.getPreviousName(account);
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
-        } else {
+        if (account == null) {
             throw new IllegalArgumentException("account is null");
+        }
+        try {
+            return this.mService.getPreviousName(account);
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
         }
     }
 
     @Deprecated
     public AccountManagerFuture<Boolean> removeAccount(final Account account, AccountManagerCallback<Boolean> callback, Handler handler) {
         SeempLog.record(25);
-        if (account != null) {
-            return new Future2Task<Boolean>(handler, callback) {
-                public void doWork() throws RemoteException {
-                    SeempLog.record(31);
-                    AccountManager.this.mService.removeAccount(this.mResponse, account, false);
-                }
+        if (account == null) {
+            throw new IllegalArgumentException("account is null");
+        }
+        return new Future2Task<Boolean>(handler, callback) { // from class: android.accounts.AccountManager.5
+            @Override // android.accounts.AccountManager.BaseFutureTask
+            public void doWork() throws RemoteException {
+                SeempLog.record(31);
+                AccountManager.this.mService.removeAccount(this.mResponse, account, false);
+            }
 
-                public Boolean bundleToResult(Bundle bundle) throws AuthenticatorException {
-                    if (bundle.containsKey(AccountManager.KEY_BOOLEAN_RESULT)) {
-                        return Boolean.valueOf(bundle.getBoolean(AccountManager.KEY_BOOLEAN_RESULT));
-                    }
+            @Override // android.accounts.AccountManager.BaseFutureTask
+            public Boolean bundleToResult(Bundle bundle) throws AuthenticatorException {
+                if (!bundle.containsKey(AccountManager.KEY_BOOLEAN_RESULT)) {
                     throw new AuthenticatorException("no result in response");
                 }
-            }.start();
-        }
-        throw new IllegalArgumentException("account is null");
+                return Boolean.valueOf(bundle.getBoolean(AccountManager.KEY_BOOLEAN_RESULT));
+            }
+        }.start();
     }
 
-    public AccountManagerFuture<Bundle> removeAccount(Account account, Activity activity, AccountManagerCallback<Bundle> callback, Handler handler) {
+    public AccountManagerFuture<Bundle> removeAccount(final Account account, final Activity activity, AccountManagerCallback<Bundle> callback, Handler handler) {
         SeempLog.record(28);
-        if (account != null) {
-            final Account account2 = account;
-            final Activity activity2 = activity;
-            return new AmsTask(activity, handler, callback) {
-                public void doWork() throws RemoteException {
-                    SeempLog.record(34);
-                    AccountManager.this.mService.removeAccount(this.mResponse, account2, activity2 != null);
-                }
-            }.start();
+        if (account == null) {
+            throw new IllegalArgumentException("account is null");
         }
-        throw new IllegalArgumentException("account is null");
+        return new AmsTask(activity, handler, callback) { // from class: android.accounts.AccountManager.6
+            @Override // android.accounts.AccountManager.AmsTask
+            public void doWork() throws RemoteException {
+                SeempLog.record(34);
+                AccountManager.this.mService.removeAccount(this.mResponse, account, activity != null);
+            }
+        }.start();
     }
 
     @Deprecated
-    public AccountManagerFuture<Boolean> removeAccountAsUser(Account account, AccountManagerCallback<Boolean> callback, Handler handler, UserHandle userHandle) {
+    public AccountManagerFuture<Boolean> removeAccountAsUser(final Account account, AccountManagerCallback<Boolean> callback, Handler handler, final UserHandle userHandle) {
         if (account == null) {
             throw new IllegalArgumentException("account is null");
-        } else if (userHandle != null) {
-            final Account account2 = account;
-            final UserHandle userHandle2 = userHandle;
-            return new Future2Task<Boolean>(handler, callback) {
-                public void doWork() throws RemoteException {
-                    SeempLog.record(31);
-                    AccountManager.this.mService.removeAccountAsUser(this.mResponse, account2, false, userHandle2.getIdentifier());
-                }
+        }
+        if (userHandle == null) {
+            throw new IllegalArgumentException("userHandle is null");
+        }
+        return new Future2Task<Boolean>(handler, callback) { // from class: android.accounts.AccountManager.7
+            @Override // android.accounts.AccountManager.BaseFutureTask
+            public void doWork() throws RemoteException {
+                SeempLog.record(31);
+                AccountManager.this.mService.removeAccountAsUser(this.mResponse, account, false, userHandle.getIdentifier());
+            }
 
-                public Boolean bundleToResult(Bundle bundle) throws AuthenticatorException {
-                    if (bundle.containsKey(AccountManager.KEY_BOOLEAN_RESULT)) {
-                        return Boolean.valueOf(bundle.getBoolean(AccountManager.KEY_BOOLEAN_RESULT));
-                    }
+            @Override // android.accounts.AccountManager.BaseFutureTask
+            public Boolean bundleToResult(Bundle bundle) throws AuthenticatorException {
+                if (!bundle.containsKey(AccountManager.KEY_BOOLEAN_RESULT)) {
                     throw new AuthenticatorException("no result in response");
                 }
-            }.start();
-        } else {
-            throw new IllegalArgumentException("userHandle is null");
-        }
+                return Boolean.valueOf(bundle.getBoolean(AccountManager.KEY_BOOLEAN_RESULT));
+            }
+        }.start();
     }
 
-    public AccountManagerFuture<Bundle> removeAccountAsUser(Account account, Activity activity, AccountManagerCallback<Bundle> callback, Handler handler, UserHandle userHandle) {
+    public AccountManagerFuture<Bundle> removeAccountAsUser(final Account account, final Activity activity, AccountManagerCallback<Bundle> callback, Handler handler, final UserHandle userHandle) {
         if (account == null) {
             throw new IllegalArgumentException("account is null");
-        } else if (userHandle != null) {
-            final Account account2 = account;
-            final Activity activity2 = activity;
-            final UserHandle userHandle2 = userHandle;
-            return new AmsTask(activity, handler, callback) {
-                public void doWork() throws RemoteException {
-                    SeempLog.record(34);
-                    AccountManager.this.mService.removeAccountAsUser(this.mResponse, account2, activity2 != null, userHandle2.getIdentifier());
-                }
-            }.start();
-        } else {
+        }
+        if (userHandle == null) {
             throw new IllegalArgumentException("userHandle is null");
         }
+        return new AmsTask(activity, handler, callback) { // from class: android.accounts.AccountManager.8
+            @Override // android.accounts.AccountManager.AmsTask
+            public void doWork() throws RemoteException {
+                SeempLog.record(34);
+                AccountManager.this.mService.removeAccountAsUser(this.mResponse, account, activity != null, userHandle.getIdentifier());
+            }
+        }.start();
     }
 
     public boolean removeAccountExplicitly(Account account) {
-        if (account != null) {
-            try {
-                return this.mService.removeAccountExplicitly(account);
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
-        } else {
+        if (account == null) {
             throw new IllegalArgumentException("account is null");
+        }
+        try {
+            return this.mService.removeAccountExplicitly(account);
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
         }
     }
 
     public void invalidateAuthToken(String accountType, String authToken) {
         if (accountType == null) {
             throw new IllegalArgumentException("accountType is null");
-        } else if (authToken != null) {
+        }
+        if (authToken != null) {
             try {
                 this.mService.invalidateAuthToken(accountType, authToken);
             } catch (RemoteException e) {
@@ -538,40 +530,38 @@ public class AccountManager {
     public String peekAuthToken(Account account, String authTokenType) {
         if (account == null) {
             throw new IllegalArgumentException("account is null");
-        } else if (authTokenType != null) {
-            try {
-                return this.mService.peekAuthToken(account, authTokenType);
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
-        } else {
+        }
+        if (authTokenType == null) {
             throw new IllegalArgumentException("authTokenType is null");
+        }
+        try {
+            return this.mService.peekAuthToken(account, authTokenType);
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
         }
     }
 
     public void setPassword(Account account, String password) {
         SeempLog.record(26);
-        if (account != null) {
-            try {
-                this.mService.setPassword(account, password);
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
-        } else {
+        if (account == null) {
             throw new IllegalArgumentException("account is null");
+        }
+        try {
+            this.mService.setPassword(account, password);
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
         }
     }
 
     public void clearPassword(Account account) {
         SeempLog.record(27);
-        if (account != null) {
-            try {
-                this.mService.clearPassword(account);
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
-        } else {
+        if (account == null) {
             throw new IllegalArgumentException("account is null");
+        }
+        try {
+            this.mService.clearPassword(account);
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
         }
     }
 
@@ -579,68 +569,65 @@ public class AccountManager {
         SeempLog.record(28);
         if (account == null) {
             throw new IllegalArgumentException("account is null");
-        } else if (key != null) {
-            try {
-                this.mService.setUserData(account, key, value);
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
-        } else {
+        }
+        if (key == null) {
             throw new IllegalArgumentException("key is null");
+        }
+        try {
+            this.mService.setUserData(account, key, value);
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
         }
     }
 
     public void setAuthToken(Account account, String authTokenType, String authToken) {
         if (account == null) {
             throw new IllegalArgumentException("account is null");
-        } else if (authTokenType != null) {
-            try {
-                this.mService.setAuthToken(account, authTokenType, authToken);
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
-        } else {
+        }
+        if (authTokenType == null) {
             throw new IllegalArgumentException("authTokenType is null");
+        }
+        try {
+            this.mService.setAuthToken(account, authTokenType, authToken);
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
         }
     }
 
     public String blockingGetAuthToken(Account account, String authTokenType, boolean notifyAuthFailure) throws OperationCanceledException, IOException, AuthenticatorException {
         if (account == null) {
             throw new IllegalArgumentException("account is null");
-        } else if (authTokenType != null) {
-            Bundle bundle = getAuthToken(account, authTokenType, notifyAuthFailure, (AccountManagerCallback<Bundle>) null, (Handler) null).getResult();
-            if (bundle != null) {
-                return bundle.getString(KEY_AUTHTOKEN);
-            }
-            Log.e(TAG, "blockingGetAuthToken: null was returned from getResult() for " + account + ", authTokenType " + authTokenType);
-            return null;
-        } else {
+        }
+        if (authTokenType == null) {
             throw new IllegalArgumentException("authTokenType is null");
         }
+        Bundle bundle = getAuthToken(account, authTokenType, notifyAuthFailure, null, null).getResult();
+        if (bundle == null) {
+            Log.m70e(TAG, "blockingGetAuthToken: null was returned from getResult() for " + account + ", authTokenType " + authTokenType);
+            return null;
+        }
+        return bundle.getString(KEY_AUTHTOKEN);
     }
 
-    public AccountManagerFuture<Bundle> getAuthToken(Account account, String authTokenType, Bundle options, Activity activity, AccountManagerCallback<Bundle> callback, Handler handler) {
-        Bundle bundle = options;
-        if (account == null) {
-            throw new IllegalArgumentException("account is null");
-        } else if (authTokenType != null) {
-            Bundle optionsIn = new Bundle();
-            if (bundle != null) {
-                optionsIn.putAll(options);
-            }
-            optionsIn.putString(KEY_ANDROID_PACKAGE_NAME, this.mContext.getPackageName());
-            final Account account2 = account;
-            final String str = authTokenType;
-            final Bundle bundle2 = optionsIn;
-            return new AmsTask(activity, handler, callback) {
-                public void doWork() throws RemoteException {
-                    SeempLog.record(31);
-                    AccountManager.this.mService.getAuthToken(this.mResponse, account2, str, false, true, bundle2);
+    public AccountManagerFuture<Bundle> getAuthToken(final Account account, final String authTokenType, Bundle options, Activity activity, AccountManagerCallback<Bundle> callback, Handler handler) {
+        if (account != null) {
+            if (authTokenType != null) {
+                final Bundle optionsIn = new Bundle();
+                if (options != null) {
+                    optionsIn.putAll(options);
                 }
-            }.start();
-        } else {
+                optionsIn.putString(KEY_ANDROID_PACKAGE_NAME, this.mContext.getPackageName());
+                return new AmsTask(activity, handler, callback) { // from class: android.accounts.AccountManager.9
+                    @Override // android.accounts.AccountManager.AmsTask
+                    public void doWork() throws RemoteException {
+                        SeempLog.record(31);
+                        AccountManager.this.mService.getAuthToken(this.mResponse, account, authTokenType, false, true, optionsIn);
+                    }
+                }.start();
+            }
             throw new IllegalArgumentException("authTokenType is null");
         }
+        throw new IllegalArgumentException("account is null");
     }
 
     @Deprecated
@@ -648,80 +635,65 @@ public class AccountManager {
         return getAuthToken(account, authTokenType, (Bundle) null, notifyAuthFailure, callback, handler);
     }
 
-    public AccountManagerFuture<Bundle> getAuthToken(Account account, String authTokenType, Bundle options, boolean notifyAuthFailure, AccountManagerCallback<Bundle> callback, Handler handler) {
-        Bundle bundle = options;
-        if (account == null) {
-            throw new IllegalArgumentException("account is null");
-        } else if (authTokenType != null) {
-            Bundle optionsIn = new Bundle();
-            if (bundle != null) {
-                optionsIn.putAll(bundle);
-            }
-            optionsIn.putString(KEY_ANDROID_PACKAGE_NAME, this.mContext.getPackageName());
-            final Account account2 = account;
-            final String str = authTokenType;
-            final boolean z = notifyAuthFailure;
-            final Bundle bundle2 = optionsIn;
-            return new AmsTask((Activity) null, handler, callback) {
-                public void doWork() throws RemoteException {
-                    SeempLog.record(31);
-                    AccountManager.this.mService.getAuthToken(this.mResponse, account2, str, z, false, bundle2);
+    public AccountManagerFuture<Bundle> getAuthToken(final Account account, final String authTokenType, Bundle options, final boolean notifyAuthFailure, AccountManagerCallback<Bundle> callback, Handler handler) {
+        if (account != null) {
+            if (authTokenType != null) {
+                final Bundle optionsIn = new Bundle();
+                if (options != null) {
+                    optionsIn.putAll(options);
                 }
-            }.start();
-        } else {
+                optionsIn.putString(KEY_ANDROID_PACKAGE_NAME, this.mContext.getPackageName());
+                return new AmsTask(null, handler, callback) { // from class: android.accounts.AccountManager.10
+                    @Override // android.accounts.AccountManager.AmsTask
+                    public void doWork() throws RemoteException {
+                        SeempLog.record(31);
+                        AccountManager.this.mService.getAuthToken(this.mResponse, account, authTokenType, notifyAuthFailure, false, optionsIn);
+                    }
+                }.start();
+            }
             throw new IllegalArgumentException("authTokenType is null");
         }
+        throw new IllegalArgumentException("account is null");
     }
 
-    public AccountManagerFuture<Bundle> addAccount(String accountType, String authTokenType, String[] requiredFeatures, Bundle addAccountOptions, Activity activity, AccountManagerCallback<Bundle> callback, Handler handler) {
-        Bundle bundle = addAccountOptions;
+    public AccountManagerFuture<Bundle> addAccount(final String accountType, final String authTokenType, final String[] requiredFeatures, Bundle addAccountOptions, final Activity activity, AccountManagerCallback<Bundle> callback, Handler handler) {
         SeempLog.record(29);
         if (accountType != null) {
-            Bundle optionsIn = new Bundle();
-            if (bundle != null) {
-                optionsIn.putAll(bundle);
+            final Bundle optionsIn = new Bundle();
+            if (addAccountOptions != null) {
+                optionsIn.putAll(addAccountOptions);
             }
             optionsIn.putString(KEY_ANDROID_PACKAGE_NAME, this.mContext.getPackageName());
-            final String str = accountType;
-            final String str2 = authTokenType;
-            final String[] strArr = requiredFeatures;
-            final Activity activity2 = activity;
-            final Bundle bundle2 = optionsIn;
-            return new AmsTask(activity, handler, callback) {
+            return new AmsTask(activity, handler, callback) { // from class: android.accounts.AccountManager.11
+                @Override // android.accounts.AccountManager.AmsTask
                 public void doWork() throws RemoteException {
                     SeempLog.record(31);
-                    AccountManager.this.mService.addAccount(this.mResponse, str, str2, strArr, activity2 != null, bundle2);
+                    AccountManager.this.mService.addAccount(this.mResponse, accountType, authTokenType, requiredFeatures, activity != null, optionsIn);
                 }
             }.start();
         }
         throw new IllegalArgumentException("accountType is null");
     }
 
-    public AccountManagerFuture<Bundle> addAccountAsUser(String accountType, String authTokenType, String[] requiredFeatures, Bundle addAccountOptions, Activity activity, AccountManagerCallback<Bundle> callback, Handler handler, UserHandle userHandle) {
-        Bundle bundle = addAccountOptions;
-        if (accountType == null) {
-            throw new IllegalArgumentException("accountType is null");
-        } else if (userHandle != null) {
-            Bundle optionsIn = new Bundle();
-            if (bundle != null) {
-                optionsIn.putAll(bundle);
-            }
-            optionsIn.putString(KEY_ANDROID_PACKAGE_NAME, this.mContext.getPackageName());
-            final String str = accountType;
-            final String str2 = authTokenType;
-            final String[] strArr = requiredFeatures;
-            final Activity activity2 = activity;
-            final Bundle bundle2 = optionsIn;
-            final UserHandle userHandle2 = userHandle;
-            return new AmsTask(activity, handler, callback) {
-                public void doWork() throws RemoteException {
-                    SeempLog.record(31);
-                    AccountManager.this.mService.addAccountAsUser(this.mResponse, str, str2, strArr, activity2 != null, bundle2, userHandle2.getIdentifier());
+    public AccountManagerFuture<Bundle> addAccountAsUser(final String accountType, final String authTokenType, final String[] requiredFeatures, Bundle addAccountOptions, final Activity activity, AccountManagerCallback<Bundle> callback, Handler handler, final UserHandle userHandle) {
+        if (accountType != null) {
+            if (userHandle != null) {
+                final Bundle optionsIn = new Bundle();
+                if (addAccountOptions != null) {
+                    optionsIn.putAll(addAccountOptions);
                 }
-            }.start();
-        } else {
+                optionsIn.putString(KEY_ANDROID_PACKAGE_NAME, this.mContext.getPackageName());
+                return new AmsTask(activity, handler, callback) { // from class: android.accounts.AccountManager.12
+                    @Override // android.accounts.AccountManager.AmsTask
+                    public void doWork() throws RemoteException {
+                        SeempLog.record(31);
+                        AccountManager.this.mService.addAccountAsUser(this.mResponse, accountType, authTokenType, requiredFeatures, activity != null, optionsIn, userHandle.getIdentifier());
+                    }
+                }.start();
+            }
             throw new IllegalArgumentException("userHandle is null");
         }
+        throw new IllegalArgumentException("accountType is null");
     }
 
     public void addSharedAccountsFromParentUser(UserHandle parentUser, UserHandle user) {
@@ -732,34 +704,34 @@ public class AccountManager {
         }
     }
 
-    public AccountManagerFuture<Boolean> copyAccountToUser(Account account, UserHandle fromUser, UserHandle toUser, AccountManagerCallback<Boolean> callback, Handler handler) {
+    public AccountManagerFuture<Boolean> copyAccountToUser(final Account account, final UserHandle fromUser, final UserHandle toUser, AccountManagerCallback<Boolean> callback, Handler handler) {
         if (account == null) {
             throw new IllegalArgumentException("account is null");
-        } else if (toUser == null || fromUser == null) {
+        }
+        if (toUser == null || fromUser == null) {
             throw new IllegalArgumentException("fromUser and toUser cannot be null");
-        } else {
-            final Account account2 = account;
-            final UserHandle userHandle = fromUser;
-            final UserHandle userHandle2 = toUser;
-            return new Future2Task<Boolean>(handler, callback) {
-                public void doWork() throws RemoteException {
-                    SeempLog.record(34);
-                    AccountManager.this.mService.copyAccountToUser(this.mResponse, account2, userHandle.getIdentifier(), userHandle2.getIdentifier());
-                }
+        }
+        return new Future2Task<Boolean>(handler, callback) { // from class: android.accounts.AccountManager.13
+            @Override // android.accounts.AccountManager.BaseFutureTask
+            public void doWork() throws RemoteException {
+                SeempLog.record(34);
+                AccountManager.this.mService.copyAccountToUser(this.mResponse, account, fromUser.getIdentifier(), toUser.getIdentifier());
+            }
 
-                public Boolean bundleToResult(Bundle bundle) throws AuthenticatorException {
-                    if (bundle.containsKey(AccountManager.KEY_BOOLEAN_RESULT)) {
-                        return Boolean.valueOf(bundle.getBoolean(AccountManager.KEY_BOOLEAN_RESULT));
-                    }
+            @Override // android.accounts.AccountManager.BaseFutureTask
+            public Boolean bundleToResult(Bundle bundle) throws AuthenticatorException {
+                if (!bundle.containsKey(AccountManager.KEY_BOOLEAN_RESULT)) {
                     throw new AuthenticatorException("no result in response");
                 }
-            }.start();
-        }
+                return Boolean.valueOf(bundle.getBoolean(AccountManager.KEY_BOOLEAN_RESULT));
+            }
+        }.start();
     }
 
     public boolean removeSharedAccount(Account account, UserHandle user) {
         try {
-            return this.mService.removeSharedAccountAsUser(account, user.getIdentifier());
+            boolean val = this.mService.removeSharedAccountAsUser(account, user.getIdentifier());
+            return val;
         } catch (RemoteException re) {
             throw re.rethrowFromSystemServer();
         }
@@ -778,50 +750,44 @@ public class AccountManager {
     }
 
     @UnsupportedAppUsage
-    public AccountManagerFuture<Bundle> confirmCredentialsAsUser(Account account, Bundle options, Activity activity, AccountManagerCallback<Bundle> callback, Handler handler, UserHandle userHandle) {
-        if (account != null) {
-            final Account account2 = account;
-            final Bundle bundle = options;
-            final Activity activity2 = activity;
-            final int identifier = userHandle.getIdentifier();
-            return new AmsTask(activity, handler, callback) {
-                public void doWork() throws RemoteException {
-                    SeempLog.record(31);
-                    AccountManager.this.mService.confirmCredentialsAsUser(this.mResponse, account2, bundle, activity2 != null, identifier);
-                }
-            }.start();
+    public AccountManagerFuture<Bundle> confirmCredentialsAsUser(final Account account, final Bundle options, final Activity activity, AccountManagerCallback<Bundle> callback, Handler handler, UserHandle userHandle) {
+        if (account == null) {
+            throw new IllegalArgumentException("account is null");
         }
-        throw new IllegalArgumentException("account is null");
+        final int userId = userHandle.getIdentifier();
+        return new AmsTask(activity, handler, callback) { // from class: android.accounts.AccountManager.14
+            @Override // android.accounts.AccountManager.AmsTask
+            public void doWork() throws RemoteException {
+                SeempLog.record(31);
+                AccountManager.this.mService.confirmCredentialsAsUser(this.mResponse, account, options, activity != null, userId);
+            }
+        }.start();
     }
 
-    public AccountManagerFuture<Bundle> updateCredentials(Account account, String authTokenType, Bundle options, Activity activity, AccountManagerCallback<Bundle> callback, Handler handler) {
-        if (account != null) {
-            final Account account2 = account;
-            final String str = authTokenType;
-            final Activity activity2 = activity;
-            final Bundle bundle = options;
-            return new AmsTask(activity, handler, callback) {
-                public void doWork() throws RemoteException {
-                    AccountManager.this.mService.updateCredentials(this.mResponse, account2, str, activity2 != null, bundle);
-                }
-            }.start();
+    public AccountManagerFuture<Bundle> updateCredentials(final Account account, final String authTokenType, final Bundle options, final Activity activity, AccountManagerCallback<Bundle> callback, Handler handler) {
+        if (account == null) {
+            throw new IllegalArgumentException("account is null");
         }
-        throw new IllegalArgumentException("account is null");
+        return new AmsTask(activity, handler, callback) { // from class: android.accounts.AccountManager.15
+            @Override // android.accounts.AccountManager.AmsTask
+            public void doWork() throws RemoteException {
+                AccountManager.this.mService.updateCredentials(this.mResponse, account, authTokenType, activity != null, options);
+            }
+        }.start();
     }
 
-    public AccountManagerFuture<Bundle> editProperties(String accountType, Activity activity, AccountManagerCallback<Bundle> callback, Handler handler) {
+    public AccountManagerFuture<Bundle> editProperties(final String accountType, final Activity activity, AccountManagerCallback<Bundle> callback, Handler handler) {
         SeempLog.record(30);
-        if (accountType != null) {
-            final String str = accountType;
-            final Activity activity2 = activity;
-            return new AmsTask(activity, handler, callback) {
-                public void doWork() throws RemoteException {
-                    SeempLog.record(31);
-                    AccountManager.this.mService.editProperties(this.mResponse, str, activity2 != null);
-                }
-            }.start();
+        if (accountType == null) {
+            throw new IllegalArgumentException("accountType is null");
         }
-        throw new IllegalArgumentException("accountType is null");
+        return new AmsTask(activity, handler, callback) { // from class: android.accounts.AccountManager.16
+            @Override // android.accounts.AccountManager.AmsTask
+            public void doWork() throws RemoteException {
+                SeempLog.record(31);
+                AccountManager.this.mService.editProperties(this.mResponse, accountType, activity != null);
+            }
+        }.start();
     }
 
     public boolean someUserHasAccount(Account account) {
@@ -832,33 +798,36 @@ public class AccountManager {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void ensureNotOnMainThread() {
         Looper looper = Looper.myLooper();
         if (looper != null && looper == this.mContext.getMainLooper()) {
             IllegalStateException exception = new IllegalStateException("calling this from your main thread can lead to deadlock");
-            Log.e(TAG, "calling this from your main thread can lead to deadlock and/or ANRs", exception);
+            Log.m69e(TAG, "calling this from your main thread can lead to deadlock and/or ANRs", exception);
             if (this.mContext.getApplicationInfo().targetSdkVersion >= 8) {
                 throw exception;
             }
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void postToHandler(Handler handler, final AccountManagerCallback<Bundle> callback, final AccountManagerFuture<Bundle> future) {
-        (handler == null ? this.mMainHandler : handler).post(new Runnable() {
+        (handler == null ? this.mMainHandler : handler).post(new Runnable() { // from class: android.accounts.AccountManager.17
+            @Override // java.lang.Runnable
             public void run() {
                 callback.run(future);
             }
         });
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void postToHandler(Handler handler, final OnAccountsUpdateListener listener, Account[] accounts) {
         final Account[] accountsCopy = new Account[accounts.length];
         System.arraycopy(accounts, 0, accountsCopy, 0, accountsCopy.length);
-        (handler == null ? this.mMainHandler : handler).post(new Runnable() {
+        (handler == null ? this.mMainHandler : handler).post(new Runnable() { // from class: android.accounts.AccountManager.18
+            @Override // java.lang.Runnable
             public void run() {
+                Account[] accountArr;
                 synchronized (AccountManager.this.mAccountsUpdatedListeners) {
                     try {
                         if (AccountManager.this.mAccountsUpdatedListeners.containsKey(listener)) {
@@ -876,13 +845,14 @@ public class AccountManager {
                             }
                         }
                     } catch (SQLException e) {
-                        Log.e(AccountManager.TAG, "Can't update accounts", e);
+                        Log.m69e(AccountManager.TAG, "Can't update accounts", e);
                     }
                 }
             }
         });
     }
 
+    /* loaded from: classes.dex */
     private abstract class AmsTask extends FutureTask<Bundle> implements AccountManagerFuture<Bundle> {
         @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
         final Activity mActivity;
@@ -890,12 +860,14 @@ public class AccountManager {
         @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
         final Handler mHandler;
         @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
-        final IAccountManagerResponse mResponse = new Response();
+        final IAccountManagerResponse mResponse;
 
         public abstract void doWork() throws RemoteException;
 
         public AmsTask(Activity activity, Handler handler, AccountManagerCallback<Bundle> callback) {
-            super(new Callable<Bundle>() {
+            super(new Callable<Bundle>() { // from class: android.accounts.AccountManager.AmsTask.1
+                /* JADX WARN: Can't rename method to resolve collision */
+                @Override // java.util.concurrent.Callable
                 public Bundle call() throws Exception {
                     throw new IllegalStateException("this should never be called");
                 }
@@ -903,6 +875,7 @@ public class AccountManager {
             this.mHandler = handler;
             this.mCallback = callback;
             this.mActivity = activity;
+            this.mResponse = new Response();
         }
 
         public final AccountManagerFuture<Bundle> start() {
@@ -914,73 +887,79 @@ public class AccountManager {
             return this;
         }
 
-        /* access modifiers changed from: protected */
+        /* JADX INFO: Access modifiers changed from: protected */
+        @Override // java.util.concurrent.FutureTask
         public void set(Bundle bundle) {
             if (bundle == null) {
-                Log.e(AccountManager.TAG, "the bundle must not be null", new Exception());
+                Log.m69e(AccountManager.TAG, "the bundle must not be null", new Exception());
             }
-            super.set(bundle);
+            super.set((AmsTask) bundle);
         }
 
         private Bundle internalGetResult(Long timeout, TimeUnit unit) throws OperationCanceledException, IOException, AuthenticatorException {
             if (!isDone()) {
                 AccountManager.this.ensureNotOnMainThread();
             }
-            if (timeout == null) {
+            try {
                 try {
-                    Bundle bundle = (Bundle) get();
+                    return timeout == null ? get() : get(timeout.longValue(), unit);
+                } catch (InterruptedException e) {
                     cancel(true);
-                    return bundle;
-                } catch (CancellationException e) {
                     throw new OperationCanceledException();
-                } catch (InterruptedException | TimeoutException e2) {
-                    cancel(true);
+                } catch (CancellationException e2) {
                     throw new OperationCanceledException();
                 } catch (ExecutionException e3) {
                     Throwable cause = e3.getCause();
                     if (cause instanceof IOException) {
                         throw ((IOException) cause);
-                    } else if (cause instanceof UnsupportedOperationException) {
-                        throw new AuthenticatorException(cause);
-                    } else if (cause instanceof AuthenticatorException) {
-                        throw ((AuthenticatorException) cause);
-                    } else if (cause instanceof RuntimeException) {
-                        throw ((RuntimeException) cause);
-                    } else if (cause instanceof Error) {
-                        throw ((Error) cause);
-                    } else {
-                        throw new IllegalStateException(cause);
                     }
-                } catch (Throwable th) {
+                    if (cause instanceof UnsupportedOperationException) {
+                        throw new AuthenticatorException(cause);
+                    }
+                    if (cause instanceof AuthenticatorException) {
+                        throw ((AuthenticatorException) cause);
+                    }
+                    if (cause instanceof RuntimeException) {
+                        throw ((RuntimeException) cause);
+                    }
+                    if (cause instanceof Error) {
+                        throw ((Error) cause);
+                    }
+                    throw new IllegalStateException(cause);
+                } catch (TimeoutException e4) {
                     cancel(true);
-                    throw th;
+                    throw new OperationCanceledException();
                 }
-            } else {
-                Bundle bundle2 = (Bundle) get(timeout.longValue(), unit);
+            } finally {
                 cancel(true);
-                return bundle2;
             }
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.accounts.AccountManagerFuture
         public Bundle getResult() throws OperationCanceledException, IOException, AuthenticatorException {
-            return internalGetResult((Long) null, (TimeUnit) null);
+            return internalGetResult(null, null);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.accounts.AccountManagerFuture
         public Bundle getResult(long timeout, TimeUnit unit) throws OperationCanceledException, IOException, AuthenticatorException {
             return internalGetResult(Long.valueOf(timeout), unit);
         }
 
-        /* access modifiers changed from: protected */
-        public void done() {
+        @Override // java.util.concurrent.FutureTask
+        protected void done() {
             if (this.mCallback != null) {
-                AccountManager.this.postToHandler(this.mHandler, this.mCallback, (AccountManagerFuture<Bundle>) this);
+                AccountManager.this.postToHandler(this.mHandler, this.mCallback, this);
             }
         }
 
+        /* loaded from: classes.dex */
         private class Response extends IAccountManagerResponse.Stub {
             private Response() {
             }
 
+            @Override // android.accounts.IAccountManagerResponse
             public void onResult(Bundle bundle) {
                 if (bundle == null) {
                     onError(5, "null bundle returned");
@@ -1000,40 +979,43 @@ public class AccountManager {
                 }
             }
 
+            @Override // android.accounts.IAccountManagerResponse
             public void onError(int code, String message) {
-                if (code == 4 || code == 100 || code == 101) {
-                    AmsTask.this.cancel(true);
-                } else {
+                if (code != 4 && code != 100 && code != 101) {
                     AmsTask.this.setException(AccountManager.this.convertErrorToException(code, message));
+                } else {
+                    AmsTask.this.cancel(true);
                 }
             }
         }
     }
 
+    /* loaded from: classes.dex */
     private abstract class BaseFutureTask<T> extends FutureTask<T> {
         final Handler mHandler;
-        public final IAccountManagerResponse mResponse = new Response();
+        public final IAccountManagerResponse mResponse;
 
         public abstract T bundleToResult(Bundle bundle) throws AuthenticatorException;
 
         public abstract void doWork() throws RemoteException;
 
         public BaseFutureTask(Handler handler) {
-            super(new Callable<T>() {
+            super(new Callable<T>() { // from class: android.accounts.AccountManager.BaseFutureTask.1
+                @Override // java.util.concurrent.Callable
                 public T call() throws Exception {
                     throw new IllegalStateException("this should never be called");
                 }
             });
             this.mHandler = handler;
+            this.mResponse = new Response();
         }
 
-        /* access modifiers changed from: protected */
-        public void postRunnableToHandler(Runnable runnable) {
-            (this.mHandler == null ? AccountManager.this.mMainHandler : this.mHandler).post(runnable);
+        protected void postRunnableToHandler(Runnable runnable) {
+            Handler handler = this.mHandler == null ? AccountManager.this.mMainHandler : this.mHandler;
+            handler.post(runnable);
         }
 
-        /* access modifiers changed from: protected */
-        public void startTask() {
+        protected void startTask() {
             try {
                 doWork();
             } catch (RemoteException e) {
@@ -1041,31 +1023,35 @@ public class AccountManager {
             }
         }
 
+        /* loaded from: classes.dex */
         protected class Response extends IAccountManagerResponse.Stub {
             protected Response() {
             }
 
+            @Override // android.accounts.IAccountManagerResponse
             public void onResult(Bundle bundle) {
                 try {
-                    T result = BaseFutureTask.this.bundleToResult(bundle);
-                    if (result != null) {
-                        BaseFutureTask.this.set(result);
+                    Object bundleToResult = BaseFutureTask.this.bundleToResult(bundle);
+                    if (bundleToResult != null) {
+                        BaseFutureTask.this.set(bundleToResult);
                     }
                 } catch (AuthenticatorException | ClassCastException e) {
                     onError(5, "no result in response");
                 }
             }
 
+            @Override // android.accounts.IAccountManagerResponse
             public void onError(int code, String message) {
-                if (code == 4 || code == 100 || code == 101) {
-                    BaseFutureTask.this.cancel(true);
-                } else {
+                if (code != 4 && code != 100 && code != 101) {
                     BaseFutureTask.this.setException(AccountManager.this.convertErrorToException(code, message));
+                } else {
+                    BaseFutureTask.this.cancel(true);
                 }
             }
         }
     }
 
+    /* loaded from: classes.dex */
     private abstract class Future2Task<T> extends BaseFutureTask<T> implements AccountManagerFuture<T> {
         final AccountManagerCallback<T> mCallback;
 
@@ -1074,10 +1060,11 @@ public class AccountManager {
             this.mCallback = callback;
         }
 
-        /* access modifiers changed from: protected */
-        public void done() {
+        @Override // java.util.concurrent.FutureTask
+        protected void done() {
             if (this.mCallback != null) {
-                postRunnableToHandler(new Runnable() {
+                postRunnableToHandler(new Runnable() { // from class: android.accounts.AccountManager.Future2Task.1
+                    @Override // java.lang.Runnable
                     public void run() {
                         Future2Task.this.mCallback.run(Future2Task.this);
                     }
@@ -1094,50 +1081,54 @@ public class AccountManager {
             if (!isDone()) {
                 AccountManager.this.ensureNotOnMainThread();
             }
-            if (timeout == null) {
+            try {
                 try {
-                    T t = get();
-                    cancel(true);
-                    return t;
-                } catch (InterruptedException | CancellationException | TimeoutException e) {
+                    return timeout == null ? (T) get() : (T) get(timeout.longValue(), unit);
+                } catch (InterruptedException e) {
                     cancel(true);
                     throw new OperationCanceledException();
-                } catch (ExecutionException e2) {
-                    Throwable cause = e2.getCause();
+                } catch (CancellationException e2) {
+                    cancel(true);
+                    throw new OperationCanceledException();
+                } catch (ExecutionException e3) {
+                    Throwable cause = e3.getCause();
                     if (cause instanceof IOException) {
                         throw ((IOException) cause);
-                    } else if (cause instanceof UnsupportedOperationException) {
-                        throw new AuthenticatorException(cause);
-                    } else if (cause instanceof AuthenticatorException) {
-                        throw ((AuthenticatorException) cause);
-                    } else if (cause instanceof RuntimeException) {
-                        throw ((RuntimeException) cause);
-                    } else if (cause instanceof Error) {
-                        throw ((Error) cause);
-                    } else {
-                        throw new IllegalStateException(cause);
                     }
-                } catch (Throwable th) {
+                    if (cause instanceof UnsupportedOperationException) {
+                        throw new AuthenticatorException(cause);
+                    }
+                    if (cause instanceof AuthenticatorException) {
+                        throw ((AuthenticatorException) cause);
+                    }
+                    if (cause instanceof RuntimeException) {
+                        throw ((RuntimeException) cause);
+                    }
+                    if (cause instanceof Error) {
+                        throw ((Error) cause);
+                    }
+                    throw new IllegalStateException(cause);
+                } catch (TimeoutException e4) {
                     cancel(true);
-                    throw th;
+                    throw new OperationCanceledException();
                 }
-            } else {
-                T t2 = get(timeout.longValue(), unit);
+            } finally {
                 cancel(true);
-                return t2;
             }
         }
 
+        @Override // android.accounts.AccountManagerFuture
         public T getResult() throws OperationCanceledException, IOException, AuthenticatorException {
-            return internalGetResult((Long) null, (TimeUnit) null);
+            return internalGetResult(null, null);
         }
 
+        @Override // android.accounts.AccountManagerFuture
         public T getResult(long timeout, TimeUnit unit) throws OperationCanceledException, IOException, AuthenticatorException {
             return internalGetResult(Long.valueOf(timeout), unit);
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public Exception convertErrorToException(int code, String message) {
         if (code == 3) {
             return new IOException(message);
@@ -1154,55 +1145,57 @@ public class AccountManager {
         return new AuthenticatorException(message);
     }
 
-    /* access modifiers changed from: private */
-    public void getAccountByTypeAndFeatures(String accountType, String[] features, AccountManagerCallback<Bundle> callback, Handler handler) {
-        final String str = accountType;
-        final String[] strArr = features;
-        new AmsTask((Activity) null, handler, callback) {
+    /* JADX INFO: Access modifiers changed from: private */
+    public void getAccountByTypeAndFeatures(final String accountType, final String[] features, AccountManagerCallback<Bundle> callback, Handler handler) {
+        new AmsTask(null, handler, callback) { // from class: android.accounts.AccountManager.19
+            @Override // android.accounts.AccountManager.AmsTask
             public void doWork() throws RemoteException {
-                AccountManager.this.mService.getAccountByTypeAndFeatures(this.mResponse, str, strArr, AccountManager.this.mContext.getOpPackageName());
+                AccountManager.this.mService.getAccountByTypeAndFeatures(this.mResponse, accountType, features, AccountManager.this.mContext.getOpPackageName());
             }
         }.start();
     }
 
+    /* loaded from: classes.dex */
     private class GetAuthTokenByTypeAndFeaturesTask extends AmsTask implements AccountManagerCallback<Bundle> {
         final String mAccountType;
         final Bundle mAddAccountOptions;
         @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
         final String mAuthTokenType;
         final String[] mFeatures;
-        volatile AccountManagerFuture<Bundle> mFuture = null;
+        volatile AccountManagerFuture<Bundle> mFuture;
         @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
         final Bundle mLoginOptions;
         @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
         final AccountManagerCallback<Bundle> mMyCallback;
-        /* access modifiers changed from: private */
-        public volatile int mNumAccounts = 0;
+        private volatile int mNumAccounts;
 
         GetAuthTokenByTypeAndFeaturesTask(String accountType, String authTokenType, String[] features, Activity activityForPrompting, Bundle addAccountOptions, Bundle loginOptions, AccountManagerCallback<Bundle> callback, Handler handler) {
             super(activityForPrompting, handler, callback);
-            if (accountType != null) {
-                this.mAccountType = accountType;
-                this.mAuthTokenType = authTokenType;
-                this.mFeatures = features;
-                this.mAddAccountOptions = addAccountOptions;
-                this.mLoginOptions = loginOptions;
-                this.mMyCallback = this;
-                return;
+            this.mFuture = null;
+            this.mNumAccounts = 0;
+            if (accountType == null) {
+                throw new IllegalArgumentException("account type is null");
             }
-            throw new IllegalArgumentException("account type is null");
+            this.mAccountType = accountType;
+            this.mAuthTokenType = authTokenType;
+            this.mFeatures = features;
+            this.mAddAccountOptions = addAccountOptions;
+            this.mLoginOptions = loginOptions;
+            this.mMyCallback = this;
         }
 
+        @Override // android.accounts.AccountManager.AmsTask
         public void doWork() throws RemoteException {
             SeempLog.record(31);
-            AccountManager.this.getAccountByTypeAndFeatures(this.mAccountType, this.mFeatures, new AccountManagerCallback<Bundle>() {
+            AccountManager.this.getAccountByTypeAndFeatures(this.mAccountType, this.mFeatures, new AccountManagerCallback<Bundle>() { // from class: android.accounts.AccountManager.GetAuthTokenByTypeAndFeaturesTask.1
+                @Override // android.accounts.AccountManagerCallback
                 public void run(AccountManagerFuture<Bundle> future) {
                     try {
                         Bundle result = future.getResult();
                         String accountName = result.getString(AccountManager.KEY_ACCOUNT_NAME);
                         String accountType = result.getString("accountType");
                         if (accountName != null) {
-                            int unused = GetAuthTokenByTypeAndFeaturesTask.this.mNumAccounts = 1;
+                            GetAuthTokenByTypeAndFeaturesTask.this.mNumAccounts = 1;
                             Account account = new Account(accountName, accountType);
                             if (GetAuthTokenByTypeAndFeaturesTask.this.mActivity == null) {
                                 GetAuthTokenByTypeAndFeaturesTask.this.mFuture = AccountManager.this.getAuthToken(account, GetAuthTokenByTypeAndFeaturesTask.this.mAuthTokenType, false, GetAuthTokenByTypeAndFeaturesTask.this.mMyCallback, GetAuthTokenByTypeAndFeaturesTask.this.mHandler);
@@ -1213,49 +1206,49 @@ public class AccountManager {
                             GetAuthTokenByTypeAndFeaturesTask.this.mFuture = AccountManager.this.addAccount(GetAuthTokenByTypeAndFeaturesTask.this.mAccountType, GetAuthTokenByTypeAndFeaturesTask.this.mAuthTokenType, GetAuthTokenByTypeAndFeaturesTask.this.mFeatures, GetAuthTokenByTypeAndFeaturesTask.this.mAddAccountOptions, GetAuthTokenByTypeAndFeaturesTask.this.mActivity, GetAuthTokenByTypeAndFeaturesTask.this.mMyCallback, GetAuthTokenByTypeAndFeaturesTask.this.mHandler);
                         } else {
                             Bundle result2 = new Bundle();
-                            result2.putString(AccountManager.KEY_ACCOUNT_NAME, (String) null);
-                            result2.putString("accountType", (String) null);
-                            result2.putString(AccountManager.KEY_AUTHTOKEN, (String) null);
-                            result2.putBinder(AccountManager.KEY_ACCOUNT_ACCESS_ID, (IBinder) null);
+                            result2.putString(AccountManager.KEY_ACCOUNT_NAME, null);
+                            result2.putString("accountType", null);
+                            result2.putString(AccountManager.KEY_AUTHTOKEN, null);
+                            result2.putBinder(AccountManager.KEY_ACCOUNT_ACCESS_ID, null);
                             try {
                                 GetAuthTokenByTypeAndFeaturesTask.this.mResponse.onResult(result2);
                             } catch (RemoteException e) {
                             }
                         }
-                    } catch (OperationCanceledException e2) {
+                    } catch (AuthenticatorException e2) {
                         GetAuthTokenByTypeAndFeaturesTask.this.setException(e2);
-                    } catch (IOException e3) {
+                    } catch (OperationCanceledException e3) {
                         GetAuthTokenByTypeAndFeaturesTask.this.setException(e3);
-                    } catch (AuthenticatorException e4) {
+                    } catch (IOException e4) {
                         GetAuthTokenByTypeAndFeaturesTask.this.setException(e4);
                     }
                 }
             }, this.mHandler);
         }
 
+        @Override // android.accounts.AccountManagerCallback
         public void run(AccountManagerFuture<Bundle> future) {
             try {
                 Bundle result = future.getResult();
                 if (this.mNumAccounts == 0) {
                     String accountName = result.getString(AccountManager.KEY_ACCOUNT_NAME);
                     String accountType = result.getString("accountType");
-                    if (!TextUtils.isEmpty(accountName)) {
-                        if (!TextUtils.isEmpty(accountType)) {
-                            Account account = new Account(accountName, accountType, result.getString(AccountManager.KEY_ACCOUNT_ACCESS_ID));
-                            this.mNumAccounts = 1;
-                            AccountManager.this.getAuthToken(account, this.mAuthTokenType, (Bundle) null, this.mActivity, this.mMyCallback, this.mHandler);
-                            return;
-                        }
+                    if (!TextUtils.isEmpty(accountName) && !TextUtils.isEmpty(accountType)) {
+                        String accessId = result.getString(AccountManager.KEY_ACCOUNT_ACCESS_ID);
+                        Account account = new Account(accountName, accountType, accessId);
+                        this.mNumAccounts = 1;
+                        AccountManager.this.getAuthToken(account, this.mAuthTokenType, (Bundle) null, this.mActivity, this.mMyCallback, this.mHandler);
+                        return;
                     }
                     setException(new AuthenticatorException("account not in result"));
                     return;
                 }
                 set(result);
-            } catch (OperationCanceledException e) {
+            } catch (AuthenticatorException e) {
+                setException(e);
+            } catch (OperationCanceledException e2) {
                 cancel(true);
-            } catch (IOException e2) {
-                setException(e2);
-            } catch (AuthenticatorException e3) {
+            } catch (IOException e3) {
                 setException(e3);
             }
         }
@@ -1264,13 +1257,13 @@ public class AccountManager {
     public AccountManagerFuture<Bundle> getAuthTokenByFeatures(String accountType, String authTokenType, String[] features, Activity activity, Bundle addAccountOptions, Bundle getAuthTokenOptions, AccountManagerCallback<Bundle> callback, Handler handler) {
         if (accountType == null) {
             throw new IllegalArgumentException("account type is null");
-        } else if (authTokenType != null) {
-            GetAuthTokenByTypeAndFeaturesTask task = new GetAuthTokenByTypeAndFeaturesTask(accountType, authTokenType, features, activity, addAccountOptions, getAuthTokenOptions, callback, handler);
-            task.start();
-            return task;
-        } else {
+        }
+        if (authTokenType == null) {
             throw new IllegalArgumentException("authTokenType is null");
         }
+        GetAuthTokenByTypeAndFeaturesTask task = new GetAuthTokenByTypeAndFeaturesTask(accountType, authTokenType, features, activity, addAccountOptions, getAuthTokenOptions, callback, handler);
+        task.start();
+        return task;
     }
 
     @Deprecated
@@ -1280,12 +1273,12 @@ public class AccountManager {
 
     public static Intent newChooseAccountIntent(Account selectedAccount, List<Account> allowableAccounts, String[] allowableAccountTypes, String descriptionOverrideText, String addAccountAuthTokenType, String[] addAccountRequiredFeatures, Bundle addAccountOptions) {
         Intent intent = new Intent();
-        ComponentName componentName = ComponentName.unflattenFromString(Resources.getSystem().getString(R.string.config_chooseTypeAndAccountActivity));
+        ComponentName componentName = ComponentName.unflattenFromString(Resources.getSystem().getString(C3132R.string.config_chooseTypeAndAccountActivity));
         intent.setClassName(componentName.getPackageName(), componentName.getClassName());
-        intent.putExtra(ChooseTypeAndAccountActivity.EXTRA_ALLOWABLE_ACCOUNTS_ARRAYLIST, (Serializable) allowableAccounts == null ? null : new ArrayList(allowableAccounts));
+        intent.putExtra(ChooseTypeAndAccountActivity.EXTRA_ALLOWABLE_ACCOUNTS_ARRAYLIST, allowableAccounts == null ? null : new ArrayList(allowableAccounts));
         intent.putExtra(ChooseTypeAndAccountActivity.EXTRA_ALLOWABLE_ACCOUNT_TYPES_STRING_ARRAY, allowableAccountTypes);
         intent.putExtra(ChooseTypeAndAccountActivity.EXTRA_ADD_ACCOUNT_OPTIONS_BUNDLE, addAccountOptions);
-        intent.putExtra(ChooseTypeAndAccountActivity.EXTRA_SELECTED_ACCOUNT, (Parcelable) selectedAccount);
+        intent.putExtra(ChooseTypeAndAccountActivity.EXTRA_SELECTED_ACCOUNT, selectedAccount);
         intent.putExtra(ChooseTypeAndAccountActivity.EXTRA_DESCRIPTION_TEXT_OVERRIDE, descriptionOverrideText);
         intent.putExtra("authTokenType", addAccountAuthTokenType);
         intent.putExtra(ChooseTypeAndAccountActivity.EXTRA_ADD_ACCOUNT_REQUIRED_FEATURES_STRING_ARRAY, addAccountRequiredFeatures);
@@ -1293,111 +1286,98 @@ public class AccountManager {
     }
 
     public void addOnAccountsUpdatedListener(OnAccountsUpdateListener listener, Handler handler, boolean updateImmediately) {
-        addOnAccountsUpdatedListener(listener, handler, updateImmediately, (String[]) null);
+        addOnAccountsUpdatedListener(listener, handler, updateImmediately, null);
     }
 
     public void addOnAccountsUpdatedListener(OnAccountsUpdateListener listener, Handler handler, boolean updateImmediately, String[] accountTypes) {
-        if (listener != null) {
-            synchronized (this.mAccountsUpdatedListeners) {
-                if (!this.mAccountsUpdatedListeners.containsKey(listener)) {
-                    boolean wasEmpty = this.mAccountsUpdatedListeners.isEmpty();
-                    this.mAccountsUpdatedListeners.put(listener, handler);
-                    if (accountTypes != null) {
-                        this.mAccountsUpdatedListenersTypes.put(listener, new HashSet(Arrays.asList(accountTypes)));
-                    } else {
-                        this.mAccountsUpdatedListenersTypes.put(listener, (Object) null);
-                    }
-                    if (wasEmpty) {
-                        IntentFilter intentFilter = new IntentFilter();
-                        intentFilter.addAction(ACTION_VISIBLE_ACCOUNTS_CHANGED);
-                        intentFilter.addAction(Intent.ACTION_DEVICE_STORAGE_OK);
-                        this.mContext.registerReceiver(this.mAccountsChangedBroadcastReceiver, intentFilter);
-                    }
-                    try {
-                        this.mService.registerAccountListener(accountTypes, this.mContext.getOpPackageName());
-                    } catch (RemoteException e) {
-                        throw e.rethrowFromSystemServer();
-                    }
-                } else {
-                    throw new IllegalStateException("this listener is already added");
-                }
-            }
-            if (updateImmediately) {
-                postToHandler(handler, listener, getAccounts());
-                return;
-            }
-            return;
+        if (listener == null) {
+            throw new IllegalArgumentException("the listener is null");
         }
-        throw new IllegalArgumentException("the listener is null");
+        synchronized (this.mAccountsUpdatedListeners) {
+            if (this.mAccountsUpdatedListeners.containsKey(listener)) {
+                throw new IllegalStateException("this listener is already added");
+            }
+            boolean wasEmpty = this.mAccountsUpdatedListeners.isEmpty();
+            this.mAccountsUpdatedListeners.put(listener, handler);
+            if (accountTypes != null) {
+                this.mAccountsUpdatedListenersTypes.put(listener, new HashSet(Arrays.asList(accountTypes)));
+            } else {
+                this.mAccountsUpdatedListenersTypes.put(listener, null);
+            }
+            if (wasEmpty) {
+                IntentFilter intentFilter = new IntentFilter();
+                intentFilter.addAction(ACTION_VISIBLE_ACCOUNTS_CHANGED);
+                intentFilter.addAction(Intent.ACTION_DEVICE_STORAGE_OK);
+                this.mContext.registerReceiver(this.mAccountsChangedBroadcastReceiver, intentFilter);
+            }
+            try {
+                this.mService.registerAccountListener(accountTypes, this.mContext.getOpPackageName());
+            } catch (RemoteException e) {
+                throw e.rethrowFromSystemServer();
+            }
+        }
+        if (updateImmediately) {
+            postToHandler(handler, listener, getAccounts());
+        }
     }
 
     public void removeOnAccountsUpdatedListener(OnAccountsUpdateListener listener) {
         String[] accountsArray;
-        if (listener != null) {
-            synchronized (this.mAccountsUpdatedListeners) {
-                if (!this.mAccountsUpdatedListeners.containsKey(listener)) {
-                    Log.e(TAG, "Listener was not previously added");
-                    return;
-                }
-                Set<String> accountTypes = this.mAccountsUpdatedListenersTypes.get(listener);
-                if (accountTypes != null) {
-                    accountsArray = (String[]) accountTypes.toArray(new String[accountTypes.size()]);
-                } else {
-                    accountsArray = null;
-                }
-                this.mAccountsUpdatedListeners.remove(listener);
-                this.mAccountsUpdatedListenersTypes.remove(listener);
-                if (this.mAccountsUpdatedListeners.isEmpty()) {
-                    this.mContext.unregisterReceiver(this.mAccountsChangedBroadcastReceiver);
-                }
-                try {
-                    this.mService.unregisterAccountListener(accountsArray, this.mContext.getOpPackageName());
-                } catch (RemoteException e) {
-                    throw e.rethrowFromSystemServer();
-                }
-            }
-        } else {
+        if (listener == null) {
             throw new IllegalArgumentException("listener is null");
+        }
+        synchronized (this.mAccountsUpdatedListeners) {
+            if (!this.mAccountsUpdatedListeners.containsKey(listener)) {
+                Log.m70e(TAG, "Listener was not previously added");
+                return;
+            }
+            Set<String> accountTypes = this.mAccountsUpdatedListenersTypes.get(listener);
+            if (accountTypes != null) {
+                accountsArray = (String[]) accountTypes.toArray(new String[accountTypes.size()]);
+            } else {
+                accountsArray = null;
+            }
+            this.mAccountsUpdatedListeners.remove(listener);
+            this.mAccountsUpdatedListenersTypes.remove(listener);
+            if (this.mAccountsUpdatedListeners.isEmpty()) {
+                this.mContext.unregisterReceiver(this.mAccountsChangedBroadcastReceiver);
+            }
+            try {
+                this.mService.unregisterAccountListener(accountsArray, this.mContext.getOpPackageName());
+            } catch (RemoteException e) {
+                throw e.rethrowFromSystemServer();
+            }
         }
     }
 
-    public AccountManagerFuture<Bundle> startAddAccountSession(String accountType, String authTokenType, String[] requiredFeatures, Bundle options, Activity activity, AccountManagerCallback<Bundle> callback, Handler handler) {
-        Bundle bundle = options;
+    public AccountManagerFuture<Bundle> startAddAccountSession(final String accountType, final String authTokenType, final String[] requiredFeatures, Bundle options, final Activity activity, AccountManagerCallback<Bundle> callback, Handler handler) {
         if (accountType != null) {
-            Bundle optionsIn = new Bundle();
-            if (bundle != null) {
-                optionsIn.putAll(bundle);
+            final Bundle optionsIn = new Bundle();
+            if (options != null) {
+                optionsIn.putAll(options);
             }
             optionsIn.putString(KEY_ANDROID_PACKAGE_NAME, this.mContext.getPackageName());
-            final String str = accountType;
-            final String str2 = authTokenType;
-            final String[] strArr = requiredFeatures;
-            final Activity activity2 = activity;
-            final Bundle bundle2 = optionsIn;
-            return new AmsTask(activity, handler, callback) {
+            return new AmsTask(activity, handler, callback) { // from class: android.accounts.AccountManager.21
+                @Override // android.accounts.AccountManager.AmsTask
                 public void doWork() throws RemoteException {
-                    AccountManager.this.mService.startAddAccountSession(this.mResponse, str, str2, strArr, activity2 != null, bundle2);
+                    AccountManager.this.mService.startAddAccountSession(this.mResponse, accountType, authTokenType, requiredFeatures, activity != null, optionsIn);
                 }
             }.start();
         }
         throw new IllegalArgumentException("accountType is null");
     }
 
-    public AccountManagerFuture<Bundle> startUpdateCredentialsSession(Account account, String authTokenType, Bundle options, Activity activity, AccountManagerCallback<Bundle> callback, Handler handler) {
-        Bundle bundle = options;
+    public AccountManagerFuture<Bundle> startUpdateCredentialsSession(final Account account, final String authTokenType, Bundle options, final Activity activity, AccountManagerCallback<Bundle> callback, Handler handler) {
         if (account != null) {
-            Bundle optionsIn = new Bundle();
-            if (bundle != null) {
-                optionsIn.putAll(bundle);
+            final Bundle optionsIn = new Bundle();
+            if (options != null) {
+                optionsIn.putAll(options);
             }
             optionsIn.putString(KEY_ANDROID_PACKAGE_NAME, this.mContext.getPackageName());
-            final Account account2 = account;
-            final String str = authTokenType;
-            final Activity activity2 = activity;
-            final Bundle bundle2 = optionsIn;
-            return new AmsTask(activity, handler, callback) {
+            return new AmsTask(activity, handler, callback) { // from class: android.accounts.AccountManager.22
+                @Override // android.accounts.AccountManager.AmsTask
                 public void doWork() throws RemoteException {
-                    AccountManager.this.mService.startUpdateCredentialsSession(this.mResponse, account2, str, activity2 != null, bundle2);
+                    AccountManager.this.mService.startUpdateCredentialsSession(this.mResponse, account, authTokenType, activity != null, optionsIn);
                 }
             }.start();
         }
@@ -1409,44 +1389,41 @@ public class AccountManager {
     }
 
     @SystemApi
-    public AccountManagerFuture<Bundle> finishSessionAsUser(Bundle sessionBundle, Activity activity, UserHandle userHandle, AccountManagerCallback<Bundle> callback, Handler handler) {
+    public AccountManagerFuture<Bundle> finishSessionAsUser(final Bundle sessionBundle, final Activity activity, final UserHandle userHandle, AccountManagerCallback<Bundle> callback, Handler handler) {
         if (sessionBundle != null) {
-            Bundle appInfo = new Bundle();
+            final Bundle appInfo = new Bundle();
             appInfo.putString(KEY_ANDROID_PACKAGE_NAME, this.mContext.getPackageName());
-            final Bundle bundle = sessionBundle;
-            final Activity activity2 = activity;
-            final Bundle bundle2 = appInfo;
-            final UserHandle userHandle2 = userHandle;
-            return new AmsTask(activity, handler, callback) {
+            return new AmsTask(activity, handler, callback) { // from class: android.accounts.AccountManager.23
+                @Override // android.accounts.AccountManager.AmsTask
                 public void doWork() throws RemoteException {
-                    AccountManager.this.mService.finishSessionAsUser(this.mResponse, bundle, activity2 != null, bundle2, userHandle2.getIdentifier());
+                    AccountManager.this.mService.finishSessionAsUser(this.mResponse, sessionBundle, activity != null, appInfo, userHandle.getIdentifier());
                 }
             }.start();
         }
         throw new IllegalArgumentException("sessionBundle is null");
     }
 
-    public AccountManagerFuture<Boolean> isCredentialsUpdateSuggested(Account account, String statusToken, AccountManagerCallback<Boolean> callback, Handler handler) {
+    public AccountManagerFuture<Boolean> isCredentialsUpdateSuggested(final Account account, final String statusToken, AccountManagerCallback<Boolean> callback, Handler handler) {
         if (account == null) {
             throw new IllegalArgumentException("account is null");
-        } else if (!TextUtils.isEmpty(statusToken)) {
-            final Account account2 = account;
-            final String str = statusToken;
-            return new Future2Task<Boolean>(handler, callback) {
-                public void doWork() throws RemoteException {
-                    AccountManager.this.mService.isCredentialsUpdateSuggested(this.mResponse, account2, str);
-                }
-
-                public Boolean bundleToResult(Bundle bundle) throws AuthenticatorException {
-                    if (bundle.containsKey(AccountManager.KEY_BOOLEAN_RESULT)) {
-                        return Boolean.valueOf(bundle.getBoolean(AccountManager.KEY_BOOLEAN_RESULT));
-                    }
-                    throw new AuthenticatorException("no result in response");
-                }
-            }.start();
-        } else {
+        }
+        if (TextUtils.isEmpty(statusToken)) {
             throw new IllegalArgumentException("status token is empty");
         }
+        return new Future2Task<Boolean>(handler, callback) { // from class: android.accounts.AccountManager.24
+            @Override // android.accounts.AccountManager.BaseFutureTask
+            public void doWork() throws RemoteException {
+                AccountManager.this.mService.isCredentialsUpdateSuggested(this.mResponse, account, statusToken);
+            }
+
+            @Override // android.accounts.AccountManager.BaseFutureTask
+            public Boolean bundleToResult(Bundle bundle) throws AuthenticatorException {
+                if (!bundle.containsKey(AccountManager.KEY_BOOLEAN_RESULT)) {
+                    throw new AuthenticatorException("no result in response");
+                }
+                return Boolean.valueOf(bundle.getBoolean(AccountManager.KEY_BOOLEAN_RESULT));
+            }
+        }.start();
     }
 
     public boolean hasAccountAccess(Account account, String packageName, UserHandle userHandle) {

@@ -3,17 +3,18 @@ package android.telephony.ims;
 import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.os.RemoteException;
+import android.p007os.Handler;
+import android.p007os.Looper;
+import android.p007os.Message;
+import android.p007os.RemoteException;
 import android.telecom.VideoProfile;
 import android.view.Surface;
 import com.android.ims.internal.IImsVideoCallCallback;
 import com.android.ims.internal.IImsVideoCallProvider;
-import com.android.internal.os.SomeArgs;
+import com.android.internal.p016os.SomeArgs;
 
 @SystemApi
+/* loaded from: classes4.dex */
 public abstract class ImsVideoCallProvider {
     private static final int MSG_REQUEST_CALL_DATA_USAGE = 10;
     private static final int MSG_REQUEST_CAMERA_CAPABILITIES = 9;
@@ -26,24 +27,22 @@ public abstract class ImsVideoCallProvider {
     private static final int MSG_SET_PAUSE_IMAGE = 11;
     private static final int MSG_SET_PREVIEW_SURFACE = 3;
     private static final int MSG_SET_ZOOM = 6;
-    private final ImsVideoCallProviderBinder mBinder = new ImsVideoCallProviderBinder();
-    /* access modifiers changed from: private */
-    public IImsVideoCallCallback mCallback;
-    /* access modifiers changed from: private */
-    public final Handler mProviderHandler = new Handler(Looper.getMainLooper()) {
+    private IImsVideoCallCallback mCallback;
+    private final Handler mProviderHandler = new Handler(Looper.getMainLooper()) { // from class: android.telephony.ims.ImsVideoCallProvider.1
+        @Override // android.p007os.Handler
         public void handleMessage(Message msg) {
+            SomeArgs args;
             switch (msg.what) {
                 case 1:
-                    IImsVideoCallCallback unused = ImsVideoCallProvider.this.mCallback = (IImsVideoCallCallback) msg.obj;
+                    ImsVideoCallProvider.this.mCallback = (IImsVideoCallCallback) msg.obj;
                     return;
                 case 2:
-                    SomeArgs args = (SomeArgs) msg.obj;
+                    args = (SomeArgs) msg.obj;
                     try {
                         ImsVideoCallProvider.this.onSetCamera((String) args.arg1);
                         ImsVideoCallProvider.this.onSetCamera((String) args.arg1, args.argi1);
                         return;
                     } finally {
-                        args.recycle();
                     }
                 case 3:
                     ImsVideoCallProvider.this.onSetPreviewSurface((Surface) msg.obj);
@@ -58,12 +57,13 @@ public abstract class ImsVideoCallProvider {
                     ImsVideoCallProvider.this.onSetZoom(((Float) msg.obj).floatValue());
                     return;
                 case 7:
-                    SomeArgs args2 = (SomeArgs) msg.obj;
+                    args = (SomeArgs) msg.obj;
                     try {
-                        ImsVideoCallProvider.this.onSendSessionModifyRequest((VideoProfile) args2.arg1, (VideoProfile) args2.arg2);
+                        VideoProfile fromProfile = (VideoProfile) args.arg1;
+                        VideoProfile toProfile = (VideoProfile) args.arg2;
+                        ImsVideoCallProvider.this.onSendSessionModifyRequest(fromProfile, toProfile);
                         return;
                     } finally {
-                        args2.recycle();
                     }
                 case 8:
                     ImsVideoCallProvider.this.onSendSessionModifyResponse((VideoProfile) msg.obj);
@@ -82,6 +82,7 @@ public abstract class ImsVideoCallProvider {
             }
         }
     };
+    private final ImsVideoCallProviderBinder mBinder = new ImsVideoCallProviderBinder();
 
     public abstract void onRequestCallDataUsage();
 
@@ -103,14 +104,17 @@ public abstract class ImsVideoCallProvider {
 
     public abstract void onSetZoom(float f);
 
+    /* loaded from: classes4.dex */
     private final class ImsVideoCallProviderBinder extends IImsVideoCallProvider.Stub {
         private ImsVideoCallProviderBinder() {
         }
 
+        @Override // com.android.ims.internal.IImsVideoCallProvider
         public void setCallback(IImsVideoCallCallback callback) {
             ImsVideoCallProvider.this.mProviderHandler.obtainMessage(1, callback).sendToTarget();
         }
 
+        @Override // com.android.ims.internal.IImsVideoCallProvider
         public void setCamera(String cameraId, int uid) {
             SomeArgs args = SomeArgs.obtain();
             args.arg1 = cameraId;
@@ -118,22 +122,27 @@ public abstract class ImsVideoCallProvider {
             ImsVideoCallProvider.this.mProviderHandler.obtainMessage(2, args).sendToTarget();
         }
 
+        @Override // com.android.ims.internal.IImsVideoCallProvider
         public void setPreviewSurface(Surface surface) {
             ImsVideoCallProvider.this.mProviderHandler.obtainMessage(3, surface).sendToTarget();
         }
 
+        @Override // com.android.ims.internal.IImsVideoCallProvider
         public void setDisplaySurface(Surface surface) {
             ImsVideoCallProvider.this.mProviderHandler.obtainMessage(4, surface).sendToTarget();
         }
 
+        @Override // com.android.ims.internal.IImsVideoCallProvider
         public void setDeviceOrientation(int rotation) {
             ImsVideoCallProvider.this.mProviderHandler.obtainMessage(5, rotation, 0).sendToTarget();
         }
 
+        @Override // com.android.ims.internal.IImsVideoCallProvider
         public void setZoom(float value) {
             ImsVideoCallProvider.this.mProviderHandler.obtainMessage(6, Float.valueOf(value)).sendToTarget();
         }
 
+        @Override // com.android.ims.internal.IImsVideoCallProvider
         public void sendSessionModifyRequest(VideoProfile fromProfile, VideoProfile toProfile) {
             SomeArgs args = SomeArgs.obtain();
             args.arg1 = fromProfile;
@@ -141,18 +150,22 @@ public abstract class ImsVideoCallProvider {
             ImsVideoCallProvider.this.mProviderHandler.obtainMessage(7, args).sendToTarget();
         }
 
+        @Override // com.android.ims.internal.IImsVideoCallProvider
         public void sendSessionModifyResponse(VideoProfile responseProfile) {
             ImsVideoCallProvider.this.mProviderHandler.obtainMessage(8, responseProfile).sendToTarget();
         }
 
+        @Override // com.android.ims.internal.IImsVideoCallProvider
         public void requestCameraCapabilities() {
             ImsVideoCallProvider.this.mProviderHandler.obtainMessage(9).sendToTarget();
         }
 
+        @Override // com.android.ims.internal.IImsVideoCallProvider
         public void requestCallDataUsage() {
             ImsVideoCallProvider.this.mProviderHandler.obtainMessage(10).sendToTarget();
         }
 
+        @Override // com.android.ims.internal.IImsVideoCallProvider
         public void setPauseImage(Uri uri) {
             ImsVideoCallProvider.this.mProviderHandler.obtainMessage(11, uri).sendToTarget();
         }

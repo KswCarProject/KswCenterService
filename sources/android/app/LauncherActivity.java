@@ -1,11 +1,11 @@
 package android.app;
 
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ComponentInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
+import android.content.p002pm.ComponentInfo;
+import android.content.p002pm.PackageManager;
+import android.content.p002pm.ResolveInfo;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.PaintFlagsDrawFilter;
@@ -14,7 +14,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PaintDrawable;
 import android.net.wifi.WifiEnterpriseConfig;
-import android.os.Bundle;
+import android.p007os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,16 +24,18 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/* loaded from: classes.dex */
 public abstract class LauncherActivity extends ListActivity {
     IconResizer mIconResizer;
     Intent mIntent;
     PackageManager mPackageManager;
 
+    /* loaded from: classes.dex */
     public static class ListItem {
         public String className;
         public Bundle extras;
@@ -42,16 +44,16 @@ public abstract class LauncherActivity extends ListActivity {
         public String packageName;
         public ResolveInfo resolveInfo;
 
-        ListItem(PackageManager pm, ResolveInfo resolveInfo2, IconResizer resizer) {
-            this.resolveInfo = resolveInfo2;
-            this.label = resolveInfo2.loadLabel(pm);
-            ComponentInfo ci = resolveInfo2.activityInfo;
-            ci = ci == null ? resolveInfo2.serviceInfo : ci;
+        ListItem(PackageManager pm, ResolveInfo resolveInfo, IconResizer resizer) {
+            this.resolveInfo = resolveInfo;
+            this.label = resolveInfo.loadLabel(pm);
+            ComponentInfo ci = resolveInfo.activityInfo;
+            ci = ci == null ? resolveInfo.serviceInfo : ci;
             if (this.label == null && ci != null) {
-                this.label = resolveInfo2.activityInfo.name;
+                this.label = resolveInfo.activityInfo.name;
             }
             if (resizer != null) {
-                this.icon = resizer.createIconThumbnail(resolveInfo2.loadIcon(pm));
+                this.icon = resizer.createIconThumbnail(resolveInfo.loadIcon(pm));
             }
             this.packageName = ci.applicationInfo.packageName;
             this.className = ci.name;
@@ -61,15 +63,14 @@ public abstract class LauncherActivity extends ListActivity {
         }
     }
 
+    /* loaded from: classes.dex */
     private class ActivityAdapter extends BaseAdapter implements Filterable {
-        /* access modifiers changed from: private */
-        public final Object lock = new Object();
+        private final Object lock = new Object();
         protected List<ListItem> mActivitiesList;
         private Filter mFilter;
         protected final IconResizer mIconResizer;
         protected final LayoutInflater mInflater;
-        /* access modifiers changed from: private */
-        public ArrayList<ListItem> mOriginalValues;
+        private ArrayList<ListItem> mOriginalValues;
         private final boolean mShowIcons;
 
         public ActivityAdapter(IconResizer resizer) {
@@ -99,6 +100,7 @@ public abstract class LauncherActivity extends ListActivity {
             return this.mActivitiesList.get(position);
         }
 
+        @Override // android.widget.Adapter
         public int getCount() {
             if (this.mActivitiesList != null) {
                 return this.mActivitiesList.size();
@@ -106,18 +108,21 @@ public abstract class LauncherActivity extends ListActivity {
             return 0;
         }
 
+        @Override // android.widget.Adapter
         public Object getItem(int position) {
             return Integer.valueOf(position);
         }
 
+        @Override // android.widget.Adapter
         public long getItemId(int position) {
-            return (long) position;
+            return position;
         }
 
+        @Override // android.widget.Adapter
         public View getView(int position, View convertView, ViewGroup parent) {
             View view;
             if (convertView == null) {
-                view = this.mInflater.inflate((int) R.layout.activity_list_item_2, parent, false);
+                view = this.mInflater.inflate(C3132R.layout.activity_list_item_2, parent, false);
             } else {
                 view = convertView;
             }
@@ -136,6 +141,7 @@ public abstract class LauncherActivity extends ListActivity {
             }
         }
 
+        @Override // android.widget.Filterable
         public Filter getFilter() {
             if (this.mFilter == null) {
                 this.mFilter = new ArrayFilter();
@@ -143,16 +149,17 @@ public abstract class LauncherActivity extends ListActivity {
             return this.mFilter;
         }
 
+        /* loaded from: classes.dex */
         private class ArrayFilter extends Filter {
             private ArrayFilter() {
             }
 
-            /* access modifiers changed from: protected */
-            public Filter.FilterResults performFiltering(CharSequence prefix) {
+            @Override // android.widget.Filter
+            protected Filter.FilterResults performFiltering(CharSequence prefix) {
                 Filter.FilterResults results = new Filter.FilterResults();
                 if (ActivityAdapter.this.mOriginalValues == null) {
                     synchronized (ActivityAdapter.this.lock) {
-                        ArrayList unused = ActivityAdapter.this.mOriginalValues = new ArrayList(ActivityAdapter.this.mActivitiesList);
+                        ActivityAdapter.this.mOriginalValues = new ArrayList(ActivityAdapter.this.mActivitiesList);
                     }
                 }
                 if (prefix == null || prefix.length() == 0) {
@@ -172,13 +179,14 @@ public abstract class LauncherActivity extends ListActivity {
                         int wordCount = words.length;
                         int k = 0;
                         while (true) {
-                            if (k >= wordCount) {
-                                break;
-                            } else if (words[k].startsWith(prefixString)) {
-                                newValues.add(item);
-                                break;
-                            } else {
-                                k++;
+                            if (k < wordCount) {
+                                String word = words[k];
+                                if (!word.startsWith(prefixString)) {
+                                    k++;
+                                } else {
+                                    newValues.add(item);
+                                    break;
+                                }
                             }
                         }
                     }
@@ -188,8 +196,8 @@ public abstract class LauncherActivity extends ListActivity {
                 return results;
             }
 
-            /* access modifiers changed from: protected */
-            public void publishResults(CharSequence constraint, Filter.FilterResults results) {
+            @Override // android.widget.Filter
+            protected void publishResults(CharSequence constraint, Filter.FilterResults results) {
                 ActivityAdapter.this.mActivitiesList = (List) results.values;
                 if (results.count > 0) {
                     ActivityAdapter.this.notifyDataSetChanged();
@@ -200,15 +208,19 @@ public abstract class LauncherActivity extends ListActivity {
         }
     }
 
+    /* loaded from: classes.dex */
     public class IconResizer {
-        private Canvas mCanvas = new Canvas();
-        private int mIconHeight = -1;
-        private int mIconWidth = -1;
+        private int mIconHeight;
+        private int mIconWidth;
         private final Rect mOldBounds = new Rect();
+        private Canvas mCanvas = new Canvas();
 
         public IconResizer() {
+            this.mIconWidth = -1;
+            this.mIconHeight = -1;
             this.mCanvas.setDrawFilter(new PaintFlagsDrawFilter(4, 2));
-            int dimension = (int) LauncherActivity.this.getResources().getDimension(17104896);
+            Resources resources = LauncherActivity.this.getResources();
+            int dimension = (int) resources.getDimension(17104896);
             this.mIconHeight = dimension;
             this.mIconWidth = dimension;
         }
@@ -227,13 +239,14 @@ public abstract class LauncherActivity extends ListActivity {
                 return icon;
             }
             if (width < iconWidth || height < iconHeight) {
-                float ratio = ((float) iconWidth) / ((float) iconHeight);
+                float ratio = iconWidth / iconHeight;
                 if (iconWidth > iconHeight) {
-                    height = (int) (((float) width) / ratio);
+                    height = (int) (width / ratio);
                 } else if (iconHeight > iconWidth) {
-                    width = (int) (((float) height) * ratio);
+                    width = (int) (height * ratio);
                 }
-                Bitmap thumb = Bitmap.createBitmap(this.mIconWidth, this.mIconHeight, icon.getOpacity() != -1 ? Bitmap.Config.ARGB_8888 : Bitmap.Config.RGB_565);
+                Bitmap.Config c = icon.getOpacity() != -1 ? Bitmap.Config.ARGB_8888 : Bitmap.Config.RGB_565;
+                Bitmap thumb = Bitmap.createBitmap(this.mIconWidth, this.mIconHeight, c);
                 Canvas canvas = this.mCanvas;
                 canvas.setBitmap(thumb);
                 this.mOldBounds.set(icon.getBounds());
@@ -243,12 +256,11 @@ public abstract class LauncherActivity extends ListActivity {
                 icon.draw(canvas);
                 icon.setBounds(this.mOldBounds);
                 Drawable icon2 = new BitmapDrawable(LauncherActivity.this.getResources(), thumb);
-                canvas.setBitmap((Bitmap) null);
+                canvas.setBitmap(null);
                 return icon2;
-            } else if (iconWidth >= width || iconHeight >= height) {
-                return icon;
-            } else {
-                Bitmap thumb2 = Bitmap.createBitmap(this.mIconWidth, this.mIconHeight, Bitmap.Config.ARGB_8888);
+            } else if (iconWidth < width && iconHeight < height) {
+                Bitmap.Config c2 = Bitmap.Config.ARGB_8888;
+                Bitmap thumb2 = Bitmap.createBitmap(this.mIconWidth, this.mIconHeight, c2);
                 Canvas canvas2 = this.mCanvas;
                 canvas2.setBitmap(thumb2);
                 this.mOldBounds.set(icon.getBounds());
@@ -258,14 +270,16 @@ public abstract class LauncherActivity extends ListActivity {
                 icon.draw(canvas2);
                 icon.setBounds(this.mOldBounds);
                 Drawable icon3 = new BitmapDrawable(LauncherActivity.this.getResources(), thumb2);
-                canvas2.setBitmap((Bitmap) null);
+                canvas2.setBitmap(null);
                 return icon3;
+            } else {
+                return icon;
             }
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onCreate(Bundle icicle) {
+    @Override // android.app.Activity
+    protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         this.mPackageManager = getPackageManager();
         if (!this.mPackageManager.hasSystemFeature(PackageManager.FEATURE_WATCH)) {
@@ -275,7 +289,7 @@ public abstract class LauncherActivity extends ListActivity {
         onSetContentView();
         this.mIconResizer = new IconResizer();
         this.mIntent = new Intent(getTargetIntent());
-        this.mIntent.setComponent((ComponentName) null);
+        this.mIntent.setComponent(null);
         this.mAdapter = new ActivityAdapter(this.mIconResizer);
         setListAdapter(this.mAdapter);
         getListView().setTextFilterEnabled(true);
@@ -287,7 +301,7 @@ public abstract class LauncherActivity extends ListActivity {
     }
 
     private void updateAlertTitle() {
-        TextView alertTitle = (TextView) findViewById(R.id.alertTitle);
+        TextView alertTitle = (TextView) findViewById(C3132R.C3134id.alertTitle);
         if (alertTitle != null) {
             alertTitle.setText(getTitle());
         }
@@ -296,7 +310,8 @@ public abstract class LauncherActivity extends ListActivity {
     private void updateButtonText() {
         Button cancelButton = (Button) findViewById(16908313);
         if (cancelButton != null) {
-            cancelButton.setOnClickListener(new View.OnClickListener() {
+            cancelButton.setOnClickListener(new View.OnClickListener() { // from class: android.app.LauncherActivity.1
+                @Override // android.view.View.OnClickListener
                 public void onClick(View v) {
                     LauncherActivity.this.finish();
                 }
@@ -304,48 +319,47 @@ public abstract class LauncherActivity extends ListActivity {
         }
     }
 
+    @Override // android.app.Activity
     public void setTitle(CharSequence title) {
         super.setTitle(title);
         updateAlertTitle();
     }
 
+    @Override // android.app.Activity
     public void setTitle(int titleId) {
         super.setTitle(titleId);
         updateAlertTitle();
     }
 
-    /* access modifiers changed from: protected */
-    public void onSetContentView() {
-        setContentView((int) R.layout.activity_list);
+    protected void onSetContentView() {
+        setContentView(C3132R.layout.activity_list);
     }
 
-    /* access modifiers changed from: protected */
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        startActivity(intentForPosition(position));
+    @Override // android.app.ListActivity
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        Intent intent = intentForPosition(position);
+        startActivity(intent);
     }
 
-    /* access modifiers changed from: protected */
-    public Intent intentForPosition(int position) {
-        return ((ActivityAdapter) this.mAdapter).intentForPosition(position);
+    protected Intent intentForPosition(int position) {
+        ActivityAdapter adapter = (ActivityAdapter) this.mAdapter;
+        return adapter.intentForPosition(position);
     }
 
-    /* access modifiers changed from: protected */
-    public ListItem itemForPosition(int position) {
-        return ((ActivityAdapter) this.mAdapter).itemForPosition(position);
+    protected ListItem itemForPosition(int position) {
+        ActivityAdapter adapter = (ActivityAdapter) this.mAdapter;
+        return adapter.itemForPosition(position);
     }
 
-    /* access modifiers changed from: protected */
-    public Intent getTargetIntent() {
+    protected Intent getTargetIntent() {
         return new Intent();
     }
 
-    /* access modifiers changed from: protected */
-    public List<ResolveInfo> onQueryPackageManager(Intent queryIntent) {
+    protected List<ResolveInfo> onQueryPackageManager(Intent queryIntent) {
         return this.mPackageManager.queryIntentActivities(queryIntent, 0);
     }
 
-    /* access modifiers changed from: protected */
-    public void onSortResultList(List<ResolveInfo> results) {
+    protected void onSortResultList(List<ResolveInfo> results) {
         Collections.sort(results, new ResolveInfo.DisplayNameComparator(this.mPackageManager));
     }
 
@@ -355,13 +369,13 @@ public abstract class LauncherActivity extends ListActivity {
         ArrayList<ListItem> result = new ArrayList<>(list.size());
         int listSize = list.size();
         for (int i = 0; i < listSize; i++) {
-            result.add(new ListItem(this.mPackageManager, list.get(i), (IconResizer) null));
+            ResolveInfo resolveInfo = list.get(i);
+            result.add(new ListItem(this.mPackageManager, resolveInfo, null));
         }
         return result;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean onEvaluateShowIcons() {
+    protected boolean onEvaluateShowIcons() {
         return true;
     }
 }

@@ -1,19 +1,24 @@
 package android.bluetooth;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.Arrays;
 
+/* loaded from: classes.dex */
 public final class BluetoothActivityEnergyInfo implements Parcelable {
     public static final int BT_STACK_STATE_INVALID = 0;
     public static final int BT_STACK_STATE_STATE_ACTIVE = 1;
     public static final int BT_STACK_STATE_STATE_IDLE = 3;
     public static final int BT_STACK_STATE_STATE_SCANNING = 2;
-    public static final Parcelable.Creator<BluetoothActivityEnergyInfo> CREATOR = new Parcelable.Creator<BluetoothActivityEnergyInfo>() {
+    public static final Parcelable.Creator<BluetoothActivityEnergyInfo> CREATOR = new Parcelable.Creator<BluetoothActivityEnergyInfo>() { // from class: android.bluetooth.BluetoothActivityEnergyInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public BluetoothActivityEnergyInfo createFromParcel(Parcel in) {
             return new BluetoothActivityEnergyInfo(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public BluetoothActivityEnergyInfo[] newArray(int size) {
             return new BluetoothActivityEnergyInfo[size];
         }
@@ -49,6 +54,7 @@ public final class BluetoothActivityEnergyInfo implements Parcelable {
         return "BluetoothActivityEnergyInfo{ mTimestamp=" + this.mTimestamp + " mBluetoothStackState=" + this.mBluetoothStackState + " mControllerTxTimeMs=" + this.mControllerTxTimeMs + " mControllerRxTimeMs=" + this.mControllerRxTimeMs + " mControllerIdleTimeMs=" + this.mControllerIdleTimeMs + " mControllerEnergyUsed=" + this.mControllerEnergyUsed + " mUidTraffic=" + Arrays.toString(this.mUidTraffic) + " }";
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeLong(this.mTimestamp);
         out.writeInt(this.mBluetoothStackState);
@@ -59,6 +65,7 @@ public final class BluetoothActivityEnergyInfo implements Parcelable {
         out.writeTypedArray(this.mUidTraffic, flags);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

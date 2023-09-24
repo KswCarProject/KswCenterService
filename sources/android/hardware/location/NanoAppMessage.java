@@ -2,18 +2,23 @@ package android.hardware.location;
 
 import android.annotation.SystemApi;
 import android.net.wifi.WifiEnterpriseConfig;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.telecom.Logging.Session;
 import java.util.Arrays;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class NanoAppMessage implements Parcelable {
-    public static final Parcelable.Creator<NanoAppMessage> CREATOR = new Parcelable.Creator<NanoAppMessage>() {
+    public static final Parcelable.Creator<NanoAppMessage> CREATOR = new Parcelable.Creator<NanoAppMessage>() { // from class: android.hardware.location.NanoAppMessage.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NanoAppMessage createFromParcel(Parcel in) {
             return new NanoAppMessage(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NanoAppMessage[] newArray(int size) {
             return new NanoAppMessage[size];
         }
@@ -57,16 +62,19 @@ public final class NanoAppMessage implements Parcelable {
 
     private NanoAppMessage(Parcel in) {
         this.mNanoAppId = in.readLong();
-        this.mIsBroadcasted = in.readInt() != 1 ? false : true;
+        this.mIsBroadcasted = in.readInt() == 1;
         this.mMessageType = in.readInt();
-        this.mMessageBody = new byte[in.readInt()];
+        int msgSize = in.readInt();
+        this.mMessageBody = new byte[msgSize];
         in.readByteArray(this.mMessageBody);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeLong(this.mNanoAppId);
         out.writeInt(this.mIsBroadcasted ? 1 : 0);
@@ -76,7 +84,6 @@ public final class NanoAppMessage implements Parcelable {
     }
 
     public String toString() {
-        String ret;
         int length = this.mMessageBody.length;
         StringBuilder sb = new StringBuilder();
         sb.append("NanoAppMessage[type = ");
@@ -88,9 +95,9 @@ public final class NanoAppMessage implements Parcelable {
         sb.append(", nanoapp = 0x");
         sb.append(Long.toHexString(this.mNanoAppId));
         sb.append("](");
-        String ret2 = sb.toString();
+        String ret = sb.toString();
         if (length > 0) {
-            ret2 = ret2 + "data = 0x";
+            ret = ret + "data = 0x";
         }
         for (int i = 0; i < Math.min(length, 16); i++) {
             ret = ret + Byte.toHexString(this.mMessageBody[i], true);
@@ -105,7 +112,7 @@ public final class NanoAppMessage implements Parcelable {
     }
 
     public boolean equals(Object object) {
-        boolean isEqual = true;
+        boolean z = true;
         if (object == this) {
             return true;
         }
@@ -113,9 +120,7 @@ public final class NanoAppMessage implements Parcelable {
             return false;
         }
         NanoAppMessage other = (NanoAppMessage) object;
-        if (!(other.getNanoAppId() == this.mNanoAppId && other.getMessageType() == this.mMessageType && other.isBroadcastMessage() == this.mIsBroadcasted && Arrays.equals(other.getMessageBody(), this.mMessageBody))) {
-            isEqual = false;
-        }
+        boolean isEqual = (other.getNanoAppId() == this.mNanoAppId && other.getMessageType() == this.mMessageType && other.isBroadcastMessage() == this.mIsBroadcasted && Arrays.equals(other.getMessageBody(), this.mMessageBody)) ? false : false;
         return isEqual;
     }
 }

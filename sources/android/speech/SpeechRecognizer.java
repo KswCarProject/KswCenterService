@@ -4,13 +4,13 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.pm.ResolveInfo;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Looper;
-import android.os.Message;
-import android.os.RemoteException;
+import android.content.p002pm.ResolveInfo;
+import android.p007os.Bundle;
+import android.p007os.Handler;
+import android.p007os.IBinder;
+import android.p007os.Looper;
+import android.p007os.Message;
+import android.p007os.RemoteException;
 import android.provider.Settings;
 import android.speech.IRecognitionListener;
 import android.speech.IRecognitionService;
@@ -21,6 +21,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+/* loaded from: classes3.dex */
 public class SpeechRecognizer {
     public static final String CONFIDENCE_SCORES = "confidence_scores";
     private static final boolean DBG = false;
@@ -39,11 +40,12 @@ public class SpeechRecognizer {
     private static final int MSG_STOP = 2;
     public static final String RESULTS_RECOGNITION = "results_recognition";
     private static final String TAG = "SpeechRecognizer";
-    /* access modifiers changed from: private */
-    public Connection mConnection;
+    private Connection mConnection;
     private final Context mContext;
-    /* access modifiers changed from: private */
-    public Handler mHandler = new Handler() {
+    private IRecognitionService mService;
+    private final ComponentName mServiceComponent;
+    private Handler mHandler = new Handler() { // from class: android.speech.SpeechRecognizer.1
+        @Override // android.p007os.Handler
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 1:
@@ -63,54 +65,50 @@ public class SpeechRecognizer {
             }
         }
     };
+    private final Queue<Message> mPendingTasks = new LinkedList();
     private final InternalListener mListener = new InternalListener();
-    /* access modifiers changed from: private */
-    public final Queue<Message> mPendingTasks = new LinkedList();
-    /* access modifiers changed from: private */
-    public IRecognitionService mService;
-    private final ComponentName mServiceComponent;
 
     private SpeechRecognizer(Context context, ComponentName serviceComponent) {
         this.mContext = context;
         this.mServiceComponent = serviceComponent;
     }
 
+    /* loaded from: classes3.dex */
     private class Connection implements ServiceConnection {
         private Connection() {
         }
 
+        @Override // android.content.ServiceConnection
         public void onServiceConnected(ComponentName name, IBinder service) {
-            IRecognitionService unused = SpeechRecognizer.this.mService = IRecognitionService.Stub.asInterface(service);
+            SpeechRecognizer.this.mService = IRecognitionService.Stub.asInterface(service);
             while (!SpeechRecognizer.this.mPendingTasks.isEmpty()) {
                 SpeechRecognizer.this.mHandler.sendMessage((Message) SpeechRecognizer.this.mPendingTasks.poll());
             }
         }
 
+        @Override // android.content.ServiceConnection
         public void onServiceDisconnected(ComponentName name) {
-            IRecognitionService unused = SpeechRecognizer.this.mService = null;
-            Connection unused2 = SpeechRecognizer.this.mConnection = null;
+            SpeechRecognizer.this.mService = null;
+            SpeechRecognizer.this.mConnection = null;
             SpeechRecognizer.this.mPendingTasks.clear();
         }
     }
 
     public static boolean isRecognitionAvailable(Context context) {
         List<ResolveInfo> list = context.getPackageManager().queryIntentServices(new Intent(RecognitionService.SERVICE_INTERFACE), 0);
-        if (list == null || list.size() == 0) {
-            return false;
-        }
-        return true;
+        return (list == null || list.size() == 0) ? false : true;
     }
 
     public static SpeechRecognizer createSpeechRecognizer(Context context) {
-        return createSpeechRecognizer(context, (ComponentName) null);
+        return createSpeechRecognizer(context, null);
     }
 
     public static SpeechRecognizer createSpeechRecognizer(Context context, ComponentName serviceComponent) {
-        if (context != null) {
-            checkIsCalledFromMainThread();
-            return new SpeechRecognizer(context, serviceComponent);
+        if (context == null) {
+            throw new IllegalArgumentException("Context cannot be null)");
         }
-        throw new IllegalArgumentException("Context cannot be null)");
+        checkIsCalledFromMainThread();
+        return new SpeechRecognizer(context, serviceComponent);
     }
 
     public void setRecognitionListener(RecognitionListener listener) {
@@ -120,34 +118,33 @@ public class SpeechRecognizer {
 
     public void startListening(Intent recognizerIntent) {
         SeempLog.record(72);
-        if (recognizerIntent != null) {
-            checkIsCalledFromMainThread();
-            if (this.mConnection == null) {
-                this.mConnection = new Connection();
-                Intent serviceIntent = new Intent(RecognitionService.SERVICE_INTERFACE);
-                if (this.mServiceComponent == null) {
-                    String serviceComponent = Settings.Secure.getString(this.mContext.getContentResolver(), Settings.Secure.VOICE_RECOGNITION_SERVICE);
-                    if (TextUtils.isEmpty(serviceComponent)) {
-                        Log.e(TAG, "no selected voice recognition service");
-                        this.mListener.onError(5);
-                        return;
-                    }
-                    serviceIntent.setComponent(ComponentName.unflattenFromString(serviceComponent));
-                } else {
-                    serviceIntent.setComponent(this.mServiceComponent);
-                }
-                if (!this.mContext.bindService(serviceIntent, this.mConnection, 1)) {
-                    Log.e(TAG, "bind to recognition service failed");
-                    this.mConnection = null;
-                    this.mService = null;
+        if (recognizerIntent == null) {
+            throw new IllegalArgumentException("intent must not be null");
+        }
+        checkIsCalledFromMainThread();
+        if (this.mConnection == null) {
+            this.mConnection = new Connection();
+            Intent serviceIntent = new Intent(RecognitionService.SERVICE_INTERFACE);
+            if (this.mServiceComponent == null) {
+                String serviceComponent = Settings.Secure.getString(this.mContext.getContentResolver(), Settings.Secure.VOICE_RECOGNITION_SERVICE);
+                if (TextUtils.isEmpty(serviceComponent)) {
+                    Log.m70e(TAG, "no selected voice recognition service");
                     this.mListener.onError(5);
                     return;
                 }
+                serviceIntent.setComponent(ComponentName.unflattenFromString(serviceComponent));
+            } else {
+                serviceIntent.setComponent(this.mServiceComponent);
             }
-            putMessage(Message.obtain(this.mHandler, 1, recognizerIntent));
-            return;
+            if (!this.mContext.bindService(serviceIntent, this.mConnection, 1)) {
+                Log.m70e(TAG, "bind to recognition service failed");
+                this.mConnection = null;
+                this.mService = null;
+                this.mListener.onError(5);
+                return;
+            }
         }
-        throw new IllegalArgumentException("intent must not be null");
+        putMessage(Message.obtain(this.mHandler, 1, recognizerIntent));
     }
 
     public void stopListening() {
@@ -174,39 +171,42 @@ public class SpeechRecognizer {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void handleStartListening(Intent recognizerIntent) {
-        if (checkOpenConnection()) {
-            try {
-                this.mService.startListening(recognizerIntent, this.mListener);
-            } catch (RemoteException e) {
-                Log.e(TAG, "startListening() failed", e);
-                this.mListener.onError(5);
-            }
+        if (!checkOpenConnection()) {
+            return;
+        }
+        try {
+            this.mService.startListening(recognizerIntent, this.mListener);
+        } catch (RemoteException e) {
+            Log.m69e(TAG, "startListening() failed", e);
+            this.mListener.onError(5);
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void handleStopMessage() {
-        if (checkOpenConnection()) {
-            try {
-                this.mService.stopListening(this.mListener);
-            } catch (RemoteException e) {
-                Log.e(TAG, "stopListening() failed", e);
-                this.mListener.onError(5);
-            }
+        if (!checkOpenConnection()) {
+            return;
+        }
+        try {
+            this.mService.stopListening(this.mListener);
+        } catch (RemoteException e) {
+            Log.m69e(TAG, "stopListening() failed", e);
+            this.mListener.onError(5);
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void handleCancelMessage() {
-        if (checkOpenConnection()) {
-            try {
-                this.mService.cancel(this.mListener);
-            } catch (RemoteException e) {
-                Log.e(TAG, "cancel() failed", e);
-                this.mListener.onError(5);
-            }
+        if (!checkOpenConnection()) {
+            return;
+        }
+        try {
+            this.mService.cancel(this.mListener);
+        } catch (RemoteException e) {
+            Log.m69e(TAG, "cancel() failed", e);
+            this.mListener.onError(5);
         }
     }
 
@@ -215,13 +215,13 @@ public class SpeechRecognizer {
             return true;
         }
         this.mListener.onError(5);
-        Log.e(TAG, "not connected to the recognition service");
+        Log.m70e(TAG, "not connected to the recognition service");
         return false;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void handleChangeListener(RecognitionListener listener) {
-        RecognitionListener unused = this.mListener.mInternalListener = listener;
+        this.mListener.mInternalListener = listener;
     }
 
     public void destroy() {
@@ -237,9 +237,10 @@ public class SpeechRecognizer {
         this.mPendingTasks.clear();
         this.mService = null;
         this.mConnection = null;
-        RecognitionListener unused = this.mListener.mInternalListener = null;
+        this.mListener.mInternalListener = null;
     }
 
+    /* loaded from: classes3.dex */
     private static class InternalListener extends IRecognitionListener.Stub {
         private static final int MSG_BEGINNING_OF_SPEECH = 1;
         private static final int MSG_BUFFER_RECEIVED = 2;
@@ -251,11 +252,11 @@ public class SpeechRecognizer {
         private static final int MSG_RESULTS = 6;
         private static final int MSG_RMS_CHANGED = 8;
         private final Handler mInternalHandler;
-        /* access modifiers changed from: private */
-        public RecognitionListener mInternalListener;
+        private RecognitionListener mInternalListener;
 
         private InternalListener() {
-            this.mInternalHandler = new Handler() {
+            this.mInternalHandler = new Handler() { // from class: android.speech.SpeechRecognizer.InternalListener.1
+                @Override // android.p007os.Handler
                 public void handleMessage(Message msg) {
                     if (InternalListener.this.mInternalListener != null) {
                         switch (msg.what) {
@@ -294,38 +295,47 @@ public class SpeechRecognizer {
             };
         }
 
+        @Override // android.speech.IRecognitionListener
         public void onBeginningOfSpeech() {
             Message.obtain(this.mInternalHandler, 1).sendToTarget();
         }
 
+        @Override // android.speech.IRecognitionListener
         public void onBufferReceived(byte[] buffer) {
             Message.obtain(this.mInternalHandler, 2, buffer).sendToTarget();
         }
 
+        @Override // android.speech.IRecognitionListener
         public void onEndOfSpeech() {
             Message.obtain(this.mInternalHandler, 3).sendToTarget();
         }
 
+        @Override // android.speech.IRecognitionListener
         public void onError(int error) {
             Message.obtain(this.mInternalHandler, 4, Integer.valueOf(error)).sendToTarget();
         }
 
+        @Override // android.speech.IRecognitionListener
         public void onReadyForSpeech(Bundle noiseParams) {
             Message.obtain(this.mInternalHandler, 5, noiseParams).sendToTarget();
         }
 
+        @Override // android.speech.IRecognitionListener
         public void onResults(Bundle results) {
             Message.obtain(this.mInternalHandler, 6, results).sendToTarget();
         }
 
+        @Override // android.speech.IRecognitionListener
         public void onPartialResults(Bundle results) {
             Message.obtain(this.mInternalHandler, 7, results).sendToTarget();
         }
 
+        @Override // android.speech.IRecognitionListener
         public void onRmsChanged(float rmsdB) {
             Message.obtain(this.mInternalHandler, 8, Float.valueOf(rmsdB)).sendToTarget();
         }
 
+        @Override // android.speech.IRecognitionListener
         public void onEvent(int eventType, Bundle params) {
             Message.obtain(this.mInternalHandler, 9, eventType, eventType, params).sendToTarget();
         }

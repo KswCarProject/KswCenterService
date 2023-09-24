@@ -1,139 +1,144 @@
 package android.renderscript;
 
+/* loaded from: classes3.dex */
 public class Float2 {
-    public float x;
-    public float y;
+
+    /* renamed from: x */
+    public float f190x;
+
+    /* renamed from: y */
+    public float f191y;
 
     public Float2() {
     }
 
     public Float2(Float2 data) {
-        this.x = data.x;
-        this.y = data.y;
+        this.f190x = data.f190x;
+        this.f191y = data.f191y;
     }
 
-    public Float2(float x2, float y2) {
-        this.x = x2;
-        this.y = y2;
+    public Float2(float x, float y) {
+        this.f190x = x;
+        this.f191y = y;
     }
 
     public static Float2 add(Float2 a, Float2 b) {
         Float2 res = new Float2();
-        res.x = a.x + b.x;
-        res.y = a.y + b.y;
+        res.f190x = a.f190x + b.f190x;
+        res.f191y = a.f191y + b.f191y;
         return res;
     }
 
     public void add(Float2 value) {
-        this.x += value.x;
-        this.y += value.y;
+        this.f190x += value.f190x;
+        this.f191y += value.f191y;
     }
 
     public void add(float value) {
-        this.x += value;
-        this.y += value;
+        this.f190x += value;
+        this.f191y += value;
     }
 
     public static Float2 add(Float2 a, float b) {
         Float2 res = new Float2();
-        res.x = a.x + b;
-        res.y = a.y + b;
+        res.f190x = a.f190x + b;
+        res.f191y = a.f191y + b;
         return res;
     }
 
     public void sub(Float2 value) {
-        this.x -= value.x;
-        this.y -= value.y;
+        this.f190x -= value.f190x;
+        this.f191y -= value.f191y;
     }
 
     public static Float2 sub(Float2 a, Float2 b) {
         Float2 res = new Float2();
-        res.x = a.x - b.x;
-        res.y = a.y - b.y;
+        res.f190x = a.f190x - b.f190x;
+        res.f191y = a.f191y - b.f191y;
         return res;
     }
 
     public void sub(float value) {
-        this.x -= value;
-        this.y -= value;
+        this.f190x -= value;
+        this.f191y -= value;
     }
 
     public static Float2 sub(Float2 a, float b) {
         Float2 res = new Float2();
-        res.x = a.x - b;
-        res.y = a.y - b;
+        res.f190x = a.f190x - b;
+        res.f191y = a.f191y - b;
         return res;
     }
 
     public void mul(Float2 value) {
-        this.x *= value.x;
-        this.y *= value.y;
+        this.f190x *= value.f190x;
+        this.f191y *= value.f191y;
     }
 
     public static Float2 mul(Float2 a, Float2 b) {
         Float2 res = new Float2();
-        res.x = a.x * b.x;
-        res.y = a.y * b.y;
+        res.f190x = a.f190x * b.f190x;
+        res.f191y = a.f191y * b.f191y;
         return res;
     }
 
     public void mul(float value) {
-        this.x *= value;
-        this.y *= value;
+        this.f190x *= value;
+        this.f191y *= value;
     }
 
     public static Float2 mul(Float2 a, float b) {
         Float2 res = new Float2();
-        res.x = a.x * b;
-        res.y = a.y * b;
+        res.f190x = a.f190x * b;
+        res.f191y = a.f191y * b;
         return res;
     }
 
     public void div(Float2 value) {
-        this.x /= value.x;
-        this.y /= value.y;
+        this.f190x /= value.f190x;
+        this.f191y /= value.f191y;
     }
 
     public static Float2 div(Float2 a, Float2 b) {
         Float2 res = new Float2();
-        res.x = a.x / b.x;
-        res.y = a.y / b.y;
+        res.f190x = a.f190x / b.f190x;
+        res.f191y = a.f191y / b.f191y;
         return res;
     }
 
     public void div(float value) {
-        this.x /= value;
-        this.y /= value;
+        this.f190x /= value;
+        this.f191y /= value;
     }
 
     public static Float2 div(Float2 a, float b) {
         Float2 res = new Float2();
-        res.x = a.x / b;
-        res.y = a.y / b;
+        res.f190x = a.f190x / b;
+        res.f191y = a.f191y / b;
         return res;
     }
 
     public float dotProduct(Float2 a) {
-        return (this.x * a.x) + (this.y * a.y);
+        return (this.f190x * a.f190x) + (this.f191y * a.f191y);
     }
 
     public static float dotProduct(Float2 a, Float2 b) {
-        return (b.x * a.x) + (b.y * a.y);
+        return (b.f190x * a.f190x) + (b.f191y * a.f191y);
     }
 
     public void addMultiple(Float2 a, float factor) {
-        this.x += a.x * factor;
-        this.y += a.y * factor;
+        this.f190x += a.f190x * factor;
+        this.f191y += a.f191y * factor;
     }
 
     public void set(Float2 a) {
-        this.x = a.x;
-        this.y = a.y;
+        this.f190x = a.f190x;
+        this.f191y = a.f191y;
     }
 
     public void negate() {
-        this.x = -this.x;
-        this.y = -this.y;
+        this.f190x = -this.f190x;
+        this.f191y = -this.f191y;
     }
 
     public int length() {
@@ -141,15 +146,15 @@ public class Float2 {
     }
 
     public float elementSum() {
-        return this.x + this.y;
+        return this.f190x + this.f191y;
     }
 
     public float get(int i) {
         switch (i) {
             case 0:
-                return this.x;
+                return this.f190x;
             case 1:
-                return this.y;
+                return this.f191y;
             default:
                 throw new IndexOutOfBoundsException("Index: i");
         }
@@ -158,10 +163,10 @@ public class Float2 {
     public void setAt(int i, float value) {
         switch (i) {
             case 0:
-                this.x = value;
+                this.f190x = value;
                 return;
             case 1:
-                this.y = value;
+                this.f191y = value;
                 return;
             default:
                 throw new IndexOutOfBoundsException("Index: i");
@@ -171,23 +176,23 @@ public class Float2 {
     public void addAt(int i, float value) {
         switch (i) {
             case 0:
-                this.x += value;
+                this.f190x += value;
                 return;
             case 1:
-                this.y += value;
+                this.f191y += value;
                 return;
             default:
                 throw new IndexOutOfBoundsException("Index: i");
         }
     }
 
-    public void setValues(float x2, float y2) {
-        this.x = x2;
-        this.y = y2;
+    public void setValues(float x, float y) {
+        this.f190x = x;
+        this.f191y = y;
     }
 
     public void copyTo(float[] data, int offset) {
-        data[offset] = this.x;
-        data[offset + 1] = this.y;
+        data[offset] = this.f190x;
+        data[offset + 1] = this.f191y;
     }
 }

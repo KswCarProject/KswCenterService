@@ -3,6 +3,7 @@ package android.hardware.radio.V1_0;
 import android.security.keystore.KeyProperties;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class IndicationFilter {
     public static final int ALL = 7;
     public static final int DATA_CALL_DORMANCY_CHANGED = 4;

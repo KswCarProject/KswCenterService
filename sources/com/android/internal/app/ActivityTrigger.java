@@ -2,10 +2,11 @@ package com.android.internal.app;
 
 import android.content.ComponentName;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.content.pm.ApplicationInfo;
+import android.content.p002pm.ActivityInfo;
+import android.content.p002pm.ApplicationInfo;
 import android.util.Log;
 
+/* loaded from: classes4.dex */
 public class ActivityTrigger {
     private static final String TAG = "ActivityTrigger";
 
@@ -23,13 +24,13 @@ public class ActivityTrigger {
 
     private native void native_at_stopActivity(String str);
 
-    /* access modifiers changed from: protected */
-    public void finalize() {
+    protected void finalize() {
         native_at_deinit();
     }
 
     public void activityStartTrigger(ApplicationInfo appInfo, int pid) {
-        native_at_startApp(appInfo.packageName + "/" + appInfo.processName + "/" + appInfo.longVersionCode + "/" + pid, 0);
+        String activity = appInfo.packageName + "/" + appInfo.processName + "/" + appInfo.longVersionCode + "/" + pid;
+        native_at_startApp(activity, 0);
     }
 
     public void activityResumeTrigger(Intent intent, ActivityInfo acInfo, ApplicationInfo appInfo, boolean IsInFullScreen) {
@@ -44,8 +45,8 @@ public class ActivityTrigger {
     public void activityPauseTrigger(Intent intent, ActivityInfo acInfo, ApplicationInfo appInfo) {
         ComponentName cn = intent.getComponent();
         String activity = null;
-        Log.d(TAG, "ActivityTrigger activityPauseTrigger ");
-        if (!(cn == null || appInfo == null)) {
+        Log.m72d(TAG, "ActivityTrigger activityPauseTrigger ");
+        if (cn != null && appInfo != null) {
             activity = cn.flattenToString() + "/" + appInfo.versionCode;
         }
         native_at_pauseActivity(activity);
@@ -54,8 +55,8 @@ public class ActivityTrigger {
     public void activityStopTrigger(Intent intent, ActivityInfo acInfo, ApplicationInfo appInfo) {
         ComponentName cn = intent.getComponent();
         String activity = null;
-        Log.d(TAG, "ActivityTrigger activityStopTrigger ");
-        if (!(cn == null || appInfo == null)) {
+        Log.m72d(TAG, "ActivityTrigger activityStopTrigger ");
+        if (cn != null && appInfo != null) {
             activity = cn.flattenToString() + "/" + appInfo.versionCode;
         }
         native_at_stopActivity(activity);

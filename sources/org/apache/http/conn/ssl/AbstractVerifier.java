@@ -3,6 +3,7 @@ package org.apache.http.conn.ssl;
 import android.annotation.UnsupportedAppUsage;
 import android.provider.DocumentsContract;
 import java.io.IOException;
+import java.security.cert.Certificate;
 import java.security.cert.CertificateParsingException;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
@@ -19,39 +20,49 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
 
 @Deprecated
+/* loaded from: classes5.dex */
 public abstract class AbstractVerifier implements X509HostnameVerifier {
+    private static final Pattern IPV4_PATTERN = Pattern.compile("^(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}$");
     @UnsupportedAppUsage
     private static final String[] BAD_COUNTRY_2LDS = {"ac", "co", "com", "ed", "edu", "go", "gouv", "gov", DocumentsContract.EXTRA_INFO, "lg", "ne", "net", "or", "org"};
-    private static final Pattern IPV4_PATTERN = Pattern.compile("^(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}$");
 
     static {
         Arrays.sort(BAD_COUNTRY_2LDS);
     }
 
+    @Override // org.apache.http.conn.ssl.X509HostnameVerifier
     public final void verify(String host, SSLSocket ssl) throws IOException {
-        if (host != null) {
-            verify(host, (X509Certificate) ssl.getSession().getPeerCertificates()[0]);
-            return;
+        if (host == null) {
+            throw new NullPointerException("host to verify is null");
         }
-        throw new NullPointerException("host to verify is null");
+        SSLSession session = ssl.getSession();
+        Certificate[] certs = session.getPeerCertificates();
+        X509Certificate x509 = (X509Certificate) certs[0];
+        verify(host, x509);
     }
 
+    @Override // org.apache.http.conn.ssl.X509HostnameVerifier, javax.net.ssl.HostnameVerifier
     public final boolean verify(String host, SSLSession session) {
         try {
-            verify(host, (X509Certificate) session.getPeerCertificates()[0]);
+            Certificate[] certs = session.getPeerCertificates();
+            X509Certificate x509 = (X509Certificate) certs[0];
+            verify(host, x509);
             return true;
         } catch (SSLException e) {
             return false;
         }
     }
 
+    @Override // org.apache.http.conn.ssl.X509HostnameVerifier
     public final void verify(String host, X509Certificate cert) throws SSLException {
-        verify(host, getCNs(cert), getDNSSubjectAlts(cert));
+        String[] cns = getCNs(cert);
+        String[] subjectAlts = getDNSSubjectAlts(cert);
+        verify(host, cns, subjectAlts);
     }
 
     public final void verify(String host, String[] cns, String[] subjectAlts, boolean strictWithSubDomains) throws SSLException {
         LinkedList<String> names = new LinkedList<>();
-        if (!(cns == null || cns.length <= 0 || cns[0] == null)) {
+        if (cns != null && cns.length > 0 && cns[0] != null) {
             names.add(cns[0]);
         }
         if (subjectAlts != null) {
@@ -61,43 +72,40 @@ public abstract class AbstractVerifier implements X509HostnameVerifier {
                 }
             }
         }
-        if (!names.isEmpty()) {
-            StringBuffer buf = new StringBuffer();
-            String hostName = host.trim().toLowerCase(Locale.ENGLISH);
-            boolean match = false;
-            Iterator<String> it = names.iterator();
-            while (it.hasNext()) {
-                String cn = it.next().toLowerCase(Locale.ENGLISH);
-                buf.append(" <");
-                buf.append(cn);
-                buf.append('>');
-                if (it.hasNext()) {
-                    buf.append(" OR");
-                }
-                boolean z = true;
-                if (cn.startsWith("*.") && cn.indexOf(46, 2) != -1 && acceptableCountryWildcard(cn) && !isIPv4Address(host)) {
-                    match = hostName.endsWith(cn.substring(1));
-                    if (match && strictWithSubDomains) {
-                        if (countDots(hostName) != countDots(cn)) {
-                            z = false;
-                        }
-                        match = z;
-                        continue;
-                    }
-                } else {
-                    match = hostName.equals(cn);
+        if (names.isEmpty()) {
+            String msg = "Certificate for <" + host + "> doesn't contain CN or DNS subjectAlt";
+            throw new SSLException(msg);
+        }
+        StringBuffer buf = new StringBuffer();
+        String hostName = host.trim().toLowerCase(Locale.ENGLISH);
+        boolean match = false;
+        Iterator<String> it = names.iterator();
+        while (it.hasNext()) {
+            String cn = it.next().toLowerCase(Locale.ENGLISH);
+            buf.append(" <");
+            buf.append(cn);
+            buf.append('>');
+            if (it.hasNext()) {
+                buf.append(" OR");
+            }
+            boolean doWildcard = cn.startsWith("*.") && cn.indexOf(46, 2) != -1 && acceptableCountryWildcard(cn) && !isIPv4Address(host);
+            if (doWildcard) {
+                match = hostName.endsWith(cn.substring(1));
+                if (match && strictWithSubDomains) {
+                    match = countDots(hostName) == countDots(cn);
                     continue;
                 }
-                if (match) {
-                    break;
-                }
+            } else {
+                match = hostName.equals(cn);
+                continue;
             }
-            if (!match) {
-                throw new SSLException("hostname in certificate didn't match: <" + host + "> !=" + buf);
+            if (match) {
+                break;
             }
-            return;
         }
-        throw new SSLException("Certificate for <" + host + "> doesn't contain CN or DNS subjectAlt");
+        if (!match) {
+            throw new SSLException("hostname in certificate didn't match: <" + host + "> !=" + ((Object) buf));
+        }
     }
 
     public static boolean acceptableCountryWildcard(String cn) {
@@ -105,20 +113,20 @@ public abstract class AbstractVerifier implements X509HostnameVerifier {
         if (cnLen < 7 || cnLen > 9 || cn.charAt(cnLen - 3) != '.') {
             return true;
         }
-        if (Arrays.binarySearch(BAD_COUNTRY_2LDS, cn.substring(2, cnLen - 3)) < 0) {
-            return true;
-        }
-        return false;
+        String s = cn.substring(2, cnLen - 3);
+        int x = Arrays.binarySearch(BAD_COUNTRY_2LDS, s);
+        return x < 0;
     }
 
     public static String[] getCNs(X509Certificate cert) {
-        List<String> cnList = new AndroidDistinguishedNameParser(cert.getSubjectX500Principal()).getAllMostSpecificFirst("cn");
-        if (cnList.isEmpty()) {
-            return null;
+        AndroidDistinguishedNameParser dnParser = new AndroidDistinguishedNameParser(cert.getSubjectX500Principal());
+        List<String> cnList = dnParser.getAllMostSpecificFirst("cn");
+        if (!cnList.isEmpty()) {
+            String[] cns = new String[cnList.size()];
+            cnList.toArray(cns);
+            return cns;
         }
-        String[] cns = new String[cnList.size()];
-        cnList.toArray(cns);
-        return cns;
+        return null;
     }
 
     public static String[] getDNSSubjectAlts(X509Certificate cert) {
@@ -127,12 +135,14 @@ public abstract class AbstractVerifier implements X509HostnameVerifier {
         try {
             c = cert.getSubjectAlternativeNames();
         } catch (CertificateParsingException cpe) {
-            Logger.getLogger(AbstractVerifier.class.getName()).log(Level.FINE, "Error parsing certificate.", cpe);
+            Logger.getLogger(AbstractVerifier.class.getName()).log(Level.FINE, "Error parsing certificate.", (Throwable) cpe);
         }
         if (c != null) {
-            for (List<?> list : c) {
-                if (((Integer) list.get(0)).intValue() == 2) {
-                    subjectAltList.add((String) list.get(1));
+            for (List<?> aC : c) {
+                int type = ((Integer) aC.get(0)).intValue();
+                if (type == 2) {
+                    String s = (String) aC.get(1);
+                    subjectAltList.add(s);
                 }
             }
         }

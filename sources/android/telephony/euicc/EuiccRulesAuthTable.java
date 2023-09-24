@@ -1,8 +1,8 @@
 package android.telephony.euicc;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.service.carrier.CarrierIdentifier;
 import android.text.TextUtils;
 import com.android.internal.annotations.VisibleForTesting;
@@ -12,12 +12,17 @@ import java.util.Arrays;
 import java.util.List;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class EuiccRulesAuthTable implements Parcelable {
-    public static final Parcelable.Creator<EuiccRulesAuthTable> CREATOR = new Parcelable.Creator<EuiccRulesAuthTable>() {
+    public static final Parcelable.Creator<EuiccRulesAuthTable> CREATOR = new Parcelable.Creator<EuiccRulesAuthTable>() { // from class: android.telephony.euicc.EuiccRulesAuthTable.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public EuiccRulesAuthTable createFromParcel(Parcel source) {
             return new EuiccRulesAuthTable(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public EuiccRulesAuthTable[] newArray(int size) {
             return new EuiccRulesAuthTable[size];
         }
@@ -28,9 +33,11 @@ public final class EuiccRulesAuthTable implements Parcelable {
     private final int[] mPolicyRules;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface PolicyRuleFlag {
     }
 
+    /* loaded from: classes3.dex */
     public static final class Builder {
         private CarrierIdentifier[][] mCarrierIds;
         private int[] mPolicyRuleFlags;
@@ -39,28 +46,28 @@ public final class EuiccRulesAuthTable implements Parcelable {
 
         public Builder(int ruleNum) {
             this.mPolicyRules = new int[ruleNum];
-            this.mCarrierIds = new CarrierIdentifier[ruleNum][];
+            this.mCarrierIds = new CarrierIdentifier[ruleNum];
             this.mPolicyRuleFlags = new int[ruleNum];
         }
 
         public EuiccRulesAuthTable build() {
-            if (this.mPosition == this.mPolicyRules.length) {
-                return new EuiccRulesAuthTable(this.mPolicyRules, this.mCarrierIds, this.mPolicyRuleFlags);
+            if (this.mPosition != this.mPolicyRules.length) {
+                throw new IllegalStateException("Not enough rules are added, expected: " + this.mPolicyRules.length + ", added: " + this.mPosition);
             }
-            throw new IllegalStateException("Not enough rules are added, expected: " + this.mPolicyRules.length + ", added: " + this.mPosition);
+            return new EuiccRulesAuthTable(this.mPolicyRules, this.mCarrierIds, this.mPolicyRuleFlags);
         }
 
         public Builder add(int policyRules, List<CarrierIdentifier> carrierId, int policyRuleFlags) {
-            if (this.mPosition < this.mPolicyRules.length) {
-                this.mPolicyRules[this.mPosition] = policyRules;
-                if (carrierId != null && carrierId.size() > 0) {
-                    this.mCarrierIds[this.mPosition] = (CarrierIdentifier[]) carrierId.toArray(new CarrierIdentifier[carrierId.size()]);
-                }
-                this.mPolicyRuleFlags[this.mPosition] = policyRuleFlags;
-                this.mPosition++;
-                return this;
+            if (this.mPosition >= this.mPolicyRules.length) {
+                throw new ArrayIndexOutOfBoundsException(this.mPosition);
             }
-            throw new ArrayIndexOutOfBoundsException(this.mPosition);
+            this.mPolicyRules[this.mPosition] = policyRules;
+            if (carrierId != null && carrierId.size() > 0) {
+                this.mCarrierIds[this.mPosition] = (CarrierIdentifier[]) carrierId.toArray(new CarrierIdentifier[carrierId.size()]);
+            }
+            this.mPolicyRuleFlags[this.mPosition] = policyRuleFlags;
+            this.mPosition++;
+            return this;
         }
     }
 
@@ -86,7 +93,7 @@ public final class EuiccRulesAuthTable implements Parcelable {
     public int findIndex(int policy, CarrierIdentifier carrierId) {
         CarrierIdentifier[] carrierIds;
         for (int i = 0; i < this.mPolicyRules.length; i++) {
-            if (!((this.mPolicyRules[i] & policy) == 0 || (carrierIds = this.mCarrierIds[i]) == null || carrierIds.length == 0)) {
+            if ((this.mPolicyRules[i] & policy) != 0 && (carrierIds = this.mCarrierIds[i]) != null && carrierIds.length != 0) {
                 for (CarrierIdentifier ruleCarrierId : carrierIds) {
                     if (match(ruleCarrierId.getMcc(), carrierId.getMcc()) && match(ruleCarrierId.getMnc(), carrierId.getMnc())) {
                         String gid = ruleCarrierId.getGid1();
@@ -105,17 +112,20 @@ public final class EuiccRulesAuthTable implements Parcelable {
     }
 
     public boolean hasPolicyRuleFlag(int index, int flag) {
-        if (index >= 0 && index < this.mPolicyRules.length) {
-            return (this.mPolicyRuleFlags[index] & flag) != 0;
+        if (index < 0 || index >= this.mPolicyRules.length) {
+            throw new ArrayIndexOutOfBoundsException(index);
         }
-        throw new ArrayIndexOutOfBoundsException(index);
+        return (this.mPolicyRuleFlags[index] & flag) != 0;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
+        CarrierIdentifier[][] carrierIdentifierArr;
         dest.writeIntArray(this.mPolicyRules);
         for (CarrierIdentifier[] ids : this.mCarrierIds) {
             dest.writeTypedArray(ids, flags);
@@ -137,31 +147,30 @@ public final class EuiccRulesAuthTable implements Parcelable {
         for (int i = 0; i < this.mCarrierIds.length; i++) {
             CarrierIdentifier[] carrierIds = this.mCarrierIds[i];
             CarrierIdentifier[] thatCarrierIds = that.mCarrierIds[i];
-            if (carrierIds == null || thatCarrierIds == null) {
-                if (carrierIds != null || thatCarrierIds != null) {
+            if (carrierIds != null && thatCarrierIds != null) {
+                if (carrierIds.length != thatCarrierIds.length) {
                     return false;
                 }
-            } else if (carrierIds.length != thatCarrierIds.length) {
-                return false;
-            } else {
                 for (int j = 0; j < carrierIds.length; j++) {
                     if (!carrierIds[j].equals(thatCarrierIds[j])) {
                         return false;
                     }
                 }
                 continue;
+            } else if (carrierIds != null || thatCarrierIds != null) {
+                return false;
             }
         }
-        if (!Arrays.equals(this.mPolicyRules, that.mPolicyRules) || !Arrays.equals(this.mPolicyRuleFlags, that.mPolicyRuleFlags)) {
-            return false;
+        if (Arrays.equals(this.mPolicyRules, that.mPolicyRules) && Arrays.equals(this.mPolicyRuleFlags, that.mPolicyRuleFlags)) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     private EuiccRulesAuthTable(Parcel source) {
         this.mPolicyRules = source.createIntArray();
         int len = this.mPolicyRules.length;
-        this.mCarrierIds = new CarrierIdentifier[len][];
+        this.mCarrierIds = new CarrierIdentifier[len];
         for (int i = 0; i < len; i++) {
             this.mCarrierIds[i] = (CarrierIdentifier[]) source.createTypedArray(CarrierIdentifier.CREATOR);
         }

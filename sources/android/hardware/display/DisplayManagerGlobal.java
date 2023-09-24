@@ -2,7 +2,7 @@ package android.hardware.display;
 
 import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
-import android.content.pm.ParceledListSlice;
+import android.content.p002pm.ParceledListSlice;
 import android.content.res.Resources;
 import android.graphics.ColorSpace;
 import android.graphics.Point;
@@ -11,13 +11,14 @@ import android.hardware.display.IDisplayManager;
 import android.hardware.display.IDisplayManagerCallback;
 import android.hardware.display.IVirtualDisplayCallback;
 import android.hardware.display.VirtualDisplay;
+import android.media.projection.IMediaProjection;
 import android.media.projection.MediaProjection;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Looper;
-import android.os.Message;
-import android.os.RemoteException;
-import android.os.ServiceManager;
+import android.p007os.Handler;
+import android.p007os.IBinder;
+import android.p007os.Looper;
+import android.p007os.Message;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
@@ -30,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/* loaded from: classes.dex */
 public final class DisplayManagerGlobal {
     private static final boolean DEBUG = false;
     public static final int EVENT_DISPLAY_ADDED = 1;
@@ -41,13 +43,13 @@ public final class DisplayManagerGlobal {
     private static DisplayManagerGlobal sInstance;
     private DisplayManagerCallback mCallback;
     private int[] mDisplayIdCache;
-    private final SparseArray<DisplayInfo> mDisplayInfoCache = new SparseArray<>();
-    private final ArrayList<DisplayListenerDelegate> mDisplayListeners = new ArrayList<>();
     @UnsupportedAppUsage
     private final IDisplayManager mDm;
-    private final Object mLock = new Object();
     private final ColorSpace mWideColorSpace;
     private int mWifiDisplayScanNestCount;
+    private final Object mLock = new Object();
+    private final ArrayList<DisplayListenerDelegate> mDisplayListeners = new ArrayList<>();
+    private final SparseArray<DisplayInfo> mDisplayInfoCache = new SparseArray<>();
 
     private DisplayManagerGlobal(IDisplayManager dm) {
         this.mDm = dm;
@@ -131,30 +133,31 @@ public final class DisplayManagerGlobal {
     }
 
     public void registerDisplayListener(DisplayManager.DisplayListener listener, Handler handler) {
-        if (listener != null) {
-            synchronized (this.mLock) {
-                if (findDisplayListenerLocked(listener) < 0) {
-                    this.mDisplayListeners.add(new DisplayListenerDelegate(listener, getLooperForHandler(handler)));
-                    registerCallbackIfNeededLocked();
-                }
-            }
-            return;
+        if (listener == null) {
+            throw new IllegalArgumentException("listener must not be null");
         }
-        throw new IllegalArgumentException("listener must not be null");
+        synchronized (this.mLock) {
+            int index = findDisplayListenerLocked(listener);
+            if (index < 0) {
+                Looper looper = getLooperForHandler(handler);
+                this.mDisplayListeners.add(new DisplayListenerDelegate(listener, looper));
+                registerCallbackIfNeededLocked();
+            }
+        }
     }
 
     public void unregisterDisplayListener(DisplayManager.DisplayListener listener) {
-        if (listener != null) {
-            synchronized (this.mLock) {
-                int index = findDisplayListenerLocked(listener);
-                if (index >= 0) {
-                    this.mDisplayListeners.get(index).clearEvents();
-                    this.mDisplayListeners.remove(index);
-                }
-            }
-            return;
+        if (listener == null) {
+            throw new IllegalArgumentException("listener must not be null");
         }
-        throw new IllegalArgumentException("listener must not be null");
+        synchronized (this.mLock) {
+            int index = findDisplayListenerLocked(listener);
+            if (index >= 0) {
+                DisplayListenerDelegate d = this.mDisplayListeners.get(index);
+                d.clearEvents();
+                this.mDisplayListeners.remove(index);
+            }
+        }
     }
 
     private static Looper getLooperForHandler(Handler handler) {
@@ -162,10 +165,10 @@ public final class DisplayManagerGlobal {
         if (looper == null) {
             looper = Looper.getMainLooper();
         }
-        if (looper != null) {
-            return looper;
+        if (looper == null) {
+            throw new RuntimeException("Could not get Looper for the UI thread.");
         }
-        throw new RuntimeException("Could not get Looper for the UI thread.");
+        return looper;
     }
 
     private int findDisplayListenerLocked(DisplayManager.DisplayListener listener) {
@@ -189,7 +192,7 @@ public final class DisplayManagerGlobal {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void handleDisplayEvent(int displayId, int event) {
         synchronized (this.mLock) {
             int numListeners = this.mDisplayListeners.size();
@@ -232,14 +235,13 @@ public final class DisplayManagerGlobal {
     }
 
     public void connectWifiDisplay(String deviceAddress) {
-        if (deviceAddress != null) {
-            try {
-                this.mDm.connectWifiDisplay(deviceAddress);
-            } catch (RemoteException ex) {
-                throw ex.rethrowFromSystemServer();
-            }
-        } else {
+        if (deviceAddress == null) {
             throw new IllegalArgumentException("deviceAddress must not be null");
+        }
+        try {
+            this.mDm.connectWifiDisplay(deviceAddress);
+        } catch (RemoteException ex) {
+            throw ex.rethrowFromSystemServer();
         }
     }
 
@@ -269,26 +271,24 @@ public final class DisplayManagerGlobal {
     }
 
     public void renameWifiDisplay(String deviceAddress, String alias) {
-        if (deviceAddress != null) {
-            try {
-                this.mDm.renameWifiDisplay(deviceAddress, alias);
-            } catch (RemoteException ex) {
-                throw ex.rethrowFromSystemServer();
-            }
-        } else {
+        if (deviceAddress == null) {
             throw new IllegalArgumentException("deviceAddress must not be null");
+        }
+        try {
+            this.mDm.renameWifiDisplay(deviceAddress, alias);
+        } catch (RemoteException ex) {
+            throw ex.rethrowFromSystemServer();
         }
     }
 
     public void forgetWifiDisplay(String deviceAddress) {
-        if (deviceAddress != null) {
-            try {
-                this.mDm.forgetWifiDisplay(deviceAddress);
-            } catch (RemoteException ex) {
-                throw ex.rethrowFromSystemServer();
-            }
-        } else {
+        if (deviceAddress == null) {
             throw new IllegalArgumentException("deviceAddress must not be null");
+        }
+        try {
+            this.mDm.forgetWifiDisplay(deviceAddress);
+        } catch (RemoteException ex) {
+            throw ex.rethrowFromSystemServer();
         }
     }
 
@@ -310,45 +310,38 @@ public final class DisplayManagerGlobal {
     }
 
     public VirtualDisplay createVirtualDisplay(Context context, MediaProjection projection, String name, int width, int height, int densityDpi, Surface surface, int flags, VirtualDisplay.Callback callback, Handler handler, String uniqueId) {
-        String str = name;
         if (TextUtils.isEmpty(name)) {
-            Surface surface2 = surface;
             throw new IllegalArgumentException("name must be non-null and non-empty");
-        } else if (width <= 0 || height <= 0 || densityDpi <= 0) {
-            Surface surface3 = surface;
+        }
+        if (width <= 0 || height <= 0 || densityDpi <= 0) {
             throw new IllegalArgumentException("width, height, and densityDpi must be greater than 0");
-        } else {
-            VirtualDisplayCallback callbackWrapper = new VirtualDisplayCallback(callback, handler);
+        }
+        VirtualDisplayCallback callbackWrapper = new VirtualDisplayCallback(callback, handler);
+        IMediaProjection projectionToken = projection != null ? projection.getProjection() : null;
+        try {
             try {
-                VirtualDisplayCallback callbackWrapper2 = callbackWrapper;
-                try {
-                    int displayId = this.mDm.createVirtualDisplay(callbackWrapper, projection != null ? projection.getProjection() : null, context.getPackageName(), name, width, height, densityDpi, surface, flags, uniqueId);
-                    if (displayId < 0) {
-                        Log.e(TAG, "Could not create virtual display: " + str);
-                        return null;
-                    }
-                    Display display = getRealDisplay(displayId);
-                    if (display != null) {
-                        return new VirtualDisplay(this, display, callbackWrapper2, surface);
-                    }
-                    Log.wtf(TAG, "Could not obtain display info for newly created virtual display: " + str);
+                int displayId = this.mDm.createVirtualDisplay(callbackWrapper, projectionToken, context.getPackageName(), name, width, height, densityDpi, surface, flags, uniqueId);
+                if (displayId < 0) {
+                    Log.m70e(TAG, "Could not create virtual display: " + name);
+                    return null;
+                }
+                Display display = getRealDisplay(displayId);
+                if (display == null) {
+                    Log.wtf(TAG, "Could not obtain display info for newly created virtual display: " + name);
                     try {
-                        this.mDm.releaseVirtualDisplay(callbackWrapper2);
+                        this.mDm.releaseVirtualDisplay(callbackWrapper);
                         return null;
                     } catch (RemoteException ex) {
                         throw ex.rethrowFromSystemServer();
                     }
-                } catch (RemoteException e) {
-                    ex = e;
-                    Surface surface4 = surface;
-                    throw ex.rethrowFromSystemServer();
                 }
-            } catch (RemoteException e2) {
-                ex = e2;
-                Surface surface5 = surface;
-                VirtualDisplayCallback virtualDisplayCallback = callbackWrapper;
+                return new VirtualDisplay(this, display, callbackWrapper, surface);
+            } catch (RemoteException e) {
+                ex = e;
                 throw ex.rethrowFromSystemServer();
             }
+        } catch (RemoteException e2) {
+            ex = e2;
         }
     }
 
@@ -377,8 +370,7 @@ public final class DisplayManagerGlobal {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void setVirtualDisplayState(IVirtualDisplayCallback token, boolean isOn) {
+    void setVirtualDisplayState(IVirtualDisplayCallback token, boolean isOn) {
         try {
             this.mDm.setVirtualDisplayState(token, isOn);
         } catch (RemoteException ex) {
@@ -471,31 +463,36 @@ public final class DisplayManagerGlobal {
         }
     }
 
+    /* loaded from: classes.dex */
     private final class DisplayManagerCallback extends IDisplayManagerCallback.Stub {
         private DisplayManagerCallback() {
         }
 
+        @Override // android.hardware.display.IDisplayManagerCallback
         public void onDisplayEvent(int displayId, int event) {
             DisplayManagerGlobal.this.handleDisplayEvent(displayId, event);
         }
     }
 
+    /* loaded from: classes.dex */
     private static final class DisplayListenerDelegate extends Handler {
         public final DisplayManager.DisplayListener mListener;
 
         DisplayListenerDelegate(DisplayManager.DisplayListener listener, Looper looper) {
-            super(looper, (Handler.Callback) null, true);
+            super(looper, null, true);
             this.mListener = listener;
         }
 
         public void sendDisplayEvent(int displayId, int event) {
-            sendMessage(obtainMessage(event, displayId, 0));
+            Message msg = obtainMessage(event, displayId, 0);
+            sendMessage(msg);
         }
 
         public void clearEvents() {
-            removeCallbacksAndMessages((Object) null);
+            removeCallbacksAndMessages(null);
         }
 
+        @Override // android.p007os.Handler
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 1:
@@ -513,6 +510,7 @@ public final class DisplayManagerGlobal {
         }
     }
 
+    /* loaded from: classes.dex */
     private static final class VirtualDisplayCallback extends IVirtualDisplayCallback.Stub {
         private VirtualDisplayCallbackDelegate mDelegate;
 
@@ -522,18 +520,21 @@ public final class DisplayManagerGlobal {
             }
         }
 
+        @Override // android.hardware.display.IVirtualDisplayCallback
         public void onPaused() {
             if (this.mDelegate != null) {
                 this.mDelegate.sendEmptyMessage(0);
             }
         }
 
+        @Override // android.hardware.display.IVirtualDisplayCallback
         public void onResumed() {
             if (this.mDelegate != null) {
                 this.mDelegate.sendEmptyMessage(1);
             }
         }
 
+        @Override // android.hardware.display.IVirtualDisplayCallback
         public void onStopped() {
             if (this.mDelegate != null) {
                 this.mDelegate.sendEmptyMessage(2);
@@ -541,18 +542,19 @@ public final class DisplayManagerGlobal {
         }
     }
 
+    /* loaded from: classes.dex */
     private static final class VirtualDisplayCallbackDelegate extends Handler {
         public static final int MSG_DISPLAY_PAUSED = 0;
         public static final int MSG_DISPLAY_RESUMED = 1;
         public static final int MSG_DISPLAY_STOPPED = 2;
         private final VirtualDisplay.Callback mCallback;
 
-        /* JADX INFO: super call moved to the top of the method (can break code semantics) */
         public VirtualDisplayCallbackDelegate(VirtualDisplay.Callback callback, Handler handler) {
-            super(handler != null ? handler.getLooper() : Looper.myLooper(), (Handler.Callback) null, true);
+            super(handler != null ? handler.getLooper() : Looper.myLooper(), null, true);
             this.mCallback = callback;
         }
 
+        @Override // android.p007os.Handler
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 0:

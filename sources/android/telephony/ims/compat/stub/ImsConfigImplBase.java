@@ -3,7 +3,7 @@ package android.telephony.ims.compat.stub;
 import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
 import android.content.Intent;
-import android.os.RemoteException;
+import android.p007os.RemoteException;
 import android.util.Log;
 import com.android.ims.ImsConfig;
 import com.android.ims.ImsConfigListener;
@@ -12,6 +12,7 @@ import com.android.internal.annotations.VisibleForTesting;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 
+/* loaded from: classes4.dex */
 public class ImsConfigImplBase {
     private static final String TAG = "ImsConfigImplBase";
     ImsConfigStub mImsConfigStub;
@@ -67,6 +68,7 @@ public class ImsConfigImplBase {
     }
 
     @VisibleForTesting
+    /* loaded from: classes4.dex */
     public static class ImsConfigStub extends IImsConfig.Stub {
         Context mContext;
         WeakReference<ImsConfigImplBase> mImsConfigImplBaseWeakReference;
@@ -79,78 +81,31 @@ public class ImsConfigImplBase {
             this.mImsConfigImplBaseWeakReference = new WeakReference<>(imsConfigImplBase);
         }
 
-        /* JADX WARNING: Code restructure failed: missing block: B:12:0x002f, code lost:
-            return r0;
-         */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public synchronized int getProvisionedValue(int r3) throws android.os.RemoteException {
-            /*
-                r2 = this;
-                monitor-enter(r2)
-                java.util.HashMap<java.lang.Integer, java.lang.Integer> r0 = r2.mProvisionedIntValue     // Catch:{ all -> 0x0030 }
-                java.lang.Integer r1 = java.lang.Integer.valueOf(r3)     // Catch:{ all -> 0x0030 }
-                boolean r0 = r0.containsKey(r1)     // Catch:{ all -> 0x0030 }
-                if (r0 == 0) goto L_0x001f
-                java.util.HashMap<java.lang.Integer, java.lang.Integer> r0 = r2.mProvisionedIntValue     // Catch:{ all -> 0x0030 }
-                java.lang.Integer r1 = java.lang.Integer.valueOf(r3)     // Catch:{ all -> 0x0030 }
-                java.lang.Object r0 = r0.get(r1)     // Catch:{ all -> 0x0030 }
-                java.lang.Integer r0 = (java.lang.Integer) r0     // Catch:{ all -> 0x0030 }
-                int r0 = r0.intValue()     // Catch:{ all -> 0x0030 }
-                monitor-exit(r2)
-                return r0
-            L_0x001f:
-                android.telephony.ims.compat.stub.ImsConfigImplBase r0 = r2.getImsConfigImpl()     // Catch:{ all -> 0x0030 }
-                int r0 = r0.getProvisionedValue(r3)     // Catch:{ all -> 0x0030 }
-                r1 = -1
-                if (r0 == r1) goto L_0x002e
-                r1 = 0
-                r2.updateCachedValue((int) r3, (int) r0, (boolean) r1)     // Catch:{ all -> 0x0030 }
-            L_0x002e:
-                monitor-exit(r2)
-                return r0
-            L_0x0030:
-                r3 = move-exception
-                monitor-exit(r2)
-                throw r3
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.telephony.ims.compat.stub.ImsConfigImplBase.ImsConfigStub.getProvisionedValue(int):int");
+        @Override // com.android.ims.internal.IImsConfig
+        public synchronized int getProvisionedValue(int item) throws RemoteException {
+            if (this.mProvisionedIntValue.containsKey(Integer.valueOf(item))) {
+                return this.mProvisionedIntValue.get(Integer.valueOf(item)).intValue();
+            }
+            int retVal = getImsConfigImpl().getProvisionedValue(item);
+            if (retVal != -1) {
+                updateCachedValue(item, retVal, false);
+            }
+            return retVal;
         }
 
-        /* JADX WARNING: Code restructure failed: missing block: B:12:0x002a, code lost:
-            return r0;
-         */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public synchronized java.lang.String getProvisionedStringValue(int r3) throws android.os.RemoteException {
-            /*
-                r2 = this;
-                monitor-enter(r2)
-                java.util.HashMap<java.lang.Integer, java.lang.Integer> r0 = r2.mProvisionedIntValue     // Catch:{ all -> 0x002b }
-                java.lang.Integer r1 = java.lang.Integer.valueOf(r3)     // Catch:{ all -> 0x002b }
-                boolean r0 = r0.containsKey(r1)     // Catch:{ all -> 0x002b }
-                if (r0 == 0) goto L_0x001b
-                java.util.HashMap<java.lang.Integer, java.lang.String> r0 = r2.mProvisionedStringValue     // Catch:{ all -> 0x002b }
-                java.lang.Integer r1 = java.lang.Integer.valueOf(r3)     // Catch:{ all -> 0x002b }
-                java.lang.Object r0 = r0.get(r1)     // Catch:{ all -> 0x002b }
-                java.lang.String r0 = (java.lang.String) r0     // Catch:{ all -> 0x002b }
-                monitor-exit(r2)
-                return r0
-            L_0x001b:
-                android.telephony.ims.compat.stub.ImsConfigImplBase r0 = r2.getImsConfigImpl()     // Catch:{ all -> 0x002b }
-                java.lang.String r0 = r0.getProvisionedStringValue(r3)     // Catch:{ all -> 0x002b }
-                if (r0 == 0) goto L_0x0029
-                r1 = 0
-                r2.updateCachedValue((int) r3, (java.lang.String) r0, (boolean) r1)     // Catch:{ all -> 0x002b }
-            L_0x0029:
-                monitor-exit(r2)
-                return r0
-            L_0x002b:
-                r3 = move-exception
-                monitor-exit(r2)
-                throw r3
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.telephony.ims.compat.stub.ImsConfigImplBase.ImsConfigStub.getProvisionedStringValue(int):java.lang.String");
+        @Override // com.android.ims.internal.IImsConfig
+        public synchronized String getProvisionedStringValue(int item) throws RemoteException {
+            if (this.mProvisionedIntValue.containsKey(Integer.valueOf(item))) {
+                return this.mProvisionedStringValue.get(Integer.valueOf(item));
+            }
+            String retVal = getImsConfigImpl().getProvisionedStringValue(item);
+            if (retVal != null) {
+                updateCachedValue(item, retVal, false);
+            }
+            return retVal;
         }
 
+        @Override // com.android.ims.internal.IImsConfig
         public synchronized int setProvisionedValue(int item, int value) throws RemoteException {
             int retVal;
             this.mProvisionedIntValue.remove(Integer.valueOf(item));
@@ -158,11 +113,12 @@ public class ImsConfigImplBase {
             if (retVal == 0) {
                 updateCachedValue(item, value, true);
             } else {
-                Log.d(ImsConfigImplBase.TAG, "Set provision value of " + item + " to " + value + " failed with error code " + retVal);
+                Log.m72d(ImsConfigImplBase.TAG, "Set provision value of " + item + " to " + value + " failed with error code " + retVal);
             }
             return retVal;
         }
 
+        @Override // com.android.ims.internal.IImsConfig
         public synchronized int setProvisionedStringValue(int item, String value) throws RemoteException {
             int retVal;
             this.mProvisionedStringValue.remove(Integer.valueOf(item));
@@ -173,32 +129,37 @@ public class ImsConfigImplBase {
             return retVal;
         }
 
+        @Override // com.android.ims.internal.IImsConfig
         public void getFeatureValue(int feature, int network, ImsConfigListener listener) throws RemoteException {
             getImsConfigImpl().getFeatureValue(feature, network, listener);
         }
 
+        @Override // com.android.ims.internal.IImsConfig
         public void setFeatureValue(int feature, int network, int value, ImsConfigListener listener) throws RemoteException {
             getImsConfigImpl().setFeatureValue(feature, network, value, listener);
         }
 
+        @Override // com.android.ims.internal.IImsConfig
         public boolean getVolteProvisioned() throws RemoteException {
             return getImsConfigImpl().getVolteProvisioned();
         }
 
+        @Override // com.android.ims.internal.IImsConfig
         public void getVideoQuality(ImsConfigListener listener) throws RemoteException {
             getImsConfigImpl().getVideoQuality(listener);
         }
 
+        @Override // com.android.ims.internal.IImsConfig
         public void setVideoQuality(int quality, ImsConfigListener listener) throws RemoteException {
             getImsConfigImpl().setVideoQuality(quality, listener);
         }
 
         private ImsConfigImplBase getImsConfigImpl() throws RemoteException {
-            ImsConfigImplBase ref = (ImsConfigImplBase) this.mImsConfigImplBaseWeakReference.get();
-            if (ref != null) {
-                return ref;
+            ImsConfigImplBase ref = this.mImsConfigImplBaseWeakReference.get();
+            if (ref == null) {
+                throw new RemoteException("Fail to get ImsConfigImpl");
             }
-            throw new RemoteException("Fail to get ImsConfigImpl");
+            return ref;
         }
 
         private void sendImsConfigChangedIntent(int item, int value) {
@@ -214,16 +175,14 @@ public class ImsConfigImplBase {
             }
         }
 
-        /* access modifiers changed from: protected */
-        public synchronized void updateCachedValue(int item, int value, boolean notifyChange) {
+        protected synchronized void updateCachedValue(int item, int value, boolean notifyChange) {
             this.mProvisionedIntValue.put(Integer.valueOf(item), Integer.valueOf(value));
             if (notifyChange) {
                 sendImsConfigChangedIntent(item, value);
             }
         }
 
-        /* access modifiers changed from: protected */
-        public synchronized void updateCachedValue(int item, String value, boolean notifyChange) {
+        protected synchronized void updateCachedValue(int item, String value, boolean notifyChange) {
             this.mProvisionedStringValue.put(Integer.valueOf(item), value);
             if (notifyChange) {
                 sendImsConfigChangedIntent(item, value);

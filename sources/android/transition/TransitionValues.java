@@ -6,24 +6,25 @@ import com.ibm.icu.text.PluralRules;
 import java.util.ArrayList;
 import java.util.Map;
 
+/* loaded from: classes4.dex */
 public class TransitionValues {
-    final ArrayList<Transition> targetedTransitions = new ArrayList<>();
-    public final Map<String, Object> values = new ArrayMap();
     public View view;
+    public final Map<String, Object> values = new ArrayMap();
+    final ArrayList<Transition> targetedTransitions = new ArrayList<>();
 
     @Deprecated
     public TransitionValues() {
     }
 
-    public TransitionValues(View view2) {
-        this.view = view2;
+    public TransitionValues(View view) {
+        this.view = view;
     }
 
     public boolean equals(Object other) {
-        if (!(other instanceof TransitionValues) || this.view != ((TransitionValues) other).view || !this.values.equals(((TransitionValues) other).values)) {
-            return false;
+        if ((other instanceof TransitionValues) && this.view == ((TransitionValues) other).view && this.values.equals(((TransitionValues) other).values)) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     public int hashCode() {
@@ -31,10 +32,11 @@ public class TransitionValues {
     }
 
     public String toString() {
-        String returnValue = (("TransitionValues@" + Integer.toHexString(hashCode()) + ":\n") + "    view = " + this.view + "\n") + "    values:";
+        String returnValue = "TransitionValues@" + Integer.toHexString(hashCode()) + ":\n";
+        String returnValue2 = (returnValue + "    view = " + this.view + "\n") + "    values:";
         for (String s : this.values.keySet()) {
-            returnValue = returnValue + "    " + s + PluralRules.KEYWORD_RULE_SEPARATOR + this.values.get(s) + "\n";
+            returnValue2 = returnValue2 + "    " + s + PluralRules.KEYWORD_RULE_SEPARATOR + this.values.get(s) + "\n";
         }
-        return returnValue;
+        return returnValue2;
     }
 }

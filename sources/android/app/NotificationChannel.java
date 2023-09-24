@@ -6,8 +6,8 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.media.AudioAttributes;
 import android.net.Uri;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.provider.Settings;
 import android.service.notification.NotificationListenerService;
 import android.text.TextUtils;
@@ -23,6 +23,7 @@ import org.json.JSONObject;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlSerializer;
 
+/* loaded from: classes.dex */
 public final class NotificationChannel implements Parcelable {
     private static final String ATT_ALLOW_BUBBLE = "can_bubble";
     private static final String ATT_BLOCKABLE_SYSTEM = "blockable_system";
@@ -45,15 +46,6 @@ public final class NotificationChannel implements Parcelable {
     private static final String ATT_VIBRATION = "vibration";
     private static final String ATT_VIBRATION_ENABLED = "vibration_enabled";
     private static final String ATT_VISIBILITY = "visibility";
-    public static final Parcelable.Creator<NotificationChannel> CREATOR = new Parcelable.Creator<NotificationChannel>() {
-        public NotificationChannel createFromParcel(Parcel in) {
-            return new NotificationChannel(in);
-        }
-
-        public NotificationChannel[] newArray(int size) {
-            return new NotificationChannel[size];
-        }
-    };
     private static final boolean DEFAULT_ALLOW_BUBBLE = true;
     public static final String DEFAULT_CHANNEL_ID = "miscellaneous";
     private static final boolean DEFAULT_DELETED = false;
@@ -62,7 +54,6 @@ public final class NotificationChannel implements Parcelable {
     private static final boolean DEFAULT_SHOW_BADGE = true;
     private static final int DEFAULT_VISIBILITY = -1000;
     private static final String DELIMITER = ",";
-    public static final int[] LOCKABLE_FIELDS = {1, 2, 4, 8, 16, 32, 128, 256};
     private static final int MAX_TEXT_LENGTH = 1000;
     private static final String TAG_CHANNEL = "channel";
     public static final int USER_LOCKED_ALLOW_BUBBLE = 256;
@@ -95,6 +86,20 @@ public final class NotificationChannel implements Parcelable {
     private int mUserLockedFields;
     private long[] mVibration;
     private boolean mVibrationEnabled;
+    public static final int[] LOCKABLE_FIELDS = {1, 2, 4, 8, 16, 32, 128, 256};
+    public static final Parcelable.Creator<NotificationChannel> CREATOR = new Parcelable.Creator<NotificationChannel>() { // from class: android.app.NotificationChannel.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public NotificationChannel createFromParcel(Parcel in) {
+            return new NotificationChannel(in);
+        }
+
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public NotificationChannel[] newArray(int size) {
+            return new NotificationChannel[size];
+        }
+    };
 
     public NotificationChannel(String id, CharSequence name, int importance) {
         this.mImportance = -1000;
@@ -112,17 +117,20 @@ public final class NotificationChannel implements Parcelable {
     }
 
     protected NotificationChannel(Parcel in) {
+        boolean z;
+        boolean z2;
+        boolean z3;
+        boolean z4;
+        boolean z5;
         this.mImportance = -1000;
         this.mLockscreenVisibility = -1000;
         this.mSound = Settings.System.DEFAULT_NOTIFICATION_URI;
-        boolean z = false;
         this.mLightColor = 0;
         this.mShowBadge = true;
         this.mDeleted = false;
         this.mAudioAttributes = Notification.AUDIO_ATTRIBUTES_DEFAULT;
         this.mBlockableSystem = false;
         this.mAllowBubbles = true;
-        AudioAttributes audioAttributes = null;
         if (in.readByte() != 0) {
             this.mId = in.readString();
         } else {
@@ -139,32 +147,58 @@ public final class NotificationChannel implements Parcelable {
             this.mDesc = null;
         }
         this.mImportance = in.readInt();
-        this.mBypassDnd = in.readByte() != 0;
+        if (in.readByte() == 0) {
+            z = false;
+        } else {
+            z = true;
+        }
+        this.mBypassDnd = z;
         this.mLockscreenVisibility = in.readInt();
         if (in.readByte() != 0) {
             this.mSound = Uri.CREATOR.createFromParcel(in);
         } else {
             this.mSound = null;
         }
-        this.mLights = in.readByte() != 0;
+        if (in.readByte() == 0) {
+            z2 = false;
+        } else {
+            z2 = true;
+        }
+        this.mLights = z2;
         this.mVibration = in.createLongArray();
         this.mUserLockedFields = in.readInt();
-        this.mFgServiceShown = in.readByte() != 0;
-        this.mVibrationEnabled = in.readByte() != 0;
-        this.mShowBadge = in.readByte() != 0;
-        this.mDeleted = in.readByte() != 0 ? true : z;
+        if (in.readByte() == 0) {
+            z3 = false;
+        } else {
+            z3 = true;
+        }
+        this.mFgServiceShown = z3;
+        if (in.readByte() == 0) {
+            z4 = false;
+        } else {
+            z4 = true;
+        }
+        this.mVibrationEnabled = z4;
+        if (in.readByte() == 0) {
+            z5 = false;
+        } else {
+            z5 = true;
+        }
+        this.mShowBadge = z5;
+        this.mDeleted = in.readByte() != 0;
         if (in.readByte() != 0) {
             this.mGroup = in.readString();
         } else {
             this.mGroup = null;
         }
-        this.mAudioAttributes = in.readInt() > 0 ? AudioAttributes.CREATOR.createFromParcel(in) : audioAttributes;
+        this.mAudioAttributes = in.readInt() > 0 ? AudioAttributes.CREATOR.createFromParcel(in) : null;
         this.mLightColor = in.readInt();
         this.mBlockableSystem = in.readBoolean();
         this.mAllowBubbles = in.readBoolean();
         this.mImportanceLockedByOEM = in.readBoolean();
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         if (this.mId != null) {
             dest.writeByte((byte) 1);
@@ -185,7 +219,7 @@ public final class NotificationChannel implements Parcelable {
             dest.writeByte((byte) 0);
         }
         dest.writeInt(this.mImportance);
-        dest.writeByte(this.mBypassDnd ? (byte) 1 : 0);
+        dest.writeByte(this.mBypassDnd ? (byte) 1 : (byte) 0);
         dest.writeInt(this.mLockscreenVisibility);
         if (this.mSound != null) {
             dest.writeByte((byte) 1);
@@ -193,13 +227,13 @@ public final class NotificationChannel implements Parcelable {
         } else {
             dest.writeByte((byte) 0);
         }
-        dest.writeByte(this.mLights ? (byte) 1 : 0);
+        dest.writeByte(this.mLights ? (byte) 1 : (byte) 0);
         dest.writeLongArray(this.mVibration);
         dest.writeInt(this.mUserLockedFields);
-        dest.writeByte(this.mFgServiceShown ? (byte) 1 : 0);
-        dest.writeByte(this.mVibrationEnabled ? (byte) 1 : 0);
-        dest.writeByte(this.mShowBadge ? (byte) 1 : 0);
-        dest.writeByte(this.mDeleted ? (byte) 1 : 0);
+        dest.writeByte(this.mFgServiceShown ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.mVibrationEnabled ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.mShowBadge ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.mDeleted ? (byte) 1 : (byte) 0);
         if (this.mGroup != null) {
             dest.writeByte((byte) 1);
             dest.writeString(this.mGroup);
@@ -248,10 +282,10 @@ public final class NotificationChannel implements Parcelable {
     }
 
     private String getTrimmedString(String input) {
-        if (input == null || input.length() <= 1000) {
-            return input;
+        if (input != null && input.length() > 1000) {
+            return input.substring(0, 1000);
         }
-        return input.substring(0, 1000);
+        return input;
     }
 
     public void setGroup(String groupId) {
@@ -404,23 +438,23 @@ public final class NotificationChannel implements Parcelable {
 
     @SystemApi
     public void populateFromXml(XmlPullParser parser) {
-        populateFromXml(parser, false, (Context) null);
+        populateFromXml(parser, false, null);
     }
 
     private void populateFromXml(XmlPullParser parser, boolean forRestore, Context context) {
-        Preconditions.checkArgument(!forRestore || context != null, "forRestore is true but got null context");
-        setDescription(parser.getAttributeValue((String) null, ATT_DESC));
+        Preconditions.checkArgument((forRestore && context == null) ? false : true, "forRestore is true but got null context");
+        setDescription(parser.getAttributeValue(null, ATT_DESC));
         setBypassDnd(safeInt(parser, "priority", 0) != 0);
         setLockscreenVisibility(safeInt(parser, "visibility", -1000));
         Uri sound = safeUri(parser, ATT_SOUND);
         setSound(forRestore ? restoreSoundUri(context, sound) : sound, safeAudioAttributes(parser));
         enableLights(safeBool(parser, ATT_LIGHTS, false));
         setLightColor(safeInt(parser, ATT_LIGHT_COLOR, 0));
-        setVibrationPattern(safeLongArray(parser, ATT_VIBRATION, (long[]) null));
+        setVibrationPattern(safeLongArray(parser, ATT_VIBRATION, null));
         enableVibration(safeBool(parser, ATT_VIBRATION_ENABLED, false));
         setShowBadge(safeBool(parser, ATT_SHOW_BADGE, false));
         setDeleted(safeBool(parser, "deleted", false));
-        setGroup(parser.getAttributeValue((String) null, "group"));
+        setGroup(parser.getAttributeValue(null, "group"));
         lockFields(safeInt(parser, "locked", 0));
         setFgServiceShown(safeBool(parser, ATT_FG_SERVICE_SHOWN, false));
         setBlockableSystem(safeBool(parser, ATT_BLOCKABLE_SYSTEM, false));
@@ -441,7 +475,7 @@ public final class NotificationChannel implements Parcelable {
 
     @SystemApi
     public void writeXml(XmlSerializer out) throws IOException {
-        writeXml(out, false, (Context) null);
+        writeXml(out, false, null);
     }
 
     public void writeXmlForBackup(XmlSerializer out, Context context) throws IOException {
@@ -461,67 +495,67 @@ public final class NotificationChannel implements Parcelable {
     }
 
     private void writeXml(XmlSerializer out, boolean forBackup, Context context) throws IOException {
-        Preconditions.checkArgument(!forBackup || context != null, "forBackup is true but got null context");
-        out.startTag((String) null, "channel");
-        out.attribute((String) null, "id", getId());
+        Preconditions.checkArgument((forBackup && context == null) ? false : true, "forBackup is true but got null context");
+        out.startTag(null, "channel");
+        out.attribute(null, "id", getId());
         if (getName() != null) {
-            out.attribute((String) null, "name", getName().toString());
+            out.attribute(null, "name", getName().toString());
         }
         if (getDescription() != null) {
-            out.attribute((String) null, ATT_DESC, getDescription());
+            out.attribute(null, ATT_DESC, getDescription());
         }
         if (getImportance() != -1000) {
-            out.attribute((String) null, ATT_IMPORTANCE, Integer.toString(getImportance()));
+            out.attribute(null, ATT_IMPORTANCE, Integer.toString(getImportance()));
         }
         if (canBypassDnd()) {
-            out.attribute((String) null, "priority", Integer.toString(2));
+            out.attribute(null, "priority", Integer.toString(2));
         }
         if (getLockscreenVisibility() != -1000) {
-            out.attribute((String) null, "visibility", Integer.toString(getLockscreenVisibility()));
+            out.attribute(null, "visibility", Integer.toString(getLockscreenVisibility()));
         }
         Uri sound = forBackup ? getSoundForBackup(context) : getSound();
         if (sound != null) {
-            out.attribute((String) null, ATT_SOUND, sound.toString());
+            out.attribute(null, ATT_SOUND, sound.toString());
         }
         if (getAudioAttributes() != null) {
-            out.attribute((String) null, ATT_USAGE, Integer.toString(getAudioAttributes().getUsage()));
-            out.attribute((String) null, "content_type", Integer.toString(getAudioAttributes().getContentType()));
-            out.attribute((String) null, "flags", Integer.toString(getAudioAttributes().getFlags()));
+            out.attribute(null, ATT_USAGE, Integer.toString(getAudioAttributes().getUsage()));
+            out.attribute(null, "content_type", Integer.toString(getAudioAttributes().getContentType()));
+            out.attribute(null, "flags", Integer.toString(getAudioAttributes().getFlags()));
         }
         if (shouldShowLights()) {
-            out.attribute((String) null, ATT_LIGHTS, Boolean.toString(shouldShowLights()));
+            out.attribute(null, ATT_LIGHTS, Boolean.toString(shouldShowLights()));
         }
         if (getLightColor() != 0) {
-            out.attribute((String) null, ATT_LIGHT_COLOR, Integer.toString(getLightColor()));
+            out.attribute(null, ATT_LIGHT_COLOR, Integer.toString(getLightColor()));
         }
         if (shouldVibrate()) {
-            out.attribute((String) null, ATT_VIBRATION_ENABLED, Boolean.toString(shouldVibrate()));
+            out.attribute(null, ATT_VIBRATION_ENABLED, Boolean.toString(shouldVibrate()));
         }
         if (getVibrationPattern() != null) {
-            out.attribute((String) null, ATT_VIBRATION, longArrayToString(getVibrationPattern()));
+            out.attribute(null, ATT_VIBRATION, longArrayToString(getVibrationPattern()));
         }
         if (getUserLockedFields() != 0) {
-            out.attribute((String) null, "locked", Integer.toString(getUserLockedFields()));
+            out.attribute(null, "locked", Integer.toString(getUserLockedFields()));
         }
         if (isFgServiceShown()) {
-            out.attribute((String) null, ATT_FG_SERVICE_SHOWN, Boolean.toString(isFgServiceShown()));
+            out.attribute(null, ATT_FG_SERVICE_SHOWN, Boolean.toString(isFgServiceShown()));
         }
         if (canShowBadge()) {
-            out.attribute((String) null, ATT_SHOW_BADGE, Boolean.toString(canShowBadge()));
+            out.attribute(null, ATT_SHOW_BADGE, Boolean.toString(canShowBadge()));
         }
         if (isDeleted()) {
-            out.attribute((String) null, "deleted", Boolean.toString(isDeleted()));
+            out.attribute(null, "deleted", Boolean.toString(isDeleted()));
         }
         if (getGroup() != null) {
-            out.attribute((String) null, "group", getGroup());
+            out.attribute(null, "group", getGroup());
         }
         if (isBlockableSystem()) {
-            out.attribute((String) null, ATT_BLOCKABLE_SYSTEM, Boolean.toString(isBlockableSystem()));
+            out.attribute(null, ATT_BLOCKABLE_SYSTEM, Boolean.toString(isBlockableSystem()));
         }
         if (!canBubble()) {
-            out.attribute((String) null, ATT_ALLOW_BUBBLE, Boolean.toString(canBubble()));
+            out.attribute(null, ATT_ALLOW_BUBBLE, Boolean.toString(canBubble()));
         }
-        out.endTag((String) null, "channel");
+        out.endTag(null, "channel");
     }
 
     @SystemApi
@@ -564,11 +598,12 @@ public final class NotificationChannel implements Parcelable {
     private static AudioAttributes safeAudioAttributes(XmlPullParser parser) {
         int usage = safeInt(parser, ATT_USAGE, 5);
         int contentType = safeInt(parser, "content_type", 4);
-        return new AudioAttributes.Builder().setUsage(usage).setContentType(contentType).setFlags(safeInt(parser, "flags", 0)).build();
+        int flags = safeInt(parser, "flags", 0);
+        return new AudioAttributes.Builder().setUsage(usage).setContentType(contentType).setFlags(flags).build();
     }
 
     private static Uri safeUri(XmlPullParser parser, String att) {
-        String val = parser.getAttributeValue((String) null, att);
+        String val = parser.getAttributeValue(null, att);
         if (val == null) {
             return null;
         }
@@ -576,7 +611,8 @@ public final class NotificationChannel implements Parcelable {
     }
 
     private static int safeInt(XmlPullParser parser, String att, int defValue) {
-        return tryParseInt(parser.getAttributeValue((String) null, att), defValue);
+        String val = parser.getAttributeValue(null, att);
+        return tryParseInt(val, defValue);
     }
 
     private static int tryParseInt(String value, int defValue) {
@@ -591,15 +627,12 @@ public final class NotificationChannel implements Parcelable {
     }
 
     private static boolean safeBool(XmlPullParser parser, String att, boolean defValue) {
-        String value = parser.getAttributeValue((String) null, att);
-        if (TextUtils.isEmpty(value)) {
-            return defValue;
-        }
-        return Boolean.parseBoolean(value);
+        String value = parser.getAttributeValue(null, att);
+        return TextUtils.isEmpty(value) ? defValue : Boolean.parseBoolean(value);
     }
 
     private static long[] safeLongArray(XmlPullParser parser, String att, long[] defValue) {
-        String attributeValue = parser.getAttributeValue((String) null, att);
+        String attributeValue = parser.getAttributeValue(null, att);
         if (TextUtils.isEmpty(attributeValue)) {
             return defValue;
         }
@@ -622,11 +655,13 @@ public final class NotificationChannel implements Parcelable {
                 sb.append(values[i]);
                 sb.append(",");
             }
-            sb.append(values[values.length - 1]);
+            int i2 = values.length;
+            sb.append(values[i2 - 1]);
         }
         return sb.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -646,7 +681,8 @@ public final class NotificationChannel implements Parcelable {
     }
 
     public int hashCode() {
-        return (Objects.hash(new Object[]{getId(), getName(), this.mDesc, Integer.valueOf(getImportance()), Boolean.valueOf(this.mBypassDnd), Integer.valueOf(getLockscreenVisibility()), getSound(), Boolean.valueOf(this.mLights), Integer.valueOf(getLightColor()), Integer.valueOf(getUserLockedFields()), Boolean.valueOf(isFgServiceShown()), Boolean.valueOf(this.mVibrationEnabled), Boolean.valueOf(this.mShowBadge), Boolean.valueOf(isDeleted()), getGroup(), getAudioAttributes(), Boolean.valueOf(isBlockableSystem()), Boolean.valueOf(this.mAllowBubbles), Boolean.valueOf(this.mImportanceLockedByOEM), Boolean.valueOf(this.mImportanceLockedDefaultApp)}) * 31) + Arrays.hashCode(this.mVibration);
+        int result = Objects.hash(getId(), getName(), this.mDesc, Integer.valueOf(getImportance()), Boolean.valueOf(this.mBypassDnd), Integer.valueOf(getLockscreenVisibility()), getSound(), Boolean.valueOf(this.mLights), Integer.valueOf(getLightColor()), Integer.valueOf(getUserLockedFields()), Boolean.valueOf(isFgServiceShown()), Boolean.valueOf(this.mVibrationEnabled), Boolean.valueOf(this.mShowBadge), Boolean.valueOf(isDeleted()), getGroup(), getAudioAttributes(), Boolean.valueOf(isBlockableSystem()), Boolean.valueOf(this.mAllowBubbles), Boolean.valueOf(this.mImportanceLockedByOEM), Boolean.valueOf(this.mImportanceLockedDefaultApp));
+        return (result * 31) + Arrays.hashCode(this.mVibration);
     }
 
     public void dump(PrintWriter pw, String prefix, boolean redacted) {
@@ -752,6 +788,7 @@ public final class NotificationChannel implements Parcelable {
     }
 
     public void writeToProto(ProtoOutputStream proto, long fieldId) {
+        long[] jArr;
         long token = proto.start(fieldId);
         proto.write(1138166333441L, this.mId);
         proto.write(1138166333442L, this.mName);
@@ -766,7 +803,7 @@ public final class NotificationChannel implements Parcelable {
         proto.write(1120986464265L, this.mLightColor);
         if (this.mVibration != null) {
             for (long v : this.mVibration) {
-                proto.write((long) NotificationChannelProto.VIBRATION, v);
+                proto.write(NotificationChannelProto.VIBRATION, v);
             }
         }
         proto.write(1120986464267L, this.mUserLockedFields);

@@ -2,12 +2,13 @@ package android.view;
 
 import android.annotation.UnsupportedAppUsage;
 import android.app.ActivityManager;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes4.dex */
 public interface IRecentsAnimationController extends IInterface {
     void cleanupScreenshot() throws RemoteException;
 
@@ -29,37 +30,48 @@ public interface IRecentsAnimationController extends IInterface {
 
     void setSplitScreenMinimized(boolean z) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IRecentsAnimationController {
+        @Override // android.view.IRecentsAnimationController
         public ActivityManager.TaskSnapshot screenshotTask(int taskId) throws RemoteException {
             return null;
         }
 
+        @Override // android.view.IRecentsAnimationController
         public void finish(boolean moveHomeToTop, boolean sendUserLeaveHint) throws RemoteException {
         }
 
+        @Override // android.view.IRecentsAnimationController
         public void setInputConsumerEnabled(boolean enabled) throws RemoteException {
         }
 
+        @Override // android.view.IRecentsAnimationController
         public void setAnimationTargetsBehindSystemBars(boolean behindSystemBars) throws RemoteException {
         }
 
+        @Override // android.view.IRecentsAnimationController
         public void setSplitScreenMinimized(boolean minimized) throws RemoteException {
         }
 
+        @Override // android.view.IRecentsAnimationController
         public void hideCurrentInputMethod() throws RemoteException {
         }
 
+        @Override // android.view.IRecentsAnimationController
         public void setCancelWithDeferredScreenshot(boolean screenshot) throws RemoteException {
         }
 
+        @Override // android.view.IRecentsAnimationController
         public void cleanupScreenshot() throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IRecentsAnimationController {
         private static final String DESCRIPTOR = "android.view.IRecentsAnimationController";
         static final int TRANSACTION_cleanupScreenshot = 8;
@@ -80,12 +92,13 @@ public interface IRecentsAnimationController extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IRecentsAnimationController)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IRecentsAnimationController)) {
+                return (IRecentsAnimationController) iin;
             }
-            return (IRecentsAnimationController) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -113,85 +126,77 @@ public interface IRecentsAnimationController extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                boolean _arg0 = false;
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        ActivityManager.TaskSnapshot _result = screenshotTask(data.readInt());
-                        reply.writeNoException();
-                        if (_result != null) {
-                            reply.writeInt(1);
-                            _result.writeToParcel(reply, 1);
-                        } else {
-                            reply.writeInt(0);
-                        }
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        boolean _arg02 = data.readInt() != 0;
-                        if (data.readInt() != 0) {
-                            _arg0 = true;
-                        }
-                        finish(_arg02, _arg0);
-                        reply.writeNoException();
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = true;
-                        }
-                        setInputConsumerEnabled(_arg0);
-                        reply.writeNoException();
-                        return true;
-                    case 4:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = true;
-                        }
-                        setAnimationTargetsBehindSystemBars(_arg0);
-                        reply.writeNoException();
-                        return true;
-                    case 5:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = true;
-                        }
-                        setSplitScreenMinimized(_arg0);
-                        reply.writeNoException();
-                        return true;
-                    case 6:
-                        data.enforceInterface(DESCRIPTOR);
-                        hideCurrentInputMethod();
-                        reply.writeNoException();
-                        return true;
-                    case 7:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = true;
-                        }
-                        setCancelWithDeferredScreenshot(_arg0);
-                        reply.writeNoException();
-                        return true;
-                    case 8:
-                        data.enforceInterface(DESCRIPTOR);
-                        cleanupScreenshot();
-                        reply.writeNoException();
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            boolean _arg0;
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    ActivityManager.TaskSnapshot _result = screenshotTask(data.readInt());
+                    reply.writeNoException();
+                    if (_result != null) {
+                        reply.writeInt(1);
+                        _result.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean _arg02 = data.readInt() != 0;
+                    _arg0 = data.readInt() != 0;
+                    finish(_arg02, _arg0);
+                    reply.writeNoException();
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0;
+                    setInputConsumerEnabled(_arg0);
+                    reply.writeNoException();
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0;
+                    setAnimationTargetsBehindSystemBars(_arg0);
+                    reply.writeNoException();
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0;
+                    setSplitScreenMinimized(_arg0);
+                    reply.writeNoException();
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    hideCurrentInputMethod();
+                    reply.writeNoException();
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0;
+                    setCancelWithDeferredScreenshot(_arg0);
+                    reply.writeNoException();
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    cleanupScreenshot();
+                    reply.writeNoException();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IRecentsAnimationController {
             public static IRecentsAnimationController sDefaultImpl;
             private IBinder mRemote;
@@ -200,6 +205,7 @@ public interface IRecentsAnimationController extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -208,6 +214,7 @@ public interface IRecentsAnimationController extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.view.IRecentsAnimationController
             public ActivityManager.TaskSnapshot screenshotTask(int taskId) throws RemoteException {
                 ActivityManager.TaskSnapshot _result;
                 Parcel _data = Parcel.obtain();
@@ -215,7 +222,8 @@ public interface IRecentsAnimationController extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(taskId);
-                    if (!this.mRemote.transact(1, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().screenshotTask(taskId);
                     }
                     _reply.readException();
@@ -224,142 +232,139 @@ public interface IRecentsAnimationController extends IInterface {
                     } else {
                         _result = null;
                     }
-                    ActivityManager.TaskSnapshot _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.view.IRecentsAnimationController
             public void finish(boolean moveHomeToTop, boolean sendUserLeaveHint) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(moveHomeToTop);
-                    _data.writeInt(sendUserLeaveHint);
-                    if (this.mRemote.transact(2, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(moveHomeToTop ? 1 : 0);
+                    _data.writeInt(sendUserLeaveHint ? 1 : 0);
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().finish(moveHomeToTop, sendUserLeaveHint);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().finish(moveHomeToTop, sendUserLeaveHint);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.view.IRecentsAnimationController
             public void setInputConsumerEnabled(boolean enabled) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(enabled);
-                    if (this.mRemote.transact(3, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(enabled ? 1 : 0);
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setInputConsumerEnabled(enabled);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setInputConsumerEnabled(enabled);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.view.IRecentsAnimationController
             public void setAnimationTargetsBehindSystemBars(boolean behindSystemBars) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(behindSystemBars);
-                    if (this.mRemote.transact(4, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(behindSystemBars ? 1 : 0);
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setAnimationTargetsBehindSystemBars(behindSystemBars);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setAnimationTargetsBehindSystemBars(behindSystemBars);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.view.IRecentsAnimationController
             public void setSplitScreenMinimized(boolean minimized) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(minimized);
-                    if (this.mRemote.transact(5, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(minimized ? 1 : 0);
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setSplitScreenMinimized(minimized);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setSplitScreenMinimized(minimized);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.view.IRecentsAnimationController
             public void hideCurrentInputMethod() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(6, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().hideCurrentInputMethod();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().hideCurrentInputMethod();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.view.IRecentsAnimationController
             public void setCancelWithDeferredScreenshot(boolean screenshot) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(screenshot);
-                    if (this.mRemote.transact(7, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(screenshot ? 1 : 0);
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setCancelWithDeferredScreenshot(screenshot);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setCancelWithDeferredScreenshot(screenshot);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.view.IRecentsAnimationController
             public void cleanupScreenshot() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(8, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().cleanupScreenshot();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().cleanupScreenshot();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -368,11 +373,11 @@ public interface IRecentsAnimationController extends IInterface {
         }
 
         public static boolean setDefaultImpl(IRecentsAnimationController impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IRecentsAnimationController getDefaultImpl() {

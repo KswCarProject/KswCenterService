@@ -1,8 +1,9 @@
 package com.android.ims;
 
-import android.os.Handler;
-import android.os.Message;
+import android.p007os.Handler;
+import android.p007os.Message;
 
+/* loaded from: classes4.dex */
 public interface ImsUtInterface {
     public static final int ACTION_ACTIVATION = 1;
     public static final int ACTION_DEACTIVATION = 0;

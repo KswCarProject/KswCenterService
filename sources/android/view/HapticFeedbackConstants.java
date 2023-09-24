@@ -1,5 +1,6 @@
 package android.view;
 
+/* loaded from: classes4.dex */
 public class HapticFeedbackConstants {
     public static final int CALENDAR_DATE = 5;
     public static final int CLOCK_TICK = 4;

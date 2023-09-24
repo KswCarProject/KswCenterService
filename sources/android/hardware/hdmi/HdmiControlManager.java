@@ -3,15 +3,16 @@ package android.hardware.hdmi;
 import android.annotation.SuppressLint;
 import android.annotation.SystemApi;
 import android.hardware.hdmi.IHdmiHotplugEventListener;
-import android.os.RemoteException;
-import android.os.SystemProperties;
+import android.p007os.RemoteException;
+import android.p007os.SystemProperties;
 import android.util.ArrayMap;
 import android.util.Log;
-import com.android.internal.os.RoSystemProperties;
+import com.android.internal.p016os.RoSystemProperties;
 import com.android.internal.util.Preconditions;
 import java.util.List;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class HdmiControlManager {
     public static final String ACTION_OSD_MESSAGE = "android.hardware.hdmi.action.OSD_MESSAGE";
     public static final int AVR_VOLUME_MUTED = 101;
@@ -106,18 +107,21 @@ public final class HdmiControlManager {
     private final boolean mHasPlaybackDevice;
     private final boolean mHasSwitchDevice;
     private final boolean mHasTvDevice;
-    private final ArrayMap<HotplugEventListener, IHdmiHotplugEventListener> mHotplugEventListeners = new ArrayMap<>();
     private final boolean mIsSwitchDevice;
-    private int mPhysicalAddress = 65535;
     private final IHdmiControlService mService;
+    private int mPhysicalAddress = 65535;
+    private final ArrayMap<HotplugEventListener, IHdmiHotplugEventListener> mHotplugEventListeners = new ArrayMap<>();
 
+    /* loaded from: classes.dex */
     public @interface ControlCallbackResult {
     }
 
+    /* loaded from: classes.dex */
     public interface HotplugEventListener {
         void onReceived(HdmiHotplugEvent hdmiHotplugEvent);
     }
 
+    /* loaded from: classes.dex */
     public interface VendorCommandListener {
         void onControlStateChanged(boolean z, int i);
 
@@ -158,30 +162,30 @@ public final class HdmiControlManager {
         if (this.mService == null) {
             return null;
         }
-        if (type != 0) {
-            switch (type) {
-                case 4:
-                    if (this.mHasPlaybackDevice) {
-                        return new HdmiPlaybackClient(this.mService);
-                    }
-                    return null;
-                case 5:
-                    if (this.mHasAudioSystemDevice) {
-                        return new HdmiAudioSystemClient(this.mService);
-                    }
-                    return null;
-                case 6:
-                    if (this.mHasSwitchDevice || this.mIsSwitchDevice) {
-                        return new HdmiSwitchClient(this.mService);
-                    }
-                    return null;
-                default:
-                    return null;
+        if (type == 0) {
+            if (this.mHasTvDevice) {
+                return new HdmiTvClient(this.mService);
             }
-        } else if (this.mHasTvDevice) {
-            return new HdmiTvClient(this.mService);
-        } else {
             return null;
+        }
+        switch (type) {
+            case 4:
+                if (this.mHasPlaybackDevice) {
+                    return new HdmiPlaybackClient(this.mService);
+                }
+                return null;
+            case 5:
+                if (this.mHasAudioSystemDevice) {
+                    return new HdmiAudioSystemClient(this.mService);
+                }
+                return null;
+            case 6:
+                if (this.mHasSwitchDevice || this.mIsSwitchDevice) {
+                    return new HdmiSwitchClient(this.mService);
+                }
+                return null;
+            default:
+                return null;
         }
     }
 
@@ -200,8 +204,8 @@ public final class HdmiControlManager {
         return (HdmiAudioSystemClient) getClient(5);
     }
 
-    @SuppressLint({"Doclava125"})
     @SystemApi
+    @SuppressLint({"Doclava125"})
     public HdmiSwitchClient getSwitchClient() {
         return (HdmiSwitchClient) getClient(6);
     }
@@ -321,10 +325,7 @@ public final class HdmiControlManager {
         int targetPhysicalAddress;
         Preconditions.checkNotNull(targetDevice);
         this.mPhysicalAddress = getPhysicalAddress();
-        if (this.mPhysicalAddress == 65535 || (targetPhysicalAddress = targetDevice.getPhysicalAddress()) == 65535 || HdmiUtils.getLocalPortFromPhysicalAddress(targetPhysicalAddress, this.mPhysicalAddress) == -1) {
-            return false;
-        }
-        return true;
+        return (this.mPhysicalAddress == 65535 || (targetPhysicalAddress = targetDevice.getPhysicalAddress()) == 65535 || HdmiUtils.getLocalPortFromPhysicalAddress(targetPhysicalAddress, this.mPhysicalAddress) == -1) ? false : true;
     }
 
     @SystemApi
@@ -333,17 +334,14 @@ public final class HdmiControlManager {
         int targetPhysicalAddress;
         Preconditions.checkNotNull(targetDevice);
         this.mPhysicalAddress = getPhysicalAddress();
-        if (this.mPhysicalAddress == 65535 || (targetPhysicalAddress = targetDevice.getPhysicalAddress()) == 65535 || HdmiUtils.getLocalPortFromPhysicalAddress(targetPhysicalAddress, this.mPhysicalAddress) == -1) {
-            return false;
-        }
-        return true;
+        return (this.mPhysicalAddress == 65535 || (targetPhysicalAddress = targetDevice.getPhysicalAddress()) == 65535 || HdmiUtils.getLocalPortFromPhysicalAddress(targetPhysicalAddress, this.mPhysicalAddress) == -1) ? false : true;
     }
 
     public void addHotplugEventListener(HotplugEventListener listener) {
         if (this.mService == null) {
-            Log.e(TAG, "HdmiControlService is not available");
+            Log.m70e(TAG, "HdmiControlService is not available");
         } else if (this.mHotplugEventListeners.containsKey(listener)) {
-            Log.e(TAG, "listener is already registered");
+            Log.m70e(TAG, "listener is already registered");
         } else {
             IHdmiHotplugEventListener wrappedListener = getHotplugEventListenerWrapper(listener);
             this.mHotplugEventListeners.put(listener, wrappedListener);
@@ -357,12 +355,12 @@ public final class HdmiControlManager {
 
     public void removeHotplugEventListener(HotplugEventListener listener) {
         if (this.mService == null) {
-            Log.e(TAG, "HdmiControlService is not available");
+            Log.m70e(TAG, "HdmiControlService is not available");
             return;
         }
         IHdmiHotplugEventListener wrappedListener = this.mHotplugEventListeners.remove(listener);
         if (wrappedListener == null) {
-            Log.e(TAG, "tried to remove not-registered listener");
+            Log.m70e(TAG, "tried to remove not-registered listener");
             return;
         }
         try {
@@ -373,7 +371,8 @@ public final class HdmiControlManager {
     }
 
     private IHdmiHotplugEventListener getHotplugEventListenerWrapper(final HotplugEventListener listener) {
-        return new IHdmiHotplugEventListener.Stub() {
+        return new IHdmiHotplugEventListener.Stub() { // from class: android.hardware.hdmi.HdmiControlManager.1
+            @Override // android.hardware.hdmi.IHdmiHotplugEventListener
             public void onReceived(HdmiHotplugEvent event) {
                 listener.onReceived(event);
             }

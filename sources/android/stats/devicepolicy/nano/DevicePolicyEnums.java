@@ -1,5 +1,6 @@
 package android.stats.devicepolicy.nano;
 
+/* loaded from: classes3.dex */
 public interface DevicePolicyEnums {
     public static final int ADD_CROSS_PROFILE_INTENT_FILTER = 48;
     public static final int ADD_CROSS_PROFILE_WIDGET_PROVIDER = 49;

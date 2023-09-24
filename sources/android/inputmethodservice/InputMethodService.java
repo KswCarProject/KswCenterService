@@ -1,6 +1,6 @@
 package android.inputmethodservice;
 
-import android.R;
+import android.C0001R;
 import android.annotation.UnsupportedAppUsage;
 import android.app.ActivityManager;
 import android.app.Dialog;
@@ -11,15 +11,13 @@ import android.content.res.TypedArray;
 import android.database.ContentObserver;
 import android.graphics.Rect;
 import android.graphics.Region;
-import android.graphics.drawable.Drawable;
 import android.inputmethodservice.AbstractInputMethodService;
-import android.inputmethodservice.SoftInputWindow;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.ResultReceiver;
-import android.os.SystemClock;
+import android.p007os.Bundle;
+import android.p007os.Handler;
+import android.p007os.IBinder;
+import android.p007os.ResultReceiver;
+import android.p007os.SystemClock;
 import android.provider.Settings;
 import android.provider.SettingsStringUtil;
 import android.text.Layout;
@@ -51,6 +49,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.android.internal.C3132R;
 import com.android.internal.annotations.GuardedBy;
 import com.android.internal.inputmethod.IInputContentUriToken;
 import com.android.internal.inputmethod.IInputMethodPrivilegedOperations;
@@ -61,6 +60,7 @@ import java.io.PrintWriter;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes.dex */
 public class InputMethodService extends AbstractInputMethodService {
     public static final int BACK_DISPOSITION_ADJUST_NOTHING = 3;
     public static final int BACK_DISPOSITION_DEFAULT = 0;
@@ -77,11 +77,6 @@ public class InputMethodService extends AbstractInputMethodService {
     static final int MOVEMENT_DOWN = -1;
     static final int MOVEMENT_UP = -2;
     static final String TAG = "InputMethodService";
-    final View.OnClickListener mActionClickListener = new View.OnClickListener() {
-        public final void onClick(View view) {
-            InputMethodService.lambda$new$1(InputMethodService.this, view);
-        }
-    };
     int mBackDisposition;
     boolean mCanPreRender;
     FrameLayout mCandidatesFrame;
@@ -113,20 +108,12 @@ public class InputMethodService extends AbstractInputMethodService {
     boolean mInputStarted;
     View mInputView;
     boolean mInputViewStarted;
-    final ViewTreeObserver.OnComputeInternalInsetsListener mInsetsComputer = new ViewTreeObserver.OnComputeInternalInsetsListener() {
-        public final void onComputeInternalInsets(ViewTreeObserver.InternalInsetsInfo internalInsetsInfo) {
-            InputMethodService.lambda$new$0(InputMethodService.this, internalInsetsInfo);
-        }
-    };
     boolean mIsFullscreen;
     boolean mIsInputViewShown;
     boolean mIsPreRendered;
     boolean mLastShowInputRequested;
-    private Object mLock = new Object();
     @GuardedBy({"mLock"})
     private boolean mNotifyUserActionSent;
-    /* access modifiers changed from: private */
-    public InputMethodPrivilegedOperations mPrivOps = new InputMethodPrivilegedOperations();
     @UnsupportedAppUsage
     View mRootView;
     @UnsupportedAppUsage
@@ -135,21 +122,37 @@ public class InputMethodService extends AbstractInputMethodService {
     boolean mShowInputRequested;
     InputConnection mStartedInputConnection;
     int mStatusIcon;
-    @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
-    int mTheme = 0;
     TypedArray mThemeAttrs;
-    @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
-    final Insets mTmpInsets = new Insets();
-    final int[] mTmpLocation = new int[2];
     IBinder mToken;
     boolean mViewsCreated;
     SoftInputWindow mWindow;
     boolean mWindowVisible;
+    private InputMethodPrivilegedOperations mPrivOps = new InputMethodPrivilegedOperations();
+    @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
+    int mTheme = 0;
+    private Object mLock = new Object();
+    @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
+    final Insets mTmpInsets = new Insets();
+    final int[] mTmpLocation = new int[2];
+    final ViewTreeObserver.OnComputeInternalInsetsListener mInsetsComputer = new ViewTreeObserver.OnComputeInternalInsetsListener() { // from class: android.inputmethodservice.-$$Lambda$InputMethodService$8T9TmAUIN7vW9eU6kTg8309_d4E
+        @Override // android.view.ViewTreeObserver.OnComputeInternalInsetsListener
+        public final void onComputeInternalInsets(ViewTreeObserver.InternalInsetsInfo internalInsetsInfo) {
+            InputMethodService.lambda$new$0(InputMethodService.this, internalInsetsInfo);
+        }
+    };
+    final View.OnClickListener mActionClickListener = new View.OnClickListener() { // from class: android.inputmethodservice.-$$Lambda$InputMethodService$wp8DeVGx_WDOPw4F6an7QbwVxf0
+        @Override // android.view.View.OnClickListener
+        public final void onClick(View view) {
+            InputMethodService.lambda$new$1(InputMethodService.this, view);
+        }
+    };
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface BackDispositionMode {
     }
 
+    /* loaded from: classes.dex */
     public static final class Insets {
         public static final int TOUCHABLE_INSETS_CONTENT = 1;
         public static final int TOUCHABLE_INSETS_FRAME = 0;
@@ -192,37 +195,41 @@ public class InputMethodService extends AbstractInputMethodService {
         }
     }
 
+    /* loaded from: classes.dex */
     public class InputMethodImpl extends AbstractInputMethodService.AbstractInputMethodImpl {
         public InputMethodImpl() {
             super();
         }
 
+        @Override // android.view.inputmethod.InputMethod
         public final void initializeInternal(IBinder token, int displayId, IInputMethodPrivilegedOperations privilegedOperations) {
-            if (InputMethodPrivilegedOperationsRegistry.isRegistered(token)) {
-                Log.w(InputMethodService.TAG, "The token has already registered, ignore this initialization.");
+            if (!InputMethodPrivilegedOperationsRegistry.isRegistered(token)) {
+                InputMethodService.this.mPrivOps.set(privilegedOperations);
+                InputMethodPrivilegedOperationsRegistry.put(token, InputMethodService.this.mPrivOps);
+                updateInputMethodDisplay(displayId);
+                attachToken(token);
                 return;
             }
-            InputMethodService.this.mPrivOps.set(privilegedOperations);
-            InputMethodPrivilegedOperationsRegistry.put(token, InputMethodService.this.mPrivOps);
-            updateInputMethodDisplay(displayId);
-            attachToken(token);
+            Log.m64w(InputMethodService.TAG, "The token has already registered, ignore this initialization.");
         }
 
+        @Override // android.view.inputmethod.InputMethod
         public void attachToken(IBinder token) {
-            if (InputMethodService.this.mToken == null) {
-                InputMethodService.this.mToken = token;
-                InputMethodService.this.mWindow.setToken(token);
-                return;
+            if (InputMethodService.this.mToken != null) {
+                throw new IllegalStateException("attachToken() must be called at most once. token=" + token);
             }
-            throw new IllegalStateException("attachToken() must be called at most once. token=" + token);
+            InputMethodService.this.mToken = token;
+            InputMethodService.this.mWindow.setToken(token);
         }
 
+        @Override // android.view.inputmethod.InputMethod
         public void updateInputMethodDisplay(int displayId) {
             if (displayId != 0) {
                 InputMethodService.this.updateDisplay(displayId);
             }
         }
 
+        @Override // android.view.inputmethod.InputMethod
         public void bindInput(InputBinding binding) {
             InputMethodService.this.mInputBinding = binding;
             InputMethodService.this.mInputConnection = binding.getConnection();
@@ -231,20 +238,24 @@ public class InputMethodService extends AbstractInputMethodService {
             InputMethodService.this.onBindInput();
         }
 
+        @Override // android.view.inputmethod.InputMethod
         public void unbindInput() {
             InputMethodService.this.onUnbindInput();
             InputMethodService.this.mInputBinding = null;
             InputMethodService.this.mInputConnection = null;
         }
 
+        @Override // android.view.inputmethod.InputMethod
         public void startInput(InputConnection ic, EditorInfo attribute) {
             InputMethodService.this.doStartInput(ic, attribute, false);
         }
 
+        @Override // android.view.inputmethod.InputMethod
         public void restartInput(InputConnection ic, EditorInfo attribute) {
             InputMethodService.this.doStartInput(ic, attribute, true);
         }
 
+        @Override // android.view.inputmethod.InputMethod
         public final void dispatchStartInputWithToken(InputConnection inputConnection, EditorInfo editorInfo, boolean restarting, IBinder startInputToken, boolean shouldPreRenderIme) {
             InputMethodService.this.mPrivOps.reportStartInput(startInputToken);
             InputMethodService.this.mCanPreRender = shouldPreRenderIme;
@@ -255,9 +266,16 @@ public class InputMethodService extends AbstractInputMethodService {
             }
         }
 
+        @Override // android.view.inputmethod.InputMethod
         public void hideSoftInput(int flags, ResultReceiver resultReceiver) {
+            boolean wasVisible;
+            boolean isVisible;
             int i = 1;
-            boolean wasVisible = InputMethodService.this.mIsPreRendered ? InputMethodService.this.mDecorViewVisible && InputMethodService.this.mWindowVisible : InputMethodService.this.isInputViewShown();
+            if (InputMethodService.this.mIsPreRendered) {
+                wasVisible = InputMethodService.this.mDecorViewVisible && InputMethodService.this.mWindowVisible;
+            } else {
+                wasVisible = InputMethodService.this.isInputViewShown();
+            }
             if (InputMethodService.this.mIsPreRendered) {
                 InputMethodService.this.setImeWindowStatus(5, InputMethodService.this.mBackDisposition);
                 InputMethodService.this.applyVisibilityInInsetsConsumer(false);
@@ -267,20 +285,32 @@ public class InputMethodService extends AbstractInputMethodService {
                 InputMethodService.this.mShowInputRequested = false;
                 InputMethodService.this.doHideWindow();
             }
-            boolean visibilityChanged = (InputMethodService.this.mIsPreRendered ? InputMethodService.this.mDecorViewVisible && InputMethodService.this.mWindowVisible : InputMethodService.this.isInputViewShown()) != wasVisible;
+            if (InputMethodService.this.mIsPreRendered) {
+                isVisible = InputMethodService.this.mDecorViewVisible && InputMethodService.this.mWindowVisible;
+            } else {
+                isVisible = InputMethodService.this.isInputViewShown();
+            }
+            boolean visibilityChanged = isVisible != wasVisible;
             if (resultReceiver != null) {
                 if (visibilityChanged) {
                     i = 3;
                 } else if (wasVisible) {
                     i = 0;
                 }
-                resultReceiver.send(i, (Bundle) null);
+                resultReceiver.send(i, null);
             }
         }
 
+        @Override // android.view.inputmethod.InputMethod
         public void showSoftInput(int flags, ResultReceiver resultReceiver) {
+            boolean wasVisible;
+            boolean isVisible;
             int i = 0;
-            boolean wasVisible = InputMethodService.this.mIsPreRendered ? InputMethodService.this.mDecorViewVisible && InputMethodService.this.mWindowVisible : InputMethodService.this.isInputViewShown();
+            if (InputMethodService.this.mIsPreRendered) {
+                wasVisible = InputMethodService.this.mDecorViewVisible && InputMethodService.this.mWindowVisible;
+            } else {
+                wasVisible = InputMethodService.this.isInputViewShown();
+            }
             if (InputMethodService.this.dispatchOnShowInputRequested(flags, false)) {
                 if (InputMethodService.this.mIsPreRendered) {
                     InputMethodService.this.applyVisibilityInInsetsConsumer(true);
@@ -290,101 +320,128 @@ public class InputMethodService extends AbstractInputMethodService {
                 }
             }
             InputMethodService.this.setImeWindowStatus(InputMethodService.this.mapToImeWindowStatus(), InputMethodService.this.mBackDisposition);
-            boolean visibilityChanged = (InputMethodService.this.mIsPreRendered ? InputMethodService.this.mDecorViewVisible && InputMethodService.this.mWindowVisible : InputMethodService.this.isInputViewShown()) != wasVisible;
+            if (InputMethodService.this.mIsPreRendered) {
+                isVisible = InputMethodService.this.mDecorViewVisible && InputMethodService.this.mWindowVisible;
+            } else {
+                isVisible = InputMethodService.this.isInputViewShown();
+            }
+            boolean visibilityChanged = isVisible != wasVisible;
             if (resultReceiver != null) {
                 if (visibilityChanged) {
                     i = 2;
                 } else if (!wasVisible) {
                     i = 1;
                 }
-                resultReceiver.send(i, (Bundle) null);
+                resultReceiver.send(i, null);
             }
         }
 
+        @Override // android.view.inputmethod.InputMethod
         public void changeInputMethodSubtype(InputMethodSubtype subtype) {
             InputMethodService.this.dispatchOnCurrentInputMethodSubtypeChanged(subtype);
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void notifyImeHidden() {
         setImeWindowStatus(5, this.mBackDisposition);
         onPreRenderedWindowVisibilityChanged(false);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void setImeWindowStatus(int visibilityFlags, int backDisposition) {
         this.mPrivOps.setImeWindowStatus(visibilityFlags, backDisposition);
     }
 
+    /* loaded from: classes.dex */
     public class InputMethodSessionImpl extends AbstractInputMethodService.AbstractInputMethodSessionImpl {
         public InputMethodSessionImpl() {
             super();
         }
 
+        @Override // android.view.inputmethod.InputMethodSession
         public void finishInput() {
-            if (isEnabled()) {
-                InputMethodService.this.doFinishInput();
+            if (!isEnabled()) {
+                return;
             }
+            InputMethodService.this.doFinishInput();
         }
 
+        @Override // android.view.inputmethod.InputMethodSession
         public void displayCompletions(CompletionInfo[] completions) {
-            if (isEnabled()) {
-                InputMethodService.this.mCurCompletions = completions;
-                InputMethodService.this.onDisplayCompletions(completions);
+            if (!isEnabled()) {
+                return;
             }
+            InputMethodService.this.mCurCompletions = completions;
+            InputMethodService.this.onDisplayCompletions(completions);
         }
 
+        @Override // android.view.inputmethod.InputMethodSession
         public void updateExtractedText(int token, ExtractedText text) {
-            if (isEnabled()) {
-                InputMethodService.this.onUpdateExtractedText(token, text);
+            if (!isEnabled()) {
+                return;
             }
+            InputMethodService.this.onUpdateExtractedText(token, text);
         }
 
+        @Override // android.view.inputmethod.InputMethodSession
         public void updateSelection(int oldSelStart, int oldSelEnd, int newSelStart, int newSelEnd, int candidatesStart, int candidatesEnd) {
-            if (isEnabled()) {
-                InputMethodService.this.onUpdateSelection(oldSelStart, oldSelEnd, newSelStart, newSelEnd, candidatesStart, candidatesEnd);
+            if (!isEnabled()) {
+                return;
             }
+            InputMethodService.this.onUpdateSelection(oldSelStart, oldSelEnd, newSelStart, newSelEnd, candidatesStart, candidatesEnd);
         }
 
+        @Override // android.view.inputmethod.InputMethodSession
         public void viewClicked(boolean focusChanged) {
-            if (isEnabled()) {
-                InputMethodService.this.onViewClicked(focusChanged);
+            if (!isEnabled()) {
+                return;
             }
+            InputMethodService.this.onViewClicked(focusChanged);
         }
 
+        @Override // android.view.inputmethod.InputMethodSession
         public void updateCursor(Rect newCursor) {
-            if (isEnabled()) {
-                InputMethodService.this.onUpdateCursor(newCursor);
+            if (!isEnabled()) {
+                return;
             }
+            InputMethodService.this.onUpdateCursor(newCursor);
         }
 
+        @Override // android.view.inputmethod.InputMethodSession
         public void appPrivateCommand(String action, Bundle data) {
-            if (isEnabled()) {
-                InputMethodService.this.onAppPrivateCommand(action, data);
+            if (!isEnabled()) {
+                return;
             }
+            InputMethodService.this.onAppPrivateCommand(action, data);
         }
 
+        @Override // android.view.inputmethod.InputMethodSession
         public void toggleSoftInput(int showFlags, int hideFlags) {
             InputMethodService.this.onToggleSoftInput(showFlags, hideFlags);
         }
 
+        @Override // android.view.inputmethod.InputMethodSession
         public void updateCursorAnchorInfo(CursorAnchorInfo info) {
-            if (isEnabled()) {
-                InputMethodService.this.onUpdateCursorAnchorInfo(info);
+            if (!isEnabled()) {
+                return;
             }
+            InputMethodService.this.onUpdateCursorAnchorInfo(info);
         }
 
+        @Override // android.view.inputmethod.InputMethodSession
         public final void notifyImeHidden() {
             InputMethodService.this.notifyImeHidden();
         }
     }
 
+    /* loaded from: classes.dex */
     private static final class SettingsObserver extends ContentObserver {
         private final InputMethodService mService;
-        private int mShowImeWithHardKeyboard = 0;
+        private int mShowImeWithHardKeyboard;
 
         @Retention(RetentionPolicy.SOURCE)
+        /* loaded from: classes.dex */
         private @interface ShowImeWithHardKeyboardType {
             public static final int FALSE = 1;
             public static final int TRUE = 2;
@@ -393,6 +450,7 @@ public class InputMethodService extends AbstractInputMethodService {
 
         private SettingsObserver(InputMethodService service) {
             super(new Handler(service.getMainLooper()));
+            this.mShowImeWithHardKeyboard = 0;
             this.mService = service;
         }
 
@@ -402,12 +460,11 @@ public class InputMethodService extends AbstractInputMethodService {
             return observer;
         }
 
-        /* access modifiers changed from: package-private */
-        public void unregister() {
+        void unregister() {
             this.mService.getContentResolver().unregisterContentObserver(this);
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         @UnsupportedAppUsage
         public boolean shouldShowImeWithHardKeyboard() {
             if (this.mShowImeWithHardKeyboard == 0) {
@@ -419,13 +476,15 @@ public class InputMethodService extends AbstractInputMethodService {
                 case 2:
                     return true;
                 default:
-                    Log.e(InputMethodService.TAG, "Unexpected mShowImeWithHardKeyboard=" + this.mShowImeWithHardKeyboard);
+                    Log.m70e(InputMethodService.TAG, "Unexpected mShowImeWithHardKeyboard=" + this.mShowImeWithHardKeyboard);
                     return false;
             }
         }
 
+        @Override // android.database.ContentObserver
         public void onChange(boolean selfChange, Uri uri) {
-            if (Settings.Secure.getUriFor(Settings.Secure.SHOW_IME_WITH_HARD_KEYBOARD).equals(uri)) {
+            Uri showImeWithHardKeyboardUri = Settings.Secure.getUriFor(Settings.Secure.SHOW_IME_WITH_HARD_KEYBOARD);
+            if (showImeWithHardKeyboardUri.equals(uri)) {
                 this.mShowImeWithHardKeyboard = Settings.Secure.getInt(this.mService.getContentResolver(), Settings.Secure.SHOW_IME_WITH_HARD_KEYBOARD, 0) != 0 ? 2 : 1;
                 this.mService.resetStateForNewConfiguration();
             }
@@ -436,22 +495,23 @@ public class InputMethodService extends AbstractInputMethodService {
         }
     }
 
+    @Override // android.content.ContextWrapper, android.content.Context
     public void setTheme(int theme) {
-        if (this.mWindow == null) {
-            this.mTheme = theme;
-            return;
+        if (this.mWindow != null) {
+            throw new IllegalStateException("Must be called before onCreate()");
         }
-        throw new IllegalStateException("Must be called before onCreate()");
+        this.mTheme = theme;
     }
 
     @Deprecated
     public boolean enableHardwareAcceleration() {
-        if (this.mWindow == null) {
-            return ActivityManager.isHighEndGfx();
+        if (this.mWindow != null) {
+            throw new IllegalStateException("Must be called before onCreate()");
         }
-        throw new IllegalStateException("Must be called before onCreate()");
+        return ActivityManager.isHighEndGfx();
     }
 
+    @Override // android.app.Service
     public void onCreate() {
         this.mTheme = Resources.selectSystemTheme(this.mTheme, getApplicationInfo().targetSdkVersion, 16973908, 16973951, 16974142, 16974142);
         super.setTheme(this.mTheme);
@@ -459,7 +519,7 @@ public class InputMethodService extends AbstractInputMethodService {
         this.mImm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         this.mSettingsObserver = SettingsObserver.createAndRegister(this);
         this.mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.mWindow = new SoftInputWindow(this, "InputMethod", this.mTheme, (SoftInputWindow.Callback) null, (KeyEvent.Callback) null, this.mDispatcherState, 2011, 80, false);
+        this.mWindow = new SoftInputWindow(this, "InputMethod", this.mTheme, null, null, this.mDispatcherState, 2011, 80, false);
         this.mWindow.getWindow().setFlags(Integer.MIN_VALUE, Integer.MIN_VALUE);
         initViews();
         this.mWindow.getWindow().setLayout(-1, -2);
@@ -468,29 +528,27 @@ public class InputMethodService extends AbstractInputMethodService {
     public void onInitializeInterface() {
     }
 
-    /* access modifiers changed from: package-private */
-    public void initialize() {
+    void initialize() {
         if (!this.mInitialized) {
             this.mInitialized = true;
             onInitializeInterface();
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void initViews() {
+    void initViews() {
         this.mInitialized = false;
         this.mViewsCreated = false;
         this.mShowInputRequested = false;
         this.mShowInputFlags = 0;
-        this.mThemeAttrs = obtainStyledAttributes(R.styleable.InputMethodService);
-        this.mRootView = this.mInflater.inflate((int) com.android.internal.R.layout.input_method, (ViewGroup) null);
+        this.mThemeAttrs = obtainStyledAttributes(C0001R.styleable.InputMethodService);
+        this.mRootView = this.mInflater.inflate(C3132R.layout.input_method, (ViewGroup) null);
         this.mWindow.setContentView(this.mRootView);
         this.mRootView.getViewTreeObserver().removeOnComputeInternalInsetsListener(this.mInsetsComputer);
         this.mRootView.getViewTreeObserver().addOnComputeInternalInsetsListener(this.mInsetsComputer);
         if (Settings.Global.getInt(getContentResolver(), Settings.Global.FANCY_IME_ANIMATIONS, 0) != 0) {
-            this.mWindow.getWindow().setWindowAnimations(com.android.internal.R.style.Animation_InputMethodFancy);
+            this.mWindow.getWindow().setWindowAnimations(C3132R.C3136style.Animation_InputMethodFancy);
         }
-        this.mFullscreenArea = (ViewGroup) this.mRootView.findViewById(com.android.internal.R.id.fullscreenArea);
+        this.mFullscreenArea = (ViewGroup) this.mRootView.findViewById(C3132R.C3134id.fullscreenArea);
         this.mExtractViewHidden = false;
         this.mExtractFrame = (FrameLayout) this.mRootView.findViewById(16908316);
         this.mExtractView = null;
@@ -508,6 +566,7 @@ public class InputMethodService extends AbstractInputMethodService {
         this.mInputFrame.setVisibility(8);
     }
 
+    @Override // android.app.Service
     public void onDestroy() {
         super.onDestroy();
         this.mRootView.getViewTreeObserver().removeOnComputeInternalInsetsListener(this.mInsetsComputer);
@@ -522,19 +581,19 @@ public class InputMethodService extends AbstractInputMethodService {
         }
     }
 
+    @Override // android.app.Service, android.content.ComponentCallbacks
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         resetStateForNewConfiguration();
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void resetStateForNewConfiguration() {
         boolean visible = this.mDecorViewVisible;
         int showFlags = this.mShowInputFlags;
         boolean showingInput = this.mShowInputRequested;
         CompletionInfo[] completions = this.mCurCompletions;
         initViews();
-        int i = 0;
         this.mInputViewStarted = false;
         this.mCandidatesViewStarted = false;
         if (this.mInputStarted) {
@@ -556,17 +615,17 @@ public class InputMethodService extends AbstractInputMethodService {
             } else {
                 doHideWindow();
             }
-            if (onEvaluateInputViewShown()) {
-                i = 2;
-            }
-            setImeWindowStatus(i | 1, this.mBackDisposition);
+            boolean showing = onEvaluateInputViewShown();
+            setImeWindowStatus((showing ? 2 : 0) | 1, this.mBackDisposition);
         }
     }
 
+    @Override // android.inputmethodservice.AbstractInputMethodService
     public AbstractInputMethodService.AbstractInputMethodImpl onCreateInputMethodInterface() {
         return new InputMethodImpl();
     }
 
+    @Override // android.inputmethodservice.AbstractInputMethodService
     public AbstractInputMethodService.AbstractInputMethodSessionImpl onCreateInputMethodSessionInterface() {
         return new InputMethodSessionImpl();
     }
@@ -580,14 +639,15 @@ public class InputMethodService extends AbstractInputMethodService {
     }
 
     public void setBackDisposition(int disposition) {
-        if (disposition != this.mBackDisposition) {
-            if (disposition > 3 || disposition < 0) {
-                Log.e(TAG, "Invalid back disposition value (" + disposition + ") specified.");
-                return;
-            }
-            this.mBackDisposition = disposition;
-            setImeWindowStatus(mapToImeWindowStatus(), this.mBackDisposition);
+        if (disposition == this.mBackDisposition) {
+            return;
         }
+        if (disposition > 3 || disposition < 0) {
+            Log.m70e(TAG, "Invalid back disposition value (" + disposition + ") specified.");
+            return;
+        }
+        this.mBackDisposition = disposition;
+        setImeWindowStatus(mapToImeWindowStatus(), this.mBackDisposition);
     }
 
     public int getBackDisposition() {
@@ -595,7 +655,8 @@ public class InputMethodService extends AbstractInputMethodService {
     }
 
     public int getMaxWidth() {
-        return ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getWidth();
+        WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+        return wm.getDefaultDisplay().getWidth();
     }
 
     public InputBinding getCurrentInputBinding() {
@@ -630,7 +691,7 @@ public class InputMethodService extends AbstractInputMethodService {
         return this.mInputEditorInfo;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void reportFullscreenMode() {
         this.mPrivOps.reportFullscreenMode(this.mIsFullscreen);
     }
@@ -651,7 +712,7 @@ public class InputMethodService extends AbstractInputMethodService {
                 lp.height = 0;
                 lp.weight = 1.0f;
             } else {
-                this.mFullscreenArea.setBackgroundDrawable((Drawable) null);
+                this.mFullscreenArea.setBackgroundDrawable(null);
                 lp.height = -2;
                 lp.weight = 0.0f;
             }
@@ -682,13 +743,11 @@ public class InputMethodService extends AbstractInputMethodService {
     }
 
     public boolean onEvaluateFullscreenMode() {
-        if (getResources().getConfiguration().orientation != 2) {
+        Configuration config = getResources().getConfiguration();
+        if (config.orientation != 2) {
             return false;
         }
-        if (this.mInputEditorInfo == null || (this.mInputEditorInfo.imeOptions & 33554432) == 0) {
-            return true;
-        }
-        return false;
+        return this.mInputEditorInfo == null || (this.mInputEditorInfo.imeOptions & 33554432) == 0;
     }
 
     public void setExtractViewShown(boolean shown) {
@@ -702,8 +761,7 @@ public class InputMethodService extends AbstractInputMethodService {
         return this.mIsFullscreen && !this.mExtractViewHidden;
     }
 
-    /* access modifiers changed from: package-private */
-    public void updateExtractFrameVisibility() {
+    void updateExtractFrameVisibility() {
         int vis;
         if (isFullscreenMode()) {
             vis = this.mExtractViewHidden ? 4 : 0;
@@ -712,14 +770,9 @@ public class InputMethodService extends AbstractInputMethodService {
             vis = 0;
             this.mExtractFrame.setVisibility(8);
         }
-        int i = 1;
         updateCandidatesVisibility(this.mCandidatesVisibility == 0);
         if (this.mDecorViewWasVisible && this.mFullscreenArea.getVisibility() != vis) {
-            TypedArray typedArray = this.mThemeAttrs;
-            if (vis != 0) {
-                i = 2;
-            }
-            int animRes = typedArray.getResourceId(i, 0);
+            int animRes = this.mThemeAttrs.getResourceId(vis != 0 ? 2 : 1, 0);
             if (animRes != 0) {
                 this.mFullscreenArea.startAnimation(AnimationUtils.loadAnimation(this, animRes));
             }
@@ -732,10 +785,12 @@ public class InputMethodService extends AbstractInputMethodService {
         if (this.mInputFrame.getVisibility() == 0) {
             this.mInputFrame.getLocationInWindow(loc);
         } else {
-            loc[1] = getWindow().getWindow().getDecorView().getHeight();
+            View decor = getWindow().getWindow().getDecorView();
+            loc[1] = decor.getHeight();
         }
         if (isFullscreenMode()) {
-            outInsets.contentTopInsets = getWindow().getWindow().getDecorView().getHeight();
+            View decor2 = getWindow().getWindow().getDecorView();
+            outInsets.contentTopInsets = decor2.getHeight();
         } else {
             outInsets.contentTopInsets = loc[1];
         }
@@ -748,15 +803,10 @@ public class InputMethodService extends AbstractInputMethodService {
     }
 
     public void updateInputViewShown() {
-        int i = 0;
         boolean isShown = this.mShowInputRequested && onEvaluateInputViewShown();
         if (this.mIsInputViewShown != isShown && this.mDecorViewVisible) {
             this.mIsInputViewShown = isShown;
-            FrameLayout frameLayout = this.mInputFrame;
-            if (!isShown) {
-                i = 8;
-            }
-            frameLayout.setVisibility(i);
+            this.mInputFrame.setVisibility(isShown ? 0 : 8);
             if (this.mInputView == null) {
                 initialize();
                 View v = onCreateInputView();
@@ -772,25 +822,19 @@ public class InputMethodService extends AbstractInputMethodService {
     }
 
     public boolean isInputViewShown() {
-        if (this.mCanPreRender) {
-            return this.mWindowVisible;
-        }
-        return this.mIsInputViewShown && this.mDecorViewVisible;
+        return this.mCanPreRender ? this.mWindowVisible : this.mIsInputViewShown && this.mDecorViewVisible;
     }
 
     public boolean onEvaluateInputViewShown() {
-        if (this.mSettingsObserver == null) {
-            Log.w(TAG, "onEvaluateInputViewShown: mSettingsObserver must not be null here.");
-            return false;
-        } else if (this.mSettingsObserver.shouldShowImeWithHardKeyboard()) {
-            return true;
-        } else {
-            Configuration config = getResources().getConfiguration();
-            if (config.keyboard == 1 || config.hardKeyboardHidden == 2) {
+        if (this.mSettingsObserver != null) {
+            if (this.mSettingsObserver.shouldShowImeWithHardKeyboard()) {
                 return true;
             }
-            return false;
+            Configuration config = getResources().getConfiguration();
+            return config.keyboard == 1 || config.hardKeyboardHidden == 2;
         }
+        Log.m64w(TAG, "onEvaluateInputViewShown: mSettingsObserver must not be null here.");
+        return false;
     }
 
     public void setCandidatesViewShown(boolean shown) {
@@ -804,8 +848,7 @@ public class InputMethodService extends AbstractInputMethodService {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void updateCandidatesVisibility(boolean shown) {
+    void updateCandidatesVisibility(boolean shown) {
         int vis = shown ? 0 : getCandidatesHiddenVisibility();
         if (this.mCandidatesVisibility != vis) {
             this.mCandidatesFrame.setVisibility(vis);
@@ -824,7 +867,7 @@ public class InputMethodService extends AbstractInputMethodService {
 
     public void hideStatusIcon() {
         this.mStatusIcon = 0;
-        this.mPrivOps.updateStatusIcon((String) null, 0);
+        this.mPrivOps.updateStatusIcon(null, 0);
     }
 
     public void switchInputMethod(String id) {
@@ -837,14 +880,14 @@ public class InputMethodService extends AbstractInputMethodService {
 
     public void setExtractView(View view) {
         this.mExtractFrame.removeAllViews();
-        this.mExtractFrame.addView(view, (ViewGroup.LayoutParams) new FrameLayout.LayoutParams(-1, -1));
+        this.mExtractFrame.addView(view, new FrameLayout.LayoutParams(-1, -1));
         this.mExtractView = view;
         if (view != null) {
             this.mExtractEditText = (ExtractEditText) view.findViewById(16908325);
             this.mExtractEditText.setIME(this);
-            this.mExtractAction = view.findViewById(com.android.internal.R.id.inputExtractAction);
+            this.mExtractAction = view.findViewById(C3132R.C3134id.inputExtractAction);
             if (this.mExtractAction != null) {
-                this.mExtractAccessories = (ViewGroup) view.findViewById(com.android.internal.R.id.inputExtractAccessories);
+                this.mExtractAccessories = (ViewGroup) view.findViewById(C3132R.C3134id.inputExtractAccessories);
             }
             startExtractingText(false);
             return;
@@ -856,17 +899,17 @@ public class InputMethodService extends AbstractInputMethodService {
 
     public void setCandidatesView(View view) {
         this.mCandidatesFrame.removeAllViews();
-        this.mCandidatesFrame.addView(view, (ViewGroup.LayoutParams) new FrameLayout.LayoutParams(-1, -2));
+        this.mCandidatesFrame.addView(view, new FrameLayout.LayoutParams(-1, -2));
     }
 
     public void setInputView(View view) {
         this.mInputFrame.removeAllViews();
-        this.mInputFrame.addView(view, (ViewGroup.LayoutParams) new FrameLayout.LayoutParams(-1, -2));
+        this.mInputFrame.addView(view, new FrameLayout.LayoutParams(-1, -2));
         this.mInputView = view;
     }
 
     public View onCreateExtractTextView() {
-        return this.mInflater.inflate((int) com.android.internal.R.layout.input_method_extract_view, (ViewGroup) null);
+        return this.mInflater.inflate(C3132R.layout.input_method_extract_view, (ViewGroup) null);
     }
 
     public View onCreateCandidatesView() {
@@ -898,22 +941,21 @@ public class InputMethodService extends AbstractInputMethodService {
     }
 
     public boolean onShowInputRequested(int flags, boolean configChange) {
-        if (!onEvaluateInputViewShown()) {
-            return false;
-        }
-        if ((flags & 1) == 0) {
-            if (!configChange && onEvaluateFullscreenMode()) {
-                return false;
+        if (onEvaluateInputViewShown()) {
+            if ((flags & 1) == 0) {
+                if (!configChange && onEvaluateFullscreenMode()) {
+                    return false;
+                }
+                if (!this.mSettingsObserver.shouldShowImeWithHardKeyboard() && getResources().getConfiguration().keyboard != 1) {
+                    return false;
+                }
             }
-            if (this.mSettingsObserver.shouldShowImeWithHardKeyboard() || getResources().getConfiguration().keyboard == 1) {
-                return true;
-            }
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public boolean dispatchOnShowInputRequested(int flags, boolean configChange) {
         boolean result = onShowInputRequested(flags, configChange);
         if (result) {
@@ -925,13 +967,21 @@ public class InputMethodService extends AbstractInputMethodService {
     }
 
     public void showWindow(boolean showInput) {
+        int i;
         if (this.mInShowWindow) {
-            Log.w(TAG, "Re-entrance in to showWindow");
+            Log.m64w(TAG, "Re-entrance in to showWindow");
             return;
         }
         this.mDecorViewWasVisible = this.mDecorViewVisible;
         this.mInShowWindow = true;
-        int previousImeWindowStatus = this.mDecorViewVisible | (isInputViewShown() ? this.mIsPreRendered && !this.mWindowVisible ? 4 : 2 : 0);
+        boolean isPreRenderedAndInvisible = this.mIsPreRendered && !this.mWindowVisible;
+        boolean z = this.mDecorViewVisible;
+        if (isInputViewShown()) {
+            i = isPreRenderedAndInvisible ? 4 : 2;
+        } else {
+            i = 0;
+        }
+        int previousImeWindowStatus = (z ? 1 : 0) | i;
         startViews(prepareWindow(showInput));
         int nextImeWindowStatus = mapToImeWindowStatus();
         if (previousImeWindowStatus != nextImeWindowStatus) {
@@ -953,9 +1003,10 @@ public class InputMethodService extends AbstractInputMethodService {
     }
 
     private void maybeNotifyPreRendered() {
-        if (this.mCanPreRender && this.mIsPreRendered) {
-            this.mPrivOps.reportPreRendered(getCurrentInputEditorInfo());
+        if (!this.mCanPreRender || !this.mIsPreRendered) {
+            return;
         }
+        this.mPrivOps.reportPreRendered(getCurrentInputEditorInfo());
     }
 
     private boolean prepareWindow(boolean showInput) {
@@ -994,7 +1045,7 @@ public class InputMethodService extends AbstractInputMethodService {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void onPreRenderedWindowVisibilityChanged(boolean setVisible) {
         this.mWindowVisible = setVisible;
         this.mShowInputFlags = setVisible ? this.mShowInputFlags : 0;
@@ -1005,11 +1056,12 @@ public class InputMethodService extends AbstractInputMethodService {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void applyVisibilityInInsetsConsumer(boolean setVisible) {
-        if (this.mIsPreRendered) {
-            this.mPrivOps.applyImeVisibility(setVisible);
+        if (!this.mIsPreRendered) {
+            return;
         }
+        this.mPrivOps.applyImeVisibility(setVisible);
     }
 
     private void finishViews(boolean finishingInput) {
@@ -1022,7 +1074,7 @@ public class InputMethodService extends AbstractInputMethodService {
         this.mCandidatesViewStarted = false;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void doHideWindow() {
         setImeWindowStatus(0, this.mBackDisposition);
         hideWindow();
@@ -1056,8 +1108,7 @@ public class InputMethodService extends AbstractInputMethodService {
     public void onStartInput(EditorInfo attribute, boolean restarting) {
     }
 
-    /* access modifiers changed from: package-private */
-    public void doFinishInput() {
+    void doFinishInput() {
         finishViews(true);
         if (this.mInputStarted) {
             onFinishInput();
@@ -1067,8 +1118,7 @@ public class InputMethodService extends AbstractInputMethodService {
         this.mCurCompletions = null;
     }
 
-    /* access modifiers changed from: package-private */
-    public void doStartInput(InputConnection ic, EditorInfo attribute, boolean restarting) {
+    void doStartInput(InputConnection ic, EditorInfo attribute, boolean restarting) {
         if (!restarting) {
             doFinishInput();
         }
@@ -1086,11 +1136,11 @@ public class InputMethodService extends AbstractInputMethodService {
                 this.mCandidatesViewStarted = true;
                 onStartCandidatesView(this.mInputEditorInfo, restarting);
             }
-        } else if (!this.mCanPreRender || this.mInputEditorInfo == null || this.mStartedInputConnection == null) {
-            this.mIsPreRendered = false;
-        } else if (this.mInShowWindow) {
-            Log.w(TAG, "Re-entrance in to showWindow");
-        } else {
+        } else if (this.mCanPreRender && this.mInputEditorInfo != null && this.mStartedInputConnection != null) {
+            if (this.mInShowWindow) {
+                Log.m64w(TAG, "Re-entrance in to showWindow");
+                return;
+            }
             this.mDecorViewWasVisible = this.mDecorViewVisible;
             this.mInShowWindow = true;
             startViews(prepareWindow(true));
@@ -1100,6 +1150,8 @@ public class InputMethodService extends AbstractInputMethodService {
             maybeNotifyPreRendered();
             this.mDecorViewWasVisible = true;
             this.mInShowWindow = false;
+        } else {
+            this.mIsPreRendered = false;
         }
     }
 
@@ -1168,9 +1220,7 @@ public class InputMethodService extends AbstractInputMethodService {
                 requestHideSelf(0);
             }
             return true;
-        } else if (!this.mDecorViewVisible) {
-            return false;
-        } else {
+        } else if (this.mDecorViewVisible) {
             if (this.mCandidatesVisibility == 0) {
                 if (doIt) {
                     setCandidatesViewShown(false);
@@ -1179,6 +1229,8 @@ public class InputMethodService extends AbstractInputMethodService {
                 doHideWindow();
             }
             return true;
+        } else {
+            return false;
         }
     }
 
@@ -1189,29 +1241,33 @@ public class InputMethodService extends AbstractInputMethodService {
         return this.mExtractEditText;
     }
 
+    @Override // android.view.KeyEvent.Callback
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (event.getKeyCode() != 4) {
-            return doMovementKey(keyCode, event, -1);
-        }
-        ExtractEditText eet = getExtractEditTextIfVisible();
-        if (eet != null && eet.handleBackInTextActionModeIfNeeded(event)) {
+        if (event.getKeyCode() == 4) {
+            ExtractEditText eet = getExtractEditTextIfVisible();
+            if (eet != null && eet.handleBackInTextActionModeIfNeeded(event)) {
+                return true;
+            }
+            if (!handleBack(false)) {
+                return false;
+            }
+            event.startTracking();
             return true;
         }
-        if (!handleBack(false)) {
-            return false;
-        }
-        event.startTracking();
-        return true;
+        return doMovementKey(keyCode, event, -1);
     }
 
+    @Override // android.view.KeyEvent.Callback
     public boolean onKeyLongPress(int keyCode, KeyEvent event) {
         return false;
     }
 
+    @Override // android.view.KeyEvent.Callback
     public boolean onKeyMultiple(int keyCode, int count, KeyEvent event) {
         return doMovementKey(keyCode, event, count);
     }
 
+    @Override // android.view.KeyEvent.Callback
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         if (event.getKeyCode() == 4) {
             ExtractEditText eet = getExtractEditTextIfVisible();
@@ -1225,10 +1281,12 @@ public class InputMethodService extends AbstractInputMethodService {
         return doMovementKey(keyCode, event, -2);
     }
 
+    @Override // android.inputmethodservice.AbstractInputMethodService
     public boolean onTrackballEvent(MotionEvent event) {
         return false;
     }
 
+    @Override // android.inputmethodservice.AbstractInputMethodService
     public boolean onGenericMotionEvent(MotionEvent event) {
         return false;
     }
@@ -1236,7 +1294,7 @@ public class InputMethodService extends AbstractInputMethodService {
     public void onAppPrivateCommand(String action, Bundle data) {
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void onToggleSoftInput(int showFlags, int hideFlags) {
         if (isInputViewShown()) {
             requestHideSelf(hideFlags);
@@ -1245,8 +1303,7 @@ public class InputMethodService extends AbstractInputMethodService {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void reportExtractedMovement(int keyCode, int count) {
+    void reportExtractedMovement(int keyCode, int count) {
         int dx = 0;
         int dy = 0;
         switch (keyCode) {
@@ -1266,13 +1323,12 @@ public class InputMethodService extends AbstractInputMethodService {
         onExtractedCursorMovement(dx, dy);
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean doMovementKey(int keyCode, KeyEvent event, int count) {
+    boolean doMovementKey(int keyCode, KeyEvent event, int count) {
         ExtractEditText eet = getExtractEditTextIfVisible();
         if (eet != null) {
             MovementMethod movement = eet.getMovementMethod();
             Layout layout = eet.getLayout();
-            if (!(movement == null || layout == null)) {
+            if (movement != null && layout != null) {
                 if (count == -1) {
                     if (movement.onKeyDown(eet, eet.getText(), keyCode, event)) {
                         reportExtractedMovement(keyCode, 1);
@@ -1314,43 +1370,41 @@ public class InputMethodService extends AbstractInputMethodService {
 
     public void sendDownUpKeyEvents(int keyEventCode) {
         InputConnection ic = getCurrentInputConnection();
-        if (ic != null) {
-            long eventTime = SystemClock.uptimeMillis();
-            long j = eventTime;
-            int i = keyEventCode;
-            ic.sendKeyEvent(new KeyEvent(j, eventTime, 0, i, 0, 0, -1, 0, 6));
-            ic.sendKeyEvent(new KeyEvent(j, SystemClock.uptimeMillis(), 1, i, 0, 0, -1, 0, 6));
+        if (ic == null) {
+            return;
         }
+        long eventTime = SystemClock.uptimeMillis();
+        ic.sendKeyEvent(new KeyEvent(eventTime, eventTime, 0, keyEventCode, 0, 0, -1, 0, 6));
+        ic.sendKeyEvent(new KeyEvent(eventTime, SystemClock.uptimeMillis(), 1, keyEventCode, 0, 0, -1, 0, 6));
     }
 
     public boolean sendDefaultEditorAction(boolean fromEnterKey) {
         EditorInfo ei = getCurrentInputEditorInfo();
-        if (ei == null) {
+        if (ei != null) {
+            if ((!fromEnterKey || (ei.imeOptions & 1073741824) == 0) && (ei.imeOptions & 255) != 1) {
+                InputConnection ic = getCurrentInputConnection();
+                if (ic != null) {
+                    ic.performEditorAction(ei.imeOptions & 255);
+                }
+                return true;
+            }
             return false;
         }
-        if ((fromEnterKey && (ei.imeOptions & 1073741824) != 0) || (ei.imeOptions & 255) == 1) {
-            return false;
-        }
-        InputConnection ic = getCurrentInputConnection();
-        if (ic != null) {
-            ic.performEditorAction(ei.imeOptions & 255);
-        }
-        return true;
+        return false;
     }
 
     public void sendKeyChar(char charCode) {
-        if (charCode != 10) {
-            if (charCode < '0' || charCode > '9') {
-                InputConnection ic = getCurrentInputConnection();
-                if (ic != null) {
-                    ic.commitText(String.valueOf(charCode), 1);
-                    return;
-                }
-                return;
+        if (charCode == '\n') {
+            if (!sendDefaultEditorAction(true)) {
+                sendDownUpKeyEvents(66);
             }
+        } else if (charCode >= '0' && charCode <= '9') {
             sendDownUpKeyEvents((charCode - '0') + 7);
-        } else if (!sendDefaultEditorAction(true)) {
-            sendDownUpKeyEvents(66);
+        } else {
+            InputConnection ic = getCurrentInputConnection();
+            if (ic != null) {
+                ic.commitText(String.valueOf(charCode), 1);
+            }
         }
     }
 
@@ -1383,13 +1437,14 @@ public class InputMethodService extends AbstractInputMethodService {
     @UnsupportedAppUsage
     public void onExtractedSetSpan(Object span, int start, int end, int flags) {
         InputConnection conn = getCurrentInputConnection();
-        if (conn != null && conn.setSelection(start, end)) {
-            CharSequence text = conn.getSelectedText(1);
-            if (text instanceof Spannable) {
-                ((Spannable) text).setSpan(span, 0, text.length(), flags);
-                conn.setComposingRegion(start, end);
-                conn.commitText(text, 1);
-            }
+        if (conn == null || !conn.setSelection(start, end)) {
+            return;
+        }
+        CharSequence text = conn.getSelectedText(1);
+        if (text instanceof Spannable) {
+            ((Spannable) text).setSpan(span, 0, text.length(), flags);
+            conn.setComposingRegion(start, end);
+            conn.commitText(text, 1);
         }
     }
 
@@ -1407,10 +1462,10 @@ public class InputMethodService extends AbstractInputMethodService {
 
     public boolean onExtractTextContextMenuItem(int id) {
         InputConnection ic = getCurrentInputConnection();
-        if (ic == null) {
+        if (ic != null) {
+            ic.performContextMenuAction(id);
             return true;
         }
-        ic.performContextMenuAction(id);
         return true;
     }
 
@@ -1419,38 +1474,38 @@ public class InputMethodService extends AbstractInputMethodService {
             case 1:
                 return null;
             case 2:
-                return getText(com.android.internal.R.string.ime_action_go);
+                return getText(C3132R.string.ime_action_go);
             case 3:
-                return getText(com.android.internal.R.string.ime_action_search);
+                return getText(C3132R.string.ime_action_search);
             case 4:
-                return getText(com.android.internal.R.string.ime_action_send);
+                return getText(C3132R.string.ime_action_send);
             case 5:
-                return getText(com.android.internal.R.string.ime_action_next);
+                return getText(C3132R.string.ime_action_next);
             case 6:
-                return getText(com.android.internal.R.string.ime_action_done);
+                return getText(C3132R.string.ime_action_done);
             case 7:
-                return getText(com.android.internal.R.string.ime_action_previous);
+                return getText(C3132R.string.ime_action_previous);
             default:
-                return getText(com.android.internal.R.string.ime_action_default);
+                return getText(C3132R.string.ime_action_default);
         }
     }
 
     private int getIconForImeAction(int imeOptions) {
         switch (imeOptions & 255) {
             case 2:
-                return com.android.internal.R.drawable.ic_input_extract_action_go;
+                return C3132R.C3133drawable.ic_input_extract_action_go;
             case 3:
-                return com.android.internal.R.drawable.ic_input_extract_action_search;
+                return C3132R.C3133drawable.ic_input_extract_action_search;
             case 4:
-                return com.android.internal.R.drawable.ic_input_extract_action_send;
+                return C3132R.C3133drawable.ic_input_extract_action_send;
             case 5:
-                return com.android.internal.R.drawable.ic_input_extract_action_next;
+                return C3132R.C3133drawable.ic_input_extract_action_next;
             case 6:
-                return com.android.internal.R.drawable.ic_input_extract_action_done;
+                return C3132R.C3133drawable.ic_input_extract_action_done;
             case 7:
-                return com.android.internal.R.drawable.ic_input_extract_action_previous;
+                return C3132R.C3133drawable.ic_input_extract_action_previous;
             default:
-                return com.android.internal.R.drawable.ic_input_extract_action_return;
+                return C3132R.C3133drawable.ic_input_extract_action_return;
         }
     }
 
@@ -1463,35 +1518,37 @@ public class InputMethodService extends AbstractInputMethodService {
     }
 
     public void onUpdateExtractingViews(EditorInfo ei) {
-        if (isExtractViewShown() && this.mExtractAccessories != null) {
-            boolean hasAction = true;
-            if (ei.actionLabel == null && ((ei.imeOptions & 255) == 1 || (ei.imeOptions & 536870912) != 0 || ei.inputType == 0)) {
-                hasAction = false;
-            }
-            if (hasAction) {
-                this.mExtractAccessories.setVisibility(0);
-                if (this.mExtractAction != null) {
-                    if (this.mExtractAction instanceof ImageButton) {
-                        ((ImageButton) this.mExtractAction).setImageResource(getIconForImeAction(ei.imeOptions));
-                        if (ei.actionLabel != null) {
-                            this.mExtractAction.setContentDescription(ei.actionLabel);
-                        } else {
-                            this.mExtractAction.setContentDescription(getTextForImeAction(ei.imeOptions));
-                        }
-                    } else if (ei.actionLabel != null) {
-                        ((TextView) this.mExtractAction).setText(ei.actionLabel);
+        if (!isExtractViewShown() || this.mExtractAccessories == null) {
+            return;
+        }
+        boolean z = true;
+        if (ei.actionLabel == null && ((ei.imeOptions & 255) == 1 || (ei.imeOptions & 536870912) != 0 || ei.inputType == 0)) {
+            z = false;
+        }
+        boolean hasAction = z;
+        if (hasAction) {
+            this.mExtractAccessories.setVisibility(0);
+            if (this.mExtractAction != null) {
+                if (this.mExtractAction instanceof ImageButton) {
+                    ((ImageButton) this.mExtractAction).setImageResource(getIconForImeAction(ei.imeOptions));
+                    if (ei.actionLabel != null) {
+                        this.mExtractAction.setContentDescription(ei.actionLabel);
                     } else {
-                        ((TextView) this.mExtractAction).setText(getTextForImeAction(ei.imeOptions));
+                        this.mExtractAction.setContentDescription(getTextForImeAction(ei.imeOptions));
                     }
-                    this.mExtractAction.setOnClickListener(this.mActionClickListener);
-                    return;
+                } else if (ei.actionLabel != null) {
+                    ((TextView) this.mExtractAction).setText(ei.actionLabel);
+                } else {
+                    ((TextView) this.mExtractAction).setText(getTextForImeAction(ei.imeOptions));
                 }
+                this.mExtractAction.setOnClickListener(this.mActionClickListener);
                 return;
             }
-            this.mExtractAccessories.setVisibility(8);
-            if (this.mExtractAction != null) {
-                this.mExtractAction.setOnClickListener((View.OnClickListener) null);
-            }
+            return;
+        }
+        this.mExtractAccessories.setVisibility(8);
+        if (this.mExtractAction != null) {
+            this.mExtractAction.setOnClickListener(null);
         }
     }
 
@@ -1501,9 +1558,7 @@ public class InputMethodService extends AbstractInputMethodService {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void startExtractingText(boolean inputChanged) {
-        ExtractedText extractedText;
+    void startExtractingText(boolean inputChanged) {
         ExtractEditText eet = this.mExtractEditText;
         if (eet != null && getCurrentInputStarted() && isFullscreenMode()) {
             this.mExtractedToken++;
@@ -1513,14 +1568,9 @@ public class InputMethodService extends AbstractInputMethodService {
             req.hintMaxLines = 10;
             req.hintMaxChars = 10000;
             InputConnection ic = getCurrentInputConnection();
-            if (ic == null) {
-                extractedText = null;
-            } else {
-                extractedText = ic.getExtractedText(req, 1);
-            }
-            this.mExtractedText = extractedText;
+            this.mExtractedText = ic == null ? null : ic.getExtractedText(req, 1);
             if (this.mExtractedText == null || ic == null) {
-                Log.e(TAG, "Unexpected null in startExtractingText : mExtractedText = " + this.mExtractedText + ", input connection = " + ic);
+                Log.m70e(TAG, "Unexpected null in startExtractingText : mExtractedText = " + this.mExtractedText + ", input connection = " + ic);
             }
             EditorInfo ei = getCurrentInputEditorInfo();
             try {
@@ -1538,7 +1588,7 @@ public class InputMethodService extends AbstractInputMethodService {
                     eet.setExtractedText(this.mExtractedText);
                 } else {
                     eet.setEnabled(false);
-                    eet.setText((CharSequence) "");
+                    eet.setText("");
                 }
                 if (inputChanged) {
                     onExtractingInputChanged(ei);
@@ -1549,7 +1599,7 @@ public class InputMethodService extends AbstractInputMethodService {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void dispatchOnCurrentInputMethodSubtypeChanged(InputMethodSubtype newSubtype) {
         synchronized (this.mLock) {
             this.mNotifyUserActionSent = false;
@@ -1557,28 +1607,31 @@ public class InputMethodService extends AbstractInputMethodService {
         onCurrentInputMethodSubtypeChanged(newSubtype);
     }
 
-    /* access modifiers changed from: protected */
-    public void onCurrentInputMethodSubtypeChanged(InputMethodSubtype newSubtype) {
+    protected void onCurrentInputMethodSubtypeChanged(InputMethodSubtype newSubtype) {
     }
 
     @Deprecated
     public int getInputMethodWindowRecommendedHeight() {
-        Log.w(TAG, "getInputMethodWindowRecommendedHeight() is deprecated and now always returns 0. Do not use this method.");
+        Log.m64w(TAG, "getInputMethodWindowRecommendedHeight() is deprecated and now always returns 0. Do not use this method.");
         return 0;
     }
 
+    @Override // android.inputmethodservice.AbstractInputMethodService
     public final void exposeContent(InputContentInfo inputContentInfo, InputConnection inputConnection) {
-        if (inputConnection != null && getCurrentInputConnection() == inputConnection) {
-            exposeContentInternal(inputContentInfo, getCurrentInputEditorInfo());
+        if (inputConnection == null || getCurrentInputConnection() != inputConnection) {
+            return;
         }
+        exposeContentInternal(inputContentInfo, getCurrentInputEditorInfo());
     }
 
+    @Override // android.inputmethodservice.AbstractInputMethodService
     public final void notifyUserActionIfNecessary() {
         synchronized (this.mLock) {
-            if (!this.mNotifyUserActionSent) {
-                this.mPrivOps.notifyUserAction();
-                this.mNotifyUserActionSent = true;
+            if (this.mNotifyUserActionSent) {
+                return;
             }
+            this.mPrivOps.notifyUserAction();
+            this.mNotifyUserActionSent = true;
         }
     }
 
@@ -1586,13 +1639,13 @@ public class InputMethodService extends AbstractInputMethodService {
         Uri contentUri = inputContentInfo.getContentUri();
         IInputContentUriToken uriToken = this.mPrivOps.createInputContentUriToken(contentUri, editorInfo.packageName);
         if (uriToken == null) {
-            Log.e(TAG, "createInputContentAccessToken failed. contentUri=" + contentUri.toString() + " packageName=" + editorInfo.packageName);
+            Log.m70e(TAG, "createInputContentAccessToken failed. contentUri=" + contentUri.toString() + " packageName=" + editorInfo.packageName);
             return;
         }
         inputContentInfo.setUriToken(uriToken);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public int mapToImeWindowStatus() {
         int i = 2;
         if (!isInputViewShown()) {
@@ -1603,8 +1656,8 @@ public class InputMethodService extends AbstractInputMethodService {
         return 1 | i;
     }
 
-    /* access modifiers changed from: protected */
-    public void dump(FileDescriptor fd, PrintWriter fout, String[] args) {
+    @Override // android.inputmethodservice.AbstractInputMethodService, android.app.Service
+    protected void dump(FileDescriptor fd, PrintWriter fout, String[] args) {
         Printer p = new PrintWriterPrinter(fout);
         p.println("Input method service state for " + this + SettingsStringUtil.DELIMITER);
         StringBuilder sb = new StringBuilder();

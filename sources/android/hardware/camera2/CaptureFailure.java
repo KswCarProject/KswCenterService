@@ -3,6 +3,7 @@ package android.hardware.camera2;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes.dex */
 public class CaptureFailure {
     public static final int REASON_ERROR = 0;
     public static final int REASON_FLUSHED = 1;
@@ -14,6 +15,7 @@ public class CaptureFailure {
     private final int mSequenceId;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface FailureReason {
     }
 

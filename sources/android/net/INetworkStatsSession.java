@@ -1,12 +1,13 @@
 package android.net;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes3.dex */
 public interface INetworkStatsSession extends IInterface {
     @UnsupportedAppUsage
     void close() throws RemoteException;
@@ -29,43 +30,54 @@ public interface INetworkStatsSession extends IInterface {
     @UnsupportedAppUsage
     NetworkStats getSummaryForNetwork(NetworkTemplate networkTemplate, long j, long j2) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements INetworkStatsSession {
+        @Override // android.net.INetworkStatsSession
         public NetworkStats getDeviceSummaryForNetwork(NetworkTemplate template, long start, long end) throws RemoteException {
             return null;
         }
 
+        @Override // android.net.INetworkStatsSession
         public NetworkStats getSummaryForNetwork(NetworkTemplate template, long start, long end) throws RemoteException {
             return null;
         }
 
+        @Override // android.net.INetworkStatsSession
         public NetworkStatsHistory getHistoryForNetwork(NetworkTemplate template, int fields) throws RemoteException {
             return null;
         }
 
+        @Override // android.net.INetworkStatsSession
         public NetworkStats getSummaryForAllUid(NetworkTemplate template, long start, long end, boolean includeTags) throws RemoteException {
             return null;
         }
 
+        @Override // android.net.INetworkStatsSession
         public NetworkStatsHistory getHistoryForUid(NetworkTemplate template, int uid, int set, int tag, int fields) throws RemoteException {
             return null;
         }
 
+        @Override // android.net.INetworkStatsSession
         public NetworkStatsHistory getHistoryIntervalForUid(NetworkTemplate template, int uid, int set, int tag, int fields, long start, long end) throws RemoteException {
             return null;
         }
 
+        @Override // android.net.INetworkStatsSession
         public int[] getRelevantUids() throws RemoteException {
             return null;
         }
 
+        @Override // android.net.INetworkStatsSession
         public void close() throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements INetworkStatsSession {
         private static final String DESCRIPTOR = "android.net.INetworkStatsSession";
         static final int TRANSACTION_close = 8;
@@ -86,12 +98,13 @@ public interface INetworkStatsSession extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof INetworkStatsSession)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof INetworkStatsSession)) {
+                return (INetworkStatsSession) iin;
             }
-            return (INetworkStatsSession) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -119,121 +132,131 @@ public interface INetworkStatsSession extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            int i = code;
-            Parcel parcel = data;
-            Parcel parcel2 = reply;
-            if (i != 1598968902) {
-                NetworkTemplate _arg0 = null;
-                switch (i) {
-                    case 1:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = NetworkTemplate.CREATOR.createFromParcel(parcel);
-                        }
-                        NetworkStats _result = getDeviceSummaryForNetwork(_arg0, data.readLong(), data.readLong());
-                        reply.writeNoException();
-                        if (_result != null) {
-                            parcel2.writeInt(1);
-                            _result.writeToParcel(parcel2, 1);
-                        } else {
-                            parcel2.writeInt(0);
-                        }
-                        return true;
-                    case 2:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = NetworkTemplate.CREATOR.createFromParcel(parcel);
-                        }
-                        NetworkStats _result2 = getSummaryForNetwork(_arg0, data.readLong(), data.readLong());
-                        reply.writeNoException();
-                        if (_result2 != null) {
-                            parcel2.writeInt(1);
-                            _result2.writeToParcel(parcel2, 1);
-                        } else {
-                            parcel2.writeInt(0);
-                        }
-                        return true;
-                    case 3:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = NetworkTemplate.CREATOR.createFromParcel(parcel);
-                        }
-                        NetworkStatsHistory _result3 = getHistoryForNetwork(_arg0, data.readInt());
-                        reply.writeNoException();
-                        if (_result3 != null) {
-                            parcel2.writeInt(1);
-                            _result3.writeToParcel(parcel2, 1);
-                        } else {
-                            parcel2.writeInt(0);
-                        }
-                        return true;
-                    case 4:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = NetworkTemplate.CREATOR.createFromParcel(parcel);
-                        }
-                        NetworkStats _result4 = getSummaryForAllUid(_arg0, data.readLong(), data.readLong(), data.readInt() != 0);
-                        reply.writeNoException();
-                        if (_result4 != null) {
-                            parcel2.writeInt(1);
-                            _result4.writeToParcel(parcel2, 1);
-                        } else {
-                            parcel2.writeInt(0);
-                        }
-                        return true;
-                    case 5:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = NetworkTemplate.CREATOR.createFromParcel(parcel);
-                        }
-                        NetworkStatsHistory _result5 = getHistoryForUid(_arg0, data.readInt(), data.readInt(), data.readInt(), data.readInt());
-                        reply.writeNoException();
-                        if (_result5 != null) {
-                            parcel2.writeInt(1);
-                            _result5.writeToParcel(parcel2, 1);
-                        } else {
-                            parcel2.writeInt(0);
-                        }
-                        return true;
-                    case 6:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = NetworkTemplate.CREATOR.createFromParcel(parcel);
-                        }
-                        NetworkStatsHistory _result6 = getHistoryIntervalForUid(_arg0, data.readInt(), data.readInt(), data.readInt(), data.readInt(), data.readLong(), data.readLong());
-                        reply.writeNoException();
-                        if (_result6 != null) {
-                            parcel2.writeInt(1);
-                            _result6.writeToParcel(parcel2, 1);
-                        } else {
-                            parcel2.writeInt(0);
-                        }
-                        return true;
-                    case 7:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int[] _result7 = getRelevantUids();
-                        reply.writeNoException();
-                        parcel2.writeIntArray(_result7);
-                        return true;
-                    case 8:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        close();
-                        reply.writeNoException();
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
-                parcel2.writeString(DESCRIPTOR);
+            NetworkTemplate _arg0;
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
                 return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0 ? NetworkTemplate.CREATOR.createFromParcel(data) : null;
+                    NetworkTemplate _arg02 = _arg0;
+                    long _arg1 = data.readLong();
+                    long _arg2 = data.readLong();
+                    NetworkStats _result = getDeviceSummaryForNetwork(_arg02, _arg1, _arg2);
+                    reply.writeNoException();
+                    if (_result != null) {
+                        reply.writeInt(1);
+                        _result.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0 ? NetworkTemplate.CREATOR.createFromParcel(data) : null;
+                    NetworkTemplate _arg03 = _arg0;
+                    long _arg12 = data.readLong();
+                    long _arg22 = data.readLong();
+                    NetworkStats _result2 = getSummaryForNetwork(_arg03, _arg12, _arg22);
+                    reply.writeNoException();
+                    if (_result2 != null) {
+                        reply.writeInt(1);
+                        _result2.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0 ? NetworkTemplate.CREATOR.createFromParcel(data) : null;
+                    int _arg13 = data.readInt();
+                    NetworkStatsHistory _result3 = getHistoryForNetwork(_arg0, _arg13);
+                    reply.writeNoException();
+                    if (_result3 != null) {
+                        reply.writeInt(1);
+                        _result3.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0 ? NetworkTemplate.CREATOR.createFromParcel(data) : null;
+                    NetworkTemplate _arg04 = _arg0;
+                    long _arg14 = data.readLong();
+                    long _arg23 = data.readLong();
+                    boolean _arg3 = data.readInt() != 0;
+                    NetworkStats _result4 = getSummaryForAllUid(_arg04, _arg14, _arg23, _arg3);
+                    reply.writeNoException();
+                    if (_result4 != null) {
+                        reply.writeInt(1);
+                        _result4.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0 ? NetworkTemplate.CREATOR.createFromParcel(data) : null;
+                    NetworkTemplate _arg05 = _arg0;
+                    int _arg15 = data.readInt();
+                    int _arg24 = data.readInt();
+                    int _arg32 = data.readInt();
+                    int _arg4 = data.readInt();
+                    NetworkStatsHistory _result5 = getHistoryForUid(_arg05, _arg15, _arg24, _arg32, _arg4);
+                    reply.writeNoException();
+                    if (_result5 != null) {
+                        reply.writeInt(1);
+                        _result5.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0 ? NetworkTemplate.CREATOR.createFromParcel(data) : null;
+                    NetworkTemplate _arg06 = _arg0;
+                    int _arg16 = data.readInt();
+                    int _arg25 = data.readInt();
+                    int _arg33 = data.readInt();
+                    int _arg42 = data.readInt();
+                    long _arg5 = data.readLong();
+                    long _arg6 = data.readLong();
+                    NetworkStatsHistory _result6 = getHistoryIntervalForUid(_arg06, _arg16, _arg25, _arg33, _arg42, _arg5, _arg6);
+                    reply.writeNoException();
+                    if (_result6 != null) {
+                        reply.writeInt(1);
+                        _result6.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    int[] _result7 = getRelevantUids();
+                    reply.writeNoException();
+                    reply.writeIntArray(_result7);
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    close();
+                    reply.writeNoException();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
             }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements INetworkStatsSession {
             public static INetworkStatsSession sDefaultImpl;
             private IBinder mRemote;
@@ -242,6 +265,7 @@ public interface INetworkStatsSession extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -250,6 +274,7 @@ public interface INetworkStatsSession extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.net.INetworkStatsSession
             public NetworkStats getDeviceSummaryForNetwork(NetworkTemplate template, long start, long end) throws RemoteException {
                 NetworkStats _result;
                 Parcel _data = Parcel.obtain();
@@ -264,7 +289,8 @@ public interface INetworkStatsSession extends IInterface {
                     }
                     _data.writeLong(start);
                     _data.writeLong(end);
-                    if (!this.mRemote.transact(1, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getDeviceSummaryForNetwork(template, start, end);
                     }
                     _reply.readException();
@@ -273,16 +299,14 @@ public interface INetworkStatsSession extends IInterface {
                     } else {
                         _result = null;
                     }
-                    NetworkStats _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.INetworkStatsSession
             public NetworkStats getSummaryForNetwork(NetworkTemplate template, long start, long end) throws RemoteException {
                 NetworkStats _result;
                 Parcel _data = Parcel.obtain();
@@ -297,7 +321,8 @@ public interface INetworkStatsSession extends IInterface {
                     }
                     _data.writeLong(start);
                     _data.writeLong(end);
-                    if (!this.mRemote.transact(2, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getSummaryForNetwork(template, start, end);
                     }
                     _reply.readException();
@@ -306,16 +331,14 @@ public interface INetworkStatsSession extends IInterface {
                     } else {
                         _result = null;
                     }
-                    NetworkStats _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.INetworkStatsSession
             public NetworkStatsHistory getHistoryForNetwork(NetworkTemplate template, int fields) throws RemoteException {
                 NetworkStatsHistory _result;
                 Parcel _data = Parcel.obtain();
@@ -329,7 +352,8 @@ public interface INetworkStatsSession extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(fields);
-                    if (!this.mRemote.transact(3, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getHistoryForNetwork(template, fields);
                     }
                     _reply.readException();
@@ -338,83 +362,73 @@ public interface INetworkStatsSession extends IInterface {
                     } else {
                         _result = null;
                     }
-                    NetworkStatsHistory _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.INetworkStatsSession
             public NetworkStats getSummaryForAllUid(NetworkTemplate template, long start, long end, boolean includeTags) throws RemoteException {
                 NetworkStats _result;
-                NetworkTemplate networkTemplate = template;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (networkTemplate != null) {
+                    if (template != null) {
                         _data.writeInt(1);
-                        networkTemplate.writeToParcel(_data, 0);
+                        template.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    try {
-                        _data.writeLong(start);
-                        try {
-                            _data.writeLong(end);
-                        } catch (Throwable th) {
-                            th = th;
-                            boolean z = includeTags;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                        try {
-                            _data.writeInt(includeTags ? 1 : 0);
-                            if (this.mRemote.transact(4, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                _reply.readException();
-                                if (_reply.readInt() != 0) {
-                                    _result = NetworkStats.CREATOR.createFromParcel(_reply);
-                                } else {
-                                    _result = null;
-                                }
-                                NetworkStats _result2 = _result;
-                                _reply.recycle();
-                                _data.recycle();
-                                return _result2;
-                            }
-                            NetworkStats summaryForAllUid = Stub.getDefaultImpl().getSummaryForAllUid(template, start, end, includeTags);
-                            _reply.recycle();
-                            _data.recycle();
-                            return summaryForAllUid;
-                        } catch (Throwable th2) {
-                            th = th2;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                    } catch (Throwable th3) {
-                        th = th3;
-                        long j = end;
-                        boolean z2 = includeTags;
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeLong(start);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeLong(end);
+                } catch (Throwable th3) {
+                    th = th3;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(includeTags ? 1 : 0);
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        NetworkStats summaryForAllUid = Stub.getDefaultImpl().getSummaryForAllUid(template, start, end, includeTags);
                         _reply.recycle();
                         _data.recycle();
-                        throw th;
+                        return summaryForAllUid;
                     }
+                    _reply.readException();
+                    if (_reply.readInt() != 0) {
+                        _result = NetworkStats.CREATOR.createFromParcel(_reply);
+                    } else {
+                        _result = null;
+                    }
+                    NetworkStats _result2 = _result;
+                    _reply.recycle();
+                    _data.recycle();
+                    return _result2;
                 } catch (Throwable th4) {
                     th = th4;
-                    long j2 = start;
-                    long j3 = end;
-                    boolean z22 = includeTags;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.net.INetworkStatsSession
             public NetworkStatsHistory getHistoryForUid(NetworkTemplate template, int uid, int set, int tag, int fields) throws RemoteException {
                 NetworkStatsHistory _result;
                 Parcel _data = Parcel.obtain();
@@ -431,8 +445,59 @@ public interface INetworkStatsSession extends IInterface {
                     _data.writeInt(set);
                     _data.writeInt(tag);
                     _data.writeInt(fields);
-                    if (!this.mRemote.transact(5, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getHistoryForUid(template, uid, set, tag, fields);
+                    }
+                    _reply.readException();
+                    if (_reply.readInt() != 0) {
+                        _result = NetworkStatsHistory.CREATOR.createFromParcel(_reply);
+                    } else {
+                        _result = null;
+                    }
+                    return _result;
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // android.net.INetworkStatsSession
+            public NetworkStatsHistory getHistoryIntervalForUid(NetworkTemplate template, int uid, int set, int tag, int fields, long start, long end) throws RemoteException {
+                NetworkStatsHistory _result;
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    if (template != null) {
+                        _data.writeInt(1);
+                        template.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
+                    }
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeInt(uid);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(set);
+                    _data.writeInt(tag);
+                    _data.writeInt(fields);
+                    _data.writeLong(start);
+                    _data.writeLong(end);
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        NetworkStatsHistory historyIntervalForUid = Stub.getDefaultImpl().getHistoryIntervalForUid(template, uid, set, tag, fields, start, end);
+                        _reply.recycle();
+                        _data.recycle();
+                        return historyIntervalForUid;
                     }
                     _reply.readException();
                     if (_reply.readInt() != 0) {
@@ -444,84 +509,26 @@ public interface INetworkStatsSession extends IInterface {
                     _reply.recycle();
                     _data.recycle();
                     return _result2;
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public NetworkStatsHistory getHistoryIntervalForUid(NetworkTemplate template, int uid, int set, int tag, int fields, long start, long end) throws RemoteException {
-                NetworkStatsHistory _result;
-                NetworkTemplate networkTemplate = template;
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (networkTemplate != null) {
-                        _data.writeInt(1);
-                        networkTemplate.writeToParcel(_data, 0);
-                    } else {
-                        _data.writeInt(0);
-                    }
-                    try {
-                        _data.writeInt(uid);
-                        try {
-                            _data.writeInt(set);
-                            _data.writeInt(tag);
-                            _data.writeInt(fields);
-                            _data.writeLong(start);
-                            _data.writeLong(end);
-                            if (this.mRemote.transact(6, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                _reply.readException();
-                                if (_reply.readInt() != 0) {
-                                    _result = NetworkStatsHistory.CREATOR.createFromParcel(_reply);
-                                } else {
-                                    _result = null;
-                                }
-                                NetworkStatsHistory _result2 = _result;
-                                _reply.recycle();
-                                _data.recycle();
-                                return _result2;
-                            }
-                            NetworkStatsHistory historyIntervalForUid = Stub.getDefaultImpl().getHistoryIntervalForUid(template, uid, set, tag, fields, start, end);
-                            _reply.recycle();
-                            _data.recycle();
-                            return historyIntervalForUid;
-                        } catch (Throwable th) {
-                            th = th;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                    } catch (Throwable th2) {
-                        th = th2;
-                        int i = set;
-                        _reply.recycle();
-                        _data.recycle();
-                        throw th;
-                    }
                 } catch (Throwable th3) {
                     th = th3;
-                    int i2 = uid;
-                    int i3 = set;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.net.INetworkStatsSession
             public int[] getRelevantUids() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(7, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getRelevantUids();
                     }
                     _reply.readException();
                     int[] _result = _reply.createIntArray();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -529,18 +536,18 @@ public interface INetworkStatsSession extends IInterface {
                 }
             }
 
+            @Override // android.net.INetworkStatsSession
             public void close() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(8, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().close();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().close();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -549,11 +556,11 @@ public interface INetworkStatsSession extends IInterface {
         }
 
         public static boolean setDefaultImpl(INetworkStatsSession impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static INetworkStatsSession getDefaultImpl() {

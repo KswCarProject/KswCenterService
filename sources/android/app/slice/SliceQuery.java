@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+/* loaded from: classes.dex */
 public class SliceQuery {
     private static final String TAG = "SliceQuery";
 
@@ -20,8 +21,10 @@ public class SliceQuery {
             if (Objects.equals(item.getFormat(), SliceItem.FORMAT_IMAGE)) {
                 return item;
             }
-            if ((!compareTypes(item, "slice") || !item.hasHint(Slice.HINT_LIST)) && !item.hasHint(Slice.HINT_ACTIONS) && !item.hasHint(Slice.HINT_LIST_ITEM) && !compareTypes(item, "action") && (icon = find(item, (String) SliceItem.FORMAT_IMAGE)) != null) {
-                return icon;
+            if (!compareTypes(item, "slice") || !item.hasHint(Slice.HINT_LIST)) {
+                if (!item.hasHint(Slice.HINT_ACTIONS) && !item.hasHint(Slice.HINT_LIST_ITEM) && !compareTypes(item, "action") && (icon = find(item, SliceItem.FORMAT_IMAGE)) != null) {
+                    return icon;
+                }
             }
         }
         return null;
@@ -38,11 +41,12 @@ public class SliceQuery {
         return ret;
     }
 
-    private static boolean contains(SliceItem container, SliceItem item) {
+    private static boolean contains(SliceItem container, final SliceItem item) {
         if (container == null || item == null) {
             return false;
         }
-        return stream(container).filter(new Predicate() {
+        return stream(container).filter(new Predicate() { // from class: android.app.slice.-$$Lambda$SliceQuery$fdDPNErwIni-vCQ6k-MlGGBunoE
+            @Override // java.util.function.Predicate
             public final boolean test(Object obj) {
                 return SliceQuery.lambda$contains$0(SliceItem.this, (SliceItem) obj);
             }
@@ -61,20 +65,11 @@ public class SliceQuery {
         return findAll(s, type, new String[]{hints}, new String[]{nonHints});
     }
 
-    public static List<SliceItem> findAll(SliceItem s, String type, String[] hints, String[] nonHints) {
-        return (List) stream(s).filter(new Predicate(type, hints, nonHints) {
-            private final /* synthetic */ String f$0;
-            private final /* synthetic */ String[] f$1;
-            private final /* synthetic */ String[] f$2;
-
-            {
-                this.f$0 = r1;
-                this.f$1 = r2;
-                this.f$2 = r3;
-            }
-
+    public static List<SliceItem> findAll(SliceItem s, final String type, final String[] hints, final String[] nonHints) {
+        return (List) stream(s).filter(new Predicate() { // from class: android.app.slice.-$$Lambda$SliceQuery$hLToAajdaMbaf8BUtZ8fpGK980E
+            @Override // java.util.function.Predicate
             public final boolean test(Object obj) {
-                return SliceQuery.lambda$findAll$1(this.f$0, this.f$1, this.f$2, (SliceItem) obj);
+                return SliceQuery.lambda$findAll$1(type, hints, nonHints, (SliceItem) obj);
             }
         }).collect(Collectors.toList());
     }
@@ -101,25 +96,16 @@ public class SliceQuery {
 
     public static SliceItem find(Slice s, String type, String[] hints, String[] nonHints) {
         List<String> h = s.getHints();
-        return find(new SliceItem((Object) s, "slice", (String) null, (String[]) h.toArray(new String[h.size()])), type, hints, nonHints);
+        return find(new SliceItem(s, "slice", (String) null, (String[]) h.toArray(new String[h.size()])), type, hints, nonHints);
     }
 
-    public static SliceItem find(SliceItem s, String type, String[] hints, String[] nonHints) {
-        return stream(s).filter(new Predicate(type, hints, nonHints) {
-            private final /* synthetic */ String f$0;
-            private final /* synthetic */ String[] f$1;
-            private final /* synthetic */ String[] f$2;
-
-            {
-                this.f$0 = r1;
-                this.f$1 = r2;
-                this.f$2 = r3;
-            }
-
+    public static SliceItem find(SliceItem s, final String type, final String[] hints, final String[] nonHints) {
+        return stream(s).filter(new Predicate() { // from class: android.app.slice.-$$Lambda$SliceQuery$cG9kHpHpv4nbm7p3sCvlkQGlqQw
+            @Override // java.util.function.Predicate
             public final boolean test(Object obj) {
-                return SliceQuery.lambda$find$2(this.f$0, this.f$1, this.f$2, (SliceItem) obj);
+                return SliceQuery.lambda$find$2(type, hints, nonHints, (SliceItem) obj);
             }
-        }).findFirst().orElse((Object) null);
+        }).findFirst().orElse(null);
     }
 
     static /* synthetic */ boolean lambda$find$2(String type, String[] hints, String[] nonHints, SliceItem item) {
@@ -129,11 +115,14 @@ public class SliceQuery {
     public static Stream<SliceItem> stream(SliceItem slice) {
         final Queue<SliceItem> items = new LinkedList<>();
         items.add(slice);
-        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(new Iterator<SliceItem>() {
+        Iterator<SliceItem> iterator = new Iterator<SliceItem>() { // from class: android.app.slice.SliceQuery.1
+            @Override // java.util.Iterator
             public boolean hasNext() {
                 return items.size() != 0;
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // java.util.Iterator
             public SliceItem next() {
                 SliceItem item = (SliceItem) items.poll();
                 if (SliceQuery.compareTypes(item, "slice") || SliceQuery.compareTypes(item, "action")) {
@@ -141,11 +130,13 @@ public class SliceQuery {
                 }
                 return item;
             }
-        }, 0), false);
+        };
+        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, 0), false);
     }
 
     public static boolean compareTypes(SliceItem item, String desiredType) {
-        if (desiredType.length() == 3 && desiredType.equals("*/*")) {
+        int typeLength = desiredType.length();
+        if (typeLength == 3 && desiredType.equals("*/*")) {
             return true;
         }
         if (item.getSubType() == null && desiredType.indexOf(47) < 0) {

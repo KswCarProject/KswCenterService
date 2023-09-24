@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+/* loaded from: classes3.dex */
 public class RSSurfaceView extends SurfaceView implements SurfaceHolder.Callback {
     private RenderScriptGL mRS;
     private SurfaceHolder mSurfaceHolder;
@@ -24,21 +25,25 @@ public class RSSurfaceView extends SurfaceView implements SurfaceHolder.Callback
     }
 
     private void init() {
-        getHolder().addCallback(this);
+        SurfaceHolder holder = getHolder();
+        holder.addCallback(this);
     }
 
+    @Override // android.view.SurfaceHolder.Callback
     public void surfaceCreated(SurfaceHolder holder) {
         this.mSurfaceHolder = holder;
     }
 
+    @Override // android.view.SurfaceHolder.Callback
     public void surfaceDestroyed(SurfaceHolder holder) {
         synchronized (this) {
             if (this.mRS != null) {
-                this.mRS.setSurface((SurfaceHolder) null, 0, 0);
+                this.mRS.setSurface(null, 0, 0);
             }
         }
     }
 
+    @Override // android.view.SurfaceHolder.Callback
     public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
         synchronized (this) {
             if (this.mRS != null) {

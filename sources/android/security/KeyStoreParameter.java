@@ -4,6 +4,7 @@ import android.content.Context;
 import java.security.KeyStore;
 
 @Deprecated
+/* loaded from: classes3.dex */
 public final class KeyStoreParameter implements KeyStore.ProtectionParameter {
     private final int mFlags;
 
@@ -20,6 +21,7 @@ public final class KeyStoreParameter implements KeyStore.ProtectionParameter {
     }
 
     @Deprecated
+    /* loaded from: classes3.dex */
     public static final class Builder {
         private int mFlags;
 

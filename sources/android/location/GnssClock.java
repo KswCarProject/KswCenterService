@@ -1,27 +1,32 @@
 package android.location;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public final class GnssClock implements Parcelable {
-    public static final Parcelable.Creator<GnssClock> CREATOR = new Parcelable.Creator<GnssClock>() {
+    public static final Parcelable.Creator<GnssClock> CREATOR = new Parcelable.Creator<GnssClock>() { // from class: android.location.GnssClock.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public GnssClock createFromParcel(Parcel parcel) {
             GnssClock gpsClock = new GnssClock();
-            int unused = gpsClock.mFlags = parcel.readInt();
-            int unused2 = gpsClock.mLeapSecond = parcel.readInt();
-            long unused3 = gpsClock.mTimeNanos = parcel.readLong();
-            double unused4 = gpsClock.mTimeUncertaintyNanos = parcel.readDouble();
-            long unused5 = gpsClock.mFullBiasNanos = parcel.readLong();
-            double unused6 = gpsClock.mBiasNanos = parcel.readDouble();
-            double unused7 = gpsClock.mBiasUncertaintyNanos = parcel.readDouble();
-            double unused8 = gpsClock.mDriftNanosPerSecond = parcel.readDouble();
-            double unused9 = gpsClock.mDriftUncertaintyNanosPerSecond = parcel.readDouble();
-            int unused10 = gpsClock.mHardwareClockDiscontinuityCount = parcel.readInt();
-            long unused11 = gpsClock.mElapsedRealtimeNanos = parcel.readLong();
-            double unused12 = gpsClock.mElapsedRealtimeUncertaintyNanos = parcel.readDouble();
+            gpsClock.mFlags = parcel.readInt();
+            gpsClock.mLeapSecond = parcel.readInt();
+            gpsClock.mTimeNanos = parcel.readLong();
+            gpsClock.mTimeUncertaintyNanos = parcel.readDouble();
+            gpsClock.mFullBiasNanos = parcel.readLong();
+            gpsClock.mBiasNanos = parcel.readDouble();
+            gpsClock.mBiasUncertaintyNanos = parcel.readDouble();
+            gpsClock.mDriftNanosPerSecond = parcel.readDouble();
+            gpsClock.mDriftUncertaintyNanosPerSecond = parcel.readDouble();
+            gpsClock.mHardwareClockDiscontinuityCount = parcel.readInt();
+            gpsClock.mElapsedRealtimeNanos = parcel.readLong();
+            gpsClock.mElapsedRealtimeUncertaintyNanos = parcel.readDouble();
             return gpsClock;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public GnssClock[] newArray(int size) {
             return new GnssClock[size];
         }
@@ -36,30 +41,18 @@ public final class GnssClock implements Parcelable {
     private static final int HAS_LEAP_SECOND = 1;
     private static final int HAS_NO_FLAGS = 0;
     private static final int HAS_TIME_UNCERTAINTY = 2;
-    /* access modifiers changed from: private */
-    public double mBiasNanos;
-    /* access modifiers changed from: private */
-    public double mBiasUncertaintyNanos;
-    /* access modifiers changed from: private */
-    public double mDriftNanosPerSecond;
-    /* access modifiers changed from: private */
-    public double mDriftUncertaintyNanosPerSecond;
-    /* access modifiers changed from: private */
-    public long mElapsedRealtimeNanos;
-    /* access modifiers changed from: private */
-    public double mElapsedRealtimeUncertaintyNanos;
-    /* access modifiers changed from: private */
-    public int mFlags;
-    /* access modifiers changed from: private */
-    public long mFullBiasNanos;
-    /* access modifiers changed from: private */
-    public int mHardwareClockDiscontinuityCount;
-    /* access modifiers changed from: private */
-    public int mLeapSecond;
-    /* access modifiers changed from: private */
-    public long mTimeNanos;
-    /* access modifiers changed from: private */
-    public double mTimeUncertaintyNanos;
+    private double mBiasNanos;
+    private double mBiasUncertaintyNanos;
+    private double mDriftNanosPerSecond;
+    private double mDriftUncertaintyNanosPerSecond;
+    private long mElapsedRealtimeNanos;
+    private double mElapsedRealtimeUncertaintyNanos;
+    private int mFlags;
+    private long mFullBiasNanos;
+    private int mHardwareClockDiscontinuityCount;
+    private int mLeapSecond;
+    private long mTimeNanos;
+    private double mTimeUncertaintyNanos;
 
     public GnssClock() {
         initialize();
@@ -233,7 +226,7 @@ public final class GnssClock implements Parcelable {
 
     public void resetElapsedRealtimeNanos() {
         resetFlag(128);
-        this.mElapsedRealtimeNanos = 0;
+        this.mElapsedRealtimeNanos = 0L;
     }
 
     public boolean hasElapsedRealtimeUncertaintyNanos() {
@@ -262,6 +255,7 @@ public final class GnssClock implements Parcelable {
         this.mHardwareClockDiscontinuityCount = value;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeInt(this.mFlags);
         parcel.writeInt(this.mLeapSecond);
@@ -277,6 +271,7 @@ public final class GnssClock implements Parcelable {
         parcel.writeDouble(this.mElapsedRealtimeUncertaintyNanos);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -285,7 +280,6 @@ public final class GnssClock implements Parcelable {
         StringBuilder builder = new StringBuilder("GnssClock:\n");
         Object[] objArr = new Object[2];
         objArr[0] = "LeapSecond";
-        Double d = null;
         objArr[1] = hasLeapSecond() ? Integer.valueOf(this.mLeapSecond) : null;
         builder.append(String.format("   %-15s = %s\n", objArr));
         Object[] objArr2 = new Object[4];
@@ -310,17 +304,14 @@ public final class GnssClock implements Parcelable {
         objArr5[2] = "DriftUncertaintyNanosPerSecond";
         objArr5[3] = hasDriftUncertaintyNanosPerSecond() ? Double.valueOf(this.mDriftUncertaintyNanosPerSecond) : null;
         builder.append(String.format("   %-15s = %-25s   %-26s = %s\n", objArr5));
-        builder.append(String.format("   %-15s = %s\n", new Object[]{"HardwareClockDiscontinuityCount", Integer.valueOf(this.mHardwareClockDiscontinuityCount)}));
+        builder.append(String.format("   %-15s = %s\n", "HardwareClockDiscontinuityCount", Integer.valueOf(this.mHardwareClockDiscontinuityCount)));
         Object[] objArr6 = new Object[2];
         objArr6[0] = "ElapsedRealtimeNanos";
         objArr6[1] = hasElapsedRealtimeNanos() ? Long.valueOf(this.mElapsedRealtimeNanos) : null;
         builder.append(String.format("   %-15s = %s\n", objArr6));
         Object[] objArr7 = new Object[2];
         objArr7[0] = "ElapsedRealtimeUncertaintyNanos";
-        if (hasElapsedRealtimeUncertaintyNanos()) {
-            d = Double.valueOf(this.mElapsedRealtimeUncertaintyNanos);
-        }
-        objArr7[1] = d;
+        objArr7[1] = hasElapsedRealtimeUncertaintyNanos() ? Double.valueOf(this.mElapsedRealtimeUncertaintyNanos) : null;
         builder.append(String.format("   %-15s = %s\n", objArr7));
         return builder.toString();
     }

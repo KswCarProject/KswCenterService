@@ -3,13 +3,14 @@ package android.net;
 import android.annotation.SystemApi;
 import android.content.Context;
 import android.net.INetworkScoreService;
-import android.os.RemoteException;
-import android.os.ServiceManager;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.List;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public class NetworkScoreManager {
     public static final String ACTION_CHANGE_ACTIVE = "android.net.scoring.CHANGE_ACTIVE";
     public static final String ACTION_CUSTOM_ENABLE = "android.net.scoring.CUSTOM_ENABLE";
@@ -32,10 +33,12 @@ public class NetworkScoreManager {
     private final INetworkScoreService mService = INetworkScoreService.Stub.asInterface(ServiceManager.getServiceOrThrow(Context.NETWORK_SCORE_SERVICE));
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface CacheUpdateFilter {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface RecommendationsEnabledSetting {
     }
 

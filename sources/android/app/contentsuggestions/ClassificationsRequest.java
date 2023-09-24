@@ -1,18 +1,23 @@
 package android.app.contentsuggestions;
 
 import android.annotation.SystemApi;
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.List;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class ClassificationsRequest implements Parcelable {
-    public static final Parcelable.Creator<ClassificationsRequest> CREATOR = new Parcelable.Creator<ClassificationsRequest>() {
+    public static final Parcelable.Creator<ClassificationsRequest> CREATOR = new Parcelable.Creator<ClassificationsRequest>() { // from class: android.app.contentsuggestions.ClassificationsRequest.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ClassificationsRequest createFromParcel(Parcel source) {
             return new ClassificationsRequest(source.createTypedArrayList(ContentSelection.CREATOR), source.readBundle());
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ClassificationsRequest[] newArray(int size) {
             return new ClassificationsRequest[size];
         }
@@ -33,16 +38,19 @@ public final class ClassificationsRequest implements Parcelable {
         return this.mExtras == null ? new Bundle() : this.mExtras;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeTypedList(this.mSelections);
         dest.writeBundle(this.mExtras);
     }
 
     @SystemApi
+    /* loaded from: classes.dex */
     public static final class Builder {
         private Bundle mExtras;
         private final List<ContentSelection> mSelections;

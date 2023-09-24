@@ -4,6 +4,7 @@ import android.security.keystore.KeyProperties;
 import com.android.internal.telephony.IccCardConstants;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class MvnoType {
     public static final int GID = 2;
     public static final int IMSI = 1;

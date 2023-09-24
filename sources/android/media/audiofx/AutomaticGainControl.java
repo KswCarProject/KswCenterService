@@ -2,6 +2,7 @@ package android.media.audiofx;
 
 import android.util.Log;
 
+/* loaded from: classes3.dex */
 public class AutomaticGainControl extends AudioEffect {
     private static final String TAG = "AutomaticGainControl";
 
@@ -11,15 +12,16 @@ public class AutomaticGainControl extends AudioEffect {
 
     public static AutomaticGainControl create(int audioSession) {
         try {
-            return new AutomaticGainControl(audioSession);
+            AutomaticGainControl agc = new AutomaticGainControl(audioSession);
+            return agc;
         } catch (IllegalArgumentException e) {
-            Log.w(TAG, "not implemented on this device " + null);
+            Log.m64w(TAG, "not implemented on this device " + ((Object) null));
             return null;
         } catch (UnsupportedOperationException e2) {
-            Log.w(TAG, "not enough resources");
+            Log.m64w(TAG, "not enough resources");
             return null;
         } catch (RuntimeException e3) {
-            Log.w(TAG, "not enough memory");
+            Log.m64w(TAG, "not enough memory");
             return null;
         }
     }

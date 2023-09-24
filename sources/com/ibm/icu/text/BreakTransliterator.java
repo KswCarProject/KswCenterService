@@ -7,79 +7,84 @@ import com.ibm.icu.util.ICUCloneNotSupportedException;
 import com.ibm.icu.util.ULocale;
 import java.text.CharacterIterator;
 
+/* loaded from: classes5.dex */
 final class BreakTransliterator extends Transliterator {
     static final int LETTER_OR_MARK_MASK = 510;
-    private BreakIterator bi;
+
+    /* renamed from: bi */
+    private BreakIterator f2541bi;
     private int[] boundaries;
     private int boundaryCount;
     private String insertion;
 
-    public BreakTransliterator(String ID, UnicodeFilter filter, BreakIterator bi2, String insertion2) {
+    public BreakTransliterator(String ID, UnicodeFilter filter, BreakIterator bi, String insertion) {
         super(ID, filter);
         this.boundaries = new int[50];
         this.boundaryCount = 0;
-        this.bi = bi2;
-        this.insertion = insertion2;
+        this.f2541bi = bi;
+        this.insertion = insertion;
     }
 
     public BreakTransliterator(String ID, UnicodeFilter filter) {
-        this(ID, filter, (BreakIterator) null, WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER);
+        this(ID, filter, null, WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER);
     }
 
     public String getInsertion() {
         return this.insertion;
     }
 
-    public void setInsertion(String insertion2) {
-        this.insertion = insertion2;
+    public void setInsertion(String insertion) {
+        this.insertion = insertion;
     }
 
     public BreakIterator getBreakIterator() {
-        if (this.bi == null) {
-            this.bi = BreakIterator.getWordInstance(new ULocale("th_TH"));
+        if (this.f2541bi == null) {
+            this.f2541bi = BreakIterator.getWordInstance(new ULocale("th_TH"));
         }
-        return this.bi;
+        return this.f2541bi;
     }
 
-    public void setBreakIterator(BreakIterator bi2) {
-        this.bi = bi2;
+    public void setBreakIterator(BreakIterator bi) {
+        this.f2541bi = bi;
     }
 
-    /* access modifiers changed from: protected */
-    public synchronized void handleTransliterate(Replaceable text, Transliterator.Position pos, boolean incremental) {
+    @Override // com.ibm.icu.text.Transliterator
+    protected synchronized void handleTransliterate(Replaceable text, Transliterator.Position pos, boolean incremental) {
         this.boundaryCount = 0;
         getBreakIterator();
-        this.bi.setText((CharacterIterator) new ReplaceableCharacterIterator(text, pos.start, pos.limit, pos.start));
-        int first = this.bi.first();
+        this.f2541bi.setText(new ReplaceableCharacterIterator(text, pos.start, pos.limit, pos.start));
+        int first = this.f2541bi.first();
         while (true) {
             int boundary = first;
             if (boundary == -1 || boundary >= pos.limit) {
-                int delta = 0;
-                int lastBoundary = 0;
-            } else {
-                if (boundary != 0) {
-                    if (((1 << UCharacter.getType(UTF16.charAt(text, boundary - 1))) & 510) != 0) {
-                        if (((1 << UCharacter.getType(UTF16.charAt(text, boundary))) & 510) != 0) {
-                            if (this.boundaryCount >= this.boundaries.length) {
-                                int[] temp = new int[(this.boundaries.length * 2)];
-                                System.arraycopy(this.boundaries, 0, temp, 0, this.boundaries.length);
-                                this.boundaries = temp;
-                            }
-                            int[] temp2 = this.boundaries;
-                            int i = this.boundaryCount;
-                            this.boundaryCount = i + 1;
-                            temp2[i] = boundary;
+                break;
+            }
+            if (boundary != 0) {
+                int cp = UTF16.charAt(text, boundary - 1);
+                int type = UCharacter.getType(cp);
+                if (((1 << type) & 510) != 0) {
+                    int cp2 = UTF16.charAt(text, boundary);
+                    int type2 = UCharacter.getType(cp2);
+                    if (((1 << type2) & 510) != 0) {
+                        if (this.boundaryCount >= this.boundaries.length) {
+                            int[] temp = new int[this.boundaries.length * 2];
+                            System.arraycopy(this.boundaries, 0, temp, 0, this.boundaries.length);
+                            this.boundaries = temp;
                         }
+                        int[] temp2 = this.boundaries;
+                        int i = this.boundaryCount;
+                        this.boundaryCount = i + 1;
+                        temp2[i] = boundary;
                     }
                 }
-                first = this.bi.next();
             }
+            first = this.f2541bi.next();
         }
-        int delta2 = 0;
-        int lastBoundary2 = 0;
+        int delta = 0;
+        int lastBoundary = 0;
         if (this.boundaryCount != 0) {
-            delta2 = this.boundaryCount * this.insertion.length();
-            lastBoundary2 = this.boundaries[this.boundaryCount - 1];
+            delta = this.boundaryCount * this.insertion.length();
+            lastBoundary = this.boundaries[this.boundaryCount - 1];
             while (this.boundaryCount > 0) {
                 int[] iArr = this.boundaries;
                 int i2 = this.boundaryCount - 1;
@@ -88,54 +93,56 @@ final class BreakTransliterator extends Transliterator {
                 text.replace(boundary2, boundary2, this.insertion);
             }
         }
-        pos.contextLimit += delta2;
-        pos.limit += delta2;
-        pos.start = incremental ? lastBoundary2 + delta2 : pos.limit;
+        pos.contextLimit += delta;
+        pos.limit += delta;
+        pos.start = incremental ? lastBoundary + delta : pos.limit;
     }
 
     static void register() {
-        Transliterator.registerInstance(new BreakTransliterator("Any-BreakInternal", (UnicodeFilter) null), false);
+        Transliterator trans = new BreakTransliterator("Any-BreakInternal", null);
+        Transliterator.registerInstance(trans, false);
     }
 
+    /* loaded from: classes5.dex */
     static final class ReplaceableCharacterIterator implements CharacterIterator {
         private int begin;
         private int end;
         private int pos;
         private Replaceable text;
 
-        public ReplaceableCharacterIterator(Replaceable text2, int begin2, int end2, int pos2) {
-            if (text2 != null) {
-                this.text = text2;
-                if (begin2 < 0 || begin2 > end2 || end2 > text2.length()) {
-                    throw new IllegalArgumentException("Invalid substring range");
-                } else if (pos2 < begin2 || pos2 > end2) {
-                    throw new IllegalArgumentException("Invalid position");
-                } else {
-                    this.begin = begin2;
-                    this.end = end2;
-                    this.pos = pos2;
-                }
-            } else {
+        public ReplaceableCharacterIterator(Replaceable text, int begin, int end, int pos) {
+            if (text == null) {
                 throw new NullPointerException();
             }
-        }
-
-        public void setText(Replaceable text2) {
-            if (text2 != null) {
-                this.text = text2;
-                this.begin = 0;
-                this.end = text2.length();
-                this.pos = 0;
-                return;
+            this.text = text;
+            if (begin < 0 || begin > end || end > text.length()) {
+                throw new IllegalArgumentException("Invalid substring range");
             }
-            throw new NullPointerException();
+            if (pos < begin || pos > end) {
+                throw new IllegalArgumentException("Invalid position");
+            }
+            this.begin = begin;
+            this.end = end;
+            this.pos = pos;
         }
 
+        public void setText(Replaceable text) {
+            if (text == null) {
+                throw new NullPointerException();
+            }
+            this.text = text;
+            this.begin = 0;
+            this.end = text.length();
+            this.pos = 0;
+        }
+
+        @Override // java.text.CharacterIterator
         public char first() {
             this.pos = this.begin;
             return current();
         }
 
+        @Override // java.text.CharacterIterator
         public char last() {
             if (this.end != this.begin) {
                 this.pos = this.end - 1;
@@ -145,6 +152,7 @@ final class BreakTransliterator extends Transliterator {
             return current();
         }
 
+        @Override // java.text.CharacterIterator
         public char setIndex(int p) {
             if (p < this.begin || p > this.end) {
                 throw new IllegalArgumentException("Invalid index");
@@ -153,38 +161,44 @@ final class BreakTransliterator extends Transliterator {
             return current();
         }
 
+        @Override // java.text.CharacterIterator
         public char current() {
-            if (this.pos < this.begin || this.pos >= this.end) {
-                return 65535;
+            if (this.pos >= this.begin && this.pos < this.end) {
+                return this.text.charAt(this.pos);
             }
-            return this.text.charAt(this.pos);
+            return '\uffff';
         }
 
+        @Override // java.text.CharacterIterator
         public char next() {
             if (this.pos < this.end - 1) {
                 this.pos++;
                 return this.text.charAt(this.pos);
             }
             this.pos = this.end;
-            return 65535;
+            return '\uffff';
         }
 
+        @Override // java.text.CharacterIterator
         public char previous() {
-            if (this.pos <= this.begin) {
-                return 65535;
+            if (this.pos > this.begin) {
+                this.pos--;
+                return this.text.charAt(this.pos);
             }
-            this.pos--;
-            return this.text.charAt(this.pos);
+            return '\uffff';
         }
 
+        @Override // java.text.CharacterIterator
         public int getBeginIndex() {
             return this.begin;
         }
 
+        @Override // java.text.CharacterIterator
         public int getEndIndex() {
             return this.end;
         }
 
+        @Override // java.text.CharacterIterator
         public int getIndex() {
             return this.pos;
         }
@@ -193,12 +207,9 @@ final class BreakTransliterator extends Transliterator {
             if (this == obj) {
                 return true;
             }
-            if (!(obj instanceof ReplaceableCharacterIterator)) {
-                return false;
-            }
-            ReplaceableCharacterIterator that = (ReplaceableCharacterIterator) obj;
-            if (hashCode() == that.hashCode() && this.text.equals(that.text) && this.pos == that.pos && this.begin == that.begin && this.end == that.end) {
-                return true;
+            if (obj instanceof ReplaceableCharacterIterator) {
+                ReplaceableCharacterIterator that = (ReplaceableCharacterIterator) obj;
+                return hashCode() == that.hashCode() && this.text.equals(that.text) && this.pos == that.pos && this.begin == that.begin && this.end == that.end;
             }
             return false;
         }
@@ -207,18 +218,22 @@ final class BreakTransliterator extends Transliterator {
             return ((this.text.hashCode() ^ this.pos) ^ this.begin) ^ this.end;
         }
 
+        @Override // java.text.CharacterIterator
         public Object clone() {
             try {
-                return (ReplaceableCharacterIterator) super.clone();
+                ReplaceableCharacterIterator other = (ReplaceableCharacterIterator) super.clone();
+                return other;
             } catch (CloneNotSupportedException e) {
                 throw new ICUCloneNotSupportedException();
             }
         }
     }
 
+    @Override // com.ibm.icu.text.Transliterator
     public void addSourceTargetSet(UnicodeSet inputFilter, UnicodeSet sourceSet, UnicodeSet targetSet) {
-        if (getFilterAsUnicodeSet(inputFilter).size() != 0) {
-            targetSet.addAll((CharSequence) this.insertion);
+        UnicodeSet myFilter = getFilterAsUnicodeSet(inputFilter);
+        if (myFilter.size() != 0) {
+            targetSet.addAll(this.insertion);
         }
     }
 }

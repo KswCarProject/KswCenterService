@@ -1,17 +1,22 @@
 package android.app.contentsuggestions;
 
 import android.annotation.SystemApi;
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class ContentSelection implements Parcelable {
-    public static final Parcelable.Creator<ContentSelection> CREATOR = new Parcelable.Creator<ContentSelection>() {
+    public static final Parcelable.Creator<ContentSelection> CREATOR = new Parcelable.Creator<ContentSelection>() { // from class: android.app.contentsuggestions.ContentSelection.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ContentSelection createFromParcel(Parcel source) {
             return new ContentSelection(source.readString(), source.readBundle());
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ContentSelection[] newArray(int size) {
             return new ContentSelection[size];
         }
@@ -32,10 +37,12 @@ public final class ContentSelection implements Parcelable {
         return this.mExtras;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.mSelectionId);
         dest.writeBundle(this.mExtras);

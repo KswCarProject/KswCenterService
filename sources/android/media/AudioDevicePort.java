@@ -2,11 +2,11 @@ package android.media;
 
 import android.annotation.UnsupportedAppUsage;
 
+/* loaded from: classes3.dex */
 public class AudioDevicePort extends AudioPort {
     private final String mAddress;
     private final int mType;
 
-    /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     @UnsupportedAppUsage
     AudioDevicePort(AudioHandle handle, String deviceName, int[] samplingRates, int[] channelMasks, int[] channelIndexMasks, int[] formats, AudioGain[] gains, int type, String address) {
         super(handle, AudioManager.isInputDevice(type) ? 1 : 2, deviceName, samplingRates, channelMasks, channelIndexMasks, formats, gains);
@@ -23,10 +23,12 @@ public class AudioDevicePort extends AudioPort {
         return this.mAddress;
     }
 
+    @Override // android.media.AudioPort
     public AudioDevicePortConfig buildConfig(int samplingRate, int channelMask, int format, AudioGainConfig gain) {
         return new AudioDevicePortConfig(this, samplingRate, channelMask, format, gain);
     }
 
+    @Override // android.media.AudioPort
     public boolean equals(Object o) {
         if (o == null || !(o instanceof AudioDevicePort)) {
             return false;
@@ -35,12 +37,13 @@ public class AudioDevicePort extends AudioPort {
         if (this.mType != other.type()) {
             return false;
         }
-        if ((this.mAddress != null || other.address() == null) && this.mAddress.equals(other.address())) {
-            return super.equals(o);
+        if ((this.mAddress == null && other.address() != null) || !this.mAddress.equals(other.address())) {
+            return false;
         }
-        return false;
+        return super.equals(o);
     }
 
+    @Override // android.media.AudioPort
     public String toString() {
         String type;
         if (this.mRole == 1) {

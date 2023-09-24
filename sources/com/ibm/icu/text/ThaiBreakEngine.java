@@ -1,28 +1,32 @@
 package com.ibm.icu.text;
 
 import com.ibm.icu.lang.UCharacter;
+import com.ibm.icu.text.DictionaryBreakEngine;
 import java.io.IOException;
+import java.text.CharacterIterator;
 
+/* loaded from: classes5.dex */
 class ThaiBreakEngine extends DictionaryBreakEngine {
     private static final byte THAI_LOOKAHEAD = 3;
-    private static final char THAI_MAIYAMOK = 'ๆ';
+    private static final char THAI_MAIYAMOK = '\u0e46';
     private static final byte THAI_MIN_WORD = 2;
     private static final byte THAI_MIN_WORD_SPAN = 4;
-    private static final char THAI_PAIYANNOI = 'ฯ';
+    private static final char THAI_PAIYANNOI = '\u0e2f';
     private static final byte THAI_PREFIX_COMBINE_THRESHOLD = 3;
     private static final byte THAI_ROOT_COMBINE_THRESHOLD = 3;
-    private static UnicodeSet fBeginWordSet = new UnicodeSet();
-    private static UnicodeSet fEndWordSet = new UnicodeSet(fThaiWordSet);
-    private static UnicodeSet fMarkSet = new UnicodeSet();
-    private static UnicodeSet fSuffixSet = new UnicodeSet();
+    private static UnicodeSet fEndWordSet;
+    private DictionaryMatcher fDictionary;
     private static UnicodeSet fThaiWordSet = new UnicodeSet();
-    private DictionaryMatcher fDictionary = DictionaryData.loadDictionaryFor("Thai");
+    private static UnicodeSet fMarkSet = new UnicodeSet();
+    private static UnicodeSet fBeginWordSet = new UnicodeSet();
+    private static UnicodeSet fSuffixSet = new UnicodeSet();
 
     static {
         fThaiWordSet.applyPattern("[[:Thai:]&[:LineBreak=SA:]]");
         fThaiWordSet.compact();
         fMarkSet.applyPattern("[[:Thai:]&[:LineBreak=SA:]&[:M:]]");
         fMarkSet.add(32);
+        fEndWordSet = new UnicodeSet(fThaiWordSet);
         fEndWordSet.remove(3633);
         fEndWordSet.remove(3648, 3652);
         fBeginWordSet.add(3585, 3630);
@@ -33,15 +37,16 @@ class ThaiBreakEngine extends DictionaryBreakEngine {
         fEndWordSet.compact();
         fBeginWordSet.compact();
         fSuffixSet.compact();
-        fThaiWordSet.freeze();
-        fMarkSet.freeze();
-        fEndWordSet.freeze();
-        fBeginWordSet.freeze();
-        fSuffixSet.freeze();
+        fThaiWordSet.m211freeze();
+        fMarkSet.m211freeze();
+        fEndWordSet.m211freeze();
+        fBeginWordSet.m211freeze();
+        fSuffixSet.m211freeze();
     }
 
     public ThaiBreakEngine() throws IOException {
         setCharacters(fThaiWordSet);
+        this.fDictionary = DictionaryData.loadDictionaryFor("Thai");
     }
 
     public boolean equals(Object obj) {
@@ -52,238 +57,149 @@ class ThaiBreakEngine extends DictionaryBreakEngine {
         return getClass().hashCode();
     }
 
+    @Override // com.ibm.icu.text.DictionaryBreakEngine, com.ibm.icu.text.LanguageBreakEngine
     public boolean handles(int c) {
-        return UCharacter.getIntPropertyValue(c, 4106) == 38;
+        int script = UCharacter.getIntPropertyValue(c, 4106);
+        return script == 38;
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:89:0x0092 A[EDGE_INSN: B:89:0x0092->B:29:0x0092 ?: BREAK  , SYNTHETIC] */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public int divideUpDictionaryRange(java.text.CharacterIterator r16, int r17, int r18, com.ibm.icu.text.DictionaryBreakEngine.DequeI r19) {
-        /*
-            r15 = this;
-            r0 = r15
-            r1 = r16
-            r2 = r18
-            int r3 = r2 - r17
-            r4 = 0
-            r5 = 4
-            if (r3 >= r5) goto L_0x000c
-            return r4
-        L_0x000c:
-            r3 = 0
-            r5 = 3
-            com.ibm.icu.text.DictionaryBreakEngine$PossibleWord[] r6 = new com.ibm.icu.text.DictionaryBreakEngine.PossibleWord[r5]
-            r7 = r4
-        L_0x0011:
-            if (r7 >= r5) goto L_0x001d
-            com.ibm.icu.text.DictionaryBreakEngine$PossibleWord r8 = new com.ibm.icu.text.DictionaryBreakEngine$PossibleWord
-            r8.<init>()
-            r6[r7] = r8
-            int r7 = r7 + 1
-            goto L_0x0011
-        L_0x001d:
-            r16.setIndex(r17)
-        L_0x0020:
-            int r7 = r16.getIndex()
-            r8 = r7
-            if (r7 >= r2) goto L_0x0199
-            r7 = 0
-            int r9 = r3 % 3
-            r9 = r6[r9]
-            com.ibm.icu.text.DictionaryMatcher r10 = r0.fDictionary
-            int r9 = r9.candidates(r1, r10, r2)
-            r10 = 1
-            if (r9 != r10) goto L_0x0040
-            int r11 = r3 % 3
-            r11 = r6[r11]
-            int r7 = r11.acceptMarked(r1)
-            int r3 = r3 + 1
-            goto L_0x009c
-        L_0x0040:
-            if (r9 <= r10) goto L_0x009c
-            int r11 = r16.getIndex()
-            if (r11 >= r2) goto L_0x0092
-        L_0x0048:
-            r11 = 1
-            int r12 = r3 + 1
-            int r12 = r12 % r5
-            r12 = r6[r12]
-            com.ibm.icu.text.DictionaryMatcher r13 = r0.fDictionary
-            int r12 = r12.candidates(r1, r13, r2)
-            if (r12 <= 0) goto L_0x0088
-            r12 = 2
-            if (r11 >= r12) goto L_0x0061
-            int r12 = r3 % 3
-            r12 = r6[r12]
-            r12.markCurrent()
-            r11 = 2
-        L_0x0061:
-            int r12 = r16.getIndex()
-            if (r12 < r2) goto L_0x0068
-            goto L_0x0092
-        L_0x0068:
-            int r12 = r3 + 2
-            int r12 = r12 % r5
-            r12 = r6[r12]
-            com.ibm.icu.text.DictionaryMatcher r13 = r0.fDictionary
-            int r12 = r12.candidates(r1, r13, r2)
-            if (r12 <= 0) goto L_0x007d
-            int r12 = r3 % 3
-            r12 = r6[r12]
-            r12.markCurrent()
-            goto L_0x0092
-        L_0x007d:
-            int r12 = r3 + 1
-            int r12 = r12 % r5
-            r12 = r6[r12]
-            boolean r12 = r12.backUp(r1)
-            if (r12 != 0) goto L_0x0068
-        L_0x0088:
-            int r11 = r3 % 3
-            r11 = r6[r11]
-            boolean r11 = r11.backUp(r1)
-            if (r11 != 0) goto L_0x0048
-        L_0x0092:
-            int r11 = r3 % 3
-            r11 = r6[r11]
-            int r7 = r11.acceptMarked(r1)
-            int r3 = r3 + 1
-        L_0x009c:
-            int r11 = r16.getIndex()
-            if (r11 >= r2) goto L_0x0107
-            if (r7 >= r5) goto L_0x0107
-            int r11 = r3 % 3
-            r11 = r6[r11]
-            com.ibm.icu.text.DictionaryMatcher r12 = r0.fDictionary
-            int r11 = r11.candidates(r1, r12, r2)
-            if (r11 > 0) goto L_0x0102
-            if (r7 == 0) goto L_0x00bc
-            int r11 = r3 % 3
-            r11 = r6[r11]
-            int r11 = r11.longestPrefix()
-            if (r11 >= r5) goto L_0x0102
-        L_0x00bc:
-            int r11 = r8 + r7
-            int r11 = r2 - r11
-            char r12 = r16.current()
-            r13 = r12
-            r12 = r11
-            r11 = r4
-        L_0x00c7:
-            r16.next()
-            char r14 = r16.current()
-            int r11 = r11 + r10
-            int r12 = r12 + -1
-            if (r12 > 0) goto L_0x00d4
-            goto L_0x00f8
-        L_0x00d4:
-            com.ibm.icu.text.UnicodeSet r4 = fEndWordSet
-            boolean r4 = r4.contains((int) r13)
-            if (r4 == 0) goto L_0x00fe
-            com.ibm.icu.text.UnicodeSet r4 = fBeginWordSet
-            boolean r4 = r4.contains((int) r14)
-            if (r4 == 0) goto L_0x00fe
-            int r4 = r3 + 1
-            int r4 = r4 % r5
-            r4 = r6[r4]
-            com.ibm.icu.text.DictionaryMatcher r5 = r0.fDictionary
-            int r4 = r4.candidates(r1, r5, r2)
-            int r5 = r8 + r7
-            int r5 = r5 + r11
-            r1.setIndex(r5)
-            if (r4 <= 0) goto L_0x00fe
-        L_0x00f8:
-            if (r7 > 0) goto L_0x00fc
-            int r3 = r3 + 1
-        L_0x00fc:
-            int r7 = r7 + r11
-            goto L_0x0107
-        L_0x00fe:
-            r13 = r14
-            r4 = 0
-            r5 = 3
-            goto L_0x00c7
-        L_0x0102:
-            int r4 = r8 + r7
-            r1.setIndex(r4)
-        L_0x0107:
-            int r4 = r16.getIndex()
-            r5 = r4
-            if (r4 >= r2) goto L_0x0124
-            com.ibm.icu.text.UnicodeSet r4 = fMarkSet
-            char r10 = r16.current()
-            boolean r4 = r4.contains((int) r10)
-            if (r4 == 0) goto L_0x0124
-            r16.next()
-            int r4 = r16.getIndex()
-            int r4 = r4 - r5
-            int r7 = r7 + r4
-            goto L_0x0107
-        L_0x0124:
-            int r4 = r16.getIndex()
-            if (r4 >= r2) goto L_0x0181
-            if (r7 <= 0) goto L_0x0181
-            int r4 = r3 % 3
-            r4 = r6[r4]
-            com.ibm.icu.text.DictionaryMatcher r10 = r0.fDictionary
-            int r4 = r4.candidates(r1, r10, r2)
-            if (r4 > 0) goto L_0x017c
-            com.ibm.icu.text.UnicodeSet r4 = fSuffixSet
-            char r10 = r16.current()
-            r11 = r10
-            boolean r4 = r4.contains((int) r10)
-            if (r4 == 0) goto L_0x017c
-            r4 = 3631(0xe2f, float:5.088E-42)
-            if (r11 != r4) goto L_0x0165
-            com.ibm.icu.text.UnicodeSet r4 = fSuffixSet
-            char r10 = r16.previous()
-            boolean r4 = r4.contains((int) r10)
-            if (r4 != 0) goto L_0x0162
-            r16.next()
-            r16.next()
-            int r7 = r7 + 1
-            char r11 = r16.current()
-            goto L_0x0165
-        L_0x0162:
-            r16.next()
-        L_0x0165:
-            r4 = 3654(0xe46, float:5.12E-42)
-            if (r11 != r4) goto L_0x0181
-            char r10 = r16.previous()
-            if (r10 == r4) goto L_0x0178
-            r16.next()
-            r16.next()
-            int r7 = r7 + 1
-            goto L_0x0181
-        L_0x0178:
-            r16.next()
-            goto L_0x0181
-        L_0x017c:
-            int r4 = r8 + r7
-            r1.setIndex(r4)
-        L_0x0181:
-            if (r7 <= 0) goto L_0x0193
-            int r4 = r8 + r7
-            java.lang.Integer r4 = java.lang.Integer.valueOf(r4)
-            int r4 = r4.intValue()
-            r10 = r19
-            r10.push(r4)
-            goto L_0x0195
-        L_0x0193:
-            r10 = r19
-        L_0x0195:
-            r4 = 0
-            r5 = 3
-            goto L_0x0020
-        L_0x0199:
-            r10 = r19
-            int r4 = r19.peek()
-            if (r4 < r2) goto L_0x01a6
-            r19.pop()
-            int r3 = r3 + -1
-        L_0x01a6:
-            return r3
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.ibm.icu.text.ThaiBreakEngine.divideUpDictionaryRange(java.text.CharacterIterator, int, int, com.ibm.icu.text.DictionaryBreakEngine$DequeI):int");
+    /* JADX WARN: Removed duplicated region for block: B:102:0x0092 A[EDGE_INSN: B:102:0x0092->B:32:0x0092 ?: BREAK  , SYNTHETIC] */
+    @Override // com.ibm.icu.text.DictionaryBreakEngine
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public int divideUpDictionaryRange(CharacterIterator fIter, int rangeStart, int rangeEnd, DictionaryBreakEngine.DequeI foundBreaks) {
+        int wordsMatched;
+        int i = 0;
+        if (rangeEnd - rangeStart < 4) {
+            return 0;
+        }
+        int wordsFound = 0;
+        int i2 = 3;
+        DictionaryBreakEngine.PossibleWord[] words = new DictionaryBreakEngine.PossibleWord[3];
+        for (int i3 = 0; i3 < 3; i3++) {
+            words[i3] = new DictionaryBreakEngine.PossibleWord();
+        }
+        fIter.setIndex(rangeStart);
+        while (true) {
+            int current = fIter.getIndex();
+            if (current >= rangeEnd) {
+                break;
+            }
+            int wordLength = 0;
+            int candidates = words[wordsFound % 3].candidates(fIter, this.fDictionary, rangeEnd);
+            if (candidates == 1) {
+                wordLength = words[wordsFound % 3].acceptMarked(fIter);
+                wordsFound++;
+            } else if (candidates > 1) {
+                if (fIter.getIndex() < rangeEnd) {
+                    while (true) {
+                        if (words[(wordsFound + 1) % i2].candidates(fIter, this.fDictionary, rangeEnd) > 0) {
+                            if (1 < 2) {
+                                words[wordsFound % 3].markCurrent();
+                            }
+                            if (fIter.getIndex() < rangeEnd) {
+                                while (words[(wordsFound + 2) % i2].candidates(fIter, this.fDictionary, rangeEnd) <= 0) {
+                                    if (!words[(wordsFound + 1) % i2].backUp(fIter)) {
+                                        wordsMatched = wordsFound % 3;
+                                        if (!words[wordsMatched].backUp(fIter)) {
+                                        }
+                                    }
+                                }
+                                words[wordsFound % 3].markCurrent();
+                                break;
+                            }
+                            break;
+                        }
+                        wordsMatched = wordsFound % 3;
+                        if (!words[wordsMatched].backUp(fIter)) {
+                            break;
+                        }
+                    }
+                }
+                wordLength = words[wordsFound % 3].acceptMarked(fIter);
+                wordsFound++;
+            }
+            if (fIter.getIndex() < rangeEnd && wordLength < i2) {
+                if (words[wordsFound % 3].candidates(fIter, this.fDictionary, rangeEnd) <= 0 && (wordLength == 0 || words[wordsFound % 3].longestPrefix() < i2)) {
+                    int remaining = rangeEnd - (current + wordLength);
+                    int pc = fIter.current();
+                    int pc2 = pc;
+                    int remaining2 = remaining;
+                    int chars = i;
+                    while (true) {
+                        fIter.next();
+                        int uc = fIter.current();
+                        chars++;
+                        remaining2--;
+                        if (remaining2 <= 0) {
+                            break;
+                        }
+                        if (fEndWordSet.contains(pc2) && fBeginWordSet.contains(uc)) {
+                            int candidate = words[(wordsFound + 1) % i2].candidates(fIter, this.fDictionary, rangeEnd);
+                            fIter.setIndex(current + wordLength + chars);
+                            if (candidate > 0) {
+                                break;
+                            }
+                        }
+                        pc2 = uc;
+                        i2 = 3;
+                    }
+                    if (wordLength <= 0) {
+                        wordsFound++;
+                    }
+                    wordLength += chars;
+                } else {
+                    fIter.setIndex(current + wordLength);
+                }
+            }
+            while (true) {
+                int currPos = fIter.getIndex();
+                if (currPos >= rangeEnd || !fMarkSet.contains(fIter.current())) {
+                    break;
+                }
+                fIter.next();
+                wordLength += fIter.getIndex() - currPos;
+            }
+            if (fIter.getIndex() < rangeEnd && wordLength > 0) {
+                if (words[wordsFound % 3].candidates(fIter, this.fDictionary, rangeEnd) <= 0) {
+                    UnicodeSet unicodeSet = fSuffixSet;
+                    int current2 = fIter.current();
+                    int uc2 = current2;
+                    if (unicodeSet.contains(current2)) {
+                        if (uc2 == 3631) {
+                            if (!fSuffixSet.contains(fIter.previous())) {
+                                fIter.next();
+                                fIter.next();
+                                wordLength++;
+                                uc2 = fIter.current();
+                            } else {
+                                fIter.next();
+                            }
+                        }
+                        if (uc2 == 3654) {
+                            if (fIter.previous() != '\u0e46') {
+                                fIter.next();
+                                fIter.next();
+                                wordLength++;
+                            } else {
+                                fIter.next();
+                            }
+                        }
+                    }
+                }
+                fIter.setIndex(current + wordLength);
+            }
+            if (wordLength > 0) {
+                foundBreaks.push(Integer.valueOf(current + wordLength).intValue());
+            }
+            i = 0;
+            i2 = 3;
+        }
+        if (foundBreaks.peek() >= rangeEnd) {
+            foundBreaks.pop();
+            return wordsFound - 1;
+        }
+        return wordsFound;
     }
 }

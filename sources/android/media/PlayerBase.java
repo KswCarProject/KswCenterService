@@ -3,11 +3,11 @@ package android.media;
 import android.media.IAudioService;
 import android.media.IPlayer;
 import android.media.VolumeShaper;
-import android.os.IBinder;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.RemoteException;
-import android.os.ServiceManager;
+import android.p007os.IBinder;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
 import android.util.Log;
 import com.android.internal.annotations.GuardedBy;
 import com.android.internal.app.IAppOpsCallback;
@@ -15,6 +15,7 @@ import com.android.internal.app.IAppOpsService;
 import java.lang.ref.WeakReference;
 import java.util.Objects;
 
+/* loaded from: classes3.dex */
 public abstract class PlayerBase {
     private static final boolean DEBUG = false;
     private static final boolean DEBUG_APP_OPS = false;
@@ -24,81 +25,70 @@ public abstract class PlayerBase {
     private IAppOpsService mAppOps;
     private IAppOpsCallback mAppOpsCallback;
     protected AudioAttributes mAttributes;
+    private final int mImplType;
+    @GuardedBy({"mLock"})
+    private int mState;
+    protected float mLeftVolume = 1.0f;
+    protected float mRightVolume = 1.0f;
     protected float mAuxEffectSendLevel = 0.0f;
+    private final Object mLock = new Object();
     @GuardedBy({"mLock"})
     private boolean mHasAppOpsPlayAudio = true;
-    private final int mImplType;
-    protected float mLeftVolume = 1.0f;
-    private final Object mLock = new Object();
+    private int mPlayerIId = -1;
+    @GuardedBy({"mLock"})
+    private int mStartDelayMs = 0;
     @GuardedBy({"mLock"})
     private float mPanMultiplierL = 1.0f;
     @GuardedBy({"mLock"})
     private float mPanMultiplierR = 1.0f;
-    private int mPlayerIId = -1;
-    protected float mRightVolume = 1.0f;
-    @GuardedBy({"mLock"})
-    private int mStartDelayMs = 0;
-    @GuardedBy({"mLock"})
-    private int mState;
     @GuardedBy({"mLock"})
     private float mVolMultiplier = 1.0f;
 
-    /* access modifiers changed from: package-private */
-    public abstract int playerApplyVolumeShaper(VolumeShaper.Configuration configuration, VolumeShaper.Operation operation);
+    abstract int playerApplyVolumeShaper(VolumeShaper.Configuration configuration, VolumeShaper.Operation operation);
 
-    /* access modifiers changed from: package-private */
-    public abstract VolumeShaper.State playerGetVolumeShaperState(int i);
+    abstract VolumeShaper.State playerGetVolumeShaperState(int i);
 
-    /* access modifiers changed from: package-private */
-    public abstract void playerPause();
+    abstract void playerPause();
 
-    /* access modifiers changed from: package-private */
-    public abstract int playerSetAuxEffectSendLevel(boolean z, float f);
+    abstract int playerSetAuxEffectSendLevel(boolean z, float f);
 
-    /* access modifiers changed from: package-private */
-    public abstract void playerSetVolume(boolean z, float f, float f2);
+    abstract void playerSetVolume(boolean z, float f, float f2);
 
-    /* access modifiers changed from: package-private */
-    public abstract void playerStart();
+    abstract void playerStart();
 
-    /* access modifiers changed from: package-private */
-    public abstract void playerStop();
+    abstract void playerStop();
 
     PlayerBase(AudioAttributes attr, int implType) {
-        if (attr != null) {
-            this.mAttributes = attr;
-            this.mImplType = implType;
-            this.mState = 1;
-            return;
+        if (attr == null) {
+            throw new IllegalArgumentException("Illegal null AudioAttributes");
         }
-        throw new IllegalArgumentException("Illegal null AudioAttributes");
+        this.mAttributes = attr;
+        this.mImplType = implType;
+        this.mState = 1;
     }
 
-    /* access modifiers changed from: protected */
-    public void baseRegisterPlayer() {
+    protected void baseRegisterPlayer() {
         try {
             this.mPlayerIId = getService().trackPlayer(new PlayerIdCard(this.mImplType, this.mAttributes, new IPlayerWrapper(this)));
         } catch (RemoteException e) {
-            Log.e(TAG, "Error talking to audio service, player will not be tracked", e);
+            Log.m69e(TAG, "Error talking to audio service, player will not be tracked", e);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void baseUpdateAudioAttributes(AudioAttributes attr) {
-        if (attr != null) {
-            try {
-                getService().playerAttributes(this.mPlayerIId, attr);
-            } catch (RemoteException e) {
-                Log.e(TAG, "Error talking to audio service, STARTED state will not be tracked", e);
-            }
-            synchronized (this.mLock) {
-                boolean attributesChanged = this.mAttributes != attr;
-                this.mAttributes = attr;
-                updateAppOpsPlayAudio_sync(attributesChanged);
-            }
-            return;
+    void baseUpdateAudioAttributes(AudioAttributes attr) {
+        if (attr == null) {
+            throw new IllegalArgumentException("Illegal null AudioAttributes");
         }
-        throw new IllegalArgumentException("Illegal null AudioAttributes");
+        try {
+            getService().playerAttributes(this.mPlayerIId, attr);
+        } catch (RemoteException e) {
+            Log.m69e(TAG, "Error talking to audio service, STARTED state will not be tracked", e);
+        }
+        synchronized (this.mLock) {
+            boolean attributesChanged = this.mAttributes != attr;
+            this.mAttributes = attr;
+            updateAppOpsPlayAudio_sync(attributesChanged);
+        }
     }
 
     private void updateState(int state) {
@@ -110,12 +100,11 @@ public abstract class PlayerBase {
         try {
             getService().playerEvent(piid, state);
         } catch (RemoteException e) {
-            Log.e(TAG, "Error talking to audio service, " + AudioPlaybackConfiguration.toLogFriendlyPlayerState(state) + " state will not be tracked for piid=" + piid, e);
+            Log.m69e(TAG, "Error talking to audio service, " + AudioPlaybackConfiguration.toLogFriendlyPlayerState(state) + " state will not be tracked for piid=" + piid, e);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void baseStart() {
+    void baseStart() {
         updateState(2);
         synchronized (this.mLock) {
             if (isRestricted_sync()) {
@@ -124,15 +113,13 @@ public abstract class PlayerBase {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void baseSetStartDelayMs(int delayMs) {
+    void baseSetStartDelayMs(int delayMs) {
         synchronized (this.mLock) {
             this.mStartDelayMs = Math.max(delayMs, 0);
         }
     }
 
-    /* access modifiers changed from: protected */
-    public int getStartDelayMs() {
+    protected int getStartDelayMs() {
         int i;
         synchronized (this.mLock) {
             i = this.mStartDelayMs;
@@ -140,32 +127,27 @@ public abstract class PlayerBase {
         return i;
     }
 
-    /* access modifiers changed from: package-private */
-    public void basePause() {
+    void basePause() {
         updateState(3);
     }
 
-    /* access modifiers changed from: package-private */
-    public void baseStop() {
+    void baseStop() {
         updateState(4);
     }
 
-    /* access modifiers changed from: package-private */
-    public void baseSetPan(float pan) {
+    void baseSetPan(float pan) {
         float p = Math.min(Math.max(-1.0f, pan), 1.0f);
         synchronized (this.mLock) {
-            if (p >= 0.0f) {
-                try {
+            try {
+                if (p >= 0.0f) {
                     this.mPanMultiplierL = 1.0f - p;
                     this.mPanMultiplierR = 1.0f;
-                } catch (Throwable th) {
-                    while (true) {
-                        throw th;
-                    }
+                } else {
+                    this.mPanMultiplierL = 1.0f;
+                    this.mPanMultiplierR = 1.0f + p;
                 }
-            } else {
-                this.mPanMultiplierL = 1.0f;
-                this.mPanMultiplierR = 1.0f + p;
+            } catch (Throwable th) {
+                throw th;
             }
         }
         updatePlayerVolume();
@@ -183,16 +165,14 @@ public abstract class PlayerBase {
         playerSetVolume(isRestricted, finalLeftVol, finalRightVol);
     }
 
-    /* access modifiers changed from: package-private */
-    public void setVolumeMultiplier(float vol) {
+    void setVolumeMultiplier(float vol) {
         synchronized (this.mLock) {
             this.mVolMultiplier = vol;
         }
         updatePlayerVolume();
     }
 
-    /* access modifiers changed from: package-private */
-    public void baseSetVolume(float leftVolume, float rightVolume) {
+    void baseSetVolume(float leftVolume, float rightVolume) {
         synchronized (this.mLock) {
             this.mLeftVolume = leftVolume;
             this.mRightVolume = rightVolume;
@@ -200,8 +180,7 @@ public abstract class PlayerBase {
         updatePlayerVolume();
     }
 
-    /* access modifiers changed from: package-private */
-    public int baseSetAuxEffectSendLevel(float level) {
+    int baseSetAuxEffectSendLevel(float level) {
         synchronized (this.mLock) {
             this.mAuxEffectSendLevel = level;
             if (isRestricted_sync()) {
@@ -211,8 +190,7 @@ public abstract class PlayerBase {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void baseRelease() {
+    void baseRelease() {
         boolean releasePlayer = false;
         synchronized (this.mLock) {
             if (this.mState != 0) {
@@ -224,7 +202,7 @@ public abstract class PlayerBase {
             try {
                 getService().releasePlayer(this.mPlayerIId);
             } catch (RemoteException e) {
-                Log.e(TAG, "Error talking to audio service, the player will still be tracked", e);
+                Log.m69e(TAG, "Error talking to audio service, the player will still be tracked", e);
             }
         }
         try {
@@ -235,19 +213,17 @@ public abstract class PlayerBase {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void updateAppOpsPlayAudio() {
         synchronized (this.mLock) {
             updateAppOpsPlayAudio_sync(false);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void updateAppOpsPlayAudio_sync(boolean attributesChanged) {
+    void updateAppOpsPlayAudio_sync(boolean attributesChanged) {
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean isRestricted_sync() {
+    boolean isRestricted_sync() {
         return false;
     }
 
@@ -255,7 +231,8 @@ public abstract class PlayerBase {
         if (sService != null) {
             return sService;
         }
-        sService = IAudioService.Stub.asInterface(ServiceManager.getService("audio"));
+        IBinder b = ServiceManager.getService("audio");
+        sService = IAudioService.Stub.asInterface(b);
         return sService;
     }
 
@@ -263,6 +240,7 @@ public abstract class PlayerBase {
         baseSetStartDelayMs(delayMs);
     }
 
+    /* loaded from: classes3.dex */
     private static class IAppOpsCallbackWrapper extends IAppOpsCallback.Stub {
         private final WeakReference<PlayerBase> mWeakPB;
 
@@ -270,14 +248,16 @@ public abstract class PlayerBase {
             this.mWeakPB = new WeakReference<>(pb);
         }
 
+        @Override // com.android.internal.app.IAppOpsCallback
         public void opChanged(int op, int uid, String packageName) {
             PlayerBase pb;
-            if (op == 28 && (pb = (PlayerBase) this.mWeakPB.get()) != null) {
+            if (op == 28 && (pb = this.mWeakPB.get()) != null) {
                 pb.updateAppOpsPlayAudio();
             }
         }
     }
 
+    /* loaded from: classes3.dex */
     private static class IPlayerWrapper extends IPlayer.Stub {
         private final WeakReference<PlayerBase> mWeakPB;
 
@@ -285,64 +265,76 @@ public abstract class PlayerBase {
             this.mWeakPB = new WeakReference<>(pb);
         }
 
+        @Override // android.media.IPlayer
         public void start() {
-            PlayerBase pb = (PlayerBase) this.mWeakPB.get();
+            PlayerBase pb = this.mWeakPB.get();
             if (pb != null) {
                 pb.playerStart();
             }
         }
 
+        @Override // android.media.IPlayer
         public void pause() {
-            PlayerBase pb = (PlayerBase) this.mWeakPB.get();
+            PlayerBase pb = this.mWeakPB.get();
             if (pb != null) {
                 pb.playerPause();
             }
         }
 
+        @Override // android.media.IPlayer
         public void stop() {
-            PlayerBase pb = (PlayerBase) this.mWeakPB.get();
+            PlayerBase pb = this.mWeakPB.get();
             if (pb != null) {
                 pb.playerStop();
             }
         }
 
+        @Override // android.media.IPlayer
         public void setVolume(float vol) {
-            PlayerBase pb = (PlayerBase) this.mWeakPB.get();
+            PlayerBase pb = this.mWeakPB.get();
             if (pb != null) {
                 pb.setVolumeMultiplier(vol);
             }
         }
 
+        @Override // android.media.IPlayer
         public void setPan(float pan) {
-            PlayerBase pb = (PlayerBase) this.mWeakPB.get();
+            PlayerBase pb = this.mWeakPB.get();
             if (pb != null) {
                 pb.baseSetPan(pan);
             }
         }
 
+        @Override // android.media.IPlayer
         public void setStartDelayMs(int delayMs) {
-            PlayerBase pb = (PlayerBase) this.mWeakPB.get();
+            PlayerBase pb = this.mWeakPB.get();
             if (pb != null) {
                 pb.baseSetStartDelayMs(delayMs);
             }
         }
 
+        @Override // android.media.IPlayer
         public void applyVolumeShaper(VolumeShaper.Configuration configuration, VolumeShaper.Operation operation) {
-            PlayerBase pb = (PlayerBase) this.mWeakPB.get();
+            PlayerBase pb = this.mWeakPB.get();
             if (pb != null) {
                 pb.playerApplyVolumeShaper(configuration, operation);
             }
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class PlayerIdCard implements Parcelable {
         public static final int AUDIO_ATTRIBUTES_DEFINED = 1;
         public static final int AUDIO_ATTRIBUTES_NONE = 0;
-        public static final Parcelable.Creator<PlayerIdCard> CREATOR = new Parcelable.Creator<PlayerIdCard>() {
+        public static final Parcelable.Creator<PlayerIdCard> CREATOR = new Parcelable.Creator<PlayerIdCard>() { // from class: android.media.PlayerBase.PlayerIdCard.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public PlayerIdCard createFromParcel(Parcel p) {
                 return new PlayerIdCard(p);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public PlayerIdCard[] newArray(int size) {
                 return new PlayerIdCard[size];
             }
@@ -358,13 +350,15 @@ public abstract class PlayerBase {
         }
 
         public int hashCode() {
-            return Objects.hash(new Object[]{Integer.valueOf(this.mPlayerType)});
+            return Objects.hash(Integer.valueOf(this.mPlayerType));
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeInt(this.mPlayerType);
             this.mAttributes.writeToParcel(dest, 0);
@@ -386,19 +380,18 @@ public abstract class PlayerBase {
                 return false;
             }
             PlayerIdCard that = (PlayerIdCard) o;
-            if (this.mPlayerType != that.mPlayerType || !this.mAttributes.equals(that.mAttributes)) {
-                return false;
+            if (this.mPlayerType == that.mPlayerType && this.mAttributes.equals(that.mAttributes)) {
+                return true;
             }
-            return true;
+            return false;
         }
     }
 
     public static void deprecateStreamTypeForPlayback(int streamType, String className, String opName) throws IllegalArgumentException {
-        if (streamType != 10) {
-            Log.w(className, "Use of stream types is deprecated for operations other than volume control");
-            Log.w(className, "See the documentation of " + opName + " for what to use instead with android.media.AudioAttributes to qualify your playback use case");
-            return;
+        if (streamType == 10) {
+            throw new IllegalArgumentException("Use of STREAM_ACCESSIBILITY is reserved for volume control");
         }
-        throw new IllegalArgumentException("Use of STREAM_ACCESSIBILITY is reserved for volume control");
+        Log.m64w(className, "Use of stream types is deprecated for operations other than volume control");
+        Log.m64w(className, "See the documentation of " + opName + " for what to use instead with android.media.AudioAttributes to qualify your playback use case");
     }
 }

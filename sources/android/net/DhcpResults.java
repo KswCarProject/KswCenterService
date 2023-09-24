@@ -3,8 +3,8 @@ package android.net;
 import android.annotation.UnsupportedAppUsage;
 import android.net.StaticIpConfiguration;
 import android.net.shared.InetAddressUtils;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
 import java.net.Inet4Address;
@@ -13,12 +13,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/* loaded from: classes3.dex */
 public final class DhcpResults implements Parcelable {
-    public static final Parcelable.Creator<DhcpResults> CREATOR = new Parcelable.Creator<DhcpResults>() {
+    public static final Parcelable.Creator<DhcpResults> CREATOR = new Parcelable.Creator<DhcpResults>() { // from class: android.net.DhcpResults.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public DhcpResults createFromParcel(Parcel in) {
             return DhcpResults.readFromParcel(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public DhcpResults[] newArray(int size) {
             return new DhcpResults[size];
         }
@@ -60,7 +65,6 @@ public final class DhcpResults implements Parcelable {
         }
     }
 
-    /* JADX INFO: this call moved to the top of the method (can break code semantics) */
     public DhcpResults(DhcpResults source) {
         this(source == null ? null : source.toStaticIpConfiguration());
         if (source != null) {
@@ -117,16 +121,14 @@ public final class DhcpResults implements Parcelable {
         if (this == obj) {
             return true;
         }
-        if (!(obj instanceof DhcpResults)) {
-            return false;
+        if (obj instanceof DhcpResults) {
+            DhcpResults target = (DhcpResults) obj;
+            return toStaticIpConfiguration().equals(target.toStaticIpConfiguration()) && Objects.equals(this.serverAddress, target.serverAddress) && Objects.equals(this.vendorInfo, target.vendorInfo) && Objects.equals(this.serverHostName, target.serverHostName) && this.leaseDuration == target.leaseDuration && this.mtu == target.mtu;
         }
-        DhcpResults target = (DhcpResults) obj;
-        if (!toStaticIpConfiguration().equals(target.toStaticIpConfiguration()) || !Objects.equals(this.serverAddress, target.serverAddress) || !Objects.equals(this.vendorInfo, target.vendorInfo) || !Objects.equals(this.serverHostName, target.serverHostName) || this.leaseDuration != target.leaseDuration || this.mtu != target.mtu) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         toStaticIpConfiguration().writeToParcel(dest, flags);
         dest.writeInt(this.leaseDuration);
@@ -136,13 +138,15 @@ public final class DhcpResults implements Parcelable {
         dest.writeString(this.serverHostName);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static DhcpResults readFromParcel(Parcel in) {
-        DhcpResults dhcpResults = new DhcpResults(StaticIpConfiguration.CREATOR.createFromParcel(in));
+        StaticIpConfiguration s = StaticIpConfiguration.CREATOR.createFromParcel(in);
+        DhcpResults dhcpResults = new DhcpResults(s);
         dhcpResults.leaseDuration = in.readInt();
         dhcpResults.mtu = in.readInt();
         dhcpResults.serverAddress = (Inet4Address) InetAddressUtils.unparcelInetAddress(in);
@@ -153,10 +157,11 @@ public final class DhcpResults implements Parcelable {
 
     public boolean setIpAddress(String addrString, int prefixLength) {
         try {
-            this.ipAddress = new LinkAddress((Inet4Address) InetAddresses.parseNumericAddress(addrString), prefixLength);
+            Inet4Address addr = (Inet4Address) InetAddresses.parseNumericAddress(addrString);
+            this.ipAddress = new LinkAddress(addr, prefixLength);
             return false;
         } catch (ClassCastException | IllegalArgumentException e) {
-            Log.e(TAG, "setIpAddress failed with addrString " + addrString + "/" + prefixLength);
+            Log.m70e(TAG, "setIpAddress failed with addrString " + addrString + "/" + prefixLength);
             return true;
         }
     }
@@ -166,38 +171,38 @@ public final class DhcpResults implements Parcelable {
             this.gateway = InetAddresses.parseNumericAddress(addrString);
             return false;
         } catch (IllegalArgumentException e) {
-            Log.e(TAG, "setGateway failed with addrString " + addrString);
+            Log.m70e(TAG, "setGateway failed with addrString " + addrString);
             return true;
         }
     }
 
     public boolean addDns(String addrString) {
-        if (TextUtils.isEmpty(addrString)) {
-            return false;
+        if (!TextUtils.isEmpty(addrString)) {
+            try {
+                this.dnsServers.add(InetAddresses.parseNumericAddress(addrString));
+                return false;
+            } catch (IllegalArgumentException e) {
+                Log.m70e(TAG, "addDns failed with addrString " + addrString);
+                return true;
+            }
         }
-        try {
-            this.dnsServers.add(InetAddresses.parseNumericAddress(addrString));
-            return false;
-        } catch (IllegalArgumentException e) {
-            Log.e(TAG, "addDns failed with addrString " + addrString);
-            return true;
-        }
+        return false;
     }
 
     public LinkAddress getIpAddress() {
         return this.ipAddress;
     }
 
-    public void setIpAddress(LinkAddress ipAddress2) {
-        this.ipAddress = ipAddress2;
+    public void setIpAddress(LinkAddress ipAddress) {
+        this.ipAddress = ipAddress;
     }
 
     public InetAddress getGateway() {
         return this.gateway;
     }
 
-    public void setGateway(InetAddress gateway2) {
-        this.gateway = gateway2;
+    public void setGateway(InetAddress gateway) {
+        this.gateway = gateway;
     }
 
     public List<InetAddress> getDnsServers() {
@@ -212,8 +217,8 @@ public final class DhcpResults implements Parcelable {
         return this.domains;
     }
 
-    public void setDomains(String domains2) {
-        this.domains = domains2;
+    public void setDomains(String domains) {
+        this.domains = domains;
     }
 
     public Inet4Address getServerAddress() {
@@ -244,7 +249,7 @@ public final class DhcpResults implements Parcelable {
         return this.mtu;
     }
 
-    public void setMtu(int mtu2) {
-        this.mtu = mtu2;
+    public void setMtu(int mtu) {
+        this.mtu = mtu;
     }
 }

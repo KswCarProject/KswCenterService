@@ -1,33 +1,34 @@
 package android.location;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public class Criteria implements Parcelable {
     public static final int ACCURACY_COARSE = 2;
     public static final int ACCURACY_FINE = 1;
     public static final int ACCURACY_HIGH = 3;
     public static final int ACCURACY_LOW = 1;
     public static final int ACCURACY_MEDIUM = 2;
-    public static final Parcelable.Creator<Criteria> CREATOR = new Parcelable.Creator<Criteria>() {
+    public static final Parcelable.Creator<Criteria> CREATOR = new Parcelable.Creator<Criteria>() { // from class: android.location.Criteria.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Criteria createFromParcel(Parcel in) {
             Criteria c = new Criteria();
-            int unused = c.mHorizontalAccuracy = in.readInt();
-            int unused2 = c.mVerticalAccuracy = in.readInt();
-            int unused3 = c.mSpeedAccuracy = in.readInt();
-            int unused4 = c.mBearingAccuracy = in.readInt();
-            int unused5 = c.mPowerRequirement = in.readInt();
-            boolean z = false;
-            boolean unused6 = c.mAltitudeRequired = in.readInt() != 0;
-            boolean unused7 = c.mBearingRequired = in.readInt() != 0;
-            boolean unused8 = c.mSpeedRequired = in.readInt() != 0;
-            if (in.readInt() != 0) {
-                z = true;
-            }
-            boolean unused9 = c.mCostAllowed = z;
+            c.mHorizontalAccuracy = in.readInt();
+            c.mVerticalAccuracy = in.readInt();
+            c.mSpeedAccuracy = in.readInt();
+            c.mBearingAccuracy = in.readInt();
+            c.mPowerRequirement = in.readInt();
+            c.mAltitudeRequired = in.readInt() != 0;
+            c.mBearingRequired = in.readInt() != 0;
+            c.mSpeedRequired = in.readInt() != 0;
+            c.mCostAllowed = in.readInt() != 0;
             return c;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Criteria[] newArray(int size) {
             return new Criteria[size];
         }
@@ -36,29 +37,38 @@ public class Criteria implements Parcelable {
     public static final int POWER_HIGH = 3;
     public static final int POWER_LOW = 1;
     public static final int POWER_MEDIUM = 2;
-    /* access modifiers changed from: private */
-    public boolean mAltitudeRequired = false;
-    /* access modifiers changed from: private */
-    public int mBearingAccuracy = 0;
-    /* access modifiers changed from: private */
-    public boolean mBearingRequired = false;
-    /* access modifiers changed from: private */
-    public boolean mCostAllowed = false;
-    /* access modifiers changed from: private */
-    public int mHorizontalAccuracy = 0;
-    /* access modifiers changed from: private */
-    public int mPowerRequirement = 0;
-    /* access modifiers changed from: private */
-    public int mSpeedAccuracy = 0;
-    /* access modifiers changed from: private */
-    public boolean mSpeedRequired = false;
-    /* access modifiers changed from: private */
-    public int mVerticalAccuracy = 0;
+    private boolean mAltitudeRequired;
+    private int mBearingAccuracy;
+    private boolean mBearingRequired;
+    private boolean mCostAllowed;
+    private int mHorizontalAccuracy;
+    private int mPowerRequirement;
+    private int mSpeedAccuracy;
+    private boolean mSpeedRequired;
+    private int mVerticalAccuracy;
 
     public Criteria() {
+        this.mHorizontalAccuracy = 0;
+        this.mVerticalAccuracy = 0;
+        this.mSpeedAccuracy = 0;
+        this.mBearingAccuracy = 0;
+        this.mPowerRequirement = 0;
+        this.mAltitudeRequired = false;
+        this.mBearingRequired = false;
+        this.mSpeedRequired = false;
+        this.mCostAllowed = false;
     }
 
     public Criteria(Criteria criteria) {
+        this.mHorizontalAccuracy = 0;
+        this.mVerticalAccuracy = 0;
+        this.mSpeedAccuracy = 0;
+        this.mBearingAccuracy = 0;
+        this.mPowerRequirement = 0;
+        this.mAltitudeRequired = false;
+        this.mBearingRequired = false;
+        this.mSpeedRequired = false;
+        this.mCostAllowed = false;
         this.mHorizontalAccuracy = criteria.mHorizontalAccuracy;
         this.mVerticalAccuracy = criteria.mVerticalAccuracy;
         this.mSpeedAccuracy = criteria.mSpeedAccuracy;
@@ -174,10 +184,12 @@ public class Criteria implements Parcelable {
         return this.mBearingRequired;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeInt(this.mHorizontalAccuracy);
         parcel.writeInt(this.mVerticalAccuracy);

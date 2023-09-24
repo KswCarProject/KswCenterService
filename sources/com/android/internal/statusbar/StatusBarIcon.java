@@ -1,17 +1,22 @@
 package com.android.internal.statusbar;
 
 import android.graphics.drawable.Icon;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.UserHandle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.UserHandle;
 import android.text.TextUtils;
 
+/* loaded from: classes4.dex */
 public class StatusBarIcon implements Parcelable {
-    public static final Parcelable.Creator<StatusBarIcon> CREATOR = new Parcelable.Creator<StatusBarIcon>() {
+    public static final Parcelable.Creator<StatusBarIcon> CREATOR = new Parcelable.Creator<StatusBarIcon>() { // from class: com.android.internal.statusbar.StatusBarIcon.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public StatusBarIcon createFromParcel(Parcel parcel) {
             return new StatusBarIcon(parcel);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public StatusBarIcon[] newArray(int size) {
             return new StatusBarIcon[size];
         }
@@ -24,21 +29,21 @@ public class StatusBarIcon implements Parcelable {
     public UserHandle user;
     public boolean visible;
 
-    public StatusBarIcon(UserHandle user2, String resPackage, Icon icon2, int iconLevel2, int number2, CharSequence contentDescription2) {
+    public StatusBarIcon(UserHandle user, String resPackage, Icon icon, int iconLevel, int number, CharSequence contentDescription) {
         this.visible = true;
-        if (icon2.getType() == 2 && TextUtils.isEmpty(icon2.getResPackage())) {
-            icon2 = Icon.createWithResource(resPackage, icon2.getResId());
+        if (icon.getType() == 2 && TextUtils.isEmpty(icon.getResPackage())) {
+            icon = Icon.createWithResource(resPackage, icon.getResId());
         }
         this.pkg = resPackage;
-        this.user = user2;
-        this.icon = icon2;
-        this.iconLevel = iconLevel2;
-        this.number = number2;
-        this.contentDescription = contentDescription2;
+        this.user = user;
+        this.icon = icon;
+        this.iconLevel = iconLevel;
+        this.number = number;
+        this.contentDescription = contentDescription;
     }
 
-    public StatusBarIcon(String iconPackage, UserHandle user2, int iconId, int iconLevel2, int number2, CharSequence contentDescription2) {
-        this(user2, iconPackage, Icon.createWithResource(iconPackage, iconId), iconLevel2, number2, contentDescription2);
+    public StatusBarIcon(String iconPackage, UserHandle user, int iconId, int iconLevel, int number, CharSequence contentDescription) {
+        this(user, iconPackage, Icon.createWithResource(iconPackage, iconId), iconLevel, number, contentDescription);
     }
 
     public String toString() {
@@ -66,7 +71,8 @@ public class StatusBarIcon implements Parcelable {
         return sb.toString();
     }
 
-    public StatusBarIcon clone() {
+    /* renamed from: clone */
+    public StatusBarIcon m194clone() {
         StatusBarIcon that = new StatusBarIcon(this.user, this.pkg, this.icon, this.iconLevel, this.number, this.contentDescription);
         that.visible = this.visible;
         return that;
@@ -78,15 +84,16 @@ public class StatusBarIcon implements Parcelable {
     }
 
     public void readFromParcel(Parcel in) {
-        this.icon = (Icon) in.readParcelable((ClassLoader) null);
+        this.icon = (Icon) in.readParcelable(null);
         this.pkg = in.readString();
-        this.user = (UserHandle) in.readParcelable((ClassLoader) null);
+        this.user = (UserHandle) in.readParcelable(null);
         this.iconLevel = in.readInt();
         this.visible = in.readInt() != 0;
         this.number = in.readInt();
         this.contentDescription = in.readCharSequence();
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeParcelable(this.icon, 0);
         out.writeString(this.pkg);
@@ -97,6 +104,7 @@ public class StatusBarIcon implements Parcelable {
         out.writeCharSequence(this.contentDescription);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

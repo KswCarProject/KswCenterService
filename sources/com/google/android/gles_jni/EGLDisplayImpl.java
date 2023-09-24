@@ -2,6 +2,7 @@ package com.google.android.gles_jni;
 
 import javax.microedition.khronos.egl.EGLDisplay;
 
+/* loaded from: classes4.dex */
 public class EGLDisplayImpl extends EGLDisplay {
     long mEGLDisplay;
 
@@ -16,13 +17,15 @@ public class EGLDisplayImpl extends EGLDisplay {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        if (this.mEGLDisplay == ((EGLDisplayImpl) o).mEGLDisplay) {
+        EGLDisplayImpl that = (EGLDisplayImpl) o;
+        if (this.mEGLDisplay == that.mEGLDisplay) {
             return true;
         }
         return false;
     }
 
     public int hashCode() {
-        return (17 * 31) + ((int) (this.mEGLDisplay ^ (this.mEGLDisplay >>> 32)));
+        int result = (17 * 31) + ((int) (this.mEGLDisplay ^ (this.mEGLDisplay >>> 32)));
+        return result;
     }
 }

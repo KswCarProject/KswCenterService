@@ -1,16 +1,20 @@
 package android.nfc;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.io.IOException;
 
+/* loaded from: classes3.dex */
 public final class TransceiveResult implements Parcelable {
-    public static final Parcelable.Creator<TransceiveResult> CREATOR = new Parcelable.Creator<TransceiveResult>() {
+    public static final Parcelable.Creator<TransceiveResult> CREATOR = new Parcelable.Creator<TransceiveResult>() { // from class: android.nfc.TransceiveResult.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public TransceiveResult createFromParcel(Parcel in) {
             byte[] responseData;
             int result = in.readInt();
             if (result == 0) {
-                responseData = new byte[in.readInt()];
+                int responseLength = in.readInt();
+                responseData = new byte[responseLength];
                 in.readByteArray(responseData);
             } else {
                 responseData = null;
@@ -18,6 +22,8 @@ public final class TransceiveResult implements Parcelable {
             return new TransceiveResult(result, responseData);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public TransceiveResult[] newArray(int size) {
             return new TransceiveResult[size];
         }
@@ -49,10 +55,12 @@ public final class TransceiveResult implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mResult);
         if (this.mResult == 0) {

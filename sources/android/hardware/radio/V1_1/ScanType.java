@@ -2,6 +2,7 @@ package android.hardware.radio.V1_1;
 
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class ScanType {
     public static final int ONE_SHOT = 0;
     public static final int PERIODIC = 1;

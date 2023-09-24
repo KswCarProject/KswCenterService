@@ -8,6 +8,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.Objects;
 
+/* loaded from: classes4.dex */
 public class PrecomputedText implements Spannable {
     private static final char LINE_FEED = '\n';
     private final int mEnd;
@@ -16,34 +17,39 @@ public class PrecomputedText implements Spannable {
     private final int mStart;
     private final SpannableString mText;
 
+    /* loaded from: classes4.dex */
     public static final class Params {
         public static final int NEED_RECOMPUTE = 1;
         public static final int UNUSABLE = 0;
         public static final int USABLE = 2;
-        /* access modifiers changed from: private */
-        public final int mBreakStrategy;
-        /* access modifiers changed from: private */
-        public final int mHyphenationFrequency;
-        /* access modifiers changed from: private */
-        public final TextPaint mPaint;
-        /* access modifiers changed from: private */
-        public final TextDirectionHeuristic mTextDir;
+        private final int mBreakStrategy;
+        private final int mHyphenationFrequency;
+        private final TextPaint mPaint;
+        private final TextDirectionHeuristic mTextDir;
 
         @Retention(RetentionPolicy.SOURCE)
+        /* loaded from: classes4.dex */
         public @interface CheckResultUsableResult {
         }
 
+        /* loaded from: classes4.dex */
         public static class Builder {
-            private int mBreakStrategy = 1;
-            private int mHyphenationFrequency = 1;
+            private int mBreakStrategy;
+            private int mHyphenationFrequency;
             private final TextPaint mPaint;
-            private TextDirectionHeuristic mTextDir = TextDirectionHeuristics.FIRSTSTRONG_LTR;
+            private TextDirectionHeuristic mTextDir;
 
             public Builder(TextPaint paint) {
+                this.mTextDir = TextDirectionHeuristics.FIRSTSTRONG_LTR;
+                this.mBreakStrategy = 1;
+                this.mHyphenationFrequency = 1;
                 this.mPaint = paint;
             }
 
             public Builder(Params params) {
+                this.mTextDir = TextDirectionHeuristics.FIRSTSTRONG_LTR;
+                this.mBreakStrategy = 1;
+                this.mHyphenationFrequency = 1;
                 this.mPaint = params.mPaint;
                 this.mTextDir = params.mTextDir;
                 this.mBreakStrategy = params.mBreakStrategy;
@@ -115,7 +121,7 @@ public class PrecomputedText implements Spannable {
         }
 
         public int hashCode() {
-            return Objects.hash(new Object[]{Float.valueOf(this.mPaint.getTextSize()), Float.valueOf(this.mPaint.getTextScaleX()), Float.valueOf(this.mPaint.getTextSkewX()), Float.valueOf(this.mPaint.getLetterSpacing()), Float.valueOf(this.mPaint.getWordSpacing()), Integer.valueOf(this.mPaint.getFlags()), this.mPaint.getTextLocales(), this.mPaint.getTypeface(), this.mPaint.getFontVariationSettings(), Boolean.valueOf(this.mPaint.isElegantTextHeight()), this.mTextDir, Integer.valueOf(this.mBreakStrategy), Integer.valueOf(this.mHyphenationFrequency)});
+            return Objects.hash(Float.valueOf(this.mPaint.getTextSize()), Float.valueOf(this.mPaint.getTextScaleX()), Float.valueOf(this.mPaint.getTextSkewX()), Float.valueOf(this.mPaint.getLetterSpacing()), Float.valueOf(this.mPaint.getWordSpacing()), Integer.valueOf(this.mPaint.getFlags()), this.mPaint.getTextLocales(), this.mPaint.getTypeface(), this.mPaint.getFontVariationSettings(), Boolean.valueOf(this.mPaint.isElegantTextHeight()), this.mTextDir, Integer.valueOf(this.mBreakStrategy), Integer.valueOf(this.mHyphenationFrequency));
         }
 
         public String toString() {
@@ -123,13 +129,14 @@ public class PrecomputedText implements Spannable {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class ParagraphInfo {
         public final MeasuredParagraph measured;
         public final int paragraphEnd;
 
-        public ParagraphInfo(int paraEnd, MeasuredParagraph measured2) {
+        public ParagraphInfo(int paraEnd, MeasuredParagraph measured) {
             this.paragraphEnd = paraEnd;
-            this.measured = measured2;
+            this.measured = measured;
         }
     }
 
@@ -138,14 +145,16 @@ public class PrecomputedText implements Spannable {
         if (text instanceof PrecomputedText) {
             PrecomputedText hintPct = (PrecomputedText) text;
             Params hintParams = hintPct.getParams();
-            switch (hintParams.checkResultUsable(params.mPaint, params.mTextDir, params.mBreakStrategy, params.mHyphenationFrequency)) {
+            int checkResult = hintParams.checkResultUsable(params.mPaint, params.mTextDir, params.mBreakStrategy, params.mHyphenationFrequency);
+            switch (checkResult) {
+                case 2:
+                    return hintPct;
                 case 1:
                     if (params.getBreakStrategy() == hintParams.getBreakStrategy() && params.getHyphenationFrequency() == hintParams.getHyphenationFrequency()) {
                         paraInfo = createMeasuredParagraphsFromPrecomputedText(hintPct, params, true);
                         break;
                     }
-                case 2:
-                    return hintPct;
+                    break;
             }
         }
         if (paraInfo == null) {
@@ -155,44 +164,40 @@ public class PrecomputedText implements Spannable {
     }
 
     private static ParagraphInfo[] createMeasuredParagraphsFromPrecomputedText(PrecomputedText pct, Params params, boolean computeLayout) {
-        PrecomputedText precomputedText = pct;
         int i = 0;
         boolean needHyphenation = (params.getBreakStrategy() == 0 || params.getHyphenationFrequency() == 0) ? false : true;
-        ArrayList arrayList = new ArrayList();
+        ArrayList<ParagraphInfo> result = new ArrayList<>();
         while (true) {
             int i2 = i;
-            if (i2 >= pct.getParagraphCount()) {
-                return (ParagraphInfo[]) arrayList.toArray(new ParagraphInfo[arrayList.size()]);
+            if (i2 < pct.getParagraphCount()) {
+                int paraStart = pct.getParagraphStart(i2);
+                int paraEnd = pct.getParagraphEnd(i2);
+                result.add(new ParagraphInfo(paraEnd, MeasuredParagraph.buildForStaticLayout(params.getTextPaint(), pct, paraStart, paraEnd, params.getTextDirection(), needHyphenation, computeLayout, pct.getMeasuredParagraph(i2), null)));
+                i = i2 + 1;
+            } else {
+                return (ParagraphInfo[]) result.toArray(new ParagraphInfo[result.size()]);
             }
-            int paraStart = pct.getParagraphStart(i2);
-            int paraEnd = pct.getParagraphEnd(i2);
-            arrayList.add(new ParagraphInfo(paraEnd, MeasuredParagraph.buildForStaticLayout(params.getTextPaint(), pct, paraStart, paraEnd, params.getTextDirection(), needHyphenation, computeLayout, pct.getMeasuredParagraph(i2), (MeasuredParagraph) null)));
-            i = i2 + 1;
         }
     }
 
     public static ParagraphInfo[] createMeasuredParagraphs(CharSequence text, Params params, int start, int end, boolean computeLayout) {
         int paraEnd;
-        int i = end;
         ArrayList<ParagraphInfo> result = new ArrayList<>();
         Preconditions.checkNotNull(text);
         Preconditions.checkNotNull(params);
         boolean needHyphenation = (params.getBreakStrategy() == 0 || params.getHyphenationFrequency() == 0) ? false : true;
         int paraStart = start;
-        while (paraStart < i) {
-            CharSequence charSequence = text;
-            int paraEnd2 = TextUtils.indexOf(text, (char) LINE_FEED, paraStart, i);
+        while (paraStart < end) {
+            int paraEnd2 = TextUtils.indexOf(text, (char) LINE_FEED, paraStart, end);
             if (paraEnd2 < 0) {
                 paraEnd = end;
             } else {
                 paraEnd = paraEnd2 + 1;
             }
             int paraEnd3 = paraEnd;
-            result.add(new ParagraphInfo(paraEnd3, MeasuredParagraph.buildForStaticLayout(params.getTextPaint(), text, paraStart, paraEnd3, params.getTextDirection(), needHyphenation, computeLayout, (MeasuredParagraph) null, (MeasuredParagraph) null)));
+            result.add(new ParagraphInfo(paraEnd3, MeasuredParagraph.buildForStaticLayout(params.getTextPaint(), text, paraStart, paraEnd3, params.getTextDirection(), needHyphenation, computeLayout, null, null)));
             paraStart = paraEnd3;
-            int i2 = paraEnd3;
         }
-        CharSequence charSequence2 = text;
         return (ParagraphInfo[]) result.toArray(new ParagraphInfo[result.size()]);
     }
 
@@ -243,10 +248,10 @@ public class PrecomputedText implements Spannable {
     }
 
     public int checkResultUsable(int start, int end, TextDirectionHeuristic textDir, TextPaint paint, int strategy, int frequency) {
-        if (this.mStart == start && this.mEnd == end) {
-            return this.mParams.checkResultUsable(paint, textDir, strategy, frequency);
+        if (this.mStart != start || this.mEnd != end) {
+            return 0;
         }
-        return 0;
+        return this.mParams.checkResultUsable(paint, textDir, strategy, frequency);
     }
 
     public int findParaIndex(int pos) {
@@ -259,33 +264,25 @@ public class PrecomputedText implements Spannable {
     }
 
     public float getWidth(int start, int end) {
-        boolean z = true;
         Preconditions.checkArgument(start >= 0 && start <= this.mText.length(), "invalid start offset");
         Preconditions.checkArgument(end >= 0 && end <= this.mText.length(), "invalid end offset");
-        if (start > end) {
-            z = false;
-        }
-        Preconditions.checkArgument(z, "start offset can not be larger than end offset");
+        Preconditions.checkArgument(start <= end, "start offset can not be larger than end offset");
         if (start == end) {
             return 0.0f;
         }
         int paraIndex = findParaIndex(start);
         int paraStart = getParagraphStart(paraIndex);
         int paraEnd = getParagraphEnd(paraIndex);
-        if (start >= paraStart && paraEnd >= end) {
-            return getMeasuredParagraph(paraIndex).getWidth(start - paraStart, end - paraStart);
+        if (start < paraStart || paraEnd < end) {
+            throw new IllegalArgumentException("Cannot measured across the paragraph:para: (" + paraStart + ", " + paraEnd + "), request: (" + start + ", " + end + ")");
         }
-        throw new IllegalArgumentException("Cannot measured across the paragraph:para: (" + paraStart + ", " + paraEnd + "), request: (" + start + ", " + end + ")");
+        return getMeasuredParagraph(paraIndex).getWidth(start - paraStart, end - paraStart);
     }
 
     public void getBounds(int start, int end, Rect bounds) {
-        boolean z = true;
         Preconditions.checkArgument(start >= 0 && start <= this.mText.length(), "invalid start offset");
         Preconditions.checkArgument(end >= 0 && end <= this.mText.length(), "invalid end offset");
-        if (start > end) {
-            z = false;
-        }
-        Preconditions.checkArgument(z, "start offset can not be larger than end offset");
+        Preconditions.checkArgument(start <= end, "start offset can not be larger than end offset");
         Preconditions.checkNotNull(bounds);
         if (start == end) {
             bounds.set(0, 0, 0, 0);
@@ -304,7 +301,7 @@ public class PrecomputedText implements Spannable {
         Preconditions.checkArgument(offset >= 0 && offset < this.mText.length(), "invalid offset");
         int paraIndex = findParaIndex(offset);
         int paraStart = getParagraphStart(paraIndex);
-        int paragraphEnd = getParagraphEnd(paraIndex);
+        getParagraphEnd(paraIndex);
         return getMeasuredParagraph(paraIndex).getCharWidthAt(offset - paraStart);
     }
 
@@ -316,54 +313,63 @@ public class PrecomputedText implements Spannable {
         return r;
     }
 
+    @Override // android.text.Spannable
     public void setSpan(Object what, int start, int end, int flags) {
-        if (!(what instanceof MetricAffectingSpan)) {
-            this.mText.setSpan(what, start, end, flags);
-            return;
+        if (what instanceof MetricAffectingSpan) {
+            throw new IllegalArgumentException("MetricAffectingSpan can not be set to PrecomputedText.");
         }
-        throw new IllegalArgumentException("MetricAffectingSpan can not be set to PrecomputedText.");
+        this.mText.setSpan(what, start, end, flags);
     }
 
+    @Override // android.text.Spannable
     public void removeSpan(Object what) {
-        if (!(what instanceof MetricAffectingSpan)) {
-            this.mText.removeSpan(what);
-            return;
+        if (what instanceof MetricAffectingSpan) {
+            throw new IllegalArgumentException("MetricAffectingSpan can not be removed from PrecomputedText.");
         }
-        throw new IllegalArgumentException("MetricAffectingSpan can not be removed from PrecomputedText.");
+        this.mText.removeSpan(what);
     }
 
+    @Override // android.text.Spanned
     public <T> T[] getSpans(int start, int end, Class<T> type) {
-        return this.mText.getSpans(start, end, type);
+        return (T[]) this.mText.getSpans(start, end, type);
     }
 
+    @Override // android.text.Spanned
     public int getSpanStart(Object tag) {
         return this.mText.getSpanStart(tag);
     }
 
+    @Override // android.text.Spanned
     public int getSpanEnd(Object tag) {
         return this.mText.getSpanEnd(tag);
     }
 
+    @Override // android.text.Spanned
     public int getSpanFlags(Object tag) {
         return this.mText.getSpanFlags(tag);
     }
 
+    @Override // android.text.Spanned
     public int nextSpanTransition(int start, int limit, Class type) {
         return this.mText.nextSpanTransition(start, limit, type);
     }
 
+    @Override // java.lang.CharSequence
     public int length() {
         return this.mText.length();
     }
 
+    @Override // java.lang.CharSequence
     public char charAt(int index) {
         return this.mText.charAt(index);
     }
 
+    @Override // java.lang.CharSequence
     public CharSequence subSequence(int start, int end) {
         return create(this.mText.subSequence(start, end), this.mParams);
     }
 
+    @Override // java.lang.CharSequence
     public String toString() {
         return this.mText.toString();
     }

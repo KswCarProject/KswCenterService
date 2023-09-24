@@ -1,5 +1,6 @@
 package android.util.apk;
 
+/* loaded from: classes4.dex */
 public class SignatureNotFoundException extends Exception {
     private static final long serialVersionUID = 1;
 

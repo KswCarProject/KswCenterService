@@ -2,6 +2,7 @@ package android.hardware.camera2.params;
 
 import com.android.internal.util.Preconditions;
 
+/* loaded from: classes.dex */
 public final class RggbChannelVector {
     public static final int BLUE = 3;
     public static final int COUNT = 4;
@@ -56,14 +57,13 @@ public final class RggbChannelVector {
 
     public void copyTo(float[] destination, int offset) {
         Preconditions.checkNotNull(destination, "destination must not be null");
-        if (destination.length - offset >= 4) {
-            destination[offset + 0] = this.mRed;
-            destination[offset + 1] = this.mGreenEven;
-            destination[offset + 2] = this.mGreenOdd;
-            destination[offset + 3] = this.mBlue;
-            return;
+        if (destination.length - offset < 4) {
+            throw new ArrayIndexOutOfBoundsException("destination too small to fit elements");
         }
-        throw new ArrayIndexOutOfBoundsException("destination too small to fit elements");
+        destination[offset + 0] = this.mRed;
+        destination[offset + 1] = this.mGreenEven;
+        destination[offset + 2] = this.mGreenOdd;
+        destination[offset + 3] = this.mBlue;
     }
 
     public boolean equals(Object obj) {
@@ -77,10 +77,10 @@ public final class RggbChannelVector {
             return false;
         }
         RggbChannelVector other = (RggbChannelVector) obj;
-        if (this.mRed == other.mRed && this.mGreenEven == other.mGreenEven && this.mGreenOdd == other.mGreenOdd && this.mBlue == other.mBlue) {
-            return true;
+        if (this.mRed != other.mRed || this.mGreenEven != other.mGreenEven || this.mGreenOdd != other.mGreenOdd || this.mBlue != other.mBlue) {
+            return false;
         }
-        return false;
+        return true;
     }
 
     public int hashCode() {
@@ -88,10 +88,10 @@ public final class RggbChannelVector {
     }
 
     public String toString() {
-        return String.format("RggbChannelVector%s", new Object[]{toShortString()});
+        return String.format("RggbChannelVector%s", toShortString());
     }
 
     private String toShortString() {
-        return String.format("{R:%f, G_even:%f, G_odd:%f, B:%f}", new Object[]{Float.valueOf(this.mRed), Float.valueOf(this.mGreenEven), Float.valueOf(this.mGreenOdd), Float.valueOf(this.mBlue)});
+        return String.format("{R:%f, G_even:%f, G_odd:%f, B:%f}", Float.valueOf(this.mRed), Float.valueOf(this.mGreenEven), Float.valueOf(this.mGreenOdd), Float.valueOf(this.mBlue));
     }
 }

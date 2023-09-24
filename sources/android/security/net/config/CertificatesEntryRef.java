@@ -4,6 +4,7 @@ import android.util.ArraySet;
 import java.security.cert.X509Certificate;
 import java.util.Set;
 
+/* loaded from: classes3.dex */
 public final class CertificatesEntryRef {
     private final boolean mOverridesPins;
     private final CertificateSource mSource;
@@ -13,8 +14,7 @@ public final class CertificatesEntryRef {
         this.mOverridesPins = overridesPins;
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean overridesPins() {
+    boolean overridesPins() {
         return this.mOverridesPins;
     }
 

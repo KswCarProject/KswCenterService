@@ -1,10 +1,11 @@
 package android.util;
 
 @Deprecated
+/* loaded from: classes4.dex */
 public final class MutableChar {
     public char value;
 
-    public MutableChar(char value2) {
-        this.value = value2;
+    public MutableChar(char value) {
+        this.value = value;
     }
 }

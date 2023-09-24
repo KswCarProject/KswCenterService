@@ -1,15 +1,20 @@
 package android.service.notification;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.service.notification.NotificationListenerService;
 
+/* loaded from: classes3.dex */
 public class NotificationRankingUpdate implements Parcelable {
-    public static final Parcelable.Creator<NotificationRankingUpdate> CREATOR = new Parcelable.Creator<NotificationRankingUpdate>() {
+    public static final Parcelable.Creator<NotificationRankingUpdate> CREATOR = new Parcelable.Creator<NotificationRankingUpdate>() { // from class: android.service.notification.NotificationRankingUpdate.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NotificationRankingUpdate createFromParcel(Parcel parcel) {
             return new NotificationRankingUpdate(parcel);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NotificationRankingUpdate[] newArray(int size) {
             return new NotificationRankingUpdate[size];
         }
@@ -28,6 +33,7 @@ public class NotificationRankingUpdate implements Parcelable {
         return this.mRankingMap;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -39,9 +45,11 @@ public class NotificationRankingUpdate implements Parcelable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        return this.mRankingMap.equals(((NotificationRankingUpdate) o).mRankingMap);
+        NotificationRankingUpdate other = (NotificationRankingUpdate) o;
+        return this.mRankingMap.equals(other.mRankingMap);
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeParcelable(this.mRankingMap, flags);
     }

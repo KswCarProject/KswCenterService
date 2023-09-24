@@ -7,8 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
+/* loaded from: classes4.dex */
 public abstract class ToggleAction implements Action {
     private static final String TAG = "ToggleAction";
     protected int mDisabledIconResid;
@@ -20,6 +21,7 @@ public abstract class ToggleAction implements Action {
 
     public abstract void onToggle(boolean z);
 
+    /* loaded from: classes4.dex */
     public enum State {
         Off(false),
         TurningOn(true),
@@ -28,7 +30,7 @@ public abstract class ToggleAction implements Action {
         
         private final boolean inTransition;
 
-        private State(boolean intermediate) {
+        State(boolean intermediate) {
             this.inTransition = intermediate;
         }
 
@@ -45,20 +47,21 @@ public abstract class ToggleAction implements Action {
         this.mDisabledStatusMessageResId = disabledStatusMessageResId;
     }
 
-    /* access modifiers changed from: package-private */
-    public void willCreate() {
+    void willCreate() {
     }
 
+    @Override // com.android.internal.globalactions.Action
     public CharSequence getLabelForAccessibility(Context context) {
         return context.getString(this.mMessageResId);
     }
 
+    @Override // com.android.internal.globalactions.Action
     public View create(Context context, View convertView, ViewGroup parent, LayoutInflater inflater) {
         willCreate();
-        View v = inflater.inflate((int) R.layout.global_actions_item, parent, false);
+        View v = inflater.inflate(C3132R.layout.global_actions_item, parent, false);
         ImageView icon = (ImageView) v.findViewById(16908294);
         TextView messageView = (TextView) v.findViewById(16908299);
-        TextView statusView = (TextView) v.findViewById(R.id.status);
+        TextView statusView = (TextView) v.findViewById(C3132R.C3134id.status);
         boolean enabled = isEnabled();
         if (messageView != null) {
             messageView.setText(this.mMessageResId);
@@ -78,9 +81,10 @@ public abstract class ToggleAction implements Action {
         return v;
     }
 
+    @Override // com.android.internal.globalactions.Action
     public final void onPress() {
         if (this.mState.inTransition()) {
-            Log.w(TAG, "shouldn't be able to toggle when in transition");
+            Log.m64w(TAG, "shouldn't be able to toggle when in transition");
             return;
         }
         boolean nowOn = this.mState != State.On;
@@ -88,12 +92,12 @@ public abstract class ToggleAction implements Action {
         changeStateFromPress(nowOn);
     }
 
+    @Override // com.android.internal.globalactions.Action
     public boolean isEnabled() {
         return !this.mState.inTransition();
     }
 
-    /* access modifiers changed from: protected */
-    public void changeStateFromPress(boolean buttonOn) {
+    protected void changeStateFromPress(boolean buttonOn) {
         this.mState = buttonOn ? State.On : State.Off;
     }
 

@@ -7,17 +7,19 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 
+/* loaded from: classes4.dex */
 public class DateKeyListener extends NumberKeyListener {
-    @Deprecated
-    public static final char[] CHARACTERS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '/', '-', '.'};
-    private static final String[] SKELETONS = {DateFormat.YEAR_NUM_MONTH_DAY, DateFormat.YEAR_NUM_MONTH, DateFormat.NUM_MONTH_DAY};
     private static final String SYMBOLS_TO_IGNORE = "yMLd";
-    @GuardedBy({"sLock"})
-    private static final HashMap<Locale, DateKeyListener> sInstanceCache = new HashMap<>();
-    private static final Object sLock = new Object();
     private final char[] mCharacters;
     private final boolean mNeedsAdvancedInput;
+    private static final String[] SKELETONS = {DateFormat.YEAR_NUM_MONTH_DAY, DateFormat.YEAR_NUM_MONTH, DateFormat.NUM_MONTH_DAY};
+    @Deprecated
+    public static final char[] CHARACTERS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '/', '-', '.'};
+    private static final Object sLock = new Object();
+    @GuardedBy({"sLock"})
+    private static final HashMap<Locale, DateKeyListener> sInstanceCache = new HashMap<>();
 
+    @Override // android.text.method.KeyListener
     public int getInputType() {
         if (this.mNeedsAdvancedInput) {
             return 1;
@@ -25,19 +27,20 @@ public class DateKeyListener extends NumberKeyListener {
         return 20;
     }
 
-    /* access modifiers changed from: protected */
-    public char[] getAcceptedChars() {
+    @Override // android.text.method.NumberKeyListener
+    protected char[] getAcceptedChars() {
         return this.mCharacters;
     }
 
     @Deprecated
     public DateKeyListener() {
-        this((Locale) null);
+        this(null);
     }
 
     public DateKeyListener(Locale locale) {
         LinkedHashSet<Character> chars = new LinkedHashSet<>();
-        if (NumberKeyListener.addDigits(chars, locale) && NumberKeyListener.addFormatCharsFromSkeletons(chars, locale, SKELETONS, SYMBOLS_TO_IGNORE)) {
+        boolean success = NumberKeyListener.addDigits(chars, locale) && NumberKeyListener.addFormatCharsFromSkeletons(chars, locale, SKELETONS, SYMBOLS_TO_IGNORE);
+        if (success) {
             this.mCharacters = NumberKeyListener.collectionToArray(chars);
             this.mNeedsAdvancedInput = true ^ ArrayUtils.containsAll(CHARACTERS, this.mCharacters);
             return;
@@ -48,7 +51,7 @@ public class DateKeyListener extends NumberKeyListener {
 
     @Deprecated
     public static DateKeyListener getInstance() {
-        return getInstance((Locale) null);
+        return getInstance(null);
     }
 
     public static DateKeyListener getInstance(Locale locale) {

@@ -2,13 +2,14 @@ package com.wits.pms.custom;
 
 import android.content.ComponentName;
 import android.content.Intent;
-import android.os.RemoteException;
+import android.p007os.RemoteException;
 import android.util.Log;
 import com.wits.pms.core.PowerManagerAppService;
 import com.wits.pms.core.SystemStatusControl;
 import com.wits.pms.custom.ICallBackController;
 import com.wits.pms.statuscontrol.McuStatus;
 
+/* loaded from: classes2.dex */
 public class CallBackServiceImpl extends ICallBackController.Stub {
     private static String TAG = CallBackServiceImpl.class.getSimpleName();
     private static CallBackServiceImpl mCallBackServiceImpl;
@@ -21,17 +22,19 @@ public class CallBackServiceImpl extends ICallBackController.Stub {
         return mCallBackServiceImpl;
     }
 
-    public void setICallBack(ICallBack iCallBack2) throws RemoteException {
-        this.iCallBack = iCallBack2;
+    @Override // com.wits.pms.custom.ICallBackController
+    public void setICallBack(ICallBack iCallBack) throws RemoteException {
+        this.iCallBack = iCallBack;
     }
 
+    @Override // com.wits.pms.custom.ICallBackController
     public ICallBack getICallBack() throws RemoteException {
         return this.iCallBack;
     }
 
     public void handleReverse() {
         String str = TAG;
-        Log.d(str, "handleReverse  iCallBack :" + this.iCallBack + "   ccd = " + SystemStatusControl.getStatus().ccd);
+        Log.m72d(str, "handleReverse  iCallBack :" + this.iCallBack + "   ccd = " + SystemStatusControl.getStatus().ccd);
         start360();
         if (this.iCallBack != null) {
             try {
@@ -44,7 +47,7 @@ public class CallBackServiceImpl extends ICallBackController.Stub {
 
     public void handleLRReverse() {
         String str = TAG;
-        Log.d(str, "handleLRReverse  iCallBack :" + this.iCallBack);
+        Log.m72d(str, "handleLRReverse  iCallBack :" + this.iCallBack);
         if (this.iCallBack != null) {
             try {
                 McuStatus mcuStatus = SystemStatusControl.getDefault().getMcuStatus();
@@ -97,7 +100,7 @@ public class CallBackServiceImpl extends ICallBackController.Stub {
 
     public void handleAcc(boolean isAcc) {
         String str = TAG;
-        Log.d(str, "handleAcc  iCallBack :" + this.iCallBack);
+        Log.m72d(str, "handleAcc  iCallBack :" + this.iCallBack);
         if (this.iCallBack != null) {
             try {
                 this.iCallBack.onAcc(isAcc);
@@ -108,12 +111,12 @@ public class CallBackServiceImpl extends ICallBackController.Stub {
     }
 
     private void start360() {
-        Log.d(TAG, "start360");
+        Log.m72d(TAG, "start360");
         Intent tempIntent = new Intent();
         tempIntent.setComponent(new ComponentName("com.baony.avm360", "com.baony.ui.service.AVMCanBusService"));
         PowerManagerAppService.serviceContext.startService(tempIntent);
         try {
-            Thread.sleep(300);
+            Thread.sleep(300L);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

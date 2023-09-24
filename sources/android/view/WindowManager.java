@@ -2,13 +2,13 @@ package android.view;
 
 import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
-import android.content.pm.ActivityInfo;
+import android.content.p002pm.ActivityInfo;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.Region;
-import android.os.IBinder;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.IBinder;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.provider.CalendarContract;
 import android.provider.SettingsStringUtil;
 import android.speech.tts.TextToSpeech;
@@ -26,6 +26,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.List;
 import java.util.Objects;
 
+/* loaded from: classes4.dex */
 public interface WindowManager extends ViewManager {
     public static final int DOCKED_BOTTOM = 4;
     public static final int DOCKED_INVALID = -1;
@@ -70,18 +71,22 @@ public interface WindowManager extends ViewManager {
     public static final int TRANSIT_WALLPAPER_INTRA_OPEN = 14;
     public static final int TRANSIT_WALLPAPER_OPEN = 13;
 
+    /* loaded from: classes4.dex */
     public interface KeyboardShortcutsReceiver {
         void onKeyboardShortcutsReceived(List<KeyboardShortcutGroup> list);
     }
 
+    /* loaded from: classes4.dex */
     public @interface RemoveContentMode {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface TransitionFlags {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface TransitionType {
     }
 
@@ -94,6 +99,7 @@ public interface WindowManager extends ViewManager {
 
     void requestAppKeyboardShortcuts(KeyboardShortcutsReceiver keyboardShortcutsReceiver, int i);
 
+    /* loaded from: classes4.dex */
     public static class BadTokenException extends RuntimeException {
         public BadTokenException() {
         }
@@ -103,6 +109,7 @@ public interface WindowManager extends ViewManager {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class InvalidDisplayException extends RuntimeException {
         public InvalidDisplayException() {
         }
@@ -112,23 +119,24 @@ public interface WindowManager extends ViewManager {
         }
     }
 
-    void setShouldShowWithInsecureKeyguard(int displayId, boolean shouldShow) {
+    default void setShouldShowWithInsecureKeyguard(int displayId, boolean shouldShow) {
     }
 
-    void setShouldShowSystemDecors(int displayId, boolean shouldShow) {
+    default void setShouldShowSystemDecors(int displayId, boolean shouldShow) {
     }
 
-    boolean shouldShowSystemDecors(int displayId) {
+    default boolean shouldShowSystemDecors(int displayId) {
         return false;
     }
 
-    void setShouldShowIme(int displayId, boolean shouldShow) {
+    default void setShouldShowIme(int displayId, boolean shouldShow) {
     }
 
-    boolean shouldShowIme(int displayId) {
+    default boolean shouldShowIme(int displayId) {
         return false;
     }
 
+    /* loaded from: classes4.dex */
     public static class LayoutParams extends ViewGroup.LayoutParams implements Parcelable {
         public static final int ACCESSIBILITY_ANCHOR_CHANGED = 16777216;
         public static final int ACCESSIBILITY_TITLE_CHANGED = 33554432;
@@ -139,11 +147,15 @@ public interface WindowManager extends ViewManager {
         public static final float BRIGHTNESS_OVERRIDE_OFF = 0.0f;
         public static final int BUTTON_BRIGHTNESS_CHANGED = 8192;
         public static final int COLOR_MODE_CHANGED = 67108864;
-        public static final Parcelable.Creator<LayoutParams> CREATOR = new Parcelable.Creator<LayoutParams>() {
+        public static final Parcelable.Creator<LayoutParams> CREATOR = new Parcelable.Creator<LayoutParams>() { // from class: android.view.WindowManager.LayoutParams.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public LayoutParams createFromParcel(Parcel in) {
                 return new LayoutParams(in);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public LayoutParams[] newArray(int size) {
                 return new LayoutParams[size];
             }
@@ -378,7 +390,7 @@ public interface WindowManager extends ViewManager {
         public final Rect surfaceInsets;
         public int systemUiVisibility;
         public IBinder token;
-        @ViewDebug.ExportedProperty(mapping = {@ViewDebug.IntToString(from = 1, to = "BASE_APPLICATION"), @ViewDebug.IntToString(from = 2, to = "APPLICATION"), @ViewDebug.IntToString(from = 3, to = "APPLICATION_STARTING"), @ViewDebug.IntToString(from = 4, to = "DRAWN_APPLICATION"), @ViewDebug.IntToString(from = 1000, to = "APPLICATION_PANEL"), @ViewDebug.IntToString(from = 1001, to = "APPLICATION_MEDIA"), @ViewDebug.IntToString(from = 1002, to = "APPLICATION_SUB_PANEL"), @ViewDebug.IntToString(from = 1005, to = "APPLICATION_ABOVE_SUB_PANEL"), @ViewDebug.IntToString(from = 1003, to = "APPLICATION_ATTACHED_DIALOG"), @ViewDebug.IntToString(from = 1004, to = "APPLICATION_MEDIA_OVERLAY"), @ViewDebug.IntToString(from = 2000, to = "STATUS_BAR"), @ViewDebug.IntToString(from = 2001, to = "SEARCH_BAR"), @ViewDebug.IntToString(from = 2002, to = "PHONE"), @ViewDebug.IntToString(from = 2003, to = "SYSTEM_ALERT"), @ViewDebug.IntToString(from = 2005, to = "TOAST"), @ViewDebug.IntToString(from = 2006, to = "SYSTEM_OVERLAY"), @ViewDebug.IntToString(from = 2007, to = "PRIORITY_PHONE"), @ViewDebug.IntToString(from = 2008, to = "SYSTEM_DIALOG"), @ViewDebug.IntToString(from = 2009, to = "KEYGUARD_DIALOG"), @ViewDebug.IntToString(from = 2010, to = "SYSTEM_ERROR"), @ViewDebug.IntToString(from = 2011, to = "INPUT_METHOD"), @ViewDebug.IntToString(from = 2012, to = "INPUT_METHOD_DIALOG"), @ViewDebug.IntToString(from = 2013, to = "WALLPAPER"), @ViewDebug.IntToString(from = 2014, to = "STATUS_BAR_PANEL"), @ViewDebug.IntToString(from = 2015, to = "SECURE_SYSTEM_OVERLAY"), @ViewDebug.IntToString(from = 2016, to = "DRAG"), @ViewDebug.IntToString(from = 2017, to = "STATUS_BAR_SUB_PANEL"), @ViewDebug.IntToString(from = 2018, to = "POINTER"), @ViewDebug.IntToString(from = 2019, to = "NAVIGATION_BAR"), @ViewDebug.IntToString(from = 2020, to = "VOLUME_OVERLAY"), @ViewDebug.IntToString(from = 2021, to = "BOOT_PROGRESS"), @ViewDebug.IntToString(from = 2022, to = "INPUT_CONSUMER"), @ViewDebug.IntToString(from = 2023, to = "DREAM"), @ViewDebug.IntToString(from = 2024, to = "NAVIGATION_BAR_PANEL"), @ViewDebug.IntToString(from = 2026, to = "DISPLAY_OVERLAY"), @ViewDebug.IntToString(from = 2027, to = "MAGNIFICATION_OVERLAY"), @ViewDebug.IntToString(from = 2037, to = "PRESENTATION"), @ViewDebug.IntToString(from = 2030, to = "PRIVATE_PRESENTATION"), @ViewDebug.IntToString(from = 2031, to = "VOICE_INTERACTION"), @ViewDebug.IntToString(from = 2033, to = "VOICE_INTERACTION_STARTING"), @ViewDebug.IntToString(from = 2034, to = "DOCK_DIVIDER"), @ViewDebug.IntToString(from = 2035, to = "QS_DIALOG"), @ViewDebug.IntToString(from = 2036, to = "SCREENSHOT"), @ViewDebug.IntToString(from = 2038, to = "APPLICATION_OVERLAY")})
+        @ViewDebug.ExportedProperty(mapping = {@ViewDebug.IntToString(from = 1, m46to = "BASE_APPLICATION"), @ViewDebug.IntToString(from = 2, m46to = "APPLICATION"), @ViewDebug.IntToString(from = 3, m46to = "APPLICATION_STARTING"), @ViewDebug.IntToString(from = 4, m46to = "DRAWN_APPLICATION"), @ViewDebug.IntToString(from = 1000, m46to = "APPLICATION_PANEL"), @ViewDebug.IntToString(from = 1001, m46to = "APPLICATION_MEDIA"), @ViewDebug.IntToString(from = 1002, m46to = "APPLICATION_SUB_PANEL"), @ViewDebug.IntToString(from = 1005, m46to = "APPLICATION_ABOVE_SUB_PANEL"), @ViewDebug.IntToString(from = 1003, m46to = "APPLICATION_ATTACHED_DIALOG"), @ViewDebug.IntToString(from = 1004, m46to = "APPLICATION_MEDIA_OVERLAY"), @ViewDebug.IntToString(from = 2000, m46to = "STATUS_BAR"), @ViewDebug.IntToString(from = 2001, m46to = "SEARCH_BAR"), @ViewDebug.IntToString(from = 2002, m46to = "PHONE"), @ViewDebug.IntToString(from = 2003, m46to = "SYSTEM_ALERT"), @ViewDebug.IntToString(from = 2005, m46to = "TOAST"), @ViewDebug.IntToString(from = 2006, m46to = "SYSTEM_OVERLAY"), @ViewDebug.IntToString(from = 2007, m46to = "PRIORITY_PHONE"), @ViewDebug.IntToString(from = 2008, m46to = "SYSTEM_DIALOG"), @ViewDebug.IntToString(from = 2009, m46to = "KEYGUARD_DIALOG"), @ViewDebug.IntToString(from = 2010, m46to = "SYSTEM_ERROR"), @ViewDebug.IntToString(from = 2011, m46to = "INPUT_METHOD"), @ViewDebug.IntToString(from = 2012, m46to = "INPUT_METHOD_DIALOG"), @ViewDebug.IntToString(from = 2013, m46to = "WALLPAPER"), @ViewDebug.IntToString(from = 2014, m46to = "STATUS_BAR_PANEL"), @ViewDebug.IntToString(from = 2015, m46to = "SECURE_SYSTEM_OVERLAY"), @ViewDebug.IntToString(from = 2016, m46to = "DRAG"), @ViewDebug.IntToString(from = 2017, m46to = "STATUS_BAR_SUB_PANEL"), @ViewDebug.IntToString(from = 2018, m46to = "POINTER"), @ViewDebug.IntToString(from = 2019, m46to = "NAVIGATION_BAR"), @ViewDebug.IntToString(from = 2020, m46to = "VOLUME_OVERLAY"), @ViewDebug.IntToString(from = 2021, m46to = "BOOT_PROGRESS"), @ViewDebug.IntToString(from = 2022, m46to = "INPUT_CONSUMER"), @ViewDebug.IntToString(from = 2023, m46to = "DREAM"), @ViewDebug.IntToString(from = 2024, m46to = "NAVIGATION_BAR_PANEL"), @ViewDebug.IntToString(from = 2026, m46to = "DISPLAY_OVERLAY"), @ViewDebug.IntToString(from = 2027, m46to = "MAGNIFICATION_OVERLAY"), @ViewDebug.IntToString(from = 2037, m46to = "PRESENTATION"), @ViewDebug.IntToString(from = 2030, m46to = "PRIVATE_PRESENTATION"), @ViewDebug.IntToString(from = 2031, m46to = "VOICE_INTERACTION"), @ViewDebug.IntToString(from = 2033, m46to = "VOICE_INTERACTION_STARTING"), @ViewDebug.IntToString(from = 2034, m46to = "DOCK_DIVIDER"), @ViewDebug.IntToString(from = 2035, m46to = "QS_DIALOG"), @ViewDebug.IntToString(from = 2036, m46to = "SCREENSHOT"), @ViewDebug.IntToString(from = 2038, m46to = "APPLICATION_OVERLAY")})
         public int type;
         @UnsupportedAppUsage
         public long userActivityTimeout;
@@ -387,25 +399,32 @@ public interface WindowManager extends ViewManager {
         public float verticalWeight;
         public int windowAnimations;
         @ViewDebug.ExportedProperty
-        public int x;
+
+        /* renamed from: x */
+        public int f2425x;
         @ViewDebug.ExportedProperty
-        public int y;
+
+        /* renamed from: y */
+        public int f2426y;
 
         @Retention(RetentionPolicy.SOURCE)
+        /* loaded from: classes4.dex */
         @interface LayoutInDisplayCutoutMode {
         }
 
         @Retention(RetentionPolicy.SOURCE)
+        /* loaded from: classes4.dex */
         public @interface SoftInputModeFlags {
         }
 
         @SystemApi
         @Retention(RetentionPolicy.SOURCE)
+        /* loaded from: classes4.dex */
         public @interface SystemFlags {
         }
 
-        public static boolean isSystemAlertWindowType(int type2) {
-            switch (type2) {
+        public static boolean isSystemAlertWindowType(int type) {
+            switch (type) {
                 case 2002:
                 case 2003:
                 case 2006:
@@ -418,8 +437,8 @@ public interface WindowManager extends ViewManager {
             }
         }
 
-        public static boolean mayUseInputMethod(int flags2) {
-            int i = flags2 & 131080;
+        public static boolean mayUseInputMethod(int flags) {
+            int i = flags & 131080;
             if (i == 0 || i == 131080) {
                 return true;
             }
@@ -440,9 +459,9 @@ public interface WindowManager extends ViewManager {
             this.packageName = null;
             this.screenOrientation = -1;
             this.layoutInDisplayCutoutMode = 0;
-            this.userActivityTimeout = -1;
+            this.userActivityTimeout = -1L;
             this.accessibilityIdOfAnchor = AccessibilityNodeInfo.UNDEFINED_NODE_ID;
-            this.hideTimeoutMilliseconds = -1;
+            this.hideTimeoutMilliseconds = -1L;
             this.mColorMode = 0;
             this.mCompatibilityParamsBackup = null;
             this.mTitle = null;
@@ -464,9 +483,9 @@ public interface WindowManager extends ViewManager {
             this.packageName = null;
             this.screenOrientation = -1;
             this.layoutInDisplayCutoutMode = 0;
-            this.userActivityTimeout = -1;
+            this.userActivityTimeout = -1L;
             this.accessibilityIdOfAnchor = AccessibilityNodeInfo.UNDEFINED_NODE_ID;
-            this.hideTimeoutMilliseconds = -1;
+            this.hideTimeoutMilliseconds = -1L;
             this.mColorMode = 0;
             this.mCompatibilityParamsBackup = null;
             this.mTitle = null;
@@ -488,9 +507,9 @@ public interface WindowManager extends ViewManager {
             this.packageName = null;
             this.screenOrientation = -1;
             this.layoutInDisplayCutoutMode = 0;
-            this.userActivityTimeout = -1;
+            this.userActivityTimeout = -1L;
             this.accessibilityIdOfAnchor = AccessibilityNodeInfo.UNDEFINED_NODE_ID;
-            this.hideTimeoutMilliseconds = -1;
+            this.hideTimeoutMilliseconds = -1L;
             this.mColorMode = 0;
             this.mCompatibilityParamsBackup = null;
             this.mTitle = null;
@@ -513,9 +532,9 @@ public interface WindowManager extends ViewManager {
             this.packageName = null;
             this.screenOrientation = -1;
             this.layoutInDisplayCutoutMode = 0;
-            this.userActivityTimeout = -1;
+            this.userActivityTimeout = -1L;
             this.accessibilityIdOfAnchor = AccessibilityNodeInfo.UNDEFINED_NODE_ID;
-            this.hideTimeoutMilliseconds = -1;
+            this.hideTimeoutMilliseconds = -1L;
             this.mColorMode = 0;
             this.mCompatibilityParamsBackup = null;
             this.mTitle = null;
@@ -538,9 +557,9 @@ public interface WindowManager extends ViewManager {
             this.packageName = null;
             this.screenOrientation = -1;
             this.layoutInDisplayCutoutMode = 0;
-            this.userActivityTimeout = -1;
+            this.userActivityTimeout = -1L;
             this.accessibilityIdOfAnchor = AccessibilityNodeInfo.UNDEFINED_NODE_ID;
-            this.hideTimeoutMilliseconds = -1;
+            this.hideTimeoutMilliseconds = -1L;
             this.mColorMode = 0;
             this.mCompatibilityParamsBackup = null;
             this.mTitle = null;
@@ -563,14 +582,14 @@ public interface WindowManager extends ViewManager {
             this.packageName = null;
             this.screenOrientation = -1;
             this.layoutInDisplayCutoutMode = 0;
-            this.userActivityTimeout = -1;
+            this.userActivityTimeout = -1L;
             this.accessibilityIdOfAnchor = AccessibilityNodeInfo.UNDEFINED_NODE_ID;
-            this.hideTimeoutMilliseconds = -1;
+            this.hideTimeoutMilliseconds = -1L;
             this.mColorMode = 0;
             this.mCompatibilityParamsBackup = null;
             this.mTitle = null;
-            this.x = xpos;
-            this.y = ypos;
+            this.f2425x = xpos;
+            this.f2426y = ypos;
             this.type = _type;
             this.flags = _flags;
             this.format = _format;
@@ -588,7 +607,7 @@ public interface WindowManager extends ViewManager {
         }
 
         public final void setSurfaceInsets(View view, boolean manual, boolean preservePrevious) {
-            int surfaceInset = (int) Math.ceil((double) (view.getZ() * 2.0f));
+            int surfaceInset = (int) Math.ceil(view.getZ() * 2.0f);
             if (surfaceInset == 0) {
                 this.surfaceInsets.set(0, 0, 0, 0);
             } else {
@@ -616,15 +635,17 @@ public interface WindowManager extends ViewManager {
             return this.userActivityTimeout;
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel out, int parcelableFlags) {
             out.writeInt(this.width);
             out.writeInt(this.height);
-            out.writeInt(this.x);
-            out.writeInt(this.y);
+            out.writeInt(this.f2425x);
+            out.writeInt(this.f2426y);
             out.writeInt(this.type);
             out.writeInt(this.flags);
             out.writeInt(this.privateFlags);
@@ -665,7 +686,8 @@ public interface WindowManager extends ViewManager {
         }
 
         public LayoutParams(Parcel in) {
-            boolean z = false;
+            boolean z;
+            boolean z2;
             this.needsMenuKey = 0;
             this.surfaceInsets = new Rect();
             this.preservePreviousSurfaceInsets = true;
@@ -678,16 +700,16 @@ public interface WindowManager extends ViewManager {
             this.packageName = null;
             this.screenOrientation = -1;
             this.layoutInDisplayCutoutMode = 0;
-            this.userActivityTimeout = -1;
+            this.userActivityTimeout = -1L;
             this.accessibilityIdOfAnchor = AccessibilityNodeInfo.UNDEFINED_NODE_ID;
-            this.hideTimeoutMilliseconds = -1;
+            this.hideTimeoutMilliseconds = -1L;
             this.mColorMode = 0;
             this.mCompatibilityParamsBackup = null;
             this.mTitle = null;
             this.width = in.readInt();
             this.height = in.readInt();
-            this.x = in.readInt();
-            this.y = in.readInt();
+            this.f2425x = in.readInt();
+            this.f2426y = in.readInt();
             this.type = in.readInt();
             this.flags = in.readInt();
             this.privateFlags = in.readInt();
@@ -711,15 +733,25 @@ public interface WindowManager extends ViewManager {
             this.preferredDisplayModeId = in.readInt();
             this.systemUiVisibility = in.readInt();
             this.subtreeSystemUiVisibility = in.readInt();
-            this.hasSystemUiListeners = in.readInt() != 0;
+            if (in.readInt() == 0) {
+                z = false;
+            } else {
+                z = true;
+            }
+            this.hasSystemUiListeners = z;
             this.inputFeatures = in.readInt();
             this.userActivityTimeout = in.readLong();
             this.surfaceInsets.left = in.readInt();
             this.surfaceInsets.top = in.readInt();
             this.surfaceInsets.right = in.readInt();
             this.surfaceInsets.bottom = in.readInt();
-            this.hasManualSurfaceInsets = in.readInt() != 0;
-            this.preservePreviousSurfaceInsets = in.readInt() != 0 ? true : z;
+            if (in.readInt() == 0) {
+                z2 = false;
+            } else {
+                z2 = true;
+            }
+            this.hasManualSurfaceInsets = z2;
+            this.preservePreviousSurfaceInsets = in.readInt() != 0;
             this.needsMenuKey = in.readInt();
             this.accessibilityIdOfAnchor = in.readLong();
             this.accessibilityTitle = TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(in);
@@ -737,12 +769,12 @@ public interface WindowManager extends ViewManager {
                 this.height = o.height;
                 changes |= 1;
             }
-            if (this.x != o.x) {
-                this.x = o.x;
+            if (this.f2425x != o.f2425x) {
+                this.f2425x = o.f2425x;
                 changes |= 1;
             }
-            if (this.y != o.y) {
-                this.y = o.y;
+            if (this.f2426y != o.f2426y) {
+                this.f2426y = o.f2426y;
                 changes |= 1;
             }
             if (this.horizontalWeight != o.horizontalWeight) {
@@ -766,13 +798,15 @@ public interface WindowManager extends ViewManager {
                 changes |= 2;
             }
             if (this.flags != o.flags) {
-                if ((201326592 & (this.flags ^ o.flags)) != 0) {
+                int diff = this.flags ^ o.flags;
+                if ((201326592 & diff) != 0) {
                     changes |= 524288;
                 }
                 this.flags = o.flags;
                 changes |= 4;
             }
-            if (this.privateFlags != o.privateFlags) {
+            int diff2 = this.privateFlags;
+            if (diff2 != o.privateFlags) {
                 this.privateFlags = o.privateFlags;
                 changes |= 131072;
             }
@@ -838,7 +872,7 @@ public interface WindowManager extends ViewManager {
                 this.preferredDisplayModeId = o.preferredDisplayModeId;
                 changes |= 8388608;
             }
-            if (!(this.systemUiVisibility == o.systemUiVisibility && this.subtreeSystemUiVisibility == o.subtreeSystemUiVisibility)) {
+            if (this.systemUiVisibility != o.systemUiVisibility || this.subtreeSystemUiVisibility != o.subtreeSystemUiVisibility) {
                 this.systemUiVisibility = o.systemUiVisibility;
                 this.subtreeSystemUiVisibility = o.subtreeSystemUiVisibility;
                 changes |= 16384;
@@ -887,11 +921,13 @@ public interface WindowManager extends ViewManager {
             return changes;
         }
 
+        @Override // android.view.ViewGroup.LayoutParams
         public String debug(String output) {
-            Log.d("Debug", output + "Contents of " + this + SettingsStringUtil.DELIMITER);
-            Log.d("Debug", super.debug(""));
-            Log.d("Debug", "");
-            Log.d("Debug", "WindowManager.LayoutParams={title=" + this.mTitle + "}");
+            Log.m72d("Debug", output + "Contents of " + this + SettingsStringUtil.DELIMITER);
+            String output2 = super.debug("");
+            Log.m72d("Debug", output2);
+            Log.m72d("Debug", "");
+            Log.m72d("Debug", "WindowManager.LayoutParams={title=" + ((Object) this.mTitle) + "}");
             return "";
         }
 
@@ -900,26 +936,26 @@ public interface WindowManager extends ViewManager {
         }
 
         public void dumpDimensions(StringBuilder sb) {
-            String str;
-            String str2;
+            String valueOf;
+            String valueOf2;
             sb.append('(');
-            sb.append(this.x);
+            sb.append(this.f2425x);
             sb.append(',');
-            sb.append(this.y);
+            sb.append(this.f2426y);
             sb.append(")(");
             if (this.width == -1) {
-                str = "fill";
+                valueOf = "fill";
             } else {
-                str = this.width == -2 ? "wrap" : String.valueOf(this.width);
+                valueOf = this.width == -2 ? "wrap" : String.valueOf(this.width);
             }
-            sb.append(str);
+            sb.append(valueOf);
             sb.append(EpicenterTranslateClipReveal.StateProperty.TARGET_X);
             if (this.height == -1) {
-                str2 = "fill";
+                valueOf2 = "fill";
             } else {
-                str2 = this.height == -2 ? "wrap" : String.valueOf(this.height);
+                valueOf2 = this.height == -2 ? "wrap" : String.valueOf(this.height);
             }
-            sb.append(str2);
+            sb.append(valueOf2);
             sb.append(")");
         }
 
@@ -998,7 +1034,7 @@ public interface WindowManager extends ViewManager {
                 sb.append(" userActivityTimeout=");
                 sb.append(this.userActivityTimeout);
             }
-            if (!(this.surfaceInsets.left == 0 && this.surfaceInsets.top == 0 && this.surfaceInsets.right == 0 && this.surfaceInsets.bottom == 0 && !this.hasManualSurfaceInsets && this.preservePreviousSurfaceInsets)) {
+            if (this.surfaceInsets.left != 0 || this.surfaceInsets.top != 0 || this.surfaceInsets.right != 0 || this.surfaceInsets.bottom != 0 || this.hasManualSurfaceInsets || !this.preservePreviousSurfaceInsets) {
                 sb.append(" surfaceInsets=");
                 sb.append(this.surfaceInsets);
                 if (this.hasManualSurfaceInsets) {
@@ -1042,79 +1078,77 @@ public interface WindowManager extends ViewManager {
         }
 
         public void writeToProto(ProtoOutputStream proto, long fieldId) {
-            long token2 = proto.start(fieldId);
+            long token = proto.start(fieldId);
             proto.write(1120986464257L, this.type);
-            proto.write(1120986464258L, this.x);
-            proto.write(1120986464259L, this.y);
+            proto.write(1120986464258L, this.f2425x);
+            proto.write(1120986464259L, this.f2426y);
             proto.write(1120986464260L, this.width);
             proto.write(1120986464261L, this.height);
             proto.write(1108101562374L, this.horizontalMargin);
-            proto.write((long) WindowLayoutParamsProto.VERTICAL_MARGIN, this.verticalMargin);
+            proto.write(WindowLayoutParamsProto.VERTICAL_MARGIN, this.verticalMargin);
             proto.write(1120986464264L, this.gravity);
             proto.write(1120986464265L, this.softInputMode);
             proto.write(1159641169930L, this.format);
             proto.write(1120986464267L, this.windowAnimations);
             proto.write(1108101562380L, this.alpha);
-            proto.write((long) WindowLayoutParamsProto.SCREEN_BRIGHTNESS, this.screenBrightness);
-            proto.write((long) WindowLayoutParamsProto.BUTTON_BRIGHTNESS, this.buttonBrightness);
+            proto.write(WindowLayoutParamsProto.SCREEN_BRIGHTNESS, this.screenBrightness);
+            proto.write(WindowLayoutParamsProto.BUTTON_BRIGHTNESS, this.buttonBrightness);
             proto.write(1159641169935L, this.rotationAnimation);
-            proto.write((long) WindowLayoutParamsProto.PREFERRED_REFRESH_RATE, this.preferredRefreshRate);
+            proto.write(WindowLayoutParamsProto.PREFERRED_REFRESH_RATE, this.preferredRefreshRate);
             proto.write(1120986464273L, this.preferredDisplayModeId);
             proto.write(1133871366162L, this.hasSystemUiListeners);
-            proto.write((long) WindowLayoutParamsProto.INPUT_FEATURE_FLAGS, this.inputFeatures);
+            proto.write(WindowLayoutParamsProto.INPUT_FEATURE_FLAGS, this.inputFeatures);
             proto.write(1112396529684L, this.userActivityTimeout);
             proto.write(1159641169942L, this.needsMenuKey);
             proto.write(1159641169943L, this.mColorMode);
-            proto.write((long) WindowLayoutParamsProto.FLAGS, this.flags);
-            proto.write((long) WindowLayoutParamsProto.PRIVATE_FLAGS, this.privateFlags);
-            proto.write((long) WindowLayoutParamsProto.SYSTEM_UI_VISIBILITY_FLAGS, this.systemUiVisibility);
-            proto.write((long) WindowLayoutParamsProto.SUBTREE_SYSTEM_UI_VISIBILITY_FLAGS, this.subtreeSystemUiVisibility);
-            proto.end(token2);
+            proto.write(WindowLayoutParamsProto.FLAGS, this.flags);
+            proto.write(WindowLayoutParamsProto.PRIVATE_FLAGS, this.privateFlags);
+            proto.write(WindowLayoutParamsProto.SYSTEM_UI_VISIBILITY_FLAGS, this.systemUiVisibility);
+            proto.write(WindowLayoutParamsProto.SUBTREE_SYSTEM_UI_VISIBILITY_FLAGS, this.subtreeSystemUiVisibility);
+            proto.end(token);
         }
 
         public void scale(float scale) {
-            this.x = (int) ((((float) this.x) * scale) + 0.5f);
-            this.y = (int) ((((float) this.y) * scale) + 0.5f);
+            this.f2425x = (int) ((this.f2425x * scale) + 0.5f);
+            this.f2426y = (int) ((this.f2426y * scale) + 0.5f);
             if (this.width > 0) {
-                this.width = (int) ((((float) this.width) * scale) + 0.5f);
+                this.width = (int) ((this.width * scale) + 0.5f);
             }
             if (this.height > 0) {
-                this.height = (int) ((((float) this.height) * scale) + 0.5f);
+                this.height = (int) ((this.height * scale) + 0.5f);
             }
         }
 
-        /* access modifiers changed from: package-private */
         @UnsupportedAppUsage
-        public void backup() {
+        void backup() {
             int[] backup = this.mCompatibilityParamsBackup;
             if (backup == null) {
                 int[] iArr = new int[4];
                 this.mCompatibilityParamsBackup = iArr;
                 backup = iArr;
             }
-            backup[0] = this.x;
-            backup[1] = this.y;
+            backup[0] = this.f2425x;
+            backup[1] = this.f2426y;
             backup[2] = this.width;
             backup[3] = this.height;
         }
 
-        /* access modifiers changed from: package-private */
         @UnsupportedAppUsage
-        public void restore() {
+        void restore() {
             int[] backup = this.mCompatibilityParamsBackup;
             if (backup != null) {
-                this.x = backup[0];
-                this.y = backup[1];
+                this.f2425x = backup[0];
+                this.f2426y = backup[1];
                 this.width = backup[2];
                 this.height = backup[3];
             }
         }
 
-        /* access modifiers changed from: protected */
-        public void encodeProperties(ViewHierarchyEncoder encoder) {
+        @Override // android.view.ViewGroup.LayoutParams
+        protected void encodeProperties(ViewHierarchyEncoder encoder) {
             super.encodeProperties(encoder);
-            encoder.addProperty("x", this.x);
-            encoder.addProperty(DateFormat.YEAR, this.y);
+            encoder.addProperty("x", this.f2425x);
+            encoder.addProperty(DateFormat.YEAR, this.f2426y);
             encoder.addProperty("horizontalWeight", this.horizontalWeight);
             encoder.addProperty("verticalWeight", this.verticalWeight);
             encoder.addProperty("type", this.type);
@@ -1122,7 +1156,7 @@ public interface WindowManager extends ViewManager {
         }
 
         public boolean isFullscreen() {
-            return this.x == 0 && this.y == 0 && this.width == -1 && this.height == -1;
+            return this.f2425x == 0 && this.f2426y == 0 && this.width == -1 && this.height == -1;
         }
 
         private static String layoutInDisplayCutoutModeToString(int mode) {
@@ -1138,9 +1172,9 @@ public interface WindowManager extends ViewManager {
             }
         }
 
-        private static String softInputModeToString(int softInputMode2) {
+        private static String softInputModeToString(int softInputMode) {
             StringBuilder result = new StringBuilder();
-            int state = softInputMode2 & 15;
+            int state = softInputMode & 15;
             if (state != 0) {
                 result.append("state=");
                 switch (state) {
@@ -1165,21 +1199,23 @@ public interface WindowManager extends ViewManager {
                 }
                 result.append(' ');
             }
-            int adjust = softInputMode2 & 240;
+            int adjust = softInputMode & 240;
             if (adjust != 0) {
                 result.append("adjust=");
-                if (adjust == 16) {
-                    result.append("resize");
-                } else if (adjust == 32) {
-                    result.append(TextToSpeech.Engine.KEY_PARAM_PAN);
-                } else if (adjust != 48) {
-                    result.append(adjust);
+                if (adjust != 16) {
+                    if (adjust == 32) {
+                        result.append(TextToSpeech.Engine.KEY_PARAM_PAN);
+                    } else if (adjust == 48) {
+                        result.append("nothing");
+                    } else {
+                        result.append(adjust);
+                    }
                 } else {
-                    result.append("nothing");
+                    result.append("resize");
                 }
                 result.append(' ');
             }
-            if ((softInputMode2 & 256) != 0) {
+            if ((softInputMode & 256) != 0) {
                 result.append("forwardNavigation");
                 result.append(' ');
             }
@@ -1187,8 +1223,8 @@ public interface WindowManager extends ViewManager {
             return result.toString();
         }
 
-        private static String rotationAnimationToString(int rotationAnimation2) {
-            switch (rotationAnimation2) {
+        private static String rotationAnimationToString(int rotationAnimation) {
+            switch (rotationAnimation) {
                 case -1:
                     return "UNSPECIFIED";
                 case 0:
@@ -1200,22 +1236,22 @@ public interface WindowManager extends ViewManager {
                 case 3:
                     return "SEAMLESS";
                 default:
-                    return Integer.toString(rotationAnimation2);
+                    return Integer.toString(rotationAnimation);
             }
         }
 
         private static String inputFeatureToString(int inputFeature) {
-            if (inputFeature == 4) {
-                return "DISABLE_USER_ACTIVITY";
+            if (inputFeature != 4) {
+                switch (inputFeature) {
+                    case 1:
+                        return "DISABLE_POINTER_GESTURES";
+                    case 2:
+                        return "NO_INPUT_CHANNEL";
+                    default:
+                        return Integer.toString(inputFeature);
+                }
             }
-            switch (inputFeature) {
-                case 1:
-                    return "DISABLE_POINTER_GESTURES";
-                case 2:
-                    return "NO_INPUT_CHANNEL";
-                default:
-                    return Integer.toString(inputFeature);
-            }
+            return "DISABLE_USER_ACTIVITY";
         }
     }
 }

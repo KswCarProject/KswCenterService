@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/* loaded from: classes4.dex */
 public final class RcsParticipantQueryResult {
     private final RcsControllerCall mRcsControllerCall;
     private final RcsParticipantQueryResultParcelable mRcsParticipantQueryResultParcelable;
@@ -18,7 +19,8 @@ public final class RcsParticipantQueryResult {
     }
 
     public List<RcsParticipant> getParticipants() {
-        return (List) this.mRcsParticipantQueryResultParcelable.mParticipantIds.stream().map(new Function() {
+        return (List) this.mRcsParticipantQueryResultParcelable.mParticipantIds.stream().map(new Function() { // from class: android.telephony.ims.-$$Lambda$RcsParticipantQueryResult$5cUqqqG-A5Xe8Jrc2zruOvBMj44
+            @Override // java.util.function.Function
             public final Object apply(Object obj) {
                 return RcsParticipantQueryResult.lambda$getParticipants$0(RcsParticipantQueryResult.this, (Integer) obj);
             }

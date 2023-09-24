@@ -2,13 +2,14 @@ package android.webkit;
 
 import android.graphics.Bitmap;
 import android.net.http.SslError;
-import android.os.Message;
+import android.p007os.Message;
 import android.view.InputEvent;
 import android.view.KeyEvent;
 import android.view.ViewRootImpl;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes4.dex */
 public class WebViewClient {
     public static final int ERROR_AUTHENTICATION = -4;
     public static final int ERROR_BAD_URL = -12;
@@ -33,6 +34,7 @@ public class WebViewClient {
     public static final int SAFE_BROWSING_THREAT_UNWANTED_SOFTWARE = 3;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface SafeBrowsingThreat {
     }
 

@@ -7,28 +7,28 @@ import com.ibm.icu.impl.CharacterIteration;
 import com.ibm.icu.text.DictionaryBreakEngine;
 import java.io.IOException;
 import java.text.CharacterIterator;
-import java.text.StringCharacterIterator;
 
+/* loaded from: classes5.dex */
 class CjkBreakEngine extends DictionaryBreakEngine {
-    private static final UnicodeSet fHanWordSet = new UnicodeSet();
-    private static final UnicodeSet fHangulWordSet = new UnicodeSet();
-    private static final UnicodeSet fHiraganaWordSet = new UnicodeSet();
-    private static final UnicodeSet fKatakanaWordSet = new UnicodeSet();
     private static final int kMaxKatakanaGroupLength = 20;
     private static final int kMaxKatakanaLength = 8;
     private static final int kint32max = Integer.MAX_VALUE;
     private static final int maxSnlp = 255;
     private DictionaryMatcher fDictionary;
+    private static final UnicodeSet fHangulWordSet = new UnicodeSet();
+    private static final UnicodeSet fHanWordSet = new UnicodeSet();
+    private static final UnicodeSet fKatakanaWordSet = new UnicodeSet();
+    private static final UnicodeSet fHiraganaWordSet = new UnicodeSet();
 
     static {
         fHangulWordSet.applyPattern("[\\uac00-\\ud7a3]");
         fHanWordSet.applyPattern("[:Han:]");
         fKatakanaWordSet.applyPattern("[[:Katakana:]\\uff9e\\uff9f]");
         fHiraganaWordSet.applyPattern("[:Hiragana:]");
-        fHangulWordSet.freeze();
-        fHanWordSet.freeze();
-        fKatakanaWordSet.freeze();
-        fHiraganaWordSet.freeze();
+        fHangulWordSet.m211freeze();
+        fHanWordSet.m211freeze();
+        fKatakanaWordSet.m211freeze();
+        fHiraganaWordSet.m211freeze();
     }
 
     public CjkBreakEngine(boolean korean) throws IOException {
@@ -43,13 +43,14 @@ class CjkBreakEngine extends DictionaryBreakEngine {
         cjSet.addAll(fKatakanaWordSet);
         cjSet.addAll(fHiraganaWordSet);
         cjSet.add(65392);
-        cjSet.add((int) EGLExt.EGL_CONTEXT_FLAGS_KHR);
+        cjSet.add(EGLExt.EGL_CONTEXT_FLAGS_KHR);
         setCharacters(cjSet);
     }
 
     public boolean equals(Object obj) {
         if (obj instanceof CjkBreakEngine) {
-            return this.fSet.equals(((CjkBreakEngine) obj).fSet);
+            CjkBreakEngine other = (CjkBreakEngine) obj;
+            return this.fSet.equals(other.fSet);
         }
         return false;
     }
@@ -70,40 +71,40 @@ class CjkBreakEngine extends DictionaryBreakEngine {
         return (value >= 12449 && value <= 12542 && value != 12539) || (value >= 65382 && value <= 65439);
     }
 
+    @Override // com.ibm.icu.text.DictionaryBreakEngine
     public int divideUpDictionaryRange(CharacterIterator inText, int startPos, int endPos, DictionaryBreakEngine.DequeI foundBreaks) {
         int[] charPositions;
         CharacterIterator text;
         int i;
         int numBreaks;
-        int[] prev;
-        int[] values;
-        int[] bestSnlp;
-        int[] lengths;
         StringBuffer s;
+        int[] lengths;
+        int[] values;
+        int[] prev;
+        int[] bestSnlp;
         int newSnlp;
-        int i2 = startPos;
-        int i3 = endPos;
-        DictionaryBreakEngine.DequeI dequeI = foundBreaks;
-        if (i2 >= i3) {
+        if (startPos >= endPos) {
             return 0;
         }
         inText.setIndex(startPos);
-        int inputLength = i3 - i2;
-        int[] charPositions2 = new int[(inputLength + 1)];
+        int inputLength = endPos - startPos;
+        int[] charPositions2 = new int[inputLength + 1];
         StringBuffer s2 = new StringBuffer("");
         inText.setIndex(startPos);
-        while (inText.getIndex() < i3) {
+        while (inText.getIndex() < endPos) {
             s2.append(inText.current());
             inText.next();
         }
         String prenormstr = s2.toString();
+        boolean isNormalized = Normalizer.quickCheck(prenormstr, Normalizer.NFKC) == Normalizer.YES || Normalizer.isNormalized(prenormstr, Normalizer.NFKC, 0);
         int numCodePts = 0;
-        if (Normalizer.quickCheck(prenormstr, Normalizer.NFKC) == Normalizer.YES || Normalizer.isNormalized(prenormstr, Normalizer.NFKC, 0)) {
-            CharacterIterator text2 = new StringCharacterIterator(prenormstr);
+        if (isNormalized) {
+            CharacterIterator text2 = new java.text.StringCharacterIterator(prenormstr);
             int index = 0;
             charPositions2[0] = 0;
             while (index < prenormstr.length()) {
-                index += Character.charCount(prenormstr.codePointAt(index));
+                int codepoint = prenormstr.codePointAt(index);
+                index += Character.charCount(codepoint);
                 numCodePts++;
                 charPositions2[numCodePts] = index;
             }
@@ -111,8 +112,8 @@ class CjkBreakEngine extends DictionaryBreakEngine {
             text = text2;
         } else {
             String normStr = Normalizer.normalize(prenormstr, Normalizer.NFKC);
-            CharacterIterator text3 = new StringCharacterIterator(normStr);
-            int[] charPositions3 = new int[(normStr.length() + 1)];
+            CharacterIterator text3 = new java.text.StringCharacterIterator(normStr);
+            int[] charPositions3 = new int[normStr.length() + 1];
             Normalizer normalizer = new Normalizer(prenormstr, Normalizer.NFKC, 0);
             int index2 = 0;
             charPositions3[0] = 0;
@@ -125,30 +126,31 @@ class CjkBreakEngine extends DictionaryBreakEngine {
             charPositions = charPositions3;
             text = text3;
         }
-        int[] bestSnlp2 = new int[(numCodePts + 1)];
+        int[] bestSnlp2 = new int[numCodePts + 1];
         bestSnlp2[0] = 0;
-        int i4 = 1;
+        int i2 = 1;
         while (true) {
             i = Integer.MAX_VALUE;
-            if (i4 > numCodePts) {
+            if (i2 > numCodePts) {
                 break;
             }
-            bestSnlp2[i4] = Integer.MAX_VALUE;
-            i4++;
+            bestSnlp2[i2] = Integer.MAX_VALUE;
+            i2++;
         }
-        int[] prev2 = new int[(numCodePts + 1)];
-        for (int i5 = 0; i5 <= numCodePts; i5++) {
-            prev2[i5] = -1;
+        int i3 = numCodePts + 1;
+        int[] prev2 = new int[i3];
+        for (int i4 = 0; i4 <= numCodePts; i4++) {
+            prev2[i4] = -1;
         }
         int[] values2 = new int[numCodePts];
         int[] lengths2 = new int[numCodePts];
         text.setIndex(0);
         boolean is_prev_katakana = false;
-        int i6 = 0;
-        while (i6 < numCodePts) {
-            int ix = text.getIndex();
+        int ix = 0;
+        while (ix < numCodePts) {
+            int ix2 = text.getIndex();
             int inputLength2 = inputLength;
-            if (bestSnlp2[i6] == i) {
+            if (bestSnlp2[ix] == i) {
                 s = s2;
                 values = values2;
                 prev = prev2;
@@ -157,45 +159,45 @@ class CjkBreakEngine extends DictionaryBreakEngine {
             } else {
                 s = s2;
                 lengths = lengths2;
-                int maxSearchLength = i6 + 20 < numCodePts ? 20 : numCodePts - i6;
+                int maxSearchLength = ix + 20 < numCodePts ? 20 : numCodePts - ix;
                 int[] count_ = new int[1];
                 values = values2;
                 prev = prev2;
                 bestSnlp = bestSnlp2;
                 this.fDictionary.matches(text, maxSearchLength, lengths, count_, maxSearchLength, values);
                 int count = count_[0];
-                text.setIndex(ix);
+                text.setIndex(ix2);
                 if ((count == 0 || lengths[0] != 1) && CharacterIteration.current32(text) != Integer.MAX_VALUE && !fHangulWordSet.contains(CharacterIteration.current32(text))) {
                     values[count] = 255;
                     lengths[count] = 1;
                     count++;
                 }
                 for (int j = 0; j < count; j++) {
-                    int newSnlp2 = bestSnlp[i6] + values[j];
-                    if (newSnlp2 < bestSnlp[lengths[j] + i6]) {
-                        bestSnlp[lengths[j] + i6] = newSnlp2;
-                        prev[lengths[j] + i6] = i6;
+                    int newSnlp2 = bestSnlp[ix] + values[j];
+                    if (newSnlp2 < bestSnlp[lengths[j] + ix]) {
+                        bestSnlp[lengths[j] + ix] = newSnlp2;
+                        prev[lengths[j] + ix] = ix;
                     }
                 }
-                boolean is_katakana = isKatakana(CharacterIteration.current32(text));
+                int j2 = CharacterIteration.current32(text);
+                boolean is_katakana = isKatakana(j2);
                 if (!is_prev_katakana && is_katakana) {
-                    int j2 = i6 + 1;
+                    int j3 = ix + 1;
                     CharacterIteration.next32(text);
-                    while (j2 < numCodePts && j2 - i6 < 20 && isKatakana(CharacterIteration.current32(text))) {
+                    while (j3 < numCodePts && j3 - ix < 20 && isKatakana(CharacterIteration.current32(text))) {
                         CharacterIteration.next32(text);
-                        j2++;
+                        j3++;
                     }
-                    if (j2 - i6 < 20 && (newSnlp = bestSnlp[i6] + getKatakanaCost(j2 - i6)) < bestSnlp[j2]) {
-                        bestSnlp[j2] = newSnlp;
-                        prev[j2] = i6;
+                    if (j3 - ix < 20 && (newSnlp = bestSnlp[ix] + getKatakanaCost(j3 - ix)) < bestSnlp[j3]) {
+                        bestSnlp[j3] = newSnlp;
+                        prev[j3] = ix;
                     }
                 }
                 is_prev_katakana = is_katakana;
             }
-            i6++;
-            text.setIndex(ix);
+            ix++;
+            text.setIndex(ix2);
             CharacterIteration.next32(text);
-            int i7 = ix;
             inputLength = inputLength2;
             s2 = s;
             lengths2 = lengths;
@@ -204,47 +206,39 @@ class CjkBreakEngine extends DictionaryBreakEngine {
             prev2 = prev;
             i = Integer.MAX_VALUE;
         }
-        StringBuffer stringBuffer = s2;
-        int[] iArr = values2;
         int[] prev3 = prev2;
-        int[] iArr2 = lengths2;
-        int[] t_boundary = new int[(numCodePts + 1)];
-        if (bestSnlp2[numCodePts] == Integer.MAX_VALUE) {
-            t_boundary[0] = numCodePts;
-            numBreaks = 0 + 1;
-        } else {
-            boolean z = true;
+        int[] t_boundary = new int[numCodePts + 1];
+        if (bestSnlp2[numCodePts] != Integer.MAX_VALUE) {
             int numBreaks2 = 0;
-            for (int i8 = numCodePts; i8 > 0; i8 = prev3[i8]) {
-                t_boundary[numBreaks2] = i8;
+            for (int numBreaks3 = numCodePts; numBreaks3 > 0; numBreaks3 = prev3[numBreaks3]) {
+                t_boundary[numBreaks2] = numBreaks3;
                 numBreaks2++;
             }
-            if (prev3[t_boundary[numBreaks2 - 1]] != 0) {
-                z = false;
-            }
-            Assert.assrt(z);
+            int i5 = numBreaks2 - 1;
+            Assert.assrt(prev3[t_boundary[i5]] == 0);
             numBreaks = numBreaks2;
+        } else {
+            t_boundary[0] = numCodePts;
+            numBreaks = 0 + 1;
         }
-        if (foundBreaks.size() == 0 || foundBreaks.peek() < i2) {
+        if (foundBreaks.size() == 0 || foundBreaks.peek() < startPos) {
             t_boundary[numBreaks] = 0;
             numBreaks++;
         }
         int correctedNumBreaks = 0;
-        for (int i9 = numBreaks - 1; i9 >= 0; i9--) {
-            int pos = charPositions[t_boundary[i9]] + i2;
-            if (!dequeI.contains(pos) && pos != i2) {
-                dequeI.push(charPositions[t_boundary[i9]] + i2);
+        for (int i6 = numBreaks - 1; i6 >= 0; i6--) {
+            int pos = charPositions[t_boundary[i6]] + startPos;
+            if (!foundBreaks.contains(pos) && pos != startPos) {
+                foundBreaks.push(charPositions[t_boundary[i6]] + startPos);
                 correctedNumBreaks++;
             }
         }
-        if (foundBreaks.isEmpty() == 0 && foundBreaks.peek() == i3) {
+        if (!foundBreaks.isEmpty() && foundBreaks.peek() == endPos) {
             foundBreaks.pop();
             correctedNumBreaks--;
         }
         if (!foundBreaks.isEmpty()) {
             inText.setIndex(foundBreaks.peek());
-        } else {
-            CharacterIterator characterIterator = inText;
         }
         return correctedNumBreaks;
     }

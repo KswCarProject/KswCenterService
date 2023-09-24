@@ -1,6 +1,7 @@
 package android.location;
 
 @Deprecated
+/* loaded from: classes.dex */
 public final class GpsSatellite {
     float mAzimuth;
     float mElevation;
@@ -15,8 +16,7 @@ public final class GpsSatellite {
         this.mPrn = prn;
     }
 
-    /* access modifiers changed from: package-private */
-    public void setStatus(GpsSatellite satellite) {
+    void setStatus(GpsSatellite satellite) {
         if (satellite == null) {
             this.mValid = false;
             return;

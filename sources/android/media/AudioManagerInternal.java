@@ -2,8 +2,10 @@ package android.media;
 
 import android.util.IntArray;
 
+/* loaded from: classes3.dex */
 public abstract class AudioManagerInternal {
 
+    /* loaded from: classes3.dex */
     public interface RingerModeDelegate {
         boolean canVolumeDownEnterSilent();
 

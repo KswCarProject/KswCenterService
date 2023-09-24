@@ -3,6 +3,7 @@ package android.hardware.radio.V1_0;
 import com.android.internal.telephony.IccCardConstants;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class ClipStatus {
     public static final int CLIP_PROVISIONED = 0;
     public static final int CLIP_UNPROVISIONED = 1;

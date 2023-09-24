@@ -1,19 +1,24 @@
 package android.telephony.mbms;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+/* loaded from: classes4.dex */
 public final class StreamingServiceInfo extends ServiceInfo implements Parcelable {
-    public static final Parcelable.Creator<StreamingServiceInfo> CREATOR = new Parcelable.Creator<StreamingServiceInfo>() {
+    public static final Parcelable.Creator<StreamingServiceInfo> CREATOR = new Parcelable.Creator<StreamingServiceInfo>() { // from class: android.telephony.mbms.StreamingServiceInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public StreamingServiceInfo createFromParcel(Parcel source) {
             return new StreamingServiceInfo(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public StreamingServiceInfo[] newArray(int size) {
             return new StreamingServiceInfo[size];
         }
@@ -28,10 +33,12 @@ public final class StreamingServiceInfo extends ServiceInfo implements Parcelabl
         super(in);
     }
 
+    @Override // android.telephony.mbms.ServiceInfo, android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

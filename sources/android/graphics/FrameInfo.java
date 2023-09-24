@@ -3,6 +3,7 @@ package android.graphics;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes.dex */
 public final class FrameInfo {
     private static final int ANIMATION_START = 6;
     private static final int DRAW_START = 8;
@@ -18,6 +19,7 @@ public final class FrameInfo {
     public long[] frameInfo = new long[9];
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface FrameInfoFlags {
     }
 

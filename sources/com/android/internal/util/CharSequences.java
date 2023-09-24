@@ -2,21 +2,26 @@ package com.android.internal.util;
 
 import android.annotation.UnsupportedAppUsage;
 
+/* loaded from: classes4.dex */
 public class CharSequences {
     public static CharSequence forAsciiBytes(final byte[] bytes) {
-        return new CharSequence() {
+        return new CharSequence() { // from class: com.android.internal.util.CharSequences.1
+            @Override // java.lang.CharSequence
             public char charAt(int index) {
                 return (char) bytes[index];
             }
 
+            @Override // java.lang.CharSequence
             public int length() {
                 return bytes.length;
             }
 
+            @Override // java.lang.CharSequence
             public CharSequence subSequence(int start, int end) {
                 return CharSequences.forAsciiBytes(bytes, start, end);
             }
 
+            @Override // java.lang.CharSequence
             public String toString() {
                 return new String(bytes);
             }
@@ -25,15 +30,18 @@ public class CharSequences {
 
     public static CharSequence forAsciiBytes(final byte[] bytes, final int start, final int end) {
         validate(start, end, bytes.length);
-        return new CharSequence() {
+        return new CharSequence() { // from class: com.android.internal.util.CharSequences.2
+            @Override // java.lang.CharSequence
             public char charAt(int index) {
                 return (char) bytes[start + index];
             }
 
+            @Override // java.lang.CharSequence
             public int length() {
                 return end - start;
             }
 
+            @Override // java.lang.CharSequence
             public CharSequence subSequence(int newStart, int newEnd) {
                 int newStart2 = newStart - start;
                 int newEnd2 = newEnd - start;
@@ -41,6 +49,7 @@ public class CharSequences {
                 return CharSequences.forAsciiBytes(bytes, newStart2, newEnd2);
             }
 
+            @Override // java.lang.CharSequence
             public String toString() {
                 return new String(bytes, start, length());
             }
@@ -50,11 +59,14 @@ public class CharSequences {
     static void validate(int start, int end, int length) {
         if (start < 0) {
             throw new IndexOutOfBoundsException();
-        } else if (end < 0) {
+        }
+        if (end < 0) {
             throw new IndexOutOfBoundsException();
-        } else if (end > length) {
+        }
+        if (end > length) {
             throw new IndexOutOfBoundsException();
-        } else if (start > end) {
+        }
+        if (start > end) {
             throw new IndexOutOfBoundsException();
         }
     }
@@ -83,14 +95,14 @@ public class CharSequences {
         while (myPos < end) {
             int myPos2 = myPos + 1;
             int anotherPos2 = anotherPos + 1;
-            int lowerCase = Character.toLowerCase(me.charAt(myPos)) - Character.toLowerCase(another.charAt(anotherPos));
-            int result = lowerCase;
-            if (lowerCase != 0) {
+            int result = Character.toLowerCase(me.charAt(myPos)) - Character.toLowerCase(another.charAt(anotherPos));
+            if (result != 0) {
                 return result;
             }
             myPos = myPos2;
             anotherPos = anotherPos2;
         }
-        return myLen - anotherLen;
+        int myPos3 = myLen - anotherLen;
+        return myPos3;
     }
 }

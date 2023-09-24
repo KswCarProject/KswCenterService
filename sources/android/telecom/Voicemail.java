@@ -1,15 +1,20 @@
 package android.telecom;
 
 import android.net.Uri;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes3.dex */
 public class Voicemail implements Parcelable {
-    public static final Parcelable.Creator<Voicemail> CREATOR = new Parcelable.Creator<Voicemail>() {
+    public static final Parcelable.Creator<Voicemail> CREATOR = new Parcelable.Creator<Voicemail>() { // from class: android.telecom.Voicemail.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Voicemail createFromParcel(Parcel in) {
             return new Voicemail(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Voicemail[] newArray(int size) {
             return new Voicemail[size];
         }
@@ -48,6 +53,7 @@ public class Voicemail implements Parcelable {
         return new Builder().setId(id).setSourceData(sourceData);
     }
 
+    /* loaded from: classes3.dex */
     public static class Builder {
         private Long mBuilderDuration;
         private boolean mBuilderHasContent;
@@ -120,13 +126,9 @@ public class Voicemail implements Parcelable {
         }
 
         public Voicemail build() {
-            this.mBuilderId = Long.valueOf(this.mBuilderId == null ? -1 : this.mBuilderId.longValue());
-            long j = 0;
-            this.mBuilderTimestamp = Long.valueOf(this.mBuilderTimestamp == null ? 0 : this.mBuilderTimestamp.longValue());
-            if (this.mBuilderDuration != null) {
-                j = this.mBuilderDuration.longValue();
-            }
-            this.mBuilderDuration = Long.valueOf(j);
+            this.mBuilderId = Long.valueOf(this.mBuilderId == null ? -1L : this.mBuilderId.longValue());
+            this.mBuilderTimestamp = Long.valueOf(this.mBuilderTimestamp == null ? 0L : this.mBuilderTimestamp.longValue());
+            this.mBuilderDuration = Long.valueOf(this.mBuilderDuration != null ? this.mBuilderDuration.longValue() : 0L);
             this.mBuilderIsRead = Boolean.valueOf(this.mBuilderIsRead == null ? false : this.mBuilderIsRead.booleanValue());
             return new Voicemail(this.mBuilderTimestamp, this.mBuilderNumber, this.mBuilderPhoneAccount, this.mBuilderId, this.mBuilderDuration, this.mBuilderSourcePackage, this.mBuilderSourceData, this.mBuilderUri, this.mBuilderIsRead, Boolean.valueOf(this.mBuilderHasContent), this.mBuilderTranscription);
         }
@@ -176,10 +178,12 @@ public class Voicemail implements Parcelable {
         return this.mTranscription;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(this.mTimestamp.longValue());
         dest.writeCharSequence(this.mNumber);
@@ -229,9 +233,8 @@ public class Voicemail implements Parcelable {
         } else {
             this.mUri = null;
         }
-        boolean z = false;
         this.mIsRead = Boolean.valueOf(in.readInt() > 0);
-        this.mHasContent = Boolean.valueOf(in.readInt() > 0 ? true : z);
+        this.mHasContent = Boolean.valueOf(in.readInt() > 0);
         this.mTranscription = (String) in.readCharSequence();
     }
 }

@@ -1,6 +1,7 @@
 package org.apache.http.params;
 
 @Deprecated
+/* loaded from: classes5.dex */
 public interface CoreConnectionPNames {
     public static final String CONNECTION_TIMEOUT = "http.connection.timeout";
     public static final String MAX_HEADER_COUNT = "http.connection.max-header-count";

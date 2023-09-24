@@ -1,8 +1,8 @@
 package android.app;
 
 import android.annotation.UnsupportedAppUsage;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageParser;
+import android.content.p002pm.ApplicationInfo;
+import android.content.p002pm.PackageParser;
 import android.content.res.ApkAssets;
 import android.content.res.AssetManager;
 import android.content.res.CompatResources;
@@ -12,9 +12,9 @@ import android.content.res.Resources;
 import android.content.res.ResourcesImpl;
 import android.content.res.ResourcesKey;
 import android.hardware.display.DisplayManagerGlobal;
-import android.os.IBinder;
-import android.os.Process;
-import android.os.Trace;
+import android.p007os.IBinder;
+import android.p007os.Process;
+import android.p007os.Trace;
 import android.util.ArrayMap;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -36,17 +36,18 @@ import java.util.Objects;
 import java.util.WeakHashMap;
 import java.util.function.Predicate;
 
+/* loaded from: classes.dex */
 public class ResourcesManager {
     private static final boolean DEBUG = false;
     private static final boolean ENABLE_APK_ASSETS_CACHE = true;
     static final String TAG = "ResourcesManager";
-    private static final Predicate<WeakReference<Resources>> sEmptyReferencePredicate = $$Lambda$ResourcesManager$QJ7UiVk_XS90KuXAsIjIEym1DnM.INSTANCE;
+    private static final Predicate<WeakReference<Resources>> sEmptyReferencePredicate = new Predicate() { // from class: android.app.-$$Lambda$ResourcesManager$QJ7UiVk_XS90KuXAsIjIEym1DnM
+        @Override // java.util.function.Predicate
+        public final boolean test(Object obj) {
+            return ResourcesManager.lambda$static$0((WeakReference) obj);
+        }
+    };
     private static ResourcesManager sResourcesManager;
-    @UnsupportedAppUsage
-    private final WeakHashMap<IBinder, ActivityResources> mActivityResourceReferences = new WeakHashMap<>();
-    private final ArrayMap<Pair<Integer, DisplayAdjustments>, WeakReference<Display>> mAdjustedDisplays = new ArrayMap<>();
-    private final ArrayMap<ApkKey, WeakReference<ApkAssets>> mCachedApkAssets = new ArrayMap<>();
-    private final LruCache<ApkKey, ApkAssets> mLoadedApkAssets = new LruCache<>(3);
     private CompatibilityInfo mResCompatibilityInfo;
     @UnsupportedAppUsage
     private final Configuration mResConfiguration = new Configuration();
@@ -54,38 +55,43 @@ public class ResourcesManager {
     private final ArrayMap<ResourcesKey, WeakReference<ResourcesImpl>> mResourceImpls = new ArrayMap<>();
     @UnsupportedAppUsage
     private final ArrayList<WeakReference<Resources>> mResourceReferences = new ArrayList<>();
+    private final LruCache<ApkKey, ApkAssets> mLoadedApkAssets = new LruCache<>(3);
+    private final ArrayMap<ApkKey, WeakReference<ApkAssets>> mCachedApkAssets = new ArrayMap<>();
+    @UnsupportedAppUsage
+    private final WeakHashMap<IBinder, ActivityResources> mActivityResourceReferences = new WeakHashMap<>();
+    private final ArrayMap<Pair<Integer, DisplayAdjustments>, WeakReference<Display>> mAdjustedDisplays = new ArrayMap<>();
 
     static /* synthetic */ boolean lambda$static$0(WeakReference weakRef) {
         return weakRef == null || weakRef.get() == null;
     }
 
+    /* loaded from: classes.dex */
     private static class ApkKey {
         public final boolean overlay;
         public final String path;
         public final boolean sharedLib;
 
-        ApkKey(String path2, boolean sharedLib2, boolean overlay2) {
-            this.path = path2;
-            this.sharedLib = sharedLib2;
-            this.overlay = overlay2;
+        ApkKey(String path, boolean sharedLib, boolean overlay) {
+            this.path = path;
+            this.sharedLib = sharedLib;
+            this.overlay = overlay;
         }
 
         public int hashCode() {
-            return (((((1 * 31) + this.path.hashCode()) * 31) + Boolean.hashCode(this.sharedLib)) * 31) + Boolean.hashCode(this.overlay);
+            int result = (1 * 31) + this.path.hashCode();
+            return (((result * 31) + Boolean.hashCode(this.sharedLib)) * 31) + Boolean.hashCode(this.overlay);
         }
 
         public boolean equals(Object obj) {
-            if (!(obj instanceof ApkKey)) {
-                return false;
-            }
-            ApkKey other = (ApkKey) obj;
-            if (this.path.equals(other.path) && this.sharedLib == other.sharedLib && this.overlay == other.overlay) {
-                return true;
+            if (obj instanceof ApkKey) {
+                ApkKey other = (ApkKey) obj;
+                return this.path.equals(other.path) && this.sharedLib == other.sharedLib && this.overlay == other.overlay;
             }
             return false;
         }
     }
 
+    /* loaded from: classes.dex */
     private static class ActivityResources {
         public final ArrayList<WeakReference<Resources>> activityResources;
         public final Configuration overrideConfig;
@@ -121,7 +127,7 @@ public class ResourcesManager {
                     i++;
                 }
             }
-            Log.i(TAG, "Invalidated " + count + " asset managers that referenced " + path);
+            Log.m68i(TAG, "Invalidated " + count + " asset managers that referenced " + path);
         }
     }
 
@@ -133,14 +139,12 @@ public class ResourcesManager {
         return configuration;
     }
 
-    /* access modifiers changed from: package-private */
-    public DisplayMetrics getDisplayMetrics() {
+    DisplayMetrics getDisplayMetrics() {
         return getDisplayMetrics(0, DisplayAdjustments.DEFAULT_DISPLAY_ADJUSTMENTS);
     }
 
-    /* access modifiers changed from: protected */
     @VisibleForTesting
-    public DisplayMetrics getDisplayMetrics(int displayId, DisplayAdjustments da) {
+    protected DisplayMetrics getDisplayMetrics(int displayId, DisplayAdjustments da) {
         DisplayMetrics dm = new DisplayMetrics();
         Display display = getAdjustedDisplay(displayId, da);
         if (display != null) {
@@ -154,8 +158,8 @@ public class ResourcesManager {
     private static void applyNonDefaultDisplayMetricsToConfiguration(DisplayMetrics dm, Configuration config) {
         config.touchscreen = 1;
         config.densityDpi = dm.densityDpi;
-        config.screenWidthDp = (int) (((float) dm.widthPixels) / dm.density);
-        config.screenHeightDp = (int) (((float) dm.heightPixels) / dm.density);
+        config.screenWidthDp = (int) (dm.widthPixels / dm.density);
+        config.screenHeightDp = (int) (dm.heightPixels / dm.density);
         int sl = Configuration.resetScreenLayout(config.screenLayout);
         if (dm.widthPixels > dm.heightPixels) {
             config.orientation = 2;
@@ -171,64 +175,32 @@ public class ResourcesManager {
     }
 
     public boolean applyCompatConfigurationLocked(int displayDensity, Configuration compatConfiguration) {
-        if (this.mResCompatibilityInfo == null || this.mResCompatibilityInfo.supportsScreen()) {
-            return false;
+        if (this.mResCompatibilityInfo != null && !this.mResCompatibilityInfo.supportsScreen()) {
+            this.mResCompatibilityInfo.applyToConfiguration(displayDensity, compatConfiguration);
+            return true;
         }
-        this.mResCompatibilityInfo.applyToConfiguration(displayDensity, compatConfiguration);
-        return true;
+        return false;
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:21:0x0049, code lost:
-        return r4;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    private android.view.Display getAdjustedDisplay(int r8, android.view.DisplayAdjustments r9) {
-        /*
-            r7 = this;
-            if (r9 == 0) goto L_0x0008
-            android.view.DisplayAdjustments r0 = new android.view.DisplayAdjustments
-            r0.<init>((android.view.DisplayAdjustments) r9)
-            goto L_0x000d
-        L_0x0008:
-            android.view.DisplayAdjustments r0 = new android.view.DisplayAdjustments
-            r0.<init>()
-        L_0x000d:
-            java.lang.Integer r1 = java.lang.Integer.valueOf(r8)
-            android.util.Pair r1 = android.util.Pair.create(r1, r0)
-            monitor-enter(r7)
-            android.util.ArrayMap<android.util.Pair<java.lang.Integer, android.view.DisplayAdjustments>, java.lang.ref.WeakReference<android.view.Display>> r2 = r7.mAdjustedDisplays     // Catch:{ all -> 0x004a }
-            java.lang.Object r2 = r2.get(r1)     // Catch:{ all -> 0x004a }
-            java.lang.ref.WeakReference r2 = (java.lang.ref.WeakReference) r2     // Catch:{ all -> 0x004a }
-            if (r2 == 0) goto L_0x002b
-            java.lang.Object r3 = r2.get()     // Catch:{ all -> 0x004a }
-            android.view.Display r3 = (android.view.Display) r3     // Catch:{ all -> 0x004a }
-            if (r3 == 0) goto L_0x002b
-            monitor-exit(r7)     // Catch:{ all -> 0x004a }
-            return r3
-        L_0x002b:
-            android.hardware.display.DisplayManagerGlobal r3 = android.hardware.display.DisplayManagerGlobal.getInstance()     // Catch:{ all -> 0x004a }
-            if (r3 != 0) goto L_0x0034
-            r4 = 0
-            monitor-exit(r7)     // Catch:{ all -> 0x004a }
-            return r4
-        L_0x0034:
-            S r4 = r1.second     // Catch:{ all -> 0x004a }
-            android.view.DisplayAdjustments r4 = (android.view.DisplayAdjustments) r4     // Catch:{ all -> 0x004a }
-            android.view.Display r4 = r3.getCompatibleDisplay((int) r8, (android.view.DisplayAdjustments) r4)     // Catch:{ all -> 0x004a }
-            if (r4 == 0) goto L_0x0048
-            android.util.ArrayMap<android.util.Pair<java.lang.Integer, android.view.DisplayAdjustments>, java.lang.ref.WeakReference<android.view.Display>> r5 = r7.mAdjustedDisplays     // Catch:{ all -> 0x004a }
-            java.lang.ref.WeakReference r6 = new java.lang.ref.WeakReference     // Catch:{ all -> 0x004a }
-            r6.<init>(r4)     // Catch:{ all -> 0x004a }
-            r5.put(r1, r6)     // Catch:{ all -> 0x004a }
-        L_0x0048:
-            monitor-exit(r7)     // Catch:{ all -> 0x004a }
-            return r4
-        L_0x004a:
-            r2 = move-exception
-            monitor-exit(r7)     // Catch:{ all -> 0x004a }
-            throw r2
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.app.ResourcesManager.getAdjustedDisplay(int, android.view.DisplayAdjustments):android.view.Display");
+    private Display getAdjustedDisplay(int displayId, DisplayAdjustments displayAdjustments) {
+        Display display;
+        DisplayAdjustments displayAdjustmentsCopy = displayAdjustments != null ? new DisplayAdjustments(displayAdjustments) : new DisplayAdjustments();
+        Pair<Integer, DisplayAdjustments> key = Pair.create(Integer.valueOf(displayId), displayAdjustmentsCopy);
+        synchronized (this) {
+            WeakReference<Display> wd = this.mAdjustedDisplays.get(key);
+            if (wd == null || (display = wd.get()) == null) {
+                DisplayManagerGlobal dm = DisplayManagerGlobal.getInstance();
+                if (dm == null) {
+                    return null;
+                }
+                Display display2 = dm.getCompatibleDisplay(displayId, key.second);
+                if (display2 != null) {
+                    this.mAdjustedDisplays.put(key, new WeakReference<>(display2));
+                }
+                return display2;
+            }
+            return display;
+        }
     }
 
     public Display getAdjustedDisplay(int displayId, Resources resources) {
@@ -237,13 +209,12 @@ public class ResourcesManager {
             if (dm == null) {
                 return null;
             }
-            Display compatibleDisplay = dm.getCompatibleDisplay(displayId, resources);
-            return compatibleDisplay;
+            return dm.getCompatibleDisplay(displayId, resources);
         }
     }
 
     private void cleanupResourceImpl(ResourcesKey removedKey) {
-        ResourcesImpl res = (ResourcesImpl) this.mResourceImpls.remove(removedKey).get();
+        ResourcesImpl res = this.mResourceImpls.remove(removedKey).get();
         if (res != null) {
             res.flushLayoutCache();
         }
@@ -255,19 +226,23 @@ public class ResourcesManager {
 
     private ApkAssets loadApkAssets(String path, boolean sharedLib, boolean overlay) throws IOException {
         ApkAssets apkAssets;
-        ApkAssets apkAssets2;
         ApkKey newKey = new ApkKey(path, sharedLib, overlay);
-        if (this.mLoadedApkAssets != null && (apkAssets2 = this.mLoadedApkAssets.get(newKey)) != null) {
-            return apkAssets2;
+        if (this.mLoadedApkAssets != null) {
+            ApkAssets apkAssets2 = this.mLoadedApkAssets.get(newKey);
+            ApkAssets apkAssets3 = apkAssets2;
+            if (apkAssets3 != null) {
+                return apkAssets3;
+            }
         }
         WeakReference<ApkAssets> apkAssetsRef = this.mCachedApkAssets.get(newKey);
         if (apkAssetsRef != null) {
-            ApkAssets apkAssets3 = (ApkAssets) apkAssetsRef.get();
-            if (apkAssets3 != null) {
+            ApkAssets apkAssets4 = apkAssetsRef.get();
+            ApkAssets apkAssets5 = apkAssets4;
+            if (apkAssets5 != null) {
                 if (this.mLoadedApkAssets != null) {
-                    this.mLoadedApkAssets.put(newKey, apkAssets3);
+                    this.mLoadedApkAssets.put(newKey, apkAssets5);
                 }
-                return apkAssets3;
+                return apkAssets5;
             }
             this.mCachedApkAssets.remove(newKey);
         }
@@ -279,34 +254,31 @@ public class ResourcesManager {
         if (this.mLoadedApkAssets != null) {
             this.mLoadedApkAssets.put(newKey, apkAssets);
         }
-        this.mCachedApkAssets.put(newKey, new WeakReference(apkAssets));
+        this.mCachedApkAssets.put(newKey, new WeakReference<>(apkAssets));
         return apkAssets;
     }
 
-    /* access modifiers changed from: protected */
-    @VisibleForTesting
     @UnsupportedAppUsage
-    public AssetManager createAssetManager(ResourcesKey key) {
+    @VisibleForTesting
+    protected AssetManager createAssetManager(ResourcesKey key) {
+        String[] strArr;
+        String[] strArr2;
+        String[] strArr3;
         AssetManager.Builder builder = new AssetManager.Builder();
         if (key.mResDir != null) {
             try {
                 builder.addApkAssets(loadApkAssets(key.mResDir, false, false));
             } catch (IOException e) {
-                Log.e(TAG, "failed to add asset path " + key.mResDir);
+                Log.m70e(TAG, "failed to add asset path " + key.mResDir);
                 return null;
             }
         }
         if (key.mSplitResDirs != null) {
-            String[] strArr = key.mSplitResDirs;
-            int length = strArr.length;
-            int i = 0;
-            while (i < length) {
-                String splitResDir = strArr[i];
+            for (String splitResDir : key.mSplitResDirs) {
                 try {
                     builder.addApkAssets(loadApkAssets(splitResDir, false, false));
-                    i++;
                 } catch (IOException e2) {
-                    Log.e(TAG, "failed to add split asset path " + splitResDir);
+                    Log.m70e(TAG, "failed to add split asset path " + splitResDir);
                     return null;
                 }
             }
@@ -316,7 +288,7 @@ public class ResourcesManager {
                 try {
                     builder.addApkAssets(loadApkAssets(idmapPath, false, true));
                 } catch (IOException e3) {
-                    Log.w(TAG, "failed to add overlay path " + idmapPath);
+                    Log.m64w(TAG, "failed to add overlay path " + idmapPath);
                 }
             }
         }
@@ -326,7 +298,7 @@ public class ResourcesManager {
                     try {
                         builder.addApkAssets(loadApkAssets(libDir, true, false));
                     } catch (IOException e4) {
-                        Log.w(TAG, "Asset path '" + libDir + "' does not exist or contains no resources.");
+                        Log.m64w(TAG, "Asset path '" + libDir + "' does not exist or contains no resources.");
                     }
                 }
             }
@@ -339,7 +311,8 @@ public class ResourcesManager {
         Iterator<WeakReference<T>> it = collection.iterator();
         while (it.hasNext()) {
             WeakReference<T> ref = it.next();
-            if ((ref != null ? ref.get() : null) != null) {
+            T value = ref != null ? ref.get() : null;
+            if (value != null) {
                 count++;
             }
         }
@@ -387,18 +360,18 @@ public class ResourcesManager {
     private Configuration generateConfig(ResourcesKey key, DisplayMetrics dm) {
         boolean isDefaultDisplay = key.mDisplayId == 0;
         boolean hasOverrideConfig = key.hasOverrideConfiguration();
-        if (isDefaultDisplay && !hasOverrideConfig) {
-            return getConfiguration();
-        }
-        Configuration config = new Configuration(getConfiguration());
-        if (!isDefaultDisplay) {
-            applyNonDefaultDisplayMetricsToConfiguration(dm, config);
-        }
-        if (!hasOverrideConfig) {
+        if (!isDefaultDisplay || hasOverrideConfig) {
+            Configuration config = new Configuration(getConfiguration());
+            if (!isDefaultDisplay) {
+                applyNonDefaultDisplayMetricsToConfiguration(dm, config);
+            }
+            if (hasOverrideConfig) {
+                config.updateFrom(key.mOverrideConfiguration);
+                return config;
+            }
             return config;
         }
-        config.updateFrom(key.mOverrideConfiguration);
-        return config;
+        return getConfiguration();
     }
 
     private ResourcesImpl createResourcesImpl(ResourcesKey key) {
@@ -409,12 +382,14 @@ public class ResourcesManager {
             return null;
         }
         DisplayMetrics dm = getDisplayMetrics(key.mDisplayId, daj);
-        return new ResourcesImpl(assets, dm, generateConfig(key, dm), daj);
+        Configuration config = generateConfig(key, dm);
+        ResourcesImpl impl = new ResourcesImpl(assets, dm, config, daj);
+        return impl;
     }
 
     private ResourcesImpl findResourcesImplForKeyLocked(ResourcesKey key) {
         WeakReference<ResourcesImpl> weakImplRef = this.mResourceImpls.get(key);
-        ResourcesImpl impl = weakImplRef != null ? (ResourcesImpl) weakImplRef.get() : null;
+        ResourcesImpl impl = weakImplRef != null ? weakImplRef.get() : null;
         if (impl == null || !impl.getAssets().isUpToDate()) {
             return null;
         }
@@ -424,7 +399,7 @@ public class ResourcesManager {
     private ResourcesImpl findOrCreateResourcesImplForKeyLocked(ResourcesKey key) {
         ResourcesImpl impl = findResourcesImplForKeyLocked(key);
         if (impl == null && (impl = createResourcesImpl(key)) != null) {
-            this.mResourceImpls.put(key, new WeakReference(impl));
+            this.mResourceImpls.put(key, new WeakReference<>(impl));
         }
         return impl;
     }
@@ -433,310 +408,178 @@ public class ResourcesManager {
         int refCount = this.mResourceImpls.size();
         int i = 0;
         while (true) {
-            ResourcesImpl impl = null;
             if (i >= refCount) {
                 return null;
             }
             WeakReference<ResourcesImpl> weakImplRef = this.mResourceImpls.valueAt(i);
-            if (weakImplRef != null) {
-                impl = (ResourcesImpl) weakImplRef.get();
-            }
-            if (impl != null && resourceImpl == impl) {
+            ResourcesImpl impl = weakImplRef != null ? weakImplRef.get() : null;
+            if (impl == null || resourceImpl != impl) {
+                i++;
+            } else {
                 return this.mResourceImpls.keyAt(i);
             }
-            i++;
         }
     }
 
-    /* access modifiers changed from: package-private */
-    /* JADX WARNING: Code restructure failed: missing block: B:12:0x0018, code lost:
-        return r1;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:24:0x0033, code lost:
-        return r1;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public boolean isSameResourcesOverrideConfig(android.os.IBinder r5, android.content.res.Configuration r6) {
-        /*
-            r4 = this;
-            monitor-enter(r4)
-            if (r5 == 0) goto L_0x000e
-            java.util.WeakHashMap<android.os.IBinder, android.app.ResourcesManager$ActivityResources> r0 = r4.mActivityResourceReferences     // Catch:{ all -> 0x000c }
-            java.lang.Object r0 = r0.get(r5)     // Catch:{ all -> 0x000c }
-            android.app.ResourcesManager$ActivityResources r0 = (android.app.ResourcesManager.ActivityResources) r0     // Catch:{ all -> 0x000c }
-            goto L_0x000f
-        L_0x000c:
-            r0 = move-exception
-            goto L_0x0034
-        L_0x000e:
-            r0 = 0
-        L_0x000f:
-            r1 = 0
-            r2 = 1
-            if (r0 != 0) goto L_0x0019
-            if (r6 != 0) goto L_0x0017
-            r1 = r2
-        L_0x0017:
-            monitor-exit(r4)     // Catch:{ all -> 0x000c }
-            return r1
-        L_0x0019:
-            android.content.res.Configuration r3 = r0.overrideConfig     // Catch:{ all -> 0x000c }
-            boolean r3 = java.util.Objects.equals(r3, r6)     // Catch:{ all -> 0x000c }
-            if (r3 != 0) goto L_0x0031
-            if (r6 == 0) goto L_0x0030
-            android.content.res.Configuration r3 = r0.overrideConfig     // Catch:{ all -> 0x000c }
-            if (r3 == 0) goto L_0x0030
-            android.content.res.Configuration r3 = r0.overrideConfig     // Catch:{ all -> 0x000c }
-            int r3 = r6.diffPublicOnly(r3)     // Catch:{ all -> 0x000c }
-            if (r3 != 0) goto L_0x0030
-            goto L_0x0031
-        L_0x0030:
-            goto L_0x0032
-        L_0x0031:
-            r1 = r2
-        L_0x0032:
-            monitor-exit(r4)     // Catch:{ all -> 0x000c }
-            return r1
-        L_0x0034:
-            monitor-exit(r4)     // Catch:{ all -> 0x000c }
-            throw r0
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.app.ResourcesManager.isSameResourcesOverrideConfig(android.os.IBinder, android.content.res.Configuration):boolean");
+    boolean isSameResourcesOverrideConfig(IBinder activityToken, Configuration overrideConfig) {
+        ActivityResources activityResources;
+        synchronized (this) {
+            if (activityToken == null) {
+                activityResources = null;
+            } else {
+                try {
+                    activityResources = this.mActivityResourceReferences.get(activityToken);
+                } finally {
+                }
+            }
+            if (activityResources == null) {
+                return overrideConfig == null;
+            }
+            if (!Objects.equals(activityResources.overrideConfig, overrideConfig) && (overrideConfig == null || activityResources.overrideConfig == null || overrideConfig.diffPublicOnly(activityResources.overrideConfig) != 0)) {
+                return r1;
+            }
+            r1 = true;
+            return r1;
+        }
     }
 
     private ActivityResources getOrCreateActivityResourcesStructLocked(IBinder activityToken) {
         ActivityResources activityResources = this.mActivityResourceReferences.get(activityToken);
-        if (activityResources != null) {
-            return activityResources;
+        if (activityResources == null) {
+            ActivityResources activityResources2 = new ActivityResources();
+            this.mActivityResourceReferences.put(activityToken, activityResources2);
+            return activityResources2;
         }
-        ActivityResources activityResources2 = new ActivityResources();
-        this.mActivityResourceReferences.put(activityToken, activityResources2);
-        return activityResources2;
+        return activityResources;
     }
 
     private Resources getOrCreateResourcesForActivityLocked(IBinder activityToken, ClassLoader classLoader, ResourcesImpl impl, CompatibilityInfo compatInfo) {
-        Resources resources;
         ActivityResources activityResources = getOrCreateActivityResourcesStructLocked(activityToken);
         int refCount = activityResources.activityResources.size();
         for (int i = 0; i < refCount; i++) {
-            Resources resources2 = (Resources) activityResources.activityResources.get(i).get();
-            if (resources2 != null && Objects.equals(resources2.getClassLoader(), classLoader) && resources2.getImpl() == impl) {
-                return resources2;
+            WeakReference<Resources> weakResourceRef = activityResources.activityResources.get(i);
+            Resources resources = weakResourceRef.get();
+            if (resources != null && Objects.equals(resources.getClassLoader(), classLoader) && resources.getImpl() == impl) {
+                return resources;
             }
         }
-        if (compatInfo.needsCompatResources() != 0) {
-            resources = new CompatResources(classLoader);
-        } else {
-            resources = new Resources(classLoader);
-        }
-        resources.setImpl(impl);
-        activityResources.activityResources.add(new WeakReference(resources));
-        return resources;
+        Resources resources2 = compatInfo.needsCompatResources() ? new CompatResources(classLoader) : new Resources(classLoader);
+        resources2.setImpl(impl);
+        activityResources.activityResources.add(new WeakReference<>(resources2));
+        return resources2;
     }
 
     private Resources getOrCreateResourcesLocked(ClassLoader classLoader, ResourcesImpl impl, CompatibilityInfo compatInfo) {
-        Resources resources;
         int refCount = this.mResourceReferences.size();
         for (int i = 0; i < refCount; i++) {
-            Resources resources2 = (Resources) this.mResourceReferences.get(i).get();
-            if (resources2 != null && Objects.equals(resources2.getClassLoader(), classLoader) && resources2.getImpl() == impl) {
-                return resources2;
+            WeakReference<Resources> weakResourceRef = this.mResourceReferences.get(i);
+            Resources resources = weakResourceRef.get();
+            if (resources != null && Objects.equals(resources.getClassLoader(), classLoader) && resources.getImpl() == impl) {
+                return resources;
             }
         }
-        if (compatInfo.needsCompatResources() != 0) {
-            resources = new CompatResources(classLoader);
-        } else {
-            resources = new Resources(classLoader);
+        Resources resources2 = compatInfo.needsCompatResources() ? new CompatResources(classLoader) : new Resources(classLoader);
+        resources2.setImpl(impl);
+        this.mResourceReferences.add(new WeakReference<>(resources2));
+        return resources2;
+    }
+
+    public Resources createBaseActivityResources(IBinder activityToken, String resDir, String[] splitResDirs, String[] overlayDirs, String[] libDirs, int displayId, Configuration overrideConfig, CompatibilityInfo compatInfo, ClassLoader classLoader) {
+        try {
+            Trace.traceBegin(8192L, "ResourcesManager#createBaseActivityResources");
+            ResourcesKey key = new ResourcesKey(resDir, splitResDirs, overlayDirs, libDirs, displayId, overrideConfig != null ? new Configuration(overrideConfig) : null, compatInfo);
+            ClassLoader classLoader2 = classLoader != null ? classLoader : ClassLoader.getSystemClassLoader();
+            try {
+                synchronized (this) {
+                    try {
+                        getOrCreateActivityResourcesStructLocked(activityToken);
+                    } catch (Throwable th) {
+                        th = th;
+                        Trace.traceEnd(8192L);
+                        throw th;
+                    }
+                }
+                updateResourcesForActivity(activityToken, overrideConfig, displayId, false);
+                Resources orCreateResources = getOrCreateResources(activityToken, key, classLoader2);
+                Trace.traceEnd(8192L);
+                return orCreateResources;
+            } catch (Throwable th2) {
+                th = th2;
+            }
+        } catch (Throwable th3) {
+            th = th3;
         }
-        resources.setImpl(impl);
-        this.mResourceReferences.add(new WeakReference(resources));
-        return resources;
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:28:0x004c, code lost:
-        r0 = th;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public android.content.res.Resources createBaseActivityResources(android.os.IBinder r15, java.lang.String r16, java.lang.String[] r17, java.lang.String[] r18, java.lang.String[] r19, int r20, android.content.res.Configuration r21, android.content.res.CompatibilityInfo r22, java.lang.ClassLoader r23) {
-        /*
-            r14 = this;
-            r1 = r14
-            r2 = r15
-            r3 = r21
-            r4 = 8192(0x2000, double:4.0474E-320)
-            java.lang.String r0 = "ResourcesManager#createBaseActivityResources"
-            android.os.Trace.traceBegin(r4, r0)     // Catch:{ all -> 0x0052 }
-            android.content.res.ResourcesKey r0 = new android.content.res.ResourcesKey     // Catch:{ all -> 0x0052 }
-            if (r3 == 0) goto L_0x0015
-            android.content.res.Configuration r6 = new android.content.res.Configuration     // Catch:{ all -> 0x0052 }
-            r6.<init>((android.content.res.Configuration) r3)     // Catch:{ all -> 0x0052 }
-            goto L_0x0016
-        L_0x0015:
-            r6 = 0
-        L_0x0016:
-            r12 = r6
-            r6 = r0
-            r7 = r16
-            r8 = r17
-            r9 = r18
-            r10 = r19
-            r11 = r20
-            r13 = r22
-            r6.<init>(r7, r8, r9, r10, r11, r12, r13)     // Catch:{ all -> 0x0052 }
-            r6 = r0
-            if (r23 == 0) goto L_0x002d
-            r0 = r23
-            goto L_0x0031
-        L_0x002d:
-            java.lang.ClassLoader r0 = java.lang.ClassLoader.getSystemClassLoader()     // Catch:{ all -> 0x0052 }
-        L_0x0031:
-            r7 = r0
-            monitor-enter(r14)     // Catch:{ all -> 0x004e }
-            r14.getOrCreateActivityResourcesStructLocked(r15)     // Catch:{ all -> 0x0045 }
-            monitor-exit(r14)     // Catch:{ all -> 0x0045 }
-            r0 = 0
-            r8 = r20
-            r14.updateResourcesForActivity(r15, r3, r8, r0)     // Catch:{ all -> 0x004a }
-            android.content.res.Resources r0 = r14.getOrCreateResources(r15, r6, r7)     // Catch:{ all -> 0x004a }
-            android.os.Trace.traceEnd(r4)
-            return r0
-        L_0x0045:
-            r0 = move-exception
-            r8 = r20
-        L_0x0048:
-            monitor-exit(r14)     // Catch:{ all -> 0x004c }
-            throw r0     // Catch:{ all -> 0x004a }
-        L_0x004a:
-            r0 = move-exception
-            goto L_0x0057
-        L_0x004c:
-            r0 = move-exception
-            goto L_0x0048
-        L_0x004e:
-            r0 = move-exception
-            r8 = r20
-            goto L_0x0057
-        L_0x0052:
-            r0 = move-exception
-            r8 = r20
-            r7 = r23
-        L_0x0057:
-            android.os.Trace.traceEnd(r4)
-            throw r0
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.app.ResourcesManager.createBaseActivityResources(android.os.IBinder, java.lang.String, java.lang.String[], java.lang.String[], java.lang.String[], int, android.content.res.Configuration, android.content.res.CompatibilityInfo, java.lang.ClassLoader):android.content.res.Resources");
-    }
-
-    /* JADX WARNING: Code restructure failed: missing block: B:31:0x0079, code lost:
-        return r1;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    private android.content.res.Resources getOrCreateResources(android.os.IBinder r4, android.content.res.ResourcesKey r5, java.lang.ClassLoader r6) {
-        /*
-            r3 = this;
-            monitor-enter(r3)
-            if (r4 == 0) goto L_0x0041
-            android.app.ResourcesManager$ActivityResources r0 = r3.getOrCreateActivityResourcesStructLocked(r4)     // Catch:{ all -> 0x003f }
-            java.util.ArrayList<java.lang.ref.WeakReference<android.content.res.Resources>> r1 = r0.activityResources     // Catch:{ all -> 0x003f }
-            java.util.function.Predicate<java.lang.ref.WeakReference<android.content.res.Resources>> r2 = sEmptyReferencePredicate     // Catch:{ all -> 0x003f }
-            com.android.internal.util.ArrayUtils.unstableRemoveIf(r1, r2)     // Catch:{ all -> 0x003f }
-            boolean r1 = r5.hasOverrideConfiguration()     // Catch:{ all -> 0x003f }
-            if (r1 == 0) goto L_0x0030
-            android.content.res.Configuration r1 = r0.overrideConfig     // Catch:{ all -> 0x003f }
-            android.content.res.Configuration r2 = android.content.res.Configuration.EMPTY     // Catch:{ all -> 0x003f }
-            boolean r1 = r1.equals((android.content.res.Configuration) r2)     // Catch:{ all -> 0x003f }
-            if (r1 != 0) goto L_0x0030
-            android.content.res.Configuration r1 = new android.content.res.Configuration     // Catch:{ all -> 0x003f }
-            android.content.res.Configuration r2 = r0.overrideConfig     // Catch:{ all -> 0x003f }
-            r1.<init>((android.content.res.Configuration) r2)     // Catch:{ all -> 0x003f }
-            android.content.res.Configuration r2 = r5.mOverrideConfiguration     // Catch:{ all -> 0x003f }
-            r1.updateFrom(r2)     // Catch:{ all -> 0x003f }
-            android.content.res.Configuration r2 = r5.mOverrideConfiguration     // Catch:{ all -> 0x003f }
-            r2.setTo(r1)     // Catch:{ all -> 0x003f }
-        L_0x0030:
-            android.content.res.ResourcesImpl r1 = r3.findResourcesImplForKeyLocked(r5)     // Catch:{ all -> 0x003f }
-            if (r1 == 0) goto L_0x003e
-            android.content.res.CompatibilityInfo r2 = r5.mCompatInfo     // Catch:{ all -> 0x003f }
-            android.content.res.Resources r2 = r3.getOrCreateResourcesForActivityLocked(r4, r6, r1, r2)     // Catch:{ all -> 0x003f }
-            monitor-exit(r3)     // Catch:{ all -> 0x003f }
-            return r2
-        L_0x003e:
-            goto L_0x0056
-        L_0x003f:
-            r0 = move-exception
-            goto L_0x007a
-        L_0x0041:
-            java.util.ArrayList<java.lang.ref.WeakReference<android.content.res.Resources>> r0 = r3.mResourceReferences     // Catch:{ all -> 0x003f }
-            java.util.function.Predicate<java.lang.ref.WeakReference<android.content.res.Resources>> r1 = sEmptyReferencePredicate     // Catch:{ all -> 0x003f }
-            com.android.internal.util.ArrayUtils.unstableRemoveIf(r0, r1)     // Catch:{ all -> 0x003f }
-            android.content.res.ResourcesImpl r0 = r3.findResourcesImplForKeyLocked(r5)     // Catch:{ all -> 0x003f }
-            if (r0 == 0) goto L_0x0056
-            android.content.res.CompatibilityInfo r1 = r5.mCompatInfo     // Catch:{ all -> 0x003f }
-            android.content.res.Resources r1 = r3.getOrCreateResourcesLocked(r6, r0, r1)     // Catch:{ all -> 0x003f }
-            monitor-exit(r3)     // Catch:{ all -> 0x003f }
-            return r1
-        L_0x0056:
-            android.content.res.ResourcesImpl r0 = r3.createResourcesImpl(r5)     // Catch:{ all -> 0x003f }
-            if (r0 != 0) goto L_0x005f
-            r1 = 0
-            monitor-exit(r3)     // Catch:{ all -> 0x003f }
-            return r1
-        L_0x005f:
-            android.util.ArrayMap<android.content.res.ResourcesKey, java.lang.ref.WeakReference<android.content.res.ResourcesImpl>> r1 = r3.mResourceImpls     // Catch:{ all -> 0x003f }
-            java.lang.ref.WeakReference r2 = new java.lang.ref.WeakReference     // Catch:{ all -> 0x003f }
-            r2.<init>(r0)     // Catch:{ all -> 0x003f }
-            r1.put(r5, r2)     // Catch:{ all -> 0x003f }
-            if (r4 == 0) goto L_0x0072
-            android.content.res.CompatibilityInfo r1 = r5.mCompatInfo     // Catch:{ all -> 0x003f }
-            android.content.res.Resources r1 = r3.getOrCreateResourcesForActivityLocked(r4, r6, r0, r1)     // Catch:{ all -> 0x003f }
-            goto L_0x0078
-        L_0x0072:
-            android.content.res.CompatibilityInfo r1 = r5.mCompatInfo     // Catch:{ all -> 0x003f }
-            android.content.res.Resources r1 = r3.getOrCreateResourcesLocked(r6, r0, r1)     // Catch:{ all -> 0x003f }
-        L_0x0078:
-            monitor-exit(r3)     // Catch:{ all -> 0x003f }
-            return r1
-        L_0x007a:
-            monitor-exit(r3)     // Catch:{ all -> 0x003f }
-            throw r0
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.app.ResourcesManager.getOrCreateResources(android.os.IBinder, android.content.res.ResourcesKey, java.lang.ClassLoader):android.content.res.Resources");
+    private Resources getOrCreateResources(IBinder activityToken, ResourcesKey key, ClassLoader classLoader) {
+        Resources resources;
+        synchronized (this) {
+            try {
+                if (activityToken != null) {
+                    ActivityResources activityResources = getOrCreateActivityResourcesStructLocked(activityToken);
+                    ArrayUtils.unstableRemoveIf(activityResources.activityResources, sEmptyReferencePredicate);
+                    if (key.hasOverrideConfiguration() && !activityResources.overrideConfig.equals(Configuration.EMPTY)) {
+                        Configuration temp = new Configuration(activityResources.overrideConfig);
+                        temp.updateFrom(key.mOverrideConfiguration);
+                        key.mOverrideConfiguration.setTo(temp);
+                    }
+                    ResourcesImpl resourcesImpl = findResourcesImplForKeyLocked(key);
+                    if (resourcesImpl != null) {
+                        return getOrCreateResourcesForActivityLocked(activityToken, classLoader, resourcesImpl, key.mCompatInfo);
+                    }
+                } else {
+                    ArrayUtils.unstableRemoveIf(this.mResourceReferences, sEmptyReferencePredicate);
+                    ResourcesImpl resourcesImpl2 = findResourcesImplForKeyLocked(key);
+                    if (resourcesImpl2 != null) {
+                        return getOrCreateResourcesLocked(classLoader, resourcesImpl2, key.mCompatInfo);
+                    }
+                }
+                ResourcesImpl resourcesImpl3 = createResourcesImpl(key);
+                if (resourcesImpl3 == null) {
+                    return null;
+                }
+                this.mResourceImpls.put(key, new WeakReference<>(resourcesImpl3));
+                if (activityToken != null) {
+                    resources = getOrCreateResourcesForActivityLocked(activityToken, classLoader, resourcesImpl3, key.mCompatInfo);
+                } else {
+                    resources = getOrCreateResourcesLocked(classLoader, resourcesImpl3, key.mCompatInfo);
+                }
+                return resources;
+            } catch (Throwable th) {
+                throw th;
+            }
+        }
     }
 
     public Resources getResources(IBinder activityToken, String resDir, String[] splitResDirs, String[] overlayDirs, String[] libDirs, int displayId, Configuration overrideConfig, CompatibilityInfo compatInfo, ClassLoader classLoader) {
-        Configuration configuration = overrideConfig;
+        ResourcesKey key;
         try {
-            Trace.traceBegin(8192, "ResourcesManager#getResources");
-            IBinder iBinder = activityToken;
-            try {
-                Resources orCreateResources = getOrCreateResources(activityToken, new ResourcesKey(resDir, splitResDirs, overlayDirs, libDirs, displayId, configuration != null ? new Configuration(configuration) : null, compatInfo), classLoader != null ? classLoader : ClassLoader.getSystemClassLoader());
-                Trace.traceEnd(8192);
-                return orCreateResources;
-            } catch (Throwable th) {
-                th = th;
-                Trace.traceEnd(8192);
-                throw th;
-            }
+            Trace.traceBegin(8192L, "ResourcesManager#getResources");
+            key = new ResourcesKey(resDir, splitResDirs, overlayDirs, libDirs, displayId, overrideConfig != null ? new Configuration(overrideConfig) : null, compatInfo);
+        } catch (Throwable th) {
+            th = th;
+        }
+        try {
+            Resources orCreateResources = getOrCreateResources(activityToken, key, classLoader != null ? classLoader : ClassLoader.getSystemClassLoader());
+            Trace.traceEnd(8192L);
+            return orCreateResources;
         } catch (Throwable th2) {
             th = th2;
-            IBinder iBinder2 = activityToken;
-            ClassLoader classLoader2 = classLoader;
-            Trace.traceEnd(8192);
+            Trace.traceEnd(8192L);
             throw th;
         }
     }
 
     public void updateResourcesForActivity(IBinder activityToken, Configuration overrideConfig, int displayId, boolean movedToDifferentDisplay) {
         ActivityResources activityResources;
-        Configuration configuration = overrideConfig;
         try {
-            Trace.traceBegin(8192, "ResourcesManager#updateResourcesForActivity");
+            Trace.traceBegin(8192L, "ResourcesManager#updateResourcesForActivity");
             synchronized (this) {
                 ActivityResources activityResources2 = getOrCreateActivityResourcesStructLocked(activityToken);
-                if (!Objects.equals(activityResources2.overrideConfig, configuration) || movedToDifferentDisplay) {
+                if (!Objects.equals(activityResources2.overrideConfig, overrideConfig) || movedToDifferentDisplay) {
                     Configuration oldConfig = new Configuration(activityResources2.overrideConfig);
-                    if (configuration != null) {
-                        activityResources2.overrideConfig.setTo(configuration);
+                    if (overrideConfig != null) {
+                        activityResources2.overrideConfig.setTo(overrideConfig);
                     } else {
                         activityResources2.overrideConfig.unset();
                     }
@@ -744,26 +587,28 @@ public class ResourcesManager {
                     int refCount = activityResources2.activityResources.size();
                     int i = 0;
                     while (i < refCount) {
-                        Resources resources = (Resources) activityResources2.activityResources.get(i).get();
+                        WeakReference<Resources> weakResRef = activityResources2.activityResources.get(i);
+                        Resources resources = weakResRef.get();
                         if (resources != null) {
                             ResourcesKey oldKey = findKeyForResourceImplLocked(resources.getImpl());
                             if (oldKey == null) {
-                                Slog.e(TAG, "can't find ResourcesKey for resources impl=" + resources.getImpl());
+                                Slog.m56e(TAG, "can't find ResourcesKey for resources impl=" + resources.getImpl());
                             } else {
                                 Configuration rebasedOverrideConfig = new Configuration();
-                                if (configuration != null) {
-                                    rebasedOverrideConfig.setTo(configuration);
+                                if (overrideConfig != null) {
+                                    rebasedOverrideConfig.setTo(overrideConfig);
                                 }
                                 if (activityHasOverrideConfig && oldKey.hasOverrideConfiguration()) {
-                                    rebasedOverrideConfig.updateFrom(Configuration.generateDelta(oldConfig, oldKey.mOverrideConfiguration));
+                                    Configuration overrideOverrideConfig = Configuration.generateDelta(oldConfig, oldKey.mOverrideConfiguration);
+                                    rebasedOverrideConfig.updateFrom(overrideOverrideConfig);
                                 }
                                 activityResources = activityResources2;
                                 ResourcesKey newKey = new ResourcesKey(oldKey.mResDir, oldKey.mSplitResDirs, oldKey.mOverlayDirs, oldKey.mLibDirs, displayId, rebasedOverrideConfig, oldKey.mCompatInfo);
                                 ResourcesImpl resourcesImpl = findResourcesImplForKeyLocked(newKey);
                                 if (resourcesImpl == null && (resourcesImpl = createResourcesImpl(newKey)) != null) {
-                                    this.mResourceImpls.put(newKey, new WeakReference(resourcesImpl));
+                                    this.mResourceImpls.put(newKey, new WeakReference<>(resourcesImpl));
                                 }
-                                if (!(resourcesImpl == null || resourcesImpl == resources.getImpl())) {
+                                if (resourcesImpl != null && resourcesImpl != resources.getImpl()) {
                                     resources.setImpl(resourcesImpl);
                                 }
                                 i++;
@@ -774,84 +619,76 @@ public class ResourcesManager {
                         i++;
                         activityResources2 = activityResources;
                     }
-                    Trace.traceEnd(8192);
                     return;
                 }
-                Trace.traceEnd(8192);
+                Trace.traceEnd(8192L);
             }
-        } catch (Throwable th) {
-            Trace.traceEnd(8192);
-            throw th;
+        } finally {
+            Trace.traceEnd(8192L);
         }
     }
 
     public final boolean applyConfigurationToResourcesLocked(Configuration config, CompatibilityInfo compat) {
         DisplayAdjustments daj;
-        Configuration configuration = config;
-        CompatibilityInfo compatibilityInfo = compat;
         try {
-            Trace.traceBegin(8192, "ResourcesManager#applyConfigurationToResourcesLocked");
+            Trace.traceBegin(8192L, "ResourcesManager#applyConfigurationToResourcesLocked");
             boolean z = false;
-            if (this.mResConfiguration.isOtherSeqNewer(configuration) || compatibilityInfo != null) {
-                int changes = this.mResConfiguration.updateFrom(configuration);
-                this.mAdjustedDisplays.clear();
-                DisplayMetrics defaultDisplayMetrics = getDisplayMetrics();
-                if (compatibilityInfo != null && (this.mResCompatibilityInfo == null || !this.mResCompatibilityInfo.equals(compatibilityInfo))) {
-                    this.mResCompatibilityInfo = compatibilityInfo;
-                    changes |= 3328;
-                }
-                Resources.updateSystemConfiguration(configuration, defaultDisplayMetrics, compatibilityInfo);
-                ApplicationPackageManager.configurationChanged();
-                Configuration tmpConfig = null;
-                boolean z2 = true;
-                int i = this.mResourceImpls.size() - 1;
-                while (i >= 0) {
-                    ResourcesKey key = this.mResourceImpls.keyAt(i);
-                    WeakReference<ResourcesImpl> weakImplRef = this.mResourceImpls.valueAt(i);
-                    ResourcesImpl r = weakImplRef != null ? (ResourcesImpl) weakImplRef.get() : null;
-                    if (r != null) {
-                        int displayId = key.mDisplayId;
-                        boolean isDefaultDisplay = displayId == 0 ? z2 : z;
-                        DisplayMetrics dm = defaultDisplayMetrics;
-                        boolean hasOverrideConfiguration = key.hasOverrideConfiguration();
-                        if (!isDefaultDisplay) {
-                        } else if (hasOverrideConfiguration) {
-                            DisplayMetrics displayMetrics = dm;
-                        } else {
-                            r.updateConfiguration(configuration, dm, compatibilityInfo);
-                        }
-                        if (tmpConfig == null) {
-                            tmpConfig = new Configuration();
-                        }
-                        tmpConfig.setTo(configuration);
-                        DisplayAdjustments daj2 = r.getDisplayAdjustments();
-                        if (compatibilityInfo != null) {
-                            daj = new DisplayAdjustments(daj2);
-                            daj.setCompatibilityInfo(compatibilityInfo);
-                        } else {
-                            daj = daj2;
-                        }
-                        DisplayMetrics dm2 = getDisplayMetrics(displayId, daj);
-                        if (!isDefaultDisplay) {
-                            applyNonDefaultDisplayMetricsToConfiguration(dm2, tmpConfig);
-                        }
-                        if (hasOverrideConfiguration) {
-                            tmpConfig.updateFrom(key.mOverrideConfiguration);
-                        }
-                        r.updateConfiguration(tmpConfig, dm2, compatibilityInfo);
-                    } else {
-                        this.mResourceImpls.removeAt(i);
-                    }
-                    i--;
-                    z = false;
-                    z2 = true;
-                }
-                return changes != 0;
+            if (!this.mResConfiguration.isOtherSeqNewer(config) && compat == null) {
+                Trace.traceEnd(8192L);
+                return false;
             }
-            Trace.traceEnd(8192);
-            return false;
+            int changes = this.mResConfiguration.updateFrom(config);
+            this.mAdjustedDisplays.clear();
+            DisplayMetrics defaultDisplayMetrics = getDisplayMetrics();
+            if (compat != null && (this.mResCompatibilityInfo == null || !this.mResCompatibilityInfo.equals(compat))) {
+                this.mResCompatibilityInfo = compat;
+                changes |= 3328;
+            }
+            Resources.updateSystemConfiguration(config, defaultDisplayMetrics, compat);
+            ApplicationPackageManager.configurationChanged();
+            Configuration tmpConfig = null;
+            boolean z2 = true;
+            int i = this.mResourceImpls.size() - 1;
+            while (i >= 0) {
+                ResourcesKey key = this.mResourceImpls.keyAt(i);
+                WeakReference<ResourcesImpl> weakImplRef = this.mResourceImpls.valueAt(i);
+                ResourcesImpl r = weakImplRef != null ? weakImplRef.get() : null;
+                if (r != null) {
+                    int displayId = key.mDisplayId;
+                    boolean isDefaultDisplay = displayId == 0 ? z2 : z;
+                    boolean hasOverrideConfiguration = key.hasOverrideConfiguration();
+                    if (isDefaultDisplay && !hasOverrideConfiguration) {
+                        r.updateConfiguration(config, defaultDisplayMetrics, compat);
+                    }
+                    if (tmpConfig == null) {
+                        tmpConfig = new Configuration();
+                    }
+                    tmpConfig.setTo(config);
+                    DisplayAdjustments daj2 = r.getDisplayAdjustments();
+                    if (compat != null) {
+                        daj = new DisplayAdjustments(daj2);
+                        daj.setCompatibilityInfo(compat);
+                    } else {
+                        daj = daj2;
+                    }
+                    DisplayMetrics dm = getDisplayMetrics(displayId, daj);
+                    if (!isDefaultDisplay) {
+                        applyNonDefaultDisplayMetricsToConfiguration(dm, tmpConfig);
+                    }
+                    if (hasOverrideConfiguration) {
+                        tmpConfig.updateFrom(key.mOverrideConfiguration);
+                    }
+                    r.updateConfiguration(tmpConfig, dm, compat);
+                } else {
+                    this.mResourceImpls.removeAt(i);
+                }
+                i--;
+                z = false;
+                z2 = true;
+            }
+            return changes != 0;
         } finally {
-            Trace.traceEnd(8192);
+            Trace.traceEnd(8192L);
         }
     }
 
@@ -870,173 +707,144 @@ public class ResourcesManager {
                 while (i < implCount) {
                     ResourcesKey key = this.mResourceImpls.keyAt(i);
                     WeakReference<ResourcesImpl> weakImplRef = this.mResourceImpls.valueAt(i);
-                    ResourcesImpl impl = weakImplRef != null ? (ResourcesImpl) weakImplRef.get() : null;
-                    if (impl == null) {
-                        String str = assetPath;
-                    } else if (Objects.equals(key.mResDir, assetPath)) {
-                        String[] newLibAssets = key.mLibDirs;
-                        String[] newLibAssets2 = newLibAssets;
-                        for (String libAsset : strArr) {
-                            newLibAssets2 = (String[]) ArrayUtils.appendElement(String.class, newLibAssets2, libAsset);
-                        }
-                        if (newLibAssets2 != key.mLibDirs) {
-                            updatedResourceKeys.put(impl, new ResourcesKey(key.mResDir, key.mSplitResDirs, key.mOverlayDirs, newLibAssets2, key.mDisplayId, key.mOverrideConfiguration, key.mCompatInfo));
+                    ResourcesImpl impl = weakImplRef != null ? weakImplRef.get() : null;
+                    if (impl != null) {
+                        try {
+                            if (Objects.equals(key.mResDir, assetPath)) {
+                                String[] newLibAssets = key.mLibDirs;
+                                String[] newLibAssets2 = newLibAssets;
+                                for (String libAsset : strArr) {
+                                    newLibAssets2 = (String[]) ArrayUtils.appendElement(String.class, newLibAssets2, libAsset);
+                                }
+                                if (newLibAssets2 != key.mLibDirs) {
+                                    updatedResourceKeys.put(impl, new ResourcesKey(key.mResDir, key.mSplitResDirs, key.mOverlayDirs, newLibAssets2, key.mDisplayId, key.mOverrideConfiguration, key.mCompatInfo));
+                                }
+                            }
+                        } catch (Throwable th) {
+                            th = th;
+                            throw th;
                         }
                     }
                     i++;
                     strArr = libAssets;
                 }
-                String str2 = assetPath;
                 redirectResourcesToNewImplLocked(updatedResourceKeys);
-            } catch (Throwable th) {
-                th = th;
-                throw th;
+            } catch (Throwable th2) {
+                th = th2;
             }
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public final void applyNewResourceDirsLocked(ApplicationInfo appInfo, String[] oldPaths) {
-        String[] newSplitDirs;
+    final void applyNewResourceDirsLocked(ApplicationInfo appInfo, String[] oldPaths) {
+        String[] strArr;
         String baseCodePath;
         int i;
         int implCount;
-        ApplicationInfo applicationInfo = appInfo;
         try {
-            Trace.traceBegin(8192, "ResourcesManager#applyNewResourceDirsLocked");
+            Trace.traceBegin(8192L, "ResourcesManager#applyNewResourceDirsLocked");
             String baseCodePath2 = appInfo.getBaseCodePath();
-            if (applicationInfo.uid == Process.myUid()) {
-                newSplitDirs = applicationInfo.splitSourceDirs;
+            int myUid = Process.myUid();
+            if (appInfo.uid == myUid) {
+                strArr = appInfo.splitSourceDirs;
             } else {
-                newSplitDirs = applicationInfo.splitPublicSourceDirs;
+                strArr = appInfo.splitPublicSourceDirs;
             }
-            String[] copiedSplitDirs = (String[]) ArrayUtils.cloneOrNull((T[]) newSplitDirs);
-            String[] copiedResourceDirs = (String[]) ArrayUtils.cloneOrNull((T[]) applicationInfo.resourceDirs);
-            ArrayMap arrayMap = new ArrayMap();
+            String[] newSplitDirs = strArr;
+            String[] copiedSplitDirs = (String[]) ArrayUtils.cloneOrNull(newSplitDirs);
+            String[] copiedResourceDirs = (String[]) ArrayUtils.cloneOrNull(appInfo.resourceDirs);
+            ArrayMap<ResourcesImpl, ResourcesKey> updatedResourceKeys = new ArrayMap<>();
             int implCount2 = this.mResourceImpls.size();
             int i2 = 0;
             while (true) {
                 int i3 = i2;
-                if (i3 < implCount2) {
-                    ResourcesKey key = this.mResourceImpls.keyAt(i3);
-                    WeakReference<ResourcesImpl> weakImplRef = this.mResourceImpls.valueAt(i3);
-                    ResourcesImpl impl = weakImplRef != null ? (ResourcesImpl) weakImplRef.get() : null;
-                    if (impl != null) {
-                        if (key.mResDir != null) {
+                if (i3 >= implCount2) {
+                    redirectResourcesToNewImplLocked(updatedResourceKeys);
+                    Trace.traceEnd(8192L);
+                    return;
+                }
+                ResourcesKey key = this.mResourceImpls.keyAt(i3);
+                WeakReference<ResourcesImpl> weakImplRef = this.mResourceImpls.valueAt(i3);
+                ResourcesImpl impl = weakImplRef != null ? weakImplRef.get() : null;
+                if (impl != null) {
+                    if (key.mResDir != null) {
+                        try {
                             if (!key.mResDir.equals(baseCodePath2)) {
-                                if (ArrayUtils.contains((T[]) oldPaths, key.mResDir)) {
-                                    String[] strArr = key.mLibDirs;
+                                if (ArrayUtils.contains(oldPaths, key.mResDir)) {
+                                    String[] strArr2 = key.mLibDirs;
                                     int i4 = key.mDisplayId;
-                                    Configuration configuration = key.mOverrideConfiguration;
-                                    int implCount3 = implCount2;
-                                    CompatibilityInfo compatibilityInfo = key.mCompatInfo;
-                                    ResourcesKey resourcesKey = r5;
-                                    String str = baseCodePath2;
                                     baseCodePath = baseCodePath2;
-                                    ResourcesImpl impl2 = impl;
-                                    String[] strArr2 = strArr;
-                                    ResourcesKey resourcesKey2 = key;
-                                    int i5 = i4;
                                     i = i3;
-                                    Configuration configuration2 = configuration;
-                                    implCount = implCount3;
-                                    ResourcesKey resourcesKey3 = new ResourcesKey(str, copiedSplitDirs, copiedResourceDirs, strArr2, i5, configuration2, compatibilityInfo);
-                                    arrayMap.put(impl2, resourcesKey);
+                                    implCount = implCount2;
+                                    updatedResourceKeys.put(impl, new ResourcesKey(baseCodePath2, copiedSplitDirs, copiedResourceDirs, strArr2, i4, key.mOverrideConfiguration, key.mCompatInfo));
                                     i2 = i + 1;
                                     implCount2 = implCount;
                                     baseCodePath2 = baseCodePath;
-                                    ApplicationInfo applicationInfo2 = appInfo;
                                 }
                             }
+                        } catch (Throwable th) {
+                            th = th;
+                            Trace.traceEnd(8192L);
+                            throw th;
                         }
-                        String[] strArr3 = oldPaths;
-                        String[] strArr4 = key.mLibDirs;
-                        int i42 = key.mDisplayId;
-                        Configuration configuration3 = key.mOverrideConfiguration;
-                        int implCount32 = implCount2;
-                        CompatibilityInfo compatibilityInfo2 = key.mCompatInfo;
-                        ResourcesKey resourcesKey4 = resourcesKey3;
-                        String str2 = baseCodePath2;
-                        baseCodePath = baseCodePath2;
-                        ResourcesImpl impl22 = impl;
-                        String[] strArr22 = strArr4;
-                        ResourcesKey resourcesKey22 = key;
-                        int i52 = i42;
-                        i = i3;
-                        Configuration configuration22 = configuration3;
-                        implCount = implCount32;
-                        ResourcesKey resourcesKey32 = new ResourcesKey(str2, copiedSplitDirs, copiedResourceDirs, strArr22, i52, configuration22, compatibilityInfo2);
-                        arrayMap.put(impl22, resourcesKey4);
-                        i2 = i + 1;
-                        implCount2 = implCount;
-                        baseCodePath2 = baseCodePath;
-                        ApplicationInfo applicationInfo22 = appInfo;
                     }
+                    String[] strArr22 = key.mLibDirs;
+                    int i42 = key.mDisplayId;
                     baseCodePath = baseCodePath2;
                     i = i3;
                     implCount = implCount2;
+                    updatedResourceKeys.put(impl, new ResourcesKey(baseCodePath2, copiedSplitDirs, copiedResourceDirs, strArr22, i42, key.mOverrideConfiguration, key.mCompatInfo));
                     i2 = i + 1;
                     implCount2 = implCount;
                     baseCodePath2 = baseCodePath;
-                    ApplicationInfo applicationInfo222 = appInfo;
-                } else {
-                    int i6 = implCount2;
-                    redirectResourcesToNewImplLocked(arrayMap);
-                    Trace.traceEnd(8192);
-                    return;
                 }
+                baseCodePath = baseCodePath2;
+                i = i3;
+                implCount = implCount2;
+                i2 = i + 1;
+                implCount2 = implCount;
+                baseCodePath2 = baseCodePath;
             }
-        } catch (Throwable th) {
-            th = th;
-            Trace.traceEnd(8192);
-            throw th;
+        } catch (Throwable th2) {
+            th = th2;
         }
     }
 
     private void redirectResourcesToNewImplLocked(ArrayMap<ResourcesImpl, ResourcesKey> updatedResourceKeys) {
         ResourcesKey key;
         ResourcesKey key2;
-        if (!updatedResourceKeys.isEmpty()) {
-            int resourcesCount = this.mResourceReferences.size();
-            int i = 0;
-            while (true) {
-                Resources r = null;
-                if (i < resourcesCount) {
-                    WeakReference<Resources> ref = this.mResourceReferences.get(i);
-                    if (ref != null) {
-                        r = (Resources) ref.get();
+        if (updatedResourceKeys.isEmpty()) {
+            return;
+        }
+        int resourcesCount = this.mResourceReferences.size();
+        int i = 0;
+        while (true) {
+            if (i < resourcesCount) {
+                WeakReference<Resources> ref = this.mResourceReferences.get(i);
+                Resources r = ref != null ? ref.get() : null;
+                if (r != null && (key2 = updatedResourceKeys.get(r.getImpl())) != null) {
+                    ResourcesImpl impl = findOrCreateResourcesImplForKeyLocked(key2);
+                    if (impl == null) {
+                        throw new Resources.NotFoundException("failed to redirect ResourcesImpl");
                     }
-                    if (!(r == null || (key2 = updatedResourceKeys.get(r.getImpl())) == null)) {
-                        ResourcesImpl impl = findOrCreateResourcesImplForKeyLocked(key2);
-                        if (impl != null) {
-                            r.setImpl(impl);
-                        } else {
-                            throw new Resources.NotFoundException("failed to redirect ResourcesImpl");
-                        }
-                    }
-                    i++;
-                } else {
-                    for (ActivityResources activityResources : this.mActivityResourceReferences.values()) {
-                        int resCount = activityResources.activityResources.size();
-                        int i2 = 0;
-                        while (true) {
-                            if (i2 < resCount) {
-                                WeakReference<Resources> ref2 = activityResources.activityResources.get(i2);
-                                Resources r2 = ref2 != null ? (Resources) ref2.get() : null;
-                                if (!(r2 == null || (key = updatedResourceKeys.get(r2.getImpl())) == null)) {
-                                    ResourcesImpl impl2 = findOrCreateResourcesImplForKeyLocked(key);
-                                    if (impl2 != null) {
-                                        r2.setImpl(impl2);
-                                    } else {
-                                        throw new Resources.NotFoundException("failed to redirect ResourcesImpl");
-                                    }
-                                }
-                                i2++;
-                            }
-                        }
-                    }
-                    return;
+                    r.setImpl(impl);
                 }
+                i++;
+            } else {
+                for (ActivityResources activityResources : this.mActivityResourceReferences.values()) {
+                    int resCount = activityResources.activityResources.size();
+                    for (int i2 = 0; i2 < resCount; i2++) {
+                        WeakReference<Resources> ref2 = activityResources.activityResources.get(i2);
+                        Resources r2 = ref2 != null ? ref2.get() : null;
+                        if (r2 != null && (key = updatedResourceKeys.get(r2.getImpl())) != null) {
+                            ResourcesImpl impl2 = findOrCreateResourcesImplForKeyLocked(key);
+                            if (impl2 == null) {
+                                throw new Resources.NotFoundException("failed to redirect ResourcesImpl");
+                            }
+                            r2.setImpl(impl2);
+                        }
+                    }
+                }
+                return;
             }
         }
     }

@@ -3,6 +3,7 @@ package android.media;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes3.dex */
 public abstract class VolumeProvider {
     public static final int VOLUME_CONTROL_ABSOLUTE = 2;
     public static final int VOLUME_CONTROL_FIXED = 0;
@@ -12,11 +13,13 @@ public abstract class VolumeProvider {
     private int mCurrentVolume;
     private final int mMaxVolume;
 
+    /* loaded from: classes3.dex */
     public static abstract class Callback {
         public abstract void onVolumeChanged(VolumeProvider volumeProvider);
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface ControlType {
     }
 

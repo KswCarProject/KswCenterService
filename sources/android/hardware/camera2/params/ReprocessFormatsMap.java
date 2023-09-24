@@ -4,6 +4,7 @@ import android.hardware.camera2.utils.HashCodeHelpers;
 import com.android.internal.util.Preconditions;
 import java.util.Arrays;
 
+/* loaded from: classes.dex */
 public final class ReprocessFormatsMap {
     private final int[] mEntry;
     private final int mInputCount;
@@ -17,25 +18,24 @@ public final class ReprocessFormatsMap {
             int inputFormat = StreamConfigurationMap.checkArgumentFormatInternal(entry[i]);
             int left2 = left - 1;
             int i2 = i + 1;
-            if (left2 >= 1) {
-                int length = entry[i2];
-                left = left2 - 1;
-                i = i2 + 1;
-                for (int j = 0; j < length; j++) {
-                    StreamConfigurationMap.checkArgumentFormatInternal(entry[i + j]);
-                }
-                if (length > 0) {
-                    if (left >= length) {
-                        i += length;
-                        left -= length;
-                    } else {
-                        throw new IllegalArgumentException(String.format("Input %x had too few output formats listed (actual: %d, expected: %d)", new Object[]{Integer.valueOf(inputFormat), Integer.valueOf(left), Integer.valueOf(length)}));
-                    }
-                }
-                numInputs++;
-            } else {
-                throw new IllegalArgumentException(String.format("Input %x had no output format length listed", new Object[]{Integer.valueOf(inputFormat)}));
+            if (left2 < 1) {
+                throw new IllegalArgumentException(String.format("Input %x had no output format length listed", Integer.valueOf(inputFormat)));
             }
+            int length = entry[i2];
+            left = left2 - 1;
+            i = i2 + 1;
+            for (int j = 0; j < length; j++) {
+                int outputFormat = entry[i + j];
+                StreamConfigurationMap.checkArgumentFormatInternal(outputFormat);
+            }
+            if (length > 0) {
+                if (left < length) {
+                    throw new IllegalArgumentException(String.format("Input %x had too few output formats listed (actual: %d, expected: %d)", Integer.valueOf(inputFormat), Integer.valueOf(left), Integer.valueOf(length)));
+                }
+                i += length;
+                left -= length;
+            }
+            numInputs++;
         }
         this.mEntry = entry;
         this.mInputCount = numInputs;
@@ -43,62 +43,61 @@ public final class ReprocessFormatsMap {
 
     public int[] getInputs() {
         int[] inputs = new int[this.mInputCount];
-        int i = 0;
         int left = this.mEntry.length;
-        int j = 0;
+        int i = 0;
+        int left2 = left;
+        int left3 = 0;
         while (i < this.mEntry.length) {
             int format = this.mEntry[i];
-            int left2 = left - 1;
+            int left4 = left2 - 1;
             int i2 = i + 1;
-            if (left2 >= 1) {
-                int length = this.mEntry[i2];
-                left = left2 - 1;
-                i = i2 + 1;
-                if (length > 0) {
-                    if (left >= length) {
-                        i += length;
-                        left -= length;
-                    } else {
-                        throw new AssertionError(String.format("Input %x had too few output formats listed (actual: %d, expected: %d)", new Object[]{Integer.valueOf(format), Integer.valueOf(left), Integer.valueOf(length)}));
-                    }
-                }
-                inputs[j] = format;
-                j++;
-            } else {
-                throw new AssertionError(String.format("Input %x had no output format length listed", new Object[]{Integer.valueOf(format)}));
+            if (left4 < 1) {
+                throw new AssertionError(String.format("Input %x had no output format length listed", Integer.valueOf(format)));
             }
+            int length = this.mEntry[i2];
+            left2 = left4 - 1;
+            i = i2 + 1;
+            if (length > 0) {
+                if (left2 < length) {
+                    throw new AssertionError(String.format("Input %x had too few output formats listed (actual: %d, expected: %d)", Integer.valueOf(format), Integer.valueOf(left2), Integer.valueOf(length)));
+                }
+                i += length;
+                left2 -= length;
+            }
+            inputs[left3] = format;
+            left3++;
         }
         return StreamConfigurationMap.imageFormatToPublic(inputs);
     }
 
     public int[] getOutputs(int format) {
         int left = this.mEntry.length;
-        int i = 0;
-        while (i < this.mEntry.length) {
-            int inputFormat = this.mEntry[i];
-            int left2 = left - 1;
-            int i2 = i + 1;
-            if (left2 >= 1) {
-                int length = this.mEntry[i2];
-                int left3 = left2 - 1;
-                int i3 = i2 + 1;
-                if (length > 0 && left3 < length) {
-                    throw new AssertionError(String.format("Input %x had too few output formats listed (actual: %d, expected: %d)", new Object[]{Integer.valueOf(format), Integer.valueOf(left3), Integer.valueOf(length)}));
-                } else if (inputFormat == format) {
-                    int[] outputs = new int[length];
-                    for (int k = 0; k < length; k++) {
-                        outputs[k] = this.mEntry[i3 + k];
-                    }
-                    return StreamConfigurationMap.imageFormatToPublic(outputs);
-                } else {
-                    i = i3 + length;
-                    left = left3 - length;
-                }
-            } else {
-                throw new AssertionError(String.format("Input %x had no output format length listed", new Object[]{Integer.valueOf(format)}));
+        int left2 = left;
+        int left3 = 0;
+        while (left3 < this.mEntry.length) {
+            int inputFormat = this.mEntry[left3];
+            int left4 = left2 - 1;
+            int i = left3 + 1;
+            if (left4 < 1) {
+                throw new AssertionError(String.format("Input %x had no output format length listed", Integer.valueOf(format)));
             }
+            int length = this.mEntry[i];
+            int left5 = left4 - 1;
+            int i2 = i + 1;
+            if (length > 0 && left5 < length) {
+                throw new AssertionError(String.format("Input %x had too few output formats listed (actual: %d, expected: %d)", Integer.valueOf(format), Integer.valueOf(left5), Integer.valueOf(length)));
+            }
+            if (inputFormat == format) {
+                int[] outputs = new int[length];
+                for (int k = 0; k < length; k++) {
+                    outputs[k] = this.mEntry[i2 + k];
+                }
+                return StreamConfigurationMap.imageFormatToPublic(outputs);
+            }
+            left3 = i2 + length;
+            left2 = left5 - length;
         }
-        throw new IllegalArgumentException(String.format("Input format %x was not one in #getInputs", new Object[]{Integer.valueOf(format)}));
+        throw new IllegalArgumentException(String.format("Input format %x was not one in #getInputs", Integer.valueOf(format)));
     }
 
     public boolean equals(Object obj) {
@@ -108,10 +107,11 @@ public final class ReprocessFormatsMap {
         if (this == obj) {
             return true;
         }
-        if (obj instanceof ReprocessFormatsMap) {
-            return Arrays.equals(this.mEntry, ((ReprocessFormatsMap) obj).mEntry);
+        if (!(obj instanceof ReprocessFormatsMap)) {
+            return false;
         }
-        return false;
+        ReprocessFormatsMap other = (ReprocessFormatsMap) obj;
+        return Arrays.equals(this.mEntry, other.mEntry);
     }
 
     public int hashCode() {

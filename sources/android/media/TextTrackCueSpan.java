@@ -1,6 +1,7 @@
 package android.media;
 
-/* compiled from: WebVttRenderer */
+/* compiled from: WebVttRenderer.java */
+/* loaded from: classes3.dex */
 class TextTrackCueSpan {
     boolean mEnabled;
     String mText;
@@ -13,13 +14,10 @@ class TextTrackCueSpan {
     }
 
     public boolean equals(Object o) {
-        if (!(o instanceof TextTrackCueSpan)) {
-            return false;
+        if (o instanceof TextTrackCueSpan) {
+            TextTrackCueSpan span = (TextTrackCueSpan) o;
+            return this.mTimestampMs == span.mTimestampMs && this.mText.equals(span.mText);
         }
-        TextTrackCueSpan span = (TextTrackCueSpan) o;
-        if (this.mTimestampMs != span.mTimestampMs || !this.mText.equals(span.mText)) {
-            return false;
-        }
-        return true;
+        return false;
     }
 }

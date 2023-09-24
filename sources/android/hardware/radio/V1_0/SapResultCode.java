@@ -2,6 +2,7 @@ package android.hardware.radio.V1_0;
 
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class SapResultCode {
     public static final int CARD_ALREADY_POWERED_OFF = 3;
     public static final int CARD_ALREADY_POWERED_ON = 5;

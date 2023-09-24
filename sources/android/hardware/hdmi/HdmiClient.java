@@ -3,17 +3,17 @@ package android.hardware.hdmi;
 import android.annotation.SystemApi;
 import android.hardware.hdmi.HdmiControlManager;
 import android.hardware.hdmi.IHdmiVendorCommandListener;
-import android.os.RemoteException;
+import android.p007os.RemoteException;
 import android.util.Log;
 
 @SystemApi
+/* loaded from: classes.dex */
 public abstract class HdmiClient {
     private static final String TAG = "HdmiClient";
     private IHdmiVendorCommandListener mIHdmiVendorCommandListener;
     final IHdmiControlService mService;
 
-    /* access modifiers changed from: package-private */
-    public abstract int getDeviceType();
+    abstract int getDeviceType();
 
     HdmiClient(IHdmiControlService service) {
         this.mService = service;
@@ -23,7 +23,7 @@ public abstract class HdmiClient {
         try {
             return this.mService.getActiveSource();
         } catch (RemoteException e) {
-            Log.e(TAG, "getActiveSource threw exception ", e);
+            Log.m69e(TAG, "getActiveSource threw exception ", e);
             return null;
         }
     }
@@ -32,7 +32,7 @@ public abstract class HdmiClient {
         try {
             this.mService.sendKeyEvent(getDeviceType(), keyCode, isPressed);
         } catch (RemoteException e) {
-            Log.e(TAG, "sendKeyEvent threw exception ", e);
+            Log.m69e(TAG, "sendKeyEvent threw exception ", e);
         }
     }
 
@@ -40,7 +40,7 @@ public abstract class HdmiClient {
         try {
             this.mService.sendVolumeKeyEvent(getDeviceType(), keyCode, isPressed);
         } catch (RemoteException e) {
-            Log.e(TAG, "sendVolumeKeyEvent threw exception ", e);
+            Log.m69e(TAG, "sendVolumeKeyEvent threw exception ", e);
             throw e.rethrowFromSystemServer();
         }
     }
@@ -49,32 +49,34 @@ public abstract class HdmiClient {
         try {
             this.mService.sendVendorCommand(getDeviceType(), targetAddress, params, hasVendorId);
         } catch (RemoteException e) {
-            Log.e(TAG, "failed to send vendor command: ", e);
+            Log.m69e(TAG, "failed to send vendor command: ", e);
         }
     }
 
     public void setVendorCommandListener(HdmiControlManager.VendorCommandListener listener) {
         if (listener == null) {
             throw new IllegalArgumentException("listener cannot be null");
-        } else if (this.mIHdmiVendorCommandListener == null) {
-            try {
-                IHdmiVendorCommandListener wrappedListener = getListenerWrapper(listener);
-                this.mService.addVendorCommandListener(wrappedListener, getDeviceType());
-                this.mIHdmiVendorCommandListener = wrappedListener;
-            } catch (RemoteException e) {
-                Log.e(TAG, "failed to set vendor command listener: ", e);
-            }
-        } else {
+        }
+        if (this.mIHdmiVendorCommandListener != null) {
             throw new IllegalStateException("listener was already set");
+        }
+        try {
+            IHdmiVendorCommandListener wrappedListener = getListenerWrapper(listener);
+            this.mService.addVendorCommandListener(wrappedListener, getDeviceType());
+            this.mIHdmiVendorCommandListener = wrappedListener;
+        } catch (RemoteException e) {
+            Log.m69e(TAG, "failed to set vendor command listener: ", e);
         }
     }
 
     private static IHdmiVendorCommandListener getListenerWrapper(final HdmiControlManager.VendorCommandListener listener) {
-        return new IHdmiVendorCommandListener.Stub() {
+        return new IHdmiVendorCommandListener.Stub() { // from class: android.hardware.hdmi.HdmiClient.1
+            @Override // android.hardware.hdmi.IHdmiVendorCommandListener
             public void onReceived(int srcAddress, int destAddress, byte[] params, boolean hasVendorId) {
                 HdmiControlManager.VendorCommandListener.this.onReceived(srcAddress, destAddress, params, hasVendorId);
             }
 
+            @Override // android.hardware.hdmi.IHdmiVendorCommandListener
             public void onControlStateChanged(boolean enabled, int reason) {
                 HdmiControlManager.VendorCommandListener.this.onControlStateChanged(enabled, reason);
             }

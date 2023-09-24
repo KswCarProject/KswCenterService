@@ -6,10 +6,10 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.os.RemoteException;
+import android.content.p002pm.ActivityInfo;
+import android.content.p002pm.PackageManager;
+import android.content.p002pm.ResolveInfo;
+import android.p007os.RemoteException;
 import android.util.Log;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.app.AbstractResolverComparator;
@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
+/* loaded from: classes4.dex */
 public class ResolverListController {
     private static final boolean DEBUG = false;
     private static final String TAG = "ResolverListController";
@@ -31,7 +32,7 @@ public class ResolverListController {
     private final PackageManager mpm;
 
     public ResolverListController(Context context, PackageManager pm, Intent targetIntent, String referrerPackage, int launchedFromUid) {
-        this(context, pm, targetIntent, referrerPackage, launchedFromUid, new ResolverRankerServiceResolverComparator(context, targetIntent, referrerPackage, (AbstractResolverComparator.AfterCompute) null));
+        this(context, pm, targetIntent, referrerPackage, launchedFromUid, new ResolverRankerServiceResolverComparator(context, targetIntent, referrerPackage, null));
     }
 
     public ResolverListController(Context context, PackageManager pm, Intent targetIntent, String referrerPackage, int launchedFromUid, AbstractResolverComparator resolverComparator) {
@@ -60,17 +61,13 @@ public class ResolverListController {
         int N = intents.size();
         for (int i = 0; i < N; i++) {
             Intent intent = intents.get(i);
-            int i2 = 0;
-            int i3 = 65536 | (shouldGetResolvedFilter ? 64 : 0);
-            if (shouldGetActivityMetadata) {
-                i2 = 128;
-            }
-            int flags = i3 | i2;
+            int flags = 65536 | (shouldGetResolvedFilter ? 64 : 0) | (shouldGetActivityMetadata ? 128 : 0);
             if (intent.isWebIntent() || (intent.getFlags() & 2048) != 0) {
                 flags |= 8388608;
             }
             List<ResolveInfo> infos = this.mpm.queryIntentActivities(intent, flags);
-            for (int j = infos.size() - 1; j >= 0; j--) {
+            int totalSize = infos.size();
+            for (int j = totalSize - 1; j >= 0; j--) {
                 ResolveInfo info = infos.get(j);
                 if (info.activityInfo != null && !info.activityInfo.exported) {
                     infos.remove(j);
@@ -99,15 +96,17 @@ public class ResolverListController {
                     break;
                 }
                 ResolverActivity.ResolvedComponentInfo rci = into.get(j);
-                if (isSameResolvedComponent(newInfo, rci)) {
+                if (!isSameResolvedComponent(newInfo, rci)) {
+                    j++;
+                } else {
                     found = true;
                     rci.add(intent, newInfo);
                     break;
                 }
-                j++;
             }
             if (!found) {
-                into.add(new ResolverActivity.ResolvedComponentInfo(new ComponentName(newInfo.activityInfo.packageName, newInfo.activityInfo.name), intent, newInfo));
+                ComponentName name = new ComponentName(newInfo.activityInfo.packageName, newInfo.activityInfo.name);
+                into.add(new ResolverActivity.ResolvedComponentInfo(name, intent, newInfo));
             }
         }
     }
@@ -117,7 +116,8 @@ public class ResolverListController {
         ArrayList<ResolverActivity.ResolvedComponentInfo> listToReturn = null;
         for (int i = inputList.size() - 1; i >= 0; i--) {
             ActivityInfo ai = inputList.get(i).getResolveInfoAt(0).activityInfo;
-            if (ActivityManager.checkComponentPermission(ai.permission, this.mLaunchedFromUid, ai.applicationInfo.uid, ai.exported) != 0 || isComponentFiltered(ai.getComponentName())) {
+            int granted = ActivityManager.checkComponentPermission(ai.permission, this.mLaunchedFromUid, ai.applicationInfo.uid, ai.exported);
+            if (granted != 0 || isComponentFiltered(ai.getComponentName())) {
                 if (returnCopyOfOriginalListIfModified && listToReturn == null) {
                     listToReturn = new ArrayList<>(inputList);
                 }
@@ -130,7 +130,8 @@ public class ResolverListController {
     @VisibleForTesting
     public ArrayList<ResolverActivity.ResolvedComponentInfo> filterLowPriority(List<ResolverActivity.ResolvedComponentInfo> inputList, boolean returnCopyOfOriginalListIfModified) {
         ArrayList<ResolverActivity.ResolvedComponentInfo> listToReturn = null;
-        ResolveInfo r0 = inputList.get(0).getResolveInfoAt(0);
+        ResolverActivity.ResolvedComponentInfo rci0 = inputList.get(0);
+        ResolveInfo r0 = rci0.getResolveInfoAt(0);
         int N = inputList.size();
         for (int i = 1; i < N; i++) {
             ResolveInfo ri = inputList.get(i).getResolveInfoAt(0);
@@ -147,6 +148,7 @@ public class ResolverListController {
         return listToReturn;
     }
 
+    /* loaded from: classes4.dex */
     private class ComputeCallback implements AbstractResolverComparator.AfterCompute {
         private CountDownLatch mFinishComputeSignal;
 
@@ -154,6 +156,7 @@ public class ResolverListController {
             this.mFinishComputeSignal = finishComputeSignal;
         }
 
+        @Override // com.android.internal.app.AbstractResolverComparator.AfterCompute
         public void afterCompute() {
             this.mFinishComputeSignal.countDown();
         }
@@ -162,14 +165,15 @@ public class ResolverListController {
     @VisibleForTesting
     public void sort(List<ResolverActivity.ResolvedComponentInfo> inputList) {
         if (this.mResolverComparator == null) {
-            Log.d(TAG, "Comparator has already been destroyed; skipped.");
+            Log.m72d(TAG, "Comparator has already been destroyed; skipped.");
             return;
         }
         try {
-            long currentTimeMillis = System.currentTimeMillis();
+            System.currentTimeMillis();
             if (!this.isComputed) {
                 CountDownLatch finishComputeSignal = new CountDownLatch(1);
-                this.mResolverComparator.setCallBack(new ComputeCallback(finishComputeSignal));
+                ComputeCallback callback = new ComputeCallback(finishComputeSignal);
+                this.mResolverComparator.setCallBack(callback);
                 this.mResolverComparator.compute(inputList);
                 finishComputeSignal.await();
                 this.isComputed = true;
@@ -177,7 +181,7 @@ public class ResolverListController {
             Collections.sort(inputList, this.mResolverComparator);
             System.currentTimeMillis();
         } catch (InterruptedException e) {
-            Log.e(TAG, "Compute & Sort was interrupted: " + e);
+            Log.m70e(TAG, "Compute & Sort was interrupted: " + e);
         }
     }
 
@@ -186,8 +190,7 @@ public class ResolverListController {
         return ai.packageName.equals(b.name.getPackageName()) && ai.name.equals(b.name.getClassName());
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean isComponentFiltered(ComponentName componentName) {
+    boolean isComponentFiltered(ComponentName componentName) {
         return false;
     }
 

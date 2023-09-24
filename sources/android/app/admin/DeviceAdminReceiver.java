@@ -5,11 +5,13 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.PersistableBundle;
-import android.os.UserHandle;
+import android.p007os.Bundle;
+import android.p007os.PersistableBundle;
+import android.p007os.UserHandle;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes.dex */
 public class DeviceAdminReceiver extends BroadcastReceiver {
     public static final String ACTION_AFFILIATED_PROFILE_TRANSFER_OWNERSHIP_COMPLETE = "android.app.action.AFFILIATED_PROFILE_TRANSFER_OWNERSHIP_COMPLETE";
     public static final String ACTION_BUGREPORT_FAILED = "android.app.action.BUGREPORT_FAILED";
@@ -56,6 +58,7 @@ public class DeviceAdminReceiver extends BroadcastReceiver {
     private ComponentName mWho;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface BugreportFailureCode {
     }
 
@@ -173,6 +176,7 @@ public class DeviceAdminReceiver extends BroadcastReceiver {
     public void onTransferAffiliatedProfileOwnershipComplete(Context context, UserHandle user) {
     }
 
+    @Override // android.content.BroadcastReceiver
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
         if (ACTION_PASSWORD_CHANGED.equals(action)) {
@@ -186,7 +190,8 @@ public class DeviceAdminReceiver extends BroadcastReceiver {
         } else if (ACTION_DEVICE_ADMIN_DISABLE_REQUESTED.equals(action)) {
             CharSequence res = onDisableRequested(context, intent);
             if (res != null) {
-                getResultExtras(true).putCharSequence(EXTRA_DISABLE_WARNING, res);
+                Bundle extras = getResultExtras(true);
+                extras.putCharSequence(EXTRA_DISABLE_WARNING, res);
             }
         } else if (ACTION_DEVICE_ADMIN_DISABLED.equals(action)) {
             onDisabled(context, intent);
@@ -195,23 +200,33 @@ public class DeviceAdminReceiver extends BroadcastReceiver {
         } else if (ACTION_PROFILE_PROVISIONING_COMPLETE.equals(action)) {
             onProfileProvisioningComplete(context, intent);
         } else if (ACTION_CHOOSE_PRIVATE_KEY_ALIAS.equals(action)) {
-            setResultData(onChoosePrivateKeyAlias(context, intent, intent.getIntExtra(EXTRA_CHOOSE_PRIVATE_KEY_SENDER_UID, -1), (Uri) intent.getParcelableExtra(EXTRA_CHOOSE_PRIVATE_KEY_URI), intent.getStringExtra(EXTRA_CHOOSE_PRIVATE_KEY_ALIAS)));
+            int uid = intent.getIntExtra(EXTRA_CHOOSE_PRIVATE_KEY_SENDER_UID, -1);
+            Uri uri = (Uri) intent.getParcelableExtra(EXTRA_CHOOSE_PRIVATE_KEY_URI);
+            String alias = intent.getStringExtra(EXTRA_CHOOSE_PRIVATE_KEY_ALIAS);
+            String chosenAlias = onChoosePrivateKeyAlias(context, intent, uid, uri, alias);
+            setResultData(chosenAlias);
         } else if (ACTION_LOCK_TASK_ENTERING.equals(action)) {
-            onLockTaskModeEntering(context, intent, intent.getStringExtra(EXTRA_LOCK_TASK_PACKAGE));
+            String pkg = intent.getStringExtra(EXTRA_LOCK_TASK_PACKAGE);
+            onLockTaskModeEntering(context, intent, pkg);
         } else if (ACTION_LOCK_TASK_EXITING.equals(action)) {
             onLockTaskModeExiting(context, intent);
         } else if (ACTION_NOTIFY_PENDING_SYSTEM_UPDATE.equals(action)) {
-            onSystemUpdatePending(context, intent, intent.getLongExtra(EXTRA_SYSTEM_UPDATE_RECEIVED_TIME, -1));
+            long receivedTime = intent.getLongExtra(EXTRA_SYSTEM_UPDATE_RECEIVED_TIME, -1L);
+            onSystemUpdatePending(context, intent, receivedTime);
         } else if (ACTION_BUGREPORT_SHARING_DECLINED.equals(action)) {
             onBugreportSharingDeclined(context, intent);
         } else if (ACTION_BUGREPORT_SHARE.equals(action)) {
-            onBugreportShared(context, intent, intent.getStringExtra(EXTRA_BUGREPORT_HASH));
+            String bugreportFileHash = intent.getStringExtra(EXTRA_BUGREPORT_HASH);
+            onBugreportShared(context, intent, bugreportFileHash);
         } else if (ACTION_BUGREPORT_FAILED.equals(action)) {
-            onBugreportFailed(context, intent, intent.getIntExtra(EXTRA_BUGREPORT_FAILURE_REASON, 0));
+            int failureCode = intent.getIntExtra(EXTRA_BUGREPORT_FAILURE_REASON, 0);
+            onBugreportFailed(context, intent, failureCode);
         } else if (ACTION_SECURITY_LOGS_AVAILABLE.equals(action)) {
             onSecurityLogsAvailable(context, intent);
         } else if (ACTION_NETWORK_LOGS_AVAILABLE.equals(action)) {
-            onNetworkLogsAvailable(context, intent, intent.getLongExtra(EXTRA_NETWORK_LOGS_TOKEN, -1), intent.getIntExtra(EXTRA_NETWORK_LOGS_COUNT, 0));
+            long batchToken = intent.getLongExtra(EXTRA_NETWORK_LOGS_TOKEN, -1L);
+            int networkLogsCount = intent.getIntExtra(EXTRA_NETWORK_LOGS_COUNT, 0);
+            onNetworkLogsAvailable(context, intent, batchToken, networkLogsCount);
         } else if (ACTION_USER_ADDED.equals(action)) {
             onUserAdded(context, intent, (UserHandle) intent.getParcelableExtra(Intent.EXTRA_USER));
         } else if (ACTION_USER_REMOVED.equals(action)) {
@@ -223,7 +238,8 @@ public class DeviceAdminReceiver extends BroadcastReceiver {
         } else if (ACTION_USER_SWITCHED.equals(action)) {
             onUserSwitched(context, intent, (UserHandle) intent.getParcelableExtra(Intent.EXTRA_USER));
         } else if (ACTION_TRANSFER_OWNERSHIP_COMPLETE.equals(action)) {
-            onTransferOwnershipComplete(context, (PersistableBundle) intent.getParcelableExtra(EXTRA_TRANSFER_OWNERSHIP_ADMIN_EXTRAS_BUNDLE));
+            PersistableBundle bundle = (PersistableBundle) intent.getParcelableExtra(EXTRA_TRANSFER_OWNERSHIP_ADMIN_EXTRAS_BUNDLE);
+            onTransferOwnershipComplete(context, bundle);
         } else if (ACTION_AFFILIATED_PROFILE_TRANSFER_OWNERSHIP_COMPLETE.equals(action)) {
             onTransferAffiliatedProfileOwnershipComplete(context, (UserHandle) intent.getParcelableExtra(Intent.EXTRA_USER));
         }

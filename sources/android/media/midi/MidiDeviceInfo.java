@@ -1,12 +1,15 @@
 package android.media.midi;
 
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.Log;
 
+/* loaded from: classes3.dex */
 public final class MidiDeviceInfo implements Parcelable {
-    public static final Parcelable.Creator<MidiDeviceInfo> CREATOR = new Parcelable.Creator<MidiDeviceInfo>() {
+    public static final Parcelable.Creator<MidiDeviceInfo> CREATOR = new Parcelable.Creator<MidiDeviceInfo>() { // from class: android.media.midi.MidiDeviceInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public MidiDeviceInfo createFromParcel(Parcel in) {
             int type = in.readInt();
             int id = in.readInt();
@@ -15,10 +18,13 @@ public final class MidiDeviceInfo implements Parcelable {
             String[] inputPortNames = in.createStringArray();
             String[] outputPortNames = in.createStringArray();
             boolean isPrivate = in.readInt() == 1;
-            Bundle readBundle = in.readBundle();
-            return new MidiDeviceInfo(type, id, inputPortCount, outputPortCount, inputPortNames, outputPortNames, in.readBundle(), isPrivate);
+            in.readBundle();
+            Bundle properties = in.readBundle();
+            return new MidiDeviceInfo(type, id, inputPortCount, outputPortCount, inputPortNames, outputPortNames, properties, isPrivate);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public MidiDeviceInfo[] newArray(int size) {
             return new MidiDeviceInfo[size];
         }
@@ -46,6 +52,7 @@ public final class MidiDeviceInfo implements Parcelable {
     private final Bundle mProperties;
     private final int mType;
 
+    /* loaded from: classes3.dex */
     public static final class PortInfo {
         public static final int TYPE_INPUT = 1;
         public static final int TYPE_OUTPUT = 2;
@@ -108,23 +115,24 @@ public final class MidiDeviceInfo implements Parcelable {
     }
 
     public PortInfo[] getPorts() {
-        PortInfo[] ports = new PortInfo[(this.mInputPortCount + this.mOutputPortCount)];
+        PortInfo[] ports = new PortInfo[this.mInputPortCount + this.mOutputPortCount];
         int index = 0;
         int index2 = 0;
-        int i = 0;
-        while (i < this.mInputPortCount) {
-            ports[index2] = new PortInfo(1, i, this.mInputPortNames[i]);
-            i++;
+        int index3 = 0;
+        while (index3 < this.mInputPortCount) {
+            ports[index2] = new PortInfo(1, index3, this.mInputPortNames[index3]);
+            index3++;
             index2++;
         }
         while (true) {
-            int i2 = index;
-            if (i2 >= this.mOutputPortCount) {
+            int i = index;
+            if (i < this.mOutputPortCount) {
+                ports[index2] = new PortInfo(2, i, this.mOutputPortNames[i]);
+                index2++;
+                index = i + 1;
+            } else {
                 return ports;
             }
-            ports[index2] = new PortInfo(2, i2, this.mOutputPortNames[i2]);
-            index2++;
-            index = i2 + 1;
         }
     }
 
@@ -137,10 +145,7 @@ public final class MidiDeviceInfo implements Parcelable {
     }
 
     public boolean equals(Object o) {
-        if (!(o instanceof MidiDeviceInfo) || ((MidiDeviceInfo) o).mId != this.mId) {
-            return false;
-        }
-        return true;
+        return (o instanceof MidiDeviceInfo) && ((MidiDeviceInfo) o).mId == this.mId;
     }
 
     public int hashCode() {
@@ -152,6 +157,7 @@ public final class MidiDeviceInfo implements Parcelable {
         return "MidiDeviceInfo[mType=" + this.mType + ",mInputPortCount=" + this.mInputPortCount + ",mOutputPortCount=" + this.mOutputPortCount + ",mProperties=" + this.mProperties + ",mIsPrivate=" + this.mIsPrivate;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -166,13 +172,14 @@ public final class MidiDeviceInfo implements Parcelable {
                 } else if (val instanceof Integer) {
                     basicProperties.putInt(key, ((Integer) val).intValue());
                 } else {
-                    Log.w(TAG, "Unsupported property type: " + val.getClass().getName());
+                    Log.m64w(TAG, "Unsupported property type: " + val.getClass().getName());
                 }
             }
         }
         return basicProperties;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeInt(this.mType);
         parcel.writeInt(this.mId);

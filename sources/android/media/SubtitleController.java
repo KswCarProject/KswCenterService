@@ -3,14 +3,15 @@ package android.media;
 import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
 import android.media.SubtitleTrack;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
+import android.p007os.Handler;
+import android.p007os.Looper;
+import android.p007os.Message;
 import android.view.accessibility.CaptioningManager;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Vector;
 
+/* loaded from: classes3.dex */
 public class SubtitleController {
     static final /* synthetic */ boolean $assertionsDisabled = false;
     private static final int WHAT_HIDE = 2;
@@ -18,7 +19,14 @@ public class SubtitleController {
     private static final int WHAT_SELECT_TRACK = 3;
     private static final int WHAT_SHOW = 1;
     private Anchor mAnchor;
-    private final Handler.Callback mCallback = new Handler.Callback() {
+    private CaptioningManager mCaptioningManager;
+    @UnsupportedAppUsage
+    private Handler mHandler;
+    private Listener mListener;
+    private SubtitleTrack mSelectedTrack;
+    private MediaTimeProvider mTimeProvider;
+    private final Handler.Callback mCallback = new Handler.Callback() { // from class: android.media.SubtitleController.1
+        @Override // android.p007os.Handler.Callback
         public boolean handleMessage(Message msg) {
             switch (msg.what) {
                 case 1:
@@ -38,37 +46,36 @@ public class SubtitleController {
             }
         }
     };
-    private CaptioningManager.CaptioningChangeListener mCaptioningChangeListener = new CaptioningManager.CaptioningChangeListener() {
+    private CaptioningManager.CaptioningChangeListener mCaptioningChangeListener = new CaptioningManager.CaptioningChangeListener() { // from class: android.media.SubtitleController.2
+        @Override // android.view.accessibility.CaptioningManager.CaptioningChangeListener
         public void onEnabledChanged(boolean enabled) {
             SubtitleController.this.selectDefaultTrack();
         }
 
+        @Override // android.view.accessibility.CaptioningManager.CaptioningChangeListener
         public void onLocaleChanged(Locale locale) {
             SubtitleController.this.selectDefaultTrack();
         }
     };
-    private CaptioningManager mCaptioningManager;
-    @UnsupportedAppUsage
-    private Handler mHandler;
-    private Listener mListener;
-    private Vector<Renderer> mRenderers;
-    private SubtitleTrack mSelectedTrack;
-    private boolean mShowing;
-    private MediaTimeProvider mTimeProvider;
     private boolean mTrackIsExplicit = false;
-    private Vector<SubtitleTrack> mTracks;
     private boolean mVisibilityIsExplicit = false;
+    private Vector<Renderer> mRenderers = new Vector<>();
+    private boolean mShowing = false;
+    private Vector<SubtitleTrack> mTracks = new Vector<>();
 
+    /* loaded from: classes3.dex */
     public interface Anchor {
         Looper getSubtitleLooper();
 
         void setSubtitleWidget(SubtitleTrack.RenderingWidget renderingWidget);
     }
 
+    /* loaded from: classes3.dex */
     public interface Listener {
         void onSubtitleTrackSelected(SubtitleTrack subtitleTrack);
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Renderer {
         public abstract SubtitleTrack createTrack(MediaFormat mediaFormat);
 
@@ -79,14 +86,10 @@ public class SubtitleController {
     public SubtitleController(Context context, MediaTimeProvider timeProvider, Listener listener) {
         this.mTimeProvider = timeProvider;
         this.mListener = listener;
-        this.mRenderers = new Vector<>();
-        this.mShowing = false;
-        this.mTracks = new Vector<>();
         this.mCaptioningManager = (CaptioningManager) context.getSystemService(Context.CAPTIONING_SERVICE);
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         this.mCaptioningManager.removeCaptioningChangeListener(this.mCaptioningChangeListener);
         super.finalize();
     }
@@ -119,189 +122,122 @@ public class SubtitleController {
         return true;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void doSelectTrack(SubtitleTrack track) {
         this.mTrackIsExplicit = true;
-        if (this.mSelectedTrack != track) {
-            if (this.mSelectedTrack != null) {
-                this.mSelectedTrack.hide();
-                this.mSelectedTrack.setTimeProvider((MediaTimeProvider) null);
-            }
-            this.mSelectedTrack = track;
-            if (this.mAnchor != null) {
-                this.mAnchor.setSubtitleWidget(getRenderingWidget());
-            }
-            if (this.mSelectedTrack != null) {
-                this.mSelectedTrack.setTimeProvider(this.mTimeProvider);
-                this.mSelectedTrack.show();
-            }
-            if (this.mListener != null) {
-                this.mListener.onSubtitleTrackSelected(track);
-            }
+        if (this.mSelectedTrack == track) {
+            return;
+        }
+        if (this.mSelectedTrack != null) {
+            this.mSelectedTrack.hide();
+            this.mSelectedTrack.setTimeProvider(null);
+        }
+        this.mSelectedTrack = track;
+        if (this.mAnchor != null) {
+            this.mAnchor.setSubtitleWidget(getRenderingWidget());
+        }
+        if (this.mSelectedTrack != null) {
+            this.mSelectedTrack.setTimeProvider(this.mTimeProvider);
+            this.mSelectedTrack.show();
+        }
+        if (this.mListener != null) {
+            this.mListener.onSubtitleTrackSelected(track);
         }
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:32:0x0084  */
-    /* JADX WARNING: Removed duplicated region for block: B:33:0x0086  */
-    /* JADX WARNING: Removed duplicated region for block: B:40:0x0095  */
-    /* JADX WARNING: Removed duplicated region for block: B:41:0x0098  */
-    /* JADX WARNING: Removed duplicated region for block: B:44:0x009e  */
-    /* JADX WARNING: Removed duplicated region for block: B:45:0x00a1  */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public android.media.SubtitleTrack getDefaultTrack() {
-        /*
-            r18 = this;
-            r1 = r18
-            r2 = 0
-            r3 = -1
-            android.view.accessibility.CaptioningManager r0 = r1.mCaptioningManager
-            java.util.Locale r4 = r0.getLocale()
-            r0 = r4
-            if (r0 != 0) goto L_0x0011
-            java.util.Locale r0 = java.util.Locale.getDefault()
-        L_0x0011:
-            r5 = r0
-            android.view.accessibility.CaptioningManager r0 = r1.mCaptioningManager
-            boolean r0 = r0.isEnabled()
-            r6 = 1
-            r0 = r0 ^ r6
-            r7 = r0
-            java.util.Vector<android.media.SubtitleTrack> r8 = r1.mTracks
-            monitor-enter(r8)
-            java.util.Vector<android.media.SubtitleTrack> r0 = r1.mTracks     // Catch:{ all -> 0x00c0 }
-            java.util.Iterator r0 = r0.iterator()     // Catch:{ all -> 0x00c0 }
-        L_0x0024:
-            boolean r9 = r0.hasNext()     // Catch:{ all -> 0x00c0 }
-            if (r9 == 0) goto L_0x00be
-            java.lang.Object r9 = r0.next()     // Catch:{ all -> 0x00c0 }
-            android.media.SubtitleTrack r9 = (android.media.SubtitleTrack) r9     // Catch:{ all -> 0x00c0 }
-            android.media.MediaFormat r10 = r9.getFormat()     // Catch:{ all -> 0x00c0 }
-            java.lang.String r11 = "language"
-            java.lang.String r11 = r10.getString(r11)     // Catch:{ all -> 0x00c0 }
-            java.lang.String r12 = "is-forced-subtitle"
-            r13 = 0
-            int r12 = r10.getInteger(r12, r13)     // Catch:{ all -> 0x00c0 }
-            if (r12 == 0) goto L_0x0045
-            r12 = r6
-            goto L_0x0046
-        L_0x0045:
-            r12 = r13
-        L_0x0046:
-            java.lang.String r14 = "is-autoselect"
-            int r14 = r10.getInteger(r14, r6)     // Catch:{ all -> 0x00c0 }
-            if (r14 == 0) goto L_0x0050
-            r14 = r6
-            goto L_0x0051
-        L_0x0050:
-            r14 = r13
-        L_0x0051:
-            java.lang.String r15 = "is-default"
-            int r15 = r10.getInteger(r15, r13)     // Catch:{ all -> 0x00c0 }
-            if (r15 == 0) goto L_0x005b
-            r15 = r6
-            goto L_0x005c
-        L_0x005b:
-            r15 = r13
-        L_0x005c:
-            if (r5 == 0) goto L_0x0081
-            java.lang.String r6 = r5.getLanguage()     // Catch:{ all -> 0x00c0 }
-            java.lang.String r13 = ""
-            boolean r6 = r6.equals(r13)     // Catch:{ all -> 0x00c0 }
-            if (r6 != 0) goto L_0x0081
-            java.lang.String r6 = r5.getISO3Language()     // Catch:{ all -> 0x00c0 }
-            boolean r6 = r6.equals(r11)     // Catch:{ all -> 0x00c0 }
-            if (r6 != 0) goto L_0x0081
-            java.lang.String r6 = r5.getLanguage()     // Catch:{ all -> 0x00c0 }
-            boolean r6 = r6.equals(r11)     // Catch:{ all -> 0x00c0 }
-            if (r6 == 0) goto L_0x007f
-            goto L_0x0081
-        L_0x007f:
-            r6 = 0
-            goto L_0x0082
-        L_0x0081:
-            r6 = 1
-        L_0x0082:
-            if (r12 == 0) goto L_0x0086
-            r13 = 0
-            goto L_0x0088
-        L_0x0086:
-            r13 = 8
-        L_0x0088:
-            if (r4 != 0) goto L_0x008f
-            if (r15 == 0) goto L_0x008f
-            r17 = 4
-            goto L_0x0091
-        L_0x008f:
-            r17 = 0
-        L_0x0091:
-            int r13 = r13 + r17
-            if (r14 == 0) goto L_0x0098
-            r17 = 0
-            goto L_0x009a
-        L_0x0098:
-            r17 = 2
-        L_0x009a:
-            int r13 = r13 + r17
-            if (r6 == 0) goto L_0x00a1
-            r16 = 1
-            goto L_0x00a3
-        L_0x00a1:
-            r16 = 0
-        L_0x00a3:
-            int r13 = r13 + r16
-            if (r7 == 0) goto L_0x00ad
-            if (r12 != 0) goto L_0x00ad
-        L_0x00aa:
-            r6 = 1
-            goto L_0x0024
-        L_0x00ad:
-            if (r4 != 0) goto L_0x00b1
-            if (r15 != 0) goto L_0x00b9
-        L_0x00b1:
-            if (r6 == 0) goto L_0x00bd
-            if (r14 != 0) goto L_0x00b9
-            if (r12 != 0) goto L_0x00b9
-            if (r4 == 0) goto L_0x00bd
-        L_0x00b9:
-            if (r13 <= r3) goto L_0x00bd
-            r3 = r13
-            r2 = r9
-        L_0x00bd:
-            goto L_0x00aa
-        L_0x00be:
-            monitor-exit(r8)     // Catch:{ all -> 0x00c0 }
-            return r2
-        L_0x00c0:
-            r0 = move-exception
-            monitor-exit(r8)     // Catch:{ all -> 0x00c0 }
-            throw r0
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.media.SubtitleController.getDefaultTrack():android.media.SubtitleTrack");
+    /* JADX WARN: Removed duplicated region for block: B:33:0x0084  */
+    /* JADX WARN: Removed duplicated region for block: B:34:0x0086  */
+    /* JADX WARN: Removed duplicated region for block: B:41:0x0095  */
+    /* JADX WARN: Removed duplicated region for block: B:42:0x0098  */
+    /* JADX WARN: Removed duplicated region for block: B:45:0x009e  */
+    /* JADX WARN: Removed duplicated region for block: B:46:0x00a1  */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public SubtitleTrack getDefaultTrack() {
+        boolean languageMatches;
+        int i;
+        int score;
+        SubtitleTrack bestTrack = null;
+        int bestScore = -1;
+        Locale selectedLocale = this.mCaptioningManager.getLocale();
+        Locale locale = selectedLocale;
+        if (locale == null) {
+            locale = Locale.getDefault();
+        }
+        Locale locale2 = locale;
+        int i2 = 1;
+        boolean selectForced = !this.mCaptioningManager.isEnabled();
+        synchronized (this.mTracks) {
+            Iterator<SubtitleTrack> it = this.mTracks.iterator();
+            while (it.hasNext()) {
+                SubtitleTrack track = it.next();
+                MediaFormat format = track.getFormat();
+                String language = format.getString("language");
+                int i3 = format.getInteger(MediaFormat.KEY_IS_FORCED_SUBTITLE, 0) != 0 ? i2 : 0;
+                int i4 = format.getInteger(MediaFormat.KEY_IS_AUTOSELECT, i2) != 0 ? i2 : 0;
+                int i5 = format.getInteger(MediaFormat.KEY_IS_DEFAULT, 0) != 0 ? i2 : 0;
+                if (locale2 != null && !locale2.getLanguage().equals("") && !locale2.getISO3Language().equals(language) && !locale2.getLanguage().equals(language)) {
+                    languageMatches = false;
+                    if (i3 != 0) {
+                        i = 8;
+                    } else {
+                        i = 0;
+                    }
+                    score = i + ((selectedLocale == null || i5 == 0) ? 0 : 4) + (i4 == 0 ? 0 : 2) + (!languageMatches ? 1 : 0);
+                    if (selectForced || i3 != 0) {
+                        if (((selectedLocale == null && i5 != 0) || (languageMatches && (i4 != 0 || i3 != 0 || selectedLocale != null))) && score > bestScore) {
+                            bestScore = score;
+                            bestTrack = track;
+                        }
+                    }
+                    i2 = 1;
+                }
+                languageMatches = true;
+                if (i3 != 0) {
+                }
+                score = i + ((selectedLocale == null || i5 == 0) ? 0 : 4) + (i4 == 0 ? 0 : 2) + (!languageMatches ? 1 : 0);
+                if (selectForced) {
+                }
+                if (selectedLocale == null) {
+                    bestScore = score;
+                    bestTrack = track;
+                    i2 = 1;
+                }
+                bestScore = score;
+                bestTrack = track;
+                i2 = 1;
+            }
+        }
+        return bestTrack;
     }
 
     public void selectDefaultTrack() {
         processOnAnchor(this.mHandler.obtainMessage(4));
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void doSelectDefaultTrack() {
-        if (!this.mTrackIsExplicit) {
-            SubtitleTrack track = getDefaultTrack();
-            if (track != null) {
-                selectTrack(track);
-                this.mTrackIsExplicit = false;
-                if (!this.mVisibilityIsExplicit) {
+        if (this.mTrackIsExplicit) {
+            if (!this.mVisibilityIsExplicit) {
+                if (this.mCaptioningManager.isEnabled() || (this.mSelectedTrack != null && this.mSelectedTrack.getFormat().getInteger(MediaFormat.KEY_IS_FORCED_SUBTITLE, 0) != 0)) {
                     show();
-                    this.mVisibilityIsExplicit = false;
+                } else if (this.mSelectedTrack != null && this.mSelectedTrack.getTrackType() == 4) {
+                    hide();
                 }
+                this.mVisibilityIsExplicit = false;
+                return;
             }
-        } else if (!this.mVisibilityIsExplicit) {
-            if (this.mCaptioningManager.isEnabled() || !(this.mSelectedTrack == null || this.mSelectedTrack.getFormat().getInteger(MediaFormat.KEY_IS_FORCED_SUBTITLE, 0) == 0)) {
+            return;
+        }
+        SubtitleTrack track = getDefaultTrack();
+        if (track != null) {
+            selectTrack(track);
+            this.mTrackIsExplicit = false;
+            if (!this.mVisibilityIsExplicit) {
                 show();
-            } else if (this.mSelectedTrack != null && this.mSelectedTrack.getTrackType() == 4) {
-                hide();
+                this.mVisibilityIsExplicit = false;
             }
-            this.mVisibilityIsExplicit = false;
         }
     }
 
@@ -309,7 +245,7 @@ public class SubtitleController {
     public void reset() {
         checkAnchorLooper();
         hide();
-        selectTrack((SubtitleTrack) null);
+        selectTrack(null);
         this.mTracks.clear();
         this.mTrackIsExplicit = false;
         this.mVisibilityIsExplicit = false;
@@ -341,7 +277,7 @@ public class SubtitleController {
         processOnAnchor(this.mHandler.obtainMessage(1));
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void doShow() {
         this.mShowing = true;
         this.mVisibilityIsExplicit = true;
@@ -355,7 +291,7 @@ public class SubtitleController {
         processOnAnchor(this.mHandler.obtainMessage(2));
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void doHide() {
         this.mVisibilityIsExplicit = true;
         if (this.mSelectedTrack != null) {
@@ -377,7 +313,8 @@ public class SubtitleController {
         synchronized (this.mRenderers) {
             Iterator<Renderer> it = this.mRenderers.iterator();
             while (it.hasNext()) {
-                if (it.next().supports(format)) {
+                Renderer renderer = it.next();
+                if (renderer.supports(format)) {
                     return true;
                 }
             }
@@ -386,18 +323,19 @@ public class SubtitleController {
     }
 
     public void setAnchor(Anchor anchor) {
-        if (this.mAnchor != anchor) {
-            if (this.mAnchor != null) {
-                checkAnchorLooper();
-                this.mAnchor.setSubtitleWidget((SubtitleTrack.RenderingWidget) null);
-            }
-            this.mAnchor = anchor;
-            this.mHandler = null;
-            if (this.mAnchor != null) {
-                this.mHandler = new Handler(this.mAnchor.getSubtitleLooper(), this.mCallback);
-                checkAnchorLooper();
-                this.mAnchor.setSubtitleWidget(getRenderingWidget());
-            }
+        if (this.mAnchor == anchor) {
+            return;
+        }
+        if (this.mAnchor != null) {
+            checkAnchorLooper();
+            this.mAnchor.setSubtitleWidget(null);
+        }
+        this.mAnchor = anchor;
+        this.mHandler = null;
+        if (this.mAnchor != null) {
+            this.mHandler = new Handler(this.mAnchor.getSubtitleLooper(), this.mCallback);
+            checkAnchorLooper();
+            this.mAnchor.setSubtitleWidget(getRenderingWidget());
         }
     }
 

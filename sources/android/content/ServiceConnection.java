@@ -1,15 +1,16 @@
 package android.content;
 
-import android.os.IBinder;
+import android.p007os.IBinder;
 
+/* loaded from: classes.dex */
 public interface ServiceConnection {
     void onServiceConnected(ComponentName componentName, IBinder iBinder);
 
     void onServiceDisconnected(ComponentName componentName);
 
-    void onBindingDied(ComponentName name) {
+    default void onBindingDied(ComponentName name) {
     }
 
-    void onNullBinding(ComponentName name) {
+    default void onNullBinding(ComponentName name) {
     }
 }

@@ -5,10 +5,11 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.hardware.display.IColorDisplayManager;
 import android.metrics.LogMaker;
-import android.os.RemoteException;
-import android.os.ServiceManager;
+import android.p007os.IBinder;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
 import android.provider.Settings;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.nano.MetricsProto;
 import java.lang.annotation.Retention;
@@ -16,6 +17,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.time.LocalTime;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class ColorDisplayManager {
     @SystemApi
     public static final int AUTO_MODE_CUSTOM_TIME = 1;
@@ -41,14 +43,17 @@ public final class ColorDisplayManager {
     private MetricsLogger mMetricsLogger;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface AutoMode {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface CapabilityType {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface ColorMode {
     }
 
@@ -79,13 +84,13 @@ public final class ColorDisplayManager {
 
     @SystemApi
     public boolean setNightDisplayAutoMode(int autoMode) {
-        if (autoMode == 0 || autoMode == 1 || autoMode == 2) {
-            if (this.mManager.getNightDisplayAutoMode() != autoMode) {
-                getMetricsLogger().write(new LogMaker((int) MetricsProto.MetricsEvent.ACTION_NIGHT_DISPLAY_AUTO_MODE_CHANGED).setType(4).setSubtype(autoMode));
-            }
-            return this.mManager.setNightDisplayAutoMode(autoMode);
+        if (autoMode != 0 && autoMode != 1 && autoMode != 2) {
+            throw new IllegalArgumentException("Invalid autoMode: " + autoMode);
         }
-        throw new IllegalArgumentException("Invalid autoMode: " + autoMode);
+        if (this.mManager.getNightDisplayAutoMode() != autoMode) {
+            getMetricsLogger().write(new LogMaker((int) MetricsProto.MetricsEvent.ACTION_NIGHT_DISPLAY_AUTO_MODE_CHANGED).setType(4).setSubtype(autoMode));
+        }
+        return this.mManager.setNightDisplayAutoMode(autoMode);
     }
 
     public LocalTime getNightDisplayCustomStartTime() {
@@ -94,11 +99,11 @@ public final class ColorDisplayManager {
 
     @SystemApi
     public boolean setNightDisplayCustomStartTime(LocalTime startTime) {
-        if (startTime != null) {
-            getMetricsLogger().write(new LogMaker(1310).setType(4).setSubtype(0));
-            return this.mManager.setNightDisplayCustomStartTime(new Time(startTime));
+        if (startTime == null) {
+            throw new IllegalArgumentException("startTime cannot be null");
         }
-        throw new IllegalArgumentException("startTime cannot be null");
+        getMetricsLogger().write(new LogMaker(1310).setType(4).setSubtype(0));
+        return this.mManager.setNightDisplayCustomStartTime(new Time(startTime));
     }
 
     public LocalTime getNightDisplayCustomEndTime() {
@@ -107,11 +112,11 @@ public final class ColorDisplayManager {
 
     @SystemApi
     public boolean setNightDisplayCustomEndTime(LocalTime endTime) {
-        if (endTime != null) {
-            getMetricsLogger().write(new LogMaker(1310).setType(4).setSubtype(1));
-            return this.mManager.setNightDisplayCustomEndTime(new Time(endTime));
+        if (endTime == null) {
+            throw new IllegalArgumentException("endTime cannot be null");
         }
-        throw new IllegalArgumentException("endTime cannot be null");
+        getMetricsLogger().write(new LogMaker(1310).setType(4).setSubtype(1));
+        return this.mManager.setNightDisplayCustomEndTime(new Time(endTime));
     }
 
     public void setColorMode(int colorMode) {
@@ -149,23 +154,23 @@ public final class ColorDisplayManager {
     }
 
     public static boolean isNightDisplayAvailable(Context context) {
-        return context.getResources().getBoolean(R.bool.config_nightDisplayAvailable);
+        return context.getResources().getBoolean(C3132R.bool.config_nightDisplayAvailable);
     }
 
     public static int getMinimumColorTemperature(Context context) {
-        return context.getResources().getInteger(R.integer.config_nightDisplayColorTemperatureMin);
+        return context.getResources().getInteger(C3132R.integer.config_nightDisplayColorTemperatureMin);
     }
 
     public static int getMaximumColorTemperature(Context context) {
-        return context.getResources().getInteger(R.integer.config_nightDisplayColorTemperatureMax);
+        return context.getResources().getInteger(C3132R.integer.config_nightDisplayColorTemperatureMax);
     }
 
     public static boolean isDisplayWhiteBalanceAvailable(Context context) {
-        return context.getResources().getBoolean(R.bool.config_displayWhiteBalanceAvailable);
+        return context.getResources().getBoolean(C3132R.bool.config_displayWhiteBalanceAvailable);
     }
 
     public static boolean isColorTransformAccelerated(Context context) {
-        return context.getResources().getBoolean(R.bool.config_setColorTransformAccelerated);
+        return context.getResources().getBoolean(C3132R.bool.config_setColorTransformAccelerated);
     }
 
     @SystemApi
@@ -185,6 +190,7 @@ public final class ColorDisplayManager {
         return this.mMetricsLogger;
     }
 
+    /* loaded from: classes.dex */
     private static class ColorDisplayManagerInternal {
         private static ColorDisplayManagerInternal sInstance;
         private final IColorDisplayManager mCdm;
@@ -198,7 +204,8 @@ public final class ColorDisplayManager {
             synchronized (ColorDisplayManagerInternal.class) {
                 if (sInstance == null) {
                     try {
-                        sInstance = new ColorDisplayManagerInternal(IColorDisplayManager.Stub.asInterface(ServiceManager.getServiceOrThrow(Context.COLOR_DISPLAY_SERVICE)));
+                        IBinder b = ServiceManager.getServiceOrThrow(Context.COLOR_DISPLAY_SERVICE);
+                        sInstance = new ColorDisplayManagerInternal(IColorDisplayManager.Stub.asInterface(b));
                     } catch (ServiceManager.ServiceNotFoundException e) {
                         throw new IllegalStateException(e);
                     }
@@ -208,8 +215,7 @@ public final class ColorDisplayManager {
             return colorDisplayManagerInternal;
         }
 
-        /* access modifiers changed from: package-private */
-        public boolean isNightDisplayActivated() {
+        boolean isNightDisplayActivated() {
             try {
                 return this.mCdm.isNightDisplayActivated();
             } catch (RemoteException e) {
@@ -217,8 +223,7 @@ public final class ColorDisplayManager {
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public boolean setNightDisplayActivated(boolean activated) {
+        boolean setNightDisplayActivated(boolean activated) {
             try {
                 return this.mCdm.setNightDisplayActivated(activated);
             } catch (RemoteException e) {
@@ -226,8 +231,7 @@ public final class ColorDisplayManager {
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public int getNightDisplayColorTemperature() {
+        int getNightDisplayColorTemperature() {
             try {
                 return this.mCdm.getNightDisplayColorTemperature();
             } catch (RemoteException e) {
@@ -235,8 +239,7 @@ public final class ColorDisplayManager {
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public boolean setNightDisplayColorTemperature(int temperature) {
+        boolean setNightDisplayColorTemperature(int temperature) {
             try {
                 return this.mCdm.setNightDisplayColorTemperature(temperature);
             } catch (RemoteException e) {
@@ -244,8 +247,7 @@ public final class ColorDisplayManager {
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public int getNightDisplayAutoMode() {
+        int getNightDisplayAutoMode() {
             try {
                 return this.mCdm.getNightDisplayAutoMode();
             } catch (RemoteException e) {
@@ -253,8 +255,7 @@ public final class ColorDisplayManager {
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public int getNightDisplayAutoModeRaw() {
+        int getNightDisplayAutoModeRaw() {
             try {
                 return this.mCdm.getNightDisplayAutoModeRaw();
             } catch (RemoteException e) {
@@ -262,8 +263,7 @@ public final class ColorDisplayManager {
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public boolean setNightDisplayAutoMode(int autoMode) {
+        boolean setNightDisplayAutoMode(int autoMode) {
             try {
                 return this.mCdm.setNightDisplayAutoMode(autoMode);
             } catch (RemoteException e) {
@@ -271,8 +271,7 @@ public final class ColorDisplayManager {
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public Time getNightDisplayCustomStartTime() {
+        Time getNightDisplayCustomStartTime() {
             try {
                 return this.mCdm.getNightDisplayCustomStartTime();
             } catch (RemoteException e) {
@@ -280,8 +279,7 @@ public final class ColorDisplayManager {
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public boolean setNightDisplayCustomStartTime(Time startTime) {
+        boolean setNightDisplayCustomStartTime(Time startTime) {
             try {
                 return this.mCdm.setNightDisplayCustomStartTime(startTime);
             } catch (RemoteException e) {
@@ -289,8 +287,7 @@ public final class ColorDisplayManager {
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public Time getNightDisplayCustomEndTime() {
+        Time getNightDisplayCustomEndTime() {
             try {
                 return this.mCdm.getNightDisplayCustomEndTime();
             } catch (RemoteException e) {
@@ -298,8 +295,7 @@ public final class ColorDisplayManager {
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public boolean setNightDisplayCustomEndTime(Time endTime) {
+        boolean setNightDisplayCustomEndTime(Time endTime) {
             try {
                 return this.mCdm.setNightDisplayCustomEndTime(endTime);
             } catch (RemoteException e) {
@@ -307,8 +303,7 @@ public final class ColorDisplayManager {
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public boolean isDeviceColorManaged() {
+        boolean isDeviceColorManaged() {
             try {
                 return this.mCdm.isDeviceColorManaged();
             } catch (RemoteException e) {
@@ -316,8 +311,7 @@ public final class ColorDisplayManager {
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public boolean setSaturationLevel(int saturationLevel) {
+        boolean setSaturationLevel(int saturationLevel) {
             try {
                 return this.mCdm.setSaturationLevel(saturationLevel);
             } catch (RemoteException e) {
@@ -325,8 +319,7 @@ public final class ColorDisplayManager {
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public boolean isSaturationActivated() {
+        boolean isSaturationActivated() {
             try {
                 return this.mCdm.isSaturationActivated();
             } catch (RemoteException e) {
@@ -334,8 +327,7 @@ public final class ColorDisplayManager {
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public boolean setAppSaturationLevel(String packageName, int saturationLevel) {
+        boolean setAppSaturationLevel(String packageName, int saturationLevel) {
             try {
                 return this.mCdm.setAppSaturationLevel(packageName, saturationLevel);
             } catch (RemoteException e) {
@@ -343,8 +335,7 @@ public final class ColorDisplayManager {
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public boolean isDisplayWhiteBalanceEnabled() {
+        boolean isDisplayWhiteBalanceEnabled() {
             try {
                 return this.mCdm.isDisplayWhiteBalanceEnabled();
             } catch (RemoteException e) {
@@ -352,8 +343,7 @@ public final class ColorDisplayManager {
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public boolean setDisplayWhiteBalanceEnabled(boolean enabled) {
+        boolean setDisplayWhiteBalanceEnabled(boolean enabled) {
             try {
                 return this.mCdm.setDisplayWhiteBalanceEnabled(enabled);
             } catch (RemoteException e) {
@@ -361,8 +351,7 @@ public final class ColorDisplayManager {
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public int getColorMode() {
+        int getColorMode() {
             try {
                 return this.mCdm.getColorMode();
             } catch (RemoteException e) {
@@ -370,8 +359,7 @@ public final class ColorDisplayManager {
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public void setColorMode(int colorMode) {
+        void setColorMode(int colorMode) {
             try {
                 this.mCdm.setColorMode(colorMode);
             } catch (RemoteException e) {
@@ -379,8 +367,7 @@ public final class ColorDisplayManager {
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public int getTransformCapabilities() {
+        int getTransformCapabilities() {
             try {
                 return this.mCdm.getTransformCapabilities();
             } catch (RemoteException e) {

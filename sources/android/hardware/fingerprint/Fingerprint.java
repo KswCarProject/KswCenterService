@@ -1,15 +1,20 @@
 package android.hardware.fingerprint;
 
 import android.hardware.biometrics.BiometricAuthenticator;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public final class Fingerprint extends BiometricAuthenticator.Identifier {
-    public static final Parcelable.Creator<Fingerprint> CREATOR = new Parcelable.Creator<Fingerprint>() {
+    public static final Parcelable.Creator<Fingerprint> CREATOR = new Parcelable.Creator<Fingerprint>() { // from class: android.hardware.fingerprint.Fingerprint.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Fingerprint createFromParcel(Parcel in) {
             return new Fingerprint(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Fingerprint[] newArray(int size) {
             return new Fingerprint[size];
         }
@@ -30,10 +35,12 @@ public final class Fingerprint extends BiometricAuthenticator.Identifier {
         return this.mGroupId;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(getName().toString());
         out.writeInt(getBiometricId());

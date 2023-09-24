@@ -4,7 +4,8 @@ import java.nio.Buffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-public interface GL11ExtensionPack extends GL {
+/* loaded from: classes5.dex */
+public interface GL11ExtensionPack extends InterfaceC3683GL {
     public static final int GL_BLEND_DST_ALPHA = 32970;
     public static final int GL_BLEND_DST_RGB = 32968;
     public static final int GL_BLEND_EQUATION = 32777;

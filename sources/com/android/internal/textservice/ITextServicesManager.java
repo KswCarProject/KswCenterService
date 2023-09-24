@@ -1,16 +1,17 @@
 package com.android.internal.textservice;
 
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.view.textservice.SpellCheckerInfo;
 import android.view.textservice.SpellCheckerSubtype;
 import com.android.internal.textservice.ISpellCheckerSessionListener;
 import com.android.internal.textservice.ITextServicesSessionListener;
 
+/* loaded from: classes4.dex */
 public interface ITextServicesManager extends IInterface {
     void finishSpellCheckerService(int i, ISpellCheckerSessionListener iSpellCheckerSessionListener) throws RemoteException;
 
@@ -24,34 +25,43 @@ public interface ITextServicesManager extends IInterface {
 
     boolean isSpellCheckerEnabled(int i) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements ITextServicesManager {
+        @Override // com.android.internal.textservice.ITextServicesManager
         public SpellCheckerInfo getCurrentSpellChecker(int userId, String locale) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.textservice.ITextServicesManager
         public SpellCheckerSubtype getCurrentSpellCheckerSubtype(int userId, boolean allowImplicitlySelectedSubtype) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.textservice.ITextServicesManager
         public void getSpellCheckerService(int userId, String sciId, String locale, ITextServicesSessionListener tsListener, ISpellCheckerSessionListener scListener, Bundle bundle) throws RemoteException {
         }
 
+        @Override // com.android.internal.textservice.ITextServicesManager
         public void finishSpellCheckerService(int userId, ISpellCheckerSessionListener listener) throws RemoteException {
         }
 
+        @Override // com.android.internal.textservice.ITextServicesManager
         public boolean isSpellCheckerEnabled(int userId) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.textservice.ITextServicesManager
         public SpellCheckerInfo[] getEnabledSpellCheckers(int userId) throws RemoteException {
             return null;
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements ITextServicesManager {
         private static final String DESCRIPTOR = "com.android.internal.textservice.ITextServicesManager";
         static final int TRANSACTION_finishSpellCheckerService = 4;
@@ -70,12 +80,13 @@ public interface ITextServicesManager extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof ITextServicesManager)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof ITextServicesManager)) {
+                return (ITextServicesManager) iin;
             }
-            return (ITextServicesManager) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -99,78 +110,80 @@ public interface ITextServicesManager extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            Bundle _arg5;
-            int i = code;
-            Parcel parcel = data;
-            Parcel parcel2 = reply;
-            if (i != 1598968902) {
-                switch (i) {
-                    case 1:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        SpellCheckerInfo _result = getCurrentSpellChecker(data.readInt(), data.readString());
-                        reply.writeNoException();
-                        if (_result != null) {
-                            parcel2.writeInt(1);
-                            _result.writeToParcel(parcel2, 1);
-                        } else {
-                            parcel2.writeInt(0);
-                        }
-                        return true;
-                    case 2:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        SpellCheckerSubtype _result2 = getCurrentSpellCheckerSubtype(data.readInt(), data.readInt() != 0);
-                        reply.writeNoException();
-                        if (_result2 != null) {
-                            parcel2.writeInt(1);
-                            _result2.writeToParcel(parcel2, 1);
-                        } else {
-                            parcel2.writeInt(0);
-                        }
-                        return true;
-                    case 3:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _arg0 = data.readInt();
-                        String _arg1 = data.readString();
-                        String _arg2 = data.readString();
-                        ITextServicesSessionListener _arg3 = ITextServicesSessionListener.Stub.asInterface(data.readStrongBinder());
-                        ISpellCheckerSessionListener _arg4 = ISpellCheckerSessionListener.Stub.asInterface(data.readStrongBinder());
-                        if (data.readInt() != 0) {
-                            _arg5 = Bundle.CREATOR.createFromParcel(parcel);
-                        } else {
-                            _arg5 = null;
-                        }
-                        getSpellCheckerService(_arg0, _arg1, _arg2, _arg3, _arg4, _arg5);
-                        return true;
-                    case 4:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        finishSpellCheckerService(data.readInt(), ISpellCheckerSessionListener.Stub.asInterface(data.readStrongBinder()));
-                        return true;
-                    case 5:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        boolean _result3 = isSpellCheckerEnabled(data.readInt());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result3);
-                        return true;
-                    case 6:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        SpellCheckerInfo[] _result4 = getEnabledSpellCheckers(data.readInt());
-                        reply.writeNoException();
-                        parcel2.writeTypedArray(_result4, 1);
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
-                parcel2.writeString(DESCRIPTOR);
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
                 return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0 = data.readInt();
+                    String _arg1 = data.readString();
+                    SpellCheckerInfo _result = getCurrentSpellChecker(_arg0, _arg1);
+                    reply.writeNoException();
+                    if (_result != null) {
+                        reply.writeInt(1);
+                        _result.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    boolean _arg12 = data.readInt() != 0;
+                    SpellCheckerSubtype _result2 = getCurrentSpellCheckerSubtype(_arg02, _arg12);
+                    reply.writeNoException();
+                    if (_result2 != null) {
+                        reply.writeInt(1);
+                        _result2.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg03 = data.readInt();
+                    String _arg13 = data.readString();
+                    String _arg2 = data.readString();
+                    ITextServicesSessionListener _arg3 = ITextServicesSessionListener.Stub.asInterface(data.readStrongBinder());
+                    ISpellCheckerSessionListener _arg4 = ISpellCheckerSessionListener.Stub.asInterface(data.readStrongBinder());
+                    Bundle _arg5 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    getSpellCheckerService(_arg03, _arg13, _arg2, _arg3, _arg4, _arg5);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg04 = data.readInt();
+                    ISpellCheckerSessionListener _arg14 = ISpellCheckerSessionListener.Stub.asInterface(data.readStrongBinder());
+                    finishSpellCheckerService(_arg04, _arg14);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg05 = data.readInt();
+                    boolean isSpellCheckerEnabled = isSpellCheckerEnabled(_arg05);
+                    reply.writeNoException();
+                    reply.writeInt(isSpellCheckerEnabled ? 1 : 0);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg06 = data.readInt();
+                    SpellCheckerInfo[] _result3 = getEnabledSpellCheckers(_arg06);
+                    reply.writeNoException();
+                    reply.writeTypedArray(_result3, 1);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
             }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements ITextServicesManager {
             public static ITextServicesManager sDefaultImpl;
             private IBinder mRemote;
@@ -179,6 +192,7 @@ public interface ITextServicesManager extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -187,6 +201,7 @@ public interface ITextServicesManager extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // com.android.internal.textservice.ITextServicesManager
             public SpellCheckerInfo getCurrentSpellChecker(int userId, String locale) throws RemoteException {
                 SpellCheckerInfo _result;
                 Parcel _data = Parcel.obtain();
@@ -195,7 +210,8 @@ public interface ITextServicesManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userId);
                     _data.writeString(locale);
-                    if (!this.mRemote.transact(1, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCurrentSpellChecker(userId, locale);
                     }
                     _reply.readException();
@@ -204,16 +220,14 @@ public interface ITextServicesManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    SpellCheckerInfo _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.textservice.ITextServicesManager
             public SpellCheckerSubtype getCurrentSpellCheckerSubtype(int userId, boolean allowImplicitlySelectedSubtype) throws RemoteException {
                 SpellCheckerSubtype _result;
                 Parcel _data = Parcel.obtain();
@@ -221,8 +235,9 @@ public interface ITextServicesManager extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userId);
-                    _data.writeInt(allowImplicitlySelectedSubtype);
-                    if (!this.mRemote.transact(2, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(allowImplicitlySelectedSubtype ? 1 : 0);
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCurrentSpellCheckerSubtype(userId, allowImplicitlySelectedSubtype);
                     }
                     _reply.readException();
@@ -231,60 +246,50 @@ public interface ITextServicesManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    SpellCheckerSubtype _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.textservice.ITextServicesManager
             public void getSpellCheckerService(int userId, String sciId, String locale, ITextServicesSessionListener tsListener, ISpellCheckerSessionListener scListener, Bundle bundle) throws RemoteException {
-                Bundle bundle2 = bundle;
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    int i = userId;
-                    try {
-                        _data.writeInt(userId);
-                    } catch (Throwable th) {
-                        th = th;
-                        String str = sciId;
-                        String str2 = locale;
-                        _data.recycle();
-                        throw th;
-                    }
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeInt(userId);
                     try {
                         _data.writeString(sciId);
                         try {
                             _data.writeString(locale);
                             _data.writeStrongBinder(tsListener != null ? tsListener.asBinder() : null);
                             _data.writeStrongBinder(scListener != null ? scListener.asBinder() : null);
-                            if (bundle2 != null) {
+                            if (bundle != null) {
                                 _data.writeInt(1);
-                                bundle2.writeToParcel(_data, 0);
+                                bundle.writeToParcel(_data, 0);
                             } else {
                                 _data.writeInt(0);
                             }
                         } catch (Throwable th2) {
                             th = th2;
-                            _data.recycle();
-                            throw th;
                         }
                     } catch (Throwable th3) {
                         th = th3;
-                        String str22 = locale;
                         _data.recycle();
                         throw th;
                     }
                     try {
-                        if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
+                        boolean _status = this.mRemote.transact(3, _data, null, 1);
+                        if (!_status && Stub.getDefaultImpl() != null) {
+                            Stub.getDefaultImpl().getSpellCheckerService(userId, sciId, locale, tsListener, scListener, bundle);
                             _data.recycle();
                             return;
                         }
-                        Stub.getDefaultImpl().getSpellCheckerService(userId, sciId, locale, tsListener, scListener, bundle);
                         _data.recycle();
                     } catch (Throwable th4) {
                         th = th4;
@@ -293,23 +298,20 @@ public interface ITextServicesManager extends IInterface {
                     }
                 } catch (Throwable th5) {
                     th = th5;
-                    int i2 = userId;
-                    String str3 = sciId;
-                    String str222 = locale;
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // com.android.internal.textservice.ITextServicesManager
             public void finishSpellCheckerService(int userId, ISpellCheckerSessionListener listener) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userId);
                     _data.writeStrongBinder(listener != null ? listener.asBinder() : null);
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().finishSpellCheckerService(userId, listener);
                     }
                 } finally {
@@ -317,43 +319,39 @@ public interface ITextServicesManager extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.textservice.ITextServicesManager
             public boolean isSpellCheckerEnabled(int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(5, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isSpellCheckerEnabled(userId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.textservice.ITextServicesManager
             public SpellCheckerInfo[] getEnabledSpellCheckers(int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userId);
-                    if (!this.mRemote.transact(6, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getEnabledSpellCheckers(userId);
                     }
                     _reply.readException();
                     SpellCheckerInfo[] _result = (SpellCheckerInfo[]) _reply.createTypedArray(SpellCheckerInfo.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -363,11 +361,11 @@ public interface ITextServicesManager extends IInterface {
         }
 
         public static boolean setDefaultImpl(ITextServicesManager impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static ITextServicesManager getDefaultImpl() {

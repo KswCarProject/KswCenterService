@@ -4,6 +4,7 @@ import android.annotation.SystemApi;
 import android.hardware.hdmi.HdmiRecordSources;
 
 @SystemApi
+/* loaded from: classes.dex */
 public abstract class HdmiRecordListener {
     public abstract HdmiRecordSources.RecordSource onOneTouchRecordSourceRequested(int i);
 
@@ -14,6 +15,7 @@ public abstract class HdmiRecordListener {
     }
 
     @SystemApi
+    /* loaded from: classes.dex */
     public static class TimerStatusData {
         private int mDurationHour;
         private int mDurationMinute;
@@ -26,13 +28,9 @@ public abstract class HdmiRecordListener {
 
         static TimerStatusData parseFrom(int result) {
             TimerStatusData data = new TimerStatusData();
-            boolean z = true;
             data.mOverlapped = ((result >> 31) & 1) != 0;
             data.mMediaInfo = (result >> 29) & 3;
-            if (((result >> 28) & 1) == 0) {
-                z = false;
-            }
-            data.mProgrammed = z;
+            data.mProgrammed = ((result >> 28) & 1) != 0;
             if (data.mProgrammed) {
                 data.mProgrammedInfo = (result >> 24) & 15;
                 data.mDurationHour = bcdByteToInt((byte) ((result >> 16) & 255));
@@ -66,17 +64,17 @@ public abstract class HdmiRecordListener {
         }
 
         public int getProgrammedInfo() {
-            if (isProgrammed()) {
-                return this.mProgrammedInfo;
+            if (!isProgrammed()) {
+                throw new IllegalStateException("No programmed info. Call getNotProgammedError() instead.");
             }
-            throw new IllegalStateException("No programmed info. Call getNotProgammedError() instead.");
+            return this.mProgrammedInfo;
         }
 
         public int getNotProgammedError() {
-            if (!isProgrammed()) {
-                return this.mNotProgrammedError;
+            if (isProgrammed()) {
+                throw new IllegalStateException("Has no not-programmed error. Call getProgrammedInfo() instead.");
             }
-            throw new IllegalStateException("Has no not-programmed error. Call getProgrammedInfo() instead.");
+            return this.mNotProgrammedError;
         }
 
         public int getDurationHour() {

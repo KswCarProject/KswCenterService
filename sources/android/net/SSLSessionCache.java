@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import javax.net.ssl.SSLContext;
 
+/* loaded from: classes3.dex */
 public final class SSLSessionCache {
     private static final String TAG = "SSLSessionCache";
     @UnsupportedAppUsage
@@ -38,7 +39,7 @@ public final class SSLSessionCache {
         try {
             cache = FileClientSessionCache.usingDirectory(dir);
         } catch (IOException e) {
-            Log.w(TAG, "Unable to create SSL session cache in " + dir, e);
+            Log.m63w(TAG, "Unable to create SSL session cache in " + dir, e);
         }
         this.mSessionCache = cache;
     }

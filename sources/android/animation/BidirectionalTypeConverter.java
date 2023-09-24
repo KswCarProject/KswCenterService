@@ -1,5 +1,6 @@
 package android.animation;
 
+/* loaded from: classes.dex */
 public abstract class BidirectionalTypeConverter<T, V> extends TypeConverter<T, V> {
     private BidirectionalTypeConverter mInvertedConverter;
 
@@ -16,6 +17,7 @@ public abstract class BidirectionalTypeConverter<T, V> extends TypeConverter<T, 
         return this.mInvertedConverter;
     }
 
+    /* loaded from: classes.dex */
     private static class InvertedConverter<From, To> extends BidirectionalTypeConverter<From, To> {
         private BidirectionalTypeConverter<To, From> mConverter;
 
@@ -24,10 +26,12 @@ public abstract class BidirectionalTypeConverter<T, V> extends TypeConverter<T, 
             this.mConverter = converter;
         }
 
+        @Override // android.animation.BidirectionalTypeConverter
         public From convertBack(To value) {
             return this.mConverter.convert(value);
         }
 
+        @Override // android.animation.TypeConverter
         public To convert(From value) {
             return this.mConverter.convertBack(value);
         }

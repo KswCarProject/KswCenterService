@@ -2,7 +2,8 @@ package android.media;
 
 import android.media.SubtitleTrack;
 
-/* compiled from: TtmlRenderer */
+/* compiled from: TtmlRenderer.java */
+/* loaded from: classes3.dex */
 class TtmlCue extends SubtitleTrack.Cue {
     public String mText;
     public String mTtmlFragment;

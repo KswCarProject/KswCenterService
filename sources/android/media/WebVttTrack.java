@@ -7,34 +7,40 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
-/* compiled from: WebVttRenderer */
+/* compiled from: WebVttRenderer.java */
+/* loaded from: classes3.dex */
 class WebVttTrack extends SubtitleTrack implements WebVttCueListener {
     private static final String TAG = "WebVttTrack";
     private Long mCurrentRunID;
-    private final UnstyledTextExtractor mExtractor = new UnstyledTextExtractor();
-    private final WebVttParser mParser = new WebVttParser(this);
-    private final Map<String, TextTrackRegion> mRegions = new HashMap();
+    private final UnstyledTextExtractor mExtractor;
+    private final WebVttParser mParser;
+    private final Map<String, TextTrackRegion> mRegions;
     private final WebVttRenderingWidget mRenderingWidget;
-    private final Vector<Long> mTimestamps = new Vector<>();
-    private final Tokenizer mTokenizer = new Tokenizer(this.mExtractor);
+    private final Vector<Long> mTimestamps;
+    private final Tokenizer mTokenizer;
 
     WebVttTrack(WebVttRenderingWidget renderingWidget, MediaFormat format) {
         super(format);
+        this.mParser = new WebVttParser(this);
+        this.mExtractor = new UnstyledTextExtractor();
+        this.mTokenizer = new Tokenizer(this.mExtractor);
+        this.mTimestamps = new Vector<>();
+        this.mRegions = new HashMap();
         this.mRenderingWidget = renderingWidget;
     }
 
+    @Override // android.media.SubtitleTrack
     public WebVttRenderingWidget getRenderingWidget() {
         return this.mRenderingWidget;
     }
 
+    @Override // android.media.SubtitleTrack
     public void onData(byte[] data, boolean eos, long runID) {
         try {
             String str = new String(data, "UTF-8");
             synchronized (this.mParser) {
-                if (this.mCurrentRunID != null) {
-                    if (runID != this.mCurrentRunID.longValue()) {
-                        throw new IllegalStateException("Run #" + this.mCurrentRunID + " in progress.  Cannot process run #" + runID);
-                    }
+                if (this.mCurrentRunID != null && runID != this.mCurrentRunID.longValue()) {
+                    throw new IllegalStateException("Run #" + this.mCurrentRunID + " in progress.  Cannot process run #" + runID);
                 }
                 this.mCurrentRunID = Long.valueOf(runID);
                 this.mParser.parse(str);
@@ -46,17 +52,20 @@ class WebVttTrack extends SubtitleTrack implements WebVttCueListener {
                 }
             }
         } catch (UnsupportedEncodingException e) {
-            Log.w(TAG, "subtitle data is not UTF-8 encoded: " + e);
+            Log.m64w(TAG, "subtitle data is not UTF-8 encoded: " + e);
         }
     }
 
+    @Override // android.media.WebVttCueListener
     public void onCueParsed(TextTrackCue cue) {
+        String[] strArr;
+        TextTrackCueSpan[][] textTrackCueSpanArr;
         synchronized (this.mParser) {
             if (cue.mRegionId.length() != 0) {
                 cue.mRegion = this.mRegions.get(cue.mRegionId);
             }
             if (this.DEBUG) {
-                Log.v(TAG, "adding cue " + cue);
+                Log.m66v(TAG, "adding cue " + cue);
             }
             this.mTokenizer.reset();
             int ix = 0;
@@ -67,10 +76,10 @@ class WebVttTrack extends SubtitleTrack implements WebVttCueListener {
             if (this.DEBUG) {
                 StringBuilder appendStringsToBuilder = cue.appendStringsToBuilder(new StringBuilder());
                 appendStringsToBuilder.append(" simplified to: ");
-                Log.v(TAG, cue.appendLinesToBuilder(appendStringsToBuilder).toString());
+                Log.m66v(TAG, cue.appendLinesToBuilder(appendStringsToBuilder).toString());
             }
             for (TextTrackCueSpan[] line : cue.mLines) {
-                for (TextTrackCueSpan span : r1[r4]) {
+                for (TextTrackCueSpan span : line) {
                     if (span.mTimestampMs > cue.mStartTimeMs && span.mTimestampMs < cue.mEndTimeMs && !this.mTimestamps.contains(Long.valueOf(span.mTimestampMs))) {
                         this.mTimestamps.add(Long.valueOf(span.mTimestampMs));
                     }
@@ -95,24 +104,27 @@ class WebVttTrack extends SubtitleTrack implements WebVttCueListener {
         addCue(cue);
     }
 
+    @Override // android.media.WebVttCueListener
     public void onRegionParsed(TextTrackRegion region) {
         synchronized (this.mParser) {
             this.mRegions.put(region.mId, region);
         }
     }
 
+    @Override // android.media.SubtitleTrack
     public void updateView(Vector<SubtitleTrack.Cue> activeCues) {
-        if (this.mVisible) {
-            if (this.DEBUG && this.mTimeProvider != null) {
-                try {
-                    Log.d(TAG, "at " + (this.mTimeProvider.getCurrentTimeUs(false, true) / 1000) + " ms the active cues are:");
-                } catch (IllegalStateException e) {
-                    Log.d(TAG, "at (illegal state) the active cues are:");
-                }
+        if (!this.mVisible) {
+            return;
+        }
+        if (this.DEBUG && this.mTimeProvider != null) {
+            try {
+                Log.m72d(TAG, "at " + (this.mTimeProvider.getCurrentTimeUs(false, true) / 1000) + " ms the active cues are:");
+            } catch (IllegalStateException e) {
+                Log.m72d(TAG, "at (illegal state) the active cues are:");
             }
-            if (this.mRenderingWidget != null) {
-                this.mRenderingWidget.setActiveCues(activeCues);
-            }
+        }
+        if (this.mRenderingWidget != null) {
+            this.mRenderingWidget.setActiveCues(activeCues);
         }
     }
 }

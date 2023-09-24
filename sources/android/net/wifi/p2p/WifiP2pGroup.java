@@ -2,8 +2,8 @@ package android.net.wifi.p2p;
 
 import android.annotation.UnsupportedAppUsage;
 import android.net.wifi.WifiEnterpriseConfig;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -11,36 +11,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/* loaded from: classes3.dex */
 public class WifiP2pGroup implements Parcelable {
-    public static final Parcelable.Creator<WifiP2pGroup> CREATOR = new Parcelable.Creator<WifiP2pGroup>() {
-        public WifiP2pGroup createFromParcel(Parcel in) {
-            WifiP2pGroup group = new WifiP2pGroup();
-            group.setNetworkName(in.readString());
-            group.setOwner((WifiP2pDevice) in.readParcelable((ClassLoader) null));
-            boolean z = true;
-            if (in.readByte() != 1) {
-                z = false;
-            }
-            group.setIsGroupOwner(z);
-            int clientCount = in.readInt();
-            for (int i = 0; i < clientCount; i++) {
-                group.addClient((WifiP2pDevice) in.readParcelable((ClassLoader) null));
-            }
-            group.setPassphrase(in.readString());
-            group.setInterface(in.readString());
-            group.setNetworkId(in.readInt());
-            group.setFrequency(in.readInt());
-            return group;
-        }
-
-        public WifiP2pGroup[] newArray(int size) {
-            return new WifiP2pGroup[size];
-        }
-    };
     public static final int PERSISTENT_NET_ID = -2;
     @UnsupportedAppUsage
     public static final int TEMPORARY_NET_ID = -1;
-    private static final Pattern groupStartedPattern = Pattern.compile("ssid=\"(.+)\" freq=(\\d+) (?:psk=)?([0-9a-fA-F]{64})?(?:passphrase=)?(?:\"(.{0,63})\")? go_dev_addr=((?:[0-9a-f]{2}:){5}[0-9a-f]{2}) ?(\\[PERSISTENT\\])?");
     private List<WifiP2pDevice> mClients = new ArrayList();
     private int mFrequency;
     private String mInterface;
@@ -49,6 +24,32 @@ public class WifiP2pGroup implements Parcelable {
     private String mNetworkName;
     private WifiP2pDevice mOwner;
     private String mPassphrase;
+    private static final Pattern groupStartedPattern = Pattern.compile("ssid=\"(.+)\" freq=(\\d+) (?:psk=)?([0-9a-fA-F]{64})?(?:passphrase=)?(?:\"(.{0,63})\")? go_dev_addr=((?:[0-9a-f]{2}:){5}[0-9a-f]{2}) ?(\\[PERSISTENT\\])?");
+    public static final Parcelable.Creator<WifiP2pGroup> CREATOR = new Parcelable.Creator<WifiP2pGroup>() { // from class: android.net.wifi.p2p.WifiP2pGroup.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public WifiP2pGroup createFromParcel(Parcel in) {
+            WifiP2pGroup group = new WifiP2pGroup();
+            group.setNetworkName(in.readString());
+            group.setOwner((WifiP2pDevice) in.readParcelable(null));
+            group.setIsGroupOwner(in.readByte() == 1);
+            int clientCount = in.readInt();
+            for (int i = 0; i < clientCount; i++) {
+                group.addClient((WifiP2pDevice) in.readParcelable(null));
+            }
+            group.setPassphrase(in.readString());
+            group.setInterface(in.readString());
+            group.setNetworkId(in.readInt());
+            group.setFrequency(in.readInt());
+            return group;
+        }
+
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public WifiP2pGroup[] newArray(int size) {
+            return new WifiP2pGroup[size];
+        }
+    };
 
     public WifiP2pGroup() {
     }
@@ -58,40 +59,43 @@ public class WifiP2pGroup implements Parcelable {
         String[] tokens = supplicantEvent.split(WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER);
         if (tokens.length < 3) {
             throw new IllegalArgumentException("Malformed supplicant event");
-        } else if (tokens[0].startsWith("P2P-GROUP")) {
-            this.mInterface = tokens[1];
-            this.mIsGroupOwner = tokens[2].equals("GO");
-            Matcher match = groupStartedPattern.matcher(supplicantEvent);
-            if (match.find()) {
-                this.mNetworkName = match.group(1);
-                this.mFrequency = Integer.parseInt(match.group(2));
-                this.mPassphrase = match.group(4);
-                this.mOwner = new WifiP2pDevice(match.group(5));
-                if (match.group(6) != null) {
-                    this.mNetId = -2;
-                } else {
-                    this.mNetId = -1;
-                }
-            }
-        } else if (tokens[0].equals("P2P-INVITATION-RECEIVED")) {
-            this.mNetId = -2;
-            for (String token : tokens) {
-                String[] nameValue = token.split("=");
-                if (nameValue.length == 2) {
-                    if (nameValue[0].equals("sa")) {
-                        String sa = nameValue[1];
-                        WifiP2pDevice dev = new WifiP2pDevice();
-                        dev.deviceAddress = nameValue[1];
-                        this.mClients.add(dev);
-                    } else if (nameValue[0].equals("go_dev_addr")) {
-                        this.mOwner = new WifiP2pDevice(nameValue[1]);
-                    } else if (nameValue[0].equals("persistent")) {
-                        this.mNetId = Integer.parseInt(nameValue[1]);
+        }
+        if (!tokens[0].startsWith("P2P-GROUP")) {
+            if (tokens[0].equals("P2P-INVITATION-RECEIVED")) {
+                this.mNetId = -2;
+                for (String token : tokens) {
+                    String[] nameValue = token.split("=");
+                    if (nameValue.length == 2) {
+                        if (nameValue[0].equals("sa")) {
+                            String sa = nameValue[1];
+                            WifiP2pDevice dev = new WifiP2pDevice();
+                            dev.deviceAddress = nameValue[1];
+                            this.mClients.add(dev);
+                        } else if (nameValue[0].equals("go_dev_addr")) {
+                            this.mOwner = new WifiP2pDevice(nameValue[1]);
+                        } else if (nameValue[0].equals("persistent")) {
+                            this.mNetId = Integer.parseInt(nameValue[1]);
+                        }
                     }
                 }
+                return;
             }
-        } else {
             throw new IllegalArgumentException("Malformed supplicant event");
+        }
+        this.mInterface = tokens[1];
+        this.mIsGroupOwner = tokens[2].equals("GO");
+        Matcher match = groupStartedPattern.matcher(supplicantEvent);
+        if (!match.find()) {
+            return;
+        }
+        this.mNetworkName = match.group(1);
+        this.mFrequency = Integer.parseInt(match.group(2));
+        this.mPassphrase = match.group(4);
+        this.mOwner = new WifiP2pDevice(match.group(5));
+        if (match.group(6) != null) {
+            this.mNetId = -2;
+        } else {
+            this.mNetId = -1;
         }
     }
 
@@ -213,6 +217,7 @@ public class WifiP2pGroup implements Parcelable {
         return sbuf.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -232,10 +237,11 @@ public class WifiP2pGroup implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.mNetworkName);
         dest.writeParcelable(this.mOwner, flags);
-        dest.writeByte(this.mIsGroupOwner ? (byte) 1 : 0);
+        dest.writeByte(this.mIsGroupOwner ? (byte) 1 : (byte) 0);
         dest.writeInt(this.mClients.size());
         for (WifiP2pDevice client : this.mClients) {
             dest.writeParcelable(client, flags);

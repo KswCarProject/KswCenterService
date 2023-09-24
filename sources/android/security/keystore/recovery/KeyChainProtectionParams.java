@@ -1,20 +1,25 @@
 package android.security.keystore.recovery;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.util.Preconditions;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Arrays;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class KeyChainProtectionParams implements Parcelable {
-    public static final Parcelable.Creator<KeyChainProtectionParams> CREATOR = new Parcelable.Creator<KeyChainProtectionParams>() {
+    public static final Parcelable.Creator<KeyChainProtectionParams> CREATOR = new Parcelable.Creator<KeyChainProtectionParams>() { // from class: android.security.keystore.recovery.KeyChainProtectionParams.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public KeyChainProtectionParams createFromParcel(Parcel in) {
             return new KeyChainProtectionParams(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public KeyChainProtectionParams[] newArray(int length) {
             return new KeyChainProtectionParams[length];
         }
@@ -23,20 +28,18 @@ public final class KeyChainProtectionParams implements Parcelable {
     public static final int UI_FORMAT_PASSWORD = 2;
     public static final int UI_FORMAT_PATTERN = 3;
     public static final int UI_FORMAT_PIN = 1;
-    /* access modifiers changed from: private */
-    public KeyDerivationParams mKeyDerivationParams;
-    /* access modifiers changed from: private */
-    public Integer mLockScreenUiFormat;
-    /* access modifiers changed from: private */
-    public byte[] mSecret;
-    /* access modifiers changed from: private */
-    public Integer mUserSecretType;
+    private KeyDerivationParams mKeyDerivationParams;
+    private Integer mLockScreenUiFormat;
+    private byte[] mSecret;
+    private Integer mUserSecretType;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface LockScreenUiFormat {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface UserSecretType {
     }
 
@@ -59,37 +62,38 @@ public final class KeyChainProtectionParams implements Parcelable {
         return this.mSecret;
     }
 
+    /* loaded from: classes3.dex */
     public static class Builder {
         private KeyChainProtectionParams mInstance = new KeyChainProtectionParams();
 
         public Builder setUserSecretType(int userSecretType) {
-            Integer unused = this.mInstance.mUserSecretType = Integer.valueOf(userSecretType);
+            this.mInstance.mUserSecretType = Integer.valueOf(userSecretType);
             return this;
         }
 
         public Builder setLockScreenUiFormat(int lockScreenUiFormat) {
-            Integer unused = this.mInstance.mLockScreenUiFormat = Integer.valueOf(lockScreenUiFormat);
+            this.mInstance.mLockScreenUiFormat = Integer.valueOf(lockScreenUiFormat);
             return this;
         }
 
         public Builder setKeyDerivationParams(KeyDerivationParams keyDerivationParams) {
-            KeyDerivationParams unused = this.mInstance.mKeyDerivationParams = keyDerivationParams;
+            this.mInstance.mKeyDerivationParams = keyDerivationParams;
             return this;
         }
 
         public Builder setSecret(byte[] secret) {
-            byte[] unused = this.mInstance.mSecret = secret;
+            this.mInstance.mSecret = secret;
             return this;
         }
 
         public KeyChainProtectionParams build() {
             if (this.mInstance.mUserSecretType == null) {
-                Integer unused = this.mInstance.mUserSecretType = 100;
+                this.mInstance.mUserSecretType = 100;
             }
             Preconditions.checkNotNull(this.mInstance.mLockScreenUiFormat);
             Preconditions.checkNotNull(this.mInstance.mKeyDerivationParams);
             if (this.mInstance.mSecret == null) {
-                byte[] unused2 = this.mInstance.mSecret = new byte[0];
+                this.mInstance.mSecret = new byte[0];
             }
             return this.mInstance;
         }
@@ -99,6 +103,7 @@ public final class KeyChainProtectionParams implements Parcelable {
         Arrays.fill(this.mSecret, (byte) 0);
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(this.mUserSecretType.intValue());
         out.writeInt(this.mLockScreenUiFormat.intValue());
@@ -113,6 +118,7 @@ public final class KeyChainProtectionParams implements Parcelable {
         this.mSecret = in.createByteArray();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

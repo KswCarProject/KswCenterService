@@ -3,17 +3,18 @@ package com.android.internal.util;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 
+/* loaded from: classes4.dex */
 public class RingBuffer<T> {
     private final T[] mBuffer;
     private long mCursor = 0;
 
     public RingBuffer(Class<T> c, int capacity) {
         Preconditions.checkArgumentPositive(capacity, "A RingBuffer cannot have 0 capacity");
-        this.mBuffer = (Object[]) Array.newInstance(c, capacity);
+        this.mBuffer = (T[]) ((Object[]) Array.newInstance((Class<?>) c, capacity));
     }
 
     public int size() {
-        return (int) Math.min((long) this.mBuffer.length, this.mCursor);
+        return (int) Math.min(this.mBuffer.length, this.mCursor);
     }
 
     public boolean isEmpty() {
@@ -24,7 +25,7 @@ public class RingBuffer<T> {
         for (int i = 0; i < size(); i++) {
             this.mBuffer[i] = null;
         }
-        this.mCursor = 0;
+        this.mCursor = 0L;
     }
 
     public void append(T t) {
@@ -44,17 +45,16 @@ public class RingBuffer<T> {
         return this.mBuffer[nextSlotIdx];
     }
 
-    /* access modifiers changed from: protected */
-    public T createNewItem() {
+    protected T createNewItem() {
         try {
-            return this.mBuffer.getClass().getComponentType().newInstance();
+            return (T) this.mBuffer.getClass().getComponentType().newInstance();
         } catch (IllegalAccessException | InstantiationException e) {
             return null;
         }
     }
 
     public T[] toArray() {
-        T[] out = Arrays.copyOf(this.mBuffer, size(), this.mBuffer.getClass());
+        T[] out = (T[]) Arrays.copyOf(this.mBuffer, size(), this.mBuffer.getClass());
         long inCursor = this.mCursor - 1;
         int outIdx = out.length - 1;
         while (outIdx >= 0) {
@@ -66,6 +66,6 @@ public class RingBuffer<T> {
     }
 
     private int indexOf(long cursor) {
-        return (int) Math.abs(cursor % ((long) this.mBuffer.length));
+        return (int) Math.abs(cursor % this.mBuffer.length);
     }
 }

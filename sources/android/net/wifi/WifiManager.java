@@ -4,7 +4,7 @@ import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
 import android.app.ActivityManager;
 import android.content.Context;
-import android.content.pm.ParceledListSlice;
+import android.content.p002pm.ParceledListSlice;
 import android.net.DhcpInfo;
 import android.net.Network;
 import android.net.NetworkRequest;
@@ -18,14 +18,14 @@ import android.net.wifi.hotspot2.IProvisioningCallback;
 import android.net.wifi.hotspot2.OsuProvider;
 import android.net.wifi.hotspot2.PasspointConfiguration;
 import android.net.wifi.hotspot2.ProvisioningCallback;
-import android.os.Binder;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Looper;
-import android.os.Message;
-import android.os.Messenger;
-import android.os.RemoteException;
-import android.os.WorkSource;
+import android.p007os.Binder;
+import android.p007os.Handler;
+import android.p007os.IBinder;
+import android.p007os.Looper;
+import android.p007os.Message;
+import android.p007os.Messenger;
+import android.p007os.RemoteException;
+import android.p007os.WorkSource;
 import android.util.Log;
 import android.util.Pair;
 import android.util.SeempLog;
@@ -50,6 +50,7 @@ import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 
+/* loaded from: classes3.dex */
 public class WifiManager {
     public static final String ACTION_PASSPOINT_DEAUTH_IMMINENT = "android.net.wifi.action.PASSPOINT_DEAUTH_IMMINENT";
     public static final String ACTION_PASSPOINT_ICON = "android.net.wifi.action.PASSPOINT_ICON";
@@ -183,7 +184,7 @@ public class WifiManager {
     private static final int MIN_RSSI = -100;
     public static final String NETWORK_IDS_CHANGED_ACTION = "android.net.wifi.NETWORK_IDS_CHANGED";
     public static final String NETWORK_STATE_CHANGED_ACTION = "android.net.wifi.STATE_CHANGE";
-    public static final int NETWORK_SUGGESTIONS_MAX_PER_APP = (ActivityManager.isLowRamDeviceStatic() ? 256 : 1024);
+    public static final int NETWORK_SUGGESTIONS_MAX_PER_APP;
     public static final int NOT_AUTHORIZED = 9;
     @SystemApi
     public static final int PASSPOINT_HOME_NETWORK = 0;
@@ -299,32 +300,28 @@ public class WifiManager {
     public static final int WPS_TIMED_OUT = 7;
     public static final int WPS_TKIP_ONLY_PROHIBITED = 5;
     public static final int WPS_WEP_PROHIBITED = 4;
-    /* access modifiers changed from: private */
-    public static final Object sServiceHandlerDispatchLock = new Object();
-    /* access modifiers changed from: private */
+    private static final Object sServiceHandlerDispatchLock;
     @UnsupportedAppUsage
-    public int mActiveLockCount;
-    /* access modifiers changed from: private */
-    public AsyncChannel mAsyncChannel;
-    /* access modifiers changed from: private */
-    public CountDownLatch mConnected;
+    private int mActiveLockCount;
+    private AsyncChannel mAsyncChannel;
+    private CountDownLatch mConnected;
     private Context mContext;
     @GuardedBy({"mLock"})
     private LocalOnlyHotspotCallbackProxy mLOHSCallbackProxy;
     @GuardedBy({"mLock"})
     private LocalOnlyHotspotObserverProxy mLOHSObserverProxy;
-    private int mListenerKey = 1;
-    private final SparseArray mListenerMap = new SparseArray();
-    private final Object mListenerMapLock = new Object();
-    private final Object mLock = new Object();
     private Looper mLooper;
     @UnsupportedAppUsage
     IWifiManager mService;
     private final int mTargetSdkVersion;
-    /* access modifiers changed from: private */
-    public boolean mVerboseLoggingEnabled = false;
+    private int mListenerKey = 1;
+    private final SparseArray mListenerMap = new SparseArray();
+    private final Object mListenerMapLock = new Object();
+    private boolean mVerboseLoggingEnabled = false;
+    private final Object mLock = new Object();
 
     @SystemApi
+    /* loaded from: classes3.dex */
     public interface ActionListener {
         void onFailure(int i);
 
@@ -332,13 +329,16 @@ public class WifiManager {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface DeviceMobilityState {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface EasyConnectNetworkRole {
     }
 
+    /* loaded from: classes3.dex */
     public interface NetworkRequestMatchCallback {
         void onAbort();
 
@@ -351,6 +351,7 @@ public class WifiManager {
         void onUserSelectionConnectSuccess(WifiConfiguration wifiConfiguration);
     }
 
+    /* loaded from: classes3.dex */
     public interface NetworkRequestUserSelectionCallback {
         void reject();
 
@@ -358,18 +359,22 @@ public class WifiManager {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface NetworkSuggestionsStatusCode {
     }
 
     @SystemApi
+    /* loaded from: classes3.dex */
     public interface OnWifiUsabilityStatsListener {
         void onWifiUsabilityStats(int i, boolean z, WifiUsabilityStatsEntry wifiUsabilityStatsEntry);
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface SapStartFailure {
     }
 
+    /* loaded from: classes3.dex */
     public interface SoftApCallback {
         void onNumClientsChanged(int i);
 
@@ -380,6 +385,7 @@ public class WifiManager {
         void onStateChanged(int i, int i2);
     }
 
+    /* loaded from: classes3.dex */
     public interface TrafficStateCallback {
         public static final int DATA_ACTIVITY_IN = 1;
         public static final int DATA_ACTIVITY_INOUT = 3;
@@ -389,6 +395,7 @@ public class WifiManager {
         void onStateChanged(int i);
     }
 
+    /* loaded from: classes3.dex */
     public interface TxPacketCountListener {
         void onFailure(int i);
 
@@ -396,9 +403,11 @@ public class WifiManager {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface WifiApState {
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class WpsCallback {
         public abstract void onFailed(int i);
 
@@ -417,6 +426,11 @@ public class WifiManager {
         int i = x0.mActiveLockCount;
         x0.mActiveLockCount = i - 1;
         return i;
+    }
+
+    static {
+        NETWORK_SUGGESTIONS_MAX_PER_APP = ActivityManager.isLowRamDeviceStatic() ? 256 : 1024;
+        sServiceHandlerDispatchLock = new Object();
     }
 
     public WifiManager(Context context, IWifiManager service, Looper looper) {
@@ -461,7 +475,8 @@ public class WifiManager {
             if (results.isEmpty()) {
                 return configs;
             }
-            for (WifiConfiguration configuration : this.mService.getWifiConfigsForPasspointProfiles(new ArrayList(results.keySet()))) {
+            List<WifiConfiguration> wifiConfigurations = this.mService.getWifiConfigsForPasspointProfiles(new ArrayList(results.keySet()));
+            for (WifiConfiguration configuration : wifiConfigurations) {
                 Map<Integer, List<ScanResult>> scanResultsPerNetworkType = results.get(configuration.FQDN);
                 if (scanResultsPerNetworkType != null) {
                     configs.add(Pair.create(configuration, scanResultsPerNetworkType));
@@ -551,6 +566,7 @@ public class WifiManager {
         }
     }
 
+    /* loaded from: classes3.dex */
     private class NetworkRequestUserSelectionCallbackProxy implements NetworkRequestUserSelectionCallback {
         private final INetworkRequestUserSelectionCallback mCallback;
 
@@ -558,31 +574,34 @@ public class WifiManager {
             this.mCallback = callback;
         }
 
+        @Override // android.net.wifi.WifiManager.NetworkRequestUserSelectionCallback
         public void select(WifiConfiguration wifiConfiguration) {
             if (WifiManager.this.mVerboseLoggingEnabled) {
-                Log.v(WifiManager.TAG, "NetworkRequestUserSelectionCallbackProxy: select wificonfiguration: " + wifiConfiguration);
+                Log.m66v(WifiManager.TAG, "NetworkRequestUserSelectionCallbackProxy: select wificonfiguration: " + wifiConfiguration);
             }
             try {
                 this.mCallback.select(wifiConfiguration);
             } catch (RemoteException e) {
-                Log.e(WifiManager.TAG, "Failed to invoke onSelected", e);
+                Log.m69e(WifiManager.TAG, "Failed to invoke onSelected", e);
                 throw e.rethrowFromSystemServer();
             }
         }
 
+        @Override // android.net.wifi.WifiManager.NetworkRequestUserSelectionCallback
         public void reject() {
             if (WifiManager.this.mVerboseLoggingEnabled) {
-                Log.v(WifiManager.TAG, "NetworkRequestUserSelectionCallbackProxy: reject");
+                Log.m66v(WifiManager.TAG, "NetworkRequestUserSelectionCallbackProxy: reject");
             }
             try {
                 this.mCallback.reject();
             } catch (RemoteException e) {
-                Log.e(WifiManager.TAG, "Failed to invoke onRejected", e);
+                Log.m69e(WifiManager.TAG, "Failed to invoke onRejected", e);
                 throw e.rethrowFromSystemServer();
             }
         }
     }
 
+    /* loaded from: classes3.dex */
     private class NetworkRequestMatchCallbackProxy extends INetworkRequestMatchCallback.Stub {
         private final NetworkRequestMatchCallback mCallback;
         private final Handler mHandler;
@@ -592,109 +611,95 @@ public class WifiManager {
             this.mCallback = callback;
         }
 
-        public void onUserSelectionCallbackRegistration(INetworkRequestUserSelectionCallback userSelectionCallback) {
+        @Override // android.net.wifi.INetworkRequestMatchCallback
+        public void onUserSelectionCallbackRegistration(final INetworkRequestUserSelectionCallback userSelectionCallback) {
             if (WifiManager.this.mVerboseLoggingEnabled) {
-                Log.v(WifiManager.TAG, "NetworkRequestMatchCallbackProxy: onUserSelectionCallbackRegistration callback: " + userSelectionCallback);
+                Log.m66v(WifiManager.TAG, "NetworkRequestMatchCallbackProxy: onUserSelectionCallbackRegistration callback: " + userSelectionCallback);
             }
-            this.mHandler.post(new Runnable(userSelectionCallback) {
-                private final /* synthetic */ INetworkRequestUserSelectionCallback f$1;
-
-                {
-                    this.f$1 = r2;
-                }
-
+            this.mHandler.post(new Runnable() { // from class: android.net.wifi.-$$Lambda$WifiManager$NetworkRequestMatchCallbackProxy$DYo-nMH0tB37PG_5OviApSTSGXg
+                @Override // java.lang.Runnable
                 public final void run() {
-                    WifiManager.NetworkRequestMatchCallbackProxy.this.mCallback.onUserSelectionCallbackRegistration(new WifiManager.NetworkRequestUserSelectionCallbackProxy(this.f$1));
+                    r0.mCallback.onUserSelectionCallbackRegistration(new WifiManager.NetworkRequestUserSelectionCallbackProxy(userSelectionCallback));
                 }
             });
         }
 
+        @Override // android.net.wifi.INetworkRequestMatchCallback
         public void onAbort() {
             if (WifiManager.this.mVerboseLoggingEnabled) {
-                Log.v(WifiManager.TAG, "NetworkRequestMatchCallbackProxy: onAbort");
+                Log.m66v(WifiManager.TAG, "NetworkRequestMatchCallbackProxy: onAbort");
             }
-            this.mHandler.post(new Runnable() {
+            this.mHandler.post(new Runnable() { // from class: android.net.wifi.-$$Lambda$WifiManager$NetworkRequestMatchCallbackProxy$sy4224jn5G2QTmFKYUY0fGWCJ5Q
+                @Override // java.lang.Runnable
                 public final void run() {
                     WifiManager.NetworkRequestMatchCallbackProxy.this.mCallback.onAbort();
                 }
             });
         }
 
-        public void onMatch(List<ScanResult> scanResults) {
+        @Override // android.net.wifi.INetworkRequestMatchCallback
+        public void onMatch(final List<ScanResult> scanResults) {
             if (WifiManager.this.mVerboseLoggingEnabled) {
-                Log.v(WifiManager.TAG, "NetworkRequestMatchCallbackProxy: onMatch scanResults: " + scanResults);
+                Log.m66v(WifiManager.TAG, "NetworkRequestMatchCallbackProxy: onMatch scanResults: " + scanResults);
             }
-            this.mHandler.post(new Runnable(scanResults) {
-                private final /* synthetic */ List f$1;
-
-                {
-                    this.f$1 = r2;
-                }
-
+            this.mHandler.post(new Runnable() { // from class: android.net.wifi.-$$Lambda$WifiManager$NetworkRequestMatchCallbackProxy$8wy7AFc9OgD124mPKDe8H6vuPTQ
+                @Override // java.lang.Runnable
                 public final void run() {
-                    WifiManager.NetworkRequestMatchCallbackProxy.this.mCallback.onMatch(this.f$1);
+                    WifiManager.NetworkRequestMatchCallbackProxy.this.mCallback.onMatch(scanResults);
                 }
             });
         }
 
-        public void onUserSelectionConnectSuccess(WifiConfiguration wifiConfiguration) {
+        @Override // android.net.wifi.INetworkRequestMatchCallback
+        public void onUserSelectionConnectSuccess(final WifiConfiguration wifiConfiguration) {
             if (WifiManager.this.mVerboseLoggingEnabled) {
-                Log.v(WifiManager.TAG, "NetworkRequestMatchCallbackProxy: onUserSelectionConnectSuccess  wificonfiguration: " + wifiConfiguration);
+                Log.m66v(WifiManager.TAG, "NetworkRequestMatchCallbackProxy: onUserSelectionConnectSuccess  wificonfiguration: " + wifiConfiguration);
             }
-            this.mHandler.post(new Runnable(wifiConfiguration) {
-                private final /* synthetic */ WifiConfiguration f$1;
-
-                {
-                    this.f$1 = r2;
-                }
-
+            this.mHandler.post(new Runnable() { // from class: android.net.wifi.-$$Lambda$WifiManager$NetworkRequestMatchCallbackProxy$KPxBZNMm8VDinf6ZcYWL1RJk9Zc
+                @Override // java.lang.Runnable
                 public final void run() {
-                    WifiManager.NetworkRequestMatchCallbackProxy.this.mCallback.onUserSelectionConnectSuccess(this.f$1);
+                    WifiManager.NetworkRequestMatchCallbackProxy.this.mCallback.onUserSelectionConnectSuccess(wifiConfiguration);
                 }
             });
         }
 
-        public void onUserSelectionConnectFailure(WifiConfiguration wifiConfiguration) {
+        @Override // android.net.wifi.INetworkRequestMatchCallback
+        public void onUserSelectionConnectFailure(final WifiConfiguration wifiConfiguration) {
             if (WifiManager.this.mVerboseLoggingEnabled) {
-                Log.v(WifiManager.TAG, "NetworkRequestMatchCallbackProxy: onUserSelectionConnectFailure wificonfiguration: " + wifiConfiguration);
+                Log.m66v(WifiManager.TAG, "NetworkRequestMatchCallbackProxy: onUserSelectionConnectFailure wificonfiguration: " + wifiConfiguration);
             }
-            this.mHandler.post(new Runnable(wifiConfiguration) {
-                private final /* synthetic */ WifiConfiguration f$1;
-
-                {
-                    this.f$1 = r2;
-                }
-
+            this.mHandler.post(new Runnable() { // from class: android.net.wifi.-$$Lambda$WifiManager$NetworkRequestMatchCallbackProxy$MJqaBvGtvUfHUJtjhgTRIQ7GCr4
+                @Override // java.lang.Runnable
                 public final void run() {
-                    WifiManager.NetworkRequestMatchCallbackProxy.this.mCallback.onUserSelectionConnectFailure(this.f$1);
+                    WifiManager.NetworkRequestMatchCallbackProxy.this.mCallback.onUserSelectionConnectFailure(wifiConfiguration);
                 }
             });
         }
     }
 
     public void registerNetworkRequestMatchCallback(NetworkRequestMatchCallback callback, Handler handler) {
-        if (callback != null) {
-            Log.v(TAG, "registerNetworkRequestMatchCallback: callback=" + callback + ", handler=" + handler);
-            try {
-                this.mService.registerNetworkRequestMatchCallback(new Binder(), new NetworkRequestMatchCallbackProxy(handler == null ? this.mContext.getMainLooper() : handler.getLooper(), callback), callback.hashCode());
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
-        } else {
+        if (callback == null) {
             throw new IllegalArgumentException("callback cannot be null");
+        }
+        Log.m66v(TAG, "registerNetworkRequestMatchCallback: callback=" + callback + ", handler=" + handler);
+        Looper looper = handler == null ? this.mContext.getMainLooper() : handler.getLooper();
+        Binder binder = new Binder();
+        try {
+            this.mService.registerNetworkRequestMatchCallback(binder, new NetworkRequestMatchCallbackProxy(looper, callback), callback.hashCode());
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
         }
     }
 
     public void unregisterNetworkRequestMatchCallback(NetworkRequestMatchCallback callback) {
-        if (callback != null) {
-            Log.v(TAG, "unregisterNetworkRequestMatchCallback: callback=" + callback);
-            try {
-                this.mService.unregisterNetworkRequestMatchCallback(callback.hashCode());
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
-        } else {
+        if (callback == null) {
             throw new IllegalArgumentException("callback cannot be null");
+        }
+        Log.m66v(TAG, "unregisterNetworkRequestMatchCallback: callback=" + callback);
+        try {
+            this.mService.unregisterNetworkRequestMatchCallback(callback.hashCode());
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
         }
     }
 
@@ -785,7 +790,8 @@ public class WifiManager {
     public boolean enableNetwork(int netId, boolean attemptConnect) {
         boolean pin = attemptConnect && this.mTargetSdkVersion < 21;
         if (pin) {
-            NetworkPinner.pin(this.mContext, new NetworkRequest.Builder().clearCapabilities().addCapability(15).addTransportType(1).build());
+            NetworkRequest request = new NetworkRequest.Builder().clearCapabilities().addCapability(15).addTransportType(1).build();
+            NetworkPinner.pin(this.mContext, request);
         }
         try {
             boolean success = this.mService.enableNetwork(netId, attemptConnect, this.mContext.getOpPackageName());
@@ -852,60 +858,60 @@ public class WifiManager {
     }
 
     public boolean is5GHzBandSupported() {
-        return isFeatureSupported(2);
+        return isFeatureSupported(2L);
     }
 
     public boolean isPasspointSupported() {
-        return isFeatureSupported(4);
+        return isFeatureSupported(4L);
     }
 
     public boolean isP2pSupported() {
-        return isFeatureSupported(8);
+        return isFeatureSupported(8L);
     }
 
     @SystemApi
     public boolean isPortableHotspotSupported() {
-        return isFeatureSupported(16);
+        return isFeatureSupported(16L);
     }
 
     @SystemApi
     public boolean isWifiScannerSupported() {
-        return isFeatureSupported(32);
+        return isFeatureSupported(32L);
     }
 
     public boolean isWifiAwareSupported() {
-        return isFeatureSupported(64);
+        return isFeatureSupported(64L);
     }
 
     @SystemApi
     @Deprecated
     public boolean isDeviceToDeviceRttSupported() {
-        return isFeatureSupported(128);
+        return isFeatureSupported(128L);
     }
 
     @Deprecated
     public boolean isDeviceToApRttSupported() {
-        return isFeatureSupported(256);
+        return isFeatureSupported(256L);
     }
 
     public boolean isPreferredNetworkOffloadSupported() {
-        return isFeatureSupported(1024);
+        return isFeatureSupported(1024L);
     }
 
     public boolean isAdditionalStaSupported() {
-        return isFeatureSupported(2048);
+        return isFeatureSupported(2048L);
     }
 
     public boolean isTdlsSupported() {
-        return isFeatureSupported(4096);
+        return isFeatureSupported(4096L);
     }
 
     public boolean isOffChannelTdlsSupported() {
-        return isFeatureSupported(8192);
+        return isFeatureSupported(8192L);
     }
 
     public boolean isEnhancedPowerReportingSupported() {
-        return isFeatureSupported(65536);
+        return isFeatureSupported(65536L);
     }
 
     public WifiActivityEnergyInfo getControllerActivityEnergyInfo() {
@@ -925,13 +931,14 @@ public class WifiManager {
 
     @Deprecated
     public boolean startScan() {
-        return startScan((WorkSource) null);
+        return startScan(null);
     }
 
     @SystemApi
     public boolean startScan(WorkSource workSource) {
         try {
-            return this.mService.startScan(this.mContext.getOpPackageName());
+            String packageName = this.mContext.getOpPackageName();
+            return this.mService.startScan(packageName);
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
         }
@@ -983,7 +990,8 @@ public class WifiManager {
     @UnsupportedAppUsage
     public String getCountryCode() {
         try {
-            return this.mService.getCountryCode();
+            String country = this.mService.getCountryCode();
+            return country;
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
         }
@@ -1046,7 +1054,8 @@ public class WifiManager {
         if (rssi >= -55) {
             return numLevels - 1;
         }
-        return (int) ((((float) (rssi + 100)) * ((float) (numLevels - 1))) / 45.0f);
+        float outputRange = numLevels - 1;
+        return (int) (((rssi + 100) * outputRange) / 45.0f);
     }
 
     public static int compareSignalLevel(int rssiA, int rssiB) {
@@ -1078,25 +1087,23 @@ public class WifiManager {
     }
 
     public void startLocalOnlyHotspot(LocalOnlyHotspotCallback callback, Handler handler) {
-        Looper looper;
         synchronized (this.mLock) {
-            if (handler == null) {
+            try {
+                Looper looper = handler == null ? this.mContext.getMainLooper() : handler.getLooper();
+                LocalOnlyHotspotCallbackProxy proxy = new LocalOnlyHotspotCallbackProxy(this, looper, callback);
                 try {
-                    looper = this.mContext.getMainLooper();
+                    String packageName = this.mContext.getOpPackageName();
+                    int returnCode = this.mService.startLocalOnlyHotspot(proxy.getMessenger(), new Binder(), packageName);
+                    if (returnCode != 0) {
+                        proxy.notifyFailed(returnCode);
+                    } else {
+                        this.mLOHSCallbackProxy = proxy;
+                    }
                 } catch (RemoteException e) {
                     throw e.rethrowFromSystemServer();
-                } catch (Throwable th) {
-                    throw th;
                 }
-            } else {
-                looper = handler.getLooper();
-            }
-            LocalOnlyHotspotCallbackProxy proxy = new LocalOnlyHotspotCallbackProxy(this, looper, callback);
-            int returnCode = this.mService.startLocalOnlyHotspot(proxy.getMessenger(), new Binder(), this.mContext.getOpPackageName());
-            if (returnCode != 0) {
-                proxy.notifyFailed(returnCode);
-            } else {
-                this.mLOHSCallbackProxy = proxy;
+            } catch (Throwable th) {
+                throw th;
             }
         }
     }
@@ -1108,50 +1115,49 @@ public class WifiManager {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void stopLocalOnlyHotspot() {
         synchronized (this.mLock) {
-            if (this.mLOHSCallbackProxy != null) {
-                this.mLOHSCallbackProxy = null;
-                try {
-                    this.mService.stopLocalOnlyHotspot();
-                } catch (RemoteException e) {
-                    throw e.rethrowFromSystemServer();
-                }
+            if (this.mLOHSCallbackProxy == null) {
+                return;
+            }
+            this.mLOHSCallbackProxy = null;
+            try {
+                this.mService.stopLocalOnlyHotspot();
+            } catch (RemoteException e) {
+                throw e.rethrowFromSystemServer();
             }
         }
     }
 
     public void watchLocalOnlyHotspot(LocalOnlyHotspotObserver observer, Handler handler) {
-        Looper looper;
         synchronized (this.mLock) {
-            if (handler == null) {
+            try {
+                Looper looper = handler == null ? this.mContext.getMainLooper() : handler.getLooper();
+                this.mLOHSObserverProxy = new LocalOnlyHotspotObserverProxy(this, looper, observer);
                 try {
-                    looper = this.mContext.getMainLooper();
+                    this.mService.startWatchLocalOnlyHotspot(this.mLOHSObserverProxy.getMessenger(), new Binder());
+                    this.mLOHSObserverProxy.registered();
                 } catch (RemoteException e) {
                     this.mLOHSObserverProxy = null;
                     throw e.rethrowFromSystemServer();
-                } catch (Throwable th) {
-                    throw th;
                 }
-            } else {
-                looper = handler.getLooper();
+            } catch (Throwable th) {
+                throw th;
             }
-            this.mLOHSObserverProxy = new LocalOnlyHotspotObserverProxy(this, looper, observer);
-            this.mService.startWatchLocalOnlyHotspot(this.mLOHSObserverProxy.getMessenger(), new Binder());
-            this.mLOHSObserverProxy.registered();
         }
     }
 
     public void unregisterLocalOnlyHotspotObserver() {
         synchronized (this.mLock) {
-            if (this.mLOHSObserverProxy != null) {
-                this.mLOHSObserverProxy = null;
-                try {
-                    this.mService.stopWatchLocalOnlyHotspot();
-                } catch (RemoteException e) {
-                    throw e.rethrowFromSystemServer();
-                }
+            if (this.mLOHSObserverProxy == null) {
+                return;
+            }
+            this.mLOHSObserverProxy = null;
+            try {
+                this.mService.stopWatchLocalOnlyHotspot();
+            } catch (RemoteException e) {
+                throw e.rethrowFromSystemServer();
             }
         }
     }
@@ -1189,7 +1195,7 @@ public class WifiManager {
     }
 
     public void notifyUserOfApBandConversion() {
-        Log.d(TAG, "apBand was converted, notify the user");
+        Log.m72d(TAG, "apBand was converted, notify the user");
         try {
             this.mService.notifyUserOfApBandConversion(this.mContext.getOpPackageName());
         } catch (RemoteException e) {
@@ -1213,6 +1219,7 @@ public class WifiManager {
         }
     }
 
+    /* loaded from: classes3.dex */
     private class SoftApCallbackProxy extends ISoftApCallback.Stub {
         private final SoftApCallback mCallback;
         private final Handler mHandler;
@@ -1222,103 +1229,82 @@ public class WifiManager {
             this.mCallback = callback;
         }
 
-        public void onStateChanged(int state, int failureReason) {
+        @Override // android.net.wifi.ISoftApCallback
+        public void onStateChanged(final int state, final int failureReason) {
             if (WifiManager.this.mVerboseLoggingEnabled) {
-                Log.v(WifiManager.TAG, "SoftApCallbackProxy: onStateChanged: state=" + state + ", failureReason=" + failureReason);
+                Log.m66v(WifiManager.TAG, "SoftApCallbackProxy: onStateChanged: state=" + state + ", failureReason=" + failureReason);
             }
-            this.mHandler.post(new Runnable(state, failureReason) {
-                private final /* synthetic */ int f$1;
-                private final /* synthetic */ int f$2;
-
-                {
-                    this.f$1 = r2;
-                    this.f$2 = r3;
-                }
-
+            this.mHandler.post(new Runnable() { // from class: android.net.wifi.-$$Lambda$WifiManager$SoftApCallbackProxy$vmSW5veUpC52oRINBy419US5snk
+                @Override // java.lang.Runnable
                 public final void run() {
-                    WifiManager.SoftApCallbackProxy.this.mCallback.onStateChanged(this.f$1, this.f$2);
+                    WifiManager.SoftApCallbackProxy.this.mCallback.onStateChanged(state, failureReason);
                 }
             });
         }
 
-        public void onNumClientsChanged(int numClients) {
+        @Override // android.net.wifi.ISoftApCallback
+        public void onNumClientsChanged(final int numClients) {
             if (WifiManager.this.mVerboseLoggingEnabled) {
-                Log.v(WifiManager.TAG, "SoftApCallbackProxy: onNumClientsChanged: numClients=" + numClients);
+                Log.m66v(WifiManager.TAG, "SoftApCallbackProxy: onNumClientsChanged: numClients=" + numClients);
             }
-            this.mHandler.post(new Runnable(numClients) {
-                private final /* synthetic */ int f$1;
-
-                {
-                    this.f$1 = r2;
-                }
-
+            this.mHandler.post(new Runnable() { // from class: android.net.wifi.-$$Lambda$WifiManager$SoftApCallbackProxy$f44R8L0UcqgnIaD5lXMmeuRHCWI
+                @Override // java.lang.Runnable
                 public final void run() {
-                    WifiManager.SoftApCallbackProxy.this.mCallback.onNumClientsChanged(this.f$1);
+                    WifiManager.SoftApCallbackProxy.this.mCallback.onNumClientsChanged(numClients);
                 }
             });
         }
 
-        public void onStaConnected(String Macaddr, int numClients) throws RemoteException {
-            Log.v(WifiManager.TAG, "SoftApCallbackProxy: [" + numClients + "]onStaConnected Macaddr =" + Macaddr);
-            this.mHandler.post(new Runnable(Macaddr, numClients) {
-                private final /* synthetic */ String f$1;
-                private final /* synthetic */ int f$2;
-
-                {
-                    this.f$1 = r2;
-                    this.f$2 = r3;
-                }
-
+        @Override // android.net.wifi.ISoftApCallback
+        public void onStaConnected(final String Macaddr, final int numClients) throws RemoteException {
+            Log.m66v(WifiManager.TAG, "SoftApCallbackProxy: [" + numClients + "]onStaConnected Macaddr =" + Macaddr);
+            this.mHandler.post(new Runnable() { // from class: android.net.wifi.-$$Lambda$WifiManager$SoftApCallbackProxy$vo4E4HQhX8ezRZP1e1kxdx6MvpE
+                @Override // java.lang.Runnable
                 public final void run() {
-                    WifiManager.SoftApCallbackProxy.this.mCallback.onStaConnected(this.f$1, this.f$2);
+                    WifiManager.SoftApCallbackProxy.this.mCallback.onStaConnected(Macaddr, numClients);
                 }
             });
         }
 
-        public void onStaDisconnected(String Macaddr, int numClients) throws RemoteException {
-            Log.v(WifiManager.TAG, "SoftApCallbackProxy: [" + numClients + "]onStaDisconnected Macaddr =" + Macaddr);
-            this.mHandler.post(new Runnable(Macaddr, numClients) {
-                private final /* synthetic */ String f$1;
-                private final /* synthetic */ int f$2;
-
-                {
-                    this.f$1 = r2;
-                    this.f$2 = r3;
-                }
-
+        @Override // android.net.wifi.ISoftApCallback
+        public void onStaDisconnected(final String Macaddr, final int numClients) throws RemoteException {
+            Log.m66v(WifiManager.TAG, "SoftApCallbackProxy: [" + numClients + "]onStaDisconnected Macaddr =" + Macaddr);
+            this.mHandler.post(new Runnable() { // from class: android.net.wifi.-$$Lambda$WifiManager$SoftApCallbackProxy$X5LJgdNUCXHctJ7m4-CGDjDEfkU
+                @Override // java.lang.Runnable
                 public final void run() {
-                    WifiManager.SoftApCallbackProxy.this.mCallback.onStaDisconnected(this.f$1, this.f$2);
+                    WifiManager.SoftApCallbackProxy.this.mCallback.onStaDisconnected(Macaddr, numClients);
                 }
             });
         }
     }
 
     public void registerSoftApCallback(SoftApCallback callback, Handler handler) {
-        if (callback != null) {
-            Log.v(TAG, "registerSoftApCallback: callback=" + callback + ", handler=" + handler);
-            try {
-                this.mService.registerSoftApCallback(new Binder(), new SoftApCallbackProxy(handler == null ? this.mContext.getMainLooper() : handler.getLooper(), callback), callback.hashCode());
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
-        } else {
+        if (callback == null) {
             throw new IllegalArgumentException("callback cannot be null");
+        }
+        Log.m66v(TAG, "registerSoftApCallback: callback=" + callback + ", handler=" + handler);
+        Looper looper = handler == null ? this.mContext.getMainLooper() : handler.getLooper();
+        Binder binder = new Binder();
+        try {
+            this.mService.registerSoftApCallback(binder, new SoftApCallbackProxy(looper, callback), callback.hashCode());
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
         }
     }
 
     public void unregisterSoftApCallback(SoftApCallback callback) {
-        if (callback != null) {
-            Log.v(TAG, "unregisterSoftApCallback: callback=" + callback);
-            try {
-                this.mService.unregisterSoftApCallback(callback.hashCode());
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
-        } else {
+        if (callback == null) {
             throw new IllegalArgumentException("callback cannot be null");
+        }
+        Log.m66v(TAG, "unregisterSoftApCallback: callback=" + callback);
+        try {
+            this.mService.unregisterSoftApCallback(callback.hashCode());
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
         }
     }
 
+    /* loaded from: classes3.dex */
     public class LocalOnlyHotspotReservation implements AutoCloseable {
         private final CloseGuard mCloseGuard = CloseGuard.get();
         private final WifiConfiguration mConfig;
@@ -1333,17 +1319,17 @@ public class WifiManager {
             return this.mConfig;
         }
 
+        @Override // java.lang.AutoCloseable
         public void close() {
             try {
                 WifiManager.this.stopLocalOnlyHotspot();
                 this.mCloseGuard.close();
             } catch (Exception e) {
-                Log.e(WifiManager.TAG, "Failed to stop Local Only Hotspot.");
+                Log.m70e(WifiManager.TAG, "Failed to stop Local Only Hotspot.");
             }
         }
 
-        /* access modifiers changed from: protected */
-        public void finalize() throws Throwable {
+        protected void finalize() throws Throwable {
             try {
                 if (this.mCloseGuard != null) {
                     this.mCloseGuard.warnIfOpen();
@@ -1355,6 +1341,7 @@ public class WifiManager {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class LocalOnlyHotspotCallback {
         public static final int ERROR_GENERIC = 2;
         public static final int ERROR_INCOMPATIBLE_MODE = 3;
@@ -1372,52 +1359,54 @@ public class WifiManager {
         }
     }
 
+    /* loaded from: classes3.dex */
     private static class LocalOnlyHotspotCallbackProxy {
         private final Handler mHandler;
         private final Looper mLooper;
-        private final Messenger mMessenger = new Messenger(this.mHandler);
-        /* access modifiers changed from: private */
-        public final WeakReference<WifiManager> mWifiManager;
+        private final Messenger mMessenger;
+        private final WeakReference<WifiManager> mWifiManager;
 
         LocalOnlyHotspotCallbackProxy(WifiManager manager, Looper looper, final LocalOnlyHotspotCallback callback) {
             this.mWifiManager = new WeakReference<>(manager);
             this.mLooper = looper;
-            this.mHandler = new Handler(looper) {
+            this.mHandler = new Handler(looper) { // from class: android.net.wifi.WifiManager.LocalOnlyHotspotCallbackProxy.1
+                @Override // android.p007os.Handler
                 public void handleMessage(Message msg) {
-                    Log.d(WifiManager.TAG, "LocalOnlyHotspotCallbackProxy: handle message what: " + msg.what + " msg: " + msg);
-                    WifiManager manager = (WifiManager) LocalOnlyHotspotCallbackProxy.this.mWifiManager.get();
-                    if (manager == null) {
-                        Log.w(WifiManager.TAG, "LocalOnlyHotspotCallbackProxy: handle message post GC");
+                    Log.m72d(WifiManager.TAG, "LocalOnlyHotspotCallbackProxy: handle message what: " + msg.what + " msg: " + msg);
+                    WifiManager manager2 = (WifiManager) LocalOnlyHotspotCallbackProxy.this.mWifiManager.get();
+                    if (manager2 == null) {
+                        Log.m64w(WifiManager.TAG, "LocalOnlyHotspotCallbackProxy: handle message post GC");
                         return;
                     }
                     switch (msg.what) {
                         case 0:
                             WifiConfiguration config = (WifiConfiguration) msg.obj;
                             if (config == null) {
-                                Log.e(WifiManager.TAG, "LocalOnlyHotspotCallbackProxy: config cannot be null.");
+                                Log.m70e(WifiManager.TAG, "LocalOnlyHotspotCallbackProxy: config cannot be null.");
                                 callback.onFailed(2);
                                 return;
                             }
                             LocalOnlyHotspotCallback localOnlyHotspotCallback = callback;
-                            Objects.requireNonNull(manager);
+                            Objects.requireNonNull(manager2);
                             localOnlyHotspotCallback.onStarted(new LocalOnlyHotspotReservation(config));
                             return;
                         case 1:
-                            Log.w(WifiManager.TAG, "LocalOnlyHotspotCallbackProxy: hotspot stopped");
+                            Log.m64w(WifiManager.TAG, "LocalOnlyHotspotCallbackProxy: hotspot stopped");
                             callback.onStopped();
                             return;
                         case 2:
                             int reasonCode = msg.arg1;
-                            Log.w(WifiManager.TAG, "LocalOnlyHotspotCallbackProxy: failed to start.  reason: " + reasonCode);
+                            Log.m64w(WifiManager.TAG, "LocalOnlyHotspotCallbackProxy: failed to start.  reason: " + reasonCode);
                             callback.onFailed(reasonCode);
-                            Log.w(WifiManager.TAG, "done with the callback...");
+                            Log.m64w(WifiManager.TAG, "done with the callback...");
                             return;
                         default:
-                            Log.e(WifiManager.TAG, "LocalOnlyHotspotCallbackProxy unhandled message.  type: " + msg.what);
+                            Log.m70e(WifiManager.TAG, "LocalOnlyHotspotCallbackProxy unhandled message.  type: " + msg.what);
                             return;
                     }
                 }
             };
+            this.mMessenger = new Messenger(this.mHandler);
         }
 
         public Messenger getMessenger() {
@@ -1432,6 +1421,7 @@ public class WifiManager {
         }
     }
 
+    /* loaded from: classes3.dex */
     public class LocalOnlyHotspotSubscription implements AutoCloseable {
         private final CloseGuard mCloseGuard = CloseGuard.get();
 
@@ -1440,17 +1430,17 @@ public class WifiManager {
             this.mCloseGuard.open("close");
         }
 
+        @Override // java.lang.AutoCloseable
         public void close() {
             try {
                 WifiManager.this.unregisterLocalOnlyHotspotObserver();
                 this.mCloseGuard.close();
             } catch (Exception e) {
-                Log.e(WifiManager.TAG, "Failed to unregister LocalOnlyHotspotObserver.");
+                Log.m70e(WifiManager.TAG, "Failed to unregister LocalOnlyHotspotObserver.");
             }
         }
 
-        /* access modifiers changed from: protected */
-        public void finalize() throws Throwable {
+        protected void finalize() throws Throwable {
             try {
                 if (this.mCloseGuard != null) {
                     this.mCloseGuard.warnIfOpen();
@@ -1462,6 +1452,7 @@ public class WifiManager {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class LocalOnlyHotspotObserver {
         public void onRegistered(LocalOnlyHotspotSubscription subscription) {
         }
@@ -1473,50 +1464,52 @@ public class WifiManager {
         }
     }
 
+    /* loaded from: classes3.dex */
     private static class LocalOnlyHotspotObserverProxy {
         private final Handler mHandler;
         private final Looper mLooper;
-        private final Messenger mMessenger = new Messenger(this.mHandler);
-        /* access modifiers changed from: private */
-        public final WeakReference<WifiManager> mWifiManager;
+        private final Messenger mMessenger;
+        private final WeakReference<WifiManager> mWifiManager;
 
         LocalOnlyHotspotObserverProxy(WifiManager manager, Looper looper, final LocalOnlyHotspotObserver observer) {
             this.mWifiManager = new WeakReference<>(manager);
             this.mLooper = looper;
-            this.mHandler = new Handler(looper) {
+            this.mHandler = new Handler(looper) { // from class: android.net.wifi.WifiManager.LocalOnlyHotspotObserverProxy.1
+                @Override // android.p007os.Handler
                 public void handleMessage(Message msg) {
-                    Log.d(WifiManager.TAG, "LocalOnlyHotspotObserverProxy: handle message what: " + msg.what + " msg: " + msg);
-                    WifiManager manager = (WifiManager) LocalOnlyHotspotObserverProxy.this.mWifiManager.get();
-                    if (manager == null) {
-                        Log.w(WifiManager.TAG, "LocalOnlyHotspotObserverProxy: handle message post GC");
+                    Log.m72d(WifiManager.TAG, "LocalOnlyHotspotObserverProxy: handle message what: " + msg.what + " msg: " + msg);
+                    WifiManager manager2 = (WifiManager) LocalOnlyHotspotObserverProxy.this.mWifiManager.get();
+                    if (manager2 == null) {
+                        Log.m64w(WifiManager.TAG, "LocalOnlyHotspotObserverProxy: handle message post GC");
                         return;
                     }
                     int i = msg.what;
-                    if (i != 3) {
-                        switch (i) {
-                            case 0:
-                                WifiConfiguration config = (WifiConfiguration) msg.obj;
-                                if (config == null) {
-                                    Log.e(WifiManager.TAG, "LocalOnlyHotspotObserverProxy: config cannot be null.");
-                                    return;
-                                } else {
-                                    observer.onStarted(config);
-                                    return;
-                                }
-                            case 1:
-                                observer.onStopped();
-                                return;
-                            default:
-                                Log.e(WifiManager.TAG, "LocalOnlyHotspotObserverProxy unhandled message.  type: " + msg.what);
-                                return;
-                        }
-                    } else {
+                    if (i == 3) {
                         LocalOnlyHotspotObserver localOnlyHotspotObserver = observer;
-                        Objects.requireNonNull(manager);
+                        Objects.requireNonNull(manager2);
                         localOnlyHotspotObserver.onRegistered(new LocalOnlyHotspotSubscription());
+                        return;
+                    }
+                    switch (i) {
+                        case 0:
+                            WifiConfiguration config = (WifiConfiguration) msg.obj;
+                            if (config == null) {
+                                Log.m70e(WifiManager.TAG, "LocalOnlyHotspotObserverProxy: config cannot be null.");
+                                return;
+                            } else {
+                                observer.onStarted(config);
+                                return;
+                            }
+                        case 1:
+                            observer.onStopped();
+                            return;
+                        default:
+                            Log.m70e(WifiManager.TAG, "LocalOnlyHotspotObserverProxy unhandled message.  type: " + msg.what);
+                            return;
                     }
                 }
             };
+            this.mMessenger = new Messenger(this.mHandler);
         }
 
         public Messenger getMessenger() {
@@ -1530,11 +1523,13 @@ public class WifiManager {
         }
     }
 
+    /* loaded from: classes3.dex */
     private class ServiceHandler extends Handler {
         ServiceHandler(Looper looper) {
             super(looper);
         }
 
+        @Override // android.p007os.Handler
         public void handleMessage(Message message) {
             synchronized (WifiManager.sServiceHandlerDispatchLock) {
                 dispatchMessageToListeners(message);
@@ -1546,37 +1541,40 @@ public class WifiManager {
             switch (message.what) {
                 case 69632:
                     if (message.arg1 == 0) {
-                        WifiManager.this.mAsyncChannel.sendMessage((int) AsyncChannel.CMD_CHANNEL_FULL_CONNECTION);
+                        WifiManager.this.mAsyncChannel.sendMessage(AsyncChannel.CMD_CHANNEL_FULL_CONNECTION);
                     } else {
-                        Log.e(WifiManager.TAG, "Failed to set up channel connection");
-                        AsyncChannel unused = WifiManager.this.mAsyncChannel = null;
+                        Log.m70e(WifiManager.TAG, "Failed to set up channel connection");
+                        WifiManager.this.mAsyncChannel = null;
                     }
                     WifiManager.this.mConnected.countDown();
                     return;
-                case AsyncChannel.CMD_CHANNEL_DISCONNECTED /*69636*/:
-                    Log.e(WifiManager.TAG, "Channel connection lost");
-                    AsyncChannel unused2 = WifiManager.this.mAsyncChannel = null;
+                case AsyncChannel.CMD_CHANNEL_FULLY_CONNECTED /* 69634 */:
+                default:
+                    return;
+                case AsyncChannel.CMD_CHANNEL_DISCONNECTED /* 69636 */:
+                    Log.m70e(WifiManager.TAG, "Channel connection lost");
+                    WifiManager.this.mAsyncChannel = null;
                     getLooper().quit();
                     return;
-                case WifiManager.CONNECT_NETWORK_FAILED /*151554*/:
-                case WifiManager.FORGET_NETWORK_FAILED /*151557*/:
-                case WifiManager.SAVE_NETWORK_FAILED /*151560*/:
-                case WifiManager.DISABLE_NETWORK_FAILED /*151570*/:
+                case WifiManager.CONNECT_NETWORK_FAILED /* 151554 */:
+                case WifiManager.FORGET_NETWORK_FAILED /* 151557 */:
+                case WifiManager.SAVE_NETWORK_FAILED /* 151560 */:
+                case WifiManager.DISABLE_NETWORK_FAILED /* 151570 */:
                     if (listener != null) {
                         ((ActionListener) listener).onFailure(message.arg1);
                         return;
                     }
                     return;
-                case WifiManager.CONNECT_NETWORK_SUCCEEDED /*151555*/:
-                case WifiManager.FORGET_NETWORK_SUCCEEDED /*151558*/:
-                case WifiManager.SAVE_NETWORK_SUCCEEDED /*151561*/:
-                case WifiManager.DISABLE_NETWORK_SUCCEEDED /*151571*/:
+                case WifiManager.CONNECT_NETWORK_SUCCEEDED /* 151555 */:
+                case WifiManager.FORGET_NETWORK_SUCCEEDED /* 151558 */:
+                case WifiManager.SAVE_NETWORK_SUCCEEDED /* 151561 */:
+                case WifiManager.DISABLE_NETWORK_SUCCEEDED /* 151571 */:
                     if (listener != null) {
                         ((ActionListener) listener).onSuccess();
                         return;
                     }
                     return;
-                case WifiManager.RSSI_PKTCNT_FETCH_SUCCEEDED /*151573*/:
+                case WifiManager.RSSI_PKTCNT_FETCH_SUCCEEDED /* 151573 */:
                     if (listener != null) {
                         RssiPacketCountInfo info = (RssiPacketCountInfo) message.obj;
                         if (info != null) {
@@ -1586,16 +1584,13 @@ public class WifiManager {
                             ((TxPacketCountListener) listener).onFailure(0);
                             return;
                         }
-                    } else {
-                        return;
                     }
-                case WifiManager.RSSI_PKTCNT_FETCH_FAILED /*151574*/:
+                    return;
+                case WifiManager.RSSI_PKTCNT_FETCH_FAILED /* 151574 */:
                     if (listener != null) {
                         ((TxPacketCountListener) listener).onFailure(message.arg1);
                         return;
                     }
-                    return;
-                default:
                     return;
             }
         }
@@ -1616,7 +1611,7 @@ public class WifiManager {
         return key;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public Object removeListener(int key) {
         Object listener;
         if (key == 0) {
@@ -1632,17 +1627,17 @@ public class WifiManager {
     private synchronized AsyncChannel getChannel() {
         if (this.mAsyncChannel == null) {
             Messenger messenger = getWifiServiceMessenger();
-            if (messenger != null) {
-                this.mAsyncChannel = new AsyncChannel();
-                this.mConnected = new CountDownLatch(1);
-                this.mAsyncChannel.connect(this.mContext, new ServiceHandler(this.mLooper), messenger);
-                try {
-                    this.mConnected.await();
-                } catch (InterruptedException e) {
-                    Log.e(TAG, "interrupted wait at init");
-                }
-            } else {
+            if (messenger == null) {
                 throw new IllegalStateException("getWifiServiceMessenger() returned null!  This is invalid.");
+            }
+            this.mAsyncChannel = new AsyncChannel();
+            this.mConnected = new CountDownLatch(1);
+            Handler handler = new ServiceHandler(this.mLooper);
+            this.mAsyncChannel.connect(this.mContext, handler, messenger);
+            try {
+                this.mConnected.await();
+            } catch (InterruptedException e) {
+                Log.m70e(TAG, "interrupted wait at init");
             }
         }
         return this.mAsyncChannel;
@@ -1650,58 +1645,52 @@ public class WifiManager {
 
     @SystemApi
     public void connect(WifiConfiguration config, ActionListener listener) {
-        if (config != null) {
-            getChannel().sendMessage(CONNECT_NETWORK, -1, putListener(listener), config);
-            return;
+        if (config == null) {
+            throw new IllegalArgumentException("config cannot be null");
         }
-        throw new IllegalArgumentException("config cannot be null");
+        getChannel().sendMessage(CONNECT_NETWORK, -1, putListener(listener), config);
     }
 
     @SystemApi
     public void connect(int networkId, ActionListener listener) {
-        if (networkId >= 0) {
-            getChannel().sendMessage(CONNECT_NETWORK, networkId, putListener(listener));
-            return;
+        if (networkId < 0) {
+            throw new IllegalArgumentException("Network id cannot be negative");
         }
-        throw new IllegalArgumentException("Network id cannot be negative");
+        getChannel().sendMessage(CONNECT_NETWORK, networkId, putListener(listener));
     }
 
     @SystemApi
     public void save(WifiConfiguration config, ActionListener listener) {
-        if (config != null) {
-            getChannel().sendMessage(SAVE_NETWORK, 0, putListener(listener), config);
-            return;
+        if (config == null) {
+            throw new IllegalArgumentException("config cannot be null");
         }
-        throw new IllegalArgumentException("config cannot be null");
+        getChannel().sendMessage(SAVE_NETWORK, 0, putListener(listener), config);
     }
 
     @SystemApi
     public void forget(int netId, ActionListener listener) {
-        if (netId >= 0) {
-            getChannel().sendMessage(FORGET_NETWORK, netId, putListener(listener));
-            return;
+        if (netId < 0) {
+            throw new IllegalArgumentException("Network id cannot be negative");
         }
-        throw new IllegalArgumentException("Network id cannot be negative");
+        getChannel().sendMessage(FORGET_NETWORK, netId, putListener(listener));
     }
 
     @SystemApi
     public void disable(int netId, ActionListener listener) {
-        if (netId >= 0) {
-            getChannel().sendMessage(DISABLE_NETWORK, netId, putListener(listener));
-            return;
+        if (netId < 0) {
+            throw new IllegalArgumentException("Network id cannot be negative");
         }
-        throw new IllegalArgumentException("Network id cannot be negative");
+        getChannel().sendMessage(DISABLE_NETWORK, netId, putListener(listener));
     }
 
     public void disableEphemeralNetwork(String SSID) {
-        if (SSID != null) {
-            try {
-                this.mService.disableEphemeralNetwork(SSID, this.mContext.getOpPackageName());
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
-        } else {
+        if (SSID == null) {
             throw new IllegalArgumentException("SSID cannot be null");
+        }
+        try {
+            this.mService.disableEphemeralNetwork(SSID, this.mContext.getOpPackageName());
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
         }
     }
 
@@ -1726,6 +1715,7 @@ public class WifiManager {
         }
     }
 
+    /* loaded from: classes3.dex */
     public class WifiLock {
         private final IBinder mBinder;
         private boolean mHeld;
@@ -1734,6 +1724,10 @@ public class WifiManager {
         private boolean mRefCounted;
         private String mTag;
         private WorkSource mWorkSource;
+
+        /* synthetic */ WifiLock(WifiManager x0, int x1, String x2, BinderC13811 x3) {
+            this(x1, x2);
+        }
 
         private WifiLock(int lockType, String tag) {
             this.mTag = tag;
@@ -1744,137 +1738,63 @@ public class WifiManager {
             this.mHeld = false;
         }
 
-        /* JADX WARNING: Code restructure failed: missing block: B:9:0x0012, code lost:
-            if (r7.mHeld == false) goto L_0x0014;
+        /* JADX WARN: Code restructure failed: missing block: B:10:0x0012, code lost:
+            if (r7.mHeld == false) goto L9;
          */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
+        /*
+            Code decompiled incorrectly, please refer to instructions dump.
+        */
         public void acquire() {
-            /*
-                r7 = this;
-                android.os.IBinder r0 = r7.mBinder
-                monitor-enter(r0)
-                boolean r1 = r7.mRefCounted     // Catch:{ all -> 0x0056 }
-                r2 = 1
-                if (r1 == 0) goto L_0x0010
-                int r1 = r7.mRefCount     // Catch:{ all -> 0x0056 }
-                int r1 = r1 + r2
-                r7.mRefCount = r1     // Catch:{ all -> 0x0056 }
-                if (r1 != r2) goto L_0x0054
-                goto L_0x0014
-            L_0x0010:
-                boolean r1 = r7.mHeld     // Catch:{ all -> 0x0056 }
-                if (r1 != 0) goto L_0x0054
-            L_0x0014:
-                android.net.wifi.WifiManager r1 = android.net.wifi.WifiManager.this     // Catch:{ RemoteException -> 0x004e }
-                android.net.wifi.IWifiManager r1 = r1.mService     // Catch:{ RemoteException -> 0x004e }
-                android.os.IBinder r3 = r7.mBinder     // Catch:{ RemoteException -> 0x004e }
-                int r4 = r7.mLockType     // Catch:{ RemoteException -> 0x004e }
-                java.lang.String r5 = r7.mTag     // Catch:{ RemoteException -> 0x004e }
-                android.os.WorkSource r6 = r7.mWorkSource     // Catch:{ RemoteException -> 0x004e }
-                r1.acquireWifiLock(r3, r4, r5, r6)     // Catch:{ RemoteException -> 0x004e }
-                android.net.wifi.WifiManager r1 = android.net.wifi.WifiManager.this     // Catch:{ RemoteException -> 0x004e }
-                monitor-enter(r1)     // Catch:{ RemoteException -> 0x004e }
-                android.net.wifi.WifiManager r3 = android.net.wifi.WifiManager.this     // Catch:{ all -> 0x004b }
-                int r3 = r3.mActiveLockCount     // Catch:{ all -> 0x004b }
-                r4 = 50
-                if (r3 >= r4) goto L_0x003a
-                android.net.wifi.WifiManager r3 = android.net.wifi.WifiManager.this     // Catch:{ all -> 0x004b }
-                android.net.wifi.WifiManager.access$808(r3)     // Catch:{ all -> 0x004b }
-                monitor-exit(r1)     // Catch:{ all -> 0x004b }
-                r7.mHeld = r2     // Catch:{ all -> 0x0056 }
-                goto L_0x0054
-            L_0x003a:
-                android.net.wifi.WifiManager r2 = android.net.wifi.WifiManager.this     // Catch:{ all -> 0x004b }
-                android.net.wifi.IWifiManager r2 = r2.mService     // Catch:{ all -> 0x004b }
-                android.os.IBinder r3 = r7.mBinder     // Catch:{ all -> 0x004b }
-                r2.releaseWifiLock(r3)     // Catch:{ all -> 0x004b }
-                java.lang.UnsupportedOperationException r2 = new java.lang.UnsupportedOperationException     // Catch:{ all -> 0x004b }
-                java.lang.String r3 = "Exceeded maximum number of wifi locks"
-                r2.<init>(r3)     // Catch:{ all -> 0x004b }
-                throw r2     // Catch:{ all -> 0x004b }
-            L_0x004b:
-                r2 = move-exception
-                monitor-exit(r1)     // Catch:{ all -> 0x004b }
-                throw r2     // Catch:{ RemoteException -> 0x004e }
-            L_0x004e:
-                r1 = move-exception
-                java.lang.RuntimeException r2 = r1.rethrowFromSystemServer()     // Catch:{ all -> 0x0056 }
-                throw r2     // Catch:{ all -> 0x0056 }
-            L_0x0054:
-                monitor-exit(r0)     // Catch:{ all -> 0x0056 }
-                return
-            L_0x0056:
-                r1 = move-exception
-                monitor-exit(r0)     // Catch:{ all -> 0x0056 }
-                throw r1
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.net.wifi.WifiManager.WifiLock.acquire():void");
+            synchronized (this.mBinder) {
+                if (this.mRefCounted) {
+                    int i = this.mRefCount + 1;
+                    this.mRefCount = i;
+                    if (i == 1) {
+                        try {
+                            WifiManager.this.mService.acquireWifiLock(this.mBinder, this.mLockType, this.mTag, this.mWorkSource);
+                            synchronized (WifiManager.this) {
+                                if (WifiManager.this.mActiveLockCount >= 50) {
+                                    WifiManager.this.mService.releaseWifiLock(this.mBinder);
+                                    throw new UnsupportedOperationException("Exceeded maximum number of wifi locks");
+                                }
+                                WifiManager.access$808(WifiManager.this);
+                            }
+                            this.mHeld = true;
+                        } catch (RemoteException e) {
+                            throw e.rethrowFromSystemServer();
+                        }
+                    }
+                }
+            }
         }
 
-        /* JADX WARNING: Code restructure failed: missing block: B:9:0x0012, code lost:
-            if (r4.mHeld != false) goto L_0x0014;
+        /* JADX WARN: Code restructure failed: missing block: B:10:0x0012, code lost:
+            if (r4.mHeld != false) goto L9;
          */
-        /* JADX WARNING: Removed duplicated region for block: B:30:0x0038 A[DONT_GENERATE] */
-        /* JADX WARNING: Removed duplicated region for block: B:32:0x003a  */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
+        /*
+            Code decompiled incorrectly, please refer to instructions dump.
+        */
         public void release() {
-            /*
-                r4 = this;
-                android.os.IBinder r0 = r4.mBinder
-                monitor-enter(r0)
-                boolean r1 = r4.mRefCounted     // Catch:{ all -> 0x0053 }
-                if (r1 == 0) goto L_0x0010
-                int r1 = r4.mRefCount     // Catch:{ all -> 0x0053 }
-                int r1 = r1 + -1
-                r4.mRefCount = r1     // Catch:{ all -> 0x0053 }
-                if (r1 != 0) goto L_0x0034
-                goto L_0x0014
-            L_0x0010:
-                boolean r1 = r4.mHeld     // Catch:{ all -> 0x0053 }
-                if (r1 == 0) goto L_0x0034
-            L_0x0014:
-                android.net.wifi.WifiManager r1 = android.net.wifi.WifiManager.this     // Catch:{ RemoteException -> 0x002e }
-                android.net.wifi.IWifiManager r1 = r1.mService     // Catch:{ RemoteException -> 0x002e }
-                android.os.IBinder r2 = r4.mBinder     // Catch:{ RemoteException -> 0x002e }
-                r1.releaseWifiLock(r2)     // Catch:{ RemoteException -> 0x002e }
-                android.net.wifi.WifiManager r1 = android.net.wifi.WifiManager.this     // Catch:{ RemoteException -> 0x002e }
-                monitor-enter(r1)     // Catch:{ RemoteException -> 0x002e }
-                android.net.wifi.WifiManager r2 = android.net.wifi.WifiManager.this     // Catch:{ all -> 0x002b }
-                android.net.wifi.WifiManager.access$810(r2)     // Catch:{ all -> 0x002b }
-                monitor-exit(r1)     // Catch:{ all -> 0x002b }
-                r1 = 0
-                r4.mHeld = r1     // Catch:{ all -> 0x0053 }
-                goto L_0x0034
-            L_0x002b:
-                r2 = move-exception
-                monitor-exit(r1)     // Catch:{ all -> 0x002b }
-                throw r2     // Catch:{ RemoteException -> 0x002e }
-            L_0x002e:
-                r1 = move-exception
-                java.lang.RuntimeException r2 = r1.rethrowFromSystemServer()     // Catch:{ all -> 0x0053 }
-                throw r2     // Catch:{ all -> 0x0053 }
-            L_0x0034:
-                int r1 = r4.mRefCount     // Catch:{ all -> 0x0053 }
-                if (r1 < 0) goto L_0x003a
-                monitor-exit(r0)     // Catch:{ all -> 0x0053 }
-                return
-            L_0x003a:
-                java.lang.RuntimeException r1 = new java.lang.RuntimeException     // Catch:{ all -> 0x0053 }
-                java.lang.StringBuilder r2 = new java.lang.StringBuilder     // Catch:{ all -> 0x0053 }
-                r2.<init>()     // Catch:{ all -> 0x0053 }
-                java.lang.String r3 = "WifiLock under-locked "
-                r2.append(r3)     // Catch:{ all -> 0x0053 }
-                java.lang.String r3 = r4.mTag     // Catch:{ all -> 0x0053 }
-                r2.append(r3)     // Catch:{ all -> 0x0053 }
-                java.lang.String r2 = r2.toString()     // Catch:{ all -> 0x0053 }
-                r1.<init>(r2)     // Catch:{ all -> 0x0053 }
-                throw r1     // Catch:{ all -> 0x0053 }
-            L_0x0053:
-                r1 = move-exception
-                monitor-exit(r0)     // Catch:{ all -> 0x0053 }
-                throw r1
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.net.wifi.WifiManager.WifiLock.release():void");
+            synchronized (this.mBinder) {
+                if (this.mRefCounted) {
+                    int i = this.mRefCount - 1;
+                    this.mRefCount = i;
+                    if (i == 0) {
+                        try {
+                            WifiManager.this.mService.releaseWifiLock(this.mBinder);
+                            synchronized (WifiManager.this) {
+                                WifiManager.access$810(WifiManager.this);
+                            }
+                            this.mHeld = false;
+                        } catch (RemoteException e) {
+                            throw e.rethrowFromSystemServer();
+                        }
+                    }
+                    if (this.mRefCount < 0) {
+                        throw new RuntimeException("WifiLock under-locked " + this.mTag);
+                    }
+                }
+            }
         }
 
         public void setReferenceCounted(boolean refCounted) {
@@ -1896,8 +1816,6 @@ public class WifiManager {
                         if (ws.isEmpty()) {
                             ws = null;
                         }
-                    } catch (RemoteException e) {
-                        throw e.rethrowFromSystemServer();
                     } catch (Throwable th) {
                         throw th;
                     }
@@ -1922,7 +1840,11 @@ public class WifiManager {
                     }
                 }
                 if (changed && this.mHeld) {
-                    WifiManager.this.mService.updateWifiLockWorkSource(this.mBinder, this.mWorkSource);
+                    try {
+                        WifiManager.this.mService.updateWifiLockWorkSource(this.mBinder, this.mWorkSource);
+                    } catch (RemoteException e) {
+                        throw e.rethrowFromSystemServer();
+                    }
                 }
             }
         }
@@ -1943,8 +1865,7 @@ public class WifiManager {
             return str;
         }
 
-        /* access modifiers changed from: protected */
-        public void finalize() throws Throwable {
+        protected void finalize() throws Throwable {
             super.finalize();
             synchronized (this.mBinder) {
                 if (this.mHeld) {
@@ -1962,24 +1883,29 @@ public class WifiManager {
     }
 
     public WifiLock createWifiLock(int lockType, String tag) {
-        return new WifiLock(lockType, tag);
+        return new WifiLock(this, lockType, tag, null);
     }
 
     @Deprecated
     public WifiLock createWifiLock(String tag) {
-        return new WifiLock(1, tag);
+        return new WifiLock(this, 1, tag, null);
     }
 
     public MulticastLock createMulticastLock(String tag) {
-        return new MulticastLock(tag);
+        return new MulticastLock(this, tag, null);
     }
 
+    /* loaded from: classes3.dex */
     public class MulticastLock {
         private final IBinder mBinder;
         private boolean mHeld;
         private int mRefCount;
         private boolean mRefCounted;
         private String mTag;
+
+        /* synthetic */ MulticastLock(WifiManager x0, String x1, BinderC13811 x2) {
+            this(x1);
+        }
 
         private MulticastLock(String tag) {
             this.mTag = tag;
@@ -1989,135 +1915,63 @@ public class WifiManager {
             this.mHeld = false;
         }
 
-        /* JADX WARNING: Code restructure failed: missing block: B:9:0x0012, code lost:
-            if (r5.mHeld == false) goto L_0x0014;
+        /* JADX WARN: Code restructure failed: missing block: B:10:0x0012, code lost:
+            if (r5.mHeld == false) goto L9;
          */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
+        /*
+            Code decompiled incorrectly, please refer to instructions dump.
+        */
         public void acquire() {
-            /*
-                r5 = this;
-                android.os.IBinder r0 = r5.mBinder
-                monitor-enter(r0)
-                boolean r1 = r5.mRefCounted     // Catch:{ all -> 0x0052 }
-                r2 = 1
-                if (r1 == 0) goto L_0x0010
-                int r1 = r5.mRefCount     // Catch:{ all -> 0x0052 }
-                int r1 = r1 + r2
-                r5.mRefCount = r1     // Catch:{ all -> 0x0052 }
-                if (r1 != r2) goto L_0x0050
-                goto L_0x0014
-            L_0x0010:
-                boolean r1 = r5.mHeld     // Catch:{ all -> 0x0052 }
-                if (r1 != 0) goto L_0x0050
-            L_0x0014:
-                android.net.wifi.WifiManager r1 = android.net.wifi.WifiManager.this     // Catch:{ RemoteException -> 0x004a }
-                android.net.wifi.IWifiManager r1 = r1.mService     // Catch:{ RemoteException -> 0x004a }
-                android.os.IBinder r3 = r5.mBinder     // Catch:{ RemoteException -> 0x004a }
-                java.lang.String r4 = r5.mTag     // Catch:{ RemoteException -> 0x004a }
-                r1.acquireMulticastLock(r3, r4)     // Catch:{ RemoteException -> 0x004a }
-                android.net.wifi.WifiManager r1 = android.net.wifi.WifiManager.this     // Catch:{ RemoteException -> 0x004a }
-                monitor-enter(r1)     // Catch:{ RemoteException -> 0x004a }
-                android.net.wifi.WifiManager r3 = android.net.wifi.WifiManager.this     // Catch:{ all -> 0x0047 }
-                int r3 = r3.mActiveLockCount     // Catch:{ all -> 0x0047 }
-                r4 = 50
-                if (r3 >= r4) goto L_0x0036
-                android.net.wifi.WifiManager r3 = android.net.wifi.WifiManager.this     // Catch:{ all -> 0x0047 }
-                android.net.wifi.WifiManager.access$808(r3)     // Catch:{ all -> 0x0047 }
-                monitor-exit(r1)     // Catch:{ all -> 0x0047 }
-                r5.mHeld = r2     // Catch:{ all -> 0x0052 }
-                goto L_0x0050
-            L_0x0036:
-                android.net.wifi.WifiManager r2 = android.net.wifi.WifiManager.this     // Catch:{ all -> 0x0047 }
-                android.net.wifi.IWifiManager r2 = r2.mService     // Catch:{ all -> 0x0047 }
-                java.lang.String r3 = r5.mTag     // Catch:{ all -> 0x0047 }
-                r2.releaseMulticastLock(r3)     // Catch:{ all -> 0x0047 }
-                java.lang.UnsupportedOperationException r2 = new java.lang.UnsupportedOperationException     // Catch:{ all -> 0x0047 }
-                java.lang.String r3 = "Exceeded maximum number of wifi locks"
-                r2.<init>(r3)     // Catch:{ all -> 0x0047 }
-                throw r2     // Catch:{ all -> 0x0047 }
-            L_0x0047:
-                r2 = move-exception
-                monitor-exit(r1)     // Catch:{ all -> 0x0047 }
-                throw r2     // Catch:{ RemoteException -> 0x004a }
-            L_0x004a:
-                r1 = move-exception
-                java.lang.RuntimeException r2 = r1.rethrowFromSystemServer()     // Catch:{ all -> 0x0052 }
-                throw r2     // Catch:{ all -> 0x0052 }
-            L_0x0050:
-                monitor-exit(r0)     // Catch:{ all -> 0x0052 }
-                return
-            L_0x0052:
-                r1 = move-exception
-                monitor-exit(r0)     // Catch:{ all -> 0x0052 }
-                throw r1
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.net.wifi.WifiManager.MulticastLock.acquire():void");
+            synchronized (this.mBinder) {
+                if (this.mRefCounted) {
+                    int i = this.mRefCount + 1;
+                    this.mRefCount = i;
+                    if (i == 1) {
+                        try {
+                            WifiManager.this.mService.acquireMulticastLock(this.mBinder, this.mTag);
+                            synchronized (WifiManager.this) {
+                                if (WifiManager.this.mActiveLockCount >= 50) {
+                                    WifiManager.this.mService.releaseMulticastLock(this.mTag);
+                                    throw new UnsupportedOperationException("Exceeded maximum number of wifi locks");
+                                }
+                                WifiManager.access$808(WifiManager.this);
+                            }
+                            this.mHeld = true;
+                        } catch (RemoteException e) {
+                            throw e.rethrowFromSystemServer();
+                        }
+                    }
+                }
+            }
         }
 
-        /* JADX WARNING: Code restructure failed: missing block: B:9:0x0012, code lost:
-            if (r4.mHeld != false) goto L_0x0014;
+        /* JADX WARN: Code restructure failed: missing block: B:10:0x0012, code lost:
+            if (r4.mHeld != false) goto L9;
          */
-        /* JADX WARNING: Removed duplicated region for block: B:30:0x0038 A[DONT_GENERATE] */
-        /* JADX WARNING: Removed duplicated region for block: B:32:0x003a  */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
+        /*
+            Code decompiled incorrectly, please refer to instructions dump.
+        */
         public void release() {
-            /*
-                r4 = this;
-                android.os.IBinder r0 = r4.mBinder
-                monitor-enter(r0)
-                boolean r1 = r4.mRefCounted     // Catch:{ all -> 0x0053 }
-                if (r1 == 0) goto L_0x0010
-                int r1 = r4.mRefCount     // Catch:{ all -> 0x0053 }
-                int r1 = r1 + -1
-                r4.mRefCount = r1     // Catch:{ all -> 0x0053 }
-                if (r1 != 0) goto L_0x0034
-                goto L_0x0014
-            L_0x0010:
-                boolean r1 = r4.mHeld     // Catch:{ all -> 0x0053 }
-                if (r1 == 0) goto L_0x0034
-            L_0x0014:
-                android.net.wifi.WifiManager r1 = android.net.wifi.WifiManager.this     // Catch:{ RemoteException -> 0x002e }
-                android.net.wifi.IWifiManager r1 = r1.mService     // Catch:{ RemoteException -> 0x002e }
-                java.lang.String r2 = r4.mTag     // Catch:{ RemoteException -> 0x002e }
-                r1.releaseMulticastLock(r2)     // Catch:{ RemoteException -> 0x002e }
-                android.net.wifi.WifiManager r1 = android.net.wifi.WifiManager.this     // Catch:{ RemoteException -> 0x002e }
-                monitor-enter(r1)     // Catch:{ RemoteException -> 0x002e }
-                android.net.wifi.WifiManager r2 = android.net.wifi.WifiManager.this     // Catch:{ all -> 0x002b }
-                android.net.wifi.WifiManager.access$810(r2)     // Catch:{ all -> 0x002b }
-                monitor-exit(r1)     // Catch:{ all -> 0x002b }
-                r1 = 0
-                r4.mHeld = r1     // Catch:{ all -> 0x0053 }
-                goto L_0x0034
-            L_0x002b:
-                r2 = move-exception
-                monitor-exit(r1)     // Catch:{ all -> 0x002b }
-                throw r2     // Catch:{ RemoteException -> 0x002e }
-            L_0x002e:
-                r1 = move-exception
-                java.lang.RuntimeException r2 = r1.rethrowFromSystemServer()     // Catch:{ all -> 0x0053 }
-                throw r2     // Catch:{ all -> 0x0053 }
-            L_0x0034:
-                int r1 = r4.mRefCount     // Catch:{ all -> 0x0053 }
-                if (r1 < 0) goto L_0x003a
-                monitor-exit(r0)     // Catch:{ all -> 0x0053 }
-                return
-            L_0x003a:
-                java.lang.RuntimeException r1 = new java.lang.RuntimeException     // Catch:{ all -> 0x0053 }
-                java.lang.StringBuilder r2 = new java.lang.StringBuilder     // Catch:{ all -> 0x0053 }
-                r2.<init>()     // Catch:{ all -> 0x0053 }
-                java.lang.String r3 = "MulticastLock under-locked "
-                r2.append(r3)     // Catch:{ all -> 0x0053 }
-                java.lang.String r3 = r4.mTag     // Catch:{ all -> 0x0053 }
-                r2.append(r3)     // Catch:{ all -> 0x0053 }
-                java.lang.String r2 = r2.toString()     // Catch:{ all -> 0x0053 }
-                r1.<init>(r2)     // Catch:{ all -> 0x0053 }
-                throw r1     // Catch:{ all -> 0x0053 }
-            L_0x0053:
-                r1 = move-exception
-                monitor-exit(r0)     // Catch:{ all -> 0x0053 }
-                throw r1
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.net.wifi.WifiManager.MulticastLock.release():void");
+            synchronized (this.mBinder) {
+                if (this.mRefCounted) {
+                    int i = this.mRefCount - 1;
+                    this.mRefCount = i;
+                    if (i == 0) {
+                        try {
+                            WifiManager.this.mService.releaseMulticastLock(this.mTag);
+                            synchronized (WifiManager.this) {
+                                WifiManager.access$810(WifiManager.this);
+                            }
+                            this.mHeld = false;
+                        } catch (RemoteException e) {
+                            throw e.rethrowFromSystemServer();
+                        }
+                    }
+                    if (this.mRefCount < 0) {
+                        throw new RuntimeException("MulticastLock under-locked " + this.mTag);
+                    }
+                }
+            }
         }
 
         public void setReferenceCounted(boolean refCounted) {
@@ -2148,8 +2002,7 @@ public class WifiManager {
             return str;
         }
 
-        /* access modifiers changed from: protected */
-        public void finalize() throws Throwable {
+        protected void finalize() throws Throwable {
             super.finalize();
             setReferenceCounted(false);
             release();
@@ -2174,8 +2027,7 @@ public class WifiManager {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         try {
             if (this.mAsyncChannel != null) {
                 this.mAsyncChannel.disconnect();
@@ -2190,7 +2042,7 @@ public class WifiManager {
         try {
             this.mService.enableVerboseLogging(verbose);
         } catch (Exception e) {
-            Log.e(TAG, "enableVerboseLogging " + e.toString());
+            Log.m70e(TAG, "enableVerboseLogging " + e.toString());
         }
     }
 
@@ -2265,17 +2117,18 @@ public class WifiManager {
     public void startSubscriptionProvisioning(OsuProvider provider, Executor executor, ProvisioningCallback callback) {
         if (executor == null) {
             throw new IllegalArgumentException("executor must not be null");
-        } else if (callback != null) {
-            try {
-                this.mService.startSubscriptionProvisioning(provider, new ProvisioningCallbackProxy(executor, callback));
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
-        } else {
+        }
+        if (callback == null) {
             throw new IllegalArgumentException("callback must not be null");
+        }
+        try {
+            this.mService.startSubscriptionProvisioning(provider, new ProvisioningCallbackProxy(executor, callback));
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
         }
     }
 
+    /* loaded from: classes3.dex */
     private static class ProvisioningCallbackProxy extends IProvisioningCallback.Stub {
         private final ProvisioningCallback mCallback;
         private final Executor mExecutor;
@@ -2285,36 +2138,30 @@ public class WifiManager {
             this.mCallback = callback;
         }
 
-        public void onProvisioningStatus(int status) {
-            this.mExecutor.execute(new Runnable(status) {
-                private final /* synthetic */ int f$1;
-
-                {
-                    this.f$1 = r2;
-                }
-
+        @Override // android.net.wifi.hotspot2.IProvisioningCallback
+        public void onProvisioningStatus(final int status) {
+            this.mExecutor.execute(new Runnable() { // from class: android.net.wifi.-$$Lambda$WifiManager$ProvisioningCallbackProxy$0_NXiwyrbrT_579x-6QMO0y3rzc
+                @Override // java.lang.Runnable
                 public final void run() {
-                    WifiManager.ProvisioningCallbackProxy.this.mCallback.onProvisioningStatus(this.f$1);
+                    WifiManager.ProvisioningCallbackProxy.this.mCallback.onProvisioningStatus(status);
                 }
             });
         }
 
-        public void onProvisioningFailure(int status) {
-            this.mExecutor.execute(new Runnable(status) {
-                private final /* synthetic */ int f$1;
-
-                {
-                    this.f$1 = r2;
-                }
-
+        @Override // android.net.wifi.hotspot2.IProvisioningCallback
+        public void onProvisioningFailure(final int status) {
+            this.mExecutor.execute(new Runnable() { // from class: android.net.wifi.-$$Lambda$WifiManager$ProvisioningCallbackProxy$rgPeSRj_1qriYZtaCu57EZHtc_Q
+                @Override // java.lang.Runnable
                 public final void run() {
-                    WifiManager.ProvisioningCallbackProxy.this.mCallback.onProvisioningFailure(this.f$1);
+                    WifiManager.ProvisioningCallbackProxy.this.mCallback.onProvisioningFailure(status);
                 }
             });
         }
 
+        @Override // android.net.wifi.hotspot2.IProvisioningCallback
         public void onProvisioningComplete() {
-            this.mExecutor.execute(new Runnable() {
+            this.mExecutor.execute(new Runnable() { // from class: android.net.wifi.-$$Lambda$WifiManager$ProvisioningCallbackProxy$ARmFIxMD9Os9eGpiffTyA3WhD0Q
+                @Override // java.lang.Runnable
                 public final void run() {
                     WifiManager.ProvisioningCallbackProxy.this.mCallback.onProvisioningComplete();
                 }
@@ -2322,6 +2169,7 @@ public class WifiManager {
         }
     }
 
+    /* loaded from: classes3.dex */
     private class TrafficStateCallbackProxy extends ITrafficStateCallback.Stub {
         private final TrafficStateCallback mCallback;
         private final Handler mHandler;
@@ -2331,47 +2179,43 @@ public class WifiManager {
             this.mCallback = callback;
         }
 
-        public void onStateChanged(int state) {
+        @Override // android.net.wifi.ITrafficStateCallback
+        public void onStateChanged(final int state) {
             if (WifiManager.this.mVerboseLoggingEnabled) {
-                Log.v(WifiManager.TAG, "TrafficStateCallbackProxy: onStateChanged state=" + state);
+                Log.m66v(WifiManager.TAG, "TrafficStateCallbackProxy: onStateChanged state=" + state);
             }
-            this.mHandler.post(new Runnable(state) {
-                private final /* synthetic */ int f$1;
-
-                {
-                    this.f$1 = r2;
-                }
-
+            this.mHandler.post(new Runnable() { // from class: android.net.wifi.-$$Lambda$WifiManager$TrafficStateCallbackProxy$zQoZBZ4jRXbcyDZer28skV_T0jI
+                @Override // java.lang.Runnable
                 public final void run() {
-                    WifiManager.TrafficStateCallbackProxy.this.mCallback.onStateChanged(this.f$1);
+                    WifiManager.TrafficStateCallbackProxy.this.mCallback.onStateChanged(state);
                 }
             });
         }
     }
 
     public void registerTrafficStateCallback(TrafficStateCallback callback, Handler handler) {
-        if (callback != null) {
-            Log.v(TAG, "registerTrafficStateCallback: callback=" + callback + ", handler=" + handler);
-            try {
-                this.mService.registerTrafficStateCallback(new Binder(), new TrafficStateCallbackProxy(handler == null ? this.mContext.getMainLooper() : handler.getLooper(), callback), callback.hashCode());
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
-        } else {
+        if (callback == null) {
             throw new IllegalArgumentException("callback cannot be null");
+        }
+        Log.m66v(TAG, "registerTrafficStateCallback: callback=" + callback + ", handler=" + handler);
+        Looper looper = handler == null ? this.mContext.getMainLooper() : handler.getLooper();
+        Binder binder = new Binder();
+        try {
+            this.mService.registerTrafficStateCallback(binder, new TrafficStateCallbackProxy(looper, callback), callback.hashCode());
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
         }
     }
 
     public void unregisterTrafficStateCallback(TrafficStateCallback callback) {
-        if (callback != null) {
-            Log.v(TAG, "unregisterTrafficStateCallback: callback=" + callback);
-            try {
-                this.mService.unregisterTrafficStateCallback(callback.hashCode());
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
-        } else {
+        if (callback == null) {
             throw new IllegalArgumentException("callback cannot be null");
+        }
+        Log.m66v(TAG, "unregisterTrafficStateCallback: callback=" + callback);
+        try {
+            this.mService.unregisterTrafficStateCallback(callback.hashCode());
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
         }
     }
 
@@ -2468,15 +2312,15 @@ public class WifiManager {
     }
 
     public boolean isWpa3SaeSupported() {
-        return isFeatureSupported(134217728);
+        return isFeatureSupported(134217728L);
     }
 
     public boolean isWpa3SuiteBSupported() {
-        return isFeatureSupported(268435456);
+        return isFeatureSupported(268435456L);
     }
 
     public boolean isEnhancedOpenSupported() {
-        return isFeatureSupported(536870912);
+        return isFeatureSupported(536870912L);
     }
 
     public boolean isEasyConnectSupported() {
@@ -2502,8 +2346,9 @@ public class WifiManager {
 
     @SystemApi
     public void startEasyConnectAsConfiguratorInitiator(String enrolleeUri, int selectedNetworkId, int enrolleeNetworkRole, Executor executor, EasyConnectStatusCallback callback) {
+        Binder binder = new Binder();
         try {
-            this.mService.startDppAsConfiguratorInitiator(new Binder(), enrolleeUri, selectedNetworkId, enrolleeNetworkRole, new EasyConnectCallbackProxy(executor, callback));
+            this.mService.startDppAsConfiguratorInitiator(binder, enrolleeUri, selectedNetworkId, enrolleeNetworkRole, new EasyConnectCallbackProxy(executor, callback));
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
         }
@@ -2511,8 +2356,9 @@ public class WifiManager {
 
     @SystemApi
     public void startEasyConnectAsEnrolleeInitiator(String configuratorUri, Executor executor, EasyConnectStatusCallback callback) {
+        Binder binder = new Binder();
         try {
-            this.mService.startDppAsEnrolleeInitiator(new Binder(), configuratorUri, new EasyConnectCallbackProxy(executor, callback));
+            this.mService.startDppAsEnrolleeInitiator(binder, configuratorUri, new EasyConnectCallbackProxy(executor, callback));
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
         }
@@ -2527,6 +2373,7 @@ public class WifiManager {
         }
     }
 
+    /* loaded from: classes3.dex */
     private static class EasyConnectCallbackProxy extends IDppCallback.Stub {
         private final EasyConnectStatusCallback mEasyConnectStatusCallback;
         private final Executor mExecutor;
@@ -2536,137 +2383,113 @@ public class WifiManager {
             this.mEasyConnectStatusCallback = easyConnectStatusCallback;
         }
 
-        public void onSuccessConfigReceived(int newNetworkId) {
-            Log.d(WifiManager.TAG, "Easy Connect onSuccessConfigReceived callback");
-            this.mExecutor.execute(new Runnable(newNetworkId) {
-                private final /* synthetic */ int f$1;
-
-                {
-                    this.f$1 = r2;
-                }
-
+        @Override // android.net.wifi.IDppCallback
+        public void onSuccessConfigReceived(final int newNetworkId) {
+            Log.m72d(WifiManager.TAG, "Easy Connect onSuccessConfigReceived callback");
+            this.mExecutor.execute(new Runnable() { // from class: android.net.wifi.-$$Lambda$WifiManager$EasyConnectCallbackProxy$ObU39aoKguVIx_qQTyZyomhDAAg
+                @Override // java.lang.Runnable
                 public final void run() {
-                    WifiManager.EasyConnectCallbackProxy.this.mEasyConnectStatusCallback.onEnrolleeSuccess(this.f$1);
+                    WifiManager.EasyConnectCallbackProxy.this.mEasyConnectStatusCallback.onEnrolleeSuccess(newNetworkId);
                 }
             });
         }
 
-        public void onSuccess(int status) {
-            Log.d(WifiManager.TAG, "Easy Connect onSuccess callback");
-            this.mExecutor.execute(new Runnable(status) {
-                private final /* synthetic */ int f$1;
-
-                {
-                    this.f$1 = r2;
-                }
-
+        @Override // android.net.wifi.IDppCallback
+        public void onSuccess(final int status) {
+            Log.m72d(WifiManager.TAG, "Easy Connect onSuccess callback");
+            this.mExecutor.execute(new Runnable() { // from class: android.net.wifi.-$$Lambda$WifiManager$EasyConnectCallbackProxy$wTsmN4734yyutavZxcKa2TZ-4Cc
+                @Override // java.lang.Runnable
                 public final void run() {
-                    WifiManager.EasyConnectCallbackProxy.this.mEasyConnectStatusCallback.onConfiguratorSuccess(this.f$1);
+                    WifiManager.EasyConnectCallbackProxy.this.mEasyConnectStatusCallback.onConfiguratorSuccess(status);
                 }
             });
         }
 
-        public void onFailure(int status) {
-            Log.d(WifiManager.TAG, "Easy Connect onFailure callback");
-            this.mExecutor.execute(new Runnable(status) {
-                private final /* synthetic */ int f$1;
-
-                {
-                    this.f$1 = r2;
-                }
-
+        @Override // android.net.wifi.IDppCallback
+        public void onFailure(final int status) {
+            Log.m72d(WifiManager.TAG, "Easy Connect onFailure callback");
+            this.mExecutor.execute(new Runnable() { // from class: android.net.wifi.-$$Lambda$WifiManager$EasyConnectCallbackProxy$fmVMj2ImIgtBYa9roBT0GyOubTI
+                @Override // java.lang.Runnable
                 public final void run() {
-                    WifiManager.EasyConnectCallbackProxy.this.mEasyConnectStatusCallback.onFailure(this.f$1);
+                    WifiManager.EasyConnectCallbackProxy.this.mEasyConnectStatusCallback.onFailure(status);
                 }
             });
         }
 
-        public void onProgress(int status) {
-            Log.d(WifiManager.TAG, "Easy Connect onProgress callback");
-            this.mExecutor.execute(new Runnable(status) {
-                private final /* synthetic */ int f$1;
-
-                {
-                    this.f$1 = r2;
-                }
-
+        @Override // android.net.wifi.IDppCallback
+        public void onProgress(final int status) {
+            Log.m72d(WifiManager.TAG, "Easy Connect onProgress callback");
+            this.mExecutor.execute(new Runnable() { // from class: android.net.wifi.-$$Lambda$WifiManager$EasyConnectCallbackProxy$YV1XBtKl8L8u8zCEX4lzLkOT6LQ
+                @Override // java.lang.Runnable
                 public final void run() {
-                    WifiManager.EasyConnectCallbackProxy.this.mEasyConnectStatusCallback.onProgress(this.f$1);
+                    WifiManager.EasyConnectCallbackProxy.this.mEasyConnectStatusCallback.onProgress(status);
                 }
             });
         }
     }
 
     @SystemApi
-    public void addOnWifiUsabilityStatsListener(final Executor executor, final OnWifiUsabilityStatsListener listener) {
+    public void addOnWifiUsabilityStatsListener(Executor executor, OnWifiUsabilityStatsListener listener) {
         if (executor == null) {
             throw new IllegalArgumentException("executor cannot be null");
-        } else if (listener != null) {
-            if (this.mVerboseLoggingEnabled) {
-                Log.v(TAG, "addOnWifiUsabilityStatsListener: listener=" + listener);
-            }
-            try {
-                this.mService.addOnWifiUsabilityStatsListener(new Binder(), new IOnWifiUsabilityStatsListener.Stub() {
-                    public void onWifiUsabilityStats(int seqNum, boolean isSameBssidAndFreq, WifiUsabilityStatsEntry stats) {
-                        if (WifiManager.this.mVerboseLoggingEnabled) {
-                            Log.v(WifiManager.TAG, "OnWifiUsabilityStatsListener: onWifiUsabilityStats: seqNum=" + seqNum);
-                        }
-                        Binder.withCleanCallingIdentity((FunctionalUtils.ThrowingRunnable) new FunctionalUtils.ThrowingRunnable(executor, listener, seqNum, isSameBssidAndFreq, stats) {
-                            private final /* synthetic */ Executor f$0;
-                            private final /* synthetic */ WifiManager.OnWifiUsabilityStatsListener f$1;
-                            private final /* synthetic */ int f$2;
-                            private final /* synthetic */ boolean f$3;
-                            private final /* synthetic */ WifiUsabilityStatsEntry f$4;
-
-                            {
-                                this.f$0 = r1;
-                                this.f$1 = r2;
-                                this.f$2 = r3;
-                                this.f$3 = r4;
-                                this.f$4 = r5;
-                            }
-
-                            public final void runOrThrow() {
-                                this.f$0.execute(new Runnable(this.f$2, this.f$3, this.f$4) {
-                                    private final /* synthetic */ int f$1;
-                                    private final /* synthetic */ boolean f$2;
-                                    private final /* synthetic */ WifiUsabilityStatsEntry f$3;
-
-                                    {
-                                        this.f$1 = r2;
-                                        this.f$2 = r3;
-                                        this.f$3 = r4;
-                                    }
-
-                                    public final void run() {
-                                        WifiManager.OnWifiUsabilityStatsListener.this.onWifiUsabilityStats(this.f$1, this.f$2, this.f$3);
-                                    }
-                                });
-                            }
-                        });
-                    }
-                }, listener.hashCode());
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
-        } else {
+        }
+        if (listener == null) {
             throw new IllegalArgumentException("listener cannot be null");
+        }
+        if (this.mVerboseLoggingEnabled) {
+            Log.m66v(TAG, "addOnWifiUsabilityStatsListener: listener=" + listener);
+        }
+        try {
+            this.mService.addOnWifiUsabilityStatsListener(new Binder(), new BinderC13811(executor, listener), listener.hashCode());
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
+        }
+    }
+
+    /* renamed from: android.net.wifi.WifiManager$1 */
+    /* loaded from: classes3.dex */
+    class BinderC13811 extends IOnWifiUsabilityStatsListener.Stub {
+        final /* synthetic */ Executor val$executor;
+        final /* synthetic */ OnWifiUsabilityStatsListener val$listener;
+
+        BinderC13811(Executor executor, OnWifiUsabilityStatsListener onWifiUsabilityStatsListener) {
+            this.val$executor = executor;
+            this.val$listener = onWifiUsabilityStatsListener;
+        }
+
+        @Override // android.net.wifi.IOnWifiUsabilityStatsListener
+        public void onWifiUsabilityStats(final int seqNum, final boolean isSameBssidAndFreq, final WifiUsabilityStatsEntry stats) {
+            if (WifiManager.this.mVerboseLoggingEnabled) {
+                Log.m66v(WifiManager.TAG, "OnWifiUsabilityStatsListener: onWifiUsabilityStats: seqNum=" + seqNum);
+            }
+            final Executor executor = this.val$executor;
+            final OnWifiUsabilityStatsListener onWifiUsabilityStatsListener = this.val$listener;
+            Binder.withCleanCallingIdentity(new FunctionalUtils.ThrowingRunnable() { // from class: android.net.wifi.-$$Lambda$WifiManager$1$HHq94tH9ygKDknRiBOn9DYskiOc
+                @Override // com.android.internal.util.FunctionalUtils.ThrowingRunnable
+                public final void runOrThrow() {
+                    executor.execute(new Runnable() { // from class: android.net.wifi.-$$Lambda$WifiManager$1$jN3hHFyvfp2UAuLO8N-VxYJuzY8
+                        @Override // java.lang.Runnable
+                        public final void run() {
+                            WifiManager.OnWifiUsabilityStatsListener.this.onWifiUsabilityStats(r2, r3, r4);
+                        }
+                    });
+                }
+            });
         }
     }
 
     @SystemApi
     public void removeOnWifiUsabilityStatsListener(OnWifiUsabilityStatsListener listener) {
-        if (listener != null) {
-            if (this.mVerboseLoggingEnabled) {
-                Log.v(TAG, "removeOnWifiUsabilityStatsListener: listener=" + listener);
-            }
-            try {
-                this.mService.removeOnWifiUsabilityStatsListener(listener.hashCode());
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
-        } else {
+        if (listener == null) {
             throw new IllegalArgumentException("listener cannot be null");
+        }
+        if (this.mVerboseLoggingEnabled) {
+            Log.m66v(TAG, "removeOnWifiUsabilityStatsListener: listener=" + listener);
+        }
+        try {
+            this.mService.removeOnWifiUsabilityStatsListener(listener.hashCode());
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
         }
     }
 

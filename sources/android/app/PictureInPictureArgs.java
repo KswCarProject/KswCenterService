@@ -2,19 +2,24 @@ package android.app;
 
 import android.annotation.UnsupportedAppUsage;
 import android.graphics.Rect;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.Rational;
 import java.util.ArrayList;
 import java.util.List;
 
 @Deprecated
+/* loaded from: classes.dex */
 public final class PictureInPictureArgs implements Parcelable {
-    public static final Parcelable.Creator<PictureInPictureArgs> CREATOR = new Parcelable.Creator<PictureInPictureArgs>() {
+    public static final Parcelable.Creator<PictureInPictureArgs> CREATOR = new Parcelable.Creator<PictureInPictureArgs>() { // from class: android.app.PictureInPictureArgs.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PictureInPictureArgs createFromParcel(Parcel in) {
             return new PictureInPictureArgs(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PictureInPictureArgs[] newArray(int size) {
             return new PictureInPictureArgs[size];
         }
@@ -24,6 +29,7 @@ public final class PictureInPictureArgs implements Parcelable {
     private Rect mSourceRectHintInsets;
     private List<RemoteAction> mUserActions;
 
+    /* loaded from: classes.dex */
     public static class Builder {
         private Rational mAspectRatio;
         private Rect mSourceRectHint;
@@ -54,12 +60,13 @@ public final class PictureInPictureArgs implements Parcelable {
         }
 
         public PictureInPictureArgs build() {
-            return new PictureInPictureArgs(this.mAspectRatio, this.mUserActions, this.mSourceRectHint);
+            PictureInPictureArgs args = new PictureInPictureArgs(this.mAspectRatio, this.mUserActions, this.mSourceRectHint);
+            return args;
         }
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public PictureInPictureArgs() {
     }
 
@@ -88,14 +95,14 @@ public final class PictureInPictureArgs implements Parcelable {
         this.mSourceRectHint = sourceRectHint;
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public void setAspectRatio(float aspectRatio) {
         this.mAspectRatio = new Rational((int) (1.0E9f * aspectRatio), 1000000000);
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public void setActions(List<RemoteAction> actions) {
         if (this.mUserActions != null) {
             this.mUserActions = null;
@@ -173,17 +180,19 @@ public final class PictureInPictureArgs implements Parcelable {
     }
 
     public boolean hasSourceBoundsHint() {
-        return this.mSourceRectHint != null && !this.mSourceRectHint.isEmpty();
+        return (this.mSourceRectHint == null || this.mSourceRectHint.isEmpty()) ? false : true;
     }
 
     public boolean hasSourceBoundsHintInsets() {
         return this.mSourceRectHintInsets != null;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         if (this.mAspectRatio != null) {
             out.writeInt(1);

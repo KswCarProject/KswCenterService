@@ -7,16 +7,15 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
 
+/* loaded from: classes4.dex */
 public abstract class OrientationEventListener {
     private static final boolean DEBUG = false;
     public static final int ORIENTATION_UNKNOWN = -1;
     private static final String TAG = "OrientationEventListener";
     private static final boolean localLOGV = false;
     private boolean mEnabled;
-    /* access modifiers changed from: private */
-    public OrientationListener mOldListener;
-    /* access modifiers changed from: private */
-    public int mOrientation;
+    private OrientationListener mOldListener;
+    private int mOrientation;
     private int mRate;
     private Sensor mSensor;
     private SensorEventListener mSensorEventListener;
@@ -39,14 +38,13 @@ public abstract class OrientationEventListener {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void registerListener(OrientationListener lis) {
+    void registerListener(OrientationListener lis) {
         this.mOldListener = lis;
     }
 
     public void enable() {
         if (this.mSensor == null) {
-            Log.w(TAG, "Cannot detect sensors. Not enabled");
+            Log.m64w(TAG, "Cannot detect sensors. Not enabled");
         } else if (!this.mEnabled) {
             this.mSensorManager.registerListener(this.mSensorEventListener, this.mSensor, this.mRate);
             this.mEnabled = true;
@@ -55,13 +53,14 @@ public abstract class OrientationEventListener {
 
     public void disable() {
         if (this.mSensor == null) {
-            Log.w(TAG, "Cannot detect sensors. Invalid disable");
+            Log.m64w(TAG, "Cannot detect sensors. Invalid disable");
         } else if (this.mEnabled) {
             this.mSensorManager.unregisterListener(this.mSensorEventListener);
             this.mEnabled = false;
         }
     }
 
+    /* loaded from: classes4.dex */
     class SensorEventListenerImpl implements SensorEventListener {
         private static final int _DATA_X = 0;
         private static final int _DATA_Y = 1;
@@ -70,14 +69,17 @@ public abstract class OrientationEventListener {
         SensorEventListenerImpl() {
         }
 
+        @Override // android.hardware.SensorEventListener
         public void onSensorChanged(SensorEvent event) {
             float[] values = event.values;
             int orientation = -1;
             float X = -values[0];
             float Y = -values[1];
             float Z = -values[2];
-            if (4.0f * ((X * X) + (Y * Y)) >= Z * Z) {
-                orientation = 90 - Math.round(((float) Math.atan2((double) (-Y), (double) X)) * 57.29578f);
+            float magnitude = (X * X) + (Y * Y);
+            if (4.0f * magnitude >= Z * Z) {
+                float angle = ((float) Math.atan2(-Y, X)) * 57.29578f;
+                orientation = 90 - Math.round(angle);
                 while (orientation >= 360) {
                     orientation -= 360;
                 }
@@ -89,11 +91,12 @@ public abstract class OrientationEventListener {
                 OrientationEventListener.this.mOldListener.onSensorChanged(1, event.values);
             }
             if (orientation != OrientationEventListener.this.mOrientation) {
-                int unused = OrientationEventListener.this.mOrientation = orientation;
+                OrientationEventListener.this.mOrientation = orientation;
                 OrientationEventListener.this.onOrientationChanged(orientation);
             }
         }
 
+        @Override // android.hardware.SensorEventListener
         public void onAccuracyChanged(Sensor sensor, int accuracy) {
         }
     }

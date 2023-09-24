@@ -1,25 +1,28 @@
 package android.view;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Looper;
-import android.os.MessageQueue;
+import android.p007os.Looper;
+import android.p007os.MessageQueue;
 import android.util.LongSparseArray;
 import android.util.Pools;
 import dalvik.system.CloseGuard;
 import java.lang.ref.WeakReference;
 
+/* loaded from: classes4.dex */
 public final class InputQueue {
     private final LongSparseArray<ActiveInputEvent> mActiveEventArray = new LongSparseArray<>(20);
     private final Pools.Pool<ActiveInputEvent> mActiveInputEventPool = new Pools.SimplePool(20);
     private final CloseGuard mCloseGuard = CloseGuard.get();
     private long mPtr = nativeInit(new WeakReference(this), Looper.myQueue());
 
+    /* loaded from: classes4.dex */
     public interface Callback {
         void onInputQueueCreated(InputQueue inputQueue);
 
         void onInputQueueDestroyed(InputQueue inputQueue);
     }
 
+    /* loaded from: classes4.dex */
     public interface FinishedInputEventCallback {
         void onFinishedInputEvent(Object obj, boolean z);
     }
@@ -36,8 +39,7 @@ public final class InputQueue {
         this.mCloseGuard.open("dispose");
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         try {
             dispose(true);
         } finally {
@@ -58,7 +60,7 @@ public final class InputQueue {
         }
         if (this.mPtr != 0) {
             nativeDispose(this.mPtr);
-            this.mPtr = 0;
+            this.mPtr = 0L;
         }
     }
 
@@ -103,6 +105,7 @@ public final class InputQueue {
         this.mActiveInputEventPool.release(e);
     }
 
+    /* loaded from: classes4.dex */
     private final class ActiveInputEvent {
         public FinishedInputEventCallback mCallback;
         public Object mToken;

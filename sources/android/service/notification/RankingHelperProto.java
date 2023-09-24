@@ -1,10 +1,12 @@
 package android.service.notification;
 
+/* loaded from: classes3.dex */
 public final class RankingHelperProto {
     public static final long NOTIFICATION_SIGNAL_EXTRACTORS = 2237677961217L;
     public static final long RECORDS = 2246267895810L;
     public static final long RECORDS_RESTORED_WITHOUT_UID = 2246267895811L;
 
+    /* loaded from: classes3.dex */
     public final class RecordProto {
         public static final long CHANNELS = 2246267895815L;
         public static final long CHANNEL_GROUPS = 2246267895816L;

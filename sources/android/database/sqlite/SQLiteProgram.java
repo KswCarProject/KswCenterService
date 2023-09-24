@@ -2,9 +2,10 @@ package android.database.sqlite;
 
 import android.annotation.UnsupportedAppUsage;
 import android.database.DatabaseUtils;
-import android.os.CancellationSignal;
+import android.p007os.CancellationSignal;
 import java.util.Arrays;
 
+/* loaded from: classes.dex */
 public abstract class SQLiteProgram extends SQLiteClosable {
     private static final String[] EMPTY_STRING_ARRAY = new String[0];
     @UnsupportedAppUsage
@@ -29,7 +30,7 @@ public abstract class SQLiteProgram extends SQLiteClosable {
                 this.mNumParameters = 0;
                 break;
             default:
-                boolean assumeReadOnly = n != 1 ? false : true;
+                boolean assumeReadOnly = n == 1;
                 SQLiteStatementInfo info = new SQLiteStatementInfo();
                 db.getThreadSession().prepare(this.mSql, db.getThreadDefaultConnectionFlags(assumeReadOnly), cancellationSignalForPrepare, info);
                 this.mReadOnly = info.readOnly;
@@ -49,38 +50,31 @@ public abstract class SQLiteProgram extends SQLiteClosable {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public final SQLiteDatabase getDatabase() {
+    final SQLiteDatabase getDatabase() {
         return this.mDatabase;
     }
 
-    /* access modifiers changed from: package-private */
-    public final String getSql() {
+    final String getSql() {
         return this.mSql;
     }
 
-    /* access modifiers changed from: package-private */
-    public final Object[] getBindArgs() {
+    final Object[] getBindArgs() {
         return this.mBindArgs;
     }
 
-    /* access modifiers changed from: package-private */
-    public final String[] getColumnNames() {
+    final String[] getColumnNames() {
         return this.mColumnNames;
     }
 
-    /* access modifiers changed from: protected */
-    public final SQLiteSession getSession() {
+    protected final SQLiteSession getSession() {
         return this.mDatabase.getThreadSession();
     }
 
-    /* access modifiers changed from: protected */
-    public final int getConnectionFlags() {
+    protected final int getConnectionFlags() {
         return this.mDatabase.getThreadDefaultConnectionFlags(this.mReadOnly);
     }
 
-    /* access modifiers changed from: protected */
-    public final void onCorruption() {
+    protected final void onCorruption() {
         this.mDatabase.onCorruption();
     }
 
@@ -90,7 +84,7 @@ public abstract class SQLiteProgram extends SQLiteClosable {
     }
 
     public void bindNull(int index) {
-        bind(index, (Object) null);
+        bind(index, null);
     }
 
     public void bindLong(int index, long value) {
@@ -102,19 +96,17 @@ public abstract class SQLiteProgram extends SQLiteClosable {
     }
 
     public void bindString(int index, String value) {
-        if (value != null) {
-            bind(index, value);
-            return;
+        if (value == null) {
+            throw new IllegalArgumentException("the bind value at index " + index + " is null");
         }
-        throw new IllegalArgumentException("the bind value at index " + index + " is null");
+        bind(index, value);
     }
 
     public void bindBlob(int index, byte[] value) {
-        if (value != null) {
-            bind(index, value);
-            return;
+        if (value == null) {
+            throw new IllegalArgumentException("the bind value at index " + index + " is null");
         }
-        throw new IllegalArgumentException("the bind value at index " + index + " is null");
+        bind(index, value);
     }
 
     public void clearBindings() {
@@ -131,8 +123,8 @@ public abstract class SQLiteProgram extends SQLiteClosable {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onAllReferencesReleased() {
+    @Override // android.database.sqlite.SQLiteClosable
+    protected void onAllReferencesReleased() {
         clearBindings();
     }
 

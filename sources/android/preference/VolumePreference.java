@@ -4,9 +4,8 @@ import android.annotation.UnsupportedAppUsage;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.net.Uri;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.preference.SeekBarVolumizer;
@@ -14,24 +13,26 @@ import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.SeekBar;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
 @Deprecated
+/* loaded from: classes3.dex */
 public class VolumePreference extends SeekBarDialogPreference implements PreferenceManager.OnActivityStopListener, View.OnKeyListener, SeekBarVolumizer.Callback {
     private SeekBarVolumizer mSeekBarVolumizer;
     @UnsupportedAppUsage
     private int mStreamType;
 
+    /* loaded from: classes3.dex */
     public static class VolumeStore {
         @UnsupportedAppUsage
-        public int originalVolume = -1;
-        @UnsupportedAppUsage
         public int volume = -1;
+        @UnsupportedAppUsage
+        public int originalVolume = -1;
     }
 
     public VolumePreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.VolumePreference, defStyleAttr, defStyleRes);
+        TypedArray a = context.obtainStyledAttributes(attrs, C3132R.styleable.VolumePreference, defStyleAttr, defStyleRes);
         this.mStreamType = a.getInt(0, 0);
         a.recycle();
     }
@@ -42,29 +43,31 @@ public class VolumePreference extends SeekBarDialogPreference implements Prefere
 
     @UnsupportedAppUsage
     public VolumePreference(Context context, AttributeSet attrs) {
-        this(context, attrs, R.attr.seekBarDialogPreferenceStyle);
+        this(context, attrs, C3132R.attr.seekBarDialogPreferenceStyle);
     }
 
     public VolumePreference(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public void setStreamType(int streamType) {
         this.mStreamType = streamType;
     }
 
-    /* access modifiers changed from: protected */
-    public void onBindDialogView(View view) {
+    @Override // android.preference.SeekBarDialogPreference, android.preference.DialogPreference
+    protected void onBindDialogView(View view) {
         super.onBindDialogView(view);
-        this.mSeekBarVolumizer = new SeekBarVolumizer(getContext(), this.mStreamType, (Uri) null, this);
+        SeekBar seekBar = (SeekBar) view.findViewById(C3132R.C3134id.seekbar);
+        this.mSeekBarVolumizer = new SeekBarVolumizer(getContext(), this.mStreamType, null, this);
         this.mSeekBarVolumizer.start();
-        this.mSeekBarVolumizer.setSeekBar((SeekBar) view.findViewById(R.id.seekbar));
+        this.mSeekBarVolumizer.setSeekBar(seekBar);
         getPreferenceManager().registerOnActivityStopListener(this);
         view.setOnKeyListener(this);
         view.setFocusableInTouchMode(true);
         view.requestFocus();
     }
 
+    @Override // android.preference.Preference
     public boolean onKey(View v, int keyCode, KeyEvent event) {
         if (this.mSeekBarVolumizer == null) {
             return true;
@@ -85,16 +88,15 @@ public class VolumePreference extends SeekBarDialogPreference implements Prefere
                 default:
                     return false;
             }
-        } else {
-            if (isdown) {
-                this.mSeekBarVolumizer.muteVolume();
-            }
-            return true;
         }
+        if (isdown) {
+            this.mSeekBarVolumizer.muteVolume();
+        }
+        return true;
     }
 
-    /* access modifiers changed from: protected */
-    public void onDialogClosed(boolean positiveResult) {
+    @Override // android.preference.DialogPreference
+    protected void onDialogClosed(boolean positiveResult) {
         super.onDialogClosed(positiveResult);
         if (!positiveResult && this.mSeekBarVolumizer != null) {
             this.mSeekBarVolumizer.revertVolume();
@@ -102,6 +104,7 @@ public class VolumePreference extends SeekBarDialogPreference implements Prefere
         cleanup();
     }
 
+    @Override // android.preference.PreferenceManager.OnActivityStopListener
     public void onActivityStop() {
         if (this.mSeekBarVolumizer != null) {
             this.mSeekBarVolumizer.stopSample();
@@ -113,9 +116,9 @@ public class VolumePreference extends SeekBarDialogPreference implements Prefere
         if (this.mSeekBarVolumizer != null) {
             Dialog dialog = getDialog();
             if (dialog != null && dialog.isShowing()) {
-                View view = dialog.getWindow().getDecorView().findViewById(R.id.seekbar);
+                View view = dialog.getWindow().getDecorView().findViewById(C3132R.C3134id.seekbar);
                 if (view != null) {
-                    view.setOnKeyListener((View.OnKeyListener) null);
+                    view.setOnKeyListener(null);
                 }
                 this.mSeekBarVolumizer.revertVolume();
             }
@@ -124,20 +127,23 @@ public class VolumePreference extends SeekBarDialogPreference implements Prefere
         }
     }
 
+    @Override // android.preference.SeekBarVolumizer.Callback
     public void onSampleStarting(SeekBarVolumizer volumizer) {
         if (this.mSeekBarVolumizer != null && volumizer != this.mSeekBarVolumizer) {
             this.mSeekBarVolumizer.stopSample();
         }
     }
 
+    @Override // android.preference.SeekBarVolumizer.Callback
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromTouch) {
     }
 
+    @Override // android.preference.SeekBarVolumizer.Callback
     public void onMuted(boolean muted, boolean zenMuted) {
     }
 
-    /* access modifiers changed from: protected */
-    public Parcelable onSaveInstanceState() {
+    @Override // android.preference.DialogPreference, android.preference.Preference
+    protected Parcelable onSaveInstanceState() {
         Parcelable superState = super.onSaveInstanceState();
         if (isPersistent()) {
             return superState;
@@ -149,8 +155,8 @@ public class VolumePreference extends SeekBarDialogPreference implements Prefere
         return myState;
     }
 
-    /* access modifiers changed from: protected */
-    public void onRestoreInstanceState(Parcelable state) {
+    @Override // android.preference.DialogPreference, android.preference.Preference
+    protected void onRestoreInstanceState(Parcelable state) {
         if (state == null || !state.getClass().equals(SavedState.class)) {
             super.onRestoreInstanceState(state);
             return;
@@ -162,37 +168,44 @@ public class VolumePreference extends SeekBarDialogPreference implements Prefere
         }
     }
 
+    /* loaded from: classes3.dex */
     private static class SavedState extends Preference.BaseSavedState {
-        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
+        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() { // from class: android.preference.VolumePreference.SavedState.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public SavedState createFromParcel(Parcel in) {
                 return new SavedState(in);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public SavedState[] newArray(int size) {
                 return new SavedState[size];
             }
         };
-        VolumeStore mVolumeStore = new VolumeStore();
+        VolumeStore mVolumeStore;
 
         public SavedState(Parcel source) {
             super(source);
+            this.mVolumeStore = new VolumeStore();
             this.mVolumeStore.volume = source.readInt();
             this.mVolumeStore.originalVolume = source.readInt();
         }
 
+        @Override // android.view.AbsSavedState, android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             super.writeToParcel(dest, flags);
             dest.writeInt(this.mVolumeStore.volume);
             dest.writeInt(this.mVolumeStore.originalVolume);
         }
 
-        /* access modifiers changed from: package-private */
-        public VolumeStore getVolumeStore() {
+        VolumeStore getVolumeStore() {
             return this.mVolumeStore;
         }
 
         public SavedState(Parcelable superState) {
             super(superState);
+            this.mVolumeStore = new VolumeStore();
         }
     }
 }

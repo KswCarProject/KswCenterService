@@ -1,18 +1,22 @@
 package android.telephony.ims.aidl;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Message;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Message;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.telephony.ims.ImsCallProfile;
+import android.telephony.ims.aidl.IImsCapabilityCallback;
+import android.telephony.ims.aidl.IImsMmTelListener;
+import android.telephony.ims.aidl.IImsSmsListener;
 import android.telephony.ims.feature.CapabilityChangeRequest;
 import com.android.ims.internal.IImsCallSession;
 import com.android.ims.internal.IImsEcbm;
 import com.android.ims.internal.IImsMultiEndpoint;
 import com.android.ims.internal.IImsUt;
 
+/* loaded from: classes4.dex */
 public interface IImsMmTelFeature extends IInterface {
     void acknowledgeSms(int i, int i2, int i3) throws RemoteException;
 
@@ -54,81 +58,104 @@ public interface IImsMmTelFeature extends IInterface {
 
     int shouldProcessCall(String[] strArr) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IImsMmTelFeature {
+        @Override // android.telephony.ims.aidl.IImsMmTelFeature
         public void setListener(IImsMmTelListener l) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsMmTelFeature
         public int getFeatureState() throws RemoteException {
             return 0;
         }
 
+        @Override // android.telephony.ims.aidl.IImsMmTelFeature
         public ImsCallProfile createCallProfile(int callSessionType, int callType) throws RemoteException {
             return null;
         }
 
+        @Override // android.telephony.ims.aidl.IImsMmTelFeature
         public IImsCallSession createCallSession(ImsCallProfile profile) throws RemoteException {
             return null;
         }
 
+        @Override // android.telephony.ims.aidl.IImsMmTelFeature
         public int shouldProcessCall(String[] uris) throws RemoteException {
             return 0;
         }
 
+        @Override // android.telephony.ims.aidl.IImsMmTelFeature
         public IImsUt getUtInterface() throws RemoteException {
             return null;
         }
 
+        @Override // android.telephony.ims.aidl.IImsMmTelFeature
         public IImsEcbm getEcbmInterface() throws RemoteException {
             return null;
         }
 
+        @Override // android.telephony.ims.aidl.IImsMmTelFeature
         public void setUiTtyMode(int uiTtyMode, Message onCompleteMessage) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsMmTelFeature
         public IImsMultiEndpoint getMultiEndpointInterface() throws RemoteException {
             return null;
         }
 
+        @Override // android.telephony.ims.aidl.IImsMmTelFeature
         public int queryCapabilityStatus() throws RemoteException {
             return 0;
         }
 
+        @Override // android.telephony.ims.aidl.IImsMmTelFeature
         public void addCapabilityCallback(IImsCapabilityCallback c) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsMmTelFeature
         public void removeCapabilityCallback(IImsCapabilityCallback c) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsMmTelFeature
         public void changeCapabilitiesConfiguration(CapabilityChangeRequest request, IImsCapabilityCallback c) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsMmTelFeature
         public void queryCapabilityConfiguration(int capability, int radioTech, IImsCapabilityCallback c) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsMmTelFeature
         public void setSmsListener(IImsSmsListener l) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsMmTelFeature
         public void sendSms(int token, int messageRef, String format, String smsc, boolean retry, byte[] pdu) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsMmTelFeature
         public void acknowledgeSms(int token, int messageRef, int result) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsMmTelFeature
         public void acknowledgeSmsReport(int token, int messageRef, int result) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsMmTelFeature
         public String getSmsFormat() throws RemoteException {
             return null;
         }
 
+        @Override // android.telephony.ims.aidl.IImsMmTelFeature
         public void onSmsReady() throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IImsMmTelFeature {
         private static final String DESCRIPTOR = "android.telephony.ims.aidl.IImsMmTelFeature";
         static final int TRANSACTION_acknowledgeSms = 17;
@@ -161,12 +188,13 @@ public interface IImsMmTelFeature extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IImsMmTelFeature)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IImsMmTelFeature)) {
+                return (IImsMmTelFeature) iin;
             }
-            return (IImsMmTelFeature) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -218,259 +246,163 @@ public interface IImsMmTelFeature extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v9, resolved type: android.os.Message} */
-        /* JADX WARNING: type inference failed for: r1v0 */
-        /* JADX WARNING: type inference failed for: r1v2, types: [android.os.IBinder] */
-        /* JADX WARNING: type inference failed for: r1v5, types: [android.os.IBinder] */
-        /* JADX WARNING: type inference failed for: r1v7, types: [android.os.IBinder] */
-        /* JADX WARNING: type inference failed for: r1v13, types: [android.os.IBinder] */
-        /* JADX WARNING: type inference failed for: r1v15 */
-        /* JADX WARNING: type inference failed for: r1v25 */
-        /* JADX WARNING: type inference failed for: r1v26 */
-        /* JADX WARNING: type inference failed for: r1v27 */
-        /* JADX WARNING: type inference failed for: r1v28 */
-        /* JADX WARNING: type inference failed for: r1v29 */
-        /* JADX WARNING: type inference failed for: r1v30 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r19, android.os.Parcel r20, android.os.Parcel r21, int r22) throws android.os.RemoteException {
-            /*
-                r18 = this;
-                r7 = r18
-                r8 = r19
-                r9 = r20
-                r10 = r21
-                java.lang.String r11 = "android.telephony.ims.aidl.IImsMmTelFeature"
-                r0 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r12 = 1
-                if (r8 == r0) goto L_0x01cb
-                r0 = 0
-                r1 = 0
-                switch(r8) {
-                    case 1: goto L_0x01b9;
-                    case 2: goto L_0x01ab;
-                    case 3: goto L_0x018c;
-                    case 4: goto L_0x0167;
-                    case 5: goto L_0x0155;
-                    case 6: goto L_0x0140;
-                    case 7: goto L_0x012b;
-                    case 8: goto L_0x010d;
-                    case 9: goto L_0x00f8;
-                    case 10: goto L_0x00ea;
-                    case 11: goto L_0x00db;
-                    case 12: goto L_0x00cc;
-                    case 13: goto L_0x00ab;
-                    case 14: goto L_0x0094;
-                    case 15: goto L_0x0082;
-                    case 16: goto L_0x0055;
-                    case 17: goto L_0x0042;
-                    case 18: goto L_0x002f;
-                    case 19: goto L_0x0021;
-                    case 20: goto L_0x001a;
-                    default: goto L_0x0015;
-                }
-            L_0x0015:
-                boolean r0 = super.onTransact(r19, r20, r21, r22)
-                return r0
-            L_0x001a:
-                r9.enforceInterface(r11)
-                r18.onSmsReady()
-                return r12
-            L_0x0021:
-                r9.enforceInterface(r11)
-                java.lang.String r0 = r18.getSmsFormat()
-                r21.writeNoException()
-                r10.writeString(r0)
-                return r12
-            L_0x002f:
-                r9.enforceInterface(r11)
-                int r0 = r20.readInt()
-                int r1 = r20.readInt()
-                int r2 = r20.readInt()
-                r7.acknowledgeSmsReport(r0, r1, r2)
-                return r12
-            L_0x0042:
-                r9.enforceInterface(r11)
-                int r0 = r20.readInt()
-                int r1 = r20.readInt()
-                int r2 = r20.readInt()
-                r7.acknowledgeSms(r0, r1, r2)
-                return r12
-            L_0x0055:
-                r9.enforceInterface(r11)
-                int r13 = r20.readInt()
-                int r14 = r20.readInt()
-                java.lang.String r15 = r20.readString()
-                java.lang.String r16 = r20.readString()
-                int r1 = r20.readInt()
-                if (r1 == 0) goto L_0x0070
-                r5 = r12
-                goto L_0x0071
-            L_0x0070:
-                r5 = r0
-            L_0x0071:
-                byte[] r17 = r20.createByteArray()
-                r0 = r18
-                r1 = r13
-                r2 = r14
-                r3 = r15
-                r4 = r16
-                r6 = r17
-                r0.sendSms(r1, r2, r3, r4, r5, r6)
-                return r12
-            L_0x0082:
-                r9.enforceInterface(r11)
-                android.os.IBinder r0 = r20.readStrongBinder()
-                android.telephony.ims.aidl.IImsSmsListener r0 = android.telephony.ims.aidl.IImsSmsListener.Stub.asInterface(r0)
-                r7.setSmsListener(r0)
-                r21.writeNoException()
-                return r12
-            L_0x0094:
-                r9.enforceInterface(r11)
-                int r0 = r20.readInt()
-                int r1 = r20.readInt()
-                android.os.IBinder r2 = r20.readStrongBinder()
-                android.telephony.ims.aidl.IImsCapabilityCallback r2 = android.telephony.ims.aidl.IImsCapabilityCallback.Stub.asInterface(r2)
-                r7.queryCapabilityConfiguration(r0, r1, r2)
-                return r12
-            L_0x00ab:
-                r9.enforceInterface(r11)
-                int r0 = r20.readInt()
-                if (r0 == 0) goto L_0x00be
-                android.os.Parcelable$Creator<android.telephony.ims.feature.CapabilityChangeRequest> r0 = android.telephony.ims.feature.CapabilityChangeRequest.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r9)
-                r1 = r0
-                android.telephony.ims.feature.CapabilityChangeRequest r1 = (android.telephony.ims.feature.CapabilityChangeRequest) r1
-                goto L_0x00bf
-            L_0x00be:
-            L_0x00bf:
-                r0 = r1
-                android.os.IBinder r1 = r20.readStrongBinder()
-                android.telephony.ims.aidl.IImsCapabilityCallback r1 = android.telephony.ims.aidl.IImsCapabilityCallback.Stub.asInterface(r1)
-                r7.changeCapabilitiesConfiguration(r0, r1)
-                return r12
-            L_0x00cc:
-                r9.enforceInterface(r11)
-                android.os.IBinder r0 = r20.readStrongBinder()
-                android.telephony.ims.aidl.IImsCapabilityCallback r0 = android.telephony.ims.aidl.IImsCapabilityCallback.Stub.asInterface(r0)
-                r7.removeCapabilityCallback(r0)
-                return r12
-            L_0x00db:
-                r9.enforceInterface(r11)
-                android.os.IBinder r0 = r20.readStrongBinder()
-                android.telephony.ims.aidl.IImsCapabilityCallback r0 = android.telephony.ims.aidl.IImsCapabilityCallback.Stub.asInterface(r0)
-                r7.addCapabilityCallback(r0)
-                return r12
-            L_0x00ea:
-                r9.enforceInterface(r11)
-                int r0 = r18.queryCapabilityStatus()
-                r21.writeNoException()
-                r10.writeInt(r0)
-                return r12
-            L_0x00f8:
-                r9.enforceInterface(r11)
-                com.android.ims.internal.IImsMultiEndpoint r0 = r18.getMultiEndpointInterface()
-                r21.writeNoException()
-                if (r0 == 0) goto L_0x0109
-                android.os.IBinder r1 = r0.asBinder()
-            L_0x0109:
-                r10.writeStrongBinder(r1)
-                return r12
-            L_0x010d:
-                r9.enforceInterface(r11)
-                int r0 = r20.readInt()
-                int r2 = r20.readInt()
-                if (r2 == 0) goto L_0x0123
-                android.os.Parcelable$Creator<android.os.Message> r1 = android.os.Message.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r9)
-                android.os.Message r1 = (android.os.Message) r1
-                goto L_0x0124
-            L_0x0123:
-            L_0x0124:
-                r7.setUiTtyMode(r0, r1)
-                r21.writeNoException()
-                return r12
-            L_0x012b:
-                r9.enforceInterface(r11)
-                com.android.ims.internal.IImsEcbm r0 = r18.getEcbmInterface()
-                r21.writeNoException()
-                if (r0 == 0) goto L_0x013c
-                android.os.IBinder r1 = r0.asBinder()
-            L_0x013c:
-                r10.writeStrongBinder(r1)
-                return r12
-            L_0x0140:
-                r9.enforceInterface(r11)
-                com.android.ims.internal.IImsUt r0 = r18.getUtInterface()
-                r21.writeNoException()
-                if (r0 == 0) goto L_0x0151
-                android.os.IBinder r1 = r0.asBinder()
-            L_0x0151:
-                r10.writeStrongBinder(r1)
-                return r12
-            L_0x0155:
-                r9.enforceInterface(r11)
-                java.lang.String[] r0 = r20.createStringArray()
-                int r1 = r7.shouldProcessCall(r0)
-                r21.writeNoException()
-                r10.writeInt(r1)
-                return r12
-            L_0x0167:
-                r9.enforceInterface(r11)
-                int r0 = r20.readInt()
-                if (r0 == 0) goto L_0x0179
-                android.os.Parcelable$Creator<android.telephony.ims.ImsCallProfile> r0 = android.telephony.ims.ImsCallProfile.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r9)
-                android.telephony.ims.ImsCallProfile r0 = (android.telephony.ims.ImsCallProfile) r0
-                goto L_0x017a
-            L_0x0179:
-                r0 = r1
-            L_0x017a:
-                com.android.ims.internal.IImsCallSession r2 = r7.createCallSession(r0)
-                r21.writeNoException()
-                if (r2 == 0) goto L_0x0188
-                android.os.IBinder r1 = r2.asBinder()
-            L_0x0188:
-                r10.writeStrongBinder(r1)
-                return r12
-            L_0x018c:
-                r9.enforceInterface(r11)
-                int r1 = r20.readInt()
-                int r2 = r20.readInt()
-                android.telephony.ims.ImsCallProfile r3 = r7.createCallProfile(r1, r2)
-                r21.writeNoException()
-                if (r3 == 0) goto L_0x01a7
-                r10.writeInt(r12)
-                r3.writeToParcel(r10, r12)
-                goto L_0x01aa
-            L_0x01a7:
-                r10.writeInt(r0)
-            L_0x01aa:
-                return r12
-            L_0x01ab:
-                r9.enforceInterface(r11)
-                int r0 = r18.getFeatureState()
-                r21.writeNoException()
-                r10.writeInt(r0)
-                return r12
-            L_0x01b9:
-                r9.enforceInterface(r11)
-                android.os.IBinder r0 = r20.readStrongBinder()
-                android.telephony.ims.aidl.IImsMmTelListener r0 = android.telephony.ims.aidl.IImsMmTelListener.Stub.asInterface(r0)
-                r7.setListener(r0)
-                r21.writeNoException()
-                return r12
-            L_0x01cb:
-                r10.writeString(r11)
-                return r12
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.telephony.ims.aidl.IImsMmTelFeature.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            ImsCallProfile _arg0;
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    IImsMmTelListener _arg02 = IImsMmTelListener.Stub.asInterface(data.readStrongBinder());
+                    setListener(_arg02);
+                    reply.writeNoException();
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result = getFeatureState();
+                    reply.writeNoException();
+                    reply.writeInt(_result);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg03 = data.readInt();
+                    int _arg1 = data.readInt();
+                    ImsCallProfile _result2 = createCallProfile(_arg03, _arg1);
+                    reply.writeNoException();
+                    if (_result2 != null) {
+                        reply.writeInt(1);
+                        _result2.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg0 = ImsCallProfile.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg0 = null;
+                    }
+                    IImsCallSession _result3 = createCallSession(_arg0);
+                    reply.writeNoException();
+                    reply.writeStrongBinder(_result3 != null ? _result3.asBinder() : null);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    String[] _arg04 = data.createStringArray();
+                    int _result4 = shouldProcessCall(_arg04);
+                    reply.writeNoException();
+                    reply.writeInt(_result4);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    IImsUt _result5 = getUtInterface();
+                    reply.writeNoException();
+                    reply.writeStrongBinder(_result5 != null ? _result5.asBinder() : null);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    IImsEcbm _result6 = getEcbmInterface();
+                    reply.writeNoException();
+                    reply.writeStrongBinder(_result6 != null ? _result6.asBinder() : null);
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg05 = data.readInt();
+                    Message _arg12 = data.readInt() != 0 ? Message.CREATOR.createFromParcel(data) : null;
+                    setUiTtyMode(_arg05, _arg12);
+                    reply.writeNoException();
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    IImsMultiEndpoint _result7 = getMultiEndpointInterface();
+                    reply.writeNoException();
+                    reply.writeStrongBinder(_result7 != null ? _result7.asBinder() : null);
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result8 = queryCapabilityStatus();
+                    reply.writeNoException();
+                    reply.writeInt(_result8);
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    IImsCapabilityCallback _arg06 = IImsCapabilityCallback.Stub.asInterface(data.readStrongBinder());
+                    addCapabilityCallback(_arg06);
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    IImsCapabilityCallback _arg07 = IImsCapabilityCallback.Stub.asInterface(data.readStrongBinder());
+                    removeCapabilityCallback(_arg07);
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    CapabilityChangeRequest _arg08 = data.readInt() != 0 ? CapabilityChangeRequest.CREATOR.createFromParcel(data) : null;
+                    CapabilityChangeRequest _arg09 = _arg08;
+                    IImsCapabilityCallback _arg13 = IImsCapabilityCallback.Stub.asInterface(data.readStrongBinder());
+                    changeCapabilitiesConfiguration(_arg09, _arg13);
+                    return true;
+                case 14:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg010 = data.readInt();
+                    int _arg14 = data.readInt();
+                    IImsCapabilityCallback _arg2 = IImsCapabilityCallback.Stub.asInterface(data.readStrongBinder());
+                    queryCapabilityConfiguration(_arg010, _arg14, _arg2);
+                    return true;
+                case 15:
+                    data.enforceInterface(DESCRIPTOR);
+                    IImsSmsListener _arg011 = IImsSmsListener.Stub.asInterface(data.readStrongBinder());
+                    setSmsListener(_arg011);
+                    reply.writeNoException();
+                    return true;
+                case 16:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg012 = data.readInt();
+                    int _arg15 = data.readInt();
+                    String _arg22 = data.readString();
+                    String _arg3 = data.readString();
+                    boolean _arg4 = data.readInt() != 0;
+                    byte[] _arg5 = data.createByteArray();
+                    sendSms(_arg012, _arg15, _arg22, _arg3, _arg4, _arg5);
+                    return true;
+                case 17:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg013 = data.readInt();
+                    int _arg16 = data.readInt();
+                    int _arg23 = data.readInt();
+                    acknowledgeSms(_arg013, _arg16, _arg23);
+                    return true;
+                case 18:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg014 = data.readInt();
+                    int _arg17 = data.readInt();
+                    int _arg24 = data.readInt();
+                    acknowledgeSmsReport(_arg014, _arg17, _arg24);
+                    return true;
+                case 19:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _result9 = getSmsFormat();
+                    reply.writeNoException();
+                    reply.writeString(_result9);
+                    return true;
+                case 20:
+                    data.enforceInterface(DESCRIPTOR);
+                    onSmsReady();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IImsMmTelFeature {
             public static IImsMmTelFeature sDefaultImpl;
             private IBinder mRemote;
@@ -479,6 +411,7 @@ public interface IImsMmTelFeature extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -487,37 +420,37 @@ public interface IImsMmTelFeature extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.telephony.ims.aidl.IImsMmTelFeature
             public void setListener(IImsMmTelListener l) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(l != null ? l.asBinder() : null);
-                    if (this.mRemote.transact(1, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setListener(l);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setListener(l);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsMmTelFeature
             public int getFeatureState() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(2, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getFeatureState();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -525,6 +458,7 @@ public interface IImsMmTelFeature extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsMmTelFeature
             public ImsCallProfile createCallProfile(int callSessionType, int callType) throws RemoteException {
                 ImsCallProfile _result;
                 Parcel _data = Parcel.obtain();
@@ -533,7 +467,8 @@ public interface IImsMmTelFeature extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(callSessionType);
                     _data.writeInt(callType);
-                    if (!this.mRemote.transact(3, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().createCallProfile(callSessionType, callType);
                     }
                     _reply.readException();
@@ -542,16 +477,14 @@ public interface IImsMmTelFeature extends IInterface {
                     } else {
                         _result = null;
                     }
-                    ImsCallProfile _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsMmTelFeature
             public IImsCallSession createCallSession(ImsCallProfile profile) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -563,13 +496,12 @@ public interface IImsMmTelFeature extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(4, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().createCallSession(profile);
                     }
                     _reply.readException();
                     IImsCallSession _result = IImsCallSession.Stub.asInterface(_reply.readStrongBinder());
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -577,19 +509,19 @@ public interface IImsMmTelFeature extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsMmTelFeature
             public int shouldProcessCall(String[] uris) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStringArray(uris);
-                    if (!this.mRemote.transact(5, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().shouldProcessCall(uris);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -597,18 +529,18 @@ public interface IImsMmTelFeature extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsMmTelFeature
             public IImsUt getUtInterface() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(6, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getUtInterface();
                     }
                     _reply.readException();
                     IImsUt _result = IImsUt.Stub.asInterface(_reply.readStrongBinder());
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -616,18 +548,18 @@ public interface IImsMmTelFeature extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsMmTelFeature
             public IImsEcbm getEcbmInterface() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(7, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getEcbmInterface();
                     }
                     _reply.readException();
                     IImsEcbm _result = IImsEcbm.Stub.asInterface(_reply.readStrongBinder());
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -635,6 +567,7 @@ public interface IImsMmTelFeature extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsMmTelFeature
             public void setUiTtyMode(int uiTtyMode, Message onCompleteMessage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -647,31 +580,30 @@ public interface IImsMmTelFeature extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(8, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setUiTtyMode(uiTtyMode, onCompleteMessage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setUiTtyMode(uiTtyMode, onCompleteMessage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsMmTelFeature
             public IImsMultiEndpoint getMultiEndpointInterface() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(9, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(9, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getMultiEndpointInterface();
                     }
                     _reply.readException();
                     IImsMultiEndpoint _result = IImsMultiEndpoint.Stub.asInterface(_reply.readStrongBinder());
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -679,18 +611,18 @@ public interface IImsMmTelFeature extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsMmTelFeature
             public int queryCapabilityStatus() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(10, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(10, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().queryCapabilityStatus();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -698,14 +630,14 @@ public interface IImsMmTelFeature extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsMmTelFeature
             public void addCapabilityCallback(IImsCapabilityCallback c) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(c != null ? c.asBinder() : null);
-                    if (this.mRemote.transact(11, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(11, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().addCapabilityCallback(c);
                     }
                 } finally {
@@ -713,14 +645,14 @@ public interface IImsMmTelFeature extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsMmTelFeature
             public void removeCapabilityCallback(IImsCapabilityCallback c) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(c != null ? c.asBinder() : null);
-                    if (this.mRemote.transact(12, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(12, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().removeCapabilityCallback(c);
                     }
                 } finally {
@@ -728,6 +660,7 @@ public interface IImsMmTelFeature extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsMmTelFeature
             public void changeCapabilitiesConfiguration(CapabilityChangeRequest request, IImsCapabilityCallback c) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -739,9 +672,8 @@ public interface IImsMmTelFeature extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeStrongBinder(c != null ? c.asBinder() : null);
-                    if (this.mRemote.transact(13, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(13, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().changeCapabilitiesConfiguration(request, c);
                     }
                 } finally {
@@ -749,6 +681,7 @@ public interface IImsMmTelFeature extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsMmTelFeature
             public void queryCapabilityConfiguration(int capability, int radioTech, IImsCapabilityCallback c) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -756,9 +689,8 @@ public interface IImsMmTelFeature extends IInterface {
                     _data.writeInt(capability);
                     _data.writeInt(radioTech);
                     _data.writeStrongBinder(c != null ? c.asBinder() : null);
-                    if (this.mRemote.transact(14, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(14, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().queryCapabilityConfiguration(capability, radioTech, c);
                     }
                 } finally {
@@ -766,25 +698,26 @@ public interface IImsMmTelFeature extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsMmTelFeature
             public void setSmsListener(IImsSmsListener l) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(l != null ? l.asBinder() : null);
-                    if (this.mRemote.transact(15, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(15, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setSmsListener(l);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setSmsListener(l);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsMmTelFeature
             public void sendSms(int token, int messageRef, String format, String smsc, boolean retry, byte[] pdu) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -793,84 +726,61 @@ public interface IImsMmTelFeature extends IInterface {
                         _data.writeInt(token);
                     } catch (Throwable th) {
                         th = th;
-                        int i = messageRef;
-                        String str = format;
-                        String str2 = smsc;
-                        boolean z = retry;
-                        byte[] bArr = pdu;
                         _data.recycle();
                         throw th;
                     }
                     try {
                         _data.writeInt(messageRef);
-                        try {
-                            _data.writeString(format);
-                            try {
-                                _data.writeString(smsc);
-                            } catch (Throwable th2) {
-                                th = th2;
-                                boolean z2 = retry;
-                                byte[] bArr2 = pdu;
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th3) {
-                            th = th3;
-                            String str22 = smsc;
-                            boolean z22 = retry;
-                            byte[] bArr22 = pdu;
-                            _data.recycle();
-                            throw th;
-                        }
-                    } catch (Throwable th4) {
-                        th = th4;
-                        String str3 = format;
-                        String str222 = smsc;
-                        boolean z222 = retry;
-                        byte[] bArr222 = pdu;
+                    } catch (Throwable th2) {
+                        th = th2;
                         _data.recycle();
                         throw th;
                     }
                     try {
+                        _data.writeString(format);
+                    } catch (Throwable th3) {
+                        th = th3;
+                        _data.recycle();
+                        throw th;
+                    }
+                } catch (Throwable th4) {
+                    th = th4;
+                }
+                try {
+                    _data.writeString(smsc);
+                    try {
                         _data.writeInt(retry ? 1 : 0);
                         try {
                             _data.writeByteArray(pdu);
-                            try {
-                                if (this.mRemote.transact(16, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                                    _data.recycle();
-                                    return;
-                                }
-                                Stub.getDefaultImpl().sendSms(token, messageRef, format, smsc, retry, pdu);
-                                _data.recycle();
-                            } catch (Throwable th5) {
-                                th = th5;
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th6) {
-                            th = th6;
-                            _data.recycle();
-                            throw th;
+                        } catch (Throwable th5) {
+                            th = th5;
                         }
+                    } catch (Throwable th6) {
+                        th = th6;
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        boolean _status = this.mRemote.transact(16, _data, null, 1);
+                        if (!_status && Stub.getDefaultImpl() != null) {
+                            Stub.getDefaultImpl().sendSms(token, messageRef, format, smsc, retry, pdu);
+                            _data.recycle();
+                            return;
+                        }
+                        _data.recycle();
                     } catch (Throwable th7) {
                         th = th7;
-                        byte[] bArr2222 = pdu;
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th8) {
                     th = th8;
-                    int i2 = token;
-                    int i3 = messageRef;
-                    String str32 = format;
-                    String str2222 = smsc;
-                    boolean z2222 = retry;
-                    byte[] bArr22222 = pdu;
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsMmTelFeature
             public void acknowledgeSms(int token, int messageRef, int result) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -878,9 +788,8 @@ public interface IImsMmTelFeature extends IInterface {
                     _data.writeInt(token);
                     _data.writeInt(messageRef);
                     _data.writeInt(result);
-                    if (this.mRemote.transact(17, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(17, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().acknowledgeSms(token, messageRef, result);
                     }
                 } finally {
@@ -888,6 +797,7 @@ public interface IImsMmTelFeature extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsMmTelFeature
             public void acknowledgeSmsReport(int token, int messageRef, int result) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -895,9 +805,8 @@ public interface IImsMmTelFeature extends IInterface {
                     _data.writeInt(token);
                     _data.writeInt(messageRef);
                     _data.writeInt(result);
-                    if (this.mRemote.transact(18, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(18, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().acknowledgeSmsReport(token, messageRef, result);
                     }
                 } finally {
@@ -905,18 +814,18 @@ public interface IImsMmTelFeature extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsMmTelFeature
             public String getSmsFormat() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(19, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(19, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getSmsFormat();
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -924,13 +833,13 @@ public interface IImsMmTelFeature extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsMmTelFeature
             public void onSmsReady() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(20, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(20, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onSmsReady();
                     }
                 } finally {
@@ -940,11 +849,11 @@ public interface IImsMmTelFeature extends IInterface {
         }
 
         public static boolean setDefaultImpl(IImsMmTelFeature impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IImsMmTelFeature getDefaultImpl() {

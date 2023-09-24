@@ -2,7 +2,7 @@ package com.android.internal.app;
 
 import android.app.ActivityManager;
 import android.content.Context;
-import android.content.pm.PackageManager;
+import android.content.p002pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BlurMaskFilter;
@@ -19,13 +19,15 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.DrawableWrapper;
-import android.os.UserHandle;
+import android.p007os.UserHandle;
 import android.util.AttributeSet;
 import android.util.Pools;
-import com.android.internal.R;
+import com.android.internal.C3132R;
+import java.nio.ByteBuffer;
 import org.xmlpull.v1.XmlPullParser;
 
 @Deprecated
+/* loaded from: classes4.dex */
 public class SimpleIconFactory {
     private static final int AMBIENT_SHADOW_ALPHA = 30;
     private static final float BLUR_FACTOR = 0.010416667f;
@@ -43,36 +45,38 @@ public class SimpleIconFactory {
     private float mAdaptiveIconScale;
     private int mBadgeBitmapSize;
     private final Bitmap mBitmap;
-    private Paint mBlurPaint = new Paint(3);
     private final Rect mBounds;
-    private Canvas mCanvas;
     private Context mContext;
     private BlurMaskFilter mDefaultBlurMaskFilter;
-    private Paint mDrawPaint = new Paint(3);
     private int mFillResIconDpi;
     private int mIconBitmapSize;
     private final float[] mLeftBorder;
     private final int mMaxSize;
-    private final Rect mOldBounds = new Rect();
     private final byte[] mPixels;
     private PackageManager mPm;
     private final float[] mRightBorder;
     private final Canvas mScaleCheckCanvas;
     private int mWrapperBackgroundColor;
     private Drawable mWrapperIcon;
+    private final Rect mOldBounds = new Rect();
+    private Paint mBlurPaint = new Paint(3);
+    private Paint mDrawPaint = new Paint(3);
+    private Canvas mCanvas = new Canvas();
 
     @Deprecated
     public static SimpleIconFactory obtain(Context ctx) {
         SimpleIconFactory instance = sPool.acquire();
-        if (instance != null) {
-            return instance;
+        if (instance == null) {
+            ActivityManager am = (ActivityManager) ctx.getSystemService(Context.ACTIVITY_SERVICE);
+            int iconDpi = am == null ? 0 : am.getLauncherLargeIconDensity();
+            Resources r = ctx.getResources();
+            int iconSize = r.getDimensionPixelSize(C3132R.dimen.resolver_icon_size);
+            int badgeSize = r.getDimensionPixelSize(C3132R.dimen.resolver_badge_size);
+            SimpleIconFactory instance2 = new SimpleIconFactory(ctx, iconDpi, iconSize, badgeSize);
+            instance2.setWrapperBackgroundColor(-1);
+            return instance2;
         }
-        ActivityManager am = (ActivityManager) ctx.getSystemService(Context.ACTIVITY_SERVICE);
-        int iconDpi = am == null ? 0 : am.getLauncherLargeIconDensity();
-        Resources r = ctx.getResources();
-        SimpleIconFactory instance2 = new SimpleIconFactory(ctx, iconDpi, r.getDimensionPixelSize(R.dimen.resolver_icon_size), r.getDimensionPixelSize(R.dimen.resolver_badge_size));
-        instance2.setWrapperBackgroundColor(-1);
-        return instance2;
+        return instance;
     }
 
     @Deprecated
@@ -88,56 +92,53 @@ public class SimpleIconFactory {
         this.mIconBitmapSize = iconBitmapSize;
         this.mBadgeBitmapSize = badgeBitmapSize;
         this.mFillResIconDpi = fillResIconDpi;
-        this.mCanvas = new Canvas();
         this.mCanvas.setDrawFilter(new PaintFlagsDrawFilter(4, 2));
         this.mMaxSize = iconBitmapSize * 2;
         this.mBitmap = Bitmap.createBitmap(this.mMaxSize, this.mMaxSize, Bitmap.Config.ALPHA_8);
         this.mScaleCheckCanvas = new Canvas(this.mBitmap);
-        this.mPixels = new byte[(this.mMaxSize * this.mMaxSize)];
+        this.mPixels = new byte[this.mMaxSize * this.mMaxSize];
         this.mLeftBorder = new float[this.mMaxSize];
         this.mRightBorder = new float[this.mMaxSize];
         this.mBounds = new Rect();
         this.mAdaptiveIconBounds = new Rect();
         this.mAdaptiveIconScale = 0.0f;
-        this.mDefaultBlurMaskFilter = new BlurMaskFilter(((float) iconBitmapSize) * BLUR_FACTOR, BlurMaskFilter.Blur.NORMAL);
+        this.mDefaultBlurMaskFilter = new BlurMaskFilter(iconBitmapSize * BLUR_FACTOR, BlurMaskFilter.Blur.NORMAL);
     }
 
-    /* access modifiers changed from: package-private */
     @Deprecated
-    public void setWrapperBackgroundColor(int color) {
+    void setWrapperBackgroundColor(int color) {
         this.mWrapperBackgroundColor = Color.alpha(color) < 255 ? -1 : color;
     }
 
-    /* access modifiers changed from: package-private */
     @Deprecated
-    public Bitmap createUserBadgedIconBitmap(Drawable icon, UserHandle user) {
+    Bitmap createUserBadgedIconBitmap(Drawable icon, UserHandle user) {
         Bitmap result;
         float[] scale = new float[1];
         if (icon == null) {
             icon = getFullResDefaultActivityIcon(this.mFillResIconDpi);
         }
-        Drawable icon2 = normalizeAndWrapToAdaptiveIcon(icon, (RectF) null, scale);
+        Drawable icon2 = normalizeAndWrapToAdaptiveIcon(icon, null, scale);
         Bitmap bitmap = createIconBitmap(icon2, scale[0]);
         if (icon2 instanceof AdaptiveIconDrawable) {
             this.mCanvas.setBitmap(bitmap);
             recreateIcon(Bitmap.createBitmap(bitmap), this.mCanvas);
-            this.mCanvas.setBitmap((Bitmap) null);
+            this.mCanvas.setBitmap(null);
         }
-        if (user == null) {
-            return bitmap;
+        if (user != null) {
+            BitmapDrawable drawable = new FixedSizeBitmapDrawable(bitmap);
+            Drawable badged = this.mPm.getUserBadgedIcon(drawable, user);
+            if (badged instanceof BitmapDrawable) {
+                result = ((BitmapDrawable) badged).getBitmap();
+            } else {
+                result = createIconBitmap(badged, 1.0f);
+            }
+            return result;
         }
-        Drawable badged = this.mPm.getUserBadgedIcon(new FixedSizeBitmapDrawable(bitmap), user);
-        if (badged instanceof BitmapDrawable) {
-            result = ((BitmapDrawable) badged).getBitmap();
-        } else {
-            result = createIconBitmap(badged, 1.0f);
-        }
-        return result;
+        return bitmap;
     }
 
-    /* access modifiers changed from: package-private */
     @Deprecated
-    public Bitmap createAppBadgedIconBitmap(Drawable icon, Bitmap renderedAppIcon) {
+    Bitmap createAppBadgedIconBitmap(Drawable icon, Bitmap renderedAppIcon) {
         if (icon == null) {
             icon = getFullResDefaultActivityIcon(this.mFillResIconDpi);
         }
@@ -145,19 +146,20 @@ public class SimpleIconFactory {
         int h = icon.getIntrinsicHeight();
         float scale = 1.0f;
         if (h > w && w > 0) {
-            scale = ((float) h) / ((float) w);
+            scale = h / w;
         } else if (w > h && h > 0) {
-            scale = ((float) w) / ((float) h);
+            scale = w / h;
         }
-        Drawable icon2 = new BitmapDrawable(this.mContext.getResources(), maskBitmapToCircle(createIconBitmap(icon, scale)));
-        Bitmap bitmap = createIconBitmap(icon2, getScale(icon2, (RectF) null));
-        this.mCanvas.setBitmap(bitmap);
-        recreateIcon(Bitmap.createBitmap(bitmap), this.mCanvas);
+        Bitmap bitmap = createIconBitmap(icon, scale);
+        Drawable icon2 = new BitmapDrawable(this.mContext.getResources(), maskBitmapToCircle(bitmap));
+        Bitmap bitmap2 = createIconBitmap(icon2, getScale(icon2, null));
+        this.mCanvas.setBitmap(bitmap2);
+        recreateIcon(Bitmap.createBitmap(bitmap2), this.mCanvas);
         if (renderedAppIcon != null) {
-            this.mCanvas.drawBitmap(Bitmap.createScaledBitmap(renderedAppIcon, this.mBadgeBitmapSize, this.mBadgeBitmapSize, false), (float) (this.mIconBitmapSize - this.mBadgeBitmapSize), (float) (this.mIconBitmapSize - this.mBadgeBitmapSize), (Paint) null);
+            this.mCanvas.drawBitmap(Bitmap.createScaledBitmap(renderedAppIcon, this.mBadgeBitmapSize, this.mBadgeBitmapSize, false), this.mIconBitmapSize - this.mBadgeBitmapSize, this.mIconBitmapSize - this.mBadgeBitmapSize, (Paint) null);
         }
-        this.mCanvas.setBitmap((Bitmap) null);
-        return bitmap;
+        this.mCanvas.setBitmap(null);
+        return bitmap2;
     }
 
     private Bitmap maskBitmapToCircle(Bitmap bitmap) {
@@ -167,7 +169,7 @@ public class SimpleIconFactory {
         paint.setAntiAlias(true);
         paint.setColor(-1);
         canvas.drawARGB(0, 0, 0, 0);
-        canvas.drawCircle(((float) bitmap.getWidth()) / 2.0f, ((float) bitmap.getHeight()) / 2.0f, (((float) bitmap.getWidth()) / 2.0f) - 1.0f, paint);
+        canvas.drawCircle(bitmap.getWidth() / 2.0f, bitmap.getHeight() / 2.0f, (bitmap.getWidth() / 2.0f) - 1.0f, paint);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
         Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
         canvas.drawBitmap(bitmap, rect, rect, paint);
@@ -187,7 +189,7 @@ public class SimpleIconFactory {
         this.mCanvas.setBitmap(bitmap);
         this.mOldBounds.set(icon.getBounds());
         if (icon instanceof AdaptiveIconDrawable) {
-            int offset = Math.max((int) Math.ceil((double) (((float) size) * BLUR_FACTOR)), Math.round((((float) size) * (1.0f - scale)) / 2.0f));
+            int offset = Math.max((int) Math.ceil(size * BLUR_FACTOR), Math.round((size * (1.0f - scale)) / 2.0f));
             icon.setBounds(offset, offset, size - offset, size - offset);
             icon.draw(this.mCanvas);
         } else {
@@ -203,29 +205,29 @@ public class SimpleIconFactory {
             int intrinsicWidth = icon.getIntrinsicWidth();
             int intrinsicHeight = icon.getIntrinsicHeight();
             if (intrinsicWidth > 0 && intrinsicHeight > 0) {
-                float ratio = ((float) intrinsicWidth) / ((float) intrinsicHeight);
+                float ratio = intrinsicWidth / intrinsicHeight;
                 if (intrinsicWidth > intrinsicHeight) {
-                    height = (int) (((float) width) / ratio);
+                    height = (int) (width / ratio);
                 } else if (intrinsicHeight > intrinsicWidth) {
-                    width = (int) (((float) height) * ratio);
+                    width = (int) (height * ratio);
                 }
             }
             int left = (size - width) / 2;
             int top = (size - height) / 2;
             icon.setBounds(left, top, left + width, top + height);
             this.mCanvas.save();
-            this.mCanvas.scale(scale, scale, (float) (size / 2), (float) (size / 2));
+            this.mCanvas.scale(scale, scale, size / 2, size / 2);
             icon.draw(this.mCanvas);
             this.mCanvas.restore();
         }
         icon.setBounds(this.mOldBounds);
-        this.mCanvas.setBitmap((Bitmap) null);
+        this.mCanvas.setBitmap(null);
         return bitmap;
     }
 
     private Drawable normalizeAndWrapToAdaptiveIcon(Drawable icon, RectF outIconBounds, float[] outScale) {
         if (this.mWrapperIcon == null) {
-            this.mWrapperIcon = this.mContext.getDrawable(R.drawable.iconfactory_adaptive_icon_drawable_wrapper).mutate();
+            this.mWrapperIcon = this.mContext.getDrawable(C3132R.C3133drawable.iconfactory_adaptive_icon_drawable_wrapper).mutate();
         }
         AdaptiveIconDrawable dr = (AdaptiveIconDrawable) this.mWrapperIcon;
         dr.setBounds(0, 0, 1, 1);
@@ -242,330 +244,235 @@ public class SimpleIconFactory {
         return icon;
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:85:0x01aa, code lost:
-        return r7;
+    /* JADX WARN: Code restructure failed: missing block: B:24:0x0045, code lost:
+        if (r3 <= r25.mMaxSize) goto L89;
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:88:0x01b0, code lost:
+    /* JADX WARN: Code restructure failed: missing block: B:26:0x0048, code lost:
+        r6 = r3;
+     */
+    /* JADX WARN: Removed duplicated region for block: B:100:0x0112 A[EDGE_INSN: B:100:0x0112->B:67:0x0112 ?: BREAK  , SYNTHETIC] */
+    /* JADX WARN: Removed duplicated region for block: B:39:0x0088  */
+    /* JADX WARN: Removed duplicated region for block: B:57:0x00de A[ADDED_TO_REGION] */
+    /* JADX WARN: Removed duplicated region for block: B:62:0x00f9 A[Catch: all -> 0x01b3, TryCatch #0 {, blocks: (B:4:0x0007, B:6:0x000c, B:9:0x0014, B:10:0x0019, B:13:0x001d, B:17:0x002a, B:19:0x002e, B:36:0x0059, B:41:0x0095, B:47:0x00a7, B:48:0x00af, B:53:0x00c4, B:54:0x00cf, B:59:0x00e6, B:62:0x00f9, B:66:0x010f, B:65:0x0104, B:67:0x0112, B:71:0x0133, B:73:0x0145, B:75:0x017d, B:77:0x0186, B:79:0x0193, B:81:0x0199, B:83:0x01a0, B:70:0x0127, B:21:0x0032, B:23:0x0043, B:30:0x004f, B:34:0x0056, B:27:0x004a), top: B:93:0x0007 }] */
+    /* JADX WARN: Removed duplicated region for block: B:69:0x0123  */
+    /* JADX WARN: Removed duplicated region for block: B:70:0x0127 A[Catch: all -> 0x01b3, TryCatch #0 {, blocks: (B:4:0x0007, B:6:0x000c, B:9:0x0014, B:10:0x0019, B:13:0x001d, B:17:0x002a, B:19:0x002e, B:36:0x0059, B:41:0x0095, B:47:0x00a7, B:48:0x00af, B:53:0x00c4, B:54:0x00cf, B:59:0x00e6, B:62:0x00f9, B:66:0x010f, B:65:0x0104, B:67:0x0112, B:71:0x0133, B:73:0x0145, B:75:0x017d, B:77:0x0186, B:79:0x0193, B:81:0x0199, B:83:0x01a0, B:70:0x0127, B:21:0x0032, B:23:0x0043, B:30:0x004f, B:34:0x0056, B:27:0x004a), top: B:93:0x0007 }] */
+    /* JADX WARN: Removed duplicated region for block: B:73:0x0145 A[Catch: all -> 0x01b3, TryCatch #0 {, blocks: (B:4:0x0007, B:6:0x000c, B:9:0x0014, B:10:0x0019, B:13:0x001d, B:17:0x002a, B:19:0x002e, B:36:0x0059, B:41:0x0095, B:47:0x00a7, B:48:0x00af, B:53:0x00c4, B:54:0x00cf, B:59:0x00e6, B:62:0x00f9, B:66:0x010f, B:65:0x0104, B:67:0x0112, B:71:0x0133, B:73:0x0145, B:75:0x017d, B:77:0x0186, B:79:0x0193, B:81:0x0199, B:83:0x01a0, B:70:0x0127, B:21:0x0032, B:23:0x0043, B:30:0x004f, B:34:0x0056, B:27:0x004a), top: B:93:0x0007 }] */
+    /* JADX WARN: Removed duplicated region for block: B:74:0x0175  */
+    /* JADX WARN: Removed duplicated region for block: B:77:0x0186 A[Catch: all -> 0x01b3, TryCatch #0 {, blocks: (B:4:0x0007, B:6:0x000c, B:9:0x0014, B:10:0x0019, B:13:0x001d, B:17:0x002a, B:19:0x002e, B:36:0x0059, B:41:0x0095, B:47:0x00a7, B:48:0x00af, B:53:0x00c4, B:54:0x00cf, B:59:0x00e6, B:62:0x00f9, B:66:0x010f, B:65:0x0104, B:67:0x0112, B:71:0x0133, B:73:0x0145, B:75:0x017d, B:77:0x0186, B:79:0x0193, B:81:0x0199, B:83:0x01a0, B:70:0x0127, B:21:0x0032, B:23:0x0043, B:30:0x004f, B:34:0x0056, B:27:0x004a), top: B:93:0x0007 }] */
+    /* JADX WARN: Removed duplicated region for block: B:78:0x0191  */
+    /* JADX WARN: Removed duplicated region for block: B:86:0x01ab A[ADDED_TO_REGION] */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    private synchronized float getScale(Drawable d, RectF outBounds) {
+        int i;
+        int rightX;
+        int leftX;
+        int bottomY;
+        int topY;
+        int topY2;
+        int y;
+        int y2;
+        float hullByRect;
+        float scaleRequired;
+        float scale;
+        if ((d instanceof AdaptiveIconDrawable) && this.mAdaptiveIconScale != 0.0f) {
+            if (outBounds != null) {
+                outBounds.set(this.mAdaptiveIconBounds);
+            }
+            return this.mAdaptiveIconScale;
+        }
+        int width = d.getIntrinsicWidth();
+        int height = d.getIntrinsicHeight();
+        if (width > 0 && height > 0) {
+            if (width > this.mMaxSize || height > this.mMaxSize) {
+                int max = Math.max(width, height);
+                width = (this.mMaxSize * width) / max;
+                height = (this.mMaxSize * height) / max;
+            }
+            this.mBitmap.eraseColor(0);
+            d.setBounds(0, 0, width, height);
+            d.draw(this.mScaleCheckCanvas);
+            ByteBuffer buffer = ByteBuffer.wrap(this.mPixels);
+            buffer.rewind();
+            this.mBitmap.copyPixelsToBuffer(buffer);
+            int leftX2 = this.mMaxSize + 1;
+            rightX = -1;
+            int rowSizeDiff = this.mMaxSize - width;
+            int index = 0;
+            leftX = leftX2;
+            bottomY = -1;
+            topY = -1;
+            topY2 = 0;
+            while (topY2 < height) {
+                int lastX = -1;
+                int firstX = -1;
+                int lastX2 = index;
+                int index2 = 0;
+                while (index2 < width) {
+                    ByteBuffer buffer2 = buffer;
+                    if ((this.mPixels[lastX2] & 255) > 40) {
+                        if (firstX == -1) {
+                            firstX = index2;
+                        }
+                        lastX = index2;
+                    }
+                    lastX2++;
+                    index2++;
+                    buffer = buffer2;
+                }
+                ByteBuffer buffer3 = buffer;
+                index = lastX2 + rowSizeDiff;
+                this.mLeftBorder[topY2] = firstX;
+                this.mRightBorder[topY2] = lastX;
+                if (firstX != -1) {
+                    int bottomY2 = topY2;
+                    if (topY == -1) {
+                        topY = topY2;
+                    }
+                    leftX = Math.min(leftX, firstX);
+                    rightX = Math.max(rightX, lastX);
+                    bottomY = bottomY2;
+                }
+                topY2++;
+                buffer = buffer3;
+            }
+            if (topY == -1 && rightX != -1) {
+                convertToConvexArray(this.mLeftBorder, 1, topY, bottomY);
+                convertToConvexArray(this.mRightBorder, -1, topY, bottomY);
+                float area = 0.0f;
+                y = 0;
+                while (true) {
+                    y2 = y;
+                    if (y2 < height) {
+                        break;
+                    }
+                    if (this.mLeftBorder[y2] > -1.0f) {
+                        area += (this.mRightBorder[y2] - this.mLeftBorder[y2]) + 1.0f;
+                    }
+                    y = y2 + 1;
+                }
+                int y3 = bottomY + 1;
+                float rectArea = (y3 - topY) * ((rightX + 1) - leftX);
+                hullByRect = area / rectArea;
+                if (hullByRect >= CIRCLE_AREA_BY_RECT) {
+                    scaleRequired = MAX_CIRCLE_AREA_FACTOR;
+                } else {
+                    scaleRequired = ((1.0f - hullByRect) * LINEAR_SCALE_SLOPE) + MAX_SQUARE_AREA_FACTOR;
+                }
+                this.mBounds.left = leftX;
+                this.mBounds.right = rightX;
+                this.mBounds.top = topY;
+                this.mBounds.bottom = bottomY;
+                if (outBounds == null) {
+                    float rectArea2 = width;
+                    outBounds.set(this.mBounds.left / rectArea2, this.mBounds.top / height, 1.0f - (this.mBounds.right / width), 1.0f - (this.mBounds.bottom / height));
+                }
+                float areaScale = area / (width * height);
+                scale = areaScale <= scaleRequired ? (float) Math.sqrt(scaleRequired / areaScale) : 1.0f;
+                if ((d instanceof AdaptiveIconDrawable) && this.mAdaptiveIconScale == 0.0f) {
+                    this.mAdaptiveIconScale = scale;
+                    this.mAdaptiveIconBounds.set(this.mBounds);
+                }
+                return scale;
+            }
+            return 1.0f;
+        }
+        int i2 = this.mMaxSize;
+        width = i2;
+        if (height > 0 && height <= this.mMaxSize) {
+            i = height;
+            height = i;
+            this.mBitmap.eraseColor(0);
+            d.setBounds(0, 0, width, height);
+            d.draw(this.mScaleCheckCanvas);
+            ByteBuffer buffer4 = ByteBuffer.wrap(this.mPixels);
+            buffer4.rewind();
+            this.mBitmap.copyPixelsToBuffer(buffer4);
+            int leftX22 = this.mMaxSize + 1;
+            rightX = -1;
+            int rowSizeDiff2 = this.mMaxSize - width;
+            int index3 = 0;
+            leftX = leftX22;
+            bottomY = -1;
+            topY = -1;
+            topY2 = 0;
+            while (topY2 < height) {
+            }
+            if (topY == -1) {
+                convertToConvexArray(this.mLeftBorder, 1, topY, bottomY);
+                convertToConvexArray(this.mRightBorder, -1, topY, bottomY);
+                float area2 = 0.0f;
+                y = 0;
+                while (true) {
+                    y2 = y;
+                    if (y2 < height) {
+                    }
+                    y = y2 + 1;
+                }
+                int y32 = bottomY + 1;
+                float rectArea3 = (y32 - topY) * ((rightX + 1) - leftX);
+                hullByRect = area2 / rectArea3;
+                if (hullByRect >= CIRCLE_AREA_BY_RECT) {
+                }
+                this.mBounds.left = leftX;
+                this.mBounds.right = rightX;
+                this.mBounds.top = topY;
+                this.mBounds.bottom = bottomY;
+                if (outBounds == null) {
+                }
+                float areaScale2 = area2 / (width * height);
+                scale = areaScale2 <= scaleRequired ? (float) Math.sqrt(scaleRequired / areaScale2) : 1.0f;
+                if (d instanceof AdaptiveIconDrawable) {
+                    this.mAdaptiveIconScale = scale;
+                    this.mAdaptiveIconBounds.set(this.mBounds);
+                }
+                return scale;
+            }
+            return 1.0f;
+        }
+        i = this.mMaxSize;
+        height = i;
+        this.mBitmap.eraseColor(0);
+        d.setBounds(0, 0, width, height);
+        d.draw(this.mScaleCheckCanvas);
+        ByteBuffer buffer42 = ByteBuffer.wrap(this.mPixels);
+        buffer42.rewind();
+        this.mBitmap.copyPixelsToBuffer(buffer42);
+        int leftX222 = this.mMaxSize + 1;
+        rightX = -1;
+        int rowSizeDiff22 = this.mMaxSize - width;
+        int index32 = 0;
+        leftX = leftX222;
+        bottomY = -1;
+        topY = -1;
+        topY2 = 0;
+        while (topY2 < height) {
+        }
+        if (topY == -1) {
+        }
         return 1.0f;
-     */
-    /* JADX WARNING: Removed duplicated region for block: B:30:0x004f  */
-    /* JADX WARNING: Removed duplicated region for block: B:39:0x0088  */
-    /* JADX WARNING: Removed duplicated region for block: B:57:0x00de  */
-    /* JADX WARNING: Removed duplicated region for block: B:86:0x01ab  */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    private synchronized float getScale(android.graphics.drawable.Drawable r26, android.graphics.RectF r27) {
-        /*
-            r25 = this;
-            r1 = r25
-            r0 = r26
-            r2 = r27
-            monitor-enter(r25)
-            boolean r3 = r0 instanceof android.graphics.drawable.AdaptiveIconDrawable     // Catch:{ all -> 0x01b3 }
-            r4 = 0
-            if (r3 == 0) goto L_0x001d
-            float r3 = r1.mAdaptiveIconScale     // Catch:{ all -> 0x01b3 }
-            int r3 = (r3 > r4 ? 1 : (r3 == r4 ? 0 : -1))
-            if (r3 == 0) goto L_0x001d
-            if (r2 == 0) goto L_0x0019
-            android.graphics.Rect r3 = r1.mAdaptiveIconBounds     // Catch:{ all -> 0x01b3 }
-            r2.set((android.graphics.Rect) r3)     // Catch:{ all -> 0x01b3 }
-        L_0x0019:
-            float r3 = r1.mAdaptiveIconScale     // Catch:{ all -> 0x01b3 }
-            monitor-exit(r25)
-            return r3
-        L_0x001d:
-            int r3 = r26.getIntrinsicWidth()     // Catch:{ all -> 0x01b3 }
-            int r5 = r26.getIntrinsicHeight()     // Catch:{ all -> 0x01b3 }
-            if (r3 <= 0) goto L_0x0041
-            if (r5 > 0) goto L_0x002a
-            goto L_0x0041
-        L_0x002a:
-            int r6 = r1.mMaxSize     // Catch:{ all -> 0x01b3 }
-            if (r3 > r6) goto L_0x0032
-            int r6 = r1.mMaxSize     // Catch:{ all -> 0x01b3 }
-            if (r5 <= r6) goto L_0x0059
-        L_0x0032:
-            int r6 = java.lang.Math.max(r3, r5)     // Catch:{ all -> 0x01b3 }
-            int r7 = r1.mMaxSize     // Catch:{ all -> 0x01b3 }
-            int r7 = r7 * r3
-            int r7 = r7 / r6
-            r3 = r7
-            int r7 = r1.mMaxSize     // Catch:{ all -> 0x01b3 }
-            int r7 = r7 * r5
-            int r7 = r7 / r6
-            r5 = r7
-            goto L_0x0059
-        L_0x0041:
-            if (r3 <= 0) goto L_0x004a
-            int r6 = r1.mMaxSize     // Catch:{ all -> 0x01b3 }
-            if (r3 <= r6) goto L_0x0048
-            goto L_0x004a
-        L_0x0048:
-            r6 = r3
-            goto L_0x004c
-        L_0x004a:
-            int r6 = r1.mMaxSize     // Catch:{ all -> 0x01b3 }
-        L_0x004c:
-            r3 = r6
-            if (r5 <= 0) goto L_0x0056
-            int r6 = r1.mMaxSize     // Catch:{ all -> 0x01b3 }
-            if (r5 <= r6) goto L_0x0054
-            goto L_0x0056
-        L_0x0054:
-            r6 = r5
-            goto L_0x0058
-        L_0x0056:
-            int r6 = r1.mMaxSize     // Catch:{ all -> 0x01b3 }
-        L_0x0058:
-            r5 = r6
-        L_0x0059:
-            android.graphics.Bitmap r6 = r1.mBitmap     // Catch:{ all -> 0x01b3 }
-            r7 = 0
-            r6.eraseColor((int) r7)     // Catch:{ all -> 0x01b3 }
-            r0.setBounds(r7, r7, r3, r5)     // Catch:{ all -> 0x01b3 }
-            android.graphics.Canvas r6 = r1.mScaleCheckCanvas     // Catch:{ all -> 0x01b3 }
-            r0.draw(r6)     // Catch:{ all -> 0x01b3 }
-            byte[] r6 = r1.mPixels     // Catch:{ all -> 0x01b3 }
-            java.nio.ByteBuffer r6 = java.nio.ByteBuffer.wrap(r6)     // Catch:{ all -> 0x01b3 }
-            r6.rewind()     // Catch:{ all -> 0x01b3 }
-            android.graphics.Bitmap r8 = r1.mBitmap     // Catch:{ all -> 0x01b3 }
-            r8.copyPixelsToBuffer(r6)     // Catch:{ all -> 0x01b3 }
-            r8 = -1
-            r9 = -1
-            int r10 = r1.mMaxSize     // Catch:{ all -> 0x01b3 }
-            r11 = 1
-            int r10 = r10 + r11
-            r12 = -1
-            r13 = 0
-            int r14 = r1.mMaxSize     // Catch:{ all -> 0x01b3 }
-            int r14 = r14 - r3
-            r15 = r13
-            r13 = r10
-            r10 = r9
-            r9 = r8
-            r8 = r7
-        L_0x0085:
-            r7 = -1
-            if (r8 >= r5) goto L_0x00d7
-            r17 = r7
-            r18 = r7
-            r11 = r17
-            r4 = r18
-            r17 = r15
-            r15 = 0
-        L_0x0093:
-            if (r15 >= r3) goto L_0x00af
-            byte[] r7 = r1.mPixels     // Catch:{ all -> 0x01b3 }
-            byte r7 = r7[r17]     // Catch:{ all -> 0x01b3 }
-            r7 = r7 & 255(0xff, float:3.57E-43)
-            r19 = r6
-            r6 = 40
-            if (r7 <= r6) goto L_0x00a7
-            r6 = -1
-            if (r4 != r6) goto L_0x00a5
-            r4 = r15
-        L_0x00a5:
-            r6 = r15
-            r11 = r6
-        L_0x00a7:
-            int r17 = r17 + 1
-            int r15 = r15 + 1
-            r6 = r19
-            r7 = -1
-            goto L_0x0093
-        L_0x00af:
-            r19 = r6
-            int r15 = r17 + r14
-            float[] r6 = r1.mLeftBorder     // Catch:{ all -> 0x01b3 }
-            float r7 = (float) r4     // Catch:{ all -> 0x01b3 }
-            r6[r8] = r7     // Catch:{ all -> 0x01b3 }
-            float[] r6 = r1.mRightBorder     // Catch:{ all -> 0x01b3 }
-            float r7 = (float) r11     // Catch:{ all -> 0x01b3 }
-            r6[r8] = r7     // Catch:{ all -> 0x01b3 }
-            r6 = -1
-            if (r4 == r6) goto L_0x00cf
-            r7 = r8
-            if (r9 != r6) goto L_0x00c4
-            r9 = r8
-        L_0x00c4:
-            int r6 = java.lang.Math.min(r13, r4)     // Catch:{ all -> 0x01b3 }
-            int r10 = java.lang.Math.max(r12, r11)     // Catch:{ all -> 0x01b3 }
-            r13 = r6
-            r12 = r10
-            r10 = r7
-        L_0x00cf:
-            int r8 = r8 + 1
-            r6 = r19
-            r4 = 0
-            r7 = 0
-            r11 = 1
-            goto L_0x0085
-        L_0x00d7:
-            r19 = r6
-            r4 = 1065353216(0x3f800000, float:1.0)
-            r6 = -1
-            if (r9 == r6) goto L_0x01ab
-            if (r12 != r6) goto L_0x00e6
-            r23 = r9
-            r24 = r10
-            goto L_0x01af
-        L_0x00e6:
-            float[] r6 = r1.mLeftBorder     // Catch:{ all -> 0x01b3 }
-            r7 = 1
-            convertToConvexArray(r6, r7, r9, r10)     // Catch:{ all -> 0x01b3 }
-            float[] r6 = r1.mRightBorder     // Catch:{ all -> 0x01b3 }
-            r7 = -1
-            convertToConvexArray(r6, r7, r9, r10)     // Catch:{ all -> 0x01b3 }
-            r6 = 0
-            r16 = 0
-        L_0x00f5:
-            r7 = r16
-            if (r7 >= r5) goto L_0x0112
-            float[] r8 = r1.mLeftBorder     // Catch:{ all -> 0x01b3 }
-            r8 = r8[r7]     // Catch:{ all -> 0x01b3 }
-            r11 = -1082130432(0xffffffffbf800000, float:-1.0)
-            int r8 = (r8 > r11 ? 1 : (r8 == r11 ? 0 : -1))
-            if (r8 > 0) goto L_0x0104
-            goto L_0x010f
-        L_0x0104:
-            float[] r8 = r1.mRightBorder     // Catch:{ all -> 0x01b3 }
-            r8 = r8[r7]     // Catch:{ all -> 0x01b3 }
-            float[] r11 = r1.mLeftBorder     // Catch:{ all -> 0x01b3 }
-            r11 = r11[r7]     // Catch:{ all -> 0x01b3 }
-            float r8 = r8 - r11
-            float r8 = r8 + r4
-            float r6 = r6 + r8
-        L_0x010f:
-            int r16 = r7 + 1
-            goto L_0x00f5
-        L_0x0112:
-            int r7 = r10 + 1
-            int r7 = r7 - r9
-            int r8 = r12 + 1
-            int r8 = r8 - r13
-            int r7 = r7 * r8
-            float r7 = (float) r7     // Catch:{ all -> 0x01b3 }
-            float r8 = r6 / r7
-            r11 = 1061752795(0x3f490fdb, float:0.7853982)
-            int r11 = (r8 > r11 ? 1 : (r8 == r11 ? 0 : -1))
-            if (r11 >= 0) goto L_0x0127
-            r11 = 1059644302(0x3f28e38e, float:0.6597222)
-            goto L_0x0133
-        L_0x0127:
-            r11 = 1059498667(0x3f26aaab, float:0.6510417)
-            r16 = 1025879631(0x3d25ae4f, float:0.040449437)
-            float r17 = r4 - r8
-            float r17 = r17 * r16
-            float r11 = r17 + r11
-        L_0x0133:
-            android.graphics.Rect r4 = r1.mBounds     // Catch:{ all -> 0x01b3 }
-            r4.left = r13     // Catch:{ all -> 0x01b3 }
-            android.graphics.Rect r4 = r1.mBounds     // Catch:{ all -> 0x01b3 }
-            r4.right = r12     // Catch:{ all -> 0x01b3 }
-            android.graphics.Rect r4 = r1.mBounds     // Catch:{ all -> 0x01b3 }
-            r4.top = r9     // Catch:{ all -> 0x01b3 }
-            android.graphics.Rect r4 = r1.mBounds     // Catch:{ all -> 0x01b3 }
-            r4.bottom = r10     // Catch:{ all -> 0x01b3 }
-            if (r2 == 0) goto L_0x0175
-            android.graphics.Rect r4 = r1.mBounds     // Catch:{ all -> 0x01b3 }
-            int r4 = r4.left     // Catch:{ all -> 0x01b3 }
-            float r4 = (float) r4     // Catch:{ all -> 0x01b3 }
-            r21 = r7
-            float r7 = (float) r3     // Catch:{ all -> 0x01b3 }
-            float r4 = r4 / r7
-            android.graphics.Rect r7 = r1.mBounds     // Catch:{ all -> 0x01b3 }
-            int r7 = r7.top     // Catch:{ all -> 0x01b3 }
-            float r7 = (float) r7     // Catch:{ all -> 0x01b3 }
-            r22 = r8
-            float r8 = (float) r5     // Catch:{ all -> 0x01b3 }
-            float r7 = r7 / r8
-            android.graphics.Rect r8 = r1.mBounds     // Catch:{ all -> 0x01b3 }
-            int r8 = r8.right     // Catch:{ all -> 0x01b3 }
-            float r8 = (float) r8     // Catch:{ all -> 0x01b3 }
-            r23 = r9
-            float r9 = (float) r3     // Catch:{ all -> 0x01b3 }
-            float r8 = r8 / r9
-            r9 = 1065353216(0x3f800000, float:1.0)
-            float r8 = r9 - r8
-            android.graphics.Rect r9 = r1.mBounds     // Catch:{ all -> 0x01b3 }
-            int r9 = r9.bottom     // Catch:{ all -> 0x01b3 }
-            float r9 = (float) r9     // Catch:{ all -> 0x01b3 }
-            r24 = r10
-            float r10 = (float) r5     // Catch:{ all -> 0x01b3 }
-            float r9 = r9 / r10
-            r10 = 1065353216(0x3f800000, float:1.0)
-            float r9 = r10 - r9
-            r2.set(r4, r7, r8, r9)     // Catch:{ all -> 0x01b3 }
-            goto L_0x017d
-        L_0x0175:
-            r21 = r7
-            r22 = r8
-            r23 = r9
-            r24 = r10
-        L_0x017d:
-            int r4 = r3 * r5
-            float r4 = (float) r4     // Catch:{ all -> 0x01b3 }
-            float r4 = r6 / r4
-            int r7 = (r4 > r11 ? 1 : (r4 == r11 ? 0 : -1))
-            if (r7 <= 0) goto L_0x0191
-            float r7 = r11 / r4
-            double r7 = (double) r7     // Catch:{ all -> 0x01b3 }
-            double r7 = java.lang.Math.sqrt(r7)     // Catch:{ all -> 0x01b3 }
-            float r7 = (float) r7     // Catch:{ all -> 0x01b3 }
-            r20 = r7
-            goto L_0x0193
-        L_0x0191:
-            r20 = 1065353216(0x3f800000, float:1.0)
-        L_0x0193:
-            r7 = r20
-            boolean r8 = r0 instanceof android.graphics.drawable.AdaptiveIconDrawable     // Catch:{ all -> 0x01b3 }
-            if (r8 == 0) goto L_0x01a9
-            float r8 = r1.mAdaptiveIconScale     // Catch:{ all -> 0x01b3 }
-            r9 = 0
-            int r8 = (r8 > r9 ? 1 : (r8 == r9 ? 0 : -1))
-            if (r8 != 0) goto L_0x01a9
-            r1.mAdaptiveIconScale = r7     // Catch:{ all -> 0x01b3 }
-            android.graphics.Rect r8 = r1.mAdaptiveIconBounds     // Catch:{ all -> 0x01b3 }
-            android.graphics.Rect r9 = r1.mBounds     // Catch:{ all -> 0x01b3 }
-            r8.set(r9)     // Catch:{ all -> 0x01b3 }
-        L_0x01a9:
-            monitor-exit(r25)
-            return r7
-        L_0x01ab:
-            r23 = r9
-            r24 = r10
-        L_0x01af:
-            monitor-exit(r25)
-            r4 = 1065353216(0x3f800000, float:1.0)
-            return r4
-        L_0x01b3:
-            r0 = move-exception
-            monitor-exit(r25)
-            throw r0
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.internal.app.SimpleIconFactory.getScale(android.graphics.drawable.Drawable, android.graphics.RectF):float");
     }
 
     private static void convertToConvexArray(float[] xCoordinates, int direction, int topY, int bottomY) {
         int start;
-        float[] angles = new float[(xCoordinates.length - 1)];
-        int first = topY;
+        int total = xCoordinates.length;
+        float[] angles = new float[total - 1];
         int last = -1;
         float lastAngle = Float.MAX_VALUE;
         for (int i = topY + 1; i <= bottomY; i++) {
             if (xCoordinates[i] > -1.0f) {
                 if (lastAngle == Float.MAX_VALUE) {
-                    start = first;
+                    start = topY;
                 } else {
-                    float currentAngle = (xCoordinates[i] - xCoordinates[last]) / ((float) (i - last));
+                    float currentAngle = (xCoordinates[i] - xCoordinates[last]) / (i - last);
                     int start2 = last;
-                    if ((currentAngle - lastAngle) * ((float) direction) < 0.0f) {
-                        int i2 = start2;
-                        float f = currentAngle;
-                        start = i2;
-                        while (start > first) {
+                    if ((currentAngle - lastAngle) * direction < 0.0f) {
+                        start = start2;
+                        while (start > topY) {
                             start--;
-                            if ((((xCoordinates[i] - xCoordinates[start]) / ((float) (i - start))) - angles[start]) * ((float) direction) >= 0.0f) {
+                            float currentAngle2 = (xCoordinates[i] - xCoordinates[start]) / (i - start);
+                            if ((currentAngle2 - angles[start]) * direction >= 0.0f) {
                                 break;
                             }
                         }
@@ -573,10 +480,10 @@ public class SimpleIconFactory {
                         start = start2;
                     }
                 }
-                float lastAngle2 = (xCoordinates[i] - xCoordinates[start]) / ((float) (i - start));
+                float lastAngle2 = (xCoordinates[i] - xCoordinates[start]) / (i - start);
                 for (int j = start; j < i; j++) {
                     angles[j] = lastAngle2;
-                    xCoordinates[j] = xCoordinates[start] + (((float) (j - start)) * lastAngle2);
+                    xCoordinates[j] = xCoordinates[start] + ((j - start) * lastAngle2);
                 }
                 last = i;
                 lastAngle = lastAngle2;
@@ -593,22 +500,26 @@ public class SimpleIconFactory {
         this.mBlurPaint.setMaskFilter(blurMaskFilter);
         Bitmap shadow = icon.extractAlpha(this.mBlurPaint, offset);
         this.mDrawPaint.setAlpha(ambientAlpha);
-        out.drawBitmap(shadow, (float) offset[0], (float) offset[1], this.mDrawPaint);
+        out.drawBitmap(shadow, offset[0], offset[1], this.mDrawPaint);
         this.mDrawPaint.setAlpha(keyAlpha);
-        out.drawBitmap(shadow, (float) offset[0], ((float) offset[1]) + (((float) this.mIconBitmapSize) * KEY_SHADOW_DISTANCE), this.mDrawPaint);
+        out.drawBitmap(shadow, offset[0], offset[1] + (this.mIconBitmapSize * KEY_SHADOW_DISTANCE), this.mDrawPaint);
         this.mDrawPaint.setAlpha(255);
         out.drawBitmap(icon, 0.0f, 0.0f, this.mDrawPaint);
     }
 
+    /* loaded from: classes4.dex */
     public static class FixedScaleDrawable extends DrawableWrapper {
         private static final float LEGACY_ICON_SCALE = 0.46669f;
-        private float mScaleX = LEGACY_ICON_SCALE;
-        private float mScaleY = LEGACY_ICON_SCALE;
+        private float mScaleX;
+        private float mScaleY;
 
         public FixedScaleDrawable() {
             super(new ColorDrawable());
+            this.mScaleX = LEGACY_ICON_SCALE;
+            this.mScaleY = LEGACY_ICON_SCALE;
         }
 
+        @Override // android.graphics.drawable.DrawableWrapper, android.graphics.drawable.Drawable
         public void draw(Canvas canvas) {
             int saveCount = canvas.save();
             canvas.scale(this.mScaleX, this.mScaleY, getBounds().exactCenterX(), getBounds().exactCenterY());
@@ -616,15 +527,17 @@ public class SimpleIconFactory {
             canvas.restoreToCount(saveCount);
         }
 
+        @Override // android.graphics.drawable.Drawable
         public void inflate(Resources r, XmlPullParser parser, AttributeSet attrs) {
         }
 
+        @Override // android.graphics.drawable.DrawableWrapper, android.graphics.drawable.Drawable
         public void inflate(Resources r, XmlPullParser parser, AttributeSet attrs, Resources.Theme theme) {
         }
 
         public void setScale(float scale) {
-            float h = (float) getIntrinsicHeight();
-            float w = (float) getIntrinsicWidth();
+            float h = getIntrinsicHeight();
+            float w = getIntrinsicWidth();
             this.mScaleX = scale * LEGACY_ICON_SCALE;
             this.mScaleY = LEGACY_ICON_SCALE * scale;
             if (h > w && w > 0.0f) {
@@ -635,15 +548,18 @@ public class SimpleIconFactory {
         }
     }
 
+    /* loaded from: classes4.dex */
     private static class FixedSizeBitmapDrawable extends BitmapDrawable {
         FixedSizeBitmapDrawable(Bitmap bitmap) {
             super((Resources) null, bitmap);
         }
 
+        @Override // android.graphics.drawable.BitmapDrawable, android.graphics.drawable.Drawable
         public int getIntrinsicHeight() {
             return getBitmap().getWidth();
         }
 
+        @Override // android.graphics.drawable.BitmapDrawable, android.graphics.drawable.Drawable
         public int getIntrinsicWidth() {
             return getBitmap().getWidth();
         }

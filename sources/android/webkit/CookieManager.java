@@ -3,14 +3,14 @@ package android.webkit;
 import android.annotation.SystemApi;
 import android.net.WebAddress;
 
+/* loaded from: classes4.dex */
 public abstract class CookieManager {
     public abstract boolean acceptCookie();
 
     public abstract boolean acceptThirdPartyCookies(WebView webView);
 
-    /* access modifiers changed from: protected */
     @SystemApi
-    public abstract boolean allowFileSchemeCookiesImpl();
+    protected abstract boolean allowFileSchemeCookiesImpl();
 
     public abstract void flush();
 
@@ -39,9 +39,8 @@ public abstract class CookieManager {
 
     public abstract void setAcceptCookie(boolean z);
 
-    /* access modifiers changed from: protected */
     @SystemApi
-    public abstract void setAcceptFileSchemeCookiesImpl(boolean z);
+    protected abstract void setAcceptFileSchemeCookiesImpl(boolean z);
 
     public abstract void setAcceptThirdPartyCookies(WebView webView, boolean z);
 
@@ -49,8 +48,7 @@ public abstract class CookieManager {
 
     public abstract void setCookie(String str, String str2, ValueCallback<Boolean> valueCallback);
 
-    /* access modifiers changed from: protected */
-    public Object clone() throws CloneNotSupportedException {
+    protected Object clone() throws CloneNotSupportedException {
         throw new CloneNotSupportedException("doesn't implement Cloneable");
     }
 

@@ -1,17 +1,22 @@
 package android.telephony;
 
 import android.net.wifi.WifiEnterpriseConfig;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public final class CellInfoNr extends CellInfo {
-    public static final Parcelable.Creator<CellInfoNr> CREATOR = new Parcelable.Creator<CellInfoNr>() {
+    public static final Parcelable.Creator<CellInfoNr> CREATOR = new Parcelable.Creator<CellInfoNr>() { // from class: android.telephony.CellInfoNr.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public CellInfoNr createFromParcel(Parcel in) {
             in.readInt();
             return new CellInfoNr(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public CellInfoNr[] newArray(int size) {
             return new CellInfoNr[size];
         }
@@ -27,44 +32,41 @@ public final class CellInfoNr extends CellInfo {
     }
 
     private CellInfoNr(CellInfoNr other, boolean sanitizeLocationInfo) {
-        super((CellInfo) other);
-        CellIdentityNr cellIdentityNr;
-        if (sanitizeLocationInfo) {
-            cellIdentityNr = other.mCellIdentity.sanitizeLocationInfo();
-        } else {
-            cellIdentityNr = other.mCellIdentity;
-        }
-        this.mCellIdentity = cellIdentityNr;
+        super(other);
+        this.mCellIdentity = sanitizeLocationInfo ? other.mCellIdentity.sanitizeLocationInfo() : other.mCellIdentity;
         this.mCellSignalStrength = other.mCellSignalStrength;
     }
 
+    @Override // android.telephony.CellInfo
     public CellIdentity getCellIdentity() {
         return this.mCellIdentity;
     }
 
+    @Override // android.telephony.CellInfo
     public CellSignalStrength getCellSignalStrength() {
         return this.mCellSignalStrength;
     }
 
+    @Override // android.telephony.CellInfo
     public CellInfo sanitizeLocationInfo() {
         return new CellInfoNr(this, true);
     }
 
+    @Override // android.telephony.CellInfo
     public int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(super.hashCode()), this.mCellIdentity, this.mCellSignalStrength});
+        return Objects.hash(Integer.valueOf(super.hashCode()), this.mCellIdentity, this.mCellSignalStrength);
     }
 
+    @Override // android.telephony.CellInfo
     public boolean equals(Object other) {
-        if (!(other instanceof CellInfoNr)) {
-            return false;
+        if (other instanceof CellInfoNr) {
+            CellInfoNr o = (CellInfoNr) other;
+            return super.equals(o) && this.mCellIdentity.equals(o.mCellIdentity) && this.mCellSignalStrength.equals(o.mCellSignalStrength);
         }
-        CellInfoNr o = (CellInfoNr) other;
-        if (!super.equals(o) || !this.mCellIdentity.equals(o.mCellIdentity) || !this.mCellSignalStrength.equals(o.mCellSignalStrength)) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
+    @Override // android.telephony.CellInfo
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("CellInfoNr:{");
@@ -75,6 +77,7 @@ public final class CellInfoNr extends CellInfo {
         return sb.toString();
     }
 
+    @Override // android.telephony.CellInfo, android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags, 6);
         this.mCellIdentity.writeToParcel(dest, flags);

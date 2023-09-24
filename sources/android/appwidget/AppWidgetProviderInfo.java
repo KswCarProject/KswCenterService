@@ -3,25 +3,30 @@ package android.appwidget;
 import android.annotation.UnsupportedAppUsage;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
+import android.content.p002pm.ActivityInfo;
+import android.content.p002pm.PackageManager;
 import android.content.res.ResourceId;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.UserHandle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.UserHandle;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes.dex */
 public class AppWidgetProviderInfo implements Parcelable {
-    public static final Parcelable.Creator<AppWidgetProviderInfo> CREATOR = new Parcelable.Creator<AppWidgetProviderInfo>() {
+    public static final Parcelable.Creator<AppWidgetProviderInfo> CREATOR = new Parcelable.Creator<AppWidgetProviderInfo>() { // from class: android.appwidget.AppWidgetProviderInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AppWidgetProviderInfo createFromParcel(Parcel parcel) {
             return new AppWidgetProviderInfo(parcel);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AppWidgetProviderInfo[] newArray(int size) {
             return new AppWidgetProviderInfo[size];
         }
@@ -56,14 +61,17 @@ public class AppWidgetProviderInfo implements Parcelable {
     public int widgetFeatures;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface CategoryFlags {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface FeatureFlags {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface ResizeModeFlags {
     }
 
@@ -91,9 +99,9 @@ public class AppWidgetProviderInfo implements Parcelable {
     }
 
     public final String loadLabel(PackageManager packageManager) {
-        CharSequence label2 = this.providerInfo.loadLabel(packageManager);
-        if (label2 != null) {
-            return label2.toString().trim();
+        CharSequence label = this.providerInfo.loadLabel(packageManager);
+        if (label != null) {
+            return label.toString().trim();
         }
         return null;
     }
@@ -110,6 +118,7 @@ public class AppWidgetProviderInfo implements Parcelable {
         return new UserHandle(UserHandle.getUserId(this.providerInfo.applicationInfo.uid));
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeTypedObject(this.provider, flags);
         out.writeInt(this.minWidth);
@@ -130,10 +139,10 @@ public class AppWidgetProviderInfo implements Parcelable {
         out.writeInt(this.widgetFeatures);
     }
 
-    public AppWidgetProviderInfo clone() {
+    /* renamed from: clone */
+    public AppWidgetProviderInfo m154clone() {
         AppWidgetProviderInfo that = new AppWidgetProviderInfo();
-        ComponentName componentName = null;
-        that.provider = this.provider == null ? null : this.provider.clone();
+        that.provider = this.provider == null ? null : this.provider.m156clone();
         that.minWidth = this.minWidth;
         that.minHeight = this.minHeight;
         that.minResizeWidth = this.minResizeHeight;
@@ -141,10 +150,7 @@ public class AppWidgetProviderInfo implements Parcelable {
         that.updatePeriodMillis = this.updatePeriodMillis;
         that.initialLayout = this.initialLayout;
         that.initialKeyguardLayout = this.initialKeyguardLayout;
-        if (this.configure != null) {
-            componentName = this.configure.clone();
-        }
-        that.configure = componentName;
+        that.configure = this.configure != null ? this.configure.m156clone() : null;
         that.label = this.label;
         that.icon = this.icon;
         that.previewImage = this.previewImage;
@@ -156,6 +162,7 @@ public class AppWidgetProviderInfo implements Parcelable {
         return that;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -167,7 +174,7 @@ public class AppWidgetProviderInfo implements Parcelable {
                 if (density < 0) {
                     density = 0;
                 }
-                return resources.getDrawableForDensity(resourceId, density, (Resources.Theme) null);
+                return resources.getDrawableForDensity(resourceId, density, null);
             }
         } catch (PackageManager.NameNotFoundException | Resources.NotFoundException e) {
         }

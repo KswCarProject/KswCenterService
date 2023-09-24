@@ -1,14 +1,15 @@
 package com.android.internal.app;
 
 import android.app.VoiceInteractor;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import com.android.internal.app.IVoiceInteractorRequest;
 
+/* loaded from: classes4.dex */
 public interface IVoiceInteractorCallback extends IInterface {
     void deliverAbortVoiceResult(IVoiceInteractorRequest iVoiceInteractorRequest, Bundle bundle) throws RemoteException;
 
@@ -24,33 +25,43 @@ public interface IVoiceInteractorCallback extends IInterface {
 
     void destroy() throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IVoiceInteractorCallback {
+        @Override // com.android.internal.app.IVoiceInteractorCallback
         public void deliverConfirmationResult(IVoiceInteractorRequest request, boolean confirmed, Bundle result) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IVoiceInteractorCallback
         public void deliverPickOptionResult(IVoiceInteractorRequest request, boolean finished, VoiceInteractor.PickOptionRequest.Option[] selections, Bundle result) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IVoiceInteractorCallback
         public void deliverCompleteVoiceResult(IVoiceInteractorRequest request, Bundle result) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IVoiceInteractorCallback
         public void deliverAbortVoiceResult(IVoiceInteractorRequest request, Bundle result) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IVoiceInteractorCallback
         public void deliverCommandResult(IVoiceInteractorRequest request, boolean finished, Bundle result) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IVoiceInteractorCallback
         public void deliverCancel(IVoiceInteractorRequest request) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IVoiceInteractorCallback
         public void destroy() throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IVoiceInteractorCallback {
         private static final String DESCRIPTOR = "com.android.internal.app.IVoiceInteractorCallback";
         static final int TRANSACTION_deliverAbortVoiceResult = 4;
@@ -70,12 +81,13 @@ public interface IVoiceInteractorCallback extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IVoiceInteractorCallback)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IVoiceInteractorCallback)) {
+                return (IVoiceInteractorCallback) iin;
             }
-            return (IVoiceInteractorCallback) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -101,82 +113,69 @@ public interface IVoiceInteractorCallback extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                boolean _arg1 = false;
-                Bundle _arg2 = null;
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        IVoiceInteractorRequest _arg0 = IVoiceInteractorRequest.Stub.asInterface(data.readStrongBinder());
-                        if (data.readInt() != 0) {
-                            _arg1 = true;
-                        }
-                        if (data.readInt() != 0) {
-                            _arg2 = Bundle.CREATOR.createFromParcel(data);
-                        }
-                        deliverConfirmationResult(_arg0, _arg1, _arg2);
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        IVoiceInteractorRequest _arg02 = IVoiceInteractorRequest.Stub.asInterface(data.readStrongBinder());
-                        if (data.readInt() != 0) {
-                            _arg1 = true;
-                        }
-                        VoiceInteractor.PickOptionRequest.Option[] _arg22 = (VoiceInteractor.PickOptionRequest.Option[]) data.createTypedArray(VoiceInteractor.PickOptionRequest.Option.CREATOR);
-                        if (data.readInt() != 0) {
-                            _arg2 = Bundle.CREATOR.createFromParcel(data);
-                        }
-                        deliverPickOptionResult(_arg02, _arg1, _arg22, _arg2);
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        IVoiceInteractorRequest _arg03 = IVoiceInteractorRequest.Stub.asInterface(data.readStrongBinder());
-                        if (data.readInt() != 0) {
-                            _arg2 = Bundle.CREATOR.createFromParcel(data);
-                        }
-                        deliverCompleteVoiceResult(_arg03, _arg2);
-                        return true;
-                    case 4:
-                        data.enforceInterface(DESCRIPTOR);
-                        IVoiceInteractorRequest _arg04 = IVoiceInteractorRequest.Stub.asInterface(data.readStrongBinder());
-                        if (data.readInt() != 0) {
-                            _arg2 = Bundle.CREATOR.createFromParcel(data);
-                        }
-                        deliverAbortVoiceResult(_arg04, _arg2);
-                        return true;
-                    case 5:
-                        data.enforceInterface(DESCRIPTOR);
-                        IVoiceInteractorRequest _arg05 = IVoiceInteractorRequest.Stub.asInterface(data.readStrongBinder());
-                        if (data.readInt() != 0) {
-                            _arg1 = true;
-                        }
-                        if (data.readInt() != 0) {
-                            _arg2 = Bundle.CREATOR.createFromParcel(data);
-                        }
-                        deliverCommandResult(_arg05, _arg1, _arg2);
-                        return true;
-                    case 6:
-                        data.enforceInterface(DESCRIPTOR);
-                        deliverCancel(IVoiceInteractorRequest.Stub.asInterface(data.readStrongBinder()));
-                        return true;
-                    case 7:
-                        data.enforceInterface(DESCRIPTOR);
-                        destroy();
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            boolean _arg1;
+            Bundle _arg2;
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    IVoiceInteractorRequest _arg0 = IVoiceInteractorRequest.Stub.asInterface(data.readStrongBinder());
+                    _arg1 = data.readInt() != 0;
+                    _arg2 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    deliverConfirmationResult(_arg0, _arg1, _arg2);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    IVoiceInteractorRequest _arg02 = IVoiceInteractorRequest.Stub.asInterface(data.readStrongBinder());
+                    _arg1 = data.readInt() != 0;
+                    VoiceInteractor.PickOptionRequest.Option[] _arg22 = (VoiceInteractor.PickOptionRequest.Option[]) data.createTypedArray(VoiceInteractor.PickOptionRequest.Option.CREATOR);
+                    _arg2 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    deliverPickOptionResult(_arg02, _arg1, _arg22, _arg2);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    IVoiceInteractorRequest _arg03 = IVoiceInteractorRequest.Stub.asInterface(data.readStrongBinder());
+                    _arg2 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    deliverCompleteVoiceResult(_arg03, _arg2);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    IVoiceInteractorRequest _arg04 = IVoiceInteractorRequest.Stub.asInterface(data.readStrongBinder());
+                    _arg2 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    deliverAbortVoiceResult(_arg04, _arg2);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    IVoiceInteractorRequest _arg05 = IVoiceInteractorRequest.Stub.asInterface(data.readStrongBinder());
+                    _arg1 = data.readInt() != 0;
+                    _arg2 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    deliverCommandResult(_arg05, _arg1, _arg2);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    IVoiceInteractorRequest _arg06 = IVoiceInteractorRequest.Stub.asInterface(data.readStrongBinder());
+                    deliverCancel(_arg06);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    destroy();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IVoiceInteractorCallback {
             public static IVoiceInteractorCallback sDefaultImpl;
             private IBinder mRemote;
@@ -185,6 +184,7 @@ public interface IVoiceInteractorCallback extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -193,21 +193,21 @@ public interface IVoiceInteractorCallback extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // com.android.internal.app.IVoiceInteractorCallback
             public void deliverConfirmationResult(IVoiceInteractorRequest request, boolean confirmed, Bundle result) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(request != null ? request.asBinder() : null);
-                    _data.writeInt(confirmed);
+                    _data.writeInt(confirmed ? 1 : 0);
                     if (result != null) {
                         _data.writeInt(1);
                         result.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().deliverConfirmationResult(request, confirmed, result);
                     }
                 } finally {
@@ -215,12 +215,13 @@ public interface IVoiceInteractorCallback extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.app.IVoiceInteractorCallback
             public void deliverPickOptionResult(IVoiceInteractorRequest request, boolean finished, VoiceInteractor.PickOptionRequest.Option[] selections, Bundle result) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(request != null ? request.asBinder() : null);
-                    _data.writeInt(finished);
+                    _data.writeInt(finished ? 1 : 0);
                     _data.writeTypedArray(selections, 0);
                     if (result != null) {
                         _data.writeInt(1);
@@ -228,9 +229,8 @@ public interface IVoiceInteractorCallback extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().deliverPickOptionResult(request, finished, selections, result);
                     }
                 } finally {
@@ -238,6 +238,7 @@ public interface IVoiceInteractorCallback extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.app.IVoiceInteractorCallback
             public void deliverCompleteVoiceResult(IVoiceInteractorRequest request, Bundle result) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -249,9 +250,8 @@ public interface IVoiceInteractorCallback extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().deliverCompleteVoiceResult(request, result);
                     }
                 } finally {
@@ -259,6 +259,7 @@ public interface IVoiceInteractorCallback extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.app.IVoiceInteractorCallback
             public void deliverAbortVoiceResult(IVoiceInteractorRequest request, Bundle result) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -270,9 +271,8 @@ public interface IVoiceInteractorCallback extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().deliverAbortVoiceResult(request, result);
                     }
                 } finally {
@@ -280,21 +280,21 @@ public interface IVoiceInteractorCallback extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.app.IVoiceInteractorCallback
             public void deliverCommandResult(IVoiceInteractorRequest request, boolean finished, Bundle result) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(request != null ? request.asBinder() : null);
-                    _data.writeInt(finished);
+                    _data.writeInt(finished ? 1 : 0);
                     if (result != null) {
                         _data.writeInt(1);
                         result.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(5, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().deliverCommandResult(request, finished, result);
                     }
                 } finally {
@@ -302,14 +302,14 @@ public interface IVoiceInteractorCallback extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.app.IVoiceInteractorCallback
             public void deliverCancel(IVoiceInteractorRequest request) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(request != null ? request.asBinder() : null);
-                    if (this.mRemote.transact(6, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(6, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().deliverCancel(request);
                     }
                 } finally {
@@ -317,13 +317,13 @@ public interface IVoiceInteractorCallback extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.app.IVoiceInteractorCallback
             public void destroy() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(7, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(7, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().destroy();
                     }
                 } finally {
@@ -333,11 +333,11 @@ public interface IVoiceInteractorCallback extends IInterface {
         }
 
         public static boolean setDefaultImpl(IVoiceInteractorCallback impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IVoiceInteractorCallback getDefaultImpl() {

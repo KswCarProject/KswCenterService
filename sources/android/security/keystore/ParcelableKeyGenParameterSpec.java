@@ -1,7 +1,7 @@
 package android.security.keystore;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.math.BigInteger;
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.ECGenParameterSpec;
@@ -9,15 +9,20 @@ import java.security.spec.RSAKeyGenParameterSpec;
 import java.util.Date;
 import javax.security.auth.x500.X500Principal;
 
+/* loaded from: classes3.dex */
 public final class ParcelableKeyGenParameterSpec implements Parcelable {
     private static final int ALGORITHM_PARAMETER_SPEC_EC = 3;
     private static final int ALGORITHM_PARAMETER_SPEC_NONE = 1;
     private static final int ALGORITHM_PARAMETER_SPEC_RSA = 2;
-    public static final Parcelable.Creator<ParcelableKeyGenParameterSpec> CREATOR = new Parcelable.Creator<ParcelableKeyGenParameterSpec>() {
+    public static final Parcelable.Creator<ParcelableKeyGenParameterSpec> CREATOR = new Parcelable.Creator<ParcelableKeyGenParameterSpec>() { // from class: android.security.keystore.ParcelableKeyGenParameterSpec.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ParcelableKeyGenParameterSpec createFromParcel(Parcel in) {
             return new ParcelableKeyGenParameterSpec(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ParcelableKeyGenParameterSpec[] newArray(int size) {
             return new ParcelableKeyGenParameterSpec[size];
         }
@@ -28,6 +33,7 @@ public final class ParcelableKeyGenParameterSpec implements Parcelable {
         this.mSpec = spec;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -41,6 +47,7 @@ public final class ParcelableKeyGenParameterSpec implements Parcelable {
         out.writeBoolean(false);
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(this.mSpec.getKeystoreAlias());
         out.writeInt(this.mSpec.getPurposes());
@@ -55,10 +62,11 @@ public final class ParcelableKeyGenParameterSpec implements Parcelable {
             out.writeInt(rsaSpec.getKeysize());
             out.writeByteArray(rsaSpec.getPublicExponent().toByteArray());
         } else if (algoSpec instanceof ECGenParameterSpec) {
+            ECGenParameterSpec ecSpec = (ECGenParameterSpec) algoSpec;
             out.writeInt(3);
-            out.writeString(((ECGenParameterSpec) algoSpec).getName());
+            out.writeString(ecSpec.getName());
         } else {
-            throw new IllegalArgumentException(String.format("Unknown algorithm parameter spec: %s", new Object[]{algoSpec.getClass()}));
+            throw new IllegalArgumentException(String.format("Unknown algorithm parameter spec: %s", algoSpec.getClass()));
         }
         out.writeByteArray(this.mSpec.getCertificateSubject().getEncoded());
         out.writeByteArray(this.mSpec.getCertificateSerialNumber().toByteArray());
@@ -70,7 +78,7 @@ public final class ParcelableKeyGenParameterSpec implements Parcelable {
         if (this.mSpec.isDigestsSpecified()) {
             out.writeStringArray(this.mSpec.getDigests());
         } else {
-            out.writeStringArray((String[]) null);
+            out.writeStringArray(null);
         }
         out.writeStringArray(this.mSpec.getEncryptionPaddings());
         out.writeStringArray(this.mSpec.getSignaturePaddings());
@@ -89,7 +97,8 @@ public final class ParcelableKeyGenParameterSpec implements Parcelable {
     }
 
     private static Date readDateOrNull(Parcel in) {
-        if (in.readBoolean()) {
+        boolean hasDate = in.readBoolean();
+        if (hasDate) {
             return new Date(in.readLong());
         }
         return null;
@@ -105,16 +114,39 @@ public final class ParcelableKeyGenParameterSpec implements Parcelable {
         if (keySpecType == 1) {
             algorithmSpec = null;
         } else if (keySpecType == 2) {
-            algorithmSpec = new RSAKeyGenParameterSpec(in.readInt(), new BigInteger(in.createByteArray()));
-        } else if (keySpecType == 3) {
-            algorithmSpec = new ECGenParameterSpec(in.readString());
+            int rsaKeySize = in.readInt();
+            BigInteger publicExponent = new BigInteger(in.createByteArray());
+            algorithmSpec = new RSAKeyGenParameterSpec(rsaKeySize, publicExponent);
+        } else if (keySpecType != 3) {
+            throw new IllegalArgumentException(String.format("Unknown algorithm parameter spec: %d", Integer.valueOf(keySpecType)));
         } else {
-            throw new IllegalArgumentException(String.format("Unknown algorithm parameter spec: %d", new Object[]{Integer.valueOf(keySpecType)}));
+            String stdName = in.readString();
+            algorithmSpec = new ECGenParameterSpec(stdName);
         }
-        KeyGenParameterSpec keyGenParameterSpec = r0;
-        int i = keySpecType;
-        KeyGenParameterSpec keyGenParameterSpec2 = new KeyGenParameterSpec(keystoreAlias, uid, keySize, algorithmSpec, new X500Principal(in.createByteArray()), new BigInteger(in.createByteArray()), new Date(in.readLong()), new Date(in.readLong()), readDateOrNull(in), readDateOrNull(in), readDateOrNull(in), purposes, in.createStringArray(), in.createStringArray(), in.createStringArray(), in.createStringArray(), in.readBoolean(), in.readBoolean(), in.readInt(), in.readBoolean(), in.createByteArray(), in.readBoolean(), in.readBoolean(), in.readBoolean(), in.readBoolean(), in.readBoolean(), in.readBoolean());
-        this.mSpec = keyGenParameterSpec;
+        AlgorithmParameterSpec algorithmSpec2 = algorithmSpec;
+        X500Principal certificateSubject = new X500Principal(in.createByteArray());
+        BigInteger certificateSerialNumber = new BigInteger(in.createByteArray());
+        Date certificateNotBefore = new Date(in.readLong());
+        Date certificateNotAfter = new Date(in.readLong());
+        Date keyValidityStartDate = readDateOrNull(in);
+        Date keyValidityForOriginationEnd = readDateOrNull(in);
+        Date keyValidityForConsumptionEnd = readDateOrNull(in);
+        String[] digests = in.createStringArray();
+        String[] encryptionPaddings = in.createStringArray();
+        String[] signaturePaddings = in.createStringArray();
+        String[] blockModes = in.createStringArray();
+        boolean randomizedEncryptionRequired = in.readBoolean();
+        boolean userAuthenticationRequired = in.readBoolean();
+        int userAuthenticationValidityDurationSeconds = in.readInt();
+        boolean userPresenceRequired = in.readBoolean();
+        byte[] attestationChallenge = in.createByteArray();
+        boolean uniqueIdIncluded = in.readBoolean();
+        boolean userAuthenticationValidWhileOnBody = in.readBoolean();
+        boolean invalidatedByBiometricEnrollment = in.readBoolean();
+        boolean isStrongBoxBacked = in.readBoolean();
+        boolean userConfirmationRequired = in.readBoolean();
+        boolean unlockedDeviceRequired = in.readBoolean();
+        this.mSpec = new KeyGenParameterSpec(keystoreAlias, uid, keySize, algorithmSpec2, certificateSubject, certificateSerialNumber, certificateNotBefore, certificateNotAfter, keyValidityStartDate, keyValidityForOriginationEnd, keyValidityForConsumptionEnd, purposes, digests, encryptionPaddings, signaturePaddings, blockModes, randomizedEncryptionRequired, userAuthenticationRequired, userAuthenticationValidityDurationSeconds, userPresenceRequired, attestationChallenge, uniqueIdIncluded, userAuthenticationValidWhileOnBody, invalidatedByBiometricEnrollment, isStrongBoxBacked, userConfirmationRequired, unlockedDeviceRequired);
     }
 
     public KeyGenParameterSpec getSpec() {

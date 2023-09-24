@@ -3,7 +3,7 @@ package android.media;
 import android.annotation.UnsupportedAppUsage;
 import android.graphics.Canvas;
 import android.media.MediaTimeProvider;
-import android.os.Handler;
+import android.p007os.Handler;
 import android.util.Log;
 import android.util.LongSparseArray;
 import android.util.Pair;
@@ -13,25 +13,27 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.Vector;
 
+/* loaded from: classes3.dex */
 public abstract class SubtitleTrack implements MediaTimeProvider.OnMediaTimeListener {
     private static final String TAG = "SubtitleTrack";
-    public boolean DEBUG = false;
-    protected final Vector<Cue> mActiveCues = new Vector<>();
-    protected CueList mCues;
     private MediaFormat mFormat;
-    protected Handler mHandler = new Handler();
     private long mLastTimeMs;
     private long mLastUpdateTimeMs;
-    private long mNextScheduledTimeMs = -1;
-    /* access modifiers changed from: private */
-    public Runnable mRunnable;
-    protected final LongSparseArray<Run> mRunsByEndTime = new LongSparseArray<>();
-    protected final LongSparseArray<Run> mRunsByID = new LongSparseArray<>();
+    private Runnable mRunnable;
     protected MediaTimeProvider mTimeProvider;
     protected boolean mVisible;
+    protected final LongSparseArray<Run> mRunsByEndTime = new LongSparseArray<>();
+    protected final LongSparseArray<Run> mRunsByID = new LongSparseArray<>();
+    protected final Vector<Cue> mActiveCues = new Vector<>();
+    public boolean DEBUG = false;
+    protected Handler mHandler = new Handler();
+    private long mNextScheduledTimeMs = -1;
+    protected CueList mCues = new CueList();
 
+    /* loaded from: classes3.dex */
     public interface RenderingWidget {
 
+        /* loaded from: classes3.dex */
         public interface OnChangedListener {
             void onChanged(RenderingWidget renderingWidget);
         }
@@ -62,128 +64,70 @@ public abstract class SubtitleTrack implements MediaTimeProvider.OnMediaTimeList
 
     public SubtitleTrack(MediaFormat format) {
         this.mFormat = format;
-        this.mCues = new CueList();
         clearActiveCues();
-        this.mLastTimeMs = -1;
+        this.mLastTimeMs = -1L;
     }
 
     public final MediaFormat getFormat() {
         return this.mFormat;
     }
 
-    /* access modifiers changed from: protected */
-    public void onData(SubtitleData data) {
+    protected void onData(SubtitleData data) {
         long runID = data.getStartTimeUs() + 1;
         onData(data.getData(), true, runID);
         setRunDiscardTimeMs(runID, (data.getStartTimeUs() + data.getDurationUs()) / 1000);
     }
 
-    /* access modifiers changed from: protected */
-    /* JADX WARNING: Removed duplicated region for block: B:12:0x0022 A[Catch:{ all -> 0x000a }] */
-    /* JADX WARNING: Removed duplicated region for block: B:37:0x00b6 A[Catch:{ all -> 0x000a }, LOOP:1: B:33:0x00a3->B:37:0x00b6, LOOP_END] */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public synchronized void updateActiveCues(boolean r8, long r9) {
-        /*
-            r7 = this;
-            monitor-enter(r7)
-            if (r8 != 0) goto L_0x000d
-            long r0 = r7.mLastUpdateTimeMs     // Catch:{ all -> 0x000a }
-            int r0 = (r0 > r9 ? 1 : (r0 == r9 ? 0 : -1))
-            if (r0 <= 0) goto L_0x0010
-            goto L_0x000d
-        L_0x000a:
-            r8 = move-exception
-            goto L_0x00be
-        L_0x000d:
-            r7.clearActiveCues()     // Catch:{ all -> 0x000a }
-        L_0x0010:
-            android.media.SubtitleTrack$CueList r0 = r7.mCues     // Catch:{ all -> 0x000a }
-            long r1 = r7.mLastUpdateTimeMs     // Catch:{ all -> 0x000a }
-            java.lang.Iterable r0 = r0.entriesBetween(r1, r9)     // Catch:{ all -> 0x000a }
-            java.util.Iterator r0 = r0.iterator()     // Catch:{ all -> 0x000a }
-        L_0x001c:
-            boolean r1 = r0.hasNext()     // Catch:{ all -> 0x000a }
-            if (r1 == 0) goto L_0x00a3
-            java.lang.Object r1 = r0.next()     // Catch:{ all -> 0x000a }
-            android.util.Pair r1 = (android.util.Pair) r1     // Catch:{ all -> 0x000a }
-            S r2 = r1.second     // Catch:{ all -> 0x000a }
-            android.media.SubtitleTrack$Cue r2 = (android.media.SubtitleTrack.Cue) r2     // Catch:{ all -> 0x000a }
-            long r3 = r2.mEndTimeMs     // Catch:{ all -> 0x000a }
-            F r5 = r1.first     // Catch:{ all -> 0x000a }
-            java.lang.Long r5 = (java.lang.Long) r5     // Catch:{ all -> 0x000a }
-            long r5 = r5.longValue()     // Catch:{ all -> 0x000a }
-            int r3 = (r3 > r5 ? 1 : (r3 == r5 ? 0 : -1))
-            if (r3 != 0) goto L_0x0065
-            boolean r3 = r7.DEBUG     // Catch:{ all -> 0x000a }
-            if (r3 == 0) goto L_0x0054
-            java.lang.String r3 = "SubtitleTrack"
-            java.lang.StringBuilder r4 = new java.lang.StringBuilder     // Catch:{ all -> 0x000a }
-            r4.<init>()     // Catch:{ all -> 0x000a }
-            java.lang.String r5 = "Removing "
-            r4.append(r5)     // Catch:{ all -> 0x000a }
-            r4.append(r2)     // Catch:{ all -> 0x000a }
-            java.lang.String r4 = r4.toString()     // Catch:{ all -> 0x000a }
-            android.util.Log.v(r3, r4)     // Catch:{ all -> 0x000a }
-        L_0x0054:
-            java.util.Vector<android.media.SubtitleTrack$Cue> r3 = r7.mActiveCues     // Catch:{ all -> 0x000a }
-            r3.remove(r2)     // Catch:{ all -> 0x000a }
-            long r3 = r2.mRunID     // Catch:{ all -> 0x000a }
-            r5 = 0
-            int r3 = (r3 > r5 ? 1 : (r3 == r5 ? 0 : -1))
-            if (r3 != 0) goto L_0x00a1
-            r0.remove()     // Catch:{ all -> 0x000a }
-            goto L_0x00a1
-        L_0x0065:
-            long r3 = r2.mStartTimeMs     // Catch:{ all -> 0x000a }
-            F r5 = r1.first     // Catch:{ all -> 0x000a }
-            java.lang.Long r5 = (java.lang.Long) r5     // Catch:{ all -> 0x000a }
-            long r5 = r5.longValue()     // Catch:{ all -> 0x000a }
-            int r3 = (r3 > r5 ? 1 : (r3 == r5 ? 0 : -1))
-            if (r3 != 0) goto L_0x009a
-            boolean r3 = r7.DEBUG     // Catch:{ all -> 0x000a }
-            if (r3 == 0) goto L_0x008d
-            java.lang.String r3 = "SubtitleTrack"
-            java.lang.StringBuilder r4 = new java.lang.StringBuilder     // Catch:{ all -> 0x000a }
-            r4.<init>()     // Catch:{ all -> 0x000a }
-            java.lang.String r5 = "Adding "
-            r4.append(r5)     // Catch:{ all -> 0x000a }
-            r4.append(r2)     // Catch:{ all -> 0x000a }
-            java.lang.String r4 = r4.toString()     // Catch:{ all -> 0x000a }
-            android.util.Log.v(r3, r4)     // Catch:{ all -> 0x000a }
-        L_0x008d:
-            long[] r3 = r2.mInnerTimesMs     // Catch:{ all -> 0x000a }
-            if (r3 == 0) goto L_0x0094
-            r2.onTime(r9)     // Catch:{ all -> 0x000a }
-        L_0x0094:
-            java.util.Vector<android.media.SubtitleTrack$Cue> r3 = r7.mActiveCues     // Catch:{ all -> 0x000a }
-            r3.add(r2)     // Catch:{ all -> 0x000a }
-            goto L_0x00a1
-        L_0x009a:
-            long[] r3 = r2.mInnerTimesMs     // Catch:{ all -> 0x000a }
-            if (r3 == 0) goto L_0x00a1
-            r2.onTime(r9)     // Catch:{ all -> 0x000a }
-        L_0x00a1:
-            goto L_0x001c
-        L_0x00a3:
-            android.util.LongSparseArray<android.media.SubtitleTrack$Run> r0 = r7.mRunsByEndTime     // Catch:{ all -> 0x000a }
-            int r0 = r0.size()     // Catch:{ all -> 0x000a }
-            if (r0 <= 0) goto L_0x00ba
-            android.util.LongSparseArray<android.media.SubtitleTrack$Run> r0 = r7.mRunsByEndTime     // Catch:{ all -> 0x000a }
-            r1 = 0
-            long r2 = r0.keyAt(r1)     // Catch:{ all -> 0x000a }
-            int r0 = (r2 > r9 ? 1 : (r2 == r9 ? 0 : -1))
-            if (r0 > 0) goto L_0x00ba
-            r7.removeRunsByEndTimeIndex(r1)     // Catch:{ all -> 0x000a }
-            goto L_0x00a3
-        L_0x00ba:
-            r7.mLastUpdateTimeMs = r9     // Catch:{ all -> 0x000a }
-            monitor-exit(r7)
-            return
-        L_0x00be:
-            monitor-exit(r7)
-            throw r8
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.media.SubtitleTrack.updateActiveCues(boolean, long):void");
+    /* JADX WARN: Removed duplicated region for block: B:13:0x0022 A[Catch: all -> 0x000a, TryCatch #0 {all -> 0x000a, blocks: (B:4:0x0003, B:10:0x0010, B:11:0x001c, B:13:0x0022, B:15:0x003a, B:17:0x003e, B:18:0x0054, B:20:0x0061, B:21:0x0065, B:23:0x0073, B:25:0x0077, B:26:0x008d, B:28:0x0091, B:29:0x0094, B:30:0x009a, B:32:0x009e, B:34:0x00a3, B:36:0x00ab, B:38:0x00b6, B:39:0x00ba, B:9:0x000d), top: B:44:0x0003 }] */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    protected synchronized void updateActiveCues(boolean rebuild, long timeMs) {
+        Iterator<Pair<Long, Cue>> it;
+        if (!rebuild) {
+            try {
+                if (this.mLastUpdateTimeMs > timeMs) {
+                }
+                it = this.mCues.entriesBetween(this.mLastUpdateTimeMs, timeMs).iterator();
+                while (it.hasNext()) {
+                    Pair<Long, Cue> event = it.next();
+                    Cue cue = event.second;
+                    if (cue.mEndTimeMs == event.first.longValue()) {
+                        if (this.DEBUG) {
+                            Log.m66v(TAG, "Removing " + cue);
+                        }
+                        this.mActiveCues.remove(cue);
+                        if (cue.mRunID == 0) {
+                            it.remove();
+                        }
+                    } else if (cue.mStartTimeMs == event.first.longValue()) {
+                        if (this.DEBUG) {
+                            Log.m66v(TAG, "Adding " + cue);
+                        }
+                        if (cue.mInnerTimesMs != null) {
+                            cue.onTime(timeMs);
+                        }
+                        this.mActiveCues.add(cue);
+                    } else if (cue.mInnerTimesMs != null) {
+                        cue.onTime(timeMs);
+                    }
+                }
+                while (this.mRunsByEndTime.size() > 0 && this.mRunsByEndTime.keyAt(0) <= timeMs) {
+                    removeRunsByEndTimeIndex(0);
+                }
+                this.mLastUpdateTimeMs = timeMs;
+            } catch (Throwable th) {
+                throw th;
+            }
+        }
+        clearActiveCues();
+        it = this.mCues.entriesBetween(this.mLastUpdateTimeMs, timeMs).iterator();
+        while (it.hasNext()) {
+        }
+        while (this.mRunsByEndTime.size() > 0) {
+            removeRunsByEndTimeIndex(0);
+        }
+        this.mLastUpdateTimeMs = timeMs;
     }
 
     private void removeRunsByEndTimeIndex(int ix) {
@@ -205,9 +149,9 @@ public abstract class SubtitleTrack implements MediaTimeProvider.OnMediaTimeList
         this.mRunsByEndTime.removeAt(ix);
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
-        for (int ix = this.mRunsByEndTime.size() - 1; ix >= 0; ix--) {
+    protected void finalize() throws Throwable {
+        int size = this.mRunsByEndTime.size();
+        for (int ix = size - 1; ix >= 0; ix--) {
             removeRunsByEndTimeIndex(ix);
         }
         super.finalize();
@@ -217,29 +161,28 @@ public abstract class SubtitleTrack implements MediaTimeProvider.OnMediaTimeList
         this.mLastTimeMs = timeMs;
     }
 
-    /* access modifiers changed from: protected */
-    public synchronized void clearActiveCues() {
+    protected synchronized void clearActiveCues() {
         if (this.DEBUG) {
-            Log.v(TAG, "Clearing " + this.mActiveCues.size() + " active cues");
+            Log.m66v(TAG, "Clearing " + this.mActiveCues.size() + " active cues");
         }
         this.mActiveCues.clear();
-        this.mLastUpdateTimeMs = -1;
+        this.mLastUpdateTimeMs = -1L;
     }
 
-    /* access modifiers changed from: protected */
-    public void scheduleTimedEvents() {
+    protected void scheduleTimedEvents() {
         if (this.mTimeProvider != null) {
             this.mNextScheduledTimeMs = this.mCues.nextTimeAfter(this.mLastTimeMs);
             if (this.DEBUG) {
-                Log.d(TAG, "sched @" + this.mNextScheduledTimeMs + " after " + this.mLastTimeMs);
+                Log.m72d(TAG, "sched @" + this.mNextScheduledTimeMs + " after " + this.mLastTimeMs);
             }
-            this.mTimeProvider.notifyAt(this.mNextScheduledTimeMs >= 0 ? this.mNextScheduledTimeMs * 1000 : -1, this);
+            this.mTimeProvider.notifyAt(this.mNextScheduledTimeMs >= 0 ? this.mNextScheduledTimeMs * 1000 : -1L, this);
         }
     }
 
+    @Override // android.media.MediaTimeProvider.OnMediaTimeListener
     public void onTimedEvent(long timeUs) {
         if (this.DEBUG) {
-            Log.d(TAG, "onTimedEvent " + timeUs);
+            Log.m72d(TAG, "onTimedEvent " + timeUs);
         }
         synchronized (this) {
             long timeMs = timeUs / 1000;
@@ -250,9 +193,10 @@ public abstract class SubtitleTrack implements MediaTimeProvider.OnMediaTimeList
         scheduleTimedEvents();
     }
 
+    @Override // android.media.MediaTimeProvider.OnMediaTimeListener
     public void onSeek(long timeUs) {
         if (this.DEBUG) {
-            Log.d(TAG, "onSeek " + timeUs);
+            Log.m72d(TAG, "onSeek " + timeUs);
         }
         synchronized (this) {
             long timeMs = timeUs / 1000;
@@ -263,242 +207,125 @@ public abstract class SubtitleTrack implements MediaTimeProvider.OnMediaTimeList
         scheduleTimedEvents();
     }
 
+    @Override // android.media.MediaTimeProvider.OnMediaTimeListener
     public void onStop() {
         synchronized (this) {
             if (this.DEBUG) {
-                Log.d(TAG, "onStop");
+                Log.m72d(TAG, "onStop");
             }
             clearActiveCues();
-            this.mLastTimeMs = -1;
+            this.mLastTimeMs = -1L;
         }
         updateView(this.mActiveCues);
-        this.mNextScheduledTimeMs = -1;
+        this.mNextScheduledTimeMs = -1L;
         if (this.mTimeProvider != null) {
-            this.mTimeProvider.notifyAt(-1, this);
+            this.mTimeProvider.notifyAt(-1L, this);
         }
     }
 
     public void show() {
-        if (!this.mVisible) {
-            this.mVisible = true;
-            RenderingWidget renderingWidget = getRenderingWidget();
-            if (renderingWidget != null) {
-                renderingWidget.setVisible(true);
-            }
-            if (this.mTimeProvider != null) {
-                this.mTimeProvider.scheduleUpdate(this);
-            }
+        if (this.mVisible) {
+            return;
+        }
+        this.mVisible = true;
+        RenderingWidget renderingWidget = getRenderingWidget();
+        if (renderingWidget != null) {
+            renderingWidget.setVisible(true);
+        }
+        if (this.mTimeProvider != null) {
+            this.mTimeProvider.scheduleUpdate(this);
         }
     }
 
     public void hide() {
-        if (this.mVisible) {
-            if (this.mTimeProvider != null) {
-                this.mTimeProvider.cancelNotifications(this);
+        if (!this.mVisible) {
+            return;
+        }
+        if (this.mTimeProvider != null) {
+            this.mTimeProvider.cancelNotifications(this);
+        }
+        RenderingWidget renderingWidget = getRenderingWidget();
+        if (renderingWidget != null) {
+            renderingWidget.setVisible(false);
+        }
+        this.mVisible = false;
+    }
+
+    protected synchronized boolean addCue(Cue cue) {
+        this.mCues.add(cue);
+        if (cue.mRunID != 0) {
+            Run run = this.mRunsByID.get(cue.mRunID);
+            if (run == null) {
+                run = new Run();
+                this.mRunsByID.put(cue.mRunID, run);
+                run.mEndTimeMs = cue.mEndTimeMs;
+            } else if (run.mEndTimeMs < cue.mEndTimeMs) {
+                run.mEndTimeMs = cue.mEndTimeMs;
             }
-            RenderingWidget renderingWidget = getRenderingWidget();
-            if (renderingWidget != null) {
-                renderingWidget.setVisible(false);
+            cue.mNextInRun = run.mFirstCue;
+            run.mFirstCue = cue;
+        }
+        long nowMs = -1;
+        if (this.mTimeProvider != null) {
+            try {
+                nowMs = this.mTimeProvider.getCurrentTimeUs(false, true) / 1000;
+            } catch (IllegalStateException e) {
             }
-            this.mVisible = false;
+        }
+        if (this.DEBUG) {
+            Log.m66v(TAG, "mVisible=" + this.mVisible + ", " + cue.mStartTimeMs + " <= " + nowMs + ", " + cue.mEndTimeMs + " >= " + this.mLastTimeMs);
+        }
+        if (this.mVisible && cue.mStartTimeMs <= nowMs && cue.mEndTimeMs >= this.mLastTimeMs) {
+            if (this.mRunnable != null) {
+                this.mHandler.removeCallbacks(this.mRunnable);
+            }
+            final long thenMs = nowMs;
+            this.mRunnable = new Runnable() { // from class: android.media.SubtitleTrack.1
+                @Override // java.lang.Runnable
+                public void run() {
+                    synchronized (track) {
+                        SubtitleTrack.this.mRunnable = null;
+                        SubtitleTrack.this.updateActiveCues(true, thenMs);
+                        SubtitleTrack.this.updateView(SubtitleTrack.this.mActiveCues);
+                    }
+                }
+            };
+            if (this.mHandler.postDelayed(this.mRunnable, 10L)) {
+                if (this.DEBUG) {
+                    Log.m66v(TAG, "scheduling update");
+                }
+            } else if (this.DEBUG) {
+                Log.m64w(TAG, "failed to schedule subtitle view update");
+            }
+            return true;
+        }
+        if (this.mVisible && cue.mEndTimeMs >= this.mLastTimeMs && (cue.mStartTimeMs < this.mNextScheduledTimeMs || this.mNextScheduledTimeMs < 0)) {
+            scheduleTimedEvents();
+        }
+        return false;
+    }
+
+    public synchronized void setTimeProvider(MediaTimeProvider timeProvider) {
+        if (this.mTimeProvider == timeProvider) {
+            return;
+        }
+        if (this.mTimeProvider != null) {
+            this.mTimeProvider.cancelNotifications(this);
+        }
+        this.mTimeProvider = timeProvider;
+        if (this.mTimeProvider != null) {
+            this.mTimeProvider.scheduleUpdate(this);
         }
     }
 
-    /* access modifiers changed from: protected */
-    /* JADX WARNING: Code restructure failed: missing block: B:40:0x00e1, code lost:
-        return true;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:52:0x0100, code lost:
-        return false;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public synchronized boolean addCue(android.media.SubtitleTrack.Cue r12) {
-        /*
-            r11 = this;
-            monitor-enter(r11)
-            android.media.SubtitleTrack$CueList r0 = r11.mCues     // Catch:{ all -> 0x0101 }
-            r0.add(r12)     // Catch:{ all -> 0x0101 }
-            long r0 = r12.mRunID     // Catch:{ all -> 0x0101 }
-            r2 = 0
-            int r0 = (r0 > r2 ? 1 : (r0 == r2 ? 0 : -1))
-            if (r0 == 0) goto L_0x003f
-            android.util.LongSparseArray<android.media.SubtitleTrack$Run> r0 = r11.mRunsByID     // Catch:{ all -> 0x0101 }
-            long r4 = r12.mRunID     // Catch:{ all -> 0x0101 }
-            java.lang.Object r0 = r0.get(r4)     // Catch:{ all -> 0x0101 }
-            android.media.SubtitleTrack$Run r0 = (android.media.SubtitleTrack.Run) r0     // Catch:{ all -> 0x0101 }
-            if (r0 != 0) goto L_0x002d
-            android.media.SubtitleTrack$Run r1 = new android.media.SubtitleTrack$Run     // Catch:{ all -> 0x0101 }
-            r4 = 0
-            r1.<init>()     // Catch:{ all -> 0x0101 }
-            r0 = r1
-            android.util.LongSparseArray<android.media.SubtitleTrack$Run> r1 = r11.mRunsByID     // Catch:{ all -> 0x0101 }
-            long r4 = r12.mRunID     // Catch:{ all -> 0x0101 }
-            r1.put(r4, r0)     // Catch:{ all -> 0x0101 }
-            long r4 = r12.mEndTimeMs     // Catch:{ all -> 0x0101 }
-            r0.mEndTimeMs = r4     // Catch:{ all -> 0x0101 }
-            goto L_0x0039
-        L_0x002d:
-            long r4 = r0.mEndTimeMs     // Catch:{ all -> 0x0101 }
-            long r6 = r12.mEndTimeMs     // Catch:{ all -> 0x0101 }
-            int r1 = (r4 > r6 ? 1 : (r4 == r6 ? 0 : -1))
-            if (r1 >= 0) goto L_0x0039
-            long r4 = r12.mEndTimeMs     // Catch:{ all -> 0x0101 }
-            r0.mEndTimeMs = r4     // Catch:{ all -> 0x0101 }
-        L_0x0039:
-            android.media.SubtitleTrack$Cue r1 = r0.mFirstCue     // Catch:{ all -> 0x0101 }
-            r12.mNextInRun = r1     // Catch:{ all -> 0x0101 }
-            r0.mFirstCue = r12     // Catch:{ all -> 0x0101 }
-        L_0x003f:
-            r0 = -1
-            android.media.MediaTimeProvider r4 = r11.mTimeProvider     // Catch:{ all -> 0x0101 }
-            r5 = 1
-            r6 = 0
-            if (r4 == 0) goto L_0x0053
-            android.media.MediaTimeProvider r4 = r11.mTimeProvider     // Catch:{ IllegalStateException -> 0x0052 }
-            long r7 = r4.getCurrentTimeUs(r6, r5)     // Catch:{ IllegalStateException -> 0x0052 }
-            r9 = 1000(0x3e8, double:4.94E-321)
-            long r7 = r7 / r9
-            r0 = r7
-            goto L_0x0053
-        L_0x0052:
-            r4 = move-exception
-        L_0x0053:
-            boolean r4 = r11.DEBUG     // Catch:{ all -> 0x0101 }
-            if (r4 == 0) goto L_0x0096
-            java.lang.String r4 = "SubtitleTrack"
-            java.lang.StringBuilder r7 = new java.lang.StringBuilder     // Catch:{ all -> 0x0101 }
-            r7.<init>()     // Catch:{ all -> 0x0101 }
-            java.lang.String r8 = "mVisible="
-            r7.append(r8)     // Catch:{ all -> 0x0101 }
-            boolean r8 = r11.mVisible     // Catch:{ all -> 0x0101 }
-            r7.append(r8)     // Catch:{ all -> 0x0101 }
-            java.lang.String r8 = ", "
-            r7.append(r8)     // Catch:{ all -> 0x0101 }
-            long r8 = r12.mStartTimeMs     // Catch:{ all -> 0x0101 }
-            r7.append(r8)     // Catch:{ all -> 0x0101 }
-            java.lang.String r8 = " <= "
-            r7.append(r8)     // Catch:{ all -> 0x0101 }
-            r7.append(r0)     // Catch:{ all -> 0x0101 }
-            java.lang.String r8 = ", "
-            r7.append(r8)     // Catch:{ all -> 0x0101 }
-            long r8 = r12.mEndTimeMs     // Catch:{ all -> 0x0101 }
-            r7.append(r8)     // Catch:{ all -> 0x0101 }
-            java.lang.String r8 = " >= "
-            r7.append(r8)     // Catch:{ all -> 0x0101 }
-            long r8 = r11.mLastTimeMs     // Catch:{ all -> 0x0101 }
-            r7.append(r8)     // Catch:{ all -> 0x0101 }
-            java.lang.String r7 = r7.toString()     // Catch:{ all -> 0x0101 }
-            android.util.Log.v(r4, r7)     // Catch:{ all -> 0x0101 }
-        L_0x0096:
-            boolean r4 = r11.mVisible     // Catch:{ all -> 0x0101 }
-            if (r4 == 0) goto L_0x00e2
-            long r7 = r12.mStartTimeMs     // Catch:{ all -> 0x0101 }
-            int r4 = (r7 > r0 ? 1 : (r7 == r0 ? 0 : -1))
-            if (r4 > 0) goto L_0x00e2
-            long r7 = r12.mEndTimeMs     // Catch:{ all -> 0x0101 }
-            long r9 = r11.mLastTimeMs     // Catch:{ all -> 0x0101 }
-            int r4 = (r7 > r9 ? 1 : (r7 == r9 ? 0 : -1))
-            if (r4 < 0) goto L_0x00e2
-            java.lang.Runnable r2 = r11.mRunnable     // Catch:{ all -> 0x0101 }
-            if (r2 == 0) goto L_0x00b3
-            android.os.Handler r2 = r11.mHandler     // Catch:{ all -> 0x0101 }
-            java.lang.Runnable r3 = r11.mRunnable     // Catch:{ all -> 0x0101 }
-            r2.removeCallbacks(r3)     // Catch:{ all -> 0x0101 }
-        L_0x00b3:
-            r2 = r11
-            r3 = r0
-            android.media.SubtitleTrack$1 r6 = new android.media.SubtitleTrack$1     // Catch:{ all -> 0x0101 }
-            r6.<init>(r2, r3)     // Catch:{ all -> 0x0101 }
-            r11.mRunnable = r6     // Catch:{ all -> 0x0101 }
-            android.os.Handler r6 = r11.mHandler     // Catch:{ all -> 0x0101 }
-            java.lang.Runnable r7 = r11.mRunnable     // Catch:{ all -> 0x0101 }
-            r8 = 10
-            boolean r6 = r6.postDelayed(r7, r8)     // Catch:{ all -> 0x0101 }
-            if (r6 == 0) goto L_0x00d5
-            boolean r6 = r11.DEBUG     // Catch:{ all -> 0x0101 }
-            if (r6 == 0) goto L_0x00e0
-            java.lang.String r6 = "SubtitleTrack"
-            java.lang.String r7 = "scheduling update"
-            android.util.Log.v(r6, r7)     // Catch:{ all -> 0x0101 }
-            goto L_0x00e0
-        L_0x00d5:
-            boolean r6 = r11.DEBUG     // Catch:{ all -> 0x0101 }
-            if (r6 == 0) goto L_0x00e0
-            java.lang.String r6 = "SubtitleTrack"
-            java.lang.String r7 = "failed to schedule subtitle view update"
-            android.util.Log.w((java.lang.String) r6, (java.lang.String) r7)     // Catch:{ all -> 0x0101 }
-        L_0x00e0:
-            monitor-exit(r11)
-            return r5
-        L_0x00e2:
-            boolean r4 = r11.mVisible     // Catch:{ all -> 0x0101 }
-            if (r4 == 0) goto L_0x00ff
-            long r4 = r12.mEndTimeMs     // Catch:{ all -> 0x0101 }
-            long r7 = r11.mLastTimeMs     // Catch:{ all -> 0x0101 }
-            int r4 = (r4 > r7 ? 1 : (r4 == r7 ? 0 : -1))
-            if (r4 < 0) goto L_0x00ff
-            long r4 = r12.mStartTimeMs     // Catch:{ all -> 0x0101 }
-            long r7 = r11.mNextScheduledTimeMs     // Catch:{ all -> 0x0101 }
-            int r4 = (r4 > r7 ? 1 : (r4 == r7 ? 0 : -1))
-            if (r4 < 0) goto L_0x00fc
-            long r4 = r11.mNextScheduledTimeMs     // Catch:{ all -> 0x0101 }
-            int r2 = (r4 > r2 ? 1 : (r4 == r2 ? 0 : -1))
-            if (r2 >= 0) goto L_0x00ff
-        L_0x00fc:
-            r11.scheduleTimedEvents()     // Catch:{ all -> 0x0101 }
-        L_0x00ff:
-            monitor-exit(r11)
-            return r6
-        L_0x0101:
-            r12 = move-exception
-            monitor-exit(r11)
-            throw r12
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.media.SubtitleTrack.addCue(android.media.SubtitleTrack$Cue):boolean");
-    }
-
-    /* JADX WARNING: Code restructure failed: missing block: B:14:0x001c, code lost:
-        return;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public synchronized void setTimeProvider(android.media.MediaTimeProvider r2) {
-        /*
-            r1 = this;
-            monitor-enter(r1)
-            android.media.MediaTimeProvider r0 = r1.mTimeProvider     // Catch:{ all -> 0x001d }
-            if (r0 != r2) goto L_0x0007
-            monitor-exit(r1)
-            return
-        L_0x0007:
-            android.media.MediaTimeProvider r0 = r1.mTimeProvider     // Catch:{ all -> 0x001d }
-            if (r0 == 0) goto L_0x0010
-            android.media.MediaTimeProvider r0 = r1.mTimeProvider     // Catch:{ all -> 0x001d }
-            r0.cancelNotifications(r1)     // Catch:{ all -> 0x001d }
-        L_0x0010:
-            r1.mTimeProvider = r2     // Catch:{ all -> 0x001d }
-            android.media.MediaTimeProvider r0 = r1.mTimeProvider     // Catch:{ all -> 0x001d }
-            if (r0 == 0) goto L_0x001b
-            android.media.MediaTimeProvider r0 = r1.mTimeProvider     // Catch:{ all -> 0x001d }
-            r0.scheduleUpdate(r1)     // Catch:{ all -> 0x001d }
-        L_0x001b:
-            monitor-exit(r1)
-            return
-        L_0x001d:
-            r2 = move-exception
-            monitor-exit(r1)
-            throw r2
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.media.SubtitleTrack.setTimeProvider(android.media.MediaTimeProvider):void");
-    }
-
+    /* loaded from: classes3.dex */
     static class CueList {
         private static final String TAG = "CueList";
         public boolean DEBUG = false;
-        /* access modifiers changed from: private */
-        public SortedMap<Long, Vector<Cue>> mCues = new TreeMap();
+        private SortedMap<Long, Vector<Cue>> mCues = new TreeMap();
 
         private boolean addEvent(Cue cue, long timeMs) {
-            Vector<Cue> cues = (Vector) this.mCues.get(Long.valueOf(timeMs));
+            Vector<Cue> cues = this.mCues.get(Long.valueOf(timeMs));
             if (cues == null) {
                 cues = new Vector<>(2);
                 this.mCues.put(Long.valueOf(timeMs), cues);
@@ -509,9 +336,9 @@ public abstract class SubtitleTrack implements MediaTimeProvider.OnMediaTimeList
             return true;
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public void removeEvent(Cue cue, long timeMs) {
-            Vector<Cue> cues = (Vector) this.mCues.get(Long.valueOf(timeMs));
+            Vector<Cue> cues = this.mCues.get(Long.valueOf(timeMs));
             if (cues != null) {
                 cues.remove(cue);
                 if (cues.size() == 0) {
@@ -521,21 +348,24 @@ public abstract class SubtitleTrack implements MediaTimeProvider.OnMediaTimeList
         }
 
         public void add(Cue cue) {
-            if (cue.mStartTimeMs < cue.mEndTimeMs && addEvent(cue, cue.mStartTimeMs)) {
-                long lastTimeMs = cue.mStartTimeMs;
-                if (cue.mInnerTimesMs != null) {
-                    for (long timeMs : cue.mInnerTimesMs) {
-                        if (timeMs > lastTimeMs && timeMs < cue.mEndTimeMs) {
-                            addEvent(cue, timeMs);
-                            lastTimeMs = timeMs;
-                        }
+            long[] jArr;
+            if (cue.mStartTimeMs >= cue.mEndTimeMs || !addEvent(cue, cue.mStartTimeMs)) {
+                return;
+            }
+            long lastTimeMs = cue.mStartTimeMs;
+            if (cue.mInnerTimesMs != null) {
+                for (long timeMs : cue.mInnerTimesMs) {
+                    if (timeMs > lastTimeMs && timeMs < cue.mEndTimeMs) {
+                        addEvent(cue, timeMs);
+                        lastTimeMs = timeMs;
                     }
                 }
-                addEvent(cue, cue.mEndTimeMs);
             }
+            addEvent(cue, cue.mEndTimeMs);
         }
 
         public void remove(Cue cue) {
+            long[] jArr;
             removeEvent(cue, cue.mStartTimeMs);
             if (cue.mInnerTimesMs != null) {
                 for (long timeMs : cue.mInnerTimesMs) {
@@ -545,18 +375,17 @@ public abstract class SubtitleTrack implements MediaTimeProvider.OnMediaTimeList
             removeEvent(cue, cue.mEndTimeMs);
         }
 
-        public Iterable<Pair<Long, Cue>> entriesBetween(long lastTimeMs, long timeMs) {
-            final long j = lastTimeMs;
-            final long j2 = timeMs;
-            return new Iterable<Pair<Long, Cue>>() {
+        public Iterable<Pair<Long, Cue>> entriesBetween(final long lastTimeMs, final long timeMs) {
+            return new Iterable<Pair<Long, Cue>>() { // from class: android.media.SubtitleTrack.CueList.1
+                @Override // java.lang.Iterable
                 public Iterator<Pair<Long, Cue>> iterator() {
                     if (CueList.this.DEBUG) {
-                        Log.d(CueList.TAG, "slice (" + j + ", " + j2 + "]=");
+                        Log.m72d(CueList.TAG, "slice (" + lastTimeMs + ", " + timeMs + "]=");
                     }
                     try {
-                        return new EntryIterator(CueList.this.mCues.subMap(Long.valueOf(j + 1), Long.valueOf(j2 + 1)));
+                        return new EntryIterator(CueList.this.mCues.subMap(Long.valueOf(lastTimeMs + 1), Long.valueOf(timeMs + 1)));
                     } catch (IllegalArgumentException e) {
-                        return new EntryIterator((SortedMap<Long, Vector<Cue>>) null);
+                        return new EntryIterator(null);
                     }
                 }
             };
@@ -565,17 +394,18 @@ public abstract class SubtitleTrack implements MediaTimeProvider.OnMediaTimeList
         public long nextTimeAfter(long timeMs) {
             try {
                 SortedMap<Long, Vector<Cue>> tail = this.mCues.tailMap(Long.valueOf(1 + timeMs));
-                if (tail != null) {
-                    return tail.firstKey().longValue();
+                if (tail == null) {
+                    return -1L;
                 }
-                return -1;
+                return tail.firstKey().longValue();
             } catch (IllegalArgumentException e) {
-                return -1;
+                return -1L;
             } catch (NoSuchElementException e2) {
-                return -1;
+                return -1L;
             }
         }
 
+        /* loaded from: classes3.dex */
         class EntryIterator implements Iterator<Pair<Long, Cue>> {
             private long mCurrentTimeMs;
             private boolean mDone;
@@ -584,24 +414,29 @@ public abstract class SubtitleTrack implements MediaTimeProvider.OnMediaTimeList
             private Iterator<Cue> mListIterator;
             private SortedMap<Long, Vector<Cue>> mRemainingCues;
 
+            @Override // java.util.Iterator
             public boolean hasNext() {
                 return !this.mDone;
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // java.util.Iterator
             public Pair<Long, Cue> next() {
-                if (!this.mDone) {
-                    this.mLastEntry = new Pair<>(Long.valueOf(this.mCurrentTimeMs), this.mListIterator.next());
-                    this.mLastListIterator = this.mListIterator;
-                    if (!this.mListIterator.hasNext()) {
-                        nextKey();
-                    }
-                    return this.mLastEntry;
+                if (this.mDone) {
+                    throw new NoSuchElementException("");
                 }
-                throw new NoSuchElementException("");
+                this.mLastEntry = new Pair<>(Long.valueOf(this.mCurrentTimeMs), this.mListIterator.next());
+                this.mLastListIterator = this.mListIterator;
+                if (!this.mListIterator.hasNext()) {
+                    nextKey();
+                }
+                return this.mLastEntry;
             }
 
+            @Override // java.util.Iterator
             public void remove() {
-                if (this.mLastListIterator == null || ((Cue) this.mLastEntry.second).mEndTimeMs != ((Long) this.mLastEntry.first).longValue()) {
+                long[] jArr;
+                if (this.mLastListIterator == null || this.mLastEntry.second.mEndTimeMs != this.mLastEntry.first.longValue()) {
                     throw new IllegalStateException("");
                 }
                 this.mLastListIterator.remove();
@@ -609,7 +444,7 @@ public abstract class SubtitleTrack implements MediaTimeProvider.OnMediaTimeList
                 if (((Vector) CueList.this.mCues.get(this.mLastEntry.first)).size() == 0) {
                     CueList.this.mCues.remove(this.mLastEntry.first);
                 }
-                Cue cue = (Cue) this.mLastEntry.second;
+                Cue cue = this.mLastEntry.second;
                 CueList.this.removeEvent(cue, cue.mStartTimeMs);
                 if (cue.mInnerTimesMs != null) {
                     for (long timeMs : cue.mInnerTimesMs) {
@@ -620,7 +455,7 @@ public abstract class SubtitleTrack implements MediaTimeProvider.OnMediaTimeList
 
             public EntryIterator(SortedMap<Long, Vector<Cue>> cues) {
                 if (CueList.this.DEBUG) {
-                    Log.v(CueList.TAG, cues + "");
+                    Log.m66v(CueList.TAG, cues + "");
                 }
                 this.mRemainingCues = cues;
                 this.mLastListIterator = null;
@@ -630,24 +465,27 @@ public abstract class SubtitleTrack implements MediaTimeProvider.OnMediaTimeList
             private void nextKey() {
                 do {
                     try {
-                        if (this.mRemainingCues != null) {
-                            this.mCurrentTimeMs = this.mRemainingCues.firstKey().longValue();
-                            this.mListIterator = ((Vector) this.mRemainingCues.get(Long.valueOf(this.mCurrentTimeMs))).iterator();
-                            try {
-                                this.mRemainingCues = this.mRemainingCues.tailMap(Long.valueOf(this.mCurrentTimeMs + 1));
-                            } catch (IllegalArgumentException e) {
-                                this.mRemainingCues = null;
-                            }
-                            this.mDone = false;
-                        } else {
+                        if (this.mRemainingCues == null) {
                             throw new NoSuchElementException("");
                         }
+                        this.mCurrentTimeMs = this.mRemainingCues.firstKey().longValue();
+                        this.mListIterator = this.mRemainingCues.get(Long.valueOf(this.mCurrentTimeMs)).iterator();
+                        try {
+                            this.mRemainingCues = this.mRemainingCues.tailMap(Long.valueOf(this.mCurrentTimeMs + 1));
+                        } catch (IllegalArgumentException e) {
+                            this.mRemainingCues = null;
+                        }
+                        this.mDone = false;
                     } catch (NoSuchElementException e2) {
                         this.mDone = true;
                         this.mRemainingCues = null;
                         this.mListIterator = null;
                         return;
                     }
+                    this.mDone = true;
+                    this.mRemainingCues = null;
+                    this.mListIterator = null;
+                    return;
                 } while (!this.mListIterator.hasNext());
             }
         }
@@ -656,6 +494,7 @@ public abstract class SubtitleTrack implements MediaTimeProvider.OnMediaTimeList
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class Cue {
         public long mEndTimeMs;
         public long[] mInnerTimesMs;
@@ -667,8 +506,7 @@ public abstract class SubtitleTrack implements MediaTimeProvider.OnMediaTimeList
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void finishedRun(long runID) {
+    protected void finishedRun(long runID) {
         Run run;
         if (runID != 0 && runID != -1 && (run = this.mRunsByID.get(runID)) != null) {
             run.storeByEndTimeMs(this.mRunsByEndTime);
@@ -690,6 +528,7 @@ public abstract class SubtitleTrack implements MediaTimeProvider.OnMediaTimeList
         return 4;
     }
 
+    /* loaded from: classes3.dex */
     private static class Run {
         static final /* synthetic */ boolean $assertionsDisabled = false;
         public long mEndTimeMs;
@@ -699,14 +538,10 @@ public abstract class SubtitleTrack implements MediaTimeProvider.OnMediaTimeList
         public long mRunID;
         private long mStoredEndTimeMs;
 
-        static {
-            Class<SubtitleTrack> cls = SubtitleTrack.class;
-        }
-
         private Run() {
-            this.mEndTimeMs = -1;
-            this.mRunID = 0;
-            this.mStoredEndTimeMs = -1;
+            this.mEndTimeMs = -1L;
+            this.mRunID = 0L;
+            this.mStoredEndTimeMs = -1L;
         }
 
         public void storeByEndTimeMs(LongSparseArray<Run> runsByEndTime) {

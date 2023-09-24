@@ -1,14 +1,19 @@
 package android.hardware.camera2.utils;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public class SubmitInfo implements Parcelable {
-    public static final Parcelable.Creator<SubmitInfo> CREATOR = new Parcelable.Creator<SubmitInfo>() {
+    public static final Parcelable.Creator<SubmitInfo> CREATOR = new Parcelable.Creator<SubmitInfo>() { // from class: android.hardware.camera2.utils.SubmitInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SubmitInfo createFromParcel(Parcel in) {
             return new SubmitInfo(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SubmitInfo[] newArray(int size) {
             return new SubmitInfo[size];
         }
@@ -18,7 +23,7 @@ public class SubmitInfo implements Parcelable {
 
     public SubmitInfo() {
         this.mRequestId = -1;
-        this.mLastFrameNumber = -1;
+        this.mLastFrameNumber = -1L;
     }
 
     public SubmitInfo(int requestId, long lastFrameNumber) {
@@ -30,10 +35,12 @@ public class SubmitInfo implements Parcelable {
         readFromParcel(in);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mRequestId);
         dest.writeLong(this.mLastFrameNumber);

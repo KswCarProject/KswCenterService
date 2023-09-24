@@ -3,6 +3,7 @@ package com.android.internal.midi;
 import android.media.midi.MidiReceiver;
 import java.io.IOException;
 
+/* loaded from: classes4.dex */
 public class MidiFramer extends MidiReceiver {
     public String TAG = "MidiFramer";
     private byte[] mBuffer = new byte[3];
@@ -18,17 +19,20 @@ public class MidiFramer extends MidiReceiver {
 
     public static String formatMidiData(byte[] data, int offset, int count) {
         String text = "MIDI+" + offset + " : ";
+        String text2 = text;
         for (int i = 0; i < count; i++) {
-            text = text + String.format("0x%02X, ", new Object[]{Byte.valueOf(data[offset + i])});
+            text2 = text2 + String.format("0x%02X, ", Byte.valueOf(data[offset + i]));
         }
-        return text;
+        return text2;
     }
 
+    @Override // android.media.midi.MidiReceiver
     public void onSend(byte[] data, int offset, int count, long timestamp) throws IOException {
         int i;
-        int offset2 = offset;
         int sysExStartOffset = this.mInSysEx ? offset : -1;
-        for (int i2 = 0; i2 < count; i2++) {
+        int offset2 = offset;
+        int sysExStartOffset2 = sysExStartOffset;
+        for (int sysExStartOffset3 = 0; sysExStartOffset3 < count; sysExStartOffset3++) {
             byte currentByte = data[offset2];
             int currentInt = currentByte & 255;
             if (currentInt >= 128) {
@@ -42,30 +46,30 @@ public class MidiFramer extends MidiReceiver {
                         i = offset2;
                     } else if (currentInt != 247) {
                         this.mBuffer[0] = currentByte;
-                        this.mRunningStatus = 0;
+                        this.mRunningStatus = (byte) 0;
                         this.mCount = 1;
                         this.mNeeded = MidiConstants.getBytesPerMessage(currentByte) - 1;
                     } else if (this.mInSysEx) {
-                        this.mReceiver.send(data, sysExStartOffset, (offset2 - sysExStartOffset) + 1, timestamp);
+                        this.mReceiver.send(data, sysExStartOffset2, (offset2 - sysExStartOffset2) + 1, timestamp);
                         this.mInSysEx = false;
                         i = -1;
                     }
-                    sysExStartOffset = i;
+                    sysExStartOffset2 = i;
                 } else {
                     if (this.mInSysEx) {
-                        this.mReceiver.send(data, sysExStartOffset, offset2 - sysExStartOffset, timestamp);
-                        sysExStartOffset = offset2 + 1;
+                        this.mReceiver.send(data, sysExStartOffset2, offset2 - sysExStartOffset2, timestamp);
+                        sysExStartOffset2 = offset2 + 1;
                     }
                     this.mReceiver.send(data, offset2, 1, timestamp);
                 }
             } else if (!this.mInSysEx) {
                 byte[] bArr = this.mBuffer;
-                int i3 = this.mCount;
-                this.mCount = i3 + 1;
-                bArr[i3] = currentByte;
-                int i4 = this.mNeeded - 1;
-                this.mNeeded = i4;
-                if (i4 == 0) {
+                int i2 = this.mCount;
+                this.mCount = i2 + 1;
+                bArr[i2] = currentByte;
+                int i3 = this.mNeeded - 1;
+                this.mNeeded = i3;
+                if (i3 == 0) {
                     if (this.mRunningStatus != 0) {
                         this.mBuffer[0] = this.mRunningStatus;
                     }
@@ -76,8 +80,8 @@ public class MidiFramer extends MidiReceiver {
             }
             offset2++;
         }
-        if (sysExStartOffset >= 0 && sysExStartOffset < offset2) {
-            this.mReceiver.send(data, sysExStartOffset, offset2 - sysExStartOffset, timestamp);
+        if (sysExStartOffset2 >= 0 && sysExStartOffset2 < offset2) {
+            this.mReceiver.send(data, sysExStartOffset2, offset2 - sysExStartOffset2, timestamp);
         }
     }
 }

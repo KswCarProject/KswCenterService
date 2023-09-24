@@ -1,14 +1,16 @@
 package com.android.internal.telecom;
 
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.telecom.CallAudioState;
 import android.telecom.ParcelableCall;
+import com.android.internal.telecom.IInCallAdapter;
 
+/* loaded from: classes4.dex */
 public interface IInCallService extends IInterface {
     void addCall(ParcelableCall parcelableCall) throws RemoteException;
 
@@ -38,54 +40,71 @@ public interface IInCallService extends IInterface {
 
     void updateCall(ParcelableCall parcelableCall) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IInCallService {
+        @Override // com.android.internal.telecom.IInCallService
         public void setInCallAdapter(IInCallAdapter inCallAdapter) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IInCallService
         public void addCall(ParcelableCall call) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IInCallService
         public void updateCall(ParcelableCall call) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IInCallService
         public void setPostDial(String callId, String remaining) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IInCallService
         public void setPostDialWait(String callId, String remaining) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IInCallService
         public void onCallAudioStateChanged(CallAudioState callAudioState) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IInCallService
         public void bringToForeground(boolean showDialpad) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IInCallService
         public void onCanAddCallChanged(boolean canAddCall) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IInCallService
         public void silenceRinger() throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IInCallService
         public void onConnectionEvent(String callId, String event, Bundle extras) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IInCallService
         public void onRttUpgradeRequest(String callId, int id) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IInCallService
         public void onRttInitiationFailure(String callId, int reason) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IInCallService
         public void onHandoverFailed(String callId, int error) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IInCallService
         public void onHandoverComplete(String callId) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IInCallService {
         private static final String DESCRIPTOR = "com.android.internal.telecom.IInCallService";
         static final int TRANSACTION_addCall = 2;
@@ -112,12 +131,13 @@ public interface IInCallService extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IInCallService)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IInCallService)) {
+                return (IInCallService) iin;
             }
-            return (IInCallService) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -157,180 +177,96 @@ public interface IInCallService extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v0, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v1, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v5, resolved type: android.telecom.ParcelableCall} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v4, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v9, resolved type: android.telecom.ParcelableCall} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v9, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v15, resolved type: android.telecom.CallAudioState} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v14, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v21, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v22, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v23, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v24, resolved type: android.os.Bundle} */
-        /* JADX WARNING: type inference failed for: r3v3, types: [android.telecom.ParcelableCall] */
-        /* JADX WARNING: type inference failed for: r3v6, types: [android.telecom.ParcelableCall] */
-        /* JADX WARNING: type inference failed for: r3v11, types: [android.telecom.CallAudioState] */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r7, android.os.Parcel r8, android.os.Parcel r9, int r10) throws android.os.RemoteException {
-            /*
-                r6 = this;
-                java.lang.String r0 = "com.android.internal.telecom.IInCallService"
-                r1 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r2 = 1
-                if (r7 == r1) goto L_0x0106
-                r1 = 0
-                r3 = 0
-                switch(r7) {
-                    case 1: goto L_0x00f7;
-                    case 2: goto L_0x00de;
-                    case 3: goto L_0x00c5;
-                    case 4: goto L_0x00b6;
-                    case 5: goto L_0x00a7;
-                    case 6: goto L_0x008e;
-                    case 7: goto L_0x007f;
-                    case 8: goto L_0x0070;
-                    case 9: goto L_0x0069;
-                    case 10: goto L_0x004a;
-                    case 11: goto L_0x003b;
-                    case 12: goto L_0x002c;
-                    case 13: goto L_0x001d;
-                    case 14: goto L_0x0012;
-                    default: goto L_0x000d;
-                }
-            L_0x000d:
-                boolean r1 = super.onTransact(r7, r8, r9, r10)
-                return r1
-            L_0x0012:
-                r8.enforceInterface(r0)
-                java.lang.String r1 = r8.readString()
-                r6.onHandoverComplete(r1)
-                return r2
-            L_0x001d:
-                r8.enforceInterface(r0)
-                java.lang.String r1 = r8.readString()
-                int r3 = r8.readInt()
-                r6.onHandoverFailed(r1, r3)
-                return r2
-            L_0x002c:
-                r8.enforceInterface(r0)
-                java.lang.String r1 = r8.readString()
-                int r3 = r8.readInt()
-                r6.onRttInitiationFailure(r1, r3)
-                return r2
-            L_0x003b:
-                r8.enforceInterface(r0)
-                java.lang.String r1 = r8.readString()
-                int r3 = r8.readInt()
-                r6.onRttUpgradeRequest(r1, r3)
-                return r2
-            L_0x004a:
-                r8.enforceInterface(r0)
-                java.lang.String r1 = r8.readString()
-                java.lang.String r4 = r8.readString()
-                int r5 = r8.readInt()
-                if (r5 == 0) goto L_0x0064
-                android.os.Parcelable$Creator<android.os.Bundle> r3 = android.os.Bundle.CREATOR
-                java.lang.Object r3 = r3.createFromParcel(r8)
-                android.os.Bundle r3 = (android.os.Bundle) r3
-                goto L_0x0065
-            L_0x0064:
-            L_0x0065:
-                r6.onConnectionEvent(r1, r4, r3)
-                return r2
-            L_0x0069:
-                r8.enforceInterface(r0)
-                r6.silenceRinger()
-                return r2
-            L_0x0070:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x007b
-                r1 = r2
-            L_0x007b:
-                r6.onCanAddCallChanged(r1)
-                return r2
-            L_0x007f:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x008a
-                r1 = r2
-            L_0x008a:
-                r6.bringToForeground(r1)
-                return r2
-            L_0x008e:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                if (r1 == 0) goto L_0x00a1
-                android.os.Parcelable$Creator<android.telecom.CallAudioState> r1 = android.telecom.CallAudioState.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                r3 = r1
-                android.telecom.CallAudioState r3 = (android.telecom.CallAudioState) r3
-                goto L_0x00a2
-            L_0x00a1:
-            L_0x00a2:
-                r1 = r3
-                r6.onCallAudioStateChanged(r1)
-                return r2
-            L_0x00a7:
-                r8.enforceInterface(r0)
-                java.lang.String r1 = r8.readString()
-                java.lang.String r3 = r8.readString()
-                r6.setPostDialWait(r1, r3)
-                return r2
-            L_0x00b6:
-                r8.enforceInterface(r0)
-                java.lang.String r1 = r8.readString()
-                java.lang.String r3 = r8.readString()
-                r6.setPostDial(r1, r3)
-                return r2
-            L_0x00c5:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                if (r1 == 0) goto L_0x00d8
-                android.os.Parcelable$Creator<android.telecom.ParcelableCall> r1 = android.telecom.ParcelableCall.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                r3 = r1
-                android.telecom.ParcelableCall r3 = (android.telecom.ParcelableCall) r3
-                goto L_0x00d9
-            L_0x00d8:
-            L_0x00d9:
-                r1 = r3
-                r6.updateCall(r1)
-                return r2
-            L_0x00de:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                if (r1 == 0) goto L_0x00f1
-                android.os.Parcelable$Creator<android.telecom.ParcelableCall> r1 = android.telecom.ParcelableCall.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                r3 = r1
-                android.telecom.ParcelableCall r3 = (android.telecom.ParcelableCall) r3
-                goto L_0x00f2
-            L_0x00f1:
-            L_0x00f2:
-                r1 = r3
-                r6.addCall(r1)
-                return r2
-            L_0x00f7:
-                r8.enforceInterface(r0)
-                android.os.IBinder r1 = r8.readStrongBinder()
-                com.android.internal.telecom.IInCallAdapter r1 = com.android.internal.telecom.IInCallAdapter.Stub.asInterface(r1)
-                r6.setInCallAdapter(r1)
-                return r2
-            L_0x0106:
-                r9.writeString(r0)
-                return r2
-            */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.internal.telecom.IInCallService.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            boolean _arg0;
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    setInCallAdapter(IInCallAdapter.Stub.asInterface(data.readStrongBinder()));
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    addCall(data.readInt() != 0 ? ParcelableCall.CREATOR.createFromParcel(data) : null);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    updateCall(data.readInt() != 0 ? ParcelableCall.CREATOR.createFromParcel(data) : null);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg02 = data.readString();
+                    String _arg1 = data.readString();
+                    setPostDial(_arg02, _arg1);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg03 = data.readString();
+                    String _arg12 = data.readString();
+                    setPostDialWait(_arg03, _arg12);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    onCallAudioStateChanged(data.readInt() != 0 ? CallAudioState.CREATOR.createFromParcel(data) : null);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0;
+                    bringToForeground(_arg0);
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0;
+                    onCanAddCallChanged(_arg0);
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    silenceRinger();
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg04 = data.readString();
+                    String _arg13 = data.readString();
+                    Bundle _arg2 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    onConnectionEvent(_arg04, _arg13, _arg2);
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg05 = data.readString();
+                    int _arg14 = data.readInt();
+                    onRttUpgradeRequest(_arg05, _arg14);
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg06 = data.readString();
+                    int _arg15 = data.readInt();
+                    onRttInitiationFailure(_arg06, _arg15);
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg07 = data.readString();
+                    int _arg16 = data.readInt();
+                    onHandoverFailed(_arg07, _arg16);
+                    return true;
+                case 14:
+                    data.enforceInterface(DESCRIPTOR);
+                    onHandoverComplete(data.readString());
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IInCallService {
             public static IInCallService sDefaultImpl;
             private IBinder mRemote;
@@ -339,6 +275,7 @@ public interface IInCallService extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -347,14 +284,14 @@ public interface IInCallService extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // com.android.internal.telecom.IInCallService
             public void setInCallAdapter(IInCallAdapter inCallAdapter) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(inCallAdapter != null ? inCallAdapter.asBinder() : null);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().setInCallAdapter(inCallAdapter);
                     }
                 } finally {
@@ -362,6 +299,7 @@ public interface IInCallService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IInCallService
             public void addCall(ParcelableCall call) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -372,9 +310,8 @@ public interface IInCallService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().addCall(call);
                     }
                 } finally {
@@ -382,6 +319,7 @@ public interface IInCallService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IInCallService
             public void updateCall(ParcelableCall call) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -392,9 +330,8 @@ public interface IInCallService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().updateCall(call);
                     }
                 } finally {
@@ -402,15 +339,15 @@ public interface IInCallService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IInCallService
             public void setPostDial(String callId, String remaining) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callId);
                     _data.writeString(remaining);
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().setPostDial(callId, remaining);
                     }
                 } finally {
@@ -418,15 +355,15 @@ public interface IInCallService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IInCallService
             public void setPostDialWait(String callId, String remaining) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callId);
                     _data.writeString(remaining);
-                    if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(5, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().setPostDialWait(callId, remaining);
                     }
                 } finally {
@@ -434,6 +371,7 @@ public interface IInCallService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IInCallService
             public void onCallAudioStateChanged(CallAudioState callAudioState) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -444,9 +382,8 @@ public interface IInCallService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(6, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(6, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onCallAudioStateChanged(callAudioState);
                     }
                 } finally {
@@ -454,14 +391,14 @@ public interface IInCallService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IInCallService
             public void bringToForeground(boolean showDialpad) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(showDialpad);
-                    if (this.mRemote.transact(7, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(showDialpad ? 1 : 0);
+                    boolean _status = this.mRemote.transact(7, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().bringToForeground(showDialpad);
                     }
                 } finally {
@@ -469,14 +406,14 @@ public interface IInCallService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IInCallService
             public void onCanAddCallChanged(boolean canAddCall) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(canAddCall);
-                    if (this.mRemote.transact(8, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(canAddCall ? 1 : 0);
+                    boolean _status = this.mRemote.transact(8, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onCanAddCallChanged(canAddCall);
                     }
                 } finally {
@@ -484,13 +421,13 @@ public interface IInCallService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IInCallService
             public void silenceRinger() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(9, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(9, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().silenceRinger();
                     }
                 } finally {
@@ -498,6 +435,7 @@ public interface IInCallService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IInCallService
             public void onConnectionEvent(String callId, String event, Bundle extras) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -510,9 +448,8 @@ public interface IInCallService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(10, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(10, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onConnectionEvent(callId, event, extras);
                     }
                 } finally {
@@ -520,15 +457,15 @@ public interface IInCallService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IInCallService
             public void onRttUpgradeRequest(String callId, int id) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callId);
                     _data.writeInt(id);
-                    if (this.mRemote.transact(11, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(11, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onRttUpgradeRequest(callId, id);
                     }
                 } finally {
@@ -536,15 +473,15 @@ public interface IInCallService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IInCallService
             public void onRttInitiationFailure(String callId, int reason) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callId);
                     _data.writeInt(reason);
-                    if (this.mRemote.transact(12, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(12, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onRttInitiationFailure(callId, reason);
                     }
                 } finally {
@@ -552,15 +489,15 @@ public interface IInCallService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IInCallService
             public void onHandoverFailed(String callId, int error) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callId);
                     _data.writeInt(error);
-                    if (this.mRemote.transact(13, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(13, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onHandoverFailed(callId, error);
                     }
                 } finally {
@@ -568,14 +505,14 @@ public interface IInCallService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IInCallService
             public void onHandoverComplete(String callId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callId);
-                    if (this.mRemote.transact(14, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(14, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onHandoverComplete(callId);
                     }
                 } finally {
@@ -585,11 +522,11 @@ public interface IInCallService extends IInterface {
         }
 
         public static boolean setDefaultImpl(IInCallService impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IInCallService getDefaultImpl() {

@@ -1,5 +1,6 @@
 package com.android.internal.config.sysui;
 
+/* loaded from: classes4.dex */
 public final class SystemUiDeviceConfigFlags {
     public static final String ASSIST_HANDLES_BEHAVIOR_MODE = "assist_handles_behavior_mode";
     public static final String ASSIST_HANDLES_LEARN_COUNT = "assist_handles_learn_count";

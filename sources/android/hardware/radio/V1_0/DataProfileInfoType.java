@@ -2,6 +2,7 @@ package android.hardware.radio.V1_0;
 
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class DataProfileInfoType {
     public static final int COMMON = 0;
     public static final int THREE_GPP = 1;

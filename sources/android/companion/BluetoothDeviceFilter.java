@@ -2,9 +2,9 @@ package android.companion;
 
 import android.annotation.UnsupportedAppUsage;
 import android.bluetooth.BluetoothDevice;
-import android.os.Parcel;
-import android.os.ParcelUuid;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.ParcelUuid;
+import android.p007os.Parcelable;
 import android.provider.OneTimeUseBuilder;
 import com.android.internal.util.ArrayUtils;
 import com.android.internal.util.CollectionUtils;
@@ -13,12 +13,17 @@ import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
+/* loaded from: classes.dex */
 public final class BluetoothDeviceFilter implements DeviceFilter<BluetoothDevice> {
-    public static final Parcelable.Creator<BluetoothDeviceFilter> CREATOR = new Parcelable.Creator<BluetoothDeviceFilter>() {
+    public static final Parcelable.Creator<BluetoothDeviceFilter> CREATOR = new Parcelable.Creator<BluetoothDeviceFilter>() { // from class: android.companion.BluetoothDeviceFilter.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public BluetoothDeviceFilter createFromParcel(Parcel in) {
             return new BluetoothDeviceFilter(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public BluetoothDeviceFilter[] newArray(int size) {
             return new BluetoothDeviceFilter[size];
         }
@@ -43,14 +48,17 @@ public final class BluetoothDeviceFilter implements DeviceFilter<BluetoothDevice
         return in.readParcelableList(new ArrayList(), ParcelUuid.class.getClassLoader());
     }
 
+    @Override // android.companion.DeviceFilter
     public boolean matches(BluetoothDevice device) {
         return BluetoothDeviceFilterUtils.matchesAddress(this.mAddress, device) && BluetoothDeviceFilterUtils.matchesServiceUuids(this.mServiceUuids, this.mServiceUuidMasks, device) && BluetoothDeviceFilterUtils.matchesName(getNamePattern(), device);
     }
 
+    @Override // android.companion.DeviceFilter
     public String getDeviceDisplayName(BluetoothDevice device) {
         return BluetoothDeviceFilterUtils.getDeviceDisplayNameInternal(device);
     }
 
+    @Override // android.companion.DeviceFilter
     public int getMediumType() {
         return 0;
     }
@@ -72,6 +80,7 @@ public final class BluetoothDeviceFilter implements DeviceFilter<BluetoothDevice
         return this.mServiceUuidMasks;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(BluetoothDeviceFilterUtils.patternToString(getNamePattern()));
         dest.writeString(this.mAddress);
@@ -87,20 +96,22 @@ public final class BluetoothDeviceFilter implements DeviceFilter<BluetoothDevice
             return false;
         }
         BluetoothDeviceFilter that = (BluetoothDeviceFilter) o;
-        if (!Objects.equals(this.mNamePattern, that.mNamePattern) || !Objects.equals(this.mAddress, that.mAddress) || !Objects.equals(this.mServiceUuids, that.mServiceUuids) || !Objects.equals(this.mServiceUuidMasks, that.mServiceUuidMasks)) {
-            return false;
+        if (Objects.equals(this.mNamePattern, that.mNamePattern) && Objects.equals(this.mAddress, that.mAddress) && Objects.equals(this.mServiceUuids, that.mServiceUuids) && Objects.equals(this.mServiceUuidMasks, that.mServiceUuidMasks)) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{this.mNamePattern, this.mAddress, this.mServiceUuids, this.mServiceUuidMasks});
+        return Objects.hash(this.mNamePattern, this.mAddress, this.mServiceUuids, this.mServiceUuidMasks);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    /* loaded from: classes.dex */
     public static final class Builder extends OneTimeUseBuilder<BluetoothDeviceFilter> {
         private String mAddress;
         private Pattern mNamePattern;
@@ -126,6 +137,8 @@ public final class BluetoothDeviceFilter implements DeviceFilter<BluetoothDevice
             return this;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.provider.OneTimeUseBuilder
         public BluetoothDeviceFilter build() {
             markUsed();
             return new BluetoothDeviceFilter(this.mNamePattern, this.mAddress, this.mServiceUuid, this.mServiceUuidMask);

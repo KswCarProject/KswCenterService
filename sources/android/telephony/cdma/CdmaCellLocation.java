@@ -2,10 +2,11 @@ package android.telephony.cdma;
 
 import android.annotation.UnsupportedAppUsage;
 import android.content.Intent;
-import android.os.Bundle;
+import android.p007os.Bundle;
 import android.telephony.CellLocation;
 import android.telephony.SmsManager;
 
+/* loaded from: classes.dex */
 public class CdmaCellLocation extends CellLocation {
     public static final int INVALID_LAT_LONG = Integer.MAX_VALUE;
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
@@ -65,6 +66,7 @@ public class CdmaCellLocation extends CellLocation {
         return this.mNetworkId;
     }
 
+    @Override // android.telephony.CellLocation
     public void setStateInvalid() {
         this.mBaseStationId = -1;
         this.mBaseStationLatitude = Integer.MAX_VALUE;
@@ -94,10 +96,7 @@ public class CdmaCellLocation extends CellLocation {
     public boolean equals(Object o) {
         try {
             CdmaCellLocation s = (CdmaCellLocation) o;
-            if (o != null && equalsHandlesNulls(Integer.valueOf(this.mBaseStationId), Integer.valueOf(s.mBaseStationId)) && equalsHandlesNulls(Integer.valueOf(this.mBaseStationLatitude), Integer.valueOf(s.mBaseStationLatitude)) && equalsHandlesNulls(Integer.valueOf(this.mBaseStationLongitude), Integer.valueOf(s.mBaseStationLongitude)) && equalsHandlesNulls(Integer.valueOf(this.mSystemId), Integer.valueOf(s.mSystemId)) && equalsHandlesNulls(Integer.valueOf(this.mNetworkId), Integer.valueOf(s.mNetworkId))) {
-                return true;
-            }
-            return false;
+            return o != null && equalsHandlesNulls(Integer.valueOf(this.mBaseStationId), Integer.valueOf(s.mBaseStationId)) && equalsHandlesNulls(Integer.valueOf(this.mBaseStationLatitude), Integer.valueOf(s.mBaseStationLatitude)) && equalsHandlesNulls(Integer.valueOf(this.mBaseStationLongitude), Integer.valueOf(s.mBaseStationLongitude)) && equalsHandlesNulls(Integer.valueOf(this.mSystemId), Integer.valueOf(s.mSystemId)) && equalsHandlesNulls(Integer.valueOf(this.mNetworkId), Integer.valueOf(s.mNetworkId));
         } catch (ClassCastException e) {
             return false;
         }
@@ -109,12 +108,10 @@ public class CdmaCellLocation extends CellLocation {
 
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
     private static boolean equalsHandlesNulls(Object a, Object b) {
-        if (a == null) {
-            return b == null;
-        }
-        return a.equals(b);
+        return a == null ? b == null : a.equals(b);
     }
 
+    @Override // android.telephony.CellLocation
     public void fillInNotifierBundle(Bundle bundleToFill) {
         bundleToFill.putInt("baseStationId", this.mBaseStationId);
         bundleToFill.putInt("baseStationLatitude", this.mBaseStationLatitude);
@@ -123,14 +120,15 @@ public class CdmaCellLocation extends CellLocation {
         bundleToFill.putInt(Intent.EXTRA_NETWORK_ID, this.mNetworkId);
     }
 
+    @Override // android.telephony.CellLocation
     public boolean isEmpty() {
         return this.mBaseStationId == -1 && this.mBaseStationLatitude == Integer.MAX_VALUE && this.mBaseStationLongitude == Integer.MAX_VALUE && this.mSystemId == -1 && this.mNetworkId == -1;
     }
 
     public static double convertQuartSecToDecDegrees(int quartSec) {
-        if (!Double.isNaN((double) quartSec) && quartSec >= -2592000 && quartSec <= 2592000) {
-            return ((double) quartSec) / 14400.0d;
+        if (Double.isNaN(quartSec) || quartSec < -2592000 || quartSec > 2592000) {
+            throw new IllegalArgumentException("Invalid coordiante value:" + quartSec);
         }
-        throw new IllegalArgumentException("Invalid coordiante value:" + quartSec);
+        return quartSec / 14400.0d;
     }
 }

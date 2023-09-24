@@ -7,15 +7,14 @@ import android.view.MotionEvent;
 import android.view.View;
 
 @Deprecated
+/* loaded from: classes4.dex */
 public class ZoomButton extends ImageButton implements View.OnLongClickListener {
-    /* access modifiers changed from: private */
-    public boolean mIsInLongpress;
+    private boolean mIsInLongpress;
     private final Runnable mRunnable;
-    /* access modifiers changed from: private */
-    public long mZoomSpeed;
+    private long mZoomSpeed;
 
     public ZoomButton(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public ZoomButton(Context context, AttributeSet attrs) {
@@ -28,7 +27,8 @@ public class ZoomButton extends ImageButton implements View.OnLongClickListener 
 
     public ZoomButton(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        this.mRunnable = new Runnable() {
+        this.mRunnable = new Runnable() { // from class: android.widget.ZoomButton.1
+            @Override // java.lang.Runnable
             public void run() {
                 if (ZoomButton.this.hasOnClickListeners() && ZoomButton.this.mIsInLongpress && ZoomButton.this.isEnabled()) {
                     ZoomButton.this.callOnClick();
@@ -36,10 +36,11 @@ public class ZoomButton extends ImageButton implements View.OnLongClickListener 
                 }
             }
         };
-        this.mZoomSpeed = 1000;
+        this.mZoomSpeed = 1000L;
         setOnLongClickListener(this);
     }
 
+    @Override // android.view.View
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == 3 || event.getAction() == 1) {
             this.mIsInLongpress = false;
@@ -51,17 +52,20 @@ public class ZoomButton extends ImageButton implements View.OnLongClickListener 
         this.mZoomSpeed = speed;
     }
 
+    @Override // android.view.View.OnLongClickListener
     public boolean onLongClick(View v) {
         this.mIsInLongpress = true;
         post(this.mRunnable);
         return true;
     }
 
+    @Override // android.view.View, android.view.KeyEvent.Callback
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         this.mIsInLongpress = false;
         return super.onKeyUp(keyCode, event);
     }
 
+    @Override // android.view.View
     public void setEnabled(boolean enabled) {
         if (!enabled) {
             setPressed(false);
@@ -69,11 +73,13 @@ public class ZoomButton extends ImageButton implements View.OnLongClickListener 
         super.setEnabled(enabled);
     }
 
+    @Override // android.view.View
     public boolean dispatchUnhandledMove(View focused, int direction) {
         clearFocus();
         return super.dispatchUnhandledMove(focused, direction);
     }
 
+    @Override // android.widget.ImageButton, android.widget.ImageView, android.view.View
     public CharSequence getAccessibilityClassName() {
         return ZoomButton.class.getName();
     }

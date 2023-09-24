@@ -3,23 +3,22 @@ package android.net.lowpan;
 import android.net.IpPrefix;
 import android.net.lowpan.ILowpanInterfaceListener;
 import android.net.lowpan.LowpanCommissioningSession;
-import android.os.DeadObjectException;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.RemoteException;
+import android.p007os.DeadObjectException;
+import android.p007os.Handler;
+import android.p007os.Looper;
+import android.p007os.RemoteException;
 
+/* loaded from: classes3.dex */
 public class LowpanCommissioningSession {
     private final LowpanBeaconInfo mBeaconInfo;
     private final ILowpanInterface mBinder;
-    /* access modifiers changed from: private */
-    public Callback mCallback = null;
-    /* access modifiers changed from: private */
-    public Handler mHandler;
-    private final ILowpanInterfaceListener mInternalCallback = new InternalCallback();
-    /* access modifiers changed from: private */
-    public volatile boolean mIsClosed = false;
+    private Handler mHandler;
     private final Looper mLooper;
+    private final ILowpanInterfaceListener mInternalCallback = new InternalCallback();
+    private Callback mCallback = null;
+    private volatile boolean mIsClosed = false;
 
+    /* loaded from: classes3.dex */
     public static abstract class Callback {
         public void onReceiveFromCommissioner(byte[] packet) {
         }
@@ -28,13 +27,15 @@ public class LowpanCommissioningSession {
         }
     }
 
+    /* loaded from: classes3.dex */
     private class InternalCallback extends ILowpanInterfaceListener.Stub {
         private InternalCallback() {
         }
 
+        @Override // android.net.lowpan.ILowpanInterfaceListener
         public void onStateChanged(String value) {
             if (!LowpanCommissioningSession.this.mIsClosed) {
-                char c = 65535;
+                char c = '\uffff';
                 int hashCode = value.hashCode();
                 if (hashCode != -1548612125) {
                     if (hashCode == 97204770 && value.equals("fault")) {
@@ -56,16 +57,12 @@ public class LowpanCommissioningSession {
             }
         }
 
-        public void onReceiveFromCommissioner(byte[] packet) {
-            LowpanCommissioningSession.this.mHandler.post(new Runnable(packet) {
-                private final /* synthetic */ byte[] f$1;
-
-                {
-                    this.f$1 = r2;
-                }
-
+        @Override // android.net.lowpan.ILowpanInterfaceListener
+        public void onReceiveFromCommissioner(final byte[] packet) {
+            LowpanCommissioningSession.this.mHandler.post(new Runnable() { // from class: android.net.lowpan.-$$Lambda$LowpanCommissioningSession$InternalCallback$TrrmDykqIWeXNdgrXO7t2-rqCTo
+                @Override // java.lang.Runnable
                 public final void run() {
-                    LowpanCommissioningSession.InternalCallback.lambda$onReceiveFromCommissioner$0(LowpanCommissioningSession.InternalCallback.this, this.f$1);
+                    LowpanCommissioningSession.InternalCallback.lambda$onReceiveFromCommissioner$0(LowpanCommissioningSession.InternalCallback.this, packet);
                 }
             });
         }
@@ -78,30 +75,39 @@ public class LowpanCommissioningSession {
             }
         }
 
+        @Override // android.net.lowpan.ILowpanInterfaceListener
         public void onEnabledChanged(boolean value) {
         }
 
+        @Override // android.net.lowpan.ILowpanInterfaceListener
         public void onConnectedChanged(boolean value) {
         }
 
+        @Override // android.net.lowpan.ILowpanInterfaceListener
         public void onUpChanged(boolean value) {
         }
 
+        @Override // android.net.lowpan.ILowpanInterfaceListener
         public void onRoleChanged(String value) {
         }
 
+        @Override // android.net.lowpan.ILowpanInterfaceListener
         public void onLowpanIdentityChanged(LowpanIdentity value) {
         }
 
+        @Override // android.net.lowpan.ILowpanInterfaceListener
         public void onLinkNetworkAdded(IpPrefix value) {
         }
 
+        @Override // android.net.lowpan.ILowpanInterfaceListener
         public void onLinkNetworkRemoved(IpPrefix value) {
         }
 
+        @Override // android.net.lowpan.ILowpanInterfaceListener
         public void onLinkAddressAdded(String value) {
         }
 
+        @Override // android.net.lowpan.ILowpanInterfaceListener
         public void onLinkAddressRemoved(String value) {
         }
     }
@@ -122,7 +128,7 @@ public class LowpanCommissioningSession {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void lockedCleanup() {
         if (!this.mIsClosed) {
             try {
@@ -132,7 +138,8 @@ public class LowpanCommissioningSession {
                 throw x.rethrowAsRuntimeException();
             }
             if (this.mCallback != null) {
-                this.mHandler.post(new Runnable() {
+                this.mHandler.post(new Runnable() { // from class: android.net.lowpan.-$$Lambda$LowpanCommissioningSession$jqpl-iUq-e7YuWqkG33P8PNe7Ag
+                    @Override // java.lang.Runnable
                     public final void run() {
                         LowpanCommissioningSession.this.mCallback.onClosed();
                     }

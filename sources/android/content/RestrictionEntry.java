@@ -1,17 +1,22 @@
 package android.content;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.format.DateFormat;
 import java.util.Arrays;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public class RestrictionEntry implements Parcelable {
-    public static final Parcelable.Creator<RestrictionEntry> CREATOR = new Parcelable.Creator<RestrictionEntry>() {
+    public static final Parcelable.Creator<RestrictionEntry> CREATOR = new Parcelable.Creator<RestrictionEntry>() { // from class: android.content.RestrictionEntry.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RestrictionEntry createFromParcel(Parcel source) {
             return new RestrictionEntry(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RestrictionEntry[] newArray(int size) {
             return new RestrictionEntry[size];
         }
@@ -69,12 +74,8 @@ public class RestrictionEntry implements Parcelable {
         if (isBundleArray) {
             this.mType = 8;
             if (restrictionEntries != null) {
-                int length = restrictionEntries.length;
-                int i = 0;
-                while (i < length) {
-                    if (restrictionEntries[i].getType() == 7) {
-                        i++;
-                    } else {
+                for (RestrictionEntry restriction : restrictionEntries) {
+                    if (restriction.getType() != 7) {
                         throw new IllegalArgumentException("bundle_array restriction can only have nested restriction entries of type bundle");
                     }
                 }
@@ -189,26 +190,24 @@ public class RestrictionEntry implements Parcelable {
         if (o == this) {
             return true;
         }
-        if (!(o instanceof RestrictionEntry)) {
+        if (o instanceof RestrictionEntry) {
+            RestrictionEntry other = (RestrictionEntry) o;
+            if (this.mType == other.mType && this.mKey.equals(other.mKey)) {
+                if (this.mCurrentValues == null && other.mCurrentValues == null && this.mRestrictions == null && other.mRestrictions == null && Objects.equals(this.mCurrentValue, other.mCurrentValue)) {
+                    return true;
+                }
+                if (this.mCurrentValue == null && other.mCurrentValue == null && this.mRestrictions == null && other.mRestrictions == null && Arrays.equals(this.mCurrentValues, other.mCurrentValues)) {
+                    return true;
+                }
+                return this.mCurrentValue == null && other.mCurrentValue == null && this.mCurrentValue == null && other.mCurrentValue == null && Arrays.equals(this.mRestrictions, other.mRestrictions);
+            }
             return false;
-        }
-        RestrictionEntry other = (RestrictionEntry) o;
-        if (this.mType != other.mType || !this.mKey.equals(other.mKey)) {
-            return false;
-        }
-        if (this.mCurrentValues == null && other.mCurrentValues == null && this.mRestrictions == null && other.mRestrictions == null && Objects.equals(this.mCurrentValue, other.mCurrentValue)) {
-            return true;
-        }
-        if (this.mCurrentValue == null && other.mCurrentValue == null && this.mRestrictions == null && other.mRestrictions == null && Arrays.equals(this.mCurrentValues, other.mCurrentValues)) {
-            return true;
-        }
-        if (this.mCurrentValue == null && other.mCurrentValue == null && this.mCurrentValue == null && other.mCurrentValue == null && Arrays.equals(this.mRestrictions, other.mRestrictions)) {
-            return true;
         }
         return false;
     }
 
     public int hashCode() {
+        String[] strArr;
         int result = (17 * 31) + this.mKey.hashCode();
         if (this.mCurrentValue != null) {
             return (result * 31) + this.mCurrentValue.hashCode();
@@ -236,7 +235,7 @@ public class RestrictionEntry implements Parcelable {
         this.mChoiceValues = in.readStringArray();
         this.mCurrentValue = in.readString();
         this.mCurrentValues = in.readStringArray();
-        Parcelable[] parcelables = in.readParcelableArray((ClassLoader) null);
+        Parcelable[] parcelables = in.readParcelableArray(null);
         if (parcelables != null) {
             this.mRestrictions = new RestrictionEntry[parcelables.length];
             for (int i = 0; i < parcelables.length; i++) {
@@ -245,10 +244,12 @@ public class RestrictionEntry implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mType);
         dest.writeString(this.mKey);

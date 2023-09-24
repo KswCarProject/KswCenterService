@@ -1,23 +1,26 @@
 package android.app;
 
 import android.app.IUserSwitchObserver;
-import android.os.Bundle;
-import android.os.IRemoteCallback;
-import android.os.RemoteException;
+import android.p007os.IRemoteCallback;
+import android.p007os.RemoteException;
 
+/* loaded from: classes.dex */
 public class UserSwitchObserver extends IUserSwitchObserver.Stub {
     public void onUserSwitching(int newUserId, IRemoteCallback reply) throws RemoteException {
         if (reply != null) {
-            reply.sendResult((Bundle) null);
+            reply.sendResult(null);
         }
     }
 
+    @Override // android.app.IUserSwitchObserver
     public void onUserSwitchComplete(int newUserId) throws RemoteException {
     }
 
+    @Override // android.app.IUserSwitchObserver
     public void onForegroundProfileSwitch(int newProfileId) throws RemoteException {
     }
 
+    @Override // android.app.IUserSwitchObserver
     public void onLockedBootComplete(int newUserId) throws RemoteException {
     }
 }

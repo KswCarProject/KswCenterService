@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes.dex */
 public final class DisplayViewport {
     public static final int VIEWPORT_EXTERNAL = 2;
     public static final int VIEWPORT_INTERNAL = 1;
@@ -12,15 +13,16 @@ public final class DisplayViewport {
     public int deviceHeight;
     public int deviceWidth;
     public int displayId;
-    public final Rect logicalFrame = new Rect();
     public int orientation;
-    public final Rect physicalFrame = new Rect();
     public Byte physicalPort;
     public int type;
     public String uniqueId;
     public boolean valid;
+    public final Rect logicalFrame = new Rect();
+    public final Rect physicalFrame = new Rect();
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface ViewportType {
     }
 
@@ -47,12 +49,9 @@ public final class DisplayViewport {
         if (o == this) {
             return true;
         }
-        if (!(o instanceof DisplayViewport)) {
-            return false;
-        }
-        DisplayViewport other = (DisplayViewport) o;
-        if (this.valid == other.valid && this.displayId == other.displayId && this.orientation == other.orientation && this.logicalFrame.equals(other.logicalFrame) && this.physicalFrame.equals(other.physicalFrame) && this.deviceWidth == other.deviceWidth && this.deviceHeight == other.deviceHeight && TextUtils.equals(this.uniqueId, other.uniqueId) && this.physicalPort == other.physicalPort && this.type == other.type) {
-            return true;
+        if (o instanceof DisplayViewport) {
+            DisplayViewport other = (DisplayViewport) o;
+            return this.valid == other.valid && this.displayId == other.displayId && this.orientation == other.orientation && this.logicalFrame.equals(other.logicalFrame) && this.physicalFrame.equals(other.physicalFrame) && this.deviceWidth == other.deviceWidth && this.deviceHeight == other.deviceHeight && TextUtils.equals(this.uniqueId, other.uniqueId) && this.physicalPort == other.physicalPort && this.type == other.type;
         }
         return false;
     }

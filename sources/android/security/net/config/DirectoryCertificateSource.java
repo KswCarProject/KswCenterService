@@ -19,6 +19,7 @@ import java.util.Set;
 import javax.security.auth.x500.X500Principal;
 import libcore.io.IoUtils;
 
+/* loaded from: classes3.dex */
 abstract class DirectoryCertificateSource implements CertificateSource {
     private static final char[] DIGITS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', DateFormat.AM_PM, 'b', 'c', DateFormat.DATE, 'e', 'f'};
     private static final String LOG_TAG = "DirectoryCertificateSrc";
@@ -27,12 +28,12 @@ abstract class DirectoryCertificateSource implements CertificateSource {
     private final File mDir;
     private final Object mLock = new Object();
 
+    /* loaded from: classes3.dex */
     private interface CertSelector {
         boolean match(X509Certificate x509Certificate);
     }
 
-    /* access modifiers changed from: protected */
-    public abstract boolean isCertMarkedAsRemoved(String str);
+    protected abstract boolean isCertMarkedAsRemoved(String str);
 
     protected DirectoryCertificateSource(File caDir) {
         this.mDir = caDir;
@@ -43,39 +44,41 @@ abstract class DirectoryCertificateSource implements CertificateSource {
         }
     }
 
+    @Override // android.security.net.config.CertificateSource
     public Set<X509Certificate> getCertificates() {
+        String[] list;
+        X509Certificate cert;
         synchronized (this.mLock) {
             if (this.mCertificates != null) {
-                Set<X509Certificate> set = this.mCertificates;
-                return set;
+                return this.mCertificates;
             }
             Set<X509Certificate> certs = new ArraySet<>();
             if (this.mDir.isDirectory()) {
                 for (String caFile : this.mDir.list()) {
-                    if (!isCertMarkedAsRemoved(caFile)) {
-                        X509Certificate cert = readCertificate(caFile);
-                        if (cert != null) {
-                            certs.add(cert);
-                        }
+                    if (!isCertMarkedAsRemoved(caFile) && (cert = readCertificate(caFile)) != null) {
+                        certs.add(cert);
                     }
                 }
             }
             this.mCertificates = certs;
-            Set<X509Certificate> set2 = this.mCertificates;
-            return set2;
+            return this.mCertificates;
         }
     }
 
+    @Override // android.security.net.config.CertificateSource
     public X509Certificate findBySubjectAndPublicKey(final X509Certificate cert) {
-        return findCert(cert.getSubjectX500Principal(), new CertSelector() {
+        return findCert(cert.getSubjectX500Principal(), new CertSelector() { // from class: android.security.net.config.DirectoryCertificateSource.1
+            @Override // android.security.net.config.DirectoryCertificateSource.CertSelector
             public boolean match(X509Certificate ca) {
                 return ca.getPublicKey().equals(cert.getPublicKey());
             }
         });
     }
 
+    @Override // android.security.net.config.CertificateSource
     public X509Certificate findByIssuerAndSignature(final X509Certificate cert) {
-        return findCert(cert.getIssuerX500Principal(), new CertSelector() {
+        return findCert(cert.getIssuerX500Principal(), new CertSelector() { // from class: android.security.net.config.DirectoryCertificateSource.2
+            @Override // android.security.net.config.DirectoryCertificateSource.CertSelector
             public boolean match(X509Certificate ca) {
                 try {
                     cert.verify(ca.getPublicKey());
@@ -87,8 +90,10 @@ abstract class DirectoryCertificateSource implements CertificateSource {
         });
     }
 
+    @Override // android.security.net.config.CertificateSource
     public Set<X509Certificate> findAllByIssuerAndSignature(final X509Certificate cert) {
-        return findCerts(cert.getIssuerX500Principal(), new CertSelector() {
+        return findCerts(cert.getIssuerX500Principal(), new CertSelector() { // from class: android.security.net.config.DirectoryCertificateSource.3
+            @Override // android.security.net.config.DirectoryCertificateSource.CertSelector
             public boolean match(X509Certificate ca) {
                 try {
                     cert.verify(ca.getPublicKey());
@@ -100,6 +105,7 @@ abstract class DirectoryCertificateSource implements CertificateSource {
         });
     }
 
+    @Override // android.security.net.config.CertificateSource
     public void handleTrustStorageUpdate() {
         synchronized (this.mLock) {
             this.mCertificates = null;
@@ -130,18 +136,20 @@ abstract class DirectoryCertificateSource implements CertificateSource {
         String hash = getHash(subj);
         for (int index = 0; index >= 0; index++) {
             String fileName = hash + "." + index;
-            if (!new File(this.mDir, fileName).exists()) {
+            if (new File(this.mDir, fileName).exists()) {
+                if (!isCertMarkedAsRemoved(fileName) && (cert = readCertificate(fileName)) != null && subj.equals(cert.getSubjectX500Principal()) && selector.match(cert)) {
+                    return cert;
+                }
+            } else {
                 return null;
-            }
-            if (!isCertMarkedAsRemoved(fileName) && (cert = readCertificate(fileName)) != null && subj.equals(cert.getSubjectX500Principal()) && selector.match(cert)) {
-                return cert;
             }
         }
         return null;
     }
 
     private String getHash(X500Principal name) {
-        return intToHexString(hashName(name), 8);
+        int hash = hashName(name);
+        return intToHexString(hash, 8);
     }
 
     private static String intToHexString(int i, int minWidth) {
@@ -178,7 +186,7 @@ abstract class DirectoryCertificateSource implements CertificateSource {
             is = new BufferedInputStream(new FileInputStream(new File(this.mDir, file)));
             return (X509Certificate) this.mCertFactory.generateCertificate(is);
         } catch (IOException | CertificateException e) {
-            Log.e(LOG_TAG, "Failed to read certificate from " + file, e);
+            Log.m69e(LOG_TAG, "Failed to read certificate from " + file, e);
             return null;
         } finally {
             IoUtils.closeQuietly(is);

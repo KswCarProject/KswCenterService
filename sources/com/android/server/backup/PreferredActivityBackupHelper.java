@@ -2,9 +2,10 @@ package com.android.server.backup;
 
 import android.app.AppGlobals;
 import android.app.backup.BlobBackupHelper;
-import android.content.pm.IPackageManager;
+import android.content.p002pm.IPackageManager;
 import android.util.Slog;
 
+/* loaded from: classes4.dex */
 public class PreferredActivityBackupHelper extends BlobBackupHelper {
     private static final boolean DEBUG = false;
     private static final String KEY_DEFAULT_APPS = "default-apps";
@@ -17,18 +18,16 @@ public class PreferredActivityBackupHelper extends BlobBackupHelper {
         super(3, KEY_PREFERRED, KEY_DEFAULT_APPS, KEY_INTENT_VERIFICATION);
     }
 
-    /* access modifiers changed from: protected */
-    public byte[] getBackupPayload(String key) {
+    @Override // android.app.backup.BlobBackupHelper
+    protected byte[] getBackupPayload(String key) {
         IPackageManager pm = AppGlobals.getPackageManager();
-        char c = 65535;
+        char c = '\uffff';
         try {
             int hashCode = key.hashCode();
             if (hashCode != -696985986) {
                 if (hashCode != -429170260) {
-                    if (hashCode == 1336142555) {
-                        if (key.equals(KEY_PREFERRED)) {
-                            c = 0;
-                        }
+                    if (hashCode == 1336142555 && key.equals(KEY_PREFERRED)) {
+                        c = 0;
                     }
                 } else if (key.equals(KEY_INTENT_VERIFICATION)) {
                     c = 2;
@@ -44,27 +43,25 @@ public class PreferredActivityBackupHelper extends BlobBackupHelper {
                 case 2:
                     return pm.getIntentFilterVerificationBackup(0);
                 default:
-                    Slog.w(TAG, "Unexpected backup key " + key);
+                    Slog.m50w(TAG, "Unexpected backup key " + key);
                     return null;
             }
         } catch (Exception e) {
-            Slog.e(TAG, "Unable to store payload " + key);
+            Slog.m56e(TAG, "Unable to store payload " + key);
             return null;
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void applyRestoredPayload(String key, byte[] payload) {
+    @Override // android.app.backup.BlobBackupHelper
+    protected void applyRestoredPayload(String key, byte[] payload) {
         IPackageManager pm = AppGlobals.getPackageManager();
-        char c = 65535;
+        char c = '\uffff';
         try {
             int hashCode = key.hashCode();
             if (hashCode != -696985986) {
                 if (hashCode != -429170260) {
-                    if (hashCode == 1336142555) {
-                        if (key.equals(KEY_PREFERRED)) {
-                            c = 0;
-                        }
+                    if (hashCode == 1336142555 && key.equals(KEY_PREFERRED)) {
+                        c = 0;
                     }
                 } else if (key.equals(KEY_INTENT_VERIFICATION)) {
                     c = 2;
@@ -83,11 +80,11 @@ public class PreferredActivityBackupHelper extends BlobBackupHelper {
                     pm.restoreIntentFilterVerification(payload, 0);
                     return;
                 default:
-                    Slog.w(TAG, "Unexpected restore key " + key);
+                    Slog.m50w(TAG, "Unexpected restore key " + key);
                     return;
             }
         } catch (Exception e) {
-            Slog.w(TAG, "Unable to restore key " + key);
+            Slog.m50w(TAG, "Unable to restore key " + key);
         }
     }
 }

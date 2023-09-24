@@ -2,8 +2,9 @@ package android.webkit;
 
 import android.content.Context;
 import android.util.Log;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
+/* loaded from: classes4.dex */
 class LegacyErrorStrings {
     private static final String LOGTAG = "Http";
 
@@ -17,40 +18,40 @@ class LegacyErrorStrings {
     private static int getResource(int errorCode) {
         switch (errorCode) {
             case -15:
-                return R.string.httpErrorTooManyRequests;
+                return C3132R.string.httpErrorTooManyRequests;
             case -14:
-                return R.string.httpErrorFileNotFound;
+                return C3132R.string.httpErrorFileNotFound;
             case -13:
-                return R.string.httpErrorFile;
+                return C3132R.string.httpErrorFile;
             case -12:
                 return 17039367;
             case -11:
-                return R.string.httpErrorFailedSslHandshake;
+                return C3132R.string.httpErrorFailedSslHandshake;
             case -10:
                 return 17039368;
             case -9:
-                return R.string.httpErrorRedirectLoop;
+                return C3132R.string.httpErrorRedirectLoop;
             case -8:
-                return R.string.httpErrorTimeout;
+                return C3132R.string.httpErrorTimeout;
             case -7:
-                return R.string.httpErrorIO;
+                return C3132R.string.httpErrorIO;
             case -6:
-                return R.string.httpErrorConnect;
+                return C3132R.string.httpErrorConnect;
             case -5:
-                return R.string.httpErrorProxyAuth;
+                return C3132R.string.httpErrorProxyAuth;
             case -4:
-                return R.string.httpErrorAuth;
+                return C3132R.string.httpErrorAuth;
             case -3:
-                return R.string.httpErrorUnsupportedAuthScheme;
+                return C3132R.string.httpErrorUnsupportedAuthScheme;
             case -2:
-                return R.string.httpErrorLookup;
+                return C3132R.string.httpErrorLookup;
             case -1:
-                return R.string.httpError;
+                return C3132R.string.httpError;
             case 0:
-                return R.string.httpErrorOk;
+                return C3132R.string.httpErrorOk;
             default:
-                Log.w(LOGTAG, "Using generic message for unknown error code: " + errorCode);
-                return R.string.httpError;
+                Log.m64w(LOGTAG, "Using generic message for unknown error code: " + errorCode);
+                return C3132R.string.httpError;
         }
     }
 }

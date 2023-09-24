@@ -1,13 +1,14 @@
 package android.media;
 
 import android.media.VolumeShaper;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.provider.Telephony;
 
+/* loaded from: classes3.dex */
 public interface IPlayer extends IInterface {
     void applyVolumeShaper(VolumeShaper.Configuration configuration, VolumeShaper.Operation operation) throws RemoteException;
 
@@ -23,33 +24,43 @@ public interface IPlayer extends IInterface {
 
     void stop() throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements IPlayer {
+        @Override // android.media.IPlayer
         public void start() throws RemoteException {
         }
 
+        @Override // android.media.IPlayer
         public void pause() throws RemoteException {
         }
 
+        @Override // android.media.IPlayer
         public void stop() throws RemoteException {
         }
 
+        @Override // android.media.IPlayer
         public void setVolume(float vol) throws RemoteException {
         }
 
+        @Override // android.media.IPlayer
         public void setPan(float pan) throws RemoteException {
         }
 
+        @Override // android.media.IPlayer
         public void setStartDelayMs(int delayMs) throws RemoteException {
         }
 
+        @Override // android.media.IPlayer
         public void applyVolumeShaper(VolumeShaper.Configuration configuration, VolumeShaper.Operation operation) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements IPlayer {
         private static final String DESCRIPTOR = "android.media.IPlayer";
         static final int TRANSACTION_applyVolumeShaper = 7;
@@ -69,12 +80,13 @@ public interface IPlayer extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IPlayer)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IPlayer)) {
+                return (IPlayer) iin;
             }
-            return (IPlayer) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -100,60 +112,62 @@ public interface IPlayer extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
             VolumeShaper.Configuration _arg0;
-            if (code != 1598968902) {
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        start();
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        pause();
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        stop();
-                        return true;
-                    case 4:
-                        data.enforceInterface(DESCRIPTOR);
-                        setVolume(data.readFloat());
-                        return true;
-                    case 5:
-                        data.enforceInterface(DESCRIPTOR);
-                        setPan(data.readFloat());
-                        return true;
-                    case 6:
-                        data.enforceInterface(DESCRIPTOR);
-                        setStartDelayMs(data.readInt());
-                        return true;
-                    case 7:
-                        data.enforceInterface(DESCRIPTOR);
-                        VolumeShaper.Operation _arg1 = null;
-                        if (data.readInt() != 0) {
-                            _arg0 = VolumeShaper.Configuration.CREATOR.createFromParcel(data);
-                        } else {
-                            _arg0 = null;
-                        }
-                        if (data.readInt() != 0) {
-                            _arg1 = VolumeShaper.Operation.CREATOR.createFromParcel(data);
-                        }
-                        applyVolumeShaper(_arg0, _arg1);
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    start();
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    pause();
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    stop();
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    float _arg02 = data.readFloat();
+                    setVolume(_arg02);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    float _arg03 = data.readFloat();
+                    setPan(_arg03);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg04 = data.readInt();
+                    setStartDelayMs(_arg04);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg0 = VolumeShaper.Configuration.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg0 = null;
+                    }
+                    VolumeShaper.Operation _arg1 = data.readInt() != 0 ? VolumeShaper.Operation.CREATOR.createFromParcel(data) : null;
+                    applyVolumeShaper(_arg0, _arg1);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements IPlayer {
             public static IPlayer sDefaultImpl;
             private IBinder mRemote;
@@ -162,6 +176,7 @@ public interface IPlayer extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -170,13 +185,13 @@ public interface IPlayer extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.media.IPlayer
             public void start() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().start();
                     }
                 } finally {
@@ -184,13 +199,13 @@ public interface IPlayer extends IInterface {
                 }
             }
 
+            @Override // android.media.IPlayer
             public void pause() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().pause();
                     }
                 } finally {
@@ -198,13 +213,13 @@ public interface IPlayer extends IInterface {
                 }
             }
 
+            @Override // android.media.IPlayer
             public void stop() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().stop();
                     }
                 } finally {
@@ -212,14 +227,14 @@ public interface IPlayer extends IInterface {
                 }
             }
 
+            @Override // android.media.IPlayer
             public void setVolume(float vol) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeFloat(vol);
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().setVolume(vol);
                     }
                 } finally {
@@ -227,14 +242,14 @@ public interface IPlayer extends IInterface {
                 }
             }
 
+            @Override // android.media.IPlayer
             public void setPan(float pan) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeFloat(pan);
-                    if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(5, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().setPan(pan);
                     }
                 } finally {
@@ -242,14 +257,14 @@ public interface IPlayer extends IInterface {
                 }
             }
 
+            @Override // android.media.IPlayer
             public void setStartDelayMs(int delayMs) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(delayMs);
-                    if (this.mRemote.transact(6, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(6, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().setStartDelayMs(delayMs);
                     }
                 } finally {
@@ -257,6 +272,7 @@ public interface IPlayer extends IInterface {
                 }
             }
 
+            @Override // android.media.IPlayer
             public void applyVolumeShaper(VolumeShaper.Configuration configuration, VolumeShaper.Operation operation) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -273,9 +289,8 @@ public interface IPlayer extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(7, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(7, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().applyVolumeShaper(configuration, operation);
                     }
                 } finally {
@@ -285,11 +300,11 @@ public interface IPlayer extends IInterface {
         }
 
         public static boolean setDefaultImpl(IPlayer impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IPlayer getDefaultImpl() {

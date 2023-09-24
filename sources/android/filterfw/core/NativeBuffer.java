@@ -1,11 +1,12 @@
 package android.filterfw.core;
 
+/* loaded from: classes.dex */
 public class NativeBuffer {
     private Frame mAttachedFrame;
-    private long mDataPointer = 0;
-    private boolean mOwnsData = false;
-    private int mRefCount = 1;
-    private int mSize = 0;
+    private long mDataPointer;
+    private boolean mOwnsData;
+    private int mRefCount;
+    private int mSize;
 
     private native boolean allocate(int i);
 
@@ -14,16 +15,25 @@ public class NativeBuffer {
     private native boolean nativeCopyTo(NativeBuffer nativeBuffer);
 
     public NativeBuffer() {
+        this.mDataPointer = 0L;
+        this.mSize = 0;
+        this.mOwnsData = false;
+        this.mRefCount = 1;
     }
 
     public NativeBuffer(int count) {
+        this.mDataPointer = 0L;
+        this.mSize = 0;
+        this.mOwnsData = false;
+        this.mRefCount = 1;
         allocate(getElementSize() * count);
         this.mOwnsData = true;
     }
 
     public NativeBuffer mutableCopy() {
         try {
-            NativeBuffer result = (NativeBuffer) getClass().newInstance();
+            Class myClass = getClass();
+            NativeBuffer result = (NativeBuffer) myClass.newInstance();
             if (this.mSize <= 0 || nativeCopyTo(result)) {
                 return result;
             }
@@ -59,24 +69,17 @@ public class NativeBuffer {
 
     public NativeBuffer release() {
         boolean doDealloc = false;
-        boolean z = false;
         if (this.mAttachedFrame != null) {
-            if (this.mAttachedFrame.release() == null) {
-                z = true;
-            }
-            doDealloc = z;
+            doDealloc = this.mAttachedFrame.release() == null;
         } else if (this.mOwnsData) {
             this.mRefCount--;
-            if (this.mRefCount == 0) {
-                z = true;
-            }
-            doDealloc = z;
+            doDealloc = this.mRefCount == 0;
         }
-        if (!doDealloc) {
-            return this;
+        if (doDealloc) {
+            deallocate(this.mOwnsData);
+            return null;
         }
-        deallocate(this.mOwnsData);
-        return null;
+        return this;
     }
 
     public boolean isReadOnly() {
@@ -90,20 +93,17 @@ public class NativeBuffer {
         System.loadLibrary("filterfw");
     }
 
-    /* access modifiers changed from: package-private */
-    public void attachToFrame(Frame frame) {
+    void attachToFrame(Frame frame) {
         this.mAttachedFrame = frame;
     }
 
-    /* access modifiers changed from: protected */
-    public void assertReadable() {
+    protected void assertReadable() {
         if (this.mDataPointer == 0 || this.mSize == 0 || (this.mAttachedFrame != null && !this.mAttachedFrame.hasNativeAllocation())) {
             throw new NullPointerException("Attempting to read from null data frame!");
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void assertWritable() {
+    protected void assertWritable() {
         if (isReadOnly()) {
             throw new RuntimeException("Attempting to modify read-only native (structured) data!");
         }

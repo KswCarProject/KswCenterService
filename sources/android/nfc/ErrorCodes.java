@@ -2,6 +2,7 @@ package android.nfc;
 
 import android.annotation.UnsupportedAppUsage;
 
+/* loaded from: classes3.dex */
 public class ErrorCodes {
     public static final int ERROR_BUFFER_TO_SMALL = -12;
     public static final int ERROR_BUSY = -4;

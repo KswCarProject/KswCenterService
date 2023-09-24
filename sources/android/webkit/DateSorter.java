@@ -2,11 +2,12 @@ package android.webkit;
 
 import android.content.Context;
 import android.content.res.Resources;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.util.Calendar;
 import java.util.Locale;
 import libcore.icu.LocaleData;
 
+/* loaded from: classes4.dex */
 public class DateSorter {
     public static final int DAY_COUNT = 5;
     private static final String LOGTAG = "webkit";
@@ -30,9 +31,10 @@ public class DateSorter {
         LocaleData localeData = LocaleData.get(locale == null ? Locale.getDefault() : locale);
         this.mLabels[0] = localeData.today;
         this.mLabels[1] = localeData.yesterday;
-        this.mLabels[2] = String.format(resources.getQuantityString(R.plurals.last_num_days, 7), new Object[]{7});
-        this.mLabels[3] = context.getString(R.string.last_month);
-        this.mLabels[4] = context.getString(R.string.older);
+        String format = resources.getQuantityString(C3132R.plurals.last_num_days, 7);
+        this.mLabels[2] = String.format(format, 7);
+        this.mLabels[3] = context.getString(C3132R.string.last_month);
+        this.mLabels[4] = context.getString(C3132R.string.older);
     }
 
     public int getIndex(long time) {
@@ -52,9 +54,7 @@ public class DateSorter {
     }
 
     public long getBoundary(int index) {
-        if (index < 0 || index > 4) {
-            index = 0;
-        }
+        index = (index < 0 || index > 4) ? 0 : 0;
         if (index == 4) {
             return Long.MIN_VALUE;
         }

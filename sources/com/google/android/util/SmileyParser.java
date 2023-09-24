@@ -6,6 +6,7 @@ import android.text.style.ImageSpan;
 import com.google.android.util.AbstractMessageParser;
 import java.util.ArrayList;
 
+/* loaded from: classes4.dex */
 public class SmileyParser extends AbstractMessageParser {
     private SmileyResources mRes;
 
@@ -14,8 +15,8 @@ public class SmileyParser extends AbstractMessageParser {
         this.mRes = res;
     }
 
-    /* access modifiers changed from: protected */
-    public AbstractMessageParser.Resources getResources() {
+    @Override // com.google.android.util.AbstractMessageParser
+    protected AbstractMessageParser.Resources getResources() {
         return this.mRes;
     }
 
@@ -25,7 +26,8 @@ public class SmileyParser extends AbstractMessageParser {
         if (getPartCount() == 0) {
             return "";
         }
-        ArrayList<AbstractMessageParser.Token> tokens = getPart(0).getTokens();
+        AbstractMessageParser.Part part = getPart(0);
+        ArrayList<AbstractMessageParser.Token> tokens = part.getTokens();
         int len = tokens.size();
         for (int i = 0; i < len; i++) {
             AbstractMessageParser.Token token = tokens.get(i);

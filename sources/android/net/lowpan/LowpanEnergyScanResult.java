@@ -1,5 +1,6 @@
 package android.net.lowpan;
 
+/* loaded from: classes3.dex */
 public class LowpanEnergyScanResult {
     public static final int UNKNOWN = Integer.MAX_VALUE;
     private int mChannel = Integer.MAX_VALUE;
@@ -16,13 +17,11 @@ public class LowpanEnergyScanResult {
         return this.mMaxRssi;
     }
 
-    /* access modifiers changed from: package-private */
-    public void setChannel(int x) {
+    void setChannel(int x) {
         this.mChannel = x;
     }
 
-    /* access modifiers changed from: package-private */
-    public void setMaxRssi(int x) {
+    void setMaxRssi(int x) {
         this.mMaxRssi = x;
     }
 

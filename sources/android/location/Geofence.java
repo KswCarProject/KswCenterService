@@ -1,12 +1,15 @@
 package android.location;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public final class Geofence implements Parcelable {
     @UnsupportedAppUsage
-    public static final Parcelable.Creator<Geofence> CREATOR = new Parcelable.Creator<Geofence>() {
+    public static final Parcelable.Creator<Geofence> CREATOR = new Parcelable.Creator<Geofence>() { // from class: android.location.Geofence.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Geofence createFromParcel(Parcel in) {
             int type = in.readInt();
             double latitude = in.readDouble();
@@ -16,6 +19,8 @@ public final class Geofence implements Parcelable {
             return Geofence.createCircle(latitude, longitude, radius);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Geofence[] newArray(int size) {
             return new Geofence[size];
         }
@@ -24,7 +29,7 @@ public final class Geofence implements Parcelable {
     private final double mLatitude;
     private final double mLongitude;
     private final float mRadius;
-    private final int mType = 1;
+    private final int mType;
 
     public static Geofence createCircle(double latitude, double longitude, float radius) {
         return new Geofence(latitude, longitude, radius);
@@ -33,6 +38,7 @@ public final class Geofence implements Parcelable {
     private Geofence(double latitude, double longitude, float radius) {
         checkRadius(radius);
         checkLatLong(latitude, longitude);
+        this.mType = 1;
         this.mLatitude = latitude;
         this.mLongitude = longitude;
         this.mRadius = radius;
@@ -68,17 +74,19 @@ public final class Geofence implements Parcelable {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static void checkType(int type) {
         if (type != 1) {
             throw new IllegalArgumentException("invalid type: " + type);
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeInt(this.mType);
         parcel.writeDouble(this.mLatitude);
@@ -95,7 +103,7 @@ public final class Geofence implements Parcelable {
     }
 
     public String toString() {
-        return String.format("Geofence[%s %.6f, %.6f %.0fm]", new Object[]{typeToString(this.mType), Double.valueOf(this.mLatitude), Double.valueOf(this.mLongitude), Float.valueOf(this.mRadius)});
+        return String.format("Geofence[%s %.6f, %.6f %.0fm]", typeToString(this.mType), Double.valueOf(this.mLatitude), Double.valueOf(this.mLongitude), Float.valueOf(this.mRadius));
     }
 
     public int hashCode() {

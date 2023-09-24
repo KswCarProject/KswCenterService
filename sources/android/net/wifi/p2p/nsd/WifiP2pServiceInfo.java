@@ -1,20 +1,25 @@
 package android.net.wifi.p2p.nsd;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.ArrayList;
 import java.util.List;
 
+/* loaded from: classes3.dex */
 public class WifiP2pServiceInfo implements Parcelable {
     @UnsupportedAppUsage
-    public static final Parcelable.Creator<WifiP2pServiceInfo> CREATOR = new Parcelable.Creator<WifiP2pServiceInfo>() {
+    public static final Parcelable.Creator<WifiP2pServiceInfo> CREATOR = new Parcelable.Creator<WifiP2pServiceInfo>() { // from class: android.net.wifi.p2p.nsd.WifiP2pServiceInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WifiP2pServiceInfo createFromParcel(Parcel in) {
             List<String> data = new ArrayList<>();
             in.readStringList(data);
             return new WifiP2pServiceInfo(data);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WifiP2pServiceInfo[] newArray(int size) {
             return new WifiP2pServiceInfo[size];
         }
@@ -29,11 +34,10 @@ public class WifiP2pServiceInfo implements Parcelable {
 
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
     protected WifiP2pServiceInfo(List<String> queryList) {
-        if (queryList != null) {
-            this.mQueryList = queryList;
-            return;
+        if (queryList == null) {
+            throw new IllegalArgumentException("query list cannot be null");
         }
-        throw new IllegalArgumentException("query list cannot be null");
+        this.mQueryList = queryList;
     }
 
     public List<String> getSupplicantQueryList() {
@@ -42,16 +46,13 @@ public class WifiP2pServiceInfo implements Parcelable {
 
     static String bin2HexStr(byte[] data) {
         StringBuffer sb = new StringBuffer();
-        int length = data.length;
-        int i = 0;
-        while (i < length) {
+        for (byte b : data) {
             try {
-                String s = Integer.toHexString(data[i] & 255);
+                String s = Integer.toHexString(b & 255);
                 if (s.length() == 1) {
                     sb.append('0');
                 }
                 sb.append(s);
-                i++;
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
@@ -67,17 +68,21 @@ public class WifiP2pServiceInfo implements Parcelable {
         if (!(o instanceof WifiP2pServiceInfo)) {
             return false;
         }
-        return this.mQueryList.equals(((WifiP2pServiceInfo) o).mQueryList);
+        WifiP2pServiceInfo servInfo = (WifiP2pServiceInfo) o;
+        return this.mQueryList.equals(servInfo.mQueryList);
     }
 
     public int hashCode() {
-        return (17 * 31) + (this.mQueryList == null ? 0 : this.mQueryList.hashCode());
+        int result = (17 * 31) + (this.mQueryList == null ? 0 : this.mQueryList.hashCode());
+        return result;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeStringList(this.mQueryList);
     }

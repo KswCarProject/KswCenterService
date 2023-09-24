@@ -1,43 +1,49 @@
 package android.content;
 
 import android.database.ContentObserver;
-import android.os.Handler;
+import android.p007os.Handler;
 import android.util.DebugUtils;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 
 @Deprecated
+/* loaded from: classes.dex */
 public class Loader<D> {
-    boolean mAbandoned = false;
-    boolean mContentChanged = false;
     Context mContext;
     int mId;
     OnLoadCompleteListener<D> mListener;
     OnLoadCanceledListener<D> mOnLoadCanceledListener;
-    boolean mProcessingChange = false;
-    boolean mReset = true;
     boolean mStarted = false;
+    boolean mAbandoned = false;
+    boolean mReset = true;
+    boolean mContentChanged = false;
+    boolean mProcessingChange = false;
 
     @Deprecated
+    /* loaded from: classes.dex */
     public interface OnLoadCanceledListener<D> {
         void onLoadCanceled(Loader<D> loader);
     }
 
     @Deprecated
+    /* loaded from: classes.dex */
     public interface OnLoadCompleteListener<D> {
         void onLoadComplete(Loader<D> loader, D d);
     }
 
     @Deprecated
+    /* loaded from: classes.dex */
     public final class ForceLoadContentObserver extends ContentObserver {
         public ForceLoadContentObserver() {
             super(new Handler());
         }
 
+        @Override // android.database.ContentObserver
         public boolean deliverSelfNotifications() {
             return true;
         }
 
+        @Override // android.database.ContentObserver
         public void onChange(boolean selfChange) {
             Loader.this.onContentChanged();
         }
@@ -68,40 +74,38 @@ public class Loader<D> {
     }
 
     public void registerListener(int id, OnLoadCompleteListener<D> listener) {
-        if (this.mListener == null) {
-            this.mListener = listener;
-            this.mId = id;
-            return;
+        if (this.mListener != null) {
+            throw new IllegalStateException("There is already a listener registered");
         }
-        throw new IllegalStateException("There is already a listener registered");
+        this.mListener = listener;
+        this.mId = id;
     }
 
     public void unregisterListener(OnLoadCompleteListener<D> listener) {
         if (this.mListener == null) {
             throw new IllegalStateException("No listener register");
-        } else if (this.mListener == listener) {
-            this.mListener = null;
-        } else {
+        }
+        if (this.mListener != listener) {
             throw new IllegalArgumentException("Attempting to unregister the wrong listener");
         }
+        this.mListener = null;
     }
 
     public void registerOnLoadCanceledListener(OnLoadCanceledListener<D> listener) {
-        if (this.mOnLoadCanceledListener == null) {
-            this.mOnLoadCanceledListener = listener;
-            return;
+        if (this.mOnLoadCanceledListener != null) {
+            throw new IllegalStateException("There is already a listener registered");
         }
-        throw new IllegalStateException("There is already a listener registered");
+        this.mOnLoadCanceledListener = listener;
     }
 
     public void unregisterOnLoadCanceledListener(OnLoadCanceledListener<D> listener) {
         if (this.mOnLoadCanceledListener == null) {
             throw new IllegalStateException("No listener register");
-        } else if (this.mOnLoadCanceledListener == listener) {
-            this.mOnLoadCanceledListener = null;
-        } else {
+        }
+        if (this.mOnLoadCanceledListener != listener) {
             throw new IllegalArgumentException("Attempting to unregister the wrong listener");
         }
+        this.mOnLoadCanceledListener = null;
     }
 
     public boolean isStarted() {
@@ -123,16 +127,14 @@ public class Loader<D> {
         onStartLoading();
     }
 
-    /* access modifiers changed from: protected */
-    public void onStartLoading() {
+    protected void onStartLoading() {
     }
 
     public boolean cancelLoad() {
         return onCancelLoad();
     }
 
-    /* access modifiers changed from: protected */
-    public boolean onCancelLoad() {
+    protected boolean onCancelLoad() {
         return false;
     }
 
@@ -140,8 +142,7 @@ public class Loader<D> {
         onForceLoad();
     }
 
-    /* access modifiers changed from: protected */
-    public void onForceLoad() {
+    protected void onForceLoad() {
     }
 
     public void stopLoading() {
@@ -149,8 +150,7 @@ public class Loader<D> {
         onStopLoading();
     }
 
-    /* access modifiers changed from: protected */
-    public void onStopLoading() {
+    protected void onStopLoading() {
     }
 
     public void abandon() {
@@ -158,8 +158,7 @@ public class Loader<D> {
         onAbandon();
     }
 
-    /* access modifiers changed from: protected */
-    public void onAbandon() {
+    protected void onAbandon() {
     }
 
     public void reset() {
@@ -171,8 +170,7 @@ public class Loader<D> {
         this.mProcessingChange = false;
     }
 
-    /* access modifiers changed from: protected */
-    public void onReset() {
+    protected void onReset() {
     }
 
     public boolean takeContentChanged() {

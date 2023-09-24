@@ -2,14 +2,15 @@ package com.android.internal.infra;
 
 import android.content.ComponentName;
 import android.content.Context;
-import android.os.Handler;
-import android.os.IInterface;
+import android.p007os.Handler;
+import android.p007os.IInterface;
 import android.util.Slog;
 import com.android.internal.infra.AbstractMultiplePendingRequestsRemoteService;
 import com.android.internal.infra.AbstractRemoteService;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
+/* loaded from: classes4.dex */
 public abstract class AbstractMultiplePendingRequestsRemoteService<S extends AbstractMultiplePendingRequestsRemoteService<S, I>, I extends IInterface> extends AbstractRemoteService<S, I> {
     private final int mInitialCapacity;
     protected ArrayList<AbstractRemoteService.BasePendingRequest<S, I>> mPendingRequests;
@@ -19,13 +20,13 @@ public abstract class AbstractMultiplePendingRequestsRemoteService<S extends Abs
         this.mInitialCapacity = initialCapacity;
     }
 
-    /* access modifiers changed from: package-private */
-    public void handlePendingRequests() {
+    @Override // com.android.internal.infra.AbstractRemoteService
+    void handlePendingRequests() {
         if (this.mPendingRequests != null) {
             int size = this.mPendingRequests.size();
             if (this.mVerbose) {
                 String str = this.mTag;
-                Slog.v(str, "Sending " + size + " pending requests");
+                Slog.m52v(str, "Sending " + size + " pending requests");
             }
             for (int i = 0; i < size; i++) {
                 this.mPendingRequests.get(i).run();
@@ -34,13 +35,13 @@ public abstract class AbstractMultiplePendingRequestsRemoteService<S extends Abs
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void handleOnDestroy() {
+    @Override // com.android.internal.infra.AbstractRemoteService
+    protected void handleOnDestroy() {
         if (this.mPendingRequests != null) {
             int size = this.mPendingRequests.size();
             if (this.mVerbose) {
                 String str = this.mTag;
-                Slog.v(str, "Canceling " + size + " pending requests");
+                Slog.m52v(str, "Canceling " + size + " pending requests");
             }
             for (int i = 0; i < size; i++) {
                 this.mPendingRequests.get(i).cancel();
@@ -49,13 +50,13 @@ public abstract class AbstractMultiplePendingRequestsRemoteService<S extends Abs
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public final void handleBindFailure() {
+    @Override // com.android.internal.infra.AbstractRemoteService
+    final void handleBindFailure() {
         if (this.mPendingRequests != null) {
             int size = this.mPendingRequests.size();
             if (this.mVerbose) {
                 String str = this.mTag;
-                Slog.v(str, "Sending failure to " + size + " pending requests");
+                Slog.m52v(str, "Sending failure to " + size + " pending requests");
             }
             for (int i = 0; i < size; i++) {
                 AbstractRemoteService.BasePendingRequest<S, I> request = this.mPendingRequests.get(i);
@@ -66,21 +67,23 @@ public abstract class AbstractMultiplePendingRequestsRemoteService<S extends Abs
         }
     }
 
+    @Override // com.android.internal.infra.AbstractRemoteService
     public void dump(String prefix, PrintWriter pw) {
         super.dump(prefix, pw);
-        pw.append(prefix).append("initialCapacity=").append(String.valueOf(this.mInitialCapacity)).println();
-        pw.append(prefix).append("pendingRequests=").append(String.valueOf(this.mPendingRequests == null ? 0 : this.mPendingRequests.size())).println();
+        pw.append((CharSequence) prefix).append("initialCapacity=").append((CharSequence) String.valueOf(this.mInitialCapacity)).println();
+        int size = this.mPendingRequests == null ? 0 : this.mPendingRequests.size();
+        pw.append((CharSequence) prefix).append("pendingRequests=").append((CharSequence) String.valueOf(size)).println();
     }
 
-    /* access modifiers changed from: package-private */
-    public void handlePendingRequestWhileUnBound(AbstractRemoteService.BasePendingRequest<S, I> pendingRequest) {
+    @Override // com.android.internal.infra.AbstractRemoteService
+    void handlePendingRequestWhileUnBound(AbstractRemoteService.BasePendingRequest<S, I> pendingRequest) {
         if (this.mPendingRequests == null) {
             this.mPendingRequests = new ArrayList<>(this.mInitialCapacity);
         }
         this.mPendingRequests.add(pendingRequest);
         if (this.mVerbose) {
             String str = this.mTag;
-            Slog.v(str, "queued " + this.mPendingRequests.size() + " requests; last=" + pendingRequest);
+            Slog.m52v(str, "queued " + this.mPendingRequests.size() + " requests; last=" + pendingRequest);
         }
     }
 }

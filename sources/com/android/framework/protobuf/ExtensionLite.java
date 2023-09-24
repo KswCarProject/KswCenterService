@@ -3,6 +3,7 @@ package com.android.framework.protobuf;
 import com.android.framework.protobuf.MessageLite;
 import com.android.framework.protobuf.WireFormat;
 
+/* loaded from: classes4.dex */
 public abstract class ExtensionLite<ContainingType extends MessageLite, Type> {
     public abstract Type getDefaultValue();
 
@@ -14,8 +15,7 @@ public abstract class ExtensionLite<ContainingType extends MessageLite, Type> {
 
     public abstract boolean isRepeated();
 
-    /* access modifiers changed from: package-private */
-    public boolean isLite() {
+    boolean isLite() {
         return true;
     }
 }

@@ -2,6 +2,7 @@ package android.service.autofill;
 
 import com.android.internal.util.Preconditions;
 
+/* loaded from: classes3.dex */
 public final class Validators {
     private Validators() {
         throw new UnsupportedOperationException("contains static methods only");
@@ -11,7 +12,8 @@ public final class Validators {
         return new RequiredValidators(getInternalValidators(validators));
     }
 
-    public static Validator or(Validator... validators) {
+    /* renamed from: or */
+    public static Validator m107or(Validator... validators) {
         return new OptionalValidators(getInternalValidators(validators));
     }
 
@@ -25,7 +27,7 @@ public final class Validators {
         InternalValidator[] internals = new InternalValidator[validators.length];
         for (int i = 0; i < validators.length; i++) {
             Preconditions.checkArgument(validators[i] instanceof InternalValidator, "element " + i + " not provided by Android System: " + validators[i]);
-            internals[i] = validators[i];
+            internals[i] = (InternalValidator) validators[i];
         }
         return internals;
     }

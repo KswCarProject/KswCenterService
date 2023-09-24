@@ -1,5 +1,6 @@
 package org.mozilla.universalchardet.prober.contextanalysis;
 
+/* loaded from: classes5.dex */
 public abstract class JapaneseContextAnalysis {
     public static final float DONT_KNOW = -1.0f;
     public static final int ENOUGH_REL_THRESHOLD = 100;
@@ -14,9 +15,10 @@ public abstract class JapaneseContextAnalysis {
     private Order tmpOrder = new Order();
     private int totalRel;
 
+    /* loaded from: classes5.dex */
     protected class Order {
-        public int charLength = 0;
         public int order = -1;
+        public int charLength = 0;
 
         public Order() {
         }
@@ -28,41 +30,40 @@ public abstract class JapaneseContextAnalysis {
 
     public float getConfidence() {
         if (this.totalRel > 4) {
-            return ((float) (this.totalRel - this.relSample[0])) / ((float) this.totalRel);
+            return (this.totalRel - this.relSample[0]) / this.totalRel;
         }
         return -1.0f;
     }
 
-    /* access modifiers changed from: protected */
-    public abstract int getOrder(byte[] bArr, int i);
+    protected abstract int getOrder(byte[] bArr, int i);
 
-    /* access modifiers changed from: protected */
-    public abstract void getOrder(Order order, byte[] bArr, int i);
+    protected abstract void getOrder(Order order, byte[] bArr, int i);
 
     public boolean gotEnoughData() {
         return this.totalRel > 100;
     }
 
     public void handleData(byte[] bArr, int i, int i2) {
-        if (!this.done) {
-            int i3 = i2 + i;
-            int i4 = this.needToSkipCharNum + i;
-            while (i4 < i3) {
-                getOrder(this.tmpOrder, bArr, i4);
-                i4 += this.tmpOrder.charLength;
-                if (i4 > i3) {
-                    this.needToSkipCharNum = i4 - i3;
-                    this.lastCharOrder = -1;
-                } else if (!(this.tmpOrder.order == -1 || this.lastCharOrder == -1)) {
-                    this.totalRel++;
-                    if (this.totalRel > 1000) {
-                        this.done = true;
-                        return;
-                    }
-                    int[] iArr = this.relSample;
-                    byte b = jp2CharContext[this.lastCharOrder][this.tmpOrder.order];
-                    iArr[b] = iArr[b] + 1;
+        if (this.done) {
+            return;
+        }
+        int i3 = i2 + i;
+        int i4 = this.needToSkipCharNum + i;
+        while (i4 < i3) {
+            getOrder(this.tmpOrder, bArr, i4);
+            i4 += this.tmpOrder.charLength;
+            if (i4 > i3) {
+                this.needToSkipCharNum = i4 - i3;
+                this.lastCharOrder = -1;
+            } else if (this.tmpOrder.order != -1 && this.lastCharOrder != -1) {
+                this.totalRel++;
+                if (this.totalRel > 1000) {
+                    this.done = true;
+                    return;
                 }
+                int[] iArr = this.relSample;
+                byte b = jp2CharContext[this.lastCharOrder][this.tmpOrder.order];
+                iArr[b] = iArr[b] + 1;
             }
         }
     }
@@ -71,16 +72,17 @@ public abstract class JapaneseContextAnalysis {
         if (this.totalRel > 1000) {
             this.done = true;
         }
-        if (!this.done) {
-            int order = i2 == 2 ? getOrder(bArr, i) : -1;
-            if (!(order == -1 || this.lastCharOrder == -1)) {
-                this.totalRel++;
-                int[] iArr = this.relSample;
-                byte b = jp2CharContext[this.lastCharOrder][order];
-                iArr[b] = iArr[b] + 1;
-            }
-            this.lastCharOrder = order;
+        if (this.done) {
+            return;
         }
+        int order = i2 == 2 ? getOrder(bArr, i) : -1;
+        if (order != -1 && this.lastCharOrder != -1) {
+            this.totalRel++;
+            int[] iArr = this.relSample;
+            byte b = jp2CharContext[this.lastCharOrder][order];
+            iArr[b] = iArr[b] + 1;
+        }
+        this.lastCharOrder = order;
     }
 
     public void reset() {

@@ -1,13 +1,16 @@
 package android.database;
 
+/* loaded from: classes.dex */
 public class MergeCursor extends AbstractCursor {
     private Cursor mCursor;
     private Cursor[] mCursors;
-    private DataSetObserver mObserver = new DataSetObserver() {
+    private DataSetObserver mObserver = new DataSetObserver() { // from class: android.database.MergeCursor.1
+        @Override // android.database.DataSetObserver
         public void onChanged() {
             MergeCursor.this.mPos = -1;
         }
 
+        @Override // android.database.DataSetObserver
         public void onInvalidated() {
             MergeCursor.this.mPos = -1;
         }
@@ -23,6 +26,7 @@ public class MergeCursor extends AbstractCursor {
         }
     }
 
+    @Override // android.database.AbstractCursor, android.database.Cursor
     public int getCount() {
         int count = 0;
         int length = this.mCursors.length;
@@ -34,66 +38,78 @@ public class MergeCursor extends AbstractCursor {
         return count;
     }
 
+    @Override // android.database.AbstractCursor, android.database.CrossProcessCursor
     public boolean onMove(int oldPosition, int newPosition) {
         this.mCursor = null;
         int length = this.mCursors.length;
         int cursorStartPos = 0;
-        int i = 0;
+        int cursorStartPos2 = 0;
         while (true) {
-            if (i >= length) {
+            if (cursorStartPos2 >= length) {
                 break;
             }
-            if (this.mCursors[i] != null) {
-                if (newPosition < this.mCursors[i].getCount() + cursorStartPos) {
-                    this.mCursor = this.mCursors[i];
+            if (this.mCursors[cursorStartPos2] != null) {
+                if (newPosition < this.mCursors[cursorStartPos2].getCount() + cursorStartPos) {
+                    this.mCursor = this.mCursors[cursorStartPos2];
                     break;
                 }
-                cursorStartPos += this.mCursors[i].getCount();
+                cursorStartPos += this.mCursors[cursorStartPos2].getCount();
             }
-            i++;
+            cursorStartPos2++;
         }
-        if (this.mCursor != null) {
-            return this.mCursor.moveToPosition(newPosition - cursorStartPos);
+        if (this.mCursor == null) {
+            return false;
         }
-        return false;
+        boolean ret = this.mCursor.moveToPosition(newPosition - cursorStartPos);
+        return ret;
     }
 
+    @Override // android.database.AbstractCursor, android.database.Cursor
     public String getString(int column) {
         return this.mCursor.getString(column);
     }
 
+    @Override // android.database.AbstractCursor, android.database.Cursor
     public short getShort(int column) {
         return this.mCursor.getShort(column);
     }
 
+    @Override // android.database.AbstractCursor, android.database.Cursor
     public int getInt(int column) {
         return this.mCursor.getInt(column);
     }
 
+    @Override // android.database.AbstractCursor, android.database.Cursor
     public long getLong(int column) {
         return this.mCursor.getLong(column);
     }
 
+    @Override // android.database.AbstractCursor, android.database.Cursor
     public float getFloat(int column) {
         return this.mCursor.getFloat(column);
     }
 
+    @Override // android.database.AbstractCursor, android.database.Cursor
     public double getDouble(int column) {
         return this.mCursor.getDouble(column);
     }
 
+    @Override // android.database.AbstractCursor, android.database.Cursor
     public int getType(int column) {
         return this.mCursor.getType(column);
     }
 
+    @Override // android.database.AbstractCursor, android.database.Cursor
     public boolean isNull(int column) {
         return this.mCursor.isNull(column);
     }
 
+    @Override // android.database.AbstractCursor, android.database.Cursor
     public byte[] getBlob(int column) {
         return this.mCursor.getBlob(column);
     }
 
+    @Override // android.database.AbstractCursor, android.database.Cursor
     public String[] getColumnNames() {
         if (this.mCursor != null) {
             return this.mCursor.getColumnNames();
@@ -101,6 +117,7 @@ public class MergeCursor extends AbstractCursor {
         return new String[0];
     }
 
+    @Override // android.database.AbstractCursor, android.database.Cursor
     public void deactivate() {
         int length = this.mCursors.length;
         for (int i = 0; i < length; i++) {
@@ -111,6 +128,7 @@ public class MergeCursor extends AbstractCursor {
         super.deactivate();
     }
 
+    @Override // android.database.AbstractCursor, android.database.Cursor, java.io.Closeable, java.lang.AutoCloseable
     public void close() {
         int length = this.mCursors.length;
         for (int i = 0; i < length; i++) {
@@ -121,6 +139,7 @@ public class MergeCursor extends AbstractCursor {
         super.close();
     }
 
+    @Override // android.database.AbstractCursor, android.database.Cursor
     public void registerContentObserver(ContentObserver observer) {
         int length = this.mCursors.length;
         for (int i = 0; i < length; i++) {
@@ -130,6 +149,7 @@ public class MergeCursor extends AbstractCursor {
         }
     }
 
+    @Override // android.database.AbstractCursor, android.database.Cursor
     public void unregisterContentObserver(ContentObserver observer) {
         int length = this.mCursors.length;
         for (int i = 0; i < length; i++) {
@@ -139,6 +159,7 @@ public class MergeCursor extends AbstractCursor {
         }
     }
 
+    @Override // android.database.AbstractCursor, android.database.Cursor
     public void registerDataSetObserver(DataSetObserver observer) {
         int length = this.mCursors.length;
         for (int i = 0; i < length; i++) {
@@ -148,6 +169,7 @@ public class MergeCursor extends AbstractCursor {
         }
     }
 
+    @Override // android.database.AbstractCursor, android.database.Cursor
     public void unregisterDataSetObserver(DataSetObserver observer) {
         int length = this.mCursors.length;
         for (int i = 0; i < length; i++) {
@@ -157,6 +179,7 @@ public class MergeCursor extends AbstractCursor {
         }
     }
 
+    @Override // android.database.AbstractCursor, android.database.Cursor
     public boolean requery() {
         int length = this.mCursors.length;
         for (int i = 0; i < length; i++) {

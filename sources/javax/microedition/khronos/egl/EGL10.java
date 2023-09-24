@@ -5,6 +5,7 @@ import com.google.android.gles_jni.EGLContextImpl;
 import com.google.android.gles_jni.EGLDisplayImpl;
 import com.google.android.gles_jni.EGLSurfaceImpl;
 
+/* loaded from: classes5.dex */
 public interface EGL10 extends EGL {
     public static final int EGL_ALPHA_FORMAT = 12424;
     public static final int EGL_ALPHA_MASK_SIZE = 12350;
@@ -28,7 +29,6 @@ public interface EGL10 extends EGL {
     public static final int EGL_CONFIG_CAVEAT = 12327;
     public static final int EGL_CONFIG_ID = 12328;
     public static final int EGL_CORE_NATIVE_ENGINE = 12379;
-    public static final Object EGL_DEFAULT_DISPLAY = null;
     public static final int EGL_DEPTH_SIZE = 12325;
     public static final int EGL_DONT_CARE = -1;
     public static final int EGL_DRAW = 12377;
@@ -49,9 +49,6 @@ public interface EGL10 extends EGL {
     public static final int EGL_NONE = 12344;
     public static final int EGL_NON_CONFORMANT_CONFIG = 12369;
     public static final int EGL_NOT_INITIALIZED = 12289;
-    public static final EGLContext EGL_NO_CONTEXT = new EGLContextImpl(0);
-    public static final EGLDisplay EGL_NO_DISPLAY = new EGLDisplayImpl(0);
-    public static final EGLSurface EGL_NO_SURFACE = new EGLSurfaceImpl(0);
     public static final int EGL_PBUFFER_BIT = 1;
     public static final int EGL_PIXEL_ASPECT_RATIO = 12434;
     public static final int EGL_PIXMAP_BIT = 2;
@@ -77,6 +74,10 @@ public interface EGL10 extends EGL {
     public static final int EGL_VERTICAL_RESOLUTION = 12433;
     public static final int EGL_WIDTH = 12375;
     public static final int EGL_WINDOW_BIT = 4;
+    public static final Object EGL_DEFAULT_DISPLAY = null;
+    public static final EGLDisplay EGL_NO_DISPLAY = new EGLDisplayImpl(0);
+    public static final EGLContext EGL_NO_CONTEXT = new EGLContextImpl(0);
+    public static final EGLSurface EGL_NO_SURFACE = new EGLSurfaceImpl(0);
 
     boolean eglChooseConfig(EGLDisplay eGLDisplay, int[] iArr, EGLConfig[] eGLConfigArr, int i, int[] iArr2);
 

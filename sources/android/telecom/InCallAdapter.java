@@ -1,11 +1,12 @@
 package android.telecom;
 
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.RemoteException;
+import android.p007os.Bundle;
+import android.p007os.RemoteException;
 import com.android.internal.telecom.IInCallAdapter;
 import java.util.List;
 
+/* loaded from: classes3.dex */
 public final class InCallAdapter {
     private final IInCallAdapter mAdapter;
 
@@ -64,7 +65,7 @@ public final class InCallAdapter {
 
     public void setAudioRoute(int route) {
         try {
-            this.mAdapter.setAudioRoute(route, (String) null);
+            this.mAdapter.setAudioRoute(route, null);
         } catch (RemoteException e) {
         }
     }

@@ -3,17 +3,22 @@ package android.hardware.location;
 import android.annotation.SystemApi;
 import android.hardware.contexthub.V1_0.ContextHub;
 import android.net.wifi.WifiScanner;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.Arrays;
 
 @SystemApi
+/* loaded from: classes.dex */
 public class ContextHubInfo implements Parcelable {
-    public static final Parcelable.Creator<ContextHubInfo> CREATOR = new Parcelable.Creator<ContextHubInfo>() {
+    public static final Parcelable.Creator<ContextHubInfo> CREATOR = new Parcelable.Creator<ContextHubInfo>() { // from class: android.hardware.location.ContextHubInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ContextHubInfo createFromParcel(Parcel in) {
             return new ContextHubInfo(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ContextHubInfo[] newArray(int size) {
             return new ContextHubInfo[size];
         }
@@ -132,11 +137,12 @@ public class ContextHubInfo implements Parcelable {
     }
 
     public String toString() {
-        return ((((((((((("" + "ID/handle : " + this.mId) + ", Name : " + this.mName) + "\n\tVendor : " + this.mVendor) + ", Toolchain : " + this.mToolchain) + ", Toolchain version: 0x" + Integer.toHexString(this.mToolchainVersion)) + "\n\tPlatformVersion : 0x" + Integer.toHexString(this.mPlatformVersion)) + ", SwVersion : " + this.mChreApiMajorVersion + "." + this.mChreApiMinorVersion + "." + this.mChrePatchVersion) + ", CHRE platform ID: 0x" + Long.toHexString(this.mChrePlatformId)) + "\n\tPeakMips : " + this.mPeakMips) + ", StoppedPowerDraw : " + this.mStoppedPowerDrawMw + " mW") + ", PeakPowerDraw : " + this.mPeakPowerDrawMw + " mW") + ", MaxPacketLength : " + this.mMaxPacketLengthBytes + " Bytes";
+        String retVal = "ID/handle : " + this.mId;
+        return ((((((((((retVal + ", Name : " + this.mName) + "\n\tVendor : " + this.mVendor) + ", Toolchain : " + this.mToolchain) + ", Toolchain version: 0x" + Integer.toHexString(this.mToolchainVersion)) + "\n\tPlatformVersion : 0x" + Integer.toHexString(this.mPlatformVersion)) + ", SwVersion : " + ((int) this.mChreApiMajorVersion) + "." + ((int) this.mChreApiMinorVersion) + "." + ((int) this.mChrePatchVersion)) + ", CHRE platform ID: 0x" + Long.toHexString(this.mChrePlatformId)) + "\n\tPeakMips : " + this.mPeakMips) + ", StoppedPowerDraw : " + this.mStoppedPowerDrawMw + " mW") + ", PeakPowerDraw : " + this.mPeakPowerDrawMw + " mW") + ", MaxPacketLength : " + this.mMaxPacketLengthBytes + " Bytes";
     }
 
     public boolean equals(Object object) {
-        boolean isEqual = true;
+        boolean z = true;
         if (object == this) {
             return true;
         }
@@ -144,9 +150,7 @@ public class ContextHubInfo implements Parcelable {
             return false;
         }
         ContextHubInfo other = (ContextHubInfo) object;
-        if (!(other.getId() == this.mId && other.getName().equals(this.mName) && other.getVendor().equals(this.mVendor) && other.getToolchain().equals(this.mToolchain) && other.getToolchainVersion() == this.mToolchainVersion && other.getStaticSwVersion() == getStaticSwVersion() && other.getChrePlatformId() == this.mChrePlatformId && other.getPeakMips() == this.mPeakMips && other.getStoppedPowerDrawMw() == this.mStoppedPowerDrawMw && other.getSleepPowerDrawMw() == this.mSleepPowerDrawMw && other.getPeakPowerDrawMw() == this.mPeakPowerDrawMw && other.getMaxPacketLengthBytes() == this.mMaxPacketLengthBytes && Arrays.equals(other.getSupportedSensors(), this.mSupportedSensors) && Arrays.equals(other.getMemoryRegions(), this.mMemoryRegions))) {
-            isEqual = false;
-        }
+        boolean isEqual = (other.getId() == this.mId && other.getName().equals(this.mName) && other.getVendor().equals(this.mVendor) && other.getToolchain().equals(this.mToolchain) && other.getToolchainVersion() == this.mToolchainVersion && other.getStaticSwVersion() == getStaticSwVersion() && other.getChrePlatformId() == this.mChrePlatformId && other.getPeakMips() == this.mPeakMips && other.getStoppedPowerDrawMw() == this.mStoppedPowerDrawMw && other.getSleepPowerDrawMw() == this.mSleepPowerDrawMw && other.getPeakPowerDrawMw() == this.mPeakPowerDrawMw && other.getMaxPacketLengthBytes() == this.mMaxPacketLengthBytes && Arrays.equals(other.getSupportedSensors(), this.mSupportedSensors) && Arrays.equals(other.getMemoryRegions(), this.mMemoryRegions)) ? false : false;
         return isEqual;
     }
 
@@ -166,15 +170,18 @@ public class ContextHubInfo implements Parcelable {
         this.mChreApiMajorVersion = in.readByte();
         this.mChreApiMinorVersion = in.readByte();
         this.mChrePatchVersion = (short) in.readInt();
-        this.mSupportedSensors = new int[in.readInt()];
+        int numSupportedSensors = in.readInt();
+        this.mSupportedSensors = new int[numSupportedSensors];
         in.readIntArray(this.mSupportedSensors);
         this.mMemoryRegions = (MemoryRegion[]) in.createTypedArray(MemoryRegion.CREATOR);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(this.mId);
         out.writeString(this.mName);

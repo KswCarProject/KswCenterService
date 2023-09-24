@@ -1,7 +1,7 @@
 package android.security.keystore.recovery;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.util.Preconditions;
 import java.io.ByteArrayInputStream;
 import java.security.cert.CertPath;
@@ -9,13 +9,18 @@ import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 
+/* loaded from: classes3.dex */
 public final class RecoveryCertPath implements Parcelable {
     private static final String CERT_PATH_ENCODING = "PkiPath";
-    public static final Parcelable.Creator<RecoveryCertPath> CREATOR = new Parcelable.Creator<RecoveryCertPath>() {
+    public static final Parcelable.Creator<RecoveryCertPath> CREATOR = new Parcelable.Creator<RecoveryCertPath>() { // from class: android.security.keystore.recovery.RecoveryCertPath.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RecoveryCertPath createFromParcel(Parcel in) {
             return new RecoveryCertPath(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RecoveryCertPath[] newArray(int length) {
             return new RecoveryCertPath[length];
         }
@@ -42,10 +47,12 @@ public final class RecoveryCertPath implements Parcelable {
         this.mEncodedCertPath = in.createByteArray();
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeByteArray(this.mEncodedCertPath);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -58,7 +65,8 @@ public final class RecoveryCertPath implements Parcelable {
     private static CertPath decodeCertPath(byte[] bytes) throws CertificateException {
         Preconditions.checkNotNull(bytes);
         try {
-            return CertificateFactory.getInstance("X.509").generateCertPath(new ByteArrayInputStream(bytes), CERT_PATH_ENCODING);
+            CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
+            return certFactory.generateCertPath(new ByteArrayInputStream(bytes), CERT_PATH_ENCODING);
         } catch (CertificateException e) {
             throw new RuntimeException(e);
         }

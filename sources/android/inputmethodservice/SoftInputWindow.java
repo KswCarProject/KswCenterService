@@ -3,7 +3,7 @@ package android.inputmethodservice;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Rect;
-import android.os.IBinder;
+import android.p007os.IBinder;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -11,24 +11,27 @@ import android.view.WindowManager;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes.dex */
 public class SoftInputWindow extends Dialog {
     private static final boolean DEBUG = false;
     private static final String TAG = "SoftInputWindow";
-    private final Rect mBounds = new Rect();
+    private final Rect mBounds;
     final Callback mCallback;
     final KeyEvent.DispatcherState mDispatcherState;
     final int mGravity;
     final KeyEvent.Callback mKeyEventCallback;
     final String mName;
     final boolean mTakesFocus;
-    private int mWindowState = 0;
+    private int mWindowState;
     final int mWindowType;
 
+    /* loaded from: classes.dex */
     public interface Callback {
         void onBackPressed();
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     private @interface SoftInputWindowState {
         public static final int DESTROYED = 4;
         public static final int REJECTED_AT_LEAST_ONCE = 3;
@@ -50,7 +53,7 @@ public class SoftInputWindow extends Dialog {
             case 3:
                 throw new IllegalStateException("setToken can be called only once");
             case 4:
-                Log.i(TAG, "Ignoring setToken() because window is already destroyed.");
+                Log.m68i(TAG, "Ignoring setToken() because window is already destroyed.");
                 return;
             default:
                 throw new IllegalStateException("Unexpected state=" + this.mWindowState);
@@ -59,6 +62,8 @@ public class SoftInputWindow extends Dialog {
 
     public SoftInputWindow(Context context, String name, int theme, Callback callback, KeyEvent.Callback keyEventCallback, KeyEvent.DispatcherState dispatcherState, int windowType, int gravity, boolean takesFocus) {
         super(context, theme);
+        this.mBounds = new Rect();
+        this.mWindowState = 0;
         this.mName = name;
         this.mCallback = callback;
         this.mKeyEventCallback = keyEventCallback;
@@ -69,17 +74,19 @@ public class SoftInputWindow extends Dialog {
         initDockWindow();
     }
 
+    @Override // android.app.Dialog, android.view.Window.Callback
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         this.mDispatcherState.reset();
     }
 
+    @Override // android.app.Dialog, android.view.Window.Callback
     public boolean dispatchTouchEvent(MotionEvent ev) {
         getWindow().getDecorView().getHitRect(this.mBounds);
-        if (ev.isWithinBoundsNoHistory((float) this.mBounds.left, (float) this.mBounds.top, (float) (this.mBounds.right - 1), (float) (this.mBounds.bottom - 1))) {
+        if (ev.isWithinBoundsNoHistory(this.mBounds.left, this.mBounds.top, this.mBounds.right - 1, this.mBounds.bottom - 1)) {
             return super.dispatchTouchEvent(ev);
         }
-        MotionEvent temp = ev.clampNoHistory((float) this.mBounds.left, (float) this.mBounds.top, (float) (this.mBounds.right - 1), (float) (this.mBounds.bottom - 1));
+        MotionEvent temp = ev.clampNoHistory(this.mBounds.left, this.mBounds.top, this.mBounds.right - 1, this.mBounds.bottom - 1);
         boolean handled = super.dispatchTouchEvent(temp);
         temp.recycle();
         return handled;
@@ -106,34 +113,39 @@ public class SoftInputWindow extends Dialog {
         lp.height = -1;
     }
 
+    @Override // android.app.Dialog, android.view.KeyEvent.Callback
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (this.mKeyEventCallback == null || !this.mKeyEventCallback.onKeyDown(keyCode, event)) {
-            return super.onKeyDown(keyCode, event);
+        if (this.mKeyEventCallback != null && this.mKeyEventCallback.onKeyDown(keyCode, event)) {
+            return true;
         }
-        return true;
+        return super.onKeyDown(keyCode, event);
     }
 
+    @Override // android.app.Dialog, android.view.KeyEvent.Callback
     public boolean onKeyLongPress(int keyCode, KeyEvent event) {
-        if (this.mKeyEventCallback == null || !this.mKeyEventCallback.onKeyLongPress(keyCode, event)) {
-            return super.onKeyLongPress(keyCode, event);
+        if (this.mKeyEventCallback != null && this.mKeyEventCallback.onKeyLongPress(keyCode, event)) {
+            return true;
         }
-        return true;
+        return super.onKeyLongPress(keyCode, event);
     }
 
+    @Override // android.app.Dialog, android.view.KeyEvent.Callback
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if (this.mKeyEventCallback == null || !this.mKeyEventCallback.onKeyUp(keyCode, event)) {
-            return super.onKeyUp(keyCode, event);
+        if (this.mKeyEventCallback != null && this.mKeyEventCallback.onKeyUp(keyCode, event)) {
+            return true;
         }
-        return true;
+        return super.onKeyUp(keyCode, event);
     }
 
+    @Override // android.app.Dialog, android.view.KeyEvent.Callback
     public boolean onKeyMultiple(int keyCode, int count, KeyEvent event) {
-        if (this.mKeyEventCallback == null || !this.mKeyEventCallback.onKeyMultiple(keyCode, count, event)) {
-            return super.onKeyMultiple(keyCode, count, event);
+        if (this.mKeyEventCallback != null && this.mKeyEventCallback.onKeyMultiple(keyCode, count, event)) {
+            return true;
         }
-        return true;
+        return super.onKeyMultiple(keyCode, count, event);
     }
 
+    @Override // android.app.Dialog
     public void onBackPressed() {
         if (this.mCallback != null) {
             this.mCallback.onBackPressed();
@@ -160,6 +172,7 @@ public class SoftInputWindow extends Dialog {
         getWindow().setFlags(windowSetFlags, windowModFlags);
     }
 
+    @Override // android.app.Dialog
     public final void show() {
         switch (this.mWindowState) {
             case 0:
@@ -171,23 +184,22 @@ public class SoftInputWindow extends Dialog {
                     updateWindowState(2);
                     return;
                 } catch (WindowManager.BadTokenException e) {
-                    Log.i(TAG, "Probably the IME window token is already invalidated. show() does nothing.");
+                    Log.m68i(TAG, "Probably the IME window token is already invalidated. show() does nothing.");
                     updateWindowState(3);
                     return;
                 }
             case 3:
-                Log.i(TAG, "Not trying to call show() because it was already rejected once.");
+                Log.m68i(TAG, "Not trying to call show() because it was already rejected once.");
                 return;
             case 4:
-                Log.i(TAG, "Ignoring show() because the window is already destroyed.");
+                Log.m68i(TAG, "Ignoring show() because the window is already destroyed.");
                 return;
             default:
                 throw new IllegalStateException("Unexpected state=" + this.mWindowState);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public final void dismissForDestroyIfNecessary() {
+    final void dismissForDestroyIfNecessary() {
         switch (this.mWindowState) {
             case 0:
             case 1:
@@ -198,12 +210,12 @@ public class SoftInputWindow extends Dialog {
                     getWindow().setWindowAnimations(0);
                     dismiss();
                 } catch (WindowManager.BadTokenException e) {
-                    Log.i(TAG, "Probably the IME window token is already invalidated. No need to dismiss it.");
+                    Log.m68i(TAG, "Probably the IME window token is already invalidated. No need to dismiss it.");
                 }
                 updateWindowState(4);
                 return;
             case 3:
-                Log.i(TAG, "Not trying to dismiss the window because it is most likely unnecessary.");
+                Log.m68i(TAG, "Not trying to dismiss the window because it is most likely unnecessary.");
                 updateWindowState(4);
                 return;
             case 4:

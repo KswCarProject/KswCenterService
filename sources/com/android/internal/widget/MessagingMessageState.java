@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
+/* loaded from: classes4.dex */
 public class MessagingMessageState {
     private MessagingGroup mGroup;
     private final View mHostView;

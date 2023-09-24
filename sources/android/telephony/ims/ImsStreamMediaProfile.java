@@ -2,10 +2,11 @@ package android.telephony.ims;
 
 import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
 @SystemApi
+/* loaded from: classes4.dex */
 public final class ImsStreamMediaProfile implements Parcelable {
     public static final int AUDIO_QUALITY_AMR = 1;
     public static final int AUDIO_QUALITY_AMR_WB = 2;
@@ -28,11 +29,15 @@ public final class ImsStreamMediaProfile implements Parcelable {
     public static final int AUDIO_QUALITY_GSM_HR = 10;
     public static final int AUDIO_QUALITY_NONE = 0;
     public static final int AUDIO_QUALITY_QCELP13K = 3;
-    public static final Parcelable.Creator<ImsStreamMediaProfile> CREATOR = new Parcelable.Creator<ImsStreamMediaProfile>() {
+    public static final Parcelable.Creator<ImsStreamMediaProfile> CREATOR = new Parcelable.Creator<ImsStreamMediaProfile>() { // from class: android.telephony.ims.ImsStreamMediaProfile.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ImsStreamMediaProfile createFromParcel(Parcel in) {
             return new ImsStreamMediaProfile(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ImsStreamMediaProfile[] newArray(int size) {
             return new ImsStreamMediaProfile[size];
         }
@@ -110,10 +115,12 @@ public final class ImsStreamMediaProfile implements Parcelable {
         return "{ audioQuality=" + this.mAudioQuality + ", audioDirection=" + this.mAudioDirection + ", videoQuality=" + this.mVideoQuality + ", videoDirection=" + this.mVideoDirection + ", rttMode=" + this.mRttMode + ", hasRttAudioSpeech=" + this.mIsReceivingRttAudio + " }";
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(this.mAudioQuality);
         out.writeInt(this.mAudioDirection);

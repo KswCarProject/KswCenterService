@@ -16,6 +16,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/* loaded from: classes5.dex */
 class LoggerPrinter implements Printer {
     private static final int JSON_INDENT = 2;
     private final ThreadLocal<String> localTag = new ThreadLocal<>();
@@ -24,67 +25,90 @@ class LoggerPrinter implements Printer {
     LoggerPrinter() {
     }
 
-    public Printer t(String tag) {
+    @Override // com.orhanobut.logger.Printer
+    /* renamed from: t */
+    public Printer mo6t(String tag) {
         if (tag != null) {
             this.localTag.set(tag);
         }
         return this;
     }
 
-    public void d(@NonNull String message, @Nullable Object... args) {
+    @Override // com.orhanobut.logger.Printer
+    /* renamed from: d */
+    public void mo10d(@NonNull String message, @Nullable Object... args) {
         log(3, (Throwable) null, message, args);
     }
 
-    public void d(@Nullable Object object) {
+    @Override // com.orhanobut.logger.Printer
+    /* renamed from: d */
+    public void mo11d(@Nullable Object object) {
         log(3, (Throwable) null, Utils.toString(object), new Object[0]);
     }
 
-    public void e(@NonNull String message, @Nullable Object... args) {
-        e((Throwable) null, message, args);
+    @Override // com.orhanobut.logger.Printer
+    /* renamed from: e */
+    public void mo9e(@NonNull String message, @Nullable Object... args) {
+        mo8e(null, message, args);
     }
 
-    public void e(@Nullable Throwable throwable, @NonNull String message, @Nullable Object... args) {
+    @Override // com.orhanobut.logger.Printer
+    /* renamed from: e */
+    public void mo8e(@Nullable Throwable throwable, @NonNull String message, @Nullable Object... args) {
         log(6, throwable, message, args);
     }
 
-    public void w(@NonNull String message, @Nullable Object... args) {
+    @Override // com.orhanobut.logger.Printer
+    /* renamed from: w */
+    public void mo4w(@NonNull String message, @Nullable Object... args) {
         log(5, (Throwable) null, message, args);
     }
 
-    public void i(@NonNull String message, @Nullable Object... args) {
+    @Override // com.orhanobut.logger.Printer
+    /* renamed from: i */
+    public void mo7i(@NonNull String message, @Nullable Object... args) {
         log(4, (Throwable) null, message, args);
     }
 
-    public void v(@NonNull String message, @Nullable Object... args) {
+    @Override // com.orhanobut.logger.Printer
+    /* renamed from: v */
+    public void mo5v(@NonNull String message, @Nullable Object... args) {
         log(2, (Throwable) null, message, args);
     }
 
+    @Override // com.orhanobut.logger.Printer
     public void wtf(@NonNull String message, @Nullable Object... args) {
         log(7, (Throwable) null, message, args);
     }
 
+    @Override // com.orhanobut.logger.Printer
     public void json(@Nullable String json) {
         if (Utils.isEmpty(json)) {
-            d("Empty/Null json content");
+            mo11d("Empty/Null json content");
             return;
         }
         try {
             String json2 = json.trim();
             if (json2.startsWith("{")) {
-                d(new JSONObject(json2).toString(2));
+                JSONObject jsonObject = new JSONObject(json2);
+                String message = jsonObject.toString(2);
+                mo11d(message);
             } else if (json2.startsWith("[")) {
-                d(new JSONArray(json2).toString(2));
+                JSONArray jsonArray = new JSONArray(json2);
+                String message2 = jsonArray.toString(2);
+                mo11d(message2);
             } else {
-                e("Invalid Json", new Object[0]);
+                mo9e("Invalid Json", new Object[0]);
             }
         } catch (JSONException e) {
-            e("Invalid Json", new Object[0]);
+            mo9e("Invalid Json", new Object[0]);
         }
     }
 
+    @Override // com.orhanobut.logger.Printer
     public void xml(@Nullable String xml) {
         if (Utils.isEmpty(xml)) {
-            d("Empty/Null xml content");
+            mo11d("Empty/Null xml content");
             return;
         }
         try {
@@ -94,14 +118,15 @@ class LoggerPrinter implements Printer {
             transformer.setOutputProperty("indent", "yes");
             transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
             transformer.transform(xmlInput, xmlOutput);
-            d(xmlOutput.getWriter().toString().replaceFirst(">", ">\n"));
+            mo11d(xmlOutput.getWriter().toString().replaceFirst(">", ">\n"));
         } catch (TransformerException e) {
-            e("Invalid xml", new Object[0]);
+            mo9e("Invalid xml", new Object[0]);
         }
     }
 
+    @Override // com.orhanobut.logger.Printer
     public synchronized void log(int priority, @Nullable String tag, @Nullable String message, @Nullable Throwable throwable) {
-        if (!(throwable == null || message == null)) {
+        if (throwable != null && message != null) {
             try {
                 message = message + " : " + Utils.getStackTraceString(throwable);
             } catch (Throwable th) {
@@ -121,27 +146,32 @@ class LoggerPrinter implements Printer {
         }
     }
 
+    @Override // com.orhanobut.logger.Printer
     public void clearLogAdapters() {
         this.logAdapters.clear();
     }
 
+    /* JADX WARN: Multi-variable type inference failed */
+    @Override // com.orhanobut.logger.Printer
     public void addAdapter(@NonNull LogAdapter adapter) {
         this.logAdapters.add(Utils.checkNotNull(adapter));
     }
 
     private synchronized void log(int priority, @Nullable Throwable throwable, @NonNull String msg, @Nullable Object... args) {
         Utils.checkNotNull(msg);
-        log(priority, getTag(), createMessage(msg, args), throwable);
+        String tag = getTag();
+        String message = createMessage(msg, args);
+        log(priority, tag, message, throwable);
     }
 
     @Nullable
     private String getTag() {
         String tag = this.localTag.get();
-        if (tag == null) {
-            return null;
+        if (tag != null) {
+            this.localTag.remove();
+            return tag;
         }
-        this.localTag.remove();
-        return tag;
+        return null;
     }
 
     @NonNull

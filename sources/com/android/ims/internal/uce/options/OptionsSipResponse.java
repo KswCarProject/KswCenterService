@@ -1,15 +1,20 @@
 package com.android.ims.internal.uce.options;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes4.dex */
 public class OptionsSipResponse implements Parcelable {
-    public static final Parcelable.Creator<OptionsSipResponse> CREATOR = new Parcelable.Creator<OptionsSipResponse>() {
+    public static final Parcelable.Creator<OptionsSipResponse> CREATOR = new Parcelable.Creator<OptionsSipResponse>() { // from class: com.android.ims.internal.uce.options.OptionsSipResponse.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public OptionsSipResponse createFromParcel(Parcel source) {
             return new OptionsSipResponse(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public OptionsSipResponse[] newArray(int size) {
             return new OptionsSipResponse[size];
         }
@@ -74,10 +79,12 @@ public class OptionsSipResponse implements Parcelable {
         this.mCmdId = new OptionsCmdId();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mRequestId);
         dest.writeInt(this.mSipResponseCode);

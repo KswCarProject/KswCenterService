@@ -1,5 +1,6 @@
 package com.android.internal.util;
 
+/* loaded from: classes4.dex */
 public class TrafficStatsConstants {
     public static final int TAG_SYSTEM_DHCP = -511;
     public static final int TAG_SYSTEM_DHCP_SERVER = -509;

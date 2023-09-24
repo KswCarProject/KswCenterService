@@ -1,17 +1,18 @@
 package android.telecom;
 
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.os.RemoteException;
+import android.p007os.Bundle;
+import android.p007os.Handler;
+import android.p007os.Message;
+import android.p007os.RemoteException;
 import android.telecom.Logging.Session;
-import com.android.internal.os.SomeArgs;
+import com.android.internal.p016os.SomeArgs;
 import com.android.internal.telecom.IConnectionServiceAdapter;
 import com.android.internal.telecom.IVideoProvider;
 import com.android.internal.telecom.RemoteServiceCallback;
 import java.util.List;
 
+/* loaded from: classes3.dex */
 final class ConnectionServiceAdapterServant {
     private static final int MSG_ADD_CONFERENCE_CALL = 10;
     private static final int MSG_ADD_EXISTING_CONNECTION = 21;
@@ -49,10 +50,9 @@ final class ConnectionServiceAdapterServant {
     private static final int MSG_SET_STATUS_HINTS = 17;
     private static final int MSG_SET_VIDEO_CALL_PROVIDER = 15;
     private static final int MSG_SET_VIDEO_STATE = 14;
-    /* access modifiers changed from: private */
-    public final IConnectionServiceAdapter mDelegate;
-    /* access modifiers changed from: private */
-    public final Handler mHandler = new Handler() {
+    private final IConnectionServiceAdapter mDelegate;
+    private final Handler mHandler = new Handler() { // from class: android.telecom.ConnectionServiceAdapterServant.1
+        @Override // android.p007os.Handler
         public void handleMessage(Message msg) {
             try {
                 internalHandleMessage(msg);
@@ -61,232 +61,203 @@ final class ConnectionServiceAdapterServant {
         }
 
         private void internalHandleMessage(Message msg) throws RemoteException {
-            boolean z = false;
+            SomeArgs args;
             switch (msg.what) {
                 case 1:
-                    SomeArgs args = (SomeArgs) msg.obj;
+                    args = (SomeArgs) msg.obj;
                     try {
-                        ConnectionServiceAdapterServant.this.mDelegate.handleCreateConnectionComplete((String) args.arg1, (ConnectionRequest) args.arg2, (ParcelableConnection) args.arg3, (Session.Info) null);
+                        ConnectionServiceAdapterServant.this.mDelegate.handleCreateConnectionComplete((String) args.arg1, (ConnectionRequest) args.arg2, (ParcelableConnection) args.arg3, null);
                         return;
                     } finally {
-                        args.recycle();
                     }
                 case 2:
-                    ConnectionServiceAdapterServant.this.mDelegate.setActive((String) msg.obj, (Session.Info) null);
+                    ConnectionServiceAdapterServant.this.mDelegate.setActive((String) msg.obj, null);
                     return;
                 case 3:
-                    ConnectionServiceAdapterServant.this.mDelegate.setRinging((String) msg.obj, (Session.Info) null);
+                    ConnectionServiceAdapterServant.this.mDelegate.setRinging((String) msg.obj, null);
                     return;
                 case 4:
-                    ConnectionServiceAdapterServant.this.mDelegate.setDialing((String) msg.obj, (Session.Info) null);
+                    ConnectionServiceAdapterServant.this.mDelegate.setDialing((String) msg.obj, null);
                     return;
                 case 5:
-                    SomeArgs args2 = (SomeArgs) msg.obj;
+                    args = (SomeArgs) msg.obj;
                     try {
-                        ConnectionServiceAdapterServant.this.mDelegate.setDisconnected((String) args2.arg1, (DisconnectCause) args2.arg2, (Session.Info) null);
+                        ConnectionServiceAdapterServant.this.mDelegate.setDisconnected((String) args.arg1, (DisconnectCause) args.arg2, null);
                         return;
                     } finally {
-                        args2.recycle();
                     }
                 case 6:
-                    ConnectionServiceAdapterServant.this.mDelegate.setOnHold((String) msg.obj, (Session.Info) null);
+                    ConnectionServiceAdapterServant.this.mDelegate.setOnHold((String) msg.obj, null);
                     return;
                 case 7:
-                    IConnectionServiceAdapter access$000 = ConnectionServiceAdapterServant.this.mDelegate;
-                    String str = (String) msg.obj;
-                    if (msg.arg1 == 1) {
-                        z = true;
-                    }
-                    access$000.setRingbackRequested(str, z, (Session.Info) null);
+                    ConnectionServiceAdapterServant.this.mDelegate.setRingbackRequested((String) msg.obj, msg.arg1 == 1, null);
                     return;
                 case 8:
-                    ConnectionServiceAdapterServant.this.mDelegate.setConnectionCapabilities((String) msg.obj, msg.arg1, (Session.Info) null);
+                    ConnectionServiceAdapterServant.this.mDelegate.setConnectionCapabilities((String) msg.obj, msg.arg1, null);
                     return;
                 case 9:
-                    SomeArgs args3 = (SomeArgs) msg.obj;
+                    args = (SomeArgs) msg.obj;
                     try {
-                        ConnectionServiceAdapterServant.this.mDelegate.setIsConferenced((String) args3.arg1, (String) args3.arg2, (Session.Info) null);
+                        ConnectionServiceAdapterServant.this.mDelegate.setIsConferenced((String) args.arg1, (String) args.arg2, null);
                         return;
                     } finally {
-                        args3.recycle();
                     }
                 case 10:
-                    SomeArgs args4 = (SomeArgs) msg.obj;
+                    args = (SomeArgs) msg.obj;
                     try {
-                        ConnectionServiceAdapterServant.this.mDelegate.addConferenceCall((String) args4.arg1, (ParcelableConference) args4.arg2, (Session.Info) null);
+                        ConnectionServiceAdapterServant.this.mDelegate.addConferenceCall((String) args.arg1, (ParcelableConference) args.arg2, null);
                         return;
                     } finally {
-                        args4.recycle();
                     }
                 case 11:
-                    ConnectionServiceAdapterServant.this.mDelegate.removeCall((String) msg.obj, (Session.Info) null);
+                    ConnectionServiceAdapterServant.this.mDelegate.removeCall((String) msg.obj, null);
                     return;
                 case 12:
-                    SomeArgs args5 = (SomeArgs) msg.obj;
+                    args = (SomeArgs) msg.obj;
                     try {
-                        ConnectionServiceAdapterServant.this.mDelegate.onPostDialWait((String) args5.arg1, (String) args5.arg2, (Session.Info) null);
+                        ConnectionServiceAdapterServant.this.mDelegate.onPostDialWait((String) args.arg1, (String) args.arg2, null);
                         return;
                     } finally {
-                        args5.recycle();
                     }
                 case 13:
-                    SomeArgs args22 = (SomeArgs) msg.obj;
+                    args = (SomeArgs) msg.obj;
                     try {
-                        ConnectionServiceAdapterServant.this.mDelegate.queryRemoteConnectionServices((RemoteServiceCallback) args22.arg1, (String) args22.arg2, (Session.Info) null);
+                        ConnectionServiceAdapterServant.this.mDelegate.queryRemoteConnectionServices((RemoteServiceCallback) args.arg1, (String) args.arg2, null);
                         return;
                     } finally {
-                        args22.recycle();
                     }
                 case 14:
-                    ConnectionServiceAdapterServant.this.mDelegate.setVideoState((String) msg.obj, msg.arg1, (Session.Info) null);
+                    ConnectionServiceAdapterServant.this.mDelegate.setVideoState((String) msg.obj, msg.arg1, null);
                     return;
                 case 15:
-                    SomeArgs args6 = (SomeArgs) msg.obj;
+                    args = (SomeArgs) msg.obj;
                     try {
-                        ConnectionServiceAdapterServant.this.mDelegate.setVideoProvider((String) args6.arg1, (IVideoProvider) args6.arg2, (Session.Info) null);
+                        ConnectionServiceAdapterServant.this.mDelegate.setVideoProvider((String) args.arg1, (IVideoProvider) args.arg2, null);
                         return;
                     } finally {
-                        args6.recycle();
                     }
                 case 16:
-                    IConnectionServiceAdapter access$0002 = ConnectionServiceAdapterServant.this.mDelegate;
-                    String str2 = (String) msg.obj;
-                    if (msg.arg1 == 1) {
-                        z = true;
-                    }
-                    access$0002.setIsVoipAudioMode(str2, z, (Session.Info) null);
+                    ConnectionServiceAdapterServant.this.mDelegate.setIsVoipAudioMode((String) msg.obj, msg.arg1 == 1, null);
                     return;
                 case 17:
-                    SomeArgs args7 = (SomeArgs) msg.obj;
+                    args = (SomeArgs) msg.obj;
                     try {
-                        ConnectionServiceAdapterServant.this.mDelegate.setStatusHints((String) args7.arg1, (StatusHints) args7.arg2, (Session.Info) null);
+                        ConnectionServiceAdapterServant.this.mDelegate.setStatusHints((String) args.arg1, (StatusHints) args.arg2, null);
                         return;
                     } finally {
-                        args7.recycle();
                     }
                 case 18:
-                    SomeArgs args8 = (SomeArgs) msg.obj;
+                    args = (SomeArgs) msg.obj;
                     try {
-                        ConnectionServiceAdapterServant.this.mDelegate.setAddress((String) args8.arg1, (Uri) args8.arg2, args8.argi1, (Session.Info) null);
+                        ConnectionServiceAdapterServant.this.mDelegate.setAddress((String) args.arg1, (Uri) args.arg2, args.argi1, null);
                         return;
                     } finally {
-                        args8.recycle();
                     }
                 case 19:
-                    SomeArgs args9 = (SomeArgs) msg.obj;
+                    args = (SomeArgs) msg.obj;
                     try {
-                        ConnectionServiceAdapterServant.this.mDelegate.setCallerDisplayName((String) args9.arg1, (String) args9.arg2, args9.argi1, (Session.Info) null);
+                        ConnectionServiceAdapterServant.this.mDelegate.setCallerDisplayName((String) args.arg1, (String) args.arg2, args.argi1, null);
                         return;
                     } finally {
-                        args9.recycle();
                     }
                 case 20:
-                    SomeArgs args10 = (SomeArgs) msg.obj;
+                    args = (SomeArgs) msg.obj;
                     try {
-                        ConnectionServiceAdapterServant.this.mDelegate.setConferenceableConnections((String) args10.arg1, (List) args10.arg2, (Session.Info) null);
+                        ConnectionServiceAdapterServant.this.mDelegate.setConferenceableConnections((String) args.arg1, (List) args.arg2, null);
                         return;
                     } finally {
-                        args10.recycle();
                     }
                 case 21:
-                    SomeArgs args11 = (SomeArgs) msg.obj;
+                    args = (SomeArgs) msg.obj;
                     try {
-                        ConnectionServiceAdapterServant.this.mDelegate.addExistingConnection((String) args11.arg1, (ParcelableConnection) args11.arg2, (Session.Info) null);
+                        ConnectionServiceAdapterServant.this.mDelegate.addExistingConnection((String) args.arg1, (ParcelableConnection) args.arg2, null);
                         return;
                     } finally {
-                        args11.recycle();
                     }
                 case 22:
-                    SomeArgs args12 = (SomeArgs) msg.obj;
+                    args = (SomeArgs) msg.obj;
                     try {
-                        ConnectionServiceAdapterServant.this.mDelegate.onPostDialChar((String) args12.arg1, (char) args12.argi1, (Session.Info) null);
+                        ConnectionServiceAdapterServant.this.mDelegate.onPostDialChar((String) args.arg1, (char) args.argi1, null);
                         return;
                     } finally {
-                        args12.recycle();
                     }
                 case 23:
-                    SomeArgs args13 = (SomeArgs) msg.obj;
+                    args = (SomeArgs) msg.obj;
                     try {
-                        ConnectionServiceAdapterServant.this.mDelegate.setConferenceMergeFailed((String) args13.arg1, (Session.Info) null);
+                        ConnectionServiceAdapterServant.this.mDelegate.setConferenceMergeFailed((String) args.arg1, null);
                         return;
                     } finally {
-                        args13.recycle();
                     }
                 case 24:
-                    SomeArgs args14 = (SomeArgs) msg.obj;
+                    args = (SomeArgs) msg.obj;
                     try {
-                        ConnectionServiceAdapterServant.this.mDelegate.putExtras((String) args14.arg1, (Bundle) args14.arg2, (Session.Info) null);
+                        ConnectionServiceAdapterServant.this.mDelegate.putExtras((String) args.arg1, (Bundle) args.arg2, null);
                         return;
                     } finally {
-                        args14.recycle();
                     }
                 case 25:
-                    SomeArgs args15 = (SomeArgs) msg.obj;
+                    args = (SomeArgs) msg.obj;
                     try {
-                        ConnectionServiceAdapterServant.this.mDelegate.removeExtras((String) args15.arg1, (List) args15.arg2, (Session.Info) null);
+                        ConnectionServiceAdapterServant.this.mDelegate.removeExtras((String) args.arg1, (List) args.arg2, null);
                         return;
                     } finally {
-                        args15.recycle();
                     }
                 case 26:
-                    SomeArgs args16 = (SomeArgs) msg.obj;
+                    args = (SomeArgs) msg.obj;
                     try {
-                        ConnectionServiceAdapterServant.this.mDelegate.onConnectionEvent((String) args16.arg1, (String) args16.arg2, (Bundle) args16.arg3, (Session.Info) null);
+                        ConnectionServiceAdapterServant.this.mDelegate.onConnectionEvent((String) args.arg1, (String) args.arg2, (Bundle) args.arg3, null);
                         return;
                     } finally {
-                        args16.recycle();
                     }
                 case 27:
-                    ConnectionServiceAdapterServant.this.mDelegate.setConnectionProperties((String) msg.obj, msg.arg1, (Session.Info) null);
+                    ConnectionServiceAdapterServant.this.mDelegate.setConnectionProperties((String) msg.obj, msg.arg1, null);
                     return;
                 case 28:
-                    ConnectionServiceAdapterServant.this.mDelegate.setPulling((String) msg.obj, (Session.Info) null);
+                    ConnectionServiceAdapterServant.this.mDelegate.setPulling((String) msg.obj, null);
                     return;
                 case 29:
-                    SomeArgs args17 = (SomeArgs) msg.obj;
+                    args = (SomeArgs) msg.obj;
                     try {
-                        ConnectionServiceAdapterServant.this.mDelegate.setAudioRoute((String) args17.arg1, args17.argi1, (String) args17.arg2, (Session.Info) args17.arg3);
+                        ConnectionServiceAdapterServant.this.mDelegate.setAudioRoute((String) args.arg1, args.argi1, (String) args.arg2, (Session.Info) args.arg3);
                         return;
                     } finally {
-                        args17.recycle();
                     }
                 case 30:
-                    ConnectionServiceAdapterServant.this.mDelegate.onRttInitiationSuccess((String) msg.obj, (Session.Info) null);
+                    ConnectionServiceAdapterServant.this.mDelegate.onRttInitiationSuccess((String) msg.obj, null);
                     return;
                 case 31:
-                    ConnectionServiceAdapterServant.this.mDelegate.onRttInitiationFailure((String) msg.obj, msg.arg1, (Session.Info) null);
+                    ConnectionServiceAdapterServant.this.mDelegate.onRttInitiationFailure((String) msg.obj, msg.arg1, null);
                     return;
                 case 32:
-                    ConnectionServiceAdapterServant.this.mDelegate.onRttSessionRemotelyTerminated((String) msg.obj, (Session.Info) null);
+                    ConnectionServiceAdapterServant.this.mDelegate.onRttSessionRemotelyTerminated((String) msg.obj, null);
                     return;
                 case 33:
-                    ConnectionServiceAdapterServant.this.mDelegate.onRemoteRttRequest((String) msg.obj, (Session.Info) null);
+                    ConnectionServiceAdapterServant.this.mDelegate.onRemoteRttRequest((String) msg.obj, null);
                     return;
                 case 34:
-                    SomeArgs args18 = (SomeArgs) msg.obj;
+                    args = (SomeArgs) msg.obj;
                     try {
-                        ConnectionServiceAdapterServant.this.mDelegate.onPhoneAccountChanged((String) args18.arg1, (PhoneAccountHandle) args18.arg2, (Session.Info) null);
+                        ConnectionServiceAdapterServant.this.mDelegate.onPhoneAccountChanged((String) args.arg1, (PhoneAccountHandle) args.arg2, null);
                         return;
                     } finally {
-                        args18.recycle();
                     }
                 case 35:
-                    ConnectionServiceAdapterServant.this.mDelegate.onConnectionServiceFocusReleased((Session.Info) null);
+                    ConnectionServiceAdapterServant.this.mDelegate.onConnectionServiceFocusReleased(null);
                     return;
                 case 36:
-                    SomeArgs args19 = (SomeArgs) msg.obj;
+                    args = (SomeArgs) msg.obj;
                     try {
-                        ConnectionServiceAdapterServant.this.mDelegate.setConferenceState((String) args19.arg1, ((Boolean) args19.arg2).booleanValue(), (Session.Info) args19.arg3);
+                        ConnectionServiceAdapterServant.this.mDelegate.setConferenceState((String) args.arg1, ((Boolean) args.arg2).booleanValue(), (Session.Info) args.arg3);
                         return;
                     } finally {
-                        args19.recycle();
                     }
                 default:
                     return;
             }
         }
     };
-    private final IConnectionServiceAdapter mStub = new IConnectionServiceAdapter.Stub() {
+    private final IConnectionServiceAdapter mStub = new IConnectionServiceAdapter.Stub() { // from class: android.telecom.ConnectionServiceAdapterServant.2
+        @Override // com.android.internal.telecom.IConnectionServiceAdapter
         public void handleCreateConnectionComplete(String id, ConnectionRequest request, ParcelableConnection connection, Session.Info sessionInfo) {
             SomeArgs args = SomeArgs.obtain();
             args.arg1 = id;
@@ -295,22 +266,27 @@ final class ConnectionServiceAdapterServant {
             ConnectionServiceAdapterServant.this.mHandler.obtainMessage(1, args).sendToTarget();
         }
 
+        @Override // com.android.internal.telecom.IConnectionServiceAdapter
         public void setActive(String connectionId, Session.Info sessionInfo) {
             ConnectionServiceAdapterServant.this.mHandler.obtainMessage(2, connectionId).sendToTarget();
         }
 
+        @Override // com.android.internal.telecom.IConnectionServiceAdapter
         public void setRinging(String connectionId, Session.Info sessionInfo) {
             ConnectionServiceAdapterServant.this.mHandler.obtainMessage(3, connectionId).sendToTarget();
         }
 
+        @Override // com.android.internal.telecom.IConnectionServiceAdapter
         public void setDialing(String connectionId, Session.Info sessionInfo) {
             ConnectionServiceAdapterServant.this.mHandler.obtainMessage(4, connectionId).sendToTarget();
         }
 
+        @Override // com.android.internal.telecom.IConnectionServiceAdapter
         public void setPulling(String connectionId, Session.Info sessionInfo) {
             ConnectionServiceAdapterServant.this.mHandler.obtainMessage(28, connectionId).sendToTarget();
         }
 
+        @Override // com.android.internal.telecom.IConnectionServiceAdapter
         public void setDisconnected(String connectionId, DisconnectCause disconnectCause, Session.Info sessionInfo) {
             SomeArgs args = SomeArgs.obtain();
             args.arg1 = connectionId;
@@ -318,28 +294,34 @@ final class ConnectionServiceAdapterServant {
             ConnectionServiceAdapterServant.this.mHandler.obtainMessage(5, args).sendToTarget();
         }
 
+        @Override // com.android.internal.telecom.IConnectionServiceAdapter
         public void setOnHold(String connectionId, Session.Info sessionInfo) {
             ConnectionServiceAdapterServant.this.mHandler.obtainMessage(6, connectionId).sendToTarget();
         }
 
+        @Override // com.android.internal.telecom.IConnectionServiceAdapter
         public void setRingbackRequested(String connectionId, boolean ringback, Session.Info sessionInfo) {
-            ConnectionServiceAdapterServant.this.mHandler.obtainMessage(7, ringback, 0, connectionId).sendToTarget();
+            ConnectionServiceAdapterServant.this.mHandler.obtainMessage(7, ringback ? 1 : 0, 0, connectionId).sendToTarget();
         }
 
+        @Override // com.android.internal.telecom.IConnectionServiceAdapter
         public void setConnectionCapabilities(String connectionId, int connectionCapabilities, Session.Info sessionInfo) {
             ConnectionServiceAdapterServant.this.mHandler.obtainMessage(8, connectionCapabilities, 0, connectionId).sendToTarget();
         }
 
+        @Override // com.android.internal.telecom.IConnectionServiceAdapter
         public void setConnectionProperties(String connectionId, int connectionProperties, Session.Info sessionInfo) {
             ConnectionServiceAdapterServant.this.mHandler.obtainMessage(27, connectionProperties, 0, connectionId).sendToTarget();
         }
 
+        @Override // com.android.internal.telecom.IConnectionServiceAdapter
         public void setConferenceMergeFailed(String callId, Session.Info sessionInfo) {
             SomeArgs args = SomeArgs.obtain();
             args.arg1 = callId;
             ConnectionServiceAdapterServant.this.mHandler.obtainMessage(23, args).sendToTarget();
         }
 
+        @Override // com.android.internal.telecom.IConnectionServiceAdapter
         public void setIsConferenced(String callId, String conferenceCallId, Session.Info sessionInfo) {
             SomeArgs args = SomeArgs.obtain();
             args.arg1 = callId;
@@ -347,6 +329,7 @@ final class ConnectionServiceAdapterServant {
             ConnectionServiceAdapterServant.this.mHandler.obtainMessage(9, args).sendToTarget();
         }
 
+        @Override // com.android.internal.telecom.IConnectionServiceAdapter
         public void addConferenceCall(String callId, ParcelableConference parcelableConference, Session.Info sessionInfo) {
             SomeArgs args = SomeArgs.obtain();
             args.arg1 = callId;
@@ -354,10 +337,12 @@ final class ConnectionServiceAdapterServant {
             ConnectionServiceAdapterServant.this.mHandler.obtainMessage(10, args).sendToTarget();
         }
 
+        @Override // com.android.internal.telecom.IConnectionServiceAdapter
         public void removeCall(String connectionId, Session.Info sessionInfo) {
             ConnectionServiceAdapterServant.this.mHandler.obtainMessage(11, connectionId).sendToTarget();
         }
 
+        @Override // com.android.internal.telecom.IConnectionServiceAdapter
         public void onPostDialWait(String connectionId, String remainingDigits, Session.Info sessionInfo) {
             SomeArgs args = SomeArgs.obtain();
             args.arg1 = connectionId;
@@ -365,6 +350,7 @@ final class ConnectionServiceAdapterServant {
             ConnectionServiceAdapterServant.this.mHandler.obtainMessage(12, args).sendToTarget();
         }
 
+        @Override // com.android.internal.telecom.IConnectionServiceAdapter
         public void onPostDialChar(String connectionId, char nextChar, Session.Info sessionInfo) {
             SomeArgs args = SomeArgs.obtain();
             args.arg1 = connectionId;
@@ -372,6 +358,7 @@ final class ConnectionServiceAdapterServant {
             ConnectionServiceAdapterServant.this.mHandler.obtainMessage(22, args).sendToTarget();
         }
 
+        @Override // com.android.internal.telecom.IConnectionServiceAdapter
         public void queryRemoteConnectionServices(RemoteServiceCallback callback, String callingPackage, Session.Info sessionInfo) {
             SomeArgs args = SomeArgs.obtain();
             args.arg1 = callback;
@@ -379,10 +366,12 @@ final class ConnectionServiceAdapterServant {
             ConnectionServiceAdapterServant.this.mHandler.obtainMessage(13, args).sendToTarget();
         }
 
+        @Override // com.android.internal.telecom.IConnectionServiceAdapter
         public void setVideoState(String connectionId, int videoState, Session.Info sessionInfo) {
             ConnectionServiceAdapterServant.this.mHandler.obtainMessage(14, videoState, 0, connectionId).sendToTarget();
         }
 
+        @Override // com.android.internal.telecom.IConnectionServiceAdapter
         public void setVideoProvider(String connectionId, IVideoProvider videoProvider, Session.Info sessionInfo) {
             SomeArgs args = SomeArgs.obtain();
             args.arg1 = connectionId;
@@ -390,10 +379,12 @@ final class ConnectionServiceAdapterServant {
             ConnectionServiceAdapterServant.this.mHandler.obtainMessage(15, args).sendToTarget();
         }
 
+        @Override // com.android.internal.telecom.IConnectionServiceAdapter
         public final void setIsVoipAudioMode(String connectionId, boolean isVoip, Session.Info sessionInfo) {
-            ConnectionServiceAdapterServant.this.mHandler.obtainMessage(16, isVoip, 0, connectionId).sendToTarget();
+            ConnectionServiceAdapterServant.this.mHandler.obtainMessage(16, isVoip ? 1 : 0, 0, connectionId).sendToTarget();
         }
 
+        @Override // com.android.internal.telecom.IConnectionServiceAdapter
         public final void setStatusHints(String connectionId, StatusHints statusHints, Session.Info sessionInfo) {
             SomeArgs args = SomeArgs.obtain();
             args.arg1 = connectionId;
@@ -401,6 +392,7 @@ final class ConnectionServiceAdapterServant {
             ConnectionServiceAdapterServant.this.mHandler.obtainMessage(17, args).sendToTarget();
         }
 
+        @Override // com.android.internal.telecom.IConnectionServiceAdapter
         public final void setAddress(String connectionId, Uri address, int presentation, Session.Info sessionInfo) {
             SomeArgs args = SomeArgs.obtain();
             args.arg1 = connectionId;
@@ -409,6 +401,7 @@ final class ConnectionServiceAdapterServant {
             ConnectionServiceAdapterServant.this.mHandler.obtainMessage(18, args).sendToTarget();
         }
 
+        @Override // com.android.internal.telecom.IConnectionServiceAdapter
         public final void setCallerDisplayName(String connectionId, String callerDisplayName, int presentation, Session.Info sessionInfo) {
             SomeArgs args = SomeArgs.obtain();
             args.arg1 = connectionId;
@@ -417,6 +410,7 @@ final class ConnectionServiceAdapterServant {
             ConnectionServiceAdapterServant.this.mHandler.obtainMessage(19, args).sendToTarget();
         }
 
+        @Override // com.android.internal.telecom.IConnectionServiceAdapter
         public final void setConferenceableConnections(String connectionId, List<String> conferenceableConnectionIds, Session.Info sessionInfo) {
             SomeArgs args = SomeArgs.obtain();
             args.arg1 = connectionId;
@@ -424,6 +418,7 @@ final class ConnectionServiceAdapterServant {
             ConnectionServiceAdapterServant.this.mHandler.obtainMessage(20, args).sendToTarget();
         }
 
+        @Override // com.android.internal.telecom.IConnectionServiceAdapter
         public final void addExistingConnection(String connectionId, ParcelableConnection connection, Session.Info sessionInfo) {
             SomeArgs args = SomeArgs.obtain();
             args.arg1 = connectionId;
@@ -431,6 +426,7 @@ final class ConnectionServiceAdapterServant {
             ConnectionServiceAdapterServant.this.mHandler.obtainMessage(21, args).sendToTarget();
         }
 
+        @Override // com.android.internal.telecom.IConnectionServiceAdapter
         public final void putExtras(String connectionId, Bundle extras, Session.Info sessionInfo) {
             SomeArgs args = SomeArgs.obtain();
             args.arg1 = connectionId;
@@ -438,6 +434,7 @@ final class ConnectionServiceAdapterServant {
             ConnectionServiceAdapterServant.this.mHandler.obtainMessage(24, args).sendToTarget();
         }
 
+        @Override // com.android.internal.telecom.IConnectionServiceAdapter
         public final void removeExtras(String connectionId, List<String> keys, Session.Info sessionInfo) {
             SomeArgs args = SomeArgs.obtain();
             args.arg1 = connectionId;
@@ -445,6 +442,7 @@ final class ConnectionServiceAdapterServant {
             ConnectionServiceAdapterServant.this.mHandler.obtainMessage(25, args).sendToTarget();
         }
 
+        @Override // com.android.internal.telecom.IConnectionServiceAdapter
         public final void setAudioRoute(String connectionId, int audioRoute, String bluetoothAddress, Session.Info sessionInfo) {
             SomeArgs args = SomeArgs.obtain();
             args.arg1 = connectionId;
@@ -454,6 +452,7 @@ final class ConnectionServiceAdapterServant {
             ConnectionServiceAdapterServant.this.mHandler.obtainMessage(29, args).sendToTarget();
         }
 
+        @Override // com.android.internal.telecom.IConnectionServiceAdapter
         public final void onConnectionEvent(String connectionId, String event, Bundle extras, Session.Info sessionInfo) {
             SomeArgs args = SomeArgs.obtain();
             args.arg1 = connectionId;
@@ -462,22 +461,27 @@ final class ConnectionServiceAdapterServant {
             ConnectionServiceAdapterServant.this.mHandler.obtainMessage(26, args).sendToTarget();
         }
 
+        @Override // com.android.internal.telecom.IConnectionServiceAdapter
         public void onRttInitiationSuccess(String connectionId, Session.Info sessionInfo) throws RemoteException {
             ConnectionServiceAdapterServant.this.mHandler.obtainMessage(30, connectionId).sendToTarget();
         }
 
+        @Override // com.android.internal.telecom.IConnectionServiceAdapter
         public void onRttInitiationFailure(String connectionId, int reason, Session.Info sessionInfo) throws RemoteException {
             ConnectionServiceAdapterServant.this.mHandler.obtainMessage(31, reason, 0, connectionId).sendToTarget();
         }
 
+        @Override // com.android.internal.telecom.IConnectionServiceAdapter
         public void onRttSessionRemotelyTerminated(String connectionId, Session.Info sessionInfo) throws RemoteException {
             ConnectionServiceAdapterServant.this.mHandler.obtainMessage(32, connectionId).sendToTarget();
         }
 
+        @Override // com.android.internal.telecom.IConnectionServiceAdapter
         public void onRemoteRttRequest(String connectionId, Session.Info sessionInfo) throws RemoteException {
             ConnectionServiceAdapterServant.this.mHandler.obtainMessage(33, connectionId).sendToTarget();
         }
 
+        @Override // com.android.internal.telecom.IConnectionServiceAdapter
         public void onPhoneAccountChanged(String callId, PhoneAccountHandle pHandle, Session.Info sessionInfo) {
             SomeArgs args = SomeArgs.obtain();
             args.arg1 = callId;
@@ -485,13 +489,16 @@ final class ConnectionServiceAdapterServant {
             ConnectionServiceAdapterServant.this.mHandler.obtainMessage(34, args).sendToTarget();
         }
 
+        @Override // com.android.internal.telecom.IConnectionServiceAdapter
         public void onConnectionServiceFocusReleased(Session.Info sessionInfo) {
             ConnectionServiceAdapterServant.this.mHandler.obtainMessage(35).sendToTarget();
         }
 
+        @Override // com.android.internal.telecom.IConnectionServiceAdapter
         public void resetConnectionTime(String callId, Session.Info sessionInfo) {
         }
 
+        @Override // com.android.internal.telecom.IConnectionServiceAdapter
         public void setConferenceState(String callId, boolean isConference, Session.Info sessionInfo) {
             SomeArgs args = SomeArgs.obtain();
             args.arg1 = callId;

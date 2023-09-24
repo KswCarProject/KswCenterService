@@ -1,8 +1,8 @@
 package android.hardware.radio;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Collection;
@@ -10,12 +10,17 @@ import java.util.Map;
 import java.util.Objects;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class Announcement implements Parcelable {
-    public static final Parcelable.Creator<Announcement> CREATOR = new Parcelable.Creator<Announcement>() {
+    public static final Parcelable.Creator<Announcement> CREATOR = new Parcelable.Creator<Announcement>() { // from class: android.hardware.radio.Announcement.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Announcement createFromParcel(Parcel in) {
             return new Announcement(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Announcement[] newArray(int size) {
             return new Announcement[size];
         }
@@ -32,11 +37,13 @@ public final class Announcement implements Parcelable {
     private final int mType;
     private final Map<String, String> mVendorInfo;
 
+    /* loaded from: classes.dex */
     public interface OnListUpdatedListener {
         void onListUpdated(Collection<Announcement> collection);
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface Type {
     }
 
@@ -52,12 +59,14 @@ public final class Announcement implements Parcelable {
         this.mVendorInfo = Utils.readStringMap(in);
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeTypedObject(this.mSelector, 0);
         dest.writeInt(this.mType);
         Utils.writeStringMap(dest, this.mVendorInfo);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

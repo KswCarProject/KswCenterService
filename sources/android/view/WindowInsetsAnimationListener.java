@@ -2,6 +2,7 @@ package android.view;
 
 import android.graphics.Insets;
 
+/* loaded from: classes4.dex */
 public interface WindowInsetsAnimationListener {
     void onFinished(InsetsAnimation insetsAnimation);
 
@@ -9,6 +10,7 @@ public interface WindowInsetsAnimationListener {
 
     void onStarted(InsetsAnimation insetsAnimation);
 
+    /* loaded from: classes4.dex */
     public static class InsetsAnimation {
         private final Insets mLowerBound;
         private final int mTypeMask;

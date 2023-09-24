@@ -1,5 +1,6 @@
 package com.android.internal.telephony.cdma.sms;
 
+/* loaded from: classes4.dex */
 public final class SmsEnvelope {
     public static final int MESSAGE_TYPE_ACKNOWLEDGE = 2;
     public static final int MESSAGE_TYPE_BROADCAST = 1;

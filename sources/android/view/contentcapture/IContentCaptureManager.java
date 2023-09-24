@@ -1,13 +1,14 @@
 package android.view.contentcapture;
 
 import android.content.ComponentName;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
-import com.android.internal.os.IResultReceiver;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
+import com.android.internal.p016os.IResultReceiver;
 
+/* loaded from: classes4.dex */
 public interface IContentCaptureManager extends IInterface {
     void finishSession(int i) throws RemoteException;
 
@@ -23,33 +24,43 @@ public interface IContentCaptureManager extends IInterface {
 
     void startSession(IBinder iBinder, ComponentName componentName, int i, int i2, IResultReceiver iResultReceiver) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IContentCaptureManager {
+        @Override // android.view.contentcapture.IContentCaptureManager
         public void startSession(IBinder activityToken, ComponentName componentName, int sessionId, int flags, IResultReceiver result) throws RemoteException {
         }
 
+        @Override // android.view.contentcapture.IContentCaptureManager
         public void finishSession(int sessionId) throws RemoteException {
         }
 
+        @Override // android.view.contentcapture.IContentCaptureManager
         public void getServiceComponentName(IResultReceiver result) throws RemoteException {
         }
 
+        @Override // android.view.contentcapture.IContentCaptureManager
         public void removeData(DataRemovalRequest request) throws RemoteException {
         }
 
+        @Override // android.view.contentcapture.IContentCaptureManager
         public void isContentCaptureFeatureEnabled(IResultReceiver result) throws RemoteException {
         }
 
+        @Override // android.view.contentcapture.IContentCaptureManager
         public void getServiceSettingsActivity(IResultReceiver result) throws RemoteException {
         }
 
+        @Override // android.view.contentcapture.IContentCaptureManager
         public void getContentCaptureConditions(String packageName, IResultReceiver result) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IContentCaptureManager {
         private static final String DESCRIPTOR = "android.view.contentcapture.IContentCaptureManager";
         static final int TRANSACTION_finishSession = 2;
@@ -69,12 +80,13 @@ public interface IContentCaptureManager extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IContentCaptureManager)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IContentCaptureManager)) {
+                return (IContentCaptureManager) iin;
             }
-            return (IContentCaptureManager) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -100,118 +112,64 @@ public interface IContentCaptureManager extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v2, resolved type: android.view.contentcapture.DataRemovalRequest} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v3, resolved type: android.view.contentcapture.DataRemovalRequest} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v0, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v12, resolved type: android.view.contentcapture.DataRemovalRequest} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v22, resolved type: android.view.contentcapture.DataRemovalRequest} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v23, resolved type: android.view.contentcapture.DataRemovalRequest} */
-        /* JADX WARNING: type inference failed for: r0v8, types: [android.content.ComponentName] */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r16, android.os.Parcel r17, android.os.Parcel r18, int r19) throws android.os.RemoteException {
-            /*
-                r15 = this;
-                r6 = r15
-                r7 = r16
-                r8 = r17
-                java.lang.String r9 = "android.view.contentcapture.IContentCaptureManager"
-                r0 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r10 = 1
-                if (r7 == r0) goto L_0x00a9
-                r0 = 0
-                switch(r7) {
-                    case 1: goto L_0x0078;
-                    case 2: goto L_0x006d;
-                    case 3: goto L_0x005e;
-                    case 4: goto L_0x0047;
-                    case 5: goto L_0x0038;
-                    case 6: goto L_0x0029;
-                    case 7: goto L_0x0016;
-                    default: goto L_0x0011;
-                }
-            L_0x0011:
-                boolean r0 = super.onTransact(r16, r17, r18, r19)
-                return r0
-            L_0x0016:
-                r8.enforceInterface(r9)
-                java.lang.String r0 = r17.readString()
-                android.os.IBinder r1 = r17.readStrongBinder()
-                com.android.internal.os.IResultReceiver r1 = com.android.internal.os.IResultReceiver.Stub.asInterface(r1)
-                r15.getContentCaptureConditions(r0, r1)
-                return r10
-            L_0x0029:
-                r8.enforceInterface(r9)
-                android.os.IBinder r0 = r17.readStrongBinder()
-                com.android.internal.os.IResultReceiver r0 = com.android.internal.os.IResultReceiver.Stub.asInterface(r0)
-                r15.getServiceSettingsActivity(r0)
-                return r10
-            L_0x0038:
-                r8.enforceInterface(r9)
-                android.os.IBinder r0 = r17.readStrongBinder()
-                com.android.internal.os.IResultReceiver r0 = com.android.internal.os.IResultReceiver.Stub.asInterface(r0)
-                r15.isContentCaptureFeatureEnabled(r0)
-                return r10
-            L_0x0047:
-                r8.enforceInterface(r9)
-                int r1 = r17.readInt()
-                if (r1 == 0) goto L_0x0059
-                android.os.Parcelable$Creator<android.view.contentcapture.DataRemovalRequest> r0 = android.view.contentcapture.DataRemovalRequest.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                android.view.contentcapture.DataRemovalRequest r0 = (android.view.contentcapture.DataRemovalRequest) r0
-                goto L_0x005a
-            L_0x0059:
-            L_0x005a:
-                r15.removeData(r0)
-                return r10
-            L_0x005e:
-                r8.enforceInterface(r9)
-                android.os.IBinder r0 = r17.readStrongBinder()
-                com.android.internal.os.IResultReceiver r0 = com.android.internal.os.IResultReceiver.Stub.asInterface(r0)
-                r15.getServiceComponentName(r0)
-                return r10
-            L_0x006d:
-                r8.enforceInterface(r9)
-                int r0 = r17.readInt()
-                r15.finishSession(r0)
-                return r10
-            L_0x0078:
-                r8.enforceInterface(r9)
-                android.os.IBinder r11 = r17.readStrongBinder()
-                int r1 = r17.readInt()
-                if (r1 == 0) goto L_0x008f
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-            L_0x008d:
-                r2 = r0
-                goto L_0x0090
-            L_0x008f:
-                goto L_0x008d
-            L_0x0090:
-                int r12 = r17.readInt()
-                int r13 = r17.readInt()
-                android.os.IBinder r0 = r17.readStrongBinder()
-                com.android.internal.os.IResultReceiver r14 = com.android.internal.os.IResultReceiver.Stub.asInterface(r0)
-                r0 = r15
-                r1 = r11
-                r3 = r12
-                r4 = r13
-                r5 = r14
-                r0.startSession(r1, r2, r3, r4, r5)
-                return r10
-            L_0x00a9:
-                r0 = r18
-                r0.writeString(r9)
-                return r10
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.view.contentcapture.IContentCaptureManager.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg0 = data.readStrongBinder();
+                    ComponentName _arg1 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg2 = data.readInt();
+                    int _arg3 = data.readInt();
+                    IResultReceiver _arg4 = IResultReceiver.Stub.asInterface(data.readStrongBinder());
+                    startSession(_arg0, _arg1, _arg2, _arg3, _arg4);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    finishSession(_arg02);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    IResultReceiver _arg03 = IResultReceiver.Stub.asInterface(data.readStrongBinder());
+                    getServiceComponentName(_arg03);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    DataRemovalRequest _arg04 = data.readInt() != 0 ? DataRemovalRequest.CREATOR.createFromParcel(data) : null;
+                    removeData(_arg04);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    IResultReceiver _arg05 = IResultReceiver.Stub.asInterface(data.readStrongBinder());
+                    isContentCaptureFeatureEnabled(_arg05);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    IResultReceiver _arg06 = IResultReceiver.Stub.asInterface(data.readStrongBinder());
+                    getServiceSettingsActivity(_arg06);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg07 = data.readString();
+                    IResultReceiver _arg12 = IResultReceiver.Stub.asInterface(data.readStrongBinder());
+                    getContentCaptureConditions(_arg07, _arg12);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IContentCaptureManager {
             public static IContentCaptureManager sDefaultImpl;
             private IBinder mRemote;
@@ -220,6 +178,7 @@ public interface IContentCaptureManager extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -228,6 +187,7 @@ public interface IContentCaptureManager extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.view.contentcapture.IContentCaptureManager
             public void startSession(IBinder activityToken, ComponentName componentName, int sessionId, int flags, IResultReceiver result) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -242,9 +202,8 @@ public interface IContentCaptureManager extends IInterface {
                     _data.writeInt(sessionId);
                     _data.writeInt(flags);
                     _data.writeStrongBinder(result != null ? result.asBinder() : null);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().startSession(activityToken, componentName, sessionId, flags, result);
                     }
                 } finally {
@@ -252,14 +211,14 @@ public interface IContentCaptureManager extends IInterface {
                 }
             }
 
+            @Override // android.view.contentcapture.IContentCaptureManager
             public void finishSession(int sessionId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(sessionId);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().finishSession(sessionId);
                     }
                 } finally {
@@ -267,14 +226,14 @@ public interface IContentCaptureManager extends IInterface {
                 }
             }
 
+            @Override // android.view.contentcapture.IContentCaptureManager
             public void getServiceComponentName(IResultReceiver result) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(result != null ? result.asBinder() : null);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().getServiceComponentName(result);
                     }
                 } finally {
@@ -282,6 +241,7 @@ public interface IContentCaptureManager extends IInterface {
                 }
             }
 
+            @Override // android.view.contentcapture.IContentCaptureManager
             public void removeData(DataRemovalRequest request) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -292,9 +252,8 @@ public interface IContentCaptureManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().removeData(request);
                     }
                 } finally {
@@ -302,14 +261,14 @@ public interface IContentCaptureManager extends IInterface {
                 }
             }
 
+            @Override // android.view.contentcapture.IContentCaptureManager
             public void isContentCaptureFeatureEnabled(IResultReceiver result) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(result != null ? result.asBinder() : null);
-                    if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(5, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().isContentCaptureFeatureEnabled(result);
                     }
                 } finally {
@@ -317,14 +276,14 @@ public interface IContentCaptureManager extends IInterface {
                 }
             }
 
+            @Override // android.view.contentcapture.IContentCaptureManager
             public void getServiceSettingsActivity(IResultReceiver result) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(result != null ? result.asBinder() : null);
-                    if (this.mRemote.transact(6, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(6, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().getServiceSettingsActivity(result);
                     }
                 } finally {
@@ -332,15 +291,15 @@ public interface IContentCaptureManager extends IInterface {
                 }
             }
 
+            @Override // android.view.contentcapture.IContentCaptureManager
             public void getContentCaptureConditions(String packageName, IResultReceiver result) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(packageName);
                     _data.writeStrongBinder(result != null ? result.asBinder() : null);
-                    if (this.mRemote.transact(7, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(7, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().getContentCaptureConditions(packageName, result);
                     }
                 } finally {
@@ -350,11 +309,11 @@ public interface IContentCaptureManager extends IInterface {
         }
 
         public static boolean setDefaultImpl(IContentCaptureManager impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IContentCaptureManager getDefaultImpl() {

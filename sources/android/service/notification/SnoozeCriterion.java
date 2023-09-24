@@ -1,16 +1,21 @@
 package android.service.notification;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class SnoozeCriterion implements Parcelable {
-    public static final Parcelable.Creator<SnoozeCriterion> CREATOR = new Parcelable.Creator<SnoozeCriterion>() {
+    public static final Parcelable.Creator<SnoozeCriterion> CREATOR = new Parcelable.Creator<SnoozeCriterion>() { // from class: android.service.notification.SnoozeCriterion.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SnoozeCriterion createFromParcel(Parcel in) {
             return new SnoozeCriterion(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SnoozeCriterion[] newArray(int size) {
             return new SnoozeCriterion[size];
         }
@@ -55,10 +60,12 @@ public final class SnoozeCriterion implements Parcelable {
         return this.mConfirmation;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         if (this.mId != null) {
             dest.writeByte((byte) 1);
@@ -104,11 +111,7 @@ public final class SnoozeCriterion implements Parcelable {
     }
 
     public int hashCode() {
-        int i = 0;
-        int result = (((this.mId != null ? this.mId.hashCode() : 0) * 31) + (this.mExplanation != null ? this.mExplanation.hashCode() : 0)) * 31;
-        if (this.mConfirmation != null) {
-            i = this.mConfirmation.hashCode();
-        }
-        return result + i;
+        int result = this.mId != null ? this.mId.hashCode() : 0;
+        return (((result * 31) + (this.mExplanation != null ? this.mExplanation.hashCode() : 0)) * 31) + (this.mConfirmation != null ? this.mConfirmation.hashCode() : 0);
     }
 }

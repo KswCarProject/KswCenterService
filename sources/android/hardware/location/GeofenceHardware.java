@@ -5,12 +5,13 @@ import android.annotation.UnsupportedAppUsage;
 import android.hardware.location.IGeofenceHardwareCallback;
 import android.hardware.location.IGeofenceHardwareMonitorCallback;
 import android.location.Location;
-import android.os.Build;
-import android.os.RemoteException;
+import android.p007os.Build;
+import android.p007os.RemoteException;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class GeofenceHardware {
     public static final int GEOFENCE_ENTERED = 1;
     public static final int GEOFENCE_ERROR_ID_EXISTS = 2;
@@ -113,7 +114,7 @@ public final class GeofenceHardware {
         return result;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void removeCallback(GeofenceHardwareCallback callback) {
         synchronized (this.mCallbacks) {
             this.mCallbacks.remove(callback);
@@ -150,6 +151,7 @@ public final class GeofenceHardware {
         return wrapper;
     }
 
+    /* loaded from: classes.dex */
     class GeofenceHardwareMonitorCallbackWrapper extends IGeofenceHardwareMonitorCallback.Stub {
         private WeakReference<GeofenceHardwareMonitorCallback> mCallback;
 
@@ -157,17 +159,20 @@ public final class GeofenceHardware {
             this.mCallback = new WeakReference<>(c);
         }
 
+        @Override // android.hardware.location.IGeofenceHardwareMonitorCallback
         public void onMonitoringSystemChange(GeofenceHardwareMonitorEvent event) {
-            GeofenceHardwareMonitorCallback c = (GeofenceHardwareMonitorCallback) this.mCallback.get();
-            if (c != null) {
-                c.onMonitoringSystemChange(event.getMonitoringType(), event.getMonitoringStatus() == 0, event.getLocation());
-                if (Build.VERSION.SDK_INT >= 21) {
-                    c.onMonitoringSystemChange(event);
-                }
+            GeofenceHardwareMonitorCallback c = this.mCallback.get();
+            if (c == null) {
+                return;
+            }
+            c.onMonitoringSystemChange(event.getMonitoringType(), event.getMonitoringStatus() == 0, event.getLocation());
+            if (Build.VERSION.SDK_INT >= 21) {
+                c.onMonitoringSystemChange(event);
             }
         }
     }
 
+    /* loaded from: classes.dex */
     class GeofenceHardwareCallbackWrapper extends IGeofenceHardwareCallback.Stub {
         private WeakReference<GeofenceHardwareCallback> mCallback;
 
@@ -175,37 +180,42 @@ public final class GeofenceHardware {
             this.mCallback = new WeakReference<>(c);
         }
 
+        @Override // android.hardware.location.IGeofenceHardwareCallback
         public void onGeofenceTransition(int geofenceId, int transition, Location location, long timestamp, int monitoringType) {
-            GeofenceHardwareCallback c = (GeofenceHardwareCallback) this.mCallback.get();
+            GeofenceHardwareCallback c = this.mCallback.get();
             if (c != null) {
                 c.onGeofenceTransition(geofenceId, transition, location, timestamp, monitoringType);
             }
         }
 
+        @Override // android.hardware.location.IGeofenceHardwareCallback
         public void onGeofenceAdd(int geofenceId, int status) {
-            GeofenceHardwareCallback c = (GeofenceHardwareCallback) this.mCallback.get();
+            GeofenceHardwareCallback c = this.mCallback.get();
             if (c != null) {
                 c.onGeofenceAdd(geofenceId, status);
             }
         }
 
+        @Override // android.hardware.location.IGeofenceHardwareCallback
         public void onGeofenceRemove(int geofenceId, int status) {
-            GeofenceHardwareCallback c = (GeofenceHardwareCallback) this.mCallback.get();
+            GeofenceHardwareCallback c = this.mCallback.get();
             if (c != null) {
                 c.onGeofenceRemove(geofenceId, status);
                 GeofenceHardware.this.removeCallback(c);
             }
         }
 
+        @Override // android.hardware.location.IGeofenceHardwareCallback
         public void onGeofencePause(int geofenceId, int status) {
-            GeofenceHardwareCallback c = (GeofenceHardwareCallback) this.mCallback.get();
+            GeofenceHardwareCallback c = this.mCallback.get();
             if (c != null) {
                 c.onGeofencePause(geofenceId, status);
             }
         }
 
+        @Override // android.hardware.location.IGeofenceHardwareCallback
         public void onGeofenceResume(int geofenceId, int status) {
-            GeofenceHardwareCallback c = (GeofenceHardwareCallback) this.mCallback.get();
+            GeofenceHardwareCallback c = this.mCallback.get();
             if (c != null) {
                 c.onGeofenceResume(geofenceId, status);
             }

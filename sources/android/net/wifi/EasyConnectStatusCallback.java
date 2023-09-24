@@ -5,6 +5,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public abstract class EasyConnectStatusCallback {
     public static final int EASY_CONNECT_EVENT_FAILURE_AUTHENTICATION = -2;
     public static final int EASY_CONNECT_EVENT_FAILURE_BUSY = -5;
@@ -20,14 +21,17 @@ public abstract class EasyConnectStatusCallback {
     public static final int EASY_CONNECT_EVENT_SUCCESS_CONFIGURATION_SENT = 0;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface EasyConnectFailureStatusCode {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface EasyConnectProgressStatusCode {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface EasyConnectSuccessStatusCode {
     }
 

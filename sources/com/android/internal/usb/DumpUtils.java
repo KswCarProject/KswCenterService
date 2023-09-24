@@ -11,6 +11,7 @@ import android.hardware.usb.UsbPortStatus;
 import android.media.midi.MidiDeviceInfo;
 import com.android.internal.util.dump.DualDumpOutputStream;
 
+/* loaded from: classes4.dex */
 public class DumpUtils {
     public static void writeAccessory(DualDumpOutputStream dump, String idName, long id, UsbAccessory accessory) {
         long token = dump.start(idName, id);
@@ -86,24 +87,26 @@ public class DumpUtils {
         long token = dump.start(idName, id);
         dump.write("id", 1138166333441L, port.getId());
         int mode = port.getSupportedModes();
-        if (!dump.isProto()) {
-            dump.write("supported_modes", 2259152797698L, UsbPort.modeToString(mode));
-        } else if (mode == 0) {
-            dump.write("supported_modes", 2259152797698L, 0);
+        if (dump.isProto()) {
+            if (mode == 0) {
+                dump.write("supported_modes", 2259152797698L, 0);
+            } else {
+                if ((mode & 3) == 3) {
+                    dump.write("supported_modes", 2259152797698L, 3);
+                } else if ((mode & 2) == 2) {
+                    dump.write("supported_modes", 2259152797698L, 2);
+                } else if ((mode & 1) == 1) {
+                    dump.write("supported_modes", 2259152797698L, 1);
+                }
+                if ((mode & 4) == 4) {
+                    dump.write("supported_modes", 2259152797698L, 4);
+                }
+                if ((mode & 8) == 8) {
+                    dump.write("supported_modes", 2259152797698L, 8);
+                }
+            }
         } else {
-            if ((mode & 3) == 3) {
-                dump.write("supported_modes", 2259152797698L, 3);
-            } else if ((mode & 2) == 2) {
-                dump.write("supported_modes", 2259152797698L, 2);
-            } else if ((mode & 1) == 1) {
-                dump.write("supported_modes", 2259152797698L, 1);
-            }
-            if ((mode & 4) == 4) {
-                dump.write("supported_modes", 2259152797698L, 4);
-            }
-            if ((mode & 8) == 8) {
-                dump.write("supported_modes", 2259152797698L, 8);
-            }
+            dump.write("supported_modes", 2259152797698L, UsbPort.modeToString(mode));
         }
         dump.end(token);
     }
@@ -133,7 +136,6 @@ public class DumpUtils {
     }
 
     public static void writePortStatus(DualDumpOutputStream dump, String idName, long id, UsbPortStatus status) {
-        DualDumpOutputStream dualDumpOutputStream = dump;
         long token = dump.start(idName, id);
         dump.write("connected", 1133871366145L, status.isConnected());
         if (dump.isProto()) {
@@ -147,9 +149,11 @@ public class DumpUtils {
         while (undumpedCombinations != 0) {
             int index = Integer.numberOfTrailingZeros(undumpedCombinations);
             undumpedCombinations &= ~(1 << index);
+            int powerRole = (index / 3) + 0;
+            int dataRole = index % 3;
             long roleCombinationToken = dump.start("role_combinations", 2246267895813L);
-            writePowerRole(dump, "power_role", 1159641169921L, (index / 3) + 0);
-            writeDataRole(dump, "data_role", 1159641169922L, index % 3);
+            writePowerRole(dump, "power_role", 1159641169921L, powerRole);
+            writeDataRole(dump, "data_role", 1159641169922L, dataRole);
             dump.end(roleCombinationToken);
         }
         writeContaminantPresenceStatus(dump, "contaminant_presence_status", 1159641169926L, status.getContaminantDetectionStatus());

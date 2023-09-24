@@ -1,11 +1,13 @@
 package com.android.internal.infra;
 
 import android.content.ComponentName;
+import android.util.ArraySet;
 import android.util.SparseArray;
 import com.android.internal.annotations.GuardedBy;
 import java.io.PrintWriter;
 import java.util.List;
 
+/* loaded from: classes4.dex */
 public class GlobalWhitelistState {
     protected final Object mGlobalWhitelistStateLock = new Object();
     @GuardedBy({"mGlobalWhitelistStateLock"})
@@ -25,135 +27,58 @@ public class GlobalWhitelistState {
         }
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:12:0x001a, code lost:
-        return r2;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public boolean isWhitelisted(int r4, java.lang.String r5) {
-        /*
-            r3 = this;
-            java.lang.Object r0 = r3.mGlobalWhitelistStateLock
-            monitor-enter(r0)
-            android.util.SparseArray<com.android.internal.infra.WhitelistHelper> r1 = r3.mWhitelisterHelpers     // Catch:{ all -> 0x001b }
-            r2 = 0
-            if (r1 != 0) goto L_0x000a
-            monitor-exit(r0)     // Catch:{ all -> 0x001b }
-            return r2
-        L_0x000a:
-            android.util.SparseArray<com.android.internal.infra.WhitelistHelper> r1 = r3.mWhitelisterHelpers     // Catch:{ all -> 0x001b }
-            java.lang.Object r1 = r1.get(r4)     // Catch:{ all -> 0x001b }
-            com.android.internal.infra.WhitelistHelper r1 = (com.android.internal.infra.WhitelistHelper) r1     // Catch:{ all -> 0x001b }
-            if (r1 != 0) goto L_0x0015
-            goto L_0x0019
-        L_0x0015:
-            boolean r2 = r1.isWhitelisted((java.lang.String) r5)     // Catch:{ all -> 0x001b }
-        L_0x0019:
-            monitor-exit(r0)     // Catch:{ all -> 0x001b }
-            return r2
-        L_0x001b:
-            r1 = move-exception
-            monitor-exit(r0)     // Catch:{ all -> 0x001b }
-            throw r1
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.internal.infra.GlobalWhitelistState.isWhitelisted(int, java.lang.String):boolean");
+    public boolean isWhitelisted(int userId, String packageName) {
+        synchronized (this.mGlobalWhitelistStateLock) {
+            boolean z = false;
+            if (this.mWhitelisterHelpers == null) {
+                return false;
+            }
+            WhitelistHelper helper = this.mWhitelisterHelpers.get(userId);
+            if (helper != null) {
+                z = helper.isWhitelisted(packageName);
+            }
+            return z;
+        }
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:12:0x001a, code lost:
-        return r2;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public boolean isWhitelisted(int r4, android.content.ComponentName r5) {
-        /*
-            r3 = this;
-            java.lang.Object r0 = r3.mGlobalWhitelistStateLock
-            monitor-enter(r0)
-            android.util.SparseArray<com.android.internal.infra.WhitelistHelper> r1 = r3.mWhitelisterHelpers     // Catch:{ all -> 0x001b }
-            r2 = 0
-            if (r1 != 0) goto L_0x000a
-            monitor-exit(r0)     // Catch:{ all -> 0x001b }
-            return r2
-        L_0x000a:
-            android.util.SparseArray<com.android.internal.infra.WhitelistHelper> r1 = r3.mWhitelisterHelpers     // Catch:{ all -> 0x001b }
-            java.lang.Object r1 = r1.get(r4)     // Catch:{ all -> 0x001b }
-            com.android.internal.infra.WhitelistHelper r1 = (com.android.internal.infra.WhitelistHelper) r1     // Catch:{ all -> 0x001b }
-            if (r1 != 0) goto L_0x0015
-            goto L_0x0019
-        L_0x0015:
-            boolean r2 = r1.isWhitelisted((android.content.ComponentName) r5)     // Catch:{ all -> 0x001b }
-        L_0x0019:
-            monitor-exit(r0)     // Catch:{ all -> 0x001b }
-            return r2
-        L_0x001b:
-            r1 = move-exception
-            monitor-exit(r0)     // Catch:{ all -> 0x001b }
-            throw r1
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.internal.infra.GlobalWhitelistState.isWhitelisted(int, android.content.ComponentName):boolean");
+    public boolean isWhitelisted(int userId, ComponentName componentName) {
+        synchronized (this.mGlobalWhitelistStateLock) {
+            boolean z = false;
+            if (this.mWhitelisterHelpers == null) {
+                return false;
+            }
+            WhitelistHelper helper = this.mWhitelisterHelpers.get(userId);
+            if (helper != null) {
+                z = helper.isWhitelisted(componentName);
+            }
+            return z;
+        }
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:12:0x001a, code lost:
-        return r2;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public android.util.ArraySet<android.content.ComponentName> getWhitelistedComponents(int r4, java.lang.String r5) {
-        /*
-            r3 = this;
-            java.lang.Object r0 = r3.mGlobalWhitelistStateLock
-            monitor-enter(r0)
-            android.util.SparseArray<com.android.internal.infra.WhitelistHelper> r1 = r3.mWhitelisterHelpers     // Catch:{ all -> 0x001b }
-            r2 = 0
-            if (r1 != 0) goto L_0x000a
-            monitor-exit(r0)     // Catch:{ all -> 0x001b }
-            return r2
-        L_0x000a:
-            android.util.SparseArray<com.android.internal.infra.WhitelistHelper> r1 = r3.mWhitelisterHelpers     // Catch:{ all -> 0x001b }
-            java.lang.Object r1 = r1.get(r4)     // Catch:{ all -> 0x001b }
-            com.android.internal.infra.WhitelistHelper r1 = (com.android.internal.infra.WhitelistHelper) r1     // Catch:{ all -> 0x001b }
-            if (r1 != 0) goto L_0x0015
-            goto L_0x0019
-        L_0x0015:
-            android.util.ArraySet r2 = r1.getWhitelistedComponents(r5)     // Catch:{ all -> 0x001b }
-        L_0x0019:
-            monitor-exit(r0)     // Catch:{ all -> 0x001b }
-            return r2
-        L_0x001b:
-            r1 = move-exception
-            monitor-exit(r0)     // Catch:{ all -> 0x001b }
-            throw r1
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.internal.infra.GlobalWhitelistState.getWhitelistedComponents(int, java.lang.String):android.util.ArraySet");
+    public ArraySet<ComponentName> getWhitelistedComponents(int userId, String packageName) {
+        synchronized (this.mGlobalWhitelistStateLock) {
+            ArraySet<ComponentName> arraySet = null;
+            if (this.mWhitelisterHelpers == null) {
+                return null;
+            }
+            WhitelistHelper helper = this.mWhitelisterHelpers.get(userId);
+            if (helper != null) {
+                arraySet = helper.getWhitelistedComponents(packageName);
+            }
+            return arraySet;
+        }
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:11:0x001a, code lost:
-        return;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void resetWhitelist(int r3) {
-        /*
-            r2 = this;
-            java.lang.Object r0 = r2.mGlobalWhitelistStateLock
-            monitor-enter(r0)
-            android.util.SparseArray<com.android.internal.infra.WhitelistHelper> r1 = r2.mWhitelisterHelpers     // Catch:{ all -> 0x001b }
-            if (r1 != 0) goto L_0x0009
-            monitor-exit(r0)     // Catch:{ all -> 0x001b }
-            return
-        L_0x0009:
-            android.util.SparseArray<com.android.internal.infra.WhitelistHelper> r1 = r2.mWhitelisterHelpers     // Catch:{ all -> 0x001b }
-            r1.remove(r3)     // Catch:{ all -> 0x001b }
-            android.util.SparseArray<com.android.internal.infra.WhitelistHelper> r1 = r2.mWhitelisterHelpers     // Catch:{ all -> 0x001b }
-            int r1 = r1.size()     // Catch:{ all -> 0x001b }
-            if (r1 != 0) goto L_0x0019
-            r1 = 0
-            r2.mWhitelisterHelpers = r1     // Catch:{ all -> 0x001b }
-        L_0x0019:
-            monitor-exit(r0)     // Catch:{ all -> 0x001b }
-            return
-        L_0x001b:
-            r1 = move-exception
-            monitor-exit(r0)     // Catch:{ all -> 0x001b }
-            throw r1
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.internal.infra.GlobalWhitelistState.resetWhitelist(int):void");
+    public void resetWhitelist(int userId) {
+        synchronized (this.mGlobalWhitelistStateLock) {
+            if (this.mWhitelisterHelpers == null) {
+                return;
+            }
+            this.mWhitelisterHelpers.remove(userId);
+            if (this.mWhitelisterHelpers.size() == 0) {
+                this.mWhitelisterHelpers = null;
+            }
+        }
     }
 
     public void dump(String prefix, PrintWriter pw) {
@@ -168,7 +93,9 @@ public class GlobalWhitelistState {
             pw.println(" services");
             String prefix2 = prefix + "  ";
             for (int i = 0; i < this.mWhitelisterHelpers.size(); i++) {
-                this.mWhitelisterHelpers.valueAt(i).dump(prefix2, "Whitelist for userId " + this.mWhitelisterHelpers.keyAt(i), pw);
+                int userId = this.mWhitelisterHelpers.keyAt(i);
+                WhitelistHelper helper = this.mWhitelisterHelpers.valueAt(i);
+                helper.dump(prefix2, "Whitelist for userId " + userId, pw);
             }
         }
     }

@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.RectEvaluator;
-import android.animation.TypeEvaluator;
 import android.animation.ValueAnimator;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -17,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.ViewOverlay;
 import java.util.Map;
 
+/* loaded from: classes4.dex */
 public class Crossfade extends Transition {
     public static final int FADE_BEHAVIOR_CROSSFADE = 0;
     public static final int FADE_BEHAVIOR_OUT_IN = 2;
@@ -28,8 +28,7 @@ public class Crossfade extends Transition {
     public static final int RESIZE_BEHAVIOR_NONE = 0;
     public static final int RESIZE_BEHAVIOR_SCALE = 1;
     private static RectEvaluator sRectEvaluator = new RectEvaluator();
-    /* access modifiers changed from: private */
-    public int mFadeBehavior = 1;
+    private int mFadeBehavior = 1;
     private int mResizeBehavior = 1;
 
     public Crossfade setFadeBehavior(int fadeBehavior) {
@@ -54,19 +53,18 @@ public class Crossfade extends Transition {
         return this.mResizeBehavior;
     }
 
+    @Override // android.transition.Transition
     public Animator createAnimator(ViewGroup sceneRoot, TransitionValues startValues, TransitionValues endValues) {
         ViewOverlay overlay;
         ObjectAnimator anim;
         BitmapDrawable endDrawable;
-        TransitionValues transitionValues = startValues;
-        TransitionValues transitionValues2 = endValues;
-        if (transitionValues == null || transitionValues2 == null) {
+        if (startValues == null || endValues == null) {
             return null;
         }
-        boolean useParentOverlay = this.mFadeBehavior != 1;
-        final View view = transitionValues2.view;
-        Map<String, Object> startVals = transitionValues.values;
-        Map<String, Object> endVals = transitionValues2.values;
+        final boolean useParentOverlay = this.mFadeBehavior != 1;
+        final View view = endValues.view;
+        Map<String, Object> startVals = startValues.values;
+        Map<String, Object> endVals = endValues.values;
         Rect startBounds = (Rect) startVals.get(PROPNAME_BOUNDS);
         Rect endBounds = (Rect) endVals.get(PROPNAME_BOUNDS);
         Bitmap startBitmap = (Bitmap) startVals.get(PROPNAME_BITMAP);
@@ -74,10 +72,6 @@ public class Crossfade extends Transition {
         final BitmapDrawable startDrawable = (BitmapDrawable) startVals.get(PROPNAME_DRAWABLE);
         BitmapDrawable endDrawable2 = (BitmapDrawable) endVals.get(PROPNAME_DRAWABLE);
         if (startDrawable == null || endDrawable2 == null || startBitmap.sameAs(endBitmap)) {
-            Bitmap bitmap = endBitmap;
-            Bitmap bitmap2 = startBitmap;
-            Rect rect = endBounds;
-            BitmapDrawable bitmapDrawable = endDrawable2;
             return null;
         }
         ViewOverlay overlay2 = useParentOverlay ? ((ViewGroup) view.getParent()).getOverlay() : view.getOverlay();
@@ -87,13 +81,14 @@ public class Crossfade extends Transition {
         overlay2.add(startDrawable);
         if (this.mFadeBehavior == 2) {
             overlay = overlay2;
-            anim = ObjectAnimator.ofInt((Object) startDrawable, "alpha", 255, 0, 0);
+            anim = ObjectAnimator.ofInt(startDrawable, "alpha", 255, 0, 0);
         } else {
             overlay = overlay2;
-            anim = ObjectAnimator.ofInt((Object) startDrawable, "alpha", 0);
+            anim = ObjectAnimator.ofInt(startDrawable, "alpha", 0);
         }
         ObjectAnimator anim2 = anim;
-        anim2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        anim2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: android.transition.Crossfade.1
+            @Override // android.animation.ValueAnimator.AnimatorUpdateListener
             public void onAnimationUpdate(ValueAnimator animation) {
                 view.invalidate(startDrawable.getBounds());
             }
@@ -108,22 +103,14 @@ public class Crossfade extends Transition {
         } else {
             endDrawable = endDrawable2;
         }
-        ViewOverlay viewOverlay = overlay;
-        BitmapDrawable endDrawable3 = endDrawable;
-        BitmapDrawable startDrawable2 = startDrawable;
-        final boolean z = useParentOverlay;
-        Bitmap bitmap3 = endBitmap;
-        final View view2 = view;
-        Bitmap bitmap4 = startBitmap;
-        final BitmapDrawable bitmapDrawable2 = startDrawable2;
-        Rect endBounds2 = endBounds;
-        final BitmapDrawable bitmapDrawable3 = endDrawable3;
-        anim2.addListener(new AnimatorListenerAdapter() {
+        final BitmapDrawable endDrawable3 = endDrawable;
+        anim2.addListener(new AnimatorListenerAdapter() { // from class: android.transition.Crossfade.2
+            @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
             public void onAnimationEnd(Animator animation) {
-                ViewOverlay overlay = z ? ((ViewGroup) view2.getParent()).getOverlay() : view2.getOverlay();
-                overlay.remove(bitmapDrawable2);
+                ViewOverlay overlay3 = useParentOverlay ? ((ViewGroup) view.getParent()).getOverlay() : view.getOverlay();
+                overlay3.remove(startDrawable);
                 if (Crossfade.this.mFadeBehavior == 1) {
-                    overlay.remove(bitmapDrawable3);
+                    overlay3.remove(endDrawable3);
                 }
             }
         });
@@ -132,12 +119,12 @@ public class Crossfade extends Transition {
         if (anim1 != null) {
             set.playTogether(anim1);
         }
-        if (this.mResizeBehavior != 1 || startBounds.equals(endBounds2)) {
-            BitmapDrawable bitmapDrawable4 = startDrawable2;
-        } else {
-            set.playTogether(ObjectAnimator.ofObject((Object) startDrawable2, "bounds", (TypeEvaluator) sRectEvaluator, startBounds, endBounds2));
+        if (this.mResizeBehavior == 1 && !startBounds.equals(endBounds)) {
+            Animator anim22 = ObjectAnimator.ofObject(startDrawable, "bounds", sRectEvaluator, startBounds, endBounds);
+            set.playTogether(anim22);
             if (this.mResizeBehavior == 1) {
-                set.playTogether(ObjectAnimator.ofObject((Object) endDrawable3, "bounds", (TypeEvaluator) sRectEvaluator, startBounds, endBounds2));
+                Animator anim3 = ObjectAnimator.ofObject(endDrawable3, "bounds", sRectEvaluator, startBounds, endBounds);
+                set.playTogether(anim3);
             }
         }
         return set;
@@ -154,7 +141,8 @@ public class Crossfade extends Transition {
         if (view instanceof TextureView) {
             bitmap = ((TextureView) view).getBitmap();
         } else {
-            view.draw(new Canvas(bitmap));
+            Canvas c = new Canvas(bitmap);
+            view.draw(c);
         }
         transitionValues.values.put(PROPNAME_BITMAP, bitmap);
         BitmapDrawable drawable = new BitmapDrawable(bitmap);
@@ -162,10 +150,12 @@ public class Crossfade extends Transition {
         transitionValues.values.put(PROPNAME_DRAWABLE, drawable);
     }
 
+    @Override // android.transition.Transition
     public void captureStartValues(TransitionValues transitionValues) {
         captureValues(transitionValues);
     }
 
+    @Override // android.transition.Transition
     public void captureEndValues(TransitionValues transitionValues) {
         captureValues(transitionValues);
     }

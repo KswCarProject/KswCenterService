@@ -1,11 +1,12 @@
 package android.hardware.radio.V1_0;
 
-import android.os.HidlSupport;
-import android.os.HwBlob;
-import android.os.HwParcel;
+import android.p007os.HidlSupport;
+import android.p007os.HwBlob;
+import android.p007os.HwParcel;
 import java.util.ArrayList;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public final class CarrierRestrictions {
     public ArrayList<Carrier> allowedCarriers = new ArrayList<>();
     public ArrayList<Carrier> excludedCarriers = new ArrayList<>();
@@ -25,52 +26,50 @@ public final class CarrierRestrictions {
     }
 
     public final int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(HidlSupport.deepHashCode(this.allowedCarriers)), Integer.valueOf(HidlSupport.deepHashCode(this.excludedCarriers))});
+        return Objects.hash(Integer.valueOf(HidlSupport.deepHashCode(this.allowedCarriers)), Integer.valueOf(HidlSupport.deepHashCode(this.excludedCarriers)));
     }
 
     public final String toString() {
-        return "{" + ".allowedCarriers = " + this.allowedCarriers + ", .excludedCarriers = " + this.excludedCarriers + "}";
+        return "{.allowedCarriers = " + this.allowedCarriers + ", .excludedCarriers = " + this.excludedCarriers + "}";
     }
 
     public final void readFromParcel(HwParcel parcel) {
-        readEmbeddedFromParcel(parcel, parcel.readBuffer(32), 0);
+        HwBlob blob = parcel.readBuffer(32L);
+        readEmbeddedFromParcel(parcel, blob, 0L);
     }
 
     public static final ArrayList<CarrierRestrictions> readVectorFromParcel(HwParcel parcel) {
         ArrayList<CarrierRestrictions> _hidl_vec = new ArrayList<>();
-        HwBlob _hidl_blob = parcel.readBuffer(16);
-        int _hidl_vec_size = _hidl_blob.getInt32(8);
-        HwBlob childBlob = parcel.readEmbeddedBuffer((long) (_hidl_vec_size * 32), _hidl_blob.handle(), 0, true);
+        HwBlob _hidl_blob = parcel.readBuffer(16L);
+        int _hidl_vec_size = _hidl_blob.getInt32(8L);
+        HwBlob childBlob = parcel.readEmbeddedBuffer(_hidl_vec_size * 32, _hidl_blob.handle(), 0L, true);
         _hidl_vec.clear();
         for (int _hidl_index_0 = 0; _hidl_index_0 < _hidl_vec_size; _hidl_index_0++) {
             CarrierRestrictions _hidl_vec_element = new CarrierRestrictions();
-            _hidl_vec_element.readEmbeddedFromParcel(parcel, childBlob, (long) (_hidl_index_0 * 32));
+            _hidl_vec_element.readEmbeddedFromParcel(parcel, childBlob, _hidl_index_0 * 32);
             _hidl_vec.add(_hidl_vec_element);
         }
         return _hidl_vec;
     }
 
     public final void readEmbeddedFromParcel(HwParcel parcel, HwBlob _hidl_blob, long _hidl_offset) {
-        HwParcel hwParcel = parcel;
-        HwBlob hwBlob = _hidl_blob;
-        int _hidl_vec_size = hwBlob.getInt32(_hidl_offset + 0 + 8);
-        int _hidl_vec_size2 = _hidl_vec_size;
-        HwBlob childBlob = parcel.readEmbeddedBuffer((long) (_hidl_vec_size * 56), _hidl_blob.handle(), _hidl_offset + 0 + 0, true);
+        int _hidl_vec_size = _hidl_blob.getInt32(_hidl_offset + 0 + 8);
+        HwBlob childBlob = parcel.readEmbeddedBuffer(_hidl_vec_size * 56, _hidl_blob.handle(), _hidl_offset + 0 + 0, true);
         this.allowedCarriers.clear();
         int _hidl_index_0 = 0;
-        for (int _hidl_index_02 = 0; _hidl_index_02 < _hidl_vec_size2; _hidl_index_02++) {
+        for (int _hidl_index_02 = 0; _hidl_index_02 < _hidl_vec_size; _hidl_index_02++) {
             Carrier _hidl_vec_element = new Carrier();
-            _hidl_vec_element.readEmbeddedFromParcel(hwParcel, childBlob, (long) (_hidl_index_02 * 56));
+            _hidl_vec_element.readEmbeddedFromParcel(parcel, childBlob, _hidl_index_02 * 56);
             this.allowedCarriers.add(_hidl_vec_element);
         }
-        int _hidl_vec_size3 = hwBlob.getInt32(_hidl_offset + 16 + 8);
-        HwBlob childBlob2 = parcel.readEmbeddedBuffer((long) (_hidl_vec_size3 * 56), _hidl_blob.handle(), 0 + _hidl_offset + 16, true);
+        int _hidl_vec_size2 = _hidl_blob.getInt32(_hidl_offset + 16 + 8);
+        HwBlob childBlob2 = parcel.readEmbeddedBuffer(_hidl_vec_size2 * 56, _hidl_blob.handle(), 0 + _hidl_offset + 16, true);
         this.excludedCarriers.clear();
         while (true) {
             int _hidl_index_03 = _hidl_index_0;
-            if (_hidl_index_03 < _hidl_vec_size3) {
+            if (_hidl_index_03 < _hidl_vec_size2) {
                 Carrier _hidl_vec_element2 = new Carrier();
-                _hidl_vec_element2.readEmbeddedFromParcel(hwParcel, childBlob2, (long) (_hidl_index_03 * 56));
+                _hidl_vec_element2.readEmbeddedFromParcel(parcel, childBlob2, _hidl_index_03 * 56);
                 this.excludedCarriers.add(_hidl_vec_element2);
                 _hidl_index_0 = _hidl_index_03 + 1;
             } else {
@@ -81,32 +80,31 @@ public final class CarrierRestrictions {
 
     public final void writeToParcel(HwParcel parcel) {
         HwBlob _hidl_blob = new HwBlob(32);
-        writeEmbeddedToBlob(_hidl_blob, 0);
+        writeEmbeddedToBlob(_hidl_blob, 0L);
         parcel.writeBuffer(_hidl_blob);
     }
 
     public static final void writeVectorToParcel(HwParcel parcel, ArrayList<CarrierRestrictions> _hidl_vec) {
         HwBlob _hidl_blob = new HwBlob(16);
         int _hidl_vec_size = _hidl_vec.size();
-        _hidl_blob.putInt32(8, _hidl_vec_size);
-        _hidl_blob.putBool(12, false);
+        _hidl_blob.putInt32(8L, _hidl_vec_size);
+        _hidl_blob.putBool(12L, false);
         HwBlob childBlob = new HwBlob(_hidl_vec_size * 32);
         for (int _hidl_index_0 = 0; _hidl_index_0 < _hidl_vec_size; _hidl_index_0++) {
-            _hidl_vec.get(_hidl_index_0).writeEmbeddedToBlob(childBlob, (long) (_hidl_index_0 * 32));
+            _hidl_vec.get(_hidl_index_0).writeEmbeddedToBlob(childBlob, _hidl_index_0 * 32);
         }
-        _hidl_blob.putBlob(0, childBlob);
+        _hidl_blob.putBlob(0L, childBlob);
         parcel.writeBuffer(_hidl_blob);
     }
 
     public final void writeEmbeddedToBlob(HwBlob _hidl_blob, long _hidl_offset) {
-        HwBlob hwBlob = _hidl_blob;
         int _hidl_vec_size = this.allowedCarriers.size();
         _hidl_blob.putInt32(_hidl_offset + 0 + 8, _hidl_vec_size);
         int _hidl_index_0 = 0;
         _hidl_blob.putBool(_hidl_offset + 0 + 12, false);
         HwBlob childBlob = new HwBlob(_hidl_vec_size * 56);
         for (int _hidl_index_02 = 0; _hidl_index_02 < _hidl_vec_size; _hidl_index_02++) {
-            this.allowedCarriers.get(_hidl_index_02).writeEmbeddedToBlob(childBlob, (long) (_hidl_index_02 * 56));
+            this.allowedCarriers.get(_hidl_index_02).writeEmbeddedToBlob(childBlob, _hidl_index_02 * 56);
         }
         _hidl_blob.putBlob(_hidl_offset + 0 + 0, childBlob);
         int _hidl_vec_size2 = this.excludedCarriers.size();
@@ -115,12 +113,12 @@ public final class CarrierRestrictions {
         HwBlob childBlob2 = new HwBlob(_hidl_vec_size2 * 56);
         while (true) {
             int _hidl_index_03 = _hidl_index_0;
-            if (_hidl_index_03 < _hidl_vec_size2) {
-                this.excludedCarriers.get(_hidl_index_03).writeEmbeddedToBlob(childBlob2, (long) (_hidl_index_03 * 56));
-                _hidl_index_0 = _hidl_index_03 + 1;
-            } else {
+            if (_hidl_index_03 >= _hidl_vec_size2) {
                 _hidl_blob.putBlob(_hidl_offset + 16 + 0, childBlob2);
                 return;
+            } else {
+                this.excludedCarriers.get(_hidl_index_03).writeEmbeddedToBlob(childBlob2, _hidl_index_03 * 56);
+                _hidl_index_0 = _hidl_index_03 + 1;
             }
         }
     }

@@ -1,5 +1,6 @@
 package android.bluetooth;
 
+/* loaded from: classes.dex */
 public final class BluetoothProtoEnums {
     public static final int BOND_STATE_BONDED = 12;
     public static final int BOND_STATE_BONDING = 11;

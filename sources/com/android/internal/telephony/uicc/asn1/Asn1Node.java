@@ -7,13 +7,9 @@ import java.util.Collections;
 import java.util.List;
 import org.mozilla.universalchardet.prober.HebrewProber;
 
+/* loaded from: classes4.dex */
 public final class Asn1Node {
-    private static final List<Asn1Node> EMPTY_NODE_LIST = Collections.emptyList();
-    /* access modifiers changed from: private */
-    public static final byte[] FALSE_BYTES = {0};
     private static final int INT_BYTES = 4;
-    /* access modifiers changed from: private */
-    public static final byte[] TRUE_BYTES = {-1};
     private final List<Asn1Node> mChildren;
     private final boolean mConstructed;
     private byte[] mDataBytes;
@@ -21,18 +17,21 @@ public final class Asn1Node {
     private int mDataOffset;
     private int mEncodedLength;
     private final int mTag;
+    private static final List<Asn1Node> EMPTY_NODE_LIST = Collections.emptyList();
+    private static final byte[] TRUE_BYTES = {-1};
+    private static final byte[] FALSE_BYTES = {0};
 
+    /* loaded from: classes4.dex */
     public static final class Builder {
         private final List<Asn1Node> mChildren;
         private final int mTag;
 
         private Builder(int tag) {
-            if (Asn1Node.isConstructedTag(tag)) {
-                this.mTag = tag;
-                this.mChildren = new ArrayList();
-                return;
+            if (!Asn1Node.isConstructedTag(tag)) {
+                throw new IllegalArgumentException("Builder should be created for a constructed tag: " + tag);
             }
-            throw new IllegalArgumentException("Builder should be created for a constructed tag: " + tag);
+            this.mTag = tag;
+            this.mChildren = new ArrayList();
         }
 
         public Builder addChild(Asn1Node child) {
@@ -54,29 +53,29 @@ public final class Asn1Node {
         }
 
         public Builder addChildAsInteger(int tag, int value) {
-            if (!Asn1Node.isConstructedTag(tag)) {
-                byte[] dataBytes = IccUtils.signedIntToBytes(value);
-                addChild(new Asn1Node(tag, dataBytes, 0, dataBytes.length));
-                return this;
+            if (Asn1Node.isConstructedTag(tag)) {
+                throw new IllegalStateException("Cannot set value of a constructed tag: " + tag);
             }
-            throw new IllegalStateException("Cannot set value of a constructed tag: " + tag);
+            byte[] dataBytes = IccUtils.signedIntToBytes(value);
+            addChild(new Asn1Node(tag, dataBytes, 0, dataBytes.length));
+            return this;
         }
 
         public Builder addChildAsString(int tag, String value) {
-            if (!Asn1Node.isConstructedTag(tag)) {
-                byte[] dataBytes = value.getBytes(StandardCharsets.UTF_8);
-                addChild(new Asn1Node(tag, dataBytes, 0, dataBytes.length));
-                return this;
+            if (Asn1Node.isConstructedTag(tag)) {
+                throw new IllegalStateException("Cannot set value of a constructed tag: " + tag);
             }
-            throw new IllegalStateException("Cannot set value of a constructed tag: " + tag);
+            byte[] dataBytes = value.getBytes(StandardCharsets.UTF_8);
+            addChild(new Asn1Node(tag, dataBytes, 0, dataBytes.length));
+            return this;
         }
 
         public Builder addChildAsBytes(int tag, byte[] value) {
-            if (!Asn1Node.isConstructedTag(tag)) {
-                addChild(new Asn1Node(tag, value, 0, value.length));
-                return this;
+            if (Asn1Node.isConstructedTag(tag)) {
+                throw new IllegalStateException("Cannot set value of a constructed tag: " + tag);
             }
-            throw new IllegalStateException("Cannot set value of a constructed tag: " + tag);
+            addChild(new Asn1Node(tag, value, 0, value.length));
+            return this;
         }
 
         public Builder addChildAsBytesFromHex(int tag, String hex) {
@@ -84,30 +83,30 @@ public final class Asn1Node {
         }
 
         public Builder addChildAsBits(int tag, int value) {
-            if (!Asn1Node.isConstructedTag(tag)) {
-                byte[] dataBytes = new byte[5];
-                int value2 = Integer.reverse(value);
-                int dataLength = 0;
-                for (int i = 1; i < dataBytes.length; i++) {
-                    dataBytes[i] = (byte) (value2 >> ((4 - i) * 8));
-                    if (dataBytes[i] != 0) {
-                        dataLength = i;
-                    }
-                }
-                int dataLength2 = dataLength + 1;
-                dataBytes[0] = IccUtils.countTrailingZeros(dataBytes[dataLength2 - 1]);
-                addChild(new Asn1Node(tag, dataBytes, 0, dataLength2));
-                return this;
+            if (Asn1Node.isConstructedTag(tag)) {
+                throw new IllegalStateException("Cannot set value of a constructed tag: " + tag);
             }
-            throw new IllegalStateException("Cannot set value of a constructed tag: " + tag);
+            byte[] dataBytes = new byte[5];
+            int value2 = Integer.reverse(value);
+            int dataLength = 0;
+            for (int dataLength2 = 1; dataLength2 < dataBytes.length; dataLength2++) {
+                dataBytes[dataLength2] = (byte) (value2 >> ((4 - dataLength2) * 8));
+                if (dataBytes[dataLength2] != 0) {
+                    dataLength = dataLength2;
+                }
+            }
+            int dataLength3 = dataLength + 1;
+            dataBytes[0] = IccUtils.countTrailingZeros(dataBytes[dataLength3 - 1]);
+            addChild(new Asn1Node(tag, dataBytes, 0, dataLength3));
+            return this;
         }
 
         public Builder addChildAsBoolean(int tag, boolean value) {
-            if (!Asn1Node.isConstructedTag(tag)) {
-                addChild(new Asn1Node(tag, value ? Asn1Node.TRUE_BYTES : Asn1Node.FALSE_BYTES, 0, 1));
-                return this;
+            if (Asn1Node.isConstructedTag(tag)) {
+                throw new IllegalStateException("Cannot set value of a constructed tag: " + tag);
             }
-            throw new IllegalStateException("Cannot set value of a constructed tag: " + tag);
+            addChild(new Asn1Node(tag, value ? Asn1Node.TRUE_BYTES : Asn1Node.FALSE_BYTES, 0, 1));
+            return this;
         }
 
         public Asn1Node build() {
@@ -119,14 +118,16 @@ public final class Asn1Node {
         return new Builder(tag);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static boolean isConstructedTag(int tag) {
-        return (IccUtils.unsignedIntToBytes(tag)[0] & HebrewProber.SPACE) != 0;
+        byte[] tagBytes = IccUtils.unsignedIntToBytes(tag);
+        return (tagBytes[0] & HebrewProber.SPACE) != 0;
     }
 
     private static int calculateEncodedBytesNumForLength(int length) {
         if (length > 127) {
-            return 1 + IccUtils.byteNumForUnsignedInt(length);
+            int len = 1 + IccUtils.byteNumForUnsignedInt(length);
+            return len;
         }
         return 1;
     }
@@ -150,7 +151,8 @@ public final class Asn1Node {
         for (int i = 0; i < size; i++) {
             this.mDataLength += children.get(i).mEncodedLength;
         }
-        this.mEncodedLength = IccUtils.byteNumForUnsignedInt(this.mTag) + calculateEncodedBytesNumForLength(this.mDataLength) + this.mDataLength;
+        int i2 = this.mTag;
+        this.mEncodedLength = IccUtils.byteNumForUnsignedInt(i2) + calculateEncodedBytesNumForLength(this.mDataLength) + this.mDataLength;
     }
 
     public int getTag() {
@@ -171,39 +173,40 @@ public final class Asn1Node {
     }
 
     public Asn1Node getChild(int tag, int... tags) throws TagNotFoundException, InvalidAsn1DataException {
-        if (this.mConstructed) {
-            int index = 0;
-            int tag2 = tag;
-            Asn1Node node = this;
-            while (node != null) {
-                List<Asn1Node> children = node.getChildren();
-                int size = children.size();
-                Asn1Node foundChild = null;
-                int i = 0;
-                while (true) {
-                    if (i >= size) {
-                        break;
-                    }
-                    Asn1Node child = children.get(i);
-                    if (child.getTag() == tag2) {
-                        foundChild = child;
-                        break;
-                    }
-                    i++;
-                }
-                node = foundChild;
-                if (index >= tags.length) {
+        if (!this.mConstructed) {
+            throw new TagNotFoundException(tag);
+        }
+        int index = 0;
+        int tag2 = tag;
+        Asn1Node node = this;
+        while (node != null) {
+            List<Asn1Node> children = node.getChildren();
+            int size = children.size();
+            Asn1Node foundChild = null;
+            int i = 0;
+            while (true) {
+                if (i >= size) {
                     break;
                 }
-                tag2 = tags[index];
-                index++;
+                Asn1Node child = children.get(i);
+                if (child.getTag() != tag2) {
+                    i++;
+                } else {
+                    foundChild = child;
+                    break;
+                }
             }
-            if (node != null) {
-                return node;
+            node = foundChild;
+            if (index >= tags.length) {
+                break;
             }
+            tag2 = tags[index];
+            index++;
+        }
+        if (node == null) {
             throw new TagNotFoundException(tag2);
         }
-        throw new TagNotFoundException(tag);
+        return node;
     }
 
     public List<Asn1Node> getChildren(int tag) throws TagNotFoundException, InvalidAsn1DataException {
@@ -222,7 +225,7 @@ public final class Asn1Node {
                 output.add(child);
             }
         }
-        return output.isEmpty() != 0 ? EMPTY_NODE_LIST : output;
+        return output.isEmpty() ? EMPTY_NODE_LIST : output;
     }
 
     public List<Asn1Node> getChildren() throws InvalidAsn1DataException {
@@ -241,103 +244,107 @@ public final class Asn1Node {
     }
 
     public boolean hasValue() {
-        return !this.mConstructed && this.mDataBytes != null;
+        return (this.mConstructed || this.mDataBytes == null) ? false : true;
     }
 
     public int asInteger() throws InvalidAsn1DataException {
         if (this.mConstructed) {
             throw new IllegalStateException("Cannot get value of a constructed node.");
-        } else if (this.mDataBytes != null) {
-            try {
-                return IccUtils.bytesToInt(this.mDataBytes, this.mDataOffset, this.mDataLength);
-            } catch (IllegalArgumentException | IndexOutOfBoundsException e) {
-                throw new InvalidAsn1DataException(this.mTag, "Cannot parse data bytes.", e);
-            }
-        } else {
+        }
+        if (this.mDataBytes == null) {
             throw new InvalidAsn1DataException(this.mTag, "Data bytes cannot be null.");
+        }
+        try {
+            return IccUtils.bytesToInt(this.mDataBytes, this.mDataOffset, this.mDataLength);
+        } catch (IllegalArgumentException | IndexOutOfBoundsException e) {
+            throw new InvalidAsn1DataException(this.mTag, "Cannot parse data bytes.", e);
         }
     }
 
     public long asRawLong() throws InvalidAsn1DataException {
         if (this.mConstructed) {
             throw new IllegalStateException("Cannot get value of a constructed node.");
-        } else if (this.mDataBytes != null) {
-            try {
-                return IccUtils.bytesToRawLong(this.mDataBytes, this.mDataOffset, this.mDataLength);
-            } catch (IllegalArgumentException | IndexOutOfBoundsException e) {
-                throw new InvalidAsn1DataException(this.mTag, "Cannot parse data bytes.", e);
-            }
-        } else {
+        }
+        if (this.mDataBytes == null) {
             throw new InvalidAsn1DataException(this.mTag, "Data bytes cannot be null.");
+        }
+        try {
+            return IccUtils.bytesToRawLong(this.mDataBytes, this.mDataOffset, this.mDataLength);
+        } catch (IllegalArgumentException | IndexOutOfBoundsException e) {
+            throw new InvalidAsn1DataException(this.mTag, "Cannot parse data bytes.", e);
         }
     }
 
     public String asString() throws InvalidAsn1DataException {
         if (this.mConstructed) {
             throw new IllegalStateException("Cannot get value of a constructed node.");
-        } else if (this.mDataBytes != null) {
-            try {
-                return new String(this.mDataBytes, this.mDataOffset, this.mDataLength, StandardCharsets.UTF_8);
-            } catch (IndexOutOfBoundsException e) {
-                throw new InvalidAsn1DataException(this.mTag, "Cannot parse data bytes.", e);
-            }
-        } else {
+        }
+        if (this.mDataBytes == null) {
             throw new InvalidAsn1DataException(this.mTag, "Data bytes cannot be null.");
+        }
+        try {
+            return new String(this.mDataBytes, this.mDataOffset, this.mDataLength, StandardCharsets.UTF_8);
+        } catch (IndexOutOfBoundsException e) {
+            throw new InvalidAsn1DataException(this.mTag, "Cannot parse data bytes.", e);
         }
     }
 
     public byte[] asBytes() throws InvalidAsn1DataException {
         if (this.mConstructed) {
             throw new IllegalStateException("Cannot get value of a constructed node.");
-        } else if (this.mDataBytes != null) {
-            byte[] output = new byte[this.mDataLength];
-            try {
-                System.arraycopy(this.mDataBytes, this.mDataOffset, output, 0, this.mDataLength);
-                return output;
-            } catch (IndexOutOfBoundsException e) {
-                throw new InvalidAsn1DataException(this.mTag, "Cannot parse data bytes.", e);
-            }
-        } else {
+        }
+        if (this.mDataBytes == null) {
             throw new InvalidAsn1DataException(this.mTag, "Data bytes cannot be null.");
+        }
+        byte[] output = new byte[this.mDataLength];
+        try {
+            System.arraycopy(this.mDataBytes, this.mDataOffset, output, 0, this.mDataLength);
+            return output;
+        } catch (IndexOutOfBoundsException e) {
+            throw new InvalidAsn1DataException(this.mTag, "Cannot parse data bytes.", e);
         }
     }
 
     public int asBits() throws InvalidAsn1DataException {
         if (this.mConstructed) {
             throw new IllegalStateException("Cannot get value of a constructed node.");
-        } else if (this.mDataBytes != null) {
-            try {
-                int bits = IccUtils.bytesToInt(this.mDataBytes, this.mDataOffset + 1, this.mDataLength - 1);
-                for (int i = this.mDataLength - 1; i < 4; i++) {
-                    bits <<= 8;
-                }
-                return Integer.reverse(bits);
-            } catch (IllegalArgumentException | IndexOutOfBoundsException e) {
-                throw new InvalidAsn1DataException(this.mTag, "Cannot parse data bytes.", e);
-            }
-        } else {
+        }
+        if (this.mDataBytes == null) {
             throw new InvalidAsn1DataException(this.mTag, "Data bytes cannot be null.");
+        }
+        try {
+            int bits = IccUtils.bytesToInt(this.mDataBytes, this.mDataOffset + 1, this.mDataLength - 1);
+            for (int i = this.mDataLength - 1; i < 4; i++) {
+                bits <<= 8;
+            }
+            int i2 = Integer.reverse(bits);
+            return i2;
+        } catch (IllegalArgumentException | IndexOutOfBoundsException e) {
+            throw new InvalidAsn1DataException(this.mTag, "Cannot parse data bytes.", e);
         }
     }
 
     public boolean asBoolean() throws InvalidAsn1DataException {
         if (this.mConstructed) {
             throw new IllegalStateException("Cannot get value of a constructed node.");
-        } else if (this.mDataBytes == null) {
+        }
+        if (this.mDataBytes == null) {
             throw new InvalidAsn1DataException(this.mTag, "Data bytes cannot be null.");
-        } else if (this.mDataLength != 1) {
+        }
+        if (this.mDataLength != 1) {
             int i = this.mTag;
             throw new InvalidAsn1DataException(i, "Cannot parse data bytes as boolean: length=" + this.mDataLength);
         } else if (this.mDataOffset < 0 || this.mDataOffset >= this.mDataBytes.length) {
             throw new InvalidAsn1DataException(this.mTag, "Cannot parse data bytes.", new ArrayIndexOutOfBoundsException(this.mDataOffset));
-        } else if (this.mDataBytes[this.mDataOffset] == -1) {
-            return Boolean.TRUE.booleanValue();
         } else {
+            if (this.mDataBytes[this.mDataOffset] == -1) {
+                return Boolean.TRUE.booleanValue();
+            }
             if (this.mDataBytes[this.mDataOffset] == 0) {
                 return Boolean.FALSE.booleanValue();
             }
             int i2 = this.mTag;
-            throw new InvalidAsn1DataException(i2, "Cannot parse data bytes as boolean: " + this.mDataBytes[this.mDataOffset]);
+            throw new InvalidAsn1DataException(i2, "Cannot parse data bytes as boolean: " + ((int) this.mDataBytes[this.mDataOffset]));
         }
     }
 
@@ -387,17 +394,18 @@ public final class Asn1Node {
             dest[offset3 - 1] = (byte) (lenLen2 | 128);
             lenLen = lenLen2 + offset3;
         }
-        if (this.mConstructed != 0 && this.mDataBytes == null) {
-            int size = this.mChildren.size();
-            for (int i = 0; i < size; i++) {
-                lenLen = this.mChildren.get(i).write(dest, lenLen);
+        if (!this.mConstructed || this.mDataBytes != null) {
+            if (this.mDataBytes != null) {
+                System.arraycopy(this.mDataBytes, this.mDataOffset, dest, lenLen, this.mDataLength);
+                return lenLen + this.mDataLength;
             }
             return lenLen;
-        } else if (this.mDataBytes == null) {
-            return lenLen;
-        } else {
-            System.arraycopy(this.mDataBytes, this.mDataOffset, dest, lenLen, this.mDataLength);
-            return lenLen + this.mDataLength;
         }
+        int size = this.mChildren.size();
+        for (int i = 0; i < size; i++) {
+            Asn1Node child = this.mChildren.get(i);
+            lenLen = child.write(dest, lenLen);
+        }
+        return lenLen;
     }
 }

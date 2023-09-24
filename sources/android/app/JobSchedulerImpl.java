@@ -5,9 +5,10 @@ import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.app.job.JobSnapshot;
 import android.app.job.JobWorkItem;
-import android.os.RemoteException;
+import android.p007os.RemoteException;
 import java.util.List;
 
+/* loaded from: classes.dex */
 public class JobSchedulerImpl extends JobScheduler {
     IJobScheduler mBinder;
 
@@ -15,6 +16,7 @@ public class JobSchedulerImpl extends JobScheduler {
         this.mBinder = binder;
     }
 
+    @Override // android.app.job.JobScheduler
     public int schedule(JobInfo job) {
         try {
             return this.mBinder.schedule(job);
@@ -23,6 +25,7 @@ public class JobSchedulerImpl extends JobScheduler {
         }
     }
 
+    @Override // android.app.job.JobScheduler
     public int enqueue(JobInfo job, JobWorkItem work) {
         try {
             return this.mBinder.enqueue(job, work);
@@ -31,6 +34,7 @@ public class JobSchedulerImpl extends JobScheduler {
         }
     }
 
+    @Override // android.app.job.JobScheduler
     public int scheduleAsPackage(JobInfo job, String packageName, int userId, String tag) {
         try {
             return this.mBinder.scheduleAsPackage(job, packageName, userId, tag);
@@ -39,6 +43,7 @@ public class JobSchedulerImpl extends JobScheduler {
         }
     }
 
+    @Override // android.app.job.JobScheduler
     public void cancel(int jobId) {
         try {
             this.mBinder.cancel(jobId);
@@ -46,6 +51,7 @@ public class JobSchedulerImpl extends JobScheduler {
         }
     }
 
+    @Override // android.app.job.JobScheduler
     public void cancelAll() {
         try {
             this.mBinder.cancelAll();
@@ -53,6 +59,7 @@ public class JobSchedulerImpl extends JobScheduler {
         }
     }
 
+    @Override // android.app.job.JobScheduler
     public List<JobInfo> getAllPendingJobs() {
         try {
             return this.mBinder.getAllPendingJobs().getList();
@@ -61,6 +68,7 @@ public class JobSchedulerImpl extends JobScheduler {
         }
     }
 
+    @Override // android.app.job.JobScheduler
     public JobInfo getPendingJob(int jobId) {
         try {
             return this.mBinder.getPendingJob(jobId);
@@ -69,6 +77,7 @@ public class JobSchedulerImpl extends JobScheduler {
         }
     }
 
+    @Override // android.app.job.JobScheduler
     public List<JobInfo> getStartedJobs() {
         try {
             return this.mBinder.getStartedJobs();
@@ -77,6 +86,7 @@ public class JobSchedulerImpl extends JobScheduler {
         }
     }
 
+    @Override // android.app.job.JobScheduler
     public List<JobSnapshot> getAllJobSnapshots() {
         try {
             return this.mBinder.getAllJobSnapshots().getList();

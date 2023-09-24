@@ -1,5 +1,6 @@
 package android.stats.style;
 
+/* loaded from: classes3.dex */
 public final class StyleEnums {
     public static final int DEFAULT_ACTION = 0;
     public static final int LIVE_WALLPAPER_APPLIED = 16;

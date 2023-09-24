@@ -20,10 +20,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+/* loaded from: classes4.dex */
 public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageLite<MessageType, BuilderType>, BuilderType extends Builder<MessageType, BuilderType>> extends AbstractMessageLite<MessageType, BuilderType> {
-    protected int memoizedSerializedSize = -1;
     protected UnknownFieldSetLite unknownFields = UnknownFieldSetLite.getDefaultInstance();
+    protected int memoizedSerializedSize = -1;
 
+    /* loaded from: classes4.dex */
     public interface ExtendableMessageOrBuilder<MessageType extends ExtendableMessage<MessageType, BuilderType>, BuilderType extends ExtendableBuilder<MessageType, BuilderType>> extends MessageLiteOrBuilder {
         <Type> Type getExtension(ExtensionLite<MessageType, Type> extensionLite);
 
@@ -34,6 +36,7 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
         <Type> boolean hasExtension(ExtensionLite<MessageType, Type> extensionLite);
     }
 
+    /* loaded from: classes4.dex */
     public enum MethodToInvoke {
         IS_INITIALIZED,
         VISIT,
@@ -45,6 +48,7 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
         GET_PARSER
     }
 
+    /* loaded from: classes4.dex */
     protected interface Visitor {
         boolean visitBoolean(boolean z, boolean z2, boolean z3, boolean z4);
 
@@ -103,19 +107,21 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
         UnknownFieldSetLite visitUnknownFields(UnknownFieldSetLite unknownFieldSetLite, UnknownFieldSetLite unknownFieldSetLite2);
     }
 
-    /* access modifiers changed from: protected */
-    public abstract Object dynamicMethod(MethodToInvoke methodToInvoke, Object obj, Object obj2);
+    protected abstract Object dynamicMethod(MethodToInvoke methodToInvoke, Object obj, Object obj2);
 
+    @Override // com.android.framework.protobuf.MessageLite
     public final Parser<MessageType> getParserForType() {
         return (Parser) dynamicMethod(MethodToInvoke.GET_PARSER);
     }
 
+    @Override // com.android.framework.protobuf.MessageLiteOrBuilder
     public final MessageType getDefaultInstanceForType() {
-        return (GeneratedMessageLite) dynamicMethod(MethodToInvoke.GET_DEFAULT_INSTANCE);
+        return (MessageType) dynamicMethod(MethodToInvoke.GET_DEFAULT_INSTANCE);
     }
 
+    @Override // com.android.framework.protobuf.MessageLite
     public final BuilderType newBuilderForType() {
-        return (Builder) dynamicMethod(MethodToInvoke.NEW_BUILDER);
+        return (BuilderType) dynamicMethod(MethodToInvoke.NEW_BUILDER);
     }
 
     public String toString() {
@@ -131,35 +137,36 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
         return this.memoizedHashCode;
     }
 
-    /* access modifiers changed from: package-private */
-    public int hashCode(HashCodeVisitor visitor) {
+    int hashCode(HashCodeVisitor visitor) {
         if (this.memoizedHashCode == 0) {
             int inProgressHashCode = visitor.hashCode;
-            int unused = visitor.hashCode = 0;
+            visitor.hashCode = 0;
             visit(visitor, this);
             this.memoizedHashCode = visitor.hashCode;
-            int unused2 = visitor.hashCode = inProgressHashCode;
+            visitor.hashCode = inProgressHashCode;
         }
-        return this.memoizedHashCode;
+        int inProgressHashCode2 = this.memoizedHashCode;
+        return inProgressHashCode2;
     }
 
+    /* JADX WARN: Multi-variable type inference failed */
     public boolean equals(Object other) {
         if (this == other) {
             return true;
         }
-        if (!getDefaultInstanceForType().getClass().isInstance(other)) {
-            return false;
+        if (getDefaultInstanceForType().getClass().isInstance(other)) {
+            try {
+                visit(EqualsVisitor.INSTANCE, (GeneratedMessageLite) other);
+                return true;
+            } catch (EqualsVisitor.NotEqualsException e) {
+                return false;
+            }
         }
-        try {
-            visit(EqualsVisitor.INSTANCE, (GeneratedMessageLite) other);
-            return true;
-        } catch (EqualsVisitor.NotEqualsException e) {
-            return false;
-        }
+        return false;
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean equals(EqualsVisitor visitor, MessageLite other) {
+    /* JADX WARN: Multi-variable type inference failed */
+    boolean equals(EqualsVisitor visitor, MessageLite other) {
         if (this == other) {
             return true;
         }
@@ -176,8 +183,7 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
         }
     }
 
-    /* access modifiers changed from: protected */
-    public boolean parseUnknownField(int tag, CodedInputStream input) throws IOException {
+    protected boolean parseUnknownField(int tag, CodedInputStream input) throws IOException {
         if (WireFormat.getTagWireType(tag) == 4) {
             return false;
         }
@@ -185,90 +191,96 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
         return this.unknownFields.mergeFieldFrom(tag, input);
     }
 
-    /* access modifiers changed from: protected */
-    public void mergeVarintField(int tag, int value) {
+    protected void mergeVarintField(int tag, int value) {
         ensureUnknownFieldsInitialized();
         this.unknownFields.mergeVarintField(tag, value);
     }
 
-    /* access modifiers changed from: protected */
-    public void mergeLengthDelimitedField(int fieldNumber, ByteString value) {
+    protected void mergeLengthDelimitedField(int fieldNumber, ByteString value) {
         ensureUnknownFieldsInitialized();
         this.unknownFields.mergeLengthDelimitedField(fieldNumber, value);
     }
 
-    /* access modifiers changed from: protected */
-    public void makeImmutable() {
+    protected void makeImmutable() {
         dynamicMethod(MethodToInvoke.MAKE_IMMUTABLE);
         this.unknownFields.makeImmutable();
     }
 
+    @Override // com.android.framework.protobuf.MessageLiteOrBuilder
     public final boolean isInitialized() {
         return dynamicMethod(MethodToInvoke.IS_INITIALIZED, Boolean.TRUE) != null;
     }
 
+    @Override // com.android.framework.protobuf.MessageLite
     public final BuilderType toBuilder() {
-        BuilderType builder = (Builder) dynamicMethod(MethodToInvoke.NEW_BUILDER);
+        BuilderType builder = (BuilderType) dynamicMethod(MethodToInvoke.NEW_BUILDER);
         builder.mergeFrom(this);
         return builder;
     }
 
-    /* access modifiers changed from: protected */
-    public Object dynamicMethod(MethodToInvoke method, Object arg0) {
-        return dynamicMethod(method, arg0, (Object) null);
+    protected Object dynamicMethod(MethodToInvoke method, Object arg0) {
+        return dynamicMethod(method, arg0, null);
     }
 
-    /* access modifiers changed from: protected */
-    public Object dynamicMethod(MethodToInvoke method) {
-        return dynamicMethod(method, (Object) null, (Object) null);
+    protected Object dynamicMethod(MethodToInvoke method) {
+        return dynamicMethod(method, null, null);
     }
 
-    /* access modifiers changed from: package-private */
-    public void visit(Visitor visitor, MessageType other) {
+    void visit(Visitor visitor, MessageType other) {
         dynamicMethod(MethodToInvoke.VISIT, visitor, other);
         this.unknownFields = visitor.visitUnknownFields(this.unknownFields, other.unknownFields);
     }
 
-    /* access modifiers changed from: protected */
-    public final void mergeUnknownFields(UnknownFieldSetLite unknownFields2) {
-        this.unknownFields = UnknownFieldSetLite.mutableCopyOf(this.unknownFields, unknownFields2);
+    protected final void mergeUnknownFields(UnknownFieldSetLite unknownFields) {
+        this.unknownFields = UnknownFieldSetLite.mutableCopyOf(this.unknownFields, unknownFields);
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Builder<MessageType extends GeneratedMessageLite<MessageType, BuilderType>, BuilderType extends Builder<MessageType, BuilderType>> extends AbstractMessageLite.Builder<MessageType, BuilderType> {
         private final MessageType defaultInstance;
         protected MessageType instance;
         protected boolean isBuilt = false;
 
-        protected Builder(MessageType defaultInstance2) {
-            this.defaultInstance = defaultInstance2;
-            this.instance = (GeneratedMessageLite) defaultInstance2.dynamicMethod(MethodToInvoke.NEW_MUTABLE_INSTANCE);
+        /* JADX WARN: Multi-variable type inference failed */
+        @Override // com.android.framework.protobuf.AbstractMessageLite.Builder
+        protected /* bridge */ /* synthetic */ AbstractMessageLite.Builder internalMergeFrom(AbstractMessageLite abstractMessageLite) {
+            return internalMergeFrom((Builder<MessageType, BuilderType>) ((GeneratedMessageLite) abstractMessageLite));
         }
 
-        /* access modifiers changed from: protected */
-        public void copyOnWrite() {
+        protected Builder(MessageType defaultInstance) {
+            this.defaultInstance = defaultInstance;
+            this.instance = (MessageType) defaultInstance.dynamicMethod(MethodToInvoke.NEW_MUTABLE_INSTANCE);
+        }
+
+        protected void copyOnWrite() {
             if (this.isBuilt) {
-                MessageType newInstance = (GeneratedMessageLite) this.instance.dynamicMethod(MethodToInvoke.NEW_MUTABLE_INSTANCE);
+                MessageType newInstance = (MessageType) this.instance.dynamicMethod(MethodToInvoke.NEW_MUTABLE_INSTANCE);
                 newInstance.visit(MergeFromVisitor.INSTANCE, this.instance);
                 this.instance = newInstance;
                 this.isBuilt = false;
             }
         }
 
+        @Override // com.android.framework.protobuf.MessageLiteOrBuilder
         public final boolean isInitialized() {
             return GeneratedMessageLite.isInitialized(this.instance, false);
         }
 
+        @Override // com.android.framework.protobuf.MessageLite.Builder
         public final BuilderType clear() {
-            this.instance = (GeneratedMessageLite) this.instance.dynamicMethod(MethodToInvoke.NEW_MUTABLE_INSTANCE);
+            this.instance = (MessageType) this.instance.dynamicMethod(MethodToInvoke.NEW_MUTABLE_INSTANCE);
             return this;
         }
 
-        public BuilderType clone() {
-            BuilderType builder = getDefaultInstanceForType().newBuilderForType();
+        @Override // com.android.framework.protobuf.AbstractMessageLite.Builder
+        /* renamed from: clone */
+        public BuilderType mo187clone() {
+            BuilderType builder = (BuilderType) getDefaultInstanceForType().newBuilderForType();
             builder.mergeFrom(buildPartial());
             return builder;
         }
 
+        @Override // com.android.framework.protobuf.MessageLite.Builder
         public MessageType buildPartial() {
             if (this.isBuilt) {
                 return this.instance;
@@ -278,17 +290,17 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
             return this.instance;
         }
 
+        @Override // com.android.framework.protobuf.MessageLite.Builder
         public final MessageType build() {
             MessageType result = buildPartial();
-            if (result.isInitialized()) {
-                return result;
+            if (!result.isInitialized()) {
+                throw newUninitializedMessageException(result);
             }
-            throw newUninitializedMessageException(result);
+            return result;
         }
 
-        /* access modifiers changed from: protected */
-        public BuilderType internalMergeFrom(MessageType message) {
-            return mergeFrom(message);
+        protected BuilderType internalMergeFrom(MessageType message) {
+            return mergeFrom((Builder<MessageType, BuilderType>) message);
         }
 
         public BuilderType mergeFrom(MessageType message) {
@@ -297,10 +309,12 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
             return this;
         }
 
+        @Override // com.android.framework.protobuf.MessageLiteOrBuilder
         public MessageType getDefaultInstanceForType() {
             return this.defaultInstance;
         }
 
+        @Override // com.android.framework.protobuf.AbstractMessageLite.Builder, com.android.framework.protobuf.MessageLite.Builder
         public BuilderType mergeFrom(CodedInputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
             copyOnWrite();
             try {
@@ -315,32 +329,34 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class ExtendableMessage<MessageType extends ExtendableMessage<MessageType, BuilderType>, BuilderType extends ExtendableBuilder<MessageType, BuilderType>> extends GeneratedMessageLite<MessageType, BuilderType> implements ExtendableMessageOrBuilder<MessageType, BuilderType> {
         protected FieldSet<ExtensionDescriptor> extensions = FieldSet.newFieldSet();
 
-        /* access modifiers changed from: protected */
-        public final void mergeExtensionFields(MessageType other) {
+        /* JADX WARN: Multi-variable type inference failed */
+        @Override // com.android.framework.protobuf.GeneratedMessageLite
+        /* bridge */ /* synthetic */ void visit(Visitor visitor, GeneratedMessageLite generatedMessageLite) {
+            visit(visitor, (Visitor) ((ExtendableMessage) generatedMessageLite));
+        }
+
+        protected final void mergeExtensionFields(MessageType other) {
             if (this.extensions.isImmutable()) {
-                this.extensions = this.extensions.clone();
+                this.extensions = this.extensions.m188clone();
             }
             this.extensions.mergeFrom(other.extensions);
         }
 
-        /* access modifiers changed from: package-private */
-        public final void visit(Visitor visitor, MessageType other) {
-            GeneratedMessageLite.super.visit(visitor, other);
+        final void visit(Visitor visitor, MessageType other) {
+            super.visit(visitor, (Visitor) other);
             this.extensions = visitor.visitExtensions(this.extensions, other.extensions);
         }
 
-        /* access modifiers changed from: protected */
-        public <MessageType extends MessageLite> boolean parseUnknownField(MessageType defaultInstance, CodedInputStream input, ExtensionRegistryLite extensionRegistry, int tag) throws IOException {
+        protected <MessageType extends MessageLite> boolean parseUnknownField(MessageType defaultInstance, CodedInputStream input, ExtensionRegistryLite extensionRegistry, int tag) throws IOException {
             Object value;
             MessageLite existingValue;
-            CodedInputStream codedInputStream = input;
-            ExtensionRegistryLite extensionRegistryLite = extensionRegistry;
             int wireType = WireFormat.getTagWireType(tag);
             int fieldNumber = WireFormat.getTagFieldNumber(tag);
-            GeneratedExtension<MessageType, ?> extension = extensionRegistryLite.findLiteExtensionByNumber(defaultInstance, fieldNumber);
+            GeneratedExtension<MessageType, ?> extension = extensionRegistry.findLiteExtensionByNumber(defaultInstance, fieldNumber);
             boolean unknown = false;
             boolean packed = false;
             boolean z = true;
@@ -348,17 +364,17 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
                 unknown = true;
             } else if (wireType == FieldSet.getWireFormatForFieldType(extension.descriptor.getLiteType(), false)) {
                 packed = false;
-            } else if (!extension.descriptor.isRepeated || !extension.descriptor.type.isPackable() || wireType != FieldSet.getWireFormatForFieldType(extension.descriptor.getLiteType(), true)) {
-                unknown = true;
-            } else {
+            } else if (extension.descriptor.isRepeated && extension.descriptor.type.isPackable() && wireType == FieldSet.getWireFormatForFieldType(extension.descriptor.getLiteType(), true)) {
                 packed = true;
+            } else {
+                unknown = true;
             }
             if (unknown) {
-                return parseUnknownField(tag, codedInputStream);
+                return parseUnknownField(tag, input);
             }
-            int i = tag;
             if (packed) {
-                int limit = codedInputStream.pushLimit(input.readRawVarint32());
+                int length = input.readRawVarint32();
+                int limit = input.pushLimit(length);
                 if (extension.descriptor.getLiteType() == WireFormat.FieldType.ENUM) {
                     while (input.getBytesUntilLimit() > 0) {
                         Object value2 = extension.descriptor.getEnumType().findValueByNumber(input.readEnum());
@@ -371,10 +387,11 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
                     }
                 } else {
                     while (input.getBytesUntilLimit() > 0) {
-                        this.extensions.addRepeatedField(extension.descriptor, FieldSet.readPrimitiveField(codedInputStream, extension.descriptor.getLiteType(), false));
+                        Object value3 = FieldSet.readPrimitiveField(input, extension.descriptor.getLiteType(), false);
+                        this.extensions.addRepeatedField(extension.descriptor, value3);
                     }
                 }
-                codedInputStream.popLimit(limit);
+                input.popLimit(limit);
                 return true;
             }
             switch (extension.descriptor.getLiteJavaType()) {
@@ -387,9 +404,9 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
                         subBuilder = extension.getMessageDefaultInstance().newBuilderForType();
                     }
                     if (extension.descriptor.getLiteType() == WireFormat.FieldType.GROUP) {
-                        codedInputStream.readGroup(extension.getNumber(), subBuilder, extensionRegistryLite);
+                        input.readGroup(extension.getNumber(), subBuilder, extensionRegistry);
                     } else {
-                        codedInputStream.readMessage(subBuilder, extensionRegistryLite);
+                        input.readMessage(subBuilder, extensionRegistry);
                     }
                     value = subBuilder.build();
                     break;
@@ -402,15 +419,15 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
                     }
                     break;
                 default:
-                    value = FieldSet.readPrimitiveField(codedInputStream, extension.descriptor.getLiteType(), false);
+                    value = FieldSet.readPrimitiveField(input, extension.descriptor.getLiteType(), false);
                     break;
             }
-            Object value3 = value;
+            Object value4 = value;
             if (extension.descriptor.isRepeated()) {
-                this.extensions.addRepeatedField(extension.descriptor, extension.singularToFieldSetType(value3));
+                this.extensions.addRepeatedField(extension.descriptor, extension.singularToFieldSetType(value4));
                 return true;
             }
-            this.extensions.setField(extension.descriptor, extension.singularToFieldSetType(value3));
+            this.extensions.setField(extension.descriptor, extension.singularToFieldSetType(value4));
             return true;
         }
 
@@ -420,65 +437,69 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
             }
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.ExtendableMessageOrBuilder
         public final <Type> boolean hasExtension(ExtensionLite<MessageType, Type> extension) {
-            GeneratedExtension<MessageType, Type> extensionLite = GeneratedMessageLite.checkIsLite(extension);
-            verifyExtensionContainingType(extensionLite);
-            return this.extensions.hasField(extensionLite.descriptor);
+            GeneratedExtension<MessageType, ?> checkIsLite = GeneratedMessageLite.checkIsLite(extension);
+            verifyExtensionContainingType(checkIsLite);
+            return this.extensions.hasField(checkIsLite.descriptor);
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.ExtendableMessageOrBuilder
         public final <Type> int getExtensionCount(ExtensionLite<MessageType, List<Type>> extension) {
             GeneratedExtension<MessageType, List<Type>> extensionLite = GeneratedMessageLite.checkIsLite(extension);
             verifyExtensionContainingType(extensionLite);
             return this.extensions.getRepeatedFieldCount(extensionLite.descriptor);
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.ExtendableMessageOrBuilder
         public final <Type> Type getExtension(ExtensionLite<MessageType, Type> extension) {
-            GeneratedExtension<MessageType, Type> extensionLite = GeneratedMessageLite.checkIsLite(extension);
-            verifyExtensionContainingType(extensionLite);
-            Object value = this.extensions.getField(extensionLite.descriptor);
+            GeneratedExtension<MessageType, ?> checkIsLite = GeneratedMessageLite.checkIsLite(extension);
+            verifyExtensionContainingType(checkIsLite);
+            Object value = this.extensions.getField(checkIsLite.descriptor);
             if (value == null) {
-                return extensionLite.defaultValue;
+                return checkIsLite.defaultValue;
             }
-            return extensionLite.fromFieldSetType(value);
+            return (Type) checkIsLite.fromFieldSetType(value);
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.ExtendableMessageOrBuilder
         public final <Type> Type getExtension(ExtensionLite<MessageType, List<Type>> extension, int index) {
             GeneratedExtension<MessageType, List<Type>> extensionLite = GeneratedMessageLite.checkIsLite(extension);
             verifyExtensionContainingType(extensionLite);
-            return extensionLite.singularFromFieldSetType(this.extensions.getRepeatedField(extensionLite.descriptor, index));
+            return (Type) extensionLite.singularFromFieldSetType(this.extensions.getRepeatedField(extensionLite.descriptor, index));
         }
 
-        /* access modifiers changed from: protected */
-        public boolean extensionsAreInitialized() {
+        protected boolean extensionsAreInitialized() {
             return this.extensions.isInitialized();
         }
 
-        /* access modifiers changed from: protected */
-        public final void makeImmutable() {
-            GeneratedMessageLite.super.makeImmutable();
+        @Override // com.android.framework.protobuf.GeneratedMessageLite
+        protected final void makeImmutable() {
+            super.makeImmutable();
             this.extensions.makeImmutable();
         }
 
+        /* loaded from: classes4.dex */
         protected class ExtensionWriter {
             private final Iterator<Map.Entry<ExtensionDescriptor, Object>> iter;
             private final boolean messageSetWireFormat;
             private Map.Entry<ExtensionDescriptor, Object> next;
 
-            private ExtensionWriter(boolean messageSetWireFormat2) {
+            private ExtensionWriter(boolean messageSetWireFormat) {
                 this.iter = ExtendableMessage.this.extensions.iterator();
                 if (this.iter.hasNext()) {
                     this.next = this.iter.next();
                 }
-                this.messageSetWireFormat = messageSetWireFormat2;
+                this.messageSetWireFormat = messageSetWireFormat;
             }
 
             public void writeUntil(int end, CodedOutputStream output) throws IOException {
                 while (this.next != null && this.next.getKey().getNumber() < end) {
                     ExtensionDescriptor extension = this.next.getKey();
-                    if (!this.messageSetWireFormat || extension.getLiteJavaType() != WireFormat.JavaType.MESSAGE || extension.isRepeated()) {
-                        FieldSet.writeField(extension, this.next.getValue(), output);
-                    } else {
+                    if (this.messageSetWireFormat && extension.getLiteJavaType() == WireFormat.JavaType.MESSAGE && !extension.isRepeated()) {
                         output.writeMessageSetExtension(extension.getNumber(), (MessageLite) this.next.getValue());
+                    } else {
+                        FieldSet.writeField(extension, this.next.getValue(), output);
                     }
                     if (this.iter.hasNext()) {
                         this.next = this.iter.next();
@@ -489,53 +510,51 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
             }
         }
 
-        /* access modifiers changed from: protected */
-        public ExtendableMessage<MessageType, BuilderType>.ExtensionWriter newExtensionWriter() {
+        protected ExtendableMessage<MessageType, BuilderType>.ExtensionWriter newExtensionWriter() {
             return new ExtensionWriter(false);
         }
 
-        /* access modifiers changed from: protected */
-        public ExtendableMessage<MessageType, BuilderType>.ExtensionWriter newMessageSetExtensionWriter() {
+        protected ExtendableMessage<MessageType, BuilderType>.ExtensionWriter newMessageSetExtensionWriter() {
             return new ExtensionWriter(true);
         }
 
-        /* access modifiers changed from: protected */
-        public int extensionsSerializedSize() {
+        protected int extensionsSerializedSize() {
             return this.extensions.getSerializedSize();
         }
 
-        /* access modifiers changed from: protected */
-        public int extensionsSerializedSizeAsMessageSet() {
+        protected int extensionsSerializedSizeAsMessageSet() {
             return this.extensions.getMessageSetSerializedSize();
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class ExtendableBuilder<MessageType extends ExtendableMessage<MessageType, BuilderType>, BuilderType extends ExtendableBuilder<MessageType, BuilderType>> extends Builder<MessageType, BuilderType> implements ExtendableMessageOrBuilder<MessageType, BuilderType> {
         protected ExtendableBuilder(MessageType defaultInstance) {
             super(defaultInstance);
-            ((ExtendableMessage) this.instance).extensions = ((ExtendableMessage) this.instance).extensions.clone();
+            ((ExtendableMessage) this.instance).extensions = ((ExtendableMessage) this.instance).extensions.m188clone();
         }
 
-        /* access modifiers changed from: package-private */
-        public void internalSetExtensionSet(FieldSet<ExtensionDescriptor> extensions) {
+        void internalSetExtensionSet(FieldSet<ExtensionDescriptor> extensions) {
             copyOnWrite();
             ((ExtendableMessage) this.instance).extensions = extensions;
         }
 
-        /* access modifiers changed from: protected */
-        public void copyOnWrite() {
-            if (this.isBuilt) {
-                super.copyOnWrite();
-                ((ExtendableMessage) this.instance).extensions = ((ExtendableMessage) this.instance).extensions.clone();
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Builder
+        protected void copyOnWrite() {
+            if (!this.isBuilt) {
+                return;
             }
+            super.copyOnWrite();
+            ((ExtendableMessage) this.instance).extensions = ((ExtendableMessage) this.instance).extensions.m188clone();
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Builder, com.android.framework.protobuf.MessageLite.Builder
         public final MessageType buildPartial() {
             if (this.isBuilt) {
-                return (ExtendableMessage) this.instance;
+                return (MessageType) this.instance;
             }
             ((ExtendableMessage) this.instance).extensions.makeImmutable();
-            return (ExtendableMessage) super.buildPartial();
+            return (MessageType) super.buildPartial();
         }
 
         private void verifyExtensionContainingType(GeneratedExtension<MessageType, ?> extension) {
@@ -544,41 +563,37 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
             }
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.ExtendableMessageOrBuilder
         public final <Type> boolean hasExtension(ExtensionLite<MessageType, Type> extension) {
             return ((ExtendableMessage) this.instance).hasExtension(extension);
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.ExtendableMessageOrBuilder
         public final <Type> int getExtensionCount(ExtensionLite<MessageType, List<Type>> extension) {
             return ((ExtendableMessage) this.instance).getExtensionCount(extension);
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.ExtendableMessageOrBuilder
         public final <Type> Type getExtension(ExtensionLite<MessageType, Type> extension) {
-            return ((ExtendableMessage) this.instance).getExtension(extension);
+            return (Type) ((ExtendableMessage) this.instance).getExtension(extension);
         }
 
-        /* JADX WARNING: type inference failed for: r2v0, types: [com.android.framework.protobuf.ExtensionLite, com.android.framework.protobuf.ExtensionLite<MessageType, java.util.List<Type>>] */
-        /* JADX WARNING: Unknown variable types count: 1 */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public final <Type> Type getExtension(com.android.framework.protobuf.ExtensionLite<MessageType, java.util.List<Type>> r2, int r3) {
-            /*
-                r1 = this;
-                com.android.framework.protobuf.GeneratedMessageLite r0 = r1.instance
-                com.android.framework.protobuf.GeneratedMessageLite$ExtendableMessage r0 = (com.android.framework.protobuf.GeneratedMessageLite.ExtendableMessage) r0
-                java.lang.Object r0 = r0.getExtension(r2, r3)
-                return r0
-            */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.framework.protobuf.GeneratedMessageLite.ExtendableBuilder.getExtension(com.android.framework.protobuf.ExtensionLite, int):java.lang.Object");
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.ExtendableMessageOrBuilder
+        public final <Type> Type getExtension(ExtensionLite<MessageType, List<Type>> extension, int index) {
+            return (Type) ((ExtendableMessage) this.instance).getExtension(extension, index);
         }
 
-        public BuilderType clone() {
-            return (ExtendableBuilder) super.clone();
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Builder, com.android.framework.protobuf.AbstractMessageLite.Builder
+        /* renamed from: clone */
+        public BuilderType mo187clone() {
+            return (BuilderType) super.mo187clone();
         }
 
         public final <Type> BuilderType setExtension(ExtensionLite<MessageType, Type> extension, Type value) {
-            GeneratedExtension<MessageType, Type> extensionLite = GeneratedMessageLite.checkIsLite(extension);
-            verifyExtensionContainingType(extensionLite);
+            GeneratedExtension<MessageType, ?> checkIsLite = GeneratedMessageLite.checkIsLite(extension);
+            verifyExtensionContainingType(checkIsLite);
             copyOnWrite();
-            ((ExtendableMessage) this.instance).extensions.setField(extensionLite.descriptor, extensionLite.toFieldSetType(value));
+            ((ExtendableMessage) this.instance).extensions.setField(checkIsLite.descriptor, checkIsLite.toFieldSetType(value));
             return this;
         }
 
@@ -608,13 +623,14 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
     }
 
     public static <ContainingType extends MessageLite, Type> GeneratedExtension<ContainingType, Type> newSingularGeneratedExtension(ContainingType containingTypeDefaultInstance, Type defaultValue, MessageLite messageDefaultInstance, Internal.EnumLiteMap<?> enumTypeMap, int number, WireFormat.FieldType type, Class singularType) {
-        return new GeneratedExtension(containingTypeDefaultInstance, defaultValue, messageDefaultInstance, new ExtensionDescriptor(enumTypeMap, number, type, false, false), singularType);
+        return new GeneratedExtension<>(containingTypeDefaultInstance, defaultValue, messageDefaultInstance, new ExtensionDescriptor(enumTypeMap, number, type, false, false), singularType);
     }
 
     public static <ContainingType extends MessageLite, Type> GeneratedExtension<ContainingType, Type> newRepeatedGeneratedExtension(ContainingType containingTypeDefaultInstance, MessageLite messageDefaultInstance, Internal.EnumLiteMap<?> enumTypeMap, int number, WireFormat.FieldType type, boolean isPacked, Class singularType) {
-        return new GeneratedExtension(containingTypeDefaultInstance, Collections.emptyList(), messageDefaultInstance, new ExtensionDescriptor(enumTypeMap, number, type, true, isPacked), singularType);
+        return new GeneratedExtension<>(containingTypeDefaultInstance, Collections.emptyList(), messageDefaultInstance, new ExtensionDescriptor(enumTypeMap, number, type, true, isPacked), singularType);
     }
 
+    /* loaded from: classes4.dex */
     static final class ExtensionDescriptor implements FieldSet.FieldDescriptorLite<ExtensionDescriptor> {
         final Internal.EnumLiteMap<?> enumTypeMap;
         final boolean isPacked;
@@ -622,42 +638,51 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
         final int number;
         final WireFormat.FieldType type;
 
-        ExtensionDescriptor(Internal.EnumLiteMap<?> enumTypeMap2, int number2, WireFormat.FieldType type2, boolean isRepeated2, boolean isPacked2) {
-            this.enumTypeMap = enumTypeMap2;
-            this.number = number2;
-            this.type = type2;
-            this.isRepeated = isRepeated2;
-            this.isPacked = isPacked2;
+        ExtensionDescriptor(Internal.EnumLiteMap<?> enumTypeMap, int number, WireFormat.FieldType type, boolean isRepeated, boolean isPacked) {
+            this.enumTypeMap = enumTypeMap;
+            this.number = number;
+            this.type = type;
+            this.isRepeated = isRepeated;
+            this.isPacked = isPacked;
         }
 
+        @Override // com.android.framework.protobuf.FieldSet.FieldDescriptorLite
         public int getNumber() {
             return this.number;
         }
 
+        @Override // com.android.framework.protobuf.FieldSet.FieldDescriptorLite
         public WireFormat.FieldType getLiteType() {
             return this.type;
         }
 
+        @Override // com.android.framework.protobuf.FieldSet.FieldDescriptorLite
         public WireFormat.JavaType getLiteJavaType() {
             return this.type.getJavaType();
         }
 
+        @Override // com.android.framework.protobuf.FieldSet.FieldDescriptorLite
         public boolean isRepeated() {
             return this.isRepeated;
         }
 
+        @Override // com.android.framework.protobuf.FieldSet.FieldDescriptorLite
         public boolean isPacked() {
             return this.isPacked;
         }
 
+        @Override // com.android.framework.protobuf.FieldSet.FieldDescriptorLite
         public Internal.EnumLiteMap<?> getEnumType() {
             return this.enumTypeMap;
         }
 
+        /* JADX WARN: Multi-variable type inference failed */
+        @Override // com.android.framework.protobuf.FieldSet.FieldDescriptorLite
         public MessageLite.Builder internalMergeFrom(MessageLite.Builder to, MessageLite from) {
-            return ((Builder) to).mergeFrom((GeneratedMessageLite) from);
+            return ((Builder) to).mergeFrom((Builder) ((GeneratedMessageLite) from));
         }
 
+        @Override // java.lang.Comparable
         public int compareTo(ExtensionDescriptor other) {
             return this.number - other.number;
         }
@@ -680,110 +705,114 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
             Throwable cause = e2.getCause();
             if (cause instanceof RuntimeException) {
                 throw ((RuntimeException) cause);
-            } else if (cause instanceof Error) {
-                throw ((Error) cause);
-            } else {
-                throw new RuntimeException("Unexpected exception thrown by generated accessor method.", cause);
             }
+            if (cause instanceof Error) {
+                throw ((Error) cause);
+            }
+            throw new RuntimeException("Unexpected exception thrown by generated accessor method.", cause);
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class GeneratedExtension<ContainingType extends MessageLite, Type> extends ExtensionLite<ContainingType, Type> {
         final ContainingType containingTypeDefaultInstance;
         final Type defaultValue;
         final ExtensionDescriptor descriptor;
         final MessageLite messageDefaultInstance;
 
-        GeneratedExtension(ContainingType containingTypeDefaultInstance2, Type defaultValue2, MessageLite messageDefaultInstance2, ExtensionDescriptor descriptor2, Class singularType) {
-            if (containingTypeDefaultInstance2 == null) {
+        GeneratedExtension(ContainingType containingTypeDefaultInstance, Type defaultValue, MessageLite messageDefaultInstance, ExtensionDescriptor descriptor, Class singularType) {
+            if (containingTypeDefaultInstance == null) {
                 throw new IllegalArgumentException("Null containingTypeDefaultInstance");
-            } else if (descriptor2.getLiteType() == WireFormat.FieldType.MESSAGE && messageDefaultInstance2 == null) {
-                throw new IllegalArgumentException("Null messageDefaultInstance");
-            } else {
-                this.containingTypeDefaultInstance = containingTypeDefaultInstance2;
-                this.defaultValue = defaultValue2;
-                this.messageDefaultInstance = messageDefaultInstance2;
-                this.descriptor = descriptor2;
             }
+            if (descriptor.getLiteType() == WireFormat.FieldType.MESSAGE && messageDefaultInstance == null) {
+                throw new IllegalArgumentException("Null messageDefaultInstance");
+            }
+            this.containingTypeDefaultInstance = containingTypeDefaultInstance;
+            this.defaultValue = defaultValue;
+            this.messageDefaultInstance = messageDefaultInstance;
+            this.descriptor = descriptor;
         }
 
         public ContainingType getContainingTypeDefaultInstance() {
             return this.containingTypeDefaultInstance;
         }
 
+        @Override // com.android.framework.protobuf.ExtensionLite
         public int getNumber() {
             return this.descriptor.getNumber();
         }
 
+        @Override // com.android.framework.protobuf.ExtensionLite
         public MessageLite getMessageDefaultInstance() {
             return this.messageDefaultInstance;
         }
 
-        /* access modifiers changed from: package-private */
-        public Object fromFieldSetType(Object value) {
-            if (!this.descriptor.isRepeated()) {
-                return singularFromFieldSetType(value);
-            }
-            if (this.descriptor.getLiteJavaType() != WireFormat.JavaType.ENUM) {
+        Object fromFieldSetType(Object value) {
+            if (this.descriptor.isRepeated()) {
+                if (this.descriptor.getLiteJavaType() == WireFormat.JavaType.ENUM) {
+                    List result = new ArrayList();
+                    for (Object element : (List) value) {
+                        result.add(singularFromFieldSetType(element));
+                    }
+                    return result;
+                }
                 return value;
             }
-            List result = new ArrayList();
-            for (Object element : (List) value) {
-                result.add(singularFromFieldSetType(element));
-            }
-            return result;
+            return singularFromFieldSetType(value);
         }
 
-        /* access modifiers changed from: package-private */
-        public Object singularFromFieldSetType(Object value) {
+        Object singularFromFieldSetType(Object value) {
             if (this.descriptor.getLiteJavaType() == WireFormat.JavaType.ENUM) {
                 return this.descriptor.enumTypeMap.findValueByNumber(((Integer) value).intValue());
             }
             return value;
         }
 
-        /* access modifiers changed from: package-private */
-        public Object toFieldSetType(Object value) {
-            if (!this.descriptor.isRepeated()) {
-                return singularToFieldSetType(value);
-            }
-            if (this.descriptor.getLiteJavaType() != WireFormat.JavaType.ENUM) {
+        Object toFieldSetType(Object value) {
+            if (this.descriptor.isRepeated()) {
+                if (this.descriptor.getLiteJavaType() == WireFormat.JavaType.ENUM) {
+                    List result = new ArrayList();
+                    for (Object element : (List) value) {
+                        result.add(singularToFieldSetType(element));
+                    }
+                    return result;
+                }
                 return value;
             }
-            List result = new ArrayList();
-            for (Object element : (List) value) {
-                result.add(singularToFieldSetType(element));
-            }
-            return result;
+            return singularToFieldSetType(value);
         }
 
-        /* access modifiers changed from: package-private */
-        public Object singularToFieldSetType(Object value) {
+        Object singularToFieldSetType(Object value) {
             if (this.descriptor.getLiteJavaType() == WireFormat.JavaType.ENUM) {
                 return Integer.valueOf(((Internal.EnumLite) value).getNumber());
             }
             return value;
         }
 
+        @Override // com.android.framework.protobuf.ExtensionLite
         public WireFormat.FieldType getLiteType() {
             return this.descriptor.getLiteType();
         }
 
+        @Override // com.android.framework.protobuf.ExtensionLite
         public boolean isRepeated() {
             return this.descriptor.isRepeated;
         }
 
+        @Override // com.android.framework.protobuf.ExtensionLite
         public Type getDefaultValue() {
             return this.defaultValue;
         }
     }
 
+    /* loaded from: classes4.dex */
     protected static final class SerializedForm implements Serializable {
         private static final long serialVersionUID = 0;
         private final byte[] asBytes;
         private final String messageClassName;
 
-        public static SerializedForm of(MessageLite message) {
+        /* renamed from: of */
+        public static SerializedForm m35of(MessageLite message) {
             return new SerializedForm(message);
         }
 
@@ -792,32 +821,33 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
             this.asBytes = regularForm.toByteArray();
         }
 
-        /* access modifiers changed from: protected */
-        public Object readResolve() throws ObjectStreamException {
+        protected Object readResolve() throws ObjectStreamException {
             try {
-                Field defaultInstanceField = Class.forName(this.messageClassName).getDeclaredField("DEFAULT_INSTANCE");
+                Class<?> messageClass = Class.forName(this.messageClassName);
+                Field defaultInstanceField = messageClass.getDeclaredField("DEFAULT_INSTANCE");
                 defaultInstanceField.setAccessible(true);
-                return ((MessageLite) defaultInstanceField.get((Object) null)).newBuilderForType().mergeFrom(this.asBytes).buildPartial();
-            } catch (ClassNotFoundException e) {
-                throw new RuntimeException("Unable to find proto buffer class: " + this.messageClassName, e);
-            } catch (NoSuchFieldException e2) {
-                throw new RuntimeException("Unable to find DEFAULT_INSTANCE in " + this.messageClassName, e2);
-            } catch (SecurityException e3) {
-                throw new RuntimeException("Unable to call DEFAULT_INSTANCE in " + this.messageClassName, e3);
-            } catch (IllegalAccessException e4) {
-                throw new RuntimeException("Unable to call parsePartialFrom", e4);
-            } catch (InvalidProtocolBufferException e5) {
-                throw new RuntimeException("Unable to understand proto buffer", e5);
+                MessageLite defaultInstance = (MessageLite) defaultInstanceField.get(null);
+                return defaultInstance.newBuilderForType().mergeFrom(this.asBytes).buildPartial();
+            } catch (InvalidProtocolBufferException e) {
+                throw new RuntimeException("Unable to understand proto buffer", e);
+            } catch (ClassNotFoundException e2) {
+                throw new RuntimeException("Unable to find proto buffer class: " + this.messageClassName, e2);
+            } catch (IllegalAccessException e3) {
+                throw new RuntimeException("Unable to call parsePartialFrom", e3);
+            } catch (NoSuchFieldException e4) {
+                throw new RuntimeException("Unable to find DEFAULT_INSTANCE in " + this.messageClassName, e4);
+            } catch (SecurityException e5) {
+                throw new RuntimeException("Unable to call DEFAULT_INSTANCE in " + this.messageClassName, e5);
             }
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static <MessageType extends ExtendableMessage<MessageType, BuilderType>, BuilderType extends ExtendableBuilder<MessageType, BuilderType>, T> GeneratedExtension<MessageType, T> checkIsLite(ExtensionLite<MessageType, T> extension) {
-        if (extension.isLite()) {
-            return (GeneratedExtension) extension;
+        if (!extension.isLite()) {
+            throw new IllegalArgumentException("Expected a lite extension.");
         }
-        throw new IllegalArgumentException("Expected a lite extension.");
+        return (GeneratedExtension) extension;
     }
 
     protected static final <T extends GeneratedMessageLite<T, ?>> boolean isInitialized(T message, boolean shouldMemoize) {
@@ -832,6 +862,7 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
         return IntArrayList.emptyList();
     }
 
+    /* JADX WARN: Type inference failed for: r1v2, types: [com.android.framework.protobuf.Internal$IntList] */
     protected static Internal.IntList mutableCopy(Internal.IntList list) {
         int size = list.size();
         return list.mutableCopyWithCapacity(size == 0 ? 10 : size * 2);
@@ -841,6 +872,7 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
         return LongArrayList.emptyList();
     }
 
+    /* JADX WARN: Type inference failed for: r1v2, types: [com.android.framework.protobuf.Internal$LongList] */
     protected static Internal.LongList mutableCopy(Internal.LongList list) {
         int size = list.size();
         return list.mutableCopyWithCapacity(size == 0 ? 10 : size * 2);
@@ -850,6 +882,7 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
         return FloatArrayList.emptyList();
     }
 
+    /* JADX WARN: Type inference failed for: r1v2, types: [com.android.framework.protobuf.Internal$FloatList] */
     protected static Internal.FloatList mutableCopy(Internal.FloatList list) {
         int size = list.size();
         return list.mutableCopyWithCapacity(size == 0 ? 10 : size * 2);
@@ -859,6 +892,7 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
         return DoubleArrayList.emptyList();
     }
 
+    /* JADX WARN: Type inference failed for: r1v2, types: [com.android.framework.protobuf.Internal$DoubleList] */
     protected static Internal.DoubleList mutableCopy(Internal.DoubleList list) {
         int size = list.size();
         return list.mutableCopyWithCapacity(size == 0 ? 10 : size * 2);
@@ -868,6 +902,7 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
         return BooleanArrayList.emptyList();
     }
 
+    /* JADX WARN: Type inference failed for: r1v2, types: [com.android.framework.protobuf.Internal$BooleanList] */
     protected static Internal.BooleanList mutableCopy(Internal.BooleanList list) {
         int size = list.size();
         return list.mutableCopyWithCapacity(size == 0 ? 10 : size * 2);
@@ -882,20 +917,22 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
         return list.mutableCopyWithCapacity(size == 0 ? 10 : size * 2);
     }
 
+    /* loaded from: classes4.dex */
     protected static class DefaultInstanceBasedParser<T extends GeneratedMessageLite<T, ?>> extends AbstractParser<T> {
         private T defaultInstance;
 
-        public DefaultInstanceBasedParser(T defaultInstance2) {
-            this.defaultInstance = defaultInstance2;
+        public DefaultInstanceBasedParser(T defaultInstance) {
+            this.defaultInstance = defaultInstance;
         }
 
+        @Override // com.android.framework.protobuf.Parser
         public T parsePartialFrom(CodedInputStream input, ExtensionRegistryLite extensionRegistry) throws InvalidProtocolBufferException {
-            return GeneratedMessageLite.parsePartialFrom(this.defaultInstance, input, extensionRegistry);
+            return (T) GeneratedMessageLite.parsePartialFrom(this.defaultInstance, input, extensionRegistry);
         }
     }
 
     static <T extends GeneratedMessageLite<T, ?>> T parsePartialFrom(T instance, CodedInputStream input, ExtensionRegistryLite extensionRegistry) throws InvalidProtocolBufferException {
-        T result = (GeneratedMessageLite) instance.dynamicMethod(MethodToInvoke.NEW_MUTABLE_INSTANCE);
+        T result = (T) instance.dynamicMethod(MethodToInvoke.NEW_MUTABLE_INSTANCE);
         try {
             result.dynamicMethod(MethodToInvoke.MERGE_FROM_STREAM, input, extensionRegistry);
             result.makeImmutable();
@@ -909,82 +946,84 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
     }
 
     protected static <T extends GeneratedMessageLite<T, ?>> T parsePartialFrom(T defaultInstance, CodedInputStream input) throws InvalidProtocolBufferException {
-        return parsePartialFrom(defaultInstance, input, ExtensionRegistryLite.getEmptyRegistry());
+        return (T) parsePartialFrom(defaultInstance, input, ExtensionRegistryLite.getEmptyRegistry());
     }
 
     private static <T extends GeneratedMessageLite<T, ?>> T checkMessageInitialized(T message) throws InvalidProtocolBufferException {
-        if (message == null || message.isInitialized()) {
-            return message;
+        if (message != null && !message.isInitialized()) {
+            throw message.newUninitializedMessageException().asInvalidProtocolBufferException().setUnfinishedMessage(message);
         }
-        throw message.newUninitializedMessageException().asInvalidProtocolBufferException().setUnfinishedMessage(message);
+        return message;
     }
 
     protected static <T extends GeneratedMessageLite<T, ?>> T parseFrom(T defaultInstance, ByteString data) throws InvalidProtocolBufferException {
-        return checkMessageInitialized(parseFrom(defaultInstance, data, ExtensionRegistryLite.getEmptyRegistry()));
+        return (T) checkMessageInitialized(parseFrom(defaultInstance, data, ExtensionRegistryLite.getEmptyRegistry()));
     }
 
     protected static <T extends GeneratedMessageLite<T, ?>> T parseFrom(T defaultInstance, ByteString data, ExtensionRegistryLite extensionRegistry) throws InvalidProtocolBufferException {
-        return checkMessageInitialized(parsePartialFrom(defaultInstance, data, extensionRegistry));
+        return (T) checkMessageInitialized(parsePartialFrom(defaultInstance, data, extensionRegistry));
     }
 
     private static <T extends GeneratedMessageLite<T, ?>> T parsePartialFrom(T defaultInstance, ByteString data, ExtensionRegistryLite extensionRegistry) throws InvalidProtocolBufferException {
-        T message;
         try {
             CodedInputStream input = data.newCodedInput();
-            message = parsePartialFrom(defaultInstance, input, extensionRegistry);
-            input.checkLastTagWas(0);
-            return message;
-        } catch (InvalidProtocolBufferException e) {
-            throw e.setUnfinishedMessage(message);
+            T message = (T) parsePartialFrom(defaultInstance, input, extensionRegistry);
+            try {
+                input.checkLastTagWas(0);
+                return message;
+            } catch (InvalidProtocolBufferException e) {
+                throw e.setUnfinishedMessage(message);
+            }
         } catch (InvalidProtocolBufferException e2) {
             throw e2;
         }
     }
 
     private static <T extends GeneratedMessageLite<T, ?>> T parsePartialFrom(T defaultInstance, byte[] data, ExtensionRegistryLite extensionRegistry) throws InvalidProtocolBufferException {
-        T message;
         try {
             CodedInputStream input = CodedInputStream.newInstance(data);
-            message = parsePartialFrom(defaultInstance, input, extensionRegistry);
-            input.checkLastTagWas(0);
-            return message;
-        } catch (InvalidProtocolBufferException e) {
-            throw e.setUnfinishedMessage(message);
+            T message = (T) parsePartialFrom(defaultInstance, input, extensionRegistry);
+            try {
+                input.checkLastTagWas(0);
+                return message;
+            } catch (InvalidProtocolBufferException e) {
+                throw e.setUnfinishedMessage(message);
+            }
         } catch (InvalidProtocolBufferException e2) {
             throw e2;
         }
     }
 
     protected static <T extends GeneratedMessageLite<T, ?>> T parseFrom(T defaultInstance, byte[] data) throws InvalidProtocolBufferException {
-        return checkMessageInitialized(parsePartialFrom(defaultInstance, data, ExtensionRegistryLite.getEmptyRegistry()));
+        return (T) checkMessageInitialized(parsePartialFrom(defaultInstance, data, ExtensionRegistryLite.getEmptyRegistry()));
     }
 
     protected static <T extends GeneratedMessageLite<T, ?>> T parseFrom(T defaultInstance, byte[] data, ExtensionRegistryLite extensionRegistry) throws InvalidProtocolBufferException {
-        return checkMessageInitialized(parsePartialFrom(defaultInstance, data, extensionRegistry));
+        return (T) checkMessageInitialized(parsePartialFrom(defaultInstance, data, extensionRegistry));
     }
 
     protected static <T extends GeneratedMessageLite<T, ?>> T parseFrom(T defaultInstance, InputStream input) throws InvalidProtocolBufferException {
-        return checkMessageInitialized(parsePartialFrom(defaultInstance, CodedInputStream.newInstance(input), ExtensionRegistryLite.getEmptyRegistry()));
+        return (T) checkMessageInitialized(parsePartialFrom(defaultInstance, CodedInputStream.newInstance(input), ExtensionRegistryLite.getEmptyRegistry()));
     }
 
     protected static <T extends GeneratedMessageLite<T, ?>> T parseFrom(T defaultInstance, InputStream input, ExtensionRegistryLite extensionRegistry) throws InvalidProtocolBufferException {
-        return checkMessageInitialized(parsePartialFrom(defaultInstance, CodedInputStream.newInstance(input), extensionRegistry));
+        return (T) checkMessageInitialized(parsePartialFrom(defaultInstance, CodedInputStream.newInstance(input), extensionRegistry));
     }
 
     protected static <T extends GeneratedMessageLite<T, ?>> T parseFrom(T defaultInstance, CodedInputStream input) throws InvalidProtocolBufferException {
-        return parseFrom(defaultInstance, input, ExtensionRegistryLite.getEmptyRegistry());
+        return (T) parseFrom(defaultInstance, input, ExtensionRegistryLite.getEmptyRegistry());
     }
 
     protected static <T extends GeneratedMessageLite<T, ?>> T parseFrom(T defaultInstance, CodedInputStream input, ExtensionRegistryLite extensionRegistry) throws InvalidProtocolBufferException {
-        return checkMessageInitialized(parsePartialFrom(defaultInstance, input, extensionRegistry));
+        return (T) checkMessageInitialized(parsePartialFrom(defaultInstance, input, extensionRegistry));
     }
 
     protected static <T extends GeneratedMessageLite<T, ?>> T parseDelimitedFrom(T defaultInstance, InputStream input) throws InvalidProtocolBufferException {
-        return checkMessageInitialized(parsePartialDelimitedFrom(defaultInstance, input, ExtensionRegistryLite.getEmptyRegistry()));
+        return (T) checkMessageInitialized(parsePartialDelimitedFrom(defaultInstance, input, ExtensionRegistryLite.getEmptyRegistry()));
     }
 
     protected static <T extends GeneratedMessageLite<T, ?>> T parseDelimitedFrom(T defaultInstance, InputStream input, ExtensionRegistryLite extensionRegistry) throws InvalidProtocolBufferException {
-        return checkMessageInitialized(parsePartialDelimitedFrom(defaultInstance, input, extensionRegistry));
+        return (T) checkMessageInitialized(parsePartialDelimitedFrom(defaultInstance, input, extensionRegistry));
     }
 
     private static <T extends GeneratedMessageLite<T, ?>> T parsePartialDelimitedFrom(T defaultInstance, InputStream input, ExtensionRegistryLite extensionRegistry) throws InvalidProtocolBufferException {
@@ -993,8 +1032,10 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
             if (firstByte == -1) {
                 return null;
             }
-            CodedInputStream codedInput = CodedInputStream.newInstance(new AbstractMessageLite.Builder.LimitedInputStream(input, CodedInputStream.readRawVarint32(firstByte, input)));
-            T message = parsePartialFrom(defaultInstance, codedInput, extensionRegistry);
+            int size = CodedInputStream.readRawVarint32(firstByte, input);
+            InputStream limitedInput = new AbstractMessageLite.Builder.LimitedInputStream(input, size);
+            CodedInputStream codedInput = CodedInputStream.newInstance(limitedInput);
+            T message = (T) parsePartialFrom(defaultInstance, codedInput, extensionRegistry);
             try {
                 codedInput.checkLastTagWas(0);
                 return message;
@@ -1006,10 +1047,12 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
         }
     }
 
+    /* loaded from: classes4.dex */
     static class EqualsVisitor implements Visitor {
         static final EqualsVisitor INSTANCE = new EqualsVisitor();
         static final NotEqualsException NOT_EQUALS = new NotEqualsException();
 
+        /* loaded from: classes4.dex */
         static final class NotEqualsException extends RuntimeException {
             NotEqualsException() {
             }
@@ -1018,55 +1061,63 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
         private EqualsVisitor() {
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public boolean visitBoolean(boolean minePresent, boolean mine, boolean otherPresent, boolean other) {
-            if (minePresent == otherPresent && mine == other) {
-                return mine;
+            if (minePresent != otherPresent || mine != other) {
+                throw NOT_EQUALS;
             }
-            throw NOT_EQUALS;
+            return mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public int visitInt(boolean minePresent, int mine, boolean otherPresent, int other) {
-            if (minePresent == otherPresent && mine == other) {
-                return mine;
+            if (minePresent != otherPresent || mine != other) {
+                throw NOT_EQUALS;
             }
-            throw NOT_EQUALS;
+            return mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public double visitDouble(boolean minePresent, double mine, boolean otherPresent, double other) {
-            if (minePresent == otherPresent && mine == other) {
-                return mine;
+            if (minePresent != otherPresent || mine != other) {
+                throw NOT_EQUALS;
             }
-            throw NOT_EQUALS;
+            return mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public float visitFloat(boolean minePresent, float mine, boolean otherPresent, float other) {
-            if (minePresent == otherPresent && mine == other) {
-                return mine;
+            if (minePresent != otherPresent || mine != other) {
+                throw NOT_EQUALS;
             }
-            throw NOT_EQUALS;
+            return mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public long visitLong(boolean minePresent, long mine, boolean otherPresent, long other) {
-            if (minePresent == otherPresent && mine == other) {
-                return mine;
+            if (minePresent != otherPresent || mine != other) {
+                throw NOT_EQUALS;
             }
-            throw NOT_EQUALS;
+            return mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public String visitString(boolean minePresent, String mine, boolean otherPresent, String other) {
-            if (minePresent == otherPresent && mine.equals(other)) {
-                return mine;
+            if (minePresent != otherPresent || !mine.equals(other)) {
+                throw NOT_EQUALS;
             }
-            throw NOT_EQUALS;
+            return mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public ByteString visitByteString(boolean minePresent, ByteString mine, boolean otherPresent, ByteString other) {
-            if (minePresent == otherPresent && mine.equals(other)) {
-                return mine;
+            if (minePresent != otherPresent || !mine.equals(other)) {
+                throw NOT_EQUALS;
             }
-            throw NOT_EQUALS;
+            return mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public Object visitOneofBoolean(boolean minePresent, Object mine, Object other) {
             if (minePresent && mine.equals(other)) {
                 return mine;
@@ -1074,6 +1125,7 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
             throw NOT_EQUALS;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public Object visitOneofInt(boolean minePresent, Object mine, Object other) {
             if (minePresent && mine.equals(other)) {
                 return mine;
@@ -1081,6 +1133,7 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
             throw NOT_EQUALS;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public Object visitOneofDouble(boolean minePresent, Object mine, Object other) {
             if (minePresent && mine.equals(other)) {
                 return mine;
@@ -1088,6 +1141,7 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
             throw NOT_EQUALS;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public Object visitOneofFloat(boolean minePresent, Object mine, Object other) {
             if (minePresent && mine.equals(other)) {
                 return mine;
@@ -1095,6 +1149,7 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
             throw NOT_EQUALS;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public Object visitOneofLong(boolean minePresent, Object mine, Object other) {
             if (minePresent && mine.equals(other)) {
                 return mine;
@@ -1102,6 +1157,7 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
             throw NOT_EQUALS;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public Object visitOneofString(boolean minePresent, Object mine, Object other) {
             if (minePresent && mine.equals(other)) {
                 return mine;
@@ -1109,6 +1165,7 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
             throw NOT_EQUALS;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public Object visitOneofByteString(boolean minePresent, Object mine, Object other) {
             if (minePresent && mine.equals(other)) {
                 return mine;
@@ -1116,6 +1173,7 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
             throw NOT_EQUALS;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public Object visitOneofLazyMessage(boolean minePresent, Object mine, Object other) {
             if (minePresent && mine.equals(other)) {
                 return mine;
@@ -1123,6 +1181,7 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
             throw NOT_EQUALS;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public Object visitOneofMessage(boolean minePresent, Object mine, Object other) {
             if (minePresent && ((GeneratedMessageLite) mine).equals(this, (MessageLite) other)) {
                 return mine;
@@ -1130,12 +1189,14 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
             throw NOT_EQUALS;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public void visitOneofNotSet(boolean minePresent) {
             if (minePresent) {
                 throw NOT_EQUALS;
             }
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public <T extends MessageLite> T visitMessage(T mine, T other) {
             if (mine == null && other == null) {
                 return null;
@@ -1147,6 +1208,7 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
             return mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public LazyFieldLite visitLazyMessage(boolean minePresent, LazyFieldLite mine, boolean otherPresent, LazyFieldLite other) {
             if (!minePresent && !otherPresent) {
                 return mine;
@@ -1157,298 +1219,354 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
             throw NOT_EQUALS;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public <T> Internal.ProtobufList<T> visitList(Internal.ProtobufList<T> mine, Internal.ProtobufList<T> other) {
-            if (mine.equals(other)) {
-                return mine;
+            if (!mine.equals(other)) {
+                throw NOT_EQUALS;
             }
-            throw NOT_EQUALS;
+            return mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public Internal.BooleanList visitBooleanList(Internal.BooleanList mine, Internal.BooleanList other) {
-            if (mine.equals(other)) {
-                return mine;
+            if (!mine.equals(other)) {
+                throw NOT_EQUALS;
             }
-            throw NOT_EQUALS;
+            return mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public Internal.IntList visitIntList(Internal.IntList mine, Internal.IntList other) {
-            if (mine.equals(other)) {
-                return mine;
+            if (!mine.equals(other)) {
+                throw NOT_EQUALS;
             }
-            throw NOT_EQUALS;
+            return mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public Internal.DoubleList visitDoubleList(Internal.DoubleList mine, Internal.DoubleList other) {
-            if (mine.equals(other)) {
-                return mine;
+            if (!mine.equals(other)) {
+                throw NOT_EQUALS;
             }
-            throw NOT_EQUALS;
+            return mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public Internal.FloatList visitFloatList(Internal.FloatList mine, Internal.FloatList other) {
-            if (mine.equals(other)) {
-                return mine;
+            if (!mine.equals(other)) {
+                throw NOT_EQUALS;
             }
-            throw NOT_EQUALS;
+            return mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public Internal.LongList visitLongList(Internal.LongList mine, Internal.LongList other) {
-            if (mine.equals(other)) {
-                return mine;
+            if (!mine.equals(other)) {
+                throw NOT_EQUALS;
             }
-            throw NOT_EQUALS;
+            return mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public FieldSet<ExtensionDescriptor> visitExtensions(FieldSet<ExtensionDescriptor> mine, FieldSet<ExtensionDescriptor> other) {
-            if (mine.equals(other)) {
-                return mine;
+            if (!mine.equals(other)) {
+                throw NOT_EQUALS;
             }
-            throw NOT_EQUALS;
+            return mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public UnknownFieldSetLite visitUnknownFields(UnknownFieldSetLite mine, UnknownFieldSetLite other) {
-            if (mine.equals(other)) {
-                return mine;
+            if (!mine.equals(other)) {
+                throw NOT_EQUALS;
             }
-            throw NOT_EQUALS;
+            return mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public <K, V> MapFieldLite<K, V> visitMap(MapFieldLite<K, V> mine, MapFieldLite<K, V> other) {
-            if (mine.equals(other)) {
-                return mine;
+            if (!mine.equals(other)) {
+                throw NOT_EQUALS;
             }
-            throw NOT_EQUALS;
+            return mine;
         }
     }
 
+    /* loaded from: classes4.dex */
     private static class HashCodeVisitor implements Visitor {
-        /* access modifiers changed from: private */
-        public int hashCode;
+        private int hashCode;
 
         private HashCodeVisitor() {
             this.hashCode = 0;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public boolean visitBoolean(boolean minePresent, boolean mine, boolean otherPresent, boolean other) {
             this.hashCode = (this.hashCode * 53) + Internal.hashBoolean(mine);
             return mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public int visitInt(boolean minePresent, int mine, boolean otherPresent, int other) {
             this.hashCode = (this.hashCode * 53) + mine;
             return mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public double visitDouble(boolean minePresent, double mine, boolean otherPresent, double other) {
             this.hashCode = (this.hashCode * 53) + Internal.hashLong(Double.doubleToLongBits(mine));
             return mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public float visitFloat(boolean minePresent, float mine, boolean otherPresent, float other) {
             this.hashCode = (this.hashCode * 53) + Float.floatToIntBits(mine);
             return mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public long visitLong(boolean minePresent, long mine, boolean otherPresent, long other) {
             this.hashCode = (this.hashCode * 53) + Internal.hashLong(mine);
             return mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public String visitString(boolean minePresent, String mine, boolean otherPresent, String other) {
             this.hashCode = (this.hashCode * 53) + mine.hashCode();
             return mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public ByteString visitByteString(boolean minePresent, ByteString mine, boolean otherPresent, ByteString other) {
             this.hashCode = (this.hashCode * 53) + mine.hashCode();
             return mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public Object visitOneofBoolean(boolean minePresent, Object mine, Object other) {
             this.hashCode = (this.hashCode * 53) + Internal.hashBoolean(((Boolean) mine).booleanValue());
             return mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public Object visitOneofInt(boolean minePresent, Object mine, Object other) {
             this.hashCode = (this.hashCode * 53) + ((Integer) mine).intValue();
             return mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public Object visitOneofDouble(boolean minePresent, Object mine, Object other) {
             this.hashCode = (this.hashCode * 53) + Internal.hashLong(Double.doubleToLongBits(((Double) mine).doubleValue()));
             return mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public Object visitOneofFloat(boolean minePresent, Object mine, Object other) {
             this.hashCode = (this.hashCode * 53) + Float.floatToIntBits(((Float) mine).floatValue());
             return mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public Object visitOneofLong(boolean minePresent, Object mine, Object other) {
             this.hashCode = (this.hashCode * 53) + Internal.hashLong(((Long) mine).longValue());
             return mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public Object visitOneofString(boolean minePresent, Object mine, Object other) {
             this.hashCode = (this.hashCode * 53) + mine.hashCode();
             return mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public Object visitOneofByteString(boolean minePresent, Object mine, Object other) {
             this.hashCode = (this.hashCode * 53) + mine.hashCode();
             return mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public Object visitOneofLazyMessage(boolean minePresent, Object mine, Object other) {
             this.hashCode = (this.hashCode * 53) + mine.hashCode();
             return mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public Object visitOneofMessage(boolean minePresent, Object mine, Object other) {
             return visitMessage((MessageLite) mine, (MessageLite) other);
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public void visitOneofNotSet(boolean minePresent) {
             if (minePresent) {
                 throw new IllegalStateException();
             }
         }
 
-        public <T extends MessageLite> T visitMessage(T mine, T t) {
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
+        public <T extends MessageLite> T visitMessage(T mine, T other) {
             int protoHash;
-            if (mine == null) {
-                protoHash = 37;
-            } else if (mine instanceof GeneratedMessageLite) {
-                protoHash = ((GeneratedMessageLite) mine).hashCode(this);
+            if (mine != null) {
+                if (mine instanceof GeneratedMessageLite) {
+                    protoHash = ((GeneratedMessageLite) mine).hashCode(this);
+                } else {
+                    protoHash = mine.hashCode();
+                }
             } else {
-                protoHash = mine.hashCode();
+                protoHash = 37;
             }
             this.hashCode = (this.hashCode * 53) + protoHash;
             return mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public LazyFieldLite visitLazyMessage(boolean minePresent, LazyFieldLite mine, boolean otherPresent, LazyFieldLite other) {
             this.hashCode = (this.hashCode * 53) + mine.hashCode();
             return mine;
         }
 
-        public <T> Internal.ProtobufList<T> visitList(Internal.ProtobufList<T> mine, Internal.ProtobufList<T> protobufList) {
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
+        public <T> Internal.ProtobufList<T> visitList(Internal.ProtobufList<T> mine, Internal.ProtobufList<T> other) {
             this.hashCode = (this.hashCode * 53) + mine.hashCode();
             return mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public Internal.BooleanList visitBooleanList(Internal.BooleanList mine, Internal.BooleanList other) {
             this.hashCode = (this.hashCode * 53) + mine.hashCode();
             return mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public Internal.IntList visitIntList(Internal.IntList mine, Internal.IntList other) {
             this.hashCode = (this.hashCode * 53) + mine.hashCode();
             return mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public Internal.DoubleList visitDoubleList(Internal.DoubleList mine, Internal.DoubleList other) {
             this.hashCode = (this.hashCode * 53) + mine.hashCode();
             return mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public Internal.FloatList visitFloatList(Internal.FloatList mine, Internal.FloatList other) {
             this.hashCode = (this.hashCode * 53) + mine.hashCode();
             return mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public Internal.LongList visitLongList(Internal.LongList mine, Internal.LongList other) {
             this.hashCode = (this.hashCode * 53) + mine.hashCode();
             return mine;
         }
 
-        public FieldSet<ExtensionDescriptor> visitExtensions(FieldSet<ExtensionDescriptor> mine, FieldSet<ExtensionDescriptor> fieldSet) {
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
+        public FieldSet<ExtensionDescriptor> visitExtensions(FieldSet<ExtensionDescriptor> mine, FieldSet<ExtensionDescriptor> other) {
             this.hashCode = (this.hashCode * 53) + mine.hashCode();
             return mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public UnknownFieldSetLite visitUnknownFields(UnknownFieldSetLite mine, UnknownFieldSetLite other) {
             this.hashCode = (this.hashCode * 53) + mine.hashCode();
             return mine;
         }
 
-        public <K, V> MapFieldLite<K, V> visitMap(MapFieldLite<K, V> mine, MapFieldLite<K, V> mapFieldLite) {
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
+        public <K, V> MapFieldLite<K, V> visitMap(MapFieldLite<K, V> mine, MapFieldLite<K, V> other) {
             this.hashCode = (this.hashCode * 53) + mine.hashCode();
             return mine;
         }
     }
 
+    /* loaded from: classes4.dex */
     protected static class MergeFromVisitor implements Visitor {
         public static final MergeFromVisitor INSTANCE = new MergeFromVisitor();
 
         private MergeFromVisitor() {
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public boolean visitBoolean(boolean minePresent, boolean mine, boolean otherPresent, boolean other) {
             return otherPresent ? other : mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public int visitInt(boolean minePresent, int mine, boolean otherPresent, int other) {
             return otherPresent ? other : mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public double visitDouble(boolean minePresent, double mine, boolean otherPresent, double other) {
             return otherPresent ? other : mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public float visitFloat(boolean minePresent, float mine, boolean otherPresent, float other) {
             return otherPresent ? other : mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public long visitLong(boolean minePresent, long mine, boolean otherPresent, long other) {
             return otherPresent ? other : mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public String visitString(boolean minePresent, String mine, boolean otherPresent, String other) {
             return otherPresent ? other : mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public ByteString visitByteString(boolean minePresent, ByteString mine, boolean otherPresent, ByteString other) {
             return otherPresent ? other : mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public Object visitOneofBoolean(boolean minePresent, Object mine, Object other) {
             return other;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public Object visitOneofInt(boolean minePresent, Object mine, Object other) {
             return other;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public Object visitOneofDouble(boolean minePresent, Object mine, Object other) {
             return other;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public Object visitOneofFloat(boolean minePresent, Object mine, Object other) {
             return other;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public Object visitOneofLong(boolean minePresent, Object mine, Object other) {
             return other;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public Object visitOneofString(boolean minePresent, Object mine, Object other) {
             return other;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public Object visitOneofByteString(boolean minePresent, Object mine, Object other) {
             return other;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public Object visitOneofLazyMessage(boolean minePresent, Object mine, Object other) {
-            if (!minePresent) {
-                return other;
+            if (minePresent) {
+                LazyFieldLite lazy = (LazyFieldLite) mine;
+                lazy.merge((LazyFieldLite) other);
+                return lazy;
             }
-            LazyFieldLite lazy = (LazyFieldLite) mine;
-            lazy.merge((LazyFieldLite) other);
-            return lazy;
+            return other;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public Object visitOneofMessage(boolean minePresent, Object mine, Object other) {
             if (minePresent) {
                 return visitMessage((MessageLite) mine, (MessageLite) other);
@@ -1456,21 +1574,25 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
             return other;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public void visitOneofNotSet(boolean minePresent) {
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public <T extends MessageLite> T visitMessage(T mine, T other) {
             if (mine == null || other == null) {
                 return mine != null ? mine : other;
             }
-            return mine.toBuilder().mergeFrom((MessageLite) other).build();
+            return (T) mine.toBuilder().mergeFrom(other).build();
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public LazyFieldLite visitLazyMessage(boolean minePresent, LazyFieldLite mine, boolean otherPresent, LazyFieldLite other) {
             mine.merge(other);
             return mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public <T> Internal.ProtobufList<T> visitList(Internal.ProtobufList<T> mine, Internal.ProtobufList<T> other) {
             int size = mine.size();
             int otherSize = other.size();
@@ -1483,74 +1605,106 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
             return size > 0 ? mine : other;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public Internal.BooleanList visitBooleanList(Internal.BooleanList mine, Internal.BooleanList other) {
             int size = mine.size();
             int otherSize = other.size();
+            Internal.BooleanList mine2 = mine;
+            mine2 = mine;
             if (size > 0 && otherSize > 0) {
-                if (!mine.isModifiable()) {
-                    mine = mine.mutableCopyWithCapacity(size + otherSize);
+                boolean isModifiable = mine.isModifiable();
+                Internal.BooleanList mine3 = mine;
+                if (!isModifiable) {
+                    mine3 = mine.mutableCopyWithCapacity(size + otherSize);
                 }
-                mine.addAll(other);
+                mine3.addAll(other);
+                mine2 = mine3;
             }
-            return size > 0 ? mine : other;
+            return size > 0 ? mine2 : other;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public Internal.IntList visitIntList(Internal.IntList mine, Internal.IntList other) {
             int size = mine.size();
             int otherSize = other.size();
+            Internal.IntList mine2 = mine;
+            mine2 = mine;
             if (size > 0 && otherSize > 0) {
-                if (!mine.isModifiable()) {
-                    mine = mine.mutableCopyWithCapacity(size + otherSize);
+                boolean isModifiable = mine.isModifiable();
+                Internal.IntList mine3 = mine;
+                if (!isModifiable) {
+                    mine3 = mine.mutableCopyWithCapacity(size + otherSize);
                 }
-                mine.addAll(other);
+                mine3.addAll(other);
+                mine2 = mine3;
             }
-            return size > 0 ? mine : other;
+            return size > 0 ? mine2 : other;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public Internal.DoubleList visitDoubleList(Internal.DoubleList mine, Internal.DoubleList other) {
             int size = mine.size();
             int otherSize = other.size();
+            Internal.DoubleList mine2 = mine;
+            mine2 = mine;
             if (size > 0 && otherSize > 0) {
-                if (!mine.isModifiable()) {
-                    mine = mine.mutableCopyWithCapacity(size + otherSize);
+                boolean isModifiable = mine.isModifiable();
+                Internal.DoubleList mine3 = mine;
+                if (!isModifiable) {
+                    mine3 = mine.mutableCopyWithCapacity(size + otherSize);
                 }
-                mine.addAll(other);
+                mine3.addAll(other);
+                mine2 = mine3;
             }
-            return size > 0 ? mine : other;
+            return size > 0 ? mine2 : other;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public Internal.FloatList visitFloatList(Internal.FloatList mine, Internal.FloatList other) {
             int size = mine.size();
             int otherSize = other.size();
+            Internal.FloatList mine2 = mine;
+            mine2 = mine;
             if (size > 0 && otherSize > 0) {
-                if (!mine.isModifiable()) {
-                    mine = mine.mutableCopyWithCapacity(size + otherSize);
+                boolean isModifiable = mine.isModifiable();
+                Internal.FloatList mine3 = mine;
+                if (!isModifiable) {
+                    mine3 = mine.mutableCopyWithCapacity(size + otherSize);
                 }
-                mine.addAll(other);
+                mine3.addAll(other);
+                mine2 = mine3;
             }
-            return size > 0 ? mine : other;
+            return size > 0 ? mine2 : other;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public Internal.LongList visitLongList(Internal.LongList mine, Internal.LongList other) {
             int size = mine.size();
             int otherSize = other.size();
+            Internal.LongList mine2 = mine;
+            mine2 = mine;
             if (size > 0 && otherSize > 0) {
-                if (!mine.isModifiable()) {
-                    mine = mine.mutableCopyWithCapacity(size + otherSize);
+                boolean isModifiable = mine.isModifiable();
+                Internal.LongList mine3 = mine;
+                if (!isModifiable) {
+                    mine3 = mine.mutableCopyWithCapacity(size + otherSize);
                 }
-                mine.addAll(other);
+                mine3.addAll(other);
+                mine2 = mine3;
             }
-            return size > 0 ? mine : other;
+            return size > 0 ? mine2 : other;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public FieldSet<ExtensionDescriptor> visitExtensions(FieldSet<ExtensionDescriptor> mine, FieldSet<ExtensionDescriptor> other) {
             if (mine.isImmutable()) {
-                mine = mine.clone();
+                mine = mine.m188clone();
             }
             mine.mergeFrom(other);
             return mine;
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public UnknownFieldSetLite visitUnknownFields(UnknownFieldSetLite mine, UnknownFieldSetLite other) {
             if (other == UnknownFieldSetLite.getDefaultInstance()) {
                 return mine;
@@ -1558,6 +1712,7 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
             return UnknownFieldSetLite.mutableCopyOf(mine, other);
         }
 
+        @Override // com.android.framework.protobuf.GeneratedMessageLite.Visitor
         public <K, V> MapFieldLite<K, V> visitMap(MapFieldLite<K, V> mine, MapFieldLite<K, V> other) {
             mine.mergeFrom(other);
             return mine;

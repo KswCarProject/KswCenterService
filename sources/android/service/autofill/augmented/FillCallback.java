@@ -5,6 +5,7 @@ import android.service.autofill.augmented.AugmentedAutofillService;
 import android.util.Log;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class FillCallback {
     private static final String TAG = FillCallback.class.getSimpleName();
     private final AugmentedAutofillService.AutofillProxy mProxy;
@@ -16,7 +17,7 @@ public final class FillCallback {
     public void onSuccess(FillResponse response) {
         if (AugmentedAutofillService.sDebug) {
             String str = TAG;
-            Log.d(str, "onSuccess(): " + response);
+            Log.m72d(str, "onSuccess(): " + response);
         }
         if (response == null) {
             this.mProxy.report(1);

@@ -1,70 +1,70 @@
 package android.telephony.ims;
 
 import android.annotation.SystemApi;
-import android.os.Bundle;
-import android.os.RemoteException;
+import android.p007os.Bundle;
+import android.p007os.RemoteException;
 import android.util.Log;
-import com.android.ims.internal.IImsUt;
 import com.android.ims.internal.IImsUtListener;
 
 @SystemApi
+/* loaded from: classes4.dex */
 public class ImsUtListener {
     private static final String LOG_TAG = "ImsUtListener";
     private IImsUtListener mServiceInterface;
 
     public void onUtConfigurationUpdated(int id) {
         try {
-            this.mServiceInterface.utConfigurationUpdated((IImsUt) null, id);
+            this.mServiceInterface.utConfigurationUpdated(null, id);
         } catch (RemoteException e) {
-            Log.w(LOG_TAG, "utConfigurationUpdated: remote exception");
+            Log.m64w(LOG_TAG, "utConfigurationUpdated: remote exception");
         }
     }
 
     public void onUtConfigurationUpdateFailed(int id, ImsReasonInfo error) {
         try {
-            this.mServiceInterface.utConfigurationUpdateFailed((IImsUt) null, id, error);
+            this.mServiceInterface.utConfigurationUpdateFailed(null, id, error);
         } catch (RemoteException e) {
-            Log.w(LOG_TAG, "utConfigurationUpdateFailed: remote exception");
+            Log.m64w(LOG_TAG, "utConfigurationUpdateFailed: remote exception");
         }
     }
 
     public void onUtConfigurationQueried(int id, Bundle ssInfo) {
         try {
-            this.mServiceInterface.utConfigurationQueried((IImsUt) null, id, ssInfo);
+            this.mServiceInterface.utConfigurationQueried(null, id, ssInfo);
         } catch (RemoteException e) {
-            Log.w(LOG_TAG, "utConfigurationQueried: remote exception");
+            Log.m64w(LOG_TAG, "utConfigurationQueried: remote exception");
         }
     }
 
     public void onUtConfigurationQueryFailed(int id, ImsReasonInfo error) {
         try {
-            this.mServiceInterface.utConfigurationQueryFailed((IImsUt) null, id, error);
+            this.mServiceInterface.utConfigurationQueryFailed(null, id, error);
         } catch (RemoteException e) {
-            Log.w(LOG_TAG, "utConfigurationQueryFailed: remote exception");
+            Log.m64w(LOG_TAG, "utConfigurationQueryFailed: remote exception");
         }
     }
 
     public void onUtConfigurationCallBarringQueried(int id, ImsSsInfo[] cbInfo) {
         try {
-            this.mServiceInterface.utConfigurationCallBarringQueried((IImsUt) null, id, cbInfo);
+            this.mServiceInterface.utConfigurationCallBarringQueried(null, id, cbInfo);
         } catch (RemoteException e) {
-            Log.w(LOG_TAG, "utConfigurationCallBarringQueried: remote exception");
+            Log.m64w(LOG_TAG, "utConfigurationCallBarringQueried: remote exception");
         }
     }
 
     public void onUtConfigurationCallForwardQueried(int id, ImsCallForwardInfo[] cfInfo) {
         try {
-            this.mServiceInterface.utConfigurationCallForwardQueried((IImsUt) null, id, cfInfo);
+            this.mServiceInterface.utConfigurationCallForwardQueried(null, id, cfInfo);
         } catch (RemoteException e) {
-            Log.w(LOG_TAG, "utConfigurationCallForwardQueried: remote exception");
+            Log.m64w(LOG_TAG, "utConfigurationCallForwardQueried: remote exception");
         }
     }
 
     public void onUtConfigurationCallWaitingQueried(int id, ImsSsInfo[] cwInfo) {
         try {
-            this.mServiceInterface.utConfigurationCallWaitingQueried((IImsUt) null, id, cwInfo);
+            this.mServiceInterface.utConfigurationCallWaitingQueried(null, id, cwInfo);
         } catch (RemoteException e) {
-            Log.w(LOG_TAG, "utConfigurationCallWaitingQueried: remote exception");
+            Log.m64w(LOG_TAG, "utConfigurationCallWaitingQueried: remote exception");
         }
     }
 
@@ -72,7 +72,7 @@ public class ImsUtListener {
         try {
             this.mServiceInterface.onSupplementaryServiceIndication(ssData);
         } catch (RemoteException e) {
-            Log.w(LOG_TAG, "onSupplementaryServiceIndication: remote exception");
+            Log.m64w(LOG_TAG, "onSupplementaryServiceIndication: remote exception");
         }
     }
 

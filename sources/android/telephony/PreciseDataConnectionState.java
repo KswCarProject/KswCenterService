@@ -3,18 +3,23 @@ package android.telephony;
 import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
 import android.net.LinkProperties;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.telephony.data.ApnSetting;
 import java.util.Objects;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class PreciseDataConnectionState implements Parcelable {
-    public static final Parcelable.Creator<PreciseDataConnectionState> CREATOR = new Parcelable.Creator<PreciseDataConnectionState>() {
+    public static final Parcelable.Creator<PreciseDataConnectionState> CREATOR = new Parcelable.Creator<PreciseDataConnectionState>() { // from class: android.telephony.PreciseDataConnectionState.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PreciseDataConnectionState createFromParcel(Parcel in) {
             return new PreciseDataConnectionState(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PreciseDataConnectionState[] newArray(int size) {
             return new PreciseDataConnectionState[size];
         }
@@ -62,7 +67,7 @@ public final class PreciseDataConnectionState implements Parcelable {
         this.mNetworkType = in.readInt();
         this.mAPNTypes = in.readInt();
         this.mAPN = in.readString();
-        this.mLinkProperties = (LinkProperties) in.readParcelable((ClassLoader) null);
+        this.mLinkProperties = (LinkProperties) in.readParcelable(null);
         this.mFailCause = in.readInt();
     }
 
@@ -91,10 +96,12 @@ public final class PreciseDataConnectionState implements Parcelable {
         return this.mFailCause;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(this.mState);
         out.writeInt(this.mNetworkType);
@@ -105,16 +112,13 @@ public final class PreciseDataConnectionState implements Parcelable {
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(this.mState), Integer.valueOf(this.mNetworkType), Integer.valueOf(this.mAPNTypes), this.mAPN, this.mLinkProperties, Integer.valueOf(this.mFailCause)});
+        return Objects.hash(Integer.valueOf(this.mState), Integer.valueOf(this.mNetworkType), Integer.valueOf(this.mAPNTypes), this.mAPN, this.mLinkProperties, Integer.valueOf(this.mFailCause));
     }
 
     public boolean equals(Object obj) {
-        if (!(obj instanceof PreciseDataConnectionState)) {
-            return false;
-        }
-        PreciseDataConnectionState other = (PreciseDataConnectionState) obj;
-        if (Objects.equals(this.mAPN, other.mAPN) && this.mAPNTypes == other.mAPNTypes && this.mFailCause == other.mFailCause && Objects.equals(this.mLinkProperties, other.mLinkProperties) && this.mNetworkType == other.mNetworkType && this.mState == other.mState) {
-            return true;
+        if (obj instanceof PreciseDataConnectionState) {
+            PreciseDataConnectionState other = (PreciseDataConnectionState) obj;
+            return Objects.equals(this.mAPN, other.mAPN) && this.mAPNTypes == other.mAPNTypes && this.mFailCause == other.mFailCause && Objects.equals(this.mLinkProperties, other.mLinkProperties) && this.mNetworkType == other.mNetworkType && this.mState == other.mState;
         }
         return false;
     }

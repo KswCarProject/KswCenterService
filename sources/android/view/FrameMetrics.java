@@ -4,6 +4,7 @@ import android.annotation.UnsupportedAppUsage;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes4.dex */
 public final class FrameMetrics {
     public static final int ANIMATION_DURATION = 2;
     public static final int COMMAND_ISSUE_DURATION = 6;
@@ -20,9 +21,10 @@ public final class FrameMetrics {
     public static final int UNKNOWN_DELAY_DURATION = 0;
     public static final int VSYNC_TIMESTAMP = 11;
     @UnsupportedAppUsage
-    final long[] mTimingData = new long[16];
+    final long[] mTimingData;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     private @interface Index {
         public static final int ANIMATION_START = 6;
         public static final int DRAW_START = 8;
@@ -42,30 +44,33 @@ public final class FrameMetrics {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface Metric {
     }
 
     public FrameMetrics(FrameMetrics other) {
+        this.mTimingData = new long[16];
         System.arraycopy(other.mTimingData, 0, this.mTimingData, 0, this.mTimingData.length);
     }
 
     FrameMetrics() {
+        this.mTimingData = new long[16];
     }
 
     public long getMetric(int id) {
         if (id < 0 || id > 11 || this.mTimingData == null) {
-            return -1;
+            return -1L;
         }
         if (id == 9) {
-            return (this.mTimingData[0] & 1) != 0 ? 1 : 0;
-        }
-        if (id == 10) {
+            return (this.mTimingData[0] & 1) != 0 ? 1L : 0L;
+        } else if (id == 10) {
             return this.mTimingData[1];
+        } else {
+            if (id == 11) {
+                return this.mTimingData[2];
+            }
+            int durationsIdx = id * 2;
+            return this.mTimingData[DURATIONS[durationsIdx + 1]] - this.mTimingData[DURATIONS[durationsIdx]];
         }
-        if (id == 11) {
-            return this.mTimingData[2];
-        }
-        int durationsIdx = id * 2;
-        return this.mTimingData[DURATIONS[durationsIdx + 1]] - this.mTimingData[DURATIONS[durationsIdx]];
     }
 }

@@ -1,26 +1,41 @@
 package android.telecom;
 
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.telecom.IVideoProvider;
 import java.util.ArrayList;
 import java.util.List;
 
+/* loaded from: classes3.dex */
 public final class ParcelableConference implements Parcelable {
-    public static final Parcelable.Creator<ParcelableConference> CREATOR = new Parcelable.Creator<ParcelableConference>() {
+    public static final Parcelable.Creator<ParcelableConference> CREATOR = new Parcelable.Creator<ParcelableConference>() { // from class: android.telecom.ParcelableConference.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ParcelableConference createFromParcel(Parcel source) {
-            Parcel parcel = source;
             ClassLoader classLoader = ParcelableConference.class.getClassLoader();
-            ArrayList arrayList = new ArrayList(2);
-            parcel.readList(arrayList, classLoader);
-            IVideoProvider asInterface = IVideoProvider.Stub.asInterface(source.readStrongBinder());
-            int readInt = source.readInt();
-            ArrayList arrayList2 = arrayList;
-            return new ParcelableConference((PhoneAccountHandle) parcel.readParcelable(classLoader), source.readInt(), source.readInt(), source.readInt(), arrayList, asInterface, readInt, source.readLong(), source.readLong(), (StatusHints) parcel.readParcelable(classLoader), parcel.readBundle(classLoader), (Uri) parcel.readParcelable(classLoader), source.readInt(), source.readString(), source.readInt());
+            PhoneAccountHandle phoneAccount = (PhoneAccountHandle) source.readParcelable(classLoader);
+            int state = source.readInt();
+            int capabilities = source.readInt();
+            List<String> connectionIds = new ArrayList<>(2);
+            source.readList(connectionIds, classLoader);
+            long connectTimeMillis = source.readLong();
+            IVideoProvider videoCallProvider = IVideoProvider.Stub.asInterface(source.readStrongBinder());
+            int videoState = source.readInt();
+            StatusHints statusHints = (StatusHints) source.readParcelable(classLoader);
+            Bundle extras = source.readBundle(classLoader);
+            int properties = source.readInt();
+            long connectElapsedTimeMillis = source.readLong();
+            Uri address = (Uri) source.readParcelable(classLoader);
+            int addressPresentation = source.readInt();
+            String callerDisplayName = source.readString();
+            int callerDisplayNamePresentation = source.readInt();
+            return new ParcelableConference(phoneAccount, state, capabilities, properties, connectionIds, videoCallProvider, videoState, connectTimeMillis, connectElapsedTimeMillis, statusHints, extras, address, addressPresentation, callerDisplayName, callerDisplayNamePresentation);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ParcelableConference[] newArray(int size) {
             return new ParcelableConference[size];
         }
@@ -29,8 +44,8 @@ public final class ParcelableConference implements Parcelable {
     private final int mAddressPresentation;
     private final String mCallerDisplayName;
     private final int mCallerDisplayNamePresentation;
-    private long mConnectElapsedTimeMillis = 0;
-    private long mConnectTimeMillis = 0;
+    private long mConnectElapsedTimeMillis;
+    private long mConnectTimeMillis;
     private int mConnectionCapabilities;
     private List<String> mConnectionIds;
     private int mConnectionProperties;
@@ -42,6 +57,8 @@ public final class ParcelableConference implements Parcelable {
     private final int mVideoState;
 
     public ParcelableConference(PhoneAccountHandle phoneAccount, int state, int connectionCapabilities, int connectionProperties, List<String> connectionIds, IVideoProvider videoProvider, int videoState, long connectTimeMillis, long connectElapsedTimeMillis, StatusHints statusHints, Bundle extras, Uri address, int addressPresentation, String callerDisplayName, int callerDisplayNamePresentation) {
+        this.mConnectTimeMillis = 0L;
+        this.mConnectElapsedTimeMillis = 0L;
         this.mPhoneAccount = phoneAccount;
         this.mState = state;
         this.mConnectionCapabilities = connectionCapabilities;
@@ -132,10 +149,12 @@ public final class ParcelableConference implements Parcelable {
         return this.mAddressPresentation;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel destination, int flags) {
         destination.writeParcelable(this.mPhoneAccount, 0);
         destination.writeInt(this.mState);

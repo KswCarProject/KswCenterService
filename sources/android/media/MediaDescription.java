@@ -2,11 +2,12 @@ package android.media;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.TextUtils;
 
+/* loaded from: classes3.dex */
 public class MediaDescription implements Parcelable {
     public static final long BT_FOLDER_TYPE_ALBUMS = 2;
     public static final long BT_FOLDER_TYPE_ARTISTS = 3;
@@ -15,11 +16,15 @@ public class MediaDescription implements Parcelable {
     public static final long BT_FOLDER_TYPE_PLAYLISTS = 5;
     public static final long BT_FOLDER_TYPE_TITLES = 1;
     public static final long BT_FOLDER_TYPE_YEARS = 6;
-    public static final Parcelable.Creator<MediaDescription> CREATOR = new Parcelable.Creator<MediaDescription>() {
+    public static final Parcelable.Creator<MediaDescription> CREATOR = new Parcelable.Creator<MediaDescription>() { // from class: android.media.MediaDescription.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public MediaDescription createFromParcel(Parcel in) {
             return new MediaDescription(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public MediaDescription[] newArray(int size) {
             return new MediaDescription[size];
         }
@@ -50,10 +55,10 @@ public class MediaDescription implements Parcelable {
         this.mTitle = TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(in);
         this.mSubtitle = TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(in);
         this.mDescription = TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(in);
-        this.mIcon = (Bitmap) in.readParcelable((ClassLoader) null);
-        this.mIconUri = (Uri) in.readParcelable((ClassLoader) null);
+        this.mIcon = (Bitmap) in.readParcelable(null);
+        this.mIconUri = (Uri) in.readParcelable(null);
         this.mExtras = in.readBundle();
-        this.mMediaUri = (Uri) in.readParcelable((ClassLoader) null);
+        this.mMediaUri = (Uri) in.readParcelable(null);
     }
 
     public String getMediaId() {
@@ -88,10 +93,12 @@ public class MediaDescription implements Parcelable {
         return this.mMediaUri;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.mMediaId);
         TextUtils.writeToParcel(this.mTitle, dest, 0);
@@ -108,16 +115,17 @@ public class MediaDescription implements Parcelable {
             return false;
         }
         MediaDescription d = (MediaDescription) o;
-        if (String.valueOf(this.mTitle).equals(String.valueOf(d.mTitle)) && String.valueOf(this.mSubtitle).equals(String.valueOf(d.mSubtitle)) && String.valueOf(this.mDescription).equals(String.valueOf(d.mDescription))) {
-            return true;
+        if (!String.valueOf(this.mTitle).equals(String.valueOf(d.mTitle)) || !String.valueOf(this.mSubtitle).equals(String.valueOf(d.mSubtitle)) || !String.valueOf(this.mDescription).equals(String.valueOf(d.mDescription))) {
+            return false;
         }
-        return false;
+        return true;
     }
 
     public String toString() {
-        return this.mTitle + ", " + this.mSubtitle + ", " + this.mDescription;
+        return ((Object) this.mTitle) + ", " + ((Object) this.mSubtitle) + ", " + ((Object) this.mDescription);
     }
 
+    /* loaded from: classes3.dex */
     public static class Builder {
         private CharSequence mDescription;
         private Bundle mExtras;

@@ -1,13 +1,13 @@
 package com.android.internal.telecom;
 
 import android.net.Uri;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.ParcelFileDescriptor;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.ParcelFileDescriptor;
+import android.p007os.RemoteException;
 import android.telecom.CallAudioState;
 import android.telecom.ConnectionRequest;
 import android.telecom.Logging.Session;
@@ -15,6 +15,7 @@ import android.telecom.PhoneAccountHandle;
 import android.telephony.ims.ImsCallProfile;
 import com.android.internal.telecom.IConnectionServiceAdapter;
 
+/* loaded from: classes4.dex */
 public interface IConnectionService extends IInterface {
     void abort(String str, Session.Info info) throws RemoteException;
 
@@ -84,114 +85,151 @@ public interface IConnectionService extends IInterface {
 
     void unhold(String str, Session.Info info) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IConnectionService {
+        @Override // com.android.internal.telecom.IConnectionService
         public void addConnectionServiceAdapter(IConnectionServiceAdapter adapter, Session.Info sessionInfo) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IConnectionService
         public void removeConnectionServiceAdapter(IConnectionServiceAdapter adapter, Session.Info sessionInfo) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IConnectionService
         public void createConnection(PhoneAccountHandle connectionManagerPhoneAccount, String callId, ConnectionRequest request, boolean isIncoming, boolean isUnknown, Session.Info sessionInfo) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IConnectionService
         public void createConnectionComplete(String callId, Session.Info sessionInfo) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IConnectionService
         public void createConnectionFailed(PhoneAccountHandle connectionManagerPhoneAccount, String callId, ConnectionRequest request, boolean isIncoming, Session.Info sessionInfo) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IConnectionService
         public void abort(String callId, Session.Info sessionInfo) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IConnectionService
         public void answerVideo(String callId, int videoState, Session.Info sessionInfo) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IConnectionService
         public void answer(String callId, Session.Info sessionInfo) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IConnectionService
         public void deflect(String callId, Uri address, Session.Info sessionInfo) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IConnectionService
         public void reject(String callId, Session.Info sessionInfo) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IConnectionService
         public void rejectWithMessage(String callId, String message, Session.Info sessionInfo) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IConnectionService
         public void disconnect(String callId, Session.Info sessionInfo) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IConnectionService
         public void silence(String callId, Session.Info sessionInfo) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IConnectionService
         public void hold(String callId, Session.Info sessionInfo) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IConnectionService
         public void unhold(String callId, Session.Info sessionInfo) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IConnectionService
         public void onCallAudioStateChanged(String activeCallId, CallAudioState callAudioState, Session.Info sessionInfo) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IConnectionService
         public void playDtmfTone(String callId, char digit, Session.Info sessionInfo) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IConnectionService
         public void stopDtmfTone(String callId, Session.Info sessionInfo) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IConnectionService
         public void conference(String conferenceCallId, String callId, Session.Info sessionInfo) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IConnectionService
         public void splitFromConference(String callId, Session.Info sessionInfo) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IConnectionService
         public void mergeConference(String conferenceCallId, Session.Info sessionInfo) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IConnectionService
         public void swapConference(String conferenceCallId, Session.Info sessionInfo) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IConnectionService
         public void onPostDialContinue(String callId, boolean proceed, Session.Info sessionInfo) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IConnectionService
         public void pullExternalCall(String callId, Session.Info sessionInfo) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IConnectionService
         public void sendCallEvent(String callId, String event, Bundle extras, Session.Info sessionInfo) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IConnectionService
         public void onExtrasChanged(String callId, Bundle extras, Session.Info sessionInfo) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IConnectionService
         public void startRtt(String callId, ParcelFileDescriptor fromInCall, ParcelFileDescriptor toInCall, Session.Info sessionInfo) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IConnectionService
         public void stopRtt(String callId, Session.Info sessionInfo) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IConnectionService
         public void respondToRttUpgradeRequest(String callId, ParcelFileDescriptor fromInCall, ParcelFileDescriptor toInCall, Session.Info sessionInfo) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IConnectionService
         public void addParticipantWithConference(String callId, String recipients) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IConnectionService
         public void connectionServiceFocusLost(Session.Info sessionInfo) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IConnectionService
         public void connectionServiceFocusGained(Session.Info sessionInfo) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IConnectionService
         public void handoverFailed(String callId, ConnectionRequest request, int error, Session.Info sessionInfo) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.IConnectionService
         public void handoverComplete(String callId, Session.Info sessionInfo) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IConnectionService {
         private static final String DESCRIPTOR = "com.android.internal.telecom.IConnectionService";
         static final int TRANSACTION_abort = 6;
@@ -238,12 +276,13 @@ public interface IConnectionService extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IConnectionService)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IConnectionService)) {
+                return (IConnectionService) iin;
             }
-            return (IConnectionService) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -323,388 +362,316 @@ public interface IConnectionService extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            Session.Info _arg1;
             PhoneAccountHandle _arg0;
             ConnectionRequest _arg2;
-            Session.Info _arg5;
             PhoneAccountHandle _arg02;
             ConnectionRequest _arg22;
-            Session.Info _arg4;
-            Uri _arg1;
-            CallAudioState _arg12;
+            Uri _arg12;
+            CallAudioState _arg13;
             Bundle _arg23;
-            Bundle _arg13;
-            ParcelFileDescriptor _arg14;
-            ParcelFileDescriptor _arg24;
+            Bundle _arg14;
             ParcelFileDescriptor _arg15;
+            ParcelFileDescriptor _arg24;
+            ParcelFileDescriptor _arg16;
             ParcelFileDescriptor _arg25;
-            ConnectionRequest _arg16;
-            int i = code;
-            Parcel parcel = data;
-            if (i != 1598968902) {
-                boolean _arg17 = false;
-                Session.Info _arg18 = null;
-                switch (i) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        IConnectionServiceAdapter _arg03 = IConnectionServiceAdapter.Stub.asInterface(data.readStrongBinder());
-                        if (data.readInt() != 0) {
-                            _arg18 = Session.Info.CREATOR.createFromParcel(data);
-                        }
-                        addConnectionServiceAdapter(_arg03, _arg18);
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        IConnectionServiceAdapter _arg04 = IConnectionServiceAdapter.Stub.asInterface(data.readStrongBinder());
-                        if (data.readInt() != 0) {
-                            _arg18 = Session.Info.CREATOR.createFromParcel(data);
-                        }
-                        removeConnectionServiceAdapter(_arg04, _arg18);
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = PhoneAccountHandle.CREATOR.createFromParcel(data);
-                        } else {
-                            _arg0 = null;
-                        }
-                        String _arg19 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg2 = ConnectionRequest.CREATOR.createFromParcel(data);
-                        } else {
-                            _arg2 = null;
-                        }
-                        boolean _arg3 = data.readInt() != 0;
-                        boolean _arg42 = data.readInt() != 0;
-                        if (data.readInt() != 0) {
-                            _arg5 = Session.Info.CREATOR.createFromParcel(data);
-                        } else {
-                            _arg5 = null;
-                        }
-                        createConnection(_arg0, _arg19, _arg2, _arg3, _arg42, _arg5);
-                        return true;
-                    case 4:
-                        data.enforceInterface(DESCRIPTOR);
-                        String _arg05 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg18 = Session.Info.CREATOR.createFromParcel(data);
-                        }
-                        createConnectionComplete(_arg05, _arg18);
-                        return true;
-                    case 5:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg02 = PhoneAccountHandle.CREATOR.createFromParcel(data);
-                        } else {
-                            _arg02 = null;
-                        }
-                        String _arg110 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg22 = ConnectionRequest.CREATOR.createFromParcel(data);
-                        } else {
-                            _arg22 = null;
-                        }
-                        boolean _arg32 = data.readInt() != 0;
-                        if (data.readInt() != 0) {
-                            _arg4 = Session.Info.CREATOR.createFromParcel(data);
-                        } else {
-                            _arg4 = null;
-                        }
-                        createConnectionFailed(_arg02, _arg110, _arg22, _arg32, _arg4);
-                        return true;
-                    case 6:
-                        data.enforceInterface(DESCRIPTOR);
-                        String _arg06 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg18 = Session.Info.CREATOR.createFromParcel(data);
-                        }
-                        abort(_arg06, _arg18);
-                        return true;
-                    case 7:
-                        data.enforceInterface(DESCRIPTOR);
-                        String _arg07 = data.readString();
-                        int _arg111 = data.readInt();
-                        if (data.readInt() != 0) {
-                            _arg18 = Session.Info.CREATOR.createFromParcel(data);
-                        }
-                        answerVideo(_arg07, _arg111, _arg18);
-                        return true;
-                    case 8:
-                        data.enforceInterface(DESCRIPTOR);
-                        String _arg08 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg18 = Session.Info.CREATOR.createFromParcel(data);
-                        }
-                        answer(_arg08, _arg18);
-                        return true;
-                    case 9:
-                        data.enforceInterface(DESCRIPTOR);
-                        String _arg09 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg1 = Uri.CREATOR.createFromParcel(data);
-                        } else {
-                            _arg1 = null;
-                        }
-                        if (data.readInt() != 0) {
-                            _arg18 = Session.Info.CREATOR.createFromParcel(data);
-                        }
-                        deflect(_arg09, _arg1, _arg18);
-                        return true;
-                    case 10:
-                        data.enforceInterface(DESCRIPTOR);
-                        String _arg010 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg18 = Session.Info.CREATOR.createFromParcel(data);
-                        }
-                        reject(_arg010, _arg18);
-                        return true;
-                    case 11:
-                        data.enforceInterface(DESCRIPTOR);
-                        String _arg011 = data.readString();
-                        String _arg112 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg18 = Session.Info.CREATOR.createFromParcel(data);
-                        }
-                        rejectWithMessage(_arg011, _arg112, _arg18);
-                        return true;
-                    case 12:
-                        data.enforceInterface(DESCRIPTOR);
-                        String _arg012 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg18 = Session.Info.CREATOR.createFromParcel(data);
-                        }
-                        disconnect(_arg012, _arg18);
-                        return true;
-                    case 13:
-                        data.enforceInterface(DESCRIPTOR);
-                        String _arg013 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg18 = Session.Info.CREATOR.createFromParcel(data);
-                        }
-                        silence(_arg013, _arg18);
-                        return true;
-                    case 14:
-                        data.enforceInterface(DESCRIPTOR);
-                        String _arg014 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg18 = Session.Info.CREATOR.createFromParcel(data);
-                        }
-                        hold(_arg014, _arg18);
-                        return true;
-                    case 15:
-                        data.enforceInterface(DESCRIPTOR);
-                        String _arg015 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg18 = Session.Info.CREATOR.createFromParcel(data);
-                        }
-                        unhold(_arg015, _arg18);
-                        return true;
-                    case 16:
-                        data.enforceInterface(DESCRIPTOR);
-                        String _arg016 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg12 = CallAudioState.CREATOR.createFromParcel(data);
-                        } else {
-                            _arg12 = null;
-                        }
-                        if (data.readInt() != 0) {
-                            _arg18 = Session.Info.CREATOR.createFromParcel(data);
-                        }
-                        onCallAudioStateChanged(_arg016, _arg12, _arg18);
-                        return true;
-                    case 17:
-                        data.enforceInterface(DESCRIPTOR);
-                        String _arg017 = data.readString();
-                        char _arg113 = (char) data.readInt();
-                        if (data.readInt() != 0) {
-                            _arg18 = Session.Info.CREATOR.createFromParcel(data);
-                        }
-                        playDtmfTone(_arg017, _arg113, _arg18);
-                        return true;
-                    case 18:
-                        data.enforceInterface(DESCRIPTOR);
-                        String _arg018 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg18 = Session.Info.CREATOR.createFromParcel(data);
-                        }
-                        stopDtmfTone(_arg018, _arg18);
-                        return true;
-                    case 19:
-                        data.enforceInterface(DESCRIPTOR);
-                        String _arg019 = data.readString();
-                        String _arg114 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg18 = Session.Info.CREATOR.createFromParcel(data);
-                        }
-                        conference(_arg019, _arg114, _arg18);
-                        return true;
-                    case 20:
-                        data.enforceInterface(DESCRIPTOR);
-                        String _arg020 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg18 = Session.Info.CREATOR.createFromParcel(data);
-                        }
-                        splitFromConference(_arg020, _arg18);
-                        return true;
-                    case 21:
-                        data.enforceInterface(DESCRIPTOR);
-                        String _arg021 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg18 = Session.Info.CREATOR.createFromParcel(data);
-                        }
-                        mergeConference(_arg021, _arg18);
-                        return true;
-                    case 22:
-                        data.enforceInterface(DESCRIPTOR);
-                        String _arg022 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg18 = Session.Info.CREATOR.createFromParcel(data);
-                        }
-                        swapConference(_arg022, _arg18);
-                        return true;
-                    case 23:
-                        data.enforceInterface(DESCRIPTOR);
-                        String _arg023 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg17 = true;
-                        }
-                        if (data.readInt() != 0) {
-                            _arg18 = Session.Info.CREATOR.createFromParcel(data);
-                        }
-                        onPostDialContinue(_arg023, _arg17, _arg18);
-                        return true;
-                    case 24:
-                        data.enforceInterface(DESCRIPTOR);
-                        String _arg024 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg18 = Session.Info.CREATOR.createFromParcel(data);
-                        }
-                        pullExternalCall(_arg024, _arg18);
-                        return true;
-                    case 25:
-                        data.enforceInterface(DESCRIPTOR);
-                        String _arg025 = data.readString();
-                        String _arg115 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg23 = Bundle.CREATOR.createFromParcel(data);
-                        } else {
-                            _arg23 = null;
-                        }
-                        if (data.readInt() != 0) {
-                            _arg18 = Session.Info.CREATOR.createFromParcel(data);
-                        }
-                        sendCallEvent(_arg025, _arg115, _arg23, _arg18);
-                        return true;
-                    case 26:
-                        data.enforceInterface(DESCRIPTOR);
-                        String _arg026 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg13 = Bundle.CREATOR.createFromParcel(data);
-                        } else {
-                            _arg13 = null;
-                        }
-                        if (data.readInt() != 0) {
-                            _arg18 = Session.Info.CREATOR.createFromParcel(data);
-                        }
-                        onExtrasChanged(_arg026, _arg13, _arg18);
-                        return true;
-                    case 27:
-                        data.enforceInterface(DESCRIPTOR);
-                        String _arg027 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg14 = ParcelFileDescriptor.CREATOR.createFromParcel(data);
-                        } else {
-                            _arg14 = null;
-                        }
-                        if (data.readInt() != 0) {
-                            _arg24 = ParcelFileDescriptor.CREATOR.createFromParcel(data);
-                        } else {
-                            _arg24 = null;
-                        }
-                        if (data.readInt() != 0) {
-                            _arg18 = Session.Info.CREATOR.createFromParcel(data);
-                        }
-                        startRtt(_arg027, _arg14, _arg24, _arg18);
-                        return true;
-                    case 28:
-                        data.enforceInterface(DESCRIPTOR);
-                        String _arg028 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg18 = Session.Info.CREATOR.createFromParcel(data);
-                        }
-                        stopRtt(_arg028, _arg18);
-                        return true;
-                    case 29:
-                        data.enforceInterface(DESCRIPTOR);
-                        String _arg029 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg15 = ParcelFileDescriptor.CREATOR.createFromParcel(data);
-                        } else {
-                            _arg15 = null;
-                        }
-                        if (data.readInt() != 0) {
-                            _arg25 = ParcelFileDescriptor.CREATOR.createFromParcel(data);
-                        } else {
-                            _arg25 = null;
-                        }
-                        if (data.readInt() != 0) {
-                            _arg18 = Session.Info.CREATOR.createFromParcel(data);
-                        }
-                        respondToRttUpgradeRequest(_arg029, _arg15, _arg25, _arg18);
-                        return true;
-                    case 30:
-                        data.enforceInterface(DESCRIPTOR);
-                        addParticipantWithConference(data.readString(), data.readString());
-                        return true;
-                    case 31:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg18 = Session.Info.CREATOR.createFromParcel(data);
-                        }
-                        connectionServiceFocusLost(_arg18);
-                        return true;
-                    case 32:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg18 = Session.Info.CREATOR.createFromParcel(data);
-                        }
-                        connectionServiceFocusGained(_arg18);
-                        return true;
-                    case 33:
-                        data.enforceInterface(DESCRIPTOR);
-                        String _arg030 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg16 = ConnectionRequest.CREATOR.createFromParcel(data);
-                        } else {
-                            _arg16 = null;
-                        }
-                        int _arg26 = data.readInt();
-                        if (data.readInt() != 0) {
-                            _arg18 = Session.Info.CREATOR.createFromParcel(data);
-                        }
-                        handoverFailed(_arg030, _arg16, _arg26, _arg18);
-                        return true;
-                    case 34:
-                        data.enforceInterface(DESCRIPTOR);
-                        String _arg031 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg18 = Session.Info.CREATOR.createFromParcel(data);
-                        }
-                        handoverComplete(_arg031, _arg18);
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            ConnectionRequest _arg17;
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    IConnectionServiceAdapter _arg03 = IConnectionServiceAdapter.Stub.asInterface(data.readStrongBinder());
+                    _arg1 = data.readInt() != 0 ? Session.Info.CREATOR.createFromParcel(data) : null;
+                    addConnectionServiceAdapter(_arg03, _arg1);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    IConnectionServiceAdapter _arg04 = IConnectionServiceAdapter.Stub.asInterface(data.readStrongBinder());
+                    _arg1 = data.readInt() != 0 ? Session.Info.CREATOR.createFromParcel(data) : null;
+                    removeConnectionServiceAdapter(_arg04, _arg1);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg0 = PhoneAccountHandle.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg0 = null;
+                    }
+                    String _arg18 = data.readString();
+                    if (data.readInt() != 0) {
+                        _arg2 = ConnectionRequest.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg2 = null;
+                    }
+                    boolean _arg3 = data.readInt() != 0;
+                    boolean _arg4 = data.readInt() != 0;
+                    Session.Info _arg5 = data.readInt() != 0 ? Session.Info.CREATOR.createFromParcel(data) : null;
+                    createConnection(_arg0, _arg18, _arg2, _arg3, _arg4, _arg5);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg05 = data.readString();
+                    _arg1 = data.readInt() != 0 ? Session.Info.CREATOR.createFromParcel(data) : null;
+                    createConnectionComplete(_arg05, _arg1);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg02 = PhoneAccountHandle.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg02 = null;
+                    }
+                    String _arg19 = data.readString();
+                    if (data.readInt() != 0) {
+                        _arg22 = ConnectionRequest.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg22 = null;
+                    }
+                    boolean _arg32 = data.readInt() != 0;
+                    Session.Info _arg42 = data.readInt() != 0 ? Session.Info.CREATOR.createFromParcel(data) : null;
+                    createConnectionFailed(_arg02, _arg19, _arg22, _arg32, _arg42);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg06 = data.readString();
+                    _arg1 = data.readInt() != 0 ? Session.Info.CREATOR.createFromParcel(data) : null;
+                    abort(_arg06, _arg1);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg07 = data.readString();
+                    int _arg110 = data.readInt();
+                    _arg1 = data.readInt() != 0 ? Session.Info.CREATOR.createFromParcel(data) : null;
+                    answerVideo(_arg07, _arg110, _arg1);
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg08 = data.readString();
+                    _arg1 = data.readInt() != 0 ? Session.Info.CREATOR.createFromParcel(data) : null;
+                    answer(_arg08, _arg1);
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg09 = data.readString();
+                    if (data.readInt() != 0) {
+                        _arg12 = Uri.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg12 = null;
+                    }
+                    _arg1 = data.readInt() != 0 ? Session.Info.CREATOR.createFromParcel(data) : null;
+                    deflect(_arg09, _arg12, _arg1);
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg010 = data.readString();
+                    _arg1 = data.readInt() != 0 ? Session.Info.CREATOR.createFromParcel(data) : null;
+                    reject(_arg010, _arg1);
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg011 = data.readString();
+                    String _arg111 = data.readString();
+                    _arg1 = data.readInt() != 0 ? Session.Info.CREATOR.createFromParcel(data) : null;
+                    rejectWithMessage(_arg011, _arg111, _arg1);
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg012 = data.readString();
+                    _arg1 = data.readInt() != 0 ? Session.Info.CREATOR.createFromParcel(data) : null;
+                    disconnect(_arg012, _arg1);
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg013 = data.readString();
+                    _arg1 = data.readInt() != 0 ? Session.Info.CREATOR.createFromParcel(data) : null;
+                    silence(_arg013, _arg1);
+                    return true;
+                case 14:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg014 = data.readString();
+                    _arg1 = data.readInt() != 0 ? Session.Info.CREATOR.createFromParcel(data) : null;
+                    hold(_arg014, _arg1);
+                    return true;
+                case 15:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg015 = data.readString();
+                    _arg1 = data.readInt() != 0 ? Session.Info.CREATOR.createFromParcel(data) : null;
+                    unhold(_arg015, _arg1);
+                    return true;
+                case 16:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg016 = data.readString();
+                    if (data.readInt() != 0) {
+                        _arg13 = CallAudioState.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg13 = null;
+                    }
+                    _arg1 = data.readInt() != 0 ? Session.Info.CREATOR.createFromParcel(data) : null;
+                    onCallAudioStateChanged(_arg016, _arg13, _arg1);
+                    return true;
+                case 17:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg017 = data.readString();
+                    char _arg112 = (char) data.readInt();
+                    _arg1 = data.readInt() != 0 ? Session.Info.CREATOR.createFromParcel(data) : null;
+                    playDtmfTone(_arg017, _arg112, _arg1);
+                    return true;
+                case 18:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg018 = data.readString();
+                    _arg1 = data.readInt() != 0 ? Session.Info.CREATOR.createFromParcel(data) : null;
+                    stopDtmfTone(_arg018, _arg1);
+                    return true;
+                case 19:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg019 = data.readString();
+                    String _arg113 = data.readString();
+                    _arg1 = data.readInt() != 0 ? Session.Info.CREATOR.createFromParcel(data) : null;
+                    conference(_arg019, _arg113, _arg1);
+                    return true;
+                case 20:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg020 = data.readString();
+                    _arg1 = data.readInt() != 0 ? Session.Info.CREATOR.createFromParcel(data) : null;
+                    splitFromConference(_arg020, _arg1);
+                    return true;
+                case 21:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg021 = data.readString();
+                    _arg1 = data.readInt() != 0 ? Session.Info.CREATOR.createFromParcel(data) : null;
+                    mergeConference(_arg021, _arg1);
+                    return true;
+                case 22:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg022 = data.readString();
+                    _arg1 = data.readInt() != 0 ? Session.Info.CREATOR.createFromParcel(data) : null;
+                    swapConference(_arg022, _arg1);
+                    return true;
+                case 23:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg023 = data.readString();
+                    boolean _arg114 = data.readInt() != 0;
+                    _arg1 = data.readInt() != 0 ? Session.Info.CREATOR.createFromParcel(data) : null;
+                    onPostDialContinue(_arg023, _arg114, _arg1);
+                    return true;
+                case 24:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg024 = data.readString();
+                    _arg1 = data.readInt() != 0 ? Session.Info.CREATOR.createFromParcel(data) : null;
+                    pullExternalCall(_arg024, _arg1);
+                    return true;
+                case 25:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg025 = data.readString();
+                    String _arg115 = data.readString();
+                    if (data.readInt() != 0) {
+                        _arg23 = Bundle.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg23 = null;
+                    }
+                    _arg1 = data.readInt() != 0 ? Session.Info.CREATOR.createFromParcel(data) : null;
+                    sendCallEvent(_arg025, _arg115, _arg23, _arg1);
+                    return true;
+                case 26:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg026 = data.readString();
+                    if (data.readInt() != 0) {
+                        _arg14 = Bundle.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg14 = null;
+                    }
+                    _arg1 = data.readInt() != 0 ? Session.Info.CREATOR.createFromParcel(data) : null;
+                    onExtrasChanged(_arg026, _arg14, _arg1);
+                    return true;
+                case 27:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg027 = data.readString();
+                    if (data.readInt() != 0) {
+                        _arg15 = ParcelFileDescriptor.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg15 = null;
+                    }
+                    if (data.readInt() != 0) {
+                        _arg24 = ParcelFileDescriptor.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg24 = null;
+                    }
+                    _arg1 = data.readInt() != 0 ? Session.Info.CREATOR.createFromParcel(data) : null;
+                    startRtt(_arg027, _arg15, _arg24, _arg1);
+                    return true;
+                case 28:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg028 = data.readString();
+                    _arg1 = data.readInt() != 0 ? Session.Info.CREATOR.createFromParcel(data) : null;
+                    stopRtt(_arg028, _arg1);
+                    return true;
+                case 29:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg029 = data.readString();
+                    if (data.readInt() != 0) {
+                        _arg16 = ParcelFileDescriptor.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg16 = null;
+                    }
+                    if (data.readInt() != 0) {
+                        _arg25 = ParcelFileDescriptor.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg25 = null;
+                    }
+                    _arg1 = data.readInt() != 0 ? Session.Info.CREATOR.createFromParcel(data) : null;
+                    respondToRttUpgradeRequest(_arg029, _arg16, _arg25, _arg1);
+                    return true;
+                case 30:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg030 = data.readString();
+                    addParticipantWithConference(_arg030, data.readString());
+                    return true;
+                case 31:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg1 = data.readInt() != 0 ? Session.Info.CREATOR.createFromParcel(data) : null;
+                    Session.Info _arg031 = _arg1;
+                    connectionServiceFocusLost(_arg031);
+                    return true;
+                case 32:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg1 = data.readInt() != 0 ? Session.Info.CREATOR.createFromParcel(data) : null;
+                    Session.Info _arg032 = _arg1;
+                    connectionServiceFocusGained(_arg032);
+                    return true;
+                case 33:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg033 = data.readString();
+                    if (data.readInt() != 0) {
+                        _arg17 = ConnectionRequest.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg17 = null;
+                    }
+                    int _arg26 = data.readInt();
+                    _arg1 = data.readInt() != 0 ? Session.Info.CREATOR.createFromParcel(data) : null;
+                    handoverFailed(_arg033, _arg17, _arg26, _arg1);
+                    return true;
+                case 34:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg034 = data.readString();
+                    _arg1 = data.readInt() != 0 ? Session.Info.CREATOR.createFromParcel(data) : null;
+                    handoverComplete(_arg034, _arg1);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IConnectionService {
             public static IConnectionService sDefaultImpl;
             private IBinder mRemote;
@@ -713,6 +680,7 @@ public interface IConnectionService extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -721,6 +689,7 @@ public interface IConnectionService extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // com.android.internal.telecom.IConnectionService
             public void addConnectionServiceAdapter(IConnectionServiceAdapter adapter, Session.Info sessionInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -732,9 +701,8 @@ public interface IConnectionService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().addConnectionServiceAdapter(adapter, sessionInfo);
                     }
                 } finally {
@@ -742,6 +710,7 @@ public interface IConnectionService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IConnectionService
             public void removeConnectionServiceAdapter(IConnectionServiceAdapter adapter, Session.Info sessionInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -753,9 +722,8 @@ public interface IConnectionService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().removeConnectionServiceAdapter(adapter, sessionInfo);
                     }
                 } finally {
@@ -763,77 +731,67 @@ public interface IConnectionService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IConnectionService
             public void createConnection(PhoneAccountHandle connectionManagerPhoneAccount, String callId, ConnectionRequest request, boolean isIncoming, boolean isUnknown, Session.Info sessionInfo) throws RemoteException {
-                PhoneAccountHandle phoneAccountHandle = connectionManagerPhoneAccount;
-                ConnectionRequest connectionRequest = request;
-                Session.Info info = sessionInfo;
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (phoneAccountHandle != null) {
+                    if (connectionManagerPhoneAccount != null) {
                         _data.writeInt(1);
-                        phoneAccountHandle.writeToParcel(_data, 0);
+                        connectionManagerPhoneAccount.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
                     try {
                         _data.writeString(callId);
-                        if (connectionRequest != null) {
+                        if (request != null) {
                             _data.writeInt(1);
-                            connectionRequest.writeToParcel(_data, 0);
+                            request.writeToParcel(_data, 0);
                         } else {
                             _data.writeInt(0);
                         }
+                    } catch (Throwable th) {
+                        th = th;
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeInt(isIncoming ? 1 : 0);
                         try {
-                            _data.writeInt(isIncoming ? 1 : 0);
-                            try {
-                                _data.writeInt(isUnknown ? 1 : 0);
-                                if (info != null) {
-                                    _data.writeInt(1);
-                                    info.writeToParcel(_data, 0);
-                                } else {
-                                    _data.writeInt(0);
-                                }
-                                try {
-                                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                                        _data.recycle();
-                                        return;
-                                    }
-                                    Stub.getDefaultImpl().createConnection(connectionManagerPhoneAccount, callId, request, isIncoming, isUnknown, sessionInfo);
-                                    _data.recycle();
-                                } catch (Throwable th) {
-                                    th = th;
-                                    _data.recycle();
-                                    throw th;
-                                }
-                            } catch (Throwable th2) {
-                                th = th2;
-                                _data.recycle();
-                                throw th;
+                            _data.writeInt(isUnknown ? 1 : 0);
+                            if (sessionInfo != null) {
+                                _data.writeInt(1);
+                                sessionInfo.writeToParcel(_data, 0);
+                            } else {
+                                _data.writeInt(0);
                             }
-                        } catch (Throwable th3) {
-                            th = th3;
-                            boolean z = isUnknown;
-                            _data.recycle();
-                            throw th;
+                        } catch (Throwable th2) {
+                            th = th2;
                         }
+                    } catch (Throwable th3) {
+                        th = th3;
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        boolean _status = this.mRemote.transact(3, _data, null, 1);
+                        if (!_status && Stub.getDefaultImpl() != null) {
+                            Stub.getDefaultImpl().createConnection(connectionManagerPhoneAccount, callId, request, isIncoming, isUnknown, sessionInfo);
+                            _data.recycle();
+                            return;
+                        }
+                        _data.recycle();
                     } catch (Throwable th4) {
                         th = th4;
-                        boolean z2 = isIncoming;
-                        boolean z3 = isUnknown;
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th5) {
                     th = th5;
-                    String str = callId;
-                    boolean z22 = isIncoming;
-                    boolean z32 = isUnknown;
-                    _data.recycle();
-                    throw th;
                 }
             }
 
+            @Override // com.android.internal.telecom.IConnectionService
             public void createConnectionComplete(String callId, Session.Info sessionInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -845,9 +803,8 @@ public interface IConnectionService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().createConnectionComplete(callId, sessionInfo);
                     }
                 } finally {
@@ -855,6 +812,7 @@ public interface IConnectionService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IConnectionService
             public void createConnectionFailed(PhoneAccountHandle connectionManagerPhoneAccount, String callId, ConnectionRequest request, boolean isIncoming, Session.Info sessionInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -872,16 +830,15 @@ public interface IConnectionService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(isIncoming);
+                    _data.writeInt(isIncoming ? 1 : 0);
                     if (sessionInfo != null) {
                         _data.writeInt(1);
                         sessionInfo.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(5, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().createConnectionFailed(connectionManagerPhoneAccount, callId, request, isIncoming, sessionInfo);
                     }
                 } finally {
@@ -889,6 +846,7 @@ public interface IConnectionService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IConnectionService
             public void abort(String callId, Session.Info sessionInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -900,9 +858,8 @@ public interface IConnectionService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(6, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(6, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().abort(callId, sessionInfo);
                     }
                 } finally {
@@ -910,6 +867,7 @@ public interface IConnectionService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IConnectionService
             public void answerVideo(String callId, int videoState, Session.Info sessionInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -922,9 +880,8 @@ public interface IConnectionService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(7, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(7, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().answerVideo(callId, videoState, sessionInfo);
                     }
                 } finally {
@@ -932,6 +889,7 @@ public interface IConnectionService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IConnectionService
             public void answer(String callId, Session.Info sessionInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -943,9 +901,8 @@ public interface IConnectionService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(8, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(8, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().answer(callId, sessionInfo);
                     }
                 } finally {
@@ -953,6 +910,7 @@ public interface IConnectionService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IConnectionService
             public void deflect(String callId, Uri address, Session.Info sessionInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -970,9 +928,8 @@ public interface IConnectionService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(9, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(9, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().deflect(callId, address, sessionInfo);
                     }
                 } finally {
@@ -980,6 +937,7 @@ public interface IConnectionService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IConnectionService
             public void reject(String callId, Session.Info sessionInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -991,9 +949,8 @@ public interface IConnectionService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(10, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(10, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().reject(callId, sessionInfo);
                     }
                 } finally {
@@ -1001,6 +958,7 @@ public interface IConnectionService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IConnectionService
             public void rejectWithMessage(String callId, String message, Session.Info sessionInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1013,9 +971,8 @@ public interface IConnectionService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(11, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(11, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().rejectWithMessage(callId, message, sessionInfo);
                     }
                 } finally {
@@ -1023,6 +980,7 @@ public interface IConnectionService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IConnectionService
             public void disconnect(String callId, Session.Info sessionInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1034,9 +992,8 @@ public interface IConnectionService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(12, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(12, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().disconnect(callId, sessionInfo);
                     }
                 } finally {
@@ -1044,6 +1001,7 @@ public interface IConnectionService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IConnectionService
             public void silence(String callId, Session.Info sessionInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1055,9 +1013,8 @@ public interface IConnectionService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(13, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(13, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().silence(callId, sessionInfo);
                     }
                 } finally {
@@ -1065,6 +1022,7 @@ public interface IConnectionService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IConnectionService
             public void hold(String callId, Session.Info sessionInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1076,9 +1034,8 @@ public interface IConnectionService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(14, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(14, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().hold(callId, sessionInfo);
                     }
                 } finally {
@@ -1086,6 +1043,7 @@ public interface IConnectionService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IConnectionService
             public void unhold(String callId, Session.Info sessionInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1097,9 +1055,8 @@ public interface IConnectionService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(15, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(15, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().unhold(callId, sessionInfo);
                     }
                 } finally {
@@ -1107,6 +1064,7 @@ public interface IConnectionService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IConnectionService
             public void onCallAudioStateChanged(String activeCallId, CallAudioState callAudioState, Session.Info sessionInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1124,9 +1082,8 @@ public interface IConnectionService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(16, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(16, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onCallAudioStateChanged(activeCallId, callAudioState, sessionInfo);
                     }
                 } finally {
@@ -1134,6 +1091,7 @@ public interface IConnectionService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IConnectionService
             public void playDtmfTone(String callId, char digit, Session.Info sessionInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1146,9 +1104,8 @@ public interface IConnectionService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(17, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(17, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().playDtmfTone(callId, digit, sessionInfo);
                     }
                 } finally {
@@ -1156,6 +1113,7 @@ public interface IConnectionService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IConnectionService
             public void stopDtmfTone(String callId, Session.Info sessionInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1167,9 +1125,8 @@ public interface IConnectionService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(18, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(18, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().stopDtmfTone(callId, sessionInfo);
                     }
                 } finally {
@@ -1177,6 +1134,7 @@ public interface IConnectionService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IConnectionService
             public void conference(String conferenceCallId, String callId, Session.Info sessionInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1189,9 +1147,8 @@ public interface IConnectionService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(19, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(19, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().conference(conferenceCallId, callId, sessionInfo);
                     }
                 } finally {
@@ -1199,6 +1156,7 @@ public interface IConnectionService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IConnectionService
             public void splitFromConference(String callId, Session.Info sessionInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1210,9 +1168,8 @@ public interface IConnectionService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(20, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(20, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().splitFromConference(callId, sessionInfo);
                     }
                 } finally {
@@ -1220,6 +1177,7 @@ public interface IConnectionService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IConnectionService
             public void mergeConference(String conferenceCallId, Session.Info sessionInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1231,9 +1189,8 @@ public interface IConnectionService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(21, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(21, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().mergeConference(conferenceCallId, sessionInfo);
                     }
                 } finally {
@@ -1241,6 +1198,7 @@ public interface IConnectionService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IConnectionService
             public void swapConference(String conferenceCallId, Session.Info sessionInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1252,9 +1210,8 @@ public interface IConnectionService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(22, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(22, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().swapConference(conferenceCallId, sessionInfo);
                     }
                 } finally {
@@ -1262,21 +1219,21 @@ public interface IConnectionService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IConnectionService
             public void onPostDialContinue(String callId, boolean proceed, Session.Info sessionInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callId);
-                    _data.writeInt(proceed);
+                    _data.writeInt(proceed ? 1 : 0);
                     if (sessionInfo != null) {
                         _data.writeInt(1);
                         sessionInfo.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(23, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(23, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onPostDialContinue(callId, proceed, sessionInfo);
                     }
                 } finally {
@@ -1284,6 +1241,7 @@ public interface IConnectionService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IConnectionService
             public void pullExternalCall(String callId, Session.Info sessionInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1295,9 +1253,8 @@ public interface IConnectionService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(24, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(24, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().pullExternalCall(callId, sessionInfo);
                     }
                 } finally {
@@ -1305,6 +1262,7 @@ public interface IConnectionService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IConnectionService
             public void sendCallEvent(String callId, String event, Bundle extras, Session.Info sessionInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1323,9 +1281,8 @@ public interface IConnectionService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(25, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(25, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().sendCallEvent(callId, event, extras, sessionInfo);
                     }
                 } finally {
@@ -1333,6 +1290,7 @@ public interface IConnectionService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IConnectionService
             public void onExtrasChanged(String callId, Bundle extras, Session.Info sessionInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1350,9 +1308,8 @@ public interface IConnectionService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(26, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(26, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onExtrasChanged(callId, extras, sessionInfo);
                     }
                 } finally {
@@ -1360,6 +1317,7 @@ public interface IConnectionService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IConnectionService
             public void startRtt(String callId, ParcelFileDescriptor fromInCall, ParcelFileDescriptor toInCall, Session.Info sessionInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1383,9 +1341,8 @@ public interface IConnectionService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(27, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(27, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().startRtt(callId, fromInCall, toInCall, sessionInfo);
                     }
                 } finally {
@@ -1393,6 +1350,7 @@ public interface IConnectionService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IConnectionService
             public void stopRtt(String callId, Session.Info sessionInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1404,9 +1362,8 @@ public interface IConnectionService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(28, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(28, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().stopRtt(callId, sessionInfo);
                     }
                 } finally {
@@ -1414,6 +1371,7 @@ public interface IConnectionService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IConnectionService
             public void respondToRttUpgradeRequest(String callId, ParcelFileDescriptor fromInCall, ParcelFileDescriptor toInCall, Session.Info sessionInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1437,9 +1395,8 @@ public interface IConnectionService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(29, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(29, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().respondToRttUpgradeRequest(callId, fromInCall, toInCall, sessionInfo);
                     }
                 } finally {
@@ -1447,15 +1404,15 @@ public interface IConnectionService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IConnectionService
             public void addParticipantWithConference(String callId, String recipients) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callId);
                     _data.writeString(recipients);
-                    if (this.mRemote.transact(30, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(30, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().addParticipantWithConference(callId, recipients);
                     }
                 } finally {
@@ -1463,6 +1420,7 @@ public interface IConnectionService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IConnectionService
             public void connectionServiceFocusLost(Session.Info sessionInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1473,9 +1431,8 @@ public interface IConnectionService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(31, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(31, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().connectionServiceFocusLost(sessionInfo);
                     }
                 } finally {
@@ -1483,6 +1440,7 @@ public interface IConnectionService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IConnectionService
             public void connectionServiceFocusGained(Session.Info sessionInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1493,9 +1451,8 @@ public interface IConnectionService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(32, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(32, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().connectionServiceFocusGained(sessionInfo);
                     }
                 } finally {
@@ -1503,6 +1460,7 @@ public interface IConnectionService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IConnectionService
             public void handoverFailed(String callId, ConnectionRequest request, int error, Session.Info sessionInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1521,9 +1479,8 @@ public interface IConnectionService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(33, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(33, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().handoverFailed(callId, request, error, sessionInfo);
                     }
                 } finally {
@@ -1531,6 +1488,7 @@ public interface IConnectionService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.IConnectionService
             public void handoverComplete(String callId, Session.Info sessionInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1542,9 +1500,8 @@ public interface IConnectionService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(34, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(34, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().handoverComplete(callId, sessionInfo);
                     }
                 } finally {
@@ -1554,11 +1511,11 @@ public interface IConnectionService extends IInterface {
         }
 
         public static boolean setDefaultImpl(IConnectionService impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IConnectionService getDefaultImpl() {

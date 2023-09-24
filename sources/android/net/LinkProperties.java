@@ -3,8 +3,8 @@ package android.net;
 import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
 import android.net.wifi.WifiEnterpriseConfig;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.telephony.SmsManager;
 import android.text.TextUtils;
 import java.net.Inet4Address;
@@ -20,8 +20,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
 
+/* loaded from: classes3.dex */
 public final class LinkProperties implements Parcelable {
-    public static final Parcelable.Creator<LinkProperties> CREATOR = new Parcelable.Creator<LinkProperties>() {
+    public static final Parcelable.Creator<LinkProperties> CREATOR = new Parcelable.Creator<LinkProperties>() { // from class: android.net.LinkProperties.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public LinkProperties createFromParcel(Parcel in) {
             LinkProperties netProp = new LinkProperties();
             String iface = in.readString();
@@ -30,7 +33,7 @@ public final class LinkProperties implements Parcelable {
             }
             int addressCount = in.readInt();
             for (int i = 0; i < addressCount; i++) {
-                netProp.addLinkAddress((LinkAddress) in.readParcelable((ClassLoader) null));
+                netProp.addLinkAddress((LinkAddress) in.readParcelable(null));
             }
             int addressCount2 = in.readInt();
             for (int i2 = 0; i2 < addressCount2; i2++) {
@@ -60,21 +63,25 @@ public final class LinkProperties implements Parcelable {
             netProp.setTcpBufferSizes(in.readString());
             int addressCount5 = in.readInt();
             for (int i5 = 0; i5 < addressCount5; i5++) {
-                netProp.addRoute((RouteInfo) in.readParcelable((ClassLoader) null));
+                netProp.addRoute((RouteInfo) in.readParcelable(null));
             }
-            if (in.readByte() == 1) {
-                netProp.setHttpProxy((ProxyInfo) in.readParcelable((ClassLoader) null));
+            int i6 = in.readByte();
+            if (i6 == 1) {
+                netProp.setHttpProxy((ProxyInfo) in.readParcelable(null));
             }
-            netProp.setNat64Prefix((IpPrefix) in.readParcelable((ClassLoader) null));
+            netProp.setNat64Prefix((IpPrefix) in.readParcelable(null));
             ArrayList<LinkProperties> stackedLinks = new ArrayList<>();
             in.readList(stackedLinks, LinkProperties.class.getClassLoader());
             Iterator<LinkProperties> it = stackedLinks.iterator();
             while (it.hasNext()) {
-                netProp.addStackedLink(it.next());
+                LinkProperties stackedLink = it.next();
+                netProp.addStackedLink(stackedLink);
             }
             return netProp;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public LinkProperties[] newArray(int size) {
             return new LinkProperties[size];
         }
@@ -82,22 +89,23 @@ public final class LinkProperties implements Parcelable {
     private static final int MAX_MTU = 10000;
     private static final int MIN_MTU = 68;
     private static final int MIN_MTU_V6 = 1280;
-    private final ArrayList<InetAddress> mDnses = new ArrayList<>();
     private String mDomains;
     private ProxyInfo mHttpProxy;
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
     private String mIfaceName;
-    private final ArrayList<LinkAddress> mLinkAddresses = new ArrayList<>();
     private int mMtu;
     private IpPrefix mNat64Prefix;
-    private final ArrayList<InetAddress> mPcscfs = new ArrayList<>();
     private String mPrivateDnsServerName;
-    private ArrayList<RouteInfo> mRoutes = new ArrayList<>();
-    private Hashtable<String, LinkProperties> mStackedLinks = new Hashtable<>();
     private String mTcpBufferSizes;
     private boolean mUsePrivateDns;
+    private final ArrayList<LinkAddress> mLinkAddresses = new ArrayList<>();
+    private final ArrayList<InetAddress> mDnses = new ArrayList<>();
+    private final ArrayList<InetAddress> mPcscfs = new ArrayList<>();
     private final ArrayList<InetAddress> mValidatedPrivateDnses = new ArrayList<>();
+    private ArrayList<RouteInfo> mRoutes = new ArrayList<>();
+    private Hashtable<String, LinkProperties> mStackedLinks = new Hashtable<>();
 
+    /* loaded from: classes3.dex */
     public enum ProvisioningChange {
         STILL_NOT_PROVISIONED,
         LOST_PROVISIONING,
@@ -105,9 +113,10 @@ public final class LinkProperties implements Parcelable {
         STILL_PROVISIONED
     }
 
+    /* loaded from: classes3.dex */
     public static class CompareResult<T> {
-        public final List<T> added = new ArrayList();
         public final List<T> removed = new ArrayList();
+        public final List<T> added = new ArrayList();
 
         public CompareResult() {
         }
@@ -126,24 +135,24 @@ public final class LinkProperties implements Parcelable {
         }
 
         public String toString() {
-            return "removed=[" + TextUtils.join((CharSequence) SmsManager.REGEX_PREFIX_DELIMITER, (Iterable) this.removed) + "] added=[" + TextUtils.join((CharSequence) SmsManager.REGEX_PREFIX_DELIMITER, (Iterable) this.added) + "]";
+            return "removed=[" + TextUtils.join(SmsManager.REGEX_PREFIX_DELIMITER, this.removed) + "] added=[" + TextUtils.join(SmsManager.REGEX_PREFIX_DELIMITER, this.added) + "]";
         }
     }
 
     @UnsupportedAppUsage
     public static ProvisioningChange compareProvisioning(LinkProperties before, LinkProperties after) {
-        if (!before.isProvisioned() || !after.isProvisioned()) {
-            if (before.isProvisioned() && !after.isProvisioned()) {
+        if (before.isProvisioned() && after.isProvisioned()) {
+            if ((before.isIpv4Provisioned() && !after.isIpv4Provisioned()) || (before.isIpv6Provisioned() && !after.isIpv6Provisioned())) {
                 return ProvisioningChange.LOST_PROVISIONING;
             }
-            if (before.isProvisioned() || !after.isProvisioned()) {
-                return ProvisioningChange.STILL_NOT_PROVISIONED;
-            }
-            return ProvisioningChange.GAINED_PROVISIONING;
-        } else if ((!before.isIpv4Provisioned() || after.isIpv4Provisioned()) && (!before.isIpv6Provisioned() || after.isIpv6Provisioned())) {
             return ProvisioningChange.STILL_PROVISIONED;
-        } else {
+        } else if (before.isProvisioned() && !after.isProvisioned()) {
             return ProvisioningChange.LOST_PROVISIONING;
+        } else {
+            if (!before.isProvisioned() && after.isProvisioned()) {
+                return ProvisioningChange.GAINED_PROVISIONING;
+            }
+            return ProvisioningChange.STILL_NOT_PROVISIONED;
         }
     }
 
@@ -177,7 +186,8 @@ public final class LinkProperties implements Parcelable {
         ArrayList<RouteInfo> newRoutes = new ArrayList<>(this.mRoutes.size());
         Iterator<RouteInfo> it = this.mRoutes.iterator();
         while (it.hasNext()) {
-            newRoutes.add(routeWithInterface(it.next()));
+            RouteInfo route = it.next();
+            newRoutes.add(routeWithInterface(route));
         }
         this.mRoutes = newRoutes;
     }
@@ -203,7 +213,8 @@ public final class LinkProperties implements Parcelable {
         List<InetAddress> addresses = new ArrayList<>();
         Iterator<LinkAddress> it = this.mLinkAddresses.iterator();
         while (it.hasNext()) {
-            addresses.add(it.next().getAddress());
+            LinkAddress linkAddress = it.next();
+            addresses.add(linkAddress.getAddress());
         }
         return Collections.unmodifiableList(addresses);
     }
@@ -213,7 +224,8 @@ public final class LinkProperties implements Parcelable {
         List<InetAddress> addresses = new ArrayList<>();
         Iterator<LinkAddress> it = this.mLinkAddresses.iterator();
         while (it.hasNext()) {
-            addresses.add(it.next().getAddress());
+            LinkAddress linkAddress = it.next();
+            addresses.add(linkAddress.getAddress());
         }
         for (LinkProperties stacked : this.mStackedLinks.values()) {
             addresses.addAll(stacked.getAllAddresses());
@@ -250,11 +262,11 @@ public final class LinkProperties implements Parcelable {
     @SystemApi
     public boolean removeLinkAddress(LinkAddress toRemove) {
         int i = findLinkAddressIndex(toRemove);
-        if (i < 0) {
-            return false;
+        if (i >= 0) {
+            this.mLinkAddresses.remove(i);
+            return true;
         }
-        this.mLinkAddresses.remove(i);
-        return true;
+        return false;
     }
 
     public List<LinkAddress> getLinkAddresses() {
@@ -279,11 +291,11 @@ public final class LinkProperties implements Parcelable {
 
     @SystemApi
     public boolean addDnsServer(InetAddress dnsServer) {
-        if (dnsServer == null || this.mDnses.contains(dnsServer)) {
-            return false;
+        if (dnsServer != null && !this.mDnses.contains(dnsServer)) {
+            this.mDnses.add(dnsServer);
+            return true;
         }
-        this.mDnses.add(dnsServer);
-        return true;
+        return false;
     }
 
     @SystemApi
@@ -321,11 +333,11 @@ public final class LinkProperties implements Parcelable {
     }
 
     public boolean addValidatedPrivateDnsServer(InetAddress dnsServer) {
-        if (dnsServer == null || this.mValidatedPrivateDnses.contains(dnsServer)) {
-            return false;
+        if (dnsServer != null && !this.mValidatedPrivateDnses.contains(dnsServer)) {
+            this.mValidatedPrivateDnses.add(dnsServer);
+            return true;
         }
-        this.mValidatedPrivateDnses.add(dnsServer);
-        return true;
+        return false;
     }
 
     public boolean removeValidatedPrivateDnsServer(InetAddress dnsServer) {
@@ -346,11 +358,11 @@ public final class LinkProperties implements Parcelable {
     }
 
     public boolean addPcscfServer(InetAddress pcscfServer) {
-        if (pcscfServer == null || this.mPcscfs.contains(pcscfServer)) {
-            return false;
+        if (pcscfServer != null && !this.mPcscfs.contains(pcscfServer)) {
+            this.mPcscfs.add(pcscfServer);
+            return true;
         }
-        this.mPcscfs.add(pcscfServer);
-        return true;
+        return false;
     }
 
     public boolean removePcscfServer(InetAddress pcscfServer) {
@@ -402,15 +414,15 @@ public final class LinkProperties implements Parcelable {
 
     public boolean addRoute(RouteInfo route) {
         String routeIface = route.getInterface();
-        if (routeIface == null || routeIface.equals(this.mIfaceName)) {
-            RouteInfo route2 = routeWithInterface(route);
-            if (this.mRoutes.contains(route2)) {
-                return false;
-            }
+        if (routeIface != null && !routeIface.equals(this.mIfaceName)) {
+            throw new IllegalArgumentException("Route added with non-matching interface: " + routeIface + " vs. " + this.mIfaceName);
+        }
+        RouteInfo route2 = routeWithInterface(route);
+        if (!this.mRoutes.contains(route2)) {
             this.mRoutes.add(route2);
             return true;
         }
-        throw new IllegalArgumentException("Route added with non-matching interface: " + routeIface + " vs. " + this.mIfaceName);
+        return false;
     }
 
     @SystemApi
@@ -425,7 +437,8 @@ public final class LinkProperties implements Parcelable {
     public void ensureDirectlyConnectedRoutes() {
         Iterator<LinkAddress> it = this.mLinkAddresses.iterator();
         while (it.hasNext()) {
-            addRoute(new RouteInfo(it.next(), (InetAddress) null, this.mIfaceName));
+            LinkAddress addr = it.next();
+            addRoute(new RouteInfo(addr, (InetAddress) null, this.mIfaceName));
         }
     }
 
@@ -453,24 +466,24 @@ public final class LinkProperties implements Parcelable {
 
     @SystemApi
     public void setNat64Prefix(IpPrefix prefix) {
-        if (prefix == null || prefix.getPrefixLength() == 96) {
-            this.mNat64Prefix = prefix;
-            return;
+        if (prefix != null && prefix.getPrefixLength() != 96) {
+            throw new IllegalArgumentException("Only 96-bit prefixes are supported: " + prefix);
         }
-        throw new IllegalArgumentException("Only 96-bit prefixes are supported: " + prefix);
+        this.mNat64Prefix = prefix;
     }
 
     @UnsupportedAppUsage
     public boolean addStackedLink(LinkProperties link) {
-        if (link.getInterfaceName() == null) {
-            return false;
+        if (link.getInterfaceName() != null) {
+            this.mStackedLinks.put(link.getInterfaceName(), link);
+            return true;
         }
-        this.mStackedLinks.put(link.getInterfaceName(), link);
-        return true;
+        return false;
     }
 
     public boolean removeStackedLink(String iface) {
-        return this.mStackedLinks.remove(iface) != null;
+        LinkProperties removed = this.mStackedLinks.remove(iface);
+        return removed != null;
     }
 
     @UnsupportedAppUsage
@@ -501,6 +514,7 @@ public final class LinkProperties implements Parcelable {
         this.mNat64Prefix = null;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -513,12 +527,12 @@ public final class LinkProperties implements Parcelable {
         }
         resultJoiner.add("LinkAddresses: [");
         if (!this.mLinkAddresses.isEmpty()) {
-            resultJoiner.add(TextUtils.join((CharSequence) SmsManager.REGEX_PREFIX_DELIMITER, (Iterable) this.mLinkAddresses));
+            resultJoiner.add(TextUtils.join(SmsManager.REGEX_PREFIX_DELIMITER, this.mLinkAddresses));
         }
         resultJoiner.add("]");
         resultJoiner.add("DnsAddresses: [");
         if (!this.mDnses.isEmpty()) {
-            resultJoiner.add(TextUtils.join((CharSequence) SmsManager.REGEX_PREFIX_DELIMITER, (Iterable) this.mDnses));
+            resultJoiner.add(TextUtils.join(SmsManager.REGEX_PREFIX_DELIMITER, this.mDnses));
         }
         resultJoiner.add("]");
         if (this.mUsePrivateDns) {
@@ -530,14 +544,15 @@ public final class LinkProperties implements Parcelable {
         }
         if (!this.mPcscfs.isEmpty()) {
             resultJoiner.add("PcscfAddresses: [");
-            resultJoiner.add(TextUtils.join((CharSequence) SmsManager.REGEX_PREFIX_DELIMITER, (Iterable) this.mPcscfs));
+            resultJoiner.add(TextUtils.join(SmsManager.REGEX_PREFIX_DELIMITER, this.mPcscfs));
             resultJoiner.add("]");
         }
         if (!this.mValidatedPrivateDnses.isEmpty()) {
             StringJoiner validatedPrivateDnsesJoiner = new StringJoiner(SmsManager.REGEX_PREFIX_DELIMITER, "ValidatedPrivateDnsAddresses: [", "]");
             Iterator<InetAddress> it = this.mValidatedPrivateDnses.iterator();
             while (it.hasNext()) {
-                validatedPrivateDnsesJoiner.add(it.next().getHostAddress());
+                InetAddress addr = it.next();
+                validatedPrivateDnsesJoiner.add(addr.getHostAddress());
             }
             resultJoiner.add(validatedPrivateDnsesJoiner.toString());
         }
@@ -551,7 +566,7 @@ public final class LinkProperties implements Parcelable {
         }
         resultJoiner.add("Routes: [");
         if (!this.mRoutes.isEmpty()) {
-            resultJoiner.add(TextUtils.join((CharSequence) SmsManager.REGEX_PREFIX_DELIMITER, (Iterable) this.mRoutes));
+            resultJoiner.add(TextUtils.join(SmsManager.REGEX_PREFIX_DELIMITER, this.mRoutes));
         }
         resultJoiner.add("]");
         if (this.mHttpProxy != null) {
@@ -577,7 +592,8 @@ public final class LinkProperties implements Parcelable {
     public boolean hasIpv4Address() {
         Iterator<LinkAddress> it = this.mLinkAddresses.iterator();
         while (it.hasNext()) {
-            if (it.next().getAddress() instanceof Inet4Address) {
+            LinkAddress address = it.next();
+            if (address.getAddress() instanceof Inet4Address) {
                 return true;
             }
         }
@@ -614,7 +630,8 @@ public final class LinkProperties implements Parcelable {
     public boolean hasIpv4DefaultRoute() {
         Iterator<RouteInfo> it = this.mRoutes.iterator();
         while (it.hasNext()) {
-            if (it.next().isIPv4Default()) {
+            RouteInfo r = it.next();
+            if (r.isIPv4Default()) {
                 return true;
             }
         }
@@ -630,7 +647,8 @@ public final class LinkProperties implements Parcelable {
     public boolean hasIpv6DefaultRoute() {
         Iterator<RouteInfo> it = this.mRoutes.iterator();
         while (it.hasNext()) {
-            if (it.next().isIPv6Default()) {
+            RouteInfo r = it.next();
+            if (r.isIPv6Default()) {
                 return true;
             }
         }
@@ -646,7 +664,8 @@ public final class LinkProperties implements Parcelable {
     public boolean hasIpv4DnsServer() {
         Iterator<InetAddress> it = this.mDnses.iterator();
         while (it.hasNext()) {
-            if (it.next() instanceof Inet4Address) {
+            InetAddress ia = it.next();
+            if (ia instanceof Inet4Address) {
                 return true;
             }
         }
@@ -662,7 +681,8 @@ public final class LinkProperties implements Parcelable {
     public boolean hasIpv6DnsServer() {
         Iterator<InetAddress> it = this.mDnses.iterator();
         while (it.hasNext()) {
-            if (it.next() instanceof Inet6Address) {
+            InetAddress ia = it.next();
+            if (ia instanceof Inet6Address) {
                 return true;
             }
         }
@@ -677,7 +697,8 @@ public final class LinkProperties implements Parcelable {
     public boolean hasIpv4PcscfServer() {
         Iterator<InetAddress> it = this.mPcscfs.iterator();
         while (it.hasNext()) {
-            if (it.next() instanceof Inet4Address) {
+            InetAddress ia = it.next();
+            if (ia instanceof Inet4Address) {
                 return true;
             }
         }
@@ -687,7 +708,8 @@ public final class LinkProperties implements Parcelable {
     public boolean hasIpv6PcscfServer() {
         Iterator<InetAddress> it = this.mPcscfs.iterator();
         while (it.hasNext()) {
-            if (it.next() instanceof Inet6Address) {
+            InetAddress ia = it.next();
+            if (ia instanceof Inet6Address) {
                 return true;
             }
         }
@@ -716,26 +738,18 @@ public final class LinkProperties implements Parcelable {
 
     @SystemApi
     public boolean isReachable(InetAddress ip) {
-        RouteInfo bestRoute = RouteInfo.selectBestRoute(getAllRoutes(), ip);
+        List<RouteInfo> allRoutes = getAllRoutes();
+        RouteInfo bestRoute = RouteInfo.selectBestRoute(allRoutes, ip);
         if (bestRoute == null) {
             return false;
         }
         if (ip instanceof Inet4Address) {
             return hasIpv4AddressOnInterface(bestRoute.getInterface());
         }
-        if (!(ip instanceof Inet6Address)) {
-            return false;
+        if (ip instanceof Inet6Address) {
+            return ip.isLinkLocalAddress() ? ((Inet6Address) ip).getScopeId() != 0 : !bestRoute.hasGateway() || hasGlobalIpv6Address();
         }
-        if (ip.isLinkLocalAddress()) {
-            if (((Inet6Address) ip).getScopeId() != 0) {
-                return true;
-            }
-            return false;
-        } else if (!bestRoute.hasGateway() || hasGlobalIpv6Address()) {
-            return true;
-        } else {
-            return false;
-        }
+        return false;
     }
 
     @UnsupportedAppUsage
@@ -745,7 +759,7 @@ public final class LinkProperties implements Parcelable {
 
     @UnsupportedAppUsage
     public boolean isIdenticalAddresses(LinkProperties target) {
-        Collection<InetAddress> targetAddresses = target.getAddresses();
+        Collection<?> targetAddresses = target.getAddresses();
         Collection<InetAddress> sourceAddresses = getAddresses();
         if (sourceAddresses.size() == targetAddresses.size()) {
             return sourceAddresses.containsAll(targetAddresses);
@@ -809,15 +823,16 @@ public final class LinkProperties implements Parcelable {
 
     @UnsupportedAppUsage
     public boolean isIdenticalStackedLinks(LinkProperties target) {
-        if (!this.mStackedLinks.keySet().equals(target.mStackedLinks.keySet())) {
-            return false;
-        }
-        for (LinkProperties stacked : this.mStackedLinks.values()) {
-            if (!stacked.equals(target.mStackedLinks.get(stacked.getInterfaceName()))) {
-                return false;
+        if (this.mStackedLinks.keySet().equals(target.mStackedLinks.keySet())) {
+            for (LinkProperties stacked : this.mStackedLinks.values()) {
+                String iface = stacked.getInterfaceName();
+                if (!stacked.equals(target.mStackedLinks.get(iface))) {
+                    return false;
+                }
             }
+            return true;
         }
-        return true;
+        return false;
     }
 
     public boolean isIdenticalMtu(LinkProperties target) {
@@ -836,14 +851,11 @@ public final class LinkProperties implements Parcelable {
         if (this == obj) {
             return true;
         }
-        if (!(obj instanceof LinkProperties)) {
-            return false;
+        if (obj instanceof LinkProperties) {
+            LinkProperties target = (LinkProperties) obj;
+            return isIdenticalInterfaceName(target) && isIdenticalAddresses(target) && isIdenticalDnses(target) && isIdenticalPrivateDns(target) && isIdenticalValidatedPrivateDnses(target) && isIdenticalPcscfs(target) && isIdenticalRoutes(target) && isIdenticalHttpProxy(target) && isIdenticalStackedLinks(target) && isIdenticalMtu(target) && isIdenticalTcpBufferSizes(target) && isIdenticalNat64Prefix(target);
         }
-        LinkProperties target = (LinkProperties) obj;
-        if (!isIdenticalInterfaceName(target) || !isIdenticalAddresses(target) || !isIdenticalDnses(target) || !isIdenticalPrivateDns(target) || !isIdenticalValidatedPrivateDnses(target) || !isIdenticalPcscfs(target) || !isIdenticalRoutes(target) || !isIdenticalHttpProxy(target) || !isIdenticalStackedLinks(target) || !isIdenticalMtu(target) || !isIdenticalTcpBufferSizes(target) || !isIdenticalNat64Prefix(target)) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
     public CompareResult<LinkAddress> compareAddresses(LinkProperties target) {
@@ -867,38 +879,43 @@ public final class LinkProperties implements Parcelable {
     }
 
     public int hashCode() {
-        int i;
+        int hashCode;
         if (this.mIfaceName == null) {
-            i = 0;
+            hashCode = 0;
         } else {
-            i = this.mIfaceName.hashCode() + (this.mLinkAddresses.size() * 31) + (this.mDnses.size() * 37) + (this.mValidatedPrivateDnses.size() * 61) + (this.mDomains == null ? 0 : this.mDomains.hashCode()) + (this.mRoutes.size() * 41) + (this.mHttpProxy == null ? 0 : this.mHttpProxy.hashCode()) + (this.mStackedLinks.hashCode() * 47);
+            hashCode = this.mIfaceName.hashCode() + (this.mLinkAddresses.size() * 31) + (this.mDnses.size() * 37) + (this.mValidatedPrivateDnses.size() * 61) + (this.mDomains == null ? 0 : this.mDomains.hashCode()) + (this.mRoutes.size() * 41) + (this.mHttpProxy == null ? 0 : this.mHttpProxy.hashCode()) + (this.mStackedLinks.hashCode() * 47);
         }
-        return i + (this.mMtu * 51) + (this.mTcpBufferSizes == null ? 0 : this.mTcpBufferSizes.hashCode()) + (this.mUsePrivateDns ? 57 : 0) + (this.mPcscfs.size() * 67) + (this.mPrivateDnsServerName == null ? 0 : this.mPrivateDnsServerName.hashCode()) + Objects.hash(new Object[]{this.mNat64Prefix});
+        return hashCode + (this.mMtu * 51) + (this.mTcpBufferSizes == null ? 0 : this.mTcpBufferSizes.hashCode()) + (this.mUsePrivateDns ? 57 : 0) + (this.mPcscfs.size() * 67) + (this.mPrivateDnsServerName == null ? 0 : this.mPrivateDnsServerName.hashCode()) + Objects.hash(this.mNat64Prefix);
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(getInterfaceName());
         dest.writeInt(this.mLinkAddresses.size());
         Iterator<LinkAddress> it = this.mLinkAddresses.iterator();
         while (it.hasNext()) {
-            dest.writeParcelable(it.next(), flags);
+            LinkAddress linkAddress = it.next();
+            dest.writeParcelable(linkAddress, flags);
         }
         dest.writeInt(this.mDnses.size());
         Iterator<InetAddress> it2 = this.mDnses.iterator();
         while (it2.hasNext()) {
-            dest.writeByteArray(it2.next().getAddress());
+            InetAddress d = it2.next();
+            dest.writeByteArray(d.getAddress());
         }
         dest.writeInt(this.mValidatedPrivateDnses.size());
         Iterator<InetAddress> it3 = this.mValidatedPrivateDnses.iterator();
         while (it3.hasNext()) {
-            dest.writeByteArray(it3.next().getAddress());
+            InetAddress d2 = it3.next();
+            dest.writeByteArray(d2.getAddress());
         }
         dest.writeBoolean(this.mUsePrivateDns);
         dest.writeString(this.mPrivateDnsServerName);
         dest.writeInt(this.mPcscfs.size());
         Iterator<InetAddress> it4 = this.mPcscfs.iterator();
         while (it4.hasNext()) {
-            dest.writeByteArray(it4.next().getAddress());
+            InetAddress d3 = it4.next();
+            dest.writeByteArray(d3.getAddress());
         }
         dest.writeString(this.mDomains);
         dest.writeInt(this.mMtu);
@@ -906,7 +923,8 @@ public final class LinkProperties implements Parcelable {
         dest.writeInt(this.mRoutes.size());
         Iterator<RouteInfo> it5 = this.mRoutes.iterator();
         while (it5.hasNext()) {
-            dest.writeParcelable(it5.next(), flags);
+            RouteInfo route = it5.next();
+            dest.writeParcelable(route, flags);
         }
         if (this.mHttpProxy != null) {
             dest.writeByte((byte) 1);
@@ -915,19 +933,11 @@ public final class LinkProperties implements Parcelable {
             dest.writeByte((byte) 0);
         }
         dest.writeParcelable(this.mNat64Prefix, 0);
-        dest.writeList(new ArrayList<>(this.mStackedLinks.values()));
+        ArrayList<LinkProperties> stackedLinks = new ArrayList<>(this.mStackedLinks.values());
+        dest.writeList(stackedLinks);
     }
 
     public static boolean isValidMtu(int mtu, boolean ipv6) {
-        if (ipv6) {
-            if (mtu < 1280 || mtu > 10000) {
-                return false;
-            }
-            return true;
-        } else if (mtu < 68 || mtu > 10000) {
-            return false;
-        } else {
-            return true;
-        }
+        return ipv6 ? mtu >= 1280 && mtu <= 10000 : mtu >= 68 && mtu <= 10000;
     }
 }

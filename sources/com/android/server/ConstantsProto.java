@@ -1,5 +1,6 @@
 package com.android.server;
 
+/* loaded from: classes4.dex */
 public final class ConstantsProto {
     public static final long ALLOW_WHILE_IDLE_LONG_DURATION_MS = 1112396529669L;
     public static final long ALLOW_WHILE_IDLE_SHORT_DURATION_MS = 1112396529668L;

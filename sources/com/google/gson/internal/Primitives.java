@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+/* loaded from: classes4.dex */
 public final class Primitives {
     private static final Map<Class<?>, Class<?>> PRIMITIVE_TO_WRAPPER_TYPE;
     private static final Map<Class<?>, Class<?>> WRAPPER_TO_PRIMITIVE_TYPE;
@@ -42,12 +43,12 @@ public final class Primitives {
     }
 
     public static <T> Class<T> wrap(Class<T> type) {
-        Class<T> wrapped = PRIMITIVE_TO_WRAPPER_TYPE.get(C$Gson$Preconditions.checkNotNull(type));
+        Class<T> wrapped = (Class<T>) PRIMITIVE_TO_WRAPPER_TYPE.get(C$Gson$Preconditions.checkNotNull(type));
         return wrapped == null ? type : wrapped;
     }
 
     public static <T> Class<T> unwrap(Class<T> type) {
-        Class<T> unwrapped = WRAPPER_TO_PRIMITIVE_TYPE.get(C$Gson$Preconditions.checkNotNull(type));
+        Class<T> unwrapped = (Class<T>) WRAPPER_TO_PRIMITIVE_TYPE.get(C$Gson$Preconditions.checkNotNull(type));
         return unwrapped == null ? type : unwrapped;
     }
 }

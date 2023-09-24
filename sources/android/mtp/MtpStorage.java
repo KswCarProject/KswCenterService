@@ -1,10 +1,10 @@
 package android.mtp;
 
 import android.annotation.UnsupportedAppUsage;
-import android.content.Context;
-import android.os.storage.StorageVolume;
+import android.p007os.storage.StorageVolume;
 import android.provider.MediaStore;
 
+/* loaded from: classes3.dex */
 public class MtpStorage {
     private final String mDescription;
     private final long mMaxFileSize;
@@ -16,7 +16,7 @@ public class MtpStorage {
     public MtpStorage(StorageVolume volume, int storageId) {
         this.mStorageId = storageId;
         this.mPath = volume.getInternalPath();
-        this.mDescription = volume.getDescription((Context) null);
+        this.mDescription = volume.getDescription(null);
         this.mRemovable = volume.isRemovable();
         this.mMaxFileSize = volume.getMaxFileSize();
         if (volume.isPrimary()) {

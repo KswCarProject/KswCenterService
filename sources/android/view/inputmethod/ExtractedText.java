@@ -1,11 +1,14 @@
 package android.view.inputmethod;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.TextUtils;
 
+/* loaded from: classes4.dex */
 public class ExtractedText implements Parcelable {
-    public static final Parcelable.Creator<ExtractedText> CREATOR = new Parcelable.Creator<ExtractedText>() {
+    public static final Parcelable.Creator<ExtractedText> CREATOR = new Parcelable.Creator<ExtractedText>() { // from class: android.view.inputmethod.ExtractedText.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ExtractedText createFromParcel(Parcel source) {
             ExtractedText res = new ExtractedText();
             res.text = TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(source);
@@ -19,6 +22,8 @@ public class ExtractedText implements Parcelable {
             return res;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ExtractedText[] newArray(int size) {
             return new ExtractedText[size];
         }
@@ -34,17 +39,19 @@ public class ExtractedText implements Parcelable {
     public int startOffset;
     public CharSequence text;
 
-    public void writeToParcel(Parcel dest, int flags2) {
-        TextUtils.writeToParcel(this.text, dest, flags2);
+    @Override // android.p007os.Parcelable
+    public void writeToParcel(Parcel dest, int flags) {
+        TextUtils.writeToParcel(this.text, dest, flags);
         dest.writeInt(this.startOffset);
         dest.writeInt(this.partialStartOffset);
         dest.writeInt(this.partialEndOffset);
         dest.writeInt(this.selectionStart);
         dest.writeInt(this.selectionEnd);
         dest.writeInt(this.flags);
-        TextUtils.writeToParcel(this.hint, dest, flags2);
+        TextUtils.writeToParcel(this.hint, dest, flags);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

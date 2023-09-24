@@ -3,6 +3,7 @@ package com.android.internal.view;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
+/* loaded from: classes4.dex */
 public class OneShotPreDrawListener implements ViewTreeObserver.OnPreDrawListener, View.OnAttachStateChangeListener {
     private final boolean mReturnValue;
     private final Runnable mRunnable;
@@ -27,6 +28,7 @@ public class OneShotPreDrawListener implements ViewTreeObserver.OnPreDrawListene
         return listener;
     }
 
+    @Override // android.view.ViewTreeObserver.OnPreDrawListener
     public boolean onPreDraw() {
         removeListener();
         this.mRunnable.run();
@@ -42,10 +44,12 @@ public class OneShotPreDrawListener implements ViewTreeObserver.OnPreDrawListene
         this.mView.removeOnAttachStateChangeListener(this);
     }
 
+    @Override // android.view.View.OnAttachStateChangeListener
     public void onViewAttachedToWindow(View v) {
         this.mViewTreeObserver = v.getViewTreeObserver();
     }
 
+    @Override // android.view.View.OnAttachStateChangeListener
     public void onViewDetachedFromWindow(View v) {
         removeListener();
     }

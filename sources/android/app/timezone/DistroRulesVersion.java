@@ -1,17 +1,24 @@
 package android.app.timezone;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.provider.TimeZoneRulesDataContract;
 import android.telephony.SmsManager;
 import android.text.format.DateFormat;
 
+/* loaded from: classes.dex */
 public final class DistroRulesVersion implements Parcelable {
-    public static final Parcelable.Creator<DistroRulesVersion> CREATOR = new Parcelable.Creator<DistroRulesVersion>() {
+    public static final Parcelable.Creator<DistroRulesVersion> CREATOR = new Parcelable.Creator<DistroRulesVersion>() { // from class: android.app.timezone.DistroRulesVersion.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public DistroRulesVersion createFromParcel(Parcel in) {
-            return new DistroRulesVersion(in.readString(), in.readInt());
+            String rulesVersion = in.readString();
+            int revision = in.readInt();
+            return new DistroRulesVersion(rulesVersion, revision);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public DistroRulesVersion[] newArray(int size) {
             return new DistroRulesVersion[size];
         }
@@ -37,19 +44,18 @@ public final class DistroRulesVersion implements Parcelable {
         if (rulesComparison < 0) {
             return true;
         }
-        if (rulesComparison > 0) {
-            return false;
-        }
-        if (this.mRevision < distroRulesVersion.mRevision) {
+        if (rulesComparison <= 0 && this.mRevision < distroRulesVersion.mRevision) {
             return true;
         }
         return false;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(this.mRulesVersion);
         out.writeInt(this.mRevision);
@@ -70,7 +76,8 @@ public final class DistroRulesVersion implements Parcelable {
     }
 
     public int hashCode() {
-        return (this.mRulesVersion.hashCode() * 31) + this.mRevision;
+        int result = this.mRulesVersion.hashCode();
+        return (result * 31) + this.mRevision;
     }
 
     public String toString() {

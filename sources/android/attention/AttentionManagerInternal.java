@@ -1,7 +1,9 @@
 package android.attention;
 
+/* loaded from: classes.dex */
 public abstract class AttentionManagerInternal {
 
+    /* loaded from: classes.dex */
     public static abstract class AttentionCallbackInternal {
         public abstract void onFailure(int i);
 

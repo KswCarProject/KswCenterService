@@ -3,19 +3,24 @@ package android.service.settings.suggestions;
 import android.annotation.SystemApi;
 import android.app.PendingIntent;
 import android.graphics.drawable.Icon;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.TextUtils;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class Suggestion implements Parcelable {
-    public static final Parcelable.Creator<Suggestion> CREATOR = new Parcelable.Creator<Suggestion>() {
+    public static final Parcelable.Creator<Suggestion> CREATOR = new Parcelable.Creator<Suggestion>() { // from class: android.service.settings.suggestions.Suggestion.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Suggestion createFromParcel(Parcel in) {
             return new Suggestion(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Suggestion[] newArray(int size) {
             return new Suggestion[size];
         }
@@ -30,6 +35,7 @@ public final class Suggestion implements Parcelable {
     private final CharSequence mTitle;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface Flags {
     }
 
@@ -75,10 +81,12 @@ public final class Suggestion implements Parcelable {
         this.mPendingIntent = (PendingIntent) in.readParcelable(PendingIntent.class.getClassLoader());
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.mId);
         dest.writeCharSequence(this.mTitle);
@@ -88,26 +96,20 @@ public final class Suggestion implements Parcelable {
         dest.writeParcelable(this.mPendingIntent, flags);
     }
 
+    /* loaded from: classes3.dex */
     public static class Builder {
-        /* access modifiers changed from: private */
-        public int mFlags;
-        /* access modifiers changed from: private */
-        public Icon mIcon;
-        /* access modifiers changed from: private */
-        public final String mId;
-        /* access modifiers changed from: private */
-        public PendingIntent mPendingIntent;
-        /* access modifiers changed from: private */
-        public CharSequence mSummary;
-        /* access modifiers changed from: private */
-        public CharSequence mTitle;
+        private int mFlags;
+        private Icon mIcon;
+        private final String mId;
+        private PendingIntent mPendingIntent;
+        private CharSequence mSummary;
+        private CharSequence mTitle;
 
         public Builder(String id) {
-            if (!TextUtils.isEmpty(id)) {
-                this.mId = id;
-                return;
+            if (TextUtils.isEmpty(id)) {
+                throw new IllegalArgumentException("Suggestion id cannot be empty");
             }
-            throw new IllegalArgumentException("Suggestion id cannot be empty");
+            this.mId = id;
         }
 
         public Builder setTitle(CharSequence title) {

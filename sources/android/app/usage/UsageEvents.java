@@ -3,19 +3,24 @@ package android.app.usage;
 import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
 import android.content.res.Configuration;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Arrays;
 import java.util.List;
 
+/* loaded from: classes.dex */
 public final class UsageEvents implements Parcelable {
-    public static final Parcelable.Creator<UsageEvents> CREATOR = new Parcelable.Creator<UsageEvents>() {
+    public static final Parcelable.Creator<UsageEvents> CREATOR = new Parcelable.Creator<UsageEvents>() { // from class: android.app.usage.UsageEvents.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public UsageEvents createFromParcel(Parcel source) {
             return new UsageEvents(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public UsageEvents[] newArray(int size) {
             return new UsageEvents[size];
         }
@@ -34,6 +39,7 @@ public final class UsageEvents implements Parcelable {
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
     private String[] mStringPool;
 
+    /* loaded from: classes.dex */
     public static final class Event {
         public static final int ACTIVITY_DESTROYED = 24;
         public static final int ACTIVITY_PAUSED = 2;
@@ -98,6 +104,7 @@ public final class UsageEvents implements Parcelable {
         public long mTimeStamp;
 
         @Retention(RetentionPolicy.SOURCE)
+        /* loaded from: classes.dex */
         public @interface EventFlags {
         }
 
@@ -172,11 +179,11 @@ public final class UsageEvents implements Parcelable {
         }
 
         public int getStandbyBucket() {
-            return (this.mBucketAndReason & -65536) >>> 16;
+            return (this.mBucketAndReason & (-65536)) >>> 16;
         }
 
         public int getAppStandbyBucket() {
-            return (this.mBucketAndReason & -65536) >>> 16;
+            return (this.mBucketAndReason & (-65536)) >>> 16;
         }
 
         public int getStandbyReason() {
@@ -272,10 +279,10 @@ public final class UsageEvents implements Parcelable {
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
     private int findStringIndex(String str) {
         int index = Arrays.binarySearch(this.mStringPool, str);
-        if (index >= 0) {
-            return index;
+        if (index < 0) {
+            throw new IllegalStateException("String '" + str + "' is not in the string pool");
         }
-        throw new IllegalStateException("String '" + str + "' is not in the string pool");
+        return index;
     }
 
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
@@ -294,10 +301,10 @@ public final class UsageEvents implements Parcelable {
         } else {
             classIndex = -1;
         }
-        if (!this.mIncludeTaskRoots || event.mTaskRootPackage == null) {
-            taskRootPackageIndex = -1;
-        } else {
+        if (this.mIncludeTaskRoots && event.mTaskRootPackage != null) {
             taskRootPackageIndex = findStringIndex(event.mTaskRootPackage);
+        } else {
+            taskRootPackageIndex = -1;
         }
         if (this.mIncludeTaskRoots && event.mTaskRootClass != null) {
             taskRootClassIndex = findStringIndex(event.mTaskRootClass);
@@ -388,10 +395,12 @@ public final class UsageEvents implements Parcelable {
         eventOut.mFlags = p.readInt();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         Parcel data = Parcel.obtain();
         data.writeInt(this.mEventCount);
@@ -403,7 +412,8 @@ public final class UsageEvents implements Parcelable {
                 try {
                     p.setDataPosition(0);
                     for (int i = 0; i < this.mEventCount; i++) {
-                        writeEventToParcel(this.mEventsToWrite.get(i), p, flags);
+                        Event event = this.mEventsToWrite.get(i);
+                        writeEventToParcel(event, p, flags);
                     }
                     int listByteLength = p.dataPosition();
                     data.writeInt(listByteLength);

@@ -1,11 +1,12 @@
 package android.opengl;
 
+/* loaded from: classes3.dex */
 public abstract class EGLObjectHandle {
     private final long mHandle;
 
     @Deprecated
     protected EGLObjectHandle(int handle) {
-        this.mHandle = (long) handle;
+        this.mHandle = handle;
     }
 
     protected EGLObjectHandle(long handle) {
@@ -14,10 +15,10 @@ public abstract class EGLObjectHandle {
 
     @Deprecated
     public int getHandle() {
-        if ((this.mHandle & 4294967295L) == this.mHandle) {
-            return (int) this.mHandle;
+        if ((this.mHandle & 4294967295L) != this.mHandle) {
+            throw new UnsupportedOperationException();
         }
-        throw new UnsupportedOperationException();
+        return (int) this.mHandle;
     }
 
     public long getNativeHandle() {
@@ -25,6 +26,7 @@ public abstract class EGLObjectHandle {
     }
 
     public int hashCode() {
-        return (17 * 31) + ((int) (this.mHandle ^ (this.mHandle >>> 32)));
+        int result = (17 * 31) + ((int) (this.mHandle ^ (this.mHandle >>> 32)));
+        return result;
     }
 }

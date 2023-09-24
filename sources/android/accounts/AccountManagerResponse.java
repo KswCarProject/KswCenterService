@@ -1,17 +1,22 @@
 package android.accounts;
 
 import android.accounts.IAccountManagerResponse;
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.RemoteException;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.RemoteException;
 
+/* loaded from: classes.dex */
 public class AccountManagerResponse implements Parcelable {
-    public static final Parcelable.Creator<AccountManagerResponse> CREATOR = new Parcelable.Creator<AccountManagerResponse>() {
+    public static final Parcelable.Creator<AccountManagerResponse> CREATOR = new Parcelable.Creator<AccountManagerResponse>() { // from class: android.accounts.AccountManagerResponse.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AccountManagerResponse createFromParcel(Parcel source) {
             return new AccountManagerResponse(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AccountManagerResponse[] newArray(int size) {
             return new AccountManagerResponse[size];
         }
@@ -40,10 +45,12 @@ public class AccountManagerResponse implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeStrongBinder(this.mResponse.asBinder());
     }

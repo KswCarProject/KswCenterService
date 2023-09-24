@@ -8,6 +8,7 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
+/* loaded from: classes4.dex */
 public final class JsonWriter implements Closeable {
     private String indent;
     private boolean lenient;
@@ -15,28 +16,27 @@ public final class JsonWriter implements Closeable {
     private String separator;
     private final List<JsonScope> stack = new ArrayList();
 
-    public JsonWriter(Writer out2) {
+    public JsonWriter(Writer out) {
         this.stack.add(JsonScope.EMPTY_DOCUMENT);
         this.separator = SettingsStringUtil.DELIMITER;
-        if (out2 != null) {
-            this.out = out2;
-            return;
+        if (out == null) {
+            throw new NullPointerException("out == null");
         }
-        throw new NullPointerException("out == null");
+        this.out = out;
     }
 
-    public void setIndent(String indent2) {
-        if (indent2.isEmpty()) {
+    public void setIndent(String indent) {
+        if (indent.isEmpty()) {
             this.indent = null;
             this.separator = SettingsStringUtil.DELIMITER;
             return;
         }
-        this.indent = indent2;
+        this.indent = indent;
         this.separator = PluralRules.KEYWORD_RULE_SEPARATOR;
     }
 
-    public void setLenient(boolean lenient2) {
-        this.lenient = lenient2;
+    public void setLenient(boolean lenient) {
+        this.lenient = lenient;
     }
 
     public boolean isLenient() {
@@ -68,15 +68,15 @@ public final class JsonWriter implements Closeable {
 
     private JsonWriter close(JsonScope empty, JsonScope nonempty, String closeBracket) throws IOException {
         JsonScope context = peek();
-        if (context == nonempty || context == empty) {
-            this.stack.remove(this.stack.size() - 1);
-            if (context == nonempty) {
-                newline();
-            }
-            this.out.write(closeBracket);
-            return this;
+        if (context != nonempty && context != empty) {
+            throw new IllegalStateException("Nesting problem: " + this.stack);
         }
-        throw new IllegalStateException("Nesting problem: " + this.stack);
+        this.stack.remove(this.stack.size() - 1);
+        if (context == nonempty) {
+            newline();
+        }
+        this.out.write(closeBracket);
+        return this;
     }
 
     private JsonScope peek() {
@@ -88,12 +88,12 @@ public final class JsonWriter implements Closeable {
     }
 
     public JsonWriter name(String name) throws IOException {
-        if (name != null) {
-            beforeName();
-            string(name);
-            return this;
+        if (name == null) {
+            throw new NullPointerException("name == null");
         }
-        throw new NullPointerException("name == null");
+        beforeName();
+        string(name);
+        return this;
     }
 
     public JsonWriter value(String value) throws IOException {
@@ -118,12 +118,12 @@ public final class JsonWriter implements Closeable {
     }
 
     public JsonWriter value(double value) throws IOException {
-        if (this.lenient || (!Double.isNaN(value) && !Double.isInfinite(value))) {
-            beforeValue(false);
-            this.out.append(Double.toString(value));
-            return this;
+        if (!this.lenient && (Double.isNaN(value) || Double.isInfinite(value))) {
+            throw new IllegalArgumentException("Numeric values must be finite, but was " + value);
         }
-        throw new IllegalArgumentException("Numeric values must be finite, but was " + value);
+        beforeValue(false);
+        this.out.append((CharSequence) Double.toString(value));
+        return this;
     }
 
     public JsonWriter value(long value) throws IOException {
@@ -137,18 +137,19 @@ public final class JsonWriter implements Closeable {
             return nullValue();
         }
         String string = value.toString();
-        if (this.lenient || (!string.equals("-Infinity") && !string.equals("Infinity") && !string.equals("NaN"))) {
-            beforeValue(false);
-            this.out.append(string);
-            return this;
+        if (!this.lenient && (string.equals("-Infinity") || string.equals("Infinity") || string.equals("NaN"))) {
+            throw new IllegalArgumentException("Numeric values must be finite, but was " + value);
         }
-        throw new IllegalArgumentException("Numeric values must be finite, but was " + value);
+        beforeValue(false);
+        this.out.append((CharSequence) string);
+        return this;
     }
 
     public void flush() throws IOException {
         this.out.flush();
     }
 
+    @Override // java.io.Closeable, java.lang.AutoCloseable
     public void close() throws IOException {
         this.out.close();
         if (peek() != JsonScope.NONEMPTY_DOCUMENT) {
@@ -162,19 +163,19 @@ public final class JsonWriter implements Closeable {
         for (int i = 0; i < length; i++) {
             char c = value.charAt(i);
             switch (c) {
-                case 8:
+                case '\b':
                     this.out.write("\\b");
                     break;
-                case 9:
+                case '\t':
                     this.out.write("\\t");
                     break;
-                case 10:
+                case '\n':
                     this.out.write("\\n");
                     break;
-                case 12:
+                case '\f':
                     this.out.write("\\f");
                     break;
-                case 13:
+                case '\r':
                     this.out.write("\\r");
                     break;
                 case '\"':
@@ -182,16 +183,16 @@ public final class JsonWriter implements Closeable {
                     this.out.write(92);
                     this.out.write(c);
                     break;
-                case 8232:
-                case 8233:
-                    this.out.write(String.format("\\u%04x", new Object[]{Integer.valueOf(c)}));
+                case '\u2028':
+                case '\u2029':
+                    this.out.write(String.format("\\u%04x", Integer.valueOf(c)));
                     break;
                 default:
-                    if (c > 31) {
-                        this.out.write(c);
+                    if (c <= 31) {
+                        this.out.write(String.format("\\u%04x", Integer.valueOf(c)));
                         break;
                     } else {
-                        this.out.write(String.format("\\u%04x", new Object[]{Integer.valueOf(c)}));
+                        this.out.write(c);
                         break;
                     }
             }
@@ -200,11 +201,12 @@ public final class JsonWriter implements Closeable {
     }
 
     private void newline() throws IOException {
-        if (this.indent != null) {
-            this.out.write("\n");
-            for (int i = 1; i < this.stack.size(); i++) {
-                this.out.write(this.indent);
-            }
+        if (this.indent == null) {
+            return;
+        }
+        this.out.write("\n");
+        for (int i = 1; i < this.stack.size(); i++) {
+            this.out.write(this.indent);
         }
     }
 
@@ -222,11 +224,11 @@ public final class JsonWriter implements Closeable {
     private void beforeValue(boolean root) throws IOException {
         switch (peek()) {
             case EMPTY_DOCUMENT:
-                if (this.lenient || root) {
-                    replaceTop(JsonScope.NONEMPTY_DOCUMENT);
-                    return;
+                if (!this.lenient && !root) {
+                    throw new IllegalStateException("JSON must start with an array or an object.");
                 }
-                throw new IllegalStateException("JSON must start with an array or an object.");
+                replaceTop(JsonScope.NONEMPTY_DOCUMENT);
+                return;
             case EMPTY_ARRAY:
                 replaceTop(JsonScope.NONEMPTY_ARRAY);
                 newline();
@@ -236,7 +238,7 @@ public final class JsonWriter implements Closeable {
                 newline();
                 return;
             case DANGLING_NAME:
-                this.out.append(this.separator);
+                this.out.append((CharSequence) this.separator);
                 replaceTop(JsonScope.NONEMPTY_OBJECT);
                 return;
             case NONEMPTY_DOCUMENT:

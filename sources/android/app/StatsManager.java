@@ -2,15 +2,16 @@ package android.app;
 
 import android.annotation.SystemApi;
 import android.content.Context;
-import android.os.IBinder;
-import android.os.IStatsManager;
-import android.os.IStatsPullerCallback;
-import android.os.RemoteException;
-import android.os.ServiceManager;
+import android.p007os.IBinder;
+import android.p007os.IStatsManager;
+import android.p007os.IStatsPullerCallback;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
 import android.util.AndroidException;
 import android.util.Slog;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class StatsManager {
     public static final String ACTION_STATSD_STARTED = "android.app.action.STATSD_STARTED";
     private static final boolean DEBUG = false;
@@ -23,8 +24,7 @@ public final class StatsManager {
     public static final String EXTRA_STATS_SUBSCRIPTION_RULE_ID = "android.app.extra.STATS_SUBSCRIPTION_RULE_ID";
     private static final String TAG = "StatsManager";
     private final Context mContext;
-    /* access modifiers changed from: private */
-    public IStatsManager mService;
+    private IStatsManager mService;
 
     public StatsManager(Context context) {
         this.mContext = context;
@@ -33,12 +33,17 @@ public final class StatsManager {
     public void addConfig(long configKey, byte[] config) throws StatsUnavailableException {
         synchronized (this) {
             try {
-                getIStatsManagerLocked().addConfiguration(configKey, config, this.mContext.getOpPackageName());
-            } catch (RemoteException e) {
-                Slog.e(TAG, "Failed to connect to statsd when adding configuration");
-                throw new StatsUnavailableException("could not connect", e);
-            } catch (SecurityException e2) {
-                throw new StatsUnavailableException(e2.getMessage(), e2);
+                try {
+                    try {
+                        IStatsManager service = getIStatsManagerLocked();
+                        service.addConfiguration(configKey, config, this.mContext.getOpPackageName());
+                    } catch (RemoteException e) {
+                        Slog.m56e(TAG, "Failed to connect to statsd when adding configuration");
+                        throw new StatsUnavailableException("could not connect", e);
+                    }
+                } catch (SecurityException e2) {
+                    throw new StatsUnavailableException(e2.getMessage(), e2);
+                }
             } catch (Throwable th) {
                 throw th;
             }
@@ -58,12 +63,17 @@ public final class StatsManager {
     public void removeConfig(long configKey) throws StatsUnavailableException {
         synchronized (this) {
             try {
-                getIStatsManagerLocked().removeConfiguration(configKey, this.mContext.getOpPackageName());
-            } catch (RemoteException e) {
-                Slog.e(TAG, "Failed to connect to statsd when removing configuration");
-                throw new StatsUnavailableException("could not connect", e);
-            } catch (SecurityException e2) {
-                throw new StatsUnavailableException(e2.getMessage(), e2);
+                try {
+                    try {
+                        IStatsManager service = getIStatsManagerLocked();
+                        service.removeConfiguration(configKey, this.mContext.getOpPackageName());
+                    } catch (RemoteException e) {
+                        Slog.m56e(TAG, "Failed to connect to statsd when removing configuration");
+                        throw new StatsUnavailableException("could not connect", e);
+                    }
+                } catch (SecurityException e2) {
+                    throw new StatsUnavailableException(e2.getMessage(), e2);
+                }
             } catch (Throwable th) {
                 throw th;
             }
@@ -83,17 +93,22 @@ public final class StatsManager {
     public void setBroadcastSubscriber(PendingIntent pendingIntent, long configKey, long subscriberId) throws StatsUnavailableException {
         synchronized (this) {
             try {
-                IStatsManager service = getIStatsManagerLocked();
-                if (pendingIntent != null) {
-                    service.setBroadcastSubscriber(configKey, subscriberId, pendingIntent.getTarget().asBinder(), this.mContext.getOpPackageName());
-                } else {
-                    service.unsetBroadcastSubscriber(configKey, subscriberId, this.mContext.getOpPackageName());
+                try {
+                    try {
+                        IStatsManager service = getIStatsManagerLocked();
+                        if (pendingIntent != null) {
+                            IBinder intentSender = pendingIntent.getTarget().asBinder();
+                            service.setBroadcastSubscriber(configKey, subscriberId, intentSender, this.mContext.getOpPackageName());
+                        } else {
+                            service.unsetBroadcastSubscriber(configKey, subscriberId, this.mContext.getOpPackageName());
+                        }
+                    } catch (RemoteException e) {
+                        Slog.m55e(TAG, "Failed to connect to statsd when adding broadcast subscriber", e);
+                        throw new StatsUnavailableException("could not connect", e);
+                    }
+                } catch (SecurityException e2) {
+                    throw new StatsUnavailableException(e2.getMessage(), e2);
                 }
-            } catch (RemoteException e) {
-                Slog.e(TAG, "Failed to connect to statsd when adding broadcast subscriber", e);
-                throw new StatsUnavailableException("could not connect", e);
-            } catch (SecurityException e2) {
-                throw new StatsUnavailableException(e2.getMessage(), e2);
             } catch (Throwable th) {
                 throw th;
             }
@@ -113,17 +128,20 @@ public final class StatsManager {
     public void setFetchReportsOperation(PendingIntent pendingIntent, long configKey) throws StatsUnavailableException {
         synchronized (this) {
             try {
-                IStatsManager service = getIStatsManagerLocked();
-                if (pendingIntent == null) {
-                    service.removeDataFetchOperation(configKey, this.mContext.getOpPackageName());
-                } else {
-                    service.setDataFetchOperation(configKey, pendingIntent.getTarget().asBinder(), this.mContext.getOpPackageName());
+                try {
+                    IStatsManager service = getIStatsManagerLocked();
+                    if (pendingIntent == null) {
+                        service.removeDataFetchOperation(configKey, this.mContext.getOpPackageName());
+                    } else {
+                        IBinder intentSender = pendingIntent.getTarget().asBinder();
+                        service.setDataFetchOperation(configKey, intentSender, this.mContext.getOpPackageName());
+                    }
+                } catch (RemoteException e) {
+                    Slog.m56e(TAG, "Failed to connect to statsd when registering data listener.");
+                    throw new StatsUnavailableException("could not connect", e);
+                } catch (SecurityException e2) {
+                    throw new StatsUnavailableException(e2.getMessage(), e2);
                 }
-            } catch (RemoteException e) {
-                Slog.e(TAG, "Failed to connect to statsd when registering data listener.");
-                throw new StatsUnavailableException("could not connect", e);
-            } catch (SecurityException e2) {
-                throw new StatsUnavailableException(e2.getMessage(), e2);
             } catch (Throwable th) {
                 throw th;
             }
@@ -133,19 +151,22 @@ public final class StatsManager {
     public long[] setActiveConfigsChangedOperation(PendingIntent pendingIntent) throws StatsUnavailableException {
         synchronized (this) {
             try {
-                IStatsManager service = getIStatsManagerLocked();
-                if (pendingIntent == null) {
-                    service.removeActiveConfigsChangedOperation(this.mContext.getOpPackageName());
-                    long[] jArr = new long[0];
-                    return jArr;
+                try {
+                    try {
+                        IStatsManager service = getIStatsManagerLocked();
+                        if (pendingIntent == null) {
+                            service.removeActiveConfigsChangedOperation(this.mContext.getOpPackageName());
+                            return new long[0];
+                        }
+                        IBinder intentSender = pendingIntent.getTarget().asBinder();
+                        return service.setActiveConfigsChangedOperation(intentSender, this.mContext.getOpPackageName());
+                    } catch (RemoteException e) {
+                        Slog.m56e(TAG, "Failed to connect to statsd when registering active configs listener.");
+                        throw new StatsUnavailableException("could not connect", e);
+                    }
+                } catch (SecurityException e2) {
+                    throw new StatsUnavailableException(e2.getMessage(), e2);
                 }
-                long[] activeConfigsChangedOperation = service.setActiveConfigsChangedOperation(pendingIntent.getTarget().asBinder(), this.mContext.getOpPackageName());
-                return activeConfigsChangedOperation;
-            } catch (RemoteException e) {
-                Slog.e(TAG, "Failed to connect to statsd when registering active configs listener.");
-                throw new StatsUnavailableException("could not connect", e);
-            } catch (SecurityException e2) {
-                throw new StatsUnavailableException(e2.getMessage(), e2);
             } catch (Throwable th) {
                 throw th;
             }
@@ -166,12 +187,17 @@ public final class StatsManager {
         byte[] data;
         synchronized (this) {
             try {
-                data = getIStatsManagerLocked().getData(configKey, this.mContext.getOpPackageName());
-            } catch (RemoteException e) {
-                Slog.e(TAG, "Failed to connect to statsd when getting data");
-                throw new StatsUnavailableException("could not connect", e);
-            } catch (SecurityException e2) {
-                throw new StatsUnavailableException(e2.getMessage(), e2);
+                try {
+                    try {
+                        IStatsManager service = getIStatsManagerLocked();
+                        data = service.getData(configKey, this.mContext.getOpPackageName());
+                    } catch (RemoteException e) {
+                        Slog.m56e(TAG, "Failed to connect to statsd when getting data");
+                        throw new StatsUnavailableException("could not connect", e);
+                    }
+                } catch (SecurityException e2) {
+                    throw new StatsUnavailableException(e2.getMessage(), e2);
+                }
             } catch (Throwable th) {
                 throw th;
             }
@@ -192,12 +218,17 @@ public final class StatsManager {
         byte[] metadata;
         synchronized (this) {
             try {
-                metadata = getIStatsManagerLocked().getMetadata(this.mContext.getOpPackageName());
-            } catch (RemoteException e) {
-                Slog.e(TAG, "Failed to connect to statsd when getting metadata");
-                throw new StatsUnavailableException("could not connect", e);
-            } catch (SecurityException e2) {
-                throw new StatsUnavailableException(e2.getMessage(), e2);
+                try {
+                    try {
+                        IStatsManager service = getIStatsManagerLocked();
+                        metadata = service.getMetadata(this.mContext.getOpPackageName());
+                    } catch (RemoteException e) {
+                        Slog.m56e(TAG, "Failed to connect to statsd when getting metadata");
+                        throw new StatsUnavailableException("could not connect", e);
+                    }
+                } catch (SecurityException e2) {
+                    throw new StatsUnavailableException(e2.getMessage(), e2);
+                }
             } catch (Throwable th) {
                 throw th;
             }
@@ -217,15 +248,15 @@ public final class StatsManager {
     public long[] getRegisteredExperimentIds() throws StatsUnavailableException {
         synchronized (this) {
             try {
-                IStatsManager service = getIStatsManagerLocked();
-                if (service == null) {
-                    long[] jArr = new long[0];
-                    return jArr;
+                try {
+                    IStatsManager service = getIStatsManagerLocked();
+                    if (service == null) {
+                        return new long[0];
+                    }
+                    return service.getRegisteredExperimentIds();
+                } catch (RemoteException e) {
+                    return new long[0];
                 }
-                long[] registeredExperimentIds = service.getRegisteredExperimentIds();
-                return registeredExperimentIds;
-            } catch (RemoteException e) {
-                return new long[0];
             } catch (Throwable th) {
                 throw th;
             }
@@ -235,30 +266,34 @@ public final class StatsManager {
     public void setPullerCallback(int atomTag, IStatsPullerCallback callback) throws StatsUnavailableException {
         synchronized (this) {
             try {
-                IStatsManager service = getIStatsManagerLocked();
-                if (callback == null) {
-                    service.unregisterPullerCallback(atomTag, this.mContext.getOpPackageName());
-                } else {
-                    service.registerPullerCallback(atomTag, callback, this.mContext.getOpPackageName());
+                try {
+                    IStatsManager service = getIStatsManagerLocked();
+                    if (callback == null) {
+                        service.unregisterPullerCallback(atomTag, this.mContext.getOpPackageName());
+                    } else {
+                        service.registerPullerCallback(atomTag, callback, this.mContext.getOpPackageName());
+                    }
+                } catch (RemoteException e) {
+                    Slog.m56e(TAG, "Failed to connect to statsd when registering data listener.");
+                    throw new StatsUnavailableException("could not connect", e);
+                } catch (SecurityException e2) {
+                    throw new StatsUnavailableException(e2.getMessage(), e2);
                 }
-            } catch (RemoteException e) {
-                Slog.e(TAG, "Failed to connect to statsd when registering data listener.");
-                throw new StatsUnavailableException("could not connect", e);
-            } catch (SecurityException e2) {
-                throw new StatsUnavailableException(e2.getMessage(), e2);
             } catch (Throwable th) {
                 throw th;
             }
         }
     }
 
+    /* loaded from: classes.dex */
     private class StatsdDeathRecipient implements IBinder.DeathRecipient {
         private StatsdDeathRecipient() {
         }
 
+        @Override // android.p007os.IBinder.DeathRecipient
         public void binderDied() {
             synchronized (this) {
-                IStatsManager unused = StatsManager.this.mService = null;
+                StatsManager.this.mService = null;
             }
         }
     }
@@ -268,18 +303,18 @@ public final class StatsManager {
             return this.mService;
         }
         this.mService = IStatsManager.Stub.asInterface(ServiceManager.getService(Context.STATS_MANAGER));
-        if (this.mService != null) {
-            try {
-                this.mService.asBinder().linkToDeath(new StatsdDeathRecipient(), 0);
-                return this.mService;
-            } catch (RemoteException e) {
-                throw new StatsUnavailableException("could not connect when linkToDeath", e);
-            }
-        } else {
+        if (this.mService == null) {
             throw new StatsUnavailableException("could not be found");
+        }
+        try {
+            this.mService.asBinder().linkToDeath(new StatsdDeathRecipient(), 0);
+            return this.mService;
+        } catch (RemoteException e) {
+            throw new StatsUnavailableException("could not connect when linkToDeath", e);
         }
     }
 
+    /* loaded from: classes.dex */
     public static class StatsUnavailableException extends AndroidException {
         public StatsUnavailableException(String reason) {
             super("Failed to connect to statsd: " + reason);

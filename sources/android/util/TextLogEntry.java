@@ -1,5 +1,6 @@
 package android.util;
 
+/* loaded from: classes4.dex */
 public final class TextLogEntry {
     public static final long LOG = 1138166333448L;
     public static final int LOG_DEBUG = 3;

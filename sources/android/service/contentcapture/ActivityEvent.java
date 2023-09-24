@@ -2,18 +2,25 @@ package android.service.contentcapture;
 
 import android.annotation.SystemApi;
 import android.content.ComponentName;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class ActivityEvent implements Parcelable {
-    public static final Parcelable.Creator<ActivityEvent> CREATOR = new Parcelable.Creator<ActivityEvent>() {
+    public static final Parcelable.Creator<ActivityEvent> CREATOR = new Parcelable.Creator<ActivityEvent>() { // from class: android.service.contentcapture.ActivityEvent.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ActivityEvent createFromParcel(Parcel parcel) {
-            return new ActivityEvent((ComponentName) parcel.readParcelable((ClassLoader) null), parcel.readInt());
+            ComponentName componentName = (ComponentName) parcel.readParcelable(null);
+            int eventType = parcel.readInt();
+            return new ActivityEvent(componentName, eventType);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ActivityEvent[] newArray(int size) {
             return new ActivityEvent[size];
         }
@@ -26,6 +33,7 @@ public final class ActivityEvent implements Parcelable {
     private final int mType;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface ActivityEventType {
     }
 
@@ -61,10 +69,12 @@ public final class ActivityEvent implements Parcelable {
         return "ActivityEvent[" + this.mComponentName.toShortString() + "]:" + getTypeAsString(this.mType);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeParcelable(this.mComponentName, flags);
         parcel.writeInt(this.mType);

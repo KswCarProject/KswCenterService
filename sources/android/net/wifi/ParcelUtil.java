@@ -1,6 +1,6 @@
 package android.net.wifi;
 
-import android.os.Parcel;
+import android.p007os.Parcel;
 import java.io.ByteArrayInputStream;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -12,10 +12,11 @@ import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 
+/* loaded from: classes3.dex */
 public class ParcelUtil {
     public static void writePrivateKey(Parcel dest, PrivateKey key) {
         if (key == null) {
-            dest.writeString((String) null);
+            dest.writeString(null);
             return;
         }
         dest.writeString(key.getAlgorithm());
@@ -27,8 +28,10 @@ public class ParcelUtil {
         if (algorithm == null) {
             return null;
         }
+        byte[] userKeyBytes = in.createByteArray();
         try {
-            return KeyFactory.getInstance(algorithm).generatePrivate(new PKCS8EncodedKeySpec(in.createByteArray()));
+            KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
+            return keyFactory.generatePrivate(new PKCS8EncodedKeySpec(userKeyBytes));
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             return null;
         }
@@ -51,7 +54,8 @@ public class ParcelUtil {
             return null;
         }
         try {
-            return (X509Certificate) CertificateFactory.getInstance("X.509").generateCertificate(new ByteArrayInputStream(certBytes));
+            CertificateFactory cFactory = CertificateFactory.getInstance("X.509");
+            return (X509Certificate) cFactory.generateCertificate(new ByteArrayInputStream(certBytes));
         } catch (CertificateException e) {
             return null;
         }
@@ -63,8 +67,8 @@ public class ParcelUtil {
             return;
         }
         dest.writeInt(certs.length);
-        for (X509Certificate writeCertificate : certs) {
-            writeCertificate(dest, writeCertificate);
+        for (X509Certificate x509Certificate : certs) {
+            writeCertificate(dest, x509Certificate);
         }
     }
 

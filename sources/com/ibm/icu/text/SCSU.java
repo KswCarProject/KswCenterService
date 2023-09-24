@@ -7,6 +7,7 @@ import android.text.format.DateUtils;
 import android.util.BoostFramework;
 import com.android.internal.logging.nano.MetricsProto;
 
+/* loaded from: classes5.dex */
 interface SCSU {
     public static final int ARMENIANINDEX = 252;
     public static final int COMPRESSIONOFFSET = 128;

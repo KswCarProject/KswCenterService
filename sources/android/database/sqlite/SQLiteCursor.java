@@ -4,12 +4,13 @@ import android.annotation.UnsupportedAppUsage;
 import android.database.AbstractWindowedCursor;
 import android.database.CursorWindow;
 import android.database.DatabaseUtils;
-import android.os.StrictMode;
+import android.p007os.StrictMode;
 import android.util.Log;
 import com.android.internal.util.Preconditions;
 import java.util.HashMap;
 import java.util.Map;
 
+/* loaded from: classes.dex */
 public class SQLiteCursor extends AbstractWindowedCursor {
     static final int NO_COUNT = -1;
     static final String TAG = "SQLiteCursor";
@@ -32,34 +33,35 @@ public class SQLiteCursor extends AbstractWindowedCursor {
 
     public SQLiteCursor(SQLiteCursorDriver driver, String editTable, SQLiteQuery query) {
         this.mCount = -1;
-        if (query != null) {
-            if (StrictMode.vmSqliteObjectLeaksEnabled()) {
-                this.mStackTrace = new DatabaseObjectNotClosedException().fillInStackTrace();
-            } else {
-                this.mStackTrace = null;
-            }
-            this.mDriver = driver;
-            this.mEditTable = editTable;
-            this.mColumnNameMap = null;
-            this.mQuery = query;
-            this.mColumns = query.getColumnNames();
-            return;
+        if (query == null) {
+            throw new IllegalArgumentException("query object cannot be null");
         }
-        throw new IllegalArgumentException("query object cannot be null");
+        if (StrictMode.vmSqliteObjectLeaksEnabled()) {
+            this.mStackTrace = new DatabaseObjectNotClosedException().fillInStackTrace();
+        } else {
+            this.mStackTrace = null;
+        }
+        this.mDriver = driver;
+        this.mEditTable = editTable;
+        this.mColumnNameMap = null;
+        this.mQuery = query;
+        this.mColumns = query.getColumnNames();
     }
 
     public SQLiteDatabase getDatabase() {
         return this.mQuery.getDatabase();
     }
 
+    @Override // android.database.AbstractCursor, android.database.CrossProcessCursor
     public boolean onMove(int oldPosition, int newPosition) {
-        if (this.mWindow != null && newPosition >= this.mWindow.getStartPosition() && newPosition < this.mWindow.getStartPosition() + this.mWindow.getNumRows()) {
+        if (this.mWindow == null || newPosition < this.mWindow.getStartPosition() || newPosition >= this.mWindow.getStartPosition() + this.mWindow.getNumRows()) {
+            fillWindow(newPosition);
             return true;
         }
-        fillWindow(newPosition);
         return true;
     }
 
+    @Override // android.database.AbstractCursor, android.database.Cursor
     public int getCount() {
         if (this.mCount == -1) {
             fillWindow(0);
@@ -76,18 +78,20 @@ public class SQLiteCursor extends AbstractWindowedCursor {
                 this.mCount = this.mQuery.fillWindow(this.mWindow, requiredPos, requiredPos, true);
                 this.mCursorWindowCapacity = this.mWindow.getNumRows();
                 if (Log.isLoggable(TAG, 3)) {
-                    Log.d(TAG, "received count(*) from native_fill_window: " + this.mCount);
+                    Log.m72d(TAG, "received count(*) from native_fill_window: " + this.mCount);
                     return;
                 }
                 return;
             }
-            this.mQuery.fillWindow(this.mWindow, this.mFillWindowForwardOnly ? requiredPos : DatabaseUtils.cursorPickFillWindowStartPosition(requiredPos, this.mCursorWindowCapacity), requiredPos, false);
+            int startPos = this.mFillWindowForwardOnly ? requiredPos : DatabaseUtils.cursorPickFillWindowStartPosition(requiredPos, this.mCursorWindowCapacity);
+            this.mQuery.fillWindow(this.mWindow, startPos, requiredPos, false);
         } catch (RuntimeException ex) {
             closeWindow();
             throw ex;
         }
     }
 
+    @Override // android.database.AbstractCursor, android.database.Cursor
     public int getColumnIndex(String columnName) {
         if (this.mColumnNameMap == null) {
             String[] columns = this.mColumns;
@@ -101,25 +105,28 @@ public class SQLiteCursor extends AbstractWindowedCursor {
         int periodIndex = columnName.lastIndexOf(46);
         if (periodIndex != -1) {
             Exception e = new Exception();
-            Log.e(TAG, "requesting column name with table name -- " + columnName, e);
+            Log.m69e(TAG, "requesting column name with table name -- " + columnName, e);
             columnName = columnName.substring(periodIndex + 1);
         }
         Integer i2 = this.mColumnNameMap.get(columnName);
-        if (i2 != null) {
-            return i2.intValue();
+        if (i2 == null) {
+            return -1;
         }
-        return -1;
+        return i2.intValue();
     }
 
+    @Override // android.database.AbstractCursor, android.database.Cursor
     public String[] getColumnNames() {
         return this.mColumns;
     }
 
+    @Override // android.database.AbstractCursor, android.database.Cursor
     public void deactivate() {
         super.deactivate();
         this.mDriver.cursorDeactivated();
     }
 
+    @Override // android.database.AbstractCursor, android.database.Cursor, java.io.Closeable, java.lang.AutoCloseable
     public void close() {
         super.close();
         synchronized (this) {
@@ -128,29 +135,31 @@ public class SQLiteCursor extends AbstractWindowedCursor {
         }
     }
 
+    @Override // android.database.AbstractCursor, android.database.Cursor
     public boolean requery() {
         if (isClosed()) {
             return false;
         }
         synchronized (this) {
-            if (!this.mQuery.getDatabase().isOpen()) {
-                return false;
+            if (this.mQuery.getDatabase().isOpen()) {
+                if (this.mWindow != null) {
+                    this.mWindow.clear();
+                }
+                this.mPos = -1;
+                this.mCount = -1;
+                this.mDriver.cursorRequeried(this);
+                try {
+                    return super.requery();
+                } catch (IllegalStateException e) {
+                    Log.m63w(TAG, "requery() failed " + e.getMessage(), e);
+                    return false;
+                }
             }
-            if (this.mWindow != null) {
-                this.mWindow.clear();
-            }
-            this.mPos = -1;
-            this.mCount = -1;
-            this.mDriver.cursorRequeried(this);
-            try {
-                return super.requery();
-            } catch (IllegalStateException e) {
-                Log.w(TAG, "requery() failed " + e.getMessage(), e);
-                return false;
-            }
+            return false;
         }
     }
 
+    @Override // android.database.AbstractWindowedCursor
     public void setWindow(CursorWindow window) {
         super.setWindow(window);
         this.mCount = -1;
@@ -164,8 +173,8 @@ public class SQLiteCursor extends AbstractWindowedCursor {
         this.mFillWindowForwardOnly = fillWindowForwardOnly;
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() {
+    @Override // android.database.AbstractCursor
+    protected void finalize() {
         try {
             if (this.mWindow != null) {
                 if (this.mStackTrace != null) {

@@ -1,10 +1,12 @@
 package android.nfc.tech;
 
 import android.nfc.Tag;
-import android.os.RemoteException;
+import android.p007os.Bundle;
+import android.p007os.RemoteException;
 import android.util.Log;
 import java.io.IOException;
 
+/* loaded from: classes3.dex */
 public final class MifareUltralight extends BasicTagTechnology {
     public static final String EXTRA_IS_UL_C = "isulc";
     private static final int MAX_PAGE_COUNT = 256;
@@ -14,49 +16,55 @@ public final class MifareUltralight extends BasicTagTechnology {
     public static final int TYPE_ULTRALIGHT = 1;
     public static final int TYPE_ULTRALIGHT_C = 2;
     public static final int TYPE_UNKNOWN = -1;
-    private int mType = -1;
+    private int mType;
 
+    @Override // android.nfc.tech.BasicTagTechnology, android.nfc.tech.TagTechnology, java.io.Closeable, java.lang.AutoCloseable
     public /* bridge */ /* synthetic */ void close() throws IOException {
         super.close();
     }
 
+    @Override // android.nfc.tech.BasicTagTechnology, android.nfc.tech.TagTechnology
     public /* bridge */ /* synthetic */ void connect() throws IOException {
         super.connect();
     }
 
+    @Override // android.nfc.tech.BasicTagTechnology, android.nfc.tech.TagTechnology
     public /* bridge */ /* synthetic */ Tag getTag() {
         return super.getTag();
     }
 
+    @Override // android.nfc.tech.BasicTagTechnology, android.nfc.tech.TagTechnology
     public /* bridge */ /* synthetic */ boolean isConnected() {
         return super.isConnected();
     }
 
+    @Override // android.nfc.tech.BasicTagTechnology, android.nfc.tech.TagTechnology
     public /* bridge */ /* synthetic */ void reconnect() throws IOException {
         super.reconnect();
     }
 
     public static MifareUltralight get(Tag tag) {
-        if (!tag.hasTech(9)) {
-            return null;
+        if (tag.hasTech(9)) {
+            try {
+                return new MifareUltralight(tag);
+            } catch (RemoteException e) {
+                return null;
+            }
         }
-        try {
-            return new MifareUltralight(tag);
-        } catch (RemoteException e) {
-            return null;
-        }
+        return null;
     }
 
     public MifareUltralight(Tag tag) throws RemoteException {
         super(tag, 9);
         NfcA a = NfcA.get(tag);
-        if (a.getSak() != 0 || tag.getId()[0] != 4) {
-            return;
-        }
-        if (tag.getTechExtras(9).getBoolean(EXTRA_IS_UL_C)) {
-            this.mType = 2;
-        } else {
-            this.mType = 1;
+        this.mType = -1;
+        if (a.getSak() == 0 && tag.getId()[0] == 4) {
+            Bundle extras = tag.getTechExtras(9);
+            if (extras.getBoolean(EXTRA_IS_UL_C)) {
+                this.mType = 2;
+            } else {
+                this.mType = 1;
+            }
         }
     }
 
@@ -67,13 +75,14 @@ public final class MifareUltralight extends BasicTagTechnology {
     public byte[] readPages(int pageOffset) throws IOException {
         validatePageIndex(pageOffset);
         checkConnected();
-        return transceive(new byte[]{48, (byte) pageOffset}, false);
+        byte[] cmd = {48, (byte) pageOffset};
+        return transceive(cmd, false);
     }
 
     public void writePage(int pageOffset, byte[] data) throws IOException {
         validatePageIndex(pageOffset);
         checkConnected();
-        byte[] cmd = new byte[(data.length + 2)];
+        byte[] cmd = new byte[data.length + 2];
         cmd[0] = -94;
         cmd[1] = (byte) pageOffset;
         System.arraycopy(data, 0, cmd, 2, data.length);
@@ -90,11 +99,12 @@ public final class MifareUltralight extends BasicTagTechnology {
 
     public void setTimeout(int timeout) {
         try {
-            if (this.mTag.getTagService().setTimeout(9, timeout) != 0) {
+            int err = this.mTag.getTagService().setTimeout(9, timeout);
+            if (err != 0) {
                 throw new IllegalArgumentException("The supplied timeout is not valid");
             }
         } catch (RemoteException e) {
-            Log.e(TAG, "NFC service dead", e);
+            Log.m69e(TAG, "NFC service dead", e);
         }
     }
 
@@ -102,7 +112,7 @@ public final class MifareUltralight extends BasicTagTechnology {
         try {
             return this.mTag.getTagService().getTimeout(9);
         } catch (RemoteException e) {
-            Log.e(TAG, "NFC service dead", e);
+            Log.m69e(TAG, "NFC service dead", e);
             return 0;
         }
     }

@@ -1,5 +1,6 @@
 package android.service.procstats;
 
+/* loaded from: classes3.dex */
 public final class ProcessStatsAvailablePagesProto {
     public static final long LABEL = 1138166333443L;
     public static final long NODE = 1120986464257L;

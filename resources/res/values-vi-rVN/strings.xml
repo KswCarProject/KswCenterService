@@ -9,7 +9,7 @@
     <string name="import_config_success">Nhập cấu hình thành công!</string>
     <string name="no_update">KHÔNG</string>
     <string name="ota_update">CẬP NHẬT OTA</string>
-    <string name="ota_update_message">Đã phát hiện tệp nâng cấp.\10Bạn có muốn nâng cấp ngay bây giờ không?</string>
+    <string name="ota_update_message">Đã phát hiện tệp nâng cấp.\nBạn có muốn nâng cấp ngay bây giờ không?</string>
     <string name="update_success">Cập nhật thành công!</string>
     <string name="yes_update">CÓ</string>
 </resources>

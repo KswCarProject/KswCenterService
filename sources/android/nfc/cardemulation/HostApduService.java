@@ -2,14 +2,15 @@ package android.nfc.cardemulation;
 
 import android.app.Service;
 import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Message;
-import android.os.Messenger;
-import android.os.RemoteException;
+import android.p007os.Bundle;
+import android.p007os.Handler;
+import android.p007os.IBinder;
+import android.p007os.Message;
+import android.p007os.Messenger;
+import android.p007os.RemoteException;
 import android.util.Log;
 
+/* loaded from: classes3.dex */
 public abstract class HostApduService extends Service {
     public static final int DEACTIVATION_DESELECTED = 1;
     public static final int DEACTIVATION_LINK_LOSS = 0;
@@ -21,33 +22,35 @@ public abstract class HostApduService extends Service {
     public static final String SERVICE_INTERFACE = "android.nfc.cardemulation.action.HOST_APDU_SERVICE";
     public static final String SERVICE_META_DATA = "android.nfc.cardemulation.host_apdu_service";
     static final String TAG = "ApduService";
-    final Messenger mMessenger = new Messenger((Handler) new MsgHandler());
     Messenger mNfcService = null;
+    final Messenger mMessenger = new Messenger(new MsgHandler());
 
     public abstract void onDeactivated(int i);
 
     public abstract byte[] processCommandApdu(byte[] bArr, Bundle bundle);
 
+    /* loaded from: classes3.dex */
     final class MsgHandler extends Handler {
         MsgHandler() {
         }
 
+        @Override // android.p007os.Handler
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 0:
                     Bundle dataBundle = msg.getData();
-                    if (dataBundle != null) {
-                        if (HostApduService.this.mNfcService == null) {
-                            HostApduService.this.mNfcService = msg.replyTo;
-                        }
-                        byte[] apdu = dataBundle.getByteArray("data");
-                        if (apdu != null) {
-                            byte[] responseApdu = HostApduService.this.processCommandApdu(apdu, (Bundle) null);
-                            if (responseApdu == null) {
-                                return;
-                            }
+                    if (dataBundle == null) {
+                        return;
+                    }
+                    if (HostApduService.this.mNfcService == null) {
+                        HostApduService.this.mNfcService = msg.replyTo;
+                    }
+                    byte[] apdu = dataBundle.getByteArray("data");
+                    if (apdu != null) {
+                        byte[] responseApdu = HostApduService.this.processCommandApdu(apdu, null);
+                        if (responseApdu != null) {
                             if (HostApduService.this.mNfcService == null) {
-                                Log.e(HostApduService.TAG, "Response not sent; service was deactivated.");
+                                Log.m70e(HostApduService.TAG, "Response not sent; service was deactivated.");
                                 return;
                             }
                             Message responseMsg = Message.obtain((Handler) null, 1);
@@ -59,19 +62,17 @@ public abstract class HostApduService extends Service {
                                 HostApduService.this.mNfcService.send(responseMsg);
                                 return;
                             } catch (RemoteException e) {
-                                Log.e("TAG", "Response not sent; RemoteException calling into NfcService.");
+                                Log.m70e("TAG", "Response not sent; RemoteException calling into NfcService.");
                                 return;
                             }
-                        } else {
-                            Log.e(HostApduService.TAG, "Received MSG_COMMAND_APDU without data.");
-                            return;
                         }
-                    } else {
                         return;
                     }
+                    Log.m70e(HostApduService.TAG, "Received MSG_COMMAND_APDU without data.");
+                    return;
                 case 1:
                     if (HostApduService.this.mNfcService == null) {
-                        Log.e(HostApduService.TAG, "Response not sent; service was deactivated.");
+                        Log.m70e(HostApduService.TAG, "Response not sent; service was deactivated.");
                         return;
                     }
                     try {
@@ -79,7 +80,7 @@ public abstract class HostApduService extends Service {
                         HostApduService.this.mNfcService.send(msg);
                         return;
                     } catch (RemoteException e2) {
-                        Log.e(HostApduService.TAG, "RemoteException calling into NfcService.");
+                        Log.m70e(HostApduService.TAG, "RemoteException calling into NfcService.");
                         return;
                     }
                 case 2:
@@ -88,7 +89,7 @@ public abstract class HostApduService extends Service {
                     return;
                 case 3:
                     if (HostApduService.this.mNfcService == null) {
-                        Log.e(HostApduService.TAG, "notifyUnhandled not sent; service was deactivated.");
+                        Log.m70e(HostApduService.TAG, "notifyUnhandled not sent; service was deactivated.");
                         return;
                     }
                     try {
@@ -96,7 +97,7 @@ public abstract class HostApduService extends Service {
                         HostApduService.this.mNfcService.send(msg);
                         return;
                     } catch (RemoteException e3) {
-                        Log.e(HostApduService.TAG, "RemoteException calling into NfcService.");
+                        Log.m70e(HostApduService.TAG, "RemoteException calling into NfcService.");
                         return;
                     }
                 default:
@@ -106,6 +107,7 @@ public abstract class HostApduService extends Service {
         }
     }
 
+    @Override // android.app.Service
     public final IBinder onBind(Intent intent) {
         return this.mMessenger.getBinder();
     }
@@ -118,15 +120,16 @@ public abstract class HostApduService extends Service {
         try {
             this.mMessenger.send(responseMsg);
         } catch (RemoteException e) {
-            Log.e("TAG", "Local messenger has died.");
+            Log.m70e("TAG", "Local messenger has died.");
         }
     }
 
     public final void notifyUnhandled() {
+        Message unhandledMsg = Message.obtain((Handler) null, 3);
         try {
-            this.mMessenger.send(Message.obtain((Handler) null, 3));
+            this.mMessenger.send(unhandledMsg);
         } catch (RemoteException e) {
-            Log.e("TAG", "Local messenger has died.");
+            Log.m70e("TAG", "Local messenger has died.");
         }
     }
 }

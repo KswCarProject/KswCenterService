@@ -1,30 +1,36 @@
 package android.app;
 
 import android.content.Intent;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.IRemoteCallback;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.IRemoteCallback;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes.dex */
 public interface IInstantAppResolver extends IInterface {
     void getInstantAppIntentFilterList(Intent intent, int[] iArr, int i, String str, IRemoteCallback iRemoteCallback) throws RemoteException;
 
     void getInstantAppResolveInfoList(Intent intent, int[] iArr, int i, String str, int i2, IRemoteCallback iRemoteCallback) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements IInstantAppResolver {
+        @Override // android.app.IInstantAppResolver
         public void getInstantAppResolveInfoList(Intent sanitizedIntent, int[] hostDigestPrefix, int userId, String token, int sequence, IRemoteCallback callback) throws RemoteException {
         }
 
+        @Override // android.app.IInstantAppResolver
         public void getInstantAppIntentFilterList(Intent sanitizedIntent, int[] hostDigestPrefix, int userId, String token, IRemoteCallback callback) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements IInstantAppResolver {
         private static final String DESCRIPTOR = "android.app.IInstantAppResolver";
         static final int TRANSACTION_getInstantAppIntentFilterList = 2;
@@ -39,12 +45,13 @@ public interface IInstantAppResolver extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IInstantAppResolver)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IInstantAppResolver)) {
+                return (IInstantAppResolver) iin;
             }
-            return (IInstantAppResolver) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -60,41 +67,43 @@ public interface IInstantAppResolver extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            int i = code;
-            Parcel parcel = data;
-            if (i != 1598968902) {
-                Intent intent = null;
-                switch (i) {
-                    case 1:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            intent = Intent.CREATOR.createFromParcel(parcel);
-                        }
-                        Intent _arg0 = intent;
-                        getInstantAppResolveInfoList(_arg0, data.createIntArray(), data.readInt(), data.readString(), data.readInt(), IRemoteCallback.Stub.asInterface(data.readStrongBinder()));
-                        return true;
-                    case 2:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            intent = Intent.CREATOR.createFromParcel(parcel);
-                        }
-                        Intent _arg02 = intent;
-                        getInstantAppIntentFilterList(_arg02, data.createIntArray(), data.readInt(), data.readString(), IRemoteCallback.Stub.asInterface(data.readStrongBinder()));
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    Intent _arg0 = data.readInt() != 0 ? Intent.CREATOR.createFromParcel(data) : null;
+                    int[] _arg1 = data.createIntArray();
+                    int _arg2 = data.readInt();
+                    String _arg3 = data.readString();
+                    int _arg4 = data.readInt();
+                    IRemoteCallback _arg5 = IRemoteCallback.Stub.asInterface(data.readStrongBinder());
+                    getInstantAppResolveInfoList(_arg0, _arg1, _arg2, _arg3, _arg4, _arg5);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    Intent _arg02 = data.readInt() != 0 ? Intent.CREATOR.createFromParcel(data) : null;
+                    int[] _arg12 = data.createIntArray();
+                    int _arg22 = data.readInt();
+                    String _arg32 = data.readString();
+                    IRemoteCallback _arg42 = IRemoteCallback.Stub.asInterface(data.readStrongBinder());
+                    getInstantAppIntentFilterList(_arg02, _arg12, _arg22, _arg32, _arg42);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements IInstantAppResolver {
             public static IInstantAppResolver sDefaultImpl;
             private IBinder mRemote;
@@ -103,6 +112,7 @@ public interface IInstantAppResolver extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -111,75 +121,63 @@ public interface IInstantAppResolver extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.app.IInstantAppResolver
             public void getInstantAppResolveInfoList(Intent sanitizedIntent, int[] hostDigestPrefix, int userId, String token, int sequence, IRemoteCallback callback) throws RemoteException {
-                Intent intent = sanitizedIntent;
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (intent != null) {
+                    if (sanitizedIntent != null) {
                         _data.writeInt(1);
-                        intent.writeToParcel(_data, 0);
+                        sanitizedIntent.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeIntArray(hostDigestPrefix);
                     try {
-                        _data.writeIntArray(hostDigestPrefix);
-                    } catch (Throwable th) {
-                        th = th;
-                        int i = userId;
-                        String str = token;
-                        int i2 = sequence;
+                        _data.writeInt(userId);
+                    } catch (Throwable th2) {
+                        th = th2;
                         _data.recycle();
                         throw th;
                     }
                     try {
-                        _data.writeInt(userId);
-                        try {
-                            _data.writeString(token);
-                        } catch (Throwable th2) {
-                            th = th2;
-                            int i22 = sequence;
-                            _data.recycle();
-                            throw th;
-                        }
+                        _data.writeString(token);
                         try {
                             _data.writeInt(sequence);
                             _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
                         } catch (Throwable th3) {
                             th = th3;
-                            _data.recycle();
-                            throw th;
                         }
-                        try {
-                            if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                                _data.recycle();
-                                return;
-                            }
+                    } catch (Throwable th4) {
+                        th = th4;
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        boolean _status = this.mRemote.transact(1, _data, null, 1);
+                        if (!_status && Stub.getDefaultImpl() != null) {
                             Stub.getDefaultImpl().getInstantAppResolveInfoList(sanitizedIntent, hostDigestPrefix, userId, token, sequence, callback);
                             _data.recycle();
-                        } catch (Throwable th4) {
-                            th = th4;
-                            _data.recycle();
-                            throw th;
+                            return;
                         }
+                        _data.recycle();
                     } catch (Throwable th5) {
                         th = th5;
-                        String str2 = token;
-                        int i222 = sequence;
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th6) {
                     th = th6;
-                    int[] iArr = hostDigestPrefix;
-                    int i3 = userId;
-                    String str22 = token;
-                    int i2222 = sequence;
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.app.IInstantAppResolver
             public void getInstantAppIntentFilterList(Intent sanitizedIntent, int[] hostDigestPrefix, int userId, String token, IRemoteCallback callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -194,9 +192,8 @@ public interface IInstantAppResolver extends IInterface {
                     _data.writeInt(userId);
                     _data.writeString(token);
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().getInstantAppIntentFilterList(sanitizedIntent, hostDigestPrefix, userId, token, callback);
                     }
                 } finally {
@@ -206,11 +203,11 @@ public interface IInstantAppResolver extends IInterface {
         }
 
         public static boolean setDefaultImpl(IInstantAppResolver impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IInstantAppResolver getDefaultImpl() {

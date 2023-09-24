@@ -4,13 +4,14 @@ import android.annotation.SuppressLint;
 import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
-import android.os.ParcelFileDescriptor;
+import android.p007os.ParcelFileDescriptor;
 import com.android.internal.location.GpsNetInitiatedHandler;
 import com.android.internal.util.Preconditions;
 import dalvik.system.CloseGuard;
 import java.io.FileDescriptor;
 import java.util.concurrent.TimeoutException;
 
+/* loaded from: classes.dex */
 public class UsbDeviceConnection {
     private static final String TAG = "UsbDeviceConnection";
     private final CloseGuard mCloseGuard = CloseGuard.get();
@@ -49,8 +50,7 @@ public class UsbDeviceConnection {
         this.mDevice = device;
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean open(String name, ParcelFileDescriptor pfd, Context context) {
+    boolean open(String name, ParcelFileDescriptor pfd, Context context) {
         this.mContext = context.getApplicationContext();
         boolean wasOpened = native_open(name, pfd.getFileDescriptor());
         if (wasOpened) {
@@ -115,8 +115,8 @@ public class UsbDeviceConnection {
         return native_bulk_request(endpoint.getAddress(), buffer, offset, length, timeout);
     }
 
-    @SuppressLint({"Doclava125"})
     @SystemApi
+    @SuppressLint({"Doclava125"})
     public boolean resetDevice() {
         return native_reset_device();
     }
@@ -124,7 +124,7 @@ public class UsbDeviceConnection {
     public UsbRequest requestWait() {
         UsbRequest request = null;
         try {
-            request = native_request_wait(-1);
+            request = native_request_wait(-1L);
         } catch (TimeoutException e) {
         }
         if (request != null) {
@@ -152,8 +152,7 @@ public class UsbDeviceConnection {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         try {
             if (this.mCloseGuard != null) {
                 this.mCloseGuard.warnIfOpen();

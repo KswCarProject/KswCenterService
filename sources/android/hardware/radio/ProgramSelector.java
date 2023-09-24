@@ -2,24 +2,30 @@ package android.hardware.radio;
 
 import android.annotation.SystemApi;
 import android.hardware.radio.ProgramSelector;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class ProgramSelector implements Parcelable {
-    public static final Parcelable.Creator<ProgramSelector> CREATOR = new Parcelable.Creator<ProgramSelector>() {
+    public static final Parcelable.Creator<ProgramSelector> CREATOR = new Parcelable.Creator<ProgramSelector>() { // from class: android.hardware.radio.ProgramSelector.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ProgramSelector createFromParcel(Parcel in) {
             return new ProgramSelector(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ProgramSelector[] newArray(int size) {
             return new ProgramSelector[size];
         }
@@ -74,25 +80,31 @@ public final class ProgramSelector implements Parcelable {
     private final long[] mVendorIds;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface IdentifierType {
     }
 
-    @Deprecated
     @Retention(RetentionPolicy.SOURCE)
+    @Deprecated
+    /* loaded from: classes.dex */
     public @interface ProgramType {
     }
 
     public ProgramSelector(int programType, Identifier primaryId, Identifier[] secondaryIds, long[] vendorIds) {
         secondaryIds = secondaryIds == null ? new Identifier[0] : secondaryIds;
         vendorIds = vendorIds == null ? new long[0] : vendorIds;
-        if (!Stream.of(secondaryIds).anyMatch($$Lambda$ProgramSelector$pPCu6h7REdNveY60TFDS4pIKk.INSTANCE)) {
-            this.mProgramType = programType;
-            this.mPrimaryId = (Identifier) Objects.requireNonNull(primaryId);
-            this.mSecondaryIds = secondaryIds;
-            this.mVendorIds = vendorIds;
-            return;
+        if (Stream.of((Object[]) secondaryIds).anyMatch(new Predicate() { // from class: android.hardware.radio.-$$Lambda$ProgramSelector$pP-Cu6h7-REdNveY60TFDS4pIKk
+            @Override // java.util.function.Predicate
+            public final boolean test(Object obj) {
+                return ProgramSelector.lambda$new$0((ProgramSelector.Identifier) obj);
+            }
+        })) {
+            throw new IllegalArgumentException("secondaryIds list must not contain nulls");
         }
-        throw new IllegalArgumentException("secondaryIds list must not contain nulls");
+        this.mProgramType = programType;
+        this.mPrimaryId = (Identifier) Objects.requireNonNull(primaryId);
+        this.mSecondaryIds = secondaryIds;
+        this.mVendorIds = vendorIds;
     }
 
     static /* synthetic */ boolean lambda$new$0(Identifier id) {
@@ -113,6 +125,7 @@ public final class ProgramSelector implements Parcelable {
     }
 
     public long getFirstId(int type) {
+        Identifier[] identifierArr;
         if (this.mPrimaryId.getType() == type) {
             return this.mPrimaryId.getValue();
         }
@@ -125,6 +138,7 @@ public final class ProgramSelector implements Parcelable {
     }
 
     public Identifier[] getAllIds(int type) {
+        Identifier[] identifierArr;
         List<Identifier> out = new ArrayList<>();
         if (this.mPrimaryId.getType() == type) {
             out.add(this.mPrimaryId);
@@ -143,18 +157,19 @@ public final class ProgramSelector implements Parcelable {
     }
 
     public ProgramSelector withSecondaryPreferred(Identifier preferred) {
-        int preferredType = preferred.getType();
-        return new ProgramSelector(this.mProgramType, this.mPrimaryId, (Identifier[]) Stream.concat(Arrays.stream(this.mSecondaryIds).filter(new Predicate(preferredType) {
-            private final /* synthetic */ int f$0;
-
-            {
-                this.f$0 = r1;
-            }
-
+        final int preferredType = preferred.getType();
+        Identifier[] secondaryIds = (Identifier[]) Stream.concat(Arrays.stream(this.mSecondaryIds).filter(new Predicate() { // from class: android.hardware.radio.-$$Lambda$ProgramSelector$TWK8H6GGx8Rt5rbA87tKag-pCqw
+            @Override // java.util.function.Predicate
             public final boolean test(Object obj) {
-                return ProgramSelector.lambda$withSecondaryPreferred$1(this.f$0, (ProgramSelector.Identifier) obj);
+                return ProgramSelector.lambda$withSecondaryPreferred$1(preferredType, (ProgramSelector.Identifier) obj);
             }
-        }), Stream.of(preferred)).toArray($$Lambda$ProgramSelector$kEsOH_p_eN5KvKLjoDTGZXYtuP4.INSTANCE), this.mVendorIds);
+        }), Stream.of(preferred)).toArray(new IntFunction() { // from class: android.hardware.radio.-$$Lambda$ProgramSelector$kEsOH_p_eN5KvKLjoDTGZXYtuP4
+            @Override // java.util.function.IntFunction
+            public final Object apply(int i) {
+                return ProgramSelector.lambda$withSecondaryPreferred$2(i);
+            }
+        });
+        return new ProgramSelector(this.mProgramType, this.mPrimaryId, secondaryIds, this.mVendorIds);
     }
 
     static /* synthetic */ boolean lambda$withSecondaryPreferred$1(int preferredType, Identifier id) {
@@ -170,20 +185,10 @@ public final class ProgramSelector implements Parcelable {
     }
 
     private static boolean isValidAmFmFrequency(boolean isAm, int frequencyKhz) {
-        if (isAm) {
-            if (frequencyKhz <= 150 || frequencyKhz > 30000) {
-                return false;
-            }
-            return true;
-        } else if (frequencyKhz <= 60000 || frequencyKhz >= 110000) {
-            return false;
-        } else {
-            return true;
-        }
+        return isAm ? frequencyKhz > 150 && frequencyKhz <= 30000 : frequencyKhz > 60000 && frequencyKhz < 110000;
     }
 
     public static ProgramSelector createAmFmSelector(int band, int frequencyKhz, int subChannel) {
-        int programType = 2;
         if (band == -1) {
             if (frequencyKhz < 50000) {
                 band = subChannel <= 0 ? 0 : 3;
@@ -199,18 +204,14 @@ public final class ProgramSelector implements Parcelable {
             throw new IllegalArgumentException("Invalid subchannel: " + subChannel);
         } else if (subChannel > 0 && !isDigital) {
             throw new IllegalArgumentException("Subchannels are not supported for non-HD radio");
-        } else if (isValidAmFmFrequency(isAm, frequencyKhz)) {
-            if (isAm) {
-                programType = 1;
-            }
-            Identifier primary = new Identifier(1, (long) frequencyKhz);
-            Identifier[] secondary = null;
-            if (subChannel > 0) {
-                secondary = new Identifier[]{new Identifier(4, (long) (subChannel - 1))};
-            }
-            return new ProgramSelector(programType, primary, secondary, (long[]) null);
         } else {
-            throw new IllegalArgumentException("Provided value is not a valid AM/FM frequency: " + frequencyKhz);
+            if (!isValidAmFmFrequency(isAm, frequencyKhz)) {
+                throw new IllegalArgumentException("Provided value is not a valid AM/FM frequency: " + frequencyKhz);
+            }
+            int programType = isAm ? 1 : 2;
+            Identifier primary = new Identifier(1, frequencyKhz);
+            Identifier[] secondary = subChannel > 0 ? new Identifier[]{new Identifier(4, (long) (subChannel - 1))} : null;
+            return new ProgramSelector(programType, primary, secondary, null);
         }
     }
 
@@ -239,27 +240,33 @@ public final class ProgramSelector implements Parcelable {
         if (this == obj) {
             return true;
         }
-        if (!(obj instanceof ProgramSelector)) {
-            return false;
+        if (obj instanceof ProgramSelector) {
+            ProgramSelector other = (ProgramSelector) obj;
+            return this.mPrimaryId.equals(other.getPrimaryId());
         }
-        return this.mPrimaryId.equals(((ProgramSelector) obj).getPrimaryId());
+        return false;
     }
 
     private ProgramSelector(Parcel in) {
         this.mProgramType = in.readInt();
         this.mPrimaryId = (Identifier) in.readTypedObject(Identifier.CREATOR);
         this.mSecondaryIds = (Identifier[]) in.createTypedArray(Identifier.CREATOR);
-        if (!Stream.of(this.mSecondaryIds).anyMatch($$Lambda$ProgramSelector$nFx6NEitx7YUkyrPxAq5zDeJdQ.INSTANCE)) {
-            this.mVendorIds = in.createLongArray();
-            return;
+        if (Stream.of((Object[]) this.mSecondaryIds).anyMatch(new Predicate() { // from class: android.hardware.radio.-$$Lambda$ProgramSelector$nFx6NE-itx7YUkyrPxAq5zDeJdQ
+            @Override // java.util.function.Predicate
+            public final boolean test(Object obj) {
+                return ProgramSelector.lambda$new$3((ProgramSelector.Identifier) obj);
+            }
+        })) {
+            throw new IllegalArgumentException("secondaryIds list must not contain nulls");
         }
-        throw new IllegalArgumentException("secondaryIds list must not contain nulls");
+        this.mVendorIds = in.createLongArray();
     }
 
     static /* synthetic */ boolean lambda$new$3(Identifier id) {
         return id == null;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mProgramType);
         dest.writeTypedObject(this.mPrimaryId, 0);
@@ -267,16 +274,22 @@ public final class ProgramSelector implements Parcelable {
         dest.writeLongArray(this.mVendorIds);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    /* loaded from: classes.dex */
     public static final class Identifier implements Parcelable {
-        public static final Parcelable.Creator<Identifier> CREATOR = new Parcelable.Creator<Identifier>() {
+        public static final Parcelable.Creator<Identifier> CREATOR = new Parcelable.Creator<Identifier>() { // from class: android.hardware.radio.ProgramSelector.Identifier.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public Identifier createFromParcel(Parcel in) {
                 return new Identifier(in);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public Identifier[] newArray(int size) {
                 return new Identifier[size];
             }
@@ -290,10 +303,10 @@ public final class ProgramSelector implements Parcelable {
         }
 
         public int getType() {
-            if (this.mType != 4 || this.mValue <= 10) {
-                return this.mType;
+            if (this.mType == 4 && this.mValue > 10) {
+                return 10004;
             }
-            return 10004;
+            return this.mType;
         }
 
         public long getValue() {
@@ -305,19 +318,16 @@ public final class ProgramSelector implements Parcelable {
         }
 
         public int hashCode() {
-            return Objects.hash(new Object[]{Integer.valueOf(this.mType), Long.valueOf(this.mValue)});
+            return Objects.hash(Integer.valueOf(this.mType), Long.valueOf(this.mValue));
         }
 
         public boolean equals(Object obj) {
             if (this == obj) {
                 return true;
             }
-            if (!(obj instanceof Identifier)) {
-                return false;
-            }
-            Identifier other = (Identifier) obj;
-            if (other.getType() == this.mType && other.getValue() == this.mValue) {
-                return true;
+            if (obj instanceof Identifier) {
+                Identifier other = (Identifier) obj;
+                return other.getType() == this.mType && other.getValue() == this.mValue;
             }
             return false;
         }
@@ -327,11 +337,13 @@ public final class ProgramSelector implements Parcelable {
             this.mValue = in.readLong();
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeInt(this.mType);
             dest.writeLong(this.mValue);
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }

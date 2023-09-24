@@ -1,18 +1,17 @@
 package com.ibm.icu.text;
 
-import com.android.internal.midi.MidiConstants;
-
+/* loaded from: classes5.dex */
 class CharsetRecog_UTF8 extends CharsetRecognizer {
     CharsetRecog_UTF8() {
     }
 
-    /* access modifiers changed from: package-private */
-    public String getName() {
+    @Override // com.ibm.icu.text.CharsetRecognizer
+    String getName() {
         return "UTF-8";
     }
 
-    /* access modifiers changed from: package-private */
-    public CharsetMatch match(CharsetDetector det) {
+    @Override // com.ibm.icu.text.CharsetRecognizer
+    CharsetMatch match(CharsetDetector det) {
         int trailBytes;
         boolean hasBOM = false;
         int numValid = 0;
@@ -27,13 +26,13 @@ class CharsetRecog_UTF8 extends CharsetRecognizer {
             if (i >= det.fRawLength) {
                 break;
             }
-            byte b2 = input[i];
+            int b2 = input[i];
             if ((b2 & 128) != 0) {
-                if ((b2 & MidiConstants.STATUS_PITCH_BEND) == 192) {
+                if ((b2 & 224) == 192) {
                     trailBytes = 1;
                 } else if ((b2 & 240) == 224) {
                     trailBytes = 2;
-                } else if ((b2 & MidiConstants.STATUS_TIMING_CLOCK) == 240) {
+                } else if ((b2 & 248) == 240) {
                     trailBytes = 3;
                 } else {
                     numInvalid++;
@@ -41,14 +40,14 @@ class CharsetRecog_UTF8 extends CharsetRecognizer {
                 while (true) {
                     i++;
                     if (i < det.fRawLength) {
-                        if ((input[i] & 192) == 128) {
-                            trailBytes--;
-                            if (trailBytes == 0) {
-                                numValid++;
-                                break;
-                            }
-                        } else {
+                        int b3 = input[i];
+                        if ((b3 & 192) != 128) {
                             numInvalid++;
+                            break;
+                        }
+                        trailBytes--;
+                        if (trailBytes == 0) {
+                            numValid++;
                             break;
                         }
                     } else {

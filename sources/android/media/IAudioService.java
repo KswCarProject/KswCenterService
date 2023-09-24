@@ -2,7 +2,13 @@ package android.media;
 
 import android.annotation.UnsupportedAppUsage;
 import android.bluetooth.BluetoothDevice;
+import android.media.IAudioFocusDispatcher;
+import android.media.IAudioRoutesObserver;
+import android.media.IAudioServerStateDispatcher;
+import android.media.IPlaybackConfigDispatcher;
+import android.media.IRecordingConfigDispatcher;
 import android.media.IRingtonePlayer;
+import android.media.IVolumeController;
 import android.media.PlayerBase;
 import android.media.audiopolicy.AudioPolicyConfig;
 import android.media.audiopolicy.AudioProductStrategy;
@@ -10,13 +16,14 @@ import android.media.audiopolicy.AudioVolumeGroup;
 import android.media.audiopolicy.IAudioPolicyCallback;
 import android.media.projection.IMediaProjection;
 import android.net.Uri;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import java.util.List;
 
+/* loaded from: classes3.dex */
 public interface IAudioService extends IInterface {
     int abandonAudioFocus(IAudioFocusDispatcher iAudioFocusDispatcher, String str, AudioAttributes audioAttributes, String str2) throws RemoteException;
 
@@ -216,350 +223,450 @@ public interface IAudioService extends IInterface {
 
     void unregisterRecordingCallback(IRecordingConfigDispatcher iRecordingConfigDispatcher) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements IAudioService {
+        @Override // android.media.IAudioService
         public int trackPlayer(PlayerBase.PlayerIdCard pic) throws RemoteException {
             return 0;
         }
 
+        @Override // android.media.IAudioService
         public void playerAttributes(int piid, AudioAttributes attr) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public void playerEvent(int piid, int event) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public void releasePlayer(int piid) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public int trackRecorder(IBinder recorder) throws RemoteException {
             return 0;
         }
 
+        @Override // android.media.IAudioService
         public void recorderEvent(int riid, int event) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public void releaseRecorder(int riid) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public void adjustSuggestedStreamVolume(int direction, int suggestedStreamType, int flags, String callingPackage, String caller) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public void adjustStreamVolume(int streamType, int direction, int flags, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public void setStreamVolume(int streamType, int index, int flags, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public boolean isStreamMute(int streamType) throws RemoteException {
             return false;
         }
 
+        @Override // android.media.IAudioService
         public void forceRemoteSubmixFullVolume(boolean startForcing, IBinder cb) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public boolean isMasterMute() throws RemoteException {
             return false;
         }
 
+        @Override // android.media.IAudioService
         public void setMasterMute(boolean mute, int flags, String callingPackage, int userId) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public int getStreamVolume(int streamType) throws RemoteException {
             return 0;
         }
 
+        @Override // android.media.IAudioService
         public int getStreamMinVolume(int streamType) throws RemoteException {
             return 0;
         }
 
+        @Override // android.media.IAudioService
         public int getStreamMaxVolume(int streamType) throws RemoteException {
             return 0;
         }
 
+        @Override // android.media.IAudioService
         public List<AudioVolumeGroup> getAudioVolumeGroups() throws RemoteException {
             return null;
         }
 
+        @Override // android.media.IAudioService
         public void setVolumeIndexForAttributes(AudioAttributes aa, int index, int flags, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public int getVolumeIndexForAttributes(AudioAttributes aa) throws RemoteException {
             return 0;
         }
 
+        @Override // android.media.IAudioService
         public int getMaxVolumeIndexForAttributes(AudioAttributes aa) throws RemoteException {
             return 0;
         }
 
+        @Override // android.media.IAudioService
         public int getMinVolumeIndexForAttributes(AudioAttributes aa) throws RemoteException {
             return 0;
         }
 
+        @Override // android.media.IAudioService
         public int getLastAudibleStreamVolume(int streamType) throws RemoteException {
             return 0;
         }
 
+        @Override // android.media.IAudioService
         public List<AudioProductStrategy> getAudioProductStrategies() throws RemoteException {
             return null;
         }
 
+        @Override // android.media.IAudioService
         public void setMicrophoneMute(boolean on, String callingPackage, int userId) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public void setRingerModeExternal(int ringerMode, String caller) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public void setRingerModeInternal(int ringerMode, String caller) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public int getRingerModeExternal() throws RemoteException {
             return 0;
         }
 
+        @Override // android.media.IAudioService
         public int getRingerModeInternal() throws RemoteException {
             return 0;
         }
 
+        @Override // android.media.IAudioService
         public boolean isValidRingerMode(int ringerMode) throws RemoteException {
             return false;
         }
 
+        @Override // android.media.IAudioService
         public void setVibrateSetting(int vibrateType, int vibrateSetting) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public int getVibrateSetting(int vibrateType) throws RemoteException {
             return 0;
         }
 
+        @Override // android.media.IAudioService
         public boolean shouldVibrate(int vibrateType) throws RemoteException {
             return false;
         }
 
+        @Override // android.media.IAudioService
         public void setMode(int mode, IBinder cb, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public int getMode() throws RemoteException {
             return 0;
         }
 
+        @Override // android.media.IAudioService
         public void playSoundEffect(int effectType) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public void playSoundEffectVolume(int effectType, float volume) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public boolean loadSoundEffects() throws RemoteException {
             return false;
         }
 
+        @Override // android.media.IAudioService
         public void unloadSoundEffects() throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public void reloadAudioSettings() throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public void avrcpSupportsAbsoluteVolume(String address, boolean support) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public void setSpeakerphoneOn(boolean on) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public boolean isSpeakerphoneOn() throws RemoteException {
             return false;
         }
 
+        @Override // android.media.IAudioService
         public void setBluetoothScoOn(boolean on) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public boolean isBluetoothScoOn() throws RemoteException {
             return false;
         }
 
+        @Override // android.media.IAudioService
         public void setBluetoothA2dpOn(boolean on) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public boolean isBluetoothA2dpOn() throws RemoteException {
             return false;
         }
 
+        @Override // android.media.IAudioService
         public int requestAudioFocus(AudioAttributes aa, int durationHint, IBinder cb, IAudioFocusDispatcher fd, String clientId, String callingPackageName, int flags, IAudioPolicyCallback pcb, int sdk) throws RemoteException {
             return 0;
         }
 
+        @Override // android.media.IAudioService
         public int abandonAudioFocus(IAudioFocusDispatcher fd, String clientId, AudioAttributes aa, String callingPackageName) throws RemoteException {
             return 0;
         }
 
+        @Override // android.media.IAudioService
         public void unregisterAudioFocusClient(String clientId) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public int getCurrentAudioFocus() throws RemoteException {
             return 0;
         }
 
+        @Override // android.media.IAudioService
         public void startBluetoothSco(IBinder cb, int targetSdkVersion) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public void startBluetoothScoVirtualCall(IBinder cb) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public void stopBluetoothSco(IBinder cb) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public void forceVolumeControlStream(int streamType, IBinder cb) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public void setRingtonePlayer(IRingtonePlayer player) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public IRingtonePlayer getRingtonePlayer() throws RemoteException {
             return null;
         }
 
+        @Override // android.media.IAudioService
         public int getUiSoundsStreamType() throws RemoteException {
             return 0;
         }
 
+        @Override // android.media.IAudioService
         public void setWiredDeviceConnectionState(int type, int state, String address, String name, String caller) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public void handleBluetoothA2dpDeviceConfigChange(BluetoothDevice device) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public void handleBluetoothA2dpActiveDeviceChange(BluetoothDevice device, int state, int profile, boolean suppressNoisyIntent, int a2dpVolume) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public AudioRoutesInfo startWatchingRoutes(IAudioRoutesObserver observer) throws RemoteException {
             return null;
         }
 
+        @Override // android.media.IAudioService
         public boolean isCameraSoundForced() throws RemoteException {
             return false;
         }
 
+        @Override // android.media.IAudioService
         public void setVolumeController(IVolumeController controller) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public void notifyVolumeControllerVisible(IVolumeController controller, boolean visible) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public boolean isStreamAffectedByRingerMode(int streamType) throws RemoteException {
             return false;
         }
 
+        @Override // android.media.IAudioService
         public boolean isStreamAffectedByMute(int streamType) throws RemoteException {
             return false;
         }
 
+        @Override // android.media.IAudioService
         public void disableSafeMediaVolume(String callingPackage) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public int setHdmiSystemAudioSupported(boolean on) throws RemoteException {
             return 0;
         }
 
+        @Override // android.media.IAudioService
         public boolean isHdmiSystemAudioSupported() throws RemoteException {
             return false;
         }
 
+        @Override // android.media.IAudioService
         public String registerAudioPolicy(AudioPolicyConfig policyConfig, IAudioPolicyCallback pcb, boolean hasFocusListener, boolean isFocusPolicy, boolean isTestFocusPolicy, boolean isVolumeController, IMediaProjection projection) throws RemoteException {
             return null;
         }
 
+        @Override // android.media.IAudioService
         public void unregisterAudioPolicyAsync(IAudioPolicyCallback pcb) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public void unregisterAudioPolicy(IAudioPolicyCallback pcb) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public int addMixForPolicy(AudioPolicyConfig policyConfig, IAudioPolicyCallback pcb) throws RemoteException {
             return 0;
         }
 
+        @Override // android.media.IAudioService
         public int removeMixForPolicy(AudioPolicyConfig policyConfig, IAudioPolicyCallback pcb) throws RemoteException {
             return 0;
         }
 
+        @Override // android.media.IAudioService
         public int setFocusPropertiesForPolicy(int duckingBehavior, IAudioPolicyCallback pcb) throws RemoteException {
             return 0;
         }
 
+        @Override // android.media.IAudioService
         public void setVolumePolicy(VolumePolicy policy) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public boolean hasRegisteredDynamicPolicy() throws RemoteException {
             return false;
         }
 
+        @Override // android.media.IAudioService
         public void registerRecordingCallback(IRecordingConfigDispatcher rcdb) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public void unregisterRecordingCallback(IRecordingConfigDispatcher rcdb) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public List<AudioRecordingConfiguration> getActiveRecordingConfigurations() throws RemoteException {
             return null;
         }
 
+        @Override // android.media.IAudioService
         public void registerPlaybackCallback(IPlaybackConfigDispatcher pcdb) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public void unregisterPlaybackCallback(IPlaybackConfigDispatcher pcdb) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public List<AudioPlaybackConfiguration> getActivePlaybackConfigurations() throws RemoteException {
             return null;
         }
 
+        @Override // android.media.IAudioService
         public void disableRingtoneSync(int userId) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public int getFocusRampTimeMs(int focusGain, AudioAttributes attr) throws RemoteException {
             return 0;
         }
 
+        @Override // android.media.IAudioService
         public int dispatchFocusChange(AudioFocusInfo afi, int focusChange, IAudioPolicyCallback pcb) throws RemoteException {
             return 0;
         }
 
+        @Override // android.media.IAudioService
         public void playerHasOpPlayAudio(int piid, boolean hasOpPlayAudio) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public void setBluetoothHearingAidDeviceConnectionState(BluetoothDevice device, int state, boolean suppressNoisyIntent, int musicDevice) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public void setBluetoothA2dpDeviceConnectionStateSuppressNoisyIntent(BluetoothDevice device, int state, int profile, boolean suppressNoisyIntent, int a2dpVolume) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public void setFocusRequestResultFromExtPolicy(AudioFocusInfo afi, int requestResult, IAudioPolicyCallback pcb) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public void registerAudioServerStateDispatcher(IAudioServerStateDispatcher asd) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public void unregisterAudioServerStateDispatcher(IAudioServerStateDispatcher asd) throws RemoteException {
         }
 
+        @Override // android.media.IAudioService
         public boolean isAudioServerRunning() throws RemoteException {
             return false;
         }
 
+        @Override // android.media.IAudioService
         public int setUidDeviceAffinity(IAudioPolicyCallback pcb, int uid, int[] deviceTypes, String[] deviceAddresses) throws RemoteException {
             return 0;
         }
 
+        @Override // android.media.IAudioService
         public int removeUidDeviceAffinity(IAudioPolicyCallback pcb, int uid) throws RemoteException {
             return 0;
         }
 
+        @Override // android.media.IAudioService
         public boolean hasHapticChannels(Uri uri) throws RemoteException {
             return false;
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements IAudioService {
         private static final String DESCRIPTOR = "android.media.IAudioService";
         static final int TRANSACTION_abandonAudioFocus = 49;
@@ -624,7 +731,9 @@ public interface IAudioService extends IInterface {
         static final int TRANSACTION_removeMixForPolicy = 75;
         static final int TRANSACTION_removeUidDeviceAffinity = 96;
         static final int TRANSACTION_requestAudioFocus = 48;
-        static final int TRANSACTION_setBluetoothA2dpDeviceConnectionStateSuppressNoisyIntent = 90;
+
+        /* renamed from: TRANSACTION_setBluetoothA2dpDeviceConnectionStateSuppressNoisyIntent */
+        static final int f117x36cf6f62 = 90;
         static final int TRANSACTION_setBluetoothA2dpOn = 46;
         static final int TRANSACTION_setBluetoothHearingAidDeviceConnectionState = 89;
         static final int TRANSACTION_setBluetoothScoOn = 44;
@@ -669,12 +778,13 @@ public interface IAudioService extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IAudioService)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IAudioService)) {
+                return (IAudioService) iin;
             }
-            return (IAudioService) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -880,1143 +990,699 @@ public interface IAudioService extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v5, resolved type: android.media.AudioAttributes} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v54, resolved type: android.media.AudioAttributes} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v56, resolved type: android.media.AudioAttributes} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v68, resolved type: android.bluetooth.BluetoothDevice} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v80, resolved type: android.media.audiopolicy.AudioPolicyConfig} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v99, resolved type: android.media.AudioAttributes} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v108, resolved type: android.bluetooth.BluetoothDevice} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v112, resolved type: android.bluetooth.BluetoothDevice} */
-        /* JADX WARNING: type inference failed for: r1v0 */
-        /* JADX WARNING: type inference failed for: r1v1 */
-        /* JADX WARNING: type inference failed for: r1v23 */
-        /* JADX WARNING: type inference failed for: r1v27 */
-        /* JADX WARNING: type inference failed for: r1v31 */
-        /* JADX WARNING: type inference failed for: r1v35 */
-        /* JADX WARNING: type inference failed for: r1v55 */
-        /* JADX WARNING: type inference failed for: r1v62, types: [android.os.IBinder] */
-        /* JADX WARNING: type inference failed for: r1v65 */
-        /* JADX WARNING: type inference failed for: r1v84 */
-        /* JADX WARNING: type inference failed for: r1v89 */
-        /* JADX WARNING: type inference failed for: r1v96 */
-        /* JADX WARNING: type inference failed for: r1v103 */
-        /* JADX WARNING: type inference failed for: r1v116 */
-        /* JADX WARNING: type inference failed for: r1v122 */
-        /* JADX WARNING: type inference failed for: r1v126 */
-        /* JADX WARNING: type inference failed for: r1v127 */
-        /* JADX WARNING: type inference failed for: r1v128 */
-        /* JADX WARNING: type inference failed for: r1v129 */
-        /* JADX WARNING: type inference failed for: r1v130 */
-        /* JADX WARNING: type inference failed for: r1v131 */
-        /* JADX WARNING: type inference failed for: r1v132 */
-        /* JADX WARNING: type inference failed for: r1v133 */
-        /* JADX WARNING: type inference failed for: r1v134 */
-        /* JADX WARNING: type inference failed for: r1v135 */
-        /* JADX WARNING: type inference failed for: r1v136 */
-        /* JADX WARNING: type inference failed for: r1v137 */
-        /* JADX WARNING: type inference failed for: r1v138 */
-        /* JADX WARNING: type inference failed for: r1v139 */
-        /* JADX WARNING: type inference failed for: r1v140 */
-        /* JADX WARNING: type inference failed for: r1v141 */
-        /* JADX WARNING: type inference failed for: r1v142 */
-        /* JADX WARNING: type inference failed for: r1v143 */
-        /* JADX WARNING: type inference failed for: r1v144 */
-        /* JADX WARNING: type inference failed for: r1v145 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r25, android.os.Parcel r26, android.os.Parcel r27, int r28) throws android.os.RemoteException {
-            /*
-                r24 = this;
-                r10 = r24
-                r11 = r25
-                r12 = r26
-                r13 = r27
-                java.lang.String r14 = "android.media.IAudioService"
-                r0 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r15 = 1
-                if (r11 == r0) goto L_0x08c3
-                r0 = 0
-                r1 = 0
-                switch(r11) {
-                    case 1: goto L_0x08a3;
-                    case 2: goto L_0x0888;
-                    case 3: goto L_0x0879;
-                    case 4: goto L_0x086e;
-                    case 5: goto L_0x085c;
-                    case 6: goto L_0x084d;
-                    case 7: goto L_0x0842;
-                    case 8: goto L_0x081f;
-                    case 9: goto L_0x0805;
-                    case 10: goto L_0x07eb;
-                    case 11: goto L_0x07d9;
-                    case 12: goto L_0x07c3;
-                    case 13: goto L_0x07b5;
-                    case 14: goto L_0x0797;
-                    case 15: goto L_0x0785;
-                    case 16: goto L_0x0773;
-                    case 17: goto L_0x0761;
-                    case 18: goto L_0x0753;
-                    case 19: goto L_0x072b;
-                    case 20: goto L_0x070b;
-                    case 21: goto L_0x06eb;
-                    case 22: goto L_0x06cb;
-                    case 23: goto L_0x06b9;
-                    case 24: goto L_0x06ab;
-                    case 25: goto L_0x0691;
-                    case 26: goto L_0x067f;
-                    case 27: goto L_0x066d;
-                    case 28: goto L_0x065f;
-                    case 29: goto L_0x0651;
-                    case 30: goto L_0x063f;
-                    case 31: goto L_0x062d;
-                    case 32: goto L_0x061b;
-                    case 33: goto L_0x0609;
-                    case 34: goto L_0x05f3;
-                    case 35: goto L_0x05e5;
-                    case 36: goto L_0x05da;
-                    case 37: goto L_0x05cb;
-                    case 38: goto L_0x05bd;
-                    case 39: goto L_0x05b6;
-                    case 40: goto L_0x05af;
-                    case 41: goto L_0x059c;
-                    case 42: goto L_0x058a;
-                    case 43: goto L_0x057c;
-                    case 44: goto L_0x056a;
-                    case 45: goto L_0x055c;
-                    case 46: goto L_0x054a;
-                    case 47: goto L_0x053c;
-                    case 48: goto L_0x04e4;
-                    case 49: goto L_0x04b6;
-                    case 50: goto L_0x04a8;
-                    case 51: goto L_0x049a;
-                    case 52: goto L_0x0488;
-                    case 53: goto L_0x047a;
-                    case 54: goto L_0x046c;
-                    case 55: goto L_0x045a;
-                    case 56: goto L_0x0448;
-                    case 57: goto L_0x0433;
-                    case 58: goto L_0x0425;
-                    case 59: goto L_0x03ff;
-                    case 60: goto L_0x03e3;
-                    case 61: goto L_0x03af;
-                    case 62: goto L_0x0390;
-                    case 63: goto L_0x0382;
-                    case 64: goto L_0x0370;
-                    case 65: goto L_0x0356;
-                    case 66: goto L_0x0344;
-                    case 67: goto L_0x0332;
-                    case 68: goto L_0x0324;
-                    case 69: goto L_0x030e;
-                    case 70: goto L_0x0300;
-                    case 71: goto L_0x02aa;
-                    case 72: goto L_0x029b;
-                    case 73: goto L_0x0289;
-                    case 74: goto L_0x0261;
-                    case 75: goto L_0x0239;
-                    case 76: goto L_0x021f;
-                    case 77: goto L_0x0203;
-                    case 78: goto L_0x01f5;
-                    case 79: goto L_0x01e3;
-                    case 80: goto L_0x01d4;
-                    case 81: goto L_0x01c6;
-                    case 82: goto L_0x01b4;
-                    case 83: goto L_0x01a5;
-                    case 84: goto L_0x0197;
-                    case 85: goto L_0x0189;
-                    case 86: goto L_0x0167;
-                    case 87: goto L_0x013b;
-                    case 88: goto L_0x0128;
-                    case 89: goto L_0x00fe;
-                    case 90: goto L_0x00ca;
-                    case 91: goto L_0x00a5;
-                    case 92: goto L_0x0093;
-                    case 93: goto L_0x0084;
-                    case 94: goto L_0x0076;
-                    case 95: goto L_0x0054;
-                    case 96: goto L_0x003a;
-                    case 97: goto L_0x001a;
-                    default: goto L_0x0015;
-                }
-            L_0x0015:
-                boolean r0 = super.onTransact(r25, r26, r27, r28)
-                return r0
-            L_0x001a:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                if (r0 == 0) goto L_0x002d
-                android.os.Parcelable$Creator<android.net.Uri> r0 = android.net.Uri.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r12)
-                r1 = r0
-                android.net.Uri r1 = (android.net.Uri) r1
-                goto L_0x002e
-            L_0x002d:
-            L_0x002e:
-                r0 = r1
-                boolean r1 = r10.hasHapticChannels(r0)
-                r27.writeNoException()
-                r13.writeInt(r1)
-                return r15
-            L_0x003a:
-                r12.enforceInterface(r14)
-                android.os.IBinder r0 = r26.readStrongBinder()
-                android.media.audiopolicy.IAudioPolicyCallback r0 = android.media.audiopolicy.IAudioPolicyCallback.Stub.asInterface(r0)
-                int r1 = r26.readInt()
-                int r2 = r10.removeUidDeviceAffinity(r0, r1)
-                r27.writeNoException()
-                r13.writeInt(r2)
-                return r15
-            L_0x0054:
-                r12.enforceInterface(r14)
-                android.os.IBinder r0 = r26.readStrongBinder()
-                android.media.audiopolicy.IAudioPolicyCallback r0 = android.media.audiopolicy.IAudioPolicyCallback.Stub.asInterface(r0)
-                int r1 = r26.readInt()
-                int[] r2 = r26.createIntArray()
-                java.lang.String[] r3 = r26.createStringArray()
-                int r4 = r10.setUidDeviceAffinity(r0, r1, r2, r3)
-                r27.writeNoException()
-                r13.writeInt(r4)
-                return r15
-            L_0x0076:
-                r12.enforceInterface(r14)
-                boolean r0 = r24.isAudioServerRunning()
-                r27.writeNoException()
-                r13.writeInt(r0)
-                return r15
-            L_0x0084:
-                r12.enforceInterface(r14)
-                android.os.IBinder r0 = r26.readStrongBinder()
-                android.media.IAudioServerStateDispatcher r0 = android.media.IAudioServerStateDispatcher.Stub.asInterface(r0)
-                r10.unregisterAudioServerStateDispatcher(r0)
-                return r15
-            L_0x0093:
-                r12.enforceInterface(r14)
-                android.os.IBinder r0 = r26.readStrongBinder()
-                android.media.IAudioServerStateDispatcher r0 = android.media.IAudioServerStateDispatcher.Stub.asInterface(r0)
-                r10.registerAudioServerStateDispatcher(r0)
-                r27.writeNoException()
-                return r15
-            L_0x00a5:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                if (r0 == 0) goto L_0x00b8
-                android.os.Parcelable$Creator<android.media.AudioFocusInfo> r0 = android.media.AudioFocusInfo.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r12)
-                r1 = r0
-                android.media.AudioFocusInfo r1 = (android.media.AudioFocusInfo) r1
-                goto L_0x00b9
-            L_0x00b8:
-            L_0x00b9:
-                r0 = r1
-                int r1 = r26.readInt()
-                android.os.IBinder r2 = r26.readStrongBinder()
-                android.media.audiopolicy.IAudioPolicyCallback r2 = android.media.audiopolicy.IAudioPolicyCallback.Stub.asInterface(r2)
-                r10.setFocusRequestResultFromExtPolicy(r0, r1, r2)
-                return r15
-            L_0x00ca:
-                r12.enforceInterface(r14)
-                int r2 = r26.readInt()
-                if (r2 == 0) goto L_0x00dc
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothDevice> r1 = android.bluetooth.BluetoothDevice.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r12)
-                android.bluetooth.BluetoothDevice r1 = (android.bluetooth.BluetoothDevice) r1
-                goto L_0x00dd
-            L_0x00dc:
-            L_0x00dd:
-                int r6 = r26.readInt()
-                int r7 = r26.readInt()
-                int r2 = r26.readInt()
-                if (r2 == 0) goto L_0x00ed
-                r4 = r15
-                goto L_0x00ee
-            L_0x00ed:
-                r4 = r0
-            L_0x00ee:
-                int r8 = r26.readInt()
-                r0 = r24
-                r2 = r6
-                r3 = r7
-                r5 = r8
-                r0.setBluetoothA2dpDeviceConnectionStateSuppressNoisyIntent(r1, r2, r3, r4, r5)
-                r27.writeNoException()
-                return r15
-            L_0x00fe:
-                r12.enforceInterface(r14)
-                int r2 = r26.readInt()
-                if (r2 == 0) goto L_0x0110
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothDevice> r1 = android.bluetooth.BluetoothDevice.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r12)
-                android.bluetooth.BluetoothDevice r1 = (android.bluetooth.BluetoothDevice) r1
-                goto L_0x0111
-            L_0x0110:
-            L_0x0111:
-                int r2 = r26.readInt()
-                int r3 = r26.readInt()
-                if (r3 == 0) goto L_0x011d
-                r0 = r15
-            L_0x011d:
-                int r3 = r26.readInt()
-                r10.setBluetoothHearingAidDeviceConnectionState(r1, r2, r0, r3)
-                r27.writeNoException()
-                return r15
-            L_0x0128:
-                r12.enforceInterface(r14)
-                int r1 = r26.readInt()
-                int r2 = r26.readInt()
-                if (r2 == 0) goto L_0x0137
-                r0 = r15
-            L_0x0137:
-                r10.playerHasOpPlayAudio(r1, r0)
-                return r15
-            L_0x013b:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                if (r0 == 0) goto L_0x014e
-                android.os.Parcelable$Creator<android.media.AudioFocusInfo> r0 = android.media.AudioFocusInfo.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r12)
-                r1 = r0
-                android.media.AudioFocusInfo r1 = (android.media.AudioFocusInfo) r1
-                goto L_0x014f
-            L_0x014e:
-            L_0x014f:
-                r0 = r1
-                int r1 = r26.readInt()
-                android.os.IBinder r2 = r26.readStrongBinder()
-                android.media.audiopolicy.IAudioPolicyCallback r2 = android.media.audiopolicy.IAudioPolicyCallback.Stub.asInterface(r2)
-                int r3 = r10.dispatchFocusChange(r0, r1, r2)
-                r27.writeNoException()
-                r13.writeInt(r3)
-                return r15
-            L_0x0167:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                int r2 = r26.readInt()
-                if (r2 == 0) goto L_0x017d
-                android.os.Parcelable$Creator<android.media.AudioAttributes> r1 = android.media.AudioAttributes.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r12)
-                android.media.AudioAttributes r1 = (android.media.AudioAttributes) r1
-                goto L_0x017e
-            L_0x017d:
-            L_0x017e:
-                int r2 = r10.getFocusRampTimeMs(r0, r1)
-                r27.writeNoException()
-                r13.writeInt(r2)
-                return r15
-            L_0x0189:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                r10.disableRingtoneSync(r0)
-                r27.writeNoException()
-                return r15
-            L_0x0197:
-                r12.enforceInterface(r14)
-                java.util.List r0 = r24.getActivePlaybackConfigurations()
-                r27.writeNoException()
-                r13.writeTypedList(r0)
-                return r15
-            L_0x01a5:
-                r12.enforceInterface(r14)
-                android.os.IBinder r0 = r26.readStrongBinder()
-                android.media.IPlaybackConfigDispatcher r0 = android.media.IPlaybackConfigDispatcher.Stub.asInterface(r0)
-                r10.unregisterPlaybackCallback(r0)
-                return r15
-            L_0x01b4:
-                r12.enforceInterface(r14)
-                android.os.IBinder r0 = r26.readStrongBinder()
-                android.media.IPlaybackConfigDispatcher r0 = android.media.IPlaybackConfigDispatcher.Stub.asInterface(r0)
-                r10.registerPlaybackCallback(r0)
-                r27.writeNoException()
-                return r15
-            L_0x01c6:
-                r12.enforceInterface(r14)
-                java.util.List r0 = r24.getActiveRecordingConfigurations()
-                r27.writeNoException()
-                r13.writeTypedList(r0)
-                return r15
-            L_0x01d4:
-                r12.enforceInterface(r14)
-                android.os.IBinder r0 = r26.readStrongBinder()
-                android.media.IRecordingConfigDispatcher r0 = android.media.IRecordingConfigDispatcher.Stub.asInterface(r0)
-                r10.unregisterRecordingCallback(r0)
-                return r15
-            L_0x01e3:
-                r12.enforceInterface(r14)
-                android.os.IBinder r0 = r26.readStrongBinder()
-                android.media.IRecordingConfigDispatcher r0 = android.media.IRecordingConfigDispatcher.Stub.asInterface(r0)
-                r10.registerRecordingCallback(r0)
-                r27.writeNoException()
-                return r15
-            L_0x01f5:
-                r12.enforceInterface(r14)
-                boolean r0 = r24.hasRegisteredDynamicPolicy()
-                r27.writeNoException()
-                r13.writeInt(r0)
-                return r15
-            L_0x0203:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                if (r0 == 0) goto L_0x0216
-                android.os.Parcelable$Creator<android.media.VolumePolicy> r0 = android.media.VolumePolicy.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r12)
-                r1 = r0
-                android.media.VolumePolicy r1 = (android.media.VolumePolicy) r1
-                goto L_0x0217
-            L_0x0216:
-            L_0x0217:
-                r0 = r1
-                r10.setVolumePolicy(r0)
-                r27.writeNoException()
-                return r15
-            L_0x021f:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                android.os.IBinder r1 = r26.readStrongBinder()
-                android.media.audiopolicy.IAudioPolicyCallback r1 = android.media.audiopolicy.IAudioPolicyCallback.Stub.asInterface(r1)
-                int r2 = r10.setFocusPropertiesForPolicy(r0, r1)
-                r27.writeNoException()
-                r13.writeInt(r2)
-                return r15
-            L_0x0239:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                if (r0 == 0) goto L_0x024c
-                android.os.Parcelable$Creator<android.media.audiopolicy.AudioPolicyConfig> r0 = android.media.audiopolicy.AudioPolicyConfig.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r12)
-                r1 = r0
-                android.media.audiopolicy.AudioPolicyConfig r1 = (android.media.audiopolicy.AudioPolicyConfig) r1
-                goto L_0x024d
-            L_0x024c:
-            L_0x024d:
-                r0 = r1
-                android.os.IBinder r1 = r26.readStrongBinder()
-                android.media.audiopolicy.IAudioPolicyCallback r1 = android.media.audiopolicy.IAudioPolicyCallback.Stub.asInterface(r1)
-                int r2 = r10.removeMixForPolicy(r0, r1)
-                r27.writeNoException()
-                r13.writeInt(r2)
-                return r15
-            L_0x0261:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                if (r0 == 0) goto L_0x0274
-                android.os.Parcelable$Creator<android.media.audiopolicy.AudioPolicyConfig> r0 = android.media.audiopolicy.AudioPolicyConfig.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r12)
-                r1 = r0
-                android.media.audiopolicy.AudioPolicyConfig r1 = (android.media.audiopolicy.AudioPolicyConfig) r1
-                goto L_0x0275
-            L_0x0274:
-            L_0x0275:
-                r0 = r1
-                android.os.IBinder r1 = r26.readStrongBinder()
-                android.media.audiopolicy.IAudioPolicyCallback r1 = android.media.audiopolicy.IAudioPolicyCallback.Stub.asInterface(r1)
-                int r2 = r10.addMixForPolicy(r0, r1)
-                r27.writeNoException()
-                r13.writeInt(r2)
-                return r15
-            L_0x0289:
-                r12.enforceInterface(r14)
-                android.os.IBinder r0 = r26.readStrongBinder()
-                android.media.audiopolicy.IAudioPolicyCallback r0 = android.media.audiopolicy.IAudioPolicyCallback.Stub.asInterface(r0)
-                r10.unregisterAudioPolicy(r0)
-                r27.writeNoException()
-                return r15
-            L_0x029b:
-                r12.enforceInterface(r14)
-                android.os.IBinder r0 = r26.readStrongBinder()
-                android.media.audiopolicy.IAudioPolicyCallback r0 = android.media.audiopolicy.IAudioPolicyCallback.Stub.asInterface(r0)
-                r10.unregisterAudioPolicyAsync(r0)
-                return r15
-            L_0x02aa:
-                r12.enforceInterface(r14)
-                int r2 = r26.readInt()
-                if (r2 == 0) goto L_0x02bc
-                android.os.Parcelable$Creator<android.media.audiopolicy.AudioPolicyConfig> r1 = android.media.audiopolicy.AudioPolicyConfig.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r12)
-                android.media.audiopolicy.AudioPolicyConfig r1 = (android.media.audiopolicy.AudioPolicyConfig) r1
-                goto L_0x02bd
-            L_0x02bc:
-            L_0x02bd:
-                android.os.IBinder r2 = r26.readStrongBinder()
-                android.media.audiopolicy.IAudioPolicyCallback r8 = android.media.audiopolicy.IAudioPolicyCallback.Stub.asInterface(r2)
-                int r2 = r26.readInt()
-                if (r2 == 0) goto L_0x02cd
-                r3 = r15
-                goto L_0x02ce
-            L_0x02cd:
-                r3 = r0
-            L_0x02ce:
-                int r2 = r26.readInt()
-                if (r2 == 0) goto L_0x02d6
-                r4 = r15
-                goto L_0x02d7
-            L_0x02d6:
-                r4 = r0
-            L_0x02d7:
-                int r2 = r26.readInt()
-                if (r2 == 0) goto L_0x02df
-                r5 = r15
-                goto L_0x02e0
-            L_0x02df:
-                r5 = r0
-            L_0x02e0:
-                int r2 = r26.readInt()
-                if (r2 == 0) goto L_0x02e8
-                r6 = r15
-                goto L_0x02e9
-            L_0x02e8:
-                r6 = r0
-            L_0x02e9:
-                android.os.IBinder r0 = r26.readStrongBinder()
-                android.media.projection.IMediaProjection r9 = android.media.projection.IMediaProjection.Stub.asInterface(r0)
-                r0 = r24
-                r2 = r8
-                r7 = r9
-                java.lang.String r0 = r0.registerAudioPolicy(r1, r2, r3, r4, r5, r6, r7)
-                r27.writeNoException()
-                r13.writeString(r0)
-                return r15
-            L_0x0300:
-                r12.enforceInterface(r14)
-                boolean r0 = r24.isHdmiSystemAudioSupported()
-                r27.writeNoException()
-                r13.writeInt(r0)
-                return r15
-            L_0x030e:
-                r12.enforceInterface(r14)
-                int r1 = r26.readInt()
-                if (r1 == 0) goto L_0x0319
-                r0 = r15
-            L_0x0319:
-                int r1 = r10.setHdmiSystemAudioSupported(r0)
-                r27.writeNoException()
-                r13.writeInt(r1)
-                return r15
-            L_0x0324:
-                r12.enforceInterface(r14)
-                java.lang.String r0 = r26.readString()
-                r10.disableSafeMediaVolume(r0)
-                r27.writeNoException()
-                return r15
-            L_0x0332:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                boolean r1 = r10.isStreamAffectedByMute(r0)
-                r27.writeNoException()
-                r13.writeInt(r1)
-                return r15
-            L_0x0344:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                boolean r1 = r10.isStreamAffectedByRingerMode(r0)
-                r27.writeNoException()
-                r13.writeInt(r1)
-                return r15
-            L_0x0356:
-                r12.enforceInterface(r14)
-                android.os.IBinder r1 = r26.readStrongBinder()
-                android.media.IVolumeController r1 = android.media.IVolumeController.Stub.asInterface(r1)
-                int r2 = r26.readInt()
-                if (r2 == 0) goto L_0x0369
-                r0 = r15
-            L_0x0369:
-                r10.notifyVolumeControllerVisible(r1, r0)
-                r27.writeNoException()
-                return r15
-            L_0x0370:
-                r12.enforceInterface(r14)
-                android.os.IBinder r0 = r26.readStrongBinder()
-                android.media.IVolumeController r0 = android.media.IVolumeController.Stub.asInterface(r0)
-                r10.setVolumeController(r0)
-                r27.writeNoException()
-                return r15
-            L_0x0382:
-                r12.enforceInterface(r14)
-                boolean r0 = r24.isCameraSoundForced()
-                r27.writeNoException()
-                r13.writeInt(r0)
-                return r15
-            L_0x0390:
-                r12.enforceInterface(r14)
-                android.os.IBinder r1 = r26.readStrongBinder()
-                android.media.IAudioRoutesObserver r1 = android.media.IAudioRoutesObserver.Stub.asInterface(r1)
-                android.media.AudioRoutesInfo r2 = r10.startWatchingRoutes(r1)
-                r27.writeNoException()
-                if (r2 == 0) goto L_0x03ab
-                r13.writeInt(r15)
-                r2.writeToParcel(r13, r15)
-                goto L_0x03ae
-            L_0x03ab:
-                r13.writeInt(r0)
-            L_0x03ae:
-                return r15
-            L_0x03af:
-                r12.enforceInterface(r14)
-                int r2 = r26.readInt()
-                if (r2 == 0) goto L_0x03c1
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothDevice> r1 = android.bluetooth.BluetoothDevice.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r12)
-                android.bluetooth.BluetoothDevice r1 = (android.bluetooth.BluetoothDevice) r1
-                goto L_0x03c2
-            L_0x03c1:
-            L_0x03c2:
-                int r6 = r26.readInt()
-                int r7 = r26.readInt()
-                int r2 = r26.readInt()
-                if (r2 == 0) goto L_0x03d2
-                r4 = r15
-                goto L_0x03d3
-            L_0x03d2:
-                r4 = r0
-            L_0x03d3:
-                int r8 = r26.readInt()
-                r0 = r24
-                r2 = r6
-                r3 = r7
-                r5 = r8
-                r0.handleBluetoothA2dpActiveDeviceChange(r1, r2, r3, r4, r5)
-                r27.writeNoException()
-                return r15
-            L_0x03e3:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                if (r0 == 0) goto L_0x03f6
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothDevice> r0 = android.bluetooth.BluetoothDevice.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r12)
-                r1 = r0
-                android.bluetooth.BluetoothDevice r1 = (android.bluetooth.BluetoothDevice) r1
-                goto L_0x03f7
-            L_0x03f6:
-            L_0x03f7:
-                r0 = r1
-                r10.handleBluetoothA2dpDeviceConfigChange(r0)
-                r27.writeNoException()
-                return r15
-            L_0x03ff:
-                r12.enforceInterface(r14)
-                int r6 = r26.readInt()
-                int r7 = r26.readInt()
-                java.lang.String r8 = r26.readString()
-                java.lang.String r9 = r26.readString()
-                java.lang.String r16 = r26.readString()
-                r0 = r24
-                r1 = r6
-                r2 = r7
-                r3 = r8
-                r4 = r9
-                r5 = r16
-                r0.setWiredDeviceConnectionState(r1, r2, r3, r4, r5)
-                r27.writeNoException()
-                return r15
-            L_0x0425:
-                r12.enforceInterface(r14)
-                int r0 = r24.getUiSoundsStreamType()
-                r27.writeNoException()
-                r13.writeInt(r0)
-                return r15
-            L_0x0433:
-                r12.enforceInterface(r14)
-                android.media.IRingtonePlayer r0 = r24.getRingtonePlayer()
-                r27.writeNoException()
-                if (r0 == 0) goto L_0x0444
-                android.os.IBinder r1 = r0.asBinder()
-            L_0x0444:
-                r13.writeStrongBinder(r1)
-                return r15
-            L_0x0448:
-                r12.enforceInterface(r14)
-                android.os.IBinder r0 = r26.readStrongBinder()
-                android.media.IRingtonePlayer r0 = android.media.IRingtonePlayer.Stub.asInterface(r0)
-                r10.setRingtonePlayer(r0)
-                r27.writeNoException()
-                return r15
-            L_0x045a:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                android.os.IBinder r1 = r26.readStrongBinder()
-                r10.forceVolumeControlStream(r0, r1)
-                r27.writeNoException()
-                return r15
-            L_0x046c:
-                r12.enforceInterface(r14)
-                android.os.IBinder r0 = r26.readStrongBinder()
-                r10.stopBluetoothSco(r0)
-                r27.writeNoException()
-                return r15
-            L_0x047a:
-                r12.enforceInterface(r14)
-                android.os.IBinder r0 = r26.readStrongBinder()
-                r10.startBluetoothScoVirtualCall(r0)
-                r27.writeNoException()
-                return r15
-            L_0x0488:
-                r12.enforceInterface(r14)
-                android.os.IBinder r0 = r26.readStrongBinder()
-                int r1 = r26.readInt()
-                r10.startBluetoothSco(r0, r1)
-                r27.writeNoException()
-                return r15
-            L_0x049a:
-                r12.enforceInterface(r14)
-                int r0 = r24.getCurrentAudioFocus()
-                r27.writeNoException()
-                r13.writeInt(r0)
-                return r15
-            L_0x04a8:
-                r12.enforceInterface(r14)
-                java.lang.String r0 = r26.readString()
-                r10.unregisterAudioFocusClient(r0)
-                r27.writeNoException()
-                return r15
-            L_0x04b6:
-                r12.enforceInterface(r14)
-                android.os.IBinder r0 = r26.readStrongBinder()
-                android.media.IAudioFocusDispatcher r0 = android.media.IAudioFocusDispatcher.Stub.asInterface(r0)
-                java.lang.String r2 = r26.readString()
-                int r3 = r26.readInt()
-                if (r3 == 0) goto L_0x04d4
-                android.os.Parcelable$Creator<android.media.AudioAttributes> r1 = android.media.AudioAttributes.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r12)
-                android.media.AudioAttributes r1 = (android.media.AudioAttributes) r1
-                goto L_0x04d5
-            L_0x04d4:
-            L_0x04d5:
-                java.lang.String r3 = r26.readString()
-                int r4 = r10.abandonAudioFocus(r0, r2, r1, r3)
-                r27.writeNoException()
-                r13.writeInt(r4)
-                return r15
-            L_0x04e4:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                if (r0 == 0) goto L_0x04f7
-                android.os.Parcelable$Creator<android.media.AudioAttributes> r0 = android.media.AudioAttributes.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r12)
-                android.media.AudioAttributes r0 = (android.media.AudioAttributes) r0
-                r1 = r0
-            L_0x04f7:
-                int r16 = r26.readInt()
-                android.os.IBinder r17 = r26.readStrongBinder()
-                android.os.IBinder r0 = r26.readStrongBinder()
-                android.media.IAudioFocusDispatcher r18 = android.media.IAudioFocusDispatcher.Stub.asInterface(r0)
-                java.lang.String r19 = r26.readString()
-                java.lang.String r20 = r26.readString()
-                int r21 = r26.readInt()
-                android.os.IBinder r0 = r26.readStrongBinder()
-                android.media.audiopolicy.IAudioPolicyCallback r22 = android.media.audiopolicy.IAudioPolicyCallback.Stub.asInterface(r0)
-                int r23 = r26.readInt()
-                r0 = r24
-                r2 = r16
-                r3 = r17
-                r4 = r18
-                r5 = r19
-                r6 = r20
-                r7 = r21
-                r8 = r22
-                r9 = r23
-                int r0 = r0.requestAudioFocus(r1, r2, r3, r4, r5, r6, r7, r8, r9)
-                r27.writeNoException()
-                r13.writeInt(r0)
-                return r15
-            L_0x053c:
-                r12.enforceInterface(r14)
-                boolean r0 = r24.isBluetoothA2dpOn()
-                r27.writeNoException()
-                r13.writeInt(r0)
-                return r15
-            L_0x054a:
-                r12.enforceInterface(r14)
-                int r1 = r26.readInt()
-                if (r1 == 0) goto L_0x0555
-                r0 = r15
-            L_0x0555:
-                r10.setBluetoothA2dpOn(r0)
-                r27.writeNoException()
-                return r15
-            L_0x055c:
-                r12.enforceInterface(r14)
-                boolean r0 = r24.isBluetoothScoOn()
-                r27.writeNoException()
-                r13.writeInt(r0)
-                return r15
-            L_0x056a:
-                r12.enforceInterface(r14)
-                int r1 = r26.readInt()
-                if (r1 == 0) goto L_0x0575
-                r0 = r15
-            L_0x0575:
-                r10.setBluetoothScoOn(r0)
-                r27.writeNoException()
-                return r15
-            L_0x057c:
-                r12.enforceInterface(r14)
-                boolean r0 = r24.isSpeakerphoneOn()
-                r27.writeNoException()
-                r13.writeInt(r0)
-                return r15
-            L_0x058a:
-                r12.enforceInterface(r14)
-                int r1 = r26.readInt()
-                if (r1 == 0) goto L_0x0595
-                r0 = r15
-            L_0x0595:
-                r10.setSpeakerphoneOn(r0)
-                r27.writeNoException()
-                return r15
-            L_0x059c:
-                r12.enforceInterface(r14)
-                java.lang.String r1 = r26.readString()
-                int r2 = r26.readInt()
-                if (r2 == 0) goto L_0x05ab
-                r0 = r15
-            L_0x05ab:
-                r10.avrcpSupportsAbsoluteVolume(r1, r0)
-                return r15
-            L_0x05af:
-                r12.enforceInterface(r14)
-                r24.reloadAudioSettings()
-                return r15
-            L_0x05b6:
-                r12.enforceInterface(r14)
-                r24.unloadSoundEffects()
-                return r15
-            L_0x05bd:
-                r12.enforceInterface(r14)
-                boolean r0 = r24.loadSoundEffects()
-                r27.writeNoException()
-                r13.writeInt(r0)
-                return r15
-            L_0x05cb:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                float r1 = r26.readFloat()
-                r10.playSoundEffectVolume(r0, r1)
-                return r15
-            L_0x05da:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                r10.playSoundEffect(r0)
-                return r15
-            L_0x05e5:
-                r12.enforceInterface(r14)
-                int r0 = r24.getMode()
-                r27.writeNoException()
-                r13.writeInt(r0)
-                return r15
-            L_0x05f3:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                android.os.IBinder r1 = r26.readStrongBinder()
-                java.lang.String r2 = r26.readString()
-                r10.setMode(r0, r1, r2)
-                r27.writeNoException()
-                return r15
-            L_0x0609:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                boolean r1 = r10.shouldVibrate(r0)
-                r27.writeNoException()
-                r13.writeInt(r1)
-                return r15
-            L_0x061b:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                int r1 = r10.getVibrateSetting(r0)
-                r27.writeNoException()
-                r13.writeInt(r1)
-                return r15
-            L_0x062d:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                int r1 = r26.readInt()
-                r10.setVibrateSetting(r0, r1)
-                r27.writeNoException()
-                return r15
-            L_0x063f:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                boolean r1 = r10.isValidRingerMode(r0)
-                r27.writeNoException()
-                r13.writeInt(r1)
-                return r15
-            L_0x0651:
-                r12.enforceInterface(r14)
-                int r0 = r24.getRingerModeInternal()
-                r27.writeNoException()
-                r13.writeInt(r0)
-                return r15
-            L_0x065f:
-                r12.enforceInterface(r14)
-                int r0 = r24.getRingerModeExternal()
-                r27.writeNoException()
-                r13.writeInt(r0)
-                return r15
-            L_0x066d:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                java.lang.String r1 = r26.readString()
-                r10.setRingerModeInternal(r0, r1)
-                r27.writeNoException()
-                return r15
-            L_0x067f:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                java.lang.String r1 = r26.readString()
-                r10.setRingerModeExternal(r0, r1)
-                r27.writeNoException()
-                return r15
-            L_0x0691:
-                r12.enforceInterface(r14)
-                int r1 = r26.readInt()
-                if (r1 == 0) goto L_0x069c
-                r0 = r15
-            L_0x069c:
-                java.lang.String r1 = r26.readString()
-                int r2 = r26.readInt()
-                r10.setMicrophoneMute(r0, r1, r2)
-                r27.writeNoException()
-                return r15
-            L_0x06ab:
-                r12.enforceInterface(r14)
-                java.util.List r0 = r24.getAudioProductStrategies()
-                r27.writeNoException()
-                r13.writeTypedList(r0)
-                return r15
-            L_0x06b9:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                int r1 = r10.getLastAudibleStreamVolume(r0)
-                r27.writeNoException()
-                r13.writeInt(r1)
-                return r15
-            L_0x06cb:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                if (r0 == 0) goto L_0x06de
-                android.os.Parcelable$Creator<android.media.AudioAttributes> r0 = android.media.AudioAttributes.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r12)
-                r1 = r0
-                android.media.AudioAttributes r1 = (android.media.AudioAttributes) r1
-                goto L_0x06df
-            L_0x06de:
-            L_0x06df:
-                r0 = r1
-                int r1 = r10.getMinVolumeIndexForAttributes(r0)
-                r27.writeNoException()
-                r13.writeInt(r1)
-                return r15
-            L_0x06eb:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                if (r0 == 0) goto L_0x06fe
-                android.os.Parcelable$Creator<android.media.AudioAttributes> r0 = android.media.AudioAttributes.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r12)
-                r1 = r0
-                android.media.AudioAttributes r1 = (android.media.AudioAttributes) r1
-                goto L_0x06ff
-            L_0x06fe:
-            L_0x06ff:
-                r0 = r1
-                int r1 = r10.getMaxVolumeIndexForAttributes(r0)
-                r27.writeNoException()
-                r13.writeInt(r1)
-                return r15
-            L_0x070b:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                if (r0 == 0) goto L_0x071e
-                android.os.Parcelable$Creator<android.media.AudioAttributes> r0 = android.media.AudioAttributes.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r12)
-                r1 = r0
-                android.media.AudioAttributes r1 = (android.media.AudioAttributes) r1
-                goto L_0x071f
-            L_0x071e:
-            L_0x071f:
-                r0 = r1
-                int r1 = r10.getVolumeIndexForAttributes(r0)
-                r27.writeNoException()
-                r13.writeInt(r1)
-                return r15
-            L_0x072b:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                if (r0 == 0) goto L_0x073e
-                android.os.Parcelable$Creator<android.media.AudioAttributes> r0 = android.media.AudioAttributes.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r12)
-                r1 = r0
-                android.media.AudioAttributes r1 = (android.media.AudioAttributes) r1
-                goto L_0x073f
-            L_0x073e:
-            L_0x073f:
-                r0 = r1
-                int r1 = r26.readInt()
-                int r2 = r26.readInt()
-                java.lang.String r3 = r26.readString()
-                r10.setVolumeIndexForAttributes(r0, r1, r2, r3)
-                r27.writeNoException()
-                return r15
-            L_0x0753:
-                r12.enforceInterface(r14)
-                java.util.List r0 = r24.getAudioVolumeGroups()
-                r27.writeNoException()
-                r13.writeTypedList(r0)
-                return r15
-            L_0x0761:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                int r1 = r10.getStreamMaxVolume(r0)
-                r27.writeNoException()
-                r13.writeInt(r1)
-                return r15
-            L_0x0773:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                int r1 = r10.getStreamMinVolume(r0)
-                r27.writeNoException()
-                r13.writeInt(r1)
-                return r15
-            L_0x0785:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                int r1 = r10.getStreamVolume(r0)
-                r27.writeNoException()
-                r13.writeInt(r1)
-                return r15
-            L_0x0797:
-                r12.enforceInterface(r14)
-                int r1 = r26.readInt()
-                if (r1 == 0) goto L_0x07a2
-                r0 = r15
-            L_0x07a2:
-                int r1 = r26.readInt()
-                java.lang.String r2 = r26.readString()
-                int r3 = r26.readInt()
-                r10.setMasterMute(r0, r1, r2, r3)
-                r27.writeNoException()
-                return r15
-            L_0x07b5:
-                r12.enforceInterface(r14)
-                boolean r0 = r24.isMasterMute()
-                r27.writeNoException()
-                r13.writeInt(r0)
-                return r15
-            L_0x07c3:
-                r12.enforceInterface(r14)
-                int r1 = r26.readInt()
-                if (r1 == 0) goto L_0x07ce
-                r0 = r15
-            L_0x07ce:
-                android.os.IBinder r1 = r26.readStrongBinder()
-                r10.forceRemoteSubmixFullVolume(r0, r1)
-                r27.writeNoException()
-                return r15
-            L_0x07d9:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                boolean r1 = r10.isStreamMute(r0)
-                r27.writeNoException()
-                r13.writeInt(r1)
-                return r15
-            L_0x07eb:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                int r1 = r26.readInt()
-                int r2 = r26.readInt()
-                java.lang.String r3 = r26.readString()
-                r10.setStreamVolume(r0, r1, r2, r3)
-                r27.writeNoException()
-                return r15
-            L_0x0805:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                int r1 = r26.readInt()
-                int r2 = r26.readInt()
-                java.lang.String r3 = r26.readString()
-                r10.adjustStreamVolume(r0, r1, r2, r3)
-                r27.writeNoException()
-                return r15
-            L_0x081f:
-                r12.enforceInterface(r14)
-                int r6 = r26.readInt()
-                int r7 = r26.readInt()
-                int r8 = r26.readInt()
-                java.lang.String r9 = r26.readString()
-                java.lang.String r16 = r26.readString()
-                r0 = r24
-                r1 = r6
-                r2 = r7
-                r3 = r8
-                r4 = r9
-                r5 = r16
-                r0.adjustSuggestedStreamVolume(r1, r2, r3, r4, r5)
-                return r15
-            L_0x0842:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                r10.releaseRecorder(r0)
-                return r15
-            L_0x084d:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                int r1 = r26.readInt()
-                r10.recorderEvent(r0, r1)
-                return r15
-            L_0x085c:
-                r12.enforceInterface(r14)
-                android.os.IBinder r0 = r26.readStrongBinder()
-                int r1 = r10.trackRecorder(r0)
-                r27.writeNoException()
-                r13.writeInt(r1)
-                return r15
-            L_0x086e:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                r10.releasePlayer(r0)
-                return r15
-            L_0x0879:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                int r1 = r26.readInt()
-                r10.playerEvent(r0, r1)
-                return r15
-            L_0x0888:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                int r2 = r26.readInt()
-                if (r2 == 0) goto L_0x089e
-                android.os.Parcelable$Creator<android.media.AudioAttributes> r1 = android.media.AudioAttributes.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r12)
-                android.media.AudioAttributes r1 = (android.media.AudioAttributes) r1
-                goto L_0x089f
-            L_0x089e:
-            L_0x089f:
-                r10.playerAttributes(r0, r1)
-                return r15
-            L_0x08a3:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                if (r0 == 0) goto L_0x08b6
-                android.os.Parcelable$Creator<android.media.PlayerBase$PlayerIdCard> r0 = android.media.PlayerBase.PlayerIdCard.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r12)
-                r1 = r0
-                android.media.PlayerBase$PlayerIdCard r1 = (android.media.PlayerBase.PlayerIdCard) r1
-                goto L_0x08b7
-            L_0x08b6:
-            L_0x08b7:
-                r0 = r1
-                int r1 = r10.trackPlayer(r0)
-                r27.writeNoException()
-                r13.writeInt(r1)
-                return r15
-            L_0x08c3:
-                r13.writeString(r14)
-                return r15
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.media.IAudioService.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            boolean _arg2;
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    PlayerBase.PlayerIdCard _arg0 = data.readInt() != 0 ? PlayerBase.PlayerIdCard.CREATOR.createFromParcel(data) : null;
+                    int _result = trackPlayer(_arg0);
+                    reply.writeNoException();
+                    reply.writeInt(_result);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    AudioAttributes _arg1 = data.readInt() != 0 ? AudioAttributes.CREATOR.createFromParcel(data) : null;
+                    playerAttributes(_arg02, _arg1);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg03 = data.readInt();
+                    int _arg12 = data.readInt();
+                    playerEvent(_arg03, _arg12);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg04 = data.readInt();
+                    releasePlayer(_arg04);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg05 = data.readStrongBinder();
+                    int _result2 = trackRecorder(_arg05);
+                    reply.writeNoException();
+                    reply.writeInt(_result2);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg06 = data.readInt();
+                    int _arg13 = data.readInt();
+                    recorderEvent(_arg06, _arg13);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg07 = data.readInt();
+                    releaseRecorder(_arg07);
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg08 = data.readInt();
+                    int _arg14 = data.readInt();
+                    int _arg22 = data.readInt();
+                    String _arg3 = data.readString();
+                    String _arg4 = data.readString();
+                    adjustSuggestedStreamVolume(_arg08, _arg14, _arg22, _arg3, _arg4);
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg09 = data.readInt();
+                    int _arg15 = data.readInt();
+                    int _arg23 = data.readInt();
+                    String _arg32 = data.readString();
+                    adjustStreamVolume(_arg09, _arg15, _arg23, _arg32);
+                    reply.writeNoException();
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg010 = data.readInt();
+                    int _arg16 = data.readInt();
+                    int _arg24 = data.readInt();
+                    String _arg33 = data.readString();
+                    setStreamVolume(_arg010, _arg16, _arg24, _arg33);
+                    reply.writeNoException();
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg011 = data.readInt();
+                    boolean isStreamMute = isStreamMute(_arg011);
+                    reply.writeNoException();
+                    reply.writeInt(isStreamMute ? 1 : 0);
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg2 = data.readInt() != 0;
+                    IBinder _arg17 = data.readStrongBinder();
+                    forceRemoteSubmixFullVolume(_arg2, _arg17);
+                    reply.writeNoException();
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isMasterMute = isMasterMute();
+                    reply.writeNoException();
+                    reply.writeInt(isMasterMute ? 1 : 0);
+                    return true;
+                case 14:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg2 = data.readInt() != 0;
+                    int _arg18 = data.readInt();
+                    String _arg25 = data.readString();
+                    int _arg34 = data.readInt();
+                    setMasterMute(_arg2, _arg18, _arg25, _arg34);
+                    reply.writeNoException();
+                    return true;
+                case 15:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg012 = data.readInt();
+                    int _result3 = getStreamVolume(_arg012);
+                    reply.writeNoException();
+                    reply.writeInt(_result3);
+                    return true;
+                case 16:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg013 = data.readInt();
+                    int _result4 = getStreamMinVolume(_arg013);
+                    reply.writeNoException();
+                    reply.writeInt(_result4);
+                    return true;
+                case 17:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg014 = data.readInt();
+                    int _result5 = getStreamMaxVolume(_arg014);
+                    reply.writeNoException();
+                    reply.writeInt(_result5);
+                    return true;
+                case 18:
+                    data.enforceInterface(DESCRIPTOR);
+                    List<AudioVolumeGroup> _result6 = getAudioVolumeGroups();
+                    reply.writeNoException();
+                    reply.writeTypedList(_result6);
+                    return true;
+                case 19:
+                    data.enforceInterface(DESCRIPTOR);
+                    AudioAttributes _arg015 = data.readInt() != 0 ? AudioAttributes.CREATOR.createFromParcel(data) : null;
+                    AudioAttributes _arg016 = _arg015;
+                    int _arg19 = data.readInt();
+                    int _arg26 = data.readInt();
+                    String _arg35 = data.readString();
+                    setVolumeIndexForAttributes(_arg016, _arg19, _arg26, _arg35);
+                    reply.writeNoException();
+                    return true;
+                case 20:
+                    data.enforceInterface(DESCRIPTOR);
+                    AudioAttributes _arg017 = data.readInt() != 0 ? AudioAttributes.CREATOR.createFromParcel(data) : null;
+                    int _result7 = getVolumeIndexForAttributes(_arg017);
+                    reply.writeNoException();
+                    reply.writeInt(_result7);
+                    return true;
+                case 21:
+                    data.enforceInterface(DESCRIPTOR);
+                    AudioAttributes _arg018 = data.readInt() != 0 ? AudioAttributes.CREATOR.createFromParcel(data) : null;
+                    int _result8 = getMaxVolumeIndexForAttributes(_arg018);
+                    reply.writeNoException();
+                    reply.writeInt(_result8);
+                    return true;
+                case 22:
+                    data.enforceInterface(DESCRIPTOR);
+                    AudioAttributes _arg019 = data.readInt() != 0 ? AudioAttributes.CREATOR.createFromParcel(data) : null;
+                    int _result9 = getMinVolumeIndexForAttributes(_arg019);
+                    reply.writeNoException();
+                    reply.writeInt(_result9);
+                    return true;
+                case 23:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg020 = data.readInt();
+                    int _result10 = getLastAudibleStreamVolume(_arg020);
+                    reply.writeNoException();
+                    reply.writeInt(_result10);
+                    return true;
+                case 24:
+                    data.enforceInterface(DESCRIPTOR);
+                    List<AudioProductStrategy> _result11 = getAudioProductStrategies();
+                    reply.writeNoException();
+                    reply.writeTypedList(_result11);
+                    return true;
+                case 25:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg2 = data.readInt() != 0;
+                    String _arg110 = data.readString();
+                    setMicrophoneMute(_arg2, _arg110, data.readInt());
+                    reply.writeNoException();
+                    return true;
+                case 26:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg021 = data.readInt();
+                    String _arg111 = data.readString();
+                    setRingerModeExternal(_arg021, _arg111);
+                    reply.writeNoException();
+                    return true;
+                case 27:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg022 = data.readInt();
+                    String _arg112 = data.readString();
+                    setRingerModeInternal(_arg022, _arg112);
+                    reply.writeNoException();
+                    return true;
+                case 28:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result12 = getRingerModeExternal();
+                    reply.writeNoException();
+                    reply.writeInt(_result12);
+                    return true;
+                case 29:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result13 = getRingerModeInternal();
+                    reply.writeNoException();
+                    reply.writeInt(_result13);
+                    return true;
+                case 30:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg023 = data.readInt();
+                    boolean isValidRingerMode = isValidRingerMode(_arg023);
+                    reply.writeNoException();
+                    reply.writeInt(isValidRingerMode ? 1 : 0);
+                    return true;
+                case 31:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg024 = data.readInt();
+                    int _arg113 = data.readInt();
+                    setVibrateSetting(_arg024, _arg113);
+                    reply.writeNoException();
+                    return true;
+                case 32:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg025 = data.readInt();
+                    int _result14 = getVibrateSetting(_arg025);
+                    reply.writeNoException();
+                    reply.writeInt(_result14);
+                    return true;
+                case 33:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg026 = data.readInt();
+                    boolean shouldVibrate = shouldVibrate(_arg026);
+                    reply.writeNoException();
+                    reply.writeInt(shouldVibrate ? 1 : 0);
+                    return true;
+                case 34:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg027 = data.readInt();
+                    IBinder _arg114 = data.readStrongBinder();
+                    setMode(_arg027, _arg114, data.readString());
+                    reply.writeNoException();
+                    return true;
+                case 35:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result15 = getMode();
+                    reply.writeNoException();
+                    reply.writeInt(_result15);
+                    return true;
+                case 36:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg028 = data.readInt();
+                    playSoundEffect(_arg028);
+                    return true;
+                case 37:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg029 = data.readInt();
+                    float _arg115 = data.readFloat();
+                    playSoundEffectVolume(_arg029, _arg115);
+                    return true;
+                case 38:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean loadSoundEffects = loadSoundEffects();
+                    reply.writeNoException();
+                    reply.writeInt(loadSoundEffects ? 1 : 0);
+                    return true;
+                case 39:
+                    data.enforceInterface(DESCRIPTOR);
+                    unloadSoundEffects();
+                    return true;
+                case 40:
+                    data.enforceInterface(DESCRIPTOR);
+                    reloadAudioSettings();
+                    return true;
+                case 41:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg030 = data.readString();
+                    _arg2 = data.readInt() != 0;
+                    avrcpSupportsAbsoluteVolume(_arg030, _arg2);
+                    return true;
+                case 42:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg2 = data.readInt() != 0;
+                    setSpeakerphoneOn(_arg2);
+                    reply.writeNoException();
+                    return true;
+                case 43:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isSpeakerphoneOn = isSpeakerphoneOn();
+                    reply.writeNoException();
+                    reply.writeInt(isSpeakerphoneOn ? 1 : 0);
+                    return true;
+                case 44:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg2 = data.readInt() != 0;
+                    setBluetoothScoOn(_arg2);
+                    reply.writeNoException();
+                    return true;
+                case 45:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isBluetoothScoOn = isBluetoothScoOn();
+                    reply.writeNoException();
+                    reply.writeInt(isBluetoothScoOn ? 1 : 0);
+                    return true;
+                case 46:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg2 = data.readInt() != 0;
+                    setBluetoothA2dpOn(_arg2);
+                    reply.writeNoException();
+                    return true;
+                case 47:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isBluetoothA2dpOn = isBluetoothA2dpOn();
+                    reply.writeNoException();
+                    reply.writeInt(isBluetoothA2dpOn ? 1 : 0);
+                    return true;
+                case 48:
+                    data.enforceInterface(DESCRIPTOR);
+                    AudioAttributes _arg031 = data.readInt() != 0 ? AudioAttributes.CREATOR.createFromParcel(data) : null;
+                    int _arg116 = data.readInt();
+                    IBinder _arg27 = data.readStrongBinder();
+                    IAudioFocusDispatcher _arg36 = IAudioFocusDispatcher.Stub.asInterface(data.readStrongBinder());
+                    String _arg42 = data.readString();
+                    String _arg5 = data.readString();
+                    int _arg6 = data.readInt();
+                    IAudioPolicyCallback _arg7 = IAudioPolicyCallback.Stub.asInterface(data.readStrongBinder());
+                    int _arg8 = data.readInt();
+                    int _result16 = requestAudioFocus(_arg031, _arg116, _arg27, _arg36, _arg42, _arg5, _arg6, _arg7, _arg8);
+                    reply.writeNoException();
+                    reply.writeInt(_result16);
+                    return true;
+                case 49:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAudioFocusDispatcher _arg032 = IAudioFocusDispatcher.Stub.asInterface(data.readStrongBinder());
+                    String _arg117 = data.readString();
+                    AudioAttributes _arg28 = data.readInt() != 0 ? AudioAttributes.CREATOR.createFromParcel(data) : null;
+                    String _arg37 = data.readString();
+                    int _result17 = abandonAudioFocus(_arg032, _arg117, _arg28, _arg37);
+                    reply.writeNoException();
+                    reply.writeInt(_result17);
+                    return true;
+                case 50:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg033 = data.readString();
+                    unregisterAudioFocusClient(_arg033);
+                    reply.writeNoException();
+                    return true;
+                case 51:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result18 = getCurrentAudioFocus();
+                    reply.writeNoException();
+                    reply.writeInt(_result18);
+                    return true;
+                case 52:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg034 = data.readStrongBinder();
+                    int _arg118 = data.readInt();
+                    startBluetoothSco(_arg034, _arg118);
+                    reply.writeNoException();
+                    return true;
+                case 53:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg035 = data.readStrongBinder();
+                    startBluetoothScoVirtualCall(_arg035);
+                    reply.writeNoException();
+                    return true;
+                case 54:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg036 = data.readStrongBinder();
+                    stopBluetoothSco(_arg036);
+                    reply.writeNoException();
+                    return true;
+                case 55:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg037 = data.readInt();
+                    IBinder _arg119 = data.readStrongBinder();
+                    forceVolumeControlStream(_arg037, _arg119);
+                    reply.writeNoException();
+                    return true;
+                case 56:
+                    data.enforceInterface(DESCRIPTOR);
+                    IRingtonePlayer _arg038 = IRingtonePlayer.Stub.asInterface(data.readStrongBinder());
+                    setRingtonePlayer(_arg038);
+                    reply.writeNoException();
+                    return true;
+                case 57:
+                    data.enforceInterface(DESCRIPTOR);
+                    IRingtonePlayer _result19 = getRingtonePlayer();
+                    reply.writeNoException();
+                    reply.writeStrongBinder(_result19 != null ? _result19.asBinder() : null);
+                    return true;
+                case 58:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result20 = getUiSoundsStreamType();
+                    reply.writeNoException();
+                    reply.writeInt(_result20);
+                    return true;
+                case 59:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg039 = data.readInt();
+                    int _arg120 = data.readInt();
+                    String _arg29 = data.readString();
+                    String _arg38 = data.readString();
+                    String _arg43 = data.readString();
+                    setWiredDeviceConnectionState(_arg039, _arg120, _arg29, _arg38, _arg43);
+                    reply.writeNoException();
+                    return true;
+                case 60:
+                    data.enforceInterface(DESCRIPTOR);
+                    BluetoothDevice _arg040 = data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null;
+                    handleBluetoothA2dpDeviceConfigChange(_arg040);
+                    reply.writeNoException();
+                    return true;
+                case 61:
+                    data.enforceInterface(DESCRIPTOR);
+                    BluetoothDevice _arg041 = data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null;
+                    int _arg121 = data.readInt();
+                    int _arg210 = data.readInt();
+                    boolean _arg39 = data.readInt() != 0;
+                    int _arg44 = data.readInt();
+                    handleBluetoothA2dpActiveDeviceChange(_arg041, _arg121, _arg210, _arg39, _arg44);
+                    reply.writeNoException();
+                    return true;
+                case 62:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAudioRoutesObserver _arg042 = IAudioRoutesObserver.Stub.asInterface(data.readStrongBinder());
+                    AudioRoutesInfo _result21 = startWatchingRoutes(_arg042);
+                    reply.writeNoException();
+                    if (_result21 != null) {
+                        reply.writeInt(1);
+                        _result21.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 63:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isCameraSoundForced = isCameraSoundForced();
+                    reply.writeNoException();
+                    reply.writeInt(isCameraSoundForced ? 1 : 0);
+                    return true;
+                case 64:
+                    data.enforceInterface(DESCRIPTOR);
+                    IVolumeController _arg043 = IVolumeController.Stub.asInterface(data.readStrongBinder());
+                    setVolumeController(_arg043);
+                    reply.writeNoException();
+                    return true;
+                case 65:
+                    data.enforceInterface(DESCRIPTOR);
+                    IVolumeController _arg044 = IVolumeController.Stub.asInterface(data.readStrongBinder());
+                    _arg2 = data.readInt() != 0;
+                    notifyVolumeControllerVisible(_arg044, _arg2);
+                    reply.writeNoException();
+                    return true;
+                case 66:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg045 = data.readInt();
+                    boolean isStreamAffectedByRingerMode = isStreamAffectedByRingerMode(_arg045);
+                    reply.writeNoException();
+                    reply.writeInt(isStreamAffectedByRingerMode ? 1 : 0);
+                    return true;
+                case 67:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg046 = data.readInt();
+                    boolean isStreamAffectedByMute = isStreamAffectedByMute(_arg046);
+                    reply.writeNoException();
+                    reply.writeInt(isStreamAffectedByMute ? 1 : 0);
+                    return true;
+                case 68:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg047 = data.readString();
+                    disableSafeMediaVolume(_arg047);
+                    reply.writeNoException();
+                    return true;
+                case 69:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg2 = data.readInt() != 0;
+                    int _result22 = setHdmiSystemAudioSupported(_arg2);
+                    reply.writeNoException();
+                    reply.writeInt(_result22);
+                    return true;
+                case 70:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isHdmiSystemAudioSupported = isHdmiSystemAudioSupported();
+                    reply.writeNoException();
+                    reply.writeInt(isHdmiSystemAudioSupported ? 1 : 0);
+                    return true;
+                case 71:
+                    data.enforceInterface(DESCRIPTOR);
+                    AudioPolicyConfig _arg048 = data.readInt() != 0 ? AudioPolicyConfig.CREATOR.createFromParcel(data) : null;
+                    IAudioPolicyCallback _arg122 = IAudioPolicyCallback.Stub.asInterface(data.readStrongBinder());
+                    boolean _arg211 = data.readInt() != 0;
+                    boolean _arg310 = data.readInt() != 0;
+                    boolean _arg45 = data.readInt() != 0;
+                    boolean _arg52 = data.readInt() != 0;
+                    IMediaProjection _arg62 = IMediaProjection.Stub.asInterface(data.readStrongBinder());
+                    String _result23 = registerAudioPolicy(_arg048, _arg122, _arg211, _arg310, _arg45, _arg52, _arg62);
+                    reply.writeNoException();
+                    reply.writeString(_result23);
+                    return true;
+                case 72:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAudioPolicyCallback _arg049 = IAudioPolicyCallback.Stub.asInterface(data.readStrongBinder());
+                    unregisterAudioPolicyAsync(_arg049);
+                    return true;
+                case 73:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAudioPolicyCallback _arg050 = IAudioPolicyCallback.Stub.asInterface(data.readStrongBinder());
+                    unregisterAudioPolicy(_arg050);
+                    reply.writeNoException();
+                    return true;
+                case 74:
+                    data.enforceInterface(DESCRIPTOR);
+                    AudioPolicyConfig _arg051 = data.readInt() != 0 ? AudioPolicyConfig.CREATOR.createFromParcel(data) : null;
+                    AudioPolicyConfig _arg052 = _arg051;
+                    IAudioPolicyCallback _arg123 = IAudioPolicyCallback.Stub.asInterface(data.readStrongBinder());
+                    int _result24 = addMixForPolicy(_arg052, _arg123);
+                    reply.writeNoException();
+                    reply.writeInt(_result24);
+                    return true;
+                case 75:
+                    data.enforceInterface(DESCRIPTOR);
+                    AudioPolicyConfig _arg053 = data.readInt() != 0 ? AudioPolicyConfig.CREATOR.createFromParcel(data) : null;
+                    AudioPolicyConfig _arg054 = _arg053;
+                    IAudioPolicyCallback _arg124 = IAudioPolicyCallback.Stub.asInterface(data.readStrongBinder());
+                    int _result25 = removeMixForPolicy(_arg054, _arg124);
+                    reply.writeNoException();
+                    reply.writeInt(_result25);
+                    return true;
+                case 76:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg055 = data.readInt();
+                    IAudioPolicyCallback _arg125 = IAudioPolicyCallback.Stub.asInterface(data.readStrongBinder());
+                    int _result26 = setFocusPropertiesForPolicy(_arg055, _arg125);
+                    reply.writeNoException();
+                    reply.writeInt(_result26);
+                    return true;
+                case 77:
+                    data.enforceInterface(DESCRIPTOR);
+                    VolumePolicy _arg056 = data.readInt() != 0 ? VolumePolicy.CREATOR.createFromParcel(data) : null;
+                    setVolumePolicy(_arg056);
+                    reply.writeNoException();
+                    return true;
+                case 78:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean hasRegisteredDynamicPolicy = hasRegisteredDynamicPolicy();
+                    reply.writeNoException();
+                    reply.writeInt(hasRegisteredDynamicPolicy ? 1 : 0);
+                    return true;
+                case 79:
+                    data.enforceInterface(DESCRIPTOR);
+                    IRecordingConfigDispatcher _arg057 = IRecordingConfigDispatcher.Stub.asInterface(data.readStrongBinder());
+                    registerRecordingCallback(_arg057);
+                    reply.writeNoException();
+                    return true;
+                case 80:
+                    data.enforceInterface(DESCRIPTOR);
+                    IRecordingConfigDispatcher _arg058 = IRecordingConfigDispatcher.Stub.asInterface(data.readStrongBinder());
+                    unregisterRecordingCallback(_arg058);
+                    return true;
+                case 81:
+                    data.enforceInterface(DESCRIPTOR);
+                    List<AudioRecordingConfiguration> _result27 = getActiveRecordingConfigurations();
+                    reply.writeNoException();
+                    reply.writeTypedList(_result27);
+                    return true;
+                case 82:
+                    data.enforceInterface(DESCRIPTOR);
+                    IPlaybackConfigDispatcher _arg059 = IPlaybackConfigDispatcher.Stub.asInterface(data.readStrongBinder());
+                    registerPlaybackCallback(_arg059);
+                    reply.writeNoException();
+                    return true;
+                case 83:
+                    data.enforceInterface(DESCRIPTOR);
+                    IPlaybackConfigDispatcher _arg060 = IPlaybackConfigDispatcher.Stub.asInterface(data.readStrongBinder());
+                    unregisterPlaybackCallback(_arg060);
+                    return true;
+                case 84:
+                    data.enforceInterface(DESCRIPTOR);
+                    List<AudioPlaybackConfiguration> _result28 = getActivePlaybackConfigurations();
+                    reply.writeNoException();
+                    reply.writeTypedList(_result28);
+                    return true;
+                case 85:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg061 = data.readInt();
+                    disableRingtoneSync(_arg061);
+                    reply.writeNoException();
+                    return true;
+                case 86:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg062 = data.readInt();
+                    AudioAttributes _arg126 = data.readInt() != 0 ? AudioAttributes.CREATOR.createFromParcel(data) : null;
+                    int _result29 = getFocusRampTimeMs(_arg062, _arg126);
+                    reply.writeNoException();
+                    reply.writeInt(_result29);
+                    return true;
+                case 87:
+                    data.enforceInterface(DESCRIPTOR);
+                    AudioFocusInfo _arg063 = data.readInt() != 0 ? AudioFocusInfo.CREATOR.createFromParcel(data) : null;
+                    AudioFocusInfo _arg064 = _arg063;
+                    int _arg127 = data.readInt();
+                    int _result30 = dispatchFocusChange(_arg064, _arg127, IAudioPolicyCallback.Stub.asInterface(data.readStrongBinder()));
+                    reply.writeNoException();
+                    reply.writeInt(_result30);
+                    return true;
+                case 88:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg065 = data.readInt();
+                    _arg2 = data.readInt() != 0;
+                    playerHasOpPlayAudio(_arg065, _arg2);
+                    return true;
+                case 89:
+                    data.enforceInterface(DESCRIPTOR);
+                    BluetoothDevice _arg066 = data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null;
+                    int _arg128 = data.readInt();
+                    _arg2 = data.readInt() != 0;
+                    int _arg311 = data.readInt();
+                    setBluetoothHearingAidDeviceConnectionState(_arg066, _arg128, _arg2, _arg311);
+                    reply.writeNoException();
+                    return true;
+                case 90:
+                    data.enforceInterface(DESCRIPTOR);
+                    BluetoothDevice _arg067 = data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null;
+                    int _arg129 = data.readInt();
+                    int _arg212 = data.readInt();
+                    boolean _arg312 = data.readInt() != 0;
+                    int _arg46 = data.readInt();
+                    setBluetoothA2dpDeviceConnectionStateSuppressNoisyIntent(_arg067, _arg129, _arg212, _arg312, _arg46);
+                    reply.writeNoException();
+                    return true;
+                case 91:
+                    data.enforceInterface(DESCRIPTOR);
+                    AudioFocusInfo _arg068 = data.readInt() != 0 ? AudioFocusInfo.CREATOR.createFromParcel(data) : null;
+                    AudioFocusInfo _arg069 = _arg068;
+                    int _arg130 = data.readInt();
+                    setFocusRequestResultFromExtPolicy(_arg069, _arg130, IAudioPolicyCallback.Stub.asInterface(data.readStrongBinder()));
+                    return true;
+                case 92:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAudioServerStateDispatcher _arg070 = IAudioServerStateDispatcher.Stub.asInterface(data.readStrongBinder());
+                    registerAudioServerStateDispatcher(_arg070);
+                    reply.writeNoException();
+                    return true;
+                case 93:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAudioServerStateDispatcher _arg071 = IAudioServerStateDispatcher.Stub.asInterface(data.readStrongBinder());
+                    unregisterAudioServerStateDispatcher(_arg071);
+                    return true;
+                case 94:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isAudioServerRunning = isAudioServerRunning();
+                    reply.writeNoException();
+                    reply.writeInt(isAudioServerRunning ? 1 : 0);
+                    return true;
+                case 95:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAudioPolicyCallback _arg072 = IAudioPolicyCallback.Stub.asInterface(data.readStrongBinder());
+                    int _arg131 = data.readInt();
+                    int[] _arg213 = data.createIntArray();
+                    String[] _arg313 = data.createStringArray();
+                    int _result31 = setUidDeviceAffinity(_arg072, _arg131, _arg213, _arg313);
+                    reply.writeNoException();
+                    reply.writeInt(_result31);
+                    return true;
+                case 96:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAudioPolicyCallback _arg073 = IAudioPolicyCallback.Stub.asInterface(data.readStrongBinder());
+                    int _arg132 = data.readInt();
+                    int _result32 = removeUidDeviceAffinity(_arg073, _arg132);
+                    reply.writeNoException();
+                    reply.writeInt(_result32);
+                    return true;
+                case 97:
+                    data.enforceInterface(DESCRIPTOR);
+                    Uri _arg074 = data.readInt() != 0 ? Uri.CREATOR.createFromParcel(data) : null;
+                    boolean hasHapticChannels = hasHapticChannels(_arg074);
+                    reply.writeNoException();
+                    reply.writeInt(hasHapticChannels ? 1 : 0);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements IAudioService {
             public static IAudioService sDefaultImpl;
             private IBinder mRemote;
@@ -2025,6 +1691,7 @@ public interface IAudioService extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -2033,6 +1700,7 @@ public interface IAudioService extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.media.IAudioService
             public int trackPlayer(PlayerBase.PlayerIdCard pic) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2044,13 +1712,12 @@ public interface IAudioService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(1, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().trackPlayer(pic);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2058,6 +1725,7 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public void playerAttributes(int piid, AudioAttributes attr) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -2069,9 +1737,8 @@ public interface IAudioService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().playerAttributes(piid, attr);
                     }
                 } finally {
@@ -2079,15 +1746,15 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public void playerEvent(int piid, int event) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(piid);
                     _data.writeInt(event);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().playerEvent(piid, event);
                     }
                 } finally {
@@ -2095,14 +1762,14 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public void releasePlayer(int piid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(piid);
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().releasePlayer(piid);
                     }
                 } finally {
@@ -2110,19 +1777,19 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public int trackRecorder(IBinder recorder) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(recorder);
-                    if (!this.mRemote.transact(5, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().trackRecorder(recorder);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2130,15 +1797,15 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public void recorderEvent(int riid, int event) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(riid);
                     _data.writeInt(event);
-                    if (this.mRemote.transact(6, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(6, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().recorderEvent(riid, event);
                     }
                 } finally {
@@ -2146,14 +1813,14 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public void releaseRecorder(int riid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(riid);
-                    if (this.mRemote.transact(7, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(7, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().releaseRecorder(riid);
                     }
                 } finally {
@@ -2161,6 +1828,7 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public void adjustSuggestedStreamVolume(int direction, int suggestedStreamType, int flags, String callingPackage, String caller) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -2170,9 +1838,8 @@ public interface IAudioService extends IInterface {
                     _data.writeInt(flags);
                     _data.writeString(callingPackage);
                     _data.writeString(caller);
-                    if (this.mRemote.transact(8, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(8, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().adjustSuggestedStreamVolume(direction, suggestedStreamType, flags, callingPackage, caller);
                     }
                 } finally {
@@ -2180,6 +1847,7 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public void adjustStreamVolume(int streamType, int direction, int flags, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2189,19 +1857,19 @@ public interface IAudioService extends IInterface {
                     _data.writeInt(direction);
                     _data.writeInt(flags);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(9, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(9, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().adjustStreamVolume(streamType, direction, flags, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().adjustStreamVolume(streamType, direction, flags, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public void setStreamVolume(int streamType, int index, int flags, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2211,121 +1879,112 @@ public interface IAudioService extends IInterface {
                     _data.writeInt(index);
                     _data.writeInt(flags);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(10, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(10, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setStreamVolume(streamType, index, flags, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setStreamVolume(streamType, index, flags, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public boolean isStreamMute(int streamType) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(streamType);
-                    boolean z = false;
-                    if (!this.mRemote.transact(11, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(11, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isStreamMute(streamType);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public void forceRemoteSubmixFullVolume(boolean startForcing, IBinder cb) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(startForcing);
+                    _data.writeInt(startForcing ? 1 : 0);
                     _data.writeStrongBinder(cb);
-                    if (this.mRemote.transact(12, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(12, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().forceRemoteSubmixFullVolume(startForcing, cb);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().forceRemoteSubmixFullVolume(startForcing, cb);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public boolean isMasterMute() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(13, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(13, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isMasterMute();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public void setMasterMute(boolean mute, int flags, String callingPackage, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(mute);
+                    _data.writeInt(mute ? 1 : 0);
                     _data.writeInt(flags);
                     _data.writeString(callingPackage);
                     _data.writeInt(userId);
-                    if (this.mRemote.transact(14, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(14, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setMasterMute(mute, flags, callingPackage, userId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setMasterMute(mute, flags, callingPackage, userId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public int getStreamVolume(int streamType) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(streamType);
-                    if (!this.mRemote.transact(15, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(15, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getStreamVolume(streamType);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2333,19 +1992,19 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public int getStreamMinVolume(int streamType) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(streamType);
-                    if (!this.mRemote.transact(16, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(16, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getStreamMinVolume(streamType);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2353,19 +2012,19 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public int getStreamMaxVolume(int streamType) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(streamType);
-                    if (!this.mRemote.transact(17, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(17, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getStreamMaxVolume(streamType);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2373,18 +2032,18 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public List<AudioVolumeGroup> getAudioVolumeGroups() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(18, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(18, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAudioVolumeGroups();
                     }
                     _reply.readException();
                     List<AudioVolumeGroup> _result = _reply.createTypedArrayList(AudioVolumeGroup.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2392,6 +2051,7 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public void setVolumeIndexForAttributes(AudioAttributes aa, int index, int flags, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2406,19 +2066,19 @@ public interface IAudioService extends IInterface {
                     _data.writeInt(index);
                     _data.writeInt(flags);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(19, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(19, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setVolumeIndexForAttributes(aa, index, flags, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setVolumeIndexForAttributes(aa, index, flags, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public int getVolumeIndexForAttributes(AudioAttributes aa) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2430,13 +2090,12 @@ public interface IAudioService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(20, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(20, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getVolumeIndexForAttributes(aa);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2444,6 +2103,7 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public int getMaxVolumeIndexForAttributes(AudioAttributes aa) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2455,13 +2115,12 @@ public interface IAudioService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(21, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(21, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getMaxVolumeIndexForAttributes(aa);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2469,6 +2128,7 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public int getMinVolumeIndexForAttributes(AudioAttributes aa) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2480,13 +2140,12 @@ public interface IAudioService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(22, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(22, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getMinVolumeIndexForAttributes(aa);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2494,19 +2153,19 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public int getLastAudibleStreamVolume(int streamType) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(streamType);
-                    if (!this.mRemote.transact(23, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(23, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getLastAudibleStreamVolume(streamType);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2514,18 +2173,18 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public List<AudioProductStrategy> getAudioProductStrategies() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(24, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(24, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAudioProductStrategies();
                     }
                     _reply.readException();
                     List<AudioProductStrategy> _result = _reply.createTypedArrayList(AudioProductStrategy.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2533,27 +2192,28 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public void setMicrophoneMute(boolean on, String callingPackage, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(on);
+                    _data.writeInt(on ? 1 : 0);
                     _data.writeString(callingPackage);
                     _data.writeInt(userId);
-                    if (this.mRemote.transact(25, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(25, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setMicrophoneMute(on, callingPackage, userId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setMicrophoneMute(on, callingPackage, userId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public void setRingerModeExternal(int ringerMode, String caller) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2561,19 +2221,19 @@ public interface IAudioService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(ringerMode);
                     _data.writeString(caller);
-                    if (this.mRemote.transact(26, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(26, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setRingerModeExternal(ringerMode, caller);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setRingerModeExternal(ringerMode, caller);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public void setRingerModeInternal(int ringerMode, String caller) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2581,31 +2241,30 @@ public interface IAudioService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(ringerMode);
                     _data.writeString(caller);
-                    if (this.mRemote.transact(27, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(27, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setRingerModeInternal(ringerMode, caller);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setRingerModeInternal(ringerMode, caller);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public int getRingerModeExternal() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(28, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(28, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getRingerModeExternal();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2613,18 +2272,18 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public int getRingerModeInternal() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(29, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(29, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getRingerModeInternal();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2632,30 +2291,27 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public boolean isValidRingerMode(int ringerMode) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(ringerMode);
-                    boolean z = false;
-                    if (!this.mRemote.transact(30, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(30, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isValidRingerMode(ringerMode);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public void setVibrateSetting(int vibrateType, int vibrateSetting) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2663,32 +2319,31 @@ public interface IAudioService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(vibrateType);
                     _data.writeInt(vibrateSetting);
-                    if (this.mRemote.transact(31, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(31, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setVibrateSetting(vibrateType, vibrateSetting);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setVibrateSetting(vibrateType, vibrateSetting);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public int getVibrateSetting(int vibrateType) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(vibrateType);
-                    if (!this.mRemote.transact(32, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(32, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getVibrateSetting(vibrateType);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2696,30 +2351,27 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public boolean shouldVibrate(int vibrateType) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(vibrateType);
-                    boolean z = false;
-                    if (!this.mRemote.transact(33, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(33, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().shouldVibrate(vibrateType);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public void setMode(int mode, IBinder cb, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2728,31 +2380,30 @@ public interface IAudioService extends IInterface {
                     _data.writeInt(mode);
                     _data.writeStrongBinder(cb);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(34, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(34, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setMode(mode, cb, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setMode(mode, cb, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public int getMode() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(35, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(35, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getMode();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2760,14 +2411,14 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public void playSoundEffect(int effectType) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(effectType);
-                    if (this.mRemote.transact(36, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(36, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().playSoundEffect(effectType);
                     }
                 } finally {
@@ -2775,15 +2426,15 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public void playSoundEffectVolume(int effectType, float volume) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(effectType);
                     _data.writeFloat(volume);
-                    if (this.mRemote.transact(37, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(37, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().playSoundEffectVolume(effectType, volume);
                     }
                 } finally {
@@ -2791,36 +2442,32 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public boolean loadSoundEffects() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(38, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(38, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().loadSoundEffects();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public void unloadSoundEffects() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(39, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(39, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().unloadSoundEffects();
                     }
                 } finally {
@@ -2828,13 +2475,13 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public void reloadAudioSettings() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(40, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(40, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().reloadAudioSettings();
                     }
                 } finally {
@@ -2842,15 +2489,15 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public void avrcpSupportsAbsoluteVolume(String address, boolean support) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(address);
-                    _data.writeInt(support);
-                    if (this.mRemote.transact(41, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(support ? 1 : 0);
+                    boolean _status = this.mRemote.transact(41, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().avrcpSupportsAbsoluteVolume(address, support);
                     }
                 } finally {
@@ -2858,192 +2505,172 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public void setSpeakerphoneOn(boolean on) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(on);
-                    if (this.mRemote.transact(42, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(on ? 1 : 0);
+                    boolean _status = this.mRemote.transact(42, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setSpeakerphoneOn(on);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setSpeakerphoneOn(on);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public boolean isSpeakerphoneOn() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(43, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(43, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isSpeakerphoneOn();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public void setBluetoothScoOn(boolean on) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(on);
-                    if (this.mRemote.transact(44, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(on ? 1 : 0);
+                    boolean _status = this.mRemote.transact(44, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setBluetoothScoOn(on);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setBluetoothScoOn(on);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public boolean isBluetoothScoOn() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(45, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(45, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isBluetoothScoOn();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public void setBluetoothA2dpOn(boolean on) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(on);
-                    if (this.mRemote.transact(46, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(on ? 1 : 0);
+                    boolean _status = this.mRemote.transact(46, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setBluetoothA2dpOn(on);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setBluetoothA2dpOn(on);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public boolean isBluetoothA2dpOn() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(47, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(47, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isBluetoothA2dpOn();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public int requestAudioFocus(AudioAttributes aa, int durationHint, IBinder cb, IAudioFocusDispatcher fd, String clientId, String callingPackageName, int flags, IAudioPolicyCallback pcb, int sdk) throws RemoteException {
-                AudioAttributes audioAttributes = aa;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (audioAttributes != null) {
+                    if (aa != null) {
                         _data.writeInt(1);
-                        audioAttributes.writeToParcel(_data, 0);
+                        aa.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    try {
-                        _data.writeInt(durationHint);
-                        try {
-                            _data.writeStrongBinder(cb);
-                            IBinder iBinder = null;
-                            _data.writeStrongBinder(fd != null ? fd.asBinder() : null);
-                            _data.writeString(clientId);
-                            _data.writeString(callingPackageName);
-                            _data.writeInt(flags);
-                            if (pcb != null) {
-                                iBinder = pcb.asBinder();
-                            }
-                            _data.writeStrongBinder(iBinder);
-                            _data.writeInt(sdk);
-                            if (this.mRemote.transact(48, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                _reply.readException();
-                                int _result = _reply.readInt();
-                                _reply.recycle();
-                                _data.recycle();
-                                return _result;
-                            }
-                            int requestAudioFocus = Stub.getDefaultImpl().requestAudioFocus(aa, durationHint, cb, fd, clientId, callingPackageName, flags, pcb, sdk);
-                            _reply.recycle();
-                            _data.recycle();
-                            return requestAudioFocus;
-                        } catch (Throwable th) {
-                            th = th;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                    } catch (Throwable th2) {
-                        th = th2;
-                        IBinder iBinder2 = cb;
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeInt(durationHint);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeStrongBinder(cb);
+                    _data.writeStrongBinder(fd != null ? fd.asBinder() : null);
+                    _data.writeString(clientId);
+                    _data.writeString(callingPackageName);
+                    _data.writeInt(flags);
+                    _data.writeStrongBinder(pcb != null ? pcb.asBinder() : null);
+                    _data.writeInt(sdk);
+                    boolean _status = this.mRemote.transact(48, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        int requestAudioFocus = Stub.getDefaultImpl().requestAudioFocus(aa, durationHint, cb, fd, clientId, callingPackageName, flags, pcb, sdk);
                         _reply.recycle();
                         _data.recycle();
-                        throw th;
+                        return requestAudioFocus;
                     }
+                    _reply.readException();
+                    int _result = _reply.readInt();
+                    _reply.recycle();
+                    _data.recycle();
+                    return _result;
                 } catch (Throwable th3) {
                     th = th3;
-                    int i = durationHint;
-                    IBinder iBinder22 = cb;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.media.IAudioService
             public int abandonAudioFocus(IAudioFocusDispatcher fd, String clientId, AudioAttributes aa, String callingPackageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3058,13 +2685,12 @@ public interface IAudioService extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(callingPackageName);
-                    if (!this.mRemote.transact(49, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(49, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().abandonAudioFocus(fd, clientId, aa, callingPackageName);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3072,37 +2698,37 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public void unregisterAudioFocusClient(String clientId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(clientId);
-                    if (this.mRemote.transact(50, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(50, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().unregisterAudioFocusClient(clientId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().unregisterAudioFocusClient(clientId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public int getCurrentAudioFocus() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(51, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(51, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCurrentAudioFocus();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3110,6 +2736,7 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public void startBluetoothSco(IBinder cb, int targetSdkVersion) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3117,57 +2744,57 @@ public interface IAudioService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(cb);
                     _data.writeInt(targetSdkVersion);
-                    if (this.mRemote.transact(52, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(52, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().startBluetoothSco(cb, targetSdkVersion);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().startBluetoothSco(cb, targetSdkVersion);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public void startBluetoothScoVirtualCall(IBinder cb) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(cb);
-                    if (this.mRemote.transact(53, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(53, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().startBluetoothScoVirtualCall(cb);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().startBluetoothScoVirtualCall(cb);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public void stopBluetoothSco(IBinder cb) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(cb);
-                    if (this.mRemote.transact(54, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(54, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().stopBluetoothSco(cb);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().stopBluetoothSco(cb);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public void forceVolumeControlStream(int streamType, IBinder cb) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3175,50 +2802,49 @@ public interface IAudioService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(streamType);
                     _data.writeStrongBinder(cb);
-                    if (this.mRemote.transact(55, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(55, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().forceVolumeControlStream(streamType, cb);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().forceVolumeControlStream(streamType, cb);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public void setRingtonePlayer(IRingtonePlayer player) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(player != null ? player.asBinder() : null);
-                    if (this.mRemote.transact(56, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(56, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setRingtonePlayer(player);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setRingtonePlayer(player);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public IRingtonePlayer getRingtonePlayer() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(57, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(57, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getRingtonePlayer();
                     }
                     _reply.readException();
                     IRingtonePlayer _result = IRingtonePlayer.Stub.asInterface(_reply.readStrongBinder());
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3226,18 +2852,18 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public int getUiSoundsStreamType() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(58, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(58, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getUiSoundsStreamType();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3245,6 +2871,7 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public void setWiredDeviceConnectionState(int type, int state, String address, String name, String caller) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3255,19 +2882,19 @@ public interface IAudioService extends IInterface {
                     _data.writeString(address);
                     _data.writeString(name);
                     _data.writeString(caller);
-                    if (this.mRemote.transact(59, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(59, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setWiredDeviceConnectionState(type, state, address, name, caller);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setWiredDeviceConnectionState(type, state, address, name, caller);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public void handleBluetoothA2dpDeviceConfigChange(BluetoothDevice device) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3279,19 +2906,19 @@ public interface IAudioService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(60, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(60, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().handleBluetoothA2dpDeviceConfigChange(device);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().handleBluetoothA2dpDeviceConfigChange(device);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public void handleBluetoothA2dpActiveDeviceChange(BluetoothDevice device, int state, int profile, boolean suppressNoisyIntent, int a2dpVolume) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3305,21 +2932,21 @@ public interface IAudioService extends IInterface {
                     }
                     _data.writeInt(state);
                     _data.writeInt(profile);
-                    _data.writeInt(suppressNoisyIntent);
+                    _data.writeInt(suppressNoisyIntent ? 1 : 0);
                     _data.writeInt(a2dpVolume);
-                    if (this.mRemote.transact(61, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(61, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().handleBluetoothA2dpActiveDeviceChange(device, state, profile, suppressNoisyIntent, a2dpVolume);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().handleBluetoothA2dpActiveDeviceChange(device, state, profile, suppressNoisyIntent, a2dpVolume);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public AudioRoutesInfo startWatchingRoutes(IAudioRoutesObserver observer) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3327,15 +2954,14 @@ public interface IAudioService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     AudioRoutesInfo _result = null;
                     _data.writeStrongBinder(observer != null ? observer.asBinder() : null);
-                    if (!this.mRemote.transact(62, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(62, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().startWatchingRoutes(observer);
                     }
                     _reply.readException();
                     if (_reply.readInt() != 0) {
                         _result = AudioRoutesInfo.CREATOR.createFromParcel(_reply);
                     }
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3343,148 +2969,136 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public boolean isCameraSoundForced() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(63, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(63, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isCameraSoundForced();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public void setVolumeController(IVolumeController controller) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(controller != null ? controller.asBinder() : null);
-                    if (this.mRemote.transact(64, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(64, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setVolumeController(controller);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setVolumeController(controller);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public void notifyVolumeControllerVisible(IVolumeController controller, boolean visible) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(controller != null ? controller.asBinder() : null);
-                    _data.writeInt(visible);
-                    if (this.mRemote.transact(65, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(visible ? 1 : 0);
+                    boolean _status = this.mRemote.transact(65, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().notifyVolumeControllerVisible(controller, visible);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().notifyVolumeControllerVisible(controller, visible);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public boolean isStreamAffectedByRingerMode(int streamType) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(streamType);
-                    boolean z = false;
-                    if (!this.mRemote.transact(66, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(66, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isStreamAffectedByRingerMode(streamType);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public boolean isStreamAffectedByMute(int streamType) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(streamType);
-                    boolean z = false;
-                    if (!this.mRemote.transact(67, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(67, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isStreamAffectedByMute(streamType);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public void disableSafeMediaVolume(String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(68, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(68, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().disableSafeMediaVolume(callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().disableSafeMediaVolume(callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public int setHdmiSystemAudioSupported(boolean on) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(on);
-                    if (!this.mRemote.transact(69, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(on ? 1 : 0);
+                    boolean _status = this.mRemote.transact(69, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setHdmiSystemAudioSupported(on);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3492,105 +3106,89 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public boolean isHdmiSystemAudioSupported() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(70, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(70, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isHdmiSystemAudioSupported();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public String registerAudioPolicy(AudioPolicyConfig policyConfig, IAudioPolicyCallback pcb, boolean hasFocusListener, boolean isFocusPolicy, boolean isTestFocusPolicy, boolean isVolumeController, IMediaProjection projection) throws RemoteException {
-                AudioPolicyConfig audioPolicyConfig = policyConfig;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (audioPolicyConfig != null) {
+                    if (policyConfig != null) {
                         _data.writeInt(1);
-                        audioPolicyConfig.writeToParcel(_data, 0);
+                        policyConfig.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    IBinder iBinder = null;
                     _data.writeStrongBinder(pcb != null ? pcb.asBinder() : null);
-                    try {
-                        _data.writeInt(hasFocusListener ? 1 : 0);
-                    } catch (Throwable th) {
-                        th = th;
-                        boolean z = isFocusPolicy;
-                        boolean z2 = isTestFocusPolicy;
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeInt(hasFocusListener ? 1 : 0);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(isFocusPolicy ? 1 : 0);
+                } catch (Throwable th3) {
+                    th = th3;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(isTestFocusPolicy ? 1 : 0);
+                    _data.writeInt(isVolumeController ? 1 : 0);
+                    _data.writeStrongBinder(projection != null ? projection.asBinder() : null);
+                    boolean _status = this.mRemote.transact(71, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        String registerAudioPolicy = Stub.getDefaultImpl().registerAudioPolicy(policyConfig, pcb, hasFocusListener, isFocusPolicy, isTestFocusPolicy, isVolumeController, projection);
                         _reply.recycle();
                         _data.recycle();
-                        throw th;
+                        return registerAudioPolicy;
                     }
-                    try {
-                        _data.writeInt(isFocusPolicy ? 1 : 0);
-                        try {
-                            _data.writeInt(isTestFocusPolicy ? 1 : 0);
-                            _data.writeInt(isVolumeController ? 1 : 0);
-                            if (projection != null) {
-                                iBinder = projection.asBinder();
-                            }
-                            _data.writeStrongBinder(iBinder);
-                            if (this.mRemote.transact(71, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                _reply.readException();
-                                String _result = _reply.readString();
-                                _reply.recycle();
-                                _data.recycle();
-                                return _result;
-                            }
-                            String registerAudioPolicy = Stub.getDefaultImpl().registerAudioPolicy(policyConfig, pcb, hasFocusListener, isFocusPolicy, isTestFocusPolicy, isVolumeController, projection);
-                            _reply.recycle();
-                            _data.recycle();
-                            return registerAudioPolicy;
-                        } catch (Throwable th2) {
-                            th = th2;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                    } catch (Throwable th3) {
-                        th = th3;
-                        boolean z22 = isTestFocusPolicy;
-                        _reply.recycle();
-                        _data.recycle();
-                        throw th;
-                    }
+                    _reply.readException();
+                    String _result = _reply.readString();
+                    _reply.recycle();
+                    _data.recycle();
+                    return _result;
                 } catch (Throwable th4) {
                     th = th4;
-                    boolean z3 = hasFocusListener;
-                    boolean z4 = isFocusPolicy;
-                    boolean z222 = isTestFocusPolicy;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.media.IAudioService
             public void unregisterAudioPolicyAsync(IAudioPolicyCallback pcb) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(pcb != null ? pcb.asBinder() : null);
-                    if (this.mRemote.transact(72, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(72, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().unregisterAudioPolicyAsync(pcb);
                     }
                 } finally {
@@ -3598,25 +3196,26 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public void unregisterAudioPolicy(IAudioPolicyCallback pcb) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(pcb != null ? pcb.asBinder() : null);
-                    if (this.mRemote.transact(73, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(73, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().unregisterAudioPolicy(pcb);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().unregisterAudioPolicy(pcb);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public int addMixForPolicy(AudioPolicyConfig policyConfig, IAudioPolicyCallback pcb) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3629,13 +3228,12 @@ public interface IAudioService extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeStrongBinder(pcb != null ? pcb.asBinder() : null);
-                    if (!this.mRemote.transact(74, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(74, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().addMixForPolicy(policyConfig, pcb);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3643,6 +3241,7 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public int removeMixForPolicy(AudioPolicyConfig policyConfig, IAudioPolicyCallback pcb) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3655,13 +3254,12 @@ public interface IAudioService extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeStrongBinder(pcb != null ? pcb.asBinder() : null);
-                    if (!this.mRemote.transact(75, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(75, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().removeMixForPolicy(policyConfig, pcb);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3669,6 +3267,7 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public int setFocusPropertiesForPolicy(int duckingBehavior, IAudioPolicyCallback pcb) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3676,13 +3275,12 @@ public interface IAudioService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(duckingBehavior);
                     _data.writeStrongBinder(pcb != null ? pcb.asBinder() : null);
-                    if (!this.mRemote.transact(76, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(76, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setFocusPropertiesForPolicy(duckingBehavior, pcb);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3690,6 +3288,7 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public void setVolumePolicy(VolumePolicy policy) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3701,69 +3300,64 @@ public interface IAudioService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(77, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(77, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setVolumePolicy(policy);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setVolumePolicy(policy);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public boolean hasRegisteredDynamicPolicy() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(78, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(78, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().hasRegisteredDynamicPolicy();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public void registerRecordingCallback(IRecordingConfigDispatcher rcdb) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(rcdb != null ? rcdb.asBinder() : null);
-                    if (this.mRemote.transact(79, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(79, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().registerRecordingCallback(rcdb);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().registerRecordingCallback(rcdb);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public void unregisterRecordingCallback(IRecordingConfigDispatcher rcdb) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(rcdb != null ? rcdb.asBinder() : null);
-                    if (this.mRemote.transact(80, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(80, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().unregisterRecordingCallback(rcdb);
                     }
                 } finally {
@@ -3771,18 +3365,18 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public List<AudioRecordingConfiguration> getActiveRecordingConfigurations() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(81, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(81, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getActiveRecordingConfigurations();
                     }
                     _reply.readException();
                     List<AudioRecordingConfiguration> _result = _reply.createTypedArrayList(AudioRecordingConfiguration.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3790,33 +3384,33 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public void registerPlaybackCallback(IPlaybackConfigDispatcher pcdb) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(pcdb != null ? pcdb.asBinder() : null);
-                    if (this.mRemote.transact(82, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(82, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().registerPlaybackCallback(pcdb);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().registerPlaybackCallback(pcdb);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public void unregisterPlaybackCallback(IPlaybackConfigDispatcher pcdb) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(pcdb != null ? pcdb.asBinder() : null);
-                    if (this.mRemote.transact(83, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(83, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().unregisterPlaybackCallback(pcdb);
                     }
                 } finally {
@@ -3824,18 +3418,18 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public List<AudioPlaybackConfiguration> getActivePlaybackConfigurations() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(84, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(84, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getActivePlaybackConfigurations();
                     }
                     _reply.readException();
                     List<AudioPlaybackConfiguration> _result = _reply.createTypedArrayList(AudioPlaybackConfiguration.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3843,25 +3437,26 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public void disableRingtoneSync(int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userId);
-                    if (this.mRemote.transact(85, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(85, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().disableRingtoneSync(userId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().disableRingtoneSync(userId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public int getFocusRampTimeMs(int focusGain, AudioAttributes attr) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3874,13 +3469,12 @@ public interface IAudioService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(86, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(86, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getFocusRampTimeMs(focusGain, attr);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3888,6 +3482,7 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public int dispatchFocusChange(AudioFocusInfo afi, int focusChange, IAudioPolicyCallback pcb) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3901,13 +3496,12 @@ public interface IAudioService extends IInterface {
                     }
                     _data.writeInt(focusChange);
                     _data.writeStrongBinder(pcb != null ? pcb.asBinder() : null);
-                    if (!this.mRemote.transact(87, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(87, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().dispatchFocusChange(afi, focusChange, pcb);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3915,15 +3509,15 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public void playerHasOpPlayAudio(int piid, boolean hasOpPlayAudio) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(piid);
-                    _data.writeInt(hasOpPlayAudio);
-                    if (this.mRemote.transact(88, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(hasOpPlayAudio ? 1 : 0);
+                    boolean _status = this.mRemote.transact(88, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().playerHasOpPlayAudio(piid, hasOpPlayAudio);
                     }
                 } finally {
@@ -3931,6 +3525,7 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public void setBluetoothHearingAidDeviceConnectionState(BluetoothDevice device, int state, boolean suppressNoisyIntent, int musicDevice) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3943,21 +3538,21 @@ public interface IAudioService extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(state);
-                    _data.writeInt(suppressNoisyIntent);
+                    _data.writeInt(suppressNoisyIntent ? 1 : 0);
                     _data.writeInt(musicDevice);
-                    if (this.mRemote.transact(89, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(89, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setBluetoothHearingAidDeviceConnectionState(device, state, suppressNoisyIntent, musicDevice);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setBluetoothHearingAidDeviceConnectionState(device, state, suppressNoisyIntent, musicDevice);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public void setBluetoothA2dpDeviceConnectionStateSuppressNoisyIntent(BluetoothDevice device, int state, int profile, boolean suppressNoisyIntent, int a2dpVolume) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3971,21 +3566,21 @@ public interface IAudioService extends IInterface {
                     }
                     _data.writeInt(state);
                     _data.writeInt(profile);
-                    _data.writeInt(suppressNoisyIntent);
+                    _data.writeInt(suppressNoisyIntent ? 1 : 0);
                     _data.writeInt(a2dpVolume);
-                    if (this.mRemote.transact(90, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(90, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setBluetoothA2dpDeviceConnectionStateSuppressNoisyIntent(device, state, profile, suppressNoisyIntent, a2dpVolume);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setBluetoothA2dpDeviceConnectionStateSuppressNoisyIntent(device, state, profile, suppressNoisyIntent, a2dpVolume);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public void setFocusRequestResultFromExtPolicy(AudioFocusInfo afi, int requestResult, IAudioPolicyCallback pcb) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -3998,9 +3593,8 @@ public interface IAudioService extends IInterface {
                     }
                     _data.writeInt(requestResult);
                     _data.writeStrongBinder(pcb != null ? pcb.asBinder() : null);
-                    if (this.mRemote.transact(91, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(91, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().setFocusRequestResultFromExtPolicy(afi, requestResult, pcb);
                     }
                 } finally {
@@ -4008,33 +3602,33 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public void registerAudioServerStateDispatcher(IAudioServerStateDispatcher asd) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(asd != null ? asd.asBinder() : null);
-                    if (this.mRemote.transact(92, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(92, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().registerAudioServerStateDispatcher(asd);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().registerAudioServerStateDispatcher(asd);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public void unregisterAudioServerStateDispatcher(IAudioServerStateDispatcher asd) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(asd != null ? asd.asBinder() : null);
-                    if (this.mRemote.transact(93, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(93, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().unregisterAudioServerStateDispatcher(asd);
                     }
                 } finally {
@@ -4042,29 +3636,26 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public boolean isAudioServerRunning() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(94, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(94, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isAudioServerRunning();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.IAudioService
             public int setUidDeviceAffinity(IAudioPolicyCallback pcb, int uid, int[] deviceTypes, String[] deviceAddresses) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -4074,13 +3665,12 @@ public interface IAudioService extends IInterface {
                     _data.writeInt(uid);
                     _data.writeIntArray(deviceTypes);
                     _data.writeStringArray(deviceAddresses);
-                    if (!this.mRemote.transact(95, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(95, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setUidDeviceAffinity(pcb, uid, deviceTypes, deviceAddresses);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -4088,6 +3678,7 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public int removeUidDeviceAffinity(IAudioPolicyCallback pcb, int uid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -4095,13 +3686,12 @@ public interface IAudioService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(pcb != null ? pcb.asBinder() : null);
                     _data.writeInt(uid);
-                    if (!this.mRemote.transact(96, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(96, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().removeUidDeviceAffinity(pcb, uid);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -4109,27 +3699,24 @@ public interface IAudioService extends IInterface {
                 }
             }
 
+            @Override // android.media.IAudioService
             public boolean hasHapticChannels(Uri uri) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (uri != null) {
                         _data.writeInt(1);
                         uri.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(97, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(97, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().hasHapticChannels(uri);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -4139,11 +3726,11 @@ public interface IAudioService extends IInterface {
         }
 
         public static boolean setDefaultImpl(IAudioService impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IAudioService getDefaultImpl() {

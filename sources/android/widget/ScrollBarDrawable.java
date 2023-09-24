@@ -7,6 +7,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import com.android.internal.widget.ScrollBarUtils;
 
+/* loaded from: classes4.dex */
 public class ScrollBarDrawable extends Drawable implements Drawable.Callback {
     private int mAlpha = 255;
     private boolean mAlwaysDrawHorizontalTrack;
@@ -56,6 +57,7 @@ public class ScrollBarDrawable extends Drawable implements Drawable.Callback {
         }
     }
 
+    @Override // android.graphics.drawable.Drawable
     public void draw(Canvas canvas) {
         boolean vertical = this.mVertical;
         int extent = this.mExtent;
@@ -69,33 +71,34 @@ public class ScrollBarDrawable extends Drawable implements Drawable.Callback {
         boolean drawTrack2 = drawTrack;
         boolean drawThumb2 = drawThumb;
         Rect r = getBounds();
-        if (!canvas.quickReject((float) r.left, (float) r.top, (float) r.right, (float) r.bottom, Canvas.EdgeType.AA)) {
-            if (drawTrack2) {
-                drawTrack(canvas, r, vertical);
-            } else {
-                Canvas canvas2 = canvas;
-            }
-            if (drawThumb2) {
-                int scrollBarLength = vertical ? r.height() : r.width();
-                int thumbLength = ScrollBarUtils.getThumbLength(scrollBarLength, vertical ? r.width() : r.height(), extent, range);
-                int i = thumbLength;
-                drawThumb(canvas, r, ScrollBarUtils.getThumbOffset(scrollBarLength, thumbLength, extent, range, this.mOffset), thumbLength, vertical);
-            }
+        if (canvas.quickReject(r.left, r.top, r.right, r.bottom, Canvas.EdgeType.AA)) {
+            return;
+        }
+        if (drawTrack2) {
+            drawTrack(canvas, r, vertical);
+        }
+        if (drawThumb2) {
+            int scrollBarLength = vertical ? r.height() : r.width();
+            int thickness = vertical ? r.width() : r.height();
+            int thumbLength = ScrollBarUtils.getThumbLength(scrollBarLength, thickness, extent, range);
+            int thumbOffset = ScrollBarUtils.getThumbOffset(scrollBarLength, thumbLength, extent, range, this.mOffset);
+            drawThumb(canvas, r, thumbOffset, thumbLength, vertical);
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onBoundsChange(Rect bounds) {
+    @Override // android.graphics.drawable.Drawable
+    protected void onBoundsChange(Rect bounds) {
         super.onBoundsChange(bounds);
         this.mBoundsChanged = true;
     }
 
+    @Override // android.graphics.drawable.Drawable
     public boolean isStateful() {
         return (this.mVerticalTrack != null && this.mVerticalTrack.isStateful()) || (this.mVerticalThumb != null && this.mVerticalThumb.isStateful()) || ((this.mHorizontalTrack != null && this.mHorizontalTrack.isStateful()) || ((this.mHorizontalThumb != null && this.mHorizontalThumb.isStateful()) || super.isStateful()));
     }
 
-    /* access modifiers changed from: protected */
-    public boolean onStateChange(int[] state) {
+    @Override // android.graphics.drawable.Drawable
+    protected boolean onStateChange(int[] state) {
         boolean changed = super.onStateChange(state);
         if (this.mVerticalTrack != null) {
             changed |= this.mVerticalTrack.setState(state);
@@ -149,7 +152,7 @@ public class ScrollBarDrawable extends Drawable implements Drawable.Callback {
     @UnsupportedAppUsage(maxTargetSdk = 28)
     public void setVerticalThumbDrawable(Drawable thumb) {
         if (this.mVerticalThumb != null) {
-            this.mVerticalThumb.setCallback((Drawable.Callback) null);
+            this.mVerticalThumb.setCallback(null);
         }
         propagateCurrentState(thumb);
         this.mVerticalThumb = thumb;
@@ -173,7 +176,7 @@ public class ScrollBarDrawable extends Drawable implements Drawable.Callback {
 
     public void setVerticalTrackDrawable(Drawable track) {
         if (this.mVerticalTrack != null) {
-            this.mVerticalTrack.setCallback((Drawable.Callback) null);
+            this.mVerticalTrack.setCallback(null);
         }
         propagateCurrentState(track);
         this.mVerticalTrack = track;
@@ -182,7 +185,7 @@ public class ScrollBarDrawable extends Drawable implements Drawable.Callback {
     @UnsupportedAppUsage(maxTargetSdk = 28)
     public void setHorizontalThumbDrawable(Drawable thumb) {
         if (this.mHorizontalThumb != null) {
-            this.mHorizontalThumb.setCallback((Drawable.Callback) null);
+            this.mHorizontalThumb.setCallback(null);
         }
         propagateCurrentState(thumb);
         this.mHorizontalThumb = thumb;
@@ -190,7 +193,7 @@ public class ScrollBarDrawable extends Drawable implements Drawable.Callback {
 
     public void setHorizontalTrackDrawable(Drawable track) {
         if (this.mHorizontalTrack != null) {
-            this.mHorizontalTrack.setCallback((Drawable.Callback) null);
+            this.mHorizontalTrack.setCallback(null);
         }
         propagateCurrentState(track);
         this.mHorizontalTrack = track;
@@ -231,6 +234,7 @@ public class ScrollBarDrawable extends Drawable implements Drawable.Callback {
         }
     }
 
+    @Override // android.graphics.drawable.Drawable
     public ScrollBarDrawable mutate() {
         if (!this.mMutated && super.mutate() == this) {
             if (this.mVerticalTrack != null) {
@@ -250,6 +254,7 @@ public class ScrollBarDrawable extends Drawable implements Drawable.Callback {
         return this;
     }
 
+    @Override // android.graphics.drawable.Drawable
     public void setAlpha(int alpha) {
         this.mAlpha = alpha;
         this.mHasSetAlpha = true;
@@ -267,10 +272,12 @@ public class ScrollBarDrawable extends Drawable implements Drawable.Callback {
         }
     }
 
+    @Override // android.graphics.drawable.Drawable
     public int getAlpha() {
         return this.mAlpha;
     }
 
+    @Override // android.graphics.drawable.Drawable
     public void setColorFilter(ColorFilter colorFilter) {
         this.mColorFilter = colorFilter;
         this.mHasSetColorFilter = true;
@@ -288,22 +295,27 @@ public class ScrollBarDrawable extends Drawable implements Drawable.Callback {
         }
     }
 
+    @Override // android.graphics.drawable.Drawable
     public ColorFilter getColorFilter() {
         return this.mColorFilter;
     }
 
+    @Override // android.graphics.drawable.Drawable
     public int getOpacity() {
         return -3;
     }
 
+    @Override // android.graphics.drawable.Drawable.Callback
     public void invalidateDrawable(Drawable who) {
         invalidateSelf();
     }
 
+    @Override // android.graphics.drawable.Drawable.Callback
     public void scheduleDrawable(Drawable who, Runnable what, long when) {
         scheduleSelf(what, when);
     }
 
+    @Override // android.graphics.drawable.Drawable.Callback
     public void unscheduleDrawable(Drawable who, Runnable what) {
         unscheduleSelf(what);
     }

@@ -12,16 +12,16 @@ import android.util.Log;
 import android.util.LongSparseLongArray;
 import android.util.SparseIntArray;
 import android.util.StateSet;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.io.IOException;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+/* loaded from: classes.dex */
 public class AnimatedStateListDrawable extends StateListDrawable {
     private static final String ELEMENT_ITEM = "item";
     private static final String ELEMENT_TRANSITION = "transition";
-    /* access modifiers changed from: private */
-    public static final String LOGTAG = AnimatedStateListDrawable.class.getSimpleName();
+    private static final String LOGTAG = AnimatedStateListDrawable.class.getSimpleName();
     private boolean mMutated;
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
     private AnimatedStateListState mState;
@@ -30,9 +30,10 @@ public class AnimatedStateListDrawable extends StateListDrawable {
     private int mTransitionToIndex;
 
     public AnimatedStateListDrawable() {
-        this((AnimatedStateListState) null, (Resources) null);
+        this(null, null);
     }
 
+    @Override // android.graphics.drawable.DrawableContainer, android.graphics.drawable.Drawable
     public boolean setVisible(boolean visible, boolean restart) {
         boolean changed = super.setVisible(visible, restart);
         if (this.mTransition != null && (changed || restart)) {
@@ -46,28 +47,27 @@ public class AnimatedStateListDrawable extends StateListDrawable {
     }
 
     public void addState(int[] stateSet, Drawable drawable, int id) {
-        if (drawable != null) {
-            this.mState.addStateSet(stateSet, drawable, id);
-            onStateChange(getState());
-            return;
+        if (drawable == null) {
+            throw new IllegalArgumentException("Drawable must not be null");
         }
-        throw new IllegalArgumentException("Drawable must not be null");
+        this.mState.addStateSet(stateSet, drawable, id);
+        onStateChange(getState());
     }
 
     public <T extends Drawable & Animatable> void addTransition(int fromId, int toId, T transition, boolean reversible) {
-        if (transition != null) {
-            this.mState.addTransition(fromId, toId, transition, reversible);
-            return;
+        if (transition == null) {
+            throw new IllegalArgumentException("Transition drawable must not be null");
         }
-        throw new IllegalArgumentException("Transition drawable must not be null");
+        this.mState.addTransition(fromId, toId, transition, reversible);
     }
 
+    @Override // android.graphics.drawable.StateListDrawable, android.graphics.drawable.DrawableContainer, android.graphics.drawable.Drawable
     public boolean isStateful() {
         return true;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean onStateChange(int[] stateSet) {
+    @Override // android.graphics.drawable.StateListDrawable, android.graphics.drawable.DrawableContainer, android.graphics.drawable.Drawable
+    protected boolean onStateChange(int[] stateSet) {
         int targetIndex = this.mState.indexOfKeyframe(stateSet);
         boolean changed = targetIndex != getCurrentIndex() && (selectTransition(targetIndex) || selectDrawable(targetIndex));
         Drawable current = getCurrent();
@@ -82,20 +82,20 @@ public class AnimatedStateListDrawable extends StateListDrawable {
         int transitionIndex;
         Transition transition;
         Transition currentTransition = this.mTransition;
-        if (currentTransition == null) {
-            fromIndex = getCurrentIndex();
-        } else if (toIndex == this.mTransitionToIndex) {
-            return true;
-        } else {
-            if (toIndex != this.mTransitionFromIndex || !currentTransition.canReverse()) {
-                fromIndex = this.mTransitionToIndex;
-                currentTransition.stop();
-            } else {
+        if (currentTransition != null) {
+            if (toIndex == this.mTransitionToIndex) {
+                return true;
+            }
+            if (toIndex == this.mTransitionFromIndex && currentTransition.canReverse()) {
                 currentTransition.reverse();
                 this.mTransitionToIndex = this.mTransitionFromIndex;
                 this.mTransitionFromIndex = toIndex;
                 return true;
             }
+            fromIndex = this.mTransitionToIndex;
+            currentTransition.stop();
+        } else {
+            fromIndex = getCurrentIndex();
         }
         this.mTransition = null;
         this.mTransitionFromIndex = -1;
@@ -110,9 +110,11 @@ public class AnimatedStateListDrawable extends StateListDrawable {
         selectDrawable(transitionIndex);
         Drawable d = getCurrent();
         if (d instanceof AnimationDrawable) {
-            transition = new AnimationDrawableTransition((AnimationDrawable) d, state.isTransitionReversed(fromId, toId), hasReversibleFlag);
+            boolean reversed = state.isTransitionReversed(fromId, toId);
+            transition = new AnimationDrawableTransition((AnimationDrawable) d, reversed, hasReversibleFlag);
         } else if (d instanceof AnimatedVectorDrawable) {
-            transition = new AnimatedVectorDrawableTransition((AnimatedVectorDrawable) d, state.isTransitionReversed(fromId, toId), hasReversibleFlag);
+            boolean reversed2 = state.isTransitionReversed(fromId, toId);
+            transition = new AnimatedVectorDrawableTransition((AnimatedVectorDrawable) d, reversed2, hasReversibleFlag);
         } else if (!(d instanceof Animatable)) {
             return false;
         } else {
@@ -125,6 +127,7 @@ public class AnimatedStateListDrawable extends StateListDrawable {
         return true;
     }
 
+    /* loaded from: classes.dex */
     private static abstract class Transition {
         public abstract void start();
 
@@ -141,23 +144,29 @@ public class AnimatedStateListDrawable extends StateListDrawable {
         }
     }
 
+    /* loaded from: classes.dex */
     private static class AnimatableTransition extends Transition {
-        private final Animatable mA;
+
+        /* renamed from: mA */
+        private final Animatable f67mA;
 
         public AnimatableTransition(Animatable a) {
             super();
-            this.mA = a;
+            this.f67mA = a;
         }
 
+        @Override // android.graphics.drawable.AnimatedStateListDrawable.Transition
         public void start() {
-            this.mA.start();
+            this.f67mA.start();
         }
 
+        @Override // android.graphics.drawable.AnimatedStateListDrawable.Transition
         public void stop() {
-            this.mA.stop();
+            this.f67mA.stop();
         }
     }
 
+    /* loaded from: classes.dex */
     private static class AnimationDrawableTransition extends Transition {
         private final ObjectAnimator mAnim;
         private final boolean mHasReversibleFlag;
@@ -168,31 +177,36 @@ public class AnimatedStateListDrawable extends StateListDrawable {
             int fromFrame = reversed ? frameCount - 1 : 0;
             int toFrame = reversed ? 0 : frameCount - 1;
             FrameInterpolator interp = new FrameInterpolator(ad, reversed);
-            ObjectAnimator anim = ObjectAnimator.ofInt((Object) ad, "currentIndex", fromFrame, toFrame);
+            ObjectAnimator anim = ObjectAnimator.ofInt(ad, "currentIndex", fromFrame, toFrame);
             anim.setAutoCancel(true);
-            anim.setDuration((long) interp.getTotalDuration());
+            anim.setDuration(interp.getTotalDuration());
             anim.setInterpolator(interp);
             this.mHasReversibleFlag = hasReversibleFlag;
             this.mAnim = anim;
         }
 
+        @Override // android.graphics.drawable.AnimatedStateListDrawable.Transition
         public boolean canReverse() {
             return this.mHasReversibleFlag;
         }
 
+        @Override // android.graphics.drawable.AnimatedStateListDrawable.Transition
         public void start() {
             this.mAnim.start();
         }
 
+        @Override // android.graphics.drawable.AnimatedStateListDrawable.Transition
         public void reverse() {
             this.mAnim.reverse();
         }
 
+        @Override // android.graphics.drawable.AnimatedStateListDrawable.Transition
         public void stop() {
             this.mAnim.cancel();
         }
     }
 
+    /* loaded from: classes.dex */
     private static class AnimatedVectorDrawableTransition extends Transition {
         private final AnimatedVectorDrawable mAvd;
         private final boolean mHasReversibleFlag;
@@ -205,10 +219,12 @@ public class AnimatedStateListDrawable extends StateListDrawable {
             this.mHasReversibleFlag = hasReversibleFlag;
         }
 
+        @Override // android.graphics.drawable.AnimatedStateListDrawable.Transition
         public boolean canReverse() {
             return this.mAvd.canReverse() && this.mHasReversibleFlag;
         }
 
+        @Override // android.graphics.drawable.AnimatedStateListDrawable.Transition
         public void start() {
             if (this.mReversed) {
                 reverse();
@@ -217,19 +233,22 @@ public class AnimatedStateListDrawable extends StateListDrawable {
             }
         }
 
+        @Override // android.graphics.drawable.AnimatedStateListDrawable.Transition
         public void reverse() {
-            if (canReverse()) {
-                this.mAvd.reverse();
+            if (!canReverse()) {
+                Log.m64w(AnimatedStateListDrawable.LOGTAG, "Can't reverse, either the reversible is set to false, or the AnimatedVectorDrawable can't reverse");
             } else {
-                Log.w(AnimatedStateListDrawable.LOGTAG, "Can't reverse, either the reversible is set to false, or the AnimatedVectorDrawable can't reverse");
+                this.mAvd.reverse();
             }
         }
 
+        @Override // android.graphics.drawable.AnimatedStateListDrawable.Transition
         public void stop() {
             this.mAvd.stop();
         }
     }
 
+    @Override // android.graphics.drawable.DrawableContainer, android.graphics.drawable.Drawable
     public void jumpToCurrentState() {
         super.jumpToCurrentState();
         if (this.mTransition != null) {
@@ -241,8 +260,9 @@ public class AnimatedStateListDrawable extends StateListDrawable {
         }
     }
 
+    @Override // android.graphics.drawable.StateListDrawable, android.graphics.drawable.Drawable
     public void inflate(Resources r, XmlPullParser parser, AttributeSet attrs, Resources.Theme theme) throws XmlPullParserException, IOException {
-        TypedArray a = obtainAttributes(r, theme, attrs, R.styleable.AnimatedStateListDrawable);
+        TypedArray a = obtainAttributes(r, theme, attrs, C3132R.styleable.AnimatedStateListDrawable);
         super.inflateWithAttributes(r, parser, a, 1);
         updateStateFromTypedArray(a);
         updateDensity(r);
@@ -251,15 +271,17 @@ public class AnimatedStateListDrawable extends StateListDrawable {
         init();
     }
 
+    @Override // android.graphics.drawable.StateListDrawable, android.graphics.drawable.DrawableContainer, android.graphics.drawable.Drawable
     public void applyTheme(Resources.Theme theme) {
         super.applyTheme(theme);
         AnimatedStateListState state = this.mState;
-        if (state != null && state.mAnimThemeAttrs != null) {
-            TypedArray a = theme.resolveAttributes(state.mAnimThemeAttrs, R.styleable.AnimatedRotateDrawable);
-            updateStateFromTypedArray(a);
-            a.recycle();
-            init();
+        if (state == null || state.mAnimThemeAttrs == null) {
+            return;
         }
+        TypedArray a = theme.resolveAttributes(state.mAnimThemeAttrs, C3132R.styleable.AnimatedRotateDrawable);
+        updateStateFromTypedArray(a);
+        a.recycle();
+        init();
     }
 
     private void updateStateFromTypedArray(TypedArray a) {
@@ -281,20 +303,19 @@ public class AnimatedStateListDrawable extends StateListDrawable {
     private void inflateChildElements(Resources r, XmlPullParser parser, AttributeSet attrs, Resources.Theme theme) throws XmlPullParserException, IOException {
         int innerDepth = parser.getDepth() + 1;
         while (true) {
-            int next = parser.next();
-            int type = next;
-            if (next != 1) {
+            int type = parser.next();
+            if (type != 1) {
                 int depth = parser.getDepth();
-                int depth2 = depth;
-                if (depth < innerDepth && type == 3) {
-                    return;
-                }
-                if (type == 2 && depth2 <= innerDepth) {
-                    if (parser.getName().equals("item")) {
-                        parseItem(r, parser, attrs, theme);
-                    } else if (parser.getName().equals(ELEMENT_TRANSITION)) {
-                        parseTransition(r, parser, attrs, theme);
+                if (depth >= innerDepth || type != 3) {
+                    if (type == 2 && depth <= innerDepth) {
+                        if (parser.getName().equals("item")) {
+                            parseItem(r, parser, attrs, theme);
+                        } else if (parser.getName().equals(ELEMENT_TRANSITION)) {
+                            parseTransition(r, parser, attrs, theme);
+                        }
                     }
+                } else {
+                    return;
                 }
             } else {
                 return;
@@ -303,9 +324,8 @@ public class AnimatedStateListDrawable extends StateListDrawable {
     }
 
     private int parseTransition(Resources r, XmlPullParser parser, AttributeSet attrs, Resources.Theme theme) throws XmlPullParserException, IOException {
-        int next;
         int type;
-        TypedArray a = obtainAttributes(r, theme, attrs, R.styleable.AnimatedStateListDrawableTransition);
+        TypedArray a = obtainAttributes(r, theme, attrs, C3132R.styleable.AnimatedStateListDrawableTransition);
         int fromId = a.getResourceId(2, 0);
         int toId = a.getResourceId(1, 0);
         boolean reversible = a.getBoolean(3, false);
@@ -313,40 +333,36 @@ public class AnimatedStateListDrawable extends StateListDrawable {
         a.recycle();
         if (dr == null) {
             do {
-                next = parser.next();
-                type = next;
-            } while (next == 4);
-            if (type == 2) {
-                dr = Drawable.createFromXmlInner(r, parser, attrs, theme);
-            } else {
+                type = parser.next();
+            } while (type == 4);
+            if (type != 2) {
                 throw new XmlPullParserException(parser.getPositionDescription() + ": <transition> tag requires a 'drawable' attribute or child tag defining a drawable");
             }
+            dr = Drawable.createFromXmlInner(r, parser, attrs, theme);
         }
         return this.mState.addTransition(fromId, toId, dr, reversible);
     }
 
     private int parseItem(Resources r, XmlPullParser parser, AttributeSet attrs, Resources.Theme theme) throws XmlPullParserException, IOException {
-        int next;
         int type;
-        TypedArray a = obtainAttributes(r, theme, attrs, R.styleable.AnimatedStateListDrawableItem);
+        TypedArray a = obtainAttributes(r, theme, attrs, C3132R.styleable.AnimatedStateListDrawableItem);
         int keyframeId = a.getResourceId(0, 0);
         Drawable dr = a.getDrawable(1);
         a.recycle();
         int[] states = extractStateSet(attrs);
         if (dr == null) {
             do {
-                next = parser.next();
-                type = next;
-            } while (next == 4);
-            if (type == 2) {
-                dr = Drawable.createFromXmlInner(r, parser, attrs, theme);
-            } else {
+                type = parser.next();
+            } while (type == 4);
+            if (type != 2) {
                 throw new XmlPullParserException(parser.getPositionDescription() + ": <item> tag requires a 'drawable' attribute or child tag defining a drawable");
             }
+            dr = Drawable.createFromXmlInner(r, parser, attrs, theme);
         }
         return this.mState.addStateSet(states, dr, keyframeId);
     }
 
+    @Override // android.graphics.drawable.StateListDrawable, android.graphics.drawable.DrawableContainer, android.graphics.drawable.Drawable
     public Drawable mutate() {
         if (!this.mMutated && super.mutate() == this) {
             this.mState.mutate();
@@ -355,16 +371,19 @@ public class AnimatedStateListDrawable extends StateListDrawable {
         return this;
     }
 
-    /* access modifiers changed from: package-private */
+    /* JADX INFO: Access modifiers changed from: package-private */
+    @Override // android.graphics.drawable.StateListDrawable, android.graphics.drawable.DrawableContainer
     public AnimatedStateListState cloneConstantState() {
-        return new AnimatedStateListState(this.mState, this, (Resources) null);
+        return new AnimatedStateListState(this.mState, this, null);
     }
 
+    @Override // android.graphics.drawable.StateListDrawable, android.graphics.drawable.DrawableContainer, android.graphics.drawable.Drawable
     public void clearMutated() {
         super.clearMutated();
         this.mMutated = false;
     }
 
+    /* loaded from: classes.dex */
     static class AnimatedStateListState extends StateListDrawable.StateListState {
         private static final long REVERSED_BIT = 4294967296L;
         private static final long REVERSIBLE_FLAG_BIT = 8589934592L;
@@ -386,39 +405,34 @@ public class AnimatedStateListDrawable extends StateListDrawable {
             this.mStateIds = new SparseIntArray();
         }
 
-        /* access modifiers changed from: package-private */
-        public void mutate() {
-            this.mTransitions = this.mTransitions.clone();
-            this.mStateIds = this.mStateIds.clone();
+        @Override // android.graphics.drawable.StateListDrawable.StateListState
+        void mutate() {
+            this.mTransitions = this.mTransitions.m176clone();
+            this.mStateIds = this.mStateIds.m179clone();
         }
 
-        /* access modifiers changed from: package-private */
-        public int addTransition(int fromId, int toId, Drawable anim, boolean reversible) {
+        int addTransition(int fromId, int toId, Drawable anim, boolean reversible) {
             int pos = super.addChild(anim);
             long keyFromTo = generateTransitionKey(fromId, toId);
             long reversibleBit = 0;
             if (reversible) {
                 reversibleBit = 8589934592L;
             }
-            this.mTransitions.append(keyFromTo, ((long) pos) | reversibleBit);
+            this.mTransitions.append(keyFromTo, pos | reversibleBit);
             if (reversible) {
-                this.mTransitions.append(generateTransitionKey(toId, fromId), ((long) pos) | 4294967296L | reversibleBit);
-            } else {
-                int i = fromId;
-                int i2 = toId;
+                long keyToFrom = generateTransitionKey(toId, fromId);
+                this.mTransitions.append(keyToFrom, pos | 4294967296L | reversibleBit);
             }
             return pos;
         }
 
-        /* access modifiers changed from: package-private */
-        public int addStateSet(int[] stateSet, Drawable drawable, int id) {
+        int addStateSet(int[] stateSet, Drawable drawable, int id) {
             int index = super.addStateSet(stateSet, drawable);
             this.mStateIds.put(index, id);
             return index;
         }
 
-        /* access modifiers changed from: package-private */
-        public int indexOfKeyframe(int[] stateSet) {
+        int indexOfKeyframe(int[] stateSet) {
             int index = super.indexOfStateSet(stateSet);
             if (index >= 0) {
                 return index;
@@ -426,48 +440,50 @@ public class AnimatedStateListDrawable extends StateListDrawable {
             return super.indexOfStateSet(StateSet.WILD_CARD);
         }
 
-        /* access modifiers changed from: package-private */
-        public int getKeyframeIdAt(int index) {
+        int getKeyframeIdAt(int index) {
             if (index < 0) {
                 return 0;
             }
             return this.mStateIds.get(index, 0);
         }
 
-        /* access modifiers changed from: package-private */
-        public int indexOfTransition(int fromId, int toId) {
-            return (int) this.mTransitions.get(generateTransitionKey(fromId, toId), -1);
+        int indexOfTransition(int fromId, int toId) {
+            long keyFromTo = generateTransitionKey(fromId, toId);
+            return (int) this.mTransitions.get(keyFromTo, -1L);
         }
 
-        /* access modifiers changed from: package-private */
-        public boolean isTransitionReversed(int fromId, int toId) {
-            return (this.mTransitions.get(generateTransitionKey(fromId, toId), -1) & 4294967296L) != 0;
+        boolean isTransitionReversed(int fromId, int toId) {
+            long keyFromTo = generateTransitionKey(fromId, toId);
+            return (this.mTransitions.get(keyFromTo, -1L) & 4294967296L) != 0;
         }
 
-        /* access modifiers changed from: package-private */
-        public boolean transitionHasReversibleFlag(int fromId, int toId) {
-            return (this.mTransitions.get(generateTransitionKey(fromId, toId), -1) & 8589934592L) != 0;
+        boolean transitionHasReversibleFlag(int fromId, int toId) {
+            long keyFromTo = generateTransitionKey(fromId, toId);
+            return (this.mTransitions.get(keyFromTo, -1L) & 8589934592L) != 0;
         }
 
+        @Override // android.graphics.drawable.StateListDrawable.StateListState, android.graphics.drawable.DrawableContainer.DrawableContainerState, android.graphics.drawable.Drawable.ConstantState
         public boolean canApplyTheme() {
             return this.mAnimThemeAttrs != null || super.canApplyTheme();
         }
 
+        @Override // android.graphics.drawable.StateListDrawable.StateListState, android.graphics.drawable.Drawable.ConstantState
         public Drawable newDrawable() {
-            return new AnimatedStateListDrawable(this, (Resources) null);
+            return new AnimatedStateListDrawable(this, null);
         }
 
+        @Override // android.graphics.drawable.StateListDrawable.StateListState, android.graphics.drawable.Drawable.ConstantState
         public Drawable newDrawable(Resources res) {
             return new AnimatedStateListDrawable(this, res);
         }
 
         private static long generateTransitionKey(int fromId, int toId) {
-            return (((long) fromId) << 32) | ((long) toId);
+            return (fromId << 32) | toId;
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void setConstantState(DrawableContainer.DrawableContainerState state) {
+    @Override // android.graphics.drawable.StateListDrawable, android.graphics.drawable.DrawableContainer
+    protected void setConstantState(DrawableContainer.DrawableContainerState state) {
         super.setConstantState(state);
         if (state instanceof AnimatedStateListState) {
             this.mState = (AnimatedStateListState) state;
@@ -475,14 +491,16 @@ public class AnimatedStateListDrawable extends StateListDrawable {
     }
 
     private AnimatedStateListDrawable(AnimatedStateListState state, Resources res) {
-        super((StateListDrawable.StateListState) null);
+        super(null);
         this.mTransitionToIndex = -1;
         this.mTransitionFromIndex = -1;
-        setConstantState(new AnimatedStateListState(state, this, res));
+        AnimatedStateListState newState = new AnimatedStateListState(state, this, res);
+        setConstantState(newState);
         onStateChange(getState());
         jumpToCurrentState();
     }
 
+    /* loaded from: classes.dex */
     private static class FrameInterpolator implements TimeInterpolator {
         private int[] mFrameTimes;
         private int mFrames;
@@ -513,22 +531,24 @@ public class AnimatedStateListDrawable extends StateListDrawable {
             return this.mTotalDuration;
         }
 
+        @Override // android.animation.TimeInterpolator
         public float getInterpolation(float input) {
             float frameElapsed;
+            int elapsed = (int) ((this.mTotalDuration * input) + 0.5f);
             int N = this.mFrames;
             int[] frameTimes = this.mFrameTimes;
-            int remaining = (int) ((((float) this.mTotalDuration) * input) + 0.5f);
+            int remaining = elapsed;
             int i = 0;
             while (i < N && remaining >= frameTimes[i]) {
                 remaining -= frameTimes[i];
                 i++;
             }
             if (i < N) {
-                frameElapsed = ((float) remaining) / ((float) this.mTotalDuration);
+                frameElapsed = remaining / this.mTotalDuration;
             } else {
                 frameElapsed = 0.0f;
             }
-            return (((float) i) / ((float) N)) + frameElapsed;
+            return (i / N) + frameElapsed;
         }
     }
 }

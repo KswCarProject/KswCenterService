@@ -8,19 +8,22 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.drm.DrmStore;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.Looper;
-import android.os.Message;
+import android.p007os.Handler;
+import android.p007os.HandlerThread;
+import android.p007os.Looper;
+import android.p007os.Message;
 import android.util.Log;
 import dalvik.system.CloseGuard;
+import java.io.File;
 import java.io.FileDescriptor;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/* loaded from: classes.dex */
 public class DrmManagerClient implements AutoCloseable {
     private static final int ACTION_PROCESS_DRM_INFO = 1002;
     private static final int ACTION_REMOVE_ALL_RIGHTS = 1001;
@@ -28,31 +31,30 @@ public class DrmManagerClient implements AutoCloseable {
     public static final int ERROR_UNKNOWN = -2000;
     public static final int INVALID_SESSION = -1;
     private static final String TAG = "DrmManagerClient";
-    private final CloseGuard mCloseGuard = CloseGuard.get();
-    private final AtomicBoolean mClosed = new AtomicBoolean();
     private Context mContext;
     private EventHandler mEventHandler;
     HandlerThread mEventThread;
     private InfoHandler mInfoHandler;
     HandlerThread mInfoThread;
     private long mNativeContext;
-    /* access modifiers changed from: private */
-    public OnErrorListener mOnErrorListener;
-    /* access modifiers changed from: private */
-    public OnEventListener mOnEventListener;
-    /* access modifiers changed from: private */
-    public OnInfoListener mOnInfoListener;
-    /* access modifiers changed from: private */
-    public int mUniqueId;
+    private OnErrorListener mOnErrorListener;
+    private OnEventListener mOnEventListener;
+    private OnInfoListener mOnInfoListener;
+    private int mUniqueId;
+    private final AtomicBoolean mClosed = new AtomicBoolean();
+    private final CloseGuard mCloseGuard = CloseGuard.get();
 
+    /* loaded from: classes.dex */
     public interface OnErrorListener {
         void onError(DrmManagerClient drmManagerClient, DrmErrorEvent drmErrorEvent);
     }
 
+    /* loaded from: classes.dex */
     public interface OnEventListener {
         void onEvent(DrmManagerClient drmManagerClient, DrmEvent drmEvent);
     }
 
+    /* loaded from: classes.dex */
     public interface OnInfoListener {
         void onInfo(DrmManagerClient drmManagerClient, DrmInfoEvent drmInfoEvent);
     }
@@ -83,12 +85,12 @@ public class DrmManagerClient implements AutoCloseable {
 
     private native int _openConvertSession(int i, String str);
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public native DrmInfoStatus _processDrmInfo(int i, DrmInfo drmInfo);
 
     private native void _release(int i);
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public native int _removeAllRights(int i);
 
     private native int _removeRights(int i, String str);
@@ -101,22 +103,24 @@ public class DrmManagerClient implements AutoCloseable {
         System.loadLibrary("drmframework_jni");
     }
 
+    /* loaded from: classes.dex */
     private class EventHandler extends Handler {
         public EventHandler(Looper looper) {
             super(looper);
         }
 
+        @Override // android.p007os.Handler
         public void handleMessage(Message msg) {
             DrmEvent event = null;
             DrmErrorEvent error = null;
             HashMap<String, Object> attributes = new HashMap<>();
             switch (msg.what) {
                 case 1001:
-                    if (DrmManagerClient.this._removeAllRights(DrmManagerClient.this.mUniqueId) != 0) {
-                        error = new DrmErrorEvent(DrmManagerClient.this.mUniqueId, 2007, (String) null);
+                    if (DrmManagerClient.this._removeAllRights(DrmManagerClient.this.mUniqueId) == 0) {
+                        event = new DrmEvent(DrmManagerClient.this.mUniqueId, 1001, null);
                         break;
                     } else {
-                        event = new DrmEvent(DrmManagerClient.this.mUniqueId, 1001, (String) null);
+                        error = new DrmErrorEvent(DrmManagerClient.this.mUniqueId, 2007, null);
                         break;
                     }
                 case 1002:
@@ -125,18 +129,19 @@ public class DrmManagerClient implements AutoCloseable {
                     attributes.put(DrmEvent.DRM_INFO_STATUS_OBJECT, status);
                     attributes.put(DrmEvent.DRM_INFO_OBJECT, drmInfo);
                     if (status != null && 1 == status.statusCode) {
-                        event = new DrmEvent(DrmManagerClient.this.mUniqueId, DrmManagerClient.this.getEventType(status.infoType), (String) null, attributes);
+                        event = new DrmEvent(DrmManagerClient.this.mUniqueId, DrmManagerClient.this.getEventType(status.infoType), null, attributes);
                         break;
                     } else {
-                        error = new DrmErrorEvent(DrmManagerClient.this.mUniqueId, DrmManagerClient.this.getErrorType(status != null ? status.infoType : drmInfo.getInfoType()), (String) null, attributes);
+                        int infoType = status != null ? status.infoType : drmInfo.getInfoType();
+                        error = new DrmErrorEvent(DrmManagerClient.this.mUniqueId, DrmManagerClient.this.getErrorType(infoType), null, attributes);
                         break;
                     }
                     break;
                 default:
-                    Log.e(DrmManagerClient.TAG, "Unknown message type " + msg.what);
+                    Log.m70e(DrmManagerClient.TAG, "Unknown message type " + msg.what);
                     return;
             }
-            if (!(DrmManagerClient.this.mOnEventListener == null || event == null)) {
+            if (DrmManagerClient.this.mOnEventListener != null && event != null) {
                 DrmManagerClient.this.mOnEventListener.onEvent(DrmManagerClient.this, event);
             }
             if (DrmManagerClient.this.mOnErrorListener != null && error != null) {
@@ -148,10 +153,12 @@ public class DrmManagerClient implements AutoCloseable {
     public static void notify(Object thisReference, int uniqueId, int infoType, String message) {
         DrmManagerClient instance = (DrmManagerClient) ((WeakReference) thisReference).get();
         if (instance != null && instance.mInfoHandler != null) {
-            instance.mInfoHandler.sendMessage(instance.mInfoHandler.obtainMessage(1, uniqueId, infoType, message));
+            Message m = instance.mInfoHandler.obtainMessage(1, uniqueId, infoType, message);
+            instance.mInfoHandler.sendMessage(m);
         }
     }
 
+    /* loaded from: classes.dex */
     private class InfoHandler extends Handler {
         public static final int INFO_EVENT_TYPE = 1;
 
@@ -159,42 +166,44 @@ public class DrmManagerClient implements AutoCloseable {
             super(looper);
         }
 
+        @Override // android.p007os.Handler
         public void handleMessage(Message msg) {
             DrmInfoEvent info = null;
             DrmErrorEvent error = null;
-            if (msg.what != 1) {
-                Log.e(DrmManagerClient.TAG, "Unknown message type " + msg.what);
+            if (msg.what == 1) {
+                int uniqueId = msg.arg1;
+                int infoType = msg.arg2;
+                String message = msg.obj.toString();
+                switch (infoType) {
+                    case 1:
+                    case 3:
+                    case 4:
+                    case 5:
+                    case 6:
+                        info = new DrmInfoEvent(uniqueId, infoType, message);
+                        break;
+                    case 2:
+                        try {
+                            DrmUtils.removeFile(message);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        info = new DrmInfoEvent(uniqueId, infoType, message);
+                        break;
+                    default:
+                        error = new DrmErrorEvent(uniqueId, infoType, message);
+                        break;
+                }
+                if (DrmManagerClient.this.mOnInfoListener != null && info != null) {
+                    DrmManagerClient.this.mOnInfoListener.onInfo(DrmManagerClient.this, info);
+                }
+                if (DrmManagerClient.this.mOnErrorListener != null && error != null) {
+                    DrmManagerClient.this.mOnErrorListener.onError(DrmManagerClient.this, error);
+                    return;
+                }
                 return;
             }
-            int uniqueId = msg.arg1;
-            int infoType = msg.arg2;
-            String message = msg.obj.toString();
-            switch (infoType) {
-                case 1:
-                case 3:
-                case 4:
-                case 5:
-                case 6:
-                    info = new DrmInfoEvent(uniqueId, infoType, message);
-                    break;
-                case 2:
-                    try {
-                        DrmUtils.removeFile(message);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    info = new DrmInfoEvent(uniqueId, infoType, message);
-                    break;
-                default:
-                    error = new DrmErrorEvent(uniqueId, infoType, message);
-                    break;
-            }
-            if (!(DrmManagerClient.this.mOnInfoListener == null || info == null)) {
-                DrmManagerClient.this.mOnInfoListener.onInfo(DrmManagerClient.this, info);
-            }
-            if (DrmManagerClient.this.mOnErrorListener != null && error != null) {
-                DrmManagerClient.this.mOnErrorListener.onError(DrmManagerClient.this, error);
-            }
+            Log.m70e(DrmManagerClient.TAG, "Unknown message type " + msg.what);
         }
     }
 
@@ -205,8 +214,7 @@ public class DrmManagerClient implements AutoCloseable {
         this.mCloseGuard.open("release");
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         try {
             if (this.mCloseGuard != null) {
                 this.mCloseGuard.warnIfOpen();
@@ -217,6 +225,7 @@ public class DrmManagerClient implements AutoCloseable {
         }
     }
 
+    @Override // java.lang.AutoCloseable
     public void close() {
         this.mCloseGuard.close();
         if (this.mClosed.compareAndSet(false, true)) {
@@ -266,38 +275,40 @@ public class DrmManagerClient implements AutoCloseable {
     public String[] getAvailableDrmEngines() {
         DrmSupportInfo[] supportInfos = _getAllSupportInfo(this.mUniqueId);
         ArrayList<String> descriptions = new ArrayList<>();
-        for (DrmSupportInfo descriprition : supportInfos) {
-            descriptions.add(descriprition.getDescriprition());
+        for (DrmSupportInfo drmSupportInfo : supportInfos) {
+            descriptions.add(drmSupportInfo.getDescriprition());
         }
-        return (String[]) descriptions.toArray(new String[descriptions.size()]);
+        int i = descriptions.size();
+        String[] drmEngines = new String[i];
+        return (String[]) descriptions.toArray(drmEngines);
     }
 
     public ContentValues getConstraints(String path, int action) {
-        if (path != null && !path.equals("") && DrmStore.Action.isValid(action)) {
-            return _getConstraints(this.mUniqueId, path, action);
+        if (path == null || path.equals("") || !DrmStore.Action.isValid(action)) {
+            throw new IllegalArgumentException("Given usage or path is invalid/null");
         }
-        throw new IllegalArgumentException("Given usage or path is invalid/null");
+        return _getConstraints(this.mUniqueId, path, action);
     }
 
     public ContentValues getMetadata(String path) {
-        if (path != null && !path.equals("")) {
-            return _getMetadata(this.mUniqueId, path);
+        if (path == null || path.equals("")) {
+            throw new IllegalArgumentException("Given path is invalid/null");
         }
-        throw new IllegalArgumentException("Given path is invalid/null");
+        return _getMetadata(this.mUniqueId, path);
     }
 
     public ContentValues getConstraints(Uri uri, int action) {
-        if (uri != null && Uri.EMPTY != uri) {
-            return getConstraints(convertUriToPath(uri), action);
+        if (uri == null || Uri.EMPTY == uri) {
+            throw new IllegalArgumentException("Uri should be non null");
         }
-        throw new IllegalArgumentException("Uri should be non null");
+        return getConstraints(convertUriToPath(uri), action);
     }
 
     public ContentValues getMetadata(Uri uri) {
-        if (uri != null && Uri.EMPTY != uri) {
-            return getMetadata(convertUriToPath(uri));
+        if (uri == null || Uri.EMPTY == uri) {
+            throw new IllegalArgumentException("Uri should be non null");
         }
-        throw new IllegalArgumentException("Uri should be non null");
+        return getMetadata(convertUriToPath(uri));
     }
 
     public int saveRights(DrmRights drmRights, String rightsPath, String contentPath) throws IOException {
@@ -318,34 +329,36 @@ public class DrmManagerClient implements AutoCloseable {
     }
 
     public boolean canHandle(String path, String mimeType) {
-        if ((path != null && !path.equals("")) || (mimeType != null && !mimeType.equals(""))) {
-            return _canHandle(this.mUniqueId, path, mimeType);
+        if ((path == null || path.equals("")) && (mimeType == null || mimeType.equals(""))) {
+            throw new IllegalArgumentException("Path or the mimetype should be non null");
         }
-        throw new IllegalArgumentException("Path or the mimetype should be non null");
+        return _canHandle(this.mUniqueId, path, mimeType);
     }
 
     public boolean canHandle(Uri uri, String mimeType) {
-        if ((uri != null && Uri.EMPTY != uri) || (mimeType != null && !mimeType.equals(""))) {
-            return canHandle(convertUriToPath(uri), mimeType);
+        if ((uri == null || Uri.EMPTY == uri) && (mimeType == null || mimeType.equals(""))) {
+            throw new IllegalArgumentException("Uri or the mimetype should be non null");
         }
-        throw new IllegalArgumentException("Uri or the mimetype should be non null");
+        return canHandle(convertUriToPath(uri), mimeType);
     }
 
     public int processDrmInfo(DrmInfo drmInfo) {
         if (drmInfo == null || !drmInfo.isValid()) {
             throw new IllegalArgumentException("Given drmInfo is invalid/null");
-        } else if (this.mEventHandler == null) {
-            return ERROR_UNKNOWN;
-        } else {
-            return this.mEventHandler.sendMessage(this.mEventHandler.obtainMessage(1002, drmInfo)) ? 0 : -2000;
         }
+        if (this.mEventHandler == null) {
+            return ERROR_UNKNOWN;
+        }
+        Message msg = this.mEventHandler.obtainMessage(1002, drmInfo);
+        int result = this.mEventHandler.sendMessage(msg) ? 0 : -2000;
+        return result;
     }
 
     public DrmInfo acquireDrmInfo(DrmInfoRequest drmInfoRequest) {
-        if (drmInfoRequest != null && drmInfoRequest.isValid()) {
-            return _acquireDrmInfo(this.mUniqueId, drmInfoRequest);
+        if (drmInfoRequest == null || !drmInfoRequest.isValid()) {
+            throw new IllegalArgumentException("Given drmInfoRequest is invalid/null");
         }
-        throw new IllegalArgumentException("Given drmInfoRequest is invalid/null");
+        return _acquireDrmInfo(this.mUniqueId, drmInfoRequest);
     }
 
     public int acquireRights(DrmInfoRequest drmInfoRequest) {
@@ -357,10 +370,10 @@ public class DrmManagerClient implements AutoCloseable {
     }
 
     public int getDrmObjectType(String path, String mimeType) {
-        if ((path != null && !path.equals("")) || (mimeType != null && !mimeType.equals(""))) {
-            return _getDrmObjectType(this.mUniqueId, path, mimeType);
+        if ((path == null || path.equals("")) && (mimeType == null || mimeType.equals(""))) {
+            throw new IllegalArgumentException("Path or the mimetype should be non null");
         }
-        throw new IllegalArgumentException("Path or the mimetype should be non null");
+        return _getDrmObjectType(this.mUniqueId, path, mimeType);
     }
 
     public int getDrmObjectType(Uri uri, String mimeType) {
@@ -371,80 +384,56 @@ public class DrmManagerClient implements AutoCloseable {
         try {
             path = convertUriToPath(uri);
         } catch (Exception e) {
-            Log.w(TAG, "Given Uri could not be found in media store");
+            Log.m64w(TAG, "Given Uri could not be found in media store");
         }
         return getDrmObjectType(path, mimeType);
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:10:0x002a, code lost:
-        if (r1 != null) goto L_0x002c;
+    /* JADX WARN: Code restructure failed: missing block: B:11:0x002a, code lost:
+        if (r1 != null) goto L14;
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:12:?, code lost:
+    /* JADX WARN: Code restructure failed: missing block: B:12:0x002c, code lost:
         r1.close();
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:21:0x003c, code lost:
-        if (r1 == null) goto L_0x003f;
+    /* JADX WARN: Code restructure failed: missing block: B:23:0x003c, code lost:
+        if (r1 == null) goto L12;
      */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public java.lang.String getOriginalMimeType(java.lang.String r6) {
-        /*
-            r5 = this;
-            if (r6 == 0) goto L_0x0040
-            java.lang.String r0 = ""
-            boolean r0 = r6.equals(r0)
-            if (r0 != 0) goto L_0x0040
-            r0 = 0
-            r1 = 0
-            r2 = 0
-            java.io.File r3 = new java.io.File     // Catch:{ IOException -> 0x003b, all -> 0x0032 }
-            r3.<init>(r6)     // Catch:{ IOException -> 0x003b, all -> 0x0032 }
-            boolean r4 = r3.exists()     // Catch:{ IOException -> 0x003b, all -> 0x0032 }
-            if (r4 == 0) goto L_0x0023
-            java.io.FileInputStream r4 = new java.io.FileInputStream     // Catch:{ IOException -> 0x003b, all -> 0x0032 }
-            r4.<init>(r3)     // Catch:{ IOException -> 0x003b, all -> 0x0032 }
-            r1 = r4
-            java.io.FileDescriptor r4 = r1.getFD()     // Catch:{ IOException -> 0x003b, all -> 0x0032 }
-            r2 = r4
-        L_0x0023:
-            int r4 = r5.mUniqueId     // Catch:{ IOException -> 0x003b, all -> 0x0032 }
-            java.lang.String r4 = r5._getOriginalMimeType(r4, r6, r2)     // Catch:{ IOException -> 0x003b, all -> 0x0032 }
-            r0 = r4
-            if (r1 == 0) goto L_0x003f
-        L_0x002c:
-            r1.close()     // Catch:{ IOException -> 0x0030 }
-            goto L_0x003f
-        L_0x0030:
-            r2 = move-exception
-            goto L_0x003f
-        L_0x0032:
-            r2 = move-exception
-            if (r1 == 0) goto L_0x003a
-            r1.close()     // Catch:{ IOException -> 0x0039 }
-            goto L_0x003a
-        L_0x0039:
-            r3 = move-exception
-        L_0x003a:
-            throw r2
-        L_0x003b:
-            r2 = move-exception
-            if (r1 == 0) goto L_0x003f
-            goto L_0x002c
-        L_0x003f:
-            return r0
-        L_0x0040:
-            java.lang.IllegalArgumentException r0 = new java.lang.IllegalArgumentException
-            java.lang.String r1 = "Given path should be non null"
-            r0.<init>(r1)
-            throw r0
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.drm.DrmManagerClient.getOriginalMimeType(java.lang.String):java.lang.String");
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public String getOriginalMimeType(String path) {
+        String mime;
+        if (path == null || path.equals("")) {
+            throw new IllegalArgumentException("Given path should be non null");
+        }
+        mime = null;
+        FileInputStream is = null;
+        FileDescriptor fd = null;
+        try {
+            File file = new File(path);
+            if (file.exists()) {
+                is = new FileInputStream(file);
+                fd = is.getFD();
+            }
+            mime = _getOriginalMimeType(this.mUniqueId, path, fd);
+        } catch (IOException e) {
+        } catch (Throwable th) {
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (IOException e2) {
+                }
+            }
+            throw th;
+        }
+        return mime;
     }
 
     public String getOriginalMimeType(Uri uri) {
-        if (uri != null && Uri.EMPTY != uri) {
-            return getOriginalMimeType(convertUriToPath(uri));
+        if (uri == null || Uri.EMPTY == uri) {
+            throw new IllegalArgumentException("Given uri is not valid");
         }
-        throw new IllegalArgumentException("Given uri is not valid");
+        return getOriginalMimeType(convertUriToPath(uri));
     }
 
     public int checkRightsStatus(String path) {
@@ -452,66 +441,68 @@ public class DrmManagerClient implements AutoCloseable {
     }
 
     public int checkRightsStatus(Uri uri) {
-        if (uri != null && Uri.EMPTY != uri) {
-            return checkRightsStatus(convertUriToPath(uri));
+        if (uri == null || Uri.EMPTY == uri) {
+            throw new IllegalArgumentException("Given uri is not valid");
         }
-        throw new IllegalArgumentException("Given uri is not valid");
+        return checkRightsStatus(convertUriToPath(uri));
     }
 
     public int checkRightsStatus(String path, int action) {
-        if (path != null && !path.equals("") && DrmStore.Action.isValid(action)) {
-            return _checkRightsStatus(this.mUniqueId, path, action);
+        if (path == null || path.equals("") || !DrmStore.Action.isValid(action)) {
+            throw new IllegalArgumentException("Given path or action is not valid");
         }
-        throw new IllegalArgumentException("Given path or action is not valid");
+        return _checkRightsStatus(this.mUniqueId, path, action);
     }
 
     public int checkRightsStatus(Uri uri, int action) {
-        if (uri != null && Uri.EMPTY != uri) {
-            return checkRightsStatus(convertUriToPath(uri), action);
+        if (uri == null || Uri.EMPTY == uri) {
+            throw new IllegalArgumentException("Given uri is not valid");
         }
-        throw new IllegalArgumentException("Given uri is not valid");
+        return checkRightsStatus(convertUriToPath(uri), action);
     }
 
     public int removeRights(String path) {
-        if (path != null && !path.equals("")) {
-            return _removeRights(this.mUniqueId, path);
+        if (path == null || path.equals("")) {
+            throw new IllegalArgumentException("Given path should be non null");
         }
-        throw new IllegalArgumentException("Given path should be non null");
+        return _removeRights(this.mUniqueId, path);
     }
 
     public int removeRights(Uri uri) {
-        if (uri != null && Uri.EMPTY != uri) {
-            return removeRights(convertUriToPath(uri));
+        if (uri == null || Uri.EMPTY == uri) {
+            throw new IllegalArgumentException("Given uri is not valid");
         }
-        throw new IllegalArgumentException("Given uri is not valid");
+        return removeRights(convertUriToPath(uri));
     }
 
     public int removeAllRights() {
         if (this.mEventHandler == null) {
             return ERROR_UNKNOWN;
         }
-        return this.mEventHandler.sendMessage(this.mEventHandler.obtainMessage(1001)) ? 0 : -2000;
+        Message msg = this.mEventHandler.obtainMessage(1001);
+        int result = this.mEventHandler.sendMessage(msg) ? 0 : -2000;
+        return result;
     }
 
     public int openConvertSession(String mimeType) {
-        if (mimeType != null && !mimeType.equals("")) {
-            return _openConvertSession(this.mUniqueId, mimeType);
+        if (mimeType == null || mimeType.equals("")) {
+            throw new IllegalArgumentException("Path or the mimeType should be non null");
         }
-        throw new IllegalArgumentException("Path or the mimeType should be non null");
+        return _openConvertSession(this.mUniqueId, mimeType);
     }
 
     public DrmConvertedStatus convertData(int convertId, byte[] inputData) {
-        if (inputData != null && inputData.length > 0) {
-            return _convertData(this.mUniqueId, convertId, inputData);
+        if (inputData == null || inputData.length <= 0) {
+            throw new IllegalArgumentException("Given inputData should be non null");
         }
-        throw new IllegalArgumentException("Given inputData should be non null");
+        return _convertData(this.mUniqueId, convertId, inputData);
     }
 
     public DrmConvertedStatus closeConvertSession(int convertId) {
         return _closeConvertSession(this.mUniqueId, convertId);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public int getEventType(int infoType) {
         switch (infoType) {
             case 1:
@@ -523,7 +514,7 @@ public class DrmManagerClient implements AutoCloseable {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public int getErrorType(int infoType) {
         switch (infoType) {
             case 1:
@@ -541,31 +532,29 @@ public class DrmManagerClient implements AutoCloseable {
         }
         String scheme = uri.getScheme();
         if (scheme == null || scheme.equals("") || scheme.equals(ContentResolver.SCHEME_FILE)) {
-            return uri.getPath();
-        }
-        if (scheme.equals(IntentFilter.SCHEME_HTTP) || scheme.equals(IntentFilter.SCHEME_HTTPS)) {
-            return uri.toString();
-        }
-        if (scheme.equals("content")) {
+            String path = uri.getPath();
+            return path;
+        } else if (scheme.equals(IntentFilter.SCHEME_HTTP) || scheme.equals(IntentFilter.SCHEME_HTTPS)) {
+            String path2 = uri.toString();
+            return path2;
+        } else if (scheme.equals("content")) {
+            String[] projection = {"_data"};
             Cursor cursor = null;
             try {
-                cursor = this.mContext.getContentResolver().query(uri, new String[]{"_data"}, (String) null, (String[]) null, (String) null);
-                if (cursor == null || cursor.getCount() == 0 || !cursor.moveToFirst()) {
-                    throw new IllegalArgumentException("Given Uri could not be found in media store");
+                try {
+                    cursor = this.mContext.getContentResolver().query(uri, projection, null, null, null);
+                    if (cursor == null || cursor.getCount() == 0 || !cursor.moveToFirst()) {
+                        throw new IllegalArgumentException("Given Uri could not be found in media store");
+                    }
+                    int pathIndex = cursor.getColumnIndexOrThrow("_data");
+                    String path3 = cursor.getString(pathIndex);
+                } catch (SQLiteException e) {
+                    throw new IllegalArgumentException("Given Uri is not formatted in a way so that it can be found in media store.");
                 }
-                String path = cursor.getString(cursor.getColumnIndexOrThrow("_data"));
-                if (cursor == null) {
-                    return path;
-                }
-                cursor.close();
-                return path;
-            } catch (SQLiteException e) {
-                throw new IllegalArgumentException("Given Uri is not formatted in a way so that it can be found in media store.");
-            } catch (Throwable th) {
+            } finally {
                 if (cursor != null) {
                     cursor.close();
                 }
-                throw th;
             }
         } else {
             throw new IllegalArgumentException("Given Uri scheme is not supported");

@@ -8,8 +8,27 @@ import java.util.Locale;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/* loaded from: classes3.dex */
 public class SettingsValidators {
-    public static final Validator ANY_INTEGER_VALIDATOR = new Validator() {
+    public static final Validator BOOLEAN_VALIDATOR = new DiscreteValueValidator(new String[]{"0", "1"});
+    public static final Validator ANY_STRING_VALIDATOR = new Validator() { // from class: android.provider.SettingsValidators.1
+        @Override // android.provider.SettingsValidators.Validator
+        public boolean validate(String value) {
+            return true;
+        }
+    };
+    public static final Validator NON_NEGATIVE_INTEGER_VALIDATOR = new Validator() { // from class: android.provider.SettingsValidators.2
+        @Override // android.provider.SettingsValidators.Validator
+        public boolean validate(String value) {
+            try {
+                return Integer.parseInt(value) >= 0;
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        }
+    };
+    public static final Validator ANY_INTEGER_VALIDATOR = new Validator() { // from class: android.provider.SettingsValidators.3
+        @Override // android.provider.SettingsValidators.Validator
         public boolean validate(String value) {
             try {
                 Integer.parseInt(value);
@@ -19,56 +38,31 @@ public class SettingsValidators {
             }
         }
     };
-    public static final Validator ANY_STRING_VALIDATOR = new Validator() {
+    public static final Validator URI_VALIDATOR = new Validator() { // from class: android.provider.SettingsValidators.4
+        @Override // android.provider.SettingsValidators.Validator
         public boolean validate(String value) {
-            return true;
+            try {
+                Uri.decode(value);
+                return true;
+            } catch (IllegalArgumentException e) {
+                return false;
+            }
         }
     };
-    public static final Validator BOOLEAN_VALIDATOR = new DiscreteValueValidator(new String[]{"0", "1"});
-    public static final Validator COMPONENT_NAME_VALIDATOR = new Validator() {
+    public static final Validator COMPONENT_NAME_VALIDATOR = new Validator() { // from class: android.provider.SettingsValidators.5
+        @Override // android.provider.SettingsValidators.Validator
         public boolean validate(String value) {
             return (value == null || ComponentName.unflattenFromString(value) == null) ? false : true;
         }
     };
-    public static final Validator JSON_OBJECT_VALIDATOR = $$Lambda$SettingsValidators$0swA5rhyuVHADD7MEwgs2ihTCGM.INSTANCE;
-    public static final Validator LENIENT_IP_ADDRESS_VALIDATOR = new Validator() {
-        private static final int MAX_IPV6_LENGTH = 45;
-
-        public boolean validate(String value) {
-            if (value != null && value.length() <= 45) {
-                return true;
-            }
-            return false;
-        }
-    };
-    public static final Validator LOCALE_VALIDATOR = new Validator() {
-        public boolean validate(String value) {
-            if (value == null) {
-                return false;
-            }
-            for (Locale locale : Locale.getAvailableLocales()) {
-                if (value.equals(locale.toString())) {
-                    return true;
-                }
-            }
-            return false;
-        }
-    };
-    public static final Validator NON_NEGATIVE_INTEGER_VALIDATOR = new Validator() {
-        public boolean validate(String value) {
-            try {
-                return Integer.parseInt(value) >= 0;
-            } catch (NumberFormatException e) {
-                return false;
-            }
-        }
-    };
-    public static final Validator NULLABLE_COMPONENT_NAME_VALIDATOR = new Validator() {
+    public static final Validator NULLABLE_COMPONENT_NAME_VALIDATOR = new Validator() { // from class: android.provider.SettingsValidators.6
+        @Override // android.provider.SettingsValidators.Validator
         public boolean validate(String value) {
             return value == null || SettingsValidators.COMPONENT_NAME_VALIDATOR.validate(value);
         }
     };
-    public static final Validator PACKAGE_NAME_VALIDATOR = new Validator() {
+    public static final Validator PACKAGE_NAME_VALIDATOR = new Validator() { // from class: android.provider.SettingsValidators.7
+        @Override // android.provider.SettingsValidators.Validator
         public boolean validate(String value) {
             return value != null && isStringPackageName(value);
         }
@@ -77,8 +71,9 @@ public class SettingsValidators {
             if (value == null) {
                 return false;
             }
+            String[] subparts = value.split("\\.");
             boolean isValidPackageName = true;
-            for (String subpart : value.split("\\.")) {
+            for (String subpart : subparts) {
                 isValidPackageName &= isSubpartValidForPackageName(subpart);
                 if (!isValidPackageName) {
                     break;
@@ -92,26 +87,47 @@ public class SettingsValidators {
                 return false;
             }
             boolean isValidSubpart = Character.isLetter(subpart.charAt(0));
+            boolean isValidSubpart2 = isValidSubpart;
             for (int i = 1; i < subpart.length(); i++) {
-                isValidSubpart &= Character.isLetterOrDigit(subpart.charAt(i)) || subpart.charAt(i) == '_';
-                if (!isValidSubpart) {
+                isValidSubpart2 &= Character.isLetterOrDigit(subpart.charAt(i)) || subpart.charAt(i) == '_';
+                if (!isValidSubpart2) {
                     break;
                 }
             }
-            return isValidSubpart;
+            return isValidSubpart2;
         }
     };
-    public static final Validator URI_VALIDATOR = new Validator() {
+    public static final Validator LENIENT_IP_ADDRESS_VALIDATOR = new Validator() { // from class: android.provider.SettingsValidators.8
+        private static final int MAX_IPV6_LENGTH = 45;
+
+        @Override // android.provider.SettingsValidators.Validator
         public boolean validate(String value) {
-            try {
-                Uri.decode(value);
-                return true;
-            } catch (IllegalArgumentException e) {
+            return value != null && value.length() <= 45;
+        }
+    };
+    public static final Validator LOCALE_VALIDATOR = new Validator() { // from class: android.provider.SettingsValidators.9
+        @Override // android.provider.SettingsValidators.Validator
+        public boolean validate(String value) {
+            if (value == null) {
                 return false;
             }
+            Locale[] validLocales = Locale.getAvailableLocales();
+            for (Locale locale : validLocales) {
+                if (value.equals(locale.toString())) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    };
+    public static final Validator JSON_OBJECT_VALIDATOR = new Validator() { // from class: android.provider.-$$Lambda$SettingsValidators$0swA5rhyuVHADD7MEwgs2ihTCGM
+        @Override // android.provider.SettingsValidators.Validator
+        public final boolean validate(String str) {
+            return SettingsValidators.lambda$static$0(str);
         }
     };
 
+    /* loaded from: classes3.dex */
     public interface Validator {
         boolean validate(String str);
     }
@@ -128,6 +144,7 @@ public class SettingsValidators {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class DiscreteValueValidator implements Validator {
         private final String[] mValues;
 
@@ -135,11 +152,13 @@ public class SettingsValidators {
             this.mValues = values;
         }
 
+        @Override // android.provider.SettingsValidators.Validator
         public boolean validate(String value) {
-            return ArrayUtils.contains((T[]) this.mValues, value);
+            return ArrayUtils.contains(this.mValues, value);
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class InclusiveIntegerRangeValidator implements Validator {
         private final int mMax;
         private final int mMin;
@@ -149,19 +168,21 @@ public class SettingsValidators {
             this.mMax = max;
         }
 
+        @Override // android.provider.SettingsValidators.Validator
         public boolean validate(String value) {
             try {
                 int intValue = Integer.parseInt(value);
-                if (intValue < this.mMin || intValue > this.mMax) {
-                    return false;
+                if (intValue >= this.mMin) {
+                    return intValue <= this.mMax;
                 }
-                return true;
+                return false;
             } catch (NumberFormatException e) {
                 return false;
             }
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class InclusiveFloatRangeValidator implements Validator {
         private final float mMax;
         private final float mMin;
@@ -171,19 +192,21 @@ public class SettingsValidators {
             this.mMax = max;
         }
 
+        @Override // android.provider.SettingsValidators.Validator
         public boolean validate(String value) {
             try {
                 float floatValue = Float.parseFloat(value);
-                if (floatValue < this.mMin || floatValue > this.mMax) {
-                    return false;
+                if (floatValue >= this.mMin) {
+                    return floatValue <= this.mMax;
                 }
-                return true;
+                return false;
             } catch (NullPointerException | NumberFormatException e) {
                 return false;
             }
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class ComponentNameListValidator implements Validator {
         private final String mSeparator;
 
@@ -191,11 +214,13 @@ public class SettingsValidators {
             this.mSeparator = separator;
         }
 
+        @Override // android.provider.SettingsValidators.Validator
         public boolean validate(String value) {
             if (value == null) {
                 return false;
             }
-            for (String element : value.split(this.mSeparator)) {
+            String[] elements = value.split(this.mSeparator);
+            for (String element : elements) {
                 if (!SettingsValidators.COMPONENT_NAME_VALIDATOR.validate(element)) {
                     return false;
                 }
@@ -204,6 +229,7 @@ public class SettingsValidators {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class PackageNameListValidator implements Validator {
         private final String mSeparator;
 
@@ -211,11 +237,13 @@ public class SettingsValidators {
             this.mSeparator = separator;
         }
 
+        @Override // android.provider.SettingsValidators.Validator
         public boolean validate(String value) {
             if (value == null) {
                 return false;
             }
-            for (String element : value.split(this.mSeparator)) {
+            String[] elements = value.split(this.mSeparator);
+            for (String element : elements) {
                 if (!SettingsValidators.PACKAGE_NAME_VALIDATOR.validate(element)) {
                     return false;
                 }

@@ -1,31 +1,37 @@
 package android.hardware;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.ParcelFileDescriptor;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.ParcelFileDescriptor;
+import android.p007os.RemoteException;
 
+/* loaded from: classes.dex */
 public interface ISerialManager extends IInterface {
     String[] getSerialPorts() throws RemoteException;
 
     ParcelFileDescriptor openSerialPort(String str) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements ISerialManager {
+        @Override // android.hardware.ISerialManager
         public String[] getSerialPorts() throws RemoteException {
             return null;
         }
 
+        @Override // android.hardware.ISerialManager
         public ParcelFileDescriptor openSerialPort(String name) throws RemoteException {
             return null;
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements ISerialManager {
         private static final String DESCRIPTOR = "android.hardware.ISerialManager";
         static final int TRANSACTION_getSerialPorts = 1;
@@ -40,12 +46,13 @@ public interface ISerialManager extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof ISerialManager)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof ISerialManager)) {
+                return (ISerialManager) iin;
             }
-            return (ISerialManager) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -61,39 +68,42 @@ public interface ISerialManager extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        String[] _result = getSerialPorts();
-                        reply.writeNoException();
-                        reply.writeStringArray(_result);
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        ParcelFileDescriptor _result2 = openSerialPort(data.readString());
-                        reply.writeNoException();
-                        if (_result2 != null) {
-                            reply.writeInt(1);
-                            _result2.writeToParcel(reply, 1);
-                        } else {
-                            reply.writeInt(0);
-                        }
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    String[] _result = getSerialPorts();
+                    reply.writeNoException();
+                    reply.writeStringArray(_result);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0 = data.readString();
+                    ParcelFileDescriptor _result2 = openSerialPort(_arg0);
+                    reply.writeNoException();
+                    if (_result2 != null) {
+                        reply.writeInt(1);
+                        _result2.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements ISerialManager {
             public static ISerialManager sDefaultImpl;
             private IBinder mRemote;
@@ -102,6 +112,7 @@ public interface ISerialManager extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -110,18 +121,18 @@ public interface ISerialManager extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.hardware.ISerialManager
             public String[] getSerialPorts() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(1, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getSerialPorts();
                     }
                     _reply.readException();
                     String[] _result = _reply.createStringArray();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -129,6 +140,7 @@ public interface ISerialManager extends IInterface {
                 }
             }
 
+            @Override // android.hardware.ISerialManager
             public ParcelFileDescriptor openSerialPort(String name) throws RemoteException {
                 ParcelFileDescriptor _result;
                 Parcel _data = Parcel.obtain();
@@ -136,7 +148,8 @@ public interface ISerialManager extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(name);
-                    if (!this.mRemote.transact(2, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().openSerialPort(name);
                     }
                     _reply.readException();
@@ -145,10 +158,7 @@ public interface ISerialManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    ParcelFileDescriptor _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -157,11 +167,11 @@ public interface ISerialManager extends IInterface {
         }
 
         public static boolean setDefaultImpl(ISerialManager impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static ISerialManager getDefaultImpl() {

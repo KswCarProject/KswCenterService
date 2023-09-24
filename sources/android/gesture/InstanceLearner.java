@@ -5,8 +5,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.TreeMap;
 
+/* loaded from: classes.dex */
 class InstanceLearner extends Learner {
-    private static final Comparator<Prediction> sComparator = new Comparator<Prediction>() {
+    private static final Comparator<Prediction> sComparator = new Comparator<Prediction>() { // from class: android.gesture.InstanceLearner.1
+        @Override // java.util.Comparator
         public int compare(Prediction object1, Prediction object2) {
             double score1 = object1.score;
             double score2 = object2.score;
@@ -23,27 +25,17 @@ class InstanceLearner extends Learner {
     InstanceLearner() {
     }
 
-    /* access modifiers changed from: package-private */
-    public ArrayList<Prediction> classify(int sequenceType, int orientationType, float[] vector) {
-        double distance;
+    @Override // android.gesture.Learner
+    ArrayList<Prediction> classify(int sequenceType, int orientationType, float[] vector) {
         double weight;
-        float[] fArr = vector;
         ArrayList<Prediction> predictions = new ArrayList<>();
         ArrayList<Instance> instances = getInstances();
         int count = instances.size();
         TreeMap<String, Double> label2score = new TreeMap<>();
         for (int i = 0; i < count; i++) {
             Instance sample = instances.get(i);
-            if (sample.vector.length != fArr.length) {
-                int i2 = sequenceType;
-                int i3 = orientationType;
-            } else {
-                if (sequenceType == 2) {
-                    distance = (double) GestureUtils.minimumCosineDistance(sample.vector, fArr, orientationType);
-                } else {
-                    int i4 = orientationType;
-                    distance = (double) GestureUtils.squaredEuclideanDistance(sample.vector, fArr);
-                }
+            if (sample.vector.length == vector.length) {
+                double distance = sequenceType == 2 ? GestureUtils.minimumCosineDistance(sample.vector, vector, orientationType) : GestureUtils.squaredEuclideanDistance(sample.vector, vector);
                 if (distance == 0.0d) {
                     weight = Double.MAX_VALUE;
                 } else {
@@ -55,8 +47,6 @@ class InstanceLearner extends Learner {
                 }
             }
         }
-        int i5 = sequenceType;
-        int i6 = orientationType;
         for (String name : label2score.keySet()) {
             predictions.add(new Prediction(name, label2score.get(name).doubleValue()));
         }

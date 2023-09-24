@@ -2,6 +2,7 @@ package android.hardware.contexthub.V1_0;
 
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class HostEndPoint {
     public static final short BROADCAST = -1;
     public static final short UNSPECIFIED = -2;
@@ -19,13 +20,13 @@ public final class HostEndPoint {
     public static final String dumpBitfield(short o) {
         ArrayList<String> list = new ArrayList<>();
         short flipped = 0;
-        if ((o & -1) == -1) {
+        if ((o & (-1)) == -1) {
             list.add("BROADCAST");
-            flipped = (short) (0 | -1);
+            flipped = (short) (0 | (-1));
         }
-        if ((o & -2) == -2) {
+        if ((o & (-2)) == -2) {
             list.add("UNSPECIFIED");
-            flipped = (short) (flipped | -2);
+            flipped = (short) (flipped | (-2));
         }
         if (o != flipped) {
             list.add("0x" + Integer.toHexString(Short.toUnsignedInt((short) ((~flipped) & o))));

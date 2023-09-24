@@ -1,17 +1,22 @@
 package com.android.internal.telephony;
 
-import android.os.IBinder;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.RemoteException;
+import android.p007os.IBinder;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.RemoteException;
 import com.android.internal.telephony.ISmsSecurityService;
 
+/* loaded from: classes4.dex */
 public class SmsAuthorizationRequest implements Parcelable {
-    public static Parcelable.Creator<SmsAuthorizationRequest> CREATOR = new Parcelable.Creator<SmsAuthorizationRequest>() {
+    public static Parcelable.Creator<SmsAuthorizationRequest> CREATOR = new Parcelable.Creator<SmsAuthorizationRequest>() { // from class: com.android.internal.telephony.SmsAuthorizationRequest.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SmsAuthorizationRequest[] newArray(int size) {
             return new SmsAuthorizationRequest[size];
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SmsAuthorizationRequest createFromParcel(Parcel source) {
             return new SmsAuthorizationRequest(source);
         }
@@ -30,14 +35,15 @@ public class SmsAuthorizationRequest implements Parcelable {
         this.message = source.readString();
     }
 
-    public SmsAuthorizationRequest(ISmsSecurityService service2, IBinder binderToken, String packageName2, String destinationAddress2, String message2) {
-        this.service = service2;
+    public SmsAuthorizationRequest(ISmsSecurityService service, IBinder binderToken, String packageName, String destinationAddress, String message) {
+        this.service = service;
         this.token = binderToken;
-        this.packageName = packageName2;
-        this.destinationAddress = destinationAddress2;
-        this.message = message2;
+        this.packageName = packageName;
+        this.destinationAddress = destinationAddress;
+        this.message = message;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeStrongBinder(this.service.asBinder());
         dest.writeStrongBinder(this.token);
@@ -46,6 +52,7 @@ public class SmsAuthorizationRequest implements Parcelable {
         dest.writeString(this.message);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -63,6 +70,6 @@ public class SmsAuthorizationRequest implements Parcelable {
     }
 
     public String toString() {
-        return String.format("[%s] (%s) # %s", new Object[]{this.packageName, this.destinationAddress, this.message});
+        return String.format("[%s] (%s) # %s", this.packageName, this.destinationAddress, this.message);
     }
 }

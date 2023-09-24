@@ -1,5 +1,6 @@
 package com.android.server.power;
 
+/* loaded from: classes4.dex */
 public final class PowerManagerServiceDumpProto {
     public static final long ACTIVE_WAKE_LOCKS = 1146756268048L;
     public static final long ARE_UIDS_CHANGED = 1133871366188L;
@@ -52,6 +53,7 @@ public final class PowerManagerServiceDumpProto {
     public static final long WAKE_LOCKS = 2246267895855L;
     public static final long WIRELESS_CHARGER_DETECTOR = 1146756268081L;
 
+    /* loaded from: classes4.dex */
     public final class ConstantsProto {
         public static final long IS_NO_CACHED_WAKE_LOCKS = 1133871366145L;
 
@@ -59,6 +61,7 @@ public final class PowerManagerServiceDumpProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public final class ActiveWakeLocksProto {
         public static final long IS_BUTTON_BRIGHT = 1133871366148L;
         public static final long IS_CPU = 1133871366145L;
@@ -73,6 +76,7 @@ public final class PowerManagerServiceDumpProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public final class UserActivityProto {
         public static final long IS_SCREEN_BRIGHT = 1133871366145L;
         public static final long IS_SCREEN_DIM = 1133871366146L;
@@ -82,6 +86,7 @@ public final class PowerManagerServiceDumpProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public final class UidStateProto {
         public static final long IS_ACTIVE = 1133871366147L;
         public static final long NUM_WAKE_LOCKS = 1120986464260L;

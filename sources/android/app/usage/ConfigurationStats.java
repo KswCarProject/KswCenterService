@@ -2,11 +2,14 @@ package android.app.usage;
 
 import android.annotation.UnsupportedAppUsage;
 import android.content.res.Configuration;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public final class ConfigurationStats implements Parcelable {
-    public static final Parcelable.Creator<ConfigurationStats> CREATOR = new Parcelable.Creator<ConfigurationStats>() {
+    public static final Parcelable.Creator<ConfigurationStats> CREATOR = new Parcelable.Creator<ConfigurationStats>() { // from class: android.app.usage.ConfigurationStats.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ConfigurationStats createFromParcel(Parcel source) {
             ConfigurationStats stats = new ConfigurationStats();
             if (source.readInt() != 0) {
@@ -20,6 +23,8 @@ public final class ConfigurationStats implements Parcelable {
             return stats;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ConfigurationStats[] newArray(int size) {
             return new ConfigurationStats[size];
         }
@@ -73,10 +78,12 @@ public final class ConfigurationStats implements Parcelable {
         return this.mActivationCount;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         if (this.mConfiguration != null) {
             dest.writeInt(1);

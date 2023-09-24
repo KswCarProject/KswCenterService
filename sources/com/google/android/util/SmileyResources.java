@@ -4,6 +4,7 @@ import com.google.android.util.AbstractMessageParser;
 import java.util.HashMap;
 import java.util.Set;
 
+/* loaded from: classes4.dex */
 public class SmileyResources implements AbstractMessageParser.Resources {
     private HashMap<String, Integer> mSmileyToRes = new HashMap<>();
     private final AbstractMessageParser.TrieNode smileys = new AbstractMessageParser.TrieNode();
@@ -23,18 +24,22 @@ public class SmileyResources implements AbstractMessageParser.Resources {
         return i.intValue();
     }
 
+    @Override // com.google.android.util.AbstractMessageParser.Resources
     public Set<String> getSchemes() {
         return null;
     }
 
+    @Override // com.google.android.util.AbstractMessageParser.Resources
     public AbstractMessageParser.TrieNode getDomainSuffixes() {
         return null;
     }
 
+    @Override // com.google.android.util.AbstractMessageParser.Resources
     public AbstractMessageParser.TrieNode getSmileys() {
         return this.smileys;
     }
 
+    @Override // com.google.android.util.AbstractMessageParser.Resources
     public AbstractMessageParser.TrieNode getAcronyms() {
         return null;
     }

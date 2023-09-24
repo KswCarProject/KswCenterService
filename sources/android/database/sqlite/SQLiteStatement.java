@@ -1,101 +1,96 @@
 package android.database.sqlite;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.CancellationSignal;
-import android.os.ParcelFileDescriptor;
+import android.p007os.ParcelFileDescriptor;
 
+/* loaded from: classes.dex */
 public final class SQLiteStatement extends SQLiteProgram {
     @UnsupportedAppUsage
     SQLiteStatement(SQLiteDatabase db, String sql, Object[] bindArgs) {
-        super(db, sql, bindArgs, (CancellationSignal) null);
+        super(db, sql, bindArgs, null);
     }
 
     public void execute() {
         acquireReference();
         try {
-            getSession().execute(getSql(), getBindArgs(), getConnectionFlags(), (CancellationSignal) null);
+            try {
+                getSession().execute(getSql(), getBindArgs(), getConnectionFlags(), null);
+            } catch (SQLiteDatabaseCorruptException ex) {
+                onCorruption();
+                throw ex;
+            }
+        } finally {
             releaseReference();
-        } catch (SQLiteDatabaseCorruptException ex) {
-            onCorruption();
-            throw ex;
-        } catch (Throwable th) {
-            releaseReference();
-            throw th;
         }
     }
 
     public int executeUpdateDelete() {
         acquireReference();
         try {
-            int executeForChangedRowCount = getSession().executeForChangedRowCount(getSql(), getBindArgs(), getConnectionFlags(), (CancellationSignal) null);
+            try {
+                return getSession().executeForChangedRowCount(getSql(), getBindArgs(), getConnectionFlags(), null);
+            } catch (SQLiteDatabaseCorruptException ex) {
+                onCorruption();
+                throw ex;
+            }
+        } finally {
             releaseReference();
-            return executeForChangedRowCount;
-        } catch (SQLiteDatabaseCorruptException ex) {
-            onCorruption();
-            throw ex;
-        } catch (Throwable th) {
-            releaseReference();
-            throw th;
         }
     }
 
     public long executeInsert() {
         acquireReference();
         try {
-            long executeForLastInsertedRowId = getSession().executeForLastInsertedRowId(getSql(), getBindArgs(), getConnectionFlags(), (CancellationSignal) null);
+            try {
+                return getSession().executeForLastInsertedRowId(getSql(), getBindArgs(), getConnectionFlags(), null);
+            } catch (SQLiteDatabaseCorruptException ex) {
+                onCorruption();
+                throw ex;
+            }
+        } finally {
             releaseReference();
-            return executeForLastInsertedRowId;
-        } catch (SQLiteDatabaseCorruptException ex) {
-            onCorruption();
-            throw ex;
-        } catch (Throwable th) {
-            releaseReference();
-            throw th;
         }
     }
 
     public long simpleQueryForLong() {
         acquireReference();
         try {
-            long executeForLong = getSession().executeForLong(getSql(), getBindArgs(), getConnectionFlags(), (CancellationSignal) null);
+            try {
+                return getSession().executeForLong(getSql(), getBindArgs(), getConnectionFlags(), null);
+            } catch (SQLiteDatabaseCorruptException ex) {
+                onCorruption();
+                throw ex;
+            }
+        } finally {
             releaseReference();
-            return executeForLong;
-        } catch (SQLiteDatabaseCorruptException ex) {
-            onCorruption();
-            throw ex;
-        } catch (Throwable th) {
-            releaseReference();
-            throw th;
         }
     }
 
     public String simpleQueryForString() {
         acquireReference();
         try {
-            String executeForString = getSession().executeForString(getSql(), getBindArgs(), getConnectionFlags(), (CancellationSignal) null);
+            try {
+                return getSession().executeForString(getSql(), getBindArgs(), getConnectionFlags(), null);
+            } catch (SQLiteDatabaseCorruptException ex) {
+                onCorruption();
+                throw ex;
+            }
+        } finally {
             releaseReference();
-            return executeForString;
-        } catch (SQLiteDatabaseCorruptException ex) {
-            onCorruption();
-            throw ex;
-        } catch (Throwable th) {
-            releaseReference();
-            throw th;
         }
     }
 
     public ParcelFileDescriptor simpleQueryForBlobFileDescriptor() {
         acquireReference();
         try {
-            ParcelFileDescriptor executeForBlobFileDescriptor = getSession().executeForBlobFileDescriptor(getSql(), getBindArgs(), getConnectionFlags(), (CancellationSignal) null);
+            try {
+                return getSession().executeForBlobFileDescriptor(getSql(), getBindArgs(), getConnectionFlags(), null);
+            } catch (SQLiteDatabaseCorruptException ex) {
+                onCorruption();
+                throw ex;
+            }
+        } finally {
             releaseReference();
-            return executeForBlobFileDescriptor;
-        } catch (SQLiteDatabaseCorruptException ex) {
-            onCorruption();
-            throw ex;
-        } catch (Throwable th) {
-            releaseReference();
-            throw th;
         }
     }
 

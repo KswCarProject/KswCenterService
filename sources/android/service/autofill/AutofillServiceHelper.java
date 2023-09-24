@@ -3,14 +3,12 @@ package android.service.autofill;
 import android.view.autofill.AutofillId;
 import com.android.internal.util.Preconditions;
 
+/* loaded from: classes3.dex */
 final class AutofillServiceHelper {
     static AutofillId[] assertValid(AutofillId[] ids) {
-        int i = 0;
         Preconditions.checkArgument(ids != null && ids.length > 0, "must have at least one id");
-        while (i < ids.length) {
-            if (ids[i] != null) {
-                i++;
-            } else {
+        for (int i = 0; i < ids.length; i++) {
+            if (ids[i] == null) {
                 throw new IllegalArgumentException("ids[" + i + "] must not be null");
             }
         }

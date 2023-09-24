@@ -14,6 +14,7 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
 
+/* loaded from: classes4.dex */
 public class Xml {
     public static String FEATURE_RELAXED = "http://xmlpull.org/v1/doc/features.html#relaxed";
 
@@ -59,6 +60,7 @@ public class Xml {
         return XmlObjectFactory.newXmlSerializer();
     }
 
+    /* loaded from: classes4.dex */
     public enum Encoding {
         US_ASCII("US-ASCII"),
         UTF_8("UTF-8"),
@@ -67,12 +69,13 @@ public class Xml {
         
         final String expatName;
 
-        private Encoding(String expatName2) {
-            this.expatName = expatName2;
+        Encoding(String expatName) {
+            this.expatName = expatName;
         }
     }
 
     public static Encoding findEncodingByName(String encodingName) throws UnsupportedEncodingException {
+        Encoding[] values;
         if (encodingName == null) {
             return Encoding.UTF_8;
         }

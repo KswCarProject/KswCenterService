@@ -1,9 +1,12 @@
 package android.graphics.text;
 
+import dalvik.annotation.optimization.CriticalNative;
+import dalvik.annotation.optimization.FastNative;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import libcore.util.NativeAllocationRegistry;
 
+/* loaded from: classes.dex */
 public class LineBreaker {
     public static final int BREAK_STRATEGY_BALANCED = 2;
     public static final int BREAK_STRATEGY_HIGH_QUALITY = 1;
@@ -17,49 +20,65 @@ public class LineBreaker {
     private final long mNativePtr;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface BreakStrategy {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface HyphenationFrequency {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface JustificationMode {
     }
 
     private static native long nComputeLineBreaks(long j, char[] cArr, long j2, int i, float f, int i2, float f2, float[] fArr, float f3, int i3);
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
+    @CriticalNative
     public static native float nGetLineAscent(long j, int i);
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
+    @CriticalNative
     public static native int nGetLineBreakOffset(long j, int i);
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
+    @CriticalNative
     public static native int nGetLineCount(long j);
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
+    @CriticalNative
     public static native float nGetLineDescent(long j, int i);
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
+    @CriticalNative
     public static native int nGetLineFlag(long j, int i);
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
+    @CriticalNative
     public static native float nGetLineWidth(long j, int i);
 
+    @CriticalNative
     private static native long nGetReleaseFunc();
 
-    /* access modifiers changed from: private */
-    public static native long nGetReleaseResultFunc();
+    @CriticalNative
+    private static native long nGetReleaseResultFunc();
 
+    @FastNative
     private static native long nInit(int i, int i2, boolean z, int[] iArr);
 
+    static /* synthetic */ long access$100() {
+        return nGetReleaseResultFunc();
+    }
+
+    /* loaded from: classes.dex */
     public static final class Builder {
         private int mBreakStrategy = 0;
         private int mHyphenationFrequency = 0;
-        private int[] mIndents = null;
         private int mJustificationMode = 0;
+        private int[] mIndents = null;
 
         public Builder setBreakStrategy(int breakStrategy) {
             this.mBreakStrategy = breakStrategy;
@@ -86,17 +105,13 @@ public class LineBreaker {
         }
     }
 
+    /* loaded from: classes.dex */
     public static class ParagraphConstraints {
-        /* access modifiers changed from: private */
-        public float mDefaultTabStop = 0.0f;
-        /* access modifiers changed from: private */
-        public float mFirstWidth = 0.0f;
-        /* access modifiers changed from: private */
-        public int mFirstWidthLineCount = 0;
-        /* access modifiers changed from: private */
-        public float[] mVariableTabStops = null;
-        /* access modifiers changed from: private */
-        public float mWidth = 0.0f;
+        private float mWidth = 0.0f;
+        private float mFirstWidth = 0.0f;
+        private int mFirstWidthLineCount = 0;
+        private float[] mVariableTabStops = null;
+        private float mDefaultTabStop = 0.0f;
 
         public void setWidth(float width) {
             this.mWidth = width;
@@ -133,13 +148,14 @@ public class LineBreaker {
         }
     }
 
+    /* loaded from: classes.dex */
     public static class Result {
         private static final int END_HYPHEN_MASK = 7;
         private static final int HYPHEN_MASK = 255;
         private static final int START_HYPHEN_BITS_SHIFT = 3;
         private static final int START_HYPHEN_MASK = 24;
         private static final int TAB_MASK = 536870912;
-        private static final NativeAllocationRegistry sRegistry = NativeAllocationRegistry.createMalloced(Result.class.getClassLoader(), LineBreaker.nGetReleaseResultFunc());
+        private static final NativeAllocationRegistry sRegistry = NativeAllocationRegistry.createMalloced(Result.class.getClassLoader(), LineBreaker.access$100());
         private final long mPtr;
 
         private Result(long ptr) {
@@ -181,7 +197,7 @@ public class LineBreaker {
     }
 
     private LineBreaker(int breakStrategy, int hyphenationFrequency, int justify, int[] indents) {
-        this.mNativePtr = nInit(breakStrategy, hyphenationFrequency, justify != 1 ? false : true, indents);
+        this.mNativePtr = nInit(breakStrategy, hyphenationFrequency, justify == 1, indents);
         sRegistry.registerNativeAllocation(this, this.mNativePtr);
     }
 

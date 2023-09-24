@@ -5,6 +5,7 @@ import android.filterfw.core.NativeProgram;
 import android.filterfw.core.Program;
 import android.filterfw.core.ShaderProgram;
 
+/* loaded from: classes.dex */
 public class BrightnessFilter extends SimpleImageFilter {
     private static final String mBrightnessShader = "precision mediump float;\nuniform sampler2D tex_sampler_0;\nuniform float brightness;\nvarying vec2 v_texcoord;\nvoid main() {\n  vec4 color = texture2D(tex_sampler_0, v_texcoord);\n  gl_FragColor = brightness * color;\n}\n";
 
@@ -12,13 +13,13 @@ public class BrightnessFilter extends SimpleImageFilter {
         super(name, "brightness");
     }
 
-    /* access modifiers changed from: protected */
-    public Program getNativeProgram(FilterContext context) {
+    @Override // android.filterpacks.imageproc.SimpleImageFilter
+    protected Program getNativeProgram(FilterContext context) {
         return new NativeProgram("filterpack_imageproc", "brightness");
     }
 
-    /* access modifiers changed from: protected */
-    public Program getShaderProgram(FilterContext context) {
+    @Override // android.filterpacks.imageproc.SimpleImageFilter
+    protected Program getShaderProgram(FilterContext context) {
         return new ShaderProgram(context, mBrightnessShader);
     }
 }

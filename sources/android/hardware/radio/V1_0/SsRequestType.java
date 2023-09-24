@@ -2,6 +2,7 @@ package android.hardware.radio.V1_0;
 
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class SsRequestType {
     public static final int ACTIVATION = 0;
     public static final int DEACTIVATION = 1;

@@ -19,12 +19,14 @@ import android.graphics.PorterDuffColorFilter;
 import android.graphics.Rect;
 import android.graphics.Region;
 import android.graphics.Xfermode;
-import android.os.Trace;
+import android.p007os.Trace;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.StateSet;
 import android.util.TypedValue;
-import com.android.internal.R;
+import android.util.Xml;
+import com.android.internal.C3132R;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
@@ -32,23 +34,25 @@ import java.util.Arrays;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+/* loaded from: classes.dex */
 public abstract class Drawable {
-    static final BlendMode DEFAULT_BLEND_MODE = BlendMode.SRC_IN;
-    static final PorterDuff.Mode DEFAULT_TINT_MODE = PorterDuff.Mode.SRC_IN;
+    private int mLayoutDirection;
     private static final Rect ZERO_BOUNDS_RECT = new Rect();
+    static final PorterDuff.Mode DEFAULT_TINT_MODE = PorterDuff.Mode.SRC_IN;
+    static final BlendMode DEFAULT_BLEND_MODE = BlendMode.SRC_IN;
+    private int[] mStateSet = StateSet.WILD_CARD;
+    private int mLevel = 0;
+    private int mChangingConfigurations = 0;
     private Rect mBounds = ZERO_BOUNDS_RECT;
     @UnsupportedAppUsage
     private WeakReference<Callback> mCallback = null;
-    private int mChangingConfigurations = 0;
-    private int mLayoutDirection;
-    private int mLevel = 0;
-    private boolean mSetBlendModeInvoked = false;
-    private boolean mSetTintModeInvoked = false;
+    private boolean mVisible = true;
     @UnsupportedAppUsage
     protected int mSrcDensityOverride = 0;
-    private int[] mStateSet = StateSet.WILD_CARD;
-    private boolean mVisible = true;
+    private boolean mSetBlendModeInvoked = false;
+    private boolean mSetTintModeInvoked = false;
 
+    /* loaded from: classes.dex */
     public interface Callback {
         void invalidateDrawable(Drawable drawable);
 
@@ -130,7 +134,7 @@ public abstract class Drawable {
 
     public Callback getCallback() {
         if (this.mCallback != null) {
-            return (Callback) this.mCallback.get();
+            return this.mCallback.get();
         }
         return null;
     }
@@ -161,11 +165,11 @@ public abstract class Drawable {
     }
 
     public final boolean setLayoutDirection(int layoutDirection) {
-        if (this.mLayoutDirection == layoutDirection) {
-            return false;
+        if (this.mLayoutDirection != layoutDirection) {
+            this.mLayoutDirection = layoutDirection;
+            return onLayoutDirectionChanged(layoutDirection);
         }
-        this.mLayoutDirection = layoutDirection;
-        return onLayoutDirectionChanged(layoutDirection);
+        return false;
     }
 
     public boolean onLayoutDirectionChanged(int layoutDirection) {
@@ -220,7 +224,7 @@ public abstract class Drawable {
     }
 
     public void clearColorFilter() {
-        setColorFilter((ColorFilter) null);
+        setColorFilter(null);
     }
 
     public void setHotspot(float x, float y) {
@@ -246,11 +250,11 @@ public abstract class Drawable {
     }
 
     public boolean setState(int[] stateSet) {
-        if (Arrays.equals(this.mStateSet, stateSet)) {
-            return false;
+        if (!Arrays.equals(this.mStateSet, stateSet)) {
+            this.mStateSet = stateSet;
+            return onStateChange(stateSet);
         }
-        this.mStateSet = stateSet;
-        return onStateChange(stateSet);
+        return false;
     }
 
     public int[] getState() {
@@ -265,11 +269,11 @@ public abstract class Drawable {
     }
 
     public final boolean setLevel(int level) {
-        if (this.mLevel == level) {
-            return false;
+        if (this.mLevel != level) {
+            this.mLevel = level;
+            return onLevelChange(level);
         }
-        this.mLevel = level;
-        return onLevelChange(level);
+        return false;
     }
 
     public final int getLevel() {
@@ -323,18 +327,15 @@ public abstract class Drawable {
         return null;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean onStateChange(int[] state) {
+    protected boolean onStateChange(int[] state) {
         return false;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean onLevelChange(int level) {
+    protected boolean onLevelChange(int level) {
         return false;
     }
 
-    /* access modifiers changed from: protected */
-    public void onBoundsChange(Rect bounds) {
+    protected void onBoundsChange(Rect bounds) {
     }
 
     public int getIntrinsicWidth() {
@@ -383,20 +384,20 @@ public abstract class Drawable {
     }
 
     public static Drawable createFromStream(InputStream is, String srcName) {
-        Trace.traceBegin(8192, srcName != null ? srcName : "Unknown drawable");
+        Trace.traceBegin(8192L, srcName != null ? srcName : "Unknown drawable");
         try {
-            return createFromResourceStream((Resources) null, (TypedValue) null, is, srcName);
+            return createFromResourceStream(null, null, is, srcName);
         } finally {
-            Trace.traceEnd(8192);
+            Trace.traceEnd(8192L);
         }
     }
 
     public static Drawable createFromResourceStream(Resources res, TypedValue value, InputStream is, String srcName) {
-        Trace.traceBegin(8192, srcName != null ? srcName : "Unknown drawable");
+        Trace.traceBegin(8192L, srcName != null ? srcName : "Unknown drawable");
         try {
-            return createFromResourceStream(res, value, is, srcName, (BitmapFactory.Options) null);
+            return createFromResourceStream(res, value, is, srcName, null);
         } finally {
-            Trace.traceEnd(8192);
+            Trace.traceEnd(8192L);
         }
     }
 
@@ -425,28 +426,38 @@ public abstract class Drawable {
 
     private static Drawable getBitmapDrawable(Resources res, TypedValue value, InputStream is) {
         ImageDecoder.Source source;
-        if (value != null) {
-            int density = 0;
-            try {
+        try {
+            if (value != null) {
+                int density = 0;
                 if (value.density == 0) {
                     density = 160;
                 } else if (value.density != 65535) {
                     density = value.density;
                 }
                 source = ImageDecoder.createSource(res, is, density);
-            } catch (IOException e) {
-                Log.e("Drawable", "Unable to decode stream: " + e);
-                return null;
+            } else {
+                source = ImageDecoder.createSource(res, is);
             }
-        } else {
-            source = ImageDecoder.createSource(res, is);
+            return ImageDecoder.decodeDrawable(source, new ImageDecoder.OnHeaderDecodedListener() { // from class: android.graphics.drawable.-$$Lambda$Drawable$bbJz2VgQAwkXlE27mR8nPMYacEw
+                @Override // android.graphics.ImageDecoder.OnHeaderDecodedListener
+                public final void onHeaderDecoded(ImageDecoder imageDecoder, ImageDecoder.ImageInfo imageInfo, ImageDecoder.Source source2) {
+                    Drawable.lambda$getBitmapDrawable$1(imageDecoder, imageInfo, source2);
+                }
+            });
+        } catch (IOException e) {
+            Log.m70e("Drawable", "Unable to decode stream: " + e);
+            return null;
         }
-        return ImageDecoder.decodeDrawable(source, $$Lambda$Drawable$bbJz2VgQAwkXlE27mR8nPMYacEw.INSTANCE);
     }
 
     static /* synthetic */ void lambda$getBitmapDrawable$1(ImageDecoder decoder, ImageDecoder.ImageInfo info, ImageDecoder.Source src) {
         decoder.setAllocator(1);
-        decoder.setOnPartialImageListener($$Lambda$Drawable$KZt6g0IxKV2yrq1V3HrWrb1kXg.INSTANCE);
+        decoder.setOnPartialImageListener(new ImageDecoder.OnPartialImageListener() { // from class: android.graphics.drawable.-$$Lambda$Drawable$KZt6g0-IxKV2yrq1V3HrWrb1kXg
+            @Override // android.graphics.ImageDecoder.OnPartialImageListener
+            public final boolean onPartialImage(ImageDecoder.DecodeException decodeException) {
+                return Drawable.lambda$getBitmapDrawable$0(decodeException);
+            }
+        });
     }
 
     static /* synthetic */ boolean lambda$getBitmapDrawable$0(ImageDecoder.DecodeException e) {
@@ -454,54 +465,34 @@ public abstract class Drawable {
     }
 
     public static Drawable createFromXml(Resources r, XmlPullParser parser) throws XmlPullParserException, IOException {
-        return createFromXml(r, parser, (Resources.Theme) null);
+        return createFromXml(r, parser, null);
     }
 
     public static Drawable createFromXml(Resources r, XmlPullParser parser, Resources.Theme theme) throws XmlPullParserException, IOException {
         return createFromXmlForDensity(r, parser, 0, theme);
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:11:0x0034  */
-    /* JADX WARNING: Removed duplicated region for block: B:6:0x0012  */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public static android.graphics.drawable.Drawable createFromXmlForDensity(android.content.res.Resources r6, org.xmlpull.v1.XmlPullParser r7, int r8, android.content.res.Resources.Theme r9) throws org.xmlpull.v1.XmlPullParserException, java.io.IOException {
-        /*
-            android.util.AttributeSet r0 = android.util.Xml.asAttributeSet(r7)
-        L_0x0004:
-            int r1 = r7.next()
-            r2 = r1
-            r3 = 2
-            if (r1 == r3) goto L_0x0010
-            r1 = 1
-            if (r2 == r1) goto L_0x0010
-            goto L_0x0004
-        L_0x0010:
-            if (r2 != r3) goto L_0x0034
-            android.graphics.drawable.Drawable r1 = createFromXmlInnerForDensity(r6, r7, r0, r8, r9)
-            if (r1 == 0) goto L_0x0019
-            return r1
-        L_0x0019:
-            java.lang.RuntimeException r3 = new java.lang.RuntimeException
-            java.lang.StringBuilder r4 = new java.lang.StringBuilder
-            r4.<init>()
-            java.lang.String r5 = "Unknown initial tag: "
-            r4.append(r5)
-            java.lang.String r5 = r7.getName()
-            r4.append(r5)
-            java.lang.String r4 = r4.toString()
-            r3.<init>(r4)
-            throw r3
-        L_0x0034:
-            org.xmlpull.v1.XmlPullParserException r1 = new org.xmlpull.v1.XmlPullParserException
-            java.lang.String r3 = "No start tag found"
-            r1.<init>(r3)
-            throw r1
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.graphics.drawable.Drawable.createFromXmlForDensity(android.content.res.Resources, org.xmlpull.v1.XmlPullParser, int, android.content.res.Resources$Theme):android.graphics.drawable.Drawable");
+    public static Drawable createFromXmlForDensity(Resources r, XmlPullParser parser, int density, Resources.Theme theme) throws XmlPullParserException, IOException {
+        int type;
+        AttributeSet attrs = Xml.asAttributeSet(parser);
+        do {
+            type = parser.next();
+            if (type == 2) {
+                break;
+            }
+        } while (type != 1);
+        if (type != 2) {
+            throw new XmlPullParserException("No start tag found");
+        }
+        Drawable drawable = createFromXmlInnerForDensity(r, parser, attrs, density, theme);
+        if (drawable == null) {
+            throw new RuntimeException("Unknown initial tag: " + parser.getName());
+        }
+        return drawable;
     }
 
     public static Drawable createFromXmlInner(Resources r, XmlPullParser parser, AttributeSet attrs) throws XmlPullParserException, IOException {
-        return createFromXmlInner(r, parser, attrs, (Resources.Theme) null);
+        return createFromXmlInner(r, parser, attrs, null);
     }
 
     public static Drawable createFromXmlInner(Resources r, XmlPullParser parser, AttributeSet attrs, Resources.Theme theme) throws XmlPullParserException, IOException {
@@ -512,92 +503,43 @@ public abstract class Drawable {
         return r.getDrawableInflater().inflateFromXmlForDensity(parser.getName(), parser, attrs, density, theme);
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:12:0x0019, code lost:
-        r4 = th;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:13:0x001a, code lost:
-        r5 = null;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:17:0x001e, code lost:
-        r5 = move-exception;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:18:0x001f, code lost:
-        r7 = r5;
-        r5 = r4;
-        r4 = r7;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public static android.graphics.drawable.Drawable createFromPath(java.lang.String r8) {
-        /*
-            r0 = 0
-            if (r8 != 0) goto L_0x0004
-            return r0
-        L_0x0004:
-            r1 = 8192(0x2000, double:4.0474E-320)
-            android.os.Trace.traceBegin(r1, r8)
-            java.io.FileInputStream r3 = new java.io.FileInputStream     // Catch:{ IOException -> 0x0036, all -> 0x0031 }
-            r3.<init>(r8)     // Catch:{ IOException -> 0x0036, all -> 0x0031 }
-            android.graphics.drawable.Drawable r4 = getBitmapDrawable(r0, r0, r3)     // Catch:{ Throwable -> 0x001c, all -> 0x0019 }
-            r3.close()     // Catch:{ IOException -> 0x0036, all -> 0x0031 }
-            android.os.Trace.traceEnd(r1)
-            return r4
-        L_0x0019:
-            r4 = move-exception
-            r5 = r0
-            goto L_0x0022
-        L_0x001c:
-            r4 = move-exception
-            throw r4     // Catch:{ all -> 0x001e }
-        L_0x001e:
-            r5 = move-exception
-            r7 = r5
-            r5 = r4
-            r4 = r7
-        L_0x0022:
-            if (r5 == 0) goto L_0x002d
-            r3.close()     // Catch:{ Throwable -> 0x0028 }
-            goto L_0x0030
-        L_0x0028:
-            r6 = move-exception
-            r5.addSuppressed(r6)     // Catch:{ IOException -> 0x0036, all -> 0x0031 }
-            goto L_0x0030
-        L_0x002d:
-            r3.close()     // Catch:{ IOException -> 0x0036, all -> 0x0031 }
-        L_0x0030:
-            throw r4     // Catch:{ IOException -> 0x0036, all -> 0x0031 }
-        L_0x0031:
-            r0 = move-exception
-            android.os.Trace.traceEnd(r1)
-            throw r0
-        L_0x0036:
-            r3 = move-exception
-            android.os.Trace.traceEnd(r1)
-            return r0
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.graphics.drawable.Drawable.createFromPath(java.lang.String):android.graphics.drawable.Drawable");
+    public static Drawable createFromPath(String pathName) {
+        if (pathName == null) {
+            return null;
+        }
+        Trace.traceBegin(8192L, pathName);
+        try {
+            FileInputStream stream = new FileInputStream(pathName);
+            Drawable bitmapDrawable = getBitmapDrawable(null, null, stream);
+            stream.close();
+            return bitmapDrawable;
+        } catch (IOException e) {
+            return null;
+        } finally {
+            Trace.traceEnd(8192L);
+        }
     }
 
     public void inflate(Resources r, XmlPullParser parser, AttributeSet attrs) throws XmlPullParserException, IOException {
-        inflate(r, parser, attrs, (Resources.Theme) null);
+        inflate(r, parser, attrs, null);
     }
 
     public void inflate(Resources r, XmlPullParser parser, AttributeSet attrs, Resources.Theme theme) throws XmlPullParserException, IOException {
-        TypedArray a = obtainAttributes(r, theme, attrs, R.styleable.Drawable);
+        TypedArray a = obtainAttributes(r, theme, attrs, C3132R.styleable.Drawable);
         this.mVisible = a.getBoolean(0, this.mVisible);
         a.recycle();
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void inflateWithAttributes(Resources r, XmlPullParser parser, TypedArray attrs, int visibleAttr) throws XmlPullParserException, IOException {
+    void inflateWithAttributes(Resources r, XmlPullParser parser, TypedArray attrs, int visibleAttr) throws XmlPullParserException, IOException {
         this.mVisible = attrs.getBoolean(visibleAttr, this.mVisible);
     }
 
-    /* access modifiers changed from: package-private */
-    public final void setSrcDensityOverride(int density) {
+    final void setSrcDensityOverride(int density) {
         this.mSrcDensityOverride = density;
     }
 
+    /* loaded from: classes.dex */
     public static abstract class ConstantState {
         public abstract int getChangingConfigurations();
 
@@ -627,29 +569,27 @@ public abstract class Drawable {
         return new BitmapDrawable(res, bm);
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public PorterDuffColorFilter updateTintFilter(PorterDuffColorFilter tintFilter, ColorStateList tint, PorterDuff.Mode tintMode) {
+    PorterDuffColorFilter updateTintFilter(PorterDuffColorFilter tintFilter, ColorStateList tint, PorterDuff.Mode tintMode) {
         if (tint == null || tintMode == null) {
             return null;
         }
         int color = tint.getColorForState(getState(), 0);
-        if (tintFilter != null && tintFilter.getColor() == color && tintFilter.getMode() == tintMode) {
-            return tintFilter;
+        if (tintFilter == null || tintFilter.getColor() != color || tintFilter.getMode() != tintMode) {
+            return new PorterDuffColorFilter(color, tintMode);
         }
-        return new PorterDuffColorFilter(color, tintMode);
+        return tintFilter;
     }
 
-    /* access modifiers changed from: package-private */
-    public BlendModeColorFilter updateBlendModeFilter(BlendModeColorFilter blendFilter, ColorStateList tint, BlendMode blendMode) {
+    BlendModeColorFilter updateBlendModeFilter(BlendModeColorFilter blendFilter, ColorStateList tint, BlendMode blendMode) {
         if (tint == null || blendMode == null) {
             return null;
         }
         int color = tint.getColorForState(getState(), 0);
-        if (blendFilter != null && blendFilter.getColor() == color && blendFilter.getMode() == blendMode) {
-            return blendFilter;
+        if (blendFilter == null || blendFilter.getColor() != color || blendFilter.getMode() != blendMode) {
+            return new BlendModeColorFilter(color, blendMode);
         }
-        return new BlendModeColorFilter(color, blendMode);
+        return blendFilter;
     }
 
     protected static TypedArray obtainAttributes(Resources res, Resources.Theme theme, AttributeSet set, int[] attrs) {
@@ -660,14 +600,14 @@ public abstract class Drawable {
     }
 
     static float scaleFromDensity(float pixels, int sourceDensity, int targetDensity) {
-        return (((float) targetDensity) * pixels) / ((float) sourceDensity);
+        return (targetDensity * pixels) / sourceDensity;
     }
 
     static int scaleFromDensity(int pixels, int sourceDensity, int targetDensity, boolean isSize) {
         if (pixels == 0 || sourceDensity == targetDensity) {
             return pixels;
         }
-        float result = ((float) (pixels * targetDensity)) / ((float) sourceDensity);
+        float result = (pixels * targetDensity) / sourceDensity;
         if (!isSize) {
             return (int) result;
         }
@@ -697,47 +637,47 @@ public abstract class Drawable {
 
     @UnsupportedAppUsage
     public static PorterDuff.Mode parseTintMode(int value, PorterDuff.Mode defaultMode) {
-        if (value == 3) {
-            return PorterDuff.Mode.SRC_OVER;
-        }
-        if (value == 5) {
+        if (value != 3) {
+            if (value != 5) {
+                if (value == 9) {
+                    return PorterDuff.Mode.SRC_ATOP;
+                }
+                switch (value) {
+                    case 14:
+                        return PorterDuff.Mode.MULTIPLY;
+                    case 15:
+                        return PorterDuff.Mode.SCREEN;
+                    case 16:
+                        return PorterDuff.Mode.ADD;
+                    default:
+                        return defaultMode;
+                }
+            }
             return PorterDuff.Mode.SRC_IN;
         }
-        if (value == 9) {
-            return PorterDuff.Mode.SRC_ATOP;
-        }
-        switch (value) {
-            case 14:
-                return PorterDuff.Mode.MULTIPLY;
-            case 15:
-                return PorterDuff.Mode.SCREEN;
-            case 16:
-                return PorterDuff.Mode.ADD;
-            default:
-                return defaultMode;
-        }
+        return PorterDuff.Mode.SRC_OVER;
     }
 
     @UnsupportedAppUsage
     public static BlendMode parseBlendMode(int value, BlendMode defaultMode) {
-        if (value == 3) {
-            return BlendMode.SRC_OVER;
-        }
-        if (value == 5) {
+        if (value != 3) {
+            if (value != 5) {
+                if (value == 9) {
+                    return BlendMode.SRC_ATOP;
+                }
+                switch (value) {
+                    case 14:
+                        return BlendMode.MODULATE;
+                    case 15:
+                        return BlendMode.SCREEN;
+                    case 16:
+                        return BlendMode.PLUS;
+                    default:
+                        return defaultMode;
+                }
+            }
             return BlendMode.SRC_IN;
         }
-        if (value == 9) {
-            return BlendMode.SRC_ATOP;
-        }
-        switch (value) {
-            case 14:
-                return BlendMode.MODULATE;
-            case 15:
-                return BlendMode.SCREEN;
-            case 16:
-                return BlendMode.PLUS;
-            default:
-                return defaultMode;
-        }
+        return BlendMode.SRC_OVER;
     }
 }

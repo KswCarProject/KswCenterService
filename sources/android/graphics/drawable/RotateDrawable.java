@@ -9,42 +9,46 @@ import android.graphics.drawable.DrawableWrapper;
 import android.util.AttributeSet;
 import android.util.MathUtils;
 import android.util.TypedValue;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.io.IOException;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+/* loaded from: classes.dex */
 public class RotateDrawable extends DrawableWrapper {
     private static final int MAX_LEVEL = 10000;
     @UnsupportedAppUsage
     private RotateState mState;
 
     public RotateDrawable() {
-        this(new RotateState((RotateState) null, (Resources) null), (Resources) null);
+        this(new RotateState(null, null), null);
     }
 
+    @Override // android.graphics.drawable.DrawableWrapper, android.graphics.drawable.Drawable
     public void inflate(Resources r, XmlPullParser parser, AttributeSet attrs, Resources.Theme theme) throws XmlPullParserException, IOException {
-        TypedArray a = obtainAttributes(r, theme, attrs, R.styleable.RotateDrawable);
+        TypedArray a = obtainAttributes(r, theme, attrs, C3132R.styleable.RotateDrawable);
         super.inflate(r, parser, attrs, theme);
         updateStateFromTypedArray(a);
         verifyRequiredAttributes(a);
         a.recycle();
     }
 
+    @Override // android.graphics.drawable.DrawableWrapper, android.graphics.drawable.Drawable
     public void applyTheme(Resources.Theme t) {
         super.applyTheme(t);
         RotateState state = this.mState;
-        if (state != null && state.mThemeAttrs != null) {
-            TypedArray a = t.resolveAttributes(state.mThemeAttrs, R.styleable.RotateDrawable);
+        if (state == null || state.mThemeAttrs == null) {
+            return;
+        }
+        TypedArray a = t.resolveAttributes(state.mThemeAttrs, C3132R.styleable.RotateDrawable);
+        try {
             try {
                 updateStateFromTypedArray(a);
                 verifyRequiredAttributes(a);
             } catch (XmlPullParserException e) {
                 rethrowAsRuntimeException(e);
-            } catch (Throwable th) {
-                a.recycle();
-                throw th;
             }
+        } finally {
             a.recycle();
         }
     }
@@ -60,39 +64,37 @@ public class RotateDrawable extends DrawableWrapper {
 
     private void updateStateFromTypedArray(TypedArray a) {
         RotateState state = this.mState;
-        if (state != null) {
-            state.mChangingConfigurations |= a.getChangingConfigurations();
-            int[] unused = state.mThemeAttrs = a.extractThemeAttrs();
-            boolean z = false;
-            if (a.hasValue(4)) {
-                TypedValue tv = a.peekValue(4);
-                state.mPivotXRel = tv.type == 6;
-                state.mPivotX = state.mPivotXRel ? tv.getFraction(1.0f, 1.0f) : tv.getFloat();
-            }
-            if (a.hasValue(5)) {
-                TypedValue tv2 = a.peekValue(5);
-                if (tv2.type == 6) {
-                    z = true;
-                }
-                state.mPivotYRel = z;
-                state.mPivotY = state.mPivotYRel ? tv2.getFraction(1.0f, 1.0f) : tv2.getFloat();
-            }
-            state.mFromDegrees = a.getFloat(2, state.mFromDegrees);
-            state.mToDegrees = a.getFloat(3, state.mToDegrees);
-            state.mCurrentDegrees = state.mFromDegrees;
+        if (state == null) {
+            return;
         }
+        state.mChangingConfigurations |= a.getChangingConfigurations();
+        state.mThemeAttrs = a.extractThemeAttrs();
+        if (a.hasValue(4)) {
+            TypedValue tv = a.peekValue(4);
+            state.mPivotXRel = tv.type == 6;
+            state.mPivotX = state.mPivotXRel ? tv.getFraction(1.0f, 1.0f) : tv.getFloat();
+        }
+        if (a.hasValue(5)) {
+            TypedValue tv2 = a.peekValue(5);
+            state.mPivotYRel = tv2.type == 6;
+            state.mPivotY = state.mPivotYRel ? tv2.getFraction(1.0f, 1.0f) : tv2.getFloat();
+        }
+        state.mFromDegrees = a.getFloat(2, state.mFromDegrees);
+        state.mToDegrees = a.getFloat(3, state.mToDegrees);
+        state.mCurrentDegrees = state.mFromDegrees;
     }
 
+    @Override // android.graphics.drawable.DrawableWrapper, android.graphics.drawable.Drawable
     public void draw(Canvas canvas) {
         Drawable d = getDrawable();
         Rect bounds = d.getBounds();
         int w = bounds.right - bounds.left;
         int h = bounds.bottom - bounds.top;
         RotateState st = this.mState;
-        float px = st.mPivotXRel ? ((float) w) * st.mPivotX : st.mPivotX;
-        float py = st.mPivotYRel ? ((float) h) * st.mPivotY : st.mPivotY;
+        float px = st.mPivotXRel ? w * st.mPivotX : st.mPivotX;
+        float py = st.mPivotYRel ? h * st.mPivotY : st.mPivotY;
         int saveCount = canvas.save();
-        canvas.rotate(st.mCurrentDegrees, ((float) bounds.left) + px, ((float) bounds.top) + py);
+        canvas.rotate(st.mCurrentDegrees, bounds.left + px, bounds.top + py);
         d.draw(canvas);
         canvas.restoreToCount(saveCount);
     }
@@ -163,33 +165,42 @@ public class RotateDrawable extends DrawableWrapper {
         return this.mState.mPivotYRel;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean onLevelChange(int level) {
+    @Override // android.graphics.drawable.DrawableWrapper, android.graphics.drawable.Drawable
+    protected boolean onLevelChange(int level) {
         super.onLevelChange(level);
-        this.mState.mCurrentDegrees = MathUtils.lerp(this.mState.mFromDegrees, this.mState.mToDegrees, ((float) level) / 10000.0f);
+        float value = level / 10000.0f;
+        float degrees = MathUtils.lerp(this.mState.mFromDegrees, this.mState.mToDegrees, value);
+        this.mState.mCurrentDegrees = degrees;
         invalidateSelf();
         return true;
     }
 
-    /* access modifiers changed from: package-private */
-    public DrawableWrapper.DrawableWrapperState mutateConstantState() {
-        this.mState = new RotateState(this.mState, (Resources) null);
+    @Override // android.graphics.drawable.DrawableWrapper
+    DrawableWrapper.DrawableWrapperState mutateConstantState() {
+        this.mState = new RotateState(this.mState, null);
         return this.mState;
     }
 
+    /* loaded from: classes.dex */
     static final class RotateState extends DrawableWrapper.DrawableWrapperState {
-        float mCurrentDegrees = 0.0f;
-        float mFromDegrees = 0.0f;
-        float mPivotX = 0.5f;
-        boolean mPivotXRel = true;
-        float mPivotY = 0.5f;
-        boolean mPivotYRel = true;
-        /* access modifiers changed from: private */
-        public int[] mThemeAttrs;
-        float mToDegrees = 360.0f;
+        float mCurrentDegrees;
+        float mFromDegrees;
+        float mPivotX;
+        boolean mPivotXRel;
+        float mPivotY;
+        boolean mPivotYRel;
+        private int[] mThemeAttrs;
+        float mToDegrees;
 
         RotateState(RotateState orig, Resources res) {
             super(orig, res);
+            this.mPivotXRel = true;
+            this.mPivotX = 0.5f;
+            this.mPivotYRel = true;
+            this.mPivotY = 0.5f;
+            this.mFromDegrees = 0.0f;
+            this.mToDegrees = 360.0f;
+            this.mCurrentDegrees = 0.0f;
             if (orig != null) {
                 this.mPivotXRel = orig.mPivotXRel;
                 this.mPivotX = orig.mPivotX;
@@ -201,6 +212,7 @@ public class RotateDrawable extends DrawableWrapper {
             }
         }
 
+        @Override // android.graphics.drawable.DrawableWrapper.DrawableWrapperState, android.graphics.drawable.Drawable.ConstantState
         public Drawable newDrawable(Resources res) {
             return new RotateDrawable(this, res);
         }

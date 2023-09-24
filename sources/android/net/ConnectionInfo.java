@@ -1,17 +1,27 @@
 package android.net;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 
+/* loaded from: classes3.dex */
 public final class ConnectionInfo implements Parcelable {
-    public static final Parcelable.Creator<ConnectionInfo> CREATOR = new Parcelable.Creator<ConnectionInfo>() {
+    public static final Parcelable.Creator<ConnectionInfo> CREATOR = new Parcelable.Creator<ConnectionInfo>() { // from class: android.net.ConnectionInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ConnectionInfo createFromParcel(Parcel in) {
+            int protocol = in.readInt();
             try {
+                InetAddress localAddress = InetAddress.getByAddress(in.createByteArray());
+                int localPort = in.readInt();
                 try {
-                    return new ConnectionInfo(in.readInt(), new InetSocketAddress(InetAddress.getByAddress(in.createByteArray()), in.readInt()), new InetSocketAddress(InetAddress.getByAddress(in.createByteArray()), in.readInt()));
+                    InetAddress remoteAddress = InetAddress.getByAddress(in.createByteArray());
+                    int remotePort = in.readInt();
+                    InetSocketAddress local = new InetSocketAddress(localAddress, localPort);
+                    InetSocketAddress remote = new InetSocketAddress(remoteAddress, remotePort);
+                    return new ConnectionInfo(protocol, local, remote);
                 } catch (UnknownHostException e) {
                     throw new IllegalArgumentException("Invalid InetAddress");
                 }
@@ -20,6 +30,8 @@ public final class ConnectionInfo implements Parcelable {
             }
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ConnectionInfo[] newArray(int size) {
             return new ConnectionInfo[size];
         }
@@ -28,16 +40,18 @@ public final class ConnectionInfo implements Parcelable {
     public final int protocol;
     public final InetSocketAddress remote;
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
-    public ConnectionInfo(int protocol2, InetSocketAddress local2, InetSocketAddress remote2) {
-        this.protocol = protocol2;
-        this.local = local2;
-        this.remote = remote2;
+    public ConnectionInfo(int protocol, InetSocketAddress local, InetSocketAddress remote) {
+        this.protocol = protocol;
+        this.local = local;
+        this.remote = remote;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(this.protocol);
         out.writeByteArray(this.local.getAddress().getAddress());

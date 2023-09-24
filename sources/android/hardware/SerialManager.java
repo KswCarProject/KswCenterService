@@ -2,10 +2,11 @@ package android.hardware;
 
 import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
-import android.os.ParcelFileDescriptor;
-import android.os.RemoteException;
+import android.p007os.ParcelFileDescriptor;
+import android.p007os.RemoteException;
 import java.io.IOException;
 
+/* loaded from: classes.dex */
 public class SerialManager {
     private static final String TAG = "SerialManager";
     private final Context mContext;

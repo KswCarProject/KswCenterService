@@ -1,8 +1,8 @@
 package android.view.contentcapture;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.Log;
 import android.view.autofill.AutofillId;
 import com.android.internal.util.Preconditions;
@@ -13,39 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SystemApi
+/* loaded from: classes4.dex */
 public final class ContentCaptureEvent implements Parcelable {
-    public static final Parcelable.Creator<ContentCaptureEvent> CREATOR = new Parcelable.Creator<ContentCaptureEvent>() {
-        public ContentCaptureEvent createFromParcel(Parcel parcel) {
-            int sessionId = parcel.readInt();
-            int type = parcel.readInt();
-            ContentCaptureEvent event = new ContentCaptureEvent(sessionId, type, parcel.readLong());
-            AutofillId id = (AutofillId) parcel.readParcelable((ClassLoader) null);
-            if (id != null) {
-                event.setAutofillId(id);
-            }
-            ArrayList<AutofillId> ids = parcel.createTypedArrayList(AutofillId.CREATOR);
-            if (ids != null) {
-                event.setAutofillIds(ids);
-            }
-            ViewNode node = ViewNode.readFromParcel(parcel);
-            if (node != null) {
-                event.setViewNode(node);
-            }
-            event.setText(parcel.readCharSequence());
-            if (type == -1 || type == -2) {
-                event.setParentSessionId(parcel.readInt());
-            }
-            if (type == -1 || type == 6) {
-                event.setClientContext((ContentCaptureContext) parcel.readParcelable((ClassLoader) null));
-            }
-            return event;
-        }
-
-        public ContentCaptureEvent[] newArray(int size) {
-            return new ContentCaptureEvent[size];
-        }
-    };
-    private static final String TAG = ContentCaptureEvent.class.getSimpleName();
     public static final int TYPE_CONTEXT_UPDATED = 6;
     public static final int TYPE_SESSION_FINISHED = -2;
     public static final int TYPE_SESSION_PAUSED = 8;
@@ -65,8 +34,46 @@ public final class ContentCaptureEvent implements Parcelable {
     private final int mSessionId;
     private CharSequence mText;
     private final int mType;
+    private static final String TAG = ContentCaptureEvent.class.getSimpleName();
+    public static final Parcelable.Creator<ContentCaptureEvent> CREATOR = new Parcelable.Creator<ContentCaptureEvent>() { // from class: android.view.contentcapture.ContentCaptureEvent.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public ContentCaptureEvent createFromParcel(Parcel parcel) {
+            int sessionId = parcel.readInt();
+            int type = parcel.readInt();
+            long eventTime = parcel.readLong();
+            ContentCaptureEvent event = new ContentCaptureEvent(sessionId, type, eventTime);
+            AutofillId id = (AutofillId) parcel.readParcelable(null);
+            if (id != null) {
+                event.setAutofillId(id);
+            }
+            ArrayList<AutofillId> ids = parcel.createTypedArrayList(AutofillId.CREATOR);
+            if (ids != null) {
+                event.setAutofillIds(ids);
+            }
+            ViewNode node = ViewNode.readFromParcel(parcel);
+            if (node != null) {
+                event.setViewNode(node);
+            }
+            event.setText(parcel.readCharSequence());
+            if (type == -1 || type == -2) {
+                event.setParentSessionId(parcel.readInt());
+            }
+            if (type == -1 || type == 6) {
+                event.setClientContext((ContentCaptureContext) parcel.readParcelable(null));
+            }
+            return event;
+        }
+
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public ContentCaptureEvent[] newArray(int size) {
+            return new ContentCaptureEvent[size];
+        }
+    };
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface EventType {
     }
 
@@ -97,7 +104,7 @@ public final class ContentCaptureEvent implements Parcelable {
             this.mIds = new ArrayList<>();
             if (this.mId == null) {
                 String str = TAG;
-                Log.w(str, "addAutofillId(" + id + ") called without an initial id");
+                Log.m64w(str, "addAutofillId(" + id + ") called without an initial id");
             } else {
                 this.mIds.add(this.mId);
                 this.mId = null;
@@ -168,14 +175,14 @@ public final class ContentCaptureEvent implements Parcelable {
         int eventType = event.getType();
         if (this.mType != eventType) {
             String str = TAG;
-            Log.e(str, "mergeEvent(" + getTypeAsString(eventType) + ") cannot be merged with different eventType=" + getTypeAsString(this.mType));
+            Log.m70e(str, "mergeEvent(" + getTypeAsString(eventType) + ") cannot be merged with different eventType=" + getTypeAsString(this.mType));
         } else if (eventType == 2) {
             List<AutofillId> ids = event.getIds();
             AutofillId id = event.getId();
             if (ids != null) {
                 if (id != null) {
                     String str2 = TAG;
-                    Log.w(str2, "got TYPE_VIEW_DISAPPEARED event with both id and ids: " + event);
+                    Log.m64w(str2, "got TYPE_VIEW_DISAPPEARED event with both id and ids: " + event);
                 }
                 for (int i = 0; i < ids.size(); i++) {
                     addAutofillId(ids.get(i));
@@ -189,7 +196,7 @@ public final class ContentCaptureEvent implements Parcelable {
             setText(event.getText());
         } else {
             String str3 = TAG;
-            Log.e(str3, "mergeEvent(" + getTypeAsString(eventType) + ") does not support this event type.");
+            Log.m70e(str3, "mergeEvent(" + getTypeAsString(eventType) + ") does not support this event type.");
         }
     }
 
@@ -266,10 +273,12 @@ public final class ContentCaptureEvent implements Parcelable {
         return string.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeInt(this.mSessionId);
         parcel.writeInt(this.mType);
@@ -292,6 +301,9 @@ public final class ContentCaptureEvent implements Parcelable {
                 return "SESSION_FINISHED";
             case -1:
                 return "SESSION_STARTED";
+            case 0:
+            default:
+                return "UKNOWN_TYPE: " + type;
             case 1:
                 return "VIEW_APPEARED";
             case 2:
@@ -308,8 +320,6 @@ public final class ContentCaptureEvent implements Parcelable {
                 return "SESSION_RESUMED";
             case 8:
                 return "SESSION_PAUSED";
-            default:
-                return "UKNOWN_TYPE: " + type;
         }
     }
 }

@@ -1,5 +1,6 @@
 package android.graphics;
 
+/* loaded from: classes.dex */
 public class RegionIterator {
     private long mNativeIter;
 
@@ -10,19 +11,18 @@ public class RegionIterator {
     private static native boolean nativeNext(long j, Rect rect);
 
     public RegionIterator(Region region) {
-        this.mNativeIter = nativeConstructor(region.ni());
+        this.mNativeIter = nativeConstructor(region.m127ni());
     }
 
     public final boolean next(Rect r) {
-        if (r != null) {
-            return nativeNext(this.mNativeIter, r);
+        if (r == null) {
+            throw new NullPointerException("The Rect must be provided");
         }
-        throw new NullPointerException("The Rect must be provided");
+        return nativeNext(this.mNativeIter, r);
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         nativeDestructor(this.mNativeIter);
-        this.mNativeIter = 0;
+        this.mNativeIter = 0L;
     }
 }

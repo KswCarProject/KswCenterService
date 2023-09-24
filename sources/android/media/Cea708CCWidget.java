@@ -6,8 +6,8 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.media.Cea708CCParser;
 import android.media.ClosedCaptionWidget;
-import android.os.Handler;
-import android.os.Message;
+import android.p007os.Handler;
+import android.p007os.Message;
 import android.text.Layout;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -31,12 +31,13 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-/* compiled from: Cea708CaptionRenderer */
+/* compiled from: Cea708CaptionRenderer.java */
+/* loaded from: classes3.dex */
 class Cea708CCWidget extends ClosedCaptionWidget implements Cea708CCParser.DisplayListener {
     private final CCHandler mCCHandler;
 
     public Cea708CCWidget(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public Cea708CCWidget(Context context, AttributeSet attrs) {
@@ -52,10 +53,12 @@ class Cea708CCWidget extends ClosedCaptionWidget implements Cea708CCParser.Displ
         this.mCCHandler = new CCHandler((CCLayout) this.mClosedCaptionLayout);
     }
 
+    @Override // android.media.ClosedCaptionWidget
     public ClosedCaptionWidget.ClosedCaptionLayout createCaptionLayout(Context context) {
         return new CCLayout(context);
     }
 
+    @Override // android.media.Cea708CCParser.DisplayListener
     public void emitEvent(Cea708CCParser.CaptionEvent event) {
         this.mCCHandler.processCaptionEvent(event);
         setSize(getWidth(), getHeight());
@@ -64,16 +67,19 @@ class Cea708CCWidget extends ClosedCaptionWidget implements Cea708CCParser.Displ
         }
     }
 
+    @Override // android.view.View
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         ((ViewGroup) this.mClosedCaptionLayout).draw(canvas);
     }
 
-    /* compiled from: Cea708CaptionRenderer */
+    /* compiled from: Cea708CaptionRenderer.java */
+    /* loaded from: classes3.dex */
     static class ScaledLayout extends ViewGroup {
         private static final boolean DEBUG = false;
         private static final String TAG = "ScaledLayout";
-        private static final Comparator<Rect> mRectTopLeftSorter = new Comparator<Rect>() {
+        private static final Comparator<Rect> mRectTopLeftSorter = new Comparator<Rect>() { // from class: android.media.Cea708CCWidget.ScaledLayout.1
+            @Override // java.util.Comparator
             public int compare(Rect lhs, Rect rhs) {
                 if (lhs.top != rhs.top) {
                     return lhs.top - rhs.top;
@@ -87,7 +93,8 @@ class Cea708CCWidget extends ClosedCaptionWidget implements Cea708CCParser.Displ
             super(context);
         }
 
-        /* compiled from: Cea708CaptionRenderer */
+        /* compiled from: Cea708CaptionRenderer.java */
+        /* loaded from: classes3.dex */
         static class ScaledLayoutParams extends ViewGroup.LayoutParams {
             public static final float SCALE_UNSPECIFIED = -1.0f;
             public float scaleEndCol;
@@ -95,12 +102,12 @@ class Cea708CCWidget extends ClosedCaptionWidget implements Cea708CCParser.Displ
             public float scaleStartCol;
             public float scaleStartRow;
 
-            public ScaledLayoutParams(float scaleStartRow2, float scaleEndRow2, float scaleStartCol2, float scaleEndCol2) {
+            public ScaledLayoutParams(float scaleStartRow, float scaleEndRow, float scaleStartCol, float scaleEndCol) {
                 super(-1, -1);
-                this.scaleStartRow = scaleStartRow2;
-                this.scaleEndRow = scaleEndRow2;
-                this.scaleStartCol = scaleStartCol2;
-                this.scaleEndCol = scaleEndCol2;
+                this.scaleStartRow = scaleStartRow;
+                this.scaleEndRow = scaleEndRow;
+                this.scaleStartCol = scaleStartCol;
+                this.scaleEndCol = scaleEndCol;
             }
 
             public ScaledLayoutParams(Context context, AttributeSet attrs) {
@@ -108,17 +115,18 @@ class Cea708CCWidget extends ClosedCaptionWidget implements Cea708CCParser.Displ
             }
         }
 
+        @Override // android.view.ViewGroup
         public ViewGroup.LayoutParams generateLayoutParams(AttributeSet attrs) {
             return new ScaledLayoutParams(getContext(), attrs);
         }
 
-        /* access modifiers changed from: protected */
-        public boolean checkLayoutParams(ViewGroup.LayoutParams p) {
+        @Override // android.view.ViewGroup
+        protected boolean checkLayoutParams(ViewGroup.LayoutParams p) {
             return p instanceof ScaledLayoutParams;
         }
 
-        /* access modifiers changed from: protected */
-        public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        @Override // android.view.View
+        protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
             int widthSpecSize = View.MeasureSpec.getSize(widthMeasureSpec);
             int heightSpecSize = View.MeasureSpec.getSize(heightMeasureSpec);
             int width = (widthSpecSize - getPaddingLeft()) - getPaddingRight();
@@ -129,84 +137,76 @@ class Cea708CCWidget extends ClosedCaptionWidget implements Cea708CCParser.Displ
             while (i < count) {
                 View child = getChildAt(i);
                 ViewGroup.LayoutParams params = child.getLayoutParams();
-                if (params instanceof ScaledLayoutParams) {
-                    float scaleStartRow = ((ScaledLayoutParams) params).scaleStartRow;
-                    float scaleEndRow = ((ScaledLayoutParams) params).scaleEndRow;
-                    float scaleStartCol = ((ScaledLayoutParams) params).scaleStartCol;
-                    float scaleEndCol = ((ScaledLayoutParams) params).scaleEndCol;
-                    if (scaleStartRow < 0.0f || scaleStartRow > 1.0f) {
-                        int i2 = heightSpecSize;
-                        ViewGroup.LayoutParams layoutParams = params;
-                        throw new RuntimeException("A child of ScaledLayout should have a range of scaleStartRow between 0 and 1");
-                    } else if (scaleEndRow < scaleStartRow || scaleStartRow > 1.0f) {
-                        int i3 = heightSpecSize;
-                        ViewGroup.LayoutParams layoutParams2 = params;
-                        throw new RuntimeException("A child of ScaledLayout should have a range of scaleEndRow between scaleStartRow and 1");
-                    } else if (scaleEndCol < 0.0f || scaleEndCol > 1.0f) {
-                        int i4 = heightSpecSize;
-                        ViewGroup.LayoutParams layoutParams3 = params;
-                        throw new RuntimeException("A child of ScaledLayout should have a range of scaleStartCol between 0 and 1");
-                    } else if (scaleEndCol < scaleStartCol || scaleEndCol > 1.0f) {
-                        int i5 = heightSpecSize;
-                        ViewGroup.LayoutParams layoutParams4 = params;
-                        throw new RuntimeException("A child of ScaledLayout should have a range of scaleEndCol between scaleStartCol and 1");
-                    } else {
-                        ViewGroup.LayoutParams layoutParams5 = params;
-                        int widthSpecSize2 = widthSpecSize;
-                        int heightSpecSize2 = heightSpecSize;
-                        this.mRectArray[i] = new Rect((int) (((float) width) * scaleStartCol), (int) (((float) height) * scaleStartRow), (int) (((float) width) * scaleEndCol), (int) (((float) height) * scaleEndRow));
-                        int childWidthSpec = View.MeasureSpec.makeMeasureSpec((int) (((float) width) * (scaleEndCol - scaleStartCol)), 1073741824);
-                        child.measure(childWidthSpec, View.MeasureSpec.makeMeasureSpec(0, 0));
-                        if (child.getMeasuredHeight() > this.mRectArray[i].height()) {
-                            int overflowedHeight = ((child.getMeasuredHeight() - this.mRectArray[i].height()) + 1) / 2;
-                            this.mRectArray[i].bottom += overflowedHeight;
-                            this.mRectArray[i].top -= overflowedHeight;
-                            if (this.mRectArray[i].top < 0) {
-                                this.mRectArray[i].bottom -= this.mRectArray[i].top;
-                                this.mRectArray[i].top = 0;
-                            }
-                            if (this.mRectArray[i].bottom > height) {
-                                this.mRectArray[i].top -= this.mRectArray[i].bottom - height;
-                                this.mRectArray[i].bottom = height;
-                            }
-                        }
-                        child.measure(childWidthSpec, View.MeasureSpec.makeMeasureSpec((int) (((float) height) * (scaleEndRow - scaleStartRow)), 1073741824));
-                        i++;
-                        widthSpecSize = widthSpecSize2;
-                        heightSpecSize = heightSpecSize2;
-                    }
-                } else {
-                    int i6 = heightSpecSize;
-                    ViewGroup.LayoutParams layoutParams6 = params;
+                if (!(params instanceof ScaledLayoutParams)) {
                     throw new RuntimeException("A child of ScaledLayout cannot have the UNSPECIFIED scale factors");
                 }
+                float scaleStartRow = ((ScaledLayoutParams) params).scaleStartRow;
+                float scaleEndRow = ((ScaledLayoutParams) params).scaleEndRow;
+                float scaleStartCol = ((ScaledLayoutParams) params).scaleStartCol;
+                float scaleEndCol = ((ScaledLayoutParams) params).scaleEndCol;
+                if (scaleStartRow < 0.0f || scaleStartRow > 1.0f) {
+                    throw new RuntimeException("A child of ScaledLayout should have a range of scaleStartRow between 0 and 1");
+                }
+                if (scaleEndRow < scaleStartRow || scaleStartRow > 1.0f) {
+                    throw new RuntimeException("A child of ScaledLayout should have a range of scaleEndRow between scaleStartRow and 1");
+                }
+                if (scaleEndCol < 0.0f || scaleEndCol > 1.0f) {
+                    throw new RuntimeException("A child of ScaledLayout should have a range of scaleStartCol between 0 and 1");
+                }
+                if (scaleEndCol < scaleStartCol || scaleEndCol > 1.0f) {
+                    throw new RuntimeException("A child of ScaledLayout should have a range of scaleEndCol between scaleStartCol and 1");
+                }
+                int widthSpecSize2 = widthSpecSize;
+                int heightSpecSize2 = heightSpecSize;
+                this.mRectArray[i] = new Rect((int) (width * scaleStartCol), (int) (height * scaleStartRow), (int) (width * scaleEndCol), (int) (height * scaleEndRow));
+                int childWidthSpec = View.MeasureSpec.makeMeasureSpec((int) (width * (scaleEndCol - scaleStartCol)), 1073741824);
+                int childHeightSpec = View.MeasureSpec.makeMeasureSpec(0, 0);
+                child.measure(childWidthSpec, childHeightSpec);
+                if (child.getMeasuredHeight() > this.mRectArray[i].height()) {
+                    int overflowedHeight = ((child.getMeasuredHeight() - this.mRectArray[i].height()) + 1) / 2;
+                    this.mRectArray[i].bottom += overflowedHeight;
+                    this.mRectArray[i].top -= overflowedHeight;
+                    if (this.mRectArray[i].top < 0) {
+                        this.mRectArray[i].bottom -= this.mRectArray[i].top;
+                        this.mRectArray[i].top = 0;
+                    }
+                    if (this.mRectArray[i].bottom > height) {
+                        this.mRectArray[i].top -= this.mRectArray[i].bottom - height;
+                        this.mRectArray[i].bottom = height;
+                    }
+                }
+                int childHeightSpec2 = View.MeasureSpec.makeMeasureSpec((int) (height * (scaleEndRow - scaleStartRow)), 1073741824);
+                child.measure(childWidthSpec, childHeightSpec2);
+                i++;
+                widthSpecSize = widthSpecSize2;
+                heightSpecSize = heightSpecSize2;
             }
             int widthSpecSize3 = widthSpecSize;
             int heightSpecSize3 = heightSpecSize;
             int[] visibleRectGroup = new int[count];
             Rect[] visibleRectArray = new Rect[count];
             int visibleRectCount = 0;
-            for (int i7 = 0; i7 < count; i7++) {
-                if (getChildAt(i7).getVisibility() == 0) {
+            for (int visibleRectCount2 = 0; visibleRectCount2 < count; visibleRectCount2++) {
+                if (getChildAt(visibleRectCount2).getVisibility() == 0) {
                     visibleRectGroup[visibleRectCount] = visibleRectCount;
-                    visibleRectArray[visibleRectCount] = this.mRectArray[i7];
+                    visibleRectArray[visibleRectCount] = this.mRectArray[visibleRectCount2];
                     visibleRectCount++;
                 }
             }
             Arrays.sort(visibleRectArray, 0, visibleRectCount, mRectTopLeftSorter);
-            for (int i8 = 0; i8 < visibleRectCount - 1; i8++) {
-                for (int j = i8 + 1; j < visibleRectCount; j++) {
-                    if (Rect.intersects(visibleRectArray[i8], visibleRectArray[j])) {
-                        visibleRectGroup[j] = visibleRectGroup[i8];
-                        visibleRectArray[j].set(visibleRectArray[j].left, visibleRectArray[i8].bottom, visibleRectArray[j].right, visibleRectArray[i8].bottom + visibleRectArray[j].height());
+            for (int i2 = 0; i2 < visibleRectCount - 1; i2++) {
+                for (int j = i2 + 1; j < visibleRectCount; j++) {
+                    if (Rect.intersects(visibleRectArray[i2], visibleRectArray[j])) {
+                        visibleRectGroup[j] = visibleRectGroup[i2];
+                        visibleRectArray[j].set(visibleRectArray[j].left, visibleRectArray[i2].bottom, visibleRectArray[j].right, visibleRectArray[i2].bottom + visibleRectArray[j].height());
                     }
                 }
             }
-            for (int i9 = visibleRectCount - 1; i9 >= 0; i9--) {
-                if (visibleRectArray[i9].bottom > height) {
-                    int overflowedHeight2 = visibleRectArray[i9].bottom - height;
-                    for (int j2 = 0; j2 <= i9; j2++) {
-                        if (visibleRectGroup[i9] == visibleRectGroup[j2]) {
+            for (int i3 = visibleRectCount - 1; i3 >= 0; i3--) {
+                if (visibleRectArray[i3].bottom > height) {
+                    int overflowedHeight2 = visibleRectArray[i3].bottom - height;
+                    for (int j2 = 0; j2 <= i3; j2++) {
+                        if (visibleRectGroup[i3] == visibleRectGroup[j2]) {
                             visibleRectArray[j2].set(visibleRectArray[j2].left, visibleRectArray[j2].top - overflowedHeight2, visibleRectArray[j2].right, visibleRectArray[j2].bottom - overflowedHeight2);
                         }
                     }
@@ -215,19 +215,24 @@ class Cea708CCWidget extends ClosedCaptionWidget implements Cea708CCParser.Displ
             setMeasuredDimension(widthSpecSize3, heightSpecSize3);
         }
 
-        /* access modifiers changed from: protected */
-        public void onLayout(boolean changed, int l, int t, int r, int b) {
+        @Override // android.view.ViewGroup, android.view.View
+        protected void onLayout(boolean changed, int l, int t, int r, int b) {
             int paddingLeft = getPaddingLeft();
             int paddingTop = getPaddingTop();
             int count = getChildCount();
             for (int i = 0; i < count; i++) {
                 View child = getChildAt(i);
                 if (child.getVisibility() != 8) {
-                    child.layout(this.mRectArray[i].left + paddingLeft, this.mRectArray[i].top + paddingTop, this.mRectArray[i].right + paddingTop, this.mRectArray[i].bottom + paddingLeft);
+                    int childLeft = this.mRectArray[i].left + paddingLeft;
+                    int childTop = this.mRectArray[i].top + paddingTop;
+                    int childBottom = this.mRectArray[i].bottom + paddingLeft;
+                    int childRight = this.mRectArray[i].right + paddingTop;
+                    child.layout(childLeft, childTop, childRight, childBottom);
                 }
             }
         }
 
+        @Override // android.view.ViewGroup, android.view.View
         public void dispatchDraw(Canvas canvas) {
             int paddingLeft = getPaddingLeft();
             int paddingTop = getPaddingTop();
@@ -236,8 +241,10 @@ class Cea708CCWidget extends ClosedCaptionWidget implements Cea708CCParser.Displ
                 View child = getChildAt(i);
                 if (child.getVisibility() != 8) {
                     if (i < this.mRectArray.length) {
+                        int childLeft = this.mRectArray[i].left + paddingLeft;
+                        int childTop = this.mRectArray[i].top + paddingTop;
                         int saveCount = canvas.save();
-                        canvas.translate((float) (this.mRectArray[i].left + paddingLeft), (float) (this.mRectArray[i].top + paddingTop));
+                        canvas.translate(childLeft, childTop);
                         child.draw(canvas);
                         canvas.restoreToCount(saveCount);
                     } else {
@@ -248,7 +255,8 @@ class Cea708CCWidget extends ClosedCaptionWidget implements Cea708CCParser.Displ
         }
     }
 
-    /* compiled from: Cea708CaptionRenderer */
+    /* compiled from: Cea708CaptionRenderer.java */
+    /* loaded from: classes3.dex */
     static class CCLayout extends ScaledLayout implements ClosedCaptionWidget.ClosedCaptionLayout {
         private static final float SAFE_TITLE_AREA_SCALE_END_X = 0.9f;
         private static final float SAFE_TITLE_AREA_SCALE_END_Y = 0.9f;
@@ -259,12 +267,13 @@ class Cea708CCWidget extends ClosedCaptionWidget implements Cea708CCParser.Displ
         public CCLayout(Context context) {
             super(context);
             this.mSafeTitleAreaLayout = new ScaledLayout(context);
-            addView((View) this.mSafeTitleAreaLayout, (ViewGroup.LayoutParams) new ScaledLayout.ScaledLayoutParams(0.1f, 0.9f, 0.1f, 0.9f));
+            addView(this.mSafeTitleAreaLayout, new ScaledLayout.ScaledLayoutParams(0.1f, 0.9f, 0.1f, 0.9f));
         }
 
         public void addOrUpdateViewToSafeTitleArea(CCWindowLayout captionWindowLayout, ScaledLayout.ScaledLayoutParams scaledLayoutParams) {
-            if (this.mSafeTitleAreaLayout.indexOfChild(captionWindowLayout) < 0) {
-                this.mSafeTitleAreaLayout.addView((View) captionWindowLayout, (ViewGroup.LayoutParams) scaledLayoutParams);
+            int index = this.mSafeTitleAreaLayout.indexOfChild(captionWindowLayout);
+            if (index < 0) {
+                this.mSafeTitleAreaLayout.addView(captionWindowLayout, scaledLayoutParams);
             } else {
                 this.mSafeTitleAreaLayout.updateViewLayout(captionWindowLayout, scaledLayoutParams);
             }
@@ -274,22 +283,27 @@ class Cea708CCWidget extends ClosedCaptionWidget implements Cea708CCParser.Displ
             this.mSafeTitleAreaLayout.removeView(captionWindowLayout);
         }
 
+        @Override // android.media.ClosedCaptionWidget.ClosedCaptionLayout
         public void setCaptionStyle(CaptioningManager.CaptionStyle style) {
             int count = this.mSafeTitleAreaLayout.getChildCount();
             for (int i = 0; i < count; i++) {
-                ((CCWindowLayout) this.mSafeTitleAreaLayout.getChildAt(i)).setCaptionStyle(style);
+                CCWindowLayout windowLayout = (CCWindowLayout) this.mSafeTitleAreaLayout.getChildAt(i);
+                windowLayout.setCaptionStyle(style);
             }
         }
 
+        @Override // android.media.ClosedCaptionWidget.ClosedCaptionLayout
         public void setFontScale(float fontScale) {
             int count = this.mSafeTitleAreaLayout.getChildCount();
             for (int i = 0; i < count; i++) {
-                ((CCWindowLayout) this.mSafeTitleAreaLayout.getChildAt(i)).setFontScale(fontScale);
+                CCWindowLayout windowLayout = (CCWindowLayout) this.mSafeTitleAreaLayout.getChildAt(i);
+                windowLayout.setFontScale(fontScale);
             }
         }
     }
 
-    /* compiled from: Cea708CaptionRenderer */
+    /* compiled from: Cea708CaptionRenderer.java */
+    /* loaded from: classes3.dex */
     static class CCHandler implements Handler.Callback {
         private static final int CAPTION_ALL_WINDOWS_BITMAP = 255;
         private static final long CAPTION_CLEAR_INTERVAL_MS = 60000;
@@ -300,17 +314,17 @@ class Cea708CCWidget extends ClosedCaptionWidget implements Cea708CCParser.Displ
         private static final String TAG = "CCHandler";
         private static final int TENTHS_OF_SECOND_IN_MILLIS = 100;
         private final CCLayout mCCLayout;
-        private final CCWindowLayout[] mCaptionWindowLayouts = new CCWindowLayout[8];
         private CCWindowLayout mCurrentWindowLayout;
-        private final Handler mHandler;
         private boolean mIsDelayed = false;
+        private final CCWindowLayout[] mCaptionWindowLayouts = new CCWindowLayout[8];
         private final ArrayList<Cea708CCParser.CaptionEvent> mPendingCaptionEvents = new ArrayList<>();
+        private final Handler mHandler = new Handler(this);
 
         public CCHandler(CCLayout ccLayout) {
             this.mCCLayout = ccLayout;
-            this.mHandler = new Handler((Handler.Callback) this);
         }
 
+        @Override // android.p007os.Handler.Callback
         public boolean handleMessage(Message msg) {
             switch (msg.what) {
                 case 1:
@@ -385,16 +399,17 @@ class Cea708CCWidget extends ClosedCaptionWidget implements Cea708CCParser.Displ
 
         private void setCurrentWindowLayout(int windowId) {
             CCWindowLayout windowLayout;
-            if (windowId >= 0 && windowId < this.mCaptionWindowLayouts.length && (windowLayout = this.mCaptionWindowLayouts[windowId]) != null) {
-                this.mCurrentWindowLayout = windowLayout;
+            if (windowId < 0 || windowId >= this.mCaptionWindowLayouts.length || (windowLayout = this.mCaptionWindowLayouts[windowId]) == null) {
+                return;
             }
+            this.mCurrentWindowLayout = windowLayout;
         }
 
         private ArrayList<CCWindowLayout> getWindowsFromBitmap(int windowBitmap) {
             CCWindowLayout windowLayout;
             ArrayList<CCWindowLayout> windows = new ArrayList<>();
             for (int i = 0; i < 8; i++) {
-                if (!(((1 << i) & windowBitmap) == 0 || (windowLayout = this.mCaptionWindowLayouts[i]) == null)) {
+                if (((1 << i) & windowBitmap) != 0 && (windowLayout = this.mCaptionWindowLayouts[i]) != null) {
                     windows.add(windowLayout);
                 }
             }
@@ -402,54 +417,62 @@ class Cea708CCWidget extends ClosedCaptionWidget implements Cea708CCParser.Displ
         }
 
         private void clearWindows(int windowBitmap) {
-            if (windowBitmap != 0) {
-                Iterator<CCWindowLayout> it = getWindowsFromBitmap(windowBitmap).iterator();
-                while (it.hasNext()) {
-                    it.next().clear();
-                }
+            if (windowBitmap == 0) {
+                return;
+            }
+            Iterator<CCWindowLayout> it = getWindowsFromBitmap(windowBitmap).iterator();
+            while (it.hasNext()) {
+                CCWindowLayout windowLayout = it.next();
+                windowLayout.clear();
             }
         }
 
         private void displayWindows(int windowBitmap) {
-            if (windowBitmap != 0) {
-                Iterator<CCWindowLayout> it = getWindowsFromBitmap(windowBitmap).iterator();
-                while (it.hasNext()) {
-                    it.next().show();
-                }
+            if (windowBitmap == 0) {
+                return;
+            }
+            Iterator<CCWindowLayout> it = getWindowsFromBitmap(windowBitmap).iterator();
+            while (it.hasNext()) {
+                CCWindowLayout windowLayout = it.next();
+                windowLayout.show();
             }
         }
 
         private void hideWindows(int windowBitmap) {
-            if (windowBitmap != 0) {
-                Iterator<CCWindowLayout> it = getWindowsFromBitmap(windowBitmap).iterator();
-                while (it.hasNext()) {
-                    it.next().hide();
-                }
+            if (windowBitmap == 0) {
+                return;
+            }
+            Iterator<CCWindowLayout> it = getWindowsFromBitmap(windowBitmap).iterator();
+            while (it.hasNext()) {
+                CCWindowLayout windowLayout = it.next();
+                windowLayout.hide();
             }
         }
 
         private void toggleWindows(int windowBitmap) {
-            if (windowBitmap != 0) {
-                Iterator<CCWindowLayout> it = getWindowsFromBitmap(windowBitmap).iterator();
-                while (it.hasNext()) {
-                    CCWindowLayout windowLayout = it.next();
-                    if (windowLayout.isShown()) {
-                        windowLayout.hide();
-                    } else {
-                        windowLayout.show();
-                    }
+            if (windowBitmap == 0) {
+                return;
+            }
+            Iterator<CCWindowLayout> it = getWindowsFromBitmap(windowBitmap).iterator();
+            while (it.hasNext()) {
+                CCWindowLayout windowLayout = it.next();
+                if (windowLayout.isShown()) {
+                    windowLayout.hide();
+                } else {
+                    windowLayout.show();
                 }
             }
         }
 
         private void deleteWindows(int windowBitmap) {
-            if (windowBitmap != 0) {
-                Iterator<CCWindowLayout> it = getWindowsFromBitmap(windowBitmap).iterator();
-                while (it.hasNext()) {
-                    CCWindowLayout windowLayout = it.next();
-                    windowLayout.removeFromCaptionView();
-                    this.mCaptionWindowLayouts[windowLayout.getCaptionWindowId()] = null;
-                }
+            if (windowBitmap == 0) {
+                return;
+            }
+            Iterator<CCWindowLayout> it = getWindowsFromBitmap(windowBitmap).iterator();
+            while (it.hasNext()) {
+                CCWindowLayout windowLayout = it.next();
+                windowLayout.removeFromCaptionView();
+                this.mCaptionWindowLayouts[windowLayout.getCaptionWindowId()] = null;
             }
         }
 
@@ -475,22 +498,24 @@ class Cea708CCWidget extends ClosedCaptionWidget implements Cea708CCParser.Displ
 
         private void defineWindow(Cea708CCParser.CaptionWindow window) {
             int windowId;
-            if (window != null && (windowId = window.id) >= 0 && windowId < this.mCaptionWindowLayouts.length) {
-                CCWindowLayout windowLayout = this.mCaptionWindowLayouts[windowId];
-                if (windowLayout == null) {
-                    windowLayout = new CCWindowLayout(this.mCCLayout.getContext());
-                }
-                windowLayout.initWindow(this.mCCLayout, window);
-                this.mCaptionWindowLayouts[windowId] = windowLayout;
-                this.mCurrentWindowLayout = windowLayout;
+            if (window == null || (windowId = window.f116id) < 0 || windowId >= this.mCaptionWindowLayouts.length) {
+                return;
             }
+            CCWindowLayout windowLayout = this.mCaptionWindowLayouts[windowId];
+            if (windowLayout == null) {
+                windowLayout = new CCWindowLayout(this.mCCLayout.getContext());
+            }
+            windowLayout.initWindow(this.mCCLayout, window);
+            this.mCaptionWindowLayouts[windowId] = windowLayout;
+            this.mCurrentWindowLayout = windowLayout;
         }
 
         private void delay(int tenthsOfSeconds) {
-            if (tenthsOfSeconds >= 0 && tenthsOfSeconds <= 255) {
-                this.mIsDelayed = true;
-                this.mHandler.sendMessageDelayed(this.mHandler.obtainMessage(1), (long) (tenthsOfSeconds * 100));
+            if (tenthsOfSeconds < 0 || tenthsOfSeconds > 255) {
+                return;
             }
+            this.mIsDelayed = true;
+            this.mHandler.sendMessageDelayed(this.mHandler.obtainMessage(1), tenthsOfSeconds * 100);
         }
 
         private void delayCancel() {
@@ -501,7 +526,8 @@ class Cea708CCWidget extends ClosedCaptionWidget implements Cea708CCParser.Displ
         private void processPendingBuffer() {
             Iterator<Cea708CCParser.CaptionEvent> it = this.mPendingCaptionEvents.iterator();
             while (it.hasNext()) {
-                processCaptionEvent(it.next());
+                Cea708CCParser.CaptionEvent event = it.next();
+                processCaptionEvent(event);
             }
             this.mPendingCaptionEvents.clear();
         }
@@ -516,7 +542,7 @@ class Cea708CCWidget extends ClosedCaptionWidget implements Cea708CCParser.Displ
             if (this.mCurrentWindowLayout != null) {
                 this.mCurrentWindowLayout.sendBuffer(buffer);
                 this.mHandler.removeMessages(2);
-                this.mHandler.sendMessageDelayed(this.mHandler.obtainMessage(2), 60000);
+                this.mHandler.sendMessageDelayed(this.mHandler.obtainMessage(2), 60000L);
             }
         }
 
@@ -539,7 +565,8 @@ class Cea708CCWidget extends ClosedCaptionWidget implements Cea708CCParser.Displ
         }
     }
 
-    /* compiled from: Cea708CaptionRenderer */
+    /* compiled from: Cea708CaptionRenderer.java */
+    /* loaded from: classes3.dex */
     static class CCWindowLayout extends RelativeLayout implements View.OnLayoutChangeListener {
         private static final int ANCHOR_HORIZONTAL_16_9_MAX = 209;
         private static final int ANCHOR_HORIZONTAL_MODE_CENTER = 1;
@@ -570,7 +597,7 @@ class Cea708CCWidget extends ClosedCaptionWidget implements Cea708CCParser.Displ
         private String mWidestChar;
 
         public CCWindowLayout(Context context) {
-            this(context, (AttributeSet) null);
+            this(context, null);
         }
 
         public CCWindowLayout(Context context, AttributeSet attrs) {
@@ -588,11 +615,12 @@ class Cea708CCWidget extends ClosedCaptionWidget implements Cea708CCParser.Displ
             this.mCharacterStyles = new ArrayList();
             this.mRow = -1;
             this.mCCView = new CCView(context);
-            addView((View) this.mCCView, (ViewGroup.LayoutParams) new RelativeLayout.LayoutParams(-2, -2));
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(-2, -2);
+            addView(this.mCCView, params);
             CaptioningManager captioningManager = (CaptioningManager) context.getSystemService(Context.CAPTIONING_SERVICE);
             this.mFontScale = captioningManager.getFontScale();
             setCaptionStyle(captioningManager.getUserStyle());
-            this.mCCView.setText((CharSequence) "");
+            this.mCCView.setText("");
             updateWidestChar();
         }
 
@@ -674,35 +702,27 @@ class Cea708CCWidget extends ClosedCaptionWidget implements Cea708CCParser.Displ
         }
 
         public void initWindow(CCLayout ccLayout, Cea708CCParser.CaptionWindow captionWindow) {
-            float maxWindowWidth;
-            CCLayout cCLayout = ccLayout;
-            Cea708CCParser.CaptionWindow captionWindow2 = captionWindow;
-            if (this.mCCLayout != cCLayout) {
+            if (this.mCCLayout != ccLayout) {
                 if (this.mCCLayout != null) {
                     this.mCCLayout.removeOnLayoutChangeListener(this);
                 }
-                this.mCCLayout = cCLayout;
+                this.mCCLayout = ccLayout;
                 this.mCCLayout.addOnLayoutChangeListener(this);
                 updateWidestChar();
             }
-            int i = 99;
-            float scaleRow = ((float) captionWindow2.anchorVertical) / ((float) (captionWindow2.relativePositioning ? 99 : 74));
-            float f = (float) captionWindow2.anchorHorizontal;
-            if (!captionWindow2.relativePositioning) {
-                i = 209;
-            }
-            float scaleCol = f / ((float) i);
+            float scaleRow = captionWindow.anchorVertical / (captionWindow.relativePositioning ? 99 : 74);
+            float scaleCol = captionWindow.anchorHorizontal / (captionWindow.relativePositioning ? 99 : 209);
             if (scaleRow < 0.0f || scaleRow > 1.0f) {
-                Log.i(TAG, "The vertical position of the anchor point should be at the range of 0 and 1 but " + scaleRow);
+                Log.m68i(TAG, "The vertical position of the anchor point should be at the range of 0 and 1 but " + scaleRow);
                 scaleRow = Math.max(0.0f, Math.min(scaleRow, 1.0f));
             }
             if (scaleCol < 0.0f || scaleCol > 1.0f) {
-                Log.i(TAG, "The horizontal position of the anchor point should be at the range of 0 and 1 but " + scaleCol);
+                Log.m68i(TAG, "The horizontal position of the anchor point should be at the range of 0 and 1 but " + scaleCol);
                 scaleCol = Math.max(0.0f, Math.min(scaleCol, 1.0f));
             }
             int gravity = 17;
-            int horizontalMode = captionWindow2.anchorId % 3;
-            int verticalMode = captionWindow2.anchorId / 3;
+            int horizontalMode = captionWindow.anchorId % 3;
+            int verticalMode = captionWindow.anchorId / 3;
             float scaleStartRow = 0.0f;
             float scaleEndRow = 1.0f;
             float scaleStartCol = 0.0f;
@@ -715,24 +735,21 @@ class Cea708CCWidget extends ClosedCaptionWidget implements Cea708CCParser.Displ
                     break;
                 case 1:
                     float gap = Math.min(1.0f - scaleCol, scaleCol);
-                    int columnCount = Math.min(getScreenColumnCount(), captionWindow2.columnCount + 1);
+                    int columnCount = captionWindow.columnCount + 1;
+                    int columnCount2 = Math.min(getScreenColumnCount(), columnCount);
                     StringBuilder widestTextBuilder = new StringBuilder();
-                    int i2 = 0;
+                    int i = 0;
                     while (true) {
-                        int i3 = i2;
-                        if (i3 >= columnCount) {
+                        int i2 = i;
+                        if (i2 < columnCount2) {
+                            widestTextBuilder.append(this.mWidestChar);
+                            i = i2 + 1;
+                        } else {
                             Paint paint = new Paint();
                             paint.setTypeface(this.mCaptionStyle.getTypeface());
                             paint.setTextSize(this.mTextSize);
-                            float maxWindowWidth2 = paint.measureText(widestTextBuilder.toString());
-                            Paint paint2 = paint;
-                            if (this.mCCLayout.getWidth() > 0) {
-                                float f2 = maxWindowWidth2;
-                                maxWindowWidth = (maxWindowWidth2 / 2.0f) / (((float) this.mCCLayout.getWidth()) * 0.8f);
-                            } else {
-                                maxWindowWidth = 0.0f;
-                            }
-                            float halfMaxWidthScale = maxWindowWidth;
+                            float maxWindowWidth = paint.measureText(widestTextBuilder.toString());
+                            float halfMaxWidthScale = this.mCCLayout.getWidth() > 0 ? (maxWindowWidth / 2.0f) / (this.mCCLayout.getWidth() * 0.8f) : 0.0f;
                             if (halfMaxWidthScale > 0.0f && halfMaxWidthScale < scaleCol) {
                                 this.mCCView.setAlignment(Layout.Alignment.ALIGN_NORMAL);
                                 scaleStartCol = scaleCol - halfMaxWidthScale;
@@ -741,16 +758,11 @@ class Cea708CCWidget extends ClosedCaptionWidget implements Cea708CCParser.Displ
                                 break;
                             } else {
                                 gravity = 1;
-                                float f3 = halfMaxWidthScale;
                                 this.mCCView.setAlignment(Layout.Alignment.ALIGN_CENTER);
                                 scaleStartCol = scaleCol - gap;
                                 scaleEndCol = scaleCol + gap;
                                 break;
                             }
-                        } else {
-                            widestTextBuilder.append(this.mWidestChar);
-                            i2 = i3 + 1;
-                            CCLayout cCLayout2 = ccLayout;
                         }
                     }
                     break;
@@ -777,16 +789,17 @@ class Cea708CCWidget extends ClosedCaptionWidget implements Cea708CCParser.Displ
                     break;
             }
             this.mCCLayout.addOrUpdateViewToSafeTitleArea(this, new ScaledLayout.ScaledLayoutParams(scaleStartRow, scaleEndRow, scaleStartCol, scaleEndCol));
-            setCaptionWindowId(captionWindow2.id);
-            setRowLimit(captionWindow2.rowCount);
+            setCaptionWindowId(captionWindow.f116id);
+            setRowLimit(captionWindow.rowCount);
             setGravity(gravity);
-            if (captionWindow2.visible) {
+            if (captionWindow.visible) {
                 show();
             } else {
                 hide();
             }
         }
 
+        @Override // android.view.View.OnLayoutChangeListener
         public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
             int width = right - left;
             int height = bottom - top;
@@ -814,29 +827,31 @@ class Cea708CCWidget extends ClosedCaptionWidget implements Cea708CCParser.Displ
         }
 
         private void updateTextSize() {
-            if (this.mCCLayout != null) {
-                StringBuilder widestTextBuilder = new StringBuilder();
-                int screenColumnCount = getScreenColumnCount();
-                for (int i = 0; i < screenColumnCount; i++) {
-                    widestTextBuilder.append(this.mWidestChar);
-                }
-                String widestText = widestTextBuilder.toString();
-                Paint paint = new Paint();
-                paint.setTypeface(this.mCaptionStyle.getTypeface());
-                float startFontSize = 0.0f;
-                float endFontSize = 255.0f;
-                while (startFontSize < endFontSize) {
-                    float testTextSize = (startFontSize + endFontSize) / 2.0f;
-                    paint.setTextSize(testTextSize);
-                    if (((float) this.mCCLayout.getWidth()) * 0.8f > paint.measureText(widestText)) {
-                        startFontSize = 0.01f + testTextSize;
-                    } else {
-                        endFontSize = testTextSize - 0.01f;
-                    }
-                }
-                this.mTextSize = this.mFontScale * endFontSize;
-                this.mCCView.setTextSize(this.mTextSize);
+            if (this.mCCLayout == null) {
+                return;
             }
+            StringBuilder widestTextBuilder = new StringBuilder();
+            int screenColumnCount = getScreenColumnCount();
+            for (int i = 0; i < screenColumnCount; i++) {
+                widestTextBuilder.append(this.mWidestChar);
+            }
+            String widestText = widestTextBuilder.toString();
+            Paint paint = new Paint();
+            paint.setTypeface(this.mCaptionStyle.getTypeface());
+            float startFontSize = 0.0f;
+            float endFontSize = 255.0f;
+            while (startFontSize < endFontSize) {
+                float testTextSize = (startFontSize + endFontSize) / 2.0f;
+                paint.setTextSize(testTextSize);
+                float width = paint.measureText(widestText);
+                if (this.mCCLayout.getWidth() * 0.8f > width) {
+                    startFontSize = 0.01f + testTextSize;
+                } else {
+                    endFontSize = testTextSize - 0.01f;
+                }
+            }
+            this.mTextSize = this.mFontScale * endFontSize;
+            this.mCCView.setTextSize(this.mTextSize);
         }
 
         private int getScreenColumnCount() {
@@ -861,7 +876,7 @@ class Cea708CCWidget extends ClosedCaptionWidget implements Cea708CCParser.Displ
 
         public void clearText() {
             this.mBuilder.clear();
-            this.mCCView.setText((CharSequence) "");
+            this.mCCView.setText("");
         }
 
         private void updateText(String text, boolean appended) {
@@ -876,7 +891,8 @@ class Cea708CCWidget extends ClosedCaptionWidget implements Cea708CCParser.Displ
                 }
             }
             String[] lines = TextUtils.split(this.mBuilder.toString(), "\n");
-            this.mBuilder.delete(0, this.mBuilder.length() - TextUtils.join((CharSequence) "\n", Arrays.copyOfRange(lines, Math.max(0, lines.length - (this.mRowLimit + 1)), lines.length)).length());
+            String truncatedText = TextUtils.join("\n", Arrays.copyOfRange(lines, Math.max(0, lines.length - (this.mRowLimit + 1)), lines.length));
+            this.mBuilder.delete(0, this.mBuilder.length() - truncatedText.length());
             int last = this.mBuilder.length() - 1;
             int start = 0;
             int end = last;
@@ -887,7 +903,7 @@ class Cea708CCWidget extends ClosedCaptionWidget implements Cea708CCParser.Displ
                 end--;
             }
             if (start == 0 && end == last) {
-                this.mCCView.setText((CharSequence) this.mBuilder);
+                this.mCCView.setText(this.mBuilder);
                 return;
             }
             SpannableStringBuilder trim = new SpannableStringBuilder();
@@ -898,24 +914,24 @@ class Cea708CCWidget extends ClosedCaptionWidget implements Cea708CCParser.Displ
             if (start > 0) {
                 trim.delete(0, start);
             }
-            this.mCCView.setText((CharSequence) trim);
+            this.mCCView.setText(trim);
         }
 
         public void setRowLimit(int rowLimit) {
-            if (rowLimit >= 0) {
-                this.mRowLimit = rowLimit;
-                return;
+            if (rowLimit < 0) {
+                throw new IllegalArgumentException("A rowLimit should have a positive number");
             }
-            throw new IllegalArgumentException("A rowLimit should have a positive number");
+            this.mRowLimit = rowLimit;
         }
     }
 
-    /* compiled from: Cea708CaptionRenderer */
+    /* compiled from: Cea708CaptionRenderer.java */
+    /* loaded from: classes3.dex */
     static class CCView extends SubtitleView {
         private static final CaptioningManager.CaptionStyle DEFAULT_CAPTION_STYLE = CaptioningManager.CaptionStyle.DEFAULT;
 
         public CCView(Context context) {
-            this(context, (AttributeSet) null);
+            this(context, null);
         }
 
         public CCView(Context context, AttributeSet attrs) {

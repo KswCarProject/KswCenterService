@@ -1,8 +1,9 @@
 package android.util;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.SystemProperties;
+import android.p007os.SystemProperties;
 
+/* loaded from: classes4.dex */
 public class DisplayMetrics {
     public static final int DENSITY_140 = 140;
     public static final int DENSITY_180 = 180;
@@ -21,8 +22,8 @@ public class DisplayMetrics {
     public static final int DENSITY_600 = 600;
     public static final int DENSITY_DEFAULT = 160;
     public static final float DENSITY_DEFAULT_SCALE = 0.00625f;
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public static int DENSITY_DEVICE = getDeviceDensity();
     public static final int DENSITY_DEVICE_STABLE = getDeviceDensity();
     public static final int DENSITY_HIGH = 240;
@@ -51,32 +52,33 @@ public class DisplayMetrics {
     public float ydpi;
 
     public void setTo(DisplayMetrics o) {
-        if (this != o) {
-            this.widthPixels = o.widthPixels;
-            this.heightPixels = o.heightPixels;
-            this.density = o.density;
-            this.densityDpi = o.densityDpi;
-            this.scaledDensity = o.scaledDensity;
-            this.xdpi = o.xdpi;
-            this.ydpi = o.ydpi;
-            this.noncompatWidthPixels = o.noncompatWidthPixels;
-            this.noncompatHeightPixels = o.noncompatHeightPixels;
-            this.noncompatDensity = o.noncompatDensity;
-            this.noncompatDensityDpi = o.noncompatDensityDpi;
-            this.noncompatScaledDensity = o.noncompatScaledDensity;
-            this.noncompatXdpi = o.noncompatXdpi;
-            this.noncompatYdpi = o.noncompatYdpi;
+        if (this == o) {
+            return;
         }
+        this.widthPixels = o.widthPixels;
+        this.heightPixels = o.heightPixels;
+        this.density = o.density;
+        this.densityDpi = o.densityDpi;
+        this.scaledDensity = o.scaledDensity;
+        this.xdpi = o.xdpi;
+        this.ydpi = o.ydpi;
+        this.noncompatWidthPixels = o.noncompatWidthPixels;
+        this.noncompatHeightPixels = o.noncompatHeightPixels;
+        this.noncompatDensity = o.noncompatDensity;
+        this.noncompatDensityDpi = o.noncompatDensityDpi;
+        this.noncompatScaledDensity = o.noncompatScaledDensity;
+        this.noncompatXdpi = o.noncompatXdpi;
+        this.noncompatYdpi = o.noncompatYdpi;
     }
 
     public void setToDefaults() {
         this.widthPixels = 0;
         this.heightPixels = 0;
-        this.density = ((float) DENSITY_DEVICE) / 160.0f;
+        this.density = DENSITY_DEVICE / 160.0f;
         this.densityDpi = DENSITY_DEVICE;
         this.scaledDensity = this.density;
-        this.xdpi = (float) DENSITY_DEVICE;
-        this.ydpi = (float) DENSITY_DEVICE;
+        this.xdpi = DENSITY_DEVICE;
+        this.ydpi = DENSITY_DEVICE;
         this.noncompatWidthPixels = this.widthPixels;
         this.noncompatHeightPixels = this.heightPixels;
         this.noncompatDensity = this.density;

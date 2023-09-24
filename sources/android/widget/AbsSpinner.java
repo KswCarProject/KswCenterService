@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.database.DataSetObserver;
 import android.graphics.Rect;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.SparseArray;
@@ -13,8 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.autofill.AutofillValue;
 import android.widget.AdapterView;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
+/* loaded from: classes4.dex */
 public abstract class AbsSpinner extends AdapterView<SpinnerAdapter> {
     private static final String LOG_TAG = AbsSpinner.class.getSimpleName();
     SpinnerAdapter mAdapter;
@@ -29,8 +30,7 @@ public abstract class AbsSpinner extends AdapterView<SpinnerAdapter> {
     private Rect mTouchFrame;
     int mWidthMeasureSpec;
 
-    /* access modifiers changed from: package-private */
-    public abstract void layout(int i, boolean z);
+    abstract void layout(int i, boolean z);
 
     public AbsSpinner(Context context) {
         super(context);
@@ -63,11 +63,11 @@ public abstract class AbsSpinner extends AdapterView<SpinnerAdapter> {
             setImportantForAutofill(1);
         }
         initAbsSpinner();
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.AbsSpinner, defStyleAttr, defStyleRes);
-        saveAttributeDataForStyleable(context, R.styleable.AbsSpinner, attrs, a, defStyleAttr, defStyleRes);
+        TypedArray a = context.obtainStyledAttributes(attrs, C3132R.styleable.AbsSpinner, defStyleAttr, defStyleRes);
+        saveAttributeDataForStyleable(context, C3132R.styleable.AbsSpinner, attrs, a, defStyleAttr, defStyleRes);
         CharSequence[] entries = a.getTextArray(0);
         if (entries != null) {
-            ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>(context, 17367048, (T[]) entries);
+            ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>(context, 17367048, entries);
             adapter.setDropDownViewResource(17367049);
             setAdapter((SpinnerAdapter) adapter);
         }
@@ -79,13 +79,14 @@ public abstract class AbsSpinner extends AdapterView<SpinnerAdapter> {
         setWillNotDraw(false);
     }
 
+    /* JADX WARN: Can't rename method to resolve collision */
+    @Override // android.widget.AdapterView
     public void setAdapter(SpinnerAdapter adapter) {
         if (this.mAdapter != null) {
             this.mAdapter.unregisterDataSetObserver(this.mDataSetObserver);
             resetList();
         }
         this.mAdapter = adapter;
-        int position = -1;
         this.mOldSelectedPosition = -1;
         this.mOldSelectedRowId = Long.MIN_VALUE;
         if (this.mAdapter != null) {
@@ -94,9 +95,7 @@ public abstract class AbsSpinner extends AdapterView<SpinnerAdapter> {
             checkFocus();
             this.mDataSetObserver = new AdapterView.AdapterDataSetObserver();
             this.mAdapter.registerDataSetObserver(this.mDataSetObserver);
-            if (this.mItemCount > 0) {
-                position = 0;
-            }
+            int position = this.mItemCount > 0 ? 0 : -1;
             setSelectedPositionInt(position);
             setNextSelectedPositionInt(position);
             if (this.mItemCount == 0) {
@@ -110,8 +109,7 @@ public abstract class AbsSpinner extends AdapterView<SpinnerAdapter> {
         requestLayout();
     }
 
-    /* access modifiers changed from: package-private */
-    public void resetList() {
+    void resetList() {
         this.mDataChanged = false;
         this.mNeedSync = false;
         removeAllViewsInLayout();
@@ -122,41 +120,13 @@ public abstract class AbsSpinner extends AdapterView<SpinnerAdapter> {
         invalidate();
     }
 
-    /* access modifiers changed from: protected */
-    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int i;
-        int i2;
-        int i3;
-        int i4;
+    @Override // android.view.View
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int widthMode = View.MeasureSpec.getMode(widthMeasureSpec);
-        Rect rect = this.mSpinnerPadding;
-        if (this.mPaddingLeft > this.mSelectionLeftPadding) {
-            i = this.mPaddingLeft;
-        } else {
-            i = this.mSelectionLeftPadding;
-        }
-        rect.left = i;
-        Rect rect2 = this.mSpinnerPadding;
-        if (this.mPaddingTop > this.mSelectionTopPadding) {
-            i2 = this.mPaddingTop;
-        } else {
-            i2 = this.mSelectionTopPadding;
-        }
-        rect2.top = i2;
-        Rect rect3 = this.mSpinnerPadding;
-        if (this.mPaddingRight > this.mSelectionRightPadding) {
-            i3 = this.mPaddingRight;
-        } else {
-            i3 = this.mSelectionRightPadding;
-        }
-        rect3.right = i3;
-        Rect rect4 = this.mSpinnerPadding;
-        if (this.mPaddingBottom > this.mSelectionBottomPadding) {
-            i4 = this.mPaddingBottom;
-        } else {
-            i4 = this.mSelectionBottomPadding;
-        }
-        rect4.bottom = i4;
+        this.mSpinnerPadding.left = this.mPaddingLeft > this.mSelectionLeftPadding ? this.mPaddingLeft : this.mSelectionLeftPadding;
+        this.mSpinnerPadding.top = this.mPaddingTop > this.mSelectionTopPadding ? this.mPaddingTop : this.mSelectionTopPadding;
+        this.mSpinnerPadding.right = this.mPaddingRight > this.mSelectionRightPadding ? this.mPaddingRight : this.mSelectionRightPadding;
+        this.mSpinnerPadding.bottom = this.mPaddingBottom > this.mSelectionBottomPadding ? this.mPaddingBottom : this.mSelectionBottomPadding;
         if (this.mDataChanged) {
             handleDataChanged();
         }
@@ -167,7 +137,7 @@ public abstract class AbsSpinner extends AdapterView<SpinnerAdapter> {
         if (selectedPosition >= 0 && this.mAdapter != null && selectedPosition < this.mAdapter.getCount()) {
             View view = this.mRecycler.get(selectedPosition);
             if (view == null) {
-                view = this.mAdapter.getView(selectedPosition, (View) null, this);
+                view = this.mAdapter.getView(selectedPosition, null, this);
                 if (view.getImportantForAccessibility() == 0) {
                     view.setImportantForAccessibility(1);
                 }
@@ -193,77 +163,81 @@ public abstract class AbsSpinner extends AdapterView<SpinnerAdapter> {
         }
         int preferredHeight2 = Math.max(preferredHeight, getSuggestedMinimumHeight());
         int preferredWidth2 = Math.max(preferredWidth, getSuggestedMinimumWidth());
-        setMeasuredDimension(resolveSizeAndState(preferredWidth2, widthMeasureSpec, 0), resolveSizeAndState(preferredHeight2, heightMeasureSpec, 0));
+        int heightSize = resolveSizeAndState(preferredHeight2, heightMeasureSpec, 0);
+        int widthSize = resolveSizeAndState(preferredWidth2, widthMeasureSpec, 0);
+        setMeasuredDimension(widthSize, heightSize);
         this.mHeightMeasureSpec = heightMeasureSpec;
         this.mWidthMeasureSpec = widthMeasureSpec;
     }
 
-    /* access modifiers changed from: package-private */
-    public int getChildHeight(View child) {
+    int getChildHeight(View child) {
         return child.getMeasuredHeight();
     }
 
-    /* access modifiers changed from: package-private */
-    public int getChildWidth(View child) {
+    int getChildWidth(View child) {
         return child.getMeasuredWidth();
     }
 
-    /* access modifiers changed from: protected */
-    public ViewGroup.LayoutParams generateDefaultLayoutParams() {
+    @Override // android.view.ViewGroup
+    protected ViewGroup.LayoutParams generateDefaultLayoutParams() {
         return new ViewGroup.LayoutParams(-1, -2);
     }
 
-    /* access modifiers changed from: package-private */
-    public void recycleAllViews() {
+    void recycleAllViews() {
         int childCount = getChildCount();
         RecycleBin recycleBin = this.mRecycler;
         int position = this.mFirstPosition;
         for (int i = 0; i < childCount; i++) {
-            recycleBin.put(position + i, getChildAt(i));
+            View v = getChildAt(i);
+            int index = position + i;
+            recycleBin.put(index, v);
         }
     }
 
     public void setSelection(int position, boolean animate) {
         boolean shouldAnimate = true;
-        if (!animate || this.mFirstPosition > position || position > (this.mFirstPosition + getChildCount()) - 1) {
-            shouldAnimate = false;
-        }
+        shouldAnimate = (!animate || this.mFirstPosition > position || position > (this.mFirstPosition + getChildCount()) - 1) ? false : false;
         setSelectionInt(position, shouldAnimate);
     }
 
+    @Override // android.widget.AdapterView
     public void setSelection(int position) {
         setNextSelectedPositionInt(position);
         requestLayout();
         invalidate();
     }
 
-    /* access modifiers changed from: package-private */
-    public void setSelectionInt(int position, boolean animate) {
+    void setSelectionInt(int position, boolean animate) {
         if (position != this.mOldSelectedPosition) {
             this.mBlockLayoutRequests = true;
+            int delta = position - this.mSelectedPosition;
             setNextSelectedPositionInt(position);
-            layout(position - this.mSelectedPosition, animate);
+            layout(delta, animate);
             this.mBlockLayoutRequests = false;
         }
     }
 
+    @Override // android.widget.AdapterView
     public View getSelectedView() {
-        if (this.mItemCount <= 0 || this.mSelectedPosition < 0) {
-            return null;
+        if (this.mItemCount > 0 && this.mSelectedPosition >= 0) {
+            return getChildAt(this.mSelectedPosition - this.mFirstPosition);
         }
-        return getChildAt(this.mSelectedPosition - this.mFirstPosition);
+        return null;
     }
 
+    @Override // android.view.View, android.view.ViewParent
     public void requestLayout() {
         if (!this.mBlockLayoutRequests) {
             super.requestLayout();
         }
     }
 
+    @Override // android.widget.AdapterView
     public SpinnerAdapter getAdapter() {
         return this.mAdapter;
     }
 
+    @Override // android.widget.AdapterView
     public int getCount() {
         return this.mItemCount;
     }
@@ -274,7 +248,8 @@ public abstract class AbsSpinner extends AdapterView<SpinnerAdapter> {
             this.mTouchFrame = new Rect();
             frame = this.mTouchFrame;
         }
-        for (int i = getChildCount() - 1; i >= 0; i--) {
+        int count = getChildCount();
+        for (int i = count - 1; i >= 0; i--) {
             View child = getChildAt(i);
             if (child.getVisibility() == 0) {
                 child.getHitRect(frame);
@@ -286,18 +261,23 @@ public abstract class AbsSpinner extends AdapterView<SpinnerAdapter> {
         return -1;
     }
 
-    /* access modifiers changed from: protected */
-    public void dispatchRestoreInstanceState(SparseArray<Parcelable> container) {
+    @Override // android.widget.AdapterView, android.view.ViewGroup, android.view.View
+    protected void dispatchRestoreInstanceState(SparseArray<Parcelable> container) {
         super.dispatchRestoreInstanceState(container);
         handleDataChanged();
     }
 
+    /* loaded from: classes4.dex */
     static class SavedState extends View.BaseSavedState {
-        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
+        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() { // from class: android.widget.AbsSpinner.SavedState.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public SavedState createFromParcel(Parcel in) {
                 return new SavedState(in);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public SavedState[] newArray(int size) {
                 return new SavedState[size];
             }
@@ -315,6 +295,7 @@ public abstract class AbsSpinner extends AdapterView<SpinnerAdapter> {
             this.position = in.readInt();
         }
 
+        @Override // android.view.View.BaseSavedState, android.view.AbsSavedState, android.p007os.Parcelable
         public void writeToParcel(Parcel out, int flags) {
             super.writeToParcel(out, flags);
             out.writeLong(this.selectedId);
@@ -326,8 +307,10 @@ public abstract class AbsSpinner extends AdapterView<SpinnerAdapter> {
         }
     }
 
+    @Override // android.view.View
     public Parcelable onSaveInstanceState() {
-        SavedState ss = new SavedState(super.onSaveInstanceState());
+        Parcelable superState = super.onSaveInstanceState();
+        SavedState ss = new SavedState(superState);
         ss.selectedId = getSelectedItemId();
         if (ss.selectedId >= 0) {
             ss.position = getSelectedItemPosition();
@@ -337,6 +320,7 @@ public abstract class AbsSpinner extends AdapterView<SpinnerAdapter> {
         return ss;
     }
 
+    @Override // android.view.View
     public void onRestoreInstanceState(Parcelable state) {
         SavedState ss = (SavedState) state;
         super.onRestoreInstanceState(ss.getSuperState());
@@ -350,6 +334,7 @@ public abstract class AbsSpinner extends AdapterView<SpinnerAdapter> {
         }
     }
 
+    /* loaded from: classes4.dex */
     class RecycleBin {
         private final SparseArray<View> mScrapHeap = new SparseArray<>();
 
@@ -360,8 +345,7 @@ public abstract class AbsSpinner extends AdapterView<SpinnerAdapter> {
             this.mScrapHeap.put(position, v);
         }
 
-        /* access modifiers changed from: package-private */
-        public View get(int position) {
+        View get(int position) {
             View result = this.mScrapHeap.get(position);
             if (result != null) {
                 this.mScrapHeap.delete(position);
@@ -369,8 +353,7 @@ public abstract class AbsSpinner extends AdapterView<SpinnerAdapter> {
             return result;
         }
 
-        /* access modifiers changed from: package-private */
-        public void clear() {
+        void clear() {
             SparseArray<View> scrapHeap = this.mScrapHeap;
             int count = scrapHeap.size();
             for (int i = 0; i < count; i++) {
@@ -383,25 +366,29 @@ public abstract class AbsSpinner extends AdapterView<SpinnerAdapter> {
         }
     }
 
+    @Override // android.widget.AdapterView, android.view.ViewGroup, android.view.View
     public CharSequence getAccessibilityClassName() {
         return AbsSpinner.class.getName();
     }
 
+    @Override // android.view.View
     public void autofill(AutofillValue value) {
         if (isEnabled()) {
             if (!value.isList()) {
                 String str = LOG_TAG;
-                Log.w(str, value + " could not be autofilled into " + this);
+                Log.m64w(str, value + " could not be autofilled into " + this);
                 return;
             }
             setSelection(value.getListValue());
         }
     }
 
+    @Override // android.view.View
     public int getAutofillType() {
         return isEnabled() ? 3 : 0;
     }
 
+    @Override // android.view.View
     public AutofillValue getAutofillValue() {
         if (isEnabled()) {
             return AutofillValue.forList(getSelectedItemPosition());

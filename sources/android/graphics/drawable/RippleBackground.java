@@ -8,28 +8,33 @@ import android.graphics.Rect;
 import android.util.FloatProperty;
 import android.view.animation.LinearInterpolator;
 
+/* loaded from: classes.dex */
 class RippleBackground extends RippleComponent {
     private static final TimeInterpolator LINEAR_INTERPOLATOR = new LinearInterpolator();
-    private static final BackgroundProperty OPACITY = new BackgroundProperty("opacity") {
+    private static final BackgroundProperty OPACITY = new BackgroundProperty("opacity") { // from class: android.graphics.drawable.RippleBackground.1
+        @Override // android.util.FloatProperty
         public void setValue(RippleBackground object, float value) {
-            float unused = object.mOpacity = value;
+            object.mOpacity = value;
             object.invalidateSelf();
         }
 
+        @Override // android.util.Property
         public Float get(RippleBackground object) {
             return Float.valueOf(object.mOpacity);
         }
     };
     private static final int OPACITY_DURATION = 80;
     private ObjectAnimator mAnimator;
-    private boolean mFocused = false;
-    private boolean mHovered = false;
+    private boolean mFocused;
+    private boolean mHovered;
     private boolean mIsBounded;
-    /* access modifiers changed from: private */
-    public float mOpacity = 0.0f;
+    private float mOpacity;
 
     public RippleBackground(RippleDrawable owner, Rect bounds, boolean isBounded) {
         super(owner, bounds);
+        this.mOpacity = 0.0f;
+        this.mFocused = false;
+        this.mHovered = false;
         this.mIsBounded = isBounded;
     }
 
@@ -39,7 +44,7 @@ class RippleBackground extends RippleComponent {
 
     public void draw(Canvas c, Paint p) {
         int origAlpha = p.getAlpha();
-        int alpha = Math.min((int) ((((float) origAlpha) * this.mOpacity) + 0.5f), 255);
+        int alpha = Math.min((int) ((origAlpha * this.mOpacity) + 0.5f), 255);
         if (alpha > 0) {
             p.setAlpha(alpha);
             c.drawCircle(0.0f, 0.0f, this.mTargetRadius, p);
@@ -72,7 +77,7 @@ class RippleBackground extends RippleComponent {
             this.mAnimator = null;
         }
         this.mAnimator = ObjectAnimator.ofFloat(this, OPACITY, newOpacity);
-        this.mAnimator.setDuration(80);
+        this.mAnimator.setDuration(80L);
         this.mAnimator.setInterpolator(LINEAR_INTERPOLATOR);
         this.mAnimator.start();
     }
@@ -84,6 +89,7 @@ class RippleBackground extends RippleComponent {
         }
     }
 
+    /* loaded from: classes.dex */
     private static abstract class BackgroundProperty extends FloatProperty<RippleBackground> {
         public BackgroundProperty(String name) {
             super(name);

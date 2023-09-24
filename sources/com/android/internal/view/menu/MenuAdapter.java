@@ -7,6 +7,7 @@ import android.widget.BaseAdapter;
 import com.android.internal.view.menu.MenuView;
 import java.util.ArrayList;
 
+/* loaded from: classes4.dex */
 public class MenuAdapter extends BaseAdapter {
     MenuBuilder mAdapterMenu;
     private int mExpandedIndex = -1;
@@ -31,6 +32,7 @@ public class MenuAdapter extends BaseAdapter {
         this.mForceShowIcon = forceShow;
     }
 
+    @Override // android.widget.Adapter
     public int getCount() {
         ArrayList<MenuItemImpl> items = this.mOverflowOnly ? this.mAdapterMenu.getNonActionItems() : this.mAdapterMenu.getVisibleItems();
         if (this.mExpandedIndex < 0) {
@@ -43,6 +45,7 @@ public class MenuAdapter extends BaseAdapter {
         return this.mAdapterMenu;
     }
 
+    @Override // android.widget.Adapter
     public MenuItemImpl getItem(int position) {
         ArrayList<MenuItemImpl> items = this.mOverflowOnly ? this.mAdapterMenu.getNonActionItems() : this.mAdapterMenu.getVisibleItems();
         if (this.mExpandedIndex >= 0 && position >= this.mExpandedIndex) {
@@ -51,16 +54,19 @@ public class MenuAdapter extends BaseAdapter {
         return items.get(position);
     }
 
+    @Override // android.widget.Adapter
     public long getItemId(int position) {
-        return (long) position;
+        return position;
     }
 
+    @Override // android.widget.Adapter
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             convertView = this.mInflater.inflate(this.mItemLayoutRes, parent, false);
         }
         int currGroupId = getItem(position).getGroupId();
-        ((ListMenuItemView) convertView).setGroupDividerEnabled(this.mAdapterMenu.isGroupDividerEnabled() && currGroupId != (position + -1 >= 0 ? getItem(position + -1).getGroupId() : currGroupId));
+        int prevGroupId = position + (-1) >= 0 ? getItem(position - 1).getGroupId() : currGroupId;
+        ((ListMenuItemView) convertView).setGroupDividerEnabled(this.mAdapterMenu.isGroupDividerEnabled() && currGroupId != prevGroupId);
         MenuView.ItemView itemView = (MenuView.ItemView) convertView;
         if (this.mForceShowIcon) {
             ((ListMenuItemView) convertView).setForceShowIcon(true);
@@ -69,14 +75,14 @@ public class MenuAdapter extends BaseAdapter {
         return convertView;
     }
 
-    /* access modifiers changed from: package-private */
-    public void findExpandedIndex() {
+    void findExpandedIndex() {
         MenuItemImpl expandedItem = this.mAdapterMenu.getExpandedItem();
         if (expandedItem != null) {
             ArrayList<MenuItemImpl> items = this.mAdapterMenu.getNonActionItems();
             int count = items.size();
             for (int i = 0; i < count; i++) {
-                if (items.get(i) == expandedItem) {
+                MenuItemImpl item = items.get(i);
+                if (item == expandedItem) {
                     this.mExpandedIndex = i;
                     return;
                 }
@@ -85,6 +91,7 @@ public class MenuAdapter extends BaseAdapter {
         this.mExpandedIndex = -1;
     }
 
+    @Override // android.widget.BaseAdapter
     public void notifyDataSetChanged() {
         findExpandedIndex();
         super.notifyDataSetChanged();

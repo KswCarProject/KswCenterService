@@ -1,6 +1,6 @@
 package com.android.internal.util;
 
-import android.os.Process;
+import android.p007os.Process;
 import android.util.Slog;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
@@ -11,16 +11,19 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/* loaded from: classes4.dex */
 public class ConcurrentUtils {
     private ConcurrentUtils() {
     }
 
     public static ExecutorService newFixedThreadPool(int nThreads, final String poolName, final int linuxThreadPriority) {
-        return Executors.newFixedThreadPool(nThreads, new ThreadFactory() {
+        return Executors.newFixedThreadPool(nThreads, new ThreadFactory() { // from class: com.android.internal.util.ConcurrentUtils.1
             private final AtomicInteger threadNum = new AtomicInteger(0);
 
+            @Override // java.util.concurrent.ThreadFactory
             public Thread newThread(final Runnable r) {
-                return new Thread(poolName + this.threadNum.incrementAndGet()) {
+                return new Thread(poolName + this.threadNum.incrementAndGet()) { // from class: com.android.internal.util.ConcurrentUtils.1.1
+                    @Override // java.lang.Thread, java.lang.Runnable
                     public void run() {
                         Process.setThreadPriority(linuxThreadPriority);
                         r.run();

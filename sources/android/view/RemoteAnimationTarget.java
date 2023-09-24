@@ -4,19 +4,24 @@ import android.annotation.UnsupportedAppUsage;
 import android.app.WindowConfiguration;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.proto.ProtoOutputStream;
 import java.io.PrintWriter;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes4.dex */
 public class RemoteAnimationTarget implements Parcelable {
-    public static final Parcelable.Creator<RemoteAnimationTarget> CREATOR = new Parcelable.Creator<RemoteAnimationTarget>() {
+    public static final Parcelable.Creator<RemoteAnimationTarget> CREATOR = new Parcelable.Creator<RemoteAnimationTarget>() { // from class: android.view.RemoteAnimationTarget.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RemoteAnimationTarget createFromParcel(Parcel in) {
             return new RemoteAnimationTarget(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RemoteAnimationTarget[] newArray(int size) {
             return new RemoteAnimationTarget[size];
         }
@@ -52,45 +57,48 @@ public class RemoteAnimationTarget implements Parcelable {
     public final WindowConfiguration windowConfiguration;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface Mode {
     }
 
-    public RemoteAnimationTarget(int taskId2, int mode2, SurfaceControl leash2, boolean isTranslucent2, Rect clipRect2, Rect contentInsets2, int prefixOrderIndex2, Point position2, Rect sourceContainerBounds2, WindowConfiguration windowConfig, boolean isNotInRecents2, SurfaceControl startLeash2, Rect startBounds2) {
-        this.mode = mode2;
-        this.taskId = taskId2;
-        this.leash = leash2;
-        this.isTranslucent = isTranslucent2;
-        this.clipRect = new Rect(clipRect2);
-        this.contentInsets = new Rect(contentInsets2);
-        this.prefixOrderIndex = prefixOrderIndex2;
-        this.position = new Point(position2);
-        this.sourceContainerBounds = new Rect(sourceContainerBounds2);
+    public RemoteAnimationTarget(int taskId, int mode, SurfaceControl leash, boolean isTranslucent, Rect clipRect, Rect contentInsets, int prefixOrderIndex, Point position, Rect sourceContainerBounds, WindowConfiguration windowConfig, boolean isNotInRecents, SurfaceControl startLeash, Rect startBounds) {
+        this.mode = mode;
+        this.taskId = taskId;
+        this.leash = leash;
+        this.isTranslucent = isTranslucent;
+        this.clipRect = new Rect(clipRect);
+        this.contentInsets = new Rect(contentInsets);
+        this.prefixOrderIndex = prefixOrderIndex;
+        this.position = new Point(position);
+        this.sourceContainerBounds = new Rect(sourceContainerBounds);
         this.windowConfiguration = windowConfig;
-        this.isNotInRecents = isNotInRecents2;
-        this.startLeash = startLeash2;
-        this.startBounds = startBounds2 == null ? null : new Rect(startBounds2);
+        this.isNotInRecents = isNotInRecents;
+        this.startLeash = startLeash;
+        this.startBounds = startBounds == null ? null : new Rect(startBounds);
     }
 
     public RemoteAnimationTarget(Parcel in) {
         this.taskId = in.readInt();
         this.mode = in.readInt();
-        this.leash = (SurfaceControl) in.readParcelable((ClassLoader) null);
+        this.leash = (SurfaceControl) in.readParcelable(null);
         this.isTranslucent = in.readBoolean();
-        this.clipRect = (Rect) in.readParcelable((ClassLoader) null);
-        this.contentInsets = (Rect) in.readParcelable((ClassLoader) null);
+        this.clipRect = (Rect) in.readParcelable(null);
+        this.contentInsets = (Rect) in.readParcelable(null);
         this.prefixOrderIndex = in.readInt();
-        this.position = (Point) in.readParcelable((ClassLoader) null);
-        this.sourceContainerBounds = (Rect) in.readParcelable((ClassLoader) null);
-        this.windowConfiguration = (WindowConfiguration) in.readParcelable((ClassLoader) null);
+        this.position = (Point) in.readParcelable(null);
+        this.sourceContainerBounds = (Rect) in.readParcelable(null);
+        this.windowConfiguration = (WindowConfiguration) in.readParcelable(null);
         this.isNotInRecents = in.readBoolean();
-        this.startLeash = (SurfaceControl) in.readParcelable((ClassLoader) null);
-        this.startBounds = (Rect) in.readParcelable((ClassLoader) null);
+        this.startLeash = (SurfaceControl) in.readParcelable(null);
+        this.startBounds = (Rect) in.readParcelable(null);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.taskId);
         dest.writeInt(this.mode);

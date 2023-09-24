@@ -1,5 +1,6 @@
 package android.renderscript;
 
+/* loaded from: classes3.dex */
 public class Sampler extends BaseObj {
     float mAniso;
     Value mMag;
@@ -8,6 +9,7 @@ public class Sampler extends BaseObj {
     Value mWrapS;
     Value mWrapT;
 
+    /* loaded from: classes3.dex */
     public enum Value {
         NEAREST(0),
         LINEAR(1),
@@ -19,7 +21,7 @@ public class Sampler extends BaseObj {
         
         int mID;
 
-        private Value(int id) {
+        Value(int id) {
             this.mID = id;
         }
     }
@@ -193,14 +195,15 @@ public class Sampler extends BaseObj {
         return rs.mSampler_MIRRORED_REPEAT_LINEAR_MIP_LINEAR;
     }
 
+    /* loaded from: classes3.dex */
     public static class Builder {
-        float mAniso = 1.0f;
-        Value mMag = Value.NEAREST;
-        Value mMin = Value.NEAREST;
         RenderScript mRS;
-        Value mWrapR = Value.WRAP;
+        Value mMin = Value.NEAREST;
+        Value mMag = Value.NEAREST;
         Value mWrapS = Value.WRAP;
         Value mWrapT = Value.WRAP;
+        Value mWrapR = Value.WRAP;
+        float mAniso = 1.0f;
 
         public Builder(RenderScript rs) {
             this.mRS = rs;
@@ -248,7 +251,8 @@ public class Sampler extends BaseObj {
 
         public Sampler create() {
             this.mRS.validate();
-            Sampler sampler = new Sampler(this.mRS.nSamplerCreate(this.mMag.mID, this.mMin.mID, this.mWrapS.mID, this.mWrapT.mID, this.mWrapR.mID, this.mAniso), this.mRS);
+            long id = this.mRS.nSamplerCreate(this.mMag.mID, this.mMin.mID, this.mWrapS.mID, this.mWrapT.mID, this.mWrapR.mID, this.mAniso);
+            Sampler sampler = new Sampler(id, this.mRS);
             sampler.mMin = this.mMin;
             sampler.mMag = this.mMag;
             sampler.mWrapS = this.mWrapS;

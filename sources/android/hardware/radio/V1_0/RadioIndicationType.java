@@ -2,6 +2,7 @@ package android.hardware.radio.V1_0;
 
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class RadioIndicationType {
     public static final int UNSOLICITED = 0;
     public static final int UNSOLICITED_ACK_EXP = 1;

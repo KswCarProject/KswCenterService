@@ -1,5 +1,6 @@
 package com.android.server.power;
 
+/* loaded from: classes4.dex */
 public final class WirelessChargerDetectorProto {
     public static final long DETECTION_START_TIME_MS = 1112396529669L;
     public static final long FIRST_SAMPLE = 1146756268041L;
@@ -12,10 +13,17 @@ public final class WirelessChargerDetectorProto {
     public static final long REST = 1146756268035L;
     public static final long TOTAL_SAMPLES = 1120986464263L;
 
+    /* loaded from: classes4.dex */
     public final class VectorProto {
-        public static final long X = 1108101562369L;
-        public static final long Y = 1108101562370L;
-        public static final long Z = 1108101562371L;
+
+        /* renamed from: X */
+        public static final long f2510X = 1108101562369L;
+
+        /* renamed from: Y */
+        public static final long f2511Y = 1108101562370L;
+
+        /* renamed from: Z */
+        public static final long f2512Z = 1108101562371L;
 
         public VectorProto() {
         }

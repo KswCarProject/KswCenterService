@@ -10,6 +10,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.Objects;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public class AudioMix {
     private static final int CALLBACK_FLAGS_ALL = 1;
     public static final int CALLBACK_FLAG_NOTIFY_ACTIVITY = 1;
@@ -43,6 +44,7 @@ public class AudioMix {
     private AudioMixingRule mRule;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface RouteFlags {
     }
 
@@ -78,8 +80,7 @@ public class AudioMix {
         return this.mMixType;
     }
 
-    /* access modifiers changed from: package-private */
-    public void setRegistration(String regId) {
+    void setRegistration(String regId) {
         this.mDeviceAddress = regId;
     }
 
@@ -102,15 +103,15 @@ public class AudioMix {
         }
         int channelCount = format.getChannelCount();
         if (channelCount > 1 || channelCount <= 0) {
-            return "Privileged audio capture channel count " + channelCount + " can not be over " + 1;
+            return "Privileged audio capture channel count " + channelCount + " can not be over 1";
         }
         int encoding = format.getEncoding();
         if (!AudioFormat.isPublicEncoding(encoding) || !AudioFormat.isEncodingLinearPcm(encoding)) {
             return "Privileged audio capture encoding " + encoding + "is not linear";
-        } else if (AudioFormat.getBytesPerSample(encoding) <= 2) {
-            return null;
+        } else if (AudioFormat.getBytesPerSample(encoding) > 2) {
+            return "Privileged audio capture encoding " + encoding + " can not be over 2 bytes per sample";
         } else {
-            return "Privileged audio capture encoding " + encoding + " can not be over " + 2 + " bytes per sample";
+            return null;
         }
     }
 
@@ -129,122 +130,135 @@ public class AudioMix {
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(this.mRouteFlags), this.mRule, Integer.valueOf(this.mMixType), this.mFormat});
+        return Objects.hash(Integer.valueOf(this.mRouteFlags), this.mRule, Integer.valueOf(this.mMixType), this.mFormat);
     }
 
+    /* loaded from: classes3.dex */
     public static class Builder {
-        private int mCallbackFlags = 0;
-        private String mDeviceAddress = null;
-        private int mDeviceSystemType = 0;
-        private AudioFormat mFormat = null;
-        private int mRouteFlags = 0;
-        private AudioMixingRule mRule = null;
+        private int mCallbackFlags;
+        private String mDeviceAddress;
+        private int mDeviceSystemType;
+        private AudioFormat mFormat;
+        private int mRouteFlags;
+        private AudioMixingRule mRule;
 
         Builder() {
+            this.mRule = null;
+            this.mFormat = null;
+            this.mRouteFlags = 0;
+            this.mCallbackFlags = 0;
+            this.mDeviceSystemType = 0;
+            this.mDeviceAddress = null;
         }
 
         public Builder(AudioMixingRule rule) throws IllegalArgumentException {
-            if (rule != null) {
-                this.mRule = rule;
-                return;
+            this.mRule = null;
+            this.mFormat = null;
+            this.mRouteFlags = 0;
+            this.mCallbackFlags = 0;
+            this.mDeviceSystemType = 0;
+            this.mDeviceAddress = null;
+            if (rule == null) {
+                throw new IllegalArgumentException("Illegal null AudioMixingRule argument");
             }
-            throw new IllegalArgumentException("Illegal null AudioMixingRule argument");
+            this.mRule = rule;
         }
 
-        /* access modifiers changed from: package-private */
-        public Builder setMixingRule(AudioMixingRule rule) throws IllegalArgumentException {
-            if (rule != null) {
-                this.mRule = rule;
-                return this;
+        Builder setMixingRule(AudioMixingRule rule) throws IllegalArgumentException {
+            if (rule == null) {
+                throw new IllegalArgumentException("Illegal null AudioMixingRule argument");
             }
-            throw new IllegalArgumentException("Illegal null AudioMixingRule argument");
+            this.mRule = rule;
+            return this;
         }
 
-        /* access modifiers changed from: package-private */
-        public Builder setCallbackFlags(int flags) throws IllegalArgumentException {
-            if (flags == 0 || (flags & 1) != 0) {
-                this.mCallbackFlags = flags;
-                return this;
+        Builder setCallbackFlags(int flags) throws IllegalArgumentException {
+            if (flags != 0 && (flags & 1) == 0) {
+                throw new IllegalArgumentException("Illegal callback flags 0x" + Integer.toHexString(flags).toUpperCase());
             }
-            throw new IllegalArgumentException("Illegal callback flags 0x" + Integer.toHexString(flags).toUpperCase());
+            this.mCallbackFlags = flags;
+            return this;
         }
 
-        /* access modifiers changed from: package-private */
-        public Builder setDevice(int deviceType, String address) {
+        Builder setDevice(int deviceType, String address) {
             this.mDeviceSystemType = deviceType;
             this.mDeviceAddress = address;
             return this;
         }
 
         public Builder setFormat(AudioFormat format) throws IllegalArgumentException {
-            if (format != null) {
-                this.mFormat = format;
-                return this;
+            if (format == null) {
+                throw new IllegalArgumentException("Illegal null AudioFormat argument");
             }
-            throw new IllegalArgumentException("Illegal null AudioFormat argument");
+            this.mFormat = format;
+            return this;
         }
 
         public Builder setRouteFlags(int routeFlags) throws IllegalArgumentException {
             if (routeFlags == 0) {
                 throw new IllegalArgumentException("Illegal empty route flags");
-            } else if ((routeFlags & 3) == 0) {
+            }
+            if ((routeFlags & 3) == 0) {
                 throw new IllegalArgumentException("Invalid route flags 0x" + Integer.toHexString(routeFlags) + "when configuring an AudioMix");
-            } else if ((routeFlags & -4) == 0) {
+            } else if ((routeFlags & (-4)) != 0) {
+                throw new IllegalArgumentException("Unknown route flags 0x" + Integer.toHexString(routeFlags) + "when configuring an AudioMix");
+            } else {
                 this.mRouteFlags = routeFlags;
                 return this;
-            } else {
-                throw new IllegalArgumentException("Unknown route flags 0x" + Integer.toHexString(routeFlags) + "when configuring an AudioMix");
             }
         }
 
         public Builder setDevice(AudioDeviceInfo device) throws IllegalArgumentException {
             if (device == null) {
                 throw new IllegalArgumentException("Illegal null AudioDeviceInfo argument");
-            } else if (device.isSink()) {
-                this.mDeviceSystemType = AudioDeviceInfo.convertDeviceTypeToInternalDevice(device.getType());
-                this.mDeviceAddress = device.getAddress();
-                return this;
-            } else {
+            }
+            if (!device.isSink()) {
                 throw new IllegalArgumentException("Unsupported device type on mix, not a sink");
             }
+            this.mDeviceSystemType = AudioDeviceInfo.convertDeviceTypeToInternalDevice(device.getType());
+            this.mDeviceAddress = device.getAddress();
+            return this;
         }
 
         public AudioMix build() throws IllegalArgumentException {
             String error;
-            if (this.mRule != null) {
-                if (this.mRouteFlags == 0) {
-                    this.mRouteFlags = 2;
+            if (this.mRule == null) {
+                throw new IllegalArgumentException("Illegal null AudioMixingRule");
+            }
+            if (this.mRouteFlags == 0) {
+                this.mRouteFlags = 2;
+            }
+            if (this.mFormat == null) {
+                int rate = AudioSystem.getPrimaryOutputSamplingRate();
+                if (rate <= 0) {
+                    rate = 44100;
                 }
-                if (this.mFormat == null) {
-                    int rate = AudioSystem.getPrimaryOutputSamplingRate();
-                    if (rate <= 0) {
-                        rate = 44100;
-                    }
-                    this.mFormat = new AudioFormat.Builder().setSampleRate(rate).build();
-                }
-                if (this.mDeviceSystemType == 0 || this.mDeviceSystemType == 32768 || this.mDeviceSystemType == -2147483392) {
-                    if ((this.mRouteFlags & 3) == 1) {
-                        throw new IllegalArgumentException("Can't have flag ROUTE_FLAG_RENDER without an audio device");
-                    } else if ((this.mRouteFlags & 2) == 2) {
-                        if (this.mRule.getTargetMixType() == 0) {
-                            this.mDeviceSystemType = 32768;
-                        } else if (this.mRule.getTargetMixType() == 1) {
-                            this.mDeviceSystemType = AudioSystem.DEVICE_IN_REMOTE_SUBMIX;
-                        } else {
-                            throw new IllegalArgumentException("Unknown mixing rule type");
-                        }
-                    }
-                } else if ((this.mRouteFlags & 1) == 0) {
+                this.mFormat = new AudioFormat.Builder().setSampleRate(rate).build();
+            }
+            if (this.mDeviceSystemType != 0 && this.mDeviceSystemType != 32768 && this.mDeviceSystemType != -2147483392) {
+                if ((this.mRouteFlags & 1) == 0) {
                     throw new IllegalArgumentException("Can't have audio device without flag ROUTE_FLAG_RENDER");
-                } else if (this.mRule.getTargetMixType() != 0) {
+                }
+                if (this.mRule.getTargetMixType() != 0) {
                     throw new IllegalArgumentException("Unsupported device on non-playback mix");
                 }
-                if (!this.mRule.allowPrivilegedPlaybackCapture() || (error = AudioMix.canBeUsedForPrivilegedCapture(this.mFormat)) == null) {
-                    return new AudioMix(this.mRule, this.mFormat, this.mRouteFlags, this.mCallbackFlags, this.mDeviceSystemType, this.mDeviceAddress);
+            } else if ((this.mRouteFlags & 3) == 1) {
+                throw new IllegalArgumentException("Can't have flag ROUTE_FLAG_RENDER without an audio device");
+            } else {
+                if ((this.mRouteFlags & 2) == 2) {
+                    if (this.mRule.getTargetMixType() == 0) {
+                        this.mDeviceSystemType = 32768;
+                    } else if (this.mRule.getTargetMixType() == 1) {
+                        this.mDeviceSystemType = AudioSystem.DEVICE_IN_REMOTE_SUBMIX;
+                    } else {
+                        throw new IllegalArgumentException("Unknown mixing rule type");
+                    }
                 }
+            }
+            if (this.mRule.allowPrivilegedPlaybackCapture() && (error = AudioMix.canBeUsedForPrivilegedCapture(this.mFormat)) != null) {
                 throw new IllegalArgumentException(error);
             }
-            throw new IllegalArgumentException("Illegal null AudioMixingRule");
+            return new AudioMix(this.mRule, this.mFormat, this.mRouteFlags, this.mCallbackFlags, this.mDeviceSystemType, this.mDeviceAddress);
         }
     }
 }

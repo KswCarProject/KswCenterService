@@ -1,11 +1,12 @@
 package android.speech.tts;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes3.dex */
 public interface ITextToSpeechCallback extends IInterface {
     void onAudioAvailable(String str, byte[] bArr) throws RemoteException;
 
@@ -21,33 +22,43 @@ public interface ITextToSpeechCallback extends IInterface {
 
     void onSuccess(String str) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements ITextToSpeechCallback {
+        @Override // android.speech.tts.ITextToSpeechCallback
         public void onStart(String utteranceId) throws RemoteException {
         }
 
+        @Override // android.speech.tts.ITextToSpeechCallback
         public void onSuccess(String utteranceId) throws RemoteException {
         }
 
+        @Override // android.speech.tts.ITextToSpeechCallback
         public void onStop(String utteranceId, boolean isStarted) throws RemoteException {
         }
 
+        @Override // android.speech.tts.ITextToSpeechCallback
         public void onError(String utteranceId, int errorCode) throws RemoteException {
         }
 
+        @Override // android.speech.tts.ITextToSpeechCallback
         public void onBeginSynthesis(String utteranceId, int sampleRateInHz, int audioFormat, int channelCount) throws RemoteException {
         }
 
+        @Override // android.speech.tts.ITextToSpeechCallback
         public void onAudioAvailable(String utteranceId, byte[] audio) throws RemoteException {
         }
 
+        @Override // android.speech.tts.ITextToSpeechCallback
         public void onRangeStart(String utteranceId, int start, int end, int frame) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements ITextToSpeechCallback {
         private static final String DESCRIPTOR = "android.speech.tts.ITextToSpeechCallback";
         static final int TRANSACTION_onAudioAvailable = 6;
@@ -67,12 +78,13 @@ public interface ITextToSpeechCallback extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof ITextToSpeechCallback)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof ITextToSpeechCallback)) {
+                return (ITextToSpeechCallback) iin;
             }
-            return (ITextToSpeechCallback) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -98,50 +110,68 @@ public interface ITextToSpeechCallback extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        onStart(data.readString());
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        onSuccess(data.readString());
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        onStop(data.readString(), data.readInt() != 0);
-                        return true;
-                    case 4:
-                        data.enforceInterface(DESCRIPTOR);
-                        onError(data.readString(), data.readInt());
-                        return true;
-                    case 5:
-                        data.enforceInterface(DESCRIPTOR);
-                        onBeginSynthesis(data.readString(), data.readInt(), data.readInt(), data.readInt());
-                        return true;
-                    case 6:
-                        data.enforceInterface(DESCRIPTOR);
-                        onAudioAvailable(data.readString(), data.createByteArray());
-                        return true;
-                    case 7:
-                        data.enforceInterface(DESCRIPTOR);
-                        onRangeStart(data.readString(), data.readInt(), data.readInt(), data.readInt());
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0 = data.readString();
+                    onStart(_arg0);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg02 = data.readString();
+                    onSuccess(_arg02);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg03 = data.readString();
+                    boolean _arg1 = data.readInt() != 0;
+                    onStop(_arg03, _arg1);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg04 = data.readString();
+                    int _arg12 = data.readInt();
+                    onError(_arg04, _arg12);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg05 = data.readString();
+                    int _arg13 = data.readInt();
+                    int _arg2 = data.readInt();
+                    int _arg3 = data.readInt();
+                    onBeginSynthesis(_arg05, _arg13, _arg2, _arg3);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg06 = data.readString();
+                    byte[] _arg14 = data.createByteArray();
+                    onAudioAvailable(_arg06, _arg14);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg07 = data.readString();
+                    int _arg15 = data.readInt();
+                    int _arg22 = data.readInt();
+                    int _arg32 = data.readInt();
+                    onRangeStart(_arg07, _arg15, _arg22, _arg32);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements ITextToSpeechCallback {
             public static ITextToSpeechCallback sDefaultImpl;
             private IBinder mRemote;
@@ -150,6 +180,7 @@ public interface ITextToSpeechCallback extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -158,14 +189,14 @@ public interface ITextToSpeechCallback extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.speech.tts.ITextToSpeechCallback
             public void onStart(String utteranceId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(utteranceId);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onStart(utteranceId);
                     }
                 } finally {
@@ -173,14 +204,14 @@ public interface ITextToSpeechCallback extends IInterface {
                 }
             }
 
+            @Override // android.speech.tts.ITextToSpeechCallback
             public void onSuccess(String utteranceId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(utteranceId);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onSuccess(utteranceId);
                     }
                 } finally {
@@ -188,15 +219,15 @@ public interface ITextToSpeechCallback extends IInterface {
                 }
             }
 
+            @Override // android.speech.tts.ITextToSpeechCallback
             public void onStop(String utteranceId, boolean isStarted) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(utteranceId);
-                    _data.writeInt(isStarted);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(isStarted ? 1 : 0);
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onStop(utteranceId, isStarted);
                     }
                 } finally {
@@ -204,15 +235,15 @@ public interface ITextToSpeechCallback extends IInterface {
                 }
             }
 
+            @Override // android.speech.tts.ITextToSpeechCallback
             public void onError(String utteranceId, int errorCode) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(utteranceId);
                     _data.writeInt(errorCode);
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onError(utteranceId, errorCode);
                     }
                 } finally {
@@ -220,6 +251,7 @@ public interface ITextToSpeechCallback extends IInterface {
                 }
             }
 
+            @Override // android.speech.tts.ITextToSpeechCallback
             public void onBeginSynthesis(String utteranceId, int sampleRateInHz, int audioFormat, int channelCount) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -228,9 +260,8 @@ public interface ITextToSpeechCallback extends IInterface {
                     _data.writeInt(sampleRateInHz);
                     _data.writeInt(audioFormat);
                     _data.writeInt(channelCount);
-                    if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(5, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onBeginSynthesis(utteranceId, sampleRateInHz, audioFormat, channelCount);
                     }
                 } finally {
@@ -238,15 +269,15 @@ public interface ITextToSpeechCallback extends IInterface {
                 }
             }
 
+            @Override // android.speech.tts.ITextToSpeechCallback
             public void onAudioAvailable(String utteranceId, byte[] audio) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(utteranceId);
                     _data.writeByteArray(audio);
-                    if (this.mRemote.transact(6, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(6, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onAudioAvailable(utteranceId, audio);
                     }
                 } finally {
@@ -254,6 +285,7 @@ public interface ITextToSpeechCallback extends IInterface {
                 }
             }
 
+            @Override // android.speech.tts.ITextToSpeechCallback
             public void onRangeStart(String utteranceId, int start, int end, int frame) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -262,9 +294,8 @@ public interface ITextToSpeechCallback extends IInterface {
                     _data.writeInt(start);
                     _data.writeInt(end);
                     _data.writeInt(frame);
-                    if (this.mRemote.transact(7, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(7, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onRangeStart(utteranceId, start, end, frame);
                     }
                 } finally {
@@ -274,11 +305,11 @@ public interface ITextToSpeechCallback extends IInterface {
         }
 
         public static boolean setDefaultImpl(ITextToSpeechCallback impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static ITextToSpeechCallback getDefaultImpl() {

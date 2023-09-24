@@ -5,12 +5,13 @@ import android.webkit.CacheManager;
 import java.util.Map;
 
 @Deprecated
+/* loaded from: classes4.dex */
 public interface UrlInterceptHandler {
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     PluginData getPluginData(String str, Map<String, String> map);
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     CacheManager.CacheResult service(String str, Map<String, String> map);
 }

@@ -7,19 +7,19 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 @RestrictTo({RestrictTo.Scope.LIBRARY_GROUP})
+/* loaded from: classes.dex */
 public class SafeIterableMap<K, V> implements Iterable<Map.Entry<K, V>> {
     private Entry<K, V> mEnd;
     private WeakHashMap<SupportRemove<K, V>, Boolean> mIterators = new WeakHashMap<>();
     private int mSize = 0;
-    /* access modifiers changed from: private */
-    public Entry<K, V> mStart;
+    private Entry<K, V> mStart;
 
+    /* loaded from: classes.dex */
     interface SupportRemove<K, V> {
         void supportRemove(@NonNull Entry<K, V> entry);
     }
 
-    /* access modifiers changed from: protected */
-    public Entry<K, V> get(K k) {
+    protected Entry<K, V> get(K k) {
         Entry<K, V> currentNode = this.mStart;
         while (currentNode != null && !currentNode.mKey.equals(k)) {
             currentNode = currentNode.mNext;
@@ -36,8 +36,7 @@ public class SafeIterableMap<K, V> implements Iterable<Map.Entry<K, V>> {
         return null;
     }
 
-    /* access modifiers changed from: protected */
-    public Entry<K, V> put(@NonNull K key, @NonNull V v) {
+    protected Entry<K, V> put(@NonNull K key, @NonNull V v) {
         Entry<K, V> newEntry = new Entry<>(key, v);
         this.mSize++;
         if (this.mEnd == null) {
@@ -81,6 +80,7 @@ public class SafeIterableMap<K, V> implements Iterable<Map.Entry<K, V>> {
         return this.mSize;
     }
 
+    @Override // java.lang.Iterable
     @NonNull
     public Iterator<Map.Entry<K, V>> iterator() {
         ListIterator<K, V> iterator = new AscendingIterator<>(this.mStart, this.mEnd);
@@ -112,26 +112,23 @@ public class SafeIterableMap<K, V> implements Iterable<Map.Entry<K, V>> {
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof SafeIterableMap)) {
-            return false;
-        }
-        SafeIterableMap map = (SafeIterableMap) obj;
-        if (size() != map.size()) {
-            return false;
-        }
-        Iterator<Map.Entry<K, V>> iterator1 = iterator();
-        Iterator iterator2 = map.iterator();
-        while (iterator1.hasNext() && iterator2.hasNext()) {
-            Map.Entry<K, V> next1 = iterator1.next();
-            Object next2 = iterator2.next();
-            if ((next1 == null && next2 != null) || (next1 != null && !next1.equals(next2))) {
+        if (obj instanceof SafeIterableMap) {
+            SafeIterableMap map = (SafeIterableMap) obj;
+            if (size() != map.size()) {
                 return false;
             }
+            Iterator<Map.Entry<K, V>> iterator1 = iterator();
+            Iterator iterator2 = map.iterator();
+            while (iterator1.hasNext() && iterator2.hasNext()) {
+                Map.Entry<K, V> next1 = iterator1.next();
+                Object next2 = iterator2.next();
+                if ((next1 == null && next2 != null) || (next1 != null && !next1.equals(next2))) {
+                    return false;
+                }
+            }
+            return (iterator1.hasNext() || iterator2.hasNext()) ? false : true;
         }
-        if (iterator1.hasNext() || iterator2.hasNext()) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
     public String toString() {
@@ -148,25 +145,26 @@ public class SafeIterableMap<K, V> implements Iterable<Map.Entry<K, V>> {
         return builder.toString();
     }
 
+    /* loaded from: classes.dex */
     private static abstract class ListIterator<K, V> implements Iterator<Map.Entry<K, V>>, SupportRemove<K, V> {
         Entry<K, V> mExpectedEnd;
         Entry<K, V> mNext;
 
-        /* access modifiers changed from: package-private */
-        public abstract Entry<K, V> backward(Entry<K, V> entry);
+        abstract Entry<K, V> backward(Entry<K, V> entry);
 
-        /* access modifiers changed from: package-private */
-        public abstract Entry<K, V> forward(Entry<K, V> entry);
+        abstract Entry<K, V> forward(Entry<K, V> entry);
 
         ListIterator(Entry<K, V> start, Entry<K, V> expectedEnd) {
             this.mExpectedEnd = expectedEnd;
             this.mNext = start;
         }
 
+        @Override // java.util.Iterator
         public boolean hasNext() {
             return this.mNext != null;
         }
 
+        @Override // android.arch.core.internal.SafeIterableMap.SupportRemove
         public void supportRemove(@NonNull Entry<K, V> entry) {
             if (this.mExpectedEnd == entry && entry == this.mNext) {
                 this.mNext = null;
@@ -187,6 +185,7 @@ public class SafeIterableMap<K, V> implements Iterable<Map.Entry<K, V>> {
             return forward(this.mNext);
         }
 
+        @Override // java.util.Iterator
         public Map.Entry<K, V> next() {
             Map.Entry<K, V> result = this.mNext;
             this.mNext = nextNode();
@@ -194,38 +193,41 @@ public class SafeIterableMap<K, V> implements Iterable<Map.Entry<K, V>> {
         }
     }
 
+    /* loaded from: classes.dex */
     static class AscendingIterator<K, V> extends ListIterator<K, V> {
         AscendingIterator(Entry<K, V> start, Entry<K, V> expectedEnd) {
             super(start, expectedEnd);
         }
 
-        /* access modifiers changed from: package-private */
-        public Entry<K, V> forward(Entry<K, V> entry) {
+        @Override // android.arch.core.internal.SafeIterableMap.ListIterator
+        Entry<K, V> forward(Entry<K, V> entry) {
             return entry.mNext;
         }
 
-        /* access modifiers changed from: package-private */
-        public Entry<K, V> backward(Entry<K, V> entry) {
+        @Override // android.arch.core.internal.SafeIterableMap.ListIterator
+        Entry<K, V> backward(Entry<K, V> entry) {
             return entry.mPrevious;
         }
     }
 
+    /* loaded from: classes.dex */
     private static class DescendingIterator<K, V> extends ListIterator<K, V> {
         DescendingIterator(Entry<K, V> start, Entry<K, V> expectedEnd) {
             super(start, expectedEnd);
         }
 
-        /* access modifiers changed from: package-private */
-        public Entry<K, V> forward(Entry<K, V> entry) {
+        @Override // android.arch.core.internal.SafeIterableMap.ListIterator
+        Entry<K, V> forward(Entry<K, V> entry) {
             return entry.mPrevious;
         }
 
-        /* access modifiers changed from: package-private */
-        public Entry<K, V> backward(Entry<K, V> entry) {
+        @Override // android.arch.core.internal.SafeIterableMap.ListIterator
+        Entry<K, V> backward(Entry<K, V> entry) {
             return entry.mNext;
         }
     }
 
+    /* loaded from: classes.dex */
     private class IteratorWithAdditions implements Iterator<Map.Entry<K, V>>, SupportRemove<K, V> {
         private boolean mBeforeStart;
         private Entry<K, V> mCurrent;
@@ -234,6 +236,7 @@ public class SafeIterableMap<K, V> implements Iterable<Map.Entry<K, V>> {
             this.mBeforeStart = true;
         }
 
+        @Override // android.arch.core.internal.SafeIterableMap.SupportRemove
         public void supportRemove(@NonNull Entry<K, V> entry) {
             if (entry == this.mCurrent) {
                 this.mCurrent = this.mCurrent.mPrevious;
@@ -241,19 +244,12 @@ public class SafeIterableMap<K, V> implements Iterable<Map.Entry<K, V>> {
             }
         }
 
+        @Override // java.util.Iterator
         public boolean hasNext() {
-            if (this.mBeforeStart) {
-                if (SafeIterableMap.this.mStart != null) {
-                    return true;
-                }
-                return false;
-            } else if (this.mCurrent == null || this.mCurrent.mNext == null) {
-                return false;
-            } else {
-                return true;
-            }
+            return this.mBeforeStart ? SafeIterableMap.this.mStart != null : (this.mCurrent == null || this.mCurrent.mNext == null) ? false : true;
         }
 
+        @Override // java.util.Iterator
         public Map.Entry<K, V> next() {
             if (this.mBeforeStart) {
                 this.mBeforeStart = false;
@@ -265,6 +261,7 @@ public class SafeIterableMap<K, V> implements Iterable<Map.Entry<K, V>> {
         }
     }
 
+    /* loaded from: classes.dex */
     static class Entry<K, V> implements Map.Entry<K, V> {
         @NonNull
         final K mKey;
@@ -278,17 +275,20 @@ public class SafeIterableMap<K, V> implements Iterable<Map.Entry<K, V>> {
             this.mValue = value;
         }
 
+        @Override // java.util.Map.Entry
         @NonNull
         public K getKey() {
             return this.mKey;
         }
 
+        @Override // java.util.Map.Entry
         @NonNull
         public V getValue() {
             return this.mValue;
         }
 
-        public V setValue(V v) {
+        @Override // java.util.Map.Entry
+        public V setValue(V value) {
             throw new UnsupportedOperationException("An entry modification is not supported");
         }
 
@@ -296,18 +296,16 @@ public class SafeIterableMap<K, V> implements Iterable<Map.Entry<K, V>> {
             return this.mKey + "=" + this.mValue;
         }
 
+        @Override // java.util.Map.Entry
         public boolean equals(Object obj) {
             if (obj == this) {
                 return true;
             }
-            if (!(obj instanceof Entry)) {
-                return false;
+            if (obj instanceof Entry) {
+                Entry entry = (Entry) obj;
+                return this.mKey.equals(entry.mKey) && this.mValue.equals(entry.mValue);
             }
-            Entry entry = (Entry) obj;
-            if (!this.mKey.equals(entry.mKey) || !this.mValue.equals(entry.mValue)) {
-                return false;
-            }
-            return true;
+            return false;
         }
     }
 }

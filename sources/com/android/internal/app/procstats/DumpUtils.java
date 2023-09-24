@@ -3,8 +3,9 @@ package com.android.internal.app.procstats;
 import android.accounts.GrantCredentialsPermissionActivity;
 import android.app.backup.FullBackup;
 import android.content.Context;
-import android.os.IncidentManager;
-import android.os.UserHandle;
+import android.media.TtmlUtils;
+import android.p007os.IncidentManager;
+import android.p007os.UserHandle;
 import android.provider.CalendarContract;
 import android.util.TimeUtils;
 import android.util.proto.ProtoOutputStream;
@@ -15,21 +16,22 @@ import com.ibm.icu.text.PluralRules;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
+/* loaded from: classes4.dex */
 public final class DumpUtils {
-    public static final String[] ADJ_MEM_NAMES_CSV = {"norm", "mod", "low", "crit"};
-    static final int[] ADJ_MEM_PROTO_ENUMS = {1, 2, 3, 4};
-    static final String[] ADJ_MEM_TAGS = {"n", DateFormat.MINUTE, "l", FullBackup.CACHE_TREE_TOKEN};
-    public static final String[] ADJ_SCREEN_NAMES_CSV = {"off", "on"};
-    static final int[] ADJ_SCREEN_PROTO_ENUMS = {1, 2};
-    static final String[] ADJ_SCREEN_TAGS = {"0", "1"};
+    public static final String[] ADJ_MEM_NAMES_CSV;
+    static final int[] ADJ_MEM_PROTO_ENUMS;
+    static final String[] ADJ_MEM_TAGS;
+    public static final String[] ADJ_SCREEN_NAMES_CSV;
+    static final int[] ADJ_SCREEN_PROTO_ENUMS;
+    static final String[] ADJ_SCREEN_TAGS;
     static final String CSV_SEP = "\t";
-    public static final String[] STATE_LABELS = new String[14];
-    public static final String STATE_LABEL_CACHED = "  (Cached)";
-    public static final String STATE_LABEL_TOTAL = "     TOTAL";
+    public static final String[] STATE_LABELS;
+    public static final String STATE_LABEL_CACHED;
+    public static final String STATE_LABEL_TOTAL;
     public static final String[] STATE_NAMES = new String[14];
-    public static final String[] STATE_NAMES_CSV = new String[14];
-    static final int[] STATE_PROTO_ENUMS = new int[14];
-    static final String[] STATE_TAGS = new String[14];
+    public static final String[] STATE_NAMES_CSV;
+    static final int[] STATE_PROTO_ENUMS;
+    static final String[] STATE_TAGS;
 
     static {
         STATE_NAMES[0] = "Persist";
@@ -46,6 +48,7 @@ public final class DumpUtils {
         STATE_NAMES[11] = "CchAct";
         STATE_NAMES[12] = "CchCAct";
         STATE_NAMES[13] = "CchEmty";
+        STATE_LABELS = new String[14];
         STATE_LABELS[0] = "Persistent";
         STATE_LABELS[1] = "       Top";
         STATE_LABELS[2] = "    Imp Fg";
@@ -60,6 +63,9 @@ public final class DumpUtils {
         STATE_LABELS[11] = " (Cch Act)";
         STATE_LABELS[12] = "(Cch CAct)";
         STATE_LABELS[13] = "(Cch Emty)";
+        STATE_LABEL_CACHED = "  (Cached)";
+        STATE_LABEL_TOTAL = "     TOTAL";
+        STATE_NAMES_CSV = new String[14];
         STATE_NAMES_CSV[0] = "pers";
         STATE_NAMES_CSV[1] = "top";
         STATE_NAMES_CSV[2] = "impfg";
@@ -74,6 +80,7 @@ public final class DumpUtils {
         STATE_NAMES_CSV[11] = "cch-activity";
         STATE_NAMES_CSV[12] = "cch-aclient";
         STATE_NAMES_CSV[13] = "cch-empty";
+        STATE_TAGS = new String[14];
         STATE_TAGS[0] = TtmlUtils.TAG_P;
         STATE_TAGS[1] = IncidentManager.URI_PARAM_TIMESTAMP;
         STATE_TAGS[2] = FullBackup.FILES_TREE_TOKEN;
@@ -88,6 +95,7 @@ public final class DumpUtils {
         STATE_TAGS[11] = FullBackup.APK_TREE_TOKEN;
         STATE_TAGS[12] = FullBackup.CACHE_TREE_TOKEN;
         STATE_TAGS[13] = "e";
+        STATE_PROTO_ENUMS = new int[14];
         STATE_PROTO_ENUMS[0] = 1;
         STATE_PROTO_ENUMS[1] = 2;
         STATE_PROTO_ENUMS[2] = 3;
@@ -102,6 +110,12 @@ public final class DumpUtils {
         STATE_PROTO_ENUMS[11] = 12;
         STATE_PROTO_ENUMS[12] = 13;
         STATE_PROTO_ENUMS[13] = 14;
+        ADJ_SCREEN_NAMES_CSV = new String[]{"off", "on"};
+        ADJ_MEM_NAMES_CSV = new String[]{"norm", "mod", "low", "crit"};
+        ADJ_SCREEN_TAGS = new String[]{"0", "1"};
+        ADJ_SCREEN_PROTO_ENUMS = new int[]{1, 2};
+        ADJ_MEM_TAGS = new String[]{"n", DateFormat.MINUTE, "l", FullBackup.CACHE_TREE_TOKEN};
+        ADJ_MEM_PROTO_ENUMS = new int[]{1, 2, 3, 4};
     }
 
     private DumpUtils() {
@@ -120,25 +134,24 @@ public final class DumpUtils {
                     pw.print("????/");
                     return;
             }
-        } else {
-            pw.print(" SOn/");
         }
+        pw.print(" SOn/");
     }
 
     public static void printScreenLabelCsv(PrintWriter pw, int offset) {
-        if (offset != 4) {
-            switch (offset) {
-                case -1:
-                    return;
-                case 0:
-                    pw.print(ADJ_SCREEN_NAMES_CSV[0]);
-                    return;
-                default:
-                    pw.print("???");
-                    return;
-            }
-        } else {
+        if (offset == 4) {
             pw.print(ADJ_SCREEN_NAMES_CSV[1]);
+            return;
+        }
+        switch (offset) {
+            case -1:
+                return;
+            case 0:
+                pw.print(ADJ_SCREEN_NAMES_CSV[0]);
+                return;
+            default:
+                pw.print("???");
+                return;
         }
     }
 
@@ -190,24 +203,23 @@ public final class DumpUtils {
     }
 
     public static void printMemLabelCsv(PrintWriter pw, int offset) {
-        if (offset < 0) {
-            return;
-        }
-        if (offset <= 3) {
-            pw.print(ADJ_MEM_NAMES_CSV[offset]);
-        } else {
-            pw.print("???");
+        if (offset >= 0) {
+            if (offset <= 3) {
+                pw.print(ADJ_MEM_NAMES_CSV[offset]);
+            } else {
+                pw.print("???");
+            }
         }
     }
 
     public static void printPercent(PrintWriter pw, double fraction) {
         double fraction2 = fraction * 100.0d;
         if (fraction2 < 1.0d) {
-            pw.print(String.format("%.2f", new Object[]{Double.valueOf(fraction2)}));
+            pw.print(String.format("%.2f", Double.valueOf(fraction2)));
         } else if (fraction2 < 10.0d) {
-            pw.print(String.format("%.1f", new Object[]{Double.valueOf(fraction2)}));
+            pw.print(String.format("%.1f", Double.valueOf(fraction2)));
         } else {
-            pw.print(String.format("%.0f", new Object[]{Double.valueOf(fraction2)}));
+            pw.print(String.format("%.0f", Double.valueOf(fraction2)));
         }
         pw.print("%");
     }
@@ -217,11 +229,7 @@ public final class DumpUtils {
     }
 
     public static void printProcStateTagProto(ProtoOutputStream proto, long screenId, long memId, long stateId, int state) {
-        ProtoOutputStream protoOutputStream = proto;
-        long j = memId;
-        ProtoOutputStream protoOutputStream2 = proto;
-        long j2 = stateId;
-        printProto(protoOutputStream2, j2, STATE_PROTO_ENUMS, printProto(protoOutputStream, j, ADJ_MEM_PROTO_ENUMS, printProto(proto, screenId, ADJ_SCREEN_PROTO_ENUMS, state, 56), 14), 1);
+        printProto(proto, stateId, STATE_PROTO_ENUMS, printProto(proto, memId, ADJ_MEM_PROTO_ENUMS, printProto(proto, screenId, ADJ_SCREEN_PROTO_ENUMS, state, 56), 14), 1);
     }
 
     public static void printAdjTag(PrintWriter pw, int state) {
@@ -229,9 +237,7 @@ public final class DumpUtils {
     }
 
     public static void printProcStateAdjTagProto(ProtoOutputStream proto, long screenId, long memId, int state) {
-        ProtoOutputStream protoOutputStream = proto;
-        long j = memId;
-        printProto(protoOutputStream, j, ADJ_MEM_PROTO_ENUMS, printProto(proto, screenId, ADJ_SCREEN_PROTO_ENUMS, state, 56), 14);
+        printProto(proto, memId, ADJ_MEM_PROTO_ENUMS, printProto(proto, screenId, ADJ_SCREEN_PROTO_ENUMS, state, 56), 14);
     }
 
     public static void printProcStateDurationProto(ProtoOutputStream proto, long fieldId, int procState, long duration) {
@@ -256,7 +262,6 @@ public final class DumpUtils {
     }
 
     public static long dumpSingleTime(PrintWriter pw, String prefix, long[] durations, int curState, long curStartTime, long now) {
-        PrintWriter printWriter = pw;
         int printedScreen = -1;
         long totalTime = 0;
         int iscreen = 0;
@@ -274,35 +279,33 @@ public final class DumpUtils {
                 String running = "";
                 if (curState == state) {
                     time += now - curStartTime;
-                    if (printWriter != null) {
+                    if (pw != null) {
                         running = " (running)";
                     }
                 }
                 if (time != j) {
-                    if (printWriter != null) {
+                    if (pw != null) {
                         pw.print(prefix);
-                        printScreenLabel(printWriter, printedScreen != iscreen ? iscreen : -1);
+                        printScreenLabel(pw, printedScreen != iscreen ? iscreen : -1);
                         printedScreen = iscreen;
-                        printMemLabel(printWriter, printedMem != imem ? imem : -1, 0);
+                        printMemLabel(pw, printedMem != imem ? imem : -1, (char) 0);
                         printedMem = imem;
-                        printWriter.print(PluralRules.KEYWORD_RULE_SEPARATOR);
-                        TimeUtils.formatDuration(time, printWriter);
-                        printWriter.println(running);
+                        pw.print(PluralRules.KEYWORD_RULE_SEPARATOR);
+                        TimeUtils.formatDuration(time, pw);
+                        pw.println(running);
                     }
                     totalTime2 += time;
                 }
                 imem++;
                 j = 0;
             }
-            int i = curState;
             iscreen += 4;
             totalTime = totalTime2;
         }
-        int i2 = curState;
-        if (!(totalTime == 0 || printWriter == null)) {
+        if (totalTime != 0 && pw != null) {
             pw.print(prefix);
-            printWriter.print("    TOTAL: ");
-            TimeUtils.formatDuration(totalTime, printWriter);
+            pw.print("    TOTAL: ");
+            TimeUtils.formatDuration(totalTime, pw);
             pw.println();
         }
         return totalTime;
@@ -356,53 +359,43 @@ public final class DumpUtils {
 
     public static void dumpProcessSummaryLocked(PrintWriter pw, String prefix, String header, ArrayList<ProcessState> procs, int[] screenStates, int[] memStates, int[] procStates, long now, long totalTime) {
         for (int i = procs.size() - 1; i >= 0; i--) {
-            procs.get(i).dumpSummary(pw, prefix, header, screenStates, memStates, procStates, now, totalTime);
+            ProcessState proc = procs.get(i);
+            proc.dumpSummary(pw, prefix, header, screenStates, memStates, procStates, now, totalTime);
         }
-        ArrayList<ProcessState> arrayList = procs;
     }
 
     public static void dumpProcessListCsv(PrintWriter pw, ArrayList<ProcessState> procs, boolean sepScreenStates, int[] screenStates, boolean sepMemStates, int[] memStates, boolean sepProcStates, int[] procStates, long now) {
-        PrintWriter printWriter = pw;
         pw.print(DumpHeapActivity.KEY_PROCESS);
         pw.print(CSV_SEP);
         pw.print(GrantCredentialsPermissionActivity.EXTRAS_REQUESTING_UID);
         pw.print(CSV_SEP);
         pw.print("vers");
-        int[] iArr = null;
-        int[] iArr2 = sepScreenStates ? screenStates : null;
-        int[] iArr3 = sepMemStates ? memStates : null;
-        if (sepProcStates) {
-            iArr = procStates;
-        }
-        dumpStateHeadersCsv(pw, CSV_SEP, iArr2, iArr3, iArr);
+        dumpStateHeadersCsv(pw, CSV_SEP, sepScreenStates ? screenStates : null, sepMemStates ? memStates : null, sepProcStates ? procStates : null);
         pw.println();
         int i = procs.size() - 1;
         while (true) {
             int i2 = i;
-            if (i2 >= 0) {
-                ArrayList<ProcessState> arrayList = procs;
-                ProcessState proc = procs.get(i2);
-                pw.print(proc.getName());
-                pw.print(CSV_SEP);
-                UserHandle.formatUid(pw, proc.getUid());
-                pw.print(CSV_SEP);
-                pw.print(proc.getVersion());
-                proc.dumpCsv(pw, sepScreenStates, screenStates, sepMemStates, memStates, sepProcStates, procStates, now);
-                pw.println();
-                i = i2 - 1;
-            } else {
-                ArrayList<ProcessState> arrayList2 = procs;
+            if (i2 < 0) {
                 return;
             }
+            ProcessState proc = procs.get(i2);
+            pw.print(proc.getName());
+            pw.print(CSV_SEP);
+            UserHandle.formatUid(pw, proc.getUid());
+            pw.print(CSV_SEP);
+            pw.print(proc.getVersion());
+            proc.dumpCsv(pw, sepScreenStates, screenStates, sepMemStates, memStates, sepProcStates, procStates, now);
+            pw.println();
+            i = i2 - 1;
         }
     }
 
     public static int printArrayEntry(PrintWriter pw, String[] array, int value, int mod) {
         int index = value / mod;
-        if (index < 0 || index >= array.length) {
-            pw.print('?');
-        } else {
+        if (index >= 0 && index < array.length) {
             pw.print(array[index]);
+        } else {
+            pw.print('?');
         }
         return value - (index * mod);
     }

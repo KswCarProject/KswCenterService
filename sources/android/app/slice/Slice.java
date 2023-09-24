@@ -4,9 +4,9 @@ import android.app.PendingIntent;
 import android.app.RemoteInput;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.util.ArrayUtils;
 import com.android.internal.util.Preconditions;
 import java.lang.annotation.Retention;
@@ -16,12 +16,17 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public final class Slice implements Parcelable {
-    public static final Parcelable.Creator<Slice> CREATOR = new Parcelable.Creator<Slice>() {
+    public static final Parcelable.Creator<Slice> CREATOR = new Parcelable.Creator<Slice>() { // from class: android.app.slice.Slice.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Slice createFromParcel(Parcel in) {
             return new Slice(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Slice[] newArray(int size) {
             return new Slice[size];
         }
@@ -64,15 +69,16 @@ public final class Slice implements Parcelable {
     public static final String SUBTYPE_VALUE = "value";
     private final String[] mHints;
     private final SliceItem[] mItems;
-    /* access modifiers changed from: private */
-    public SliceSpec mSpec;
+    private SliceSpec mSpec;
     private Uri mUri;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface SliceHint {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface SliceSubtype {
     }
 
@@ -110,33 +116,36 @@ public final class Slice implements Parcelable {
         return Arrays.asList(this.mHints);
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeStringArray(this.mHints);
         dest.writeInt(this.mItems.length);
-        for (SliceItem writeToParcel : this.mItems) {
-            writeToParcel.writeToParcel(dest, flags);
+        for (int i = 0; i < this.mItems.length; i++) {
+            this.mItems[i].writeToParcel(dest, flags);
         }
         this.mUri.writeToParcel(dest, 0);
         dest.writeTypedObject(this.mSpec, flags);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
     public boolean hasHint(String hint) {
-        return ArrayUtils.contains((T[]) this.mHints, hint);
+        return ArrayUtils.contains(this.mHints, hint);
     }
 
     public boolean isCallerNeeded() {
         return hasHint(HINT_CALLER_NEEDED);
     }
 
+    /* loaded from: classes.dex */
     public static class Builder {
-        private ArrayList<String> mHints = new ArrayList<>();
-        private ArrayList<SliceItem> mItems = new ArrayList<>();
         private SliceSpec mSpec;
         private final Uri mUri;
+        private ArrayList<SliceItem> mItems = new ArrayList<>();
+        private ArrayList<String> mHints = new ArrayList<>();
 
         @Deprecated
         public Builder(Uri uri) {
@@ -173,7 +182,7 @@ public final class Slice implements Parcelable {
 
         public Builder addSubSlice(Slice slice, String subType) {
             Preconditions.checkNotNull(slice);
-            this.mItems.add(new SliceItem((Object) slice, "slice", subType, (String[]) slice.getHints().toArray(new String[slice.getHints().size()])));
+            this.mItems.add(new SliceItem(slice, "slice", subType, (String[]) slice.getHints().toArray(new String[slice.getHints().size()])));
             return this;
         }
 
@@ -181,30 +190,30 @@ public final class Slice implements Parcelable {
             Preconditions.checkNotNull(action);
             Preconditions.checkNotNull(s);
             List<String> hints = s.getHints();
-            SliceSpec unused = s.mSpec = null;
+            s.mSpec = null;
             this.mItems.add(new SliceItem(action, s, "action", subType, (String[]) hints.toArray(new String[hints.size()])));
             return this;
         }
 
         public Builder addText(CharSequence text, String subType, List<String> hints) {
-            this.mItems.add(new SliceItem((Object) text, "text", subType, hints));
+            this.mItems.add(new SliceItem(text, "text", subType, hints));
             return this;
         }
 
         public Builder addIcon(Icon icon, String subType, List<String> hints) {
             Preconditions.checkNotNull(icon);
-            this.mItems.add(new SliceItem((Object) icon, SliceItem.FORMAT_IMAGE, subType, hints));
+            this.mItems.add(new SliceItem(icon, SliceItem.FORMAT_IMAGE, subType, hints));
             return this;
         }
 
         public Builder addRemoteInput(RemoteInput remoteInput, String subType, List<String> hints) {
             Preconditions.checkNotNull(remoteInput);
-            this.mItems.add(new SliceItem((Object) remoteInput, "input", subType, hints));
+            this.mItems.add(new SliceItem(remoteInput, "input", subType, hints));
             return this;
         }
 
         public Builder addInt(int value, String subType, List<String> hints) {
-            this.mItems.add(new SliceItem((Object) Integer.valueOf(value), SliceItem.FORMAT_INT, subType, hints));
+            this.mItems.add(new SliceItem(Integer.valueOf(value), SliceItem.FORMAT_INT, subType, hints));
             return this;
         }
 
@@ -214,13 +223,13 @@ public final class Slice implements Parcelable {
         }
 
         public Builder addLong(long value, String subType, List<String> hints) {
-            this.mItems.add(new SliceItem((Object) Long.valueOf(value), "long", subType, (String[]) hints.toArray(new String[hints.size()])));
+            this.mItems.add(new SliceItem(Long.valueOf(value), "long", subType, (String[]) hints.toArray(new String[hints.size()])));
             return this;
         }
 
         public Builder addBundle(Bundle bundle, String subType, List<String> hints) {
             Preconditions.checkNotNull(bundle);
-            this.mItems.add(new SliceItem((Object) bundle, SliceItem.FORMAT_BUNDLE, subType, hints));
+            this.mItems.add(new SliceItem(bundle, SliceItem.FORMAT_BUNDLE, subType, hints));
             return this;
         }
 

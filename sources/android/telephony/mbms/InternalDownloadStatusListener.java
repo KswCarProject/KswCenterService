@@ -1,13 +1,13 @@
 package android.telephony.mbms;
 
-import android.os.Binder;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.RemoteException;
 import android.telephony.mbms.IDownloadStatusListener;
 import java.util.concurrent.Executor;
 
+/* loaded from: classes4.dex */
 public class InternalDownloadStatusListener extends IDownloadStatusListener.Stub {
-    /* access modifiers changed from: private */
-    public final DownloadStatusListener mAppListener;
+    private final DownloadStatusListener mAppListener;
     private final Executor mExecutor;
     private volatile boolean mIsStopped = false;
 
@@ -16,18 +16,21 @@ public class InternalDownloadStatusListener extends IDownloadStatusListener.Stub
         this.mExecutor = executor;
     }
 
+    @Override // android.telephony.mbms.IDownloadStatusListener
     public void onStatusUpdated(final DownloadRequest request, final FileInfo fileInfo, final int status) throws RemoteException {
-        if (!this.mIsStopped) {
-            long token = Binder.clearCallingIdentity();
-            try {
-                this.mExecutor.execute(new Runnable() {
-                    public void run() {
-                        InternalDownloadStatusListener.this.mAppListener.onStatusUpdated(request, fileInfo, status);
-                    }
-                });
-            } finally {
-                Binder.restoreCallingIdentity(token);
-            }
+        if (this.mIsStopped) {
+            return;
+        }
+        long token = Binder.clearCallingIdentity();
+        try {
+            this.mExecutor.execute(new Runnable() { // from class: android.telephony.mbms.InternalDownloadStatusListener.1
+                @Override // java.lang.Runnable
+                public void run() {
+                    InternalDownloadStatusListener.this.mAppListener.onStatusUpdated(request, fileInfo, status);
+                }
+            });
+        } finally {
+            Binder.restoreCallingIdentity(token);
         }
     }
 

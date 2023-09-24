@@ -8,8 +8,8 @@ import android.icu.text.CaseMap;
 import android.icu.text.Edits;
 import android.icu.util.ULocale;
 import android.net.wifi.WifiEnterpriseConfig;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.sysprop.DisplayProperties;
 import android.telecom.Logging.Session;
 import android.text.style.AbsoluteSizeSpan;
@@ -45,19 +45,21 @@ import android.text.style.UnderlineSpan;
 import android.text.style.UpdateAppearance;
 import android.util.Log;
 import android.util.Printer;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import com.android.internal.content.NativeLibraryHelper;
 import com.android.internal.util.ArrayUtils;
 import com.android.internal.util.Preconditions;
 import com.ibm.icu.text.PluralRules;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.reflect.Array;
 import java.util.BitSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
+/* loaded from: classes4.dex */
 public class TextUtils {
     public static final int ABSOLUTE_SIZE_SPAN = 16;
     public static final int ACCESSIBILITY_CLICKABLE_SPAN = 25;
@@ -69,122 +71,10 @@ public class TextUtils {
     public static final int CAP_MODE_CHARACTERS = 4096;
     public static final int CAP_MODE_SENTENCES = 16384;
     public static final int CAP_MODE_WORDS = 8192;
-    public static final Parcelable.Creator<CharSequence> CHAR_SEQUENCE_CREATOR = new Parcelable.Creator<CharSequence>() {
-        public CharSequence createFromParcel(Parcel p) {
-            int kind = p.readInt();
-            String string = p.readString();
-            if (string == null) {
-                return null;
-            }
-            if (kind == 1) {
-                return string;
-            }
-            SpannableString sp = new SpannableString(string);
-            while (true) {
-                int kind2 = p.readInt();
-                if (kind2 == 0) {
-                    return sp;
-                }
-                switch (kind2) {
-                    case 1:
-                        TextUtils.readSpan(p, sp, new AlignmentSpan.Standard(p));
-                        break;
-                    case 2:
-                        TextUtils.readSpan(p, sp, new ForegroundColorSpan(p));
-                        break;
-                    case 3:
-                        TextUtils.readSpan(p, sp, new RelativeSizeSpan(p));
-                        break;
-                    case 4:
-                        TextUtils.readSpan(p, sp, new ScaleXSpan(p));
-                        break;
-                    case 5:
-                        TextUtils.readSpan(p, sp, new StrikethroughSpan(p));
-                        break;
-                    case 6:
-                        TextUtils.readSpan(p, sp, new UnderlineSpan(p));
-                        break;
-                    case 7:
-                        TextUtils.readSpan(p, sp, new StyleSpan(p));
-                        break;
-                    case 8:
-                        TextUtils.readSpan(p, sp, new BulletSpan(p));
-                        break;
-                    case 9:
-                        TextUtils.readSpan(p, sp, new QuoteSpan(p));
-                        break;
-                    case 10:
-                        TextUtils.readSpan(p, sp, new LeadingMarginSpan.Standard(p));
-                        break;
-                    case 11:
-                        TextUtils.readSpan(p, sp, new URLSpan(p));
-                        break;
-                    case 12:
-                        TextUtils.readSpan(p, sp, new BackgroundColorSpan(p));
-                        break;
-                    case 13:
-                        TextUtils.readSpan(p, sp, new TypefaceSpan(p));
-                        break;
-                    case 14:
-                        TextUtils.readSpan(p, sp, new SuperscriptSpan(p));
-                        break;
-                    case 15:
-                        TextUtils.readSpan(p, sp, new SubscriptSpan(p));
-                        break;
-                    case 16:
-                        TextUtils.readSpan(p, sp, new AbsoluteSizeSpan(p));
-                        break;
-                    case 17:
-                        TextUtils.readSpan(p, sp, new TextAppearanceSpan(p));
-                        break;
-                    case 18:
-                        TextUtils.readSpan(p, sp, new Annotation(p));
-                        break;
-                    case 19:
-                        TextUtils.readSpan(p, sp, new SuggestionSpan(p));
-                        break;
-                    case 20:
-                        TextUtils.readSpan(p, sp, new SpellCheckSpan(p));
-                        break;
-                    case 21:
-                        TextUtils.readSpan(p, sp, new SuggestionRangeSpan(p));
-                        break;
-                    case 22:
-                        TextUtils.readSpan(p, sp, new EasyEditSpan(p));
-                        break;
-                    case 23:
-                        TextUtils.readSpan(p, sp, new LocaleSpan(p));
-                        break;
-                    case 24:
-                        TextUtils.readSpan(p, sp, new TtsSpan(p));
-                        break;
-                    case 25:
-                        TextUtils.readSpan(p, sp, new AccessibilityClickableSpan(p));
-                        break;
-                    case 26:
-                        TextUtils.readSpan(p, sp, new AccessibilityURLSpan(p));
-                        break;
-                    case 27:
-                        TextUtils.readSpan(p, sp, new LineBackgroundSpan.Standard(p));
-                        break;
-                    case 28:
-                        TextUtils.readSpan(p, sp, new LineHeightSpan.Standard(p));
-                        break;
-                    default:
-                        throw new RuntimeException("bogus span encoding " + kind2);
-                }
-            }
-        }
-
-        public CharSequence[] newArray(int size) {
-            return new CharSequence[size];
-        }
-    };
     public static final int EASY_EDIT_SPAN = 22;
-    static final char ELLIPSIS_FILLER = '﻿';
-    private static final String ELLIPSIS_NORMAL = "…";
-    private static final String ELLIPSIS_TWO_DOTS = "‥";
-    private static String[] EMPTY_STRING_ARRAY = new String[0];
+    static final char ELLIPSIS_FILLER = '\ufeff';
+    private static final String ELLIPSIS_NORMAL = "\u2026";
+    private static final String ELLIPSIS_TWO_DOTS = "\u2025";
     public static final int FIRST_SPAN = 1;
     public static final int FOREGROUND_COLOR_SPAN = 2;
     public static final int LAST_SPAN = 28;
@@ -214,21 +104,142 @@ public class TextUtils {
     public static final int TYPEFACE_SPAN = 13;
     public static final int UNDERLINE_SPAN = 6;
     public static final int URL_SPAN = 11;
+    public static final Parcelable.Creator<CharSequence> CHAR_SEQUENCE_CREATOR = new Parcelable.Creator<CharSequence>() { // from class: android.text.TextUtils.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public CharSequence createFromParcel(Parcel p) {
+            int kind = p.readInt();
+            String string = p.readString();
+            if (string == null) {
+                return null;
+            }
+            if (kind == 1) {
+                return string;
+            }
+            SpannableString sp = new SpannableString(string);
+            while (true) {
+                int kind2 = p.readInt();
+                if (kind2 != 0) {
+                    switch (kind2) {
+                        case 1:
+                            TextUtils.readSpan(p, sp, new AlignmentSpan.Standard(p));
+                            break;
+                        case 2:
+                            TextUtils.readSpan(p, sp, new ForegroundColorSpan(p));
+                            break;
+                        case 3:
+                            TextUtils.readSpan(p, sp, new RelativeSizeSpan(p));
+                            break;
+                        case 4:
+                            TextUtils.readSpan(p, sp, new ScaleXSpan(p));
+                            break;
+                        case 5:
+                            TextUtils.readSpan(p, sp, new StrikethroughSpan(p));
+                            break;
+                        case 6:
+                            TextUtils.readSpan(p, sp, new UnderlineSpan(p));
+                            break;
+                        case 7:
+                            TextUtils.readSpan(p, sp, new StyleSpan(p));
+                            break;
+                        case 8:
+                            TextUtils.readSpan(p, sp, new BulletSpan(p));
+                            break;
+                        case 9:
+                            TextUtils.readSpan(p, sp, new QuoteSpan(p));
+                            break;
+                        case 10:
+                            TextUtils.readSpan(p, sp, new LeadingMarginSpan.Standard(p));
+                            break;
+                        case 11:
+                            TextUtils.readSpan(p, sp, new URLSpan(p));
+                            break;
+                        case 12:
+                            TextUtils.readSpan(p, sp, new BackgroundColorSpan(p));
+                            break;
+                        case 13:
+                            TextUtils.readSpan(p, sp, new TypefaceSpan(p));
+                            break;
+                        case 14:
+                            TextUtils.readSpan(p, sp, new SuperscriptSpan(p));
+                            break;
+                        case 15:
+                            TextUtils.readSpan(p, sp, new SubscriptSpan(p));
+                            break;
+                        case 16:
+                            TextUtils.readSpan(p, sp, new AbsoluteSizeSpan(p));
+                            break;
+                        case 17:
+                            TextUtils.readSpan(p, sp, new TextAppearanceSpan(p));
+                            break;
+                        case 18:
+                            TextUtils.readSpan(p, sp, new Annotation(p));
+                            break;
+                        case 19:
+                            TextUtils.readSpan(p, sp, new SuggestionSpan(p));
+                            break;
+                        case 20:
+                            TextUtils.readSpan(p, sp, new SpellCheckSpan(p));
+                            break;
+                        case 21:
+                            TextUtils.readSpan(p, sp, new SuggestionRangeSpan(p));
+                            break;
+                        case 22:
+                            TextUtils.readSpan(p, sp, new EasyEditSpan(p));
+                            break;
+                        case 23:
+                            TextUtils.readSpan(p, sp, new LocaleSpan(p));
+                            break;
+                        case 24:
+                            TextUtils.readSpan(p, sp, new TtsSpan(p));
+                            break;
+                        case 25:
+                            TextUtils.readSpan(p, sp, new AccessibilityClickableSpan(p));
+                            break;
+                        case 26:
+                            TextUtils.readSpan(p, sp, new AccessibilityURLSpan(p));
+                            break;
+                        case 27:
+                            TextUtils.readSpan(p, sp, new LineBackgroundSpan.Standard(p));
+                            break;
+                        case 28:
+                            TextUtils.readSpan(p, sp, new LineHeightSpan.Standard(p));
+                            break;
+                        default:
+                            throw new RuntimeException("bogus span encoding " + kind2);
+                    }
+                } else {
+                    return sp;
+                }
+            }
+        }
+
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public CharSequence[] newArray(int size) {
+            return new CharSequence[size];
+        }
+    };
     private static Object sLock = new Object();
     private static char[] sTemp = null;
+    private static String[] EMPTY_STRING_ARRAY = new String[0];
 
+    /* loaded from: classes4.dex */
     public interface EllipsizeCallback {
         void ellipsized(int i, int i2);
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface SafeStringFlags {
     }
 
+    /* loaded from: classes4.dex */
     public interface StringSplitter extends Iterable<String> {
         void setString(String str);
     }
 
+    /* loaded from: classes4.dex */
     public enum TruncateAt {
         START,
         MIDDLE,
@@ -256,13 +267,12 @@ public class TextUtils {
             ((GetChars) s).getChars(start, end, dest, destoff);
         } else {
             int destoff2 = destoff;
-            int i = start;
-            while (i < end) {
-                dest[destoff2] = s.charAt(i);
-                i++;
+            int destoff3 = start;
+            while (destoff3 < end) {
+                dest[destoff2] = s.charAt(destoff3);
+                destoff3++;
                 destoff2++;
             }
-            int i2 = destoff2;
         }
     }
 
@@ -335,7 +345,8 @@ public class TextUtils {
                     segstart = start;
                 }
                 getChars(s, segstart, end, temp, 0);
-                for (int i = (end - segstart) - 1; i >= 0; i--) {
+                int count = end - segstart;
+                for (int i = count - 1; i >= 0; i--) {
                     if (temp[i] == ch) {
                         recycle(temp);
                         return i + segstart;
@@ -382,26 +393,26 @@ public class TextUtils {
 
     public static boolean regionMatches(CharSequence one, int toffset, CharSequence two, int ooffset, int len) {
         int tempLen = len * 2;
-        if (tempLen >= len) {
-            char[] temp = obtain(tempLen);
-            int i = 0;
-            getChars(one, toffset, toffset + len, temp, 0);
-            getChars(two, ooffset, ooffset + len, temp, len);
-            boolean match = true;
-            while (true) {
-                if (i >= len) {
-                    break;
-                } else if (temp[i] != temp[i + len]) {
-                    match = false;
-                    break;
-                } else {
-                    i++;
-                }
-            }
-            recycle(temp);
-            return match;
+        if (tempLen < len) {
+            throw new IndexOutOfBoundsException();
         }
-        throw new IndexOutOfBoundsException();
+        char[] temp = obtain(tempLen);
+        int i = 0;
+        getChars(one, toffset, toffset + len, temp, 0);
+        getChars(two, ooffset, ooffset + len, temp, len);
+        boolean match = true;
+        while (true) {
+            if (i >= len) {
+                break;
+            } else if (temp[i] == temp[i + len]) {
+                i++;
+            } else {
+                match = false;
+                break;
+            }
+        }
+        recycle(temp);
+        return match;
     }
 
     public static String substring(CharSequence source, int start, int end) {
@@ -463,6 +474,7 @@ public class TextUtils {
         return pattern.split(text, -1);
     }
 
+    /* loaded from: classes4.dex */
     public static class SimpleStringSplitter implements StringSplitter, Iterator<String> {
         private char mDelimiter;
         private int mLength;
@@ -473,20 +485,24 @@ public class TextUtils {
             this.mDelimiter = delimiter;
         }
 
+        @Override // android.text.TextUtils.StringSplitter
         public void setString(String string) {
             this.mString = string;
             this.mPosition = 0;
             this.mLength = this.mString.length();
         }
 
+        @Override // java.lang.Iterable
         public Iterator<String> iterator() {
             return this;
         }
 
+        @Override // java.util.Iterator
         public boolean hasNext() {
             return this.mPosition < this.mLength;
         }
 
+        @Override // java.util.Iterator
         public String next() {
             int end = this.mString.indexOf(this.mDelimiter, this.mPosition);
             if (end == -1) {
@@ -497,6 +513,7 @@ public class TextUtils {
             return nextString;
         }
 
+        @Override // java.util.Iterator
         public void remove() {
             throw new UnsupportedOperationException();
         }
@@ -562,25 +579,22 @@ public class TextUtils {
     }
 
     public static boolean equals(CharSequence a, CharSequence b) {
+        int length;
         if (a == b) {
             return true;
         }
-        if (!(a == null || b == null)) {
-            int length = a.length();
-            int length2 = length;
-            if (length == b.length()) {
-                if ((a instanceof String) && (b instanceof String)) {
-                    return a.equals(b);
-                }
-                for (int i = 0; i < length2; i++) {
-                    if (a.charAt(i) != b.charAt(i)) {
-                        return false;
-                    }
-                }
-                return true;
+        if (a == null || b == null || (length = a.length()) != b.length()) {
+            return false;
+        }
+        if ((a instanceof String) && (b instanceof String)) {
+            return a.equals(b);
+        }
+        for (int i = 0; i < length; i++) {
+            if (a.charAt(i) != b.charAt(i)) {
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     @Deprecated
@@ -588,6 +602,7 @@ public class TextUtils {
         return new Reverser(source, start, end);
     }
 
+    /* loaded from: classes4.dex */
     private static class Reverser implements CharSequence, GetChars {
         private int mEnd;
         private CharSequence mSource;
@@ -599,24 +614,29 @@ public class TextUtils {
             this.mEnd = end;
         }
 
+        @Override // java.lang.CharSequence
         public int length() {
             return this.mEnd - this.mStart;
         }
 
+        @Override // java.lang.CharSequence
         public CharSequence subSequence(int start, int end) {
-            char[] buf = new char[(end - start)];
+            char[] buf = new char[end - start];
             getChars(start, end, buf, 0);
             return new String(buf);
         }
 
+        @Override // java.lang.CharSequence
         public String toString() {
             return subSequence(0, length()).toString();
         }
 
+        @Override // java.lang.CharSequence
         public char charAt(int off) {
             return (char) UCharacter.getMirror(this.mSource.charAt((this.mEnd - 1) - off));
         }
 
+        @Override // android.text.GetChars
         public void getChars(int start, int end, char[] dest, int destoff) {
             TextUtils.getChars(this.mSource, this.mStart + start, this.mStart + end, dest, destoff);
             AndroidCharacter.mirror(dest, 0, end - start);
@@ -646,7 +666,7 @@ public class TextUtils {
                     ParcelableSpan ps = (ParcelableSpan) prop;
                     int spanTypeId = ps.getSpanTypeIdInternal();
                     if (spanTypeId < 1 || spanTypeId > 28) {
-                        Log.e(TAG, "External class \"" + ps.getClass().getSimpleName() + "\" is attempting to use the frameworks-only ParcelableSpan interface");
+                        Log.m70e(TAG, "External class \"" + ps.getClass().getSimpleName() + "\" is attempting to use the frameworks-only ParcelableSpan interface");
                     } else {
                         p.writeInt(spanTypeId);
                         ps.writeToParcelInternal(p, parcelableFlags);
@@ -661,7 +681,7 @@ public class TextUtils {
         if (cs != null) {
             p.writeString(cs.toString());
         } else {
-            p.writeString((String) null);
+            p.writeString(null);
         }
     }
 
@@ -678,23 +698,24 @@ public class TextUtils {
             Object[] os = sp.getSpans(0, cs.length(), Object.class);
             while (true) {
                 int i2 = i;
-                if (i2 < os.length) {
+                int i3 = os.length;
+                if (i2 < i3) {
                     Object o = os[i2];
-                    printer.println(prefix + cs.subSequence(sp.getSpanStart(o), sp.getSpanEnd(o)) + PluralRules.KEYWORD_RULE_SEPARATOR + Integer.toHexString(System.identityHashCode(o)) + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + o.getClass().getCanonicalName() + " (" + sp.getSpanStart(o) + NativeLibraryHelper.CLEAR_ABI_OVERRIDE + sp.getSpanEnd(o) + ") fl=#" + sp.getSpanFlags(o));
+                    printer.println(prefix + ((Object) cs.subSequence(sp.getSpanStart(o), sp.getSpanEnd(o))) + PluralRules.KEYWORD_RULE_SEPARATOR + Integer.toHexString(System.identityHashCode(o)) + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + o.getClass().getCanonicalName() + " (" + sp.getSpanStart(o) + NativeLibraryHelper.CLEAR_ABI_OVERRIDE + sp.getSpanEnd(o) + ") fl=#" + sp.getSpanFlags(o));
                     i = i2 + 1;
                 } else {
                     return;
                 }
             }
         } else {
-            printer.println(prefix + cs + ": (no spans)");
+            printer.println(prefix + ((Object) cs) + ": (no spans)");
         }
     }
 
     public static CharSequence replace(CharSequence template, String[] sources, CharSequence[] destinations) {
         SpannableStringBuilder tb = new SpannableStringBuilder(template);
         for (int i = 0; i < sources.length; i++) {
-            int where = indexOf((CharSequence) tb, (CharSequence) sources[i]);
+            int where = indexOf(tb, sources[i]);
             if (where >= 0) {
                 tb.setSpan(sources[i], where, sources[i].length() + where, 33);
             }
@@ -710,35 +731,35 @@ public class TextUtils {
     }
 
     public static CharSequence expandTemplate(CharSequence template, CharSequence... values) {
-        if (values.length <= 9) {
-            SpannableStringBuilder ssb = new SpannableStringBuilder(template);
-            int i = 0;
-            while (i < ssb.length()) {
-                try {
-                    if (ssb.charAt(i) == '^') {
-                        char next = ssb.charAt(i + 1);
-                        if (next == '^') {
-                            ssb.delete(i + 1, i + 2);
-                            i++;
-                        } else if (Character.isDigit(next)) {
-                            int which = Character.getNumericValue(next) - 1;
-                            if (which < 0) {
-                                throw new IllegalArgumentException("template requests value ^" + (which + 1));
-                            } else if (which < values.length) {
-                                ssb.replace(i, i + 2, values[which]);
-                                i += values[which].length();
-                            } else {
-                                throw new IllegalArgumentException("template requests value ^" + (which + 1) + "; only " + values.length + " provided");
-                            }
+        if (values.length > 9) {
+            throw new IllegalArgumentException("max of 9 values are supported");
+        }
+        SpannableStringBuilder ssb = new SpannableStringBuilder(template);
+        int i = 0;
+        while (i < ssb.length()) {
+            try {
+                if (ssb.charAt(i) == '^') {
+                    char next = ssb.charAt(i + 1);
+                    if (next == '^') {
+                        ssb.delete(i + 1, i + 2);
+                        i++;
+                    } else if (Character.isDigit(next)) {
+                        int which = Character.getNumericValue(next) - 1;
+                        if (which < 0) {
+                            throw new IllegalArgumentException("template requests value ^" + (which + 1));
+                        } else if (which >= values.length) {
+                            throw new IllegalArgumentException("template requests value ^" + (which + 1) + "; only " + values.length + " provided");
+                        } else {
+                            ssb.replace(i, i + 2, values[which]);
+                            i += values[which].length();
                         }
                     }
-                    i++;
-                } catch (IndexOutOfBoundsException e) {
                 }
+                i++;
+            } catch (IndexOutOfBoundsException e) {
             }
-            return ssb;
         }
-        throw new IllegalArgumentException("max of 9 values are supported");
+        return ssb;
     }
 
     public static int getOffsetBefore(CharSequence text, int offset) {
@@ -747,15 +768,11 @@ public class TextUtils {
             return 0;
         }
         char c = text.charAt(offset - 1);
-        if (c < 56320 || c > 57343) {
-            offset2 = offset - 1;
-        } else {
+        if (c >= '\udc00' && c <= '\udfff') {
             char c1 = text.charAt(offset - 2);
-            if (c1 < 55296 || c1 > 56319) {
-                offset2 = offset - 1;
-            } else {
-                offset2 = offset - 2;
-            }
+            offset2 = (c1 >= '\ud800' && c1 <= '\udbff') ? offset - 2 : offset - 1;
+        } else {
+            offset2 = offset - 1;
         }
         if (text instanceof Spanned) {
             ReplacementSpan[] spans = (ReplacementSpan[]) ((Spanned) text).getSpans(offset2, offset2, ReplacementSpan.class);
@@ -773,19 +790,22 @@ public class TextUtils {
     public static int getOffsetAfter(CharSequence text, int offset) {
         int offset2;
         int len = text.length();
-        if (offset == len || offset == len - 1) {
+        if (offset == len) {
+            return len;
+        }
+        if (offset == len - 1) {
             return len;
         }
         char c = text.charAt(offset);
-        if (c < 55296 || c > 56319) {
-            offset2 = offset + 1;
-        } else {
+        if (c >= '\ud800' && c <= '\udbff') {
             char c1 = text.charAt(offset + 1);
-            if (c1 < 56320 || c1 > 57343) {
-                offset2 = offset + 1;
-            } else {
+            if (c1 >= '\udc00' && c1 <= '\udfff') {
                 offset2 = offset + 2;
+            } else {
+                offset2 = offset + 1;
             }
+        } else {
+            offset2 = offset + 1;
         }
         if (text instanceof Spanned) {
             ReplacementSpan[] spans = (ReplacementSpan[]) ((Spanned) text).getSpans(offset2, offset2, ReplacementSpan.class);
@@ -800,7 +820,7 @@ public class TextUtils {
         return offset2;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static void readSpan(Parcel p, Spannable sp, Object o) {
         sp.setSpan(o, p.readInt(), p.readInt(), p.readInt());
     }
@@ -825,44 +845,27 @@ public class TextUtils {
     }
 
     public static CharSequence toUpperCase(Locale locale, CharSequence source, boolean copySpans) {
-        int destStart;
-        int destEnd;
-        Locale locale2 = locale;
-        CharSequence charSequence = source;
         Edits edits = new Edits();
         if (!copySpans) {
-            return edits.hasChanges() ? (StringBuilder) CaseMap.toUpper().apply(locale2, charSequence, new StringBuilder(), edits) : charSequence;
+            return edits.hasChanges() ? (StringBuilder) CaseMap.toUpper().apply(locale, source, new StringBuilder(), edits) : source;
         }
-        SpannableStringBuilder result = (SpannableStringBuilder) CaseMap.toUpper().apply(locale2, charSequence, new SpannableStringBuilder(), edits);
-        if (!edits.hasChanges()) {
-            return charSequence;
-        }
-        Edits.Iterator iterator = edits.getFineIterator();
-        int sourceLength = source.length();
-        Spanned spanned = (Spanned) charSequence;
-        int i = 0;
-        Object[] spans = spanned.getSpans(0, sourceLength, Object.class);
-        int length = spans.length;
-        while (i < length) {
-            Object span = spans[i];
-            int sourceStart = spanned.getSpanStart(span);
-            int sourceEnd = spanned.getSpanEnd(span);
-            int flags = spanned.getSpanFlags(span);
-            if (sourceStart == sourceLength) {
-                destStart = result.length();
-            } else {
-                destStart = toUpperMapToDest(iterator, sourceStart);
+        SpannableStringBuilder result = (SpannableStringBuilder) CaseMap.toUpper().apply(locale, source, new SpannableStringBuilder(), edits);
+        if (edits.hasChanges()) {
+            Edits.Iterator iterator = edits.getFineIterator();
+            int sourceLength = source.length();
+            Spanned spanned = (Spanned) source;
+            Object[] spans = spanned.getSpans(0, sourceLength, Object.class);
+            for (Object span : spans) {
+                int sourceStart = spanned.getSpanStart(span);
+                int sourceEnd = spanned.getSpanEnd(span);
+                int flags = spanned.getSpanFlags(span);
+                int destStart = sourceStart == sourceLength ? result.length() : toUpperMapToDest(iterator, sourceStart);
+                int destEnd = sourceEnd == sourceLength ? result.length() : toUpperMapToDest(iterator, sourceEnd);
+                result.setSpan(span, destStart, destEnd, flags);
             }
-            if (sourceEnd == sourceLength) {
-                destEnd = result.length();
-            } else {
-                destEnd = toUpperMapToDest(iterator, sourceEnd);
-            }
-            result.setSpan(span, destStart, destEnd, flags);
-            i++;
-            Locale locale3 = locale;
+            return result;
         }
-        return result;
+        return source;
     }
 
     private static int toUpperMapToDest(Edits.Iterator iterator, int sourceIndex) {
@@ -877,213 +880,138 @@ public class TextUtils {
     }
 
     public static CharSequence ellipsize(CharSequence text, TextPaint p, float avail, TruncateAt where) {
-        return ellipsize(text, p, avail, where, false, (EllipsizeCallback) null);
+        return ellipsize(text, p, avail, where, false, null);
     }
 
     public static CharSequence ellipsize(CharSequence text, TextPaint paint, float avail, TruncateAt where, boolean preserveLength, EllipsizeCallback callback) {
         return ellipsize(text, paint, avail, where, preserveLength, callback, TextDirectionHeuristics.FIRSTSTRONG_LTR, getEllipsisString(where));
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:84:0x0141  */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public static java.lang.CharSequence ellipsize(java.lang.CharSequence r24, android.text.TextPaint r25, float r26, android.text.TextUtils.TruncateAt r27, boolean r28, android.text.TextUtils.EllipsizeCallback r29, android.text.TextDirectionHeuristic r30, java.lang.String r31) {
-        /*
-            r7 = r24
-            r9 = r27
-            r10 = r29
-            r11 = r31
-            int r12 = r24.length()
-            r0 = 0
-            r6 = r0
-            r3 = 0
-            int r4 = r24.length()     // Catch:{ all -> 0x0139 }
-            r1 = r25
-            r2 = r24
-            r5 = r30
-            android.text.MeasuredParagraph r1 = android.text.MeasuredParagraph.buildForMeasurement(r1, r2, r3, r4, r5, r6)     // Catch:{ all -> 0x0139 }
-            r13 = r1
-            float r1 = r13.getWholeWidth()     // Catch:{ all -> 0x0133 }
-            r14 = r1
-            int r1 = (r14 > r26 ? 1 : (r14 == r26 ? 0 : -1))
-            r2 = 0
-            if (r1 > 0) goto L_0x0034
-            if (r10 == 0) goto L_0x002d
-            r10.ellipsized(r2, r2)     // Catch:{ all -> 0x0133 }
-        L_0x002d:
-            if (r13 == 0) goto L_0x0033
-            r13.recycle()
-        L_0x0033:
-            return r7
-        L_0x0034:
-            r15 = r25
-            float r1 = r15.measureText(r11)     // Catch:{ all -> 0x0131 }
-            r16 = r1
-            float r1 = r26 - r16
-            r3 = 0
-            r4 = r12
-            r5 = 0
-            int r5 = (r1 > r5 ? 1 : (r1 == r5 ? 0 : -1))
-            if (r5 >= 0) goto L_0x0049
-        L_0x0045:
-            r17 = r1
-            r8 = r4
-            goto L_0x0079
-        L_0x0049:
-            android.text.TextUtils$TruncateAt r5 = android.text.TextUtils.TruncateAt.START     // Catch:{ all -> 0x012d }
-            if (r9 != r5) goto L_0x0054
-            int r5 = r13.breakText(r12, r2, r1)     // Catch:{ all -> 0x012d }
-            int r4 = r12 - r5
-            goto L_0x0045
-        L_0x0054:
-            android.text.TextUtils$TruncateAt r5 = android.text.TextUtils.TruncateAt.END     // Catch:{ all -> 0x012d }
-            r6 = 1
-            if (r9 == r5) goto L_0x0073
-            android.text.TextUtils$TruncateAt r5 = android.text.TextUtils.TruncateAt.END_SMALL     // Catch:{ all -> 0x012d }
-            if (r9 != r5) goto L_0x005e
-            goto L_0x0073
-        L_0x005e:
-            r5 = 1073741824(0x40000000, float:2.0)
-            float r5 = r1 / r5
-            int r5 = r13.breakText(r12, r2, r5)     // Catch:{ all -> 0x012d }
-            int r4 = r12 - r5
-            float r5 = r13.measure(r4, r12)     // Catch:{ all -> 0x012d }
-            float r1 = r1 - r5
-            int r5 = r13.breakText(r4, r6, r1)     // Catch:{ all -> 0x012d }
-            r3 = r5
-            goto L_0x0045
-        L_0x0073:
-            int r5 = r13.breakText(r12, r6, r1)     // Catch:{ all -> 0x012d }
-            r3 = r5
-            goto L_0x0045
-        L_0x0079:
-            if (r10 == 0) goto L_0x0082
-            r10.ellipsized(r3, r8)     // Catch:{ all -> 0x007f }
-            goto L_0x0082
-        L_0x007f:
-            r0 = move-exception
-            goto L_0x013f
-        L_0x0082:
-            char[] r1 = r13.getChars()     // Catch:{ all -> 0x007f }
-            r6 = r1
-            boolean r1 = r7 instanceof android.text.Spanned     // Catch:{ all -> 0x007f }
-            if (r1 == 0) goto L_0x008f
-            r0 = r7
-            android.text.Spanned r0 = (android.text.Spanned) r0     // Catch:{ all -> 0x007f }
-        L_0x008f:
-            int r5 = r8 - r3
-            int r18 = r12 - r5
-            if (r28 == 0) goto L_0x00e9
-            if (r18 <= 0) goto L_0x00a9
-            int r1 = r31.length()     // Catch:{ all -> 0x007f }
-            if (r5 < r1) goto L_0x00a9
-            int r1 = r31.length()     // Catch:{ all -> 0x007f }
-            r11.getChars(r2, r1, r6, r3)     // Catch:{ all -> 0x007f }
-            int r1 = r31.length()     // Catch:{ all -> 0x007f }
-            int r3 = r3 + r1
-        L_0x00a9:
-            r19 = r3
-            r1 = r19
-        L_0x00ad:
-            if (r1 >= r8) goto L_0x00b7
-            r3 = 65279(0xfeff, float:9.1475E-41)
-            r6[r1] = r3     // Catch:{ all -> 0x007f }
-            int r1 = r1 + 1
-            goto L_0x00ad
-        L_0x00b7:
-            java.lang.String r1 = new java.lang.String     // Catch:{ all -> 0x007f }
-            r1.<init>(r6, r2, r12)     // Catch:{ all -> 0x007f }
-            r4 = r1
-            if (r0 != 0) goto L_0x00c6
-            if (r13 == 0) goto L_0x00c5
-            r13.recycle()
-        L_0x00c5:
-            return r4
-        L_0x00c6:
-            android.text.SpannableString r1 = new android.text.SpannableString     // Catch:{ all -> 0x007f }
-            r1.<init>(r4)     // Catch:{ all -> 0x007f }
-            r20 = r1
-            r2 = 0
-            java.lang.Class<java.lang.Object> r21 = java.lang.Object.class
-            r22 = 0
-            r1 = r0
-            r3 = r12
-            r23 = r4
-            r4 = r21
-            r21 = r5
-            r5 = r20
-            r9 = r6
-            r6 = r22
-            copySpansFrom(r1, r2, r3, r4, r5, r6)     // Catch:{ all -> 0x007f }
-            if (r13 == 0) goto L_0x00e8
-            r13.recycle()
-        L_0x00e8:
-            return r20
-        L_0x00e9:
-            r21 = r5
-            r9 = r6
-            if (r18 != 0) goto L_0x00f6
-            java.lang.String r1 = ""
-            if (r13 == 0) goto L_0x00f5
-            r13.recycle()
-        L_0x00f5:
-            return r1
-        L_0x00f6:
-            if (r0 != 0) goto L_0x0118
-            java.lang.StringBuilder r1 = new java.lang.StringBuilder     // Catch:{ all -> 0x007f }
-            int r4 = r31.length()     // Catch:{ all -> 0x007f }
-            int r4 = r18 + r4
-            r1.<init>(r4)     // Catch:{ all -> 0x007f }
-            r1.append(r9, r2, r3)     // Catch:{ all -> 0x007f }
-            r1.append(r11)     // Catch:{ all -> 0x007f }
-            int r2 = r12 - r8
-            r1.append(r9, r8, r2)     // Catch:{ all -> 0x007f }
-            java.lang.String r2 = r1.toString()     // Catch:{ all -> 0x007f }
-            if (r13 == 0) goto L_0x0117
-            r13.recycle()
-        L_0x0117:
-            return r2
-        L_0x0118:
-            android.text.SpannableStringBuilder r1 = new android.text.SpannableStringBuilder     // Catch:{ all -> 0x007f }
-            r1.<init>()     // Catch:{ all -> 0x007f }
-            r1.append((java.lang.CharSequence) r7, (int) r2, (int) r3)     // Catch:{ all -> 0x007f }
-            r1.append((java.lang.CharSequence) r11)     // Catch:{ all -> 0x007f }
-            r1.append((java.lang.CharSequence) r7, (int) r8, (int) r12)     // Catch:{ all -> 0x007f }
-            if (r13 == 0) goto L_0x012c
-            r13.recycle()
-        L_0x012c:
-            return r1
-        L_0x012d:
-            r0 = move-exception
-            r17 = r1
-            goto L_0x013f
-        L_0x0131:
-            r0 = move-exception
-            goto L_0x0136
-        L_0x0133:
-            r0 = move-exception
-            r15 = r25
-        L_0x0136:
-            r17 = r26
-            goto L_0x013f
-        L_0x0139:
-            r0 = move-exception
-            r15 = r25
-            r17 = r26
-            r13 = r6
-        L_0x013f:
-            if (r13 == 0) goto L_0x0144
-            r13.recycle()
-        L_0x0144:
-            throw r0
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.text.TextUtils.ellipsize(java.lang.CharSequence, android.text.TextPaint, float, android.text.TextUtils$TruncateAt, boolean, android.text.TextUtils$EllipsizeCallback, android.text.TextDirectionHeuristic, java.lang.String):java.lang.CharSequence");
+    /* JADX WARN: Removed duplicated region for block: B:80:0x0141  */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public static CharSequence ellipsize(CharSequence text, TextPaint paint, float avail, TruncateAt where, boolean preserveLength, EllipsizeCallback callback, TextDirectionHeuristic textDir, String ellipsis) {
+        MeasuredParagraph mt;
+        int len = text.length();
+        try {
+            mt = MeasuredParagraph.buildForMeasurement(paint, text, 0, text.length(), textDir, null);
+            try {
+                float width = mt.getWholeWidth();
+                if (width <= avail) {
+                    if (callback != null) {
+                        callback.ellipsized(0, 0);
+                    }
+                    if (mt != null) {
+                        mt.recycle();
+                    }
+                    return text;
+                }
+                try {
+                    float ellipsiswid = paint.measureText(ellipsis);
+                    float avail2 = avail - ellipsiswid;
+                    int left = 0;
+                    int right = len;
+                    if (avail2 >= 0.0f) {
+                        try {
+                            if (where == TruncateAt.START) {
+                                right = len - mt.breakText(len, false, avail2);
+                            } else {
+                                if (where != TruncateAt.END && where != TruncateAt.END_SMALL) {
+                                    right = len - mt.breakText(len, false, avail2 / 2.0f);
+                                    avail2 -= mt.measure(right, len);
+                                    left = mt.breakText(right, true, avail2);
+                                }
+                                left = mt.breakText(len, true, avail2);
+                            }
+                        } catch (Throwable th) {
+                            th = th;
+                            if (mt != null) {
+                            }
+                            throw th;
+                        }
+                    }
+                    int right2 = right;
+                    if (callback != null) {
+                        try {
+                            callback.ellipsized(left, right2);
+                        } catch (Throwable th2) {
+                            th = th2;
+                            if (mt != null) {
+                            }
+                            throw th;
+                        }
+                    }
+                    char[] buf = mt.getChars();
+                    Spanned sp = text instanceof Spanned ? (Spanned) text : null;
+                    int removed = right2 - left;
+                    int remaining = len - removed;
+                    if (preserveLength) {
+                        if (remaining > 0 && removed >= ellipsis.length()) {
+                            ellipsis.getChars(0, ellipsis.length(), buf, left);
+                            left += ellipsis.length();
+                        }
+                        for (int i = left; i < right2; i++) {
+                            buf[i] = ELLIPSIS_FILLER;
+                        }
+                        String s = new String(buf, 0, len);
+                        if (sp == null) {
+                            if (mt != null) {
+                                mt.recycle();
+                            }
+                            return s;
+                        }
+                        SpannableString ss = new SpannableString(s);
+                        copySpansFrom(sp, 0, len, Object.class, ss, 0);
+                        if (mt != null) {
+                            mt.recycle();
+                        }
+                        return ss;
+                    } else if (remaining == 0) {
+                        if (mt != null) {
+                            mt.recycle();
+                        }
+                        return "";
+                    } else if (sp != null) {
+                        SpannableStringBuilder ssb = new SpannableStringBuilder();
+                        ssb.append(text, 0, left);
+                        ssb.append((CharSequence) ellipsis);
+                        ssb.append(text, right2, len);
+                        if (mt != null) {
+                            mt.recycle();
+                        }
+                        return ssb;
+                    } else {
+                        StringBuilder sb = new StringBuilder(remaining + ellipsis.length());
+                        sb.append(buf, 0, left);
+                        sb.append(ellipsis);
+                        sb.append(buf, right2, len - right2);
+                        String sb2 = sb.toString();
+                        if (mt != null) {
+                            mt.recycle();
+                        }
+                        return sb2;
+                    }
+                } catch (Throwable th3) {
+                    th = th3;
+                    if (mt != null) {
+                        mt.recycle();
+                    }
+                    throw th;
+                }
+            } catch (Throwable th4) {
+                th = th4;
+            }
+        } catch (Throwable th5) {
+            th = th5;
+            mt = null;
+        }
     }
 
     public static CharSequence listEllipsize(Context context, List<CharSequence> elements, String separator, TextPaint paint, float avail, int moreId) {
         int totalLen;
-        BidiFormatter bidiFormatter;
         Resources res;
-        CharSequence morePiece;
+        BidiFormatter bidiFormatter;
         if (elements == null || (totalLen = elements.size()) == 0) {
             return "";
         }
@@ -1107,14 +1035,11 @@ public class TextUtils {
             output.delete(endIndexes[i2], output.length());
             int remainingElements = (totalLen - i2) - 1;
             if (remainingElements > 0) {
-                if (res == null) {
-                    morePiece = ELLIPSIS_NORMAL;
-                } else {
-                    morePiece = res.getQuantityString(moreId, remainingElements, Integer.valueOf(remainingElements));
-                }
+                CharSequence morePiece = res == null ? ELLIPSIS_NORMAL : res.getQuantityString(moreId, remainingElements, Integer.valueOf(remainingElements));
                 output.append(bidiFormatter.unicodeWrap(morePiece));
             }
-            if (paint.measureText((CharSequence) output, 0, output.length()) <= avail) {
+            float width = paint.measureText(output, 0, output.length());
+            if (width <= avail) {
                 return output;
             }
         }
@@ -1126,176 +1051,134 @@ public class TextUtils {
         return commaEllipsize(text, p, avail, oneMore, more, TextDirectionHeuristics.FIRSTSTRONG_LTR);
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:58:0x010a  */
-    /* JADX WARNING: Removed duplicated region for block: B:60:0x010f  */
-    @java.lang.Deprecated
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public static java.lang.CharSequence commaEllipsize(java.lang.CharSequence r24, android.text.TextPaint r25, float r26, java.lang.String r27, java.lang.String r28, android.text.TextDirectionHeuristic r29) {
-        /*
-            r7 = r24
-            r8 = 0
-            r0 = 0
-            r9 = r0
-            int r0 = r24.length()     // Catch:{ all -> 0x0103 }
-            r3 = 0
-            r1 = r25
-            r2 = r24
-            r4 = r0
-            r5 = r29
-            r6 = r8
-            android.text.MeasuredParagraph r1 = android.text.MeasuredParagraph.buildForMeasurement(r1, r2, r3, r4, r5, r6)     // Catch:{ all -> 0x0103 }
-            r8 = r1
-            float r1 = r8.getWholeWidth()     // Catch:{ all -> 0x0103 }
-            int r2 = (r1 > r26 ? 1 : (r1 == r26 ? 0 : -1))
-            if (r2 > 0) goto L_0x002b
-            if (r8 == 0) goto L_0x0025
-            r8.recycle()
-        L_0x0025:
-            if (r9 == 0) goto L_0x002a
-            r9.recycle()
-        L_0x002a:
-            return r7
-        L_0x002b:
-            char[] r2 = r8.getChars()     // Catch:{ all -> 0x0103 }
-            r3 = 0
-            r5 = r3
-            r3 = 0
-        L_0x0032:
-            r6 = 44
-            if (r3 >= r0) goto L_0x003f
-            char r10 = r2[r3]     // Catch:{ all -> 0x0103 }
-            if (r10 != r6) goto L_0x003c
-            int r5 = r5 + 1
-        L_0x003c:
-            int r3 = r3 + 1
-            goto L_0x0032
-        L_0x003f:
-            int r3 = r5 + 1
-            r10 = 0
-            java.lang.String r11 = ""
-            r12 = 0
-            r13 = 0
-            android.text.AutoGrowArray$FloatArray r14 = r8.getWidths()     // Catch:{ all -> 0x0103 }
-            float[] r14 = r14.getRawArray()     // Catch:{ all -> 0x0103 }
-            r21 = r9
-            r9 = r3
-            r3 = 0
-        L_0x0052:
-            if (r3 >= r0) goto L_0x00e6
-            float r4 = (float) r12
-            r15 = r14[r3]     // Catch:{ all -> 0x00e2 }
-            float r4 = r4 + r15
-            int r12 = (int) r4     // Catch:{ all -> 0x00e2 }
-            char r4 = r2[r3]     // Catch:{ all -> 0x00e2 }
-            if (r4 != r6) goto L_0x00d2
-            int r13 = r13 + 1
-            int r9 = r9 + -1
-            r4 = 1
-            if (r9 != r4) goto L_0x0080
-            java.lang.StringBuilder r4 = new java.lang.StringBuilder     // Catch:{ all -> 0x00e2 }
-            r4.<init>()     // Catch:{ all -> 0x00e2 }
-            java.lang.String r6 = " "
-            r4.append(r6)     // Catch:{ all -> 0x00e2 }
-            r6 = r27
-            r4.append(r6)     // Catch:{ all -> 0x0101 }
-            java.lang.String r4 = r4.toString()     // Catch:{ all -> 0x0101 }
-            r22 = r0
-            r23 = r1
-            r16 = r4
-            r1 = r28
-            goto L_0x00aa
-        L_0x0080:
-            r6 = r27
-            java.lang.StringBuilder r4 = new java.lang.StringBuilder     // Catch:{ all -> 0x0101 }
-            r4.<init>()     // Catch:{ all -> 0x0101 }
-            r22 = r0
-            java.lang.String r0 = " "
-            r4.append(r0)     // Catch:{ all -> 0x0101 }
-            r0 = 1
-            java.lang.Object[] r0 = new java.lang.Object[r0]     // Catch:{ all -> 0x0101 }
-            java.lang.Integer r15 = java.lang.Integer.valueOf(r9)     // Catch:{ all -> 0x0101 }
-            r16 = 0
-            r0[r16] = r15     // Catch:{ all -> 0x0101 }
-            r23 = r1
-            r1 = r28
-            java.lang.String r0 = java.lang.String.format(r1, r0)     // Catch:{ all -> 0x0101 }
-            r4.append(r0)     // Catch:{ all -> 0x0101 }
-            java.lang.String r0 = r4.toString()     // Catch:{ all -> 0x0101 }
-            r16 = r0
-        L_0x00aa:
-            r17 = 0
-            int r18 = r16.length()     // Catch:{ all -> 0x0101 }
-            r15 = r25
-            r19 = r29
-            r20 = r21
-            android.text.MeasuredParagraph r0 = android.text.MeasuredParagraph.buildForMeasurement(r15, r16, r17, r18, r19, r20)     // Catch:{ all -> 0x0101 }
-            r4 = r0
-            float r0 = r4.getWholeWidth()     // Catch:{ all -> 0x00ce }
-            float r1 = (float) r12
-            float r1 = r1 + r0
-            int r1 = (r1 > r26 ? 1 : (r1 == r26 ? 0 : -1))
-            if (r1 > 0) goto L_0x00cb
-            int r1 = r3 + 1
-            r0 = r16
-            r11 = r0
-            r10 = r1
-        L_0x00cb:
-            r21 = r4
-            goto L_0x00d8
-        L_0x00ce:
-            r0 = move-exception
-            r21 = r4
-            goto L_0x0108
-        L_0x00d2:
-            r6 = r27
-            r22 = r0
-            r23 = r1
-        L_0x00d8:
-            int r3 = r3 + 1
-            r0 = r22
-            r1 = r23
-            r6 = 44
-            goto L_0x0052
-        L_0x00e2:
-            r0 = move-exception
-            r6 = r27
-            goto L_0x0108
-        L_0x00e6:
-            r6 = r27
-            r22 = r0
-            r23 = r1
-            android.text.SpannableStringBuilder r0 = new android.text.SpannableStringBuilder     // Catch:{ all -> 0x0101 }
-            r0.<init>(r11)     // Catch:{ all -> 0x0101 }
-            r1 = 0
-            r0.insert((int) r1, (java.lang.CharSequence) r7, (int) r1, (int) r10)     // Catch:{ all -> 0x0101 }
-            if (r8 == 0) goto L_0x00fb
-            r8.recycle()
-        L_0x00fb:
-            if (r21 == 0) goto L_0x0100
-            r21.recycle()
-        L_0x0100:
-            return r0
-        L_0x0101:
-            r0 = move-exception
-            goto L_0x0108
-        L_0x0103:
-            r0 = move-exception
-            r6 = r27
-            r21 = r9
-        L_0x0108:
-            if (r8 == 0) goto L_0x010d
-            r8.recycle()
-        L_0x010d:
-            if (r21 == 0) goto L_0x0112
-            r21.recycle()
-        L_0x0112:
-            throw r0
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.text.TextUtils.commaEllipsize(java.lang.CharSequence, android.text.TextPaint, float, java.lang.String, java.lang.String, android.text.TextDirectionHeuristic):java.lang.CharSequence");
+    /* JADX WARN: Removed duplicated region for block: B:55:0x010a  */
+    /* JADX WARN: Removed duplicated region for block: B:57:0x010f  */
+    @Deprecated
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public static CharSequence commaEllipsize(CharSequence text, TextPaint p, float avail, String oneMore, String more, TextDirectionHeuristic textDir) {
+        MeasuredParagraph tempMt;
+        char c;
+        int len;
+        float width;
+        String format;
+        MeasuredParagraph mt = null;
+        MeasuredParagraph tempMt2 = null;
+        try {
+            int len2 = text.length();
+            mt = MeasuredParagraph.buildForMeasurement(p, text, 0, len2, textDir, null);
+            float width2 = mt.getWholeWidth();
+            if (width2 <= avail) {
+                if (mt != null) {
+                    mt.recycle();
+                }
+                if (0 != 0) {
+                    tempMt2.recycle();
+                }
+                return text;
+            }
+            char[] buf = mt.getChars();
+            int commaCount = 0;
+            int commaCount2 = 0;
+            while (true) {
+                c = ',';
+                if (commaCount2 >= len2) {
+                    break;
+                }
+                if (buf[commaCount2] == ',') {
+                    commaCount++;
+                }
+                commaCount2++;
+            }
+            int i = commaCount + 1;
+            int ok = 0;
+            String okFormat = "";
+            int w = 0;
+            int count = 0;
+            float[] widths = mt.getWidths().getRawArray();
+            tempMt = null;
+            int remaining = i;
+            int remaining2 = 0;
+            while (remaining2 < len2) {
+                try {
+                    w = (int) (w + widths[remaining2]);
+                    if (buf[remaining2] == c) {
+                        count++;
+                        remaining--;
+                        if (remaining == 1) {
+                            StringBuilder sb = new StringBuilder();
+                            sb.append(WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER);
+                            try {
+                                sb.append(oneMore);
+                                len = len2;
+                                width = width2;
+                                format = sb.toString();
+                            } catch (Throwable th) {
+                                th = th;
+                                if (mt != null) {
+                                    mt.recycle();
+                                }
+                                if (tempMt != null) {
+                                    tempMt.recycle();
+                                }
+                                throw th;
+                            }
+                        } else {
+                            StringBuilder sb2 = new StringBuilder();
+                            len = len2;
+                            sb2.append(WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER);
+                            width = width2;
+                            sb2.append(String.format(more, Integer.valueOf(remaining)));
+                            format = sb2.toString();
+                        }
+                        MeasuredParagraph tempMt3 = MeasuredParagraph.buildForMeasurement(p, format, 0, format.length(), textDir, tempMt);
+                        try {
+                            float moreWid = tempMt3.getWholeWidth();
+                            if (w + moreWid <= avail) {
+                                int ok2 = remaining2 + 1;
+                                okFormat = format;
+                                ok = ok2;
+                            }
+                            tempMt = tempMt3;
+                        } catch (Throwable th2) {
+                            th = th2;
+                            tempMt = tempMt3;
+                            if (mt != null) {
+                            }
+                            if (tempMt != null) {
+                            }
+                            throw th;
+                        }
+                    } else {
+                        len = len2;
+                        width = width2;
+                    }
+                    remaining2++;
+                    len2 = len;
+                    width2 = width;
+                    c = ',';
+                } catch (Throwable th3) {
+                    th = th3;
+                }
+            }
+            SpannableStringBuilder out = new SpannableStringBuilder(okFormat);
+            out.insert(0, text, 0, ok);
+            if (mt != null) {
+                mt.recycle();
+            }
+            if (tempMt != null) {
+                tempMt.recycle();
+            }
+            return out;
+        } catch (Throwable th4) {
+            th = th4;
+            tempMt = null;
+        }
     }
 
     static boolean couldAffectRtl(char c) {
-        return (1424 <= c && c <= 2303) || c == 8206 || c == 8207 || (8234 <= c && c <= 8238) || ((8294 <= c && c <= 8297) || ((55296 <= c && c <= 57343) || ((64285 <= c && c <= 65023) || (65136 <= c && c <= 65278))));
+        return ('\u0590' <= c && c <= '\u08ff') || c == '\u200e' || c == '\u200f' || ('\u202a' <= c && c <= '\u202e') || (('\u2066' <= c && c <= '\u2069') || (('\ud800' <= c && c <= '\udfff') || (('\ufb1d' <= c && c <= '\ufdff') || ('\ufe70' <= c && c <= '\ufefe'))));
     }
 
     static boolean doesNotNeedBidi(char[] text, int start, int len) {
@@ -1321,10 +1204,11 @@ public class TextUtils {
     }
 
     static void recycle(char[] temp) {
-        if (temp.length <= 1000) {
-            synchronized (sLock) {
-                sTemp = temp;
-            }
+        if (temp.length > 1000) {
+            return;
+        }
+        synchronized (sLock) {
+            sTemp = temp;
         }
     }
 
@@ -1336,20 +1220,20 @@ public class TextUtils {
                 sb.append("&quot;");
             } else if (c == '<') {
                 sb.append("&lt;");
-            } else if (c != '>') {
+            } else if (c == '>') {
+                sb.append("&gt;");
+            } else {
                 switch (c) {
                     case '&':
                         sb.append("&amp;");
-                        break;
+                        continue;
                     case '\'':
                         sb.append("&#39;");
-                        break;
+                        continue;
                     default:
                         sb.append(c);
-                        break;
+                        continue;
                 }
-            } else {
-                sb.append("&gt;");
             }
         }
         return sb.toString();
@@ -1369,11 +1253,12 @@ public class TextUtils {
         while (true) {
             if (i2 >= length) {
                 break;
-            } else if (text[i2] instanceof Spanned) {
+            }
+            if (!(text[i2] instanceof Spanned)) {
+                i2++;
+            } else {
                 spanned = true;
                 break;
-            } else {
-                i2++;
             }
         }
         if (spanned) {
@@ -1401,10 +1286,11 @@ public class TextUtils {
         while (i < len) {
             int cp = Character.codePointAt(str, i);
             int gc = Character.getType(cp);
-            if (gc != 15 && gc != 16 && gc != 19 && gc != 0 && gc != 13 && gc != 14 && gc != 12) {
+            if (gc == 15 || gc == 16 || gc == 19 || gc == 0 || gc == 13 || gc == 14 || gc == 12) {
+                i += Character.charCount(cp);
+            } else {
                 return true;
             }
-            i += Character.charCount(cp);
         }
         return false;
     }
@@ -1429,7 +1315,7 @@ public class TextUtils {
     }
 
     public static boolean isPrintableAscii(char c) {
-        return (' ' <= c && c <= '~') || c == 13 || c == 10;
+        return (' ' <= c && c <= '~') || c == '\r' || c == '\n';
     }
 
     @UnsupportedAppUsage
@@ -1445,6 +1331,7 @@ public class TextUtils {
 
     public static int getCapsMode(CharSequence cs, int off, int reqModes) {
         char c;
+        char c2;
         if (off < 0) {
             return 0;
         }
@@ -1456,56 +1343,51 @@ public class TextUtils {
             return mode;
         }
         int i = off;
-        while (i > 0 && ((c = cs.charAt(i - 1)) == '\"' || c == '\'' || Character.getType(c) == 21)) {
+        while (i > 0 && ((c2 = cs.charAt(i - 1)) == '\"' || c2 == '\'' || Character.getType(c2) == 21)) {
             i--;
         }
         int j = i;
         while (j > 0) {
-            char charAt = cs.charAt(j - 1);
-            char c2 = charAt;
-            if (charAt != ' ' && c2 != 9) {
+            char c3 = cs.charAt(j - 1);
+            if (c3 != ' ' && c3 != '\t') {
                 break;
             }
             j--;
         }
-        if (j == 0 || cs.charAt(j - 1) == 10) {
+        if (j == 0 || cs.charAt(j - 1) == '\n') {
             return mode | 8192;
         }
         if ((reqModes & 16384) == 0) {
-            if (i != j) {
-                return mode | 8192;
-            }
-            return mode;
+            return i != j ? mode | 8192 : mode;
         } else if (i == j) {
             return mode;
         } else {
             while (j > 0) {
-                char c3 = cs.charAt(j - 1);
-                if (c3 != '\"' && c3 != '\'' && Character.getType(c3) != 22) {
+                char c4 = cs.charAt(j - 1);
+                if (c4 != '\"' && c4 != '\'' && Character.getType(c4) != 22) {
                     break;
                 }
                 j--;
             }
-            if (j <= 0 || ((c = cs.charAt(j - 1)) != '.' && c != '?' && c != '!')) {
-                return mode;
-            }
-            if (c == '.') {
-                for (int k = j - 2; k >= 0; k--) {
-                    char c4 = cs.charAt(k);
-                    if (c4 == '.') {
-                        return mode;
-                    }
-                    if (!Character.isLetter(c4)) {
-                        break;
+            if (j > 0 && ((c = cs.charAt(j - 1)) == '.' || c == '?' || c == '!')) {
+                if (c == '.') {
+                    for (int k = j - 2; k >= 0; k--) {
+                        char c5 = cs.charAt(k);
+                        if (c5 == '.') {
+                            return mode;
+                        }
+                        if (!Character.isLetter(c5)) {
+                            break;
+                        }
                     }
                 }
+                return mode | 16384;
             }
-            return mode | 16384;
+            return mode;
         }
     }
 
     public static boolean delimitedStringContains(String delimitedString, char delimiter, String item) {
-        int expectedDelimiterPos;
         if (isEmpty(delimitedString) || isEmpty(item)) {
             return false;
         }
@@ -1517,62 +1399,44 @@ public class TextUtils {
             if (indexOf == -1) {
                 return false;
             }
-            if ((pos <= 0 || delimitedString.charAt(pos - 1) == delimiter) && ((expectedDelimiterPos = item.length() + pos) == length || delimitedString.charAt(expectedDelimiterPos) == delimiter)) {
-                return true;
+            if (pos <= 0 || delimitedString.charAt(pos - 1) == delimiter) {
+                int expectedDelimiterPos = item.length() + pos;
+                if (expectedDelimiterPos == length || delimitedString.charAt(expectedDelimiterPos) == delimiter) {
+                    return true;
+                }
             }
         }
     }
 
-    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r7v2, resolved type: java.lang.Object} */
-    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v4, resolved type: java.lang.Object[]} */
-    /* JADX WARNING: Multi-variable type inference failed */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public static <T> T[] removeEmptySpans(T[] r8, android.text.Spanned r9, java.lang.Class<T> r10) {
-        /*
-            r0 = 0
-            r1 = 0
-            r2 = 0
-            r3 = r1
-            r1 = r0
-            r0 = r2
-        L_0x0006:
-            int r4 = r8.length
-            if (r0 >= r4) goto L_0x002f
-            r4 = r8[r0]
-            int r5 = r9.getSpanStart(r4)
-            int r6 = r9.getSpanEnd(r4)
-            if (r5 != r6) goto L_0x0026
-            if (r1 != 0) goto L_0x002c
-            int r7 = r8.length
-            int r7 = r7 + -1
-            java.lang.Object r7 = java.lang.reflect.Array.newInstance(r10, r7)
-            r1 = r7
-            java.lang.Object[] r1 = (java.lang.Object[]) r1
-            java.lang.System.arraycopy(r8, r2, r1, r2, r0)
-            r3 = r0
-            goto L_0x002c
-        L_0x0026:
-            if (r1 == 0) goto L_0x002c
-            r1[r3] = r4
-            int r3 = r3 + 1
-        L_0x002c:
-            int r0 = r0 + 1
-            goto L_0x0006
-        L_0x002f:
-            if (r1 == 0) goto L_0x003b
-            java.lang.Object r0 = java.lang.reflect.Array.newInstance(r10, r3)
-            java.lang.Object[] r0 = (java.lang.Object[]) r0
-            java.lang.System.arraycopy(r1, r2, r0, r2, r3)
-            return r0
-        L_0x003b:
-            return r8
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.text.TextUtils.removeEmptySpans(java.lang.Object[], android.text.Spanned, java.lang.Class):java.lang.Object[]");
+    public static <T> T[] removeEmptySpans(T[] spans, Spanned spanned, Class<T> klass) {
+        int count = 0;
+        Object[] objArr = null;
+        for (int i = 0; i < spans.length; i++) {
+            T span = spans[i];
+            int start = spanned.getSpanStart(span);
+            int end = spanned.getSpanEnd(span);
+            if (start == end) {
+                if (objArr == null) {
+                    objArr = (Object[]) Array.newInstance((Class<?>) klass, spans.length - 1);
+                    System.arraycopy(spans, 0, objArr, 0, i);
+                    count = i;
+                }
+            } else if (objArr != null) {
+                objArr[count] = span;
+                count++;
+            }
+        }
+        if (objArr != null) {
+            T[] result = (T[]) ((Object[]) Array.newInstance((Class<?>) klass, count));
+            System.arraycopy(objArr, 0, result, 0, count);
+            return result;
+        }
+        return spans;
     }
 
     @UnsupportedAppUsage
     public static long packRangeInLong(int start, int end) {
-        return (((long) start) << 32) | ((long) end);
+        return (start << 32) | end;
     }
 
     @UnsupportedAppUsage
@@ -1593,13 +1457,14 @@ public class TextUtils {
     }
 
     public static CharSequence formatSelectedCount(int count) {
-        return Resources.getSystem().getQuantityString(R.plurals.selected_count, count, Integer.valueOf(count));
+        return Resources.getSystem().getQuantityString(C3132R.plurals.selected_count, count, Integer.valueOf(count));
     }
 
     public static boolean hasStyleSpan(Spanned spanned) {
         Preconditions.checkArgument(spanned != null);
-        for (Class nextSpanTransition : new Class[]{CharacterStyle.class, ParagraphStyle.class, UpdateAppearance.class}) {
-            if (spanned.nextSpanTransition(-1, spanned.length(), nextSpanTransition) < spanned.length()) {
+        Class<?>[] styleClasses = {CharacterStyle.class, ParagraphStyle.class, UpdateAppearance.class};
+        for (Class<?> clazz : styleClasses) {
+            if (spanned.nextSpanTransition(-1, spanned.length(), clazz) < spanned.length()) {
                 return true;
             }
         }
@@ -1607,10 +1472,10 @@ public class TextUtils {
     }
 
     public static CharSequence trimNoCopySpans(CharSequence charSequence) {
-        if (charSequence == null || !(charSequence instanceof Spanned)) {
-            return charSequence;
+        if (charSequence != null && (charSequence instanceof Spanned)) {
+            return new SpannableStringBuilder(charSequence);
         }
-        return new SpannableStringBuilder(charSequence);
+        return charSequence;
     }
 
     public static void wrap(StringBuilder builder, String start, String end) {
@@ -1619,7 +1484,7 @@ public class TextUtils {
     }
 
     public static <T extends CharSequence> T trimToParcelableSize(T text) {
-        return trimToSize(text, 100000);
+        return (T) trimToSize(text, 100000);
     }
 
     public static <T extends CharSequence> T trimToSize(T text, int size) {
@@ -1630,15 +1495,15 @@ public class TextUtils {
         if (Character.isHighSurrogate(text.charAt(size - 1)) && Character.isLowSurrogate(text.charAt(size))) {
             size--;
         }
-        return text.subSequence(0, size);
+        return (T) text.subSequence(0, size);
     }
 
     public static <T extends CharSequence> T trimToLengthWithEllipsis(T text, int size) {
-        T trimmed = trimToSize(text, size);
-        if (trimmed.length() >= text.length()) {
-            return trimmed;
+        T trimmed = (T) trimToSize(text, size);
+        if (trimmed.length() < text.length()) {
+            return trimmed.toString() + Session.TRUNCATE_STRING;
         }
-        return trimmed.toString() + Session.TRUNCATE_STRING;
+        return trimmed;
     }
 
     private static boolean isNewline(int codePoint) {
@@ -1659,75 +1524,73 @@ public class TextUtils {
 
     public static CharSequence makeSafeForPresentation(String unclean, int maxCharactersToConsider, float ellipsizeDip, int flags) {
         String shortString;
-        int i = maxCharactersToConsider;
-        float f = ellipsizeDip;
-        int i2 = flags;
         boolean z = true;
-        boolean onlyKeepFirstLine = (i2 & 4) != 0;
-        boolean forceSingleLine = (i2 & 2) != 0;
-        boolean trim = (i2 & 1) != 0;
+        boolean onlyKeepFirstLine = (flags & 4) != 0;
+        boolean forceSingleLine = (flags & 2) != 0;
+        boolean trim = (flags & 1) != 0;
         Preconditions.checkNotNull(unclean);
         Preconditions.checkArgumentNonnegative(maxCharactersToConsider);
-        Preconditions.checkArgumentNonNegative(f, "ellipsizeDip");
-        Preconditions.checkFlagsArgument(i2, 7);
+        Preconditions.checkArgumentNonNegative(ellipsizeDip, "ellipsizeDip");
+        Preconditions.checkFlagsArgument(flags, 7);
         if (onlyKeepFirstLine && forceSingleLine) {
             z = false;
         }
         Preconditions.checkArgument(z, "Cannot set SAFE_STRING_FLAG_SINGLE_LINE and SAFE_STRING_FLAG_FIRST_LINE at thesame time");
-        if (i > 0) {
-            shortString = unclean.substring(0, Math.min(unclean.length(), i));
+        if (maxCharactersToConsider > 0) {
+            shortString = unclean.substring(0, Math.min(unclean.length(), maxCharactersToConsider));
         } else {
             shortString = unclean;
         }
         StringWithRemovedChars gettingCleaned = new StringWithRemovedChars(Html.fromHtml(shortString).toString());
         int uncleanLength = gettingCleaned.length();
         int firstTrailingWhiteSpace = -1;
-        int firstNonWhiteSpace = -1;
-        int offset = 0;
+        int firstTrailingWhiteSpace2 = -1;
+        int firstNonWhiteSpace = 0;
         while (true) {
-            if (offset >= uncleanLength) {
+            if (firstNonWhiteSpace >= uncleanLength) {
                 break;
             }
-            int codePoint = gettingCleaned.codePointAt(offset);
+            int codePoint = gettingCleaned.codePointAt(firstNonWhiteSpace);
             int type = Character.getType(codePoint);
             int codePointLen = Character.charCount(codePoint);
             boolean isNewline = isNewline(codePoint);
             if (onlyKeepFirstLine && isNewline) {
-                gettingCleaned.removeAllCharAfter(offset);
+                gettingCleaned.removeAllCharAfter(firstNonWhiteSpace);
                 break;
             }
             if (forceSingleLine && isNewline) {
-                gettingCleaned.removeRange(offset, offset + codePointLen);
+                gettingCleaned.removeRange(firstNonWhiteSpace, firstNonWhiteSpace + codePointLen);
             } else if (type == 15 && !isNewline) {
-                gettingCleaned.removeRange(offset, offset + codePointLen);
+                gettingCleaned.removeRange(firstNonWhiteSpace, firstNonWhiteSpace + codePointLen);
             } else if (trim && !isWhiteSpace(codePoint)) {
-                if (firstNonWhiteSpace == -1) {
-                    firstNonWhiteSpace = offset;
+                if (firstTrailingWhiteSpace2 == -1) {
+                    firstTrailingWhiteSpace2 = firstNonWhiteSpace;
                 }
-                firstTrailingWhiteSpace = offset + codePointLen;
+                firstTrailingWhiteSpace = firstNonWhiteSpace + codePointLen;
             }
-            offset += codePointLen;
+            firstNonWhiteSpace += codePointLen;
         }
         if (trim) {
-            if (firstNonWhiteSpace == -1) {
+            if (firstTrailingWhiteSpace2 == -1) {
                 gettingCleaned.removeAllCharAfter(0);
             } else {
-                if (firstNonWhiteSpace > 0) {
-                    gettingCleaned.removeAllCharBefore(firstNonWhiteSpace);
+                if (firstTrailingWhiteSpace2 > 0) {
+                    gettingCleaned.removeAllCharBefore(firstTrailingWhiteSpace2);
                 }
                 if (firstTrailingWhiteSpace < uncleanLength) {
                     gettingCleaned.removeAllCharAfter(firstTrailingWhiteSpace);
                 }
             }
         }
-        if (f == 0.0f) {
+        if (ellipsizeDip == 0.0f) {
             return gettingCleaned.toString();
         }
         TextPaint paint = new TextPaint();
         paint.setTextSize(42.0f);
-        return ellipsize(gettingCleaned.toString(), paint, f, TruncateAt.END);
+        return ellipsize(gettingCleaned.toString(), paint, ellipsizeDip, TruncateAt.END);
     }
 
+    /* loaded from: classes4.dex */
     private static class StringWithRemovedChars {
         private final String mOriginal;
         private BitSet mRemovedChars;
@@ -1736,24 +1599,21 @@ public class TextUtils {
             this.mOriginal = original;
         }
 
-        /* access modifiers changed from: package-private */
-        public void removeRange(int firstRemoved, int firstNonRemoved) {
+        void removeRange(int firstRemoved, int firstNonRemoved) {
             if (this.mRemovedChars == null) {
                 this.mRemovedChars = new BitSet(this.mOriginal.length());
             }
             this.mRemovedChars.set(firstRemoved, firstNonRemoved);
         }
 
-        /* access modifiers changed from: package-private */
-        public void removeAllCharBefore(int firstNonRemoved) {
+        void removeAllCharBefore(int firstNonRemoved) {
             if (this.mRemovedChars == null) {
                 this.mRemovedChars = new BitSet(this.mOriginal.length());
             }
             this.mRemovedChars.set(0, firstNonRemoved);
         }
 
-        /* access modifiers changed from: package-private */
-        public void removeAllCharAfter(int firstRemoved) {
+        void removeAllCharAfter(int firstRemoved) {
             if (this.mRemovedChars == null) {
                 this.mRemovedChars = new BitSet(this.mOriginal.length());
             }
@@ -1773,13 +1633,11 @@ public class TextUtils {
             return sb.toString();
         }
 
-        /* access modifiers changed from: package-private */
-        public int length() {
+        int length() {
             return this.mOriginal.length();
         }
 
-        /* access modifiers changed from: package-private */
-        public int codePointAt(int offset) {
+        int codePointAt(int offset) {
             return this.mOriginal.codePointAt(offset);
         }
     }

@@ -1,23 +1,28 @@
 package android.view.autofill;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes4.dex */
 public final class AutofillId implements Parcelable {
-    public static final Parcelable.Creator<AutofillId> CREATOR = new Parcelable.Creator<AutofillId>() {
+    public static final Parcelable.Creator<AutofillId> CREATOR = new Parcelable.Creator<AutofillId>() { // from class: android.view.autofill.AutofillId.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AutofillId createFromParcel(Parcel source) {
             int viewId = source.readInt();
             int flags = source.readInt();
             int sessionId = (flags & 4) != 0 ? source.readInt() : 0;
             if ((flags & 1) != 0) {
-                return new AutofillId(flags, viewId, (long) source.readInt(), sessionId);
-            } else if ((flags & 2) == 0) {
-                return new AutofillId(flags, viewId, -1, sessionId);
-            } else {
+                return new AutofillId(flags, viewId, source.readInt(), sessionId);
+            }
+            if ((flags & 2) != 0) {
                 return new AutofillId(flags, viewId, source.readLong(), sessionId);
             }
+            return new AutofillId(flags, viewId, -1L, sessionId);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AutofillId[] newArray(int size) {
             return new AutofillId[size];
         }
@@ -33,15 +38,15 @@ public final class AutofillId implements Parcelable {
     private final long mVirtualLongId;
 
     public AutofillId(int id) {
-        this(0, id, -1, 0);
+        this(0, id, -1L, 0);
     }
 
     public AutofillId(AutofillId hostId, int virtualChildId) {
-        this(1, hostId.mViewId, (long) virtualChildId, 0);
+        this(1, hostId.mViewId, virtualChildId, 0);
     }
 
     public AutofillId(int hostId, int virtualChildId) {
-        this(1, hostId, (long) virtualChildId, 0);
+        this(1, hostId, virtualChildId, 0);
     }
 
     public AutofillId(AutofillId hostId, long virtualChildId, int sessionId) {
@@ -52,12 +57,13 @@ public final class AutofillId implements Parcelable {
         this.mFlags = flags;
         this.mViewId = parentId;
         this.mVirtualIntId = (flags & 1) != 0 ? (int) virtualChildId : -1;
-        this.mVirtualLongId = (flags & 2) != 0 ? virtualChildId : -1;
+        this.mVirtualLongId = (flags & 2) != 0 ? virtualChildId : -1L;
         this.mSessionId = sessionId;
     }
 
     public static AutofillId withoutSession(AutofillId id) {
-        return new AutofillId(id.mFlags & -5, id.mViewId, id.mVirtualLongId, 0);
+        int flags = id.mFlags & (-5);
+        return new AutofillId(flags, id.mViewId, id.mVirtualLongId, 0);
     }
 
     public int getViewId() {
@@ -81,7 +87,7 @@ public final class AutofillId implements Parcelable {
     }
 
     public boolean isNonVirtual() {
-        return !isVirtualInt() && !isVirtualLong();
+        return (isVirtualInt() || isVirtualLong()) ? false : true;
     }
 
     public boolean hasSession() {
@@ -103,7 +109,8 @@ public final class AutofillId implements Parcelable {
     }
 
     public int hashCode() {
-        return (((((((1 * 31) + this.mViewId) * 31) + this.mVirtualIntId) * 31) + ((int) (this.mVirtualLongId ^ (this.mVirtualLongId >>> 32)))) * 31) + this.mSessionId;
+        int result = (1 * 31) + this.mViewId;
+        return (((((result * 31) + this.mVirtualIntId) * 31) + ((int) (this.mVirtualLongId ^ (this.mVirtualLongId >>> 32)))) * 31) + this.mSessionId;
     }
 
     public boolean equals(Object obj) {
@@ -146,10 +153,12 @@ public final class AutofillId implements Parcelable {
         return builder.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeInt(this.mViewId);
         parcel.writeInt(this.mFlags);

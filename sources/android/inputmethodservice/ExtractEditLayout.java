@@ -4,8 +4,9 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
+/* loaded from: classes.dex */
 public class ExtractEditLayout extends LinearLayout {
     Button mExtractActionButton;
 
@@ -17,8 +18,9 @@ public class ExtractEditLayout extends LinearLayout {
         super(context, attrs);
     }
 
+    @Override // android.view.View
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mExtractActionButton = (Button) findViewById(R.id.inputExtractAction);
+        this.mExtractActionButton = (Button) findViewById(C3132R.C3134id.inputExtractAction);
     }
 }

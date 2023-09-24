@@ -2,6 +2,7 @@ package android.renderscript;
 
 import android.renderscript.Script;
 
+/* loaded from: classes3.dex */
 public final class ScriptIntrinsicYuvToRGB extends ScriptIntrinsic {
     private Allocation mInput;
 
@@ -10,12 +11,14 @@ public final class ScriptIntrinsicYuvToRGB extends ScriptIntrinsic {
     }
 
     public static ScriptIntrinsicYuvToRGB create(RenderScript rs, Element e) {
-        return new ScriptIntrinsicYuvToRGB(rs.nScriptIntrinsicCreate(6, e.getID(rs)), rs);
+        long id = rs.nScriptIntrinsicCreate(6, e.getID(rs));
+        ScriptIntrinsicYuvToRGB si = new ScriptIntrinsicYuvToRGB(id, rs);
+        return si;
     }
 
     public void setInput(Allocation ain) {
         this.mInput = ain;
-        setVar(0, (BaseObj) ain);
+        setVar(0, ain);
     }
 
     public void forEach(Allocation aout) {
@@ -23,10 +26,10 @@ public final class ScriptIntrinsicYuvToRGB extends ScriptIntrinsic {
     }
 
     public Script.KernelID getKernelID() {
-        return createKernelID(0, 2, (Element) null, (Element) null);
+        return createKernelID(0, 2, null, null);
     }
 
     public Script.FieldID getFieldID_Input() {
-        return createFieldID(0, (Element) null);
+        return createFieldID(0, null);
     }
 }

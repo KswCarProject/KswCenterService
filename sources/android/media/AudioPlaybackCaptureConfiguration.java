@@ -4,11 +4,12 @@ import android.media.AudioAttributes;
 import android.media.audiopolicy.AudioMix;
 import android.media.audiopolicy.AudioMixingRule;
 import android.media.projection.MediaProjection;
-import android.os.RemoteException;
+import android.p007os.RemoteException;
 import com.android.internal.util.Preconditions;
 import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
 
+/* loaded from: classes3.dex */
 public final class AudioPlaybackCaptureConfiguration {
     private final AudioMixingRule mAudioMixingRule;
     private final MediaProjection mProjection;
@@ -23,31 +24,54 @@ public final class AudioPlaybackCaptureConfiguration {
     }
 
     public int[] getMatchingUsages() {
-        return getIntPredicates(1, $$Lambda$AudioPlaybackCaptureConfiguration$JTl6zvocylA2c1D_zvOeuHFBuXc.INSTANCE);
+        return getIntPredicates(1, new ToIntFunction() { // from class: android.media.-$$Lambda$AudioPlaybackCaptureConfiguration$JTl6zvocylA2c1D_zvOeuHFBuXc
+            @Override // java.util.function.ToIntFunction
+            public final int applyAsInt(Object obj) {
+                int usage;
+                usage = ((AudioMixingRule.AudioMixMatchCriterion) obj).getAudioAttributes().getUsage();
+                return usage;
+            }
+        });
     }
 
     public int[] getMatchingUids() {
-        return getIntPredicates(4, $$Lambda$AudioPlaybackCaptureConfiguration$lExv8IaPEEDrexk0ZpgJOYug6js.INSTANCE);
+        return getIntPredicates(4, new ToIntFunction() { // from class: android.media.-$$Lambda$AudioPlaybackCaptureConfiguration$lExv8IaPEEDrexk0ZpgJOYug6js
+            @Override // java.util.function.ToIntFunction
+            public final int applyAsInt(Object obj) {
+                int intProp;
+                intProp = ((AudioMixingRule.AudioMixMatchCriterion) obj).getIntProp();
+                return intProp;
+            }
+        });
     }
 
     public int[] getExcludeUsages() {
-        return getIntPredicates(32769, $$Lambda$AudioPlaybackCaptureConfiguration$XNNDt4F3y6GuPLTW14ozD51SjGw.INSTANCE);
+        return getIntPredicates(32769, new ToIntFunction() { // from class: android.media.-$$Lambda$AudioPlaybackCaptureConfiguration$XNNDt4F3y6GuPLTW14ozD51SjGw
+            @Override // java.util.function.ToIntFunction
+            public final int applyAsInt(Object obj) {
+                int usage;
+                usage = ((AudioMixingRule.AudioMixMatchCriterion) obj).getAudioAttributes().getUsage();
+                return usage;
+            }
+        });
     }
 
     public int[] getExcludeUids() {
-        return getIntPredicates(32772, $$Lambda$AudioPlaybackCaptureConfiguration$OOmSH4uNi7bwcxkUNQt_briVbM.INSTANCE);
+        return getIntPredicates(32772, new ToIntFunction() { // from class: android.media.-$$Lambda$AudioPlaybackCaptureConfiguration$OOmSH4uNi7bw-cxkUNQt_briVbM
+            @Override // java.util.function.ToIntFunction
+            public final int applyAsInt(Object obj) {
+                int intProp;
+                intProp = ((AudioMixingRule.AudioMixMatchCriterion) obj).getIntProp();
+                return intProp;
+            }
+        });
     }
 
-    private int[] getIntPredicates(int rule, ToIntFunction<AudioMixingRule.AudioMixMatchCriterion> getPredicate) {
-        return this.mAudioMixingRule.getCriteria().stream().filter(new Predicate(rule) {
-            private final /* synthetic */ int f$0;
-
-            {
-                this.f$0 = r1;
-            }
-
+    private int[] getIntPredicates(final int rule, ToIntFunction<AudioMixingRule.AudioMixMatchCriterion> getPredicate) {
+        return this.mAudioMixingRule.getCriteria().stream().filter(new Predicate() { // from class: android.media.-$$Lambda$AudioPlaybackCaptureConfiguration$CbJtSEmgD3swIYuOWlTCDMPxK1s
+            @Override // java.util.function.Predicate
             public final boolean test(Object obj) {
-                return AudioPlaybackCaptureConfiguration.lambda$getIntPredicates$4(this.f$0, (AudioMixingRule.AudioMixMatchCriterion) obj);
+                return AudioPlaybackCaptureConfiguration.lambda$getIntPredicates$4(rule, (AudioMixingRule.AudioMixMatchCriterion) obj);
             }
         }).mapToInt(getPredicate).toArray();
     }
@@ -56,11 +80,11 @@ public final class AudioPlaybackCaptureConfiguration {
         return criterion.getRule() == rule;
     }
 
-    /* access modifiers changed from: package-private */
-    public AudioMix createAudioMix(AudioFormat audioFormat) {
+    AudioMix createAudioMix(AudioFormat audioFormat) {
         return new AudioMix.Builder(this.mAudioMixingRule).setFormat(audioFormat).setRouteFlags(3).build();
     }
 
+    /* loaded from: classes3.dex */
     public static final class Builder {
         private static final String ERROR_MESSAGE_MISMATCHED_RULES = "Inclusive and exclusive usage rules cannot be combined";
         private static final String ERROR_MESSAGE_NON_AUDIO_PROJECTION = "MediaProjection can not project audio";
@@ -70,8 +94,8 @@ public final class AudioPlaybackCaptureConfiguration {
         private static final int MATCH_TYPE_UNSPECIFIED = 0;
         private final AudioMixingRule.Builder mAudioMixingRuleBuilder;
         private final MediaProjection mProjection;
-        private int mUidMatchType = 0;
         private int mUsageMatchType = 0;
+        private int mUidMatchType = 0;
 
         public Builder(MediaProjection projection) {
             Preconditions.checkNotNull(projection);
@@ -106,11 +130,7 @@ public final class AudioPlaybackCaptureConfiguration {
         }
 
         public Builder excludeUid(int uid) {
-            boolean z = true;
-            if (this.mUidMatchType == 1) {
-                z = false;
-            }
-            Preconditions.checkState(z, ERROR_MESSAGE_MISMATCHED_RULES);
+            Preconditions.checkState(this.mUidMatchType != 1, ERROR_MESSAGE_MISMATCHED_RULES);
             this.mAudioMixingRuleBuilder.excludeMixRule(4, Integer.valueOf(uid));
             this.mUidMatchType = 2;
             return this;

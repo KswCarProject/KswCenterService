@@ -2,10 +2,10 @@ package android.service.textservice;
 
 import android.app.Service;
 import android.content.Intent;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.Process;
-import android.os.RemoteException;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.Process;
+import android.p007os.RemoteException;
 import android.text.TextUtils;
 import android.text.method.WordIterator;
 import android.view.textservice.SentenceSuggestionsInfo;
@@ -19,6 +19,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Locale;
 
+/* loaded from: classes3.dex */
 public abstract class SpellCheckerService extends Service {
     private static final boolean DBG = false;
     public static final String SERVICE_INTERFACE = "android.service.textservice.SpellCheckerService";
@@ -27,10 +28,12 @@ public abstract class SpellCheckerService extends Service {
 
     public abstract Session createSession();
 
+    @Override // android.app.Service
     public final IBinder onBind(Intent intent) {
         return this.mBinder;
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Session {
         private InternalISpellCheckerSession mInternalSession;
         private volatile SentenceLevelAdapter mSentenceLevelAdapter;
@@ -100,6 +103,7 @@ public abstract class SpellCheckerService extends Service {
         }
     }
 
+    /* loaded from: classes3.dex */
     private static class InternalISpellCheckerSession extends ISpellCheckerSession.Stub {
         private final Bundle mBundle;
         private ISpellCheckerSessionListener mListener;
@@ -114,6 +118,7 @@ public abstract class SpellCheckerService extends Service {
             session.setInternalISpellCheckerSession(this);
         }
 
+        @Override // com.android.internal.textservice.ISpellCheckerSession
         public void onGetSuggestionsMultiple(TextInfo[] textInfos, int suggestionsLimit, boolean sequentialWords) {
             int pri = Process.getThreadPriority(Process.myTid());
             try {
@@ -127,6 +132,7 @@ public abstract class SpellCheckerService extends Service {
             Process.setThreadPriority(pri);
         }
 
+        @Override // com.android.internal.textservice.ISpellCheckerSession
         public void onGetSentenceSuggestionsMultiple(TextInfo[] textInfos, int suggestionsLimit) {
             try {
                 this.mListener.onGetSentenceSuggestions(this.mSession.onGetSentenceSuggestionsMultiple(textInfos, suggestionsLimit));
@@ -134,19 +140,18 @@ public abstract class SpellCheckerService extends Service {
             }
         }
 
-        /* JADX INFO: finally extract failed */
+        @Override // com.android.internal.textservice.ISpellCheckerSession
         public void onCancel() {
             int pri = Process.getThreadPriority(Process.myTid());
             try {
                 Process.setThreadPriority(10);
                 this.mSession.onCancel();
+            } finally {
                 Process.setThreadPriority(pri);
-            } catch (Throwable th) {
-                Process.setThreadPriority(pri);
-                throw th;
             }
         }
 
+        @Override // com.android.internal.textservice.ISpellCheckerSession
         public void onClose() {
             int pri = Process.getThreadPriority(Process.myTid());
             try {
@@ -167,6 +172,7 @@ public abstract class SpellCheckerService extends Service {
         }
     }
 
+    /* loaded from: classes3.dex */
     private static class SpellCheckerServiceBinder extends ISpellCheckerService.Stub {
         private final WeakReference<SpellCheckerService> mInternalServiceRef;
 
@@ -174,9 +180,10 @@ public abstract class SpellCheckerService extends Service {
             this.mInternalServiceRef = new WeakReference<>(service);
         }
 
+        @Override // com.android.internal.textservice.ISpellCheckerService
         public void getISpellCheckerSession(String locale, ISpellCheckerSessionListener listener, Bundle bundle, ISpellCheckerServiceCallback callback) {
             InternalISpellCheckerSession internalSession;
-            SpellCheckerService service = (SpellCheckerService) this.mInternalServiceRef.get();
+            SpellCheckerService service = this.mInternalServiceRef.get();
             if (service == null) {
                 internalSession = null;
             } else {
@@ -192,11 +199,13 @@ public abstract class SpellCheckerService extends Service {
         }
     }
 
+    /* loaded from: classes3.dex */
     private static class SentenceLevelAdapter {
         public static final SentenceSuggestionsInfo[] EMPTY_SENTENCE_SUGGESTIONS_INFOS = new SentenceSuggestionsInfo[0];
-        private static final SuggestionsInfo EMPTY_SUGGESTIONS_INFO = new SuggestionsInfo(0, (String[]) null);
+        private static final SuggestionsInfo EMPTY_SUGGESTIONS_INFO = new SuggestionsInfo(0, null);
         private final WordIterator mWordIterator;
 
+        /* loaded from: classes3.dex */
         public static class SentenceWordItem {
             public final int mLength;
             public final int mStart;
@@ -209,6 +218,7 @@ public abstract class SpellCheckerService extends Service {
             }
         }
 
+        /* loaded from: classes3.dex */
         public static class SentenceTextInfoParams {
             final ArrayList<SentenceWordItem> mItems;
             final TextInfo mOriginalTextInfo;
@@ -225,7 +235,7 @@ public abstract class SpellCheckerService extends Service {
             this.mWordIterator = new WordIterator(locale);
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public SentenceTextInfoParams getSplitWords(TextInfo originalTextInfo) {
             WordIterator wordIterator = this.mWordIterator;
             CharSequence originalText = originalTextInfo.getText();
@@ -243,7 +253,8 @@ public abstract class SpellCheckerService extends Service {
                 }
                 if (wordEnd2 >= 0 && wordEnd2 > wordStart2) {
                     CharSequence query = originalText.subSequence(wordStart2, wordEnd2);
-                    wordItems.add(new SentenceWordItem(new TextInfo(query, 0, query.length(), cookie, query.hashCode()), wordStart2, wordEnd2));
+                    TextInfo ti = new TextInfo(query, 0, query.length(), cookie, query.hashCode());
+                    wordItems.add(new SentenceWordItem(ti, wordStart2, wordEnd2));
                 }
                 wordEnd2 = wordIterator.following(wordEnd2);
                 if (wordEnd2 == -1) {
@@ -269,19 +280,20 @@ public abstract class SpellCheckerService extends Service {
                 SuggestionsInfo result = null;
                 int j = 0;
                 while (true) {
-                    if (j < results.length) {
-                        SuggestionsInfo cur = results[j];
-                        if (cur != null && cur.getSequence() == item.mTextInfo.getSequence()) {
-                            result = cur;
-                            result.setCookieAndSequence(originalCookie, originalSequence);
-                            break;
-                        }
+                    if (j >= results.length) {
+                        break;
+                    }
+                    SuggestionsInfo cur = results[j];
+                    if (cur == null || cur.getSequence() != item.mTextInfo.getSequence()) {
                         j++;
                     } else {
+                        result = cur;
+                        result.setCookieAndSequence(originalCookie, originalSequence);
                         break;
                     }
                 }
-                offsets[i] = item.mStart;
+                int j2 = item.mStart;
+                offsets[i] = j2;
                 lengths[i] = item.mLength;
                 reconstructedSuggestions[i] = result != null ? result : EMPTY_SUGGESTIONS_INFO;
             }

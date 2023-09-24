@@ -2,6 +2,7 @@ package android.util;
 
 import android.app.backup.FullBackup;
 
+/* loaded from: classes4.dex */
 public class TypedValue {
     public static final int COMPLEX_MANTISSA_MASK = 16777215;
     public static final int COMPLEX_MANTISSA_SHIFT = 8;
@@ -25,10 +26,6 @@ public class TypedValue {
     public static final int DATA_NULL_UNDEFINED = 0;
     public static final int DENSITY_DEFAULT = 0;
     public static final int DENSITY_NONE = 65535;
-    private static final String[] DIMENSION_UNIT_STRS = {"px", "dip", FullBackup.SHAREDPREFS_TREE_TOKEN, "pt", "in", "mm"};
-    private static final String[] FRACTION_UNIT_STRS = {"%", "%p"};
-    private static final float MANTISSA_MULT = 0.00390625f;
-    private static final float[] RADIX_MULTS = {MANTISSA_MULT, 3.0517578E-5f, 1.1920929E-7f, 4.656613E-10f};
     public static final int TYPE_ATTRIBUTE = 2;
     public static final int TYPE_DIMENSION = 5;
     public static final int TYPE_FIRST_COLOR_INT = 28;
@@ -55,6 +52,10 @@ public class TypedValue {
     public int sourceResourceId;
     public CharSequence string;
     public int type;
+    private static final float MANTISSA_MULT = 0.00390625f;
+    private static final float[] RADIX_MULTS = {MANTISSA_MULT, 3.0517578E-5f, 1.1920929E-7f, 4.656613E-10f};
+    private static final String[] DIMENSION_UNIT_STRS = {"px", "dip", FullBackup.SHAREDPREFS_TREE_TOKEN, "pt", "in", "mm"};
+    private static final String[] FRACTION_UNIT_STRS = {"%", "%p"};
 
     public final float getFloat() {
         return Float.intBitsToFloat(this.data);
@@ -65,20 +66,20 @@ public class TypedValue {
     }
 
     public static float complexToFloat(int complex) {
-        return ((float) (complex & -256)) * RADIX_MULTS[(complex >> 4) & 3];
+        return (complex & (-256)) * RADIX_MULTS[(complex >> 4) & 3];
     }
 
-    public static float complexToDimension(int data2, DisplayMetrics metrics) {
-        return applyDimension((data2 >> 0) & 15, complexToFloat(data2), metrics);
+    public static float complexToDimension(int data, DisplayMetrics metrics) {
+        return applyDimension((data >> 0) & 15, complexToFloat(data), metrics);
     }
 
-    public static int complexToDimensionPixelOffset(int data2, DisplayMetrics metrics) {
-        return (int) applyDimension((data2 >> 0) & 15, complexToFloat(data2), metrics);
+    public static int complexToDimensionPixelOffset(int data, DisplayMetrics metrics) {
+        return (int) applyDimension((data >> 0) & 15, complexToFloat(data), metrics);
     }
 
-    public static int complexToDimensionPixelSize(int data2, DisplayMetrics metrics) {
-        float value = complexToFloat(data2);
-        float f = applyDimension((data2 >> 0) & 15, value, metrics);
+    public static int complexToDimensionPixelSize(int data, DisplayMetrics metrics) {
+        float value = complexToFloat(data);
+        float f = applyDimension((data >> 0) & 15, value, metrics);
         int res = (int) (f >= 0.0f ? 0.5f + f : f - 0.5f);
         if (res != 0) {
             return res;
@@ -86,15 +87,12 @@ public class TypedValue {
         if (value == 0.0f) {
             return 0;
         }
-        if (value > 0.0f) {
-            return 1;
-        }
-        return -1;
+        return value > 0.0f ? 1 : -1;
     }
 
     @Deprecated
-    public static float complexToDimensionNoisy(int data2, DisplayMetrics metrics) {
-        return complexToDimension(data2, metrics);
+    public static float complexToDimensionNoisy(int data, DisplayMetrics metrics) {
+        return complexToDimension(data, metrics);
     }
 
     public int getComplexUnit() {
@@ -124,12 +122,12 @@ public class TypedValue {
         return complexToDimension(this.data, metrics);
     }
 
-    public static float complexToFraction(int data2, float base, float pbase) {
-        switch ((data2 >> 0) & 15) {
+    public static float complexToFraction(int data, float base, float pbase) {
+        switch ((data >> 0) & 15) {
             case 0:
-                return complexToFloat(data2) * base;
+                return complexToFloat(data) * base;
             case 1:
-                return complexToFloat(data2) * pbase;
+                return complexToFloat(data) * pbase;
             default:
                 return 0.0f;
         }
@@ -147,31 +145,31 @@ public class TypedValue {
         return coerceToString(t, this.data);
     }
 
-    public static final String coerceToString(int type2, int data2) {
-        switch (type2) {
+    public static final String coerceToString(int type, int data) {
+        switch (type) {
             case 0:
                 return null;
             case 1:
-                return "@" + data2;
+                return "@" + data;
             case 2:
-                return "?" + data2;
+                return "?" + data;
             case 4:
-                return Float.toString(Float.intBitsToFloat(data2));
+                return Float.toString(Float.intBitsToFloat(data));
             case 5:
-                return Float.toString(complexToFloat(data2)) + DIMENSION_UNIT_STRS[(data2 >> 0) & 15];
+                return Float.toString(complexToFloat(data)) + DIMENSION_UNIT_STRS[(data >> 0) & 15];
             case 6:
-                return Float.toString(complexToFloat(data2) * 100.0f) + FRACTION_UNIT_STRS[(data2 >> 0) & 15];
+                return Float.toString(complexToFloat(data) * 100.0f) + FRACTION_UNIT_STRS[(data >> 0) & 15];
             case 17:
-                return "0x" + Integer.toHexString(data2);
+                return "0x" + Integer.toHexString(data);
             case 18:
-                return data2 != 0 ? "true" : "false";
+                return data != 0 ? "true" : "false";
             default:
-                if (type2 >= 28 && type2 <= 31) {
-                    return "#" + Integer.toHexString(data2);
-                } else if (type2 < 16 || type2 > 31) {
+                if (type >= 28 && type <= 31) {
+                    return "#" + Integer.toHexString(data);
+                } else if (type < 16 || type > 31) {
                     return null;
                 } else {
-                    return Integer.toString(data2);
+                    return Integer.toString(data);
                 }
         }
     }

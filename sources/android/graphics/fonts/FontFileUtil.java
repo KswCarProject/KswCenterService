@@ -3,6 +3,7 @@ package android.graphics.fonts;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+/* loaded from: classes.dex */
 public class FontFileUtil {
     private static final int ANALYZE_ERROR = -1;
     private static final int OS2_TABLE_TAG = 1330851634;
@@ -31,83 +32,76 @@ public class FontFileUtil {
 
     public static final int analyzeStyle(ByteBuffer buffer, int ttcIndex, FontVariationAxis[] varSettings) {
         int italic;
-        int weight;
+        int italic2;
         boolean z;
-        ByteBuffer byteBuffer = buffer;
-        int i = ttcIndex;
-        FontVariationAxis[] fontVariationAxisArr = varSettings;
-        boolean z2 = false;
-        if (fontVariationAxisArr != null) {
+        if (varSettings != null) {
+            int length = varSettings.length;
             italic = -1;
-            weight = -1;
-            for (FontVariationAxis axis : fontVariationAxisArr) {
+            italic2 = -1;
+            int weight = 0;
+            while (weight < length) {
+                FontVariationAxis axis = varSettings[weight];
                 if ("wght".equals(axis.getTag())) {
-                    weight = (int) axis.getStyleValue();
+                    italic2 = (int) axis.getStyleValue();
                 } else if ("ital".equals(axis.getTag())) {
                     italic = axis.getStyleValue() == 1.0f ? 1 : 0;
                 }
+                weight++;
+                italic2 = italic2;
             }
         } else {
             italic = -1;
-            weight = -1;
+            italic2 = -1;
         }
-        if (weight == -1 || italic == -1) {
-            ByteOrder originalOrder = buffer.order();
-            byteBuffer.order(ByteOrder.BIG_ENDIAN);
-            int fontFileOffset = 0;
-            try {
-                if (byteBuffer.getInt(0) == TTC_TAG) {
-                    if (i >= byteBuffer.getInt(8)) {
-                        return -1;
-                    }
-                    fontFileOffset = byteBuffer.getInt((i * 4) + 12);
+        if (italic2 != -1 && italic != -1) {
+            return pack(italic2, italic == 1);
+        }
+        ByteOrder originalOrder = buffer.order();
+        buffer.order(ByteOrder.BIG_ENDIAN);
+        int fontFileOffset = 0;
+        try {
+            int magicNumber = buffer.getInt(0);
+            if (magicNumber == TTC_TAG) {
+                if (ttcIndex >= buffer.getInt(8)) {
+                    return -1;
                 }
-                int sfntVersion = byteBuffer.getInt(fontFileOffset);
-                if (sfntVersion == 65536 || sfntVersion == SFNT_VERSION_OTTO) {
-                    int numTables = byteBuffer.getShort(fontFileOffset + 4);
-                    int os2TableOffset = -1;
-                    int i2 = 0;
-                    while (true) {
-                        if (i2 >= numTables) {
-                            break;
-                        }
-                        int tableOffset = fontFileOffset + 12 + (i2 * 16);
-                        if (byteBuffer.getInt(tableOffset) == OS2_TABLE_TAG) {
-                            os2TableOffset = byteBuffer.getInt(tableOffset + 8);
-                            break;
-                        }
-                        i2++;
+                fontFileOffset = buffer.getInt((ttcIndex * 4) + 12);
+            }
+            int sfntVersion = buffer.getInt(fontFileOffset);
+            if (sfntVersion == 65536 || sfntVersion == SFNT_VERSION_OTTO) {
+                int numTables = buffer.getShort(fontFileOffset + 4);
+                int os2TableOffset = -1;
+                int i = 0;
+                while (true) {
+                    if (i >= numTables) {
+                        break;
                     }
-                    if (os2TableOffset == -1) {
-                        int pack = pack(400, false);
-                        byteBuffer.order(originalOrder);
-                        return pack;
+                    int tableOffset = fontFileOffset + 12 + (i * 16);
+                    if (buffer.getInt(tableOffset) == OS2_TABLE_TAG) {
+                        os2TableOffset = buffer.getInt(tableOffset + 8);
+                        break;
                     }
-                    int weightFromOS2 = byteBuffer.getShort(os2TableOffset + 4);
-                    boolean italicFromOS2 = (byteBuffer.getShort(os2TableOffset + 62) & 1) != 0;
-                    int i3 = weight == -1 ? weightFromOS2 : weight;
-                    if (italic == -1) {
-                        z = italicFromOS2;
-                    } else {
-                        z = true;
-                        if (italic != 1) {
-                            z = false;
-                        }
-                    }
-                    int pack2 = pack(i3, z);
-                    byteBuffer.order(originalOrder);
-                    return pack2;
+                    i++;
                 }
-                byteBuffer.order(originalOrder);
-                return -1;
-            } finally {
-                byteBuffer.order(originalOrder);
+                if (os2TableOffset == -1) {
+                    return pack(400, false);
+                }
+                int weightFromOS2 = buffer.getShort(os2TableOffset + 4);
+                boolean italicFromOS2 = (buffer.getShort(os2TableOffset + 62) & 1) != 0;
+                int i2 = italic2 == -1 ? weightFromOS2 : italic2;
+                if (italic == -1) {
+                    z = italicFromOS2;
+                } else {
+                    z = true;
+                    if (italic != 1) {
+                        z = false;
+                    }
+                }
+                return pack(i2, z);
             }
-        } else {
-            if (italic == 1) {
-                z2 = true;
-            }
-            return pack(weight, z2);
+            return -1;
+        } finally {
+            buffer.order(originalOrder);
         }
     }
 }

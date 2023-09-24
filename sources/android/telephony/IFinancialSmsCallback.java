@@ -1,24 +1,29 @@
 package android.telephony;
 
 import android.database.CursorWindow;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes.dex */
 public interface IFinancialSmsCallback extends IInterface {
     void onGetSmsMessagesForFinancialApp(CursorWindow cursorWindow) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements IFinancialSmsCallback {
+        @Override // android.telephony.IFinancialSmsCallback
         public void onGetSmsMessagesForFinancialApp(CursorWindow messages) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements IFinancialSmsCallback {
         private static final String DESCRIPTOR = "android.telephony.IFinancialSmsCallback";
         static final int TRANSACTION_onGetSmsMessagesForFinancialApp = 1;
@@ -32,46 +37,50 @@ public interface IFinancialSmsCallback extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IFinancialSmsCallback)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IFinancialSmsCallback)) {
+                return (IFinancialSmsCallback) iin;
             }
-            return (IFinancialSmsCallback) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
 
         public static String getDefaultTransactionName(int transactionCode) {
-            if (transactionCode != 1) {
-                return null;
+            if (transactionCode == 1) {
+                return "onGetSmsMessagesForFinancialApp";
             }
-            return "onGetSmsMessagesForFinancialApp";
+            return null;
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
             CursorWindow _arg0;
-            if (code == 1) {
-                data.enforceInterface(DESCRIPTOR);
-                if (data.readInt() != 0) {
-                    _arg0 = CursorWindow.CREATOR.createFromParcel(data);
-                } else {
-                    _arg0 = null;
+            if (code != 1) {
+                if (code == 1598968902) {
+                    reply.writeString(DESCRIPTOR);
+                    return true;
                 }
-                onGetSmsMessagesForFinancialApp(_arg0);
-                return true;
-            } else if (code != 1598968902) {
                 return super.onTransact(code, data, reply, flags);
-            } else {
-                reply.writeString(DESCRIPTOR);
-                return true;
             }
+            data.enforceInterface(DESCRIPTOR);
+            if (data.readInt() != 0) {
+                _arg0 = CursorWindow.CREATOR.createFromParcel(data);
+            } else {
+                _arg0 = null;
+            }
+            onGetSmsMessagesForFinancialApp(_arg0);
+            return true;
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements IFinancialSmsCallback {
             public static IFinancialSmsCallback sDefaultImpl;
             private IBinder mRemote;
@@ -80,6 +89,7 @@ public interface IFinancialSmsCallback extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -88,6 +98,7 @@ public interface IFinancialSmsCallback extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.telephony.IFinancialSmsCallback
             public void onGetSmsMessagesForFinancialApp(CursorWindow messages) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -98,9 +109,8 @@ public interface IFinancialSmsCallback extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onGetSmsMessagesForFinancialApp(messages);
                     }
                 } finally {
@@ -110,11 +120,11 @@ public interface IFinancialSmsCallback extends IInterface {
         }
 
         public static boolean setDefaultImpl(IFinancialSmsCallback impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IFinancialSmsCallback getDefaultImpl() {

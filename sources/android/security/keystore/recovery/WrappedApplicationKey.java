@@ -1,43 +1,46 @@
 package android.security.keystore.recovery;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.util.Preconditions;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class WrappedApplicationKey implements Parcelable {
-    public static final Parcelable.Creator<WrappedApplicationKey> CREATOR = new Parcelable.Creator<WrappedApplicationKey>() {
+    public static final Parcelable.Creator<WrappedApplicationKey> CREATOR = new Parcelable.Creator<WrappedApplicationKey>() { // from class: android.security.keystore.recovery.WrappedApplicationKey.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WrappedApplicationKey createFromParcel(Parcel in) {
             return new WrappedApplicationKey(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WrappedApplicationKey[] newArray(int length) {
             return new WrappedApplicationKey[length];
         }
     };
-    /* access modifiers changed from: private */
-    public String mAlias;
-    /* access modifiers changed from: private */
-    public byte[] mEncryptedKeyMaterial;
-    /* access modifiers changed from: private */
-    public byte[] mMetadata;
+    private String mAlias;
+    private byte[] mEncryptedKeyMaterial;
+    private byte[] mMetadata;
 
+    /* loaded from: classes3.dex */
     public static class Builder {
         private WrappedApplicationKey mInstance = new WrappedApplicationKey();
 
         public Builder setAlias(String alias) {
-            String unused = this.mInstance.mAlias = alias;
+            this.mInstance.mAlias = alias;
             return this;
         }
 
         public Builder setEncryptedKeyMaterial(byte[] encryptedKeyMaterial) {
-            byte[] unused = this.mInstance.mEncryptedKeyMaterial = encryptedKeyMaterial;
+            this.mInstance.mEncryptedKeyMaterial = encryptedKeyMaterial;
             return this;
         }
 
         public Builder setMetadata(byte[] metadata) {
-            byte[] unused = this.mInstance.mMetadata = metadata;
+            this.mInstance.mMetadata = metadata;
             return this;
         }
 
@@ -69,6 +72,7 @@ public final class WrappedApplicationKey implements Parcelable {
         return this.mMetadata;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(this.mAlias);
         out.writeByteArray(this.mEncryptedKeyMaterial);
@@ -83,6 +87,7 @@ public final class WrappedApplicationKey implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

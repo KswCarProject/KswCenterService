@@ -1,5 +1,6 @@
 package com.android.internal.telephony;
 
+/* loaded from: classes4.dex */
 public class IccCardConstants {
     public static final String INTENT_KEY_ICC_STATE = "ss";
     public static final String INTENT_KEY_LOCKED_REASON = "reason";
@@ -18,6 +19,7 @@ public class IccCardConstants {
     public static final String INTENT_VALUE_LOCKED_ON_PIN = "PIN";
     public static final String INTENT_VALUE_LOCKED_ON_PUK = "PUK";
 
+    /* loaded from: classes4.dex */
     public enum State {
         UNKNOWN,
         ABSENT,

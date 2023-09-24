@@ -1,10 +1,11 @@
 package android.view;
 
 import android.graphics.Region;
-import android.os.IBinder;
+import android.p007os.IBinder;
 import android.telephony.SmsManager;
 import java.lang.ref.WeakReference;
 
+/* loaded from: classes4.dex */
 public final class InputWindowHandle {
     public boolean canReceiveKeys;
     public final IWindow clientWindow;
@@ -25,30 +26,29 @@ public final class InputWindowHandle {
     public int ownerPid;
     public int ownerUid;
     public boolean paused;
-    public int portalToDisplayId = -1;
     private long ptr;
     public boolean replaceTouchableRegionWithCrop;
     public float scaleFactor;
     public int surfaceInset;
     public IBinder token;
-    public final Region touchableRegion = new Region();
-    public WeakReference<IBinder> touchableRegionCropHandle = new WeakReference<>((Object) null);
     public boolean visible;
+    public final Region touchableRegion = new Region();
+    public int portalToDisplayId = -1;
+    public WeakReference<IBinder> touchableRegionCropHandle = new WeakReference<>(null);
 
     private native void nativeDispose();
 
-    public InputWindowHandle(InputApplicationHandle inputApplicationHandle2, IWindow clientWindow2, int displayId2) {
-        this.inputApplicationHandle = inputApplicationHandle2;
-        this.clientWindow = clientWindow2;
-        this.displayId = displayId2;
+    public InputWindowHandle(InputApplicationHandle inputApplicationHandle, IWindow clientWindow, int displayId) {
+        this.inputApplicationHandle = inputApplicationHandle;
+        this.clientWindow = clientWindow;
+        this.displayId = displayId;
     }
 
     public String toString() {
-        return (this.name != null ? this.name : "") + ", layer=" + this.layer + ", frame=[" + this.frameLeft + SmsManager.REGEX_PREFIX_DELIMITER + this.frameTop + SmsManager.REGEX_PREFIX_DELIMITER + this.frameRight + SmsManager.REGEX_PREFIX_DELIMITER + this.frameBottom + "]" + ", touchableRegion=" + this.touchableRegion + ", visible=" + this.visible;
+        return (this.name != null ? this.name : "") + ", layer=" + this.layer + ", frame=[" + this.frameLeft + SmsManager.REGEX_PREFIX_DELIMITER + this.frameTop + SmsManager.REGEX_PREFIX_DELIMITER + this.frameRight + SmsManager.REGEX_PREFIX_DELIMITER + this.frameBottom + "], touchableRegion=" + this.touchableRegion + ", visible=" + this.visible;
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         try {
             nativeDispose();
         } finally {

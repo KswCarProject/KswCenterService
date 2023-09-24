@@ -7,12 +7,14 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.METHOD, ElementType.PARAMETER, ElementType.FIELD, ElementType.LOCAL_VARIABLE})
 @Retention(RetentionPolicy.SOURCE)
+/* loaded from: classes.dex */
 public @interface FloatRange {
     double from() default Double.NEGATIVE_INFINITY;
 
     boolean fromInclusive() default true;
 
-    double to() default Double.POSITIVE_INFINITY;
+    /* renamed from: to */
+    double m137to() default Double.POSITIVE_INFINITY;
 
     boolean toInclusive() default true;
 }

@@ -1,14 +1,17 @@
 package android.bluetooth;
 
+import android.bluetooth.IBluetoothCallback;
+import android.bluetooth.IBluetoothMetadataListener;
 import android.bluetooth.IBluetoothSocketManager;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.ParcelUuid;
-import android.os.RemoteException;
-import android.os.ResultReceiver;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.ParcelUuid;
+import android.p007os.RemoteException;
+import android.p007os.ResultReceiver;
 
+/* loaded from: classes.dex */
 public interface IBluetooth extends IInterface {
     boolean cancelBondProcess(BluetoothDevice bluetoothDevice) throws RemoteException;
 
@@ -176,336 +179,422 @@ public interface IBluetooth extends IInterface {
 
     void updateQuietModeStatus(boolean z) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements IBluetooth {
+        @Override // android.bluetooth.IBluetooth
         public boolean isEnabled() throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public int getState() throws RemoteException {
             return 0;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public boolean enable() throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public boolean enableNoAutoConnect() throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public boolean disable() throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public String getAddress() throws RemoteException {
             return null;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public ParcelUuid[] getUuids() throws RemoteException {
             return null;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public boolean setName(String name) throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public String getName() throws RemoteException {
             return null;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public BluetoothClass getBluetoothClass() throws RemoteException {
             return null;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public boolean setBluetoothClass(BluetoothClass bluetoothClass) throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public int getIoCapability() throws RemoteException {
             return 0;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public boolean setIoCapability(int capability) throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public int getLeIoCapability() throws RemoteException {
             return 0;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public boolean setLeIoCapability(int capability) throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public int getScanMode() throws RemoteException {
             return 0;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public boolean setScanMode(int mode, int duration) throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public int getDiscoverableTimeout() throws RemoteException {
             return 0;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public boolean setDiscoverableTimeout(int timeout) throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public boolean startDiscovery(String callingPackage) throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public boolean cancelDiscovery() throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public boolean isDiscovering() throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public long getDiscoveryEndMillis() throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public int getAdapterConnectionState() throws RemoteException {
             return 0;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public int getProfileConnectionState(int profile) throws RemoteException {
             return 0;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public BluetoothDevice[] getBondedDevices() throws RemoteException {
             return null;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public boolean createBond(BluetoothDevice device, int transport) throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public boolean createBondOutOfBand(BluetoothDevice device, int transport, OobData oobData) throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public boolean cancelBondProcess(BluetoothDevice device) throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public boolean removeBond(BluetoothDevice device) throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public int getBondState(BluetoothDevice device) throws RemoteException {
             return 0;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public boolean isBondingInitiatedLocally(BluetoothDevice device) throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public void setBondingInitiatedLocally(BluetoothDevice devicei, boolean localInitiated) throws RemoteException {
         }
 
+        @Override // android.bluetooth.IBluetooth
         public long getSupportedProfiles() throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public int getConnectionState(BluetoothDevice device) throws RemoteException {
             return 0;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public String getRemoteName(BluetoothDevice device) throws RemoteException {
             return null;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public int getRemoteType(BluetoothDevice device) throws RemoteException {
             return 0;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public String getRemoteAlias(BluetoothDevice device) throws RemoteException {
             return null;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public boolean setRemoteAlias(BluetoothDevice device, String name) throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public int getRemoteClass(BluetoothDevice device) throws RemoteException {
             return 0;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public ParcelUuid[] getRemoteUuids(BluetoothDevice device) throws RemoteException {
             return null;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public boolean fetchRemoteUuids(BluetoothDevice device) throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public boolean sdpSearch(BluetoothDevice device, ParcelUuid uuid) throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public int getBatteryLevel(BluetoothDevice device) throws RemoteException {
             return 0;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public int getMaxConnectedAudioDevices() throws RemoteException {
             return 0;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public boolean isTwsPlusDevice(BluetoothDevice device) throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public String getTwsPlusPeerAddress(BluetoothDevice device) throws RemoteException {
             return null;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public boolean setPin(BluetoothDevice device, boolean accept, int len, byte[] pinCode) throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public boolean setPasskey(BluetoothDevice device, boolean accept, int len, byte[] passkey) throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public boolean setPairingConfirmation(BluetoothDevice device, boolean accept) throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public int getPhonebookAccessPermission(BluetoothDevice device) throws RemoteException {
             return 0;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public boolean setSilenceMode(BluetoothDevice device, boolean silence) throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public boolean getSilenceMode(BluetoothDevice device) throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public boolean setPhonebookAccessPermission(BluetoothDevice device, int value) throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public int getMessageAccessPermission(BluetoothDevice device) throws RemoteException {
             return 0;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public boolean setMessageAccessPermission(BluetoothDevice device, int value) throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public int getSimAccessPermission(BluetoothDevice device) throws RemoteException {
             return 0;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public boolean setSimAccessPermission(BluetoothDevice device, int value) throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public void sendConnectionStateChange(BluetoothDevice device, int profile, int state, int prevState) throws RemoteException {
         }
 
+        @Override // android.bluetooth.IBluetooth
         public void registerCallback(IBluetoothCallback callback) throws RemoteException {
         }
 
+        @Override // android.bluetooth.IBluetooth
         public void unregisterCallback(IBluetoothCallback callback) throws RemoteException {
         }
 
+        @Override // android.bluetooth.IBluetooth
         public IBluetoothSocketManager getSocketManager() throws RemoteException {
             return null;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public boolean factoryReset() throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public boolean isMultiAdvertisementSupported() throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public boolean isOffloadedFilteringSupported() throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public boolean isOffloadedScanBatchingSupported() throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public boolean isActivityAndEnergyReportingSupported() throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public boolean isLe2MPhySupported() throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public boolean isLeCodedPhySupported() throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public boolean isLeExtendedAdvertisingSupported() throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public boolean isLePeriodicAdvertisingSupported() throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public int getLeMaximumAdvertisingDataLength() throws RemoteException {
             return 0;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public BluetoothActivityEnergyInfo reportActivityInfo() throws RemoteException {
             return null;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public boolean registerMetadataListener(IBluetoothMetadataListener listener, BluetoothDevice device) throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public boolean unregisterMetadataListener(BluetoothDevice device) throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public boolean setMetadata(BluetoothDevice device, int key, byte[] value) throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public byte[] getMetadata(BluetoothDevice device, int key) throws RemoteException {
             return null;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public void requestActivityInfo(ResultReceiver result) throws RemoteException {
         }
 
+        @Override // android.bluetooth.IBluetooth
         public void onLeServiceUp() throws RemoteException {
         }
 
+        @Override // android.bluetooth.IBluetooth
         public void updateQuietModeStatus(boolean quietMode) throws RemoteException {
         }
 
+        @Override // android.bluetooth.IBluetooth
         public void onBrEdrDown() throws RemoteException {
         }
 
+        @Override // android.bluetooth.IBluetooth
         public int setSocketOpt(int type, int port, int optionName, byte[] optionVal, int optionLen) throws RemoteException {
             return 0;
         }
 
+        @Override // android.bluetooth.IBluetooth
         public int getSocketOpt(int type, int port, int optionName, byte[] optionVal) throws RemoteException {
             return 0;
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements IBluetooth {
         private static final String DESCRIPTOR = "android.bluetooth.IBluetooth";
         static final int TRANSACTION_cancelBondProcess = 29;
@@ -601,12 +690,13 @@ public interface IBluetooth extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IBluetooth)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IBluetooth)) {
+                return (IBluetooth) iin;
             }
-            return (IBluetooth) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -784,1150 +874,604 @@ public interface IBluetooth extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v17, resolved type: android.bluetooth.OobData} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v37, resolved type: android.bluetooth.BluetoothDevice} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v73, resolved type: android.os.ParcelUuid} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v89, resolved type: android.bluetooth.BluetoothDevice} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v93, resolved type: android.bluetooth.BluetoothDevice} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v97, resolved type: android.bluetooth.BluetoothDevice} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v105, resolved type: android.bluetooth.BluetoothDevice} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v140, resolved type: android.bluetooth.BluetoothDevice} */
-        /* JADX WARNING: type inference failed for: r1v0 */
-        /* JADX WARNING: type inference failed for: r1v3 */
-        /* JADX WARNING: type inference failed for: r1v13 */
-        /* JADX WARNING: type inference failed for: r1v21 */
-        /* JADX WARNING: type inference failed for: r1v25 */
-        /* JADX WARNING: type inference failed for: r1v29 */
-        /* JADX WARNING: type inference failed for: r1v33 */
-        /* JADX WARNING: type inference failed for: r1v41 */
-        /* JADX WARNING: type inference failed for: r1v45 */
-        /* JADX WARNING: type inference failed for: r1v49 */
-        /* JADX WARNING: type inference failed for: r1v53 */
-        /* JADX WARNING: type inference failed for: r1v57 */
-        /* JADX WARNING: type inference failed for: r1v61 */
-        /* JADX WARNING: type inference failed for: r1v65 */
-        /* JADX WARNING: type inference failed for: r1v69 */
-        /* JADX WARNING: type inference failed for: r1v77 */
-        /* JADX WARNING: type inference failed for: r1v81 */
-        /* JADX WARNING: type inference failed for: r1v85 */
-        /* JADX WARNING: type inference failed for: r1v101 */
-        /* JADX WARNING: type inference failed for: r1v109 */
-        /* JADX WARNING: type inference failed for: r1v113 */
-        /* JADX WARNING: type inference failed for: r1v117 */
-        /* JADX WARNING: type inference failed for: r1v121 */
-        /* JADX WARNING: type inference failed for: r1v125 */
-        /* JADX WARNING: type inference failed for: r1v129 */
-        /* JADX WARNING: type inference failed for: r1v133 */
-        /* JADX WARNING: type inference failed for: r1v137, types: [android.os.IBinder] */
-        /* JADX WARNING: type inference failed for: r1v144 */
-        /* JADX WARNING: type inference failed for: r1v148 */
-        /* JADX WARNING: type inference failed for: r1v152 */
-        /* JADX WARNING: type inference failed for: r1v156 */
-        /* JADX WARNING: type inference failed for: r1v162 */
-        /* JADX WARNING: type inference failed for: r1v163 */
-        /* JADX WARNING: type inference failed for: r1v164 */
-        /* JADX WARNING: type inference failed for: r1v165 */
-        /* JADX WARNING: type inference failed for: r1v166 */
-        /* JADX WARNING: type inference failed for: r1v167 */
-        /* JADX WARNING: type inference failed for: r1v168 */
-        /* JADX WARNING: type inference failed for: r1v169 */
-        /* JADX WARNING: type inference failed for: r1v170 */
-        /* JADX WARNING: type inference failed for: r1v171 */
-        /* JADX WARNING: type inference failed for: r1v172 */
-        /* JADX WARNING: type inference failed for: r1v173 */
-        /* JADX WARNING: type inference failed for: r1v174 */
-        /* JADX WARNING: type inference failed for: r1v175 */
-        /* JADX WARNING: type inference failed for: r1v176 */
-        /* JADX WARNING: type inference failed for: r1v177 */
-        /* JADX WARNING: type inference failed for: r1v178 */
-        /* JADX WARNING: type inference failed for: r1v179 */
-        /* JADX WARNING: type inference failed for: r1v180 */
-        /* JADX WARNING: type inference failed for: r1v181 */
-        /* JADX WARNING: type inference failed for: r1v182 */
-        /* JADX WARNING: type inference failed for: r1v183 */
-        /* JADX WARNING: type inference failed for: r1v184 */
-        /* JADX WARNING: type inference failed for: r1v185 */
-        /* JADX WARNING: type inference failed for: r1v186 */
-        /* JADX WARNING: type inference failed for: r1v187 */
-        /* JADX WARNING: type inference failed for: r1v188 */
-        /* JADX WARNING: type inference failed for: r1v189 */
-        /* JADX WARNING: type inference failed for: r1v190 */
-        /* JADX WARNING: type inference failed for: r1v191 */
-        /* JADX WARNING: type inference failed for: r1v192 */
-        /* JADX WARNING: type inference failed for: r1v193 */
-        /* JADX WARNING: type inference failed for: r1v194 */
-        /* JADX WARNING: type inference failed for: r1v195 */
-        /* JADX WARNING: type inference failed for: r1v196 */
-        /* JADX WARNING: type inference failed for: r1v197 */
-        /* JADX WARNING: type inference failed for: r1v198 */
-        /* JADX WARNING: type inference failed for: r1v199 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r18, android.os.Parcel r19, android.os.Parcel r20, int r21) throws android.os.RemoteException {
-            /*
-                r17 = this;
-                r6 = r17
-                r7 = r18
-                r8 = r19
-                r9 = r20
-                java.lang.String r10 = "android.bluetooth.IBluetooth"
-                r0 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r11 = 1
-                if (r7 == r0) goto L_0x0821
-                r0 = 0
-                r1 = 0
-                switch(r7) {
-                    case 1: goto L_0x0813;
-                    case 2: goto L_0x0805;
-                    case 3: goto L_0x07f7;
-                    case 4: goto L_0x07e9;
-                    case 5: goto L_0x07db;
-                    case 6: goto L_0x07cd;
-                    case 7: goto L_0x07bf;
-                    case 8: goto L_0x07ad;
-                    case 9: goto L_0x079f;
-                    case 10: goto L_0x0788;
-                    case 11: goto L_0x0768;
-                    case 12: goto L_0x075a;
-                    case 13: goto L_0x0748;
-                    case 14: goto L_0x073a;
-                    case 15: goto L_0x0728;
-                    case 16: goto L_0x071a;
-                    case 17: goto L_0x0704;
-                    case 18: goto L_0x06f6;
-                    case 19: goto L_0x06e4;
-                    case 20: goto L_0x06d2;
-                    case 21: goto L_0x06c4;
-                    case 22: goto L_0x06b6;
-                    case 23: goto L_0x06a8;
-                    case 24: goto L_0x069a;
-                    case 25: goto L_0x0688;
-                    case 26: goto L_0x067a;
-                    case 27: goto L_0x0656;
-                    case 28: goto L_0x0624;
-                    case 29: goto L_0x0604;
-                    case 30: goto L_0x05e4;
-                    case 31: goto L_0x05c4;
-                    case 32: goto L_0x05a4;
-                    case 33: goto L_0x0582;
-                    case 34: goto L_0x0574;
-                    case 35: goto L_0x0554;
-                    case 36: goto L_0x0534;
-                    case 37: goto L_0x0514;
-                    case 38: goto L_0x04f4;
-                    case 39: goto L_0x04d0;
-                    case 40: goto L_0x04b0;
-                    case 41: goto L_0x0490;
-                    case 42: goto L_0x0470;
-                    case 43: goto L_0x0442;
-                    case 44: goto L_0x0422;
-                    case 45: goto L_0x0414;
-                    case 46: goto L_0x03f4;
-                    case 47: goto L_0x03d4;
-                    case 48: goto L_0x03a6;
-                    case 49: goto L_0x0378;
-                    case 50: goto L_0x0352;
-                    case 51: goto L_0x0332;
-                    case 52: goto L_0x030c;
-                    case 53: goto L_0x02ec;
-                    case 54: goto L_0x02c8;
-                    case 55: goto L_0x02a8;
-                    case 56: goto L_0x0284;
-                    case 57: goto L_0x0264;
-                    case 58: goto L_0x0240;
-                    case 59: goto L_0x0218;
-                    case 60: goto L_0x0206;
-                    case 61: goto L_0x01f4;
-                    case 62: goto L_0x01df;
-                    case 63: goto L_0x01d1;
-                    case 64: goto L_0x01c3;
-                    case 65: goto L_0x01b5;
-                    case 66: goto L_0x01a7;
-                    case 67: goto L_0x0199;
-                    case 68: goto L_0x018b;
-                    case 69: goto L_0x017d;
-                    case 70: goto L_0x016f;
-                    case 71: goto L_0x0161;
-                    case 72: goto L_0x0153;
-                    case 73: goto L_0x013c;
-                    case 74: goto L_0x0116;
-                    case 75: goto L_0x00f6;
-                    case 76: goto L_0x00ce;
-                    case 77: goto L_0x00aa;
-                    case 78: goto L_0x0091;
-                    case 79: goto L_0x0087;
-                    case 80: goto L_0x0075;
-                    case 81: goto L_0x006b;
-                    case 82: goto L_0x0041;
-                    case 83: goto L_0x001a;
-                    default: goto L_0x0015;
-                }
-            L_0x0015:
-                boolean r0 = super.onTransact(r18, r19, r20, r21)
-                return r0
-            L_0x001a:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                int r1 = r19.readInt()
-                int r2 = r19.readInt()
-                int r3 = r19.readInt()
-                if (r3 >= 0) goto L_0x0031
-                r4 = 0
-                goto L_0x0033
-            L_0x0031:
-                byte[] r4 = new byte[r3]
-            L_0x0033:
-                int r5 = r6.getSocketOpt(r0, r1, r2, r4)
-                r20.writeNoException()
-                r9.writeInt(r5)
-                r9.writeByteArray(r4)
-                return r11
-            L_0x0041:
-                r8.enforceInterface(r10)
-                int r12 = r19.readInt()
-                int r13 = r19.readInt()
-                int r14 = r19.readInt()
-                byte[] r15 = r19.createByteArray()
-                int r16 = r19.readInt()
-                r0 = r17
-                r1 = r12
-                r2 = r13
-                r3 = r14
-                r4 = r15
-                r5 = r16
-                int r0 = r0.setSocketOpt(r1, r2, r3, r4, r5)
-                r20.writeNoException()
-                r9.writeInt(r0)
-                return r11
-            L_0x006b:
-                r8.enforceInterface(r10)
-                r17.onBrEdrDown()
-                r20.writeNoException()
-                return r11
-            L_0x0075:
-                r8.enforceInterface(r10)
-                int r1 = r19.readInt()
-                if (r1 == 0) goto L_0x0080
-                r0 = r11
-            L_0x0080:
-                r6.updateQuietModeStatus(r0)
-                r20.writeNoException()
-                return r11
-            L_0x0087:
-                r8.enforceInterface(r10)
-                r17.onLeServiceUp()
-                r20.writeNoException()
-                return r11
-            L_0x0091:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                if (r0 == 0) goto L_0x00a4
-                android.os.Parcelable$Creator<android.os.ResultReceiver> r0 = android.os.ResultReceiver.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                r1 = r0
-                android.os.ResultReceiver r1 = (android.os.ResultReceiver) r1
-                goto L_0x00a5
-            L_0x00a4:
-            L_0x00a5:
-                r0 = r1
-                r6.requestActivityInfo(r0)
-                return r11
-            L_0x00aa:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                if (r0 == 0) goto L_0x00bd
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothDevice> r0 = android.bluetooth.BluetoothDevice.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                r1 = r0
-                android.bluetooth.BluetoothDevice r1 = (android.bluetooth.BluetoothDevice) r1
-                goto L_0x00be
-            L_0x00bd:
-            L_0x00be:
-                r0 = r1
-                int r1 = r19.readInt()
-                byte[] r2 = r6.getMetadata(r0, r1)
-                r20.writeNoException()
-                r9.writeByteArray(r2)
-                return r11
-            L_0x00ce:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                if (r0 == 0) goto L_0x00e1
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothDevice> r0 = android.bluetooth.BluetoothDevice.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                r1 = r0
-                android.bluetooth.BluetoothDevice r1 = (android.bluetooth.BluetoothDevice) r1
-                goto L_0x00e2
-            L_0x00e1:
-            L_0x00e2:
-                r0 = r1
-                int r1 = r19.readInt()
-                byte[] r2 = r19.createByteArray()
-                boolean r3 = r6.setMetadata(r0, r1, r2)
-                r20.writeNoException()
-                r9.writeInt(r3)
-                return r11
-            L_0x00f6:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                if (r0 == 0) goto L_0x0109
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothDevice> r0 = android.bluetooth.BluetoothDevice.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                r1 = r0
-                android.bluetooth.BluetoothDevice r1 = (android.bluetooth.BluetoothDevice) r1
-                goto L_0x010a
-            L_0x0109:
-            L_0x010a:
-                r0 = r1
-                boolean r1 = r6.unregisterMetadataListener(r0)
-                r20.writeNoException()
-                r9.writeInt(r1)
-                return r11
-            L_0x0116:
-                r8.enforceInterface(r10)
-                android.os.IBinder r0 = r19.readStrongBinder()
-                android.bluetooth.IBluetoothMetadataListener r0 = android.bluetooth.IBluetoothMetadataListener.Stub.asInterface(r0)
-                int r2 = r19.readInt()
-                if (r2 == 0) goto L_0x0130
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothDevice> r1 = android.bluetooth.BluetoothDevice.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.bluetooth.BluetoothDevice r1 = (android.bluetooth.BluetoothDevice) r1
-                goto L_0x0131
-            L_0x0130:
-            L_0x0131:
-                boolean r2 = r6.registerMetadataListener(r0, r1)
-                r20.writeNoException()
-                r9.writeInt(r2)
-                return r11
-            L_0x013c:
-                r8.enforceInterface(r10)
-                android.bluetooth.BluetoothActivityEnergyInfo r1 = r17.reportActivityInfo()
-                r20.writeNoException()
-                if (r1 == 0) goto L_0x014f
-                r9.writeInt(r11)
-                r1.writeToParcel(r9, r11)
-                goto L_0x0152
-            L_0x014f:
-                r9.writeInt(r0)
-            L_0x0152:
-                return r11
-            L_0x0153:
-                r8.enforceInterface(r10)
-                int r0 = r17.getLeMaximumAdvertisingDataLength()
-                r20.writeNoException()
-                r9.writeInt(r0)
-                return r11
-            L_0x0161:
-                r8.enforceInterface(r10)
-                boolean r0 = r17.isLePeriodicAdvertisingSupported()
-                r20.writeNoException()
-                r9.writeInt(r0)
-                return r11
-            L_0x016f:
-                r8.enforceInterface(r10)
-                boolean r0 = r17.isLeExtendedAdvertisingSupported()
-                r20.writeNoException()
-                r9.writeInt(r0)
-                return r11
-            L_0x017d:
-                r8.enforceInterface(r10)
-                boolean r0 = r17.isLeCodedPhySupported()
-                r20.writeNoException()
-                r9.writeInt(r0)
-                return r11
-            L_0x018b:
-                r8.enforceInterface(r10)
-                boolean r0 = r17.isLe2MPhySupported()
-                r20.writeNoException()
-                r9.writeInt(r0)
-                return r11
-            L_0x0199:
-                r8.enforceInterface(r10)
-                boolean r0 = r17.isActivityAndEnergyReportingSupported()
-                r20.writeNoException()
-                r9.writeInt(r0)
-                return r11
-            L_0x01a7:
-                r8.enforceInterface(r10)
-                boolean r0 = r17.isOffloadedScanBatchingSupported()
-                r20.writeNoException()
-                r9.writeInt(r0)
-                return r11
-            L_0x01b5:
-                r8.enforceInterface(r10)
-                boolean r0 = r17.isOffloadedFilteringSupported()
-                r20.writeNoException()
-                r9.writeInt(r0)
-                return r11
-            L_0x01c3:
-                r8.enforceInterface(r10)
-                boolean r0 = r17.isMultiAdvertisementSupported()
-                r20.writeNoException()
-                r9.writeInt(r0)
-                return r11
-            L_0x01d1:
-                r8.enforceInterface(r10)
-                boolean r0 = r17.factoryReset()
-                r20.writeNoException()
-                r9.writeInt(r0)
-                return r11
-            L_0x01df:
-                r8.enforceInterface(r10)
-                android.bluetooth.IBluetoothSocketManager r0 = r17.getSocketManager()
-                r20.writeNoException()
-                if (r0 == 0) goto L_0x01f0
-                android.os.IBinder r1 = r0.asBinder()
-            L_0x01f0:
-                r9.writeStrongBinder(r1)
-                return r11
-            L_0x01f4:
-                r8.enforceInterface(r10)
-                android.os.IBinder r0 = r19.readStrongBinder()
-                android.bluetooth.IBluetoothCallback r0 = android.bluetooth.IBluetoothCallback.Stub.asInterface(r0)
-                r6.unregisterCallback(r0)
-                r20.writeNoException()
-                return r11
-            L_0x0206:
-                r8.enforceInterface(r10)
-                android.os.IBinder r0 = r19.readStrongBinder()
-                android.bluetooth.IBluetoothCallback r0 = android.bluetooth.IBluetoothCallback.Stub.asInterface(r0)
-                r6.registerCallback(r0)
-                r20.writeNoException()
-                return r11
-            L_0x0218:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                if (r0 == 0) goto L_0x022b
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothDevice> r0 = android.bluetooth.BluetoothDevice.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                r1 = r0
-                android.bluetooth.BluetoothDevice r1 = (android.bluetooth.BluetoothDevice) r1
-                goto L_0x022c
-            L_0x022b:
-            L_0x022c:
-                r0 = r1
-                int r1 = r19.readInt()
-                int r2 = r19.readInt()
-                int r3 = r19.readInt()
-                r6.sendConnectionStateChange(r0, r1, r2, r3)
-                r20.writeNoException()
-                return r11
-            L_0x0240:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                if (r0 == 0) goto L_0x0253
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothDevice> r0 = android.bluetooth.BluetoothDevice.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                r1 = r0
-                android.bluetooth.BluetoothDevice r1 = (android.bluetooth.BluetoothDevice) r1
-                goto L_0x0254
-            L_0x0253:
-            L_0x0254:
-                r0 = r1
-                int r1 = r19.readInt()
-                boolean r2 = r6.setSimAccessPermission(r0, r1)
-                r20.writeNoException()
-                r9.writeInt(r2)
-                return r11
-            L_0x0264:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                if (r0 == 0) goto L_0x0277
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothDevice> r0 = android.bluetooth.BluetoothDevice.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                r1 = r0
-                android.bluetooth.BluetoothDevice r1 = (android.bluetooth.BluetoothDevice) r1
-                goto L_0x0278
-            L_0x0277:
-            L_0x0278:
-                r0 = r1
-                int r1 = r6.getSimAccessPermission(r0)
-                r20.writeNoException()
-                r9.writeInt(r1)
-                return r11
-            L_0x0284:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                if (r0 == 0) goto L_0x0297
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothDevice> r0 = android.bluetooth.BluetoothDevice.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                r1 = r0
-                android.bluetooth.BluetoothDevice r1 = (android.bluetooth.BluetoothDevice) r1
-                goto L_0x0298
-            L_0x0297:
-            L_0x0298:
-                r0 = r1
-                int r1 = r19.readInt()
-                boolean r2 = r6.setMessageAccessPermission(r0, r1)
-                r20.writeNoException()
-                r9.writeInt(r2)
-                return r11
-            L_0x02a8:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                if (r0 == 0) goto L_0x02bb
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothDevice> r0 = android.bluetooth.BluetoothDevice.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                r1 = r0
-                android.bluetooth.BluetoothDevice r1 = (android.bluetooth.BluetoothDevice) r1
-                goto L_0x02bc
-            L_0x02bb:
-            L_0x02bc:
-                r0 = r1
-                int r1 = r6.getMessageAccessPermission(r0)
-                r20.writeNoException()
-                r9.writeInt(r1)
-                return r11
-            L_0x02c8:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                if (r0 == 0) goto L_0x02db
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothDevice> r0 = android.bluetooth.BluetoothDevice.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                r1 = r0
-                android.bluetooth.BluetoothDevice r1 = (android.bluetooth.BluetoothDevice) r1
-                goto L_0x02dc
-            L_0x02db:
-            L_0x02dc:
-                r0 = r1
-                int r1 = r19.readInt()
-                boolean r2 = r6.setPhonebookAccessPermission(r0, r1)
-                r20.writeNoException()
-                r9.writeInt(r2)
-                return r11
-            L_0x02ec:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                if (r0 == 0) goto L_0x02ff
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothDevice> r0 = android.bluetooth.BluetoothDevice.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                r1 = r0
-                android.bluetooth.BluetoothDevice r1 = (android.bluetooth.BluetoothDevice) r1
-                goto L_0x0300
-            L_0x02ff:
-            L_0x0300:
-                r0 = r1
-                boolean r1 = r6.getSilenceMode(r0)
-                r20.writeNoException()
-                r9.writeInt(r1)
-                return r11
-            L_0x030c:
-                r8.enforceInterface(r10)
-                int r2 = r19.readInt()
-                if (r2 == 0) goto L_0x031e
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothDevice> r1 = android.bluetooth.BluetoothDevice.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.bluetooth.BluetoothDevice r1 = (android.bluetooth.BluetoothDevice) r1
-                goto L_0x031f
-            L_0x031e:
-            L_0x031f:
-                int r2 = r19.readInt()
-                if (r2 == 0) goto L_0x0327
-                r0 = r11
-            L_0x0327:
-                boolean r2 = r6.setSilenceMode(r1, r0)
-                r20.writeNoException()
-                r9.writeInt(r2)
-                return r11
-            L_0x0332:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                if (r0 == 0) goto L_0x0345
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothDevice> r0 = android.bluetooth.BluetoothDevice.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                r1 = r0
-                android.bluetooth.BluetoothDevice r1 = (android.bluetooth.BluetoothDevice) r1
-                goto L_0x0346
-            L_0x0345:
-            L_0x0346:
-                r0 = r1
-                int r1 = r6.getPhonebookAccessPermission(r0)
-                r20.writeNoException()
-                r9.writeInt(r1)
-                return r11
-            L_0x0352:
-                r8.enforceInterface(r10)
-                int r2 = r19.readInt()
-                if (r2 == 0) goto L_0x0364
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothDevice> r1 = android.bluetooth.BluetoothDevice.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.bluetooth.BluetoothDevice r1 = (android.bluetooth.BluetoothDevice) r1
-                goto L_0x0365
-            L_0x0364:
-            L_0x0365:
-                int r2 = r19.readInt()
-                if (r2 == 0) goto L_0x036d
-                r0 = r11
-            L_0x036d:
-                boolean r2 = r6.setPairingConfirmation(r1, r0)
-                r20.writeNoException()
-                r9.writeInt(r2)
-                return r11
-            L_0x0378:
-                r8.enforceInterface(r10)
-                int r2 = r19.readInt()
-                if (r2 == 0) goto L_0x038a
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothDevice> r1 = android.bluetooth.BluetoothDevice.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.bluetooth.BluetoothDevice r1 = (android.bluetooth.BluetoothDevice) r1
-                goto L_0x038b
-            L_0x038a:
-            L_0x038b:
-                int r2 = r19.readInt()
-                if (r2 == 0) goto L_0x0393
-                r0 = r11
-            L_0x0393:
-                int r2 = r19.readInt()
-                byte[] r3 = r19.createByteArray()
-                boolean r4 = r6.setPasskey(r1, r0, r2, r3)
-                r20.writeNoException()
-                r9.writeInt(r4)
-                return r11
-            L_0x03a6:
-                r8.enforceInterface(r10)
-                int r2 = r19.readInt()
-                if (r2 == 0) goto L_0x03b8
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothDevice> r1 = android.bluetooth.BluetoothDevice.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.bluetooth.BluetoothDevice r1 = (android.bluetooth.BluetoothDevice) r1
-                goto L_0x03b9
-            L_0x03b8:
-            L_0x03b9:
-                int r2 = r19.readInt()
-                if (r2 == 0) goto L_0x03c1
-                r0 = r11
-            L_0x03c1:
-                int r2 = r19.readInt()
-                byte[] r3 = r19.createByteArray()
-                boolean r4 = r6.setPin(r1, r0, r2, r3)
-                r20.writeNoException()
-                r9.writeInt(r4)
-                return r11
-            L_0x03d4:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                if (r0 == 0) goto L_0x03e7
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothDevice> r0 = android.bluetooth.BluetoothDevice.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                r1 = r0
-                android.bluetooth.BluetoothDevice r1 = (android.bluetooth.BluetoothDevice) r1
-                goto L_0x03e8
-            L_0x03e7:
-            L_0x03e8:
-                r0 = r1
-                java.lang.String r1 = r6.getTwsPlusPeerAddress(r0)
-                r20.writeNoException()
-                r9.writeString(r1)
-                return r11
-            L_0x03f4:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                if (r0 == 0) goto L_0x0407
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothDevice> r0 = android.bluetooth.BluetoothDevice.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                r1 = r0
-                android.bluetooth.BluetoothDevice r1 = (android.bluetooth.BluetoothDevice) r1
-                goto L_0x0408
-            L_0x0407:
-            L_0x0408:
-                r0 = r1
-                boolean r1 = r6.isTwsPlusDevice(r0)
-                r20.writeNoException()
-                r9.writeInt(r1)
-                return r11
-            L_0x0414:
-                r8.enforceInterface(r10)
-                int r0 = r17.getMaxConnectedAudioDevices()
-                r20.writeNoException()
-                r9.writeInt(r0)
-                return r11
-            L_0x0422:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                if (r0 == 0) goto L_0x0435
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothDevice> r0 = android.bluetooth.BluetoothDevice.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                r1 = r0
-                android.bluetooth.BluetoothDevice r1 = (android.bluetooth.BluetoothDevice) r1
-                goto L_0x0436
-            L_0x0435:
-            L_0x0436:
-                r0 = r1
-                int r1 = r6.getBatteryLevel(r0)
-                r20.writeNoException()
-                r9.writeInt(r1)
-                return r11
-            L_0x0442:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                if (r0 == 0) goto L_0x0454
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothDevice> r0 = android.bluetooth.BluetoothDevice.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                android.bluetooth.BluetoothDevice r0 = (android.bluetooth.BluetoothDevice) r0
-                goto L_0x0455
-            L_0x0454:
-                r0 = r1
-            L_0x0455:
-                int r2 = r19.readInt()
-                if (r2 == 0) goto L_0x0464
-                android.os.Parcelable$Creator<android.os.ParcelUuid> r1 = android.os.ParcelUuid.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.os.ParcelUuid r1 = (android.os.ParcelUuid) r1
-                goto L_0x0465
-            L_0x0464:
-            L_0x0465:
-                boolean r2 = r6.sdpSearch(r0, r1)
-                r20.writeNoException()
-                r9.writeInt(r2)
-                return r11
-            L_0x0470:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                if (r0 == 0) goto L_0x0483
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothDevice> r0 = android.bluetooth.BluetoothDevice.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                r1 = r0
-                android.bluetooth.BluetoothDevice r1 = (android.bluetooth.BluetoothDevice) r1
-                goto L_0x0484
-            L_0x0483:
-            L_0x0484:
-                r0 = r1
-                boolean r1 = r6.fetchRemoteUuids(r0)
-                r20.writeNoException()
-                r9.writeInt(r1)
-                return r11
-            L_0x0490:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                if (r0 == 0) goto L_0x04a3
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothDevice> r0 = android.bluetooth.BluetoothDevice.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                r1 = r0
-                android.bluetooth.BluetoothDevice r1 = (android.bluetooth.BluetoothDevice) r1
-                goto L_0x04a4
-            L_0x04a3:
-            L_0x04a4:
-                r0 = r1
-                android.os.ParcelUuid[] r1 = r6.getRemoteUuids(r0)
-                r20.writeNoException()
-                r9.writeTypedArray(r1, r11)
-                return r11
-            L_0x04b0:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                if (r0 == 0) goto L_0x04c3
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothDevice> r0 = android.bluetooth.BluetoothDevice.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                r1 = r0
-                android.bluetooth.BluetoothDevice r1 = (android.bluetooth.BluetoothDevice) r1
-                goto L_0x04c4
-            L_0x04c3:
-            L_0x04c4:
-                r0 = r1
-                int r1 = r6.getRemoteClass(r0)
-                r20.writeNoException()
-                r9.writeInt(r1)
-                return r11
-            L_0x04d0:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                if (r0 == 0) goto L_0x04e3
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothDevice> r0 = android.bluetooth.BluetoothDevice.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                r1 = r0
-                android.bluetooth.BluetoothDevice r1 = (android.bluetooth.BluetoothDevice) r1
-                goto L_0x04e4
-            L_0x04e3:
-            L_0x04e4:
-                r0 = r1
-                java.lang.String r1 = r19.readString()
-                boolean r2 = r6.setRemoteAlias(r0, r1)
-                r20.writeNoException()
-                r9.writeInt(r2)
-                return r11
-            L_0x04f4:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                if (r0 == 0) goto L_0x0507
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothDevice> r0 = android.bluetooth.BluetoothDevice.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                r1 = r0
-                android.bluetooth.BluetoothDevice r1 = (android.bluetooth.BluetoothDevice) r1
-                goto L_0x0508
-            L_0x0507:
-            L_0x0508:
-                r0 = r1
-                java.lang.String r1 = r6.getRemoteAlias(r0)
-                r20.writeNoException()
-                r9.writeString(r1)
-                return r11
-            L_0x0514:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                if (r0 == 0) goto L_0x0527
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothDevice> r0 = android.bluetooth.BluetoothDevice.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                r1 = r0
-                android.bluetooth.BluetoothDevice r1 = (android.bluetooth.BluetoothDevice) r1
-                goto L_0x0528
-            L_0x0527:
-            L_0x0528:
-                r0 = r1
-                int r1 = r6.getRemoteType(r0)
-                r20.writeNoException()
-                r9.writeInt(r1)
-                return r11
-            L_0x0534:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                if (r0 == 0) goto L_0x0547
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothDevice> r0 = android.bluetooth.BluetoothDevice.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                r1 = r0
-                android.bluetooth.BluetoothDevice r1 = (android.bluetooth.BluetoothDevice) r1
-                goto L_0x0548
-            L_0x0547:
-            L_0x0548:
-                r0 = r1
-                java.lang.String r1 = r6.getRemoteName(r0)
-                r20.writeNoException()
-                r9.writeString(r1)
-                return r11
-            L_0x0554:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                if (r0 == 0) goto L_0x0567
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothDevice> r0 = android.bluetooth.BluetoothDevice.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                r1 = r0
-                android.bluetooth.BluetoothDevice r1 = (android.bluetooth.BluetoothDevice) r1
-                goto L_0x0568
-            L_0x0567:
-            L_0x0568:
-                r0 = r1
-                int r1 = r6.getConnectionState(r0)
-                r20.writeNoException()
-                r9.writeInt(r1)
-                return r11
-            L_0x0574:
-                r8.enforceInterface(r10)
-                long r0 = r17.getSupportedProfiles()
-                r20.writeNoException()
-                r9.writeLong(r0)
-                return r11
-            L_0x0582:
-                r8.enforceInterface(r10)
-                int r2 = r19.readInt()
-                if (r2 == 0) goto L_0x0594
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothDevice> r1 = android.bluetooth.BluetoothDevice.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.bluetooth.BluetoothDevice r1 = (android.bluetooth.BluetoothDevice) r1
-                goto L_0x0595
-            L_0x0594:
-            L_0x0595:
-                int r2 = r19.readInt()
-                if (r2 == 0) goto L_0x059d
-                r0 = r11
-            L_0x059d:
-                r6.setBondingInitiatedLocally(r1, r0)
-                r20.writeNoException()
-                return r11
-            L_0x05a4:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                if (r0 == 0) goto L_0x05b7
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothDevice> r0 = android.bluetooth.BluetoothDevice.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                r1 = r0
-                android.bluetooth.BluetoothDevice r1 = (android.bluetooth.BluetoothDevice) r1
-                goto L_0x05b8
-            L_0x05b7:
-            L_0x05b8:
-                r0 = r1
-                boolean r1 = r6.isBondingInitiatedLocally(r0)
-                r20.writeNoException()
-                r9.writeInt(r1)
-                return r11
-            L_0x05c4:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                if (r0 == 0) goto L_0x05d7
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothDevice> r0 = android.bluetooth.BluetoothDevice.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                r1 = r0
-                android.bluetooth.BluetoothDevice r1 = (android.bluetooth.BluetoothDevice) r1
-                goto L_0x05d8
-            L_0x05d7:
-            L_0x05d8:
-                r0 = r1
-                int r1 = r6.getBondState(r0)
-                r20.writeNoException()
-                r9.writeInt(r1)
-                return r11
-            L_0x05e4:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                if (r0 == 0) goto L_0x05f7
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothDevice> r0 = android.bluetooth.BluetoothDevice.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                r1 = r0
-                android.bluetooth.BluetoothDevice r1 = (android.bluetooth.BluetoothDevice) r1
-                goto L_0x05f8
-            L_0x05f7:
-            L_0x05f8:
-                r0 = r1
-                boolean r1 = r6.removeBond(r0)
-                r20.writeNoException()
-                r9.writeInt(r1)
-                return r11
-            L_0x0604:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                if (r0 == 0) goto L_0x0617
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothDevice> r0 = android.bluetooth.BluetoothDevice.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                r1 = r0
-                android.bluetooth.BluetoothDevice r1 = (android.bluetooth.BluetoothDevice) r1
-                goto L_0x0618
-            L_0x0617:
-            L_0x0618:
-                r0 = r1
-                boolean r1 = r6.cancelBondProcess(r0)
-                r20.writeNoException()
-                r9.writeInt(r1)
-                return r11
-            L_0x0624:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                if (r0 == 0) goto L_0x0636
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothDevice> r0 = android.bluetooth.BluetoothDevice.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                android.bluetooth.BluetoothDevice r0 = (android.bluetooth.BluetoothDevice) r0
-                goto L_0x0637
-            L_0x0636:
-                r0 = r1
-            L_0x0637:
-                int r2 = r19.readInt()
-                int r3 = r19.readInt()
-                if (r3 == 0) goto L_0x064a
-                android.os.Parcelable$Creator<android.bluetooth.OobData> r1 = android.bluetooth.OobData.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.bluetooth.OobData r1 = (android.bluetooth.OobData) r1
-                goto L_0x064b
-            L_0x064a:
-            L_0x064b:
-                boolean r3 = r6.createBondOutOfBand(r0, r2, r1)
-                r20.writeNoException()
-                r9.writeInt(r3)
-                return r11
-            L_0x0656:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                if (r0 == 0) goto L_0x0669
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothDevice> r0 = android.bluetooth.BluetoothDevice.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                r1 = r0
-                android.bluetooth.BluetoothDevice r1 = (android.bluetooth.BluetoothDevice) r1
-                goto L_0x066a
-            L_0x0669:
-            L_0x066a:
-                r0 = r1
-                int r1 = r19.readInt()
-                boolean r2 = r6.createBond(r0, r1)
-                r20.writeNoException()
-                r9.writeInt(r2)
-                return r11
-            L_0x067a:
-                r8.enforceInterface(r10)
-                android.bluetooth.BluetoothDevice[] r0 = r17.getBondedDevices()
-                r20.writeNoException()
-                r9.writeTypedArray(r0, r11)
-                return r11
-            L_0x0688:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                int r1 = r6.getProfileConnectionState(r0)
-                r20.writeNoException()
-                r9.writeInt(r1)
-                return r11
-            L_0x069a:
-                r8.enforceInterface(r10)
-                int r0 = r17.getAdapterConnectionState()
-                r20.writeNoException()
-                r9.writeInt(r0)
-                return r11
-            L_0x06a8:
-                r8.enforceInterface(r10)
-                long r0 = r17.getDiscoveryEndMillis()
-                r20.writeNoException()
-                r9.writeLong(r0)
-                return r11
-            L_0x06b6:
-                r8.enforceInterface(r10)
-                boolean r0 = r17.isDiscovering()
-                r20.writeNoException()
-                r9.writeInt(r0)
-                return r11
-            L_0x06c4:
-                r8.enforceInterface(r10)
-                boolean r0 = r17.cancelDiscovery()
-                r20.writeNoException()
-                r9.writeInt(r0)
-                return r11
-            L_0x06d2:
-                r8.enforceInterface(r10)
-                java.lang.String r0 = r19.readString()
-                boolean r1 = r6.startDiscovery(r0)
-                r20.writeNoException()
-                r9.writeInt(r1)
-                return r11
-            L_0x06e4:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                boolean r1 = r6.setDiscoverableTimeout(r0)
-                r20.writeNoException()
-                r9.writeInt(r1)
-                return r11
-            L_0x06f6:
-                r8.enforceInterface(r10)
-                int r0 = r17.getDiscoverableTimeout()
-                r20.writeNoException()
-                r9.writeInt(r0)
-                return r11
-            L_0x0704:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                int r1 = r19.readInt()
-                boolean r2 = r6.setScanMode(r0, r1)
-                r20.writeNoException()
-                r9.writeInt(r2)
-                return r11
-            L_0x071a:
-                r8.enforceInterface(r10)
-                int r0 = r17.getScanMode()
-                r20.writeNoException()
-                r9.writeInt(r0)
-                return r11
-            L_0x0728:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                boolean r1 = r6.setLeIoCapability(r0)
-                r20.writeNoException()
-                r9.writeInt(r1)
-                return r11
-            L_0x073a:
-                r8.enforceInterface(r10)
-                int r0 = r17.getLeIoCapability()
-                r20.writeNoException()
-                r9.writeInt(r0)
-                return r11
-            L_0x0748:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                boolean r1 = r6.setIoCapability(r0)
-                r20.writeNoException()
-                r9.writeInt(r1)
-                return r11
-            L_0x075a:
-                r8.enforceInterface(r10)
-                int r0 = r17.getIoCapability()
-                r20.writeNoException()
-                r9.writeInt(r0)
-                return r11
-            L_0x0768:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                if (r0 == 0) goto L_0x077b
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothClass> r0 = android.bluetooth.BluetoothClass.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                r1 = r0
-                android.bluetooth.BluetoothClass r1 = (android.bluetooth.BluetoothClass) r1
-                goto L_0x077c
-            L_0x077b:
-            L_0x077c:
-                r0 = r1
-                boolean r1 = r6.setBluetoothClass(r0)
-                r20.writeNoException()
-                r9.writeInt(r1)
-                return r11
-            L_0x0788:
-                r8.enforceInterface(r10)
-                android.bluetooth.BluetoothClass r1 = r17.getBluetoothClass()
-                r20.writeNoException()
-                if (r1 == 0) goto L_0x079b
-                r9.writeInt(r11)
-                r1.writeToParcel(r9, r11)
-                goto L_0x079e
-            L_0x079b:
-                r9.writeInt(r0)
-            L_0x079e:
-                return r11
-            L_0x079f:
-                r8.enforceInterface(r10)
-                java.lang.String r0 = r17.getName()
-                r20.writeNoException()
-                r9.writeString(r0)
-                return r11
-            L_0x07ad:
-                r8.enforceInterface(r10)
-                java.lang.String r0 = r19.readString()
-                boolean r1 = r6.setName(r0)
-                r20.writeNoException()
-                r9.writeInt(r1)
-                return r11
-            L_0x07bf:
-                r8.enforceInterface(r10)
-                android.os.ParcelUuid[] r0 = r17.getUuids()
-                r20.writeNoException()
-                r9.writeTypedArray(r0, r11)
-                return r11
-            L_0x07cd:
-                r8.enforceInterface(r10)
-                java.lang.String r0 = r17.getAddress()
-                r20.writeNoException()
-                r9.writeString(r0)
-                return r11
-            L_0x07db:
-                r8.enforceInterface(r10)
-                boolean r0 = r17.disable()
-                r20.writeNoException()
-                r9.writeInt(r0)
-                return r11
-            L_0x07e9:
-                r8.enforceInterface(r10)
-                boolean r0 = r17.enableNoAutoConnect()
-                r20.writeNoException()
-                r9.writeInt(r0)
-                return r11
-            L_0x07f7:
-                r8.enforceInterface(r10)
-                boolean r0 = r17.enable()
-                r20.writeNoException()
-                r9.writeInt(r0)
-                return r11
-            L_0x0805:
-                r8.enforceInterface(r10)
-                int r0 = r17.getState()
-                r20.writeNoException()
-                r9.writeInt(r0)
-                return r11
-            L_0x0813:
-                r8.enforceInterface(r10)
-                boolean r0 = r17.isEnabled()
-                r20.writeNoException()
-                r9.writeInt(r0)
-                return r11
-            L_0x0821:
-                r9.writeString(r10)
-                return r11
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.bluetooth.IBluetooth.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            BluetoothDevice _arg0;
+            boolean _arg02;
+            BluetoothDevice _arg03;
+            byte[] _arg3;
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isEnabled = isEnabled();
+                    reply.writeNoException();
+                    reply.writeInt(isEnabled ? 1 : 0);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result = getState();
+                    reply.writeNoException();
+                    reply.writeInt(_result);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean enable = enable();
+                    reply.writeNoException();
+                    reply.writeInt(enable ? 1 : 0);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean enableNoAutoConnect = enableNoAutoConnect();
+                    reply.writeNoException();
+                    reply.writeInt(enableNoAutoConnect ? 1 : 0);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean disable = disable();
+                    reply.writeNoException();
+                    reply.writeInt(disable ? 1 : 0);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _result2 = getAddress();
+                    reply.writeNoException();
+                    reply.writeString(_result2);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    ParcelUuid[] _result3 = getUuids();
+                    reply.writeNoException();
+                    reply.writeTypedArray(_result3, 1);
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean name = setName(data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(name ? 1 : 0);
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _result4 = getName();
+                    reply.writeNoException();
+                    reply.writeString(_result4);
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    BluetoothClass _result5 = getBluetoothClass();
+                    reply.writeNoException();
+                    if (_result5 != null) {
+                        reply.writeInt(1);
+                        _result5.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean bluetoothClass = setBluetoothClass(data.readInt() != 0 ? BluetoothClass.CREATOR.createFromParcel(data) : null);
+                    reply.writeNoException();
+                    reply.writeInt(bluetoothClass ? 1 : 0);
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result6 = getIoCapability();
+                    reply.writeNoException();
+                    reply.writeInt(_result6);
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean ioCapability = setIoCapability(data.readInt());
+                    reply.writeNoException();
+                    reply.writeInt(ioCapability ? 1 : 0);
+                    return true;
+                case 14:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result7 = getLeIoCapability();
+                    reply.writeNoException();
+                    reply.writeInt(_result7);
+                    return true;
+                case 15:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean leIoCapability = setLeIoCapability(data.readInt());
+                    reply.writeNoException();
+                    reply.writeInt(leIoCapability ? 1 : 0);
+                    return true;
+                case 16:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result8 = getScanMode();
+                    reply.writeNoException();
+                    reply.writeInt(_result8);
+                    return true;
+                case 17:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg04 = data.readInt();
+                    int _arg1 = data.readInt();
+                    boolean scanMode = setScanMode(_arg04, _arg1);
+                    reply.writeNoException();
+                    reply.writeInt(scanMode ? 1 : 0);
+                    return true;
+                case 18:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result9 = getDiscoverableTimeout();
+                    reply.writeNoException();
+                    reply.writeInt(_result9);
+                    return true;
+                case 19:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean discoverableTimeout = setDiscoverableTimeout(data.readInt());
+                    reply.writeNoException();
+                    reply.writeInt(discoverableTimeout ? 1 : 0);
+                    return true;
+                case 20:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean startDiscovery = startDiscovery(data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(startDiscovery ? 1 : 0);
+                    return true;
+                case 21:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean cancelDiscovery = cancelDiscovery();
+                    reply.writeNoException();
+                    reply.writeInt(cancelDiscovery ? 1 : 0);
+                    return true;
+                case 22:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isDiscovering = isDiscovering();
+                    reply.writeNoException();
+                    reply.writeInt(isDiscovering ? 1 : 0);
+                    return true;
+                case 23:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _result10 = getDiscoveryEndMillis();
+                    reply.writeNoException();
+                    reply.writeLong(_result10);
+                    return true;
+                case 24:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result11 = getAdapterConnectionState();
+                    reply.writeNoException();
+                    reply.writeInt(_result11);
+                    return true;
+                case 25:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result12 = getProfileConnectionState(data.readInt());
+                    reply.writeNoException();
+                    reply.writeInt(_result12);
+                    return true;
+                case 26:
+                    data.enforceInterface(DESCRIPTOR);
+                    BluetoothDevice[] _result13 = getBondedDevices();
+                    reply.writeNoException();
+                    reply.writeTypedArray(_result13, 1);
+                    return true;
+                case 27:
+                    data.enforceInterface(DESCRIPTOR);
+                    BluetoothDevice _arg05 = data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null;
+                    int _arg12 = data.readInt();
+                    boolean createBond = createBond(_arg05, _arg12);
+                    reply.writeNoException();
+                    reply.writeInt(createBond ? 1 : 0);
+                    return true;
+                case 28:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg0 = BluetoothDevice.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg0 = null;
+                    }
+                    int _arg13 = data.readInt();
+                    OobData _arg2 = data.readInt() != 0 ? OobData.CREATOR.createFromParcel(data) : null;
+                    boolean createBondOutOfBand = createBondOutOfBand(_arg0, _arg13, _arg2);
+                    reply.writeNoException();
+                    reply.writeInt(createBondOutOfBand ? 1 : 0);
+                    return true;
+                case 29:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean cancelBondProcess = cancelBondProcess(data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null);
+                    reply.writeNoException();
+                    reply.writeInt(cancelBondProcess ? 1 : 0);
+                    return true;
+                case 30:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean removeBond = removeBond(data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null);
+                    reply.writeNoException();
+                    reply.writeInt(removeBond ? 1 : 0);
+                    return true;
+                case 31:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result14 = getBondState(data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null);
+                    reply.writeNoException();
+                    reply.writeInt(_result14);
+                    return true;
+                case 32:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isBondingInitiatedLocally = isBondingInitiatedLocally(data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null);
+                    reply.writeNoException();
+                    reply.writeInt(isBondingInitiatedLocally ? 1 : 0);
+                    return true;
+                case 33:
+                    data.enforceInterface(DESCRIPTOR);
+                    BluetoothDevice _arg06 = data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null;
+                    _arg02 = data.readInt() != 0;
+                    setBondingInitiatedLocally(_arg06, _arg02);
+                    reply.writeNoException();
+                    return true;
+                case 34:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _result15 = getSupportedProfiles();
+                    reply.writeNoException();
+                    reply.writeLong(_result15);
+                    return true;
+                case 35:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result16 = getConnectionState(data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null);
+                    reply.writeNoException();
+                    reply.writeInt(_result16);
+                    return true;
+                case 36:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _result17 = getRemoteName(data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null);
+                    reply.writeNoException();
+                    reply.writeString(_result17);
+                    return true;
+                case 37:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result18 = getRemoteType(data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null);
+                    reply.writeNoException();
+                    reply.writeInt(_result18);
+                    return true;
+                case 38:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _result19 = getRemoteAlias(data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null);
+                    reply.writeNoException();
+                    reply.writeString(_result19);
+                    return true;
+                case 39:
+                    data.enforceInterface(DESCRIPTOR);
+                    BluetoothDevice _arg07 = data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null;
+                    String _arg14 = data.readString();
+                    boolean remoteAlias = setRemoteAlias(_arg07, _arg14);
+                    reply.writeNoException();
+                    reply.writeInt(remoteAlias ? 1 : 0);
+                    return true;
+                case 40:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result20 = getRemoteClass(data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null);
+                    reply.writeNoException();
+                    reply.writeInt(_result20);
+                    return true;
+                case 41:
+                    data.enforceInterface(DESCRIPTOR);
+                    ParcelUuid[] _result21 = getRemoteUuids(data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null);
+                    reply.writeNoException();
+                    reply.writeTypedArray(_result21, 1);
+                    return true;
+                case 42:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean fetchRemoteUuids = fetchRemoteUuids(data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null);
+                    reply.writeNoException();
+                    reply.writeInt(fetchRemoteUuids ? 1 : 0);
+                    return true;
+                case 43:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg03 = BluetoothDevice.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg03 = null;
+                    }
+                    ParcelUuid _arg15 = data.readInt() != 0 ? ParcelUuid.CREATOR.createFromParcel(data) : null;
+                    boolean sdpSearch = sdpSearch(_arg03, _arg15);
+                    reply.writeNoException();
+                    reply.writeInt(sdpSearch ? 1 : 0);
+                    return true;
+                case 44:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result22 = getBatteryLevel(data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null);
+                    reply.writeNoException();
+                    reply.writeInt(_result22);
+                    return true;
+                case 45:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result23 = getMaxConnectedAudioDevices();
+                    reply.writeNoException();
+                    reply.writeInt(_result23);
+                    return true;
+                case 46:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isTwsPlusDevice = isTwsPlusDevice(data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null);
+                    reply.writeNoException();
+                    reply.writeInt(isTwsPlusDevice ? 1 : 0);
+                    return true;
+                case 47:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _result24 = getTwsPlusPeerAddress(data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null);
+                    reply.writeNoException();
+                    reply.writeString(_result24);
+                    return true;
+                case 48:
+                    data.enforceInterface(DESCRIPTOR);
+                    BluetoothDevice _arg08 = data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null;
+                    _arg02 = data.readInt() != 0;
+                    int _arg22 = data.readInt();
+                    byte[] _arg32 = data.createByteArray();
+                    boolean pin = setPin(_arg08, _arg02, _arg22, _arg32);
+                    reply.writeNoException();
+                    reply.writeInt(pin ? 1 : 0);
+                    return true;
+                case 49:
+                    data.enforceInterface(DESCRIPTOR);
+                    BluetoothDevice _arg09 = data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null;
+                    _arg02 = data.readInt() != 0;
+                    int _arg23 = data.readInt();
+                    byte[] _arg33 = data.createByteArray();
+                    boolean passkey = setPasskey(_arg09, _arg02, _arg23, _arg33);
+                    reply.writeNoException();
+                    reply.writeInt(passkey ? 1 : 0);
+                    return true;
+                case 50:
+                    data.enforceInterface(DESCRIPTOR);
+                    BluetoothDevice _arg010 = data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null;
+                    _arg02 = data.readInt() != 0;
+                    boolean pairingConfirmation = setPairingConfirmation(_arg010, _arg02);
+                    reply.writeNoException();
+                    reply.writeInt(pairingConfirmation ? 1 : 0);
+                    return true;
+                case 51:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result25 = getPhonebookAccessPermission(data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null);
+                    reply.writeNoException();
+                    reply.writeInt(_result25);
+                    return true;
+                case 52:
+                    data.enforceInterface(DESCRIPTOR);
+                    BluetoothDevice _arg011 = data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null;
+                    _arg02 = data.readInt() != 0;
+                    boolean silenceMode = setSilenceMode(_arg011, _arg02);
+                    reply.writeNoException();
+                    reply.writeInt(silenceMode ? 1 : 0);
+                    return true;
+                case 53:
+                    data.enforceInterface(DESCRIPTOR);
+                    BluetoothDevice _arg012 = data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null;
+                    boolean silenceMode2 = getSilenceMode(_arg012);
+                    reply.writeNoException();
+                    reply.writeInt(silenceMode2 ? 1 : 0);
+                    return true;
+                case 54:
+                    data.enforceInterface(DESCRIPTOR);
+                    BluetoothDevice _arg013 = data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null;
+                    BluetoothDevice _arg014 = _arg013;
+                    int _arg16 = data.readInt();
+                    boolean phonebookAccessPermission = setPhonebookAccessPermission(_arg014, _arg16);
+                    reply.writeNoException();
+                    reply.writeInt(phonebookAccessPermission ? 1 : 0);
+                    return true;
+                case 55:
+                    data.enforceInterface(DESCRIPTOR);
+                    BluetoothDevice _arg015 = data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null;
+                    int _result26 = getMessageAccessPermission(_arg015);
+                    reply.writeNoException();
+                    reply.writeInt(_result26);
+                    return true;
+                case 56:
+                    data.enforceInterface(DESCRIPTOR);
+                    BluetoothDevice _arg016 = data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null;
+                    BluetoothDevice _arg017 = _arg016;
+                    int _arg17 = data.readInt();
+                    boolean messageAccessPermission = setMessageAccessPermission(_arg017, _arg17);
+                    reply.writeNoException();
+                    reply.writeInt(messageAccessPermission ? 1 : 0);
+                    return true;
+                case 57:
+                    data.enforceInterface(DESCRIPTOR);
+                    BluetoothDevice _arg018 = data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null;
+                    int _result27 = getSimAccessPermission(_arg018);
+                    reply.writeNoException();
+                    reply.writeInt(_result27);
+                    return true;
+                case 58:
+                    data.enforceInterface(DESCRIPTOR);
+                    BluetoothDevice _arg019 = data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null;
+                    BluetoothDevice _arg020 = _arg019;
+                    int _arg18 = data.readInt();
+                    boolean simAccessPermission = setSimAccessPermission(_arg020, _arg18);
+                    reply.writeNoException();
+                    reply.writeInt(simAccessPermission ? 1 : 0);
+                    return true;
+                case 59:
+                    data.enforceInterface(DESCRIPTOR);
+                    BluetoothDevice _arg021 = data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null;
+                    BluetoothDevice _arg022 = _arg021;
+                    int _arg19 = data.readInt();
+                    int _arg24 = data.readInt();
+                    int _arg34 = data.readInt();
+                    sendConnectionStateChange(_arg022, _arg19, _arg24, _arg34);
+                    reply.writeNoException();
+                    return true;
+                case 60:
+                    data.enforceInterface(DESCRIPTOR);
+                    registerCallback(IBluetoothCallback.Stub.asInterface(data.readStrongBinder()));
+                    reply.writeNoException();
+                    return true;
+                case 61:
+                    data.enforceInterface(DESCRIPTOR);
+                    unregisterCallback(IBluetoothCallback.Stub.asInterface(data.readStrongBinder()));
+                    reply.writeNoException();
+                    return true;
+                case 62:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBluetoothSocketManager _result28 = getSocketManager();
+                    reply.writeNoException();
+                    reply.writeStrongBinder(_result28 != null ? _result28.asBinder() : null);
+                    return true;
+                case 63:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean factoryReset = factoryReset();
+                    reply.writeNoException();
+                    reply.writeInt(factoryReset ? 1 : 0);
+                    return true;
+                case 64:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isMultiAdvertisementSupported = isMultiAdvertisementSupported();
+                    reply.writeNoException();
+                    reply.writeInt(isMultiAdvertisementSupported ? 1 : 0);
+                    return true;
+                case 65:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isOffloadedFilteringSupported = isOffloadedFilteringSupported();
+                    reply.writeNoException();
+                    reply.writeInt(isOffloadedFilteringSupported ? 1 : 0);
+                    return true;
+                case 66:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isOffloadedScanBatchingSupported = isOffloadedScanBatchingSupported();
+                    reply.writeNoException();
+                    reply.writeInt(isOffloadedScanBatchingSupported ? 1 : 0);
+                    return true;
+                case 67:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isActivityAndEnergyReportingSupported = isActivityAndEnergyReportingSupported();
+                    reply.writeNoException();
+                    reply.writeInt(isActivityAndEnergyReportingSupported ? 1 : 0);
+                    return true;
+                case 68:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isLe2MPhySupported = isLe2MPhySupported();
+                    reply.writeNoException();
+                    reply.writeInt(isLe2MPhySupported ? 1 : 0);
+                    return true;
+                case 69:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isLeCodedPhySupported = isLeCodedPhySupported();
+                    reply.writeNoException();
+                    reply.writeInt(isLeCodedPhySupported ? 1 : 0);
+                    return true;
+                case 70:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isLeExtendedAdvertisingSupported = isLeExtendedAdvertisingSupported();
+                    reply.writeNoException();
+                    reply.writeInt(isLeExtendedAdvertisingSupported ? 1 : 0);
+                    return true;
+                case 71:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isLePeriodicAdvertisingSupported = isLePeriodicAdvertisingSupported();
+                    reply.writeNoException();
+                    reply.writeInt(isLePeriodicAdvertisingSupported ? 1 : 0);
+                    return true;
+                case 72:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result29 = getLeMaximumAdvertisingDataLength();
+                    reply.writeNoException();
+                    reply.writeInt(_result29);
+                    return true;
+                case 73:
+                    data.enforceInterface(DESCRIPTOR);
+                    BluetoothActivityEnergyInfo _result30 = reportActivityInfo();
+                    reply.writeNoException();
+                    if (_result30 != null) {
+                        reply.writeInt(1);
+                        _result30.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 74:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBluetoothMetadataListener _arg023 = IBluetoothMetadataListener.Stub.asInterface(data.readStrongBinder());
+                    BluetoothDevice _arg110 = data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null;
+                    boolean registerMetadataListener = registerMetadataListener(_arg023, _arg110);
+                    reply.writeNoException();
+                    reply.writeInt(registerMetadataListener ? 1 : 0);
+                    return true;
+                case 75:
+                    data.enforceInterface(DESCRIPTOR);
+                    BluetoothDevice _arg024 = data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null;
+                    boolean unregisterMetadataListener = unregisterMetadataListener(_arg024);
+                    reply.writeNoException();
+                    reply.writeInt(unregisterMetadataListener ? 1 : 0);
+                    return true;
+                case 76:
+                    data.enforceInterface(DESCRIPTOR);
+                    BluetoothDevice _arg025 = data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null;
+                    BluetoothDevice _arg026 = _arg025;
+                    int _arg111 = data.readInt();
+                    byte[] _arg25 = data.createByteArray();
+                    boolean metadata = setMetadata(_arg026, _arg111, _arg25);
+                    reply.writeNoException();
+                    reply.writeInt(metadata ? 1 : 0);
+                    return true;
+                case 77:
+                    data.enforceInterface(DESCRIPTOR);
+                    BluetoothDevice _arg027 = data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null;
+                    BluetoothDevice _arg028 = _arg027;
+                    int _arg112 = data.readInt();
+                    byte[] _result31 = getMetadata(_arg028, _arg112);
+                    reply.writeNoException();
+                    reply.writeByteArray(_result31);
+                    return true;
+                case 78:
+                    data.enforceInterface(DESCRIPTOR);
+                    ResultReceiver _arg029 = data.readInt() != 0 ? ResultReceiver.CREATOR.createFromParcel(data) : null;
+                    requestActivityInfo(_arg029);
+                    return true;
+                case 79:
+                    data.enforceInterface(DESCRIPTOR);
+                    onLeServiceUp();
+                    reply.writeNoException();
+                    return true;
+                case 80:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg02 = data.readInt() != 0;
+                    updateQuietModeStatus(_arg02);
+                    reply.writeNoException();
+                    return true;
+                case 81:
+                    data.enforceInterface(DESCRIPTOR);
+                    onBrEdrDown();
+                    reply.writeNoException();
+                    return true;
+                case 82:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg030 = data.readInt();
+                    int _arg113 = data.readInt();
+                    int _arg26 = data.readInt();
+                    byte[] _arg35 = data.createByteArray();
+                    int _arg4 = data.readInt();
+                    int _result32 = setSocketOpt(_arg030, _arg113, _arg26, _arg35, _arg4);
+                    reply.writeNoException();
+                    reply.writeInt(_result32);
+                    return true;
+                case 83:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg031 = data.readInt();
+                    int _arg114 = data.readInt();
+                    int _arg27 = data.readInt();
+                    int _arg3_length = data.readInt();
+                    if (_arg3_length < 0) {
+                        _arg3 = null;
+                    } else {
+                        _arg3 = new byte[_arg3_length];
+                    }
+                    int _result33 = getSocketOpt(_arg031, _arg114, _arg27, _arg3);
+                    reply.writeNoException();
+                    reply.writeInt(_result33);
+                    reply.writeByteArray(_arg3);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements IBluetooth {
             public static IBluetooth sDefaultImpl;
             private IBinder mRemote;
@@ -1936,6 +1480,7 @@ public interface IBluetooth extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -1944,41 +1489,37 @@ public interface IBluetooth extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.bluetooth.IBluetooth
             public boolean isEnabled() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(1, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isEnabled();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public int getState() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(2, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getState();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1986,87 +1527,75 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public boolean enable() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(3, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().enable();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public boolean enableNoAutoConnect() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(4, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().enableNoAutoConnect();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public boolean disable() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(5, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().disable();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public String getAddress() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(6, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAddress();
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2074,18 +1603,18 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public ParcelUuid[] getUuids() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(7, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getUuids();
                     }
                     _reply.readException();
                     ParcelUuid[] _result = (ParcelUuid[]) _reply.createTypedArray(ParcelUuid.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2093,42 +1622,38 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public boolean setName(String name) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(name);
-                    boolean z = false;
-                    if (!this.mRemote.transact(8, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setName(name);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public String getName() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(9, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(9, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getName();
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2136,13 +1661,15 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public BluetoothClass getBluetoothClass() throws RemoteException {
                 BluetoothClass _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(10, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(10, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getBluetoothClass();
                     }
                     _reply.readException();
@@ -2151,37 +1678,31 @@ public interface IBluetooth extends IInterface {
                     } else {
                         _result = null;
                     }
-                    BluetoothClass _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public boolean setBluetoothClass(BluetoothClass bluetoothClass) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (bluetoothClass != null) {
                         _data.writeInt(1);
                         bluetoothClass.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(11, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(11, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setBluetoothClass(bluetoothClass);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2189,18 +1710,18 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public int getIoCapability() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(12, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(12, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getIoCapability();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2208,42 +1729,38 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public boolean setIoCapability(int capability) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(capability);
-                    boolean z = false;
-                    if (!this.mRemote.transact(13, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(13, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setIoCapability(capability);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public int getLeIoCapability() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(14, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(14, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getLeIoCapability();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2251,42 +1768,38 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public boolean setLeIoCapability(int capability) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(capability);
-                    boolean z = false;
-                    if (!this.mRemote.transact(15, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(15, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setLeIoCapability(capability);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public int getScanMode() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(16, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(16, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getScanMode();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2294,6 +1807,7 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public boolean setScanMode(int mode, int duration) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2301,36 +1815,31 @@ public interface IBluetooth extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(mode);
                     _data.writeInt(duration);
-                    boolean z = false;
-                    if (!this.mRemote.transact(17, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(17, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setScanMode(mode, duration);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public int getDiscoverableTimeout() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(18, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(18, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getDiscoverableTimeout();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2338,112 +1847,96 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public boolean setDiscoverableTimeout(int timeout) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(timeout);
-                    boolean z = false;
-                    if (!this.mRemote.transact(19, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(19, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setDiscoverableTimeout(timeout);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public boolean startDiscovery(String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPackage);
-                    boolean z = false;
-                    if (!this.mRemote.transact(20, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(20, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().startDiscovery(callingPackage);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public boolean cancelDiscovery() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(21, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(21, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().cancelDiscovery();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public boolean isDiscovering() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(22, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(22, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isDiscovering();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public long getDiscoveryEndMillis() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(23, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(23, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getDiscoveryEndMillis();
                     }
                     _reply.readException();
                     long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2451,18 +1944,18 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public int getAdapterConnectionState() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(24, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(24, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAdapterConnectionState();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2470,19 +1963,19 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public int getProfileConnectionState(int profile) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(profile);
-                    if (!this.mRemote.transact(25, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(25, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getProfileConnectionState(profile);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2490,18 +1983,18 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public BluetoothDevice[] getBondedDevices() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(26, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(26, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getBondedDevices();
                     }
                     _reply.readException();
                     BluetoothDevice[] _result = (BluetoothDevice[]) _reply.createTypedArray(BluetoothDevice.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2509,12 +2002,12 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public boolean createBond(BluetoothDevice device, int transport) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (device != null) {
                         _data.writeInt(1);
                         device.writeToParcel(_data, 0);
@@ -2522,15 +2015,12 @@ public interface IBluetooth extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(transport);
-                    if (!this.mRemote.transact(27, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(27, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().createBond(device, transport);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2538,12 +2028,12 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public boolean createBondOutOfBand(BluetoothDevice device, int transport, OobData oobData) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (device != null) {
                         _data.writeInt(1);
                         device.writeToParcel(_data, 0);
@@ -2557,15 +2047,12 @@ public interface IBluetooth extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(28, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(28, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().createBondOutOfBand(device, transport, oobData);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2573,27 +2060,24 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public boolean cancelBondProcess(BluetoothDevice device) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (device != null) {
                         _data.writeInt(1);
                         device.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(29, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(29, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().cancelBondProcess(device);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2601,27 +2085,24 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public boolean removeBond(BluetoothDevice device) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (device != null) {
                         _data.writeInt(1);
                         device.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(30, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(30, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().removeBond(device);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2629,6 +2110,7 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public int getBondState(BluetoothDevice device) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2640,13 +2122,12 @@ public interface IBluetooth extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(31, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(31, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getBondState(device);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2654,27 +2135,24 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public boolean isBondingInitiatedLocally(BluetoothDevice device) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (device != null) {
                         _data.writeInt(1);
                         device.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(32, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(32, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isBondingInitiatedLocally(device);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2682,6 +2160,7 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public void setBondingInitiatedLocally(BluetoothDevice devicei, boolean localInitiated) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2693,32 +2172,31 @@ public interface IBluetooth extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(localInitiated);
-                    if (this.mRemote.transact(33, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(localInitiated ? 1 : 0);
+                    boolean _status = this.mRemote.transact(33, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setBondingInitiatedLocally(devicei, localInitiated);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setBondingInitiatedLocally(devicei, localInitiated);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public long getSupportedProfiles() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(34, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(34, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getSupportedProfiles();
                     }
                     _reply.readException();
                     long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2726,6 +2204,7 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public int getConnectionState(BluetoothDevice device) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2737,13 +2216,12 @@ public interface IBluetooth extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(35, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(35, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getConnectionState(device);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2751,6 +2229,7 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public String getRemoteName(BluetoothDevice device) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2762,13 +2241,12 @@ public interface IBluetooth extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(36, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(36, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getRemoteName(device);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2776,6 +2254,7 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public int getRemoteType(BluetoothDevice device) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2787,13 +2266,12 @@ public interface IBluetooth extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(37, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(37, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getRemoteType(device);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2801,6 +2279,7 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public String getRemoteAlias(BluetoothDevice device) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2812,13 +2291,12 @@ public interface IBluetooth extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(38, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(38, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getRemoteAlias(device);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2826,12 +2304,12 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public boolean setRemoteAlias(BluetoothDevice device, String name) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (device != null) {
                         _data.writeInt(1);
                         device.writeToParcel(_data, 0);
@@ -2839,15 +2317,12 @@ public interface IBluetooth extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(name);
-                    if (!this.mRemote.transact(39, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(39, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setRemoteAlias(device, name);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2855,6 +2330,7 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public int getRemoteClass(BluetoothDevice device) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2866,13 +2342,12 @@ public interface IBluetooth extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(40, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(40, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getRemoteClass(device);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2880,6 +2355,7 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public ParcelUuid[] getRemoteUuids(BluetoothDevice device) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2891,13 +2367,12 @@ public interface IBluetooth extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(41, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(41, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getRemoteUuids(device);
                     }
                     _reply.readException();
                     ParcelUuid[] _result = (ParcelUuid[]) _reply.createTypedArray(ParcelUuid.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2905,27 +2380,24 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public boolean fetchRemoteUuids(BluetoothDevice device) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (device != null) {
                         _data.writeInt(1);
                         device.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(42, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(42, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().fetchRemoteUuids(device);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2933,12 +2405,12 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public boolean sdpSearch(BluetoothDevice device, ParcelUuid uuid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (device != null) {
                         _data.writeInt(1);
                         device.writeToParcel(_data, 0);
@@ -2951,15 +2423,12 @@ public interface IBluetooth extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(43, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(43, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().sdpSearch(device, uuid);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2967,6 +2436,7 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public int getBatteryLevel(BluetoothDevice device) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2978,13 +2448,12 @@ public interface IBluetooth extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(44, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(44, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getBatteryLevel(device);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2992,18 +2461,18 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public int getMaxConnectedAudioDevices() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(45, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(45, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getMaxConnectedAudioDevices();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3011,27 +2480,24 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public boolean isTwsPlusDevice(BluetoothDevice device) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (device != null) {
                         _data.writeInt(1);
                         device.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(46, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(46, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isTwsPlusDevice(device);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3039,6 +2505,7 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public String getTwsPlusPeerAddress(BluetoothDevice device) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3050,13 +2517,12 @@ public interface IBluetooth extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(47, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(47, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getTwsPlusPeerAddress(device);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3064,30 +2530,27 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public boolean setPin(BluetoothDevice device, boolean accept, int len, byte[] pinCode) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (device != null) {
                         _data.writeInt(1);
                         device.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(accept);
+                    _data.writeInt(accept ? 1 : 0);
                     _data.writeInt(len);
                     _data.writeByteArray(pinCode);
-                    if (!this.mRemote.transact(48, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(48, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setPin(device, accept, len, pinCode);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3095,30 +2558,27 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public boolean setPasskey(BluetoothDevice device, boolean accept, int len, byte[] passkey) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (device != null) {
                         _data.writeInt(1);
                         device.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(accept);
+                    _data.writeInt(accept ? 1 : 0);
                     _data.writeInt(len);
                     _data.writeByteArray(passkey);
-                    if (!this.mRemote.transact(49, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(49, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setPasskey(device, accept, len, passkey);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3126,28 +2586,25 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public boolean setPairingConfirmation(BluetoothDevice device, boolean accept) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (device != null) {
                         _data.writeInt(1);
                         device.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(accept);
-                    if (!this.mRemote.transact(50, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(accept ? 1 : 0);
+                    boolean _status = this.mRemote.transact(50, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setPairingConfirmation(device, accept);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3155,6 +2612,7 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public int getPhonebookAccessPermission(BluetoothDevice device) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3166,13 +2624,12 @@ public interface IBluetooth extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(51, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(51, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPhonebookAccessPermission(device);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3180,28 +2637,25 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public boolean setSilenceMode(BluetoothDevice device, boolean silence) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (device != null) {
                         _data.writeInt(1);
                         device.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(silence);
-                    if (!this.mRemote.transact(52, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(silence ? 1 : 0);
+                    boolean _status = this.mRemote.transact(52, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setSilenceMode(device, silence);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3209,27 +2663,24 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public boolean getSilenceMode(BluetoothDevice device) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (device != null) {
                         _data.writeInt(1);
                         device.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(53, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(53, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getSilenceMode(device);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3237,12 +2688,12 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public boolean setPhonebookAccessPermission(BluetoothDevice device, int value) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (device != null) {
                         _data.writeInt(1);
                         device.writeToParcel(_data, 0);
@@ -3250,15 +2701,12 @@ public interface IBluetooth extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(value);
-                    if (!this.mRemote.transact(54, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(54, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setPhonebookAccessPermission(device, value);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3266,6 +2714,7 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public int getMessageAccessPermission(BluetoothDevice device) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3277,13 +2726,12 @@ public interface IBluetooth extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(55, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(55, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getMessageAccessPermission(device);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3291,12 +2739,12 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public boolean setMessageAccessPermission(BluetoothDevice device, int value) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (device != null) {
                         _data.writeInt(1);
                         device.writeToParcel(_data, 0);
@@ -3304,15 +2752,12 @@ public interface IBluetooth extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(value);
-                    if (!this.mRemote.transact(56, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(56, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setMessageAccessPermission(device, value);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3320,6 +2765,7 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public int getSimAccessPermission(BluetoothDevice device) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3331,13 +2777,12 @@ public interface IBluetooth extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(57, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(57, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getSimAccessPermission(device);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3345,12 +2790,12 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public boolean setSimAccessPermission(BluetoothDevice device, int value) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (device != null) {
                         _data.writeInt(1);
                         device.writeToParcel(_data, 0);
@@ -3358,15 +2803,12 @@ public interface IBluetooth extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(value);
-                    if (!this.mRemote.transact(58, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(58, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setSimAccessPermission(device, value);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3374,6 +2816,7 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public void sendConnectionStateChange(BluetoothDevice device, int profile, int state, int prevState) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3388,69 +2831,68 @@ public interface IBluetooth extends IInterface {
                     _data.writeInt(profile);
                     _data.writeInt(state);
                     _data.writeInt(prevState);
-                    if (this.mRemote.transact(59, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(59, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().sendConnectionStateChange(device, profile, state, prevState);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().sendConnectionStateChange(device, profile, state, prevState);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public void registerCallback(IBluetoothCallback callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                    if (this.mRemote.transact(60, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(60, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().registerCallback(callback);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().registerCallback(callback);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public void unregisterCallback(IBluetoothCallback callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                    if (this.mRemote.transact(61, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(61, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().unregisterCallback(callback);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().unregisterCallback(callback);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public IBluetoothSocketManager getSocketManager() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(62, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(62, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getSocketManager();
                     }
                     _reply.readException();
                     IBluetoothSocketManager _result = IBluetoothSocketManager.Stub.asInterface(_reply.readStrongBinder());
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3458,225 +2900,189 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public boolean factoryReset() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(63, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(63, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().factoryReset();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public boolean isMultiAdvertisementSupported() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(64, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(64, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isMultiAdvertisementSupported();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public boolean isOffloadedFilteringSupported() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(65, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(65, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isOffloadedFilteringSupported();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public boolean isOffloadedScanBatchingSupported() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(66, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(66, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isOffloadedScanBatchingSupported();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public boolean isActivityAndEnergyReportingSupported() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(67, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(67, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isActivityAndEnergyReportingSupported();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public boolean isLe2MPhySupported() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(68, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(68, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isLe2MPhySupported();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public boolean isLeCodedPhySupported() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(69, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(69, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isLeCodedPhySupported();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public boolean isLeExtendedAdvertisingSupported() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(70, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(70, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isLeExtendedAdvertisingSupported();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public boolean isLePeriodicAdvertisingSupported() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(71, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(71, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isLePeriodicAdvertisingSupported();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public int getLeMaximumAdvertisingDataLength() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(72, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(72, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getLeMaximumAdvertisingDataLength();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3684,13 +3090,15 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public BluetoothActivityEnergyInfo reportActivityInfo() throws RemoteException {
                 BluetoothActivityEnergyInfo _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(73, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(73, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().reportActivityInfo();
                     }
                     _reply.readException();
@@ -3699,38 +3107,32 @@ public interface IBluetooth extends IInterface {
                     } else {
                         _result = null;
                     }
-                    BluetoothActivityEnergyInfo _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public boolean registerMetadataListener(IBluetoothMetadataListener listener, BluetoothDevice device) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(listener != null ? listener.asBinder() : null);
-                    boolean _result = true;
                     if (device != null) {
                         _data.writeInt(1);
                         device.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(74, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(74, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().registerMetadataListener(listener, device);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3738,27 +3140,24 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public boolean unregisterMetadataListener(BluetoothDevice device) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (device != null) {
                         _data.writeInt(1);
                         device.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(75, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(75, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().unregisterMetadataListener(device);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3766,12 +3165,12 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public boolean setMetadata(BluetoothDevice device, int key, byte[] value) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (device != null) {
                         _data.writeInt(1);
                         device.writeToParcel(_data, 0);
@@ -3780,15 +3179,12 @@ public interface IBluetooth extends IInterface {
                     }
                     _data.writeInt(key);
                     _data.writeByteArray(value);
-                    if (!this.mRemote.transact(76, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(76, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setMetadata(device, key, value);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3796,6 +3192,7 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public byte[] getMetadata(BluetoothDevice device, int key) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3808,13 +3205,12 @@ public interface IBluetooth extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(key);
-                    if (!this.mRemote.transact(77, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(77, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getMetadata(device, key);
                     }
                     _reply.readException();
                     byte[] _result = _reply.createByteArray();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3822,6 +3218,7 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public void requestActivityInfo(ResultReceiver result) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -3832,9 +3229,8 @@ public interface IBluetooth extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(78, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(78, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().requestActivityInfo(result);
                     }
                 } finally {
@@ -3842,61 +3238,62 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public void onLeServiceUp() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(79, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(79, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().onLeServiceUp();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().onLeServiceUp();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public void updateQuietModeStatus(boolean quietMode) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(quietMode);
-                    if (this.mRemote.transact(80, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(quietMode ? 1 : 0);
+                    boolean _status = this.mRemote.transact(80, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().updateQuietModeStatus(quietMode);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().updateQuietModeStatus(quietMode);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public void onBrEdrDown() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(81, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(81, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().onBrEdrDown();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().onBrEdrDown();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public int setSocketOpt(int type, int port, int optionName, byte[] optionVal, int optionLen) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3907,13 +3304,12 @@ public interface IBluetooth extends IInterface {
                     _data.writeInt(optionName);
                     _data.writeByteArray(optionVal);
                     _data.writeInt(optionLen);
-                    if (!this.mRemote.transact(82, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(82, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setSocketOpt(type, port, optionName, optionVal, optionLen);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3921,6 +3317,7 @@ public interface IBluetooth extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetooth
             public int getSocketOpt(int type, int port, int optionName, byte[] optionVal) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3934,14 +3331,13 @@ public interface IBluetooth extends IInterface {
                     } else {
                         _data.writeInt(optionVal.length);
                     }
-                    if (!this.mRemote.transact(83, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(83, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getSocketOpt(type, port, optionName, optionVal);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
                     _reply.readByteArray(optionVal);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3951,11 +3347,11 @@ public interface IBluetooth extends IInterface {
         }
 
         public static boolean setDefaultImpl(IBluetooth impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IBluetooth getDefaultImpl() {

@@ -2,31 +2,32 @@ package android.app;
 
 import android.app.AlertDialog;
 import android.app.Notification;
-import android.app.PendingIntent;
-import android.app.RecoverableSecurityException;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
-import com.android.internal.R;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import com.android.internal.C3132R;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public final class RecoverableSecurityException extends SecurityException implements Parcelable {
-    public static final Parcelable.Creator<RecoverableSecurityException> CREATOR = new Parcelable.Creator<RecoverableSecurityException>() {
+    public static final Parcelable.Creator<RecoverableSecurityException> CREATOR = new Parcelable.Creator<RecoverableSecurityException>() { // from class: android.app.RecoverableSecurityException.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RecoverableSecurityException createFromParcel(Parcel source) {
             return new RecoverableSecurityException(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RecoverableSecurityException[] newArray(int size) {
             return new RecoverableSecurityException[size];
         }
     };
     private static final String TAG = "RecoverableSecurityException";
-    /* access modifiers changed from: private */
-    public final RemoteAction mUserAction;
-    /* access modifiers changed from: private */
-    public final CharSequence mUserMessage;
+    private final RemoteAction mUserAction;
+    private final CharSequence mUserMessage;
 
     public RecoverableSecurityException(Parcel in) {
         this(new SecurityException(in.readString()), in.readCharSequence(), RemoteAction.CREATOR.createFromParcel(in));
@@ -47,7 +48,9 @@ public final class RecoverableSecurityException extends SecurityException implem
     }
 
     public void showAsNotification(Context context, String channelId) {
-        ((NotificationManager) context.getSystemService(NotificationManager.class)).notify(TAG, this.mUserAction.getActionIntent().getCreatorUid(), new Notification.Builder(context, channelId).setSmallIcon((int) R.drawable.ic_print_error).setContentTitle(this.mUserAction.getTitle()).setContentText(this.mUserMessage).setContentIntent(this.mUserAction.getActionIntent()).setCategory("err").build());
+        NotificationManager nm = (NotificationManager) context.getSystemService(NotificationManager.class);
+        Notification.Builder builder = new Notification.Builder(context, channelId).setSmallIcon(C3132R.C3133drawable.ic_print_error).setContentTitle(this.mUserAction.getTitle()).setContentText(this.mUserMessage).setContentIntent(this.mUserAction.getActionIntent()).setCategory("err");
+        nm.notify(TAG, this.mUserAction.getActionIntent().getCreatorUid(), builder.build());
     }
 
     public void showAsDialog(Activity activity) {
@@ -62,32 +65,30 @@ public final class RecoverableSecurityException extends SecurityException implem
         if (old != null) {
             ft.remove(old);
         }
-        ft.add((Fragment) dialog, tag);
+        ft.add(dialog, tag);
         ft.commitAllowingStateLoss();
     }
 
+    /* loaded from: classes.dex */
     public static class LocalDialog extends DialogFragment {
+        @Override // android.app.DialogFragment
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            RecoverableSecurityException e = (RecoverableSecurityException) getArguments().getParcelable(RecoverableSecurityException.TAG);
-            return new AlertDialog.Builder(getActivity()).setMessage(e.mUserMessage).setPositiveButton(e.mUserAction.getTitle(), (DialogInterface.OnClickListener) new DialogInterface.OnClickListener() {
+            final RecoverableSecurityException e = (RecoverableSecurityException) getArguments().getParcelable(RecoverableSecurityException.TAG);
+            return new AlertDialog.Builder(getActivity()).setMessage(e.mUserMessage).setPositiveButton(e.mUserAction.getTitle(), new DialogInterface.OnClickListener() { // from class: android.app.-$$Lambda$RecoverableSecurityException$LocalDialog$r8YNkpjWIZllJsQ_8eA0q51FU5Q
+                @Override // android.content.DialogInterface.OnClickListener
                 public final void onClick(DialogInterface dialogInterface, int i) {
-                    RecoverableSecurityException.LocalDialog.lambda$onCreateDialog$0(RecoverableSecurityException.this, dialogInterface, i);
+                    RecoverableSecurityException.this.mUserAction.getActionIntent().send();
                 }
             }).setNegativeButton(17039360, (DialogInterface.OnClickListener) null).create();
         }
-
-        static /* synthetic */ void lambda$onCreateDialog$0(RecoverableSecurityException e, DialogInterface dialog, int which) {
-            try {
-                e.mUserAction.getActionIntent().send();
-            } catch (PendingIntent.CanceledException e2) {
-            }
-        }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(getMessage());
         dest.writeCharSequence(this.mUserMessage);

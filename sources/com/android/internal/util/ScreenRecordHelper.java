@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 
+/* loaded from: classes4.dex */
 public class ScreenRecordHelper {
     private static final String SYSUI_PACKAGE = "com.android.systemui";
     private static final String SYSUI_SCREENRECORD_LAUNCHER = "com.android.systemui.screenrecord.ScreenRecordDialog";

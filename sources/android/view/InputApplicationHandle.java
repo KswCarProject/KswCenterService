@@ -1,7 +1,8 @@
 package android.view;
 
-import android.os.IBinder;
+import android.p007os.IBinder;
 
+/* loaded from: classes4.dex */
 public final class InputApplicationHandle {
     public long dispatchingTimeoutNanos;
     public String name;
@@ -10,12 +11,11 @@ public final class InputApplicationHandle {
 
     private native void nativeDispose();
 
-    public InputApplicationHandle(IBinder token2) {
-        this.token = token2;
+    public InputApplicationHandle(IBinder token) {
+        this.token = token;
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         try {
             nativeDispose();
         } finally {

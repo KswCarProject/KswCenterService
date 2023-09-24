@@ -1,11 +1,14 @@
 package android.hardware.usb;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.util.Preconditions;
 
+/* loaded from: classes.dex */
 public class UsbInterface implements Parcelable {
-    public static final Parcelable.Creator<UsbInterface> CREATOR = new Parcelable.Creator<UsbInterface>() {
+    public static final Parcelable.Creator<UsbInterface> CREATOR = new Parcelable.Creator<UsbInterface>() { // from class: android.hardware.usb.UsbInterface.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public UsbInterface createFromParcel(Parcel in) {
             int id = in.readInt();
             int alternateSetting = in.readInt();
@@ -19,6 +22,8 @@ public class UsbInterface implements Parcelable {
             return intf;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public UsbInterface[] newArray(int size) {
             return new UsbInterface[size];
         }
@@ -78,18 +83,20 @@ public class UsbInterface implements Parcelable {
 
     public String toString() {
         StringBuilder builder = new StringBuilder("UsbInterface[mId=" + this.mId + ",mAlternateSetting=" + this.mAlternateSetting + ",mName=" + this.mName + ",mClass=" + this.mClass + ",mSubclass=" + this.mSubclass + ",mProtocol=" + this.mProtocol + ",mEndpoints=[");
-        for (Parcelable obj : this.mEndpoints) {
+        for (int i = 0; i < this.mEndpoints.length; i++) {
             builder.append("\n");
-            builder.append(obj.toString());
+            builder.append(this.mEndpoints[i].toString());
         }
         builder.append("]");
         return builder.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeInt(this.mId);
         parcel.writeInt(this.mAlternateSetting);

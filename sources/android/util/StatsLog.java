@@ -3,10 +3,11 @@ package android.util;
 import android.Manifest;
 import android.annotation.SystemApi;
 import android.content.Context;
-import android.os.IStatsManager;
-import android.os.RemoteException;
-import android.os.ServiceManager;
+import android.p007os.IStatsManager;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
 
+/* loaded from: classes4.dex */
 public final class StatsLog extends StatsLogInternal {
     private static final boolean DEBUG = false;
     private static final String TAG = "StatsLog";
@@ -22,15 +23,17 @@ public final class StatsLog extends StatsLogInternal {
     public static boolean logStart(int label) {
         synchronized (sLogLock) {
             try {
-                IStatsManager service = getIStatsManagerLocked();
-                if (service == null) {
+                try {
+                    IStatsManager service = getIStatsManagerLocked();
+                    if (service == null) {
+                        return false;
+                    }
+                    service.sendAppBreadcrumbAtom(label, 3);
+                    return true;
+                } catch (RemoteException e) {
+                    sService = null;
                     return false;
                 }
-                service.sendAppBreadcrumbAtom(label, 3);
-                return true;
-            } catch (RemoteException e) {
-                sService = null;
-                return false;
             } catch (Throwable th) {
                 throw th;
             }
@@ -40,15 +43,17 @@ public final class StatsLog extends StatsLogInternal {
     public static boolean logStop(int label) {
         synchronized (sLogLock) {
             try {
-                IStatsManager service = getIStatsManagerLocked();
-                if (service == null) {
+                try {
+                    IStatsManager service = getIStatsManagerLocked();
+                    if (service == null) {
+                        return false;
+                    }
+                    service.sendAppBreadcrumbAtom(label, 2);
+                    return true;
+                } catch (RemoteException e) {
+                    sService = null;
                     return false;
                 }
-                service.sendAppBreadcrumbAtom(label, 2);
-                return true;
-            } catch (RemoteException e) {
-                sService = null;
-                return false;
             } catch (Throwable th) {
                 throw th;
             }
@@ -58,15 +63,17 @@ public final class StatsLog extends StatsLogInternal {
     public static boolean logEvent(int label) {
         synchronized (sLogLock) {
             try {
-                IStatsManager service = getIStatsManagerLocked();
-                if (service == null) {
+                try {
+                    IStatsManager service = getIStatsManagerLocked();
+                    if (service == null) {
+                        return false;
+                    }
+                    service.sendAppBreadcrumbAtom(label, 1);
+                    return true;
+                } catch (RemoteException e) {
+                    sService = null;
                     return false;
                 }
-                service.sendAppBreadcrumbAtom(label, 1);
-                return true;
-            } catch (RemoteException e) {
-                sService = null;
-                return false;
             } catch (Throwable th) {
                 throw th;
             }
@@ -76,15 +83,17 @@ public final class StatsLog extends StatsLogInternal {
     public static boolean logBinaryPushStateChanged(String trainName, long trainVersionCode, int options, int state, long[] experimentIds) {
         synchronized (sLogLock) {
             try {
-                IStatsManager service = getIStatsManagerLocked();
-                if (service == null) {
+                try {
+                    IStatsManager service = getIStatsManagerLocked();
+                    if (service == null) {
+                        return false;
+                    }
+                    service.sendBinaryPushStateChangedAtom(trainName, trainVersionCode, options, state, experimentIds);
+                    return true;
+                } catch (RemoteException e) {
+                    sService = null;
                     return false;
                 }
-                service.sendBinaryPushStateChangedAtom(trainName, trainVersionCode, options, state, experimentIds);
-                return true;
-            } catch (RemoteException e) {
-                sService = null;
-                return false;
             } catch (Throwable th) {
                 throw th;
             }
@@ -94,15 +103,17 @@ public final class StatsLog extends StatsLogInternal {
     public static boolean logWatchdogRollbackOccurred(int rollbackType, String packageName, long packageVersionCode) {
         synchronized (sLogLock) {
             try {
-                IStatsManager service = getIStatsManagerLocked();
-                if (service == null) {
+                try {
+                    IStatsManager service = getIStatsManagerLocked();
+                    if (service == null) {
+                        return false;
+                    }
+                    service.sendWatchdogRollbackOccurredAtom(rollbackType, packageName, packageVersionCode);
+                    return true;
+                } catch (RemoteException e) {
+                    sService = null;
                     return false;
                 }
-                service.sendWatchdogRollbackOccurredAtom(rollbackType, packageName, packageVersionCode);
-                return true;
-            } catch (RemoteException e) {
-                sService = null;
-                return false;
             } catch (Throwable th) {
                 throw th;
             }
@@ -119,17 +130,17 @@ public final class StatsLog extends StatsLogInternal {
 
     public static void write(int id, Object... params) {
         if (id == 121) {
-            write(id, params[0].intValue(), params[1].intValue(), params[2].intValue(), params[3], params[4], params[5]);
+            write(id, ((Integer) params[0]).intValue(), ((Integer) params[1]).intValue(), ((Integer) params[2]).intValue(), (byte[]) params[3], (byte[]) params[4], (byte[]) params[5]);
         } else if (id == 170) {
-            write(id, params[0].longValue(), params[1].intValue(), params[2], params[3], params[4].booleanValue(), params[5].intValue());
+            write(id, ((Long) params[0]).longValue(), ((Integer) params[1]).intValue(), (String) params[2], (String) params[3], ((Boolean) params[4]).booleanValue(), ((Integer) params[5]).intValue());
         }
     }
 
     private static void enforceDumpCallingPermission(Context context) {
-        context.enforceCallingPermission(Manifest.permission.DUMP, "Need DUMP permission.");
+        context.enforceCallingPermission(Manifest.C0000permission.DUMP, "Need DUMP permission.");
     }
 
     private static void enforcesageStatsCallingPermission(Context context) {
-        context.enforceCallingPermission(Manifest.permission.PACKAGE_USAGE_STATS, "Need PACKAGE_USAGE_STATS permission.");
+        context.enforceCallingPermission(Manifest.C0000permission.PACKAGE_USAGE_STATS, "Need PACKAGE_USAGE_STATS permission.");
     }
 }

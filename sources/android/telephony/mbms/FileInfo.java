@@ -2,16 +2,21 @@ package android.telephony.mbms;
 
 import android.annotation.SystemApi;
 import android.net.Uri;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.Objects;
 
+/* loaded from: classes4.dex */
 public final class FileInfo implements Parcelable {
-    public static final Parcelable.Creator<FileInfo> CREATOR = new Parcelable.Creator<FileInfo>() {
+    public static final Parcelable.Creator<FileInfo> CREATOR = new Parcelable.Creator<FileInfo>() { // from class: android.telephony.mbms.FileInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public FileInfo createFromParcel(Parcel source) {
             return new FileInfo(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public FileInfo[] newArray(int size) {
             return new FileInfo[size];
         }
@@ -20,21 +25,23 @@ public final class FileInfo implements Parcelable {
     private final Uri uri;
 
     @SystemApi
-    public FileInfo(Uri uri2, String mimeType2) {
-        this.uri = uri2;
-        this.mimeType = mimeType2;
+    public FileInfo(Uri uri, String mimeType) {
+        this.uri = uri;
+        this.mimeType = mimeType;
     }
 
     private FileInfo(Parcel in) {
-        this.uri = (Uri) in.readParcelable((ClassLoader) null);
+        this.uri = (Uri) in.readParcelable(null);
         this.mimeType = in.readString();
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(this.uri, flags);
         dest.writeString(this.mimeType);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -55,13 +62,13 @@ public final class FileInfo implements Parcelable {
             return false;
         }
         FileInfo fileInfo = (FileInfo) o;
-        if (!Objects.equals(this.uri, fileInfo.uri) || !Objects.equals(this.mimeType, fileInfo.mimeType)) {
-            return false;
+        if (Objects.equals(this.uri, fileInfo.uri) && Objects.equals(this.mimeType, fileInfo.mimeType)) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{this.uri, this.mimeType});
+        return Objects.hash(this.uri, this.mimeType);
     }
 }

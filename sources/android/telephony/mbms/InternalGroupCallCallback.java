@@ -1,12 +1,12 @@
 package android.telephony.mbms;
 
-import android.os.Binder;
+import android.p007os.Binder;
 import android.telephony.mbms.IGroupCallCallback;
 import java.util.concurrent.Executor;
 
+/* loaded from: classes4.dex */
 public class InternalGroupCallCallback extends IGroupCallCallback.Stub {
-    /* access modifiers changed from: private */
-    public final GroupCallCallback mAppCallback;
+    private final GroupCallCallback mAppCallback;
     private final Executor mExecutor;
     private volatile boolean mIsStopped = false;
 
@@ -15,48 +15,57 @@ public class InternalGroupCallCallback extends IGroupCallCallback.Stub {
         this.mExecutor = executor;
     }
 
+    @Override // android.telephony.mbms.IGroupCallCallback
     public void onError(final int errorCode, final String message) {
-        if (!this.mIsStopped) {
-            long token = Binder.clearCallingIdentity();
-            try {
-                this.mExecutor.execute(new Runnable() {
-                    public void run() {
-                        InternalGroupCallCallback.this.mAppCallback.onError(errorCode, message);
-                    }
-                });
-            } finally {
-                Binder.restoreCallingIdentity(token);
-            }
+        if (this.mIsStopped) {
+            return;
+        }
+        long token = Binder.clearCallingIdentity();
+        try {
+            this.mExecutor.execute(new Runnable() { // from class: android.telephony.mbms.InternalGroupCallCallback.1
+                @Override // java.lang.Runnable
+                public void run() {
+                    InternalGroupCallCallback.this.mAppCallback.onError(errorCode, message);
+                }
+            });
+        } finally {
+            Binder.restoreCallingIdentity(token);
         }
     }
 
+    @Override // android.telephony.mbms.IGroupCallCallback
     public void onGroupCallStateChanged(final int state, final int reason) {
-        if (!this.mIsStopped) {
-            long token = Binder.clearCallingIdentity();
-            try {
-                this.mExecutor.execute(new Runnable() {
-                    public void run() {
-                        InternalGroupCallCallback.this.mAppCallback.onGroupCallStateChanged(state, reason);
-                    }
-                });
-            } finally {
-                Binder.restoreCallingIdentity(token);
-            }
+        if (this.mIsStopped) {
+            return;
+        }
+        long token = Binder.clearCallingIdentity();
+        try {
+            this.mExecutor.execute(new Runnable() { // from class: android.telephony.mbms.InternalGroupCallCallback.2
+                @Override // java.lang.Runnable
+                public void run() {
+                    InternalGroupCallCallback.this.mAppCallback.onGroupCallStateChanged(state, reason);
+                }
+            });
+        } finally {
+            Binder.restoreCallingIdentity(token);
         }
     }
 
+    @Override // android.telephony.mbms.IGroupCallCallback
     public void onBroadcastSignalStrengthUpdated(final int signalStrength) {
-        if (!this.mIsStopped) {
-            long token = Binder.clearCallingIdentity();
-            try {
-                this.mExecutor.execute(new Runnable() {
-                    public void run() {
-                        InternalGroupCallCallback.this.mAppCallback.onBroadcastSignalStrengthUpdated(signalStrength);
-                    }
-                });
-            } finally {
-                Binder.restoreCallingIdentity(token);
-            }
+        if (this.mIsStopped) {
+            return;
+        }
+        long token = Binder.clearCallingIdentity();
+        try {
+            this.mExecutor.execute(new Runnable() { // from class: android.telephony.mbms.InternalGroupCallCallback.3
+                @Override // java.lang.Runnable
+                public void run() {
+                    InternalGroupCallCallback.this.mAppCallback.onBroadcastSignalStrengthUpdated(signalStrength);
+                }
+            });
+        } finally {
+            Binder.restoreCallingIdentity(token);
         }
     }
 

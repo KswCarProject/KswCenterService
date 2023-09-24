@@ -1,16 +1,21 @@
 package android.drm;
 
+/* loaded from: classes.dex */
 public class ProcessedData {
-    private String mAccountId = "_NO_USER";
+    private String mAccountId;
     private final byte[] mData;
-    private String mSubscriptionId = "";
+    private String mSubscriptionId;
 
     ProcessedData(byte[] data, String accountId) {
+        this.mAccountId = "_NO_USER";
+        this.mSubscriptionId = "";
         this.mData = data;
         this.mAccountId = accountId;
     }
 
     ProcessedData(byte[] data, String accountId, String subscriptionId) {
+        this.mAccountId = "_NO_USER";
+        this.mSubscriptionId = "";
         this.mData = data;
         this.mAccountId = accountId;
         this.mSubscriptionId = subscriptionId;

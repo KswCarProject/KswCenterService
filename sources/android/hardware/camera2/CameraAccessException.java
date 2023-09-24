@@ -4,6 +4,7 @@ import android.util.AndroidException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes.dex */
 public class CameraAccessException extends AndroidException {
     public static final int CAMERA_DEPRECATED_HAL = 1000;
     public static final int CAMERA_DISABLED = 1;
@@ -15,6 +16,7 @@ public class CameraAccessException extends AndroidException {
     private final int mReason;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface AccessError {
     }
 
@@ -60,26 +62,27 @@ public class CameraAccessException extends AndroidException {
     }
 
     private static String getCombinedMessage(int problem, String message) {
-        return String.format("%s (%d): %s", new Object[]{getProblemString(problem), Integer.valueOf(problem), message});
+        String problemString = getProblemString(problem);
+        return String.format("%s (%d): %s", problemString, Integer.valueOf(problem), message);
     }
 
     private static String getProblemString(int problem) {
-        if (problem == 1000) {
-            return "CAMERA_DEPRECATED_HAL";
+        if (problem != 1000) {
+            switch (problem) {
+                case 1:
+                    return "CAMERA_DISABLED";
+                case 2:
+                    return "CAMERA_DISCONNECTED";
+                case 3:
+                    return "CAMERA_ERROR";
+                case 4:
+                    return "CAMERA_IN_USE";
+                case 5:
+                    return "MAX_CAMERAS_IN_USE";
+                default:
+                    return "<UNKNOWN ERROR>";
+            }
         }
-        switch (problem) {
-            case 1:
-                return "CAMERA_DISABLED";
-            case 2:
-                return "CAMERA_DISCONNECTED";
-            case 3:
-                return "CAMERA_ERROR";
-            case 4:
-                return "CAMERA_IN_USE";
-            case 5:
-                return "MAX_CAMERAS_IN_USE";
-            default:
-                return "<UNKNOWN ERROR>";
-        }
+        return "CAMERA_DEPRECATED_HAL";
     }
 }

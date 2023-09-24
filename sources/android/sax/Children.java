@@ -1,13 +1,13 @@
 package android.sax;
 
+/* loaded from: classes3.dex */
 class Children {
     Child[] children = new Child[16];
 
     Children() {
     }
 
-    /* access modifiers changed from: package-private */
-    public Element getOrCreate(Element parent, String uri, String localName) {
+    Element getOrCreate(Element parent, String uri, String localName) {
         Child previous;
         int hash = (uri.hashCode() * 31) + localName.hashCode();
         int index = hash & 15;
@@ -29,10 +29,10 @@ class Children {
         return current3;
     }
 
-    /* access modifiers changed from: package-private */
-    public Element get(String uri, String localName) {
+    Element get(String uri, String localName) {
         int hash = (uri.hashCode() * 31) + localName.hashCode();
-        Child current = this.children[hash & 15];
+        int index = hash & 15;
+        Child current = this.children[index];
         if (current == null) {
             return null;
         }
@@ -45,13 +45,14 @@ class Children {
         return null;
     }
 
+    /* loaded from: classes3.dex */
     static class Child extends Element {
         final int hash;
         Child next;
 
-        Child(Element parent, String uri, String localName, int depth, int hash2) {
+        Child(Element parent, String uri, String localName, int depth, int hash) {
             super(parent, uri, localName, depth);
-            this.hash = hash2;
+            this.hash = hash;
         }
     }
 }

@@ -1,27 +1,30 @@
 package android.nfc.cardemulation;
 
 import android.content.ComponentName;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.content.pm.ServiceInfo;
+import android.content.p002pm.PackageManager;
+import android.content.p002pm.ResolveInfo;
+import android.content.p002pm.ServiceInfo;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.content.res.XmlResourceParser;
 import android.graphics.drawable.Drawable;
 import android.net.wifi.WifiEnterpriseConfig;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Xml;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.io.PrintWriter;
 import org.xmlpull.v1.XmlPullParserException;
 
+/* loaded from: classes3.dex */
 public final class NfcFServiceInfo implements Parcelable {
-    public static final Parcelable.Creator<NfcFServiceInfo> CREATOR = new Parcelable.Creator<NfcFServiceInfo>() {
+    public static final Parcelable.Creator<NfcFServiceInfo> CREATOR = new Parcelable.Creator<NfcFServiceInfo>() { // from class: android.nfc.cardemulation.NfcFServiceInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NfcFServiceInfo createFromParcel(Parcel source) {
             ResolveInfo info = ResolveInfo.CREATOR.createFromParcel(source);
             String description = source.readString();
@@ -36,9 +39,14 @@ public final class NfcFServiceInfo implements Parcelable {
             if (source.readInt() != 0) {
                 dynamicNfcid2 = source.readString();
             }
-            return new NfcFServiceInfo(info, description, systemCode, dynamicSystemCode2, nfcid2, dynamicNfcid2, source.readInt(), source.readString());
+            int uid = source.readInt();
+            String t3tPmm = source.readString();
+            NfcFServiceInfo service = new NfcFServiceInfo(info, description, systemCode, dynamicSystemCode2, nfcid2, dynamicNfcid2, uid, t3tPmm);
+            return service;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NfcFServiceInfo[] newArray(int size) {
             return new NfcFServiceInfo[size];
         }
@@ -65,109 +73,100 @@ public final class NfcFServiceInfo implements Parcelable {
         this.mT3tPmm = t3tPmm;
     }
 
+    /* JADX WARN: Type inference failed for: r0v0, types: [android.content.res.XmlResourceParser, java.lang.String] */
     public NfcFServiceInfo(PackageManager pm, ResolveInfo info) throws XmlPullParserException, IOException {
         int i;
         int depth;
         boolean z;
-        PackageManager packageManager = pm;
-        ResolveInfo resolveInfo = info;
-        ServiceInfo si = resolveInfo.serviceInfo;
-        XmlResourceParser parser = null;
+        ServiceInfo si = info.serviceInfo;
+        XmlResourceParser parser = 0;
         try {
-            parser = si.loadXmlMetaData(packageManager, HostNfcFService.SERVICE_META_DATA);
-            if (parser != null) {
+            try {
+                parser = si.loadXmlMetaData(pm, HostNfcFService.SERVICE_META_DATA);
+                if (parser == null) {
+                    throw new XmlPullParserException("No android.nfc.cardemulation.host_nfcf_service meta-data");
+                }
                 int eventType = parser.getEventType();
                 while (true) {
                     i = 1;
-                    if (eventType != 2 && eventType != 1) {
-                        eventType = parser.next();
+                    if (eventType == 2 || eventType == 1) {
+                        break;
                     }
+                    eventType = parser.next();
                 }
-                if ("host-nfcf-service".equals(parser.getName())) {
-                    Resources res = packageManager.getResourcesForApplication(si.applicationInfo);
-                    AttributeSet attrs = Xml.asAttributeSet(parser);
-                    TypedArray sa = res.obtainAttributes(attrs, R.styleable.HostNfcFService);
-                    this.mService = resolveInfo;
-                    this.mDescription = sa.getString(0);
-                    this.mDynamicSystemCode = null;
-                    this.mDynamicNfcid2 = null;
-                    sa.recycle();
-                    String systemCode = null;
-                    String nfcid2 = null;
-                    String t3tPmm = null;
-                    int depth2 = parser.getDepth();
-                    while (true) {
-                        int depth3 = depth2;
-                        int next = parser.next();
-                        int eventType2 = next;
-                        if (next == 3) {
-                            depth = depth3;
-                            if (parser.getDepth() <= depth) {
-                                break;
-                            }
-                        } else {
-                            depth = depth3;
-                        }
-                        if (eventType2 == i) {
+                if (!"host-nfcf-service".equals(parser.getName())) {
+                    throw new XmlPullParserException("Meta-data does not start with <host-nfcf-service> tag");
+                }
+                Resources res = pm.getResourcesForApplication(si.applicationInfo);
+                AttributeSet attrs = Xml.asAttributeSet(parser);
+                TypedArray sa = res.obtainAttributes(attrs, C3132R.styleable.HostNfcFService);
+                this.mService = info;
+                this.mDescription = sa.getString(0);
+                this.mDynamicSystemCode = parser;
+                this.mDynamicNfcid2 = parser;
+                sa.recycle();
+                String systemCode = null;
+                String nfcid2 = null;
+                String t3tPmm = null;
+                int depth2 = parser.getDepth();
+                while (true) {
+                    int depth3 = depth2;
+                    int eventType2 = parser.next();
+                    if (eventType2 == 3) {
+                        depth = depth3;
+                        if (parser.getDepth() <= depth) {
                             break;
                         }
-                        String tagName = parser.getName();
-                        if (eventType2 == 2 && "system-code-filter".equals(tagName) && systemCode == null) {
-                            TypedArray a = res.obtainAttributes(attrs, R.styleable.SystemCodeFilter);
-                            systemCode = a.getString(0).toUpperCase();
-                            if (!NfcFCardEmulation.isValidSystemCode(systemCode) && !systemCode.equalsIgnoreCase(WifiEnterpriseConfig.EMPTY_VALUE)) {
-                                Log.e(TAG, "Invalid System Code: " + systemCode);
-                                systemCode = null;
-                            }
-                            a.recycle();
-                        } else if (eventType2 == 2 && "nfcid2-filter".equals(tagName) && nfcid2 == null) {
-                            TypedArray a2 = res.obtainAttributes(attrs, R.styleable.Nfcid2Filter);
-                            String nfcid22 = a2.getString(0).toUpperCase();
-                            if (!nfcid22.equalsIgnoreCase("RANDOM") && !nfcid22.equalsIgnoreCase(WifiEnterpriseConfig.EMPTY_VALUE) && !NfcFCardEmulation.isValidNfcid2(nfcid22)) {
-                                Log.e(TAG, "Invalid NFCID2: " + nfcid22);
-                                nfcid22 = null;
-                            }
-                            nfcid2 = nfcid22;
-                            a2.recycle();
+                    } else {
+                        depth = depth3;
+                    }
+                    if (eventType2 == i) {
+                        break;
+                    }
+                    String tagName = parser.getName();
+                    if (eventType2 == 2 && "system-code-filter".equals(tagName) && systemCode == null) {
+                        TypedArray a = res.obtainAttributes(attrs, C3132R.styleable.SystemCodeFilter);
+                        systemCode = a.getString(0).toUpperCase();
+                        if (!NfcFCardEmulation.isValidSystemCode(systemCode) && !systemCode.equalsIgnoreCase(WifiEnterpriseConfig.EMPTY_VALUE)) {
+                            Log.m70e(TAG, "Invalid System Code: " + systemCode);
+                            systemCode = null;
+                        }
+                        a.recycle();
+                    } else if (eventType2 == 2 && "nfcid2-filter".equals(tagName) && nfcid2 == null) {
+                        TypedArray a2 = res.obtainAttributes(attrs, C3132R.styleable.Nfcid2Filter);
+                        String nfcid22 = a2.getString(0).toUpperCase();
+                        if (!nfcid22.equalsIgnoreCase("RANDOM") && !nfcid22.equalsIgnoreCase(WifiEnterpriseConfig.EMPTY_VALUE) && !NfcFCardEmulation.isValidNfcid2(nfcid22)) {
+                            Log.m70e(TAG, "Invalid NFCID2: " + nfcid22);
+                            nfcid22 = null;
+                        }
+                        nfcid2 = nfcid22;
+                        a2.recycle();
+                    } else {
+                        if (eventType2 != 2 || !tagName.equals("t3tPmm-filter") || t3tPmm != null) {
+                            z = false;
                         } else {
-                            if (eventType2 == 2 && tagName.equals("t3tPmm-filter") && t3tPmm == null) {
-                                TypedArray a3 = res.obtainAttributes(attrs, R.styleable.T3tPmmFilter);
-                                z = false;
-                                t3tPmm = a3.getString(0).toUpperCase();
-                                a3.recycle();
-                            } else {
-                                z = false;
-                            }
-                            depth2 = depth;
-                            PackageManager packageManager2 = pm;
-                            ResolveInfo resolveInfo2 = info;
-                            boolean z2 = z;
-                            i = 1;
+                            TypedArray a3 = res.obtainAttributes(attrs, C3132R.styleable.T3tPmmFilter);
+                            z = false;
+                            t3tPmm = a3.getString(0).toUpperCase();
+                            a3.recycle();
                         }
                         depth2 = depth;
-                        PackageManager packageManager3 = pm;
-                        ResolveInfo resolveInfo3 = info;
                         i = 1;
                     }
-                    this.mSystemCode = systemCode == null ? WifiEnterpriseConfig.EMPTY_VALUE : systemCode;
-                    this.mNfcid2 = nfcid2 == null ? WifiEnterpriseConfig.EMPTY_VALUE : nfcid2;
-                    this.mT3tPmm = t3tPmm == null ? DEFAULT_T3T_PMM : t3tPmm;
-                    if (parser != null) {
-                        parser.close();
-                    }
-                    this.mUid = si.applicationInfo.uid;
-                    return;
+                    depth2 = depth;
+                    i = 1;
                 }
-                throw new XmlPullParserException("Meta-data does not start with <host-nfcf-service> tag");
+                this.mSystemCode = systemCode == null ? WifiEnterpriseConfig.EMPTY_VALUE : systemCode;
+                this.mNfcid2 = nfcid2 == null ? WifiEnterpriseConfig.EMPTY_VALUE : nfcid2;
+                this.mT3tPmm = t3tPmm == null ? DEFAULT_T3T_PMM : t3tPmm;
+                this.mUid = si.applicationInfo.uid;
+            } catch (PackageManager.NameNotFoundException e) {
+                throw new XmlPullParserException("Unable to create context for: " + si.packageName);
             }
-            throw new XmlPullParserException("No android.nfc.cardemulation.host_nfcf_service meta-data");
-        } catch (PackageManager.NameNotFoundException e) {
-            throw new XmlPullParserException("Unable to create context for: " + si.packageName);
-        } catch (Throwable th) {
-            if (parser != null) {
+        } finally {
+            if (parser != 0) {
                 parser.close();
             }
-            throw th;
         }
     }
 
@@ -231,12 +230,9 @@ public final class NfcFServiceInfo implements Parcelable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof NfcFServiceInfo)) {
-            return false;
-        }
-        NfcFServiceInfo thatService = (NfcFServiceInfo) o;
-        if (thatService.getComponent().equals(getComponent()) && thatService.mSystemCode.equalsIgnoreCase(this.mSystemCode) && thatService.mNfcid2.equalsIgnoreCase(this.mNfcid2) && thatService.mT3tPmm.equalsIgnoreCase(this.mT3tPmm)) {
-            return true;
+        if (o instanceof NfcFServiceInfo) {
+            NfcFServiceInfo thatService = (NfcFServiceInfo) o;
+            return thatService.getComponent().equals(getComponent()) && thatService.mSystemCode.equalsIgnoreCase(this.mSystemCode) && thatService.mNfcid2.equalsIgnoreCase(this.mNfcid2) && thatService.mT3tPmm.equalsIgnoreCase(this.mT3tPmm);
         }
         return false;
     }
@@ -245,24 +241,22 @@ public final class NfcFServiceInfo implements Parcelable {
         return getComponent().hashCode();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         this.mService.writeToParcel(dest, flags);
         dest.writeString(this.mDescription);
         dest.writeString(this.mSystemCode);
-        int i = 0;
         dest.writeInt(this.mDynamicSystemCode != null ? 1 : 0);
         if (this.mDynamicSystemCode != null) {
             dest.writeString(this.mDynamicSystemCode);
         }
         dest.writeString(this.mNfcid2);
-        if (this.mDynamicNfcid2 != null) {
-            i = 1;
-        }
-        dest.writeInt(i);
+        dest.writeInt(this.mDynamicNfcid2 != null ? 1 : 0);
         if (this.mDynamicNfcid2 != null) {
             dest.writeString(this.mDynamicNfcid2);
         }

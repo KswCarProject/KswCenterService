@@ -2,6 +2,7 @@ package android.hardware.contexthub.V1_0;
 
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class TransactionResult {
     public static final int FAILURE = 1;
     public static final int SUCCESS = 0;

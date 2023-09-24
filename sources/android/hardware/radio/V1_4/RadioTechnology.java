@@ -3,6 +3,7 @@ package android.hardware.radio.V1_4;
 import com.android.internal.telephony.IccCardConstants;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class RadioTechnology {
     public static final int EDGE = 2;
     public static final int EHRPD = 13;
@@ -20,7 +21,9 @@ public final class RadioTechnology {
     public static final int IWLAN = 18;
     public static final int LTE = 14;
     public static final int LTE_CA = 19;
-    public static final int NR = 20;
+
+    /* renamed from: NR */
+    public static final int f102NR = 20;
     public static final int ONE_X_RTT = 6;
     public static final int TD_SCDMA = 17;
     public static final int UMTS = 3;

@@ -6,30 +6,33 @@ import android.util.Log;
 import android.view.Surface;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
 
+/* loaded from: classes3.dex */
 public final class AmrInputStream extends InputStream {
     private static final int SAMPLES_PER_FRAME = 160;
     private static final String TAG = "AmrInputStream";
-    private final byte[] mBuf = new byte[320];
-    private int mBufIn = 0;
-    private int mBufOut = 0;
     MediaCodec mCodec;
     MediaCodec.BufferInfo mInfo;
     private InputStream mInputStream;
-    private byte[] mOneByte = new byte[1];
     boolean mSawInputEOS;
     boolean mSawOutputEOS;
+    private final byte[] mBuf = new byte[320];
+    private int mBufIn = 0;
+    private int mBufOut = 0;
+    private byte[] mOneByte = new byte[1];
 
     @UnsupportedAppUsage
     public AmrInputStream(InputStream inputStream) {
-        Log.w(TAG, "@@@@ AmrInputStream is not a public API @@@@");
+        Log.m64w(TAG, "@@@@ AmrInputStream is not a public API @@@@");
         this.mInputStream = inputStream;
         MediaFormat format = new MediaFormat();
         format.setString(MediaFormat.KEY_MIME, MediaFormat.MIMETYPE_AUDIO_AMR_NB);
         format.setInteger(MediaFormat.KEY_SAMPLE_RATE, 8000);
         format.setInteger(MediaFormat.KEY_CHANNEL_COUNT, 1);
         format.setInteger(MediaFormat.KEY_BIT_RATE, 12200);
-        String name = new MediaCodecList(0).findEncoderForFormat(format);
+        MediaCodecList mcl = new MediaCodecList(0);
+        String name = mcl.findEncoderForFormat(format);
         if (name != null) {
             try {
                 this.mCodec = MediaCodec.createByCodecName(name);
@@ -45,17 +48,21 @@ public final class AmrInputStream extends InputStream {
         this.mInfo = new MediaCodec.BufferInfo();
     }
 
+    @Override // java.io.InputStream
     public int read() throws IOException {
-        if (read(this.mOneByte, 0, 1) == 1) {
+        int rtn = read(this.mOneByte, 0, 1);
+        if (rtn == 1) {
             return this.mOneByte[0] & 255;
         }
         return -1;
     }
 
+    @Override // java.io.InputStream
     public int read(byte[] b) throws IOException {
         return read(b, 0, b.length);
     }
 
+    @Override // java.io.InputStream
     public int read(byte[] b, int offset, int length) throws IOException {
         int length2;
         int index;
@@ -63,7 +70,7 @@ public final class AmrInputStream extends InputStream {
             if (this.mBufOut >= this.mBufIn && !this.mSawOutputEOS) {
                 this.mBufOut = 0;
                 this.mBufIn = 0;
-                while (!this.mSawInputEOS && (index = this.mCodec.dequeueInputBuffer(0)) >= 0) {
+                while (!this.mSawInputEOS && (index = this.mCodec.dequeueInputBuffer(0L)) >= 0) {
                     int numRead = 0;
                     while (true) {
                         if (numRead >= 320) {
@@ -76,41 +83,37 @@ public final class AmrInputStream extends InputStream {
                         }
                         numRead += n;
                     }
-                    this.mCodec.getInputBuffer(index).put(this.mBuf, 0, numRead);
-                    this.mCodec.queueInputBuffer(index, 0, numRead, 0, this.mSawInputEOS ? 4 : 0);
+                    ByteBuffer buf = this.mCodec.getInputBuffer(index);
+                    buf.put(this.mBuf, 0, numRead);
+                    this.mCodec.queueInputBuffer(index, 0, numRead, 0L, this.mSawInputEOS ? 4 : 0);
                 }
-                int index2 = this.mCodec.dequeueOutputBuffer(this.mInfo, 0);
+                int index2 = this.mCodec.dequeueOutputBuffer(this.mInfo, 0L);
                 if (index2 >= 0) {
                     this.mBufIn = this.mInfo.size;
-                    this.mCodec.getOutputBuffer(index2).get(this.mBuf, 0, this.mBufIn);
+                    ByteBuffer out = this.mCodec.getOutputBuffer(index2);
+                    out.get(this.mBuf, 0, this.mBufIn);
                     this.mCodec.releaseOutputBuffer(index2, false);
                     if ((4 & this.mInfo.flags) != 0) {
                         this.mSawOutputEOS = true;
                     }
                 }
             }
-            if (this.mBufOut < this.mBufIn) {
-                int i = length;
-                if (i > this.mBufIn - this.mBufOut) {
-                    length2 = this.mBufIn - this.mBufOut;
-                } else {
-                    length2 = i;
-                }
-                System.arraycopy(this.mBuf, this.mBufOut, b, offset, length2);
-                this.mBufOut += length2;
-                return length2;
+            if (this.mBufOut >= this.mBufIn) {
+                return (this.mSawInputEOS && this.mSawOutputEOS) ? -1 : 0;
             }
-            byte[] bArr = b;
-            int i2 = offset;
-            int i3 = length;
-            return (!this.mSawInputEOS || !this.mSawOutputEOS) ? 0 : -1;
+            if (length > this.mBufIn - this.mBufOut) {
+                length2 = this.mBufIn - this.mBufOut;
+            } else {
+                length2 = length;
+            }
+            System.arraycopy(this.mBuf, this.mBufOut, b, offset, length2);
+            this.mBufOut += length2;
+            return length2;
         }
-        byte[] bArr2 = b;
-        int i4 = offset;
-        int i5 = length;
         throw new IllegalStateException("not open");
     }
 
+    @Override // java.io.InputStream, java.io.Closeable, java.lang.AutoCloseable
     public void close() throws IOException {
         try {
             if (this.mInputStream != null) {
@@ -122,23 +125,22 @@ public final class AmrInputStream extends InputStream {
                     this.mCodec.release();
                 }
             } finally {
-                this.mCodec = null;
             }
         } catch (Throwable th) {
             this.mInputStream = null;
-            if (this.mCodec != null) {
-                this.mCodec.release();
+            try {
+                if (this.mCodec != null) {
+                    this.mCodec.release();
+                }
+                throw th;
+            } finally {
             }
-            throw th;
-        } finally {
-            this.mCodec = null;
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         if (this.mCodec != null) {
-            Log.w(TAG, "AmrInputStream wasn't closed");
+            Log.m64w(TAG, "AmrInputStream wasn't closed");
             this.mCodec.release();
         }
     }

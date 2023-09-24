@@ -1,14 +1,16 @@
 package android.net;
 
-import android.os.Parcel;
+import android.p007os.Parcel;
 
+/* loaded from: classes3.dex */
 public class WifiLinkQualityInfo extends LinkQualityInfo {
     private String mBssid;
-    private int mRssi = Integer.MAX_VALUE;
-    private long mTxBad = Long.MAX_VALUE;
-    private long mTxGood = Long.MAX_VALUE;
     private int mType = Integer.MAX_VALUE;
+    private int mRssi = Integer.MAX_VALUE;
+    private long mTxGood = Long.MAX_VALUE;
+    private long mTxBad = Long.MAX_VALUE;
 
+    @Override // android.net.LinkQualityInfo, android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags, 2);
         dest.writeInt(this.mType);

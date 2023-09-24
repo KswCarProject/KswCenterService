@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothHeadset;
 import com.android.internal.telephony.IccCardConstants;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class TemperatureType {
     public static final int BATTERY = 2;
     public static final int BCL_CURRENT = 7;
@@ -57,9 +58,9 @@ public final class TemperatureType {
     public static final String dumpBitfield(int o) {
         ArrayList<String> list = new ArrayList<>();
         int flipped = 0;
-        if ((o & -1) == -1) {
+        if ((o & (-1)) == -1) {
             list.add(IccCardConstants.INTENT_VALUE_ICC_UNKNOWN);
-            flipped = 0 | -1;
+            flipped = 0 | (-1);
         }
         list.add("CPU");
         if ((o & 1) == 1) {

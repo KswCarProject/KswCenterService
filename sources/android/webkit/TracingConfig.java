@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/* loaded from: classes4.dex */
 public class TracingConfig {
     public static final int CATEGORIES_ALL = 1;
     public static final int CATEGORIES_ANDROID_WEBVIEW = 2;
@@ -22,10 +23,12 @@ public class TracingConfig {
     private int mTracingMode;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface PredefinedCategories {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface TracingMode {
     }
 
@@ -47,9 +50,10 @@ public class TracingConfig {
         return this.mTracingMode;
     }
 
+    /* loaded from: classes4.dex */
     public static class Builder {
-        private final List<String> mCustomIncludedCategories = new ArrayList();
         private int mPredefinedCategories = 0;
+        private final List<String> mCustomIncludedCategories = new ArrayList();
         private int mTracingMode = 1;
 
         public TracingConfig build() {
@@ -57,9 +61,8 @@ public class TracingConfig {
         }
 
         public Builder addCategories(int... predefinedCategories) {
-            int length = predefinedCategories.length;
-            for (int i = 0; i < length; i++) {
-                this.mPredefinedCategories |= predefinedCategories[i];
+            for (int categorySet : predefinedCategories) {
+                this.mPredefinedCategories |= categorySet;
             }
             return this;
         }

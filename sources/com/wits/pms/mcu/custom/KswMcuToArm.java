@@ -1,6 +1,8 @@
 package com.wits.pms.mcu.custom;
 
+/* loaded from: classes2.dex */
 public class KswMcuToArm {
+    public static final int CMD_ARM_STS = 105;
     public static final int CMD_ATMOSPHERE_LIGHT_CONTROL = 25;
     public static final int CMD_BENZ_DATA = 29;
     public static final int CMD_BLUETOOTH_UI = 36;

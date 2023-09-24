@@ -1,25 +1,30 @@
 package android.app.usage;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteCallback;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteCallback;
+import android.p007os.RemoteException;
 import java.util.List;
 
+/* loaded from: classes.dex */
 public interface ICacheQuotaService extends IInterface {
     void computeCacheQuotaHints(RemoteCallback remoteCallback, List<CacheQuotaHint> list) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements ICacheQuotaService {
-        public void computeCacheQuotaHints(RemoteCallback callback, List<CacheQuotaHint> list) throws RemoteException {
+        @Override // android.app.usage.ICacheQuotaService
+        public void computeCacheQuotaHints(RemoteCallback callback, List<CacheQuotaHint> requests) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements ICacheQuotaService {
         private static final String DESCRIPTOR = "android.app.usage.ICacheQuotaService";
         static final int TRANSACTION_computeCacheQuotaHints = 1;
@@ -33,46 +38,51 @@ public interface ICacheQuotaService extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof ICacheQuotaService)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof ICacheQuotaService)) {
+                return (ICacheQuotaService) iin;
             }
-            return (ICacheQuotaService) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
 
         public static String getDefaultTransactionName(int transactionCode) {
-            if (transactionCode != 1) {
-                return null;
+            if (transactionCode == 1) {
+                return "computeCacheQuotaHints";
             }
-            return "computeCacheQuotaHints";
+            return null;
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
             RemoteCallback _arg0;
-            if (code == 1) {
-                data.enforceInterface(DESCRIPTOR);
-                if (data.readInt() != 0) {
-                    _arg0 = RemoteCallback.CREATOR.createFromParcel(data);
-                } else {
-                    _arg0 = null;
+            if (code != 1) {
+                if (code == 1598968902) {
+                    reply.writeString(DESCRIPTOR);
+                    return true;
                 }
-                computeCacheQuotaHints(_arg0, data.createTypedArrayList(CacheQuotaHint.CREATOR));
-                return true;
-            } else if (code != 1598968902) {
                 return super.onTransact(code, data, reply, flags);
-            } else {
-                reply.writeString(DESCRIPTOR);
-                return true;
             }
+            data.enforceInterface(DESCRIPTOR);
+            if (data.readInt() != 0) {
+                _arg0 = RemoteCallback.CREATOR.createFromParcel(data);
+            } else {
+                _arg0 = null;
+            }
+            List<CacheQuotaHint> _arg1 = data.createTypedArrayList(CacheQuotaHint.CREATOR);
+            computeCacheQuotaHints(_arg0, _arg1);
+            return true;
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements ICacheQuotaService {
             public static ICacheQuotaService sDefaultImpl;
             private IBinder mRemote;
@@ -81,6 +91,7 @@ public interface ICacheQuotaService extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -89,6 +100,7 @@ public interface ICacheQuotaService extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.app.usage.ICacheQuotaService
             public void computeCacheQuotaHints(RemoteCallback callback, List<CacheQuotaHint> requests) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -100,9 +112,8 @@ public interface ICacheQuotaService extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeTypedList(requests);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().computeCacheQuotaHints(callback, requests);
                     }
                 } finally {
@@ -112,11 +123,11 @@ public interface ICacheQuotaService extends IInterface {
         }
 
         public static boolean setDefaultImpl(ICacheQuotaService impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static ICacheQuotaService getDefaultImpl() {

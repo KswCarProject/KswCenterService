@@ -1,16 +1,18 @@
 package com.android.internal.inputmethod;
 
-import android.os.IBinder;
-import android.os.RemoteException;
+import android.p007os.IBinder;
+import android.p007os.RemoteException;
 import android.util.Log;
 import android.view.InputChannel;
 import com.android.internal.annotations.GuardedBy;
 import com.android.internal.view.IInputMethodSession;
 
+/* loaded from: classes4.dex */
 public class MultiClientInputMethodPrivilegedOperations {
     private static final String TAG = "MultiClientInputMethodPrivilegedOperations";
     private final OpsHolder mOps = new OpsHolder();
 
+    /* loaded from: classes4.dex */
     private static final class OpsHolder {
         @GuardedBy({"this"})
         private IMultiClientInputMethodPrivilegedOperations mPrivOps;
@@ -19,11 +21,10 @@ public class MultiClientInputMethodPrivilegedOperations {
         }
 
         public synchronized void set(IMultiClientInputMethodPrivilegedOperations privOps) {
-            if (this.mPrivOps == null) {
-                this.mPrivOps = privOps;
-            } else {
+            if (this.mPrivOps != null) {
                 throw new IllegalStateException("IMultiClientInputMethodPrivilegedOperations must be set at most once. privOps=" + privOps);
             }
+            this.mPrivOps = privOps;
         }
 
         private static String getCallerMethodName() {
@@ -40,7 +41,7 @@ public class MultiClientInputMethodPrivilegedOperations {
 
         public synchronized IMultiClientInputMethodPrivilegedOperations getAndWarnIfNull() {
             if (this.mPrivOps == null) {
-                Log.e(MultiClientInputMethodPrivilegedOperations.TAG, getCallerMethodName() + " is ignored. Call it within attachToken() and InputMethodService.onDestroy()");
+                Log.m70e(MultiClientInputMethodPrivilegedOperations.TAG, getCallerMethodName() + " is ignored. Call it within attachToken() and InputMethodService.onDestroy()");
             }
             return this.mPrivOps;
         }
@@ -68,34 +69,37 @@ public class MultiClientInputMethodPrivilegedOperations {
 
     public void deleteInputMethodWindowToken(IBinder token) {
         IMultiClientInputMethodPrivilegedOperations ops = this.mOps.getAndWarnIfNull();
-        if (ops != null) {
-            try {
-                ops.deleteInputMethodWindowToken(token);
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
+        if (ops == null) {
+            return;
+        }
+        try {
+            ops.deleteInputMethodWindowToken(token);
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
         }
     }
 
     public void acceptClient(int clientId, IInputMethodSession session, IMultiClientInputMethodSession multiClientSession, InputChannel writeChannel) {
         IMultiClientInputMethodPrivilegedOperations ops = this.mOps.getAndWarnIfNull();
-        if (ops != null) {
-            try {
-                ops.acceptClient(clientId, session, multiClientSession, writeChannel);
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
+        if (ops == null) {
+            return;
+        }
+        try {
+            ops.acceptClient(clientId, session, multiClientSession, writeChannel);
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
         }
     }
 
     public void reportImeWindowTarget(int clientId, int targetWindowHandle, IBinder imeWindowToken) {
         IMultiClientInputMethodPrivilegedOperations ops = this.mOps.getAndWarnIfNull();
-        if (ops != null) {
-            try {
-                ops.reportImeWindowTarget(clientId, targetWindowHandle, imeWindowToken);
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
+        if (ops == null) {
+            return;
+        }
+        try {
+            ops.reportImeWindowTarget(clientId, targetWindowHandle, imeWindowToken);
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
         }
     }
 
@@ -113,12 +117,13 @@ public class MultiClientInputMethodPrivilegedOperations {
 
     public void setActive(int clientId, boolean active) {
         IMultiClientInputMethodPrivilegedOperations ops = this.mOps.getAndWarnIfNull();
-        if (ops != null) {
-            try {
-                ops.setActive(clientId, active);
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
+        if (ops == null) {
+            return;
+        }
+        try {
+            ops.setActive(clientId, active);
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
         }
     }
 }

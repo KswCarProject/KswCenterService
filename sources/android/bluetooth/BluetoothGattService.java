@@ -1,20 +1,25 @@
 package android.bluetooth;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.ParcelUuid;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.ParcelUuid;
+import android.p007os.Parcelable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
+/* loaded from: classes.dex */
 public class BluetoothGattService implements Parcelable {
-    public static final Parcelable.Creator<BluetoothGattService> CREATOR = new Parcelable.Creator<BluetoothGattService>() {
+    public static final Parcelable.Creator<BluetoothGattService> CREATOR = new Parcelable.Creator<BluetoothGattService>() { // from class: android.bluetooth.BluetoothGattService.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public BluetoothGattService createFromParcel(Parcel in) {
             return new BluetoothGattService(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public BluetoothGattService[] newArray(int size) {
             return new BluetoothGattService[size];
         }
@@ -61,10 +66,12 @@ public class BluetoothGattService implements Parcelable {
         this.mIncludedServices = new ArrayList();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeParcelable(new ParcelUuid(this.mUuid), 0);
         out.writeInt(this.mInstanceId);
@@ -79,7 +86,7 @@ public class BluetoothGattService implements Parcelable {
 
     private BluetoothGattService(Parcel in) {
         this.mHandles = 0;
-        this.mUuid = ((ParcelUuid) in.readParcelable((ClassLoader) null)).getUuid();
+        this.mUuid = ((ParcelUuid) in.readParcelable(null)).getUuid();
         this.mInstanceId = in.readInt();
         this.mServiceType = in.readInt();
         this.mCharacteristics = new ArrayList();
@@ -98,18 +105,16 @@ public class BluetoothGattService implements Parcelable {
             Iterator<BluetoothGattIncludedService> it2 = inclSvcs.iterator();
             while (it2.hasNext()) {
                 BluetoothGattIncludedService isvc = it2.next();
-                this.mIncludedServices.add(new BluetoothGattService((BluetoothDevice) null, isvc.getUuid(), isvc.getInstanceId(), isvc.getType()));
+                this.mIncludedServices.add(new BluetoothGattService(null, isvc.getUuid(), isvc.getInstanceId(), isvc.getType()));
             }
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public BluetoothDevice getDevice() {
+    BluetoothDevice getDevice() {
         return this.mDevice;
     }
 
-    /* access modifiers changed from: package-private */
-    public void setDevice(BluetoothDevice device) {
+    void setDevice(BluetoothDevice device) {
         this.mDevice = device;
     }
 
@@ -124,8 +129,7 @@ public class BluetoothGattService implements Parcelable {
         return true;
     }
 
-    /* access modifiers changed from: package-private */
-    public BluetoothGattCharacteristic getCharacteristic(UUID uuid, int instanceId) {
+    BluetoothGattCharacteristic getCharacteristic(UUID uuid, int instanceId) {
         for (BluetoothGattCharacteristic characteristic : this.mCharacteristics) {
             if (uuid.equals(characteristic.getUuid()) && characteristic.getInstanceId() == instanceId) {
                 return characteristic;
@@ -139,8 +143,7 @@ public class BluetoothGattService implements Parcelable {
         this.mInstanceId = instanceId;
     }
 
-    /* access modifiers changed from: package-private */
-    public int getHandles() {
+    int getHandles() {
         return this.mHandles;
     }
 

@@ -1,14 +1,19 @@
 package android.bluetooth;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public final class BluetoothHidDeviceAppQosSettings implements Parcelable {
-    public static final Parcelable.Creator<BluetoothHidDeviceAppQosSettings> CREATOR = new Parcelable.Creator<BluetoothHidDeviceAppQosSettings>() {
+    public static final Parcelable.Creator<BluetoothHidDeviceAppQosSettings> CREATOR = new Parcelable.Creator<BluetoothHidDeviceAppQosSettings>() { // from class: android.bluetooth.BluetoothHidDeviceAppQosSettings.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public BluetoothHidDeviceAppQosSettings createFromParcel(Parcel in) {
             return new BluetoothHidDeviceAppQosSettings(in.readInt(), in.readInt(), in.readInt(), in.readInt(), in.readInt(), in.readInt());
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public BluetoothHidDeviceAppQosSettings[] newArray(int size) {
             return new BluetoothHidDeviceAppQosSettings[size];
         }
@@ -57,10 +62,12 @@ public final class BluetoothHidDeviceAppQosSettings implements Parcelable {
         return this.mDelayVariation;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(this.mServiceType);
         out.writeInt(this.mTokenRate);

@@ -4,8 +4,8 @@ import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
 import android.net.NetworkInfo;
 import android.net.NetworkUtils;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.TextUtils;
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -13,59 +13,10 @@ import java.net.UnknownHostException;
 import java.util.EnumMap;
 import java.util.Locale;
 
+/* loaded from: classes3.dex */
 public class WifiInfo implements Parcelable {
     @UnsupportedAppUsage
-    public static final Parcelable.Creator<WifiInfo> CREATOR = new Parcelable.Creator<WifiInfo>() {
-        public WifiInfo createFromParcel(Parcel in) {
-            WifiInfo info = new WifiInfo();
-            info.setNetworkId(in.readInt());
-            info.setRssi(in.readInt());
-            info.setLinkSpeed(in.readInt());
-            info.setTxLinkSpeedMbps(in.readInt());
-            info.setRxLinkSpeedMbps(in.readInt());
-            info.setFrequency(in.readInt());
-            boolean z = true;
-            if (in.readByte() == 1) {
-                try {
-                    info.setInetAddress(InetAddress.getByAddress(in.createByteArray()));
-                } catch (UnknownHostException e) {
-                }
-            }
-            if (in.readInt() == 1) {
-                WifiSsid unused = info.mWifiSsid = WifiSsid.CREATOR.createFromParcel(in);
-            }
-            String unused2 = info.mBSSID = in.readString();
-            String unused3 = info.mMacAddress = in.readString();
-            boolean unused4 = info.mMeteredHint = in.readInt() != 0;
-            boolean unused5 = info.mEphemeral = in.readInt() != 0;
-            boolean unused6 = info.mTrusted = in.readInt() != 0;
-            info.score = in.readInt();
-            info.txSuccess = in.readLong();
-            info.txSuccessRate = in.readDouble();
-            info.txRetries = in.readLong();
-            info.txRetriesRate = in.readDouble();
-            info.txBad = in.readLong();
-            info.txBadRate = in.readDouble();
-            info.rxSuccess = in.readLong();
-            info.rxSuccessRate = in.readDouble();
-            SupplicantState unused7 = info.mSupplicantState = SupplicantState.CREATOR.createFromParcel(in);
-            boolean unused8 = info.mOsuAp = in.readInt() != 0;
-            String unused9 = info.mNetworkSuggestionOrSpecifierPackageName = in.readString();
-            String unused10 = info.mFqdn = in.readString();
-            String unused11 = info.mProviderFriendlyName = in.readString();
-            int unused12 = info.mWifiGeneration = in.readInt();
-            boolean unused13 = info.mVhtMax8SpatialStreamsSupport = in.readInt() != 0;
-            if (in.readInt() == 0) {
-                z = false;
-            }
-            boolean unused14 = info.mTwtSupport = z;
-            return info;
-        }
-
-        public WifiInfo[] newArray(int size) {
-            return new WifiInfo[size];
-        }
-    };
+    public static final Parcelable.Creator<WifiInfo> CREATOR;
     @UnsupportedAppUsage
     public static final String DEFAULT_MAC_ADDRESS = "02:00:00:00:00:00";
     public static final String FREQUENCY_UNITS = "MHz";
@@ -77,45 +28,31 @@ public class WifiInfo implements Parcelable {
     public static final int MIN_RSSI = -126;
     private static final String TAG = "WifiInfo";
     private static final EnumMap<SupplicantState, NetworkInfo.DetailedState> stateMap = new EnumMap<>(SupplicantState.class);
-    /* access modifiers changed from: private */
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
-    public String mBSSID;
-    /* access modifiers changed from: private */
-    public boolean mEphemeral;
-    /* access modifiers changed from: private */
-    public String mFqdn;
+    private String mBSSID;
+    private boolean mEphemeral;
+    private String mFqdn;
     private int mFrequency;
     @UnsupportedAppUsage
     private InetAddress mIpAddress;
     private int mLinkSpeed;
-    /* access modifiers changed from: private */
     @UnsupportedAppUsage
-    public String mMacAddress;
-    /* access modifiers changed from: private */
-    public boolean mMeteredHint;
+    private String mMacAddress;
+    private boolean mMeteredHint;
     private int mNetworkId;
-    /* access modifiers changed from: private */
-    public String mNetworkSuggestionOrSpecifierPackageName;
-    /* access modifiers changed from: private */
-    public boolean mOsuAp;
-    /* access modifiers changed from: private */
-    public String mProviderFriendlyName;
+    private String mNetworkSuggestionOrSpecifierPackageName;
+    private boolean mOsuAp;
+    private String mProviderFriendlyName;
     private int mRssi;
     private int mRxLinkSpeed;
-    /* access modifiers changed from: private */
-    public SupplicantState mSupplicantState;
-    /* access modifiers changed from: private */
-    public boolean mTrusted;
-    /* access modifiers changed from: private */
-    public boolean mTwtSupport;
+    private SupplicantState mSupplicantState;
+    private boolean mTrusted;
+    private boolean mTwtSupport;
     private int mTxLinkSpeed;
-    /* access modifiers changed from: private */
-    public boolean mVhtMax8SpatialStreamsSupport;
-    /* access modifiers changed from: private */
-    public int mWifiGeneration;
-    /* access modifiers changed from: private */
+    private boolean mVhtMax8SpatialStreamsSupport;
+    private int mWifiGeneration;
     @UnsupportedAppUsage
-    public WifiSsid mWifiSsid;
+    private WifiSsid mWifiSsid;
     public long rxSuccess;
     public double rxSuccessRate;
     @UnsupportedAppUsage
@@ -128,19 +65,70 @@ public class WifiInfo implements Parcelable {
     public double txSuccessRate;
 
     static {
-        stateMap.put(SupplicantState.DISCONNECTED, NetworkInfo.DetailedState.DISCONNECTED);
-        stateMap.put(SupplicantState.INTERFACE_DISABLED, NetworkInfo.DetailedState.DISCONNECTED);
-        stateMap.put(SupplicantState.INACTIVE, NetworkInfo.DetailedState.IDLE);
-        stateMap.put(SupplicantState.SCANNING, NetworkInfo.DetailedState.SCANNING);
-        stateMap.put(SupplicantState.AUTHENTICATING, NetworkInfo.DetailedState.CONNECTING);
-        stateMap.put(SupplicantState.ASSOCIATING, NetworkInfo.DetailedState.CONNECTING);
-        stateMap.put(SupplicantState.ASSOCIATED, NetworkInfo.DetailedState.CONNECTING);
-        stateMap.put(SupplicantState.FOUR_WAY_HANDSHAKE, NetworkInfo.DetailedState.AUTHENTICATING);
-        stateMap.put(SupplicantState.GROUP_HANDSHAKE, NetworkInfo.DetailedState.AUTHENTICATING);
-        stateMap.put(SupplicantState.COMPLETED, NetworkInfo.DetailedState.OBTAINING_IPADDR);
-        stateMap.put(SupplicantState.DORMANT, NetworkInfo.DetailedState.DISCONNECTED);
-        stateMap.put(SupplicantState.UNINITIALIZED, NetworkInfo.DetailedState.IDLE);
-        stateMap.put(SupplicantState.INVALID, NetworkInfo.DetailedState.FAILED);
+        stateMap.put((EnumMap<SupplicantState, NetworkInfo.DetailedState>) SupplicantState.DISCONNECTED, (SupplicantState) NetworkInfo.DetailedState.DISCONNECTED);
+        stateMap.put((EnumMap<SupplicantState, NetworkInfo.DetailedState>) SupplicantState.INTERFACE_DISABLED, (SupplicantState) NetworkInfo.DetailedState.DISCONNECTED);
+        stateMap.put((EnumMap<SupplicantState, NetworkInfo.DetailedState>) SupplicantState.INACTIVE, (SupplicantState) NetworkInfo.DetailedState.IDLE);
+        stateMap.put((EnumMap<SupplicantState, NetworkInfo.DetailedState>) SupplicantState.SCANNING, (SupplicantState) NetworkInfo.DetailedState.SCANNING);
+        stateMap.put((EnumMap<SupplicantState, NetworkInfo.DetailedState>) SupplicantState.AUTHENTICATING, (SupplicantState) NetworkInfo.DetailedState.CONNECTING);
+        stateMap.put((EnumMap<SupplicantState, NetworkInfo.DetailedState>) SupplicantState.ASSOCIATING, (SupplicantState) NetworkInfo.DetailedState.CONNECTING);
+        stateMap.put((EnumMap<SupplicantState, NetworkInfo.DetailedState>) SupplicantState.ASSOCIATED, (SupplicantState) NetworkInfo.DetailedState.CONNECTING);
+        stateMap.put((EnumMap<SupplicantState, NetworkInfo.DetailedState>) SupplicantState.FOUR_WAY_HANDSHAKE, (SupplicantState) NetworkInfo.DetailedState.AUTHENTICATING);
+        stateMap.put((EnumMap<SupplicantState, NetworkInfo.DetailedState>) SupplicantState.GROUP_HANDSHAKE, (SupplicantState) NetworkInfo.DetailedState.AUTHENTICATING);
+        stateMap.put((EnumMap<SupplicantState, NetworkInfo.DetailedState>) SupplicantState.COMPLETED, (SupplicantState) NetworkInfo.DetailedState.OBTAINING_IPADDR);
+        stateMap.put((EnumMap<SupplicantState, NetworkInfo.DetailedState>) SupplicantState.DORMANT, (SupplicantState) NetworkInfo.DetailedState.DISCONNECTED);
+        stateMap.put((EnumMap<SupplicantState, NetworkInfo.DetailedState>) SupplicantState.UNINITIALIZED, (SupplicantState) NetworkInfo.DetailedState.IDLE);
+        stateMap.put((EnumMap<SupplicantState, NetworkInfo.DetailedState>) SupplicantState.INVALID, (SupplicantState) NetworkInfo.DetailedState.FAILED);
+        CREATOR = new Parcelable.Creator<WifiInfo>() { // from class: android.net.wifi.WifiInfo.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
+            public WifiInfo createFromParcel(Parcel in) {
+                WifiInfo info = new WifiInfo();
+                info.setNetworkId(in.readInt());
+                info.setRssi(in.readInt());
+                info.setLinkSpeed(in.readInt());
+                info.setTxLinkSpeedMbps(in.readInt());
+                info.setRxLinkSpeedMbps(in.readInt());
+                info.setFrequency(in.readInt());
+                if (in.readByte() == 1) {
+                    try {
+                        info.setInetAddress(InetAddress.getByAddress(in.createByteArray()));
+                    } catch (UnknownHostException e) {
+                    }
+                }
+                if (in.readInt() == 1) {
+                    info.mWifiSsid = WifiSsid.CREATOR.createFromParcel(in);
+                }
+                info.mBSSID = in.readString();
+                info.mMacAddress = in.readString();
+                info.mMeteredHint = in.readInt() != 0;
+                info.mEphemeral = in.readInt() != 0;
+                info.mTrusted = in.readInt() != 0;
+                info.score = in.readInt();
+                info.txSuccess = in.readLong();
+                info.txSuccessRate = in.readDouble();
+                info.txRetries = in.readLong();
+                info.txRetriesRate = in.readDouble();
+                info.txBad = in.readLong();
+                info.txBadRate = in.readDouble();
+                info.rxSuccess = in.readLong();
+                info.rxSuccessRate = in.readDouble();
+                info.mSupplicantState = SupplicantState.CREATOR.createFromParcel(in);
+                info.mOsuAp = in.readInt() != 0;
+                info.mNetworkSuggestionOrSpecifierPackageName = in.readString();
+                info.mFqdn = in.readString();
+                info.mProviderFriendlyName = in.readString();
+                info.mWifiGeneration = in.readInt();
+                info.mVhtMax8SpatialStreamsSupport = in.readInt() != 0;
+                info.mTwtSupport = in.readInt() != 0;
+                return info;
+            }
+
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
+            public WifiInfo[] newArray(int size) {
+                return new WifiInfo[size];
+            }
+        };
     }
 
     @UnsupportedAppUsage
@@ -157,9 +145,9 @@ public class WifiInfo implements Parcelable {
     }
 
     public void reset() {
-        setInetAddress((InetAddress) null);
-        setBSSID((String) null);
-        setSSID((WifiSsid) null);
+        setInetAddress(null);
+        setBSSID(null);
+        setSSID(null);
         setNetworkId(-1);
         setRssi(-127);
         setLinkSpeed(-1);
@@ -169,16 +157,16 @@ public class WifiInfo implements Parcelable {
         setMeteredHint(false);
         setEphemeral(false);
         setOsuAp(false);
-        setNetworkSuggestionOrSpecifierPackageName((String) null);
-        setFQDN((String) null);
-        setProviderFriendlyName((String) null);
+        setNetworkSuggestionOrSpecifierPackageName(null);
+        setFQDN(null);
+        setProviderFriendlyName(null);
         setWifiGeneration(-1);
         setTwtSupport(false);
         setVhtMax8SpatialStreamsSupport(false);
-        this.txBad = 0;
-        this.txSuccess = 0;
-        this.rxSuccess = 0;
-        this.txRetries = 0;
+        this.txBad = 0L;
+        this.txSuccess = 0L;
+        this.rxSuccess = 0L;
+        this.txRetries = 0L;
         this.txBadRate = 0.0d;
         this.txSuccessRate = 0.0d;
         this.rxSuccessRate = 0.0d;
@@ -227,15 +215,15 @@ public class WifiInfo implements Parcelable {
     }
 
     public String getSSID() {
-        if (this.mWifiSsid == null) {
-            return WifiSsid.NONE;
+        if (this.mWifiSsid != null) {
+            String unicode = this.mWifiSsid.toString();
+            if (!TextUtils.isEmpty(unicode)) {
+                return "\"" + unicode + "\"";
+            }
+            String hex = this.mWifiSsid.getHexString();
+            return hex != null ? hex : WifiSsid.NONE;
         }
-        String unicode = this.mWifiSsid.toString();
-        if (!TextUtils.isEmpty(unicode)) {
-            return "\"" + unicode + "\"";
-        }
-        String hex = this.mWifiSsid.getHexString();
-        return hex != null ? hex : WifiSsid.NONE;
+        return WifiSsid.NONE;
     }
 
     @UnsupportedAppUsage
@@ -319,7 +307,7 @@ public class WifiInfo implements Parcelable {
     }
 
     public boolean hasRealMacAddress() {
-        return this.mMacAddress != null && !"02:00:00:00:00:00".equals(this.mMacAddress);
+        return (this.mMacAddress == null || "02:00:00:00:00:00".equals(this.mMacAddress)) ? false : true;
     }
 
     public void setMeteredHint(boolean meteredHint) {
@@ -409,10 +397,11 @@ public class WifiInfo implements Parcelable {
     }
 
     public int getIpAddress() {
-        if (this.mIpAddress instanceof Inet4Address) {
-            return NetworkUtils.inetAddressToInt((Inet4Address) this.mIpAddress);
+        if (!(this.mIpAddress instanceof Inet4Address)) {
+            return 0;
         }
-        return 0;
+        int result = NetworkUtils.inetAddressToInt((Inet4Address) this.mIpAddress);
+        return result;
     }
 
     public boolean getHiddenSSID() {
@@ -426,9 +415,8 @@ public class WifiInfo implements Parcelable {
         return stateMap.get(suppState);
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void setSupplicantState(String stateName) {
+    void setSupplicantState(String stateName) {
         this.mSupplicantState = valueOf(stateName);
     }
 
@@ -480,33 +468,15 @@ public class WifiInfo implements Parcelable {
     }
 
     public String toString() {
-        String str;
-        String str2;
-        SupplicantState supplicantState;
         StringBuffer sb = new StringBuffer();
         sb.append("SSID: ");
         sb.append(this.mWifiSsid == null ? WifiSsid.NONE : this.mWifiSsid);
         sb.append(", BSSID: ");
-        if (this.mBSSID == null) {
-            str = "<none>";
-        } else {
-            str = this.mBSSID;
-        }
-        sb.append(str);
+        sb.append(this.mBSSID == null ? "<none>" : this.mBSSID);
         sb.append(", MAC: ");
-        if (this.mMacAddress == null) {
-            str2 = "<none>";
-        } else {
-            str2 = this.mMacAddress;
-        }
-        sb.append(str2);
+        sb.append(this.mMacAddress == null ? "<none>" : this.mMacAddress);
         sb.append(", Supplicant state: ");
-        if (this.mSupplicantState == null) {
-            supplicantState = "<none>";
-        } else {
-            supplicantState = this.mSupplicantState;
-        }
-        sb.append(supplicantState);
+        sb.append(this.mSupplicantState == null ? "<none>" : this.mSupplicantState);
         sb.append(", Wifi Generation: ");
         sb.append(this.mWifiGeneration);
         sb.append(", TWT support: ");
@@ -536,10 +506,12 @@ public class WifiInfo implements Parcelable {
         return sb.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mNetworkId);
         dest.writeInt(this.mRssi);

@@ -3,9 +3,10 @@ package com.android.internal.app;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
-import android.os.Bundle;
+import android.p007os.Bundle;
 import android.view.View;
 
+/* loaded from: classes4.dex */
 public class MediaRouteChooserDialogFragment extends DialogFragment {
     private final String ARGUMENT_ROUTE_TYPES = "routeTypes";
     private View.OnClickListener mExtendedSettingsClickListener;
@@ -58,6 +59,7 @@ public class MediaRouteChooserDialogFragment extends DialogFragment {
         return new MediaRouteChooserDialog(context, getTheme());
     }
 
+    @Override // android.app.DialogFragment
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         MediaRouteChooserDialog dialog = onCreateChooserDialog(getActivity(), savedInstanceState);
         dialog.setRouteTypes(getRouteTypes());

@@ -3,9 +3,10 @@ package android.widget;
 import android.content.Context;
 import android.util.AttributeSet;
 
+/* loaded from: classes4.dex */
 public class CheckBox extends CompoundButton {
     public CheckBox(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public CheckBox(Context context, AttributeSet attrs) {
@@ -20,6 +21,7 @@ public class CheckBox extends CompoundButton {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
+    @Override // android.widget.CompoundButton, android.widget.Button, android.widget.TextView, android.view.View
     public CharSequence getAccessibilityClassName() {
         return CheckBox.class.getName();
     }

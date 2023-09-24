@@ -1,20 +1,24 @@
 package android.telephony;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.annotations.VisibleForTesting;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes.dex */
 public abstract class CellInfo implements Parcelable {
     public static final int CONNECTION_NONE = 0;
     public static final int CONNECTION_PRIMARY_SERVING = 1;
     public static final int CONNECTION_SECONDARY_SERVING = 2;
     public static final int CONNECTION_UNKNOWN = Integer.MAX_VALUE;
-    public static final Parcelable.Creator<CellInfo> CREATOR = new Parcelable.Creator<CellInfo>() {
+    public static final Parcelable.Creator<CellInfo> CREATOR = new Parcelable.Creator<CellInfo>() { // from class: android.telephony.CellInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public CellInfo createFromParcel(Parcel in) {
-            switch (in.readInt()) {
+            int type = in.readInt();
+            switch (type) {
                 case 1:
                     return CellInfoGsm.createFromParcelBody(in);
                 case 2:
@@ -32,6 +36,8 @@ public abstract class CellInfo implements Parcelable {
             }
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public CellInfo[] newArray(int size) {
             return new CellInfo[size];
         }
@@ -60,10 +66,12 @@ public abstract class CellInfo implements Parcelable {
     private long mTimeStamp;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface CellConnectionStatus {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface Type {
     }
 
@@ -71,6 +79,7 @@ public abstract class CellInfo implements Parcelable {
 
     public abstract CellSignalStrength getCellSignalStrength();
 
+    @Override // android.p007os.Parcelable
     public abstract void writeToParcel(Parcel parcel, int i);
 
     protected CellInfo() {
@@ -115,7 +124,7 @@ public abstract class CellInfo implements Parcelable {
     }
 
     public int hashCode() {
-        return ((this.mRegistered ^ true ? 1 : 0) * true) + (((int) (this.mTimeStamp / 1000)) * 31) + (this.mCellConnectionStatus * 31);
+        return ((!this.mRegistered ? 1 : 0) * 31) + (((int) (this.mTimeStamp / 1000)) * 31) + (this.mCellConnectionStatus * 31);
     }
 
     public boolean equals(Object other) {
@@ -127,7 +136,10 @@ public abstract class CellInfo implements Parcelable {
         }
         try {
             CellInfo o = (CellInfo) other;
-            if (this.mRegistered == o.mRegistered && this.mTimeStamp == o.mTimeStamp && this.mCellConnectionStatus == o.mCellConnectionStatus) {
+            if (this.mRegistered == o.mRegistered && this.mTimeStamp == o.mTimeStamp) {
+                if (this.mCellConnectionStatus != o.mCellConnectionStatus) {
+                    return false;
+                }
                 return true;
             }
             return false;
@@ -148,12 +160,12 @@ public abstract class CellInfo implements Parcelable {
         return sb.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
-    /* access modifiers changed from: protected */
-    public void writeToParcel(Parcel dest, int flags, int type) {
+    protected void writeToParcel(Parcel dest, int flags, int type) {
         dest.writeInt(type);
         dest.writeInt(this.mRegistered ? 1 : 0);
         dest.writeLong(this.mTimeStamp);
@@ -161,7 +173,7 @@ public abstract class CellInfo implements Parcelable {
     }
 
     protected CellInfo(Parcel in) {
-        this.mRegistered = in.readInt() != 1 ? false : true;
+        this.mRegistered = in.readInt() == 1;
         this.mTimeStamp = in.readLong();
         this.mCellConnectionStatus = in.readInt();
     }

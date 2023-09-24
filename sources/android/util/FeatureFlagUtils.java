@@ -1,12 +1,13 @@
 package android.util;
 
 import android.content.Context;
-import android.os.SystemProperties;
+import android.p007os.SystemProperties;
 import android.provider.Settings;
 import android.text.TextUtils;
 import java.util.HashMap;
 import java.util.Map;
 
+/* loaded from: classes4.dex */
 public class FeatureFlagUtils {
     private static final Map<String, String> DEFAULT_FLAGS = new HashMap();
     public static final String DYNAMIC_SYSTEM = "settings_dynamic_system";

@@ -7,6 +7,7 @@ import android.view.Surface;
 import com.android.internal.util.Preconditions;
 import java.util.Collection;
 
+/* loaded from: classes.dex */
 public class RequestHolder {
     private static final String TAG = "RequestHolder";
     private volatile boolean mFailed;
@@ -20,10 +21,11 @@ public class RequestHolder {
     private final int mRequestId;
     private final int mSubsequeceId;
 
+    /* loaded from: classes.dex */
     public static final class Builder {
         private final Collection<Long> mJpegSurfaceIds;
-        private final int mNumJpegTargets = numJpegTargets(this.mRequest);
-        private final int mNumPreviewTargets = numPreviewTargets(this.mRequest);
+        private final int mNumJpegTargets;
+        private final int mNumPreviewTargets;
         private final boolean mRepeating;
         private final CaptureRequest mRequest;
         private final int mRequestId;
@@ -36,6 +38,8 @@ public class RequestHolder {
             this.mRequest = request;
             this.mRepeating = repeating;
             this.mJpegSurfaceIds = jpegSurfaceIds;
+            this.mNumJpegTargets = numJpegTargets(this.mRequest);
+            this.mNumPreviewTargets = numPreviewTargets(this.mRequest);
         }
 
         private boolean jpegType(Surface s) throws LegacyExceptionUtils.BufferQueueAbandonedException {
@@ -54,7 +58,7 @@ public class RequestHolder {
                         count++;
                     }
                 } catch (LegacyExceptionUtils.BufferQueueAbandonedException e) {
-                    Log.d(RequestHolder.TAG, "Surface abandoned, skipping...", e);
+                    Log.m71d(RequestHolder.TAG, "Surface abandoned, skipping...", e);
                 }
             }
             return count;
@@ -68,7 +72,7 @@ public class RequestHolder {
                         count++;
                     }
                 } catch (LegacyExceptionUtils.BufferQueueAbandonedException e) {
-                    Log.d(RequestHolder.TAG, "Surface abandoned, skipping...", e);
+                    Log.m71d(RequestHolder.TAG, "Surface abandoned, skipping...", e);
                 }
             }
             return count;
@@ -137,7 +141,7 @@ public class RequestHolder {
     }
 
     public void failRequest() {
-        Log.w(TAG, "Capture failed for request: " + getRequestId());
+        Log.m64w(TAG, "Capture failed for request: " + getRequestId());
         this.mFailed = true;
     }
 

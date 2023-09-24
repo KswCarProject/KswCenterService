@@ -3,24 +3,22 @@ package com.wits.pms.mcu.custom.utils;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.os.PowerManager;
-import android.os.RecoverySystem;
-import android.os.RemoteException;
-import android.os.UserHandle;
+import android.p007os.Build;
+import android.p007os.Handler;
+import android.p007os.Looper;
+import android.p007os.Message;
+import android.p007os.PowerManager;
+import android.p007os.RecoverySystem;
+import android.p007os.RemoteException;
+import android.p007os.UserHandle;
 import android.provider.Settings;
-import android.support.v7.app.AlertDialog;
+import android.support.p014v7.app.AlertDialog;
 import android.text.TextUtils;
-import android.util.AttributeSet;
 import android.util.Log;
-import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+import com.wits.pms.C3580R;
 import com.wits.pms.PowerManagerApp;
-import com.wits.pms.R;
 import com.wits.pms.mirror.SystemProperties;
 import com.wits.pms.statuscontrol.WitsCommand;
 import java.io.File;
@@ -30,32 +28,28 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+/* loaded from: classes2.dex */
 public class NetOTAUpdate {
     private static final int MSG_REBOOT_AFTER_UPDATE = 4;
     private static final int MSG_UPDATE_FAIL = 2;
     private static final int MSG_UPDATE_PROGRESS = 1;
     private static final int MSG_UPDATE_RETRY = 5;
     private static final int MSG_UPDATE_SUCCESS = 3;
-    private static String OSVersion = Build.VERSION.RELEASE;
-    private static final String OTAFileName = (OSVersion.equals("9") ? OTAFileName9 : OTAFileName10);
+    private static final String OTAFileName;
     private static final String OTAFileName10;
     private static final String OTAFileName9;
-    public static final String TAG = NetOTAUpdate.class.getName();
-    private static String device = Build.DEVICE;
-    /* access modifiers changed from: private */
-    public static boolean isChecking = false;
-    /* access modifiers changed from: private */
-    public static boolean isUpdating = false;
-    /* access modifiers changed from: private */
-    public static Handler mHandler = null;
+    private static boolean isChecking = false;
+    private static boolean isUpdating = false;
+    private static Handler mHandler = null;
     private static final String otaFilePatch = "/sdcard/otapackage";
-    /* access modifiers changed from: private */
-    public static int retryCount = 0;
+    private static int retryCount;
     public static File tempFile;
+    private static boolean wipeData;
+    public static final String TAG = NetOTAUpdate.class.getName();
     public static boolean test = false;
+    private static String device = Build.DEVICE;
+    private static String OSVersion = Build.VERSION.RELEASE;
     private static String version = Build.DISPLAY;
-    /* access modifiers changed from: private */
-    public static boolean wipeData = false;
 
     static /* synthetic */ int access$108() {
         int i = retryCount;
@@ -74,19 +68,24 @@ public class NetOTAUpdate {
         sb2.append(device.contains("8937") ? version.contains("8937") ? "8937-" : "S-" : "");
         sb2.append("Userdebug_OS_v");
         OTAFileName10 = sb2.toString();
+        OTAFileName = OSVersion.equals("9") ? OTAFileName9 : OTAFileName10;
+        retryCount = 0;
+        wipeData = false;
     }
 
     private static int checkDirHasOTA(File parent) {
+        File[] listFiles;
         if (parent.listFiles() == null || parent.listFiles().length == 0) {
             return -1;
         }
-        String versionCode = Build.DISPLAY.replace("Ksw-Q-Userdebug OS v", "").replace(".", "");
+        String phoneId = Build.DISPLAY;
+        String versionCode = phoneId.replace("Ksw-Q-Userdebug OS v", "").replace(".", "");
         for (File subFile : parent.listFiles()) {
-            Log.d(TAG, "checkDirHasOTA   subFile = " + subFile.getName() + "  OTAFileName = " + OTAFileName);
+            Log.m72d(TAG, "checkDirHasOTA   subFile = " + subFile.getName() + "  OTAFileName = " + OTAFileName);
             if (subFile.getName().contains(OTAFileName)) {
                 String targetVersion = getVersion(subFile);
                 tempFile = subFile;
-                Log.v(TAG, "has update file: targetVersion - " + targetVersion + " - " + versionCode);
+                Log.m66v(TAG, "has update file: targetVersion - " + targetVersion + " - " + versionCode);
                 return 1;
             }
         }
@@ -96,17 +95,18 @@ public class NetOTAUpdate {
     private static String getVersion(File file) {
         String version2 = file.getName().replace(OTAFileName, "").replace("-ota.zip", "").replace(".", "");
         String str = TAG;
-        Log.i(str, "getVersion" + version2);
+        Log.m68i(str, "getVersion" + version2);
         return version2;
     }
 
     public static boolean checkFile(Context context) {
         File parent = new File(otaFilePatch);
-        Log.i(TAG, "checkFile - /sdcard/otapackage");
+        Log.m68i(TAG, "checkFile - /sdcard/otapackage");
         if (isUpdating) {
             return false;
         }
-        if (checkDirHasOTA(parent) >= 1) {
+        int status = checkDirHasOTA(parent);
+        if (status >= 1) {
             isUpdating = true;
             startUpgrade(context);
             return true;
@@ -118,36 +118,38 @@ public class NetOTAUpdate {
                 updateFile.delete();
             }
             reinstallApk();
-            Toast.makeText(context, (int) R.string.update_success, 0).show();
+            Toast.makeText(context, (int) C3580R.string.update_success, 0).show();
             Settings.System.putString(context.getContentResolver(), "ota_update", "");
         }
         if (tempFile != null && tempFile.getParent().contains("/0")) {
             tempFile.delete();
         }
-        Log.w(TAG, "checkFile: no ota file");
+        Log.m64w(TAG, "checkFile: no ota file");
         WitsCommand.sendCommand(9, 102);
         return false;
     }
 
     public static void reinstallApk() {
-        Log.i(TAG, "OTA Update apk. Reinstall!");
+        Log.m68i(TAG, "OTA Update apk. Reinstall!");
         SystemProperties.set("persist.rebuild.apk", "0");
         SystemProperties.set("persist.rebuild.apk", "1");
     }
 
+    /* JADX WARN: Type inference failed for: r0v2, types: [com.wits.pms.mcu.custom.utils.NetOTAUpdate$2] */
     public static void startUpgrade(final Context context) {
         if (mHandler == null) {
-            mHandler = new Handler(context.getMainLooper()) {
+            mHandler = new Handler(context.getMainLooper()) { // from class: com.wits.pms.mcu.custom.utils.NetOTAUpdate.1
+                @Override // android.p007os.Handler
                 public void handleMessage(Message msg) {
                     String str = NetOTAUpdate.TAG;
-                    Log.d(str, "handleMessage   msg " + msg.what);
+                    Log.m72d(str, "handleMessage   msg " + msg.what);
                     switch (msg.what) {
                         case 1:
                             WitsCommand.sendCommand(9, 104, "" + msg.arg1);
                             return;
                         case 2:
                             WitsCommand.sendCommand(9, 106);
-                            Toast.makeText(context, context.getText(R.string.update_fail), 1).show();
+                            Toast.makeText(context, context.getText(C3580R.string.update_fail), 1).show();
                             try {
                                 PowerManagerApp.setBooleanStatus("ota_net_updated", false);
                                 return;
@@ -156,8 +158,8 @@ public class NetOTAUpdate {
                                 return;
                             }
                         case 3:
-                            android.os.SystemProperties.set("persist.wits.ota", "true");
-                            Toast.makeText(context, context.getText(R.string.update_success), 1).show();
+                            android.p007os.SystemProperties.set("persist.wits.ota", "true");
+                            Toast.makeText(context, context.getText(C3580R.string.update_success), 1).show();
                             WitsCommand.sendCommand(9, 105);
                             try {
                                 PowerManagerApp.setBooleanStatus("ota_net_updated", true);
@@ -198,11 +200,12 @@ public class NetOTAUpdate {
                 }
             };
         }
-        Log.d(TAG, "startUpgrade: ");
-        new Thread() {
+        Log.m72d(TAG, "startUpgrade: ");
+        new Thread() { // from class: com.wits.pms.mcu.custom.utils.NetOTAUpdate.2
+            @Override // java.lang.Thread, java.lang.Runnable
             public void run() {
                 Looper.prepare();
-                NetOTAUpdate.update(context, NetOTAUpdate.tempFile);
+                NetOTAUpdate.update(Context.this, NetOTAUpdate.tempFile);
                 if (NetOTAUpdate.test) {
                     NetOTAUpdate.mHandler.obtainMessage(0).sendToTarget();
                     boolean unused = NetOTAUpdate.isUpdating = false;
@@ -212,7 +215,7 @@ public class NetOTAUpdate {
         }.start();
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static void update(Context context, File tempFile2) {
         File realPath;
         try {
@@ -223,7 +226,7 @@ public class NetOTAUpdate {
             } else {
                 realPath = new File("/dev/ota_mnt/" + tempFile2.getName());
             }
-            android.os.SystemProperties.set("persist.wits.ota", "true");
+            android.p007os.SystemProperties.set("persist.wits.ota", "true");
             RecoverySystem.installPackage(context, realPath);
         } catch (IOException e) {
             e.printStackTrace();
@@ -232,67 +235,65 @@ public class NetOTAUpdate {
     }
 
     private static boolean copyToUpdate(File file) {
-        int byteread;
-        Log.i(TAG, "Ready. copy to /data/media/0/");
+        Log.m68i(TAG, "Ready. copy to /data/media/0/");
         File target = new File("/data/media/0/" + file.getName());
         tempFile = target;
         int i = 0;
-        if (!target.exists() || test) {
-            try {
-                long count = file.length();
-                if (file.exists()) {
-                    Log.i(TAG, "start copy" + file.getName() + " to /data/media/0/");
-                    InputStream inStream = new FileInputStream(file.getPath());
-                    FileOutputStream fs = new FileOutputStream("/storage/emulated/0/" + file.getName());
-                    FileDescriptor fd = fs.getFD();
-                    byte[] buffer = new byte[1024];
-                    int bytesum = 0;
-                    int progress = -1;
-                    while (true) {
-                        int read = inStream.read(buffer);
-                        byteread = read;
-                        if (read == -1) {
-                            break;
-                        }
-                        bytesum += byteread;
-                        fs.write(buffer, i, byteread);
-                        if (!(progress == ((int) (((long) bytesum) / (count / 100))) || progress == 100)) {
-                            progress = (int) (((long) bytesum) / (count / 100));
-                            Log.i(TAG, "progress: " + progress);
-                            mHandler.obtainMessage(99, progress, 0).sendToTarget();
-                        }
-                        i = 0;
-                    }
-                    inStream.close();
-                    fs.flush();
-                    fd.sync();
-                    if (!test) {
-                        int i2 = byteread;
-                        mHandler.sendMessageDelayed(mHandler.obtainMessage(99, 100, 0), 60000);
-                    }
-                }
-                Log.i(TAG, "copy success, update now");
-                return true;
-            } catch (Exception e) {
-                Log.e(TAG, "error", e);
-                if (!target.exists()) {
-                    return false;
-                }
-                target.delete();
-                return false;
-            }
-        } else {
-            Log.i(TAG, "ota file already exist. show update now");
+        if (target.exists() && !test) {
+            Log.m68i(TAG, "ota file already exist. show update now");
             mHandler.obtainMessage(99, 100, 0).sendToTarget();
             return true;
         }
+        try {
+            long count = file.length();
+            if (file.exists()) {
+                Log.m68i(TAG, "start copy" + file.getName() + " to /data/media/0/");
+                InputStream inStream = new FileInputStream(file.getPath());
+                FileOutputStream fs = new FileOutputStream("/storage/emulated/0/" + file.getName());
+                FileDescriptor fd = fs.getFD();
+                byte[] buffer = new byte[1024];
+                int bytesum = 0;
+                int progress = -1;
+                while (true) {
+                    int byteread = inStream.read(buffer);
+                    if (byteread == -1) {
+                        break;
+                    }
+                    bytesum += byteread;
+                    fs.write(buffer, i, byteread);
+                    if (progress != ((int) (bytesum / (count / 100))) && progress != 100) {
+                        progress = (int) (bytesum / (count / 100));
+                        Log.m68i(TAG, "progress: " + progress);
+                        mHandler.obtainMessage(99, progress, 0).sendToTarget();
+                    }
+                    i = 0;
+                }
+                inStream.close();
+                fs.flush();
+                fd.sync();
+                fs.close();
+                if (!test) {
+                    mHandler.sendMessageDelayed(mHandler.obtainMessage(99, 100, 0), 60000L);
+                }
+            }
+            Log.m68i(TAG, "copy success, update now");
+            return true;
+        } catch (Exception e) {
+            Log.m69e(TAG, "error", e);
+            if (target.exists()) {
+                target.delete();
+                return false;
+            }
+            return false;
+        }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static void showUpdateDialog(final Context context) {
-        final ProgressBar progressBar = new ProgressBar(context, (AttributeSet) null, 16842872);
+        final ProgressBar progressBar = new ProgressBar(context, null, 16842872);
         progressBar.setPadding(20, 20, 20, 20);
-        mHandler = new Handler(context.getMainLooper()) {
+        mHandler = new Handler(context.getMainLooper()) { // from class: com.wits.pms.mcu.custom.utils.NetOTAUpdate.3
+            @Override // android.p007os.Handler
             public void handleMessage(Message msg) {
                 if (msg.what == 0) {
                     NetOTAUpdate.showUpdateDialog(context);
@@ -300,7 +301,7 @@ public class NetOTAUpdate {
                 if (msg.what == 99) {
                     int progress = msg.arg1;
                     String str = NetOTAUpdate.TAG;
-                    Log.v(str, "copying file in progress: " + progress);
+                    Log.m66v(str, "copying file in progress: " + progress);
                     progressBar.setProgress(progress);
                     if (progress == 100) {
                         try {
@@ -312,15 +313,20 @@ public class NetOTAUpdate {
                 }
             }
         };
-        AlertDialog alertDialog = new AlertDialog.Builder(context, R.style.AlertDialogCustom).setCancelable(true).setTitle((int) R.string.ota_update).setMessage((int) R.string.ota_update_message).setOnDismissListener($$Lambda$NetOTAUpdate$HyYqoMWJQx4CfGjFkRF69dicwA4.INSTANCE).setNegativeButton((int) R.string.no_update, (DialogInterface.OnClickListener) $$Lambda$NetOTAUpdate$6x2TJJkCVxACTwniKROYXYSvbU8.INSTANCE).setPositiveButton((int) R.string.yes_update, (DialogInterface.OnClickListener) new DialogInterface.OnClickListener(progressBar) {
-            private final /* synthetic */ ProgressBar f$1;
-
-            {
-                this.f$1 = r2;
+        AlertDialog alertDialog = new AlertDialog.Builder(context, C3580R.C3583style.AlertDialogCustom).setCancelable(true).setTitle(C3580R.string.ota_update).setMessage(C3580R.string.ota_update_message).setOnDismissListener(new DialogInterface.OnDismissListener() { // from class: com.wits.pms.mcu.custom.utils.-$$Lambda$NetOTAUpdate$HyYqoMWJQx4CfGjFkRF69dicwA4
+            @Override // android.content.DialogInterface.OnDismissListener
+            public final void onDismiss(DialogInterface dialogInterface) {
+                NetOTAUpdate.isUpdating = false;
             }
-
+        }).setNegativeButton(C3580R.string.no_update, new DialogInterface.OnClickListener() { // from class: com.wits.pms.mcu.custom.utils.-$$Lambda$NetOTAUpdate$6x2TJJkCVxACTwniKROYXYSvbU8
+            @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
-                NetOTAUpdate.lambda$showUpdateDialog$2(Context.this, this.f$1, dialogInterface, i);
+                NetOTAUpdate.lambda$showUpdateDialog$1(dialogInterface, i);
+            }
+        }).setPositiveButton(C3580R.string.yes_update, new DialogInterface.OnClickListener() { // from class: com.wits.pms.mcu.custom.utils.-$$Lambda$NetOTAUpdate$uXEW_fdTOKa_RTo8FpwGyuM1mUE
+            @Override // android.content.DialogInterface.OnClickListener
+            public final void onClick(DialogInterface dialogInterface, int i) {
+                NetOTAUpdate.lambda$showUpdateDialog$2(Context.this, progressBar, dialogInterface, i);
             }
         }).create();
         alertDialog.getWindow().setType(2003);
@@ -332,16 +338,18 @@ public class NetOTAUpdate {
         isUpdating = false;
     }
 
+    /* JADX WARN: Type inference failed for: r1v5, types: [com.wits.pms.mcu.custom.utils.NetOTAUpdate$4] */
     static /* synthetic */ void lambda$showUpdateDialog$2(final Context context, ProgressBar progressBar, DialogInterface dialog, int which) {
         Settings.System.putString(context.getContentResolver(), "ota_update", getVersion(tempFile));
         dialog.dismiss();
-        AlertDialog alertDialog1 = new AlertDialog.Builder(context, R.style.AlertDialogCustom).setCancelable(false).setTitle((int) R.string.copy_file).setView((View) progressBar).create();
+        AlertDialog alertDialog1 = new AlertDialog.Builder(context, C3580R.C3583style.AlertDialogCustom).setCancelable(false).setTitle(C3580R.string.copy_file).setView(progressBar).create();
         alertDialog1.getWindow().setType(2003);
         alertDialog1.show();
-        new Thread() {
+        new Thread() { // from class: com.wits.pms.mcu.custom.utils.NetOTAUpdate.4
+            @Override // java.lang.Thread, java.lang.Runnable
             public void run() {
                 Looper.prepare();
-                NetOTAUpdate.update(context, NetOTAUpdate.tempFile);
+                NetOTAUpdate.update(Context.this, NetOTAUpdate.tempFile);
                 if (NetOTAUpdate.test) {
                     NetOTAUpdate.mHandler.obtainMessage(0).sendToTarget();
                     boolean unused = NetOTAUpdate.isUpdating = false;

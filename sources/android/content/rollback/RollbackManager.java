@@ -3,14 +3,15 @@ package android.content.rollback;
 import android.annotation.SystemApi;
 import android.content.Context;
 import android.content.IntentSender;
-import android.content.pm.ParceledListSlice;
-import android.content.pm.VersionedPackage;
-import android.os.RemoteException;
+import android.content.p002pm.ParceledListSlice;
+import android.content.p002pm.VersionedPackage;
+import android.p007os.RemoteException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.List;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class RollbackManager {
     public static final String EXTRA_STATUS = "android.content.rollback.extra.STATUS";
     public static final String EXTRA_STATUS_MESSAGE = "android.content.rollback.extra.STATUS_MESSAGE";
@@ -23,6 +24,7 @@ public final class RollbackManager {
     private final String mCallerPackageName;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface Status {
     }
 

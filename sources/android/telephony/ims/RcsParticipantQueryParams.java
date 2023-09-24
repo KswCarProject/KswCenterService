@@ -1,17 +1,22 @@
 package android.telephony.ims;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.security.InvalidParameterException;
 
+/* loaded from: classes4.dex */
 public final class RcsParticipantQueryParams implements Parcelable {
-    public static final Parcelable.Creator<RcsParticipantQueryParams> CREATOR = new Parcelable.Creator<RcsParticipantQueryParams>() {
+    public static final Parcelable.Creator<RcsParticipantQueryParams> CREATOR = new Parcelable.Creator<RcsParticipantQueryParams>() { // from class: android.telephony.ims.RcsParticipantQueryParams.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RcsParticipantQueryParams createFromParcel(Parcel in) {
             return new RcsParticipantQueryParams(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RcsParticipantQueryParams[] newArray(int size) {
             return new RcsParticipantQueryParams[size];
         }
@@ -28,6 +33,7 @@ public final class RcsParticipantQueryParams implements Parcelable {
     private int mThreadId;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface SortingProperty {
     }
 
@@ -64,6 +70,7 @@ public final class RcsParticipantQueryParams implements Parcelable {
         return this.mIsAscending;
     }
 
+    /* loaded from: classes4.dex */
     public static class Builder {
         private String mAliasLike;
         private String mCanonicalAddressLike;
@@ -88,11 +95,11 @@ public final class RcsParticipantQueryParams implements Parcelable {
         }
 
         public Builder setResultLimit(int limit) throws InvalidParameterException {
-            if (limit >= 0) {
-                this.mLimit = limit;
-                return this;
+            if (limit < 0) {
+                throw new InvalidParameterException("The query limit must be non-negative");
             }
-            throw new InvalidParameterException("The query limit must be non-negative");
+            this.mLimit = limit;
+            return this;
         }
 
         public Builder setSortProperty(int sortingProperty) {
@@ -114,20 +121,22 @@ public final class RcsParticipantQueryParams implements Parcelable {
         this.mAliasLike = in.readString();
         this.mCanonicalAddressLike = in.readString();
         this.mSortingProperty = in.readInt();
-        this.mIsAscending = in.readByte() != 1 ? false : true;
+        this.mIsAscending = in.readByte() == 1;
         this.mLimit = in.readInt();
         this.mThreadId = in.readInt();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.mAliasLike);
         dest.writeString(this.mCanonicalAddressLike);
         dest.writeInt(this.mSortingProperty);
-        dest.writeByte(this.mIsAscending ? (byte) 1 : 0);
+        dest.writeByte(this.mIsAscending ? (byte) 1 : (byte) 0);
         dest.writeInt(this.mLimit);
         dest.writeInt(this.mThreadId);
     }

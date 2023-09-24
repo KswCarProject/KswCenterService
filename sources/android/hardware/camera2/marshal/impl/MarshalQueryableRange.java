@@ -9,23 +9,39 @@ import java.lang.Comparable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 
+/* loaded from: classes.dex */
 public class MarshalQueryableRange<T extends Comparable<? super T>> implements MarshalQueryable<Range<T>> {
     private static final int RANGE_COUNT = 2;
 
+    /* loaded from: classes.dex */
     private class MarshalerRange extends Marshaler<Range<T>> {
         private final Class<? super Range<T>> mClass;
         private final Constructor<Range<T>> mConstructor;
         private final Marshaler<T> mNestedTypeMarshaler;
 
+        @Override // android.hardware.camera2.marshal.Marshaler
+        public /* bridge */ /* synthetic */ int calculateMarshalSize(Object obj) {
+            return calculateMarshalSize((Range) ((Range) obj));
+        }
+
+        @Override // android.hardware.camera2.marshal.Marshaler
+        public /* bridge */ /* synthetic */ void marshal(Object obj, ByteBuffer byteBuffer) {
+            marshal((Range) ((Range) obj), byteBuffer);
+        }
+
         protected MarshalerRange(TypeReference<Range<T>> typeReference, int nativeType) {
             super(MarshalQueryableRange.this, typeReference, nativeType);
             this.mClass = typeReference.getRawType();
             try {
-                this.mNestedTypeMarshaler = MarshalRegistry.getMarshaler(TypeReference.createSpecializedTypeReference(((ParameterizedType) typeReference.getType()).getActualTypeArguments()[0]), this.mNativeType);
+                ParameterizedType paramType = (ParameterizedType) typeReference.getType();
+                Type actualTypeArgument = paramType.getActualTypeArguments()[0];
+                TypeReference<?> actualTypeArgToken = TypeReference.createSpecializedTypeReference(actualTypeArgument);
+                this.mNestedTypeMarshaler = MarshalRegistry.getMarshaler(actualTypeArgToken, this.mNativeType);
                 try {
-                    this.mConstructor = this.mClass.getConstructor(new Class[]{Comparable.class, Comparable.class});
+                    this.mConstructor = (Constructor<? super Range<T>>) this.mClass.getConstructor(Comparable.class, Comparable.class);
                 } catch (NoSuchMethodException e) {
                     throw new AssertionError(e);
                 }
@@ -39,22 +55,24 @@ public class MarshalQueryableRange<T extends Comparable<? super T>> implements M
             this.mNestedTypeMarshaler.marshal(value.getUpper(), buffer);
         }
 
+        @Override // android.hardware.camera2.marshal.Marshaler
         public Range<T> unmarshal(ByteBuffer buffer) {
-            T lower = (Comparable) this.mNestedTypeMarshaler.unmarshal(buffer);
-            T upper = (Comparable) this.mNestedTypeMarshaler.unmarshal(buffer);
+            T lower = this.mNestedTypeMarshaler.unmarshal(buffer);
+            T upper = this.mNestedTypeMarshaler.unmarshal(buffer);
             try {
-                return this.mConstructor.newInstance(new Object[]{lower, upper});
-            } catch (InstantiationException e) {
+                return this.mConstructor.newInstance(lower, upper);
+            } catch (IllegalAccessException e) {
                 throw new AssertionError(e);
-            } catch (IllegalAccessException e2) {
+            } catch (IllegalArgumentException e2) {
                 throw new AssertionError(e2);
-            } catch (IllegalArgumentException e3) {
+            } catch (InstantiationException e3) {
                 throw new AssertionError(e3);
             } catch (InvocationTargetException e4) {
                 throw new AssertionError(e4);
             }
         }
 
+        @Override // android.hardware.camera2.marshal.Marshaler
         public int getNativeSize() {
             int nestedSize = this.mNestedTypeMarshaler.getNativeSize();
             if (nestedSize != NATIVE_SIZE_DYNAMIC) {
@@ -68,14 +86,18 @@ public class MarshalQueryableRange<T extends Comparable<? super T>> implements M
             if (nativeSize != NATIVE_SIZE_DYNAMIC) {
                 return nativeSize;
             }
-            return this.mNestedTypeMarshaler.calculateMarshalSize(value.getLower()) + this.mNestedTypeMarshaler.calculateMarshalSize(value.getUpper());
+            int lowerSize = this.mNestedTypeMarshaler.calculateMarshalSize(value.getLower());
+            int upperSize = this.mNestedTypeMarshaler.calculateMarshalSize(value.getUpper());
+            return lowerSize + upperSize;
         }
     }
 
+    @Override // android.hardware.camera2.marshal.MarshalQueryable
     public Marshaler<Range<T>> createMarshaler(TypeReference<Range<T>> managedType, int nativeType) {
         return new MarshalerRange(managedType, nativeType);
     }
 
+    @Override // android.hardware.camera2.marshal.MarshalQueryable
     public boolean isTypeMappingSupported(TypeReference<Range<T>> managedType, int nativeType) {
         return Range.class.equals(managedType.getRawType());
     }

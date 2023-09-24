@@ -3,6 +3,7 @@ package org.mozilla.universalchardet.prober;
 import org.mozilla.universalchardet.Constants;
 import org.mozilla.universalchardet.prober.CharsetProber;
 
+/* loaded from: classes5.dex */
 public class HebrewProber extends CharsetProber {
     public static final int FINAL_KAF = 234;
     public static final int FINAL_MEM = 237;
@@ -20,8 +21,8 @@ public class HebrewProber extends CharsetProber {
     private byte beforePrev;
     private int finalCharLogicalScore;
     private int finalCharVisualScore;
-    private CharsetProber logicalProber = null;
     private byte prev;
+    private CharsetProber logicalProber = null;
     private CharsetProber visualProber = null;
 
     public HebrewProber() {
@@ -29,15 +30,16 @@ public class HebrewProber extends CharsetProber {
     }
 
     protected static boolean isFinal(byte b) {
-        byte b2 = b & 255;
-        return b2 == 234 || b2 == 237 || b2 == 239 || b2 == 243 || b2 == 245;
+        int i = b & 255;
+        return i == 234 || i == 237 || i == 239 || i == 243 || i == 245;
     }
 
     protected static boolean isNonFinal(byte b) {
-        byte b2 = b & 255;
-        return b2 == 235 || b2 == 238 || b2 == 240 || b2 == 244;
+        int i = b & 255;
+        return i == 235 || i == 238 || i == 240 || i == 244;
     }
 
+    @Override // org.mozilla.universalchardet.prober.CharsetProber
     public String getCharSetName() {
         int i = this.finalCharLogicalScore - this.finalCharVisualScore;
         if (i >= 5) {
@@ -47,17 +49,26 @@ public class HebrewProber extends CharsetProber {
             return Constants.CHARSET_ISO_8859_8;
         }
         float confidence = this.logicalProber.getConfidence() - this.visualProber.getConfidence();
-        return confidence > 0.01f ? Constants.CHARSET_WINDOWS_1255 : confidence < -0.01f ? Constants.CHARSET_ISO_8859_8 : i < 0 ? Constants.CHARSET_ISO_8859_8 : Constants.CHARSET_WINDOWS_1255;
+        if (confidence > 0.01f) {
+            return Constants.CHARSET_WINDOWS_1255;
+        }
+        if (confidence >= -0.01f && i >= 0) {
+            return Constants.CHARSET_WINDOWS_1255;
+        }
+        return Constants.CHARSET_ISO_8859_8;
     }
 
+    @Override // org.mozilla.universalchardet.prober.CharsetProber
     public float getConfidence() {
         return 0.0f;
     }
 
+    @Override // org.mozilla.universalchardet.prober.CharsetProber
     public CharsetProber.ProbingState getState() {
         return (this.logicalProber.getState() == CharsetProber.ProbingState.NOT_ME && this.visualProber.getState() == CharsetProber.ProbingState.NOT_ME) ? CharsetProber.ProbingState.NOT_ME : CharsetProber.ProbingState.DETECTING;
     }
 
+    @Override // org.mozilla.universalchardet.prober.CharsetProber
     public CharsetProber.ProbingState handleData(byte[] bArr, int i, int i2) {
         if (getState() == CharsetProber.ProbingState.NOT_ME) {
             return CharsetProber.ProbingState.NOT_ME;
@@ -69,24 +80,19 @@ public class HebrewProber extends CharsetProber {
                 if (this.beforePrev != 32) {
                     if (isFinal(this.prev)) {
                         this.finalCharLogicalScore++;
-                    } else if (!isNonFinal(this.prev)) {
-                    }
-                }
-                this.beforePrev = this.prev;
-                this.prev = b;
-                i++;
-            } else {
-                if (this.beforePrev == 32) {
-                    if (isFinal(this.prev)) {
-                        if (b == 32) {
+                    } else {
+                        if (!isNonFinal(this.prev)) {
                         }
+                        this.finalCharVisualScore++;
                     }
                 }
-                this.beforePrev = this.prev;
-                this.prev = b;
-                i++;
+            } else if (this.beforePrev == 32) {
+                if (isFinal(this.prev)) {
+                    if (b == 32) {
+                    }
+                    this.finalCharVisualScore++;
+                }
             }
-            this.finalCharVisualScore++;
             this.beforePrev = this.prev;
             this.prev = b;
             i++;
@@ -94,6 +100,7 @@ public class HebrewProber extends CharsetProber {
         return CharsetProber.ProbingState.DETECTING;
     }
 
+    @Override // org.mozilla.universalchardet.prober.CharsetProber
     public void reset() {
         this.finalCharLogicalScore = 0;
         this.finalCharVisualScore = 0;
@@ -106,6 +113,7 @@ public class HebrewProber extends CharsetProber {
         this.visualProber = charsetProber2;
     }
 
+    @Override // org.mozilla.universalchardet.prober.CharsetProber
     public void setOption() {
     }
 }

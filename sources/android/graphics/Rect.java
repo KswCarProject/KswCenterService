@@ -1,8 +1,8 @@
 package android.graphics;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.TextUtils;
 import android.util.proto.ProtoInputStream;
 import android.util.proto.ProtoOutputStream;
@@ -12,14 +12,19 @@ import java.io.PrintWriter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/* loaded from: classes.dex */
 public final class Rect implements Parcelable {
-    public static final Parcelable.Creator<Rect> CREATOR = new Parcelable.Creator<Rect>() {
+    public static final Parcelable.Creator<Rect> CREATOR = new Parcelable.Creator<Rect>() { // from class: android.graphics.Rect.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Rect createFromParcel(Parcel in) {
             Rect r = new Rect();
             r.readFromParcel(in);
             return r;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Rect[] newArray(int size) {
             return new Rect[size];
         }
@@ -29,6 +34,7 @@ public final class Rect implements Parcelable {
     public int right;
     public int top;
 
+    /* loaded from: classes.dex */
     private static final class UnflattenHelper {
         private static final Pattern FLATTENED_PATTERN = Pattern.compile("(-?\\d+) (-?\\d+) (-?\\d+) (-?\\d+)");
 
@@ -43,11 +49,11 @@ public final class Rect implements Parcelable {
     public Rect() {
     }
 
-    public Rect(int left2, int top2, int right2, int bottom2) {
-        this.left = left2;
-        this.top = top2;
-        this.right = right2;
-        this.bottom = bottom2;
+    public Rect(int left, int top, int right, int bottom) {
+        this.left = left;
+        this.top = top;
+        this.right = right;
+        this.bottom = bottom;
     }
 
     public Rect(Rect r) {
@@ -100,7 +106,8 @@ public final class Rect implements Parcelable {
     }
 
     public int hashCode() {
-        return (((((this.left * 31) + this.top) * 31) + this.right) * 31) + this.bottom;
+        int result = this.left;
+        return (((((result * 31) + this.top) * 31) + this.right) * 31) + this.bottom;
     }
 
     public String toString() {
@@ -152,10 +159,10 @@ public final class Rect implements Parcelable {
             return null;
         }
         Matcher matcher = UnflattenHelper.getMatcher(str);
-        if (!matcher.matches()) {
-            return null;
+        if (matcher.matches()) {
+            return new Rect(Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)), Integer.parseInt(matcher.group(3)), Integer.parseInt(matcher.group(4)));
         }
-        return new Rect(Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)), Integer.parseInt(matcher.group(3)), Integer.parseInt(matcher.group(4)));
+        return null;
     }
 
     @UnsupportedAppUsage
@@ -225,11 +232,11 @@ public final class Rect implements Parcelable {
     }
 
     public final float exactCenterX() {
-        return ((float) (this.left + this.right)) * 0.5f;
+        return (this.left + this.right) * 0.5f;
     }
 
     public final float exactCenterY() {
-        return ((float) (this.top + this.bottom)) * 0.5f;
+        return (this.top + this.bottom) * 0.5f;
     }
 
     public void setEmpty() {
@@ -239,11 +246,11 @@ public final class Rect implements Parcelable {
         this.left = 0;
     }
 
-    public void set(int left2, int top2, int right2, int bottom2) {
-        this.left = left2;
-        this.top = top2;
-        this.right = right2;
-        this.bottom = bottom2;
+    public void set(int left, int top, int right, int bottom) {
+        this.left = left;
+        this.top = top;
+        this.right = right;
+        this.bottom = bottom;
     }
 
     public void set(Rect src) {
@@ -288,43 +295,43 @@ public final class Rect implements Parcelable {
         this.bottom -= insets.bottom;
     }
 
-    public void inset(int left2, int top2, int right2, int bottom2) {
-        this.left += left2;
-        this.top += top2;
-        this.right -= right2;
-        this.bottom -= bottom2;
+    public void inset(int left, int top, int right, int bottom) {
+        this.left += left;
+        this.top += top;
+        this.right -= right;
+        this.bottom -= bottom;
     }
 
     public boolean contains(int x, int y) {
         return this.left < this.right && this.top < this.bottom && x >= this.left && x < this.right && y >= this.top && y < this.bottom;
     }
 
-    public boolean contains(int left2, int top2, int right2, int bottom2) {
-        return this.left < this.right && this.top < this.bottom && this.left <= left2 && this.top <= top2 && this.right >= right2 && this.bottom >= bottom2;
+    public boolean contains(int left, int top, int right, int bottom) {
+        return this.left < this.right && this.top < this.bottom && this.left <= left && this.top <= top && this.right >= right && this.bottom >= bottom;
     }
 
     public boolean contains(Rect r) {
         return this.left < this.right && this.top < this.bottom && this.left <= r.left && this.top <= r.top && this.right >= r.right && this.bottom >= r.bottom;
     }
 
-    public boolean intersect(int left2, int top2, int right2, int bottom2) {
-        if (this.left >= right2 || left2 >= this.right || this.top >= bottom2 || top2 >= this.bottom) {
-            return false;
-        }
-        if (this.left < left2) {
-            this.left = left2;
-        }
-        if (this.top < top2) {
-            this.top = top2;
-        }
-        if (this.right > right2) {
-            this.right = right2;
-        }
-        if (this.bottom <= bottom2) {
+    public boolean intersect(int left, int top, int right, int bottom) {
+        if (this.left < right && left < this.right && this.top < bottom && top < this.bottom) {
+            if (this.left < left) {
+                this.left = left;
+            }
+            if (this.top < top) {
+                this.top = top;
+            }
+            if (this.right > right) {
+                this.right = right;
+            }
+            if (this.bottom > bottom) {
+                this.bottom = bottom;
+                return true;
+            }
             return true;
         }
-        this.bottom = bottom2;
-        return true;
+        return false;
     }
 
     public boolean intersect(Rect r) {
@@ -339,45 +346,46 @@ public final class Rect implements Parcelable {
     }
 
     public boolean setIntersect(Rect a, Rect b) {
-        if (a.left >= b.right || b.left >= a.right || a.top >= b.bottom || b.top >= a.bottom) {
-            return false;
+        if (a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom) {
+            this.left = Math.max(a.left, b.left);
+            this.top = Math.max(a.top, b.top);
+            this.right = Math.min(a.right, b.right);
+            this.bottom = Math.min(a.bottom, b.bottom);
+            return true;
         }
-        this.left = Math.max(a.left, b.left);
-        this.top = Math.max(a.top, b.top);
-        this.right = Math.min(a.right, b.right);
-        this.bottom = Math.min(a.bottom, b.bottom);
-        return true;
+        return false;
     }
 
-    public boolean intersects(int left2, int top2, int right2, int bottom2) {
-        return this.left < right2 && left2 < this.right && this.top < bottom2 && top2 < this.bottom;
+    public boolean intersects(int left, int top, int right, int bottom) {
+        return this.left < right && left < this.right && this.top < bottom && top < this.bottom;
     }
 
     public static boolean intersects(Rect a, Rect b) {
         return a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom;
     }
 
-    public void union(int left2, int top2, int right2, int bottom2) {
-        if (left2 < right2 && top2 < bottom2) {
-            if (this.left >= this.right || this.top >= this.bottom) {
-                this.left = left2;
-                this.top = top2;
-                this.right = right2;
-                this.bottom = bottom2;
+    public void union(int left, int top, int right, int bottom) {
+        if (left < right && top < bottom) {
+            if (this.left < this.right && this.top < this.bottom) {
+                if (this.left > left) {
+                    this.left = left;
+                }
+                if (this.top > top) {
+                    this.top = top;
+                }
+                if (this.right < right) {
+                    this.right = right;
+                }
+                if (this.bottom < bottom) {
+                    this.bottom = bottom;
+                    return;
+                }
                 return;
             }
-            if (this.left > left2) {
-                this.left = left2;
-            }
-            if (this.top > top2) {
-                this.top = top2;
-            }
-            if (this.right < right2) {
-                this.right = right2;
-            }
-            if (this.bottom < bottom2) {
-                this.bottom = bottom2;
-            }
+            this.left = left;
+            this.top = top;
+            this.right = right;
+            this.bottom = bottom;
         }
     }
 
@@ -404,17 +412,20 @@ public final class Rect implements Parcelable {
             this.left = this.right;
             this.right = temp;
         }
-        if (this.top > this.bottom) {
-            int temp2 = this.top;
+        int temp2 = this.top;
+        if (temp2 > this.bottom) {
+            int temp3 = this.top;
             this.top = this.bottom;
-            this.bottom = temp2;
+            this.bottom = temp3;
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(this.left);
         out.writeInt(this.top);
@@ -432,10 +443,10 @@ public final class Rect implements Parcelable {
     @UnsupportedAppUsage
     public void scale(float scale) {
         if (scale != 1.0f) {
-            this.left = (int) ((((float) this.left) * scale) + 0.5f);
-            this.top = (int) ((((float) this.top) * scale) + 0.5f);
-            this.right = (int) ((((float) this.right) * scale) + 0.5f);
-            this.bottom = (int) ((((float) this.bottom) * scale) + 0.5f);
+            this.left = (int) ((this.left * scale) + 0.5f);
+            this.top = (int) ((this.top * scale) + 0.5f);
+            this.right = (int) ((this.right * scale) + 0.5f);
+            this.bottom = (int) ((this.bottom * scale) + 0.5f);
         }
     }
 }

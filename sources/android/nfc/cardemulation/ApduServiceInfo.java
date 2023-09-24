@@ -2,19 +2,19 @@ package android.nfc.cardemulation;
 
 import android.annotation.UnsupportedAppUsage;
 import android.content.ComponentName;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.content.pm.ServiceInfo;
+import android.content.p002pm.PackageManager;
+import android.content.p002pm.ResolveInfo;
+import android.content.p002pm.ServiceInfo;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.content.res.XmlResourceParser;
 import android.graphics.drawable.Drawable;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Xml;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -25,29 +25,37 @@ import java.util.List;
 import java.util.Map;
 import org.xmlpull.v1.XmlPullParserException;
 
+/* loaded from: classes3.dex */
 public class ApduServiceInfo implements Parcelable {
     @UnsupportedAppUsage
-    public static final Parcelable.Creator<ApduServiceInfo> CREATOR = new Parcelable.Creator<ApduServiceInfo>() {
+    public static final Parcelable.Creator<ApduServiceInfo> CREATOR = new Parcelable.Creator<ApduServiceInfo>() { // from class: android.nfc.cardemulation.ApduServiceInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ApduServiceInfo createFromParcel(Parcel source) {
-            Parcel parcel = source;
-            ResolveInfo info = ResolveInfo.CREATOR.createFromParcel(parcel);
+            ResolveInfo info = ResolveInfo.CREATOR.createFromParcel(source);
             String description = source.readString();
             boolean z = source.readInt() != 0;
             String offHostName = source.readString();
             String staticOffHostName = source.readString();
             ArrayList<AidGroup> staticAidGroups = new ArrayList<>();
-            if (source.readInt() > 0) {
-                parcel.readTypedList(staticAidGroups, AidGroup.CREATOR);
+            int numStaticGroups = source.readInt();
+            if (numStaticGroups > 0) {
+                source.readTypedList(staticAidGroups, AidGroup.CREATOR);
             }
             ArrayList<AidGroup> dynamicAidGroups = new ArrayList<>();
-            if (source.readInt() > 0) {
-                parcel.readTypedList(dynamicAidGroups, AidGroup.CREATOR);
+            int numDynamicGroups = source.readInt();
+            if (numDynamicGroups > 0) {
+                source.readTypedList(dynamicAidGroups, AidGroup.CREATOR);
             }
-            ArrayList<AidGroup> arrayList = dynamicAidGroups;
-            ArrayList<AidGroup> arrayList2 = staticAidGroups;
-            return new ApduServiceInfo(info, description, staticAidGroups, dynamicAidGroups, source.readInt() != 0, source.readInt(), source.readInt(), source.readString(), offHostName, staticOffHostName);
+            boolean requiresUnlock = source.readInt() != 0;
+            int bannerResource = source.readInt();
+            int uid = source.readInt();
+            String settingsActivityName = source.readString();
+            return new ApduServiceInfo(info, description, staticAidGroups, dynamicAidGroups, requiresUnlock, bannerResource, uid, settingsActivityName, offHostName, staticOffHostName);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ApduServiceInfo[] newArray(int size) {
             return new ApduServiceInfo[size];
         }
@@ -93,178 +101,180 @@ public class ApduServiceInfo implements Parcelable {
         this.mSettingsActivityName = settingsActivityName;
     }
 
+    /* JADX WARN: Code restructure failed: missing block: B:29:0x0062, code lost:
+        if ("offhost-apdu-service".equals(r10) == false) goto L25;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:32:0x006c, code lost:
+        throw new org.xmlpull.v1.XmlPullParserException("Meta-data does not start with <offhost-apdu-service> tag");
+     */
     @UnsupportedAppUsage
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
     public ApduServiceInfo(PackageManager pm, ResolveInfo info, boolean onHost) throws XmlPullParserException, IOException {
+        XmlResourceParser parser;
         int i;
         int depth;
-        PackageManager packageManager = pm;
-        ResolveInfo resolveInfo = info;
-        boolean z = onHost;
-        ServiceInfo si = resolveInfo.serviceInfo;
-        XmlResourceParser parser = null;
-        if (z) {
+        ServiceInfo si = info.serviceInfo;
+        XmlResourceParser parser2 = null;
+        try {
             try {
-                parser = si.loadXmlMetaData(packageManager, HostApduService.SERVICE_META_DATA);
-                if (parser == null) {
-                    throw new XmlPullParserException("No android.nfc.cardemulation.host_apdu_service meta-data");
-                }
-            } catch (PackageManager.NameNotFoundException e) {
-                throw new XmlPullParserException("Unable to create context for: " + si.packageName);
-            } catch (Throwable th) {
-                if (parser != null) {
-                    parser.close();
-                }
-                throw th;
-            }
-        } else {
-            parser = si.loadXmlMetaData(packageManager, OffHostApduService.SERVICE_META_DATA);
-            if (parser == null) {
-                throw new XmlPullParserException("No android.nfc.cardemulation.off_host_apdu_service meta-data");
-            }
-        }
-        int eventType = parser.getEventType();
-        while (true) {
-            i = 2;
-            if (eventType == 2 || eventType == 1) {
-                String tagName = parser.getName();
-            } else {
-                eventType = parser.next();
-            }
-        }
-        String tagName2 = parser.getName();
-        if (z) {
-            if (!"host-apdu-service".equals(tagName2)) {
-                throw new XmlPullParserException("Meta-data does not start with <host-apdu-service> tag");
-            }
-        }
-        if (!z) {
-            if (!"offhost-apdu-service".equals(tagName2)) {
-                throw new XmlPullParserException("Meta-data does not start with <offhost-apdu-service> tag");
-            }
-        }
-        Resources res = packageManager.getResourcesForApplication(si.applicationInfo);
-        AttributeSet attrs = Xml.asAttributeSet(parser);
-        int i2 = 3;
-        int i3 = 0;
-        if (z) {
-            TypedArray sa = res.obtainAttributes(attrs, R.styleable.HostApduService);
-            this.mService = resolveInfo;
-            this.mDescription = sa.getString(0);
-            this.mRequiresDeviceUnlock = sa.getBoolean(2, false);
-            this.mBannerResourceId = sa.getResourceId(3, -1);
-            this.mSettingsActivityName = sa.getString(1);
-            this.mOffHostName = null;
-            this.mStaticOffHostName = this.mOffHostName;
-            sa.recycle();
-        } else {
-            TypedArray sa2 = res.obtainAttributes(attrs, R.styleable.OffHostApduService);
-            this.mService = resolveInfo;
-            this.mDescription = sa2.getString(0);
-            this.mRequiresDeviceUnlock = false;
-            this.mBannerResourceId = sa2.getResourceId(2, -1);
-            this.mSettingsActivityName = sa2.getString(1);
-            this.mOffHostName = sa2.getString(3);
-            if (this.mOffHostName != null) {
-                if (this.mOffHostName.equals("eSE")) {
-                    this.mOffHostName = "eSE1";
-                } else if (this.mOffHostName.equals("SIM")) {
-                    this.mOffHostName = "SIM1";
-                }
-            }
-            this.mStaticOffHostName = this.mOffHostName;
-            sa2.recycle();
-        }
-        this.mStaticAidGroups = new HashMap<>();
-        this.mDynamicAidGroups = new HashMap<>();
-        this.mOnHost = z;
-        int depth2 = parser.getDepth();
-        AidGroup currentGroup = null;
-        while (true) {
-            AidGroup currentGroup2 = currentGroup;
-            int next = parser.next();
-            int eventType2 = next;
-            if ((next != i2 || parser.getDepth() > depth2) && eventType2 != 1) {
-                String tagName3 = parser.getName();
-                if (eventType2 == i && "aid-group".equals(tagName3) && currentGroup2 == null) {
-                    TypedArray groupAttrs = res.obtainAttributes(attrs, R.styleable.AidGroup);
-                    String groupCategory = groupAttrs.getString(1);
-                    String groupDescription = groupAttrs.getString(i3);
-                    String groupCategory2 = groupCategory;
-                    groupCategory2 = !CardEmulation.CATEGORY_PAYMENT.equals(groupCategory2) ? "other" : groupCategory2;
-                    AidGroup currentGroup3 = this.mStaticAidGroups.get(groupCategory2);
-                    if (currentGroup3 == null) {
-                        depth = depth2;
-                        currentGroup = new AidGroup(groupCategory2, groupDescription);
-                    } else if (!"other".equals(groupCategory2)) {
-                        StringBuilder sb = new StringBuilder();
-                        depth = depth2;
-                        sb.append("Not allowing multiple aid-groups in the ");
-                        sb.append(groupCategory2);
-                        sb.append(" category");
-                        Log.e(TAG, sb.toString());
-                        currentGroup = null;
-                        String str = groupDescription;
-                    } else {
-                        depth = depth2;
-                        currentGroup = currentGroup3;
-                        String str2 = groupDescription;
+                if (onHost) {
+                    parser = si.loadXmlMetaData(pm, HostApduService.SERVICE_META_DATA);
+                    if (parser == null) {
+                        throw new XmlPullParserException("No android.nfc.cardemulation.host_apdu_service meta-data");
                     }
-                    groupAttrs.recycle();
                 } else {
-                    depth = depth2;
-                    if (eventType2 != 3 || !"aid-group".equals(tagName3) || currentGroup2 == null) {
-                        if (eventType2 == 2 && "aid-filter".equals(tagName3) && currentGroup2 != null) {
-                            TypedArray a = res.obtainAttributes(attrs, R.styleable.AidFilter);
-                            String aid = a.getString(0).toUpperCase();
-                            if (!CardEmulation.isValidAid(aid) || currentGroup2.aids.contains(aid)) {
-                                Log.e(TAG, "Ignoring invalid or duplicate aid: " + aid);
-                            } else {
-                                currentGroup2.aids.add(aid);
-                            }
-                            a.recycle();
-                        } else if (eventType2 == 2 && "aid-prefix-filter".equals(tagName3) && currentGroup2 != null) {
-                            TypedArray a2 = res.obtainAttributes(attrs, R.styleable.AidFilter);
-                            String aid2 = a2.getString(0).toUpperCase().concat("*");
-                            if (!CardEmulation.isValidAid(aid2) || currentGroup2.aids.contains(aid2)) {
-                                Log.e(TAG, "Ignoring invalid or duplicate aid: " + aid2);
-                            } else {
-                                currentGroup2.aids.add(aid2);
-                            }
-                            a2.recycle();
-                        } else if (eventType2 == 2 && tagName3.equals("aid-suffix-filter") && currentGroup2 != null) {
-                            TypedArray a3 = res.obtainAttributes(attrs, R.styleable.AidFilter);
-                            String aid3 = a3.getString(0).toUpperCase().concat("#");
-                            if (!CardEmulation.isValidAid(aid3) || currentGroup2.aids.contains(aid3)) {
-                                Log.e(TAG, "Ignoring invalid or duplicate aid: " + aid3);
-                            } else {
-                                currentGroup2.aids.add(aid3);
-                            }
-                            a3.recycle();
+                    parser = si.loadXmlMetaData(pm, OffHostApduService.SERVICE_META_DATA);
+                    if (parser == null) {
+                        throw new XmlPullParserException("No android.nfc.cardemulation.off_host_apdu_service meta-data");
+                    }
+                }
+                int eventType = parser.getEventType();
+                while (true) {
+                    i = 2;
+                    if (eventType == 2 || eventType == 1) {
+                        break;
+                    }
+                    eventType = parser.next();
+                }
+                String tagName = parser.getName();
+                if (onHost && !"host-apdu-service".equals(tagName)) {
+                    throw new XmlPullParserException("Meta-data does not start with <host-apdu-service> tag");
+                }
+                Resources res = pm.getResourcesForApplication(si.applicationInfo);
+                AttributeSet attrs = Xml.asAttributeSet(parser);
+                int i2 = 3;
+                int i3 = 0;
+                if (onHost) {
+                    TypedArray sa = res.obtainAttributes(attrs, C3132R.styleable.HostApduService);
+                    this.mService = info;
+                    this.mDescription = sa.getString(0);
+                    this.mRequiresDeviceUnlock = sa.getBoolean(2, false);
+                    this.mBannerResourceId = sa.getResourceId(3, -1);
+                    this.mSettingsActivityName = sa.getString(1);
+                    this.mOffHostName = null;
+                    this.mStaticOffHostName = this.mOffHostName;
+                    sa.recycle();
+                } else {
+                    TypedArray sa2 = res.obtainAttributes(attrs, C3132R.styleable.OffHostApduService);
+                    this.mService = info;
+                    this.mDescription = sa2.getString(0);
+                    this.mRequiresDeviceUnlock = false;
+                    this.mBannerResourceId = sa2.getResourceId(2, -1);
+                    this.mSettingsActivityName = sa2.getString(1);
+                    this.mOffHostName = sa2.getString(3);
+                    if (this.mOffHostName != null) {
+                        if (this.mOffHostName.equals("eSE")) {
+                            this.mOffHostName = "eSE1";
+                        } else if (this.mOffHostName.equals("SIM")) {
+                            this.mOffHostName = "SIM1";
                         }
-                        currentGroup = currentGroup2;
-                    } else {
-                        if (currentGroup2.aids.size() <= 0) {
-                            Log.e(TAG, "Not adding <aid-group> with empty or invalid AIDs");
-                        } else if (!this.mStaticAidGroups.containsKey(currentGroup2.category)) {
-                            this.mStaticAidGroups.put(currentGroup2.category, currentGroup2);
+                    }
+                    this.mStaticOffHostName = this.mOffHostName;
+                    sa2.recycle();
+                }
+                this.mStaticAidGroups = new HashMap<>();
+                this.mDynamicAidGroups = new HashMap<>();
+                this.mOnHost = onHost;
+                int depth2 = parser.getDepth();
+                AidGroup currentGroup = null;
+                while (true) {
+                    AidGroup currentGroup2 = currentGroup;
+                    int eventType2 = parser.next();
+                    if ((eventType2 != i2 || parser.getDepth() > depth2) && eventType2 != 1) {
+                        String tagName2 = parser.getName();
+                        if (eventType2 == i && "aid-group".equals(tagName2) && currentGroup2 == null) {
+                            TypedArray groupAttrs = res.obtainAttributes(attrs, C3132R.styleable.AidGroup);
+                            String groupCategory = groupAttrs.getString(1);
+                            String groupDescription = groupAttrs.getString(i3);
+                            String groupCategory2 = groupCategory;
+                            groupCategory2 = CardEmulation.CATEGORY_PAYMENT.equals(groupCategory2) ? groupCategory2 : "other";
+                            AidGroup currentGroup3 = this.mStaticAidGroups.get(groupCategory2);
+                            if (currentGroup3 != null) {
+                                if ("other".equals(groupCategory2)) {
+                                    depth = depth2;
+                                    currentGroup = currentGroup3;
+                                } else {
+                                    StringBuilder sb = new StringBuilder();
+                                    depth = depth2;
+                                    sb.append("Not allowing multiple aid-groups in the ");
+                                    sb.append(groupCategory2);
+                                    sb.append(" category");
+                                    Log.m70e(TAG, sb.toString());
+                                    currentGroup = null;
+                                }
+                            } else {
+                                depth = depth2;
+                                currentGroup = new AidGroup(groupCategory2, groupDescription);
+                            }
+                            groupAttrs.recycle();
+                        } else {
+                            depth = depth2;
+                            if (eventType2 == 3 && "aid-group".equals(tagName2) && currentGroup2 != null) {
+                                if (currentGroup2.aids.size() > 0) {
+                                    if (!this.mStaticAidGroups.containsKey(currentGroup2.category)) {
+                                        this.mStaticAidGroups.put(currentGroup2.category, currentGroup2);
+                                    }
+                                } else {
+                                    Log.m70e(TAG, "Not adding <aid-group> with empty or invalid AIDs");
+                                }
+                                currentGroup = null;
+                                i2 = 3;
+                                depth2 = depth;
+                                i = 2;
+                                i3 = 0;
+                            } else {
+                                if (eventType2 == 2 && "aid-filter".equals(tagName2) && currentGroup2 != null) {
+                                    TypedArray a = res.obtainAttributes(attrs, C3132R.styleable.AidFilter);
+                                    String aid = a.getString(0).toUpperCase();
+                                    if (CardEmulation.isValidAid(aid) && !currentGroup2.aids.contains(aid)) {
+                                        currentGroup2.aids.add(aid);
+                                    } else {
+                                        Log.m70e(TAG, "Ignoring invalid or duplicate aid: " + aid);
+                                    }
+                                    a.recycle();
+                                } else if (eventType2 == 2 && "aid-prefix-filter".equals(tagName2) && currentGroup2 != null) {
+                                    TypedArray a2 = res.obtainAttributes(attrs, C3132R.styleable.AidFilter);
+                                    String aid2 = a2.getString(0).toUpperCase().concat("*");
+                                    if (CardEmulation.isValidAid(aid2) && !currentGroup2.aids.contains(aid2)) {
+                                        currentGroup2.aids.add(aid2);
+                                    } else {
+                                        Log.m70e(TAG, "Ignoring invalid or duplicate aid: " + aid2);
+                                    }
+                                    a2.recycle();
+                                } else if (eventType2 == 2 && tagName2.equals("aid-suffix-filter") && currentGroup2 != null) {
+                                    TypedArray a3 = res.obtainAttributes(attrs, C3132R.styleable.AidFilter);
+                                    String aid3 = a3.getString(0).toUpperCase().concat("#");
+                                    if (CardEmulation.isValidAid(aid3) && !currentGroup2.aids.contains(aid3)) {
+                                        currentGroup2.aids.add(aid3);
+                                    } else {
+                                        Log.m70e(TAG, "Ignoring invalid or duplicate aid: " + aid3);
+                                    }
+                                    a3.recycle();
+                                }
+                                currentGroup = currentGroup2;
+                            }
                         }
-                        currentGroup = null;
-                        i2 = 3;
                         depth2 = depth;
                         i = 2;
+                        i2 = 3;
                         i3 = 0;
                     }
                 }
-                depth2 = depth;
-                i = 2;
-                i2 = 3;
-                i3 = 0;
+                if (parser != null) {
+                    parser.close();
+                }
+                this.mUid = si.applicationInfo.uid;
+            } catch (PackageManager.NameNotFoundException e) {
+                throw new XmlPullParserException("Unable to create context for: " + si.packageName);
             }
+        } catch (Throwable th) {
+            if (0 != 0) {
+                parser2.close();
+            }
+            throw th;
         }
-        if (parser != null) {
-            parser.close();
-        }
-        this.mUid = si.applicationInfo.uid;
     }
 
     public ComponentName getComponent() {
@@ -279,7 +289,8 @@ public class ApduServiceInfo implements Parcelable {
         ArrayList<String> aids = new ArrayList<>();
         Iterator<AidGroup> it = getAidGroups().iterator();
         while (it.hasNext()) {
-            aids.addAll(it.next().aids);
+            AidGroup group = it.next();
+            aids.addAll(group.aids);
         }
         return aids;
     }
@@ -288,7 +299,8 @@ public class ApduServiceInfo implements Parcelable {
         ArrayList<String> prefixAids = new ArrayList<>();
         Iterator<AidGroup> it = getAidGroups().iterator();
         while (it.hasNext()) {
-            for (String aid : it.next().aids) {
+            AidGroup group = it.next();
+            for (String aid : group.aids) {
                 if (aid.endsWith("*")) {
                     prefixAids.add(aid);
                 }
@@ -301,7 +313,8 @@ public class ApduServiceInfo implements Parcelable {
         ArrayList<String> subsetAids = new ArrayList<>();
         Iterator<AidGroup> it = getAidGroups().iterator();
         while (it.hasNext()) {
-            for (String aid : it.next().aids) {
+            AidGroup group = it.next();
+            for (String aid : group.aids) {
                 if (aid.endsWith("#")) {
                     subsetAids.add(aid);
                 }
@@ -332,7 +345,8 @@ public class ApduServiceInfo implements Parcelable {
     }
 
     public String getCategoryForAid(String aid) {
-        Iterator<AidGroup> it = getAidGroups().iterator();
+        ArrayList<AidGroup> groups = getAidGroups();
+        Iterator<AidGroup> it = groups.iterator();
         while (it.hasNext()) {
             AidGroup group = it.next();
             if (group.aids.contains(aid.toUpperCase())) {
@@ -397,12 +411,14 @@ public class ApduServiceInfo implements Parcelable {
     @UnsupportedAppUsage
     public Drawable loadBanner(PackageManager pm) {
         try {
-            return pm.getResourcesForApplication(this.mService.serviceInfo.packageName).getDrawable(this.mBannerResourceId);
-        } catch (Resources.NotFoundException e) {
-            Log.e(TAG, "Could not load banner.");
+            Resources res = pm.getResourcesForApplication(this.mService.serviceInfo.packageName);
+            Drawable banner = res.getDrawable(this.mBannerResourceId);
+            return banner;
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.m70e(TAG, "Could not load banner.");
             return null;
-        } catch (PackageManager.NameNotFoundException e2) {
-            Log.e(TAG, "Could not load banner.");
+        } catch (Resources.NotFoundException e2) {
+            Log.m70e(TAG, "Could not load banner.");
             return null;
         }
     }
@@ -431,20 +447,23 @@ public class ApduServiceInfo implements Parcelable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof ApduServiceInfo)) {
-            return false;
+        if (o instanceof ApduServiceInfo) {
+            ApduServiceInfo thatService = (ApduServiceInfo) o;
+            return thatService.getComponent().equals(getComponent());
         }
-        return ((ApduServiceInfo) o).getComponent().equals(getComponent());
+        return false;
     }
 
     public int hashCode() {
         return getComponent().hashCode();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         this.mService.writeToParcel(dest, flags);
         dest.writeString(this.mDescription);

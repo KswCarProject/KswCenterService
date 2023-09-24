@@ -2,9 +2,10 @@ package android.app.timedetector;
 
 import android.app.timedetector.ITimeDetectorService;
 import android.content.Context;
-import android.os.RemoteException;
-import android.os.ServiceManager;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
 
+/* loaded from: classes.dex */
 public final class TimeDetector {
     private static final boolean DEBUG = false;
     private static final String TAG = "timedetector.TimeDetector";

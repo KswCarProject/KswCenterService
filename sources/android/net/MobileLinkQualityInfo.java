@@ -1,23 +1,25 @@
 package android.net;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
+import android.p007os.Parcel;
 
+/* loaded from: classes3.dex */
 public class MobileLinkQualityInfo extends LinkQualityInfo {
+    private int mMobileNetworkType = Integer.MAX_VALUE;
+    private int mRssi = Integer.MAX_VALUE;
+    private int mGsmErrorRate = Integer.MAX_VALUE;
     private int mCdmaDbm = Integer.MAX_VALUE;
     private int mCdmaEcio = Integer.MAX_VALUE;
     private int mEvdoDbm = Integer.MAX_VALUE;
     private int mEvdoEcio = Integer.MAX_VALUE;
     private int mEvdoSnr = Integer.MAX_VALUE;
-    private int mGsmErrorRate = Integer.MAX_VALUE;
-    private int mLteCqi = Integer.MAX_VALUE;
+    private int mLteSignalStrength = Integer.MAX_VALUE;
     private int mLteRsrp = Integer.MAX_VALUE;
     private int mLteRsrq = Integer.MAX_VALUE;
     private int mLteRssnr = Integer.MAX_VALUE;
-    private int mLteSignalStrength = Integer.MAX_VALUE;
-    private int mMobileNetworkType = Integer.MAX_VALUE;
-    private int mRssi = Integer.MAX_VALUE;
+    private int mLteCqi = Integer.MAX_VALUE;
 
+    @Override // android.net.LinkQualityInfo, android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags, 3);
         dest.writeInt(this.mMobileNetworkType);

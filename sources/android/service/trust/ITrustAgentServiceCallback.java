@@ -1,12 +1,13 @@
 package android.service.trust;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.text.TextUtils;
 
+/* loaded from: classes3.dex */
 public interface ITrustAgentServiceCallback extends IInterface {
     void addEscrowToken(byte[] bArr, int i) throws RemoteException;
 
@@ -26,39 +27,51 @@ public interface ITrustAgentServiceCallback extends IInterface {
 
     void unlockUserWithToken(long j, byte[] bArr, int i) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements ITrustAgentServiceCallback {
+        @Override // android.service.trust.ITrustAgentServiceCallback
         public void grantTrust(CharSequence message, long durationMs, int flags) throws RemoteException {
         }
 
+        @Override // android.service.trust.ITrustAgentServiceCallback
         public void revokeTrust() throws RemoteException {
         }
 
+        @Override // android.service.trust.ITrustAgentServiceCallback
         public void setManagingTrust(boolean managingTrust) throws RemoteException {
         }
 
+        @Override // android.service.trust.ITrustAgentServiceCallback
         public void onConfigureCompleted(boolean result, IBinder token) throws RemoteException {
         }
 
+        @Override // android.service.trust.ITrustAgentServiceCallback
         public void addEscrowToken(byte[] token, int userId) throws RemoteException {
         }
 
+        @Override // android.service.trust.ITrustAgentServiceCallback
         public void isEscrowTokenActive(long handle, int userId) throws RemoteException {
         }
 
+        @Override // android.service.trust.ITrustAgentServiceCallback
         public void removeEscrowToken(long handle, int userId) throws RemoteException {
         }
 
+        @Override // android.service.trust.ITrustAgentServiceCallback
         public void unlockUserWithToken(long handle, byte[] token, int userId) throws RemoteException {
         }
 
+        @Override // android.service.trust.ITrustAgentServiceCallback
         public void showKeyguardErrorMessage(CharSequence message) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements ITrustAgentServiceCallback {
         private static final String DESCRIPTOR = "android.service.trust.ITrustAgentServiceCallback";
         static final int TRANSACTION_addEscrowToken = 5;
@@ -80,12 +93,13 @@ public interface ITrustAgentServiceCallback extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof ITrustAgentServiceCallback)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof ITrustAgentServiceCallback)) {
+                return (ITrustAgentServiceCallback) iin;
             }
-            return (ITrustAgentServiceCallback) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -115,72 +129,77 @@ public interface ITrustAgentServiceCallback extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                boolean _arg0 = false;
-                CharSequence _arg02 = null;
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg02 = TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(data);
-                        }
-                        grantTrust(_arg02, data.readLong(), data.readInt());
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        revokeTrust();
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = true;
-                        }
-                        setManagingTrust(_arg0);
-                        return true;
-                    case 4:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = true;
-                        }
-                        onConfigureCompleted(_arg0, data.readStrongBinder());
-                        return true;
-                    case 5:
-                        data.enforceInterface(DESCRIPTOR);
-                        addEscrowToken(data.createByteArray(), data.readInt());
-                        return true;
-                    case 6:
-                        data.enforceInterface(DESCRIPTOR);
-                        isEscrowTokenActive(data.readLong(), data.readInt());
-                        return true;
-                    case 7:
-                        data.enforceInterface(DESCRIPTOR);
-                        removeEscrowToken(data.readLong(), data.readInt());
-                        return true;
-                    case 8:
-                        data.enforceInterface(DESCRIPTOR);
-                        unlockUserWithToken(data.readLong(), data.createByteArray(), data.readInt());
-                        return true;
-                    case 9:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg02 = TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(data);
-                        }
-                        showKeyguardErrorMessage(_arg02);
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            boolean _arg0;
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    CharSequence _arg02 = data.readInt() != 0 ? TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(data) : null;
+                    long _arg1 = data.readLong();
+                    int _arg2 = data.readInt();
+                    grantTrust(_arg02, _arg1, _arg2);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    revokeTrust();
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0;
+                    setManagingTrust(_arg0);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0;
+                    IBinder _arg12 = data.readStrongBinder();
+                    onConfigureCompleted(_arg0, _arg12);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    byte[] _arg03 = data.createByteArray();
+                    int _arg13 = data.readInt();
+                    addEscrowToken(_arg03, _arg13);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _arg04 = data.readLong();
+                    int _arg14 = data.readInt();
+                    isEscrowTokenActive(_arg04, _arg14);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _arg05 = data.readLong();
+                    int _arg15 = data.readInt();
+                    removeEscrowToken(_arg05, _arg15);
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _arg06 = data.readLong();
+                    byte[] _arg16 = data.createByteArray();
+                    int _arg22 = data.readInt();
+                    unlockUserWithToken(_arg06, _arg16, _arg22);
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    CharSequence _arg07 = data.readInt() != 0 ? TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(data) : null;
+                    showKeyguardErrorMessage(_arg07);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements ITrustAgentServiceCallback {
             public static ITrustAgentServiceCallback sDefaultImpl;
             private IBinder mRemote;
@@ -189,6 +208,7 @@ public interface ITrustAgentServiceCallback extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -197,6 +217,7 @@ public interface ITrustAgentServiceCallback extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.service.trust.ITrustAgentServiceCallback
             public void grantTrust(CharSequence message, long durationMs, int flags) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -209,9 +230,8 @@ public interface ITrustAgentServiceCallback extends IInterface {
                     }
                     _data.writeLong(durationMs);
                     _data.writeInt(flags);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().grantTrust(message, durationMs, flags);
                     }
                 } finally {
@@ -219,13 +239,13 @@ public interface ITrustAgentServiceCallback extends IInterface {
                 }
             }
 
+            @Override // android.service.trust.ITrustAgentServiceCallback
             public void revokeTrust() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().revokeTrust();
                     }
                 } finally {
@@ -233,14 +253,14 @@ public interface ITrustAgentServiceCallback extends IInterface {
                 }
             }
 
+            @Override // android.service.trust.ITrustAgentServiceCallback
             public void setManagingTrust(boolean managingTrust) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(managingTrust);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(managingTrust ? 1 : 0);
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().setManagingTrust(managingTrust);
                     }
                 } finally {
@@ -248,15 +268,15 @@ public interface ITrustAgentServiceCallback extends IInterface {
                 }
             }
 
+            @Override // android.service.trust.ITrustAgentServiceCallback
             public void onConfigureCompleted(boolean result, IBinder token) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(result);
+                    _data.writeInt(result ? 1 : 0);
                     _data.writeStrongBinder(token);
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onConfigureCompleted(result, token);
                     }
                 } finally {
@@ -264,15 +284,15 @@ public interface ITrustAgentServiceCallback extends IInterface {
                 }
             }
 
+            @Override // android.service.trust.ITrustAgentServiceCallback
             public void addEscrowToken(byte[] token, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeByteArray(token);
                     _data.writeInt(userId);
-                    if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(5, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().addEscrowToken(token, userId);
                     }
                 } finally {
@@ -280,15 +300,15 @@ public interface ITrustAgentServiceCallback extends IInterface {
                 }
             }
 
+            @Override // android.service.trust.ITrustAgentServiceCallback
             public void isEscrowTokenActive(long handle, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeLong(handle);
                     _data.writeInt(userId);
-                    if (this.mRemote.transact(6, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(6, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().isEscrowTokenActive(handle, userId);
                     }
                 } finally {
@@ -296,15 +316,15 @@ public interface ITrustAgentServiceCallback extends IInterface {
                 }
             }
 
+            @Override // android.service.trust.ITrustAgentServiceCallback
             public void removeEscrowToken(long handle, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeLong(handle);
                     _data.writeInt(userId);
-                    if (this.mRemote.transact(7, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(7, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().removeEscrowToken(handle, userId);
                     }
                 } finally {
@@ -312,6 +332,7 @@ public interface ITrustAgentServiceCallback extends IInterface {
                 }
             }
 
+            @Override // android.service.trust.ITrustAgentServiceCallback
             public void unlockUserWithToken(long handle, byte[] token, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -319,9 +340,8 @@ public interface ITrustAgentServiceCallback extends IInterface {
                     _data.writeLong(handle);
                     _data.writeByteArray(token);
                     _data.writeInt(userId);
-                    if (this.mRemote.transact(8, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(8, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().unlockUserWithToken(handle, token, userId);
                     }
                 } finally {
@@ -329,6 +349,7 @@ public interface ITrustAgentServiceCallback extends IInterface {
                 }
             }
 
+            @Override // android.service.trust.ITrustAgentServiceCallback
             public void showKeyguardErrorMessage(CharSequence message) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -339,9 +360,8 @@ public interface ITrustAgentServiceCallback extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(9, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(9, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().showKeyguardErrorMessage(message);
                     }
                 } finally {
@@ -351,11 +371,11 @@ public interface ITrustAgentServiceCallback extends IInterface {
         }
 
         public static boolean setDefaultImpl(ITrustAgentServiceCallback impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static ITrustAgentServiceCallback getDefaultImpl() {

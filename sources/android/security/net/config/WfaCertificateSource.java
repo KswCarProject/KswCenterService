@@ -4,32 +4,38 @@ import java.io.File;
 import java.security.cert.X509Certificate;
 import java.util.Set;
 
+/* loaded from: classes3.dex */
 public final class WfaCertificateSource extends DirectoryCertificateSource {
 
+    /* loaded from: classes3.dex */
     private static class NoPreloadHolder {
-        /* access modifiers changed from: private */
-        public static final WfaCertificateSource INSTANCE = new WfaCertificateSource();
+        private static final WfaCertificateSource INSTANCE = new WfaCertificateSource();
 
         private NoPreloadHolder() {
         }
     }
 
+    @Override // android.security.net.config.DirectoryCertificateSource, android.security.net.config.CertificateSource
     public /* bridge */ /* synthetic */ Set findAllByIssuerAndSignature(X509Certificate x509Certificate) {
         return super.findAllByIssuerAndSignature(x509Certificate);
     }
 
+    @Override // android.security.net.config.DirectoryCertificateSource, android.security.net.config.CertificateSource
     public /* bridge */ /* synthetic */ X509Certificate findByIssuerAndSignature(X509Certificate x509Certificate) {
         return super.findByIssuerAndSignature(x509Certificate);
     }
 
+    @Override // android.security.net.config.DirectoryCertificateSource, android.security.net.config.CertificateSource
     public /* bridge */ /* synthetic */ X509Certificate findBySubjectAndPublicKey(X509Certificate x509Certificate) {
         return super.findBySubjectAndPublicKey(x509Certificate);
     }
 
+    @Override // android.security.net.config.DirectoryCertificateSource, android.security.net.config.CertificateSource
     public /* bridge */ /* synthetic */ Set getCertificates() {
         return super.getCertificates();
     }
 
+    @Override // android.security.net.config.DirectoryCertificateSource, android.security.net.config.CertificateSource
     public /* bridge */ /* synthetic */ void handleTrustStorageUpdate() {
         super.handleTrustStorageUpdate();
     }
@@ -42,8 +48,8 @@ public final class WfaCertificateSource extends DirectoryCertificateSource {
         return NoPreloadHolder.INSTANCE;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean isCertMarkedAsRemoved(String caFile) {
+    @Override // android.security.net.config.DirectoryCertificateSource
+    protected boolean isCertMarkedAsRemoved(String caFile) {
         return false;
     }
 }

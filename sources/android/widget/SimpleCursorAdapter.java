@@ -6,20 +6,23 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.view.View;
 
+/* loaded from: classes4.dex */
 public class SimpleCursorAdapter extends ResourceCursorAdapter {
     private CursorToStringConverter mCursorToStringConverter;
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
     protected int[] mFrom;
     String[] mOriginalFrom;
-    private int mStringConversionColumn = -1;
+    private int mStringConversionColumn;
     @UnsupportedAppUsage
     protected int[] mTo;
     private ViewBinder mViewBinder;
 
+    /* loaded from: classes4.dex */
     public interface CursorToStringConverter {
         CharSequence convertToString(Cursor cursor);
     }
 
+    /* loaded from: classes4.dex */
     public interface ViewBinder {
         boolean setViewValue(View view, Cursor cursor, int i);
     }
@@ -27,6 +30,7 @@ public class SimpleCursorAdapter extends ResourceCursorAdapter {
     @Deprecated
     public SimpleCursorAdapter(Context context, int layout, Cursor c, String[] from, int[] to) {
         super(context, layout, c);
+        this.mStringConversionColumn = -1;
         this.mTo = to;
         this.mOriginalFrom = from;
         findColumns(c, from);
@@ -34,11 +38,13 @@ public class SimpleCursorAdapter extends ResourceCursorAdapter {
 
     public SimpleCursorAdapter(Context context, int layout, Cursor c, String[] from, int[] to, int flags) {
         super(context, layout, c, flags);
+        this.mStringConversionColumn = -1;
         this.mTo = to;
         this.mOriginalFrom = from;
         findColumns(c, from);
     }
 
+    @Override // android.widget.CursorAdapter
     public void bindView(View view, Context context, Cursor cursor) {
         ViewBinder binder = this.mViewBinder;
         int count = this.mTo.length;
@@ -87,7 +93,7 @@ public class SimpleCursorAdapter extends ResourceCursorAdapter {
     }
 
     public void setViewText(TextView v, String text) {
-        v.setText((CharSequence) text);
+        v.setText(text);
     }
 
     public int getStringConversionColumn() {
@@ -106,6 +112,7 @@ public class SimpleCursorAdapter extends ResourceCursorAdapter {
         this.mCursorToStringConverter = cursorToStringConverter;
     }
 
+    @Override // android.widget.CursorAdapter, android.widget.CursorFilter.CursorFilterClient
     public CharSequence convertToString(Cursor cursor) {
         if (this.mCursorToStringConverter != null) {
             return this.mCursorToStringConverter.convertToString(cursor);
@@ -130,6 +137,7 @@ public class SimpleCursorAdapter extends ResourceCursorAdapter {
         this.mFrom = null;
     }
 
+    @Override // android.widget.CursorAdapter
     public Cursor swapCursor(Cursor c) {
         findColumns(c, this.mOriginalFrom);
         return super.swapCursor(c);

@@ -8,12 +8,13 @@ import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkInfo;
 import android.net.SntpClient;
-import android.os.SystemClock;
-import android.os.SystemProperties;
+import android.p007os.SystemClock;
+import android.p007os.SystemProperties;
 import android.provider.Settings;
 import android.text.TextUtils;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
+/* loaded from: classes4.dex */
 public class NtpTrustedTime implements TrustedTime {
     private static final String BACKUP_SERVER = "persist.backup.ntpServer";
     private static final boolean LOGD = true;
@@ -33,7 +34,7 @@ public class NtpTrustedTime implements TrustedTime {
     private final long mTimeout;
 
     public NtpTrustedTime(String server, long timeout) {
-        Log.d(TAG, "creating NtpTrustedTime using " + server);
+        Log.m72d(TAG, "creating NtpTrustedTime using " + server);
         this.mServer = server;
         this.mTimeout = timeout;
     }
@@ -46,21 +47,21 @@ public class NtpTrustedTime implements TrustedTime {
             if (sSingleton == null) {
                 Resources res = context.getResources();
                 ContentResolver resolver = context.getContentResolver();
-                String defaultServer = res.getString(R.string.config_ntpServer);
-                long defaultTimeout = (long) res.getInteger(R.integer.config_ntpTimeout);
+                String defaultServer = res.getString(C3132R.string.config_ntpServer);
+                long defaultTimeout = res.getInteger(C3132R.integer.config_ntpTimeout);
                 String secureServer = Settings.Global.getString(resolver, Settings.Global.NTP_SERVER);
                 long timeout = Settings.Global.getLong(resolver, Settings.Global.NTP_TIMEOUT, defaultTimeout);
-                Log.d(TAG, "defaultServer is " + defaultServer + ", defaultTimeout is " + defaultTimeout + ", secureServer is " + secureServer + ", timeout is " + timeout);
-                sSingleton = new NtpTrustedTime(secureServer != null ? secureServer : defaultServer, timeout);
+                Log.m72d(TAG, "defaultServer is " + defaultServer + ", defaultTimeout is " + defaultTimeout + ", secureServer is " + secureServer + ", timeout is " + timeout);
+                String server = secureServer != null ? secureServer : defaultServer;
+                sSingleton = new NtpTrustedTime(server, timeout);
                 sContext = context;
                 String sserver_prop = Settings.Global.getString(resolver, Settings.Global.NTP_SERVER_2);
-                String backupServer = SystemProperties.get((sserver_prop == null || sserver_prop.length() <= 0) ? BACKUP_SERVER : sserver_prop);
-                if (backupServer != null && backupServer.length() > 0 && (retryMax = res.getInteger(R.integer.config_ntpRetry)) > 0) {
+                String secondServer_prop = (sserver_prop == null || sserver_prop.length() <= 0) ? BACKUP_SERVER : sserver_prop;
+                String backupServer = SystemProperties.get(secondServer_prop);
+                if (backupServer != null && backupServer.length() > 0 && (retryMax = res.getInteger(C3132R.integer.config_ntpRetry)) > 0) {
                     NtpTrustedTime ntpTrustedTime2 = sSingleton;
                     mNtpRetriesMax = retryMax;
                     NtpTrustedTime ntpTrustedTime3 = sSingleton;
-                    Resources resources = res;
-                    ContentResolver contentResolver = resolver;
                     mBackupServer = backupServer.trim().replace("\"", "");
                 }
             }
@@ -69,24 +70,22 @@ public class NtpTrustedTime implements TrustedTime {
         return ntpTrustedTime;
     }
 
+    @Override // android.util.TrustedTime
     public boolean forceRefresh(String host, long timeout) {
         if (host == null) {
             return forceRefresh();
         }
-        Log.d(TAG, "forceRefresh() from cache miss base host");
+        Log.m72d(TAG, "forceRefresh() from cache miss base host");
         SntpClient client = new SntpClient();
         synchronized (this) {
             if (this.mCM == null) {
                 this.mCM = (ConnectivityManager) sContext.getSystemService(ConnectivityManager.class);
             }
         }
-        NetworkInfo ni = null;
         Network networkP = this.mCM == null ? null : this.mCM.getActiveNetwork();
-        if (this.mCM != null) {
-            ni = this.mCM.getNetworkInfo(networkP);
-        }
+        NetworkInfo ni = this.mCM != null ? this.mCM.getNetworkInfo(networkP) : null;
         if (ni == null || !ni.isConnected()) {
-            Log.d(TAG, "forceRefresh: no connectivity");
+            Log.m72d(TAG, "forceRefresh: no connectivity");
             return false;
         } else if (!client.requestTime(host, (int) timeout, networkP)) {
             return false;
@@ -95,32 +94,35 @@ public class NtpTrustedTime implements TrustedTime {
             this.mCachedNtpTime = client.getNtpTime();
             this.mCachedNtpElapsedRealtime = client.getNtpTimeReference();
             this.mCachedNtpCertainty = client.getRoundTripTime() / 2;
-            Log.d(TAG, "Ntp Server,mHasCache:" + this.mHasCache + " ,mCachedNtpTime:" + this.mCachedNtpTime + " ,mCachedNtpElapsedRealtime:" + this.mCachedNtpElapsedRealtime);
+            Log.m72d(TAG, "Ntp Server,mHasCache:" + this.mHasCache + " ,mCachedNtpTime:" + this.mCachedNtpTime + " ,mCachedNtpElapsedRealtime:" + this.mCachedNtpElapsedRealtime);
             return true;
         }
     }
 
+    @Override // android.util.TrustedTime
     @UnsupportedAppUsage
     public boolean forceRefresh() {
-        Log.d(TAG, "forceRefresh");
+        Log.m72d(TAG, "forceRefresh");
         if (hasCache()) {
             return forceSync();
         }
         return false;
     }
 
+    @Override // android.util.TrustedTime
     public boolean forceSync() {
-        Log.d(TAG, "forceSync");
+        Log.m72d(TAG, "forceSync");
         synchronized (this) {
             if (this.mCM == null) {
                 this.mCM = (ConnectivityManager) sContext.getSystemService(ConnectivityManager.class);
             }
         }
-        return forceRefresh(this.mCM == null ? null : this.mCM.getActiveNetwork());
+        Network network = this.mCM == null ? null : this.mCM.getActiveNetwork();
+        return forceRefresh(network);
     }
 
     public boolean forceRefresh(Network network) {
-        Log.d(TAG, "forceRefresh 2");
+        Log.m72d(TAG, "forceRefresh 2");
         if (TextUtils.isEmpty(this.mServer)) {
             return false;
         }
@@ -131,59 +133,59 @@ public class NtpTrustedTime implements TrustedTime {
         }
         NetworkInfo ni = this.mCM == null ? null : this.mCM.getNetworkInfo(network);
         if (ni == null || !ni.isConnected()) {
-            Log.d(TAG, "forceRefresh: no connectivity");
+            Log.m72d(TAG, "forceRefresh: no connectivity");
             return false;
         }
-        Log.d(TAG, "forceRefresh() from cache miss");
+        Log.m72d(TAG, "forceRefresh() from cache miss");
         SntpClient client = new SntpClient();
         String targetServer = this.mServer;
         if (getBackupmode()) {
             setBackupmode(false);
             targetServer = mBackupServer;
         }
-        Log.d(TAG, "Ntp Server to access at:" + targetServer);
-        Log.d(TAG, "Ntp Server,mHasCache:" + this.mHasCache + " ,mCachedNtpTime:" + this.mCachedNtpTime + " ,mCachedNtpElapsedRealtime:" + this.mCachedNtpElapsedRealtime);
+        Log.m72d(TAG, "Ntp Server to access at:" + targetServer);
+        Log.m72d(TAG, "Ntp Server,mHasCache:" + this.mHasCache + " ,mCachedNtpTime:" + this.mCachedNtpTime + " ,mCachedNtpElapsedRealtime:" + this.mCachedNtpElapsedRealtime);
         if (client.requestTime(targetServer, (int) this.mTimeout, network)) {
             this.mHasCache = true;
             this.mCachedNtpTime = client.getNtpTime();
             this.mCachedNtpElapsedRealtime = client.getNtpTimeReference();
             this.mCachedNtpCertainty = client.getRoundTripTime() / 2;
-            Log.d(TAG, "-------- " + this.mServer + " -------- OK!!!");
+            Log.m72d(TAG, "-------- " + this.mServer + " -------- OK!!!");
             return true;
         } else if (client.requestTime("s2g.time.edu.cn", (int) this.mTimeout, network)) {
             this.mHasCache = true;
             this.mCachedNtpTime = client.getNtpTime();
             this.mCachedNtpElapsedRealtime = client.getNtpTimeReference();
             this.mCachedNtpCertainty = client.getRoundTripTime() / 2;
-            Log.d(TAG, "-------- s2g.time.edu.cn -------- OK!!!");
+            Log.m72d(TAG, "-------- s2g.time.edu.cn -------- OK!!!");
             return true;
         } else if (client.requestTime("ntp.api.bz", (int) this.mTimeout, network)) {
             this.mHasCache = true;
             this.mCachedNtpTime = client.getNtpTime();
             this.mCachedNtpElapsedRealtime = client.getNtpTimeReference();
             this.mCachedNtpCertainty = client.getRoundTripTime() / 2;
-            Log.d(TAG, "-------- ntp.api.bz -------- OK!!!");
+            Log.m72d(TAG, "-------- ntp.api.bz -------- OK!!!");
             return true;
         } else if (client.requestTime("asia.pool.ntp.org", (int) this.mTimeout, network)) {
             this.mHasCache = true;
             this.mCachedNtpTime = client.getNtpTime();
             this.mCachedNtpElapsedRealtime = client.getNtpTimeReference();
             this.mCachedNtpCertainty = client.getRoundTripTime() / 2;
-            Log.d(TAG, "-------- asia.pool.ntp.org -------- OK!!!");
+            Log.m72d(TAG, "-------- asia.pool.ntp.org -------- OK!!!");
             return true;
         } else if (client.requestTime("cn.pool.ntp.org", (int) this.mTimeout, network)) {
             this.mHasCache = true;
             this.mCachedNtpTime = client.getNtpTime();
             this.mCachedNtpElapsedRealtime = client.getNtpTimeReference();
             this.mCachedNtpCertainty = client.getRoundTripTime() / 2;
-            Log.d(TAG, "-------- cn.pool.ntp.org -------- OK!!!");
+            Log.m72d(TAG, "-------- cn.pool.ntp.org -------- OK!!!");
             return true;
         } else if (client.requestTime("2.android.pool.ntp.org", (int) this.mTimeout, network)) {
             this.mHasCache = true;
             this.mCachedNtpTime = client.getNtpTime();
             this.mCachedNtpElapsedRealtime = client.getNtpTimeReference();
             this.mCachedNtpCertainty = client.getRoundTripTime() / 2;
-            Log.d(TAG, "-------- 2.android.pool.ntp.org -------- OK!!!");
+            Log.m72d(TAG, "-------- 2.android.pool.ntp.org -------- OK!!!");
             return true;
         } else {
             countInBackupmode();
@@ -191,11 +193,13 @@ public class NtpTrustedTime implements TrustedTime {
         }
     }
 
+    @Override // android.util.TrustedTime
     @UnsupportedAppUsage
     public boolean hasCache() {
         return this.mHasCache;
     }
 
+    @Override // android.util.TrustedTime
     public long getCacheAge() {
         if (this.mHasCache) {
             return SystemClock.elapsedRealtime() - this.mCachedNtpElapsedRealtime;
@@ -203,6 +207,7 @@ public class NtpTrustedTime implements TrustedTime {
         return Long.MAX_VALUE;
     }
 
+    @Override // android.util.TrustedTime
     public long getCacheCertainty() {
         if (this.mHasCache) {
             return this.mCachedNtpCertainty;
@@ -210,18 +215,19 @@ public class NtpTrustedTime implements TrustedTime {
         return Long.MAX_VALUE;
     }
 
+    @Override // android.util.TrustedTime
     @UnsupportedAppUsage
     public long currentTimeMillis() {
-        if (this.mHasCache) {
-            Log.d(TAG, "currentTimeMillis() cache hit");
-            return this.mCachedNtpTime + getCacheAge();
+        if (!this.mHasCache) {
+            throw new IllegalStateException("Missing authoritative time source");
         }
-        throw new IllegalStateException("Missing authoritative time source");
+        Log.m72d(TAG, "currentTimeMillis() cache hit");
+        return this.mCachedNtpTime + getCacheAge();
     }
 
     @UnsupportedAppUsage
     public long getCachedNtpTime() {
-        Log.d(TAG, "getCachedNtpTime() cache hit");
+        Log.m72d(TAG, "getCachedNtpTime() cache hit");
         return this.mCachedNtpTime;
     }
 
@@ -234,7 +240,7 @@ public class NtpTrustedTime implements TrustedTime {
         if (isBackupSupported()) {
             this.mBackupmode = mode;
         }
-        Log.d(TAG, "setBackupmode() set the backup mode to be:" + this.mBackupmode);
+        Log.m72d(TAG, "setBackupmode() set the backup mode to be:" + this.mBackupmode);
     }
 
     private boolean getBackupmode() {
@@ -253,6 +259,6 @@ public class NtpTrustedTime implements TrustedTime {
                 setBackupmode(true);
             }
         }
-        Log.d(TAG, "countInBackupmode() func");
+        Log.m72d(TAG, "countInBackupmode() func");
     }
 }

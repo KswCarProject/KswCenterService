@@ -1,239 +1,257 @@
 package android.hardware.camera2.legacy;
 
 import android.hardware.Camera;
+import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.CaptureResult;
 import android.hardware.camera2.impl.CameraMetadataNative;
+import android.hardware.camera2.utils.ParamsUtils;
+import android.util.Log;
 import com.android.internal.util.Preconditions;
+import java.util.Objects;
 
+/* loaded from: classes.dex */
 public class LegacyFocusStateMapper {
     private static final boolean DEBUG = false;
-    /* access modifiers changed from: private */
-    public static String TAG = "LegacyFocusStateMapper";
-    private String mAfModePrevious = null;
-    /* access modifiers changed from: private */
-    public int mAfRun = 0;
-    /* access modifiers changed from: private */
-    public int mAfState = 0;
-    private int mAfStatePrevious = 0;
+    private static String TAG = "LegacyFocusStateMapper";
     private final Camera mCamera;
-    /* access modifiers changed from: private */
-    public final Object mLock = new Object();
+    private int mAfStatePrevious = 0;
+    private String mAfModePrevious = null;
+    private final Object mLock = new Object();
+    private int mAfRun = 0;
+    private int mAfState = 0;
 
     public LegacyFocusStateMapper(Camera camera) {
         this.mCamera = (Camera) Preconditions.checkNotNull(camera, "camera must not be null");
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:108:? A[RETURN, SYNTHETIC] */
-    /* JADX WARNING: Removed duplicated region for block: B:36:0x0091  */
-    /* JADX WARNING: Removed duplicated region for block: B:38:0x0099  */
-    /* JADX WARNING: Removed duplicated region for block: B:39:0x00b2  */
-    /* JADX WARNING: Removed duplicated region for block: B:58:0x00ce  */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void processRequestTriggers(android.hardware.camera2.CaptureRequest r17, android.hardware.Camera.Parameters r18) {
-        /*
-            r16 = this;
-            r1 = r16
-            r2 = r17
-            java.lang.String r0 = "captureRequest must not be null"
-            com.android.internal.util.Preconditions.checkNotNull(r2, r0)
-            android.hardware.camera2.CaptureRequest$Key<java.lang.Integer> r0 = android.hardware.camera2.CaptureRequest.CONTROL_AF_TRIGGER
-            r3 = 0
-            java.lang.Integer r4 = java.lang.Integer.valueOf(r3)
-            java.lang.Object r0 = android.hardware.camera2.utils.ParamsUtils.getOrDefault(r2, r0, r4)
-            java.lang.Integer r0 = (java.lang.Integer) r0
-            int r4 = r0.intValue()
-            java.lang.String r5 = r18.getFocusMode()
-            java.lang.String r0 = r1.mAfModePrevious
-            boolean r0 = java.util.Objects.equals(r0, r5)
-            r6 = 1
-            if (r0 != 0) goto L_0x003b
-            java.lang.Object r7 = r1.mLock
-            monitor-enter(r7)
-            int r0 = r1.mAfRun     // Catch:{ all -> 0x0038 }
-            int r0 = r0 + r6
-            r1.mAfRun = r0     // Catch:{ all -> 0x0038 }
-            r1.mAfState = r3     // Catch:{ all -> 0x0038 }
-            monitor-exit(r7)     // Catch:{ all -> 0x0038 }
-            android.hardware.Camera r0 = r1.mCamera
-            r0.cancelAutoFocus()
-            goto L_0x003b
-        L_0x0038:
-            r0 = move-exception
-            monitor-exit(r7)     // Catch:{ all -> 0x0038 }
-            throw r0
-        L_0x003b:
-            r1.mAfModePrevious = r5
-            java.lang.Object r7 = r1.mLock
-            monitor-enter(r7)
-            int r0 = r1.mAfRun     // Catch:{ all -> 0x0129 }
-            monitor-exit(r7)     // Catch:{ all -> 0x0129 }
-            android.hardware.camera2.legacy.LegacyFocusStateMapper$1 r7 = new android.hardware.camera2.legacy.LegacyFocusStateMapper$1
-            r7.<init>(r0, r5)
-            int r8 = r5.hashCode()
-            r9 = 2
-            r10 = 3
-            r11 = 910005312(0x363d9440, float:2.8249488E-6)
-            r12 = 103652300(0x62d9bcc, float:3.2652145E-35)
-            r13 = 3005871(0x2dddaf, float:4.212122E-39)
-            r14 = -194628547(0xfffffffff466343d, float:-7.2954577E31)
-            r15 = -1
-            if (r8 == r14) goto L_0x0082
-            if (r8 == r13) goto L_0x0078
-            if (r8 == r12) goto L_0x006e
-            if (r8 == r11) goto L_0x0064
-            goto L_0x008c
-        L_0x0064:
-            java.lang.String r8 = "continuous-picture"
-            boolean r8 = r5.equals(r8)
-            if (r8 == 0) goto L_0x008c
-            r8 = r9
-            goto L_0x008d
-        L_0x006e:
-            java.lang.String r8 = "macro"
-            boolean r8 = r5.equals(r8)
-            if (r8 == 0) goto L_0x008c
-            r8 = r6
-            goto L_0x008d
-        L_0x0078:
-            java.lang.String r8 = "auto"
-            boolean r8 = r5.equals(r8)
-            if (r8 == 0) goto L_0x008c
-            r8 = r3
-            goto L_0x008d
-        L_0x0082:
-            java.lang.String r8 = "continuous-video"
-            boolean r8 = r5.equals(r8)
-            if (r8 == 0) goto L_0x008c
-            r8 = r10
-            goto L_0x008d
-        L_0x008c:
-            r8 = r15
-        L_0x008d:
-            switch(r8) {
-                case 0: goto L_0x0091;
-                case 1: goto L_0x0091;
-                case 2: goto L_0x0091;
-                case 3: goto L_0x0091;
-                default: goto L_0x0090;
+    public void processRequestTriggers(CaptureRequest captureRequest, Camera.Parameters parameters) {
+        final int currentAfRun;
+        boolean z;
+        final int currentAfRun2;
+        Preconditions.checkNotNull(captureRequest, "captureRequest must not be null");
+        int afStateAfterStart = 0;
+        int afTrigger = ((Integer) ParamsUtils.getOrDefault(captureRequest, CaptureRequest.CONTROL_AF_TRIGGER, 0)).intValue();
+        final String afMode = parameters.getFocusMode();
+        if (!Objects.equals(this.mAfModePrevious, afMode)) {
+            synchronized (this.mLock) {
+                this.mAfRun++;
+                this.mAfState = 0;
             }
-        L_0x0090:
-            goto L_0x0096
-        L_0x0091:
-            android.hardware.Camera r8 = r1.mCamera
-            r8.setAutoFocusMoveCallback(r7)
-        L_0x0096:
-            switch(r4) {
-                case 0: goto L_0x0127;
-                case 1: goto L_0x00ce;
-                case 2: goto L_0x00b2;
-                default: goto L_0x0099;
+            this.mCamera.cancelAutoFocus();
+        }
+        this.mAfModePrevious = afMode;
+        synchronized (this.mLock) {
+            currentAfRun = this.mAfRun;
+        }
+        Camera.AutoFocusMoveCallback afMoveCallback = new Camera.AutoFocusMoveCallback() { // from class: android.hardware.camera2.legacy.LegacyFocusStateMapper.1
+            /* JADX WARN: Removed duplicated region for block: B:26:0x005e A[Catch: all -> 0x0082, TryCatch #0 {, blocks: (B:4:0x0007, B:6:0x0011, B:7:0x002c, B:13:0x0035, B:25:0x005b, B:26:0x005e, B:28:0x0064, B:29:0x007b, B:30:0x0080, B:18:0x0047, B:21:0x0051), top: B:35:0x0007 }] */
+            /* JADX WARN: Removed duplicated region for block: B:27:0x0063  */
+            @Override // android.hardware.Camera.AutoFocusMoveCallback
+            /*
+                Code decompiled incorrectly, please refer to instructions dump.
+            */
+            public void onAutoFocusMoving(boolean start, Camera camera) {
+                synchronized (LegacyFocusStateMapper.this.mLock) {
+                    int latestAfRun = LegacyFocusStateMapper.this.mAfRun;
+                    if (currentAfRun != latestAfRun) {
+                        Log.m72d(LegacyFocusStateMapper.TAG, "onAutoFocusMoving - ignoring move callbacks from old af run" + currentAfRun);
+                        return;
+                    }
+                    boolean z2 = true;
+                    int newAfState = start ? 1 : 2;
+                    String str = afMode;
+                    int hashCode = str.hashCode();
+                    if (hashCode != -194628547) {
+                        if (hashCode == 910005312 && str.equals(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)) {
+                            z2 = false;
+                            switch (z2) {
+                                case false:
+                                case true:
+                                    break;
+                                default:
+                                    Log.m64w(LegacyFocusStateMapper.TAG, "onAutoFocus - got unexpected onAutoFocus in mode " + afMode);
+                                    break;
+                            }
+                            LegacyFocusStateMapper.this.mAfState = newAfState;
+                        }
+                        z2 = true;
+                        switch (z2) {
+                        }
+                        LegacyFocusStateMapper.this.mAfState = newAfState;
+                    }
+                    if (str.equals(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO)) {
+                        switch (z2) {
+                        }
+                        LegacyFocusStateMapper.this.mAfState = newAfState;
+                    }
+                    z2 = true;
+                    switch (z2) {
+                    }
+                    LegacyFocusStateMapper.this.mAfState = newAfState;
+                }
             }
-        L_0x0099:
-            java.lang.String r0 = TAG
-            java.lang.StringBuilder r3 = new java.lang.StringBuilder
-            r3.<init>()
-            java.lang.String r6 = "processRequestTriggers - ignoring unknown control.afTrigger = "
-            r3.append(r6)
-            r3.append(r4)
-            java.lang.String r3 = r3.toString()
-            android.util.Log.w((java.lang.String) r0, (java.lang.String) r3)
-            goto L_0x0128
-        L_0x00b2:
-            java.lang.Object r7 = r1.mLock
-            monitor-enter(r7)
-            java.lang.Object r8 = r1.mLock     // Catch:{ all -> 0x00cb }
-            monitor-enter(r8)     // Catch:{ all -> 0x00cb }
-            int r0 = r1.mAfRun     // Catch:{ all -> 0x00c8 }
-            int r0 = r0 + r6
-            r1.mAfRun = r0     // Catch:{ all -> 0x00c8 }
-            r1.mAfState = r3     // Catch:{ all -> 0x00c8 }
-            monitor-exit(r8)     // Catch:{ all -> 0x00c8 }
-            android.hardware.Camera r3 = r1.mCamera     // Catch:{ all -> 0x00cb }
-            r3.cancelAutoFocus()     // Catch:{ all -> 0x00cb }
-            monitor-exit(r7)     // Catch:{ all -> 0x00cb }
-            goto L_0x0128
-        L_0x00c8:
-            r0 = move-exception
-            monitor-exit(r8)     // Catch:{ all -> 0x00c8 }
-            throw r0     // Catch:{ all -> 0x00cb }
-        L_0x00cb:
-            r0 = move-exception
-            monitor-exit(r7)     // Catch:{ all -> 0x00cb }
-            throw r0
-        L_0x00ce:
-            int r0 = r5.hashCode()
-            if (r0 == r14) goto L_0x00f9
-            if (r0 == r13) goto L_0x00ef
-            if (r0 == r12) goto L_0x00e5
-            if (r0 == r11) goto L_0x00db
-            goto L_0x0102
-        L_0x00db:
-            java.lang.String r0 = "continuous-picture"
-            boolean r0 = r5.equals(r0)
-            if (r0 == 0) goto L_0x0102
-            r15 = r9
-            goto L_0x0102
-        L_0x00e5:
-            java.lang.String r0 = "macro"
-            boolean r0 = r5.equals(r0)
-            if (r0 == 0) goto L_0x0102
-            r15 = r6
-            goto L_0x0102
-        L_0x00ef:
-            java.lang.String r0 = "auto"
-            boolean r0 = r5.equals(r0)
-            if (r0 == 0) goto L_0x0102
-            r15 = r3
-            goto L_0x0102
-        L_0x00f9:
-            java.lang.String r0 = "continuous-video"
-            boolean r0 = r5.equals(r0)
-            if (r0 == 0) goto L_0x0102
-            r15 = r10
-        L_0x0102:
-            switch(r15) {
-                case 0: goto L_0x0108;
-                case 1: goto L_0x0108;
-                case 2: goto L_0x0106;
-                case 3: goto L_0x0106;
-                default: goto L_0x0105;
+        };
+        int hashCode = afMode.hashCode();
+        char c = '\uffff';
+        if (hashCode == -194628547) {
+            if (afMode.equals(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO)) {
+                z = true;
             }
-        L_0x0105:
-            goto L_0x010a
-        L_0x0106:
-            r3 = 1
-            goto L_0x010a
-        L_0x0108:
-            r3 = 3
-        L_0x010a:
-            java.lang.Object r7 = r1.mLock
-            monitor-enter(r7)
-            int r0 = r1.mAfRun     // Catch:{ all -> 0x0124 }
-            int r0 = r0 + r6
-            r1.mAfRun = r0     // Catch:{ all -> 0x0124 }
-            r1.mAfState = r3     // Catch:{ all -> 0x0124 }
-            monitor-exit(r7)     // Catch:{ all -> 0x0124 }
-            if (r3 != 0) goto L_0x0119
-            goto L_0x0128
-        L_0x0119:
-            android.hardware.Camera r6 = r1.mCamera
-            android.hardware.camera2.legacy.LegacyFocusStateMapper$2 r7 = new android.hardware.camera2.legacy.LegacyFocusStateMapper$2
-            r7.<init>(r0, r5)
-            r6.autoFocus(r7)
-            goto L_0x0128
-        L_0x0124:
-            r0 = move-exception
-            monitor-exit(r7)     // Catch:{ all -> 0x0124 }
-            throw r0
-        L_0x0127:
-        L_0x0128:
-            return
-        L_0x0129:
-            r0 = move-exception
-            monitor-exit(r7)     // Catch:{ all -> 0x0129 }
-            throw r0
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.hardware.camera2.legacy.LegacyFocusStateMapper.processRequestTriggers(android.hardware.camera2.CaptureRequest, android.hardware.Camera$Parameters):void");
+            z = true;
+        } else if (hashCode == 3005871) {
+            if (afMode.equals("auto")) {
+                z = false;
+            }
+            z = true;
+        } else if (hashCode != 103652300) {
+            if (hashCode == 910005312 && afMode.equals(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)) {
+                z = true;
+            }
+            z = true;
+        } else {
+            if (afMode.equals(Camera.Parameters.FOCUS_MODE_MACRO)) {
+                z = true;
+            }
+            z = true;
+        }
+        switch (z) {
+            case false:
+            case true:
+            case true:
+            case true:
+                this.mCamera.setAutoFocusMoveCallback(afMoveCallback);
+                break;
+        }
+        switch (afTrigger) {
+            case 0:
+                return;
+            case 1:
+                int hashCode2 = afMode.hashCode();
+                if (hashCode2 != -194628547) {
+                    if (hashCode2 != 3005871) {
+                        if (hashCode2 != 103652300) {
+                            if (hashCode2 == 910005312 && afMode.equals(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)) {
+                                c = 2;
+                            }
+                        } else if (afMode.equals(Camera.Parameters.FOCUS_MODE_MACRO)) {
+                            c = 1;
+                        }
+                    } else if (afMode.equals("auto")) {
+                        c = 0;
+                    }
+                } else if (afMode.equals(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO)) {
+                    c = 3;
+                }
+                switch (c) {
+                    case 0:
+                    case 1:
+                        afStateAfterStart = 3;
+                        break;
+                    case 2:
+                    case 3:
+                        afStateAfterStart = 1;
+                        break;
+                }
+                synchronized (this.mLock) {
+                    currentAfRun2 = this.mAfRun + 1;
+                    this.mAfRun = currentAfRun2;
+                    this.mAfState = afStateAfterStart;
+                }
+                if (afStateAfterStart != 0) {
+                    this.mCamera.autoFocus(new Camera.AutoFocusCallback() { // from class: android.hardware.camera2.legacy.LegacyFocusStateMapper.2
+                        /* JADX WARN: Removed duplicated region for block: B:35:0x0080 A[Catch: all -> 0x00a4, TryCatch #0 {, blocks: (B:4:0x0007, B:6:0x0014, B:7:0x0032, B:12:0x0039, B:34:0x007d, B:35:0x0080, B:37:0x0086, B:38:0x009d, B:39:0x00a2, B:21:0x0055, B:24:0x005e, B:27:0x0068, B:30:0x0072), top: B:44:0x0007 }] */
+                        /* JADX WARN: Removed duplicated region for block: B:36:0x0085  */
+                        @Override // android.hardware.Camera.AutoFocusCallback
+                        /*
+                            Code decompiled incorrectly, please refer to instructions dump.
+                        */
+                        public void onAutoFocus(boolean success, Camera camera) {
+                            int newAfState;
+                            synchronized (LegacyFocusStateMapper.this.mLock) {
+                                int latestAfRun = LegacyFocusStateMapper.this.mAfRun;
+                                char c2 = 1;
+                                if (latestAfRun != currentAfRun2) {
+                                    Log.m72d(LegacyFocusStateMapper.TAG, String.format("onAutoFocus - ignoring AF callback (old run %d, new run %d)", Integer.valueOf(currentAfRun2), Integer.valueOf(latestAfRun)));
+                                    return;
+                                }
+                                if (success) {
+                                    newAfState = 4;
+                                } else {
+                                    newAfState = 5;
+                                }
+                                String str = afMode;
+                                int hashCode3 = str.hashCode();
+                                if (hashCode3 == -194628547) {
+                                    if (str.equals(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO)) {
+                                        c2 = 2;
+                                        switch (c2) {
+                                        }
+                                        LegacyFocusStateMapper.this.mAfState = newAfState;
+                                    }
+                                    c2 = '\uffff';
+                                    switch (c2) {
+                                    }
+                                    LegacyFocusStateMapper.this.mAfState = newAfState;
+                                } else if (hashCode3 == 3005871) {
+                                    if (str.equals("auto")) {
+                                        c2 = 0;
+                                        switch (c2) {
+                                        }
+                                        LegacyFocusStateMapper.this.mAfState = newAfState;
+                                    }
+                                    c2 = '\uffff';
+                                    switch (c2) {
+                                    }
+                                    LegacyFocusStateMapper.this.mAfState = newAfState;
+                                } else if (hashCode3 != 103652300) {
+                                    if (hashCode3 == 910005312 && str.equals(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)) {
+                                        switch (c2) {
+                                            case 0:
+                                            case 1:
+                                            case 2:
+                                            case 3:
+                                                break;
+                                            default:
+                                                Log.m64w(LegacyFocusStateMapper.TAG, "onAutoFocus - got unexpected onAutoFocus in mode " + afMode);
+                                                break;
+                                        }
+                                        LegacyFocusStateMapper.this.mAfState = newAfState;
+                                    }
+                                    c2 = '\uffff';
+                                    switch (c2) {
+                                    }
+                                    LegacyFocusStateMapper.this.mAfState = newAfState;
+                                } else {
+                                    if (str.equals(Camera.Parameters.FOCUS_MODE_MACRO)) {
+                                        c2 = 3;
+                                        switch (c2) {
+                                        }
+                                        LegacyFocusStateMapper.this.mAfState = newAfState;
+                                    }
+                                    c2 = '\uffff';
+                                    switch (c2) {
+                                    }
+                                    LegacyFocusStateMapper.this.mAfState = newAfState;
+                                }
+                            }
+                        }
+                    });
+                    return;
+                }
+                return;
+            case 2:
+                synchronized (this.mLock) {
+                    synchronized (this.mLock) {
+                        this.mAfRun++;
+                        this.mAfState = 0;
+                    }
+                    this.mCamera.cancelAutoFocus();
+                }
+                return;
+            default:
+                Log.m64w(TAG, "processRequestTriggers - ignoring unknown control.afTrigger = " + afTrigger);
+                return;
+        }
     }
 
     public void mapResultTriggers(CameraMetadataNative result) {
@@ -242,7 +260,7 @@ public class LegacyFocusStateMapper {
         synchronized (this.mLock) {
             newAfState = this.mAfState;
         }
-        result.set(CaptureResult.CONTROL_AF_STATE, Integer.valueOf(newAfState));
+        result.set((CaptureResult.Key<CaptureResult.Key<Integer>>) CaptureResult.CONTROL_AF_STATE, (CaptureResult.Key<Integer>) Integer.valueOf(newAfState));
         this.mAfStatePrevious = newAfState;
     }
 

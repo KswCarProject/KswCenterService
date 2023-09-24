@@ -1,5 +1,6 @@
 package android.util;
 
+/* loaded from: classes4.dex */
 public class DayOfMonthCursor extends MonthDisplayHelper {
     private int mColumn;
     private int mRow;
@@ -46,7 +47,8 @@ public class DayOfMonthCursor extends MonthDisplayHelper {
         return this.mRow == row && this.mColumn == column;
     }
 
-    public boolean up() {
+    /* renamed from: up */
+    public boolean m73up() {
         if (isWithinCurrentMonth(this.mRow - 1, this.mColumn)) {
             this.mRow--;
             return false;

@@ -1,5 +1,6 @@
 package android.content;
 
+/* loaded from: classes.dex */
 public class UndoOwner {
     Object mData;
     final UndoManager mManager;
@@ -11,12 +12,12 @@ public class UndoOwner {
     UndoOwner(String tag, UndoManager manager) {
         if (tag == null) {
             throw new NullPointerException("tag can't be null");
-        } else if (manager != null) {
-            this.mTag = tag;
-            this.mManager = manager;
-        } else {
+        }
+        if (manager == null) {
             throw new NullPointerException("manager can't be null");
         }
+        this.mTag = tag;
+        this.mManager = manager;
     }
 
     public String getTag() {

@@ -2,6 +2,7 @@ package android.hardware.biometrics;
 
 import android.annotation.UnsupportedAppUsage;
 
+/* loaded from: classes.dex */
 public interface BiometricFingerprintConstants {
     public static final int BIOMETRIC_ERROR_NO_DEVICE_CREDENTIAL = 14;
     public static final int FINGERPRINT_ACQUIRED_GOOD = 0;

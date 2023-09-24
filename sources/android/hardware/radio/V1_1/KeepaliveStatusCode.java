@@ -2,6 +2,7 @@ package android.hardware.radio.V1_1;
 
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class KeepaliveStatusCode {
     public static final int ACTIVE = 0;
     public static final int INACTIVE = 1;

@@ -1,14 +1,15 @@
 package android.util;
 
-import android.os.Build;
-import android.os.SystemClock;
-import android.os.Trace;
+import android.p007os.Build;
+import android.p007os.SystemClock;
+import android.p007os.Trace;
 import com.ibm.icu.text.DateFormat;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
+/* loaded from: classes4.dex */
 public class TimingsTraceLog {
-    private static final boolean DEBUG_BOOT_TIME = (!Build.IS_USER);
+    private static final boolean DEBUG_BOOT_TIME = !Build.IS_USER;
     private final Deque<Pair<String, Long>> mStartTimes;
     private final String mTag;
     private long mThreadId;
@@ -32,14 +33,15 @@ public class TimingsTraceLog {
     public void traceEnd() {
         assertSameThread();
         Trace.traceEnd(this.mTraceTag);
-        if (DEBUG_BOOT_TIME) {
-            if (this.mStartTimes.peek() == null) {
-                Slog.w(this.mTag, "traceEnd called more times than traceBegin");
-                return;
-            }
-            Pair<String, Long> event = this.mStartTimes.pop();
-            logDuration((String) event.first, SystemClock.elapsedRealtime() - ((Long) event.second).longValue());
+        if (!DEBUG_BOOT_TIME) {
+            return;
         }
+        if (this.mStartTimes.peek() == null) {
+            Slog.m50w(this.mTag, "traceEnd called more times than traceBegin");
+            return;
+        }
+        Pair<String, Long> event = this.mStartTimes.pop();
+        logDuration(event.first, SystemClock.elapsedRealtime() - event.second.longValue());
     }
 
     private void assertSameThread() {
@@ -51,6 +53,6 @@ public class TimingsTraceLog {
 
     public void logDuration(String name, long timeMs) {
         String str = this.mTag;
-        Slog.d(str, name + " took to complete: " + timeMs + DateFormat.MINUTE_SECOND);
+        Slog.m58d(str, name + " took to complete: " + timeMs + DateFormat.MINUTE_SECOND);
     }
 }

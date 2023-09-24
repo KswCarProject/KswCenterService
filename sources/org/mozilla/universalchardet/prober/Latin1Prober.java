@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 import org.mozilla.universalchardet.Constants;
 import org.mozilla.universalchardet.prober.CharsetProber;
 
+/* loaded from: classes5.dex */
 public class Latin1Prober extends CharsetProber {
     public static final byte ACO = 5;
     public static final byte ACV = 4;
@@ -25,36 +26,36 @@ public class Latin1Prober extends CharsetProber {
         reset();
     }
 
+    @Override // org.mozilla.universalchardet.prober.CharsetProber
     public String getCharSetName() {
         return Constants.CHARSET_WINDOWS_1252;
     }
 
+    @Override // org.mozilla.universalchardet.prober.CharsetProber
     public float getConfidence() {
         float f;
         if (this.state == CharsetProber.ProbingState.NOT_ME) {
             return 0.01f;
         }
         int i = 0;
-        for (int i2 : this.freqCounter) {
-            i += i2;
+        for (int i2 = 0; i2 < this.freqCounter.length; i2++) {
+            i += this.freqCounter[i2];
         }
-        float f2 = 0.0f;
         if (i <= 0) {
             f = 0.0f;
         } else {
-            float f3 = (float) i;
-            f = ((((float) this.freqCounter[3]) * 1.0f) / f3) - ((((float) this.freqCounter[1]) * 20.0f) / f3);
+            float f2 = i;
+            f = ((this.freqCounter[3] * 1.0f) / f2) - ((this.freqCounter[1] * 20.0f) / f2);
         }
-        if (f >= 0.0f) {
-            f2 = f;
-        }
-        return f2 * 0.5f;
+        return (f >= 0.0f ? f : 0.0f) * 0.5f;
     }
 
+    @Override // org.mozilla.universalchardet.prober.CharsetProber
     public CharsetProber.ProbingState getState() {
         return this.state;
     }
 
+    @Override // org.mozilla.universalchardet.prober.CharsetProber
     public CharsetProber.ProbingState handleData(byte[] bArr, int i, int i2) {
         ByteBuffer filterWithEnglishLetters = filterWithEnglishLetters(bArr, i, i2);
         byte[] array = filterWithEnglishLetters.array();
@@ -78,14 +79,16 @@ public class Latin1Prober extends CharsetProber {
         return this.state;
     }
 
+    @Override // org.mozilla.universalchardet.prober.CharsetProber
     public void reset() {
         this.state = CharsetProber.ProbingState.DETECTING;
-        this.lastCharClass = 1;
+        this.lastCharClass = (byte) 1;
         for (int i = 0; i < this.freqCounter.length; i++) {
             this.freqCounter[i] = 0;
         }
     }
 
+    @Override // org.mozilla.universalchardet.prober.CharsetProber
     public void setOption() {
     }
 }

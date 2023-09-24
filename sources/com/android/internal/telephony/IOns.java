@@ -1,15 +1,16 @@
 package com.android.internal.telephony;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.telephony.AvailableNetworkInfo;
 import com.android.internal.telephony.ISetOpportunisticDataCallback;
 import com.android.internal.telephony.IUpdateAvailableNetworksCallback;
 import java.util.List;
 
+/* loaded from: classes4.dex */
 public interface IOns extends IInterface {
     int getPreferredDataSubscriptionId(String str) throws RemoteException;
 
@@ -21,30 +22,38 @@ public interface IOns extends IInterface {
 
     void updateAvailableNetworks(List<AvailableNetworkInfo> list, IUpdateAvailableNetworksCallback iUpdateAvailableNetworksCallback, String str) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IOns {
+        @Override // com.android.internal.telephony.IOns
         public boolean setEnable(boolean enable, String callingPackage) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.IOns
         public boolean isEnabled(String callingPackage) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.IOns
         public void setPreferredDataSubscriptionId(int subId, boolean needValidation, ISetOpportunisticDataCallback callbackStub, String callingPackage) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.IOns
         public int getPreferredDataSubscriptionId(String callingPackage) throws RemoteException {
             return 0;
         }
 
-        public void updateAvailableNetworks(List<AvailableNetworkInfo> list, IUpdateAvailableNetworksCallback callbackStub, String callingPackage) throws RemoteException {
+        @Override // com.android.internal.telephony.IOns
+        public void updateAvailableNetworks(List<AvailableNetworkInfo> availableNetworks, IUpdateAvailableNetworksCallback callbackStub, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IOns {
         private static final String DESCRIPTOR = "com.android.internal.telephony.IOns";
         static final int TRANSACTION_getPreferredDataSubscriptionId = 4;
@@ -62,12 +71,13 @@ public interface IOns extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IOns)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IOns)) {
+                return (IOns) iin;
             }
-            return (IOns) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -89,58 +99,63 @@ public interface IOns extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                boolean _arg1 = false;
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg1 = true;
-                        }
-                        boolean _result = setEnable(_arg1, data.readString());
-                        reply.writeNoException();
-                        reply.writeInt(_result);
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        boolean _result2 = isEnabled(data.readString());
-                        reply.writeNoException();
-                        reply.writeInt(_result2);
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        int _arg0 = data.readInt();
-                        if (data.readInt() != 0) {
-                            _arg1 = true;
-                        }
-                        setPreferredDataSubscriptionId(_arg0, _arg1, ISetOpportunisticDataCallback.Stub.asInterface(data.readStrongBinder()), data.readString());
-                        reply.writeNoException();
-                        return true;
-                    case 4:
-                        data.enforceInterface(DESCRIPTOR);
-                        int _result3 = getPreferredDataSubscriptionId(data.readString());
-                        reply.writeNoException();
-                        reply.writeInt(_result3);
-                        return true;
-                    case 5:
-                        data.enforceInterface(DESCRIPTOR);
-                        updateAvailableNetworks(data.createTypedArrayList(AvailableNetworkInfo.CREATOR), IUpdateAvailableNetworksCallback.Stub.asInterface(data.readStrongBinder()), data.readString());
-                        reply.writeNoException();
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            boolean _arg1;
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg1 = data.readInt() != 0;
+                    boolean enable = setEnable(_arg1, data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(enable ? 1 : 0);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0 = data.readString();
+                    boolean isEnabled = isEnabled(_arg0);
+                    reply.writeNoException();
+                    reply.writeInt(isEnabled ? 1 : 0);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    ISetOpportunisticDataCallback _arg2 = ISetOpportunisticDataCallback.Stub.asInterface(data.readStrongBinder());
+                    String _arg3 = data.readString();
+                    setPreferredDataSubscriptionId(_arg02, _arg1, _arg2, _arg3);
+                    reply.writeNoException();
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg03 = data.readString();
+                    int _result = getPreferredDataSubscriptionId(_arg03);
+                    reply.writeNoException();
+                    reply.writeInt(_result);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    List<AvailableNetworkInfo> _arg04 = data.createTypedArrayList(AvailableNetworkInfo.CREATOR);
+                    IUpdateAvailableNetworksCallback _arg12 = IUpdateAvailableNetworksCallback.Stub.asInterface(data.readStrongBinder());
+                    String _arg22 = data.readString();
+                    updateAvailableNetworks(_arg04, _arg12, _arg22);
+                    reply.writeNoException();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IOns {
             public static IOns sDefaultImpl;
             private IBinder mRemote;
@@ -149,6 +164,7 @@ public interface IOns extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -157,90 +173,82 @@ public interface IOns extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // com.android.internal.telephony.IOns
             public boolean setEnable(boolean enable, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(enable);
+                    _data.writeInt(enable ? 1 : 0);
                     _data.writeString(callingPackage);
-                    boolean z = false;
-                    if (!this.mRemote.transact(1, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setEnable(enable, callingPackage);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.IOns
             public boolean isEnabled(String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPackage);
-                    boolean z = false;
-                    if (!this.mRemote.transact(2, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isEnabled(callingPackage);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.IOns
             public void setPreferredDataSubscriptionId(int subId, boolean needValidation, ISetOpportunisticDataCallback callbackStub, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    _data.writeInt(needValidation);
+                    _data.writeInt(needValidation ? 1 : 0);
                     _data.writeStrongBinder(callbackStub != null ? callbackStub.asBinder() : null);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(3, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setPreferredDataSubscriptionId(subId, needValidation, callbackStub, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setPreferredDataSubscriptionId(subId, needValidation, callbackStub, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.IOns
             public int getPreferredDataSubscriptionId(String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(4, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPreferredDataSubscriptionId(callingPackage);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -248,6 +256,7 @@ public interface IOns extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.IOns
             public void updateAvailableNetworks(List<AvailableNetworkInfo> availableNetworks, IUpdateAvailableNetworksCallback callbackStub, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -256,13 +265,12 @@ public interface IOns extends IInterface {
                     _data.writeTypedList(availableNetworks);
                     _data.writeStrongBinder(callbackStub != null ? callbackStub.asBinder() : null);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(5, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().updateAvailableNetworks(availableNetworks, callbackStub, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().updateAvailableNetworks(availableNetworks, callbackStub, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -271,11 +279,11 @@ public interface IOns extends IInterface {
         }
 
         public static boolean setDefaultImpl(IOns impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IOns getDefaultImpl() {

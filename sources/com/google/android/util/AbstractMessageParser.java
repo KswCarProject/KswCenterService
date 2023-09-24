@@ -1,6 +1,7 @@
 package com.google.android.util;
 
 import android.app.backup.FullBackup;
+import android.media.TtmlUtils;
 import android.view.ThreadedRenderer;
 import com.ibm.icu.text.DateFormat;
 import java.util.ArrayList;
@@ -12,8 +13,9 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/* loaded from: classes4.dex */
 public abstract class AbstractMessageParser {
-    public static final String musicNote = "♫ ";
+    public static final String musicNote = "\u266b ";
     private HashMap<Character, Format> formatStart;
     private int nextChar;
     private int nextClass;
@@ -27,6 +29,7 @@ public abstract class AbstractMessageParser {
     private String text;
     private ArrayList<Token> tokens;
 
+    /* loaded from: classes4.dex */
     public interface Resources {
         TrieNode getAcronyms();
 
@@ -37,26 +40,25 @@ public abstract class AbstractMessageParser {
         TrieNode getSmileys();
     }
 
-    /* access modifiers changed from: protected */
-    public abstract Resources getResources();
+    protected abstract Resources getResources();
 
-    public AbstractMessageParser(String text2) {
-        this(text2, true, true, true, true, true, true);
+    public AbstractMessageParser(String text) {
+        this(text, true, true, true, true, true, true);
     }
 
-    public AbstractMessageParser(String text2, boolean parseSmilies2, boolean parseAcronyms2, boolean parseFormatting2, boolean parseUrls2, boolean parseMusic2, boolean parseMeText2) {
-        this.text = text2;
+    public AbstractMessageParser(String text, boolean parseSmilies, boolean parseAcronyms, boolean parseFormatting, boolean parseUrls, boolean parseMusic, boolean parseMeText) {
+        this.text = text;
         this.nextChar = 0;
         this.nextClass = 10;
         this.parts = new ArrayList<>();
         this.tokens = new ArrayList<>();
         this.formatStart = new HashMap<>();
-        this.parseSmilies = parseSmilies2;
-        this.parseAcronyms = parseAcronyms2;
-        this.parseFormatting = parseFormatting2;
-        this.parseUrls = parseUrls2;
-        this.parseMusic = parseMusic2;
-        this.parseMeText = parseMeText2;
+        this.parseSmilies = parseSmilies;
+        this.parseAcronyms = parseAcronyms;
+        this.parseFormatting = parseFormatting;
+        this.parseUrls = parseUrls;
+        this.parseMusic = parseMusic;
+        this.parseMeText = parseMeText;
     }
 
     public final String getRawText() {
@@ -77,7 +79,7 @@ public abstract class AbstractMessageParser {
 
     public void parse() {
         if (parseMusicTrack()) {
-            buildParts((String) null);
+            buildParts(null);
             return;
         }
         String meText = null;
@@ -90,7 +92,8 @@ public abstract class AbstractMessageParser {
         while (this.nextChar < this.text.length()) {
             if (!isWordBreak(this.nextChar) && (!wasSmiley || !isSmileyBreak(this.nextChar))) {
                 throw new AssertionError("last chunk did not end at word break");
-            } else if (parseSmiley()) {
+            }
+            if (parseSmiley()) {
                 wasSmiley = true;
             } else {
                 wasSmiley = false;
@@ -119,27 +122,27 @@ public abstract class AbstractMessageParser {
         buildParts(meText);
     }
 
-    public static Token tokenForUrl(String url, String text2) {
+    public static Token tokenForUrl(String url, String text) {
         if (url == null) {
             return null;
         }
-        Video video = Video.matchURL(url, text2);
+        Video video = Video.matchURL(url, text);
         if (video != null) {
             return video;
         }
-        YouTubeVideo ytVideo = YouTubeVideo.matchURL(url, text2);
+        YouTubeVideo ytVideo = YouTubeVideo.matchURL(url, text);
         if (ytVideo != null) {
             return ytVideo;
         }
-        Photo photo = Photo.matchURL(url, text2);
+        Photo photo = Photo.matchURL(url, text);
         if (photo != null) {
             return photo;
         }
-        FlickrPhoto flickrPhoto = FlickrPhoto.matchURL(url, text2);
+        FlickrPhoto flickrPhoto = FlickrPhoto.matchURL(url, text);
         if (flickrPhoto != null) {
             return flickrPhoto;
         }
-        return new Link(url, text2);
+        return new Link(url, text);
     }
 
     private void buildParts(String meText) {
@@ -160,12 +163,12 @@ public abstract class AbstractMessageParser {
     }
 
     private boolean parseMusicTrack() {
-        if (!this.parseMusic || !this.text.startsWith(musicNote)) {
-            return false;
+        if (this.parseMusic && this.text.startsWith(musicNote)) {
+            addToken(new MusicTrack(this.text.substring(musicNote.length())));
+            this.nextChar = this.text.length();
+            return true;
         }
-        addToken(new MusicTrack(this.text.substring(musicNote.length())));
-        this.nextChar = this.text.length();
-        return true;
+        return false;
     }
 
     private void parseText() {
@@ -176,13 +179,15 @@ public abstract class AbstractMessageParser {
             int i = this.nextChar;
             this.nextChar = i + 1;
             char ch = str.charAt(i);
-            if (ch == 10) {
+            if (ch == '\n') {
                 buf.append("<br>");
             } else if (ch == '\"') {
                 buf.append("&quot;");
             } else if (ch == '<') {
                 buf.append("&lt;");
-            } else if (ch != '>') {
+            } else if (ch == '>') {
+                buf.append("&gt;");
+            } else {
                 switch (ch) {
                     case '&':
                         buf.append("&amp;");
@@ -194,8 +199,6 @@ public abstract class AbstractMessageParser {
                         buf.append(ch);
                         break;
                 }
-            } else {
-                buf.append("&gt;");
             }
         } while (!isWordBreak(this.nextChar));
         addToken(new Html(this.text.substring(start, this.nextChar), buf.toString()));
@@ -203,27 +206,27 @@ public abstract class AbstractMessageParser {
 
     private boolean parseSmiley() {
         TrieNode match;
-        if (!this.parseSmilies || (match = longestMatch(getResources().getSmileys(), this, this.nextChar, true)) == null) {
-            return false;
+        if (this.parseSmilies && (match = longestMatch(getResources().getSmileys(), this, this.nextChar, true)) != null) {
+            int previousCharClass = getCharClass(this.nextChar - 1);
+            int nextCharClass = getCharClass(this.nextChar + match.getText().length());
+            if ((previousCharClass == 2 || previousCharClass == 3) && (nextCharClass == 2 || nextCharClass == 3)) {
+                return false;
+            }
+            addToken(new Smiley(match.getText()));
+            this.nextChar += match.getText().length();
+            return true;
         }
-        int previousCharClass = getCharClass(this.nextChar - 1);
-        int nextCharClass = getCharClass(this.nextChar + match.getText().length());
-        if ((previousCharClass == 2 || previousCharClass == 3) && (nextCharClass == 2 || nextCharClass == 3)) {
-            return false;
-        }
-        addToken(new Smiley(match.getText()));
-        this.nextChar += match.getText().length();
-        return true;
+        return false;
     }
 
     private boolean parseAcronym() {
         TrieNode match;
-        if (!this.parseAcronyms || (match = longestMatch(getResources().getAcronyms(), this, this.nextChar)) == null) {
-            return false;
+        if (this.parseAcronyms && (match = longestMatch(getResources().getAcronyms(), this, this.nextChar)) != null) {
+            addToken(new Acronym(match.getText(), match.getValue()));
+            this.nextChar += match.getText().length();
+            return true;
         }
-        addToken(new Acronym(match.getText(), match.getValue()));
-        this.nextChar += match.getText().length();
-        return true;
+        return false;
     }
 
     private boolean isDomainChar(char c) {
@@ -239,134 +242,137 @@ public abstract class AbstractMessageParser {
 
     private boolean parseURL() {
         boolean z;
-        if (!this.parseUrls || !isURLBreak(this.nextChar)) {
-            return false;
-        }
-        int start = this.nextChar;
-        int index = start;
-        while (index < this.text.length() && isDomainChar(this.text.charAt(index))) {
-            index++;
-        }
-        String url = "";
-        boolean done = false;
-        if (index == this.text.length()) {
-            return false;
-        }
-        if (this.text.charAt(index) == ':') {
-            if (!getResources().getSchemes().contains(this.text.substring(this.nextChar, index))) {
-                return false;
-            }
-        } else if (this.text.charAt(index) != '.') {
-            return false;
-        } else {
-            while (index < this.text.length() && ((ch = this.text.charAt(index)) == '.' || isDomainChar(ch))) {
+        char ch;
+        if (this.parseUrls && isURLBreak(this.nextChar)) {
+            int start = this.nextChar;
+            int index = start;
+            while (index < this.text.length() && isDomainChar(this.text.charAt(index))) {
                 index++;
             }
-            if (!isValidDomain(this.text.substring(this.nextChar, index))) {
+            String url = "";
+            boolean done = false;
+            if (index == this.text.length()) {
                 return false;
             }
-            if (index + 1 < this.text.length() && this.text.charAt(index) == ':' && Character.isDigit(this.text.charAt(index + 1))) {
-                while (true) {
+            if (this.text.charAt(index) == ':') {
+                String scheme = this.text.substring(this.nextChar, index);
+                if (!getResources().getSchemes().contains(scheme)) {
+                    return false;
+                }
+            } else if (this.text.charAt(index) != '.') {
+                return false;
+            } else {
+                while (index < this.text.length() && ((ch = this.text.charAt(index)) == '.' || isDomainChar(ch))) {
                     index++;
-                    if (index >= this.text.length() || !Character.isDigit(this.text.charAt(index))) {
-                        break;
+                }
+                String domain = this.text.substring(this.nextChar, index);
+                if (!isValidDomain(domain)) {
+                    return false;
+                }
+                if (index + 1 < this.text.length() && this.text.charAt(index) == ':' && Character.isDigit(this.text.charAt(index + 1))) {
+                    while (true) {
+                        index++;
+                        if (index >= this.text.length() || !Character.isDigit(this.text.charAt(index))) {
+                            break;
+                        }
                     }
                 }
-            }
-            if (index == this.text.length()) {
-                z = true;
-            } else {
-                char ch = this.text.charAt(index);
-                if (ch == '?') {
-                    if (index + 1 == this.text.length()) {
+                if (index == this.text.length()) {
+                    z = true;
+                } else {
+                    char ch2 = this.text.charAt(index);
+                    if (ch2 == '?') {
+                        if (index + 1 == this.text.length()) {
+                            z = true;
+                        } else {
+                            char ch22 = this.text.charAt(index + 1);
+                            if (Character.isWhitespace(ch22) || isPunctuation(ch22)) {
+                                done = true;
+                            }
+                            url = "http://";
+                        }
+                    } else if (isPunctuation(ch2)) {
+                        z = true;
+                    } else if (Character.isWhitespace(ch2)) {
                         z = true;
                     } else {
-                        char ch2 = this.text.charAt(index + 1);
-                        if (Character.isWhitespace(ch2) || isPunctuation(ch2)) {
-                            done = true;
+                        if (ch2 != '/' && ch2 != '#') {
+                            return false;
                         }
                         url = "http://";
                     }
-                } else if (isPunctuation(ch)) {
-                    z = true;
-                } else if (Character.isWhitespace(ch)) {
-                    z = true;
-                } else {
-                    if (!(ch == '/' || ch == '#')) {
-                        return false;
-                    }
-                    url = "http://";
+                }
+                done = z;
+                url = "http://";
+            }
+            if (!done) {
+                while (index < this.text.length() && !Character.isWhitespace(this.text.charAt(index))) {
+                    index++;
                 }
             }
-            done = z;
-            url = "http://";
+            String urlText = this.text.substring(start, index);
+            addURLToken(url + urlText, urlText);
+            this.nextChar = index;
+            return true;
         }
-        if (!done) {
-            while (index < this.text.length() && !Character.isWhitespace(this.text.charAt(index))) {
-                index++;
-            }
-        }
-        String urlText = this.text.substring(start, index);
-        addURLToken(url + urlText, urlText);
-        this.nextChar = index;
-        return true;
+        return false;
     }
 
-    private void addURLToken(String url, String text2) {
-        addToken(tokenForUrl(url, text2));
+    private void addURLToken(String url, String text) {
+        addToken(tokenForUrl(url, text));
     }
 
     private boolean parseFormatting() {
-        if (!this.parseFormatting) {
-            return false;
-        }
-        int endChar = this.nextChar;
-        while (endChar < this.text.length() && isFormatChar(this.text.charAt(endChar))) {
-            endChar++;
-        }
-        if (endChar == this.nextChar || !isWordBreak(endChar)) {
-            return false;
-        }
-        LinkedHashMap<Character, Boolean> seenCharacters = new LinkedHashMap<>();
-        for (int index = this.nextChar; index < endChar; index++) {
-            char ch = this.text.charAt(index);
-            Character key = Character.valueOf(ch);
-            if (seenCharacters.containsKey(key)) {
-                addToken(new Format(ch, false));
-            } else {
-                Format start = this.formatStart.get(key);
-                if (start != null) {
-                    start.setMatched(true);
-                    this.formatStart.remove(key);
-                    seenCharacters.put(key, Boolean.TRUE);
+        if (this.parseFormatting) {
+            int endChar = this.nextChar;
+            while (endChar < this.text.length() && isFormatChar(this.text.charAt(endChar))) {
+                endChar++;
+            }
+            if (endChar == this.nextChar || !isWordBreak(endChar)) {
+                return false;
+            }
+            LinkedHashMap<Character, Boolean> seenCharacters = new LinkedHashMap<>();
+            for (int index = this.nextChar; index < endChar; index++) {
+                char ch = this.text.charAt(index);
+                Character key = Character.valueOf(ch);
+                if (seenCharacters.containsKey(key)) {
+                    addToken(new Format(ch, false));
                 } else {
-                    Format start2 = new Format(ch, true);
-                    this.formatStart.put(key, start2);
-                    addToken(start2);
-                    seenCharacters.put(key, Boolean.FALSE);
+                    Format start = this.formatStart.get(key);
+                    if (start != null) {
+                        start.setMatched(true);
+                        this.formatStart.remove(key);
+                        seenCharacters.put(key, Boolean.TRUE);
+                    } else {
+                        Format start2 = new Format(ch, true);
+                        this.formatStart.put(key, start2);
+                        addToken(start2);
+                        seenCharacters.put(key, Boolean.FALSE);
+                    }
                 }
             }
-        }
-        for (Character key2 : seenCharacters.keySet()) {
-            if (seenCharacters.get(key2) == Boolean.TRUE) {
-                Format end = new Format(key2.charValue(), false);
-                end.setMatched(true);
-                addToken(end);
+            for (Character key2 : seenCharacters.keySet()) {
+                if (seenCharacters.get(key2) == Boolean.TRUE) {
+                    Format end = new Format(key2.charValue(), false);
+                    end.setMatched(true);
+                    addToken(end);
+                }
             }
+            this.nextChar = endChar;
+            return true;
         }
-        this.nextChar = endChar;
-        return true;
+        return false;
     }
 
     private boolean isWordBreak(int index) {
-        return getCharClass(index + -1) != getCharClass(index);
+        return getCharClass(index + (-1)) != getCharClass(index);
     }
 
     private boolean isSmileyBreak(int index) {
-        if (index <= 0 || index >= this.text.length() || !isSmileyBreak(this.text.charAt(index - 1), this.text.charAt(index))) {
-            return false;
+        if (index > 0 && index < this.text.length() && isSmileyBreak(this.text.charAt(index - 1), this.text.charAt(index))) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     private boolean isURLBreak(int index) {
@@ -394,16 +400,16 @@ public abstract class AbstractMessageParser {
         if (Character.isDigit(ch)) {
             return 3;
         }
-        if (!isPunctuation(ch)) {
-            return 4;
+        if (isPunctuation(ch)) {
+            int i = this.nextClass + 1;
+            this.nextClass = i;
+            return i;
         }
-        int i = this.nextClass + 1;
-        this.nextClass = i;
-        return i;
+        return 4;
     }
 
     private static boolean isSmileyBreak(char c1, char c2) {
-        if (!(c1 == '$' || c1 == '&' || c1 == '-' || c1 == '/' || c1 == '@')) {
+        if (c1 != '$' && c1 != '&' && c1 != '-' && c1 != '/' && c1 != '@') {
             switch (c1) {
                 case '*':
                 case '+':
@@ -472,24 +478,26 @@ public abstract class AbstractMessageParser {
     }
 
     private static boolean isFormatChar(char ch) {
-        if (ch == '*') {
-            return true;
+        if (ch != '*') {
+            switch (ch) {
+                case '^':
+                case '_':
+                    return true;
+                default:
+                    return false;
+            }
         }
-        switch (ch) {
-            case '^':
-            case '_':
-                return true;
-            default:
-                return false;
-        }
+        return true;
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Token {
         protected String text;
         protected Type type;
 
         public abstract boolean isHtml();
 
+        /* loaded from: classes4.dex */
         public enum Type {
             HTML("html"),
             FORMAT("format"),
@@ -504,18 +512,19 @@ public abstract class AbstractMessageParser {
             
             private String stringRep;
 
-            private Type(String stringRep2) {
-                this.stringRep = stringRep2;
+            Type(String stringRep) {
+                this.stringRep = stringRep;
             }
 
+            @Override // java.lang.Enum
             public String toString() {
                 return this.stringRep;
             }
         }
 
-        protected Token(Type type2, String text2) {
-            this.type = type2;
-            this.text = text2;
+        protected Token(Type type, String text) {
+            this.type = type;
+            this.text = text;
         }
 
         public Type getType() {
@@ -553,22 +562,26 @@ public abstract class AbstractMessageParser {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class Html extends Token {
         private String html;
 
-        public Html(String text, String html2) {
+        public Html(String text, String html) {
             super(Token.Type.HTML, text);
-            this.html = html2;
+            this.html = html;
         }
 
+        @Override // com.google.android.util.AbstractMessageParser.Token
         public boolean isHtml() {
             return true;
         }
 
+        @Override // com.google.android.util.AbstractMessageParser.Token
         public String toHtml(boolean caps) {
             return caps ? this.html.toUpperCase() : this.html;
         }
 
+        @Override // com.google.android.util.AbstractMessageParser.Token
         public List<String> getInfo() {
             throw new UnsupportedOperationException();
         }
@@ -600,22 +613,25 @@ public abstract class AbstractMessageParser {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class MusicTrack extends Token {
         private String track;
 
-        public MusicTrack(String track2) {
-            super(Token.Type.MUSIC, track2);
-            this.track = track2;
+        public MusicTrack(String track) {
+            super(Token.Type.MUSIC, track);
+            this.track = track;
         }
 
         public String getTrack() {
             return this.track;
         }
 
+        @Override // com.google.android.util.AbstractMessageParser.Token
         public boolean isHtml() {
             return false;
         }
 
+        @Override // com.google.android.util.AbstractMessageParser.Token
         public List<String> getInfo() {
             List<String> info = super.getInfo();
             info.add(getTrack());
@@ -623,22 +639,25 @@ public abstract class AbstractMessageParser {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class Link extends Token {
         private String url;
 
-        public Link(String url2, String text) {
+        public Link(String url, String text) {
             super(Token.Type.LINK, text);
-            this.url = url2;
+            this.url = url;
         }
 
         public String getURL() {
             return this.url;
         }
 
+        @Override // com.google.android.util.AbstractMessageParser.Token
         public boolean isHtml() {
             return false;
         }
 
+        @Override // com.google.android.util.AbstractMessageParser.Token
         public List<String> getInfo() {
             List<String> info = super.getInfo();
             info.add(getURL());
@@ -647,23 +666,26 @@ public abstract class AbstractMessageParser {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class Video extends Token {
         private static final Pattern URL_PATTERN = Pattern.compile("(?i)http://video\\.google\\.[a-z0-9]+(?:\\.[a-z0-9]+)?/videoplay\\?.*?\\bdocid=(-?\\d+).*");
         private String docid;
 
-        public Video(String docid2, String text) {
+        public Video(String docid, String text) {
             super(Token.Type.GOOGLE_VIDEO, text);
-            this.docid = docid2;
+            this.docid = docid;
         }
 
         public String getDocID() {
             return this.docid;
         }
 
+        @Override // com.google.android.util.AbstractMessageParser.Token
         public boolean isHtml() {
             return false;
         }
 
+        @Override // com.google.android.util.AbstractMessageParser.Token
         public boolean isMedia() {
             return true;
         }
@@ -676,6 +698,7 @@ public abstract class AbstractMessageParser {
             return null;
         }
 
+        @Override // com.google.android.util.AbstractMessageParser.Token
         public List<String> getInfo() {
             List<String> info = super.getInfo();
             info.add(getRssUrl(this.docid));
@@ -683,41 +706,44 @@ public abstract class AbstractMessageParser {
             return info;
         }
 
-        public static String getRssUrl(String docid2) {
-            return "http://video.google.com/videofeed?type=docid&output=rss&sourceid=gtalk&docid=" + docid2;
+        public static String getRssUrl(String docid) {
+            return "http://video.google.com/videofeed?type=docid&output=rss&sourceid=gtalk&docid=" + docid;
         }
 
-        public static String getURL(String docid2) {
-            return getURL(docid2, (String) null);
+        public static String getURL(String docid) {
+            return getURL(docid, null);
         }
 
-        public static String getURL(String docid2, String extraParams) {
+        public static String getURL(String docid, String extraParams) {
             if (extraParams == null) {
                 extraParams = "";
             } else if (extraParams.length() > 0) {
                 extraParams = extraParams + "&";
             }
-            return "http://video.google.com/videoplay?" + extraParams + "docid=" + docid2;
+            return "http://video.google.com/videoplay?" + extraParams + "docid=" + docid;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class YouTubeVideo extends Token {
         private static final Pattern URL_PATTERN = Pattern.compile("(?i)http://(?:[a-z0-9]+\\.)?youtube\\.[a-z0-9]+(?:\\.[a-z0-9]+)?/watch\\?.*\\bv=([-_a-zA-Z0-9=]+).*");
         private String docid;
 
-        public YouTubeVideo(String docid2, String text) {
+        public YouTubeVideo(String docid, String text) {
             super(Token.Type.YOUTUBE_VIDEO, text);
-            this.docid = docid2;
+            this.docid = docid;
         }
 
         public String getDocID() {
             return this.docid;
         }
 
+        @Override // com.google.android.util.AbstractMessageParser.Token
         public boolean isHtml() {
             return false;
         }
 
+        @Override // com.google.android.util.AbstractMessageParser.Token
         public boolean isMedia() {
             return true;
         }
@@ -730,6 +756,7 @@ public abstract class AbstractMessageParser {
             return null;
         }
 
+        @Override // com.google.android.util.AbstractMessageParser.Token
         public List<String> getInfo() {
             List<String> info = super.getInfo();
             info.add(getRssUrl(this.docid));
@@ -737,24 +764,24 @@ public abstract class AbstractMessageParser {
             return info;
         }
 
-        public static String getRssUrl(String docid2) {
-            return "http://youtube.com/watch?v=" + docid2;
+        public static String getRssUrl(String docid) {
+            return "http://youtube.com/watch?v=" + docid;
         }
 
-        public static String getURL(String docid2) {
-            return getURL(docid2, (String) null);
+        public static String getURL(String docid) {
+            return getURL(docid, null);
         }
 
-        public static String getURL(String docid2, String extraParams) {
+        public static String getURL(String docid, String extraParams) {
             if (extraParams == null) {
                 extraParams = "";
             } else if (extraParams.length() > 0) {
                 extraParams = extraParams + "&";
             }
-            return "http://youtube.com/watch?" + extraParams + "v=" + docid2;
+            return "http://youtube.com/watch?" + extraParams + "v=" + docid;
         }
 
-        public static String getPrefixedURL(boolean http, String prefix, String docid2, String extraParams) {
+        public static String getPrefixedURL(boolean http, String prefix, String docid, String extraParams) {
             String protocol = "";
             if (http) {
                 protocol = "http://";
@@ -767,21 +794,22 @@ public abstract class AbstractMessageParser {
             } else if (extraParams.length() > 0) {
                 extraParams = extraParams + "&";
             }
-            return protocol + prefix + "youtube.com/watch?" + extraParams + "v=" + docid2;
+            return protocol + prefix + "youtube.com/watch?" + extraParams + "v=" + docid;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class Photo extends Token {
         private static final Pattern URL_PATTERN = Pattern.compile("http://picasaweb.google.com/([^/?#&]+)/+((?!searchbrowse)[^/?#&]+)(?:/|/photo)?(?:\\?[^#]*)?(?:#(.*))?");
         private String album;
         private String photo;
         private String user;
 
-        public Photo(String user2, String album2, String photo2, String text) {
+        public Photo(String user, String album, String photo, String text) {
             super(Token.Type.PHOTO, text);
-            this.user = user2;
-            this.album = album2;
-            this.photo = photo2;
+            this.user = user;
+            this.album = album;
+            this.photo = photo;
         }
 
         public String getUser() {
@@ -796,10 +824,12 @@ public abstract class AbstractMessageParser {
             return this.photo;
         }
 
+        @Override // com.google.android.util.AbstractMessageParser.Token
         public boolean isHtml() {
             return false;
         }
 
+        @Override // com.google.android.util.AbstractMessageParser.Token
         public boolean isMedia() {
             return true;
         }
@@ -812,6 +842,7 @@ public abstract class AbstractMessageParser {
             return null;
         }
 
+        @Override // com.google.android.util.AbstractMessageParser.Token
         public List<String> getInfo() {
             List<String> info = super.getInfo();
             info.add(getRssUrl(getUser()));
@@ -819,48 +850,48 @@ public abstract class AbstractMessageParser {
             if (getPhoto() != null) {
                 info.add(getPhotoURL(getUser(), getAlbum(), getPhoto()));
             } else {
-                info.add((String) null);
+                info.add(null);
             }
             return info;
         }
 
-        public static String getRssUrl(String user2) {
-            return "http://picasaweb.google.com/data/feed/api/user/" + user2 + "?category=album&alt=rss";
+        public static String getRssUrl(String user) {
+            return "http://picasaweb.google.com/data/feed/api/user/" + user + "?category=album&alt=rss";
         }
 
-        public static String getAlbumURL(String user2, String album2) {
-            return "http://picasaweb.google.com/" + user2 + "/" + album2;
+        public static String getAlbumURL(String user, String album) {
+            return "http://picasaweb.google.com/" + user + "/" + album;
         }
 
-        public static String getPhotoURL(String user2, String album2, String photo2) {
-            return "http://picasaweb.google.com/" + user2 + "/" + album2 + "/photo#" + photo2;
+        public static String getPhotoURL(String user, String album, String photo) {
+            return "http://picasaweb.google.com/" + user + "/" + album + "/photo#" + photo;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class FlickrPhoto extends Token {
-        private static final Pattern GROUPING_PATTERN = Pattern.compile("http://(?:www.)?flickr.com/photos/([^/?#&]+)/(tags|sets)/([^/?#&]+)/?");
         private static final String SETS = "sets";
         private static final String TAGS = "tags";
-        private static final Pattern URL_PATTERN = Pattern.compile("http://(?:www.)?flickr.com/photos/([^/?#&]+)/?([^/?#&]+)?/?.*");
         private String grouping;
         private String groupingId;
         private String photo;
         private String user;
+        private static final Pattern URL_PATTERN = Pattern.compile("http://(?:www.)?flickr.com/photos/([^/?#&]+)/?([^/?#&]+)?/?.*");
+        private static final Pattern GROUPING_PATTERN = Pattern.compile("http://(?:www.)?flickr.com/photos/([^/?#&]+)/(tags|sets)/([^/?#&]+)/?");
 
-        public FlickrPhoto(String user2, String photo2, String grouping2, String groupingId2, String text) {
+        public FlickrPhoto(String user, String photo, String grouping, String groupingId, String text) {
             super(Token.Type.FLICKR, text);
-            String str = null;
-            if (!"tags".equals(user2)) {
-                this.user = user2;
-                this.photo = !ThreadedRenderer.OVERDRAW_PROPERTY_SHOW.equals(photo2) ? photo2 : str;
-                this.grouping = grouping2;
-                this.groupingId = groupingId2;
+            if (!"tags".equals(user)) {
+                this.user = user;
+                this.photo = ThreadedRenderer.OVERDRAW_PROPERTY_SHOW.equals(photo) ? null : photo;
+                this.grouping = grouping;
+                this.groupingId = groupingId;
                 return;
             }
             this.user = null;
             this.photo = null;
             this.grouping = "tags";
-            this.groupingId = photo2;
+            this.groupingId = photo;
         }
 
         public String getUser() {
@@ -879,10 +910,12 @@ public abstract class AbstractMessageParser {
             return this.groupingId;
         }
 
+        @Override // com.google.android.util.AbstractMessageParser.Token
         public boolean isHtml() {
             return false;
         }
 
+        @Override // com.google.android.util.AbstractMessageParser.Token
         public boolean isMedia() {
             return true;
         }
@@ -890,15 +923,16 @@ public abstract class AbstractMessageParser {
         public static FlickrPhoto matchURL(String url, String text) {
             Matcher m = GROUPING_PATTERN.matcher(url);
             if (m.matches()) {
-                return new FlickrPhoto(m.group(1), (String) null, m.group(2), m.group(3), text);
+                return new FlickrPhoto(m.group(1), null, m.group(2), m.group(3), text);
             }
             Matcher m2 = URL_PATTERN.matcher(url);
             if (m2.matches()) {
-                return new FlickrPhoto(m2.group(1), m2.group(2), (String) null, (String) null, text);
+                return new FlickrPhoto(m2.group(1), m2.group(2), null, null, text);
             }
             return null;
         }
 
+        @Override // com.google.android.util.AbstractMessageParser.Token
         public List<String> getInfo() {
             List<String> info = super.getInfo();
             info.add(getUrl());
@@ -925,7 +959,7 @@ public abstract class AbstractMessageParser {
             }
         }
 
-        public static String getRssUrl(String user2) {
+        public static String getRssUrl(String user) {
             return null;
         }
 
@@ -933,32 +967,35 @@ public abstract class AbstractMessageParser {
             return "http://flickr.com/photos/tags/" + tag;
         }
 
-        public static String getUserURL(String user2) {
-            return "http://flickr.com/photos/" + user2;
+        public static String getUserURL(String user) {
+            return "http://flickr.com/photos/" + user;
         }
 
-        public static String getPhotoURL(String user2, String photo2) {
-            return "http://flickr.com/photos/" + user2 + "/" + photo2;
+        public static String getPhotoURL(String user, String photo) {
+            return "http://flickr.com/photos/" + user + "/" + photo;
         }
 
-        public static String getUserTagsURL(String user2, String tagId) {
-            return "http://flickr.com/photos/" + user2 + "/tags/" + tagId;
+        public static String getUserTagsURL(String user, String tagId) {
+            return "http://flickr.com/photos/" + user + "/tags/" + tagId;
         }
 
-        public static String getUserSetsURL(String user2, String setId) {
-            return "http://flickr.com/photos/" + user2 + "/sets/" + setId;
+        public static String getUserSetsURL(String user, String setId) {
+            return "http://flickr.com/photos/" + user + "/sets/" + setId;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class Smiley extends Token {
         public Smiley(String text) {
             super(Token.Type.SMILEY, text);
         }
 
+        @Override // com.google.android.util.AbstractMessageParser.Token
         public boolean isHtml() {
             return false;
         }
 
+        @Override // com.google.android.util.AbstractMessageParser.Token
         public List<String> getInfo() {
             List<String> info = super.getInfo();
             info.add(getRawText());
@@ -966,22 +1003,25 @@ public abstract class AbstractMessageParser {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class Acronym extends Token {
         private String value;
 
-        public Acronym(String text, String value2) {
+        public Acronym(String text, String value) {
             super(Token.Type.ACRONYM, text);
-            this.value = value2;
+            this.value = value;
         }
 
         public String getValue() {
             return this.value;
         }
 
+        @Override // com.google.android.util.AbstractMessageParser.Token
         public boolean isHtml() {
             return false;
         }
 
+        @Override // com.google.android.util.AbstractMessageParser.Token
         public List<String> getInfo() {
             List<String> info = super.getInfo();
             info.add(getRawText());
@@ -990,73 +1030,81 @@ public abstract class AbstractMessageParser {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class Format extends Token {
-        private char ch;
+
+        /* renamed from: ch */
+        private char f2519ch;
         private boolean matched;
         private boolean start;
 
-        public Format(char ch2, boolean start2) {
-            super(Token.Type.FORMAT, String.valueOf(ch2));
-            this.ch = ch2;
-            this.start = start2;
+        public Format(char ch, boolean start) {
+            super(Token.Type.FORMAT, String.valueOf(ch));
+            this.f2519ch = ch;
+            this.start = start;
         }
 
-        public void setMatched(boolean matched2) {
-            this.matched = matched2;
+        public void setMatched(boolean matched) {
+            this.matched = matched;
         }
 
+        @Override // com.google.android.util.AbstractMessageParser.Token
         public boolean isHtml() {
             return true;
         }
 
+        @Override // com.google.android.util.AbstractMessageParser.Token
         public String toHtml(boolean caps) {
-            return this.matched ? this.start ? getFormatStart(this.ch) : getFormatEnd(this.ch) : this.ch == '\"' ? "&quot;" : String.valueOf(this.ch);
+            return this.matched ? this.start ? getFormatStart(this.f2519ch) : getFormatEnd(this.f2519ch) : this.f2519ch == '\"' ? "&quot;" : String.valueOf(this.f2519ch);
         }
 
+        @Override // com.google.android.util.AbstractMessageParser.Token
         public List<String> getInfo() {
             throw new UnsupportedOperationException();
         }
 
+        @Override // com.google.android.util.AbstractMessageParser.Token
         public boolean controlCaps() {
-            return this.ch == '^';
+            return this.f2519ch == '^';
         }
 
+        @Override // com.google.android.util.AbstractMessageParser.Token
         public boolean setCaps() {
             return this.start;
         }
 
-        private String getFormatStart(char ch2) {
-            if (ch2 == '\"') {
-                return "<font color=\"#999999\">“";
+        private String getFormatStart(char ch) {
+            if (ch != '\"') {
+                if (ch == '*') {
+                    return "<b>";
+                }
+                switch (ch) {
+                    case '^':
+                        return "<b><font color=\"#005FFF\">";
+                    case '_':
+                        return "<i>";
+                    default:
+                        throw new AssertionError("unknown format '" + ch + "'");
+                }
             }
-            if (ch2 == '*') {
-                return "<b>";
-            }
-            switch (ch2) {
-                case '^':
-                    return "<b><font color=\"#005FFF\">";
-                case '_':
-                    return "<i>";
-                default:
-                    throw new AssertionError("unknown format '" + ch2 + "'");
-            }
+            return "<font color=\"#999999\">\u201c";
         }
 
-        private String getFormatEnd(char ch2) {
-            if (ch2 == '\"') {
-                return "”</font>";
+        private String getFormatEnd(char ch) {
+            if (ch != '\"') {
+                if (ch == '*') {
+                    return "</b>";
+                }
+                switch (ch) {
+                    case '^':
+                        return "</font></b>";
+                    case '_':
+                        return "</i>";
+                    default:
+                        throw new AssertionError("unknown format '" + ch + "'");
+                }
             }
-            if (ch2 == '*') {
-                return "</b>";
-            }
-            switch (ch2) {
-                case '^':
-                    return "</font></b>";
-                case '_':
-                    return "</i>";
-                default:
-                    throw new AssertionError("unknown format '" + ch2 + "'");
-            }
+            return "\u201d</font>";
         }
     }
 
@@ -1068,9 +1116,10 @@ public abstract class AbstractMessageParser {
         StringBuilder html = new StringBuilder();
         Iterator<Part> it = this.parts.iterator();
         while (it.hasNext()) {
+            Part part = it.next();
             boolean caps = false;
             html.append("<p>");
-            Iterator<Token> it2 = it.next().getTokens().iterator();
+            Iterator<Token> it2 = part.getTokens().iterator();
             while (it2.hasNext()) {
                 Token token = it2.next();
                 if (token.isHtml()) {
@@ -1117,7 +1166,6 @@ public abstract class AbstractMessageParser {
                             html.append("</a>");
                             break;
                         case FLICKR:
-                            Token token2 = token;
                             html.append("<a href=\"");
                             html.append(((FlickrPhoto) token).getUrl());
                             html.append("\">");
@@ -1145,6 +1193,7 @@ public abstract class AbstractMessageParser {
         return buf.toString();
     }
 
+    /* loaded from: classes4.dex */
     public static class TrieNode {
         private final HashMap<Character, TrieNode> children;
         private String text;
@@ -1154,9 +1203,9 @@ public abstract class AbstractMessageParser {
             this("");
         }
 
-        public TrieNode(String text2) {
+        public TrieNode(String text) {
             this.children = new HashMap<>();
-            this.text = text2;
+            this.text = text;
         }
 
         public final boolean exists() {
@@ -1171,8 +1220,8 @@ public abstract class AbstractMessageParser {
             return this.value;
         }
 
-        public void setValue(String value2) {
-            this.value = value2;
+        public void setValue(String value) {
+            this.value = value;
         }
 
         public TrieNode getChild(char ch) {
@@ -1182,38 +1231,34 @@ public abstract class AbstractMessageParser {
         public TrieNode getOrCreateChild(char ch) {
             Character key = Character.valueOf(ch);
             TrieNode node = this.children.get(key);
-            if (node != null) {
-                return node;
+            if (node == null) {
+                TrieNode node2 = new TrieNode(this.text + String.valueOf(ch));
+                this.children.put(key, node2);
+                return node2;
             }
-            TrieNode node2 = new TrieNode(this.text + String.valueOf(ch));
-            this.children.put(key, node2);
-            return node2;
+            return node;
         }
 
-        public static void addToTrie(TrieNode root, String str, String value2) {
+        public static void addToTrie(TrieNode root, String str, String value) {
             for (int index = 0; index < str.length(); index++) {
                 root = root.getOrCreateChild(str.charAt(index));
             }
-            root.setValue(value2);
+            root.setValue(value);
         }
     }
 
     private static boolean matches(TrieNode root, String str) {
         TrieNode root2 = root;
         int index = 0;
-        while (true) {
-            if (index >= str.length()) {
-                break;
-            }
+        while (index < str.length()) {
             int index2 = index + 1;
             root2 = root2.getChild(str.charAt(index));
             if (root2 == null) {
-                int i = index2;
                 break;
-            } else if (root2.exists()) {
-                return true;
-            } else {
+            } else if (!root2.exists()) {
                 index = index2;
+            } else {
+                return true;
             }
         }
         return false;
@@ -1226,14 +1271,10 @@ public abstract class AbstractMessageParser {
     private static TrieNode longestMatch(TrieNode root, AbstractMessageParser p, int start, boolean smiley) {
         int index = start;
         TrieNode bestMatch = null;
-        while (true) {
-            if (index >= p.getRawText().length()) {
-                break;
-            }
+        while (index < p.getRawText().length()) {
             int index2 = index + 1;
             root = root.getChild(p.getRawText().charAt(index));
             if (root == null) {
-                int i = index2;
                 break;
             }
             if (root.exists()) {
@@ -1248,6 +1289,7 @@ public abstract class AbstractMessageParser {
         return bestMatch;
     }
 
+    /* loaded from: classes4.dex */
     public static class Part {
         private String meText;
         private ArrayList<Token> tokens = new ArrayList<>();
@@ -1281,15 +1323,14 @@ public abstract class AbstractMessageParser {
         }
 
         public void add(Token token) {
-            if (!isMedia()) {
-                this.tokens.add(token);
-                return;
+            if (isMedia()) {
+                throw new AssertionError("media ");
             }
-            throw new AssertionError("media ");
+            this.tokens.add(token);
         }
 
-        public void setMeText(String meText2) {
-            this.meText = meText2;
+        public void setMeText(String meText) {
+            this.meText = meText;
         }
 
         public String getRawText() {

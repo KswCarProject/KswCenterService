@@ -2,6 +2,7 @@ package android.hardware.radio.V1_0;
 
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class CallForwardInfoStatus {
     public static final int DISABLE = 0;
     public static final int ENABLE = 1;

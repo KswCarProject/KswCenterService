@@ -3,9 +3,9 @@ package android.media;
 import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
 import android.media.audiopolicy.AudioProductStrategy;
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseIntArray;
@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+/* loaded from: classes3.dex */
 public final class AudioAttributes implements Parcelable {
     public static final int ALLOW_CAPTURE_BY_ALL = 1;
     public static final int ALLOW_CAPTURE_BY_NONE = 3;
@@ -29,15 +30,7 @@ public final class AudioAttributes implements Parcelable {
     public static final int CONTENT_TYPE_SONIFICATION = 4;
     public static final int CONTENT_TYPE_SPEECH = 1;
     public static final int CONTENT_TYPE_UNKNOWN = 0;
-    public static final Parcelable.Creator<AudioAttributes> CREATOR = new Parcelable.Creator<AudioAttributes>() {
-        public AudioAttributes createFromParcel(Parcel p) {
-            return new AudioAttributes(p);
-        }
-
-        public AudioAttributes[] newArray(int size) {
-            return new AudioAttributes[size];
-        }
-    };
+    public static final Parcelable.Creator<AudioAttributes> CREATOR;
     private static final int FLAG_ALL = 6143;
     private static final int FLAG_ALL_PUBLIC = 273;
     public static final int FLAG_AUDIBILITY_ENFORCED = 1;
@@ -58,7 +51,7 @@ public final class AudioAttributes implements Parcelable {
     public static final int FLAG_SCO = 4;
     public static final int FLAG_SECURE = 2;
     public static final int FLATTEN_TAGS = 1;
-    public static final int[] SDK_USAGES = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16};
+    public static final int[] SDK_USAGES;
     public static final int SUPPRESSIBLE_ALARM = 4;
     public static final int SUPPRESSIBLE_CALL = 2;
     public static final int SUPPRESSIBLE_MEDIA = 5;
@@ -84,35 +77,31 @@ public final class AudioAttributes implements Parcelable {
     public static final int USAGE_VIRTUAL_SOURCE = 15;
     public static final int USAGE_VOICE_COMMUNICATION = 2;
     public static final int USAGE_VOICE_COMMUNICATION_SIGNALLING = 3;
-    /* access modifiers changed from: private */
-    public Bundle mBundle;
-    /* access modifiers changed from: private */
+    private Bundle mBundle;
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
-    public int mContentType;
-    /* access modifiers changed from: private */
+    private int mContentType;
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
-    public int mFlags;
-    /* access modifiers changed from: private */
+    private int mFlags;
     @UnsupportedAppUsage
-    public String mFormattedTags;
-    /* access modifiers changed from: private */
+    private String mFormattedTags;
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
-    public int mSource;
-    /* access modifiers changed from: private */
-    public HashSet<String> mTags;
-    /* access modifiers changed from: private */
+    private int mSource;
+    private HashSet<String> mTags;
     @UnsupportedAppUsage
-    public int mUsage;
+    private int mUsage;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface AttributeContentType {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface AttributeUsage {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface CapturePolicy {
     }
 
@@ -139,6 +128,20 @@ public final class AudioAttributes implements Parcelable {
         SUPPRESSIBLE_USAGES.put(16, 5);
         SUPPRESSIBLE_USAGES.put(0, 5);
         SUPPRESSIBLE_USAGES.put(13, 6);
+        SDK_USAGES = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16};
+        CREATOR = new Parcelable.Creator<AudioAttributes>() { // from class: android.media.AudioAttributes.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
+            public AudioAttributes createFromParcel(Parcel p) {
+                return new AudioAttributes(p);
+            }
+
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
+            public AudioAttributes[] newArray(int size) {
+                return new AudioAttributes[size];
+            }
+        };
     }
 
     private AudioAttributes() {
@@ -196,19 +199,32 @@ public final class AudioAttributes implements Parcelable {
         return 1;
     }
 
+    /* loaded from: classes3.dex */
     public static class Builder {
         private Bundle mBundle;
-        private int mContentType = 0;
-        private int mFlags = 0;
-        private boolean mMuteHapticChannels = true;
-        private int mSource = -1;
-        private HashSet<String> mTags = new HashSet<>();
-        private int mUsage = 0;
+        private int mContentType;
+        private int mFlags;
+        private boolean mMuteHapticChannels;
+        private int mSource;
+        private HashSet<String> mTags;
+        private int mUsage;
 
         public Builder() {
+            this.mUsage = 0;
+            this.mContentType = 0;
+            this.mSource = -1;
+            this.mFlags = 0;
+            this.mMuteHapticChannels = true;
+            this.mTags = new HashSet<>();
         }
 
         public Builder(AudioAttributes aa) {
+            this.mUsage = 0;
+            this.mContentType = 0;
+            this.mSource = -1;
+            this.mFlags = 0;
+            this.mMuteHapticChannels = true;
+            this.mTags = new HashSet<>();
             this.mUsage = aa.mUsage;
             this.mContentType = aa.mContentType;
             this.mFlags = aa.getAllFlags();
@@ -218,17 +234,17 @@ public final class AudioAttributes implements Parcelable {
 
         public AudioAttributes build() {
             AudioAttributes aa = new AudioAttributes();
-            int unused = aa.mContentType = this.mContentType;
-            int unused2 = aa.mUsage = this.mUsage;
-            int unused3 = aa.mSource = this.mSource;
-            int unused4 = aa.mFlags = this.mFlags;
+            aa.mContentType = this.mContentType;
+            aa.mUsage = this.mUsage;
+            aa.mSource = this.mSource;
+            aa.mFlags = this.mFlags;
             if (this.mMuteHapticChannels) {
                 AudioAttributes.access$576(aa, 2048);
             }
-            HashSet unused5 = aa.mTags = (HashSet) this.mTags.clone();
-            String unused6 = aa.mFormattedTags = TextUtils.join((CharSequence) ";", (Iterable) this.mTags);
+            aa.mTags = (HashSet) this.mTags.clone();
+            aa.mFormattedTags = TextUtils.join(";", this.mTags);
             if (this.mBundle != null) {
-                Bundle unused7 = aa.mBundle = new Bundle(this.mBundle);
+                aa.mBundle = new Bundle(this.mBundle);
             }
             return aa;
         }
@@ -294,15 +310,15 @@ public final class AudioAttributes implements Parcelable {
 
         @SystemApi
         public Builder addBundle(Bundle bundle) {
-            if (bundle != null) {
-                if (this.mBundle == null) {
-                    this.mBundle = new Bundle(bundle);
-                } else {
-                    this.mBundle.putAll(bundle);
-                }
-                return this;
+            if (bundle == null) {
+                throw new IllegalArgumentException("Illegal null bundle");
             }
-            throw new IllegalArgumentException("Illegal null bundle");
+            if (this.mBundle == null) {
+                this.mBundle = new Bundle(bundle);
+            } else {
+                this.mBundle.putAll(bundle);
+            }
+            return this;
         }
 
         @UnsupportedAppUsage
@@ -312,13 +328,14 @@ public final class AudioAttributes implements Parcelable {
         }
 
         public Builder setLegacyStreamType(int streamType) {
-            if (streamType != 10) {
-                setInternalLegacyStreamType(streamType);
-                return this;
+            if (streamType == 10) {
+                throw new IllegalArgumentException("STREAM_ACCESSIBILITY is not a legacy stream type that was used for audio playback");
             }
-            throw new IllegalArgumentException("STREAM_ACCESSIBILITY is not a legacy stream type that was used for audio playback");
+            setInternalLegacyStreamType(streamType);
+            return this;
         }
 
+        /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
         @UnsupportedAppUsage
         public Builder setInternalLegacyStreamType(int streamType) {
             AudioAttributes attributes;
@@ -339,6 +356,7 @@ public final class AudioAttributes implements Parcelable {
                         this.mContentType = 1;
                         break;
                     case 1:
+                        this.mContentType = 4;
                         break;
                     case 2:
                         this.mContentType = 4;
@@ -358,6 +376,7 @@ public final class AudioAttributes implements Parcelable {
                         break;
                     case 7:
                         this.mFlags = 1 | this.mFlags;
+                        this.mContentType = 4;
                         break;
                     case 8:
                         this.mContentType = 4;
@@ -370,10 +389,9 @@ public final class AudioAttributes implements Parcelable {
                         this.mContentType = 1;
                         break;
                     default:
-                        Log.e(AudioAttributes.TAG, "Invalid stream type " + streamType + " for AudioAttributes");
+                        Log.m70e(AudioAttributes.TAG, "Invalid stream type " + streamType + " for AudioAttributes");
                         break;
                 }
-                this.mContentType = 4;
             }
             if (this.mUsage == 0) {
                 this.mUsage = AudioAttributes.usageForStreamType(streamType);
@@ -393,8 +411,12 @@ public final class AudioAttributes implements Parcelable {
                 case 10:
                     this.mSource = preset;
                     break;
+                case 2:
+                case 3:
+                case 4:
+                case 8:
                 default:
-                    Log.e(AudioAttributes.TAG, "Invalid capture preset " + preset + " for AudioAttributes");
+                    Log.m70e(AudioAttributes.TAG, "Invalid capture preset " + preset + " for AudioAttributes");
                     break;
             }
             return this;
@@ -416,10 +438,12 @@ public final class AudioAttributes implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mUsage);
         dest.writeInt(this.mContentType);
@@ -442,7 +466,6 @@ public final class AudioAttributes implements Parcelable {
     }
 
     private AudioAttributes(Parcel in) {
-        boolean hasFlattenedTags = false;
         this.mUsage = 0;
         this.mContentType = 0;
         this.mSource = -1;
@@ -451,7 +474,7 @@ public final class AudioAttributes implements Parcelable {
         this.mContentType = in.readInt();
         this.mSource = in.readInt();
         this.mFlags = in.readInt();
-        hasFlattenedTags = (in.readInt() & 1) == 1 ? true : hasFlattenedTags;
+        boolean hasFlattenedTags = (in.readInt() & 1) == 1;
         this.mTags = new HashSet<>();
         if (hasFlattenedTags) {
             this.mFormattedTags = new String(in.readString());
@@ -467,15 +490,15 @@ public final class AudioAttributes implements Parcelable {
                 this.mTags.add(tagsArray[i2]);
                 i = i2 - 1;
             }
-            this.mFormattedTags = TextUtils.join((CharSequence) ";", (Iterable) this.mTags);
+            this.mFormattedTags = TextUtils.join(";", this.mTags);
         }
         int readInt = in.readInt();
         if (readInt == ATTR_PARCEL_IS_NULL_BUNDLE) {
             this.mBundle = null;
-        } else if (readInt != ATTR_PARCEL_IS_VALID_BUNDLE) {
-            Log.e(TAG, "Illegal value unmarshalling AudioAttributes, can't initialize bundle");
-        } else {
+        } else if (readInt == ATTR_PARCEL_IS_VALID_BUNDLE) {
             this.mBundle = new Bundle(in.readBundle());
+        } else {
+            Log.m70e(TAG, "Illegal value unmarshalling AudioAttributes, can't initialize bundle");
         }
     }
 
@@ -494,7 +517,7 @@ public final class AudioAttributes implements Parcelable {
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(this.mContentType), Integer.valueOf(this.mFlags), Integer.valueOf(this.mSource), Integer.valueOf(this.mUsage), this.mFormattedTags, this.mBundle});
+        return Objects.hash(Integer.valueOf(this.mContentType), Integer.valueOf(this.mFlags), Integer.valueOf(this.mSource), Integer.valueOf(this.mUsage), this.mFormattedTags, this.mBundle);
     }
 
     public String toString() {
@@ -562,10 +585,11 @@ public final class AudioAttributes implements Parcelable {
                 return new String("USAGE_ASSISTANCE_SONIFICATION");
             case 14:
                 return new String("USAGE_GAME");
-            case 16:
-                return new String("USAGE_ASSISTANT");
+            case 15:
             default:
                 return new String("unknown usage " + usage);
+            case 16:
+                return new String("USAGE_ASSISTANT");
         }
     }
 
@@ -586,7 +610,7 @@ public final class AudioAttributes implements Parcelable {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static int usageForStreamType(int streamType) {
         switch (streamType) {
             case 0:
@@ -606,10 +630,11 @@ public final class AudioAttributes implements Parcelable {
                 return 2;
             case 8:
                 return 3;
-            case 10:
-                return 11;
+            case 9:
             default:
                 return 0;
+            case 10:
+                return 11;
         }
     }
 
@@ -624,20 +649,11 @@ public final class AudioAttributes implements Parcelable {
 
     private static int toVolumeStreamType(boolean fromGetVolumeControlStream, AudioAttributes aa) {
         if ((aa.getFlags() & 1) == 1) {
-            if (fromGetVolumeControlStream) {
-                return 1;
-            }
-            return 7;
+            return fromGetVolumeControlStream ? 1 : 7;
         } else if ((aa.getAllFlags() & 4) == 4) {
-            if (fromGetVolumeControlStream) {
-                return 0;
-            }
-            return 6;
+            return fromGetVolumeControlStream ? 0 : 6;
         } else if ((aa.getAllFlags() & 8) == 8) {
-            if (fromGetVolumeControlStream) {
-                return 3;
-            }
-            return 9;
+            return fromGetVolumeControlStream ? 3 : 9;
         } else if (AudioProductStrategy.getAudioProductStrategies().size() > 0) {
             return AudioProductStrategy.getLegacyStreamTypeForStrategyWithAudioAttributes(aa);
         } else {
@@ -652,10 +668,7 @@ public final class AudioAttributes implements Parcelable {
                 case 2:
                     return 0;
                 case 3:
-                    if (fromGetVolumeControlStream) {
-                        return 0;
-                    }
-                    return 8;
+                    return fromGetVolumeControlStream ? 0 : 8;
                 case 4:
                     return 4;
                 case 5:
@@ -670,11 +683,12 @@ public final class AudioAttributes implements Parcelable {
                     return 10;
                 case 13:
                     return 1;
+                case 15:
                 default:
-                    if (!fromGetVolumeControlStream) {
-                        return 3;
+                    if (fromGetVolumeControlStream) {
+                        throw new IllegalArgumentException("Unknown usage value " + aa.getUsage() + " in audio attributes");
                     }
-                    throw new IllegalArgumentException("Unknown usage value " + aa.getUsage() + " in audio attributes");
+                    return 3;
             }
         }
     }
@@ -682,9 +696,9 @@ public final class AudioAttributes implements Parcelable {
     static int capturePolicyToFlags(int capturePolicy, int flags) {
         switch (capturePolicy) {
             case 1:
-                return flags & -5121;
+                return flags & (-5121);
             case 2:
-                return (flags | 1024) & -4097;
+                return (flags | 1024) & (-4097);
             case 3:
                 return flags | 5120;
             default:

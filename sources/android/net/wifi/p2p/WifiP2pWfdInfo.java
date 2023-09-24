@@ -1,21 +1,26 @@
 package android.net.wifi.p2p;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.Locale;
 
+/* loaded from: classes3.dex */
 public class WifiP2pWfdInfo implements Parcelable {
     private static final int COUPLED_SINK_SUPPORT_AT_SINK = 8;
     private static final int COUPLED_SINK_SUPPORT_AT_SOURCE = 4;
     @UnsupportedAppUsage
-    public static final Parcelable.Creator<WifiP2pWfdInfo> CREATOR = new Parcelable.Creator<WifiP2pWfdInfo>() {
+    public static final Parcelable.Creator<WifiP2pWfdInfo> CREATOR = new Parcelable.Creator<WifiP2pWfdInfo>() { // from class: android.net.wifi.p2p.WifiP2pWfdInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WifiP2pWfdInfo createFromParcel(Parcel in) {
             WifiP2pWfdInfo device = new WifiP2pWfdInfo();
             device.readFromParcel(in);
             return device;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WifiP2pWfdInfo[] newArray(int size) {
             return new WifiP2pWfdInfo[size];
         }
@@ -73,12 +78,12 @@ public class WifiP2pWfdInfo implements Parcelable {
 
     @UnsupportedAppUsage
     public boolean setDeviceType(int deviceType) {
-        if (deviceType < 0 || deviceType > 3) {
-            return false;
+        if (deviceType >= 0 && deviceType <= 3) {
+            this.mDeviceInfo &= -4;
+            this.mDeviceInfo |= deviceType;
+            return true;
         }
-        this.mDeviceInfo &= -4;
-        this.mDeviceInfo |= deviceType;
-        return true;
+        return false;
     }
 
     public boolean isCoupledSinkSupportedAtSource() {
@@ -138,11 +143,11 @@ public class WifiP2pWfdInfo implements Parcelable {
     }
 
     public String getDeviceInfoHex() {
-        return String.format(Locale.US, "%04x%04x%04x", new Object[]{Integer.valueOf(this.mDeviceInfo), Integer.valueOf(this.mCtrlPort), Integer.valueOf(this.mMaxThroughput)});
+        return String.format(Locale.US, "%04x%04x%04x", Integer.valueOf(this.mDeviceInfo), Integer.valueOf(this.mCtrlPort), Integer.valueOf(this.mMaxThroughput));
     }
 
     public String getR2DeviceInfoHex() {
-        return String.format(Locale.US, "%04x%04x", new Object[]{2, Integer.valueOf(this.mR2DeviceInfo)});
+        return String.format(Locale.US, "%04x%04x", 2, Integer.valueOf(this.mR2DeviceInfo));
     }
 
     public String toString() {
@@ -160,6 +165,7 @@ public class WifiP2pWfdInfo implements Parcelable {
         return sbuf.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -175,6 +181,7 @@ public class WifiP2pWfdInfo implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mWfdEnabled ? 1 : 0);
         dest.writeInt(this.mDeviceInfo);
@@ -184,11 +191,7 @@ public class WifiP2pWfdInfo implements Parcelable {
     }
 
     public void readFromParcel(Parcel in) {
-        boolean z = true;
-        if (in.readInt() != 1) {
-            z = false;
-        }
-        this.mWfdEnabled = z;
+        this.mWfdEnabled = in.readInt() == 1;
         this.mDeviceInfo = in.readInt();
         this.mCtrlPort = in.readInt();
         this.mMaxThroughput = in.readInt();

@@ -2,6 +2,7 @@ package android.security.keystore;
 
 import java.security.Key;
 
+/* loaded from: classes3.dex */
 public class AndroidKeyStoreKey implements Key {
     private final String mAlgorithm;
     private final String mAlias;
@@ -13,35 +14,32 @@ public class AndroidKeyStoreKey implements Key {
         this.mAlgorithm = algorithm;
     }
 
-    /* access modifiers changed from: package-private */
-    public String getAlias() {
+    String getAlias() {
         return this.mAlias;
     }
 
-    /* access modifiers changed from: package-private */
-    public int getUid() {
+    int getUid() {
         return this.mUid;
     }
 
+    @Override // java.security.Key
     public String getAlgorithm() {
         return this.mAlgorithm;
     }
 
+    @Override // java.security.Key
     public String getFormat() {
         return null;
     }
 
+    @Override // java.security.Key
     public byte[] getEncoded() {
         return null;
     }
 
     public int hashCode() {
-        int i = 0;
-        int result = ((1 * 31) + (this.mAlgorithm == null ? 0 : this.mAlgorithm.hashCode())) * 31;
-        if (this.mAlias != null) {
-            i = this.mAlias.hashCode();
-        }
-        return ((result + i) * 31) + this.mUid;
+        int result = (1 * 31) + (this.mAlgorithm == null ? 0 : this.mAlgorithm.hashCode());
+        return (((result * 31) + (this.mAlias != null ? this.mAlias.hashCode() : 0)) * 31) + this.mUid;
     }
 
     public boolean equals(Object obj) {
@@ -66,9 +64,9 @@ public class AndroidKeyStoreKey implements Key {
         } else if (!this.mAlias.equals(other.mAlias)) {
             return false;
         }
-        if (this.mUid != other.mUid) {
-            return false;
+        if (this.mUid == other.mUid) {
+            return true;
         }
-        return true;
+        return false;
     }
 }

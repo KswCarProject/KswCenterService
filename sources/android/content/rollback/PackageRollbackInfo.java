@@ -1,21 +1,26 @@
 package android.content.rollback;
 
 import android.annotation.SystemApi;
-import android.content.pm.VersionedPackage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.content.p002pm.VersionedPackage;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.IntArray;
 import android.util.SparseLongArray;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class PackageRollbackInfo implements Parcelable {
-    public static final Parcelable.Creator<PackageRollbackInfo> CREATOR = new Parcelable.Creator<PackageRollbackInfo>() {
+    public static final Parcelable.Creator<PackageRollbackInfo> CREATOR = new Parcelable.Creator<PackageRollbackInfo>() { // from class: android.content.rollback.PackageRollbackInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PackageRollbackInfo createFromParcel(Parcel in) {
             return new PackageRollbackInfo(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PackageRollbackInfo[] newArray(int size) {
             return new PackageRollbackInfo[size];
         }
@@ -28,15 +33,16 @@ public final class PackageRollbackInfo implements Parcelable {
     private final VersionedPackage mVersionRolledBackFrom;
     private final VersionedPackage mVersionRolledBackTo;
 
+    /* loaded from: classes.dex */
     public static class RestoreInfo {
         public final int appId;
         public final String seInfo;
         public final int userId;
 
-        public RestoreInfo(int userId2, int appId2, String seInfo2) {
-            this.userId = userId2;
-            this.appId = appId2;
-            this.seInfo = seInfo2;
+        public RestoreInfo(int userId, int appId, String seInfo) {
+            this.userId = userId;
+            this.appId = appId;
+            this.seInfo = seInfo;
         }
     }
 
@@ -126,10 +132,12 @@ public final class PackageRollbackInfo implements Parcelable {
         this.mCeSnapshotInodes = null;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         this.mVersionRolledBackFrom.writeToParcel(out, flags);
         this.mVersionRolledBackTo.writeToParcel(out, flags);

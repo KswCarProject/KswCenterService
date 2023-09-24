@@ -28,7 +28,7 @@
     <string name="import_config_success">설정 수정 완료!</string>
     <string name="no_update">No</string>
     <string name="ota_update">OTA 업데이트</string>
-    <string name="ota_update_message">업데이트 파일이 검색되었습니다.\10지금 업데이트 하시겠습니까?</string>
+    <string name="ota_update_message">업데이트 파일이 검색되었습니다.\n지금 업데이트 하시겠습니까?</string>
     <string name="search_menu_title">검색</string>
     <string name="status_bar_notification_info_overflow">999+</string>
     <string name="update_success">업데이트 완료!</string>

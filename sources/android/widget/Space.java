@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.View;
 
+/* loaded from: classes4.dex */
 public final class Space extends View {
     public Space(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
@@ -22,30 +23,31 @@ public final class Space extends View {
     }
 
     public Space(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
+    @Override // android.view.View
     public void draw(Canvas canvas) {
     }
 
     private static int getDefaultSize2(int size, int measureSpec) {
-        int result = size;
         int specMode = View.MeasureSpec.getMode(measureSpec);
         int specSize = View.MeasureSpec.getSize(measureSpec);
         if (specMode == Integer.MIN_VALUE) {
-            return Math.min(size, specSize);
-        }
-        if (specMode == 0) {
+            int result = Math.min(size, specSize);
+            return result;
+        } else if (specMode != 0) {
+            if (specMode != 1073741824) {
+                return size;
+            }
+            return specSize;
+        } else {
             return size;
         }
-        if (specMode != 1073741824) {
-            return result;
-        }
-        return specSize;
     }
 
-    /* access modifiers changed from: protected */
-    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    @Override // android.view.View
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         setMeasuredDimension(getDefaultSize2(getSuggestedMinimumWidth(), widthMeasureSpec), getDefaultSize2(getSuggestedMinimumHeight(), heightMeasureSpec));
     }
 }

@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/* loaded from: classes4.dex */
 public class EventLog {
     private static final String COMMENT_PATTERN = "^\\s*(#.*)?$";
     private static final String TAG = "EventLog";
@@ -38,6 +39,7 @@ public class EventLog {
 
     public static native int writeEvent(int i, Object... objArr);
 
+    /* loaded from: classes4.dex */
     public static final class Event {
         private static final int DATA_OFFSET = 4;
         private static final byte FLOAT_TYPE = 4;
@@ -80,7 +82,7 @@ public class EventLog {
         }
 
         public long getTimeNanos() {
-            return (((long) this.mBuffer.getInt(12)) * 1000000000) + ((long) this.mBuffer.getInt(16));
+            return (this.mBuffer.getInt(12) * 1000000000) + this.mBuffer.getInt(16);
         }
 
         public int getTag() {
@@ -145,7 +147,7 @@ public class EventLog {
                 case 4:
                     return Float.valueOf(this.mBuffer.getFloat());
                 default:
-                    throw new IllegalArgumentException("Unknown entry type: " + type);
+                    throw new IllegalArgumentException("Unknown entry type: " + ((int) type));
             }
         }
 
@@ -173,7 +175,8 @@ public class EventLog {
             if (o == null || getClass() != o.getClass()) {
                 return false;
             }
-            return Arrays.equals(this.mBuffer.array(), ((Event) o).mBuffer.array());
+            Event other = (Event) o;
+            return Arrays.equals(this.mBuffer.array(), other.mBuffer.array());
         }
 
         public int hashCode() {
@@ -204,51 +207,37 @@ public class EventLog {
                 Pattern tag = Pattern.compile(TAG_PATTERN);
                 BufferedReader reader = null;
                 try {
-                    reader = new BufferedReader(new FileReader(TAGS_FILE), 256);
-                    while (true) {
-                        String readLine = reader.readLine();
-                        String line = readLine;
-                        if (readLine == null) {
-                            try {
+                    try {
+                        reader = new BufferedReader(new FileReader(TAGS_FILE), 256);
+                        while (true) {
+                            String line = reader.readLine();
+                            if (line == null) {
                                 break;
-                            } catch (IOException e) {
-                            }
-                        } else if (!comment.matcher(line).matches()) {
-                            Matcher m = tag.matcher(line);
-                            if (!m.matches()) {
-                                Log.wtf(TAG, "Bad entry in /system/etc/event-log-tags: " + line);
-                            } else {
-                                try {
-                                    int num = Integer.parseInt(m.group(1));
-                                    String name = m.group(2);
-                                    sTagCodes.put(name, Integer.valueOf(num));
-                                    sTagNames.put(Integer.valueOf(num), name);
-                                } catch (NumberFormatException e2) {
-                                    Log.wtf(TAG, "Error in /system/etc/event-log-tags: " + line, e2);
+                            } else if (!comment.matcher(line).matches()) {
+                                Matcher m = tag.matcher(line);
+                                if (m.matches()) {
+                                    try {
+                                        int num = Integer.parseInt(m.group(1));
+                                        String name = m.group(2);
+                                        sTagCodes.put(name, Integer.valueOf(num));
+                                        sTagNames.put(Integer.valueOf(num), name);
+                                    } catch (NumberFormatException e) {
+                                        Log.wtf(TAG, "Error in /system/etc/event-log-tags: " + line, e);
+                                    }
+                                } else {
+                                    Log.wtf(TAG, "Bad entry in /system/etc/event-log-tags: " + line);
                                 }
                             }
                         }
-                    }
-                    reader.close();
-                } catch (IOException e3) {
-                    try {
-                        Log.wtf(TAG, "Error reading /system/etc/event-log-tags", e3);
+                        reader.close();
+                    } catch (IOException e2) {
+                        Log.wtf(TAG, "Error reading /system/etc/event-log-tags", e2);
                         if (reader != null) {
                             reader.close();
                         }
-                        return;
-                    } catch (Throwable th) {
-                        if (reader != null) {
-                            try {
-                                reader.close();
-                            } catch (IOException e4) {
-                            }
-                        }
-                        throw th;
                     }
+                } catch (IOException e3) {
                 }
-            } else {
-                return;
             }
         }
     }

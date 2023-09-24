@@ -1,38 +1,42 @@
 package android.view;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.Pools;
 
+/* loaded from: classes4.dex */
 public class MagnificationSpec implements Parcelable {
-    public static final Parcelable.Creator<MagnificationSpec> CREATOR = new Parcelable.Creator<MagnificationSpec>() {
+    private static final int MAX_POOL_SIZE = 20;
+    public float offsetX;
+    public float offsetY;
+    public float scale = 1.0f;
+    private static final Pools.SynchronizedPool<MagnificationSpec> sPool = new Pools.SynchronizedPool<>(20);
+    public static final Parcelable.Creator<MagnificationSpec> CREATOR = new Parcelable.Creator<MagnificationSpec>() { // from class: android.view.MagnificationSpec.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public MagnificationSpec[] newArray(int size) {
             return new MagnificationSpec[size];
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public MagnificationSpec createFromParcel(Parcel parcel) {
             MagnificationSpec spec = MagnificationSpec.obtain();
             spec.initFromParcel(parcel);
             return spec;
         }
     };
-    private static final int MAX_POOL_SIZE = 20;
-    private static final Pools.SynchronizedPool<MagnificationSpec> sPool = new Pools.SynchronizedPool<>(20);
-    public float offsetX;
-    public float offsetY;
-    public float scale = 1.0f;
 
     private MagnificationSpec() {
     }
 
-    public void initialize(float scale2, float offsetX2, float offsetY2) {
-        if (scale2 >= 1.0f) {
-            this.scale = scale2;
-            this.offsetX = offsetX2;
-            this.offsetY = offsetY2;
-            return;
+    public void initialize(float scale, float offsetX, float offsetY) {
+        if (scale < 1.0f) {
+            throw new IllegalArgumentException("Scale must be greater than or equal to one!");
         }
-        throw new IllegalArgumentException("Scale must be greater than or equal to one!");
+        this.scale = scale;
+        this.offsetX = offsetX;
+        this.offsetY = offsetY;
     }
 
     public boolean isNop() {
@@ -69,10 +73,12 @@ public class MagnificationSpec implements Parcelable {
         this.offsetY = other.offsetY;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeFloat(this.scale);
         parcel.writeFloat(this.offsetX);
@@ -95,19 +101,15 @@ public class MagnificationSpec implements Parcelable {
     }
 
     public int hashCode() {
-        int i = 0;
-        int result = (((this.scale != 0.0f ? Float.floatToIntBits(this.scale) : 0) * 31) + (this.offsetX != 0.0f ? Float.floatToIntBits(this.offsetX) : 0)) * 31;
-        if (this.offsetY != 0.0f) {
-            i = Float.floatToIntBits(this.offsetY);
-        }
-        return result + i;
+        int result = this.scale != 0.0f ? Float.floatToIntBits(this.scale) : 0;
+        return (((result * 31) + (this.offsetX != 0.0f ? Float.floatToIntBits(this.offsetX) : 0)) * 31) + (this.offsetY != 0.0f ? Float.floatToIntBits(this.offsetY) : 0);
     }
 
     public String toString() {
         return "<scale:" + Float.toString(this.scale) + ",offsetX:" + Float.toString(this.offsetX) + ",offsetY:" + Float.toString(this.offsetY) + ">";
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void initFromParcel(Parcel parcel) {
         this.scale = parcel.readFloat();
         this.offsetX = parcel.readFloat();

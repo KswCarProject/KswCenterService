@@ -3,8 +3,9 @@ package android.speech;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ResolveInfo;
+import android.content.p002pm.ResolveInfo;
 
+/* loaded from: classes3.dex */
 public class RecognizerIntent {
     public static final String ACTION_GET_LANGUAGE_DETAILS = "android.speech.action.GET_LANGUAGE_DETAILS";
     public static final String ACTION_RECOGNIZE_SPEECH = "android.speech.action.RECOGNIZE_SPEECH";
@@ -44,7 +45,8 @@ public class RecognizerIntent {
 
     public static final Intent getVoiceDetailsIntent(Context context) {
         String className;
-        ResolveInfo ri = context.getPackageManager().resolveActivity(new Intent(ACTION_WEB_SEARCH), 128);
+        Intent voiceSearchIntent = new Intent(ACTION_WEB_SEARCH);
+        ResolveInfo ri = context.getPackageManager().resolveActivity(voiceSearchIntent, 128);
         if (ri == null || ri.activityInfo == null || ri.activityInfo.metaData == null || (className = ri.activityInfo.metaData.getString(DETAILS_META_DATA)) == null) {
             return null;
         }

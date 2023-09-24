@@ -1,8 +1,8 @@
 package android.net.wifi;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
@@ -13,9 +13,12 @@ import java.nio.charset.CodingErrorAction;
 import java.util.Arrays;
 import java.util.Locale;
 
+/* loaded from: classes3.dex */
 public class WifiSsid implements Parcelable {
     @UnsupportedAppUsage
-    public static final Parcelable.Creator<WifiSsid> CREATOR = new Parcelable.Creator<WifiSsid>() {
+    public static final Parcelable.Creator<WifiSsid> CREATOR = new Parcelable.Creator<WifiSsid>() { // from class: android.net.wifi.WifiSsid.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WifiSsid createFromParcel(Parcel in) {
             WifiSsid ssid = new WifiSsid();
             int length = in.readInt();
@@ -25,6 +28,8 @@ public class WifiSsid implements Parcelable {
             return ssid;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WifiSsid[] newArray(int size) {
             return new WifiSsid[size];
         }
@@ -80,74 +85,75 @@ public class WifiSsid implements Parcelable {
         int i = 0;
         while (i < asciiEncoded.length()) {
             char c = asciiEncoded.charAt(i);
-            if (c != '\\') {
-                this.octets.write(c);
-                i++;
-            } else {
+            if (c == '\\') {
                 i++;
                 char charAt = asciiEncoded.charAt(i);
-                if (charAt == '\"') {
-                    this.octets.write(34);
-                    i++;
-                } else if (charAt == '\\') {
-                    this.octets.write(92);
-                    i++;
-                } else if (charAt == 'e') {
-                    this.octets.write(27);
-                    i++;
-                } else if (charAt == 'n') {
-                    this.octets.write(10);
-                    i++;
-                } else if (charAt == 'r') {
-                    this.octets.write(13);
-                    i++;
-                } else if (charAt == 't') {
-                    this.octets.write(9);
-                    i++;
-                } else if (charAt != 'x') {
-                    switch (charAt) {
-                        case '0':
-                        case '1':
-                        case '2':
-                        case '3':
-                        case '4':
-                        case '5':
-                        case '6':
-                        case '7':
-                            int val2 = asciiEncoded.charAt(i) - '0';
-                            i++;
-                            if (asciiEncoded.charAt(i) >= '0' && asciiEncoded.charAt(i) <= '7') {
-                                val2 = ((val2 * 8) + asciiEncoded.charAt(i)) - 48;
+                if (charAt != '\"') {
+                    if (charAt == '\\') {
+                        this.octets.write(92);
+                        i++;
+                    } else if (charAt == 'e') {
+                        this.octets.write(27);
+                        i++;
+                    } else if (charAt == 'n') {
+                        this.octets.write(10);
+                        i++;
+                    } else if (charAt == 'r') {
+                        this.octets.write(13);
+                        i++;
+                    } else if (charAt == 't') {
+                        this.octets.write(9);
+                        i++;
+                    } else if (charAt == 'x') {
+                        i++;
+                        try {
+                            val = Integer.parseInt(asciiEncoded.substring(i, i + 2), 16);
+                        } catch (NumberFormatException e) {
+                            val = -1;
+                        } catch (StringIndexOutOfBoundsException e2) {
+                            val = -1;
+                        }
+                        if (val < 0) {
+                            int val2 = Character.digit(asciiEncoded.charAt(i), 16);
+                            if (val2 >= 0) {
+                                this.octets.write(val2);
                                 i++;
                             }
-                            if (asciiEncoded.charAt(i) >= '0' && asciiEncoded.charAt(i) <= '7') {
-                                val2 = ((val2 * 8) + asciiEncoded.charAt(i)) - 48;
-                                i++;
-                            }
-                            this.octets.write(val2);
-                            int i2 = val2;
-                            break;
-                    }
-                } else {
-                    i++;
-                    try {
-                        val = Integer.parseInt(asciiEncoded.substring(i, i + 2), 16);
-                    } catch (NumberFormatException e) {
-                        val = -1;
-                    } catch (StringIndexOutOfBoundsException e2) {
-                        val = -1;
-                    }
-                    if (val < 0) {
-                        int val3 = Character.digit(asciiEncoded.charAt(i), 16);
-                        if (val3 >= 0) {
-                            this.octets.write(val3);
-                            i++;
+                        } else {
+                            this.octets.write(val);
+                            i += 2;
                         }
                     } else {
-                        this.octets.write(val);
-                        i += 2;
+                        switch (charAt) {
+                            case '0':
+                            case '1':
+                            case '2':
+                            case '3':
+                            case '4':
+                            case '5':
+                            case '6':
+                            case '7':
+                                int val3 = asciiEncoded.charAt(i) - '0';
+                                i++;
+                                if (asciiEncoded.charAt(i) >= '0' && asciiEncoded.charAt(i) <= '7') {
+                                    val3 = ((val3 * 8) + asciiEncoded.charAt(i)) - 48;
+                                    i++;
+                                }
+                                if (asciiEncoded.charAt(i) >= '0' && asciiEncoded.charAt(i) <= '7') {
+                                    val3 = ((val3 * 8) + asciiEncoded.charAt(i)) - 48;
+                                    i++;
+                                }
+                                this.octets.write(val3);
+                                continue;
+                        }
                     }
+                } else {
+                    this.octets.write(34);
+                    i++;
                 }
+            } else {
+                this.octets.write(c);
+                i++;
             }
         }
     }
@@ -157,7 +163,8 @@ public class WifiSsid implements Parcelable {
         if (this.octets.size() <= 0 || isArrayAllZeroes(ssidBytes)) {
             return "";
         }
-        CharsetDecoder decoder = Charset.forName("UTF-8").newDecoder().onMalformedInput(CodingErrorAction.REPLACE).onUnmappableCharacter(CodingErrorAction.REPLACE);
+        Charset charset = Charset.forName("UTF-8");
+        CharsetDecoder decoder = charset.newDecoder().onMalformedInput(CodingErrorAction.REPLACE).onUnmappableCharacter(CodingErrorAction.REPLACE);
         CharBuffer out = CharBuffer.allocate(32);
         CoderResult result = decoder.decode(ByteBuffer.wrap(ssidBytes), out, true);
         out.flip();
@@ -174,7 +181,8 @@ public class WifiSsid implements Parcelable {
         if (!(thatObject instanceof WifiSsid)) {
             return false;
         }
-        return Arrays.equals(this.octets.toByteArray(), ((WifiSsid) thatObject).octets.toByteArray());
+        WifiSsid that = (WifiSsid) thatObject;
+        return Arrays.equals(this.octets.toByteArray(), that.octets.toByteArray());
     }
 
     public int hashCode() {
@@ -203,7 +211,7 @@ public class WifiSsid implements Parcelable {
         byte[] ssidbytes = getOctets();
         String out = "0x";
         for (int i = 0; i < this.octets.size(); i++) {
-            out = out + String.format(Locale.US, "%02x", new Object[]{Byte.valueOf(ssidbytes[i])});
+            out = out + String.format(Locale.US, "%02x", Byte.valueOf(ssidbytes[i]));
         }
         if (this.octets.size() > 0) {
             return out;
@@ -211,10 +219,12 @@ public class WifiSsid implements Parcelable {
         return null;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.octets.size());
         dest.writeByteArray(this.octets.toByteArray());

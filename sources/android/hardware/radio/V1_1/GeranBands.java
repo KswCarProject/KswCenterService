@@ -2,6 +2,7 @@ package android.hardware.radio.V1_1;
 
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class GeranBands {
     public static final int BAND_450 = 3;
     public static final int BAND_480 = 4;

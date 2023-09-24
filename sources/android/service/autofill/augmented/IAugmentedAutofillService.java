@@ -1,15 +1,16 @@
 package android.service.autofill.augmented;
 
 import android.content.ComponentName;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.service.autofill.augmented.IFillCallback;
 import android.view.autofill.AutofillId;
 import android.view.autofill.AutofillValue;
 
+/* loaded from: classes3.dex */
 public interface IAugmentedAutofillService extends IInterface {
     void onConnected(boolean z, boolean z2) throws RemoteException;
 
@@ -19,24 +20,31 @@ public interface IAugmentedAutofillService extends IInterface {
 
     void onFillRequest(int i, IBinder iBinder, int i2, ComponentName componentName, AutofillId autofillId, AutofillValue autofillValue, long j, IFillCallback iFillCallback) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements IAugmentedAutofillService {
+        @Override // android.service.autofill.augmented.IAugmentedAutofillService
         public void onConnected(boolean debug, boolean verbose) throws RemoteException {
         }
 
+        @Override // android.service.autofill.augmented.IAugmentedAutofillService
         public void onDisconnected() throws RemoteException {
         }
 
+        @Override // android.service.autofill.augmented.IAugmentedAutofillService
         public void onFillRequest(int sessionId, IBinder autofillManagerClient, int taskId, ComponentName activityComponent, AutofillId focusedId, AutofillValue focusedValue, long requestTime, IFillCallback callback) throws RemoteException {
         }
 
+        @Override // android.service.autofill.augmented.IAugmentedAutofillService
         public void onDestroyAllFillWindowsRequest() throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements IAugmentedAutofillService {
         private static final String DESCRIPTOR = "android.service.autofill.augmented.IAugmentedAutofillService";
         static final int TRANSACTION_onConnected = 1;
@@ -53,12 +61,13 @@ public interface IAugmentedAutofillService extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IAugmentedAutofillService)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IAugmentedAutofillService)) {
+                return (IAugmentedAutofillService) iin;
             }
-            return (IAugmentedAutofillService) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -78,66 +87,50 @@ public interface IAugmentedAutofillService extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            ComponentName _arg3;
-            AutofillId _arg4;
-            AutofillValue _arg5;
-            int i = code;
-            Parcel parcel = data;
-            if (i != 1598968902) {
-                switch (i) {
-                    case 1:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        boolean _arg1 = false;
-                        boolean _arg0 = data.readInt() != 0;
-                        if (data.readInt() != 0) {
-                            _arg1 = true;
-                        }
-                        onConnected(_arg0, _arg1);
-                        return true;
-                    case 2:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        onDisconnected();
-                        return true;
-                    case 3:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _arg02 = data.readInt();
-                        IBinder _arg12 = data.readStrongBinder();
-                        int _arg2 = data.readInt();
-                        if (data.readInt() != 0) {
-                            _arg3 = ComponentName.CREATOR.createFromParcel(parcel);
-                        } else {
-                            _arg3 = null;
-                        }
-                        if (data.readInt() != 0) {
-                            _arg4 = AutofillId.CREATOR.createFromParcel(parcel);
-                        } else {
-                            _arg4 = null;
-                        }
-                        if (data.readInt() != 0) {
-                            _arg5 = AutofillValue.CREATOR.createFromParcel(parcel);
-                        } else {
-                            _arg5 = null;
-                        }
-                        onFillRequest(_arg02, _arg12, _arg2, _arg3, _arg4, _arg5, data.readLong(), IFillCallback.Stub.asInterface(data.readStrongBinder()));
-                        return true;
-                    case 4:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        onDestroyAllFillWindowsRequest();
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean _arg0 = data.readInt() != 0;
+                    boolean _arg1 = data.readInt() != 0;
+                    onConnected(_arg0, _arg1);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    onDisconnected();
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    IBinder _arg12 = data.readStrongBinder();
+                    int _arg2 = data.readInt();
+                    ComponentName _arg3 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    AutofillId _arg4 = data.readInt() != 0 ? AutofillId.CREATOR.createFromParcel(data) : null;
+                    AutofillValue _arg5 = data.readInt() != 0 ? AutofillValue.CREATOR.createFromParcel(data) : null;
+                    long _arg6 = data.readLong();
+                    IFillCallback _arg7 = IFillCallback.Stub.asInterface(data.readStrongBinder());
+                    onFillRequest(_arg02, _arg12, _arg2, _arg3, _arg4, _arg5, _arg6, _arg7);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    onDestroyAllFillWindowsRequest();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements IAugmentedAutofillService {
             public static IAugmentedAutofillService sDefaultImpl;
             private IBinder mRemote;
@@ -146,6 +139,7 @@ public interface IAugmentedAutofillService extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -154,15 +148,15 @@ public interface IAugmentedAutofillService extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.service.autofill.augmented.IAugmentedAutofillService
             public void onConnected(boolean debug, boolean verbose) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(debug);
-                    _data.writeInt(verbose);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(debug ? 1 : 0);
+                    _data.writeInt(verbose ? 1 : 0);
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onConnected(debug, verbose);
                     }
                 } finally {
@@ -170,13 +164,13 @@ public interface IAugmentedAutofillService extends IInterface {
                 }
             }
 
+            @Override // android.service.autofill.augmented.IAugmentedAutofillService
             public void onDisconnected() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onDisconnected();
                     }
                 } finally {
@@ -184,63 +178,59 @@ public interface IAugmentedAutofillService extends IInterface {
                 }
             }
 
+            @Override // android.service.autofill.augmented.IAugmentedAutofillService
             public void onFillRequest(int sessionId, IBinder autofillManagerClient, int taskId, ComponentName activityComponent, AutofillId focusedId, AutofillValue focusedValue, long requestTime, IFillCallback callback) throws RemoteException {
-                ComponentName componentName = activityComponent;
-                AutofillId autofillId = focusedId;
-                AutofillValue autofillValue = focusedValue;
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    try {
-                        _data.writeInt(sessionId);
-                        _data.writeStrongBinder(autofillManagerClient);
-                        _data.writeInt(taskId);
-                        if (componentName != null) {
-                            _data.writeInt(1);
-                            componentName.writeToParcel(_data, 0);
-                        } else {
-                            _data.writeInt(0);
-                        }
-                        if (autofillId != null) {
-                            _data.writeInt(1);
-                            autofillId.writeToParcel(_data, 0);
-                        } else {
-                            _data.writeInt(0);
-                        }
-                        if (autofillValue != null) {
-                            _data.writeInt(1);
-                            autofillValue.writeToParcel(_data, 0);
-                        } else {
-                            _data.writeInt(0);
-                        }
-                        _data.writeLong(requestTime);
-                        _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                        if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                            _data.recycle();
-                            return;
-                        }
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeInt(sessionId);
+                    _data.writeStrongBinder(autofillManagerClient);
+                    _data.writeInt(taskId);
+                    if (activityComponent != null) {
+                        _data.writeInt(1);
+                        activityComponent.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
+                    }
+                    if (focusedId != null) {
+                        _data.writeInt(1);
+                        focusedId.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
+                    }
+                    if (focusedValue != null) {
+                        _data.writeInt(1);
+                        focusedValue.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
+                    }
+                    _data.writeLong(requestTime);
+                    _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onFillRequest(sessionId, autofillManagerClient, taskId, activityComponent, focusedId, focusedValue, requestTime, callback);
                         _data.recycle();
-                    } catch (Throwable th) {
-                        th = th;
-                        _data.recycle();
-                        throw th;
+                        return;
                     }
+                    _data.recycle();
                 } catch (Throwable th2) {
                     th = th2;
-                    int i = sessionId;
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.service.autofill.augmented.IAugmentedAutofillService
             public void onDestroyAllFillWindowsRequest() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onDestroyAllFillWindowsRequest();
                     }
                 } finally {
@@ -250,11 +240,11 @@ public interface IAugmentedAutofillService extends IInterface {
         }
 
         public static boolean setDefaultImpl(IAugmentedAutofillService impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IAugmentedAutofillService getDefaultImpl() {

@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.net.ProtocolException;
 import java.nio.charset.StandardCharsets;
 
+/* loaded from: classes4.dex */
 public class ProcFileReader implements Closeable {
     private final byte[] mBuffer;
     private boolean mLineFinished;
@@ -25,14 +26,14 @@ public class ProcFileReader implements Closeable {
 
     private int fillBuf() throws IOException {
         int length = this.mBuffer.length - this.mTail;
-        if (length != 0) {
-            int read = this.mStream.read(this.mBuffer, this.mTail, length);
-            if (read != -1) {
-                this.mTail += read;
-            }
-            return read;
+        if (length == 0) {
+            throw new IOException("attempting to fill already-full buffer");
         }
-        throw new IOException("attempting to fill already-full buffer");
+        int read = this.mStream.read(this.mBuffer, this.mTail, length);
+        if (read != -1) {
+            this.mTail += read;
+        }
+        return read;
     }
 
     private void consumeBuf(int count) throws IOException {
@@ -54,10 +55,10 @@ public class ProcFileReader implements Closeable {
                 if (b == 10) {
                     this.mLineFinished = true;
                     return i;
-                } else if (b == 32) {
-                    return i;
-                } else {
+                } else if (b != 32) {
                     i++;
+                } else {
+                    return i;
                 }
             } else if (fillBuf() <= 0) {
                 throw new ProtocolException("End of stream while looking for token boundary");
@@ -77,11 +78,12 @@ public class ProcFileReader implements Closeable {
         }
         while (true) {
             if (i < this.mTail) {
-                if (this.mBuffer[i] == 10) {
+                if (this.mBuffer[i] != 10) {
+                    i++;
+                } else {
                     consumeBuf(i + 1);
                     return;
                 }
-                i++;
             } else if (fillBuf() <= 0) {
                 throw new ProtocolException("End of stream while looking for line boundary");
             }
@@ -90,18 +92,18 @@ public class ProcFileReader implements Closeable {
 
     public String nextString() throws IOException {
         int tokenIndex = nextTokenIndex();
-        if (tokenIndex != -1) {
-            return parseAndConsumeString(tokenIndex);
+        if (tokenIndex == -1) {
+            throw new ProtocolException("Missing required string");
         }
-        throw new ProtocolException("Missing required string");
+        return parseAndConsumeString(tokenIndex);
     }
 
     public long nextLong() throws IOException {
         int tokenIndex = nextTokenIndex();
-        if (tokenIndex != -1) {
-            return parseAndConsumeLong(tokenIndex);
+        if (tokenIndex == -1) {
+            throw new ProtocolException("Missing required long");
         }
-        throw new ProtocolException("Missing required long");
+        return parseAndConsumeLong(tokenIndex);
     }
 
     public long nextOptionalLong(long def) throws IOException {
@@ -119,26 +121,21 @@ public class ProcFileReader implements Closeable {
     }
 
     private long parseAndConsumeLong(int tokenIndex) throws IOException {
-        int i = 0;
         boolean negative = this.mBuffer[0] == 45;
         long result = 0;
-        if (negative) {
-            i = 1;
-        }
-        while (i < tokenIndex) {
+        for (int i = negative ? 1 : 0; i < tokenIndex; i++) {
             int digit = this.mBuffer[i] + MidiConstants.STATUS_CHANNEL_PRESSURE;
             if (digit < 0 || digit > 9) {
                 throw invalidLong(tokenIndex);
             }
-            long next = (10 * result) - ((long) digit);
-            if (next <= result) {
-                result = next;
-                i++;
-            } else {
+            long next = (10 * result) - digit;
+            if (next > result) {
                 throw invalidLong(tokenIndex);
             }
+            result = next;
         }
-        consumeBuf(tokenIndex + 1);
+        int i2 = tokenIndex + 1;
+        consumeBuf(i2);
         return negative ? result : -result;
     }
 
@@ -148,12 +145,13 @@ public class ProcFileReader implements Closeable {
 
     public int nextInt() throws IOException {
         long value = nextLong();
-        if (value <= 2147483647L && value >= -2147483648L) {
-            return (int) value;
+        if (value > 2147483647L || value < -2147483648L) {
+            throw new NumberFormatException("parsed value larger than integer");
         }
-        throw new NumberFormatException("parsed value larger than integer");
+        return (int) value;
     }
 
+    @Override // java.io.Closeable, java.lang.AutoCloseable
     public void close() throws IOException {
         this.mStream.close();
     }

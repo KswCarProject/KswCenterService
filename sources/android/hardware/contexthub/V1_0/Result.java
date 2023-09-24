@@ -2,10 +2,13 @@ package android.hardware.contexthub.V1_0;
 
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class Result {
     public static final int BAD_PARAMS = 2;
     public static final int NOT_INIT = 3;
-    public static final int OK = 0;
+
+    /* renamed from: OK */
+    public static final int f79OK = 0;
     public static final int TRANSACTION_FAILED = 4;
     public static final int TRANSACTION_PENDING = 5;
     public static final int UNKNOWN_FAILURE = 1;

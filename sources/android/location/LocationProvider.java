@@ -2,6 +2,7 @@ package android.location;
 
 import com.android.internal.location.ProviderProperties;
 
+/* loaded from: classes.dex */
 public class LocationProvider {
     @Deprecated
     public static final int AVAILABLE = 2;
@@ -14,12 +15,11 @@ public class LocationProvider {
     private final ProviderProperties mProperties;
 
     public LocationProvider(String name, ProviderProperties properties) {
-        if (!name.matches(BAD_CHARS_REGEX)) {
-            this.mName = name;
-            this.mProperties = properties;
-            return;
+        if (name.matches(BAD_CHARS_REGEX)) {
+            throw new IllegalArgumentException("provider name contains illegal character: " + name);
         }
-        throw new IllegalArgumentException("provider name contains illegal character: " + name);
+        this.mName = name;
+        this.mProperties = properties;
     }
 
     public String getName() {
@@ -34,23 +34,20 @@ public class LocationProvider {
         if (LocationManager.PASSIVE_PROVIDER.equals(name) || properties == null) {
             return false;
         }
-        if (criteria.getAccuracy() != 0 && criteria.getAccuracy() < properties.mAccuracy) {
+        if (criteria.getAccuracy() == 0 || criteria.getAccuracy() >= properties.mAccuracy) {
+            if (criteria.getPowerRequirement() == 0 || criteria.getPowerRequirement() >= properties.mPowerRequirement) {
+                if (!criteria.isAltitudeRequired() || properties.mSupportsAltitude) {
+                    if (!criteria.isSpeedRequired() || properties.mSupportsSpeed) {
+                        if (!criteria.isBearingRequired() || properties.mSupportsBearing) {
+                            return criteria.isCostAllowed() || !properties.mHasMonetaryCost;
+                        }
+                        return false;
+                    }
+                    return false;
+                }
+                return false;
+            }
             return false;
-        }
-        if (criteria.getPowerRequirement() != 0 && criteria.getPowerRequirement() < properties.mPowerRequirement) {
-            return false;
-        }
-        if (criteria.isAltitudeRequired() && !properties.mSupportsAltitude) {
-            return false;
-        }
-        if (criteria.isSpeedRequired() && !properties.mSupportsSpeed) {
-            return false;
-        }
-        if (criteria.isBearingRequired() && !properties.mSupportsBearing) {
-            return false;
-        }
-        if (criteria.isCostAllowed() || !properties.mHasMonetaryCost) {
-            return true;
         }
         return false;
     }

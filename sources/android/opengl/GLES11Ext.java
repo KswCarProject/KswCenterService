@@ -5,6 +5,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
+/* loaded from: classes3.dex */
 public class GLES11Ext {
     public static final int GL_3DC_XY_AMD = 34810;
     public static final int GL_3DC_X_AMD = 34809;
@@ -367,11 +368,10 @@ public class GLES11Ext {
 
     public static void glMatrixIndexPointerOES(int size, int type, int stride, Buffer pointer) {
         glMatrixIndexPointerOESBounds(size, type, stride, pointer, pointer.remaining());
-        if (size != 2 && size != 3 && size != 4) {
-            return;
-        }
-        if ((type == 5126 || type == 5120 || type == 5122 || type == 5132) && stride >= 0) {
-            _matrixIndexPointerOES = pointer;
+        if (size == 2 || size == 3 || size == 4) {
+            if ((type == 5126 || type == 5120 || type == 5122 || type == 5132) && stride >= 0) {
+                _matrixIndexPointerOES = pointer;
+            }
         }
     }
 

@@ -1,5 +1,6 @@
 package android.text;
 
+/* loaded from: classes4.dex */
 public abstract class LoginFilter implements InputFilter {
     private boolean mAppendInvalid;
 
@@ -13,6 +14,7 @@ public abstract class LoginFilter implements InputFilter {
         this.mAppendInvalid = false;
     }
 
+    @Override // android.text.InputFilter
     public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
         onStart();
         for (int i = 0; i < dstart; i++) {
@@ -59,6 +61,7 @@ public abstract class LoginFilter implements InputFilter {
     public void onStop() {
     }
 
+    /* loaded from: classes4.dex */
     public static class UsernameFilterGMail extends LoginFilter {
         public UsernameFilterGMail() {
             super(false);
@@ -68,6 +71,7 @@ public abstract class LoginFilter implements InputFilter {
             super(appendInvalid);
         }
 
+        @Override // android.text.LoginFilter
         public boolean isAllowed(char c) {
             if ('0' <= c && c <= '9') {
                 return true;
@@ -75,13 +79,14 @@ public abstract class LoginFilter implements InputFilter {
             if ('a' <= c && c <= 'z') {
                 return true;
             }
-            if (('A' > c || c > 'Z') && '.' != c) {
-                return false;
+            if (('A' <= c && c <= 'Z') || '.' == c) {
+                return true;
             }
-            return true;
+            return false;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class UsernameFilterGeneric extends LoginFilter {
         private static final String mAllowed = "@_-+.";
 
@@ -93,6 +98,7 @@ public abstract class LoginFilter implements InputFilter {
             super(appendInvalid);
         }
 
+        @Override // android.text.LoginFilter
         public boolean isAllowed(char c) {
             if ('0' <= c && c <= '9') {
                 return true;
@@ -100,13 +106,14 @@ public abstract class LoginFilter implements InputFilter {
             if ('a' <= c && c <= 'z') {
                 return true;
             }
-            if (('A' > c || c > 'Z') && mAllowed.indexOf(c) == -1) {
-                return false;
+            if (('A' <= c && c <= 'Z') || mAllowed.indexOf(c) != -1) {
+                return true;
             }
-            return true;
+            return false;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class PasswordFilterGMail extends LoginFilter {
         public PasswordFilterGMail() {
             super(false);
@@ -116,14 +123,15 @@ public abstract class LoginFilter implements InputFilter {
             super(appendInvalid);
         }
 
+        @Override // android.text.LoginFilter
         public boolean isAllowed(char c) {
-            if (' ' <= c && c <= 127) {
+            if (' ' <= c && c <= '\u007f') {
                 return true;
             }
-            if (160 > c || c > 255) {
-                return false;
+            if ('\u00a0' <= c && c <= '\u00ff') {
+                return true;
             }
-            return true;
+            return false;
         }
     }
 }

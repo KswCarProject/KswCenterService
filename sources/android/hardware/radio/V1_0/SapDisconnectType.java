@@ -2,6 +2,7 @@ package android.hardware.radio.V1_0;
 
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class SapDisconnectType {
     public static final int GRACEFUL = 0;
     public static final int IMMEDIATE = 1;

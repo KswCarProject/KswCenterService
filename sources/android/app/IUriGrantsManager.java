@@ -1,13 +1,14 @@
 package android.app;
 
-import android.content.pm.ParceledListSlice;
+import android.content.p002pm.ParceledListSlice;
 import android.net.Uri;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes.dex */
 public interface IUriGrantsManager extends IInterface {
     void clearGrantedUriPermissions(String str, int i) throws RemoteException;
 
@@ -21,32 +22,41 @@ public interface IUriGrantsManager extends IInterface {
 
     void takePersistableUriPermission(Uri uri, int i, String str, int i2) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements IUriGrantsManager {
+        @Override // android.app.IUriGrantsManager
         public void takePersistableUriPermission(Uri uri, int modeFlags, String toPackage, int userId) throws RemoteException {
         }
 
+        @Override // android.app.IUriGrantsManager
         public void releasePersistableUriPermission(Uri uri, int modeFlags, String toPackage, int userId) throws RemoteException {
         }
 
+        @Override // android.app.IUriGrantsManager
         public void grantUriPermissionFromOwner(IBinder owner, int fromUid, String targetPkg, Uri uri, int mode, int sourceUserId, int targetUserId) throws RemoteException {
         }
 
+        @Override // android.app.IUriGrantsManager
         public ParceledListSlice getGrantedUriPermissions(String packageName, int userId) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.IUriGrantsManager
         public void clearGrantedUriPermissions(String packageName, int userId) throws RemoteException {
         }
 
+        @Override // android.app.IUriGrantsManager
         public ParceledListSlice getUriPermissions(String packageName, boolean incoming, boolean persistedOnly) throws RemoteException {
             return null;
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements IUriGrantsManager {
         private static final String DESCRIPTOR = "android.app.IUriGrantsManager";
         static final int TRANSACTION_clearGrantedUriPermissions = 5;
@@ -65,12 +75,13 @@ public interface IUriGrantsManager extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IUriGrantsManager)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IUriGrantsManager)) {
+                return (IUriGrantsManager) iin;
             }
-            return (IUriGrantsManager) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -94,80 +105,90 @@ public interface IUriGrantsManager extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            int i = code;
-            Parcel parcel = data;
-            Parcel parcel2 = reply;
-            if (i != 1598968902) {
-                Uri _arg0 = null;
-                switch (i) {
-                    case 1:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = Uri.CREATOR.createFromParcel(parcel);
-                        }
-                        takePersistableUriPermission(_arg0, data.readInt(), data.readString(), data.readInt());
-                        reply.writeNoException();
-                        return true;
-                    case 2:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = Uri.CREATOR.createFromParcel(parcel);
-                        }
-                        releasePersistableUriPermission(_arg0, data.readInt(), data.readString(), data.readInt());
-                        reply.writeNoException();
-                        return true;
-                    case 3:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        IBinder _arg02 = data.readStrongBinder();
-                        int _arg1 = data.readInt();
-                        String _arg2 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg0 = Uri.CREATOR.createFromParcel(parcel);
-                        }
-                        grantUriPermissionFromOwner(_arg02, _arg1, _arg2, _arg0, data.readInt(), data.readInt(), data.readInt());
-                        reply.writeNoException();
-                        return true;
-                    case 4:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        ParceledListSlice _result = getGrantedUriPermissions(data.readString(), data.readInt());
-                        reply.writeNoException();
-                        if (_result != null) {
-                            parcel2.writeInt(1);
-                            _result.writeToParcel(parcel2, 1);
-                        } else {
-                            parcel2.writeInt(0);
-                        }
-                        return true;
-                    case 5:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        clearGrantedUriPermissions(data.readString(), data.readInt());
-                        reply.writeNoException();
-                        return true;
-                    case 6:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        ParceledListSlice _result2 = getUriPermissions(data.readString(), data.readInt() != 0, data.readInt() != 0);
-                        reply.writeNoException();
-                        if (_result2 != null) {
-                            parcel2.writeInt(1);
-                            _result2.writeToParcel(parcel2, 1);
-                        } else {
-                            parcel2.writeInt(0);
-                        }
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
-                parcel2.writeString(DESCRIPTOR);
+            Uri _arg0;
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
                 return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0 ? Uri.CREATOR.createFromParcel(data) : null;
+                    int _arg1 = data.readInt();
+                    String _arg2 = data.readString();
+                    int _arg3 = data.readInt();
+                    takePersistableUriPermission(_arg0, _arg1, _arg2, _arg3);
+                    reply.writeNoException();
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0 ? Uri.CREATOR.createFromParcel(data) : null;
+                    int _arg12 = data.readInt();
+                    String _arg22 = data.readString();
+                    int _arg32 = data.readInt();
+                    releasePersistableUriPermission(_arg0, _arg12, _arg22, _arg32);
+                    reply.writeNoException();
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg02 = data.readStrongBinder();
+                    int _arg13 = data.readInt();
+                    String _arg23 = data.readString();
+                    _arg0 = data.readInt() != 0 ? Uri.CREATOR.createFromParcel(data) : null;
+                    Uri _arg33 = _arg0;
+                    int _arg4 = data.readInt();
+                    int _arg5 = data.readInt();
+                    int _arg6 = data.readInt();
+                    grantUriPermissionFromOwner(_arg02, _arg13, _arg23, _arg33, _arg4, _arg5, _arg6);
+                    reply.writeNoException();
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg03 = data.readString();
+                    int _arg14 = data.readInt();
+                    ParceledListSlice _result = getGrantedUriPermissions(_arg03, _arg14);
+                    reply.writeNoException();
+                    if (_result != null) {
+                        reply.writeInt(1);
+                        _result.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg04 = data.readString();
+                    int _arg15 = data.readInt();
+                    clearGrantedUriPermissions(_arg04, _arg15);
+                    reply.writeNoException();
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg05 = data.readString();
+                    boolean _arg16 = data.readInt() != 0;
+                    boolean _arg24 = data.readInt() != 0;
+                    ParceledListSlice _result2 = getUriPermissions(_arg05, _arg16, _arg24);
+                    reply.writeNoException();
+                    if (_result2 != null) {
+                        reply.writeInt(1);
+                        _result2.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
             }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements IUriGrantsManager {
             public static IUriGrantsManager sDefaultImpl;
             private IBinder mRemote;
@@ -176,6 +197,7 @@ public interface IUriGrantsManager extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -184,6 +206,7 @@ public interface IUriGrantsManager extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.app.IUriGrantsManager
             public void takePersistableUriPermission(Uri uri, int modeFlags, String toPackage, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -198,19 +221,19 @@ public interface IUriGrantsManager extends IInterface {
                     _data.writeInt(modeFlags);
                     _data.writeString(toPackage);
                     _data.writeInt(userId);
-                    if (this.mRemote.transact(1, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().takePersistableUriPermission(uri, modeFlags, toPackage, userId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().takePersistableUriPermission(uri, modeFlags, toPackage, userId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IUriGrantsManager
             public void releasePersistableUriPermission(Uri uri, int modeFlags, String toPackage, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -225,92 +248,80 @@ public interface IUriGrantsManager extends IInterface {
                     _data.writeInt(modeFlags);
                     _data.writeString(toPackage);
                     _data.writeInt(userId);
-                    if (this.mRemote.transact(2, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().releasePersistableUriPermission(uri, modeFlags, toPackage, userId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().releasePersistableUriPermission(uri, modeFlags, toPackage, userId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IUriGrantsManager
             public void grantUriPermissionFromOwner(IBinder owner, int fromUid, String targetPkg, Uri uri, int mode, int sourceUserId, int targetUserId) throws RemoteException {
-                Uri uri2 = uri;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    try {
-                        _data.writeStrongBinder(owner);
-                        try {
-                            _data.writeInt(fromUid);
-                        } catch (Throwable th) {
-                            th = th;
-                            String str = targetPkg;
-                            int i = mode;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                        try {
-                            _data.writeString(targetPkg);
-                            if (uri2 != null) {
-                                _data.writeInt(1);
-                                uri2.writeToParcel(_data, 0);
-                            } else {
-                                _data.writeInt(0);
-                            }
-                            try {
-                                _data.writeInt(mode);
-                                _data.writeInt(sourceUserId);
-                                _data.writeInt(targetUserId);
-                                if (this.mRemote.transact(3, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                    _reply.readException();
-                                    _reply.recycle();
-                                    _data.recycle();
-                                    return;
-                                }
-                                Stub.getDefaultImpl().grantUriPermissionFromOwner(owner, fromUid, targetPkg, uri, mode, sourceUserId, targetUserId);
-                                _reply.recycle();
-                                _data.recycle();
-                            } catch (Throwable th2) {
-                                th = th2;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th3) {
-                            th = th3;
-                            int i2 = mode;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                    } catch (Throwable th4) {
-                        th = th4;
-                        int i3 = fromUid;
-                        String str2 = targetPkg;
-                        int i22 = mode;
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeStrongBinder(owner);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(fromUid);
+                } catch (Throwable th3) {
+                    th = th3;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeString(targetPkg);
+                    if (uri != null) {
+                        _data.writeInt(1);
+                        uri.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
+                    }
+                } catch (Throwable th4) {
+                    th = th4;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(mode);
+                    _data.writeInt(sourceUserId);
+                    _data.writeInt(targetUserId);
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().grantUriPermissionFromOwner(owner, fromUid, targetPkg, uri, mode, sourceUserId, targetUserId);
                         _reply.recycle();
                         _data.recycle();
-                        throw th;
+                        return;
                     }
+                    _reply.readException();
+                    _reply.recycle();
+                    _data.recycle();
                 } catch (Throwable th5) {
                     th = th5;
-                    IBinder iBinder = owner;
-                    int i32 = fromUid;
-                    String str22 = targetPkg;
-                    int i222 = mode;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.app.IUriGrantsManager
             public ParceledListSlice getGrantedUriPermissions(String packageName, int userId) throws RemoteException {
                 ParceledListSlice _result;
                 Parcel _data = Parcel.obtain();
@@ -319,7 +330,8 @@ public interface IUriGrantsManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(packageName);
                     _data.writeInt(userId);
-                    if (!this.mRemote.transact(4, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getGrantedUriPermissions(packageName, userId);
                     }
                     _reply.readException();
@@ -328,16 +340,14 @@ public interface IUriGrantsManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    ParceledListSlice _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IUriGrantsManager
             public void clearGrantedUriPermissions(String packageName, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -345,19 +355,19 @@ public interface IUriGrantsManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(packageName);
                     _data.writeInt(userId);
-                    if (this.mRemote.transact(5, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().clearGrantedUriPermissions(packageName, userId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().clearGrantedUriPermissions(packageName, userId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IUriGrantsManager
             public ParceledListSlice getUriPermissions(String packageName, boolean incoming, boolean persistedOnly) throws RemoteException {
                 ParceledListSlice _result;
                 Parcel _data = Parcel.obtain();
@@ -365,9 +375,10 @@ public interface IUriGrantsManager extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(packageName);
-                    _data.writeInt(incoming);
-                    _data.writeInt(persistedOnly);
-                    if (!this.mRemote.transact(6, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(incoming ? 1 : 0);
+                    _data.writeInt(persistedOnly ? 1 : 0);
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getUriPermissions(packageName, incoming, persistedOnly);
                     }
                     _reply.readException();
@@ -376,10 +387,7 @@ public interface IUriGrantsManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    ParceledListSlice _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -388,11 +396,11 @@ public interface IUriGrantsManager extends IInterface {
         }
 
         public static boolean setDefaultImpl(IUriGrantsManager impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IUriGrantsManager getDefaultImpl() {

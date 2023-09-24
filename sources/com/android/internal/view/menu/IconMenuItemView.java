@@ -11,11 +11,12 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.ViewDebug;
 import android.widget.TextView;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import com.android.internal.view.menu.IconMenuView;
 import com.android.internal.view.menu.MenuBuilder;
 import com.android.internal.view.menu.MenuView;
 
+/* loaded from: classes4.dex */
 public final class IconMenuItemView extends TextView implements MenuView.ItemView {
     private static final int NO_ALPHA = 255;
     private static String sPrependShortcutLabel;
@@ -36,9 +37,9 @@ public final class IconMenuItemView extends TextView implements MenuView.ItemVie
         this.mPositionIconAvailable = new Rect();
         this.mPositionIconOutput = new Rect();
         if (sPrependShortcutLabel == null) {
-            sPrependShortcutLabel = getResources().getString(R.string.prepend_shortcut_label);
+            sPrependShortcutLabel = getResources().getString(C3132R.string.prepend_shortcut_label);
         }
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.MenuView, defStyleAttr, defStyleRes);
+        TypedArray a = context.obtainStyledAttributes(attrs, C3132R.styleable.MenuView, defStyleAttr, defStyleRes);
         this.mDisabledAlpha = a.getFloat(6, 0.8f);
         this.mTextAppearance = a.getResourceId(1, -1);
         this.mTextAppearanceContext = context;
@@ -53,8 +54,7 @@ public final class IconMenuItemView extends TextView implements MenuView.ItemVie
         this(context, attrs, 0);
     }
 
-    /* access modifiers changed from: package-private */
-    public void initialize(CharSequence title, Drawable icon) {
+    void initialize(CharSequence title, Drawable icon) {
         setClickable(true);
         setFocusable(true);
         if (this.mTextAppearance != -1) {
@@ -73,6 +73,7 @@ public final class IconMenuItemView extends TextView implements MenuView.ItemVie
         }
     }
 
+    @Override // com.android.internal.view.menu.MenuView.ItemView
     public void initialize(MenuItemImpl itemData, int menuType) {
         this.mItemData = itemData;
         initialize(itemData.getTitleForItemView(this), itemData.getIcon());
@@ -84,6 +85,7 @@ public final class IconMenuItemView extends TextView implements MenuView.ItemVie
         this.mItemData = data;
     }
 
+    @Override // android.view.View
     public boolean performClick() {
         if (super.performClick()) {
             return true;
@@ -95,6 +97,7 @@ public final class IconMenuItemView extends TextView implements MenuView.ItemVie
         return true;
     }
 
+    @Override // com.android.internal.view.menu.MenuView.ItemView
     public void setTitle(CharSequence title) {
         if (this.mShortcutCaptionMode) {
             setCaptionMode(true);
@@ -103,31 +106,32 @@ public final class IconMenuItemView extends TextView implements MenuView.ItemVie
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void setCaptionMode(boolean shortcut) {
-        if (this.mItemData != null) {
-            this.mShortcutCaptionMode = shortcut && this.mItemData.shouldShowShortcut();
-            CharSequence text = this.mItemData.getTitleForItemView(this);
-            if (this.mShortcutCaptionMode) {
-                if (this.mShortcutCaption == null) {
-                    this.mShortcutCaption = this.mItemData.getShortcutLabel();
-                }
-                text = this.mShortcutCaption;
-            }
-            setText(text);
+    void setCaptionMode(boolean shortcut) {
+        if (this.mItemData == null) {
+            return;
         }
+        this.mShortcutCaptionMode = shortcut && this.mItemData.shouldShowShortcut();
+        CharSequence text = this.mItemData.getTitleForItemView(this);
+        if (this.mShortcutCaptionMode) {
+            if (this.mShortcutCaption == null) {
+                this.mShortcutCaption = this.mItemData.getShortcutLabel();
+            }
+            text = this.mShortcutCaption;
+        }
+        setText(text);
     }
 
+    @Override // com.android.internal.view.menu.MenuView.ItemView
     public void setIcon(Drawable icon) {
         this.mIcon = icon;
         if (icon != null) {
             icon.setBounds(0, 0, icon.getIntrinsicWidth(), icon.getIntrinsicHeight());
-            setCompoundDrawables((Drawable) null, icon, (Drawable) null, (Drawable) null);
+            setCompoundDrawables(null, icon, null, null);
             setGravity(81);
             requestLayout();
             return;
         }
-        setCompoundDrawables((Drawable) null, (Drawable) null, (Drawable) null, (Drawable) null);
+        setCompoundDrawables(null, null, null, null);
         setGravity(17);
     }
 
@@ -136,11 +140,13 @@ public final class IconMenuItemView extends TextView implements MenuView.ItemVie
         this.mItemInvoker = itemInvoker;
     }
 
+    @Override // com.android.internal.view.menu.MenuView.ItemView
     @ViewDebug.CapturedViewProperty(retrieveReturn = true)
     public MenuItemImpl getItemData() {
         return this.mItemData;
     }
 
+    @Override // android.view.View
     public void setVisibility(int v) {
         super.setVisibility(v);
         if (this.mIconMenuView != null) {
@@ -148,35 +154,34 @@ public final class IconMenuItemView extends TextView implements MenuView.ItemVie
         }
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void setIconMenuView(IconMenuView iconMenuView) {
+    void setIconMenuView(IconMenuView iconMenuView) {
         this.mIconMenuView = iconMenuView;
     }
 
-    /* access modifiers changed from: protected */
-    public void drawableStateChanged() {
+    @Override // android.widget.TextView, android.view.View
+    protected void drawableStateChanged() {
         super.drawableStateChanged();
         if (this.mItemData != null && this.mIcon != null) {
-            this.mIcon.setAlpha(!this.mItemData.isEnabled() && (isPressed() || !isFocused()) ? (int) (this.mDisabledAlpha * 255.0f) : 255);
+            boolean isInAlphaState = !this.mItemData.isEnabled() && (isPressed() || !isFocused());
+            this.mIcon.setAlpha(isInAlphaState ? (int) (this.mDisabledAlpha * 255.0f) : 255);
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onLayout(boolean changed, int left, int top, int right, int bottom) {
+    @Override // android.widget.TextView, android.view.View
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         positionIcon();
     }
 
-    /* access modifiers changed from: protected */
-    public void onTextChanged(CharSequence text, int start, int before, int after) {
+    @Override // android.widget.TextView
+    protected void onTextChanged(CharSequence text, int start, int before, int after) {
         super.onTextChanged(text, start, before, after);
         setLayoutParams(getTextAppropriateLayoutParams());
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public IconMenuView.LayoutParams getTextAppropriateLayoutParams() {
+    IconMenuView.LayoutParams getTextAppropriateLayoutParams() {
         IconMenuView.LayoutParams lp = (IconMenuView.LayoutParams) getLayoutParams();
         if (lp == null) {
             lp = new IconMenuView.LayoutParams(-1, -1);
@@ -186,21 +191,26 @@ public final class IconMenuItemView extends TextView implements MenuView.ItemVie
     }
 
     private void positionIcon() {
-        if (this.mIcon != null) {
-            Rect tmpRect = this.mPositionIconOutput;
-            getLineBounds(0, tmpRect);
-            this.mPositionIconAvailable.set(0, 0, getWidth(), tmpRect.top);
-            Gravity.apply(8388627, this.mIcon.getIntrinsicWidth(), this.mIcon.getIntrinsicHeight(), this.mPositionIconAvailable, this.mPositionIconOutput, getLayoutDirection());
-            this.mIcon.setBounds(this.mPositionIconOutput);
+        if (this.mIcon == null) {
+            return;
         }
+        Rect tmpRect = this.mPositionIconOutput;
+        getLineBounds(0, tmpRect);
+        this.mPositionIconAvailable.set(0, 0, getWidth(), tmpRect.top);
+        int layoutDirection = getLayoutDirection();
+        Gravity.apply(8388627, this.mIcon.getIntrinsicWidth(), this.mIcon.getIntrinsicHeight(), this.mPositionIconAvailable, this.mPositionIconOutput, layoutDirection);
+        this.mIcon.setBounds(this.mPositionIconOutput);
     }
 
+    @Override // com.android.internal.view.menu.MenuView.ItemView
     public void setCheckable(boolean checkable) {
     }
 
+    @Override // com.android.internal.view.menu.MenuView.ItemView
     public void setChecked(boolean checked) {
     }
 
+    @Override // com.android.internal.view.menu.MenuView.ItemView
     public void setShortcut(boolean showShortcut, char shortcutKey) {
         if (this.mShortcutCaptionMode) {
             this.mShortcutCaption = null;
@@ -208,10 +218,12 @@ public final class IconMenuItemView extends TextView implements MenuView.ItemVie
         }
     }
 
+    @Override // com.android.internal.view.menu.MenuView.ItemView
     public boolean prefersCondensedTitle() {
         return true;
     }
 
+    @Override // com.android.internal.view.menu.MenuView.ItemView
     public boolean showsIcon() {
         return true;
     }

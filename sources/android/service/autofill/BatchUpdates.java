@@ -1,32 +1,37 @@
 package android.service.autofill;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.Pair;
 import android.view.autofill.Helper;
 import android.widget.RemoteViews;
 import com.android.internal.util.Preconditions;
 import java.util.ArrayList;
 
+/* loaded from: classes3.dex */
 public final class BatchUpdates implements Parcelable {
-    public static final Parcelable.Creator<BatchUpdates> CREATOR = new Parcelable.Creator<BatchUpdates>() {
+    public static final Parcelable.Creator<BatchUpdates> CREATOR = new Parcelable.Creator<BatchUpdates>() { // from class: android.service.autofill.BatchUpdates.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public BatchUpdates createFromParcel(Parcel parcel) {
             Builder builder = new Builder();
             int[] ids = parcel.createIntArray();
             if (ids != null) {
-                InternalTransformation[] values = (InternalTransformation[]) parcel.readParcelableArray((ClassLoader) null, InternalTransformation.class);
+                InternalTransformation[] values = (InternalTransformation[]) parcel.readParcelableArray(null, InternalTransformation.class);
                 int size = ids.length;
                 for (int i = 0; i < size; i++) {
                     builder.transformChild(ids[i], values[i]);
                 }
             }
-            RemoteViews updates = (RemoteViews) parcel.readParcelable((ClassLoader) null);
+            RemoteViews updates = (RemoteViews) parcel.readParcelable(null);
             if (updates != null) {
                 builder.updateTemplate(updates);
             }
             return builder.build();
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public BatchUpdates[] newArray(int size) {
             return new BatchUpdates[size];
         }
@@ -47,12 +52,11 @@ public final class BatchUpdates implements Parcelable {
         return this.mUpdates;
     }
 
+    /* loaded from: classes3.dex */
     public static class Builder {
         private boolean mDestroyed;
-        /* access modifiers changed from: private */
-        public ArrayList<Pair<Integer, InternalTransformation>> mTransformations;
-        /* access modifiers changed from: private */
-        public RemoteViews mUpdates;
+        private ArrayList<Pair<Integer, InternalTransformation>> mTransformations;
+        private RemoteViews mUpdates;
 
         public Builder updateTemplate(RemoteViews updates) {
             throwIfDestroyed();
@@ -66,7 +70,7 @@ public final class BatchUpdates implements Parcelable {
             if (this.mTransformations == null) {
                 this.mTransformations = new ArrayList<>();
             }
-            this.mTransformations.add(new Pair(Integer.valueOf(id), (InternalTransformation) transformation));
+            this.mTransformations.add(new Pair<>(Integer.valueOf(id), (InternalTransformation) transformation));
             return this;
         }
 
@@ -85,33 +89,35 @@ public final class BatchUpdates implements Parcelable {
     }
 
     public String toString() {
-        if (!Helper.sDebug) {
-            return super.toString();
+        if (Helper.sDebug) {
+            StringBuilder sb = new StringBuilder("BatchUpdates: [");
+            sb.append(", transformations=");
+            sb.append(this.mTransformations == null ? "N/A" : Integer.valueOf(this.mTransformations.size()));
+            sb.append(", updates=");
+            sb.append(this.mUpdates);
+            sb.append("]");
+            return sb.toString();
         }
-        StringBuilder sb = new StringBuilder("BatchUpdates: [");
-        sb.append(", transformations=");
-        sb.append(this.mTransformations == null ? "N/A" : Integer.valueOf(this.mTransformations.size()));
-        sb.append(", updates=");
-        sb.append(this.mUpdates);
-        sb.append("]");
-        return sb.toString();
+        return super.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         if (this.mTransformations == null) {
-            dest.writeIntArray((int[]) null);
+            dest.writeIntArray(null);
         } else {
             int size = this.mTransformations.size();
             int[] ids = new int[size];
             InternalTransformation[] values = new InternalTransformation[size];
             for (int i = 0; i < size; i++) {
                 Pair<Integer, InternalTransformation> pair = this.mTransformations.get(i);
-                ids[i] = ((Integer) pair.first).intValue();
-                values[i] = (InternalTransformation) pair.second;
+                ids[i] = pair.first.intValue();
+                values[i] = pair.second;
             }
             dest.writeIntArray(ids);
             dest.writeParcelableArray(values, flags);

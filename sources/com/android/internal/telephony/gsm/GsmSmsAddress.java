@@ -6,6 +6,7 @@ import com.android.internal.telephony.GsmAlphabet;
 import com.android.internal.telephony.SmsAddress;
 import java.text.ParseException;
 
+/* loaded from: classes4.dex */
 public class GsmSmsAddress extends SmsAddress {
     static final int OFFSET_ADDRESS_LENGTH = 0;
     static final int OFFSET_ADDRESS_VALUE = 2;
@@ -20,7 +21,8 @@ public class GsmSmsAddress extends SmsAddress {
         if ((toa & 128) != 128) {
             throw new ParseException("Invalid TOA - high bit must be set. toa = " + toa, offset + 1);
         } else if (isAlphanumeric()) {
-            this.address = GsmAlphabet.gsm7BitPackedToString(this.origBytes, 2, (addressLength * 4) / 7);
+            int countSeptets = (addressLength * 4) / 7;
+            this.address = GsmAlphabet.gsm7BitPackedToString(this.origBytes, 2, countSeptets);
         } else {
             byte lastByte = this.origBytes[length - 1];
             if ((addressLength & 1) == 1) {
@@ -33,14 +35,17 @@ public class GsmSmsAddress extends SmsAddress {
         }
     }
 
+    @Override // com.android.internal.telephony.SmsAddress
     public String getAddressString() {
         return this.address;
     }
 
+    @Override // com.android.internal.telephony.SmsAddress
     public boolean isAlphanumeric() {
         return this.ton == 5;
     }
 
+    @Override // com.android.internal.telephony.SmsAddress
     public boolean isNetworkSpecific() {
         return this.ton == 3;
     }

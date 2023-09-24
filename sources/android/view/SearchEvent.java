@@ -1,5 +1,6 @@
 package android.view;
 
+/* loaded from: classes4.dex */
 public class SearchEvent {
     private InputDevice mInputDevice;
 

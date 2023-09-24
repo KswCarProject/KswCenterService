@@ -3,6 +3,7 @@ package android.graphics;
 import android.annotation.UnsupportedAppUsage;
 import com.android.internal.util.VirtualRefBasePtr;
 
+/* loaded from: classes.dex */
 public final class CanvasProperty<T> {
     private VirtualRefBasePtr mProperty;
 

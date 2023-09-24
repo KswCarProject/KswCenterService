@@ -4,19 +4,24 @@ import android.content.ClipDescription;
 import android.content.ContentProvider;
 import android.content.IntentFilter;
 import android.net.Uri;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.RemoteException;
-import android.os.UserHandle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.RemoteException;
+import android.p007os.UserHandle;
 import com.android.internal.inputmethod.IInputContentUriToken;
 import java.security.InvalidParameterException;
 
+/* loaded from: classes4.dex */
 public final class InputContentInfo implements Parcelable {
-    public static final Parcelable.Creator<InputContentInfo> CREATOR = new Parcelable.Creator<InputContentInfo>() {
+    public static final Parcelable.Creator<InputContentInfo> CREATOR = new Parcelable.Creator<InputContentInfo>() { // from class: android.view.inputmethod.InputContentInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public InputContentInfo createFromParcel(Parcel source) {
             return new InputContentInfo(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public InputContentInfo[] newArray(int size) {
             return new InputContentInfo[size];
         }
@@ -28,7 +33,7 @@ public final class InputContentInfo implements Parcelable {
     private IInputContentUriToken mUriToken;
 
     public InputContentInfo(Uri contentUri, ClipDescription description) {
-        this(contentUri, description, (Uri) null);
+        this(contentUri, description, null);
     }
 
     public InputContentInfo(Uri contentUri, ClipDescription description, Uri linkUri) {
@@ -54,22 +59,25 @@ public final class InputContentInfo implements Parcelable {
                 return false;
             }
             throw new NullPointerException("description");
-        } else if (!"content".equals(contentUri.getScheme())) {
-            if (!throwException) {
-                return false;
-            }
-            throw new InvalidParameterException("contentUri must have content scheme");
-        } else if (linkUri == null) {
-            return true;
         } else {
-            String scheme = linkUri.getScheme();
-            if (scheme != null && (scheme.equalsIgnoreCase(IntentFilter.SCHEME_HTTP) || scheme.equalsIgnoreCase(IntentFilter.SCHEME_HTTPS))) {
+            String contentUriScheme = contentUri.getScheme();
+            if (!"content".equals(contentUriScheme)) {
+                if (!throwException) {
+                    return false;
+                }
+                throw new InvalidParameterException("contentUri must have content scheme");
+            } else if (linkUri != null) {
+                String scheme = linkUri.getScheme();
+                if (scheme == null || (!scheme.equalsIgnoreCase(IntentFilter.SCHEME_HTTP) && !scheme.equalsIgnoreCase(IntentFilter.SCHEME_HTTPS))) {
+                    if (!throwException) {
+                        return false;
+                    }
+                    throw new InvalidParameterException("linkUri must have either http or https scheme");
+                }
+                return true;
+            } else {
                 return true;
             }
-            if (!throwException) {
-                return false;
-            }
-            throw new InvalidParameterException("linkUri must have either http or https scheme");
         }
     }
 
@@ -89,33 +97,35 @@ public final class InputContentInfo implements Parcelable {
     }
 
     public void setUriToken(IInputContentUriToken token) {
-        if (this.mUriToken == null) {
-            this.mUriToken = token;
-            return;
+        if (this.mUriToken != null) {
+            throw new IllegalStateException("URI token is already set");
         }
-        throw new IllegalStateException("URI token is already set");
+        this.mUriToken = token;
     }
 
     public void requestPermission() {
-        if (this.mUriToken != null) {
-            try {
-                this.mUriToken.take();
-            } catch (RemoteException e) {
-                e.rethrowFromSystemServer();
-            }
+        if (this.mUriToken == null) {
+            return;
+        }
+        try {
+            this.mUriToken.take();
+        } catch (RemoteException e) {
+            e.rethrowFromSystemServer();
         }
     }
 
     public void releasePermission() {
-        if (this.mUriToken != null) {
-            try {
-                this.mUriToken.release();
-            } catch (RemoteException e) {
-                e.rethrowFromSystemServer();
-            }
+        if (this.mUriToken == null) {
+            return;
+        }
+        try {
+            this.mUriToken.release();
+        } catch (RemoteException e) {
+            e.rethrowFromSystemServer();
         }
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         Uri.writeToParcel(dest, this.mContentUri);
         dest.writeInt(this.mContentUriOwnerUserId);
@@ -141,6 +151,7 @@ public final class InputContentInfo implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

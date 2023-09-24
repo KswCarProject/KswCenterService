@@ -4,11 +4,11 @@ import android.annotation.SystemApi;
 import android.content.ComponentName;
 import android.content.ContentCaptureOptions;
 import android.content.Context;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Looper;
-import android.os.RemoteException;
-import android.os.ServiceManager;
+import android.p007os.Handler;
+import android.p007os.IBinder;
+import android.p007os.Looper;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
 import android.util.Log;
 import android.view.WindowManager;
 import android.view.contentcapture.IContentCaptureManager;
@@ -18,8 +18,10 @@ import com.android.internal.util.SyncResultReceiver;
 import java.io.PrintWriter;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.ArrayList;
 import java.util.Set;
 
+/* loaded from: classes4.dex */
 public final class ContentCaptureManager {
     public static final int DEFAULT_IDLE_FLUSHING_FREQUENCY_MS = 5000;
     public static final int DEFAULT_LOG_HISTORY_SIZE = 10;
@@ -51,14 +53,17 @@ public final class ContentCaptureManager {
     final ContentCaptureOptions mOptions;
     private final IContentCaptureManager mService;
 
+    /* loaded from: classes4.dex */
     public interface ContentCaptureClient {
         ComponentName contentCaptureClientGetComponentName();
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface LoggingLevel {
     }
 
+    /* loaded from: classes4.dex */
     private interface MyRunnable {
         void run(SyncResultReceiver syncResultReceiver) throws RemoteException;
     }
@@ -70,7 +75,7 @@ public final class ContentCaptureManager {
         ContentCaptureHelper.setLoggingLevel(this.mOptions.loggingLevel);
         if (ContentCaptureHelper.sVerbose) {
             String str = TAG;
-            Log.v(str, "Constructor for " + context.getPackageName());
+            Log.m66v(str, "Constructor for " + context.getPackageName());
         }
         this.mHandler = Handler.createAsync(Looper.getMainLooper());
     }
@@ -82,7 +87,7 @@ public final class ContentCaptureManager {
                 this.mMainSession = new MainContentCaptureSession(this.mContext, this, this.mHandler, this.mService);
                 if (ContentCaptureHelper.sVerbose) {
                     String str = TAG;
-                    Log.v(str, "getMainContentCaptureSession(): created " + this.mMainSession);
+                    Log.m66v(str, "getMainContentCaptureSession(): created " + this.mMainSession);
                 }
             }
             mainContentCaptureSession = this.mMainSession;
@@ -91,48 +96,53 @@ public final class ContentCaptureManager {
     }
 
     public void onActivityCreated(IBinder applicationToken, ComponentName activityComponent) {
-        if (!this.mOptions.lite) {
-            synchronized (this.mLock) {
-                getMainContentCaptureSession().start(applicationToken, activityComponent, this.mFlags);
-            }
+        if (this.mOptions.lite) {
+            return;
+        }
+        synchronized (this.mLock) {
+            getMainContentCaptureSession().start(applicationToken, activityComponent, this.mFlags);
         }
     }
 
     public void onActivityResumed() {
-        if (!this.mOptions.lite) {
-            getMainContentCaptureSession().notifySessionLifecycle(true);
+        if (this.mOptions.lite) {
+            return;
         }
+        getMainContentCaptureSession().notifySessionLifecycle(true);
     }
 
     public void onActivityPaused() {
-        if (!this.mOptions.lite) {
-            getMainContentCaptureSession().notifySessionLifecycle(false);
+        if (this.mOptions.lite) {
+            return;
         }
+        getMainContentCaptureSession().notifySessionLifecycle(false);
     }
 
     public void onActivityDestroyed() {
-        if (!this.mOptions.lite) {
-            getMainContentCaptureSession().destroy();
+        if (this.mOptions.lite) {
+            return;
         }
+        getMainContentCaptureSession().destroy();
     }
 
     public void flush(int reason) {
-        if (!this.mOptions.lite) {
-            getMainContentCaptureSession().flush(reason);
+        if (this.mOptions.lite) {
+            return;
         }
+        getMainContentCaptureSession().flush(reason);
     }
 
     public ComponentName getServiceComponentName() {
-        if (!isContentCaptureEnabled() && !this.mOptions.lite) {
-            return null;
+        if (isContentCaptureEnabled() || this.mOptions.lite) {
+            SyncResultReceiver resultReceiver = new SyncResultReceiver(5000);
+            try {
+                this.mService.getServiceComponentName(resultReceiver);
+                return (ComponentName) resultReceiver.getParcelableResult();
+            } catch (RemoteException e) {
+                throw e.rethrowFromSystemServer();
+            }
         }
-        SyncResultReceiver resultReceiver = new SyncResultReceiver(5000);
-        try {
-            this.mService.getServiceComponentName(resultReceiver);
-            return (ComponentName) resultReceiver.getParcelableResult();
-        } catch (RemoteException e) {
-            throw e.rethrowFromSystemServer();
-        }
+        return null;
     }
 
     public static ComponentName getServiceSettingsComponentName() {
@@ -144,10 +154,11 @@ public final class ContentCaptureManager {
         SyncResultReceiver resultReceiver = new SyncResultReceiver(5000);
         try {
             service.getServiceSettingsActivity(resultReceiver);
-            if (resultReceiver.getIntResult() != -1) {
-                return (ComponentName) resultReceiver.getParcelableResult();
+            int resultCode = resultReceiver.getIntResult();
+            if (resultCode == -1) {
+                throw new SecurityException(resultReceiver.getStringResult());
             }
-            throw new SecurityException(resultReceiver.getStringResult());
+            return (ComponentName) resultReceiver.getParcelableResult();
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
         }
@@ -161,19 +172,19 @@ public final class ContentCaptureManager {
         synchronized (this.mLock) {
             mainSession = this.mMainSession;
         }
-        if (mainSession == null || !mainSession.isDisabled()) {
-            return true;
-        }
-        return false;
+        return mainSession == null || !mainSession.isDisabled();
     }
 
     public Set<ContentCaptureCondition> getContentCaptureConditions() {
         if (isContentCaptureEnabled() || this.mOptions.lite) {
-            return ContentCaptureHelper.toSet(syncRun(new MyRunnable() {
+            SyncResultReceiver resultReceiver = syncRun(new MyRunnable() { // from class: android.view.contentcapture.-$$Lambda$ContentCaptureManager$F5a5O5ubPHwlndmmnmOInl75_sQ
+                @Override // android.view.contentcapture.ContentCaptureManager.MyRunnable
                 public final void run(SyncResultReceiver syncResultReceiver) {
-                    ContentCaptureManager.this.mService.getContentCaptureConditions(ContentCaptureManager.this.mContext.getPackageName(), syncResultReceiver);
+                    r0.mService.getContentCaptureConditions(ContentCaptureManager.this.mContext.getPackageName(), syncResultReceiver);
                 }
-            }).getParcelableListResult());
+            });
+            ArrayList<ContentCaptureCondition> result = resultReceiver.getParcelableListResult();
+            return ContentCaptureHelper.toSet(result);
         }
         return null;
     }
@@ -181,21 +192,19 @@ public final class ContentCaptureManager {
     public void setContentCaptureEnabled(boolean enabled) {
         MainContentCaptureSession mainSession;
         if (ContentCaptureHelper.sDebug) {
-            Log.d(TAG, "setContentCaptureEnabled(): setting to " + enabled + " for " + this.mContext);
+            Log.m72d(TAG, "setContentCaptureEnabled(): setting to " + enabled + " for " + this.mContext);
         }
         synchronized (this.mLock) {
-            if (enabled) {
-                try {
+            try {
+                if (enabled) {
                     this.mFlags &= -2;
-                } catch (Throwable th) {
-                    while (true) {
-                        throw th;
-                    }
+                } else {
+                    this.mFlags |= 1;
                 }
-            } else {
-                this.mFlags |= 1;
+                mainSession = this.mMainSession;
+            } catch (Throwable th) {
+                throw th;
             }
-            mainSession = this.mMainSession;
         }
         if (mainSession != null) {
             mainSession.setDisabled(!enabled);
@@ -205,22 +214,20 @@ public final class ContentCaptureManager {
     public void updateWindowAttributes(WindowManager.LayoutParams params) {
         MainContentCaptureSession mainSession;
         if (ContentCaptureHelper.sDebug) {
-            Log.d(TAG, "updateWindowAttributes(): window flags=" + params.flags);
+            Log.m72d(TAG, "updateWindowAttributes(): window flags=" + params.flags);
         }
         boolean flagSecureEnabled = (params.flags & 8192) != 0;
         synchronized (this.mLock) {
-            if (flagSecureEnabled) {
-                try {
+            try {
+                if (flagSecureEnabled) {
                     this.mFlags |= 2;
-                } catch (Throwable th) {
-                    while (true) {
-                        throw th;
-                    }
+                } else {
+                    this.mFlags &= -3;
                 }
-            } else {
-                this.mFlags &= -3;
+                mainSession = this.mMainSession;
+            } catch (Throwable th) {
+                throw th;
             }
-            mainSession = this.mMainSession;
         }
         if (mainSession != null) {
             mainSession.setDisabled(flagSecureEnabled);
@@ -229,11 +236,13 @@ public final class ContentCaptureManager {
 
     @SystemApi
     public boolean isContentCaptureFeatureEnabled() {
-        int resultCode = syncRun(new MyRunnable() {
+        SyncResultReceiver resultReceiver = syncRun(new MyRunnable() { // from class: android.view.contentcapture.-$$Lambda$ContentCaptureManager$uvjEvSXcmP7-uA6i89N3m1TrKCk
+            @Override // android.view.contentcapture.ContentCaptureManager.MyRunnable
             public final void run(SyncResultReceiver syncResultReceiver) {
                 ContentCaptureManager.this.mService.isContentCaptureFeatureEnabled(syncResultReceiver);
             }
-        }).getIntResult();
+        });
+        int resultCode = resultReceiver.getIntResult();
         switch (resultCode) {
             case 1:
                 return true;
@@ -259,10 +268,11 @@ public final class ContentCaptureManager {
         SyncResultReceiver resultReceiver = new SyncResultReceiver(5000);
         try {
             r.run(resultReceiver);
-            if (resultReceiver.getIntResult() != -1) {
-                return resultReceiver;
+            int resultCode = resultReceiver.getIntResult();
+            if (resultCode == -1) {
+                throw new SecurityException(resultReceiver.getStringResult());
             }
-            throw new SecurityException(resultReceiver.getStringResult());
+            return resultReceiver;
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
         }
@@ -298,9 +308,10 @@ public final class ContentCaptureManager {
             this.mOptions.dumpShort(pw);
             pw.println();
             if (this.mMainSession != null) {
+                String prefix3 = prefix2 + "  ";
                 pw.print(prefix2);
                 pw.println("Main session:");
-                this.mMainSession.dump(prefix2 + "  ", pw);
+                this.mMainSession.dump(prefix3, pw);
             } else {
                 pw.print(prefix2);
                 pw.println("No sessions");

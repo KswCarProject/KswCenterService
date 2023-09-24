@@ -1,12 +1,13 @@
 package com.android.internal.view;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.view.inputmethod.EditorInfo;
 
+/* loaded from: classes4.dex */
 public interface IInputMethodClient extends IInterface {
     void applyImeVisibility(boolean z) throws RemoteException;
 
@@ -22,33 +23,43 @@ public interface IInputMethodClient extends IInterface {
 
     void updateActivityViewToScreenMatrix(int i, float[] fArr) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IInputMethodClient {
+        @Override // com.android.internal.view.IInputMethodClient
         public void onBindMethod(InputBindResult res) throws RemoteException {
         }
 
+        @Override // com.android.internal.view.IInputMethodClient
         public void onUnbindMethod(int sequence, int unbindReason) throws RemoteException {
         }
 
+        @Override // com.android.internal.view.IInputMethodClient
         public void setActive(boolean active, boolean fullscreen) throws RemoteException {
         }
 
+        @Override // com.android.internal.view.IInputMethodClient
         public void reportFullscreenMode(boolean fullscreen) throws RemoteException {
         }
 
+        @Override // com.android.internal.view.IInputMethodClient
         public void reportPreRendered(EditorInfo info) throws RemoteException {
         }
 
+        @Override // com.android.internal.view.IInputMethodClient
         public void applyImeVisibility(boolean setVisible) throws RemoteException {
         }
 
+        @Override // com.android.internal.view.IInputMethodClient
         public void updateActivityViewToScreenMatrix(int bindSequence, float[] matrixValues) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IInputMethodClient {
         private static final String DESCRIPTOR = "com.android.internal.view.IInputMethodClient";
         static final int TRANSACTION_applyImeVisibility = 6;
@@ -68,12 +79,13 @@ public interface IInputMethodClient extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IInputMethodClient)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IInputMethodClient)) {
+                return (IInputMethodClient) iin;
             }
-            return (IInputMethodClient) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -99,115 +111,63 @@ public interface IInputMethodClient extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v2, resolved type: com.android.internal.view.InputBindResult} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v13, resolved type: android.view.inputmethod.EditorInfo} */
-        /* JADX WARNING: type inference failed for: r1v1 */
-        /* JADX WARNING: type inference failed for: r1v21 */
-        /* JADX WARNING: type inference failed for: r1v22 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r6, android.os.Parcel r7, android.os.Parcel r8, int r9) throws android.os.RemoteException {
-            /*
-                r5 = this;
-                java.lang.String r0 = "com.android.internal.view.IInputMethodClient"
-                r1 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r2 = 1
-                if (r6 == r1) goto L_0x0096
-                r1 = 0
-                r3 = 0
-                switch(r6) {
-                    case 1: goto L_0x007f;
-                    case 2: goto L_0x0070;
-                    case 3: goto L_0x0058;
-                    case 4: goto L_0x0048;
-                    case 5: goto L_0x0031;
-                    case 6: goto L_0x0021;
-                    case 7: goto L_0x0012;
-                    default: goto L_0x000d;
-                }
-            L_0x000d:
-                boolean r1 = super.onTransact(r6, r7, r8, r9)
-                return r1
-            L_0x0012:
-                r7.enforceInterface(r0)
-                int r1 = r7.readInt()
-                float[] r3 = r7.createFloatArray()
-                r5.updateActivityViewToScreenMatrix(r1, r3)
-                return r2
-            L_0x0021:
-                r7.enforceInterface(r0)
-                int r1 = r7.readInt()
-                if (r1 == 0) goto L_0x002c
-                r3 = r2
-            L_0x002c:
-                r1 = r3
-                r5.applyImeVisibility(r1)
-                return r2
-            L_0x0031:
-                r7.enforceInterface(r0)
-                int r3 = r7.readInt()
-                if (r3 == 0) goto L_0x0043
-                android.os.Parcelable$Creator<android.view.inputmethod.EditorInfo> r1 = android.view.inputmethod.EditorInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r7)
-                android.view.inputmethod.EditorInfo r1 = (android.view.inputmethod.EditorInfo) r1
-                goto L_0x0044
-            L_0x0043:
-            L_0x0044:
-                r5.reportPreRendered(r1)
-                return r2
-            L_0x0048:
-                r7.enforceInterface(r0)
-                int r1 = r7.readInt()
-                if (r1 == 0) goto L_0x0053
-                r3 = r2
-            L_0x0053:
-                r1 = r3
-                r5.reportFullscreenMode(r1)
-                return r2
-            L_0x0058:
-                r7.enforceInterface(r0)
-                int r1 = r7.readInt()
-                if (r1 == 0) goto L_0x0063
-                r1 = r2
-                goto L_0x0064
-            L_0x0063:
-                r1 = r3
-            L_0x0064:
-                int r4 = r7.readInt()
-                if (r4 == 0) goto L_0x006c
-                r3 = r2
-            L_0x006c:
-                r5.setActive(r1, r3)
-                return r2
-            L_0x0070:
-                r7.enforceInterface(r0)
-                int r1 = r7.readInt()
-                int r3 = r7.readInt()
-                r5.onUnbindMethod(r1, r3)
-                return r2
-            L_0x007f:
-                r7.enforceInterface(r0)
-                int r3 = r7.readInt()
-                if (r3 == 0) goto L_0x0091
-                android.os.Parcelable$Creator<com.android.internal.view.InputBindResult> r1 = com.android.internal.view.InputBindResult.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r7)
-                com.android.internal.view.InputBindResult r1 = (com.android.internal.view.InputBindResult) r1
-                goto L_0x0092
-            L_0x0091:
-            L_0x0092:
-                r5.onBindMethod(r1)
-                return r2
-            L_0x0096:
-                r8.writeString(r0)
-                return r2
-            */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.internal.view.IInputMethodClient.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            boolean _arg1;
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    InputBindResult _arg0 = data.readInt() != 0 ? InputBindResult.CREATOR.createFromParcel(data) : null;
+                    onBindMethod(_arg0);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    onUnbindMethod(_arg02, data.readInt());
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean _arg03 = data.readInt() != 0;
+                    _arg1 = data.readInt() != 0;
+                    setActive(_arg03, _arg1);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg1 = data.readInt() != 0;
+                    boolean _arg04 = _arg1;
+                    reportFullscreenMode(_arg04);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    EditorInfo _arg05 = data.readInt() != 0 ? EditorInfo.CREATOR.createFromParcel(data) : null;
+                    reportPreRendered(_arg05);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg1 = data.readInt() != 0;
+                    boolean _arg06 = _arg1;
+                    applyImeVisibility(_arg06);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg07 = data.readInt();
+                    updateActivityViewToScreenMatrix(_arg07, data.createFloatArray());
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IInputMethodClient {
             public static IInputMethodClient sDefaultImpl;
             private IBinder mRemote;
@@ -216,6 +176,7 @@ public interface IInputMethodClient extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -224,6 +185,7 @@ public interface IInputMethodClient extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // com.android.internal.view.IInputMethodClient
             public void onBindMethod(InputBindResult res) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -234,9 +196,8 @@ public interface IInputMethodClient extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onBindMethod(res);
                     }
                 } finally {
@@ -244,15 +205,15 @@ public interface IInputMethodClient extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.view.IInputMethodClient
             public void onUnbindMethod(int sequence, int unbindReason) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(sequence);
                     _data.writeInt(unbindReason);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onUnbindMethod(sequence, unbindReason);
                     }
                 } finally {
@@ -260,15 +221,15 @@ public interface IInputMethodClient extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.view.IInputMethodClient
             public void setActive(boolean active, boolean fullscreen) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(active);
-                    _data.writeInt(fullscreen);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(active ? 1 : 0);
+                    _data.writeInt(fullscreen ? 1 : 0);
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().setActive(active, fullscreen);
                     }
                 } finally {
@@ -276,14 +237,14 @@ public interface IInputMethodClient extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.view.IInputMethodClient
             public void reportFullscreenMode(boolean fullscreen) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(fullscreen);
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(fullscreen ? 1 : 0);
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().reportFullscreenMode(fullscreen);
                     }
                 } finally {
@@ -291,6 +252,7 @@ public interface IInputMethodClient extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.view.IInputMethodClient
             public void reportPreRendered(EditorInfo info) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -301,9 +263,8 @@ public interface IInputMethodClient extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(5, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().reportPreRendered(info);
                     }
                 } finally {
@@ -311,14 +272,14 @@ public interface IInputMethodClient extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.view.IInputMethodClient
             public void applyImeVisibility(boolean setVisible) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(setVisible);
-                    if (this.mRemote.transact(6, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(setVisible ? 1 : 0);
+                    boolean _status = this.mRemote.transact(6, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().applyImeVisibility(setVisible);
                     }
                 } finally {
@@ -326,15 +287,15 @@ public interface IInputMethodClient extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.view.IInputMethodClient
             public void updateActivityViewToScreenMatrix(int bindSequence, float[] matrixValues) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(bindSequence);
                     _data.writeFloatArray(matrixValues);
-                    if (this.mRemote.transact(7, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(7, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().updateActivityViewToScreenMatrix(bindSequence, matrixValues);
                     }
                 } finally {
@@ -344,11 +305,11 @@ public interface IInputMethodClient extends IInterface {
         }
 
         public static boolean setDefaultImpl(IInputMethodClient impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IInputMethodClient getDefaultImpl() {

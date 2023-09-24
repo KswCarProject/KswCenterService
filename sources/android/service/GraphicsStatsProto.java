@@ -1,5 +1,6 @@
 package android.service;
 
+/* loaded from: classes3.dex */
 public final class GraphicsStatsProto {
     public static final long HISTOGRAM = 2246267895814L;
     public static final long PACKAGE_NAME = 1138166333441L;

@@ -7,8 +7,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.ref.WeakReference;
 
+/* loaded from: classes.dex */
 public final class GestureLibraries {
     private GestureLibraries() {
     }
@@ -29,6 +31,7 @@ public final class GestureLibraries {
         return new ResourceGestureLibrary(context, resourceId);
     }
 
+    /* loaded from: classes.dex */
     private static class FileGestureLibrary extends GestureLibrary {
         private final File mPath;
 
@@ -36,32 +39,35 @@ public final class GestureLibraries {
             this.mPath = path;
         }
 
+        @Override // android.gesture.GestureLibrary
         public boolean isReadOnly() {
             return !this.mPath.canWrite();
         }
 
+        @Override // android.gesture.GestureLibrary
         public boolean save() {
-            if (!this.mStore.hasChanged()) {
-                return true;
-            }
-            File file = this.mPath;
-            File parentFile = file.getParentFile();
-            if (!parentFile.exists() && !parentFile.mkdirs()) {
+            if (this.mStore.hasChanged()) {
+                File file = this.mPath;
+                File parentFile = file.getParentFile();
+                if (parentFile.exists() || parentFile.mkdirs()) {
+                    try {
+                        file.createNewFile();
+                        this.mStore.save(new FileOutputStream(file), true);
+                        return true;
+                    } catch (FileNotFoundException e) {
+                        Log.m71d(GestureConstants.LOG_TAG, "Could not save the gesture library in " + this.mPath, e);
+                        return false;
+                    } catch (IOException e2) {
+                        Log.m71d(GestureConstants.LOG_TAG, "Could not save the gesture library in " + this.mPath, e2);
+                        return false;
+                    }
+                }
                 return false;
             }
-            try {
-                file.createNewFile();
-                this.mStore.save(new FileOutputStream(file), true);
-                return true;
-            } catch (FileNotFoundException e) {
-                Log.d(GestureConstants.LOG_TAG, "Could not save the gesture library in " + this.mPath, e);
-                return false;
-            } catch (IOException e2) {
-                Log.d(GestureConstants.LOG_TAG, "Could not save the gesture library in " + this.mPath, e2);
-                return false;
-            }
+            return true;
         }
 
+        @Override // android.gesture.GestureLibrary
         public boolean load() {
             File file = this.mPath;
             if (!file.exists() || !file.canRead()) {
@@ -71,15 +77,16 @@ public final class GestureLibraries {
                 this.mStore.load(new FileInputStream(file), true);
                 return true;
             } catch (FileNotFoundException e) {
-                Log.d(GestureConstants.LOG_TAG, "Could not load the gesture library from " + this.mPath, e);
+                Log.m71d(GestureConstants.LOG_TAG, "Could not load the gesture library from " + this.mPath, e);
                 return false;
             } catch (IOException e2) {
-                Log.d(GestureConstants.LOG_TAG, "Could not load the gesture library from " + this.mPath, e2);
+                Log.m71d(GestureConstants.LOG_TAG, "Could not load the gesture library from " + this.mPath, e2);
                 return false;
             }
         }
     }
 
+    /* loaded from: classes.dex */
     private static class ResourceGestureLibrary extends GestureLibrary {
         private final WeakReference<Context> mContext;
         private final int mResourceId;
@@ -89,24 +96,28 @@ public final class GestureLibraries {
             this.mResourceId = resourceId;
         }
 
+        @Override // android.gesture.GestureLibrary
         public boolean isReadOnly() {
             return true;
         }
 
+        @Override // android.gesture.GestureLibrary
         public boolean save() {
             return false;
         }
 
+        @Override // android.gesture.GestureLibrary
         public boolean load() {
-            Context context = (Context) this.mContext.get();
+            Context context = this.mContext.get();
             if (context == null) {
                 return false;
             }
+            InputStream in = context.getResources().openRawResource(this.mResourceId);
             try {
-                this.mStore.load(context.getResources().openRawResource(this.mResourceId), true);
+                this.mStore.load(in, true);
                 return true;
             } catch (IOException e) {
-                Log.d(GestureConstants.LOG_TAG, "Could not load the gesture library from raw resource " + context.getResources().getResourceName(this.mResourceId), e);
+                Log.m71d(GestureConstants.LOG_TAG, "Could not load the gesture library from raw resource " + context.getResources().getResourceName(this.mResourceId), e);
                 return false;
             }
         }

@@ -2,31 +2,34 @@ package android.graphics;
 
 import libcore.util.NativeAllocationRegistry;
 
+/* loaded from: classes.dex */
 public class ColorFilter {
     private Runnable mCleaner;
     private long mNativeInstance;
 
-    /* access modifiers changed from: private */
-    public static native long nativeGetFinalizer();
+    private static native long nativeGetFinalizer();
 
+    static /* synthetic */ long access$000() {
+        return nativeGetFinalizer();
+    }
+
+    /* loaded from: classes.dex */
     private static class NoImagePreloadHolder {
-        public static final NativeAllocationRegistry sRegistry = NativeAllocationRegistry.createMalloced(ColorFilter.class.getClassLoader(), ColorFilter.nativeGetFinalizer());
+        public static final NativeAllocationRegistry sRegistry = NativeAllocationRegistry.createMalloced(ColorFilter.class.getClassLoader(), ColorFilter.access$000());
 
         private NoImagePreloadHolder() {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public long createNativeInstance() {
-        return 0;
+    long createNativeInstance() {
+        return 0L;
     }
 
-    /* access modifiers changed from: package-private */
-    public void discardNativeInstance() {
+    void discardNativeInstance() {
         if (this.mNativeInstance != 0) {
             this.mCleaner.run();
             this.mCleaner = null;
-            this.mNativeInstance = 0;
+            this.mNativeInstance = 0L;
         }
     }
 

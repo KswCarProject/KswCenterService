@@ -2,12 +2,13 @@ package com.wits.pms.bean;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.os.UserHandle;
+import android.p007os.Bundle;
+import android.p007os.UserHandle;
 import android.provider.Telephony;
 import android.util.Log;
 import com.android.internal.content.NativeLibraryHelper;
 
+/* loaded from: classes2.dex */
 public class TxzMessage {
     public static final String TXZ_DISMISS = "0";
     public static final String TXZ_SHOW = "1";
@@ -16,13 +17,13 @@ public class TxzMessage {
     public Bundle bundle;
     public int keyType;
 
-    public TxzMessage(int keyType2, String action2, Bundle bundle2) {
-        bundle2 = bundle2 == null ? new Bundle() : bundle2;
-        this.action = action2;
-        this.keyType = keyType2;
-        bundle2.putInt(Telephony.CarrierColumns.KEY_TYPE, keyType2);
-        bundle2.putString("action", action2);
-        this.bundle = bundle2;
+    public TxzMessage(int keyType, String action, Bundle bundle) {
+        bundle = bundle == null ? new Bundle() : bundle;
+        this.action = action;
+        this.keyType = keyType;
+        bundle.putInt(Telephony.CarrierColumns.KEY_TYPE, keyType);
+        bundle.putString("action", action);
+        this.bundle = bundle;
     }
 
     public TxzMessage(Intent intent) {
@@ -35,7 +36,7 @@ public class TxzMessage {
         Intent txzIntent = new Intent();
         txzIntent.putExtras(this.bundle);
         txzIntent.setAction("com.txznet.adapter.recv");
-        Log.v("TxzMessage", "keyType: " + txzIntent.getIntExtra(Telephony.CarrierColumns.KEY_TYPE, 0) + " - action: " + txzIntent.getStringExtra("action"));
+        Log.m66v("TxzMessage", "keyType: " + txzIntent.getIntExtra(Telephony.CarrierColumns.KEY_TYPE, 0) + " - action: " + txzIntent.getStringExtra("action"));
         context.sendBroadcastAsUser(txzIntent, UserHandle.getUserHandleForUid(context.getApplicationInfo().uid));
     }
 

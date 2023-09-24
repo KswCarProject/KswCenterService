@@ -4,13 +4,14 @@ import android.hardware.camera2.impl.CameraMetadataNative;
 import android.hardware.camera2.params.OutputConfiguration;
 import android.hardware.camera2.params.SessionConfiguration;
 import android.hardware.camera2.utils.SubmitInfo;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.view.Surface;
 
+/* loaded from: classes.dex */
 public interface ICameraDeviceUser extends IInterface {
     public static final int CONSTRAINED_HIGH_SPEED_MODE = 1;
     public static final int NORMAL_MODE = 0;
@@ -63,82 +64,105 @@ public interface ICameraDeviceUser extends IInterface {
 
     void waitUntilIdle() throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements ICameraDeviceUser {
+        @Override // android.hardware.camera2.ICameraDeviceUser
         public void disconnect() throws RemoteException {
         }
 
+        @Override // android.hardware.camera2.ICameraDeviceUser
         public SubmitInfo submitRequest(CaptureRequest request, boolean streaming) throws RemoteException {
             return null;
         }
 
+        @Override // android.hardware.camera2.ICameraDeviceUser
         public SubmitInfo submitRequestList(CaptureRequest[] requestList, boolean streaming) throws RemoteException {
             return null;
         }
 
+        @Override // android.hardware.camera2.ICameraDeviceUser
         public long cancelRequest(int requestId) throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // android.hardware.camera2.ICameraDeviceUser
         public void beginConfigure() throws RemoteException {
         }
 
+        @Override // android.hardware.camera2.ICameraDeviceUser
         public void endConfigure(int operatingMode, CameraMetadataNative sessionParams) throws RemoteException {
         }
 
+        @Override // android.hardware.camera2.ICameraDeviceUser
         public boolean isSessionConfigurationSupported(SessionConfiguration sessionConfiguration) throws RemoteException {
             return false;
         }
 
+        @Override // android.hardware.camera2.ICameraDeviceUser
         public void deleteStream(int streamId) throws RemoteException {
         }
 
+        @Override // android.hardware.camera2.ICameraDeviceUser
         public int createStream(OutputConfiguration outputConfiguration) throws RemoteException {
             return 0;
         }
 
+        @Override // android.hardware.camera2.ICameraDeviceUser
         public int createInputStream(int width, int height, int format) throws RemoteException {
             return 0;
         }
 
+        @Override // android.hardware.camera2.ICameraDeviceUser
         public Surface getInputSurface() throws RemoteException {
             return null;
         }
 
+        @Override // android.hardware.camera2.ICameraDeviceUser
         public CameraMetadataNative createDefaultRequest(int templateId) throws RemoteException {
             return null;
         }
 
+        @Override // android.hardware.camera2.ICameraDeviceUser
         public CameraMetadataNative getCameraInfo() throws RemoteException {
             return null;
         }
 
+        @Override // android.hardware.camera2.ICameraDeviceUser
         public void waitUntilIdle() throws RemoteException {
         }
 
+        @Override // android.hardware.camera2.ICameraDeviceUser
         public long flush() throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // android.hardware.camera2.ICameraDeviceUser
         public void prepare(int streamId) throws RemoteException {
         }
 
+        @Override // android.hardware.camera2.ICameraDeviceUser
         public void tearDown(int streamId) throws RemoteException {
         }
 
+        @Override // android.hardware.camera2.ICameraDeviceUser
         public void prepare2(int maxCount, int streamId) throws RemoteException {
         }
 
+        @Override // android.hardware.camera2.ICameraDeviceUser
         public void updateOutputConfiguration(int streamId, OutputConfiguration outputConfiguration) throws RemoteException {
         }
 
+        @Override // android.hardware.camera2.ICameraDeviceUser
         public void finalizeOutputConfigurations(int streamId, OutputConfiguration outputConfiguration) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements ICameraDeviceUser {
         private static final String DESCRIPTOR = "android.hardware.camera2.ICameraDeviceUser";
         static final int TRANSACTION_beginConfigure = 5;
@@ -171,12 +195,13 @@ public interface ICameraDeviceUser extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof ICameraDeviceUser)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof ICameraDeviceUser)) {
+                return (ICameraDeviceUser) iin;
             }
-            return (ICameraDeviceUser) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -228,285 +253,181 @@ public interface ICameraDeviceUser extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v2, resolved type: android.hardware.camera2.CaptureRequest} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v10, resolved type: android.hardware.camera2.impl.CameraMetadataNative} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v14, resolved type: android.hardware.camera2.params.SessionConfiguration} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v19, resolved type: android.hardware.camera2.params.OutputConfiguration} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v30, resolved type: android.hardware.camera2.params.OutputConfiguration} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v34, resolved type: android.hardware.camera2.params.OutputConfiguration} */
-        /* JADX WARNING: type inference failed for: r1v1 */
-        /* JADX WARNING: type inference failed for: r1v39 */
-        /* JADX WARNING: type inference failed for: r1v40 */
-        /* JADX WARNING: type inference failed for: r1v41 */
-        /* JADX WARNING: type inference failed for: r1v42 */
-        /* JADX WARNING: type inference failed for: r1v43 */
-        /* JADX WARNING: type inference failed for: r1v44 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r7, android.os.Parcel r8, android.os.Parcel r9, int r10) throws android.os.RemoteException {
-            /*
-                r6 = this;
-                java.lang.String r0 = "android.hardware.camera2.ICameraDeviceUser"
-                r1 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r2 = 1
-                if (r7 == r1) goto L_0x01dd
-                r1 = 0
-                r3 = 0
-                switch(r7) {
-                    case 1: goto L_0x01d3;
-                    case 2: goto L_0x01a3;
-                    case 3: goto L_0x017b;
-                    case 4: goto L_0x0169;
-                    case 5: goto L_0x015f;
-                    case 6: goto L_0x0141;
-                    case 7: goto L_0x0123;
-                    case 8: goto L_0x0115;
-                    case 9: goto L_0x00f7;
-                    case 10: goto L_0x00dd;
-                    case 11: goto L_0x00c6;
-                    case 12: goto L_0x00ab;
-                    case 13: goto L_0x0094;
-                    case 14: goto L_0x008a;
-                    case 15: goto L_0x007c;
-                    case 16: goto L_0x006e;
-                    case 17: goto L_0x0060;
-                    case 18: goto L_0x004e;
-                    case 19: goto L_0x0030;
-                    case 20: goto L_0x0012;
-                    default: goto L_0x000d;
-                }
-            L_0x000d:
-                boolean r1 = super.onTransact(r7, r8, r9, r10)
-                return r1
-            L_0x0012:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                int r4 = r8.readInt()
-                if (r4 == 0) goto L_0x0028
-                android.os.Parcelable$Creator<android.hardware.camera2.params.OutputConfiguration> r1 = android.hardware.camera2.params.OutputConfiguration.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.hardware.camera2.params.OutputConfiguration r1 = (android.hardware.camera2.params.OutputConfiguration) r1
-                goto L_0x0029
-            L_0x0028:
-            L_0x0029:
-                r6.finalizeOutputConfigurations(r3, r1)
-                r9.writeNoException()
-                return r2
-            L_0x0030:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                int r4 = r8.readInt()
-                if (r4 == 0) goto L_0x0046
-                android.os.Parcelable$Creator<android.hardware.camera2.params.OutputConfiguration> r1 = android.hardware.camera2.params.OutputConfiguration.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.hardware.camera2.params.OutputConfiguration r1 = (android.hardware.camera2.params.OutputConfiguration) r1
-                goto L_0x0047
-            L_0x0046:
-            L_0x0047:
-                r6.updateOutputConfiguration(r3, r1)
-                r9.writeNoException()
-                return r2
-            L_0x004e:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                int r3 = r8.readInt()
-                r6.prepare2(r1, r3)
-                r9.writeNoException()
-                return r2
-            L_0x0060:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                r6.tearDown(r1)
-                r9.writeNoException()
-                return r2
-            L_0x006e:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                r6.prepare(r1)
-                r9.writeNoException()
-                return r2
-            L_0x007c:
-                r8.enforceInterface(r0)
-                long r3 = r6.flush()
-                r9.writeNoException()
-                r9.writeLong(r3)
-                return r2
-            L_0x008a:
-                r8.enforceInterface(r0)
-                r6.waitUntilIdle()
-                r9.writeNoException()
-                return r2
-            L_0x0094:
-                r8.enforceInterface(r0)
-                android.hardware.camera2.impl.CameraMetadataNative r1 = r6.getCameraInfo()
-                r9.writeNoException()
-                if (r1 == 0) goto L_0x00a7
-                r9.writeInt(r2)
-                r1.writeToParcel(r9, r2)
-                goto L_0x00aa
-            L_0x00a7:
-                r9.writeInt(r3)
-            L_0x00aa:
-                return r2
-            L_0x00ab:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                android.hardware.camera2.impl.CameraMetadataNative r4 = r6.createDefaultRequest(r1)
-                r9.writeNoException()
-                if (r4 == 0) goto L_0x00c2
-                r9.writeInt(r2)
-                r4.writeToParcel(r9, r2)
-                goto L_0x00c5
-            L_0x00c2:
-                r9.writeInt(r3)
-            L_0x00c5:
-                return r2
-            L_0x00c6:
-                r8.enforceInterface(r0)
-                android.view.Surface r1 = r6.getInputSurface()
-                r9.writeNoException()
-                if (r1 == 0) goto L_0x00d9
-                r9.writeInt(r2)
-                r1.writeToParcel(r9, r2)
-                goto L_0x00dc
-            L_0x00d9:
-                r9.writeInt(r3)
-            L_0x00dc:
-                return r2
-            L_0x00dd:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                int r3 = r8.readInt()
-                int r4 = r8.readInt()
-                int r5 = r6.createInputStream(r1, r3, r4)
-                r9.writeNoException()
-                r9.writeInt(r5)
-                return r2
-            L_0x00f7:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x0109
-                android.os.Parcelable$Creator<android.hardware.camera2.params.OutputConfiguration> r1 = android.hardware.camera2.params.OutputConfiguration.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.hardware.camera2.params.OutputConfiguration r1 = (android.hardware.camera2.params.OutputConfiguration) r1
-                goto L_0x010a
-            L_0x0109:
-            L_0x010a:
-                int r3 = r6.createStream(r1)
-                r9.writeNoException()
-                r9.writeInt(r3)
-                return r2
-            L_0x0115:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                r6.deleteStream(r1)
-                r9.writeNoException()
-                return r2
-            L_0x0123:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x0135
-                android.os.Parcelable$Creator<android.hardware.camera2.params.SessionConfiguration> r1 = android.hardware.camera2.params.SessionConfiguration.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.hardware.camera2.params.SessionConfiguration r1 = (android.hardware.camera2.params.SessionConfiguration) r1
-                goto L_0x0136
-            L_0x0135:
-            L_0x0136:
-                boolean r3 = r6.isSessionConfigurationSupported(r1)
-                r9.writeNoException()
-                r9.writeInt(r3)
-                return r2
-            L_0x0141:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                int r4 = r8.readInt()
-                if (r4 == 0) goto L_0x0157
-                android.os.Parcelable$Creator<android.hardware.camera2.impl.CameraMetadataNative> r1 = android.hardware.camera2.impl.CameraMetadataNative.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.hardware.camera2.impl.CameraMetadataNative r1 = (android.hardware.camera2.impl.CameraMetadataNative) r1
-                goto L_0x0158
-            L_0x0157:
-            L_0x0158:
-                r6.endConfigure(r3, r1)
-                r9.writeNoException()
-                return r2
-            L_0x015f:
-                r8.enforceInterface(r0)
-                r6.beginConfigure()
-                r9.writeNoException()
-                return r2
-            L_0x0169:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                long r3 = r6.cancelRequest(r1)
-                r9.writeNoException()
-                r9.writeLong(r3)
-                return r2
-            L_0x017b:
-                r8.enforceInterface(r0)
-                android.os.Parcelable$Creator<android.hardware.camera2.CaptureRequest> r1 = android.hardware.camera2.CaptureRequest.CREATOR
-                java.lang.Object[] r1 = r8.createTypedArray(r1)
-                android.hardware.camera2.CaptureRequest[] r1 = (android.hardware.camera2.CaptureRequest[]) r1
-                int r4 = r8.readInt()
-                if (r4 == 0) goto L_0x018e
-                r4 = r2
-                goto L_0x018f
-            L_0x018e:
-                r4 = r3
-            L_0x018f:
-                android.hardware.camera2.utils.SubmitInfo r5 = r6.submitRequestList(r1, r4)
-                r9.writeNoException()
-                if (r5 == 0) goto L_0x019f
-                r9.writeInt(r2)
-                r5.writeToParcel(r9, r2)
-                goto L_0x01a2
-            L_0x019f:
-                r9.writeInt(r3)
-            L_0x01a2:
-                return r2
-            L_0x01a3:
-                r8.enforceInterface(r0)
-                int r4 = r8.readInt()
-                if (r4 == 0) goto L_0x01b5
-                android.os.Parcelable$Creator<android.hardware.camera2.CaptureRequest> r1 = android.hardware.camera2.CaptureRequest.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.hardware.camera2.CaptureRequest r1 = (android.hardware.camera2.CaptureRequest) r1
-                goto L_0x01b6
-            L_0x01b5:
-            L_0x01b6:
-                int r4 = r8.readInt()
-                if (r4 == 0) goto L_0x01be
-                r4 = r2
-                goto L_0x01bf
-            L_0x01be:
-                r4 = r3
-            L_0x01bf:
-                android.hardware.camera2.utils.SubmitInfo r5 = r6.submitRequest(r1, r4)
-                r9.writeNoException()
-                if (r5 == 0) goto L_0x01cf
-                r9.writeInt(r2)
-                r5.writeToParcel(r9, r2)
-                goto L_0x01d2
-            L_0x01cf:
-                r9.writeInt(r3)
-            L_0x01d2:
-                return r2
-            L_0x01d3:
-                r8.enforceInterface(r0)
-                r6.disconnect()
-                r9.writeNoException()
-                return r2
-            L_0x01dd:
-                r9.writeString(r0)
-                return r2
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.hardware.camera2.ICameraDeviceUser.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    disconnect();
+                    reply.writeNoException();
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    CaptureRequest _arg0 = data.readInt() != 0 ? CaptureRequest.CREATOR.createFromParcel(data) : null;
+                    boolean _arg1 = data.readInt() != 0;
+                    SubmitInfo _result = submitRequest(_arg0, _arg1);
+                    reply.writeNoException();
+                    if (_result != null) {
+                        reply.writeInt(1);
+                        _result.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    CaptureRequest[] _arg02 = (CaptureRequest[]) data.createTypedArray(CaptureRequest.CREATOR);
+                    boolean _arg12 = data.readInt() != 0;
+                    SubmitInfo _result2 = submitRequestList(_arg02, _arg12);
+                    reply.writeNoException();
+                    if (_result2 != null) {
+                        reply.writeInt(1);
+                        _result2.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg03 = data.readInt();
+                    long _result3 = cancelRequest(_arg03);
+                    reply.writeNoException();
+                    reply.writeLong(_result3);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    beginConfigure();
+                    reply.writeNoException();
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg04 = data.readInt();
+                    CameraMetadataNative _arg13 = data.readInt() != 0 ? CameraMetadataNative.CREATOR.createFromParcel(data) : null;
+                    endConfigure(_arg04, _arg13);
+                    reply.writeNoException();
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    SessionConfiguration _arg05 = data.readInt() != 0 ? SessionConfiguration.CREATOR.createFromParcel(data) : null;
+                    boolean isSessionConfigurationSupported = isSessionConfigurationSupported(_arg05);
+                    reply.writeNoException();
+                    reply.writeInt(isSessionConfigurationSupported ? 1 : 0);
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg06 = data.readInt();
+                    deleteStream(_arg06);
+                    reply.writeNoException();
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    OutputConfiguration _arg07 = data.readInt() != 0 ? OutputConfiguration.CREATOR.createFromParcel(data) : null;
+                    int _result4 = createStream(_arg07);
+                    reply.writeNoException();
+                    reply.writeInt(_result4);
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg08 = data.readInt();
+                    int _arg14 = data.readInt();
+                    int _arg2 = data.readInt();
+                    int _result5 = createInputStream(_arg08, _arg14, _arg2);
+                    reply.writeNoException();
+                    reply.writeInt(_result5);
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    Surface _result6 = getInputSurface();
+                    reply.writeNoException();
+                    if (_result6 != null) {
+                        reply.writeInt(1);
+                        _result6.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg09 = data.readInt();
+                    CameraMetadataNative _result7 = createDefaultRequest(_arg09);
+                    reply.writeNoException();
+                    if (_result7 != null) {
+                        reply.writeInt(1);
+                        _result7.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    CameraMetadataNative _result8 = getCameraInfo();
+                    reply.writeNoException();
+                    if (_result8 != null) {
+                        reply.writeInt(1);
+                        _result8.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 14:
+                    data.enforceInterface(DESCRIPTOR);
+                    waitUntilIdle();
+                    reply.writeNoException();
+                    return true;
+                case 15:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _result9 = flush();
+                    reply.writeNoException();
+                    reply.writeLong(_result9);
+                    return true;
+                case 16:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg010 = data.readInt();
+                    prepare(_arg010);
+                    reply.writeNoException();
+                    return true;
+                case 17:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg011 = data.readInt();
+                    tearDown(_arg011);
+                    reply.writeNoException();
+                    return true;
+                case 18:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg012 = data.readInt();
+                    int _arg15 = data.readInt();
+                    prepare2(_arg012, _arg15);
+                    reply.writeNoException();
+                    return true;
+                case 19:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg013 = data.readInt();
+                    OutputConfiguration _arg16 = data.readInt() != 0 ? OutputConfiguration.CREATOR.createFromParcel(data) : null;
+                    updateOutputConfiguration(_arg013, _arg16);
+                    reply.writeNoException();
+                    return true;
+                case 20:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg014 = data.readInt();
+                    OutputConfiguration _arg17 = data.readInt() != 0 ? OutputConfiguration.CREATOR.createFromParcel(data) : null;
+                    finalizeOutputConfigurations(_arg014, _arg17);
+                    reply.writeNoException();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements ICameraDeviceUser {
             public static ICameraDeviceUser sDefaultImpl;
             private IBinder mRemote;
@@ -515,6 +436,7 @@ public interface ICameraDeviceUser extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -523,24 +445,25 @@ public interface ICameraDeviceUser extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.hardware.camera2.ICameraDeviceUser
             public void disconnect() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(1, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().disconnect();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().disconnect();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.camera2.ICameraDeviceUser
             public SubmitInfo submitRequest(CaptureRequest request, boolean streaming) throws RemoteException {
                 SubmitInfo _result;
                 Parcel _data = Parcel.obtain();
@@ -553,8 +476,9 @@ public interface ICameraDeviceUser extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(streaming);
-                    if (!this.mRemote.transact(2, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(streaming ? 1 : 0);
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().submitRequest(request, streaming);
                     }
                     _reply.readException();
@@ -563,16 +487,14 @@ public interface ICameraDeviceUser extends IInterface {
                     } else {
                         _result = null;
                     }
-                    SubmitInfo _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.camera2.ICameraDeviceUser
             public SubmitInfo submitRequestList(CaptureRequest[] requestList, boolean streaming) throws RemoteException {
                 SubmitInfo _result;
                 Parcel _data = Parcel.obtain();
@@ -580,8 +502,9 @@ public interface ICameraDeviceUser extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeTypedArray(requestList, 0);
-                    _data.writeInt(streaming);
-                    if (!this.mRemote.transact(3, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(streaming ? 1 : 0);
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().submitRequestList(requestList, streaming);
                     }
                     _reply.readException();
@@ -590,29 +513,6 @@ public interface ICameraDeviceUser extends IInterface {
                     } else {
                         _result = null;
                     }
-                    SubmitInfo _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public long cancelRequest(int requestId) throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(requestId);
-                    if (!this.mRemote.transact(4, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
-                        return Stub.getDefaultImpl().cancelRequest(requestId);
-                    }
-                    _reply.readException();
-                    long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -620,24 +520,45 @@ public interface ICameraDeviceUser extends IInterface {
                 }
             }
 
-            public void beginConfigure() throws RemoteException {
+            @Override // android.hardware.camera2.ICameraDeviceUser
+            public long cancelRequest(int requestId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(5, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                        _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
+                    _data.writeInt(requestId);
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        return Stub.getDefaultImpl().cancelRequest(requestId);
                     }
-                    Stub.getDefaultImpl().beginConfigure();
+                    _reply.readException();
+                    long _result = _reply.readLong();
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.camera2.ICameraDeviceUser
+            public void beginConfigure() throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().beginConfigure();
+                    } else {
+                        _reply.readException();
+                    }
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // android.hardware.camera2.ICameraDeviceUser
             public void endConfigure(int operatingMode, CameraMetadataNative sessionParams) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -650,40 +571,36 @@ public interface ICameraDeviceUser extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(6, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().endConfigure(operatingMode, sessionParams);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().endConfigure(operatingMode, sessionParams);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.camera2.ICameraDeviceUser
             public boolean isSessionConfigurationSupported(SessionConfiguration sessionConfiguration) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (sessionConfiguration != null) {
                         _data.writeInt(1);
                         sessionConfiguration.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(7, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isSessionConfigurationSupported(sessionConfiguration);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -691,25 +608,26 @@ public interface ICameraDeviceUser extends IInterface {
                 }
             }
 
+            @Override // android.hardware.camera2.ICameraDeviceUser
             public void deleteStream(int streamId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(streamId);
-                    if (this.mRemote.transact(8, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().deleteStream(streamId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().deleteStream(streamId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.camera2.ICameraDeviceUser
             public int createStream(OutputConfiguration outputConfiguration) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -721,13 +639,12 @@ public interface ICameraDeviceUser extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(9, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(9, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().createStream(outputConfiguration);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -735,6 +652,7 @@ public interface ICameraDeviceUser extends IInterface {
                 }
             }
 
+            @Override // android.hardware.camera2.ICameraDeviceUser
             public int createInputStream(int width, int height, int format) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -743,13 +661,12 @@ public interface ICameraDeviceUser extends IInterface {
                     _data.writeInt(width);
                     _data.writeInt(height);
                     _data.writeInt(format);
-                    if (!this.mRemote.transact(10, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(10, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().createInputStream(width, height, format);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -757,13 +674,15 @@ public interface ICameraDeviceUser extends IInterface {
                 }
             }
 
+            @Override // android.hardware.camera2.ICameraDeviceUser
             public Surface getInputSurface() throws RemoteException {
                 Surface _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(11, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(11, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getInputSurface();
                     }
                     _reply.readException();
@@ -772,16 +691,14 @@ public interface ICameraDeviceUser extends IInterface {
                     } else {
                         _result = null;
                     }
-                    Surface _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.camera2.ICameraDeviceUser
             public CameraMetadataNative createDefaultRequest(int templateId) throws RemoteException {
                 CameraMetadataNative _result;
                 Parcel _data = Parcel.obtain();
@@ -789,7 +706,8 @@ public interface ICameraDeviceUser extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(templateId);
-                    if (!this.mRemote.transact(12, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(12, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().createDefaultRequest(templateId);
                     }
                     _reply.readException();
@@ -798,23 +716,22 @@ public interface ICameraDeviceUser extends IInterface {
                     } else {
                         _result = null;
                     }
-                    CameraMetadataNative _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.camera2.ICameraDeviceUser
             public CameraMetadataNative getCameraInfo() throws RemoteException {
                 CameraMetadataNative _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(13, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(13, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCameraInfo();
                     }
                     _reply.readException();
@@ -823,46 +740,6 @@ public interface ICameraDeviceUser extends IInterface {
                     } else {
                         _result = null;
                     }
-                    CameraMetadataNative _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public void waitUntilIdle() throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(14, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                        _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
-                    }
-                    Stub.getDefaultImpl().waitUntilIdle();
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public long flush() throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(15, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
-                        return Stub.getDefaultImpl().flush();
-                    }
-                    _reply.readException();
-                    long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -870,44 +747,82 @@ public interface ICameraDeviceUser extends IInterface {
                 }
             }
 
+            @Override // android.hardware.camera2.ICameraDeviceUser
+            public void waitUntilIdle() throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    boolean _status = this.mRemote.transact(14, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().waitUntilIdle();
+                    } else {
+                        _reply.readException();
+                    }
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // android.hardware.camera2.ICameraDeviceUser
+            public long flush() throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    boolean _status = this.mRemote.transact(15, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        return Stub.getDefaultImpl().flush();
+                    }
+                    _reply.readException();
+                    long _result = _reply.readLong();
+                    return _result;
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // android.hardware.camera2.ICameraDeviceUser
             public void prepare(int streamId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(streamId);
-                    if (this.mRemote.transact(16, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(16, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().prepare(streamId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().prepare(streamId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.camera2.ICameraDeviceUser
             public void tearDown(int streamId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(streamId);
-                    if (this.mRemote.transact(17, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(17, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().tearDown(streamId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().tearDown(streamId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.camera2.ICameraDeviceUser
             public void prepare2(int maxCount, int streamId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -915,19 +830,19 @@ public interface ICameraDeviceUser extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(maxCount);
                     _data.writeInt(streamId);
-                    if (this.mRemote.transact(18, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(18, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().prepare2(maxCount, streamId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().prepare2(maxCount, streamId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.camera2.ICameraDeviceUser
             public void updateOutputConfiguration(int streamId, OutputConfiguration outputConfiguration) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -940,19 +855,19 @@ public interface ICameraDeviceUser extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(19, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(19, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().updateOutputConfiguration(streamId, outputConfiguration);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().updateOutputConfiguration(streamId, outputConfiguration);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.camera2.ICameraDeviceUser
             public void finalizeOutputConfigurations(int streamId, OutputConfiguration outputConfiguration) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -965,13 +880,12 @@ public interface ICameraDeviceUser extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(20, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(20, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().finalizeOutputConfigurations(streamId, outputConfiguration);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().finalizeOutputConfigurations(streamId, outputConfiguration);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -980,11 +894,11 @@ public interface ICameraDeviceUser extends IInterface {
         }
 
         public static boolean setDefaultImpl(ICameraDeviceUser impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static ICameraDeviceUser getDefaultImpl() {

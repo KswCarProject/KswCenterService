@@ -19,122 +19,134 @@ import android.util.Log;
 import android.view.Surface;
 import java.io.IOException;
 
+/* loaded from: classes.dex */
 public class MediaSource extends Filter {
     private static final int NEWFRAME_TIMEOUT = 100;
     private static final int NEWFRAME_TIMEOUT_REPEAT = 10;
     private static final int PREP_TIMEOUT = 100;
     private static final int PREP_TIMEOUT_REPEAT = 100;
     private static final String TAG = "MediaSource";
-    private static final float[] mSourceCoords_0 = {1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f};
-    private static final float[] mSourceCoords_180 = {0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f};
-    private static final float[] mSourceCoords_270 = {0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f};
-    private static final float[] mSourceCoords_90 = {1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f};
-    /* access modifiers changed from: private */
-    public boolean mCompleted;
+    private boolean mCompleted;
     @GenerateFieldPort(hasDefault = true, name = "context")
-    private Context mContext = null;
+    private Context mContext;
     private ShaderProgram mFrameExtractor;
-    private final String mFrameShader = "#extension GL_OES_EGL_image_external : require\nprecision mediump float;\nuniform samplerExternalOES tex_sampler_0;\nvarying vec2 v_texcoord;\nvoid main() {\n  gl_FragColor = texture2D(tex_sampler_0, v_texcoord);\n}\n";
-    /* access modifiers changed from: private */
-    public boolean mGotSize;
-    /* access modifiers changed from: private */
-    public int mHeight;
-    /* access modifiers changed from: private */
-    public final boolean mLogVerbose = Log.isLoggable(TAG, 2);
+    private final String mFrameShader;
+    private boolean mGotSize;
+    private int mHeight;
+    private final boolean mLogVerbose;
     @GenerateFieldPort(hasDefault = true, name = "loop")
-    private boolean mLooping = true;
+    private boolean mLooping;
     private GLFrame mMediaFrame;
     private MediaPlayer mMediaPlayer;
-    /* access modifiers changed from: private */
-    public boolean mNewFrameAvailable = false;
-    /* access modifiers changed from: private */
+    private boolean mNewFrameAvailable;
     @GenerateFieldPort(hasDefault = true, name = "orientation")
-    public int mOrientation = 0;
+    private int mOrientation;
     private boolean mOrientationUpdated;
-    /* access modifiers changed from: private */
-    public MutableFrameFormat mOutputFormat;
+    private MutableFrameFormat mOutputFormat;
     private boolean mPaused;
     private boolean mPlaying;
-    /* access modifiers changed from: private */
-    public boolean mPrepared;
+    private boolean mPrepared;
     @GenerateFieldPort(hasDefault = true, name = "sourceIsUrl")
-    private boolean mSelectedIsUrl = false;
+    private boolean mSelectedIsUrl;
     @GenerateFieldPort(hasDefault = true, name = "sourceAsset")
-    private AssetFileDescriptor mSourceAsset = null;
+    private AssetFileDescriptor mSourceAsset;
     @GenerateFieldPort(hasDefault = true, name = "sourceUrl")
-    private String mSourceUrl = "";
+    private String mSourceUrl;
     private SurfaceTexture mSurfaceTexture;
     @GenerateFieldPort(hasDefault = true, name = "volume")
-    private float mVolume = 0.0f;
+    private float mVolume;
     @GenerateFinalPort(hasDefault = true, name = "waitForNewFrame")
-    private boolean mWaitForNewFrame = true;
-    /* access modifiers changed from: private */
-    public int mWidth;
-    private MediaPlayer.OnCompletionListener onCompletionListener = new MediaPlayer.OnCompletionListener() {
-        public void onCompletion(MediaPlayer mp) {
-            if (MediaSource.this.mLogVerbose) {
-                Log.v(MediaSource.TAG, "MediaPlayer has completed playback");
-            }
-            synchronized (MediaSource.this) {
-                boolean unused = MediaSource.this.mCompleted = true;
-            }
-        }
-    };
-    private SurfaceTexture.OnFrameAvailableListener onMediaFrameAvailableListener = new SurfaceTexture.OnFrameAvailableListener() {
-        public void onFrameAvailable(SurfaceTexture surfaceTexture) {
-            if (MediaSource.this.mLogVerbose) {
-                Log.v(MediaSource.TAG, "New frame from media player");
-            }
-            synchronized (MediaSource.this) {
-                if (MediaSource.this.mLogVerbose) {
-                    Log.v(MediaSource.TAG, "New frame: notify");
-                }
-                boolean unused = MediaSource.this.mNewFrameAvailable = true;
-                MediaSource.this.notify();
-                if (MediaSource.this.mLogVerbose) {
-                    Log.v(MediaSource.TAG, "New frame: notify done");
-                }
-            }
-        }
-    };
-    private MediaPlayer.OnPreparedListener onPreparedListener = new MediaPlayer.OnPreparedListener() {
-        public void onPrepared(MediaPlayer mp) {
-            if (MediaSource.this.mLogVerbose) {
-                Log.v(MediaSource.TAG, "MediaPlayer is prepared");
-            }
-            synchronized (MediaSource.this) {
-                boolean unused = MediaSource.this.mPrepared = true;
-                MediaSource.this.notify();
-            }
-        }
-    };
-    private MediaPlayer.OnVideoSizeChangedListener onVideoSizeChangedListener = new MediaPlayer.OnVideoSizeChangedListener() {
-        public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
-            if (MediaSource.this.mLogVerbose) {
-                Log.v(MediaSource.TAG, "MediaPlayer sent dimensions: " + width + " x " + height);
-            }
-            if (!MediaSource.this.mGotSize) {
-                if (MediaSource.this.mOrientation == 0 || MediaSource.this.mOrientation == 180) {
-                    MediaSource.this.mOutputFormat.setDimensions(width, height);
-                } else {
-                    MediaSource.this.mOutputFormat.setDimensions(height, width);
-                }
-                int unused = MediaSource.this.mWidth = width;
-                int unused2 = MediaSource.this.mHeight = height;
-            } else if (!(MediaSource.this.mOutputFormat.getWidth() == width && MediaSource.this.mOutputFormat.getHeight() == height)) {
-                Log.e(MediaSource.TAG, "Multiple video size change events received!");
-            }
-            synchronized (MediaSource.this) {
-                boolean unused3 = MediaSource.this.mGotSize = true;
-                MediaSource.this.notify();
-            }
-        }
-    };
+    private boolean mWaitForNewFrame;
+    private int mWidth;
+    private MediaPlayer.OnCompletionListener onCompletionListener;
+    private SurfaceTexture.OnFrameAvailableListener onMediaFrameAvailableListener;
+    private MediaPlayer.OnPreparedListener onPreparedListener;
+    private MediaPlayer.OnVideoSizeChangedListener onVideoSizeChangedListener;
+    private static final float[] mSourceCoords_0 = {1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f};
+    private static final float[] mSourceCoords_270 = {0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f};
+    private static final float[] mSourceCoords_180 = {0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f};
+    private static final float[] mSourceCoords_90 = {1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f};
 
     public MediaSource(String name) {
         super(name);
+        this.mSourceUrl = "";
+        this.mSourceAsset = null;
+        this.mContext = null;
+        this.mSelectedIsUrl = false;
+        this.mWaitForNewFrame = true;
+        this.mLooping = true;
+        this.mVolume = 0.0f;
+        this.mOrientation = 0;
+        this.mFrameShader = "#extension GL_OES_EGL_image_external : require\nprecision mediump float;\nuniform samplerExternalOES tex_sampler_0;\nvarying vec2 v_texcoord;\nvoid main() {\n  gl_FragColor = texture2D(tex_sampler_0, v_texcoord);\n}\n";
+        this.onVideoSizeChangedListener = new MediaPlayer.OnVideoSizeChangedListener() { // from class: android.filterpacks.videosrc.MediaSource.1
+            @Override // android.media.MediaPlayer.OnVideoSizeChangedListener
+            public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
+                if (MediaSource.this.mLogVerbose) {
+                    Log.m66v(MediaSource.TAG, "MediaPlayer sent dimensions: " + width + " x " + height);
+                }
+                if (!MediaSource.this.mGotSize) {
+                    if (MediaSource.this.mOrientation == 0 || MediaSource.this.mOrientation == 180) {
+                        MediaSource.this.mOutputFormat.setDimensions(width, height);
+                    } else {
+                        MediaSource.this.mOutputFormat.setDimensions(height, width);
+                    }
+                    MediaSource.this.mWidth = width;
+                    MediaSource.this.mHeight = height;
+                } else if (MediaSource.this.mOutputFormat.getWidth() != width || MediaSource.this.mOutputFormat.getHeight() != height) {
+                    Log.m70e(MediaSource.TAG, "Multiple video size change events received!");
+                }
+                synchronized (MediaSource.this) {
+                    MediaSource.this.mGotSize = true;
+                    MediaSource.this.notify();
+                }
+            }
+        };
+        this.onPreparedListener = new MediaPlayer.OnPreparedListener() { // from class: android.filterpacks.videosrc.MediaSource.2
+            @Override // android.media.MediaPlayer.OnPreparedListener
+            public void onPrepared(MediaPlayer mp) {
+                if (MediaSource.this.mLogVerbose) {
+                    Log.m66v(MediaSource.TAG, "MediaPlayer is prepared");
+                }
+                synchronized (MediaSource.this) {
+                    MediaSource.this.mPrepared = true;
+                    MediaSource.this.notify();
+                }
+            }
+        };
+        this.onCompletionListener = new MediaPlayer.OnCompletionListener() { // from class: android.filterpacks.videosrc.MediaSource.3
+            @Override // android.media.MediaPlayer.OnCompletionListener
+            public void onCompletion(MediaPlayer mp) {
+                if (MediaSource.this.mLogVerbose) {
+                    Log.m66v(MediaSource.TAG, "MediaPlayer has completed playback");
+                }
+                synchronized (MediaSource.this) {
+                    MediaSource.this.mCompleted = true;
+                }
+            }
+        };
+        this.onMediaFrameAvailableListener = new SurfaceTexture.OnFrameAvailableListener() { // from class: android.filterpacks.videosrc.MediaSource.4
+            @Override // android.graphics.SurfaceTexture.OnFrameAvailableListener
+            public void onFrameAvailable(SurfaceTexture surfaceTexture) {
+                if (MediaSource.this.mLogVerbose) {
+                    Log.m66v(MediaSource.TAG, "New frame from media player");
+                }
+                synchronized (MediaSource.this) {
+                    if (MediaSource.this.mLogVerbose) {
+                        Log.m66v(MediaSource.TAG, "New frame: notify");
+                    }
+                    MediaSource.this.mNewFrameAvailable = true;
+                    MediaSource.this.notify();
+                    if (MediaSource.this.mLogVerbose) {
+                        Log.m66v(MediaSource.TAG, "New frame: notify done");
+                    }
+                }
+            }
+        };
+        this.mNewFrameAvailable = false;
+        this.mLogVerbose = Log.isLoggable(TAG, 2);
     }
 
+    @Override // android.filterfw.core.Filter
     public void setupPorts() {
         addOutputPort("video", ImageFormat.create(3, 3));
     }
@@ -143,135 +155,141 @@ public class MediaSource extends Filter {
         this.mOutputFormat = ImageFormat.create(3, 3);
     }
 
-    /* access modifiers changed from: protected */
-    public void prepare(FilterContext context) {
+    @Override // android.filterfw.core.Filter
+    protected void prepare(FilterContext context) {
         if (this.mLogVerbose) {
-            Log.v(TAG, "Preparing MediaSource");
+            Log.m66v(TAG, "Preparing MediaSource");
         }
         this.mFrameExtractor = new ShaderProgram(context, "#extension GL_OES_EGL_image_external : require\nprecision mediump float;\nuniform samplerExternalOES tex_sampler_0;\nvarying vec2 v_texcoord;\nvoid main() {\n  gl_FragColor = texture2D(tex_sampler_0, v_texcoord);\n}\n");
         this.mFrameExtractor.setSourceRect(0.0f, 1.0f, 1.0f, -1.0f);
         createFormats();
     }
 
+    @Override // android.filterfw.core.Filter
     public void open(FilterContext context) {
         if (this.mLogVerbose) {
-            Log.v(TAG, "Opening MediaSource");
+            Log.m66v(TAG, "Opening MediaSource");
             if (this.mSelectedIsUrl) {
-                Log.v(TAG, "Current URL is " + this.mSourceUrl);
+                Log.m66v(TAG, "Current URL is " + this.mSourceUrl);
             } else {
-                Log.v(TAG, "Current source is Asset!");
+                Log.m66v(TAG, "Current source is Asset!");
             }
         }
-        this.mMediaFrame = (GLFrame) context.getFrameManager().newBoundFrame(this.mOutputFormat, 104, 0);
+        this.mMediaFrame = (GLFrame) context.getFrameManager().newBoundFrame(this.mOutputFormat, 104, 0L);
         this.mSurfaceTexture = new SurfaceTexture(this.mMediaFrame.getTextureId());
         if (!setupMediaPlayer(this.mSelectedIsUrl)) {
             throw new RuntimeException("Error setting up MediaPlayer!");
         }
     }
 
+    @Override // android.filterfw.core.Filter
     public void process(FilterContext context) {
         if (this.mLogVerbose) {
-            Log.v(TAG, "Processing new frame");
+            Log.m66v(TAG, "Processing new frame");
         }
         if (this.mMediaPlayer == null) {
             throw new NullPointerException("Unexpected null media player!");
-        } else if (this.mCompleted) {
+        }
+        if (this.mCompleted) {
             closeOutputPort("video");
-        } else {
-            if (!this.mPlaying) {
-                if (this.mLogVerbose) {
-                    Log.v(TAG, "Waiting for preparation to complete");
-                }
-                int waitCount = 0;
-                do {
-                    if (this.mGotSize == 0 || !this.mPrepared) {
-                        try {
-                            wait(100);
-                        } catch (InterruptedException e) {
-                        }
-                        if (this.mCompleted) {
-                            closeOutputPort("video");
-                            return;
-                        }
-                        waitCount++;
-                    } else {
-                        if (this.mLogVerbose) {
-                            Log.v(TAG, "Starting playback");
-                        }
-                        this.mMediaPlayer.start();
-                    }
-                } while (waitCount != 100);
-                this.mMediaPlayer.release();
-                throw new RuntimeException("MediaPlayer timed out while preparing!");
+            return;
+        }
+        if (!this.mPlaying) {
+            if (this.mLogVerbose) {
+                Log.m66v(TAG, "Waiting for preparation to complete");
             }
-            if (!this.mPaused || !this.mPlaying) {
-                if (this.mWaitForNewFrame) {
-                    if (this.mLogVerbose) {
-                        Log.v(TAG, "Waiting for new frame");
+            int waitCount = 0;
+            do {
+                if (!this.mGotSize || !this.mPrepared) {
+                    try {
+                        wait(100L);
+                    } catch (InterruptedException e) {
                     }
-                    int waitCount2 = 0;
-                    while (true) {
-                        int waitCount3 = waitCount2;
-                        if (this.mNewFrameAvailable != 0) {
-                            this.mNewFrameAvailable = false;
-                            if (this.mLogVerbose) {
-                                Log.v(TAG, "Got new frame");
+                    if (this.mCompleted) {
+                        closeOutputPort("video");
+                        return;
+                    }
+                    waitCount++;
+                } else {
+                    if (this.mLogVerbose) {
+                        Log.m66v(TAG, "Starting playback");
+                    }
+                    this.mMediaPlayer.start();
+                }
+            } while (waitCount != 100);
+            this.mMediaPlayer.release();
+            throw new RuntimeException("MediaPlayer timed out while preparing!");
+        }
+        if (!this.mPaused || !this.mPlaying) {
+            if (this.mWaitForNewFrame) {
+                if (this.mLogVerbose) {
+                    Log.m66v(TAG, "Waiting for new frame");
+                }
+                int waitCount2 = 0;
+                while (true) {
+                    int waitCount3 = waitCount2;
+                    if (!this.mNewFrameAvailable) {
+                        if (waitCount3 == 10) {
+                            if (this.mCompleted) {
+                                closeOutputPort("video");
+                                return;
                             }
-                        } else if (waitCount3 != 10) {
-                            try {
-                                wait(100);
-                            } catch (InterruptedException e2) {
-                                InterruptedException interruptedException = e2;
-                                if (this.mLogVerbose) {
-                                    Log.v(TAG, "interrupted");
-                                }
-                            }
-                            waitCount2 = waitCount3 + 1;
-                        } else if (this.mCompleted) {
-                            closeOutputPort("video");
-                            return;
-                        } else {
                             throw new RuntimeException("Timeout waiting for new frame!");
                         }
+                        try {
+                            wait(100L);
+                        } catch (InterruptedException e2) {
+                            if (this.mLogVerbose) {
+                                Log.m66v(TAG, "interrupted");
+                            }
+                        }
+                        waitCount2 = waitCount3 + 1;
+                    } else {
+                        this.mNewFrameAvailable = false;
+                        if (this.mLogVerbose) {
+                            Log.m66v(TAG, "Got new frame");
+                        }
                     }
                 }
-                this.mSurfaceTexture.updateTexImage();
-                this.mOrientationUpdated = true;
             }
-            if (this.mOrientationUpdated) {
-                float[] surfaceTransform = new float[16];
-                this.mSurfaceTexture.getTransformMatrix(surfaceTransform);
-                float[] sourceCoords = new float[16];
-                int i = this.mOrientation;
-                if (i == 90) {
-                    Matrix.multiplyMM(sourceCoords, 0, surfaceTransform, 0, mSourceCoords_90, 0);
-                } else if (i == 180) {
-                    Matrix.multiplyMM(sourceCoords, 0, surfaceTransform, 0, mSourceCoords_180, 0);
-                } else if (i != 270) {
-                    Matrix.multiplyMM(sourceCoords, 0, surfaceTransform, 0, mSourceCoords_0, 0);
-                } else {
-                    Matrix.multiplyMM(sourceCoords, 0, surfaceTransform, 0, mSourceCoords_270, 0);
-                }
-                if (this.mLogVerbose) {
-                    Log.v(TAG, "OrientationHint = " + this.mOrientation);
-                    Log.v(TAG, String.format("SetSourceRegion: %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f", new Object[]{Float.valueOf(sourceCoords[4]), Float.valueOf(sourceCoords[5]), Float.valueOf(sourceCoords[0]), Float.valueOf(sourceCoords[1]), Float.valueOf(sourceCoords[12]), Float.valueOf(sourceCoords[13]), Float.valueOf(sourceCoords[8]), Float.valueOf(sourceCoords[9])}));
-                }
-                this.mFrameExtractor.setSourceRegion(sourceCoords[4], sourceCoords[5], sourceCoords[0], sourceCoords[1], sourceCoords[12], sourceCoords[13], sourceCoords[8], sourceCoords[9]);
-                this.mOrientationUpdated = false;
-            }
-            Frame output = context.getFrameManager().newFrame(this.mOutputFormat);
-            this.mFrameExtractor.process((Frame) this.mMediaFrame, output);
-            long timestamp = this.mSurfaceTexture.getTimestamp();
-            if (this.mLogVerbose) {
-                Log.v(TAG, "Timestamp: " + (((double) timestamp) / 1.0E9d) + " s");
-            }
-            output.setTimestamp(timestamp);
-            pushOutput("video", output);
-            output.release();
-            this.mPlaying = true;
+            this.mSurfaceTexture.updateTexImage();
+            this.mOrientationUpdated = true;
         }
+        if (this.mOrientationUpdated) {
+            float[] surfaceTransform = new float[16];
+            this.mSurfaceTexture.getTransformMatrix(surfaceTransform);
+            float[] sourceCoords = new float[16];
+            int i = this.mOrientation;
+            if (i == 90) {
+                Matrix.multiplyMM(sourceCoords, 0, surfaceTransform, 0, mSourceCoords_90, 0);
+            } else if (i == 180) {
+                Matrix.multiplyMM(sourceCoords, 0, surfaceTransform, 0, mSourceCoords_180, 0);
+            } else if (i != 270) {
+                Matrix.multiplyMM(sourceCoords, 0, surfaceTransform, 0, mSourceCoords_0, 0);
+            } else {
+                Matrix.multiplyMM(sourceCoords, 0, surfaceTransform, 0, mSourceCoords_270, 0);
+            }
+            if (this.mLogVerbose) {
+                Log.m66v(TAG, "OrientationHint = " + this.mOrientation);
+                String temp = String.format("SetSourceRegion: %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f", Float.valueOf(sourceCoords[4]), Float.valueOf(sourceCoords[5]), Float.valueOf(sourceCoords[0]), Float.valueOf(sourceCoords[1]), Float.valueOf(sourceCoords[12]), Float.valueOf(sourceCoords[13]), Float.valueOf(sourceCoords[8]), Float.valueOf(sourceCoords[9]));
+                Log.m66v(TAG, temp);
+            }
+            this.mFrameExtractor.setSourceRegion(sourceCoords[4], sourceCoords[5], sourceCoords[0], sourceCoords[1], sourceCoords[12], sourceCoords[13], sourceCoords[8], sourceCoords[9]);
+            this.mOrientationUpdated = false;
+        }
+        Frame output = context.getFrameManager().newFrame(this.mOutputFormat);
+        this.mFrameExtractor.process(this.mMediaFrame, output);
+        long timestamp = this.mSurfaceTexture.getTimestamp();
+        if (this.mLogVerbose) {
+            Log.m66v(TAG, "Timestamp: " + (timestamp / 1.0E9d) + " s");
+        }
+        output.setTimestamp(timestamp);
+        pushOutput("video", output);
+        output.release();
+        this.mPlaying = true;
     }
 
+    @Override // android.filterfw.core.Filter
     public void close(FilterContext context) {
         if (this.mMediaPlayer.isPlaying()) {
             this.mMediaPlayer.stop();
@@ -287,24 +305,26 @@ public class MediaSource extends Filter {
         this.mSurfaceTexture.release();
         this.mSurfaceTexture = null;
         if (this.mLogVerbose) {
-            Log.v(TAG, "MediaSource closed");
+            Log.m66v(TAG, "MediaSource closed");
         }
     }
 
+    @Override // android.filterfw.core.Filter
     public void tearDown(FilterContext context) {
         if (this.mMediaFrame != null) {
             this.mMediaFrame.release();
         }
     }
 
+    @Override // android.filterfw.core.Filter
     public void fieldPortValueUpdated(String name, FilterContext context) {
         if (this.mLogVerbose) {
-            Log.v(TAG, "Parameter update");
+            Log.m66v(TAG, "Parameter update");
         }
         if (name.equals("sourceUrl")) {
             if (isOpen()) {
                 if (this.mLogVerbose) {
-                    Log.v(TAG, "Opening new source URL");
+                    Log.m66v(TAG, "Opening new source URL");
                 }
                 if (this.mSelectedIsUrl) {
                     setupMediaPlayer(this.mSelectedIsUrl);
@@ -313,7 +333,7 @@ public class MediaSource extends Filter {
         } else if (name.equals("sourceAsset")) {
             if (isOpen()) {
                 if (this.mLogVerbose) {
-                    Log.v(TAG, "Opening new source FD");
+                    Log.m66v(TAG, "Opening new source FD");
                 }
                 if (!this.mSelectedIsUrl) {
                     setupMediaPlayer(this.mSelectedIsUrl);
@@ -327,10 +347,10 @@ public class MediaSource extends Filter {
             if (isOpen()) {
                 if (this.mSelectedIsUrl) {
                     if (this.mLogVerbose) {
-                        Log.v(TAG, "Opening new source URL");
+                        Log.m66v(TAG, "Opening new source URL");
                     }
                 } else if (this.mLogVerbose) {
-                    Log.v(TAG, "Opening new source Asset");
+                    Log.m66v(TAG, "Opening new source Asset");
                 }
                 setupMediaPlayer(this.mSelectedIsUrl);
             }
@@ -367,48 +387,35 @@ public class MediaSource extends Filter {
         this.mCompleted = false;
         this.mNewFrameAvailable = false;
         if (this.mLogVerbose) {
-            Log.v(TAG, "Setting up playback.");
+            Log.m66v(TAG, "Setting up playback.");
         }
         if (this.mMediaPlayer != null) {
             if (this.mLogVerbose) {
-                Log.v(TAG, "Resetting existing MediaPlayer.");
+                Log.m66v(TAG, "Resetting existing MediaPlayer.");
             }
             this.mMediaPlayer.reset();
         } else {
             if (this.mLogVerbose) {
-                Log.v(TAG, "Creating new MediaPlayer.");
+                Log.m66v(TAG, "Creating new MediaPlayer.");
             }
             this.mMediaPlayer = new MediaPlayer();
         }
-        if (this.mMediaPlayer != null) {
+        if (this.mMediaPlayer == null) {
+            throw new RuntimeException("Unable to create a MediaPlayer!");
+        }
+        try {
             if (useUrl) {
-                try {
-                    if (this.mLogVerbose) {
-                        Log.v(TAG, "Setting MediaPlayer source to URI " + this.mSourceUrl);
-                    }
-                    if (this.mContext == null) {
-                        this.mMediaPlayer.setDataSource(this.mSourceUrl);
-                    } else {
-                        this.mMediaPlayer.setDataSource(this.mContext, Uri.parse(this.mSourceUrl.toString()));
-                    }
-                } catch (IOException e) {
-                    this.mMediaPlayer.release();
-                    this.mMediaPlayer = null;
-                    if (useUrl) {
-                        throw new RuntimeException(String.format("Unable to set MediaPlayer to URL %s!", new Object[]{this.mSourceUrl}), e);
-                    }
-                    throw new RuntimeException(String.format("Unable to set MediaPlayer to asset %s!", new Object[]{this.mSourceAsset}), e);
-                } catch (IllegalArgumentException e2) {
-                    this.mMediaPlayer.release();
-                    this.mMediaPlayer = null;
-                    if (useUrl) {
-                        throw new RuntimeException(String.format("Unable to set MediaPlayer to URL %s!", new Object[]{this.mSourceUrl}), e2);
-                    }
-                    throw new RuntimeException(String.format("Unable to set MediaPlayer to asset %s!", new Object[]{this.mSourceAsset}), e2);
+                if (this.mLogVerbose) {
+                    Log.m66v(TAG, "Setting MediaPlayer source to URI " + this.mSourceUrl);
+                }
+                if (this.mContext == null) {
+                    this.mMediaPlayer.setDataSource(this.mSourceUrl);
+                } else {
+                    this.mMediaPlayer.setDataSource(this.mContext, Uri.parse(this.mSourceUrl.toString()));
                 }
             } else {
                 if (this.mLogVerbose) {
-                    Log.v(TAG, "Setting MediaPlayer source to asset " + this.mSourceAsset);
+                    Log.m66v(TAG, "Setting MediaPlayer source to asset " + this.mSourceAsset);
                 }
                 this.mMediaPlayer.setDataSource(this.mSourceAsset.getFileDescriptor(), this.mSourceAsset.getStartOffset(), this.mSourceAsset.getLength());
             }
@@ -422,11 +429,23 @@ public class MediaSource extends Filter {
             this.mMediaPlayer.setOnCompletionListener(this.onCompletionListener);
             this.mSurfaceTexture.setOnFrameAvailableListener(this.onMediaFrameAvailableListener);
             if (this.mLogVerbose) {
-                Log.v(TAG, "Preparing MediaPlayer.");
+                Log.m66v(TAG, "Preparing MediaPlayer.");
             }
             this.mMediaPlayer.prepareAsync();
-        } else {
-            throw new RuntimeException("Unable to create a MediaPlayer!");
+        } catch (IOException e) {
+            this.mMediaPlayer.release();
+            this.mMediaPlayer = null;
+            if (useUrl) {
+                throw new RuntimeException(String.format("Unable to set MediaPlayer to URL %s!", this.mSourceUrl), e);
+            }
+            throw new RuntimeException(String.format("Unable to set MediaPlayer to asset %s!", this.mSourceAsset), e);
+        } catch (IllegalArgumentException e2) {
+            this.mMediaPlayer.release();
+            this.mMediaPlayer = null;
+            if (useUrl) {
+                throw new RuntimeException(String.format("Unable to set MediaPlayer to URL %s!", this.mSourceUrl), e2);
+            }
+            throw new RuntimeException(String.format("Unable to set MediaPlayer to asset %s!", this.mSourceAsset), e2);
         }
         return true;
     }

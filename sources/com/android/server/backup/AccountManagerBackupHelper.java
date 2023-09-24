@@ -5,6 +5,7 @@ import android.app.backup.BlobBackupHelper;
 import android.util.Slog;
 import com.android.server.LocalServices;
 
+/* loaded from: classes4.dex */
 public class AccountManagerBackupHelper extends BlobBackupHelper {
     private static final boolean DEBUG = false;
     private static final String KEY_ACCOUNT_ACCESS_GRANTS = "account_access_grants";
@@ -15,43 +16,47 @@ public class AccountManagerBackupHelper extends BlobBackupHelper {
         super(1, KEY_ACCOUNT_ACCESS_GRANTS);
     }
 
-    /* access modifiers changed from: protected */
-    public byte[] getBackupPayload(String key) {
+    /* JADX WARN: Code restructure failed: missing block: B:10:0x001f, code lost:
+        android.util.Slog.m50w(com.android.server.backup.AccountManagerBackupHelper.TAG, "Unexpected backup key " + r7);
+     */
+    @Override // android.app.backup.BlobBackupHelper
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    protected byte[] getBackupPayload(String key) {
         AccountManagerInternal am = (AccountManagerInternal) LocalServices.getService(AccountManagerInternal.class);
-        char c = 65535;
+        char c = '\uffff';
         try {
-            if (key.hashCode() == 1544100736) {
-                if (key.equals(KEY_ACCOUNT_ACCESS_GRANTS)) {
-                    c = 0;
-                }
+            if (key.hashCode() == 1544100736 && key.equals(KEY_ACCOUNT_ACCESS_GRANTS)) {
+                c = 0;
             }
-            if (c == 0) {
-                return am.backupAccountAccessPermissions(0);
-            }
-            Slog.w(TAG, "Unexpected backup key " + key);
-            return new byte[0];
+            return am.backupAccountAccessPermissions(0);
         } catch (Exception e) {
-            Slog.e(TAG, "Unable to store payload " + key);
+            Slog.m56e(TAG, "Unable to store payload " + key);
         }
+        return new byte[0];
     }
 
-    /* access modifiers changed from: protected */
-    public void applyRestoredPayload(String key, byte[] payload) {
+    /* JADX WARN: Code restructure failed: missing block: B:10:0x001f, code lost:
+        android.util.Slog.m50w(com.android.server.backup.AccountManagerBackupHelper.TAG, "Unexpected restore key " + r6);
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:18:?, code lost:
+        return;
+     */
+    @Override // android.app.backup.BlobBackupHelper
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    protected void applyRestoredPayload(String key, byte[] payload) {
         AccountManagerInternal am = (AccountManagerInternal) LocalServices.getService(AccountManagerInternal.class);
-        char c = 65535;
+        char c = '\uffff';
         try {
-            if (key.hashCode() == 1544100736) {
-                if (key.equals(KEY_ACCOUNT_ACCESS_GRANTS)) {
-                    c = 0;
-                }
-            }
-            if (c != 0) {
-                Slog.w(TAG, "Unexpected restore key " + key);
-                return;
+            if (key.hashCode() == 1544100736 && key.equals(KEY_ACCOUNT_ACCESS_GRANTS)) {
+                c = 0;
             }
             am.restoreAccountAccessPermissions(payload, 0);
         } catch (Exception e) {
-            Slog.w(TAG, "Unable to restore key " + key);
+            Slog.m50w(TAG, "Unable to restore key " + key);
         }
     }
 }

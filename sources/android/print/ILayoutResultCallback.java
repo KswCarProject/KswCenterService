@@ -1,13 +1,14 @@
 package android.print;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.ICancellationSignal;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.ICancellationSignal;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.text.TextUtils;
 
+/* loaded from: classes3.dex */
 public interface ILayoutResultCallback extends IInterface {
     void onLayoutCanceled(int i) throws RemoteException;
 
@@ -17,24 +18,31 @@ public interface ILayoutResultCallback extends IInterface {
 
     void onLayoutStarted(ICancellationSignal iCancellationSignal, int i) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements ILayoutResultCallback {
+        @Override // android.print.ILayoutResultCallback
         public void onLayoutStarted(ICancellationSignal cancellation, int sequence) throws RemoteException {
         }
 
+        @Override // android.print.ILayoutResultCallback
         public void onLayoutFinished(PrintDocumentInfo info, boolean changed, int sequence) throws RemoteException {
         }
 
+        @Override // android.print.ILayoutResultCallback
         public void onLayoutFailed(CharSequence error, int sequence) throws RemoteException {
         }
 
+        @Override // android.print.ILayoutResultCallback
         public void onLayoutCanceled(int sequence) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements ILayoutResultCallback {
         private static final String DESCRIPTOR = "android.print.ILayoutResultCallback";
         static final int TRANSACTION_onLayoutCanceled = 4;
@@ -51,12 +59,13 @@ public interface ILayoutResultCallback extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof ILayoutResultCallback)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof ILayoutResultCallback)) {
+                return (ILayoutResultCallback) iin;
             }
-            return (ILayoutResultCallback) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -76,87 +85,48 @@ public interface ILayoutResultCallback extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v4, resolved type: android.print.PrintDocumentInfo} */
-        /* JADX WARNING: type inference failed for: r1v1 */
-        /* JADX WARNING: type inference failed for: r1v8, types: [java.lang.CharSequence] */
-        /* JADX WARNING: type inference failed for: r1v14 */
-        /* JADX WARNING: type inference failed for: r1v15 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r6, android.os.Parcel r7, android.os.Parcel r8, int r9) throws android.os.RemoteException {
-            /*
-                r5 = this;
-                java.lang.String r0 = "android.print.ILayoutResultCallback"
-                r1 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r2 = 1
-                if (r6 == r1) goto L_0x006e
-                r1 = 0
-                switch(r6) {
-                    case 1: goto L_0x005b;
-                    case 2: goto L_0x0037;
-                    case 3: goto L_0x001c;
-                    case 4: goto L_0x0011;
-                    default: goto L_0x000c;
-                }
-            L_0x000c:
-                boolean r1 = super.onTransact(r6, r7, r8, r9)
-                return r1
-            L_0x0011:
-                r7.enforceInterface(r0)
-                int r1 = r7.readInt()
-                r5.onLayoutCanceled(r1)
-                return r2
-            L_0x001c:
-                r7.enforceInterface(r0)
-                int r3 = r7.readInt()
-                if (r3 == 0) goto L_0x002e
-                android.os.Parcelable$Creator<java.lang.CharSequence> r1 = android.text.TextUtils.CHAR_SEQUENCE_CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r7)
-                java.lang.CharSequence r1 = (java.lang.CharSequence) r1
-                goto L_0x002f
-            L_0x002e:
-            L_0x002f:
-                int r3 = r7.readInt()
-                r5.onLayoutFailed(r1, r3)
-                return r2
-            L_0x0037:
-                r7.enforceInterface(r0)
-                int r3 = r7.readInt()
-                if (r3 == 0) goto L_0x0049
-                android.os.Parcelable$Creator<android.print.PrintDocumentInfo> r1 = android.print.PrintDocumentInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r7)
-                android.print.PrintDocumentInfo r1 = (android.print.PrintDocumentInfo) r1
-                goto L_0x004a
-            L_0x0049:
-            L_0x004a:
-                int r3 = r7.readInt()
-                if (r3 == 0) goto L_0x0052
-                r3 = r2
-                goto L_0x0053
-            L_0x0052:
-                r3 = 0
-            L_0x0053:
-                int r4 = r7.readInt()
-                r5.onLayoutFinished(r1, r3, r4)
-                return r2
-            L_0x005b:
-                r7.enforceInterface(r0)
-                android.os.IBinder r1 = r7.readStrongBinder()
-                android.os.ICancellationSignal r1 = android.os.ICancellationSignal.Stub.asInterface(r1)
-                int r3 = r7.readInt()
-                r5.onLayoutStarted(r1, r3)
-                return r2
-            L_0x006e:
-                r8.writeString(r0)
-                return r2
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.print.ILayoutResultCallback.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    ICancellationSignal _arg0 = ICancellationSignal.Stub.asInterface(data.readStrongBinder());
+                    int _arg1 = data.readInt();
+                    onLayoutStarted(_arg0, _arg1);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    PrintDocumentInfo _arg02 = data.readInt() != 0 ? PrintDocumentInfo.CREATOR.createFromParcel(data) : null;
+                    boolean _arg12 = data.readInt() != 0;
+                    int _arg2 = data.readInt();
+                    onLayoutFinished(_arg02, _arg12, _arg2);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    CharSequence _arg03 = data.readInt() != 0 ? TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(data) : null;
+                    int _arg13 = data.readInt();
+                    onLayoutFailed(_arg03, _arg13);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg04 = data.readInt();
+                    onLayoutCanceled(_arg04);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements ILayoutResultCallback {
             public static ILayoutResultCallback sDefaultImpl;
             private IBinder mRemote;
@@ -165,6 +135,7 @@ public interface ILayoutResultCallback extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -173,15 +144,15 @@ public interface ILayoutResultCallback extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.print.ILayoutResultCallback
             public void onLayoutStarted(ICancellationSignal cancellation, int sequence) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(cancellation != null ? cancellation.asBinder() : null);
                     _data.writeInt(sequence);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onLayoutStarted(cancellation, sequence);
                     }
                 } finally {
@@ -189,6 +160,7 @@ public interface ILayoutResultCallback extends IInterface {
                 }
             }
 
+            @Override // android.print.ILayoutResultCallback
             public void onLayoutFinished(PrintDocumentInfo info, boolean changed, int sequence) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -199,11 +171,10 @@ public interface ILayoutResultCallback extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(changed);
+                    _data.writeInt(changed ? 1 : 0);
                     _data.writeInt(sequence);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onLayoutFinished(info, changed, sequence);
                     }
                 } finally {
@@ -211,6 +182,7 @@ public interface ILayoutResultCallback extends IInterface {
                 }
             }
 
+            @Override // android.print.ILayoutResultCallback
             public void onLayoutFailed(CharSequence error, int sequence) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -222,9 +194,8 @@ public interface ILayoutResultCallback extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(sequence);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onLayoutFailed(error, sequence);
                     }
                 } finally {
@@ -232,14 +203,14 @@ public interface ILayoutResultCallback extends IInterface {
                 }
             }
 
+            @Override // android.print.ILayoutResultCallback
             public void onLayoutCanceled(int sequence) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(sequence);
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onLayoutCanceled(sequence);
                     }
                 } finally {
@@ -249,11 +220,11 @@ public interface ILayoutResultCallback extends IInterface {
         }
 
         public static boolean setDefaultImpl(ILayoutResultCallback impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static ILayoutResultCallback getDefaultImpl() {

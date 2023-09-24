@@ -1,20 +1,25 @@
 package android.telephony.ims.feature;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.ArraySet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 @SystemApi
+/* loaded from: classes4.dex */
 public final class CapabilityChangeRequest implements Parcelable {
-    public static final Parcelable.Creator<CapabilityChangeRequest> CREATOR = new Parcelable.Creator<CapabilityChangeRequest>() {
+    public static final Parcelable.Creator<CapabilityChangeRequest> CREATOR = new Parcelable.Creator<CapabilityChangeRequest>() { // from class: android.telephony.ims.feature.CapabilityChangeRequest.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public CapabilityChangeRequest createFromParcel(Parcel in) {
             return new CapabilityChangeRequest(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public CapabilityChangeRequest[] newArray(int size) {
             return new CapabilityChangeRequest[size];
         }
@@ -22,34 +27,30 @@ public final class CapabilityChangeRequest implements Parcelable {
     private final Set<CapabilityPair> mCapabilitiesToDisable;
     private final Set<CapabilityPair> mCapabilitiesToEnable;
 
+    /* loaded from: classes4.dex */
     public static class CapabilityPair {
         private final int mCapability;
         private final int radioTech;
 
-        public CapabilityPair(int capability, int radioTech2) {
+        public CapabilityPair(int capability, int radioTech) {
             this.mCapability = capability;
-            this.radioTech = radioTech2;
+            this.radioTech = radioTech;
         }
 
         public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }
-            if (!(o instanceof CapabilityPair)) {
-                return false;
-            }
-            CapabilityPair that = (CapabilityPair) o;
-            if (getCapability() != that.getCapability()) {
-                return false;
-            }
-            if (getRadioTech() == that.getRadioTech()) {
-                return true;
+            if (o instanceof CapabilityPair) {
+                CapabilityPair that = (CapabilityPair) o;
+                return getCapability() == that.getCapability() && getRadioTech() == that.getRadioTech();
             }
             return false;
         }
 
         public int hashCode() {
-            return (getCapability() * 31) + getRadioTech();
+            int result = getCapability();
+            return (result * 31) + getRadioTech();
         }
 
         public int getCapability() {
@@ -87,8 +88,8 @@ public final class CapabilityChangeRequest implements Parcelable {
     }
 
     private void addAllCapabilities(Set<CapabilityPair> set, int capabilities, int tech) {
-        long highestCapability = Long.highestOneBit((long) capabilities);
-        for (int i = 1; ((long) i) <= highestCapability; i *= 2) {
+        long highestCapability = Long.highestOneBit(capabilities);
+        for (int i = 1; i <= highestCapability; i *= 2) {
             if ((i & capabilities) > 0) {
                 set.add(new CapabilityPair(i, tech));
             }
@@ -108,10 +109,12 @@ public final class CapabilityChangeRequest implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mCapabilitiesToEnable.size());
         for (CapabilityPair pair : this.mCapabilitiesToEnable) {
@@ -133,17 +136,18 @@ public final class CapabilityChangeRequest implements Parcelable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof CapabilityChangeRequest)) {
+        if (o instanceof CapabilityChangeRequest) {
+            CapabilityChangeRequest that = (CapabilityChangeRequest) o;
+            if (this.mCapabilitiesToEnable.equals(that.mCapabilitiesToEnable)) {
+                return this.mCapabilitiesToDisable.equals(that.mCapabilitiesToDisable);
+            }
             return false;
         }
-        CapabilityChangeRequest that = (CapabilityChangeRequest) o;
-        if (!this.mCapabilitiesToEnable.equals(that.mCapabilitiesToEnable)) {
-            return false;
-        }
-        return this.mCapabilitiesToDisable.equals(that.mCapabilitiesToDisable);
+        return false;
     }
 
     public int hashCode() {
-        return (this.mCapabilitiesToEnable.hashCode() * 31) + this.mCapabilitiesToDisable.hashCode();
+        int result = this.mCapabilitiesToEnable.hashCode();
+        return (result * 31) + this.mCapabilitiesToDisable.hashCode();
     }
 }

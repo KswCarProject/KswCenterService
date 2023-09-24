@@ -3,22 +3,22 @@ package com.android.framework.protobuf.nano;
 import java.io.IOException;
 import java.util.Arrays;
 
+/* loaded from: classes4.dex */
 final class UnknownFieldData {
     final byte[] bytes;
     final int tag;
 
-    UnknownFieldData(int tag2, byte[] bytes2) {
-        this.tag = tag2;
-        this.bytes = bytes2;
+    UnknownFieldData(int tag, byte[] bytes) {
+        this.tag = tag;
+        this.bytes = bytes;
     }
 
-    /* access modifiers changed from: package-private */
-    public int computeSerializedSize() {
-        return 0 + CodedOutputByteBufferNano.computeRawVarint32Size(this.tag) + this.bytes.length;
+    int computeSerializedSize() {
+        int size = 0 + CodedOutputByteBufferNano.computeRawVarint32Size(this.tag);
+        return size + this.bytes.length;
     }
 
-    /* access modifiers changed from: package-private */
-    public void writeTo(CodedOutputByteBufferNano output) throws IOException {
+    void writeTo(CodedOutputByteBufferNano output) throws IOException {
         output.writeRawVarint32(this.tag);
         output.writeRawBytes(this.bytes);
     }
@@ -27,17 +27,15 @@ final class UnknownFieldData {
         if (o == this) {
             return true;
         }
-        if (!(o instanceof UnknownFieldData)) {
-            return false;
+        if (o instanceof UnknownFieldData) {
+            UnknownFieldData other = (UnknownFieldData) o;
+            return this.tag == other.tag && Arrays.equals(this.bytes, other.bytes);
         }
-        UnknownFieldData other = (UnknownFieldData) o;
-        if (this.tag != other.tag || !Arrays.equals(this.bytes, other.bytes)) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        return (((17 * 31) + this.tag) * 31) + Arrays.hashCode(this.bytes);
+        int result = (17 * 31) + this.tag;
+        return (result * 31) + Arrays.hashCode(this.bytes);
     }
 }

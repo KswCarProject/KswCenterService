@@ -1,13 +1,14 @@
 package android.net.wifi;
 
 import android.net.wifi.INetworkRequestUserSelectionCallback;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import java.util.List;
 
+/* loaded from: classes3.dex */
 public interface INetworkRequestMatchCallback extends IInterface {
     void onAbort() throws RemoteException;
 
@@ -19,27 +20,35 @@ public interface INetworkRequestMatchCallback extends IInterface {
 
     void onUserSelectionConnectSuccess(WifiConfiguration wifiConfiguration) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements INetworkRequestMatchCallback {
+        @Override // android.net.wifi.INetworkRequestMatchCallback
         public void onUserSelectionCallbackRegistration(INetworkRequestUserSelectionCallback userSelectionCallback) throws RemoteException {
         }
 
+        @Override // android.net.wifi.INetworkRequestMatchCallback
         public void onAbort() throws RemoteException {
         }
 
-        public void onMatch(List<ScanResult> list) throws RemoteException {
+        @Override // android.net.wifi.INetworkRequestMatchCallback
+        public void onMatch(List<ScanResult> scanResults) throws RemoteException {
         }
 
+        @Override // android.net.wifi.INetworkRequestMatchCallback
         public void onUserSelectionConnectSuccess(WifiConfiguration wificonfiguration) throws RemoteException {
         }
 
+        @Override // android.net.wifi.INetworkRequestMatchCallback
         public void onUserSelectionConnectFailure(WifiConfiguration wificonfiguration) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements INetworkRequestMatchCallback {
         private static final String DESCRIPTOR = "android.net.wifi.INetworkRequestMatchCallback";
         static final int TRANSACTION_onAbort = 2;
@@ -57,12 +66,13 @@ public interface INetworkRequestMatchCallback extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof INetworkRequestMatchCallback)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof INetworkRequestMatchCallback)) {
+                return (INetworkRequestMatchCallback) iin;
             }
-            return (INetworkRequestMatchCallback) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -84,49 +94,47 @@ public interface INetworkRequestMatchCallback extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                WifiConfiguration _arg0 = null;
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        onUserSelectionCallbackRegistration(INetworkRequestUserSelectionCallback.Stub.asInterface(data.readStrongBinder()));
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        onAbort();
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        onMatch(data.createTypedArrayList(ScanResult.CREATOR));
-                        return true;
-                    case 4:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = WifiConfiguration.CREATOR.createFromParcel(data);
-                        }
-                        onUserSelectionConnectSuccess(_arg0);
-                        return true;
-                    case 5:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = WifiConfiguration.CREATOR.createFromParcel(data);
-                        }
-                        onUserSelectionConnectFailure(_arg0);
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            WifiConfiguration _arg0;
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    onUserSelectionCallbackRegistration(INetworkRequestUserSelectionCallback.Stub.asInterface(data.readStrongBinder()));
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    onAbort();
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    onMatch(data.createTypedArrayList(ScanResult.CREATOR));
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0 ? WifiConfiguration.CREATOR.createFromParcel(data) : null;
+                    onUserSelectionConnectSuccess(_arg0);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0 ? WifiConfiguration.CREATOR.createFromParcel(data) : null;
+                    onUserSelectionConnectFailure(_arg0);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements INetworkRequestMatchCallback {
             public static INetworkRequestMatchCallback sDefaultImpl;
             private IBinder mRemote;
@@ -135,6 +143,7 @@ public interface INetworkRequestMatchCallback extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -143,14 +152,14 @@ public interface INetworkRequestMatchCallback extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.net.wifi.INetworkRequestMatchCallback
             public void onUserSelectionCallbackRegistration(INetworkRequestUserSelectionCallback userSelectionCallback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(userSelectionCallback != null ? userSelectionCallback.asBinder() : null);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onUserSelectionCallbackRegistration(userSelectionCallback);
                     }
                 } finally {
@@ -158,13 +167,13 @@ public interface INetworkRequestMatchCallback extends IInterface {
                 }
             }
 
+            @Override // android.net.wifi.INetworkRequestMatchCallback
             public void onAbort() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onAbort();
                     }
                 } finally {
@@ -172,14 +181,14 @@ public interface INetworkRequestMatchCallback extends IInterface {
                 }
             }
 
+            @Override // android.net.wifi.INetworkRequestMatchCallback
             public void onMatch(List<ScanResult> scanResults) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeTypedList(scanResults);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onMatch(scanResults);
                     }
                 } finally {
@@ -187,6 +196,7 @@ public interface INetworkRequestMatchCallback extends IInterface {
                 }
             }
 
+            @Override // android.net.wifi.INetworkRequestMatchCallback
             public void onUserSelectionConnectSuccess(WifiConfiguration wificonfiguration) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -197,9 +207,8 @@ public interface INetworkRequestMatchCallback extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onUserSelectionConnectSuccess(wificonfiguration);
                     }
                 } finally {
@@ -207,6 +216,7 @@ public interface INetworkRequestMatchCallback extends IInterface {
                 }
             }
 
+            @Override // android.net.wifi.INetworkRequestMatchCallback
             public void onUserSelectionConnectFailure(WifiConfiguration wificonfiguration) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -217,9 +227,8 @@ public interface INetworkRequestMatchCallback extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(5, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onUserSelectionConnectFailure(wificonfiguration);
                     }
                 } finally {
@@ -229,11 +238,11 @@ public interface INetworkRequestMatchCallback extends IInterface {
         }
 
         public static boolean setDefaultImpl(INetworkRequestMatchCallback impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static INetworkRequestMatchCallback getDefaultImpl() {

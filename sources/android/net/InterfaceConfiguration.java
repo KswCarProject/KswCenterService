@@ -1,19 +1,28 @@
 package android.net;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.google.android.collect.Sets;
 import java.util.HashSet;
 import java.util.Iterator;
 
+/* loaded from: classes3.dex */
 public class InterfaceConfiguration implements Parcelable {
-    public static final Parcelable.Creator<InterfaceConfiguration> CREATOR = new Parcelable.Creator<InterfaceConfiguration>() {
+    private static final String FLAG_DOWN = "down";
+    private static final String FLAG_UP = "up";
+    private LinkAddress mAddr;
+    private HashSet<String> mFlags = Sets.newHashSet();
+    private String mHwAddr;
+    private static final String[] EMPTY_STRING_ARRAY = new String[0];
+    public static final Parcelable.Creator<InterfaceConfiguration> CREATOR = new Parcelable.Creator<InterfaceConfiguration>() { // from class: android.net.InterfaceConfiguration.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public InterfaceConfiguration createFromParcel(Parcel in) {
             InterfaceConfiguration info = new InterfaceConfiguration();
-            String unused = info.mHwAddr = in.readString();
+            info.mHwAddr = in.readString();
             if (in.readByte() == 1) {
-                LinkAddress unused2 = info.mAddr = (LinkAddress) in.readParcelable((ClassLoader) null);
+                info.mAddr = (LinkAddress) in.readParcelable(null);
             }
             int size = in.readInt();
             for (int i = 0; i < size; i++) {
@@ -22,19 +31,12 @@ public class InterfaceConfiguration implements Parcelable {
             return info;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public InterfaceConfiguration[] newArray(int size) {
             return new InterfaceConfiguration[size];
         }
     };
-    private static final String[] EMPTY_STRING_ARRAY = new String[0];
-    private static final String FLAG_DOWN = "down";
-    private static final String FLAG_UP = "up";
-    /* access modifiers changed from: private */
-    public LinkAddress mAddr;
-    /* access modifiers changed from: private */
-    public HashSet<String> mFlags = Sets.newHashSet();
-    /* access modifiers changed from: private */
-    public String mHwAddr;
 
     public String toString() {
         return "mHwAddr=" + this.mHwAddr + " mAddr=" + String.valueOf(this.mAddr) + " mFlags=" + getFlags();
@@ -97,6 +99,7 @@ public class InterfaceConfiguration implements Parcelable {
     }
 
     public boolean isActive() {
+        byte[] address;
         try {
             if (isUp()) {
                 for (byte b : this.mAddr.getAddress().getAddress()) {
@@ -115,10 +118,12 @@ public class InterfaceConfiguration implements Parcelable {
         return hasFlag(FLAG_UP);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.mHwAddr);
         if (this.mAddr != null) {
@@ -130,7 +135,8 @@ public class InterfaceConfiguration implements Parcelable {
         dest.writeInt(this.mFlags.size());
         Iterator<String> it = this.mFlags.iterator();
         while (it.hasNext()) {
-            dest.writeString(it.next());
+            String flag = it.next();
+            dest.writeString(flag);
         }
     }
 

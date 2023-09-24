@@ -1,21 +1,26 @@
 package android.security.keystore.recovery;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.util.Preconditions;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class KeyDerivationParams implements Parcelable {
     public static final int ALGORITHM_SCRYPT = 2;
     public static final int ALGORITHM_SHA256 = 1;
-    public static final Parcelable.Creator<KeyDerivationParams> CREATOR = new Parcelable.Creator<KeyDerivationParams>() {
+    public static final Parcelable.Creator<KeyDerivationParams> CREATOR = new Parcelable.Creator<KeyDerivationParams>() { // from class: android.security.keystore.recovery.KeyDerivationParams.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public KeyDerivationParams createFromParcel(Parcel in) {
             return new KeyDerivationParams(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public KeyDerivationParams[] newArray(int length) {
             return new KeyDerivationParams[length];
         }
@@ -25,6 +30,7 @@ public final class KeyDerivationParams implements Parcelable {
     private final byte[] mSalt;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface KeyDerivationAlgorithm {
     }
 
@@ -58,6 +64,7 @@ public final class KeyDerivationParams implements Parcelable {
         return this.mMemoryDifficulty;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(this.mAlgorithm);
         out.writeByteArray(this.mSalt);
@@ -70,6 +77,7 @@ public final class KeyDerivationParams implements Parcelable {
         this.mMemoryDifficulty = in.readInt();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

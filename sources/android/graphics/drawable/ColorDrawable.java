@@ -14,11 +14,12 @@ import android.graphics.Xfermode;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.ViewDebug;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.io.IOException;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+/* loaded from: classes.dex */
 public class ColorDrawable extends Drawable {
     private BlendModeColorFilter mBlendModeColorFilter;
     @ViewDebug.ExportedProperty(deepExport = true, prefix = "state_")
@@ -38,10 +39,12 @@ public class ColorDrawable extends Drawable {
         setColor(color);
     }
 
+    @Override // android.graphics.drawable.Drawable
     public int getChangingConfigurations() {
         return super.getChangingConfigurations() | this.mColorState.getChangingConfigurations();
     }
 
+    @Override // android.graphics.drawable.Drawable
     public Drawable mutate() {
         if (!this.mMutated && super.mutate() == this) {
             this.mColorState = new ColorState(this.mColorState);
@@ -50,11 +53,13 @@ public class ColorDrawable extends Drawable {
         return this;
     }
 
+    @Override // android.graphics.drawable.Drawable
     public void clearMutated() {
         super.clearMutated();
         this.mMutated = false;
     }
 
+    @Override // android.graphics.drawable.Drawable
     public void draw(Canvas canvas) {
         ColorFilter colorFilter = this.mPaint.getColorFilter();
         if ((this.mColorState.mUseColor >>> 24) != 0 || colorFilter != null || this.mBlendModeColorFilter != null) {
@@ -80,56 +85,67 @@ public class ColorDrawable extends Drawable {
         }
     }
 
+    @Override // android.graphics.drawable.Drawable
     public int getAlpha() {
         return this.mColorState.mUseColor >>> 24;
     }
 
+    @Override // android.graphics.drawable.Drawable
     public void setAlpha(int alpha) {
-        int useColor = ((this.mColorState.mBaseColor << 8) >>> 8) | ((((this.mColorState.mBaseColor >>> 24) * (alpha + (alpha >> 7))) >> 8) << 24);
+        int baseAlpha = this.mColorState.mBaseColor >>> 24;
+        int useAlpha = (baseAlpha * (alpha + (alpha >> 7))) >> 8;
+        int useColor = ((this.mColorState.mBaseColor << 8) >>> 8) | (useAlpha << 24);
         if (this.mColorState.mUseColor != useColor) {
             this.mColorState.mUseColor = useColor;
             invalidateSelf();
         }
     }
 
+    @Override // android.graphics.drawable.Drawable
     public void setColorFilter(ColorFilter colorFilter) {
         this.mPaint.setColorFilter(colorFilter);
     }
 
+    @Override // android.graphics.drawable.Drawable
     public ColorFilter getColorFilter() {
         return this.mPaint.getColorFilter();
     }
 
+    @Override // android.graphics.drawable.Drawable
     public void setTintList(ColorStateList tint) {
         this.mColorState.mTint = tint;
         this.mBlendModeColorFilter = updateBlendModeFilter(this.mBlendModeColorFilter, tint, this.mColorState.mBlendMode);
         invalidateSelf();
     }
 
+    @Override // android.graphics.drawable.Drawable
     public void setTintBlendMode(BlendMode blendMode) {
         this.mColorState.mBlendMode = blendMode;
         this.mBlendModeColorFilter = updateBlendModeFilter(this.mBlendModeColorFilter, this.mColorState.mTint, blendMode);
         invalidateSelf();
     }
 
-    /* access modifiers changed from: protected */
-    public boolean onStateChange(int[] stateSet) {
+    @Override // android.graphics.drawable.Drawable
+    protected boolean onStateChange(int[] stateSet) {
         ColorState state = this.mColorState;
-        if (state.mTint == null || state.mBlendMode == null) {
-            return false;
+        if (state.mTint != null && state.mBlendMode != null) {
+            this.mBlendModeColorFilter = updateBlendModeFilter(this.mBlendModeColorFilter, state.mTint, state.mBlendMode);
+            return true;
         }
-        this.mBlendModeColorFilter = updateBlendModeFilter(this.mBlendModeColorFilter, state.mTint, state.mBlendMode);
-        return true;
+        return false;
     }
 
+    @Override // android.graphics.drawable.Drawable
     public boolean isStateful() {
         return this.mColorState.mTint != null && this.mColorState.mTint.isStateful();
     }
 
+    @Override // android.graphics.drawable.Drawable
     public boolean hasFocusStateSpecified() {
         return this.mColorState.mTint != null && this.mColorState.mTint.hasFocusStateSpecified();
     }
 
+    @Override // android.graphics.drawable.Drawable
     public void setXfermode(Xfermode mode) {
         this.mPaint.setXfermode(mode);
         invalidateSelf();
@@ -139,28 +155,28 @@ public class ColorDrawable extends Drawable {
         return this.mPaint.getXfermode();
     }
 
+    @Override // android.graphics.drawable.Drawable
     public int getOpacity() {
-        if (this.mBlendModeColorFilter != null || this.mPaint.getColorFilter() != null) {
-            return -3;
-        }
-        int i = this.mColorState.mUseColor >>> 24;
-        if (i == 0) {
+        if (this.mBlendModeColorFilter == null && this.mPaint.getColorFilter() == null) {
+            int i = this.mColorState.mUseColor >>> 24;
+            if (i != 0) {
+                return i != 255 ? -3 : -1;
+            }
             return -2;
         }
-        if (i != 255) {
-            return -3;
-        }
-        return -1;
+        return -3;
     }
 
+    @Override // android.graphics.drawable.Drawable
     public void getOutline(Outline outline) {
         outline.setRect(getBounds());
-        outline.setAlpha(((float) getAlpha()) / 255.0f);
+        outline.setAlpha(getAlpha() / 255.0f);
     }
 
+    @Override // android.graphics.drawable.Drawable
     public void inflate(Resources r, XmlPullParser parser, AttributeSet attrs, Resources.Theme theme) throws XmlPullParserException, IOException {
         super.inflate(r, parser, attrs, theme);
-        TypedArray a = obtainAttributes(r, theme, attrs, R.styleable.ColorDrawable);
+        TypedArray a = obtainAttributes(r, theme, attrs, C3132R.styleable.ColorDrawable);
         updateStateFromTypedArray(a);
         a.recycle();
         updateLocalState(r);
@@ -174,44 +190,53 @@ public class ColorDrawable extends Drawable {
         state.mUseColor = state.mBaseColor;
     }
 
+    @Override // android.graphics.drawable.Drawable
     public boolean canApplyTheme() {
         return this.mColorState.canApplyTheme() || super.canApplyTheme();
     }
 
+    @Override // android.graphics.drawable.Drawable
     public void applyTheme(Resources.Theme t) {
         super.applyTheme(t);
         ColorState state = this.mColorState;
-        if (state != null) {
-            if (state.mThemeAttrs != null) {
-                TypedArray a = t.resolveAttributes(state.mThemeAttrs, R.styleable.ColorDrawable);
-                updateStateFromTypedArray(a);
-                a.recycle();
-            }
-            if (state.mTint != null && state.mTint.canApplyTheme()) {
-                state.mTint = state.mTint.obtainForTheme(t);
-            }
-            updateLocalState(t.getResources());
+        if (state == null) {
+            return;
         }
+        if (state.mThemeAttrs != null) {
+            TypedArray a = t.resolveAttributes(state.mThemeAttrs, C3132R.styleable.ColorDrawable);
+            updateStateFromTypedArray(a);
+            a.recycle();
+        }
+        if (state.mTint != null && state.mTint.canApplyTheme()) {
+            state.mTint = state.mTint.obtainForTheme(t);
+        }
+        updateLocalState(t.getResources());
     }
 
+    @Override // android.graphics.drawable.Drawable
     public Drawable.ConstantState getConstantState() {
         return this.mColorState;
     }
 
+    /* loaded from: classes.dex */
     static final class ColorState extends Drawable.ConstantState {
         int mBaseColor;
-        BlendMode mBlendMode = Drawable.DEFAULT_BLEND_MODE;
+        BlendMode mBlendMode;
         int mChangingConfigurations;
         int[] mThemeAttrs;
-        ColorStateList mTint = null;
-        @ViewDebug.ExportedProperty
+        ColorStateList mTint;
         @UnsupportedAppUsage
+        @ViewDebug.ExportedProperty
         int mUseColor;
 
         ColorState() {
+            this.mTint = null;
+            this.mBlendMode = Drawable.DEFAULT_BLEND_MODE;
         }
 
         ColorState(ColorState state) {
+            this.mTint = null;
+            this.mBlendMode = Drawable.DEFAULT_BLEND_MODE;
             this.mThemeAttrs = state.mThemeAttrs;
             this.mBaseColor = state.mBaseColor;
             this.mUseColor = state.mUseColor;
@@ -220,18 +245,22 @@ public class ColorDrawable extends Drawable {
             this.mBlendMode = state.mBlendMode;
         }
 
+        @Override // android.graphics.drawable.Drawable.ConstantState
         public boolean canApplyTheme() {
             return this.mThemeAttrs != null || (this.mTint != null && this.mTint.canApplyTheme());
         }
 
+        @Override // android.graphics.drawable.Drawable.ConstantState
         public Drawable newDrawable() {
-            return new ColorDrawable(this, (Resources) null);
+            return new ColorDrawable(this, null);
         }
 
+        @Override // android.graphics.drawable.Drawable.ConstantState
         public Drawable newDrawable(Resources res) {
             return new ColorDrawable(this, res);
         }
 
+        @Override // android.graphics.drawable.Drawable.ConstantState
         public int getChangingConfigurations() {
             return this.mChangingConfigurations | (this.mTint != null ? this.mTint.getChangingConfigurations() : 0);
         }

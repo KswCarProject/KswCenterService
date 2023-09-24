@@ -5,6 +5,7 @@ import android.annotation.UnsupportedAppUsage;
 import android.provider.CalendarContract;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class DisconnectCause {
     public static final int ACCESS_INFORMATION_DISCARDED = 117;
     public static final int ALREADY_DIALING = 72;
@@ -149,6 +150,10 @@ public final class DisconnectCause {
                 return "BUSY";
             case 5:
                 return "CONGESTION";
+            case 6:
+            case 56:
+            default:
+                return "INVALID: " + cause;
             case 7:
                 return "INVALID_NUMBER";
             case 8:
@@ -377,8 +382,6 @@ public final class DisconnectCause {
                 return "HO_NOT_FEASIBLE";
             case 121:
                 return "NON_SELECTED_USER_CLEARING";
-            default:
-                return "INVALID: " + cause;
         }
     }
 }

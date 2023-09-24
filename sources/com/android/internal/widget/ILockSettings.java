@@ -3,18 +3,20 @@ package com.android.internal.widget;
 import android.annotation.UnsupportedAppUsage;
 import android.app.PendingIntent;
 import android.app.trust.IStrongAuthTracker;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.security.keystore.recovery.KeyChainProtectionParams;
 import android.security.keystore.recovery.KeyChainSnapshot;
 import android.security.keystore.recovery.RecoveryCertPath;
 import android.security.keystore.recovery.WrappedApplicationKey;
+import com.android.internal.widget.ICheckCredentialProgressCallback;
 import java.util.List;
 import java.util.Map;
 
+/* loaded from: classes4.dex */
 public interface ILockSettings extends IInterface {
     VerifyCredentialResponse checkCredential(byte[] bArr, int i, int i2, ICheckCredentialProgressCallback iCheckCredentialProgressCallback) throws RemoteException;
 
@@ -110,165 +112,211 @@ public interface ILockSettings extends IInterface {
 
     VerifyCredentialResponse verifyTiedProfileChallenge(byte[] bArr, int i, long j, int i2) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements ILockSettings {
+        @Override // com.android.internal.widget.ILockSettings
         public void setBoolean(String key, boolean value, int userId) throws RemoteException {
         }
 
+        @Override // com.android.internal.widget.ILockSettings
         public void setLong(String key, long value, int userId) throws RemoteException {
         }
 
+        @Override // com.android.internal.widget.ILockSettings
         public void setString(String key, String value, int userId) throws RemoteException {
         }
 
+        @Override // com.android.internal.widget.ILockSettings
         public boolean getBoolean(String key, boolean defaultValue, int userId) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.widget.ILockSettings
         public long getLong(String key, long defaultValue, int userId) throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // com.android.internal.widget.ILockSettings
         public String getString(String key, String defaultValue, int userId) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.widget.ILockSettings
         public void setLockCredential(byte[] credential, int type, byte[] savedCredential, int requestedQuality, int userId, boolean allowUntrustedChange) throws RemoteException {
         }
 
+        @Override // com.android.internal.widget.ILockSettings
         public void resetKeyStore(int userId) throws RemoteException {
         }
 
+        @Override // com.android.internal.widget.ILockSettings
         public VerifyCredentialResponse checkCredential(byte[] credential, int type, int userId, ICheckCredentialProgressCallback progressCallback) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.widget.ILockSettings
         public VerifyCredentialResponse verifyCredential(byte[] credential, int type, long challenge, int userId) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.widget.ILockSettings
         public VerifyCredentialResponse verifyTiedProfileChallenge(byte[] credential, int type, long challenge, int userId) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.widget.ILockSettings
         public boolean checkVoldPassword(int userId) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.widget.ILockSettings
         public boolean havePattern(int userId) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.widget.ILockSettings
         public boolean havePassword(int userId) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.widget.ILockSettings
         public byte[] getHashFactor(byte[] currentCredential, int userId) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.widget.ILockSettings
         public void setSeparateProfileChallengeEnabled(int userId, boolean enabled, byte[] managedUserPassword) throws RemoteException {
         }
 
+        @Override // com.android.internal.widget.ILockSettings
         public boolean getSeparateProfileChallengeEnabled(int userId) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.widget.ILockSettings
         public void registerStrongAuthTracker(IStrongAuthTracker tracker) throws RemoteException {
         }
 
+        @Override // com.android.internal.widget.ILockSettings
         public void unregisterStrongAuthTracker(IStrongAuthTracker tracker) throws RemoteException {
         }
 
+        @Override // com.android.internal.widget.ILockSettings
         public void requireStrongAuth(int strongAuthReason, int userId) throws RemoteException {
         }
 
+        @Override // com.android.internal.widget.ILockSettings
         public void systemReady() throws RemoteException {
         }
 
+        @Override // com.android.internal.widget.ILockSettings
         public void userPresent(int userId) throws RemoteException {
         }
 
+        @Override // com.android.internal.widget.ILockSettings
         public int getStrongAuthForUser(int userId) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.widget.ILockSettings
         public boolean hasPendingEscrowToken(int userId) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.widget.ILockSettings
         public void initRecoveryServiceWithSigFile(String rootCertificateAlias, byte[] recoveryServiceCertFile, byte[] recoveryServiceSigFile) throws RemoteException {
         }
 
+        @Override // com.android.internal.widget.ILockSettings
         public KeyChainSnapshot getKeyChainSnapshot() throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.widget.ILockSettings
         public String generateKey(String alias) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.widget.ILockSettings
         public String generateKeyWithMetadata(String alias, byte[] metadata) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.widget.ILockSettings
         public String importKey(String alias, byte[] keyBytes) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.widget.ILockSettings
         public String importKeyWithMetadata(String alias, byte[] keyBytes, byte[] metadata) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.widget.ILockSettings
         public String getKey(String alias) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.widget.ILockSettings
         public void removeKey(String alias) throws RemoteException {
         }
 
+        @Override // com.android.internal.widget.ILockSettings
         public void setSnapshotCreatedPendingIntent(PendingIntent intent) throws RemoteException {
         }
 
+        @Override // com.android.internal.widget.ILockSettings
         public void setServerParams(byte[] serverParams) throws RemoteException {
         }
 
+        @Override // com.android.internal.widget.ILockSettings
         public void setRecoveryStatus(String alias, int status) throws RemoteException {
         }
 
+        @Override // com.android.internal.widget.ILockSettings
         public Map getRecoveryStatus() throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.widget.ILockSettings
         public void setRecoverySecretTypes(int[] secretTypes) throws RemoteException {
         }
 
+        @Override // com.android.internal.widget.ILockSettings
         public int[] getRecoverySecretTypes() throws RemoteException {
             return null;
         }
 
-        public byte[] startRecoverySessionWithCertPath(String sessionId, String rootCertificateAlias, RecoveryCertPath verifierCertPath, byte[] vaultParams, byte[] vaultChallenge, List<KeyChainProtectionParams> list) throws RemoteException {
+        @Override // com.android.internal.widget.ILockSettings
+        public byte[] startRecoverySessionWithCertPath(String sessionId, String rootCertificateAlias, RecoveryCertPath verifierCertPath, byte[] vaultParams, byte[] vaultChallenge, List<KeyChainProtectionParams> secrets) throws RemoteException {
             return null;
         }
 
-        public Map recoverKeyChainSnapshot(String sessionId, byte[] recoveryKeyBlob, List<WrappedApplicationKey> list) throws RemoteException {
+        @Override // com.android.internal.widget.ILockSettings
+        public Map recoverKeyChainSnapshot(String sessionId, byte[] recoveryKeyBlob, List<WrappedApplicationKey> applicationKeys) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.widget.ILockSettings
         public void closeSession(String sessionId) throws RemoteException {
         }
 
+        @Override // com.android.internal.widget.ILockSettings
         public void sanitizePassword() throws RemoteException {
         }
 
+        @Override // com.android.internal.widget.ILockSettings
         public String getPassword() throws RemoteException {
             return null;
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements ILockSettings {
         private static final String DESCRIPTOR = "com.android.internal.widget.ILockSettings";
         static final int TRANSACTION_checkCredential = 9;
@@ -324,12 +372,13 @@ public interface ILockSettings extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof ILockSettings)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof ILockSettings)) {
+                return (ILockSettings) iin;
             }
-            return (ILockSettings) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -427,491 +476,367 @@ public interface ILockSettings extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v1, resolved type: android.app.PendingIntent} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v38, resolved type: android.app.PendingIntent} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v47, resolved type: android.app.PendingIntent} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v10, resolved type: android.security.keystore.recovery.RecoveryCertPath} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v58, resolved type: android.app.PendingIntent} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v59, resolved type: android.app.PendingIntent} */
-        /* JADX WARNING: type inference failed for: r0v53, types: [android.security.keystore.recovery.RecoveryCertPath] */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r19, android.os.Parcel r20, android.os.Parcel r21, int r22) throws android.os.RemoteException {
-            /*
-                r18 = this;
-                r7 = r18
-                r8 = r19
-                r9 = r20
-                r10 = r21
-                java.lang.String r11 = "com.android.internal.widget.ILockSettings"
-                r0 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r12 = 1
-                if (r8 == r0) goto L_0x03ec
-                r0 = 0
-                r6 = 0
-                switch(r8) {
-                    case 1: goto L_0x03d1;
-                    case 2: goto L_0x03bb;
-                    case 3: goto L_0x03a5;
-                    case 4: goto L_0x0386;
-                    case 5: goto L_0x036c;
-                    case 6: goto L_0x0352;
-                    case 7: goto L_0x0323;
-                    case 8: goto L_0x0315;
-                    case 9: goto L_0x02ea;
-                    case 10: goto L_0x02bc;
-                    case 11: goto L_0x028e;
-                    case 12: goto L_0x027c;
-                    case 13: goto L_0x026a;
-                    case 14: goto L_0x0258;
-                    case 15: goto L_0x0242;
-                    case 16: goto L_0x0227;
-                    case 17: goto L_0x0215;
-                    case 18: goto L_0x0203;
-                    case 19: goto L_0x01f1;
-                    case 20: goto L_0x01df;
-                    case 21: goto L_0x01d5;
-                    case 22: goto L_0x01c7;
-                    case 23: goto L_0x01b5;
-                    case 24: goto L_0x01a3;
-                    case 25: goto L_0x018d;
-                    case 26: goto L_0x0176;
-                    case 27: goto L_0x0164;
-                    case 28: goto L_0x014e;
-                    case 29: goto L_0x0138;
-                    case 30: goto L_0x011e;
-                    case 31: goto L_0x010c;
-                    case 32: goto L_0x00fe;
-                    case 33: goto L_0x00e4;
-                    case 34: goto L_0x00d6;
-                    case 35: goto L_0x00c4;
-                    case 36: goto L_0x00b6;
-                    case 37: goto L_0x00a8;
-                    case 38: goto L_0x009a;
-                    case 39: goto L_0x005c;
-                    case 40: goto L_0x0040;
-                    case 41: goto L_0x0032;
-                    case 42: goto L_0x0028;
-                    case 43: goto L_0x001a;
-                    default: goto L_0x0015;
-                }
-            L_0x0015:
-                boolean r0 = super.onTransact(r19, r20, r21, r22)
-                return r0
-            L_0x001a:
-                r9.enforceInterface(r11)
-                java.lang.String r0 = r18.getPassword()
-                r21.writeNoException()
-                r10.writeString(r0)
-                return r12
-            L_0x0028:
-                r9.enforceInterface(r11)
-                r18.sanitizePassword()
-                r21.writeNoException()
-                return r12
-            L_0x0032:
-                r9.enforceInterface(r11)
-                java.lang.String r0 = r20.readString()
-                r7.closeSession(r0)
-                r21.writeNoException()
-                return r12
-            L_0x0040:
-                r9.enforceInterface(r11)
-                java.lang.String r0 = r20.readString()
-                byte[] r1 = r20.createByteArray()
-                android.os.Parcelable$Creator<android.security.keystore.recovery.WrappedApplicationKey> r2 = android.security.keystore.recovery.WrappedApplicationKey.CREATOR
-                java.util.ArrayList r2 = r9.createTypedArrayList(r2)
-                java.util.Map r3 = r7.recoverKeyChainSnapshot(r0, r1, r2)
-                r21.writeNoException()
-                r10.writeMap(r3)
-                return r12
-            L_0x005c:
-                r9.enforceInterface(r11)
-                java.lang.String r13 = r20.readString()
-                java.lang.String r14 = r20.readString()
-                int r1 = r20.readInt()
-                if (r1 == 0) goto L_0x0077
-                android.os.Parcelable$Creator<android.security.keystore.recovery.RecoveryCertPath> r0 = android.security.keystore.recovery.RecoveryCertPath.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r9)
-                android.security.keystore.recovery.RecoveryCertPath r0 = (android.security.keystore.recovery.RecoveryCertPath) r0
-            L_0x0075:
-                r3 = r0
-                goto L_0x0078
-            L_0x0077:
-                goto L_0x0075
-            L_0x0078:
-                byte[] r15 = r20.createByteArray()
-                byte[] r16 = r20.createByteArray()
-                android.os.Parcelable$Creator<android.security.keystore.recovery.KeyChainProtectionParams> r0 = android.security.keystore.recovery.KeyChainProtectionParams.CREATOR
-                java.util.ArrayList r17 = r9.createTypedArrayList(r0)
-                r0 = r18
-                r1 = r13
-                r2 = r14
-                r4 = r15
-                r5 = r16
-                r6 = r17
-                byte[] r0 = r0.startRecoverySessionWithCertPath(r1, r2, r3, r4, r5, r6)
-                r21.writeNoException()
-                r10.writeByteArray(r0)
-                return r12
-            L_0x009a:
-                r9.enforceInterface(r11)
-                int[] r0 = r18.getRecoverySecretTypes()
-                r21.writeNoException()
-                r10.writeIntArray(r0)
-                return r12
-            L_0x00a8:
-                r9.enforceInterface(r11)
-                int[] r0 = r20.createIntArray()
-                r7.setRecoverySecretTypes(r0)
-                r21.writeNoException()
-                return r12
-            L_0x00b6:
-                r9.enforceInterface(r11)
-                java.util.Map r0 = r18.getRecoveryStatus()
-                r21.writeNoException()
-                r10.writeMap(r0)
-                return r12
-            L_0x00c4:
-                r9.enforceInterface(r11)
-                java.lang.String r0 = r20.readString()
-                int r1 = r20.readInt()
-                r7.setRecoveryStatus(r0, r1)
-                r21.writeNoException()
-                return r12
-            L_0x00d6:
-                r9.enforceInterface(r11)
-                byte[] r0 = r20.createByteArray()
-                r7.setServerParams(r0)
-                r21.writeNoException()
-                return r12
-            L_0x00e4:
-                r9.enforceInterface(r11)
-                int r1 = r20.readInt()
-                if (r1 == 0) goto L_0x00f6
-                android.os.Parcelable$Creator<android.app.PendingIntent> r0 = android.app.PendingIntent.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r9)
-                android.app.PendingIntent r0 = (android.app.PendingIntent) r0
-                goto L_0x00f7
-            L_0x00f6:
-            L_0x00f7:
-                r7.setSnapshotCreatedPendingIntent(r0)
-                r21.writeNoException()
-                return r12
-            L_0x00fe:
-                r9.enforceInterface(r11)
-                java.lang.String r0 = r20.readString()
-                r7.removeKey(r0)
-                r21.writeNoException()
-                return r12
-            L_0x010c:
-                r9.enforceInterface(r11)
-                java.lang.String r0 = r20.readString()
-                java.lang.String r1 = r7.getKey(r0)
-                r21.writeNoException()
-                r10.writeString(r1)
-                return r12
-            L_0x011e:
-                r9.enforceInterface(r11)
-                java.lang.String r0 = r20.readString()
-                byte[] r1 = r20.createByteArray()
-                byte[] r2 = r20.createByteArray()
-                java.lang.String r3 = r7.importKeyWithMetadata(r0, r1, r2)
-                r21.writeNoException()
-                r10.writeString(r3)
-                return r12
-            L_0x0138:
-                r9.enforceInterface(r11)
-                java.lang.String r0 = r20.readString()
-                byte[] r1 = r20.createByteArray()
-                java.lang.String r2 = r7.importKey(r0, r1)
-                r21.writeNoException()
-                r10.writeString(r2)
-                return r12
-            L_0x014e:
-                r9.enforceInterface(r11)
-                java.lang.String r0 = r20.readString()
-                byte[] r1 = r20.createByteArray()
-                java.lang.String r2 = r7.generateKeyWithMetadata(r0, r1)
-                r21.writeNoException()
-                r10.writeString(r2)
-                return r12
-            L_0x0164:
-                r9.enforceInterface(r11)
-                java.lang.String r0 = r20.readString()
-                java.lang.String r1 = r7.generateKey(r0)
-                r21.writeNoException()
-                r10.writeString(r1)
-                return r12
-            L_0x0176:
-                r9.enforceInterface(r11)
-                android.security.keystore.recovery.KeyChainSnapshot r0 = r18.getKeyChainSnapshot()
-                r21.writeNoException()
-                if (r0 == 0) goto L_0x0189
-                r10.writeInt(r12)
-                r0.writeToParcel(r10, r12)
-                goto L_0x018c
-            L_0x0189:
-                r10.writeInt(r6)
-            L_0x018c:
-                return r12
-            L_0x018d:
-                r9.enforceInterface(r11)
-                java.lang.String r0 = r20.readString()
-                byte[] r1 = r20.createByteArray()
-                byte[] r2 = r20.createByteArray()
-                r7.initRecoveryServiceWithSigFile(r0, r1, r2)
-                r21.writeNoException()
-                return r12
-            L_0x01a3:
-                r9.enforceInterface(r11)
-                int r0 = r20.readInt()
-                boolean r1 = r7.hasPendingEscrowToken(r0)
-                r21.writeNoException()
-                r10.writeInt(r1)
-                return r12
-            L_0x01b5:
-                r9.enforceInterface(r11)
-                int r0 = r20.readInt()
-                int r1 = r7.getStrongAuthForUser(r0)
-                r21.writeNoException()
-                r10.writeInt(r1)
-                return r12
-            L_0x01c7:
-                r9.enforceInterface(r11)
-                int r0 = r20.readInt()
-                r7.userPresent(r0)
-                r21.writeNoException()
-                return r12
-            L_0x01d5:
-                r9.enforceInterface(r11)
-                r18.systemReady()
-                r21.writeNoException()
-                return r12
-            L_0x01df:
-                r9.enforceInterface(r11)
-                int r0 = r20.readInt()
-                int r1 = r20.readInt()
-                r7.requireStrongAuth(r0, r1)
-                r21.writeNoException()
-                return r12
-            L_0x01f1:
-                r9.enforceInterface(r11)
-                android.os.IBinder r0 = r20.readStrongBinder()
-                android.app.trust.IStrongAuthTracker r0 = android.app.trust.IStrongAuthTracker.Stub.asInterface(r0)
-                r7.unregisterStrongAuthTracker(r0)
-                r21.writeNoException()
-                return r12
-            L_0x0203:
-                r9.enforceInterface(r11)
-                android.os.IBinder r0 = r20.readStrongBinder()
-                android.app.trust.IStrongAuthTracker r0 = android.app.trust.IStrongAuthTracker.Stub.asInterface(r0)
-                r7.registerStrongAuthTracker(r0)
-                r21.writeNoException()
-                return r12
-            L_0x0215:
-                r9.enforceInterface(r11)
-                int r0 = r20.readInt()
-                boolean r1 = r7.getSeparateProfileChallengeEnabled(r0)
-                r21.writeNoException()
-                r10.writeInt(r1)
-                return r12
-            L_0x0227:
-                r9.enforceInterface(r11)
-                int r0 = r20.readInt()
-                int r1 = r20.readInt()
-                if (r1 == 0) goto L_0x0236
-                r6 = r12
-            L_0x0236:
-                r1 = r6
-                byte[] r2 = r20.createByteArray()
-                r7.setSeparateProfileChallengeEnabled(r0, r1, r2)
-                r21.writeNoException()
-                return r12
-            L_0x0242:
-                r9.enforceInterface(r11)
-                byte[] r0 = r20.createByteArray()
-                int r1 = r20.readInt()
-                byte[] r2 = r7.getHashFactor(r0, r1)
-                r21.writeNoException()
-                r10.writeByteArray(r2)
-                return r12
-            L_0x0258:
-                r9.enforceInterface(r11)
-                int r0 = r20.readInt()
-                boolean r1 = r7.havePassword(r0)
-                r21.writeNoException()
-                r10.writeInt(r1)
-                return r12
-            L_0x026a:
-                r9.enforceInterface(r11)
-                int r0 = r20.readInt()
-                boolean r1 = r7.havePattern(r0)
-                r21.writeNoException()
-                r10.writeInt(r1)
-                return r12
-            L_0x027c:
-                r9.enforceInterface(r11)
-                int r0 = r20.readInt()
-                boolean r1 = r7.checkVoldPassword(r0)
-                r21.writeNoException()
-                r10.writeInt(r1)
-                return r12
-            L_0x028e:
-                r9.enforceInterface(r11)
-                byte[] r13 = r20.createByteArray()
-                int r14 = r20.readInt()
-                long r15 = r20.readLong()
-                int r17 = r20.readInt()
-                r0 = r18
-                r1 = r13
-                r2 = r14
-                r3 = r15
-                r5 = r17
-                com.android.internal.widget.VerifyCredentialResponse r0 = r0.verifyTiedProfileChallenge(r1, r2, r3, r5)
-                r21.writeNoException()
-                if (r0 == 0) goto L_0x02b8
-                r10.writeInt(r12)
-                r0.writeToParcel(r10, r12)
-                goto L_0x02bb
-            L_0x02b8:
-                r10.writeInt(r6)
-            L_0x02bb:
-                return r12
-            L_0x02bc:
-                r9.enforceInterface(r11)
-                byte[] r13 = r20.createByteArray()
-                int r14 = r20.readInt()
-                long r15 = r20.readLong()
-                int r17 = r20.readInt()
-                r0 = r18
-                r1 = r13
-                r2 = r14
-                r3 = r15
-                r5 = r17
-                com.android.internal.widget.VerifyCredentialResponse r0 = r0.verifyCredential(r1, r2, r3, r5)
-                r21.writeNoException()
-                if (r0 == 0) goto L_0x02e6
-                r10.writeInt(r12)
-                r0.writeToParcel(r10, r12)
-                goto L_0x02e9
-            L_0x02e6:
-                r10.writeInt(r6)
-            L_0x02e9:
-                return r12
-            L_0x02ea:
-                r9.enforceInterface(r11)
-                byte[] r0 = r20.createByteArray()
-                int r1 = r20.readInt()
-                int r2 = r20.readInt()
-                android.os.IBinder r3 = r20.readStrongBinder()
-                com.android.internal.widget.ICheckCredentialProgressCallback r3 = com.android.internal.widget.ICheckCredentialProgressCallback.Stub.asInterface(r3)
-                com.android.internal.widget.VerifyCredentialResponse r4 = r7.checkCredential(r0, r1, r2, r3)
-                r21.writeNoException()
-                if (r4 == 0) goto L_0x0311
-                r10.writeInt(r12)
-                r4.writeToParcel(r10, r12)
-                goto L_0x0314
-            L_0x0311:
-                r10.writeInt(r6)
-            L_0x0314:
-                return r12
-            L_0x0315:
-                r9.enforceInterface(r11)
-                int r0 = r20.readInt()
-                r7.resetKeyStore(r0)
-                r21.writeNoException()
-                return r12
-            L_0x0323:
-                r9.enforceInterface(r11)
-                byte[] r13 = r20.createByteArray()
-                int r14 = r20.readInt()
-                byte[] r15 = r20.createByteArray()
-                int r16 = r20.readInt()
-                int r17 = r20.readInt()
-                int r0 = r20.readInt()
-                if (r0 == 0) goto L_0x0342
-                r6 = r12
-            L_0x0342:
-                r0 = r18
-                r1 = r13
-                r2 = r14
-                r3 = r15
-                r4 = r16
-                r5 = r17
-                r0.setLockCredential(r1, r2, r3, r4, r5, r6)
-                r21.writeNoException()
-                return r12
-            L_0x0352:
-                r9.enforceInterface(r11)
-                java.lang.String r0 = r20.readString()
-                java.lang.String r1 = r20.readString()
-                int r2 = r20.readInt()
-                java.lang.String r3 = r7.getString(r0, r1, r2)
-                r21.writeNoException()
-                r10.writeString(r3)
-                return r12
-            L_0x036c:
-                r9.enforceInterface(r11)
-                java.lang.String r0 = r20.readString()
-                long r1 = r20.readLong()
-                int r3 = r20.readInt()
-                long r4 = r7.getLong(r0, r1, r3)
-                r21.writeNoException()
-                r10.writeLong(r4)
-                return r12
-            L_0x0386:
-                r9.enforceInterface(r11)
-                java.lang.String r0 = r20.readString()
-                int r1 = r20.readInt()
-                if (r1 == 0) goto L_0x0395
-                r6 = r12
-            L_0x0395:
-                r1 = r6
-                int r2 = r20.readInt()
-                boolean r3 = r7.getBoolean(r0, r1, r2)
-                r21.writeNoException()
-                r10.writeInt(r3)
-                return r12
-            L_0x03a5:
-                r9.enforceInterface(r11)
-                java.lang.String r0 = r20.readString()
-                java.lang.String r1 = r20.readString()
-                int r2 = r20.readInt()
-                r7.setString(r0, r1, r2)
-                r21.writeNoException()
-                return r12
-            L_0x03bb:
-                r9.enforceInterface(r11)
-                java.lang.String r0 = r20.readString()
-                long r1 = r20.readLong()
-                int r3 = r20.readInt()
-                r7.setLong(r0, r1, r3)
-                r21.writeNoException()
-                return r12
-            L_0x03d1:
-                r9.enforceInterface(r11)
-                java.lang.String r0 = r20.readString()
-                int r1 = r20.readInt()
-                if (r1 == 0) goto L_0x03e0
-                r6 = r12
-            L_0x03e0:
-                r1 = r6
-                int r2 = r20.readInt()
-                r7.setBoolean(r0, r1, r2)
-                r21.writeNoException()
-                return r12
-            L_0x03ec:
-                r10.writeString(r11)
-                return r12
-            */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.internal.widget.ILockSettings.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            boolean _arg5;
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0 = data.readString();
+                    _arg5 = data.readInt() != 0;
+                    boolean _arg1 = _arg5;
+                    int _arg2 = data.readInt();
+                    setBoolean(_arg0, _arg1, _arg2);
+                    reply.writeNoException();
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg02 = data.readString();
+                    long _arg12 = data.readLong();
+                    int _arg22 = data.readInt();
+                    setLong(_arg02, _arg12, _arg22);
+                    reply.writeNoException();
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg03 = data.readString();
+                    String _arg13 = data.readString();
+                    int _arg23 = data.readInt();
+                    setString(_arg03, _arg13, _arg23);
+                    reply.writeNoException();
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg04 = data.readString();
+                    _arg5 = data.readInt() != 0;
+                    boolean _arg14 = _arg5;
+                    int _arg24 = data.readInt();
+                    boolean z = getBoolean(_arg04, _arg14, _arg24);
+                    reply.writeNoException();
+                    reply.writeInt(z ? 1 : 0);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg05 = data.readString();
+                    long _arg15 = data.readLong();
+                    int _arg25 = data.readInt();
+                    long _result = getLong(_arg05, _arg15, _arg25);
+                    reply.writeNoException();
+                    reply.writeLong(_result);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg06 = data.readString();
+                    String _arg16 = data.readString();
+                    int _arg26 = data.readInt();
+                    String _result2 = getString(_arg06, _arg16, _arg26);
+                    reply.writeNoException();
+                    reply.writeString(_result2);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    byte[] _arg07 = data.createByteArray();
+                    int _arg17 = data.readInt();
+                    byte[] _arg27 = data.createByteArray();
+                    int _arg3 = data.readInt();
+                    int _arg4 = data.readInt();
+                    _arg5 = data.readInt() != 0;
+                    setLockCredential(_arg07, _arg17, _arg27, _arg3, _arg4, _arg5);
+                    reply.writeNoException();
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg08 = data.readInt();
+                    resetKeyStore(_arg08);
+                    reply.writeNoException();
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    byte[] _arg09 = data.createByteArray();
+                    int _arg18 = data.readInt();
+                    int _arg28 = data.readInt();
+                    ICheckCredentialProgressCallback _arg32 = ICheckCredentialProgressCallback.Stub.asInterface(data.readStrongBinder());
+                    VerifyCredentialResponse _result3 = checkCredential(_arg09, _arg18, _arg28, _arg32);
+                    reply.writeNoException();
+                    if (_result3 != null) {
+                        reply.writeInt(1);
+                        _result3.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    byte[] _arg010 = data.createByteArray();
+                    int _arg19 = data.readInt();
+                    long _arg29 = data.readLong();
+                    int _arg33 = data.readInt();
+                    VerifyCredentialResponse _result4 = verifyCredential(_arg010, _arg19, _arg29, _arg33);
+                    reply.writeNoException();
+                    if (_result4 != null) {
+                        reply.writeInt(1);
+                        _result4.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    byte[] _arg011 = data.createByteArray();
+                    int _arg110 = data.readInt();
+                    long _arg210 = data.readLong();
+                    int _arg34 = data.readInt();
+                    VerifyCredentialResponse _result5 = verifyTiedProfileChallenge(_arg011, _arg110, _arg210, _arg34);
+                    reply.writeNoException();
+                    if (_result5 != null) {
+                        reply.writeInt(1);
+                        _result5.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg012 = data.readInt();
+                    boolean checkVoldPassword = checkVoldPassword(_arg012);
+                    reply.writeNoException();
+                    reply.writeInt(checkVoldPassword ? 1 : 0);
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg013 = data.readInt();
+                    boolean havePattern = havePattern(_arg013);
+                    reply.writeNoException();
+                    reply.writeInt(havePattern ? 1 : 0);
+                    return true;
+                case 14:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg014 = data.readInt();
+                    boolean havePassword = havePassword(_arg014);
+                    reply.writeNoException();
+                    reply.writeInt(havePassword ? 1 : 0);
+                    return true;
+                case 15:
+                    data.enforceInterface(DESCRIPTOR);
+                    byte[] _arg015 = data.createByteArray();
+                    int _arg111 = data.readInt();
+                    byte[] _result6 = getHashFactor(_arg015, _arg111);
+                    reply.writeNoException();
+                    reply.writeByteArray(_result6);
+                    return true;
+                case 16:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg016 = data.readInt();
+                    _arg5 = data.readInt() != 0;
+                    boolean _arg112 = _arg5;
+                    byte[] _arg211 = data.createByteArray();
+                    setSeparateProfileChallengeEnabled(_arg016, _arg112, _arg211);
+                    reply.writeNoException();
+                    return true;
+                case 17:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg017 = data.readInt();
+                    boolean separateProfileChallengeEnabled = getSeparateProfileChallengeEnabled(_arg017);
+                    reply.writeNoException();
+                    reply.writeInt(separateProfileChallengeEnabled ? 1 : 0);
+                    return true;
+                case 18:
+                    data.enforceInterface(DESCRIPTOR);
+                    IStrongAuthTracker _arg018 = IStrongAuthTracker.Stub.asInterface(data.readStrongBinder());
+                    registerStrongAuthTracker(_arg018);
+                    reply.writeNoException();
+                    return true;
+                case 19:
+                    data.enforceInterface(DESCRIPTOR);
+                    IStrongAuthTracker _arg019 = IStrongAuthTracker.Stub.asInterface(data.readStrongBinder());
+                    unregisterStrongAuthTracker(_arg019);
+                    reply.writeNoException();
+                    return true;
+                case 20:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg020 = data.readInt();
+                    int _arg113 = data.readInt();
+                    requireStrongAuth(_arg020, _arg113);
+                    reply.writeNoException();
+                    return true;
+                case 21:
+                    data.enforceInterface(DESCRIPTOR);
+                    systemReady();
+                    reply.writeNoException();
+                    return true;
+                case 22:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg021 = data.readInt();
+                    userPresent(_arg021);
+                    reply.writeNoException();
+                    return true;
+                case 23:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg022 = data.readInt();
+                    int _result7 = getStrongAuthForUser(_arg022);
+                    reply.writeNoException();
+                    reply.writeInt(_result7);
+                    return true;
+                case 24:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg023 = data.readInt();
+                    boolean hasPendingEscrowToken = hasPendingEscrowToken(_arg023);
+                    reply.writeNoException();
+                    reply.writeInt(hasPendingEscrowToken ? 1 : 0);
+                    return true;
+                case 25:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg024 = data.readString();
+                    byte[] _arg114 = data.createByteArray();
+                    byte[] _arg212 = data.createByteArray();
+                    initRecoveryServiceWithSigFile(_arg024, _arg114, _arg212);
+                    reply.writeNoException();
+                    return true;
+                case 26:
+                    data.enforceInterface(DESCRIPTOR);
+                    KeyChainSnapshot _result8 = getKeyChainSnapshot();
+                    reply.writeNoException();
+                    if (_result8 != null) {
+                        reply.writeInt(1);
+                        _result8.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 27:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg025 = data.readString();
+                    String _result9 = generateKey(_arg025);
+                    reply.writeNoException();
+                    reply.writeString(_result9);
+                    return true;
+                case 28:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg026 = data.readString();
+                    byte[] _arg115 = data.createByteArray();
+                    String _result10 = generateKeyWithMetadata(_arg026, _arg115);
+                    reply.writeNoException();
+                    reply.writeString(_result10);
+                    return true;
+                case 29:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg027 = data.readString();
+                    byte[] _arg116 = data.createByteArray();
+                    String _result11 = importKey(_arg027, _arg116);
+                    reply.writeNoException();
+                    reply.writeString(_result11);
+                    return true;
+                case 30:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg028 = data.readString();
+                    byte[] _arg117 = data.createByteArray();
+                    byte[] _arg213 = data.createByteArray();
+                    String _result12 = importKeyWithMetadata(_arg028, _arg117, _arg213);
+                    reply.writeNoException();
+                    reply.writeString(_result12);
+                    return true;
+                case 31:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg029 = data.readString();
+                    String _result13 = getKey(_arg029);
+                    reply.writeNoException();
+                    reply.writeString(_result13);
+                    return true;
+                case 32:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg030 = data.readString();
+                    removeKey(_arg030);
+                    reply.writeNoException();
+                    return true;
+                case 33:
+                    data.enforceInterface(DESCRIPTOR);
+                    PendingIntent _arg031 = data.readInt() != 0 ? PendingIntent.CREATOR.createFromParcel(data) : null;
+                    setSnapshotCreatedPendingIntent(_arg031);
+                    reply.writeNoException();
+                    return true;
+                case 34:
+                    data.enforceInterface(DESCRIPTOR);
+                    byte[] _arg032 = data.createByteArray();
+                    setServerParams(_arg032);
+                    reply.writeNoException();
+                    return true;
+                case 35:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg033 = data.readString();
+                    int _arg118 = data.readInt();
+                    setRecoveryStatus(_arg033, _arg118);
+                    reply.writeNoException();
+                    return true;
+                case 36:
+                    data.enforceInterface(DESCRIPTOR);
+                    Map _result14 = getRecoveryStatus();
+                    reply.writeNoException();
+                    reply.writeMap(_result14);
+                    return true;
+                case 37:
+                    data.enforceInterface(DESCRIPTOR);
+                    int[] _arg034 = data.createIntArray();
+                    setRecoverySecretTypes(_arg034);
+                    reply.writeNoException();
+                    return true;
+                case 38:
+                    data.enforceInterface(DESCRIPTOR);
+                    int[] _result15 = getRecoverySecretTypes();
+                    reply.writeNoException();
+                    reply.writeIntArray(_result15);
+                    return true;
+                case 39:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg035 = data.readString();
+                    String _arg119 = data.readString();
+                    RecoveryCertPath _arg214 = data.readInt() != 0 ? RecoveryCertPath.CREATOR.createFromParcel(data) : null;
+                    byte[] _arg35 = data.createByteArray();
+                    byte[] _arg42 = data.createByteArray();
+                    byte[] _result16 = startRecoverySessionWithCertPath(_arg035, _arg119, _arg214, _arg35, _arg42, data.createTypedArrayList(KeyChainProtectionParams.CREATOR));
+                    reply.writeNoException();
+                    reply.writeByteArray(_result16);
+                    return true;
+                case 40:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg036 = data.readString();
+                    byte[] _arg120 = data.createByteArray();
+                    List<WrappedApplicationKey> _arg215 = data.createTypedArrayList(WrappedApplicationKey.CREATOR);
+                    Map _result17 = recoverKeyChainSnapshot(_arg036, _arg120, _arg215);
+                    reply.writeNoException();
+                    reply.writeMap(_result17);
+                    return true;
+                case 41:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg037 = data.readString();
+                    closeSession(_arg037);
+                    reply.writeNoException();
+                    return true;
+                case 42:
+                    data.enforceInterface(DESCRIPTOR);
+                    sanitizePassword();
+                    reply.writeNoException();
+                    return true;
+                case 43:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _result18 = getPassword();
+                    reply.writeNoException();
+                    reply.writeString(_result18);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements ILockSettings {
             public static ILockSettings sDefaultImpl;
             private IBinder mRemote;
@@ -920,6 +845,7 @@ public interface ILockSettings extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -928,27 +854,28 @@ public interface ILockSettings extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // com.android.internal.widget.ILockSettings
             public void setBoolean(String key, boolean value, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(key);
-                    _data.writeInt(value);
+                    _data.writeInt(value ? 1 : 0);
                     _data.writeInt(userId);
-                    if (this.mRemote.transact(1, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setBoolean(key, value, userId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setBoolean(key, value, userId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.widget.ILockSettings
             public void setLong(String key, long value, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -957,19 +884,19 @@ public interface ILockSettings extends IInterface {
                     _data.writeString(key);
                     _data.writeLong(value);
                     _data.writeInt(userId);
-                    if (this.mRemote.transact(2, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setLong(key, value, userId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setLong(key, value, userId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.widget.ILockSettings
             public void setString(String key, String value, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -978,45 +905,41 @@ public interface ILockSettings extends IInterface {
                     _data.writeString(key);
                     _data.writeString(value);
                     _data.writeInt(userId);
-                    if (this.mRemote.transact(3, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setString(key, value, userId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setString(key, value, userId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.widget.ILockSettings
             public boolean getBoolean(String key, boolean defaultValue, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(key);
-                    _data.writeInt(defaultValue);
+                    _data.writeInt(defaultValue ? 1 : 0);
                     _data.writeInt(userId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(4, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getBoolean(key, defaultValue, userId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.widget.ILockSettings
             public long getLong(String key, long defaultValue, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1025,13 +948,12 @@ public interface ILockSettings extends IInterface {
                     _data.writeString(key);
                     _data.writeLong(defaultValue);
                     _data.writeInt(userId);
-                    if (!this.mRemote.transact(5, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getLong(key, defaultValue, userId);
                     }
                     _reply.readException();
                     long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1039,6 +961,7 @@ public interface ILockSettings extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.widget.ILockSettings
             public String getString(String key, String defaultValue, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1047,13 +970,12 @@ public interface ILockSettings extends IInterface {
                     _data.writeString(key);
                     _data.writeString(defaultValue);
                     _data.writeInt(userId);
-                    if (!this.mRemote.transact(6, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getString(key, defaultValue, userId);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1061,116 +983,95 @@ public interface ILockSettings extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.widget.ILockSettings
             public void setLockCredential(byte[] credential, int type, byte[] savedCredential, int requestedQuality, int userId, boolean allowUntrustedChange) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    try {
-                        _data.writeByteArray(credential);
-                        try {
-                            _data.writeInt(type);
-                            try {
-                                _data.writeByteArray(savedCredential);
-                                try {
-                                    _data.writeInt(requestedQuality);
-                                } catch (Throwable th) {
-                                    th = th;
-                                    int i = userId;
-                                    boolean z = allowUntrustedChange;
-                                    _reply.recycle();
-                                    _data.recycle();
-                                    throw th;
-                                }
-                            } catch (Throwable th2) {
-                                th = th2;
-                                int i2 = requestedQuality;
-                                int i3 = userId;
-                                boolean z2 = allowUntrustedChange;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th3) {
-                            th = th3;
-                            byte[] bArr = savedCredential;
-                            int i22 = requestedQuality;
-                            int i32 = userId;
-                            boolean z22 = allowUntrustedChange;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                        try {
-                            _data.writeInt(userId);
-                            try {
-                                _data.writeInt(allowUntrustedChange ? 1 : 0);
-                                if (this.mRemote.transact(7, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                    _reply.readException();
-                                    _reply.recycle();
-                                    _data.recycle();
-                                    return;
-                                }
-                                Stub.getDefaultImpl().setLockCredential(credential, type, savedCredential, requestedQuality, userId, allowUntrustedChange);
-                                _reply.recycle();
-                                _data.recycle();
-                            } catch (Throwable th4) {
-                                th = th4;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th5) {
-                            th = th5;
-                            boolean z222 = allowUntrustedChange;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                    } catch (Throwable th6) {
-                        th = th6;
-                        int i4 = type;
-                        byte[] bArr2 = savedCredential;
-                        int i222 = requestedQuality;
-                        int i322 = userId;
-                        boolean z2222 = allowUntrustedChange;
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeByteArray(credential);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(type);
+                } catch (Throwable th3) {
+                    th = th3;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeByteArray(savedCredential);
+                } catch (Throwable th4) {
+                    th = th4;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(requestedQuality);
+                } catch (Throwable th5) {
+                    th = th5;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(userId);
+                } catch (Throwable th6) {
+                    th = th6;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(allowUntrustedChange ? 1 : 0);
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setLockCredential(credential, type, savedCredential, requestedQuality, userId, allowUntrustedChange);
                         _reply.recycle();
                         _data.recycle();
-                        throw th;
+                        return;
                     }
+                    _reply.readException();
+                    _reply.recycle();
+                    _data.recycle();
                 } catch (Throwable th7) {
                     th = th7;
-                    byte[] bArr3 = credential;
-                    int i42 = type;
-                    byte[] bArr22 = savedCredential;
-                    int i2222 = requestedQuality;
-                    int i3222 = userId;
-                    boolean z22222 = allowUntrustedChange;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // com.android.internal.widget.ILockSettings
             public void resetKeyStore(int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userId);
-                    if (this.mRemote.transact(8, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().resetKeyStore(userId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().resetKeyStore(userId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.widget.ILockSettings
             public VerifyCredentialResponse checkCredential(byte[] credential, int type, int userId, ICheckCredentialProgressCallback progressCallback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1181,15 +1082,14 @@ public interface ILockSettings extends IInterface {
                     _data.writeInt(userId);
                     VerifyCredentialResponse _result = null;
                     _data.writeStrongBinder(progressCallback != null ? progressCallback.asBinder() : null);
-                    if (!this.mRemote.transact(9, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(9, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().checkCredential(credential, type, userId, progressCallback);
                     }
                     _reply.readException();
                     if (_reply.readInt() != 0) {
                         _result = VerifyCredentialResponse.CREATOR.createFromParcel(_reply);
                     }
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1197,6 +1097,7 @@ public interface ILockSettings extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.widget.ILockSettings
             public VerifyCredentialResponse verifyCredential(byte[] credential, int type, long challenge, int userId) throws RemoteException {
                 VerifyCredentialResponse _result;
                 Parcel _data = Parcel.obtain();
@@ -1207,7 +1108,8 @@ public interface ILockSettings extends IInterface {
                     _data.writeInt(type);
                     _data.writeLong(challenge);
                     _data.writeInt(userId);
-                    if (!this.mRemote.transact(10, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(10, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().verifyCredential(credential, type, challenge, userId);
                     }
                     _reply.readException();
@@ -1216,16 +1118,14 @@ public interface ILockSettings extends IInterface {
                     } else {
                         _result = null;
                     }
-                    VerifyCredentialResponse _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.widget.ILockSettings
             public VerifyCredentialResponse verifyTiedProfileChallenge(byte[] credential, int type, long challenge, int userId) throws RemoteException {
                 VerifyCredentialResponse _result;
                 Parcel _data = Parcel.obtain();
@@ -1236,7 +1136,8 @@ public interface ILockSettings extends IInterface {
                     _data.writeInt(type);
                     _data.writeLong(challenge);
                     _data.writeInt(userId);
-                    if (!this.mRemote.transact(11, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(11, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().verifyTiedProfileChallenge(credential, type, challenge, userId);
                     }
                     _reply.readException();
@@ -1245,88 +1146,74 @@ public interface ILockSettings extends IInterface {
                     } else {
                         _result = null;
                     }
-                    VerifyCredentialResponse _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.widget.ILockSettings
             public boolean checkVoldPassword(int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(12, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(12, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().checkVoldPassword(userId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.widget.ILockSettings
             public boolean havePattern(int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(13, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(13, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().havePattern(userId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.widget.ILockSettings
             public boolean havePassword(int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(14, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(14, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().havePassword(userId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.widget.ILockSettings
             public byte[] getHashFactor(byte[] currentCredential, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1334,13 +1221,12 @@ public interface ILockSettings extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeByteArray(currentCredential);
                     _data.writeInt(userId);
-                    if (!this.mRemote.transact(15, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(15, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getHashFactor(currentCredential, userId);
                     }
                     _reply.readException();
                     byte[] _result = _reply.createByteArray();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1348,89 +1234,86 @@ public interface ILockSettings extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.widget.ILockSettings
             public void setSeparateProfileChallengeEnabled(int userId, boolean enabled, byte[] managedUserPassword) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userId);
-                    _data.writeInt(enabled);
+                    _data.writeInt(enabled ? 1 : 0);
                     _data.writeByteArray(managedUserPassword);
-                    if (this.mRemote.transact(16, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(16, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setSeparateProfileChallengeEnabled(userId, enabled, managedUserPassword);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setSeparateProfileChallengeEnabled(userId, enabled, managedUserPassword);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.widget.ILockSettings
             public boolean getSeparateProfileChallengeEnabled(int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(17, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(17, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getSeparateProfileChallengeEnabled(userId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.widget.ILockSettings
             public void registerStrongAuthTracker(IStrongAuthTracker tracker) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(tracker != null ? tracker.asBinder() : null);
-                    if (this.mRemote.transact(18, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(18, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().registerStrongAuthTracker(tracker);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().registerStrongAuthTracker(tracker);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.widget.ILockSettings
             public void unregisterStrongAuthTracker(IStrongAuthTracker tracker) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(tracker != null ? tracker.asBinder() : null);
-                    if (this.mRemote.transact(19, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(19, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().unregisterStrongAuthTracker(tracker);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().unregisterStrongAuthTracker(tracker);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.widget.ILockSettings
             public void requireStrongAuth(int strongAuthReason, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1438,69 +1321,68 @@ public interface ILockSettings extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(strongAuthReason);
                     _data.writeInt(userId);
-                    if (this.mRemote.transact(20, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(20, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().requireStrongAuth(strongAuthReason, userId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().requireStrongAuth(strongAuthReason, userId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.widget.ILockSettings
             public void systemReady() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(21, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(21, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().systemReady();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().systemReady();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.widget.ILockSettings
             public void userPresent(int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userId);
-                    if (this.mRemote.transact(22, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(22, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().userPresent(userId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().userPresent(userId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.widget.ILockSettings
             public int getStrongAuthForUser(int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userId);
-                    if (!this.mRemote.transact(23, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(23, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getStrongAuthForUser(userId);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1508,30 +1390,27 @@ public interface ILockSettings extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.widget.ILockSettings
             public boolean hasPendingEscrowToken(int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(24, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(24, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().hasPendingEscrowToken(userId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.widget.ILockSettings
             public void initRecoveryServiceWithSigFile(String rootCertificateAlias, byte[] recoveryServiceCertFile, byte[] recoveryServiceSigFile) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1540,26 +1419,27 @@ public interface ILockSettings extends IInterface {
                     _data.writeString(rootCertificateAlias);
                     _data.writeByteArray(recoveryServiceCertFile);
                     _data.writeByteArray(recoveryServiceSigFile);
-                    if (this.mRemote.transact(25, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(25, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().initRecoveryServiceWithSigFile(rootCertificateAlias, recoveryServiceCertFile, recoveryServiceSigFile);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().initRecoveryServiceWithSigFile(rootCertificateAlias, recoveryServiceCertFile, recoveryServiceSigFile);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.widget.ILockSettings
             public KeyChainSnapshot getKeyChainSnapshot() throws RemoteException {
                 KeyChainSnapshot _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(26, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(26, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getKeyChainSnapshot();
                     }
                     _reply.readException();
@@ -1568,29 +1448,6 @@ public interface ILockSettings extends IInterface {
                     } else {
                         _result = null;
                     }
-                    KeyChainSnapshot _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public String generateKey(String alias) throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeString(alias);
-                    if (!this.mRemote.transact(27, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
-                        return Stub.getDefaultImpl().generateKey(alias);
-                    }
-                    _reply.readException();
-                    String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1598,6 +1455,27 @@ public interface ILockSettings extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.widget.ILockSettings
+            public String generateKey(String alias) throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    _data.writeString(alias);
+                    boolean _status = this.mRemote.transact(27, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        return Stub.getDefaultImpl().generateKey(alias);
+                    }
+                    _reply.readException();
+                    String _result = _reply.readString();
+                    return _result;
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // com.android.internal.widget.ILockSettings
             public String generateKeyWithMetadata(String alias, byte[] metadata) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1605,13 +1483,12 @@ public interface ILockSettings extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(alias);
                     _data.writeByteArray(metadata);
-                    if (!this.mRemote.transact(28, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(28, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().generateKeyWithMetadata(alias, metadata);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1619,6 +1496,7 @@ public interface ILockSettings extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.widget.ILockSettings
             public String importKey(String alias, byte[] keyBytes) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1626,13 +1504,12 @@ public interface ILockSettings extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(alias);
                     _data.writeByteArray(keyBytes);
-                    if (!this.mRemote.transact(29, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(29, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().importKey(alias, keyBytes);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1640,6 +1517,7 @@ public interface ILockSettings extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.widget.ILockSettings
             public String importKeyWithMetadata(String alias, byte[] keyBytes, byte[] metadata) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1648,13 +1526,12 @@ public interface ILockSettings extends IInterface {
                     _data.writeString(alias);
                     _data.writeByteArray(keyBytes);
                     _data.writeByteArray(metadata);
-                    if (!this.mRemote.transact(30, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(30, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().importKeyWithMetadata(alias, keyBytes, metadata);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1662,19 +1539,19 @@ public interface ILockSettings extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.widget.ILockSettings
             public String getKey(String alias) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(alias);
-                    if (!this.mRemote.transact(31, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(31, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getKey(alias);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1682,25 +1559,26 @@ public interface ILockSettings extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.widget.ILockSettings
             public void removeKey(String alias) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(alias);
-                    if (this.mRemote.transact(32, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(32, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().removeKey(alias);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().removeKey(alias);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.widget.ILockSettings
             public void setSnapshotCreatedPendingIntent(PendingIntent intent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1712,38 +1590,38 @@ public interface ILockSettings extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(33, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(33, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setSnapshotCreatedPendingIntent(intent);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setSnapshotCreatedPendingIntent(intent);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.widget.ILockSettings
             public void setServerParams(byte[] serverParams) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeByteArray(serverParams);
-                    if (this.mRemote.transact(34, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(34, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setServerParams(serverParams);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setServerParams(serverParams);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.widget.ILockSettings
             public void setRecoveryStatus(String alias, int status) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1751,31 +1629,31 @@ public interface ILockSettings extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(alias);
                     _data.writeInt(status);
-                    if (this.mRemote.transact(35, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(35, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setRecoveryStatus(alias, status);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setRecoveryStatus(alias, status);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.widget.ILockSettings
             public Map getRecoveryStatus() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(36, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(36, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getRecoveryStatus();
                     }
                     _reply.readException();
-                    Map _result = _reply.readHashMap(getClass().getClassLoader());
-                    _reply.recycle();
-                    _data.recycle();
+                    ClassLoader cl = getClass().getClassLoader();
+                    Map _result = _reply.readHashMap(cl);
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1783,37 +1661,37 @@ public interface ILockSettings extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.widget.ILockSettings
             public void setRecoverySecretTypes(int[] secretTypes) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeIntArray(secretTypes);
-                    if (this.mRemote.transact(37, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(37, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setRecoverySecretTypes(secretTypes);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setRecoverySecretTypes(secretTypes);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.widget.ILockSettings
             public int[] getRecoverySecretTypes() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(38, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(38, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getRecoverySecretTypes();
                     }
                     _reply.readException();
                     int[] _result = _reply.createIntArray();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1821,92 +1699,76 @@ public interface ILockSettings extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.widget.ILockSettings
             public byte[] startRecoverySessionWithCertPath(String sessionId, String rootCertificateAlias, RecoveryCertPath verifierCertPath, byte[] vaultParams, byte[] vaultChallenge, List<KeyChainProtectionParams> secrets) throws RemoteException {
-                RecoveryCertPath recoveryCertPath = verifierCertPath;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    try {
-                        _data.writeString(sessionId);
-                        try {
-                            _data.writeString(rootCertificateAlias);
-                            if (recoveryCertPath != null) {
-                                _data.writeInt(1);
-                                recoveryCertPath.writeToParcel(_data, 0);
-                            } else {
-                                _data.writeInt(0);
-                            }
-                        } catch (Throwable th) {
-                            th = th;
-                            byte[] bArr = vaultParams;
-                            byte[] bArr2 = vaultChallenge;
-                            List<KeyChainProtectionParams> list = secrets;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                    } catch (Throwable th2) {
-                        th = th2;
-                        String str = rootCertificateAlias;
-                        byte[] bArr3 = vaultParams;
-                        byte[] bArr22 = vaultChallenge;
-                        List<KeyChainProtectionParams> list2 = secrets;
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeString(sessionId);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeString(rootCertificateAlias);
+                    if (verifierCertPath != null) {
+                        _data.writeInt(1);
+                        verifierCertPath.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
+                    }
+                } catch (Throwable th3) {
+                    th = th3;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeByteArray(vaultParams);
+                } catch (Throwable th4) {
+                    th = th4;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeByteArray(vaultChallenge);
+                } catch (Throwable th5) {
+                    th = th5;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeTypedList(secrets);
+                    boolean _status = this.mRemote.transact(39, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        byte[] startRecoverySessionWithCertPath = Stub.getDefaultImpl().startRecoverySessionWithCertPath(sessionId, rootCertificateAlias, verifierCertPath, vaultParams, vaultChallenge, secrets);
                         _reply.recycle();
                         _data.recycle();
-                        throw th;
+                        return startRecoverySessionWithCertPath;
                     }
-                    try {
-                        _data.writeByteArray(vaultParams);
-                        try {
-                            _data.writeByteArray(vaultChallenge);
-                        } catch (Throwable th3) {
-                            th = th3;
-                            List<KeyChainProtectionParams> list22 = secrets;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                        try {
-                            _data.writeTypedList(secrets);
-                            if (this.mRemote.transact(39, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                _reply.readException();
-                                byte[] _result = _reply.createByteArray();
-                                _reply.recycle();
-                                _data.recycle();
-                                return _result;
-                            }
-                            byte[] startRecoverySessionWithCertPath = Stub.getDefaultImpl().startRecoverySessionWithCertPath(sessionId, rootCertificateAlias, verifierCertPath, vaultParams, vaultChallenge, secrets);
-                            _reply.recycle();
-                            _data.recycle();
-                            return startRecoverySessionWithCertPath;
-                        } catch (Throwable th4) {
-                            th = th4;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                    } catch (Throwable th5) {
-                        th = th5;
-                        byte[] bArr222 = vaultChallenge;
-                        List<KeyChainProtectionParams> list222 = secrets;
-                        _reply.recycle();
-                        _data.recycle();
-                        throw th;
-                    }
+                    _reply.readException();
+                    byte[] _result = _reply.createByteArray();
+                    _reply.recycle();
+                    _data.recycle();
+                    return _result;
                 } catch (Throwable th6) {
                     th = th6;
-                    String str2 = sessionId;
-                    String str3 = rootCertificateAlias;
-                    byte[] bArr32 = vaultParams;
-                    byte[] bArr2222 = vaultChallenge;
-                    List<KeyChainProtectionParams> list2222 = secrets;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // com.android.internal.widget.ILockSettings
             public Map recoverKeyChainSnapshot(String sessionId, byte[] recoveryKeyBlob, List<WrappedApplicationKey> applicationKeys) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1915,13 +1777,13 @@ public interface ILockSettings extends IInterface {
                     _data.writeString(sessionId);
                     _data.writeByteArray(recoveryKeyBlob);
                     _data.writeTypedList(applicationKeys);
-                    if (!this.mRemote.transact(40, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(40, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().recoverKeyChainSnapshot(sessionId, recoveryKeyBlob, applicationKeys);
                     }
                     _reply.readException();
-                    Map _result = _reply.readHashMap(getClass().getClassLoader());
-                    _reply.recycle();
-                    _data.recycle();
+                    ClassLoader cl = getClass().getClassLoader();
+                    Map _result = _reply.readHashMap(cl);
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1929,55 +1791,55 @@ public interface ILockSettings extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.widget.ILockSettings
             public void closeSession(String sessionId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(sessionId);
-                    if (this.mRemote.transact(41, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(41, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().closeSession(sessionId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().closeSession(sessionId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.widget.ILockSettings
             public void sanitizePassword() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(42, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(42, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().sanitizePassword();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().sanitizePassword();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.widget.ILockSettings
             public String getPassword() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(43, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(43, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPassword();
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1987,11 +1849,11 @@ public interface ILockSettings extends IInterface {
         }
 
         public static boolean setDefaultImpl(ILockSettings impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static ILockSettings getDefaultImpl() {

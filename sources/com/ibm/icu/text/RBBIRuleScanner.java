@@ -3,40 +3,45 @@ package com.ibm.icu.text;
 import com.ibm.icu.impl.Assert;
 import com.ibm.icu.impl.Utility;
 import com.ibm.icu.lang.UCharacter;
+import com.ibm.icu.text.RBBIRuleParseTable;
 import java.text.ParsePosition;
 import java.util.HashMap;
 
+/* loaded from: classes5.dex */
 class RBBIRuleScanner {
     static final int chLS = 8232;
     static final int chNEL = 133;
-    private static String gRuleSet_digit_char_pattern = "[0-9]";
-    private static String gRuleSet_name_char_pattern = "[_\\p{L}\\p{N}]";
-    private static String gRuleSet_name_start_char_pattern = "[_\\p{L}]";
-    private static String gRuleSet_rule_char_pattern = "[^[\\p{Z}\\u0020-\\u007f]-[\\p{L}]-[\\p{N}]]";
-    private static String gRuleSet_white_space_pattern = "[\\p{Pattern_White_Space}]";
-    private static String kAny = "any";
     private static final int kStackSize = 100;
-    RBBIRuleChar fC = new RBBIRuleChar();
     int fCharNum;
     int fLastChar;
-    int fLineNum;
     boolean fLookAheadRule;
     int fNextIndex;
     boolean fNoChainInRule;
-    RBBINode[] fNodeStack = new RBBINode[100];
     int fNodeStackPtr;
     int fOptionStart;
     boolean fQuoteMode;
     RBBIRuleBuilder fRB;
     boolean fReverseRule;
     int fRuleNum;
-    UnicodeSet[] fRuleSets = new UnicodeSet[10];
     int fScanIndex;
-    HashMap<String, RBBISetTableEl> fSetTable = new HashMap<>();
-    short[] fStack = new short[100];
     int fStackPtr;
     RBBISymbolTable fSymbolTable;
+    private static String gRuleSet_rule_char_pattern = "[^[\\p{Z}\\u0020-\\u007f]-[\\p{L}]-[\\p{N}]]";
+    private static String gRuleSet_name_char_pattern = "[_\\p{L}\\p{N}]";
+    private static String gRuleSet_digit_char_pattern = "[0-9]";
+    private static String gRuleSet_name_start_char_pattern = "[_\\p{L}]";
+    private static String gRuleSet_white_space_pattern = "[\\p{Pattern_White_Space}]";
+    private static String kAny = "any";
 
+    /* renamed from: fC */
+    RBBIRuleChar f2558fC = new RBBIRuleChar();
+    short[] fStack = new short[100];
+    RBBINode[] fNodeStack = new RBBINode[100];
+    HashMap<String, RBBISetTableEl> fSetTable = new HashMap<>();
+    UnicodeSet[] fRuleSets = new UnicodeSet[10];
+    int fLineNum = 1;
+
+    /* loaded from: classes5.dex */
     static class RBBIRuleChar {
         int fChar;
         boolean fEscaped;
@@ -47,7 +52,6 @@ class RBBIRuleScanner {
 
     RBBIRuleScanner(RBBIRuleBuilder rb) {
         this.fRB = rb;
-        this.fLineNum = 1;
         this.fRuleSets[3] = new UnicodeSet(gRuleSet_rule_char_pattern);
         this.fRuleSets[4] = new UnicodeSet(gRuleSet_white_space_pattern);
         this.fRuleSets[1] = new UnicodeSet(gRuleSet_name_char_pattern);
@@ -56,9 +60,7 @@ class RBBIRuleScanner {
         this.fSymbolTable = new RBBISymbolTable(this);
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean doParseActions(int action) {
-        int i = 3;
+    boolean doParseActions(int action) {
         switch (action) {
             case 1:
                 if (this.fNodeStack[this.fNodeStackPtr].fLeftChild != null) {
@@ -68,7 +70,7 @@ class RBBIRuleScanner {
                 return false;
             case 2:
                 RBBINode n = pushNewNode(0);
-                findSetFor(kAny, n, (UnicodeSet) null);
+                findSetFor(kAny, n, null);
                 n.fFirstPos = this.fScanIndex;
                 n.fLastPos = this.fNextIndex;
                 n.fText = this.fRB.fRules.substring(n.fFirstPos, n.fLastPos);
@@ -108,10 +110,7 @@ class RBBIRuleScanner {
                 if (this.fRB.fChainRules && !this.fNoChainInRule) {
                     thisRule.fChainIn = true;
                 }
-                if (!this.fReverseRule) {
-                    i = this.fRB.fDefaultTree;
-                }
-                int destRules = i;
+                int destRules = this.fReverseRule ? 3 : this.fRB.fDefaultTree;
                 if (this.fRB.fTreeRoots[destRules] != null) {
                     RBBINode thisRule2 = this.fNodeStack[this.fNodeStackPtr];
                     RBBINode prevRules = this.fRB.fTreeRoots[destRules];
@@ -144,9 +143,9 @@ class RBBIRuleScanner {
             case 7:
                 fixOpStack(4);
                 RBBINode[] rBBINodeArr = this.fNodeStack;
-                int i2 = this.fNodeStackPtr;
-                this.fNodeStackPtr = i2 - 1;
-                RBBINode operandNode = rBBINodeArr[i2];
+                int i = this.fNodeStackPtr;
+                this.fNodeStackPtr = i - 1;
+                RBBINode operandNode = rBBINodeArr[i];
                 RBBINode catNode2 = pushNewNode(8);
                 catNode2.fLeftChild = operandNode;
                 operandNode.fParent = catNode2;
@@ -157,9 +156,9 @@ class RBBIRuleScanner {
             case 9:
                 fixOpStack(4);
                 RBBINode[] rBBINodeArr2 = this.fNodeStack;
-                int i3 = this.fNodeStackPtr;
-                this.fNodeStackPtr = i3 - 1;
-                RBBINode operandNode2 = rBBINodeArr2[i3];
+                int i2 = this.fNodeStackPtr;
+                this.fNodeStackPtr = i2 - 1;
+                RBBINode operandNode2 = rBBINodeArr2[i2];
                 RBBINode orNode2 = pushNewNode(9);
                 orNode2.fLeftChild = operandNode2;
                 operandNode2.fParent = orNode2;
@@ -218,7 +217,8 @@ class RBBIRuleScanner {
                 return true;
             case 18:
                 RBBINode n3 = pushNewNode(0);
-                findSetFor(String.valueOf((char) this.fC.fChar), n3, (UnicodeSet) null);
+                String s = String.valueOf((char) this.f2558fC.fChar);
+                findSetFor(s, n3, null);
                 n3.fFirstPos = this.fScanIndex;
                 n3.fLastPos = this.fNextIndex;
                 n3.fText = this.fRB.fRules.substring(n3.fFirstPos, n3.fLastPos);
@@ -255,7 +255,8 @@ class RBBIRuleScanner {
                 return true;
             case 26:
                 RBBINode n6 = this.fNodeStack[this.fNodeStackPtr];
-                n6.fVal = (n6.fVal * 10) + UCharacter.digit((char) this.fC.fChar, 10);
+                int v = UCharacter.digit((char) this.f2558fC.fChar, 10);
+                n6.fVal = (n6.fVal * 10) + v;
                 return true;
             case 27:
                 error(66062);
@@ -267,27 +268,27 @@ class RBBIRuleScanner {
                 return true;
             case 29:
                 RBBINode[] rBBINodeArr3 = this.fNodeStack;
-                int i4 = this.fNodeStackPtr;
-                this.fNodeStackPtr = i4 - 1;
-                RBBINode operandNode3 = rBBINodeArr3[i4];
+                int i3 = this.fNodeStackPtr;
+                this.fNodeStackPtr = i3 - 1;
+                RBBINode operandNode3 = rBBINodeArr3[i3];
                 RBBINode plusNode = pushNewNode(11);
                 plusNode.fLeftChild = operandNode3;
                 operandNode3.fParent = plusNode;
                 return true;
             case 30:
                 RBBINode[] rBBINodeArr4 = this.fNodeStack;
-                int i5 = this.fNodeStackPtr;
-                this.fNodeStackPtr = i5 - 1;
-                RBBINode operandNode4 = rBBINodeArr4[i5];
+                int i4 = this.fNodeStackPtr;
+                this.fNodeStackPtr = i4 - 1;
+                RBBINode operandNode4 = rBBINodeArr4[i4];
                 RBBINode qNode = pushNewNode(12);
                 qNode.fLeftChild = operandNode4;
                 operandNode4.fParent = qNode;
                 return true;
             case 31:
                 RBBINode[] rBBINodeArr5 = this.fNodeStack;
-                int i6 = this.fNodeStackPtr;
-                this.fNodeStackPtr = i6 - 1;
-                RBBINode operandNode5 = rBBINodeArr5[i6];
+                int i5 = this.fNodeStackPtr;
+                this.fNodeStackPtr = i5 - 1;
+                RBBINode operandNode5 = rBBINodeArr5[i5];
                 RBBINode starNode = pushNewNode(10);
                 starNode.fLeftChild = operandNode5;
                 operandNode5.fParent = starNode;
@@ -301,74 +302,38 @@ class RBBIRuleScanner {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void error(int e) {
-        throw new IllegalArgumentException("Error " + e + " at line " + this.fLineNum + " column " + this.fCharNum);
+    void error(int e) {
+        String s = "Error " + e + " at line " + this.fLineNum + " column " + this.fCharNum;
+        IllegalArgumentException ex = new IllegalArgumentException(s);
+        throw ex;
     }
 
-    /* access modifiers changed from: package-private */
-    /* JADX WARNING: Removed duplicated region for block: B:10:0x003d  */
-    /* JADX WARNING: Removed duplicated region for block: B:18:? A[RETURN, SYNTHETIC] */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void fixOpStack(int r6) {
-        /*
-            r5 = this;
-        L_0x0000:
-            com.ibm.icu.text.RBBINode[] r0 = r5.fNodeStack
-            int r1 = r5.fNodeStackPtr
-            int r1 = r1 + -1
-            r0 = r0[r1]
-            int r1 = r0.fPrecedence
-            if (r1 != 0) goto L_0x001a
-            java.io.PrintStream r1 = java.lang.System.out
-            java.lang.String r2 = "RBBIRuleScanner.fixOpStack, bad operator node"
-            r1.print(r2)
-            r1 = 66049(0x10201, float:9.2554E-41)
-            r5.error(r1)
-            return
-        L_0x001a:
-            int r1 = r0.fPrecedence
-            r2 = 2
-            if (r1 < r6) goto L_0x003b
-            int r1 = r0.fPrecedence
-            if (r1 > r2) goto L_0x0024
-            goto L_0x003b
-        L_0x0024:
-            com.ibm.icu.text.RBBINode[] r1 = r5.fNodeStack
-            int r2 = r5.fNodeStackPtr
-            r1 = r1[r2]
-            r0.fRightChild = r1
-            com.ibm.icu.text.RBBINode[] r1 = r5.fNodeStack
-            int r2 = r5.fNodeStackPtr
-            r1 = r1[r2]
-            r1.fParent = r0
-            int r1 = r5.fNodeStackPtr
-            int r1 = r1 + -1
-            r5.fNodeStackPtr = r1
-            goto L_0x0000
-        L_0x003b:
-            if (r6 > r2) goto L_0x005b
-            int r1 = r0.fPrecedence
-            if (r1 == r6) goto L_0x0047
-            r1 = 66056(0x10208, float:9.2564E-41)
-            r5.error(r1)
-        L_0x0047:
-            com.ibm.icu.text.RBBINode[] r1 = r5.fNodeStack
-            int r2 = r5.fNodeStackPtr
-            int r2 = r2 + -1
-            com.ibm.icu.text.RBBINode[] r3 = r5.fNodeStack
-            int r4 = r5.fNodeStackPtr
-            r3 = r3[r4]
-            r1[r2] = r3
-            int r1 = r5.fNodeStackPtr
-            int r1 = r1 + -1
-            r5.fNodeStackPtr = r1
-        L_0x005b:
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.ibm.icu.text.RBBIRuleScanner.fixOpStack(int):void");
+    void fixOpStack(int p) {
+        RBBINode n;
+        while (true) {
+            n = this.fNodeStack[this.fNodeStackPtr - 1];
+            if (n.fPrecedence == 0) {
+                System.out.print("RBBIRuleScanner.fixOpStack, bad operator node");
+                error(66049);
+                return;
+            } else if (n.fPrecedence < p || n.fPrecedence <= 2) {
+                break;
+            } else {
+                n.fRightChild = this.fNodeStack[this.fNodeStackPtr];
+                this.fNodeStack[this.fNodeStackPtr].fParent = n;
+                this.fNodeStackPtr--;
+            }
+        }
+        if (p <= 2) {
+            if (n.fPrecedence != p) {
+                error(66056);
+            }
+            this.fNodeStack[this.fNodeStackPtr - 1] = this.fNodeStack[this.fNodeStackPtr];
+            this.fNodeStackPtr--;
+        }
     }
 
+    /* loaded from: classes5.dex */
     static class RBBISetTableEl {
         String key;
         RBBINode val;
@@ -377,16 +342,11 @@ class RBBIRuleScanner {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void findSetFor(String s, RBBINode node, UnicodeSet setToAdopt) {
+    void findSetFor(String s, RBBINode node, UnicodeSet setToAdopt) {
         RBBISetTableEl el = this.fSetTable.get(s);
-        boolean z = false;
         if (el != null) {
             node.fLeftChild = el.val;
-            if (node.fLeftChild.fType == 1) {
-                z = true;
-            }
-            Assert.assrt(z);
+            Assert.assrt(node.fLeftChild.fType == 1);
             return;
         }
         if (setToAdopt == null) {
@@ -426,8 +386,7 @@ class RBBIRuleScanner {
         return strippedRules.toString();
     }
 
-    /* access modifiers changed from: package-private */
-    public int nextCharLL() {
+    int nextCharLL() {
         if (this.fNextIndex >= this.fRB.fRules.length()) {
             return -1;
         }
@@ -447,8 +406,7 @@ class RBBIRuleScanner {
         return ch;
     }
 
-    /* access modifiers changed from: package-private */
-    public void nextChar(RBBIRuleChar c) {
+    void nextChar(RBBIRuleChar c) {
         this.fScanIndex = this.fNextIndex;
         c.fChar = nextCharLL();
         c.fEscaped = false;
@@ -475,16 +433,16 @@ class RBBIRuleScanner {
             int commentStart = this.fScanIndex;
             do {
                 c.fChar = nextCharLL();
-                if (c.fChar == -1 || c.fChar == 13 || c.fChar == 10 || c.fChar == 133 || c.fChar == 8232) {
+                if (c.fChar == -1 || c.fChar == 13 || c.fChar == 10 || c.fChar == 133) {
+                    break;
                 }
-                c.fChar = nextCharLL();
-                break;
-            } while (c.fChar == 8232);
+            } while (c.fChar != 8232);
             for (int i = commentStart; i < this.fNextIndex - 1; i++) {
                 this.fRB.fStrippedRules.setCharAt(i, ' ');
             }
         }
-        if (c.fChar != -1 && c.fChar == 92) {
+        int commentStart2 = c.fChar;
+        if (commentStart2 != -1 && c.fChar == 92) {
             c.fEscaped = true;
             int[] unescapeIndex = {this.fNextIndex};
             c.fChar = Utility.unescapeAt(this.fRB.fRules, unescapeIndex);
@@ -496,296 +454,94 @@ class RBBIRuleScanner {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    /* JADX WARNING: Incorrect type for immutable var: ssa=short, code=int, for r0v3, types: [short] */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void parse() {
-        /*
-            r9 = this;
-            r0 = 1
-            com.ibm.icu.text.RBBIRuleScanner$RBBIRuleChar r1 = r9.fC
-            r9.nextChar(r1)
-        L_0x0006:
-            r1 = 1
-            if (r0 != 0) goto L_0x000b
-            goto L_0x011a
-        L_0x000b:
-            com.ibm.icu.text.RBBIRuleParseTable$RBBIRuleTableElement[] r2 = com.ibm.icu.text.RBBIRuleParseTable.gRuleParseStateTable
-            r2 = r2[r0]
-            com.ibm.icu.text.RBBIRuleBuilder r3 = r9.fRB
-            java.lang.String r3 = r3.fDebugEnv
-            if (r3 == 0) goto L_0x005a
-            com.ibm.icu.text.RBBIRuleBuilder r3 = r9.fRB
-            java.lang.String r3 = r3.fDebugEnv
-            java.lang.String r4 = "scan"
-            int r3 = r3.indexOf(r4)
-            if (r3 < 0) goto L_0x005a
-            java.io.PrintStream r3 = java.lang.System.out
-            java.lang.StringBuilder r4 = new java.lang.StringBuilder
-            r4.<init>()
-            java.lang.String r5 = "char, line, col = ('"
-            r4.append(r5)
-            com.ibm.icu.text.RBBIRuleScanner$RBBIRuleChar r5 = r9.fC
-            int r5 = r5.fChar
-            char r5 = (char) r5
-            r4.append(r5)
-            java.lang.String r5 = "', "
-            r4.append(r5)
-            int r5 = r9.fLineNum
-            r4.append(r5)
-            java.lang.String r5 = ", "
-            r4.append(r5)
-            int r5 = r9.fCharNum
-            r4.append(r5)
-            java.lang.String r5 = "    state = "
-            r4.append(r5)
-            java.lang.String r5 = r2.fStateName
-            r4.append(r5)
-            java.lang.String r4 = r4.toString()
-            r3.println(r4)
-        L_0x005a:
-            r3 = r2
-            r2 = r0
-        L_0x005c:
-            com.ibm.icu.text.RBBIRuleParseTable$RBBIRuleTableElement[] r4 = com.ibm.icu.text.RBBIRuleParseTable.gRuleParseStateTable
-            r3 = r4[r2]
-            com.ibm.icu.text.RBBIRuleBuilder r4 = r9.fRB
-            java.lang.String r4 = r4.fDebugEnv
-            if (r4 == 0) goto L_0x0079
-            com.ibm.icu.text.RBBIRuleBuilder r4 = r9.fRB
-            java.lang.String r4 = r4.fDebugEnv
-            java.lang.String r5 = "scan"
-            int r4 = r4.indexOf(r5)
-            if (r4 < 0) goto L_0x0079
-            java.io.PrintStream r4 = java.lang.System.out
-            java.lang.String r5 = "."
-            r4.print(r5)
-        L_0x0079:
-            short r4 = r3.fCharClass
-            r5 = 127(0x7f, float:1.78E-43)
-            r6 = 255(0xff, float:3.57E-43)
-            if (r4 >= r5) goto L_0x0091
-            com.ibm.icu.text.RBBIRuleScanner$RBBIRuleChar r4 = r9.fC
-            boolean r4 = r4.fEscaped
-            if (r4 != 0) goto L_0x0091
-            short r4 = r3.fCharClass
-            com.ibm.icu.text.RBBIRuleScanner$RBBIRuleChar r5 = r9.fC
-            int r5 = r5.fChar
-            if (r4 != r5) goto L_0x0091
-            goto L_0x00f8
-        L_0x0091:
-            short r4 = r3.fCharClass
-            if (r4 != r6) goto L_0x0096
-            goto L_0x00f8
-        L_0x0096:
-            short r4 = r3.fCharClass
-            r5 = 254(0xfe, float:3.56E-43)
-            if (r4 != r5) goto L_0x00a3
-            com.ibm.icu.text.RBBIRuleScanner$RBBIRuleChar r4 = r9.fC
-            boolean r4 = r4.fEscaped
-            if (r4 == 0) goto L_0x00a3
-            goto L_0x00f8
-        L_0x00a3:
-            short r4 = r3.fCharClass
-            r5 = 253(0xfd, float:3.55E-43)
-            if (r4 != r5) goto L_0x00c0
-            com.ibm.icu.text.RBBIRuleScanner$RBBIRuleChar r4 = r9.fC
-            boolean r4 = r4.fEscaped
-            if (r4 == 0) goto L_0x00c0
-            com.ibm.icu.text.RBBIRuleScanner$RBBIRuleChar r4 = r9.fC
-            int r4 = r4.fChar
-            r5 = 80
-            if (r4 == r5) goto L_0x00f8
-            com.ibm.icu.text.RBBIRuleScanner$RBBIRuleChar r4 = r9.fC
-            int r4 = r4.fChar
-            r5 = 112(0x70, float:1.57E-43)
-            if (r4 != r5) goto L_0x00c0
-            goto L_0x00f8
-        L_0x00c0:
-            short r4 = r3.fCharClass
-            r5 = 252(0xfc, float:3.53E-43)
-            r7 = -1
-            if (r4 != r5) goto L_0x00ce
-            com.ibm.icu.text.RBBIRuleScanner$RBBIRuleChar r4 = r9.fC
-            int r4 = r4.fChar
-            if (r4 != r7) goto L_0x00ce
-            goto L_0x00f8
-        L_0x00ce:
-            short r4 = r3.fCharClass
-            r5 = 128(0x80, float:1.794E-43)
-            if (r4 < r5) goto L_0x0205
-            short r4 = r3.fCharClass
-            r8 = 240(0xf0, float:3.36E-43)
-            if (r4 >= r8) goto L_0x0205
-            com.ibm.icu.text.RBBIRuleScanner$RBBIRuleChar r4 = r9.fC
-            boolean r4 = r4.fEscaped
-            if (r4 != 0) goto L_0x0205
-            com.ibm.icu.text.RBBIRuleScanner$RBBIRuleChar r4 = r9.fC
-            int r4 = r4.fChar
-            if (r4 == r7) goto L_0x0205
-            com.ibm.icu.text.UnicodeSet[] r4 = r9.fRuleSets
-            short r7 = r3.fCharClass
-            int r7 = r7 - r5
-            r4 = r4[r7]
-            com.ibm.icu.text.RBBIRuleScanner$RBBIRuleChar r5 = r9.fC
-            int r5 = r5.fChar
-            boolean r5 = r4.contains((int) r5)
-            if (r5 == 0) goto L_0x0205
-        L_0x00f8:
-            com.ibm.icu.text.RBBIRuleBuilder r2 = r9.fRB
-            java.lang.String r2 = r2.fDebugEnv
-            if (r2 == 0) goto L_0x0111
-            com.ibm.icu.text.RBBIRuleBuilder r2 = r9.fRB
-            java.lang.String r2 = r2.fDebugEnv
-            java.lang.String r4 = "scan"
-            int r2 = r2.indexOf(r4)
-            if (r2 < 0) goto L_0x0111
-            java.io.PrintStream r2 = java.lang.System.out
-            java.lang.String r4 = ""
-            r2.println(r4)
-        L_0x0111:
-            short r2 = r3.fAction
-            boolean r2 = r9.doParseActions(r2)
-            if (r2 != 0) goto L_0x01b5
-        L_0x011a:
-            com.ibm.icu.text.RBBIRuleBuilder r2 = r9.fRB
-            com.ibm.icu.text.RBBINode[] r2 = r2.fTreeRoots
-            r3 = 0
-            r2 = r2[r3]
-            if (r2 != 0) goto L_0x0129
-            r2 = 66052(0x10204, float:9.2559E-41)
-            r9.error(r2)
-        L_0x0129:
-            com.ibm.icu.text.RBBIRuleBuilder r2 = r9.fRB
-            java.lang.String r2 = r2.fDebugEnv
-            if (r2 == 0) goto L_0x0140
-            com.ibm.icu.text.RBBIRuleBuilder r2 = r9.fRB
-            java.lang.String r2 = r2.fDebugEnv
-            java.lang.String r4 = "symbols"
-            int r2 = r2.indexOf(r4)
-            if (r2 < 0) goto L_0x0140
-            com.ibm.icu.text.RBBISymbolTable r2 = r9.fSymbolTable
-            r2.rbbiSymtablePrint()
-        L_0x0140:
-            com.ibm.icu.text.RBBIRuleBuilder r2 = r9.fRB
-            java.lang.String r2 = r2.fDebugEnv
-            if (r2 == 0) goto L_0x01b4
-            com.ibm.icu.text.RBBIRuleBuilder r2 = r9.fRB
-            java.lang.String r2 = r2.fDebugEnv
-            java.lang.String r4 = "ptree"
-            int r2 = r2.indexOf(r4)
-            if (r2 < 0) goto L_0x01b4
-            java.io.PrintStream r2 = java.lang.System.out
-            java.lang.String r4 = "Completed Forward Rules Parse Tree..."
-            r2.println(r4)
-            com.ibm.icu.text.RBBIRuleBuilder r2 = r9.fRB
-            com.ibm.icu.text.RBBINode[] r2 = r2.fTreeRoots
-            r2 = r2[r3]
-            r2.printTree(r1)
-            java.io.PrintStream r2 = java.lang.System.out
-            java.lang.String r3 = "\nCompleted Reverse Rules Parse Tree..."
-            r2.println(r3)
-            com.ibm.icu.text.RBBIRuleBuilder r2 = r9.fRB
-            com.ibm.icu.text.RBBINode[] r2 = r2.fTreeRoots
-            r2 = r2[r1]
-            r2.printTree(r1)
-            java.io.PrintStream r2 = java.lang.System.out
-            java.lang.String r3 = "\nCompleted Safe Point Forward Rules Parse Tree..."
-            r2.println(r3)
-            com.ibm.icu.text.RBBIRuleBuilder r2 = r9.fRB
-            com.ibm.icu.text.RBBINode[] r2 = r2.fTreeRoots
-            r3 = 2
-            r2 = r2[r3]
-            if (r2 != 0) goto L_0x018a
-            java.io.PrintStream r2 = java.lang.System.out
-            java.lang.String r3 = "  -- null -- "
-            r2.println(r3)
-            goto L_0x0193
-        L_0x018a:
-            com.ibm.icu.text.RBBIRuleBuilder r2 = r9.fRB
-            com.ibm.icu.text.RBBINode[] r2 = r2.fTreeRoots
-            r2 = r2[r3]
-            r2.printTree(r1)
-        L_0x0193:
-            java.io.PrintStream r2 = java.lang.System.out
-            java.lang.String r3 = "\nCompleted Safe Point Reverse Rules Parse Tree..."
-            r2.println(r3)
-            com.ibm.icu.text.RBBIRuleBuilder r2 = r9.fRB
-            com.ibm.icu.text.RBBINode[] r2 = r2.fTreeRoots
-            r3 = 3
-            r2 = r2[r3]
-            if (r2 != 0) goto L_0x01ab
-            java.io.PrintStream r1 = java.lang.System.out
-            java.lang.String r2 = "  -- null -- "
-            r1.println(r2)
-            goto L_0x01b4
-        L_0x01ab:
-            com.ibm.icu.text.RBBIRuleBuilder r2 = r9.fRB
-            com.ibm.icu.text.RBBINode[] r2 = r2.fTreeRoots
-            r2 = r2[r3]
-            r2.printTree(r1)
-        L_0x01b4:
-            return
-        L_0x01b5:
-            short r2 = r3.fPushState
-            r4 = 66049(0x10201, float:9.2554E-41)
-            if (r2 == 0) goto L_0x01d9
-            int r2 = r9.fStackPtr
-            int r2 = r2 + r1
-            r9.fStackPtr = r2
-            int r2 = r9.fStackPtr
-            r5 = 100
-            if (r2 < r5) goto L_0x01d1
-            java.io.PrintStream r2 = java.lang.System.out
-            java.lang.String r5 = "RBBIRuleScanner.parse() - state stack overflow."
-            r2.println(r5)
-            r9.error(r4)
-        L_0x01d1:
-            short[] r2 = r9.fStack
-            int r5 = r9.fStackPtr
-            short r7 = r3.fPushState
-            r2[r5] = r7
-        L_0x01d9:
-            boolean r2 = r3.fNextChar
-            if (r2 == 0) goto L_0x01e2
-            com.ibm.icu.text.RBBIRuleScanner$RBBIRuleChar r2 = r9.fC
-            r9.nextChar(r2)
-        L_0x01e2:
-            short r2 = r3.fNextState
-            if (r2 == r6) goto L_0x01ea
-            short r0 = r3.fNextState
-            goto L_0x0006
-        L_0x01ea:
-            short[] r2 = r9.fStack
-            int r5 = r9.fStackPtr
-            short r0 = r2[r5]
-            int r2 = r9.fStackPtr
-            int r2 = r2 - r1
-            r9.fStackPtr = r2
-            int r1 = r9.fStackPtr
-            if (r1 >= 0) goto L_0x0006
-            java.io.PrintStream r1 = java.lang.System.out
-            java.lang.String r2 = "RBBIRuleScanner.parse() - state stack underflow."
-            r1.println(r2)
-            r9.error(r4)
-            goto L_0x0006
-        L_0x0205:
-            int r2 = r2 + 1
-            goto L_0x005c
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.ibm.icu.text.RBBIRuleScanner.parse():void");
+    void parse() {
+        RBBIRuleParseTable.RBBIRuleTableElement tableEl;
+        short s = 1;
+        nextChar(this.f2558fC);
+        while (s != 0) {
+            RBBIRuleParseTable.RBBIRuleTableElement tableEl2 = RBBIRuleParseTable.gRuleParseStateTable[s];
+            if (this.fRB.fDebugEnv != null && this.fRB.fDebugEnv.indexOf("scan") >= 0) {
+                System.out.println("char, line, col = ('" + ((char) this.f2558fC.fChar) + "', " + this.fLineNum + ", " + this.fCharNum + "    state = " + tableEl2.fStateName);
+            }
+            int tableRow = s;
+            while (true) {
+                tableEl = RBBIRuleParseTable.gRuleParseStateTable[tableRow];
+                if (this.fRB.fDebugEnv != null && this.fRB.fDebugEnv.indexOf("scan") >= 0) {
+                    System.out.print(".");
+                }
+                if ((tableEl.fCharClass < 127 && !this.f2558fC.fEscaped && tableEl.fCharClass == this.f2558fC.fChar) || tableEl.fCharClass == 255 || ((tableEl.fCharClass == 254 && this.f2558fC.fEscaped) || ((tableEl.fCharClass == 253 && this.f2558fC.fEscaped && (this.f2558fC.fChar == 80 || this.f2558fC.fChar == 112)) || (tableEl.fCharClass == 252 && this.f2558fC.fChar == -1)))) {
+                    break;
+                }
+                if (tableEl.fCharClass >= 128 && tableEl.fCharClass < 240 && !this.f2558fC.fEscaped && this.f2558fC.fChar != -1) {
+                    UnicodeSet uniset = this.fRuleSets[tableEl.fCharClass - 128];
+                    if (uniset.contains(this.f2558fC.fChar)) {
+                        break;
+                    }
+                }
+                tableRow++;
+            }
+            if (this.fRB.fDebugEnv != null && this.fRB.fDebugEnv.indexOf("scan") >= 0) {
+                System.out.println("");
+            }
+            if (!doParseActions(tableEl.fAction)) {
+                break;
+            }
+            if (tableEl.fPushState != 0) {
+                this.fStackPtr++;
+                if (this.fStackPtr >= 100) {
+                    System.out.println("RBBIRuleScanner.parse() - state stack overflow.");
+                    error(66049);
+                }
+                this.fStack[this.fStackPtr] = tableEl.fPushState;
+            }
+            if (tableEl.fNextChar) {
+                nextChar(this.f2558fC);
+            }
+            if (tableEl.fNextState != 255) {
+                s = tableEl.fNextState;
+            } else {
+                s = this.fStack[this.fStackPtr];
+                this.fStackPtr--;
+                if (this.fStackPtr < 0) {
+                    System.out.println("RBBIRuleScanner.parse() - state stack underflow.");
+                    error(66049);
+                }
+            }
+        }
+        if (this.fRB.fTreeRoots[0] == null) {
+            error(66052);
+        }
+        if (this.fRB.fDebugEnv != null && this.fRB.fDebugEnv.indexOf("symbols") >= 0) {
+            this.fSymbolTable.rbbiSymtablePrint();
+        }
+        if (this.fRB.fDebugEnv != null && this.fRB.fDebugEnv.indexOf("ptree") >= 0) {
+            System.out.println("Completed Forward Rules Parse Tree...");
+            this.fRB.fTreeRoots[0].printTree(true);
+            System.out.println("\nCompleted Reverse Rules Parse Tree...");
+            this.fRB.fTreeRoots[1].printTree(true);
+            System.out.println("\nCompleted Safe Point Forward Rules Parse Tree...");
+            if (this.fRB.fTreeRoots[2] != null) {
+                this.fRB.fTreeRoots[2].printTree(true);
+            } else {
+                System.out.println("  -- null -- ");
+            }
+            System.out.println("\nCompleted Safe Point Reverse Rules Parse Tree...");
+            if (this.fRB.fTreeRoots[3] != null) {
+                this.fRB.fTreeRoots[3].printTree(true);
+            } else {
+                System.out.println("  -- null -- ");
+            }
+        }
     }
 
-    /* access modifiers changed from: package-private */
-    public void printNodeStack(String title) {
+    void printNodeStack(String title) {
         System.out.println(title + ".  Dumping node stack...\n");
         for (int i = this.fNodeStackPtr; i > 0; i--) {
             this.fNodeStack[i].printTree(true);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public RBBINode pushNewNode(int nodeType) {
+    RBBINode pushNewNode(int nodeType) {
         this.fNodeStackPtr++;
         if (this.fNodeStackPtr >= 100) {
             System.out.println("RBBIRuleScanner.pushNewNode - stack overflow.");
@@ -795,8 +551,7 @@ class RBBIRuleScanner {
         return this.fNodeStack[this.fNodeStackPtr];
     }
 
-    /* access modifiers changed from: package-private */
-    public void scanSet() {
+    void scanSet() {
         UnicodeSet uset = null;
         ParsePosition pos = new ParsePosition(this.fScanIndex);
         int startPos = this.fScanIndex;

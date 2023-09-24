@@ -1,16 +1,19 @@
 package com.android.internal.view;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
-import android.os.ResultReceiver;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
+import android.p007os.ResultReceiver;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodInfo;
 import android.view.inputmethod.InputMethodSubtype;
+import com.android.internal.view.IInputContext;
+import com.android.internal.view.IInputMethodClient;
 import java.util.List;
 
+/* loaded from: classes4.dex */
 public interface IInputMethodManager extends IInterface {
     void addClient(IInputMethodClient iInputMethodClient, IInputContext iInputContext, int i) throws RemoteException;
 
@@ -44,70 +47,89 @@ public interface IInputMethodManager extends IInterface {
 
     InputBindResult startInputOrWindowGainedFocus(int i, IInputMethodClient iInputMethodClient, IBinder iBinder, int i2, int i3, int i4, EditorInfo editorInfo, IInputContext iInputContext, int i5, int i6) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IInputMethodManager {
+        @Override // com.android.internal.view.IInputMethodManager
         public void addClient(IInputMethodClient client, IInputContext inputContext, int untrustedDisplayId) throws RemoteException {
         }
 
+        @Override // com.android.internal.view.IInputMethodManager
         public List<InputMethodInfo> getInputMethodList(int userId) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.view.IInputMethodManager
         public List<InputMethodInfo> getEnabledInputMethodList(int userId) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.view.IInputMethodManager
         public List<InputMethodSubtype> getEnabledInputMethodSubtypeList(String imiId, boolean allowsImplicitlySelectedSubtypes) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.view.IInputMethodManager
         public InputMethodSubtype getLastInputMethodSubtype() throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.view.IInputMethodManager
         public boolean showSoftInput(IInputMethodClient client, int flags, ResultReceiver resultReceiver) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.view.IInputMethodManager
         public boolean hideSoftInput(IInputMethodClient client, int flags, ResultReceiver resultReceiver) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.view.IInputMethodManager
         public InputBindResult startInputOrWindowGainedFocus(int startInputReason, IInputMethodClient client, IBinder windowToken, int startInputFlags, int softInputMode, int windowFlags, EditorInfo attribute, IInputContext inputContext, int missingMethodFlags, int unverifiedTargetSdkVersion) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.view.IInputMethodManager
         public void showInputMethodPickerFromClient(IInputMethodClient client, int auxiliarySubtypeMode) throws RemoteException {
         }
 
+        @Override // com.android.internal.view.IInputMethodManager
         public void showInputMethodPickerFromSystem(IInputMethodClient client, int auxiliarySubtypeMode, int displayId) throws RemoteException {
         }
 
+        @Override // com.android.internal.view.IInputMethodManager
         public void showInputMethodAndSubtypeEnablerFromClient(IInputMethodClient client, String topId) throws RemoteException {
         }
 
+        @Override // com.android.internal.view.IInputMethodManager
         public boolean isInputMethodPickerShownForTest() throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.view.IInputMethodManager
         public InputMethodSubtype getCurrentInputMethodSubtype() throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.view.IInputMethodManager
         public void setAdditionalInputMethodSubtypes(String id, InputMethodSubtype[] subtypes) throws RemoteException {
         }
 
+        @Override // com.android.internal.view.IInputMethodManager
         public int getInputMethodWindowVisibleHeight() throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.view.IInputMethodManager
         public void reportActivityView(IInputMethodClient parentClient, int childDisplayId, float[] matrixValues) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IInputMethodManager {
         private static final String DESCRIPTOR = "com.android.internal.view.IInputMethodManager";
         static final int TRANSACTION_addClient = 1;
@@ -136,12 +158,13 @@ public interface IInputMethodManager extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IInputMethodManager)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IInputMethodManager)) {
+                return (IInputMethodManager) iin;
             }
-            return (IInputMethodManager) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -185,268 +208,167 @@ public interface IInputMethodManager extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v1, resolved type: android.os.ResultReceiver} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v8, resolved type: android.os.ResultReceiver} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v12, resolved type: android.os.ResultReceiver} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v16, resolved type: android.os.ResultReceiver} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r7v0, resolved type: android.view.inputmethod.EditorInfo} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v36, resolved type: android.os.ResultReceiver} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v37, resolved type: android.os.ResultReceiver} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v38, resolved type: android.os.ResultReceiver} */
-        /* JADX WARNING: type inference failed for: r0v22, types: [android.view.inputmethod.EditorInfo] */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r26, android.os.Parcel r27, android.os.Parcel r28, int r29) throws android.os.RemoteException {
-            /*
-                r25 = this;
-                r11 = r25
-                r12 = r26
-                r13 = r27
-                r14 = r28
-                java.lang.String r15 = "com.android.internal.view.IInputMethodManager"
-                r0 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r10 = 1
-                if (r12 == r0) goto L_0x01fe
-                r0 = 0
-                r9 = 0
-                switch(r12) {
-                    case 1: goto L_0x01df;
-                    case 2: goto L_0x01cc;
-                    case 3: goto L_0x01b9;
-                    case 4: goto L_0x019d;
-                    case 5: goto L_0x0184;
-                    case 6: goto L_0x0159;
-                    case 7: goto L_0x012e;
-                    case 8: goto L_0x00c3;
-                    case 9: goto L_0x00ad;
-                    case 10: goto L_0x0093;
-                    case 11: goto L_0x007d;
-                    case 12: goto L_0x006f;
-                    case 13: goto L_0x0058;
-                    case 14: goto L_0x0042;
-                    case 15: goto L_0x0034;
-                    case 16: goto L_0x001a;
-                    default: goto L_0x0015;
-                }
-            L_0x0015:
-                boolean r0 = super.onTransact(r26, r27, r28, r29)
-                return r0
-            L_0x001a:
-                r13.enforceInterface(r15)
-                android.os.IBinder r0 = r27.readStrongBinder()
-                com.android.internal.view.IInputMethodClient r0 = com.android.internal.view.IInputMethodClient.Stub.asInterface(r0)
-                int r1 = r27.readInt()
-                float[] r2 = r27.createFloatArray()
-                r11.reportActivityView(r0, r1, r2)
-                r28.writeNoException()
-                return r10
-            L_0x0034:
-                r13.enforceInterface(r15)
-                int r0 = r25.getInputMethodWindowVisibleHeight()
-                r28.writeNoException()
-                r14.writeInt(r0)
-                return r10
-            L_0x0042:
-                r13.enforceInterface(r15)
-                java.lang.String r0 = r27.readString()
-                android.os.Parcelable$Creator<android.view.inputmethod.InputMethodSubtype> r1 = android.view.inputmethod.InputMethodSubtype.CREATOR
-                java.lang.Object[] r1 = r13.createTypedArray(r1)
-                android.view.inputmethod.InputMethodSubtype[] r1 = (android.view.inputmethod.InputMethodSubtype[]) r1
-                r11.setAdditionalInputMethodSubtypes(r0, r1)
-                r28.writeNoException()
-                return r10
-            L_0x0058:
-                r13.enforceInterface(r15)
-                android.view.inputmethod.InputMethodSubtype r0 = r25.getCurrentInputMethodSubtype()
-                r28.writeNoException()
-                if (r0 == 0) goto L_0x006b
-                r14.writeInt(r10)
-                r0.writeToParcel(r14, r10)
-                goto L_0x006e
-            L_0x006b:
-                r14.writeInt(r9)
-            L_0x006e:
-                return r10
-            L_0x006f:
-                r13.enforceInterface(r15)
-                boolean r0 = r25.isInputMethodPickerShownForTest()
-                r28.writeNoException()
-                r14.writeInt(r0)
-                return r10
-            L_0x007d:
-                r13.enforceInterface(r15)
-                android.os.IBinder r0 = r27.readStrongBinder()
-                com.android.internal.view.IInputMethodClient r0 = com.android.internal.view.IInputMethodClient.Stub.asInterface(r0)
-                java.lang.String r1 = r27.readString()
-                r11.showInputMethodAndSubtypeEnablerFromClient(r0, r1)
-                r28.writeNoException()
-                return r10
-            L_0x0093:
-                r13.enforceInterface(r15)
-                android.os.IBinder r0 = r27.readStrongBinder()
-                com.android.internal.view.IInputMethodClient r0 = com.android.internal.view.IInputMethodClient.Stub.asInterface(r0)
-                int r1 = r27.readInt()
-                int r2 = r27.readInt()
-                r11.showInputMethodPickerFromSystem(r0, r1, r2)
-                r28.writeNoException()
-                return r10
-            L_0x00ad:
-                r13.enforceInterface(r15)
-                android.os.IBinder r0 = r27.readStrongBinder()
-                com.android.internal.view.IInputMethodClient r0 = com.android.internal.view.IInputMethodClient.Stub.asInterface(r0)
-                int r1 = r27.readInt()
-                r11.showInputMethodPickerFromClient(r0, r1)
-                r28.writeNoException()
-                return r10
-            L_0x00c3:
-                r13.enforceInterface(r15)
-                int r16 = r27.readInt()
-                android.os.IBinder r1 = r27.readStrongBinder()
-                com.android.internal.view.IInputMethodClient r17 = com.android.internal.view.IInputMethodClient.Stub.asInterface(r1)
-                android.os.IBinder r18 = r27.readStrongBinder()
-                int r19 = r27.readInt()
-                int r20 = r27.readInt()
-                int r21 = r27.readInt()
-                int r1 = r27.readInt()
-                if (r1 == 0) goto L_0x00f2
-                android.os.Parcelable$Creator<android.view.inputmethod.EditorInfo> r0 = android.view.inputmethod.EditorInfo.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.view.inputmethod.EditorInfo r0 = (android.view.inputmethod.EditorInfo) r0
-            L_0x00f0:
-                r7 = r0
-                goto L_0x00f3
-            L_0x00f2:
-                goto L_0x00f0
-            L_0x00f3:
-                android.os.IBinder r0 = r27.readStrongBinder()
-                com.android.internal.view.IInputContext r22 = com.android.internal.view.IInputContext.Stub.asInterface(r0)
-                int r23 = r27.readInt()
-                int r24 = r27.readInt()
-                r0 = r25
-                r1 = r16
-                r2 = r17
-                r3 = r18
-                r4 = r19
-                r5 = r20
-                r6 = r21
-                r8 = r22
-                r12 = r9
-                r9 = r23
-                r12 = r10
-                r10 = r24
-                com.android.internal.view.InputBindResult r0 = r0.startInputOrWindowGainedFocus(r1, r2, r3, r4, r5, r6, r7, r8, r9, r10)
-                r28.writeNoException()
-                if (r0 == 0) goto L_0x0129
-                r14.writeInt(r12)
-                r0.writeToParcel(r14, r12)
-                goto L_0x012d
-            L_0x0129:
-                r1 = 0
-                r14.writeInt(r1)
-            L_0x012d:
-                return r12
-            L_0x012e:
-                r12 = r10
-                r13.enforceInterface(r15)
-                android.os.IBinder r1 = r27.readStrongBinder()
-                com.android.internal.view.IInputMethodClient r1 = com.android.internal.view.IInputMethodClient.Stub.asInterface(r1)
-                int r2 = r27.readInt()
-                int r3 = r27.readInt()
-                if (r3 == 0) goto L_0x014d
-                android.os.Parcelable$Creator<android.os.ResultReceiver> r0 = android.os.ResultReceiver.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.os.ResultReceiver r0 = (android.os.ResultReceiver) r0
-                goto L_0x014e
-            L_0x014d:
-            L_0x014e:
-                boolean r3 = r11.hideSoftInput(r1, r2, r0)
-                r28.writeNoException()
-                r14.writeInt(r3)
-                return r12
-            L_0x0159:
-                r12 = r10
-                r13.enforceInterface(r15)
-                android.os.IBinder r1 = r27.readStrongBinder()
-                com.android.internal.view.IInputMethodClient r1 = com.android.internal.view.IInputMethodClient.Stub.asInterface(r1)
-                int r2 = r27.readInt()
-                int r3 = r27.readInt()
-                if (r3 == 0) goto L_0x0178
-                android.os.Parcelable$Creator<android.os.ResultReceiver> r0 = android.os.ResultReceiver.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.os.ResultReceiver r0 = (android.os.ResultReceiver) r0
-                goto L_0x0179
-            L_0x0178:
-            L_0x0179:
-                boolean r3 = r11.showSoftInput(r1, r2, r0)
-                r28.writeNoException()
-                r14.writeInt(r3)
-                return r12
-            L_0x0184:
-                r12 = r10
-                r13.enforceInterface(r15)
-                android.view.inputmethod.InputMethodSubtype r0 = r25.getLastInputMethodSubtype()
-                r28.writeNoException()
-                if (r0 == 0) goto L_0x0198
-                r14.writeInt(r12)
-                r0.writeToParcel(r14, r12)
-                goto L_0x019c
-            L_0x0198:
-                r1 = 0
-                r14.writeInt(r1)
-            L_0x019c:
-                return r12
-            L_0x019d:
-                r1 = r9
-                r12 = r10
-                r13.enforceInterface(r15)
-                java.lang.String r0 = r27.readString()
-                int r2 = r27.readInt()
-                if (r2 == 0) goto L_0x01ae
-                r1 = r12
-            L_0x01ae:
-                java.util.List r2 = r11.getEnabledInputMethodSubtypeList(r0, r1)
-                r28.writeNoException()
-                r14.writeTypedList(r2)
-                return r12
-            L_0x01b9:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r27.readInt()
-                java.util.List r1 = r11.getEnabledInputMethodList(r0)
-                r28.writeNoException()
-                r14.writeTypedList(r1)
-                return r12
-            L_0x01cc:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r27.readInt()
-                java.util.List r1 = r11.getInputMethodList(r0)
-                r28.writeNoException()
-                r14.writeTypedList(r1)
-                return r12
-            L_0x01df:
-                r12 = r10
-                r13.enforceInterface(r15)
-                android.os.IBinder r0 = r27.readStrongBinder()
-                com.android.internal.view.IInputMethodClient r0 = com.android.internal.view.IInputMethodClient.Stub.asInterface(r0)
-                android.os.IBinder r1 = r27.readStrongBinder()
-                com.android.internal.view.IInputContext r1 = com.android.internal.view.IInputContext.Stub.asInterface(r1)
-                int r2 = r27.readInt()
-                r11.addClient(r0, r1, r2)
-                r28.writeNoException()
-                return r12
-            L_0x01fe:
-                r12 = r10
-                r14.writeString(r15)
-                return r12
-            */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.internal.view.IInputMethodManager.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    IInputMethodClient _arg0 = IInputMethodClient.Stub.asInterface(data.readStrongBinder());
+                    IInputContext _arg1 = IInputContext.Stub.asInterface(data.readStrongBinder());
+                    int _arg2 = data.readInt();
+                    addClient(_arg0, _arg1, _arg2);
+                    reply.writeNoException();
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    List<InputMethodInfo> _result = getInputMethodList(_arg02);
+                    reply.writeNoException();
+                    reply.writeTypedList(_result);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg03 = data.readInt();
+                    List<InputMethodInfo> _result2 = getEnabledInputMethodList(_arg03);
+                    reply.writeNoException();
+                    reply.writeTypedList(_result2);
+                    return true;
+                case 4:
+                    boolean _arg12 = false;
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg04 = data.readString();
+                    if (data.readInt() != 0) {
+                        _arg12 = true;
+                    }
+                    List<InputMethodSubtype> _result3 = getEnabledInputMethodSubtypeList(_arg04, _arg12);
+                    reply.writeNoException();
+                    reply.writeTypedList(_result3);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    InputMethodSubtype _result4 = getLastInputMethodSubtype();
+                    reply.writeNoException();
+                    if (_result4 != null) {
+                        reply.writeInt(1);
+                        _result4.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    IInputMethodClient _arg05 = IInputMethodClient.Stub.asInterface(data.readStrongBinder());
+                    int _arg13 = data.readInt();
+                    ResultReceiver _arg22 = data.readInt() != 0 ? ResultReceiver.CREATOR.createFromParcel(data) : null;
+                    boolean showSoftInput = showSoftInput(_arg05, _arg13, _arg22);
+                    reply.writeNoException();
+                    reply.writeInt(showSoftInput ? 1 : 0);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    IInputMethodClient _arg06 = IInputMethodClient.Stub.asInterface(data.readStrongBinder());
+                    int _arg14 = data.readInt();
+                    ResultReceiver _arg23 = data.readInt() != 0 ? ResultReceiver.CREATOR.createFromParcel(data) : null;
+                    boolean hideSoftInput = hideSoftInput(_arg06, _arg14, _arg23);
+                    reply.writeNoException();
+                    reply.writeInt(hideSoftInput ? 1 : 0);
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg07 = data.readInt();
+                    IInputMethodClient _arg15 = IInputMethodClient.Stub.asInterface(data.readStrongBinder());
+                    IBinder _arg24 = data.readStrongBinder();
+                    int _arg3 = data.readInt();
+                    int _arg4 = data.readInt();
+                    int _arg5 = data.readInt();
+                    EditorInfo _arg6 = data.readInt() != 0 ? EditorInfo.CREATOR.createFromParcel(data) : null;
+                    IInputContext _arg7 = IInputContext.Stub.asInterface(data.readStrongBinder());
+                    int _arg8 = data.readInt();
+                    int _arg9 = data.readInt();
+                    InputBindResult _result5 = startInputOrWindowGainedFocus(_arg07, _arg15, _arg24, _arg3, _arg4, _arg5, _arg6, _arg7, _arg8, _arg9);
+                    reply.writeNoException();
+                    if (_result5 != null) {
+                        reply.writeInt(1);
+                        _result5.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    IInputMethodClient _arg08 = IInputMethodClient.Stub.asInterface(data.readStrongBinder());
+                    int _arg16 = data.readInt();
+                    showInputMethodPickerFromClient(_arg08, _arg16);
+                    reply.writeNoException();
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    IInputMethodClient _arg09 = IInputMethodClient.Stub.asInterface(data.readStrongBinder());
+                    int _arg17 = data.readInt();
+                    int _arg25 = data.readInt();
+                    showInputMethodPickerFromSystem(_arg09, _arg17, _arg25);
+                    reply.writeNoException();
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    IInputMethodClient _arg010 = IInputMethodClient.Stub.asInterface(data.readStrongBinder());
+                    String _arg18 = data.readString();
+                    showInputMethodAndSubtypeEnablerFromClient(_arg010, _arg18);
+                    reply.writeNoException();
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isInputMethodPickerShownForTest = isInputMethodPickerShownForTest();
+                    reply.writeNoException();
+                    reply.writeInt(isInputMethodPickerShownForTest ? 1 : 0);
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    InputMethodSubtype _result6 = getCurrentInputMethodSubtype();
+                    reply.writeNoException();
+                    if (_result6 != null) {
+                        reply.writeInt(1);
+                        _result6.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 14:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg011 = data.readString();
+                    InputMethodSubtype[] _arg19 = (InputMethodSubtype[]) data.createTypedArray(InputMethodSubtype.CREATOR);
+                    setAdditionalInputMethodSubtypes(_arg011, _arg19);
+                    reply.writeNoException();
+                    return true;
+                case 15:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result7 = getInputMethodWindowVisibleHeight();
+                    reply.writeNoException();
+                    reply.writeInt(_result7);
+                    return true;
+                case 16:
+                    data.enforceInterface(DESCRIPTOR);
+                    IInputMethodClient _arg012 = IInputMethodClient.Stub.asInterface(data.readStrongBinder());
+                    int _arg110 = data.readInt();
+                    float[] _arg26 = data.createFloatArray();
+                    reportActivityView(_arg012, _arg110, _arg26);
+                    reply.writeNoException();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IInputMethodManager {
             public static IInputMethodManager sDefaultImpl;
             private IBinder mRemote;
@@ -455,6 +377,7 @@ public interface IInputMethodManager extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -463,44 +386,40 @@ public interface IInputMethodManager extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // com.android.internal.view.IInputMethodManager
             public void addClient(IInputMethodClient client, IInputContext inputContext, int untrustedDisplayId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    IBinder iBinder = null;
                     _data.writeStrongBinder(client != null ? client.asBinder() : null);
-                    if (inputContext != null) {
-                        iBinder = inputContext.asBinder();
-                    }
-                    _data.writeStrongBinder(iBinder);
+                    _data.writeStrongBinder(inputContext != null ? inputContext.asBinder() : null);
                     _data.writeInt(untrustedDisplayId);
-                    if (this.mRemote.transact(1, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().addClient(client, inputContext, untrustedDisplayId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().addClient(client, inputContext, untrustedDisplayId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.view.IInputMethodManager
             public List<InputMethodInfo> getInputMethodList(int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userId);
-                    if (!this.mRemote.transact(2, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getInputMethodList(userId);
                     }
                     _reply.readException();
                     List<InputMethodInfo> _result = _reply.createTypedArrayList(InputMethodInfo.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -508,19 +427,19 @@ public interface IInputMethodManager extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.view.IInputMethodManager
             public List<InputMethodInfo> getEnabledInputMethodList(int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userId);
-                    if (!this.mRemote.transact(3, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getEnabledInputMethodList(userId);
                     }
                     _reply.readException();
                     List<InputMethodInfo> _result = _reply.createTypedArrayList(InputMethodInfo.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -528,20 +447,20 @@ public interface IInputMethodManager extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.view.IInputMethodManager
             public List<InputMethodSubtype> getEnabledInputMethodSubtypeList(String imiId, boolean allowsImplicitlySelectedSubtypes) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(imiId);
-                    _data.writeInt(allowsImplicitlySelectedSubtypes);
-                    if (!this.mRemote.transact(4, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(allowsImplicitlySelectedSubtypes ? 1 : 0);
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getEnabledInputMethodSubtypeList(imiId, allowsImplicitlySelectedSubtypes);
                     }
                     _reply.readException();
                     List<InputMethodSubtype> _result = _reply.createTypedArrayList(InputMethodSubtype.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -549,13 +468,15 @@ public interface IInputMethodManager extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.view.IInputMethodManager
             public InputMethodSubtype getLastInputMethodSubtype() throws RemoteException {
                 InputMethodSubtype _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(5, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getLastInputMethodSubtype();
                     }
                     _reply.readException();
@@ -564,16 +485,14 @@ public interface IInputMethodManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    InputMethodSubtype _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.view.IInputMethodManager
             public boolean showSoftInput(IInputMethodClient client, int flags, ResultReceiver resultReceiver) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -581,22 +500,18 @@ public interface IInputMethodManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(client != null ? client.asBinder() : null);
                     _data.writeInt(flags);
-                    boolean _result = true;
                     if (resultReceiver != null) {
                         _data.writeInt(1);
                         resultReceiver.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(6, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().showSoftInput(client, flags, resultReceiver);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -604,6 +519,7 @@ public interface IInputMethodManager extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.view.IInputMethodManager
             public boolean hideSoftInput(IInputMethodClient client, int flags, ResultReceiver resultReceiver) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -611,22 +527,18 @@ public interface IInputMethodManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(client != null ? client.asBinder() : null);
                     _data.writeInt(flags);
-                    boolean _result = true;
                     if (resultReceiver != null) {
                         _data.writeInt(1);
                         resultReceiver.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(7, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().hideSoftInput(client, flags, resultReceiver);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -634,57 +546,55 @@ public interface IInputMethodManager extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.view.IInputMethodManager
             public InputBindResult startInputOrWindowGainedFocus(int startInputReason, IInputMethodClient client, IBinder windowToken, int startInputFlags, int softInputMode, int windowFlags, EditorInfo attribute, IInputContext inputContext, int missingMethodFlags, int unverifiedTargetSdkVersion) throws RemoteException {
-                EditorInfo editorInfo = attribute;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    try {
-                        _data.writeInt(startInputReason);
-                        InputBindResult _result = null;
-                        _data.writeStrongBinder(client != null ? client.asBinder() : null);
-                        _data.writeStrongBinder(windowToken);
-                        _data.writeInt(startInputFlags);
-                        _data.writeInt(softInputMode);
-                        _data.writeInt(windowFlags);
-                        if (editorInfo != null) {
-                            _data.writeInt(1);
-                            editorInfo.writeToParcel(_data, 0);
-                        } else {
-                            _data.writeInt(0);
-                        }
-                        _data.writeStrongBinder(inputContext != null ? inputContext.asBinder() : null);
-                        _data.writeInt(missingMethodFlags);
-                        _data.writeInt(unverifiedTargetSdkVersion);
-                        if (this.mRemote.transact(8, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                            _reply.readException();
-                            if (_reply.readInt() != 0) {
-                                _result = InputBindResult.CREATOR.createFromParcel(_reply);
-                            }
-                            _reply.recycle();
-                            _data.recycle();
-                            return _result;
-                        }
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeInt(startInputReason);
+                    InputBindResult _result = null;
+                    _data.writeStrongBinder(client != null ? client.asBinder() : null);
+                    _data.writeStrongBinder(windowToken);
+                    _data.writeInt(startInputFlags);
+                    _data.writeInt(softInputMode);
+                    _data.writeInt(windowFlags);
+                    if (attribute != null) {
+                        _data.writeInt(1);
+                        attribute.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
+                    }
+                    _data.writeStrongBinder(inputContext != null ? inputContext.asBinder() : null);
+                    _data.writeInt(missingMethodFlags);
+                    _data.writeInt(unverifiedTargetSdkVersion);
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         InputBindResult startInputOrWindowGainedFocus = Stub.getDefaultImpl().startInputOrWindowGainedFocus(startInputReason, client, windowToken, startInputFlags, softInputMode, windowFlags, attribute, inputContext, missingMethodFlags, unverifiedTargetSdkVersion);
                         _reply.recycle();
                         _data.recycle();
                         return startInputOrWindowGainedFocus;
-                    } catch (Throwable th) {
-                        th = th;
-                        _reply.recycle();
-                        _data.recycle();
-                        throw th;
                     }
+                    _reply.readException();
+                    if (_reply.readInt() != 0) {
+                        _result = InputBindResult.CREATOR.createFromParcel(_reply);
+                    }
+                    _reply.recycle();
+                    _data.recycle();
+                    return _result;
                 } catch (Throwable th2) {
                     th = th2;
-                    int i = startInputReason;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // com.android.internal.view.IInputMethodManager
             public void showInputMethodPickerFromClient(IInputMethodClient client, int auxiliarySubtypeMode) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -692,19 +602,19 @@ public interface IInputMethodManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(client != null ? client.asBinder() : null);
                     _data.writeInt(auxiliarySubtypeMode);
-                    if (this.mRemote.transact(9, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(9, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().showInputMethodPickerFromClient(client, auxiliarySubtypeMode);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().showInputMethodPickerFromClient(client, auxiliarySubtypeMode);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.view.IInputMethodManager
             public void showInputMethodPickerFromSystem(IInputMethodClient client, int auxiliarySubtypeMode, int displayId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -713,19 +623,19 @@ public interface IInputMethodManager extends IInterface {
                     _data.writeStrongBinder(client != null ? client.asBinder() : null);
                     _data.writeInt(auxiliarySubtypeMode);
                     _data.writeInt(displayId);
-                    if (this.mRemote.transact(10, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(10, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().showInputMethodPickerFromSystem(client, auxiliarySubtypeMode, displayId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().showInputMethodPickerFromSystem(client, auxiliarySubtypeMode, displayId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.view.IInputMethodManager
             public void showInputMethodAndSubtypeEnablerFromClient(IInputMethodClient client, String topId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -733,49 +643,46 @@ public interface IInputMethodManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(client != null ? client.asBinder() : null);
                     _data.writeString(topId);
-                    if (this.mRemote.transact(11, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(11, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().showInputMethodAndSubtypeEnablerFromClient(client, topId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().showInputMethodAndSubtypeEnablerFromClient(client, topId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.view.IInputMethodManager
             public boolean isInputMethodPickerShownForTest() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(12, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(12, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isInputMethodPickerShownForTest();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.view.IInputMethodManager
             public InputMethodSubtype getCurrentInputMethodSubtype() throws RemoteException {
                 InputMethodSubtype _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(13, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(13, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCurrentInputMethodSubtype();
                     }
                     _reply.readException();
@@ -784,48 +691,6 @@ public interface IInputMethodManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    InputMethodSubtype _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public void setAdditionalInputMethodSubtypes(String id, InputMethodSubtype[] subtypes) throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeString(id);
-                    _data.writeTypedArray(subtypes, 0);
-                    if (this.mRemote.transact(14, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                        _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
-                    }
-                    Stub.getDefaultImpl().setAdditionalInputMethodSubtypes(id, subtypes);
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public int getInputMethodWindowVisibleHeight() throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(15, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
-                        return Stub.getDefaultImpl().getInputMethodWindowVisibleHeight();
-                    }
-                    _reply.readException();
-                    int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -833,6 +698,46 @@ public interface IInputMethodManager extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.view.IInputMethodManager
+            public void setAdditionalInputMethodSubtypes(String id, InputMethodSubtype[] subtypes) throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    _data.writeString(id);
+                    _data.writeTypedArray(subtypes, 0);
+                    boolean _status = this.mRemote.transact(14, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setAdditionalInputMethodSubtypes(id, subtypes);
+                    } else {
+                        _reply.readException();
+                    }
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // com.android.internal.view.IInputMethodManager
+            public int getInputMethodWindowVisibleHeight() throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    boolean _status = this.mRemote.transact(15, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        return Stub.getDefaultImpl().getInputMethodWindowVisibleHeight();
+                    }
+                    _reply.readException();
+                    int _result = _reply.readInt();
+                    return _result;
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // com.android.internal.view.IInputMethodManager
             public void reportActivityView(IInputMethodClient parentClient, int childDisplayId, float[] matrixValues) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -841,13 +746,12 @@ public interface IInputMethodManager extends IInterface {
                     _data.writeStrongBinder(parentClient != null ? parentClient.asBinder() : null);
                     _data.writeInt(childDisplayId);
                     _data.writeFloatArray(matrixValues);
-                    if (this.mRemote.transact(16, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(16, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().reportActivityView(parentClient, childDisplayId, matrixValues);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().reportActivityView(parentClient, childDisplayId, matrixValues);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -856,11 +760,11 @@ public interface IInputMethodManager extends IInterface {
         }
 
         public static boolean setDefaultImpl(IInputMethodManager impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IInputMethodManager getDefaultImpl() {

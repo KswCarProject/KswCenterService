@@ -4,21 +4,19 @@ import android.app.ActivityManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.ContentObserver;
-import android.hardware.display.NightDisplayListener;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
+import android.p007os.Handler;
+import android.p007os.Looper;
 import android.provider.Settings;
 import java.time.LocalTime;
 
+/* loaded from: classes.dex */
 public class NightDisplayListener {
-    /* access modifiers changed from: private */
-    public Callback mCallback;
+    private Callback mCallback;
     private final ContentObserver mContentObserver;
     private final Context mContext;
     private final Handler mHandler;
-    /* access modifiers changed from: private */
-    public final ColorDisplayManager mManager;
+    private final ColorDisplayManager mManager;
     private final int mUserId;
 
     public NightDisplayListener(Context context) {
@@ -34,12 +32,13 @@ public class NightDisplayListener {
         this.mManager = (ColorDisplayManager) this.mContext.getSystemService(ColorDisplayManager.class);
         this.mUserId = userId;
         this.mHandler = handler;
-        this.mContentObserver = new ContentObserver(this.mHandler) {
+        this.mContentObserver = new ContentObserver(this.mHandler) { // from class: android.hardware.display.NightDisplayListener.1
+            @Override // android.database.ContentObserver
             public void onChange(boolean selfChange, Uri uri) {
                 super.onChange(selfChange, uri);
                 String setting = uri == null ? null : uri.getLastPathSegment();
                 if (setting != null && NightDisplayListener.this.mCallback != null) {
-                    char c = 65535;
+                    char c = '\uffff';
                     switch (setting.hashCode()) {
                         case -2038150513:
                             if (setting.equals(Settings.Secure.NIGHT_DISPLAY_AUTO_MODE)) {
@@ -96,24 +95,19 @@ public class NightDisplayListener {
         };
     }
 
-    public void setCallback(Callback callback) {
+    public void setCallback(final Callback callback) {
         if (Looper.myLooper() != this.mHandler.getLooper()) {
-            this.mHandler.post(new Runnable(callback) {
-                private final /* synthetic */ NightDisplayListener.Callback f$1;
-
-                {
-                    this.f$1 = r2;
-                }
-
+            this.mHandler.post(new Runnable() { // from class: android.hardware.display.-$$Lambda$NightDisplayListener$sOK1HmSbMnFLzc4SdDD1WpVWJiI
+                @Override // java.lang.Runnable
                 public final void run() {
-                    NightDisplayListener.this.setCallbackInternal(this.f$1);
+                    NightDisplayListener.this.setCallbackInternal(callback);
                 }
             });
         }
         setCallbackInternal(callback);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void setCallbackInternal(Callback newCallback) {
         Callback oldCallback = this.mCallback;
         if (oldCallback != newCallback) {
@@ -131,20 +125,21 @@ public class NightDisplayListener {
         }
     }
 
+    /* loaded from: classes.dex */
     public interface Callback {
-        void onActivated(boolean activated) {
+        default void onActivated(boolean activated) {
         }
 
-        void onAutoModeChanged(int autoMode) {
+        default void onAutoModeChanged(int autoMode) {
         }
 
-        void onCustomStartTimeChanged(LocalTime startTime) {
+        default void onCustomStartTimeChanged(LocalTime startTime) {
         }
 
-        void onCustomEndTimeChanged(LocalTime endTime) {
+        default void onCustomEndTimeChanged(LocalTime endTime) {
         }
 
-        void onColorTemperatureChanged(int colorTemperature) {
+        default void onColorTemperatureChanged(int colorTemperature) {
         }
     }
 }

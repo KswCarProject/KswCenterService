@@ -2,17 +2,19 @@ package android.app;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.os.Bundle;
+import android.p007os.Bundle;
 import android.view.View;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.util.List;
 
 @Deprecated
+/* loaded from: classes.dex */
 public abstract class FragmentManager {
     public static final int POP_BACK_STACK_INCLUSIVE = 1;
 
     @Deprecated
+    /* loaded from: classes.dex */
     public interface BackStackEntry {
         CharSequence getBreadCrumbShortTitle();
 
@@ -28,6 +30,7 @@ public abstract class FragmentManager {
     }
 
     @Deprecated
+    /* loaded from: classes.dex */
     public interface OnBackStackChangedListener {
         void onBackStackChanged();
     }
@@ -93,6 +96,7 @@ public abstract class FragmentManager {
     }
 
     @Deprecated
+    /* loaded from: classes.dex */
     public static abstract class FragmentLifecycleCallbacks {
         public void onFragmentPreAttached(FragmentManager fm, Fragment f, Context context) {
         }

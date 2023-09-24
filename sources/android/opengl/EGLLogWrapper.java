@@ -6,11 +6,8 @@ import java.io.Writer;
 import javax.microedition.khronos.egl.EGL;
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGL11;
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.egl.EGLContext;
-import javax.microedition.khronos.egl.EGLDisplay;
-import javax.microedition.khronos.egl.EGLSurface;
 
+/* loaded from: classes3.dex */
 class EGLLogWrapper implements EGL11 {
     private int mArgCount;
     boolean mCheckError;
@@ -21,12 +18,12 @@ class EGLLogWrapper implements EGL11 {
     public EGLLogWrapper(EGL egl, int configFlags, Writer log) {
         this.mEgl10 = (EGL10) egl;
         this.mLog = log;
-        boolean z = false;
         this.mLogArgumentNames = (configFlags & 4) != 0;
-        this.mCheckError = (configFlags & 1) != 0 ? true : z;
+        this.mCheckError = (configFlags & 1) != 0;
     }
 
-    public boolean eglChooseConfig(EGLDisplay display, int[] attrib_list, EGLConfig[] configs, int config_size, int[] num_config) {
+    @Override // javax.microedition.khronos.egl.EGL10
+    public boolean eglChooseConfig(javax.microedition.khronos.egl.EGLDisplay display, int[] attrib_list, javax.microedition.khronos.egl.EGLConfig[] configs, int config_size, int[] num_config) {
         begin("eglChooseConfig");
         arg(Context.DISPLAY_SERVICE, display);
         arg("attrib_list", attrib_list);
@@ -40,7 +37,8 @@ class EGLLogWrapper implements EGL11 {
         return result;
     }
 
-    public boolean eglCopyBuffers(EGLDisplay display, EGLSurface surface, Object native_pixmap) {
+    @Override // javax.microedition.khronos.egl.EGL10
+    public boolean eglCopyBuffers(javax.microedition.khronos.egl.EGLDisplay display, javax.microedition.khronos.egl.EGLSurface surface, Object native_pixmap) {
         begin("eglCopyBuffers");
         arg(Context.DISPLAY_SERVICE, display);
         arg("surface", surface);
@@ -52,58 +50,63 @@ class EGLLogWrapper implements EGL11 {
         return result;
     }
 
-    public EGLContext eglCreateContext(EGLDisplay display, EGLConfig config, EGLContext share_context, int[] attrib_list) {
+    @Override // javax.microedition.khronos.egl.EGL10
+    public javax.microedition.khronos.egl.EGLContext eglCreateContext(javax.microedition.khronos.egl.EGLDisplay display, javax.microedition.khronos.egl.EGLConfig config, javax.microedition.khronos.egl.EGLContext share_context, int[] attrib_list) {
         begin("eglCreateContext");
         arg(Context.DISPLAY_SERVICE, display);
-        arg("config", (Object) config);
+        arg("config", config);
         arg("share_context", share_context);
         arg("attrib_list", attrib_list);
         end();
-        EGLContext result = this.mEgl10.eglCreateContext(display, config, share_context, attrib_list);
-        returns((Object) result);
+        javax.microedition.khronos.egl.EGLContext result = this.mEgl10.eglCreateContext(display, config, share_context, attrib_list);
+        returns(result);
         checkError();
         return result;
     }
 
-    public EGLSurface eglCreatePbufferSurface(EGLDisplay display, EGLConfig config, int[] attrib_list) {
+    @Override // javax.microedition.khronos.egl.EGL10
+    public javax.microedition.khronos.egl.EGLSurface eglCreatePbufferSurface(javax.microedition.khronos.egl.EGLDisplay display, javax.microedition.khronos.egl.EGLConfig config, int[] attrib_list) {
         begin("eglCreatePbufferSurface");
         arg(Context.DISPLAY_SERVICE, display);
-        arg("config", (Object) config);
+        arg("config", config);
         arg("attrib_list", attrib_list);
         end();
-        EGLSurface result = this.mEgl10.eglCreatePbufferSurface(display, config, attrib_list);
-        returns((Object) result);
+        javax.microedition.khronos.egl.EGLSurface result = this.mEgl10.eglCreatePbufferSurface(display, config, attrib_list);
+        returns(result);
         checkError();
         return result;
     }
 
-    public EGLSurface eglCreatePixmapSurface(EGLDisplay display, EGLConfig config, Object native_pixmap, int[] attrib_list) {
+    @Override // javax.microedition.khronos.egl.EGL10
+    public javax.microedition.khronos.egl.EGLSurface eglCreatePixmapSurface(javax.microedition.khronos.egl.EGLDisplay display, javax.microedition.khronos.egl.EGLConfig config, Object native_pixmap, int[] attrib_list) {
         begin("eglCreatePixmapSurface");
         arg(Context.DISPLAY_SERVICE, display);
-        arg("config", (Object) config);
+        arg("config", config);
         arg("native_pixmap", native_pixmap);
         arg("attrib_list", attrib_list);
         end();
-        EGLSurface result = this.mEgl10.eglCreatePixmapSurface(display, config, native_pixmap, attrib_list);
-        returns((Object) result);
+        javax.microedition.khronos.egl.EGLSurface result = this.mEgl10.eglCreatePixmapSurface(display, config, native_pixmap, attrib_list);
+        returns(result);
         checkError();
         return result;
     }
 
-    public EGLSurface eglCreateWindowSurface(EGLDisplay display, EGLConfig config, Object native_window, int[] attrib_list) {
+    @Override // javax.microedition.khronos.egl.EGL10
+    public javax.microedition.khronos.egl.EGLSurface eglCreateWindowSurface(javax.microedition.khronos.egl.EGLDisplay display, javax.microedition.khronos.egl.EGLConfig config, Object native_window, int[] attrib_list) {
         begin("eglCreateWindowSurface");
         arg(Context.DISPLAY_SERVICE, display);
-        arg("config", (Object) config);
+        arg("config", config);
         arg("native_window", native_window);
         arg("attrib_list", attrib_list);
         end();
-        EGLSurface result = this.mEgl10.eglCreateWindowSurface(display, config, native_window, attrib_list);
-        returns((Object) result);
+        javax.microedition.khronos.egl.EGLSurface result = this.mEgl10.eglCreateWindowSurface(display, config, native_window, attrib_list);
+        returns(result);
         checkError();
         return result;
     }
 
-    public boolean eglDestroyContext(EGLDisplay display, EGLContext context) {
+    @Override // javax.microedition.khronos.egl.EGL10
+    public boolean eglDestroyContext(javax.microedition.khronos.egl.EGLDisplay display, javax.microedition.khronos.egl.EGLContext context) {
         begin("eglDestroyContext");
         arg(Context.DISPLAY_SERVICE, display);
         arg("context", context);
@@ -114,7 +117,8 @@ class EGLLogWrapper implements EGL11 {
         return result;
     }
 
-    public boolean eglDestroySurface(EGLDisplay display, EGLSurface surface) {
+    @Override // javax.microedition.khronos.egl.EGL10
+    public boolean eglDestroySurface(javax.microedition.khronos.egl.EGLDisplay display, javax.microedition.khronos.egl.EGLSurface surface) {
         begin("eglDestroySurface");
         arg(Context.DISPLAY_SERVICE, display);
         arg("surface", surface);
@@ -125,10 +129,11 @@ class EGLLogWrapper implements EGL11 {
         return result;
     }
 
-    public boolean eglGetConfigAttrib(EGLDisplay display, EGLConfig config, int attribute, int[] value) {
+    @Override // javax.microedition.khronos.egl.EGL10
+    public boolean eglGetConfigAttrib(javax.microedition.khronos.egl.EGLDisplay display, javax.microedition.khronos.egl.EGLConfig config, int attribute, int[] value) {
         begin("eglGetConfigAttrib");
         arg(Context.DISPLAY_SERVICE, display);
-        arg("config", (Object) config);
+        arg("config", config);
         arg("attribute", attribute);
         end();
         boolean result = this.mEgl10.eglGetConfigAttrib(display, config, attribute, value);
@@ -138,7 +143,8 @@ class EGLLogWrapper implements EGL11 {
         return false;
     }
 
-    public boolean eglGetConfigs(EGLDisplay display, EGLConfig[] configs, int config_size, int[] num_config) {
+    @Override // javax.microedition.khronos.egl.EGL10
+    public boolean eglGetConfigs(javax.microedition.khronos.egl.EGLDisplay display, javax.microedition.khronos.egl.EGLConfig[] configs, int config_size, int[] num_config) {
         begin("eglGetConfigs");
         arg(Context.DISPLAY_SERVICE, display);
         arg("config_size", config_size);
@@ -151,44 +157,49 @@ class EGLLogWrapper implements EGL11 {
         return result;
     }
 
-    public EGLContext eglGetCurrentContext() {
+    @Override // javax.microedition.khronos.egl.EGL10
+    public javax.microedition.khronos.egl.EGLContext eglGetCurrentContext() {
         begin("eglGetCurrentContext");
         end();
-        EGLContext result = this.mEgl10.eglGetCurrentContext();
-        returns((Object) result);
+        javax.microedition.khronos.egl.EGLContext result = this.mEgl10.eglGetCurrentContext();
+        returns(result);
         checkError();
         return result;
     }
 
-    public EGLDisplay eglGetCurrentDisplay() {
+    @Override // javax.microedition.khronos.egl.EGL10
+    public javax.microedition.khronos.egl.EGLDisplay eglGetCurrentDisplay() {
         begin("eglGetCurrentDisplay");
         end();
-        EGLDisplay result = this.mEgl10.eglGetCurrentDisplay();
-        returns((Object) result);
+        javax.microedition.khronos.egl.EGLDisplay result = this.mEgl10.eglGetCurrentDisplay();
+        returns(result);
         checkError();
         return result;
     }
 
-    public EGLSurface eglGetCurrentSurface(int readdraw) {
+    @Override // javax.microedition.khronos.egl.EGL10
+    public javax.microedition.khronos.egl.EGLSurface eglGetCurrentSurface(int readdraw) {
         begin("eglGetCurrentSurface");
         arg("readdraw", readdraw);
         end();
-        EGLSurface result = this.mEgl10.eglGetCurrentSurface(readdraw);
-        returns((Object) result);
+        javax.microedition.khronos.egl.EGLSurface result = this.mEgl10.eglGetCurrentSurface(readdraw);
+        returns(result);
         checkError();
         return result;
     }
 
-    public EGLDisplay eglGetDisplay(Object native_display) {
+    @Override // javax.microedition.khronos.egl.EGL10
+    public javax.microedition.khronos.egl.EGLDisplay eglGetDisplay(Object native_display) {
         begin("eglGetDisplay");
         arg("native_display", native_display);
         end();
-        EGLDisplay result = this.mEgl10.eglGetDisplay(native_display);
-        returns((Object) result);
+        javax.microedition.khronos.egl.EGLDisplay result = this.mEgl10.eglGetDisplay(native_display);
+        returns(result);
         checkError();
         return result;
     }
 
+    @Override // javax.microedition.khronos.egl.EGL10
     public int eglGetError() {
         begin("eglGetError");
         end();
@@ -197,7 +208,8 @@ class EGLLogWrapper implements EGL11 {
         return result;
     }
 
-    public boolean eglInitialize(EGLDisplay display, int[] major_minor) {
+    @Override // javax.microedition.khronos.egl.EGL10
+    public boolean eglInitialize(javax.microedition.khronos.egl.EGLDisplay display, int[] major_minor) {
         begin("eglInitialize");
         arg(Context.DISPLAY_SERVICE, display);
         end();
@@ -208,7 +220,8 @@ class EGLLogWrapper implements EGL11 {
         return result;
     }
 
-    public boolean eglMakeCurrent(EGLDisplay display, EGLSurface draw, EGLSurface read, EGLContext context) {
+    @Override // javax.microedition.khronos.egl.EGL10
+    public boolean eglMakeCurrent(javax.microedition.khronos.egl.EGLDisplay display, javax.microedition.khronos.egl.EGLSurface draw, javax.microedition.khronos.egl.EGLSurface read, javax.microedition.khronos.egl.EGLContext context) {
         begin("eglMakeCurrent");
         arg(Context.DISPLAY_SERVICE, display);
         arg("draw", draw);
@@ -221,7 +234,8 @@ class EGLLogWrapper implements EGL11 {
         return result;
     }
 
-    public boolean eglQueryContext(EGLDisplay display, EGLContext context, int attribute, int[] value) {
+    @Override // javax.microedition.khronos.egl.EGL10
+    public boolean eglQueryContext(javax.microedition.khronos.egl.EGLDisplay display, javax.microedition.khronos.egl.EGLContext context, int attribute, int[] value) {
         begin("eglQueryContext");
         arg(Context.DISPLAY_SERVICE, display);
         arg("context", context);
@@ -234,7 +248,8 @@ class EGLLogWrapper implements EGL11 {
         return result;
     }
 
-    public String eglQueryString(EGLDisplay display, int name) {
+    @Override // javax.microedition.khronos.egl.EGL10
+    public String eglQueryString(javax.microedition.khronos.egl.EGLDisplay display, int name) {
         begin("eglQueryString");
         arg(Context.DISPLAY_SERVICE, display);
         arg("name", name);
@@ -245,7 +260,8 @@ class EGLLogWrapper implements EGL11 {
         return result;
     }
 
-    public boolean eglQuerySurface(EGLDisplay display, EGLSurface surface, int attribute, int[] value) {
+    @Override // javax.microedition.khronos.egl.EGL10
+    public boolean eglQuerySurface(javax.microedition.khronos.egl.EGLDisplay display, javax.microedition.khronos.egl.EGLSurface surface, int attribute, int[] value) {
         begin("eglQuerySurface");
         arg(Context.DISPLAY_SERVICE, display);
         arg("surface", surface);
@@ -258,6 +274,7 @@ class EGLLogWrapper implements EGL11 {
         return result;
     }
 
+    @Override // javax.microedition.khronos.egl.EGL10
     public boolean eglReleaseThread() {
         begin("eglReleaseThread");
         end();
@@ -267,7 +284,8 @@ class EGLLogWrapper implements EGL11 {
         return result;
     }
 
-    public boolean eglSwapBuffers(EGLDisplay display, EGLSurface surface) {
+    @Override // javax.microedition.khronos.egl.EGL10
+    public boolean eglSwapBuffers(javax.microedition.khronos.egl.EGLDisplay display, javax.microedition.khronos.egl.EGLSurface surface) {
         begin("eglSwapBuffers");
         arg(Context.DISPLAY_SERVICE, display);
         arg("surface", surface);
@@ -278,7 +296,8 @@ class EGLLogWrapper implements EGL11 {
         return result;
     }
 
-    public boolean eglTerminate(EGLDisplay display) {
+    @Override // javax.microedition.khronos.egl.EGL10
+    public boolean eglTerminate(javax.microedition.khronos.egl.EGLDisplay display) {
         begin("eglTerminate");
         arg(Context.DISPLAY_SERVICE, display);
         end();
@@ -288,6 +307,7 @@ class EGLLogWrapper implements EGL11 {
         return result;
     }
 
+    @Override // javax.microedition.khronos.egl.EGL10
     public boolean eglWaitGL() {
         begin("eglWaitGL");
         end();
@@ -297,6 +317,7 @@ class EGLLogWrapper implements EGL11 {
         return result;
     }
 
+    @Override // javax.microedition.khronos.egl.EGL10
     public boolean eglWaitNative(int engine, Object bindTarget) {
         begin("eglWaitNative");
         arg("engine", engine);
@@ -309,9 +330,8 @@ class EGLLogWrapper implements EGL11 {
     }
 
     private void checkError() {
-        int eglGetError = this.mEgl10.eglGetError();
-        int eglError = eglGetError;
-        if (eglGetError != 12288) {
+        int eglError = this.mEgl10.eglGetError();
+        if (eglError != 12288) {
             String errorMessage = "eglError: " + getErrorString(eglError);
             logLine(errorMessage);
             if (this.mCheckError) {
@@ -321,7 +341,7 @@ class EGLLogWrapper implements EGL11 {
     }
 
     private void logLine(String message) {
-        log(message + 10);
+        log(message + '\n');
     }
 
     private void log(String message) {
@@ -369,7 +389,7 @@ class EGLLogWrapper implements EGL11 {
         arg(name, toString(object));
     }
 
-    private void arg(String name, EGLDisplay object) {
+    private void arg(String name, javax.microedition.khronos.egl.EGLDisplay object) {
         if (object == EGL10.EGL_DEFAULT_DISPLAY) {
             arg(name, "EGL10.EGL_DEFAULT_DISPLAY");
         } else if (object == EGL_NO_DISPLAY) {
@@ -379,7 +399,7 @@ class EGLLogWrapper implements EGL11 {
         }
     }
 
-    private void arg(String name, EGLContext object) {
+    private void arg(String name, javax.microedition.khronos.egl.EGLContext object) {
         if (object == EGL10.EGL_NO_CONTEXT) {
             arg(name, "EGL10.EGL_NO_CONTEXT");
         } else {
@@ -387,7 +407,7 @@ class EGLLogWrapper implements EGL11 {
         }
     }
 
-    private void arg(String name, EGLSurface object) {
+    private void arg(String name, javax.microedition.khronos.egl.EGLSurface object) {
         if (object == EGL10.EGL_NO_SURFACE) {
             arg(name, "EGL10.EGL_NO_SURFACE");
         } else {
@@ -447,7 +467,7 @@ class EGLLogWrapper implements EGL11 {
             } else {
                 buf.append(arr[index]);
             }
-            buf.append(10);
+            buf.append('\n');
         }
         buf.append("}");
         return buf.toString();
@@ -465,7 +485,7 @@ class EGLLogWrapper implements EGL11 {
             } else {
                 buf.append(arr[index]);
             }
-            buf.append(10);
+            buf.append('\n');
         }
         buf.append("}");
         return buf.toString();

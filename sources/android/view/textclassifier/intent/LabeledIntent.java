@@ -5,23 +5,29 @@ import android.app.RemoteAction;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
+import android.content.p002pm.PackageManager;
+import android.content.p002pm.ResolveInfo;
 import android.graphics.drawable.Icon;
-import android.os.Bundle;
+import android.p007os.Bundle;
 import android.text.TextUtils;
 import android.view.textclassifier.ExtrasUtils;
 import android.view.textclassifier.Log;
 import android.view.textclassifier.TextClassification;
 import android.view.textclassifier.TextClassifier;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.util.Preconditions;
 
 @VisibleForTesting(visibility = VisibleForTesting.Visibility.PACKAGE)
+/* loaded from: classes4.dex */
 public final class LabeledIntent {
     public static final int DEFAULT_REQUEST_CODE = 0;
-    private static final TitleChooser DEFAULT_TITLE_CHOOSER = $$Lambda$LabeledIntent$LaL7EfxShgNu4lrdo3mv85g49Jg.INSTANCE;
+    private static final TitleChooser DEFAULT_TITLE_CHOOSER = new TitleChooser() { // from class: android.view.textclassifier.intent.-$$Lambda$LabeledIntent$LaL7EfxShgNu4lrdo3mv85g49Jg
+        @Override // android.view.textclassifier.intent.LabeledIntent.TitleChooser
+        public final CharSequence chooseTitle(LabeledIntent labeledIntent, ResolveInfo resolveInfo) {
+            return LabeledIntent.lambda$static$0(labeledIntent, resolveInfo);
+        }
+    };
     private static final String TAG = "LabeledIntent";
     public final String description;
     public final String descriptionWithAppName;
@@ -30,6 +36,7 @@ public final class LabeledIntent {
     public final String titleWithEntity;
     public final String titleWithoutEntity;
 
+    /* loaded from: classes4.dex */
     public interface TitleChooser {
         CharSequence chooseTitle(LabeledIntent labeledIntent, ResolveInfo resolveInfo);
     }
@@ -41,30 +48,29 @@ public final class LabeledIntent {
         return labeledIntent.titleWithoutEntity;
     }
 
-    public LabeledIntent(String titleWithoutEntity2, String titleWithEntity2, String description2, String descriptionWithAppName2, Intent intent2, int requestCode2) {
-        if (!TextUtils.isEmpty(titleWithEntity2) || !TextUtils.isEmpty(titleWithoutEntity2)) {
-            this.titleWithoutEntity = titleWithoutEntity2;
-            this.titleWithEntity = titleWithEntity2;
-            this.description = (String) Preconditions.checkNotNull(description2);
-            this.descriptionWithAppName = descriptionWithAppName2;
-            this.intent = (Intent) Preconditions.checkNotNull(intent2);
-            this.requestCode = requestCode2;
-            return;
+    public LabeledIntent(String titleWithoutEntity, String titleWithEntity, String description, String descriptionWithAppName, Intent intent, int requestCode) {
+        if (TextUtils.isEmpty(titleWithEntity) && TextUtils.isEmpty(titleWithoutEntity)) {
+            throw new IllegalArgumentException("titleWithEntity and titleWithoutEntity should not be both null");
         }
-        throw new IllegalArgumentException("titleWithEntity and titleWithoutEntity should not be both null");
+        this.titleWithoutEntity = titleWithoutEntity;
+        this.titleWithEntity = titleWithEntity;
+        this.description = (String) Preconditions.checkNotNull(description);
+        this.descriptionWithAppName = descriptionWithAppName;
+        this.intent = (Intent) Preconditions.checkNotNull(intent);
+        this.requestCode = requestCode;
     }
 
     public Result resolve(Context context, TitleChooser titleChooser, Bundle textLanguagesBundle) {
         PackageManager pm = context.getPackageManager();
         ResolveInfo resolveInfo = pm.resolveActivity(this.intent, 0);
         if (resolveInfo == null || resolveInfo.activityInfo == null) {
-            Log.w(TAG, "resolveInfo or activityInfo is null");
+            Log.m37w(TAG, "resolveInfo or activityInfo is null");
             return null;
         }
         String packageName = resolveInfo.activityInfo.packageName;
         String className = resolveInfo.activityInfo.name;
         if (packageName == null || className == null) {
-            Log.w(TAG, "packageName or className is null");
+            Log.m37w(TAG, "packageName or className is null");
             return null;
         }
         Intent resolvedIntent = new Intent(this.intent);
@@ -79,12 +85,12 @@ public final class LabeledIntent {
             }
         }
         if (icon == null) {
-            icon = Icon.createWithResource("android", (int) R.drawable.ic_more_items);
+            icon = Icon.createWithResource("android", (int) C3132R.C3133drawable.ic_more_items);
         }
         PendingIntent pendingIntent = TextClassification.createPendingIntent(context, resolvedIntent, this.requestCode);
         CharSequence title = (titleChooser == null ? DEFAULT_TITLE_CHOOSER : titleChooser).chooseTitle(this, resolveInfo);
         if (TextUtils.isEmpty(title)) {
-            Log.w(TAG, "Custom titleChooser return null, fallback to the default titleChooser");
+            Log.m37w(TAG, "Custom titleChooser return null, fallback to the default titleChooser");
             title = DEFAULT_TITLE_CHOOSER.chooseTitle(this, resolveInfo);
         }
         RemoteAction action = new RemoteAction(icon, title, resolveDescription(resolveInfo, pm), pendingIntent);
@@ -96,7 +102,7 @@ public final class LabeledIntent {
         if (!TextUtils.isEmpty(this.descriptionWithAppName)) {
             String applicationName = getApplicationName(resolveInfo, packageManager);
             if (!TextUtils.isEmpty(applicationName)) {
-                return String.format(this.descriptionWithAppName, new Object[]{applicationName});
+                return String.format(this.descriptionWithAppName, applicationName);
             }
         }
         return this.description;
@@ -110,21 +116,22 @@ public final class LabeledIntent {
     }
 
     private Bundle getFromTextClassifierExtra(Bundle textLanguagesBundle) {
-        if (textLanguagesBundle == null) {
-            return Bundle.EMPTY;
+        if (textLanguagesBundle != null) {
+            Bundle bundle = new Bundle();
+            ExtrasUtils.putTextLanguagesExtra(bundle, textLanguagesBundle);
+            return bundle;
         }
-        Bundle bundle = new Bundle();
-        ExtrasUtils.putTextLanguagesExtra(bundle, textLanguagesBundle);
-        return bundle;
+        return Bundle.EMPTY;
     }
 
+    /* loaded from: classes4.dex */
     public static final class Result {
         public final RemoteAction remoteAction;
         public final Intent resolvedIntent;
 
-        public Result(Intent resolvedIntent2, RemoteAction remoteAction2) {
-            this.resolvedIntent = (Intent) Preconditions.checkNotNull(resolvedIntent2);
-            this.remoteAction = (RemoteAction) Preconditions.checkNotNull(remoteAction2);
+        public Result(Intent resolvedIntent, RemoteAction remoteAction) {
+            this.resolvedIntent = (Intent) Preconditions.checkNotNull(resolvedIntent);
+            this.remoteAction = (RemoteAction) Preconditions.checkNotNull(remoteAction);
         }
     }
 }

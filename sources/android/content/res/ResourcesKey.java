@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import java.util.Arrays;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public final class ResourcesKey {
     public final CompatibilityInfo mCompatInfo;
     public final int mDisplayId;
@@ -27,7 +28,8 @@ public final class ResourcesKey {
         this.mDisplayId = displayId;
         this.mOverrideConfiguration = new Configuration(overrideConfig != null ? overrideConfig : Configuration.EMPTY);
         this.mCompatInfo = compatInfo != null ? compatInfo : CompatibilityInfo.DEFAULT_COMPATIBILITY_INFO;
-        this.mHash = (((((((((((((17 * 31) + Objects.hashCode(this.mResDir)) * 31) + Arrays.hashCode(this.mSplitResDirs)) * 31) + Arrays.hashCode(this.mOverlayDirs)) * 31) + Arrays.hashCode(this.mLibDirs)) * 31) + this.mDisplayId) * 31) + Objects.hashCode(this.mOverrideConfiguration)) * 31) + Objects.hashCode(this.mCompatInfo);
+        int hash = (17 * 31) + Objects.hashCode(this.mResDir);
+        this.mHash = (((((((((((hash * 31) + Arrays.hashCode(this.mSplitResDirs)) * 31) + Arrays.hashCode(this.mOverlayDirs)) * 31) + Arrays.hashCode(this.mLibDirs)) * 31) + this.mDisplayId) * 31) + Objects.hashCode(this.mOverrideConfiguration)) * 31) + Objects.hashCode(this.mCompatInfo);
     }
 
     public boolean hasOverrideConfiguration() {
@@ -35,10 +37,7 @@ public final class ResourcesKey {
     }
 
     public boolean isPathReferenced(String path) {
-        if ((this.mResDir == null || !this.mResDir.startsWith(path)) && !anyStartsWith(this.mSplitResDirs, path) && !anyStartsWith(this.mOverlayDirs, path) && !anyStartsWith(this.mLibDirs, path)) {
-            return false;
-        }
-        return true;
+        return (this.mResDir != null && this.mResDir.startsWith(path)) || anyStartsWith(this.mSplitResDirs, path) || anyStartsWith(this.mOverlayDirs, path) || anyStartsWith(this.mLibDirs, path);
     }
 
     private static boolean anyStartsWith(String[] list, String prefix) {
@@ -57,12 +56,9 @@ public final class ResourcesKey {
     }
 
     public boolean equals(Object obj) {
-        if (!(obj instanceof ResourcesKey)) {
-            return false;
-        }
-        ResourcesKey peer = (ResourcesKey) obj;
-        if (this.mHash == peer.mHash && Objects.equals(this.mResDir, peer.mResDir) && Arrays.equals(this.mSplitResDirs, peer.mSplitResDirs) && Arrays.equals(this.mOverlayDirs, peer.mOverlayDirs) && Arrays.equals(this.mLibDirs, peer.mLibDirs) && this.mDisplayId == peer.mDisplayId && Objects.equals(this.mOverrideConfiguration, peer.mOverrideConfiguration) && Objects.equals(this.mCompatInfo, peer.mCompatInfo)) {
-            return true;
+        if (obj instanceof ResourcesKey) {
+            ResourcesKey peer = (ResourcesKey) obj;
+            return this.mHash == peer.mHash && Objects.equals(this.mResDir, peer.mResDir) && Arrays.equals(this.mSplitResDirs, peer.mSplitResDirs) && Arrays.equals(this.mOverlayDirs, peer.mOverlayDirs) && Arrays.equals(this.mLibDirs, peer.mLibDirs) && this.mDisplayId == peer.mDisplayId && Objects.equals(this.mOverrideConfiguration, peer.mOverrideConfiguration) && Objects.equals(this.mCompatInfo, peer.mCompatInfo);
         }
         return false;
     }
@@ -75,17 +71,17 @@ public final class ResourcesKey {
         builder.append(this.mResDir);
         builder.append(" mSplitDirs=[");
         if (this.mSplitResDirs != null) {
-            builder.append(TextUtils.join((CharSequence) SmsManager.REGEX_PREFIX_DELIMITER, (Object[]) this.mSplitResDirs));
+            builder.append(TextUtils.join(SmsManager.REGEX_PREFIX_DELIMITER, this.mSplitResDirs));
         }
         builder.append("]");
         builder.append(" mOverlayDirs=[");
         if (this.mOverlayDirs != null) {
-            builder.append(TextUtils.join((CharSequence) SmsManager.REGEX_PREFIX_DELIMITER, (Object[]) this.mOverlayDirs));
+            builder.append(TextUtils.join(SmsManager.REGEX_PREFIX_DELIMITER, this.mOverlayDirs));
         }
         builder.append("]");
         builder.append(" mLibDirs=[");
         if (this.mLibDirs != null) {
-            builder.append(TextUtils.join((CharSequence) SmsManager.REGEX_PREFIX_DELIMITER, (Object[]) this.mLibDirs));
+            builder.append(TextUtils.join(SmsManager.REGEX_PREFIX_DELIMITER, this.mLibDirs));
         }
         builder.append("]");
         builder.append(" mDisplayId=");

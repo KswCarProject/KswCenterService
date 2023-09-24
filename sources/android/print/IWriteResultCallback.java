@@ -1,13 +1,14 @@
 package android.print;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.ICancellationSignal;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.ICancellationSignal;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.text.TextUtils;
 
+/* loaded from: classes3.dex */
 public interface IWriteResultCallback extends IInterface {
     void onWriteCanceled(int i) throws RemoteException;
 
@@ -17,24 +18,31 @@ public interface IWriteResultCallback extends IInterface {
 
     void onWriteStarted(ICancellationSignal iCancellationSignal, int i) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements IWriteResultCallback {
+        @Override // android.print.IWriteResultCallback
         public void onWriteStarted(ICancellationSignal cancellation, int sequence) throws RemoteException {
         }
 
+        @Override // android.print.IWriteResultCallback
         public void onWriteFinished(PageRange[] pages, int sequence) throws RemoteException {
         }
 
+        @Override // android.print.IWriteResultCallback
         public void onWriteFailed(CharSequence error, int sequence) throws RemoteException {
         }
 
+        @Override // android.print.IWriteResultCallback
         public void onWriteCanceled(int sequence) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements IWriteResultCallback {
         private static final String DESCRIPTOR = "android.print.IWriteResultCallback";
         static final int TRANSACTION_onWriteCanceled = 4;
@@ -51,12 +59,13 @@ public interface IWriteResultCallback extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IWriteResultCallback)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IWriteResultCallback)) {
+                return (IWriteResultCallback) iin;
             }
-            return (IWriteResultCallback) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -76,44 +85,52 @@ public interface IWriteResultCallback extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
             CharSequence _arg0;
-            if (code != 1598968902) {
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        onWriteStarted(ICancellationSignal.Stub.asInterface(data.readStrongBinder()), data.readInt());
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        onWriteFinished((PageRange[]) data.createTypedArray(PageRange.CREATOR), data.readInt());
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(data);
-                        } else {
-                            _arg0 = null;
-                        }
-                        onWriteFailed(_arg0, data.readInt());
-                        return true;
-                    case 4:
-                        data.enforceInterface(DESCRIPTOR);
-                        onWriteCanceled(data.readInt());
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    ICancellationSignal _arg02 = ICancellationSignal.Stub.asInterface(data.readStrongBinder());
+                    int _arg1 = data.readInt();
+                    onWriteStarted(_arg02, _arg1);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    PageRange[] _arg03 = (PageRange[]) data.createTypedArray(PageRange.CREATOR);
+                    int _arg12 = data.readInt();
+                    onWriteFinished(_arg03, _arg12);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg0 = TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(data);
+                    } else {
+                        _arg0 = null;
+                    }
+                    int _arg13 = data.readInt();
+                    onWriteFailed(_arg0, _arg13);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg04 = data.readInt();
+                    onWriteCanceled(_arg04);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements IWriteResultCallback {
             public static IWriteResultCallback sDefaultImpl;
             private IBinder mRemote;
@@ -122,6 +139,7 @@ public interface IWriteResultCallback extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -130,15 +148,15 @@ public interface IWriteResultCallback extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.print.IWriteResultCallback
             public void onWriteStarted(ICancellationSignal cancellation, int sequence) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(cancellation != null ? cancellation.asBinder() : null);
                     _data.writeInt(sequence);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onWriteStarted(cancellation, sequence);
                     }
                 } finally {
@@ -146,15 +164,15 @@ public interface IWriteResultCallback extends IInterface {
                 }
             }
 
+            @Override // android.print.IWriteResultCallback
             public void onWriteFinished(PageRange[] pages, int sequence) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeTypedArray(pages, 0);
                     _data.writeInt(sequence);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onWriteFinished(pages, sequence);
                     }
                 } finally {
@@ -162,6 +180,7 @@ public interface IWriteResultCallback extends IInterface {
                 }
             }
 
+            @Override // android.print.IWriteResultCallback
             public void onWriteFailed(CharSequence error, int sequence) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -173,9 +192,8 @@ public interface IWriteResultCallback extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(sequence);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onWriteFailed(error, sequence);
                     }
                 } finally {
@@ -183,14 +201,14 @@ public interface IWriteResultCallback extends IInterface {
                 }
             }
 
+            @Override // android.print.IWriteResultCallback
             public void onWriteCanceled(int sequence) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(sequence);
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onWriteCanceled(sequence);
                     }
                 } finally {
@@ -200,11 +218,11 @@ public interface IWriteResultCallback extends IInterface {
         }
 
         public static boolean setDefaultImpl(IWriteResultCallback impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IWriteResultCallback getDefaultImpl() {

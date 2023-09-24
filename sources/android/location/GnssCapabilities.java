@@ -3,6 +3,7 @@ package android.location;
 import android.annotation.SystemApi;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class GnssCapabilities {
     public static final long GEOFENCING = 4;
     public static final long INVALID_CAPABILITIES = -1;
@@ -16,7 +17,8 @@ public final class GnssCapabilities {
     public static final long SATELLITE_BLACKLIST = 2;
     private final long mGnssCapabilities;
 
-    public static GnssCapabilities of(long gnssCapabilities) {
+    /* renamed from: of */
+    public static GnssCapabilities m117of(long gnssCapabilities) {
         return new GnssCapabilities(gnssCapabilities);
     }
 
@@ -25,39 +27,39 @@ public final class GnssCapabilities {
     }
 
     public boolean hasLowPowerMode() {
-        return hasCapability(1);
+        return hasCapability(1L);
     }
 
     public boolean hasSatelliteBlacklist() {
-        return hasCapability(2);
+        return hasCapability(2L);
     }
 
     public boolean hasGeofencing() {
-        return hasCapability(4);
+        return hasCapability(4L);
     }
 
     public boolean hasMeasurements() {
-        return hasCapability(8);
+        return hasCapability(8L);
     }
 
     public boolean hasNavMessages() {
-        return hasCapability(16);
+        return hasCapability(16L);
     }
 
     public boolean hasMeasurementCorrections() {
-        return hasCapability(32);
+        return hasCapability(32L);
     }
 
     public boolean hasMeasurementCorrectionsLosSats() {
-        return hasCapability(64);
+        return hasCapability(64L);
     }
 
     public boolean hasMeasurementCorrectionsExcessPathLength() {
-        return hasCapability(128);
+        return hasCapability(128L);
     }
 
     public boolean hasMeasurementCorrectionsReflectingPane() {
-        return hasCapability(256);
+        return hasCapability(256L);
     }
 
     public String toString() {

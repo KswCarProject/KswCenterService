@@ -1,10 +1,10 @@
 package android.telephony.ims;
 
+/* loaded from: classes4.dex */
 public abstract class RcsEvent {
     private final long mTimestamp;
 
-    /* access modifiers changed from: package-private */
-    public abstract void persist(RcsControllerCall rcsControllerCall) throws RcsMessageStoreException;
+    abstract void persist(RcsControllerCall rcsControllerCall) throws RcsMessageStoreException;
 
     protected RcsEvent(long timestamp) {
         this.mTimestamp = timestamp;

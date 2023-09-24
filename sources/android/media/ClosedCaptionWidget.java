@@ -1,17 +1,16 @@
 package android.media;
 
 import android.content.Context;
-import android.graphics.Paint;
 import android.media.SubtitleTrack;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.CaptioningManager;
 
-/* compiled from: ClosedCaptionRenderer */
+/* compiled from: ClosedCaptionRenderer.java */
+/* loaded from: classes3.dex */
 abstract class ClosedCaptionWidget extends ViewGroup implements SubtitleTrack.RenderingWidget {
-    /* access modifiers changed from: private */
-    public static final CaptioningManager.CaptionStyle DEFAULT_CAPTION_STYLE = CaptioningManager.CaptionStyle.DEFAULT;
+    private static final CaptioningManager.CaptionStyle DEFAULT_CAPTION_STYLE = CaptioningManager.CaptionStyle.DEFAULT;
     protected CaptioningManager.CaptionStyle mCaptionStyle;
     private final CaptioningManager.CaptioningChangeListener mCaptioningListener;
     protected ClosedCaptionLayout mClosedCaptionLayout;
@@ -19,7 +18,8 @@ abstract class ClosedCaptionWidget extends ViewGroup implements SubtitleTrack.Re
     protected SubtitleTrack.RenderingWidget.OnChangedListener mListener;
     private final CaptioningManager mManager;
 
-    /* compiled from: ClosedCaptionRenderer */
+    /* compiled from: ClosedCaptionRenderer.java */
+    /* loaded from: classes3.dex */
     interface ClosedCaptionLayout {
         void setCaptionStyle(CaptioningManager.CaptionStyle captionStyle);
 
@@ -29,7 +29,7 @@ abstract class ClosedCaptionWidget extends ViewGroup implements SubtitleTrack.Re
     public abstract ClosedCaptionLayout createCaptionLayout(Context context);
 
     public ClosedCaptionWidget(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public ClosedCaptionWidget(Context context, AttributeSet attrs) {
@@ -42,35 +42,42 @@ abstract class ClosedCaptionWidget extends ViewGroup implements SubtitleTrack.Re
 
     public ClosedCaptionWidget(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        this.mCaptioningListener = new CaptioningManager.CaptioningChangeListener() {
+        this.mCaptioningListener = new CaptioningManager.CaptioningChangeListener() { // from class: android.media.ClosedCaptionWidget.1
+            @Override // android.view.accessibility.CaptioningManager.CaptioningChangeListener
             public void onUserStyleChanged(CaptioningManager.CaptionStyle userStyle) {
                 ClosedCaptionWidget.this.mCaptionStyle = ClosedCaptionWidget.DEFAULT_CAPTION_STYLE.applyStyle(userStyle);
                 ClosedCaptionWidget.this.mClosedCaptionLayout.setCaptionStyle(ClosedCaptionWidget.this.mCaptionStyle);
             }
 
+            @Override // android.view.accessibility.CaptioningManager.CaptioningChangeListener
             public void onFontScaleChanged(float fontScale) {
                 ClosedCaptionWidget.this.mClosedCaptionLayout.setFontScale(fontScale);
             }
         };
-        setLayerType(1, (Paint) null);
+        setLayerType(1, null);
         this.mManager = (CaptioningManager) context.getSystemService(Context.CAPTIONING_SERVICE);
         this.mCaptionStyle = DEFAULT_CAPTION_STYLE.applyStyle(this.mManager.getUserStyle());
         this.mClosedCaptionLayout = createCaptionLayout(context);
         this.mClosedCaptionLayout.setCaptionStyle(this.mCaptionStyle);
         this.mClosedCaptionLayout.setFontScale(this.mManager.getFontScale());
-        addView((View) (ViewGroup) this.mClosedCaptionLayout, -1, -1);
+        addView((ViewGroup) this.mClosedCaptionLayout, -1, -1);
         requestLayout();
     }
 
+    @Override // android.media.SubtitleTrack.RenderingWidget
     public void setOnChangedListener(SubtitleTrack.RenderingWidget.OnChangedListener listener) {
         this.mListener = listener;
     }
 
+    @Override // android.media.SubtitleTrack.RenderingWidget
     public void setSize(int width, int height) {
-        measure(View.MeasureSpec.makeMeasureSpec(width, 1073741824), View.MeasureSpec.makeMeasureSpec(height, 1073741824));
+        int widthSpec = View.MeasureSpec.makeMeasureSpec(width, 1073741824);
+        int heightSpec = View.MeasureSpec.makeMeasureSpec(height, 1073741824);
+        measure(widthSpec, heightSpec);
         layout(0, 0, width, height);
     }
 
+    @Override // android.media.SubtitleTrack.RenderingWidget
     public void setVisible(boolean visible) {
         if (visible) {
             setVisibility(0);
@@ -80,24 +87,26 @@ abstract class ClosedCaptionWidget extends ViewGroup implements SubtitleTrack.Re
         manageChangeListener();
     }
 
+    @Override // android.view.ViewGroup, android.view.View
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         manageChangeListener();
     }
 
+    @Override // android.view.ViewGroup, android.view.View
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         manageChangeListener();
     }
 
-    /* access modifiers changed from: protected */
-    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    @Override // android.view.View
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         ((ViewGroup) this.mClosedCaptionLayout).measure(widthMeasureSpec, heightMeasureSpec);
     }
 
-    /* access modifiers changed from: protected */
-    public void onLayout(boolean changed, int l, int t, int r, int b) {
+    @Override // android.view.ViewGroup, android.view.View
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
         ((ViewGroup) this.mClosedCaptionLayout).layout(l, t, r, b);
     }
 

@@ -16,10 +16,11 @@ import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import libcore.util.EmptyArray;
 
+/* loaded from: classes4.dex */
 public class ArrayUtils {
     private static final int CACHE_SIZE = 73;
-    public static final File[] EMPTY_FILE = new File[0];
     private static Object[] sCache = new Object[73];
+    public static final File[] EMPTY_FILE = new File[0];
 
     private ArrayUtils() {
     }
@@ -55,15 +56,14 @@ public class ArrayUtils {
 
     @UnsupportedAppUsage
     public static <T> T[] newUnpaddedArray(Class<T> clazz, int minLen) {
-        return (Object[]) VMRuntime.getRuntime().newUnpaddedArray(clazz, minLen);
+        return (T[]) ((Object[]) VMRuntime.getRuntime().newUnpaddedArray(clazz, minLen));
     }
 
     public static boolean equals(byte[] array1, byte[] array2, int length) {
-        if (length < 0) {
-            throw new IllegalArgumentException();
-        } else if (array1 == array2) {
-            return true;
-        } else {
+        if (length >= 0) {
+            if (array1 == array2) {
+                return true;
+            }
             if (array1 == null || array2 == null || array1.length < length || array2.length < length) {
                 return false;
             }
@@ -74,20 +74,21 @@ public class ArrayUtils {
             }
             return true;
         }
+        throw new IllegalArgumentException();
     }
 
     @UnsupportedAppUsage
     public static <T> T[] emptyArray(Class<T> kind) {
         if (kind == Object.class) {
-            return EmptyArray.OBJECT;
+            return (T[]) EmptyArray.OBJECT;
         }
         int bucket = (kind.hashCode() & Integer.MAX_VALUE) % 73;
         Object cache = sCache[bucket];
         if (cache == null || cache.getClass().getComponentType() != kind) {
-            cache = Array.newInstance(kind, 0);
+            cache = Array.newInstance((Class<?>) kind, 0);
             sCache[bucket] = cache;
         }
-        return (Object[]) cache;
+        return (T[]) ((Object[]) cache);
     }
 
     public static boolean isEmpty(Collection<?> array) {
@@ -248,7 +249,7 @@ public class ArrayUtils {
         }
         long[] array = new long[intArray.length];
         for (int i = 0; i < intArray.length; i++) {
-            array[i] = (long) intArray[i];
+            array[i] = intArray[i];
         }
         return array;
     }
@@ -258,13 +259,13 @@ public class ArrayUtils {
         int bn = b != null ? b.length : 0;
         if (an == 0 && bn == 0) {
             if (kind == String.class) {
-                return (Object[]) EmptyArray.STRING;
+                return (T[]) EmptyArray.STRING;
             }
             if (kind == Object.class) {
-                return EmptyArray.OBJECT;
+                return (T[]) EmptyArray.OBJECT;
             }
         }
-        T[] res = (Object[]) Array.newInstance(kind, an + bn);
+        T[] res = (T[]) ((Object[]) Array.newInstance((Class<?>) kind, an + bn));
         if (an > 0) {
             System.arraycopy(a, 0, res, 0, an);
         }
@@ -276,21 +277,22 @@ public class ArrayUtils {
 
     @UnsupportedAppUsage
     public static <T> T[] appendElement(Class<T> kind, T[] array, T element) {
-        return appendElement(kind, array, element, false);
+        return (T[]) appendElement(kind, array, element, false);
     }
 
     public static <T> T[] appendElement(Class<T> kind, T[] array, T element, boolean allowDuplicates) {
-        T[] result;
         int end;
-        if (array == null) {
-            end = 0;
-            result = (Object[]) Array.newInstance(kind, 1);
-        } else if (!allowDuplicates && contains(array, element)) {
-            return array;
-        } else {
+        T[] result;
+        if (array != null) {
+            if (!allowDuplicates && contains(array, element)) {
+                return array;
+            }
             end = array.length;
-            result = (Object[]) Array.newInstance(kind, end + 1);
+            result = (T[]) ((Object[]) Array.newInstance((Class<?>) kind, end + 1));
             System.arraycopy(array, 0, result, 0, end);
+        } else {
+            end = 0;
+            result = (T[]) ((Object[]) Array.newInstance((Class<?>) kind, 1));
         }
         result[end] = element;
         return result;
@@ -298,21 +300,22 @@ public class ArrayUtils {
 
     @UnsupportedAppUsage
     public static <T> T[] removeElement(Class<T> kind, T[] array, T element) {
-        if (array == null || !contains(array, element)) {
-            return array;
-        }
-        int length = array.length;
-        int i = 0;
-        while (i < length) {
-            if (!Objects.equals(array[i], element)) {
-                i++;
-            } else if (length == 1) {
-                return null;
-            } else {
-                T[] result = (Object[]) Array.newInstance(kind, length - 1);
-                System.arraycopy(array, 0, result, 0, i);
-                System.arraycopy(array, i + 1, result, i, (length - i) - 1);
-                return result;
+        if (array != null) {
+            if (!contains(array, element)) {
+                return array;
+            }
+            int length = array.length;
+            for (int i = 0; i < length; i++) {
+                if (Objects.equals(array[i], element)) {
+                    if (length == 1) {
+                        return null;
+                    } else {
+                        T[] result = (T[]) ((Object[]) Array.newInstance((Class<?>) kind, length - 1));
+                        System.arraycopy(array, 0, result, 0, i);
+                        System.arraycopy(array, i + 1, result, i, (length - i) - 1);
+                        return result;
+                    }
+                }
             }
         }
         return array;
@@ -322,6 +325,7 @@ public class ArrayUtils {
         if (cur == null) {
             return new int[]{val};
         }
+        int N = cur.length;
         if (!allowDuplicates) {
             for (int i : cur) {
                 if (i == val) {
@@ -329,7 +333,8 @@ public class ArrayUtils {
                 }
             }
         }
-        int[] ret = new int[(N + 1)];
+        int i2 = N + 1;
+        int[] ret = new int[i2];
         System.arraycopy(cur, 0, ret, 0, N);
         ret[N] = val;
         return ret;
@@ -347,7 +352,7 @@ public class ArrayUtils {
         int N = cur.length;
         for (int i = 0; i < N; i++) {
             if (cur[i] == val) {
-                int[] ret = new int[(N - 1)];
+                int[] ret = new int[N - 1];
                 if (i > 0) {
                     System.arraycopy(cur, 0, ret, 0, i);
                 }
@@ -367,7 +372,7 @@ public class ArrayUtils {
         int N = cur.length;
         for (int i = 0; i < N; i++) {
             if (Objects.equals(cur[i], val)) {
-                String[] ret = new String[(N - 1)];
+                String[] ret = new String[N - 1];
                 if (i > 0) {
                     System.arraycopy(cur, 0, ret, 0, i);
                 }
@@ -384,14 +389,16 @@ public class ArrayUtils {
         if (cur == null) {
             return new long[]{val};
         }
+        int N = cur.length;
         if (!allowDuplicates) {
-            for (long j : cur) {
-                if (j == val) {
+            for (int i = 0; i < N; i++) {
+                if (cur[i] == val) {
                     return cur;
                 }
             }
         }
-        long[] ret = new long[(N + 1)];
+        int i2 = N + 1;
+        long[] ret = new long[i2];
         System.arraycopy(cur, 0, ret, 0, N);
         ret[N] = val;
         return ret;
@@ -408,7 +415,7 @@ public class ArrayUtils {
         int N = cur.length;
         for (int i = 0; i < N; i++) {
             if (cur[i] == val) {
-                long[] ret = new long[(N - 1)];
+                long[] ret = new long[N - 1];
                 if (i > 0) {
                     System.arraycopy(cur, 0, ret, 0, i);
                 }
@@ -430,7 +437,7 @@ public class ArrayUtils {
 
     public static <T> T[] cloneOrNull(T[] array) {
         if (array != null) {
-            return (Object[]) array.clone();
+            return (T[]) ((Object[]) array.clone());
         }
         return null;
     }
@@ -494,10 +501,11 @@ public class ArrayUtils {
         if (array.length == size) {
             return array;
         }
-        return Arrays.copyOf(array, size);
+        return (T[]) Arrays.copyOf(array, size);
     }
 
     public static <T> boolean referenceEquals(ArrayList<T> a, ArrayList<T> b) {
+        boolean z;
         if (a == b) {
             return true;
         }
@@ -508,7 +516,12 @@ public class ArrayUtils {
         }
         boolean diff = false;
         for (int i = 0; i < sizeA && !diff; i++) {
-            diff |= a.get(i) != b.get(i);
+            if (a.get(i) != b.get(i)) {
+                z = true;
+            } else {
+                z = false;
+            }
+            diff |= z;
         }
         if (!diff) {
             return true;
@@ -540,7 +553,8 @@ public class ArrayUtils {
         for (int i = size - 1; i >= leftIdx; i--) {
             collection.remove(i);
         }
-        return size - leftIdx;
+        int i2 = size - leftIdx;
+        return i2;
     }
 
     public static int[] defeatNullable(int[] val) {
@@ -562,21 +576,21 @@ public class ArrayUtils {
     }
 
     public static <T> T[] filterNotNull(T[] val, IntFunction<T[]> arrayConstructor) {
-        int size = size((Object[]) val);
+        int size = size(val);
         int nullCount = 0;
-        for (int i = 0; i < size; i++) {
-            if (val[i] == null) {
+        for (int nullCount2 = 0; nullCount2 < size; nullCount2++) {
+            if (val[nullCount2] == null) {
                 nullCount++;
             }
         }
         if (nullCount == 0) {
             return val;
         }
-        T[] result = (Object[]) arrayConstructor.apply(size - nullCount);
+        T[] result = arrayConstructor.apply(size - nullCount);
         int outIdx = 0;
-        for (int i2 = 0; i2 < size; i2++) {
-            if (val[i2] != null) {
-                result[outIdx] = val[i2];
+        for (int i = 0; i < size; i++) {
+            if (val[i] != null) {
+                result[outIdx] = val[i];
                 outIdx++;
             }
         }
@@ -608,34 +622,34 @@ public class ArrayUtils {
     }
 
     public static String deepToString(Object value) {
-        if (value == null || !value.getClass().isArray()) {
-            return String.valueOf(value);
+        if (value != null && value.getClass().isArray()) {
+            if (value.getClass() == boolean[].class) {
+                return Arrays.toString((boolean[]) value);
+            }
+            if (value.getClass() == byte[].class) {
+                return Arrays.toString((byte[]) value);
+            }
+            if (value.getClass() == char[].class) {
+                return Arrays.toString((char[]) value);
+            }
+            if (value.getClass() == double[].class) {
+                return Arrays.toString((double[]) value);
+            }
+            if (value.getClass() == float[].class) {
+                return Arrays.toString((float[]) value);
+            }
+            if (value.getClass() == int[].class) {
+                return Arrays.toString((int[]) value);
+            }
+            if (value.getClass() == long[].class) {
+                return Arrays.toString((long[]) value);
+            }
+            if (value.getClass() == short[].class) {
+                return Arrays.toString((short[]) value);
+            }
+            return Arrays.deepToString((Object[]) value);
         }
-        if (value.getClass() == boolean[].class) {
-            return Arrays.toString((boolean[]) value);
-        }
-        if (value.getClass() == byte[].class) {
-            return Arrays.toString((byte[]) value);
-        }
-        if (value.getClass() == char[].class) {
-            return Arrays.toString((char[]) value);
-        }
-        if (value.getClass() == double[].class) {
-            return Arrays.toString((double[]) value);
-        }
-        if (value.getClass() == float[].class) {
-            return Arrays.toString((float[]) value);
-        }
-        if (value.getClass() == int[].class) {
-            return Arrays.toString((int[]) value);
-        }
-        if (value.getClass() == long[].class) {
-            return Arrays.toString((long[]) value);
-        }
-        if (value.getClass() == short[].class) {
-            return Arrays.toString((short[]) value);
-        }
-        return Arrays.deepToString((Object[]) value);
+        return String.valueOf(value);
     }
 
     public static <T> T firstOrNull(T[] items) {

@@ -1,8 +1,8 @@
 package com.android.internal.app.procstats;
 
 import android.net.wifi.WifiEnterpriseConfig;
-import android.os.Parcel;
-import android.os.SystemClock;
+import android.p007os.Parcel;
+import android.p007os.SystemClock;
 import android.provider.SettingsStringUtil;
 import android.telephony.SmsManager;
 import android.util.Slog;
@@ -11,6 +11,7 @@ import android.util.proto.ProtoOutputStream;
 import com.ibm.icu.text.PluralRules;
 import java.io.PrintWriter;
 
+/* loaded from: classes4.dex */
 public final class ServiceState {
     private static final boolean DEBUG = false;
     public static final int SERVICE_BOUND = 2;
@@ -22,14 +23,11 @@ public final class ServiceState {
     private static final String TAG = "ProcessStats";
     private int mBoundCount;
     private long mBoundStartTime;
-    private int mBoundState = -1;
     private final DurationsTable mDurations;
     private int mExecCount;
     private long mExecStartTime;
-    private int mExecState = -1;
     private int mForegroundCount;
     private long mForegroundStartTime;
-    private int mForegroundState = -1;
     private final String mName;
     private Object mOwner;
     private final String mPackage;
@@ -38,11 +36,14 @@ public final class ServiceState {
     private boolean mRestarting;
     private int mRunCount;
     private long mRunStartTime;
-    private int mRunState = -1;
     private boolean mStarted;
     private int mStartedCount;
     private long mStartedStartTime;
+    private int mRunState = -1;
     private int mStartedState = -1;
+    private int mBoundState = -1;
+    private int mExecState = -1;
+    private int mForegroundState = -1;
 
     public ServiceState(ProcessStats processStats, String pkg, String name, String processName, ProcessState proc) {
         this.mPackage = pkg;
@@ -92,28 +93,27 @@ public final class ServiceState {
     }
 
     public void applyNewOwner(Object newOwner) {
-        if (this.mOwner == newOwner) {
-            return;
-        }
-        if (this.mOwner == null) {
+        if (this.mOwner != newOwner) {
+            if (this.mOwner == null) {
+                this.mOwner = newOwner;
+                this.mProc.incActiveServices(this.mName);
+                return;
+            }
             this.mOwner = newOwner;
-            this.mProc.incActiveServices(this.mName);
-            return;
-        }
-        this.mOwner = newOwner;
-        if (this.mStarted || this.mBoundState != -1 || this.mExecState != -1 || this.mForegroundState != -1) {
-            long now = SystemClock.uptimeMillis();
-            if (this.mStarted) {
-                setStarted(false, 0, now);
-            }
-            if (this.mBoundState != -1) {
-                setBound(false, 0, now);
-            }
-            if (this.mExecState != -1) {
-                setExecuting(false, 0, now);
-            }
-            if (this.mForegroundState != -1) {
-                setForeground(false, 0, now);
+            if (this.mStarted || this.mBoundState != -1 || this.mExecState != -1 || this.mForegroundState != -1) {
+                long now = SystemClock.uptimeMillis();
+                if (this.mStarted) {
+                    setStarted(false, 0, now);
+                }
+                if (this.mBoundState != -1) {
+                    setBound(false, 0, now);
+                }
+                if (this.mExecState != -1) {
+                    setExecuting(false, 0, now);
+                }
+                if (this.mForegroundState != -1) {
+                    setForeground(false, 0, now);
+                }
             }
         }
     }
@@ -121,7 +121,7 @@ public final class ServiceState {
     public void clearCurrentOwner(Object owner, boolean silently) {
         if (this.mOwner == owner) {
             this.mProc.decActiveServices(this.mName);
-            if (!(!this.mStarted && this.mBoundState == -1 && this.mExecState == -1 && this.mForegroundState == -1)) {
+            if (this.mStarted || this.mBoundState != -1 || this.mExecState != -1 || this.mForegroundState != -1) {
                 long now = SystemClock.uptimeMillis();
                 if (this.mStarted) {
                     if (!silently) {
@@ -171,15 +171,11 @@ public final class ServiceState {
 
     public void resetSafely(long now) {
         this.mDurations.resetTable();
-        int i = 0;
         this.mRunCount = this.mRunState != -1 ? 1 : 0;
         this.mStartedCount = this.mStartedState != -1 ? 1 : 0;
         this.mBoundCount = this.mBoundState != -1 ? 1 : 0;
         this.mExecCount = this.mExecState != -1 ? 1 : 0;
-        if (this.mForegroundState != -1) {
-            i = 1;
-        }
-        this.mForegroundCount = i;
+        this.mForegroundCount = this.mForegroundState != -1 ? 1 : 0;
         this.mForegroundStartTime = now;
         this.mExecStartTime = now;
         this.mBoundStartTime = now;
@@ -336,7 +332,8 @@ public final class ServiceState {
     }
 
     public long getDuration(int opType, int curState, long startTime, int memFactor, long now) {
-        long time = this.mDurations.getValueForId((byte) ((memFactor * 5) + opType));
+        int state = (memFactor * 5) + opType;
+        long time = this.mDurations.getValueForId((byte) state);
         if (curState == memFactor) {
             return time + (now - startTime);
         }
@@ -345,7 +342,6 @@ public final class ServiceState {
 
     public void dumpStats(PrintWriter pw, String prefix, String prefixInner, String headerPrefix, long now, long totalTime, boolean dumpSummary, boolean dumpAll) {
         PrintWriter printWriter;
-        PrintWriter printWriter2 = pw;
         boolean z = false;
         dumpStats(pw, prefix, prefixInner, headerPrefix, "Running", this.mRunCount, 0, this.mRunState, this.mRunStartTime, now, totalTime, !dumpSummary || dumpAll);
         dumpStats(pw, prefix, prefixInner, headerPrefix, "Started", this.mStartedCount, 1, this.mStartedState, this.mStartedStartTime, now, totalTime, !dumpSummary || dumpAll);
@@ -371,56 +367,45 @@ public final class ServiceState {
                 printWriter.print(this.mStarted);
                 printWriter.print(" mRestarting=");
                 printWriter.println(this.mRestarting);
-                return;
             }
-            return;
         }
-        PrintWriter printWriter3 = pw;
     }
 
     private void dumpStats(PrintWriter pw, String prefix, String prefixInner, String headerPrefix, String header, int count, int serviceType, int state, long startTime, long now, long totalTime, boolean dumpAll) {
-        PrintWriter printWriter = pw;
-        String str = header;
-        int i = count;
-        if (i != 0) {
+        if (count != 0) {
             if (dumpAll) {
                 pw.print(prefix);
-                printWriter.print(str);
-                printWriter.print(" op count ");
-                printWriter.print(i);
-                printWriter.println(SettingsStringUtil.DELIMITER);
+                pw.print(header);
+                pw.print(" op count ");
+                pw.print(count);
+                pw.println(SettingsStringUtil.DELIMITER);
                 dumpTime(pw, prefixInner, serviceType, state, startTime, now);
             } else {
-                long myTime = dumpTimeInternal((PrintWriter) null, (String) null, serviceType, state, startTime, now, true);
+                long myTime = dumpTimeInternal(null, null, serviceType, state, startTime, now, true);
                 pw.print(prefix);
-                printWriter.print(headerPrefix);
-                printWriter.print(str);
-                printWriter.print(" count ");
-                printWriter.print(i);
-                printWriter.print(" / time ");
+                pw.print(headerPrefix);
+                pw.print(header);
+                pw.print(" count ");
+                pw.print(count);
+                pw.print(" / time ");
                 boolean isRunning = myTime < 0;
                 if (isRunning) {
                     myTime = -myTime;
                 }
-                DumpUtils.printPercent(printWriter, ((double) myTime) / ((double) totalTime));
+                DumpUtils.printPercent(pw, myTime / totalTime);
                 if (isRunning) {
-                    printWriter.print(" (running)");
+                    pw.print(" (running)");
                 }
                 pw.println();
-                return;
             }
         }
-        String str2 = headerPrefix;
-        long j = totalTime;
     }
 
     public long dumpTime(PrintWriter pw, String prefix, int serviceType, int curState, long curStartTime, long now) {
         return dumpTimeInternal(pw, prefix, serviceType, curState, curStartTime, now, false);
     }
 
-    /* access modifiers changed from: package-private */
-    public long dumpTimeInternal(PrintWriter pw, String prefix, int serviceType, int curState, long curStartTime, long now, boolean negativeIfRunning) {
-        PrintWriter printWriter = pw;
+    long dumpTimeInternal(PrintWriter pw, String prefix, int serviceType, int curState, long curStartTime, long now, boolean negativeIfRunning) {
         boolean isRunning = false;
         int printedScreen = -1;
         long totalTime = 0;
@@ -439,20 +424,20 @@ public final class ServiceState {
                 int state = imem + iscreen;
                 long time = getDuration(serviceType, curState, curStartTime, state, now);
                 String running = "";
-                if (curState == state && printWriter != null) {
+                if (curState == state && pw != null) {
                     running = " (running)";
                     isRunning2 = true;
                 }
                 if (time != j) {
-                    if (printWriter != null) {
+                    if (pw != null) {
                         pw.print(prefix);
-                        DumpUtils.printScreenLabel(printWriter, printedScreen2 != iscreen ? iscreen : -1);
+                        DumpUtils.printScreenLabel(pw, printedScreen2 != iscreen ? iscreen : -1);
                         int printedScreen3 = iscreen;
-                        DumpUtils.printMemLabel(printWriter, printedMem != imem ? imem : -1, 0);
+                        DumpUtils.printMemLabel(pw, printedMem != imem ? imem : -1, (char) 0);
                         printedMem = imem;
-                        printWriter.print(PluralRules.KEYWORD_RULE_SEPARATOR);
-                        TimeUtils.formatDuration(time, printWriter);
-                        printWriter.println(running);
+                        pw.print(PluralRules.KEYWORD_RULE_SEPARATOR);
+                        TimeUtils.formatDuration(time, pw);
+                        pw.println(running);
                         printedScreen2 = printedScreen3;
                     }
                     totalTime2 += time;
@@ -460,159 +445,135 @@ public final class ServiceState {
                 imem++;
                 j = 0;
             }
-            int i = curState;
             iscreen += 4;
             totalTime = totalTime2;
             isRunning = isRunning2;
             printedScreen = printedScreen2;
         }
-        int i2 = curState;
-        if (!(totalTime == 0 || printWriter == null)) {
+        if (totalTime != 0 && pw != null) {
             pw.print(prefix);
-            printWriter.print("    TOTAL: ");
-            TimeUtils.formatDuration(totalTime, printWriter);
+            pw.print("    TOTAL: ");
+            TimeUtils.formatDuration(totalTime, pw);
             pw.println();
         }
-        return (!isRunning || !negativeIfRunning) ? totalTime : -totalTime;
+        return (isRunning && negativeIfRunning) ? -totalTime : totalTime;
     }
 
     public void dumpTimesCheckin(PrintWriter pw, String pkgName, int uid, long vers, String serviceName, long now) {
-        PrintWriter printWriter = pw;
-        String str = pkgName;
-        int i = uid;
-        long j = vers;
-        String str2 = serviceName;
-        long j2 = now;
-        dumpTimeCheckin(printWriter, "pkgsvc-run", str, i, j, str2, 0, this.mRunCount, this.mRunState, this.mRunStartTime, j2);
-        dumpTimeCheckin(printWriter, "pkgsvc-start", str, i, j, str2, 1, this.mStartedCount, this.mStartedState, this.mStartedStartTime, j2);
-        dumpTimeCheckin(printWriter, "pkgsvc-fg", str, i, j, str2, 4, this.mForegroundCount, this.mForegroundState, this.mForegroundStartTime, j2);
-        dumpTimeCheckin(printWriter, "pkgsvc-bound", str, i, j, str2, 2, this.mBoundCount, this.mBoundState, this.mBoundStartTime, j2);
-        dumpTimeCheckin(printWriter, "pkgsvc-exec", str, i, j, str2, 3, this.mExecCount, this.mExecState, this.mExecStartTime, j2);
+        dumpTimeCheckin(pw, "pkgsvc-run", pkgName, uid, vers, serviceName, 0, this.mRunCount, this.mRunState, this.mRunStartTime, now);
+        dumpTimeCheckin(pw, "pkgsvc-start", pkgName, uid, vers, serviceName, 1, this.mStartedCount, this.mStartedState, this.mStartedStartTime, now);
+        dumpTimeCheckin(pw, "pkgsvc-fg", pkgName, uid, vers, serviceName, 4, this.mForegroundCount, this.mForegroundState, this.mForegroundStartTime, now);
+        dumpTimeCheckin(pw, "pkgsvc-bound", pkgName, uid, vers, serviceName, 2, this.mBoundCount, this.mBoundState, this.mBoundStartTime, now);
+        dumpTimeCheckin(pw, "pkgsvc-exec", pkgName, uid, vers, serviceName, 3, this.mExecCount, this.mExecState, this.mExecStartTime, now);
     }
 
     private void dumpTimeCheckin(PrintWriter pw, String label, String packageName, int uid, long vers, String serviceName, int serviceType, int opCount, int curState, long curStartTime, long now) {
         ServiceState serviceState = this;
-        PrintWriter printWriter = pw;
-        int i = opCount;
-        int i2 = curState;
-        if (i > 0) {
-            pw.print(label);
-            printWriter.print(SmsManager.REGEX_PREFIX_DELIMITER);
-            printWriter.print(packageName);
-            printWriter.print(SmsManager.REGEX_PREFIX_DELIMITER);
-            printWriter.print(uid);
-            printWriter.print(SmsManager.REGEX_PREFIX_DELIMITER);
-            printWriter.print(vers);
-            printWriter.print(SmsManager.REGEX_PREFIX_DELIMITER);
-            printWriter.print(serviceName);
-            printWriter.print(SmsManager.REGEX_PREFIX_DELIMITER);
-            printWriter.print(i);
-            boolean didCurState = false;
-            int N = serviceState.mDurations.getKeyCount();
-            int i3 = 0;
-            while (i3 < N) {
-                int key = serviceState.mDurations.getKeyAt(i3);
-                long time = serviceState.mDurations.getValue(key);
-                int type = SparseMappingTable.getIdFromKey(key);
-                int memFactor = type / 5;
-                int type2 = type % 5;
-                int i4 = key;
-                if (type2 == serviceType) {
-                    if (i2 == memFactor) {
-                        didCurState = true;
-                        time += now - curStartTime;
-                    }
-                    DumpUtils.printAdjTagAndValue(printWriter, memFactor, time);
-                }
-                i3++;
-                serviceState = this;
-                int i5 = opCount;
-                String str = packageName;
-                int i6 = uid;
-            }
-            int i7 = serviceType;
-            if (!didCurState && i2 != -1) {
-                DumpUtils.printAdjTagAndValue(printWriter, i2, now - curStartTime);
-            }
-            pw.println();
+        if (opCount <= 0) {
+            return;
         }
+        pw.print(label);
+        pw.print(SmsManager.REGEX_PREFIX_DELIMITER);
+        pw.print(packageName);
+        pw.print(SmsManager.REGEX_PREFIX_DELIMITER);
+        pw.print(uid);
+        pw.print(SmsManager.REGEX_PREFIX_DELIMITER);
+        pw.print(vers);
+        pw.print(SmsManager.REGEX_PREFIX_DELIMITER);
+        pw.print(serviceName);
+        pw.print(SmsManager.REGEX_PREFIX_DELIMITER);
+        pw.print(opCount);
+        boolean didCurState = false;
+        int N = serviceState.mDurations.getKeyCount();
+        int i = 0;
+        while (i < N) {
+            int key = serviceState.mDurations.getKeyAt(i);
+            long time = serviceState.mDurations.getValue(key);
+            int type = SparseMappingTable.getIdFromKey(key);
+            int memFactor = type / 5;
+            if (type % 5 == serviceType) {
+                if (curState == memFactor) {
+                    didCurState = true;
+                    time += now - curStartTime;
+                }
+                DumpUtils.printAdjTagAndValue(pw, memFactor, time);
+            }
+            i++;
+            serviceState = this;
+        }
+        if (!didCurState && curState != -1) {
+            DumpUtils.printAdjTagAndValue(pw, curState, now - curStartTime);
+        }
+        pw.println();
     }
 
     public void writeToProto(ProtoOutputStream proto, long fieldId, long now) {
-        ProtoOutputStream protoOutputStream = proto;
         long token = proto.start(fieldId);
-        protoOutputStream.write(1138166333441L, this.mName);
-        ProtoOutputStream protoOutputStream2 = proto;
-        long j = now;
-        writeTypeToProto(protoOutputStream2, 2246267895810L, 1, 0, this.mRunCount, this.mRunState, this.mRunStartTime, j);
-        writeTypeToProto(protoOutputStream2, 2246267895810L, 2, 1, this.mStartedCount, this.mStartedState, this.mStartedStartTime, j);
-        writeTypeToProto(protoOutputStream2, 2246267895810L, 3, 4, this.mForegroundCount, this.mForegroundState, this.mForegroundStartTime, j);
-        writeTypeToProto(protoOutputStream2, 2246267895810L, 4, 2, this.mBoundCount, this.mBoundState, this.mBoundStartTime, j);
-        writeTypeToProto(protoOutputStream2, 2246267895810L, 5, 3, this.mExecCount, this.mExecState, this.mExecStartTime, j);
-        protoOutputStream.end(token);
+        proto.write(1138166333441L, this.mName);
+        writeTypeToProto(proto, 2246267895810L, 1, 0, this.mRunCount, this.mRunState, this.mRunStartTime, now);
+        writeTypeToProto(proto, 2246267895810L, 2, 1, this.mStartedCount, this.mStartedState, this.mStartedStartTime, now);
+        writeTypeToProto(proto, 2246267895810L, 3, 4, this.mForegroundCount, this.mForegroundState, this.mForegroundStartTime, now);
+        writeTypeToProto(proto, 2246267895810L, 4, 2, this.mBoundCount, this.mBoundState, this.mBoundStartTime, now);
+        writeTypeToProto(proto, 2246267895810L, 5, 3, this.mExecCount, this.mExecState, this.mExecStartTime, now);
+        proto.end(token);
     }
 
     public void writeTypeToProto(ProtoOutputStream proto, long fieldId, int opType, int serviceType, int opCount, int curState, long curStartTime, long now) {
         long token;
-        int i;
         int N;
+        int i;
         ServiceState serviceState = this;
-        ProtoOutputStream protoOutputStream = proto;
-        int i2 = opCount;
-        int i3 = curState;
-        if (i2 > 0) {
-            long token2 = proto.start(fieldId);
-            protoOutputStream.write(1159641169921L, opType);
-            protoOutputStream.write(1120986464258L, i2);
-            int N2 = serviceState.mDurations.getKeyCount();
-            int i4 = 0;
-            boolean didCurState = false;
-            while (true) {
-                int i5 = i4;
-                if (i5 >= N2) {
-                    break;
-                }
-                int key = serviceState.mDurations.getKeyAt(i5);
-                long time = serviceState.mDurations.getValue(key);
-                int type = SparseMappingTable.getIdFromKey(key);
-                int N3 = N2;
-                int memFactor = type / 5;
-                int i6 = i5;
-                int type2 = type % 5;
-                if (type2 != serviceType) {
-                    token = token2;
-                    N = N3;
-                    i = i6;
-                } else {
-                    if (i3 == memFactor) {
-                        didCurState = true;
-                        time += now - curStartTime;
-                    }
-                    long stateToken = protoOutputStream.start(2246267895811L);
-                    int i7 = key;
-                    token = token2;
-                    int i8 = memFactor;
-                    N = N3;
-                    i = i6;
-                    DumpUtils.printProcStateAdjTagProto(proto, 1159641169921L, 1159641169922L, type2);
-                    protoOutputStream.write(1112396529667L, time);
-                    protoOutputStream.end(stateToken);
-                }
-                i4 = i + 1;
-                int i9 = opType;
-                N2 = N;
-                token2 = token;
-                serviceState = this;
-            }
-            long token3 = token2;
-            if (!didCurState && i3 != -1) {
-                long stateToken2 = protoOutputStream.start(2246267895811L);
-                DumpUtils.printProcStateAdjTagProto(proto, 1159641169921L, 1159641169922L, curState);
-                protoOutputStream.write(1112396529667L, now - curStartTime);
-                protoOutputStream.end(stateToken2);
-            }
-            protoOutputStream.end(token3);
+        if (opCount <= 0) {
+            return;
         }
+        long token2 = proto.start(fieldId);
+        proto.write(1159641169921L, opType);
+        proto.write(1120986464258L, opCount);
+        int N2 = serviceState.mDurations.getKeyCount();
+        int i2 = 0;
+        boolean didCurState = false;
+        while (true) {
+            int i3 = i2;
+            if (i3 >= N2) {
+                break;
+            }
+            int key = serviceState.mDurations.getKeyAt(i3);
+            long time = serviceState.mDurations.getValue(key);
+            int type = SparseMappingTable.getIdFromKey(key);
+            int N3 = N2;
+            int N4 = type / 5;
+            int i4 = type % 5;
+            if (i4 != serviceType) {
+                token = token2;
+                N = N3;
+                i = i3;
+            } else {
+                if (curState == N4) {
+                    didCurState = true;
+                    time += now - curStartTime;
+                }
+                long stateToken = proto.start(2246267895811L);
+                token = token2;
+                long token3 = time;
+                N = N3;
+                i = i3;
+                DumpUtils.printProcStateAdjTagProto(proto, 1159641169921L, 1159641169922L, i4);
+                proto.write(1112396529667L, token3);
+                proto.end(stateToken);
+            }
+            i2 = i + 1;
+            N2 = N;
+            token2 = token;
+            serviceState = this;
+        }
+        long token4 = token2;
+        if (!didCurState && curState != -1) {
+            long stateToken2 = proto.start(2246267895811L);
+            DumpUtils.printProcStateAdjTagProto(proto, 1159641169921L, 1159641169922L, curState);
+            proto.write(1112396529667L, now - curStartTime);
+            proto.end(stateToken2);
+        }
+        proto.end(token4);
     }
 
     public String toString() {

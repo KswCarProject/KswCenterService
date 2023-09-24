@@ -2,6 +2,7 @@ package android.hardware.radio.V1_0;
 
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class RadioCapabilityPhase {
     public static final int APPLY = 2;
     public static final int CONFIGURED = 0;

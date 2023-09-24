@@ -3,6 +3,7 @@ package android.hardware.radio.V1_0;
 import com.android.internal.telephony.IccCardConstants;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class RegState {
     public static final int NOT_REG_MT_NOT_SEARCHING_OP = 0;
     public static final int NOT_REG_MT_NOT_SEARCHING_OP_EM = 10;

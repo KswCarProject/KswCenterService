@@ -3,10 +3,12 @@ package android.telephony.mbms;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes4.dex */
 public class StreamingServiceCallback {
     public static final int SIGNAL_STRENGTH_UNAVAILABLE = -1;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     private @interface StreamingServiceError {
     }
 

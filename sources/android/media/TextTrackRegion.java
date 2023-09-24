@@ -1,17 +1,18 @@
 package android.media;
 
-/* compiled from: WebVttRenderer */
+/* compiled from: WebVttRenderer.java */
+/* loaded from: classes3.dex */
 class TextTrackRegion {
     static final int SCROLL_VALUE_NONE = 300;
     static final int SCROLL_VALUE_SCROLL_UP = 301;
-    float mAnchorPointX = 0.0f;
-    float mAnchorPointY = 100.0f;
     String mId = "";
-    int mLines = 3;
-    int mScrollValue = 300;
-    float mViewportAnchorPointX = 0.0f;
-    float mViewportAnchorPointY = 100.0f;
     float mWidth = 100.0f;
+    int mLines = 3;
+    float mViewportAnchorPointX = 0.0f;
+    float mAnchorPointX = 0.0f;
+    float mViewportAnchorPointY = 100.0f;
+    float mAnchorPointY = 100.0f;
+    int mScrollValue = 300;
 
     TextTrackRegion() {
     }
@@ -35,12 +36,11 @@ class TextTrackRegion {
         sb.append("), scrollValue:");
         if (this.mScrollValue == 300) {
             str = "none";
-        } else if (this.mScrollValue == 301) {
-            str = "scroll_up";
         } else {
-            str = "INVALID";
+            str = this.mScrollValue == 301 ? "scroll_up" : "INVALID";
         }
         sb.append(str);
-        return sb.append("}").toString();
+        StringBuilder res = sb.append("}");
+        return res.toString();
     }
 }

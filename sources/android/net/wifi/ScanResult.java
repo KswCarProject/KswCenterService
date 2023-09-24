@@ -2,13 +2,14 @@ package android.net.wifi;
 
 import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+/* loaded from: classes3.dex */
 public class ScanResult implements Parcelable {
     public static final int CHANNEL_WIDTH_160MHZ = 3;
     public static final int CHANNEL_WIDTH_20MHZ = 0;
@@ -21,73 +22,76 @@ public class ScanResult implements Parcelable {
     public static final int CIPHER_NO_GROUP_ADDRESSED = 1;
     public static final int CIPHER_TKIP = 2;
     @UnsupportedAppUsage
-    public static final Parcelable.Creator<ScanResult> CREATOR = new Parcelable.Creator<ScanResult>() {
+    public static final Parcelable.Creator<ScanResult> CREATOR = new Parcelable.Creator<ScanResult>() { // from class: android.net.wifi.ScanResult.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ScanResult createFromParcel(Parcel in) {
-            Parcel parcel = in;
             WifiSsid wifiSsid = null;
-            boolean z = true;
             if (in.readInt() == 1) {
-                wifiSsid = WifiSsid.CREATOR.createFromParcel(parcel);
+                WifiSsid wifiSsid2 = WifiSsid.CREATOR.createFromParcel(in);
+                wifiSsid = wifiSsid2;
             }
-            ScanResult scanResult = new ScanResult(wifiSsid, in.readString(), in.readString(), in.readLong(), in.readInt(), in.readString(), in.readInt(), in.readInt(), in.readLong(), in.readInt(), in.readInt(), in.readInt(), in.readInt(), in.readInt(), false);
-            scanResult.seen = in.readLong();
+            ScanResult sr = new ScanResult(wifiSsid, in.readString(), in.readString(), in.readLong(), in.readInt(), in.readString(), in.readInt(), in.readInt(), in.readLong(), in.readInt(), in.readInt(), in.readInt(), in.readInt(), in.readInt(), false);
+            sr.seen = in.readLong();
             int i = 0;
-            scanResult.untrusted = in.readInt() != 0;
-            scanResult.numUsage = in.readInt();
-            scanResult.venueName = in.readString();
-            scanResult.operatorFriendlyName = in.readString();
-            scanResult.flags = in.readLong();
+            sr.untrusted = in.readInt() != 0;
+            sr.numUsage = in.readInt();
+            sr.venueName = in.readString();
+            sr.operatorFriendlyName = in.readString();
+            sr.flags = in.readLong();
             int n = in.readInt();
             if (n != 0) {
-                scanResult.informationElements = new InformationElement[n];
+                sr.informationElements = new InformationElement[n];
                 for (int i2 = 0; i2 < n; i2++) {
-                    scanResult.informationElements[i2] = new InformationElement();
-                    scanResult.informationElements[i2].id = in.readInt();
-                    scanResult.informationElements[i2].bytes = new byte[in.readInt()];
-                    parcel.readByteArray(scanResult.informationElements[i2].bytes);
+                    sr.informationElements[i2] = new InformationElement();
+                    sr.informationElements[i2].f135id = in.readInt();
+                    int len = in.readInt();
+                    sr.informationElements[i2].bytes = new byte[len];
+                    in.readByteArray(sr.informationElements[i2].bytes);
                 }
             }
             int n2 = in.readInt();
             if (n2 != 0) {
-                scanResult.anqpLines = new ArrayList();
+                sr.anqpLines = new ArrayList();
                 for (int i3 = 0; i3 < n2; i3++) {
-                    scanResult.anqpLines.add(in.readString());
+                    sr.anqpLines.add(in.readString());
                 }
             }
             int n3 = in.readInt();
             if (n3 != 0) {
-                scanResult.anqpElements = new AnqpInformationElement[n3];
+                sr.anqpElements = new AnqpInformationElement[n3];
                 for (int i4 = 0; i4 < n3; i4++) {
                     int vendorId = in.readInt();
                     int elementId = in.readInt();
-                    byte[] payload = new byte[in.readInt()];
-                    parcel.readByteArray(payload);
-                    scanResult.anqpElements[i4] = new AnqpInformationElement(vendorId, elementId, payload);
+                    int len2 = in.readInt();
+                    byte[] payload = new byte[len2];
+                    in.readByteArray(payload);
+                    sr.anqpElements[i4] = new AnqpInformationElement(vendorId, elementId, payload);
                 }
             }
-            if (in.readInt() == 0) {
-                z = false;
-            }
-            scanResult.isCarrierAp = z;
-            scanResult.carrierApEapType = in.readInt();
-            scanResult.carrierName = in.readString();
+            int i5 = in.readInt();
+            sr.isCarrierAp = i5 != 0;
+            sr.carrierApEapType = in.readInt();
+            sr.carrierName = in.readString();
             int n4 = in.readInt();
             if (n4 != 0) {
-                scanResult.radioChainInfos = new RadioChainInfo[n4];
+                sr.radioChainInfos = new RadioChainInfo[n4];
                 while (true) {
-                    int i5 = i;
-                    if (i5 >= n4) {
+                    int i6 = i;
+                    if (i6 >= n4) {
                         break;
                     }
-                    scanResult.radioChainInfos[i5] = new RadioChainInfo();
-                    scanResult.radioChainInfos[i5].id = in.readInt();
-                    scanResult.radioChainInfos[i5].level = in.readInt();
-                    i = i5 + 1;
+                    sr.radioChainInfos[i6] = new RadioChainInfo();
+                    sr.radioChainInfos[i6].f136id = in.readInt();
+                    sr.radioChainInfos[i6].level = in.readInt();
+                    i = i6 + 1;
                 }
             }
-            return scanResult;
+            return sr;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ScanResult[] newArray(int size) {
             return new ScanResult[size];
         }
@@ -156,30 +160,30 @@ public class ScanResult implements Parcelable {
     @UnsupportedAppUsage
     public WifiSsid wifiSsid;
 
+    /* loaded from: classes3.dex */
     public static class RadioChainInfo {
-        public int id;
+
+        /* renamed from: id */
+        public int f136id;
         public int level;
 
         public String toString() {
-            return "RadioChainInfo: id=" + this.id + ", level=" + this.level;
+            return "RadioChainInfo: id=" + this.f136id + ", level=" + this.level;
         }
 
         public boolean equals(Object otherObj) {
             if (this == otherObj) {
                 return true;
             }
-            if (!(otherObj instanceof RadioChainInfo)) {
-                return false;
-            }
-            RadioChainInfo other = (RadioChainInfo) otherObj;
-            if (this.id == other.id && this.level == other.level) {
-                return true;
+            if (otherObj instanceof RadioChainInfo) {
+                RadioChainInfo other = (RadioChainInfo) otherObj;
+                return this.f136id == other.f136id && this.level == other.level;
             }
             return false;
         }
 
         public int hashCode() {
-            return Objects.hash(new Object[]{Integer.valueOf(this.id), Integer.valueOf(this.level)});
+            return Objects.hash(Integer.valueOf(this.f136id), Integer.valueOf(this.level));
         }
     }
 
@@ -215,6 +219,7 @@ public class ScanResult implements Parcelable {
         return freq > 4900 && freq < 5900;
     }
 
+    /* loaded from: classes3.dex */
     public static class InformationElement {
         @UnsupportedAppUsage
         public static final int EID_BSS_LOAD = 11;
@@ -249,83 +254,83 @@ public class ScanResult implements Parcelable {
         @UnsupportedAppUsage
         public byte[] bytes;
         @UnsupportedAppUsage
-        public int id;
+
+        /* renamed from: id */
+        public int f135id;
 
         public InformationElement() {
         }
 
         public InformationElement(InformationElement rhs) {
-            this.id = rhs.id;
+            this.f135id = rhs.f135id;
             this.bytes = (byte[]) rhs.bytes.clone();
         }
     }
 
-    public ScanResult(WifiSsid wifiSsid2, String BSSID2, long hessid2, int anqpDomainId2, byte[] osuProviders, String caps, int level2, int frequency2, long tsf) {
-        WifiSsid wifiSsid3 = wifiSsid2;
-        byte[] bArr = osuProviders;
-        this.wifiSsid = wifiSsid3;
-        this.SSID = wifiSsid3 != null ? wifiSsid2.toString() : WifiSsid.NONE;
-        this.BSSID = BSSID2;
-        this.hessid = hessid2;
-        this.anqpDomainId = anqpDomainId2;
-        if (bArr != null) {
+    public ScanResult(WifiSsid wifiSsid, String BSSID, long hessid, int anqpDomainId, byte[] osuProviders, String caps, int level, int frequency, long tsf) {
+        this.wifiSsid = wifiSsid;
+        this.SSID = wifiSsid != null ? wifiSsid.toString() : WifiSsid.NONE;
+        this.BSSID = BSSID;
+        this.hessid = hessid;
+        this.anqpDomainId = anqpDomainId;
+        if (osuProviders != null) {
             this.anqpElements = new AnqpInformationElement[1];
-            this.anqpElements[0] = new AnqpInformationElement(AnqpInformationElement.HOTSPOT20_VENDOR_ID, 8, bArr);
+            this.anqpElements[0] = new AnqpInformationElement(AnqpInformationElement.HOTSPOT20_VENDOR_ID, 8, osuProviders);
         }
         this.capabilities = caps;
-        this.level = level2;
-        this.frequency = frequency2;
+        this.level = level;
+        this.frequency = frequency;
         this.timestamp = tsf;
         this.distanceCm = -1;
         this.distanceSdCm = -1;
         this.channelWidth = -1;
         this.centerFreq0 = -1;
         this.centerFreq1 = -1;
-        this.flags = 0;
+        this.flags = 0L;
         this.isCarrierAp = false;
         this.carrierApEapType = -1;
         this.carrierName = null;
         this.radioChainInfos = null;
     }
 
-    public ScanResult(WifiSsid wifiSsid2, String BSSID2, String caps, int level2, int frequency2, long tsf, int distCm, int distSdCm) {
-        this.wifiSsid = wifiSsid2;
-        this.SSID = wifiSsid2 != null ? wifiSsid2.toString() : WifiSsid.NONE;
-        this.BSSID = BSSID2;
+    public ScanResult(WifiSsid wifiSsid, String BSSID, String caps, int level, int frequency, long tsf, int distCm, int distSdCm) {
+        this.wifiSsid = wifiSsid;
+        this.SSID = wifiSsid != null ? wifiSsid.toString() : WifiSsid.NONE;
+        this.BSSID = BSSID;
         this.capabilities = caps;
-        this.level = level2;
-        this.frequency = frequency2;
+        this.level = level;
+        this.frequency = frequency;
         this.timestamp = tsf;
         this.distanceCm = distCm;
         this.distanceSdCm = distSdCm;
         this.channelWidth = -1;
         this.centerFreq0 = -1;
         this.centerFreq1 = -1;
-        this.flags = 0;
+        this.flags = 0L;
         this.isCarrierAp = false;
         this.carrierApEapType = -1;
         this.carrierName = null;
         this.radioChainInfos = null;
     }
 
-    public ScanResult(String Ssid, String BSSID2, long hessid2, int anqpDomainId2, String caps, int level2, int frequency2, long tsf, int distCm, int distSdCm, int channelWidth2, int centerFreq02, int centerFreq12, boolean is80211McRTTResponder2) {
+    public ScanResult(String Ssid, String BSSID, long hessid, int anqpDomainId, String caps, int level, int frequency, long tsf, int distCm, int distSdCm, int channelWidth, int centerFreq0, int centerFreq1, boolean is80211McRTTResponder) {
         this.SSID = Ssid;
-        this.BSSID = BSSID2;
-        this.hessid = hessid2;
-        this.anqpDomainId = anqpDomainId2;
+        this.BSSID = BSSID;
+        this.hessid = hessid;
+        this.anqpDomainId = anqpDomainId;
         this.capabilities = caps;
-        this.level = level2;
-        this.frequency = frequency2;
+        this.level = level;
+        this.frequency = frequency;
         this.timestamp = tsf;
         this.distanceCm = distCm;
         this.distanceSdCm = distSdCm;
-        this.channelWidth = channelWidth2;
-        this.centerFreq0 = centerFreq02;
-        this.centerFreq1 = centerFreq12;
-        if (is80211McRTTResponder2) {
-            this.flags = 2;
+        this.channelWidth = channelWidth;
+        this.centerFreq0 = centerFreq0;
+        this.centerFreq1 = centerFreq1;
+        if (is80211McRTTResponder) {
+            this.flags = 2L;
         } else {
-            this.flags = 0;
+            this.flags = 0L;
         }
         this.isCarrierAp = false;
         this.carrierApEapType = -1;
@@ -333,9 +338,9 @@ public class ScanResult implements Parcelable {
         this.radioChainInfos = null;
     }
 
-    public ScanResult(WifiSsid wifiSsid2, String Ssid, String BSSID2, long hessid2, int anqpDomainId2, String caps, int level2, int frequency2, long tsf, int distCm, int distSdCm, int channelWidth2, int centerFreq02, int centerFreq12, boolean is80211McRTTResponder2) {
-        this(Ssid, BSSID2, hessid2, anqpDomainId2, caps, level2, frequency2, tsf, distCm, distSdCm, channelWidth2, centerFreq02, centerFreq12, is80211McRTTResponder2);
-        this.wifiSsid = wifiSsid2;
+    public ScanResult(WifiSsid wifiSsid, String Ssid, String BSSID, long hessid, int anqpDomainId, String caps, int level, int frequency, long tsf, int distCm, int distSdCm, int channelWidth, int centerFreq0, int centerFreq1, boolean is80211McRTTResponder) {
+        this(Ssid, BSSID, hessid, anqpDomainId, caps, level, frequency, tsf, distCm, distSdCm, channelWidth, centerFreq0, centerFreq1, is80211McRTTResponder);
+        this.wifiSsid = wifiSsid;
     }
 
     public ScanResult(ScanResult source) {
@@ -373,25 +378,13 @@ public class ScanResult implements Parcelable {
     }
 
     public String toString() {
-        String str;
-        String str2;
         StringBuffer sb = new StringBuffer();
         sb.append("SSID: ");
         sb.append(this.wifiSsid == null ? WifiSsid.NONE : this.wifiSsid);
         sb.append(", BSSID: ");
-        if (this.BSSID == null) {
-            str = "<none>";
-        } else {
-            str = this.BSSID;
-        }
-        sb.append(str);
+        sb.append(this.BSSID == null ? "<none>" : this.BSSID);
         sb.append(", capabilities: ");
-        if (this.capabilities == null) {
-            str2 = "<none>";
-        } else {
-            str2 = this.capabilities;
-        }
-        sb.append(str2);
+        sb.append(this.capabilities == null ? "<none>" : this.capabilities);
         sb.append(", level: ");
         sb.append(this.level);
         sb.append(", frequency: ");
@@ -425,15 +418,18 @@ public class ScanResult implements Parcelable {
         return sb.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
-    public void writeToParcel(Parcel dest, int flags2) {
+    @Override // android.p007os.Parcelable
+    public void writeToParcel(Parcel dest, int flags) {
+        AnqpInformationElement[] anqpInformationElementArr;
         int i = 0;
         if (this.wifiSsid != null) {
             dest.writeInt(1);
-            this.wifiSsid.writeToParcel(dest, flags2);
+            this.wifiSsid.writeToParcel(dest, flags);
         } else {
             dest.writeInt(0);
         }
@@ -459,7 +455,7 @@ public class ScanResult implements Parcelable {
         if (this.informationElements != null) {
             dest.writeInt(this.informationElements.length);
             for (int i2 = 0; i2 < this.informationElements.length; i2++) {
-                dest.writeInt(this.informationElements[i2].id);
+                dest.writeInt(this.informationElements[i2].f135id);
                 dest.writeInt(this.informationElements[i2].bytes.length);
                 dest.writeByteArray(this.informationElements[i2].bytes);
             }
@@ -493,7 +489,7 @@ public class ScanResult implements Parcelable {
             while (true) {
                 int i4 = i;
                 if (i4 < this.radioChainInfos.length) {
-                    dest.writeInt(this.radioChainInfos[i4].id);
+                    dest.writeInt(this.radioChainInfos[i4].f136id);
                     dest.writeInt(this.radioChainInfos[i4].level);
                     i = i4 + 1;
                 } else {

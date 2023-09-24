@@ -10,16 +10,16 @@ import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
+/* loaded from: classes4.dex */
 class YearPickerView extends ListView {
-    /* access modifiers changed from: private */
-    public final YearAdapter mAdapter;
+    private final YearAdapter mAdapter;
     private final int mChildSize;
-    /* access modifiers changed from: private */
-    public OnYearSelectedListener mOnYearSelectedListener;
+    private OnYearSelectedListener mOnYearSelectedListener;
     private final int mViewSize;
 
+    /* loaded from: classes4.dex */
     public interface OnYearSelectedListener {
         void onYearChanged(YearPickerView yearPickerView, int i);
     }
@@ -34,12 +34,14 @@ class YearPickerView extends ListView {
 
     public YearPickerView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        setLayoutParams(new AbsListView.LayoutParams(-1, -2));
+        AbsListView.LayoutParams frame = new AbsListView.LayoutParams(-1, -2);
+        setLayoutParams(frame);
         Resources res = context.getResources();
-        this.mViewSize = res.getDimensionPixelOffset(R.dimen.datepicker_view_animator_height);
-        this.mChildSize = res.getDimensionPixelOffset(R.dimen.datepicker_year_label_height);
-        setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+        this.mViewSize = res.getDimensionPixelOffset(C3132R.dimen.datepicker_view_animator_height);
+        this.mChildSize = res.getDimensionPixelOffset(C3132R.dimen.datepicker_year_label_height);
+        setOnItemClickListener(new AdapterView.OnItemClickListener() { // from class: android.widget.YearPickerView.1
+            @Override // android.widget.AdapterView.OnItemClickListener
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int year = YearPickerView.this.mAdapter.getYearForPosition(position);
                 YearPickerView.this.mAdapter.setSelection(year);
                 if (YearPickerView.this.mOnYearSelectedListener != null) {
@@ -57,7 +59,8 @@ class YearPickerView extends ListView {
 
     public void setYear(final int year) {
         this.mAdapter.setSelection(year);
-        post(new Runnable() {
+        post(new Runnable() { // from class: android.widget.YearPickerView.2
+            @Override // java.lang.Runnable
             public void run() {
                 int position = YearPickerView.this.mAdapter.getPositionForYear(year);
                 if (position >= 0 && position < YearPickerView.this.getCount()) {
@@ -68,13 +71,15 @@ class YearPickerView extends ListView {
     }
 
     public void setSelectionCentered(int position) {
-        setSelectionFromTop(position, (this.mViewSize / 2) - (this.mChildSize / 2));
+        int offset = (this.mViewSize / 2) - (this.mChildSize / 2);
+        setSelectionFromTop(position, offset);
     }
 
     public void setRange(Calendar min, Calendar max) {
         this.mAdapter.setRange(min, max);
     }
 
+    /* loaded from: classes4.dex */
     private static class YearAdapter extends BaseAdapter {
         private static final int ITEM_LAYOUT = 17367342;
         private static final int ITEM_TEXT_ACTIVATED_APPEARANCE = 16974768;
@@ -99,24 +104,27 @@ class YearPickerView extends ListView {
         }
 
         public boolean setSelection(int year) {
-            if (this.mActivatedYear == year) {
-                return false;
+            if (this.mActivatedYear != year) {
+                this.mActivatedYear = year;
+                notifyDataSetChanged();
+                return true;
             }
-            this.mActivatedYear = year;
-            notifyDataSetChanged();
-            return true;
+            return false;
         }
 
+        @Override // android.widget.Adapter
         public int getCount() {
             return this.mCount;
         }
 
+        @Override // android.widget.Adapter
         public Integer getItem(int position) {
             return Integer.valueOf(getYearForPosition(position));
         }
 
+        @Override // android.widget.Adapter
         public long getItemId(int position) {
-            return (long) getYearForPosition(position);
+            return getYearForPosition(position);
         }
 
         public int getPositionForYear(int year) {
@@ -127,14 +135,15 @@ class YearPickerView extends ListView {
             return this.mMinYear + position;
         }
 
+        @Override // android.widget.BaseAdapter, android.widget.Adapter
         public boolean hasStableIds() {
             return true;
         }
 
+        @Override // android.widget.Adapter
         public View getView(int position, View convertView, ViewGroup parent) {
             TextView v;
             int textAppearanceResId;
-            boolean activated = true;
             boolean hasNewView = convertView == null;
             if (hasNewView) {
                 v = (TextView) this.mInflater.inflate(17367342, parent, false);
@@ -142,9 +151,7 @@ class YearPickerView extends ListView {
                 v = (TextView) convertView;
             }
             int year = getYearForPosition(position);
-            if (this.mActivatedYear != year) {
-                activated = false;
-            }
+            boolean activated = this.mActivatedYear == year;
             if (hasNewView || v.isActivated() != activated) {
                 if (activated) {
                     textAppearanceResId = 16974768;
@@ -154,26 +161,31 @@ class YearPickerView extends ListView {
                 v.setTextAppearance(textAppearanceResId);
                 v.setActivated(activated);
             }
-            v.setText((CharSequence) Integer.toString(year));
+            v.setText(Integer.toString(year));
             return v;
         }
 
+        @Override // android.widget.BaseAdapter, android.widget.Adapter
         public int getItemViewType(int position) {
             return 0;
         }
 
+        @Override // android.widget.BaseAdapter, android.widget.Adapter
         public int getViewTypeCount() {
             return 1;
         }
 
+        @Override // android.widget.BaseAdapter, android.widget.Adapter
         public boolean isEmpty() {
             return false;
         }
 
+        @Override // android.widget.BaseAdapter, android.widget.ListAdapter
         public boolean areAllItemsEnabled() {
             return true;
         }
 
+        @Override // android.widget.BaseAdapter, android.widget.ListAdapter
         public boolean isEnabled(int position) {
             return true;
         }
@@ -187,6 +199,7 @@ class YearPickerView extends ListView {
         return firstChild.getTop();
     }
 
+    @Override // android.widget.AdapterView, android.view.View
     public void onInitializeAccessibilityEventInternal(AccessibilityEvent event) {
         super.onInitializeAccessibilityEventInternal(event);
         if (event.getEventType() == 4096) {

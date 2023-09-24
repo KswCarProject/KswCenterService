@@ -3,17 +3,18 @@ package android.service.autofill;
 import android.annotation.SystemApi;
 import android.app.Service;
 import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Looper;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.RemoteCallback;
-import android.os.RemoteException;
+import android.p007os.Bundle;
+import android.p007os.Handler;
+import android.p007os.IBinder;
+import android.p007os.Looper;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.RemoteCallback;
+import android.p007os.RemoteException;
 import android.service.autofill.IAutofillFieldClassificationService;
 import android.util.Log;
 import android.view.autofill.AutofillValue;
+import com.android.internal.util.function.NonaConsumer;
 import com.android.internal.util.function.pooled.PooledLambda;
 import com.ibm.icu.text.PluralRules;
 import java.lang.reflect.Array;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public abstract class AutofillFieldClassificationService extends Service {
     public static final String EXTRA_SCORES = "scores";
     public static final String REQUIRED_ALGORITHM_EDIT_DISTANCE = "EDIT_DISTANCE";
@@ -30,58 +32,70 @@ public abstract class AutofillFieldClassificationService extends Service {
     public static final String SERVICE_META_DATA_KEY_AVAILABLE_ALGORITHMS = "android.autofill.field_classification.available_algorithms";
     public static final String SERVICE_META_DATA_KEY_DEFAULT_ALGORITHM = "android.autofill.field_classification.default_algorithm";
     private static final String TAG = "AutofillFieldClassificationService";
-    /* access modifiers changed from: private */
-    public final Handler mHandler = new Handler(Looper.getMainLooper(), (Handler.Callback) null, true);
+    private final Handler mHandler = new Handler(Looper.getMainLooper(), null, true);
     private AutofillFieldClassificationServiceWrapper mWrapper;
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void calculateScores(RemoteCallback callback, List<AutofillValue> actualValues, String[] userDataValues, String[] categoryIds, String defaultAlgorithm, Bundle defaultArgs, Map algorithms, Map args) {
         Bundle data = new Bundle();
         float[][] scores = onCalculateScores(actualValues, Arrays.asList(userDataValues), Arrays.asList(categoryIds), defaultAlgorithm, defaultArgs, algorithms, args);
         if (scores != null) {
             data.putParcelable(EXTRA_SCORES, new Scores(scores));
         }
-        RemoteCallback remoteCallback = callback;
         callback.sendResult(data);
     }
 
+    @Override // android.app.Service
     public void onCreate() {
         super.onCreate();
         this.mWrapper = new AutofillFieldClassificationServiceWrapper();
     }
 
+    @Override // android.app.Service
     public IBinder onBind(Intent intent) {
         return this.mWrapper;
     }
 
     @SystemApi
     @Deprecated
-    public float[][] onGetScores(String algorithm, Bundle algorithmOptions, List<AutofillValue> list, List<String> list2) {
-        Log.e(TAG, "service implementation (" + getClass() + " does not implement onGetScores()");
+    public float[][] onGetScores(String algorithm, Bundle algorithmOptions, List<AutofillValue> actualValues, List<String> userDataValues) {
+        Log.m70e(TAG, "service implementation (" + getClass() + " does not implement onGetScores()");
         return null;
     }
 
     @SystemApi
-    public float[][] onCalculateScores(List<AutofillValue> list, List<String> list2, List<String> list3, String defaultAlgorithm, Bundle defaultArgs, Map algorithms, Map args) {
-        Log.e(TAG, "service implementation (" + getClass() + " does not implement onCalculateScore()");
+    public float[][] onCalculateScores(List<AutofillValue> actualValues, List<String> userDataValues, List<String> categoryIds, String defaultAlgorithm, Bundle defaultArgs, Map algorithms, Map args) {
+        Log.m70e(TAG, "service implementation (" + getClass() + " does not implement onCalculateScore()");
         return null;
     }
 
+    /* loaded from: classes3.dex */
     private final class AutofillFieldClassificationServiceWrapper extends IAutofillFieldClassificationService.Stub {
         private AutofillFieldClassificationServiceWrapper() {
         }
 
+        @Override // android.service.autofill.IAutofillFieldClassificationService
         public void calculateScores(RemoteCallback callback, List<AutofillValue> actualValues, String[] userDataValues, String[] categoryIds, String defaultAlgorithm, Bundle defaultArgs, Map algorithms, Map args) throws RemoteException {
-            AutofillFieldClassificationService.this.mHandler.sendMessage(PooledLambda.obtainMessage($$Lambda$AutofillFieldClassificationService$AutofillFieldClassificationServiceWrapper$mUalgFt87R5lup2LhB9vW49Xixs.INSTANCE, AutofillFieldClassificationService.this, callback, actualValues, userDataValues, categoryIds, defaultAlgorithm, defaultArgs, algorithms, args));
+            AutofillFieldClassificationService.this.mHandler.sendMessage(PooledLambda.obtainMessage(new NonaConsumer() { // from class: android.service.autofill.-$$Lambda$AutofillFieldClassificationService$AutofillFieldClassificationServiceWrapper$mUalgFt87R5lup2LhB9vW49Xixs
+                @Override // com.android.internal.util.function.NonaConsumer
+                public final void accept(Object obj, Object obj2, Object obj3, Object obj4, Object obj5, Object obj6, Object obj7, Object obj8, Object obj9) {
+                    ((AutofillFieldClassificationService) obj).calculateScores((RemoteCallback) obj2, (List) obj3, (String[]) obj4, (String[]) obj5, (String) obj6, (Bundle) obj7, (Map) obj8, (Map) obj9);
+                }
+            }, AutofillFieldClassificationService.this, callback, actualValues, userDataValues, categoryIds, defaultAlgorithm, defaultArgs, algorithms, args));
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class Scores implements Parcelable {
-        public static final Parcelable.Creator<Scores> CREATOR = new Parcelable.Creator<Scores>() {
+        public static final Parcelable.Creator<Scores> CREATOR = new Parcelable.Creator<Scores>() { // from class: android.service.autofill.AutofillFieldClassificationService.Scores.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public Scores createFromParcel(Parcel parcel) {
                 return new Scores(parcel);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public Scores[] newArray(int size) {
                 return new Scores[size];
             }
@@ -91,7 +105,7 @@ public abstract class AutofillFieldClassificationService extends Service {
         private Scores(Parcel parcel) {
             int size1 = parcel.readInt();
             int size2 = parcel.readInt();
-            this.scores = (float[][]) Array.newInstance(float.class, new int[]{size1, size2});
+            this.scores = (float[][]) Array.newInstance(float.class, size1, size2);
             for (int i = 0; i < size1; i++) {
                 for (int j = 0; j < size2; j++) {
                     this.scores[i][j] = parcel.readFloat();
@@ -99,8 +113,8 @@ public abstract class AutofillFieldClassificationService extends Service {
             }
         }
 
-        private Scores(float[][] scores2) {
-            this.scores = scores2;
+        private Scores(float[][] scores) {
+            this.scores = scores;
         }
 
         public String toString() {
@@ -120,10 +134,12 @@ public abstract class AutofillFieldClassificationService extends Service {
             return builder.toString();
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel parcel, int flags) {
             int size1 = this.scores.length;
             int size2 = this.scores[0].length;

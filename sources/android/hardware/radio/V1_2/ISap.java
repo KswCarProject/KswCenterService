@@ -5,14 +5,14 @@ import android.hardware.radio.V1_0.ISapCallback;
 import android.internal.hidl.base.V1_0.DebugInfo;
 import android.internal.hidl.base.V1_0.IBase;
 import android.net.wifi.WifiScanner;
-import android.os.HidlSupport;
-import android.os.HwBinder;
-import android.os.HwBlob;
-import android.os.HwParcel;
-import android.os.IHwBinder;
-import android.os.IHwInterface;
-import android.os.NativeHandle;
-import android.os.RemoteException;
+import android.p007os.HidlSupport;
+import android.p007os.HwBinder;
+import android.p007os.HwBlob;
+import android.p007os.HwParcel;
+import android.p007os.IHwBinder;
+import android.p007os.IHwInterface;
+import android.p007os.NativeHandle;
+import android.p007os.RemoteException;
 import com.android.internal.midi.MidiConstants;
 import com.android.internal.telephony.PhoneConstants;
 import com.ibm.icu.text.Bidi;
@@ -21,29 +21,41 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public interface ISap extends android.hardware.radio.V1_1.ISap {
     public static final String kInterfaceName = "android.hardware.radio@1.2::ISap";
 
+    @Override // android.hardware.radio.V1_1.ISap, android.hardware.radio.V1_0.ISap, android.internal.hidl.base.V1_0.IBase, android.p007os.IHwInterface
     IHwBinder asBinder();
 
+    @Override // android.hardware.radio.V1_1.ISap, android.hardware.radio.V1_0.ISap, android.internal.hidl.base.V1_0.IBase
     void debug(NativeHandle nativeHandle, ArrayList<String> arrayList) throws RemoteException;
 
+    @Override // android.hardware.radio.V1_1.ISap, android.hardware.radio.V1_0.ISap, android.internal.hidl.base.V1_0.IBase
     DebugInfo getDebugInfo() throws RemoteException;
 
+    @Override // android.hardware.radio.V1_1.ISap, android.hardware.radio.V1_0.ISap, android.internal.hidl.base.V1_0.IBase
     ArrayList<byte[]> getHashChain() throws RemoteException;
 
+    @Override // android.hardware.radio.V1_1.ISap, android.hardware.radio.V1_0.ISap, android.internal.hidl.base.V1_0.IBase
     ArrayList<String> interfaceChain() throws RemoteException;
 
+    @Override // android.hardware.radio.V1_1.ISap, android.hardware.radio.V1_0.ISap, android.internal.hidl.base.V1_0.IBase
     String interfaceDescriptor() throws RemoteException;
 
+    @Override // android.hardware.radio.V1_1.ISap, android.hardware.radio.V1_0.ISap, android.internal.hidl.base.V1_0.IBase
     boolean linkToDeath(IHwBinder.DeathRecipient deathRecipient, long j) throws RemoteException;
 
+    @Override // android.hardware.radio.V1_1.ISap, android.hardware.radio.V1_0.ISap, android.internal.hidl.base.V1_0.IBase
     void notifySyspropsChanged() throws RemoteException;
 
+    @Override // android.hardware.radio.V1_1.ISap, android.hardware.radio.V1_0.ISap, android.internal.hidl.base.V1_0.IBase
     void ping() throws RemoteException;
 
+    @Override // android.hardware.radio.V1_1.ISap, android.hardware.radio.V1_0.ISap, android.internal.hidl.base.V1_0.IBase
     void setHALInstrumentation() throws RemoteException;
 
+    @Override // android.hardware.radio.V1_1.ISap, android.hardware.radio.V1_0.ISap, android.internal.hidl.base.V1_0.IBase
     boolean unlinkToDeath(IHwBinder.DeathRecipient deathRecipient) throws RemoteException;
 
     static ISap asInterface(IHwBinder binder) {
@@ -58,7 +70,8 @@ public interface ISap extends android.hardware.radio.V1_1.ISap {
         try {
             Iterator<String> it = proxy.interfaceChain().iterator();
             while (it.hasNext()) {
-                if (it.next().equals(kInterfaceName)) {
+                String descriptor = it.next();
+                if (descriptor.equals(kInterfaceName)) {
                     return proxy;
                 }
             }
@@ -90,6 +103,7 @@ public interface ISap extends android.hardware.radio.V1_1.ISap {
         return getService(PhoneConstants.APN_TYPE_DEFAULT);
     }
 
+    /* loaded from: classes.dex */
     public static final class Proxy implements ISap {
         private IHwBinder mRemote;
 
@@ -97,6 +111,7 @@ public interface ISap extends android.hardware.radio.V1_1.ISap {
             this.mRemote = (IHwBinder) Objects.requireNonNull(remote);
         }
 
+        @Override // android.hardware.radio.V1_2.ISap, android.hardware.radio.V1_1.ISap, android.hardware.radio.V1_0.ISap, android.internal.hidl.base.V1_0.IBase, android.p007os.IHwInterface
         public IHwBinder asBinder() {
             return this.mRemote;
         }
@@ -117,6 +132,7 @@ public interface ISap extends android.hardware.radio.V1_1.ISap {
             return asBinder().hashCode();
         }
 
+        @Override // android.hardware.radio.V1_0.ISap
         public void setCallback(ISapCallback sapCallback) throws RemoteException {
             HwParcel _hidl_request = new HwParcel();
             _hidl_request.writeInterfaceToken(android.hardware.radio.V1_0.ISap.kInterfaceName);
@@ -131,6 +147,7 @@ public interface ISap extends android.hardware.radio.V1_1.ISap {
             }
         }
 
+        @Override // android.hardware.radio.V1_0.ISap
         public void connectReq(int token, int maxMsgSize) throws RemoteException {
             HwParcel _hidl_request = new HwParcel();
             _hidl_request.writeInterfaceToken(android.hardware.radio.V1_0.ISap.kInterfaceName);
@@ -145,6 +162,7 @@ public interface ISap extends android.hardware.radio.V1_1.ISap {
             }
         }
 
+        @Override // android.hardware.radio.V1_0.ISap
         public void disconnectReq(int token) throws RemoteException {
             HwParcel _hidl_request = new HwParcel();
             _hidl_request.writeInterfaceToken(android.hardware.radio.V1_0.ISap.kInterfaceName);
@@ -158,6 +176,7 @@ public interface ISap extends android.hardware.radio.V1_1.ISap {
             }
         }
 
+        @Override // android.hardware.radio.V1_0.ISap
         public void apduReq(int token, int type, ArrayList<Byte> command) throws RemoteException {
             HwParcel _hidl_request = new HwParcel();
             _hidl_request.writeInterfaceToken(android.hardware.radio.V1_0.ISap.kInterfaceName);
@@ -173,6 +192,7 @@ public interface ISap extends android.hardware.radio.V1_1.ISap {
             }
         }
 
+        @Override // android.hardware.radio.V1_0.ISap
         public void transferAtrReq(int token) throws RemoteException {
             HwParcel _hidl_request = new HwParcel();
             _hidl_request.writeInterfaceToken(android.hardware.radio.V1_0.ISap.kInterfaceName);
@@ -186,6 +206,7 @@ public interface ISap extends android.hardware.radio.V1_1.ISap {
             }
         }
 
+        @Override // android.hardware.radio.V1_0.ISap
         public void powerReq(int token, boolean state) throws RemoteException {
             HwParcel _hidl_request = new HwParcel();
             _hidl_request.writeInterfaceToken(android.hardware.radio.V1_0.ISap.kInterfaceName);
@@ -200,6 +221,7 @@ public interface ISap extends android.hardware.radio.V1_1.ISap {
             }
         }
 
+        @Override // android.hardware.radio.V1_0.ISap
         public void resetSimReq(int token) throws RemoteException {
             HwParcel _hidl_request = new HwParcel();
             _hidl_request.writeInterfaceToken(android.hardware.radio.V1_0.ISap.kInterfaceName);
@@ -213,6 +235,7 @@ public interface ISap extends android.hardware.radio.V1_1.ISap {
             }
         }
 
+        @Override // android.hardware.radio.V1_0.ISap
         public void transferCardReaderStatusReq(int token) throws RemoteException {
             HwParcel _hidl_request = new HwParcel();
             _hidl_request.writeInterfaceToken(android.hardware.radio.V1_0.ISap.kInterfaceName);
@@ -226,6 +249,7 @@ public interface ISap extends android.hardware.radio.V1_1.ISap {
             }
         }
 
+        @Override // android.hardware.radio.V1_0.ISap
         public void setTransferProtocolReq(int token, int transferProtocol) throws RemoteException {
             HwParcel _hidl_request = new HwParcel();
             _hidl_request.writeInterfaceToken(android.hardware.radio.V1_0.ISap.kInterfaceName);
@@ -240,6 +264,7 @@ public interface ISap extends android.hardware.radio.V1_1.ISap {
             }
         }
 
+        @Override // android.hardware.radio.V1_2.ISap, android.hardware.radio.V1_1.ISap, android.hardware.radio.V1_0.ISap, android.internal.hidl.base.V1_0.IBase
         public ArrayList<String> interfaceChain() throws RemoteException {
             HwParcel _hidl_request = new HwParcel();
             _hidl_request.writeInterfaceToken(IBase.kInterfaceName);
@@ -248,12 +273,14 @@ public interface ISap extends android.hardware.radio.V1_1.ISap {
                 this.mRemote.transact(256067662, _hidl_request, _hidl_reply, 0);
                 _hidl_reply.verifySuccess();
                 _hidl_request.releaseTemporaryStorage();
-                return _hidl_reply.readStringVector();
+                ArrayList<String> _hidl_out_descriptors = _hidl_reply.readStringVector();
+                return _hidl_out_descriptors;
             } finally {
                 _hidl_reply.release();
             }
         }
 
+        @Override // android.hardware.radio.V1_2.ISap, android.hardware.radio.V1_1.ISap, android.hardware.radio.V1_0.ISap, android.internal.hidl.base.V1_0.IBase
         public void debug(NativeHandle fd, ArrayList<String> options) throws RemoteException {
             HwParcel _hidl_request = new HwParcel();
             _hidl_request.writeInterfaceToken(IBase.kInterfaceName);
@@ -269,6 +296,7 @@ public interface ISap extends android.hardware.radio.V1_1.ISap {
             }
         }
 
+        @Override // android.hardware.radio.V1_2.ISap, android.hardware.radio.V1_1.ISap, android.hardware.radio.V1_0.ISap, android.internal.hidl.base.V1_0.IBase
         public String interfaceDescriptor() throws RemoteException {
             HwParcel _hidl_request = new HwParcel();
             _hidl_request.writeInterfaceToken(IBase.kInterfaceName);
@@ -277,12 +305,14 @@ public interface ISap extends android.hardware.radio.V1_1.ISap {
                 this.mRemote.transact(256136003, _hidl_request, _hidl_reply, 0);
                 _hidl_reply.verifySuccess();
                 _hidl_request.releaseTemporaryStorage();
-                return _hidl_reply.readString();
+                String _hidl_out_descriptor = _hidl_reply.readString();
+                return _hidl_out_descriptor;
             } finally {
                 _hidl_reply.release();
             }
         }
 
+        @Override // android.hardware.radio.V1_2.ISap, android.hardware.radio.V1_1.ISap, android.hardware.radio.V1_0.ISap, android.internal.hidl.base.V1_0.IBase
         public ArrayList<byte[]> getHashChain() throws RemoteException {
             HwParcel _hidl_request = new HwParcel();
             _hidl_request.writeInterfaceToken(IBase.kInterfaceName);
@@ -293,9 +323,9 @@ public interface ISap extends android.hardware.radio.V1_1.ISap {
                 _hidl_reply.verifySuccess();
                 _hidl_request.releaseTemporaryStorage();
                 ArrayList<byte[]> _hidl_out_hashchain = new ArrayList<>();
-                HwBlob _hidl_blob = _hidl_reply.readBuffer(16);
-                int _hidl_vec_size = _hidl_blob.getInt32(8);
-                HwBlob childBlob = _hidl_reply.readEmbeddedBuffer((long) (_hidl_vec_size * 32), _hidl_blob.handle(), 0, true);
+                HwBlob _hidl_blob = _hidl_reply.readBuffer(16L);
+                int _hidl_vec_size = _hidl_blob.getInt32(8L);
+                HwBlob childBlob = _hidl_reply.readEmbeddedBuffer(_hidl_vec_size * 32, _hidl_blob.handle(), 0L, true);
                 _hidl_out_hashchain.clear();
                 while (true) {
                     int _hidl_index_02 = _hidl_index_0;
@@ -303,7 +333,8 @@ public interface ISap extends android.hardware.radio.V1_1.ISap {
                         return _hidl_out_hashchain;
                     }
                     byte[] _hidl_vec_element = new byte[32];
-                    childBlob.copyToInt8Array((long) (_hidl_index_02 * 32), _hidl_vec_element, 32);
+                    long _hidl_array_offset_1 = _hidl_index_02 * 32;
+                    childBlob.copyToInt8Array(_hidl_array_offset_1, _hidl_vec_element, 32);
                     _hidl_out_hashchain.add(_hidl_vec_element);
                     _hidl_index_0 = _hidl_index_02 + 1;
                 }
@@ -312,6 +343,7 @@ public interface ISap extends android.hardware.radio.V1_1.ISap {
             }
         }
 
+        @Override // android.hardware.radio.V1_2.ISap, android.hardware.radio.V1_1.ISap, android.hardware.radio.V1_0.ISap, android.internal.hidl.base.V1_0.IBase
         public void setHALInstrumentation() throws RemoteException {
             HwParcel _hidl_request = new HwParcel();
             _hidl_request.writeInterfaceToken(IBase.kInterfaceName);
@@ -324,10 +356,12 @@ public interface ISap extends android.hardware.radio.V1_1.ISap {
             }
         }
 
+        @Override // android.hardware.radio.V1_2.ISap, android.hardware.radio.V1_1.ISap, android.hardware.radio.V1_0.ISap, android.internal.hidl.base.V1_0.IBase
         public boolean linkToDeath(IHwBinder.DeathRecipient recipient, long cookie) throws RemoteException {
             return this.mRemote.linkToDeath(recipient, cookie);
         }
 
+        @Override // android.hardware.radio.V1_2.ISap, android.hardware.radio.V1_1.ISap, android.hardware.radio.V1_0.ISap, android.internal.hidl.base.V1_0.IBase
         public void ping() throws RemoteException {
             HwParcel _hidl_request = new HwParcel();
             _hidl_request.writeInterfaceToken(IBase.kInterfaceName);
@@ -341,6 +375,7 @@ public interface ISap extends android.hardware.radio.V1_1.ISap {
             }
         }
 
+        @Override // android.hardware.radio.V1_2.ISap, android.hardware.radio.V1_1.ISap, android.hardware.radio.V1_0.ISap, android.internal.hidl.base.V1_0.IBase
         public DebugInfo getDebugInfo() throws RemoteException {
             HwParcel _hidl_request = new HwParcel();
             _hidl_request.writeInterfaceToken(IBase.kInterfaceName);
@@ -357,6 +392,7 @@ public interface ISap extends android.hardware.radio.V1_1.ISap {
             }
         }
 
+        @Override // android.hardware.radio.V1_2.ISap, android.hardware.radio.V1_1.ISap, android.hardware.radio.V1_0.ISap, android.internal.hidl.base.V1_0.IBase
         public void notifySyspropsChanged() throws RemoteException {
             HwParcel _hidl_request = new HwParcel();
             _hidl_request.writeInterfaceToken(IBase.kInterfaceName);
@@ -369,57 +405,71 @@ public interface ISap extends android.hardware.radio.V1_1.ISap {
             }
         }
 
+        @Override // android.hardware.radio.V1_2.ISap, android.hardware.radio.V1_1.ISap, android.hardware.radio.V1_0.ISap, android.internal.hidl.base.V1_0.IBase
         public boolean unlinkToDeath(IHwBinder.DeathRecipient recipient) throws RemoteException {
             return this.mRemote.unlinkToDeath(recipient);
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends HwBinder implements ISap {
+        @Override // android.hardware.radio.V1_2.ISap, android.hardware.radio.V1_1.ISap, android.hardware.radio.V1_0.ISap, android.internal.hidl.base.V1_0.IBase, android.p007os.IHwInterface
         public IHwBinder asBinder() {
             return this;
         }
 
+        @Override // android.hardware.radio.V1_2.ISap, android.hardware.radio.V1_1.ISap, android.hardware.radio.V1_0.ISap, android.internal.hidl.base.V1_0.IBase
         public final ArrayList<String> interfaceChain() {
-            return new ArrayList<>(Arrays.asList(new String[]{ISap.kInterfaceName, android.hardware.radio.V1_1.ISap.kInterfaceName, android.hardware.radio.V1_0.ISap.kInterfaceName, IBase.kInterfaceName}));
+            return new ArrayList<>(Arrays.asList(ISap.kInterfaceName, android.hardware.radio.V1_1.ISap.kInterfaceName, android.hardware.radio.V1_0.ISap.kInterfaceName, IBase.kInterfaceName));
         }
 
-        public void debug(NativeHandle fd, ArrayList<String> arrayList) {
+        @Override // android.hardware.radio.V1_2.ISap, android.hardware.radio.V1_1.ISap, android.hardware.radio.V1_0.ISap, android.internal.hidl.base.V1_0.IBase
+        public void debug(NativeHandle fd, ArrayList<String> options) {
         }
 
+        @Override // android.hardware.radio.V1_2.ISap, android.hardware.radio.V1_1.ISap, android.hardware.radio.V1_0.ISap, android.internal.hidl.base.V1_0.IBase
         public final String interfaceDescriptor() {
             return ISap.kInterfaceName;
         }
 
+        @Override // android.hardware.radio.V1_2.ISap, android.hardware.radio.V1_1.ISap, android.hardware.radio.V1_0.ISap, android.internal.hidl.base.V1_0.IBase
         public final ArrayList<byte[]> getHashChain() {
-            return new ArrayList<>(Arrays.asList(new byte[][]{new byte[]{45, -122, -110, -105, -108, 121, 94, 92, 112, -12, -3, -75, 7, 52, -123, -3, 5, -125, 92, -100, 111, 73, 97, 22, 104, 124, 61, -97, 50, -26, -33, 62}, new byte[]{-7, 108, -68, 89, -33, -31, 108, -115, 12, 42, Bidi.LEVEL_DEFAULT_LTR, 6, -37, 36, -40, 115, -118, 99, 40, -74, -23, MidiConstants.STATUS_CHANNEL_MASK, 123, -114, 22, BluetoothHidDevice.SUBCLASS1_KEYBOARD, -22, 43, 70, 0, -34, -67}, new byte[]{-34, 58, -71, -9, 59, WifiScanner.PnoSettings.PnoNetwork.FLAG_SAME_NETWORK, 115, -51, 103, 123, 25, -40, -122, -5, -110, Bidi.LEVEL_DEFAULT_LTR, -109, -127, -77, 1, 97, -89, 4, 113, 45, 43, 48, -8, 117, -121, 63, 92}, new byte[]{-20, Bidi.LEVEL_DEFAULT_RTL, -41, -98, MidiConstants.STATUS_CHANNEL_PRESSURE, 45, -6, -123, -68, 73, -108, 38, -83, -82, 62, -66, 35, -17, 5, 36, MidiConstants.STATUS_SONG_SELECT, -51, 105, 87, 19, -109, 36, -72, 59, 24, -54, 76}}));
+            return new ArrayList<>(Arrays.asList(new byte[]{45, -122, -110, -105, -108, 121, 94, 92, 112, -12, -3, -75, 7, 52, -123, -3, 5, -125, 92, -100, 111, 73, 97, 22, 104, 124, 61, -97, 50, -26, -33, 62}, new byte[]{-7, 108, -68, 89, -33, -31, 108, -115, 12, 42, Bidi.LEVEL_DEFAULT_LTR, 6, -37, 36, -40, 115, -118, 99, 40, -74, -23, MidiConstants.STATUS_CHANNEL_MASK, 123, -114, 22, BluetoothHidDevice.SUBCLASS1_KEYBOARD, -22, 43, 70, 0, -34, -67}, new byte[]{-34, 58, -71, -9, 59, WifiScanner.PnoSettings.PnoNetwork.FLAG_SAME_NETWORK, 115, -51, 103, 123, 25, -40, -122, -5, -110, Bidi.LEVEL_DEFAULT_LTR, -109, -127, -77, 1, 97, -89, 4, 113, 45, 43, 48, -8, 117, -121, 63, 92}, new byte[]{-20, Bidi.LEVEL_DEFAULT_RTL, -41, -98, MidiConstants.STATUS_CHANNEL_PRESSURE, 45, -6, -123, -68, 73, -108, 38, -83, -82, 62, -66, 35, -17, 5, 36, MidiConstants.STATUS_SONG_SELECT, -51, 105, 87, 19, -109, 36, -72, 59, 24, -54, 76}));
         }
 
+        @Override // android.hardware.radio.V1_2.ISap, android.hardware.radio.V1_1.ISap, android.hardware.radio.V1_0.ISap, android.internal.hidl.base.V1_0.IBase
         public final void setHALInstrumentation() {
         }
 
+        @Override // android.p007os.IHwBinder, android.hardware.cas.V1_0.ICas, android.internal.hidl.base.V1_0.IBase
         public final boolean linkToDeath(IHwBinder.DeathRecipient recipient, long cookie) {
             return true;
         }
 
+        @Override // android.hardware.radio.V1_2.ISap, android.hardware.radio.V1_1.ISap, android.hardware.radio.V1_0.ISap, android.internal.hidl.base.V1_0.IBase
         public final void ping() {
         }
 
+        @Override // android.hardware.radio.V1_2.ISap, android.hardware.radio.V1_1.ISap, android.hardware.radio.V1_0.ISap, android.internal.hidl.base.V1_0.IBase
         public final DebugInfo getDebugInfo() {
             DebugInfo info = new DebugInfo();
             info.pid = HidlSupport.getPidIfSharable();
-            info.ptr = 0;
+            info.ptr = 0L;
             info.arch = 0;
             return info;
         }
 
+        @Override // android.hardware.radio.V1_2.ISap, android.hardware.radio.V1_1.ISap, android.hardware.radio.V1_0.ISap, android.internal.hidl.base.V1_0.IBase
         public final void notifySyspropsChanged() {
             HwBinder.enableInstrumentation();
         }
 
+        @Override // android.p007os.IHwBinder, android.hardware.cas.V1_0.ICas, android.internal.hidl.base.V1_0.IBase
         public final boolean unlinkToDeath(IHwBinder.DeathRecipient recipient) {
             return true;
         }
 
+        @Override // android.p007os.IHwBinder
         public IHwInterface queryLocalInterface(String descriptor) {
             if (ISap.kInterfaceName.equals(descriptor)) {
                 return this;
@@ -435,126 +485,120 @@ public interface ISap extends android.hardware.radio.V1_1.ISap {
             return interfaceDescriptor() + "@Stub";
         }
 
+        @Override // android.p007os.HwBinder
         public void onTransact(int _hidl_code, HwParcel _hidl_request, HwParcel _hidl_reply, int _hidl_flags) throws RemoteException {
-            int _hidl_index_0 = 0;
-            boolean _hidl_is_oneway = true;
+            boolean _hidl_is_oneway;
             switch (_hidl_code) {
                 case 1:
-                    if ((_hidl_flags & 1) == 0) {
-                        _hidl_is_oneway = false;
-                    }
+                    _hidl_is_oneway = (_hidl_flags & 1) != 0;
                     if (_hidl_is_oneway) {
                         _hidl_reply.writeStatus(Integer.MIN_VALUE);
                         _hidl_reply.send();
                         return;
                     }
                     _hidl_request.enforceInterface(android.hardware.radio.V1_0.ISap.kInterfaceName);
-                    setCallback(ISapCallback.asInterface(_hidl_request.readStrongBinder()));
+                    ISapCallback sapCallback = ISapCallback.asInterface(_hidl_request.readStrongBinder());
+                    setCallback(sapCallback);
                     _hidl_reply.writeStatus(0);
                     _hidl_reply.send();
                     return;
                 case 2:
-                    if ((_hidl_flags & 1) != 0) {
-                        _hidl_index_0 = 1;
-                    }
+                    _hidl_index_0 = (_hidl_flags & 1) != 0 ? 1 : 0;
                     if (_hidl_index_0 != 1) {
                         _hidl_reply.writeStatus(Integer.MIN_VALUE);
                         _hidl_reply.send();
                         return;
                     }
                     _hidl_request.enforceInterface(android.hardware.radio.V1_0.ISap.kInterfaceName);
-                    connectReq(_hidl_request.readInt32(), _hidl_request.readInt32());
+                    int token = _hidl_request.readInt32();
+                    int maxMsgSize = _hidl_request.readInt32();
+                    connectReq(token, maxMsgSize);
                     return;
                 case 3:
-                    if ((_hidl_flags & 1) != 0) {
-                        _hidl_index_0 = 1;
-                    }
+                    _hidl_index_0 = (_hidl_flags & 1) != 0 ? 1 : 0;
                     if (_hidl_index_0 != 1) {
                         _hidl_reply.writeStatus(Integer.MIN_VALUE);
                         _hidl_reply.send();
                         return;
                     }
                     _hidl_request.enforceInterface(android.hardware.radio.V1_0.ISap.kInterfaceName);
-                    disconnectReq(_hidl_request.readInt32());
+                    int token2 = _hidl_request.readInt32();
+                    disconnectReq(token2);
                     return;
                 case 4:
-                    if ((_hidl_flags & 1) != 0) {
-                        _hidl_index_0 = 1;
-                    }
+                    _hidl_index_0 = (_hidl_flags & 1) != 0 ? 1 : 0;
                     if (_hidl_index_0 != 1) {
                         _hidl_reply.writeStatus(Integer.MIN_VALUE);
                         _hidl_reply.send();
                         return;
                     }
                     _hidl_request.enforceInterface(android.hardware.radio.V1_0.ISap.kInterfaceName);
-                    apduReq(_hidl_request.readInt32(), _hidl_request.readInt32(), _hidl_request.readInt8Vector());
+                    int token3 = _hidl_request.readInt32();
+                    int type = _hidl_request.readInt32();
+                    ArrayList<Byte> command = _hidl_request.readInt8Vector();
+                    apduReq(token3, type, command);
                     return;
                 case 5:
-                    if ((_hidl_flags & 1) != 0) {
-                        _hidl_index_0 = 1;
-                    }
+                    _hidl_index_0 = (_hidl_flags & 1) != 0 ? 1 : 0;
                     if (_hidl_index_0 != 1) {
                         _hidl_reply.writeStatus(Integer.MIN_VALUE);
                         _hidl_reply.send();
                         return;
                     }
                     _hidl_request.enforceInterface(android.hardware.radio.V1_0.ISap.kInterfaceName);
-                    transferAtrReq(_hidl_request.readInt32());
+                    int token4 = _hidl_request.readInt32();
+                    transferAtrReq(token4);
                     return;
                 case 6:
-                    if ((_hidl_flags & 1) != 0) {
-                        _hidl_index_0 = 1;
-                    }
+                    _hidl_index_0 = (_hidl_flags & 1) != 0 ? 1 : 0;
                     if (_hidl_index_0 != 1) {
                         _hidl_reply.writeStatus(Integer.MIN_VALUE);
                         _hidl_reply.send();
                         return;
                     }
                     _hidl_request.enforceInterface(android.hardware.radio.V1_0.ISap.kInterfaceName);
-                    powerReq(_hidl_request.readInt32(), _hidl_request.readBool());
+                    int token5 = _hidl_request.readInt32();
+                    boolean state = _hidl_request.readBool();
+                    powerReq(token5, state);
                     return;
                 case 7:
-                    if ((_hidl_flags & 1) != 0) {
-                        _hidl_index_0 = 1;
-                    }
+                    _hidl_index_0 = (_hidl_flags & 1) != 0 ? 1 : 0;
                     if (_hidl_index_0 != 1) {
                         _hidl_reply.writeStatus(Integer.MIN_VALUE);
                         _hidl_reply.send();
                         return;
                     }
                     _hidl_request.enforceInterface(android.hardware.radio.V1_0.ISap.kInterfaceName);
-                    resetSimReq(_hidl_request.readInt32());
+                    int token6 = _hidl_request.readInt32();
+                    resetSimReq(token6);
                     return;
                 case 8:
-                    if ((_hidl_flags & 1) != 0) {
-                        _hidl_index_0 = 1;
-                    }
+                    _hidl_index_0 = (_hidl_flags & 1) != 0 ? 1 : 0;
                     if (_hidl_index_0 != 1) {
                         _hidl_reply.writeStatus(Integer.MIN_VALUE);
                         _hidl_reply.send();
                         return;
                     }
                     _hidl_request.enforceInterface(android.hardware.radio.V1_0.ISap.kInterfaceName);
-                    transferCardReaderStatusReq(_hidl_request.readInt32());
+                    int token7 = _hidl_request.readInt32();
+                    transferCardReaderStatusReq(token7);
                     return;
                 case 9:
-                    if ((_hidl_flags & 1) != 0) {
-                        _hidl_index_0 = 1;
-                    }
+                    _hidl_index_0 = (_hidl_flags & 1) != 0 ? 1 : 0;
                     if (_hidl_index_0 != 1) {
                         _hidl_reply.writeStatus(Integer.MIN_VALUE);
                         _hidl_reply.send();
                         return;
                     }
                     _hidl_request.enforceInterface(android.hardware.radio.V1_0.ISap.kInterfaceName);
-                    setTransferProtocolReq(_hidl_request.readInt32(), _hidl_request.readInt32());
+                    int token8 = _hidl_request.readInt32();
+                    int transferProtocol = _hidl_request.readInt32();
+                    setTransferProtocolReq(token8, transferProtocol);
                     return;
                 default:
                     switch (_hidl_code) {
                         case 256067662:
-                            if ((_hidl_flags & 1) == 0) {
-                                _hidl_is_oneway = false;
-                            }
+                            _hidl_is_oneway = (_hidl_flags & 1) != 0;
                             if (_hidl_is_oneway) {
                                 _hidl_reply.writeStatus(Integer.MIN_VALUE);
                                 _hidl_reply.send();
@@ -567,23 +611,21 @@ public interface ISap extends android.hardware.radio.V1_1.ISap {
                             _hidl_reply.send();
                             return;
                         case 256131655:
-                            if ((_hidl_flags & 1) == 0) {
-                                _hidl_is_oneway = false;
-                            }
+                            _hidl_is_oneway = (_hidl_flags & 1) != 0;
                             if (_hidl_is_oneway) {
                                 _hidl_reply.writeStatus(Integer.MIN_VALUE);
                                 _hidl_reply.send();
                                 return;
                             }
                             _hidl_request.enforceInterface(IBase.kInterfaceName);
-                            debug(_hidl_request.readNativeHandle(), _hidl_request.readStringVector());
+                            NativeHandle fd = _hidl_request.readNativeHandle();
+                            ArrayList<String> options = _hidl_request.readStringVector();
+                            debug(fd, options);
                             _hidl_reply.writeStatus(0);
                             _hidl_reply.send();
                             return;
                         case 256136003:
-                            if ((_hidl_flags & 1) == 0) {
-                                _hidl_is_oneway = false;
-                            }
+                            _hidl_is_oneway = (_hidl_flags & 1) != 0;
                             if (_hidl_is_oneway) {
                                 _hidl_reply.writeStatus(Integer.MIN_VALUE);
                                 _hidl_reply.send();
@@ -596,9 +638,7 @@ public interface ISap extends android.hardware.radio.V1_1.ISap {
                             _hidl_reply.send();
                             return;
                         case 256398152:
-                            if ((_hidl_flags & 1) == 0) {
-                                _hidl_is_oneway = false;
-                            }
+                            _hidl_is_oneway = (_hidl_flags & 1) != 0;
                             if (_hidl_is_oneway) {
                                 _hidl_reply.writeStatus(Integer.MIN_VALUE);
                                 _hidl_reply.send();
@@ -609,11 +649,11 @@ public interface ISap extends android.hardware.radio.V1_1.ISap {
                             _hidl_reply.writeStatus(0);
                             HwBlob _hidl_blob = new HwBlob(16);
                             int _hidl_vec_size = _hidl_out_hashchain.size();
-                            _hidl_blob.putInt32(8, _hidl_vec_size);
-                            _hidl_blob.putBool(12, false);
+                            _hidl_blob.putInt32(8L, _hidl_vec_size);
+                            _hidl_blob.putBool(12L, false);
                             HwBlob childBlob = new HwBlob(_hidl_vec_size * 32);
                             while (_hidl_index_0 < _hidl_vec_size) {
-                                long _hidl_array_offset_1 = (long) (_hidl_index_0 * 32);
+                                long _hidl_array_offset_1 = _hidl_index_0 * 32;
                                 byte[] _hidl_array_item_1 = _hidl_out_hashchain.get(_hidl_index_0);
                                 if (_hidl_array_item_1 == null || _hidl_array_item_1.length != 32) {
                                     throw new IllegalArgumentException("Array element is not of the expected length");
@@ -621,14 +661,12 @@ public interface ISap extends android.hardware.radio.V1_1.ISap {
                                 childBlob.putInt8Array(_hidl_array_offset_1, _hidl_array_item_1);
                                 _hidl_index_0++;
                             }
-                            _hidl_blob.putBlob(0, childBlob);
+                            _hidl_blob.putBlob(0L, childBlob);
                             _hidl_reply.writeBuffer(_hidl_blob);
                             _hidl_reply.send();
                             return;
                         case 256462420:
-                            if ((_hidl_flags & 1) != 0) {
-                                _hidl_index_0 = 1;
-                            }
+                            _hidl_index_0 = (_hidl_flags & 1) != 0 ? 1 : 0;
                             if (_hidl_index_0 != 1) {
                                 _hidl_reply.writeStatus(Integer.MIN_VALUE);
                                 _hidl_reply.send();
@@ -638,9 +676,7 @@ public interface ISap extends android.hardware.radio.V1_1.ISap {
                             setHALInstrumentation();
                             return;
                         case 256660548:
-                            if ((_hidl_flags & 1) != 0) {
-                                _hidl_index_0 = 1;
-                            }
+                            _hidl_index_0 = (_hidl_flags & 1) != 0 ? 1 : 0;
                             if (_hidl_index_0 != 0) {
                                 _hidl_reply.writeStatus(Integer.MIN_VALUE);
                                 _hidl_reply.send();
@@ -648,9 +684,7 @@ public interface ISap extends android.hardware.radio.V1_1.ISap {
                             }
                             return;
                         case 256921159:
-                            if ((_hidl_flags & 1) == 0) {
-                                _hidl_is_oneway = false;
-                            }
+                            _hidl_is_oneway = (_hidl_flags & 1) != 0;
                             if (_hidl_is_oneway) {
                                 _hidl_reply.writeStatus(Integer.MIN_VALUE);
                                 _hidl_reply.send();
@@ -662,9 +696,7 @@ public interface ISap extends android.hardware.radio.V1_1.ISap {
                             _hidl_reply.send();
                             return;
                         case 257049926:
-                            if ((_hidl_flags & 1) == 0) {
-                                _hidl_is_oneway = false;
-                            }
+                            _hidl_is_oneway = (_hidl_flags & 1) != 0;
                             if (_hidl_is_oneway) {
                                 _hidl_reply.writeStatus(Integer.MIN_VALUE);
                                 _hidl_reply.send();
@@ -677,9 +709,7 @@ public interface ISap extends android.hardware.radio.V1_1.ISap {
                             _hidl_reply.send();
                             return;
                         case 257120595:
-                            if ((_hidl_flags & 1) != 0) {
-                                _hidl_index_0 = 1;
-                            }
+                            _hidl_index_0 = (_hidl_flags & 1) != 0 ? 1 : 0;
                             if (_hidl_index_0 != 1) {
                                 _hidl_reply.writeStatus(Integer.MIN_VALUE);
                                 _hidl_reply.send();
@@ -689,9 +719,7 @@ public interface ISap extends android.hardware.radio.V1_1.ISap {
                             notifySyspropsChanged();
                             return;
                         case 257250372:
-                            if ((_hidl_flags & 1) != 0) {
-                                _hidl_index_0 = 1;
-                            }
+                            _hidl_index_0 = (_hidl_flags & 1) != 0 ? 1 : 0;
                             if (_hidl_index_0 != 0) {
                                 _hidl_reply.writeStatus(Integer.MIN_VALUE);
                                 _hidl_reply.send();

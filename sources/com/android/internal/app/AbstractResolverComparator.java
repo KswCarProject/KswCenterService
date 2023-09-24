@@ -5,18 +5,19 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.os.UserHandle;
+import android.content.p002pm.PackageManager;
+import android.content.p002pm.ResolveInfo;
+import android.p007os.Handler;
+import android.p007os.Looper;
+import android.p007os.Message;
+import android.p007os.UserHandle;
 import android.util.Log;
 import com.android.internal.app.ResolverActivity;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+/* loaded from: classes4.dex */
 abstract class AbstractResolverComparator implements Comparator<ResolverActivity.ResolvedComponentInfo> {
     private static final boolean DEBUG = false;
     private static final int NUM_OF_TOP_ANNOTATIONS_TO_USE = 3;
@@ -28,7 +29,8 @@ abstract class AbstractResolverComparator implements Comparator<ResolverActivity
     protected String[] mAnnotations;
     protected String mContentType;
     private final String mDefaultBrowserPackageName;
-    protected final Handler mHandler = new Handler(Looper.getMainLooper()) {
+    protected final Handler mHandler = new Handler(Looper.getMainLooper()) { // from class: com.android.internal.app.AbstractResolverComparator.1
+        @Override // android.p007os.Handler
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 0:
@@ -53,21 +55,18 @@ abstract class AbstractResolverComparator implements Comparator<ResolverActivity
     protected final PackageManager mPm;
     protected final UsageStatsManager mUsm;
 
+    /* loaded from: classes4.dex */
     interface AfterCompute {
         void afterCompute();
     }
 
-    /* access modifiers changed from: package-private */
-    public abstract int compare(ResolveInfo resolveInfo, ResolveInfo resolveInfo2);
+    abstract int compare(ResolveInfo resolveInfo, ResolveInfo resolveInfo2);
 
-    /* access modifiers changed from: package-private */
-    public abstract void doCompute(List<ResolverActivity.ResolvedComponentInfo> list);
+    abstract void doCompute(List<ResolverActivity.ResolvedComponentInfo> list);
 
-    /* access modifiers changed from: package-private */
-    public abstract float getScore(ComponentName componentName);
+    abstract float getScore(ComponentName componentName);
 
-    /* access modifiers changed from: package-private */
-    public abstract void handleResultMessage(Message message);
+    abstract void handleResultMessage(Message message);
 
     AbstractResolverComparator(Context context, Intent intent) {
         String str;
@@ -99,27 +98,23 @@ abstract class AbstractResolverComparator implements Comparator<ResolverActivity
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void setCallBack(AfterCompute afterCompute) {
+    void setCallBack(AfterCompute afterCompute) {
         this.mAfterCompute = afterCompute;
     }
 
-    /* access modifiers changed from: protected */
-    public final void afterCompute() {
+    protected final void afterCompute() {
         AfterCompute afterCompute = this.mAfterCompute;
         if (afterCompute != null) {
             afterCompute.afterCompute();
         }
     }
 
+    @Override // java.util.Comparator
     public final int compare(ResolverActivity.ResolvedComponentInfo lhsp, ResolverActivity.ResolvedComponentInfo rhsp) {
         ResolveInfo lhs = lhsp.getResolveInfoAt(0);
         ResolveInfo rhs = rhsp.getResolveInfoAt(0);
         if (lhs.targetUserId != -2) {
-            if (rhs.targetUserId != -2) {
-                return 0;
-            }
-            return 1;
+            return rhs.targetUserId != -2 ? 0 : 1;
         } else if (rhs.targetUserId != -2) {
             return -1;
         } else {
@@ -131,54 +126,44 @@ abstract class AbstractResolverComparator implements Comparator<ResolverActivity
                     return 1;
                 }
                 boolean lhsSpecific = ResolverActivity.isSpecificUriMatch(lhs.match);
-                if (lhsSpecific != ResolverActivity.isSpecificUriMatch(rhs.match)) {
-                    if (lhsSpecific) {
-                        return -1;
-                    }
-                    return 1;
+                boolean rhsSpecific = ResolverActivity.isSpecificUriMatch(rhs.match);
+                if (lhsSpecific != rhsSpecific) {
+                    return lhsSpecific ? -1 : 1;
                 }
             }
             return compare(lhs, rhs);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public final void compute(List<ResolverActivity.ResolvedComponentInfo> targets) {
+    final void compute(List<ResolverActivity.ResolvedComponentInfo> targets) {
         beforeCompute();
         doCompute(targets);
     }
 
-    /* access modifiers changed from: package-private */
-    public final void updateChooserCounts(String packageName, int userId, String action) {
+    final void updateChooserCounts(String packageName, int userId, String action) {
         if (this.mUsm != null) {
             this.mUsm.reportChooserSelection(packageName, userId, this.mContentType, this.mAnnotations, action);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void updateModel(ComponentName componentName) {
+    void updateModel(ComponentName componentName) {
     }
 
-    /* access modifiers changed from: package-private */
-    public void beforeCompute() {
+    void beforeCompute() {
         if (this.mHandler == null) {
-            Log.d(TAG, "Error: Handler is Null; Needs to be initialized.");
+            Log.m72d(TAG, "Error: Handler is Null; Needs to be initialized.");
         } else {
-            this.mHandler.sendEmptyMessageDelayed(1, 500);
+            this.mHandler.sendEmptyMessageDelayed(1, 500L);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void destroy() {
+    void destroy() {
         this.mHandler.removeMessages(0);
         this.mHandler.removeMessages(1);
         afterCompute();
     }
 
     private boolean isDefaultBrowser(ResolveInfo ri) {
-        if (ri.targetUserId == -2 && ri.activityInfo.packageName != null && ri.activityInfo.packageName.equals(this.mDefaultBrowserPackageName)) {
-            return true;
-        }
-        return false;
+        return ri.targetUserId == -2 && ri.activityInfo.packageName != null && ri.activityInfo.packageName.equals(this.mDefaultBrowserPackageName);
     }
 }

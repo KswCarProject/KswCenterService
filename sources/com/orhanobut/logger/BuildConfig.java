@@ -1,5 +1,6 @@
 package com.orhanobut.logger;
 
+/* loaded from: classes5.dex */
 public final class BuildConfig {
     public static final String APPLICATION_ID = "com.orhanobut.logger";
     public static final String BUILD_TYPE = "release";

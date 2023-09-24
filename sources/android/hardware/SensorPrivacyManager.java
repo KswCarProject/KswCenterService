@@ -3,11 +3,13 @@ package android.hardware;
 import android.content.Context;
 import android.hardware.ISensorPrivacyListener;
 import android.hardware.ISensorPrivacyManager;
-import android.os.RemoteException;
-import android.os.ServiceManager;
+import android.p007os.IBinder;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
 import android.util.ArrayMap;
 import com.android.internal.annotations.GuardedBy;
 
+/* loaded from: classes.dex */
 public final class SensorPrivacyManager {
     @GuardedBy({"sInstanceLock"})
     private static SensorPrivacyManager sInstance;
@@ -16,6 +18,7 @@ public final class SensorPrivacyManager {
     private final ArrayMap<OnSensorPrivacyChangedListener, ISensorPrivacyListener> mListeners = new ArrayMap<>();
     private final ISensorPrivacyManager mService;
 
+    /* loaded from: classes.dex */
     public interface OnSensorPrivacyChangedListener {
         void onSensorPrivacyChanged(boolean z);
     }
@@ -30,7 +33,9 @@ public final class SensorPrivacyManager {
         synchronized (sInstanceLock) {
             if (sInstance == null) {
                 try {
-                    sInstance = new SensorPrivacyManager(context, ISensorPrivacyManager.Stub.asInterface(ServiceManager.getServiceOrThrow(Context.SENSOR_PRIVACY_SERVICE)));
+                    IBinder b = ServiceManager.getServiceOrThrow(Context.SENSOR_PRIVACY_SERVICE);
+                    ISensorPrivacyManager service = ISensorPrivacyManager.Stub.asInterface(b);
+                    sInstance = new SensorPrivacyManager(context, service);
                 } catch (ServiceManager.ServiceNotFoundException e) {
                     throw new IllegalStateException(e);
                 }
@@ -52,7 +57,8 @@ public final class SensorPrivacyManager {
         synchronized (this.mListeners) {
             ISensorPrivacyListener iListener = this.mListeners.get(listener);
             if (iListener == null) {
-                iListener = new ISensorPrivacyListener.Stub() {
+                iListener = new ISensorPrivacyListener.Stub() { // from class: android.hardware.SensorPrivacyManager.1
+                    @Override // android.hardware.ISensorPrivacyListener
                     public void onSensorPrivacyChanged(boolean enabled) {
                         listener.onSensorPrivacyChanged(enabled);
                     }

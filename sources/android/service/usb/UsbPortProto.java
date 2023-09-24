@@ -1,7 +1,10 @@
 package android.service.usb;
 
+/* loaded from: classes3.dex */
 public final class UsbPortProto {
-    public static final long ID = 1138166333441L;
+
+    /* renamed from: ID */
+    public static final long f251ID = 1138166333441L;
     public static final int MODE_AUDIO_ACCESSORY = 4;
     public static final int MODE_DEBUG_ACCESSORY = 8;
     public static final int MODE_DFP = 2;

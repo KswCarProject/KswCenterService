@@ -11,6 +11,7 @@ import com.wits.pms.mcu.custom.KswMessage;
 import java.io.FileWriter;
 import java.io.IOException;
 
+/* loaded from: classes2.dex */
 public class CanLogUtils {
     @SuppressLint({"SdCardPath"})
     private static final String CAN_LOG_PATH = "/sdcard/CANBus_Log";
@@ -33,8 +34,9 @@ public class CanLogUtils {
     private static void startCatCanLog() {
         int type = Settings.System.getInt(PowerManagerAppService.serviceContext.getContentResolver(), "canBusType", 0);
         KswMcuSender.getSender().sendMessage(112, new byte[]{MidiConstants.STATUS_CHANNEL_MASK, 1, (byte) type});
+        String path = "/sdcard/CANBus_Log_CAN" + type + ".txt";
         try {
-            fileWriter = new FileWriter("/sdcard/CANBus_Log_CAN" + type + ".txt");
+            fileWriter = new FileWriter(path);
         } catch (IOException e) {
         }
     }
@@ -51,7 +53,7 @@ public class CanLogUtils {
 
     public static void canLog(KswMessage message) {
         if (message.getCmdType() == 161 && message.getData()[0] == 29) {
-            byte[] realData = new byte[(message.getData().length - 1)];
+            byte[] realData = new byte[message.getData().length - 1];
             System.arraycopy(message.getData(), 1, realData, 0, realData.length);
             try {
                 getCanLog(realData);
@@ -82,13 +84,13 @@ public class CanLogUtils {
         }
         line.append(head.toString());
         line.append(WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER);
-        line.append(data[4] == 0 ? "数据帧" : "远程帧");
+        line.append(data[4] == 0 ? "\u6570\u636e\u5e27" : "\u8fdc\u7a0b\u5e27");
         line.append(WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER);
-        line.append(data[5] == 0 ? "标准帧" : "扩展帧");
+        line.append(data[5] == 0 ? "\u6807\u51c6\u5e27" : "\u6269\u5c55\u5e27");
         line.append(WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER);
         line.append(dataString.toString());
         fileWriter.write(line.toString());
         fileWriter.write("\n");
-        Log.v("CanLog", line.toString());
+        Log.m66v("CanLog", line.toString());
     }
 }

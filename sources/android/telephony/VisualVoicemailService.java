@@ -5,15 +5,16 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Message;
-import android.os.Messenger;
-import android.os.RemoteException;
+import android.p007os.Handler;
+import android.p007os.IBinder;
+import android.p007os.Message;
+import android.p007os.Messenger;
+import android.p007os.RemoteException;
 import android.telecom.PhoneAccountHandle;
 import android.telecom.TelecomManager;
 import android.util.Log;
 
+/* loaded from: classes.dex */
 public abstract class VisualVoicemailService extends Service {
     public static final String DATA_PHONE_ACCOUNT_HANDLE = "data_phone_account_handle";
     public static final String DATA_SMS = "data_sms";
@@ -24,7 +25,8 @@ public abstract class VisualVoicemailService extends Service {
     public static final int MSG_TASK_STOPPED = 5;
     public static final String SERVICE_INTERFACE = "android.telephony.VisualVoicemailService";
     private static final String TAG = "VvmService";
-    private final Messenger mMessenger = new Messenger((Handler) new Handler() {
+    private final Messenger mMessenger = new Messenger(new Handler() { // from class: android.telephony.VisualVoicemailService.1
+        @Override // android.p007os.Handler
         public void handleMessage(Message msg) {
             PhoneAccountHandle handle = (PhoneAccountHandle) msg.getData().getParcelable(VisualVoicemailService.DATA_PHONE_ACCOUNT_HANDLE);
             VisualVoicemailTask task = new VisualVoicemailTask(msg.replyTo, msg.arg1);
@@ -35,7 +37,8 @@ public abstract class VisualVoicemailService extends Service {
                         VisualVoicemailService.this.onCellServiceConnected(task, handle);
                         return;
                     case 2:
-                        VisualVoicemailService.this.onSmsReceived(task, (VisualVoicemailSms) msg.getData().getParcelable(VisualVoicemailService.DATA_SMS));
+                        VisualVoicemailSms sms = (VisualVoicemailSms) msg.getData().getParcelable(VisualVoicemailService.DATA_SMS);
+                        VisualVoicemailService.this.onSmsReceived(task, sms);
                         return;
                     case 3:
                         VisualVoicemailService.this.onSimRemoved(task, handle);
@@ -44,9 +47,8 @@ public abstract class VisualVoicemailService extends Service {
                         super.handleMessage(msg);
                         return;
                 }
-            } else {
-                VisualVoicemailService.this.onStopped(task);
             }
+            VisualVoicemailService.this.onStopped(task);
         }
     });
 
@@ -58,6 +60,7 @@ public abstract class VisualVoicemailService extends Service {
 
     public abstract void onStopped(VisualVoicemailTask visualVoicemailTask);
 
+    /* loaded from: classes.dex */
     public static class VisualVoicemailTask {
         private final Messenger mReplyTo;
         private final int mTaskId;
@@ -74,15 +77,12 @@ public abstract class VisualVoicemailService extends Service {
                 message.arg1 = this.mTaskId;
                 this.mReplyTo.send(message);
             } catch (RemoteException e) {
-                Log.e(VisualVoicemailService.TAG, "Cannot send MSG_TASK_ENDED, remote handler no longer exist");
+                Log.m70e(VisualVoicemailService.TAG, "Cannot send MSG_TASK_ENDED, remote handler no longer exist");
             }
         }
 
         public boolean equals(Object obj) {
-            if ((obj instanceof VisualVoicemailTask) && this.mTaskId == ((VisualVoicemailTask) obj).mTaskId) {
-                return true;
-            }
-            return false;
+            return (obj instanceof VisualVoicemailTask) && this.mTaskId == ((VisualVoicemailTask) obj).mTaskId;
         }
 
         public int hashCode() {
@@ -90,6 +90,7 @@ public abstract class VisualVoicemailService extends Service {
         }
     }
 
+    @Override // android.app.Service
     public IBinder onBind(Intent intent) {
         return this.mMessenger.getBinder();
     }
@@ -107,10 +108,13 @@ public abstract class VisualVoicemailService extends Service {
 
     @SystemApi
     public static final void sendVisualVoicemailSms(Context context, PhoneAccountHandle phoneAccountHandle, String number, short port, String text, PendingIntent sentIntent) {
-        ((TelephonyManager) context.getSystemService(TelephonyManager.class)).sendVisualVoicemailSmsForSubscriber(getSubId(context, phoneAccountHandle), number, port, text, sentIntent);
+        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(TelephonyManager.class);
+        telephonyManager.sendVisualVoicemailSmsForSubscriber(getSubId(context, phoneAccountHandle), number, port, text, sentIntent);
     }
 
     private static int getSubId(Context context, PhoneAccountHandle phoneAccountHandle) {
-        return ((TelephonyManager) context.getSystemService(TelephonyManager.class)).getSubIdForPhoneAccount(((TelecomManager) context.getSystemService(TelecomManager.class)).getPhoneAccount(phoneAccountHandle));
+        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(TelephonyManager.class);
+        TelecomManager telecomManager = (TelecomManager) context.getSystemService(TelecomManager.class);
+        return telephonyManager.getSubIdForPhoneAccount(telecomManager.getPhoneAccount(phoneAccountHandle));
     }
 }

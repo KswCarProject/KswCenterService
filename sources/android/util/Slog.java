@@ -2,65 +2,77 @@ package android.util;
 
 import android.annotation.UnsupportedAppUsage;
 
+/* loaded from: classes4.dex */
 public final class Slog {
     private Slog() {
     }
 
     @UnsupportedAppUsage
-    public static int v(String tag, String msg) {
+    /* renamed from: v */
+    public static int m52v(String tag, String msg) {
         return Log.println_native(3, 2, tag, msg);
     }
 
-    public static int v(String tag, String msg, Throwable tr) {
-        return Log.println_native(3, 2, tag, msg + 10 + Log.getStackTraceString(tr));
+    /* renamed from: v */
+    public static int m51v(String tag, String msg, Throwable tr) {
+        return Log.println_native(3, 2, tag, msg + '\n' + Log.getStackTraceString(tr));
     }
 
     @UnsupportedAppUsage
-    public static int d(String tag, String msg) {
+    /* renamed from: d */
+    public static int m58d(String tag, String msg) {
         return Log.println_native(3, 3, tag, msg);
     }
 
     @UnsupportedAppUsage
-    public static int d(String tag, String msg, Throwable tr) {
-        return Log.println_native(3, 3, tag, msg + 10 + Log.getStackTraceString(tr));
+    /* renamed from: d */
+    public static int m57d(String tag, String msg, Throwable tr) {
+        return Log.println_native(3, 3, tag, msg + '\n' + Log.getStackTraceString(tr));
     }
 
     @UnsupportedAppUsage
-    public static int i(String tag, String msg) {
+    /* renamed from: i */
+    public static int m54i(String tag, String msg) {
         return Log.println_native(3, 4, tag, msg);
     }
 
-    public static int i(String tag, String msg, Throwable tr) {
-        return Log.println_native(3, 4, tag, msg + 10 + Log.getStackTraceString(tr));
+    /* renamed from: i */
+    public static int m53i(String tag, String msg, Throwable tr) {
+        return Log.println_native(3, 4, tag, msg + '\n' + Log.getStackTraceString(tr));
     }
 
     @UnsupportedAppUsage
-    public static int w(String tag, String msg) {
+    /* renamed from: w */
+    public static int m50w(String tag, String msg) {
         return Log.println_native(3, 5, tag, msg);
     }
 
     @UnsupportedAppUsage
-    public static int w(String tag, String msg, Throwable tr) {
-        return Log.println_native(3, 5, tag, msg + 10 + Log.getStackTraceString(tr));
+    /* renamed from: w */
+    public static int m49w(String tag, String msg, Throwable tr) {
+        return Log.println_native(3, 5, tag, msg + '\n' + Log.getStackTraceString(tr));
     }
 
-    public static int w(String tag, Throwable tr) {
+    /* renamed from: w */
+    public static int m48w(String tag, Throwable tr) {
         return Log.println_native(3, 5, tag, Log.getStackTraceString(tr));
     }
 
     @UnsupportedAppUsage
-    public static int e(String tag, String msg) {
+    /* renamed from: e */
+    public static int m56e(String tag, String msg) {
         return Log.println_native(3, 6, tag, msg);
     }
 
     @UnsupportedAppUsage
-    public static int e(String tag, String msg, Throwable tr) {
-        return Log.println_native(3, 6, tag, msg + 10 + Log.getStackTraceString(tr));
+    /* renamed from: e */
+    public static int m55e(String tag, String msg, Throwable tr) {
+        return Log.println_native(3, 6, tag, msg + '\n' + Log.getStackTraceString(tr));
     }
 
     @UnsupportedAppUsage
     public static int wtf(String tag, String msg) {
-        return Log.wtf(3, tag, msg, (Throwable) null, false, true);
+        return Log.wtf(3, tag, msg, null, false, true);
     }
 
     public static void wtfQuiet(String tag, String msg) {
@@ -69,7 +81,7 @@ public final class Slog {
 
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
     public static int wtfStack(String tag, String msg) {
-        return Log.wtf(3, tag, msg, (Throwable) null, true, true);
+        return Log.wtf(3, tag, msg, null, true, true);
     }
 
     public static int wtf(String tag, Throwable tr) {

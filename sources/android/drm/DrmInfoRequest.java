@@ -3,6 +3,7 @@ package android.drm;
 import java.util.HashMap;
 import java.util.Iterator;
 
+/* loaded from: classes.dex */
 public class DrmInfoRequest {
     public static final String ACCOUNT_ID = "account_id";
     public static final String SUBSCRIPTION_ID = "subscription_id";
@@ -18,7 +19,8 @@ public class DrmInfoRequest {
         this.mInfoType = infoType;
         this.mMimeType = mimeType;
         if (!isValid()) {
-            throw new IllegalArgumentException("infoType: " + infoType + ",mimeType: " + mimeType);
+            String msg = "infoType: " + infoType + ",mimeType: " + mimeType;
+            throw new IllegalArgumentException(msg);
         }
     }
 
@@ -46,9 +48,8 @@ public class DrmInfoRequest {
         return this.mRequestInformation.values().iterator();
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean isValid() {
-        return this.mMimeType != null && !this.mMimeType.equals("") && this.mRequestInformation != null && isValidType(this.mInfoType);
+    boolean isValid() {
+        return (this.mMimeType == null || this.mMimeType.equals("") || this.mRequestInformation == null || !isValidType(this.mInfoType)) ? false : true;
     }
 
     static boolean isValidType(int infoType) {

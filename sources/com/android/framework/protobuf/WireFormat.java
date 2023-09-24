@@ -2,14 +2,11 @@ package com.android.framework.protobuf;
 
 import java.io.IOException;
 
+/* loaded from: classes4.dex */
 public final class WireFormat {
     static final int MESSAGE_SET_ITEM = 1;
-    static final int MESSAGE_SET_ITEM_END_TAG = makeTag(1, 4);
-    static final int MESSAGE_SET_ITEM_TAG = makeTag(1, 3);
     static final int MESSAGE_SET_MESSAGE = 3;
-    static final int MESSAGE_SET_MESSAGE_TAG = makeTag(3, 2);
     static final int MESSAGE_SET_TYPE_ID = 2;
-    static final int MESSAGE_SET_TYPE_ID_TAG = makeTag(2, 0);
     static final int TAG_TYPE_BITS = 3;
     static final int TAG_TYPE_MASK = 7;
     public static final int WIRETYPE_END_GROUP = 4;
@@ -18,29 +15,33 @@ public final class WireFormat {
     public static final int WIRETYPE_LENGTH_DELIMITED = 2;
     public static final int WIRETYPE_START_GROUP = 3;
     public static final int WIRETYPE_VARINT = 0;
+    static final int MESSAGE_SET_ITEM_TAG = makeTag(1, 3);
+    static final int MESSAGE_SET_ITEM_END_TAG = makeTag(1, 4);
+    static final int MESSAGE_SET_TYPE_ID_TAG = makeTag(2, 0);
+    static final int MESSAGE_SET_MESSAGE_TAG = makeTag(3, 2);
 
+    /* loaded from: classes4.dex */
     enum Utf8Validation {
-        LOOSE {
-            /* access modifiers changed from: package-private */
-            public Object readString(CodedInputStream input) throws IOException {
+        LOOSE { // from class: com.android.framework.protobuf.WireFormat.Utf8Validation.1
+            @Override // com.android.framework.protobuf.WireFormat.Utf8Validation
+            Object readString(CodedInputStream input) throws IOException {
                 return input.readString();
             }
         },
-        STRICT {
-            /* access modifiers changed from: package-private */
-            public Object readString(CodedInputStream input) throws IOException {
+        STRICT { // from class: com.android.framework.protobuf.WireFormat.Utf8Validation.2
+            @Override // com.android.framework.protobuf.WireFormat.Utf8Validation
+            Object readString(CodedInputStream input) throws IOException {
                 return input.readStringRequireUtf8();
             }
         },
-        LAZY {
-            /* access modifiers changed from: package-private */
-            public Object readString(CodedInputStream input) throws IOException {
+        LAZY { // from class: com.android.framework.protobuf.WireFormat.Utf8Validation.3
+            @Override // com.android.framework.protobuf.WireFormat.Utf8Validation
+            Object readString(CodedInputStream input) throws IOException {
                 return input.readBytes();
             }
         };
 
-        /* access modifiers changed from: package-private */
-        public abstract Object readString(CodedInputStream codedInputStream) throws IOException;
+        abstract Object readString(CodedInputStream codedInputStream) throws IOException;
     }
 
     private WireFormat() {
@@ -58,6 +59,7 @@ public final class WireFormat {
         return (fieldNumber << 3) | wireType;
     }
 
+    /* loaded from: classes4.dex */
     public enum JavaType {
         INT(0),
         LONG(0L),
@@ -66,21 +68,21 @@ public final class WireFormat {
         BOOLEAN(false),
         STRING(""),
         BYTE_STRING(ByteString.EMPTY),
-        ENUM((String) null),
-        MESSAGE((String) null);
+        ENUM(null),
+        MESSAGE(null);
         
         private final Object defaultDefault;
 
-        private JavaType(Object defaultDefault2) {
-            this.defaultDefault = defaultDefault2;
+        JavaType(Object defaultDefault) {
+            this.defaultDefault = defaultDefault;
         }
 
-        /* access modifiers changed from: package-private */
-        public Object getDefaultDefault() {
+        Object getDefaultDefault() {
             return this.defaultDefault;
         }
     }
 
+    /* loaded from: classes4.dex */
     public enum FieldType {
         DOUBLE(JavaType.DOUBLE, 1),
         FLOAT(JavaType.FLOAT, 5),
@@ -90,22 +92,26 @@ public final class WireFormat {
         FIXED64(JavaType.LONG, 1),
         FIXED32(JavaType.INT, 5),
         BOOL(JavaType.BOOLEAN, 0),
-        STRING(JavaType.STRING, 2) {
+        STRING(JavaType.STRING, 2) { // from class: com.android.framework.protobuf.WireFormat.FieldType.1
+            @Override // com.android.framework.protobuf.WireFormat.FieldType
             public boolean isPackable() {
                 return false;
             }
         },
-        GROUP(JavaType.MESSAGE, 3) {
+        GROUP(JavaType.MESSAGE, 3) { // from class: com.android.framework.protobuf.WireFormat.FieldType.2
+            @Override // com.android.framework.protobuf.WireFormat.FieldType
             public boolean isPackable() {
                 return false;
             }
         },
-        MESSAGE(JavaType.MESSAGE, 2) {
+        MESSAGE(JavaType.MESSAGE, 2) { // from class: com.android.framework.protobuf.WireFormat.FieldType.3
+            @Override // com.android.framework.protobuf.WireFormat.FieldType
             public boolean isPackable() {
                 return false;
             }
         },
-        BYTES(JavaType.BYTE_STRING, 2) {
+        BYTES(JavaType.BYTE_STRING, 2) { // from class: com.android.framework.protobuf.WireFormat.FieldType.4
+            @Override // com.android.framework.protobuf.WireFormat.FieldType
             public boolean isPackable() {
                 return false;
             }
@@ -120,9 +126,9 @@ public final class WireFormat {
         private final JavaType javaType;
         private final int wireType;
 
-        private FieldType(JavaType javaType2, int wireType2) {
-            this.javaType = javaType2;
-            this.wireType = wireType2;
+        FieldType(JavaType javaType, int wireType) {
+            this.javaType = javaType;
+            this.wireType = wireType;
         }
 
         public JavaType getJavaType() {

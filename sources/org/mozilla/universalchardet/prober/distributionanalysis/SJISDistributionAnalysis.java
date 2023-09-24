@@ -1,7 +1,6 @@
 package org.mozilla.universalchardet.prober.distributionanalysis;
 
-import com.android.internal.midi.MidiConstants;
-
+/* loaded from: classes5.dex */
 public class SJISDistributionAnalysis extends JISDistributionAnalysis {
     public static final int HIGHBYTE_BEGIN_1 = 129;
     public static final int HIGHBYTE_BEGIN_2 = 224;
@@ -10,20 +9,20 @@ public class SJISDistributionAnalysis extends JISDistributionAnalysis {
     public static final int LOWBYTE_BEGIN_1 = 64;
     public static final int LOWBYTE_BEGIN_2 = 128;
 
-    /* access modifiers changed from: protected */
-    public int getOrder(byte[] bArr, int i) {
+    @Override // org.mozilla.universalchardet.prober.distributionanalysis.CharDistributionAnalysis
+    protected int getOrder(byte[] bArr, int i) {
         int i2;
-        byte b = bArr[i] & 255;
-        if (b >= 129 && b <= 159) {
-            i2 = b - 129;
-        } else if (b < 224 || b > 239) {
+        int i3 = bArr[i] & 255;
+        if (i3 >= 129 && i3 <= 159) {
+            i2 = i3 - 129;
+        } else if (i3 < 224 || i3 > 239) {
             return -1;
         } else {
-            i2 = (b - MidiConstants.STATUS_PITCH_BEND) + 31;
+            i2 = (i3 - 224) + 31;
         }
-        int i3 = i2 * 188;
-        byte b2 = bArr[i + 1] & 255;
-        int i4 = i3 + (b2 - 64);
-        return b2 >= 128 ? i4 - 1 : i4;
+        int i4 = i2 * 188;
+        int i5 = bArr[i + 1] & 255;
+        int i6 = i4 + (i5 - 64);
+        return i5 >= 128 ? i6 - 1 : i6;
     }
 }

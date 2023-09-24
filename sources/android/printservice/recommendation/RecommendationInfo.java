@@ -1,8 +1,8 @@
 package android.printservice.recommendation;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.util.Preconditions;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -10,12 +10,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class RecommendationInfo implements Parcelable {
-    public static final Parcelable.Creator<RecommendationInfo> CREATOR = new Parcelable.Creator<RecommendationInfo>() {
+    public static final Parcelable.Creator<RecommendationInfo> CREATOR = new Parcelable.Creator<RecommendationInfo>() { // from class: android.printservice.recommendation.RecommendationInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RecommendationInfo createFromParcel(Parcel in) {
             return new RecommendationInfo(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RecommendationInfo[] newArray(int size) {
             return new RecommendationInfo[size];
         }
@@ -40,11 +45,9 @@ public final class RecommendationInfo implements Parcelable {
     private static ArrayList<InetAddress> readDiscoveredPrinters(Parcel parcel) {
         int numDiscoveredPrinters = parcel.readInt();
         ArrayList<InetAddress> discoveredPrinters = new ArrayList<>(numDiscoveredPrinters);
-        int i = 0;
-        while (i < numDiscoveredPrinters) {
+        for (int i = 0; i < numDiscoveredPrinters; i++) {
             try {
                 discoveredPrinters.add(InetAddress.getByAddress(parcel.readBlob()));
-                i++;
             } catch (UnknownHostException e) {
                 throw new IllegalArgumentException(e);
             }
@@ -52,9 +55,8 @@ public final class RecommendationInfo implements Parcelable {
         return discoveredPrinters;
     }
 
-    /* JADX INFO: this call moved to the top of the method (can break code semantics) */
     private RecommendationInfo(Parcel parcel) {
-        this(parcel.readCharSequence(), parcel.readCharSequence(), (List<InetAddress>) readDiscoveredPrinters(parcel), parcel.readByte() != 0);
+        this(parcel.readCharSequence(), parcel.readCharSequence(), readDiscoveredPrinters(parcel), parcel.readByte() != 0);
     }
 
     public CharSequence getPackageName() {
@@ -77,17 +79,20 @@ public final class RecommendationInfo implements Parcelable {
         return this.mName;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeCharSequence(this.mPackageName);
         dest.writeCharSequence(this.mName);
-        dest.writeInt(this.mDiscoveredPrinters.size());
+        int numDiscoveredPrinters = this.mDiscoveredPrinters.size();
+        dest.writeInt(numDiscoveredPrinters);
         for (InetAddress printer : this.mDiscoveredPrinters) {
             dest.writeBlob(printer.getAddress());
         }
-        dest.writeByte(this.mRecommendsMultiVendorService ? (byte) 1 : 0);
+        dest.writeByte(this.mRecommendsMultiVendorService ? (byte) 1 : (byte) 0);
     }
 }

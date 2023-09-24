@@ -3,28 +3,35 @@ package android.text;
 import android.annotation.UnsupportedAppUsage;
 import android.graphics.Paint;
 
+/* loaded from: classes4.dex */
 public class TextPaint extends Paint {
     public int baselineShift;
     public int bgColor;
-    public float density = 1.0f;
+    public float density;
     public int[] drawableState;
     public int linkColor;
-    public int underlineColor = 0;
+    public int underlineColor;
     public float underlineThickness;
 
     public TextPaint() {
+        this.density = 1.0f;
+        this.underlineColor = 0;
     }
 
     public TextPaint(int flags) {
         super(flags);
+        this.density = 1.0f;
+        this.underlineColor = 0;
     }
 
     public TextPaint(Paint p) {
         super(p);
+        this.density = 1.0f;
+        this.underlineColor = 0;
     }
 
     public void set(TextPaint tp) {
-        super.set(tp);
+        super.set((Paint) tp);
         this.bgColor = tp.bgColor;
         this.baselineShift = tp.baselineShift;
         this.linkColor = tp.linkColor;
@@ -40,6 +47,7 @@ public class TextPaint extends Paint {
         this.underlineThickness = thickness;
     }
 
+    @Override // android.graphics.Paint
     public float getUnderlineThickness() {
         if (this.underlineColor != 0) {
             return this.underlineThickness;

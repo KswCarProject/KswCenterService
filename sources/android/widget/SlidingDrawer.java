@@ -1,6 +1,6 @@
 package android.widget;
 
-import android.R;
+import android.C0001R;
 import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -8,7 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.os.SystemClock;
+import android.p007os.SystemClock;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 @Deprecated
+/* loaded from: classes4.dex */
 public class SlidingDrawer extends ViewGroup {
     private static final int ANIMATION_FRAME_DURATION = 16;
     private static final int COLLAPSED_FULL_CLOSED = -10002;
@@ -29,8 +30,7 @@ public class SlidingDrawer extends ViewGroup {
     private static final int TAP_THRESHOLD = 6;
     private static final int VELOCITY_UNITS = 1000;
     private boolean mAllowSingleTap;
-    /* access modifiers changed from: private */
-    public boolean mAnimateOnClick;
+    private boolean mAnimateOnClick;
     private float mAnimatedAcceleration;
     private float mAnimatedVelocity;
     private boolean mAnimating;
@@ -47,8 +47,7 @@ public class SlidingDrawer extends ViewGroup {
     private final int mHandleId;
     private int mHandleWidth;
     private final Rect mInvalidate;
-    /* access modifiers changed from: private */
-    public boolean mLocked;
+    private boolean mLocked;
     private final int mMaximumAcceleration;
     private final int mMaximumMajorVelocity;
     private final int mMaximumMinorVelocity;
@@ -69,14 +68,17 @@ public class SlidingDrawer extends ViewGroup {
     private final int mVelocityUnits;
     private boolean mVertical;
 
+    /* loaded from: classes4.dex */
     public interface OnDrawerCloseListener {
         void onDrawerClosed();
     }
 
+    /* loaded from: classes4.dex */
     public interface OnDrawerOpenListener {
         void onDrawerOpened();
     }
 
+    /* loaded from: classes4.dex */
     public interface OnDrawerScrollListener {
         void onScrollEnded();
 
@@ -95,14 +97,16 @@ public class SlidingDrawer extends ViewGroup {
         super(context, attrs, defStyleAttr, defStyleRes);
         this.mFrame = new Rect();
         this.mInvalidate = new Rect();
-        this.mSlidingRunnable = new Runnable() {
+        this.mSlidingRunnable = new Runnable() { // from class: android.widget.SlidingDrawer.1
+            @Override // java.lang.Runnable
             public void run() {
                 SlidingDrawer.this.doAnimation();
             }
         };
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SlidingDrawer, defStyleAttr, defStyleRes);
-        saveAttributeDataForStyleable(context, R.styleable.SlidingDrawer, attrs, a, defStyleAttr, defStyleRes);
-        this.mVertical = a.getInt(0, 1) == 1;
+        TypedArray a = context.obtainStyledAttributes(attrs, C0001R.styleable.SlidingDrawer, defStyleAttr, defStyleRes);
+        saveAttributeDataForStyleable(context, C0001R.styleable.SlidingDrawer, attrs, a, defStyleAttr, defStyleRes);
+        int orientation = a.getInt(0, 1);
+        this.mVertical = orientation == 1;
         this.mBottomOffset = (int) a.getDimension(1, 0.0f);
         this.mTopOffset = (int) a.getDimension(2, 0.0f);
         this.mAllowSingleTap = a.getBoolean(3, true);
@@ -112,43 +116,42 @@ public class SlidingDrawer extends ViewGroup {
             int contentId = a.getResourceId(5, 0);
             if (contentId == 0) {
                 throw new IllegalArgumentException("The content attribute is required and must refer to a valid child.");
-            } else if (handleId != contentId) {
-                this.mHandleId = handleId;
-                this.mContentId = contentId;
-                float density = getResources().getDisplayMetrics().density;
-                this.mTapThreshold = (int) ((6.0f * density) + 0.5f);
-                this.mMaximumTapVelocity = (int) ((100.0f * density) + 0.5f);
-                this.mMaximumMinorVelocity = (int) ((MAXIMUM_MINOR_VELOCITY * density) + 0.5f);
-                this.mMaximumMajorVelocity = (int) ((MAXIMUM_MAJOR_VELOCITY * density) + 0.5f);
-                this.mMaximumAcceleration = (int) ((MAXIMUM_ACCELERATION * density) + 0.5f);
-                this.mVelocityUnits = (int) ((1000.0f * density) + 0.5f);
-                a.recycle();
-                setAlwaysDrawnWithCacheEnabled(false);
-            } else {
+            }
+            if (handleId == contentId) {
                 throw new IllegalArgumentException("The content and handle attributes must refer to different children.");
             }
-        } else {
-            throw new IllegalArgumentException("The handle attribute is required and must refer to a valid child.");
+            this.mHandleId = handleId;
+            this.mContentId = contentId;
+            float density = getResources().getDisplayMetrics().density;
+            this.mTapThreshold = (int) ((6.0f * density) + 0.5f);
+            this.mMaximumTapVelocity = (int) ((100.0f * density) + 0.5f);
+            this.mMaximumMinorVelocity = (int) ((MAXIMUM_MINOR_VELOCITY * density) + 0.5f);
+            this.mMaximumMajorVelocity = (int) ((MAXIMUM_MAJOR_VELOCITY * density) + 0.5f);
+            this.mMaximumAcceleration = (int) ((MAXIMUM_ACCELERATION * density) + 0.5f);
+            this.mVelocityUnits = (int) ((1000.0f * density) + 0.5f);
+            a.recycle();
+            setAlwaysDrawnWithCacheEnabled(false);
+            return;
         }
+        throw new IllegalArgumentException("The handle attribute is required and must refer to a valid child.");
     }
 
-    /* access modifiers changed from: protected */
-    public void onFinishInflate() {
+    @Override // android.view.View
+    protected void onFinishInflate() {
         this.mHandle = findViewById(this.mHandleId);
-        if (this.mHandle != null) {
-            this.mHandle.setOnClickListener(new DrawerToggler());
-            this.mContent = findViewById(this.mContentId);
-            if (this.mContent != null) {
-                this.mContent.setVisibility(8);
-                return;
-            }
+        if (this.mHandle == null) {
+            throw new IllegalArgumentException("The handle attribute is must refer to an existing child.");
+        }
+        this.mHandle.setOnClickListener(new DrawerToggler());
+        this.mContent = findViewById(this.mContentId);
+        if (this.mContent == null) {
             throw new IllegalArgumentException("The content attribute is must refer to an existing child.");
         }
-        throw new IllegalArgumentException("The handle attribute is must refer to an existing child.");
+        this.mContent.setVisibility(8);
     }
 
-    /* access modifiers changed from: protected */
-    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    @Override // android.view.View
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int widthSpecMode = View.MeasureSpec.getMode(widthMeasureSpec);
         int widthSpecSize = View.MeasureSpec.getSize(widthMeasureSpec);
         int heightSpecMode = View.MeasureSpec.getMode(heightMeasureSpec);
@@ -159,72 +162,75 @@ public class SlidingDrawer extends ViewGroup {
         View handle = this.mHandle;
         measureChild(handle, widthMeasureSpec, heightMeasureSpec);
         if (this.mVertical) {
-            this.mContent.measure(View.MeasureSpec.makeMeasureSpec(widthSpecSize, 1073741824), View.MeasureSpec.makeMeasureSpec((heightSpecSize - handle.getMeasuredHeight()) - this.mTopOffset, 1073741824));
+            int height = (heightSpecSize - handle.getMeasuredHeight()) - this.mTopOffset;
+            this.mContent.measure(View.MeasureSpec.makeMeasureSpec(widthSpecSize, 1073741824), View.MeasureSpec.makeMeasureSpec(height, 1073741824));
         } else {
-            this.mContent.measure(View.MeasureSpec.makeMeasureSpec((widthSpecSize - handle.getMeasuredWidth()) - this.mTopOffset, 1073741824), View.MeasureSpec.makeMeasureSpec(heightSpecSize, 1073741824));
+            int width = (widthSpecSize - handle.getMeasuredWidth()) - this.mTopOffset;
+            this.mContent.measure(View.MeasureSpec.makeMeasureSpec(width, 1073741824), View.MeasureSpec.makeMeasureSpec(heightSpecSize, 1073741824));
         }
         setMeasuredDimension(widthSpecSize, heightSpecSize);
     }
 
-    /* access modifiers changed from: protected */
-    public void dispatchDraw(Canvas canvas) {
-        float f;
+    @Override // android.view.ViewGroup, android.view.View
+    protected void dispatchDraw(Canvas canvas) {
+        float left;
         long drawingTime = getDrawingTime();
         View handle = this.mHandle;
         boolean isVertical = this.mVertical;
         drawChild(canvas, handle, drawingTime);
         if (this.mTracking || this.mAnimating) {
             Bitmap cache = this.mContent.getDrawingCache();
-            float f2 = 0.0f;
-            if (cache == null) {
-                canvas.save();
+            if (cache != null) {
                 if (isVertical) {
-                    f = 0.0f;
+                    canvas.drawBitmap(cache, 0.0f, handle.getBottom(), (Paint) null);
+                    return;
                 } else {
-                    f = (float) (handle.getLeft() - this.mTopOffset);
+                    canvas.drawBitmap(cache, handle.getRight(), 0.0f, (Paint) null);
+                    return;
                 }
-                if (isVertical) {
-                    f2 = (float) (handle.getTop() - this.mTopOffset);
-                }
-                canvas.translate(f, f2);
-                drawChild(canvas, this.mContent, drawingTime);
-                canvas.restore();
-            } else if (isVertical) {
-                canvas.drawBitmap(cache, 0.0f, (float) handle.getBottom(), (Paint) null);
-            } else {
-                canvas.drawBitmap(cache, (float) handle.getRight(), 0.0f, (Paint) null);
             }
+            canvas.save();
+            if (!isVertical) {
+                left = handle.getLeft() - this.mTopOffset;
+            } else {
+                left = 0.0f;
+            }
+            canvas.translate(left, isVertical ? handle.getTop() - this.mTopOffset : 0.0f);
+            drawChild(canvas, this.mContent, drawingTime);
+            canvas.restore();
         } else if (this.mExpanded) {
             drawChild(canvas, this.mContent, drawingTime);
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onLayout(boolean changed, int l, int t, int r, int b) {
-        int childTop;
+    @Override // android.view.ViewGroup, android.view.View
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
         int childLeft;
-        if (!this.mTracking) {
-            int width = r - l;
-            int height = b - t;
-            View handle = this.mHandle;
-            int childWidth = handle.getMeasuredWidth();
-            int childHeight = handle.getMeasuredHeight();
-            View content = this.mContent;
-            if (this.mVertical) {
-                childLeft = (width - childWidth) / 2;
-                childTop = this.mExpanded ? this.mTopOffset : (height - childHeight) + this.mBottomOffset;
-                content.layout(0, this.mTopOffset + childHeight, content.getMeasuredWidth(), this.mTopOffset + childHeight + content.getMeasuredHeight());
-            } else {
-                childLeft = this.mExpanded ? this.mTopOffset : (width - childWidth) + this.mBottomOffset;
-                childTop = (height - childHeight) / 2;
-                content.layout(this.mTopOffset + childWidth, 0, this.mTopOffset + childWidth + content.getMeasuredWidth(), content.getMeasuredHeight());
-            }
-            handle.layout(childLeft, childTop, childLeft + childWidth, childTop + childHeight);
-            this.mHandleHeight = handle.getHeight();
-            this.mHandleWidth = handle.getWidth();
+        int childTop;
+        if (this.mTracking) {
+            return;
         }
+        int width = r - l;
+        int height = b - t;
+        View handle = this.mHandle;
+        int childWidth = handle.getMeasuredWidth();
+        int childHeight = handle.getMeasuredHeight();
+        View content = this.mContent;
+        if (this.mVertical) {
+            childLeft = (width - childWidth) / 2;
+            childTop = this.mExpanded ? this.mTopOffset : (height - childHeight) + this.mBottomOffset;
+            content.layout(0, this.mTopOffset + childHeight, content.getMeasuredWidth(), this.mTopOffset + childHeight + content.getMeasuredHeight());
+        } else {
+            childLeft = this.mExpanded ? this.mTopOffset : (width - childWidth) + this.mBottomOffset;
+            childTop = (height - childHeight) / 2;
+            content.layout(this.mTopOffset + childWidth, 0, this.mTopOffset + childWidth + content.getMeasuredWidth(), content.getMeasuredHeight());
+        }
+        handle.layout(childLeft, childTop, childLeft + childWidth, childTop + childHeight);
+        this.mHandleHeight = handle.getHeight();
+        this.mHandleWidth = handle.getWidth();
     }
 
+    @Override // android.view.ViewGroup
     public boolean onInterceptTouchEvent(MotionEvent event) {
         if (this.mLocked) {
             return false;
@@ -235,30 +241,81 @@ public class SlidingDrawer extends ViewGroup {
         Rect frame = this.mFrame;
         View handle = this.mHandle;
         handle.getHitRect(frame);
-        if (!this.mTracking && !frame.contains((int) x, (int) y)) {
-            return false;
-        }
-        if (action == 0) {
-            this.mTracking = true;
-            handle.setPressed(true);
-            prepareContent();
-            if (this.mOnDrawerScrollListener != null) {
-                this.mOnDrawerScrollListener.onScrollStarted();
+        if (this.mTracking || frame.contains((int) x, (int) y)) {
+            if (action == 0) {
+                this.mTracking = true;
+                handle.setPressed(true);
+                prepareContent();
+                if (this.mOnDrawerScrollListener != null) {
+                    this.mOnDrawerScrollListener.onScrollStarted();
+                }
+                if (this.mVertical) {
+                    int top = this.mHandle.getTop();
+                    this.mTouchDelta = ((int) y) - top;
+                    prepareTracking(top);
+                } else {
+                    int left = this.mHandle.getLeft();
+                    this.mTouchDelta = ((int) x) - left;
+                    prepareTracking(left);
+                }
+                this.mVelocityTracker.addMovement(event);
             }
-            if (this.mVertical) {
-                int top = this.mHandle.getTop();
-                this.mTouchDelta = ((int) y) - top;
-                prepareTracking(top);
-            } else {
-                int left = this.mHandle.getLeft();
-                this.mTouchDelta = ((int) x) - left;
-                prepareTracking(left);
-            }
-            this.mVelocityTracker.addMovement(event);
+            return true;
         }
-        return true;
+        return false;
     }
 
+    /* JADX WARN: Code restructure failed: missing block: B:61:0x00d4, code lost:
+        if (r13.mAllowSingleTap == false) goto L47;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:62:0x00d6, code lost:
+        playSoundEffect(0);
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:63:0x00db, code lost:
+        if (r13.mExpanded == false) goto L43;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:64:0x00dd, code lost:
+        if (r6 == false) goto L42;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:65:0x00df, code lost:
+        r11 = r9;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:66:0x00e1, code lost:
+        r11 = r10;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:67:0x00e2, code lost:
+        animateClose(r11, true);
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:68:0x00e6, code lost:
+        if (r6 == false) goto L46;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:69:0x00e8, code lost:
+        r11 = r9;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:70:0x00ea, code lost:
+        r11 = r10;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:71:0x00eb, code lost:
+        animateOpen(r11, true);
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:72:0x00ef, code lost:
+        if (r6 == false) goto L50;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:73:0x00f1, code lost:
+        r11 = r9;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:74:0x00f3, code lost:
+        r11 = r10;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:75:0x00f4, code lost:
+        performFling(r11, r7, false, true);
+     */
+    /* JADX WARN: Removed duplicated region for block: B:77:0x00fa  */
+    /* JADX WARN: Removed duplicated region for block: B:78:0x00fc  */
+    @Override // android.view.View
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
     public boolean onTouchEvent(MotionEvent event) {
         boolean negative;
         if (this.mLocked) {
@@ -266,7 +323,8 @@ public class SlidingDrawer extends ViewGroup {
         }
         if (this.mTracking) {
             this.mVelocityTracker.addMovement(event);
-            switch (event.getAction()) {
+            int action = event.getAction();
+            switch (action) {
                 case 1:
                 case 3:
                     VelocityTracker velocityTracker = this.mVelocityTracker;
@@ -279,172 +337,99 @@ public class SlidingDrawer extends ViewGroup {
                         if (xVelocity < 0.0f) {
                             xVelocity = -xVelocity;
                         }
-                        if (xVelocity > ((float) this.mMaximumMinorVelocity)) {
-                            xVelocity = (float) this.mMaximumMinorVelocity;
+                        if (xVelocity > this.mMaximumMinorVelocity) {
+                            xVelocity = this.mMaximumMinorVelocity;
                         }
                     } else {
                         negative = xVelocity < 0.0f;
                         if (yVelocity < 0.0f) {
                             yVelocity = -yVelocity;
                         }
-                        if (yVelocity > ((float) this.mMaximumMinorVelocity)) {
-                            yVelocity = (float) this.mMaximumMinorVelocity;
+                        if (yVelocity > this.mMaximumMinorVelocity) {
+                            yVelocity = this.mMaximumMinorVelocity;
                         }
                     }
-                    float velocity = (float) Math.hypot((double) xVelocity, (double) yVelocity);
+                    float velocity = (float) Math.hypot(xVelocity, yVelocity);
                     if (negative) {
                         velocity = -velocity;
                     }
                     int top = this.mHandle.getTop();
                     int left = this.mHandle.getLeft();
-                    if (Math.abs(velocity) < ((float) this.mMaximumTapVelocity)) {
-                        if (!vertical ? !((!this.mExpanded || left >= this.mTapThreshold + this.mTopOffset) && (this.mExpanded || left <= (((this.mBottomOffset + this.mRight) - this.mLeft) - this.mHandleWidth) - this.mTapThreshold)) : !((!this.mExpanded || top >= this.mTapThreshold + this.mTopOffset) && (this.mExpanded || top <= (((this.mBottomOffset + this.mBottom) - this.mTop) - this.mHandleHeight) - this.mTapThreshold))) {
-                            if (!this.mAllowSingleTap) {
-                                performFling(vertical ? top : left, velocity, false, true);
-                                break;
-                            } else {
-                                playSoundEffect(0);
-                                if (!this.mExpanded) {
-                                    animateOpen(vertical ? top : left, true);
-                                    break;
-                                } else {
-                                    animateClose(vertical ? top : left, true);
-                                    break;
-                                }
-                            }
+                    if (Math.abs(velocity) < this.mMaximumTapVelocity) {
+                        if (vertical) {
+                            performFling(!vertical ? top : left, velocity, false, true);
+                            break;
                         } else {
-                            performFling(vertical ? top : left, velocity, false, true);
+                            performFling(!vertical ? top : left, velocity, false, true);
                             break;
                         }
                     } else {
                         performFling(vertical ? top : left, velocity, false, true);
                         break;
                     }
-                    break;
                 case 2:
                     moveHandle(((int) (this.mVertical ? event.getY() : event.getX())) - this.mTouchDelta);
                     break;
             }
         }
-        if (this.mTracking != 0 || this.mAnimating || super.onTouchEvent(event)) {
-            return true;
-        }
-        return false;
+        return this.mTracking || this.mAnimating || super.onTouchEvent(event);
     }
 
     private void animateClose(int position, boolean notifyScrollListener) {
         prepareTracking(position);
-        performFling(position, (float) this.mMaximumAcceleration, true, notifyScrollListener);
+        performFling(position, this.mMaximumAcceleration, true, notifyScrollListener);
     }
 
     private void animateOpen(int position, boolean notifyScrollListener) {
         prepareTracking(position);
-        performFling(position, (float) (-this.mMaximumAcceleration), true, notifyScrollListener);
+        performFling(position, -this.mMaximumAcceleration, true, notifyScrollListener);
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:29:0x0063, code lost:
-        if (r8 > ((float) (-r6.mMaximumMajorVelocity))) goto L_0x0065;
+    /* JADX WARN: Code restructure failed: missing block: B:32:0x0063, code lost:
+        if (r8 > (-r6.mMaximumMajorVelocity)) goto L34;
      */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    private void performFling(int r7, float r8, boolean r9, boolean r10) {
-        /*
-            r6 = this;
-            float r0 = (float) r7
-            r6.mAnimationPosition = r0
-            r6.mAnimatedVelocity = r8
-            boolean r0 = r6.mExpanded
-            r1 = 0
-            if (r0 == 0) goto L_0x0043
-            if (r9 != 0) goto L_0x0037
-            int r0 = r6.mMaximumMajorVelocity
-            float r0 = (float) r0
-            int r0 = (r8 > r0 ? 1 : (r8 == r0 ? 0 : -1))
-            if (r0 > 0) goto L_0x0037
-            int r0 = r6.mTopOffset
-            boolean r2 = r6.mVertical
-            if (r2 == 0) goto L_0x001c
-            int r2 = r6.mHandleHeight
-            goto L_0x001e
-        L_0x001c:
-            int r2 = r6.mHandleWidth
-        L_0x001e:
-            int r0 = r0 + r2
-            if (r7 <= r0) goto L_0x002a
-            int r0 = r6.mMaximumMajorVelocity
-            int r0 = -r0
-            float r0 = (float) r0
-            int r0 = (r8 > r0 ? 1 : (r8 == r0 ? 0 : -1))
-            if (r0 <= 0) goto L_0x002a
-            goto L_0x0037
-        L_0x002a:
-            int r0 = r6.mMaximumAcceleration
-            int r0 = -r0
-            float r0 = (float) r0
-            r6.mAnimatedAcceleration = r0
-            int r0 = (r8 > r1 ? 1 : (r8 == r1 ? 0 : -1))
-            if (r0 <= 0) goto L_0x007d
-            r6.mAnimatedVelocity = r1
-            goto L_0x007d
-        L_0x0037:
-            int r0 = r6.mMaximumAcceleration
-            float r0 = (float) r0
-            r6.mAnimatedAcceleration = r0
-            int r0 = (r8 > r1 ? 1 : (r8 == r1 ? 0 : -1))
-            if (r0 >= 0) goto L_0x007d
-            r6.mAnimatedVelocity = r1
-            goto L_0x007d
-        L_0x0043:
-            if (r9 != 0) goto L_0x0071
-            int r0 = r6.mMaximumMajorVelocity
-            float r0 = (float) r0
-            int r0 = (r8 > r0 ? 1 : (r8 == r0 ? 0 : -1))
-            if (r0 > 0) goto L_0x0065
-            boolean r0 = r6.mVertical
-            if (r0 == 0) goto L_0x0055
-            int r0 = r6.getHeight()
-            goto L_0x0059
-        L_0x0055:
-            int r0 = r6.getWidth()
-        L_0x0059:
-            int r0 = r0 / 2
-            if (r7 <= r0) goto L_0x0071
-            int r0 = r6.mMaximumMajorVelocity
-            int r0 = -r0
-            float r0 = (float) r0
-            int r0 = (r8 > r0 ? 1 : (r8 == r0 ? 0 : -1))
-            if (r0 <= 0) goto L_0x0071
-        L_0x0065:
-            int r0 = r6.mMaximumAcceleration
-            float r0 = (float) r0
-            r6.mAnimatedAcceleration = r0
-            int r0 = (r8 > r1 ? 1 : (r8 == r1 ? 0 : -1))
-            if (r0 >= 0) goto L_0x007d
-            r6.mAnimatedVelocity = r1
-            goto L_0x007d
-        L_0x0071:
-            int r0 = r6.mMaximumAcceleration
-            int r0 = -r0
-            float r0 = (float) r0
-            r6.mAnimatedAcceleration = r0
-            int r0 = (r8 > r1 ? 1 : (r8 == r1 ? 0 : -1))
-            if (r0 <= 0) goto L_0x007d
-            r6.mAnimatedVelocity = r1
-        L_0x007d:
-            long r0 = android.os.SystemClock.uptimeMillis()
-            r6.mAnimationLastTime = r0
-            r2 = 16
-            long r4 = r0 + r2
-            r6.mCurrentAnimationTime = r4
-            r4 = 1
-            r6.mAnimating = r4
-            java.lang.Runnable r4 = r6.mSlidingRunnable
-            r6.removeCallbacks(r4)
-            java.lang.Runnable r4 = r6.mSlidingRunnable
-            r6.postDelayed(r4, r2)
-            r6.stopTracking(r10)
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.widget.SlidingDrawer.performFling(int, float, boolean, boolean):void");
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    private void performFling(int position, float velocity, boolean always, boolean notifyScrollListener) {
+        this.mAnimationPosition = position;
+        this.mAnimatedVelocity = velocity;
+        if (this.mExpanded) {
+            if (!always && velocity <= this.mMaximumMajorVelocity) {
+                if (position <= this.mTopOffset + (this.mVertical ? this.mHandleHeight : this.mHandleWidth) || velocity <= (-this.mMaximumMajorVelocity)) {
+                    this.mAnimatedAcceleration = -this.mMaximumAcceleration;
+                    if (velocity > 0.0f) {
+                        this.mAnimatedVelocity = 0.0f;
+                    }
+                }
+            }
+            this.mAnimatedAcceleration = this.mMaximumAcceleration;
+            if (velocity < 0.0f) {
+                this.mAnimatedVelocity = 0.0f;
+            }
+        } else {
+            if (!always) {
+                if (velocity <= this.mMaximumMajorVelocity) {
+                    if (position > (this.mVertical ? getHeight() : getWidth()) / 2) {
+                    }
+                }
+                this.mAnimatedAcceleration = this.mMaximumAcceleration;
+                if (velocity < 0.0f) {
+                    this.mAnimatedVelocity = 0.0f;
+                }
+            }
+            this.mAnimatedAcceleration = -this.mMaximumAcceleration;
+            if (velocity > 0.0f) {
+                this.mAnimatedVelocity = 0.0f;
+            }
+        }
+        long now = SystemClock.uptimeMillis();
+        this.mAnimationLastTime = now;
+        this.mCurrentAnimationTime = now + 16;
+        this.mAnimating = true;
+        removeCallbacks(this.mSlidingRunnable);
+        postDelayed(this.mSlidingRunnable, 16L);
+        stopTracking(notifyScrollListener);
     }
 
     @UnsupportedAppUsage
@@ -453,9 +438,10 @@ public class SlidingDrawer extends ViewGroup {
         int i;
         this.mTracking = true;
         this.mVelocityTracker = VelocityTracker.obtain();
-        if (!this.mExpanded) {
-            this.mAnimatedAcceleration = (float) this.mMaximumAcceleration;
-            this.mAnimatedVelocity = (float) this.mMaximumMajorVelocity;
+        boolean opening = !this.mExpanded;
+        if (opening) {
+            this.mAnimatedAcceleration = this.mMaximumAcceleration;
+            this.mAnimatedVelocity = this.mMaximumMajorVelocity;
             int i2 = this.mBottomOffset;
             if (this.mVertical) {
                 width = getHeight();
@@ -464,7 +450,7 @@ public class SlidingDrawer extends ViewGroup {
                 width = getWidth();
                 i = this.mHandleWidth;
             }
-            this.mAnimationPosition = (float) (i2 + (width - i));
+            this.mAnimationPosition = i2 + (width - i);
             moveHandle((int) this.mAnimationPosition);
             this.mAnimating = true;
             removeCallbacks(this.mSlidingRunnable);
@@ -534,25 +520,28 @@ public class SlidingDrawer extends ViewGroup {
 
     @UnsupportedAppUsage
     private void prepareContent() {
-        if (!this.mAnimating) {
-            View content = this.mContent;
-            if (content.isLayoutRequested()) {
-                if (this.mVertical) {
-                    int childHeight = this.mHandleHeight;
-                    content.measure(View.MeasureSpec.makeMeasureSpec(this.mRight - this.mLeft, 1073741824), View.MeasureSpec.makeMeasureSpec(((this.mBottom - this.mTop) - childHeight) - this.mTopOffset, 1073741824));
-                    content.layout(0, this.mTopOffset + childHeight, content.getMeasuredWidth(), this.mTopOffset + childHeight + content.getMeasuredHeight());
-                } else {
-                    int childWidth = this.mHandle.getWidth();
-                    content.measure(View.MeasureSpec.makeMeasureSpec(((this.mRight - this.mLeft) - childWidth) - this.mTopOffset, 1073741824), View.MeasureSpec.makeMeasureSpec(this.mBottom - this.mTop, 1073741824));
-                    content.layout(this.mTopOffset + childWidth, 0, this.mTopOffset + childWidth + content.getMeasuredWidth(), content.getMeasuredHeight());
-                }
-            }
-            content.getViewTreeObserver().dispatchOnPreDraw();
-            if (!content.isHardwareAccelerated()) {
-                content.buildDrawingCache();
-            }
-            content.setVisibility(8);
+        if (this.mAnimating) {
+            return;
         }
+        View content = this.mContent;
+        if (content.isLayoutRequested()) {
+            if (this.mVertical) {
+                int childHeight = this.mHandleHeight;
+                int height = ((this.mBottom - this.mTop) - childHeight) - this.mTopOffset;
+                content.measure(View.MeasureSpec.makeMeasureSpec(this.mRight - this.mLeft, 1073741824), View.MeasureSpec.makeMeasureSpec(height, 1073741824));
+                content.layout(0, this.mTopOffset + childHeight, content.getMeasuredWidth(), this.mTopOffset + childHeight + content.getMeasuredHeight());
+            } else {
+                int childWidth = this.mHandle.getWidth();
+                int width = ((this.mRight - this.mLeft) - childWidth) - this.mTopOffset;
+                content.measure(View.MeasureSpec.makeMeasureSpec(width, 1073741824), View.MeasureSpec.makeMeasureSpec(this.mBottom - this.mTop, 1073741824));
+                content.layout(this.mTopOffset + childWidth, 0, this.mTopOffset + childWidth + content.getMeasuredWidth(), content.getMeasuredHeight());
+            }
+        }
+        content.getViewTreeObserver().dispatchOnPreDraw();
+        if (!content.isHardwareAccelerated()) {
+            content.buildDrawingCache();
+        }
+        content.setVisibility(8);
     }
 
     private void stopTracking(boolean notifyScrollListener) {
@@ -567,20 +556,20 @@ public class SlidingDrawer extends ViewGroup {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void doAnimation() {
         if (this.mAnimating) {
             incrementAnimation();
-            if (this.mAnimationPosition >= ((float) ((this.mBottomOffset + (this.mVertical ? getHeight() : getWidth())) - 1))) {
+            if (this.mAnimationPosition >= (this.mBottomOffset + (this.mVertical ? getHeight() : getWidth())) - 1) {
                 this.mAnimating = false;
                 closeDrawer();
-            } else if (this.mAnimationPosition < ((float) this.mTopOffset)) {
+            } else if (this.mAnimationPosition < this.mTopOffset) {
                 this.mAnimating = false;
                 openDrawer();
             } else {
                 moveHandle((int) this.mAnimationPosition);
                 this.mCurrentAnimationTime += 16;
-                postDelayed(this.mSlidingRunnable, 16);
+                postDelayed(this.mSlidingRunnable, 16L);
             }
         }
     }
@@ -652,6 +641,7 @@ public class SlidingDrawer extends ViewGroup {
         }
     }
 
+    @Override // android.view.ViewGroup, android.view.View
     public CharSequence getAccessibilityClassName() {
         return SlidingDrawer.class.getName();
     }
@@ -660,22 +650,24 @@ public class SlidingDrawer extends ViewGroup {
         moveHandle(COLLAPSED_FULL_CLOSED);
         this.mContent.setVisibility(8);
         this.mContent.destroyDrawingCache();
-        if (this.mExpanded) {
-            this.mExpanded = false;
-            if (this.mOnDrawerCloseListener != null) {
-                this.mOnDrawerCloseListener.onDrawerClosed();
-            }
+        if (!this.mExpanded) {
+            return;
+        }
+        this.mExpanded = false;
+        if (this.mOnDrawerCloseListener != null) {
+            this.mOnDrawerCloseListener.onDrawerClosed();
         }
     }
 
     private void openDrawer() {
         moveHandle(EXPANDED_FULL_OPEN);
         this.mContent.setVisibility(0);
-        if (!this.mExpanded) {
-            this.mExpanded = true;
-            if (this.mOnDrawerOpenListener != null) {
-                this.mOnDrawerOpenListener.onDrawerOpened();
-            }
+        if (this.mExpanded) {
+            return;
+        }
+        this.mExpanded = true;
+        if (this.mOnDrawerOpenListener != null) {
+            this.mOnDrawerOpenListener.onDrawerOpened();
         }
     }
 
@@ -715,10 +707,12 @@ public class SlidingDrawer extends ViewGroup {
         return this.mTracking || this.mAnimating;
     }
 
+    /* loaded from: classes4.dex */
     private class DrawerToggler implements View.OnClickListener {
         private DrawerToggler() {
         }
 
+        @Override // android.view.View.OnClickListener
         public void onClick(View v) {
             if (!SlidingDrawer.this.mLocked) {
                 if (SlidingDrawer.this.mAnimateOnClick) {

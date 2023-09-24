@@ -2,13 +2,14 @@ package com.android.internal.infra;
 
 import android.content.ComponentName;
 import android.content.Context;
-import android.os.Handler;
-import android.os.IInterface;
+import android.p007os.Handler;
+import android.p007os.IInterface;
 import android.util.Slog;
 import com.android.internal.infra.AbstractRemoteService;
 import com.android.internal.infra.AbstractSinglePendingRequestRemoteService;
 import java.io.PrintWriter;
 
+/* loaded from: classes4.dex */
 public abstract class AbstractSinglePendingRequestRemoteService<S extends AbstractSinglePendingRequestRemoteService<S, I>, I extends IInterface> extends AbstractRemoteService<S, I> {
     protected AbstractRemoteService.BasePendingRequest<S, I> mPendingRequest;
 
@@ -16,8 +17,8 @@ public abstract class AbstractSinglePendingRequestRemoteService<S extends Abstra
         super(context, serviceInterface, componentName, userId, callback, handler, bindingFlags, verbose);
     }
 
-    /* access modifiers changed from: package-private */
-    public void handlePendingRequests() {
+    @Override // com.android.internal.infra.AbstractRemoteService
+    void handlePendingRequests() {
         if (this.mPendingRequest != null) {
             AbstractRemoteService.BasePendingRequest<S, I> pendingRequest = this.mPendingRequest;
             this.mPendingRequest = null;
@@ -25,13 +26,12 @@ public abstract class AbstractSinglePendingRequestRemoteService<S extends Abstra
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void handleOnDestroy() {
+    @Override // com.android.internal.infra.AbstractRemoteService
+    protected void handleOnDestroy() {
         handleCancelPendingRequest();
     }
 
-    /* access modifiers changed from: protected */
-    public AbstractRemoteService.BasePendingRequest<S, I> handleCancelPendingRequest() {
+    protected AbstractRemoteService.BasePendingRequest<S, I> handleCancelPendingRequest() {
         AbstractRemoteService.BasePendingRequest<S, I> pendingRequest = this.mPendingRequest;
         if (pendingRequest != null) {
             pendingRequest.cancel();
@@ -40,29 +40,30 @@ public abstract class AbstractSinglePendingRequestRemoteService<S extends Abstra
         return pendingRequest;
     }
 
-    /* access modifiers changed from: package-private */
-    public void handleBindFailure() {
+    @Override // com.android.internal.infra.AbstractRemoteService
+    void handleBindFailure() {
         if (this.mPendingRequest != null) {
             if (this.mVerbose) {
                 String str = this.mTag;
-                Slog.v(str, "Sending failure to " + this.mPendingRequest);
+                Slog.m52v(str, "Sending failure to " + this.mPendingRequest);
             }
             this.mPendingRequest.onFailed();
             this.mPendingRequest = null;
         }
     }
 
+    @Override // com.android.internal.infra.AbstractRemoteService
     public void dump(String prefix, PrintWriter pw) {
         super.dump(prefix, pw);
-        pw.append(prefix).append("hasPendingRequest=").append(String.valueOf(this.mPendingRequest != null)).println();
+        pw.append((CharSequence) prefix).append("hasPendingRequest=").append((CharSequence) String.valueOf(this.mPendingRequest != null)).println();
     }
 
-    /* access modifiers changed from: package-private */
-    public void handlePendingRequestWhileUnBound(AbstractRemoteService.BasePendingRequest<S, I> pendingRequest) {
+    @Override // com.android.internal.infra.AbstractRemoteService
+    void handlePendingRequestWhileUnBound(AbstractRemoteService.BasePendingRequest<S, I> pendingRequest) {
         if (this.mPendingRequest != null) {
             if (this.mVerbose) {
                 String str = this.mTag;
-                Slog.v(str, "handlePendingRequestWhileUnBound(): cancelling " + this.mPendingRequest + " to handle " + pendingRequest);
+                Slog.m52v(str, "handlePendingRequestWhileUnBound(): cancelling " + this.mPendingRequest + " to handle " + pendingRequest);
             }
             this.mPendingRequest.cancel();
         }

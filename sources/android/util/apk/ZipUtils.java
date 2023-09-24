@@ -7,6 +7,7 @@ import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+/* loaded from: classes4.dex */
 abstract class ZipUtils {
     private static final int UINT16_MAX_VALUE = 65535;
     private static final int ZIP64_EOCD_LOCATOR_SIG_REVERSE_BYTE_ORDER = 1347094023;
@@ -21,7 +22,8 @@ abstract class ZipUtils {
     }
 
     static Pair<ByteBuffer, Long> findZipEndOfCentralDirectoryRecord(RandomAccessFile zip) throws IOException {
-        if (zip.length() < 22) {
+        long fileSize = zip.length();
+        if (fileSize < 22) {
             return null;
         }
         Pair<ByteBuffer, Long> result = findZipEndOfCentralDirectoryRecord(zip, 0);
@@ -39,9 +41,9 @@ abstract class ZipUtils {
         if (fileSize < 22) {
             return null;
         }
-        ByteBuffer buf = ByteBuffer.allocate(((int) Math.min((long) maxCommentSize, fileSize - 22)) + 22);
+        ByteBuffer buf = ByteBuffer.allocate(((int) Math.min(maxCommentSize, fileSize - 22)) + 22);
         buf.order(ByteOrder.LITTLE_ENDIAN);
-        long bufOffsetInFile = fileSize - ((long) buf.capacity());
+        long bufOffsetInFile = fileSize - buf.capacity();
         zip.seek(bufOffsetInFile);
         zip.readFully(buf.array(), buf.arrayOffset(), buf.capacity());
         int eocdOffsetInBuf = findZipEndOfCentralDirectoryRecord(buf);
@@ -51,7 +53,7 @@ abstract class ZipUtils {
         buf.position(eocdOffsetInBuf);
         ByteBuffer eocd = buf.slice();
         eocd.order(ByteOrder.LITTLE_ENDIAN);
-        return Pair.create(eocd, Long.valueOf(((long) eocdOffsetInBuf) + bufOffsetInFile));
+        return Pair.create(eocd, Long.valueOf(eocdOffsetInBuf + bufOffsetInFile));
     }
 
     private static int findZipEndOfCentralDirectoryRecord(ByteBuffer zipContents) {
@@ -64,8 +66,11 @@ abstract class ZipUtils {
         int eocdWithEmptyCommentStartPosition = archiveSize - 22;
         for (int expectedCommentLength = 0; expectedCommentLength <= maxCommentLength; expectedCommentLength++) {
             int eocdStartPos = eocdWithEmptyCommentStartPosition - expectedCommentLength;
-            if (zipContents.getInt(eocdStartPos) == ZIP_EOCD_REC_SIG && getUnsignedInt16(zipContents, eocdStartPos + 20) == expectedCommentLength) {
-                return eocdStartPos;
+            if (zipContents.getInt(eocdStartPos) == ZIP_EOCD_REC_SIG) {
+                int actualCommentLength = getUnsignedInt16(zipContents, eocdStartPos + 20);
+                if (actualCommentLength == expectedCommentLength) {
+                    return eocdStartPos;
+                }
             }
         }
         return -1;
@@ -77,10 +82,7 @@ abstract class ZipUtils {
             return false;
         }
         zip.seek(locatorPosition);
-        if (zip.readInt() == ZIP64_EOCD_LOCATOR_SIG_REVERSE_BYTE_ORDER) {
-            return true;
-        }
-        return false;
+        return zip.readInt() == ZIP64_EOCD_LOCATOR_SIG_REVERSE_BYTE_ORDER;
     }
 
     public static long getZipEocdCentralDirectoryOffset(ByteBuffer zipEndOfCentralDirectory) {
@@ -109,7 +111,7 @@ abstract class ZipUtils {
     }
 
     private static long getUnsignedInt32(ByteBuffer buffer, int offset) {
-        return ((long) buffer.getInt(offset)) & 4294967295L;
+        return buffer.getInt(offset) & 4294967295L;
     }
 
     private static void setUnsignedInt32(ByteBuffer buffer, int offset, long value) {

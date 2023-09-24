@@ -8,15 +8,16 @@ import android.app.ActivityTaskManager;
 import android.app.ActivityThread;
 import android.app.VoiceInteractor;
 import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.ActivityInfo;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.LabeledIntent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.content.pm.UserInfo;
+import android.content.p002pm.ActivityInfo;
+import android.content.p002pm.ApplicationInfo;
+import android.content.p002pm.LabeledIntent;
+import android.content.p002pm.PackageManager;
+import android.content.p002pm.ResolveInfo;
+import android.content.p002pm.UserInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -27,15 +28,15 @@ import android.graphics.Insets;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.Parcelable;
-import android.os.Process;
-import android.os.RemoteException;
-import android.os.StrictMode;
-import android.os.UserHandle;
-import android.os.UserManager;
+import android.p007os.AsyncTask;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.PatternMatcher;
+import android.p007os.Process;
+import android.p007os.RemoteException;
+import android.p007os.StrictMode;
+import android.p007os.UserHandle;
+import android.p007os.UserManager;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.provider.SettingsStringUtil;
@@ -51,12 +52,11 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Space;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.content.PackageMonitor;
 import com.android.internal.logging.MetricsLogger;
@@ -69,6 +69,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+/* loaded from: classes4.dex */
 public class ResolverActivity extends Activity {
     private static final boolean DEBUG = false;
     private static final String EXTRA_FRAGMENT_ARG_KEY = ":settings:fragment_args_key";
@@ -78,42 +79,36 @@ public class ResolverActivity extends Activity {
     @UnsupportedAppUsage
     protected ResolveListAdapter mAdapter;
     protected AbsListView mAdapterView;
-    /* access modifiers changed from: private */
-    public Button mAlwaysButton;
+    private Button mAlwaysButton;
     private int mDefaultTitleResId;
-    boolean mEnableChooserDelegate = true;
-    private Space mFooterSpacer = null;
     private int mIconDpi;
-    private final ArrayList<Intent> mIntents = new ArrayList<>();
-    /* access modifiers changed from: private */
-    public int mLastSelected = -1;
     protected int mLaunchedFromUid;
     private int mLayoutId;
-    /* access modifiers changed from: private */
-    public Button mOnceButton;
-    private final PackageMonitor mPackageMonitor = createPackageMonitor();
-    /* access modifiers changed from: private */
-    public PickTargetOptionRequest mPickOptionRequest;
+    private Button mOnceButton;
+    private PickTargetOptionRequest mPickOptionRequest;
     @UnsupportedAppUsage
     protected PackageManager mPm;
-    /* access modifiers changed from: private */
-    public Runnable mPostListReadyRunnable;
-    private int mProfileSwitchMessageId = -1;
+    private Runnable mPostListReadyRunnable;
     protected View mProfileView;
     private String mReferrerPackage;
     private boolean mRegistered;
     protected ResolverDrawerLayout mResolverDrawerLayout;
-    private boolean mResolvingHome = false;
     private boolean mRetainInOnStop;
     private boolean mSafeForwardingMode;
     private boolean mSupportsAlwaysUseOption;
-    /* access modifiers changed from: private */
-    public ColorMatrixColorFilter mSuspendedMatrixColorFilter;
-    protected Insets mSystemWindowInsets = null;
+    private ColorMatrixColorFilter mSuspendedMatrixColorFilter;
     private CharSequence mTitle;
-    /* access modifiers changed from: private */
-    public boolean mUseLayoutForBrowsables;
+    private boolean mUseLayoutForBrowsables;
+    boolean mEnableChooserDelegate = true;
+    private int mLastSelected = -1;
+    private boolean mResolvingHome = false;
+    private int mProfileSwitchMessageId = -1;
+    private final ArrayList<Intent> mIntents = new ArrayList<>();
+    protected Insets mSystemWindowInsets = null;
+    private Space mFooterSpacer = null;
+    private final PackageMonitor mPackageMonitor = createPackageMonitor();
 
+    /* loaded from: classes4.dex */
     public interface TargetInfo {
         TargetInfo cloneFilledIn(Intent intent, int i);
 
@@ -144,15 +139,16 @@ public class ResolverActivity extends Activity {
         return ActionTitle.forAction(action).labelRes;
     }
 
+    /* loaded from: classes4.dex */
     private enum ActionTitle {
-        VIEW("android.intent.action.VIEW", R.string.whichViewApplication, R.string.whichViewApplicationNamed, R.string.whichViewApplicationLabel),
-        EDIT(Intent.ACTION_EDIT, R.string.whichEditApplication, R.string.whichEditApplicationNamed, R.string.whichEditApplicationLabel),
-        SEND(Intent.ACTION_SEND, R.string.whichSendApplication, R.string.whichSendApplicationNamed, R.string.whichSendApplicationLabel),
-        SENDTO(Intent.ACTION_SENDTO, R.string.whichSendToApplication, R.string.whichSendToApplicationNamed, R.string.whichSendToApplicationLabel),
-        SEND_MULTIPLE(Intent.ACTION_SEND_MULTIPLE, R.string.whichSendApplication, R.string.whichSendApplicationNamed, R.string.whichSendApplicationLabel),
-        CAPTURE_IMAGE(MediaStore.ACTION_IMAGE_CAPTURE, R.string.whichImageCaptureApplication, R.string.whichImageCaptureApplicationNamed, R.string.whichImageCaptureApplicationLabel),
-        DEFAULT((String) null, R.string.whichApplication, R.string.whichApplicationNamed, R.string.whichApplicationLabel),
-        HOME(Intent.ACTION_MAIN, R.string.whichHomeApplication, R.string.whichHomeApplicationNamed, R.string.whichHomeApplicationLabel);
+        VIEW("android.intent.action.VIEW", C3132R.string.whichViewApplication, C3132R.string.whichViewApplicationNamed, C3132R.string.whichViewApplicationLabel),
+        EDIT(Intent.ACTION_EDIT, C3132R.string.whichEditApplication, C3132R.string.whichEditApplicationNamed, C3132R.string.whichEditApplicationLabel),
+        SEND(Intent.ACTION_SEND, C3132R.string.whichSendApplication, C3132R.string.whichSendApplicationNamed, C3132R.string.whichSendApplicationLabel),
+        SENDTO(Intent.ACTION_SENDTO, C3132R.string.whichSendToApplication, C3132R.string.whichSendToApplicationNamed, C3132R.string.whichSendToApplicationLabel),
+        SEND_MULTIPLE(Intent.ACTION_SEND_MULTIPLE, C3132R.string.whichSendApplication, C3132R.string.whichSendApplicationNamed, C3132R.string.whichSendApplicationLabel),
+        CAPTURE_IMAGE(MediaStore.ACTION_IMAGE_CAPTURE, C3132R.string.whichImageCaptureApplication, C3132R.string.whichImageCaptureApplicationNamed, C3132R.string.whichImageCaptureApplicationLabel),
+        DEFAULT(null, C3132R.string.whichApplication, C3132R.string.whichApplicationNamed, C3132R.string.whichApplicationLabel),
+        HOME(Intent.ACTION_MAIN, C3132R.string.whichHomeApplication, C3132R.string.whichHomeApplicationNamed, C3132R.string.whichHomeApplicationLabel);
         
         public static final int BROWSABLE_APP_TITLE_RES = 17041266;
         public static final int BROWSABLE_HOST_APP_TITLE_RES = 17041264;
@@ -163,16 +159,17 @@ public class ResolverActivity extends Activity {
         public final int namedTitleRes;
         public final int titleRes;
 
-        private ActionTitle(String action2, int titleRes2, int namedTitleRes2, int labelRes2) {
-            this.action = action2;
-            this.titleRes = titleRes2;
-            this.namedTitleRes = namedTitleRes2;
-            this.labelRes = labelRes2;
+        ActionTitle(String action, int titleRes, int namedTitleRes, int labelRes) {
+            this.action = action;
+            this.titleRes = titleRes;
+            this.namedTitleRes = namedTitleRes;
+            this.labelRes = labelRes;
         }
 
-        public static ActionTitle forAction(String action2) {
+        public static ActionTitle forAction(String action) {
+            ActionTitle[] values;
             for (ActionTitle title : values()) {
-                if (title != HOME && action2 != null && action2.equals(title.action)) {
+                if (title != HOME && action != null && action.equals(title.action)) {
                     return title;
                 }
             }
@@ -180,14 +177,15 @@ public class ResolverActivity extends Activity {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public PackageMonitor createPackageMonitor() {
-        return new PackageMonitor() {
+    protected PackageMonitor createPackageMonitor() {
+        return new PackageMonitor() { // from class: com.android.internal.app.ResolverActivity.1
+            @Override // com.android.internal.content.PackageMonitor
             public void onSomePackagesChanged() {
                 ResolverActivity.this.mAdapter.handlePackagesChanged();
                 ResolverActivity.this.bindProfileView();
             }
 
+            @Override // com.android.internal.content.PackageMonitor
             public boolean onPackageChanged(String packageName, int uid, String[] components) {
                 return true;
             }
@@ -196,32 +194,30 @@ public class ResolverActivity extends Activity {
 
     private Intent makeMyIntent() {
         Intent intent = new Intent(getIntent());
-        intent.setComponent((ComponentName) null);
-        intent.setFlags(intent.getFlags() & -8388609);
+        intent.setComponent(null);
+        intent.setFlags(intent.getFlags() & (-8388609));
         return intent;
     }
 
-    /* access modifiers changed from: protected */
-    public void onCreate(Bundle savedInstanceState) {
+    @Override // android.app.Activity
+    protected void onCreate(Bundle savedInstanceState) {
         Intent intent = makeMyIntent();
         Set<String> categories = intent.getCategories();
         if (Intent.ACTION_MAIN.equals(intent.getAction()) && categories != null && categories.size() == 1 && categories.contains(Intent.CATEGORY_HOME)) {
             this.mResolvingHome = true;
         }
         setSafeForwardingMode(true);
-        onCreate(savedInstanceState, intent, (CharSequence) null, 0, (Intent[]) null, (List<ResolveInfo>) null, true);
+        onCreate(savedInstanceState, intent, null, 0, null, null, true);
     }
 
-    /* access modifiers changed from: protected */
     @UnsupportedAppUsage
-    public void onCreate(Bundle savedInstanceState, Intent intent, CharSequence title, Intent[] initialIntents, List<ResolveInfo> rList, boolean supportsAlwaysUseOption) {
+    protected void onCreate(Bundle savedInstanceState, Intent intent, CharSequence title, Intent[] initialIntents, List<ResolveInfo> rList, boolean supportsAlwaysUseOption) {
         onCreate(savedInstanceState, intent, title, 0, initialIntents, rList, supportsAlwaysUseOption);
     }
 
-    /* access modifiers changed from: protected */
-    public void onCreate(Bundle savedInstanceState, Intent intent, CharSequence title, int defaultTitleRes, Intent[] initialIntents, List<ResolveInfo> rList, boolean supportsAlwaysUseOption) {
+    protected void onCreate(Bundle savedInstanceState, Intent intent, CharSequence title, int defaultTitleRes, Intent[] initialIntents, List<ResolveInfo> rList, boolean supportsAlwaysUseOption) {
         int i;
-        setTheme(R.style.Theme_DeviceDefault_Resolver);
+        setTheme(C3132R.C3136style.Theme_DeviceDefault_Resolver);
         super.onCreate(savedInstanceState);
         setProfileSwitchMessageId(intent.getContentUserHint());
         try {
@@ -237,77 +233,81 @@ public class ResolverActivity extends Activity {
         this.mPackageMonitor.register(this, getMainLooper(), false);
         this.mRegistered = true;
         this.mReferrerPackage = getReferrerPackageName();
-        this.mIconDpi = ((ActivityManager) getSystemService(Context.ACTIVITY_SERVICE)).getLauncherLargeIconDensity();
+        ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        this.mIconDpi = am.getLauncherLargeIconDensity();
         this.mIntents.add(0, new Intent(intent));
         this.mTitle = title;
         this.mDefaultTitleResId = defaultTitleRes;
         this.mUseLayoutForBrowsables = getTargetIntent() == null ? false : isHttpSchemeAndViewAction(getTargetIntent());
         this.mSupportsAlwaysUseOption = supportsAlwaysUseOption;
-        if (!configureContentView(this.mIntents, initialIntents, rList)) {
-            ResolverDrawerLayout rdl = (ResolverDrawerLayout) findViewById(R.id.contentPanel);
-            if (rdl != null) {
-                rdl.setOnDismissedListener(new ResolverDrawerLayout.OnDismissedListener() {
-                    public void onDismissed() {
-                        ResolverActivity.this.finish();
-                    }
-                });
-                if (isVoiceInteraction()) {
-                    rdl.setCollapsed(false);
+        if (configureContentView(this.mIntents, initialIntents, rList)) {
+            return;
+        }
+        ResolverDrawerLayout rdl = (ResolverDrawerLayout) findViewById(C3132R.C3134id.contentPanel);
+        if (rdl != null) {
+            rdl.setOnDismissedListener(new ResolverDrawerLayout.OnDismissedListener() { // from class: com.android.internal.app.ResolverActivity.2
+                @Override // com.android.internal.widget.ResolverDrawerLayout.OnDismissedListener
+                public void onDismissed() {
+                    ResolverActivity.this.finish();
                 }
-                rdl.setSystemUiVisibility(768);
-                rdl.setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
-                    public final WindowInsets onApplyWindowInsets(View view, WindowInsets windowInsets) {
-                        return ResolverActivity.this.onApplyWindowInsets(view, windowInsets);
-                    }
-                });
-                this.mResolverDrawerLayout = rdl;
-            }
-            this.mProfileView = findViewById(R.id.profile_button);
-            if (this.mProfileView != null) {
-                this.mProfileView.setOnClickListener(new View.OnClickListener() {
-                    public final void onClick(View view) {
-                        ResolverActivity.this.onProfileClick(view);
-                    }
-                });
-                bindProfileView();
-            }
-            initSuspendedColorMatrix();
+            });
             if (isVoiceInteraction()) {
-                onSetupVoiceInteraction();
+                rdl.setCollapsed(false);
             }
-            Set<String> categories = intent.getCategories();
-            if (this.mAdapter.hasFilteredItem()) {
-                i = MetricsProto.MetricsEvent.ACTION_SHOW_APP_DISAMBIG_APP_FEATURED;
-            } else {
-                i = MetricsProto.MetricsEvent.ACTION_SHOW_APP_DISAMBIG_NONE_FEATURED;
-            }
-            StringBuilder sb = new StringBuilder();
-            sb.append(intent.getAction());
-            sb.append(SettingsStringUtil.DELIMITER);
-            sb.append(intent.getType());
-            sb.append(SettingsStringUtil.DELIMITER);
-            sb.append(categories != null ? Arrays.toString(categories.toArray()) : "");
-            MetricsLogger.action((Context) this, i, sb.toString());
+            rdl.setSystemUiVisibility(768);
+            rdl.setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() { // from class: com.android.internal.app.-$$Lambda$yRChr-JGmMwuDQFg-BsC_mE_wmc
+                @Override // android.view.View.OnApplyWindowInsetsListener
+                public final WindowInsets onApplyWindowInsets(View view, WindowInsets windowInsets) {
+                    return ResolverActivity.this.onApplyWindowInsets(view, windowInsets);
+                }
+            });
+            this.mResolverDrawerLayout = rdl;
         }
+        this.mProfileView = findViewById(C3132R.C3134id.profile_button);
+        if (this.mProfileView != null) {
+            this.mProfileView.setOnClickListener(new View.OnClickListener() { // from class: com.android.internal.app.-$$Lambda$fPZctSH683BQhFNSBKdl6Wz99qg
+                @Override // android.view.View.OnClickListener
+                public final void onClick(View view) {
+                    ResolverActivity.this.onProfileClick(view);
+                }
+            });
+            bindProfileView();
+        }
+        initSuspendedColorMatrix();
+        if (isVoiceInteraction()) {
+            onSetupVoiceInteraction();
+        }
+        Set<String> categories = intent.getCategories();
+        if (this.mAdapter.hasFilteredItem()) {
+            i = MetricsProto.MetricsEvent.ACTION_SHOW_APP_DISAMBIG_APP_FEATURED;
+        } else {
+            i = MetricsProto.MetricsEvent.ACTION_SHOW_APP_DISAMBIG_NONE_FEATURED;
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append(intent.getAction());
+        sb.append(SettingsStringUtil.DELIMITER);
+        sb.append(intent.getType());
+        sb.append(SettingsStringUtil.DELIMITER);
+        sb.append(categories != null ? Arrays.toString(categories.toArray()) : "");
+        MetricsLogger.action(this, i, sb.toString());
     }
 
-    /* access modifiers changed from: protected */
-    public void onProfileClick(View v) {
+    protected void onProfileClick(View v) {
         DisplayResolveInfo dri = this.mAdapter.getOtherProfile();
-        if (dri != null) {
-            this.mProfileSwitchMessageId = -1;
-            onTargetSelected(dri, false);
-            finish();
+        if (dri == null) {
+            return;
         }
+        this.mProfileSwitchMessageId = -1;
+        onTargetSelected(dri, false);
+        finish();
     }
 
-    /* access modifiers changed from: protected */
-    public WindowInsets onApplyWindowInsets(View v, WindowInsets insets) {
+    protected WindowInsets onApplyWindowInsets(View v, WindowInsets insets) {
         this.mSystemWindowInsets = insets.getSystemWindowInsets();
         this.mResolverDrawerLayout.setPadding(this.mSystemWindowInsets.left, this.mSystemWindowInsets.top, this.mSystemWindowInsets.right, 0);
         View emptyView = findViewById(16908292);
         if (emptyView != null) {
-            emptyView.setPadding(0, 0, 0, this.mSystemWindowInsets.bottom + (getResources().getDimensionPixelSize(R.dimen.chooser_edge_margin_normal) * 2));
+            emptyView.setPadding(0, 0, 0, this.mSystemWindowInsets.bottom + (getResources().getDimensionPixelSize(C3132R.dimen.chooser_edge_margin_normal) * 2));
         }
         if (this.mFooterSpacer == null) {
             this.mFooterSpacer = new Space(getApplicationContext());
@@ -320,6 +320,7 @@ public class ResolverActivity extends Activity {
         return insets.consumeSystemWindowInsets();
     }
 
+    @Override // android.app.Activity, android.content.ComponentCallbacks
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         this.mAdapter.handlePackagesChanged();
@@ -334,9 +335,9 @@ public class ResolverActivity extends Activity {
         mat[0] = 0.5f;
         mat[6] = 0.5f;
         mat[12] = 0.5f;
-        mat[4] = (float) 127;
-        mat[9] = (float) 127;
-        mat[14] = (float) 127;
+        mat[4] = 127;
+        mat[9] = 127;
+        mat[14] = 127;
         ColorMatrix matrix = new ColorMatrix();
         matrix.setSaturation(0.0f);
         matrix.preConcat(tempBrightnessMatrix);
@@ -348,24 +349,23 @@ public class ResolverActivity extends Activity {
     }
 
     public void sendVoiceChoicesIfNeeded() {
-        if (isVoiceInteraction()) {
-            VoiceInteractor.PickOptionRequest.Option[] options = new VoiceInteractor.PickOptionRequest.Option[this.mAdapter.getCount()];
-            int N = options.length;
-            for (int i = 0; i < N; i++) {
-                options[i] = optionForChooserTarget(this.mAdapter.getItem(i), i);
-            }
-            this.mPickOptionRequest = new PickTargetOptionRequest(new VoiceInteractor.Prompt(getTitle()), options, (Bundle) null);
-            getVoiceInteractor().submitRequest(this.mPickOptionRequest);
+        if (!isVoiceInteraction()) {
+            return;
         }
+        VoiceInteractor.PickOptionRequest.Option[] options = new VoiceInteractor.PickOptionRequest.Option[this.mAdapter.getCount()];
+        int N = options.length;
+        for (int i = 0; i < N; i++) {
+            options[i] = optionForChooserTarget(this.mAdapter.getItem(i), i);
+        }
+        this.mPickOptionRequest = new PickTargetOptionRequest(new VoiceInteractor.Prompt(getTitle()), options, null);
+        getVoiceInteractor().submitRequest(this.mPickOptionRequest);
     }
 
-    /* access modifiers changed from: package-private */
-    public VoiceInteractor.PickOptionRequest.Option optionForChooserTarget(TargetInfo target, int index) {
+    VoiceInteractor.PickOptionRequest.Option optionForChooserTarget(TargetInfo target, int index) {
         return new VoiceInteractor.PickOptionRequest.Option(target.getDisplayLabel(), index);
     }
 
-    /* access modifiers changed from: protected */
-    public final void setAdditionalTargets(Intent[] intents) {
+    protected final void setAdditionalTargets(Intent[] intents) {
         if (intents != null) {
             for (Intent intent : intents) {
                 this.mIntents.add(intent);
@@ -380,51 +380,45 @@ public class ResolverActivity extends Activity {
         return this.mIntents.get(0);
     }
 
-    /* access modifiers changed from: protected */
-    public String getReferrerPackageName() {
+    protected String getReferrerPackageName() {
         Uri referrer = getReferrer();
-        if (referrer == null || !"android-app".equals(referrer.getScheme())) {
-            return null;
+        if (referrer != null && "android-app".equals(referrer.getScheme())) {
+            return referrer.getHost();
         }
-        return referrer.getHost();
+        return null;
     }
 
     public int getLayoutResource() {
-        return R.layout.resolver_list;
+        return C3132R.layout.resolver_list;
     }
 
-    /* access modifiers changed from: protected */
-    public void bindProfileView() {
-        if (this.mProfileView != null) {
-            DisplayResolveInfo dri = this.mAdapter.getOtherProfile();
-            if (dri != null) {
-                this.mProfileView.setVisibility(0);
-                View text = this.mProfileView.findViewById(R.id.profile_button);
-                if (!(text instanceof TextView)) {
-                    text = this.mProfileView.findViewById(16908308);
-                }
-                ((TextView) text).setText(dri.getDisplayLabel());
-                return;
-            }
-            this.mProfileView.setVisibility(8);
+    protected void bindProfileView() {
+        if (this.mProfileView == null) {
+            return;
         }
+        DisplayResolveInfo dri = this.mAdapter.getOtherProfile();
+        if (dri != null) {
+            this.mProfileView.setVisibility(0);
+            View text = this.mProfileView.findViewById(C3132R.C3134id.profile_button);
+            if (!(text instanceof TextView)) {
+                text = this.mProfileView.findViewById(16908308);
+            }
+            ((TextView) text).setText(dri.getDisplayLabel());
+            return;
+        }
+        this.mProfileView.setVisibility(8);
     }
 
     private void setProfileSwitchMessageId(int contentUserHint) {
-        boolean originIsManaged;
         if (contentUserHint != -2 && contentUserHint != UserHandle.myUserId()) {
             UserManager userManager = (UserManager) getSystemService("user");
             UserInfo originUserInfo = userManager.getUserInfo(contentUserHint);
-            if (originUserInfo != null) {
-                originIsManaged = originUserInfo.isManagedProfile();
-            } else {
-                originIsManaged = false;
-            }
+            boolean originIsManaged = originUserInfo != null ? originUserInfo.isManagedProfile() : false;
             boolean targetIsManaged = userManager.isManagedProfile();
             if (originIsManaged && !targetIsManaged) {
-                this.mProfileSwitchMessageId = R.string.forward_intent_to_owner;
+                this.mProfileSwitchMessageId = C3132R.string.forward_intent_to_owner;
             } else if (!originIsManaged && targetIsManaged) {
-                this.mProfileSwitchMessageId = R.string.forward_intent_to_work;
+                this.mProfileSwitchMessageId = C3132R.string.forward_intent_to_work;
             }
         }
     }
@@ -433,8 +427,7 @@ public class ResolverActivity extends Activity {
         this.mSafeForwardingMode = safeForwarding;
     }
 
-    /* access modifiers changed from: protected */
-    public CharSequence getTitleForAction(Intent intent, int defaultTitleRes) {
+    protected CharSequence getTitleForAction(Intent intent, int defaultTitleRes) {
         ActionTitle title;
         if (this.mResolvingHome) {
             title = ActionTitle.HOME;
@@ -445,30 +438,30 @@ public class ResolverActivity extends Activity {
         if (title == ActionTitle.DEFAULT && defaultTitleRes != 0) {
             return getString(defaultTitleRes);
         }
-        if (isHttpSchemeAndViewAction(intent)) {
-            if (named && !this.mUseLayoutForBrowsables) {
-                return getString(17041266, this.mAdapter.getFilteredItem().getDisplayLabel());
-            } else if (named && this.mUseLayoutForBrowsables) {
-                return getString(17041264, intent.getData().getHost(), this.mAdapter.getFilteredItem().getDisplayLabel());
-            } else if (this.mAdapter.areAllTargetsBrowsers()) {
-                return getString(17041265);
-            } else {
-                return getString(17041263, intent.getData().getHost());
-            }
-        } else if (!named) {
-            return getString(title.titleRes);
+        if (!isHttpSchemeAndViewAction(intent)) {
+            return named ? getString(title.namedTitleRes, this.mAdapter.getFilteredItem().getDisplayLabel()) : getString(title.titleRes);
+        } else if (named && !this.mUseLayoutForBrowsables) {
+            String dialogTitle = getString(17041266, this.mAdapter.getFilteredItem().getDisplayLabel());
+            return dialogTitle;
+        } else if (named && this.mUseLayoutForBrowsables) {
+            String dialogTitle2 = getString(17041264, intent.getData().getHost(), this.mAdapter.getFilteredItem().getDisplayLabel());
+            return dialogTitle2;
+        } else if (this.mAdapter.areAllTargetsBrowsers()) {
+            String dialogTitle3 = getString(17041265);
+            return dialogTitle3;
         } else {
-            return getString(title.namedTitleRes, this.mAdapter.getFilteredItem().getDisplayLabel());
+            String dialogTitle4 = getString(17041263, intent.getData().getHost());
+            return dialogTitle4;
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void dismiss() {
+    void dismiss() {
         if (!isFinishing()) {
             finish();
         }
     }
 
+    /* loaded from: classes4.dex */
     private static abstract class TargetPresentationGetter {
         private final ApplicationInfo mAi;
         private Context mCtx;
@@ -476,18 +469,16 @@ public class ResolverActivity extends Activity {
         private final int mIconDpi;
         protected PackageManager mPm;
 
-        /* access modifiers changed from: package-private */
-        public abstract String getAppSubLabelInternal();
+        abstract String getAppSubLabelInternal();
 
-        /* access modifiers changed from: package-private */
-        public abstract Drawable getIconSubstituteInternal();
+        abstract Drawable getIconSubstituteInternal();
 
         TargetPresentationGetter(Context ctx, int iconDpi, ApplicationInfo ai) {
             this.mCtx = ctx;
             this.mPm = ctx.getPackageManager();
             this.mAi = ai;
             this.mIconDpi = iconDpi;
-            this.mHasSubstitutePermission = this.mPm.checkPermission(Manifest.permission.SUBSTITUTE_SHARE_TARGET_APP_NAME_AND_ICON, this.mAi.packageName) == 0;
+            this.mHasSubstitutePermission = this.mPm.checkPermission(Manifest.C0000permission.SUBSTITUTE_SHARE_TARGET_APP_NAME_AND_ICON, this.mAi.packageName) == 0;
         }
 
         public Drawable getIcon(UserHandle userHandle) {
@@ -522,7 +513,8 @@ public class ResolverActivity extends Activity {
                 label = getAppSubLabelInternal();
             }
             if (label == null) {
-                return (String) this.mAi.loadLabel(this.mPm);
+                String label2 = (String) this.mAi.loadLabel(this.mPm);
+                return label2;
             }
             return label;
         }
@@ -534,18 +526,17 @@ public class ResolverActivity extends Activity {
             return getAppSubLabelInternal();
         }
 
-        /* access modifiers changed from: protected */
-        public String loadLabelFromResource(Resources res, int resId) {
+        protected String loadLabelFromResource(Resources res, int resId) {
             return res.getString(resId);
         }
 
-        /* access modifiers changed from: protected */
-        public Drawable loadIconFromResource(Resources res, int resId) {
+        protected Drawable loadIconFromResource(Resources res, int resId) {
             return res.getDrawableForDensity(resId, this.mIconDpi);
         }
     }
 
     @VisibleForTesting
+    /* loaded from: classes4.dex */
     public static class ResolveInfoPresentationGetter extends ActivityInfoPresentationGetter {
         private final ResolveInfo mRi;
 
@@ -554,49 +545,50 @@ public class ResolverActivity extends Activity {
             this.mRi = ri;
         }
 
-        /* access modifiers changed from: package-private */
-        public Drawable getIconSubstituteInternal() {
+        @Override // com.android.internal.app.ResolverActivity.ActivityInfoPresentationGetter, com.android.internal.app.ResolverActivity.TargetPresentationGetter
+        Drawable getIconSubstituteInternal() {
             Drawable dr = null;
             try {
-                if (!(this.mRi.resolvePackageName == null || this.mRi.icon == 0)) {
+                if (this.mRi.resolvePackageName != null && this.mRi.icon != 0) {
                     dr = loadIconFromResource(this.mPm.getResourcesForApplication(this.mRi.resolvePackageName), this.mRi.icon);
                 }
             } catch (PackageManager.NameNotFoundException e) {
-                Log.e(ResolverActivity.TAG, "SUBSTITUTE_SHARE_TARGET_APP_NAME_AND_ICON permission granted but couldn't find resources for package", e);
+                Log.m69e(ResolverActivity.TAG, "SUBSTITUTE_SHARE_TARGET_APP_NAME_AND_ICON permission granted but couldn't find resources for package", e);
             }
-            if (dr == null) {
-                return super.getIconSubstituteInternal();
-            }
-            return dr;
+            return dr == null ? super.getIconSubstituteInternal() : dr;
         }
 
-        /* access modifiers changed from: package-private */
-        public String getAppSubLabelInternal() {
+        @Override // com.android.internal.app.ResolverActivity.ActivityInfoPresentationGetter, com.android.internal.app.ResolverActivity.TargetPresentationGetter
+        String getAppSubLabelInternal() {
             return (String) this.mRi.loadLabel(this.mPm);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public ResolveInfoPresentationGetter makePresentationGetter(ResolveInfo ri) {
+    ResolveInfoPresentationGetter makePresentationGetter(ResolveInfo ri) {
         return new ResolveInfoPresentationGetter(this, this.mIconDpi, ri);
     }
 
     @VisibleForTesting
+    /* loaded from: classes4.dex */
     public static class ActivityInfoPresentationGetter extends TargetPresentationGetter {
         private final ActivityInfo mActivityInfo;
 
+        @Override // com.android.internal.app.ResolverActivity.TargetPresentationGetter
         public /* bridge */ /* synthetic */ Drawable getIcon(UserHandle userHandle) {
             return super.getIcon(userHandle);
         }
 
+        @Override // com.android.internal.app.ResolverActivity.TargetPresentationGetter
         public /* bridge */ /* synthetic */ Bitmap getIconBitmap(UserHandle userHandle) {
             return super.getIconBitmap(userHandle);
         }
 
+        @Override // com.android.internal.app.ResolverActivity.TargetPresentationGetter
         public /* bridge */ /* synthetic */ String getLabel() {
             return super.getLabel();
         }
 
+        @Override // com.android.internal.app.ResolverActivity.TargetPresentationGetter
         public /* bridge */ /* synthetic */ String getSubLabel() {
             return super.getSubLabel();
         }
@@ -606,37 +598,36 @@ public class ResolverActivity extends Activity {
             this.mActivityInfo = activityInfo;
         }
 
-        /* access modifiers changed from: package-private */
-        public Drawable getIconSubstituteInternal() {
+        @Override // com.android.internal.app.ResolverActivity.TargetPresentationGetter
+        Drawable getIconSubstituteInternal() {
             try {
-                if (this.mActivityInfo.icon != 0) {
-                    return loadIconFromResource(this.mPm.getResourcesForApplication(this.mActivityInfo.applicationInfo), this.mActivityInfo.icon);
+                if (this.mActivityInfo.icon == 0) {
+                    return null;
                 }
-                return null;
+                Drawable dr = loadIconFromResource(this.mPm.getResourcesForApplication(this.mActivityInfo.applicationInfo), this.mActivityInfo.icon);
+                return dr;
             } catch (PackageManager.NameNotFoundException e) {
-                Log.e(ResolverActivity.TAG, "SUBSTITUTE_SHARE_TARGET_APP_NAME_AND_ICON permission granted but couldn't find resources for package", e);
+                Log.m69e(ResolverActivity.TAG, "SUBSTITUTE_SHARE_TARGET_APP_NAME_AND_ICON permission granted but couldn't find resources for package", e);
                 return null;
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public String getAppSubLabelInternal() {
+        @Override // com.android.internal.app.ResolverActivity.TargetPresentationGetter
+        String getAppSubLabelInternal() {
             return (String) this.mActivityInfo.loadLabel(this.mPm);
         }
     }
 
-    /* access modifiers changed from: protected */
-    public ActivityInfoPresentationGetter makePresentationGetter(ActivityInfo ai) {
+    protected ActivityInfoPresentationGetter makePresentationGetter(ActivityInfo ai) {
         return new ActivityInfoPresentationGetter(this, this.mIconDpi, ai);
     }
 
-    /* access modifiers changed from: package-private */
-    public Drawable loadIconForResolveInfo(ResolveInfo ri) {
+    Drawable loadIconForResolveInfo(ResolveInfo ri) {
         return makePresentationGetter(ri).getIcon(Process.myUserHandle());
     }
 
-    /* access modifiers changed from: protected */
-    public void onRestart() {
+    @Override // android.app.Activity
+    protected void onRestart() {
         super.onRestart();
         if (!this.mRegistered) {
             this.mPackageMonitor.register(this, getMainLooper(), false);
@@ -646,20 +637,21 @@ public class ResolverActivity extends Activity {
         bindProfileView();
     }
 
-    /* access modifiers changed from: protected */
-    public void onStop() {
+    @Override // android.app.Activity
+    protected void onStop() {
         super.onStop();
         if (this.mRegistered) {
             this.mPackageMonitor.unregister();
             this.mRegistered = false;
         }
-        if ((getIntent().getFlags() & 268435456) != 0 && !isVoiceInteraction() && !this.mResolvingHome && !this.mRetainInOnStop && !isChangingConfigurations()) {
+        Intent intent = getIntent();
+        if ((intent.getFlags() & 268435456) != 0 && !isVoiceInteraction() && !this.mResolvingHome && !this.mRetainInOnStop && !isChangingConfigurations()) {
             finish();
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onDestroy() {
+    @Override // android.app.Activity
+    protected void onDestroy() {
         super.onDestroy();
         if (!isChangingConfigurations() && this.mPickOptionRequest != null) {
             this.mPickOptionRequest.cancel();
@@ -668,13 +660,14 @@ public class ResolverActivity extends Activity {
             getMainThreadHandler().removeCallbacks(this.mPostListReadyRunnable);
             this.mPostListReadyRunnable = null;
         }
-        if (this.mAdapter != null && this.mAdapter.mResolverListController != null) {
-            this.mAdapter.mResolverListController.destroy();
+        if (this.mAdapter == null || this.mAdapter.mResolverListController == null) {
+            return;
         }
+        this.mAdapter.mResolverListController.destroy();
     }
 
-    /* access modifiers changed from: protected */
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
+    @Override // android.app.Activity
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         resetButtonBar();
     }
@@ -689,7 +682,8 @@ public class ResolverActivity extends Activity {
             return false;
         }
         try {
-            for (UserInfo userInfo : userManager.getProfiles(getUserId())) {
+            List<UserInfo> profiles = userManager.getProfiles(getUserId());
+            for (UserInfo userInfo : profiles) {
                 if (userInfo != null && userInfo.isManagedProfile()) {
                     return true;
                 }
@@ -702,32 +696,30 @@ public class ResolverActivity extends Activity {
 
     private boolean supportsManagedProfiles(ResolveInfo resolveInfo) {
         try {
-            if (getPackageManager().getApplicationInfo(resolveInfo.activityInfo.packageName, 0).targetSdkVersion >= 21) {
-                return true;
-            }
-            return false;
+            ApplicationInfo appInfo = getPackageManager().getApplicationInfo(resolveInfo.activityInfo.packageName, 0);
+            return appInfo.targetSdkVersion >= 21;
         } catch (PackageManager.NameNotFoundException e) {
             return false;
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void setAlwaysButtonEnabled(boolean hasValidSelection, int checkedPos, boolean filtered) {
         boolean enabled = false;
         if (hasValidSelection) {
             ResolveInfo ri = this.mAdapter.resolveInfoForPosition(checkedPos, filtered);
             if (ri == null) {
-                Log.e(TAG, "Invalid position supplied to setAlwaysButtonEnabled");
+                Log.m70e(TAG, "Invalid position supplied to setAlwaysButtonEnabled");
                 return;
             } else if (ri.targetUserId != -2) {
-                Log.e(TAG, "Attempted to set selection to resolve info for another user");
+                Log.m70e(TAG, "Attempted to set selection to resolve info for another user");
                 return;
             } else {
                 enabled = true;
-                if (!this.mUseLayoutForBrowsables || ri.handleAllWebDataURI) {
-                    this.mAlwaysButton.setText((CharSequence) getResources().getString(R.string.activity_resolver_use_always));
+                if (this.mUseLayoutForBrowsables && !ri.handleAllWebDataURI) {
+                    this.mAlwaysButton.setText(getResources().getString(C3132R.string.activity_resolver_set_always));
                 } else {
-                    this.mAlwaysButton.setText((CharSequence) getResources().getString(R.string.activity_resolver_set_always));
+                    this.mAlwaysButton.setText(getResources().getString(C3132R.string.activity_resolver_use_always));
                 }
             }
         }
@@ -742,17 +734,13 @@ public class ResolverActivity extends Activity {
         } else {
             which = this.mAdapterView.getCheckedItemPosition();
         }
-        boolean z = true;
         boolean hasIndexBeenFiltered = !this.mAdapter.hasFilteredItem();
         ResolveInfo ri = this.mAdapter.resolveInfoForPosition(which, hasIndexBeenFiltered);
-        if (!this.mUseLayoutForBrowsables || ri.handleAllWebDataURI || id != 16908779) {
-            if (id != 16908779) {
-                z = false;
-            }
-            startSelected(which, z, hasIndexBeenFiltered);
-            return;
+        if (this.mUseLayoutForBrowsables && !ri.handleAllWebDataURI && id == 16908779) {
+            showSettingsForSelected(ri);
+        } else {
+            startSelected(which, id == 16908779, hasIndexBeenFiltered);
         }
-        showSettingsForSelected(ri);
     }
 
     private void showSettingsForSelected(ResolveInfo ri) {
@@ -761,36 +749,36 @@ public class ResolverActivity extends Activity {
         Bundle showFragmentArgs = new Bundle();
         showFragmentArgs.putString(EXTRA_FRAGMENT_ARG_KEY, OPEN_LINKS_COMPONENT_KEY);
         showFragmentArgs.putString("package", packageName);
-        intent.setAction(Settings.ACTION_APP_OPEN_BY_DEFAULT_SETTINGS).setData(Uri.fromParts("package", packageName, (String) null)).addFlags(524288).putExtra(EXTRA_FRAGMENT_ARG_KEY, OPEN_LINKS_COMPONENT_KEY).putExtra(EXTRA_SHOW_FRAGMENT_ARGS, showFragmentArgs);
+        intent.setAction(Settings.ACTION_APP_OPEN_BY_DEFAULT_SETTINGS).setData(Uri.fromParts("package", packageName, null)).addFlags(524288).putExtra(EXTRA_FRAGMENT_ARG_KEY, OPEN_LINKS_COMPONENT_KEY).putExtra(EXTRA_SHOW_FRAGMENT_ARGS, showFragmentArgs);
         startActivity(intent);
     }
 
     public void startSelected(int which, boolean always, boolean hasIndexBeenFiltered) {
         int i;
-        if (!isFinishing()) {
-            ResolveInfo ri = this.mAdapter.resolveInfoForPosition(which, hasIndexBeenFiltered);
-            if (!this.mResolvingHome || !hasManagedProfile() || supportsManagedProfiles(ri)) {
-                TargetInfo target = this.mAdapter.targetInfoForPosition(which, hasIndexBeenFiltered);
-                if (target != null && onTargetSelected(target, always)) {
-                    if (always && this.mSupportsAlwaysUseOption) {
-                        MetricsLogger.action((Context) this, (int) MetricsProto.MetricsEvent.ACTION_APP_DISAMBIG_ALWAYS);
-                    } else if (this.mSupportsAlwaysUseOption) {
-                        MetricsLogger.action((Context) this, (int) MetricsProto.MetricsEvent.ACTION_APP_DISAMBIG_JUST_ONCE);
-                    } else {
-                        MetricsLogger.action((Context) this, (int) MetricsProto.MetricsEvent.ACTION_APP_DISAMBIG_TAP);
-                    }
-                    if (this.mAdapter.hasFilteredItem()) {
-                        i = MetricsProto.MetricsEvent.ACTION_HIDE_APP_DISAMBIG_APP_FEATURED;
-                    } else {
-                        i = MetricsProto.MetricsEvent.ACTION_HIDE_APP_DISAMBIG_NONE_FEATURED;
-                    }
-                    MetricsLogger.action((Context) this, i);
-                    finish();
-                    return;
-                }
-                return;
+        if (isFinishing()) {
+            return;
+        }
+        ResolveInfo ri = this.mAdapter.resolveInfoForPosition(which, hasIndexBeenFiltered);
+        if (this.mResolvingHome && hasManagedProfile() && !supportsManagedProfiles(ri)) {
+            Toast.makeText(this, String.format(getResources().getString(C3132R.string.activity_resolver_work_profiles_support), ri.activityInfo.loadLabel(getPackageManager()).toString()), 1).show();
+            return;
+        }
+        TargetInfo target = this.mAdapter.targetInfoForPosition(which, hasIndexBeenFiltered);
+        if (target != null && onTargetSelected(target, always)) {
+            if (always && this.mSupportsAlwaysUseOption) {
+                MetricsLogger.action(this, (int) MetricsProto.MetricsEvent.ACTION_APP_DISAMBIG_ALWAYS);
+            } else if (this.mSupportsAlwaysUseOption) {
+                MetricsLogger.action(this, (int) MetricsProto.MetricsEvent.ACTION_APP_DISAMBIG_JUST_ONCE);
+            } else {
+                MetricsLogger.action(this, (int) MetricsProto.MetricsEvent.ACTION_APP_DISAMBIG_TAP);
             }
-            Toast.makeText((Context) this, (CharSequence) String.format(getResources().getString(R.string.activity_resolver_work_profiles_support), new Object[]{ri.activityInfo.loadLabel(getPackageManager()).toString()}), 1).show();
+            if (this.mAdapter.hasFilteredItem()) {
+                i = MetricsProto.MetricsEvent.ACTION_HIDE_APP_DISAMBIG_APP_FEATURED;
+            } else {
+                i = MetricsProto.MetricsEvent.ACTION_HIDE_APP_DISAMBIG_NONE_FEATURED;
+            }
+            MetricsLogger.action(this, i);
+            finish();
         }
     }
 
@@ -798,336 +786,203 @@ public class ResolverActivity extends Activity {
         return defIntent;
     }
 
-    /* access modifiers changed from: protected */
-    /* JADX WARNING: Removed duplicated region for block: B:112:0x020c  */
-    /* JADX WARNING: Removed duplicated region for block: B:115:0x0218  */
-    /* JADX WARNING: Removed duplicated region for block: B:118:0x021d  */
-    /* JADX WARNING: Removed duplicated region for block: B:121:0x0229  */
-    /* JADX WARNING: Removed duplicated region for block: B:134:0x0263  */
-    /* JADX WARNING: Removed duplicated region for block: B:149:? A[ORIG_RETURN, RETURN, SYNTHETIC] */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public boolean onTargetSelected(com.android.internal.app.ResolverActivity.TargetInfo r25, boolean r26) {
-        /*
-            r24 = this;
-            r1 = r24
-            android.content.pm.ResolveInfo r3 = r25.getResolveInfo()
-            if (r25 == 0) goto L_0x000d
-            android.content.Intent r0 = r25.getResolvedIntent()
-            goto L_0x000e
-        L_0x000d:
-            r0 = 0
-        L_0x000e:
-            r5 = r0
-            if (r5 == 0) goto L_0x025f
-            boolean r0 = r1.mSupportsAlwaysUseOption
-            if (r0 != 0) goto L_0x0022
-            com.android.internal.app.ResolverActivity$ResolveListAdapter r0 = r1.mAdapter
-            boolean r0 = r0.hasFilteredItem()
-            if (r0 == 0) goto L_0x001e
-            goto L_0x0022
-        L_0x001e:
-            r20 = r3
-            goto L_0x0261
-        L_0x0022:
-            com.android.internal.app.ResolverActivity$ResolveListAdapter r0 = r1.mAdapter
-            java.util.List<com.android.internal.app.ResolverActivity$ResolvedComponentInfo> r0 = r0.mUnfilteredResolveList
-            if (r0 == 0) goto L_0x025f
-            android.content.IntentFilter r0 = new android.content.IntentFilter
-            r0.<init>()
-            r8 = r0
-            android.content.Intent r0 = r5.getSelector()
-            if (r0 == 0) goto L_0x0039
-            android.content.Intent r0 = r5.getSelector()
-            goto L_0x003a
-        L_0x0039:
-            r0 = r5
-        L_0x003a:
-            r9 = r0
-            java.lang.String r10 = r9.getAction()
-            if (r10 == 0) goto L_0x0044
-            r8.addAction(r10)
-        L_0x0044:
-            java.util.Set r11 = r9.getCategories()
-            if (r11 == 0) goto L_0x005e
-            java.util.Iterator r0 = r11.iterator()
-        L_0x004e:
-            boolean r12 = r0.hasNext()
-            if (r12 == 0) goto L_0x005e
-            java.lang.Object r12 = r0.next()
-            java.lang.String r12 = (java.lang.String) r12
-            r8.addCategory(r12)
-            goto L_0x004e
-        L_0x005e:
-            java.lang.String r0 = "android.intent.category.DEFAULT"
-            r8.addCategory(r0)
-            int r0 = r3.match
-            r12 = 268369920(0xfff0000, float:2.5144941E-29)
-            r12 = r12 & r0
-            android.net.Uri r13 = r9.getData()
-            r14 = 6291456(0x600000, float:8.816208E-39)
-            if (r12 != r14) goto L_0x0085
-            java.lang.String r15 = r9.resolveType((android.content.Context) r1)
-            if (r15 == 0) goto L_0x0085
-            r8.addDataType(r15)     // Catch:{ MalformedMimeTypeException -> 0x007a }
-            goto L_0x0085
-        L_0x007a:
-            r0 = move-exception
-            r16 = r0
-            r0 = r16
-            java.lang.String r4 = "ResolverActivity"
-            android.util.Log.w((java.lang.String) r4, (java.lang.Throwable) r0)
-            r8 = 0
-        L_0x0085:
-            if (r13 == 0) goto L_0x013a
-            java.lang.String r0 = r13.getScheme()
-            if (r0 == 0) goto L_0x013a
-            if (r12 != r14) goto L_0x00a7
-            java.lang.String r0 = "file"
-            java.lang.String r4 = r13.getScheme()
-            boolean r0 = r0.equals(r4)
-            if (r0 != 0) goto L_0x013a
-            java.lang.String r0 = "content"
-            java.lang.String r4 = r13.getScheme()
-            boolean r0 = r0.equals(r4)
-            if (r0 != 0) goto L_0x013a
-        L_0x00a7:
-            java.lang.String r0 = r13.getScheme()
-            r8.addDataScheme(r0)
-            android.content.IntentFilter r0 = r3.filter
-            java.util.Iterator r0 = r0.schemeSpecificPartsIterator()
-            if (r0 == 0) goto L_0x00db
-            java.lang.String r4 = r13.getSchemeSpecificPart()
-        L_0x00ba:
-            if (r4 == 0) goto L_0x00db
-            boolean r14 = r0.hasNext()
-            if (r14 == 0) goto L_0x00db
-            java.lang.Object r14 = r0.next()
-            android.os.PatternMatcher r14 = (android.os.PatternMatcher) r14
-            boolean r15 = r14.match(r4)
-            if (r15 == 0) goto L_0x00da
-            java.lang.String r15 = r14.getPath()
-            int r7 = r14.getType()
-            r8.addDataSchemeSpecificPart(r15, r7)
-            goto L_0x00db
-        L_0x00da:
-            goto L_0x00ba
-        L_0x00db:
-            android.content.IntentFilter r4 = r3.filter
-            java.util.Iterator r4 = r4.authoritiesIterator()
-            if (r4 == 0) goto L_0x010d
-        L_0x00e3:
-            boolean r7 = r4.hasNext()
-            if (r7 == 0) goto L_0x010d
-            java.lang.Object r7 = r4.next()
-            android.content.IntentFilter$AuthorityEntry r7 = (android.content.IntentFilter.AuthorityEntry) r7
-            int r14 = r7.match((android.net.Uri) r13)
-            if (r14 < 0) goto L_0x010c
-            int r14 = r7.getPort()
-            java.lang.String r15 = r7.getHost()
-            if (r14 < 0) goto L_0x0106
-            java.lang.String r16 = java.lang.Integer.toString(r14)
-            r6 = r16
-            goto L_0x0108
-        L_0x0106:
-            r6 = 0
-        L_0x0108:
-            r8.addDataAuthority(r15, r6)
-            goto L_0x010d
-        L_0x010c:
-            goto L_0x00e3
-        L_0x010d:
-            android.content.IntentFilter r6 = r3.filter
-            java.util.Iterator r0 = r6.pathsIterator()
-            if (r0 == 0) goto L_0x013a
-            java.lang.String r6 = r13.getPath()
-        L_0x0119:
-            if (r6 == 0) goto L_0x013a
-            boolean r7 = r0.hasNext()
-            if (r7 == 0) goto L_0x013a
-            java.lang.Object r7 = r0.next()
-            android.os.PatternMatcher r7 = (android.os.PatternMatcher) r7
-            boolean r14 = r7.match(r6)
-            if (r14 == 0) goto L_0x0139
-            java.lang.String r14 = r7.getPath()
-            int r15 = r7.getType()
-            r8.addDataPath(r14, r15)
-            goto L_0x013a
-        L_0x0139:
-            goto L_0x0119
-        L_0x013a:
-            if (r8 == 0) goto L_0x025f
-            com.android.internal.app.ResolverActivity$ResolveListAdapter r0 = r1.mAdapter
-            java.util.List<com.android.internal.app.ResolverActivity$ResolvedComponentInfo> r0 = r0.mUnfilteredResolveList
-            int r4 = r0.size()
-            com.android.internal.app.ResolverActivity$ResolveListAdapter r0 = r1.mAdapter
-            com.android.internal.app.ResolverActivity$DisplayResolveInfo r0 = r0.mOtherProfile
-            if (r0 == 0) goto L_0x014e
-            r0 = 1
-            goto L_0x014f
-        L_0x014e:
-            r0 = 0
-        L_0x014f:
-            r6 = r0
-            if (r6 != 0) goto L_0x0155
-            android.content.ComponentName[] r0 = new android.content.ComponentName[r4]
-            goto L_0x0159
-        L_0x0155:
-            int r0 = r4 + 1
-            android.content.ComponentName[] r0 = new android.content.ComponentName[r0]
-        L_0x0159:
-            r7 = r0
-            r0 = 0
-            r14 = r0
-            r0 = 0
-        L_0x015d:
-            if (r0 >= r4) goto L_0x018f
-            com.android.internal.app.ResolverActivity$ResolveListAdapter r15 = r1.mAdapter
-            java.util.List<com.android.internal.app.ResolverActivity$ResolvedComponentInfo> r15 = r15.mUnfilteredResolveList
-            java.lang.Object r15 = r15.get(r0)
-            com.android.internal.app.ResolverActivity$ResolvedComponentInfo r15 = (com.android.internal.app.ResolverActivity.ResolvedComponentInfo) r15
-            r17 = r9
-            r9 = 0
-            android.content.pm.ResolveInfo r15 = r15.getResolveInfoAt(r9)
-            android.content.ComponentName r9 = new android.content.ComponentName
-            r18 = r12
-            android.content.pm.ActivityInfo r12 = r15.activityInfo
-            java.lang.String r12 = r12.packageName
-            android.content.pm.ActivityInfo r2 = r15.activityInfo
-            java.lang.String r2 = r2.name
-            r9.<init>((java.lang.String) r12, (java.lang.String) r2)
-            r7[r0] = r9
-            int r2 = r15.match
-            if (r2 <= r14) goto L_0x0188
-            int r2 = r15.match
-            r14 = r2
-        L_0x0188:
-            int r0 = r0 + 1
-            r9 = r17
-            r12 = r18
-            goto L_0x015d
-        L_0x018f:
-            r17 = r9
-            r18 = r12
-            if (r6 == 0) goto L_0x01b0
-            com.android.internal.app.ResolverActivity$ResolveListAdapter r0 = r1.mAdapter
-            com.android.internal.app.ResolverActivity$DisplayResolveInfo r0 = r0.mOtherProfile
-            android.content.ComponentName r0 = r0.getResolvedComponentName()
-            r7[r4] = r0
-            com.android.internal.app.ResolverActivity$ResolveListAdapter r0 = r1.mAdapter
-            com.android.internal.app.ResolverActivity$DisplayResolveInfo r0 = r0.mOtherProfile
-            android.content.pm.ResolveInfo r0 = r0.getResolveInfo()
-            int r0 = r0.match
-            if (r0 <= r14) goto L_0x01b0
-            r14 = r0
-        L_0x01b0:
-            if (r26 == 0) goto L_0x0239
-            int r0 = r24.getUserId()
-            android.content.pm.PackageManager r9 = r24.getPackageManager()
-            android.content.ComponentName r12 = r5.getComponent()
-            r9.addPreferredActivity(r8, r14, r7, r12)
-            boolean r12 = r3.handleAllWebDataURI
-            if (r12 == 0) goto L_0x01dc
-            java.lang.String r12 = r9.getDefaultBrowserPackageNameAsUser(r0)
-            boolean r15 = android.text.TextUtils.isEmpty(r12)
-            if (r15 == 0) goto L_0x01d6
-            android.content.pm.ActivityInfo r15 = r3.activityInfo
-            java.lang.String r15 = r15.packageName
-            r9.setDefaultBrowserPackageNameAsUser(r15, r0)
-        L_0x01d6:
-            r20 = r3
-            r22 = r4
-            goto L_0x0238
-        L_0x01dc:
-            android.content.ComponentName r12 = r5.getComponent()
-            java.lang.String r15 = r12.getPackageName()
-            if (r13 == 0) goto L_0x01eb
-            java.lang.String r16 = r13.getScheme()
-            goto L_0x01ed
-        L_0x01eb:
-            r16 = 0
-        L_0x01ed:
-            r19 = r16
-            r2 = r19
-            if (r2 == 0) goto L_0x0207
-            r20 = r3
-            java.lang.String r3 = "http"
-            boolean r3 = r2.equals(r3)
-            if (r3 != 0) goto L_0x0205
-            java.lang.String r3 = "https"
-            boolean r3 = r2.equals(r3)
-            if (r3 == 0) goto L_0x0209
-        L_0x0205:
-            r3 = 1
-            goto L_0x020a
-        L_0x0207:
-            r20 = r3
-        L_0x0209:
-            r3 = 0
-        L_0x020a:
-            if (r10 == 0) goto L_0x0218
-            r21 = r2
-            java.lang.String r2 = "android.intent.action.VIEW"
-            boolean r2 = r10.equals(r2)
-            if (r2 == 0) goto L_0x021a
-            r2 = 1
-            goto L_0x021b
-        L_0x0218:
-            r21 = r2
-        L_0x021a:
-            r2 = 0
-        L_0x021b:
-            if (r11 == 0) goto L_0x0229
-            r22 = r4
-            java.lang.String r4 = "android.intent.category.BROWSABLE"
-            boolean r4 = r11.contains(r4)
-            if (r4 == 0) goto L_0x022b
-            r4 = 1
-            goto L_0x022c
-        L_0x0229:
-            r22 = r4
-        L_0x022b:
-            r4 = 0
-        L_0x022c:
-            if (r3 == 0) goto L_0x0238
-            if (r2 == 0) goto L_0x0238
-            if (r4 == 0) goto L_0x0238
-            r23 = r2
-            r2 = 2
-            r9.updateIntentVerificationStatusAsUser(r15, r2, r0)
-        L_0x0238:
-            goto L_0x0261
-        L_0x0239:
-            r20 = r3
-            r22 = r4
-            com.android.internal.app.ResolverActivity$ResolveListAdapter r0 = r1.mAdapter     // Catch:{ RemoteException -> 0x0247 }
-            com.android.internal.app.ResolverListController r0 = r0.mResolverListController     // Catch:{ RemoteException -> 0x0247 }
-            r0.setLastChosen(r5, r8, r14)     // Catch:{ RemoteException -> 0x0247 }
-            goto L_0x0261
-        L_0x0247:
-            r0 = move-exception
-            java.lang.String r2 = "ResolverActivity"
-            java.lang.StringBuilder r3 = new java.lang.StringBuilder
-            r3.<init>()
-            java.lang.String r4 = "Error calling setLastChosenActivity\n"
-            r3.append(r4)
-            r3.append(r0)
-            java.lang.String r3 = r3.toString()
-            android.util.Log.d(r2, r3)
-            goto L_0x0261
-        L_0x025f:
-            r20 = r3
-        L_0x0261:
-            if (r25 == 0) goto L_0x026e
-            r24.safelyStartActivity(r25)
-            boolean r0 = r25.isSuspended()
-            if (r0 == 0) goto L_0x026e
-            r3 = 0
-            return r3
-        L_0x026e:
-            r3 = 1
-            return r3
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.internal.app.ResolverActivity.onTargetSelected(com.android.internal.app.ResolverActivity$TargetInfo, boolean):boolean");
+    /* JADX WARN: Removed duplicated region for block: B:124:0x021d  */
+    /* JADX WARN: Removed duplicated region for block: B:127:0x0229 A[ADDED_TO_REGION] */
+    /* JADX WARN: Removed duplicated region for block: B:130:0x022e A[ADDED_TO_REGION] */
+    /* JADX WARN: Removed duplicated region for block: B:141:0x0263  */
+    /* JADX WARN: Removed duplicated region for block: B:145:0x026e A[ORIG_RETURN, RETURN] */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    protected boolean onTargetSelected(TargetInfo target, boolean alwaysCheck) {
+        Intent filterIntent;
+        ComponentName[] set;
+        boolean isHttpOrHttps;
+        boolean isViewAction;
+        boolean hasCategoryBrowsable;
+        String mimeType;
+        ResolveInfo ri = target.getResolveInfo();
+        Intent intent = target != null ? target.getResolvedIntent() : null;
+        if (intent != null) {
+            if (this.mSupportsAlwaysUseOption || this.mAdapter.hasFilteredItem()) {
+                if (this.mAdapter.mUnfilteredResolveList != null) {
+                    IntentFilter filter = new IntentFilter();
+                    if (intent.getSelector() != null) {
+                        filterIntent = intent.getSelector();
+                    } else {
+                        filterIntent = intent;
+                    }
+                    Intent filterIntent2 = filterIntent;
+                    String action = filterIntent2.getAction();
+                    if (action != null) {
+                        filter.addAction(action);
+                    }
+                    Set<String> categories = filterIntent2.getCategories();
+                    if (categories != null) {
+                        for (String cat : categories) {
+                            filter.addCategory(cat);
+                        }
+                    }
+                    filter.addCategory(Intent.CATEGORY_DEFAULT);
+                    int cat2 = 268369920 & ri.match;
+                    Uri data = filterIntent2.getData();
+                    if (cat2 == 6291456 && (mimeType = filterIntent2.resolveType(this)) != null) {
+                        try {
+                            filter.addDataType(mimeType);
+                        } catch (IntentFilter.MalformedMimeTypeException e) {
+                            Log.m62w(TAG, e);
+                            filter = null;
+                        }
+                    }
+                    if (data != null && data.getScheme() != null && (cat2 != 6291456 || (!ContentResolver.SCHEME_FILE.equals(data.getScheme()) && !"content".equals(data.getScheme())))) {
+                        filter.addDataScheme(data.getScheme());
+                        Iterator<PatternMatcher> pIt = ri.filter.schemeSpecificPartsIterator();
+                        if (pIt != null) {
+                            String ssp = data.getSchemeSpecificPart();
+                            while (true) {
+                                if (ssp == null || !pIt.hasNext()) {
+                                    break;
+                                }
+                                PatternMatcher p = pIt.next();
+                                if (p.match(ssp)) {
+                                    filter.addDataSchemeSpecificPart(p.getPath(), p.getType());
+                                    break;
+                                }
+                            }
+                        }
+                        Iterator<IntentFilter.AuthorityEntry> aIt = ri.filter.authoritiesIterator();
+                        if (aIt != null) {
+                            while (true) {
+                                if (!aIt.hasNext()) {
+                                    break;
+                                }
+                                IntentFilter.AuthorityEntry a = aIt.next();
+                                if (a.match(data) >= 0) {
+                                    int port = a.getPort();
+                                    filter.addDataAuthority(a.getHost(), port >= 0 ? Integer.toString(port) : null);
+                                }
+                            }
+                        }
+                        Iterator<PatternMatcher> pIt2 = ri.filter.pathsIterator();
+                        if (pIt2 != null) {
+                            String path = data.getPath();
+                            while (true) {
+                                if (path == null || !pIt2.hasNext()) {
+                                    break;
+                                }
+                                PatternMatcher p2 = pIt2.next();
+                                if (p2.match(path)) {
+                                    filter.addDataPath(p2.getPath(), p2.getType());
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if (filter != null) {
+                        int N = this.mAdapter.mUnfilteredResolveList.size();
+                        boolean needToAddBackProfileForwardingComponent = this.mAdapter.mOtherProfile != null;
+                        if (!needToAddBackProfileForwardingComponent) {
+                            set = new ComponentName[N];
+                        } else {
+                            set = new ComponentName[N + 1];
+                        }
+                        ComponentName[] set2 = set;
+                        int bestMatch = 0;
+                        int bestMatch2 = 0;
+                        while (bestMatch2 < N) {
+                            Intent filterIntent3 = filterIntent2;
+                            ResolveInfo r = this.mAdapter.mUnfilteredResolveList.get(bestMatch2).getResolveInfoAt(0);
+                            int cat3 = cat2;
+                            set2[bestMatch2] = new ComponentName(r.activityInfo.packageName, r.activityInfo.name);
+                            if (r.match > bestMatch) {
+                                bestMatch = r.match;
+                            }
+                            bestMatch2++;
+                            filterIntent2 = filterIntent3;
+                            cat2 = cat3;
+                        }
+                        if (needToAddBackProfileForwardingComponent) {
+                            set2[N] = this.mAdapter.mOtherProfile.getResolvedComponentName();
+                            int otherProfileMatch = this.mAdapter.mOtherProfile.getResolveInfo().match;
+                            if (otherProfileMatch > bestMatch) {
+                                bestMatch = otherProfileMatch;
+                            }
+                        }
+                        if (alwaysCheck) {
+                            int userId = getUserId();
+                            PackageManager pm = getPackageManager();
+                            pm.addPreferredActivity(filter, bestMatch, set2, intent.getComponent());
+                            if (ri.handleAllWebDataURI) {
+                                String packageName = pm.getDefaultBrowserPackageNameAsUser(userId);
+                                if (TextUtils.isEmpty(packageName)) {
+                                    pm.setDefaultBrowserPackageNameAsUser(ri.activityInfo.packageName, userId);
+                                }
+                            } else {
+                                ComponentName cn = intent.getComponent();
+                                String packageName2 = cn.getPackageName();
+                                String dataScheme = data != null ? data.getScheme() : null;
+                                if (dataScheme != null && (dataScheme.equals(IntentFilter.SCHEME_HTTP) || dataScheme.equals(IntentFilter.SCHEME_HTTPS))) {
+                                    isHttpOrHttps = true;
+                                    if (action != null && action.equals("android.intent.action.VIEW")) {
+                                        isViewAction = true;
+                                        if (categories != null && categories.contains(Intent.CATEGORY_BROWSABLE)) {
+                                            hasCategoryBrowsable = true;
+                                            if (isHttpOrHttps && isViewAction && hasCategoryBrowsable) {
+                                                pm.updateIntentVerificationStatusAsUser(packageName2, 2, userId);
+                                            }
+                                        }
+                                        hasCategoryBrowsable = false;
+                                        if (isHttpOrHttps) {
+                                            pm.updateIntentVerificationStatusAsUser(packageName2, 2, userId);
+                                        }
+                                    }
+                                    isViewAction = false;
+                                    if (categories != null) {
+                                        hasCategoryBrowsable = true;
+                                        if (isHttpOrHttps) {
+                                        }
+                                    }
+                                    hasCategoryBrowsable = false;
+                                    if (isHttpOrHttps) {
+                                    }
+                                }
+                                isHttpOrHttps = false;
+                                if (action != null) {
+                                    isViewAction = true;
+                                    if (categories != null) {
+                                    }
+                                    hasCategoryBrowsable = false;
+                                    if (isHttpOrHttps) {
+                                    }
+                                }
+                                isViewAction = false;
+                                if (categories != null) {
+                                }
+                                hasCategoryBrowsable = false;
+                                if (isHttpOrHttps) {
+                                }
+                            }
+                        } else {
+                            try {
+                                this.mAdapter.mResolverListController.setLastChosen(intent, filter, bestMatch);
+                            } catch (RemoteException re) {
+                                Log.m72d(TAG, "Error calling setLastChosenActivity\n" + re);
+                            }
+                        }
+                    }
+                }
+            }
+            if (target == null) {
+                safelyStartActivity(target);
+                if (target.isSuspended()) {
+                    return false;
+                }
+                return true;
+            }
+            return true;
+        }
+        if (target == null) {
+        }
     }
 
     public void safelyStartActivity(TargetInfo cti) {
@@ -1142,35 +997,37 @@ public class ResolverActivity extends Activity {
     private void safelyStartActivityInternal(TargetInfo cti) {
         String launchedFromPackage;
         if (this.mProfileSwitchMessageId != -1) {
-            Toast.makeText((Context) this, (CharSequence) getString(this.mProfileSwitchMessageId), 1).show();
+            Toast.makeText(this, getString(this.mProfileSwitchMessageId), 1).show();
         }
-        if (this.mSafeForwardingMode) {
-            try {
-                if (cti.startAsCaller(this, (Bundle) null, -10000)) {
-                    onActivityStarted(cti);
-                }
-            } catch (RuntimeException e) {
-                try {
-                    launchedFromPackage = ActivityTaskManager.getService().getLaunchedFromPackage(getActivityToken());
-                } catch (RemoteException e2) {
-                    launchedFromPackage = "??";
-                }
-                Slog.wtf(TAG, "Unable to launch as uid " + this.mLaunchedFromUid + " package " + launchedFromPackage + ", while running in " + ActivityThread.currentProcessName(), e);
+        if (!this.mSafeForwardingMode) {
+            if (cti.start(this, null)) {
+                onActivityStarted(cti);
+                return;
             }
-        } else if (cti.start(this, (Bundle) null)) {
-            onActivityStarted(cti);
+            return;
+        }
+        try {
+            if (cti.startAsCaller(this, null, -10000)) {
+                onActivityStarted(cti);
+            }
+        } catch (RuntimeException e) {
+            try {
+                launchedFromPackage = ActivityTaskManager.getService().getLaunchedFromPackage(getActivityToken());
+            } catch (RemoteException e2) {
+                launchedFromPackage = "??";
+            }
+            Slog.wtf(TAG, "Unable to launch as uid " + this.mLaunchedFromUid + " package " + launchedFromPackage + ", while running in " + ActivityThread.currentProcessName(), e);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean startAsCallerImpl(Intent intent, Bundle options, boolean ignoreTargetSecurity, int userId) {
+    boolean startAsCallerImpl(Intent intent, Bundle options, boolean ignoreTargetSecurity, int userId) {
         try {
             IBinder permissionToken = ActivityTaskManager.getService().requestStartActivityPermissionToken(getActivityToken());
             Intent chooserIntent = new Intent();
-            ComponentName delegateActivity = ComponentName.unflattenFromString(Resources.getSystem().getString(R.string.config_chooserActivity));
+            ComponentName delegateActivity = ComponentName.unflattenFromString(Resources.getSystem().getString(C3132R.string.config_chooserActivity));
             chooserIntent.setClassName(delegateActivity.getPackageName(), delegateActivity.getClassName());
             chooserIntent.putExtra(ActivityTaskManager.EXTRA_PERMISSION_TOKEN, permissionToken);
-            chooserIntent.putExtra(Intent.EXTRA_INTENT, (Parcelable) intent);
+            chooserIntent.putExtra(Intent.EXTRA_INTENT, intent);
             chooserIntent.putExtra(ActivityTaskManager.EXTRA_OPTIONS, options);
             chooserIntent.putExtra(ActivityTaskManager.EXTRA_IGNORE_TARGET_SECURITY, ignoreTargetSecurity);
             chooserIntent.putExtra(Intent.EXTRA_USER_ID, userId);
@@ -1178,7 +1035,7 @@ public class ResolverActivity extends Activity {
             startActivity(chooserIntent);
             return true;
         } catch (RemoteException e) {
-            Log.e(TAG, e.toString());
+            Log.m70e(TAG, e.toString());
             return true;
         }
     }
@@ -1195,16 +1052,16 @@ public class ResolverActivity extends Activity {
     }
 
     public void showTargetDetails(ResolveInfo ri) {
-        startActivity(new Intent().setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData(Uri.fromParts("package", ri.activityInfo.packageName, (String) null)).addFlags(524288));
+        Intent in = new Intent().setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData(Uri.fromParts("package", ri.activityInfo.packageName, null)).addFlags(524288);
+        startActivity(in);
     }
 
     public ResolveListAdapter createAdapter(Context context, List<Intent> payloadIntents, Intent[] initialIntents, List<ResolveInfo> rList, int launchedFromUid, boolean filterLastUsed) {
         return new ResolveListAdapter(context, payloadIntents, initialIntents, rList, launchedFromUid, filterLastUsed, createListController());
     }
 
-    /* access modifiers changed from: protected */
     @VisibleForTesting
-    public ResolverListController createListController() {
+    protected ResolverListController createListController() {
         return new ResolverListController(this, this.mPm, getTargetIntent(), getReferrerPackageName(), this.mLaunchedFromUid);
     }
 
@@ -1212,7 +1069,7 @@ public class ResolverActivity extends Activity {
         this.mAdapter = createAdapter(this, payloadIntents, initialIntents, rList, this.mLaunchedFromUid, this.mSupportsAlwaysUseOption && !isVoiceInteraction());
         boolean rebuildCompleted = this.mAdapter.rebuildList();
         if (useLayoutWithDefault()) {
-            this.mLayoutId = R.layout.resolver_list_with_default;
+            this.mLayoutId = C3132R.layout.resolver_list_with_default;
         } else {
             this.mLayoutId = getLayoutResource();
         }
@@ -1228,9 +1085,10 @@ public class ResolverActivity extends Activity {
                 return true;
             }
         }
-        this.mAdapterView = (AbsListView) findViewById(R.id.resolver_list);
+        this.mAdapterView = (AbsListView) findViewById(C3132R.C3134id.resolver_list);
         if (count == 0 && this.mAdapter.mPlaceholderCount == 0) {
-            ((TextView) findViewById(16908292)).setVisibility(0);
+            TextView emptyView = (TextView) findViewById(16908292);
+            emptyView.setVisibility(0);
             this.mAdapterView.setVisibility(8);
         } else {
             this.mAdapterView.setVisibility(0);
@@ -1242,7 +1100,7 @@ public class ResolverActivity extends Activity {
     public void onPrepareAdapterView(AbsListView adapterView, ResolveListAdapter adapter) {
         boolean useHeader = adapter.hasFilteredItem();
         ListView listView = adapterView instanceof ListView ? (ListView) adapterView : null;
-        adapterView.setAdapter((ListAdapter) this.mAdapter);
+        adapterView.setAdapter(this.mAdapter);
         ItemClickListener listener = new ItemClickListener();
         adapterView.setOnItemClickListener(listener);
         adapterView.setOnItemLongClickListener(listener);
@@ -1250,7 +1108,7 @@ public class ResolverActivity extends Activity {
             listView.setChoiceMode(1);
         }
         if (useHeader && listView != null && listView.getHeaderViewsCount() == 0) {
-            listView.addHeaderView(LayoutInflater.from(this).inflate((int) R.layout.resolver_different_item_header, (ViewGroup) listView, false));
+            listView.addHeaderView(LayoutInflater.from(this).inflate(C3132R.layout.resolver_different_item_header, (ViewGroup) listView, false));
         }
     }
 
@@ -1275,28 +1133,26 @@ public class ResolverActivity extends Activity {
         ImageView iconView = (ImageView) findViewById(16908294);
         DisplayResolveInfo iconInfo = this.mAdapter.getFilteredItem();
         if (iconView != null && iconInfo != null) {
-            new LoadIconTask(iconInfo, iconView).execute((Params[]) new Void[0]);
+            new LoadIconTask(iconInfo, iconView).execute(new Void[0]);
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void resetButtonBar() {
-        if (this.mSupportsAlwaysUseOption || this.mUseLayoutForBrowsables) {
-            ViewGroup buttonLayout = (ViewGroup) findViewById(R.id.button_bar);
-            if (buttonLayout != null) {
-                int inset = 0;
-                buttonLayout.setVisibility(0);
-                if (this.mSystemWindowInsets != null) {
-                    inset = this.mSystemWindowInsets.bottom;
-                }
-                buttonLayout.setPadding(buttonLayout.getPaddingLeft(), buttonLayout.getPaddingTop(), buttonLayout.getPaddingRight(), getResources().getDimensionPixelSize(R.dimen.resolver_button_bar_spacing) + inset);
-                this.mOnceButton = (Button) buttonLayout.findViewById(R.id.button_once);
-                this.mAlwaysButton = (Button) buttonLayout.findViewById(R.id.button_always);
-                resetAlwaysOrOnceButtonBar();
-                return;
-            }
-            Log.e(TAG, "Layout unexpectedly does not have a button bar");
+        if (!this.mSupportsAlwaysUseOption && !this.mUseLayoutForBrowsables) {
+            return;
         }
+        ViewGroup buttonLayout = (ViewGroup) findViewById(C3132R.C3134id.button_bar);
+        if (buttonLayout != null) {
+            buttonLayout.setVisibility(0);
+            int inset = this.mSystemWindowInsets != null ? this.mSystemWindowInsets.bottom : 0;
+            buttonLayout.setPadding(buttonLayout.getPaddingLeft(), buttonLayout.getPaddingTop(), buttonLayout.getPaddingRight(), getResources().getDimensionPixelSize(C3132R.dimen.resolver_button_bar_spacing) + inset);
+            this.mOnceButton = (Button) buttonLayout.findViewById(C3132R.C3134id.button_once);
+            this.mAlwaysButton = (Button) buttonLayout.findViewById(C3132R.C3134id.button_always);
+            resetAlwaysOrOnceButtonBar();
+            return;
+        }
+        Log.m70e(TAG, "Layout unexpectedly does not have a button bar");
     }
 
     private void resetAlwaysOrOnceButtonBar() {
@@ -1309,13 +1165,12 @@ public class ResolverActivity extends Activity {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public boolean useLayoutWithDefault() {
         return this.mSupportsAlwaysUseOption && this.mAdapter.hasFilteredItem();
     }
 
-    /* access modifiers changed from: protected */
-    public void setRetainInOnStop(boolean retainInOnStop) {
+    protected void setRetainInOnStop(boolean retainInOnStop) {
         this.mRetainInOnStop = retainInOnStop;
     }
 
@@ -1334,14 +1189,14 @@ public class ResolverActivity extends Activity {
         return true;
     }
 
+    /* loaded from: classes4.dex */
     public final class DisplayResolveInfo implements TargetInfo {
         private Drawable mBadge;
         private Drawable mDisplayIcon;
         private final CharSequence mDisplayLabel;
         private final CharSequence mExtendedInfo;
         private boolean mIsSuspended;
-        /* access modifiers changed from: private */
-        public final ResolveInfo mResolveInfo;
+        private final ResolveInfo mResolveInfo;
         private final Intent mResolvedIntent;
         private final List<Intent> mSourceIntents = new ArrayList();
 
@@ -1368,22 +1223,27 @@ public class ResolverActivity extends Activity {
             this.mResolvedIntent.fillIn(fillInIntent, flags);
         }
 
+        @Override // com.android.internal.app.ResolverActivity.TargetInfo
         public ResolveInfo getResolveInfo() {
             return this.mResolveInfo;
         }
 
+        @Override // com.android.internal.app.ResolverActivity.TargetInfo
         public CharSequence getDisplayLabel() {
             return this.mDisplayLabel;
         }
 
+        @Override // com.android.internal.app.ResolverActivity.TargetInfo
         public Drawable getDisplayIcon() {
             return this.mDisplayIcon;
         }
 
+        @Override // com.android.internal.app.ResolverActivity.TargetInfo
         public TargetInfo cloneFilledIn(Intent fillInIntent, int flags) {
             return new DisplayResolveInfo(this, fillInIntent, flags);
         }
 
+        @Override // com.android.internal.app.ResolverActivity.TargetInfo
         public List<Intent> getAllSourceIntents() {
             return this.mSourceIntents;
         }
@@ -1400,48 +1260,54 @@ public class ResolverActivity extends Activity {
             return this.mDisplayIcon != null;
         }
 
+        @Override // com.android.internal.app.ResolverActivity.TargetInfo
         public CharSequence getExtendedInfo() {
             return this.mExtendedInfo;
         }
 
+        @Override // com.android.internal.app.ResolverActivity.TargetInfo
         public Intent getResolvedIntent() {
             return this.mResolvedIntent;
         }
 
+        @Override // com.android.internal.app.ResolverActivity.TargetInfo
         public ComponentName getResolvedComponentName() {
             return new ComponentName(this.mResolveInfo.activityInfo.packageName, this.mResolveInfo.activityInfo.name);
         }
 
+        @Override // com.android.internal.app.ResolverActivity.TargetInfo
         public boolean start(Activity activity, Bundle options) {
             activity.startActivity(this.mResolvedIntent, options);
             return true;
         }
 
+        @Override // com.android.internal.app.ResolverActivity.TargetInfo
         public boolean startAsCaller(ResolverActivity activity, Bundle options, int userId) {
             if (ResolverActivity.this.mEnableChooserDelegate) {
                 return activity.startAsCallerImpl(this.mResolvedIntent, options, false, userId);
             }
-            activity.startActivityAsCaller(this.mResolvedIntent, options, (IBinder) null, false, userId);
+            activity.startActivityAsCaller(this.mResolvedIntent, options, null, false, userId);
             return true;
         }
 
+        @Override // com.android.internal.app.ResolverActivity.TargetInfo
         public boolean startAsUser(Activity activity, Bundle options, UserHandle user) {
             activity.startActivityAsUser(this.mResolvedIntent, options, user);
             return false;
         }
 
+        @Override // com.android.internal.app.ResolverActivity.TargetInfo
         public boolean isSuspended() {
             return this.mIsSuspended;
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public List<DisplayResolveInfo> getDisplayList() {
+    List<DisplayResolveInfo> getDisplayList() {
         return this.mAdapter.mDisplayList;
     }
 
+    /* loaded from: classes4.dex */
     public class ResolveListAdapter extends BaseAdapter {
-        private boolean mAllTargetsAreBrowsers = false;
         private final List<ResolveInfo> mBaseResolveList;
         List<DisplayResolveInfo> mDisplayList;
         private boolean mFilterLastUsed;
@@ -1449,14 +1315,12 @@ public class ResolverActivity extends Activity {
         private final Intent[] mInitialIntents;
         private final List<Intent> mIntents;
         protected ResolveInfo mLastChosen;
-        private int mLastChosenPosition = -1;
-        /* access modifiers changed from: private */
-        public DisplayResolveInfo mOtherProfile;
-        /* access modifiers changed from: private */
-        public int mPlaceholderCount;
-        /* access modifiers changed from: private */
-        public ResolverListController mResolverListController;
+        private DisplayResolveInfo mOtherProfile;
+        private int mPlaceholderCount;
+        private ResolverListController mResolverListController;
         List<ResolvedComponentInfo> mUnfilteredResolveList;
+        private boolean mAllTargetsAreBrowsers = false;
+        private int mLastChosenPosition = -1;
 
         public ResolveListAdapter(Context context, List<Intent> payloadIntents, Intent[] initialIntents, List<ResolveInfo> rList, int launchedFromUid, boolean filterLastUsed, ResolverListController resolverListController) {
             this.mIntents = payloadIntents;
@@ -1485,10 +1349,10 @@ public class ResolverActivity extends Activity {
         }
 
         public DisplayResolveInfo getFilteredItem() {
-            if (!this.mFilterLastUsed || this.mLastChosenPosition < 0) {
-                return null;
+            if (this.mFilterLastUsed && this.mLastChosenPosition >= 0) {
+                return this.mDisplayList.get(this.mLastChosenPosition);
             }
-            return this.mDisplayList.get(this.mLastChosenPosition);
+            return null;
         }
 
         public DisplayResolveInfo getOtherProfile() {
@@ -1496,10 +1360,10 @@ public class ResolverActivity extends Activity {
         }
 
         public int getFilteredPosition() {
-            if (!this.mFilterLastUsed || this.mLastChosenPosition < 0) {
-                return -1;
+            if (this.mFilterLastUsed && this.mLastChosenPosition >= 0) {
+                return this.mLastChosenPosition;
             }
-            return this.mLastChosenPosition;
+            return -1;
         }
 
         public boolean hasFilteredItem() {
@@ -1522,8 +1386,7 @@ public class ResolverActivity extends Activity {
             return this.mAllTargetsAreBrowsers;
         }
 
-        /* access modifiers changed from: protected */
-        public boolean rebuildList() {
+        protected boolean rebuildList() {
             List<ResolvedComponentInfo> currentResolveList;
             this.mOtherProfile = null;
             this.mLastChosen = null;
@@ -1564,97 +1427,90 @@ public class ResolverActivity extends Activity {
                 try {
                     this.mLastChosen = this.mResolverListController.getLastChosen();
                 } catch (RemoteException re) {
-                    Log.d(ResolverActivity.TAG, "Error calling getLastChosenActivity\n" + re);
+                    Log.m72d(ResolverActivity.TAG, "Error calling getLastChosenActivity\n" + re);
                 }
             }
-            if (currentResolveList != null) {
-                int size = currentResolveList.size();
-                int i = size;
-                if (size > 0) {
-                    List<ResolvedComponentInfo> originalList2 = this.mResolverListController.filterLowPriority(currentResolveList, this.mUnfilteredResolveList == currentResolveList);
-                    if (originalList2 != null) {
-                        this.mUnfilteredResolveList = originalList2;
-                    }
-                    if (currentResolveList.size() > 1) {
-                        int placeholderCount = currentResolveList.size();
-                        if (ResolverActivity.this.useLayoutWithDefault()) {
-                            placeholderCount--;
-                        }
-                        setPlaceholderCount(placeholderCount);
-                        new AsyncTask<List<ResolvedComponentInfo>, Void, List<ResolvedComponentInfo>>() {
-                            /* access modifiers changed from: protected */
-                            public List<ResolvedComponentInfo> doInBackground(List<ResolvedComponentInfo>... params) {
-                                ResolveListAdapter.this.mResolverListController.sort(params[0]);
-                                return params[0];
-                            }
-
-                            /* access modifiers changed from: protected */
-                            public void onPostExecute(List<ResolvedComponentInfo> sortedComponents) {
-                                ResolveListAdapter.this.processSortedList(sortedComponents);
-                                ResolverActivity.this.bindProfileView();
-                                ResolveListAdapter.this.notifyDataSetChanged();
-                            }
-                        }.execute((Params[]) new List[]{currentResolveList});
-                        postListReadyRunnable();
-                        return false;
-                    }
-                    processSortedList(currentResolveList);
-                    return true;
+            if (currentResolveList != null && currentResolveList.size() > 0) {
+                List<ResolvedComponentInfo> originalList2 = this.mResolverListController.filterLowPriority(currentResolveList, this.mUnfilteredResolveList == currentResolveList);
+                if (originalList2 != null) {
+                    this.mUnfilteredResolveList = originalList2;
                 }
+                if (currentResolveList.size() > 1) {
+                    int placeholderCount = currentResolveList.size();
+                    if (ResolverActivity.this.useLayoutWithDefault()) {
+                        placeholderCount--;
+                    }
+                    setPlaceholderCount(placeholderCount);
+                    AsyncTask<List<ResolvedComponentInfo>, Void, List<ResolvedComponentInfo>> sortingTask = new AsyncTask<List<ResolvedComponentInfo>, Void, List<ResolvedComponentInfo>>() { // from class: com.android.internal.app.ResolverActivity.ResolveListAdapter.1
+                        /* JADX INFO: Access modifiers changed from: protected */
+                        @Override // android.p007os.AsyncTask
+                        public List<ResolvedComponentInfo> doInBackground(List<ResolvedComponentInfo>... params) {
+                            ResolveListAdapter.this.mResolverListController.sort(params[0]);
+                            return params[0];
+                        }
+
+                        /* JADX INFO: Access modifiers changed from: protected */
+                        @Override // android.p007os.AsyncTask
+                        public void onPostExecute(List<ResolvedComponentInfo> sortedComponents) {
+                            ResolveListAdapter.this.processSortedList(sortedComponents);
+                            ResolverActivity.this.bindProfileView();
+                            ResolveListAdapter.this.notifyDataSetChanged();
+                        }
+                    };
+                    sortingTask.execute(currentResolveList);
+                    postListReadyRunnable();
+                    return false;
+                }
+                processSortedList(currentResolveList);
+                return true;
             }
             processSortedList(currentResolveList);
             return true;
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public void processSortedList(List<ResolvedComponentInfo> sortedComponents) {
-            if (sortedComponents != null) {
-                int size = sortedComponents.size();
-                int i = size;
-                if (size != 0) {
-                    this.mAllTargetsAreBrowsers = ResolverActivity.this.mUseLayoutForBrowsables;
+            if (sortedComponents != null && sortedComponents.size() != 0) {
+                this.mAllTargetsAreBrowsers = ResolverActivity.this.mUseLayoutForBrowsables;
+                int i = 0;
+                if (this.mInitialIntents != null) {
                     int i2 = 0;
-                    if (this.mInitialIntents != null) {
-                        int i3 = 0;
-                        while (i3 < this.mInitialIntents.length) {
-                            Intent ii = this.mInitialIntents[i3];
-                            if (ii != null) {
-                                ActivityInfo ai = ii.resolveActivityInfo(ResolverActivity.this.getPackageManager(), i2);
-                                if (ai == null) {
-                                    Log.w(ResolverActivity.TAG, "No activity found for " + ii);
-                                } else {
-                                    ResolveInfo ri = new ResolveInfo();
-                                    ri.activityInfo = ai;
-                                    UserManager userManager = (UserManager) ResolverActivity.this.getSystemService("user");
-                                    if (ii instanceof LabeledIntent) {
-                                        LabeledIntent li = (LabeledIntent) ii;
-                                        ri.resolvePackageName = li.getSourcePackage();
-                                        ri.labelRes = li.getLabelResource();
-                                        ri.nonLocalizedLabel = li.getNonLocalizedLabel();
-                                        ri.icon = li.getIconResource();
-                                        ri.iconResourceId = ri.icon;
-                                    }
-                                    if (userManager.isManagedProfile()) {
-                                        ri.noResourceId = true;
-                                        ri.icon = i2;
-                                    }
-                                    this.mAllTargetsAreBrowsers &= ri.handleAllWebDataURI;
-                                    DisplayResolveInfo displayResolveInfo = r5;
-                                    DisplayResolveInfo displayResolveInfo2 = new DisplayResolveInfo(ii, ri, ri.loadLabel(ResolverActivity.this.getPackageManager()), (CharSequence) null, ii);
-                                    addResolveInfo(displayResolveInfo);
+                    while (i2 < this.mInitialIntents.length) {
+                        Intent ii = this.mInitialIntents[i2];
+                        if (ii != null) {
+                            ActivityInfo ai = ii.resolveActivityInfo(ResolverActivity.this.getPackageManager(), i);
+                            if (ai == null) {
+                                Log.m64w(ResolverActivity.TAG, "No activity found for " + ii);
+                            } else {
+                                ResolveInfo ri = new ResolveInfo();
+                                ri.activityInfo = ai;
+                                UserManager userManager = (UserManager) ResolverActivity.this.getSystemService("user");
+                                if (ii instanceof LabeledIntent) {
+                                    LabeledIntent li = (LabeledIntent) ii;
+                                    ri.resolvePackageName = li.getSourcePackage();
+                                    ri.labelRes = li.getLabelResource();
+                                    ri.nonLocalizedLabel = li.getNonLocalizedLabel();
+                                    ri.icon = li.getIconResource();
+                                    ri.iconResourceId = ri.icon;
                                 }
+                                if (userManager.isManagedProfile()) {
+                                    ri.noResourceId = true;
+                                    ri.icon = i;
+                                }
+                                this.mAllTargetsAreBrowsers &= ri.handleAllWebDataURI;
+                                addResolveInfo(new DisplayResolveInfo(ii, ri, ri.loadLabel(ResolverActivity.this.getPackageManager()), null, ii));
                             }
-                            i3++;
-                            i2 = 0;
                         }
+                        i2++;
+                        i = 0;
                     }
-                    for (ResolvedComponentInfo rci : sortedComponents) {
-                        ResolveInfo ri2 = rci.getResolveInfoAt(0);
-                        if (ri2 != null) {
-                            this.mAllTargetsAreBrowsers &= ri2.handleAllWebDataURI;
-                            ResolveInfoPresentationGetter pg = ResolverActivity.this.makePresentationGetter(ri2);
-                            addResolveInfoWithAlternates(rci, pg.getSubLabel(), pg.getLabel());
-                        }
+                }
+                for (ResolvedComponentInfo rci : sortedComponents) {
+                    ResolveInfo ri2 = rci.getResolveInfoAt(0);
+                    if (ri2 != null) {
+                        this.mAllTargetsAreBrowsers &= ri2.handleAllWebDataURI;
+                        ResolveInfoPresentationGetter pg = ResolverActivity.this.makePresentationGetter(ri2);
+                        addResolveInfoWithAlternates(rci, pg.getSubLabel(), pg.getLabel());
                     }
                 }
             }
@@ -1663,12 +1519,13 @@ public class ResolverActivity extends Activity {
 
         private void postListReadyRunnable() {
             if (ResolverActivity.this.mPostListReadyRunnable == null) {
-                Runnable unused = ResolverActivity.this.mPostListReadyRunnable = new Runnable() {
+                ResolverActivity.this.mPostListReadyRunnable = new Runnable() { // from class: com.android.internal.app.ResolverActivity.ResolveListAdapter.2
+                    @Override // java.lang.Runnable
                     public void run() {
                         ResolverActivity.this.setHeader();
                         ResolverActivity.this.resetButtonBar();
                         ResolveListAdapter.this.onListRebuilt();
-                        Runnable unused = ResolverActivity.this.mPostListReadyRunnable = null;
+                        ResolverActivity.this.mPostListReadyRunnable = null;
                     }
                 };
                 ResolverActivity.this.getMainThreadHandler().post(ResolverActivity.this.mPostListReadyRunnable);
@@ -1676,7 +1533,8 @@ public class ResolverActivity extends Activity {
         }
 
         public void onListRebuilt() {
-            if (getUnfilteredCount() == 1 && getOtherProfile() == null) {
+            int count = getUnfilteredCount();
+            if (count == 1 && getOtherProfile() == null) {
                 TargetInfo target = targetInfoForPosition(0, false);
                 if (ResolverActivity.this.shouldAutoLaunchSingleChoice(target)) {
                     ResolverActivity.this.safelyStartActivity(target);
@@ -1697,9 +1555,9 @@ public class ResolverActivity extends Activity {
             DisplayResolveInfo dri = new DisplayResolveInfo(intent, add, roLabel, extraInfo, replaceIntent);
             addResolveInfo(dri);
             if (replaceIntent == intent) {
-                int N = count;
-                for (int i = 1; i < N; i++) {
-                    dri.addAlternateSourceIntent(rci.getIntentAt(i));
+                for (int i = 1; i < count; i++) {
+                    Intent altIntent = rci.getIntentAt(i);
+                    dri.addAlternateSourceIntent(altIntent);
                 }
             }
             updateLastChosenPosition(add);
@@ -1742,6 +1600,7 @@ public class ResolverActivity extends Activity {
             return null;
         }
 
+        @Override // android.widget.Adapter
         public int getCount() {
             int totalSize;
             if (this.mDisplayList == null || this.mDisplayList.isEmpty()) {
@@ -1749,16 +1608,17 @@ public class ResolverActivity extends Activity {
             } else {
                 totalSize = this.mDisplayList.size();
             }
-            if (!this.mFilterLastUsed || this.mLastChosenPosition < 0) {
-                return totalSize;
+            if (this.mFilterLastUsed && this.mLastChosenPosition >= 0) {
+                return totalSize - 1;
             }
-            return totalSize - 1;
+            return totalSize;
         }
 
         public int getUnfilteredCount() {
             return this.mDisplayList.size();
         }
 
+        @Override // android.widget.Adapter
         public TargetInfo getItem(int position) {
             if (this.mFilterLastUsed && this.mLastChosenPosition >= 0 && position >= this.mLastChosenPosition) {
                 position++;
@@ -1769,8 +1629,9 @@ public class ResolverActivity extends Activity {
             return null;
         }
 
+        @Override // android.widget.Adapter
         public long getItemId(int position) {
-            return (long) position;
+            return position;
         }
 
         public int getDisplayResolveInfoCount() {
@@ -1781,6 +1642,7 @@ public class ResolverActivity extends Activity {
             return this.mDisplayList.get(index);
         }
 
+        @Override // android.widget.Adapter
         public final View getView(int position, View convertView, ViewGroup parent) {
             View view = convertView;
             if (view == null) {
@@ -1792,23 +1654,23 @@ public class ResolverActivity extends Activity {
 
         public final View createView(ViewGroup parent) {
             View view = onCreateView(parent);
-            view.setTag(new ViewHolder(view));
+            ViewHolder holder = new ViewHolder(view);
+            view.setTag(holder);
             return view;
         }
 
         public View onCreateView(ViewGroup parent) {
-            return this.mInflater.inflate((int) R.layout.resolve_list_item, parent, false);
+            return this.mInflater.inflate(C3132R.layout.resolve_list_item, parent, false);
         }
 
         public final void bindView(int position, View view) {
             onBindView(view, getItem(position));
         }
 
-        /* access modifiers changed from: protected */
-        public void onBindView(View view, TargetInfo info) {
+        protected void onBindView(View view, TargetInfo info) {
             ViewHolder holder = (ViewHolder) view.getTag();
             if (info == null) {
-                holder.icon.setImageDrawable(ResolverActivity.this.getDrawable(R.drawable.resolver_icon_placeholder));
+                holder.icon.setImageDrawable(ResolverActivity.this.getDrawable(C3132R.C3133drawable.resolver_icon_placeholder));
                 return;
             }
             CharSequence label = info.getDisplayLabel();
@@ -1823,26 +1685,27 @@ public class ResolverActivity extends Activity {
                 holder.text2.setText(subLabel);
             }
             if (info.isSuspended()) {
-                holder.icon.setColorFilter((ColorFilter) ResolverActivity.this.mSuspendedMatrixColorFilter);
+                holder.icon.setColorFilter(ResolverActivity.this.mSuspendedMatrixColorFilter);
             } else {
                 holder.icon.setColorFilter((ColorFilter) null);
             }
-            if (!(info instanceof DisplayResolveInfo) || ((DisplayResolveInfo) info).hasDisplayIcon()) {
-                holder.icon.setImageDrawable(info.getDisplayIcon());
+            if ((info instanceof DisplayResolveInfo) && !((DisplayResolveInfo) info).hasDisplayIcon()) {
+                new LoadIconTask((DisplayResolveInfo) info, holder.icon).execute(new Void[0]);
             } else {
-                new LoadIconTask((DisplayResolveInfo) info, holder.icon).execute((Params[]) new Void[0]);
+                holder.icon.setImageDrawable(info.getDisplayIcon());
             }
         }
     }
 
     @VisibleForTesting
+    /* loaded from: classes4.dex */
     public static final class ResolvedComponentInfo {
         private final List<Intent> mIntents = new ArrayList();
         private final List<ResolveInfo> mResolveInfos = new ArrayList();
         public final ComponentName name;
 
-        public ResolvedComponentInfo(ComponentName name2, Intent intent, ResolveInfo info) {
-            this.name = name2;
+        public ResolvedComponentInfo(ComponentName name, Intent intent, ResolveInfo info) {
+            this.name = name;
             add(intent, info);
         }
 
@@ -1890,6 +1753,7 @@ public class ResolverActivity extends Activity {
         }
     }
 
+    /* loaded from: classes4.dex */
     static class ViewHolder {
         public Drawable defaultItemViewBackground;
         public ImageView icon;
@@ -1906,31 +1770,35 @@ public class ResolverActivity extends Activity {
         }
     }
 
+    /* loaded from: classes4.dex */
     class ItemClickListener implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
         ItemClickListener() {
         }
 
+        @Override // android.widget.AdapterView.OnItemClickListener
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             ListView listView = parent instanceof ListView ? (ListView) parent : null;
             if (listView != null) {
                 position -= listView.getHeaderViewsCount();
             }
-            if (position >= 0 && ResolverActivity.this.mAdapter.resolveInfoForPosition(position, true) != null) {
-                int checkedPos = ResolverActivity.this.mAdapterView.getCheckedItemPosition();
-                boolean hasValidSelection = checkedPos != -1;
-                if (ResolverActivity.this.useLayoutWithDefault() || ((hasValidSelection && ResolverActivity.this.mLastSelected == checkedPos) || ResolverActivity.this.mAlwaysButton == null)) {
-                    ResolverActivity.this.startSelected(position, false, true);
-                    return;
-                }
+            if (position < 0 || ResolverActivity.this.mAdapter.resolveInfoForPosition(position, true) == null) {
+                return;
+            }
+            int checkedPos = ResolverActivity.this.mAdapterView.getCheckedItemPosition();
+            boolean hasValidSelection = checkedPos != -1;
+            if (!ResolverActivity.this.useLayoutWithDefault() && ((!hasValidSelection || ResolverActivity.this.mLastSelected != checkedPos) && ResolverActivity.this.mAlwaysButton != null)) {
                 ResolverActivity.this.setAlwaysButtonEnabled(hasValidSelection, checkedPos, true);
                 ResolverActivity.this.mOnceButton.setEnabled(hasValidSelection);
                 if (hasValidSelection) {
                     ResolverActivity.this.mAdapterView.smoothScrollToPosition(checkedPos);
                 }
-                int unused = ResolverActivity.this.mLastSelected = checkedPos;
+                ResolverActivity.this.mLastSelected = checkedPos;
+                return;
             }
+            ResolverActivity.this.startSelected(position, false, true);
         }
 
+        @Override // android.widget.AdapterView.OnItemLongClickListener
         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
             ListView listView = parent instanceof ListView ? (ListView) parent : null;
             if (listView != null) {
@@ -1939,11 +1807,13 @@ public class ResolverActivity extends Activity {
             if (position < 0) {
                 return false;
             }
-            ResolverActivity.this.showTargetDetails(ResolverActivity.this.mAdapter.resolveInfoForPosition(position, true));
+            ResolveInfo ri = ResolverActivity.this.mAdapter.resolveInfoForPosition(position, true);
+            ResolverActivity.this.showTargetDetails(ri);
             return true;
         }
     }
 
+    /* loaded from: classes4.dex */
     class LoadIconTask extends AsyncTask<Void, Void, Drawable> {
         protected final DisplayResolveInfo mDisplayResolveInfo;
         private final ResolveInfo mResolveInfo;
@@ -1955,12 +1825,14 @@ public class ResolverActivity extends Activity {
             this.mTargetView = target;
         }
 
-        /* access modifiers changed from: protected */
+        /* JADX INFO: Access modifiers changed from: protected */
+        @Override // android.p007os.AsyncTask
         public Drawable doInBackground(Void... params) {
             return ResolverActivity.this.loadIconForResolveInfo(this.mResolveInfo);
         }
 
-        /* access modifiers changed from: protected */
+        /* JADX INFO: Access modifiers changed from: protected */
+        @Override // android.p007os.AsyncTask
         public void onPostExecute(Drawable d) {
             if (ResolverActivity.this.mAdapter.getOtherProfile() == this.mDisplayResolveInfo) {
                 ResolverActivity.this.bindProfileView();
@@ -1976,26 +1848,32 @@ public class ResolverActivity extends Activity {
         return match2 >= 3145728 && match2 <= 5242880;
     }
 
+    /* loaded from: classes4.dex */
     static class PickTargetOptionRequest extends VoiceInteractor.PickOptionRequest {
         public PickTargetOptionRequest(VoiceInteractor.Prompt prompt, VoiceInteractor.PickOptionRequest.Option[] options, Bundle extras) {
             super(prompt, options, extras);
         }
 
+        @Override // android.app.VoiceInteractor.Request
         public void onCancel() {
             super.onCancel();
             ResolverActivity ra = (ResolverActivity) getActivity();
             if (ra != null) {
-                PickTargetOptionRequest unused = ra.mPickOptionRequest = null;
+                ra.mPickOptionRequest = null;
                 ra.finish();
             }
         }
 
+        @Override // android.app.VoiceInteractor.PickOptionRequest
         public void onPickOptionResult(boolean finished, VoiceInteractor.PickOptionRequest.Option[] selections, Bundle result) {
             ResolverActivity ra;
             super.onPickOptionResult(finished, selections, result);
-            if (selections.length == 1 && (ra = (ResolverActivity) getActivity()) != null && ra.onTargetSelected(ra.mAdapter.getItem(selections[0].getIndex()), false)) {
-                PickTargetOptionRequest unused = ra.mPickOptionRequest = null;
-                ra.finish();
+            if (selections.length == 1 && (ra = (ResolverActivity) getActivity()) != null) {
+                TargetInfo ti = ra.mAdapter.getItem(selections[0].getIndex());
+                if (ra.onTargetSelected(ti, false)) {
+                    ra.mPickOptionRequest = null;
+                    ra.finish();
+                }
             }
         }
     }

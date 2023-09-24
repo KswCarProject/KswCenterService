@@ -3,8 +3,8 @@ package android.preference;
 import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.preference.Preference;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -12,9 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.EditText;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
 @Deprecated
+/* loaded from: classes3.dex */
 public class EditTextPreference extends DialogPreference {
     @UnsupportedAppUsage
     private EditText mEditText;
@@ -37,7 +38,7 @@ public class EditTextPreference extends DialogPreference {
     }
 
     public EditTextPreference(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public void setText(String text) {
@@ -57,11 +58,11 @@ public class EditTextPreference extends DialogPreference {
         return this.mText;
     }
 
-    /* access modifiers changed from: protected */
-    public void onBindDialogView(View view) {
+    @Override // android.preference.DialogPreference
+    protected void onBindDialogView(View view) {
         super.onBindDialogView(view);
         EditText editText = this.mEditText;
-        editText.setText((CharSequence) getText());
+        editText.setText(getText());
         ViewParent oldParent = editText.getParent();
         if (oldParent != view) {
             if (oldParent != null) {
@@ -71,16 +72,15 @@ public class EditTextPreference extends DialogPreference {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onAddEditTextToDialogView(View dialogView, EditText editText) {
-        ViewGroup container = (ViewGroup) dialogView.findViewById(R.id.edittext_container);
+    protected void onAddEditTextToDialogView(View dialogView, EditText editText) {
+        ViewGroup container = (ViewGroup) dialogView.findViewById(C3132R.C3134id.edittext_container);
         if (container != null) {
-            container.addView((View) editText, -1, -2);
+            container.addView(editText, -1, -2);
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onDialogClosed(boolean positiveResult) {
+    @Override // android.preference.DialogPreference
+    protected void onDialogClosed(boolean positiveResult) {
         super.onDialogClosed(positiveResult);
         if (positiveResult) {
             String value = this.mEditText.getText().toString();
@@ -90,16 +90,17 @@ public class EditTextPreference extends DialogPreference {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public Object onGetDefaultValue(TypedArray a, int index) {
+    @Override // android.preference.Preference
+    protected Object onGetDefaultValue(TypedArray a, int index) {
         return a.getString(index);
     }
 
-    /* access modifiers changed from: protected */
-    public void onSetInitialValue(boolean restoreValue, Object defaultValue) {
+    @Override // android.preference.Preference
+    protected void onSetInitialValue(boolean restoreValue, Object defaultValue) {
         setText(restoreValue ? getPersistedString(this.mText) : (String) defaultValue);
     }
 
+    @Override // android.preference.Preference
     public boolean shouldDisableDependents() {
         return TextUtils.isEmpty(this.mText) || super.shouldDisableDependents();
     }
@@ -108,13 +109,13 @@ public class EditTextPreference extends DialogPreference {
         return this.mEditText;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean needInputMethod() {
+    @Override // android.preference.DialogPreference
+    protected boolean needInputMethod() {
         return true;
     }
 
-    /* access modifiers changed from: protected */
-    public Parcelable onSaveInstanceState() {
+    @Override // android.preference.DialogPreference, android.preference.Preference
+    protected Parcelable onSaveInstanceState() {
         Parcelable superState = super.onSaveInstanceState();
         if (isPersistent()) {
             return superState;
@@ -124,8 +125,8 @@ public class EditTextPreference extends DialogPreference {
         return myState;
     }
 
-    /* access modifiers changed from: protected */
-    public void onRestoreInstanceState(Parcelable state) {
+    @Override // android.preference.DialogPreference, android.preference.Preference
+    protected void onRestoreInstanceState(Parcelable state) {
         if (state == null || !state.getClass().equals(SavedState.class)) {
             super.onRestoreInstanceState(state);
             return;
@@ -135,12 +136,17 @@ public class EditTextPreference extends DialogPreference {
         setText(myState.text);
     }
 
+    /* loaded from: classes3.dex */
     private static class SavedState extends Preference.BaseSavedState {
-        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
+        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() { // from class: android.preference.EditTextPreference.SavedState.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public SavedState createFromParcel(Parcel in) {
                 return new SavedState(in);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public SavedState[] newArray(int size) {
                 return new SavedState[size];
             }
@@ -152,6 +158,7 @@ public class EditTextPreference extends DialogPreference {
             this.text = source.readString();
         }
 
+        @Override // android.view.AbsSavedState, android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             super.writeToParcel(dest, flags);
             dest.writeString(this.text);

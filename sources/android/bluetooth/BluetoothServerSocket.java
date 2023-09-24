@@ -1,12 +1,13 @@
 package android.bluetooth;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Handler;
-import android.os.ParcelUuid;
+import android.p007os.Handler;
+import android.p007os.ParcelUuid;
 import android.util.Log;
 import java.io.Closeable;
 import java.io.IOException;
 
+/* loaded from: classes.dex */
 public final class BluetoothServerSocket implements Closeable {
     private static final boolean DBG = false;
     private static final String TAG = "BluetoothServerSocket";
@@ -18,23 +19,22 @@ public final class BluetoothServerSocket implements Closeable {
 
     BluetoothServerSocket(int type, boolean auth, boolean encrypt, int port) throws IOException {
         this.mChannel = port;
-        this.mSocket = new BluetoothSocket(type, -1, auth, encrypt, (BluetoothDevice) null, port, (ParcelUuid) null);
+        this.mSocket = new BluetoothSocket(type, -1, auth, encrypt, null, port, null);
         if (port == -2) {
             this.mSocket.setExcludeSdp(true);
         }
     }
 
     BluetoothServerSocket(int type, boolean auth, boolean encrypt, int port, boolean mitm, boolean min16DigitPin) throws IOException {
-        int i = port;
-        this.mChannel = i;
-        this.mSocket = new BluetoothSocket(type, -1, auth, encrypt, (BluetoothDevice) null, port, (ParcelUuid) null, mitm, min16DigitPin);
-        if (i == -2) {
+        this.mChannel = port;
+        this.mSocket = new BluetoothSocket(type, -1, auth, encrypt, null, port, null, mitm, min16DigitPin);
+        if (port == -2) {
             this.mSocket.setExcludeSdp(true);
         }
     }
 
     BluetoothServerSocket(int type, boolean auth, boolean encrypt, ParcelUuid uuid) throws IOException {
-        this.mSocket = new BluetoothSocket(type, -1, auth, encrypt, (BluetoothDevice) null, -1, uuid);
+        this.mSocket = new BluetoothSocket(type, -1, auth, encrypt, null, -1, uuid);
         this.mChannel = this.mSocket.getPort();
     }
 
@@ -46,6 +46,7 @@ public final class BluetoothServerSocket implements Closeable {
         return this.mSocket.accept(timeout);
     }
 
+    @Override // java.io.Closeable, java.lang.AutoCloseable
     public void close() throws IOException {
         synchronized (this) {
             if (this.mHandler != null) {
@@ -55,14 +56,12 @@ public final class BluetoothServerSocket implements Closeable {
         this.mSocket.close();
     }
 
-    /* access modifiers changed from: package-private */
-    public synchronized void setCloseHandler(Handler handler, int message) {
+    synchronized void setCloseHandler(Handler handler, int message) {
         this.mHandler = handler;
         this.mMessage = message;
     }
 
-    /* access modifiers changed from: package-private */
-    public void setServiceName(String serviceName) {
+    void setServiceName(String serviceName) {
         this.mSocket.setServiceName(serviceName);
     }
 
@@ -74,10 +73,9 @@ public final class BluetoothServerSocket implements Closeable {
         return this.mChannel;
     }
 
-    /* access modifiers changed from: package-private */
-    public void setChannel(int newChannel) {
-        if (!(this.mSocket == null || this.mSocket.getPort() == newChannel)) {
-            Log.w(TAG, "The port set is different that the underlying port. mSocket.getPort(): " + this.mSocket.getPort() + " requested newChannel: " + newChannel);
+    void setChannel(int newChannel) {
+        if (this.mSocket != null && this.mSocket.getPort() != newChannel) {
+            Log.m64w(TAG, "The port set is different that the underlying port. mSocket.getPort(): " + this.mSocket.getPort() + " requested newChannel: " + newChannel);
         }
         this.mChannel = newChannel;
     }

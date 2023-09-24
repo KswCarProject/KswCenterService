@@ -1,12 +1,13 @@
 package android.app.job;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes.dex */
 public interface IJobCallback extends IInterface {
     @UnsupportedAppUsage
     void acknowledgeStartMessage(int i, boolean z) throws RemoteException;
@@ -23,29 +24,37 @@ public interface IJobCallback extends IInterface {
     @UnsupportedAppUsage
     void jobFinished(int i, boolean z) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements IJobCallback {
+        @Override // android.app.job.IJobCallback
         public void acknowledgeStartMessage(int jobId, boolean ongoing) throws RemoteException {
         }
 
+        @Override // android.app.job.IJobCallback
         public void acknowledgeStopMessage(int jobId, boolean reschedule) throws RemoteException {
         }
 
+        @Override // android.app.job.IJobCallback
         public JobWorkItem dequeueWork(int jobId) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.job.IJobCallback
         public boolean completeWork(int jobId, int workId) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.job.IJobCallback
         public void jobFinished(int jobId, boolean reschedule) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements IJobCallback {
         private static final String DESCRIPTOR = "android.app.job.IJobCallback";
         static final int TRANSACTION_acknowledgeStartMessage = 1;
@@ -63,12 +72,13 @@ public interface IJobCallback extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IJobCallback)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IJobCallback)) {
+                return (IJobCallback) iin;
             }
-            return (IJobCallback) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -90,67 +100,65 @@ public interface IJobCallback extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                boolean _arg1 = false;
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        int _arg0 = data.readInt();
-                        if (data.readInt() != 0) {
-                            _arg1 = true;
-                        }
-                        acknowledgeStartMessage(_arg0, _arg1);
-                        reply.writeNoException();
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        int _arg02 = data.readInt();
-                        if (data.readInt() != 0) {
-                            _arg1 = true;
-                        }
-                        acknowledgeStopMessage(_arg02, _arg1);
-                        reply.writeNoException();
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        JobWorkItem _result = dequeueWork(data.readInt());
-                        reply.writeNoException();
-                        if (_result != null) {
-                            reply.writeInt(1);
-                            _result.writeToParcel(reply, 1);
-                        } else {
-                            reply.writeInt(0);
-                        }
-                        return true;
-                    case 4:
-                        data.enforceInterface(DESCRIPTOR);
-                        boolean _result2 = completeWork(data.readInt(), data.readInt());
-                        reply.writeNoException();
-                        reply.writeInt(_result2);
-                        return true;
-                    case 5:
-                        data.enforceInterface(DESCRIPTOR);
-                        int _arg03 = data.readInt();
-                        if (data.readInt() != 0) {
-                            _arg1 = true;
-                        }
-                        jobFinished(_arg03, _arg1);
-                        reply.writeNoException();
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            boolean _arg1;
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    acknowledgeStartMessage(_arg0, _arg1);
+                    reply.writeNoException();
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    acknowledgeStopMessage(_arg02, _arg1);
+                    reply.writeNoException();
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg03 = data.readInt();
+                    JobWorkItem _result = dequeueWork(_arg03);
+                    reply.writeNoException();
+                    if (_result != null) {
+                        reply.writeInt(1);
+                        _result.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg04 = data.readInt();
+                    boolean completeWork = completeWork(_arg04, data.readInt());
+                    reply.writeNoException();
+                    reply.writeInt(completeWork ? 1 : 0);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg05 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    jobFinished(_arg05, _arg1);
+                    reply.writeNoException();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements IJobCallback {
             public static IJobCallback sDefaultImpl;
             private IBinder mRemote;
@@ -159,6 +167,7 @@ public interface IJobCallback extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -167,46 +176,47 @@ public interface IJobCallback extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.app.job.IJobCallback
             public void acknowledgeStartMessage(int jobId, boolean ongoing) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(jobId);
-                    _data.writeInt(ongoing);
-                    if (this.mRemote.transact(1, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(ongoing ? 1 : 0);
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().acknowledgeStartMessage(jobId, ongoing);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().acknowledgeStartMessage(jobId, ongoing);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.job.IJobCallback
             public void acknowledgeStopMessage(int jobId, boolean reschedule) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(jobId);
-                    _data.writeInt(reschedule);
-                    if (this.mRemote.transact(2, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(reschedule ? 1 : 0);
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().acknowledgeStopMessage(jobId, reschedule);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().acknowledgeStopMessage(jobId, reschedule);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.job.IJobCallback
             public JobWorkItem dequeueWork(int jobId) throws RemoteException {
                 JobWorkItem _result;
                 Parcel _data = Parcel.obtain();
@@ -214,7 +224,8 @@ public interface IJobCallback extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(jobId);
-                    if (!this.mRemote.transact(3, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().dequeueWork(jobId);
                     }
                     _reply.readException();
@@ -223,16 +234,14 @@ public interface IJobCallback extends IInterface {
                     } else {
                         _result = null;
                     }
-                    JobWorkItem _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.job.IJobCallback
             public boolean completeWork(int jobId, int workId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -240,38 +249,33 @@ public interface IJobCallback extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(jobId);
                     _data.writeInt(workId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(4, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().completeWork(jobId, workId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.job.IJobCallback
             public void jobFinished(int jobId, boolean reschedule) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(jobId);
-                    _data.writeInt(reschedule);
-                    if (this.mRemote.transact(5, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(reschedule ? 1 : 0);
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().jobFinished(jobId, reschedule);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().jobFinished(jobId, reschedule);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -280,11 +284,11 @@ public interface IJobCallback extends IInterface {
         }
 
         public static boolean setDefaultImpl(IJobCallback impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IJobCallback getDefaultImpl() {

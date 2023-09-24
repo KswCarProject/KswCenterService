@@ -3,21 +3,26 @@ package android.app.servertransaction;
 import android.app.ActivityThread;
 import android.app.ClientTransactionHandler;
 import android.app.ResultInfo;
-import android.os.IBinder;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.Trace;
+import android.p007os.IBinder;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.Trace;
 import android.util.MergedConfiguration;
 import com.android.internal.content.ReferrerIntent;
 import java.util.List;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public class ActivityRelaunchItem extends ClientTransactionItem {
-    public static final Parcelable.Creator<ActivityRelaunchItem> CREATOR = new Parcelable.Creator<ActivityRelaunchItem>() {
+    public static final Parcelable.Creator<ActivityRelaunchItem> CREATOR = new Parcelable.Creator<ActivityRelaunchItem>() { // from class: android.app.servertransaction.ActivityRelaunchItem.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ActivityRelaunchItem createFromParcel(Parcel in) {
             return new ActivityRelaunchItem(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ActivityRelaunchItem[] newArray(int size) {
             return new ActivityRelaunchItem[size];
         }
@@ -30,18 +35,22 @@ public class ActivityRelaunchItem extends ClientTransactionItem {
     private List<ResultInfo> mPendingResults;
     private boolean mPreserveWindow;
 
+    @Override // android.app.servertransaction.BaseClientRequest
     public void preExecute(ClientTransactionHandler client, IBinder token) {
         this.mActivityClientRecord = client.prepareRelaunchActivity(token, this.mPendingResults, this.mPendingNewIntents, this.mConfigChanges, this.mConfig, this.mPreserveWindow);
     }
 
+    @Override // android.app.servertransaction.BaseClientRequest
     public void execute(ClientTransactionHandler client, IBinder token, PendingTransactionActions pendingActions) {
-        if (this.mActivityClientRecord != null) {
-            Trace.traceBegin(64, "activityRestart");
-            client.handleRelaunchActivity(this.mActivityClientRecord, pendingActions);
-            Trace.traceEnd(64);
+        if (this.mActivityClientRecord == null) {
+            return;
         }
+        Trace.traceBegin(64L, "activityRestart");
+        client.handleRelaunchActivity(this.mActivityClientRecord, pendingActions);
+        Trace.traceEnd(64L);
     }
 
+    @Override // android.app.servertransaction.BaseClientRequest
     public void postExecute(ClientTransactionHandler client, IBinder token, PendingTransactionActions pendingActions) {
         client.reportRelaunch(token, pendingActions);
     }
@@ -62,6 +71,7 @@ public class ActivityRelaunchItem extends ClientTransactionItem {
         return instance;
     }
 
+    @Override // android.app.servertransaction.ObjectPoolItem
     public void recycle() {
         this.mPendingResults = null;
         this.mPendingNewIntents = null;
@@ -72,6 +82,7 @@ public class ActivityRelaunchItem extends ClientTransactionItem {
         ObjectPool.recycle(this);
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeTypedList(this.mPendingResults, flags);
         dest.writeTypedList(this.mPendingNewIntents, flags);
@@ -96,14 +107,15 @@ public class ActivityRelaunchItem extends ClientTransactionItem {
             return false;
         }
         ActivityRelaunchItem other = (ActivityRelaunchItem) o;
-        if (!Objects.equals(this.mPendingResults, other.mPendingResults) || !Objects.equals(this.mPendingNewIntents, other.mPendingNewIntents) || this.mConfigChanges != other.mConfigChanges || !Objects.equals(this.mConfig, other.mConfig) || this.mPreserveWindow != other.mPreserveWindow) {
-            return false;
+        if (Objects.equals(this.mPendingResults, other.mPendingResults) && Objects.equals(this.mPendingNewIntents, other.mPendingNewIntents) && this.mConfigChanges == other.mConfigChanges && Objects.equals(this.mConfig, other.mConfig) && this.mPreserveWindow == other.mPreserveWindow) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        return (((((((((17 * 31) + Objects.hashCode(this.mPendingResults)) * 31) + Objects.hashCode(this.mPendingNewIntents)) * 31) + this.mConfigChanges) * 31) + Objects.hashCode(this.mConfig)) * 31) + (this.mPreserveWindow ? 1 : 0);
+        int result = (17 * 31) + Objects.hashCode(this.mPendingResults);
+        return (((((((result * 31) + Objects.hashCode(this.mPendingNewIntents)) * 31) + this.mConfigChanges) * 31) + Objects.hashCode(this.mConfig)) * 31) + (this.mPreserveWindow ? 1 : 0);
     }
 
     public String toString() {

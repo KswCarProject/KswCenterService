@@ -1,10 +1,11 @@
 package com.android.internal.view;
 
-import android.os.Handler;
-import android.os.Message;
+import android.p007os.Handler;
+import android.p007os.Message;
 import android.view.Choreographer;
 import android.view.Display;
 
+/* loaded from: classes4.dex */
 public class SurfaceFlingerVsyncChoreographer {
     private static final long ONE_MS_IN_NS = 1000000;
     private static final long ONE_S_IN_NS = 1000000000;
@@ -23,7 +24,9 @@ public class SurfaceFlingerVsyncChoreographer {
     }
 
     private long calculateAppSurfaceFlingerVsyncOffsetMs(Display display) {
-        return Math.max(0, ((((long) (1.0E9f / display.getRefreshRate())) - (display.getPresentationDeadlineNanos() - 1000000)) - display.getAppVsyncOffsetNanos()) / 1000000);
+        long vsyncPeriod = 1.0E9f / display.getRefreshRate();
+        long sfVsyncOffset = vsyncPeriod - (display.getPresentationDeadlineNanos() - 1000000);
+        return Math.max(0L, (sfVsyncOffset - display.getAppVsyncOffsetNanos()) / 1000000);
     }
 
     public void scheduleAtSfVsync(Runnable r) {
@@ -46,6 +49,7 @@ public class SurfaceFlingerVsyncChoreographer {
     }
 
     private long calculateDelay() {
-        return this.mSurfaceFlingerOffsetMs - ((System.nanoTime() - this.mChoreographer.getLastFrameTimeNanos()) / 1000000);
+        long sinceFrameStart = System.nanoTime() - this.mChoreographer.getLastFrameTimeNanos();
+        return this.mSurfaceFlingerOffsetMs - (sinceFrameStart / 1000000);
     }
 }

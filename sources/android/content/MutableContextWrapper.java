@@ -1,5 +1,6 @@
 package android.content;
 
+/* loaded from: classes.dex */
 public class MutableContextWrapper extends ContextWrapper {
     public MutableContextWrapper(Context base) {
         super(base);

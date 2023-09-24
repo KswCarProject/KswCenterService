@@ -1,14 +1,19 @@
 package android.telephony;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public class SmsCbLocation implements Parcelable {
-    public static final Parcelable.Creator<SmsCbLocation> CREATOR = new Parcelable.Creator<SmsCbLocation>() {
+    public static final Parcelable.Creator<SmsCbLocation> CREATOR = new Parcelable.Creator<SmsCbLocation>() { // from class: android.telephony.SmsCbLocation.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SmsCbLocation createFromParcel(Parcel in) {
             return new SmsCbLocation(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SmsCbLocation[] newArray(int size) {
             return new SmsCbLocation[size];
         }
@@ -54,7 +59,8 @@ public class SmsCbLocation implements Parcelable {
     }
 
     public int hashCode() {
-        return (((this.mPlmn.hashCode() * 31) + this.mLac) * 31) + this.mCid;
+        int hash = this.mPlmn.hashCode();
+        return (((hash * 31) + this.mLac) * 31) + this.mCid;
     }
 
     public boolean equals(Object o) {
@@ -76,34 +82,33 @@ public class SmsCbLocation implements Parcelable {
     }
 
     public boolean isInLocationArea(SmsCbLocation area) {
-        if (this.mCid != -1 && this.mCid != area.mCid) {
+        if (this.mCid == -1 || this.mCid == area.mCid) {
+            if (this.mLac == -1 || this.mLac == area.mLac) {
+                return this.mPlmn.equals(area.mPlmn);
+            }
             return false;
-        }
-        if (this.mLac == -1 || this.mLac == area.mLac) {
-            return this.mPlmn.equals(area.mPlmn);
         }
         return false;
     }
 
     public boolean isInLocationArea(String plmn, int lac, int cid) {
-        if (!this.mPlmn.equals(plmn)) {
+        if (this.mPlmn.equals(plmn)) {
+            if (this.mLac == -1 || this.mLac == lac) {
+                return this.mCid == -1 || this.mCid == cid;
+            }
             return false;
-        }
-        if (this.mLac != -1 && this.mLac != lac) {
-            return false;
-        }
-        if (this.mCid == -1 || this.mCid == cid) {
-            return true;
         }
         return false;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.mPlmn);
         dest.writeInt(this.mLac);
         dest.writeInt(this.mCid);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

@@ -22,59 +22,72 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+/* loaded from: classes4.dex */
 public final class MapTypeAdapterFactory implements TypeAdapterFactory {
-    /* access modifiers changed from: private */
-    public final boolean complexMapKeySerialization;
+    private final boolean complexMapKeySerialization;
     private final ConstructorConstructor constructorConstructor;
 
-    public MapTypeAdapterFactory(ConstructorConstructor constructorConstructor2, boolean complexMapKeySerialization2) {
-        this.constructorConstructor = constructorConstructor2;
-        this.complexMapKeySerialization = complexMapKeySerialization2;
+    public MapTypeAdapterFactory(ConstructorConstructor constructorConstructor, boolean complexMapKeySerialization) {
+        this.constructorConstructor = constructorConstructor;
+        this.complexMapKeySerialization = complexMapKeySerialization;
     }
 
+    @Override // com.google.gson.TypeAdapterFactory
     public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> typeToken) {
-        Gson gson2 = gson;
         Type type = typeToken.getType();
-        if (!Map.class.isAssignableFrom(typeToken.getRawType())) {
+        Class<? super T> rawType = typeToken.getRawType();
+        if (!Map.class.isAssignableFrom(rawType)) {
             return null;
         }
-        Type[] keyAndValueTypes = C$Gson$Types.getMapKeyAndValueTypes(type, C$Gson$Types.getRawType(type));
-        TypeAdapter<?> keyAdapter = getKeyAdapter(gson2, keyAndValueTypes[0]);
-        return new Adapter<>(gson, keyAndValueTypes[0], keyAdapter, keyAndValueTypes[1], gson2.getAdapter(TypeToken.get(keyAndValueTypes[1])), this.constructorConstructor.get(typeToken));
+        Class<?> rawTypeOfSrc = C$Gson$Types.getRawType(type);
+        Type[] keyAndValueTypes = C$Gson$Types.getMapKeyAndValueTypes(type, rawTypeOfSrc);
+        TypeAdapter<?> keyAdapter = getKeyAdapter(gson, keyAndValueTypes[0]);
+        TypeAdapter<?> valueAdapter = gson.getAdapter(TypeToken.get(keyAndValueTypes[1]));
+        ObjectConstructor<T> constructor = this.constructorConstructor.get(typeToken);
+        TypeAdapter<T> result = new Adapter<>(gson, keyAndValueTypes[0], keyAdapter, keyAndValueTypes[1], valueAdapter, constructor);
+        return result;
     }
 
     private TypeAdapter<?> getKeyAdapter(Gson context, Type keyType) {
         return (keyType == Boolean.TYPE || keyType == Boolean.class) ? TypeAdapters.BOOLEAN_AS_STRING : context.getAdapter(TypeToken.get(keyType));
     }
 
+    /* loaded from: classes4.dex */
     private final class Adapter<K, V> extends TypeAdapter<Map<K, V>> {
         private final ObjectConstructor<? extends Map<K, V>> constructor;
         private final TypeAdapter<K> keyTypeAdapter;
         private final TypeAdapter<V> valueTypeAdapter;
 
-        public Adapter(Gson context, Type keyType, TypeAdapter<K> keyTypeAdapter2, Type valueType, TypeAdapter<V> valueTypeAdapter2, ObjectConstructor<? extends Map<K, V>> constructor2) {
-            this.keyTypeAdapter = new TypeAdapterRuntimeTypeWrapper(context, keyTypeAdapter2, keyType);
-            this.valueTypeAdapter = new TypeAdapterRuntimeTypeWrapper(context, valueTypeAdapter2, valueType);
-            this.constructor = constructor2;
+        @Override // com.google.gson.TypeAdapter
+        public /* bridge */ /* synthetic */ void write(JsonWriter x0, Object x1) throws IOException {
+            write(x0, (Map) ((Map) x1));
         }
 
+        public Adapter(Gson context, Type keyType, TypeAdapter<K> keyTypeAdapter, Type valueType, TypeAdapter<V> valueTypeAdapter, ObjectConstructor<? extends Map<K, V>> constructor) {
+            this.keyTypeAdapter = new TypeAdapterRuntimeTypeWrapper(context, keyTypeAdapter, keyType);
+            this.valueTypeAdapter = new TypeAdapterRuntimeTypeWrapper(context, valueTypeAdapter, valueType);
+            this.constructor = constructor;
+        }
+
+        @Override // com.google.gson.TypeAdapter
         public Map<K, V> read(JsonReader in) throws IOException {
             JsonToken peek = in.peek();
             if (peek == JsonToken.NULL) {
                 in.nextNull();
                 return null;
             }
-            Map<K, V> map = (Map) this.constructor.construct();
+            Map<K, V> map = this.constructor.construct();
             if (peek == JsonToken.BEGIN_ARRAY) {
                 in.beginArray();
                 while (in.hasNext()) {
                     in.beginArray();
                     K key = this.keyTypeAdapter.read(in);
-                    if (map.put(key, this.valueTypeAdapter.read(in)) == null) {
-                        in.endArray();
-                    } else {
+                    V value = this.valueTypeAdapter.read(in);
+                    V replaced = map.put(key, value);
+                    if (replaced != null) {
                         throw new JsonSyntaxException("duplicate key: " + key);
                     }
+                    in.endArray();
                 }
                 in.endArray();
             } else {
@@ -82,7 +95,9 @@ public final class MapTypeAdapterFactory implements TypeAdapterFactory {
                 while (in.hasNext()) {
                     JsonReaderInternalAccess.INSTANCE.promoteNameToValue(in);
                     K key2 = this.keyTypeAdapter.read(in);
-                    if (map.put(key2, this.valueTypeAdapter.read(in)) != null) {
+                    V value2 = this.valueTypeAdapter.read(in);
+                    V replaced2 = map.put(key2, value2);
+                    if (replaced2 != null) {
                         throw new JsonSyntaxException("duplicate key: " + key2);
                     }
                 }
@@ -91,19 +106,20 @@ public final class MapTypeAdapterFactory implements TypeAdapterFactory {
             return map;
         }
 
+        /* JADX WARN: Multi-variable type inference failed */
         public void write(JsonWriter out, Map<K, V> map) throws IOException {
             int i;
-            if (map == null) {
-                out.nullValue();
-            } else if (!MapTypeAdapterFactory.this.complexMapKeySerialization) {
-                out.beginObject();
-                for (Map.Entry<K, V> entry : map.entrySet()) {
-                    out.name(String.valueOf(entry.getKey()));
-                    this.valueTypeAdapter.write(out, entry.getValue());
+            if (map != null) {
+                if (!MapTypeAdapterFactory.this.complexMapKeySerialization) {
+                    out.beginObject();
+                    for (Map.Entry<K, V> entry : map.entrySet()) {
+                        out.name(String.valueOf(entry.getKey()));
+                        this.valueTypeAdapter.write(out, entry.getValue());
+                    }
+                    out.endObject();
+                    return;
                 }
-                out.endObject();
-            } else {
-                boolean hasComplexKeys = false;
+                int i2 = 0;
                 List<JsonElement> keys = new ArrayList<>(map.size());
                 List<V> values = new ArrayList<>(map.size());
                 Iterator i$ = map.entrySet().iterator();
@@ -119,18 +135,18 @@ public final class MapTypeAdapterFactory implements TypeAdapterFactory {
                     if (keyElement.isJsonArray() || keyElement.isJsonObject()) {
                         i = 1;
                     }
-                    hasComplexKeys |= i;
+                    i2 |= i;
                 }
-                if (hasComplexKeys) {
+                if (i2 != 0) {
                     out.beginArray();
                     while (true) {
-                        int i2 = i;
-                        if (i2 < keys.size()) {
+                        int i3 = i;
+                        if (i3 < keys.size()) {
                             out.beginArray();
-                            Streams.write(keys.get(i2), out);
-                            this.valueTypeAdapter.write(out, values.get(i2));
+                            Streams.write(keys.get(i3), out);
+                            this.valueTypeAdapter.write(out, values.get(i3));
                             out.endArray();
-                            i = i2 + 1;
+                            i = i3 + 1;
                         } else {
                             out.endArray();
                             return;
@@ -139,17 +155,19 @@ public final class MapTypeAdapterFactory implements TypeAdapterFactory {
                 } else {
                     out.beginObject();
                     while (true) {
-                        int i3 = i;
-                        if (i3 < keys.size()) {
-                            out.name(keyToString(keys.get(i3)));
-                            this.valueTypeAdapter.write(out, values.get(i3));
-                            i = i3 + 1;
+                        int i4 = i;
+                        if (i4 < keys.size()) {
+                            out.name(keyToString(keys.get(i4)));
+                            this.valueTypeAdapter.write(out, values.get(i4));
+                            i = i4 + 1;
                         } else {
                             out.endObject();
                             return;
                         }
                     }
                 }
+            } else {
+                out.nullValue();
             }
         }
 

@@ -4,21 +4,26 @@ import android.annotation.UnsupportedAppUsage;
 import android.hardware.input.InputDeviceIdentifier;
 import android.hardware.input.InputManager;
 import android.net.wifi.WifiEnterpriseConfig;
-import android.os.NullVibrator;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.Vibrator;
+import android.p007os.NullVibrator;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.Vibrator;
 import android.provider.MediaStore;
 import com.ibm.icu.text.PluralRules;
 import java.util.ArrayList;
 import java.util.List;
 
+/* loaded from: classes4.dex */
 public final class InputDevice implements Parcelable {
-    public static final Parcelable.Creator<InputDevice> CREATOR = new Parcelable.Creator<InputDevice>() {
+    public static final Parcelable.Creator<InputDevice> CREATOR = new Parcelable.Creator<InputDevice>() { // from class: android.view.InputDevice.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public InputDevice createFromParcel(Parcel in) {
             return new InputDevice(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public InputDevice[] newArray(int size) {
             return new InputDevice[size];
         }
@@ -116,14 +121,13 @@ public final class InputDevice implements Parcelable {
         this.mVendorId = in.readInt();
         this.mProductId = in.readInt();
         this.mDescriptor = in.readString();
-        boolean z = true;
         this.mIsExternal = in.readInt() != 0;
         this.mSources = in.readInt();
         this.mKeyboardType = in.readInt();
         this.mKeyCharacterMap = KeyCharacterMap.CREATOR.createFromParcel(in);
         this.mHasVibrator = in.readInt() != 0;
         this.mHasMicrophone = in.readInt() != 0;
-        this.mHasButtonUnderPad = in.readInt() == 0 ? false : z;
+        this.mHasButtonUnderPad = in.readInt() != 0;
         this.mIdentifier = new InputDeviceIdentifier(this.mDescriptor, this.mVendorId, this.mProductId);
         int numRanges = in.readInt();
         numRanges = numRanges > 1000 ? 1000 : numRanges;
@@ -278,21 +282,15 @@ public final class InputDevice implements Parcelable {
         InputManager.getInstance().setCustomPointerIcon(icon);
     }
 
+    /* loaded from: classes4.dex */
     public static final class MotionRange {
-        /* access modifiers changed from: private */
-        public int mAxis;
-        /* access modifiers changed from: private */
-        public float mFlat;
-        /* access modifiers changed from: private */
-        public float mFuzz;
-        /* access modifiers changed from: private */
-        public float mMax;
-        /* access modifiers changed from: private */
-        public float mMin;
-        /* access modifiers changed from: private */
-        public float mResolution;
-        /* access modifiers changed from: private */
-        public int mSource;
+        private int mAxis;
+        private float mFlat;
+        private float mFuzz;
+        private float mMax;
+        private float mMin;
+        private float mResolution;
+        private int mSource;
 
         private MotionRange(int axis, int source, float min, float max, float flat, float fuzz, float resolution) {
             this.mAxis = axis;
@@ -341,6 +339,7 @@ public final class InputDevice implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(this.mId);
         out.writeInt(this.mGeneration);
@@ -370,6 +369,7 @@ public final class InputDevice implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

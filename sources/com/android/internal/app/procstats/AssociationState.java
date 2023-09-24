@@ -1,9 +1,9 @@
 package com.android.internal.app.procstats;
 
 import android.net.wifi.WifiEnterpriseConfig;
-import android.os.Parcel;
-import android.os.SystemClock;
-import android.os.UserHandle;
+import android.p007os.Parcel;
+import android.p007os.SystemClock;
+import android.p007os.UserHandle;
 import android.provider.SettingsStringUtil;
 import android.telephony.SmsManager;
 import android.util.ArrayMap;
@@ -16,6 +16,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Objects;
 
+/* loaded from: classes4.dex */
 public final class AssociationState {
     private static final boolean DEBUG = false;
     private static final String TAG = "ProcessStats";
@@ -24,10 +25,9 @@ public final class AssociationState {
     private final ProcessStats.PackageState mPackageState;
     private ProcessState mProc;
     private final String mProcessName;
-    /* access modifiers changed from: private */
-    public final ProcessStats mProcessStats;
+    private final ProcessStats mProcessStats;
     private final ArrayMap<SourceKey, SourceState> mSources = new ArrayMap<>();
-    private final SourceKey mTmpSourceKey = new SourceKey(0, (String) null, (String) null);
+    private final SourceKey mTmpSourceKey = new SourceKey(0, null, null);
 
     static /* synthetic */ int access$110(AssociationState x0) {
         int i = x0.mNumActive;
@@ -35,10 +35,10 @@ public final class AssociationState {
         return i;
     }
 
+    /* loaded from: classes4.dex */
     public final class SourceState {
         int mActiveCount;
         long mActiveDuration;
-        int mActiveProcState = -1;
         long mActiveStartUptime;
         int mCount;
         long mDuration;
@@ -46,10 +46,11 @@ public final class AssociationState {
         boolean mInTrackingList;
         final SourceKey mKey;
         int mNesting;
-        int mProcState = -1;
-        int mProcStateSeq = -1;
         long mStartUptime;
         long mTrackingUptime;
+        int mProcStateSeq = -1;
+        int mProcState = -1;
+        int mActiveProcState = -1;
 
         SourceState(SourceKey key) {
             this.mKey = key;
@@ -91,8 +92,7 @@ public final class AssociationState {
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public void startActive(long now) {
+        void startActive(long now) {
             if (this.mInTrackingList) {
                 if (this.mActiveStartUptime == 0) {
                     this.mActiveStartUptime = now;
@@ -106,7 +106,7 @@ public final class AssociationState {
                                 makeDurations();
                             }
                             this.mDurations.addDuration(this.mActiveProcState, duration);
-                            this.mActiveDuration = 0;
+                            this.mActiveDuration = 0L;
                         }
                         this.mActiveStartUptime = now;
                     }
@@ -118,8 +118,7 @@ public final class AssociationState {
             Slog.wtf("ProcessStats", "startActive while not tracking: " + this);
         }
 
-        /* access modifiers changed from: package-private */
-        public void stopActive(long now) {
+        void stopActive(long now) {
             if (this.mActiveStartUptime != 0) {
                 if (!this.mInTrackingList) {
                     Slog.wtf("ProcessStats", "stopActive while not tracking: " + this);
@@ -130,17 +129,15 @@ public final class AssociationState {
                 } else {
                     this.mActiveDuration = duration;
                 }
-                this.mActiveStartUptime = 0;
+                this.mActiveStartUptime = 0L;
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public void makeDurations() {
+        void makeDurations() {
             this.mDurations = new DurationsTable(AssociationState.this.mProcessStats.mTableData);
         }
 
-        /* access modifiers changed from: package-private */
-        public void stopTracking(long now) {
+        void stopTracking(long now) {
             stopActive(now);
             if (this.mInTrackingList) {
                 this.mInTrackingList = false;
@@ -175,6 +172,7 @@ public final class AssociationState {
         }
     }
 
+    /* loaded from: classes4.dex */
     private static final class SourceKey {
         String mPackage;
         String mProcess;
@@ -187,23 +185,15 @@ public final class AssociationState {
         }
 
         public boolean equals(Object o) {
-            if (!(o instanceof SourceKey)) {
-                return false;
+            if (o instanceof SourceKey) {
+                SourceKey s = (SourceKey) o;
+                return s.mUid == this.mUid && Objects.equals(s.mProcess, this.mProcess) && Objects.equals(s.mPackage, this.mPackage);
             }
-            SourceKey s = (SourceKey) o;
-            if (s.mUid != this.mUid || !Objects.equals(s.mProcess, this.mProcess) || !Objects.equals(s.mPackage, this.mPackage)) {
-                return false;
-            }
-            return true;
+            return false;
         }
 
         public int hashCode() {
-            int i = 0;
-            int hashCode = Integer.hashCode(this.mUid) ^ (this.mProcess == null ? 0 : this.mProcess.hashCode());
-            if (this.mPackage != null) {
-                i = this.mPackage.hashCode() * 33;
-            }
-            return hashCode ^ i;
+            return (Integer.hashCode(this.mUid) ^ (this.mProcess == null ? 0 : this.mProcess.hashCode())) ^ (this.mPackage != null ? this.mPackage.hashCode() * 33 : 0);
         }
 
         public String toString() {
@@ -294,20 +284,22 @@ public final class AssociationState {
                     mySrc.mDurations.addDurations(otherSrc.mDurations);
                     if (mySrc.mActiveDuration != 0) {
                         mySrc.mDurations.addDuration(mySrc.mActiveProcState, mySrc.mActiveDuration);
-                        mySrc.mActiveDuration = 0;
+                        mySrc.mActiveDuration = 0L;
                         mySrc.mActiveProcState = -1;
                     }
-                } else if (mySrc.mActiveDuration == 0) {
+                } else if (mySrc.mActiveDuration != 0) {
+                    if (mySrc.mActiveProcState == otherSrc.mActiveProcState) {
+                        mySrc.mDuration += otherSrc.mDuration;
+                    } else {
+                        mySrc.makeDurations();
+                        mySrc.mDurations.addDuration(mySrc.mActiveProcState, mySrc.mActiveDuration);
+                        mySrc.mDurations.addDuration(otherSrc.mActiveProcState, otherSrc.mActiveDuration);
+                        mySrc.mActiveDuration = 0L;
+                        mySrc.mActiveProcState = -1;
+                    }
+                } else {
                     mySrc.mActiveProcState = otherSrc.mActiveProcState;
                     mySrc.mActiveDuration = otherSrc.mActiveDuration;
-                } else if (mySrc.mActiveProcState == otherSrc.mActiveProcState) {
-                    mySrc.mDuration += otherSrc.mDuration;
-                } else {
-                    mySrc.makeDurations();
-                    mySrc.mDurations.addDuration(mySrc.mActiveProcState, mySrc.mActiveDuration);
-                    mySrc.mDurations.addDuration(otherSrc.mActiveProcState, otherSrc.mActiveDuration);
-                    mySrc.mActiveDuration = 0;
-                    mySrc.mActiveProcState = -1;
                 }
             }
         }
@@ -327,14 +319,14 @@ public final class AssociationState {
             if (src.mNesting > 0) {
                 src.mCount = 1;
                 src.mStartUptime = now;
-                src.mDuration = 0;
+                src.mDuration = 0L;
                 if (src.mActiveStartUptime > 0) {
                     src.mActiveCount = 1;
                     src.mActiveStartUptime = now;
                 } else {
                     src.mActiveCount = 0;
                 }
-                src.mActiveDuration = 0;
+                src.mActiveDuration = 0L;
                 src.mDurations = null;
             } else {
                 this.mSources.removeAt(isrc);
@@ -371,7 +363,10 @@ public final class AssociationState {
             return "Association with bad src count: " + NSRC;
         }
         for (int isrc = 0; isrc < NSRC; isrc++) {
-            SourceKey key = new SourceKey(in.readInt(), stats.readCommonString(in, parcelVersion), stats.readCommonString(in, parcelVersion));
+            int uid = in.readInt();
+            String procName = stats.readCommonString(in, parcelVersion);
+            String pkgName = stats.readCommonString(in, parcelVersion);
+            SourceKey key = new SourceKey(uid, procName, pkgName);
             SourceState src = new SourceState(key);
             src.mCount = in.readInt();
             src.mDuration = in.readLong();
@@ -423,17 +418,14 @@ public final class AssociationState {
     }
 
     public void dumpStats(PrintWriter pw, String prefix, String prefixInner, String headerPrefix, long now, long totalTime, String reqPackage, boolean dumpDetails, boolean dumpAll) {
-        int isrc;
         SourceState src;
         int i;
+        int isrc;
         AssociationState associationState = this;
-        PrintWriter printWriter = pw;
-        String str = prefixInner;
-        String str2 = reqPackage;
         if (dumpAll) {
             pw.print(prefix);
-            printWriter.print("mNumActive=");
-            printWriter.println(associationState.mNumActive);
+            pw.print("mNumActive=");
+            pw.println(associationState.mNumActive);
         }
         int NSRC = associationState.mSources.size();
         int isrc2 = 0;
@@ -442,92 +434,88 @@ public final class AssociationState {
             if (isrc3 < NSRC) {
                 SourceKey key = associationState.mSources.keyAt(isrc3);
                 SourceState src2 = associationState.mSources.valueAt(isrc3);
-                if (str2 == null || str2.equals(key.mProcess) || str2.equals(key.mPackage)) {
-                    printWriter.print(str);
-                    printWriter.print("<- ");
-                    printWriter.print(key.mProcess);
-                    printWriter.print("/");
-                    UserHandle.formatUid(printWriter, key.mUid);
+                if (reqPackage != null && !reqPackage.equals(key.mProcess) && !reqPackage.equals(key.mPackage)) {
+                    isrc = isrc3;
+                } else {
+                    pw.print(prefixInner);
+                    pw.print("<- ");
+                    pw.print(key.mProcess);
+                    pw.print("/");
+                    UserHandle.formatUid(pw, key.mUid);
                     if (key.mPackage != null) {
-                        printWriter.print(" (");
-                        printWriter.print(key.mPackage);
-                        printWriter.print(")");
+                        pw.print(" (");
+                        pw.print(key.mPackage);
+                        pw.print(")");
                     }
-                    printWriter.println(SettingsStringUtil.DELIMITER);
-                    printWriter.print(str);
-                    printWriter.print("   Total count ");
-                    printWriter.print(src2.mCount);
+                    pw.println(SettingsStringUtil.DELIMITER);
+                    pw.print(prefixInner);
+                    pw.print("   Total count ");
+                    pw.print(src2.mCount);
                     long duration = src2.mDuration;
                     if (src2.mNesting > 0) {
                         duration += now - src2.mStartUptime;
                     }
                     long duration2 = duration;
                     if (dumpAll) {
-                        printWriter.print(": Duration ");
-                        TimeUtils.formatDuration(duration2, printWriter);
-                        printWriter.print(" / ");
+                        pw.print(": Duration ");
+                        TimeUtils.formatDuration(duration2, pw);
+                        pw.print(" / ");
                     } else {
-                        printWriter.print(": time ");
+                        pw.print(": time ");
                     }
-                    long j = duration2;
-                    DumpUtils.printPercent(printWriter, ((double) duration2) / ((double) totalTime));
+                    DumpUtils.printPercent(pw, duration2 / totalTime);
                     if (src2.mNesting > 0) {
-                        printWriter.print(" (running");
+                        pw.print(" (running");
                         if (src2.mProcState != -1) {
-                            printWriter.print(" / ");
-                            printWriter.print(DumpUtils.STATE_NAMES[src2.mProcState]);
-                            printWriter.print(" #");
-                            printWriter.print(src2.mProcStateSeq);
+                            pw.print(" / ");
+                            pw.print(DumpUtils.STATE_NAMES[src2.mProcState]);
+                            pw.print(" #");
+                            pw.print(src2.mProcStateSeq);
                         }
-                        printWriter.print(")");
+                        pw.print(")");
                     }
                     pw.println();
-                    if (src2.mActiveCount <= 0 && src2.mDurations == null && src2.mActiveDuration == 0 && src2.mActiveStartUptime == 0) {
-                        src = src2;
-                        i = -1;
-                        SourceKey sourceKey = key;
-                        isrc = isrc3;
-                    } else {
-                        printWriter.print(str);
-                        printWriter.print("   Active count ");
-                        printWriter.print(src2.mActiveCount);
+                    if (src2.mActiveCount > 0 || src2.mDurations != null || src2.mActiveDuration != 0 || src2.mActiveStartUptime != 0) {
+                        pw.print(prefixInner);
+                        pw.print("   Active count ");
+                        pw.print(src2.mActiveCount);
                         if (dumpDetails) {
                             if (dumpAll) {
-                                printWriter.print(src2.mDurations != null ? " (multi-field)" : " (inline)");
+                                pw.print(src2.mDurations != null ? " (multi-field)" : " (inline)");
                             }
-                            printWriter.println(SettingsStringUtil.DELIMITER);
+                            pw.println(SettingsStringUtil.DELIMITER);
                             src = src2;
                             i = -1;
-                            SourceKey sourceKey2 = key;
                             isrc = isrc3;
                             dumpTime(pw, prefixInner, src2, totalTime, now, dumpDetails, dumpAll);
                         } else {
                             src = src2;
                             i = -1;
-                            SourceKey sourceKey3 = key;
                             isrc = isrc3;
-                            printWriter.print(PluralRules.KEYWORD_RULE_SEPARATOR);
+                            pw.print(PluralRules.KEYWORD_RULE_SEPARATOR);
                             dumpActiveDurationSummary(pw, src, totalTime, now, dumpAll);
                             pw.println();
                         }
+                    } else {
+                        src = src2;
+                        i = -1;
+                        isrc = isrc3;
                     }
                     if (dumpAll) {
                         SourceState src3 = src;
                         if (src3.mInTrackingList) {
-                            printWriter.print(str);
-                            printWriter.print("   mInTrackingList=");
-                            printWriter.println(src3.mInTrackingList);
+                            pw.print(prefixInner);
+                            pw.print("   mInTrackingList=");
+                            pw.println(src3.mInTrackingList);
                         }
                         if (src3.mProcState != i) {
-                            printWriter.print(str);
-                            printWriter.print("   mProcState=");
-                            printWriter.print(DumpUtils.STATE_NAMES[src3.mProcState]);
-                            printWriter.print(" mProcStateSeq=");
-                            printWriter.println(src3.mProcStateSeq);
+                            pw.print(prefixInner);
+                            pw.print("   mProcState=");
+                            pw.print(DumpUtils.STATE_NAMES[src3.mProcState]);
+                            pw.print(" mProcStateSeq=");
+                            pw.println(src3.mProcStateSeq);
                         }
                     }
-                } else {
-                    isrc = isrc3;
                 }
                 isrc2 = isrc + 1;
                 associationState = this;
@@ -537,11 +525,10 @@ public final class AssociationState {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void dumpActiveDurationSummary(PrintWriter pw, SourceState src, long totalTime, long now, boolean dumpAll) {
-        PrintWriter printWriter = pw;
-        long duration = dumpTime((PrintWriter) null, (String) null, src, totalTime, now, false, false);
-        if (duration < 0) {
+    void dumpActiveDurationSummary(PrintWriter pw, SourceState src, long totalTime, long now, boolean dumpAll) {
+        long duration = dumpTime(null, null, src, totalTime, now, false, false);
+        boolean isRunning = duration < 0;
+        if (isRunning) {
             duration = -duration;
         }
         if (dumpAll) {
@@ -551,52 +538,48 @@ public final class AssociationState {
         } else {
             pw.print("time ");
         }
-        DumpUtils.printPercent(pw, ((double) duration) / ((double) totalTime));
+        DumpUtils.printPercent(pw, duration / totalTime);
         if (src.mActiveStartUptime > 0) {
             pw.print(" (running)");
         }
         pw.println();
     }
 
-    /* access modifiers changed from: package-private */
-    public long dumpTime(PrintWriter pw, String prefix, SourceState src, long overallTime, long now, boolean dumpDetails, boolean dumpAll) {
+    long dumpTime(PrintWriter pw, String prefix, SourceState src, long overallTime, long now, boolean dumpDetails, boolean dumpAll) {
         long time;
         String running;
-        PrintWriter printWriter = pw;
-        SourceState sourceState = src;
-        long j = overallTime;
         long totalTime = 0;
         boolean isRunning = false;
         int iprocstate = 0;
         while (iprocstate < 14) {
-            if (sourceState.mDurations != null) {
-                time = sourceState.mDurations.getValueForId((byte) iprocstate);
+            if (src.mDurations != null) {
+                time = src.mDurations.getValueForId((byte) iprocstate);
             } else {
-                time = sourceState.mActiveProcState == iprocstate ? sourceState.mDuration : 0;
+                time = src.mActiveProcState == iprocstate ? src.mDuration : 0L;
             }
-            if (sourceState.mActiveStartUptime == 0 || sourceState.mActiveProcState != iprocstate) {
-                running = null;
-            } else {
+            if (src.mActiveStartUptime != 0 && src.mActiveProcState == iprocstate) {
                 running = " (running)";
                 isRunning = true;
-                time += now - sourceState.mActiveStartUptime;
+                time += now - src.mActiveStartUptime;
+            } else {
+                running = null;
             }
             if (time != 0) {
-                if (printWriter != null) {
+                if (pw != null) {
                     pw.print(prefix);
-                    printWriter.print("  ");
-                    printWriter.print(DumpUtils.STATE_LABELS[iprocstate]);
-                    printWriter.print(PluralRules.KEYWORD_RULE_SEPARATOR);
+                    pw.print("  ");
+                    pw.print(DumpUtils.STATE_LABELS[iprocstate]);
+                    pw.print(PluralRules.KEYWORD_RULE_SEPARATOR);
                     if (dumpAll) {
-                        printWriter.print("Duration ");
-                        TimeUtils.formatDuration(time, printWriter);
-                        printWriter.print(" / ");
+                        pw.print("Duration ");
+                        TimeUtils.formatDuration(time, pw);
+                        pw.print(" / ");
                     } else {
-                        printWriter.print("time ");
+                        pw.print("time ");
                     }
-                    DumpUtils.printPercent(printWriter, ((double) time) / ((double) j));
+                    DumpUtils.printPercent(pw, time / overallTime);
                     if (running != null) {
-                        printWriter.print(running);
+                        pw.print(running);
                     }
                     pw.println();
                 }
@@ -604,19 +587,20 @@ public final class AssociationState {
             }
             iprocstate++;
         }
-        if (!(totalTime == 0 || printWriter == null)) {
+        int iprocstate2 = (totalTime > 0L ? 1 : (totalTime == 0L ? 0 : -1));
+        if (iprocstate2 != 0 && pw != null) {
             pw.print(prefix);
-            printWriter.print("  ");
-            printWriter.print(DumpUtils.STATE_LABEL_TOTAL);
-            printWriter.print(PluralRules.KEYWORD_RULE_SEPARATOR);
+            pw.print("  ");
+            pw.print(DumpUtils.STATE_LABEL_TOTAL);
+            pw.print(PluralRules.KEYWORD_RULE_SEPARATOR);
             if (dumpAll) {
-                printWriter.print("Duration ");
-                TimeUtils.formatDuration(totalTime, printWriter);
-                printWriter.print(" / ");
+                pw.print("Duration ");
+                TimeUtils.formatDuration(totalTime, pw);
+                pw.print(" / ");
             } else {
-                printWriter.print("time ");
+                pw.print("time ");
             }
-            DumpUtils.printPercent(printWriter, ((double) totalTime) / ((double) j));
+            DumpUtils.printPercent(pw, totalTime / overallTime);
             pw.println();
         }
         return isRunning ? -totalTime : totalTime;
@@ -626,27 +610,26 @@ public final class AssociationState {
         int isrc;
         int NSRC;
         AssociationState associationState = this;
-        PrintWriter printWriter = pw;
         int NSRC2 = associationState.mSources.size();
         int isrc2 = 0;
         while (isrc2 < NSRC2) {
             SourceKey key = associationState.mSources.keyAt(isrc2);
             SourceState src = associationState.mSources.valueAt(isrc2);
-            printWriter.print("pkgasc");
-            printWriter.print(SmsManager.REGEX_PREFIX_DELIMITER);
+            pw.print("pkgasc");
+            pw.print(SmsManager.REGEX_PREFIX_DELIMITER);
             pw.print(pkgName);
-            printWriter.print(SmsManager.REGEX_PREFIX_DELIMITER);
-            printWriter.print(uid);
-            printWriter.print(SmsManager.REGEX_PREFIX_DELIMITER);
-            printWriter.print(vers);
-            printWriter.print(SmsManager.REGEX_PREFIX_DELIMITER);
-            printWriter.print(associationName);
-            printWriter.print(SmsManager.REGEX_PREFIX_DELIMITER);
-            printWriter.print(key.mProcess);
-            printWriter.print(SmsManager.REGEX_PREFIX_DELIMITER);
-            printWriter.print(key.mUid);
-            printWriter.print(SmsManager.REGEX_PREFIX_DELIMITER);
-            printWriter.print(src.mCount);
+            pw.print(SmsManager.REGEX_PREFIX_DELIMITER);
+            pw.print(uid);
+            pw.print(SmsManager.REGEX_PREFIX_DELIMITER);
+            pw.print(vers);
+            pw.print(SmsManager.REGEX_PREFIX_DELIMITER);
+            pw.print(associationName);
+            pw.print(SmsManager.REGEX_PREFIX_DELIMITER);
+            pw.print(key.mProcess);
+            pw.print(SmsManager.REGEX_PREFIX_DELIMITER);
+            pw.print(key.mUid);
+            pw.print(SmsManager.REGEX_PREFIX_DELIMITER);
+            pw.print(src.mCount);
             long duration = src.mDuration;
             if (src.mNesting > 0) {
                 isrc = isrc2;
@@ -654,11 +637,11 @@ public final class AssociationState {
             } else {
                 isrc = isrc2;
             }
-            printWriter.print(SmsManager.REGEX_PREFIX_DELIMITER);
-            printWriter.print(duration);
-            printWriter.print(SmsManager.REGEX_PREFIX_DELIMITER);
-            printWriter.print(src.mActiveCount);
-            long timeNow = src.mActiveStartUptime != 0 ? now - src.mActiveStartUptime : 0;
+            pw.print(SmsManager.REGEX_PREFIX_DELIMITER);
+            pw.print(duration);
+            pw.print(SmsManager.REGEX_PREFIX_DELIMITER);
+            pw.print(src.mActiveCount);
+            long timeNow = src.mActiveStartUptime != 0 ? now - src.mActiveStartUptime : 0L;
             if (src.mDurations != null) {
                 int N = src.mDurations.getKeyCount();
                 long duration2 = duration;
@@ -671,27 +654,24 @@ public final class AssociationState {
                     }
                     long duration4 = duration3;
                     int procState = SparseMappingTable.getIdFromKey(dkey);
-                    printWriter.print(SmsManager.REGEX_PREFIX_DELIMITER);
-                    DumpUtils.printArrayEntry(printWriter, DumpUtils.STATE_TAGS, procState, 1);
-                    printWriter.print(':');
-                    printWriter.print(duration4);
+                    pw.print(SmsManager.REGEX_PREFIX_DELIMITER);
+                    DumpUtils.printArrayEntry(pw, DumpUtils.STATE_TAGS, procState, 1);
+                    pw.print(':');
+                    pw.print(duration4);
                     i++;
                     duration2 = duration4;
                     NSRC2 = NSRC2;
                     key = key;
                 }
                 NSRC = NSRC2;
-                SourceKey sourceKey = key;
-                long j = duration2;
             } else {
                 NSRC = NSRC2;
-                SourceKey sourceKey2 = key;
                 long duration5 = src.mActiveDuration + timeNow;
                 if (duration5 != 0) {
-                    printWriter.print(SmsManager.REGEX_PREFIX_DELIMITER);
-                    DumpUtils.printArrayEntry(printWriter, DumpUtils.STATE_TAGS, src.mActiveProcState, 1);
-                    printWriter.print(':');
-                    printWriter.print(duration5);
+                    pw.print(SmsManager.REGEX_PREFIX_DELIMITER);
+                    DumpUtils.printArrayEntry(pw, DumpUtils.STATE_TAGS, src.mActiveProcState, 1);
+                    pw.print(':');
+                    pw.print(duration5);
                 }
             }
             pw.println();
@@ -699,19 +679,14 @@ public final class AssociationState {
             NSRC2 = NSRC;
             associationState = this;
         }
-        int i2 = uid;
-        long j2 = vers;
-        String str = associationName;
-        int i3 = NSRC2;
     }
 
     public void writeToProto(ProtoOutputStream proto, long fieldId, long now) {
         int isrc;
         long sourceToken;
         AssociationState associationState = this;
-        ProtoOutputStream protoOutputStream = proto;
         long token = proto.start(fieldId);
-        protoOutputStream.write(1138166333441L, associationState.mName);
+        proto.write(1138166333441L, associationState.mName);
         int NSRC = associationState.mSources.size();
         int isrc2 = 0;
         while (true) {
@@ -719,11 +694,11 @@ public final class AssociationState {
             if (isrc3 < NSRC) {
                 SourceKey key = associationState.mSources.keyAt(isrc3);
                 SourceState src = associationState.mSources.valueAt(isrc3);
-                long sourceToken2 = protoOutputStream.start(2246267895810L);
-                protoOutputStream.write(1138166333442L, key.mProcess);
-                protoOutputStream.write(1138166333447L, key.mPackage);
-                protoOutputStream.write(1120986464257L, key.mUid);
-                protoOutputStream.write(1120986464259L, src.mCount);
+                long sourceToken2 = proto.start(2246267895810L);
+                proto.write(1138166333442L, key.mProcess);
+                proto.write(1138166333447L, key.mPackage);
+                proto.write(1120986464257L, key.mUid);
+                proto.write(1120986464259L, src.mCount);
                 long duration = src.mDuration;
                 if (src.mNesting > 0) {
                     isrc = isrc3;
@@ -731,14 +706,13 @@ public final class AssociationState {
                 } else {
                     isrc = isrc3;
                 }
-                protoOutputStream.write(1112396529668L, duration);
+                proto.write(1112396529668L, duration);
                 if (src.mActiveCount != 0) {
-                    protoOutputStream.write(1120986464261L, src.mActiveCount);
+                    proto.write(1120986464261L, src.mActiveCount);
                 }
-                long timeNow = src.mActiveStartUptime != 0 ? now - src.mActiveStartUptime : 0;
+                long timeNow = src.mActiveStartUptime != 0 ? now - src.mActiveStartUptime : 0L;
                 if (src.mDurations != null) {
                     int N = src.mDurations.getKeyCount();
-                    long j = duration;
                     int i = 0;
                     while (true) {
                         int i2 = i;
@@ -750,39 +724,33 @@ public final class AssociationState {
                         if (dkey == src.mActiveProcState) {
                             duration2 += timeNow;
                         }
-                        byte idFromKey = SparseMappingTable.getIdFromKey(dkey);
-                        int i3 = dkey;
+                        int procState = SparseMappingTable.getIdFromKey(dkey);
                         int N2 = N;
-                        long stateToken = protoOutputStream.start(2246267895814L);
-                        byte b = idFromKey;
-                        DumpUtils.printProto(proto, 1159641169921L, DumpUtils.STATE_PROTO_ENUMS, idFromKey, 1);
-                        protoOutputStream.write(1112396529666L, duration2);
-                        protoOutputStream.end(stateToken);
+                        long stateToken = proto.start(2246267895814L);
+                        DumpUtils.printProto(proto, 1159641169921L, DumpUtils.STATE_PROTO_ENUMS, procState, 1);
+                        proto.write(1112396529666L, duration2);
+                        proto.end(stateToken);
                         i = i2 + 1;
                         src = src;
-                        long j2 = duration2;
                         N = N2;
                         sourceToken2 = sourceToken2;
                     }
                     sourceToken = sourceToken2;
-                    SourceState sourceState = src;
                 } else {
                     sourceToken = sourceToken2;
-                    SourceState src2 = src;
-                    long duration3 = src2.mActiveDuration + timeNow;
+                    long duration3 = src.mActiveDuration + timeNow;
                     if (duration3 != 0) {
-                        long stateToken2 = protoOutputStream.start(2246267895814L);
-                        DumpUtils.printProto(proto, 1159641169921L, DumpUtils.STATE_PROTO_ENUMS, src2.mActiveProcState, 1);
-                        protoOutputStream.write(1112396529666L, duration3);
-                        protoOutputStream.end(stateToken2);
+                        long stateToken2 = proto.start(2246267895814L);
+                        DumpUtils.printProto(proto, 1159641169921L, DumpUtils.STATE_PROTO_ENUMS, src.mActiveProcState, 1);
+                        proto.write(1112396529666L, duration3);
+                        proto.end(stateToken2);
                     }
-                    long j3 = duration3;
                 }
-                protoOutputStream.end(sourceToken);
+                proto.end(sourceToken);
                 isrc2 = isrc + 1;
                 associationState = this;
             } else {
-                protoOutputStream.end(token);
+                proto.end(token);
                 return;
             }
         }

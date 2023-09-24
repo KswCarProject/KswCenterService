@@ -7,10 +7,10 @@ import android.hardware.soundtrigger.KeyphraseEnrollmentInfo;
 import android.hardware.soundtrigger.KeyphraseMetadata;
 import android.hardware.soundtrigger.SoundTrigger;
 import android.media.AudioFormat;
-import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.Message;
-import android.os.RemoteException;
+import android.p007os.AsyncTask;
+import android.p007os.Handler;
+import android.p007os.Message;
+import android.p007os.RemoteException;
 import android.util.Slog;
 import com.android.internal.app.IVoiceInteractionManagerService;
 import java.io.PrintWriter;
@@ -18,6 +18,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Locale;
 
+/* loaded from: classes3.dex */
 public class AlwaysOnHotwordDetector {
     static final boolean DBG = false;
     public static final int MANAGE_ACTION_ENROLL = 0;
@@ -42,25 +43,19 @@ public class AlwaysOnHotwordDetector {
     private static final int STATUS_ERROR = Integer.MIN_VALUE;
     private static final int STATUS_OK = 0;
     static final String TAG = "AlwaysOnHotwordDetector";
-    /* access modifiers changed from: private */
-    public int mAvailability = 0;
-    /* access modifiers changed from: private */
-    public final Callback mExternalCallback;
-    private final Handler mHandler;
-    private final SoundTriggerListener mInternalCallback;
+    private final Callback mExternalCallback;
     private final KeyphraseEnrollmentInfo mKeyphraseEnrollmentInfo;
-    /* access modifiers changed from: private */
-    public final KeyphraseMetadata mKeyphraseMetadata;
-    /* access modifiers changed from: private */
-    public final Locale mLocale;
-    /* access modifiers changed from: private */
-    public final Object mLock = new Object();
-    /* access modifiers changed from: private */
-    public final IVoiceInteractionManagerService mModelManagementService;
+    private final KeyphraseMetadata mKeyphraseMetadata;
+    private final Locale mLocale;
+    private final IVoiceInteractionManagerService mModelManagementService;
     private final String mText;
-    /* access modifiers changed from: private */
-    public final IVoiceInteractionService mVoiceInteractionService;
+    private final IVoiceInteractionService mVoiceInteractionService;
+    private final Object mLock = new Object();
+    private int mAvailability = 0;
+    private final Handler mHandler = new MyHandler();
+    private final SoundTriggerListener mInternalCallback = new SoundTriggerListener(this.mHandler);
 
+    /* loaded from: classes3.dex */
     public static abstract class Callback {
         public abstract void onAvailabilityChanged(int i);
 
@@ -74,17 +69,21 @@ public class AlwaysOnHotwordDetector {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     private @interface ManageActions {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface RecognitionFlags {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface RecognitionModes {
     }
 
+    /* loaded from: classes3.dex */
     public static class EventPayload {
         private final AudioFormat mAudioFormat;
         private final boolean mCaptureAvailable;
@@ -126,11 +125,9 @@ public class AlwaysOnHotwordDetector {
         this.mKeyphraseEnrollmentInfo = keyphraseEnrollmentInfo;
         this.mKeyphraseMetadata = this.mKeyphraseEnrollmentInfo.getKeyphraseMetadata(text, locale);
         this.mExternalCallback = callback;
-        this.mHandler = new MyHandler();
-        this.mInternalCallback = new SoundTriggerListener(this.mHandler);
         this.mVoiceInteractionService = voiceInteractionService;
         this.mModelManagementService = modelManagementService;
-        new RefreshAvailabiltyTask().execute((Params[]) new Void[0]);
+        new RefreshAvailabiltyTask().execute(new Void[0]);
     }
 
     public int getSupportedRecognitionModes() {
@@ -144,11 +141,11 @@ public class AlwaysOnHotwordDetector {
     private int getSupportedRecognitionModesLocked() {
         if (this.mAvailability == -3) {
             throw new IllegalStateException("getSupportedRecognitionModes called on an invalid detector");
-        } else if (this.mAvailability == 2 || this.mAvailability == 1) {
-            return this.mKeyphraseMetadata.recognitionModeFlags;
-        } else {
+        }
+        if (this.mAvailability != 2 && this.mAvailability != 1) {
             throw new UnsupportedOperationException("Getting supported recognition modes for the keyphrase is not supported");
         }
+        return this.mKeyphraseMetadata.recognitionModeFlags;
     }
 
     public boolean startRecognition(int recognitionFlags) {
@@ -156,11 +153,11 @@ public class AlwaysOnHotwordDetector {
         synchronized (this.mLock) {
             if (this.mAvailability == -3) {
                 throw new IllegalStateException("startRecognition called on an invalid detector");
-            } else if (this.mAvailability == 2) {
-                z = startRecognitionLocked(recognitionFlags) == 0;
-            } else {
+            }
+            if (this.mAvailability != 2) {
                 throw new UnsupportedOperationException("Recognition for the given keyphrase is not supported");
             }
+            z = startRecognitionLocked(recognitionFlags) == 0;
         }
         return z;
     }
@@ -170,11 +167,11 @@ public class AlwaysOnHotwordDetector {
         synchronized (this.mLock) {
             if (this.mAvailability == -3) {
                 throw new IllegalStateException("stopRecognition called on an invalid detector");
-            } else if (this.mAvailability == 2) {
-                z = stopRecognitionLocked() == 0;
-            } else {
+            }
+            if (this.mAvailability != 2) {
                 throw new UnsupportedOperationException("Recognition for the given keyphrase is not supported");
             }
+            z = stopRecognitionLocked() == 0;
         }
         return z;
     }
@@ -206,50 +203,43 @@ public class AlwaysOnHotwordDetector {
     private Intent getManageIntentLocked(int action) {
         if (this.mAvailability == -3) {
             throw new IllegalStateException("getManageIntent called on an invalid detector");
-        } else if (this.mAvailability == 2 || this.mAvailability == 1) {
-            return this.mKeyphraseEnrollmentInfo.getManageKeyphraseIntent(action, this.mText, this.mLocale);
-        } else {
+        }
+        if (this.mAvailability != 2 && this.mAvailability != 1) {
             throw new UnsupportedOperationException("Managing the given keyphrase is not supported");
         }
+        return this.mKeyphraseEnrollmentInfo.getManageKeyphraseIntent(action, this.mText, this.mLocale);
     }
 
-    /* access modifiers changed from: package-private */
-    public void invalidate() {
+    void invalidate() {
         synchronized (this.mLock) {
             this.mAvailability = -3;
             notifyStateChangedLocked();
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void onSoundModelsChanged() {
+    void onSoundModelsChanged() {
         synchronized (this.mLock) {
-            if (!(this.mAvailability == -3 || this.mAvailability == -2)) {
-                if (this.mAvailability != -1) {
-                    stopRecognitionLocked();
-                    new RefreshAvailabiltyTask().execute((Params[]) new Void[0]);
-                    return;
-                }
+            if (this.mAvailability != -3 && this.mAvailability != -2 && this.mAvailability != -1) {
+                stopRecognitionLocked();
+                new RefreshAvailabiltyTask().execute(new Void[0]);
+                return;
             }
-            Slog.w(TAG, "Received onSoundModelsChanged for an unsupported keyphrase/config");
+            Slog.m50w(TAG, "Received onSoundModelsChanged for an unsupported keyphrase/config");
         }
     }
 
     private int startRecognitionLocked(int recognitionFlags) {
-        boolean allowMultipleTriggers = true;
-        SoundTrigger.KeyphraseRecognitionExtra[] recognitionExtra = {new SoundTrigger.KeyphraseRecognitionExtra(this.mKeyphraseMetadata.id, this.mKeyphraseMetadata.recognitionModeFlags, 0, new SoundTrigger.ConfidenceLevel[0])};
+        SoundTrigger.KeyphraseRecognitionExtra[] recognitionExtra = {new SoundTrigger.KeyphraseRecognitionExtra(this.mKeyphraseMetadata.f104id, this.mKeyphraseMetadata.recognitionModeFlags, 0, new SoundTrigger.ConfidenceLevel[0])};
         boolean captureTriggerAudio = (recognitionFlags & 1) != 0;
-        if ((recognitionFlags & 2) == 0) {
-            allowMultipleTriggers = false;
-        }
+        boolean allowMultipleTriggers = (recognitionFlags & 2) != 0;
         int code = Integer.MIN_VALUE;
         try {
-            code = this.mModelManagementService.startRecognition(this.mVoiceInteractionService, this.mKeyphraseMetadata.id, this.mLocale.toLanguageTag(), this.mInternalCallback, new SoundTrigger.RecognitionConfig(captureTriggerAudio, allowMultipleTriggers, recognitionExtra, (byte[]) null));
+            code = this.mModelManagementService.startRecognition(this.mVoiceInteractionService, this.mKeyphraseMetadata.f104id, this.mLocale.toLanguageTag(), this.mInternalCallback, new SoundTrigger.RecognitionConfig(captureTriggerAudio, allowMultipleTriggers, recognitionExtra, null));
         } catch (RemoteException e) {
-            Slog.w(TAG, "RemoteException in startRecognition!", e);
+            Slog.m49w(TAG, "RemoteException in startRecognition!", e);
         }
         if (code != 0) {
-            Slog.w(TAG, "startRecognition() failed with error code " + code);
+            Slog.m50w(TAG, "startRecognition() failed with error code " + code);
         }
         return code;
     }
@@ -257,23 +247,24 @@ public class AlwaysOnHotwordDetector {
     private int stopRecognitionLocked() {
         int code = Integer.MIN_VALUE;
         try {
-            code = this.mModelManagementService.stopRecognition(this.mVoiceInteractionService, this.mKeyphraseMetadata.id, this.mInternalCallback);
+            code = this.mModelManagementService.stopRecognition(this.mVoiceInteractionService, this.mKeyphraseMetadata.f104id, this.mInternalCallback);
         } catch (RemoteException e) {
-            Slog.w(TAG, "RemoteException in stopRecognition!", e);
+            Slog.m49w(TAG, "RemoteException in stopRecognition!", e);
         }
         if (code != 0) {
-            Slog.w(TAG, "stopRecognition() failed with error code " + code);
+            Slog.m50w(TAG, "stopRecognition() failed with error code " + code);
         }
         return code;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void notifyStateChangedLocked() {
         Message message = Message.obtain(this.mHandler, 1);
         message.arg1 = this.mAvailability;
         message.sendToTarget();
     }
 
+    /* loaded from: classes3.dex */
     static final class SoundTriggerListener extends IRecognitionStatusCallback.Stub {
         private final Handler mHandler;
 
@@ -281,243 +272,120 @@ public class AlwaysOnHotwordDetector {
             this.mHandler = handler;
         }
 
+        @Override // android.hardware.soundtrigger.IRecognitionStatusCallback
         public void onKeyphraseDetected(SoundTrigger.KeyphraseRecognitionEvent event) {
-            Slog.i(AlwaysOnHotwordDetector.TAG, "onDetected");
+            Slog.m54i(AlwaysOnHotwordDetector.TAG, "onDetected");
             Message.obtain(this.mHandler, 2, new EventPayload(event.triggerInData, event.captureAvailable, event.captureFormat, event.captureSession, event.data)).sendToTarget();
         }
 
+        @Override // android.hardware.soundtrigger.IRecognitionStatusCallback
         public void onGenericSoundTriggerDetected(SoundTrigger.GenericRecognitionEvent event) {
-            Slog.w(AlwaysOnHotwordDetector.TAG, "Generic sound trigger event detected at AOHD: " + event);
+            Slog.m50w(AlwaysOnHotwordDetector.TAG, "Generic sound trigger event detected at AOHD: " + event);
         }
 
+        @Override // android.hardware.soundtrigger.IRecognitionStatusCallback
         public void onError(int status) {
-            Slog.i(AlwaysOnHotwordDetector.TAG, "onError: " + status);
+            Slog.m54i(AlwaysOnHotwordDetector.TAG, "onError: " + status);
             this.mHandler.sendEmptyMessage(3);
         }
 
+        @Override // android.hardware.soundtrigger.IRecognitionStatusCallback
         public void onRecognitionPaused() {
-            Slog.i(AlwaysOnHotwordDetector.TAG, "onRecognitionPaused");
+            Slog.m54i(AlwaysOnHotwordDetector.TAG, "onRecognitionPaused");
             this.mHandler.sendEmptyMessage(4);
         }
 
+        @Override // android.hardware.soundtrigger.IRecognitionStatusCallback
         public void onRecognitionResumed() {
-            Slog.i(AlwaysOnHotwordDetector.TAG, "onRecognitionResumed");
+            Slog.m54i(AlwaysOnHotwordDetector.TAG, "onRecognitionResumed");
             this.mHandler.sendEmptyMessage(5);
         }
     }
 
+    /* loaded from: classes3.dex */
     class MyHandler extends Handler {
         MyHandler() {
         }
 
-        /* JADX WARNING: Code restructure failed: missing block: B:10:0x0032, code lost:
-            switch(r5.what) {
-                case 1: goto L_0x0065;
-                case 2: goto L_0x0057;
-                case 3: goto L_0x004d;
-                case 4: goto L_0x0043;
-                case 5: goto L_0x0039;
-                default: goto L_0x0035;
-            };
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:11:0x0035, code lost:
-            super.handleMessage(r5);
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:12:0x0039, code lost:
-            android.service.voice.AlwaysOnHotwordDetector.access$300(r4.this$0).onRecognitionResumed();
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:13:0x0043, code lost:
-            android.service.voice.AlwaysOnHotwordDetector.access$300(r4.this$0).onRecognitionPaused();
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:14:0x004d, code lost:
-            android.service.voice.AlwaysOnHotwordDetector.access$300(r4.this$0).onError();
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:15:0x0057, code lost:
-            android.service.voice.AlwaysOnHotwordDetector.access$300(r4.this$0).onDetected((android.service.voice.AlwaysOnHotwordDetector.EventPayload) r5.obj);
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:16:0x0065, code lost:
-            android.service.voice.AlwaysOnHotwordDetector.access$300(r4.this$0).onAvailabilityChanged(r5.arg1);
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:24:?, code lost:
-            return;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:25:?, code lost:
-            return;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:26:?, code lost:
-            return;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:27:?, code lost:
-            return;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:28:?, code lost:
-            return;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:29:?, code lost:
-            return;
-         */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public void handleMessage(android.os.Message r5) {
-            /*
-                r4 = this;
-                android.service.voice.AlwaysOnHotwordDetector r0 = android.service.voice.AlwaysOnHotwordDetector.this
-                java.lang.Object r0 = r0.mLock
-                monitor-enter(r0)
-                android.service.voice.AlwaysOnHotwordDetector r1 = android.service.voice.AlwaysOnHotwordDetector.this     // Catch:{ all -> 0x0072 }
-                int r1 = r1.mAvailability     // Catch:{ all -> 0x0072 }
-                r2 = -3
-                if (r1 != r2) goto L_0x002f
-                java.lang.String r1 = "AlwaysOnHotwordDetector"
-                java.lang.StringBuilder r2 = new java.lang.StringBuilder     // Catch:{ all -> 0x0072 }
-                r2.<init>()     // Catch:{ all -> 0x0072 }
-                java.lang.String r3 = "Received message: "
-                r2.append(r3)     // Catch:{ all -> 0x0072 }
-                int r3 = r5.what     // Catch:{ all -> 0x0072 }
-                r2.append(r3)     // Catch:{ all -> 0x0072 }
-                java.lang.String r3 = " for an invalid detector"
-                r2.append(r3)     // Catch:{ all -> 0x0072 }
-                java.lang.String r2 = r2.toString()     // Catch:{ all -> 0x0072 }
-                android.util.Slog.w((java.lang.String) r1, (java.lang.String) r2)     // Catch:{ all -> 0x0072 }
-                monitor-exit(r0)     // Catch:{ all -> 0x0072 }
-                return
-            L_0x002f:
-                monitor-exit(r0)     // Catch:{ all -> 0x0072 }
-                int r0 = r5.what
-                switch(r0) {
-                    case 1: goto L_0x0065;
-                    case 2: goto L_0x0057;
-                    case 3: goto L_0x004d;
-                    case 4: goto L_0x0043;
-                    case 5: goto L_0x0039;
-                    default: goto L_0x0035;
+        @Override // android.p007os.Handler
+        public void handleMessage(Message msg) {
+            synchronized (AlwaysOnHotwordDetector.this.mLock) {
+                if (AlwaysOnHotwordDetector.this.mAvailability != -3) {
+                    switch (msg.what) {
+                        case 1:
+                            AlwaysOnHotwordDetector.this.mExternalCallback.onAvailabilityChanged(msg.arg1);
+                            return;
+                        case 2:
+                            AlwaysOnHotwordDetector.this.mExternalCallback.onDetected((EventPayload) msg.obj);
+                            return;
+                        case 3:
+                            AlwaysOnHotwordDetector.this.mExternalCallback.onError();
+                            return;
+                        case 4:
+                            AlwaysOnHotwordDetector.this.mExternalCallback.onRecognitionPaused();
+                            return;
+                        case 5:
+                            AlwaysOnHotwordDetector.this.mExternalCallback.onRecognitionResumed();
+                            return;
+                        default:
+                            super.handleMessage(msg);
+                            return;
+                    }
                 }
-            L_0x0035:
-                super.handleMessage(r5)
-                goto L_0x0071
-            L_0x0039:
-                android.service.voice.AlwaysOnHotwordDetector r0 = android.service.voice.AlwaysOnHotwordDetector.this
-                android.service.voice.AlwaysOnHotwordDetector$Callback r0 = r0.mExternalCallback
-                r0.onRecognitionResumed()
-                goto L_0x0071
-            L_0x0043:
-                android.service.voice.AlwaysOnHotwordDetector r0 = android.service.voice.AlwaysOnHotwordDetector.this
-                android.service.voice.AlwaysOnHotwordDetector$Callback r0 = r0.mExternalCallback
-                r0.onRecognitionPaused()
-                goto L_0x0071
-            L_0x004d:
-                android.service.voice.AlwaysOnHotwordDetector r0 = android.service.voice.AlwaysOnHotwordDetector.this
-                android.service.voice.AlwaysOnHotwordDetector$Callback r0 = r0.mExternalCallback
-                r0.onError()
-                goto L_0x0071
-            L_0x0057:
-                android.service.voice.AlwaysOnHotwordDetector r0 = android.service.voice.AlwaysOnHotwordDetector.this
-                android.service.voice.AlwaysOnHotwordDetector$Callback r0 = r0.mExternalCallback
-                java.lang.Object r1 = r5.obj
-                android.service.voice.AlwaysOnHotwordDetector$EventPayload r1 = (android.service.voice.AlwaysOnHotwordDetector.EventPayload) r1
-                r0.onDetected(r1)
-                goto L_0x0071
-            L_0x0065:
-                android.service.voice.AlwaysOnHotwordDetector r0 = android.service.voice.AlwaysOnHotwordDetector.this
-                android.service.voice.AlwaysOnHotwordDetector$Callback r0 = r0.mExternalCallback
-                int r1 = r5.arg1
-                r0.onAvailabilityChanged(r1)
-            L_0x0071:
-                return
-            L_0x0072:
-                r1 = move-exception
-                monitor-exit(r0)     // Catch:{ all -> 0x0072 }
-                throw r1
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.service.voice.AlwaysOnHotwordDetector.MyHandler.handleMessage(android.os.Message):void");
+                Slog.m50w(AlwaysOnHotwordDetector.TAG, "Received message: " + msg.what + " for an invalid detector");
+            }
         }
     }
 
+    /* loaded from: classes3.dex */
     class RefreshAvailabiltyTask extends AsyncTask<Void, Void, Void> {
         RefreshAvailabiltyTask() {
         }
 
+        @Override // android.p007os.AsyncTask
         public Void doInBackground(Void... params) {
             int availability = internalGetInitialAvailability();
             if (availability == 0 || availability == 1 || availability == 2) {
-                if (!internalGetIsEnrolled(AlwaysOnHotwordDetector.this.mKeyphraseMetadata.id, AlwaysOnHotwordDetector.this.mLocale)) {
+                boolean enrolled = internalGetIsEnrolled(AlwaysOnHotwordDetector.this.mKeyphraseMetadata.f104id, AlwaysOnHotwordDetector.this.mLocale);
+                if (!enrolled) {
                     availability = 1;
                 } else {
                     availability = 2;
                 }
             }
             synchronized (AlwaysOnHotwordDetector.this.mLock) {
-                int unused = AlwaysOnHotwordDetector.this.mAvailability = availability;
+                AlwaysOnHotwordDetector.this.mAvailability = availability;
                 AlwaysOnHotwordDetector.this.notifyStateChangedLocked();
             }
             return null;
         }
 
-        /* JADX WARNING: Code restructure failed: missing block: B:11:0x0024, code lost:
-            r0 = android.service.voice.AlwaysOnHotwordDetector.access$800(r4.this$0).getDspModuleProperties(android.service.voice.AlwaysOnHotwordDetector.access$700(r4.this$0));
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:12:0x0026, code lost:
-            r1 = move-exception;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:13:0x0027, code lost:
-            android.util.Slog.w(android.service.voice.AlwaysOnHotwordDetector.TAG, "RemoteException in getDspProperties!", r1);
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:8:0x0013, code lost:
-            r0 = null;
-         */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
         private int internalGetInitialAvailability() {
-            /*
-                r4 = this;
-                android.service.voice.AlwaysOnHotwordDetector r0 = android.service.voice.AlwaysOnHotwordDetector.this
-                java.lang.Object r0 = r0.mLock
-                monitor-enter(r0)
-                android.service.voice.AlwaysOnHotwordDetector r1 = android.service.voice.AlwaysOnHotwordDetector.this     // Catch:{ all -> 0x003e }
-                int r1 = r1.mAvailability     // Catch:{ all -> 0x003e }
-                r2 = -3
-                if (r1 != r2) goto L_0x0012
-                monitor-exit(r0)     // Catch:{ all -> 0x003e }
-                return r2
-            L_0x0012:
-                monitor-exit(r0)     // Catch:{ all -> 0x003e }
-                r0 = 0
-                android.service.voice.AlwaysOnHotwordDetector r1 = android.service.voice.AlwaysOnHotwordDetector.this     // Catch:{ RemoteException -> 0x0026 }
-                com.android.internal.app.IVoiceInteractionManagerService r1 = r1.mModelManagementService     // Catch:{ RemoteException -> 0x0026 }
-                android.service.voice.AlwaysOnHotwordDetector r2 = android.service.voice.AlwaysOnHotwordDetector.this     // Catch:{ RemoteException -> 0x0026 }
-                android.service.voice.IVoiceInteractionService r2 = r2.mVoiceInteractionService     // Catch:{ RemoteException -> 0x0026 }
-                android.hardware.soundtrigger.SoundTrigger$ModuleProperties r1 = r1.getDspModuleProperties(r2)     // Catch:{ RemoteException -> 0x0026 }
-                r0 = r1
-                goto L_0x002e
-            L_0x0026:
-                r1 = move-exception
-                java.lang.String r2 = "AlwaysOnHotwordDetector"
-                java.lang.String r3 = "RemoteException in getDspProperties!"
-                android.util.Slog.w(r2, r3, r1)
-            L_0x002e:
-                if (r0 != 0) goto L_0x0032
-                r1 = -2
-                return r1
-            L_0x0032:
-                android.service.voice.AlwaysOnHotwordDetector r1 = android.service.voice.AlwaysOnHotwordDetector.this
-                android.hardware.soundtrigger.KeyphraseMetadata r1 = r1.mKeyphraseMetadata
-                if (r1 != 0) goto L_0x003c
-                r1 = -1
-                return r1
-            L_0x003c:
-                r1 = 0
-                return r1
-            L_0x003e:
-                r1 = move-exception
-                monitor-exit(r0)     // Catch:{ all -> 0x003e }
-                throw r1
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.service.voice.AlwaysOnHotwordDetector.RefreshAvailabiltyTask.internalGetInitialAvailability():int");
+            synchronized (AlwaysOnHotwordDetector.this.mLock) {
+                if (AlwaysOnHotwordDetector.this.mAvailability == -3) {
+                    return -3;
+                }
+                SoundTrigger.ModuleProperties dspModuleProperties = null;
+                try {
+                    dspModuleProperties = AlwaysOnHotwordDetector.this.mModelManagementService.getDspModuleProperties(AlwaysOnHotwordDetector.this.mVoiceInteractionService);
+                } catch (RemoteException e) {
+                    Slog.m49w(AlwaysOnHotwordDetector.TAG, "RemoteException in getDspProperties!", e);
+                }
+                if (dspModuleProperties != null) {
+                    if (AlwaysOnHotwordDetector.this.mKeyphraseMetadata == null) {
+                        return -1;
+                    }
+                    return 0;
+                }
+                return -2;
+            }
         }
 
         private boolean internalGetIsEnrolled(int keyphraseId, Locale locale) {
             try {
                 return AlwaysOnHotwordDetector.this.mModelManagementService.isEnrolledForKeyphrase(AlwaysOnHotwordDetector.this.mVoiceInteractionService, keyphraseId, locale.toLanguageTag());
             } catch (RemoteException e) {
-                Slog.w(AlwaysOnHotwordDetector.TAG, "RemoteException in listRegisteredKeyphraseSoundModels!", e);
+                Slog.m49w(AlwaysOnHotwordDetector.TAG, "RemoteException in listRegisteredKeyphraseSoundModels!", e);
                 return false;
             }
         }

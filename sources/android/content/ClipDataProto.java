@@ -1,10 +1,12 @@
 package android.content;
 
+/* loaded from: classes.dex */
 public final class ClipDataProto {
     public static final long DESCRIPTION = 1146756268033L;
     public static final long ICON = 1146756268034L;
     public static final long ITEMS = 2246267895811L;
 
+    /* loaded from: classes.dex */
     public final class Icon {
         public static final long HEIGHT = 1120986464258L;
         public static final long WIDTH = 1120986464257L;
@@ -13,6 +15,7 @@ public final class ClipDataProto {
         }
     }
 
+    /* loaded from: classes.dex */
     public final class Item {
         public static final long HTML_TEXT = 1138166333441L;
         public static final long INTENT = 1146756268036L;

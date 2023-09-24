@@ -1,11 +1,12 @@
 package android.hardware.camera2;
 
 import android.hardware.camera2.params.OutputConfiguration;
-import android.os.Handler;
+import android.p007os.Handler;
 import android.view.Surface;
 import java.util.List;
 import java.util.concurrent.Executor;
 
+/* loaded from: classes.dex */
 public abstract class CameraCaptureSession implements AutoCloseable {
     public static final int SESSION_ID_NONE = -1;
 
@@ -15,6 +16,7 @@ public abstract class CameraCaptureSession implements AutoCloseable {
 
     public abstract int captureBurst(List<CaptureRequest> list, CaptureCallback captureCallback, Handler handler) throws CameraAccessException;
 
+    @Override // java.lang.AutoCloseable
     public abstract void close();
 
     public abstract void finalizeOutputConfigurations(List<OutputConfiguration> list) throws CameraAccessException;
@@ -41,7 +43,7 @@ public abstract class CameraCaptureSession implements AutoCloseable {
         throw new UnsupportedOperationException("Subclasses must override this method");
     }
 
-    public int captureBurstRequests(List<CaptureRequest> list, Executor executor, CaptureCallback listener) throws CameraAccessException {
+    public int captureBurstRequests(List<CaptureRequest> requests, Executor executor, CaptureCallback listener) throws CameraAccessException {
         throw new UnsupportedOperationException("Subclasses must override this method");
     }
 
@@ -49,7 +51,7 @@ public abstract class CameraCaptureSession implements AutoCloseable {
         throw new UnsupportedOperationException("Subclasses must override this method");
     }
 
-    public int setRepeatingBurstRequests(List<CaptureRequest> list, Executor executor, CaptureCallback listener) throws CameraAccessException {
+    public int setRepeatingBurstRequests(List<CaptureRequest> requests, Executor executor, CaptureCallback listener) throws CameraAccessException {
         throw new UnsupportedOperationException("Subclasses must override this method");
     }
 
@@ -57,6 +59,7 @@ public abstract class CameraCaptureSession implements AutoCloseable {
         throw new UnsupportedOperationException("Subclasses must override this method");
     }
 
+    /* loaded from: classes.dex */
     public static abstract class StateCallback {
         public abstract void onConfigureFailed(CameraCaptureSession cameraCaptureSession);
 
@@ -78,6 +81,7 @@ public abstract class CameraCaptureSession implements AutoCloseable {
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class CaptureCallback {
         public static final int NO_FRAMES_CAPTURED = -1;
 

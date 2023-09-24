@@ -1,11 +1,12 @@
 package android.location;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes.dex */
 public interface IGnssStatusListener extends IInterface {
     void onFirstFix(int i) throws RemoteException;
 
@@ -17,27 +18,35 @@ public interface IGnssStatusListener extends IInterface {
 
     void onSvStatusChanged(int i, int[] iArr, float[] fArr, float[] fArr2, float[] fArr3, float[] fArr4) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements IGnssStatusListener {
+        @Override // android.location.IGnssStatusListener
         public void onGnssStarted() throws RemoteException {
         }
 
+        @Override // android.location.IGnssStatusListener
         public void onGnssStopped() throws RemoteException {
         }
 
+        @Override // android.location.IGnssStatusListener
         public void onFirstFix(int ttff) throws RemoteException {
         }
 
+        @Override // android.location.IGnssStatusListener
         public void onSvStatusChanged(int svCount, int[] svidWithFlags, float[] cn0s, float[] elevations, float[] azimuths, float[] carrierFreqs) throws RemoteException {
         }
 
+        @Override // android.location.IGnssStatusListener
         public void onNmeaReceived(long timestamp, String nmea) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements IGnssStatusListener {
         private static final String DESCRIPTOR = "android.location.IGnssStatusListener";
         static final int TRANSACTION_onFirstFix = 3;
@@ -55,12 +64,13 @@ public interface IGnssStatusListener extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IGnssStatusListener)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IGnssStatusListener)) {
+                return (IGnssStatusListener) iin;
             }
-            return (IGnssStatusListener) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -82,44 +92,53 @@ public interface IGnssStatusListener extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            int i = code;
-            Parcel parcel = data;
-            if (i != 1598968902) {
-                switch (i) {
-                    case 1:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        onGnssStarted();
-                        return true;
-                    case 2:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        onGnssStopped();
-                        return true;
-                    case 3:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        onFirstFix(data.readInt());
-                        return true;
-                    case 4:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        onSvStatusChanged(data.readInt(), data.createIntArray(), data.createFloatArray(), data.createFloatArray(), data.createFloatArray(), data.createFloatArray());
-                        return true;
-                    case 5:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        onNmeaReceived(data.readLong(), data.readString());
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    onGnssStarted();
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    onGnssStopped();
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0 = data.readInt();
+                    onFirstFix(_arg0);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    int[] _arg1 = data.createIntArray();
+                    float[] _arg2 = data.createFloatArray();
+                    float[] _arg3 = data.createFloatArray();
+                    float[] _arg4 = data.createFloatArray();
+                    float[] _arg5 = data.createFloatArray();
+                    onSvStatusChanged(_arg02, _arg1, _arg2, _arg3, _arg4, _arg5);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _arg03 = data.readLong();
+                    String _arg12 = data.readString();
+                    onNmeaReceived(_arg03, _arg12);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements IGnssStatusListener {
             public static IGnssStatusListener sDefaultImpl;
             private IBinder mRemote;
@@ -128,6 +147,7 @@ public interface IGnssStatusListener extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -136,13 +156,13 @@ public interface IGnssStatusListener extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.location.IGnssStatusListener
             public void onGnssStarted() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onGnssStarted();
                     }
                 } finally {
@@ -150,13 +170,13 @@ public interface IGnssStatusListener extends IInterface {
                 }
             }
 
+            @Override // android.location.IGnssStatusListener
             public void onGnssStopped() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onGnssStopped();
                     }
                 } finally {
@@ -164,14 +184,14 @@ public interface IGnssStatusListener extends IInterface {
                 }
             }
 
+            @Override // android.location.IGnssStatusListener
             public void onFirstFix(int ttff) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(ttff);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onFirstFix(ttff);
                     }
                 } finally {
@@ -179,6 +199,7 @@ public interface IGnssStatusListener extends IInterface {
                 }
             }
 
+            @Override // android.location.IGnssStatusListener
             public void onSvStatusChanged(int svCount, int[] svidWithFlags, float[] cn0s, float[] elevations, float[] azimuths, float[] carrierFreqs) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -187,93 +208,69 @@ public interface IGnssStatusListener extends IInterface {
                         _data.writeInt(svCount);
                     } catch (Throwable th) {
                         th = th;
-                        int[] iArr = svidWithFlags;
-                        float[] fArr = cn0s;
-                        float[] fArr2 = elevations;
-                        float[] fArr3 = azimuths;
-                        float[] fArr4 = carrierFreqs;
                         _data.recycle();
                         throw th;
                     }
                     try {
                         _data.writeIntArray(svidWithFlags);
-                        try {
-                            _data.writeFloatArray(cn0s);
-                            try {
-                                _data.writeFloatArray(elevations);
-                            } catch (Throwable th2) {
-                                th = th2;
-                                float[] fArr32 = azimuths;
-                                float[] fArr42 = carrierFreqs;
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th3) {
-                            th = th3;
-                            float[] fArr22 = elevations;
-                            float[] fArr322 = azimuths;
-                            float[] fArr422 = carrierFreqs;
-                            _data.recycle();
-                            throw th;
-                        }
-                    } catch (Throwable th4) {
-                        th = th4;
-                        float[] fArr5 = cn0s;
-                        float[] fArr222 = elevations;
-                        float[] fArr3222 = azimuths;
-                        float[] fArr4222 = carrierFreqs;
+                    } catch (Throwable th2) {
+                        th = th2;
                         _data.recycle();
                         throw th;
                     }
                     try {
+                        _data.writeFloatArray(cn0s);
+                    } catch (Throwable th3) {
+                        th = th3;
+                        _data.recycle();
+                        throw th;
+                    }
+                } catch (Throwable th4) {
+                    th = th4;
+                }
+                try {
+                    _data.writeFloatArray(elevations);
+                    try {
                         _data.writeFloatArray(azimuths);
                         try {
                             _data.writeFloatArray(carrierFreqs);
-                            try {
-                                if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                                    _data.recycle();
-                                    return;
-                                }
-                                Stub.getDefaultImpl().onSvStatusChanged(svCount, svidWithFlags, cn0s, elevations, azimuths, carrierFreqs);
-                                _data.recycle();
-                            } catch (Throwable th5) {
-                                th = th5;
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th6) {
-                            th = th6;
-                            _data.recycle();
-                            throw th;
+                        } catch (Throwable th5) {
+                            th = th5;
                         }
+                    } catch (Throwable th6) {
+                        th = th6;
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        boolean _status = this.mRemote.transact(4, _data, null, 1);
+                        if (!_status && Stub.getDefaultImpl() != null) {
+                            Stub.getDefaultImpl().onSvStatusChanged(svCount, svidWithFlags, cn0s, elevations, azimuths, carrierFreqs);
+                            _data.recycle();
+                            return;
+                        }
+                        _data.recycle();
                     } catch (Throwable th7) {
                         th = th7;
-                        float[] fArr42222 = carrierFreqs;
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th8) {
                     th = th8;
-                    int i = svCount;
-                    int[] iArr2 = svidWithFlags;
-                    float[] fArr52 = cn0s;
-                    float[] fArr2222 = elevations;
-                    float[] fArr32222 = azimuths;
-                    float[] fArr422222 = carrierFreqs;
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.location.IGnssStatusListener
             public void onNmeaReceived(long timestamp, String nmea) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeLong(timestamp);
                     _data.writeString(nmea);
-                    if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(5, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onNmeaReceived(timestamp, nmea);
                     }
                 } finally {
@@ -283,11 +280,11 @@ public interface IGnssStatusListener extends IInterface {
         }
 
         public static boolean setDefaultImpl(IGnssStatusListener impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IGnssStatusListener getDefaultImpl() {

@@ -1,5 +1,6 @@
 package com.android.internal.alsa;
 
+/* loaded from: classes4.dex */
 public class LineTokenizer {
     public static final int kTokenNotFound = -1;
     private final String mDelimiters;
@@ -8,8 +9,7 @@ public class LineTokenizer {
         this.mDelimiters = delimiters;
     }
 
-    /* access modifiers changed from: package-private */
-    public int nextToken(String line, int startIndex) {
+    int nextToken(String line, int startIndex) {
         int len = line.length();
         int offset = startIndex;
         while (offset < len && this.mDelimiters.indexOf(line.charAt(offset)) != -1) {
@@ -21,8 +21,7 @@ public class LineTokenizer {
         return -1;
     }
 
-    /* access modifiers changed from: package-private */
-    public int nextDelimiter(String line, int startIndex) {
+    int nextDelimiter(String line, int startIndex) {
         int len = line.length();
         int offset = startIndex;
         while (offset < len && this.mDelimiters.indexOf(line.charAt(offset)) == -1) {

@@ -1,11 +1,12 @@
 package android.hardware.location;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes.dex */
 public interface IContextHubClientCallback extends IInterface {
     void onHubReset() throws RemoteException;
 
@@ -21,33 +22,43 @@ public interface IContextHubClientCallback extends IInterface {
 
     void onNanoAppUnloaded(long j) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements IContextHubClientCallback {
+        @Override // android.hardware.location.IContextHubClientCallback
         public void onMessageFromNanoApp(NanoAppMessage message) throws RemoteException {
         }
 
+        @Override // android.hardware.location.IContextHubClientCallback
         public void onHubReset() throws RemoteException {
         }
 
+        @Override // android.hardware.location.IContextHubClientCallback
         public void onNanoAppAborted(long nanoAppId, int abortCode) throws RemoteException {
         }
 
+        @Override // android.hardware.location.IContextHubClientCallback
         public void onNanoAppLoaded(long nanoAppId) throws RemoteException {
         }
 
+        @Override // android.hardware.location.IContextHubClientCallback
         public void onNanoAppUnloaded(long nanoAppId) throws RemoteException {
         }
 
+        @Override // android.hardware.location.IContextHubClientCallback
         public void onNanoAppEnabled(long nanoAppId) throws RemoteException {
         }
 
+        @Override // android.hardware.location.IContextHubClientCallback
         public void onNanoAppDisabled(long nanoAppId) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements IContextHubClientCallback {
         private static final String DESCRIPTOR = "android.hardware.location.IContextHubClientCallback";
         static final int TRANSACTION_onHubReset = 2;
@@ -67,12 +78,13 @@ public interface IContextHubClientCallback extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IContextHubClientCallback)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IContextHubClientCallback)) {
+                return (IContextHubClientCallback) iin;
             }
-            return (IContextHubClientCallback) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -98,56 +110,64 @@ public interface IContextHubClientCallback extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
             NanoAppMessage _arg0;
-            if (code != 1598968902) {
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = NanoAppMessage.CREATOR.createFromParcel(data);
-                        } else {
-                            _arg0 = null;
-                        }
-                        onMessageFromNanoApp(_arg0);
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        onHubReset();
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        onNanoAppAborted(data.readLong(), data.readInt());
-                        return true;
-                    case 4:
-                        data.enforceInterface(DESCRIPTOR);
-                        onNanoAppLoaded(data.readLong());
-                        return true;
-                    case 5:
-                        data.enforceInterface(DESCRIPTOR);
-                        onNanoAppUnloaded(data.readLong());
-                        return true;
-                    case 6:
-                        data.enforceInterface(DESCRIPTOR);
-                        onNanoAppEnabled(data.readLong());
-                        return true;
-                    case 7:
-                        data.enforceInterface(DESCRIPTOR);
-                        onNanoAppDisabled(data.readLong());
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg0 = NanoAppMessage.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg0 = null;
+                    }
+                    onMessageFromNanoApp(_arg0);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    onHubReset();
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _arg02 = data.readLong();
+                    int _arg1 = data.readInt();
+                    onNanoAppAborted(_arg02, _arg1);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _arg03 = data.readLong();
+                    onNanoAppLoaded(_arg03);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _arg04 = data.readLong();
+                    onNanoAppUnloaded(_arg04);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _arg05 = data.readLong();
+                    onNanoAppEnabled(_arg05);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _arg06 = data.readLong();
+                    onNanoAppDisabled(_arg06);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements IContextHubClientCallback {
             public static IContextHubClientCallback sDefaultImpl;
             private IBinder mRemote;
@@ -156,6 +176,7 @@ public interface IContextHubClientCallback extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -164,6 +185,7 @@ public interface IContextHubClientCallback extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.hardware.location.IContextHubClientCallback
             public void onMessageFromNanoApp(NanoAppMessage message) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -174,9 +196,8 @@ public interface IContextHubClientCallback extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onMessageFromNanoApp(message);
                     }
                 } finally {
@@ -184,13 +205,13 @@ public interface IContextHubClientCallback extends IInterface {
                 }
             }
 
+            @Override // android.hardware.location.IContextHubClientCallback
             public void onHubReset() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onHubReset();
                     }
                 } finally {
@@ -198,15 +219,15 @@ public interface IContextHubClientCallback extends IInterface {
                 }
             }
 
+            @Override // android.hardware.location.IContextHubClientCallback
             public void onNanoAppAborted(long nanoAppId, int abortCode) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeLong(nanoAppId);
                     _data.writeInt(abortCode);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onNanoAppAborted(nanoAppId, abortCode);
                     }
                 } finally {
@@ -214,14 +235,14 @@ public interface IContextHubClientCallback extends IInterface {
                 }
             }
 
+            @Override // android.hardware.location.IContextHubClientCallback
             public void onNanoAppLoaded(long nanoAppId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeLong(nanoAppId);
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onNanoAppLoaded(nanoAppId);
                     }
                 } finally {
@@ -229,14 +250,14 @@ public interface IContextHubClientCallback extends IInterface {
                 }
             }
 
+            @Override // android.hardware.location.IContextHubClientCallback
             public void onNanoAppUnloaded(long nanoAppId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeLong(nanoAppId);
-                    if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(5, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onNanoAppUnloaded(nanoAppId);
                     }
                 } finally {
@@ -244,14 +265,14 @@ public interface IContextHubClientCallback extends IInterface {
                 }
             }
 
+            @Override // android.hardware.location.IContextHubClientCallback
             public void onNanoAppEnabled(long nanoAppId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeLong(nanoAppId);
-                    if (this.mRemote.transact(6, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(6, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onNanoAppEnabled(nanoAppId);
                     }
                 } finally {
@@ -259,14 +280,14 @@ public interface IContextHubClientCallback extends IInterface {
                 }
             }
 
+            @Override // android.hardware.location.IContextHubClientCallback
             public void onNanoAppDisabled(long nanoAppId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeLong(nanoAppId);
-                    if (this.mRemote.transact(7, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(7, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onNanoAppDisabled(nanoAppId);
                     }
                 } finally {
@@ -276,11 +297,11 @@ public interface IContextHubClientCallback extends IInterface {
         }
 
         public static boolean setDefaultImpl(IContextHubClientCallback impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IContextHubClientCallback getDefaultImpl() {

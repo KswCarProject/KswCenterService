@@ -2,6 +2,7 @@ package org.mozilla.universalchardet.prober;
 
 import java.nio.ByteBuffer;
 
+/* loaded from: classes5.dex */
 public abstract class CharsetProber {
     public static final int ASCII_A = 97;
     public static final int ASCII_A_CAPITAL = 65;
@@ -12,6 +13,7 @@ public abstract class CharsetProber {
     public static final int ASCII_Z_CAPITAL = 90;
     public static final float SHORTCUT_THRESHOLD = 0.95f;
 
+    /* loaded from: classes5.dex */
     public enum ProbingState {
         DETECTING,
         FOUND_IT,
@@ -23,8 +25,8 @@ public abstract class CharsetProber {
     }
 
     private boolean isAsciiSymbol(byte b) {
-        byte b2 = b & 255;
-        return b2 < 65 || (b2 > 90 && b2 < 97) || b2 > 122;
+        int i = b & 255;
+        return i < 65 || (i > 90 && i < 97) || i > 122;
     }
 
     public ByteBuffer filterWithEnglishLetters(byte[] bArr, int i, int i2) {

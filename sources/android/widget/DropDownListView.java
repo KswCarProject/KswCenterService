@@ -1,17 +1,16 @@
 package android.widget;
 
 import android.content.Context;
-import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import com.android.internal.widget.AutoScrollHelper;
 
+/* loaded from: classes4.dex */
 public class DropDownListView extends ListView {
     private boolean mDrawsInPressedState;
     private boolean mHijackFocus;
     private boolean mListSelectionHidden;
-    /* access modifiers changed from: private */
-    public ResolveHoverRunnable mResolveHoverRunnable;
+    private ResolveHoverRunnable mResolveHoverRunnable;
     private AutoScrollHelper.AbsListViewAutoScroller mScrollHelper;
 
     public DropDownListView(Context context, boolean hijackFocus) {
@@ -19,16 +18,17 @@ public class DropDownListView extends ListView {
     }
 
     public DropDownListView(Context context, boolean hijackFocus, int defStyleAttr) {
-        super(context, (AttributeSet) null, defStyleAttr);
+        super(context, null, defStyleAttr);
         this.mHijackFocus = hijackFocus;
         setCacheColorHint(0);
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean shouldShowSelector() {
+    @Override // android.widget.AbsListView
+    boolean shouldShowSelector() {
         return isHovered() || super.shouldShowSelector();
     }
 
+    @Override // android.widget.AbsListView, android.view.View
     public boolean onTouchEvent(MotionEvent ev) {
         if (this.mResolveHoverRunnable != null) {
             this.mResolveHoverRunnable.cancel();
@@ -36,6 +36,7 @@ public class DropDownListView extends ListView {
         return super.onTouchEvent(ev);
     }
 
+    @Override // android.view.View
     public boolean onHoverEvent(MotionEvent ev) {
         int action = ev.getActionMasked();
         if (action == 10 && this.mResolveHoverRunnable == null) {
@@ -45,7 +46,7 @@ public class DropDownListView extends ListView {
         boolean handled = super.onHoverEvent(ev);
         if (action == 9 || action == 7) {
             int position = pointToPosition((int) ev.getX(), (int) ev.getY());
-            if (!(position == -1 || position == this.mSelectedPosition)) {
+            if (position != -1 && position != this.mSelectedPosition) {
                 View hoveredItem = getChildAt(position - getFirstVisiblePosition());
                 if (hoveredItem.isEnabled()) {
                     requestFocus();
@@ -62,8 +63,8 @@ public class DropDownListView extends ListView {
         return handled;
     }
 
-    /* access modifiers changed from: protected */
-    public void drawableStateChanged() {
+    @Override // android.widget.AbsListView, android.view.ViewGroup, android.view.View
+    protected void drawableStateChanged() {
         if (this.mResolveHoverRunnable == null) {
             super.drawableStateChanged();
         }
@@ -76,30 +77,33 @@ public class DropDownListView extends ListView {
         switch (actionMasked) {
             case 1:
                 handledEvent = false;
-                break;
             case 2:
+                int activeIndex = event.findPointerIndex(activePointerId);
+                if (activeIndex < 0) {
+                    handledEvent = false;
+                    break;
+                } else {
+                    int x = (int) event.getX(activeIndex);
+                    int y = (int) event.getY(activeIndex);
+                    int position = pointToPosition(x, y);
+                    if (position == -1) {
+                        clearPressedItem = true;
+                        break;
+                    } else {
+                        View child = getChildAt(position - getFirstVisiblePosition());
+                        setPressedItem(child, position, x, y);
+                        handledEvent = true;
+                        if (actionMasked == 1) {
+                            long id = getItemIdAtPosition(position);
+                            performItemClick(child, position, id);
+                            break;
+                        }
+                    }
+                }
                 break;
             case 3:
                 handledEvent = false;
                 break;
-        }
-        int activeIndex = event.findPointerIndex(activePointerId);
-        if (activeIndex < 0) {
-            handledEvent = false;
-        } else {
-            int x = (int) event.getX(activeIndex);
-            int y = (int) event.getY(activeIndex);
-            int position = pointToPosition(x, y);
-            if (position == -1) {
-                clearPressedItem = true;
-            } else {
-                View child = getChildAt(position - getFirstVisiblePosition());
-                setPressedItem(child, position, (float) x, (float) y);
-                handledEvent = true;
-                if (actionMasked == 1) {
-                    performItemClick(child, position, getItemIdAtPosition(position));
-                }
-            }
         }
         if (!handledEvent || clearPressedItem) {
             clearPressedItem();
@@ -140,11 +144,13 @@ public class DropDownListView extends ListView {
             layoutChildren();
         }
         View motionView = getChildAt(this.mMotionPosition - this.mFirstPosition);
-        if (!(motionView == null || motionView == child || !motionView.isPressed())) {
+        if (motionView != null && motionView != child && motionView.isPressed()) {
             motionView.setPressed(false);
         }
         this.mMotionPosition = position;
-        child.drawableHotspotChanged(x - ((float) child.getLeft()), y - ((float) child.getTop()));
+        float childX = x - child.getLeft();
+        float childY = y - child.getTop();
+        child.drawableHotspotChanged(childX, childY);
         if (!child.isPressed()) {
             child.setPressed(true);
         }
@@ -153,13 +159,13 @@ public class DropDownListView extends ListView {
         refreshDrawableState();
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean touchModeDrawsInPressedState() {
+    @Override // android.widget.AbsListView
+    boolean touchModeDrawsInPressedState() {
         return this.mDrawsInPressedState || super.touchModeDrawsInPressedState();
     }
 
-    /* access modifiers changed from: package-private */
-    public View obtainView(int position, boolean[] isScrap) {
+    @Override // android.widget.AbsListView
+    View obtainView(int position, boolean[] isScrap) {
         View view = super.obtainView(position, isScrap);
         if (view instanceof TextView) {
             ((TextView) view).setHorizontallyScrolling(true);
@@ -167,33 +173,39 @@ public class DropDownListView extends ListView {
         return view;
     }
 
+    @Override // android.view.View
     public boolean isInTouchMode() {
         return (this.mHijackFocus && this.mListSelectionHidden) || super.isInTouchMode();
     }
 
+    @Override // android.view.View
     public boolean hasWindowFocus() {
         return this.mHijackFocus || super.hasWindowFocus();
     }
 
+    @Override // android.view.View
     public boolean isFocused() {
         return this.mHijackFocus || super.isFocused();
     }
 
+    @Override // android.view.ViewGroup, android.view.View
     public boolean hasFocus() {
         return this.mHijackFocus || super.hasFocus();
     }
 
+    /* loaded from: classes4.dex */
     private class ResolveHoverRunnable implements Runnable {
         private ResolveHoverRunnable() {
         }
 
+        @Override // java.lang.Runnable
         public void run() {
-            ResolveHoverRunnable unused = DropDownListView.this.mResolveHoverRunnable = null;
+            DropDownListView.this.mResolveHoverRunnable = null;
             DropDownListView.this.drawableStateChanged();
         }
 
         public void cancel() {
-            ResolveHoverRunnable unused = DropDownListView.this.mResolveHoverRunnable = null;
+            DropDownListView.this.mResolveHoverRunnable = null;
             DropDownListView.this.removeCallbacks(this);
         }
 

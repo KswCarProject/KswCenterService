@@ -8,11 +8,11 @@ import com.android.internal.transition.EpicenterTranslateClipReveal;
 import com.android.internal.util.HexDump;
 import com.ibm.icu.text.SymbolTable;
 
+/* loaded from: classes4.dex */
 public class UserData {
     public static final int ASCII_CR_INDEX = 13;
-    public static final char[] ASCII_MAP = {' ', '!', '\"', '#', SymbolTable.SYMBOL_REF, '%', '&', DateFormat.QUOTE, '(', ')', '*', '+', ',', '-', '.', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '<', '=', '>', '?', '@', DateFormat.CAPITAL_AM_PM, 'B', 'C', 'D', DateFormat.DAY, 'F', 'G', 'H', 'I', 'J', 'K', DateFormat.STANDALONE_MONTH, DateFormat.MONTH, PhoneNumberUtils.WILD, 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '[', '\\', ']', '^', '_', '`', DateFormat.AM_PM, 'b', 'c', DateFormat.DATE, 'e', 'f', 'g', DateFormat.HOUR, 'i', 'j', DateFormat.HOUR_OF_DAY, 'l', DateFormat.MINUTE, 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', EpicenterTranslateClipReveal.StateProperty.TARGET_X, 'y', DateFormat.TIME_ZONE, '{', '|', '}', '~'};
     public static final int ASCII_MAP_BASE_INDEX = 32;
-    public static final int ASCII_MAP_MAX_INDEX = ((ASCII_MAP.length + 32) - 1);
+    public static final int ASCII_MAP_MAX_INDEX;
     public static final int ASCII_NL_INDEX = 10;
     public static final int ENCODING_7BIT_ASCII = 2;
     public static final int ENCODING_GSM_7BIT_ALPHABET = 9;
@@ -34,7 +34,6 @@ public class UserData {
     public static final int IS91_MSG_TYPE_VOICEMAIL_STATUS = 130;
     public static final int PRINTABLE_ASCII_MIN_INDEX = 32;
     static final byte UNENCODABLE_7_BIT_CHAR = 32;
-    public static final SparseIntArray charToAscii = new SparseIntArray();
     public int msgEncoding;
     public boolean msgEncodingSet = false;
     public int msgType;
@@ -43,6 +42,8 @@ public class UserData {
     public byte[] payload;
     public String payloadStr;
     public SmsHeader userDataHeader;
+    public static final char[] ASCII_MAP = {' ', '!', '\"', '#', SymbolTable.SYMBOL_REF, '%', '&', DateFormat.QUOTE, '(', ')', '*', '+', ',', '-', '.', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '<', '=', '>', '?', '@', DateFormat.CAPITAL_AM_PM, 'B', 'C', 'D', DateFormat.DAY, 'F', 'G', 'H', 'I', 'J', 'K', DateFormat.STANDALONE_MONTH, DateFormat.MONTH, PhoneNumberUtils.WILD, 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '[', '\\', ']', '^', '_', '`', DateFormat.AM_PM, 'b', 'c', DateFormat.DATE, 'e', 'f', 'g', DateFormat.HOUR, 'i', 'j', DateFormat.HOUR_OF_DAY, 'l', DateFormat.MINUTE, 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', EpicenterTranslateClipReveal.StateProperty.TARGET_X, 'y', DateFormat.TIME_ZONE, '{', '|', '}', '~'};
+    public static final SparseIntArray charToAscii = new SparseIntArray();
 
     static {
         for (int i = 0; i < ASCII_MAP.length; i++) {
@@ -50,6 +51,7 @@ public class UserData {
         }
         charToAscii.put(10, 10);
         charToAscii.put(13, 13);
+        ASCII_MAP_MAX_INDEX = (ASCII_MAP.length + 32) - 1;
     }
 
     public static byte[] stringToAscii(String str) {

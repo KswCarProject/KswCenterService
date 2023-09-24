@@ -1,8 +1,9 @@
 package android.telephony.cdma;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public class CdmaSmsCbProgramData implements Parcelable {
     public static final int ALERT_OPTION_DEFAULT_ALERT = 1;
     public static final int ALERT_OPTION_HIGH_PRIORITY_ONCE = 10;
@@ -16,11 +17,15 @@ public class CdmaSmsCbProgramData implements Parcelable {
     public static final int ALERT_OPTION_VIBRATE_REPEAT = 3;
     public static final int ALERT_OPTION_VISUAL_ONCE = 4;
     public static final int ALERT_OPTION_VISUAL_REPEAT = 5;
-    public static final Parcelable.Creator<CdmaSmsCbProgramData> CREATOR = new Parcelable.Creator<CdmaSmsCbProgramData>() {
+    public static final Parcelable.Creator<CdmaSmsCbProgramData> CREATOR = new Parcelable.Creator<CdmaSmsCbProgramData>() { // from class: android.telephony.cdma.CdmaSmsCbProgramData.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public CdmaSmsCbProgramData createFromParcel(Parcel in) {
             return new CdmaSmsCbProgramData(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public CdmaSmsCbProgramData[] newArray(int size) {
             return new CdmaSmsCbProgramData[size];
         }
@@ -53,6 +58,7 @@ public class CdmaSmsCbProgramData implements Parcelable {
         this.mCategoryName = in.readString();
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mOperation);
         dest.writeInt(this.mCategory);
@@ -90,6 +96,7 @@ public class CdmaSmsCbProgramData implements Parcelable {
         return "CdmaSmsCbProgramData{operation=" + this.mOperation + ", category=" + this.mCategory + ", language=" + this.mLanguage + ", max messages=" + this.mMaxMessages + ", alert option=" + this.mAlertOption + ", category name=" + this.mCategoryName + '}';
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

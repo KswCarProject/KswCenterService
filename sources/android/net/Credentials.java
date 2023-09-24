@@ -1,14 +1,15 @@
 package android.net;
 
+/* loaded from: classes3.dex */
 public class Credentials {
     private final int gid;
     private final int pid;
     private final int uid;
 
-    public Credentials(int pid2, int uid2, int gid2) {
-        this.pid = pid2;
-        this.uid = uid2;
-        this.gid = gid2;
+    public Credentials(int pid, int uid, int gid) {
+        this.pid = pid;
+        this.uid = uid;
+        this.gid = gid;
     }
 
     public int getPid() {

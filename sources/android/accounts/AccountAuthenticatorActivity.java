@@ -1,8 +1,9 @@
 package android.accounts;
 
 import android.app.Activity;
-import android.os.Bundle;
+import android.p007os.Bundle;
 
+/* loaded from: classes.dex */
 public class AccountAuthenticatorActivity extends Activity {
     private AccountAuthenticatorResponse mAccountAuthenticatorResponse = null;
     private Bundle mResultBundle = null;
@@ -11,8 +12,8 @@ public class AccountAuthenticatorActivity extends Activity {
         this.mResultBundle = result;
     }
 
-    /* access modifiers changed from: protected */
-    public void onCreate(Bundle icicle) {
+    @Override // android.app.Activity
+    protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         this.mAccountAuthenticatorResponse = (AccountAuthenticatorResponse) getIntent().getParcelableExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE);
         if (this.mAccountAuthenticatorResponse != null) {
@@ -20,6 +21,7 @@ public class AccountAuthenticatorActivity extends Activity {
         }
     }
 
+    @Override // android.app.Activity
     public void finish() {
         if (this.mAccountAuthenticatorResponse != null) {
             if (this.mResultBundle != null) {

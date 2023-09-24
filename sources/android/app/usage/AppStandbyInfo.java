@@ -1,14 +1,19 @@
 package android.app.usage;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public final class AppStandbyInfo implements Parcelable {
-    public static final Parcelable.Creator<AppStandbyInfo> CREATOR = new Parcelable.Creator<AppStandbyInfo>() {
+    public static final Parcelable.Creator<AppStandbyInfo> CREATOR = new Parcelable.Creator<AppStandbyInfo>() { // from class: android.app.usage.AppStandbyInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AppStandbyInfo createFromParcel(Parcel source) {
             return new AppStandbyInfo(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AppStandbyInfo[] newArray(int size) {
             return new AppStandbyInfo[size];
         }
@@ -26,10 +31,12 @@ public final class AppStandbyInfo implements Parcelable {
         this.mStandbyBucket = bucket;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.mPackageName);
         dest.writeInt(this.mStandbyBucket);

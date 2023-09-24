@@ -1,13 +1,14 @@
 package android.telecom;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public class ParcelableCallAnalytics implements Parcelable {
     public static final int CALLTYPE_INCOMING = 1;
     public static final int CALLTYPE_OUTGOING = 2;
@@ -16,11 +17,15 @@ public class ParcelableCallAnalytics implements Parcelable {
     public static final int CALL_SOURCE_EMERGENCY_SHORTCUT = 2;
     public static final int CALL_SOURCE_UNSPECIFIED = 0;
     public static final int CDMA_PHONE = 1;
-    public static final Parcelable.Creator<ParcelableCallAnalytics> CREATOR = new Parcelable.Creator<ParcelableCallAnalytics>() {
+    public static final Parcelable.Creator<ParcelableCallAnalytics> CREATOR = new Parcelable.Creator<ParcelableCallAnalytics>() { // from class: android.telecom.ParcelableCallAnalytics.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ParcelableCallAnalytics createFromParcel(Parcel in) {
             return new ParcelableCallAnalytics(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ParcelableCallAnalytics[] newArray(int size) {
             return new ParcelableCallAnalytics[size];
         }
@@ -34,7 +39,7 @@ public class ParcelableCallAnalytics implements Parcelable {
     public static final int THIRD_PARTY_PHONE = 16;
     private final List<AnalyticsEvent> analyticsEvents;
     private final long callDurationMillis;
-    private int callSource = 0;
+    private int callSource;
     private final int callTechnologies;
     private final int callTerminationCode;
     private final int callType;
@@ -44,16 +49,21 @@ public class ParcelableCallAnalytics implements Parcelable {
     private final boolean isCreatedFromExistingConnection;
     private final boolean isEmergencyCall;
     private final boolean isInterrupted;
-    private boolean isVideoCall = false;
+    private boolean isVideoCall;
     private final long startTimeMillis;
     private List<VideoEvent> videoEvents;
 
+    /* loaded from: classes3.dex */
     public static final class VideoEvent implements Parcelable {
-        public static final Parcelable.Creator<VideoEvent> CREATOR = new Parcelable.Creator<VideoEvent>() {
+        public static final Parcelable.Creator<VideoEvent> CREATOR = new Parcelable.Creator<VideoEvent>() { // from class: android.telecom.ParcelableCallAnalytics.VideoEvent.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public VideoEvent createFromParcel(Parcel in) {
                 return new VideoEvent(in);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public VideoEvent[] newArray(int size) {
                 return new VideoEvent[size];
             }
@@ -90,10 +100,12 @@ public class ParcelableCallAnalytics implements Parcelable {
             return this.mVideoState;
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel out, int flags) {
             out.writeInt(this.mEventName);
             out.writeLong(this.mTimeSinceLastEvent);
@@ -101,6 +113,7 @@ public class ParcelableCallAnalytics implements Parcelable {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class AnalyticsEvent implements Parcelable {
         public static final int AUDIO_ROUTE_BT = 204;
         public static final int AUDIO_ROUTE_EARPIECE = 205;
@@ -110,11 +123,15 @@ public class ParcelableCallAnalytics implements Parcelable {
         public static final int BLOCK_CHECK_FINISHED = 105;
         public static final int BLOCK_CHECK_INITIATED = 104;
         public static final int CONFERENCE_WITH = 300;
-        public static final Parcelable.Creator<AnalyticsEvent> CREATOR = new Parcelable.Creator<AnalyticsEvent>() {
+        public static final Parcelable.Creator<AnalyticsEvent> CREATOR = new Parcelable.Creator<AnalyticsEvent>() { // from class: android.telecom.ParcelableCallAnalytics.AnalyticsEvent.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public AnalyticsEvent createFromParcel(Parcel in) {
                 return new AnalyticsEvent(in);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public AnalyticsEvent[] newArray(int size) {
                 return new AnalyticsEvent[size];
             }
@@ -168,25 +185,32 @@ public class ParcelableCallAnalytics implements Parcelable {
             return this.mTimeSinceLastEvent;
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel out, int flags) {
             out.writeInt(this.mEventName);
             out.writeLong(this.mTimeSinceLastEvent);
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class EventTiming implements Parcelable {
         public static final int ACCEPT_TIMING = 0;
         public static final int BIND_CS_TIMING = 6;
         public static final int BLOCK_CHECK_FINISHED_TIMING = 9;
-        public static final Parcelable.Creator<EventTiming> CREATOR = new Parcelable.Creator<EventTiming>() {
+        public static final Parcelable.Creator<EventTiming> CREATOR = new Parcelable.Creator<EventTiming>() { // from class: android.telecom.ParcelableCallAnalytics.EventTiming.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public EventTiming createFromParcel(Parcel in) {
                 return new EventTiming(in);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public EventTiming[] newArray(int size) {
                 return new EventTiming[size];
             }
@@ -223,32 +247,38 @@ public class ParcelableCallAnalytics implements Parcelable {
             return this.mTime;
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel out, int flags) {
             out.writeInt(this.mName);
             out.writeLong(this.mTime);
         }
     }
 
-    public ParcelableCallAnalytics(long startTimeMillis2, long callDurationMillis2, int callType2, boolean isAdditionalCall2, boolean isInterrupted2, int callTechnologies2, int callTerminationCode2, boolean isEmergencyCall2, String connectionService2, boolean isCreatedFromExistingConnection2, List<AnalyticsEvent> analyticsEvents2, List<EventTiming> eventTimings2) {
-        this.startTimeMillis = startTimeMillis2;
-        this.callDurationMillis = callDurationMillis2;
-        this.callType = callType2;
-        this.isAdditionalCall = isAdditionalCall2;
-        this.isInterrupted = isInterrupted2;
-        this.callTechnologies = callTechnologies2;
-        this.callTerminationCode = callTerminationCode2;
-        this.isEmergencyCall = isEmergencyCall2;
-        this.connectionService = connectionService2;
-        this.isCreatedFromExistingConnection = isCreatedFromExistingConnection2;
-        this.analyticsEvents = analyticsEvents2;
-        this.eventTimings = eventTimings2;
+    public ParcelableCallAnalytics(long startTimeMillis, long callDurationMillis, int callType, boolean isAdditionalCall, boolean isInterrupted, int callTechnologies, int callTerminationCode, boolean isEmergencyCall, String connectionService, boolean isCreatedFromExistingConnection, List<AnalyticsEvent> analyticsEvents, List<EventTiming> eventTimings) {
+        this.isVideoCall = false;
+        this.callSource = 0;
+        this.startTimeMillis = startTimeMillis;
+        this.callDurationMillis = callDurationMillis;
+        this.callType = callType;
+        this.isAdditionalCall = isAdditionalCall;
+        this.isInterrupted = isInterrupted;
+        this.callTechnologies = callTechnologies;
+        this.callTerminationCode = callTerminationCode;
+        this.isEmergencyCall = isEmergencyCall;
+        this.connectionService = connectionService;
+        this.isCreatedFromExistingConnection = isCreatedFromExistingConnection;
+        this.analyticsEvents = analyticsEvents;
+        this.eventTimings = eventTimings;
     }
 
     public ParcelableCallAnalytics(Parcel in) {
+        this.isVideoCall = false;
+        this.callSource = 0;
         this.startTimeMillis = in.readLong();
         this.callDurationMillis = in.readLong();
         this.callType = in.readInt();
@@ -269,6 +299,7 @@ public class ParcelableCallAnalytics implements Parcelable {
         this.callSource = in.readInt();
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeLong(this.startTimeMillis);
         out.writeLong(this.callDurationMillis);
@@ -287,16 +318,16 @@ public class ParcelableCallAnalytics implements Parcelable {
         out.writeInt(this.callSource);
     }
 
-    public void setIsVideoCall(boolean isVideoCall2) {
-        this.isVideoCall = isVideoCall2;
+    public void setIsVideoCall(boolean isVideoCall) {
+        this.isVideoCall = isVideoCall;
     }
 
-    public void setVideoEvents(List<VideoEvent> videoEvents2) {
-        this.videoEvents = videoEvents2;
+    public void setVideoEvents(List<VideoEvent> videoEvents) {
+        this.videoEvents = videoEvents;
     }
 
-    public void setCallSource(int callSource2) {
-        this.callSource = callSource2;
+    public void setCallSource(int callSource) {
+        this.callSource = callSource;
     }
 
     public long getStartTimeMillis() {
@@ -359,12 +390,13 @@ public class ParcelableCallAnalytics implements Parcelable {
         return this.callSource;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
     private static void writeBooleanAsByte(Parcel out, boolean b) {
-        out.writeByte(b ? (byte) 1 : 0);
+        out.writeByte(b ? (byte) 1 : (byte) 0);
     }
 
     private static boolean readByteAsBoolean(Parcel in) {

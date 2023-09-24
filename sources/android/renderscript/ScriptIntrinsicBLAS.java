@@ -3,6 +3,7 @@ package android.renderscript;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes3.dex */
 public final class ScriptIntrinsicBLAS extends ScriptIntrinsic {
     public static final int CONJ_TRANSPOSE = 113;
     public static final int LEFT = 141;
@@ -159,18 +160,22 @@ public final class ScriptIntrinsicBLAS extends ScriptIntrinsic {
     private Allocation mLUT;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface Diag {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface Side {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface Transpose {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface Uplo {
     }
 
@@ -179,7 +184,8 @@ public final class ScriptIntrinsicBLAS extends ScriptIntrinsic {
     }
 
     public static ScriptIntrinsicBLAS create(RenderScript rs) {
-        return new ScriptIntrinsicBLAS(rs.nScriptIntrinsicCreate(13, Element.U32(rs).getID(rs)), rs);
+        long id = rs.nScriptIntrinsicCreate(13, Element.U32(rs).getID(rs));
+        return new ScriptIntrinsicBLAS(id, rs);
     }
 
     static void validateSide(int Side2) {
@@ -220,66 +226,54 @@ public final class ScriptIntrinsicBLAS extends ScriptIntrinsic {
         int N = A.getType().getX();
         if (!A.getType().getElement().isCompatible(e) || !X.getType().getElement().isCompatible(e) || !Y.getType().getElement().isCompatible(e)) {
             throw new RSRuntimeException("Called BLAS with wrong Element type");
-        } else if (X.getType().getY() > 1 || Y.getType().getY() > 1) {
+        }
+        if (X.getType().getY() > 1 || Y.getType().getY() > 1) {
             throw new RSRuntimeException("BLAS vectors must have Y dimension of 0 or 1");
-        } else if (incX <= 0 || incY <= 0) {
+        }
+        if (incX <= 0 || incY <= 0) {
             throw new RSRuntimeException("Vector increments must be greater than 0");
+        }
+        if (TransA == 111) {
+            expectedXDim = ((N - 1) * incX) + 1;
+            int expectedXDim2 = M - 1;
+            expectedYDim = (expectedXDim2 * incY) + 1;
         } else {
-            if (TransA == 111) {
-                expectedXDim = ((N - 1) * incX) + 1;
-                expectedYDim = ((M - 1) * incY) + 1;
-            } else {
-                expectedXDim = ((M - 1) * incX) + 1;
-                expectedYDim = ((N - 1) * incY) + 1;
-            }
-            if (X.getType().getX() != expectedXDim || Y.getType().getX() != expectedYDim) {
-                throw new RSRuntimeException("Incorrect vector dimensions for GEMV");
-            }
+            int expectedXDim3 = M - 1;
+            expectedXDim = (expectedXDim3 * incX) + 1;
+            int expectedXDim4 = N - 1;
+            expectedYDim = (expectedXDim4 * incY) + 1;
+        }
+        if (X.getType().getX() != expectedXDim || Y.getType().getX() != expectedYDim) {
+            throw new RSRuntimeException("Incorrect vector dimensions for GEMV");
         }
     }
 
     public void SGEMV(int TransA, float alpha, Allocation A, Allocation X, int incX, float beta, Allocation Y, int incY) {
-        Allocation allocation = X;
-        validateGEMV(Element.F32(this.mRS), TransA, A, allocation, incX, Y, incY);
-        int y = A.getType().getY();
-        int x = A.getType().getX();
-        RenderScript renderScript = this.mRS;
-        long id = getID(this.mRS);
-        long id2 = A.getID(this.mRS);
-        long id3 = allocation.getID(this.mRS);
-        renderScript.nScriptIntrinsicBLAS_Single(id, 47, TransA, 0, 0, 0, 0, y, x, 0, alpha, id2, id3, beta, Y.getID(this.mRS), incX, incY, 0, 0);
+        validateGEMV(Element.F32(this.mRS), TransA, A, X, incX, Y, incY);
+        int M = A.getType().getY();
+        int N = A.getType().getX();
+        this.mRS.nScriptIntrinsicBLAS_Single(getID(this.mRS), 47, TransA, 0, 0, 0, 0, M, N, 0, alpha, A.getID(this.mRS), X.getID(this.mRS), beta, Y.getID(this.mRS), incX, incY, 0, 0);
     }
 
     public void DGEMV(int TransA, double alpha, Allocation A, Allocation X, int incX, double beta, Allocation Y, int incY) {
-        Allocation allocation = X;
-        validateGEMV(Element.F64(this.mRS), TransA, A, allocation, incX, Y, incY);
-        int y = A.getType().getY();
-        int x = A.getType().getX();
-        RenderScript renderScript = this.mRS;
-        long id = getID(this.mRS);
-        long id2 = A.getID(this.mRS);
-        long id3 = allocation.getID(this.mRS);
-        renderScript.nScriptIntrinsicBLAS_Double(id, 55, TransA, 0, 0, 0, 0, y, x, 0, alpha, id2, id3, beta, Y.getID(this.mRS), incX, incY, 0, 0);
+        validateGEMV(Element.F64(this.mRS), TransA, A, X, incX, Y, incY);
+        int M = A.getType().getY();
+        int N = A.getType().getX();
+        this.mRS.nScriptIntrinsicBLAS_Double(getID(this.mRS), 55, TransA, 0, 0, 0, 0, M, N, 0, alpha, A.getID(this.mRS), X.getID(this.mRS), beta, Y.getID(this.mRS), incX, incY, 0, 0);
     }
 
     public void CGEMV(int TransA, Float2 alpha, Allocation A, Allocation X, int incX, Float2 beta, Allocation Y, int incY) {
-        Float2 float2 = alpha;
-        Float2 float22 = beta;
-        Allocation allocation = X;
-        validateGEMV(Element.F32_2(this.mRS), TransA, A, allocation, incX, Y, incY);
-        int y = A.getType().getY();
-        int x = A.getType().getX();
-        this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 63, TransA, 0, 0, 0, 0, y, x, 0, float2.x, float2.y, A.getID(this.mRS), allocation.getID(this.mRS), float22.x, float22.y, Y.getID(this.mRS), incX, incY, 0, 0);
+        validateGEMV(Element.F32_2(this.mRS), TransA, A, X, incX, Y, incY);
+        int M = A.getType().getY();
+        int N = A.getType().getX();
+        this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 63, TransA, 0, 0, 0, 0, M, N, 0, alpha.f190x, alpha.f191y, A.getID(this.mRS), X.getID(this.mRS), beta.f190x, beta.f191y, Y.getID(this.mRS), incX, incY, 0, 0);
     }
 
     public void ZGEMV(int TransA, Double2 alpha, Allocation A, Allocation X, int incX, Double2 beta, Allocation Y, int incY) {
-        Double2 double2 = alpha;
-        Double2 double22 = beta;
-        Allocation allocation = X;
-        validateGEMV(Element.F64_2(this.mRS), TransA, A, allocation, incX, Y, incY);
-        int y = A.getType().getY();
-        int x = A.getType().getX();
-        this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 71, TransA, 0, 0, 0, 0, y, x, 0, double2.x, double2.y, A.getID(this.mRS), allocation.getID(this.mRS), double22.x, double22.y, Y.getID(this.mRS), incX, incY, 0, 0);
+        validateGEMV(Element.F64_2(this.mRS), TransA, A, X, incX, Y, incY);
+        int M = A.getType().getY();
+        int N = A.getType().getX();
+        this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 71, TransA, 0, 0, 0, 0, M, N, 0, alpha.f181x, alpha.f182y, A.getID(this.mRS), X.getID(this.mRS), beta.f181x, beta.f182y, Y.getID(this.mRS), incX, incY, 0, 0);
     }
 
     public void SGBMV(int TransA, int KL, int KU, float alpha, Allocation A, Allocation X, int incX, float beta, Allocation Y, int incY) {
@@ -287,8 +281,9 @@ public final class ScriptIntrinsicBLAS extends ScriptIntrinsic {
         if (KL < 0 || KU < 0) {
             throw new RSRuntimeException("KL and KU must be greater than or equal to 0");
         }
-        int i = TransA;
-        this.mRS.nScriptIntrinsicBLAS_Single(getID(this.mRS), 48, i, 0, 0, 0, 0, A.getType().getY(), A.getType().getX(), 0, alpha, A.getID(this.mRS), X.getID(this.mRS), beta, Y.getID(this.mRS), incX, incY, KL, KU);
+        int M = A.getType().getY();
+        int N = A.getType().getX();
+        this.mRS.nScriptIntrinsicBLAS_Single(getID(this.mRS), 48, TransA, 0, 0, 0, 0, M, N, 0, alpha, A.getID(this.mRS), X.getID(this.mRS), beta, Y.getID(this.mRS), incX, incY, KL, KU);
     }
 
     public void DGBMV(int TransA, int KL, int KU, double alpha, Allocation A, Allocation X, int incX, double beta, Allocation Y, int incY) {
@@ -296,30 +291,29 @@ public final class ScriptIntrinsicBLAS extends ScriptIntrinsic {
         if (KL < 0 || KU < 0) {
             throw new RSRuntimeException("KL and KU must be greater than or equal to 0");
         }
-        int i = TransA;
-        this.mRS.nScriptIntrinsicBLAS_Double(getID(this.mRS), 56, i, 0, 0, 0, 0, A.getType().getY(), A.getType().getX(), 0, alpha, A.getID(this.mRS), X.getID(this.mRS), beta, Y.getID(this.mRS), incX, incY, KL, KU);
+        int M = A.getType().getY();
+        int N = A.getType().getX();
+        this.mRS.nScriptIntrinsicBLAS_Double(getID(this.mRS), 56, TransA, 0, 0, 0, 0, M, N, 0, alpha, A.getID(this.mRS), X.getID(this.mRS), beta, Y.getID(this.mRS), incX, incY, KL, KU);
     }
 
     public void CGBMV(int TransA, int KL, int KU, Float2 alpha, Allocation A, Allocation X, int incX, Float2 beta, Allocation Y, int incY) {
-        Float2 float2 = alpha;
-        Float2 float22 = beta;
         validateGEMV(Element.F32_2(this.mRS), TransA, A, X, incX, Y, incY);
         if (KL < 0 || KU < 0) {
             throw new RSRuntimeException("KL and KU must be greater than or equal to 0");
         }
-        int i = TransA;
-        this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 64, i, 0, 0, 0, 0, A.getType().getY(), A.getType().getX(), 0, float2.x, float2.y, A.getID(this.mRS), X.getID(this.mRS), float22.x, float22.y, Y.getID(this.mRS), incX, incY, KL, KU);
+        int M = A.getType().getY();
+        int N = A.getType().getX();
+        this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 64, TransA, 0, 0, 0, 0, M, N, 0, alpha.f190x, alpha.f191y, A.getID(this.mRS), X.getID(this.mRS), beta.f190x, beta.f191y, Y.getID(this.mRS), incX, incY, KL, KU);
     }
 
     public void ZGBMV(int TransA, int KL, int KU, Double2 alpha, Allocation A, Allocation X, int incX, Double2 beta, Allocation Y, int incY) {
-        Double2 double2 = alpha;
-        Double2 double22 = beta;
         validateGEMV(Element.F64_2(this.mRS), TransA, A, X, incX, Y, incY);
         if (KL < 0 || KU < 0) {
             throw new RSRuntimeException("KL and KU must be greater than or equal to 0");
         }
-        int i = TransA;
-        this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 72, i, 0, 0, 0, 0, A.getType().getY(), A.getType().getX(), 0, double2.x, double2.y, A.getID(this.mRS), X.getID(this.mRS), double22.x, double22.y, Y.getID(this.mRS), incX, incY, KL, KU);
+        int M = A.getType().getY();
+        int N = A.getType().getX();
+        this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 72, TransA, 0, 0, 0, 0, M, N, 0, alpha.f181x, alpha.f182y, A.getID(this.mRS), X.getID(this.mRS), beta.f181x, beta.f182y, Y.getID(this.mRS), incX, incY, KL, KU);
     }
 
     static void validateTRMV(Element e, int Uplo2, int TransA, int Diag2, Allocation A, Allocation X, int incX) {
@@ -329,16 +323,19 @@ public final class ScriptIntrinsicBLAS extends ScriptIntrinsic {
         int N = A.getType().getY();
         if (A.getType().getX() != N) {
             throw new RSRuntimeException("A must be a square matrix for TRMV");
-        } else if (!A.getType().getElement().isCompatible(e) || !X.getType().getElement().isCompatible(e)) {
+        }
+        if (!A.getType().getElement().isCompatible(e) || !X.getType().getElement().isCompatible(e)) {
             throw new RSRuntimeException("Called BLAS with wrong Element type");
-        } else if (X.getType().getY() > 1) {
+        }
+        if (X.getType().getY() > 1) {
             throw new RSRuntimeException("BLAS vectors must have Y dimension of 0 or 1");
-        } else if (incX > 0) {
-            if (X.getType().getX() != ((N - 1) * incX) + 1) {
-                throw new RSRuntimeException("Incorrect vector dimensions for TRMV");
-            }
-        } else {
+        }
+        if (incX <= 0) {
             throw new RSRuntimeException("Vector increments must be greater than 0");
+        }
+        int expectedXDim = ((N - 1) * incX) + 1;
+        if (X.getType().getX() != expectedXDim) {
+            throw new RSRuntimeException("Incorrect vector dimensions for TRMV");
         }
     }
 
@@ -348,177 +345,136 @@ public final class ScriptIntrinsicBLAS extends ScriptIntrinsic {
         validateDiag(Diag2);
         if (!Ap.getType().getElement().isCompatible(e) || !X.getType().getElement().isCompatible(e)) {
             throw new RSRuntimeException("Called BLAS with wrong Element type");
-        } else if (X.getType().getY() > 1) {
+        }
+        if (X.getType().getY() > 1) {
             throw new RSRuntimeException("BLAS vectors must have Y dimension of 0 or 1");
-        } else if (Ap.getType().getY() <= 1) {
-            int N = (int) Math.sqrt(((double) Ap.getType().getX()) * 2.0d);
-            if (Ap.getType().getX() != ((N + 1) * N) / 2) {
-                throw new RSRuntimeException("Invalid dimension for Ap");
-            } else if (incX > 0) {
-                if (X.getType().getX() == ((N - 1) * incX) + 1) {
-                    return N;
-                }
-                throw new RSRuntimeException("Incorrect vector dimensions for TPMV");
-            } else {
-                throw new RSRuntimeException("Vector increments must be greater than 0");
-            }
-        } else {
+        }
+        if (Ap.getType().getY() > 1) {
             throw new RSRuntimeException("Ap must have a Y dimension of 0 or 1");
         }
+        int N = (int) Math.sqrt(Ap.getType().getX() * 2.0d);
+        if (Ap.getType().getX() != ((N + 1) * N) / 2) {
+            throw new RSRuntimeException("Invalid dimension for Ap");
+        }
+        if (incX <= 0) {
+            throw new RSRuntimeException("Vector increments must be greater than 0");
+        }
+        int expectedXDim = ((N - 1) * incX) + 1;
+        if (X.getType().getX() != expectedXDim) {
+            throw new RSRuntimeException("Incorrect vector dimensions for TPMV");
+        }
+        return N;
     }
 
     public void STRMV(int Uplo2, int TransA, int Diag2, Allocation A, Allocation X, int incX) {
         validateTRMV(Element.F32(this.mRS), Uplo2, TransA, Diag2, A, X, incX);
-        int y = A.getType().getY();
-        RenderScript renderScript = this.mRS;
-        long id = getID(this.mRS);
-        renderScript.nScriptIntrinsicBLAS_Single(id, 49, TransA, 0, 0, Uplo2, Diag2, 0, y, 0, 0.0f, A.getID(this.mRS), X.getID(this.mRS), 0.0f, 0, incX, 0, 0, 0);
+        int N = A.getType().getY();
+        this.mRS.nScriptIntrinsicBLAS_Single(getID(this.mRS), 49, TransA, 0, 0, Uplo2, Diag2, 0, N, 0, 0.0f, A.getID(this.mRS), X.getID(this.mRS), 0.0f, 0L, incX, 0, 0, 0);
     }
 
     public void DTRMV(int Uplo2, int TransA, int Diag2, Allocation A, Allocation X, int incX) {
         validateTRMV(Element.F64(this.mRS), Uplo2, TransA, Diag2, A, X, incX);
-        int y = A.getType().getY();
-        RenderScript renderScript = this.mRS;
-        long id = getID(this.mRS);
-        renderScript.nScriptIntrinsicBLAS_Double(id, 57, TransA, 0, 0, Uplo2, Diag2, 0, y, 0, 0.0d, A.getID(this.mRS), X.getID(this.mRS), 0.0d, 0, incX, 0, 0, 0);
+        int N = A.getType().getY();
+        this.mRS.nScriptIntrinsicBLAS_Double(getID(this.mRS), 57, TransA, 0, 0, Uplo2, Diag2, 0, N, 0, 0.0d, A.getID(this.mRS), X.getID(this.mRS), 0.0d, 0L, incX, 0, 0, 0);
     }
 
     public void CTRMV(int Uplo2, int TransA, int Diag2, Allocation A, Allocation X, int incX) {
-        Allocation allocation = A;
-        validateTRMV(Element.F32_2(this.mRS), Uplo2, TransA, Diag2, allocation, X, incX);
-        int y = A.getType().getY();
-        RenderScript renderScript = this.mRS;
-        long id = getID(this.mRS);
-        renderScript.nScriptIntrinsicBLAS_Complex(id, 65, TransA, 0, 0, Uplo2, Diag2, 0, y, 0, 0.0f, 0.0f, allocation.getID(this.mRS), X.getID(this.mRS), 0.0f, 0.0f, 0, incX, 0, 0, 0);
+        validateTRMV(Element.F32_2(this.mRS), Uplo2, TransA, Diag2, A, X, incX);
+        int N = A.getType().getY();
+        this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 65, TransA, 0, 0, Uplo2, Diag2, 0, N, 0, 0.0f, 0.0f, A.getID(this.mRS), X.getID(this.mRS), 0.0f, 0.0f, 0L, incX, 0, 0, 0);
     }
 
     public void ZTRMV(int Uplo2, int TransA, int Diag2, Allocation A, Allocation X, int incX) {
         validateTRMV(Element.F64_2(this.mRS), Uplo2, TransA, Diag2, A, X, incX);
-        int y = A.getType().getY();
-        RenderScript renderScript = this.mRS;
-        long id = getID(this.mRS);
-        renderScript.nScriptIntrinsicBLAS_Z(id, 73, TransA, 0, 0, Uplo2, Diag2, 0, y, 0, 0.0d, 0.0d, A.getID(this.mRS), X.getID(this.mRS), 0.0d, 0.0d, 0, incX, 0, 0, 0);
+        int N = A.getType().getY();
+        this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 73, TransA, 0, 0, Uplo2, Diag2, 0, N, 0, 0.0d, 0.0d, A.getID(this.mRS), X.getID(this.mRS), 0.0d, 0.0d, 0L, incX, 0, 0, 0);
     }
 
     public void STBMV(int Uplo2, int TransA, int Diag2, int K, Allocation A, Allocation X, int incX) {
-        if (K >= 0) {
-            validateTRMV(Element.F32(this.mRS), Uplo2, TransA, Diag2, A, X, incX);
-            RenderScript renderScript = this.mRS;
-            long id = getID(this.mRS);
-            long id2 = A.getID(this.mRS);
-            long id3 = X.getID(this.mRS);
-            renderScript.nScriptIntrinsicBLAS_Single(id, 50, TransA, 0, 0, Uplo2, Diag2, 0, A.getType().getY(), K, 0.0f, id2, id3, 0.0f, 0, incX, 0, 0, 0);
-            return;
+        if (K < 0) {
+            throw new RSRuntimeException("K must be greater than or equal to 0");
         }
-        throw new RSRuntimeException("K must be greater than or equal to 0");
+        validateTRMV(Element.F32(this.mRS), Uplo2, TransA, Diag2, A, X, incX);
+        int N = A.getType().getY();
+        this.mRS.nScriptIntrinsicBLAS_Single(getID(this.mRS), 50, TransA, 0, 0, Uplo2, Diag2, 0, N, K, 0.0f, A.getID(this.mRS), X.getID(this.mRS), 0.0f, 0L, incX, 0, 0, 0);
     }
 
     public void DTBMV(int Uplo2, int TransA, int Diag2, int K, Allocation A, Allocation X, int incX) {
-        if (K >= 0) {
-            validateTRMV(Element.F64(this.mRS), Uplo2, TransA, Diag2, A, X, incX);
-            RenderScript renderScript = this.mRS;
-            long id = getID(this.mRS);
-            long id2 = A.getID(this.mRS);
-            long id3 = X.getID(this.mRS);
-            renderScript.nScriptIntrinsicBLAS_Double(id, 58, TransA, 0, 0, Uplo2, Diag2, 0, A.getType().getY(), K, 0.0d, id2, id3, 0.0d, 0, incX, 0, 0, 0);
-            return;
+        if (K < 0) {
+            throw new RSRuntimeException("K must be greater than or equal to 0");
         }
-        throw new RSRuntimeException("K must be greater than or equal to 0");
+        validateTRMV(Element.F64(this.mRS), Uplo2, TransA, Diag2, A, X, incX);
+        int N = A.getType().getY();
+        this.mRS.nScriptIntrinsicBLAS_Double(getID(this.mRS), 58, TransA, 0, 0, Uplo2, Diag2, 0, N, K, 0.0d, A.getID(this.mRS), X.getID(this.mRS), 0.0d, 0L, incX, 0, 0, 0);
     }
 
     public void CTBMV(int Uplo2, int TransA, int Diag2, int K, Allocation A, Allocation X, int incX) {
-        if (K >= 0) {
-            validateTRMV(Element.F32_2(this.mRS), Uplo2, TransA, Diag2, A, X, incX);
-            RenderScript renderScript = this.mRS;
-            long id = getID(this.mRS);
-            long id2 = A.getID(this.mRS);
-            long id3 = X.getID(this.mRS);
-            renderScript.nScriptIntrinsicBLAS_Complex(id, 66, TransA, 0, 0, Uplo2, Diag2, 0, A.getType().getY(), K, 0.0f, 0.0f, id2, id3, 0.0f, 0.0f, 0, incX, 0, 0, 0);
-            return;
+        if (K < 0) {
+            throw new RSRuntimeException("K must be greater than or equal to 0");
         }
-        throw new RSRuntimeException("K must be greater than or equal to 0");
+        validateTRMV(Element.F32_2(this.mRS), Uplo2, TransA, Diag2, A, X, incX);
+        int N = A.getType().getY();
+        this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 66, TransA, 0, 0, Uplo2, Diag2, 0, N, K, 0.0f, 0.0f, A.getID(this.mRS), X.getID(this.mRS), 0.0f, 0.0f, 0L, incX, 0, 0, 0);
     }
 
     public void ZTBMV(int Uplo2, int TransA, int Diag2, int K, Allocation A, Allocation X, int incX) {
-        if (K >= 0) {
-            validateTRMV(Element.F64_2(this.mRS), Uplo2, TransA, Diag2, A, X, incX);
-            RenderScript renderScript = this.mRS;
-            long id = getID(this.mRS);
-            long id2 = A.getID(this.mRS);
-            long id3 = X.getID(this.mRS);
-            renderScript.nScriptIntrinsicBLAS_Z(id, 74, TransA, 0, 0, Uplo2, Diag2, 0, A.getType().getY(), K, 0.0d, 0.0d, id2, id3, 0.0d, 0.0d, 0, incX, 0, 0, 0);
-            return;
+        if (K < 0) {
+            throw new RSRuntimeException("K must be greater than or equal to 0");
         }
-        throw new RSRuntimeException("K must be greater than or equal to 0");
+        validateTRMV(Element.F64_2(this.mRS), Uplo2, TransA, Diag2, A, X, incX);
+        int N = A.getType().getY();
+        this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 74, TransA, 0, 0, Uplo2, Diag2, 0, N, K, 0.0d, 0.0d, A.getID(this.mRS), X.getID(this.mRS), 0.0d, 0.0d, 0L, incX, 0, 0, 0);
     }
 
     public void STPMV(int Uplo2, int TransA, int Diag2, Allocation Ap, Allocation X, int incX) {
-        int validateTPMV = validateTPMV(Element.F32(this.mRS), Uplo2, TransA, Diag2, Ap, X, incX);
-        RenderScript renderScript = this.mRS;
-        long id = getID(this.mRS);
-        renderScript.nScriptIntrinsicBLAS_Single(id, 51, TransA, 0, 0, Uplo2, Diag2, 0, validateTPMV, 0, 0.0f, Ap.getID(this.mRS), X.getID(this.mRS), 0.0f, 0, incX, 0, 0, 0);
+        int N = validateTPMV(Element.F32(this.mRS), Uplo2, TransA, Diag2, Ap, X, incX);
+        this.mRS.nScriptIntrinsicBLAS_Single(getID(this.mRS), 51, TransA, 0, 0, Uplo2, Diag2, 0, N, 0, 0.0f, Ap.getID(this.mRS), X.getID(this.mRS), 0.0f, 0L, incX, 0, 0, 0);
     }
 
     public void DTPMV(int Uplo2, int TransA, int Diag2, Allocation Ap, Allocation X, int incX) {
-        int validateTPMV = validateTPMV(Element.F64(this.mRS), Uplo2, TransA, Diag2, Ap, X, incX);
-        RenderScript renderScript = this.mRS;
-        long id = getID(this.mRS);
-        renderScript.nScriptIntrinsicBLAS_Double(id, 59, TransA, 0, 0, Uplo2, Diag2, 0, validateTPMV, 0, 0.0d, Ap.getID(this.mRS), X.getID(this.mRS), 0.0d, 0, incX, 0, 0, 0);
+        int N = validateTPMV(Element.F64(this.mRS), Uplo2, TransA, Diag2, Ap, X, incX);
+        this.mRS.nScriptIntrinsicBLAS_Double(getID(this.mRS), 59, TransA, 0, 0, Uplo2, Diag2, 0, N, 0, 0.0d, Ap.getID(this.mRS), X.getID(this.mRS), 0.0d, 0L, incX, 0, 0, 0);
     }
 
     public void CTPMV(int Uplo2, int TransA, int Diag2, Allocation Ap, Allocation X, int incX) {
-        Allocation allocation = Ap;
-        int validateTPMV = validateTPMV(Element.F32_2(this.mRS), Uplo2, TransA, Diag2, allocation, X, incX);
-        RenderScript renderScript = this.mRS;
-        long id = getID(this.mRS);
-        renderScript.nScriptIntrinsicBLAS_Complex(id, 67, TransA, 0, 0, Uplo2, Diag2, 0, validateTPMV, 0, 0.0f, 0.0f, allocation.getID(this.mRS), X.getID(this.mRS), 0.0f, 0.0f, 0, incX, 0, 0, 0);
+        int N = validateTPMV(Element.F32_2(this.mRS), Uplo2, TransA, Diag2, Ap, X, incX);
+        this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 67, TransA, 0, 0, Uplo2, Diag2, 0, N, 0, 0.0f, 0.0f, Ap.getID(this.mRS), X.getID(this.mRS), 0.0f, 0.0f, 0L, incX, 0, 0, 0);
     }
 
     public void ZTPMV(int Uplo2, int TransA, int Diag2, Allocation Ap, Allocation X, int incX) {
-        int validateTPMV = validateTPMV(Element.F64_2(this.mRS), Uplo2, TransA, Diag2, Ap, X, incX);
-        RenderScript renderScript = this.mRS;
-        long id = getID(this.mRS);
-        renderScript.nScriptIntrinsicBLAS_Z(id, 75, TransA, 0, 0, Uplo2, Diag2, 0, validateTPMV, 0, 0.0d, 0.0d, Ap.getID(this.mRS), X.getID(this.mRS), 0.0d, 0.0d, 0, incX, 0, 0, 0);
+        int N = validateTPMV(Element.F64_2(this.mRS), Uplo2, TransA, Diag2, Ap, X, incX);
+        this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 75, TransA, 0, 0, Uplo2, Diag2, 0, N, 0, 0.0d, 0.0d, Ap.getID(this.mRS), X.getID(this.mRS), 0.0d, 0.0d, 0L, incX, 0, 0, 0);
     }
 
     public void STRSV(int Uplo2, int TransA, int Diag2, Allocation A, Allocation X, int incX) {
         validateTRMV(Element.F32(this.mRS), Uplo2, TransA, Diag2, A, X, incX);
-        int y = A.getType().getY();
-        RenderScript renderScript = this.mRS;
-        long id = getID(this.mRS);
-        renderScript.nScriptIntrinsicBLAS_Single(id, 52, TransA, 0, 0, Uplo2, Diag2, 0, y, 0, 0.0f, A.getID(this.mRS), X.getID(this.mRS), 0.0f, 0, incX, 0, 0, 0);
+        int N = A.getType().getY();
+        this.mRS.nScriptIntrinsicBLAS_Single(getID(this.mRS), 52, TransA, 0, 0, Uplo2, Diag2, 0, N, 0, 0.0f, A.getID(this.mRS), X.getID(this.mRS), 0.0f, 0L, incX, 0, 0, 0);
     }
 
     public void DTRSV(int Uplo2, int TransA, int Diag2, Allocation A, Allocation X, int incX) {
         validateTRMV(Element.F64(this.mRS), Uplo2, TransA, Diag2, A, X, incX);
-        int y = A.getType().getY();
-        RenderScript renderScript = this.mRS;
-        long id = getID(this.mRS);
-        renderScript.nScriptIntrinsicBLAS_Double(id, 60, TransA, 0, 0, Uplo2, Diag2, 0, y, 0, 0.0d, A.getID(this.mRS), X.getID(this.mRS), 0.0d, 0, incX, 0, 0, 0);
+        int N = A.getType().getY();
+        this.mRS.nScriptIntrinsicBLAS_Double(getID(this.mRS), 60, TransA, 0, 0, Uplo2, Diag2, 0, N, 0, 0.0d, A.getID(this.mRS), X.getID(this.mRS), 0.0d, 0L, incX, 0, 0, 0);
     }
 
     public void CTRSV(int Uplo2, int TransA, int Diag2, Allocation A, Allocation X, int incX) {
-        Allocation allocation = A;
-        validateTRMV(Element.F32_2(this.mRS), Uplo2, TransA, Diag2, allocation, X, incX);
-        int y = A.getType().getY();
-        RenderScript renderScript = this.mRS;
-        long id = getID(this.mRS);
-        renderScript.nScriptIntrinsicBLAS_Complex(id, 68, TransA, 0, 0, Uplo2, Diag2, 0, y, 0, 0.0f, 0.0f, allocation.getID(this.mRS), X.getID(this.mRS), 0.0f, 0.0f, 0, incX, 0, 0, 0);
+        validateTRMV(Element.F32_2(this.mRS), Uplo2, TransA, Diag2, A, X, incX);
+        int N = A.getType().getY();
+        this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 68, TransA, 0, 0, Uplo2, Diag2, 0, N, 0, 0.0f, 0.0f, A.getID(this.mRS), X.getID(this.mRS), 0.0f, 0.0f, 0L, incX, 0, 0, 0);
     }
 
     public void ZTRSV(int Uplo2, int TransA, int Diag2, Allocation A, Allocation X, int incX) {
         validateTRMV(Element.F64_2(this.mRS), Uplo2, TransA, Diag2, A, X, incX);
-        int y = A.getType().getY();
-        RenderScript renderScript = this.mRS;
-        long id = getID(this.mRS);
-        renderScript.nScriptIntrinsicBLAS_Z(id, 76, TransA, 0, 0, Uplo2, Diag2, 0, y, 0, 0.0d, 0.0d, A.getID(this.mRS), X.getID(this.mRS), 0.0d, 0.0d, 0, incX, 0, 0, 0);
+        int N = A.getType().getY();
+        this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 76, TransA, 0, 0, Uplo2, Diag2, 0, N, 0, 0.0d, 0.0d, A.getID(this.mRS), X.getID(this.mRS), 0.0d, 0.0d, 0L, incX, 0, 0, 0);
     }
 
     public void STBSV(int Uplo2, int TransA, int Diag2, int K, Allocation A, Allocation X, int incX) {
         validateTRMV(Element.F32(this.mRS), Uplo2, TransA, Diag2, A, X, incX);
         int N = A.getType().getY();
         if (K >= 0) {
-            this.mRS.nScriptIntrinsicBLAS_Single(getID(this.mRS), 53, TransA, 0, 0, Uplo2, Diag2, 0, N, K, 0.0f, A.getID(this.mRS), X.getID(this.mRS), 0.0f, 0, incX, 0, 0, 0);
+            this.mRS.nScriptIntrinsicBLAS_Single(getID(this.mRS), 53, TransA, 0, 0, Uplo2, Diag2, 0, N, K, 0.0f, A.getID(this.mRS), X.getID(this.mRS), 0.0f, 0L, incX, 0, 0, 0);
             return;
         }
         throw new RSRuntimeException("Number of diagonals must be positive");
@@ -528,7 +484,7 @@ public final class ScriptIntrinsicBLAS extends ScriptIntrinsic {
         validateTRMV(Element.F64(this.mRS), Uplo2, TransA, Diag2, A, X, incX);
         int N = A.getType().getY();
         if (K >= 0) {
-            this.mRS.nScriptIntrinsicBLAS_Double(getID(this.mRS), 61, TransA, 0, 0, Uplo2, Diag2, 0, N, K, 0.0d, A.getID(this.mRS), X.getID(this.mRS), 0.0d, 0, incX, 0, 0, 0);
+            this.mRS.nScriptIntrinsicBLAS_Double(getID(this.mRS), 61, TransA, 0, 0, Uplo2, Diag2, 0, N, K, 0.0d, A.getID(this.mRS), X.getID(this.mRS), 0.0d, 0L, incX, 0, 0, 0);
             return;
         }
         throw new RSRuntimeException("Number of diagonals must be positive");
@@ -538,7 +494,7 @@ public final class ScriptIntrinsicBLAS extends ScriptIntrinsic {
         validateTRMV(Element.F32_2(this.mRS), Uplo2, TransA, Diag2, A, X, incX);
         int N = A.getType().getY();
         if (K >= 0) {
-            this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 69, TransA, 0, 0, Uplo2, Diag2, 0, N, K, 0.0f, 0.0f, A.getID(this.mRS), X.getID(this.mRS), 0.0f, 0.0f, 0, incX, 0, 0, 0);
+            this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 69, TransA, 0, 0, Uplo2, Diag2, 0, N, K, 0.0f, 0.0f, A.getID(this.mRS), X.getID(this.mRS), 0.0f, 0.0f, 0L, incX, 0, 0, 0);
             return;
         }
         throw new RSRuntimeException("Number of diagonals must be positive");
@@ -548,39 +504,30 @@ public final class ScriptIntrinsicBLAS extends ScriptIntrinsic {
         validateTRMV(Element.F64_2(this.mRS), Uplo2, TransA, Diag2, A, X, incX);
         int N = A.getType().getY();
         if (K >= 0) {
-            this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 77, TransA, 0, 0, Uplo2, Diag2, 0, N, K, 0.0d, 0.0d, A.getID(this.mRS), X.getID(this.mRS), 0.0d, 0.0d, 0, incX, 0, 0, 0);
+            this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 77, TransA, 0, 0, Uplo2, Diag2, 0, N, K, 0.0d, 0.0d, A.getID(this.mRS), X.getID(this.mRS), 0.0d, 0.0d, 0L, incX, 0, 0, 0);
             return;
         }
         throw new RSRuntimeException("Number of diagonals must be positive");
     }
 
     public void STPSV(int Uplo2, int TransA, int Diag2, Allocation Ap, Allocation X, int incX) {
-        int validateTPMV = validateTPMV(Element.F32(this.mRS), Uplo2, TransA, Diag2, Ap, X, incX);
-        RenderScript renderScript = this.mRS;
-        long id = getID(this.mRS);
-        renderScript.nScriptIntrinsicBLAS_Single(id, 54, TransA, 0, 0, Uplo2, Diag2, 0, validateTPMV, 0, 0.0f, Ap.getID(this.mRS), X.getID(this.mRS), 0.0f, 0, incX, 0, 0, 0);
+        int N = validateTPMV(Element.F32(this.mRS), Uplo2, TransA, Diag2, Ap, X, incX);
+        this.mRS.nScriptIntrinsicBLAS_Single(getID(this.mRS), 54, TransA, 0, 0, Uplo2, Diag2, 0, N, 0, 0.0f, Ap.getID(this.mRS), X.getID(this.mRS), 0.0f, 0L, incX, 0, 0, 0);
     }
 
     public void DTPSV(int Uplo2, int TransA, int Diag2, Allocation Ap, Allocation X, int incX) {
-        int validateTPMV = validateTPMV(Element.F64(this.mRS), Uplo2, TransA, Diag2, Ap, X, incX);
-        RenderScript renderScript = this.mRS;
-        long id = getID(this.mRS);
-        renderScript.nScriptIntrinsicBLAS_Double(id, 62, TransA, 0, 0, Uplo2, Diag2, 0, validateTPMV, 0, 0.0d, Ap.getID(this.mRS), X.getID(this.mRS), 0.0d, 0, incX, 0, 0, 0);
+        int N = validateTPMV(Element.F64(this.mRS), Uplo2, TransA, Diag2, Ap, X, incX);
+        this.mRS.nScriptIntrinsicBLAS_Double(getID(this.mRS), 62, TransA, 0, 0, Uplo2, Diag2, 0, N, 0, 0.0d, Ap.getID(this.mRS), X.getID(this.mRS), 0.0d, 0L, incX, 0, 0, 0);
     }
 
     public void CTPSV(int Uplo2, int TransA, int Diag2, Allocation Ap, Allocation X, int incX) {
-        Allocation allocation = Ap;
-        int validateTPMV = validateTPMV(Element.F32_2(this.mRS), Uplo2, TransA, Diag2, allocation, X, incX);
-        RenderScript renderScript = this.mRS;
-        long id = getID(this.mRS);
-        renderScript.nScriptIntrinsicBLAS_Complex(id, 70, TransA, 0, 0, Uplo2, Diag2, 0, validateTPMV, 0, 0.0f, 0.0f, allocation.getID(this.mRS), X.getID(this.mRS), 0.0f, 0.0f, 0, incX, 0, 0, 0);
+        int N = validateTPMV(Element.F32_2(this.mRS), Uplo2, TransA, Diag2, Ap, X, incX);
+        this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 70, TransA, 0, 0, Uplo2, Diag2, 0, N, 0, 0.0f, 0.0f, Ap.getID(this.mRS), X.getID(this.mRS), 0.0f, 0.0f, 0L, incX, 0, 0, 0);
     }
 
     public void ZTPSV(int Uplo2, int TransA, int Diag2, Allocation Ap, Allocation X, int incX) {
-        int validateTPMV = validateTPMV(Element.F64_2(this.mRS), Uplo2, TransA, Diag2, Ap, X, incX);
-        RenderScript renderScript = this.mRS;
-        long id = getID(this.mRS);
-        renderScript.nScriptIntrinsicBLAS_Z(id, 78, TransA, 0, 0, Uplo2, Diag2, 0, validateTPMV, 0, 0.0d, 0.0d, Ap.getID(this.mRS), X.getID(this.mRS), 0.0d, 0.0d, 0, incX, 0, 0, 0);
+        int N = validateTPMV(Element.F64_2(this.mRS), Uplo2, TransA, Diag2, Ap, X, incX);
+        this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 78, TransA, 0, 0, Uplo2, Diag2, 0, N, 0, 0.0d, 0.0d, Ap.getID(this.mRS), X.getID(this.mRS), 0.0d, 0.0d, 0L, incX, 0, 0, 0);
     }
 
     static int validateSYMV(Element e, int Uplo2, Allocation A, Allocation X, Allocation Y, int incX, int incY) {
@@ -588,70 +535,78 @@ public final class ScriptIntrinsicBLAS extends ScriptIntrinsic {
         int N = A.getType().getY();
         if (A.getType().getX() != N) {
             throw new RSRuntimeException("A must be a square matrix for SYMV");
-        } else if (!A.getType().getElement().isCompatible(e) || !X.getType().getElement().isCompatible(e) || !Y.getType().getElement().isCompatible(e)) {
+        }
+        if (!A.getType().getElement().isCompatible(e) || !X.getType().getElement().isCompatible(e) || !Y.getType().getElement().isCompatible(e)) {
             throw new RSRuntimeException("Called BLAS with wrong Element type");
-        } else if (X.getType().getY() > 1 || Y.getType().getY() > 1) {
+        }
+        if (X.getType().getY() > 1 || Y.getType().getY() > 1) {
             throw new RSRuntimeException("BLAS vectors must have Y dimension of 0 or 1");
-        } else if (incX <= 0 || incY <= 0) {
+        }
+        if (incX <= 0 || incY <= 0) {
             throw new RSRuntimeException("Vector increments must be greater than 0");
-        } else {
-            if (X.getType().getX() == ((N - 1) * incX) + 1) {
-                if (Y.getType().getX() == ((N - 1) * incY) + 1) {
-                    return N;
-                }
-                throw new RSRuntimeException("Incorrect vector dimensions for SYMV");
-            }
+        }
+        int expectedXDim = ((N - 1) * incX) + 1;
+        if (X.getType().getX() != expectedXDim) {
             throw new RSRuntimeException("Incorrect vector dimensions for SYMV");
         }
+        int expectedYDim = ((N - 1) * incY) + 1;
+        if (Y.getType().getX() != expectedYDim) {
+            throw new RSRuntimeException("Incorrect vector dimensions for SYMV");
+        }
+        return N;
     }
 
     static int validateSPMV(Element e, int Uplo2, Allocation Ap, Allocation X, int incX, Allocation Y, int incY) {
         validateUplo(Uplo2);
         if (!Ap.getType().getElement().isCompatible(e) || !X.getType().getElement().isCompatible(e) || !Y.getType().getElement().isCompatible(e)) {
             throw new RSRuntimeException("Called BLAS with wrong Element type");
-        } else if (X.getType().getY() > 1 || Y.getType().getY() > 1) {
+        }
+        if (X.getType().getY() > 1 || Y.getType().getY() > 1) {
             throw new RSRuntimeException("BLAS vectors must have Y dimension of 0 or 1");
-        } else if (Ap.getType().getY() <= 1) {
-            int N = (int) Math.sqrt(((double) Ap.getType().getX()) * 2.0d);
-            if (Ap.getType().getX() != ((N + 1) * N) / 2) {
-                throw new RSRuntimeException("Invalid dimension for Ap");
-            } else if (incX <= 0 || incY <= 0) {
-                throw new RSRuntimeException("Vector increments must be greater than 0");
-            } else {
-                if (X.getType().getX() == ((N - 1) * incX) + 1) {
-                    if (Y.getType().getX() == ((N - 1) * incY) + 1) {
-                        return N;
-                    }
-                    throw new RSRuntimeException("Incorrect vector dimensions for SPMV");
-                }
-                throw new RSRuntimeException("Incorrect vector dimensions for SPMV");
-            }
-        } else {
+        }
+        if (Ap.getType().getY() > 1) {
             throw new RSRuntimeException("Ap must have a Y dimension of 0 or 1");
         }
+        int N = (int) Math.sqrt(Ap.getType().getX() * 2.0d);
+        if (Ap.getType().getX() != ((N + 1) * N) / 2) {
+            throw new RSRuntimeException("Invalid dimension for Ap");
+        }
+        if (incX <= 0 || incY <= 0) {
+            throw new RSRuntimeException("Vector increments must be greater than 0");
+        }
+        int expectedXDim = ((N - 1) * incX) + 1;
+        if (X.getType().getX() != expectedXDim) {
+            throw new RSRuntimeException("Incorrect vector dimensions for SPMV");
+        }
+        int expectedYDim = ((N - 1) * incY) + 1;
+        if (Y.getType().getX() != expectedYDim) {
+            throw new RSRuntimeException("Incorrect vector dimensions for SPMV");
+        }
+        return N;
     }
 
     static void validateGER(Element e, Allocation X, int incX, Allocation Y, int incY, Allocation A) {
         if (!A.getType().getElement().isCompatible(e) || !X.getType().getElement().isCompatible(e) || !Y.getType().getElement().isCompatible(e)) {
             throw new RSRuntimeException("Called BLAS with wrong Element type");
-        } else if (X.getType().getY() > 1 || Y.getType().getY() > 1) {
+        }
+        if (X.getType().getY() > 1 || Y.getType().getY() > 1) {
             throw new RSRuntimeException("BLAS vectors must have Y dimension of 0 or 1");
-        } else {
-            int M = A.getType().getY();
-            int N = A.getType().getX();
-            if (N < 1 || M < 1) {
-                throw new RSRuntimeException("M and N must be 1 or greater for GER");
-            } else if (incX <= 0 || incY <= 0) {
-                throw new RSRuntimeException("Vector increments must be greater than 0");
-            } else {
-                if (X.getType().getX() == ((M - 1) * incX) + 1) {
-                    if (Y.getType().getX() != ((N - 1) * incY) + 1) {
-                        throw new RSRuntimeException("Incorrect vector dimensions for GER");
-                    }
-                    return;
-                }
-                throw new RSRuntimeException("Incorrect vector dimensions for GER");
-            }
+        }
+        int M = A.getType().getY();
+        int N = A.getType().getX();
+        if (N < 1 || M < 1) {
+            throw new RSRuntimeException("M and N must be 1 or greater for GER");
+        }
+        if (incX <= 0 || incY <= 0) {
+            throw new RSRuntimeException("Vector increments must be greater than 0");
+        }
+        int expectedXDim = ((M - 1) * incX) + 1;
+        if (X.getType().getX() != expectedXDim) {
+            throw new RSRuntimeException("Incorrect vector dimensions for GER");
+        }
+        int expectedYDim = ((N - 1) * incY) + 1;
+        if (Y.getType().getX() != expectedYDim) {
+            throw new RSRuntimeException("Incorrect vector dimensions for GER");
         }
     }
 
@@ -663,359 +618,310 @@ public final class ScriptIntrinsicBLAS extends ScriptIntrinsic {
         int N = A.getType().getX();
         if (X.getType().getY() > 1) {
             throw new RSRuntimeException("BLAS vectors must have Y dimension of 0 or 1");
-        } else if (N != A.getType().getY()) {
+        }
+        if (N != A.getType().getY()) {
             throw new RSRuntimeException("A must be a symmetric matrix");
-        } else if (incX > 0) {
-            if (X.getType().getX() == ((N - 1) * incX) + 1) {
-                return N;
-            }
-            throw new RSRuntimeException("Incorrect vector dimensions for SYR");
-        } else {
+        }
+        if (incX <= 0) {
             throw new RSRuntimeException("Vector increments must be greater than 0");
         }
+        int expectedXDim = ((N - 1) * incX) + 1;
+        if (X.getType().getX() != expectedXDim) {
+            throw new RSRuntimeException("Incorrect vector dimensions for SYR");
+        }
+        return N;
     }
 
     static int validateSPR(Element e, int Uplo2, Allocation X, int incX, Allocation Ap) {
         validateUplo(Uplo2);
         if (!Ap.getType().getElement().isCompatible(e) || !X.getType().getElement().isCompatible(e)) {
             throw new RSRuntimeException("Called BLAS with wrong Element type");
-        } else if (X.getType().getY() > 1) {
+        }
+        if (X.getType().getY() > 1) {
             throw new RSRuntimeException("BLAS vectors must have Y dimension of 0 or 1");
-        } else if (Ap.getType().getY() <= 1) {
-            int N = (int) Math.sqrt(((double) Ap.getType().getX()) * 2.0d);
-            if (Ap.getType().getX() != ((N + 1) * N) / 2) {
-                throw new RSRuntimeException("Invalid dimension for Ap");
-            } else if (incX > 0) {
-                if (X.getType().getX() == ((N - 1) * incX) + 1) {
-                    return N;
-                }
-                throw new RSRuntimeException("Incorrect vector dimensions for SPR");
-            } else {
-                throw new RSRuntimeException("Vector increments must be greater than 0");
-            }
-        } else {
+        }
+        if (Ap.getType().getY() > 1) {
             throw new RSRuntimeException("Ap must have a Y dimension of 0 or 1");
         }
+        int N = (int) Math.sqrt(Ap.getType().getX() * 2.0d);
+        if (Ap.getType().getX() != ((N + 1) * N) / 2) {
+            throw new RSRuntimeException("Invalid dimension for Ap");
+        }
+        if (incX <= 0) {
+            throw new RSRuntimeException("Vector increments must be greater than 0");
+        }
+        int expectedXDim = ((N - 1) * incX) + 1;
+        if (X.getType().getX() != expectedXDim) {
+            throw new RSRuntimeException("Incorrect vector dimensions for SPR");
+        }
+        return N;
     }
 
     static int validateSYR2(Element e, int Uplo2, Allocation X, int incX, Allocation Y, int incY, Allocation A) {
         validateUplo(Uplo2);
         if (!A.getType().getElement().isCompatible(e) || !X.getType().getElement().isCompatible(e) || !Y.getType().getElement().isCompatible(e)) {
             throw new RSRuntimeException("Called BLAS with wrong Element type");
-        } else if (X.getType().getY() > 1 || Y.getType().getY() > 1) {
-            throw new RSRuntimeException("BLAS vectors must have Y dimension of 0 or 1");
-        } else {
-            int N = A.getType().getX();
-            if (N != A.getType().getY()) {
-                throw new RSRuntimeException("A must be a symmetric matrix");
-            } else if (incX <= 0 || incY <= 0) {
-                throw new RSRuntimeException("Vector increments must be greater than 0");
-            } else {
-                int expectedYDim = ((N - 1) * incY) + 1;
-                if (X.getType().getX() == ((N - 1) * incX) + 1 && Y.getType().getX() == expectedYDim) {
-                    return N;
-                }
-                throw new RSRuntimeException("Incorrect vector dimensions for SYR");
-            }
         }
+        if (X.getType().getY() > 1 || Y.getType().getY() > 1) {
+            throw new RSRuntimeException("BLAS vectors must have Y dimension of 0 or 1");
+        }
+        int N = A.getType().getX();
+        if (N != A.getType().getY()) {
+            throw new RSRuntimeException("A must be a symmetric matrix");
+        }
+        if (incX <= 0 || incY <= 0) {
+            throw new RSRuntimeException("Vector increments must be greater than 0");
+        }
+        int expectedXDim = ((N - 1) * incX) + 1;
+        int expectedYDim = ((N - 1) * incY) + 1;
+        if (X.getType().getX() != expectedXDim || Y.getType().getX() != expectedYDim) {
+            throw new RSRuntimeException("Incorrect vector dimensions for SYR");
+        }
+        return N;
     }
 
     static int validateSPR2(Element e, int Uplo2, Allocation X, int incX, Allocation Y, int incY, Allocation Ap) {
         validateUplo(Uplo2);
         if (!Ap.getType().getElement().isCompatible(e) || !X.getType().getElement().isCompatible(e) || !Y.getType().getElement().isCompatible(e)) {
             throw new RSRuntimeException("Called BLAS with wrong Element type");
-        } else if (X.getType().getY() > 1 || Y.getType().getY() > 1) {
+        }
+        if (X.getType().getY() > 1 || Y.getType().getY() > 1) {
             throw new RSRuntimeException("BLAS vectors must have Y dimension of 0 or 1");
-        } else if (Ap.getType().getY() <= 1) {
-            int N = (int) Math.sqrt(((double) Ap.getType().getX()) * 2.0d);
-            if (Ap.getType().getX() != ((N + 1) * N) / 2) {
-                throw new RSRuntimeException("Invalid dimension for Ap");
-            } else if (incX <= 0 || incY <= 0) {
-                throw new RSRuntimeException("Vector increments must be greater than 0");
-            } else {
-                int expectedYDim = ((N - 1) * incY) + 1;
-                if (X.getType().getX() == ((N - 1) * incX) + 1 && Y.getType().getX() == expectedYDim) {
-                    return N;
-                }
-                throw new RSRuntimeException("Incorrect vector dimensions for SPR2");
-            }
-        } else {
+        }
+        if (Ap.getType().getY() > 1) {
             throw new RSRuntimeException("Ap must have a Y dimension of 0 or 1");
         }
+        int N = (int) Math.sqrt(Ap.getType().getX() * 2.0d);
+        if (Ap.getType().getX() != ((N + 1) * N) / 2) {
+            throw new RSRuntimeException("Invalid dimension for Ap");
+        }
+        if (incX <= 0 || incY <= 0) {
+            throw new RSRuntimeException("Vector increments must be greater than 0");
+        }
+        int expectedXDim = ((N - 1) * incX) + 1;
+        int expectedYDim = ((N - 1) * incY) + 1;
+        if (X.getType().getX() != expectedXDim || Y.getType().getX() != expectedYDim) {
+            throw new RSRuntimeException("Incorrect vector dimensions for SPR2");
+        }
+        return N;
     }
 
     public void SSYMV(int Uplo2, float alpha, Allocation A, Allocation X, int incX, float beta, Allocation Y, int incY) {
-        int validateSYMV = validateSYMV(Element.F32(this.mRS), Uplo2, A, X, Y, incX, incY);
-        RenderScript renderScript = this.mRS;
-        long id = getID(this.mRS);
-        long id2 = A.getID(this.mRS);
-        long id3 = X.getID(this.mRS);
-        renderScript.nScriptIntrinsicBLAS_Single(id, 79, 0, 0, 0, Uplo2, 0, 0, validateSYMV, 0, alpha, id2, id3, beta, Y.getID(this.mRS), incX, incY, 0, 0);
+        int N = validateSYMV(Element.F32(this.mRS), Uplo2, A, X, Y, incX, incY);
+        this.mRS.nScriptIntrinsicBLAS_Single(getID(this.mRS), 79, 0, 0, 0, Uplo2, 0, 0, N, 0, alpha, A.getID(this.mRS), X.getID(this.mRS), beta, Y.getID(this.mRS), incX, incY, 0, 0);
     }
 
     public void SSBMV(int Uplo2, int K, float alpha, Allocation A, Allocation X, int incX, float beta, Allocation Y, int incY) {
-        if (K >= 0) {
-            int i = Uplo2;
-            this.mRS.nScriptIntrinsicBLAS_Single(getID(this.mRS), 80, 0, 0, 0, i, 0, 0, validateSYMV(Element.F32(this.mRS), Uplo2, A, X, Y, incX, incY), K, alpha, A.getID(this.mRS), X.getID(this.mRS), beta, Y.getID(this.mRS), incX, incY, 0, 0);
-            return;
+        if (K < 0) {
+            throw new RSRuntimeException("K must be greater than or equal to 0");
         }
-        throw new RSRuntimeException("K must be greater than or equal to 0");
+        int N = validateSYMV(Element.F32(this.mRS), Uplo2, A, X, Y, incX, incY);
+        this.mRS.nScriptIntrinsicBLAS_Single(getID(this.mRS), 80, 0, 0, 0, Uplo2, 0, 0, N, K, alpha, A.getID(this.mRS), X.getID(this.mRS), beta, Y.getID(this.mRS), incX, incY, 0, 0);
     }
 
     public void SSPMV(int Uplo2, float alpha, Allocation Ap, Allocation X, int incX, float beta, Allocation Y, int incY) {
-        int validateSPMV = validateSPMV(Element.F32(this.mRS), Uplo2, Ap, X, incX, Y, incY);
-        RenderScript renderScript = this.mRS;
-        long id = getID(this.mRS);
-        long id2 = Ap.getID(this.mRS);
-        long id3 = X.getID(this.mRS);
-        renderScript.nScriptIntrinsicBLAS_Single(id, 81, 0, 0, 0, Uplo2, 0, 0, validateSPMV, 0, alpha, id2, id3, beta, Y.getID(this.mRS), incX, incY, 0, 0);
+        int N = validateSPMV(Element.F32(this.mRS), Uplo2, Ap, X, incX, Y, incY);
+        this.mRS.nScriptIntrinsicBLAS_Single(getID(this.mRS), 81, 0, 0, 0, Uplo2, 0, 0, N, 0, alpha, Ap.getID(this.mRS), X.getID(this.mRS), beta, Y.getID(this.mRS), incX, incY, 0, 0);
     }
 
     public void SGER(float alpha, Allocation X, int incX, Allocation Y, int incY, Allocation A) {
-        int y = A.getType().getY();
-        int x = A.getType().getX();
+        int M = A.getType().getY();
+        int N = A.getType().getX();
         validateGER(Element.F32(this.mRS), X, incX, Y, incY, A);
-        this.mRS.nScriptIntrinsicBLAS_Single(getID(this.mRS), 82, 0, 0, 0, 0, 0, y, x, 0, alpha, X.getID(this.mRS), Y.getID(this.mRS), 0.0f, A.getID(this.mRS), incX, incY, 0, 0);
+        this.mRS.nScriptIntrinsicBLAS_Single(getID(this.mRS), 82, 0, 0, 0, 0, 0, M, N, 0, alpha, X.getID(this.mRS), Y.getID(this.mRS), 0.0f, A.getID(this.mRS), incX, incY, 0, 0);
     }
 
     public void SSYR(int Uplo2, float alpha, Allocation X, int incX, Allocation A) {
-        Allocation allocation = X;
-        Allocation allocation2 = A;
-        int validateSYR = validateSYR(Element.F32(this.mRS), Uplo2, allocation, incX, allocation2);
-        this.mRS.nScriptIntrinsicBLAS_Single(getID(this.mRS), 83, 0, 0, 0, Uplo2, 0, 0, validateSYR, 0, alpha, allocation.getID(this.mRS), allocation2.getID(this.mRS), 0.0f, 0, incX, 0, 0, 0);
+        int N = validateSYR(Element.F32(this.mRS), Uplo2, X, incX, A);
+        this.mRS.nScriptIntrinsicBLAS_Single(getID(this.mRS), 83, 0, 0, 0, Uplo2, 0, 0, N, 0, alpha, X.getID(this.mRS), A.getID(this.mRS), 0.0f, 0L, incX, 0, 0, 0);
     }
 
     public void SSPR(int Uplo2, float alpha, Allocation X, int incX, Allocation Ap) {
-        Allocation allocation = X;
-        Allocation allocation2 = Ap;
-        int validateSPR = validateSPR(Element.F32(this.mRS), Uplo2, allocation, incX, allocation2);
-        this.mRS.nScriptIntrinsicBLAS_Single(getID(this.mRS), 84, 0, 0, 0, Uplo2, 0, 0, validateSPR, 0, alpha, allocation.getID(this.mRS), allocation2.getID(this.mRS), 0.0f, 0, incX, 0, 0, 0);
+        int N = validateSPR(Element.F32(this.mRS), Uplo2, X, incX, Ap);
+        this.mRS.nScriptIntrinsicBLAS_Single(getID(this.mRS), 84, 0, 0, 0, Uplo2, 0, 0, N, 0, alpha, X.getID(this.mRS), Ap.getID(this.mRS), 0.0f, 0L, incX, 0, 0, 0);
     }
 
     public void SSYR2(int Uplo2, float alpha, Allocation X, int incX, Allocation Y, int incY, Allocation A) {
-        int validateSYR2 = validateSYR2(Element.F32(this.mRS), Uplo2, X, incX, Y, incY, A);
-        this.mRS.nScriptIntrinsicBLAS_Single(getID(this.mRS), 85, 0, 0, 0, Uplo2, 0, 0, validateSYR2, 0, alpha, X.getID(this.mRS), Y.getID(this.mRS), 0.0f, A.getID(this.mRS), incX, incY, 0, 0);
+        int N = validateSYR2(Element.F32(this.mRS), Uplo2, X, incX, Y, incY, A);
+        this.mRS.nScriptIntrinsicBLAS_Single(getID(this.mRS), 85, 0, 0, 0, Uplo2, 0, 0, N, 0, alpha, X.getID(this.mRS), Y.getID(this.mRS), 0.0f, A.getID(this.mRS), incX, incY, 0, 0);
     }
 
     public void SSPR2(int Uplo2, float alpha, Allocation X, int incX, Allocation Y, int incY, Allocation Ap) {
-        int validateSPR2 = validateSPR2(Element.F32(this.mRS), Uplo2, X, incX, Y, incY, Ap);
-        this.mRS.nScriptIntrinsicBLAS_Single(getID(this.mRS), 86, 0, 0, 0, Uplo2, 0, 0, validateSPR2, 0, alpha, X.getID(this.mRS), Y.getID(this.mRS), 0.0f, Ap.getID(this.mRS), incX, incY, 0, 0);
+        int N = validateSPR2(Element.F32(this.mRS), Uplo2, X, incX, Y, incY, Ap);
+        this.mRS.nScriptIntrinsicBLAS_Single(getID(this.mRS), 86, 0, 0, 0, Uplo2, 0, 0, N, 0, alpha, X.getID(this.mRS), Y.getID(this.mRS), 0.0f, Ap.getID(this.mRS), incX, incY, 0, 0);
     }
 
     public void DSYMV(int Uplo2, double alpha, Allocation A, Allocation X, int incX, double beta, Allocation Y, int incY) {
-        int validateSYMV = validateSYMV(Element.F64(this.mRS), Uplo2, A, X, Y, incX, incY);
-        RenderScript renderScript = this.mRS;
-        long id = getID(this.mRS);
-        long id2 = A.getID(this.mRS);
-        long id3 = X.getID(this.mRS);
-        renderScript.nScriptIntrinsicBLAS_Double(id, 87, 0, 0, 0, Uplo2, 0, 0, validateSYMV, 0, alpha, id2, id3, beta, Y.getID(this.mRS), incX, incY, 0, 0);
+        int N = validateSYMV(Element.F64(this.mRS), Uplo2, A, X, Y, incX, incY);
+        this.mRS.nScriptIntrinsicBLAS_Double(getID(this.mRS), 87, 0, 0, 0, Uplo2, 0, 0, N, 0, alpha, A.getID(this.mRS), X.getID(this.mRS), beta, Y.getID(this.mRS), incX, incY, 0, 0);
     }
 
     public void DSBMV(int Uplo2, int K, double alpha, Allocation A, Allocation X, int incX, double beta, Allocation Y, int incY) {
-        if (K >= 0) {
-            int i = Uplo2;
-            this.mRS.nScriptIntrinsicBLAS_Double(getID(this.mRS), 88, 0, 0, 0, i, 0, 0, validateSYMV(Element.F64(this.mRS), Uplo2, A, X, Y, incX, incY), K, alpha, A.getID(this.mRS), X.getID(this.mRS), beta, Y.getID(this.mRS), incX, incY, 0, 0);
-            return;
+        if (K < 0) {
+            throw new RSRuntimeException("K must be greater than or equal to 0");
         }
-        throw new RSRuntimeException("K must be greater than or equal to 0");
+        int N = validateSYMV(Element.F64(this.mRS), Uplo2, A, X, Y, incX, incY);
+        this.mRS.nScriptIntrinsicBLAS_Double(getID(this.mRS), 88, 0, 0, 0, Uplo2, 0, 0, N, K, alpha, A.getID(this.mRS), X.getID(this.mRS), beta, Y.getID(this.mRS), incX, incY, 0, 0);
     }
 
     public void DSPMV(int Uplo2, double alpha, Allocation Ap, Allocation X, int incX, double beta, Allocation Y, int incY) {
-        int validateSPMV = validateSPMV(Element.F64(this.mRS), Uplo2, Ap, X, incX, Y, incY);
-        RenderScript renderScript = this.mRS;
-        long id = getID(this.mRS);
-        long id2 = Ap.getID(this.mRS);
-        long id3 = X.getID(this.mRS);
-        renderScript.nScriptIntrinsicBLAS_Double(id, 89, 0, 0, 0, Uplo2, 0, 0, validateSPMV, 0, alpha, id2, id3, beta, Y.getID(this.mRS), incX, incY, 0, 0);
+        int N = validateSPMV(Element.F64(this.mRS), Uplo2, Ap, X, incX, Y, incY);
+        this.mRS.nScriptIntrinsicBLAS_Double(getID(this.mRS), 89, 0, 0, 0, Uplo2, 0, 0, N, 0, alpha, Ap.getID(this.mRS), X.getID(this.mRS), beta, Y.getID(this.mRS), incX, incY, 0, 0);
     }
 
     public void DGER(double alpha, Allocation X, int incX, Allocation Y, int incY, Allocation A) {
-        int y = A.getType().getY();
-        int x = A.getType().getX();
+        int M = A.getType().getY();
+        int N = A.getType().getX();
         validateGER(Element.F64(this.mRS), X, incX, Y, incY, A);
-        this.mRS.nScriptIntrinsicBLAS_Double(getID(this.mRS), 90, 0, 0, 0, 0, 0, y, x, 0, alpha, X.getID(this.mRS), Y.getID(this.mRS), 0.0d, A.getID(this.mRS), incX, incY, 0, 0);
+        this.mRS.nScriptIntrinsicBLAS_Double(getID(this.mRS), 90, 0, 0, 0, 0, 0, M, N, 0, alpha, X.getID(this.mRS), Y.getID(this.mRS), 0.0d, A.getID(this.mRS), incX, incY, 0, 0);
     }
 
     public void DSYR(int Uplo2, double alpha, Allocation X, int incX, Allocation A) {
-        Allocation allocation = X;
-        Allocation allocation2 = A;
-        int validateSYR = validateSYR(Element.F64(this.mRS), Uplo2, allocation, incX, allocation2);
-        this.mRS.nScriptIntrinsicBLAS_Double(getID(this.mRS), 91, 0, 0, 0, Uplo2, 0, 0, validateSYR, 0, alpha, allocation.getID(this.mRS), allocation2.getID(this.mRS), 0.0d, 0, incX, 0, 0, 0);
+        int N = validateSYR(Element.F64(this.mRS), Uplo2, X, incX, A);
+        this.mRS.nScriptIntrinsicBLAS_Double(getID(this.mRS), 91, 0, 0, 0, Uplo2, 0, 0, N, 0, alpha, X.getID(this.mRS), A.getID(this.mRS), 0.0d, 0L, incX, 0, 0, 0);
     }
 
     public void DSPR(int Uplo2, double alpha, Allocation X, int incX, Allocation Ap) {
-        Allocation allocation = X;
-        Allocation allocation2 = Ap;
-        int validateSPR = validateSPR(Element.F64(this.mRS), Uplo2, allocation, incX, allocation2);
-        this.mRS.nScriptIntrinsicBLAS_Double(getID(this.mRS), 92, 0, 0, 0, Uplo2, 0, 0, validateSPR, 0, alpha, allocation.getID(this.mRS), allocation2.getID(this.mRS), 0.0d, 0, incX, 0, 0, 0);
+        int N = validateSPR(Element.F64(this.mRS), Uplo2, X, incX, Ap);
+        this.mRS.nScriptIntrinsicBLAS_Double(getID(this.mRS), 92, 0, 0, 0, Uplo2, 0, 0, N, 0, alpha, X.getID(this.mRS), Ap.getID(this.mRS), 0.0d, 0L, incX, 0, 0, 0);
     }
 
     public void DSYR2(int Uplo2, double alpha, Allocation X, int incX, Allocation Y, int incY, Allocation A) {
-        int validateSYR2 = validateSYR2(Element.F64(this.mRS), Uplo2, X, incX, Y, incY, A);
-        this.mRS.nScriptIntrinsicBLAS_Double(getID(this.mRS), 93, 0, 0, 0, Uplo2, 0, 0, validateSYR2, 0, alpha, X.getID(this.mRS), Y.getID(this.mRS), 0.0d, A.getID(this.mRS), incX, incY, 0, 0);
+        int N = validateSYR2(Element.F64(this.mRS), Uplo2, X, incX, Y, incY, A);
+        this.mRS.nScriptIntrinsicBLAS_Double(getID(this.mRS), 93, 0, 0, 0, Uplo2, 0, 0, N, 0, alpha, X.getID(this.mRS), Y.getID(this.mRS), 0.0d, A.getID(this.mRS), incX, incY, 0, 0);
     }
 
     public void DSPR2(int Uplo2, double alpha, Allocation X, int incX, Allocation Y, int incY, Allocation Ap) {
-        int validateSPR2 = validateSPR2(Element.F64(this.mRS), Uplo2, X, incX, Y, incY, Ap);
-        this.mRS.nScriptIntrinsicBLAS_Double(getID(this.mRS), 94, 0, 0, 0, Uplo2, 0, 0, validateSPR2, 0, alpha, X.getID(this.mRS), Y.getID(this.mRS), 0.0d, Ap.getID(this.mRS), incX, incY, 0, 0);
+        int N = validateSPR2(Element.F64(this.mRS), Uplo2, X, incX, Y, incY, Ap);
+        this.mRS.nScriptIntrinsicBLAS_Double(getID(this.mRS), 94, 0, 0, 0, Uplo2, 0, 0, N, 0, alpha, X.getID(this.mRS), Y.getID(this.mRS), 0.0d, Ap.getID(this.mRS), incX, incY, 0, 0);
     }
 
     static void validateGERU(Element e, Allocation X, int incX, Allocation Y, int incY, Allocation A) {
         if (!A.getType().getElement().isCompatible(e) || !X.getType().getElement().isCompatible(e) || !Y.getType().getElement().isCompatible(e)) {
             throw new RSRuntimeException("Called BLAS with wrong Element type");
-        } else if (X.getType().getY() > 1 || Y.getType().getY() > 1) {
+        }
+        if (X.getType().getY() > 1 || Y.getType().getY() > 1) {
             throw new RSRuntimeException("BLAS vectors must have Y dimension of 0 or 1");
-        } else {
-            int M = A.getType().getY();
-            int N = A.getType().getX();
-            if (incX <= 0 || incY <= 0) {
-                throw new RSRuntimeException("Vector increments must be greater than 0");
-            }
-            if (X.getType().getX() == ((M - 1) * incX) + 1) {
-                if (Y.getType().getX() != ((N - 1) * incY) + 1) {
-                    throw new RSRuntimeException("Incorrect vector dimensions for GERU");
-                }
-                return;
-            }
+        }
+        int M = A.getType().getY();
+        int N = A.getType().getX();
+        if (incX <= 0 || incY <= 0) {
+            throw new RSRuntimeException("Vector increments must be greater than 0");
+        }
+        int expectedXDim = ((M - 1) * incX) + 1;
+        if (X.getType().getX() != expectedXDim) {
+            throw new RSRuntimeException("Incorrect vector dimensions for GERU");
+        }
+        int expectedYDim = ((N - 1) * incY) + 1;
+        if (Y.getType().getX() != expectedYDim) {
             throw new RSRuntimeException("Incorrect vector dimensions for GERU");
         }
     }
 
     public void CHEMV(int Uplo2, Float2 alpha, Allocation A, Allocation X, int incX, Float2 beta, Allocation Y, int incY) {
-        Float2 float2 = alpha;
-        Float2 float22 = beta;
-        int validateSYR2 = validateSYR2(Element.F32_2(this.mRS), Uplo2, X, incX, Y, incY, A);
-        this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 95, 0, 0, 0, Uplo2, 0, 0, validateSYR2, 0, float2.x, float2.y, A.getID(this.mRS), X.getID(this.mRS), float22.x, float22.y, Y.getID(this.mRS), incX, incY, 0, 0);
+        int N = validateSYR2(Element.F32_2(this.mRS), Uplo2, X, incX, Y, incY, A);
+        this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 95, 0, 0, 0, Uplo2, 0, 0, N, 0, alpha.f190x, alpha.f191y, A.getID(this.mRS), X.getID(this.mRS), beta.f190x, beta.f191y, Y.getID(this.mRS), incX, incY, 0, 0);
     }
 
     public void CHBMV(int Uplo2, int K, Float2 alpha, Allocation A, Allocation X, int incX, Float2 beta, Allocation Y, int incY) {
-        Float2 float2 = alpha;
-        Float2 float22 = beta;
         int N = validateSYR2(Element.F32_2(this.mRS), Uplo2, X, incX, Y, incY, A);
         if (K >= 0) {
-            this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 96, 0, 0, 0, Uplo2, 0, 0, N, K, float2.x, float2.y, A.getID(this.mRS), X.getID(this.mRS), float22.x, float22.y, Y.getID(this.mRS), incX, incY, 0, 0);
+            this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 96, 0, 0, 0, Uplo2, 0, 0, N, K, alpha.f190x, alpha.f191y, A.getID(this.mRS), X.getID(this.mRS), beta.f190x, beta.f191y, Y.getID(this.mRS), incX, incY, 0, 0);
             return;
         }
         throw new RSRuntimeException("K must be 0 or greater for HBMV");
     }
 
     public void CHPMV(int Uplo2, Float2 alpha, Allocation Ap, Allocation X, int incX, Float2 beta, Allocation Y, int incY) {
-        Float2 float2 = alpha;
-        Float2 float22 = beta;
-        int validateSPR2 = validateSPR2(Element.F32_2(this.mRS), Uplo2, X, incX, Y, incY, Ap);
-        this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 97, 0, 0, 0, Uplo2, 0, 0, validateSPR2, 0, float2.x, float2.y, Ap.getID(this.mRS), X.getID(this.mRS), float22.x, float22.y, Y.getID(this.mRS), incX, incY, 0, 0);
+        int N = validateSPR2(Element.F32_2(this.mRS), Uplo2, X, incX, Y, incY, Ap);
+        this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 97, 0, 0, 0, Uplo2, 0, 0, N, 0, alpha.f190x, alpha.f191y, Ap.getID(this.mRS), X.getID(this.mRS), beta.f190x, beta.f191y, Y.getID(this.mRS), incX, incY, 0, 0);
     }
 
     public void CGERU(Float2 alpha, Allocation X, int incX, Allocation Y, int incY, Allocation A) {
-        Float2 float2 = alpha;
         validateGERU(Element.F32_2(this.mRS), X, incX, Y, incY, A);
-        int y = A.getType().getY();
-        int x = A.getType().getX();
-        this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 98, 0, 0, 0, 0, 0, y, x, 0, float2.x, float2.y, X.getID(this.mRS), Y.getID(this.mRS), 0.0f, 0.0f, A.getID(this.mRS), incX, incY, 0, 0);
+        int M = A.getType().getY();
+        int N = A.getType().getX();
+        this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 98, 0, 0, 0, 0, 0, M, N, 0, alpha.f190x, alpha.f191y, X.getID(this.mRS), Y.getID(this.mRS), 0.0f, 0.0f, A.getID(this.mRS), incX, incY, 0, 0);
     }
 
     public void CGERC(Float2 alpha, Allocation X, int incX, Allocation Y, int incY, Allocation A) {
-        Float2 float2 = alpha;
         validateGERU(Element.F32_2(this.mRS), X, incX, Y, incY, A);
-        int y = A.getType().getY();
-        int x = A.getType().getX();
-        this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 99, 0, 0, 0, 0, 0, y, x, 0, float2.x, float2.y, X.getID(this.mRS), Y.getID(this.mRS), 0.0f, 0.0f, A.getID(this.mRS), incX, incY, 0, 0);
+        int M = A.getType().getY();
+        int N = A.getType().getX();
+        this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 99, 0, 0, 0, 0, 0, M, N, 0, alpha.f190x, alpha.f191y, X.getID(this.mRS), Y.getID(this.mRS), 0.0f, 0.0f, A.getID(this.mRS), incX, incY, 0, 0);
     }
 
     public void CHER(int Uplo2, float alpha, Allocation X, int incX, Allocation A) {
-        Allocation allocation = X;
-        Allocation allocation2 = A;
-        int validateSYR = validateSYR(Element.F32_2(this.mRS), Uplo2, allocation, incX, allocation2);
-        this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 100, 0, 0, 0, Uplo2, 0, 0, validateSYR, 0, alpha, 0.0f, allocation.getID(this.mRS), 0, 0.0f, 0.0f, allocation2.getID(this.mRS), incX, 0, 0, 0);
+        int N = validateSYR(Element.F32_2(this.mRS), Uplo2, X, incX, A);
+        this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 100, 0, 0, 0, Uplo2, 0, 0, N, 0, alpha, 0.0f, X.getID(this.mRS), 0L, 0.0f, 0.0f, A.getID(this.mRS), incX, 0, 0, 0);
     }
 
     public void CHPR(int Uplo2, float alpha, Allocation X, int incX, Allocation Ap) {
-        Allocation allocation = X;
-        Allocation allocation2 = Ap;
-        int validateSPR = validateSPR(Element.F32_2(this.mRS), Uplo2, allocation, incX, allocation2);
-        this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 101, 0, 0, 0, Uplo2, 0, 0, validateSPR, 0, alpha, 0.0f, allocation.getID(this.mRS), 0, 0.0f, 0.0f, allocation2.getID(this.mRS), incX, 0, 0, 0);
+        int N = validateSPR(Element.F32_2(this.mRS), Uplo2, X, incX, Ap);
+        this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 101, 0, 0, 0, Uplo2, 0, 0, N, 0, alpha, 0.0f, X.getID(this.mRS), 0L, 0.0f, 0.0f, Ap.getID(this.mRS), incX, 0, 0, 0);
     }
 
     public void CHER2(int Uplo2, Float2 alpha, Allocation X, int incX, Allocation Y, int incY, Allocation A) {
-        Float2 float2 = alpha;
-        int validateSYR2 = validateSYR2(Element.F32_2(this.mRS), Uplo2, X, incX, Y, incY, A);
-        this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 102, 0, 0, 0, Uplo2, 0, 0, validateSYR2, 0, float2.x, float2.y, X.getID(this.mRS), Y.getID(this.mRS), 0.0f, 0.0f, A.getID(this.mRS), incX, incY, 0, 0);
+        int N = validateSYR2(Element.F32_2(this.mRS), Uplo2, X, incX, Y, incY, A);
+        this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 102, 0, 0, 0, Uplo2, 0, 0, N, 0, alpha.f190x, alpha.f191y, X.getID(this.mRS), Y.getID(this.mRS), 0.0f, 0.0f, A.getID(this.mRS), incX, incY, 0, 0);
     }
 
     public void CHPR2(int Uplo2, Float2 alpha, Allocation X, int incX, Allocation Y, int incY, Allocation Ap) {
-        Float2 float2 = alpha;
-        int validateSPR2 = validateSPR2(Element.F32_2(this.mRS), Uplo2, X, incX, Y, incY, Ap);
-        this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 103, 0, 0, 0, Uplo2, 0, 0, validateSPR2, 0, float2.x, float2.y, X.getID(this.mRS), Y.getID(this.mRS), 0.0f, 0.0f, Ap.getID(this.mRS), incX, incY, 0, 0);
+        int N = validateSPR2(Element.F32_2(this.mRS), Uplo2, X, incX, Y, incY, Ap);
+        this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 103, 0, 0, 0, Uplo2, 0, 0, N, 0, alpha.f190x, alpha.f191y, X.getID(this.mRS), Y.getID(this.mRS), 0.0f, 0.0f, Ap.getID(this.mRS), incX, incY, 0, 0);
     }
 
     public void ZHEMV(int Uplo2, Double2 alpha, Allocation A, Allocation X, int incX, Double2 beta, Allocation Y, int incY) {
-        Double2 double2 = alpha;
-        Double2 double22 = beta;
-        int validateSYR2 = validateSYR2(Element.F64_2(this.mRS), Uplo2, X, incX, Y, incY, A);
-        this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 104, 0, 0, 0, Uplo2, 0, 0, validateSYR2, 0, double2.x, double2.y, A.getID(this.mRS), X.getID(this.mRS), double22.x, double22.y, Y.getID(this.mRS), incX, incY, 0, 0);
+        int N = validateSYR2(Element.F64_2(this.mRS), Uplo2, X, incX, Y, incY, A);
+        this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 104, 0, 0, 0, Uplo2, 0, 0, N, 0, alpha.f181x, alpha.f182y, A.getID(this.mRS), X.getID(this.mRS), beta.f181x, beta.f182y, Y.getID(this.mRS), incX, incY, 0, 0);
     }
 
     public void ZHBMV(int Uplo2, int K, Double2 alpha, Allocation A, Allocation X, int incX, Double2 beta, Allocation Y, int incY) {
-        Double2 double2 = alpha;
-        Double2 double22 = beta;
         int N = validateSYR2(Element.F64_2(this.mRS), Uplo2, X, incX, Y, incY, A);
         if (K >= 0) {
-            int i = Uplo2;
-            int i2 = N;
-            int i3 = K;
-            this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 105, 0, 0, 0, i, 0, 0, i2, i3, double2.x, double2.y, A.getID(this.mRS), X.getID(this.mRS), double22.x, double22.y, Y.getID(this.mRS), incX, incY, 0, 0);
+            this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 105, 0, 0, 0, Uplo2, 0, 0, N, K, alpha.f181x, alpha.f182y, A.getID(this.mRS), X.getID(this.mRS), beta.f181x, beta.f182y, Y.getID(this.mRS), incX, incY, 0, 0);
             return;
         }
         throw new RSRuntimeException("K must be 0 or greater for HBMV");
     }
 
     public void ZHPMV(int Uplo2, Double2 alpha, Allocation Ap, Allocation X, int incX, Double2 beta, Allocation Y, int incY) {
-        Double2 double2 = alpha;
-        Double2 double22 = beta;
-        int validateSPR2 = validateSPR2(Element.F64_2(this.mRS), Uplo2, X, incX, Y, incY, Ap);
-        this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 106, 0, 0, 0, Uplo2, 0, 0, validateSPR2, 0, double2.x, double2.y, Ap.getID(this.mRS), X.getID(this.mRS), double22.x, double22.y, Y.getID(this.mRS), incX, incY, 0, 0);
+        int N = validateSPR2(Element.F64_2(this.mRS), Uplo2, X, incX, Y, incY, Ap);
+        this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 106, 0, 0, 0, Uplo2, 0, 0, N, 0, alpha.f181x, alpha.f182y, Ap.getID(this.mRS), X.getID(this.mRS), beta.f181x, beta.f182y, Y.getID(this.mRS), incX, incY, 0, 0);
     }
 
     public void ZGERU(Double2 alpha, Allocation X, int incX, Allocation Y, int incY, Allocation A) {
-        Double2 double2 = alpha;
         validateGERU(Element.F64_2(this.mRS), X, incX, Y, incY, A);
-        int y = A.getType().getY();
-        int x = A.getType().getX();
-        this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 107, 0, 0, 0, 0, 0, y, x, 0, double2.x, double2.y, X.getID(this.mRS), Y.getID(this.mRS), 0.0d, 0.0d, A.getID(this.mRS), incX, incY, 0, 0);
+        int M = A.getType().getY();
+        int N = A.getType().getX();
+        this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 107, 0, 0, 0, 0, 0, M, N, 0, alpha.f181x, alpha.f182y, X.getID(this.mRS), Y.getID(this.mRS), 0.0d, 0.0d, A.getID(this.mRS), incX, incY, 0, 0);
     }
 
     public void ZGERC(Double2 alpha, Allocation X, int incX, Allocation Y, int incY, Allocation A) {
-        Double2 double2 = alpha;
         validateGERU(Element.F64_2(this.mRS), X, incX, Y, incY, A);
-        int y = A.getType().getY();
-        int x = A.getType().getX();
-        this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 108, 0, 0, 0, 0, 0, y, x, 0, double2.x, double2.y, X.getID(this.mRS), Y.getID(this.mRS), 0.0d, 0.0d, A.getID(this.mRS), incX, incY, 0, 0);
+        int M = A.getType().getY();
+        int N = A.getType().getX();
+        this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 108, 0, 0, 0, 0, 0, M, N, 0, alpha.f181x, alpha.f182y, X.getID(this.mRS), Y.getID(this.mRS), 0.0d, 0.0d, A.getID(this.mRS), incX, incY, 0, 0);
     }
 
     public void ZHER(int Uplo2, double alpha, Allocation X, int incX, Allocation A) {
-        Allocation allocation = X;
-        Allocation allocation2 = A;
-        int validateSYR = validateSYR(Element.F64_2(this.mRS), Uplo2, allocation, incX, allocation2);
-        this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 109, 0, 0, 0, Uplo2, 0, 0, validateSYR, 0, alpha, 0.0d, allocation.getID(this.mRS), 0, 0.0d, 0.0d, allocation2.getID(this.mRS), incX, 0, 0, 0);
+        int N = validateSYR(Element.F64_2(this.mRS), Uplo2, X, incX, A);
+        this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 109, 0, 0, 0, Uplo2, 0, 0, N, 0, alpha, 0.0d, X.getID(this.mRS), 0L, 0.0d, 0.0d, A.getID(this.mRS), incX, 0, 0, 0);
     }
 
     public void ZHPR(int Uplo2, double alpha, Allocation X, int incX, Allocation Ap) {
-        Allocation allocation = X;
-        Allocation allocation2 = Ap;
-        int validateSPR = validateSPR(Element.F64_2(this.mRS), Uplo2, allocation, incX, allocation2);
-        this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 110, 0, 0, 0, Uplo2, 0, 0, validateSPR, 0, alpha, 0.0d, allocation.getID(this.mRS), 0, 0.0d, 0.0d, allocation2.getID(this.mRS), incX, 0, 0, 0);
+        int N = validateSPR(Element.F64_2(this.mRS), Uplo2, X, incX, Ap);
+        this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 110, 0, 0, 0, Uplo2, 0, 0, N, 0, alpha, 0.0d, X.getID(this.mRS), 0L, 0.0d, 0.0d, Ap.getID(this.mRS), incX, 0, 0, 0);
     }
 
     public void ZHER2(int Uplo2, Double2 alpha, Allocation X, int incX, Allocation Y, int incY, Allocation A) {
-        Double2 double2 = alpha;
-        int validateSYR2 = validateSYR2(Element.F64_2(this.mRS), Uplo2, X, incX, Y, incY, A);
-        this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 111, 0, 0, 0, Uplo2, 0, 0, validateSYR2, 0, double2.x, double2.y, X.getID(this.mRS), Y.getID(this.mRS), 0.0d, 0.0d, A.getID(this.mRS), incX, incY, 0, 0);
+        int N = validateSYR2(Element.F64_2(this.mRS), Uplo2, X, incX, Y, incY, A);
+        this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 111, 0, 0, 0, Uplo2, 0, 0, N, 0, alpha.f181x, alpha.f182y, X.getID(this.mRS), Y.getID(this.mRS), 0.0d, 0.0d, A.getID(this.mRS), incX, incY, 0, 0);
     }
 
     public void ZHPR2(int Uplo2, Double2 alpha, Allocation X, int incX, Allocation Y, int incY, Allocation Ap) {
-        Double2 double2 = alpha;
-        int validateSPR2 = validateSPR2(Element.F64_2(this.mRS), Uplo2, X, incX, Y, incY, Ap);
-        this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 112, 0, 0, 0, Uplo2, 0, 0, validateSPR2, 0, double2.x, double2.y, X.getID(this.mRS), Y.getID(this.mRS), 0.0d, 0.0d, Ap.getID(this.mRS), incX, incY, 0, 0);
+        int N = validateSPR2(Element.F64_2(this.mRS), Uplo2, X, incX, Y, incY, Ap);
+        this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 112, 0, 0, 0, Uplo2, 0, 0, N, 0, alpha.f181x, alpha.f182y, X.getID(this.mRS), Y.getID(this.mRS), 0.0d, 0.0d, Ap.getID(this.mRS), incX, incY, 0, 0);
     }
 
     static void validateL3(Element e, int TransA, int TransB, int Side2, Allocation A, Allocation B, Allocation C) {
@@ -1025,61 +931,63 @@ public final class ScriptIntrinsicBLAS extends ScriptIntrinsic {
         int bN = -1;
         if ((A != null && !A.getType().getElement().isCompatible(e)) || ((B != null && !B.getType().getElement().isCompatible(e)) || (C != null && !C.getType().getElement().isCompatible(e)))) {
             throw new RSRuntimeException("Called BLAS with wrong Element type");
-        } else if (C != null) {
-            int cM = C.getType().getY();
-            int cN = C.getType().getX();
-            if (Side2 != 142) {
-                if (A != null) {
-                    if (TransA == 112 || TransA == 113) {
-                        aN = A.getType().getY();
-                        aM = A.getType().getX();
-                    } else {
-                        aM = A.getType().getY();
-                        aN = A.getType().getX();
-                    }
-                }
-                if (B != null) {
-                    if (TransB == 112 || TransB == 113) {
-                        bN = B.getType().getY();
-                        bM = B.getType().getX();
-                    } else {
-                        bM = B.getType().getY();
-                        bN = B.getType().getX();
-                    }
-                }
-            } else if ((A != null || B == null) && (A == null || B != null)) {
-                if (B != null) {
-                    bM = A.getType().getY();
-                    bN = A.getType().getX();
-                }
-                if (A != null) {
-                    aM = B.getType().getY();
-                    aN = B.getType().getX();
-                }
-            } else {
+        }
+        if (C == null) {
+            throw new RSRuntimeException("Allocation C cannot be null");
+        }
+        int cM = C.getType().getY();
+        int cN = C.getType().getX();
+        if (Side2 == 142) {
+            if ((A == null && B != null) || (A != null && B == null)) {
                 throw new RSRuntimeException("Provided Matrix A without Matrix B, or vice versa");
             }
-            if (A == null || B == null || C == null) {
-                if (A == null || C == null) {
-                    if (A != null && B != null && aN != bM) {
-                        throw new RSRuntimeException("Called BLAS with invalid dimensions");
-                    }
-                } else if (cM != cN) {
-                    throw new RSRuntimeException("Matrix C is not symmetric");
-                } else if (aM != cM) {
-                    throw new RSRuntimeException("Called BLAS with invalid dimensions");
-                }
-            } else if (aN != bM || aM != cM || bN != cN) {
-                throw new RSRuntimeException("Called BLAS with invalid dimensions");
+            if (B != null) {
+                bM = A.getType().getY();
+                bN = A.getType().getX();
+            }
+            if (A != null) {
+                aM = B.getType().getY();
+                aN = B.getType().getX();
             }
         } else {
-            throw new RSRuntimeException("Allocation C cannot be null");
+            if (A != null) {
+                if (TransA == 112 || TransA == 113) {
+                    aN = A.getType().getY();
+                    aM = A.getType().getX();
+                } else {
+                    aM = A.getType().getY();
+                    aN = A.getType().getX();
+                }
+            }
+            if (B != null) {
+                if (TransB == 112 || TransB == 113) {
+                    bN = B.getType().getY();
+                    bM = B.getType().getX();
+                } else {
+                    bM = B.getType().getY();
+                    bN = B.getType().getX();
+                }
+            }
+        }
+        if (A != null && B != null && C != null) {
+            if (aN != bM || aM != cM || bN != cN) {
+                throw new RSRuntimeException("Called BLAS with invalid dimensions");
+            }
+        } else if (A != null && C != null) {
+            if (cM != cN) {
+                throw new RSRuntimeException("Matrix C is not symmetric");
+            }
+            if (aM != cM) {
+                throw new RSRuntimeException("Called BLAS with invalid dimensions");
+            }
+        } else if (A != null && B != null && aN != bM) {
+            throw new RSRuntimeException("Called BLAS with invalid dimensions");
         }
     }
 
     public void SGEMM(int TransA, int TransB, float alpha, Allocation A, Allocation B, float beta, Allocation C) {
-        int K;
         int M;
+        int K;
         int N;
         validateTranspose(TransA);
         validateTranspose(TransB);
@@ -1096,19 +1004,12 @@ public final class ScriptIntrinsicBLAS extends ScriptIntrinsic {
         } else {
             N = B.getType().getX();
         }
-        int i = TransA;
-        int i2 = TransB;
-        int i3 = M;
-        int i4 = N;
-        int i5 = K;
-        float f = alpha;
-        float f2 = beta;
-        this.mRS.nScriptIntrinsicBLAS_Single(getID(this.mRS), 113, i, i2, 0, 0, 0, i3, i4, i5, f, A.getID(this.mRS), B.getID(this.mRS), f2, C.getID(this.mRS), 0, 0, 0, 0);
+        this.mRS.nScriptIntrinsicBLAS_Single(getID(this.mRS), 113, TransA, TransB, 0, 0, 0, M, N, K, alpha, A.getID(this.mRS), B.getID(this.mRS), beta, C.getID(this.mRS), 0, 0, 0, 0);
     }
 
     public void DGEMM(int TransA, int TransB, double alpha, Allocation A, Allocation B, double beta, Allocation C) {
-        int K;
         int M;
+        int K;
         int N;
         validateTranspose(TransA);
         validateTranspose(TransB);
@@ -1125,22 +1026,13 @@ public final class ScriptIntrinsicBLAS extends ScriptIntrinsic {
         } else {
             N = B.getType().getX();
         }
-        int i = TransA;
-        int i2 = TransB;
-        int i3 = M;
-        int i4 = N;
-        int i5 = K;
-        double d = alpha;
-        double d2 = beta;
-        this.mRS.nScriptIntrinsicBLAS_Double(getID(this.mRS), 119, i, i2, 0, 0, 0, i3, i4, i5, d, A.getID(this.mRS), B.getID(this.mRS), d2, C.getID(this.mRS), 0, 0, 0, 0);
+        this.mRS.nScriptIntrinsicBLAS_Double(getID(this.mRS), 119, TransA, TransB, 0, 0, 0, M, N, K, alpha, A.getID(this.mRS), B.getID(this.mRS), beta, C.getID(this.mRS), 0, 0, 0, 0);
     }
 
     public void CGEMM(int TransA, int TransB, Float2 alpha, Allocation A, Allocation B, Float2 beta, Allocation C) {
-        int K;
         int M;
+        int K;
         int N;
-        Float2 float2 = alpha;
-        Float2 float22 = beta;
         validateTranspose(TransA);
         validateTranspose(TransB);
         validateL3(Element.F32_2(this.mRS), TransA, TransB, 0, A, B, C);
@@ -1156,20 +1048,13 @@ public final class ScriptIntrinsicBLAS extends ScriptIntrinsic {
         } else {
             N = B.getType().getX();
         }
-        int i = TransA;
-        int i2 = TransB;
-        int i3 = M;
-        int i4 = N;
-        int i5 = K;
-        this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 125, i, i2, 0, 0, 0, i3, i4, i5, float2.x, float2.y, A.getID(this.mRS), B.getID(this.mRS), float22.x, float22.y, C.getID(this.mRS), 0, 0, 0, 0);
+        this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 125, TransA, TransB, 0, 0, 0, M, N, K, alpha.f190x, alpha.f191y, A.getID(this.mRS), B.getID(this.mRS), beta.f190x, beta.f191y, C.getID(this.mRS), 0, 0, 0, 0);
     }
 
     public void ZGEMM(int TransA, int TransB, Double2 alpha, Allocation A, Allocation B, Double2 beta, Allocation C) {
-        int K;
         int M;
+        int K;
         int N;
-        Double2 double2 = alpha;
-        Double2 double22 = beta;
         validateTranspose(TransA);
         validateTranspose(TransB);
         validateL3(Element.F64_2(this.mRS), TransA, TransB, 0, A, B, C);
@@ -1185,146 +1070,99 @@ public final class ScriptIntrinsicBLAS extends ScriptIntrinsic {
         } else {
             N = B.getType().getX();
         }
-        int i = TransA;
-        int i2 = TransB;
-        int i3 = M;
-        int i4 = N;
-        int i5 = K;
-        this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 131, i, i2, 0, 0, 0, i3, i4, i5, double2.x, double2.y, A.getID(this.mRS), B.getID(this.mRS), double22.x, double22.y, C.getID(this.mRS), 0, 0, 0, 0);
+        this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 131, TransA, TransB, 0, 0, 0, M, N, K, alpha.f181x, alpha.f182y, A.getID(this.mRS), B.getID(this.mRS), beta.f181x, beta.f182y, C.getID(this.mRS), 0, 0, 0, 0);
     }
 
     public void SSYMM(int Side2, int Uplo2, float alpha, Allocation A, Allocation B, float beta, Allocation C) {
         validateSide(Side2);
         validateUplo(Uplo2);
-        if (A.getType().getX() == A.getType().getY()) {
-            validateL3(Element.F32(this.mRS), 0, 0, Side2, A, B, C);
-            int i = Side2;
-            int i2 = Uplo2;
-            float f = alpha;
-            float f2 = beta;
-            this.mRS.nScriptIntrinsicBLAS_Single(getID(this.mRS), 114, 0, 0, i, i2, 0, C.getType().getY(), C.getType().getX(), 0, f, A.getID(this.mRS), B.getID(this.mRS), f2, C.getID(this.mRS), 0, 0, 0, 0);
-            return;
+        if (A.getType().getX() != A.getType().getY()) {
+            throw new RSRuntimeException("Matrix A is not symmetric");
         }
-        Allocation allocation = A;
-        Allocation allocation2 = B;
-        Allocation allocation3 = C;
-        throw new RSRuntimeException("Matrix A is not symmetric");
+        validateL3(Element.F32(this.mRS), 0, 0, Side2, A, B, C);
+        this.mRS.nScriptIntrinsicBLAS_Single(getID(this.mRS), 114, 0, 0, Side2, Uplo2, 0, C.getType().getY(), C.getType().getX(), 0, alpha, A.getID(this.mRS), B.getID(this.mRS), beta, C.getID(this.mRS), 0, 0, 0, 0);
     }
 
     public void DSYMM(int Side2, int Uplo2, double alpha, Allocation A, Allocation B, double beta, Allocation C) {
         validateSide(Side2);
         validateUplo(Uplo2);
-        if (A.getType().getX() == A.getType().getY()) {
-            validateL3(Element.F64(this.mRS), 0, 0, Side2, A, B, C);
-            int i = Side2;
-            int i2 = Uplo2;
-            double d = alpha;
-            double d2 = beta;
-            this.mRS.nScriptIntrinsicBLAS_Double(getID(this.mRS), 120, 0, 0, i, i2, 0, C.getType().getY(), C.getType().getX(), 0, d, A.getID(this.mRS), B.getID(this.mRS), d2, C.getID(this.mRS), 0, 0, 0, 0);
-            return;
+        if (A.getType().getX() != A.getType().getY()) {
+            throw new RSRuntimeException("Matrix A is not symmetric");
         }
-        Allocation allocation = A;
-        Allocation allocation2 = B;
-        Allocation allocation3 = C;
-        throw new RSRuntimeException("Matrix A is not symmetric");
+        validateL3(Element.F64(this.mRS), 0, 0, Side2, A, B, C);
+        this.mRS.nScriptIntrinsicBLAS_Double(getID(this.mRS), 120, 0, 0, Side2, Uplo2, 0, C.getType().getY(), C.getType().getX(), 0, alpha, A.getID(this.mRS), B.getID(this.mRS), beta, C.getID(this.mRS), 0, 0, 0, 0);
     }
 
     public void CSYMM(int Side2, int Uplo2, Float2 alpha, Allocation A, Allocation B, Float2 beta, Allocation C) {
-        Float2 float2 = alpha;
-        Float2 float22 = beta;
         validateSide(Side2);
         validateUplo(Uplo2);
-        if (A.getType().getX() == A.getType().getY()) {
-            validateL3(Element.F32_2(this.mRS), 0, 0, Side2, A, B, C);
-            int i = Side2;
-            int i2 = Uplo2;
-            this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 126, 0, 0, i, i2, 0, C.getType().getY(), C.getType().getX(), 0, float2.x, float2.y, A.getID(this.mRS), B.getID(this.mRS), float22.x, float22.y, C.getID(this.mRS), 0, 0, 0, 0);
-            return;
+        if (A.getType().getX() != A.getType().getY()) {
+            throw new RSRuntimeException("Matrix A is not symmetric");
         }
-        Allocation allocation = A;
-        Allocation allocation2 = B;
-        Allocation allocation3 = C;
-        throw new RSRuntimeException("Matrix A is not symmetric");
+        validateL3(Element.F32_2(this.mRS), 0, 0, Side2, A, B, C);
+        this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 126, 0, 0, Side2, Uplo2, 0, C.getType().getY(), C.getType().getX(), 0, alpha.f190x, alpha.f191y, A.getID(this.mRS), B.getID(this.mRS), beta.f190x, beta.f191y, C.getID(this.mRS), 0, 0, 0, 0);
     }
 
     public void ZSYMM(int Side2, int Uplo2, Double2 alpha, Allocation A, Allocation B, Double2 beta, Allocation C) {
-        Double2 double2 = alpha;
-        Double2 double22 = beta;
         validateSide(Side2);
         validateUplo(Uplo2);
-        if (A.getType().getX() == A.getType().getY()) {
-            validateL3(Element.F64_2(this.mRS), 0, 0, Side2, A, B, C);
-            int i = Side2;
-            int i2 = Uplo2;
-            this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 132, 0, 0, i, i2, 0, C.getType().getY(), C.getType().getX(), 0, double2.x, double2.y, A.getID(this.mRS), B.getID(this.mRS), double22.x, double22.y, C.getID(this.mRS), 0, 0, 0, 0);
-            return;
+        if (A.getType().getX() != A.getType().getY()) {
+            throw new RSRuntimeException("Matrix A is not symmetric");
         }
-        Allocation allocation = A;
-        Allocation allocation2 = B;
-        Allocation allocation3 = C;
-        throw new RSRuntimeException("Matrix A is not symmetric");
+        validateL3(Element.F64_2(this.mRS), 0, 0, Side2, A, B, C);
+        this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 132, 0, 0, Side2, Uplo2, 0, C.getType().getY(), C.getType().getX(), 0, alpha.f181x, alpha.f182y, A.getID(this.mRS), B.getID(this.mRS), beta.f181x, beta.f182y, C.getID(this.mRS), 0, 0, 0, 0);
     }
 
     public void SSYRK(int Uplo2, int Trans, float alpha, Allocation A, float beta, Allocation C) {
         int K;
         validateTranspose(Trans);
         validateUplo(Uplo2);
-        validateL3(Element.F32(this.mRS), Trans, 0, 0, A, (Allocation) null, C);
+        validateL3(Element.F32(this.mRS), Trans, 0, 0, A, null, C);
         if (Trans != 111) {
             K = A.getType().getY();
         } else {
             K = A.getType().getX();
         }
-        this.mRS.nScriptIntrinsicBLAS_Single(getID(this.mRS), 115, Trans, 0, 0, Uplo2, 0, 0, C.getType().getX(), K, alpha, A.getID(this.mRS), 0, beta, C.getID(this.mRS), 0, 0, 0, 0);
+        this.mRS.nScriptIntrinsicBLAS_Single(getID(this.mRS), 115, Trans, 0, 0, Uplo2, 0, 0, C.getType().getX(), K, alpha, A.getID(this.mRS), 0L, beta, C.getID(this.mRS), 0, 0, 0, 0);
     }
 
     public void DSYRK(int Uplo2, int Trans, double alpha, Allocation A, double beta, Allocation C) {
         int K;
         validateTranspose(Trans);
         validateUplo(Uplo2);
-        validateL3(Element.F64(this.mRS), Trans, 0, 0, A, (Allocation) null, C);
+        validateL3(Element.F64(this.mRS), Trans, 0, 0, A, null, C);
         if (Trans != 111) {
             K = A.getType().getY();
         } else {
             K = A.getType().getX();
         }
-        this.mRS.nScriptIntrinsicBLAS_Double(getID(this.mRS), 121, Trans, 0, 0, Uplo2, 0, 0, C.getType().getX(), K, alpha, A.getID(this.mRS), 0, beta, C.getID(this.mRS), 0, 0, 0, 0);
+        this.mRS.nScriptIntrinsicBLAS_Double(getID(this.mRS), 121, Trans, 0, 0, Uplo2, 0, 0, C.getType().getX(), K, alpha, A.getID(this.mRS), 0L, beta, C.getID(this.mRS), 0, 0, 0, 0);
     }
 
     public void CSYRK(int Uplo2, int Trans, Float2 alpha, Allocation A, Float2 beta, Allocation C) {
         int K;
-        Float2 float2 = alpha;
-        Float2 float22 = beta;
         validateTranspose(Trans);
         validateUplo(Uplo2);
-        validateL3(Element.F32_2(this.mRS), Trans, 0, 0, A, (Allocation) null, C);
+        validateL3(Element.F32_2(this.mRS), Trans, 0, 0, A, null, C);
         if (Trans != 111) {
             K = A.getType().getY();
         } else {
             K = A.getType().getX();
         }
-        int i = Trans;
-        int i2 = Uplo2;
-        int i3 = K;
-        this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 127, i, 0, 0, i2, 0, 0, C.getType().getX(), i3, float2.x, float2.y, A.getID(this.mRS), 0, float22.x, float22.y, C.getID(this.mRS), 0, 0, 0, 0);
+        this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 127, Trans, 0, 0, Uplo2, 0, 0, C.getType().getX(), K, alpha.f190x, alpha.f191y, A.getID(this.mRS), 0L, beta.f190x, beta.f191y, C.getID(this.mRS), 0, 0, 0, 0);
     }
 
     public void ZSYRK(int Uplo2, int Trans, Double2 alpha, Allocation A, Double2 beta, Allocation C) {
         int K;
-        Double2 double2 = alpha;
-        Double2 double22 = beta;
         validateTranspose(Trans);
         validateUplo(Uplo2);
-        validateL3(Element.F64_2(this.mRS), Trans, 0, 0, A, (Allocation) null, C);
+        validateL3(Element.F64_2(this.mRS), Trans, 0, 0, A, null, C);
         if (Trans != 111) {
             K = A.getType().getY();
         } else {
             K = A.getType().getX();
         }
-        int i = Trans;
-        int i2 = Uplo2;
-        int i3 = K;
-        this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 133, i, 0, 0, i2, 0, 0, C.getType().getX(), i3, double2.x, double2.y, A.getID(this.mRS), 0, double22.x, double22.y, C.getID(this.mRS), 0, 0, 0, 0);
+        this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 133, Trans, 0, 0, Uplo2, 0, 0, C.getType().getX(), K, alpha.f181x, alpha.f182y, A.getID(this.mRS), 0L, beta.f181x, beta.f182y, C.getID(this.mRS), 0, 0, 0, 0);
     }
 
     static void validateSYR2K(Element e, int Trans, Allocation A, Allocation B, Allocation C) {
@@ -1340,89 +1178,58 @@ public final class ScriptIntrinsicBLAS extends ScriptIntrinsic {
         }
         if (C.getType().getX() != Cdim || C.getType().getY() != Cdim) {
             throw new RSRuntimeException("Invalid symmetric matrix in SYR2K");
-        } else if (A.getType().getX() != B.getType().getX() || A.getType().getY() != B.getType().getY()) {
+        }
+        if (A.getType().getX() != B.getType().getX() || A.getType().getY() != B.getType().getY()) {
             throw new RSRuntimeException("Invalid A and B in SYR2K");
         }
     }
 
     public void SSYR2K(int Uplo2, int Trans, float alpha, Allocation A, Allocation B, float beta, Allocation C) {
         int K;
-        int i = Trans;
-        Allocation allocation = A;
-        Allocation allocation2 = B;
-        Allocation allocation3 = C;
         validateUplo(Uplo2);
-        validateSYR2K(Element.F32(this.mRS), i, allocation, allocation2, allocation3);
-        if (i != 111) {
+        validateSYR2K(Element.F32(this.mRS), Trans, A, B, C);
+        if (Trans != 111) {
             K = A.getType().getY();
         } else {
             K = A.getType().getX();
         }
-        int K2 = K;
-        this.mRS.nScriptIntrinsicBLAS_Single(getID(this.mRS), 116, Trans, 0, 0, Uplo2, 0, 0, C.getType().getX(), K2, alpha, allocation.getID(this.mRS), allocation2.getID(this.mRS), beta, allocation3.getID(this.mRS), 0, 0, 0, 0);
+        this.mRS.nScriptIntrinsicBLAS_Single(getID(this.mRS), 116, Trans, 0, 0, Uplo2, 0, 0, C.getType().getX(), K, alpha, A.getID(this.mRS), B.getID(this.mRS), beta, C.getID(this.mRS), 0, 0, 0, 0);
     }
 
     public void DSYR2K(int Uplo2, int Trans, double alpha, Allocation A, Allocation B, double beta, Allocation C) {
         int K;
-        int i = Trans;
-        Allocation allocation = A;
-        Allocation allocation2 = B;
-        Allocation allocation3 = C;
         validateUplo(Uplo2);
-        validateSYR2K(Element.F64(this.mRS), i, allocation, allocation2, allocation3);
-        if (i != 111) {
+        validateSYR2K(Element.F64(this.mRS), Trans, A, B, C);
+        if (Trans != 111) {
             K = A.getType().getY();
         } else {
             K = A.getType().getX();
         }
-        int K2 = K;
-        this.mRS.nScriptIntrinsicBLAS_Double(getID(this.mRS), 122, Trans, 0, 0, Uplo2, 0, 0, C.getType().getX(), K2, alpha, allocation.getID(this.mRS), allocation2.getID(this.mRS), beta, allocation3.getID(this.mRS), 0, 0, 0, 0);
+        this.mRS.nScriptIntrinsicBLAS_Double(getID(this.mRS), 122, Trans, 0, 0, Uplo2, 0, 0, C.getType().getX(), K, alpha, A.getID(this.mRS), B.getID(this.mRS), beta, C.getID(this.mRS), 0, 0, 0, 0);
     }
 
     public void CSYR2K(int Uplo2, int Trans, Float2 alpha, Allocation A, Allocation B, Float2 beta, Allocation C) {
         int K;
-        int i = Trans;
-        Float2 float2 = alpha;
-        Allocation allocation = A;
-        Allocation allocation2 = B;
-        Float2 float22 = beta;
-        Allocation allocation3 = C;
         validateUplo(Uplo2);
-        validateSYR2K(Element.F32_2(this.mRS), i, allocation, allocation2, allocation3);
-        if (i != 111) {
+        validateSYR2K(Element.F32_2(this.mRS), Trans, A, B, C);
+        if (Trans != 111) {
             K = A.getType().getY();
         } else {
             K = A.getType().getX();
         }
-        int K2 = K;
-        Allocation allocation4 = allocation3;
-        Float2 float23 = float22;
-        int i2 = Trans;
-        int i3 = Uplo2;
-        int i4 = K2;
-        this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 128, i2, 0, 0, i3, 0, 0, C.getType().getX(), i4, float2.x, float2.y, allocation.getID(this.mRS), allocation2.getID(this.mRS), float23.x, float23.y, allocation4.getID(this.mRS), 0, 0, 0, 0);
+        this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 128, Trans, 0, 0, Uplo2, 0, 0, C.getType().getX(), K, alpha.f190x, alpha.f191y, A.getID(this.mRS), B.getID(this.mRS), beta.f190x, beta.f191y, C.getID(this.mRS), 0, 0, 0, 0);
     }
 
     public void ZSYR2K(int Uplo2, int Trans, Double2 alpha, Allocation A, Allocation B, Double2 beta, Allocation C) {
         int K;
-        int i = Trans;
-        Double2 double2 = alpha;
-        Allocation allocation = A;
-        Allocation allocation2 = B;
-        Double2 double22 = beta;
-        Allocation allocation3 = C;
         validateUplo(Uplo2);
-        validateSYR2K(Element.F64_2(this.mRS), i, allocation, allocation2, allocation3);
-        if (i != 111) {
+        validateSYR2K(Element.F64_2(this.mRS), Trans, A, B, C);
+        if (Trans != 111) {
             K = A.getType().getY();
         } else {
             K = A.getType().getX();
         }
-        Double2 double23 = double22;
-        int i2 = Trans;
-        int i3 = Uplo2;
-        int i4 = K;
-        this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 134, i2, 0, 0, i3, 0, 0, C.getType().getX(), i4, double2.x, double2.y, allocation.getID(this.mRS), allocation2.getID(this.mRS), double23.x, double23.y, allocation3.getID(this.mRS), 0, 0, 0, 0);
+        this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 134, Trans, 0, 0, Uplo2, 0, 0, C.getType().getX(), K, alpha.f181x, alpha.f182y, A.getID(this.mRS), B.getID(this.mRS), beta.f181x, beta.f182y, C.getID(this.mRS), 0, 0, 0, 0);
     }
 
     static void validateTRMM(Element e, int Side2, int TransA, Allocation A, Allocation B) {
@@ -1433,67 +1240,46 @@ public final class ScriptIntrinsicBLAS extends ScriptIntrinsic {
         }
         int aM = A.getType().getY();
         int aN = A.getType().getX();
-        if (aM == aN) {
-            int bM = B.getType().getY();
-            int bN = B.getType().getX();
-            if (Side2 == 141) {
-                if (aN != bM) {
-                    throw new RSRuntimeException("Called TRMM with invalid matrices");
-                }
-            } else if (bN != aM) {
+        if (aM != aN) {
+            throw new RSRuntimeException("Called TRMM with a non-symmetric matrix A");
+        }
+        int bM = B.getType().getY();
+        int bN = B.getType().getX();
+        if (Side2 == 141) {
+            if (aN != bM) {
                 throw new RSRuntimeException("Called TRMM with invalid matrices");
             }
-        } else {
-            throw new RSRuntimeException("Called TRMM with a non-symmetric matrix A");
+        } else if (bN != aM) {
+            throw new RSRuntimeException("Called TRMM with invalid matrices");
         }
     }
 
     public void STRMM(int Side2, int Uplo2, int TransA, int Diag2, float alpha, Allocation A, Allocation B) {
-        Allocation allocation = A;
-        Allocation allocation2 = B;
         validateUplo(Uplo2);
         validateDiag(Diag2);
-        validateTRMM(Element.F32(this.mRS), Side2, TransA, allocation, allocation2);
-        RenderScript renderScript = this.mRS;
-        long id = getID(this.mRS);
-        renderScript.nScriptIntrinsicBLAS_Single(id, 117, TransA, 0, Side2, Uplo2, Diag2, B.getType().getY(), B.getType().getX(), 0, alpha, allocation.getID(this.mRS), allocation2.getID(this.mRS), 0.0f, 0, 0, 0, 0, 0);
+        validateTRMM(Element.F32(this.mRS), Side2, TransA, A, B);
+        this.mRS.nScriptIntrinsicBLAS_Single(getID(this.mRS), 117, TransA, 0, Side2, Uplo2, Diag2, B.getType().getY(), B.getType().getX(), 0, alpha, A.getID(this.mRS), B.getID(this.mRS), 0.0f, 0L, 0, 0, 0, 0);
     }
 
     public void DTRMM(int Side2, int Uplo2, int TransA, int Diag2, double alpha, Allocation A, Allocation B) {
-        Allocation allocation = A;
-        Allocation allocation2 = B;
         validateUplo(Uplo2);
         validateDiag(Diag2);
-        validateTRMM(Element.F64(this.mRS), Side2, TransA, allocation, allocation2);
-        RenderScript renderScript = this.mRS;
-        long id = getID(this.mRS);
-        renderScript.nScriptIntrinsicBLAS_Double(id, 123, TransA, 0, Side2, Uplo2, Diag2, B.getType().getY(), B.getType().getX(), 0, alpha, allocation.getID(this.mRS), allocation2.getID(this.mRS), 0.0d, 0, 0, 0, 0, 0);
+        validateTRMM(Element.F64(this.mRS), Side2, TransA, A, B);
+        this.mRS.nScriptIntrinsicBLAS_Double(getID(this.mRS), 123, TransA, 0, Side2, Uplo2, Diag2, B.getType().getY(), B.getType().getX(), 0, alpha, A.getID(this.mRS), B.getID(this.mRS), 0.0d, 0L, 0, 0, 0, 0);
     }
 
     public void CTRMM(int Side2, int Uplo2, int TransA, int Diag2, Float2 alpha, Allocation A, Allocation B) {
-        Float2 float2 = alpha;
-        Allocation allocation = A;
-        Allocation allocation2 = B;
         validateUplo(Uplo2);
         validateDiag(Diag2);
-        validateTRMM(Element.F32_2(this.mRS), Side2, TransA, allocation, allocation2);
-        RenderScript renderScript = this.mRS;
-        long id = getID(this.mRS);
-        renderScript.nScriptIntrinsicBLAS_Complex(id, 129, TransA, 0, Side2, Uplo2, Diag2, B.getType().getY(), B.getType().getX(), 0, float2.x, float2.y, allocation.getID(this.mRS), allocation2.getID(this.mRS), 0.0f, 0.0f, 0, 0, 0, 0, 0);
+        validateTRMM(Element.F32_2(this.mRS), Side2, TransA, A, B);
+        this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 129, TransA, 0, Side2, Uplo2, Diag2, B.getType().getY(), B.getType().getX(), 0, alpha.f190x, alpha.f191y, A.getID(this.mRS), B.getID(this.mRS), 0.0f, 0.0f, 0L, 0, 0, 0, 0);
     }
 
     public void ZTRMM(int Side2, int Uplo2, int TransA, int Diag2, Double2 alpha, Allocation A, Allocation B) {
-        Double2 double2 = alpha;
-        Allocation allocation = A;
-        Allocation allocation2 = B;
         validateUplo(Uplo2);
         validateDiag(Diag2);
-        validateTRMM(Element.F64_2(this.mRS), Side2, TransA, allocation, allocation2);
-        RenderScript renderScript = this.mRS;
-        long id = getID(this.mRS);
-        RenderScript renderScript2 = renderScript;
-        long j = id;
-        renderScript2.nScriptIntrinsicBLAS_Z(j, 135, TransA, 0, Side2, Uplo2, Diag2, B.getType().getY(), B.getType().getX(), 0, double2.x, double2.y, allocation.getID(this.mRS), allocation2.getID(this.mRS), 0.0d, 0.0d, 0, 0, 0, 0, 0);
+        validateTRMM(Element.F64_2(this.mRS), Side2, TransA, A, B);
+        this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 135, TransA, 0, Side2, Uplo2, Diag2, B.getType().getY(), B.getType().getX(), 0, alpha.f181x, alpha.f182y, A.getID(this.mRS), B.getID(this.mRS), 0.0d, 0.0d, 0L, 0, 0, 0, 0);
     }
 
     static void validateTRSM(Element e, int Side2, int TransA, Allocation A, Allocation B) {
@@ -1503,67 +1289,46 @@ public final class ScriptIntrinsicBLAS extends ScriptIntrinsic {
             throw new RSRuntimeException("Called BLAS with wrong Element type");
         }
         int adim = A.getType().getX();
-        if (adim == A.getType().getY()) {
-            int bM = B.getType().getY();
-            int bN = B.getType().getX();
-            if (Side2 == 141) {
-                if (adim != bM) {
-                    throw new RSRuntimeException("Called TRSM with invalid matrix dimensions");
-                }
-            } else if (adim != bN) {
+        if (adim != A.getType().getY()) {
+            throw new RSRuntimeException("Called TRSM with a non-symmetric matrix A");
+        }
+        int bM = B.getType().getY();
+        int bN = B.getType().getX();
+        if (Side2 == 141) {
+            if (adim != bM) {
                 throw new RSRuntimeException("Called TRSM with invalid matrix dimensions");
             }
-        } else {
-            throw new RSRuntimeException("Called TRSM with a non-symmetric matrix A");
+        } else if (adim != bN) {
+            throw new RSRuntimeException("Called TRSM with invalid matrix dimensions");
         }
     }
 
     public void STRSM(int Side2, int Uplo2, int TransA, int Diag2, float alpha, Allocation A, Allocation B) {
-        Allocation allocation = A;
-        Allocation allocation2 = B;
         validateUplo(Uplo2);
         validateDiag(Diag2);
-        validateTRSM(Element.F32(this.mRS), Side2, TransA, allocation, allocation2);
-        RenderScript renderScript = this.mRS;
-        long id = getID(this.mRS);
-        renderScript.nScriptIntrinsicBLAS_Single(id, 118, TransA, 0, Side2, Uplo2, Diag2, B.getType().getY(), B.getType().getX(), 0, alpha, allocation.getID(this.mRS), allocation2.getID(this.mRS), 0.0f, 0, 0, 0, 0, 0);
+        validateTRSM(Element.F32(this.mRS), Side2, TransA, A, B);
+        this.mRS.nScriptIntrinsicBLAS_Single(getID(this.mRS), 118, TransA, 0, Side2, Uplo2, Diag2, B.getType().getY(), B.getType().getX(), 0, alpha, A.getID(this.mRS), B.getID(this.mRS), 0.0f, 0L, 0, 0, 0, 0);
     }
 
     public void DTRSM(int Side2, int Uplo2, int TransA, int Diag2, double alpha, Allocation A, Allocation B) {
-        Allocation allocation = A;
-        Allocation allocation2 = B;
         validateUplo(Uplo2);
         validateDiag(Diag2);
-        validateTRSM(Element.F64(this.mRS), Side2, TransA, allocation, allocation2);
-        RenderScript renderScript = this.mRS;
-        long id = getID(this.mRS);
-        renderScript.nScriptIntrinsicBLAS_Double(id, 124, TransA, 0, Side2, Uplo2, Diag2, B.getType().getY(), B.getType().getX(), 0, alpha, allocation.getID(this.mRS), allocation2.getID(this.mRS), 0.0d, 0, 0, 0, 0, 0);
+        validateTRSM(Element.F64(this.mRS), Side2, TransA, A, B);
+        this.mRS.nScriptIntrinsicBLAS_Double(getID(this.mRS), 124, TransA, 0, Side2, Uplo2, Diag2, B.getType().getY(), B.getType().getX(), 0, alpha, A.getID(this.mRS), B.getID(this.mRS), 0.0d, 0L, 0, 0, 0, 0);
     }
 
     public void CTRSM(int Side2, int Uplo2, int TransA, int Diag2, Float2 alpha, Allocation A, Allocation B) {
-        Float2 float2 = alpha;
-        Allocation allocation = A;
-        Allocation allocation2 = B;
         validateUplo(Uplo2);
         validateDiag(Diag2);
-        validateTRSM(Element.F32_2(this.mRS), Side2, TransA, allocation, allocation2);
-        RenderScript renderScript = this.mRS;
-        long id = getID(this.mRS);
-        renderScript.nScriptIntrinsicBLAS_Complex(id, 130, TransA, 0, Side2, Uplo2, Diag2, B.getType().getY(), B.getType().getX(), 0, float2.x, float2.y, allocation.getID(this.mRS), allocation2.getID(this.mRS), 0.0f, 0.0f, 0, 0, 0, 0, 0);
+        validateTRSM(Element.F32_2(this.mRS), Side2, TransA, A, B);
+        this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 130, TransA, 0, Side2, Uplo2, Diag2, B.getType().getY(), B.getType().getX(), 0, alpha.f190x, alpha.f191y, A.getID(this.mRS), B.getID(this.mRS), 0.0f, 0.0f, 0L, 0, 0, 0, 0);
     }
 
     public void ZTRSM(int Side2, int Uplo2, int TransA, int Diag2, Double2 alpha, Allocation A, Allocation B) {
-        Double2 double2 = alpha;
-        Allocation allocation = A;
-        Allocation allocation2 = B;
         validateUplo(Uplo2);
         validateDiag(Diag2);
-        validateTRSM(Element.F64_2(this.mRS), Side2, TransA, allocation, allocation2);
-        RenderScript renderScript = this.mRS;
-        long id = getID(this.mRS);
-        RenderScript renderScript2 = renderScript;
-        long j = id;
-        renderScript2.nScriptIntrinsicBLAS_Z(j, 136, TransA, 0, Side2, Uplo2, Diag2, B.getType().getY(), B.getType().getX(), 0, double2.x, double2.y, allocation.getID(this.mRS), allocation2.getID(this.mRS), 0.0d, 0.0d, 0, 0, 0, 0, 0);
+        validateTRSM(Element.F64_2(this.mRS), Side2, TransA, A, B);
+        this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 136, TransA, 0, Side2, Uplo2, Diag2, B.getType().getY(), B.getType().getX(), 0, alpha.f181x, alpha.f182y, A.getID(this.mRS), B.getID(this.mRS), 0.0d, 0.0d, 0L, 0, 0, 0, 0);
     }
 
     static void validateHEMM(Element e, int Side2, Allocation A, Allocation B, Allocation C) {
@@ -1574,33 +1339,25 @@ public final class ScriptIntrinsicBLAS extends ScriptIntrinsic {
         int adim = A.getType().getX();
         if (adim != A.getType().getY()) {
             throw new RSRuntimeException("Called HEMM with non-square A");
-        } else if ((Side2 == 141 && adim != B.getType().getY()) || (Side2 == 142 && adim != B.getType().getX())) {
+        }
+        if ((Side2 == 141 && adim != B.getType().getY()) || (Side2 == 142 && adim != B.getType().getX())) {
             throw new RSRuntimeException("Called HEMM with invalid B");
-        } else if (B.getType().getX() != C.getType().getX() || B.getType().getY() != C.getType().getY()) {
+        }
+        if (B.getType().getX() != C.getType().getX() || B.getType().getY() != C.getType().getY()) {
             throw new RSRuntimeException("Called HEMM with mismatched B and C");
         }
     }
 
     public void CHEMM(int Side2, int Uplo2, Float2 alpha, Allocation A, Allocation B, Float2 beta, Allocation C) {
-        Float2 float2 = alpha;
-        Allocation allocation = A;
-        Allocation allocation2 = B;
-        Float2 float22 = beta;
-        Allocation allocation3 = C;
         validateUplo(Uplo2);
-        validateHEMM(Element.F32_2(this.mRS), Side2, allocation, allocation2, allocation3);
-        this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 137, 0, 0, Side2, Uplo2, 0, C.getType().getY(), C.getType().getX(), 0, float2.x, float2.y, allocation.getID(this.mRS), allocation2.getID(this.mRS), float22.x, float22.y, allocation3.getID(this.mRS), 0, 0, 0, 0);
+        validateHEMM(Element.F32_2(this.mRS), Side2, A, B, C);
+        this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 137, 0, 0, Side2, Uplo2, 0, C.getType().getY(), C.getType().getX(), 0, alpha.f190x, alpha.f191y, A.getID(this.mRS), B.getID(this.mRS), beta.f190x, beta.f191y, C.getID(this.mRS), 0, 0, 0, 0);
     }
 
     public void ZHEMM(int Side2, int Uplo2, Double2 alpha, Allocation A, Allocation B, Double2 beta, Allocation C) {
-        Double2 double2 = alpha;
-        Allocation allocation = A;
-        Allocation allocation2 = B;
-        Double2 double22 = beta;
-        Allocation allocation3 = C;
         validateUplo(Uplo2);
-        validateHEMM(Element.F64_2(this.mRS), Side2, allocation, allocation2, allocation3);
-        this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 140, 0, 0, Side2, Uplo2, 0, C.getType().getY(), C.getType().getX(), 0, double2.x, double2.y, allocation.getID(this.mRS), allocation2.getID(this.mRS), double22.x, double22.y, allocation3.getID(this.mRS), 0, 0, 0, 0);
+        validateHEMM(Element.F64_2(this.mRS), Side2, A, B, C);
+        this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 140, 0, 0, Side2, Uplo2, 0, C.getType().getY(), C.getType().getX(), 0, alpha.f181x, alpha.f182y, A.getID(this.mRS), B.getID(this.mRS), beta.f181x, beta.f182y, C.getID(this.mRS), 0, 0, 0, 0);
     }
 
     static void validateHERK(Element e, int Trans, Allocation A, Allocation C) {
@@ -1611,7 +1368,8 @@ public final class ScriptIntrinsicBLAS extends ScriptIntrinsic {
         int cdim = C.getType().getX();
         if (cdim != C.getType().getY()) {
             throw new RSRuntimeException("Called HERK with non-square C");
-        } else if (Trans == 111) {
+        }
+        if (Trans == 111) {
             if (cdim != A.getType().getY()) {
                 throw new RSRuntimeException("Called HERK with invalid A");
             }
@@ -1622,34 +1380,26 @@ public final class ScriptIntrinsicBLAS extends ScriptIntrinsic {
 
     public void CHERK(int Uplo2, int Trans, float alpha, Allocation A, float beta, Allocation C) {
         int k;
-        int i = Trans;
-        Allocation allocation = A;
-        Allocation allocation2 = C;
         validateUplo(Uplo2);
-        validateHERK(Element.F32_2(this.mRS), i, allocation, allocation2);
-        if (i == 113) {
+        validateHERK(Element.F32_2(this.mRS), Trans, A, C);
+        if (Trans == 113) {
             k = A.getType().getY();
         } else {
             k = A.getType().getX();
         }
-        int k2 = k;
-        this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 138, Trans, 0, 0, Uplo2, 0, 0, C.getType().getX(), k2, alpha, 0.0f, allocation.getID(this.mRS), 0, beta, 0.0f, allocation2.getID(this.mRS), 0, 0, 0, 0);
+        this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 138, Trans, 0, 0, Uplo2, 0, 0, C.getType().getX(), k, alpha, 0.0f, A.getID(this.mRS), 0L, beta, 0.0f, C.getID(this.mRS), 0, 0, 0, 0);
     }
 
     public void ZHERK(int Uplo2, int Trans, double alpha, Allocation A, double beta, Allocation C) {
         int k;
-        int i = Trans;
-        Allocation allocation = A;
-        Allocation allocation2 = C;
         validateUplo(Uplo2);
-        validateHERK(Element.F64_2(this.mRS), i, allocation, allocation2);
-        if (i == 113) {
+        validateHERK(Element.F64_2(this.mRS), Trans, A, C);
+        if (Trans == 113) {
             k = A.getType().getY();
         } else {
             k = A.getType().getX();
         }
-        int k2 = k;
-        this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 141, Trans, 0, 0, Uplo2, 0, 0, C.getType().getX(), k2, alpha, 0.0d, allocation.getID(this.mRS), 0, beta, 0.0d, allocation2.getID(this.mRS), 0, 0, 0, 0);
+        this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 141, Trans, 0, 0, Uplo2, 0, 0, C.getType().getX(), k, alpha, 0.0d, A.getID(this.mRS), 0L, beta, 0.0d, C.getID(this.mRS), 0, 0, 0, 0);
     }
 
     static void validateHER2K(Element e, int Trans, Allocation A, Allocation B, Allocation C) {
@@ -1658,80 +1408,56 @@ public final class ScriptIntrinsicBLAS extends ScriptIntrinsic {
         }
         validateConjTranspose(Trans);
         int cdim = C.getType().getX();
-        if (cdim == C.getType().getY()) {
-            if (Trans == 111) {
-                if (A.getType().getY() != cdim) {
-                    throw new RSRuntimeException("Called HER2K with invalid matrices");
-                }
-            } else if (A.getType().getX() != cdim) {
+        if (cdim != C.getType().getY()) {
+            throw new RSRuntimeException("Called HER2K with non-square C");
+        }
+        if (Trans == 111) {
+            if (A.getType().getY() != cdim) {
                 throw new RSRuntimeException("Called HER2K with invalid matrices");
             }
-            if (A.getType().getX() != B.getType().getX() || A.getType().getY() != B.getType().getY()) {
-                throw new RSRuntimeException("Called HER2K with invalid A and B matrices");
-            }
-            return;
+        } else if (A.getType().getX() != cdim) {
+            throw new RSRuntimeException("Called HER2K with invalid matrices");
         }
-        throw new RSRuntimeException("Called HER2K with non-square C");
+        if (A.getType().getX() != B.getType().getX() || A.getType().getY() != B.getType().getY()) {
+            throw new RSRuntimeException("Called HER2K with invalid A and B matrices");
+        }
     }
 
     public void CHER2K(int Uplo2, int Trans, Float2 alpha, Allocation A, Allocation B, float beta, Allocation C) {
         int k;
-        int i = Trans;
-        Float2 float2 = alpha;
-        Allocation allocation = A;
-        Allocation allocation2 = B;
-        Allocation allocation3 = C;
         validateUplo(Uplo2);
-        validateHER2K(Element.F32_2(this.mRS), i, allocation, allocation2, allocation3);
-        if (i == 111) {
+        validateHER2K(Element.F32_2(this.mRS), Trans, A, B, C);
+        if (Trans == 111) {
             k = A.getType().getX();
         } else {
             k = A.getType().getY();
         }
-        int k2 = k;
-        Allocation allocation4 = allocation3;
-        int i2 = Trans;
-        int i3 = Uplo2;
-        int i4 = k2;
-        float f = beta;
-        this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 139, i2, 0, 0, i3, 0, 0, C.getType().getX(), i4, float2.x, float2.y, allocation.getID(this.mRS), allocation2.getID(this.mRS), f, 0.0f, allocation4.getID(this.mRS), 0, 0, 0, 0);
+        this.mRS.nScriptIntrinsicBLAS_Complex(getID(this.mRS), 139, Trans, 0, 0, Uplo2, 0, 0, C.getType().getX(), k, alpha.f190x, alpha.f191y, A.getID(this.mRS), B.getID(this.mRS), beta, 0.0f, C.getID(this.mRS), 0, 0, 0, 0);
     }
 
     public void ZHER2K(int Uplo2, int Trans, Double2 alpha, Allocation A, Allocation B, double beta, Allocation C) {
         int k;
-        int i = Trans;
-        Double2 double2 = alpha;
-        Allocation allocation = A;
-        Allocation allocation2 = B;
-        Allocation allocation3 = C;
         validateUplo(Uplo2);
-        validateHER2K(Element.F64_2(this.mRS), i, allocation, allocation2, allocation3);
-        if (i == 111) {
+        validateHER2K(Element.F64_2(this.mRS), Trans, A, B, C);
+        if (Trans == 111) {
             k = A.getType().getX();
         } else {
             k = A.getType().getY();
         }
-        Allocation allocation4 = allocation2;
-        int i2 = Trans;
-        int i3 = Uplo2;
-        int i4 = k;
-        double d = beta;
-        this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 142, i2, 0, 0, i3, 0, 0, C.getType().getX(), i4, double2.x, double2.y, allocation.getID(this.mRS), allocation4.getID(this.mRS), d, 0.0d, allocation3.getID(this.mRS), 0, 0, 0, 0);
+        this.mRS.nScriptIntrinsicBLAS_Z(getID(this.mRS), 142, Trans, 0, 0, Uplo2, 0, 0, C.getType().getX(), k, alpha.f181x, alpha.f182y, A.getID(this.mRS), B.getID(this.mRS), beta, 0.0d, C.getID(this.mRS), 0, 0, 0, 0);
     }
 
     public void BNNM(Allocation A, int a_offset, Allocation B, int b_offset, Allocation C, int c_offset, int c_mult) {
-        int i = a_offset;
-        int i2 = b_offset;
-        validateL3(Element.U8(this.mRS), 111, 112, 0, A, B, C);
-        if (i < 0 || i > 255) {
+        validateL3(Element.m108U8(this.mRS), 111, 112, 0, A, B, C);
+        if (a_offset < 0 || a_offset > 255) {
             throw new RSRuntimeException("Invalid a_offset passed to BNNM");
-        } else if (i2 < 0 || i2 > 255) {
-            throw new RSRuntimeException("Invalid b_offset passed to BNNM");
-        } else {
-            int M = A.getType().getY();
-            int N = B.getType().getY();
-            int K = A.getType().getX();
-            this.mRS.nScriptIntrinsicBLAS_BNNM(getID(this.mRS), M, N, K, A.getID(this.mRS), a_offset, B.getID(this.mRS), b_offset, C.getID(this.mRS), c_offset, c_mult);
         }
+        if (b_offset < 0 || b_offset > 255) {
+            throw new RSRuntimeException("Invalid b_offset passed to BNNM");
+        }
+        int M = A.getType().getY();
+        int N = B.getType().getY();
+        int K = A.getType().getX();
+        this.mRS.nScriptIntrinsicBLAS_BNNM(getID(this.mRS), M, N, K, A.getID(this.mRS), a_offset, B.getID(this.mRS), b_offset, C.getID(this.mRS), c_offset, c_mult);
     }
 }

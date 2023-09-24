@@ -4,9 +4,10 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.Button;
 
+/* loaded from: classes.dex */
 class ExtractButton extends Button {
     public ExtractButton(Context context) {
-        super(context, (AttributeSet) null);
+        super(context, null);
     }
 
     public ExtractButton(Context context, AttributeSet attrs) {
@@ -21,6 +22,7 @@ class ExtractButton extends Button {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
+    @Override // android.view.View
     public boolean hasWindowFocus() {
         return isEnabled() && getVisibility() == 0;
     }

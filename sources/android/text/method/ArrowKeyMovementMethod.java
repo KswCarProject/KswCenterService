@@ -8,15 +8,13 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
+/* loaded from: classes4.dex */
 public class ArrowKeyMovementMethod extends BaseMovementMethod implements MovementMethod {
     private static final Object LAST_TAP_DOWN = new Object();
     private static ArrowKeyMovementMethod sInstance;
 
     private static boolean isSelecting(Spannable buffer) {
-        if (MetaKeyKeyListener.getMetaState((CharSequence) buffer, 1) == 1 || MetaKeyKeyListener.getMetaState((CharSequence) buffer, 2048) != 0) {
-            return true;
-        }
-        return false;
+        return MetaKeyKeyListener.getMetaState(buffer, 1) == 1 || MetaKeyKeyListener.getMetaState(buffer, 2048) != 0;
     }
 
     private static int getCurrentLineTop(Spannable buffer, Layout layout) {
@@ -31,16 +29,16 @@ public class ArrowKeyMovementMethod extends BaseMovementMethod implements Moveme
         return 0;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean handleMovementKey(TextView widget, Spannable buffer, int keyCode, int movementMetaState, KeyEvent event) {
+    @Override // android.text.method.BaseMovementMethod
+    protected boolean handleMovementKey(TextView widget, Spannable buffer, int keyCode, int movementMetaState, KeyEvent event) {
         if (keyCode == 23 && KeyEvent.metaStateHasNoModifiers(movementMetaState) && event.getAction() == 0 && event.getRepeatCount() == 0 && MetaKeyKeyListener.getMetaState(buffer, 2048, event) != 0) {
             return widget.showContextMenu();
         }
         return super.handleMovementKey(widget, buffer, keyCode, movementMetaState, event);
     }
 
-    /* access modifiers changed from: protected */
-    public boolean left(TextView widget, Spannable buffer) {
+    @Override // android.text.method.BaseMovementMethod
+    protected boolean left(TextView widget, Spannable buffer) {
         Layout layout = widget.getLayout();
         if (isSelecting(buffer)) {
             return Selection.extendLeft(buffer, layout);
@@ -48,8 +46,8 @@ public class ArrowKeyMovementMethod extends BaseMovementMethod implements Moveme
         return Selection.moveLeft(buffer, layout);
     }
 
-    /* access modifiers changed from: protected */
-    public boolean right(TextView widget, Spannable buffer) {
+    @Override // android.text.method.BaseMovementMethod
+    protected boolean right(TextView widget, Spannable buffer) {
         Layout layout = widget.getLayout();
         if (isSelecting(buffer)) {
             return Selection.extendRight(buffer, layout);
@@ -57,8 +55,9 @@ public class ArrowKeyMovementMethod extends BaseMovementMethod implements Moveme
         return Selection.moveRight(buffer, layout);
     }
 
-    /* access modifiers changed from: protected */
-    public boolean up(TextView widget, Spannable buffer) {
+    @Override // android.text.method.BaseMovementMethod
+    /* renamed from: up */
+    protected boolean mo76up(TextView widget, Spannable buffer) {
         Layout layout = widget.getLayout();
         if (isSelecting(buffer)) {
             return Selection.extendUp(buffer, layout);
@@ -66,8 +65,8 @@ public class ArrowKeyMovementMethod extends BaseMovementMethod implements Moveme
         return Selection.moveUp(buffer, layout);
     }
 
-    /* access modifiers changed from: protected */
-    public boolean down(TextView widget, Spannable buffer) {
+    @Override // android.text.method.BaseMovementMethod
+    protected boolean down(TextView widget, Spannable buffer) {
         Layout layout = widget.getLayout();
         if (isSelecting(buffer)) {
             return Selection.extendDown(buffer, layout);
@@ -75,8 +74,8 @@ public class ArrowKeyMovementMethod extends BaseMovementMethod implements Moveme
         return Selection.moveDown(buffer, layout);
     }
 
-    /* access modifiers changed from: protected */
-    public boolean pageUp(TextView widget, Spannable buffer) {
+    @Override // android.text.method.BaseMovementMethod
+    protected boolean pageUp(TextView widget, Spannable buffer) {
         Layout layout = widget.getLayout();
         boolean selecting = isSelecting(buffer);
         int targetY = getCurrentLineTop(buffer, layout) - getPageHeight(widget);
@@ -96,8 +95,8 @@ public class ArrowKeyMovementMethod extends BaseMovementMethod implements Moveme
         return handled;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean pageDown(TextView widget, Spannable buffer) {
+    @Override // android.text.method.BaseMovementMethod
+    protected boolean pageDown(TextView widget, Spannable buffer) {
         Layout layout = widget.getLayout();
         boolean selecting = isSelecting(buffer);
         int targetY = getCurrentLineTop(buffer, layout) + getPageHeight(widget);
@@ -117,8 +116,8 @@ public class ArrowKeyMovementMethod extends BaseMovementMethod implements Moveme
         return handled;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean top(TextView widget, Spannable buffer) {
+    @Override // android.text.method.BaseMovementMethod
+    protected boolean top(TextView widget, Spannable buffer) {
         if (isSelecting(buffer)) {
             Selection.extendSelection(buffer, 0);
             return true;
@@ -127,8 +126,8 @@ public class ArrowKeyMovementMethod extends BaseMovementMethod implements Moveme
         return true;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean bottom(TextView widget, Spannable buffer) {
+    @Override // android.text.method.BaseMovementMethod
+    protected boolean bottom(TextView widget, Spannable buffer) {
         if (isSelecting(buffer)) {
             Selection.extendSelection(buffer, buffer.length());
             return true;
@@ -137,8 +136,8 @@ public class ArrowKeyMovementMethod extends BaseMovementMethod implements Moveme
         return true;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean lineStart(TextView widget, Spannable buffer) {
+    @Override // android.text.method.BaseMovementMethod
+    protected boolean lineStart(TextView widget, Spannable buffer) {
         Layout layout = widget.getLayout();
         if (isSelecting(buffer)) {
             return Selection.extendToLeftEdge(buffer, layout);
@@ -146,8 +145,8 @@ public class ArrowKeyMovementMethod extends BaseMovementMethod implements Moveme
         return Selection.moveToLeftEdge(buffer, layout);
     }
 
-    /* access modifiers changed from: protected */
-    public boolean lineEnd(TextView widget, Spannable buffer) {
+    @Override // android.text.method.BaseMovementMethod
+    protected boolean lineEnd(TextView widget, Spannable buffer) {
         Layout layout = widget.getLayout();
         if (isSelecting(buffer)) {
             return Selection.extendToRightEdge(buffer, layout);
@@ -155,32 +154,33 @@ public class ArrowKeyMovementMethod extends BaseMovementMethod implements Moveme
         return Selection.moveToRightEdge(buffer, layout);
     }
 
-    /* access modifiers changed from: protected */
-    public boolean leftWord(TextView widget, Spannable buffer) {
+    @Override // android.text.method.BaseMovementMethod
+    protected boolean leftWord(TextView widget, Spannable buffer) {
         int selectionEnd = widget.getSelectionEnd();
         WordIterator wordIterator = widget.getWordIterator();
         wordIterator.setCharSequence(buffer, selectionEnd, selectionEnd);
         return Selection.moveToPreceding(buffer, wordIterator, isSelecting(buffer));
     }
 
-    /* access modifiers changed from: protected */
-    public boolean rightWord(TextView widget, Spannable buffer) {
+    @Override // android.text.method.BaseMovementMethod
+    protected boolean rightWord(TextView widget, Spannable buffer) {
         int selectionEnd = widget.getSelectionEnd();
         WordIterator wordIterator = widget.getWordIterator();
         wordIterator.setCharSequence(buffer, selectionEnd, selectionEnd);
         return Selection.moveToFollowing(buffer, wordIterator, isSelecting(buffer));
     }
 
-    /* access modifiers changed from: protected */
-    public boolean home(TextView widget, Spannable buffer) {
+    @Override // android.text.method.BaseMovementMethod
+    protected boolean home(TextView widget, Spannable buffer) {
         return lineStart(widget, buffer);
     }
 
-    /* access modifiers changed from: protected */
-    public boolean end(TextView widget, Spannable buffer) {
+    @Override // android.text.method.BaseMovementMethod
+    protected boolean end(TextView widget, Spannable buffer) {
         return lineEnd(widget, buffer);
     }
 
+    @Override // android.text.method.BaseMovementMethod, android.text.method.MovementMethod
     public boolean onTouchEvent(TextView widget, Spannable buffer, MotionEvent event) {
         int initialScrollX = -1;
         int initialScrollY = -1;
@@ -195,12 +195,14 @@ public class ArrowKeyMovementMethod extends BaseMovementMethod implements Moveme
             return handled;
         }
         if (action == 0) {
-            if (!isSelecting(buffer) || (!widget.isFocused() && !widget.requestFocus())) {
-                return handled;
+            if (isSelecting(buffer)) {
+                if (!widget.isFocused() && !widget.requestFocus()) {
+                    return handled;
+                }
+                int offset = widget.getOffsetForPosition(event.getX(), event.getY());
+                buffer.setSpan(LAST_TAP_DOWN, offset, offset, 34);
+                widget.getParent().requestDisallowInterceptTouchEvent(true);
             }
-            int offset = widget.getOffsetForPosition(event.getX(), event.getY());
-            buffer.setSpan(LAST_TAP_DOWN, offset, offset, 34);
-            widget.getParent().requestDisallowInterceptTouchEvent(true);
         } else if (widget.isFocused()) {
             if (action == 2) {
                 if (isSelecting(buffer) && handled) {
@@ -211,38 +213,44 @@ public class ArrowKeyMovementMethod extends BaseMovementMethod implements Moveme
                     return true;
                 }
             } else if (action == 1) {
-                if ((initialScrollY < 0 || initialScrollY == widget.getScrollY()) && (initialScrollX < 0 || initialScrollX == widget.getScrollX())) {
-                    if (wasTouchSelecting) {
-                        int startOffset2 = buffer.getSpanStart(LAST_TAP_DOWN);
-                        int endOffset = widget.getOffsetForPosition(event.getX(), event.getY());
-                        Selection.setSelection(buffer, Math.min(startOffset2, endOffset), Math.max(startOffset2, endOffset));
-                        buffer.removeSpan(LAST_TAP_DOWN);
-                    }
-                    MetaKeyKeyListener.adjustMetaAfterKeypress(buffer);
-                    MetaKeyKeyListener.resetLockedMeta(buffer);
+                if ((initialScrollY >= 0 && initialScrollY != widget.getScrollY()) || (initialScrollX >= 0 && initialScrollX != widget.getScrollX())) {
+                    widget.moveCursorToVisibleOffset();
                     return true;
                 }
-                widget.moveCursorToVisibleOffset();
+                if (wasTouchSelecting) {
+                    int startOffset2 = buffer.getSpanStart(LAST_TAP_DOWN);
+                    int endOffset = widget.getOffsetForPosition(event.getX(), event.getY());
+                    Selection.setSelection(buffer, Math.min(startOffset2, endOffset), Math.max(startOffset2, endOffset));
+                    buffer.removeSpan(LAST_TAP_DOWN);
+                }
+                MetaKeyKeyListener.adjustMetaAfterKeypress(buffer);
+                MetaKeyKeyListener.resetLockedMeta(buffer);
                 return true;
             }
         }
         return handled;
     }
 
+    @Override // android.text.method.BaseMovementMethod, android.text.method.MovementMethod
     public boolean canSelectArbitrarily() {
         return true;
     }
 
+    @Override // android.text.method.BaseMovementMethod, android.text.method.MovementMethod
     public void initialize(TextView widget, Spannable text) {
         Selection.setSelection(text, 0);
     }
 
+    @Override // android.text.method.BaseMovementMethod, android.text.method.MovementMethod
     public void onTakeFocus(TextView view, Spannable text, int dir) {
-        if ((dir & 130) == 0) {
-            Selection.setSelection(text, text.length());
-        } else if (view.getLayout() == null) {
-            Selection.setSelection(text, text.length());
+        if ((dir & 130) != 0) {
+            if (view.getLayout() == null) {
+                Selection.setSelection(text, text.length());
+                return;
+            }
+            return;
         }
+        Selection.setSelection(text, text.length());
     }
 
     public static MovementMethod getInstance() {

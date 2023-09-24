@@ -2,6 +2,7 @@ package android.filterfw.core;
 
 import java.lang.reflect.Field;
 
+/* loaded from: classes.dex */
 public class ProgramPort extends FieldPort {
     protected String mVarName;
 
@@ -10,22 +11,25 @@ public class ProgramPort extends FieldPort {
         this.mVarName = varName;
     }
 
+    @Override // android.filterfw.core.FieldPort, android.filterfw.core.FilterPort
     public String toString() {
         return "Program " + super.toString();
     }
 
+    @Override // android.filterfw.core.FieldPort, android.filterfw.core.InputPort
     public synchronized void transfer(FilterContext context) {
         if (this.mValueWaiting) {
             try {
                 Object fieldValue = this.mField.get(this.mFilter);
                 if (fieldValue != null) {
-                    ((Program) fieldValue).setHostValue(this.mVarName, this.mValue);
+                    Program program = (Program) fieldValue;
+                    program.setHostValue(this.mVarName, this.mValue);
                     this.mValueWaiting = false;
                 }
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException("Access to program field '" + this.mField.getName() + "' was denied!");
-            } catch (ClassCastException e2) {
+            } catch (ClassCastException e) {
                 throw new RuntimeException("Non Program field '" + this.mField.getName() + "' annotated with ProgramParameter!");
+            } catch (IllegalAccessException e2) {
+                throw new RuntimeException("Access to program field '" + this.mField.getName() + "' was denied!");
             }
         }
     }

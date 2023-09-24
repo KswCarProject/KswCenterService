@@ -4,6 +4,7 @@ import android.annotation.UnsupportedAppUsage;
 import android.filterfw.core.MutableFrameFormat;
 import android.graphics.Bitmap;
 
+/* loaded from: classes.dex */
 public class ImageFormat {
     public static final int COLORSPACE_GRAY = 1;
     public static final String COLORSPACE_KEY = "colorspace";

@@ -1,5 +1,6 @@
 package com.android.internal.util;
 
+/* loaded from: classes4.dex */
 public class RingBufferIndices {
     private final int mCapacity;
     private int mSize;

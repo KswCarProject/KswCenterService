@@ -3,6 +3,7 @@ package android.hardware.radio.V1_4;
 import com.android.internal.telephony.IccCardConstants;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class RadioAccessFamily {
     public static final int EDGE = 4;
     public static final int EHRPD = 8192;
@@ -19,7 +20,9 @@ public final class RadioAccessFamily {
     public static final int IS95B = 32;
     public static final int LTE = 16384;
     public static final int LTE_CA = 524288;
-    public static final int NR = 1048576;
+
+    /* renamed from: NR */
+    public static final int f101NR = 1048576;
     public static final int ONE_X_RTT = 64;
     public static final int TD_SCDMA = 131072;
     public static final int UMTS = 8;

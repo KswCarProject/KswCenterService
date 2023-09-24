@@ -1,15 +1,16 @@
 package android.media.session;
 
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.SystemClock;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.SystemClock;
 import android.text.TextUtils;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
 
+/* loaded from: classes3.dex */
 public final class PlaybackState implements Parcelable {
     public static final long ACTION_FAST_FORWARD = 64;
     public static final long ACTION_PAUSE = 2;
@@ -29,11 +30,15 @@ public final class PlaybackState implements Parcelable {
     public static final long ACTION_SKIP_TO_PREVIOUS = 16;
     public static final long ACTION_SKIP_TO_QUEUE_ITEM = 4096;
     public static final long ACTION_STOP = 1;
-    public static final Parcelable.Creator<PlaybackState> CREATOR = new Parcelable.Creator<PlaybackState>() {
+    public static final Parcelable.Creator<PlaybackState> CREATOR = new Parcelable.Creator<PlaybackState>() { // from class: android.media.session.PlaybackState.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PlaybackState createFromParcel(Parcel in) {
             return new PlaybackState(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PlaybackState[] newArray(int size) {
             return new PlaybackState[size];
         }
@@ -52,32 +57,24 @@ public final class PlaybackState implements Parcelable {
     public static final int STATE_SKIPPING_TO_QUEUE_ITEM = 11;
     public static final int STATE_STOPPED = 1;
     private static final String TAG = "PlaybackState";
-    /* access modifiers changed from: private */
-    public final long mActions;
-    /* access modifiers changed from: private */
-    public final long mActiveItemId;
-    /* access modifiers changed from: private */
-    public final long mBufferedPosition;
-    /* access modifiers changed from: private */
-    public List<CustomAction> mCustomActions;
-    /* access modifiers changed from: private */
-    public final CharSequence mErrorMessage;
-    /* access modifiers changed from: private */
-    public final Bundle mExtras;
-    /* access modifiers changed from: private */
-    public final long mPosition;
-    /* access modifiers changed from: private */
-    public final float mSpeed;
-    /* access modifiers changed from: private */
-    public final int mState;
-    /* access modifiers changed from: private */
-    public final long mUpdateTime;
+    private final long mActions;
+    private final long mActiveItemId;
+    private final long mBufferedPosition;
+    private List<CustomAction> mCustomActions;
+    private final CharSequence mErrorMessage;
+    private final Bundle mExtras;
+    private final long mPosition;
+    private final float mSpeed;
+    private final int mState;
+    private final long mUpdateTime;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface Actions {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface State {
     }
 
@@ -108,13 +105,15 @@ public final class PlaybackState implements Parcelable {
     }
 
     public String toString() {
-        return "PlaybackState {" + "state=" + this.mState + ", position=" + this.mPosition + ", buffered position=" + this.mBufferedPosition + ", speed=" + this.mSpeed + ", updated=" + this.mUpdateTime + ", actions=" + this.mActions + ", custom actions=" + this.mCustomActions + ", active item id=" + this.mActiveItemId + ", error=" + this.mErrorMessage + "}";
+        return "PlaybackState {state=" + this.mState + ", position=" + this.mPosition + ", buffered position=" + this.mBufferedPosition + ", speed=" + this.mSpeed + ", updated=" + this.mUpdateTime + ", actions=" + this.mActions + ", custom actions=" + this.mCustomActions + ", active item id=" + this.mActiveItemId + ", error=" + this.mErrorMessage + "}";
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mState);
         dest.writeLong(this.mPosition);
@@ -168,12 +167,17 @@ public final class PlaybackState implements Parcelable {
         return this.mExtras;
     }
 
+    /* loaded from: classes3.dex */
     public static final class CustomAction implements Parcelable {
-        public static final Parcelable.Creator<CustomAction> CREATOR = new Parcelable.Creator<CustomAction>() {
+        public static final Parcelable.Creator<CustomAction> CREATOR = new Parcelable.Creator<CustomAction>() { // from class: android.media.session.PlaybackState.CustomAction.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public CustomAction createFromParcel(Parcel p) {
                 return new CustomAction(p);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public CustomAction[] newArray(int size) {
                 return new CustomAction[size];
             }
@@ -197,6 +201,7 @@ public final class PlaybackState implements Parcelable {
             this.mExtras = in.readBundle();
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeString(this.mAction);
             TextUtils.writeToParcel(this.mName, dest, flags);
@@ -204,6 +209,7 @@ public final class PlaybackState implements Parcelable {
             dest.writeBundle(this.mExtras);
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
@@ -225,9 +231,10 @@ public final class PlaybackState implements Parcelable {
         }
 
         public String toString() {
-            return "Action:mName='" + this.mName + ", mIcon=" + this.mIcon + ", mExtras=" + this.mExtras;
+            return "Action:mName='" + ((Object) this.mName) + ", mIcon=" + this.mIcon + ", mExtras=" + this.mExtras;
         }
 
+        /* loaded from: classes3.dex */
         public static final class Builder {
             private final String mAction;
             private Bundle mExtras;
@@ -237,15 +244,16 @@ public final class PlaybackState implements Parcelable {
             public Builder(String action, CharSequence name, int icon) {
                 if (TextUtils.isEmpty(action)) {
                     throw new IllegalArgumentException("You must specify an action to build a CustomAction.");
-                } else if (TextUtils.isEmpty(name)) {
+                }
+                if (TextUtils.isEmpty(name)) {
                     throw new IllegalArgumentException("You must specify a name to build a CustomAction.");
-                } else if (icon != 0) {
-                    this.mAction = action;
-                    this.mName = name;
-                    this.mIcon = icon;
-                } else {
+                }
+                if (icon == 0) {
                     throw new IllegalArgumentException("You must specify an icon resource id to build a CustomAction.");
                 }
+                this.mAction = action;
+                this.mName = name;
+                this.mIcon = icon;
             }
 
             public Builder setExtras(Bundle extras) {
@@ -259,11 +267,12 @@ public final class PlaybackState implements Parcelable {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class Builder {
         private long mActions;
-        private long mActiveItemId = -1;
+        private long mActiveItemId;
         private long mBufferedPosition;
-        private final List<CustomAction> mCustomActions = new ArrayList();
+        private final List<CustomAction> mCustomActions;
         private CharSequence mErrorMessage;
         private Bundle mExtras;
         private long mPosition;
@@ -272,9 +281,13 @@ public final class PlaybackState implements Parcelable {
         private long mUpdateTime;
 
         public Builder() {
+            this.mCustomActions = new ArrayList();
+            this.mActiveItemId = -1L;
         }
 
         public Builder(PlaybackState from) {
+            this.mCustomActions = new ArrayList();
+            this.mActiveItemId = -1L;
             if (from != null) {
                 this.mState = from.mState;
                 this.mPosition = from.mPosition;
@@ -309,15 +322,15 @@ public final class PlaybackState implements Parcelable {
         }
 
         public Builder addCustomAction(String action, String name, int icon) {
-            return addCustomAction(new CustomAction(action, name, icon, (Bundle) null));
+            return addCustomAction(new CustomAction(action, name, icon, null));
         }
 
         public Builder addCustomAction(CustomAction customAction) {
-            if (customAction != null) {
-                this.mCustomActions.add(customAction);
-                return this;
+            if (customAction == null) {
+                throw new IllegalArgumentException("You may not add a null CustomAction to PlaybackState.");
             }
-            throw new IllegalArgumentException("You may not add a null CustomAction to PlaybackState.");
+            this.mCustomActions.add(customAction);
+            return this;
         }
 
         public Builder setBufferedPosition(long bufferedPosition) {

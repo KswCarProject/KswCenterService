@@ -1,12 +1,13 @@
 package android.telephony.ims;
 
 import android.annotation.SystemApi;
-import android.content.pm.IPackageManager;
-import android.content.pm.PackageManager;
-import android.os.Binder;
-import android.os.RemoteException;
-import android.os.ServiceManager;
+import android.content.p002pm.IPackageManager;
+import android.content.p002pm.PackageManager;
+import android.p007os.Binder;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
 import android.telephony.SubscriptionManager;
+import android.telephony.ims.ProvisioningManager;
 import android.telephony.ims.aidl.IImsConfigCallback;
 import com.android.internal.telephony.ITelephony;
 import com.android.internal.util.FunctionalUtils;
@@ -15,6 +16,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.concurrent.Executor;
 
 @SystemApi
+/* loaded from: classes4.dex */
 public class ProvisioningManager {
     public static final int KEY_VOICE_OVER_WIFI_MODE_OVERRIDE = 27;
     public static final int KEY_VOICE_OVER_WIFI_ROAMING_ENABLED_OVERRIDE = 26;
@@ -25,12 +27,15 @@ public class ProvisioningManager {
     private int mSubId;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface StringResultError {
     }
 
+    /* loaded from: classes4.dex */
     public static class Callback {
         private final CallbackBinder mBinder = new CallbackBinder();
 
+        /* loaded from: classes4.dex */
         private static class CallbackBinder extends IImsConfigCallback.Stub {
             private Executor mExecutor;
             private final Callback mLocalConfigurationCallback;
@@ -39,207 +44,37 @@ public class ProvisioningManager {
                 this.mLocalConfigurationCallback = localConfigurationCallback;
             }
 
-            public final void onIntConfigChanged(int item, int value) {
-                Binder.withCleanCallingIdentity((FunctionalUtils.ThrowingRunnable) 
-                /*  JADX ERROR: Method code generation error
-                    jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x0005: INVOKE  
-                      (wrap: android.telephony.ims.-$$Lambda$ProvisioningManager$Callback$CallbackBinder$rMBayJlNIko46WAqcRq_ggxbfrY : 0x0002: CONSTRUCTOR  (r0v0 android.telephony.ims.-$$Lambda$ProvisioningManager$Callback$CallbackBinder$rMBayJlNIko46WAqcRq_ggxbfrY) = 
-                      (r1v0 'this' android.telephony.ims.ProvisioningManager$Callback$CallbackBinder A[THIS])
-                      (r2v0 'item' int)
-                      (r3v0 'value' int)
-                     call: android.telephony.ims.-$$Lambda$ProvisioningManager$Callback$CallbackBinder$rMBayJlNIko46WAqcRq_ggxbfrY.<init>(android.telephony.ims.ProvisioningManager$Callback$CallbackBinder, int, int):void type: CONSTRUCTOR)
-                     android.os.Binder.withCleanCallingIdentity(com.android.internal.util.FunctionalUtils$ThrowingRunnable):void type: STATIC in method: android.telephony.ims.ProvisioningManager.Callback.CallbackBinder.onIntConfigChanged(int, int):void, dex: classes4.dex
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:221)
-                    	at jadx.core.codegen.RegionGen.makeSimpleBlock(RegionGen.java:109)
-                    	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:55)
-                    	at jadx.core.codegen.RegionGen.makeSimpleRegion(RegionGen.java:92)
-                    	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:58)
-                    	at jadx.core.codegen.MethodGen.addRegionInsns(MethodGen.java:211)
-                    	at jadx.core.codegen.MethodGen.addInstructions(MethodGen.java:204)
-                    	at jadx.core.codegen.ClassGen.addMethodCode(ClassGen.java:318)
-                    	at jadx.core.codegen.ClassGen.addMethod(ClassGen.java:271)
-                    	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:240)
-                    	at java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
-                    	at java.util.ArrayList.forEach(ArrayList.java:1259)
-                    	at java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
-                    	at java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                    	at java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:483)
-                    	at java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:472)
-                    	at java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
-                    	at java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
-                    	at java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                    	at java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:485)
-                    	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
-                    	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
-                    	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)
-                    	at jadx.core.codegen.ClassGen.addInnerClass(ClassGen.java:249)
-                    	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:238)
-                    	at java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
-                    	at java.util.ArrayList.forEach(ArrayList.java:1259)
-                    	at java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
-                    	at java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                    	at java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:483)
-                    	at java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:472)
-                    	at java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
-                    	at java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
-                    	at java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                    	at java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:485)
-                    	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
-                    	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
-                    	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)
-                    	at jadx.core.codegen.ClassGen.addInnerClass(ClassGen.java:249)
-                    	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:238)
-                    	at java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
-                    	at java.util.ArrayList.forEach(ArrayList.java:1259)
-                    	at java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
-                    	at java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                    	at java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:483)
-                    	at java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:472)
-                    	at java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
-                    	at java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
-                    	at java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                    	at java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:485)
-                    	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
-                    	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
-                    	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)
-                    	at jadx.core.codegen.ClassGen.makeClass(ClassGen.java:78)
-                    	at jadx.core.codegen.CodeGen.wrapCodeGen(CodeGen.java:44)
-                    	at jadx.core.codegen.CodeGen.generateJavaCode(CodeGen.java:33)
-                    	at jadx.core.codegen.CodeGen.generate(CodeGen.java:21)
-                    	at jadx.core.ProcessClass.generateCode(ProcessClass.java:61)
-                    	at jadx.core.dex.nodes.ClassNode.decompile(ClassNode.java:273)
-                    Caused by: jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x0002: CONSTRUCTOR  (r0v0 android.telephony.ims.-$$Lambda$ProvisioningManager$Callback$CallbackBinder$rMBayJlNIko46WAqcRq_ggxbfrY) = 
-                      (r1v0 'this' android.telephony.ims.ProvisioningManager$Callback$CallbackBinder A[THIS])
-                      (r2v0 'item' int)
-                      (r3v0 'value' int)
-                     call: android.telephony.ims.-$$Lambda$ProvisioningManager$Callback$CallbackBinder$rMBayJlNIko46WAqcRq_ggxbfrY.<init>(android.telephony.ims.ProvisioningManager$Callback$CallbackBinder, int, int):void type: CONSTRUCTOR in method: android.telephony.ims.ProvisioningManager.Callback.CallbackBinder.onIntConfigChanged(int, int):void, dex: classes4.dex
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
-                    	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
-                    	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)
-                    	at jadx.core.codegen.InsnGen.generateMethodArguments(InsnGen.java:787)
-                    	at jadx.core.codegen.InsnGen.makeInvoke(InsnGen.java:728)
-                    	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:368)
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:250)
-                    	... 59 more
-                    Caused by: jadx.core.utils.exceptions.JadxRuntimeException: Expected class to be processed at this point, class: android.telephony.ims.-$$Lambda$ProvisioningManager$Callback$CallbackBinder$rMBayJlNIko46WAqcRq_ggxbfrY, state: NOT_LOADED
-                    	at jadx.core.dex.nodes.ClassNode.ensureProcessed(ClassNode.java:260)
-                    	at jadx.core.codegen.InsnGen.makeConstructor(InsnGen.java:606)
-                    	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:364)
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:231)
-                    	... 65 more
-                    */
-                /*
-                    this = this;
-                    android.telephony.ims.-$$Lambda$ProvisioningManager$Callback$CallbackBinder$rMBayJlNIko46WAqcRq_ggxbfrY r0 = new android.telephony.ims.-$$Lambda$ProvisioningManager$Callback$CallbackBinder$rMBayJlNIko46WAqcRq_ggxbfrY
-                    r0.<init>(r1, r2, r3)
-                    android.os.Binder.withCleanCallingIdentity((com.android.internal.util.FunctionalUtils.ThrowingRunnable) r0)
-                    return
-                */
-                throw new UnsupportedOperationException("Method not decompiled: android.telephony.ims.ProvisioningManager.Callback.CallbackBinder.onIntConfigChanged(int, int):void");
+            @Override // android.telephony.ims.aidl.IImsConfigCallback
+            public final void onIntConfigChanged(final int item, final int value) {
+                Binder.withCleanCallingIdentity(new FunctionalUtils.ThrowingRunnable() { // from class: android.telephony.ims.-$$Lambda$ProvisioningManager$Callback$CallbackBinder$rMBayJlNIko46WAqcRq_ggxbfrY
+                    @Override // com.android.internal.util.FunctionalUtils.ThrowingRunnable
+                    public final void runOrThrow() {
+                        r0.mExecutor.execute(new Runnable() { // from class: android.telephony.ims.-$$Lambda$ProvisioningManager$Callback$CallbackBinder$R_8jXQuOM7aV7dIwYBzcWwV-YpM
+                            @Override // java.lang.Runnable
+                            public final void run() {
+                                ProvisioningManager.Callback.CallbackBinder.this.mLocalConfigurationCallback.onProvisioningIntChanged(r2, r3);
+                            }
+                        });
+                    }
+                });
             }
 
-            public final void onStringConfigChanged(int item, String value) {
-                Binder.withCleanCallingIdentity((FunctionalUtils.ThrowingRunnable) 
-                /*  JADX ERROR: Method code generation error
-                    jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x0005: INVOKE  
-                      (wrap: android.telephony.ims.-$$Lambda$ProvisioningManager$Callback$CallbackBinder$Jkes2onT-fqeBCDl6FWK1nXcIt0 : 0x0002: CONSTRUCTOR  (r0v0 android.telephony.ims.-$$Lambda$ProvisioningManager$Callback$CallbackBinder$Jkes2onT-fqeBCDl6FWK1nXcIt0) = 
-                      (r1v0 'this' android.telephony.ims.ProvisioningManager$Callback$CallbackBinder A[THIS])
-                      (r2v0 'item' int)
-                      (r3v0 'value' java.lang.String)
-                     call: android.telephony.ims.-$$Lambda$ProvisioningManager$Callback$CallbackBinder$Jkes2onT-fqeBCDl6FWK1nXcIt0.<init>(android.telephony.ims.ProvisioningManager$Callback$CallbackBinder, int, java.lang.String):void type: CONSTRUCTOR)
-                     android.os.Binder.withCleanCallingIdentity(com.android.internal.util.FunctionalUtils$ThrowingRunnable):void type: STATIC in method: android.telephony.ims.ProvisioningManager.Callback.CallbackBinder.onStringConfigChanged(int, java.lang.String):void, dex: classes4.dex
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:221)
-                    	at jadx.core.codegen.RegionGen.makeSimpleBlock(RegionGen.java:109)
-                    	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:55)
-                    	at jadx.core.codegen.RegionGen.makeSimpleRegion(RegionGen.java:92)
-                    	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:58)
-                    	at jadx.core.codegen.MethodGen.addRegionInsns(MethodGen.java:211)
-                    	at jadx.core.codegen.MethodGen.addInstructions(MethodGen.java:204)
-                    	at jadx.core.codegen.ClassGen.addMethodCode(ClassGen.java:318)
-                    	at jadx.core.codegen.ClassGen.addMethod(ClassGen.java:271)
-                    	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:240)
-                    	at java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
-                    	at java.util.ArrayList.forEach(ArrayList.java:1259)
-                    	at java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
-                    	at java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                    	at java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:483)
-                    	at java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:472)
-                    	at java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
-                    	at java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
-                    	at java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                    	at java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:485)
-                    	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
-                    	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
-                    	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)
-                    	at jadx.core.codegen.ClassGen.addInnerClass(ClassGen.java:249)
-                    	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:238)
-                    	at java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
-                    	at java.util.ArrayList.forEach(ArrayList.java:1259)
-                    	at java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
-                    	at java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                    	at java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:483)
-                    	at java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:472)
-                    	at java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
-                    	at java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
-                    	at java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                    	at java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:485)
-                    	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
-                    	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
-                    	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)
-                    	at jadx.core.codegen.ClassGen.addInnerClass(ClassGen.java:249)
-                    	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:238)
-                    	at java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
-                    	at java.util.ArrayList.forEach(ArrayList.java:1259)
-                    	at java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
-                    	at java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                    	at java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:483)
-                    	at java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:472)
-                    	at java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
-                    	at java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
-                    	at java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                    	at java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:485)
-                    	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
-                    	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
-                    	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)
-                    	at jadx.core.codegen.ClassGen.makeClass(ClassGen.java:78)
-                    	at jadx.core.codegen.CodeGen.wrapCodeGen(CodeGen.java:44)
-                    	at jadx.core.codegen.CodeGen.generateJavaCode(CodeGen.java:33)
-                    	at jadx.core.codegen.CodeGen.generate(CodeGen.java:21)
-                    	at jadx.core.ProcessClass.generateCode(ProcessClass.java:61)
-                    	at jadx.core.dex.nodes.ClassNode.decompile(ClassNode.java:273)
-                    Caused by: jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x0002: CONSTRUCTOR  (r0v0 android.telephony.ims.-$$Lambda$ProvisioningManager$Callback$CallbackBinder$Jkes2onT-fqeBCDl6FWK1nXcIt0) = 
-                      (r1v0 'this' android.telephony.ims.ProvisioningManager$Callback$CallbackBinder A[THIS])
-                      (r2v0 'item' int)
-                      (r3v0 'value' java.lang.String)
-                     call: android.telephony.ims.-$$Lambda$ProvisioningManager$Callback$CallbackBinder$Jkes2onT-fqeBCDl6FWK1nXcIt0.<init>(android.telephony.ims.ProvisioningManager$Callback$CallbackBinder, int, java.lang.String):void type: CONSTRUCTOR in method: android.telephony.ims.ProvisioningManager.Callback.CallbackBinder.onStringConfigChanged(int, java.lang.String):void, dex: classes4.dex
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
-                    	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
-                    	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)
-                    	at jadx.core.codegen.InsnGen.generateMethodArguments(InsnGen.java:787)
-                    	at jadx.core.codegen.InsnGen.makeInvoke(InsnGen.java:728)
-                    	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:368)
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:250)
-                    	... 59 more
-                    Caused by: jadx.core.utils.exceptions.JadxRuntimeException: Expected class to be processed at this point, class: android.telephony.ims.-$$Lambda$ProvisioningManager$Callback$CallbackBinder$Jkes2onT-fqeBCDl6FWK1nXcIt0, state: NOT_LOADED
-                    	at jadx.core.dex.nodes.ClassNode.ensureProcessed(ClassNode.java:260)
-                    	at jadx.core.codegen.InsnGen.makeConstructor(InsnGen.java:606)
-                    	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:364)
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:231)
-                    	... 65 more
-                    */
-                /*
-                    this = this;
-                    android.telephony.ims.-$$Lambda$ProvisioningManager$Callback$CallbackBinder$Jkes2onT-fqeBCDl6FWK1nXcIt0 r0 = new android.telephony.ims.-$$Lambda$ProvisioningManager$Callback$CallbackBinder$Jkes2onT-fqeBCDl6FWK1nXcIt0
-                    r0.<init>(r1, r2, r3)
-                    android.os.Binder.withCleanCallingIdentity((com.android.internal.util.FunctionalUtils.ThrowingRunnable) r0)
-                    return
-                */
-                throw new UnsupportedOperationException("Method not decompiled: android.telephony.ims.ProvisioningManager.Callback.CallbackBinder.onStringConfigChanged(int, java.lang.String):void");
+            @Override // android.telephony.ims.aidl.IImsConfigCallback
+            public final void onStringConfigChanged(final int item, final String value) {
+                Binder.withCleanCallingIdentity(new FunctionalUtils.ThrowingRunnable() { // from class: android.telephony.ims.-$$Lambda$ProvisioningManager$Callback$CallbackBinder$Jkes2onT-fqeBCDl6FWK1nXcIt0
+                    @Override // com.android.internal.util.FunctionalUtils.ThrowingRunnable
+                    public final void runOrThrow() {
+                        r0.mExecutor.execute(new Runnable() { // from class: android.telephony.ims.-$$Lambda$ProvisioningManager$Callback$CallbackBinder$rsWuitP9riQDO6nFxj5wJBdYX40
+                            @Override // java.lang.Runnable
+                            public final void run() {
+                                ProvisioningManager.Callback.CallbackBinder.this.mLocalConfigurationCallback.onProvisioningStringChanged(r2, r3);
+                            }
+                        });
+                    }
+                });
             }
 
-            /* access modifiers changed from: private */
+            /* JADX INFO: Access modifiers changed from: private */
             public void setExecutor(Executor executor) {
                 this.mExecutor = executor;
             }
@@ -261,10 +96,10 @@ public class ProvisioningManager {
     }
 
     public static ProvisioningManager createForSubscriptionId(int subId) {
-        if (SubscriptionManager.isValidSubscriptionId(subId)) {
-            return new ProvisioningManager(subId);
+        if (!SubscriptionManager.isValidSubscriptionId(subId)) {
+            throw new IllegalArgumentException("Invalid subscription ID");
         }
-        throw new IllegalArgumentException("Invalid subscription ID");
+        return new ProvisioningManager(subId);
     }
 
     private ProvisioningManager(int subId) {
@@ -272,15 +107,14 @@ public class ProvisioningManager {
     }
 
     public void registerProvisioningChangedCallback(Executor executor, Callback callback) throws ImsException {
-        if (isImsAvailableOnDevice()) {
-            callback.setExecutor(executor);
-            try {
-                getITelephony().registerImsProvisioningChangedCallback(this.mSubId, callback.getBinder());
-            } catch (RemoteException | IllegalStateException e) {
-                throw new ImsException(e.getMessage(), 1);
-            }
-        } else {
+        if (!isImsAvailableOnDevice()) {
             throw new ImsException("IMS not available on device.", 2);
+        }
+        callback.setExecutor(executor);
+        try {
+            getITelephony().registerImsProvisioningChangedCallback(this.mSubId, callback.getBinder());
+        } catch (RemoteException | IllegalStateException e) {
+            throw new ImsException(e.getMessage(), 1);
         }
     }
 
@@ -354,9 +188,9 @@ public class ProvisioningManager {
 
     private static ITelephony getITelephony() {
         ITelephony binder = ITelephony.Stub.asInterface(ServiceManager.getService("phone"));
-        if (binder != null) {
-            return binder;
+        if (binder == null) {
+            throw new RuntimeException("Could not find Telephony Service.");
         }
-        throw new RuntimeException("Could not find Telephony Service.");
+        return binder;
     }
 }

@@ -1,7 +1,7 @@
 package android.media;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
+import android.p007os.Parcel;
 import android.util.Log;
 import android.util.MathUtils;
 import java.util.Calendar;
@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.TimeZone;
 
 @Deprecated
+/* loaded from: classes3.dex */
 public class Metadata {
     public static final int ALBUM = 8;
     public static final int ALBUM_ART = 18;
@@ -40,8 +41,6 @@ public class Metadata {
     private static final int LAST_SYSTEM = 31;
     private static final int LAST_TYPE = 7;
     public static final int LONG_VAL = 4;
-    public static final Set<Integer> MATCH_ALL = Collections.singleton(0);
-    public static final Set<Integer> MATCH_NONE = Collections.EMPTY_SET;
     public static final int MIME_TYPE = 25;
     public static final int NUM_TRACKS = 30;
     @UnsupportedAppUsage
@@ -68,6 +67,8 @@ public class Metadata {
     private static final int kRecordHeaderSize = 12;
     private final HashMap<Integer, Integer> mKeyToPosMap = new HashMap<>();
     private Parcel mParcel;
+    public static final Set<Integer> MATCH_NONE = Collections.EMPTY_SET;
+    public static final Set<Integer> MATCH_ALL = Collections.singleton(0);
 
     private boolean scanAllRecords(Parcel parcel, int bytesLeft) {
         int metadataType;
@@ -81,7 +82,7 @@ public class Metadata {
             int start = parcel.dataPosition();
             int size = parcel.readInt();
             if (size <= 12) {
-                Log.e(TAG, "Record is too short");
+                Log.m70e(TAG, "Record is too short");
                 error = true;
                 break;
             }
@@ -90,53 +91,51 @@ public class Metadata {
                 error = true;
                 break;
             } else if (this.mKeyToPosMap.containsKey(Integer.valueOf(metadataId))) {
-                Log.e(TAG, "Duplicate metadata ID found");
+                Log.m70e(TAG, "Duplicate metadata ID found");
                 error = true;
                 break;
             } else {
                 this.mKeyToPosMap.put(Integer.valueOf(metadataId), Integer.valueOf(parcel.dataPosition()));
                 metadataType = parcel.readInt();
                 if (metadataType <= 0 || metadataType > 7) {
-                    Log.e(TAG, "Invalid metadata type " + metadataType);
+                    break;
+                }
+                try {
+                    parcel.setDataPosition(MathUtils.addOrThrow(start, size));
+                    bytesLeft -= size;
+                    recCount++;
+                } catch (IllegalArgumentException e) {
+                    Log.m70e(TAG, "Invalid size: " + e.getMessage());
                     error = true;
-                } else {
-                    try {
-                        parcel.setDataPosition(MathUtils.addOrThrow(start, size));
-                        bytesLeft -= size;
-                        recCount++;
-                    } catch (IllegalArgumentException e) {
-                        Log.e(TAG, "Invalid size: " + e.getMessage());
-                        error = true;
-                    }
                 }
             }
         }
-        Log.e(TAG, "Invalid metadata type " + metadataType);
+        Log.m70e(TAG, "Invalid metadata type " + metadataType);
         error = true;
-        if (bytesLeft == 0 && !error) {
-            return true;
+        if (bytesLeft != 0 || error) {
+            Log.m70e(TAG, "Ran out of data or error on record " + recCount);
+            this.mKeyToPosMap.clear();
+            return false;
         }
-        Log.e(TAG, "Ran out of data or error on record " + recCount);
-        this.mKeyToPosMap.clear();
-        return false;
+        return true;
     }
 
     @UnsupportedAppUsage
     public boolean parse(Parcel parcel) {
         if (parcel.dataAvail() < 8) {
-            Log.e(TAG, "Not enough data " + parcel.dataAvail());
+            Log.m70e(TAG, "Not enough data " + parcel.dataAvail());
             return false;
         }
         int pin = parcel.dataPosition();
         int size = parcel.readInt();
         if (parcel.dataAvail() + 4 < size || size < 8) {
-            Log.e(TAG, "Bad size " + size + " avail " + parcel.dataAvail() + " position " + pin);
+            Log.m70e(TAG, "Bad size " + size + " avail " + parcel.dataAvail() + " position " + pin);
             parcel.setDataPosition(pin);
             return false;
         }
         int kShouldBeMetaMarker = parcel.readInt();
         if (kShouldBeMetaMarker != kMetaMarker) {
-            Log.e(TAG, "Marker missing " + Integer.toHexString(kShouldBeMetaMarker));
+            Log.m70e(TAG, "Marker missing " + Integer.toHexString(kShouldBeMetaMarker));
             parcel.setDataPosition(pin);
             return false;
         } else if (!scanAllRecords(parcel, size - 8)) {
@@ -155,10 +154,10 @@ public class Metadata {
 
     @UnsupportedAppUsage
     public boolean has(int metadataId) {
-        if (checkMetadataId(metadataId)) {
-            return this.mKeyToPosMap.containsKey(Integer.valueOf(metadataId));
+        if (!checkMetadataId(metadataId)) {
+            throw new IllegalArgumentException("Invalid key: " + metadataId);
         }
-        throw new IllegalArgumentException("Invalid key: " + metadataId);
+        return this.mKeyToPosMap.containsKey(Integer.valueOf(metadataId));
     }
 
     @UnsupportedAppUsage
@@ -205,7 +204,8 @@ public class Metadata {
         if (timeZone.length() == 0) {
             return new Date(timeSinceEpoch);
         }
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone(timeZone));
+        TimeZone tz = TimeZone.getTimeZone(timeZone);
+        Calendar cal = Calendar.getInstance(tz);
         cal.setTimeInMillis(timeSinceEpoch);
         return cal.getTime();
     }
@@ -223,15 +223,16 @@ public class Metadata {
     }
 
     private boolean checkMetadataId(int val) {
-        if (val > 0 && (31 >= val || val >= 8192)) {
-            return true;
+        if (val <= 0 || (31 < val && val < 8192)) {
+            Log.m70e(TAG, "Invalid metadata ID " + val);
+            return false;
         }
-        Log.e(TAG, "Invalid metadata ID " + val);
-        return false;
+        return true;
     }
 
     private void checkType(int key, int expectedType) {
-        this.mParcel.setDataPosition(this.mKeyToPosMap.get(Integer.valueOf(key)).intValue());
+        int pos = this.mKeyToPosMap.get(Integer.valueOf(key)).intValue();
+        this.mParcel.setDataPosition(pos);
         int type = this.mParcel.readInt();
         if (type != expectedType) {
             throw new IllegalStateException("Wrong type " + expectedType + " but got " + type);

@@ -7,12 +7,14 @@ import android.net.Uri;
 import android.text.TextUtils;
 import java.util.Locale;
 
+/* loaded from: classes3.dex */
 public class UserDictionary {
     public static final String AUTHORITY = "user_dictionary";
     public static final Uri CONTENT_URI = Uri.parse("content://user_dictionary");
     private static final int FREQUENCY_MAX = 255;
     private static final int FREQUENCY_MIN = 0;
 
+    /* loaded from: classes3.dex */
     public static class Words implements BaseColumns {
         public static final String APP_ID = "appid";
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.google.userword";
@@ -38,27 +40,28 @@ public class UserDictionary {
                 } else {
                     locale = null;
                 }
-                addWord(context, word, frequency, (String) null, locale);
+                addWord(context, word, frequency, null, locale);
             }
         }
 
         public static void addWord(Context context, String word, int frequency, String shortcut, Locale locale) {
             ContentResolver resolver = context.getContentResolver();
-            if (!TextUtils.isEmpty(word)) {
-                if (frequency < 0) {
-                    frequency = 0;
-                }
-                if (frequency > 255) {
-                    frequency = 255;
-                }
-                ContentValues values = new ContentValues(5);
-                values.put(WORD, word);
-                values.put(FREQUENCY, Integer.valueOf(frequency));
-                values.put(LOCALE, locale == null ? null : locale.toString());
-                values.put(APP_ID, (Integer) 0);
-                values.put("shortcut", shortcut);
-                Uri insert = resolver.insert(CONTENT_URI, values);
+            if (TextUtils.isEmpty(word)) {
+                return;
             }
+            if (frequency < 0) {
+                frequency = 0;
+            }
+            if (frequency > 255) {
+                frequency = 255;
+            }
+            ContentValues values = new ContentValues(5);
+            values.put(WORD, word);
+            values.put(FREQUENCY, Integer.valueOf(frequency));
+            values.put(LOCALE, locale == null ? null : locale.toString());
+            values.put(APP_ID, (Integer) 0);
+            values.put("shortcut", shortcut);
+            resolver.insert(CONTENT_URI, values);
         }
     }
 }

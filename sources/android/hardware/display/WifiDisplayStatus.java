@@ -1,28 +1,35 @@
 package android.hardware.display;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.Arrays;
 
+/* loaded from: classes.dex */
 public final class WifiDisplayStatus implements Parcelable {
-    public static final Parcelable.Creator<WifiDisplayStatus> CREATOR = new Parcelable.Creator<WifiDisplayStatus>() {
+    public static final Parcelable.Creator<WifiDisplayStatus> CREATOR = new Parcelable.Creator<WifiDisplayStatus>() { // from class: android.hardware.display.WifiDisplayStatus.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WifiDisplayStatus createFromParcel(Parcel in) {
             int featureState = in.readInt();
             int scanState = in.readInt();
             int activeDisplayState = in.readInt();
             WifiDisplay activeDisplay = null;
             if (in.readInt() != 0) {
-                activeDisplay = WifiDisplay.CREATOR.createFromParcel(in);
+                WifiDisplay activeDisplay2 = WifiDisplay.CREATOR.createFromParcel(in);
+                activeDisplay = activeDisplay2;
             }
-            WifiDisplay activeDisplay2 = activeDisplay;
-            WifiDisplay[] displays = (WifiDisplay[]) WifiDisplay.CREATOR.newArray(in.readInt());
+            WifiDisplay activeDisplay3 = activeDisplay;
+            WifiDisplay[] displays = WifiDisplay.CREATOR.newArray(in.readInt());
             for (int i = 0; i < displays.length; i++) {
                 displays[i] = WifiDisplay.CREATOR.createFromParcel(in);
             }
-            return new WifiDisplayStatus(featureState, scanState, activeDisplayState, activeDisplay2, displays, WifiDisplaySessionInfo.CREATOR.createFromParcel(in));
+            WifiDisplaySessionInfo sessionInfo = WifiDisplaySessionInfo.CREATOR.createFromParcel(in);
+            return new WifiDisplayStatus(featureState, scanState, activeDisplayState, activeDisplay3, displays, sessionInfo);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WifiDisplayStatus[] newArray(int size) {
             return new WifiDisplayStatus[size];
         }
@@ -51,20 +58,19 @@ public final class WifiDisplayStatus implements Parcelable {
     private final WifiDisplaySessionInfo mSessionInfo;
 
     public WifiDisplayStatus() {
-        this(0, 0, 0, (WifiDisplay) null, WifiDisplay.EMPTY_ARRAY, (WifiDisplaySessionInfo) null);
+        this(0, 0, 0, null, WifiDisplay.EMPTY_ARRAY, null);
     }
 
     public WifiDisplayStatus(int featureState, int scanState, int activeDisplayState, WifiDisplay activeDisplay, WifiDisplay[] displays, WifiDisplaySessionInfo sessionInfo) {
-        if (displays != null) {
-            this.mFeatureState = featureState;
-            this.mScanState = scanState;
-            this.mActiveDisplayState = activeDisplayState;
-            this.mActiveDisplay = activeDisplay;
-            this.mDisplays = displays;
-            this.mSessionInfo = sessionInfo != null ? sessionInfo : new WifiDisplaySessionInfo();
-            return;
+        if (displays == null) {
+            throw new IllegalArgumentException("displays must not be null");
         }
-        throw new IllegalArgumentException("displays must not be null");
+        this.mFeatureState = featureState;
+        this.mScanState = scanState;
+        this.mActiveDisplayState = activeDisplayState;
+        this.mActiveDisplay = activeDisplay;
+        this.mDisplays = displays;
+        this.mSessionInfo = sessionInfo != null ? sessionInfo : new WifiDisplaySessionInfo();
     }
 
     @UnsupportedAppUsage
@@ -96,7 +102,9 @@ public final class WifiDisplayStatus implements Parcelable {
         return this.mSessionInfo;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
+        WifiDisplay[] wifiDisplayArr;
         dest.writeInt(this.mFeatureState);
         dest.writeInt(this.mScanState);
         dest.writeInt(this.mActiveDisplayState);
@@ -113,6 +121,7 @@ public final class WifiDisplayStatus implements Parcelable {
         this.mSessionInfo.writeToParcel(dest, flags);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

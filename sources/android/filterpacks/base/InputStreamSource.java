@@ -1,5 +1,6 @@
 package android.filterpacks.base;
 
+import android.app.Instrumentation;
 import android.filterfw.core.Filter;
 import android.filterfw.core.FilterContext;
 import android.filterfw.core.Frame;
@@ -13,18 +14,21 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 
+/* loaded from: classes.dex */
 public class InputStreamSource extends Filter {
-    @GenerateFieldPort(name = "stream")
+    @GenerateFieldPort(name = Instrumentation.REPORT_KEY_STREAMRESULT)
     private InputStream mInputStream;
     @GenerateFinalPort(hasDefault = true, name = "format")
-    private MutableFrameFormat mOutputFormat = null;
+    private MutableFrameFormat mOutputFormat;
     @GenerateFinalPort(name = "target")
     private String mTarget;
 
     public InputStreamSource(String name) {
         super(name);
+        this.mOutputFormat = null;
     }
 
+    @Override // android.filterfw.core.Filter
     public void setupPorts() {
         int target = FrameFormat.readTargetString(this.mTarget);
         if (this.mOutputFormat == null) {
@@ -33,15 +37,15 @@ public class InputStreamSource extends Filter {
         addOutputPort("data", this.mOutputFormat);
     }
 
+    @Override // android.filterfw.core.Filter
     public void process(FilterContext context) {
         int fileSize = 0;
         try {
             ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
             byte[] buffer = new byte[1024];
             while (true) {
-                int read = this.mInputStream.read(buffer);
-                int bytesRead = read;
-                if (read > 0) {
+                int bytesRead = this.mInputStream.read(buffer);
+                if (bytesRead > 0) {
                     byteStream.write(buffer, 0, bytesRead);
                     fileSize += bytesRead;
                 } else {

@@ -1,18 +1,19 @@
 package android.media.session;
 
 import android.app.PendingIntent;
-import android.content.pm.ParceledListSlice;
+import android.content.p002pm.ParceledListSlice;
 import android.media.AudioAttributes;
 import android.media.MediaMetadata;
 import android.media.session.ISessionController;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.text.TextUtils;
 
+/* loaded from: classes3.dex */
 public interface ISession extends IInterface {
     void destroySession() throws RemoteException;
 
@@ -46,61 +47,80 @@ public interface ISession extends IInterface {
 
     void setRatingType(int i) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements ISession {
+        @Override // android.media.session.ISession
         public void sendEvent(String event, Bundle data) throws RemoteException {
         }
 
+        @Override // android.media.session.ISession
         public ISessionController getController() throws RemoteException {
             return null;
         }
 
+        @Override // android.media.session.ISession
         public void setFlags(int flags) throws RemoteException {
         }
 
+        @Override // android.media.session.ISession
         public void setActive(boolean active) throws RemoteException {
         }
 
+        @Override // android.media.session.ISession
         public void setMediaButtonReceiver(PendingIntent mbr) throws RemoteException {
         }
 
+        @Override // android.media.session.ISession
         public void setLaunchPendingIntent(PendingIntent pi) throws RemoteException {
         }
 
+        @Override // android.media.session.ISession
         public void destroySession() throws RemoteException {
         }
 
+        @Override // android.media.session.ISession
         public void setMetadata(MediaMetadata metadata, long duration, String metadataDescription) throws RemoteException {
         }
 
+        @Override // android.media.session.ISession
         public void setPlaybackState(PlaybackState state) throws RemoteException {
         }
 
+        @Override // android.media.session.ISession
         public void setQueue(ParceledListSlice queue) throws RemoteException {
         }
 
+        @Override // android.media.session.ISession
         public void setQueueTitle(CharSequence title) throws RemoteException {
         }
 
+        @Override // android.media.session.ISession
         public void setExtras(Bundle extras) throws RemoteException {
         }
 
+        @Override // android.media.session.ISession
         public void setRatingType(int type) throws RemoteException {
         }
 
+        @Override // android.media.session.ISession
         public void setPlaybackToLocal(AudioAttributes attributes) throws RemoteException {
         }
 
+        @Override // android.media.session.ISession
         public void setPlaybackToRemote(int control, int max) throws RemoteException {
         }
 
+        @Override // android.media.session.ISession
         public void setCurrentVolume(int currentVolume) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements ISession {
         private static final String DESCRIPTOR = "android.media.session.ISession";
         static final int TRANSACTION_destroySession = 7;
@@ -129,12 +149,13 @@ public interface ISession extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof ISession)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof ISession)) {
+                return (ISession) iin;
             }
-            return (ISession) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -178,241 +199,123 @@ public interface ISession extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v2, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v13, resolved type: android.app.PendingIntent} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v17, resolved type: android.app.PendingIntent} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v21, resolved type: android.media.MediaMetadata} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v25, resolved type: android.media.session.PlaybackState} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v29, resolved type: android.content.pm.ParceledListSlice} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v37, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v42, resolved type: android.media.AudioAttributes} */
-        /* JADX WARNING: type inference failed for: r1v1 */
-        /* JADX WARNING: type inference failed for: r1v6, types: [android.os.IBinder] */
-        /* JADX WARNING: type inference failed for: r1v33, types: [java.lang.CharSequence] */
-        /* JADX WARNING: type inference failed for: r1v49 */
-        /* JADX WARNING: type inference failed for: r1v50 */
-        /* JADX WARNING: type inference failed for: r1v51 */
-        /* JADX WARNING: type inference failed for: r1v52 */
-        /* JADX WARNING: type inference failed for: r1v53 */
-        /* JADX WARNING: type inference failed for: r1v54 */
-        /* JADX WARNING: type inference failed for: r1v55 */
-        /* JADX WARNING: type inference failed for: r1v56 */
-        /* JADX WARNING: type inference failed for: r1v57 */
-        /* JADX WARNING: type inference failed for: r1v58 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r7, android.os.Parcel r8, android.os.Parcel r9, int r10) throws android.os.RemoteException {
-            /*
-                r6 = this;
-                java.lang.String r0 = "android.media.session.ISession"
-                r1 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r2 = 1
-                if (r7 == r1) goto L_0x0175
-                r1 = 0
-                switch(r7) {
-                    case 1: goto L_0x0157;
-                    case 2: goto L_0x0142;
-                    case 3: goto L_0x0134;
-                    case 4: goto L_0x0121;
-                    case 5: goto L_0x0107;
-                    case 6: goto L_0x00ed;
-                    case 7: goto L_0x00e3;
-                    case 8: goto L_0x00c1;
-                    case 9: goto L_0x00a7;
-                    case 10: goto L_0x008d;
-                    case 11: goto L_0x0073;
-                    case 12: goto L_0x0059;
-                    case 13: goto L_0x004b;
-                    case 14: goto L_0x0031;
-                    case 15: goto L_0x001f;
-                    case 16: goto L_0x0011;
-                    default: goto L_0x000c;
-                }
-            L_0x000c:
-                boolean r1 = super.onTransact(r7, r8, r9, r10)
-                return r1
-            L_0x0011:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                r6.setCurrentVolume(r1)
-                r9.writeNoException()
-                return r2
-            L_0x001f:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                int r3 = r8.readInt()
-                r6.setPlaybackToRemote(r1, r3)
-                r9.writeNoException()
-                return r2
-            L_0x0031:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x0043
-                android.os.Parcelable$Creator<android.media.AudioAttributes> r1 = android.media.AudioAttributes.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.media.AudioAttributes r1 = (android.media.AudioAttributes) r1
-                goto L_0x0044
-            L_0x0043:
-            L_0x0044:
-                r6.setPlaybackToLocal(r1)
-                r9.writeNoException()
-                return r2
-            L_0x004b:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                r6.setRatingType(r1)
-                r9.writeNoException()
-                return r2
-            L_0x0059:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x006b
-                android.os.Parcelable$Creator<android.os.Bundle> r1 = android.os.Bundle.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.os.Bundle r1 = (android.os.Bundle) r1
-                goto L_0x006c
-            L_0x006b:
-            L_0x006c:
-                r6.setExtras(r1)
-                r9.writeNoException()
-                return r2
-            L_0x0073:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x0085
-                android.os.Parcelable$Creator<java.lang.CharSequence> r1 = android.text.TextUtils.CHAR_SEQUENCE_CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                java.lang.CharSequence r1 = (java.lang.CharSequence) r1
-                goto L_0x0086
-            L_0x0085:
-            L_0x0086:
-                r6.setQueueTitle(r1)
-                r9.writeNoException()
-                return r2
-            L_0x008d:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x009f
-                android.os.Parcelable$ClassLoaderCreator<android.content.pm.ParceledListSlice> r1 = android.content.pm.ParceledListSlice.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.content.pm.ParceledListSlice r1 = (android.content.pm.ParceledListSlice) r1
-                goto L_0x00a0
-            L_0x009f:
-            L_0x00a0:
-                r6.setQueue(r1)
-                r9.writeNoException()
-                return r2
-            L_0x00a7:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x00b9
-                android.os.Parcelable$Creator<android.media.session.PlaybackState> r1 = android.media.session.PlaybackState.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.media.session.PlaybackState r1 = (android.media.session.PlaybackState) r1
-                goto L_0x00ba
-            L_0x00b9:
-            L_0x00ba:
-                r6.setPlaybackState(r1)
-                r9.writeNoException()
-                return r2
-            L_0x00c1:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x00d3
-                android.os.Parcelable$Creator<android.media.MediaMetadata> r1 = android.media.MediaMetadata.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.media.MediaMetadata r1 = (android.media.MediaMetadata) r1
-                goto L_0x00d4
-            L_0x00d3:
-            L_0x00d4:
-                long r3 = r8.readLong()
-                java.lang.String r5 = r8.readString()
-                r6.setMetadata(r1, r3, r5)
-                r9.writeNoException()
-                return r2
-            L_0x00e3:
-                r8.enforceInterface(r0)
-                r6.destroySession()
-                r9.writeNoException()
-                return r2
-            L_0x00ed:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x00ff
-                android.os.Parcelable$Creator<android.app.PendingIntent> r1 = android.app.PendingIntent.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.app.PendingIntent r1 = (android.app.PendingIntent) r1
-                goto L_0x0100
-            L_0x00ff:
-            L_0x0100:
-                r6.setLaunchPendingIntent(r1)
-                r9.writeNoException()
-                return r2
-            L_0x0107:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x0119
-                android.os.Parcelable$Creator<android.app.PendingIntent> r1 = android.app.PendingIntent.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.app.PendingIntent r1 = (android.app.PendingIntent) r1
-                goto L_0x011a
-            L_0x0119:
-            L_0x011a:
-                r6.setMediaButtonReceiver(r1)
-                r9.writeNoException()
-                return r2
-            L_0x0121:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                if (r1 == 0) goto L_0x012c
-                r1 = r2
-                goto L_0x012d
-            L_0x012c:
-                r1 = 0
-            L_0x012d:
-                r6.setActive(r1)
-                r9.writeNoException()
-                return r2
-            L_0x0134:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                r6.setFlags(r1)
-                r9.writeNoException()
-                return r2
-            L_0x0142:
-                r8.enforceInterface(r0)
-                android.media.session.ISessionController r3 = r6.getController()
-                r9.writeNoException()
-                if (r3 == 0) goto L_0x0153
-                android.os.IBinder r1 = r3.asBinder()
-            L_0x0153:
-                r9.writeStrongBinder(r1)
-                return r2
-            L_0x0157:
-                r8.enforceInterface(r0)
-                java.lang.String r3 = r8.readString()
-                int r4 = r8.readInt()
-                if (r4 == 0) goto L_0x016d
-                android.os.Parcelable$Creator<android.os.Bundle> r1 = android.os.Bundle.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.os.Bundle r1 = (android.os.Bundle) r1
-                goto L_0x016e
-            L_0x016d:
-            L_0x016e:
-                r6.sendEvent(r3, r1)
-                r9.writeNoException()
-                return r2
-            L_0x0175:
-                r9.writeString(r0)
-                return r2
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.media.session.ISession.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0 = data.readString();
+                    Bundle _arg1 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    sendEvent(_arg0, _arg1);
+                    reply.writeNoException();
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    ISessionController _result = getController();
+                    reply.writeNoException();
+                    reply.writeStrongBinder(_result != null ? _result.asBinder() : null);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    setFlags(_arg02);
+                    reply.writeNoException();
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean _arg03 = data.readInt() != 0;
+                    setActive(_arg03);
+                    reply.writeNoException();
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    PendingIntent _arg04 = data.readInt() != 0 ? PendingIntent.CREATOR.createFromParcel(data) : null;
+                    setMediaButtonReceiver(_arg04);
+                    reply.writeNoException();
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    PendingIntent _arg05 = data.readInt() != 0 ? PendingIntent.CREATOR.createFromParcel(data) : null;
+                    setLaunchPendingIntent(_arg05);
+                    reply.writeNoException();
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    destroySession();
+                    reply.writeNoException();
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    MediaMetadata _arg06 = data.readInt() != 0 ? MediaMetadata.CREATOR.createFromParcel(data) : null;
+                    long _arg12 = data.readLong();
+                    String _arg2 = data.readString();
+                    setMetadata(_arg06, _arg12, _arg2);
+                    reply.writeNoException();
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    PlaybackState _arg07 = data.readInt() != 0 ? PlaybackState.CREATOR.createFromParcel(data) : null;
+                    setPlaybackState(_arg07);
+                    reply.writeNoException();
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    ParceledListSlice _arg08 = data.readInt() != 0 ? ParceledListSlice.CREATOR.createFromParcel(data) : null;
+                    setQueue(_arg08);
+                    reply.writeNoException();
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    CharSequence _arg09 = data.readInt() != 0 ? TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(data) : null;
+                    setQueueTitle(_arg09);
+                    reply.writeNoException();
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    Bundle _arg010 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    setExtras(_arg010);
+                    reply.writeNoException();
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg011 = data.readInt();
+                    setRatingType(_arg011);
+                    reply.writeNoException();
+                    return true;
+                case 14:
+                    data.enforceInterface(DESCRIPTOR);
+                    AudioAttributes _arg012 = data.readInt() != 0 ? AudioAttributes.CREATOR.createFromParcel(data) : null;
+                    setPlaybackToLocal(_arg012);
+                    reply.writeNoException();
+                    return true;
+                case 15:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg013 = data.readInt();
+                    int _arg13 = data.readInt();
+                    setPlaybackToRemote(_arg013, _arg13);
+                    reply.writeNoException();
+                    return true;
+                case 16:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg014 = data.readInt();
+                    setCurrentVolume(_arg014);
+                    reply.writeNoException();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements ISession {
             public static ISession sDefaultImpl;
             private IBinder mRemote;
@@ -421,6 +324,7 @@ public interface ISession extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -429,6 +333,7 @@ public interface ISession extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.media.session.ISession
             public void sendEvent(String event, Bundle data) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -441,31 +346,30 @@ public interface ISession extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(1, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().sendEvent(event, data);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().sendEvent(event, data);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.session.ISession
             public ISessionController getController() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(2, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getController();
                     }
                     _reply.readException();
                     ISessionController _result = ISessionController.Stub.asInterface(_reply.readStrongBinder());
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -473,44 +377,45 @@ public interface ISession extends IInterface {
                 }
             }
 
+            @Override // android.media.session.ISession
             public void setFlags(int flags) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(flags);
-                    if (this.mRemote.transact(3, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setFlags(flags);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setFlags(flags);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.session.ISession
             public void setActive(boolean active) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(active);
-                    if (this.mRemote.transact(4, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(active ? 1 : 0);
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setActive(active);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setActive(active);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.session.ISession
             public void setMediaButtonReceiver(PendingIntent mbr) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -522,19 +427,19 @@ public interface ISession extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(5, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setMediaButtonReceiver(mbr);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setMediaButtonReceiver(mbr);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.session.ISession
             public void setLaunchPendingIntent(PendingIntent pi) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -546,37 +451,37 @@ public interface ISession extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(6, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setLaunchPendingIntent(pi);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setLaunchPendingIntent(pi);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.session.ISession
             public void destroySession() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(7, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().destroySession();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().destroySession();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.session.ISession
             public void setMetadata(MediaMetadata metadata, long duration, String metadataDescription) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -590,19 +495,19 @@ public interface ISession extends IInterface {
                     }
                     _data.writeLong(duration);
                     _data.writeString(metadataDescription);
-                    if (this.mRemote.transact(8, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setMetadata(metadata, duration, metadataDescription);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setMetadata(metadata, duration, metadataDescription);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.session.ISession
             public void setPlaybackState(PlaybackState state) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -614,19 +519,19 @@ public interface ISession extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(9, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(9, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setPlaybackState(state);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setPlaybackState(state);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.session.ISession
             public void setQueue(ParceledListSlice queue) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -638,19 +543,19 @@ public interface ISession extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(10, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(10, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setQueue(queue);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setQueue(queue);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.session.ISession
             public void setQueueTitle(CharSequence title) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -662,19 +567,19 @@ public interface ISession extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(11, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(11, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setQueueTitle(title);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setQueueTitle(title);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.session.ISession
             public void setExtras(Bundle extras) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -686,38 +591,38 @@ public interface ISession extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(12, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(12, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setExtras(extras);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setExtras(extras);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.session.ISession
             public void setRatingType(int type) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(type);
-                    if (this.mRemote.transact(13, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(13, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setRatingType(type);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setRatingType(type);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.session.ISession
             public void setPlaybackToLocal(AudioAttributes attributes) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -729,19 +634,19 @@ public interface ISession extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(14, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(14, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setPlaybackToLocal(attributes);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setPlaybackToLocal(attributes);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.session.ISession
             public void setPlaybackToRemote(int control, int max) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -749,32 +654,31 @@ public interface ISession extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(control);
                     _data.writeInt(max);
-                    if (this.mRemote.transact(15, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(15, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setPlaybackToRemote(control, max);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setPlaybackToRemote(control, max);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.media.session.ISession
             public void setCurrentVolume(int currentVolume) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(currentVolume);
-                    if (this.mRemote.transact(16, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(16, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setCurrentVolume(currentVolume);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setCurrentVolume(currentVolume);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -783,11 +687,11 @@ public interface ISession extends IInterface {
         }
 
         public static boolean setDefaultImpl(ISession impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static ISession getDefaultImpl() {

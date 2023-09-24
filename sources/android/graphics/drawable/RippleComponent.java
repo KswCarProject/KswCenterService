@@ -2,6 +2,7 @@ package android.graphics.drawable;
 
 import android.graphics.Rect;
 
+/* loaded from: classes.dex */
 abstract class RippleComponent {
     protected final Rect mBounds;
     protected float mDensityScale;
@@ -28,35 +29,32 @@ abstract class RippleComponent {
         } else {
             this.mTargetRadius = getTargetRadius(this.mBounds);
         }
-        this.mDensityScale = ((float) densityDpi) * 0.00625f;
+        this.mDensityScale = densityDpi * 0.00625f;
         onTargetRadiusChanged(this.mTargetRadius);
     }
 
     private static float getTargetRadius(Rect bounds) {
-        float halfWidth = ((float) bounds.width()) / 2.0f;
-        float halfHeight = ((float) bounds.height()) / 2.0f;
-        return (float) Math.sqrt((double) ((halfWidth * halfWidth) + (halfHeight * halfHeight)));
+        float halfWidth = bounds.width() / 2.0f;
+        float halfHeight = bounds.height() / 2.0f;
+        return (float) Math.sqrt((halfWidth * halfWidth) + (halfHeight * halfHeight));
     }
 
     public void getBounds(Rect bounds) {
-        int r = (int) Math.ceil((double) this.mTargetRadius);
+        int r = (int) Math.ceil(this.mTargetRadius);
         bounds.set(-r, -r, r, r);
     }
 
-    /* access modifiers changed from: protected */
-    public final void invalidateSelf() {
+    protected final void invalidateSelf() {
         this.mOwner.invalidateSelf(false);
     }
 
-    /* access modifiers changed from: protected */
-    public final void onHotspotBoundsChanged() {
+    protected final void onHotspotBoundsChanged() {
         if (!this.mHasMaxRadius) {
             this.mTargetRadius = getTargetRadius(this.mBounds);
             onTargetRadiusChanged(this.mTargetRadius);
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onTargetRadiusChanged(float targetRadius) {
+    protected void onTargetRadiusChanged(float targetRadius) {
     }
 }

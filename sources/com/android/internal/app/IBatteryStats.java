@@ -3,20 +3,21 @@ package com.android.internal.app;
 import android.annotation.UnsupportedAppUsage;
 import android.bluetooth.BluetoothActivityEnergyInfo;
 import android.net.wifi.WifiActivityEnergyInfo;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.ParcelFileDescriptor;
-import android.os.RemoteException;
-import android.os.WorkSource;
-import android.os.connectivity.CellularBatteryStats;
-import android.os.connectivity.GpsBatteryStats;
-import android.os.connectivity.WifiBatteryStats;
-import android.os.health.HealthStatsParceler;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.ParcelFileDescriptor;
+import android.p007os.RemoteException;
+import android.p007os.WorkSource;
+import android.p007os.connectivity.CellularBatteryStats;
+import android.p007os.connectivity.GpsBatteryStats;
+import android.p007os.connectivity.WifiBatteryStats;
+import android.p007os.health.HealthStatsParceler;
 import android.telephony.ModemActivityInfo;
 import android.telephony.SignalStrength;
 
+/* loaded from: classes4.dex */
 public interface IBatteryStats extends IInterface {
     long computeBatteryTimeRemaining() throws RemoteException;
 
@@ -200,292 +201,384 @@ public interface IBatteryStats extends IInterface {
 
     HealthStatsParceler[] takeUidSnapshots(int[] iArr) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IBatteryStats {
+        @Override // com.android.internal.app.IBatteryStats
         public void noteStartSensor(int uid, int sensor) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteStopSensor(int uid, int sensor) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteStartVideo(int uid) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteStopVideo(int uid) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteStartAudio(int uid) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteStopAudio(int uid) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteResetVideo() throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteResetAudio() throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteFlashlightOn(int uid) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteFlashlightOff(int uid) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteStartCamera(int uid) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteStopCamera(int uid) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteResetCamera() throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteResetFlashlight() throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public byte[] getStatistics() throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public ParcelFileDescriptor getStatisticsStream() throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public boolean isCharging() throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public long computeBatteryTimeRemaining() throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public long computeChargeTimeRemaining() throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteEvent(int code, String name, int uid) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteSyncStart(String name, int uid) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteSyncFinish(String name, int uid) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteJobStart(String name, int uid, int standbyBucket, int jobid) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteJobFinish(String name, int uid, int stopReason, int standbyBucket, int jobid) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteStartWakelock(int uid, int pid, String name, String historyName, int type, boolean unimportantForLogging) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteStopWakelock(int uid, int pid, String name, String historyName, int type) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteStartWakelockFromSource(WorkSource ws, int pid, String name, String historyName, int type, boolean unimportantForLogging) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteChangeWakelockFromSource(WorkSource ws, int pid, String name, String histyoryName, int type, WorkSource newWs, int newPid, String newName, String newHistoryName, int newType, boolean newUnimportantForLogging) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteStopWakelockFromSource(WorkSource ws, int pid, String name, String historyName, int type) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteLongPartialWakelockStart(String name, String historyName, int uid) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteLongPartialWakelockStartFromSource(String name, String historyName, WorkSource workSource) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteLongPartialWakelockFinish(String name, String historyName, int uid) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteLongPartialWakelockFinishFromSource(String name, String historyName, WorkSource workSource) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteVibratorOn(int uid, long durationMillis) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteVibratorOff(int uid) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteGpsChanged(WorkSource oldSource, WorkSource newSource) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteGpsSignalQuality(int signalLevel) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteScreenState(int state) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteScreenBrightness(int brightness) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteUserActivity(int uid, int event) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteWakeUp(String reason, int reasonUid) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteInteractive(boolean interactive) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteConnectivityChanged(int type, String extra) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteMobileRadioPowerState(int powerState, long timestampNs, int uid) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void notePhoneOn() throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void notePhoneOff() throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void notePhoneSignalStrength(SignalStrength signalStrength) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void notePhoneDataConnectionState(int dataType, boolean hasData) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void notePhoneState(int phoneState) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteWifiOn() throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteWifiOff() throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteWifiRunning(WorkSource ws) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteWifiRunningChanged(WorkSource oldWs, WorkSource newWs) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteWifiStopped(WorkSource ws) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteWifiState(int wifiState, String accessPoint) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteWifiSupplicantStateChanged(int supplState, boolean failedAuth) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteWifiRssiChanged(int newRssi) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteFullWifiLockAcquired(int uid) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteFullWifiLockReleased(int uid) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteWifiScanStarted(int uid) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteWifiScanStopped(int uid) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteWifiMulticastEnabled(int uid) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteWifiMulticastDisabled(int uid) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteFullWifiLockAcquiredFromSource(WorkSource ws) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteFullWifiLockReleasedFromSource(WorkSource ws) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteWifiScanStartedFromSource(WorkSource ws) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteWifiScanStoppedFromSource(WorkSource ws) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteWifiBatchedScanStartedFromSource(WorkSource ws, int csph) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteWifiBatchedScanStoppedFromSource(WorkSource ws) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteWifiRadioPowerState(int powerState, long timestampNs, int uid) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteNetworkInterfaceType(String iface, int type) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteNetworkStatsEnabled() throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteDeviceIdleMode(int mode, String activeReason, int activeUid) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void setBatteryState(int status, int health, int plugType, int level, int temp, int volt, int chargeUAh, int chargeFullUAh) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public long getAwakeTimeBattery() throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public long getAwakeTimePlugged() throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteBleScanStarted(WorkSource ws, boolean isUnoptimized) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteBleScanStopped(WorkSource ws, boolean isUnoptimized) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteResetBleScan() throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteBleScanResults(WorkSource ws, int numNewResults) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public CellularBatteryStats getCellularBatteryStats() throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public WifiBatteryStats getWifiBatteryStats() throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public GpsBatteryStats getGpsBatteryStats() throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public HealthStatsParceler takeUidSnapshot(int uid) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public HealthStatsParceler[] takeUidSnapshots(int[] uid) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteBluetoothControllerActivity(BluetoothActivityEnergyInfo info) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteModemControllerActivity(ModemActivityInfo info) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public void noteWifiControllerActivity(WifiActivityEnergyInfo info) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IBatteryStats
         public boolean setChargingStateUpdateDelayMillis(int delay) throws RemoteException {
             return false;
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IBatteryStats {
         private static final String DESCRIPTOR = "com.android.internal.app.IBatteryStats";
         static final int TRANSACTION_computeBatteryTimeRemaining = 18;
@@ -587,12 +680,13 @@ public interface IBatteryStats extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IBatteryStats)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IBatteryStats)) {
+                return (IBatteryStats) iin;
             }
-            return (IBatteryStats) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -782,1164 +876,658 @@ public interface IBatteryStats extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v0, resolved type: android.os.WorkSource} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v8, resolved type: android.os.WorkSource} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v16, resolved type: android.os.WorkSource} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v21, resolved type: android.os.WorkSource} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v25, resolved type: android.os.WorkSource} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v28, resolved type: android.os.WorkSource} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v52, resolved type: android.telephony.SignalStrength} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v32, resolved type: android.os.WorkSource} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v35, resolved type: android.os.WorkSource} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v38, resolved type: android.os.WorkSource} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v42, resolved type: android.os.WorkSource} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v45, resolved type: android.os.WorkSource} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v48, resolved type: android.os.WorkSource} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v51, resolved type: android.os.WorkSource} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v54, resolved type: android.os.WorkSource} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v57, resolved type: android.os.WorkSource} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v62, resolved type: android.os.WorkSource} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v66, resolved type: android.os.WorkSource} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v70, resolved type: android.os.WorkSource} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v74, resolved type: android.os.WorkSource} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v122, resolved type: android.bluetooth.BluetoothActivityEnergyInfo} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v77, resolved type: android.os.WorkSource} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v126, resolved type: android.telephony.ModemActivityInfo} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v80, resolved type: android.os.WorkSource} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v130, resolved type: android.net.wifi.WifiActivityEnergyInfo} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v83, resolved type: android.os.WorkSource} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v84, resolved type: android.os.WorkSource} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v85, resolved type: android.os.WorkSource} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v86, resolved type: android.os.WorkSource} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v87, resolved type: android.os.WorkSource} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v88, resolved type: android.os.WorkSource} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v89, resolved type: android.os.WorkSource} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v90, resolved type: android.os.WorkSource} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v91, resolved type: android.os.WorkSource} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v92, resolved type: android.os.WorkSource} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v93, resolved type: android.os.WorkSource} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v94, resolved type: android.os.WorkSource} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v95, resolved type: android.os.WorkSource} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v96, resolved type: android.os.WorkSource} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v97, resolved type: android.os.WorkSource} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v98, resolved type: android.os.WorkSource} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v99, resolved type: android.os.WorkSource} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v100, resolved type: android.os.WorkSource} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v101, resolved type: android.os.WorkSource} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v102, resolved type: android.os.WorkSource} */
-        /* JADX WARNING: type inference failed for: r2v30, types: [android.telephony.SignalStrength] */
-        /* JADX WARNING: type inference failed for: r2v76, types: [android.bluetooth.BluetoothActivityEnergyInfo] */
-        /* JADX WARNING: type inference failed for: r2v79, types: [android.telephony.ModemActivityInfo] */
-        /* JADX WARNING: type inference failed for: r2v82, types: [android.net.wifi.WifiActivityEnergyInfo] */
-        /*  JADX ERROR: NullPointerException in pass: CodeShrinkVisitor
-            java.lang.NullPointerException
-            */
-        /* JADX WARNING: Multi-variable type inference failed */
-        public boolean onTransact(int r26, android.os.Parcel r27, android.os.Parcel r28, int r29) throws android.os.RemoteException {
-            /*
-                r25 = this;
-                r12 = r25
-                r13 = r26
-                r14 = r27
-                r15 = r28
-                java.lang.String r10 = "com.android.internal.app.IBatteryStats"
-                r0 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r9 = 1
-                if (r13 == r0) goto L_0x0824
-                r0 = 0
-                r2 = 0
-                switch(r13) {
-                    case 1: goto L_0x0810;
-                    case 2: goto L_0x07fc;
-                    case 3: goto L_0x07ec;
-                    case 4: goto L_0x07dc;
-                    case 5: goto L_0x07cc;
-                    case 6: goto L_0x07bc;
-                    case 7: goto L_0x07b0;
-                    case 8: goto L_0x07a4;
-                    case 9: goto L_0x0794;
-                    case 10: goto L_0x0784;
-                    case 11: goto L_0x0774;
-                    case 12: goto L_0x0764;
-                    case 13: goto L_0x0758;
-                    case 14: goto L_0x074c;
-                    case 15: goto L_0x073c;
-                    case 16: goto L_0x0723;
-                    case 17: goto L_0x0713;
-                    case 18: goto L_0x0703;
-                    case 19: goto L_0x06f3;
-                    case 20: goto L_0x06db;
-                    case 21: goto L_0x06c7;
-                    case 22: goto L_0x06b3;
-                    case 23: goto L_0x0697;
-                    case 24: goto L_0x0670;
-                    case 25: goto L_0x063f;
-                    case 26: goto L_0x0618;
-                    case 27: goto L_0x05da;
-                    case 28: goto L_0x0571;
-                    case 29: goto L_0x0540;
-                    case 30: goto L_0x052a;
-                    case 31: goto L_0x0508;
-                    case 32: goto L_0x04f2;
-                    case 33: goto L_0x04d0;
-                    case 34: goto L_0x04be;
-                    case 35: goto L_0x04b0;
-                    case 36: goto L_0x0484;
-                    case 37: goto L_0x0476;
-                    case 38: goto L_0x0468;
-                    case 39: goto L_0x045a;
-                    case 40: goto L_0x0448;
-                    case 41: goto L_0x0436;
-                    case 42: goto L_0x0424;
-                    case 43: goto L_0x0412;
-                    case 44: goto L_0x03fc;
-                    case 45: goto L_0x03f2;
-                    case 46: goto L_0x03e8;
-                    case 47: goto L_0x03cc;
-                    case 48: goto L_0x03b6;
-                    case 49: goto L_0x03a8;
-                    case 50: goto L_0x039e;
-                    case 51: goto L_0x0394;
-                    case 52: goto L_0x0378;
-                    case 53: goto L_0x034c;
-                    case 54: goto L_0x0330;
-                    case 55: goto L_0x031e;
-                    case 56: goto L_0x0308;
-                    case 57: goto L_0x02fa;
-                    case 58: goto L_0x02ec;
-                    case 59: goto L_0x02de;
-                    case 60: goto L_0x02d0;
-                    case 61: goto L_0x02c2;
-                    case 62: goto L_0x02b4;
-                    case 63: goto L_0x02a6;
-                    case 64: goto L_0x028a;
-                    case 65: goto L_0x026e;
-                    case 66: goto L_0x0252;
-                    case 67: goto L_0x0236;
-                    case 68: goto L_0x0216;
-                    case 69: goto L_0x01fa;
-                    case 70: goto L_0x01e4;
-                    case 71: goto L_0x01d2;
-                    case 72: goto L_0x01c8;
-                    case 73: goto L_0x01b2;
-                    case 74: goto L_0x0177;
-                    case 75: goto L_0x0169;
-                    case 76: goto L_0x015b;
-                    case 77: goto L_0x0137;
-                    case 78: goto L_0x0113;
-                    case 79: goto L_0x0109;
-                    case 80: goto L_0x00e9;
-                    case 81: goto L_0x00d2;
-                    case 82: goto L_0x00bb;
-                    case 83: goto L_0x00a4;
-                    case 84: goto L_0x0089;
-                    case 85: goto L_0x0077;
-                    case 86: goto L_0x005e;
-                    case 87: goto L_0x0045;
-                    case 88: goto L_0x002c;
-                    case 89: goto L_0x001a;
-                    default: goto L_0x0015;
-                }
-            L_0x0015:
-                boolean r0 = super.onTransact(r26, r27, r28, r29)
-                return r0
-            L_0x001a:
-                r14.enforceInterface(r10)
-                int r0 = r27.readInt()
-                boolean r1 = r12.setChargingStateUpdateDelayMillis(r0)
-                r28.writeNoException()
-                r15.writeInt(r1)
-                return r9
-            L_0x002c:
-                r14.enforceInterface(r10)
-                int r0 = r27.readInt()
-                if (r0 == 0) goto L_0x003f
-                android.os.Parcelable$Creator<android.net.wifi.WifiActivityEnergyInfo> r0 = android.net.wifi.WifiActivityEnergyInfo.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r14)
-                r2 = r0
-                android.net.wifi.WifiActivityEnergyInfo r2 = (android.net.wifi.WifiActivityEnergyInfo) r2
-                goto L_0x0040
-            L_0x003f:
-            L_0x0040:
-                r0 = r2
-                r12.noteWifiControllerActivity(r0)
-                return r9
-            L_0x0045:
-                r14.enforceInterface(r10)
-                int r0 = r27.readInt()
-                if (r0 == 0) goto L_0x0058
-                android.os.Parcelable$Creator<android.telephony.ModemActivityInfo> r0 = android.telephony.ModemActivityInfo.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r14)
-                r2 = r0
-                android.telephony.ModemActivityInfo r2 = (android.telephony.ModemActivityInfo) r2
-                goto L_0x0059
-            L_0x0058:
-            L_0x0059:
-                r0 = r2
-                r12.noteModemControllerActivity(r0)
-                return r9
-            L_0x005e:
-                r14.enforceInterface(r10)
-                int r0 = r27.readInt()
-                if (r0 == 0) goto L_0x0071
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothActivityEnergyInfo> r0 = android.bluetooth.BluetoothActivityEnergyInfo.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r14)
-                r2 = r0
-                android.bluetooth.BluetoothActivityEnergyInfo r2 = (android.bluetooth.BluetoothActivityEnergyInfo) r2
-                goto L_0x0072
-            L_0x0071:
-            L_0x0072:
-                r0 = r2
-                r12.noteBluetoothControllerActivity(r0)
-                return r9
-            L_0x0077:
-                r14.enforceInterface(r10)
-                int[] r0 = r27.createIntArray()
-                android.os.health.HealthStatsParceler[] r1 = r12.takeUidSnapshots(r0)
-                r28.writeNoException()
-                r15.writeTypedArray(r1, r9)
-                return r9
-            L_0x0089:
-                r14.enforceInterface(r10)
-                int r1 = r27.readInt()
-                android.os.health.HealthStatsParceler r2 = r12.takeUidSnapshot(r1)
-                r28.writeNoException()
-                if (r2 == 0) goto L_0x00a0
-                r15.writeInt(r9)
-                r2.writeToParcel(r15, r9)
-                goto L_0x00a3
-            L_0x00a0:
-                r15.writeInt(r0)
-            L_0x00a3:
-                return r9
-            L_0x00a4:
-                r14.enforceInterface(r10)
-                android.os.connectivity.GpsBatteryStats r1 = r25.getGpsBatteryStats()
-                r28.writeNoException()
-                if (r1 == 0) goto L_0x00b7
-                r15.writeInt(r9)
-                r1.writeToParcel(r15, r9)
-                goto L_0x00ba
-            L_0x00b7:
-                r15.writeInt(r0)
-            L_0x00ba:
-                return r9
-            L_0x00bb:
-                r14.enforceInterface(r10)
-                android.os.connectivity.WifiBatteryStats r1 = r25.getWifiBatteryStats()
-                r28.writeNoException()
-                if (r1 == 0) goto L_0x00ce
-                r15.writeInt(r9)
-                r1.writeToParcel(r15, r9)
-                goto L_0x00d1
-            L_0x00ce:
-                r15.writeInt(r0)
-            L_0x00d1:
-                return r9
-            L_0x00d2:
-                r14.enforceInterface(r10)
-                android.os.connectivity.CellularBatteryStats r1 = r25.getCellularBatteryStats()
-                r28.writeNoException()
-                if (r1 == 0) goto L_0x00e5
-                r15.writeInt(r9)
-                r1.writeToParcel(r15, r9)
-                goto L_0x00e8
-            L_0x00e5:
-                r15.writeInt(r0)
-            L_0x00e8:
-                return r9
-            L_0x00e9:
-                r14.enforceInterface(r10)
-                int r0 = r27.readInt()
-                if (r0 == 0) goto L_0x00fc
-                android.os.Parcelable$Creator<android.os.WorkSource> r0 = android.os.WorkSource.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r14)
-                r2 = r0
-                android.os.WorkSource r2 = (android.os.WorkSource) r2
-                goto L_0x00fd
-            L_0x00fc:
-            L_0x00fd:
-                r0 = r2
-                int r1 = r27.readInt()
-                r12.noteBleScanResults(r0, r1)
-                r28.writeNoException()
-                return r9
-            L_0x0109:
-                r14.enforceInterface(r10)
-                r25.noteResetBleScan()
-                r28.writeNoException()
-                return r9
-            L_0x0113:
-                r14.enforceInterface(r10)
-                int r1 = r27.readInt()
-                if (r1 == 0) goto L_0x0126
-                android.os.Parcelable$Creator<android.os.WorkSource> r1 = android.os.WorkSource.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r14)
-                r2 = r1
-                android.os.WorkSource r2 = (android.os.WorkSource) r2
-                goto L_0x0127
-            L_0x0126:
-            L_0x0127:
-                r1 = r2
-                int r2 = r27.readInt()
-                if (r2 == 0) goto L_0x0130
-                r0 = r9
-            L_0x0130:
-                r12.noteBleScanStopped(r1, r0)
-                r28.writeNoException()
-                return r9
-            L_0x0137:
-                r14.enforceInterface(r10)
-                int r1 = r27.readInt()
-                if (r1 == 0) goto L_0x014a
-                android.os.Parcelable$Creator<android.os.WorkSource> r1 = android.os.WorkSource.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r14)
-                r2 = r1
-                android.os.WorkSource r2 = (android.os.WorkSource) r2
-                goto L_0x014b
-            L_0x014a:
-            L_0x014b:
-                r1 = r2
-                int r2 = r27.readInt()
-                if (r2 == 0) goto L_0x0154
-                r0 = r9
-            L_0x0154:
-                r12.noteBleScanStarted(r1, r0)
-                r28.writeNoException()
-                return r9
-            L_0x015b:
-                r14.enforceInterface(r10)
-                long r0 = r25.getAwakeTimePlugged()
-                r28.writeNoException()
-                r15.writeLong(r0)
-                return r9
-            L_0x0169:
-                r14.enforceInterface(r10)
-                long r0 = r25.getAwakeTimeBattery()
-                r28.writeNoException()
-                r15.writeLong(r0)
-                return r9
-            L_0x0177:
-                r14.enforceInterface(r10)
-                int r11 = r27.readInt()
-                int r16 = r27.readInt()
-                int r17 = r27.readInt()
-                int r18 = r27.readInt()
-                int r19 = r27.readInt()
-                int r20 = r27.readInt()
-                int r21 = r27.readInt()
-                int r22 = r27.readInt()
-                r0 = r25
-                r1 = r11
-                r2 = r16
-                r3 = r17
-                r4 = r18
-                r5 = r19
-                r6 = r20
-                r7 = r21
-                r8 = r22
-                r0.setBatteryState(r1, r2, r3, r4, r5, r6, r7, r8)
-                r28.writeNoException()
-                return r9
-            L_0x01b2:
-                r14.enforceInterface(r10)
-                int r0 = r27.readInt()
-                java.lang.String r1 = r27.readString()
-                int r2 = r27.readInt()
-                r12.noteDeviceIdleMode(r0, r1, r2)
-                r28.writeNoException()
-                return r9
-            L_0x01c8:
-                r14.enforceInterface(r10)
-                r25.noteNetworkStatsEnabled()
-                r28.writeNoException()
-                return r9
-            L_0x01d2:
-                r14.enforceInterface(r10)
-                java.lang.String r0 = r27.readString()
-                int r1 = r27.readInt()
-                r12.noteNetworkInterfaceType(r0, r1)
-                r28.writeNoException()
-                return r9
-            L_0x01e4:
-                r14.enforceInterface(r10)
-                int r0 = r27.readInt()
-                long r1 = r27.readLong()
-                int r3 = r27.readInt()
-                r12.noteWifiRadioPowerState(r0, r1, r3)
-                r28.writeNoException()
-                return r9
-            L_0x01fa:
-                r14.enforceInterface(r10)
-                int r0 = r27.readInt()
-                if (r0 == 0) goto L_0x020d
-                android.os.Parcelable$Creator<android.os.WorkSource> r0 = android.os.WorkSource.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r14)
-                r2 = r0
-                android.os.WorkSource r2 = (android.os.WorkSource) r2
-                goto L_0x020e
-            L_0x020d:
-            L_0x020e:
-                r0 = r2
-                r12.noteWifiBatchedScanStoppedFromSource(r0)
-                r28.writeNoException()
-                return r9
-            L_0x0216:
-                r14.enforceInterface(r10)
-                int r0 = r27.readInt()
-                if (r0 == 0) goto L_0x0229
-                android.os.Parcelable$Creator<android.os.WorkSource> r0 = android.os.WorkSource.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r14)
-                r2 = r0
-                android.os.WorkSource r2 = (android.os.WorkSource) r2
-                goto L_0x022a
-            L_0x0229:
-            L_0x022a:
-                r0 = r2
-                int r1 = r27.readInt()
-                r12.noteWifiBatchedScanStartedFromSource(r0, r1)
-                r28.writeNoException()
-                return r9
-            L_0x0236:
-                r14.enforceInterface(r10)
-                int r0 = r27.readInt()
-                if (r0 == 0) goto L_0x0249
-                android.os.Parcelable$Creator<android.os.WorkSource> r0 = android.os.WorkSource.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r14)
-                r2 = r0
-                android.os.WorkSource r2 = (android.os.WorkSource) r2
-                goto L_0x024a
-            L_0x0249:
-            L_0x024a:
-                r0 = r2
-                r12.noteWifiScanStoppedFromSource(r0)
-                r28.writeNoException()
-                return r9
-            L_0x0252:
-                r14.enforceInterface(r10)
-                int r0 = r27.readInt()
-                if (r0 == 0) goto L_0x0265
-                android.os.Parcelable$Creator<android.os.WorkSource> r0 = android.os.WorkSource.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r14)
-                r2 = r0
-                android.os.WorkSource r2 = (android.os.WorkSource) r2
-                goto L_0x0266
-            L_0x0265:
-            L_0x0266:
-                r0 = r2
-                r12.noteWifiScanStartedFromSource(r0)
-                r28.writeNoException()
-                return r9
-            L_0x026e:
-                r14.enforceInterface(r10)
-                int r0 = r27.readInt()
-                if (r0 == 0) goto L_0x0281
-                android.os.Parcelable$Creator<android.os.WorkSource> r0 = android.os.WorkSource.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r14)
-                r2 = r0
-                android.os.WorkSource r2 = (android.os.WorkSource) r2
-                goto L_0x0282
-            L_0x0281:
-            L_0x0282:
-                r0 = r2
-                r12.noteFullWifiLockReleasedFromSource(r0)
-                r28.writeNoException()
-                return r9
-            L_0x028a:
-                r14.enforceInterface(r10)
-                int r0 = r27.readInt()
-                if (r0 == 0) goto L_0x029d
-                android.os.Parcelable$Creator<android.os.WorkSource> r0 = android.os.WorkSource.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r14)
-                r2 = r0
-                android.os.WorkSource r2 = (android.os.WorkSource) r2
-                goto L_0x029e
-            L_0x029d:
-            L_0x029e:
-                r0 = r2
-                r12.noteFullWifiLockAcquiredFromSource(r0)
-                r28.writeNoException()
-                return r9
-            L_0x02a6:
-                r14.enforceInterface(r10)
-                int r0 = r27.readInt()
-                r12.noteWifiMulticastDisabled(r0)
-                r28.writeNoException()
-                return r9
-            L_0x02b4:
-                r14.enforceInterface(r10)
-                int r0 = r27.readInt()
-                r12.noteWifiMulticastEnabled(r0)
-                r28.writeNoException()
-                return r9
-            L_0x02c2:
-                r14.enforceInterface(r10)
-                int r0 = r27.readInt()
-                r12.noteWifiScanStopped(r0)
-                r28.writeNoException()
-                return r9
-            L_0x02d0:
-                r14.enforceInterface(r10)
-                int r0 = r27.readInt()
-                r12.noteWifiScanStarted(r0)
-                r28.writeNoException()
-                return r9
-            L_0x02de:
-                r14.enforceInterface(r10)
-                int r0 = r27.readInt()
-                r12.noteFullWifiLockReleased(r0)
-                r28.writeNoException()
-                return r9
-            L_0x02ec:
-                r14.enforceInterface(r10)
-                int r0 = r27.readInt()
-                r12.noteFullWifiLockAcquired(r0)
-                r28.writeNoException()
-                return r9
-            L_0x02fa:
-                r14.enforceInterface(r10)
-                int r0 = r27.readInt()
-                r12.noteWifiRssiChanged(r0)
-                r28.writeNoException()
-                return r9
-            L_0x0308:
-                r14.enforceInterface(r10)
-                int r1 = r27.readInt()
-                int r2 = r27.readInt()
-                if (r2 == 0) goto L_0x0317
-                r0 = r9
-            L_0x0317:
-                r12.noteWifiSupplicantStateChanged(r1, r0)
-                r28.writeNoException()
-                return r9
-            L_0x031e:
-                r14.enforceInterface(r10)
-                int r0 = r27.readInt()
-                java.lang.String r1 = r27.readString()
-                r12.noteWifiState(r0, r1)
-                r28.writeNoException()
-                return r9
-            L_0x0330:
-                r14.enforceInterface(r10)
-                int r0 = r27.readInt()
-                if (r0 == 0) goto L_0x0343
-                android.os.Parcelable$Creator<android.os.WorkSource> r0 = android.os.WorkSource.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r14)
-                r2 = r0
-                android.os.WorkSource r2 = (android.os.WorkSource) r2
-                goto L_0x0344
-            L_0x0343:
-            L_0x0344:
-                r0 = r2
-                r12.noteWifiStopped(r0)
-                r28.writeNoException()
-                return r9
-            L_0x034c:
-                r14.enforceInterface(r10)
-                int r0 = r27.readInt()
-                if (r0 == 0) goto L_0x035e
-                android.os.Parcelable$Creator<android.os.WorkSource> r0 = android.os.WorkSource.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r14)
-                android.os.WorkSource r0 = (android.os.WorkSource) r0
-                goto L_0x035f
-            L_0x035e:
-                r0 = r2
-            L_0x035f:
-                int r1 = r27.readInt()
-                if (r1 == 0) goto L_0x036f
-                android.os.Parcelable$Creator<android.os.WorkSource> r1 = android.os.WorkSource.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r14)
-                r2 = r1
-                android.os.WorkSource r2 = (android.os.WorkSource) r2
-                goto L_0x0370
-            L_0x036f:
-            L_0x0370:
-                r1 = r2
-                r12.noteWifiRunningChanged(r0, r1)
-                r28.writeNoException()
-                return r9
-            L_0x0378:
-                r14.enforceInterface(r10)
-                int r0 = r27.readInt()
-                if (r0 == 0) goto L_0x038b
-                android.os.Parcelable$Creator<android.os.WorkSource> r0 = android.os.WorkSource.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r14)
-                r2 = r0
-                android.os.WorkSource r2 = (android.os.WorkSource) r2
-                goto L_0x038c
-            L_0x038b:
-            L_0x038c:
-                r0 = r2
-                r12.noteWifiRunning(r0)
-                r28.writeNoException()
-                return r9
-            L_0x0394:
-                r14.enforceInterface(r10)
-                r25.noteWifiOff()
-                r28.writeNoException()
-                return r9
-            L_0x039e:
-                r14.enforceInterface(r10)
-                r25.noteWifiOn()
-                r28.writeNoException()
-                return r9
-            L_0x03a8:
-                r14.enforceInterface(r10)
-                int r0 = r27.readInt()
-                r12.notePhoneState(r0)
-                r28.writeNoException()
-                return r9
-            L_0x03b6:
-                r14.enforceInterface(r10)
-                int r1 = r27.readInt()
-                int r2 = r27.readInt()
-                if (r2 == 0) goto L_0x03c5
-                r0 = r9
-            L_0x03c5:
-                r12.notePhoneDataConnectionState(r1, r0)
-                r28.writeNoException()
-                return r9
-            L_0x03cc:
-                r14.enforceInterface(r10)
-                int r0 = r27.readInt()
-                if (r0 == 0) goto L_0x03df
-                android.os.Parcelable$Creator<android.telephony.SignalStrength> r0 = android.telephony.SignalStrength.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r14)
-                r2 = r0
-                android.telephony.SignalStrength r2 = (android.telephony.SignalStrength) r2
-                goto L_0x03e0
-            L_0x03df:
-            L_0x03e0:
-                r0 = r2
-                r12.notePhoneSignalStrength(r0)
-                r28.writeNoException()
-                return r9
-            L_0x03e8:
-                r14.enforceInterface(r10)
-                r25.notePhoneOff()
-                r28.writeNoException()
-                return r9
-            L_0x03f2:
-                r14.enforceInterface(r10)
-                r25.notePhoneOn()
-                r28.writeNoException()
-                return r9
-            L_0x03fc:
-                r14.enforceInterface(r10)
-                int r0 = r27.readInt()
-                long r1 = r27.readLong()
-                int r3 = r27.readInt()
-                r12.noteMobileRadioPowerState(r0, r1, r3)
-                r28.writeNoException()
-                return r9
-            L_0x0412:
-                r14.enforceInterface(r10)
-                int r0 = r27.readInt()
-                java.lang.String r1 = r27.readString()
-                r12.noteConnectivityChanged(r0, r1)
-                r28.writeNoException()
-                return r9
-            L_0x0424:
-                r14.enforceInterface(r10)
-                int r1 = r27.readInt()
-                if (r1 == 0) goto L_0x042f
-                r0 = r9
-            L_0x042f:
-                r12.noteInteractive(r0)
-                r28.writeNoException()
-                return r9
-            L_0x0436:
-                r14.enforceInterface(r10)
-                java.lang.String r0 = r27.readString()
-                int r1 = r27.readInt()
-                r12.noteWakeUp(r0, r1)
-                r28.writeNoException()
-                return r9
-            L_0x0448:
-                r14.enforceInterface(r10)
-                int r0 = r27.readInt()
-                int r1 = r27.readInt()
-                r12.noteUserActivity(r0, r1)
-                r28.writeNoException()
-                return r9
-            L_0x045a:
-                r14.enforceInterface(r10)
-                int r0 = r27.readInt()
-                r12.noteScreenBrightness(r0)
-                r28.writeNoException()
-                return r9
-            L_0x0468:
-                r14.enforceInterface(r10)
-                int r0 = r27.readInt()
-                r12.noteScreenState(r0)
-                r28.writeNoException()
-                return r9
-            L_0x0476:
-                r14.enforceInterface(r10)
-                int r0 = r27.readInt()
-                r12.noteGpsSignalQuality(r0)
-                r28.writeNoException()
-                return r9
-            L_0x0484:
-                r14.enforceInterface(r10)
-                int r0 = r27.readInt()
-                if (r0 == 0) goto L_0x0496
-                android.os.Parcelable$Creator<android.os.WorkSource> r0 = android.os.WorkSource.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r14)
-                android.os.WorkSource r0 = (android.os.WorkSource) r0
-                goto L_0x0497
-            L_0x0496:
-                r0 = r2
-            L_0x0497:
-                int r1 = r27.readInt()
-                if (r1 == 0) goto L_0x04a7
-                android.os.Parcelable$Creator<android.os.WorkSource> r1 = android.os.WorkSource.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r14)
-                r2 = r1
-                android.os.WorkSource r2 = (android.os.WorkSource) r2
-                goto L_0x04a8
-            L_0x04a7:
-            L_0x04a8:
-                r1 = r2
-                r12.noteGpsChanged(r0, r1)
-                r28.writeNoException()
-                return r9
-            L_0x04b0:
-                r14.enforceInterface(r10)
-                int r0 = r27.readInt()
-                r12.noteVibratorOff(r0)
-                r28.writeNoException()
-                return r9
-            L_0x04be:
-                r14.enforceInterface(r10)
-                int r0 = r27.readInt()
-                long r1 = r27.readLong()
-                r12.noteVibratorOn(r0, r1)
-                r28.writeNoException()
-                return r9
-            L_0x04d0:
-                r14.enforceInterface(r10)
-                java.lang.String r0 = r27.readString()
-                java.lang.String r1 = r27.readString()
-                int r3 = r27.readInt()
-                if (r3 == 0) goto L_0x04ea
-                android.os.Parcelable$Creator<android.os.WorkSource> r2 = android.os.WorkSource.CREATOR
-                java.lang.Object r2 = r2.createFromParcel(r14)
-                android.os.WorkSource r2 = (android.os.WorkSource) r2
-                goto L_0x04eb
-            L_0x04ea:
-            L_0x04eb:
-                r12.noteLongPartialWakelockFinishFromSource(r0, r1, r2)
-                r28.writeNoException()
-                return r9
-            L_0x04f2:
-                r14.enforceInterface(r10)
-                java.lang.String r0 = r27.readString()
-                java.lang.String r1 = r27.readString()
-                int r2 = r27.readInt()
-                r12.noteLongPartialWakelockFinish(r0, r1, r2)
-                r28.writeNoException()
-                return r9
-            L_0x0508:
-                r14.enforceInterface(r10)
-                java.lang.String r0 = r27.readString()
-                java.lang.String r1 = r27.readString()
-                int r3 = r27.readInt()
-                if (r3 == 0) goto L_0x0522
-                android.os.Parcelable$Creator<android.os.WorkSource> r2 = android.os.WorkSource.CREATOR
-                java.lang.Object r2 = r2.createFromParcel(r14)
-                android.os.WorkSource r2 = (android.os.WorkSource) r2
-                goto L_0x0523
-            L_0x0522:
-            L_0x0523:
-                r12.noteLongPartialWakelockStartFromSource(r0, r1, r2)
-                r28.writeNoException()
-                return r9
-            L_0x052a:
-                r14.enforceInterface(r10)
-                java.lang.String r0 = r27.readString()
-                java.lang.String r1 = r27.readString()
-                int r2 = r27.readInt()
-                r12.noteLongPartialWakelockStart(r0, r1, r2)
-                r28.writeNoException()
-                return r9
-            L_0x0540:
-                r14.enforceInterface(r10)
-                int r0 = r27.readInt()
-                if (r0 == 0) goto L_0x0553
-                android.os.Parcelable$Creator<android.os.WorkSource> r0 = android.os.WorkSource.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r14)
-                android.os.WorkSource r0 = (android.os.WorkSource) r0
-                r1 = r0
-                goto L_0x0554
-            L_0x0553:
-                r1 = r2
-            L_0x0554:
-                int r6 = r27.readInt()
-                java.lang.String r7 = r27.readString()
-                java.lang.String r8 = r27.readString()
-                int r11 = r27.readInt()
-                r0 = r25
-                r2 = r6
-                r3 = r7
-                r4 = r8
-                r5 = r11
-                r0.noteStopWakelockFromSource(r1, r2, r3, r4, r5)
-                r28.writeNoException()
-                return r9
-            L_0x0571:
-                r14.enforceInterface(r10)
-                int r1 = r27.readInt()
-                if (r1 == 0) goto L_0x0583
-                android.os.Parcelable$Creator<android.os.WorkSource> r1 = android.os.WorkSource.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r14)
-                android.os.WorkSource r1 = (android.os.WorkSource) r1
-                goto L_0x0584
-            L_0x0583:
-                r1 = r2
-            L_0x0584:
-                int r16 = r27.readInt()
-                java.lang.String r17 = r27.readString()
-                java.lang.String r18 = r27.readString()
-                int r19 = r27.readInt()
-                int r3 = r27.readInt()
-                if (r3 == 0) goto L_0x05a4
-                android.os.Parcelable$Creator<android.os.WorkSource> r2 = android.os.WorkSource.CREATOR
-                java.lang.Object r2 = r2.createFromParcel(r14)
-                android.os.WorkSource r2 = (android.os.WorkSource) r2
-            L_0x05a2:
-                r6 = r2
-                goto L_0x05a5
-            L_0x05a4:
-                goto L_0x05a2
-            L_0x05a5:
-                int r20 = r27.readInt()
-                java.lang.String r21 = r27.readString()
-                java.lang.String r22 = r27.readString()
-                int r23 = r27.readInt()
-                int r2 = r27.readInt()
-                if (r2 == 0) goto L_0x05bd
-                r11 = r9
-                goto L_0x05be
-            L_0x05bd:
-                r11 = r0
-            L_0x05be:
-                r0 = r25
-                r2 = r16
-                r3 = r17
-                r4 = r18
-                r5 = r19
-                r7 = r20
-                r8 = r21
-                r13 = r9
-                r9 = r22
-                r24 = r10
-                r10 = r23
-                r0.noteChangeWakelockFromSource(r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11)
-                r28.writeNoException()
-                return r13
-            L_0x05da:
-                r13 = r9
-                r24 = r10
-                r7 = r24
-                r14.enforceInterface(r7)
-                int r1 = r27.readInt()
-                if (r1 == 0) goto L_0x05f1
-                android.os.Parcelable$Creator<android.os.WorkSource> r1 = android.os.WorkSource.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r14)
-                android.os.WorkSource r1 = (android.os.WorkSource) r1
-                goto L_0x05f2
-            L_0x05f1:
-                r1 = r2
-            L_0x05f2:
-                int r8 = r27.readInt()
-                java.lang.String r9 = r27.readString()
-                java.lang.String r10 = r27.readString()
-                int r11 = r27.readInt()
-                int r2 = r27.readInt()
-                if (r2 == 0) goto L_0x060a
-                r6 = r13
-                goto L_0x060b
-            L_0x060a:
-                r6 = r0
-            L_0x060b:
-                r0 = r25
-                r2 = r8
-                r3 = r9
-                r4 = r10
-                r5 = r11
-                r0.noteStartWakelockFromSource(r1, r2, r3, r4, r5, r6)
-                r28.writeNoException()
-                return r13
-            L_0x0618:
-                r13 = r9
-                r7 = r10
-                r14.enforceInterface(r7)
-                int r6 = r27.readInt()
-                int r8 = r27.readInt()
-                java.lang.String r9 = r27.readString()
-                java.lang.String r10 = r27.readString()
-                int r11 = r27.readInt()
-                r0 = r25
-                r1 = r6
-                r2 = r8
-                r3 = r9
-                r4 = r10
-                r5 = r11
-                r0.noteStopWakelock(r1, r2, r3, r4, r5)
-                r28.writeNoException()
-                return r13
-            L_0x063f:
-                r13 = r9
-                r7 = r10
-                r14.enforceInterface(r7)
-                int r8 = r27.readInt()
-                int r9 = r27.readInt()
-                java.lang.String r10 = r27.readString()
-                java.lang.String r11 = r27.readString()
-                int r16 = r27.readInt()
-                int r1 = r27.readInt()
-                if (r1 == 0) goto L_0x0660
-                r6 = r13
-                goto L_0x0661
-            L_0x0660:
-                r6 = r0
-            L_0x0661:
-                r0 = r25
-                r1 = r8
-                r2 = r9
-                r3 = r10
-                r4 = r11
-                r5 = r16
-                r0.noteStartWakelock(r1, r2, r3, r4, r5, r6)
-                r28.writeNoException()
-                return r13
-            L_0x0670:
-                r13 = r9
-                r7 = r10
-                r14.enforceInterface(r7)
-                java.lang.String r6 = r27.readString()
-                int r8 = r27.readInt()
-                int r9 = r27.readInt()
-                int r10 = r27.readInt()
-                int r11 = r27.readInt()
-                r0 = r25
-                r1 = r6
-                r2 = r8
-                r3 = r9
-                r4 = r10
-                r5 = r11
-                r0.noteJobFinish(r1, r2, r3, r4, r5)
-                r28.writeNoException()
-                return r13
-            L_0x0697:
-                r13 = r9
-                r7 = r10
-                r14.enforceInterface(r7)
-                java.lang.String r0 = r27.readString()
-                int r1 = r27.readInt()
-                int r2 = r27.readInt()
-                int r3 = r27.readInt()
-                r12.noteJobStart(r0, r1, r2, r3)
-                r28.writeNoException()
-                return r13
-            L_0x06b3:
-                r13 = r9
-                r7 = r10
-                r14.enforceInterface(r7)
-                java.lang.String r0 = r27.readString()
-                int r1 = r27.readInt()
-                r12.noteSyncFinish(r0, r1)
-                r28.writeNoException()
-                return r13
-            L_0x06c7:
-                r13 = r9
-                r7 = r10
-                r14.enforceInterface(r7)
-                java.lang.String r0 = r27.readString()
-                int r1 = r27.readInt()
-                r12.noteSyncStart(r0, r1)
-                r28.writeNoException()
-                return r13
-            L_0x06db:
-                r13 = r9
-                r7 = r10
-                r14.enforceInterface(r7)
-                int r0 = r27.readInt()
-                java.lang.String r1 = r27.readString()
-                int r2 = r27.readInt()
-                r12.noteEvent(r0, r1, r2)
-                r28.writeNoException()
-                return r13
-            L_0x06f3:
-                r13 = r9
-                r7 = r10
-                r14.enforceInterface(r7)
-                long r0 = r25.computeChargeTimeRemaining()
-                r28.writeNoException()
-                r15.writeLong(r0)
-                return r13
-            L_0x0703:
-                r13 = r9
-                r7 = r10
-                r14.enforceInterface(r7)
-                long r0 = r25.computeBatteryTimeRemaining()
-                r28.writeNoException()
-                r15.writeLong(r0)
-                return r13
-            L_0x0713:
-                r13 = r9
-                r7 = r10
-                r14.enforceInterface(r7)
-                boolean r0 = r25.isCharging()
-                r28.writeNoException()
-                r15.writeInt(r0)
-                return r13
-            L_0x0723:
-                r13 = r9
-                r7 = r10
-                r14.enforceInterface(r7)
-                android.os.ParcelFileDescriptor r1 = r25.getStatisticsStream()
-                r28.writeNoException()
-                if (r1 == 0) goto L_0x0738
-                r15.writeInt(r13)
-                r1.writeToParcel(r15, r13)
-                goto L_0x073b
-            L_0x0738:
-                r15.writeInt(r0)
-            L_0x073b:
-                return r13
-            L_0x073c:
-                r13 = r9
-                r7 = r10
-                r14.enforceInterface(r7)
-                byte[] r0 = r25.getStatistics()
-                r28.writeNoException()
-                r15.writeByteArray(r0)
-                return r13
-            L_0x074c:
-                r13 = r9
-                r7 = r10
-                r14.enforceInterface(r7)
-                r25.noteResetFlashlight()
-                r28.writeNoException()
-                return r13
-            L_0x0758:
-                r13 = r9
-                r7 = r10
-                r14.enforceInterface(r7)
-                r25.noteResetCamera()
-                r28.writeNoException()
-                return r13
-            L_0x0764:
-                r13 = r9
-                r7 = r10
-                r14.enforceInterface(r7)
-                int r0 = r27.readInt()
-                r12.noteStopCamera(r0)
-                r28.writeNoException()
-                return r13
-            L_0x0774:
-                r13 = r9
-                r7 = r10
-                r14.enforceInterface(r7)
-                int r0 = r27.readInt()
-                r12.noteStartCamera(r0)
-                r28.writeNoException()
-                return r13
-            L_0x0784:
-                r13 = r9
-                r7 = r10
-                r14.enforceInterface(r7)
-                int r0 = r27.readInt()
-                r12.noteFlashlightOff(r0)
-                r28.writeNoException()
-                return r13
-            L_0x0794:
-                r13 = r9
-                r7 = r10
-                r14.enforceInterface(r7)
-                int r0 = r27.readInt()
-                r12.noteFlashlightOn(r0)
-                r28.writeNoException()
-                return r13
-            L_0x07a4:
-                r13 = r9
-                r7 = r10
-                r14.enforceInterface(r7)
-                r25.noteResetAudio()
-                r28.writeNoException()
-                return r13
-            L_0x07b0:
-                r13 = r9
-                r7 = r10
-                r14.enforceInterface(r7)
-                r25.noteResetVideo()
-                r28.writeNoException()
-                return r13
-            L_0x07bc:
-                r13 = r9
-                r7 = r10
-                r14.enforceInterface(r7)
-                int r0 = r27.readInt()
-                r12.noteStopAudio(r0)
-                r28.writeNoException()
-                return r13
-            L_0x07cc:
-                r13 = r9
-                r7 = r10
-                r14.enforceInterface(r7)
-                int r0 = r27.readInt()
-                r12.noteStartAudio(r0)
-                r28.writeNoException()
-                return r13
-            L_0x07dc:
-                r13 = r9
-                r7 = r10
-                r14.enforceInterface(r7)
-                int r0 = r27.readInt()
-                r12.noteStopVideo(r0)
-                r28.writeNoException()
-                return r13
-            L_0x07ec:
-                r13 = r9
-                r7 = r10
-                r14.enforceInterface(r7)
-                int r0 = r27.readInt()
-                r12.noteStartVideo(r0)
-                r28.writeNoException()
-                return r13
-            L_0x07fc:
-                r13 = r9
-                r7 = r10
-                r14.enforceInterface(r7)
-                int r0 = r27.readInt()
-                int r1 = r27.readInt()
-                r12.noteStopSensor(r0, r1)
-                r28.writeNoException()
-                return r13
-            L_0x0810:
-                r13 = r9
-                r7 = r10
-                r14.enforceInterface(r7)
-                int r0 = r27.readInt()
-                int r1 = r27.readInt()
-                r12.noteStartSensor(r0, r1)
-                r28.writeNoException()
-                return r13
-            L_0x0824:
-                r13 = r9
-                r7 = r10
-                r15.writeString(r7)
-                return r13
-            */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.internal.app.IBatteryStats.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            WorkSource _arg0;
+            WorkSource _arg02;
+            WorkSource _arg03;
+            boolean _arg1;
+            WorkSource _arg04;
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg05 = data.readInt();
+                    noteStartSensor(_arg05, data.readInt());
+                    reply.writeNoException();
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg06 = data.readInt();
+                    noteStopSensor(_arg06, data.readInt());
+                    reply.writeNoException();
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg07 = data.readInt();
+                    noteStartVideo(_arg07);
+                    reply.writeNoException();
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg08 = data.readInt();
+                    noteStopVideo(_arg08);
+                    reply.writeNoException();
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg09 = data.readInt();
+                    noteStartAudio(_arg09);
+                    reply.writeNoException();
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg010 = data.readInt();
+                    noteStopAudio(_arg010);
+                    reply.writeNoException();
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    noteResetVideo();
+                    reply.writeNoException();
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    noteResetAudio();
+                    reply.writeNoException();
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg011 = data.readInt();
+                    noteFlashlightOn(_arg011);
+                    reply.writeNoException();
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg012 = data.readInt();
+                    noteFlashlightOff(_arg012);
+                    reply.writeNoException();
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg013 = data.readInt();
+                    noteStartCamera(_arg013);
+                    reply.writeNoException();
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg014 = data.readInt();
+                    noteStopCamera(_arg014);
+                    reply.writeNoException();
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    noteResetCamera();
+                    reply.writeNoException();
+                    return true;
+                case 14:
+                    data.enforceInterface(DESCRIPTOR);
+                    noteResetFlashlight();
+                    reply.writeNoException();
+                    return true;
+                case 15:
+                    data.enforceInterface(DESCRIPTOR);
+                    byte[] _result = getStatistics();
+                    reply.writeNoException();
+                    reply.writeByteArray(_result);
+                    return true;
+                case 16:
+                    data.enforceInterface(DESCRIPTOR);
+                    ParcelFileDescriptor _result2 = getStatisticsStream();
+                    reply.writeNoException();
+                    if (_result2 != null) {
+                        reply.writeInt(1);
+                        _result2.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 17:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isCharging = isCharging();
+                    reply.writeNoException();
+                    reply.writeInt(isCharging ? 1 : 0);
+                    return true;
+                case 18:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _result3 = computeBatteryTimeRemaining();
+                    reply.writeNoException();
+                    reply.writeLong(_result3);
+                    return true;
+                case 19:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _result4 = computeChargeTimeRemaining();
+                    reply.writeNoException();
+                    reply.writeLong(_result4);
+                    return true;
+                case 20:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg015 = data.readInt();
+                    String _arg12 = data.readString();
+                    int _arg2 = data.readInt();
+                    noteEvent(_arg015, _arg12, _arg2);
+                    reply.writeNoException();
+                    return true;
+                case 21:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg016 = data.readString();
+                    noteSyncStart(_arg016, data.readInt());
+                    reply.writeNoException();
+                    return true;
+                case 22:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg017 = data.readString();
+                    noteSyncFinish(_arg017, data.readInt());
+                    reply.writeNoException();
+                    return true;
+                case 23:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg018 = data.readString();
+                    int _arg13 = data.readInt();
+                    int _arg22 = data.readInt();
+                    int _arg3 = data.readInt();
+                    noteJobStart(_arg018, _arg13, _arg22, _arg3);
+                    reply.writeNoException();
+                    return true;
+                case 24:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg019 = data.readString();
+                    int _arg14 = data.readInt();
+                    int _arg23 = data.readInt();
+                    int _arg32 = data.readInt();
+                    int _arg4 = data.readInt();
+                    noteJobFinish(_arg019, _arg14, _arg23, _arg32, _arg4);
+                    reply.writeNoException();
+                    return true;
+                case 25:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg020 = data.readInt();
+                    int _arg15 = data.readInt();
+                    String _arg24 = data.readString();
+                    String _arg33 = data.readString();
+                    int _arg42 = data.readInt();
+                    boolean _arg5 = data.readInt() != 0;
+                    noteStartWakelock(_arg020, _arg15, _arg24, _arg33, _arg42, _arg5);
+                    reply.writeNoException();
+                    return true;
+                case 26:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg021 = data.readInt();
+                    int _arg16 = data.readInt();
+                    String _arg25 = data.readString();
+                    String _arg34 = data.readString();
+                    int _arg43 = data.readInt();
+                    noteStopWakelock(_arg021, _arg16, _arg25, _arg34, _arg43);
+                    reply.writeNoException();
+                    return true;
+                case 27:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg0 = WorkSource.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg0 = null;
+                    }
+                    int _arg17 = data.readInt();
+                    String _arg26 = data.readString();
+                    String _arg35 = data.readString();
+                    int _arg44 = data.readInt();
+                    boolean _arg52 = data.readInt() != 0;
+                    noteStartWakelockFromSource(_arg0, _arg17, _arg26, _arg35, _arg44, _arg52);
+                    reply.writeNoException();
+                    return true;
+                case 28:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg02 = WorkSource.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg02 = null;
+                    }
+                    int _arg18 = data.readInt();
+                    String _arg27 = data.readString();
+                    String _arg36 = data.readString();
+                    int _arg45 = data.readInt();
+                    WorkSource _arg53 = data.readInt() != 0 ? WorkSource.CREATOR.createFromParcel(data) : null;
+                    int _arg6 = data.readInt();
+                    String _arg7 = data.readString();
+                    String _arg8 = data.readString();
+                    int _arg9 = data.readInt();
+                    boolean _arg10 = data.readInt() != 0;
+                    noteChangeWakelockFromSource(_arg02, _arg18, _arg27, _arg36, _arg45, _arg53, _arg6, _arg7, _arg8, _arg9, _arg10);
+                    reply.writeNoException();
+                    return true;
+                case 29:
+                    data.enforceInterface(DESCRIPTOR);
+                    WorkSource _arg022 = data.readInt() != 0 ? WorkSource.CREATOR.createFromParcel(data) : null;
+                    int _arg19 = data.readInt();
+                    String _arg28 = data.readString();
+                    String _arg37 = data.readString();
+                    int _arg46 = data.readInt();
+                    noteStopWakelockFromSource(_arg022, _arg19, _arg28, _arg37, _arg46);
+                    reply.writeNoException();
+                    return true;
+                case 30:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg023 = data.readString();
+                    String _arg110 = data.readString();
+                    int _arg29 = data.readInt();
+                    noteLongPartialWakelockStart(_arg023, _arg110, _arg29);
+                    reply.writeNoException();
+                    return true;
+                case 31:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg024 = data.readString();
+                    String _arg111 = data.readString();
+                    WorkSource _arg210 = data.readInt() != 0 ? WorkSource.CREATOR.createFromParcel(data) : null;
+                    noteLongPartialWakelockStartFromSource(_arg024, _arg111, _arg210);
+                    reply.writeNoException();
+                    return true;
+                case 32:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg025 = data.readString();
+                    String _arg112 = data.readString();
+                    int _arg211 = data.readInt();
+                    noteLongPartialWakelockFinish(_arg025, _arg112, _arg211);
+                    reply.writeNoException();
+                    return true;
+                case 33:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg026 = data.readString();
+                    String _arg113 = data.readString();
+                    WorkSource _arg212 = data.readInt() != 0 ? WorkSource.CREATOR.createFromParcel(data) : null;
+                    noteLongPartialWakelockFinishFromSource(_arg026, _arg113, _arg212);
+                    reply.writeNoException();
+                    return true;
+                case 34:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg027 = data.readInt();
+                    noteVibratorOn(_arg027, data.readLong());
+                    reply.writeNoException();
+                    return true;
+                case 35:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg028 = data.readInt();
+                    noteVibratorOff(_arg028);
+                    reply.writeNoException();
+                    return true;
+                case 36:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg03 = WorkSource.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg03 = null;
+                    }
+                    noteGpsChanged(_arg03, data.readInt() != 0 ? WorkSource.CREATOR.createFromParcel(data) : null);
+                    reply.writeNoException();
+                    return true;
+                case 37:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg029 = data.readInt();
+                    noteGpsSignalQuality(_arg029);
+                    reply.writeNoException();
+                    return true;
+                case 38:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg030 = data.readInt();
+                    noteScreenState(_arg030);
+                    reply.writeNoException();
+                    return true;
+                case 39:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg031 = data.readInt();
+                    noteScreenBrightness(_arg031);
+                    reply.writeNoException();
+                    return true;
+                case 40:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg032 = data.readInt();
+                    noteUserActivity(_arg032, data.readInt());
+                    reply.writeNoException();
+                    return true;
+                case 41:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg033 = data.readString();
+                    noteWakeUp(_arg033, data.readInt());
+                    reply.writeNoException();
+                    return true;
+                case 42:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg1 = data.readInt() != 0;
+                    noteInteractive(_arg1);
+                    reply.writeNoException();
+                    return true;
+                case 43:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg034 = data.readInt();
+                    noteConnectivityChanged(_arg034, data.readString());
+                    reply.writeNoException();
+                    return true;
+                case 44:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg035 = data.readInt();
+                    long _arg114 = data.readLong();
+                    int _arg213 = data.readInt();
+                    noteMobileRadioPowerState(_arg035, _arg114, _arg213);
+                    reply.writeNoException();
+                    return true;
+                case 45:
+                    data.enforceInterface(DESCRIPTOR);
+                    notePhoneOn();
+                    reply.writeNoException();
+                    return true;
+                case 46:
+                    data.enforceInterface(DESCRIPTOR);
+                    notePhoneOff();
+                    reply.writeNoException();
+                    return true;
+                case 47:
+                    data.enforceInterface(DESCRIPTOR);
+                    SignalStrength _arg036 = data.readInt() != 0 ? SignalStrength.CREATOR.createFromParcel(data) : null;
+                    notePhoneSignalStrength(_arg036);
+                    reply.writeNoException();
+                    return true;
+                case 48:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg037 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    notePhoneDataConnectionState(_arg037, _arg1);
+                    reply.writeNoException();
+                    return true;
+                case 49:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg038 = data.readInt();
+                    notePhoneState(_arg038);
+                    reply.writeNoException();
+                    return true;
+                case 50:
+                    data.enforceInterface(DESCRIPTOR);
+                    noteWifiOn();
+                    reply.writeNoException();
+                    return true;
+                case 51:
+                    data.enforceInterface(DESCRIPTOR);
+                    noteWifiOff();
+                    reply.writeNoException();
+                    return true;
+                case 52:
+                    data.enforceInterface(DESCRIPTOR);
+                    WorkSource _arg039 = data.readInt() != 0 ? WorkSource.CREATOR.createFromParcel(data) : null;
+                    noteWifiRunning(_arg039);
+                    reply.writeNoException();
+                    return true;
+                case 53:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg04 = WorkSource.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg04 = null;
+                    }
+                    noteWifiRunningChanged(_arg04, data.readInt() != 0 ? WorkSource.CREATOR.createFromParcel(data) : null);
+                    reply.writeNoException();
+                    return true;
+                case 54:
+                    data.enforceInterface(DESCRIPTOR);
+                    WorkSource _arg040 = data.readInt() != 0 ? WorkSource.CREATOR.createFromParcel(data) : null;
+                    noteWifiStopped(_arg040);
+                    reply.writeNoException();
+                    return true;
+                case 55:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg041 = data.readInt();
+                    noteWifiState(_arg041, data.readString());
+                    reply.writeNoException();
+                    return true;
+                case 56:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg042 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    noteWifiSupplicantStateChanged(_arg042, _arg1);
+                    reply.writeNoException();
+                    return true;
+                case 57:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg043 = data.readInt();
+                    noteWifiRssiChanged(_arg043);
+                    reply.writeNoException();
+                    return true;
+                case 58:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg044 = data.readInt();
+                    noteFullWifiLockAcquired(_arg044);
+                    reply.writeNoException();
+                    return true;
+                case 59:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg045 = data.readInt();
+                    noteFullWifiLockReleased(_arg045);
+                    reply.writeNoException();
+                    return true;
+                case 60:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg046 = data.readInt();
+                    noteWifiScanStarted(_arg046);
+                    reply.writeNoException();
+                    return true;
+                case 61:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg047 = data.readInt();
+                    noteWifiScanStopped(_arg047);
+                    reply.writeNoException();
+                    return true;
+                case 62:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg048 = data.readInt();
+                    noteWifiMulticastEnabled(_arg048);
+                    reply.writeNoException();
+                    return true;
+                case 63:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg049 = data.readInt();
+                    noteWifiMulticastDisabled(_arg049);
+                    reply.writeNoException();
+                    return true;
+                case 64:
+                    data.enforceInterface(DESCRIPTOR);
+                    WorkSource _arg050 = data.readInt() != 0 ? WorkSource.CREATOR.createFromParcel(data) : null;
+                    noteFullWifiLockAcquiredFromSource(_arg050);
+                    reply.writeNoException();
+                    return true;
+                case 65:
+                    data.enforceInterface(DESCRIPTOR);
+                    WorkSource _arg051 = data.readInt() != 0 ? WorkSource.CREATOR.createFromParcel(data) : null;
+                    noteFullWifiLockReleasedFromSource(_arg051);
+                    reply.writeNoException();
+                    return true;
+                case 66:
+                    data.enforceInterface(DESCRIPTOR);
+                    WorkSource _arg052 = data.readInt() != 0 ? WorkSource.CREATOR.createFromParcel(data) : null;
+                    noteWifiScanStartedFromSource(_arg052);
+                    reply.writeNoException();
+                    return true;
+                case 67:
+                    data.enforceInterface(DESCRIPTOR);
+                    WorkSource _arg053 = data.readInt() != 0 ? WorkSource.CREATOR.createFromParcel(data) : null;
+                    noteWifiScanStoppedFromSource(_arg053);
+                    reply.writeNoException();
+                    return true;
+                case 68:
+                    data.enforceInterface(DESCRIPTOR);
+                    WorkSource _arg054 = data.readInt() != 0 ? WorkSource.CREATOR.createFromParcel(data) : null;
+                    noteWifiBatchedScanStartedFromSource(_arg054, data.readInt());
+                    reply.writeNoException();
+                    return true;
+                case 69:
+                    data.enforceInterface(DESCRIPTOR);
+                    WorkSource _arg055 = data.readInt() != 0 ? WorkSource.CREATOR.createFromParcel(data) : null;
+                    noteWifiBatchedScanStoppedFromSource(_arg055);
+                    reply.writeNoException();
+                    return true;
+                case 70:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg056 = data.readInt();
+                    long _arg115 = data.readLong();
+                    int _arg214 = data.readInt();
+                    noteWifiRadioPowerState(_arg056, _arg115, _arg214);
+                    reply.writeNoException();
+                    return true;
+                case 71:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg057 = data.readString();
+                    noteNetworkInterfaceType(_arg057, data.readInt());
+                    reply.writeNoException();
+                    return true;
+                case 72:
+                    data.enforceInterface(DESCRIPTOR);
+                    noteNetworkStatsEnabled();
+                    reply.writeNoException();
+                    return true;
+                case 73:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg058 = data.readInt();
+                    String _arg116 = data.readString();
+                    int _arg215 = data.readInt();
+                    noteDeviceIdleMode(_arg058, _arg116, _arg215);
+                    reply.writeNoException();
+                    return true;
+                case 74:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg059 = data.readInt();
+                    int _arg117 = data.readInt();
+                    int _arg216 = data.readInt();
+                    int _arg38 = data.readInt();
+                    int _arg47 = data.readInt();
+                    int _arg54 = data.readInt();
+                    int _arg62 = data.readInt();
+                    int _arg72 = data.readInt();
+                    setBatteryState(_arg059, _arg117, _arg216, _arg38, _arg47, _arg54, _arg62, _arg72);
+                    reply.writeNoException();
+                    return true;
+                case 75:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _result5 = getAwakeTimeBattery();
+                    reply.writeNoException();
+                    reply.writeLong(_result5);
+                    return true;
+                case 76:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _result6 = getAwakeTimePlugged();
+                    reply.writeNoException();
+                    reply.writeLong(_result6);
+                    return true;
+                case 77:
+                    data.enforceInterface(DESCRIPTOR);
+                    WorkSource _arg060 = data.readInt() != 0 ? WorkSource.CREATOR.createFromParcel(data) : null;
+                    WorkSource _arg061 = _arg060;
+                    _arg1 = data.readInt() != 0;
+                    noteBleScanStarted(_arg061, _arg1);
+                    reply.writeNoException();
+                    return true;
+                case 78:
+                    data.enforceInterface(DESCRIPTOR);
+                    WorkSource _arg062 = data.readInt() != 0 ? WorkSource.CREATOR.createFromParcel(data) : null;
+                    WorkSource _arg063 = _arg062;
+                    _arg1 = data.readInt() != 0;
+                    noteBleScanStopped(_arg063, _arg1);
+                    reply.writeNoException();
+                    return true;
+                case 79:
+                    data.enforceInterface(DESCRIPTOR);
+                    noteResetBleScan();
+                    reply.writeNoException();
+                    return true;
+                case 80:
+                    data.enforceInterface(DESCRIPTOR);
+                    WorkSource _arg064 = data.readInt() != 0 ? WorkSource.CREATOR.createFromParcel(data) : null;
+                    noteBleScanResults(_arg064, data.readInt());
+                    reply.writeNoException();
+                    return true;
+                case 81:
+                    data.enforceInterface(DESCRIPTOR);
+                    CellularBatteryStats _result7 = getCellularBatteryStats();
+                    reply.writeNoException();
+                    if (_result7 != null) {
+                        reply.writeInt(1);
+                        _result7.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 82:
+                    data.enforceInterface(DESCRIPTOR);
+                    WifiBatteryStats _result8 = getWifiBatteryStats();
+                    reply.writeNoException();
+                    if (_result8 != null) {
+                        reply.writeInt(1);
+                        _result8.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 83:
+                    data.enforceInterface(DESCRIPTOR);
+                    GpsBatteryStats _result9 = getGpsBatteryStats();
+                    reply.writeNoException();
+                    if (_result9 != null) {
+                        reply.writeInt(1);
+                        _result9.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 84:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg065 = data.readInt();
+                    HealthStatsParceler _result10 = takeUidSnapshot(_arg065);
+                    reply.writeNoException();
+                    if (_result10 != null) {
+                        reply.writeInt(1);
+                        _result10.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 85:
+                    data.enforceInterface(DESCRIPTOR);
+                    int[] _arg066 = data.createIntArray();
+                    HealthStatsParceler[] _result11 = takeUidSnapshots(_arg066);
+                    reply.writeNoException();
+                    reply.writeTypedArray(_result11, 1);
+                    return true;
+                case 86:
+                    data.enforceInterface(DESCRIPTOR);
+                    BluetoothActivityEnergyInfo _arg067 = data.readInt() != 0 ? BluetoothActivityEnergyInfo.CREATOR.createFromParcel(data) : null;
+                    noteBluetoothControllerActivity(_arg067);
+                    return true;
+                case 87:
+                    data.enforceInterface(DESCRIPTOR);
+                    ModemActivityInfo _arg068 = data.readInt() != 0 ? ModemActivityInfo.CREATOR.createFromParcel(data) : null;
+                    noteModemControllerActivity(_arg068);
+                    return true;
+                case 88:
+                    data.enforceInterface(DESCRIPTOR);
+                    WifiActivityEnergyInfo _arg069 = data.readInt() != 0 ? WifiActivityEnergyInfo.CREATOR.createFromParcel(data) : null;
+                    noteWifiControllerActivity(_arg069);
+                    return true;
+                case 89:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg070 = data.readInt();
+                    boolean chargingStateUpdateDelayMillis = setChargingStateUpdateDelayMillis(_arg070);
+                    reply.writeNoException();
+                    reply.writeInt(chargingStateUpdateDelayMillis ? 1 : 0);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IBatteryStats {
             public static IBatteryStats sDefaultImpl;
             private IBinder mRemote;
@@ -1948,6 +1536,7 @@ public interface IBatteryStats extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -1956,6 +1545,7 @@ public interface IBatteryStats extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteStartSensor(int uid, int sensor) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1963,19 +1553,19 @@ public interface IBatteryStats extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(uid);
                     _data.writeInt(sensor);
-                    if (this.mRemote.transact(1, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteStartSensor(uid, sensor);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteStartSensor(uid, sensor);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteStopSensor(int uid, int sensor) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1983,255 +1573,254 @@ public interface IBatteryStats extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(uid);
                     _data.writeInt(sensor);
-                    if (this.mRemote.transact(2, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteStopSensor(uid, sensor);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteStopSensor(uid, sensor);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteStartVideo(int uid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(uid);
-                    if (this.mRemote.transact(3, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteStartVideo(uid);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteStartVideo(uid);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteStopVideo(int uid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(uid);
-                    if (this.mRemote.transact(4, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteStopVideo(uid);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteStopVideo(uid);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteStartAudio(int uid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(uid);
-                    if (this.mRemote.transact(5, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteStartAudio(uid);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteStartAudio(uid);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteStopAudio(int uid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(uid);
-                    if (this.mRemote.transact(6, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteStopAudio(uid);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteStopAudio(uid);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteResetVideo() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(7, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteResetVideo();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteResetVideo();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteResetAudio() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(8, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteResetAudio();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteResetAudio();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteFlashlightOn(int uid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(uid);
-                    if (this.mRemote.transact(9, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(9, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteFlashlightOn(uid);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteFlashlightOn(uid);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteFlashlightOff(int uid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(uid);
-                    if (this.mRemote.transact(10, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(10, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteFlashlightOff(uid);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteFlashlightOff(uid);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteStartCamera(int uid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(uid);
-                    if (this.mRemote.transact(11, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(11, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteStartCamera(uid);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteStartCamera(uid);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteStopCamera(int uid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(uid);
-                    if (this.mRemote.transact(12, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(12, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteStopCamera(uid);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteStopCamera(uid);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteResetCamera() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(13, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(13, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteResetCamera();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteResetCamera();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteResetFlashlight() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(14, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(14, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteResetFlashlight();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteResetFlashlight();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public byte[] getStatistics() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(15, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(15, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getStatistics();
                     }
                     _reply.readException();
                     byte[] _result = _reply.createByteArray();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2239,13 +1828,15 @@ public interface IBatteryStats extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public ParcelFileDescriptor getStatisticsStream() throws RemoteException {
                 ParcelFileDescriptor _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(16, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(16, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getStatisticsStream();
                     }
                     _reply.readException();
@@ -2254,51 +1845,44 @@ public interface IBatteryStats extends IInterface {
                     } else {
                         _result = null;
                     }
-                    ParcelFileDescriptor _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public boolean isCharging() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(17, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(17, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isCharging();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public long computeBatteryTimeRemaining() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(18, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(18, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().computeBatteryTimeRemaining();
                     }
                     _reply.readException();
                     long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2306,18 +1890,18 @@ public interface IBatteryStats extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public long computeChargeTimeRemaining() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(19, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(19, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().computeChargeTimeRemaining();
                     }
                     _reply.readException();
                     long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2325,6 +1909,7 @@ public interface IBatteryStats extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteEvent(int code, String name, int uid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2333,19 +1918,19 @@ public interface IBatteryStats extends IInterface {
                     _data.writeInt(code);
                     _data.writeString(name);
                     _data.writeInt(uid);
-                    if (this.mRemote.transact(20, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(20, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteEvent(code, name, uid);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteEvent(code, name, uid);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteSyncStart(String name, int uid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2353,19 +1938,19 @@ public interface IBatteryStats extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(name);
                     _data.writeInt(uid);
-                    if (this.mRemote.transact(21, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(21, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteSyncStart(name, uid);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteSyncStart(name, uid);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteSyncFinish(String name, int uid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2373,19 +1958,19 @@ public interface IBatteryStats extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(name);
                     _data.writeInt(uid);
-                    if (this.mRemote.transact(22, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(22, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteSyncFinish(name, uid);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteSyncFinish(name, uid);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteJobStart(String name, int uid, int standbyBucket, int jobid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2395,19 +1980,19 @@ public interface IBatteryStats extends IInterface {
                     _data.writeInt(uid);
                     _data.writeInt(standbyBucket);
                     _data.writeInt(jobid);
-                    if (this.mRemote.transact(23, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(23, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteJobStart(name, uid, standbyBucket, jobid);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteJobStart(name, uid, standbyBucket, jobid);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteJobFinish(String name, int uid, int stopReason, int standbyBucket, int jobid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2418,19 +2003,19 @@ public interface IBatteryStats extends IInterface {
                     _data.writeInt(stopReason);
                     _data.writeInt(standbyBucket);
                     _data.writeInt(jobid);
-                    if (this.mRemote.transact(24, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(24, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteJobFinish(name, uid, stopReason, standbyBucket, jobid);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteJobFinish(name, uid, stopReason, standbyBucket, jobid);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteStartWakelock(int uid, int pid, String name, String historyName, int type, boolean unimportantForLogging) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2438,90 +2023,68 @@ public interface IBatteryStats extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     try {
                         _data.writeInt(uid);
-                        try {
-                            _data.writeInt(pid);
-                            try {
-                                _data.writeString(name);
-                                try {
-                                    _data.writeString(historyName);
-                                } catch (Throwable th) {
-                                    th = th;
-                                    int i = type;
-                                    boolean z = unimportantForLogging;
-                                    _reply.recycle();
-                                    _data.recycle();
-                                    throw th;
-                                }
-                            } catch (Throwable th2) {
-                                th = th2;
-                                String str = historyName;
-                                int i2 = type;
-                                boolean z2 = unimportantForLogging;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th3) {
-                            th = th3;
-                            String str2 = name;
-                            String str3 = historyName;
-                            int i22 = type;
-                            boolean z22 = unimportantForLogging;
+                    } catch (Throwable th) {
+                        th = th;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeInt(pid);
+                    } catch (Throwable th2) {
+                        th = th2;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeString(name);
+                    } catch (Throwable th3) {
+                        th = th3;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeString(historyName);
+                    } catch (Throwable th4) {
+                        th = th4;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeInt(type);
+                    } catch (Throwable th5) {
+                        th = th5;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeInt(unimportantForLogging ? 1 : 0);
+                        boolean _status = this.mRemote.transact(25, _data, _reply, 0);
+                        if (!_status && Stub.getDefaultImpl() != null) {
+                            Stub.getDefaultImpl().noteStartWakelock(uid, pid, name, historyName, type, unimportantForLogging);
                             _reply.recycle();
                             _data.recycle();
-                            throw th;
+                            return;
                         }
-                        try {
-                            _data.writeInt(type);
-                            try {
-                                _data.writeInt(unimportantForLogging ? 1 : 0);
-                                if (this.mRemote.transact(25, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                    _reply.readException();
-                                    _reply.recycle();
-                                    _data.recycle();
-                                    return;
-                                }
-                                Stub.getDefaultImpl().noteStartWakelock(uid, pid, name, historyName, type, unimportantForLogging);
-                                _reply.recycle();
-                                _data.recycle();
-                            } catch (Throwable th4) {
-                                th = th4;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th5) {
-                            th = th5;
-                            boolean z222 = unimportantForLogging;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
+                        _reply.readException();
+                        _reply.recycle();
+                        _data.recycle();
                     } catch (Throwable th6) {
                         th = th6;
-                        int i3 = pid;
-                        String str22 = name;
-                        String str32 = historyName;
-                        int i222 = type;
-                        boolean z2222 = unimportantForLogging;
                         _reply.recycle();
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th7) {
                     th = th7;
-                    int i4 = uid;
-                    int i32 = pid;
-                    String str222 = name;
-                    String str322 = historyName;
-                    int i2222 = type;
-                    boolean z22222 = unimportantForLogging;
-                    _reply.recycle();
-                    _data.recycle();
-                    throw th;
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteStopWakelock(int uid, int pid, String name, String historyName, int type) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2532,118 +2095,103 @@ public interface IBatteryStats extends IInterface {
                     _data.writeString(name);
                     _data.writeString(historyName);
                     _data.writeInt(type);
-                    if (this.mRemote.transact(26, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(26, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteStopWakelock(uid, pid, name, historyName, type);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteStopWakelock(uid, pid, name, historyName, type);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteStartWakelockFromSource(WorkSource ws, int pid, String name, String historyName, int type, boolean unimportantForLogging) throws RemoteException {
-                WorkSource workSource = ws;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (workSource != null) {
+                    if (ws != null) {
                         _data.writeInt(1);
-                        workSource.writeToParcel(_data, 0);
+                        ws.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeInt(pid);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeString(name);
+                } catch (Throwable th3) {
+                    th = th3;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeString(historyName);
+                } catch (Throwable th4) {
+                    th = th4;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(type);
                     try {
-                        _data.writeInt(pid);
-                        try {
-                            _data.writeString(name);
-                        } catch (Throwable th) {
-                            th = th;
-                            String str = historyName;
-                            int i = type;
-                            boolean z = unimportantForLogging;
+                        _data.writeInt(unimportantForLogging ? 1 : 0);
+                        boolean _status = this.mRemote.transact(27, _data, _reply, 0);
+                        if (!_status && Stub.getDefaultImpl() != null) {
+                            Stub.getDefaultImpl().noteStartWakelockFromSource(ws, pid, name, historyName, type, unimportantForLogging);
                             _reply.recycle();
                             _data.recycle();
-                            throw th;
+                            return;
                         }
-                        try {
-                            _data.writeString(historyName);
-                            try {
-                                _data.writeInt(type);
-                            } catch (Throwable th2) {
-                                th = th2;
-                                boolean z2 = unimportantForLogging;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                            try {
-                                _data.writeInt(unimportantForLogging ? 1 : 0);
-                                if (this.mRemote.transact(27, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                    _reply.readException();
-                                    _reply.recycle();
-                                    _data.recycle();
-                                    return;
-                                }
-                                Stub.getDefaultImpl().noteStartWakelockFromSource(ws, pid, name, historyName, type, unimportantForLogging);
-                                _reply.recycle();
-                                _data.recycle();
-                            } catch (Throwable th3) {
-                                th = th3;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th4) {
-                            th = th4;
-                            int i2 = type;
-                            boolean z22 = unimportantForLogging;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
+                        _reply.readException();
+                        _reply.recycle();
+                        _data.recycle();
                     } catch (Throwable th5) {
                         th = th5;
-                        String str2 = name;
-                        String str3 = historyName;
-                        int i22 = type;
-                        boolean z222 = unimportantForLogging;
                         _reply.recycle();
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th6) {
                     th = th6;
-                    int i3 = pid;
-                    String str22 = name;
-                    String str32 = historyName;
-                    int i222 = type;
-                    boolean z2222 = unimportantForLogging;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteChangeWakelockFromSource(WorkSource ws, int pid, String name, String histyoryName, int type, WorkSource newWs, int newPid, String newName, String newHistoryName, int newType, boolean newUnimportantForLogging) throws RemoteException {
                 Parcel _reply;
-                WorkSource workSource = ws;
-                WorkSource workSource2 = newWs;
+                boolean _status;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply2 = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (workSource != null) {
+                    if (ws != null) {
                         try {
                             _data.writeInt(1);
-                            workSource.writeToParcel(_data, 0);
+                            ws.writeToParcel(_data, 0);
                         } catch (Throwable th) {
                             th = th;
                             _reply = _reply2;
+                            _reply.recycle();
+                            _data.recycle();
+                            throw th;
                         }
                     } else {
                         _data.writeInt(0);
@@ -2652,9 +2200,9 @@ public interface IBatteryStats extends IInterface {
                     _data.writeString(name);
                     _data.writeString(histyoryName);
                     _data.writeInt(type);
-                    if (workSource2 != null) {
+                    if (newWs != null) {
                         _data.writeInt(1);
-                        workSource2.writeToParcel(_data, 0);
+                        newWs.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
@@ -2663,33 +2211,30 @@ public interface IBatteryStats extends IInterface {
                     _data.writeString(newHistoryName);
                     _data.writeInt(newType);
                     _data.writeInt(newUnimportantForLogging ? 1 : 0);
-                    if (this.mRemote.transact(28, _data, _reply2, 0) || Stub.getDefaultImpl() == null) {
-                        _reply = _reply2;
-                        _reply.readException();
-                        _reply.recycle();
+                    _status = this.mRemote.transact(28, _data, _reply2, 0);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply = _reply2;
+                }
+                try {
+                    if (_status || Stub.getDefaultImpl() == null) {
+                        _reply2.readException();
+                        _reply2.recycle();
                         _data.recycle();
                         return;
                     }
-                    _reply = _reply2;
-                    try {
-                        Stub.getDefaultImpl().noteChangeWakelockFromSource(ws, pid, name, histyoryName, type, newWs, newPid, newName, newHistoryName, newType, newUnimportantForLogging);
-                        _reply.recycle();
-                        _data.recycle();
-                    } catch (Throwable th2) {
-                        th = th2;
-                        _reply.recycle();
-                        _data.recycle();
-                        throw th;
-                    }
+                    Stub.getDefaultImpl().noteChangeWakelockFromSource(ws, pid, name, histyoryName, type, newWs, newPid, newName, newHistoryName, newType, newUnimportantForLogging);
+                    _reply2.recycle();
+                    _data.recycle();
                 } catch (Throwable th3) {
                     th = th3;
-                    _reply = _reply2;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteStopWakelockFromSource(WorkSource ws, int pid, String name, String historyName, int type) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2705,19 +2250,19 @@ public interface IBatteryStats extends IInterface {
                     _data.writeString(name);
                     _data.writeString(historyName);
                     _data.writeInt(type);
-                    if (this.mRemote.transact(29, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(29, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteStopWakelockFromSource(ws, pid, name, historyName, type);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteStopWakelockFromSource(ws, pid, name, historyName, type);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteLongPartialWakelockStart(String name, String historyName, int uid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2726,19 +2271,19 @@ public interface IBatteryStats extends IInterface {
                     _data.writeString(name);
                     _data.writeString(historyName);
                     _data.writeInt(uid);
-                    if (this.mRemote.transact(30, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(30, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteLongPartialWakelockStart(name, historyName, uid);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteLongPartialWakelockStart(name, historyName, uid);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteLongPartialWakelockStartFromSource(String name, String historyName, WorkSource workSource) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2752,19 +2297,19 @@ public interface IBatteryStats extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(31, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(31, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteLongPartialWakelockStartFromSource(name, historyName, workSource);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteLongPartialWakelockStartFromSource(name, historyName, workSource);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteLongPartialWakelockFinish(String name, String historyName, int uid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2773,19 +2318,19 @@ public interface IBatteryStats extends IInterface {
                     _data.writeString(name);
                     _data.writeString(historyName);
                     _data.writeInt(uid);
-                    if (this.mRemote.transact(32, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(32, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteLongPartialWakelockFinish(name, historyName, uid);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteLongPartialWakelockFinish(name, historyName, uid);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteLongPartialWakelockFinishFromSource(String name, String historyName, WorkSource workSource) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2799,19 +2344,19 @@ public interface IBatteryStats extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(33, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(33, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteLongPartialWakelockFinishFromSource(name, historyName, workSource);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteLongPartialWakelockFinishFromSource(name, historyName, workSource);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteVibratorOn(int uid, long durationMillis) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2819,38 +2364,38 @@ public interface IBatteryStats extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(uid);
                     _data.writeLong(durationMillis);
-                    if (this.mRemote.transact(34, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(34, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteVibratorOn(uid, durationMillis);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteVibratorOn(uid, durationMillis);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteVibratorOff(int uid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(uid);
-                    if (this.mRemote.transact(35, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(35, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteVibratorOff(uid);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteVibratorOff(uid);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteGpsChanged(WorkSource oldSource, WorkSource newSource) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2868,76 +2413,76 @@ public interface IBatteryStats extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(36, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(36, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteGpsChanged(oldSource, newSource);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteGpsChanged(oldSource, newSource);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteGpsSignalQuality(int signalLevel) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(signalLevel);
-                    if (this.mRemote.transact(37, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(37, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteGpsSignalQuality(signalLevel);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteGpsSignalQuality(signalLevel);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteScreenState(int state) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(state);
-                    if (this.mRemote.transact(38, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(38, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteScreenState(state);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteScreenState(state);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteScreenBrightness(int brightness) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(brightness);
-                    if (this.mRemote.transact(39, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(39, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteScreenBrightness(brightness);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteScreenBrightness(brightness);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteUserActivity(int uid, int event) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2945,19 +2490,19 @@ public interface IBatteryStats extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(uid);
                     _data.writeInt(event);
-                    if (this.mRemote.transact(40, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(40, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteUserActivity(uid, event);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteUserActivity(uid, event);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteWakeUp(String reason, int reasonUid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2965,38 +2510,38 @@ public interface IBatteryStats extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(reason);
                     _data.writeInt(reasonUid);
-                    if (this.mRemote.transact(41, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(41, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteWakeUp(reason, reasonUid);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteWakeUp(reason, reasonUid);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteInteractive(boolean interactive) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(interactive);
-                    if (this.mRemote.transact(42, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(interactive ? 1 : 0);
+                    boolean _status = this.mRemote.transact(42, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteInteractive(interactive);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteInteractive(interactive);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteConnectivityChanged(int type, String extra) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3004,19 +2549,19 @@ public interface IBatteryStats extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(type);
                     _data.writeString(extra);
-                    if (this.mRemote.transact(43, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(43, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteConnectivityChanged(type, extra);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteConnectivityChanged(type, extra);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteMobileRadioPowerState(int powerState, long timestampNs, int uid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3025,55 +2570,55 @@ public interface IBatteryStats extends IInterface {
                     _data.writeInt(powerState);
                     _data.writeLong(timestampNs);
                     _data.writeInt(uid);
-                    if (this.mRemote.transact(44, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(44, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteMobileRadioPowerState(powerState, timestampNs, uid);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteMobileRadioPowerState(powerState, timestampNs, uid);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void notePhoneOn() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(45, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(45, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().notePhoneOn();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().notePhoneOn();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void notePhoneOff() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(46, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(46, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().notePhoneOff();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().notePhoneOff();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void notePhoneSignalStrength(SignalStrength signalStrength) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3085,94 +2630,94 @@ public interface IBatteryStats extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(47, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(47, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().notePhoneSignalStrength(signalStrength);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().notePhoneSignalStrength(signalStrength);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void notePhoneDataConnectionState(int dataType, boolean hasData) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(dataType);
-                    _data.writeInt(hasData);
-                    if (this.mRemote.transact(48, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(hasData ? 1 : 0);
+                    boolean _status = this.mRemote.transact(48, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().notePhoneDataConnectionState(dataType, hasData);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().notePhoneDataConnectionState(dataType, hasData);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void notePhoneState(int phoneState) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(phoneState);
-                    if (this.mRemote.transact(49, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(49, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().notePhoneState(phoneState);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().notePhoneState(phoneState);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteWifiOn() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(50, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(50, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteWifiOn();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteWifiOn();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteWifiOff() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(51, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(51, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteWifiOff();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteWifiOff();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteWifiRunning(WorkSource ws) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3184,19 +2729,19 @@ public interface IBatteryStats extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(52, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(52, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteWifiRunning(ws);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteWifiRunning(ws);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteWifiRunningChanged(WorkSource oldWs, WorkSource newWs) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3214,19 +2759,19 @@ public interface IBatteryStats extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(53, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(53, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteWifiRunningChanged(oldWs, newWs);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteWifiRunningChanged(oldWs, newWs);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteWifiStopped(WorkSource ws) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3238,19 +2783,19 @@ public interface IBatteryStats extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(54, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(54, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteWifiStopped(ws);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteWifiStopped(ws);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteWifiState(int wifiState, String accessPoint) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3258,172 +2803,172 @@ public interface IBatteryStats extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(wifiState);
                     _data.writeString(accessPoint);
-                    if (this.mRemote.transact(55, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(55, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteWifiState(wifiState, accessPoint);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteWifiState(wifiState, accessPoint);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteWifiSupplicantStateChanged(int supplState, boolean failedAuth) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(supplState);
-                    _data.writeInt(failedAuth);
-                    if (this.mRemote.transact(56, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(failedAuth ? 1 : 0);
+                    boolean _status = this.mRemote.transact(56, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteWifiSupplicantStateChanged(supplState, failedAuth);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteWifiSupplicantStateChanged(supplState, failedAuth);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteWifiRssiChanged(int newRssi) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(newRssi);
-                    if (this.mRemote.transact(57, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(57, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteWifiRssiChanged(newRssi);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteWifiRssiChanged(newRssi);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteFullWifiLockAcquired(int uid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(uid);
-                    if (this.mRemote.transact(58, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(58, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteFullWifiLockAcquired(uid);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteFullWifiLockAcquired(uid);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteFullWifiLockReleased(int uid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(uid);
-                    if (this.mRemote.transact(59, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(59, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteFullWifiLockReleased(uid);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteFullWifiLockReleased(uid);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteWifiScanStarted(int uid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(uid);
-                    if (this.mRemote.transact(60, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(60, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteWifiScanStarted(uid);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteWifiScanStarted(uid);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteWifiScanStopped(int uid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(uid);
-                    if (this.mRemote.transact(61, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(61, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteWifiScanStopped(uid);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteWifiScanStopped(uid);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteWifiMulticastEnabled(int uid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(uid);
-                    if (this.mRemote.transact(62, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(62, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteWifiMulticastEnabled(uid);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteWifiMulticastEnabled(uid);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteWifiMulticastDisabled(int uid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(uid);
-                    if (this.mRemote.transact(63, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(63, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteWifiMulticastDisabled(uid);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteWifiMulticastDisabled(uid);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteFullWifiLockAcquiredFromSource(WorkSource ws) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3435,19 +2980,19 @@ public interface IBatteryStats extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(64, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(64, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteFullWifiLockAcquiredFromSource(ws);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteFullWifiLockAcquiredFromSource(ws);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteFullWifiLockReleasedFromSource(WorkSource ws) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3459,19 +3004,19 @@ public interface IBatteryStats extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(65, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(65, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteFullWifiLockReleasedFromSource(ws);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteFullWifiLockReleasedFromSource(ws);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteWifiScanStartedFromSource(WorkSource ws) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3483,19 +3028,19 @@ public interface IBatteryStats extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(66, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(66, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteWifiScanStartedFromSource(ws);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteWifiScanStartedFromSource(ws);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteWifiScanStoppedFromSource(WorkSource ws) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3507,19 +3052,19 @@ public interface IBatteryStats extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(67, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(67, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteWifiScanStoppedFromSource(ws);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteWifiScanStoppedFromSource(ws);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteWifiBatchedScanStartedFromSource(WorkSource ws, int csph) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3532,19 +3077,19 @@ public interface IBatteryStats extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(csph);
-                    if (this.mRemote.transact(68, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(68, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteWifiBatchedScanStartedFromSource(ws, csph);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteWifiBatchedScanStartedFromSource(ws, csph);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteWifiBatchedScanStoppedFromSource(WorkSource ws) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3556,19 +3101,19 @@ public interface IBatteryStats extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(69, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(69, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteWifiBatchedScanStoppedFromSource(ws);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteWifiBatchedScanStoppedFromSource(ws);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteWifiRadioPowerState(int powerState, long timestampNs, int uid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3577,19 +3122,19 @@ public interface IBatteryStats extends IInterface {
                     _data.writeInt(powerState);
                     _data.writeLong(timestampNs);
                     _data.writeInt(uid);
-                    if (this.mRemote.transact(70, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(70, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteWifiRadioPowerState(powerState, timestampNs, uid);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteWifiRadioPowerState(powerState, timestampNs, uid);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteNetworkInterfaceType(String iface, int type) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3597,37 +3142,37 @@ public interface IBatteryStats extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(iface);
                     _data.writeInt(type);
-                    if (this.mRemote.transact(71, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(71, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteNetworkInterfaceType(iface, type);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteNetworkInterfaceType(iface, type);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteNetworkStatsEnabled() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(72, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(72, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteNetworkStatsEnabled();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteNetworkStatsEnabled();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteDeviceIdleMode(int mode, String activeReason, int activeUid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3636,99 +3181,87 @@ public interface IBatteryStats extends IInterface {
                     _data.writeInt(mode);
                     _data.writeString(activeReason);
                     _data.writeInt(activeUid);
-                    if (this.mRemote.transact(73, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(73, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteDeviceIdleMode(mode, activeReason, activeUid);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteDeviceIdleMode(mode, activeReason, activeUid);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void setBatteryState(int status, int health, int plugType, int level, int temp, int volt, int chargeUAh, int chargeFullUAh) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    try {
-                        _data.writeInt(status);
-                        try {
-                            _data.writeInt(health);
-                        } catch (Throwable th) {
-                            th = th;
-                            int i = plugType;
-                            int i2 = level;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                        try {
-                            _data.writeInt(plugType);
-                            try {
-                                _data.writeInt(level);
-                                _data.writeInt(temp);
-                                _data.writeInt(volt);
-                                _data.writeInt(chargeUAh);
-                                _data.writeInt(chargeFullUAh);
-                                if (this.mRemote.transact(74, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                    _reply.readException();
-                                    _reply.recycle();
-                                    _data.recycle();
-                                    return;
-                                }
-                                Stub.getDefaultImpl().setBatteryState(status, health, plugType, level, temp, volt, chargeUAh, chargeFullUAh);
-                                _reply.recycle();
-                                _data.recycle();
-                            } catch (Throwable th2) {
-                                th = th2;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th3) {
-                            th = th3;
-                            int i22 = level;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                    } catch (Throwable th4) {
-                        th = th4;
-                        int i3 = health;
-                        int i4 = plugType;
-                        int i222 = level;
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeInt(status);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(health);
+                } catch (Throwable th3) {
+                    th = th3;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(plugType);
+                } catch (Throwable th4) {
+                    th = th4;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(level);
+                    _data.writeInt(temp);
+                    _data.writeInt(volt);
+                    _data.writeInt(chargeUAh);
+                    _data.writeInt(chargeFullUAh);
+                    boolean _status = this.mRemote.transact(74, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setBatteryState(status, health, plugType, level, temp, volt, chargeUAh, chargeFullUAh);
                         _reply.recycle();
                         _data.recycle();
-                        throw th;
+                        return;
                     }
+                    _reply.readException();
+                    _reply.recycle();
+                    _data.recycle();
                 } catch (Throwable th5) {
                     th = th5;
-                    int i5 = status;
-                    int i32 = health;
-                    int i42 = plugType;
-                    int i2222 = level;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public long getAwakeTimeBattery() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(75, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(75, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAwakeTimeBattery();
                     }
                     _reply.readException();
                     long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3736,18 +3269,18 @@ public interface IBatteryStats extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public long getAwakeTimePlugged() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(76, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(76, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAwakeTimePlugged();
                     }
                     _reply.readException();
                     long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3755,6 +3288,7 @@ public interface IBatteryStats extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteBleScanStarted(WorkSource ws, boolean isUnoptimized) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3766,20 +3300,20 @@ public interface IBatteryStats extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(isUnoptimized);
-                    if (this.mRemote.transact(77, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(isUnoptimized ? 1 : 0);
+                    boolean _status = this.mRemote.transact(77, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteBleScanStarted(ws, isUnoptimized);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteBleScanStarted(ws, isUnoptimized);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteBleScanStopped(WorkSource ws, boolean isUnoptimized) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3791,38 +3325,38 @@ public interface IBatteryStats extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(isUnoptimized);
-                    if (this.mRemote.transact(78, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(isUnoptimized ? 1 : 0);
+                    boolean _status = this.mRemote.transact(78, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteBleScanStopped(ws, isUnoptimized);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteBleScanStopped(ws, isUnoptimized);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteResetBleScan() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(79, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(79, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteResetBleScan();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteResetBleScan();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteBleScanResults(WorkSource ws, int numNewResults) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3835,26 +3369,27 @@ public interface IBatteryStats extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(numNewResults);
-                    if (this.mRemote.transact(80, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(80, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().noteBleScanResults(ws, numNewResults);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().noteBleScanResults(ws, numNewResults);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public CellularBatteryStats getCellularBatteryStats() throws RemoteException {
                 CellularBatteryStats _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(81, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(81, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCellularBatteryStats();
                     }
                     _reply.readException();
@@ -3863,23 +3398,22 @@ public interface IBatteryStats extends IInterface {
                     } else {
                         _result = null;
                     }
-                    CellularBatteryStats _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public WifiBatteryStats getWifiBatteryStats() throws RemoteException {
                 WifiBatteryStats _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(82, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(82, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getWifiBatteryStats();
                     }
                     _reply.readException();
@@ -3888,23 +3422,22 @@ public interface IBatteryStats extends IInterface {
                     } else {
                         _result = null;
                     }
-                    WifiBatteryStats _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public GpsBatteryStats getGpsBatteryStats() throws RemoteException {
                 GpsBatteryStats _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(83, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(83, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getGpsBatteryStats();
                     }
                     _reply.readException();
@@ -3913,16 +3446,14 @@ public interface IBatteryStats extends IInterface {
                     } else {
                         _result = null;
                     }
-                    GpsBatteryStats _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public HealthStatsParceler takeUidSnapshot(int uid) throws RemoteException {
                 HealthStatsParceler _result;
                 Parcel _data = Parcel.obtain();
@@ -3930,7 +3461,8 @@ public interface IBatteryStats extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(uid);
-                    if (!this.mRemote.transact(84, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(84, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().takeUidSnapshot(uid);
                     }
                     _reply.readException();
@@ -3939,29 +3471,6 @@ public interface IBatteryStats extends IInterface {
                     } else {
                         _result = null;
                     }
-                    HealthStatsParceler _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public HealthStatsParceler[] takeUidSnapshots(int[] uid) throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeIntArray(uid);
-                    if (!this.mRemote.transact(85, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
-                        return Stub.getDefaultImpl().takeUidSnapshots(uid);
-                    }
-                    _reply.readException();
-                    HealthStatsParceler[] _result = (HealthStatsParceler[]) _reply.createTypedArray(HealthStatsParceler.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3969,6 +3478,27 @@ public interface IBatteryStats extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
+            public HealthStatsParceler[] takeUidSnapshots(int[] uid) throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    _data.writeIntArray(uid);
+                    boolean _status = this.mRemote.transact(85, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        return Stub.getDefaultImpl().takeUidSnapshots(uid);
+                    }
+                    _reply.readException();
+                    HealthStatsParceler[] _result = (HealthStatsParceler[]) _reply.createTypedArray(HealthStatsParceler.CREATOR);
+                    return _result;
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // com.android.internal.app.IBatteryStats
             public void noteBluetoothControllerActivity(BluetoothActivityEnergyInfo info) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -3979,9 +3509,8 @@ public interface IBatteryStats extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(86, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(86, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().noteBluetoothControllerActivity(info);
                     }
                 } finally {
@@ -3989,6 +3518,7 @@ public interface IBatteryStats extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteModemControllerActivity(ModemActivityInfo info) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -3999,9 +3529,8 @@ public interface IBatteryStats extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(87, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(87, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().noteModemControllerActivity(info);
                     }
                 } finally {
@@ -4009,6 +3538,7 @@ public interface IBatteryStats extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public void noteWifiControllerActivity(WifiActivityEnergyInfo info) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -4019,9 +3549,8 @@ public interface IBatteryStats extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(88, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(88, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().noteWifiControllerActivity(info);
                     }
                 } finally {
@@ -4029,24 +3558,20 @@ public interface IBatteryStats extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.app.IBatteryStats
             public boolean setChargingStateUpdateDelayMillis(int delay) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(delay);
-                    boolean z = false;
-                    if (!this.mRemote.transact(89, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(89, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setChargingStateUpdateDelayMillis(delay);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -4055,11 +3580,11 @@ public interface IBatteryStats extends IInterface {
         }
 
         public static boolean setDefaultImpl(IBatteryStats impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IBatteryStats getDefaultImpl() {

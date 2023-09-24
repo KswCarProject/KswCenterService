@@ -5,6 +5,7 @@ import android.hardware.camera2.utils.HashCodeHelpers;
 import com.android.internal.util.Preconditions;
 import java.util.Arrays;
 
+/* loaded from: classes.dex */
 public final class TonemapCurve {
     public static final int CHANNEL_BLUE = 2;
     public static final int CHANNEL_GREEN = 1;
@@ -74,18 +75,19 @@ public final class TonemapCurve {
             throw new IllegalArgumentException("index out of range");
         }
         float[] curve = getCurve(colorChannel);
-        return new PointF(curve[(index * 2) + 0], curve[(index * 2) + 1]);
+        float pIn = curve[(index * 2) + 0];
+        float pOut = curve[(index * 2) + 1];
+        return new PointF(pIn, pOut);
     }
 
     public void copyColorCurve(int colorChannel, float[] destination, int offset) {
         Preconditions.checkArgumentNonnegative(offset, "offset must not be negative");
         Preconditions.checkNotNull(destination, "destination must not be null");
-        if (destination.length + offset >= getPointCount(colorChannel) * 2) {
-            float[] curve = getCurve(colorChannel);
-            System.arraycopy(curve, 0, destination, offset, curve.length);
-            return;
+        if (destination.length + offset < getPointCount(colorChannel) * 2) {
+            throw new ArrayIndexOutOfBoundsException("destination too small to fit elements");
         }
-        throw new ArrayIndexOutOfBoundsException("destination too small to fit elements");
+        float[] curve = getCurve(colorChannel);
+        System.arraycopy(curve, 0, destination, offset, curve.length);
     }
 
     public boolean equals(Object obj) {
@@ -115,7 +117,7 @@ public final class TonemapCurve {
     }
 
     public String toString() {
-        return "TonemapCurve{" + "R:" + curveToString(0) + ", G:" + curveToString(1) + ", B:" + curveToString(2) + "}";
+        return "TonemapCurve{R:" + curveToString(0) + ", G:" + curveToString(1) + ", B:" + curveToString(2) + "}";
     }
 
     private String curveToString(int colorChannel) {
@@ -134,7 +136,8 @@ public final class TonemapCurve {
             i++;
             j += 2;
         }
-        sb.setLength(sb.length() - 2);
+        int i2 = sb.length();
+        sb.setLength(i2 - 2);
         sb.append("]");
         return sb.toString();
     }

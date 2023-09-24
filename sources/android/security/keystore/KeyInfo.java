@@ -3,6 +3,7 @@ package android.security.keystore;
 import java.security.spec.KeySpec;
 import java.util.Date;
 
+/* loaded from: classes3.dex */
 public class KeyInfo implements KeySpec {
     private final String[] mBlockModes;
     private final String[] mDigests;

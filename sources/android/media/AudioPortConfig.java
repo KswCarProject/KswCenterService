@@ -2,6 +2,7 @@ package android.media;
 
 import android.annotation.UnsupportedAppUsage;
 
+/* loaded from: classes3.dex */
 public class AudioPortConfig {
     static final int CHANNEL_MASK = 2;
     static final int FORMAT = 4;

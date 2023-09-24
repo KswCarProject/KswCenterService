@@ -3,7 +3,6 @@ package android.view.textclassifier;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.ContentObserver;
-import android.os.Handler;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Base64;
@@ -16,6 +15,7 @@ import java.lang.ref.WeakReference;
 import java.util.Objects;
 import java.util.function.Supplier;
 
+/* loaded from: classes4.dex */
 public final class ActionsModelParamsSupplier implements Supplier<ActionsModelParams> {
     @VisibleForTesting
     static final String KEY_REQUIRED_LOCALES = "required_locales";
@@ -27,16 +27,22 @@ public final class ActionsModelParamsSupplier implements Supplier<ActionsModelPa
     @GuardedBy({"mLock"})
     private ActionsModelParams mActionsModelParams;
     private final Context mAppContext;
-    private final Object mLock = new Object();
     private final Runnable mOnChangedListener;
+    private final SettingsObserver mSettingsObserver;
+    private final Object mLock = new Object();
     @GuardedBy({"mLock"})
     private boolean mParsed = true;
-    private final SettingsObserver mSettingsObserver;
 
     public ActionsModelParamsSupplier(Context context, Runnable onChangedListener) {
         this.mAppContext = ((Context) Preconditions.checkNotNull(context)).getApplicationContext();
-        this.mOnChangedListener = onChangedListener == null ? $$Lambda$ActionsModelParamsSupplier$GCXILXtg_S2la6x__ANOhbYxetw.INSTANCE : onChangedListener;
-        this.mSettingsObserver = new SettingsObserver(this.mAppContext, new Runnable() {
+        this.mOnChangedListener = onChangedListener == null ? new Runnable() { // from class: android.view.textclassifier.-$$Lambda$ActionsModelParamsSupplier$GCXILXtg_S2la6x__ANOhbYxetw
+            @Override // java.lang.Runnable
+            public final void run() {
+                ActionsModelParamsSupplier.lambda$new$0();
+            }
+        } : onChangedListener;
+        this.mSettingsObserver = new SettingsObserver(this.mAppContext, new Runnable() { // from class: android.view.textclassifier.-$$Lambda$ActionsModelParamsSupplier$zElxNeuL3A8paTXvw8GWdpp4rFo
+            @Override // java.lang.Runnable
             public final void run() {
                 ActionsModelParamsSupplier.lambda$new$1(ActionsModelParamsSupplier.this);
             }
@@ -48,12 +54,14 @@ public final class ActionsModelParamsSupplier implements Supplier<ActionsModelPa
 
     public static /* synthetic */ void lambda$new$1(ActionsModelParamsSupplier actionsModelParamsSupplier) {
         synchronized (actionsModelParamsSupplier.mLock) {
-            Log.v("androidtc", "Settings.Global.TEXT_CLASSIFIER_ACTION_MODEL_PARAMS is updated");
+            Log.m38v("androidtc", "Settings.Global.TEXT_CLASSIFIER_ACTION_MODEL_PARAMS is updated");
             actionsModelParamsSupplier.mParsed = true;
             actionsModelParamsSupplier.mOnChangedListener.run();
         }
     }
 
+    /* JADX WARN: Can't rename method to resolve collision */
+    @Override // java.util.function.Supplier
     public ActionsModelParams get() {
         synchronized (this.mLock) {
             if (this.mParsed) {
@@ -74,28 +82,28 @@ public final class ActionsModelParamsSupplier implements Supplier<ActionsModelPa
             keyValueListParser.setString(settingStr);
             int version = keyValueListParser.getInt(KEY_REQUIRED_MODEL_VERSION, -1);
             if (version == -1) {
-                Log.w("androidtc", "ActionsModelParams.Parse, invalid model version");
+                Log.m37w("androidtc", "ActionsModelParams.Parse, invalid model version");
                 return ActionsModelParams.INVALID;
             }
-            String locales = keyValueListParser.getString(KEY_REQUIRED_LOCALES, (String) null);
+            String locales = keyValueListParser.getString(KEY_REQUIRED_LOCALES, null);
             if (locales == null) {
-                Log.w("androidtc", "ActionsModelParams.Parse, invalid locales");
+                Log.m37w("androidtc", "ActionsModelParams.Parse, invalid locales");
                 return ActionsModelParams.INVALID;
             }
-            String serializedPreconditionsStr = keyValueListParser.getString(KEY_SERIALIZED_PRECONDITIONS, (String) null);
-            if (serializedPreconditionsStr != null) {
-                return new ActionsModelParams(version, locales, Base64.decode(serializedPreconditionsStr, 2));
+            String serializedPreconditionsStr = keyValueListParser.getString(KEY_SERIALIZED_PRECONDITIONS, null);
+            if (serializedPreconditionsStr == null) {
+                Log.m37w("androidtc", "ActionsModelParams.Parse, invalid preconditions");
+                return ActionsModelParams.INVALID;
             }
-            Log.w("androidtc", "ActionsModelParams.Parse, invalid preconditions");
-            return ActionsModelParams.INVALID;
+            byte[] serializedPreconditions = Base64.decode(serializedPreconditionsStr, 2);
+            return new ActionsModelParams(version, locales, serializedPreconditions);
         } catch (Throwable t) {
-            Log.e("androidtc", "Invalid TEXT_CLASSIFIER_ACTION_MODEL_PARAMS, ignore", t);
+            Log.m39e("androidtc", "Invalid TEXT_CLASSIFIER_ACTION_MODEL_PARAMS, ignore", t);
             return ActionsModelParams.INVALID;
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         try {
             this.mAppContext.getContentResolver().unregisterContentObserver(this.mSettingsObserver);
         } finally {
@@ -103,6 +111,7 @@ public final class ActionsModelParamsSupplier implements Supplier<ActionsModelPa
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class ActionsModelParams {
         public static final ActionsModelParams INVALID = new ActionsModelParams(-1, "", new byte[0]);
         private final String mRequiredModelLocales;
@@ -120,29 +129,31 @@ public final class ActionsModelParamsSupplier implements Supplier<ActionsModelPa
                 return null;
             }
             if (modelInUse.getVersion() != this.mRequiredModelVersion) {
-                Log.w("androidtc", String.format("Not applying mSerializedPreconditions, required version=%d, actual=%d", new Object[]{Integer.valueOf(this.mRequiredModelVersion), Integer.valueOf(modelInUse.getVersion())}));
+                Log.m37w("androidtc", String.format("Not applying mSerializedPreconditions, required version=%d, actual=%d", Integer.valueOf(this.mRequiredModelVersion), Integer.valueOf(modelInUse.getVersion())));
                 return null;
-            } else if (Objects.equals(modelInUse.getSupportedLocalesStr(), this.mRequiredModelLocales)) {
-                return this.mSerializedPreconditions;
+            } else if (!Objects.equals(modelInUse.getSupportedLocalesStr(), this.mRequiredModelLocales)) {
+                Log.m37w("androidtc", String.format("Not applying mSerializedPreconditions, required locales=%s, actual=%s", this.mRequiredModelLocales, modelInUse.getSupportedLocalesStr()));
+                return null;
             } else {
-                Log.w("androidtc", String.format("Not applying mSerializedPreconditions, required locales=%s, actual=%s", new Object[]{this.mRequiredModelLocales, modelInUse.getSupportedLocalesStr()}));
-                return null;
+                return this.mSerializedPreconditions;
             }
         }
     }
 
+    /* loaded from: classes4.dex */
     private static final class SettingsObserver extends ContentObserver {
         private final WeakReference<Runnable> mOnChangedListener;
 
         SettingsObserver(Context appContext, Runnable listener) {
-            super((Handler) null);
+            super(null);
             this.mOnChangedListener = new WeakReference<>(listener);
             appContext.getContentResolver().registerContentObserver(Settings.Global.getUriFor(Settings.Global.TEXT_CLASSIFIER_ACTION_MODEL_PARAMS), false, this);
         }
 
+        @Override // android.database.ContentObserver
         public void onChange(boolean selfChange) {
             if (this.mOnChangedListener.get() != null) {
-                ((Runnable) this.mOnChangedListener.get()).run();
+                this.mOnChangedListener.get().run();
             }
         }
     }

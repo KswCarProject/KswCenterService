@@ -1,25 +1,26 @@
 package android.net;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes3.dex */
 public class NetworkMisc implements Parcelable {
-    public static final Parcelable.Creator<NetworkMisc> CREATOR = new Parcelable.Creator<NetworkMisc>() {
+    public static final Parcelable.Creator<NetworkMisc> CREATOR = new Parcelable.Creator<NetworkMisc>() { // from class: android.net.NetworkMisc.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NetworkMisc createFromParcel(Parcel in) {
             NetworkMisc networkMisc = new NetworkMisc();
-            boolean z = false;
             networkMisc.allowBypass = in.readInt() != 0;
             networkMisc.explicitlySelected = in.readInt() != 0;
             networkMisc.acceptUnvalidated = in.readInt() != 0;
             networkMisc.subscriberId = in.readString();
             networkMisc.provisioningNotificationDisabled = in.readInt() != 0;
-            if (in.readInt() != 0) {
-                z = true;
-            }
-            networkMisc.skip464xlat = z;
+            networkMisc.skip464xlat = in.readInt() != 0;
             return networkMisc;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NetworkMisc[] newArray(int size) {
             return new NetworkMisc[size];
         }
@@ -46,10 +47,12 @@ public class NetworkMisc implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(this.allowBypass ? 1 : 0);
         out.writeInt(this.explicitlySelected ? 1 : 0);

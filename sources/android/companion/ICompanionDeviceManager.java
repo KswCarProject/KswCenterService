@@ -1,14 +1,16 @@
 package android.companion;
 
 import android.app.PendingIntent;
+import android.companion.IFindDeviceCallback;
 import android.content.ComponentName;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import java.util.List;
 
+/* loaded from: classes.dex */
 public interface ICompanionDeviceManager extends IInterface {
     void associate(AssociationRequest associationRequest, IFindDeviceCallback iFindDeviceCallback, String str) throws RemoteException;
 
@@ -22,33 +24,42 @@ public interface ICompanionDeviceManager extends IInterface {
 
     void stopScan(AssociationRequest associationRequest, IFindDeviceCallback iFindDeviceCallback, String str) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements ICompanionDeviceManager {
+        @Override // android.companion.ICompanionDeviceManager
         public void associate(AssociationRequest request, IFindDeviceCallback callback, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.companion.ICompanionDeviceManager
         public void stopScan(AssociationRequest request, IFindDeviceCallback callback, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.companion.ICompanionDeviceManager
         public List<String> getAssociations(String callingPackage, int userId) throws RemoteException {
             return null;
         }
 
+        @Override // android.companion.ICompanionDeviceManager
         public void disassociate(String deviceMacAddress, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.companion.ICompanionDeviceManager
         public boolean hasNotificationAccess(ComponentName component) throws RemoteException {
             return false;
         }
 
+        @Override // android.companion.ICompanionDeviceManager
         public PendingIntent requestNotificationAccess(ComponentName component) throws RemoteException {
             return null;
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements ICompanionDeviceManager {
         private static final String DESCRIPTOR = "android.companion.ICompanionDeviceManager";
         static final int TRANSACTION_associate = 1;
@@ -67,12 +78,13 @@ public interface ICompanionDeviceManager extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof ICompanionDeviceManager)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof ICompanionDeviceManager)) {
+                return (ICompanionDeviceManager) iin;
             }
-            return (ICompanionDeviceManager) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -96,130 +108,74 @@ public interface ICompanionDeviceManager extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v2, resolved type: android.companion.AssociationRequest} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v6, resolved type: android.companion.AssociationRequest} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v12, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v16, resolved type: android.content.ComponentName} */
-        /* JADX WARNING: type inference failed for: r1v1 */
-        /* JADX WARNING: type inference failed for: r1v21 */
-        /* JADX WARNING: type inference failed for: r1v22 */
-        /* JADX WARNING: type inference failed for: r1v23 */
-        /* JADX WARNING: type inference failed for: r1v24 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r6, android.os.Parcel r7, android.os.Parcel r8, int r9) throws android.os.RemoteException {
-            /*
-                r5 = this;
-                java.lang.String r0 = "android.companion.ICompanionDeviceManager"
-                r1 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r2 = 1
-                if (r6 == r1) goto L_0x00cb
-                r1 = 0
-                switch(r6) {
-                    case 1: goto L_0x00a5;
-                    case 2: goto L_0x007f;
-                    case 3: goto L_0x0069;
-                    case 4: goto L_0x0057;
-                    case 5: goto L_0x0039;
-                    case 6: goto L_0x0011;
-                    default: goto L_0x000c;
-                }
-            L_0x000c:
-                boolean r1 = super.onTransact(r6, r7, r8, r9)
-                return r1
-            L_0x0011:
-                r7.enforceInterface(r0)
-                int r3 = r7.readInt()
-                if (r3 == 0) goto L_0x0023
-                android.os.Parcelable$Creator<android.content.ComponentName> r1 = android.content.ComponentName.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r7)
-                android.content.ComponentName r1 = (android.content.ComponentName) r1
-                goto L_0x0024
-            L_0x0023:
-            L_0x0024:
-                android.app.PendingIntent r3 = r5.requestNotificationAccess(r1)
-                r8.writeNoException()
-                if (r3 == 0) goto L_0x0034
-                r8.writeInt(r2)
-                r3.writeToParcel(r8, r2)
-                goto L_0x0038
-            L_0x0034:
-                r4 = 0
-                r8.writeInt(r4)
-            L_0x0038:
-                return r2
-            L_0x0039:
-                r7.enforceInterface(r0)
-                int r3 = r7.readInt()
-                if (r3 == 0) goto L_0x004b
-                android.os.Parcelable$Creator<android.content.ComponentName> r1 = android.content.ComponentName.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r7)
-                android.content.ComponentName r1 = (android.content.ComponentName) r1
-                goto L_0x004c
-            L_0x004b:
-            L_0x004c:
-                boolean r3 = r5.hasNotificationAccess(r1)
-                r8.writeNoException()
-                r8.writeInt(r3)
-                return r2
-            L_0x0057:
-                r7.enforceInterface(r0)
-                java.lang.String r1 = r7.readString()
-                java.lang.String r3 = r7.readString()
-                r5.disassociate(r1, r3)
-                r8.writeNoException()
-                return r2
-            L_0x0069:
-                r7.enforceInterface(r0)
-                java.lang.String r1 = r7.readString()
-                int r3 = r7.readInt()
-                java.util.List r4 = r5.getAssociations(r1, r3)
-                r8.writeNoException()
-                r8.writeStringList(r4)
-                return r2
-            L_0x007f:
-                r7.enforceInterface(r0)
-                int r3 = r7.readInt()
-                if (r3 == 0) goto L_0x0091
-                android.os.Parcelable$Creator<android.companion.AssociationRequest> r1 = android.companion.AssociationRequest.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r7)
-                android.companion.AssociationRequest r1 = (android.companion.AssociationRequest) r1
-                goto L_0x0092
-            L_0x0091:
-            L_0x0092:
-                android.os.IBinder r3 = r7.readStrongBinder()
-                android.companion.IFindDeviceCallback r3 = android.companion.IFindDeviceCallback.Stub.asInterface(r3)
-                java.lang.String r4 = r7.readString()
-                r5.stopScan(r1, r3, r4)
-                r8.writeNoException()
-                return r2
-            L_0x00a5:
-                r7.enforceInterface(r0)
-                int r3 = r7.readInt()
-                if (r3 == 0) goto L_0x00b7
-                android.os.Parcelable$Creator<android.companion.AssociationRequest> r1 = android.companion.AssociationRequest.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r7)
-                android.companion.AssociationRequest r1 = (android.companion.AssociationRequest) r1
-                goto L_0x00b8
-            L_0x00b7:
-            L_0x00b8:
-                android.os.IBinder r3 = r7.readStrongBinder()
-                android.companion.IFindDeviceCallback r3 = android.companion.IFindDeviceCallback.Stub.asInterface(r3)
-                java.lang.String r4 = r7.readString()
-                r5.associate(r1, r3, r4)
-                r8.writeNoException()
-                return r2
-            L_0x00cb:
-                r8.writeString(r0)
-                return r2
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.companion.ICompanionDeviceManager.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    AssociationRequest _arg0 = data.readInt() != 0 ? AssociationRequest.CREATOR.createFromParcel(data) : null;
+                    IFindDeviceCallback _arg1 = IFindDeviceCallback.Stub.asInterface(data.readStrongBinder());
+                    String _arg2 = data.readString();
+                    associate(_arg0, _arg1, _arg2);
+                    reply.writeNoException();
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    AssociationRequest _arg02 = data.readInt() != 0 ? AssociationRequest.CREATOR.createFromParcel(data) : null;
+                    IFindDeviceCallback _arg12 = IFindDeviceCallback.Stub.asInterface(data.readStrongBinder());
+                    String _arg22 = data.readString();
+                    stopScan(_arg02, _arg12, _arg22);
+                    reply.writeNoException();
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg03 = data.readString();
+                    int _arg13 = data.readInt();
+                    List<String> _result = getAssociations(_arg03, _arg13);
+                    reply.writeNoException();
+                    reply.writeStringList(_result);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg04 = data.readString();
+                    String _arg14 = data.readString();
+                    disassociate(_arg04, _arg14);
+                    reply.writeNoException();
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg05 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    boolean hasNotificationAccess = hasNotificationAccess(_arg05);
+                    reply.writeNoException();
+                    reply.writeInt(hasNotificationAccess ? 1 : 0);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg06 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    PendingIntent _result2 = requestNotificationAccess(_arg06);
+                    reply.writeNoException();
+                    if (_result2 != null) {
+                        reply.writeInt(1);
+                        _result2.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements ICompanionDeviceManager {
             public static ICompanionDeviceManager sDefaultImpl;
             private IBinder mRemote;
@@ -228,6 +184,7 @@ public interface ICompanionDeviceManager extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -236,6 +193,7 @@ public interface ICompanionDeviceManager extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.companion.ICompanionDeviceManager
             public void associate(AssociationRequest request, IFindDeviceCallback callback, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -249,19 +207,19 @@ public interface ICompanionDeviceManager extends IInterface {
                     }
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(1, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().associate(request, callback, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().associate(request, callback, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.companion.ICompanionDeviceManager
             public void stopScan(AssociationRequest request, IFindDeviceCallback callback, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -275,19 +233,19 @@ public interface ICompanionDeviceManager extends IInterface {
                     }
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(2, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().stopScan(request, callback, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().stopScan(request, callback, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.companion.ICompanionDeviceManager
             public List<String> getAssociations(String callingPackage, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -295,13 +253,12 @@ public interface ICompanionDeviceManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPackage);
                     _data.writeInt(userId);
-                    if (!this.mRemote.transact(3, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAssociations(callingPackage, userId);
                     }
                     _reply.readException();
                     List<String> _result = _reply.createStringArrayList();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -309,6 +266,7 @@ public interface ICompanionDeviceManager extends IInterface {
                 }
             }
 
+            @Override // android.companion.ICompanionDeviceManager
             public void disassociate(String deviceMacAddress, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -316,40 +274,36 @@ public interface ICompanionDeviceManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(deviceMacAddress);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(4, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().disassociate(deviceMacAddress, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().disassociate(deviceMacAddress, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.companion.ICompanionDeviceManager
             public boolean hasNotificationAccess(ComponentName component) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (component != null) {
                         _data.writeInt(1);
                         component.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(5, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().hasNotificationAccess(component);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -357,6 +311,7 @@ public interface ICompanionDeviceManager extends IInterface {
                 }
             }
 
+            @Override // android.companion.ICompanionDeviceManager
             public PendingIntent requestNotificationAccess(ComponentName component) throws RemoteException {
                 PendingIntent _result;
                 Parcel _data = Parcel.obtain();
@@ -369,7 +324,8 @@ public interface ICompanionDeviceManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(6, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().requestNotificationAccess(component);
                     }
                     _reply.readException();
@@ -378,10 +334,7 @@ public interface ICompanionDeviceManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    PendingIntent _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -390,11 +343,11 @@ public interface ICompanionDeviceManager extends IInterface {
         }
 
         public static boolean setDefaultImpl(ICompanionDeviceManager impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static ICompanionDeviceManager getDefaultImpl() {

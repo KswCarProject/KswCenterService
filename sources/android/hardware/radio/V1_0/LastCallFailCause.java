@@ -2,6 +2,7 @@ package android.hardware.radio.V1_0;
 
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class LastCallFailCause {
     public static final int ACCESS_CLASS_BLOCKED = 260;
     public static final int ACCESS_INFORMATION_DISCARDED = 43;
@@ -780,7 +781,7 @@ public final class LastCallFailCause {
             flipped |= 65535;
         }
         if (o != flipped) {
-            list.add("0x" + Integer.toHexString((~((int) flipped)) & o));
+            list.add("0x" + Integer.toHexString((~flipped) & o));
         }
         return String.join(" | ", list);
     }

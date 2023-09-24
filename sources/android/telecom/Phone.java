@@ -2,7 +2,7 @@ package android.telecom;
 
 import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
-import android.os.Bundle;
+import android.p007os.Bundle;
 import android.telecom.InCallService;
 import android.util.ArrayMap;
 import java.util.Collections;
@@ -13,17 +13,19 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 @SystemApi
 @Deprecated
+/* loaded from: classes3.dex */
 public final class Phone {
     private CallAudioState mCallAudioState;
-    private final Map<String, Call> mCallByTelecomCallId = new ArrayMap();
     private final String mCallingPackage;
-    private final List<Call> mCalls = new CopyOnWriteArrayList();
-    private boolean mCanAddCall = true;
     private final InCallAdapter mInCallAdapter;
-    private final List<Listener> mListeners = new CopyOnWriteArrayList();
     private final int mTargetSdkVersion;
+    private final Map<String, Call> mCallByTelecomCallId = new ArrayMap();
+    private final List<Call> mCalls = new CopyOnWriteArrayList();
     private final List<Call> mUnmodifiableCalls = Collections.unmodifiableList(this.mCalls);
+    private final List<Listener> mListeners = new CopyOnWriteArrayList();
+    private boolean mCanAddCall = true;
 
+    /* loaded from: classes3.dex */
     public static abstract class Listener {
         @Deprecated
         public void onAudioStateChanged(Phone phone, AudioState audioState) {
@@ -54,8 +56,7 @@ public final class Phone {
         this.mTargetSdkVersion = targetSdkVersion;
     }
 
-    /* access modifiers changed from: package-private */
-    public final void internalAddCall(ParcelableCall parcelableCall) {
+    final void internalAddCall(ParcelableCall parcelableCall) {
         Call call = new Call(this, parcelableCall.getId(), this.mInCallAdapter, parcelableCall.getState(), this.mCallingPackage, this.mTargetSdkVersion);
         this.mCallByTelecomCallId.put(parcelableCall.getId(), call);
         this.mCalls.add(call);
@@ -64,8 +65,7 @@ public final class Phone {
         fireCallAdded(call);
     }
 
-    /* access modifiers changed from: package-private */
-    public final void internalRemoveCall(Call call) {
+    final void internalRemoveCall(Call call) {
         this.mCallByTelecomCallId.remove(call.internalGetCallId());
         this.mCalls.remove(call);
         InCallService.VideoCall videoCall = call.getVideoCall();
@@ -75,8 +75,7 @@ public final class Phone {
         fireCallRemoved(call);
     }
 
-    /* access modifiers changed from: package-private */
-    public final void internalUpdateCall(ParcelableCall parcelableCall) {
+    final void internalUpdateCall(ParcelableCall parcelableCall) {
         Call call = this.mCallByTelecomCallId.get(parcelableCall.getId());
         if (call != null) {
             checkCallTree(parcelableCall);
@@ -84,87 +83,75 @@ public final class Phone {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public final void internalSetPostDialWait(String telecomId, String remaining) {
+    final void internalSetPostDialWait(String telecomId, String remaining) {
         Call call = this.mCallByTelecomCallId.get(telecomId);
         if (call != null) {
             call.internalSetPostDialWait(remaining);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public final void internalCallAudioStateChanged(CallAudioState callAudioState) {
+    final void internalCallAudioStateChanged(CallAudioState callAudioState) {
         if (!Objects.equals(this.mCallAudioState, callAudioState)) {
             this.mCallAudioState = callAudioState;
             fireCallAudioStateChanged(callAudioState);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public final Call internalGetCallByTelecomId(String telecomId) {
+    final Call internalGetCallByTelecomId(String telecomId) {
         return this.mCallByTelecomCallId.get(telecomId);
     }
 
-    /* access modifiers changed from: package-private */
-    public final void internalBringToForeground(boolean showDialpad) {
+    final void internalBringToForeground(boolean showDialpad) {
         fireBringToForeground(showDialpad);
     }
 
-    /* access modifiers changed from: package-private */
-    public final void internalSetCanAddCall(boolean canAddCall) {
+    final void internalSetCanAddCall(boolean canAddCall) {
         if (this.mCanAddCall != canAddCall) {
             this.mCanAddCall = canAddCall;
             fireCanAddCallChanged(canAddCall);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public final void internalSilenceRinger() {
+    final void internalSilenceRinger() {
         fireSilenceRinger();
     }
 
-    /* access modifiers changed from: package-private */
-    public final void internalOnConnectionEvent(String telecomId, String event, Bundle extras) {
+    final void internalOnConnectionEvent(String telecomId, String event, Bundle extras) {
         Call call = this.mCallByTelecomCallId.get(telecomId);
         if (call != null) {
             call.internalOnConnectionEvent(event, extras);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public final void internalOnRttUpgradeRequest(String callId, int requestId) {
+    final void internalOnRttUpgradeRequest(String callId, int requestId) {
         Call call = this.mCallByTelecomCallId.get(callId);
         if (call != null) {
             call.internalOnRttUpgradeRequest(requestId);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public final void internalOnRttInitiationFailure(String callId, int reason) {
+    final void internalOnRttInitiationFailure(String callId, int reason) {
         Call call = this.mCallByTelecomCallId.get(callId);
         if (call != null) {
             call.internalOnRttInitiationFailure(reason);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public final void internalOnHandoverFailed(String callId, int error) {
+    final void internalOnHandoverFailed(String callId, int error) {
         Call call = this.mCallByTelecomCallId.get(callId);
         if (call != null) {
             call.internalOnHandoverFailed(error);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public final void internalOnHandoverComplete(String callId) {
+    final void internalOnHandoverComplete(String callId) {
         Call call = this.mCallByTelecomCallId.get(callId);
         if (call != null) {
             call.internalOnHandoverComplete();
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public final void destroy() {
+    final void destroy() {
         for (Call call : this.mCalls) {
             InCallService.VideoCall videoCall = call.getVideoCall();
             if (videoCall != null) {
@@ -266,7 +253,7 @@ public final class Phone {
         if (parcelableCall.getChildCallIds() != null) {
             for (int i = 0; i < parcelableCall.getChildCallIds().size(); i++) {
                 if (!this.mCallByTelecomCallId.containsKey(parcelableCall.getChildCallIds().get(i))) {
-                    Log.wtf((Object) this, "ParcelableCall %s has nonexistent child %s", parcelableCall.getId(), parcelableCall.getChildCallIds().get(i));
+                    Log.wtf(this, "ParcelableCall %s has nonexistent child %s", parcelableCall.getId(), parcelableCall.getChildCallIds().get(i));
                 }
             }
         }

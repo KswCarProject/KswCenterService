@@ -1,5 +1,6 @@
 package android.opengl;
 
+/* loaded from: classes3.dex */
 public class EGLImage extends EGLObjectHandle {
     private EGLImage(long handle) {
         super(handle);
@@ -9,11 +10,9 @@ public class EGLImage extends EGLObjectHandle {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof EGLImage)) {
-            return false;
-        }
-        if (getNativeHandle() == ((EGLImage) o).getNativeHandle()) {
-            return true;
+        if (o instanceof EGLImage) {
+            EGLImage that = (EGLImage) o;
+            return getNativeHandle() == that.getNativeHandle();
         }
         return false;
     }

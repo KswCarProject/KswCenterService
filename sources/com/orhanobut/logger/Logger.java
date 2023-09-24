@@ -3,6 +3,7 @@ package com.orhanobut.logger;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+/* loaded from: classes5.dex */
 public final class Logger {
     public static final int ASSERT = 7;
     public static final int DEBUG = 3;
@@ -28,40 +29,48 @@ public final class Logger {
         printer.clearLogAdapters();
     }
 
-    public static Printer t(@Nullable String tag) {
-        return printer.t(tag);
+    /* renamed from: t */
+    public static Printer m14t(@Nullable String tag) {
+        return printer.mo6t(tag);
     }
 
     public static void log(int priority, @Nullable String tag, @Nullable String message, @Nullable Throwable throwable) {
         printer.log(priority, tag, message, throwable);
     }
 
-    public static void d(@NonNull String message, @Nullable Object... args) {
-        printer.d(message, args);
+    /* renamed from: d */
+    public static void m18d(@NonNull String message, @Nullable Object... args) {
+        printer.mo10d(message, args);
     }
 
-    public static void d(@Nullable Object object) {
-        printer.d(object);
+    /* renamed from: d */
+    public static void m19d(@Nullable Object object) {
+        printer.mo11d(object);
     }
 
-    public static void e(@NonNull String message, @Nullable Object... args) {
-        printer.e((Throwable) null, message, args);
+    /* renamed from: e */
+    public static void m17e(@NonNull String message, @Nullable Object... args) {
+        printer.mo8e(null, message, args);
     }
 
-    public static void e(@Nullable Throwable throwable, @NonNull String message, @Nullable Object... args) {
-        printer.e(throwable, message, args);
+    /* renamed from: e */
+    public static void m16e(@Nullable Throwable throwable, @NonNull String message, @Nullable Object... args) {
+        printer.mo8e(throwable, message, args);
     }
 
-    public static void i(@NonNull String message, @Nullable Object... args) {
-        printer.i(message, args);
+    /* renamed from: i */
+    public static void m15i(@NonNull String message, @Nullable Object... args) {
+        printer.mo7i(message, args);
     }
 
-    public static void v(@NonNull String message, @Nullable Object... args) {
-        printer.v(message, args);
+    /* renamed from: v */
+    public static void m13v(@NonNull String message, @Nullable Object... args) {
+        printer.mo5v(message, args);
     }
 
-    public static void w(@NonNull String message, @Nullable Object... args) {
-        printer.w(message, args);
+    /* renamed from: w */
+    public static void m12w(@NonNull String message, @Nullable Object... args) {
+        printer.mo4w(message, args);
     }
 
     public static void wtf(@NonNull String message, @Nullable Object... args) {

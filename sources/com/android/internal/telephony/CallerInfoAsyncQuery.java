@@ -4,16 +4,16 @@ import android.app.ActivityManager;
 import android.content.AsyncQueryHandler;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.pm.PackageManager;
+import android.content.p002pm.PackageManager;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.os.SystemClock;
-import android.os.UserHandle;
-import android.os.UserManager;
+import android.p007os.Handler;
+import android.p007os.Looper;
+import android.p007os.Message;
+import android.p007os.SystemClock;
+import android.p007os.UserHandle;
+import android.p007os.UserManager;
 import android.provider.ContactsContract;
 import android.telephony.PhoneNumberUtils;
 import android.telephony.Rlog;
@@ -22,6 +22,7 @@ import android.text.TextUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+/* loaded from: classes4.dex */
 public class CallerInfoAsyncQuery {
     private static final boolean DBG = false;
     private static final boolean ENABLE_UNKNOWN_NUMBER_GEO_DESCRIPTION = true;
@@ -34,10 +35,12 @@ public class CallerInfoAsyncQuery {
     private static final String LOG_TAG = "CallerInfoAsyncQuery";
     private CallerInfoAsyncQueryHandler mHandler;
 
+    /* loaded from: classes4.dex */
     public interface OnQueryCompleteListener {
         void onQueryComplete(int i, Object obj, CallerInfo callerInfo);
     }
 
+    /* loaded from: classes4.dex */
     private static final class CookieWrapper {
         public Object cookie;
         public int event;
@@ -50,6 +53,7 @@ public class CallerInfoAsyncQuery {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class QueryPoolException extends SQLException {
         public QueryPoolException(String error) {
             super(error);
@@ -58,64 +62,65 @@ public class CallerInfoAsyncQuery {
 
     static ContentResolver getCurrentProfileContentResolver(Context context) {
         int currentUser = ActivityManager.getCurrentUser();
-        if (UserManager.get(context).getUserHandle() != currentUser) {
+        int myUser = UserManager.get(context).getUserHandle();
+        if (myUser != currentUser) {
             try {
-                return context.createPackageContextAsUser(context.getPackageName(), 0, new UserHandle(currentUser)).getContentResolver();
+                Context otherContext = context.createPackageContextAsUser(context.getPackageName(), 0, new UserHandle(currentUser));
+                return otherContext.getContentResolver();
             } catch (PackageManager.NameNotFoundException e) {
-                Rlog.e(LOG_TAG, "Can't find self package", e);
+                Rlog.m85e(LOG_TAG, "Can't find self package", e);
             }
         }
         return context.getContentResolver();
     }
 
+    /* loaded from: classes4.dex */
     private class CallerInfoAsyncQueryHandler extends AsyncQueryHandler {
-        /* access modifiers changed from: private */
-        public CallerInfo mCallerInfo;
-        /* access modifiers changed from: private */
-        public Context mContext;
+        private CallerInfo mCallerInfo;
+        private Context mContext;
         private List<Runnable> mPendingListenerCallbacks;
-        /* access modifiers changed from: private */
-        public Uri mQueryUri;
+        private Uri mQueryUri;
 
+        /* loaded from: classes4.dex */
         protected class CallerInfoWorkerHandler extends AsyncQueryHandler.WorkerHandler {
             public CallerInfoWorkerHandler(Looper looper) {
                 super(looper);
             }
 
+            @Override // android.content.AsyncQueryHandler.WorkerHandler, android.p007os.Handler
             public void handleMessage(Message msg) {
                 AsyncQueryHandler.WorkerArgs args = (AsyncQueryHandler.WorkerArgs) msg.obj;
                 CookieWrapper cw = (CookieWrapper) args.cookie;
-                if (cw == null) {
-                    Rlog.i(CallerInfoAsyncQuery.LOG_TAG, "Unexpected command (CookieWrapper is null): " + msg.what + " ignored by CallerInfoWorkerHandler, passing onto parent.");
-                    super.handleMessage(msg);
-                    return;
+                if (cw != null) {
+                    Rlog.m88d(CallerInfoAsyncQuery.LOG_TAG, "Processing event: " + cw.event + " token (arg1): " + msg.arg1 + " command: " + msg.what + " query URI: " + CallerInfoAsyncQuery.sanitizeUriToString(args.uri));
+                    switch (cw.event) {
+                        case 1:
+                            super.handleMessage(msg);
+                            return;
+                        case 2:
+                        case 3:
+                        case 4:
+                        case 5:
+                            Message reply = args.handler.obtainMessage(msg.what);
+                            reply.obj = args;
+                            reply.arg1 = msg.arg1;
+                            reply.sendToTarget();
+                            return;
+                        case 6:
+                            handleGeoDescription(msg);
+                            return;
+                        default:
+                            return;
+                    }
                 }
-                Rlog.d(CallerInfoAsyncQuery.LOG_TAG, "Processing event: " + cw.event + " token (arg1): " + msg.arg1 + " command: " + msg.what + " query URI: " + CallerInfoAsyncQuery.sanitizeUriToString(args.uri));
-                switch (cw.event) {
-                    case 1:
-                        super.handleMessage(msg);
-                        return;
-                    case 2:
-                    case 3:
-                    case 4:
-                    case 5:
-                        Message reply = args.handler.obtainMessage(msg.what);
-                        reply.obj = args;
-                        reply.arg1 = msg.arg1;
-                        reply.sendToTarget();
-                        return;
-                    case 6:
-                        handleGeoDescription(msg);
-                        return;
-                    default:
-                        return;
-                }
+                Rlog.m84i(CallerInfoAsyncQuery.LOG_TAG, "Unexpected command (CookieWrapper is null): " + msg.what + " ignored by CallerInfoWorkerHandler, passing onto parent.");
+                super.handleMessage(msg);
             }
 
             private void handleGeoDescription(Message msg) {
                 AsyncQueryHandler.WorkerArgs args = (AsyncQueryHandler.WorkerArgs) msg.obj;
                 CookieWrapper cw = (CookieWrapper) args.cookie;
-                if (!(TextUtils.isEmpty(cw.number) || cw.cookie == null || CallerInfoAsyncQueryHandler.this.mContext == null)) {
+                if (!TextUtils.isEmpty(cw.number) && cw.cookie != null && CallerInfoAsyncQueryHandler.this.mContext != null) {
                     long startTimeMillis = SystemClock.elapsedRealtime();
                     cw.geoDescription = CallerInfo.getGeoDescription(CallerInfoAsyncQueryHandler.this.mContext, cw.number);
                     long elapsedRealtime = SystemClock.elapsedRealtime() - startTimeMillis;
@@ -133,20 +138,18 @@ public class CallerInfoAsyncQuery {
             this.mContext = context;
         }
 
-        /* access modifiers changed from: protected */
-        public Handler createHandler(Looper looper) {
+        @Override // android.content.AsyncQueryHandler
+        protected Handler createHandler(Looper looper) {
             return new CallerInfoWorkerHandler(looper);
         }
 
-        /* access modifiers changed from: protected */
-        public void onQueryComplete(int token, Object cookie, Cursor cursor) {
-            final int i = token;
-            Cursor cursor2 = cursor;
-            Rlog.d(CallerInfoAsyncQuery.LOG_TAG, "##### onQueryComplete() #####   query complete for token: " + i);
+        @Override // android.content.AsyncQueryHandler
+        protected void onQueryComplete(final int token, Object cookie, Cursor cursor) {
+            Rlog.m88d(CallerInfoAsyncQuery.LOG_TAG, "##### onQueryComplete() #####   query complete for token: " + token);
             final CookieWrapper cw = (CookieWrapper) cookie;
             if (cw == null) {
-                Rlog.i(CallerInfoAsyncQuery.LOG_TAG, "Cookie is null, ignoring onQueryComplete() request.");
-                if (cursor2 != null) {
+                Rlog.m84i(CallerInfoAsyncQuery.LOG_TAG, "Cookie is null, ignoring onQueryComplete() request.");
+                if (cursor != null) {
                     cursor.close();
                 }
             } else if (cw.event == 3) {
@@ -155,7 +158,7 @@ public class CallerInfoAsyncQuery {
                 }
                 this.mPendingListenerCallbacks.clear();
                 CallerInfoAsyncQuery.this.release();
-                if (cursor2 != null) {
+                if (cursor != null) {
                     cursor.close();
                 }
             } else {
@@ -165,8 +168,7 @@ public class CallerInfoAsyncQuery {
                     }
                     CookieWrapper endMarker = new CookieWrapper();
                     endMarker.event = 3;
-                    CookieWrapper cookieWrapper = endMarker;
-                    startQuery(token, endMarker, (Uri) null, (String[]) null, (String) null, (String[]) null, (String) null);
+                    startQuery(token, endMarker, null, null, null, null, null);
                 }
                 if (this.mCallerInfo == null) {
                     if (this.mContext == null || this.mQueryUri == null) {
@@ -177,7 +179,7 @@ public class CallerInfoAsyncQuery {
                     } else if (cw.event == 5) {
                         this.mCallerInfo = new CallerInfo().markAsVoiceMail(cw.subId);
                     } else {
-                        this.mCallerInfo = CallerInfo.getCallerInfo(this.mContext, this.mQueryUri, cursor2);
+                        this.mCallerInfo = CallerInfo.getCallerInfo(this.mContext, this.mQueryUri, cursor);
                         CallerInfo newCallerInfo = CallerInfo.doSecondaryLookupIfNecessary(this.mContext, cw.number, this.mCallerInfo);
                         if (newCallerInfo != this.mCallerInfo) {
                             this.mCallerInfo = newCallerInfo;
@@ -187,25 +189,25 @@ public class CallerInfoAsyncQuery {
                         }
                         if (TextUtils.isEmpty(this.mCallerInfo.name)) {
                             cw.event = 6;
-                            CallerInfo callerInfo = newCallerInfo;
-                            startQuery(token, cw, (Uri) null, (String[]) null, (String) null, (String[]) null, (String) null);
+                            startQuery(token, cw, null, null, null, null, null);
                             return;
                         }
                     }
                     CookieWrapper endMarker2 = new CookieWrapper();
                     endMarker2.event = 3;
-                    startQuery(token, endMarker2, (Uri) null, (String[]) null, (String) null, (String[]) null, (String) null);
+                    startQuery(token, endMarker2, null, null, null, null, null);
                 }
                 if (cw.listener != null) {
-                    this.mPendingListenerCallbacks.add(new Runnable() {
+                    this.mPendingListenerCallbacks.add(new Runnable() { // from class: com.android.internal.telephony.CallerInfoAsyncQuery.CallerInfoAsyncQueryHandler.1
+                        @Override // java.lang.Runnable
                         public void run() {
-                            cw.listener.onQueryComplete(i, cw.cookie, CallerInfoAsyncQueryHandler.this.mCallerInfo);
+                            cw.listener.onQueryComplete(token, cw.cookie, CallerInfoAsyncQueryHandler.this.mCallerInfo);
                         }
                     });
                 } else {
-                    Rlog.w(CallerInfoAsyncQuery.LOG_TAG, "There is no listener to notify for this query.");
+                    Rlog.m80w(CallerInfoAsyncQuery.LOG_TAG, "There is no listener to notify for this query.");
                 }
-                if (cursor2 != null) {
+                if (cursor != null) {
                     cursor.close();
                 }
             }
@@ -222,34 +224,32 @@ public class CallerInfoAsyncQuery {
         cw.listener = listener;
         cw.cookie = cookie;
         cw.event = 1;
-        c.mHandler.startQuery(token, cw, contactRef, (String[]) null, (String) null, (String[]) null, (String) null);
+        c.mHandler.startQuery(token, cw, contactRef, null, null, null, null);
         return c;
     }
 
     public static CallerInfoAsyncQuery startQuery(int token, Context context, String number, OnQueryCompleteListener listener, Object cookie) {
-        return startQuery(token, context, number, listener, cookie, SubscriptionManager.getDefaultSubscriptionId());
+        int subId = SubscriptionManager.getDefaultSubscriptionId();
+        return startQuery(token, context, number, listener, cookie, subId);
     }
 
     public static CallerInfoAsyncQuery startQuery(int token, Context context, String number, OnQueryCompleteListener listener, Object cookie, int subId) {
-        Context context2 = context;
-        String str = number;
-        int i = subId;
-        Uri contactRef = ContactsContract.PhoneLookup.ENTERPRISE_CONTENT_FILTER_URI.buildUpon().appendPath(str).appendQueryParameter("sip", String.valueOf(PhoneNumberUtils.isUriNumber(number))).build();
+        Uri contactRef = ContactsContract.PhoneLookup.ENTERPRISE_CONTENT_FILTER_URI.buildUpon().appendPath(number).appendQueryParameter("sip", String.valueOf(PhoneNumberUtils.isUriNumber(number))).build();
         CallerInfoAsyncQuery c = new CallerInfoAsyncQuery();
-        c.allocate(context2, contactRef);
+        c.allocate(context, contactRef);
         CookieWrapper cw = new CookieWrapper();
         cw.listener = listener;
         cw.cookie = cookie;
-        cw.number = str;
-        cw.subId = i;
+        cw.number = number;
+        cw.subId = subId;
         if (PhoneNumberUtils.isLocalEmergencyNumber(context, number)) {
             cw.event = 4;
-        } else if (PhoneNumberUtils.isVoiceMailNumber(context2, i, str)) {
+        } else if (PhoneNumberUtils.isVoiceMailNumber(context, subId, number)) {
             cw.event = 5;
         } else {
             cw.event = 1;
         }
-        c.mHandler.startQuery(token, cw, contactRef, (String[]) null, (String) null, (String[]) null, (String) null);
+        c.mHandler.startQuery(token, cw, contactRef, null, null, null, null);
         return c;
     }
 
@@ -258,7 +258,7 @@ public class CallerInfoAsyncQuery {
         cw.listener = listener;
         cw.cookie = cookie;
         cw.event = 2;
-        this.mHandler.startQuery(token, cw, (Uri) null, (String[]) null, (String) null, (String[]) null, (String) null);
+        this.mHandler.startQuery(token, cw, null, null, null, null, null);
     }
 
     private void allocate(Context context, Uri contactRef) {
@@ -266,27 +266,27 @@ public class CallerInfoAsyncQuery {
             throw new QueryPoolException("Bad context or query uri.");
         }
         this.mHandler = new CallerInfoAsyncQueryHandler(context);
-        Uri unused = this.mHandler.mQueryUri = contactRef;
+        this.mHandler.mQueryUri = contactRef;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void release() {
-        Context unused = this.mHandler.mContext = null;
-        Uri unused2 = this.mHandler.mQueryUri = null;
-        CallerInfo unused3 = this.mHandler.mCallerInfo = null;
+        this.mHandler.mContext = null;
+        this.mHandler.mQueryUri = null;
+        this.mHandler.mCallerInfo = null;
         this.mHandler = null;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static String sanitizeUriToString(Uri uri) {
-        if (uri == null) {
-            return "";
-        }
-        String uriString = uri.toString();
-        int indexOfLastSlash = uriString.lastIndexOf(47);
-        if (indexOfLastSlash <= 0) {
+        if (uri != null) {
+            String uriString = uri.toString();
+            int indexOfLastSlash = uriString.lastIndexOf(47);
+            if (indexOfLastSlash > 0) {
+                return uriString.substring(0, indexOfLastSlash) + "/xxxxxxx";
+            }
             return uriString;
         }
-        return uriString.substring(0, indexOfLastSlash) + "/xxxxxxx";
+        return "";
     }
 }

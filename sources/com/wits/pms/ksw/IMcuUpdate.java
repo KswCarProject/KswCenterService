@@ -1,17 +1,19 @@
 package com.wits.pms.ksw;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import com.wits.pms.ksw.OnMcuUpdateProgressListener;
 
+/* loaded from: classes2.dex */
 public interface IMcuUpdate extends IInterface {
     void mcuUpdate(String str) throws RemoteException;
 
     void setOnMcuUpdateProgressListener(OnMcuUpdateProgressListener onMcuUpdateProgressListener) throws RemoteException;
 
+    /* loaded from: classes2.dex */
     public static abstract class Stub extends Binder implements IMcuUpdate {
         private static final String DESCRIPTOR = "com.wits.pms.ksw.IMcuUpdate";
         static final int TRANSACTION_mcuUpdate = 1;
@@ -26,38 +28,42 @@ public interface IMcuUpdate extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IMcuUpdate)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IMcuUpdate)) {
+                return (IMcuUpdate) iin;
             }
-            return (IMcuUpdate) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        mcuUpdate(data.readString());
-                        reply.writeNoException();
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        setOnMcuUpdateProgressListener(OnMcuUpdateProgressListener.Stub.asInterface(data.readStrongBinder()));
-                        reply.writeNoException();
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0 = data.readString();
+                    mcuUpdate(_arg0);
+                    reply.writeNoException();
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    OnMcuUpdateProgressListener _arg02 = OnMcuUpdateProgressListener.Stub.asInterface(data.readStrongBinder());
+                    setOnMcuUpdateProgressListener(_arg02);
+                    reply.writeNoException();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes2.dex */
         private static class Proxy implements IMcuUpdate {
             private IBinder mRemote;
 
@@ -65,6 +71,7 @@ public interface IMcuUpdate extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -73,6 +80,7 @@ public interface IMcuUpdate extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // com.wits.pms.ksw.IMcuUpdate
             public void mcuUpdate(String path) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -87,6 +95,7 @@ public interface IMcuUpdate extends IInterface {
                 }
             }
 
+            @Override // com.wits.pms.ksw.IMcuUpdate
             public void setOnMcuUpdateProgressListener(OnMcuUpdateProgressListener listener) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();

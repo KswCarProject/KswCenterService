@@ -1,43 +1,48 @@
 package android.view;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes4.dex */
 public abstract class AbsSavedState implements Parcelable {
-    public static final Parcelable.Creator<AbsSavedState> CREATOR = new Parcelable.ClassLoaderCreator<AbsSavedState>() {
+    private final Parcelable mSuperState;
+    public static final AbsSavedState EMPTY_STATE = new AbsSavedState() { // from class: android.view.AbsSavedState.1
+    };
+    public static final Parcelable.Creator<AbsSavedState> CREATOR = new Parcelable.ClassLoaderCreator<AbsSavedState>() { // from class: android.view.AbsSavedState.2
+        @Override // android.p007os.Parcelable.Creator
         public AbsSavedState createFromParcel(Parcel in) {
             return createFromParcel(in, (ClassLoader) null);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.ClassLoaderCreator
         public AbsSavedState createFromParcel(Parcel in, ClassLoader loader) {
-            if (in.readParcelable(loader) == null) {
-                return AbsSavedState.EMPTY_STATE;
+            Parcelable superState = in.readParcelable(loader);
+            if (superState != null) {
+                throw new IllegalStateException("superState must be null");
             }
-            throw new IllegalStateException("superState must be null");
+            return AbsSavedState.EMPTY_STATE;
         }
 
+        @Override // android.p007os.Parcelable.Creator
         public AbsSavedState[] newArray(int size) {
             return new AbsSavedState[size];
         }
     };
-    public static final AbsSavedState EMPTY_STATE = new AbsSavedState() {
-    };
-    private final Parcelable mSuperState;
 
     private AbsSavedState() {
         this.mSuperState = null;
     }
 
     protected AbsSavedState(Parcelable superState) {
-        if (superState != null) {
-            this.mSuperState = superState != EMPTY_STATE ? superState : null;
-            return;
+        if (superState == null) {
+            throw new IllegalArgumentException("superState must not be null");
         }
-        throw new IllegalArgumentException("superState must not be null");
+        this.mSuperState = superState != EMPTY_STATE ? superState : null;
     }
 
     protected AbsSavedState(Parcel source) {
-        this(source, (ClassLoader) null);
+        this(source, null);
     }
 
     protected AbsSavedState(Parcel source, ClassLoader loader) {
@@ -49,10 +54,12 @@ public abstract class AbsSavedState implements Parcelable {
         return this.mSuperState;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(this.mSuperState, flags);
     }

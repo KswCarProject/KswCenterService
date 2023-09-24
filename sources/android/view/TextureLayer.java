@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.SurfaceTexture;
 import com.android.internal.util.VirtualRefBasePtr;
 
+/* loaded from: classes4.dex */
 public final class TextureLayer {
     private VirtualRefBasePtr mFinalizer;
     private HardwareRenderer mRenderer;
@@ -30,7 +31,7 @@ public final class TextureLayer {
     }
 
     public void setLayerPaint(Paint paint) {
-        nSetLayerPaint(this.mFinalizer.get(), paint != null ? paint.getNativeInstance() : 0);
+        nSetLayerPaint(this.mFinalizer.get(), paint != null ? paint.getNativeInstance() : 0L);
         this.mRenderer.pushLayerUpdate(this);
     }
 
@@ -39,12 +40,13 @@ public final class TextureLayer {
     }
 
     public void destroy() {
-        if (isValid()) {
-            this.mRenderer.onLayerDestroyed(this);
-            this.mRenderer = null;
-            this.mFinalizer.release();
-            this.mFinalizer = null;
+        if (!isValid()) {
+            return;
         }
+        this.mRenderer.onLayerDestroyed(this);
+        this.mRenderer = null;
+        this.mFinalizer.release();
+        this.mFinalizer = null;
     }
 
     public long getDeferredLayerUpdater() {

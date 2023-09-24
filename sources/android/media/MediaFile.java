@@ -8,34 +8,36 @@ import com.android.internal.widget.MessagingMessage;
 import java.util.HashMap;
 import libcore.net.MimeUtils;
 
+/* loaded from: classes3.dex */
 public class MediaFile {
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     private static final int FIRST_AUDIO_FILE_TYPE = 1;
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     private static final int LAST_AUDIO_FILE_TYPE = 10;
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     private static final HashMap<String, MediaFileType> sFileTypeMap = new HashMap<>();
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     private static final HashMap<String, Integer> sFileTypeToFormatMap = new HashMap<>();
     @UnsupportedAppUsage
-    private static final HashMap<Integer, String> sFormatToMimeTypeMap = new HashMap<>();
-    @UnsupportedAppUsage
     private static final HashMap<String, Integer> sMimeTypeToFormatMap = new HashMap<>();
+    @UnsupportedAppUsage
+    private static final HashMap<Integer, String> sFormatToMimeTypeMap = new HashMap<>();
 
     @Deprecated
+    /* loaded from: classes3.dex */
     public static class MediaFileType {
         @UnsupportedAppUsage
         public final int fileType;
         @UnsupportedAppUsage
         public final String mimeType;
 
-        MediaFileType(int fileType2, String mimeType2) {
-            this.fileType = fileType2;
-            this.mimeType = mimeType2;
+        MediaFileType(int fileType, String mimeType) {
+            this.fileType = fileType;
+            this.mimeType = mimeType;
         }
     }
 
@@ -88,8 +90,8 @@ public class MediaFile {
         addFileType(MtpConstants.FORMAT_MS_POWERPOINT_PRESENTATION, "application/vnd.openxmlformats-officedocument.presentationml.presentation");
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     static void addFileType(String extension, int fileType, String mimeType) {
     }
 
@@ -102,38 +104,38 @@ public class MediaFile {
         }
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public static boolean isAudioFileType(int fileType) {
         return false;
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public static boolean isVideoFileType(int fileType) {
         return false;
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public static boolean isImageFileType(int fileType) {
         return false;
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public static boolean isPlayListFileType(int fileType) {
         return false;
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public static boolean isDrmFileType(int fileType) {
         return false;
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public static MediaFileType getFileType(String path) {
         return null;
     }
@@ -154,79 +156,68 @@ public class MediaFile {
         return normalizeMimeType(mimeType).startsWith(MessagingMessage.IMAGE_MIME_TYPE_PREFIX);
     }
 
-    /* JADX WARNING: Can't fix incorrect switch cases order */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public static boolean isPlayListMimeType(java.lang.String r4) {
-        /*
-            java.lang.String r0 = normalizeMimeType(r4)
-            int r1 = r0.hashCode()
-            r2 = 1
-            r3 = 0
-            switch(r1) {
-                case -1165508903: goto L_0x0040;
-                case -979095690: goto L_0x0036;
-                case -622808459: goto L_0x002c;
-                case -432766831: goto L_0x0022;
-                case 264230524: goto L_0x0018;
-                case 1872259501: goto L_0x000e;
-                default: goto L_0x000d;
-            }
-        L_0x000d:
-            goto L_0x004a
-        L_0x000e:
-            java.lang.String r1 = "application/vnd.ms-wpl"
-            boolean r0 = r0.equals(r1)
-            if (r0 == 0) goto L_0x004a
-            r0 = r3
-            goto L_0x004b
-        L_0x0018:
-            java.lang.String r1 = "audio/x-mpegurl"
-            boolean r0 = r0.equals(r1)
-            if (r0 == 0) goto L_0x004a
-            r0 = r2
-            goto L_0x004b
-        L_0x0022:
-            java.lang.String r1 = "audio/mpegurl"
-            boolean r0 = r0.equals(r1)
-            if (r0 == 0) goto L_0x004a
-            r0 = 2
-            goto L_0x004b
-        L_0x002c:
-            java.lang.String r1 = "application/vnd.apple.mpegurl"
-            boolean r0 = r0.equals(r1)
-            if (r0 == 0) goto L_0x004a
-            r0 = 4
-            goto L_0x004b
-        L_0x0036:
-            java.lang.String r1 = "application/x-mpegurl"
-            boolean r0 = r0.equals(r1)
-            if (r0 == 0) goto L_0x004a
-            r0 = 3
-            goto L_0x004b
-        L_0x0040:
-            java.lang.String r1 = "audio/x-scpls"
-            boolean r0 = r0.equals(r1)
-            if (r0 == 0) goto L_0x004a
-            r0 = 5
-            goto L_0x004b
-        L_0x004a:
-            r0 = -1
-        L_0x004b:
-            switch(r0) {
-                case 0: goto L_0x004f;
-                case 1: goto L_0x004f;
-                case 2: goto L_0x004f;
-                case 3: goto L_0x004f;
-                case 4: goto L_0x004f;
-                case 5: goto L_0x004f;
-                default: goto L_0x004e;
-            }
-        L_0x004e:
-            return r3
-        L_0x004f:
-            return r2
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.media.MediaFile.isPlayListMimeType(java.lang.String):boolean");
+    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
+    public static boolean isPlayListMimeType(String mimeType) {
+        char c;
+        String normalizeMimeType = normalizeMimeType(mimeType);
+        switch (normalizeMimeType.hashCode()) {
+            case -1165508903:
+                if (normalizeMimeType.equals("audio/x-scpls")) {
+                    c = 5;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -979095690:
+                if (normalizeMimeType.equals("application/x-mpegurl")) {
+                    c = 3;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -622808459:
+                if (normalizeMimeType.equals("application/vnd.apple.mpegurl")) {
+                    c = 4;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case -432766831:
+                if (normalizeMimeType.equals("audio/mpegurl")) {
+                    c = 2;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 264230524:
+                if (normalizeMimeType.equals("audio/x-mpegurl")) {
+                    c = 1;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 1872259501:
+                if (normalizeMimeType.equals("application/vnd.ms-wpl")) {
+                    c = 0;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            default:
+                c = '\uffff';
+                break;
+        }
+        switch (c) {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+                return true;
+            default:
+                return false;
+        }
     }
 
     public static boolean isDrmMimeType(String mimeType) {
@@ -249,14 +240,14 @@ public class MediaFile {
 
     public static String getFileExtension(String path) {
         int lastDot;
-        if (path != null && (lastDot = path.lastIndexOf(46)) >= 0) {
-            return path.substring(lastDot + 1);
+        if (path == null || (lastDot = path.lastIndexOf(46)) < 0) {
+            return null;
         }
-        return null;
+        return path.substring(lastDot + 1);
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public static int getFileTypeForMimeType(String mimeType) {
         return 0;
     }
@@ -311,10 +302,10 @@ public class MediaFile {
         if (mimeType2.startsWith("video/")) {
             return MtpConstants.FORMAT_UNDEFINED_VIDEO;
         }
-        if (mimeType2.startsWith(MessagingMessage.IMAGE_MIME_TYPE_PREFIX)) {
-            return 14336;
+        if (!mimeType2.startsWith(MessagingMessage.IMAGE_MIME_TYPE_PREFIX)) {
+            return 12288;
         }
-        return 12288;
+        return 14336;
     }
 
     private static String normalizeMimeType(String mimeType) {

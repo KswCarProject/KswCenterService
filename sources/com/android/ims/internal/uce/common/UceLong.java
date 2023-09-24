@@ -1,15 +1,20 @@
 package com.android.ims.internal.uce.common;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes4.dex */
 public class UceLong implements Parcelable {
-    public static final Parcelable.Creator<UceLong> CREATOR = new Parcelable.Creator<UceLong>() {
+    public static final Parcelable.Creator<UceLong> CREATOR = new Parcelable.Creator<UceLong>() { // from class: com.android.ims.internal.uce.common.UceLong.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public UceLong createFromParcel(Parcel source) {
             return new UceLong(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public UceLong[] newArray(int size) {
             return new UceLong[size];
         }
@@ -46,10 +51,12 @@ public class UceLong implements Parcelable {
         return new UceLong();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         writeToParcel(dest);
     }

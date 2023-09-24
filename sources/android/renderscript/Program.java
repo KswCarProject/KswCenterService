@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
+/* loaded from: classes3.dex */
 public class Program extends BaseObj {
     static final int MAX_CONSTANT = 8;
     static final int MAX_INPUT = 8;
@@ -20,17 +21,19 @@ public class Program extends BaseObj {
     String[] mTextureNames;
     TextureType[] mTextures;
 
+    /* loaded from: classes3.dex */
     public enum TextureType {
         TEXTURE_2D(0),
         TEXTURE_CUBE(1);
         
         int mID;
 
-        private TextureType(int id) {
+        TextureType(int id) {
             this.mID = id;
         }
     }
 
+    /* loaded from: classes3.dex */
     enum ProgramParam {
         INPUT(0),
         OUTPUT(1),
@@ -39,7 +42,7 @@ public class Program extends BaseObj {
         
         int mID;
 
-        private ProgramParam(int id) {
+        ProgramParam(int id) {
             this.mID = id;
         }
     }
@@ -57,10 +60,10 @@ public class Program extends BaseObj {
     }
 
     public Type getConstant(int slot) {
-        if (slot >= 0 && slot < this.mConstants.length) {
-            return this.mConstants[slot];
+        if (slot < 0 || slot >= this.mConstants.length) {
+            throw new IllegalArgumentException("Slot ID out of range.");
         }
-        throw new IllegalArgumentException("Slot ID out of range.");
+        return this.mConstants[slot];
     }
 
     public int getTextureCount() {
@@ -68,38 +71,40 @@ public class Program extends BaseObj {
     }
 
     public TextureType getTextureType(int slot) {
-        if (slot >= 0 && slot < this.mTextureCount) {
-            return this.mTextures[slot];
+        if (slot < 0 || slot >= this.mTextureCount) {
+            throw new IllegalArgumentException("Slot ID out of range.");
         }
-        throw new IllegalArgumentException("Slot ID out of range.");
+        return this.mTextures[slot];
     }
 
     public String getTextureName(int slot) {
-        if (slot >= 0 && slot < this.mTextureCount) {
-            return this.mTextureNames[slot];
+        if (slot < 0 || slot >= this.mTextureCount) {
+            throw new IllegalArgumentException("Slot ID out of range.");
         }
-        throw new IllegalArgumentException("Slot ID out of range.");
+        return this.mTextureNames[slot];
     }
 
     public void bindConstants(Allocation a, int slot) {
         if (slot < 0 || slot >= this.mConstants.length) {
             throw new IllegalArgumentException("Slot ID out of range.");
-        } else if (a == null || a.getType().getID(this.mRS) == this.mConstants[slot].getID(this.mRS)) {
-            this.mRS.nProgramBindConstants(getID(this.mRS), slot, a != null ? a.getID(this.mRS) : 0);
-        } else {
+        }
+        if (a != null && a.getType().getID(this.mRS) != this.mConstants[slot].getID(this.mRS)) {
             throw new IllegalArgumentException("Allocation type does not match slot type.");
         }
+        long id = a != null ? a.getID(this.mRS) : 0L;
+        this.mRS.nProgramBindConstants(getID(this.mRS), slot, id);
     }
 
     public void bindTexture(Allocation va, int slot) throws IllegalArgumentException {
         this.mRS.validate();
         if (slot < 0 || slot >= this.mTextureCount) {
             throw new IllegalArgumentException("Slot ID out of range.");
-        } else if (va == null || !va.getType().hasFaces() || this.mTextures[slot] == TextureType.TEXTURE_CUBE) {
-            this.mRS.nProgramBindTexture(getID(this.mRS), slot, va != null ? va.getID(this.mRS) : 0);
-        } else {
+        }
+        if (va != null && va.getType().hasFaces() && this.mTextures[slot] != TextureType.TEXTURE_CUBE) {
             throw new IllegalArgumentException("Cannot bind cubemap to 2d texture slot");
         }
+        long id = va != null ? va.getID(this.mRS) : 0L;
+        this.mRS.nProgramBindTexture(getID(this.mRS), slot, id);
     }
 
     public void bindSampler(Sampler vs, int slot) throws IllegalArgumentException {
@@ -107,31 +112,33 @@ public class Program extends BaseObj {
         if (slot < 0 || slot >= this.mTextureCount) {
             throw new IllegalArgumentException("Slot ID out of range.");
         }
-        this.mRS.nProgramBindSampler(getID(this.mRS), slot, vs != null ? vs.getID(this.mRS) : 0);
+        long id = vs != null ? vs.getID(this.mRS) : 0L;
+        this.mRS.nProgramBindSampler(getID(this.mRS), slot, id);
     }
 
+    /* loaded from: classes3.dex */
     public static class BaseProgramBuilder {
         @UnsupportedAppUsage
-        int mConstantCount = 0;
+        RenderScript mRS;
+        @UnsupportedAppUsage
+        String mShader;
+        Type[] mTextures;
+        @UnsupportedAppUsage
+        Element[] mInputs = new Element[8];
+        @UnsupportedAppUsage
+        Element[] mOutputs = new Element[8];
         @UnsupportedAppUsage
         Type[] mConstants = new Type[8];
         @UnsupportedAppUsage
         int mInputCount = 0;
         @UnsupportedAppUsage
-        Element[] mInputs = new Element[8];
-        @UnsupportedAppUsage
         int mOutputCount = 0;
         @UnsupportedAppUsage
-        Element[] mOutputs = new Element[8];
-        @UnsupportedAppUsage
-        RenderScript mRS;
-        @UnsupportedAppUsage
-        String mShader;
+        int mConstantCount = 0;
         @UnsupportedAppUsage
         int mTextureCount = 0;
-        String[] mTextureNames = new String[8];
         TextureType[] mTextureTypes = new TextureType[8];
-        Type[] mTextures;
+        String[] mTextureNames = new String[8];
 
         @UnsupportedAppUsage
         protected BaseProgramBuilder(RenderScript rs) {
@@ -147,16 +154,17 @@ public class Program extends BaseObj {
             InputStream is = resources.openRawResource(resourceID);
             try {
                 byte[] str = new byte[1024];
+                byte[] str2 = str;
                 int strLength = 0;
                 while (true) {
-                    int bytesLeft = str.length - strLength;
+                    int bytesLeft = str2.length - strLength;
                     if (bytesLeft == 0) {
-                        byte[] buf2 = new byte[(str.length * 2)];
-                        System.arraycopy(str, 0, buf2, 0, str.length);
-                        str = buf2;
-                        bytesLeft = str.length - strLength;
+                        byte[] buf2 = new byte[str2.length * 2];
+                        System.arraycopy(str2, 0, buf2, 0, str2.length);
+                        str2 = buf2;
+                        bytesLeft = str2.length - strLength;
                     }
-                    int bytesRead = is.read(str, strLength, bytesLeft);
+                    int bytesRead = is.read(str2, strLength, bytesLeft);
                     if (bytesRead <= 0) {
                         break;
                     }
@@ -164,16 +172,13 @@ public class Program extends BaseObj {
                 }
                 is.close();
                 try {
-                    this.mShader = new String(str, 0, strLength, "UTF-8");
+                    this.mShader = new String(str2, 0, strLength, "UTF-8");
                 } catch (UnsupportedEncodingException e) {
-                    Log.e("RenderScript shader creation", "Could not decode shader string");
+                    Log.m70e("RenderScript shader creation", "Could not decode shader string");
                 }
                 return this;
             } catch (IOException e2) {
                 throw new Resources.NotFoundException();
-            } catch (Throwable th) {
-                is.close();
-                throw th;
             }
         }
 
@@ -188,13 +193,13 @@ public class Program extends BaseObj {
         public BaseProgramBuilder addConstant(Type t) throws IllegalStateException {
             if (this.mConstantCount >= 8) {
                 throw new RSIllegalArgumentException("Max input count exceeded.");
-            } else if (!t.getElement().isComplex()) {
-                this.mConstants[this.mConstantCount] = t;
-                this.mConstantCount++;
-                return this;
-            } else {
+            }
+            if (t.getElement().isComplex()) {
                 throw new RSIllegalArgumentException("Complex elements not allowed.");
             }
+            this.mConstants[this.mConstantCount] = t;
+            this.mConstantCount++;
+            return this;
         }
 
         public BaseProgramBuilder addTexture(TextureType texType) throws IllegalArgumentException {
@@ -203,17 +208,16 @@ public class Program extends BaseObj {
         }
 
         public BaseProgramBuilder addTexture(TextureType texType, String texName) throws IllegalArgumentException {
-            if (this.mTextureCount < 8) {
-                this.mTextureTypes[this.mTextureCount] = texType;
-                this.mTextureNames[this.mTextureCount] = texName;
-                this.mTextureCount++;
-                return this;
+            if (this.mTextureCount >= 8) {
+                throw new IllegalArgumentException("Max texture count exceeded.");
             }
-            throw new IllegalArgumentException("Max texture count exceeded.");
+            this.mTextureTypes[this.mTextureCount] = texType;
+            this.mTextureNames[this.mTextureCount] = texName;
+            this.mTextureCount++;
+            return this;
         }
 
-        /* access modifiers changed from: protected */
-        public void initProgram(Program p) {
+        protected void initProgram(Program p) {
             p.mInputs = new Element[this.mInputCount];
             System.arraycopy(this.mInputs, 0, p.mInputs, 0, this.mInputCount);
             p.mOutputs = new Element[this.mOutputCount];

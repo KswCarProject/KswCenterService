@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+/* loaded from: classes4.dex */
 public class ArrayAdapter<T> extends BaseAdapter implements Filterable, ThemedSpinnerAdapter {
     private final Context mContext;
     private LayoutInflater mDropDownInflater;
@@ -24,17 +25,14 @@ public class ArrayAdapter<T> extends BaseAdapter implements Filterable, ThemedSp
     private int mFieldId;
     private ArrayAdapter<T>.ArrayFilter mFilter;
     private final LayoutInflater mInflater;
-    /* access modifiers changed from: private */
     @UnsupportedAppUsage
-    public final Object mLock;
+    private final Object mLock;
     private boolean mNotifyOnChange;
-    /* access modifiers changed from: private */
     @UnsupportedAppUsage
-    public List<T> mObjects;
+    private List<T> mObjects;
     private boolean mObjectsFromResources;
-    /* access modifiers changed from: private */
     @UnsupportedAppUsage
-    public ArrayList<T> mOriginalValues;
+    private ArrayList<T> mOriginalValues;
     private final int mResource;
 
     public ArrayAdapter(Context context, int resource) {
@@ -171,6 +169,7 @@ public class ArrayAdapter<T> extends BaseAdapter implements Filterable, ThemedSp
         }
     }
 
+    @Override // android.widget.BaseAdapter
     public void notifyDataSetChanged() {
         super.notifyDataSetChanged();
         this.mNotifyOnChange = true;
@@ -184,10 +183,12 @@ public class ArrayAdapter<T> extends BaseAdapter implements Filterable, ThemedSp
         return this.mContext;
     }
 
+    @Override // android.widget.Adapter
     public int getCount() {
         return this.mObjects.size();
     }
 
+    @Override // android.widget.Adapter
     public T getItem(int position) {
         return this.mObjects.get(position);
     }
@@ -196,10 +197,12 @@ public class ArrayAdapter<T> extends BaseAdapter implements Filterable, ThemedSp
         return this.mObjects.indexOf(item);
     }
 
+    @Override // android.widget.Adapter
     public long getItemId(int position) {
-        return (long) position;
+        return position;
     }
 
+    @Override // android.widget.Adapter
     public View getView(int position, View convertView, ViewGroup parent) {
         return createViewFromResource(this.mInflater, position, convertView, parent, this.mResource);
     }
@@ -225,11 +228,11 @@ public class ArrayAdapter<T> extends BaseAdapter implements Filterable, ThemedSp
             if (item instanceof CharSequence) {
                 text.setText((CharSequence) item);
             } else {
-                text.setText((CharSequence) item.toString());
+                text.setText(item.toString());
             }
             return view;
         } catch (ClassCastException e) {
-            Log.e("ArrayAdapter", "You must supply a resource ID for a TextView");
+            Log.m70e("ArrayAdapter", "You must supply a resource ID for a TextView");
             throw new IllegalStateException("ArrayAdapter requires the resource ID to be a TextView", e);
         }
     }
@@ -238,16 +241,19 @@ public class ArrayAdapter<T> extends BaseAdapter implements Filterable, ThemedSp
         this.mDropDownResource = resource;
     }
 
+    @Override // android.widget.ThemedSpinnerAdapter
     public void setDropDownViewTheme(Resources.Theme theme) {
         if (theme == null) {
             this.mDropDownInflater = null;
         } else if (theme == this.mInflater.getContext().getTheme()) {
             this.mDropDownInflater = this.mInflater;
         } else {
-            this.mDropDownInflater = LayoutInflater.from(new ContextThemeWrapper(this.mContext, theme));
+            Context context = new ContextThemeWrapper(this.mContext, theme);
+            this.mDropDownInflater = LayoutInflater.from(context);
         }
     }
 
+    @Override // android.widget.ThemedSpinnerAdapter
     public Resources.Theme getDropDownViewTheme() {
         if (this.mDropDownInflater == null) {
             return null;
@@ -255,14 +261,18 @@ public class ArrayAdapter<T> extends BaseAdapter implements Filterable, ThemedSp
         return this.mDropDownInflater.getContext().getTheme();
     }
 
+    @Override // android.widget.BaseAdapter, android.widget.SpinnerAdapter
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
-        return createViewFromResource(this.mDropDownInflater == null ? this.mInflater : this.mDropDownInflater, position, convertView, parent, this.mDropDownResource);
+        LayoutInflater inflater = this.mDropDownInflater == null ? this.mInflater : this.mDropDownInflater;
+        return createViewFromResource(inflater, position, convertView, parent, this.mDropDownResource);
     }
 
     public static ArrayAdapter<CharSequence> createFromResource(Context context, int textArrayResId, int textViewResId) {
-        return new ArrayAdapter(context, textViewResId, 0, Arrays.asList(context.getResources().getTextArray(textArrayResId)), true);
+        CharSequence[] strings = context.getResources().getTextArray(textArrayResId);
+        return new ArrayAdapter<>(context, textViewResId, 0, Arrays.asList(strings), true);
     }
 
+    @Override // android.widget.Filterable
     public Filter getFilter() {
         if (this.mFilter == null) {
             this.mFilter = new ArrayFilter();
@@ -270,6 +280,7 @@ public class ArrayAdapter<T> extends BaseAdapter implements Filterable, ThemedSp
         return this.mFilter;
     }
 
+    @Override // android.widget.BaseAdapter, android.widget.Adapter
     public CharSequence[] getAutofillOptions() {
         CharSequence[] explicitOptions = super.getAutofillOptions();
         if (explicitOptions != null) {
@@ -278,23 +289,25 @@ public class ArrayAdapter<T> extends BaseAdapter implements Filterable, ThemedSp
         if (!this.mObjectsFromResources || this.mObjects == null || this.mObjects.isEmpty()) {
             return null;
         }
-        CharSequence[] options = new CharSequence[this.mObjects.size()];
+        int size = this.mObjects.size();
+        CharSequence[] options = new CharSequence[size];
         this.mObjects.toArray(options);
         return options;
     }
 
+    /* loaded from: classes4.dex */
     private class ArrayFilter extends Filter {
         private ArrayFilter() {
         }
 
-        /* access modifiers changed from: protected */
-        public Filter.FilterResults performFiltering(CharSequence prefix) {
+        @Override // android.widget.Filter
+        protected Filter.FilterResults performFiltering(CharSequence prefix) {
             ArrayList<T> list;
             ArrayList<T> values;
             Filter.FilterResults results = new Filter.FilterResults();
             if (ArrayAdapter.this.mOriginalValues == null) {
                 synchronized (ArrayAdapter.this.mLock) {
-                    ArrayList unused = ArrayAdapter.this.mOriginalValues = new ArrayList(ArrayAdapter.this.mObjects);
+                    ArrayAdapter.this.mOriginalValues = new ArrayList(ArrayAdapter.this.mObjects);
                 }
             }
             if (prefix == null || prefix.length() == 0) {
@@ -320,13 +333,14 @@ public class ArrayAdapter<T> extends BaseAdapter implements Filterable, ThemedSp
                         int length = words.length;
                         int i2 = 0;
                         while (true) {
-                            if (i2 >= length) {
-                                break;
-                            } else if (words[i2].startsWith(prefixString)) {
-                                newValues.add(value);
-                                break;
-                            } else {
-                                i2++;
+                            if (i2 < length) {
+                                String word = words[i2];
+                                if (!word.startsWith(prefixString)) {
+                                    i2++;
+                                } else {
+                                    newValues.add(value);
+                                    break;
+                                }
                             }
                         }
                     }
@@ -337,9 +351,9 @@ public class ArrayAdapter<T> extends BaseAdapter implements Filterable, ThemedSp
             return results;
         }
 
-        /* access modifiers changed from: protected */
-        public void publishResults(CharSequence constraint, Filter.FilterResults results) {
-            List unused = ArrayAdapter.this.mObjects = (List) results.values;
+        @Override // android.widget.Filter
+        protected void publishResults(CharSequence constraint, Filter.FilterResults results) {
+            ArrayAdapter.this.mObjects = (List) results.values;
             if (results.count > 0) {
                 ArrayAdapter.this.notifyDataSetChanged();
             } else {

@@ -3,6 +3,7 @@ package android.hardware.radio.V1_4;
 import com.android.internal.telephony.IccCardConstants;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class EmergencyCallRouting {
     public static final int EMERGENCY = 1;
     public static final int NORMAL = 2;

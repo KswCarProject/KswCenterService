@@ -3,25 +3,26 @@ package android.view.contentcapture;
 import android.annotation.SystemApi;
 import android.content.ComponentName;
 import android.content.LocusId;
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.util.Preconditions;
 import java.io.PrintWriter;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes4.dex */
 public final class ContentCaptureContext implements Parcelable {
-    public static final Parcelable.Creator<ContentCaptureContext> CREATOR = new Parcelable.Creator<ContentCaptureContext>() {
+    public static final Parcelable.Creator<ContentCaptureContext> CREATOR = new Parcelable.Creator<ContentCaptureContext>() { // from class: android.view.contentcapture.ContentCaptureContext.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ContentCaptureContext createFromParcel(Parcel parcel) {
             ContentCaptureContext clientContext;
-            boolean hasClientContext = true;
-            if (parcel.readInt() != 1) {
-                hasClientContext = false;
-            }
+            boolean hasClientContext = parcel.readInt() == 1;
             if (hasClientContext) {
+                LocusId id = (LocusId) parcel.readParcelable(null);
                 Bundle extras = parcel.readBundle();
-                Builder builder = new Builder((LocusId) parcel.readParcelable((ClassLoader) null));
+                Builder builder = new Builder(id);
                 if (extras != null) {
                     builder.setExtras(extras);
                 }
@@ -29,13 +30,18 @@ public final class ContentCaptureContext implements Parcelable {
             } else {
                 clientContext = null;
             }
-            ComponentName componentName = (ComponentName) parcel.readParcelable((ClassLoader) null);
+            ComponentName componentName = (ComponentName) parcel.readParcelable(null);
             if (componentName == null) {
                 return clientContext;
             }
-            return new ContentCaptureContext(clientContext, componentName, parcel.readInt(), parcel.readInt(), parcel.readInt());
+            int taskId = parcel.readInt();
+            int displayId = parcel.readInt();
+            int flags = parcel.readInt();
+            return new ContentCaptureContext(clientContext, componentName, taskId, displayId, flags);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ContentCaptureContext[] newArray(int size) {
             return new ContentCaptureContext[size];
         }
@@ -56,6 +62,7 @@ public final class ContentCaptureContext implements Parcelable {
     private final int mTaskId;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     @interface ContextCreationFlags {
     }
 
@@ -142,12 +149,11 @@ public final class ContentCaptureContext implements Parcelable {
         return new Builder(new LocusId(id)).build();
     }
 
+    /* loaded from: classes4.dex */
     public static final class Builder {
         private boolean mDestroyed;
-        /* access modifiers changed from: private */
-        public Bundle mExtras;
-        /* access modifiers changed from: private */
-        public final LocusId mId;
+        private Bundle mExtras;
+        private final LocusId mId;
 
         public Builder(LocusId id) {
             this.mId = (LocusId) Preconditions.checkNotNull(id);
@@ -226,10 +232,12 @@ public final class ContentCaptureContext implements Parcelable {
         return builder.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeInt(this.mHasClientContext ? 1 : 0);
         if (this.mHasClientContext) {

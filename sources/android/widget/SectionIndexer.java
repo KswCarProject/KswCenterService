@@ -1,5 +1,6 @@
 package android.widget;
 
+/* loaded from: classes4.dex */
 public interface SectionIndexer {
     int getPositionForSection(int i);
 

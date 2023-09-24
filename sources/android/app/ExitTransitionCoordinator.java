@@ -11,10 +11,10 @@ import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.os.ResultReceiver;
+import android.p007os.Bundle;
+import android.p007os.Handler;
+import android.p007os.Message;
+import android.p007os.ResultReceiver;
 import android.transition.Transition;
 import android.transition.TransitionListenerAdapter;
 import android.transition.TransitionManager;
@@ -24,29 +24,25 @@ import android.view.Window;
 import com.android.internal.view.OneShotPreDrawListener;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 class ExitTransitionCoordinator extends ActivityTransitionCoordinator {
     private static final long MAX_WAIT_MS = 1000;
     private static final String TAG = "ExitTransitionCoordinator";
-    /* access modifiers changed from: private */
-    public Activity mActivity;
-    /* access modifiers changed from: private */
-    public ObjectAnimator mBackgroundAnimator;
+    private Activity mActivity;
+    private ObjectAnimator mBackgroundAnimator;
     private boolean mExitNotified;
     private Bundle mExitSharedElementBundle;
     private Handler mHandler;
     private HideSharedElementsCallback mHideSharedElementsCallback;
-    /* access modifiers changed from: private */
-    public boolean mIsBackgroundReady;
-    /* access modifiers changed from: private */
-    public boolean mIsCanceled;
+    private boolean mIsBackgroundReady;
+    private boolean mIsCanceled;
     private boolean mIsExitStarted;
-    /* access modifiers changed from: private */
-    public boolean mIsHidden;
-    /* access modifiers changed from: private */
-    public Bundle mSharedElementBundle;
+    private boolean mIsHidden;
+    private Bundle mSharedElementBundle;
     private boolean mSharedElementNotified;
     private boolean mSharedElementsHidden;
 
+    /* loaded from: classes.dex */
     interface HideSharedElementsCallback {
         void hideSharedElements();
     }
@@ -59,19 +55,18 @@ class ExitTransitionCoordinator extends ActivityTransitionCoordinator {
         this.mActivity = activity;
     }
 
-    /* access modifiers changed from: package-private */
-    public void setHideSharedElementsCallback(HideSharedElementsCallback callback) {
+    void setHideSharedElementsCallback(HideSharedElementsCallback callback) {
         this.mHideSharedElementsCallback = callback;
     }
 
-    /* access modifiers changed from: protected */
-    public void onReceiveResult(int resultCode, Bundle resultData) {
+    @Override // android.p007os.ResultReceiver
+    protected void onReceiveResult(int resultCode, Bundle resultData) {
         switch (resultCode) {
             case 100:
                 stopCancel();
                 this.mResultReceiver = (ResultReceiver) resultData.getParcelable("android:remoteReceiver");
                 if (this.mIsCanceled) {
-                    this.mResultReceiver.send(106, (Bundle) null);
+                    this.mResultReceiver.send(106, null);
                     this.mResultReceiver = null;
                     return;
                 }
@@ -83,6 +78,11 @@ class ExitTransitionCoordinator extends ActivityTransitionCoordinator {
                     hideSharedElements();
                     return;
                 }
+                return;
+            case 102:
+            case 103:
+            case 104:
+            default:
                 return;
             case 105:
                 this.mHandler.removeMessages(106);
@@ -96,8 +96,6 @@ class ExitTransitionCoordinator extends ActivityTransitionCoordinator {
                 this.mExitSharedElementBundle = resultData;
                 sharedElementExitBack();
                 return;
-            default:
-                return;
         }
     }
 
@@ -107,10 +105,10 @@ class ExitTransitionCoordinator extends ActivityTransitionCoordinator {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void delayCancel() {
         if (this.mHandler != null) {
-            this.mHandler.sendEmptyMessageDelayed(106, 1000);
+            this.mHandler.sendEmptyMessageDelayed(106, 1000L);
         }
     }
 
@@ -137,38 +135,35 @@ class ExitTransitionCoordinator extends ActivityTransitionCoordinator {
         if (decorView != null) {
             decorView.suppressLayout(true);
         }
-        if (decorView == null || this.mExitSharedElementBundle == null || this.mExitSharedElementBundle.isEmpty() || this.mSharedElements.isEmpty() || getSharedElementTransition() == null) {
-            sharedElementTransitionComplete();
-        } else {
-            startTransition(new Runnable() {
+        if (decorView != null && this.mExitSharedElementBundle != null && !this.mExitSharedElementBundle.isEmpty() && !this.mSharedElements.isEmpty() && getSharedElementTransition() != null) {
+            startTransition(new Runnable() { // from class: android.app.ExitTransitionCoordinator.1
+                @Override // java.lang.Runnable
                 public void run() {
                     ExitTransitionCoordinator.this.startSharedElementExit(decorView);
                 }
             });
+        } else {
+            sharedElementTransitionComplete();
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void startSharedElementExit(ViewGroup decorView) {
         Transition transition = getSharedElementExitTransition();
-        transition.addListener(new TransitionListenerAdapter() {
-            public void onTransitionEnd(Transition transition) {
-                transition.removeListener(this);
+        transition.addListener(new TransitionListenerAdapter() { // from class: android.app.ExitTransitionCoordinator.2
+            @Override // android.transition.TransitionListenerAdapter, android.transition.Transition.TransitionListener
+            public void onTransitionEnd(Transition transition2) {
+                transition2.removeListener(this);
                 if (ExitTransitionCoordinator.this.isViewsTransitionComplete()) {
                     ExitTransitionCoordinator.this.delayCancel();
                 }
             }
         });
-        ArrayList<View> sharedElementSnapshots = createSnapshots(this.mExitSharedElementBundle, this.mSharedElementNames);
-        OneShotPreDrawListener.add(decorView, new Runnable(sharedElementSnapshots) {
-            private final /* synthetic */ ArrayList f$1;
-
-            {
-                this.f$1 = r2;
-            }
-
+        final ArrayList<View> sharedElementSnapshots = createSnapshots(this.mExitSharedElementBundle, this.mSharedElementNames);
+        OneShotPreDrawListener.add(decorView, new Runnable() { // from class: android.app.-$$Lambda$ExitTransitionCoordinator$QSAvMs76ZWnO0eiLyXWkcGxkRIY
+            @Override // java.lang.Runnable
             public final void run() {
-                ExitTransitionCoordinator.this.setSharedElementState(ExitTransitionCoordinator.this.mExitSharedElementBundle, this.f$1);
+                r0.setSharedElementState(ExitTransitionCoordinator.this.mExitSharedElementBundle, sharedElementSnapshots);
             }
         });
         setGhostVisibility(4);
@@ -204,7 +199,8 @@ class ExitTransitionCoordinator extends ActivityTransitionCoordinator {
                 decorView.suppressLayout(true);
             }
             moveSharedElementsToOverlay();
-            startTransition(new Runnable() {
+            startTransition(new Runnable() { // from class: android.app.ExitTransitionCoordinator.3
+                @Override // java.lang.Runnable
                 public void run() {
                     if (ExitTransitionCoordinator.this.mActivity != null) {
                         ExitTransitionCoordinator.this.beginTransitions();
@@ -217,7 +213,6 @@ class ExitTransitionCoordinator extends ActivityTransitionCoordinator {
     }
 
     public void startExit(int resultCode, Intent data) {
-        ArrayList<String> sharedElementNames;
         if (!this.mIsExitStarted) {
             boolean targetsM = true;
             this.mIsExitStarted = true;
@@ -226,9 +221,10 @@ class ExitTransitionCoordinator extends ActivityTransitionCoordinator {
             if (decorView != null) {
                 decorView.suppressLayout(true);
             }
-            this.mHandler = new Handler() {
+            this.mHandler = new Handler() { // from class: android.app.ExitTransitionCoordinator.4
+                @Override // android.p007os.Handler
                 public void handleMessage(Message msg) {
-                    boolean unused = ExitTransitionCoordinator.this.mIsCanceled = true;
+                    ExitTransitionCoordinator.this.mIsCanceled = true;
                     ExitTransitionCoordinator.this.finish();
                 }
             };
@@ -240,19 +236,18 @@ class ExitTransitionCoordinator extends ActivityTransitionCoordinator {
             if (decorView != null && decorView.getContext().getApplicationInfo().targetSdkVersion < 23) {
                 targetsM = false;
             }
-            if (targetsM) {
-                sharedElementNames = this.mSharedElementNames;
-            } else {
-                sharedElementNames = this.mAllSharedElementNames;
-            }
-            this.mActivity.convertToTranslucent(new Activity.TranslucentConversionListener() {
+            ArrayList<String> sharedElementNames = targetsM ? this.mSharedElementNames : this.mAllSharedElementNames;
+            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this.mActivity, this, sharedElementNames, resultCode, data);
+            this.mActivity.convertToTranslucent(new Activity.TranslucentConversionListener() { // from class: android.app.ExitTransitionCoordinator.5
+                @Override // android.app.Activity.TranslucentConversionListener
                 public void onTranslucentConversionComplete(boolean drawComplete) {
                     if (!ExitTransitionCoordinator.this.mIsCanceled) {
                         ExitTransitionCoordinator.this.fadeOutBackground();
                     }
                 }
-            }, ActivityOptions.makeSceneTransitionAnimation(this.mActivity, this, sharedElementNames, resultCode, data));
-            startTransition(new Runnable() {
+            }, options);
+            startTransition(new Runnable() { // from class: android.app.ExitTransitionCoordinator.6
+                @Override // java.lang.Runnable
                 public void run() {
                     ExitTransitionCoordinator.this.startExitTransition();
                 }
@@ -262,50 +257,48 @@ class ExitTransitionCoordinator extends ActivityTransitionCoordinator {
 
     public void stop() {
         if (this.mIsReturning && this.mActivity != null) {
-            this.mActivity.convertToTranslucent((Activity.TranslucentConversionListener) null, (ActivityOptions) null);
+            this.mActivity.convertToTranslucent(null, null);
             finish();
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void startExitTransition() {
         Transition transition = getExitTransition();
         ViewGroup decorView = getDecor();
-        if (transition == null || decorView == null || this.mTransitioningViews == null) {
-            transitionStarted();
+        if (transition != null && decorView != null && this.mTransitioningViews != null) {
+            setTransitioningViewsVisiblity(0, false);
+            TransitionManager.beginDelayedTransition(decorView, transition);
+            setTransitioningViewsVisiblity(4, false);
+            decorView.invalidate();
             return;
         }
-        setTransitioningViewsVisiblity(0, false);
-        TransitionManager.beginDelayedTransition(decorView, transition);
-        setTransitioningViewsVisiblity(4, false);
-        decorView.invalidate();
+        transitionStarted();
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void fadeOutBackground() {
+        Drawable background;
         if (this.mBackgroundAnimator == null) {
             ViewGroup decor = getDecor();
-            if (decor != null) {
-                Drawable background = decor.getBackground();
-                Drawable background2 = background;
-                if (background != null) {
-                    Drawable background3 = background2.mutate();
-                    getWindow().setBackgroundDrawable(background3);
-                    this.mBackgroundAnimator = ObjectAnimator.ofInt((Object) background3, "alpha", 0);
-                    this.mBackgroundAnimator.addListener(new AnimatorListenerAdapter() {
-                        public void onAnimationEnd(Animator animation) {
-                            ObjectAnimator unused = ExitTransitionCoordinator.this.mBackgroundAnimator = null;
-                            if (!ExitTransitionCoordinator.this.mIsCanceled) {
-                                boolean unused2 = ExitTransitionCoordinator.this.mIsBackgroundReady = true;
-                                ExitTransitionCoordinator.this.notifyComplete();
-                            }
-                            ExitTransitionCoordinator.this.backgroundAnimatorComplete();
+            if (decor != null && (background = decor.getBackground()) != null) {
+                Drawable background2 = background.mutate();
+                getWindow().setBackgroundDrawable(background2);
+                this.mBackgroundAnimator = ObjectAnimator.ofInt(background2, "alpha", 0);
+                this.mBackgroundAnimator.addListener(new AnimatorListenerAdapter() { // from class: android.app.ExitTransitionCoordinator.7
+                    @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
+                    public void onAnimationEnd(Animator animation) {
+                        ExitTransitionCoordinator.this.mBackgroundAnimator = null;
+                        if (!ExitTransitionCoordinator.this.mIsCanceled) {
+                            ExitTransitionCoordinator.this.mIsBackgroundReady = true;
+                            ExitTransitionCoordinator.this.notifyComplete();
                         }
-                    });
-                    this.mBackgroundAnimator.setDuration(getFadeDuration());
-                    this.mBackgroundAnimator.start();
-                    return;
-                }
+                        ExitTransitionCoordinator.this.backgroundAnimatorComplete();
+                    }
+                });
+                this.mBackgroundAnimator.setDuration(getFadeDuration());
+                this.mBackgroundAnimator.start();
+                return;
             }
             backgroundAnimatorComplete();
             this.mIsBackgroundReady = true;
@@ -325,7 +318,13 @@ class ExitTransitionCoordinator extends ActivityTransitionCoordinator {
             viewsTransitionComplete();
         } else {
             final ArrayList<View> transitioningViews = this.mTransitioningViews;
-            viewsTransition.addListener(new ActivityTransitionCoordinator.ContinueTransitionListener() {
+            viewsTransition.addListener(new ActivityTransitionCoordinator.ContinueTransitionListener() { // from class: android.app.ExitTransitionCoordinator.8
+                /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
+                {
+                    super();
+                }
+
+                @Override // android.app.ActivityTransitionCoordinator.ContinueTransitionListener, android.transition.TransitionListenerAdapter, android.transition.Transition.TransitionListener
                 public void onTransitionEnd(Transition transition) {
                     ExitTransitionCoordinator.this.viewsTransitionComplete();
                     if (ExitTransitionCoordinator.this.mIsHidden && transitioningViews != null) {
@@ -350,7 +349,8 @@ class ExitTransitionCoordinator extends ActivityTransitionCoordinator {
         if (sharedElementTransition == null) {
             sharedElementTransitionComplete();
         } else {
-            sharedElementTransition.addListener(new ActivityTransitionCoordinator.ContinueTransitionListener() {
+            sharedElementTransition.addListener(new ActivityTransitionCoordinator.ContinueTransitionListener() { // from class: android.app.ExitTransitionCoordinator.9
+                @Override // android.app.ActivityTransitionCoordinator.ContinueTransitionListener, android.transition.TransitionListenerAdapter, android.transition.Transition.TransitionListener
                 public void onTransitionEnd(Transition transition) {
                     ExitTransitionCoordinator.this.sharedElementTransitionComplete();
                     if (ExitTransitionCoordinator.this.mIsHidden) {
@@ -359,42 +359,41 @@ class ExitTransitionCoordinator extends ActivityTransitionCoordinator {
                     super.onTransitionEnd(transition);
                 }
             });
-            ((View) this.mSharedElements.get(0)).invalidate();
+            this.mSharedElements.get(0).invalidate();
         }
         return sharedElementTransition;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void beginTransitions() {
         Transition sharedElementTransition = getSharedElementExitTransition();
         Transition viewsTransition = getExitTransition();
         Transition transition = mergeTransitions(sharedElementTransition, viewsTransition);
         ViewGroup decorView = getDecor();
-        if (transition == null || decorView == null) {
-            transitionStarted();
+        if (transition != null && decorView != null) {
+            setGhostVisibility(4);
+            scheduleGhostVisibilityChange(4);
+            if (viewsTransition != null) {
+                setTransitioningViewsVisiblity(0, false);
+            }
+            TransitionManager.beginDelayedTransition(decorView, transition);
+            scheduleGhostVisibilityChange(0);
+            setGhostVisibility(0);
+            if (viewsTransition != null) {
+                setTransitioningViewsVisiblity(4, false);
+            }
+            decorView.invalidate();
             return;
         }
-        setGhostVisibility(4);
-        scheduleGhostVisibilityChange(4);
-        if (viewsTransition != null) {
-            setTransitioningViewsVisiblity(0, false);
-        }
-        TransitionManager.beginDelayedTransition(decorView, transition);
-        scheduleGhostVisibilityChange(0);
-        setGhostVisibility(0);
-        if (viewsTransition != null) {
-            setTransitioningViewsVisiblity(4, false);
-        }
-        decorView.invalidate();
+        transitionStarted();
     }
 
-    /* access modifiers changed from: protected */
-    public boolean isReadyToNotify() {
+    protected boolean isReadyToNotify() {
         return (this.mSharedElementBundle == null || this.mResultReceiver == null || !this.mIsBackgroundReady) ? false : true;
     }
 
-    /* access modifiers changed from: protected */
-    public void sharedElementTransitionComplete() {
+    @Override // android.app.ActivityTransitionCoordinator
+    protected void sharedElementTransitionComplete() {
         this.mSharedElementBundle = this.mExitSharedElementBundle == null ? captureSharedElementState() : captureExitSharedElementsState();
         super.sharedElementTransitionComplete();
     }
@@ -406,59 +405,60 @@ class ExitTransitionCoordinator extends ActivityTransitionCoordinator {
         int i = 0;
         while (true) {
             int i2 = i;
-            if (i2 >= this.mSharedElements.size()) {
+            if (i2 < this.mSharedElements.size()) {
+                String name = this.mSharedElementNames.get(i2);
+                Bundle sharedElementState = this.mExitSharedElementBundle.getBundle(name);
+                if (sharedElementState != null) {
+                    bundle.putBundle(name, sharedElementState);
+                } else {
+                    View view = this.mSharedElements.get(i2);
+                    captureSharedElementState(view, name, bundle, matrix, bounds);
+                }
+                i = i2 + 1;
+            } else {
                 return bundle;
             }
-            String name = (String) this.mSharedElementNames.get(i2);
-            Bundle sharedElementState = this.mExitSharedElementBundle.getBundle(name);
-            if (sharedElementState != null) {
-                bundle.putBundle(name, sharedElementState);
-            } else {
-                captureSharedElementState((View) this.mSharedElements.get(i2), name, bundle, matrix, bounds);
-            }
-            i = i2 + 1;
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onTransitionsComplete() {
+    @Override // android.app.ActivityTransitionCoordinator
+    protected void onTransitionsComplete() {
         notifyComplete();
     }
 
-    /* access modifiers changed from: protected */
-    public void notifyComplete() {
-        if (!isReadyToNotify()) {
-            return;
-        }
-        if (!this.mSharedElementNotified) {
-            this.mSharedElementNotified = true;
-            delayCancel();
-            if (!this.mActivity.isTopOfTask()) {
-                this.mResultReceiver.send(108, (Bundle) null);
-            }
-            if (this.mListener == null) {
-                this.mResultReceiver.send(103, this.mSharedElementBundle);
-                notifyExitComplete();
+    protected void notifyComplete() {
+        if (isReadyToNotify()) {
+            if (!this.mSharedElementNotified) {
+                this.mSharedElementNotified = true;
+                delayCancel();
+                if (!this.mActivity.isTopOfTask()) {
+                    this.mResultReceiver.send(108, null);
+                }
+                if (this.mListener == null) {
+                    this.mResultReceiver.send(103, this.mSharedElementBundle);
+                    notifyExitComplete();
+                    return;
+                }
+                final ResultReceiver resultReceiver = this.mResultReceiver;
+                final Bundle sharedElementBundle = this.mSharedElementBundle;
+                this.mListener.onSharedElementsArrived(this.mSharedElementNames, this.mSharedElements, new SharedElementCallback.OnSharedElementsReadyListener() { // from class: android.app.ExitTransitionCoordinator.10
+                    @Override // android.app.SharedElementCallback.OnSharedElementsReadyListener
+                    public void onSharedElementsReady() {
+                        resultReceiver.send(103, sharedElementBundle);
+                        ExitTransitionCoordinator.this.notifyExitComplete();
+                    }
+                });
                 return;
             }
-            final ResultReceiver resultReceiver = this.mResultReceiver;
-            final Bundle sharedElementBundle = this.mSharedElementBundle;
-            this.mListener.onSharedElementsArrived(this.mSharedElementNames, this.mSharedElements, new SharedElementCallback.OnSharedElementsReadyListener() {
-                public void onSharedElementsReady() {
-                    resultReceiver.send(103, sharedElementBundle);
-                    ExitTransitionCoordinator.this.notifyExitComplete();
-                }
-            });
-            return;
+            notifyExitComplete();
         }
-        notifyExitComplete();
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void notifyExitComplete() {
         if (!this.mExitNotified && isViewsTransitionComplete()) {
             this.mExitNotified = true;
-            this.mResultReceiver.send(104, (Bundle) null);
+            this.mResultReceiver.send(104, null);
             this.mResultReceiver = null;
             ViewGroup decorView = getDecor();
             if (!this.mIsReturning && decorView != null) {
@@ -477,7 +477,7 @@ class ExitTransitionCoordinator extends ActivityTransitionCoordinator {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void finish() {
         stopCancel();
         if (this.mActivity != null) {
@@ -489,8 +489,8 @@ class ExitTransitionCoordinator extends ActivityTransitionCoordinator {
         clearState();
     }
 
-    /* access modifiers changed from: protected */
-    public void clearState() {
+    @Override // android.app.ActivityTransitionCoordinator
+    protected void clearState() {
         this.mHandler = null;
         this.mSharedElementBundle = null;
         if (this.mBackgroundAnimator != null) {
@@ -501,21 +501,20 @@ class ExitTransitionCoordinator extends ActivityTransitionCoordinator {
         super.clearState();
     }
 
-    /* access modifiers changed from: protected */
-    public boolean moveSharedElementWithParent() {
+    @Override // android.app.ActivityTransitionCoordinator
+    protected boolean moveSharedElementWithParent() {
         return !this.mIsReturning;
     }
 
-    /* access modifiers changed from: protected */
-    public Transition getViewsTransition() {
+    @Override // android.app.ActivityTransitionCoordinator
+    protected Transition getViewsTransition() {
         if (this.mIsReturning) {
             return getWindow().getReturnTransition();
         }
         return getWindow().getExitTransition();
     }
 
-    /* access modifiers changed from: protected */
-    public Transition getSharedElementTransition() {
+    protected Transition getSharedElementTransition() {
         if (this.mIsReturning) {
             return getWindow().getSharedElementReturnTransition();
         }

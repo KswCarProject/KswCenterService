@@ -1,16 +1,21 @@
 package android.util;
 
 import android.content.res.Configuration;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.io.PrintWriter;
 
+/* loaded from: classes4.dex */
 public class MergedConfiguration implements Parcelable {
-    public static final Parcelable.Creator<MergedConfiguration> CREATOR = new Parcelable.Creator<MergedConfiguration>() {
+    public static final Parcelable.Creator<MergedConfiguration> CREATOR = new Parcelable.Creator<MergedConfiguration>() { // from class: android.util.MergedConfiguration.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public MergedConfiguration createFromParcel(Parcel in) {
             return new MergedConfiguration(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public MergedConfiguration[] newArray(int size) {
             return new MergedConfiguration[size];
         }
@@ -53,6 +58,7 @@ public class MergedConfiguration implements Parcelable {
         readFromParcel(in);
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(this.mGlobalConfig, flags);
         dest.writeParcelable(this.mOverrideConfig, flags);
@@ -65,6 +71,7 @@ public class MergedConfiguration implements Parcelable {
         this.mMergedConfig = (Configuration) source.readParcelable(Configuration.class.getClassLoader());
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

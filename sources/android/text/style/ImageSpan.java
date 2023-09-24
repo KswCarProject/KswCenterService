@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.util.Log;
 import java.io.InputStream;
 
+/* loaded from: classes4.dex */
 public class ImageSpan extends DynamicDrawableSpan {
     private Uri mContentUri;
     private Context mContext;
@@ -87,6 +88,7 @@ public class ImageSpan extends DynamicDrawableSpan {
         this.mResourceId = resourceId;
     }
 
+    @Override // android.text.style.DynamicDrawableSpan
     public Drawable getDrawable() {
         Drawable drawable = null;
         if (this.mDrawable != null) {
@@ -95,23 +97,23 @@ public class ImageSpan extends DynamicDrawableSpan {
         if (this.mContentUri != null) {
             try {
                 InputStream is = this.mContext.getContentResolver().openInputStream(this.mContentUri);
-                drawable = new BitmapDrawable(this.mContext.getResources(), BitmapFactory.decodeStream(is));
+                Bitmap bitmap = BitmapFactory.decodeStream(is);
+                drawable = new BitmapDrawable(this.mContext.getResources(), bitmap);
                 drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
                 is.close();
                 return drawable;
             } catch (Exception e) {
-                Log.e("ImageSpan", "Failed to loaded content " + this.mContentUri, e);
+                Log.m69e("ImageSpan", "Failed to loaded content " + this.mContentUri, e);
                 return drawable;
             }
-        } else {
-            try {
-                drawable = this.mContext.getDrawable(this.mResourceId);
-                drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
-                return drawable;
-            } catch (Exception e2) {
-                Log.e("ImageSpan", "Unable to find resource: " + this.mResourceId);
-                return drawable;
-            }
+        }
+        try {
+            drawable = this.mContext.getDrawable(this.mResourceId);
+            drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+            return drawable;
+        } catch (Exception e2) {
+            Log.m70e("ImageSpan", "Unable to find resource: " + this.mResourceId);
+            return drawable;
         }
     }
 

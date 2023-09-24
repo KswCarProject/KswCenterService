@@ -1,87 +1,84 @@
 package android.content;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
+import android.p007os.Parcel;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public class UndoManager {
     public static final int MERGE_MODE_ANY = 2;
     public static final int MERGE_MODE_NONE = 0;
     public static final int MERGE_MODE_UNIQUE = 1;
-    private int mCommitId = 1;
-    private int mHistorySize = 20;
     private boolean mInUndo;
     private boolean mMerged;
     private int mNextSavedIdx;
-    private final ArrayMap<String, UndoOwner> mOwners = new ArrayMap<>(1);
-    private final ArrayList<UndoState> mRedos = new ArrayList<>();
     private UndoOwner[] mStateOwners;
     private int mStateSeq;
-    private final ArrayList<UndoState> mUndos = new ArrayList<>();
     private int mUpdateCount;
     private UndoState mWorking;
+    private final ArrayMap<String, UndoOwner> mOwners = new ArrayMap<>(1);
+    private final ArrayList<UndoState> mUndos = new ArrayList<>();
+    private final ArrayList<UndoState> mRedos = new ArrayList<>();
+    private int mHistorySize = 20;
+    private int mCommitId = 1;
 
     @UnsupportedAppUsage
     public UndoOwner getOwner(String tag, Object data) {
         if (tag == null) {
             throw new NullPointerException("tag can't be null");
-        } else if (data != null) {
-            UndoOwner owner = this.mOwners.get(tag);
-            if (owner != null) {
-                if (owner.mData != data) {
-                    if (owner.mData == null) {
-                        owner.mData = data;
-                    } else {
-                        throw new IllegalStateException("Owner " + owner + " already exists with data " + owner.mData + " but giving different data " + data);
-                    }
-                }
-                return owner;
-            }
-            UndoOwner owner2 = new UndoOwner(tag, this);
-            owner2.mData = data;
-            this.mOwners.put(tag, owner2);
-            return owner2;
-        } else {
+        }
+        if (data == null) {
             throw new NullPointerException("data can't be null");
         }
+        UndoOwner owner = this.mOwners.get(tag);
+        if (owner != null) {
+            if (owner.mData != data) {
+                if (owner.mData != null) {
+                    throw new IllegalStateException("Owner " + owner + " already exists with data " + owner.mData + " but giving different data " + data);
+                }
+                owner.mData = data;
+            }
+            return owner;
+        }
+        UndoOwner owner2 = new UndoOwner(tag, this);
+        owner2.mData = data;
+        this.mOwners.put(tag, owner2);
+        return owner2;
     }
 
-    /* access modifiers changed from: package-private */
-    public void removeOwner(UndoOwner owner) {
+    void removeOwner(UndoOwner owner) {
     }
 
     @UnsupportedAppUsage
     public void saveInstanceState(Parcel p) {
-        if (this.mUpdateCount <= 0) {
-            this.mStateSeq++;
-            if (this.mStateSeq <= 0) {
-                this.mStateSeq = 0;
-            }
-            this.mNextSavedIdx = 0;
-            p.writeInt(this.mHistorySize);
-            p.writeInt(this.mOwners.size());
-            int i = this.mUndos.size();
-            while (i > 0) {
-                p.writeInt(1);
-                i--;
-                this.mUndos.get(i).writeToParcel(p);
-            }
-            int i2 = this.mRedos.size();
-            while (i2 > 0) {
-                p.writeInt(2);
-                i2--;
-                this.mRedos.get(i2).writeToParcel(p);
-            }
-            p.writeInt(0);
-            return;
+        if (this.mUpdateCount > 0) {
+            throw new IllegalStateException("Can't save state while updating");
         }
-        throw new IllegalStateException("Can't save state while updating");
+        this.mStateSeq++;
+        if (this.mStateSeq <= 0) {
+            this.mStateSeq = 0;
+        }
+        this.mNextSavedIdx = 0;
+        p.writeInt(this.mHistorySize);
+        p.writeInt(this.mOwners.size());
+        int i = this.mUndos.size();
+        while (i > 0) {
+            p.writeInt(1);
+            i--;
+            this.mUndos.get(i).writeToParcel(p);
+        }
+        int i2 = this.mRedos.size();
+        while (i2 > 0) {
+            p.writeInt(2);
+            i2--;
+            this.mRedos.get(i2).writeToParcel(p);
+        }
+        p.writeInt(0);
     }
 
-    /* access modifiers changed from: package-private */
-    public void saveOwner(UndoOwner owner, Parcel out) {
+    void saveOwner(UndoOwner owner, Parcel out) {
         if (owner.mStateSeq == this.mStateSeq) {
             out.writeInt(owner.mSavedIdx);
             return;
@@ -96,50 +93,47 @@ public class UndoManager {
 
     @UnsupportedAppUsage
     public void restoreInstanceState(Parcel p, ClassLoader loader) {
-        if (this.mUpdateCount <= 0) {
-            forgetUndos((UndoOwner[]) null, -1);
-            forgetRedos((UndoOwner[]) null, -1);
-            this.mHistorySize = p.readInt();
-            this.mStateOwners = new UndoOwner[p.readInt()];
-            while (true) {
-                int readInt = p.readInt();
-                int stype = readInt;
-                if (readInt != 0) {
-                    UndoState ustate = new UndoState(this, p, loader);
-                    if (stype == 1) {
-                        this.mUndos.add(0, ustate);
-                    } else {
-                        this.mRedos.add(0, ustate);
-                    }
-                } else {
-                    return;
-                }
-            }
-        } else {
+        if (this.mUpdateCount > 0) {
             throw new IllegalStateException("Can't save state while updating");
+        }
+        forgetUndos(null, -1);
+        forgetRedos(null, -1);
+        this.mHistorySize = p.readInt();
+        this.mStateOwners = new UndoOwner[p.readInt()];
+        while (true) {
+            int stype = p.readInt();
+            if (stype != 0) {
+                UndoState ustate = new UndoState(this, p, loader);
+                if (stype == 1) {
+                    this.mUndos.add(0, ustate);
+                } else {
+                    this.mRedos.add(0, ustate);
+                }
+            } else {
+                return;
+            }
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public UndoOwner restoreOwner(Parcel in) {
+    UndoOwner restoreOwner(Parcel in) {
         int idx = in.readInt();
         UndoOwner owner = this.mStateOwners[idx];
-        if (owner != null) {
-            return owner;
+        if (owner == null) {
+            String tag = in.readString();
+            int opCount = in.readInt();
+            UndoOwner owner2 = new UndoOwner(tag, this);
+            owner2.mOpCount = opCount;
+            this.mStateOwners[idx] = owner2;
+            this.mOwners.put(tag, owner2);
+            return owner2;
         }
-        String tag = in.readString();
-        int opCount = in.readInt();
-        UndoOwner owner2 = new UndoOwner(tag, this);
-        owner2.mOpCount = opCount;
-        this.mStateOwners[idx] = owner2;
-        this.mOwners.put(tag, owner2);
-        return owner2;
+        return owner;
     }
 
     public void setHistorySize(int size) {
         this.mHistorySize = size;
-        if (this.mHistorySize >= 0 && countUndos((UndoOwner[]) null) > this.mHistorySize) {
-            forgetUndos((UndoOwner[]) null, countUndos((UndoOwner[]) null) - this.mHistorySize);
+        if (this.mHistorySize >= 0 && countUndos(null) > this.mHistorySize) {
+            forgetUndos(null, countUndos(null) - this.mHistorySize);
         }
     }
 
@@ -149,54 +143,54 @@ public class UndoManager {
 
     @UnsupportedAppUsage
     public int undo(UndoOwner[] owners, int count) {
-        if (this.mWorking == null) {
-            int num = 0;
-            int i = -1;
-            this.mInUndo = true;
-            UndoState us = getTopUndo((UndoOwner[]) null);
-            if (us != null) {
-                us.makeExecuted();
-            }
-            while (count > 0) {
-                int findPrevState = findPrevState(this.mUndos, owners, i);
-                i = findPrevState;
-                if (findPrevState < 0) {
-                    break;
-                }
-                UndoState state = this.mUndos.remove(i);
-                state.undo();
-                this.mRedos.add(state);
-                count--;
-                num++;
-            }
-            this.mInUndo = false;
-            return num;
+        if (this.mWorking != null) {
+            throw new IllegalStateException("Can't be called during an update");
         }
-        throw new IllegalStateException("Can't be called during an update");
+        int num = 0;
+        int i = -1;
+        this.mInUndo = true;
+        UndoState us = getTopUndo(null);
+        if (us != null) {
+            us.makeExecuted();
+        }
+        while (count > 0) {
+            int findPrevState = findPrevState(this.mUndos, owners, i);
+            i = findPrevState;
+            if (findPrevState < 0) {
+                break;
+            }
+            UndoState state = this.mUndos.remove(i);
+            state.undo();
+            this.mRedos.add(state);
+            count--;
+            num++;
+        }
+        this.mInUndo = false;
+        return num;
     }
 
     @UnsupportedAppUsage
     public int redo(UndoOwner[] owners, int count) {
-        if (this.mWorking == null) {
-            int num = 0;
-            int i = -1;
-            this.mInUndo = true;
-            while (count > 0) {
-                int findPrevState = findPrevState(this.mRedos, owners, i);
-                i = findPrevState;
-                if (findPrevState < 0) {
-                    break;
-                }
-                UndoState state = this.mRedos.remove(i);
-                state.redo();
-                this.mUndos.add(state);
-                count--;
-                num++;
-            }
-            this.mInUndo = false;
-            return num;
+        if (this.mWorking != null) {
+            throw new IllegalStateException("Can't be called during an update");
         }
-        throw new IllegalStateException("Can't be called during an update");
+        int num = 0;
+        int i = -1;
+        this.mInUndo = true;
+        while (count > 0) {
+            int findPrevState = findPrevState(this.mRedos, owners, i);
+            i = findPrevState;
+            if (findPrevState < 0) {
+                break;
+            }
+            UndoState state = this.mRedos.remove(i);
+            state.redo();
+            this.mUndos.add(state);
+            count--;
+            num++;
+        }
+        this.mInUndo = false;
+        return num;
     }
 
     @UnsupportedAppUsage
@@ -213,12 +207,12 @@ public class UndoManager {
         int i = 0;
         while (i < this.mUndos.size() && removed < count) {
             UndoState state = this.mUndos.get(i);
-            if (count <= 0 || !matchOwners(state, owners)) {
-                i++;
-            } else {
+            if (count > 0 && matchOwners(state, owners)) {
                 state.destroy();
                 this.mUndos.remove(i);
                 removed++;
+            } else {
+                i++;
             }
         }
         return removed;
@@ -233,12 +227,12 @@ public class UndoManager {
         int i = 0;
         while (i < this.mRedos.size() && removed < count) {
             UndoState state = this.mRedos.get(i);
-            if (count <= 0 || !matchOwners(state, owners)) {
-                i++;
-            } else {
+            if (count > 0 && matchOwners(state, owners)) {
                 state.destroy();
                 this.mRedos.remove(i);
                 removed++;
+            } else {
+                i++;
             }
         }
         return removed;
@@ -252,13 +246,13 @@ public class UndoManager {
         int count = 0;
         int i = 0;
         while (true) {
-            int findNextState = findNextState(this.mUndos, owners, i);
-            int i2 = findNextState;
-            if (findNextState < 0) {
+            int i2 = findNextState(this.mUndos, owners, i);
+            if (i2 >= 0) {
+                count++;
+                i = i2 + 1;
+            } else {
                 return count;
             }
-            count++;
-            i = i2 + 1;
         }
     }
 
@@ -270,13 +264,13 @@ public class UndoManager {
         int count = 0;
         int i = 0;
         while (true) {
-            int findNextState = findNextState(this.mRedos, owners, i);
-            int i2 = findNextState;
-            if (findNextState < 0) {
+            int i2 = findNextState(this.mRedos, owners, i);
+            if (i2 >= 0) {
+                count++;
+                i = i2 + 1;
+            } else {
                 return count;
             }
-            count++;
-            i = i2 + 1;
         }
     }
 
@@ -298,17 +292,16 @@ public class UndoManager {
 
     @UnsupportedAppUsage
     public void beginUpdate(CharSequence label) {
-        if (!this.mInUndo) {
-            if (this.mUpdateCount <= 0) {
-                createWorkingState();
-                this.mMerged = false;
-                this.mUpdateCount = 0;
-            }
-            this.mWorking.updateLabel(label);
-            this.mUpdateCount++;
-            return;
+        if (this.mInUndo) {
+            throw new IllegalStateException("Can't being update while performing undo/redo");
         }
-        throw new IllegalStateException("Can't being update while performing undo/redo");
+        if (this.mUpdateCount <= 0) {
+            createWorkingState();
+            this.mMerged = false;
+            this.mUpdateCount = 0;
+        }
+        this.mWorking.updateLabel(label);
+        this.mUpdateCount++;
     }
 
     private void createWorkingState() {
@@ -326,19 +319,17 @@ public class UndoManager {
 
     @UnsupportedAppUsage
     public void setUndoLabel(CharSequence label) {
-        if (this.mWorking != null) {
-            this.mWorking.setLabel(label);
-            return;
+        if (this.mWorking == null) {
+            throw new IllegalStateException("Must be called during an update");
         }
-        throw new IllegalStateException("Must be called during an update");
+        this.mWorking.setLabel(label);
     }
 
     public void suggestUndoLabel(CharSequence label) {
-        if (this.mWorking != null) {
-            this.mWorking.updateLabel(label);
-            return;
+        if (this.mWorking == null) {
+            throw new IllegalStateException("Must be called during an update");
         }
-        throw new IllegalStateException("Must be called during an update");
+        this.mWorking.updateLabel(label);
     }
 
     public int getUpdateNestingLevel() {
@@ -346,38 +337,35 @@ public class UndoManager {
     }
 
     public boolean hasOperation(UndoOwner owner) {
-        if (this.mWorking != null) {
-            return this.mWorking.hasOperation(owner);
+        if (this.mWorking == null) {
+            throw new IllegalStateException("Must be called during an update");
         }
-        throw new IllegalStateException("Must be called during an update");
+        return this.mWorking.hasOperation(owner);
     }
 
     public UndoOperation<?> getLastOperation(int mergeMode) {
-        return getLastOperation((Class) null, (UndoOwner) null, mergeMode);
+        return getLastOperation(null, null, mergeMode);
     }
 
     public UndoOperation<?> getLastOperation(UndoOwner owner, int mergeMode) {
-        return getLastOperation((Class) null, owner, mergeMode);
+        return getLastOperation(null, owner, mergeMode);
     }
 
     @UnsupportedAppUsage
     public <T extends UndoOperation> T getLastOperation(Class<T> clazz, UndoOwner owner, int mergeMode) {
         UndoState state;
-        if (this.mWorking != null) {
-            if (mergeMode != 0 && !this.mMerged && !this.mWorking.hasData() && (state = getTopUndo((UndoOwner[]) null)) != null && ((mergeMode == 2 || !state.hasMultipleOwners()) && state.canMerge())) {
-                UndoOperation<?> lastOperation = state.getLastOperation(clazz, owner);
-                UndoOperation<?> last = lastOperation;
-                if (lastOperation != null && last.allowMerge()) {
-                    this.mWorking.destroy();
-                    this.mWorking = state;
-                    this.mUndos.remove(state);
-                    this.mMerged = true;
-                    return last;
-                }
-            }
-            return this.mWorking.getLastOperation(clazz, owner);
+        UndoOperation<?> last;
+        if (this.mWorking == null) {
+            throw new IllegalStateException("Must be called during an update");
         }
-        throw new IllegalStateException("Must be called during an update");
+        if (mergeMode != 0 && !this.mMerged && !this.mWorking.hasData() && (state = getTopUndo(null)) != null && ((mergeMode == 2 || !state.hasMultipleOwners()) && state.canMerge() && (last = state.getLastOperation(clazz, owner)) != null && last.allowMerge())) {
+            this.mWorking.destroy();
+            this.mWorking = state;
+            this.mUndos.remove(state);
+            this.mMerged = true;
+            return last;
+        }
+        return (T) this.mWorking.getLastOperation(clazz, owner);
     }
 
     @UnsupportedAppUsage
@@ -385,37 +373,36 @@ public class UndoManager {
         UndoState state;
         if (this.mWorking == null) {
             throw new IllegalStateException("Must be called during an update");
-        } else if (op.getOwner().mManager == this) {
-            if (mergeMode != 0 && !this.mMerged && !this.mWorking.hasData() && (state = getTopUndo((UndoOwner[]) null)) != null && ((mergeMode == 2 || !state.hasMultipleOwners()) && state.canMerge() && state.hasOperation(op.getOwner()))) {
-                this.mWorking.destroy();
-                this.mWorking = state;
-                this.mUndos.remove(state);
-                this.mMerged = true;
-            }
-            this.mWorking.addOperation(op);
-        } else {
+        }
+        UndoOwner owner = op.getOwner();
+        if (owner.mManager != this) {
             throw new IllegalArgumentException("Given operation's owner is not in this undo manager.");
         }
+        if (mergeMode != 0 && !this.mMerged && !this.mWorking.hasData() && (state = getTopUndo(null)) != null && ((mergeMode == 2 || !state.hasMultipleOwners()) && state.canMerge() && state.hasOperation(op.getOwner()))) {
+            this.mWorking.destroy();
+            this.mWorking = state;
+            this.mUndos.remove(state);
+            this.mMerged = true;
+        }
+        this.mWorking.addOperation(op);
     }
 
     @UnsupportedAppUsage
     public void endUpdate() {
-        if (this.mWorking != null) {
-            this.mUpdateCount--;
-            if (this.mUpdateCount == 0) {
-                pushWorkingState();
-                return;
-            }
-            return;
+        if (this.mWorking == null) {
+            throw new IllegalStateException("Must be called during an update");
         }
-        throw new IllegalStateException("Must be called during an update");
+        this.mUpdateCount--;
+        if (this.mUpdateCount == 0) {
+            pushWorkingState();
+        }
     }
 
     private void pushWorkingState() {
         int N = this.mUndos.size() + 1;
         if (this.mWorking.hasData()) {
             this.mUndos.add(this.mWorking);
-            forgetRedos((UndoOwner[]) null, -1);
+            forgetRedos(null, -1);
             this.mWorking.commit();
             if (N >= 2) {
                 this.mUndos.get(N - 2).makeExecuted();
@@ -425,53 +412,52 @@ public class UndoManager {
         }
         this.mWorking = null;
         if (this.mHistorySize >= 0 && N > this.mHistorySize) {
-            forgetUndos((UndoOwner[]) null, N - this.mHistorySize);
+            forgetUndos(null, N - this.mHistorySize);
         }
     }
 
     @UnsupportedAppUsage
     public int commitState(UndoOwner owner) {
-        if (this.mWorking == null || !this.mWorking.hasData()) {
-            UndoState state = getTopUndo((UndoOwner[]) null);
-            if (state == null) {
-                return -1;
+        if (this.mWorking != null && this.mWorking.hasData()) {
+            if (owner == null || this.mWorking.hasOperation(owner)) {
+                this.mWorking.setCanMerge(false);
+                int commitId = this.mWorking.getCommitId();
+                pushWorkingState();
+                createWorkingState();
+                this.mMerged = true;
+                return commitId;
             }
-            if (owner != null && !state.hasOperation(owner)) {
-                return -1;
-            }
-            state.setCanMerge(false);
-            return state.getCommitId();
-        } else if (owner != null && !this.mWorking.hasOperation(owner)) {
             return -1;
-        } else {
-            this.mWorking.setCanMerge(false);
-            int commitId = this.mWorking.getCommitId();
-            pushWorkingState();
-            createWorkingState();
-            this.mMerged = true;
-            return commitId;
         }
+        UndoState state = getTopUndo(null);
+        if (state != null) {
+            if (owner == null || state.hasOperation(owner)) {
+                state.setCanMerge(false);
+                return state.getCommitId();
+            }
+            return -1;
+        }
+        return -1;
     }
 
     public boolean uncommitState(int commitId, UndoOwner owner) {
-        if (this.mWorking == null || this.mWorking.getCommitId() != commitId) {
-            UndoState state = getTopUndo((UndoOwner[]) null);
-            if (state == null) {
-                return false;
+        if (this.mWorking != null && this.mWorking.getCommitId() == commitId) {
+            if (owner == null || this.mWorking.hasOperation(owner)) {
+                return this.mWorking.setCanMerge(true);
             }
+            return false;
+        }
+        UndoState state = getTopUndo(null);
+        if (state != null) {
             if ((owner == null || state.hasOperation(owner)) && state.getCommitId() == commitId) {
                 return state.setCanMerge(true);
             }
             return false;
-        } else if (owner == null || this.mWorking.hasOperation(owner)) {
-            return this.mWorking.setCanMerge(true);
-        } else {
-            return false;
         }
+        return false;
     }
 
-    /* access modifiers changed from: package-private */
-    public UndoState getTopUndo(UndoOwner[] owners) {
+    UndoState getTopUndo(UndoOwner[] owners) {
         int i;
         if (this.mUndos.size() > 0 && (i = findPrevState(this.mUndos, owners, -1)) >= 0) {
             return this.mUndos.get(i);
@@ -479,8 +465,7 @@ public class UndoManager {
         return null;
     }
 
-    /* access modifiers changed from: package-private */
-    public UndoState getTopRedo(UndoOwner[] owners) {
+    UndoState getTopRedo(UndoOwner[] owners) {
         int i;
         if (this.mRedos.size() > 0 && (i = findPrevState(this.mRedos, owners, -1)) >= 0) {
             return this.mRedos.get(i);
@@ -488,21 +473,19 @@ public class UndoManager {
         return null;
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean matchOwners(UndoState state, UndoOwner[] owners) {
+    boolean matchOwners(UndoState state, UndoOwner[] owners) {
         if (owners == null) {
             return true;
         }
-        for (UndoOwner matchOwner : owners) {
-            if (state.matchOwner(matchOwner)) {
+        for (UndoOwner undoOwner : owners) {
+            if (state.matchOwner(undoOwner)) {
                 return true;
             }
         }
         return false;
     }
 
-    /* access modifiers changed from: package-private */
-    public int findPrevState(ArrayList<UndoState> states, UndoOwner[] owners, int from) {
+    int findPrevState(ArrayList<UndoState> states, UndoOwner[] owners, int from) {
         int N = states.size();
         if (from == -1) {
             from = N - 1;
@@ -514,7 +497,8 @@ public class UndoManager {
             return from;
         }
         while (from >= 0) {
-            if (matchOwners(states.get(from), owners)) {
+            UndoState state = states.get(from);
+            if (matchOwners(state, owners)) {
                 return from;
             }
             from--;
@@ -522,8 +506,7 @@ public class UndoManager {
         return -1;
     }
 
-    /* access modifiers changed from: package-private */
-    public int findNextState(ArrayList<UndoState> states, UndoOwner[] owners, int from) {
+    int findNextState(ArrayList<UndoState> states, UndoOwner[] owners, int from) {
         int N = states.size();
         if (from < 0) {
             from = 0;
@@ -535,7 +518,8 @@ public class UndoManager {
             return from;
         }
         while (from < N) {
-            if (matchOwners(states.get(from), owners)) {
+            UndoState state = states.get(from);
+            if (matchOwners(state, owners)) {
                 return from;
             }
             from++;
@@ -543,6 +527,7 @@ public class UndoManager {
         return -1;
     }
 
+    /* loaded from: classes.dex */
     static final class UndoState {
         private boolean mCanMerge;
         private final int mCommitId;
@@ -561,13 +546,12 @@ public class UndoManager {
 
         UndoState(UndoManager manager, Parcel p, ClassLoader loader) {
             this.mOperations = new ArrayList<>();
-            boolean z = true;
             this.mCanMerge = true;
             this.mManager = manager;
             this.mCommitId = p.readInt();
             int i = 0;
             this.mCanMerge = p.readInt() != 0;
-            this.mExecuted = p.readInt() == 0 ? false : z;
+            this.mExecuted = p.readInt() != 0;
             this.mLabel = TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(p);
             int N = p.readInt();
             while (true) {
@@ -584,49 +568,42 @@ public class UndoManager {
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public void writeToParcel(Parcel p) {
-            if (this.mRecent == null) {
-                p.writeInt(this.mCommitId);
-                p.writeInt(this.mCanMerge ? 1 : 0);
-                p.writeInt(this.mExecuted ? 1 : 0);
-                TextUtils.writeToParcel(this.mLabel, p, 0);
-                int N = this.mOperations.size();
-                p.writeInt(N);
-                for (int i = 0; i < N; i++) {
-                    UndoOperation op = this.mOperations.get(i);
-                    this.mManager.saveOwner(op.mOwner, p);
-                    p.writeParcelable(op, 0);
-                }
-                return;
+        void writeToParcel(Parcel p) {
+            if (this.mRecent != null) {
+                throw new IllegalStateException("Can't save state before committing");
             }
-            throw new IllegalStateException("Can't save state before committing");
+            p.writeInt(this.mCommitId);
+            p.writeInt(this.mCanMerge ? 1 : 0);
+            p.writeInt(this.mExecuted ? 1 : 0);
+            TextUtils.writeToParcel(this.mLabel, p, 0);
+            int N = this.mOperations.size();
+            p.writeInt(N);
+            for (int i = 0; i < N; i++) {
+                UndoOperation op = this.mOperations.get(i);
+                this.mManager.saveOwner(op.mOwner, p);
+                p.writeParcelable(op, 0);
+            }
         }
 
-        /* access modifiers changed from: package-private */
-        public int getCommitId() {
+        int getCommitId() {
             return this.mCommitId;
         }
 
-        /* access modifiers changed from: package-private */
-        public void setLabel(CharSequence label) {
+        void setLabel(CharSequence label) {
             this.mLabel = label;
         }
 
-        /* access modifiers changed from: package-private */
-        public void updateLabel(CharSequence label) {
+        void updateLabel(CharSequence label) {
             if (this.mLabel != null) {
                 this.mLabel = label;
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public CharSequence getLabel() {
+        CharSequence getLabel() {
             return this.mLabel;
         }
 
-        /* access modifiers changed from: package-private */
-        public boolean setCanMerge(boolean state) {
+        boolean setCanMerge(boolean state) {
             if (state && this.mExecuted) {
                 return false;
             }
@@ -634,40 +611,32 @@ public class UndoManager {
             return true;
         }
 
-        /* access modifiers changed from: package-private */
-        public void makeExecuted() {
+        void makeExecuted() {
             this.mExecuted = true;
         }
 
-        /* access modifiers changed from: package-private */
-        public boolean canMerge() {
+        boolean canMerge() {
             return this.mCanMerge && !this.mExecuted;
         }
 
-        /* access modifiers changed from: package-private */
-        public int countOperations() {
+        int countOperations() {
             return this.mOperations.size();
         }
 
-        /* access modifiers changed from: package-private */
-        public boolean hasOperation(UndoOwner owner) {
+        boolean hasOperation(UndoOwner owner) {
             int N = this.mOperations.size();
-            if (owner != null) {
-                for (int i = 0; i < N; i++) {
-                    if (this.mOperations.get(i).getOwner() == owner) {
-                        return true;
-                    }
-                }
-                return false;
-            } else if (N != 0) {
-                return true;
-            } else {
-                return false;
+            if (owner == null) {
+                return N != 0;
             }
+            for (int i = 0; i < N; i++) {
+                if (this.mOperations.get(i).getOwner() == owner) {
+                    return true;
+                }
+            }
+            return false;
         }
 
-        /* access modifiers changed from: package-private */
-        public boolean hasMultipleOwners() {
+        boolean hasMultipleOwners() {
             int N = this.mOperations.size();
             if (N <= 1) {
                 return false;
@@ -681,45 +650,40 @@ public class UndoManager {
             return false;
         }
 
-        /* access modifiers changed from: package-private */
-        public void addOperation(UndoOperation<?> op) {
-            if (!this.mOperations.contains(op)) {
-                this.mOperations.add(op);
-                if (this.mRecent == null) {
-                    this.mRecent = new ArrayList<>();
-                    this.mRecent.add(op);
-                }
-                op.mOwner.mOpCount++;
-                return;
+        void addOperation(UndoOperation<?> op) {
+            if (this.mOperations.contains(op)) {
+                throw new IllegalStateException("Already holds " + op);
             }
-            throw new IllegalStateException("Already holds " + op);
+            this.mOperations.add(op);
+            if (this.mRecent == null) {
+                this.mRecent = new ArrayList<>();
+                this.mRecent.add(op);
+            }
+            op.mOwner.mOpCount++;
         }
 
-        /* access modifiers changed from: package-private */
-        public <T extends UndoOperation> T getLastOperation(Class<T> clazz, UndoOwner owner) {
+        <T extends UndoOperation> T getLastOperation(Class<T> clazz, UndoOwner owner) {
             int N = this.mOperations.size();
-            if (clazz != null || owner != null) {
-                int i = N - 1;
-                while (i >= 0) {
-                    UndoOperation<?> op = this.mOperations.get(i);
-                    if (owner != null && op.getOwner() != owner) {
-                        i--;
-                    } else if (clazz == null || op.getClass() == clazz) {
-                        return op;
-                    } else {
+            if (clazz == null && owner == null) {
+                if (N > 0) {
+                    return this.mOperations.get(N - 1);
+                }
+                return null;
+            }
+            for (int i = N - 1; i >= 0; i--) {
+                UndoOperation<?> op = this.mOperations.get(i);
+                if (owner == null || op.getOwner() == owner) {
+                    if (clazz != null && op.getClass() != clazz) {
                         return null;
+                    } else {
+                        return op;
                     }
                 }
-                return null;
-            } else if (N > 0) {
-                return (UndoOperation) this.mOperations.get(N - 1);
-            } else {
-                return null;
             }
+            return null;
         }
 
-        /* access modifiers changed from: package-private */
-        public boolean matchOwner(UndoOwner owner) {
+        boolean matchOwner(UndoOwner owner) {
             for (int i = this.mOperations.size() - 1; i >= 0; i--) {
                 if (this.mOperations.get(i).matchOwner(owner)) {
                     return true;
@@ -728,8 +692,7 @@ public class UndoManager {
             return false;
         }
 
-        /* access modifiers changed from: package-private */
-        public boolean hasData() {
+        boolean hasData() {
             for (int i = this.mOperations.size() - 1; i >= 0; i--) {
                 if (this.mOperations.get(i).hasData()) {
                     return true;
@@ -738,8 +701,7 @@ public class UndoManager {
             return false;
         }
 
-        /* access modifiers changed from: package-private */
-        public void commit() {
+        void commit() {
             int N = this.mRecent != null ? this.mRecent.size() : 0;
             for (int i = 0; i < N; i++) {
                 this.mRecent.get(i).commit();
@@ -747,32 +709,28 @@ public class UndoManager {
             this.mRecent = null;
         }
 
-        /* access modifiers changed from: package-private */
-        public void undo() {
+        void undo() {
             for (int i = this.mOperations.size() - 1; i >= 0; i--) {
                 this.mOperations.get(i).undo();
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public void redo() {
+        void redo() {
             int N = this.mOperations.size();
             for (int i = 0; i < N; i++) {
                 this.mOperations.get(i).redo();
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public void destroy() {
+        void destroy() {
             for (int i = this.mOperations.size() - 1; i >= 0; i--) {
                 UndoOwner owner = this.mOperations.get(i).mOwner;
                 owner.mOpCount--;
                 if (owner.mOpCount <= 0) {
-                    if (owner.mOpCount >= 0) {
-                        this.mManager.removeOwner(owner);
-                    } else {
+                    if (owner.mOpCount < 0) {
                         throw new IllegalStateException("Underflow of op count on owner " + owner + " in op " + this.mOperations.get(i));
                     }
+                    this.mManager.removeOwner(owner);
                 }
             }
         }

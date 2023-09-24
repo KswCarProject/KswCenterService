@@ -1,13 +1,14 @@
 package android.media;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Arrays;
 import java.util.Objects;
 
+/* loaded from: classes3.dex */
 public final class AudioFormat implements Parcelable {
     public static final int AUDIO_FORMAT_HAS_PROPERTY_CHANNEL_INDEX_MASK = 8;
     public static final int AUDIO_FORMAT_HAS_PROPERTY_CHANNEL_MASK = 4;
@@ -71,15 +72,6 @@ public final class AudioFormat implements Parcelable {
     public static final int CHANNEL_OUT_TOP_FRONT_CENTER = 32768;
     public static final int CHANNEL_OUT_TOP_FRONT_LEFT = 16384;
     public static final int CHANNEL_OUT_TOP_FRONT_RIGHT = 65536;
-    public static final Parcelable.Creator<AudioFormat> CREATOR = new Parcelable.Creator<AudioFormat>() {
-        public AudioFormat createFromParcel(Parcel p) {
-            return new AudioFormat(p);
-        }
-
-        public AudioFormat[] newArray(int size) {
-            return new AudioFormat[size];
-        }
-    };
     public static final int ENCODING_AAC_ELD = 15;
     public static final int ENCODING_AAC_HE_V1 = 11;
     public static final int ENCODING_AAC_HE_V2 = 12;
@@ -109,28 +101,38 @@ public final class AudioFormat implements Parcelable {
     public static final int SAMPLE_RATE_HZ_MAX = 192000;
     public static final int SAMPLE_RATE_HZ_MIN = 4000;
     public static final int SAMPLE_RATE_UNSPECIFIED = 0;
-    public static final int[] SURROUND_SOUND_ENCODING = {5, 6, 7, 8, 10, 14, 17, 18, 19};
     private final int mChannelCount;
-    /* access modifiers changed from: private */
-    public final int mChannelIndexMask;
-    /* access modifiers changed from: private */
+    private final int mChannelIndexMask;
     @UnsupportedAppUsage
-    public final int mChannelMask;
-    /* access modifiers changed from: private */
+    private final int mChannelMask;
     @UnsupportedAppUsage
-    public final int mEncoding;
+    private final int mEncoding;
     private final int mFrameSizeInBytes;
-    /* access modifiers changed from: private */
-    public final int mPropertySetMask;
-    /* access modifiers changed from: private */
+    private final int mPropertySetMask;
     @UnsupportedAppUsage
-    public final int mSampleRate;
+    private final int mSampleRate;
+    public static final Parcelable.Creator<AudioFormat> CREATOR = new Parcelable.Creator<AudioFormat>() { // from class: android.media.AudioFormat.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public AudioFormat createFromParcel(Parcel p) {
+            return new AudioFormat(p);
+        }
+
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public AudioFormat[] newArray(int size) {
+            return new AudioFormat[size];
+        }
+    };
+    public static final int[] SURROUND_SOUND_ENCODING = {5, 6, 7, 8, 10, 14, 17, 18, 19};
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface Encoding {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface SurroundSoundEncoding {
     }
 
@@ -181,17 +183,16 @@ public final class AudioFormat implements Parcelable {
     }
 
     public static int inChannelMaskFromOutChannelMask(int outMask) throws IllegalArgumentException {
-        if (outMask != 1) {
-            switch (channelCountFromOutChannelMask(outMask)) {
-                case 1:
-                    return 16;
-                case 2:
-                    return 12;
-                default:
-                    throw new IllegalArgumentException("Unsupported channel configuration for input.");
-            }
-        } else {
+        if (outMask == 1) {
             throw new IllegalArgumentException("Illegal CHANNEL_OUT_DEFAULT channel mask for input.");
+        }
+        switch (channelCountFromOutChannelMask(outMask)) {
+            case 1:
+                return 16;
+            case 2:
+                return 12;
+            default:
+                throw new IllegalArgumentException("Unsupported channel configuration for input.");
         }
     }
 
@@ -212,32 +213,32 @@ public final class AudioFormat implements Parcelable {
     }
 
     public static int getBytesPerSample(int audioFormat) {
-        if (audioFormat == 13) {
-            return 2;
+        if (audioFormat != 13) {
+            switch (audioFormat) {
+                case 1:
+                case 2:
+                    return 2;
+                case 3:
+                    return 1;
+                case 4:
+                    return 4;
+                default:
+                    switch (audioFormat) {
+                        case 100:
+                            return 32;
+                        case 101:
+                            return 61;
+                        case 102:
+                        case 103:
+                        case 104:
+                        case 105:
+                            return 23;
+                        default:
+                            throw new IllegalArgumentException("Bad audio format " + audioFormat);
+                    }
+            }
         }
-        switch (audioFormat) {
-            case 1:
-            case 2:
-                return 2;
-            case 3:
-                return 1;
-            case 4:
-                return 4;
-            default:
-                switch (audioFormat) {
-                    case 100:
-                        return 32;
-                    case 101:
-                        return 61;
-                    case 102:
-                    case 103:
-                    case 104:
-                    case 105:
-                        return 23;
-                    default:
-                        throw new IllegalArgumentException("Bad audio format " + audioFormat);
-                }
-        }
+        return 2;
     }
 
     public static boolean isValidEncoding(int audioFormat) {
@@ -396,26 +397,25 @@ public final class AudioFormat implements Parcelable {
 
     private AudioFormat(int propertySetMask, int encoding, int sampleRate, int channelMask, int channelIndexMask) {
         this.mPropertySetMask = propertySetMask;
-        int i = 0;
         this.mEncoding = (propertySetMask & 1) != 0 ? encoding : 0;
         this.mSampleRate = (propertySetMask & 2) != 0 ? sampleRate : 0;
         this.mChannelMask = (propertySetMask & 4) != 0 ? channelMask : 0;
-        this.mChannelIndexMask = (propertySetMask & 8) != 0 ? channelIndexMask : i;
+        this.mChannelIndexMask = (propertySetMask & 8) != 0 ? channelIndexMask : 0;
         int channelIndexCount = Integer.bitCount(getChannelIndexMask());
         int channelCount = channelCountFromOutChannelMask(getChannelMask());
         if (channelCount == 0) {
             channelCount = channelIndexCount;
-        } else if (!(channelCount == channelIndexCount || channelIndexCount == 0)) {
+        } else if (channelCount != channelIndexCount && channelIndexCount != 0) {
             channelCount = 0;
         }
         this.mChannelCount = channelCount;
-        int i2 = 1;
         int frameSizeInBytes = 1;
         try {
-            frameSizeInBytes = getBytesPerSample(this.mEncoding) * channelCount;
+            int frameSizeInBytes2 = getBytesPerSample(this.mEncoding) * channelCount;
+            frameSizeInBytes = frameSizeInBytes2;
         } catch (IllegalArgumentException e) {
         }
-        this.mFrameSizeInBytes = frameSizeInBytes != 0 ? frameSizeInBytes : i2;
+        this.mFrameSizeInBytes = frameSizeInBytes != 0 ? frameSizeInBytes : 1;
     }
 
     public int getEncoding() {
@@ -447,20 +447,31 @@ public final class AudioFormat implements Parcelable {
     }
 
     public String toLogFriendlyString() {
-        return String.format("%dch %dHz %s", new Object[]{Integer.valueOf(this.mChannelCount), Integer.valueOf(this.mSampleRate), toLogFriendlyEncoding(this.mEncoding)});
+        return String.format("%dch %dHz %s", Integer.valueOf(this.mChannelCount), Integer.valueOf(this.mSampleRate), toLogFriendlyEncoding(this.mEncoding));
     }
 
+    /* loaded from: classes3.dex */
     public static class Builder {
-        private int mChannelIndexMask = 0;
-        private int mChannelMask = 0;
-        private int mEncoding = 0;
-        private int mPropertySetMask = 0;
-        private int mSampleRate = 0;
+        private int mChannelIndexMask;
+        private int mChannelMask;
+        private int mEncoding;
+        private int mPropertySetMask;
+        private int mSampleRate;
 
         public Builder() {
+            this.mEncoding = 0;
+            this.mSampleRate = 0;
+            this.mChannelMask = 0;
+            this.mChannelIndexMask = 0;
+            this.mPropertySetMask = 0;
         }
 
         public Builder(AudioFormat af) {
+            this.mEncoding = 0;
+            this.mSampleRate = 0;
+            this.mChannelMask = 0;
+            this.mChannelIndexMask = 0;
+            this.mPropertySetMask = 0;
             this.mEncoding = af.mEncoding;
             this.mSampleRate = af.mSampleRate;
             this.mChannelMask = af.mChannelMask;
@@ -469,7 +480,8 @@ public final class AudioFormat implements Parcelable {
         }
 
         public AudioFormat build() {
-            return new AudioFormat(this.mPropertySetMask, this.mEncoding, this.mSampleRate, this.mChannelMask, this.mChannelIndexMask);
+            AudioFormat af = new AudioFormat(this.mPropertySetMask, this.mEncoding, this.mSampleRate, this.mChannelMask, this.mChannelIndexMask);
+            return af;
         }
 
         public Builder setEncoding(int encoding) throws IllegalArgumentException {
@@ -477,6 +489,18 @@ public final class AudioFormat implements Parcelable {
                 case 1:
                     this.mEncoding = 2;
                     break;
+                default:
+                    switch (encoding) {
+                        case 100:
+                        case 101:
+                        case 102:
+                        case 103:
+                        case 104:
+                        case 105:
+                            break;
+                        default:
+                            throw new IllegalArgumentException("Invalid encoding " + encoding);
+                    }
                 case 2:
                 case 3:
                 case 4:
@@ -495,21 +519,9 @@ public final class AudioFormat implements Parcelable {
                 case 17:
                 case 18:
                 case 19:
+                    this.mEncoding = encoding;
                     break;
-                default:
-                    switch (encoding) {
-                        case 100:
-                        case 101:
-                        case 102:
-                        case 103:
-                        case 104:
-                        case 105:
-                            break;
-                        default:
-                            throw new IllegalArgumentException("Invalid encoding " + encoding);
-                    }
             }
-            this.mEncoding = encoding;
             this.mPropertySetMask |= 1;
             return this;
         }
@@ -517,25 +529,25 @@ public final class AudioFormat implements Parcelable {
         public Builder setChannelMask(int channelMask) {
             if (channelMask == 0) {
                 throw new IllegalArgumentException("Invalid zero channel mask");
-            } else if (this.mChannelIndexMask == 0 || Integer.bitCount(channelMask) == Integer.bitCount(this.mChannelIndexMask)) {
-                this.mChannelMask = channelMask;
-                this.mPropertySetMask |= 4;
-                return this;
-            } else {
+            }
+            if (this.mChannelIndexMask != 0 && Integer.bitCount(channelMask) != Integer.bitCount(this.mChannelIndexMask)) {
                 throw new IllegalArgumentException("Mismatched channel count for mask " + Integer.toHexString(channelMask).toUpperCase());
             }
+            this.mChannelMask = channelMask;
+            this.mPropertySetMask |= 4;
+            return this;
         }
 
         public Builder setChannelIndexMask(int channelIndexMask) {
             if (channelIndexMask == 0) {
                 throw new IllegalArgumentException("Invalid zero channel index mask");
-            } else if (this.mChannelMask == 0 || Integer.bitCount(channelIndexMask) == Integer.bitCount(this.mChannelMask)) {
-                this.mChannelIndexMask = channelIndexMask;
-                this.mPropertySetMask |= 8;
-                return this;
-            } else {
+            }
+            if (this.mChannelMask != 0 && Integer.bitCount(channelIndexMask) != Integer.bitCount(this.mChannelMask)) {
                 throw new IllegalArgumentException("Mismatched channel count for index mask " + Integer.toHexString(channelIndexMask).toUpperCase());
             }
+            this.mChannelIndexMask = channelIndexMask;
+            this.mPropertySetMask |= 8;
+            return this;
         }
 
         public Builder setSampleRate(int sampleRate) throws IllegalArgumentException {
@@ -556,23 +568,25 @@ public final class AudioFormat implements Parcelable {
             return false;
         }
         AudioFormat that = (AudioFormat) o;
-        if (this.mPropertySetMask != that.mPropertySetMask) {
+        if (this.mPropertySetMask == that.mPropertySetMask) {
+            if (((this.mPropertySetMask & 1) == 0 || this.mEncoding == that.mEncoding) && (((this.mPropertySetMask & 2) == 0 || this.mSampleRate == that.mSampleRate) && (((this.mPropertySetMask & 4) == 0 || this.mChannelMask == that.mChannelMask) && ((this.mPropertySetMask & 8) == 0 || this.mChannelIndexMask == that.mChannelIndexMask)))) {
+                return true;
+            }
             return false;
-        }
-        if (((this.mPropertySetMask & 1) == 0 || this.mEncoding == that.mEncoding) && (((this.mPropertySetMask & 2) == 0 || this.mSampleRate == that.mSampleRate) && (((this.mPropertySetMask & 4) == 0 || this.mChannelMask == that.mChannelMask) && ((this.mPropertySetMask & 8) == 0 || this.mChannelIndexMask == that.mChannelIndexMask)))) {
-            return true;
         }
         return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(this.mPropertySetMask), Integer.valueOf(this.mSampleRate), Integer.valueOf(this.mEncoding), Integer.valueOf(this.mChannelMask), Integer.valueOf(this.mChannelIndexMask)});
+        return Objects.hash(Integer.valueOf(this.mPropertySetMask), Integer.valueOf(this.mSampleRate), Integer.valueOf(this.mEncoding), Integer.valueOf(this.mChannelMask), Integer.valueOf(this.mChannelIndexMask));
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mPropertySetMask);
         dest.writeInt(this.mEncoding);
@@ -590,32 +604,32 @@ public final class AudioFormat implements Parcelable {
     }
 
     public static String toDisplayName(int audioFormat) {
-        if (audioFormat == 10) {
-            return "AAC";
-        }
-        if (audioFormat == 14) {
+        if (audioFormat != 10) {
+            if (audioFormat != 14) {
+                switch (audioFormat) {
+                    case 5:
+                        return "Dolby Digital";
+                    case 6:
+                        return "Dolby Digital Plus";
+                    case 7:
+                        return "DTS";
+                    case 8:
+                        return "DTS HD";
+                    default:
+                        switch (audioFormat) {
+                            case 17:
+                                return "Dolby AC-4";
+                            case 18:
+                                return "Dolby Atmos in Dolby Digital Plus";
+                            case 19:
+                                return "Dolby MAT";
+                            default:
+                                return "Unknown surround sound format";
+                        }
+                }
+            }
             return "Dolby TrueHD";
         }
-        switch (audioFormat) {
-            case 5:
-                return "Dolby Digital";
-            case 6:
-                return "Dolby Digital Plus";
-            case 7:
-                return "DTS";
-            case 8:
-                return "DTS HD";
-            default:
-                switch (audioFormat) {
-                    case 17:
-                        return "Dolby AC-4";
-                    case 18:
-                        return "Dolby Atmos in Dolby Digital Plus";
-                    case 19:
-                        return "Dolby MAT";
-                    default:
-                        return "Unknown surround sound format";
-                }
-        }
+        return "AAC";
     }
 }

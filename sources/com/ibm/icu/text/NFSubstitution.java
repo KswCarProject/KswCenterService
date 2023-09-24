@@ -2,6 +2,7 @@ package com.ibm.icu.text;
 
 import java.text.ParsePosition;
 
+/* loaded from: classes5.dex */
 abstract class NFSubstitution {
     static final /* synthetic */ boolean $assertionsDisabled = false;
     private static final long MAX_INT64_IN_DOUBLE = 9007199254740991L;
@@ -13,54 +14,48 @@ abstract class NFSubstitution {
 
     public abstract double composeRuleValue(double d, double d2);
 
-    /* access modifiers changed from: package-private */
-    public abstract char tokenChar();
+    abstract char tokenChar();
 
     public abstract double transformNumber(double d);
 
     public abstract long transformNumber(long j);
 
-    public static NFSubstitution makeSubstitution(int pos2, NFRule rule, NFRule rulePredecessor, NFRuleSet ruleSet2, RuleBasedNumberFormat formatter, String description) {
-        int i = pos2;
-        NFRuleSet nFRuleSet = ruleSet2;
-        String str = description;
+    public static NFSubstitution makeSubstitution(int pos, NFRule rule, NFRule rulePredecessor, NFRuleSet ruleSet, RuleBasedNumberFormat formatter, String description) {
         if (description.length() == 0) {
             return null;
         }
-        switch (str.charAt(0)) {
+        switch (description.charAt(0)) {
             case '<':
-                if (rule.getBaseValue() == -1) {
-                    NFRule nFRule = rule;
-                    throw new IllegalArgumentException("<< not allowed in negative-number rule");
-                } else if (rule.getBaseValue() == -2 || rule.getBaseValue() == -3 || rule.getBaseValue() == -4) {
-                    NFRule nFRule2 = rule;
-                    return new IntegralPartSubstitution(pos2, nFRuleSet, str);
-                } else if (!ruleSet2.isFractionSet()) {
-                    return new MultiplierSubstitution(pos2, rule, nFRuleSet, str);
-                } else {
-                    return new NumeratorSubstitution(pos2, (double) rule.getBaseValue(), formatter.getDefaultRuleSet(), description);
+                if (rule.getBaseValue() != -1) {
+                    if (rule.getBaseValue() == -2 || rule.getBaseValue() == -3 || rule.getBaseValue() == -4) {
+                        return new IntegralPartSubstitution(pos, ruleSet, description);
+                    }
+                    if (ruleSet.isFractionSet()) {
+                        return new NumeratorSubstitution(pos, rule.getBaseValue(), formatter.getDefaultRuleSet(), description);
+                    }
+                    return new MultiplierSubstitution(pos, rule, ruleSet, description);
                 }
+                throw new IllegalArgumentException("<< not allowed in negative-number rule");
             case '=':
-                return new SameValueSubstitution(pos2, nFRuleSet, str);
+                return new SameValueSubstitution(pos, ruleSet, description);
             case '>':
                 if (rule.getBaseValue() == -1) {
-                    return new AbsoluteValueSubstitution(pos2, nFRuleSet, str);
+                    return new AbsoluteValueSubstitution(pos, ruleSet, description);
                 }
                 if (rule.getBaseValue() == -2 || rule.getBaseValue() == -3 || rule.getBaseValue() == -4) {
-                    return new FractionalPartSubstitution(pos2, nFRuleSet, str);
+                    return new FractionalPartSubstitution(pos, ruleSet, description);
                 }
-                if (!ruleSet2.isFractionSet()) {
-                    return new ModulusSubstitution(pos2, rule, rulePredecessor, ruleSet2, description);
+                if (ruleSet.isFractionSet()) {
+                    throw new IllegalArgumentException(">> not allowed in fraction rule set");
                 }
-                throw new IllegalArgumentException(">> not allowed in fraction rule set");
+                return new ModulusSubstitution(pos, rule, rulePredecessor, ruleSet, description);
             default:
-                NFRule nFRule3 = rule;
                 throw new IllegalArgumentException("Illegal substitution character");
         }
     }
 
-    NFSubstitution(int pos2, NFRuleSet ruleSet2, String description) {
-        this.pos = pos2;
+    NFSubstitution(int pos, NFRuleSet ruleSet, String description) {
+        this.pos = pos;
         int descriptionLen = description.length();
         if (descriptionLen >= 2 && description.charAt(0) == description.charAt(descriptionLen - 1)) {
             description = description.substring(1, descriptionLen - 1);
@@ -68,17 +63,17 @@ abstract class NFSubstitution {
             throw new IllegalArgumentException("Illegal substitution syntax");
         }
         if (description.length() == 0) {
-            this.ruleSet = ruleSet2;
+            this.ruleSet = ruleSet;
             this.numberFormat = null;
         } else if (description.charAt(0) == '%') {
-            this.ruleSet = ruleSet2.owner.findRuleSet(description);
+            this.ruleSet = ruleSet.owner.findRuleSet(description);
             this.numberFormat = null;
         } else if (description.charAt(0) == '#' || description.charAt(0) == '0') {
             this.ruleSet = null;
-            this.numberFormat = (DecimalFormat) ruleSet2.owner.getDecimalFormat().clone();
+            this.numberFormat = (DecimalFormat) ruleSet.owner.getDecimalFormat().clone();
             this.numberFormat.applyPattern(description);
         } else if (description.charAt(0) == '>') {
-            this.ruleSet = ruleSet2;
+            this.ruleSet = ruleSet;
             this.numberFormat = null;
         } else {
             throw new IllegalArgumentException("Illegal substitution syntax");
@@ -99,20 +94,20 @@ abstract class NFSubstitution {
             return false;
         }
         NFSubstitution that2 = (NFSubstitution) that;
-        if (this.pos != that2.pos) {
-            return false;
-        }
-        if (this.ruleSet == null && that2.ruleSet != null) {
-            return false;
-        }
-        if (this.numberFormat == null) {
-            if (that2.numberFormat != null) {
+        if (this.pos == that2.pos) {
+            if (this.ruleSet == null && that2.ruleSet != null) {
                 return false;
             }
-        } else if (!this.numberFormat.equals(that2.numberFormat)) {
-            return false;
+            if (this.numberFormat == null) {
+                if (that2.numberFormat != null) {
+                    return false;
+                }
+            } else if (!this.numberFormat.equals(that2.numberFormat)) {
+                return false;
+            }
+            return true;
         }
-        return true;
+        return false;
     }
 
     public int hashCode() {
@@ -128,13 +123,14 @@ abstract class NFSubstitution {
 
     public void doSubstitution(long number, StringBuilder toInsertInto, int position, int recursionCount) {
         if (this.ruleSet != null) {
-            this.ruleSet.format(transformNumber(number), toInsertInto, position + this.pos, recursionCount);
+            long numberToFormat = transformNumber(number);
+            this.ruleSet.format(numberToFormat, toInsertInto, position + this.pos, recursionCount);
         } else if (number <= MAX_INT64_IN_DOUBLE) {
-            double numberToFormat = transformNumber((double) number);
+            double numberToFormat2 = transformNumber(number);
             if (this.numberFormat.getMaximumFractionDigits() == 0) {
-                numberToFormat = Math.floor(numberToFormat);
+                numberToFormat2 = Math.floor(numberToFormat2);
             }
-            toInsertInto.insert(this.pos + position, this.numberFormat.format(numberToFormat));
+            toInsertInto.insert(this.pos + position, this.numberFormat.format(numberToFormat2));
         } else {
             toInsertInto.insert(this.pos + position, this.numberFormat.format(transformNumber(number)));
         }
@@ -143,7 +139,8 @@ abstract class NFSubstitution {
     public void doSubstitution(double number, StringBuilder toInsertInto, int position, int recursionCount) {
         double numberToFormat = transformNumber(number);
         if (Double.isInfinite(numberToFormat)) {
-            this.ruleSet.findRule(Double.POSITIVE_INFINITY).doFormat(numberToFormat, toInsertInto, position + this.pos, recursionCount);
+            NFRule infiniteRule = this.ruleSet.findRule(Double.POSITIVE_INFINITY);
+            infiniteRule.doFormat(numberToFormat, toInsertInto, position + this.pos, recursionCount);
             return;
         }
         if (numberToFormat == Math.floor(numberToFormat) && this.ruleSet != null) {
@@ -152,9 +149,7 @@ abstract class NFSubstitution {
             this.ruleSet.format(numberToFormat, toInsertInto, position + this.pos, recursionCount);
         } else {
             toInsertInto.insert(position + this.pos, this.numberFormat.format(numberToFormat));
-            return;
         }
-        StringBuilder sb = toInsertInto;
     }
 
     public Number doParse(String text, ParsePosition parsePosition, double baseValue, double upperBound, boolean lenientParse, int nonNumericalExecutedRuleMask) {
@@ -168,14 +163,14 @@ abstract class NFSubstitution {
         } else {
             tempResult = this.numberFormat.parse(text, parsePosition);
         }
-        if (parsePosition.getIndex() == 0) {
-            return tempResult;
+        if (parsePosition.getIndex() != 0) {
+            double result = composeRuleValue(tempResult.doubleValue(), baseValue);
+            if (result == ((long) result)) {
+                return Long.valueOf((long) result);
+            }
+            return new Double(result);
         }
-        double result = composeRuleValue(tempResult.doubleValue(), baseValue);
-        if (result == ((double) ((long) result))) {
-            return Long.valueOf((long) result);
-        }
-        return new Double(result);
+        return tempResult;
     }
 
     public final int getPos() {

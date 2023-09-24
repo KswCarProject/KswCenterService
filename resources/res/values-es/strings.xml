@@ -28,7 +28,7 @@
     <string name="import_config_success">Exitosamente importado!</string>
     <string name="no_update">No</string>
     <string name="ota_update">OTA Actualización</string>
-    <string name="ota_update_message">Archivo de actualización detectado.\10¿Quieres actualizar ahora?</string>
+    <string name="ota_update_message">Archivo de actualización detectado.\n¿Quieres actualizar ahora?</string>
     <string name="search_menu_title">Buscar</string>
     <string name="status_bar_notification_info_overflow">+999</string>
     <string name="update_success">Actualizar con éxito!</string>

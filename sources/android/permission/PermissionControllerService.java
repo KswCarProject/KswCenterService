@@ -4,12 +4,13 @@ import android.Manifest;
 import android.annotation.SystemApi;
 import android.app.Service;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.ParcelFileDescriptor;
-import android.os.RemoteCallback;
-import android.os.UserHandle;
+import android.content.p002pm.PackageInfo;
+import android.content.p002pm.PackageManager;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.ParcelFileDescriptor;
+import android.p007os.RemoteCallback;
+import android.p007os.UserHandle;
 import android.permission.IPermissionController;
 import android.permission.PermissionControllerService;
 import android.util.ArrayMap;
@@ -27,9 +28,9 @@ import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public abstract class PermissionControllerService extends Service {
-    /* access modifiers changed from: private */
-    public static final String LOG_TAG = PermissionControllerService.class.getSimpleName();
+    private static final String LOG_TAG = PermissionControllerService.class.getSimpleName();
     public static final String SERVICE_INTERFACE = "android.permission.PermissionControllerService";
 
     public abstract void onCountPermissionApps(List<String> list, int i, IntConsumer intConsumer);
@@ -52,271 +53,253 @@ public abstract class PermissionControllerService extends Service {
 
     public abstract void onSetRuntimePermissionGrantStateByDeviceAdmin(String str, String str2, String str3, int i, Consumer<Boolean> consumer);
 
-    public final IBinder onBind(Intent intent) {
-        return new IPermissionController.Stub() {
-            public void revokeRuntimePermissions(Bundle bundleizedRequest, boolean doDryRun, int reason, String callerPackageName, RemoteCallback callback) {
-                Preconditions.checkNotNull(bundleizedRequest, "bundleizedRequest");
-                Preconditions.checkNotNull(callerPackageName);
-                Preconditions.checkNotNull(callback);
-                ArrayMap arrayMap = new ArrayMap();
-                for (String packageName : bundleizedRequest.keySet()) {
-                    Preconditions.checkNotNull(packageName);
-                    ArrayList<String> permissions = bundleizedRequest.getStringArrayList(packageName);
-                    Preconditions.checkCollectionElementsNotNull(permissions, "permissions");
-                    arrayMap.put(packageName, permissions);
-                }
-                PermissionControllerService.this.enforceCallingPermission(Manifest.permission.REVOKE_RUNTIME_PERMISSIONS, (String) null);
-                try {
-                    boolean z = false;
-                    if (getCallingUid() == PermissionControllerService.this.getPackageManager().getPackageInfo(callerPackageName, 0).applicationInfo.uid) {
-                        z = true;
-                    }
-                    Preconditions.checkArgument(z);
-                    PermissionControllerService.this.onRevokeRuntimePermissions(arrayMap, doDryRun, reason, callerPackageName, new Consumer() {
-                        public final void accept(Object obj) {
-                            PermissionControllerService.AnonymousClass1.lambda$revokeRuntimePermissions$0(RemoteCallback.this, (Map) obj);
-                        }
-                    });
-                } catch (PackageManager.NameNotFoundException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+    /* renamed from: android.permission.PermissionControllerService$1 */
+    /* loaded from: classes3.dex */
+    class BinderC15971 extends IPermissionController.Stub {
+        BinderC15971() {
+        }
 
-            static /* synthetic */ void lambda$revokeRuntimePermissions$0(RemoteCallback callback, Map revoked) {
-                Preconditions.checkNotNull(revoked);
-                Bundle bundledizedRevoked = new Bundle();
-                for (Map.Entry<String, List<String>> appRevocation : revoked.entrySet()) {
-                    Preconditions.checkNotNull(appRevocation.getKey());
-                    Preconditions.checkCollectionElementsNotNull(appRevocation.getValue(), "permissions");
-                    bundledizedRevoked.putStringArrayList(appRevocation.getKey(), new ArrayList(appRevocation.getValue()));
-                }
-                Bundle result = new Bundle();
-                result.putBundle(PermissionControllerManager.KEY_RESULT, bundledizedRevoked);
-                callback.sendResult(result);
-            }
-
-            public void getRuntimePermissionBackup(UserHandle user, ParcelFileDescriptor pipe) {
-                OutputStream backup;
-                Throwable th;
-                Preconditions.checkNotNull(user);
-                Preconditions.checkNotNull(pipe);
-                PermissionControllerService.this.enforceCallingPermission(Manifest.permission.GET_RUNTIME_PERMISSIONS, (String) null);
-                try {
-                    backup = new ParcelFileDescriptor.AutoCloseOutputStream(pipe);
-                    CountDownLatch latch = new CountDownLatch(1);
-                    PermissionControllerService permissionControllerService = PermissionControllerService.this;
-                    Objects.requireNonNull(latch);
-                    permissionControllerService.onGetRuntimePermissionsBackup(user, backup, new Runnable(latch) {
-                        private final /* synthetic */ CountDownLatch f$0;
-
-                        {
-                            this.f$0 = r1;
-                        }
-
-                        public final void run() {
-                            this.f$0.countDown();
-                        }
-                    });
-                    latch.await();
-                    $closeResource((Throwable) null, backup);
-                } catch (IOException e) {
-                    Log.e(PermissionControllerService.LOG_TAG, "Could not open pipe to write backup to", e);
-                } catch (InterruptedException e2) {
-                    Log.e(PermissionControllerService.LOG_TAG, "getRuntimePermissionBackup timed out", e2);
-                } catch (Throwable th2) {
-                    $closeResource(th, backup);
-                    throw th2;
-                }
-            }
-
-            private static /* synthetic */ void $closeResource(Throwable x0, AutoCloseable x1) {
-                if (x0 != null) {
-                    try {
-                        x1.close();
-                    } catch (Throwable th) {
-                        x0.addSuppressed(th);
-                    }
-                } else {
-                    x1.close();
-                }
-            }
-
-            public void restoreRuntimePermissionBackup(UserHandle user, ParcelFileDescriptor pipe) {
-                InputStream backup;
-                Throwable th;
-                Preconditions.checkNotNull(user);
-                Preconditions.checkNotNull(pipe);
-                PermissionControllerService.this.enforceCallingPermission(Manifest.permission.GRANT_RUNTIME_PERMISSIONS, (String) null);
-                try {
-                    backup = new ParcelFileDescriptor.AutoCloseInputStream(pipe);
-                    CountDownLatch latch = new CountDownLatch(1);
-                    PermissionControllerService permissionControllerService = PermissionControllerService.this;
-                    Objects.requireNonNull(latch);
-                    permissionControllerService.onRestoreRuntimePermissionsBackup(user, backup, new Runnable(latch) {
-                        private final /* synthetic */ CountDownLatch f$0;
-
-                        {
-                            this.f$0 = r1;
-                        }
-
-                        public final void run() {
-                            this.f$0.countDown();
-                        }
-                    });
-                    latch.await();
-                    $closeResource((Throwable) null, backup);
-                } catch (IOException e) {
-                    Log.e(PermissionControllerService.LOG_TAG, "Could not open pipe to read backup from", e);
-                } catch (InterruptedException e2) {
-                    Log.e(PermissionControllerService.LOG_TAG, "restoreRuntimePermissionBackup timed out", e2);
-                } catch (Throwable th2) {
-                    $closeResource(th, backup);
-                    throw th2;
-                }
-            }
-
-            public void restoreDelayedRuntimePermissionBackup(String packageName, UserHandle user, RemoteCallback callback) {
+        @Override // android.permission.IPermissionController
+        public void revokeRuntimePermissions(Bundle bundleizedRequest, boolean doDryRun, int reason, String callerPackageName, final RemoteCallback callback) {
+            Preconditions.checkNotNull(bundleizedRequest, "bundleizedRequest");
+            Preconditions.checkNotNull(callerPackageName);
+            Preconditions.checkNotNull(callback);
+            Map<String, List<String>> request = new ArrayMap<>();
+            for (String packageName : bundleizedRequest.keySet()) {
                 Preconditions.checkNotNull(packageName);
-                Preconditions.checkNotNull(user);
-                Preconditions.checkNotNull(callback);
-                PermissionControllerService.this.enforceCallingPermission(Manifest.permission.GRANT_RUNTIME_PERMISSIONS, (String) null);
-                PermissionControllerService.this.onRestoreDelayedRuntimePermissionsBackup(packageName, user, new Consumer() {
+                ArrayList<String> permissions = bundleizedRequest.getStringArrayList(packageName);
+                Preconditions.checkCollectionElementsNotNull(permissions, "permissions");
+                request.put(packageName, permissions);
+            }
+            PermissionControllerService.this.enforceCallingPermission(Manifest.C0000permission.REVOKE_RUNTIME_PERMISSIONS, null);
+            try {
+                PackageInfo pkgInfo = PermissionControllerService.this.getPackageManager().getPackageInfo(callerPackageName, 0);
+                Preconditions.checkArgument(getCallingUid() == pkgInfo.applicationInfo.uid);
+                PermissionControllerService.this.onRevokeRuntimePermissions(request, doDryRun, reason, callerPackageName, new Consumer() { // from class: android.permission.-$$Lambda$PermissionControllerService$1$__ZsT0Jo3iLdGM0gy2UV6ea_oEw
+                    @Override // java.util.function.Consumer
                     public final void accept(Object obj) {
-                        PermissionControllerService.AnonymousClass1.lambda$restoreDelayedRuntimePermissionBackup$1(RemoteCallback.this, (Boolean) obj);
+                        PermissionControllerService.BinderC15971.lambda$revokeRuntimePermissions$0(RemoteCallback.this, (Map) obj);
                     }
                 });
+            } catch (PackageManager.NameNotFoundException e) {
+                throw new RuntimeException(e);
             }
+        }
 
-            static /* synthetic */ void lambda$restoreDelayedRuntimePermissionBackup$1(RemoteCallback callback, Boolean hasMoreBackup) {
-                Bundle result = new Bundle();
-                result.putBoolean(PermissionControllerManager.KEY_RESULT, hasMoreBackup.booleanValue());
-                callback.sendResult(result);
+        static /* synthetic */ void lambda$revokeRuntimePermissions$0(RemoteCallback callback, Map revoked) {
+            Preconditions.checkNotNull(revoked);
+            Bundle bundledizedRevoked = new Bundle();
+            for (Map.Entry<String, List<String>> appRevocation : revoked.entrySet()) {
+                Preconditions.checkNotNull(appRevocation.getKey());
+                Preconditions.checkCollectionElementsNotNull(appRevocation.getValue(), "permissions");
+                bundledizedRevoked.putStringArrayList(appRevocation.getKey(), new ArrayList<>(appRevocation.getValue()));
             }
+            Bundle result = new Bundle();
+            result.putBundle(PermissionControllerManager.KEY_RESULT, bundledizedRevoked);
+            callback.sendResult(result);
+        }
 
-            public void getAppPermissions(String packageName, RemoteCallback callback) {
-                Preconditions.checkNotNull(packageName, "packageName");
-                Preconditions.checkNotNull(callback, "callback");
-                PermissionControllerService.this.enforceCallingPermission(Manifest.permission.GET_RUNTIME_PERMISSIONS, (String) null);
-                PermissionControllerService.this.onGetAppPermissions(packageName, new Consumer() {
-                    public final void accept(Object obj) {
-                        PermissionControllerService.AnonymousClass1.lambda$getAppPermissions$2(RemoteCallback.this, (List) obj);
-                    }
-                });
-            }
-
-            static /* synthetic */ void lambda$getAppPermissions$2(RemoteCallback callback, List permissions) {
-                if (permissions == null || permissions.isEmpty()) {
-                    callback.sendResult((Bundle) null);
-                    return;
-                }
-                Bundle result = new Bundle();
-                result.putParcelableList(PermissionControllerManager.KEY_RESULT, permissions);
-                callback.sendResult(result);
-            }
-
-            public void revokeRuntimePermission(String packageName, String permissionName) {
-                Preconditions.checkNotNull(packageName, "packageName");
-                Preconditions.checkNotNull(permissionName, "permissionName");
-                PermissionControllerService.this.enforceCallingPermission(Manifest.permission.REVOKE_RUNTIME_PERMISSIONS, (String) null);
+        @Override // android.permission.IPermissionController
+        public void getRuntimePermissionBackup(UserHandle user, ParcelFileDescriptor pipe) {
+            Preconditions.checkNotNull(user);
+            Preconditions.checkNotNull(pipe);
+            PermissionControllerService.this.enforceCallingPermission(Manifest.C0000permission.GET_RUNTIME_PERMISSIONS, null);
+            try {
+                OutputStream backup = new ParcelFileDescriptor.AutoCloseOutputStream(pipe);
                 CountDownLatch latch = new CountDownLatch(1);
                 PermissionControllerService permissionControllerService = PermissionControllerService.this;
                 Objects.requireNonNull(latch);
-                permissionControllerService.onRevokeRuntimePermission(packageName, permissionName, new Runnable(latch) {
-                    private final /* synthetic */ CountDownLatch f$0;
+                permissionControllerService.onGetRuntimePermissionsBackup(user, backup, new $$Lambda$5k6tNlswoNAjCdgttrkQIe8VHVs(latch));
+                latch.await();
+                $closeResource(null, backup);
+            } catch (IOException e) {
+                Log.m69e(PermissionControllerService.LOG_TAG, "Could not open pipe to write backup to", e);
+            } catch (InterruptedException e2) {
+                Log.m69e(PermissionControllerService.LOG_TAG, "getRuntimePermissionBackup timed out", e2);
+            }
+        }
 
-                    {
-                        this.f$0 = r1;
-                    }
+        private static /* synthetic */ void $closeResource(Throwable x0, AutoCloseable x1) {
+            if (x0 == null) {
+                x1.close();
+                return;
+            }
+            try {
+                x1.close();
+            } catch (Throwable th) {
+                x0.addSuppressed(th);
+            }
+        }
 
-                    public final void run() {
-                        this.f$0.countDown();
-                    }
-                });
-                try {
-                    latch.await();
-                } catch (InterruptedException e) {
-                    Log.e(PermissionControllerService.LOG_TAG, "revokeRuntimePermission timed out", e);
+        @Override // android.permission.IPermissionController
+        public void restoreRuntimePermissionBackup(UserHandle user, ParcelFileDescriptor pipe) {
+            Preconditions.checkNotNull(user);
+            Preconditions.checkNotNull(pipe);
+            PermissionControllerService.this.enforceCallingPermission(Manifest.C0000permission.GRANT_RUNTIME_PERMISSIONS, null);
+            try {
+                InputStream backup = new ParcelFileDescriptor.AutoCloseInputStream(pipe);
+                CountDownLatch latch = new CountDownLatch(1);
+                PermissionControllerService permissionControllerService = PermissionControllerService.this;
+                Objects.requireNonNull(latch);
+                permissionControllerService.onRestoreRuntimePermissionsBackup(user, backup, new $$Lambda$5k6tNlswoNAjCdgttrkQIe8VHVs(latch));
+                latch.await();
+                $closeResource(null, backup);
+            } catch (IOException e) {
+                Log.m69e(PermissionControllerService.LOG_TAG, "Could not open pipe to read backup from", e);
+            } catch (InterruptedException e2) {
+                Log.m69e(PermissionControllerService.LOG_TAG, "restoreRuntimePermissionBackup timed out", e2);
+            }
+        }
+
+        @Override // android.permission.IPermissionController
+        public void restoreDelayedRuntimePermissionBackup(String packageName, UserHandle user, final RemoteCallback callback) {
+            Preconditions.checkNotNull(packageName);
+            Preconditions.checkNotNull(user);
+            Preconditions.checkNotNull(callback);
+            PermissionControllerService.this.enforceCallingPermission(Manifest.C0000permission.GRANT_RUNTIME_PERMISSIONS, null);
+            PermissionControllerService.this.onRestoreDelayedRuntimePermissionsBackup(packageName, user, new Consumer() { // from class: android.permission.-$$Lambda$PermissionControllerService$1$byERALVqclrc25diZo2Ly0OtfwI
+                @Override // java.util.function.Consumer
+                public final void accept(Object obj) {
+                    PermissionControllerService.BinderC15971.lambda$restoreDelayedRuntimePermissionBackup$1(RemoteCallback.this, (Boolean) obj);
                 }
-            }
+            });
+        }
 
-            public void countPermissionApps(List<String> permissionNames, int flags, RemoteCallback callback) {
-                Preconditions.checkCollectionElementsNotNull(permissionNames, "permissionNames");
-                Preconditions.checkFlagsArgument(flags, 3);
-                Preconditions.checkNotNull(callback, "callback");
-                PermissionControllerService.this.enforceCallingPermission(Manifest.permission.GET_RUNTIME_PERMISSIONS, (String) null);
-                PermissionControllerService.this.onCountPermissionApps(permissionNames, flags, new IntConsumer() {
-                    public final void accept(int i) {
-                        PermissionControllerService.AnonymousClass1.lambda$countPermissionApps$3(RemoteCallback.this, i);
-                    }
-                });
-            }
+        static /* synthetic */ void lambda$restoreDelayedRuntimePermissionBackup$1(RemoteCallback callback, Boolean hasMoreBackup) {
+            Bundle result = new Bundle();
+            result.putBoolean(PermissionControllerManager.KEY_RESULT, hasMoreBackup.booleanValue());
+            callback.sendResult(result);
+        }
 
-            static /* synthetic */ void lambda$countPermissionApps$3(RemoteCallback callback, int numApps) {
+        @Override // android.permission.IPermissionController
+        public void getAppPermissions(String packageName, final RemoteCallback callback) {
+            Preconditions.checkNotNull(packageName, "packageName");
+            Preconditions.checkNotNull(callback, "callback");
+            PermissionControllerService.this.enforceCallingPermission(Manifest.C0000permission.GET_RUNTIME_PERMISSIONS, null);
+            PermissionControllerService.this.onGetAppPermissions(packageName, new Consumer() { // from class: android.permission.-$$Lambda$PermissionControllerService$1$ROtJOrojS2cjqvX59tSprAvs-1o
+                @Override // java.util.function.Consumer
+                public final void accept(Object obj) {
+                    PermissionControllerService.BinderC15971.lambda$getAppPermissions$2(RemoteCallback.this, (List) obj);
+                }
+            });
+        }
+
+        static /* synthetic */ void lambda$getAppPermissions$2(RemoteCallback callback, List permissions) {
+            if (permissions != null && !permissions.isEmpty()) {
                 Bundle result = new Bundle();
-                result.putInt(PermissionControllerManager.KEY_RESULT, numApps);
+                result.putParcelableList(PermissionControllerManager.KEY_RESULT, permissions);
                 callback.sendResult(result);
+                return;
             }
+            callback.sendResult(null);
+        }
 
-            public void getPermissionUsages(boolean countSystem, long numMillis, RemoteCallback callback) {
-                Preconditions.checkArgumentNonnegative(numMillis);
-                Preconditions.checkNotNull(callback, "callback");
-                PermissionControllerService.this.enforceCallingPermission(Manifest.permission.GET_RUNTIME_PERMISSIONS, (String) null);
-                PermissionControllerService.this.onGetPermissionUsages(countSystem, numMillis, new Consumer() {
-                    public final void accept(Object obj) {
-                        PermissionControllerService.AnonymousClass1.lambda$getPermissionUsages$4(RemoteCallback.this, (List) obj);
-                    }
-                });
+        @Override // android.permission.IPermissionController
+        public void revokeRuntimePermission(String packageName, String permissionName) {
+            Preconditions.checkNotNull(packageName, "packageName");
+            Preconditions.checkNotNull(permissionName, "permissionName");
+            PermissionControllerService.this.enforceCallingPermission(Manifest.C0000permission.REVOKE_RUNTIME_PERMISSIONS, null);
+            CountDownLatch latch = new CountDownLatch(1);
+            PermissionControllerService permissionControllerService = PermissionControllerService.this;
+            Objects.requireNonNull(latch);
+            permissionControllerService.onRevokeRuntimePermission(packageName, permissionName, new $$Lambda$5k6tNlswoNAjCdgttrkQIe8VHVs(latch));
+            try {
+                latch.await();
+            } catch (InterruptedException e) {
+                Log.m69e(PermissionControllerService.LOG_TAG, "revokeRuntimePermission timed out", e);
             }
+        }
 
-            static /* synthetic */ void lambda$getPermissionUsages$4(RemoteCallback callback, List users) {
-                if (users == null || users.isEmpty()) {
-                    callback.sendResult((Bundle) null);
-                    return;
+        @Override // android.permission.IPermissionController
+        public void countPermissionApps(List<String> permissionNames, int flags, final RemoteCallback callback) {
+            Preconditions.checkCollectionElementsNotNull(permissionNames, "permissionNames");
+            Preconditions.checkFlagsArgument(flags, 3);
+            Preconditions.checkNotNull(callback, "callback");
+            PermissionControllerService.this.enforceCallingPermission(Manifest.C0000permission.GET_RUNTIME_PERMISSIONS, null);
+            PermissionControllerService.this.onCountPermissionApps(permissionNames, flags, new IntConsumer() { // from class: android.permission.-$$Lambda$PermissionControllerService$1$i3vGLgbFSsM1LDWQDjRkXStMIUE
+                @Override // java.util.function.IntConsumer
+                public final void accept(int i) {
+                    PermissionControllerService.BinderC15971.lambda$countPermissionApps$3(RemoteCallback.this, i);
                 }
+            });
+        }
+
+        static /* synthetic */ void lambda$countPermissionApps$3(RemoteCallback callback, int numApps) {
+            Bundle result = new Bundle();
+            result.putInt(PermissionControllerManager.KEY_RESULT, numApps);
+            callback.sendResult(result);
+        }
+
+        @Override // android.permission.IPermissionController
+        public void getPermissionUsages(boolean countSystem, long numMillis, final RemoteCallback callback) {
+            Preconditions.checkArgumentNonnegative(numMillis);
+            Preconditions.checkNotNull(callback, "callback");
+            PermissionControllerService.this.enforceCallingPermission(Manifest.C0000permission.GET_RUNTIME_PERMISSIONS, null);
+            PermissionControllerService.this.onGetPermissionUsages(countSystem, numMillis, new Consumer() { // from class: android.permission.-$$Lambda$PermissionControllerService$1$oEdK7RdXzZpRIDF40ujz7uvW1Ts
+                @Override // java.util.function.Consumer
+                public final void accept(Object obj) {
+                    PermissionControllerService.BinderC15971.lambda$getPermissionUsages$4(RemoteCallback.this, (List) obj);
+                }
+            });
+        }
+
+        static /* synthetic */ void lambda$getPermissionUsages$4(RemoteCallback callback, List users) {
+            if (users != null && !users.isEmpty()) {
                 Bundle result = new Bundle();
                 result.putParcelableList(PermissionControllerManager.KEY_RESULT, users);
                 callback.sendResult(result);
+                return;
             }
+            callback.sendResult(null);
+        }
 
-            public void setRuntimePermissionGrantStateByDeviceAdmin(String callerPackageName, String packageName, String permission, int grantState, RemoteCallback callback) {
-                Preconditions.checkStringNotEmpty(callerPackageName);
-                Preconditions.checkStringNotEmpty(packageName);
-                Preconditions.checkStringNotEmpty(permission);
-                boolean z = true;
-                if (!(grantState == 1 || grantState == 2 || grantState == 0)) {
-                    z = false;
-                }
-                Preconditions.checkArgument(z);
-                Preconditions.checkNotNull(callback);
-                if (grantState == 2) {
-                    PermissionControllerService.this.enforceCallingPermission(Manifest.permission.GRANT_RUNTIME_PERMISSIONS, (String) null);
-                }
-                if (grantState == 2) {
-                    PermissionControllerService.this.enforceCallingPermission(Manifest.permission.REVOKE_RUNTIME_PERMISSIONS, (String) null);
-                }
-                PermissionControllerService.this.enforceCallingPermission(Manifest.permission.ADJUST_RUNTIME_PERMISSIONS_POLICY, (String) null);
-                PermissionControllerService.this.onSetRuntimePermissionGrantStateByDeviceAdmin(callerPackageName, packageName, permission, grantState, new Consumer() {
-                    public final void accept(Object obj) {
-                        PermissionControllerService.AnonymousClass1.lambda$setRuntimePermissionGrantStateByDeviceAdmin$5(RemoteCallback.this, (Boolean) obj);
-                    }
-                });
+        @Override // android.permission.IPermissionController
+        public void setRuntimePermissionGrantStateByDeviceAdmin(String callerPackageName, String packageName, String permission, int grantState, final RemoteCallback callback) {
+            Preconditions.checkStringNotEmpty(callerPackageName);
+            Preconditions.checkStringNotEmpty(packageName);
+            Preconditions.checkStringNotEmpty(permission);
+            boolean z = true;
+            if (grantState != 1 && grantState != 2 && grantState != 0) {
+                z = false;
             }
+            Preconditions.checkArgument(z);
+            Preconditions.checkNotNull(callback);
+            if (grantState == 2) {
+                PermissionControllerService.this.enforceCallingPermission(Manifest.C0000permission.GRANT_RUNTIME_PERMISSIONS, null);
+            }
+            if (grantState == 2) {
+                PermissionControllerService.this.enforceCallingPermission(Manifest.C0000permission.REVOKE_RUNTIME_PERMISSIONS, null);
+            }
+            PermissionControllerService.this.enforceCallingPermission(Manifest.C0000permission.ADJUST_RUNTIME_PERMISSIONS_POLICY, null);
+            PermissionControllerService.this.onSetRuntimePermissionGrantStateByDeviceAdmin(callerPackageName, packageName, permission, grantState, new Consumer() { // from class: android.permission.-$$Lambda$PermissionControllerService$1$Sp35OTwahalQfZumoUDJ70lCKe0
+                @Override // java.util.function.Consumer
+                public final void accept(Object obj) {
+                    PermissionControllerService.BinderC15971.lambda$setRuntimePermissionGrantStateByDeviceAdmin$5(RemoteCallback.this, (Boolean) obj);
+                }
+            });
+        }
 
-            static /* synthetic */ void lambda$setRuntimePermissionGrantStateByDeviceAdmin$5(RemoteCallback callback, Boolean wasSet) {
-                Bundle result = new Bundle();
-                result.putBoolean(PermissionControllerManager.KEY_RESULT, wasSet.booleanValue());
-                callback.sendResult(result);
-            }
+        static /* synthetic */ void lambda$setRuntimePermissionGrantStateByDeviceAdmin$5(RemoteCallback callback, Boolean wasSet) {
+            Bundle result = new Bundle();
+            result.putBoolean(PermissionControllerManager.KEY_RESULT, wasSet.booleanValue());
+            callback.sendResult(result);
+        }
 
-            public void grantOrUpgradeDefaultRuntimePermissions(RemoteCallback callback) {
-                Preconditions.checkNotNull(callback, "callback");
-                PermissionControllerService.this.enforceCallingPermission(Manifest.permission.ADJUST_RUNTIME_PERMISSIONS_POLICY, (String) null);
-                PermissionControllerService.this.onGrantOrUpgradeDefaultRuntimePermissions(new Runnable() {
-                    public final void run() {
-                        RemoteCallback.this.sendResult(Bundle.EMPTY);
-                    }
-                });
-            }
-        };
+        @Override // android.permission.IPermissionController
+        public void grantOrUpgradeDefaultRuntimePermissions(final RemoteCallback callback) {
+            Preconditions.checkNotNull(callback, "callback");
+            PermissionControllerService.this.enforceCallingPermission(Manifest.C0000permission.ADJUST_RUNTIME_PERMISSIONS_POLICY, null);
+            PermissionControllerService.this.onGrantOrUpgradeDefaultRuntimePermissions(new Runnable() { // from class: android.permission.-$$Lambda$PermissionControllerService$1$aoBUJn0rgfJAYfvz7rYL8N9wr_Y
+                @Override // java.lang.Runnable
+                public final void run() {
+                    RemoteCallback.this.sendResult(Bundle.EMPTY);
+                }
+            });
+        }
+    }
+
+    @Override // android.app.Service
+    public final IBinder onBind(Intent intent) {
+        return new BinderC15971();
     }
 }

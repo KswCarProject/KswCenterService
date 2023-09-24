@@ -3,13 +3,13 @@ Built-By: Generated-by-ADT
 Created-By: Android Gradle 3.2.1
 
 Name: AndroidManifest.xml
-SHA-256-Digest: zdIqAUh9HqL8jdsELYgnVDssWwqKNf5ddu1MAcCq0H0=
+SHA-256-Digest: yflGO+8WaANG8ut3MkOpOk2GrlAxBZrpHQDg0w1BlYg=
 
 Name: classes.dex
 SHA-256-Digest: mdvGz76p8psKlvKJre/PJtIo2wN1L5zsgzdHNrPKWTo=
 
 Name: classes2.dex
-SHA-256-Digest: W+Oy71P+en+iDXojQtrnXW8g2NBwNTz3kjiBdj4YNuM=
+SHA-256-Digest: CPrOrQq/6Z9axK4LQcFMA9aYvX6AdFql6yMQbW6AbZI=
 
 Name: classes3.dex
 SHA-256-Digest: bkOuJzeU5uFOXhWVh/BqPjh0SGZhGN3kpOvUaqf+Wzg=

@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+/* loaded from: classes4.dex */
 class ReflectiveProperty<T, V> extends Property<T, V> {
     private static final String PREFIX_GET = "get";
     private static final String PREFIX_IS = "is";
@@ -14,31 +15,37 @@ class ReflectiveProperty<T, V> extends Property<T, V> {
 
     public ReflectiveProperty(Class<T> propertyHolder, Class<V> valueType, String name) {
         super(valueType, name);
-        String capitalizedName = Character.toUpperCase(name.charAt(0)) + name.substring(1);
+        char firstLetter = Character.toUpperCase(name.charAt(0));
+        String theRest = name.substring(1);
+        String capitalizedName = firstLetter + theRest;
+        String getterName = PREFIX_GET + capitalizedName;
         try {
-            this.mGetter = propertyHolder.getMethod(PREFIX_GET + capitalizedName, (Class[]) null);
+            this.mGetter = propertyHolder.getMethod(getterName, null);
         } catch (NoSuchMethodException e) {
+            String getterName2 = PREFIX_IS + capitalizedName;
             try {
-                this.mGetter = propertyHolder.getMethod(PREFIX_IS + capitalizedName, (Class[]) null);
+                this.mGetter = propertyHolder.getMethod(getterName2, null);
             } catch (NoSuchMethodException e2) {
-                this.mField = propertyHolder.getField(name);
-                Class fieldType = this.mField.getType();
-                if (!typesMatch(valueType, fieldType)) {
-                    throw new NoSuchPropertyException("Underlying type (" + fieldType + ") does not match Property type (" + valueType + ")");
+                try {
+                    this.mField = propertyHolder.getField(name);
+                    Class fieldType = this.mField.getType();
+                    if (!typesMatch(valueType, fieldType)) {
+                        throw new NoSuchPropertyException("Underlying type (" + fieldType + ") does not match Property type (" + valueType + ")");
+                    }
+                    return;
+                } catch (NoSuchFieldException e3) {
+                    throw new NoSuchPropertyException("No accessor method or field found for property with name " + name);
                 }
-                return;
-            } catch (NoSuchFieldException e3) {
-                throw new NoSuchPropertyException("No accessor method or field found for property with name " + name);
             }
         }
         Class getterType = this.mGetter.getReturnType();
-        if (typesMatch(valueType, getterType)) {
-            try {
-                this.mSetter = propertyHolder.getMethod(PREFIX_SET + capitalizedName, new Class[]{getterType});
-            } catch (NoSuchMethodException e4) {
-            }
-        } else {
+        if (!typesMatch(valueType, getterType)) {
             throw new NoSuchPropertyException("Underlying type (" + getterType + ") does not match Property type (" + valueType + ")");
+        }
+        String setterName = PREFIX_SET + capitalizedName;
+        try {
+            this.mSetter = propertyHolder.getMethod(setterName, getterType);
+        } catch (NoSuchMethodException e4) {
         }
     }
 
@@ -46,40 +53,38 @@ class ReflectiveProperty<T, V> extends Property<T, V> {
         if (getterType == valueType) {
             return true;
         }
-        if (!getterType.isPrimitive()) {
-            return false;
-        }
-        if (getterType == Float.TYPE && valueType == Float.class) {
-            return true;
-        }
-        if (getterType == Integer.TYPE && valueType == Integer.class) {
-            return true;
-        }
-        if (getterType == Boolean.TYPE && valueType == Boolean.class) {
-            return true;
-        }
-        if (getterType == Long.TYPE && valueType == Long.class) {
-            return true;
-        }
-        if (getterType == Double.TYPE && valueType == Double.class) {
-            return true;
-        }
-        if (getterType == Short.TYPE && valueType == Short.class) {
-            return true;
-        }
-        if (getterType == Byte.TYPE && valueType == Byte.class) {
-            return true;
-        }
-        if (getterType == Character.TYPE && valueType == Character.class) {
-            return true;
+        if (getterType.isPrimitive()) {
+            if (getterType == Float.TYPE && valueType == Float.class) {
+                return true;
+            }
+            if (getterType == Integer.TYPE && valueType == Integer.class) {
+                return true;
+            }
+            if (getterType == Boolean.TYPE && valueType == Boolean.class) {
+                return true;
+            }
+            if (getterType == Long.TYPE && valueType == Long.class) {
+                return true;
+            }
+            if (getterType == Double.TYPE && valueType == Double.class) {
+                return true;
+            }
+            if (getterType == Short.TYPE && valueType == Short.class) {
+                return true;
+            }
+            if (getterType == Byte.TYPE && valueType == Byte.class) {
+                return true;
+            }
+            return getterType == Character.TYPE && valueType == Character.class;
         }
         return false;
     }
 
+    @Override // android.util.Property
     public void set(T object, V value) {
         if (this.mSetter != null) {
             try {
-                this.mSetter.invoke(object, new Object[]{value});
+                this.mSetter.invoke(object, value);
             } catch (IllegalAccessException e) {
                 throw new AssertionError();
             } catch (InvocationTargetException e2) {
@@ -96,10 +101,11 @@ class ReflectiveProperty<T, V> extends Property<T, V> {
         }
     }
 
+    @Override // android.util.Property
     public V get(T object) {
         if (this.mGetter != null) {
             try {
-                return this.mGetter.invoke(object, (Object[]) null);
+                return (V) this.mGetter.invoke(object, null);
             } catch (IllegalAccessException e) {
                 throw new AssertionError();
             } catch (InvocationTargetException e2) {
@@ -107,7 +113,7 @@ class ReflectiveProperty<T, V> extends Property<T, V> {
             }
         } else if (this.mField != null) {
             try {
-                return this.mField.get(object);
+                return (V) this.mField.get(object);
             } catch (IllegalAccessException e3) {
                 throw new AssertionError();
             }
@@ -116,6 +122,7 @@ class ReflectiveProperty<T, V> extends Property<T, V> {
         }
     }
 
+    @Override // android.util.Property
     public boolean isReadOnly() {
         return this.mSetter == null && this.mField == null;
     }

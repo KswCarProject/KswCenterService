@@ -1,9 +1,10 @@
 package android.app;
 
 import android.annotation.SystemApi;
-import android.os.Bundle;
+import android.p007os.Bundle;
 
 @SystemApi
+/* loaded from: classes.dex */
 public class BroadcastOptions {
     static final String KEY_ALLOW_BACKGROUND_ACTIVITY_STARTS = "android:broadcast.allowBackgroundActivityStarts";
     static final String KEY_DONT_SEND_TO_RESTRICTED_APPS = "android:broadcast.dontSendToRestrictedApps";
@@ -11,19 +12,26 @@ public class BroadcastOptions {
     static final String KEY_MIN_MANIFEST_RECEIVER_API_LEVEL = "android:broadcast.minManifestReceiverApiLevel";
     static final String KEY_TEMPORARY_APP_WHITELIST_DURATION = "android:broadcast.temporaryAppWhitelistDuration";
     private boolean mAllowBackgroundActivityStarts;
-    private boolean mDontSendToRestrictedApps = false;
-    private int mMaxManifestReceiverApiLevel = 10000;
-    private int mMinManifestReceiverApiLevel = 0;
+    private boolean mDontSendToRestrictedApps;
+    private int mMaxManifestReceiverApiLevel;
+    private int mMinManifestReceiverApiLevel;
     private long mTemporaryAppWhitelistDuration;
 
     public static BroadcastOptions makeBasic() {
-        return new BroadcastOptions();
+        BroadcastOptions opts = new BroadcastOptions();
+        return opts;
     }
 
     private BroadcastOptions() {
+        this.mMinManifestReceiverApiLevel = 0;
+        this.mMaxManifestReceiverApiLevel = 10000;
+        this.mDontSendToRestrictedApps = false;
     }
 
     public BroadcastOptions(Bundle opts) {
+        this.mMinManifestReceiverApiLevel = 0;
+        this.mMaxManifestReceiverApiLevel = 10000;
+        this.mDontSendToRestrictedApps = false;
         this.mTemporaryAppWhitelistDuration = opts.getLong(KEY_TEMPORARY_APP_WHITELIST_DURATION);
         this.mMinManifestReceiverApiLevel = opts.getInt(KEY_MIN_MANIFEST_RECEIVER_API_LEVEL, 0);
         this.mMaxManifestReceiverApiLevel = opts.getInt(KEY_MAX_MANIFEST_RECEIVER_API_LEVEL, 10000);

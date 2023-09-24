@@ -1,12 +1,13 @@
 package android.bluetooth;
 
 import android.bluetooth.IBluetooth;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes.dex */
 public interface IBluetoothManagerCallback extends IInterface {
     void onBluetoothServiceDown() throws RemoteException;
 
@@ -14,21 +15,27 @@ public interface IBluetoothManagerCallback extends IInterface {
 
     void onBrEdrDown() throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements IBluetoothManagerCallback {
+        @Override // android.bluetooth.IBluetoothManagerCallback
         public void onBluetoothServiceUp(IBluetooth bluetoothService) throws RemoteException {
         }
 
+        @Override // android.bluetooth.IBluetoothManagerCallback
         public void onBluetoothServiceDown() throws RemoteException {
         }
 
+        @Override // android.bluetooth.IBluetoothManagerCallback
         public void onBrEdrDown() throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements IBluetoothManagerCallback {
         private static final String DESCRIPTOR = "android.bluetooth.IBluetoothManagerCallback";
         static final int TRANSACTION_onBluetoothServiceDown = 2;
@@ -44,12 +51,13 @@ public interface IBluetoothManagerCallback extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IBluetoothManagerCallback)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IBluetoothManagerCallback)) {
+                return (IBluetoothManagerCallback) iin;
             }
-            return (IBluetoothManagerCallback) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -67,34 +75,37 @@ public interface IBluetoothManagerCallback extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        onBluetoothServiceUp(IBluetooth.Stub.asInterface(data.readStrongBinder()));
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        onBluetoothServiceDown();
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        onBrEdrDown();
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBluetooth _arg0 = IBluetooth.Stub.asInterface(data.readStrongBinder());
+                    onBluetoothServiceUp(_arg0);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    onBluetoothServiceDown();
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    onBrEdrDown();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements IBluetoothManagerCallback {
             public static IBluetoothManagerCallback sDefaultImpl;
             private IBinder mRemote;
@@ -103,6 +114,7 @@ public interface IBluetoothManagerCallback extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -111,14 +123,14 @@ public interface IBluetoothManagerCallback extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.bluetooth.IBluetoothManagerCallback
             public void onBluetoothServiceUp(IBluetooth bluetoothService) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(bluetoothService != null ? bluetoothService.asBinder() : null);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onBluetoothServiceUp(bluetoothService);
                     }
                 } finally {
@@ -126,13 +138,13 @@ public interface IBluetoothManagerCallback extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetoothManagerCallback
             public void onBluetoothServiceDown() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onBluetoothServiceDown();
                     }
                 } finally {
@@ -140,13 +152,13 @@ public interface IBluetoothManagerCallback extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetoothManagerCallback
             public void onBrEdrDown() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onBrEdrDown();
                     }
                 } finally {
@@ -156,11 +168,11 @@ public interface IBluetoothManagerCallback extends IInterface {
         }
 
         public static boolean setDefaultImpl(IBluetoothManagerCallback impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IBluetoothManagerCallback getDefaultImpl() {

@@ -3,6 +3,7 @@ package android.graphics;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes.dex */
 public class ImageFormat {
     public static final int DEPTH16 = 1144402265;
     public static final int DEPTH_JPEG = 1768253795;
@@ -22,7 +23,9 @@ public class ImageFormat {
     public static final int RGB_565 = 4;
     public static final int UNKNOWN = 0;
     public static final int Y16 = 540422489;
-    public static final int Y8 = 538982489;
+
+    /* renamed from: Y8 */
+    public static final int f57Y8 = 538982489;
     public static final int YUV_420_888 = 35;
     public static final int YUV_422_888 = 39;
     public static final int YUV_444_888 = 40;
@@ -30,6 +33,7 @@ public class ImageFormat {
     public static final int YV12 = 842094169;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface Format {
     }
 
@@ -64,12 +68,12 @@ public class ImageFormat {
                                 return 16;
                             case 35:
                                 return 12;
-                            case Y8 /*538982489*/:
+                            case f57Y8 /* 538982489 */:
                                 return 8;
-                            case Y16 /*540422489*/:
-                            case DEPTH16 /*1144402265*/:
+                            case Y16 /* 540422489 */:
+                            case DEPTH16 /* 1144402265 */:
                                 return 16;
-                            case YV12 /*842094169*/:
+                            case YV12 /* 842094169 */:
                                 return 12;
                             default:
                                 return -1;
@@ -106,11 +110,11 @@ public class ImageFormat {
                                     case 20:
                                     case 32:
                                     case 4098:
-                                    case Y8 /*538982489*/:
-                                    case YV12 /*842094169*/:
-                                    case DEPTH16 /*1144402265*/:
-                                    case HEIC /*1212500294*/:
-                                    case DEPTH_JPEG /*1768253795*/:
+                                    case f57Y8 /* 538982489 */:
+                                    case YV12 /* 842094169 */:
+                                    case DEPTH16 /* 1144402265 */:
+                                    case HEIC /* 1212500294 */:
+                                    case DEPTH_JPEG /* 1768253795 */:
                                         return true;
                                     default:
                                         return false;

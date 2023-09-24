@@ -1,17 +1,19 @@
 package com.android.ims.internal.uce.uceservice;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import com.android.ims.internal.uce.common.UceLong;
 import com.android.ims.internal.uce.options.IOptionsListener;
 import com.android.ims.internal.uce.options.IOptionsService;
 import com.android.ims.internal.uce.presence.IPresenceListener;
 import com.android.ims.internal.uce.presence.IPresenceService;
+import com.android.ims.internal.uce.uceservice.IUceListener;
 
+/* loaded from: classes4.dex */
 public interface IUceService extends IInterface {
     @UnsupportedAppUsage
     int createOptionsService(IOptionsListener iOptionsListener, UceLong uceLong) throws RemoteException;
@@ -51,66 +53,83 @@ public interface IUceService extends IInterface {
     @UnsupportedAppUsage
     boolean stopService() throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IUceService {
+        @Override // com.android.ims.internal.uce.uceservice.IUceService
         public boolean startService(IUceListener uceListener) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.ims.internal.uce.uceservice.IUceService
         public boolean stopService() throws RemoteException {
             return false;
         }
 
+        @Override // com.android.ims.internal.uce.uceservice.IUceService
         public boolean isServiceStarted() throws RemoteException {
             return false;
         }
 
+        @Override // com.android.ims.internal.uce.uceservice.IUceService
         public int createOptionsService(IOptionsListener optionsListener, UceLong optionsServiceListenerHdl) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.ims.internal.uce.uceservice.IUceService
         public int createOptionsServiceForSubscription(IOptionsListener optionsListener, UceLong optionsServiceListenerHdl, String iccId) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.ims.internal.uce.uceservice.IUceService
         public void destroyOptionsService(int optionsServiceHandle) throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.uce.uceservice.IUceService
         public int createPresenceService(IPresenceListener presenceServiceListener, UceLong presenceServiceListenerHdl) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.ims.internal.uce.uceservice.IUceService
         public int createPresenceServiceForSubscription(IPresenceListener presenceServiceListener, UceLong presenceServiceListenerHdl, String iccId) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.ims.internal.uce.uceservice.IUceService
         public void destroyPresenceService(int presenceServiceHdl) throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.uce.uceservice.IUceService
         public boolean getServiceStatus() throws RemoteException {
             return false;
         }
 
+        @Override // com.android.ims.internal.uce.uceservice.IUceService
         public IPresenceService getPresenceService() throws RemoteException {
             return null;
         }
 
+        @Override // com.android.ims.internal.uce.uceservice.IUceService
         public IPresenceService getPresenceServiceForSubscription(String iccId) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.ims.internal.uce.uceservice.IUceService
         public IOptionsService getOptionsService() throws RemoteException {
             return null;
         }
 
+        @Override // com.android.ims.internal.uce.uceservice.IUceService
         public IOptionsService getOptionsServiceForSubscription(String iccId) throws RemoteException {
             return null;
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IUceService {
         private static final String DESCRIPTOR = "com.android.ims.internal.uce.uceservice.IUceService";
         static final int TRANSACTION_createOptionsService = 4;
@@ -137,12 +156,13 @@ public interface IUceService extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IUceService)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IUceService)) {
+                return (IUceService) iin;
             }
-            return (IUceService) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -182,235 +202,145 @@ public interface IUceService extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v2, resolved type: com.android.ims.internal.uce.common.UceLong} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v6, resolved type: com.android.ims.internal.uce.common.UceLong} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v10, resolved type: com.android.ims.internal.uce.common.UceLong} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v14, resolved type: com.android.ims.internal.uce.common.UceLong} */
-        /* JADX WARNING: type inference failed for: r3v0 */
-        /* JADX WARNING: type inference failed for: r3v18, types: [android.os.IBinder] */
-        /* JADX WARNING: type inference failed for: r3v20, types: [android.os.IBinder] */
-        /* JADX WARNING: type inference failed for: r3v22, types: [android.os.IBinder] */
-        /* JADX WARNING: type inference failed for: r3v24, types: [android.os.IBinder] */
-        /* JADX WARNING: type inference failed for: r3v26 */
-        /* JADX WARNING: type inference failed for: r3v27 */
-        /* JADX WARNING: type inference failed for: r3v28 */
-        /* JADX WARNING: type inference failed for: r3v29 */
-        /* JADX WARNING: type inference failed for: r3v30 */
-        /* JADX WARNING: type inference failed for: r3v31 */
-        /* JADX WARNING: type inference failed for: r3v32 */
-        /* JADX WARNING: type inference failed for: r3v33 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r8, android.os.Parcel r9, android.os.Parcel r10, int r11) throws android.os.RemoteException {
-            /*
-                r7 = this;
-                java.lang.String r0 = "com.android.ims.internal.uce.uceservice.IUceService"
-                r1 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r2 = 1
-                if (r8 == r1) goto L_0x019a
-                r1 = 0
-                r3 = 0
-                switch(r8) {
-                    case 1: goto L_0x0184;
-                    case 2: goto L_0x0176;
-                    case 3: goto L_0x0168;
-                    case 4: goto L_0x0136;
-                    case 5: goto L_0x0100;
-                    case 6: goto L_0x00f2;
-                    case 7: goto L_0x00c0;
-                    case 8: goto L_0x008a;
-                    case 9: goto L_0x007c;
-                    case 10: goto L_0x006e;
-                    case 11: goto L_0x0059;
-                    case 12: goto L_0x0040;
-                    case 13: goto L_0x002b;
-                    case 14: goto L_0x0012;
-                    default: goto L_0x000d;
-                }
-            L_0x000d:
-                boolean r1 = super.onTransact(r8, r9, r10, r11)
-                return r1
-            L_0x0012:
-                r9.enforceInterface(r0)
-                java.lang.String r1 = r9.readString()
-                com.android.ims.internal.uce.options.IOptionsService r4 = r7.getOptionsServiceForSubscription(r1)
-                r10.writeNoException()
-                if (r4 == 0) goto L_0x0027
-                android.os.IBinder r3 = r4.asBinder()
-            L_0x0027:
-                r10.writeStrongBinder(r3)
-                return r2
-            L_0x002b:
-                r9.enforceInterface(r0)
-                com.android.ims.internal.uce.options.IOptionsService r1 = r7.getOptionsService()
-                r10.writeNoException()
-                if (r1 == 0) goto L_0x003c
-                android.os.IBinder r3 = r1.asBinder()
-            L_0x003c:
-                r10.writeStrongBinder(r3)
-                return r2
-            L_0x0040:
-                r9.enforceInterface(r0)
-                java.lang.String r1 = r9.readString()
-                com.android.ims.internal.uce.presence.IPresenceService r4 = r7.getPresenceServiceForSubscription(r1)
-                r10.writeNoException()
-                if (r4 == 0) goto L_0x0055
-                android.os.IBinder r3 = r4.asBinder()
-            L_0x0055:
-                r10.writeStrongBinder(r3)
-                return r2
-            L_0x0059:
-                r9.enforceInterface(r0)
-                com.android.ims.internal.uce.presence.IPresenceService r1 = r7.getPresenceService()
-                r10.writeNoException()
-                if (r1 == 0) goto L_0x006a
-                android.os.IBinder r3 = r1.asBinder()
-            L_0x006a:
-                r10.writeStrongBinder(r3)
-                return r2
-            L_0x006e:
-                r9.enforceInterface(r0)
-                boolean r1 = r7.getServiceStatus()
-                r10.writeNoException()
-                r10.writeInt(r1)
-                return r2
-            L_0x007c:
-                r9.enforceInterface(r0)
-                int r1 = r9.readInt()
-                r7.destroyPresenceService(r1)
-                r10.writeNoException()
-                return r2
-            L_0x008a:
-                r9.enforceInterface(r0)
-                android.os.IBinder r4 = r9.readStrongBinder()
-                com.android.ims.internal.uce.presence.IPresenceListener r4 = com.android.ims.internal.uce.presence.IPresenceListener.Stub.asInterface(r4)
-                int r5 = r9.readInt()
-                if (r5 == 0) goto L_0x00a4
-                android.os.Parcelable$Creator<com.android.ims.internal.uce.common.UceLong> r3 = com.android.ims.internal.uce.common.UceLong.CREATOR
-                java.lang.Object r3 = r3.createFromParcel(r9)
-                com.android.ims.internal.uce.common.UceLong r3 = (com.android.ims.internal.uce.common.UceLong) r3
-                goto L_0x00a5
-            L_0x00a4:
-            L_0x00a5:
-                java.lang.String r5 = r9.readString()
-                int r6 = r7.createPresenceServiceForSubscription(r4, r3, r5)
-                r10.writeNoException()
-                r10.writeInt(r6)
-                if (r3 == 0) goto L_0x00bc
-                r10.writeInt(r2)
-                r3.writeToParcel(r10, r2)
-                goto L_0x00bf
-            L_0x00bc:
-                r10.writeInt(r1)
-            L_0x00bf:
-                return r2
-            L_0x00c0:
-                r9.enforceInterface(r0)
-                android.os.IBinder r4 = r9.readStrongBinder()
-                com.android.ims.internal.uce.presence.IPresenceListener r4 = com.android.ims.internal.uce.presence.IPresenceListener.Stub.asInterface(r4)
-                int r5 = r9.readInt()
-                if (r5 == 0) goto L_0x00da
-                android.os.Parcelable$Creator<com.android.ims.internal.uce.common.UceLong> r3 = com.android.ims.internal.uce.common.UceLong.CREATOR
-                java.lang.Object r3 = r3.createFromParcel(r9)
-                com.android.ims.internal.uce.common.UceLong r3 = (com.android.ims.internal.uce.common.UceLong) r3
-                goto L_0x00db
-            L_0x00da:
-            L_0x00db:
-                int r5 = r7.createPresenceService(r4, r3)
-                r10.writeNoException()
-                r10.writeInt(r5)
-                if (r3 == 0) goto L_0x00ee
-                r10.writeInt(r2)
-                r3.writeToParcel(r10, r2)
-                goto L_0x00f1
-            L_0x00ee:
-                r10.writeInt(r1)
-            L_0x00f1:
-                return r2
-            L_0x00f2:
-                r9.enforceInterface(r0)
-                int r1 = r9.readInt()
-                r7.destroyOptionsService(r1)
-                r10.writeNoException()
-                return r2
-            L_0x0100:
-                r9.enforceInterface(r0)
-                android.os.IBinder r4 = r9.readStrongBinder()
-                com.android.ims.internal.uce.options.IOptionsListener r4 = com.android.ims.internal.uce.options.IOptionsListener.Stub.asInterface(r4)
-                int r5 = r9.readInt()
-                if (r5 == 0) goto L_0x011a
-                android.os.Parcelable$Creator<com.android.ims.internal.uce.common.UceLong> r3 = com.android.ims.internal.uce.common.UceLong.CREATOR
-                java.lang.Object r3 = r3.createFromParcel(r9)
-                com.android.ims.internal.uce.common.UceLong r3 = (com.android.ims.internal.uce.common.UceLong) r3
-                goto L_0x011b
-            L_0x011a:
-            L_0x011b:
-                java.lang.String r5 = r9.readString()
-                int r6 = r7.createOptionsServiceForSubscription(r4, r3, r5)
-                r10.writeNoException()
-                r10.writeInt(r6)
-                if (r3 == 0) goto L_0x0132
-                r10.writeInt(r2)
-                r3.writeToParcel(r10, r2)
-                goto L_0x0135
-            L_0x0132:
-                r10.writeInt(r1)
-            L_0x0135:
-                return r2
-            L_0x0136:
-                r9.enforceInterface(r0)
-                android.os.IBinder r4 = r9.readStrongBinder()
-                com.android.ims.internal.uce.options.IOptionsListener r4 = com.android.ims.internal.uce.options.IOptionsListener.Stub.asInterface(r4)
-                int r5 = r9.readInt()
-                if (r5 == 0) goto L_0x0150
-                android.os.Parcelable$Creator<com.android.ims.internal.uce.common.UceLong> r3 = com.android.ims.internal.uce.common.UceLong.CREATOR
-                java.lang.Object r3 = r3.createFromParcel(r9)
-                com.android.ims.internal.uce.common.UceLong r3 = (com.android.ims.internal.uce.common.UceLong) r3
-                goto L_0x0151
-            L_0x0150:
-            L_0x0151:
-                int r5 = r7.createOptionsService(r4, r3)
-                r10.writeNoException()
-                r10.writeInt(r5)
-                if (r3 == 0) goto L_0x0164
-                r10.writeInt(r2)
-                r3.writeToParcel(r10, r2)
-                goto L_0x0167
-            L_0x0164:
-                r10.writeInt(r1)
-            L_0x0167:
-                return r2
-            L_0x0168:
-                r9.enforceInterface(r0)
-                boolean r1 = r7.isServiceStarted()
-                r10.writeNoException()
-                r10.writeInt(r1)
-                return r2
-            L_0x0176:
-                r9.enforceInterface(r0)
-                boolean r1 = r7.stopService()
-                r10.writeNoException()
-                r10.writeInt(r1)
-                return r2
-            L_0x0184:
-                r9.enforceInterface(r0)
-                android.os.IBinder r1 = r9.readStrongBinder()
-                com.android.ims.internal.uce.uceservice.IUceListener r1 = com.android.ims.internal.uce.uceservice.IUceListener.Stub.asInterface(r1)
-                boolean r3 = r7.startService(r1)
-                r10.writeNoException()
-                r10.writeInt(r3)
-                return r2
-            L_0x019a:
-                r10.writeString(r0)
-                return r2
-            */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.ims.internal.uce.uceservice.IUceService.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    IUceListener _arg0 = IUceListener.Stub.asInterface(data.readStrongBinder());
+                    boolean startService = startService(_arg0);
+                    reply.writeNoException();
+                    reply.writeInt(startService ? 1 : 0);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean stopService = stopService();
+                    reply.writeNoException();
+                    reply.writeInt(stopService ? 1 : 0);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isServiceStarted = isServiceStarted();
+                    reply.writeNoException();
+                    reply.writeInt(isServiceStarted ? 1 : 0);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    IOptionsListener _arg02 = IOptionsListener.Stub.asInterface(data.readStrongBinder());
+                    UceLong _arg1 = data.readInt() != 0 ? UceLong.CREATOR.createFromParcel(data) : null;
+                    int _result = createOptionsService(_arg02, _arg1);
+                    reply.writeNoException();
+                    reply.writeInt(_result);
+                    if (_arg1 != null) {
+                        reply.writeInt(1);
+                        _arg1.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    IOptionsListener _arg03 = IOptionsListener.Stub.asInterface(data.readStrongBinder());
+                    UceLong _arg12 = data.readInt() != 0 ? UceLong.CREATOR.createFromParcel(data) : null;
+                    String _arg2 = data.readString();
+                    int _result2 = createOptionsServiceForSubscription(_arg03, _arg12, _arg2);
+                    reply.writeNoException();
+                    reply.writeInt(_result2);
+                    if (_arg12 != null) {
+                        reply.writeInt(1);
+                        _arg12.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg04 = data.readInt();
+                    destroyOptionsService(_arg04);
+                    reply.writeNoException();
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    IPresenceListener _arg05 = IPresenceListener.Stub.asInterface(data.readStrongBinder());
+                    UceLong _arg13 = data.readInt() != 0 ? UceLong.CREATOR.createFromParcel(data) : null;
+                    int _result3 = createPresenceService(_arg05, _arg13);
+                    reply.writeNoException();
+                    reply.writeInt(_result3);
+                    if (_arg13 != null) {
+                        reply.writeInt(1);
+                        _arg13.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    IPresenceListener _arg06 = IPresenceListener.Stub.asInterface(data.readStrongBinder());
+                    UceLong _arg14 = data.readInt() != 0 ? UceLong.CREATOR.createFromParcel(data) : null;
+                    String _arg22 = data.readString();
+                    int _result4 = createPresenceServiceForSubscription(_arg06, _arg14, _arg22);
+                    reply.writeNoException();
+                    reply.writeInt(_result4);
+                    if (_arg14 != null) {
+                        reply.writeInt(1);
+                        _arg14.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg07 = data.readInt();
+                    destroyPresenceService(_arg07);
+                    reply.writeNoException();
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean serviceStatus = getServiceStatus();
+                    reply.writeNoException();
+                    reply.writeInt(serviceStatus ? 1 : 0);
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    IPresenceService _result5 = getPresenceService();
+                    reply.writeNoException();
+                    reply.writeStrongBinder(_result5 != null ? _result5.asBinder() : null);
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg08 = data.readString();
+                    IPresenceService _result6 = getPresenceServiceForSubscription(_arg08);
+                    reply.writeNoException();
+                    reply.writeStrongBinder(_result6 != null ? _result6.asBinder() : null);
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    IOptionsService _result7 = getOptionsService();
+                    reply.writeNoException();
+                    reply.writeStrongBinder(_result7 != null ? _result7.asBinder() : null);
+                    return true;
+                case 14:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg09 = data.readString();
+                    IOptionsService _result8 = getOptionsServiceForSubscription(_arg09);
+                    reply.writeNoException();
+                    reply.writeStrongBinder(_result8 != null ? _result8.asBinder() : null);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IUceService {
             public static IUceService sDefaultImpl;
             private IBinder mRemote;
@@ -419,6 +349,7 @@ public interface IUceService extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -427,76 +358,65 @@ public interface IUceService extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // com.android.ims.internal.uce.uceservice.IUceService
             public boolean startService(IUceListener uceListener) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(uceListener != null ? uceListener.asBinder() : null);
-                    boolean z = false;
-                    if (!this.mRemote.transact(1, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().startService(uceListener);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.ims.internal.uce.uceservice.IUceService
             public boolean stopService() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(2, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().stopService();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.ims.internal.uce.uceservice.IUceService
             public boolean isServiceStarted() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(3, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isServiceStarted();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.ims.internal.uce.uceservice.IUceService
             public int createOptionsService(IOptionsListener optionsListener, UceLong optionsServiceListenerHdl) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -509,7 +429,8 @@ public interface IUceService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(4, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().createOptionsService(optionsListener, optionsServiceListenerHdl);
                     }
                     _reply.readException();
@@ -517,8 +438,6 @@ public interface IUceService extends IInterface {
                     if (_reply.readInt() != 0) {
                         optionsServiceListenerHdl.readFromParcel(_reply);
                     }
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -526,6 +445,7 @@ public interface IUceService extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.uce.uceservice.IUceService
             public int createOptionsServiceForSubscription(IOptionsListener optionsListener, UceLong optionsServiceListenerHdl, String iccId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -539,7 +459,8 @@ public interface IUceService extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(iccId);
-                    if (!this.mRemote.transact(5, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().createOptionsServiceForSubscription(optionsListener, optionsServiceListenerHdl, iccId);
                     }
                     _reply.readException();
@@ -547,8 +468,6 @@ public interface IUceService extends IInterface {
                     if (_reply.readInt() != 0) {
                         optionsServiceListenerHdl.readFromParcel(_reply);
                     }
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -556,25 +475,26 @@ public interface IUceService extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.uce.uceservice.IUceService
             public void destroyOptionsService(int optionsServiceHandle) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(optionsServiceHandle);
-                    if (this.mRemote.transact(6, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().destroyOptionsService(optionsServiceHandle);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().destroyOptionsService(optionsServiceHandle);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.ims.internal.uce.uceservice.IUceService
             public int createPresenceService(IPresenceListener presenceServiceListener, UceLong presenceServiceListenerHdl) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -587,7 +507,8 @@ public interface IUceService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(7, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().createPresenceService(presenceServiceListener, presenceServiceListenerHdl);
                     }
                     _reply.readException();
@@ -595,8 +516,6 @@ public interface IUceService extends IInterface {
                     if (_reply.readInt() != 0) {
                         presenceServiceListenerHdl.readFromParcel(_reply);
                     }
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -604,6 +523,7 @@ public interface IUceService extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.uce.uceservice.IUceService
             public int createPresenceServiceForSubscription(IPresenceListener presenceServiceListener, UceLong presenceServiceListenerHdl, String iccId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -617,7 +537,8 @@ public interface IUceService extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(iccId);
-                    if (!this.mRemote.transact(8, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().createPresenceServiceForSubscription(presenceServiceListener, presenceServiceListenerHdl, iccId);
                     }
                     _reply.readException();
@@ -625,8 +546,6 @@ public interface IUceService extends IInterface {
                     if (_reply.readInt() != 0) {
                         presenceServiceListenerHdl.readFromParcel(_reply);
                     }
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -634,60 +553,56 @@ public interface IUceService extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.uce.uceservice.IUceService
             public void destroyPresenceService(int presenceServiceHdl) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(presenceServiceHdl);
-                    if (this.mRemote.transact(9, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(9, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().destroyPresenceService(presenceServiceHdl);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().destroyPresenceService(presenceServiceHdl);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.ims.internal.uce.uceservice.IUceService
             public boolean getServiceStatus() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(10, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(10, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getServiceStatus();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.ims.internal.uce.uceservice.IUceService
             public IPresenceService getPresenceService() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(11, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(11, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPresenceService();
                     }
                     _reply.readException();
                     IPresenceService _result = IPresenceService.Stub.asInterface(_reply.readStrongBinder());
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -695,19 +610,19 @@ public interface IUceService extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.uce.uceservice.IUceService
             public IPresenceService getPresenceServiceForSubscription(String iccId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(iccId);
-                    if (!this.mRemote.transact(12, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(12, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPresenceServiceForSubscription(iccId);
                     }
                     _reply.readException();
                     IPresenceService _result = IPresenceService.Stub.asInterface(_reply.readStrongBinder());
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -715,18 +630,18 @@ public interface IUceService extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.uce.uceservice.IUceService
             public IOptionsService getOptionsService() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(13, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(13, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getOptionsService();
                     }
                     _reply.readException();
                     IOptionsService _result = IOptionsService.Stub.asInterface(_reply.readStrongBinder());
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -734,19 +649,19 @@ public interface IUceService extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.uce.uceservice.IUceService
             public IOptionsService getOptionsServiceForSubscription(String iccId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(iccId);
-                    if (!this.mRemote.transact(14, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(14, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getOptionsServiceForSubscription(iccId);
                     }
                     _reply.readException();
                     IOptionsService _result = IOptionsService.Stub.asInterface(_reply.readStrongBinder());
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -756,11 +671,11 @@ public interface IUceService extends IInterface {
         }
 
         public static boolean setDefaultImpl(IUceService impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IUceService getDefaultImpl() {

@@ -3,8 +3,8 @@ package android.net;
 import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
 import android.net.wifi.WifiEnterpriseConfig;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.telephony.SmsManager;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -15,18 +15,26 @@ import java.net.UnknownHostException;
 import java.util.Collection;
 import java.util.Objects;
 
+/* loaded from: classes3.dex */
 public final class RouteInfo implements Parcelable {
-    public static final Parcelable.Creator<RouteInfo> CREATOR = new Parcelable.Creator<RouteInfo>() {
+    public static final Parcelable.Creator<RouteInfo> CREATOR = new Parcelable.Creator<RouteInfo>() { // from class: android.net.RouteInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RouteInfo createFromParcel(Parcel in) {
-            IpPrefix dest = (IpPrefix) in.readParcelable((ClassLoader) null);
+            IpPrefix dest = (IpPrefix) in.readParcelable(null);
             InetAddress gateway = null;
+            byte[] addr = in.createByteArray();
             try {
-                gateway = InetAddress.getByAddress(in.createByteArray());
+                gateway = InetAddress.getByAddress(addr);
             } catch (UnknownHostException e) {
             }
-            return new RouteInfo(dest, gateway, in.readString(), in.readInt());
+            String iface = in.readString();
+            int type = in.readInt();
+            return new RouteInfo(dest, gateway, iface, type);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RouteInfo[] newArray(int size) {
             return new RouteInfo[size];
         }
@@ -47,40 +55,42 @@ public final class RouteInfo implements Parcelable {
     private final int mType;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface RouteType {
     }
 
     @SystemApi
     public RouteInfo(IpPrefix destination, InetAddress gateway, String iface, int type) {
-        if (type == 1 || type == 7 || type == 9) {
-            if (destination == null) {
-                if (gateway == null) {
-                    throw new IllegalArgumentException("Invalid arguments passed in: " + gateway + SmsManager.REGEX_PREFIX_DELIMITER + destination);
-                } else if (gateway instanceof Inet4Address) {
+        if (type != 1 && type != 7 && type != 9) {
+            throw new IllegalArgumentException("Unknown route type " + type);
+        }
+        if (destination == null) {
+            if (gateway != null) {
+                if (gateway instanceof Inet4Address) {
                     destination = new IpPrefix(Inet4Address.ANY, 0);
                 } else {
                     destination = new IpPrefix(Inet6Address.ANY, 0);
                 }
+            } else {
+                throw new IllegalArgumentException("Invalid arguments passed in: " + gateway + SmsManager.REGEX_PREFIX_DELIMITER + destination);
             }
-            if (gateway == null) {
-                if (destination.getAddress() instanceof Inet4Address) {
-                    gateway = Inet4Address.ANY;
-                } else {
-                    gateway = Inet6Address.ANY;
-                }
+        }
+        if (gateway == null) {
+            if (destination.getAddress() instanceof Inet4Address) {
+                gateway = Inet4Address.ANY;
+            } else {
+                gateway = Inet6Address.ANY;
             }
-            this.mHasGateway = true ^ gateway.isAnyLocalAddress();
-            if ((!(destination.getAddress() instanceof Inet4Address) || (gateway instanceof Inet4Address)) && (!(destination.getAddress() instanceof Inet6Address) || (gateway instanceof Inet6Address))) {
-                this.mDestination = destination;
-                this.mGateway = gateway;
-                this.mInterface = iface;
-                this.mType = type;
-                this.mIsHost = isHost();
-                return;
-            }
+        }
+        this.mHasGateway = true ^ gateway.isAnyLocalAddress();
+        if (((destination.getAddress() instanceof Inet4Address) && !(gateway instanceof Inet4Address)) || ((destination.getAddress() instanceof Inet6Address) && !(gateway instanceof Inet6Address))) {
             throw new IllegalArgumentException("address family mismatch in RouteInfo constructor");
         }
-        throw new IllegalArgumentException("Unknown route type " + type);
+        this.mDestination = destination;
+        this.mGateway = gateway;
+        this.mInterface = iface;
+        this.mType = type;
+        this.mIsHost = isHost();
     }
 
     @UnsupportedAppUsage
@@ -88,25 +98,9 @@ public final class RouteInfo implements Parcelable {
         this(destination, gateway, iface, 1);
     }
 
-    /* JADX WARNING: Illegal instructions before constructor call */
-    @android.annotation.UnsupportedAppUsage
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public RouteInfo(android.net.LinkAddress r4, java.net.InetAddress r5, java.lang.String r6) {
-        /*
-            r3 = this;
-            if (r4 != 0) goto L_0x0004
-            r0 = 0
-            goto L_0x0011
-        L_0x0004:
-            android.net.IpPrefix r0 = new android.net.IpPrefix
-            java.net.InetAddress r1 = r4.getAddress()
-            int r2 = r4.getPrefixLength()
-            r0.<init>((java.net.InetAddress) r1, (int) r2)
-        L_0x0011:
-            r3.<init>((android.net.IpPrefix) r0, (java.net.InetAddress) r5, (java.lang.String) r6)
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.net.RouteInfo.<init>(android.net.LinkAddress, java.net.InetAddress, java.lang.String):void");
+    @UnsupportedAppUsage
+    public RouteInfo(LinkAddress destination, InetAddress gateway, String iface) {
+        this(destination == null ? null : new IpPrefix(destination.getAddress(), destination.getPrefixLength()), gateway, iface);
     }
 
     public RouteInfo(IpPrefix destination, InetAddress gateway) {
@@ -132,11 +126,11 @@ public final class RouteInfo implements Parcelable {
     }
 
     public RouteInfo(IpPrefix destination, int type) {
-        this(destination, (InetAddress) null, (String) null, type);
+        this(destination, null, null, type);
     }
 
     public static RouteInfo makeHostRoute(InetAddress host, String iface) {
-        return makeHostRoute(host, (InetAddress) null, iface);
+        return makeHostRoute(host, null, iface);
     }
 
     public static RouteInfo makeHostRoute(InetAddress host, InetAddress gateway, String iface) {
@@ -206,18 +200,17 @@ public final class RouteInfo implements Parcelable {
         }
         RouteInfo bestRoute = null;
         for (RouteInfo route : routes) {
-            if (NetworkUtils.addressTypeMatches(route.mDestination.getAddress(), dest) && ((bestRoute == null || bestRoute.mDestination.getPrefixLength() < route.mDestination.getPrefixLength()) && route.matches(dest))) {
-                bestRoute = route;
+            if (NetworkUtils.addressTypeMatches(route.mDestination.getAddress(), dest) && (bestRoute == null || bestRoute.mDestination.getPrefixLength() < route.mDestination.getPrefixLength())) {
+                if (route.matches(dest)) {
+                    bestRoute = route;
+                }
             }
         }
         return bestRoute;
     }
 
     public String toString() {
-        String val = "";
-        if (this.mDestination != null) {
-            val = this.mDestination.toString();
-        }
+        String val = this.mDestination != null ? this.mDestination.toString() : "";
         if (this.mType == 7) {
             return val + " unreachable";
         } else if (this.mType == 9) {
@@ -230,10 +223,10 @@ public final class RouteInfo implements Parcelable {
             if (this.mInterface != null) {
                 val2 = val2 + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + this.mInterface;
             }
-            if (this.mType == 1) {
-                return val2;
+            if (this.mType != 1) {
+                return val2 + " unknown type " + this.mType;
             }
-            return val2 + " unknown type " + this.mType;
+            return val2;
         }
     }
 
@@ -241,32 +234,27 @@ public final class RouteInfo implements Parcelable {
         if (this == obj) {
             return true;
         }
-        if (!(obj instanceof RouteInfo)) {
-            return false;
+        if (obj instanceof RouteInfo) {
+            RouteInfo target = (RouteInfo) obj;
+            return Objects.equals(this.mDestination, target.getDestination()) && Objects.equals(this.mGateway, target.getGateway()) && Objects.equals(this.mInterface, target.getInterface()) && this.mType == target.getType();
         }
-        RouteInfo target = (RouteInfo) obj;
-        if (!Objects.equals(this.mDestination, target.getDestination()) || !Objects.equals(this.mGateway, target.getGateway()) || !Objects.equals(this.mInterface, target.getInterface()) || this.mType != target.getType()) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        int i = 0;
-        int hashCode = (this.mDestination.hashCode() * 41) + (this.mGateway == null ? 0 : this.mGateway.hashCode() * 47);
-        if (this.mInterface != null) {
-            i = this.mInterface.hashCode() * 67;
-        }
-        return hashCode + i + (this.mType * 71);
+        return (this.mDestination.hashCode() * 41) + (this.mGateway == null ? 0 : this.mGateway.hashCode() * 47) + (this.mInterface != null ? this.mInterface.hashCode() * 67 : 0) + (this.mType * 71);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(this.mDestination, flags);
-        dest.writeByteArray(this.mGateway == null ? null : this.mGateway.getAddress());
+        byte[] gatewayBytes = this.mGateway == null ? null : this.mGateway.getAddress();
+        dest.writeByteArray(gatewayBytes);
         dest.writeString(this.mInterface);
         dest.writeInt(this.mType);
     }

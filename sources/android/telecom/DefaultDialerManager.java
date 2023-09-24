@@ -4,13 +4,14 @@ import android.app.ActivityManager;
 import android.app.role.RoleManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.content.pm.ResolveInfo;
+import android.content.p002pm.ActivityInfo;
+import android.content.p002pm.PackageManager;
+import android.content.p002pm.ResolveInfo;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Binder;
-import android.os.Process;
-import android.os.UserHandle;
+import android.p007os.AsyncTask;
+import android.p007os.Binder;
+import android.p007os.Process;
+import android.p007os.UserHandle;
 import android.text.TextUtils;
 import android.util.Slog;
 import com.android.internal.util.CollectionUtils;
@@ -22,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 
+/* loaded from: classes3.dex */
 public class DefaultDialerManager {
     private static final String TAG = "DefaultDialerManager";
 
@@ -32,23 +34,18 @@ public class DefaultDialerManager {
     public static boolean setDefaultDialerApplication(Context context, String packageName, int user) {
         long identity = Binder.clearCallingIdentity();
         try {
-            CompletableFuture<Void> future = new CompletableFuture<>();
-            String str = packageName;
-            ((RoleManager) context.getSystemService(RoleManager.class)).addRoleHolderAsUser(RoleManager.ROLE_DIALER, str, 0, UserHandle.of(user), AsyncTask.THREAD_POOL_EXECUTOR, new Consumer(future) {
-                private final /* synthetic */ CompletableFuture f$0;
-
-                {
-                    this.f$0 = r1;
-                }
-
+            final CompletableFuture<Void> future = new CompletableFuture<>();
+            Consumer<Boolean> callback = new Consumer() { // from class: android.telecom.-$$Lambda$DefaultDialerManager$csTSL_1G9gDs8ZsH7BZ6UatLUF0
+                @Override // java.util.function.Consumer
                 public final void accept(Object obj) {
-                    DefaultDialerManager.lambda$setDefaultDialerApplication$0(this.f$0, (Boolean) obj);
+                    DefaultDialerManager.lambda$setDefaultDialerApplication$0(future, (Boolean) obj);
                 }
-            });
-            future.get(5, TimeUnit.SECONDS);
+            };
+            ((RoleManager) context.getSystemService(RoleManager.class)).addRoleHolderAsUser(RoleManager.ROLE_DIALER, packageName, 0, UserHandle.m110of(user), AsyncTask.THREAD_POOL_EXECUTOR, callback);
+            future.get(5L, TimeUnit.SECONDS);
             return true;
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            Slog.e(TAG, "Failed to set default dialer to " + packageName + " for user " + user, e);
+            Slog.m55e(TAG, "Failed to set default dialer to " + packageName + " for user " + user, e);
             return false;
         } finally {
             Binder.restoreCallingIdentity(identity);
@@ -57,7 +54,7 @@ public class DefaultDialerManager {
 
     static /* synthetic */ void lambda$setDefaultDialerApplication$0(CompletableFuture future, Boolean successful) {
         if (successful.booleanValue()) {
-            future.complete((Object) null);
+            future.complete(null);
         } else {
             future.completeExceptionally(new RuntimeException());
         }
@@ -70,14 +67,16 @@ public class DefaultDialerManager {
     public static String getDefaultDialerApplication(Context context, int user) {
         long identity = Binder.clearCallingIdentity();
         try {
-            return (String) CollectionUtils.firstOrNull(((RoleManager) context.getSystemService(RoleManager.class)).getRoleHoldersAsUser(RoleManager.ROLE_DIALER, UserHandle.of(user)));
+            return (String) CollectionUtils.firstOrNull((List<Object>) ((RoleManager) context.getSystemService(RoleManager.class)).getRoleHoldersAsUser(RoleManager.ROLE_DIALER, UserHandle.m110of(user)));
         } finally {
             Binder.restoreCallingIdentity(identity);
         }
     }
 
     public static List<String> getInstalledDialerApplications(Context context, int userId) {
-        List<ResolveInfo> resolveInfoList = context.getPackageManager().queryIntentActivitiesAsUser(new Intent(Intent.ACTION_DIAL), 0, userId);
+        PackageManager packageManager = context.getPackageManager();
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        List<ResolveInfo> resolveInfoList = packageManager.queryIntentActivitiesAsUser(intent, 0, userId);
         List<String> packageNames = new ArrayList<>();
         for (ResolveInfo resolveInfo : resolveInfoList) {
             ActivityInfo activityInfo = resolveInfo.activityInfo;
@@ -86,7 +85,7 @@ public class DefaultDialerManager {
             }
         }
         Intent dialIntentWithTelScheme = new Intent(Intent.ACTION_DIAL);
-        dialIntentWithTelScheme.setData(Uri.fromParts(PhoneAccount.SCHEME_TEL, "", (String) null));
+        dialIntentWithTelScheme.setData(Uri.fromParts(PhoneAccount.SCHEME_TEL, "", null));
         return filterByIntent(context, packageNames, dialIntentWithTelScheme, userId);
     }
 
@@ -99,10 +98,7 @@ public class DefaultDialerManager {
             return false;
         }
         TelecomManager tm = getTelecomManager(context);
-        if (packageName.equals(tm.getDefaultDialerPackage()) || packageName.equals(tm.getSystemDialerPackage())) {
-            return true;
-        }
-        return false;
+        return packageName.equals(tm.getDefaultDialerPackage()) || packageName.equals(tm.getSystemDialerPackage());
     }
 
     private static List<String> filterByIntent(Context context, List<String> packageNames, Intent intent, int userId) {

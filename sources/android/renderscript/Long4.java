@@ -1,249 +1,258 @@
 package android.renderscript;
 
+/* loaded from: classes3.dex */
 public class Long4 {
-    public long w;
-    public long x;
-    public long y;
-    public long z;
+
+    /* renamed from: w */
+    public long f213w;
+
+    /* renamed from: x */
+    public long f214x;
+
+    /* renamed from: y */
+    public long f215y;
+
+    /* renamed from: z */
+    public long f216z;
 
     public Long4() {
     }
 
     public Long4(long i) {
-        this.w = i;
-        this.z = i;
-        this.y = i;
-        this.x = i;
+        this.f213w = i;
+        this.f216z = i;
+        this.f215y = i;
+        this.f214x = i;
     }
 
-    public Long4(long x2, long y2, long z2, long w2) {
-        this.x = x2;
-        this.y = y2;
-        this.z = z2;
-        this.w = w2;
+    public Long4(long x, long y, long z, long w) {
+        this.f214x = x;
+        this.f215y = y;
+        this.f216z = z;
+        this.f213w = w;
     }
 
     public Long4(Long4 source) {
-        this.x = source.x;
-        this.y = source.y;
-        this.z = source.z;
-        this.w = source.w;
+        this.f214x = source.f214x;
+        this.f215y = source.f215y;
+        this.f216z = source.f216z;
+        this.f213w = source.f213w;
     }
 
     public void add(Long4 a) {
-        this.x += a.x;
-        this.y += a.y;
-        this.z += a.z;
-        this.w += a.w;
+        this.f214x += a.f214x;
+        this.f215y += a.f215y;
+        this.f216z += a.f216z;
+        this.f213w += a.f213w;
     }
 
     public static Long4 add(Long4 a, Long4 b) {
         Long4 result = new Long4();
-        result.x = a.x + b.x;
-        result.y = a.y + b.y;
-        result.z = a.z + b.z;
-        result.w = a.w + b.w;
+        result.f214x = a.f214x + b.f214x;
+        result.f215y = a.f215y + b.f215y;
+        result.f216z = a.f216z + b.f216z;
+        result.f213w = a.f213w + b.f213w;
         return result;
     }
 
     public void add(long value) {
-        this.x += value;
-        this.y += value;
-        this.z += value;
-        this.w += value;
+        this.f214x += value;
+        this.f215y += value;
+        this.f216z += value;
+        this.f213w += value;
     }
 
     public static Long4 add(Long4 a, long b) {
         Long4 result = new Long4();
-        result.x = a.x + b;
-        result.y = a.y + b;
-        result.z = a.z + b;
-        result.w = a.w + b;
+        result.f214x = a.f214x + b;
+        result.f215y = a.f215y + b;
+        result.f216z = a.f216z + b;
+        result.f213w = a.f213w + b;
         return result;
     }
 
     public void sub(Long4 a) {
-        this.x -= a.x;
-        this.y -= a.y;
-        this.z -= a.z;
-        this.w -= a.w;
+        this.f214x -= a.f214x;
+        this.f215y -= a.f215y;
+        this.f216z -= a.f216z;
+        this.f213w -= a.f213w;
     }
 
     public static Long4 sub(Long4 a, Long4 b) {
         Long4 result = new Long4();
-        result.x = a.x - b.x;
-        result.y = a.y - b.y;
-        result.z = a.z - b.z;
-        result.w = a.w - b.w;
+        result.f214x = a.f214x - b.f214x;
+        result.f215y = a.f215y - b.f215y;
+        result.f216z = a.f216z - b.f216z;
+        result.f213w = a.f213w - b.f213w;
         return result;
     }
 
     public void sub(long value) {
-        this.x -= value;
-        this.y -= value;
-        this.z -= value;
-        this.w -= value;
+        this.f214x -= value;
+        this.f215y -= value;
+        this.f216z -= value;
+        this.f213w -= value;
     }
 
     public static Long4 sub(Long4 a, long b) {
         Long4 result = new Long4();
-        result.x = a.x - b;
-        result.y = a.y - b;
-        result.z = a.z - b;
-        result.w = a.w - b;
+        result.f214x = a.f214x - b;
+        result.f215y = a.f215y - b;
+        result.f216z = a.f216z - b;
+        result.f213w = a.f213w - b;
         return result;
     }
 
     public void mul(Long4 a) {
-        this.x *= a.x;
-        this.y *= a.y;
-        this.z *= a.z;
-        this.w *= a.w;
+        this.f214x *= a.f214x;
+        this.f215y *= a.f215y;
+        this.f216z *= a.f216z;
+        this.f213w *= a.f213w;
     }
 
     public static Long4 mul(Long4 a, Long4 b) {
         Long4 result = new Long4();
-        result.x = a.x * b.x;
-        result.y = a.y * b.y;
-        result.z = a.z * b.z;
-        result.w = a.w * b.w;
+        result.f214x = a.f214x * b.f214x;
+        result.f215y = a.f215y * b.f215y;
+        result.f216z = a.f216z * b.f216z;
+        result.f213w = a.f213w * b.f213w;
         return result;
     }
 
     public void mul(long value) {
-        this.x *= value;
-        this.y *= value;
-        this.z *= value;
-        this.w *= value;
+        this.f214x *= value;
+        this.f215y *= value;
+        this.f216z *= value;
+        this.f213w *= value;
     }
 
     public static Long4 mul(Long4 a, long b) {
         Long4 result = new Long4();
-        result.x = a.x * b;
-        result.y = a.y * b;
-        result.z = a.z * b;
-        result.w = a.w * b;
+        result.f214x = a.f214x * b;
+        result.f215y = a.f215y * b;
+        result.f216z = a.f216z * b;
+        result.f213w = a.f213w * b;
         return result;
     }
 
     public void div(Long4 a) {
-        this.x /= a.x;
-        this.y /= a.y;
-        this.z /= a.z;
-        this.w /= a.w;
+        this.f214x /= a.f214x;
+        this.f215y /= a.f215y;
+        this.f216z /= a.f216z;
+        this.f213w /= a.f213w;
     }
 
     public static Long4 div(Long4 a, Long4 b) {
         Long4 result = new Long4();
-        result.x = a.x / b.x;
-        result.y = a.y / b.y;
-        result.z = a.z / b.z;
-        result.w = a.w / b.w;
+        result.f214x = a.f214x / b.f214x;
+        result.f215y = a.f215y / b.f215y;
+        result.f216z = a.f216z / b.f216z;
+        result.f213w = a.f213w / b.f213w;
         return result;
     }
 
     public void div(long value) {
-        this.x /= value;
-        this.y /= value;
-        this.z /= value;
-        this.w /= value;
+        this.f214x /= value;
+        this.f215y /= value;
+        this.f216z /= value;
+        this.f213w /= value;
     }
 
     public static Long4 div(Long4 a, long b) {
         Long4 result = new Long4();
-        result.x = a.x / b;
-        result.y = a.y / b;
-        result.z = a.z / b;
-        result.w = a.w / b;
+        result.f214x = a.f214x / b;
+        result.f215y = a.f215y / b;
+        result.f216z = a.f216z / b;
+        result.f213w = a.f213w / b;
         return result;
     }
 
     public void mod(Long4 a) {
-        this.x %= a.x;
-        this.y %= a.y;
-        this.z %= a.z;
-        this.w %= a.w;
+        this.f214x %= a.f214x;
+        this.f215y %= a.f215y;
+        this.f216z %= a.f216z;
+        this.f213w %= a.f213w;
     }
 
     public static Long4 mod(Long4 a, Long4 b) {
         Long4 result = new Long4();
-        result.x = a.x % b.x;
-        result.y = a.y % b.y;
-        result.z = a.z % b.z;
-        result.w = a.w % b.w;
+        result.f214x = a.f214x % b.f214x;
+        result.f215y = a.f215y % b.f215y;
+        result.f216z = a.f216z % b.f216z;
+        result.f213w = a.f213w % b.f213w;
         return result;
     }
 
     public void mod(long value) {
-        this.x %= value;
-        this.y %= value;
-        this.z %= value;
-        this.w %= value;
+        this.f214x %= value;
+        this.f215y %= value;
+        this.f216z %= value;
+        this.f213w %= value;
     }
 
     public static Long4 mod(Long4 a, long b) {
         Long4 result = new Long4();
-        result.x = a.x % b;
-        result.y = a.y % b;
-        result.z = a.z % b;
-        result.w = a.w % b;
+        result.f214x = a.f214x % b;
+        result.f215y = a.f215y % b;
+        result.f216z = a.f216z % b;
+        result.f213w = a.f213w % b;
         return result;
     }
 
     public long length() {
-        return 4;
+        return 4L;
     }
 
     public void negate() {
-        this.x = -this.x;
-        this.y = -this.y;
-        this.z = -this.z;
-        this.w = -this.w;
+        this.f214x = -this.f214x;
+        this.f215y = -this.f215y;
+        this.f216z = -this.f216z;
+        this.f213w = -this.f213w;
     }
 
     public long dotProduct(Long4 a) {
-        return (this.x * a.x) + (this.y * a.y) + (this.z * a.z) + (this.w * a.w);
+        return (this.f214x * a.f214x) + (this.f215y * a.f215y) + (this.f216z * a.f216z) + (this.f213w * a.f213w);
     }
 
     public static long dotProduct(Long4 a, Long4 b) {
-        return (b.x * a.x) + (b.y * a.y) + (b.z * a.z) + (b.w * a.w);
+        return (b.f214x * a.f214x) + (b.f215y * a.f215y) + (b.f216z * a.f216z) + (b.f213w * a.f213w);
     }
 
     public void addMultiple(Long4 a, long factor) {
-        this.x += a.x * factor;
-        this.y += a.y * factor;
-        this.z += a.z * factor;
-        this.w += a.w * factor;
+        this.f214x += a.f214x * factor;
+        this.f215y += a.f215y * factor;
+        this.f216z += a.f216z * factor;
+        this.f213w += a.f213w * factor;
     }
 
     public void set(Long4 a) {
-        this.x = a.x;
-        this.y = a.y;
-        this.z = a.z;
-        this.w = a.w;
+        this.f214x = a.f214x;
+        this.f215y = a.f215y;
+        this.f216z = a.f216z;
+        this.f213w = a.f213w;
     }
 
     public void setValues(long a, long b, long c, long d) {
-        this.x = a;
-        this.y = b;
-        this.z = c;
-        this.w = d;
+        this.f214x = a;
+        this.f215y = b;
+        this.f216z = c;
+        this.f213w = d;
     }
 
     public long elementSum() {
-        return this.x + this.y + this.z + this.w;
+        return this.f214x + this.f215y + this.f216z + this.f213w;
     }
 
     public long get(int i) {
         switch (i) {
             case 0:
-                return this.x;
+                return this.f214x;
             case 1:
-                return this.y;
+                return this.f215y;
             case 2:
-                return this.z;
+                return this.f216z;
             case 3:
-                return this.w;
+                return this.f213w;
             default:
                 throw new IndexOutOfBoundsException("Index: i");
         }
@@ -252,16 +261,16 @@ public class Long4 {
     public void setAt(int i, long value) {
         switch (i) {
             case 0:
-                this.x = value;
+                this.f214x = value;
                 return;
             case 1:
-                this.y = value;
+                this.f215y = value;
                 return;
             case 2:
-                this.z = value;
+                this.f216z = value;
                 return;
             case 3:
-                this.w = value;
+                this.f213w = value;
                 return;
             default:
                 throw new IndexOutOfBoundsException("Index: i");
@@ -271,16 +280,16 @@ public class Long4 {
     public void addAt(int i, long value) {
         switch (i) {
             case 0:
-                this.x += value;
+                this.f214x += value;
                 return;
             case 1:
-                this.y += value;
+                this.f215y += value;
                 return;
             case 2:
-                this.z += value;
+                this.f216z += value;
                 return;
             case 3:
-                this.w += value;
+                this.f213w += value;
                 return;
             default:
                 throw new IndexOutOfBoundsException("Index: i");
@@ -288,9 +297,9 @@ public class Long4 {
     }
 
     public void copyTo(long[] data, int offset) {
-        data[offset] = this.x;
-        data[offset + 1] = this.y;
-        data[offset + 2] = this.z;
-        data[offset + 3] = this.w;
+        data[offset] = this.f214x;
+        data[offset + 1] = this.f215y;
+        data[offset + 2] = this.f216z;
+        data[offset + 3] = this.f213w;
     }
 }

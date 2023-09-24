@@ -3,6 +3,7 @@ package android.database.sqlite;
 import android.annotation.UnsupportedAppUsage;
 import android.database.sqlite.SQLiteDatabase;
 
+/* loaded from: classes.dex */
 public final class SQLiteCustomFunction {
     public final SQLiteDatabase.CustomFunction callback;
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
@@ -10,14 +11,13 @@ public final class SQLiteCustomFunction {
     @UnsupportedAppUsage
     public final int numArgs;
 
-    public SQLiteCustomFunction(String name2, int numArgs2, SQLiteDatabase.CustomFunction callback2) {
-        if (name2 != null) {
-            this.name = name2;
-            this.numArgs = numArgs2;
-            this.callback = callback2;
-            return;
+    public SQLiteCustomFunction(String name, int numArgs, SQLiteDatabase.CustomFunction callback) {
+        if (name == null) {
+            throw new IllegalArgumentException("name must not be null.");
         }
-        throw new IllegalArgumentException("name must not be null.");
+        this.name = name;
+        this.numArgs = numArgs;
+        this.callback = callback;
     }
 
     @UnsupportedAppUsage

@@ -3,7 +3,7 @@ package com.android.internal.widget;
 import android.animation.Animator;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.os.Parcelable;
+import android.p007os.Parcelable;
 import android.util.SparseArray;
 import android.view.Menu;
 import android.view.View;
@@ -14,6 +14,7 @@ import android.widget.SpinnerAdapter;
 import com.android.internal.view.menu.MenuBuilder;
 import com.android.internal.view.menu.MenuPresenter;
 
+/* loaded from: classes4.dex */
 public interface DecorToolbar {
     void animateToVisibility(int i);
 

@@ -5,6 +5,7 @@ import com.android.internal.app.procstats.SparseMappingTable;
 import com.ibm.icu.text.PluralRules;
 import java.io.PrintWriter;
 
+/* loaded from: classes4.dex */
 public class SysMemUsageTable extends SparseMappingTable.Table {
     public SysMemUsageTable(SparseMappingTable tableData) {
         super(tableData);
@@ -14,13 +15,18 @@ public class SysMemUsageTable extends SparseMappingTable.Table {
         int N = that.getKeyCount();
         for (int i = 0; i < N; i++) {
             int key = that.getKeyAt(i);
-            mergeStats(SparseMappingTable.getIdFromKey(key), that.getArrayForKey(key), SparseMappingTable.getIndexFromKey(key));
+            int state = SparseMappingTable.getIdFromKey(key);
+            long[] addData = that.getArrayForKey(key);
+            int addOff = SparseMappingTable.getIndexFromKey(key);
+            mergeStats(state, addData, addOff);
         }
     }
 
     public void mergeStats(int state, long[] addData, int addOff) {
         int key = getOrAddKey((byte) state, 16);
-        mergeSysMemUsage(getArrayForKey(key), SparseMappingTable.getIndexFromKey(key), addData, addOff);
+        long[] dstData = getArrayForKey(key);
+        int dstOff = SparseMappingTable.getIndexFromKey(key);
+        mergeSysMemUsage(dstData, dstOff, addData, addOff);
     }
 
     public long[] getTotalMemUsage() {
@@ -28,7 +34,9 @@ public class SysMemUsageTable extends SparseMappingTable.Table {
         int N = getKeyCount();
         for (int i = 0; i < N; i++) {
             int key = getKeyAt(i);
-            mergeSysMemUsage(total, 0, getArrayForKey(key), SparseMappingTable.getIndexFromKey(key));
+            long[] addData = getArrayForKey(key);
+            int addOff = SparseMappingTable.getIndexFromKey(key);
+            mergeSysMemUsage(total, 0, addData, addOff);
         }
         return total;
     }
@@ -56,7 +64,7 @@ public class SysMemUsageTable extends SparseMappingTable.Table {
                 if (dstData[dstOff + i4] > addData[addOff + i4]) {
                     dstData[dstOff + i4] = addData[addOff + i4];
                 }
-                dstData[dstOff + i4 + i2] = (long) (((((double) dstData[(dstOff + i4) + i2]) * ((double) dstCount)) + (((double) addData[(addOff + i4) + 1]) * ((double) addCount))) / ((double) (dstCount + addCount)));
+                dstData[dstOff + i4 + i2] = (long) (((dstData[(dstOff + i4) + i2] * dstCount) + (addData[(addOff + i4) + 1] * addCount)) / (dstCount + addCount));
                 if (dstData[dstOff + i4 + 2] < addData[addOff + i4 + 2]) {
                     dstData[dstOff + i4 + 2] = addData[addOff + i4 + 2];
                 }
@@ -69,61 +77,51 @@ public class SysMemUsageTable extends SparseMappingTable.Table {
 
     public void dump(PrintWriter pw, String prefix, int[] screenStates, int[] memStates) {
         int printedScreen;
-        PrintWriter printWriter = pw;
-        int[] iArr = screenStates;
-        int[] iArr2 = memStates;
         int printedScreen2 = -1;
         int printedScreen3 = 0;
         while (true) {
             int is = printedScreen3;
-            if (is < iArr.length) {
-                int printedScreen4 = printedScreen2;
-                int printedMem = -1;
-                int printedMem2 = 0;
-                while (true) {
-                    int im = printedMem2;
-                    if (im >= iArr2.length) {
-                        break;
-                    }
-                    int iscreen = iArr[is];
-                    int imem = iArr2[im];
+            if (is >= screenStates.length) {
+                return;
+            }
+            int printedScreen4 = printedScreen2;
+            int printedMem = -1;
+            int printedMem2 = 0;
+            while (true) {
+                int im = printedMem2;
+                if (im < memStates.length) {
+                    int iscreen = screenStates[is];
+                    int imem = memStates[im];
                     int bucket = (iscreen + imem) * 14;
                     long count = getValueForId((byte) bucket, 0);
                     if (count > 0) {
                         pw.print(prefix);
-                        if (iArr.length > 1) {
-                            DumpUtils.printScreenLabel(printWriter, printedScreen4 != iscreen ? iscreen : -1);
+                        if (screenStates.length > 1) {
+                            DumpUtils.printScreenLabel(pw, printedScreen4 != iscreen ? iscreen : -1);
                             printedScreen = iscreen;
                         } else {
                             printedScreen = printedScreen4;
                         }
-                        if (iArr2.length > 1) {
-                            DumpUtils.printMemLabel(printWriter, printedMem != imem ? imem : -1, 0);
+                        if (memStates.length > 1) {
+                            DumpUtils.printMemLabel(pw, printedMem != imem ? imem : -1, (char) 0);
                             printedMem = imem;
                         }
-                        int printedMem3 = printedMem;
-                        printWriter.print(PluralRules.KEYWORD_RULE_SEPARATOR);
-                        printWriter.print(count);
-                        printWriter.println(" samples:");
-                        PrintWriter printWriter2 = pw;
-                        String str = prefix;
-                        long j = count;
-                        int i = bucket;
-                        dumpCategory(printWriter2, str, "  Cached", i, 1);
-                        dumpCategory(printWriter2, str, "  Free", i, 4);
-                        dumpCategory(printWriter2, str, "  ZRam", i, 7);
-                        dumpCategory(printWriter2, str, "  Kernel", i, 10);
-                        dumpCategory(printWriter2, str, "  Native", i, 13);
+                        pw.print(PluralRules.KEYWORD_RULE_SEPARATOR);
+                        pw.print(count);
+                        pw.println(" samples:");
+                        dumpCategory(pw, prefix, "  Cached", bucket, 1);
+                        dumpCategory(pw, prefix, "  Free", bucket, 4);
+                        dumpCategory(pw, prefix, "  ZRam", bucket, 7);
+                        dumpCategory(pw, prefix, "  Kernel", bucket, 10);
+                        dumpCategory(pw, prefix, "  Native", bucket, 13);
                         printedScreen4 = printedScreen;
-                        printedMem = printedMem3;
+                        printedMem = printedMem;
                     }
                     printedMem2 = im + 1;
                 }
-                printedScreen3 = is + 1;
-                printedScreen2 = printedScreen4;
-            } else {
-                return;
             }
+            printedScreen3 = is + 1;
+            printedScreen2 = printedScreen4;
         }
     }
 

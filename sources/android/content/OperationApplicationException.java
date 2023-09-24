@@ -1,5 +1,6 @@
 package android.content;
 
+/* loaded from: classes.dex */
 public class OperationApplicationException extends Exception {
     private final int mNumSuccessfulYieldPoints;
 

@@ -1,22 +1,27 @@
 package android.print;
 
 import android.annotation.UnsupportedAppUsage;
-import android.content.pm.PackageManager;
+import android.content.p002pm.PackageManager;
 import android.content.res.Resources;
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.util.Preconditions;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Arrays;
 
+/* loaded from: classes3.dex */
 public final class PrintJobInfo implements Parcelable {
-    public static final Parcelable.Creator<PrintJobInfo> CREATOR = new Parcelable.Creator<PrintJobInfo>() {
+    public static final Parcelable.Creator<PrintJobInfo> CREATOR = new Parcelable.Creator<PrintJobInfo>() { // from class: android.print.PrintJobInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PrintJobInfo createFromParcel(Parcel parcel) {
             return new PrintJobInfo(parcel);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PrintJobInfo[] newArray(int size) {
             return new PrintJobInfo[size];
         }
@@ -32,32 +37,27 @@ public final class PrintJobInfo implements Parcelable {
     public static final int STATE_FAILED = 6;
     public static final int STATE_QUEUED = 2;
     public static final int STATE_STARTED = 3;
-    /* access modifiers changed from: private */
-    public Bundle mAdvancedOptions;
+    private Bundle mAdvancedOptions;
     private int mAppId;
-    /* access modifiers changed from: private */
-    public PrintAttributes mAttributes;
+    private PrintAttributes mAttributes;
     private boolean mCanceling;
-    /* access modifiers changed from: private */
-    public int mCopies;
+    private int mCopies;
     private long mCreationTime;
     private PrintDocumentInfo mDocumentInfo;
     private PrintJobId mId;
     private String mLabel;
-    /* access modifiers changed from: private */
-    public PageRange[] mPageRanges;
+    private PageRange[] mPageRanges;
     private PrinterId mPrinterId;
     private String mPrinterName;
-    /* access modifiers changed from: private */
-    public float mProgress;
+    private float mProgress;
     private int mState;
-    /* access modifiers changed from: private */
-    public CharSequence mStatus;
+    private CharSequence mStatus;
     private int mStatusRes;
     private CharSequence mStatusResAppPackageName;
     private String mTag;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface State {
     }
 
@@ -87,33 +87,32 @@ public final class PrintJobInfo implements Parcelable {
     }
 
     private PrintJobInfo(Parcel parcel) {
-        this.mId = (PrintJobId) parcel.readParcelable((ClassLoader) null);
+        this.mId = (PrintJobId) parcel.readParcelable(null);
         this.mLabel = parcel.readString();
-        this.mPrinterId = (PrinterId) parcel.readParcelable((ClassLoader) null);
+        this.mPrinterId = (PrinterId) parcel.readParcelable(null);
         this.mPrinterName = parcel.readString();
         this.mState = parcel.readInt();
         this.mAppId = parcel.readInt();
         this.mTag = parcel.readString();
         this.mCreationTime = parcel.readLong();
         this.mCopies = parcel.readInt();
-        Parcelable[] parcelables = parcel.readParcelableArray((ClassLoader) null);
-        boolean z = false;
+        Parcelable[] parcelables = parcel.readParcelableArray(null);
         if (parcelables != null) {
             this.mPageRanges = new PageRange[parcelables.length];
             for (int i = 0; i < parcelables.length; i++) {
                 this.mPageRanges[i] = (PageRange) parcelables[i];
             }
         }
-        this.mAttributes = (PrintAttributes) parcel.readParcelable((ClassLoader) null);
-        this.mDocumentInfo = (PrintDocumentInfo) parcel.readParcelable((ClassLoader) null);
+        this.mAttributes = (PrintAttributes) parcel.readParcelable(null);
+        this.mDocumentInfo = (PrintDocumentInfo) parcel.readParcelable(null);
         this.mProgress = parcel.readFloat();
         this.mStatus = parcel.readCharSequence();
         this.mStatusRes = parcel.readInt();
         this.mStatusResAppPackageName = parcel.readCharSequence();
-        this.mCanceling = parcel.readInt() == 1 ? true : z;
+        this.mCanceling = parcel.readInt() == 1;
         this.mAdvancedOptions = parcel.readBundle();
         if (this.mAdvancedOptions != null) {
-            Preconditions.checkArgument(!this.mAdvancedOptions.containsKey((String) null));
+            Preconditions.checkArgument(!this.mAdvancedOptions.containsKey(null));
         }
     }
 
@@ -195,11 +194,10 @@ public final class PrintJobInfo implements Parcelable {
     }
 
     public void setCreationTime(long creationTime) {
-        if (creationTime >= 0) {
-            this.mCreationTime = creationTime;
-            return;
+        if (creationTime < 0) {
+            throw new IllegalArgumentException("creationTime must be non-negative.");
         }
-        throw new IllegalArgumentException("creationTime must be non-negative.");
+        this.mCreationTime = creationTime;
     }
 
     public int getCopies() {
@@ -207,11 +205,10 @@ public final class PrintJobInfo implements Parcelable {
     }
 
     public void setCopies(int copyCount) {
-        if (copyCount >= 1) {
-            this.mCopies = copyCount;
-            return;
+        if (copyCount < 1) {
+            throw new IllegalArgumentException("Copies must be more than one.");
         }
-        throw new IllegalArgumentException("Copies must be more than one.");
+        this.mCopies = copyCount;
     }
 
     public PageRange[] getPages() {
@@ -278,10 +275,12 @@ public final class PrintJobInfo implements Parcelable {
         this.mAdvancedOptions = options;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeParcelable(this.mId, flags);
         parcel.writeString(this.mLabel);
@@ -320,7 +319,6 @@ public final class PrintJobInfo implements Parcelable {
         builder.append(this.mCopies);
         StringBuilder sb = new StringBuilder();
         sb.append(", attributes: ");
-        String str = null;
         sb.append(this.mAttributes != null ? this.mAttributes.toString() : null);
         builder.append(sb.toString());
         StringBuilder sb2 = new StringBuilder();
@@ -344,10 +342,7 @@ public final class PrintJobInfo implements Parcelable {
         builder.append(", statusRes: " + this.mStatusRes);
         StringBuilder sb6 = new StringBuilder();
         sb6.append(", statusResAppPackageName: ");
-        if (this.mStatusResAppPackageName != null) {
-            str = this.mStatusResAppPackageName.toString();
-        }
-        sb6.append(str);
+        sb6.append(this.mStatusResAppPackageName != null ? this.mStatusResAppPackageName.toString() : null);
         builder.append(sb6.toString());
         builder.append("}");
         return builder.toString();
@@ -389,6 +384,7 @@ public final class PrintJobInfo implements Parcelable {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class Builder {
         private final PrintJobInfo mPrototype;
 
@@ -403,37 +399,37 @@ public final class PrintJobInfo implements Parcelable {
         }
 
         public void setCopies(int copies) {
-            int unused = this.mPrototype.mCopies = copies;
+            this.mPrototype.mCopies = copies;
         }
 
         public void setAttributes(PrintAttributes attributes) {
-            PrintAttributes unused = this.mPrototype.mAttributes = attributes;
+            this.mPrototype.mAttributes = attributes;
         }
 
         public void setPages(PageRange[] pages) {
-            PageRange[] unused = this.mPrototype.mPageRanges = pages;
+            this.mPrototype.mPageRanges = pages;
         }
 
         public void setProgress(float progress) {
             Preconditions.checkArgumentInRange(progress, 0.0f, 1.0f, "progress");
-            float unused = this.mPrototype.mProgress = progress;
+            this.mPrototype.mProgress = progress;
         }
 
         public void setStatus(CharSequence status) {
-            CharSequence unused = this.mPrototype.mStatus = status;
+            this.mPrototype.mStatus = status;
         }
 
         public void putAdvancedOption(String key, String value) {
             Preconditions.checkNotNull(key, "key cannot be null");
             if (this.mPrototype.mAdvancedOptions == null) {
-                Bundle unused = this.mPrototype.mAdvancedOptions = new Bundle();
+                this.mPrototype.mAdvancedOptions = new Bundle();
             }
             this.mPrototype.mAdvancedOptions.putString(key, value);
         }
 
         public void putAdvancedOption(String key, int value) {
             if (this.mPrototype.mAdvancedOptions == null) {
-                Bundle unused = this.mPrototype.mAdvancedOptions = new Bundle();
+                this.mPrototype.mAdvancedOptions = new Bundle();
             }
             this.mPrototype.mAdvancedOptions.putInt(key, value);
         }

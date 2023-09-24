@@ -1,9 +1,8 @@
 package com.android.internal.view.menu;
 
 import android.content.Context;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.Parcelable;
+import android.p007os.Bundle;
+import android.p007os.Parcelable;
 import android.util.SparseArray;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -12,11 +11,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import com.android.internal.view.menu.MenuPresenter;
 import com.android.internal.view.menu.MenuView;
 import java.util.ArrayList;
 
+/* loaded from: classes4.dex */
 public class ListMenuPresenter implements MenuPresenter, AdapterView.OnItemClickListener {
     private static final String TAG = "ListMenuPresenter";
     public static final String VIEWS_TAG = "android:menu:list";
@@ -25,8 +25,7 @@ public class ListMenuPresenter implements MenuPresenter, AdapterView.OnItemClick
     Context mContext;
     private int mId;
     LayoutInflater mInflater;
-    /* access modifiers changed from: private */
-    public int mItemIndexOffset;
+    private int mItemIndexOffset;
     int mItemLayoutRes;
     MenuBuilder mMenu;
     ExpandedMenuView mMenuView;
@@ -43,6 +42,7 @@ public class ListMenuPresenter implements MenuPresenter, AdapterView.OnItemClick
         this.mThemeRes = themeRes;
     }
 
+    @Override // com.android.internal.view.menu.MenuPresenter
     public void initForMenu(Context context, MenuBuilder menu) {
         if (this.mThemeRes != 0) {
             this.mContext = new ContextThemeWrapper(context, this.mThemeRes);
@@ -59,9 +59,10 @@ public class ListMenuPresenter implements MenuPresenter, AdapterView.OnItemClick
         }
     }
 
+    @Override // com.android.internal.view.menu.MenuPresenter
     public MenuView getMenuView(ViewGroup root) {
         if (this.mMenuView == null) {
-            this.mMenuView = (ExpandedMenuView) this.mInflater.inflate((int) R.layout.expanded_menu_layout, root, false);
+            this.mMenuView = (ExpandedMenuView) this.mInflater.inflate(C3132R.layout.expanded_menu_layout, root, false);
             if (this.mAdapter == null) {
                 this.mAdapter = new MenuAdapter();
             }
@@ -78,36 +79,39 @@ public class ListMenuPresenter implements MenuPresenter, AdapterView.OnItemClick
         return this.mAdapter;
     }
 
+    @Override // com.android.internal.view.menu.MenuPresenter
     public void updateMenuView(boolean cleared) {
         if (this.mAdapter != null) {
             this.mAdapter.notifyDataSetChanged();
         }
     }
 
+    @Override // com.android.internal.view.menu.MenuPresenter
     public void setCallback(MenuPresenter.Callback cb) {
         this.mCallback = cb;
     }
 
+    @Override // com.android.internal.view.menu.MenuPresenter
     public boolean onSubMenuSelected(SubMenuBuilder subMenu) {
-        if (!subMenu.hasVisibleItems()) {
-            return false;
-        }
-        new MenuDialogHelper(subMenu).show((IBinder) null);
-        if (this.mCallback == null) {
+        if (subMenu.hasVisibleItems()) {
+            new MenuDialogHelper(subMenu).show(null);
+            if (this.mCallback != null) {
+                this.mCallback.onOpenSubMenu(subMenu);
+                return true;
+            }
             return true;
         }
-        this.mCallback.onOpenSubMenu(subMenu);
-        return true;
+        return false;
     }
 
+    @Override // com.android.internal.view.menu.MenuPresenter
     public void onCloseMenu(MenuBuilder menu, boolean allMenusAreClosing) {
         if (this.mCallback != null) {
             this.mCallback.onCloseMenu(menu, allMenusAreClosing);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public int getItemIndexOffset() {
+    int getItemIndexOffset() {
         return this.mItemIndexOffset;
     }
 
@@ -118,18 +122,22 @@ public class ListMenuPresenter implements MenuPresenter, AdapterView.OnItemClick
         }
     }
 
-    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+    @Override // android.widget.AdapterView.OnItemClickListener
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         this.mMenu.performItemAction(this.mAdapter.getItem(position), this, 0);
     }
 
+    @Override // com.android.internal.view.menu.MenuPresenter
     public boolean flagActionItems() {
         return false;
     }
 
+    @Override // com.android.internal.view.menu.MenuPresenter
     public boolean expandItemActionView(MenuBuilder menu, MenuItemImpl item) {
         return false;
     }
 
+    @Override // com.android.internal.view.menu.MenuPresenter
     public boolean collapseItemActionView(MenuBuilder menu, MenuItemImpl item) {
         return false;
     }
@@ -153,10 +161,12 @@ public class ListMenuPresenter implements MenuPresenter, AdapterView.OnItemClick
         this.mId = id;
     }
 
+    @Override // com.android.internal.view.menu.MenuPresenter
     public int getId() {
         return this.mId;
     }
 
+    @Override // com.android.internal.view.menu.MenuPresenter
     public Parcelable onSaveInstanceState() {
         if (this.mMenuView == null) {
             return null;
@@ -166,10 +176,12 @@ public class ListMenuPresenter implements MenuPresenter, AdapterView.OnItemClick
         return state;
     }
 
+    @Override // com.android.internal.view.menu.MenuPresenter
     public void onRestoreInstanceState(Parcelable state) {
         restoreHierarchyState((Bundle) state);
     }
 
+    /* loaded from: classes4.dex */
     private class MenuAdapter extends BaseAdapter {
         private int mExpandedIndex = -1;
 
@@ -177,14 +189,17 @@ public class ListMenuPresenter implements MenuPresenter, AdapterView.OnItemClick
             findExpandedIndex();
         }
 
+        @Override // android.widget.Adapter
         public int getCount() {
-            int count = ListMenuPresenter.this.mMenu.getNonActionItems().size() - ListMenuPresenter.this.mItemIndexOffset;
+            ArrayList<MenuItemImpl> items = ListMenuPresenter.this.mMenu.getNonActionItems();
+            int count = items.size() - ListMenuPresenter.this.mItemIndexOffset;
             if (this.mExpandedIndex < 0) {
                 return count;
             }
             return count - 1;
         }
 
+        @Override // android.widget.Adapter
         public MenuItemImpl getItem(int position) {
             ArrayList<MenuItemImpl> items = ListMenuPresenter.this.mMenu.getNonActionItems();
             int position2 = position + ListMenuPresenter.this.mItemIndexOffset;
@@ -194,26 +209,29 @@ public class ListMenuPresenter implements MenuPresenter, AdapterView.OnItemClick
             return items.get(position2);
         }
 
+        @Override // android.widget.Adapter
         public long getItemId(int position) {
-            return (long) position;
+            return position;
         }
 
+        @Override // android.widget.Adapter
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
                 convertView = ListMenuPresenter.this.mInflater.inflate(ListMenuPresenter.this.mItemLayoutRes, parent, false);
             }
-            ((MenuView.ItemView) convertView).initialize(getItem(position), 0);
+            MenuView.ItemView itemView = (MenuView.ItemView) convertView;
+            itemView.initialize(getItem(position), 0);
             return convertView;
         }
 
-        /* access modifiers changed from: package-private */
-        public void findExpandedIndex() {
+        void findExpandedIndex() {
             MenuItemImpl expandedItem = ListMenuPresenter.this.mMenu.getExpandedItem();
             if (expandedItem != null) {
                 ArrayList<MenuItemImpl> items = ListMenuPresenter.this.mMenu.getNonActionItems();
                 int count = items.size();
                 for (int i = 0; i < count; i++) {
-                    if (items.get(i) == expandedItem) {
+                    MenuItemImpl item = items.get(i);
+                    if (item == expandedItem) {
                         this.mExpandedIndex = i;
                         return;
                     }
@@ -222,6 +240,7 @@ public class ListMenuPresenter implements MenuPresenter, AdapterView.OnItemClick
             this.mExpandedIndex = -1;
         }
 
+        @Override // android.widget.BaseAdapter
         public void notifyDataSetChanged() {
             findExpandedIndex();
             super.notifyDataSetChanged();

@@ -3,6 +3,7 @@ package android.app;
 import java.util.List;
 
 @Deprecated
+/* loaded from: classes.dex */
 public class FragmentManagerNonConfig {
     private final List<FragmentManagerNonConfig> mChildNonConfigs;
     private final List<Fragment> mFragments;
@@ -12,13 +13,11 @@ public class FragmentManagerNonConfig {
         this.mChildNonConfigs = childNonConfigs;
     }
 
-    /* access modifiers changed from: package-private */
-    public List<Fragment> getFragments() {
+    List<Fragment> getFragments() {
         return this.mFragments;
     }
 
-    /* access modifiers changed from: package-private */
-    public List<FragmentManagerNonConfig> getChildNonConfigs() {
+    List<FragmentManagerNonConfig> getChildNonConfigs() {
         return this.mChildNonConfigs;
     }
 }

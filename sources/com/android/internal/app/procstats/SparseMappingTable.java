@@ -1,13 +1,14 @@
 package com.android.internal.app.procstats;
 
-import android.os.Build;
-import android.os.Parcel;
+import android.p007os.Build;
+import android.p007os.Parcel;
 import android.util.EventLog;
 import android.util.Slog;
 import com.android.internal.util.GrowingArrayUtils;
 import java.util.ArrayList;
 import libcore.util.EmptyArray;
 
+/* loaded from: classes4.dex */
 public class SparseMappingTable {
     private static final int ARRAY_MASK = 255;
     private static final int ARRAY_SHIFT = 8;
@@ -18,12 +19,9 @@ public class SparseMappingTable {
     private static final int INDEX_SHIFT = 16;
     public static final int INVALID_KEY = -1;
     private static final String TAG = "SparseMappingTable";
-    /* access modifiers changed from: private */
-    public final ArrayList<long[]> mLongs = new ArrayList<>();
-    /* access modifiers changed from: private */
-    public int mNextIndex;
-    /* access modifiers changed from: private */
-    public int mSequence;
+    private final ArrayList<long[]> mLongs = new ArrayList<>();
+    private int mNextIndex;
+    private int mSequence;
 
     static /* synthetic */ int access$212(SparseMappingTable x0, int x1) {
         int i = x0.mNextIndex + x1;
@@ -31,13 +29,15 @@ public class SparseMappingTable {
         return i;
     }
 
+    /* loaded from: classes4.dex */
     public static class Table {
         private SparseMappingTable mParent;
-        private int mSequence = 1;
+        private int mSequence;
         private int mSize;
         private int[] mTable;
 
         public Table(SparseMappingTable parent) {
+            this.mSequence = 1;
             this.mParent = parent;
             this.mSequence = parent.mSequence;
         }
@@ -48,29 +48,34 @@ public class SparseMappingTable {
             int N = copyFrom.getKeyCount();
             for (int i = 0; i < N; i++) {
                 int theirKey = copyFrom.getKeyAt(i);
-                int myKey = getOrAddKey(SparseMappingTable.getIdFromKey(theirKey), valueCount);
-                System.arraycopy((long[]) copyFrom.mParent.mLongs.get(SparseMappingTable.getArrayFromKey(theirKey)), SparseMappingTable.getIndexFromKey(theirKey), (long[]) this.mParent.mLongs.get(SparseMappingTable.getArrayFromKey(myKey)), SparseMappingTable.getIndexFromKey(myKey), valueCount);
+                long[] theirLongs = (long[]) copyFrom.mParent.mLongs.get(SparseMappingTable.getArrayFromKey(theirKey));
+                byte id = SparseMappingTable.getIdFromKey(theirKey);
+                int myKey = getOrAddKey(id, valueCount);
+                long[] myLongs = (long[]) this.mParent.mLongs.get(SparseMappingTable.getArrayFromKey(myKey));
+                System.arraycopy(theirLongs, SparseMappingTable.getIndexFromKey(theirKey), myLongs, SparseMappingTable.getIndexFromKey(myKey), valueCount);
             }
         }
 
         public int getOrAddKey(byte id, int count) {
             assertConsistency();
             int idx = binarySearch(id);
-            if (idx >= 0) {
-                return this.mTable[idx];
+            if (idx < 0) {
+                ArrayList<long[]> list = this.mParent.mLongs;
+                int whichArray = list.size() - 1;
+                long[] array = list.get(whichArray);
+                if (this.mParent.mNextIndex + count > array.length) {
+                    long[] array2 = new long[4096];
+                    list.add(array2);
+                    whichArray++;
+                    this.mParent.mNextIndex = 0;
+                }
+                int key = (whichArray << 8) | (this.mParent.mNextIndex << 16) | (id << 0);
+                SparseMappingTable.access$212(this.mParent, count);
+                this.mTable = GrowingArrayUtils.insert(this.mTable != null ? this.mTable : EmptyArray.INT, this.mSize, ~idx, key);
+                this.mSize++;
+                return key;
             }
-            ArrayList<long[]> list = this.mParent.mLongs;
-            int whichArray = list.size() - 1;
-            if (this.mParent.mNextIndex + count > list.get(whichArray).length) {
-                list.add(new long[4096]);
-                whichArray++;
-                int unused = this.mParent.mNextIndex = 0;
-            }
-            int key = (whichArray << 8) | (this.mParent.mNextIndex << 16) | (id << 0);
-            SparseMappingTable.access$212(this.mParent, count);
-            this.mTable = GrowingArrayUtils.insert(this.mTable != null ? this.mTable : EmptyArray.INT, this.mSize, ~idx, key);
-            this.mSize++;
-            return key;
+            return this.mTable[idx];
         }
 
         public int getKey(byte id) {
@@ -89,10 +94,11 @@ public class SparseMappingTable {
         public long getValue(int key, int index) {
             assertConsistency();
             try {
-                return ((long[]) this.mParent.mLongs.get(SparseMappingTable.getArrayFromKey(key)))[SparseMappingTable.getIndexFromKey(key) + index];
+                long[] array = (long[]) this.mParent.mLongs.get(SparseMappingTable.getArrayFromKey(key));
+                return array[SparseMappingTable.getIndexFromKey(key) + index];
             } catch (IndexOutOfBoundsException ex) {
                 SparseMappingTable.logOrThrow("key=0x" + Integer.toHexString(key) + " index=" + index + " -- " + dumpInternalState(), ex);
-                return 0;
+                return 0L;
             }
         }
 
@@ -104,14 +110,15 @@ public class SparseMappingTable {
             assertConsistency();
             int idx = binarySearch(id);
             if (idx < 0) {
-                return 0;
+                return 0L;
             }
             int key = this.mTable[idx];
             try {
-                return ((long[]) this.mParent.mLongs.get(SparseMappingTable.getArrayFromKey(key)))[SparseMappingTable.getIndexFromKey(key) + index];
+                long[] array = (long[]) this.mParent.mLongs.get(SparseMappingTable.getArrayFromKey(key));
+                return array[SparseMappingTable.getIndexFromKey(key) + index];
             } catch (IndexOutOfBoundsException ex) {
                 SparseMappingTable.logOrThrow("id=0x" + Integer.toHexString(id) + " idx=" + idx + " key=0x" + Integer.toHexString(key) + " index=" + index + " -- " + dumpInternalState(), ex);
-                return 0;
+                return 0L;
             }
         }
 
@@ -126,15 +133,17 @@ public class SparseMappingTable {
 
         public void setValue(int key, int index, long value) {
             assertConsistency();
-            if (value < 0) {
-                SparseMappingTable.logOrThrow("can't store negative values key=0x" + Integer.toHexString(key) + " index=" + index + " value=" + value + " -- " + dumpInternalState());
-                return;
+            if (value >= 0) {
+                try {
+                    long[] array = (long[]) this.mParent.mLongs.get(SparseMappingTable.getArrayFromKey(key));
+                    array[SparseMappingTable.getIndexFromKey(key) + index] = value;
+                    return;
+                } catch (IndexOutOfBoundsException ex) {
+                    SparseMappingTable.logOrThrow("key=0x" + Integer.toHexString(key) + " index=" + index + " value=" + value + " -- " + dumpInternalState(), ex);
+                    return;
+                }
             }
-            try {
-                ((long[]) this.mParent.mLongs.get(SparseMappingTable.getArrayFromKey(key)))[SparseMappingTable.getIndexFromKey(key) + index] = value;
-            } catch (IndexOutOfBoundsException ex) {
-                SparseMappingTable.logOrThrow("key=0x" + Integer.toHexString(key) + " index=" + index + " value=" + value + " -- " + dumpInternalState(), ex);
-            }
+            SparseMappingTable.logOrThrow("can't store negative values key=0x" + Integer.toHexString(key) + " index=" + index + " value=" + value + " -- " + dumpInternalState());
         }
 
         public void resetTable() {
@@ -189,10 +198,10 @@ public class SparseMappingTable {
                 byte midId = (byte) ((this.mTable[mid] >> 0) & 255);
                 if (midId < id) {
                     lo = mid + 1;
-                } else if (midId <= id) {
-                    return mid;
-                } else {
+                } else if (midId > id) {
                     hi = mid - 1;
+                } else {
+                    return mid;
                 }
             }
             return ~lo;
@@ -208,7 +217,7 @@ public class SparseMappingTable {
                 int index = SparseMappingTable.getIndexFromKey(key);
                 if (arrayIndex >= longsSize || index >= longs.get(arrayIndex).length) {
                     if (log) {
-                        Slog.w(SparseMappingTable.TAG, "Invalid stats at index " + i + " -- " + dumpInternalState());
+                        Slog.m50w(SparseMappingTable.TAG, "Invalid stats at index " + i + " -- " + dumpInternalState());
                     }
                     return false;
                 }
@@ -274,8 +283,9 @@ public class SparseMappingTable {
             out.writeInt(array.length);
             writeCompactedLongArray(out, array, array.length);
         }
+        long[] lastLongs = this.mLongs.get(N - 1);
         out.writeInt(this.mNextIndex);
-        writeCompactedLongArray(out, this.mLongs.get(N - 1), this.mNextIndex);
+        writeCompactedLongArray(out, lastLongs, this.mNextIndex);
     }
 
     public void readFromParcel(Parcel in) {
@@ -307,15 +317,11 @@ public class SparseMappingTable {
         sb.append(N);
         sb.append("\n");
         if (includeData) {
-            int i = 0;
-            while (i < N) {
+            for (int i = 0; i < N; i++) {
                 long[] array = this.mLongs.get(i);
-                int j = 0;
-                while (j < array.length && (i != N - 1 || j != this.mNextIndex)) {
-                    sb.append(String.format(" %4d %d 0x%016x %-19d\n", new Object[]{Integer.valueOf(i), Integer.valueOf(j), Long.valueOf(array[j]), Long.valueOf(array[j])}));
-                    j++;
+                for (int j = 0; j < array.length && (i != N - 1 || j != this.mNextIndex); j++) {
+                    sb.append(String.format(" %4d %d 0x%016x %-19d\n", Integer.valueOf(i), Integer.valueOf(j), Long.valueOf(array[j]), Long.valueOf(array[j])));
                 }
-                i++;
             }
         }
         sb.append("}");
@@ -326,14 +332,16 @@ public class SparseMappingTable {
         for (int i = 0; i < num; i++) {
             long val = array[i];
             if (val < 0) {
-                Slog.w(TAG, "Time val negative: " + val);
+                Slog.m50w(TAG, "Time val negative: " + val);
                 val = 0;
             }
-            if (val <= 2147483647L) {
-                out.writeInt((int) val);
+            if (val > 2147483647L) {
+                int top = ~((int) (2147483647L & (val >> 32)));
+                int bottom = (int) (4294967295L & val);
+                out.writeInt(top);
+                out.writeInt(bottom);
             } else {
-                out.writeInt(~((int) (2147483647L & (val >> 32))));
-                out.writeInt((int) (4294967295L & val));
+                out.writeInt((int) val);
             }
         }
     }
@@ -348,9 +356,10 @@ public class SparseMappingTable {
         while (i < num) {
             int val = in.readInt();
             if (val >= 0) {
-                array[i] = (long) val;
+                array[i] = val;
             } else {
-                array[i] = (((long) (~val)) << 32) | ((long) in.readInt());
+                int bottom = in.readInt();
+                array[i] = ((~val) << 32) | bottom;
             }
             i++;
         }
@@ -372,14 +381,14 @@ public class SparseMappingTable {
         return (key >> 16) & 65535;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static void logOrThrow(String message) {
         logOrThrow(message, new RuntimeException("Stack trace"));
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static void logOrThrow(String message, Throwable th) {
-        Slog.e(TAG, message, th);
+        Slog.m55e(TAG, message, th);
         if (Build.IS_ENG) {
             throw new RuntimeException(message, th);
         }

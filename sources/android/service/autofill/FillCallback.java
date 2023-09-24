@@ -1,8 +1,9 @@
 package android.service.autofill;
 
-import android.os.RemoteException;
+import android.p007os.RemoteException;
 import android.util.Log;
 
+/* loaded from: classes3.dex */
 public final class FillCallback {
     private static final String TAG = "FillCallback";
     private final IFillCallback mCallback;
@@ -28,7 +29,7 @@ public final class FillCallback {
     }
 
     public void onFailure(CharSequence message) {
-        Log.w(TAG, "onFailure(): " + message);
+        Log.m64w(TAG, "onFailure(): " + ((Object) message));
         assertNotCalled();
         this.mCalled = true;
         try {

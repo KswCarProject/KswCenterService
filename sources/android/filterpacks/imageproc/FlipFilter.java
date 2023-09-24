@@ -1,5 +1,6 @@
 package android.filterpacks.imageproc;
 
+import android.app.slice.Slice;
 import android.app.slice.SliceItem;
 import android.filterfw.core.Filter;
 import android.filterfw.core.FilterContext;
@@ -10,25 +11,32 @@ import android.filterfw.core.Program;
 import android.filterfw.core.ShaderProgram;
 import android.filterfw.format.ImageFormat;
 
+/* loaded from: classes.dex */
 public class FlipFilter extends Filter {
-    @GenerateFieldPort(hasDefault = true, name = "horizontal")
-    private boolean mHorizontal = false;
+    @GenerateFieldPort(hasDefault = true, name = Slice.HINT_HORIZONTAL)
+    private boolean mHorizontal;
     private Program mProgram;
-    private int mTarget = 0;
+    private int mTarget;
     @GenerateFieldPort(hasDefault = true, name = "tile_size")
-    private int mTileSize = 640;
+    private int mTileSize;
     @GenerateFieldPort(hasDefault = true, name = "vertical")
-    private boolean mVertical = false;
+    private boolean mVertical;
 
     public FlipFilter(String name) {
         super(name);
+        this.mVertical = false;
+        this.mHorizontal = false;
+        this.mTileSize = 640;
+        this.mTarget = 0;
     }
 
+    @Override // android.filterfw.core.Filter
     public void setupPorts() {
         addMaskedInputPort(SliceItem.FORMAT_IMAGE, ImageFormat.create(3));
         addOutputBasedOnInput(SliceItem.FORMAT_IMAGE, SliceItem.FORMAT_IMAGE);
     }
 
+    @Override // android.filterfw.core.Filter
     public FrameFormat getOutputFormat(String portName, FrameFormat inputFormat) {
         return inputFormat;
     }
@@ -45,12 +53,14 @@ public class FlipFilter extends Filter {
         throw new RuntimeException("Filter Sharpen does not support frames of target " + target + "!");
     }
 
+    @Override // android.filterfw.core.Filter
     public void fieldPortValueUpdated(String name, FilterContext context) {
         if (this.mProgram != null) {
             updateParameters();
         }
     }
 
+    @Override // android.filterfw.core.Filter
     public void process(FilterContext context) {
         Frame input = pullInput(SliceItem.FORMAT_IMAGE);
         FrameFormat inputFormat = input.getFormat();
@@ -64,16 +74,10 @@ public class FlipFilter extends Filter {
     }
 
     private void updateParameters() {
-        float y_origin = 0.0f;
-        float height = 1.0f;
         float x_origin = this.mHorizontal ? 1.0f : 0.0f;
-        if (this.mVertical) {
-            y_origin = 1.0f;
-        }
+        float y_origin = this.mVertical ? 1.0f : 0.0f;
         float width = this.mHorizontal ? -1.0f : 1.0f;
-        if (this.mVertical) {
-            height = -1.0f;
-        }
+        float height = this.mVertical ? -1.0f : 1.0f;
         ((ShaderProgram) this.mProgram).setSourceRect(x_origin, y_origin, width, height);
     }
 }

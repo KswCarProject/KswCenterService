@@ -6,15 +6,15 @@ import android.hardware.input.IInputDevicesChangedListener;
 import android.hardware.input.IInputManager;
 import android.hardware.input.ITabletModeChangedListener;
 import android.media.AudioAttributes;
-import android.os.Binder;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Looper;
-import android.os.Message;
-import android.os.RemoteException;
-import android.os.ServiceManager;
-import android.os.VibrationEffect;
-import android.os.Vibrator;
+import android.p007os.Binder;
+import android.p007os.Handler;
+import android.p007os.IBinder;
+import android.p007os.Looper;
+import android.p007os.Message;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
+import android.p007os.VibrationEffect;
+import android.p007os.Vibrator;
 import android.provider.Settings;
 import android.util.Log;
 import android.util.SparseArray;
@@ -22,12 +22,13 @@ import android.view.InputDevice;
 import android.view.InputEvent;
 import android.view.InputMonitor;
 import android.view.PointerIcon;
-import com.android.internal.os.SomeArgs;
+import com.android.internal.p016os.SomeArgs;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
 
+/* loaded from: classes.dex */
 public final class InputManager {
     public static final String ACTION_QUERY_KEYBOARD_LAYOUTS = "android.hardware.input.action.QUERY_KEYBOARD_LAYOUTS";
     private static final boolean DEBUG = false;
@@ -47,17 +48,17 @@ public final class InputManager {
     public static final int SWITCH_STATE_UNKNOWN = -1;
     private static final String TAG = "InputManager";
     private static InputManager sInstance;
-    /* access modifiers changed from: private */
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
-    public final IInputManager mIm;
-    private final ArrayList<InputDeviceListenerDelegate> mInputDeviceListeners = new ArrayList<>();
+    private final IInputManager mIm;
     private SparseArray<InputDevice> mInputDevices;
     private InputDevicesChangedListener mInputDevicesChangedListener;
-    private final Object mInputDevicesLock = new Object();
     private List<OnTabletModeChangedListenerDelegate> mOnTabletModeChangedListeners;
     private TabletModeChangedListener mTabletModeChangedListener;
+    private final Object mInputDevicesLock = new Object();
+    private final ArrayList<InputDeviceListenerDelegate> mInputDeviceListeners = new ArrayList<>();
     private final Object mTabletModeLock = new Object();
 
+    /* loaded from: classes.dex */
     public interface InputDeviceListener {
         void onInputDeviceAdded(int i);
 
@@ -66,11 +67,13 @@ public final class InputManager {
         void onInputDeviceRemoved(int i);
     }
 
+    /* loaded from: classes.dex */
     public interface OnTabletModeChangedListener {
         void onTabletModeChanged(long j, boolean z);
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface SwitchState {
     }
 
@@ -94,76 +97,56 @@ public final class InputManager {
         return inputManager;
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:20:0x0032, code lost:
-        return r2;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public android.view.InputDevice getInputDevice(int r6) {
-        /*
-            r5 = this;
-            java.lang.Object r0 = r5.mInputDevicesLock
-            monitor-enter(r0)
-            r5.populateInputDevicesLocked()     // Catch:{ all -> 0x0033 }
-            android.util.SparseArray<android.view.InputDevice> r1 = r5.mInputDevices     // Catch:{ all -> 0x0033 }
-            int r1 = r1.indexOfKey(r6)     // Catch:{ all -> 0x0033 }
-            if (r1 >= 0) goto L_0x0011
-            r2 = 0
-            monitor-exit(r0)     // Catch:{ all -> 0x0033 }
-            return r2
-        L_0x0011:
-            android.util.SparseArray<android.view.InputDevice> r2 = r5.mInputDevices     // Catch:{ all -> 0x0033 }
-            java.lang.Object r2 = r2.valueAt(r1)     // Catch:{ all -> 0x0033 }
-            android.view.InputDevice r2 = (android.view.InputDevice) r2     // Catch:{ all -> 0x0033 }
-            if (r2 != 0) goto L_0x0031
-            android.hardware.input.IInputManager r3 = r5.mIm     // Catch:{ RemoteException -> 0x002b }
-            android.view.InputDevice r3 = r3.getInputDevice(r6)     // Catch:{ RemoteException -> 0x002b }
-            r2 = r3
-            if (r2 == 0) goto L_0x0031
-            android.util.SparseArray<android.view.InputDevice> r3 = r5.mInputDevices     // Catch:{ all -> 0x0033 }
-            r3.setValueAt(r1, r2)     // Catch:{ all -> 0x0033 }
-            goto L_0x0031
-        L_0x002b:
-            r3 = move-exception
-            java.lang.RuntimeException r4 = r3.rethrowFromSystemServer()     // Catch:{ all -> 0x0033 }
-            throw r4     // Catch:{ all -> 0x0033 }
-        L_0x0031:
-            monitor-exit(r0)     // Catch:{ all -> 0x0033 }
-            return r2
-        L_0x0033:
-            r1 = move-exception
-            monitor-exit(r0)     // Catch:{ all -> 0x0033 }
-            throw r1
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.hardware.input.InputManager.getInputDevice(int):android.view.InputDevice");
+    public InputDevice getInputDevice(int id) {
+        synchronized (this.mInputDevicesLock) {
+            populateInputDevicesLocked();
+            int index = this.mInputDevices.indexOfKey(id);
+            if (index < 0) {
+                return null;
+            }
+            InputDevice inputDevice = this.mInputDevices.valueAt(index);
+            if (inputDevice == null) {
+                try {
+                    inputDevice = this.mIm.getInputDevice(id);
+                    if (inputDevice != null) {
+                        this.mInputDevices.setValueAt(index, inputDevice);
+                    }
+                } catch (RemoteException ex) {
+                    throw ex.rethrowFromSystemServer();
+                }
+            }
+            return inputDevice;
+        }
     }
 
     public InputDevice getInputDeviceByDescriptor(String descriptor) {
-        if (descriptor != null) {
-            synchronized (this.mInputDevicesLock) {
-                populateInputDevicesLocked();
-                int numDevices = this.mInputDevices.size();
-                for (int i = 0; i < numDevices; i++) {
-                    InputDevice inputDevice = this.mInputDevices.valueAt(i);
-                    if (inputDevice == null) {
-                        try {
-                            inputDevice = this.mIm.getInputDevice(this.mInputDevices.keyAt(i));
-                            if (inputDevice == null) {
-                                continue;
-                            } else {
-                                this.mInputDevices.setValueAt(i, inputDevice);
-                            }
-                        } catch (RemoteException ex) {
-                            throw ex.rethrowFromSystemServer();
+        if (descriptor == null) {
+            throw new IllegalArgumentException("descriptor must not be null.");
+        }
+        synchronized (this.mInputDevicesLock) {
+            populateInputDevicesLocked();
+            int numDevices = this.mInputDevices.size();
+            for (int i = 0; i < numDevices; i++) {
+                InputDevice inputDevice = this.mInputDevices.valueAt(i);
+                if (inputDevice == null) {
+                    int id = this.mInputDevices.keyAt(i);
+                    try {
+                        inputDevice = this.mIm.getInputDevice(id);
+                        if (inputDevice == null) {
+                            continue;
+                        } else {
+                            this.mInputDevices.setValueAt(i, inputDevice);
                         }
-                    }
-                    if (descriptor.equals(inputDevice.getDescriptor())) {
-                        return inputDevice;
+                    } catch (RemoteException ex) {
+                        throw ex.rethrowFromSystemServer();
                     }
                 }
-                return null;
+                if (descriptor.equals(inputDevice.getDescriptor())) {
+                    return inputDevice;
+                }
             }
+            return null;
         }
-        throw new IllegalArgumentException("descriptor must not be null.");
     }
 
     public int[] getInputDeviceIds() {
@@ -183,7 +166,7 @@ public final class InputManager {
         try {
             return this.mIm.isInputDeviceEnabled(id);
         } catch (RemoteException ex) {
-            Log.w(TAG, "Could not check enabled status of input device with id = " + id);
+            Log.m64w(TAG, "Could not check enabled status of input device with id = " + id);
             throw ex.rethrowFromSystemServer();
         }
     }
@@ -192,7 +175,7 @@ public final class InputManager {
         try {
             this.mIm.enableInputDevice(id);
         } catch (RemoteException ex) {
-            Log.w(TAG, "Could not enable input device with id = " + id);
+            Log.m64w(TAG, "Could not enable input device with id = " + id);
             throw ex.rethrowFromSystemServer();
         }
     }
@@ -201,36 +184,36 @@ public final class InputManager {
         try {
             this.mIm.disableInputDevice(id);
         } catch (RemoteException ex) {
-            Log.w(TAG, "Could not disable input device with id = " + id);
+            Log.m64w(TAG, "Could not disable input device with id = " + id);
             throw ex.rethrowFromSystemServer();
         }
     }
 
     public void registerInputDeviceListener(InputDeviceListener listener, Handler handler) {
-        if (listener != null) {
-            synchronized (this.mInputDevicesLock) {
-                populateInputDevicesLocked();
-                if (findInputDeviceListenerLocked(listener) < 0) {
-                    this.mInputDeviceListeners.add(new InputDeviceListenerDelegate(listener, handler));
-                }
-            }
-            return;
+        if (listener == null) {
+            throw new IllegalArgumentException("listener must not be null");
         }
-        throw new IllegalArgumentException("listener must not be null");
+        synchronized (this.mInputDevicesLock) {
+            populateInputDevicesLocked();
+            int index = findInputDeviceListenerLocked(listener);
+            if (index < 0) {
+                this.mInputDeviceListeners.add(new InputDeviceListenerDelegate(listener, handler));
+            }
+        }
     }
 
     public void unregisterInputDeviceListener(InputDeviceListener listener) {
-        if (listener != null) {
-            synchronized (this.mInputDevicesLock) {
-                int index = findInputDeviceListenerLocked(listener);
-                if (index >= 0) {
-                    this.mInputDeviceListeners.get(index).removeCallbacksAndMessages((Object) null);
-                    this.mInputDeviceListeners.remove(index);
-                }
-            }
-            return;
+        if (listener == null) {
+            throw new IllegalArgumentException("listener must not be null");
         }
-        throw new IllegalArgumentException("listener must not be null");
+        synchronized (this.mInputDevicesLock) {
+            int index = findInputDeviceListenerLocked(listener);
+            if (index >= 0) {
+                InputDeviceListenerDelegate d = this.mInputDeviceListeners.get(index);
+                d.removeCallbacksAndMessages(null);
+                this.mInputDeviceListeners.remove(index);
+            }
+        }
     }
 
     private int findInputDeviceListenerLocked(InputDeviceListener listener) {
@@ -252,31 +235,32 @@ public final class InputManager {
     }
 
     public void registerOnTabletModeChangedListener(OnTabletModeChangedListener listener, Handler handler) {
-        if (listener != null) {
-            synchronized (this.mTabletModeLock) {
-                if (this.mOnTabletModeChangedListeners == null) {
-                    initializeTabletModeListenerLocked();
-                }
-                if (findOnTabletModeChangedListenerLocked(listener) < 0) {
-                    this.mOnTabletModeChangedListeners.add(new OnTabletModeChangedListenerDelegate(listener, handler));
-                }
-            }
-            return;
+        if (listener == null) {
+            throw new IllegalArgumentException("listener must not be null");
         }
-        throw new IllegalArgumentException("listener must not be null");
+        synchronized (this.mTabletModeLock) {
+            if (this.mOnTabletModeChangedListeners == null) {
+                initializeTabletModeListenerLocked();
+            }
+            int idx = findOnTabletModeChangedListenerLocked(listener);
+            if (idx < 0) {
+                OnTabletModeChangedListenerDelegate d = new OnTabletModeChangedListenerDelegate(listener, handler);
+                this.mOnTabletModeChangedListeners.add(d);
+            }
+        }
     }
 
     public void unregisterOnTabletModeChangedListener(OnTabletModeChangedListener listener) {
-        if (listener != null) {
-            synchronized (this.mTabletModeLock) {
-                int idx = findOnTabletModeChangedListenerLocked(listener);
-                if (idx >= 0) {
-                    this.mOnTabletModeChangedListeners.remove(idx).removeCallbacksAndMessages((Object) null);
-                }
-            }
-            return;
+        if (listener == null) {
+            throw new IllegalArgumentException("listener must not be null");
         }
-        throw new IllegalArgumentException("listener must not be null");
+        synchronized (this.mTabletModeLock) {
+            int idx = findOnTabletModeChangedListenerLocked(listener);
+            if (idx >= 0) {
+                OnTabletModeChangedListenerDelegate d = this.mOnTabletModeChangedListeners.remove(idx);
+                d.removeCallbacksAndMessages(null);
+            }
+        }
     }
 
     private void initializeTabletModeListenerLocked() {
@@ -317,14 +301,13 @@ public final class InputManager {
     }
 
     public KeyboardLayout getKeyboardLayout(String keyboardLayoutDescriptor) {
-        if (keyboardLayoutDescriptor != null) {
-            try {
-                return this.mIm.getKeyboardLayout(keyboardLayoutDescriptor);
-            } catch (RemoteException ex) {
-                throw ex.rethrowFromSystemServer();
-            }
-        } else {
+        if (keyboardLayoutDescriptor == null) {
             throw new IllegalArgumentException("keyboardLayoutDescriptor must not be null");
+        }
+        try {
+            return this.mIm.getKeyboardLayout(keyboardLayoutDescriptor);
+        } catch (RemoteException ex) {
+            throw ex.rethrowFromSystemServer();
         }
     }
 
@@ -339,54 +322,53 @@ public final class InputManager {
     public void setCurrentKeyboardLayoutForInputDevice(InputDeviceIdentifier identifier, String keyboardLayoutDescriptor) {
         if (identifier == null) {
             throw new IllegalArgumentException("identifier must not be null");
-        } else if (keyboardLayoutDescriptor != null) {
-            try {
-                this.mIm.setCurrentKeyboardLayoutForInputDevice(identifier, keyboardLayoutDescriptor);
-            } catch (RemoteException ex) {
-                throw ex.rethrowFromSystemServer();
-            }
-        } else {
+        }
+        if (keyboardLayoutDescriptor == null) {
             throw new IllegalArgumentException("keyboardLayoutDescriptor must not be null");
+        }
+        try {
+            this.mIm.setCurrentKeyboardLayoutForInputDevice(identifier, keyboardLayoutDescriptor);
+        } catch (RemoteException ex) {
+            throw ex.rethrowFromSystemServer();
         }
     }
 
     public String[] getEnabledKeyboardLayoutsForInputDevice(InputDeviceIdentifier identifier) {
-        if (identifier != null) {
-            try {
-                return this.mIm.getEnabledKeyboardLayoutsForInputDevice(identifier);
-            } catch (RemoteException ex) {
-                throw ex.rethrowFromSystemServer();
-            }
-        } else {
+        if (identifier == null) {
             throw new IllegalArgumentException("inputDeviceDescriptor must not be null");
+        }
+        try {
+            return this.mIm.getEnabledKeyboardLayoutsForInputDevice(identifier);
+        } catch (RemoteException ex) {
+            throw ex.rethrowFromSystemServer();
         }
     }
 
     public void addKeyboardLayoutForInputDevice(InputDeviceIdentifier identifier, String keyboardLayoutDescriptor) {
         if (identifier == null) {
             throw new IllegalArgumentException("inputDeviceDescriptor must not be null");
-        } else if (keyboardLayoutDescriptor != null) {
-            try {
-                this.mIm.addKeyboardLayoutForInputDevice(identifier, keyboardLayoutDescriptor);
-            } catch (RemoteException ex) {
-                throw ex.rethrowFromSystemServer();
-            }
-        } else {
+        }
+        if (keyboardLayoutDescriptor == null) {
             throw new IllegalArgumentException("keyboardLayoutDescriptor must not be null");
+        }
+        try {
+            this.mIm.addKeyboardLayoutForInputDevice(identifier, keyboardLayoutDescriptor);
+        } catch (RemoteException ex) {
+            throw ex.rethrowFromSystemServer();
         }
     }
 
     public void removeKeyboardLayoutForInputDevice(InputDeviceIdentifier identifier, String keyboardLayoutDescriptor) {
         if (identifier == null) {
             throw new IllegalArgumentException("inputDeviceDescriptor must not be null");
-        } else if (keyboardLayoutDescriptor != null) {
-            try {
-                this.mIm.removeKeyboardLayoutForInputDevice(identifier, keyboardLayoutDescriptor);
-            } catch (RemoteException ex) {
-                throw ex.rethrowFromSystemServer();
-            }
-        } else {
+        }
+        if (keyboardLayoutDescriptor == null) {
             throw new IllegalArgumentException("keyboardLayoutDescriptor must not be null");
+        }
+        try {
+            this.mIm.removeKeyboardLayoutForInputDevice(identifier, keyboardLayoutDescriptor);
+        } catch (RemoteException ex) {
+            throw ex.rethrowFromSystemServer();
         }
     }
 
@@ -408,7 +390,8 @@ public final class InputManager {
 
     public int getPointerSpeed(Context context) {
         try {
-            return Settings.System.getInt(context.getContentResolver(), Settings.System.POINTER_SPEED);
+            int speed = Settings.System.getInt(context.getContentResolver(), Settings.System.POINTER_SPEED);
+            return speed;
         } catch (Settings.SettingNotFoundException e) {
             return 0;
         }
@@ -450,14 +433,14 @@ public final class InputManager {
     public boolean injectInputEvent(InputEvent event, int mode) {
         if (event == null) {
             throw new IllegalArgumentException("event must not be null");
-        } else if (mode == 0 || mode == 2 || mode == 1) {
-            try {
-                return this.mIm.injectInputEvent(event, mode);
-            } catch (RemoteException ex) {
-                throw ex.rethrowFromSystemServer();
-            }
-        } else {
+        }
+        if (mode != 0 && mode != 2 && mode != 1) {
             throw new IllegalArgumentException("mode is invalid");
+        }
+        try {
+            return this.mIm.injectInputEvent(event, mode);
+        } catch (RemoteException ex) {
+            throw ex.rethrowFromSystemServer();
         }
     }
 
@@ -508,8 +491,8 @@ public final class InputManager {
             try {
                 int[] ids = this.mIm.getInputDeviceIds();
                 this.mInputDevices = new SparseArray<>();
-                for (int put : ids) {
-                    this.mInputDevices.put(put, null);
+                for (int i : ids) {
+                    this.mInputDevices.put(i, null);
                 }
             } catch (RemoteException ex2) {
                 throw ex2.rethrowFromSystemServer();
@@ -517,7 +500,7 @@ public final class InputManager {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void onInputDevicesChanged(int[] deviceIdAndGeneration) {
         synchronized (this.mInputDevicesLock) {
             int i = this.mInputDevices.size();
@@ -535,15 +518,18 @@ public final class InputManager {
             for (int i2 = 0; i2 < deviceIdAndGeneration.length; i2 += 2) {
                 int deviceId2 = deviceIdAndGeneration[i2];
                 int index = this.mInputDevices.indexOfKey(deviceId2);
-                if (index >= 0) {
-                    InputDevice device = this.mInputDevices.valueAt(index);
-                    if (!(device == null || device.getGeneration() == deviceIdAndGeneration[i2 + 1])) {
-                        this.mInputDevices.setValueAt(index, null);
-                        sendMessageToInputDeviceListenersLocked(3, deviceId2);
-                    }
-                } else {
+                if (index < 0) {
                     this.mInputDevices.put(deviceId2, null);
                     sendMessageToInputDeviceListenersLocked(1, deviceId2);
+                } else {
+                    InputDevice device = this.mInputDevices.valueAt(index);
+                    if (device != null) {
+                        int generation = deviceIdAndGeneration[i2 + 1];
+                        if (device.getGeneration() != generation) {
+                            this.mInputDevices.setValueAt(index, null);
+                            sendMessageToInputDeviceListenersLocked(3, deviceId2);
+                        }
+                    }
                 }
             }
         }
@@ -566,12 +552,13 @@ public final class InputManager {
         return false;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void onTabletModeChanged(long whenNanos, boolean inTabletMode) {
         synchronized (this.mTabletModeLock) {
             int N = this.mOnTabletModeChangedListeners.size();
             for (int i = 0; i < N; i++) {
-                this.mOnTabletModeChangedListeners.get(i).sendTabletModeChanged(whenNanos, inTabletMode);
+                OnTabletModeChangedListenerDelegate listener = this.mOnTabletModeChangedListeners.get(i);
+                listener.sendTabletModeChanged(whenNanos, inTabletMode);
             }
         }
     }
@@ -580,24 +567,27 @@ public final class InputManager {
         return new InputDeviceVibrator(deviceId);
     }
 
+    /* loaded from: classes.dex */
     private final class InputDevicesChangedListener extends IInputDevicesChangedListener.Stub {
         private InputDevicesChangedListener() {
         }
 
+        @Override // android.hardware.input.IInputDevicesChangedListener
         public void onInputDevicesChanged(int[] deviceIdAndGeneration) throws RemoteException {
             InputManager.this.onInputDevicesChanged(deviceIdAndGeneration);
         }
     }
 
+    /* loaded from: classes.dex */
     private static final class InputDeviceListenerDelegate extends Handler {
         public final InputDeviceListener mListener;
 
-        /* JADX INFO: super call moved to the top of the method (can break code semantics) */
         public InputDeviceListenerDelegate(InputDeviceListener listener, Handler handler) {
             super(handler != null ? handler.getLooper() : Looper.myLooper());
             this.mListener = listener;
         }
 
+        @Override // android.p007os.Handler
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 1:
@@ -615,20 +605,22 @@ public final class InputManager {
         }
     }
 
+    /* loaded from: classes.dex */
     private final class TabletModeChangedListener extends ITabletModeChangedListener.Stub {
         private TabletModeChangedListener() {
         }
 
+        @Override // android.hardware.input.ITabletModeChangedListener
         public void onTabletModeChanged(long whenNanos, boolean inTabletMode) {
             InputManager.this.onTabletModeChanged(whenNanos, inTabletMode);
         }
     }
 
+    /* loaded from: classes.dex */
     private static final class OnTabletModeChangedListenerDelegate extends Handler {
         private static final int MSG_TABLET_MODE_CHANGED = 0;
         public final OnTabletModeChangedListener mListener;
 
-        /* JADX INFO: super call moved to the top of the method (can break code semantics) */
         public OnTabletModeChangedListenerDelegate(OnTabletModeChangedListener listener, Handler handler) {
             super(handler != null ? handler.getLooper() : Looper.myLooper());
             this.mListener = listener;
@@ -636,20 +628,24 @@ public final class InputManager {
 
         public void sendTabletModeChanged(long whenNanos, boolean inTabletMode) {
             SomeArgs args = SomeArgs.obtain();
-            args.argi1 = (int) (-1 & whenNanos);
+            args.argi1 = (int) ((-1) & whenNanos);
             args.argi2 = (int) (whenNanos >> 32);
             args.arg1 = Boolean.valueOf(inTabletMode);
             obtainMessage(0, args).sendToTarget();
         }
 
+        @Override // android.p007os.Handler
         public void handleMessage(Message msg) {
             if (msg.what == 0) {
                 SomeArgs args = (SomeArgs) msg.obj;
-                this.mListener.onTabletModeChanged((((long) args.argi1) & 4294967295L) | (((long) args.argi2) << 32), ((Boolean) args.arg1).booleanValue());
+                long whenNanos = (args.argi1 & 4294967295L) | (args.argi2 << 32);
+                boolean inTabletMode = ((Boolean) args.arg1).booleanValue();
+                this.mListener.onTabletModeChanged(whenNanos, inTabletMode);
             }
         }
     }
 
+    /* loaded from: classes.dex */
     private final class InputDeviceVibrator extends Vibrator {
         private final int mDeviceId;
         private final Binder mToken = new Binder();
@@ -658,26 +654,30 @@ public final class InputManager {
             this.mDeviceId = deviceId;
         }
 
+        @Override // android.p007os.Vibrator
         public boolean hasVibrator() {
             return true;
         }
 
+        @Override // android.p007os.Vibrator
         public boolean hasAmplitudeControl() {
             return false;
         }
 
+        @Override // android.p007os.Vibrator
         public void vibrate(int uid, String opPkg, VibrationEffect effect, String reason, AudioAttributes attributes) {
             long[] pattern;
             int repeat;
             if (effect instanceof VibrationEffect.OneShot) {
-                pattern = new long[]{0, ((VibrationEffect.OneShot) effect).getDuration()};
+                VibrationEffect.OneShot oneShot = (VibrationEffect.OneShot) effect;
+                pattern = new long[]{0, oneShot.getDuration()};
                 repeat = -1;
-            } else if ((effect instanceof VibrationEffect.Waveform) != 0) {
+            } else if (effect instanceof VibrationEffect.Waveform) {
                 VibrationEffect.Waveform waveform = (VibrationEffect.Waveform) effect;
                 pattern = waveform.getTimings();
                 repeat = waveform.getRepeatIndex();
             } else {
-                Log.w(InputManager.TAG, "Pre-baked effects aren't supported on input devices");
+                Log.m64w(InputManager.TAG, "Pre-baked effects aren't supported on input devices");
                 return;
             }
             try {
@@ -687,6 +687,7 @@ public final class InputManager {
             }
         }
 
+        @Override // android.p007os.Vibrator
         public void cancel() {
             try {
                 InputManager.this.mIm.cancelVibrate(this.mDeviceId, this.mToken);

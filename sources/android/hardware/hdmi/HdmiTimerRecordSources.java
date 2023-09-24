@@ -5,6 +5,7 @@ import android.hardware.hdmi.HdmiRecordSources;
 import android.util.Log;
 
 @SystemApi
+/* loaded from: classes.dex */
 public class HdmiTimerRecordSources {
     private static final int EXTERNAL_SOURCE_SPECIFIER_EXTERNAL_PHYSICAL_ADDRESS = 5;
     private static final int EXTERNAL_SOURCE_SPECIFIER_EXTERNAL_PLUG = 4;
@@ -44,10 +45,10 @@ public class HdmiTimerRecordSources {
 
     private static void checkTimerRecordSourceInputs(TimerInfo timerInfo, HdmiRecordSources.RecordSource source) {
         if (timerInfo == null) {
-            Log.w(TAG, "TimerInfo should not be null.");
+            Log.m64w(TAG, "TimerInfo should not be null.");
             throw new IllegalArgumentException("TimerInfo should not be null.");
         } else if (source == null) {
-            Log.w(TAG, "source should not be null.");
+            Log.m64w(TAG, "source should not be null.");
             throw new IllegalArgumentException("source should not be null.");
         }
     }
@@ -78,6 +79,7 @@ public class HdmiTimerRecordSources {
         }
     }
 
+    /* loaded from: classes.dex */
     static class TimeUnit {
         final int mHour;
         final int mMinute;
@@ -87,19 +89,21 @@ public class HdmiTimerRecordSources {
             this.mMinute = minute;
         }
 
-        /* access modifiers changed from: package-private */
-        public int toByteArray(byte[] data, int index) {
+        int toByteArray(byte[] data, int index) {
             data[index] = toBcdByte(this.mHour);
             data[index + 1] = toBcdByte(this.mMinute);
             return 2;
         }
 
         static byte toBcdByte(int value) {
-            return (byte) ((((value / 10) % 10) << 4) | (value % 10));
+            int digitOfTen = (value / 10) % 10;
+            int digitOfOne = value % 10;
+            return (byte) ((digitOfTen << 4) | digitOfOne);
         }
     }
 
     @SystemApi
+    /* loaded from: classes.dex */
     public static final class Time extends TimeUnit {
         private Time(int hour, int minute) {
             super(hour, minute);
@@ -107,6 +111,7 @@ public class HdmiTimerRecordSources {
     }
 
     @SystemApi
+    /* loaded from: classes.dex */
     public static final class Duration extends TimeUnit {
         private Duration(int hour, int minute) {
             super(hour, minute);
@@ -121,14 +126,15 @@ public class HdmiTimerRecordSources {
         } else {
             checkTimeValue(startTime.mHour, startTime.mMinute);
             checkDurationValue(duration.mHour, duration.mMinute);
-            if (recordingSequence == 0 || (recordingSequence & -128) == 0) {
-                return new TimerInfo(dayOfMonth, monthOfYear, startTime, duration, recordingSequence);
+            if (recordingSequence != 0 && (recordingSequence & (-128)) != 0) {
+                throw new IllegalArgumentException("Invalid reecording sequence value:" + recordingSequence);
             }
-            throw new IllegalArgumentException("Invalid reecording sequence value:" + recordingSequence);
+            return new TimerInfo(dayOfMonth, monthOfYear, startTime, duration, recordingSequence);
         }
     }
 
     @SystemApi
+    /* loaded from: classes.dex */
     public static final class TimerInfo {
         private static final int BASIC_INFO_SIZE = 7;
         private static final int DAY_OF_MONTH_SIZE = 1;
@@ -150,8 +156,7 @@ public class HdmiTimerRecordSources {
             this.mRecordingSequence = recordingSequence;
         }
 
-        /* access modifiers changed from: package-private */
-        public int toByteArray(byte[] data, int index) {
+        int toByteArray(byte[] data, int index) {
             data[index] = (byte) this.mDayOfMonth;
             int index2 = index + 1;
             data[index2] = (byte) this.mMonthOfYear;
@@ -161,13 +166,13 @@ public class HdmiTimerRecordSources {
             return getDataSize();
         }
 
-        /* access modifiers changed from: package-private */
-        public int getDataSize() {
+        int getDataSize() {
             return 7;
         }
     }
 
     @SystemApi
+    /* loaded from: classes.dex */
     public static final class TimerRecordSource {
         private final HdmiRecordSources.RecordSource mRecordSource;
         private final TimerInfo mTimerInfo;
@@ -177,18 +182,17 @@ public class HdmiTimerRecordSources {
             this.mRecordSource = recordSource;
         }
 
-        /* access modifiers changed from: package-private */
-        public int getDataSize() {
+        int getDataSize() {
             return this.mTimerInfo.getDataSize() + this.mRecordSource.getDataSize(false);
         }
 
-        /* access modifiers changed from: package-private */
-        public int toByteArray(byte[] data, int index) {
+        int toByteArray(byte[] data, int index) {
             this.mRecordSource.toByteArray(false, data, index + this.mTimerInfo.toByteArray(data, index));
             return getDataSize();
         }
     }
 
+    /* loaded from: classes.dex */
     private static class ExternalSourceDecorator extends HdmiRecordSources.RecordSource {
         private final int mExternalSourceSpecifier;
         private final HdmiRecordSources.RecordSource mRecordSource;
@@ -199,8 +203,8 @@ public class HdmiTimerRecordSources {
             this.mExternalSourceSpecifier = externalSourceSpecifier;
         }
 
-        /* access modifiers changed from: package-private */
-        public int extraParamToByteArray(byte[] data, int index) {
+        @Override // android.hardware.hdmi.HdmiRecordSources.RecordSource
+        int extraParamToByteArray(byte[] data, int index) {
             data[index] = (byte) this.mExternalSourceSpecifier;
             this.mRecordSource.toByteArray(false, data, index + 1);
             return getDataSize(false);
@@ -212,30 +216,12 @@ public class HdmiTimerRecordSources {
         int recordSourceSize = recordSource.length - 7;
         switch (sourcetype) {
             case 1:
-                if (7 == recordSourceSize) {
-                    return true;
-                }
-                return false;
+                return 7 == recordSourceSize;
             case 2:
-                if (4 == recordSourceSize) {
-                    return true;
-                }
-                return false;
+                return 4 == recordSourceSize;
             case 3:
-                byte specifier = recordSource[7];
-                if (specifier == 4) {
-                    if (2 == recordSourceSize) {
-                        return true;
-                    }
-                    return false;
-                } else if (specifier != 5) {
-                    return false;
-                } else {
-                    if (3 == recordSourceSize) {
-                        return true;
-                    }
-                    return false;
-                }
+                int specifier = recordSource[7];
+                return specifier == 4 ? 2 == recordSourceSize : specifier == 5 && 3 == recordSourceSize;
             default:
                 return false;
         }

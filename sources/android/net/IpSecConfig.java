@@ -1,15 +1,20 @@
 package android.net;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.annotations.VisibleForTesting;
 
+/* loaded from: classes3.dex */
 public final class IpSecConfig implements Parcelable {
-    public static final Parcelable.Creator<IpSecConfig> CREATOR = new Parcelable.Creator<IpSecConfig>() {
+    public static final Parcelable.Creator<IpSecConfig> CREATOR = new Parcelable.Creator<IpSecConfig>() { // from class: android.net.IpSecConfig.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public IpSecConfig createFromParcel(Parcel in) {
             return new IpSecConfig(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public IpSecConfig[] newArray(int size) {
             return new IpSecConfig[size];
         }
@@ -151,10 +156,12 @@ public final class IpSecConfig implements Parcelable {
         return this.mXfrmInterfaceId;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(this.mMode);
         out.writeString(this.mSourceAddress);
@@ -272,13 +279,10 @@ public final class IpSecConfig implements Parcelable {
     public static boolean equals(IpSecConfig lhs, IpSecConfig rhs) {
         if (lhs == null || rhs == null) {
             return lhs == rhs;
-        }
-        if (lhs.mMode != rhs.mMode || !lhs.mSourceAddress.equals(rhs.mSourceAddress) || !lhs.mDestinationAddress.equals(rhs.mDestinationAddress)) {
+        } else if (lhs.mMode == rhs.mMode && lhs.mSourceAddress.equals(rhs.mSourceAddress) && lhs.mDestinationAddress.equals(rhs.mDestinationAddress)) {
+            return ((lhs.mNetwork != null && lhs.mNetwork.equals(rhs.mNetwork)) || lhs.mNetwork == rhs.mNetwork) && lhs.mEncapType == rhs.mEncapType && lhs.mEncapSocketResourceId == rhs.mEncapSocketResourceId && lhs.mEncapRemotePort == rhs.mEncapRemotePort && lhs.mNattKeepaliveInterval == rhs.mNattKeepaliveInterval && lhs.mSpiResourceId == rhs.mSpiResourceId && IpSecAlgorithm.equals(lhs.mEncryption, rhs.mEncryption) && IpSecAlgorithm.equals(lhs.mAuthenticatedEncryption, rhs.mAuthenticatedEncryption) && IpSecAlgorithm.equals(lhs.mAuthentication, rhs.mAuthentication) && lhs.mMarkValue == rhs.mMarkValue && lhs.mMarkMask == rhs.mMarkMask && lhs.mXfrmInterfaceId == rhs.mXfrmInterfaceId;
+        } else {
             return false;
         }
-        if (((lhs.mNetwork != null && lhs.mNetwork.equals(rhs.mNetwork)) || lhs.mNetwork == rhs.mNetwork) && lhs.mEncapType == rhs.mEncapType && lhs.mEncapSocketResourceId == rhs.mEncapSocketResourceId && lhs.mEncapRemotePort == rhs.mEncapRemotePort && lhs.mNattKeepaliveInterval == rhs.mNattKeepaliveInterval && lhs.mSpiResourceId == rhs.mSpiResourceId && IpSecAlgorithm.equals(lhs.mEncryption, rhs.mEncryption) && IpSecAlgorithm.equals(lhs.mAuthenticatedEncryption, rhs.mAuthenticatedEncryption) && IpSecAlgorithm.equals(lhs.mAuthentication, rhs.mAuthentication) && lhs.mMarkValue == rhs.mMarkValue && lhs.mMarkMask == rhs.mMarkMask && lhs.mXfrmInterfaceId == rhs.mXfrmInterfaceId) {
-            return true;
-        }
-        return false;
     }
 }

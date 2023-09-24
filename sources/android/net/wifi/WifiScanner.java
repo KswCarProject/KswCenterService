@@ -3,15 +3,15 @@ package android.net.wifi;
 import android.annotation.SuppressLint;
 import android.annotation.SystemApi;
 import android.content.Context;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.os.Messenger;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.RemoteException;
-import android.os.WorkSource;
+import android.p007os.Bundle;
+import android.p007os.Handler;
+import android.p007os.Looper;
+import android.p007os.Message;
+import android.p007os.Messenger;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.RemoteException;
+import android.p007os.WorkSource;
 import android.util.Log;
 import android.util.SparseArray;
 import com.android.internal.util.AsyncChannel;
@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public class WifiScanner {
     private static final int BASE = 159744;
     public static final int CMD_DEREGISTER_SCAN_LISTENER = 159772;
@@ -73,8 +74,7 @@ public class WifiScanner {
     public static final int WIFI_BAND_BOTH = 3;
     public static final int WIFI_BAND_BOTH_WITH_DFS = 7;
     public static final int WIFI_BAND_UNSPECIFIED = 0;
-    /* access modifiers changed from: private */
-    public AsyncChannel mAsyncChannel;
+    private AsyncChannel mAsyncChannel;
     private Context mContext;
     private final Handler mInternalHandler;
     private int mListenerKey = 1;
@@ -83,6 +83,7 @@ public class WifiScanner {
     private IWifiScanner mService;
 
     @SystemApi
+    /* loaded from: classes3.dex */
     public interface ActionListener {
         void onFailure(int i, String str);
 
@@ -90,6 +91,7 @@ public class WifiScanner {
     }
 
     @Deprecated
+    /* loaded from: classes3.dex */
     public static class BssidInfo {
         public String bssid;
         public int frequencyHint;
@@ -98,16 +100,19 @@ public class WifiScanner {
     }
 
     @Deprecated
+    /* loaded from: classes3.dex */
     public interface BssidListener extends ActionListener {
         void onFound(ScanResult[] scanResultArr);
 
         void onLost(ScanResult[] scanResultArr);
     }
 
+    /* loaded from: classes3.dex */
     public interface PnoScanListener extends ScanListener {
         void onPnoNetworkFound(ScanResult[] scanResultArr);
     }
 
+    /* loaded from: classes3.dex */
     public interface ScanListener extends ActionListener {
         void onFullResult(ScanResult scanResult);
 
@@ -117,6 +122,7 @@ public class WifiScanner {
     }
 
     @Deprecated
+    /* loaded from: classes3.dex */
     public interface WifiChangeListener extends ActionListener {
         void onChanging(ScanResult[] scanResultArr);
 
@@ -125,24 +131,29 @@ public class WifiScanner {
 
     public List<Integer> getAvailableChannels(int band) {
         try {
-            return this.mService.getAvailableChannels(band).getIntegerArrayList(GET_AVAILABLE_CHANNELS_EXTRA);
+            Bundle bundle = this.mService.getAvailableChannels(band);
+            return bundle.getIntegerArrayList(GET_AVAILABLE_CHANNELS_EXTRA);
         } catch (RemoteException e) {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class ChannelSpec {
-        public int dwellTimeMS = 0;
         public int frequency;
         public boolean passive = false;
+        public int dwellTimeMS = 0;
 
-        public ChannelSpec(int frequency2) {
-            this.frequency = frequency2;
+        public ChannelSpec(int frequency) {
+            this.frequency = frequency;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class ScanSettings implements Parcelable {
-        public static final Parcelable.Creator<ScanSettings> CREATOR = new Parcelable.Creator<ScanSettings>() {
+        public static final Parcelable.Creator<ScanSettings> CREATOR = new Parcelable.Creator<ScanSettings>() { // from class: android.net.wifi.WifiScanner.ScanSettings.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public ScanSettings createFromParcel(Parcel in) {
                 ScanSettings settings = new ScanSettings();
                 settings.band = in.readInt();
@@ -159,7 +170,8 @@ public class WifiScanner {
                 int num_channels = in.readInt();
                 settings.channels = new ChannelSpec[num_channels];
                 for (int i = 0; i < num_channels; i++) {
-                    ChannelSpec spec = new ChannelSpec(in.readInt());
+                    int frequency = in.readInt();
+                    ChannelSpec spec = new ChannelSpec(frequency);
                     spec.dwellTimeMS = in.readInt();
                     spec.passive = in.readInt() == 1;
                     settings.channels[i] = spec;
@@ -167,11 +179,14 @@ public class WifiScanner {
                 int numNetworks = in.readInt();
                 settings.hiddenNetworks = new HiddenNetwork[numNetworks];
                 for (int i2 = 0; i2 < numNetworks; i2++) {
-                    settings.hiddenNetworks[i2] = new HiddenNetwork(in.readString());
+                    String ssid = in.readString();
+                    settings.hiddenNetworks[i2] = new HiddenNetwork(ssid);
                 }
                 return settings;
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public ScanSettings[] newArray(int size) {
                 return new ScanSettings[size];
             }
@@ -192,18 +207,21 @@ public class WifiScanner {
         public int stepCount;
         public int type = 0;
 
+        /* loaded from: classes3.dex */
         public static class HiddenNetwork {
             public String ssid;
 
-            public HiddenNetwork(String ssid2) {
-                this.ssid = ssid2;
+            public HiddenNetwork(String ssid) {
+                this.ssid = ssid;
             }
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeInt(this.band);
             dest.writeInt(this.periodInMs);
@@ -244,8 +262,11 @@ public class WifiScanner {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class ScanData implements Parcelable {
-        public static final Parcelable.Creator<ScanData> CREATOR = new Parcelable.Creator<ScanData>() {
+        public static final Parcelable.Creator<ScanData> CREATOR = new Parcelable.Creator<ScanData>() { // from class: android.net.wifi.WifiScanner.ScanData.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public ScanData createFromParcel(Parcel in) {
                 int id = in.readInt();
                 int flags = in.readInt();
@@ -259,6 +280,8 @@ public class WifiScanner {
                 return new ScanData(id, flags, bucketsScanned, bandScanned, results);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public ScanData[] newArray(int size) {
                 return new ScanData[size];
             }
@@ -293,7 +316,9 @@ public class WifiScanner {
             this.mBandScanned = s.mBandScanned;
             this.mResults = new ScanResult[s.mResults.length];
             for (int i = 0; i < s.mResults.length; i++) {
-                this.mResults[i] = new ScanResult(s.mResults[i]);
+                ScanResult result = s.mResults[i];
+                ScanResult newResult = new ScanResult(result);
+                this.mResults[i] = newResult;
             }
         }
 
@@ -317,10 +342,12 @@ public class WifiScanner {
             return this.mResults;
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             int i = 0;
             if (this.mResults != null) {
@@ -332,7 +359,8 @@ public class WifiScanner {
                 while (true) {
                     int i2 = i;
                     if (i2 < this.mResults.length) {
-                        this.mResults[i2].writeToParcel(dest, flags);
+                        ScanResult result = this.mResults[i2];
+                        result.writeToParcel(dest, flags);
                         i = i2 + 1;
                     } else {
                         return;
@@ -344,8 +372,11 @@ public class WifiScanner {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class ParcelableScanData implements Parcelable {
-        public static final Parcelable.Creator<ParcelableScanData> CREATOR = new Parcelable.Creator<ParcelableScanData>() {
+        public static final Parcelable.Creator<ParcelableScanData> CREATOR = new Parcelable.Creator<ParcelableScanData>() { // from class: android.net.wifi.WifiScanner.ParcelableScanData.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public ParcelableScanData createFromParcel(Parcel in) {
                 int n = in.readInt();
                 ScanData[] results = new ScanData[n];
@@ -355,6 +386,8 @@ public class WifiScanner {
                 return new ParcelableScanData(results);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public ParcelableScanData[] newArray(int size) {
                 return new ParcelableScanData[size];
             }
@@ -369,10 +402,12 @@ public class WifiScanner {
             return this.mResults;
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             int i = 0;
             if (this.mResults != null) {
@@ -380,7 +415,8 @@ public class WifiScanner {
                 while (true) {
                     int i2 = i;
                     if (i2 < this.mResults.length) {
-                        this.mResults[i2].writeToParcel(dest, flags);
+                        ScanData result = this.mResults[i2];
+                        result.writeToParcel(dest, flags);
                         i = i2 + 1;
                     } else {
                         return;
@@ -392,8 +428,11 @@ public class WifiScanner {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class ParcelableScanResults implements Parcelable {
-        public static final Parcelable.Creator<ParcelableScanResults> CREATOR = new Parcelable.Creator<ParcelableScanResults>() {
+        public static final Parcelable.Creator<ParcelableScanResults> CREATOR = new Parcelable.Creator<ParcelableScanResults>() { // from class: android.net.wifi.WifiScanner.ParcelableScanResults.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public ParcelableScanResults createFromParcel(Parcel in) {
                 int n = in.readInt();
                 ScanResult[] results = new ScanResult[n];
@@ -403,6 +442,8 @@ public class WifiScanner {
                 return new ParcelableScanResults(results);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public ParcelableScanResults[] newArray(int size) {
                 return new ParcelableScanResults[size];
             }
@@ -417,10 +458,12 @@ public class WifiScanner {
             return this.mResults;
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             int i = 0;
             if (this.mResults != null) {
@@ -428,7 +471,8 @@ public class WifiScanner {
                 while (true) {
                     int i2 = i;
                     if (i2 < this.mResults.length) {
-                        this.mResults[i2].writeToParcel(dest, flags);
+                        ScanResult result = this.mResults[i2];
+                        result.writeToParcel(dest, flags);
                         i = i2 + 1;
                     } else {
                         return;
@@ -440,15 +484,14 @@ public class WifiScanner {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class PnoSettings implements Parcelable {
-        public static final Parcelable.Creator<PnoSettings> CREATOR = new Parcelable.Creator<PnoSettings>() {
+        public static final Parcelable.Creator<PnoSettings> CREATOR = new Parcelable.Creator<PnoSettings>() { // from class: android.net.wifi.WifiScanner.PnoSettings.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public PnoSettings createFromParcel(Parcel in) {
                 PnoSettings settings = new PnoSettings();
-                boolean z = true;
-                if (in.readInt() != 1) {
-                    z = false;
-                }
-                settings.isConnected = z;
+                settings.isConnected = in.readInt() == 1;
                 settings.min5GHzRssi = in.readInt();
                 settings.min24GHzRssi = in.readInt();
                 settings.initialScoreMax = in.readInt();
@@ -459,7 +502,8 @@ public class WifiScanner {
                 int numNetworks = in.readInt();
                 settings.networkList = new PnoNetwork[numNetworks];
                 for (int i = 0; i < numNetworks; i++) {
-                    PnoNetwork network = new PnoNetwork(in.readString());
+                    String ssid = in.readString();
+                    PnoNetwork network = new PnoNetwork(ssid);
                     network.flags = in.readByte();
                     network.authBitField = in.readByte();
                     network.frequencies = in.createIntArray();
@@ -468,6 +512,8 @@ public class WifiScanner {
                 return settings;
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public PnoSettings[] newArray(int size) {
                 return new PnoSettings[size];
             }
@@ -482,6 +528,7 @@ public class WifiScanner {
         public int sameNetworkBonus;
         public int secureBonus;
 
+        /* loaded from: classes3.dex */
         public static class PnoNetwork {
             public static final byte AUTH_CODE_EAPOL = 4;
             public static final byte AUTH_CODE_OPEN = 1;
@@ -491,20 +538,22 @@ public class WifiScanner {
             public static final byte FLAG_G_BAND = 4;
             public static final byte FLAG_SAME_NETWORK = 16;
             public static final byte FLAG_STRICT_MATCH = 8;
-            public byte authBitField = 0;
-            public byte flags = 0;
-            public int[] frequencies = new int[0];
             public String ssid;
+            public byte flags = 0;
+            public byte authBitField = 0;
+            public int[] frequencies = new int[0];
 
-            public PnoNetwork(String ssid2) {
-                this.ssid = ssid2;
+            public PnoNetwork(String ssid) {
+                this.ssid = ssid;
             }
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeInt(this.isConnected ? 1 : 0);
             dest.writeInt(this.min5GHzRssi);
@@ -543,85 +592,89 @@ public class WifiScanner {
     public void registerScanListener(ScanListener listener) {
         Preconditions.checkNotNull(listener, "listener cannot be null");
         int key = addListener(listener);
-        if (key != 0) {
-            validateChannel();
-            this.mAsyncChannel.sendMessage(CMD_REGISTER_SCAN_LISTENER, 0, key);
+        if (key == 0) {
+            return;
         }
+        validateChannel();
+        this.mAsyncChannel.sendMessage(CMD_REGISTER_SCAN_LISTENER, 0, key);
     }
 
     public void deregisterScanListener(ScanListener listener) {
         Preconditions.checkNotNull(listener, "listener cannot be null");
-        int key = removeListener((Object) listener);
-        if (key != 0) {
-            validateChannel();
-            this.mAsyncChannel.sendMessage(CMD_DEREGISTER_SCAN_LISTENER, 0, key);
+        int key = removeListener(listener);
+        if (key == 0) {
+            return;
         }
+        validateChannel();
+        this.mAsyncChannel.sendMessage(CMD_DEREGISTER_SCAN_LISTENER, 0, key);
     }
 
     public void startBackgroundScan(ScanSettings settings, ScanListener listener) {
-        startBackgroundScan(settings, listener, (WorkSource) null);
+        startBackgroundScan(settings, listener, null);
     }
 
     public void startBackgroundScan(ScanSettings settings, ScanListener listener, WorkSource workSource) {
         Preconditions.checkNotNull(listener, "listener cannot be null");
         int key = addListener(listener);
-        if (key != 0) {
-            validateChannel();
-            Bundle scanParams = new Bundle();
-            scanParams.putParcelable("ScanSettings", settings);
-            scanParams.putParcelable(SCAN_PARAMS_WORK_SOURCE_KEY, workSource);
-            scanParams.putString(REQUEST_PACKAGE_NAME_KEY, this.mContext.getOpPackageName());
-            this.mAsyncChannel.sendMessage(CMD_START_BACKGROUND_SCAN, 0, key, scanParams);
+        if (key == 0) {
+            return;
         }
+        validateChannel();
+        Bundle scanParams = new Bundle();
+        scanParams.putParcelable("ScanSettings", settings);
+        scanParams.putParcelable(SCAN_PARAMS_WORK_SOURCE_KEY, workSource);
+        scanParams.putString(REQUEST_PACKAGE_NAME_KEY, this.mContext.getOpPackageName());
+        this.mAsyncChannel.sendMessage(CMD_START_BACKGROUND_SCAN, 0, key, scanParams);
     }
 
     public void stopBackgroundScan(ScanListener listener) {
         Preconditions.checkNotNull(listener, "listener cannot be null");
-        int key = removeListener((Object) listener);
-        if (key != 0) {
-            validateChannel();
-            Bundle scanParams = new Bundle();
-            scanParams.putString(REQUEST_PACKAGE_NAME_KEY, this.mContext.getOpPackageName());
-            this.mAsyncChannel.sendMessage(CMD_STOP_BACKGROUND_SCAN, 0, key, scanParams);
+        int key = removeListener(listener);
+        if (key == 0) {
+            return;
         }
+        validateChannel();
+        Bundle scanParams = new Bundle();
+        scanParams.putString(REQUEST_PACKAGE_NAME_KEY, this.mContext.getOpPackageName());
+        this.mAsyncChannel.sendMessage(CMD_STOP_BACKGROUND_SCAN, 0, key, scanParams);
     }
 
     public boolean getScanResults() {
         validateChannel();
         Bundle scanParams = new Bundle();
         scanParams.putString(REQUEST_PACKAGE_NAME_KEY, this.mContext.getOpPackageName());
-        if (this.mAsyncChannel.sendMessageSynchronously(CMD_GET_SCAN_RESULTS, 0, 0, scanParams).what == 159761) {
-            return true;
-        }
-        return false;
+        Message reply = this.mAsyncChannel.sendMessageSynchronously(CMD_GET_SCAN_RESULTS, 0, 0, scanParams);
+        return reply.what == 159761;
     }
 
     public void startScan(ScanSettings settings, ScanListener listener) {
-        startScan(settings, listener, (WorkSource) null);
+        startScan(settings, listener, null);
     }
 
     public void startScan(ScanSettings settings, ScanListener listener, WorkSource workSource) {
         Preconditions.checkNotNull(listener, "listener cannot be null");
         int key = addListener(listener);
-        if (key != 0) {
-            validateChannel();
-            Bundle scanParams = new Bundle();
-            scanParams.putParcelable("ScanSettings", settings);
-            scanParams.putParcelable(SCAN_PARAMS_WORK_SOURCE_KEY, workSource);
-            scanParams.putString(REQUEST_PACKAGE_NAME_KEY, this.mContext.getOpPackageName());
-            this.mAsyncChannel.sendMessage(CMD_START_SINGLE_SCAN, 0, key, scanParams);
+        if (key == 0) {
+            return;
         }
+        validateChannel();
+        Bundle scanParams = new Bundle();
+        scanParams.putParcelable("ScanSettings", settings);
+        scanParams.putParcelable(SCAN_PARAMS_WORK_SOURCE_KEY, workSource);
+        scanParams.putString(REQUEST_PACKAGE_NAME_KEY, this.mContext.getOpPackageName());
+        this.mAsyncChannel.sendMessage(CMD_START_SINGLE_SCAN, 0, key, scanParams);
     }
 
     public void stopScan(ScanListener listener) {
         Preconditions.checkNotNull(listener, "listener cannot be null");
-        int key = removeListener((Object) listener);
-        if (key != 0) {
-            validateChannel();
-            Bundle scanParams = new Bundle();
-            scanParams.putString(REQUEST_PACKAGE_NAME_KEY, this.mContext.getOpPackageName());
-            this.mAsyncChannel.sendMessage(CMD_STOP_SINGLE_SCAN, 0, key, scanParams);
+        int key = removeListener(listener);
+        if (key == 0) {
+            return;
         }
+        validateChannel();
+        Bundle scanParams = new Bundle();
+        scanParams.putString(REQUEST_PACKAGE_NAME_KEY, this.mContext.getOpPackageName());
+        this.mAsyncChannel.sendMessage(CMD_STOP_SINGLE_SCAN, 0, key, scanParams);
     }
 
     public List<ScanResult> getSingleScanResults() {
@@ -633,7 +686,7 @@ public class WifiScanner {
             return Arrays.asList(((ParcelableScanResults) reply.obj).getResults());
         }
         OperationResult result = (OperationResult) reply.obj;
-        Log.e(TAG, "Error retrieving SingleScan results reason: " + result.reason + " description: " + result.description);
+        Log.m70e(TAG, "Error retrieving SingleScan results reason: " + result.reason + " description: " + result.description);
         return new ArrayList();
     }
 
@@ -649,41 +702,49 @@ public class WifiScanner {
         Preconditions.checkNotNull(listener, "listener cannot be null");
         Preconditions.checkNotNull(pnoSettings, "pnoSettings cannot be null");
         int key = addListener(listener);
-        if (key != 0) {
-            validateChannel();
-            pnoSettings.isConnected = true;
-            startPnoScan(scanSettings, pnoSettings, key);
+        if (key == 0) {
+            return;
         }
+        validateChannel();
+        pnoSettings.isConnected = true;
+        startPnoScan(scanSettings, pnoSettings, key);
     }
 
     public void startDisconnectedPnoScan(ScanSettings scanSettings, PnoSettings pnoSettings, PnoScanListener listener) {
         Preconditions.checkNotNull(listener, "listener cannot be null");
         Preconditions.checkNotNull(pnoSettings, "pnoSettings cannot be null");
         int key = addListener(listener);
-        if (key != 0) {
-            validateChannel();
-            pnoSettings.isConnected = false;
-            startPnoScan(scanSettings, pnoSettings, key);
+        if (key == 0) {
+            return;
         }
+        validateChannel();
+        pnoSettings.isConnected = false;
+        startPnoScan(scanSettings, pnoSettings, key);
     }
 
     public void stopPnoScan(ScanListener listener) {
         Preconditions.checkNotNull(listener, "listener cannot be null");
-        int key = removeListener((Object) listener);
-        if (key != 0) {
-            validateChannel();
-            this.mAsyncChannel.sendMessage(CMD_STOP_PNO_SCAN, 0, key);
+        int key = removeListener(listener);
+        if (key == 0) {
+            return;
         }
+        validateChannel();
+        this.mAsyncChannel.sendMessage(CMD_STOP_PNO_SCAN, 0, key);
     }
 
     @SystemApi
     @Deprecated
+    /* loaded from: classes3.dex */
     public static class WifiChangeSettings implements Parcelable {
-        public static final Parcelable.Creator<WifiChangeSettings> CREATOR = new Parcelable.Creator<WifiChangeSettings>() {
+        public static final Parcelable.Creator<WifiChangeSettings> CREATOR = new Parcelable.Creator<WifiChangeSettings>() { // from class: android.net.wifi.WifiScanner.WifiChangeSettings.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public WifiChangeSettings createFromParcel(Parcel in) {
                 return new WifiChangeSettings();
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public WifiChangeSettings[] newArray(int size) {
                 return new WifiChangeSettings[size];
             }
@@ -695,10 +756,12 @@ public class WifiScanner {
         public int rssiSampleSize;
         public int unchangedSampleSize;
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
         }
     }
@@ -721,8 +784,8 @@ public class WifiScanner {
         throw new UnsupportedOperationException();
     }
 
-    @SuppressLint({"Doclava125"})
     @SystemApi
+    @SuppressLint({"Doclava125"})
     @Deprecated
     public void configureWifiChange(WifiChangeSettings settings) {
         throw new UnsupportedOperationException();
@@ -730,12 +793,18 @@ public class WifiScanner {
 
     @SystemApi
     @Deprecated
+    /* loaded from: classes3.dex */
     public static class HotlistSettings implements Parcelable {
-        public static final Parcelable.Creator<HotlistSettings> CREATOR = new Parcelable.Creator<HotlistSettings>() {
+        public static final Parcelable.Creator<HotlistSettings> CREATOR = new Parcelable.Creator<HotlistSettings>() { // from class: android.net.wifi.WifiScanner.HotlistSettings.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public HotlistSettings createFromParcel(Parcel in) {
-                return new HotlistSettings();
+                HotlistSettings settings = new HotlistSettings();
+                return settings;
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public HotlistSettings[] newArray(int size) {
                 return new HotlistSettings[size];
             }
@@ -743,10 +812,12 @@ public class WifiScanner {
         public int apLostThreshold;
         public BssidInfo[] bssidInfos;
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
         }
     }
@@ -768,14 +839,13 @@ public class WifiScanner {
         this.mService = service;
         try {
             Messenger messenger = this.mService.getMessenger();
-            if (messenger != null) {
-                this.mAsyncChannel = new AsyncChannel();
-                this.mInternalHandler = new ServiceHandler(looper);
-                this.mAsyncChannel.connectSync(this.mContext, this.mInternalHandler, messenger);
-                this.mAsyncChannel.sendMessage((int) AsyncChannel.CMD_CHANNEL_FULL_CONNECTION);
-                return;
+            if (messenger == null) {
+                throw new IllegalStateException("getMessenger() returned null!  This is invalid.");
             }
-            throw new IllegalStateException("getMessenger() returned null!  This is invalid.");
+            this.mAsyncChannel = new AsyncChannel();
+            this.mInternalHandler = new ServiceHandler(looper);
+            this.mAsyncChannel.connectSync(this.mContext, this.mInternalHandler, messenger);
+            this.mAsyncChannel.sendMessage(AsyncChannel.CMD_CHANNEL_FULL_CONNECTION);
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
         }
@@ -791,11 +861,13 @@ public class WifiScanner {
         synchronized (this.mListenerMapLock) {
             boolean keyExists = getListenerKey(listener) != 0;
             int key = putListener(listener);
-            if (!keyExists) {
-                return key;
+            if (keyExists) {
+                OperationResult operationResult = new OperationResult(-5, "Outstanding request with same key not stopped yet");
+                Message message = Message.obtain(this.mInternalHandler, CMD_OP_FAILED, 0, key, operationResult);
+                message.sendToTarget();
+                return 0;
             }
-            Message.obtain(this.mInternalHandler, CMD_OP_FAILED, 0, key, new OperationResult(-5, "Outstanding request with same key not stopped yet")).sendToTarget();
-            return 0;
+            return key;
         }
     }
 
@@ -814,7 +886,7 @@ public class WifiScanner {
         return key;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public Object getListener(int key) {
         Object listener;
         if (key == 0) {
@@ -835,12 +907,11 @@ public class WifiScanner {
             if (index == -1) {
                 return 0;
             }
-            int keyAt = this.mListenerMap.keyAt(index);
-            return keyAt;
+            return this.mListenerMap.keyAt(index);
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public Object removeListener(int key) {
         Object listener;
         if (key == 0) {
@@ -856,7 +927,7 @@ public class WifiScanner {
     private int removeListener(Object listener) {
         int key = getListenerKey(listener);
         if (key == 0) {
-            Log.e(TAG, "listener cannot be found");
+            Log.m70e(TAG, "listener cannot be found");
             return key;
         }
         synchronized (this.mListenerMapLock) {
@@ -865,12 +936,19 @@ public class WifiScanner {
         return key;
     }
 
+    /* loaded from: classes3.dex */
     public static class OperationResult implements Parcelable {
-        public static final Parcelable.Creator<OperationResult> CREATOR = new Parcelable.Creator<OperationResult>() {
+        public static final Parcelable.Creator<OperationResult> CREATOR = new Parcelable.Creator<OperationResult>() { // from class: android.net.wifi.WifiScanner.OperationResult.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public OperationResult createFromParcel(Parcel in) {
-                return new OperationResult(in.readInt(), in.readString());
+                int reason = in.readInt();
+                String description = in.readString();
+                return new OperationResult(reason, description);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public OperationResult[] newArray(int size) {
                 return new OperationResult[size];
             }
@@ -878,62 +956,65 @@ public class WifiScanner {
         public String description;
         public int reason;
 
-        public OperationResult(int reason2, String description2) {
-            this.reason = reason2;
-            this.description = description2;
+        public OperationResult(int reason, String description) {
+            this.reason = reason;
+            this.description = description;
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeInt(this.reason);
             dest.writeString(this.description);
         }
     }
 
+    /* loaded from: classes3.dex */
     private class ServiceHandler extends Handler {
         ServiceHandler(Looper looper) {
             super(looper);
         }
 
+        @Override // android.p007os.Handler
         public void handleMessage(Message msg) {
             int i = msg.what;
-            if (i == 69634) {
-                return;
-            }
-            if (i != 69636) {
-                Object listener = WifiScanner.this.getListener(msg.arg2);
-                if (listener != null) {
+            if (i != 69634) {
+                if (i != 69636) {
+                    Object listener = WifiScanner.this.getListener(msg.arg2);
+                    if (listener == null) {
+                        return;
+                    }
                     switch (msg.what) {
-                        case WifiScanner.CMD_SCAN_RESULT /*159749*/:
+                        case WifiScanner.CMD_SCAN_RESULT /* 159749 */:
                             ((ScanListener) listener).onResults(((ParcelableScanData) msg.obj).getResults());
                             return;
-                        case WifiScanner.CMD_OP_SUCCEEDED /*159761*/:
+                        case WifiScanner.CMD_OP_SUCCEEDED /* 159761 */:
                             ((ActionListener) listener).onSuccess();
                             return;
-                        case WifiScanner.CMD_OP_FAILED /*159762*/:
+                        case WifiScanner.CMD_OP_FAILED /* 159762 */:
                             OperationResult result = (OperationResult) msg.obj;
                             ((ActionListener) listener).onFailure(result.reason, result.description);
-                            Object unused = WifiScanner.this.removeListener(msg.arg2);
+                            WifiScanner.this.removeListener(msg.arg2);
                             return;
-                        case WifiScanner.CMD_FULL_SCAN_RESULT /*159764*/:
+                        case WifiScanner.CMD_FULL_SCAN_RESULT /* 159764 */:
                             ((ScanListener) listener).onFullResult((ScanResult) msg.obj);
                             return;
-                        case WifiScanner.CMD_SINGLE_SCAN_COMPLETED /*159767*/:
-                            Object unused2 = WifiScanner.this.removeListener(msg.arg2);
+                        case WifiScanner.CMD_SINGLE_SCAN_COMPLETED /* 159767 */:
+                            WifiScanner.this.removeListener(msg.arg2);
                             return;
-                        case WifiScanner.CMD_PNO_NETWORK_FOUND /*159770*/:
+                        case WifiScanner.CMD_PNO_NETWORK_FOUND /* 159770 */:
                             ((PnoScanListener) listener).onPnoNetworkFound(((ParcelableScanResults) msg.obj).getResults());
                             return;
                         default:
                             return;
                     }
                 }
-            } else {
-                Log.e(WifiScanner.TAG, "Channel connection lost");
-                AsyncChannel unused3 = WifiScanner.this.mAsyncChannel = null;
+                Log.m70e(WifiScanner.TAG, "Channel connection lost");
+                WifiScanner.this.mAsyncChannel = null;
                 getLooper().quit();
             }
         }

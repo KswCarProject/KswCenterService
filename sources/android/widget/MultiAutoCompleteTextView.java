@@ -9,9 +9,11 @@ import android.text.method.QwertyKeyListener;
 import android.util.AttributeSet;
 import android.widget.AutoCompleteTextView;
 
+/* loaded from: classes4.dex */
 public class MultiAutoCompleteTextView extends AutoCompleteTextView {
     private Tokenizer mTokenizer;
 
+    /* loaded from: classes4.dex */
     public interface Tokenizer {
         int findTokenEnd(CharSequence charSequence, int i);
 
@@ -21,7 +23,7 @@ public class MultiAutoCompleteTextView extends AutoCompleteTextView {
     }
 
     public MultiAutoCompleteTextView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public MultiAutoCompleteTextView(Context context, AttributeSet attrs) {
@@ -36,75 +38,86 @@ public class MultiAutoCompleteTextView extends AutoCompleteTextView {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    /* access modifiers changed from: package-private */
-    public void finishInit() {
+    void finishInit() {
     }
 
     public void setTokenizer(Tokenizer t) {
         this.mTokenizer = t;
     }
 
-    /* access modifiers changed from: protected */
-    public void performFiltering(CharSequence text, int keyCode) {
+    @Override // android.widget.AutoCompleteTextView
+    protected void performFiltering(CharSequence text, int keyCode) {
         if (enoughToFilter()) {
             int end = getSelectionEnd();
-            performFiltering(text, this.mTokenizer.findTokenStart(text, end), end, keyCode);
+            int start = this.mTokenizer.findTokenStart(text, end);
+            performFiltering(text, start, end, keyCode);
             return;
         }
         dismissDropDown();
         Filter f = getFilter();
         if (f != null) {
-            f.filter((CharSequence) null);
+            f.filter(null);
         }
     }
 
+    @Override // android.widget.AutoCompleteTextView
     public boolean enoughToFilter() {
         Editable text = getText();
         int end = getSelectionEnd();
-        if (end < 0 || this.mTokenizer == null || end - this.mTokenizer.findTokenStart(text, end) < getThreshold()) {
+        if (end < 0 || this.mTokenizer == null) {
+            return false;
+        }
+        int start = this.mTokenizer.findTokenStart(text, end);
+        if (end - start < getThreshold()) {
             return false;
         }
         return true;
     }
 
+    @Override // android.widget.AutoCompleteTextView
     public void performValidation() {
         AutoCompleteTextView.Validator v = getValidator();
-        if (v != null && this.mTokenizer != null) {
-            Editable e = getText();
-            int i = getText().length();
-            while (i > 0) {
-                int start = this.mTokenizer.findTokenStart(e, i);
-                CharSequence sub = e.subSequence(start, this.mTokenizer.findTokenEnd(e, start));
-                if (TextUtils.isEmpty(sub)) {
-                    e.replace(start, i, "");
-                } else if (!v.isValid(sub)) {
-                    e.replace(start, i, this.mTokenizer.terminateToken(v.fixText(sub)));
-                }
-                i = start;
+        if (v == null || this.mTokenizer == null) {
+            return;
+        }
+        Editable e = getText();
+        int i = getText().length();
+        while (i > 0) {
+            int start = this.mTokenizer.findTokenStart(e, i);
+            int end = this.mTokenizer.findTokenEnd(e, start);
+            CharSequence sub = e.subSequence(start, end);
+            if (TextUtils.isEmpty(sub)) {
+                e.replace(start, i, "");
+            } else if (!v.isValid(sub)) {
+                e.replace(start, i, this.mTokenizer.terminateToken(v.fixText(sub)));
             }
+            i = start;
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void performFiltering(CharSequence text, int start, int end, int keyCode) {
+    protected void performFiltering(CharSequence text, int start, int end, int keyCode) {
         getFilter().filter(text.subSequence(start, end), this);
     }
 
-    /* access modifiers changed from: protected */
-    public void replaceText(CharSequence text) {
+    @Override // android.widget.AutoCompleteTextView
+    protected void replaceText(CharSequence text) {
         clearComposingText();
         int end = getSelectionEnd();
         int start = this.mTokenizer.findTokenStart(getText(), end);
         Editable editable = getText();
-        QwertyKeyListener.markAsReplaced(editable, start, end, TextUtils.substring(editable, start, end));
+        String original = TextUtils.substring(editable, start, end);
+        QwertyKeyListener.markAsReplaced(editable, start, end, original);
         editable.replace(start, end, this.mTokenizer.terminateToken(text));
     }
 
+    @Override // android.widget.EditText, android.widget.TextView, android.view.View
     public CharSequence getAccessibilityClassName() {
         return MultiAutoCompleteTextView.class.getName();
     }
 
+    /* loaded from: classes4.dex */
     public static class CommaTokenizer implements Tokenizer {
+        @Override // android.widget.MultiAutoCompleteTextView.Tokenizer
         public int findTokenStart(CharSequence text, int cursor) {
             int i = cursor;
             while (i > 0 && text.charAt(i - 1) != ',') {
@@ -116,6 +129,7 @@ public class MultiAutoCompleteTextView extends AutoCompleteTextView {
             return i;
         }
 
+        @Override // android.widget.MultiAutoCompleteTextView.Tokenizer
         public int findTokenEnd(CharSequence text, int cursor) {
             int len = text.length();
             for (int i = cursor; i < len; i++) {
@@ -126,6 +140,7 @@ public class MultiAutoCompleteTextView extends AutoCompleteTextView {
             return len;
         }
 
+        @Override // android.widget.MultiAutoCompleteTextView.Tokenizer
         public CharSequence terminateToken(CharSequence text) {
             int i = text.length();
             while (i > 0 && text.charAt(i - 1) == ' ') {
@@ -135,11 +150,11 @@ public class MultiAutoCompleteTextView extends AutoCompleteTextView {
                 return text;
             }
             if (text instanceof Spanned) {
-                SpannableString sp = new SpannableString(text + ", ");
+                SpannableString sp = new SpannableString(((Object) text) + ", ");
                 TextUtils.copySpansFrom((Spanned) text, 0, text.length(), Object.class, sp, 0);
                 return sp;
             }
-            return text + ", ";
+            return ((Object) text) + ", ";
         }
     }
 }

@@ -1,5 +1,6 @@
 package android.nfc;
 
+/* loaded from: classes3.dex */
 public class FormatException extends Exception {
     public FormatException() {
     }

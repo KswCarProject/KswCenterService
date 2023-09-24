@@ -3,6 +3,7 @@ package android.hardware.radio.V1_0;
 import com.android.internal.telephony.IccCardConstants;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class OperatorStatus {
     public static final int AVAILABLE = 1;
     public static final int CURRENT = 2;

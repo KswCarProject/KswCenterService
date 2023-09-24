@@ -4,14 +4,15 @@ import android.app.ActivityManager;
 import android.app.IActivityManager;
 import android.app.backup.BackupManager;
 import android.content.res.Configuration;
-import android.os.Build;
-import android.os.LocaleList;
-import android.os.RemoteException;
+import android.p007os.Build;
+import android.p007os.LocaleList;
+import android.p007os.RemoteException;
 import com.wits.pms.mirror.ActivityManagerNative;
 import com.wits.pms.mirror.ConfigurationMirror;
 import com.wits.pms.mirror.IActivityManagerMirror;
 import java.util.Locale;
 
+/* loaded from: classes2.dex */
 public class LanguageUtil {
     public static void changeSystemLanguage(Locale locale) {
         try {
@@ -29,7 +30,8 @@ public class LanguageUtil {
     }
 
     public static void changeSystemLanguageComb(Locale locale) {
-        IActivityManagerMirror activityManagerMirror = new IActivityManagerMirror(ActivityManagerNative.getDefault());
+        IActivityManager activityManager = ActivityManagerNative.getDefault();
+        IActivityManagerMirror activityManagerMirror = new IActivityManagerMirror(activityManager);
         Configuration configuration = activityManagerMirror.getConfiguration();
         configuration.setLocale(locale);
         new ConfigurationMirror(configuration).setUserSetLocale(true);

@@ -7,6 +7,7 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.TYPE, ElementType.METHOD, ElementType.CONSTRUCTOR, ElementType.FIELD})
 @Retention(RetentionPolicy.CLASS)
+/* loaded from: classes3.dex */
 public @interface RequiresApi {
     @IntRange(from = 1)
     int api() default 1;

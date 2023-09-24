@@ -1,11 +1,11 @@
 package android.telephony.ims.aidl;
 
 import android.net.Uri;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.telephony.ims.RcsEventQueryParams;
 import android.telephony.ims.RcsEventQueryResultDescriptor;
 import android.telephony.ims.RcsFileTransferCreationParams;
@@ -20,6 +20,7 @@ import android.telephony.ims.RcsQueryContinuationToken;
 import android.telephony.ims.RcsThreadQueryParams;
 import android.telephony.ims.RcsThreadQueryResultParcelable;
 
+/* loaded from: classes4.dex */
 public interface IRcs extends IInterface {
     int addIncomingMessage(int i, RcsIncomingMessageCreationParams rcsIncomingMessageCreationParams, String str) throws RemoteException;
 
@@ -201,338 +202,431 @@ public interface IRcs extends IInterface {
 
     int storeFileTransfer(int i, boolean z, RcsFileTransferCreationParams rcsFileTransferCreationParams, String str) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IRcs {
+        @Override // android.telephony.ims.aidl.IRcs
         public RcsThreadQueryResultParcelable getRcsThreads(RcsThreadQueryParams queryParams, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public RcsThreadQueryResultParcelable getRcsThreadsWithToken(RcsQueryContinuationToken continuationToken, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public RcsParticipantQueryResultParcelable getParticipants(RcsParticipantQueryParams queryParams, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public RcsParticipantQueryResultParcelable getParticipantsWithToken(RcsQueryContinuationToken continuationToken, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public RcsMessageQueryResultParcelable getMessages(RcsMessageQueryParams queryParams, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public RcsMessageQueryResultParcelable getMessagesWithToken(RcsQueryContinuationToken continuationToken, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public RcsEventQueryResultDescriptor getEvents(RcsEventQueryParams queryParams, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public RcsEventQueryResultDescriptor getEventsWithToken(RcsQueryContinuationToken continuationToken, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public boolean deleteThread(int threadId, int threadType, String callingPackage) throws RemoteException {
             return false;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public int createRcs1To1Thread(int participantId, String callingPackage) throws RemoteException {
             return 0;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public int createGroupThread(int[] participantIds, String groupName, Uri groupIcon, String callingPackage) throws RemoteException {
             return 0;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public int addIncomingMessage(int rcsThreadId, RcsIncomingMessageCreationParams rcsIncomingMessageCreationParams, String callingPackage) throws RemoteException {
             return 0;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public int addOutgoingMessage(int rcsThreadId, RcsOutgoingMessageCreationParams rcsOutgoingMessageCreationParams, String callingPackage) throws RemoteException {
             return 0;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public void deleteMessage(int rcsMessageId, boolean isIncoming, int rcsThreadId, boolean isGroup, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public RcsMessageSnippet getMessageSnippet(int rcsThreadId, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public void set1To1ThreadFallbackThreadId(int rcsThreadId, long fallbackId, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public long get1To1ThreadFallbackThreadId(int rcsThreadId, String callingPackage) throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public int get1To1ThreadOtherParticipantId(int rcsThreadId, String callingPackage) throws RemoteException {
             return 0;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public void setGroupThreadName(int rcsThreadId, String groupName, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public String getGroupThreadName(int rcsThreadId, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public void setGroupThreadIcon(int rcsThreadId, Uri groupIcon, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public Uri getGroupThreadIcon(int rcsThreadId, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public void setGroupThreadOwner(int rcsThreadId, int participantId, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public int getGroupThreadOwner(int rcsThreadId, String callingPackage) throws RemoteException {
             return 0;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public void setGroupThreadConferenceUri(int rcsThreadId, Uri conferenceUri, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public Uri getGroupThreadConferenceUri(int rcsThreadId, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public void addParticipantToGroupThread(int rcsThreadId, int participantId, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public void removeParticipantFromGroupThread(int rcsThreadId, int participantId, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public int createRcsParticipant(String canonicalAddress, String alias, String callingPackage) throws RemoteException {
             return 0;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public String getRcsParticipantCanonicalAddress(int participantId, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public String getRcsParticipantAlias(int participantId, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public void setRcsParticipantAlias(int id, String alias, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public String getRcsParticipantContactId(int participantId, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public void setRcsParticipantContactId(int participantId, String contactId, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public void setMessageSubId(int messageId, boolean isIncoming, int subId, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public int getMessageSubId(int messageId, boolean isIncoming, String callingPackage) throws RemoteException {
             return 0;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public void setMessageStatus(int messageId, boolean isIncoming, int status, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public int getMessageStatus(int messageId, boolean isIncoming, String callingPackage) throws RemoteException {
             return 0;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public void setMessageOriginationTimestamp(int messageId, boolean isIncoming, long originationTimestamp, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public long getMessageOriginationTimestamp(int messageId, boolean isIncoming, String callingPackage) throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public void setGlobalMessageIdForMessage(int messageId, boolean isIncoming, String globalId, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public String getGlobalMessageIdForMessage(int messageId, boolean isIncoming, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public void setMessageArrivalTimestamp(int messageId, boolean isIncoming, long arrivalTimestamp, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public long getMessageArrivalTimestamp(int messageId, boolean isIncoming, String callingPackage) throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public void setMessageSeenTimestamp(int messageId, boolean isIncoming, long seenTimestamp, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public long getMessageSeenTimestamp(int messageId, boolean isIncoming, String callingPackage) throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public void setTextForMessage(int messageId, boolean isIncoming, String text, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public String getTextForMessage(int messageId, boolean isIncoming, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public void setLatitudeForMessage(int messageId, boolean isIncoming, double latitude, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public double getLatitudeForMessage(int messageId, boolean isIncoming, String callingPackage) throws RemoteException {
             return 0.0d;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public void setLongitudeForMessage(int messageId, boolean isIncoming, double longitude, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public double getLongitudeForMessage(int messageId, boolean isIncoming, String callingPackage) throws RemoteException {
             return 0.0d;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public int[] getFileTransfersAttachedToMessage(int messageId, boolean isIncoming, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public int getSenderParticipant(int messageId, String callingPackage) throws RemoteException {
             return 0;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public int[] getMessageRecipients(int messageId, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public long getOutgoingDeliveryDeliveredTimestamp(int messageId, int participantId, String callingPackage) throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public void setOutgoingDeliveryDeliveredTimestamp(int messageId, int participantId, long deliveredTimestamp, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public long getOutgoingDeliverySeenTimestamp(int messageId, int participantId, String callingPackage) throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public void setOutgoingDeliverySeenTimestamp(int messageId, int participantId, long seenTimestamp, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public int getOutgoingDeliveryStatus(int messageId, int participantId, String callingPackage) throws RemoteException {
             return 0;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public void setOutgoingDeliveryStatus(int messageId, int participantId, int status, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public int storeFileTransfer(int messageId, boolean isIncoming, RcsFileTransferCreationParams fileTransferCreationParams, String callingPackage) throws RemoteException {
             return 0;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public void deleteFileTransfer(int partId, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public void setFileTransferSessionId(int partId, String sessionId, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public String getFileTransferSessionId(int partId, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public void setFileTransferContentUri(int partId, Uri contentUri, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public Uri getFileTransferContentUri(int partId, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public void setFileTransferContentType(int partId, String contentType, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public String getFileTransferContentType(int partId, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public void setFileTransferFileSize(int partId, long fileSize, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public long getFileTransferFileSize(int partId, String callingPackage) throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public void setFileTransferTransferOffset(int partId, long transferOffset, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public long getFileTransferTransferOffset(int partId, String callingPackage) throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public void setFileTransferStatus(int partId, int transferStatus, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public int getFileTransferStatus(int partId, String callingPackage) throws RemoteException {
             return 0;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public void setFileTransferWidth(int partId, int width, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public int getFileTransferWidth(int partId, String callingPackage) throws RemoteException {
             return 0;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public void setFileTransferHeight(int partId, int height, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public int getFileTransferHeight(int partId, String callingPackage) throws RemoteException {
             return 0;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public void setFileTransferLength(int partId, long length, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public long getFileTransferLength(int partId, String callingPackage) throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public void setFileTransferPreviewUri(int partId, Uri uri, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public Uri getFileTransferPreviewUri(int partId, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public void setFileTransferPreviewType(int partId, String type, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public String getFileTransferPreviewType(int partId, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public int createGroupThreadNameChangedEvent(long timestamp, int threadId, int originationParticipantId, String newName, String callingPackage) throws RemoteException {
             return 0;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public int createGroupThreadIconChangedEvent(long timestamp, int threadId, int originationParticipantId, Uri newIcon, String callingPackage) throws RemoteException {
             return 0;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public int createGroupThreadParticipantJoinedEvent(long timestamp, int threadId, int originationParticipantId, int participantId, String callingPackage) throws RemoteException {
             return 0;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public int createGroupThreadParticipantLeftEvent(long timestamp, int threadId, int originationParticipantId, int participantId, String callingPackage) throws RemoteException {
             return 0;
         }
 
+        @Override // android.telephony.ims.aidl.IRcs
         public int createParticipantAliasChangedEvent(long timestamp, int participantId, String newAlias, String callingPackage) throws RemoteException {
             return 0;
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IRcs {
         private static final String DESCRIPTOR = "android.telephony.ims.aidl.IRcs";
         static final int TRANSACTION_addIncomingMessage = 12;
@@ -635,12 +729,13 @@ public interface IRcs extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IRcs)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IRcs)) {
+                return (IRcs) iin;
             }
-            return (IRcs) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -832,1280 +927,825 @@ public interface IRcs extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v2, resolved type: android.telephony.ims.RcsThreadQueryParams} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v6, resolved type: android.telephony.ims.RcsQueryContinuationToken} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v10, resolved type: android.telephony.ims.RcsParticipantQueryParams} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v14, resolved type: android.telephony.ims.RcsQueryContinuationToken} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v18, resolved type: android.telephony.ims.RcsMessageQueryParams} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v22, resolved type: android.telephony.ims.RcsQueryContinuationToken} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v26, resolved type: android.telephony.ims.RcsEventQueryParams} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v30, resolved type: android.telephony.ims.RcsQueryContinuationToken} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v40, resolved type: android.telephony.ims.RcsIncomingMessageCreationParams} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v44, resolved type: android.telephony.ims.RcsOutgoingMessageCreationParams} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v109, resolved type: android.telephony.ims.RcsFileTransferCreationParams} */
-        /* JADX WARNING: type inference failed for: r0v1 */
-        /* JADX WARNING: type inference failed for: r0v36, types: [android.net.Uri] */
-        /* JADX WARNING: type inference failed for: r0v57, types: [android.net.Uri] */
-        /* JADX WARNING: type inference failed for: r0v64, types: [android.net.Uri] */
-        /* JADX WARNING: type inference failed for: r0v116, types: [android.net.Uri] */
-        /* JADX WARNING: type inference failed for: r0v135, types: [android.net.Uri] */
-        /* JADX WARNING: type inference failed for: r0v144 */
-        /* JADX WARNING: type inference failed for: r0v157 */
-        /* JADX WARNING: type inference failed for: r0v158 */
-        /* JADX WARNING: type inference failed for: r0v159 */
-        /* JADX WARNING: type inference failed for: r0v160 */
-        /* JADX WARNING: type inference failed for: r0v161 */
-        /* JADX WARNING: type inference failed for: r0v162 */
-        /* JADX WARNING: type inference failed for: r0v163 */
-        /* JADX WARNING: type inference failed for: r0v164 */
-        /* JADX WARNING: type inference failed for: r0v165 */
-        /* JADX WARNING: type inference failed for: r0v166 */
-        /* JADX WARNING: type inference failed for: r0v167 */
-        /* JADX WARNING: type inference failed for: r0v168 */
-        /* JADX WARNING: type inference failed for: r0v169 */
-        /* JADX WARNING: type inference failed for: r0v170 */
-        /* JADX WARNING: type inference failed for: r0v171 */
-        /* JADX WARNING: type inference failed for: r0v172 */
-        /* JADX WARNING: type inference failed for: r0v173 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r20, android.os.Parcel r21, android.os.Parcel r22, int r23) throws android.os.RemoteException {
-            /*
-                r19 = this;
-                r7 = r19
-                r8 = r20
-                r9 = r21
-                r10 = r22
-                java.lang.String r11 = "android.telephony.ims.aidl.IRcs"
-                r0 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r12 = 1
-                if (r8 == r0) goto L_0x0a90
-                r0 = 0
-                r1 = 0
-                switch(r8) {
-                    case 1: goto L_0x0a65;
-                    case 2: goto L_0x0a3a;
-                    case 3: goto L_0x0a0f;
-                    case 4: goto L_0x09e4;
-                    case 5: goto L_0x09b9;
-                    case 6: goto L_0x098e;
-                    case 7: goto L_0x0963;
-                    case 8: goto L_0x0938;
-                    case 9: goto L_0x091e;
-                    case 10: goto L_0x0908;
-                    case 11: goto L_0x08de;
-                    case 12: goto L_0x08b8;
-                    case 13: goto L_0x0892;
-                    case 14: goto L_0x0865;
-                    case 15: goto L_0x0846;
-                    case 16: goto L_0x0830;
-                    case 17: goto L_0x081a;
-                    case 18: goto L_0x0804;
-                    case 19: goto L_0x07ee;
-                    case 20: goto L_0x07d8;
-                    case 21: goto L_0x07b6;
-                    case 22: goto L_0x0797;
-                    case 23: goto L_0x0781;
-                    case 24: goto L_0x076b;
-                    case 25: goto L_0x0749;
-                    case 26: goto L_0x072a;
-                    case 27: goto L_0x0714;
-                    case 28: goto L_0x06fe;
-                    case 29: goto L_0x06e4;
-                    case 30: goto L_0x06ce;
-                    case 31: goto L_0x06b8;
-                    case 32: goto L_0x06a2;
-                    case 33: goto L_0x068c;
-                    case 34: goto L_0x0676;
-                    case 35: goto L_0x0658;
-                    case 36: goto L_0x063a;
-                    case 37: goto L_0x061c;
-                    case 38: goto L_0x05fe;
-                    case 39: goto L_0x05da;
-                    case 40: goto L_0x05bc;
-                    case 41: goto L_0x059e;
-                    case 42: goto L_0x0580;
-                    case 43: goto L_0x055c;
-                    case 44: goto L_0x053e;
-                    case 45: goto L_0x051a;
-                    case 46: goto L_0x04fc;
-                    case 47: goto L_0x04de;
-                    case 48: goto L_0x04c0;
-                    case 49: goto L_0x049c;
-                    case 50: goto L_0x047e;
-                    case 51: goto L_0x045a;
-                    case 52: goto L_0x043c;
-                    case 53: goto L_0x041e;
-                    case 54: goto L_0x0408;
-                    case 55: goto L_0x03f2;
-                    case 56: goto L_0x03d8;
-                    case 57: goto L_0x03b7;
-                    case 58: goto L_0x039d;
-                    case 59: goto L_0x037c;
-                    case 60: goto L_0x0362;
-                    case 61: goto L_0x0348;
-                    case 62: goto L_0x031a;
-                    case 63: goto L_0x0308;
-                    case 64: goto L_0x02f2;
-                    case 65: goto L_0x02dc;
-                    case 66: goto L_0x02ba;
-                    case 67: goto L_0x029b;
-                    case 68: goto L_0x0285;
-                    case 69: goto L_0x026f;
-                    case 70: goto L_0x0259;
-                    case 71: goto L_0x0243;
-                    case 72: goto L_0x022d;
-                    case 73: goto L_0x0217;
-                    case 74: goto L_0x0201;
-                    case 75: goto L_0x01eb;
-                    case 76: goto L_0x01d5;
-                    case 77: goto L_0x01bf;
-                    case 78: goto L_0x01a9;
-                    case 79: goto L_0x0193;
-                    case 80: goto L_0x017d;
-                    case 81: goto L_0x0167;
-                    case 82: goto L_0x0145;
-                    case 83: goto L_0x0126;
-                    case 84: goto L_0x0110;
-                    case 85: goto L_0x00fa;
-                    case 86: goto L_0x00ce;
-                    case 87: goto L_0x0097;
-                    case 88: goto L_0x006b;
-                    case 89: goto L_0x003f;
-                    case 90: goto L_0x001a;
-                    default: goto L_0x0015;
-                }
-            L_0x0015:
-                boolean r0 = super.onTransact(r20, r21, r22, r23)
-                return r0
-            L_0x001a:
-                r9.enforceInterface(r11)
-                long r13 = r21.readLong()
-                int r6 = r21.readInt()
-                java.lang.String r15 = r21.readString()
-                java.lang.String r16 = r21.readString()
-                r0 = r19
-                r1 = r13
-                r3 = r6
-                r4 = r15
-                r5 = r16
-                int r0 = r0.createParticipantAliasChangedEvent(r1, r3, r4, r5)
-                r22.writeNoException()
-                r10.writeInt(r0)
-                return r12
-            L_0x003f:
-                r9.enforceInterface(r11)
-                long r13 = r21.readLong()
-                int r15 = r21.readInt()
-                int r16 = r21.readInt()
-                int r17 = r21.readInt()
-                java.lang.String r18 = r21.readString()
-                r0 = r19
-                r1 = r13
-                r3 = r15
-                r4 = r16
-                r5 = r17
-                r6 = r18
-                int r0 = r0.createGroupThreadParticipantLeftEvent(r1, r3, r4, r5, r6)
-                r22.writeNoException()
-                r10.writeInt(r0)
-                return r12
-            L_0x006b:
-                r9.enforceInterface(r11)
-                long r13 = r21.readLong()
-                int r15 = r21.readInt()
-                int r16 = r21.readInt()
-                int r17 = r21.readInt()
-                java.lang.String r18 = r21.readString()
-                r0 = r19
-                r1 = r13
-                r3 = r15
-                r4 = r16
-                r5 = r17
-                r6 = r18
-                int r0 = r0.createGroupThreadParticipantJoinedEvent(r1, r3, r4, r5, r6)
-                r22.writeNoException()
-                r10.writeInt(r0)
-                return r12
-            L_0x0097:
-                r9.enforceInterface(r11)
-                long r13 = r21.readLong()
-                int r15 = r21.readInt()
-                int r16 = r21.readInt()
-                int r1 = r21.readInt()
-                if (r1 == 0) goto L_0x00b6
-                android.os.Parcelable$Creator<android.net.Uri> r0 = android.net.Uri.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r9)
-                android.net.Uri r0 = (android.net.Uri) r0
-            L_0x00b4:
-                r5 = r0
-                goto L_0x00b7
-            L_0x00b6:
-                goto L_0x00b4
-            L_0x00b7:
-                java.lang.String r17 = r21.readString()
-                r0 = r19
-                r1 = r13
-                r3 = r15
-                r4 = r16
-                r6 = r17
-                int r0 = r0.createGroupThreadIconChangedEvent(r1, r3, r4, r5, r6)
-                r22.writeNoException()
-                r10.writeInt(r0)
-                return r12
-            L_0x00ce:
-                r9.enforceInterface(r11)
-                long r13 = r21.readLong()
-                int r15 = r21.readInt()
-                int r16 = r21.readInt()
-                java.lang.String r17 = r21.readString()
-                java.lang.String r18 = r21.readString()
-                r0 = r19
-                r1 = r13
-                r3 = r15
-                r4 = r16
-                r5 = r17
-                r6 = r18
-                int r0 = r0.createGroupThreadNameChangedEvent(r1, r3, r4, r5, r6)
-                r22.writeNoException()
-                r10.writeInt(r0)
-                return r12
-            L_0x00fa:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                java.lang.String r1 = r21.readString()
-                java.lang.String r2 = r7.getFileTransferPreviewType(r0, r1)
-                r22.writeNoException()
-                r10.writeString(r2)
-                return r12
-            L_0x0110:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                java.lang.String r1 = r21.readString()
-                java.lang.String r2 = r21.readString()
-                r7.setFileTransferPreviewType(r0, r1, r2)
-                r22.writeNoException()
-                return r12
-            L_0x0126:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                java.lang.String r2 = r21.readString()
-                android.net.Uri r3 = r7.getFileTransferPreviewUri(r0, r2)
-                r22.writeNoException()
-                if (r3 == 0) goto L_0x0141
-                r10.writeInt(r12)
-                r3.writeToParcel(r10, r12)
-                goto L_0x0144
-            L_0x0141:
-                r10.writeInt(r1)
-            L_0x0144:
-                return r12
-            L_0x0145:
-                r9.enforceInterface(r11)
-                int r1 = r21.readInt()
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x015b
-                android.os.Parcelable$Creator<android.net.Uri> r0 = android.net.Uri.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r9)
-                android.net.Uri r0 = (android.net.Uri) r0
-                goto L_0x015c
-            L_0x015b:
-            L_0x015c:
-                java.lang.String r2 = r21.readString()
-                r7.setFileTransferPreviewUri(r1, r0, r2)
-                r22.writeNoException()
-                return r12
-            L_0x0167:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                java.lang.String r1 = r21.readString()
-                long r2 = r7.getFileTransferLength(r0, r1)
-                r22.writeNoException()
-                r10.writeLong(r2)
-                return r12
-            L_0x017d:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                long r1 = r21.readLong()
-                java.lang.String r3 = r21.readString()
-                r7.setFileTransferLength(r0, r1, r3)
-                r22.writeNoException()
-                return r12
-            L_0x0193:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                java.lang.String r1 = r21.readString()
-                int r2 = r7.getFileTransferHeight(r0, r1)
-                r22.writeNoException()
-                r10.writeInt(r2)
-                return r12
-            L_0x01a9:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                int r1 = r21.readInt()
-                java.lang.String r2 = r21.readString()
-                r7.setFileTransferHeight(r0, r1, r2)
-                r22.writeNoException()
-                return r12
-            L_0x01bf:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                java.lang.String r1 = r21.readString()
-                int r2 = r7.getFileTransferWidth(r0, r1)
-                r22.writeNoException()
-                r10.writeInt(r2)
-                return r12
-            L_0x01d5:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                int r1 = r21.readInt()
-                java.lang.String r2 = r21.readString()
-                r7.setFileTransferWidth(r0, r1, r2)
-                r22.writeNoException()
-                return r12
-            L_0x01eb:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                java.lang.String r1 = r21.readString()
-                int r2 = r7.getFileTransferStatus(r0, r1)
-                r22.writeNoException()
-                r10.writeInt(r2)
-                return r12
-            L_0x0201:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                int r1 = r21.readInt()
-                java.lang.String r2 = r21.readString()
-                r7.setFileTransferStatus(r0, r1, r2)
-                r22.writeNoException()
-                return r12
-            L_0x0217:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                java.lang.String r1 = r21.readString()
-                long r2 = r7.getFileTransferTransferOffset(r0, r1)
-                r22.writeNoException()
-                r10.writeLong(r2)
-                return r12
-            L_0x022d:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                long r1 = r21.readLong()
-                java.lang.String r3 = r21.readString()
-                r7.setFileTransferTransferOffset(r0, r1, r3)
-                r22.writeNoException()
-                return r12
-            L_0x0243:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                java.lang.String r1 = r21.readString()
-                long r2 = r7.getFileTransferFileSize(r0, r1)
-                r22.writeNoException()
-                r10.writeLong(r2)
-                return r12
-            L_0x0259:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                long r1 = r21.readLong()
-                java.lang.String r3 = r21.readString()
-                r7.setFileTransferFileSize(r0, r1, r3)
-                r22.writeNoException()
-                return r12
-            L_0x026f:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                java.lang.String r1 = r21.readString()
-                java.lang.String r2 = r7.getFileTransferContentType(r0, r1)
-                r22.writeNoException()
-                r10.writeString(r2)
-                return r12
-            L_0x0285:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                java.lang.String r1 = r21.readString()
-                java.lang.String r2 = r21.readString()
-                r7.setFileTransferContentType(r0, r1, r2)
-                r22.writeNoException()
-                return r12
-            L_0x029b:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                java.lang.String r2 = r21.readString()
-                android.net.Uri r3 = r7.getFileTransferContentUri(r0, r2)
-                r22.writeNoException()
-                if (r3 == 0) goto L_0x02b6
-                r10.writeInt(r12)
-                r3.writeToParcel(r10, r12)
-                goto L_0x02b9
-            L_0x02b6:
-                r10.writeInt(r1)
-            L_0x02b9:
-                return r12
-            L_0x02ba:
-                r9.enforceInterface(r11)
-                int r1 = r21.readInt()
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x02d0
-                android.os.Parcelable$Creator<android.net.Uri> r0 = android.net.Uri.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r9)
-                android.net.Uri r0 = (android.net.Uri) r0
-                goto L_0x02d1
-            L_0x02d0:
-            L_0x02d1:
-                java.lang.String r2 = r21.readString()
-                r7.setFileTransferContentUri(r1, r0, r2)
-                r22.writeNoException()
-                return r12
-            L_0x02dc:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                java.lang.String r1 = r21.readString()
-                java.lang.String r2 = r7.getFileTransferSessionId(r0, r1)
-                r22.writeNoException()
-                r10.writeString(r2)
-                return r12
-            L_0x02f2:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                java.lang.String r1 = r21.readString()
-                java.lang.String r2 = r21.readString()
-                r7.setFileTransferSessionId(r0, r1, r2)
-                r22.writeNoException()
-                return r12
-            L_0x0308:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                java.lang.String r1 = r21.readString()
-                r7.deleteFileTransfer(r0, r1)
-                r22.writeNoException()
-                return r12
-            L_0x031a:
-                r9.enforceInterface(r11)
-                int r2 = r21.readInt()
-                int r3 = r21.readInt()
-                if (r3 == 0) goto L_0x0329
-                r1 = r12
-            L_0x0329:
-                int r3 = r21.readInt()
-                if (r3 == 0) goto L_0x0338
-                android.os.Parcelable$Creator<android.telephony.ims.RcsFileTransferCreationParams> r0 = android.telephony.ims.RcsFileTransferCreationParams.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r9)
-                android.telephony.ims.RcsFileTransferCreationParams r0 = (android.telephony.ims.RcsFileTransferCreationParams) r0
-                goto L_0x0339
-            L_0x0338:
-            L_0x0339:
-                java.lang.String r3 = r21.readString()
-                int r4 = r7.storeFileTransfer(r2, r1, r0, r3)
-                r22.writeNoException()
-                r10.writeInt(r4)
-                return r12
-            L_0x0348:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                int r1 = r21.readInt()
-                int r2 = r21.readInt()
-                java.lang.String r3 = r21.readString()
-                r7.setOutgoingDeliveryStatus(r0, r1, r2, r3)
-                r22.writeNoException()
-                return r12
-            L_0x0362:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                int r1 = r21.readInt()
-                java.lang.String r2 = r21.readString()
-                int r3 = r7.getOutgoingDeliveryStatus(r0, r1, r2)
-                r22.writeNoException()
-                r10.writeInt(r3)
-                return r12
-            L_0x037c:
-                r9.enforceInterface(r11)
-                int r6 = r21.readInt()
-                int r13 = r21.readInt()
-                long r14 = r21.readLong()
-                java.lang.String r16 = r21.readString()
-                r0 = r19
-                r1 = r6
-                r2 = r13
-                r3 = r14
-                r5 = r16
-                r0.setOutgoingDeliverySeenTimestamp(r1, r2, r3, r5)
-                r22.writeNoException()
-                return r12
-            L_0x039d:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                int r1 = r21.readInt()
-                java.lang.String r2 = r21.readString()
-                long r3 = r7.getOutgoingDeliverySeenTimestamp(r0, r1, r2)
-                r22.writeNoException()
-                r10.writeLong(r3)
-                return r12
-            L_0x03b7:
-                r9.enforceInterface(r11)
-                int r6 = r21.readInt()
-                int r13 = r21.readInt()
-                long r14 = r21.readLong()
-                java.lang.String r16 = r21.readString()
-                r0 = r19
-                r1 = r6
-                r2 = r13
-                r3 = r14
-                r5 = r16
-                r0.setOutgoingDeliveryDeliveredTimestamp(r1, r2, r3, r5)
-                r22.writeNoException()
-                return r12
-            L_0x03d8:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                int r1 = r21.readInt()
-                java.lang.String r2 = r21.readString()
-                long r3 = r7.getOutgoingDeliveryDeliveredTimestamp(r0, r1, r2)
-                r22.writeNoException()
-                r10.writeLong(r3)
-                return r12
-            L_0x03f2:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                java.lang.String r1 = r21.readString()
-                int[] r2 = r7.getMessageRecipients(r0, r1)
-                r22.writeNoException()
-                r10.writeIntArray(r2)
-                return r12
-            L_0x0408:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                java.lang.String r1 = r21.readString()
-                int r2 = r7.getSenderParticipant(r0, r1)
-                r22.writeNoException()
-                r10.writeInt(r2)
-                return r12
-            L_0x041e:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x042d
-                r1 = r12
-            L_0x042d:
-                java.lang.String r2 = r21.readString()
-                int[] r3 = r7.getFileTransfersAttachedToMessage(r0, r1, r2)
-                r22.writeNoException()
-                r10.writeIntArray(r3)
-                return r12
-            L_0x043c:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x044b
-                r1 = r12
-            L_0x044b:
-                java.lang.String r2 = r21.readString()
-                double r3 = r7.getLongitudeForMessage(r0, r1, r2)
-                r22.writeNoException()
-                r10.writeDouble(r3)
-                return r12
-            L_0x045a:
-                r9.enforceInterface(r11)
-                int r6 = r21.readInt()
-                int r0 = r21.readInt()
-                if (r0 == 0) goto L_0x0469
-                r2 = r12
-                goto L_0x046a
-            L_0x0469:
-                r2 = r1
-            L_0x046a:
-                double r13 = r21.readDouble()
-                java.lang.String r15 = r21.readString()
-                r0 = r19
-                r1 = r6
-                r3 = r13
-                r5 = r15
-                r0.setLongitudeForMessage(r1, r2, r3, r5)
-                r22.writeNoException()
-                return r12
-            L_0x047e:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x048d
-                r1 = r12
-            L_0x048d:
-                java.lang.String r2 = r21.readString()
-                double r3 = r7.getLatitudeForMessage(r0, r1, r2)
-                r22.writeNoException()
-                r10.writeDouble(r3)
-                return r12
-            L_0x049c:
-                r9.enforceInterface(r11)
-                int r6 = r21.readInt()
-                int r0 = r21.readInt()
-                if (r0 == 0) goto L_0x04ab
-                r2 = r12
-                goto L_0x04ac
-            L_0x04ab:
-                r2 = r1
-            L_0x04ac:
-                double r13 = r21.readDouble()
-                java.lang.String r15 = r21.readString()
-                r0 = r19
-                r1 = r6
-                r3 = r13
-                r5 = r15
-                r0.setLatitudeForMessage(r1, r2, r3, r5)
-                r22.writeNoException()
-                return r12
-            L_0x04c0:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x04cf
-                r1 = r12
-            L_0x04cf:
-                java.lang.String r2 = r21.readString()
-                java.lang.String r3 = r7.getTextForMessage(r0, r1, r2)
-                r22.writeNoException()
-                r10.writeString(r3)
-                return r12
-            L_0x04de:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x04ed
-                r1 = r12
-            L_0x04ed:
-                java.lang.String r2 = r21.readString()
-                java.lang.String r3 = r21.readString()
-                r7.setTextForMessage(r0, r1, r2, r3)
-                r22.writeNoException()
-                return r12
-            L_0x04fc:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x050b
-                r1 = r12
-            L_0x050b:
-                java.lang.String r2 = r21.readString()
-                long r3 = r7.getMessageSeenTimestamp(r0, r1, r2)
-                r22.writeNoException()
-                r10.writeLong(r3)
-                return r12
-            L_0x051a:
-                r9.enforceInterface(r11)
-                int r6 = r21.readInt()
-                int r0 = r21.readInt()
-                if (r0 == 0) goto L_0x0529
-                r2 = r12
-                goto L_0x052a
-            L_0x0529:
-                r2 = r1
-            L_0x052a:
-                long r13 = r21.readLong()
-                java.lang.String r15 = r21.readString()
-                r0 = r19
-                r1 = r6
-                r3 = r13
-                r5 = r15
-                r0.setMessageSeenTimestamp(r1, r2, r3, r5)
-                r22.writeNoException()
-                return r12
-            L_0x053e:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x054d
-                r1 = r12
-            L_0x054d:
-                java.lang.String r2 = r21.readString()
-                long r3 = r7.getMessageArrivalTimestamp(r0, r1, r2)
-                r22.writeNoException()
-                r10.writeLong(r3)
-                return r12
-            L_0x055c:
-                r9.enforceInterface(r11)
-                int r6 = r21.readInt()
-                int r0 = r21.readInt()
-                if (r0 == 0) goto L_0x056b
-                r2 = r12
-                goto L_0x056c
-            L_0x056b:
-                r2 = r1
-            L_0x056c:
-                long r13 = r21.readLong()
-                java.lang.String r15 = r21.readString()
-                r0 = r19
-                r1 = r6
-                r3 = r13
-                r5 = r15
-                r0.setMessageArrivalTimestamp(r1, r2, r3, r5)
-                r22.writeNoException()
-                return r12
-            L_0x0580:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x058f
-                r1 = r12
-            L_0x058f:
-                java.lang.String r2 = r21.readString()
-                java.lang.String r3 = r7.getGlobalMessageIdForMessage(r0, r1, r2)
-                r22.writeNoException()
-                r10.writeString(r3)
-                return r12
-            L_0x059e:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x05ad
-                r1 = r12
-            L_0x05ad:
-                java.lang.String r2 = r21.readString()
-                java.lang.String r3 = r21.readString()
-                r7.setGlobalMessageIdForMessage(r0, r1, r2, r3)
-                r22.writeNoException()
-                return r12
-            L_0x05bc:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x05cb
-                r1 = r12
-            L_0x05cb:
-                java.lang.String r2 = r21.readString()
-                long r3 = r7.getMessageOriginationTimestamp(r0, r1, r2)
-                r22.writeNoException()
-                r10.writeLong(r3)
-                return r12
-            L_0x05da:
-                r9.enforceInterface(r11)
-                int r6 = r21.readInt()
-                int r0 = r21.readInt()
-                if (r0 == 0) goto L_0x05e9
-                r2 = r12
-                goto L_0x05ea
-            L_0x05e9:
-                r2 = r1
-            L_0x05ea:
-                long r13 = r21.readLong()
-                java.lang.String r15 = r21.readString()
-                r0 = r19
-                r1 = r6
-                r3 = r13
-                r5 = r15
-                r0.setMessageOriginationTimestamp(r1, r2, r3, r5)
-                r22.writeNoException()
-                return r12
-            L_0x05fe:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x060d
-                r1 = r12
-            L_0x060d:
-                java.lang.String r2 = r21.readString()
-                int r3 = r7.getMessageStatus(r0, r1, r2)
-                r22.writeNoException()
-                r10.writeInt(r3)
-                return r12
-            L_0x061c:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x062b
-                r1 = r12
-            L_0x062b:
-                int r2 = r21.readInt()
-                java.lang.String r3 = r21.readString()
-                r7.setMessageStatus(r0, r1, r2, r3)
-                r22.writeNoException()
-                return r12
-            L_0x063a:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x0649
-                r1 = r12
-            L_0x0649:
-                java.lang.String r2 = r21.readString()
-                int r3 = r7.getMessageSubId(r0, r1, r2)
-                r22.writeNoException()
-                r10.writeInt(r3)
-                return r12
-            L_0x0658:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x0667
-                r1 = r12
-            L_0x0667:
-                int r2 = r21.readInt()
-                java.lang.String r3 = r21.readString()
-                r7.setMessageSubId(r0, r1, r2, r3)
-                r22.writeNoException()
-                return r12
-            L_0x0676:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                java.lang.String r1 = r21.readString()
-                java.lang.String r2 = r21.readString()
-                r7.setRcsParticipantContactId(r0, r1, r2)
-                r22.writeNoException()
-                return r12
-            L_0x068c:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                java.lang.String r1 = r21.readString()
-                java.lang.String r2 = r7.getRcsParticipantContactId(r0, r1)
-                r22.writeNoException()
-                r10.writeString(r2)
-                return r12
-            L_0x06a2:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                java.lang.String r1 = r21.readString()
-                java.lang.String r2 = r21.readString()
-                r7.setRcsParticipantAlias(r0, r1, r2)
-                r22.writeNoException()
-                return r12
-            L_0x06b8:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                java.lang.String r1 = r21.readString()
-                java.lang.String r2 = r7.getRcsParticipantAlias(r0, r1)
-                r22.writeNoException()
-                r10.writeString(r2)
-                return r12
-            L_0x06ce:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                java.lang.String r1 = r21.readString()
-                java.lang.String r2 = r7.getRcsParticipantCanonicalAddress(r0, r1)
-                r22.writeNoException()
-                r10.writeString(r2)
-                return r12
-            L_0x06e4:
-                r9.enforceInterface(r11)
-                java.lang.String r0 = r21.readString()
-                java.lang.String r1 = r21.readString()
-                java.lang.String r2 = r21.readString()
-                int r3 = r7.createRcsParticipant(r0, r1, r2)
-                r22.writeNoException()
-                r10.writeInt(r3)
-                return r12
-            L_0x06fe:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                int r1 = r21.readInt()
-                java.lang.String r2 = r21.readString()
-                r7.removeParticipantFromGroupThread(r0, r1, r2)
-                r22.writeNoException()
-                return r12
-            L_0x0714:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                int r1 = r21.readInt()
-                java.lang.String r2 = r21.readString()
-                r7.addParticipantToGroupThread(r0, r1, r2)
-                r22.writeNoException()
-                return r12
-            L_0x072a:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                java.lang.String r2 = r21.readString()
-                android.net.Uri r3 = r7.getGroupThreadConferenceUri(r0, r2)
-                r22.writeNoException()
-                if (r3 == 0) goto L_0x0745
-                r10.writeInt(r12)
-                r3.writeToParcel(r10, r12)
-                goto L_0x0748
-            L_0x0745:
-                r10.writeInt(r1)
-            L_0x0748:
-                return r12
-            L_0x0749:
-                r9.enforceInterface(r11)
-                int r1 = r21.readInt()
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x075f
-                android.os.Parcelable$Creator<android.net.Uri> r0 = android.net.Uri.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r9)
-                android.net.Uri r0 = (android.net.Uri) r0
-                goto L_0x0760
-            L_0x075f:
-            L_0x0760:
-                java.lang.String r2 = r21.readString()
-                r7.setGroupThreadConferenceUri(r1, r0, r2)
-                r22.writeNoException()
-                return r12
-            L_0x076b:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                java.lang.String r1 = r21.readString()
-                int r2 = r7.getGroupThreadOwner(r0, r1)
-                r22.writeNoException()
-                r10.writeInt(r2)
-                return r12
-            L_0x0781:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                int r1 = r21.readInt()
-                java.lang.String r2 = r21.readString()
-                r7.setGroupThreadOwner(r0, r1, r2)
-                r22.writeNoException()
-                return r12
-            L_0x0797:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                java.lang.String r2 = r21.readString()
-                android.net.Uri r3 = r7.getGroupThreadIcon(r0, r2)
-                r22.writeNoException()
-                if (r3 == 0) goto L_0x07b2
-                r10.writeInt(r12)
-                r3.writeToParcel(r10, r12)
-                goto L_0x07b5
-            L_0x07b2:
-                r10.writeInt(r1)
-            L_0x07b5:
-                return r12
-            L_0x07b6:
-                r9.enforceInterface(r11)
-                int r1 = r21.readInt()
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x07cc
-                android.os.Parcelable$Creator<android.net.Uri> r0 = android.net.Uri.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r9)
-                android.net.Uri r0 = (android.net.Uri) r0
-                goto L_0x07cd
-            L_0x07cc:
-            L_0x07cd:
-                java.lang.String r2 = r21.readString()
-                r7.setGroupThreadIcon(r1, r0, r2)
-                r22.writeNoException()
-                return r12
-            L_0x07d8:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                java.lang.String r1 = r21.readString()
-                java.lang.String r2 = r7.getGroupThreadName(r0, r1)
-                r22.writeNoException()
-                r10.writeString(r2)
-                return r12
-            L_0x07ee:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                java.lang.String r1 = r21.readString()
-                java.lang.String r2 = r21.readString()
-                r7.setGroupThreadName(r0, r1, r2)
-                r22.writeNoException()
-                return r12
-            L_0x0804:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                java.lang.String r1 = r21.readString()
-                int r2 = r7.get1To1ThreadOtherParticipantId(r0, r1)
-                r22.writeNoException()
-                r10.writeInt(r2)
-                return r12
-            L_0x081a:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                java.lang.String r1 = r21.readString()
-                long r2 = r7.get1To1ThreadFallbackThreadId(r0, r1)
-                r22.writeNoException()
-                r10.writeLong(r2)
-                return r12
-            L_0x0830:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                long r1 = r21.readLong()
-                java.lang.String r3 = r21.readString()
-                r7.set1To1ThreadFallbackThreadId(r0, r1, r3)
-                r22.writeNoException()
-                return r12
-            L_0x0846:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                java.lang.String r2 = r21.readString()
-                android.telephony.ims.RcsMessageSnippet r3 = r7.getMessageSnippet(r0, r2)
-                r22.writeNoException()
-                if (r3 == 0) goto L_0x0861
-                r10.writeInt(r12)
-                r3.writeToParcel(r10, r12)
-                goto L_0x0864
-            L_0x0861:
-                r10.writeInt(r1)
-            L_0x0864:
-                return r12
-            L_0x0865:
-                r9.enforceInterface(r11)
-                int r6 = r21.readInt()
-                int r0 = r21.readInt()
-                if (r0 == 0) goto L_0x0874
-                r2 = r12
-                goto L_0x0875
-            L_0x0874:
-                r2 = r1
-            L_0x0875:
-                int r13 = r21.readInt()
-                int r0 = r21.readInt()
-                if (r0 == 0) goto L_0x0881
-                r4 = r12
-                goto L_0x0882
-            L_0x0881:
-                r4 = r1
-            L_0x0882:
-                java.lang.String r14 = r21.readString()
-                r0 = r19
-                r1 = r6
-                r3 = r13
-                r5 = r14
-                r0.deleteMessage(r1, r2, r3, r4, r5)
-                r22.writeNoException()
-                return r12
-            L_0x0892:
-                r9.enforceInterface(r11)
-                int r1 = r21.readInt()
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x08a8
-                android.os.Parcelable$Creator<android.telephony.ims.RcsOutgoingMessageCreationParams> r0 = android.telephony.ims.RcsOutgoingMessageCreationParams.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r9)
-                android.telephony.ims.RcsOutgoingMessageCreationParams r0 = (android.telephony.ims.RcsOutgoingMessageCreationParams) r0
-                goto L_0x08a9
-            L_0x08a8:
-            L_0x08a9:
-                java.lang.String r2 = r21.readString()
-                int r3 = r7.addOutgoingMessage(r1, r0, r2)
-                r22.writeNoException()
-                r10.writeInt(r3)
-                return r12
-            L_0x08b8:
-                r9.enforceInterface(r11)
-                int r1 = r21.readInt()
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x08ce
-                android.os.Parcelable$Creator<android.telephony.ims.RcsIncomingMessageCreationParams> r0 = android.telephony.ims.RcsIncomingMessageCreationParams.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r9)
-                android.telephony.ims.RcsIncomingMessageCreationParams r0 = (android.telephony.ims.RcsIncomingMessageCreationParams) r0
-                goto L_0x08cf
-            L_0x08ce:
-            L_0x08cf:
-                java.lang.String r2 = r21.readString()
-                int r3 = r7.addIncomingMessage(r1, r0, r2)
-                r22.writeNoException()
-                r10.writeInt(r3)
-                return r12
-            L_0x08de:
-                r9.enforceInterface(r11)
-                int[] r1 = r21.createIntArray()
-                java.lang.String r2 = r21.readString()
-                int r3 = r21.readInt()
-                if (r3 == 0) goto L_0x08f8
-                android.os.Parcelable$Creator<android.net.Uri> r0 = android.net.Uri.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r9)
-                android.net.Uri r0 = (android.net.Uri) r0
-                goto L_0x08f9
-            L_0x08f8:
-            L_0x08f9:
-                java.lang.String r3 = r21.readString()
-                int r4 = r7.createGroupThread(r1, r2, r0, r3)
-                r22.writeNoException()
-                r10.writeInt(r4)
-                return r12
-            L_0x0908:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                java.lang.String r1 = r21.readString()
-                int r2 = r7.createRcs1To1Thread(r0, r1)
-                r22.writeNoException()
-                r10.writeInt(r2)
-                return r12
-            L_0x091e:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                int r1 = r21.readInt()
-                java.lang.String r2 = r21.readString()
-                boolean r3 = r7.deleteThread(r0, r1, r2)
-                r22.writeNoException()
-                r10.writeInt(r3)
-                return r12
-            L_0x0938:
-                r9.enforceInterface(r11)
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x094a
-                android.os.Parcelable$Creator<android.telephony.ims.RcsQueryContinuationToken> r0 = android.telephony.ims.RcsQueryContinuationToken.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r9)
-                android.telephony.ims.RcsQueryContinuationToken r0 = (android.telephony.ims.RcsQueryContinuationToken) r0
-                goto L_0x094b
-            L_0x094a:
-            L_0x094b:
-                java.lang.String r2 = r21.readString()
-                android.telephony.ims.RcsEventQueryResultDescriptor r3 = r7.getEventsWithToken(r0, r2)
-                r22.writeNoException()
-                if (r3 == 0) goto L_0x095f
-                r10.writeInt(r12)
-                r3.writeToParcel(r10, r12)
-                goto L_0x0962
-            L_0x095f:
-                r10.writeInt(r1)
-            L_0x0962:
-                return r12
-            L_0x0963:
-                r9.enforceInterface(r11)
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x0975
-                android.os.Parcelable$Creator<android.telephony.ims.RcsEventQueryParams> r0 = android.telephony.ims.RcsEventQueryParams.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r9)
-                android.telephony.ims.RcsEventQueryParams r0 = (android.telephony.ims.RcsEventQueryParams) r0
-                goto L_0x0976
-            L_0x0975:
-            L_0x0976:
-                java.lang.String r2 = r21.readString()
-                android.telephony.ims.RcsEventQueryResultDescriptor r3 = r7.getEvents(r0, r2)
-                r22.writeNoException()
-                if (r3 == 0) goto L_0x098a
-                r10.writeInt(r12)
-                r3.writeToParcel(r10, r12)
-                goto L_0x098d
-            L_0x098a:
-                r10.writeInt(r1)
-            L_0x098d:
-                return r12
-            L_0x098e:
-                r9.enforceInterface(r11)
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x09a0
-                android.os.Parcelable$Creator<android.telephony.ims.RcsQueryContinuationToken> r0 = android.telephony.ims.RcsQueryContinuationToken.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r9)
-                android.telephony.ims.RcsQueryContinuationToken r0 = (android.telephony.ims.RcsQueryContinuationToken) r0
-                goto L_0x09a1
-            L_0x09a0:
-            L_0x09a1:
-                java.lang.String r2 = r21.readString()
-                android.telephony.ims.RcsMessageQueryResultParcelable r3 = r7.getMessagesWithToken(r0, r2)
-                r22.writeNoException()
-                if (r3 == 0) goto L_0x09b5
-                r10.writeInt(r12)
-                r3.writeToParcel(r10, r12)
-                goto L_0x09b8
-            L_0x09b5:
-                r10.writeInt(r1)
-            L_0x09b8:
-                return r12
-            L_0x09b9:
-                r9.enforceInterface(r11)
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x09cb
-                android.os.Parcelable$Creator<android.telephony.ims.RcsMessageQueryParams> r0 = android.telephony.ims.RcsMessageQueryParams.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r9)
-                android.telephony.ims.RcsMessageQueryParams r0 = (android.telephony.ims.RcsMessageQueryParams) r0
-                goto L_0x09cc
-            L_0x09cb:
-            L_0x09cc:
-                java.lang.String r2 = r21.readString()
-                android.telephony.ims.RcsMessageQueryResultParcelable r3 = r7.getMessages(r0, r2)
-                r22.writeNoException()
-                if (r3 == 0) goto L_0x09e0
-                r10.writeInt(r12)
-                r3.writeToParcel(r10, r12)
-                goto L_0x09e3
-            L_0x09e0:
-                r10.writeInt(r1)
-            L_0x09e3:
-                return r12
-            L_0x09e4:
-                r9.enforceInterface(r11)
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x09f6
-                android.os.Parcelable$Creator<android.telephony.ims.RcsQueryContinuationToken> r0 = android.telephony.ims.RcsQueryContinuationToken.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r9)
-                android.telephony.ims.RcsQueryContinuationToken r0 = (android.telephony.ims.RcsQueryContinuationToken) r0
-                goto L_0x09f7
-            L_0x09f6:
-            L_0x09f7:
-                java.lang.String r2 = r21.readString()
-                android.telephony.ims.RcsParticipantQueryResultParcelable r3 = r7.getParticipantsWithToken(r0, r2)
-                r22.writeNoException()
-                if (r3 == 0) goto L_0x0a0b
-                r10.writeInt(r12)
-                r3.writeToParcel(r10, r12)
-                goto L_0x0a0e
-            L_0x0a0b:
-                r10.writeInt(r1)
-            L_0x0a0e:
-                return r12
-            L_0x0a0f:
-                r9.enforceInterface(r11)
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x0a21
-                android.os.Parcelable$Creator<android.telephony.ims.RcsParticipantQueryParams> r0 = android.telephony.ims.RcsParticipantQueryParams.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r9)
-                android.telephony.ims.RcsParticipantQueryParams r0 = (android.telephony.ims.RcsParticipantQueryParams) r0
-                goto L_0x0a22
-            L_0x0a21:
-            L_0x0a22:
-                java.lang.String r2 = r21.readString()
-                android.telephony.ims.RcsParticipantQueryResultParcelable r3 = r7.getParticipants(r0, r2)
-                r22.writeNoException()
-                if (r3 == 0) goto L_0x0a36
-                r10.writeInt(r12)
-                r3.writeToParcel(r10, r12)
-                goto L_0x0a39
-            L_0x0a36:
-                r10.writeInt(r1)
-            L_0x0a39:
-                return r12
-            L_0x0a3a:
-                r9.enforceInterface(r11)
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x0a4c
-                android.os.Parcelable$Creator<android.telephony.ims.RcsQueryContinuationToken> r0 = android.telephony.ims.RcsQueryContinuationToken.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r9)
-                android.telephony.ims.RcsQueryContinuationToken r0 = (android.telephony.ims.RcsQueryContinuationToken) r0
-                goto L_0x0a4d
-            L_0x0a4c:
-            L_0x0a4d:
-                java.lang.String r2 = r21.readString()
-                android.telephony.ims.RcsThreadQueryResultParcelable r3 = r7.getRcsThreadsWithToken(r0, r2)
-                r22.writeNoException()
-                if (r3 == 0) goto L_0x0a61
-                r10.writeInt(r12)
-                r3.writeToParcel(r10, r12)
-                goto L_0x0a64
-            L_0x0a61:
-                r10.writeInt(r1)
-            L_0x0a64:
-                return r12
-            L_0x0a65:
-                r9.enforceInterface(r11)
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x0a77
-                android.os.Parcelable$Creator<android.telephony.ims.RcsThreadQueryParams> r0 = android.telephony.ims.RcsThreadQueryParams.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r9)
-                android.telephony.ims.RcsThreadQueryParams r0 = (android.telephony.ims.RcsThreadQueryParams) r0
-                goto L_0x0a78
-            L_0x0a77:
-            L_0x0a78:
-                java.lang.String r2 = r21.readString()
-                android.telephony.ims.RcsThreadQueryResultParcelable r3 = r7.getRcsThreads(r0, r2)
-                r22.writeNoException()
-                if (r3 == 0) goto L_0x0a8c
-                r10.writeInt(r12)
-                r3.writeToParcel(r10, r12)
-                goto L_0x0a8f
-            L_0x0a8c:
-                r10.writeInt(r1)
-            L_0x0a8f:
-                return r12
-            L_0x0a90:
-                r10.writeString(r11)
-                return r12
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.telephony.ims.aidl.IRcs.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            boolean _arg1;
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    RcsThreadQueryParams _arg0 = data.readInt() != 0 ? RcsThreadQueryParams.CREATOR.createFromParcel(data) : null;
+                    RcsThreadQueryResultParcelable _result = getRcsThreads(_arg0, data.readString());
+                    reply.writeNoException();
+                    if (_result != null) {
+                        reply.writeInt(1);
+                        _result.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    RcsQueryContinuationToken _arg02 = data.readInt() != 0 ? RcsQueryContinuationToken.CREATOR.createFromParcel(data) : null;
+                    RcsThreadQueryResultParcelable _result2 = getRcsThreadsWithToken(_arg02, data.readString());
+                    reply.writeNoException();
+                    if (_result2 != null) {
+                        reply.writeInt(1);
+                        _result2.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    RcsParticipantQueryParams _arg03 = data.readInt() != 0 ? RcsParticipantQueryParams.CREATOR.createFromParcel(data) : null;
+                    RcsParticipantQueryResultParcelable _result3 = getParticipants(_arg03, data.readString());
+                    reply.writeNoException();
+                    if (_result3 != null) {
+                        reply.writeInt(1);
+                        _result3.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    RcsQueryContinuationToken _arg04 = data.readInt() != 0 ? RcsQueryContinuationToken.CREATOR.createFromParcel(data) : null;
+                    RcsParticipantQueryResultParcelable _result4 = getParticipantsWithToken(_arg04, data.readString());
+                    reply.writeNoException();
+                    if (_result4 != null) {
+                        reply.writeInt(1);
+                        _result4.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    RcsMessageQueryParams _arg05 = data.readInt() != 0 ? RcsMessageQueryParams.CREATOR.createFromParcel(data) : null;
+                    RcsMessageQueryResultParcelable _result5 = getMessages(_arg05, data.readString());
+                    reply.writeNoException();
+                    if (_result5 != null) {
+                        reply.writeInt(1);
+                        _result5.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    RcsQueryContinuationToken _arg06 = data.readInt() != 0 ? RcsQueryContinuationToken.CREATOR.createFromParcel(data) : null;
+                    RcsMessageQueryResultParcelable _result6 = getMessagesWithToken(_arg06, data.readString());
+                    reply.writeNoException();
+                    if (_result6 != null) {
+                        reply.writeInt(1);
+                        _result6.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    RcsEventQueryParams _arg07 = data.readInt() != 0 ? RcsEventQueryParams.CREATOR.createFromParcel(data) : null;
+                    RcsEventQueryResultDescriptor _result7 = getEvents(_arg07, data.readString());
+                    reply.writeNoException();
+                    if (_result7 != null) {
+                        reply.writeInt(1);
+                        _result7.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    RcsQueryContinuationToken _arg08 = data.readInt() != 0 ? RcsQueryContinuationToken.CREATOR.createFromParcel(data) : null;
+                    RcsEventQueryResultDescriptor _result8 = getEventsWithToken(_arg08, data.readString());
+                    reply.writeNoException();
+                    if (_result8 != null) {
+                        reply.writeInt(1);
+                        _result8.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg09 = data.readInt();
+                    int _arg12 = data.readInt();
+                    String _arg2 = data.readString();
+                    boolean deleteThread = deleteThread(_arg09, _arg12, _arg2);
+                    reply.writeNoException();
+                    reply.writeInt(deleteThread ? 1 : 0);
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg010 = data.readInt();
+                    int _result9 = createRcs1To1Thread(_arg010, data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(_result9);
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    int[] _arg011 = data.createIntArray();
+                    String _arg13 = data.readString();
+                    Uri _arg22 = data.readInt() != 0 ? Uri.CREATOR.createFromParcel(data) : null;
+                    String _arg3 = data.readString();
+                    int _result10 = createGroupThread(_arg011, _arg13, _arg22, _arg3);
+                    reply.writeNoException();
+                    reply.writeInt(_result10);
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg012 = data.readInt();
+                    RcsIncomingMessageCreationParams _arg14 = data.readInt() != 0 ? RcsIncomingMessageCreationParams.CREATOR.createFromParcel(data) : null;
+                    String _arg23 = data.readString();
+                    int _result11 = addIncomingMessage(_arg012, _arg14, _arg23);
+                    reply.writeNoException();
+                    reply.writeInt(_result11);
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg013 = data.readInt();
+                    RcsOutgoingMessageCreationParams _arg15 = data.readInt() != 0 ? RcsOutgoingMessageCreationParams.CREATOR.createFromParcel(data) : null;
+                    String _arg24 = data.readString();
+                    int _result12 = addOutgoingMessage(_arg013, _arg15, _arg24);
+                    reply.writeNoException();
+                    reply.writeInt(_result12);
+                    return true;
+                case 14:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg014 = data.readInt();
+                    boolean _arg16 = data.readInt() != 0;
+                    int _arg25 = data.readInt();
+                    boolean _arg32 = data.readInt() != 0;
+                    String _arg4 = data.readString();
+                    deleteMessage(_arg014, _arg16, _arg25, _arg32, _arg4);
+                    reply.writeNoException();
+                    return true;
+                case 15:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg015 = data.readInt();
+                    RcsMessageSnippet _result13 = getMessageSnippet(_arg015, data.readString());
+                    reply.writeNoException();
+                    if (_result13 != null) {
+                        reply.writeInt(1);
+                        _result13.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 16:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg016 = data.readInt();
+                    long _arg17 = data.readLong();
+                    String _arg26 = data.readString();
+                    set1To1ThreadFallbackThreadId(_arg016, _arg17, _arg26);
+                    reply.writeNoException();
+                    return true;
+                case 17:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg017 = data.readInt();
+                    long _result14 = get1To1ThreadFallbackThreadId(_arg017, data.readString());
+                    reply.writeNoException();
+                    reply.writeLong(_result14);
+                    return true;
+                case 18:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg018 = data.readInt();
+                    int _result15 = get1To1ThreadOtherParticipantId(_arg018, data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(_result15);
+                    return true;
+                case 19:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg019 = data.readInt();
+                    String _arg18 = data.readString();
+                    String _arg27 = data.readString();
+                    setGroupThreadName(_arg019, _arg18, _arg27);
+                    reply.writeNoException();
+                    return true;
+                case 20:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg020 = data.readInt();
+                    String _result16 = getGroupThreadName(_arg020, data.readString());
+                    reply.writeNoException();
+                    reply.writeString(_result16);
+                    return true;
+                case 21:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg021 = data.readInt();
+                    Uri _arg19 = data.readInt() != 0 ? Uri.CREATOR.createFromParcel(data) : null;
+                    String _arg28 = data.readString();
+                    setGroupThreadIcon(_arg021, _arg19, _arg28);
+                    reply.writeNoException();
+                    return true;
+                case 22:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg022 = data.readInt();
+                    Uri _result17 = getGroupThreadIcon(_arg022, data.readString());
+                    reply.writeNoException();
+                    if (_result17 != null) {
+                        reply.writeInt(1);
+                        _result17.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 23:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg023 = data.readInt();
+                    int _arg110 = data.readInt();
+                    String _arg29 = data.readString();
+                    setGroupThreadOwner(_arg023, _arg110, _arg29);
+                    reply.writeNoException();
+                    return true;
+                case 24:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg024 = data.readInt();
+                    int _result18 = getGroupThreadOwner(_arg024, data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(_result18);
+                    return true;
+                case 25:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg025 = data.readInt();
+                    Uri _arg111 = data.readInt() != 0 ? Uri.CREATOR.createFromParcel(data) : null;
+                    String _arg210 = data.readString();
+                    setGroupThreadConferenceUri(_arg025, _arg111, _arg210);
+                    reply.writeNoException();
+                    return true;
+                case 26:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg026 = data.readInt();
+                    Uri _result19 = getGroupThreadConferenceUri(_arg026, data.readString());
+                    reply.writeNoException();
+                    if (_result19 != null) {
+                        reply.writeInt(1);
+                        _result19.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 27:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg027 = data.readInt();
+                    int _arg112 = data.readInt();
+                    String _arg211 = data.readString();
+                    addParticipantToGroupThread(_arg027, _arg112, _arg211);
+                    reply.writeNoException();
+                    return true;
+                case 28:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg028 = data.readInt();
+                    int _arg113 = data.readInt();
+                    String _arg212 = data.readString();
+                    removeParticipantFromGroupThread(_arg028, _arg113, _arg212);
+                    reply.writeNoException();
+                    return true;
+                case 29:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg029 = data.readString();
+                    String _arg114 = data.readString();
+                    String _arg213 = data.readString();
+                    int _result20 = createRcsParticipant(_arg029, _arg114, _arg213);
+                    reply.writeNoException();
+                    reply.writeInt(_result20);
+                    return true;
+                case 30:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg030 = data.readInt();
+                    String _result21 = getRcsParticipantCanonicalAddress(_arg030, data.readString());
+                    reply.writeNoException();
+                    reply.writeString(_result21);
+                    return true;
+                case 31:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg031 = data.readInt();
+                    String _result22 = getRcsParticipantAlias(_arg031, data.readString());
+                    reply.writeNoException();
+                    reply.writeString(_result22);
+                    return true;
+                case 32:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg032 = data.readInt();
+                    String _arg115 = data.readString();
+                    String _arg214 = data.readString();
+                    setRcsParticipantAlias(_arg032, _arg115, _arg214);
+                    reply.writeNoException();
+                    return true;
+                case 33:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg033 = data.readInt();
+                    String _result23 = getRcsParticipantContactId(_arg033, data.readString());
+                    reply.writeNoException();
+                    reply.writeString(_result23);
+                    return true;
+                case 34:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg034 = data.readInt();
+                    String _arg116 = data.readString();
+                    String _arg215 = data.readString();
+                    setRcsParticipantContactId(_arg034, _arg116, _arg215);
+                    reply.writeNoException();
+                    return true;
+                case 35:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg035 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    int _arg216 = data.readInt();
+                    String _arg33 = data.readString();
+                    setMessageSubId(_arg035, _arg1, _arg216, _arg33);
+                    reply.writeNoException();
+                    return true;
+                case 36:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg036 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    String _arg217 = data.readString();
+                    int _result24 = getMessageSubId(_arg036, _arg1, _arg217);
+                    reply.writeNoException();
+                    reply.writeInt(_result24);
+                    return true;
+                case 37:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg037 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    int _arg218 = data.readInt();
+                    String _arg34 = data.readString();
+                    setMessageStatus(_arg037, _arg1, _arg218, _arg34);
+                    reply.writeNoException();
+                    return true;
+                case 38:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg038 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    String _arg219 = data.readString();
+                    int _result25 = getMessageStatus(_arg038, _arg1, _arg219);
+                    reply.writeNoException();
+                    reply.writeInt(_result25);
+                    return true;
+                case 39:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg039 = data.readInt();
+                    boolean _arg117 = data.readInt() != 0;
+                    long _arg220 = data.readLong();
+                    String _arg35 = data.readString();
+                    setMessageOriginationTimestamp(_arg039, _arg117, _arg220, _arg35);
+                    reply.writeNoException();
+                    return true;
+                case 40:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg040 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    String _arg221 = data.readString();
+                    long _result26 = getMessageOriginationTimestamp(_arg040, _arg1, _arg221);
+                    reply.writeNoException();
+                    reply.writeLong(_result26);
+                    return true;
+                case 41:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg041 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    String _arg222 = data.readString();
+                    String _arg36 = data.readString();
+                    setGlobalMessageIdForMessage(_arg041, _arg1, _arg222, _arg36);
+                    reply.writeNoException();
+                    return true;
+                case 42:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg042 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    String _arg223 = data.readString();
+                    String _result27 = getGlobalMessageIdForMessage(_arg042, _arg1, _arg223);
+                    reply.writeNoException();
+                    reply.writeString(_result27);
+                    return true;
+                case 43:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg043 = data.readInt();
+                    boolean _arg118 = data.readInt() != 0;
+                    long _arg224 = data.readLong();
+                    String _arg37 = data.readString();
+                    setMessageArrivalTimestamp(_arg043, _arg118, _arg224, _arg37);
+                    reply.writeNoException();
+                    return true;
+                case 44:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg044 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    String _arg225 = data.readString();
+                    long _result28 = getMessageArrivalTimestamp(_arg044, _arg1, _arg225);
+                    reply.writeNoException();
+                    reply.writeLong(_result28);
+                    return true;
+                case 45:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg045 = data.readInt();
+                    boolean _arg119 = data.readInt() != 0;
+                    long _arg226 = data.readLong();
+                    String _arg38 = data.readString();
+                    setMessageSeenTimestamp(_arg045, _arg119, _arg226, _arg38);
+                    reply.writeNoException();
+                    return true;
+                case 46:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg046 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    String _arg227 = data.readString();
+                    long _result29 = getMessageSeenTimestamp(_arg046, _arg1, _arg227);
+                    reply.writeNoException();
+                    reply.writeLong(_result29);
+                    return true;
+                case 47:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg047 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    String _arg228 = data.readString();
+                    String _arg39 = data.readString();
+                    setTextForMessage(_arg047, _arg1, _arg228, _arg39);
+                    reply.writeNoException();
+                    return true;
+                case 48:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg048 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    String _arg229 = data.readString();
+                    String _result30 = getTextForMessage(_arg048, _arg1, _arg229);
+                    reply.writeNoException();
+                    reply.writeString(_result30);
+                    return true;
+                case 49:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg049 = data.readInt();
+                    boolean _arg120 = data.readInt() != 0;
+                    double _arg230 = data.readDouble();
+                    String _arg310 = data.readString();
+                    setLatitudeForMessage(_arg049, _arg120, _arg230, _arg310);
+                    reply.writeNoException();
+                    return true;
+                case 50:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg050 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    String _arg231 = data.readString();
+                    double _result31 = getLatitudeForMessage(_arg050, _arg1, _arg231);
+                    reply.writeNoException();
+                    reply.writeDouble(_result31);
+                    return true;
+                case 51:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg051 = data.readInt();
+                    boolean _arg121 = data.readInt() != 0;
+                    double _arg232 = data.readDouble();
+                    String _arg311 = data.readString();
+                    setLongitudeForMessage(_arg051, _arg121, _arg232, _arg311);
+                    reply.writeNoException();
+                    return true;
+                case 52:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg052 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    String _arg233 = data.readString();
+                    double _result32 = getLongitudeForMessage(_arg052, _arg1, _arg233);
+                    reply.writeNoException();
+                    reply.writeDouble(_result32);
+                    return true;
+                case 53:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg053 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    String _arg234 = data.readString();
+                    int[] _result33 = getFileTransfersAttachedToMessage(_arg053, _arg1, _arg234);
+                    reply.writeNoException();
+                    reply.writeIntArray(_result33);
+                    return true;
+                case 54:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg054 = data.readInt();
+                    int _result34 = getSenderParticipant(_arg054, data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(_result34);
+                    return true;
+                case 55:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg055 = data.readInt();
+                    int[] _result35 = getMessageRecipients(_arg055, data.readString());
+                    reply.writeNoException();
+                    reply.writeIntArray(_result35);
+                    return true;
+                case 56:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg056 = data.readInt();
+                    int _arg122 = data.readInt();
+                    String _arg235 = data.readString();
+                    long _result36 = getOutgoingDeliveryDeliveredTimestamp(_arg056, _arg122, _arg235);
+                    reply.writeNoException();
+                    reply.writeLong(_result36);
+                    return true;
+                case 57:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg057 = data.readInt();
+                    int _arg123 = data.readInt();
+                    long _arg236 = data.readLong();
+                    String _arg312 = data.readString();
+                    setOutgoingDeliveryDeliveredTimestamp(_arg057, _arg123, _arg236, _arg312);
+                    reply.writeNoException();
+                    return true;
+                case 58:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg058 = data.readInt();
+                    int _arg124 = data.readInt();
+                    String _arg237 = data.readString();
+                    long _result37 = getOutgoingDeliverySeenTimestamp(_arg058, _arg124, _arg237);
+                    reply.writeNoException();
+                    reply.writeLong(_result37);
+                    return true;
+                case 59:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg059 = data.readInt();
+                    int _arg125 = data.readInt();
+                    long _arg238 = data.readLong();
+                    String _arg313 = data.readString();
+                    setOutgoingDeliverySeenTimestamp(_arg059, _arg125, _arg238, _arg313);
+                    reply.writeNoException();
+                    return true;
+                case 60:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg060 = data.readInt();
+                    int _arg126 = data.readInt();
+                    String _arg239 = data.readString();
+                    int _result38 = getOutgoingDeliveryStatus(_arg060, _arg126, _arg239);
+                    reply.writeNoException();
+                    reply.writeInt(_result38);
+                    return true;
+                case 61:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg061 = data.readInt();
+                    int _arg127 = data.readInt();
+                    int _arg240 = data.readInt();
+                    String _arg314 = data.readString();
+                    setOutgoingDeliveryStatus(_arg061, _arg127, _arg240, _arg314);
+                    reply.writeNoException();
+                    return true;
+                case 62:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg062 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    RcsFileTransferCreationParams _arg241 = data.readInt() != 0 ? RcsFileTransferCreationParams.CREATOR.createFromParcel(data) : null;
+                    String _arg315 = data.readString();
+                    int _result39 = storeFileTransfer(_arg062, _arg1, _arg241, _arg315);
+                    reply.writeNoException();
+                    reply.writeInt(_result39);
+                    return true;
+                case 63:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg063 = data.readInt();
+                    deleteFileTransfer(_arg063, data.readString());
+                    reply.writeNoException();
+                    return true;
+                case 64:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg064 = data.readInt();
+                    String _arg128 = data.readString();
+                    String _arg242 = data.readString();
+                    setFileTransferSessionId(_arg064, _arg128, _arg242);
+                    reply.writeNoException();
+                    return true;
+                case 65:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg065 = data.readInt();
+                    String _result40 = getFileTransferSessionId(_arg065, data.readString());
+                    reply.writeNoException();
+                    reply.writeString(_result40);
+                    return true;
+                case 66:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg066 = data.readInt();
+                    Uri _arg129 = data.readInt() != 0 ? Uri.CREATOR.createFromParcel(data) : null;
+                    String _arg243 = data.readString();
+                    setFileTransferContentUri(_arg066, _arg129, _arg243);
+                    reply.writeNoException();
+                    return true;
+                case 67:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg067 = data.readInt();
+                    Uri _result41 = getFileTransferContentUri(_arg067, data.readString());
+                    reply.writeNoException();
+                    if (_result41 != null) {
+                        reply.writeInt(1);
+                        _result41.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 68:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg068 = data.readInt();
+                    String _arg130 = data.readString();
+                    String _arg244 = data.readString();
+                    setFileTransferContentType(_arg068, _arg130, _arg244);
+                    reply.writeNoException();
+                    return true;
+                case 69:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg069 = data.readInt();
+                    String _result42 = getFileTransferContentType(_arg069, data.readString());
+                    reply.writeNoException();
+                    reply.writeString(_result42);
+                    return true;
+                case 70:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg070 = data.readInt();
+                    long _arg131 = data.readLong();
+                    String _arg245 = data.readString();
+                    setFileTransferFileSize(_arg070, _arg131, _arg245);
+                    reply.writeNoException();
+                    return true;
+                case 71:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg071 = data.readInt();
+                    long _result43 = getFileTransferFileSize(_arg071, data.readString());
+                    reply.writeNoException();
+                    reply.writeLong(_result43);
+                    return true;
+                case 72:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg072 = data.readInt();
+                    long _arg132 = data.readLong();
+                    String _arg246 = data.readString();
+                    setFileTransferTransferOffset(_arg072, _arg132, _arg246);
+                    reply.writeNoException();
+                    return true;
+                case 73:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg073 = data.readInt();
+                    long _result44 = getFileTransferTransferOffset(_arg073, data.readString());
+                    reply.writeNoException();
+                    reply.writeLong(_result44);
+                    return true;
+                case 74:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg074 = data.readInt();
+                    int _arg133 = data.readInt();
+                    String _arg247 = data.readString();
+                    setFileTransferStatus(_arg074, _arg133, _arg247);
+                    reply.writeNoException();
+                    return true;
+                case 75:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg075 = data.readInt();
+                    int _result45 = getFileTransferStatus(_arg075, data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(_result45);
+                    return true;
+                case 76:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg076 = data.readInt();
+                    int _arg134 = data.readInt();
+                    String _arg248 = data.readString();
+                    setFileTransferWidth(_arg076, _arg134, _arg248);
+                    reply.writeNoException();
+                    return true;
+                case 77:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg077 = data.readInt();
+                    int _result46 = getFileTransferWidth(_arg077, data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(_result46);
+                    return true;
+                case 78:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg078 = data.readInt();
+                    int _arg135 = data.readInt();
+                    String _arg249 = data.readString();
+                    setFileTransferHeight(_arg078, _arg135, _arg249);
+                    reply.writeNoException();
+                    return true;
+                case 79:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg079 = data.readInt();
+                    int _result47 = getFileTransferHeight(_arg079, data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(_result47);
+                    return true;
+                case 80:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg080 = data.readInt();
+                    long _arg136 = data.readLong();
+                    String _arg250 = data.readString();
+                    setFileTransferLength(_arg080, _arg136, _arg250);
+                    reply.writeNoException();
+                    return true;
+                case 81:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg081 = data.readInt();
+                    long _result48 = getFileTransferLength(_arg081, data.readString());
+                    reply.writeNoException();
+                    reply.writeLong(_result48);
+                    return true;
+                case 82:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg082 = data.readInt();
+                    Uri _arg137 = data.readInt() != 0 ? Uri.CREATOR.createFromParcel(data) : null;
+                    String _arg251 = data.readString();
+                    setFileTransferPreviewUri(_arg082, _arg137, _arg251);
+                    reply.writeNoException();
+                    return true;
+                case 83:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg083 = data.readInt();
+                    Uri _result49 = getFileTransferPreviewUri(_arg083, data.readString());
+                    reply.writeNoException();
+                    if (_result49 != null) {
+                        reply.writeInt(1);
+                        _result49.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 84:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg084 = data.readInt();
+                    String _arg138 = data.readString();
+                    String _arg252 = data.readString();
+                    setFileTransferPreviewType(_arg084, _arg138, _arg252);
+                    reply.writeNoException();
+                    return true;
+                case 85:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg085 = data.readInt();
+                    String _result50 = getFileTransferPreviewType(_arg085, data.readString());
+                    reply.writeNoException();
+                    reply.writeString(_result50);
+                    return true;
+                case 86:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _arg086 = data.readLong();
+                    int _arg139 = data.readInt();
+                    int _arg253 = data.readInt();
+                    String _arg316 = data.readString();
+                    String _arg42 = data.readString();
+                    int _result51 = createGroupThreadNameChangedEvent(_arg086, _arg139, _arg253, _arg316, _arg42);
+                    reply.writeNoException();
+                    reply.writeInt(_result51);
+                    return true;
+                case 87:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _arg087 = data.readLong();
+                    int _arg140 = data.readInt();
+                    int _arg254 = data.readInt();
+                    Uri _arg317 = data.readInt() != 0 ? Uri.CREATOR.createFromParcel(data) : null;
+                    String _arg43 = data.readString();
+                    int _result52 = createGroupThreadIconChangedEvent(_arg087, _arg140, _arg254, _arg317, _arg43);
+                    reply.writeNoException();
+                    reply.writeInt(_result52);
+                    return true;
+                case 88:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _arg088 = data.readLong();
+                    int _arg141 = data.readInt();
+                    int _arg255 = data.readInt();
+                    int _arg318 = data.readInt();
+                    String _arg44 = data.readString();
+                    int _result53 = createGroupThreadParticipantJoinedEvent(_arg088, _arg141, _arg255, _arg318, _arg44);
+                    reply.writeNoException();
+                    reply.writeInt(_result53);
+                    return true;
+                case 89:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _arg089 = data.readLong();
+                    int _arg142 = data.readInt();
+                    int _arg256 = data.readInt();
+                    int _arg319 = data.readInt();
+                    String _arg45 = data.readString();
+                    int _result54 = createGroupThreadParticipantLeftEvent(_arg089, _arg142, _arg256, _arg319, _arg45);
+                    reply.writeNoException();
+                    reply.writeInt(_result54);
+                    return true;
+                case 90:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _arg090 = data.readLong();
+                    int _arg143 = data.readInt();
+                    String _arg257 = data.readString();
+                    String _arg320 = data.readString();
+                    int _result55 = createParticipantAliasChangedEvent(_arg090, _arg143, _arg257, _arg320);
+                    reply.writeNoException();
+                    reply.writeInt(_result55);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IRcs {
             public static IRcs sDefaultImpl;
             private IBinder mRemote;
@@ -2114,6 +1754,7 @@ public interface IRcs extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -2122,6 +1763,7 @@ public interface IRcs extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public RcsThreadQueryResultParcelable getRcsThreads(RcsThreadQueryParams queryParams, String callingPackage) throws RemoteException {
                 RcsThreadQueryResultParcelable _result;
                 Parcel _data = Parcel.obtain();
@@ -2135,7 +1777,8 @@ public interface IRcs extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(1, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getRcsThreads(queryParams, callingPackage);
                     }
                     _reply.readException();
@@ -2144,16 +1787,14 @@ public interface IRcs extends IInterface {
                     } else {
                         _result = null;
                     }
-                    RcsThreadQueryResultParcelable _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public RcsThreadQueryResultParcelable getRcsThreadsWithToken(RcsQueryContinuationToken continuationToken, String callingPackage) throws RemoteException {
                 RcsThreadQueryResultParcelable _result;
                 Parcel _data = Parcel.obtain();
@@ -2167,7 +1808,8 @@ public interface IRcs extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(2, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getRcsThreadsWithToken(continuationToken, callingPackage);
                     }
                     _reply.readException();
@@ -2176,16 +1818,14 @@ public interface IRcs extends IInterface {
                     } else {
                         _result = null;
                     }
-                    RcsThreadQueryResultParcelable _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public RcsParticipantQueryResultParcelable getParticipants(RcsParticipantQueryParams queryParams, String callingPackage) throws RemoteException {
                 RcsParticipantQueryResultParcelable _result;
                 Parcel _data = Parcel.obtain();
@@ -2199,7 +1839,8 @@ public interface IRcs extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(3, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getParticipants(queryParams, callingPackage);
                     }
                     _reply.readException();
@@ -2208,16 +1849,14 @@ public interface IRcs extends IInterface {
                     } else {
                         _result = null;
                     }
-                    RcsParticipantQueryResultParcelable _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public RcsParticipantQueryResultParcelable getParticipantsWithToken(RcsQueryContinuationToken continuationToken, String callingPackage) throws RemoteException {
                 RcsParticipantQueryResultParcelable _result;
                 Parcel _data = Parcel.obtain();
@@ -2231,7 +1870,8 @@ public interface IRcs extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(4, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getParticipantsWithToken(continuationToken, callingPackage);
                     }
                     _reply.readException();
@@ -2240,16 +1880,14 @@ public interface IRcs extends IInterface {
                     } else {
                         _result = null;
                     }
-                    RcsParticipantQueryResultParcelable _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public RcsMessageQueryResultParcelable getMessages(RcsMessageQueryParams queryParams, String callingPackage) throws RemoteException {
                 RcsMessageQueryResultParcelable _result;
                 Parcel _data = Parcel.obtain();
@@ -2263,7 +1901,8 @@ public interface IRcs extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(5, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getMessages(queryParams, callingPackage);
                     }
                     _reply.readException();
@@ -2272,16 +1911,14 @@ public interface IRcs extends IInterface {
                     } else {
                         _result = null;
                     }
-                    RcsMessageQueryResultParcelable _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public RcsMessageQueryResultParcelable getMessagesWithToken(RcsQueryContinuationToken continuationToken, String callingPackage) throws RemoteException {
                 RcsMessageQueryResultParcelable _result;
                 Parcel _data = Parcel.obtain();
@@ -2295,7 +1932,8 @@ public interface IRcs extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(6, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getMessagesWithToken(continuationToken, callingPackage);
                     }
                     _reply.readException();
@@ -2304,16 +1942,14 @@ public interface IRcs extends IInterface {
                     } else {
                         _result = null;
                     }
-                    RcsMessageQueryResultParcelable _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public RcsEventQueryResultDescriptor getEvents(RcsEventQueryParams queryParams, String callingPackage) throws RemoteException {
                 RcsEventQueryResultDescriptor _result;
                 Parcel _data = Parcel.obtain();
@@ -2327,7 +1963,8 @@ public interface IRcs extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(7, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getEvents(queryParams, callingPackage);
                     }
                     _reply.readException();
@@ -2336,16 +1973,14 @@ public interface IRcs extends IInterface {
                     } else {
                         _result = null;
                     }
-                    RcsEventQueryResultDescriptor _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public RcsEventQueryResultDescriptor getEventsWithToken(RcsQueryContinuationToken continuationToken, String callingPackage) throws RemoteException {
                 RcsEventQueryResultDescriptor _result;
                 Parcel _data = Parcel.obtain();
@@ -2359,7 +1994,8 @@ public interface IRcs extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(8, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getEventsWithToken(continuationToken, callingPackage);
                     }
                     _reply.readException();
@@ -2368,16 +2004,14 @@ public interface IRcs extends IInterface {
                     } else {
                         _result = null;
                     }
-                    RcsEventQueryResultDescriptor _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public boolean deleteThread(int threadId, int threadType, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2386,24 +2020,20 @@ public interface IRcs extends IInterface {
                     _data.writeInt(threadId);
                     _data.writeInt(threadType);
                     _data.writeString(callingPackage);
-                    boolean z = false;
-                    if (!this.mRemote.transact(9, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(9, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().deleteThread(threadId, threadType, callingPackage);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public int createRcs1To1Thread(int participantId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2411,13 +2041,12 @@ public interface IRcs extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(participantId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(10, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(10, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().createRcs1To1Thread(participantId, callingPackage);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2425,6 +2054,7 @@ public interface IRcs extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public int createGroupThread(int[] participantIds, String groupName, Uri groupIcon, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2439,13 +2069,12 @@ public interface IRcs extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(11, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(11, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().createGroupThread(participantIds, groupName, groupIcon, callingPackage);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2453,6 +2082,7 @@ public interface IRcs extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public int addIncomingMessage(int rcsThreadId, RcsIncomingMessageCreationParams rcsIncomingMessageCreationParams, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2466,13 +2096,12 @@ public interface IRcs extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(12, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(12, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().addIncomingMessage(rcsThreadId, rcsIncomingMessageCreationParams, callingPackage);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2480,6 +2109,7 @@ public interface IRcs extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public int addOutgoingMessage(int rcsThreadId, RcsOutgoingMessageCreationParams rcsOutgoingMessageCreationParams, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2493,13 +2123,12 @@ public interface IRcs extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(13, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(13, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().addOutgoingMessage(rcsThreadId, rcsOutgoingMessageCreationParams, callingPackage);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2507,29 +2136,30 @@ public interface IRcs extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public void deleteMessage(int rcsMessageId, boolean isIncoming, int rcsThreadId, boolean isGroup, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(rcsMessageId);
-                    _data.writeInt(isIncoming);
+                    _data.writeInt(isIncoming ? 1 : 0);
                     _data.writeInt(rcsThreadId);
-                    _data.writeInt(isGroup);
+                    _data.writeInt(isGroup ? 1 : 0);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(14, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(14, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().deleteMessage(rcsMessageId, isIncoming, rcsThreadId, isGroup, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().deleteMessage(rcsMessageId, isIncoming, rcsThreadId, isGroup, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public RcsMessageSnippet getMessageSnippet(int rcsThreadId, String callingPackage) throws RemoteException {
                 RcsMessageSnippet _result;
                 Parcel _data = Parcel.obtain();
@@ -2538,7 +2168,8 @@ public interface IRcs extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(rcsThreadId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(15, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(15, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getMessageSnippet(rcsThreadId, callingPackage);
                     }
                     _reply.readException();
@@ -2547,16 +2178,14 @@ public interface IRcs extends IInterface {
                     } else {
                         _result = null;
                     }
-                    RcsMessageSnippet _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public void set1To1ThreadFallbackThreadId(int rcsThreadId, long fallbackId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2565,19 +2194,19 @@ public interface IRcs extends IInterface {
                     _data.writeInt(rcsThreadId);
                     _data.writeLong(fallbackId);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(16, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(16, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().set1To1ThreadFallbackThreadId(rcsThreadId, fallbackId, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().set1To1ThreadFallbackThreadId(rcsThreadId, fallbackId, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public long get1To1ThreadFallbackThreadId(int rcsThreadId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2585,13 +2214,12 @@ public interface IRcs extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(rcsThreadId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(17, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(17, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().get1To1ThreadFallbackThreadId(rcsThreadId, callingPackage);
                     }
                     _reply.readException();
                     long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2599,6 +2227,7 @@ public interface IRcs extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public int get1To1ThreadOtherParticipantId(int rcsThreadId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2606,13 +2235,12 @@ public interface IRcs extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(rcsThreadId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(18, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(18, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().get1To1ThreadOtherParticipantId(rcsThreadId, callingPackage);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2620,6 +2248,7 @@ public interface IRcs extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public void setGroupThreadName(int rcsThreadId, String groupName, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2628,19 +2257,19 @@ public interface IRcs extends IInterface {
                     _data.writeInt(rcsThreadId);
                     _data.writeString(groupName);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(19, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(19, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setGroupThreadName(rcsThreadId, groupName, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setGroupThreadName(rcsThreadId, groupName, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public String getGroupThreadName(int rcsThreadId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2648,13 +2277,12 @@ public interface IRcs extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(rcsThreadId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(20, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(20, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getGroupThreadName(rcsThreadId, callingPackage);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2662,6 +2290,7 @@ public interface IRcs extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public void setGroupThreadIcon(int rcsThreadId, Uri groupIcon, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2675,19 +2304,19 @@ public interface IRcs extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(21, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(21, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setGroupThreadIcon(rcsThreadId, groupIcon, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setGroupThreadIcon(rcsThreadId, groupIcon, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public Uri getGroupThreadIcon(int rcsThreadId, String callingPackage) throws RemoteException {
                 Uri _result;
                 Parcel _data = Parcel.obtain();
@@ -2696,7 +2325,8 @@ public interface IRcs extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(rcsThreadId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(22, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(22, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getGroupThreadIcon(rcsThreadId, callingPackage);
                     }
                     _reply.readException();
@@ -2705,16 +2335,14 @@ public interface IRcs extends IInterface {
                     } else {
                         _result = null;
                     }
-                    Uri _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public void setGroupThreadOwner(int rcsThreadId, int participantId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2723,19 +2351,19 @@ public interface IRcs extends IInterface {
                     _data.writeInt(rcsThreadId);
                     _data.writeInt(participantId);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(23, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(23, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setGroupThreadOwner(rcsThreadId, participantId, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setGroupThreadOwner(rcsThreadId, participantId, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public int getGroupThreadOwner(int rcsThreadId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2743,13 +2371,12 @@ public interface IRcs extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(rcsThreadId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(24, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(24, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getGroupThreadOwner(rcsThreadId, callingPackage);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2757,6 +2384,7 @@ public interface IRcs extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public void setGroupThreadConferenceUri(int rcsThreadId, Uri conferenceUri, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2770,19 +2398,19 @@ public interface IRcs extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(25, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(25, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setGroupThreadConferenceUri(rcsThreadId, conferenceUri, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setGroupThreadConferenceUri(rcsThreadId, conferenceUri, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public Uri getGroupThreadConferenceUri(int rcsThreadId, String callingPackage) throws RemoteException {
                 Uri _result;
                 Parcel _data = Parcel.obtain();
@@ -2791,7 +2419,8 @@ public interface IRcs extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(rcsThreadId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(26, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(26, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getGroupThreadConferenceUri(rcsThreadId, callingPackage);
                     }
                     _reply.readException();
@@ -2800,16 +2429,14 @@ public interface IRcs extends IInterface {
                     } else {
                         _result = null;
                     }
-                    Uri _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public void addParticipantToGroupThread(int rcsThreadId, int participantId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2818,19 +2445,19 @@ public interface IRcs extends IInterface {
                     _data.writeInt(rcsThreadId);
                     _data.writeInt(participantId);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(27, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(27, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().addParticipantToGroupThread(rcsThreadId, participantId, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().addParticipantToGroupThread(rcsThreadId, participantId, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public void removeParticipantFromGroupThread(int rcsThreadId, int participantId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2839,19 +2466,19 @@ public interface IRcs extends IInterface {
                     _data.writeInt(rcsThreadId);
                     _data.writeInt(participantId);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(28, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(28, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().removeParticipantFromGroupThread(rcsThreadId, participantId, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().removeParticipantFromGroupThread(rcsThreadId, participantId, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public int createRcsParticipant(String canonicalAddress, String alias, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2860,13 +2487,12 @@ public interface IRcs extends IInterface {
                     _data.writeString(canonicalAddress);
                     _data.writeString(alias);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(29, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(29, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().createRcsParticipant(canonicalAddress, alias, callingPackage);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2874,6 +2500,7 @@ public interface IRcs extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public String getRcsParticipantCanonicalAddress(int participantId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2881,13 +2508,12 @@ public interface IRcs extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(participantId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(30, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(30, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getRcsParticipantCanonicalAddress(participantId, callingPackage);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2895,6 +2521,7 @@ public interface IRcs extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public String getRcsParticipantAlias(int participantId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2902,13 +2529,12 @@ public interface IRcs extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(participantId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(31, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(31, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getRcsParticipantAlias(participantId, callingPackage);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2916,6 +2542,7 @@ public interface IRcs extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public void setRcsParticipantAlias(int id, String alias, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2924,19 +2551,19 @@ public interface IRcs extends IInterface {
                     _data.writeInt(id);
                     _data.writeString(alias);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(32, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(32, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setRcsParticipantAlias(id, alias, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setRcsParticipantAlias(id, alias, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public String getRcsParticipantContactId(int participantId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2944,13 +2571,12 @@ public interface IRcs extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(participantId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(33, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(33, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getRcsParticipantContactId(participantId, callingPackage);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2958,6 +2584,7 @@ public interface IRcs extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public void setRcsParticipantContactId(int participantId, String contactId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2966,56 +2593,55 @@ public interface IRcs extends IInterface {
                     _data.writeInt(participantId);
                     _data.writeString(contactId);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(34, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(34, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setRcsParticipantContactId(participantId, contactId, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setRcsParticipantContactId(participantId, contactId, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public void setMessageSubId(int messageId, boolean isIncoming, int subId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(messageId);
-                    _data.writeInt(isIncoming);
+                    _data.writeInt(isIncoming ? 1 : 0);
                     _data.writeInt(subId);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(35, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(35, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setMessageSubId(messageId, isIncoming, subId, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setMessageSubId(messageId, isIncoming, subId, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public int getMessageSubId(int messageId, boolean isIncoming, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(messageId);
-                    _data.writeInt(isIncoming);
+                    _data.writeInt(isIncoming ? 1 : 0);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(36, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(36, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getMessageSubId(messageId, isIncoming, callingPackage);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3023,43 +2649,43 @@ public interface IRcs extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public void setMessageStatus(int messageId, boolean isIncoming, int status, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(messageId);
-                    _data.writeInt(isIncoming);
+                    _data.writeInt(isIncoming ? 1 : 0);
                     _data.writeInt(status);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(37, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(37, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setMessageStatus(messageId, isIncoming, status, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setMessageStatus(messageId, isIncoming, status, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public int getMessageStatus(int messageId, boolean isIncoming, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(messageId);
-                    _data.writeInt(isIncoming);
+                    _data.writeInt(isIncoming ? 1 : 0);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(38, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(38, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getMessageStatus(messageId, isIncoming, callingPackage);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3067,43 +2693,43 @@ public interface IRcs extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public void setMessageOriginationTimestamp(int messageId, boolean isIncoming, long originationTimestamp, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(messageId);
-                    _data.writeInt(isIncoming);
+                    _data.writeInt(isIncoming ? 1 : 0);
                     _data.writeLong(originationTimestamp);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(39, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(39, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setMessageOriginationTimestamp(messageId, isIncoming, originationTimestamp, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setMessageOriginationTimestamp(messageId, isIncoming, originationTimestamp, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public long getMessageOriginationTimestamp(int messageId, boolean isIncoming, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(messageId);
-                    _data.writeInt(isIncoming);
+                    _data.writeInt(isIncoming ? 1 : 0);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(40, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(40, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getMessageOriginationTimestamp(messageId, isIncoming, callingPackage);
                     }
                     _reply.readException();
                     long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3111,43 +2737,43 @@ public interface IRcs extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public void setGlobalMessageIdForMessage(int messageId, boolean isIncoming, String globalId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(messageId);
-                    _data.writeInt(isIncoming);
+                    _data.writeInt(isIncoming ? 1 : 0);
                     _data.writeString(globalId);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(41, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(41, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setGlobalMessageIdForMessage(messageId, isIncoming, globalId, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setGlobalMessageIdForMessage(messageId, isIncoming, globalId, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public String getGlobalMessageIdForMessage(int messageId, boolean isIncoming, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(messageId);
-                    _data.writeInt(isIncoming);
+                    _data.writeInt(isIncoming ? 1 : 0);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(42, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(42, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getGlobalMessageIdForMessage(messageId, isIncoming, callingPackage);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3155,43 +2781,43 @@ public interface IRcs extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public void setMessageArrivalTimestamp(int messageId, boolean isIncoming, long arrivalTimestamp, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(messageId);
-                    _data.writeInt(isIncoming);
+                    _data.writeInt(isIncoming ? 1 : 0);
                     _data.writeLong(arrivalTimestamp);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(43, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(43, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setMessageArrivalTimestamp(messageId, isIncoming, arrivalTimestamp, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setMessageArrivalTimestamp(messageId, isIncoming, arrivalTimestamp, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public long getMessageArrivalTimestamp(int messageId, boolean isIncoming, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(messageId);
-                    _data.writeInt(isIncoming);
+                    _data.writeInt(isIncoming ? 1 : 0);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(44, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(44, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getMessageArrivalTimestamp(messageId, isIncoming, callingPackage);
                     }
                     _reply.readException();
                     long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3199,43 +2825,43 @@ public interface IRcs extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public void setMessageSeenTimestamp(int messageId, boolean isIncoming, long seenTimestamp, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(messageId);
-                    _data.writeInt(isIncoming);
+                    _data.writeInt(isIncoming ? 1 : 0);
                     _data.writeLong(seenTimestamp);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(45, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(45, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setMessageSeenTimestamp(messageId, isIncoming, seenTimestamp, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setMessageSeenTimestamp(messageId, isIncoming, seenTimestamp, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public long getMessageSeenTimestamp(int messageId, boolean isIncoming, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(messageId);
-                    _data.writeInt(isIncoming);
+                    _data.writeInt(isIncoming ? 1 : 0);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(46, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(46, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getMessageSeenTimestamp(messageId, isIncoming, callingPackage);
                     }
                     _reply.readException();
                     long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3243,43 +2869,43 @@ public interface IRcs extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public void setTextForMessage(int messageId, boolean isIncoming, String text, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(messageId);
-                    _data.writeInt(isIncoming);
+                    _data.writeInt(isIncoming ? 1 : 0);
                     _data.writeString(text);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(47, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(47, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setTextForMessage(messageId, isIncoming, text, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setTextForMessage(messageId, isIncoming, text, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public String getTextForMessage(int messageId, boolean isIncoming, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(messageId);
-                    _data.writeInt(isIncoming);
+                    _data.writeInt(isIncoming ? 1 : 0);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(48, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(48, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getTextForMessage(messageId, isIncoming, callingPackage);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3287,43 +2913,43 @@ public interface IRcs extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public void setLatitudeForMessage(int messageId, boolean isIncoming, double latitude, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(messageId);
-                    _data.writeInt(isIncoming);
+                    _data.writeInt(isIncoming ? 1 : 0);
                     _data.writeDouble(latitude);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(49, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(49, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setLatitudeForMessage(messageId, isIncoming, latitude, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setLatitudeForMessage(messageId, isIncoming, latitude, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public double getLatitudeForMessage(int messageId, boolean isIncoming, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(messageId);
-                    _data.writeInt(isIncoming);
+                    _data.writeInt(isIncoming ? 1 : 0);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(50, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(50, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getLatitudeForMessage(messageId, isIncoming, callingPackage);
                     }
                     _reply.readException();
                     double _result = _reply.readDouble();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3331,43 +2957,43 @@ public interface IRcs extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public void setLongitudeForMessage(int messageId, boolean isIncoming, double longitude, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(messageId);
-                    _data.writeInt(isIncoming);
+                    _data.writeInt(isIncoming ? 1 : 0);
                     _data.writeDouble(longitude);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(51, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(51, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setLongitudeForMessage(messageId, isIncoming, longitude, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setLongitudeForMessage(messageId, isIncoming, longitude, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public double getLongitudeForMessage(int messageId, boolean isIncoming, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(messageId);
-                    _data.writeInt(isIncoming);
+                    _data.writeInt(isIncoming ? 1 : 0);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(52, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(52, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getLongitudeForMessage(messageId, isIncoming, callingPackage);
                     }
                     _reply.readException();
                     double _result = _reply.readDouble();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3375,21 +3001,21 @@ public interface IRcs extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public int[] getFileTransfersAttachedToMessage(int messageId, boolean isIncoming, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(messageId);
-                    _data.writeInt(isIncoming);
+                    _data.writeInt(isIncoming ? 1 : 0);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(53, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(53, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getFileTransfersAttachedToMessage(messageId, isIncoming, callingPackage);
                     }
                     _reply.readException();
                     int[] _result = _reply.createIntArray();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3397,6 +3023,7 @@ public interface IRcs extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public int getSenderParticipant(int messageId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3404,13 +3031,12 @@ public interface IRcs extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(messageId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(54, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(54, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getSenderParticipant(messageId, callingPackage);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3418,6 +3044,7 @@ public interface IRcs extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public int[] getMessageRecipients(int messageId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3425,13 +3052,12 @@ public interface IRcs extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(messageId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(55, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(55, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getMessageRecipients(messageId, callingPackage);
                     }
                     _reply.readException();
                     int[] _result = _reply.createIntArray();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3439,6 +3065,7 @@ public interface IRcs extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public long getOutgoingDeliveryDeliveredTimestamp(int messageId, int participantId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3447,13 +3074,12 @@ public interface IRcs extends IInterface {
                     _data.writeInt(messageId);
                     _data.writeInt(participantId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(56, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(56, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getOutgoingDeliveryDeliveredTimestamp(messageId, participantId, callingPackage);
                     }
                     _reply.readException();
                     long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3461,6 +3087,7 @@ public interface IRcs extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public void setOutgoingDeliveryDeliveredTimestamp(int messageId, int participantId, long deliveredTimestamp, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3470,19 +3097,19 @@ public interface IRcs extends IInterface {
                     _data.writeInt(participantId);
                     _data.writeLong(deliveredTimestamp);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(57, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(57, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setOutgoingDeliveryDeliveredTimestamp(messageId, participantId, deliveredTimestamp, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setOutgoingDeliveryDeliveredTimestamp(messageId, participantId, deliveredTimestamp, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public long getOutgoingDeliverySeenTimestamp(int messageId, int participantId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3491,13 +3118,12 @@ public interface IRcs extends IInterface {
                     _data.writeInt(messageId);
                     _data.writeInt(participantId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(58, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(58, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getOutgoingDeliverySeenTimestamp(messageId, participantId, callingPackage);
                     }
                     _reply.readException();
                     long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3505,6 +3131,7 @@ public interface IRcs extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public void setOutgoingDeliverySeenTimestamp(int messageId, int participantId, long seenTimestamp, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3514,19 +3141,19 @@ public interface IRcs extends IInterface {
                     _data.writeInt(participantId);
                     _data.writeLong(seenTimestamp);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(59, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(59, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setOutgoingDeliverySeenTimestamp(messageId, participantId, seenTimestamp, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setOutgoingDeliverySeenTimestamp(messageId, participantId, seenTimestamp, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public int getOutgoingDeliveryStatus(int messageId, int participantId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3535,13 +3162,12 @@ public interface IRcs extends IInterface {
                     _data.writeInt(messageId);
                     _data.writeInt(participantId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(60, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(60, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getOutgoingDeliveryStatus(messageId, participantId, callingPackage);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3549,6 +3175,7 @@ public interface IRcs extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public void setOutgoingDeliveryStatus(int messageId, int participantId, int status, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3558,26 +3185,26 @@ public interface IRcs extends IInterface {
                     _data.writeInt(participantId);
                     _data.writeInt(status);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(61, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(61, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setOutgoingDeliveryStatus(messageId, participantId, status, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setOutgoingDeliveryStatus(messageId, participantId, status, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public int storeFileTransfer(int messageId, boolean isIncoming, RcsFileTransferCreationParams fileTransferCreationParams, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(messageId);
-                    _data.writeInt(isIncoming);
+                    _data.writeInt(isIncoming ? 1 : 0);
                     if (fileTransferCreationParams != null) {
                         _data.writeInt(1);
                         fileTransferCreationParams.writeToParcel(_data, 0);
@@ -3585,13 +3212,12 @@ public interface IRcs extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(62, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(62, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().storeFileTransfer(messageId, isIncoming, fileTransferCreationParams, callingPackage);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3599,6 +3225,7 @@ public interface IRcs extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public void deleteFileTransfer(int partId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3606,19 +3233,19 @@ public interface IRcs extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(partId);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(63, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(63, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().deleteFileTransfer(partId, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().deleteFileTransfer(partId, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public void setFileTransferSessionId(int partId, String sessionId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3627,19 +3254,19 @@ public interface IRcs extends IInterface {
                     _data.writeInt(partId);
                     _data.writeString(sessionId);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(64, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(64, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setFileTransferSessionId(partId, sessionId, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setFileTransferSessionId(partId, sessionId, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public String getFileTransferSessionId(int partId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3647,13 +3274,12 @@ public interface IRcs extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(partId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(65, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(65, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getFileTransferSessionId(partId, callingPackage);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3661,6 +3287,7 @@ public interface IRcs extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public void setFileTransferContentUri(int partId, Uri contentUri, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3674,19 +3301,19 @@ public interface IRcs extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(66, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(66, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setFileTransferContentUri(partId, contentUri, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setFileTransferContentUri(partId, contentUri, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public Uri getFileTransferContentUri(int partId, String callingPackage) throws RemoteException {
                 Uri _result;
                 Parcel _data = Parcel.obtain();
@@ -3695,7 +3322,8 @@ public interface IRcs extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(partId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(67, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(67, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getFileTransferContentUri(partId, callingPackage);
                     }
                     _reply.readException();
@@ -3704,16 +3332,14 @@ public interface IRcs extends IInterface {
                     } else {
                         _result = null;
                     }
-                    Uri _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public void setFileTransferContentType(int partId, String contentType, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3722,19 +3348,19 @@ public interface IRcs extends IInterface {
                     _data.writeInt(partId);
                     _data.writeString(contentType);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(68, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(68, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setFileTransferContentType(partId, contentType, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setFileTransferContentType(partId, contentType, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public String getFileTransferContentType(int partId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3742,13 +3368,12 @@ public interface IRcs extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(partId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(69, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(69, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getFileTransferContentType(partId, callingPackage);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3756,6 +3381,7 @@ public interface IRcs extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public void setFileTransferFileSize(int partId, long fileSize, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3764,19 +3390,19 @@ public interface IRcs extends IInterface {
                     _data.writeInt(partId);
                     _data.writeLong(fileSize);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(70, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(70, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setFileTransferFileSize(partId, fileSize, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setFileTransferFileSize(partId, fileSize, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public long getFileTransferFileSize(int partId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3784,13 +3410,12 @@ public interface IRcs extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(partId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(71, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(71, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getFileTransferFileSize(partId, callingPackage);
                     }
                     _reply.readException();
                     long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3798,6 +3423,7 @@ public interface IRcs extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public void setFileTransferTransferOffset(int partId, long transferOffset, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3806,19 +3432,19 @@ public interface IRcs extends IInterface {
                     _data.writeInt(partId);
                     _data.writeLong(transferOffset);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(72, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(72, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setFileTransferTransferOffset(partId, transferOffset, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setFileTransferTransferOffset(partId, transferOffset, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public long getFileTransferTransferOffset(int partId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3826,13 +3452,12 @@ public interface IRcs extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(partId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(73, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(73, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getFileTransferTransferOffset(partId, callingPackage);
                     }
                     _reply.readException();
                     long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3840,6 +3465,7 @@ public interface IRcs extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public void setFileTransferStatus(int partId, int transferStatus, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3848,19 +3474,19 @@ public interface IRcs extends IInterface {
                     _data.writeInt(partId);
                     _data.writeInt(transferStatus);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(74, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(74, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setFileTransferStatus(partId, transferStatus, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setFileTransferStatus(partId, transferStatus, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public int getFileTransferStatus(int partId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3868,13 +3494,12 @@ public interface IRcs extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(partId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(75, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(75, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getFileTransferStatus(partId, callingPackage);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3882,6 +3507,7 @@ public interface IRcs extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public void setFileTransferWidth(int partId, int width, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3890,19 +3516,19 @@ public interface IRcs extends IInterface {
                     _data.writeInt(partId);
                     _data.writeInt(width);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(76, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(76, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setFileTransferWidth(partId, width, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setFileTransferWidth(partId, width, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public int getFileTransferWidth(int partId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3910,13 +3536,12 @@ public interface IRcs extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(partId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(77, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(77, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getFileTransferWidth(partId, callingPackage);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3924,6 +3549,7 @@ public interface IRcs extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public void setFileTransferHeight(int partId, int height, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3932,19 +3558,19 @@ public interface IRcs extends IInterface {
                     _data.writeInt(partId);
                     _data.writeInt(height);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(78, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(78, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setFileTransferHeight(partId, height, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setFileTransferHeight(partId, height, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public int getFileTransferHeight(int partId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3952,13 +3578,12 @@ public interface IRcs extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(partId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(79, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(79, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getFileTransferHeight(partId, callingPackage);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -3966,6 +3591,7 @@ public interface IRcs extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public void setFileTransferLength(int partId, long length, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3974,19 +3600,19 @@ public interface IRcs extends IInterface {
                     _data.writeInt(partId);
                     _data.writeLong(length);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(80, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(80, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setFileTransferLength(partId, length, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setFileTransferLength(partId, length, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public long getFileTransferLength(int partId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -3994,13 +3620,12 @@ public interface IRcs extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(partId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(81, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(81, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getFileTransferLength(partId, callingPackage);
                     }
                     _reply.readException();
                     long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -4008,6 +3633,7 @@ public interface IRcs extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public void setFileTransferPreviewUri(int partId, Uri uri, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -4021,19 +3647,19 @@ public interface IRcs extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(82, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(82, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setFileTransferPreviewUri(partId, uri, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setFileTransferPreviewUri(partId, uri, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public Uri getFileTransferPreviewUri(int partId, String callingPackage) throws RemoteException {
                 Uri _result;
                 Parcel _data = Parcel.obtain();
@@ -4042,7 +3668,8 @@ public interface IRcs extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(partId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(83, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(83, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getFileTransferPreviewUri(partId, callingPackage);
                     }
                     _reply.readException();
@@ -4051,16 +3678,14 @@ public interface IRcs extends IInterface {
                     } else {
                         _result = null;
                     }
-                    Uri _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public void setFileTransferPreviewType(int partId, String type, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -4069,19 +3694,19 @@ public interface IRcs extends IInterface {
                     _data.writeInt(partId);
                     _data.writeString(type);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(84, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(84, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setFileTransferPreviewType(partId, type, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setFileTransferPreviewType(partId, type, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public String getFileTransferPreviewType(int partId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -4089,13 +3714,12 @@ public interface IRcs extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(partId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(85, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(85, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getFileTransferPreviewType(partId, callingPackage);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -4103,316 +3727,257 @@ public interface IRcs extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public int createGroupThreadNameChangedEvent(long timestamp, int threadId, int originationParticipantId, String newName, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    try {
-                        _data.writeLong(timestamp);
-                        try {
-                            _data.writeInt(threadId);
-                        } catch (Throwable th) {
-                            th = th;
-                            int i = originationParticipantId;
-                            String str = newName;
-                            String str2 = callingPackage;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                        try {
-                            _data.writeInt(originationParticipantId);
-                            try {
-                                _data.writeString(newName);
-                            } catch (Throwable th2) {
-                                th = th2;
-                                String str22 = callingPackage;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                            try {
-                                _data.writeString(callingPackage);
-                                if (this.mRemote.transact(86, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                    _reply.readException();
-                                    int _result = _reply.readInt();
-                                    _reply.recycle();
-                                    _data.recycle();
-                                    return _result;
-                                }
-                                int createGroupThreadNameChangedEvent = Stub.getDefaultImpl().createGroupThreadNameChangedEvent(timestamp, threadId, originationParticipantId, newName, callingPackage);
-                                _reply.recycle();
-                                _data.recycle();
-                                return createGroupThreadNameChangedEvent;
-                            } catch (Throwable th3) {
-                                th = th3;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th4) {
-                            th = th4;
-                            String str3 = newName;
-                            String str222 = callingPackage;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                    } catch (Throwable th5) {
-                        th = th5;
-                        int i2 = threadId;
-                        int i3 = originationParticipantId;
-                        String str32 = newName;
-                        String str2222 = callingPackage;
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeLong(timestamp);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(threadId);
+                } catch (Throwable th3) {
+                    th = th3;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(originationParticipantId);
+                } catch (Throwable th4) {
+                    th = th4;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeString(newName);
+                } catch (Throwable th5) {
+                    th = th5;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeString(callingPackage);
+                    boolean _status = this.mRemote.transact(86, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        int createGroupThreadNameChangedEvent = Stub.getDefaultImpl().createGroupThreadNameChangedEvent(timestamp, threadId, originationParticipantId, newName, callingPackage);
                         _reply.recycle();
                         _data.recycle();
-                        throw th;
+                        return createGroupThreadNameChangedEvent;
                     }
+                    _reply.readException();
+                    int _result = _reply.readInt();
+                    _reply.recycle();
+                    _data.recycle();
+                    return _result;
                 } catch (Throwable th6) {
                     th = th6;
-                    long j = timestamp;
-                    int i22 = threadId;
-                    int i32 = originationParticipantId;
-                    String str322 = newName;
-                    String str22222 = callingPackage;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public int createGroupThreadIconChangedEvent(long timestamp, int threadId, int originationParticipantId, Uri newIcon, String callingPackage) throws RemoteException {
-                Uri uri = newIcon;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeLong(timestamp);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(threadId);
+                } catch (Throwable th3) {
+                    th = th3;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(originationParticipantId);
+                    if (newIcon != null) {
+                        _data.writeInt(1);
+                        newIcon.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
+                    }
                     try {
-                        _data.writeLong(timestamp);
-                        try {
-                            _data.writeInt(threadId);
-                        } catch (Throwable th) {
-                            th = th;
-                            int i = originationParticipantId;
-                            String str = callingPackage;
+                        _data.writeString(callingPackage);
+                        boolean _status = this.mRemote.transact(87, _data, _reply, 0);
+                        if (!_status && Stub.getDefaultImpl() != null) {
+                            int createGroupThreadIconChangedEvent = Stub.getDefaultImpl().createGroupThreadIconChangedEvent(timestamp, threadId, originationParticipantId, newIcon, callingPackage);
                             _reply.recycle();
                             _data.recycle();
-                            throw th;
+                            return createGroupThreadIconChangedEvent;
                         }
-                        try {
-                            _data.writeInt(originationParticipantId);
-                            if (uri != null) {
-                                _data.writeInt(1);
-                                uri.writeToParcel(_data, 0);
-                            } else {
-                                _data.writeInt(0);
-                            }
-                            try {
-                                _data.writeString(callingPackage);
-                                if (this.mRemote.transact(87, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                    _reply.readException();
-                                    int _result = _reply.readInt();
-                                    _reply.recycle();
-                                    _data.recycle();
-                                    return _result;
-                                }
-                                int createGroupThreadIconChangedEvent = Stub.getDefaultImpl().createGroupThreadIconChangedEvent(timestamp, threadId, originationParticipantId, newIcon, callingPackage);
-                                _reply.recycle();
-                                _data.recycle();
-                                return createGroupThreadIconChangedEvent;
-                            } catch (Throwable th2) {
-                                th = th2;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th3) {
-                            th = th3;
-                            String str2 = callingPackage;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
+                        _reply.readException();
+                        int _result = _reply.readInt();
+                        _reply.recycle();
+                        _data.recycle();
+                        return _result;
                     } catch (Throwable th4) {
                         th = th4;
-                        int i2 = threadId;
-                        int i3 = originationParticipantId;
-                        String str22 = callingPackage;
                         _reply.recycle();
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th5) {
                     th = th5;
-                    long j = timestamp;
-                    int i22 = threadId;
-                    int i32 = originationParticipantId;
-                    String str222 = callingPackage;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public int createGroupThreadParticipantJoinedEvent(long timestamp, int threadId, int originationParticipantId, int participantId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    try {
-                        _data.writeLong(timestamp);
-                        try {
-                            _data.writeInt(threadId);
-                        } catch (Throwable th) {
-                            th = th;
-                            int i = originationParticipantId;
-                            int i2 = participantId;
-                            String str = callingPackage;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                        try {
-                            _data.writeInt(originationParticipantId);
-                            try {
-                                _data.writeInt(participantId);
-                            } catch (Throwable th2) {
-                                th = th2;
-                                String str2 = callingPackage;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                            try {
-                                _data.writeString(callingPackage);
-                                if (this.mRemote.transact(88, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                    _reply.readException();
-                                    int _result = _reply.readInt();
-                                    _reply.recycle();
-                                    _data.recycle();
-                                    return _result;
-                                }
-                                int createGroupThreadParticipantJoinedEvent = Stub.getDefaultImpl().createGroupThreadParticipantJoinedEvent(timestamp, threadId, originationParticipantId, participantId, callingPackage);
-                                _reply.recycle();
-                                _data.recycle();
-                                return createGroupThreadParticipantJoinedEvent;
-                            } catch (Throwable th3) {
-                                th = th3;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th4) {
-                            th = th4;
-                            int i22 = participantId;
-                            String str22 = callingPackage;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                    } catch (Throwable th5) {
-                        th = th5;
-                        int i3 = threadId;
-                        int i4 = originationParticipantId;
-                        int i222 = participantId;
-                        String str222 = callingPackage;
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeLong(timestamp);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(threadId);
+                } catch (Throwable th3) {
+                    th = th3;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(originationParticipantId);
+                } catch (Throwable th4) {
+                    th = th4;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(participantId);
+                } catch (Throwable th5) {
+                    th = th5;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeString(callingPackage);
+                    boolean _status = this.mRemote.transact(88, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        int createGroupThreadParticipantJoinedEvent = Stub.getDefaultImpl().createGroupThreadParticipantJoinedEvent(timestamp, threadId, originationParticipantId, participantId, callingPackage);
                         _reply.recycle();
                         _data.recycle();
-                        throw th;
+                        return createGroupThreadParticipantJoinedEvent;
                     }
+                    _reply.readException();
+                    int _result = _reply.readInt();
+                    _reply.recycle();
+                    _data.recycle();
+                    return _result;
                 } catch (Throwable th6) {
                     th = th6;
-                    long j = timestamp;
-                    int i32 = threadId;
-                    int i42 = originationParticipantId;
-                    int i2222 = participantId;
-                    String str2222 = callingPackage;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public int createGroupThreadParticipantLeftEvent(long timestamp, int threadId, int originationParticipantId, int participantId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    try {
-                        _data.writeLong(timestamp);
-                        try {
-                            _data.writeInt(threadId);
-                        } catch (Throwable th) {
-                            th = th;
-                            int i = originationParticipantId;
-                            int i2 = participantId;
-                            String str = callingPackage;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                        try {
-                            _data.writeInt(originationParticipantId);
-                            try {
-                                _data.writeInt(participantId);
-                            } catch (Throwable th2) {
-                                th = th2;
-                                String str2 = callingPackage;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                            try {
-                                _data.writeString(callingPackage);
-                                if (this.mRemote.transact(89, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                    _reply.readException();
-                                    int _result = _reply.readInt();
-                                    _reply.recycle();
-                                    _data.recycle();
-                                    return _result;
-                                }
-                                int createGroupThreadParticipantLeftEvent = Stub.getDefaultImpl().createGroupThreadParticipantLeftEvent(timestamp, threadId, originationParticipantId, participantId, callingPackage);
-                                _reply.recycle();
-                                _data.recycle();
-                                return createGroupThreadParticipantLeftEvent;
-                            } catch (Throwable th3) {
-                                th = th3;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th4) {
-                            th = th4;
-                            int i22 = participantId;
-                            String str22 = callingPackage;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                    } catch (Throwable th5) {
-                        th = th5;
-                        int i3 = threadId;
-                        int i4 = originationParticipantId;
-                        int i222 = participantId;
-                        String str222 = callingPackage;
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeLong(timestamp);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(threadId);
+                } catch (Throwable th3) {
+                    th = th3;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(originationParticipantId);
+                } catch (Throwable th4) {
+                    th = th4;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(participantId);
+                } catch (Throwable th5) {
+                    th = th5;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeString(callingPackage);
+                    boolean _status = this.mRemote.transact(89, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        int createGroupThreadParticipantLeftEvent = Stub.getDefaultImpl().createGroupThreadParticipantLeftEvent(timestamp, threadId, originationParticipantId, participantId, callingPackage);
                         _reply.recycle();
                         _data.recycle();
-                        throw th;
+                        return createGroupThreadParticipantLeftEvent;
                     }
+                    _reply.readException();
+                    int _result = _reply.readInt();
+                    _reply.recycle();
+                    _data.recycle();
+                    return _result;
                 } catch (Throwable th6) {
                     th = th6;
-                    long j = timestamp;
-                    int i32 = threadId;
-                    int i42 = originationParticipantId;
-                    int i2222 = participantId;
-                    String str2222 = callingPackage;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IRcs
             public int createParticipantAliasChangedEvent(long timestamp, int participantId, String newAlias, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -4422,13 +3987,12 @@ public interface IRcs extends IInterface {
                     _data.writeInt(participantId);
                     _data.writeString(newAlias);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(90, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(90, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().createParticipantAliasChangedEvent(timestamp, participantId, newAlias, callingPackage);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -4438,11 +4002,11 @@ public interface IRcs extends IInterface {
         }
 
         public static boolean setDefaultImpl(IRcs impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IRcs getDefaultImpl() {

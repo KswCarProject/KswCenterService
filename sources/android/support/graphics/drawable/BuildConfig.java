@@ -1,5 +1,6 @@
 package android.support.graphics.drawable;
 
+/* loaded from: classes3.dex */
 public final class BuildConfig {
     public static final String APPLICATION_ID = "android.support.graphics.drawable";
     public static final String BUILD_TYPE = "release";

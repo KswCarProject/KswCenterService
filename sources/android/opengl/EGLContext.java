@@ -1,5 +1,6 @@
 package android.opengl;
 
+/* loaded from: classes3.dex */
 public class EGLContext extends EGLObjectHandle {
     private EGLContext(long handle) {
         super(handle);
@@ -9,11 +10,9 @@ public class EGLContext extends EGLObjectHandle {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof EGLContext)) {
-            return false;
-        }
-        if (getNativeHandle() == ((EGLContext) o).getNativeHandle()) {
-            return true;
+        if (o instanceof EGLContext) {
+            EGLContext that = (EGLContext) o;
+            return getNativeHandle() == that.getNativeHandle();
         }
         return false;
     }

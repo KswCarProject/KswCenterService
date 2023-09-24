@@ -8,12 +8,13 @@ import android.hardware.camera2.ICameraDeviceUser;
 import android.hardware.camera2.impl.CameraMetadataNative;
 import android.hardware.camera2.params.VendorTagDescriptor;
 import android.hardware.camera2.params.VendorTagDescriptorCache;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes.dex */
 public interface ICameraService extends IInterface {
     public static final int API_VERSION_1 = 1;
     public static final int API_VERSION_2 = 2;
@@ -72,72 +73,91 @@ public interface ICameraService extends IInterface {
 
     boolean supportsCameraApi(String str, int i) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements ICameraService {
+        @Override // android.hardware.ICameraService
         public int getNumberOfCameras(int type) throws RemoteException {
             return 0;
         }
 
+        @Override // android.hardware.ICameraService
         public CameraInfo getCameraInfo(int cameraId) throws RemoteException {
             return null;
         }
 
+        @Override // android.hardware.ICameraService
         public ICamera connect(ICameraClient client, int cameraId, String opPackageName, int clientUid, int clientPid) throws RemoteException {
             return null;
         }
 
+        @Override // android.hardware.ICameraService
         public ICameraDeviceUser connectDevice(ICameraDeviceCallbacks callbacks, String cameraId, String opPackageName, int clientUid) throws RemoteException {
             return null;
         }
 
+        @Override // android.hardware.ICameraService
         public ICamera connectLegacy(ICameraClient client, int cameraId, int halVersion, String opPackageName, int clientUid) throws RemoteException {
             return null;
         }
 
+        @Override // android.hardware.ICameraService
         public CameraStatus[] addListener(ICameraServiceListener listener) throws RemoteException {
             return null;
         }
 
+        @Override // android.hardware.ICameraService
         public void removeListener(ICameraServiceListener listener) throws RemoteException {
         }
 
+        @Override // android.hardware.ICameraService
         public CameraMetadataNative getCameraCharacteristics(String cameraId) throws RemoteException {
             return null;
         }
 
+        @Override // android.hardware.ICameraService
         public VendorTagDescriptor getCameraVendorTagDescriptor() throws RemoteException {
             return null;
         }
 
+        @Override // android.hardware.ICameraService
         public VendorTagDescriptorCache getCameraVendorTagCache() throws RemoteException {
             return null;
         }
 
+        @Override // android.hardware.ICameraService
         public String getLegacyParameters(int cameraId) throws RemoteException {
             return null;
         }
 
+        @Override // android.hardware.ICameraService
         public boolean supportsCameraApi(String cameraId, int apiVersion) throws RemoteException {
             return false;
         }
 
+        @Override // android.hardware.ICameraService
         public boolean isHiddenPhysicalCamera(String cameraId) throws RemoteException {
             return false;
         }
 
+        @Override // android.hardware.ICameraService
         public void setTorchMode(String cameraId, boolean enabled, IBinder clientBinder) throws RemoteException {
         }
 
+        @Override // android.hardware.ICameraService
         public void notifySystemEvent(int eventId, int[] args) throws RemoteException {
         }
 
+        @Override // android.hardware.ICameraService
         public void notifyDeviceStateChange(long newState) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements ICameraService {
         private static final String DESCRIPTOR = "android.hardware.ICameraService";
         static final int TRANSACTION_addListener = 6;
@@ -166,12 +186,13 @@ public interface ICameraService extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof ICameraService)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof ICameraService)) {
+                return (ICameraService) iin;
             }
-            return (ICameraService) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -215,150 +236,163 @@ public interface ICameraService extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            int i = code;
-            Parcel parcel = data;
-            Parcel parcel2 = reply;
-            if (i != 1598968902) {
-                IBinder iBinder = null;
-                boolean _arg1 = false;
-                switch (i) {
-                    case 1:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _result = getNumberOfCameras(data.readInt());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result);
-                        return true;
-                    case 2:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        CameraInfo _result2 = getCameraInfo(data.readInt());
-                        reply.writeNoException();
-                        if (_result2 != null) {
-                            parcel2.writeInt(1);
-                            _result2.writeToParcel(parcel2, 1);
-                        } else {
-                            parcel2.writeInt(0);
-                        }
-                        return true;
-                    case 3:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        ICamera _result3 = connect(ICameraClient.Stub.asInterface(data.readStrongBinder()), data.readInt(), data.readString(), data.readInt(), data.readInt());
-                        reply.writeNoException();
-                        if (_result3 != null) {
-                            iBinder = _result3.asBinder();
-                        }
-                        parcel2.writeStrongBinder(iBinder);
-                        return true;
-                    case 4:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        ICameraDeviceUser _result4 = connectDevice(ICameraDeviceCallbacks.Stub.asInterface(data.readStrongBinder()), data.readString(), data.readString(), data.readInt());
-                        reply.writeNoException();
-                        if (_result4 != null) {
-                            iBinder = _result4.asBinder();
-                        }
-                        parcel2.writeStrongBinder(iBinder);
-                        return true;
-                    case 5:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        ICamera _result5 = connectLegacy(ICameraClient.Stub.asInterface(data.readStrongBinder()), data.readInt(), data.readInt(), data.readString(), data.readInt());
-                        reply.writeNoException();
-                        if (_result5 != null) {
-                            iBinder = _result5.asBinder();
-                        }
-                        parcel2.writeStrongBinder(iBinder);
-                        return true;
-                    case 6:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        CameraStatus[] _result6 = addListener(ICameraServiceListener.Stub.asInterface(data.readStrongBinder()));
-                        reply.writeNoException();
-                        parcel2.writeTypedArray(_result6, 1);
-                        return true;
-                    case 7:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        removeListener(ICameraServiceListener.Stub.asInterface(data.readStrongBinder()));
-                        reply.writeNoException();
-                        return true;
-                    case 8:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        CameraMetadataNative _result7 = getCameraCharacteristics(data.readString());
-                        reply.writeNoException();
-                        if (_result7 != null) {
-                            parcel2.writeInt(1);
-                            _result7.writeToParcel(parcel2, 1);
-                        } else {
-                            parcel2.writeInt(0);
-                        }
-                        return true;
-                    case 9:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        VendorTagDescriptor _result8 = getCameraVendorTagDescriptor();
-                        reply.writeNoException();
-                        if (_result8 != null) {
-                            parcel2.writeInt(1);
-                            _result8.writeToParcel(parcel2, 1);
-                        } else {
-                            parcel2.writeInt(0);
-                        }
-                        return true;
-                    case 10:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        VendorTagDescriptorCache _result9 = getCameraVendorTagCache();
-                        reply.writeNoException();
-                        if (_result9 != null) {
-                            parcel2.writeInt(1);
-                            _result9.writeToParcel(parcel2, 1);
-                        } else {
-                            parcel2.writeInt(0);
-                        }
-                        return true;
-                    case 11:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        String _result10 = getLegacyParameters(data.readInt());
-                        reply.writeNoException();
-                        parcel2.writeString(_result10);
-                        return true;
-                    case 12:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        boolean _result11 = supportsCameraApi(data.readString(), data.readInt());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result11);
-                        return true;
-                    case 13:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        boolean _result12 = isHiddenPhysicalCamera(data.readString());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result12);
-                        return true;
-                    case 14:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        String _arg0 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg1 = true;
-                        }
-                        setTorchMode(_arg0, _arg1, data.readStrongBinder());
-                        reply.writeNoException();
-                        return true;
-                    case 15:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        notifySystemEvent(data.readInt(), data.createIntArray());
-                        return true;
-                    case 16:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        notifyDeviceStateChange(data.readLong());
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
-                parcel2.writeString(DESCRIPTOR);
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
                 return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0 = data.readInt();
+                    int _result = getNumberOfCameras(_arg0);
+                    reply.writeNoException();
+                    reply.writeInt(_result);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    CameraInfo _result2 = getCameraInfo(_arg02);
+                    reply.writeNoException();
+                    if (_result2 != null) {
+                        reply.writeInt(1);
+                        _result2.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    ICameraClient _arg03 = ICameraClient.Stub.asInterface(data.readStrongBinder());
+                    int _arg1 = data.readInt();
+                    String _arg2 = data.readString();
+                    int _arg3 = data.readInt();
+                    int _arg4 = data.readInt();
+                    ICamera _result3 = connect(_arg03, _arg1, _arg2, _arg3, _arg4);
+                    reply.writeNoException();
+                    reply.writeStrongBinder(_result3 != null ? _result3.asBinder() : null);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    ICameraDeviceCallbacks _arg04 = ICameraDeviceCallbacks.Stub.asInterface(data.readStrongBinder());
+                    String _arg12 = data.readString();
+                    String _arg22 = data.readString();
+                    int _arg32 = data.readInt();
+                    ICameraDeviceUser _result4 = connectDevice(_arg04, _arg12, _arg22, _arg32);
+                    reply.writeNoException();
+                    reply.writeStrongBinder(_result4 != null ? _result4.asBinder() : null);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    ICameraClient _arg05 = ICameraClient.Stub.asInterface(data.readStrongBinder());
+                    int _arg13 = data.readInt();
+                    int _arg23 = data.readInt();
+                    String _arg33 = data.readString();
+                    int _arg42 = data.readInt();
+                    ICamera _result5 = connectLegacy(_arg05, _arg13, _arg23, _arg33, _arg42);
+                    reply.writeNoException();
+                    reply.writeStrongBinder(_result5 != null ? _result5.asBinder() : null);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    ICameraServiceListener _arg06 = ICameraServiceListener.Stub.asInterface(data.readStrongBinder());
+                    CameraStatus[] _result6 = addListener(_arg06);
+                    reply.writeNoException();
+                    reply.writeTypedArray(_result6, 1);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    ICameraServiceListener _arg07 = ICameraServiceListener.Stub.asInterface(data.readStrongBinder());
+                    removeListener(_arg07);
+                    reply.writeNoException();
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg08 = data.readString();
+                    CameraMetadataNative _result7 = getCameraCharacteristics(_arg08);
+                    reply.writeNoException();
+                    if (_result7 != null) {
+                        reply.writeInt(1);
+                        _result7.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    VendorTagDescriptor _result8 = getCameraVendorTagDescriptor();
+                    reply.writeNoException();
+                    if (_result8 != null) {
+                        reply.writeInt(1);
+                        _result8.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    VendorTagDescriptorCache _result9 = getCameraVendorTagCache();
+                    reply.writeNoException();
+                    if (_result9 != null) {
+                        reply.writeInt(1);
+                        _result9.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg09 = data.readInt();
+                    String _result10 = getLegacyParameters(_arg09);
+                    reply.writeNoException();
+                    reply.writeString(_result10);
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg010 = data.readString();
+                    int _arg14 = data.readInt();
+                    boolean supportsCameraApi = supportsCameraApi(_arg010, _arg14);
+                    reply.writeNoException();
+                    reply.writeInt(supportsCameraApi ? 1 : 0);
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg011 = data.readString();
+                    boolean isHiddenPhysicalCamera = isHiddenPhysicalCamera(_arg011);
+                    reply.writeNoException();
+                    reply.writeInt(isHiddenPhysicalCamera ? 1 : 0);
+                    return true;
+                case 14:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg012 = data.readString();
+                    boolean _arg15 = data.readInt() != 0;
+                    IBinder _arg24 = data.readStrongBinder();
+                    setTorchMode(_arg012, _arg15, _arg24);
+                    reply.writeNoException();
+                    return true;
+                case 15:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg013 = data.readInt();
+                    int[] _arg16 = data.createIntArray();
+                    notifySystemEvent(_arg013, _arg16);
+                    return true;
+                case 16:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _arg014 = data.readLong();
+                    notifyDeviceStateChange(_arg014);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
             }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements ICameraService {
             public static ICameraService sDefaultImpl;
             private IBinder mRemote;
@@ -367,6 +401,7 @@ public interface ICameraService extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -375,19 +410,19 @@ public interface ICameraService extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.hardware.ICameraService
             public int getNumberOfCameras(int type) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(type);
-                    if (!this.mRemote.transact(1, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getNumberOfCameras(type);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -395,6 +430,7 @@ public interface ICameraService extends IInterface {
                 }
             }
 
+            @Override // android.hardware.ICameraService
             public CameraInfo getCameraInfo(int cameraId) throws RemoteException {
                 CameraInfo _result;
                 Parcel _data = Parcel.obtain();
@@ -402,7 +438,8 @@ public interface ICameraService extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(cameraId);
-                    if (!this.mRemote.transact(2, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCameraInfo(cameraId);
                     }
                     _reply.readException();
@@ -411,16 +448,14 @@ public interface ICameraService extends IInterface {
                     } else {
                         _result = null;
                     }
-                    CameraInfo _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.ICameraService
             public ICamera connect(ICameraClient client, int cameraId, String opPackageName, int clientUid, int clientPid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -431,13 +466,12 @@ public interface ICameraService extends IInterface {
                     _data.writeString(opPackageName);
                     _data.writeInt(clientUid);
                     _data.writeInt(clientPid);
-                    if (!this.mRemote.transact(3, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().connect(client, cameraId, opPackageName, clientUid, clientPid);
                     }
                     _reply.readException();
                     ICamera _result = ICamera.Stub.asInterface(_reply.readStrongBinder());
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -445,6 +479,7 @@ public interface ICameraService extends IInterface {
                 }
             }
 
+            @Override // android.hardware.ICameraService
             public ICameraDeviceUser connectDevice(ICameraDeviceCallbacks callbacks, String cameraId, String opPackageName, int clientUid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -454,13 +489,12 @@ public interface ICameraService extends IInterface {
                     _data.writeString(cameraId);
                     _data.writeString(opPackageName);
                     _data.writeInt(clientUid);
-                    if (!this.mRemote.transact(4, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().connectDevice(callbacks, cameraId, opPackageName, clientUid);
                     }
                     _reply.readException();
                     ICameraDeviceUser _result = ICameraDeviceUser.Stub.asInterface(_reply.readStrongBinder());
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -468,6 +502,7 @@ public interface ICameraService extends IInterface {
                 }
             }
 
+            @Override // android.hardware.ICameraService
             public ICamera connectLegacy(ICameraClient client, int cameraId, int halVersion, String opPackageName, int clientUid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -478,13 +513,12 @@ public interface ICameraService extends IInterface {
                     _data.writeInt(halVersion);
                     _data.writeString(opPackageName);
                     _data.writeInt(clientUid);
-                    if (!this.mRemote.transact(5, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().connectLegacy(client, cameraId, halVersion, opPackageName, clientUid);
                     }
                     _reply.readException();
                     ICamera _result = ICamera.Stub.asInterface(_reply.readStrongBinder());
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -492,19 +526,19 @@ public interface ICameraService extends IInterface {
                 }
             }
 
+            @Override // android.hardware.ICameraService
             public CameraStatus[] addListener(ICameraServiceListener listener) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(listener != null ? listener.asBinder() : null);
-                    if (!this.mRemote.transact(6, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().addListener(listener);
                     }
                     _reply.readException();
                     CameraStatus[] _result = (CameraStatus[]) _reply.createTypedArray(CameraStatus.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -512,25 +546,26 @@ public interface ICameraService extends IInterface {
                 }
             }
 
+            @Override // android.hardware.ICameraService
             public void removeListener(ICameraServiceListener listener) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(listener != null ? listener.asBinder() : null);
-                    if (this.mRemote.transact(7, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().removeListener(listener);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().removeListener(listener);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.ICameraService
             public CameraMetadataNative getCameraCharacteristics(String cameraId) throws RemoteException {
                 CameraMetadataNative _result;
                 Parcel _data = Parcel.obtain();
@@ -538,7 +573,8 @@ public interface ICameraService extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(cameraId);
-                    if (!this.mRemote.transact(8, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCameraCharacteristics(cameraId);
                     }
                     _reply.readException();
@@ -547,23 +583,22 @@ public interface ICameraService extends IInterface {
                     } else {
                         _result = null;
                     }
-                    CameraMetadataNative _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.ICameraService
             public VendorTagDescriptor getCameraVendorTagDescriptor() throws RemoteException {
                 VendorTagDescriptor _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(9, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(9, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCameraVendorTagDescriptor();
                     }
                     _reply.readException();
@@ -572,23 +607,22 @@ public interface ICameraService extends IInterface {
                     } else {
                         _result = null;
                     }
-                    VendorTagDescriptor _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.ICameraService
             public VendorTagDescriptorCache getCameraVendorTagCache() throws RemoteException {
                 VendorTagDescriptorCache _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(10, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(10, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCameraVendorTagCache();
                     }
                     _reply.readException();
@@ -597,29 +631,6 @@ public interface ICameraService extends IInterface {
                     } else {
                         _result = null;
                     }
-                    VendorTagDescriptorCache _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public String getLegacyParameters(int cameraId) throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(cameraId);
-                    if (!this.mRemote.transact(11, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
-                        return Stub.getDefaultImpl().getLegacyParameters(cameraId);
-                    }
-                    _reply.readException();
-                    String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -627,6 +638,27 @@ public interface ICameraService extends IInterface {
                 }
             }
 
+            @Override // android.hardware.ICameraService
+            public String getLegacyParameters(int cameraId) throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    _data.writeInt(cameraId);
+                    boolean _status = this.mRemote.transact(11, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        return Stub.getDefaultImpl().getLegacyParameters(cameraId);
+                    }
+                    _reply.readException();
+                    String _result = _reply.readString();
+                    return _result;
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // android.hardware.ICameraService
             public boolean supportsCameraApi(String cameraId, int apiVersion) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -634,78 +666,69 @@ public interface ICameraService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(cameraId);
                     _data.writeInt(apiVersion);
-                    boolean z = false;
-                    if (!this.mRemote.transact(12, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(12, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().supportsCameraApi(cameraId, apiVersion);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.ICameraService
             public boolean isHiddenPhysicalCamera(String cameraId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(cameraId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(13, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(13, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isHiddenPhysicalCamera(cameraId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.ICameraService
             public void setTorchMode(String cameraId, boolean enabled, IBinder clientBinder) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(cameraId);
-                    _data.writeInt(enabled);
+                    _data.writeInt(enabled ? 1 : 0);
                     _data.writeStrongBinder(clientBinder);
-                    if (this.mRemote.transact(14, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(14, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setTorchMode(cameraId, enabled, clientBinder);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setTorchMode(cameraId, enabled, clientBinder);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.ICameraService
             public void notifySystemEvent(int eventId, int[] args) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(eventId);
                     _data.writeIntArray(args);
-                    if (this.mRemote.transact(15, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(15, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().notifySystemEvent(eventId, args);
                     }
                 } finally {
@@ -713,14 +736,14 @@ public interface ICameraService extends IInterface {
                 }
             }
 
+            @Override // android.hardware.ICameraService
             public void notifyDeviceStateChange(long newState) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeLong(newState);
-                    if (this.mRemote.transact(16, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(16, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().notifyDeviceStateChange(newState);
                     }
                 } finally {
@@ -730,11 +753,11 @@ public interface ICameraService extends IInterface {
         }
 
         public static boolean setDefaultImpl(ICameraService impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static ICameraService getDefaultImpl() {

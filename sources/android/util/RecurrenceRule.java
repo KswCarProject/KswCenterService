@@ -1,8 +1,8 @@
 package android.util;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.annotations.VisibleForTesting;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -13,45 +13,52 @@ import java.time.LocalTime;
 import java.time.Period;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.temporal.TemporalAmount;
 import java.util.Iterator;
 import java.util.Objects;
 
+/* loaded from: classes4.dex */
 public class RecurrenceRule implements Parcelable {
-    public static final Parcelable.Creator<RecurrenceRule> CREATOR = new Parcelable.Creator<RecurrenceRule>() {
-        public RecurrenceRule createFromParcel(Parcel source) {
-            return new RecurrenceRule(source);
-        }
-
-        public RecurrenceRule[] newArray(int size) {
-            return new RecurrenceRule[size];
-        }
-    };
-    /* access modifiers changed from: private */
-    public static final boolean LOGD = Log.isLoggable(TAG, 3);
-    private static final String TAG = "RecurrenceRule";
     private static final int VERSION_INIT = 0;
-    @VisibleForTesting
-    public static Clock sClock = Clock.systemDefaultZone();
     public final ZonedDateTime end;
     public final Period period;
     @UnsupportedAppUsage
     public final ZonedDateTime start;
+    private static final String TAG = "RecurrenceRule";
+    private static final boolean LOGD = Log.isLoggable(TAG, 3);
+    @VisibleForTesting
+    public static Clock sClock = Clock.systemDefaultZone();
+    public static final Parcelable.Creator<RecurrenceRule> CREATOR = new Parcelable.Creator<RecurrenceRule>() { // from class: android.util.RecurrenceRule.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public RecurrenceRule createFromParcel(Parcel source) {
+            return new RecurrenceRule(source);
+        }
 
-    public RecurrenceRule(ZonedDateTime start2, ZonedDateTime end2, Period period2) {
-        this.start = start2;
-        this.end = end2;
-        this.period = period2;
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public RecurrenceRule[] newArray(int size) {
+            return new RecurrenceRule[size];
+        }
+    };
+
+    public RecurrenceRule(ZonedDateTime start, ZonedDateTime end, Period period) {
+        this.start = start;
+        this.end = end;
+        this.period = period;
     }
 
     @Deprecated
     public static RecurrenceRule buildNever() {
-        return new RecurrenceRule((ZonedDateTime) null, (ZonedDateTime) null, (Period) null);
+        return new RecurrenceRule(null, null, null);
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public static RecurrenceRule buildRecurringMonthly(int dayOfMonth, ZoneId zone) {
-        return new RecurrenceRule(ZonedDateTime.of(ZonedDateTime.now(sClock).withZoneSameInstant(zone).toLocalDate().minusYears(1).withMonth(1).withDayOfMonth(dayOfMonth), LocalTime.MIDNIGHT, zone), (ZonedDateTime) null, Period.ofMonths(1));
+        ZonedDateTime now = ZonedDateTime.now(sClock).withZoneSameInstant(zone);
+        ZonedDateTime start = ZonedDateTime.of(now.toLocalDate().minusYears(1L).withMonth(1).withDayOfMonth(dayOfMonth), LocalTime.MIDNIGHT, zone);
+        return new RecurrenceRule(start, null, Period.ofMonths(1));
     }
 
     private RecurrenceRule(Parcel source) {
@@ -60,10 +67,12 @@ public class RecurrenceRule implements Parcelable {
         this.period = convertPeriod(source.readString());
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(convertZonedDateTime(this.start));
         dest.writeString(convertZonedDateTime(this.end));
@@ -89,22 +98,19 @@ public class RecurrenceRule implements Parcelable {
     }
 
     public String toString() {
-        return "RecurrenceRule{" + "start=" + this.start + " end=" + this.end + " period=" + this.period + "}";
+        return "RecurrenceRule{start=" + this.start + " end=" + this.end + " period=" + this.period + "}";
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{this.start, this.end, this.period});
+        return Objects.hash(this.start, this.end, this.period);
     }
 
     public boolean equals(Object obj) {
-        if (!(obj instanceof RecurrenceRule)) {
-            return false;
+        if (obj instanceof RecurrenceRule) {
+            RecurrenceRule other = (RecurrenceRule) obj;
+            return Objects.equals(this.start, other.start) && Objects.equals(this.end, other.end) && Objects.equals(this.period, other.period);
         }
-        RecurrenceRule other = (RecurrenceRule) obj;
-        if (!Objects.equals(this.start, other.start) || !Objects.equals(this.end, other.end) || !Objects.equals(this.period, other.period)) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
     public boolean isRecurring() {
@@ -113,10 +119,7 @@ public class RecurrenceRule implements Parcelable {
 
     @Deprecated
     public boolean isMonthly() {
-        if (this.start != null && this.period != null && this.period.getYears() == 0 && this.period.getMonths() == 1 && this.period.getDays() == 0) {
-            return true;
-        }
-        return false;
+        return this.start != null && this.period != null && this.period.getYears() == 0 && this.period.getMonths() == 1 && this.period.getDays() == 0;
     }
 
     public Iterator<Range<ZonedDateTime>> cycleIterator() {
@@ -126,6 +129,7 @@ public class RecurrenceRule implements Parcelable {
         return new NonrecurringIterator();
     }
 
+    /* loaded from: classes4.dex */
     private class NonrecurringIterator implements Iterator<Range<ZonedDateTime>> {
         boolean hasNext;
 
@@ -133,64 +137,68 @@ public class RecurrenceRule implements Parcelable {
             this.hasNext = (RecurrenceRule.this.start == null || RecurrenceRule.this.end == null) ? false : true;
         }
 
+        @Override // java.util.Iterator
         public boolean hasNext() {
             return this.hasNext;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // java.util.Iterator
         public Range<ZonedDateTime> next() {
             this.hasNext = false;
             return new Range<>(RecurrenceRule.this.start, RecurrenceRule.this.end);
         }
     }
 
+    /* loaded from: classes4.dex */
     private class RecurringIterator implements Iterator<Range<ZonedDateTime>> {
         ZonedDateTime cycleEnd;
         ZonedDateTime cycleStart;
-        int i;
+
+        /* renamed from: i */
+        int f291i;
 
         public RecurringIterator() {
-            ZonedDateTime anchor;
-            if (RecurrenceRule.this.end != null) {
-                anchor = RecurrenceRule.this.end;
-            } else {
-                anchor = ZonedDateTime.now(RecurrenceRule.sClock).withZoneSameInstant(RecurrenceRule.this.start.getZone());
-            }
+            ZonedDateTime anchor = RecurrenceRule.this.end != null ? RecurrenceRule.this.end : ZonedDateTime.now(RecurrenceRule.sClock).withZoneSameInstant(RecurrenceRule.this.start.getZone());
             if (RecurrenceRule.LOGD) {
-                Log.d(RecurrenceRule.TAG, "Resolving using anchor " + anchor);
+                Log.m72d(RecurrenceRule.TAG, "Resolving using anchor " + anchor);
             }
             updateCycle();
             while (anchor.toEpochSecond() > this.cycleEnd.toEpochSecond()) {
-                this.i++;
+                this.f291i++;
                 updateCycle();
             }
             while (anchor.toEpochSecond() <= this.cycleStart.toEpochSecond()) {
-                this.i--;
+                this.f291i--;
                 updateCycle();
             }
         }
 
         private void updateCycle() {
-            this.cycleStart = roundBoundaryTime(RecurrenceRule.this.start.plus(RecurrenceRule.this.period.multipliedBy(this.i)));
-            this.cycleEnd = roundBoundaryTime(RecurrenceRule.this.start.plus(RecurrenceRule.this.period.multipliedBy(this.i + 1)));
+            this.cycleStart = roundBoundaryTime(RecurrenceRule.this.start.plus((TemporalAmount) RecurrenceRule.this.period.multipliedBy(this.f291i)));
+            this.cycleEnd = roundBoundaryTime(RecurrenceRule.this.start.plus((TemporalAmount) RecurrenceRule.this.period.multipliedBy(this.f291i + 1)));
         }
 
         private ZonedDateTime roundBoundaryTime(ZonedDateTime boundary) {
-            if (!RecurrenceRule.this.isMonthly() || boundary.getDayOfMonth() >= RecurrenceRule.this.start.getDayOfMonth()) {
-                return boundary;
+            if (RecurrenceRule.this.isMonthly() && boundary.getDayOfMonth() < RecurrenceRule.this.start.getDayOfMonth()) {
+                return ZonedDateTime.of(boundary.toLocalDate(), LocalTime.MAX, RecurrenceRule.this.start.getZone());
             }
-            return ZonedDateTime.of(boundary.toLocalDate(), LocalTime.MAX, RecurrenceRule.this.start.getZone());
+            return boundary;
         }
 
+        @Override // java.util.Iterator
         public boolean hasNext() {
             return this.cycleStart.toEpochSecond() >= RecurrenceRule.this.start.toEpochSecond();
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // java.util.Iterator
         public Range<ZonedDateTime> next() {
             if (RecurrenceRule.LOGD) {
-                Log.d(RecurrenceRule.TAG, "Cycle " + this.i + " from " + this.cycleStart + " to " + this.cycleEnd);
+                Log.m72d(RecurrenceRule.TAG, "Cycle " + this.f291i + " from " + this.cycleStart + " to " + this.cycleEnd);
             }
             Range<ZonedDateTime> r = new Range<>(this.cycleStart, this.cycleEnd);
-            this.i--;
+            this.f291i--;
             updateCycle();
             return r;
         }
@@ -210,16 +218,16 @@ public class RecurrenceRule implements Parcelable {
         return null;
     }
 
-    public static String convertPeriod(Period period2) {
-        if (period2 != null) {
-            return period2.toString();
+    public static String convertPeriod(Period period) {
+        if (period != null) {
+            return period.toString();
         }
         return null;
     }
 
-    public static Period convertPeriod(String period2) {
-        if (period2 != null) {
-            return Period.parse(period2);
+    public static Period convertPeriod(String period) {
+        if (period != null) {
+            return Period.parse(period);
         }
         return null;
     }

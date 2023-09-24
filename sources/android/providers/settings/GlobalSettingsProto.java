@@ -1,5 +1,6 @@
 package android.providers.settings;
 
+/* loaded from: classes3.dex */
 public final class GlobalSettingsProto {
     public static final long ACTIVITY_MANAGER_CONSTANTS = 1146756268034L;
     public static final long ADB_ENABLED = 1146756268035L;
@@ -149,8 +150,11 @@ public final class GlobalSettingsProto {
     public static final long ZEN = 1146756268170L;
     public static final long ZRAM_ENABLED = 1146756268171L;
 
+    /* loaded from: classes3.dex */
     public final class AirplaneMode {
-        public static final long ON = 1146756268033L;
+
+        /* renamed from: ON */
+        public static final long f164ON = 1146756268033L;
         public static final long RADIOS = 1146756268034L;
         public static final long TOGGLEABLE_RADIOS = 1146756268035L;
 
@@ -158,6 +162,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Anomaly {
         public static final long CONFIG = 1146756268035L;
         public static final long CONFIG_VERSION = 1146756268034L;
@@ -167,6 +172,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class ApnDb {
         public static final long UPDATE_CONTENT_URL = 1146756268033L;
         public static final long UPDATE_METADATA_URL = 1146756268034L;
@@ -175,6 +181,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class App {
         public static final long AUTO_RESTRICTION_ENABLED = 1146756268035L;
         public static final long FORCED_APP_STANDBY_ENABLED = 1146756268036L;
@@ -186,6 +193,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Auto {
         public static final long TIME = 1146756268033L;
         public static final long TIME_ZONE = 1146756268034L;
@@ -194,6 +202,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Autofill {
         public static final long COMPAT_MODE_ALLOWED_PACKAGES = 1146756268033L;
         public static final long LOGGING_LEVEL = 1146756268034L;
@@ -204,6 +213,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Backup {
         public static final long BACKUP_AGENT_TIMEOUT_PARAMETERS = 1146756268033L;
         public static final long BACKUP_MULTI_USER_ENABLED = 1146756268034L;
@@ -212,6 +222,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Battery {
         public static final long DISCHARGE_DURATION_THRESHOLD = 1146756268033L;
         public static final long DISCHARGE_THRESHOLD = 1146756268034L;
@@ -224,6 +235,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class BleScan {
         public static final long ALWAYS_AVAILABLE = 1146756268033L;
         public static final long BACKGROUND_MODE = 1146756268040L;
@@ -238,6 +250,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Bluetooth {
         public static final long A2DP_OPTIONAL_CODECS_ENABLED = 2246267895817L;
         public static final long A2DP_SINK_PRIORITIES = 2246267895814L;
@@ -251,7 +264,9 @@ public final class GlobalSettingsProto {
         public static final long INTEROPERABILITY_LIST = 1146756268035L;
         public static final long MAP_CLIENT_PRIORITIES = 2246267895820L;
         public static final long MAP_PRIORITIES = 2246267895819L;
-        public static final long ON = 1146756268036L;
+
+        /* renamed from: ON */
+        public static final long f165ON = 1146756268036L;
         public static final long PAN_PRIORITIES = 2246267895823L;
         public static final long PBAP_CLIENT_PRIORITIES = 2246267895821L;
         public static final long SAP_PRIORITIES = 2246267895822L;
@@ -260,6 +275,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class CaptivePortal {
         public static final long DETECTION_ENABLED = 1146756268034L;
         public static final long FALLBACK_URL = 1146756268038L;
@@ -275,6 +291,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Carrier {
         public static final long APP_NAMES = 1146756268034L;
         public static final long APP_WHITELIST = 1146756268033L;
@@ -285,6 +302,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Cdma {
         public static final long CELL_BROADCAST_SMS = 1146756268033L;
         public static final long ROAMING_MODE = 1146756268034L;
@@ -294,6 +312,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class CertPin {
         public static final long UPDATE_CONTENT_URL = 1146756268033L;
         public static final long UPDATE_METADATA_URL = 1146756268034L;
@@ -302,6 +321,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Connectivity {
         public static final long CHANGE_DELAY = 1146756268034L;
         public static final long METRICS_BUFFER_SIZE = 1146756268033L;
@@ -311,6 +331,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Data {
         public static final long ACTIVITY_TIMEOUT_MOBILE = 1146756268033L;
         public static final long ACTIVITY_TIMEOUT_WIFI = 1146756268034L;
@@ -322,6 +343,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Database {
         public static final long CREATION_BUILDID = 1146756268034L;
         public static final long DOWNGRADE_REASON = 1146756268033L;
@@ -330,6 +352,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Debug {
         public static final long APP = 1146756268033L;
         public static final long VIEW_ATTRIBUTES = 1146756268034L;
@@ -339,6 +362,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Default {
         public static final long DNS_SERVER = 1146756268034L;
         public static final long INSTALL_LOCATION = 1146756268033L;
@@ -347,6 +371,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Development {
         public static final long EMULATE_DISPLAY_CUTOUT = 1146756268037L;
         public static final long ENABLE_FREEFORM_WINDOWS_SUPPORT = 1146756268035L;
@@ -359,6 +384,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Device {
         public static final long DEMO_MODE = 1146756268038L;
         public static final long IDLE_CONSTANTS = 1146756268036L;
@@ -371,6 +397,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Display {
         public static final long PANEL_LPM = 1146756268035L;
         public static final long SCALING_FORCE = 1146756268034L;
@@ -380,6 +407,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class DnsResolver {
         public static final long MAX_SAMPLES = 1146756268036L;
         public static final long MIN_SAMPLES = 1146756268035L;
@@ -390,6 +418,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Download {
         public static final long MAX_BYTES_OVER_MOBILE = 1146756268033L;
         public static final long RECOMMENDED_MAX_BYTES_OVER_MOBILE = 1146756268034L;
@@ -398,6 +427,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Dropbox {
         public static final long AGE_SECONDS = 1146756268033L;
         public static final long MAX_FILES = 1146756268034L;
@@ -410,6 +440,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class DynamicPowerSavings {
         public static final long DISABLE_THRESHOLD = 1146756268033L;
         public static final long ENABLED = 1146756268034L;
@@ -418,6 +449,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Emergency {
         public static final long AFFORDANCE_NEEDED = 1146756268034L;
         public static final long TONE = 1146756268033L;
@@ -426,6 +458,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Enable {
         public static final long ACCESSIBILITY_GLOBAL_GESTURE_ENABLED = 1146756268033L;
         public static final long CACHE_QUOTA_CALCULATION = 1146756268038L;
@@ -440,6 +473,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Euicc {
         public static final long FACTORY_RESET_TIMEOUT_MILLIS = 1146756268034L;
         public static final long PROVISIONED = 1146756268033L;
@@ -448,6 +482,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class GlobalHttpProxy {
         public static final long EXCLUSION_LIST = 1146756268035L;
         public static final long HOST = 1146756268033L;
@@ -459,6 +494,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Gpu {
         public static final long ANGLE_DEBUG_PACKAGE = 1146756268049L;
         public static final long ANGLE_GL_DRIVER_ALL_ANGLE = 1146756268035L;
@@ -483,6 +519,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Hdmi {
         public static final long CONTROL_AUTO_DEVICE_OFF_ENABLED = 1146756268036L;
         public static final long CONTROL_AUTO_WAKEUP_ENABLED = 1146756268035L;
@@ -493,6 +530,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class InetCondition {
         public static final long DEBOUNCE_DOWN_DELAY = 1146756268034L;
         public static final long DEBOUNCE_UP_DELAY = 1146756268033L;
@@ -501,6 +539,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class InstantApp {
         public static final long DEXOPT_ENABLED = 1146756268033L;
         public static final long EPHEMERAL_COOKIE_MAX_SIZE_BYTES = 1146756268034L;
@@ -513,6 +552,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class IntentFirewall {
         public static final long UPDATE_CONTENT_URL = 1146756268033L;
         public static final long UPDATE_METADATA_URL = 1146756268034L;
@@ -521,6 +561,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class LangId {
         public static final long UPDATE_CONTENT_URL = 1146756268033L;
         public static final long UPDATE_METADATA_URL = 1146756268034L;
@@ -529,6 +570,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Location {
         public static final long BACKGROUND_THROTTLE_INTERVAL_MS = 1146756268033L;
         public static final long BACKGROUND_THROTTLE_PACKAGE_WHITELIST = 1146756268035L;
@@ -543,6 +585,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class LowPowerMode {
         public static final long AUTOMATIC_POWER_SAVER_MODE = 1146756268036L;
         public static final long ENABLED = 1146756268033L;
@@ -556,6 +599,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Mhl {
         public static final long INPUT_SWITCHING_ENABLED = 1146756268033L;
         public static final long POWER_CHARGE_ENABLED = 1146756268034L;
@@ -564,6 +608,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class MobileData {
         public static final long ALLOWED = 1146756268033L;
         public static final long ALWAYS_ON = 1146756268034L;
@@ -572,6 +617,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class MultiSim {
         public static final long DATA_CALL_SUBSCRIPTION = 1146756268035L;
         public static final long SMS_PROMPT = 1146756268037L;
@@ -583,6 +629,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Netstats {
         public static final long AUGMENT_ENABLED = 1146756268038L;
         public static final long DEV_BUCKET_DURATION = 1146756268039L;
@@ -607,6 +654,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Network {
         public static final long ACCESS_TIMEOUT_MS = 1146756268047L;
         public static final long AVOID_BAD_WIFI = 1146756268038L;
@@ -629,6 +677,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class NitzUpdate {
         public static final long DIFF = 1146756268033L;
         public static final long SPACING = 1146756268034L;
@@ -637,6 +686,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Notification {
         public static final long MAX_NOTIFICATION_ENQUEUE_RATE = 1146756268033L;
         public static final long SHOW_NOTIFICATION_CHANNEL_WARNINGS = 1146756268034L;
@@ -648,6 +698,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Ntp {
         public static final long SERVER = 1146756268033L;
         public static final long SERVER_2 = 1146756268035L;
@@ -657,6 +708,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class UserAbsentSmallBattery {
         public static final long RADIOS_OFF_ENABLED = 1146756268033L;
         public static final long TOUCH_OFF_ENABLED = 1146756268034L;
@@ -665,6 +717,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class PackageVerifier {
         public static final long DEFAULT_RESPONSE = 1146756268035L;
         public static final long ENABLED = 1146756268033L;
@@ -676,6 +729,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class PdpWatchdog {
         public static final long ERROR_POLL_COUNT = 1146756268037L;
         public static final long ERROR_POLL_INTERVAL_MS = 1146756268035L;
@@ -688,6 +742,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class PrepaidSetup {
         public static final long DATA_SERVICE_URL = 1146756268033L;
         public static final long DETECTION_REDIR_HOST = 1146756268035L;
@@ -697,6 +752,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Private {
         public static final long DNS_MODE = 1146756268033L;
         public static final long DNS_SPECIFIER = 1146756268034L;
@@ -705,6 +761,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Selinux {
         public static final long STATUS = 1146756268035L;
         public static final long UPDATE_CONTENT_URL = 1146756268033L;
@@ -714,6 +771,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class SmartSelection {
         public static final long UPDATE_CONTENT_URL = 1146756268033L;
         public static final long UPDATE_METADATA_URL = 1146756268034L;
@@ -722,6 +780,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Sms {
         public static final long ACCESS_RESTRICTION_ENABLED = 1146756268039L;
         public static final long OUTGOING_CHECK_INTERVAL_MS = 1146756268033L;
@@ -735,6 +794,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Sounds {
         public static final long CAR_DOCK = 1146756268033L;
         public static final long CAR_UNDOCK = 1146756268034L;
@@ -754,6 +814,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class SoundTrigger {
         public static final long DETECTION_SERVICE_OP_TIMEOUT_MS = 1146756268034L;
         public static final long MAX_SOUND_TRIGGER_DETECTION_SERVICE_OPS_PER_DAY = 1146756268033L;
@@ -762,6 +823,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Storage {
         public static final long BENCHMARK_INTERVAL = 1146756268033L;
         public static final long SETTINGS_CLOBBER_THRESHOLD = 1146756268034L;
@@ -770,6 +832,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Sync {
         public static final long MANAGER_CONSTANTS = 1146756268034L;
         public static final long MAX_RETRY_DELAY_IN_SECONDS = 1146756268033L;
@@ -778,6 +841,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Sys {
         public static final long FREE_STORAGE_LOG_INTERVAL_MINS = 1146756268033L;
         public static final long STORAGE_CACHE_MAX_BYTES = 1146756268038L;
@@ -792,6 +856,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class TemperatureWarning {
         public static final long SHOW_TEMPERATURE_WARNING = 1146756268033L;
         public static final long SHOW_USB_TEMPERATURE_ALARM = 1146756268035L;
@@ -801,6 +866,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Tether {
         public static final long DUN_APN = 1146756268035L;
         public static final long DUN_REQUIRED = 1146756268034L;
@@ -812,6 +878,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Tzinfo {
         public static final long UPDATE_CONTENT_URL = 1146756268033L;
         public static final long UPDATE_METADATA_URL = 1146756268034L;
@@ -820,6 +887,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Webview {
         public static final long DATA_REDUCTION_PROXY_KEY = 1146756268033L;
         public static final long FALLBACK_LOGIC_ENABLED = 1146756268034L;
@@ -830,6 +898,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Wfc {
         public static final long IMS_ENABLED = 1146756268033L;
         public static final long IMS_MODE = 1146756268034L;
@@ -840,6 +909,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Wifi {
         public static final long BADGING_THRESHOLDS = 1146756268034L;
         public static final long BOUNCE_DELAY_OVERRIDE_MS = 1146756268066L;
@@ -860,7 +930,9 @@ public final class GlobalSettingsProto {
         public static final long NETWORKS_AVAILABLE_REPEAT_DELAY = 1146756268040L;
         public static final long NETWORK_SHOW_RSSI = 1146756268051L;
         public static final long NUM_OPEN_NETWORKS_KEPT = 1146756268044L;
-        public static final long ON = 1146756268045L;
+
+        /* renamed from: ON */
+        public static final long f166ON = 1146756268045L;
         public static final long ON_WHEN_PROXY_DISCONNECTED = 1146756268065L;
         public static final long P2P_DEVICE_NAME = 1146756268062L;
         public static final long REENABLE_DELAY_MS = 1146756268063L;
@@ -879,6 +951,7 @@ public final class GlobalSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Zen {
         public static final long MODE = 1146756268033L;
         public static final long MODE_CONFIG_ETAG = 1146756268035L;

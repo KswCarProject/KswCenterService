@@ -1,6 +1,6 @@
 package com.android.internal.util.function.pooled;
 
-import android.os.Message;
+import android.p007os.Message;
 import android.telephony.SmsManager;
 import android.text.TextUtils;
 import android.util.Pools;
@@ -38,6 +38,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+/* loaded from: classes4.dex */
 final class PooledLambdaImpl<R> extends OmniFunction<Object, Object, Object, Object, Object, Object, Object, Object, Object, R> {
     private static final boolean DEBUG = false;
     private static final int FLAG_ACQUIRED_FROM_MESSAGE_CALLBACKS_POOL = 2048;
@@ -48,13 +49,14 @@ final class PooledLambdaImpl<R> extends OmniFunction<Object, Object, Object, Obj
     static final int MASK_FUNC_TYPE = 66584576;
     private static final int MAX_ARGS = 9;
     private static final int MAX_POOL_SIZE = 50;
-    static final Pool sMessageCallbacksPool = new Pool(Message.sPoolSync);
-    static final Pool sPool = new Pool(new Object());
-    Object[] mArgs = null;
     long mConstValue;
-    int mFlags = 0;
     Object mFunc;
+    static final Pool sPool = new Pool(new Object());
+    static final Pool sMessageCallbacksPool = new Pool(Message.sPoolSync);
+    Object[] mArgs = null;
+    int mFlags = 0;
 
+    /* loaded from: classes4.dex */
     static class Pool extends Pools.SynchronizedPool<PooledLambdaImpl> {
         public Pool(Object lock) {
             super(50, lock);
@@ -64,6 +66,7 @@ final class PooledLambdaImpl<R> extends OmniFunction<Object, Object, Object, Obj
     private PooledLambdaImpl() {
     }
 
+    @Override // com.android.internal.util.function.pooled.PooledLambda
     public void recycle() {
         if (!isRecycled()) {
             doRecycle();
@@ -82,108 +85,38 @@ final class PooledLambdaImpl<R> extends OmniFunction<Object, Object, Object, Obj
             Arrays.fill(this.mArgs, (Object) null);
         }
         this.mFlags = 512;
-        this.mConstValue = 0;
+        this.mConstValue = 0L;
         pool.release(this);
     }
 
-    /*  JADX ERROR: StackOverflow in pass: MarkFinallyVisitor
-        jadx.core.utils.exceptions.JadxOverflowException: 
-        	at jadx.core.utils.ErrorsCounter.addError(ErrorsCounter.java:47)
-        	at jadx.core.utils.ErrorsCounter.methodError(ErrorsCounter.java:81)
-        */
-    R invoke(java.lang.Object r7, java.lang.Object r8, java.lang.Object r9, java.lang.Object r10, java.lang.Object r11, java.lang.Object r12, java.lang.Object r13, java.lang.Object r14, java.lang.Object r15) {
-        /*
-            r6 = this;
-            r6.checkNotRecycled()
-            boolean r0 = r6.fillInArg(r7)
-            r1 = 0
-            if (r0 == 0) goto L_0x003c
-            boolean r0 = r6.fillInArg(r8)
-            if (r0 == 0) goto L_0x003c
-            boolean r0 = r6.fillInArg(r9)
-            if (r0 == 0) goto L_0x003c
-            boolean r0 = r6.fillInArg(r10)
-            if (r0 == 0) goto L_0x003c
-            boolean r0 = r6.fillInArg(r11)
-            if (r0 == 0) goto L_0x003c
-            boolean r0 = r6.fillInArg(r12)
-            if (r0 == 0) goto L_0x003c
-            boolean r0 = r6.fillInArg(r13)
-            if (r0 == 0) goto L_0x003c
-            boolean r0 = r6.fillInArg(r14)
-            if (r0 == 0) goto L_0x003c
-            boolean r0 = r6.fillInArg(r15)
-            if (r0 == 0) goto L_0x003c
-            r0 = 1
-            goto L_0x003d
-        L_0x003c:
-            r0 = r1
-        L_0x003d:
-            r2 = 66584576(0x3f80000, float:1.457613E-36)
-            int r2 = r6.getFlags(r2)
-            int r2 = com.android.internal.util.function.pooled.PooledLambdaImpl.LambdaType.decodeArgCount(r2)
-            r3 = 15
-            if (r2 == r3) goto L_0x007e
-            r3 = r1
-        L_0x004c:
-            if (r3 >= r2) goto L_0x007e
-            java.lang.Object[] r4 = r6.mArgs
-            r4 = r4[r3]
-            com.android.internal.util.function.pooled.ArgumentPlaceholder<?> r5 = com.android.internal.util.function.pooled.ArgumentPlaceholder.INSTANCE
-            if (r4 == r5) goto L_0x0059
-            int r3 = r3 + 1
-            goto L_0x004c
-        L_0x0059:
-            java.lang.IllegalStateException r1 = new java.lang.IllegalStateException
-            java.lang.StringBuilder r4 = new java.lang.StringBuilder
-            r4.<init>()
-            java.lang.String r5 = "Missing argument #"
-            r4.append(r5)
-            r4.append(r3)
-            java.lang.String r5 = " among "
-            r4.append(r5)
-            java.lang.Object[] r5 = r6.mArgs
-            java.lang.String r5 = java.util.Arrays.toString(r5)
-            r4.append(r5)
-            java.lang.String r4 = r4.toString()
-            r1.<init>(r4)
-            throw r1
-        L_0x007e:
-            java.lang.Object r3 = r6.doInvoke()     // Catch:{ all -> 0x00a1 }
-            boolean r4 = r6.isRecycleOnUse()
-            if (r4 == 0) goto L_0x008b
-            r6.doRecycle()
-        L_0x008b:
-            boolean r4 = r6.isRecycled()
-            if (r4 != 0) goto L_0x00a0
-            java.lang.Object[] r4 = r6.mArgs
-            int r4 = com.android.internal.util.ArrayUtils.size((java.lang.Object[]) r4)
-        L_0x0098:
-            if (r1 >= r4) goto L_0x00a0
-            r6.popArg(r1)
-            int r1 = r1 + 1
-            goto L_0x0098
-        L_0x00a0:
-            return r3
-        L_0x00a1:
-            r3 = move-exception
-            boolean r4 = r6.isRecycleOnUse()
-            if (r4 == 0) goto L_0x00ab
-            r6.doRecycle()
-        L_0x00ab:
-            boolean r4 = r6.isRecycled()
-            if (r4 != 0) goto L_0x00c0
-            java.lang.Object[] r4 = r6.mArgs
-            int r4 = com.android.internal.util.ArrayUtils.size((java.lang.Object[]) r4)
-        L_0x00b8:
-            if (r1 >= r4) goto L_0x00c0
-            r6.popArg(r1)
-            int r1 = r1 + 1
-            goto L_0x00b8
-        L_0x00c0:
-            throw r3
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.internal.util.function.pooled.PooledLambdaImpl.invoke(java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object):java.lang.Object");
+    @Override // com.android.internal.util.function.pooled.OmniFunction
+    R invoke(Object a1, Object a2, Object a3, Object a4, Object a5, Object a6, Object a7, Object a8, Object a9) {
+        checkNotRecycled();
+        int i = 0;
+        if (!fillInArg(a1) || !fillInArg(a2) || !fillInArg(a3) || !fillInArg(a4) || !fillInArg(a5) || !fillInArg(a6) || !fillInArg(a7) || !fillInArg(a8) || !fillInArg(a9)) {
+        }
+        int argCount = LambdaType.decodeArgCount(getFlags(MASK_FUNC_TYPE));
+        if (argCount != 15) {
+            for (int i2 = 0; i2 < argCount; i2++) {
+                if (this.mArgs[i2] == ArgumentPlaceholder.INSTANCE) {
+                    throw new IllegalStateException("Missing argument #" + i2 + " among " + Arrays.toString(this.mArgs));
+                }
+            }
+        }
+        try {
+            return doInvoke();
+        } finally {
+            if (isRecycleOnUse()) {
+                doRecycle();
+            }
+            if (!isRecycled()) {
+                int argsSize = ArrayUtils.size(this.mArgs);
+                while (i < argsSize) {
+                    popArg(i);
+                    i++;
+                }
+            }
+        }
     }
 
     private boolean fillInArg(Object invocationArg) {
@@ -191,7 +124,7 @@ final class PooledLambdaImpl<R> extends OmniFunction<Object, Object, Object, Obj
         for (int i = 0; i < argsSize; i++) {
             if (this.mArgs[i] == ArgumentPlaceholder.INSTANCE) {
                 this.mArgs[i] = invocationArg;
-                this.mFlags = (int) (((long) this.mFlags) | BitUtils.bitAt(i));
+                this.mFlags = (int) (this.mFlags | BitUtils.bitAt(i));
                 return true;
             }
         }
@@ -211,120 +144,120 @@ final class PooledLambdaImpl<R> extends OmniFunction<Object, Object, Object, Obj
         int funcType = getFlags(MASK_FUNC_TYPE);
         int argCount = LambdaType.decodeArgCount(funcType);
         int returnType = LambdaType.decodeReturnType(funcType);
-        if (argCount != 15) {
-            switch (argCount) {
-                case 0:
-                    switch (returnType) {
-                        case 1:
-                            ((Runnable) this.mFunc).run();
-                            return null;
-                        case 2:
-                        case 3:
-                            return ((Supplier) this.mFunc).get();
-                    }
-                case 1:
-                    switch (returnType) {
-                        case 1:
-                            ((Consumer) this.mFunc).accept(popArg(0));
-                            return null;
-                        case 2:
-                            return Boolean.valueOf(((Predicate) this.mFunc).test(popArg(0)));
-                        case 3:
-                            return ((Function) this.mFunc).apply(popArg(0));
-                    }
-                case 2:
-                    switch (returnType) {
-                        case 1:
-                            ((BiConsumer) this.mFunc).accept(popArg(0), popArg(1));
-                            return null;
-                        case 2:
-                            return Boolean.valueOf(((BiPredicate) this.mFunc).test(popArg(0), popArg(1)));
-                        case 3:
-                            return ((BiFunction) this.mFunc).apply(popArg(0), popArg(1));
-                    }
-                case 3:
-                    switch (returnType) {
-                        case 1:
-                            ((TriConsumer) this.mFunc).accept(popArg(0), popArg(1), popArg(2));
-                            return null;
-                        case 2:
-                            return Boolean.valueOf(((TriPredicate) this.mFunc).test(popArg(0), popArg(1), popArg(2)));
-                        case 3:
-                            return ((TriFunction) this.mFunc).apply(popArg(0), popArg(1), popArg(2));
-                    }
+        if (argCount == 15) {
+            switch (returnType) {
                 case 4:
-                    switch (returnType) {
-                        case 1:
-                            ((QuadConsumer) this.mFunc).accept(popArg(0), popArg(1), popArg(2), popArg(3));
-                            return null;
-                        case 2:
-                            return Boolean.valueOf(((QuadPredicate) this.mFunc).test(popArg(0), popArg(1), popArg(2), popArg(3)));
-                        case 3:
-                            return ((QuadFunction) this.mFunc).apply(popArg(0), popArg(1), popArg(2), popArg(3));
-                    }
+                    return (R) Integer.valueOf(getAsInt());
                 case 5:
-                    switch (returnType) {
-                        case 1:
-                            ((QuintConsumer) this.mFunc).accept(popArg(0), popArg(1), popArg(2), popArg(3), popArg(4));
-                            return null;
-                        case 2:
-                            return Boolean.valueOf(((QuintPredicate) this.mFunc).test(popArg(0), popArg(1), popArg(2), popArg(3), popArg(4)));
-                        case 3:
-                            return ((QuintFunction) this.mFunc).apply(popArg(0), popArg(1), popArg(2), popArg(3), popArg(4));
-                    }
+                    return (R) Long.valueOf(getAsLong());
                 case 6:
-                    switch (returnType) {
-                        case 1:
-                            ((HexConsumer) this.mFunc).accept(popArg(0), popArg(1), popArg(2), popArg(3), popArg(4), popArg(5));
-                            return null;
-                        case 2:
-                            return Boolean.valueOf(((HexPredicate) this.mFunc).test(popArg(0), popArg(1), popArg(2), popArg(3), popArg(4), popArg(5)));
-                        case 3:
-                            return ((HexFunction) this.mFunc).apply(popArg(0), popArg(1), popArg(2), popArg(3), popArg(4), popArg(5));
-                    }
-                case 7:
-                    switch (returnType) {
-                        case 1:
-                            ((HeptConsumer) this.mFunc).accept(popArg(0), popArg(1), popArg(2), popArg(3), popArg(4), popArg(5), popArg(6));
-                            return null;
-                        case 2:
-                            return Boolean.valueOf(((HeptPredicate) this.mFunc).test(popArg(0), popArg(1), popArg(2), popArg(3), popArg(4), popArg(5), popArg(6)));
-                        case 3:
-                            return ((HeptFunction) this.mFunc).apply(popArg(0), popArg(1), popArg(2), popArg(3), popArg(4), popArg(5), popArg(6));
-                    }
-                case 8:
-                    switch (returnType) {
-                        case 1:
-                            ((OctConsumer) this.mFunc).accept(popArg(0), popArg(1), popArg(2), popArg(3), popArg(4), popArg(5), popArg(6), popArg(7));
-                            return null;
-                        case 2:
-                            return Boolean.valueOf(((OctPredicate) this.mFunc).test(popArg(0), popArg(1), popArg(2), popArg(3), popArg(4), popArg(5), popArg(6), popArg(7)));
-                        case 3:
-                            return ((OctFunction) this.mFunc).apply(popArg(0), popArg(1), popArg(2), popArg(3), popArg(4), popArg(5), popArg(6), popArg(7));
-                    }
-                case 9:
-                    switch (returnType) {
-                        case 1:
-                            ((NonaConsumer) this.mFunc).accept(popArg(0), popArg(1), popArg(2), popArg(3), popArg(4), popArg(5), popArg(6), popArg(7), popArg(8));
-                            return null;
-                        case 2:
-                            return Boolean.valueOf(((NonaPredicate) this.mFunc).test(popArg(0), popArg(1), popArg(2), popArg(3), popArg(4), popArg(5), popArg(6), popArg(7), popArg(8)));
-                        case 3:
-                            return ((NonaFunction) this.mFunc).apply(popArg(0), popArg(1), popArg(2), popArg(3), popArg(4), popArg(5), popArg(6), popArg(7), popArg(8));
-                    }
+                    return (R) Double.valueOf(getAsDouble());
+                default:
+                    return (R) this.mFunc;
             }
-            throw new IllegalStateException("Unknown function type: " + LambdaType.toString(funcType));
         }
-        switch (returnType) {
+        switch (argCount) {
+            case 0:
+                switch (returnType) {
+                    case 1:
+                        ((Runnable) this.mFunc).run();
+                        return null;
+                    case 2:
+                    case 3:
+                        return (R) ((Supplier) this.mFunc).get();
+                }
+            case 1:
+                switch (returnType) {
+                    case 1:
+                        ((Consumer) this.mFunc).accept(popArg(0));
+                        return null;
+                    case 2:
+                        return (R) Boolean.valueOf(((Predicate) this.mFunc).test(popArg(0)));
+                    case 3:
+                        return (R) ((Function) this.mFunc).apply(popArg(0));
+                }
+            case 2:
+                switch (returnType) {
+                    case 1:
+                        ((BiConsumer) this.mFunc).accept(popArg(0), popArg(1));
+                        return null;
+                    case 2:
+                        return (R) Boolean.valueOf(((BiPredicate) this.mFunc).test(popArg(0), popArg(1)));
+                    case 3:
+                        return (R) ((BiFunction) this.mFunc).apply(popArg(0), popArg(1));
+                }
+            case 3:
+                switch (returnType) {
+                    case 1:
+                        ((TriConsumer) this.mFunc).accept(popArg(0), popArg(1), popArg(2));
+                        return null;
+                    case 2:
+                        return (R) Boolean.valueOf(((TriPredicate) this.mFunc).test(popArg(0), popArg(1), popArg(2)));
+                    case 3:
+                        return (R) ((TriFunction) this.mFunc).apply(popArg(0), popArg(1), popArg(2));
+                }
             case 4:
-                return Integer.valueOf(getAsInt());
+                switch (returnType) {
+                    case 1:
+                        ((QuadConsumer) this.mFunc).accept(popArg(0), popArg(1), popArg(2), popArg(3));
+                        return null;
+                    case 2:
+                        return (R) Boolean.valueOf(((QuadPredicate) this.mFunc).test(popArg(0), popArg(1), popArg(2), popArg(3)));
+                    case 3:
+                        return (R) ((QuadFunction) this.mFunc).apply(popArg(0), popArg(1), popArg(2), popArg(3));
+                }
             case 5:
-                return Long.valueOf(getAsLong());
+                switch (returnType) {
+                    case 1:
+                        ((QuintConsumer) this.mFunc).accept(popArg(0), popArg(1), popArg(2), popArg(3), popArg(4));
+                        return null;
+                    case 2:
+                        return (R) Boolean.valueOf(((QuintPredicate) this.mFunc).test(popArg(0), popArg(1), popArg(2), popArg(3), popArg(4)));
+                    case 3:
+                        return (R) ((QuintFunction) this.mFunc).apply(popArg(0), popArg(1), popArg(2), popArg(3), popArg(4));
+                }
             case 6:
-                return Double.valueOf(getAsDouble());
-            default:
-                return this.mFunc;
+                switch (returnType) {
+                    case 1:
+                        ((HexConsumer) this.mFunc).accept(popArg(0), popArg(1), popArg(2), popArg(3), popArg(4), popArg(5));
+                        return null;
+                    case 2:
+                        return (R) Boolean.valueOf(((HexPredicate) this.mFunc).test(popArg(0), popArg(1), popArg(2), popArg(3), popArg(4), popArg(5)));
+                    case 3:
+                        return (R) ((HexFunction) this.mFunc).apply(popArg(0), popArg(1), popArg(2), popArg(3), popArg(4), popArg(5));
+                }
+            case 7:
+                switch (returnType) {
+                    case 1:
+                        ((HeptConsumer) this.mFunc).accept(popArg(0), popArg(1), popArg(2), popArg(3), popArg(4), popArg(5), popArg(6));
+                        return null;
+                    case 2:
+                        return (R) Boolean.valueOf(((HeptPredicate) this.mFunc).test(popArg(0), popArg(1), popArg(2), popArg(3), popArg(4), popArg(5), popArg(6)));
+                    case 3:
+                        return (R) ((HeptFunction) this.mFunc).apply(popArg(0), popArg(1), popArg(2), popArg(3), popArg(4), popArg(5), popArg(6));
+                }
+            case 8:
+                switch (returnType) {
+                    case 1:
+                        ((OctConsumer) this.mFunc).accept(popArg(0), popArg(1), popArg(2), popArg(3), popArg(4), popArg(5), popArg(6), popArg(7));
+                        return null;
+                    case 2:
+                        return (R) Boolean.valueOf(((OctPredicate) this.mFunc).test(popArg(0), popArg(1), popArg(2), popArg(3), popArg(4), popArg(5), popArg(6), popArg(7)));
+                    case 3:
+                        return (R) ((OctFunction) this.mFunc).apply(popArg(0), popArg(1), popArg(2), popArg(3), popArg(4), popArg(5), popArg(6), popArg(7));
+                }
+            case 9:
+                switch (returnType) {
+                    case 1:
+                        ((NonaConsumer) this.mFunc).accept(popArg(0), popArg(1), popArg(2), popArg(3), popArg(4), popArg(5), popArg(6), popArg(7), popArg(8));
+                        return null;
+                    case 2:
+                        return (R) Boolean.valueOf(((NonaPredicate) this.mFunc).test(popArg(0), popArg(1), popArg(2), popArg(3), popArg(4), popArg(5), popArg(6), popArg(7), popArg(8)));
+                    case 3:
+                        return (R) ((NonaFunction) this.mFunc).apply(popArg(0), popArg(1), popArg(2), popArg(3), popArg(4), popArg(5), popArg(6), popArg(7), popArg(8));
+                }
         }
+        throw new IllegalStateException("Unknown function type: " + LambdaType.toString(funcType));
     }
 
     private boolean isConstSupplier() {
@@ -335,7 +268,7 @@ final class PooledLambdaImpl<R> extends OmniFunction<Object, Object, Object, Obj
         Object result = this.mArgs[index];
         if (isInvocationArgAtIndex(index)) {
             this.mArgs[index] = ArgumentPlaceholder.INSTANCE;
-            this.mFlags = (int) (((long) this.mFlags) & (~BitUtils.bitAt(index)));
+            this.mFlags = (int) (this.mFlags & (~BitUtils.bitAt(index)));
         }
         return result;
     }
@@ -367,10 +300,7 @@ final class PooledLambdaImpl<R> extends OmniFunction<Object, Object, Object, Obj
     }
 
     private String commaSeparateFirstN(Object[] arr, int n) {
-        if (arr == null) {
-            return "";
-        }
-        return TextUtils.join((CharSequence) SmsManager.REGEX_PREFIX_DELIMITER, Arrays.copyOf(arr, n));
+        return arr == null ? "" : TextUtils.join(SmsManager.REGEX_PREFIX_DELIMITER, Arrays.copyOf(arr, n));
     }
 
     private static String hashCodeHex(Object o) {
@@ -385,32 +315,16 @@ final class PooledLambdaImpl<R> extends OmniFunction<Object, Object, Object, Obj
             return "supplier";
         }
         String name = LambdaType.toString(getFlags(MASK_EXPOSED_AS));
-        if (name.endsWith("Consumer")) {
-            return "consumer";
-        }
-        if (name.endsWith("Function")) {
-            return "function";
-        }
-        if (name.endsWith("Predicate")) {
-            return "predicate";
-        }
-        if (name.endsWith("Supplier")) {
-            return "supplier";
-        }
-        if (name.endsWith("Runnable")) {
-            return "runnable";
-        }
-        return name;
+        return name.endsWith("Consumer") ? "consumer" : name.endsWith("Function") ? "function" : name.endsWith("Predicate") ? "predicate" : name.endsWith("Supplier") ? "supplier" : name.endsWith("Runnable") ? "runnable" : name;
     }
 
     static <E extends PooledLambda> E acquire(Pool pool, Object func, int fNumArgs, int numPlaceholders, int fReturnType, Object a, Object b, Object c, Object d, Object e, Object f, Object g, Object h, Object i) {
-        int i2 = fNumArgs;
         PooledLambdaImpl r = acquire(pool);
         r.mFunc = Preconditions.checkNotNull(func);
-        r.setFlags(MASK_FUNC_TYPE, LambdaType.encode(i2, fReturnType));
+        r.setFlags(MASK_FUNC_TYPE, LambdaType.encode(fNumArgs, fReturnType));
         r.setFlags(MASK_EXPOSED_AS, LambdaType.encode(numPlaceholders, fReturnType));
-        if (ArrayUtils.size(r.mArgs) < i2) {
-            r.mArgs = new Object[i2];
+        if (ArrayUtils.size(r.mArgs) < fNumArgs) {
+            r.mArgs = new Object[fNumArgs];
         }
         setIfInBounds(r.mArgs, 0, a);
         setIfInBounds(r.mArgs, 1, b);
@@ -433,7 +347,7 @@ final class PooledLambdaImpl<R> extends OmniFunction<Object, Object, Object, Obj
     }
 
     static PooledLambdaImpl acquire(Pool pool) {
-        PooledLambdaImpl r = (PooledLambdaImpl) pool.acquire();
+        PooledLambdaImpl r = pool.acquire();
         if (r == null) {
             r = new PooledLambdaImpl();
         }
@@ -448,26 +362,32 @@ final class PooledLambdaImpl<R> extends OmniFunction<Object, Object, Object, Obj
         }
     }
 
+    @Override // com.android.internal.util.function.pooled.OmniFunction, java.util.function.Predicate, java.util.function.BiPredicate
     public OmniFunction<Object, Object, Object, Object, Object, Object, Object, Object, Object, R> negate() {
         throw new UnsupportedOperationException();
     }
 
-    public <V> OmniFunction<Object, Object, Object, Object, Object, Object, Object, Object, Object, V> andThen(Function<? super R, ? extends V> function) {
+    @Override // com.android.internal.util.function.pooled.OmniFunction, java.util.function.Function, java.util.function.BiFunction
+    public <V> OmniFunction<Object, Object, Object, Object, Object, Object, Object, Object, Object, V> andThen(Function<? super R, ? extends V> after) {
         throw new UnsupportedOperationException();
     }
 
+    @Override // java.util.function.DoubleSupplier
     public double getAsDouble() {
         return Double.longBitsToDouble(this.mConstValue);
     }
 
+    @Override // java.util.function.IntSupplier
     public int getAsInt() {
         return (int) this.mConstValue;
     }
 
+    @Override // java.util.function.LongSupplier
     public long getAsLong() {
         return this.mConstValue;
     }
 
+    @Override // com.android.internal.util.function.pooled.OmniFunction, com.android.internal.util.function.pooled.PooledFunction, com.android.internal.util.function.pooled.PooledLambda, com.android.internal.util.function.pooled.PooledConsumer, com.android.internal.util.function.pooled.PooledPredicate, com.android.internal.util.function.pooled.PooledSupplier, com.android.internal.util.function.pooled.PooledRunnable, com.android.internal.util.function.pooled.PooledSupplier.OfInt, com.android.internal.util.function.pooled.PooledSupplier.OfLong, com.android.internal.util.function.pooled.PooledSupplier.OfDouble
     public OmniFunction<Object, Object, Object, Object, Object, Object, Object, Object, Object, R> recycleOnUse() {
         this.mFlags |= 1024;
         return this;
@@ -485,27 +405,26 @@ final class PooledLambdaImpl<R> extends OmniFunction<Object, Object, Object, Obj
         return (this.mFlags & (1 << argIndex)) != 0;
     }
 
-    /* access modifiers changed from: package-private */
-    public int getFlags(int mask) {
+    int getFlags(int mask) {
         return unmask(mask, this.mFlags);
     }
 
-    /* access modifiers changed from: package-private */
-    public void setFlags(int mask, int value) {
+    void setFlags(int mask, int value) {
         this.mFlags &= ~mask;
         this.mFlags |= mask(mask, value);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static int mask(int mask, int value) {
         return (value << Integer.numberOfTrailingZeros(mask)) & mask;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static int unmask(int mask, int bits) {
         return (bits & mask) / (1 << Integer.numberOfTrailingZeros(mask));
     }
 
+    /* loaded from: classes4.dex */
     static class LambdaType {
         public static final int MASK = 127;
         public static final int MASK_ARG_COUNT = 15;
@@ -571,6 +490,7 @@ final class PooledLambdaImpl<R> extends OmniFunction<Object, Object, Object, Obj
             }
         }
 
+        /* loaded from: classes4.dex */
         static class ReturnType {
             public static final int BOOLEAN = 2;
             public static final int DOUBLE = 6;

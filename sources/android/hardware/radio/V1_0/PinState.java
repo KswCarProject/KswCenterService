@@ -3,6 +3,7 @@ package android.hardware.radio.V1_0;
 import com.android.internal.telephony.IccCardConstants;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class PinState {
     public static final int DISABLED = 3;
     public static final int ENABLED_BLOCKED = 4;

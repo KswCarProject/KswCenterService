@@ -2,6 +2,7 @@ package android.graphics;
 
 import android.annotation.UnsupportedAppUsage;
 
+/* loaded from: classes.dex */
 public class LightingColorFilter extends ColorFilter {
     private int mAdd;
     private int mMul;
@@ -37,8 +38,8 @@ public class LightingColorFilter extends ColorFilter {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public long createNativeInstance() {
+    @Override // android.graphics.ColorFilter
+    long createNativeInstance() {
         return native_CreateLightingFilter(this.mMul, this.mAdd);
     }
 }

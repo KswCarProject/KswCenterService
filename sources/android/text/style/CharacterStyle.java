@@ -3,6 +3,7 @@ package android.text.style;
 import android.text.TextPaint;
 import android.text.style.MetricAffectingSpan;
 
+/* loaded from: classes4.dex */
 public abstract class CharacterStyle {
     public abstract void updateDrawState(TextPaint textPaint);
 
@@ -17,6 +18,7 @@ public abstract class CharacterStyle {
         return this;
     }
 
+    /* loaded from: classes4.dex */
     private static class Passthrough extends CharacterStyle {
         private CharacterStyle mStyle;
 
@@ -24,10 +26,12 @@ public abstract class CharacterStyle {
             this.mStyle = cs;
         }
 
+        @Override // android.text.style.CharacterStyle
         public void updateDrawState(TextPaint tp) {
             this.mStyle.updateDrawState(tp);
         }
 
+        @Override // android.text.style.CharacterStyle
         public CharacterStyle getUnderlying() {
             return this.mStyle.getUnderlying();
         }

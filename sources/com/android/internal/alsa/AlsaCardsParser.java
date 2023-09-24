@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+/* loaded from: classes4.dex */
 public class AlsaCardsParser {
     protected static final boolean DEBUG = false;
     public static final int SCANSTATUS_EMPTY = 2;
@@ -21,20 +22,19 @@ public class AlsaCardsParser {
     private static final String kAlsaFolderPath = "/proc/asound";
     private static final String kCardsFilePath = "/proc/asound/cards";
     private static final String kDeviceAddressPrefix = "/dev/bus/usb/";
-    /* access modifiers changed from: private */
-    public static LineTokenizer mTokenizer = new LineTokenizer(" :[]");
+    private static LineTokenizer mTokenizer = new LineTokenizer(" :[]");
     private ArrayList<AlsaCardRecord> mCardRecords = new ArrayList<>();
     private int mScanStatus = -1;
 
+    /* loaded from: classes4.dex */
     public class AlsaCardRecord {
         private static final String TAG = "AlsaCardRecord";
         private static final String kUsbCardKeyStr = "at usb-";
-        String mCardDescription = "";
-        String mCardName = "";
         int mCardNum = -1;
         String mField1 = "";
-        /* access modifiers changed from: private */
-        public String mUsbDeviceAddress = null;
+        String mCardName = "";
+        String mCardDescription = "";
+        private String mUsbDeviceAddress = null;
 
         public AlsaCardRecord() {
         }
@@ -55,10 +55,9 @@ public class AlsaCardsParser {
             this.mUsbDeviceAddress = usbDeviceAddress;
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public boolean parse(String line, int lineIndex) {
             int tokenIndex;
-            boolean isUsb = false;
             if (lineIndex == 0) {
                 int tokenIndex2 = AlsaCardsParser.mTokenizer.nextToken(line, 0);
                 int delimIndex = AlsaCardsParser.mTokenizer.nextDelimiter(line, tokenIndex2);
@@ -69,14 +68,12 @@ public class AlsaCardsParser {
                     this.mField1 = line.substring(tokenIndex3, delimIndex2);
                     this.mCardName = line.substring(AlsaCardsParser.mTokenizer.nextToken(line, delimIndex2));
                 } catch (NumberFormatException e) {
-                    Slog.e(TAG, "Failed to parse line " + lineIndex + " of " + AlsaCardsParser.kCardsFilePath + PluralRules.KEYWORD_RULE_SEPARATOR + line.substring(tokenIndex2, delimIndex));
+                    Slog.m56e(TAG, "Failed to parse line " + lineIndex + " of " + AlsaCardsParser.kCardsFilePath + PluralRules.KEYWORD_RULE_SEPARATOR + line.substring(tokenIndex2, delimIndex));
                     return false;
                 }
             } else if (lineIndex == 1 && (tokenIndex = AlsaCardsParser.mTokenizer.nextToken(line, 0)) != -1) {
                 int keyIndex = line.indexOf(kUsbCardKeyStr);
-                if (keyIndex != -1) {
-                    isUsb = true;
-                }
+                boolean isUsb = keyIndex != -1;
                 if (isUsb) {
                     this.mCardDescription = line.substring(tokenIndex, keyIndex - 1);
                 }
@@ -84,8 +81,7 @@ public class AlsaCardsParser {
             return true;
         }
 
-        /* access modifiers changed from: package-private */
-        public boolean isUsb() {
+        boolean isUsb() {
             return this.mUsbDeviceAddress != null;
         }
 
@@ -94,29 +90,31 @@ public class AlsaCardsParser {
         }
 
         public void log(int listIndex) {
-            Slog.d(TAG, "" + listIndex + " [" + this.mCardNum + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + this.mCardName + " : " + this.mCardDescription + " usb:" + isUsb());
+            Slog.m58d(TAG, "" + listIndex + " [" + this.mCardNum + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + this.mCardName + " : " + this.mCardDescription + " usb:" + isUsb());
         }
     }
 
     public int scan() {
         this.mCardRecords = new ArrayList<>();
+        File cardsFile = new File(kCardsFilePath);
         try {
-            FileReader reader = new FileReader(new File(kCardsFilePath));
+            FileReader reader = new FileReader(cardsFile);
             BufferedReader bufferedReader = new BufferedReader(reader);
             while (true) {
-                String readLine = bufferedReader.readLine();
-                String line = readLine;
-                if (readLine == null) {
+                String line = bufferedReader.readLine();
+                if (line == null) {
                     break;
                 }
                 AlsaCardRecord cardRecord = new AlsaCardRecord();
-                boolean unused = cardRecord.parse(line, 0);
+                cardRecord.parse(line, 0);
                 String line2 = bufferedReader.readLine();
                 if (line2 == null) {
                     break;
                 }
-                boolean unused2 = cardRecord.parse(line2, 1);
-                File usbbusFile = new File(("/proc/asound/card" + cardRecord.mCardNum) + "/usbbus");
+                cardRecord.parse(line2, 1);
+                int cardNum = cardRecord.mCardNum;
+                String cardFolderPath = "/proc/asound/card" + cardNum;
+                File usbbusFile = new File(cardFolderPath + "/usbbus");
                 if (usbbusFile.exists()) {
                     FileReader usbbusReader = new FileReader(usbbusFile);
                     String deviceAddress = new BufferedReader(usbbusReader).readLine();

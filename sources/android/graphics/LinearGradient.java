@@ -4,6 +4,7 @@ import android.annotation.UnsupportedAppUsage;
 import android.graphics.ColorSpace;
 import android.graphics.Shader;
 
+/* loaded from: classes.dex */
 public class LinearGradient extends Shader {
     @UnsupportedAppUsage
     private int mColor0;
@@ -37,17 +38,16 @@ public class LinearGradient extends Shader {
 
     private LinearGradient(float x0, float y0, float x1, float y1, long[] colors, float[] positions, Shader.TileMode tile, ColorSpace colorSpace) {
         super(colorSpace);
-        if (positions == null || colors.length == positions.length) {
-            this.mX0 = x0;
-            this.mY0 = y0;
-            this.mX1 = x1;
-            this.mY1 = y1;
-            this.mColorLongs = colors;
-            this.mPositions = positions != null ? (float[]) positions.clone() : null;
-            this.mTileMode = tile;
-            return;
+        if (positions != null && colors.length != positions.length) {
+            throw new IllegalArgumentException("color and position arrays must be of equal length");
         }
-        throw new IllegalArgumentException("color and position arrays must be of equal length");
+        this.mX0 = x0;
+        this.mY0 = y0;
+        this.mX1 = x1;
+        this.mY1 = y1;
+        this.mColorLongs = colors;
+        this.mPositions = positions != null ? (float[]) positions.clone() : null;
+        this.mTileMode = tile;
     }
 
     public LinearGradient(float x0, float y0, float x1, float y1, int color0, int color1, Shader.TileMode tile) {
@@ -58,8 +58,8 @@ public class LinearGradient extends Shader {
         this(x0, y0, x1, y1, new long[]{color0, color1}, (float[]) null, tile);
     }
 
-    /* access modifiers changed from: package-private */
-    public long createNativeInstance(long nativeMatrix) {
+    @Override // android.graphics.Shader
+    long createNativeInstance(long nativeMatrix) {
         return nativeCreate(nativeMatrix, this.mX0, this.mY0, this.mX1, this.mY1, this.mColorLongs, this.mPositions, this.mTileMode.nativeInt, colorSpace().getNativeInstance());
     }
 }

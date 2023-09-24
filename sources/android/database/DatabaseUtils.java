@@ -14,9 +14,9 @@ import android.database.sqlite.SQLiteFullException;
 import android.database.sqlite.SQLiteProgram;
 import android.database.sqlite.SQLiteStatement;
 import android.net.wifi.WifiEnterpriseConfig;
-import android.os.OperationCanceledException;
-import android.os.Parcel;
-import android.os.ParcelFileDescriptor;
+import android.p007os.OperationCanceledException;
+import android.p007os.Parcel;
+import android.p007os.ParcelFileDescriptor;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -29,9 +29,9 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+/* loaded from: classes.dex */
 public class DatabaseUtils {
     private static final boolean DEBUG = false;
-    private static final char[] DIGITS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', DateFormat.AM_PM, 'b', 'c', DateFormat.DATE, 'e', 'f'};
     public static final int STATEMENT_ABORT = 6;
     public static final int STATEMENT_ATTACH = 3;
     public static final int STATEMENT_BEGIN = 4;
@@ -43,6 +43,7 @@ public class DatabaseUtils {
     public static final int STATEMENT_UNPREPARED = 9;
     public static final int STATEMENT_UPDATE = 2;
     private static final String TAG = "DatabaseUtils";
+    private static final char[] DIGITS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', DateFormat.AM_PM, 'b', 'c', DateFormat.DATE, 'e', 'f'};
     private static Collator mColl = null;
 
     public static final void writeExceptionToParcel(Parcel reply, Exception e) {
@@ -74,45 +75,47 @@ public class DatabaseUtils {
             logException = false;
         } else {
             reply.writeException(e);
-            Log.e(TAG, "Writing exception to parcel", e);
+            Log.m69e(TAG, "Writing exception to parcel", e);
             return;
         }
         reply.writeInt(code);
         reply.writeString(e.getMessage());
         if (logException) {
-            Log.e(TAG, "Writing exception to parcel", e);
+            Log.m69e(TAG, "Writing exception to parcel", e);
         }
     }
 
     public static final void readExceptionFromParcel(Parcel reply) {
         int code = reply.readExceptionCode();
-        if (code != 0) {
-            readExceptionFromParcel(reply, reply.readString(), code);
+        if (code == 0) {
+            return;
         }
+        String msg = reply.readString();
+        readExceptionFromParcel(reply, msg, code);
     }
 
     public static void readExceptionWithFileNotFoundExceptionFromParcel(Parcel reply) throws FileNotFoundException {
         int code = reply.readExceptionCode();
-        if (code != 0) {
-            String msg = reply.readString();
-            if (code != 1) {
-                readExceptionFromParcel(reply, msg, code);
-                return;
-            }
+        if (code == 0) {
+            return;
+        }
+        String msg = reply.readString();
+        if (code == 1) {
             throw new FileNotFoundException(msg);
         }
+        readExceptionFromParcel(reply, msg, code);
     }
 
     public static void readExceptionWithOperationApplicationExceptionFromParcel(Parcel reply) throws OperationApplicationException {
         int code = reply.readExceptionCode();
-        if (code != 0) {
-            String msg = reply.readString();
-            if (code != 10) {
-                readExceptionFromParcel(reply, msg, code);
-                return;
-            }
+        if (code == 0) {
+            return;
+        }
+        String msg = reply.readString();
+        if (code == 10) {
             throw new OperationApplicationException(msg);
         }
+        readExceptionFromParcel(reply, msg, code);
     }
 
     private static final void readExceptionFromParcel(Parcel reply, String msg, int code) {
@@ -133,11 +136,12 @@ public class DatabaseUtils {
                 throw new SQLiteDiskIOException(msg);
             case 9:
                 throw new SQLiteException(msg);
-            case 11:
-                throw new OperationCanceledException(msg);
+            case 10:
             default:
                 reply.readException(code, msg);
                 return;
+            case 11:
+                throw new OperationCanceledException(msg);
         }
     }
 
@@ -148,25 +152,34 @@ public class DatabaseUtils {
             prog.bindDouble(index, ((Number) value).doubleValue());
         } else if (value instanceof Number) {
             prog.bindLong(index, ((Number) value).longValue());
-        } else if (value instanceof Boolean) {
-            if (((Boolean) value).booleanValue()) {
-                prog.bindLong(index, 1);
+        } else if (!(value instanceof Boolean)) {
+            if (value instanceof byte[]) {
+                prog.bindBlob(index, (byte[]) value);
             } else {
-                prog.bindLong(index, 0);
+                prog.bindString(index, value.toString());
             }
-        } else if (value instanceof byte[]) {
-            prog.bindBlob(index, (byte[]) value);
         } else {
-            prog.bindString(index, value.toString());
+            Boolean bool = (Boolean) value;
+            if (bool.booleanValue()) {
+                prog.bindLong(index, 1L);
+            } else {
+                prog.bindLong(index, 0L);
+            }
         }
     }
 
+    /* JADX WARN: Removed duplicated region for block: B:25:0x0048  */
+    /* JADX WARN: Removed duplicated region for block: B:33:0x0068  */
+    /* JADX WARN: Removed duplicated region for block: B:51:0x00ae A[SYNTHETIC] */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
     public static String bindSelection(String selection, Object... selectionArgs) {
-        char c;
+        int typeOfObject;
         if (selection == null) {
             return null;
         }
-        if (ArrayUtils.isEmpty((T[]) selectionArgs) || selection.indexOf(63) == -1) {
+        if (ArrayUtils.isEmpty(selectionArgs) || selection.indexOf(63) == -1) {
             return selection;
         }
         char before = ' ';
@@ -175,65 +188,71 @@ public class DatabaseUtils {
         StringBuilder res = new StringBuilder(len);
         int i = 0;
         while (i < len) {
-            int start = i + 1;
-            char c2 = selection.charAt(i);
-            if (c2 == '?') {
+            int i2 = i + 1;
+            char c = selection.charAt(i);
+            if (c == '?') {
                 char after = ' ';
-                char c3 = c2;
-                i = start;
-                while (true) {
-                    if (i < len) {
-                        c = selection.charAt(i);
-                        if (c < '0' || c > '9') {
-                            after = c;
+                i = i2;
+                while (i < len) {
+                    char c2 = selection.charAt(i);
+                    if (c2 >= '0' && c2 <= '9') {
+                        i++;
+                    } else {
+                        after = c2;
+                        if (i2 != i) {
+                            argIndex = Integer.parseInt(selection.substring(i2, i)) - 1;
+                        }
+                        int argIndex2 = argIndex + 1;
+                        Object arg = selectionArgs[argIndex];
+                        if (before != ' ' && before != '=') {
+                            res.append(' ');
+                        }
+                        typeOfObject = getTypeOfObject(arg);
+                        if (typeOfObject == 4) {
+                            switch (typeOfObject) {
+                                case 0:
+                                    res.append(WifiEnterpriseConfig.EMPTY_VALUE);
+                                    break;
+                                case 1:
+                                    res.append(((Number) arg).longValue());
+                                    break;
+                                case 2:
+                                    res.append(((Number) arg).doubleValue());
+                                    break;
+                                default:
+                                    if (!(arg instanceof Boolean)) {
+                                        res.append(DateFormat.QUOTE);
+                                        res.append(arg.toString());
+                                        res.append(DateFormat.QUOTE);
+                                        break;
+                                    } else {
+                                        res.append(((Boolean) arg).booleanValue() ? 1 : 0);
+                                        break;
+                                    }
+                            }
+                            if (after != ' ') {
+                                res.append(' ');
+                            }
+                            argIndex = argIndex2;
                         } else {
-                            i++;
+                            throw new IllegalArgumentException("Blobs not supported");
                         }
                     }
                 }
-                after = c;
-                if (start != i) {
-                    argIndex = Integer.parseInt(selection.substring(start, i)) - 1;
+                if (i2 != i) {
                 }
-                int argIndex2 = argIndex + 1;
-                Boolean bool = selectionArgs[argIndex];
-                if (!(before == ' ' || before == '=')) {
+                int argIndex22 = argIndex + 1;
+                Object arg2 = selectionArgs[argIndex];
+                if (before != ' ') {
                     res.append(' ');
                 }
-                int typeOfObject = getTypeOfObject(bool);
-                if (typeOfObject != 4) {
-                    switch (typeOfObject) {
-                        case 0:
-                            res.append(WifiEnterpriseConfig.EMPTY_VALUE);
-                            break;
-                        case 1:
-                            res.append(bool.longValue());
-                            break;
-                        case 2:
-                            res.append(bool.doubleValue());
-                            break;
-                        default:
-                            if (!(bool instanceof Boolean)) {
-                                res.append(DateFormat.QUOTE);
-                                res.append(bool.toString());
-                                res.append(DateFormat.QUOTE);
-                                break;
-                            } else {
-                                res.append(bool.booleanValue() ? 1 : 0);
-                                break;
-                            }
-                    }
-                    if (after != ' ') {
-                        res.append(' ');
-                    }
-                    argIndex = argIndex2;
-                } else {
-                    throw new IllegalArgumentException("Blobs not supported");
+                typeOfObject = getTypeOfObject(arg2);
+                if (typeOfObject == 4) {
                 }
             } else {
-                res.append(c2);
-                before = c2;
-                i = start;
+                res.append(c);
+                before = c;
+                i = i2;
             }
         }
         return res.toString();
@@ -258,64 +277,61 @@ public class DatabaseUtils {
 
     public static void cursorFillWindow(Cursor cursor, int position, CursorWindow window) {
         boolean success;
-        if (position >= 0 && position < cursor.getCount()) {
-            int oldPos = cursor.getPosition();
-            int numColumns = cursor.getColumnCount();
-            window.clear();
-            window.setStartPosition(position);
-            window.setNumColumns(numColumns);
-            if (cursor.moveToPosition(position)) {
-                while (true) {
-                    if (window.allocRow()) {
-                        int i = 0;
-                        while (true) {
-                            if (i >= numColumns) {
-                                position++;
-                                if (!cursor.moveToNext()) {
-                                }
-                            } else {
-                                int type = cursor.getType(i);
-                                if (type != 4) {
-                                    switch (type) {
-                                        case 0:
+        if (position < 0 || position >= cursor.getCount()) {
+            return;
+        }
+        int oldPos = cursor.getPosition();
+        int numColumns = cursor.getColumnCount();
+        window.clear();
+        window.setStartPosition(position);
+        window.setNumColumns(numColumns);
+        if (cursor.moveToPosition(position)) {
+            while (true) {
+                if (window.allocRow()) {
+                    int i = 0;
+                    while (true) {
+                        if (i < numColumns) {
+                            int type = cursor.getType(i);
+                            if (type != 4) {
+                                switch (type) {
+                                    case 0:
+                                        success = window.putNull(position, i);
+                                        break;
+                                    case 1:
+                                        success = window.putLong(cursor.getLong(i), position, i);
+                                        break;
+                                    case 2:
+                                        success = window.putDouble(cursor.getDouble(i), position, i);
+                                        break;
+                                    default:
+                                        String value = cursor.getString(i);
+                                        if (value == null) {
                                             success = window.putNull(position, i);
                                             break;
-                                        case 1:
-                                            success = window.putLong(cursor.getLong(i), position, i);
+                                        } else {
+                                            success = window.putString(value, position, i);
                                             break;
-                                        case 2:
-                                            success = window.putDouble(cursor.getDouble(i), position, i);
-                                            break;
-                                        default:
-                                            String value = cursor.getString(i);
-                                            if (value == null) {
-                                                success = window.putNull(position, i);
-                                                break;
-                                            } else {
-                                                success = window.putString(value, position, i);
-                                                break;
-                                            }
-                                    }
-                                } else {
-                                    byte[] value2 = cursor.getBlob(i);
-                                    if (value2 != null) {
-                                        success = window.putBlob(value2, position, i);
-                                    } else {
-                                        success = window.putNull(position, i);
-                                    }
+                                        }
                                 }
-                                if (!success) {
-                                    window.freeLastRow();
-                                } else {
-                                    i++;
-                                }
+                            } else {
+                                byte[] value2 = cursor.getBlob(i);
+                                success = value2 != null ? window.putBlob(value2, position, i) : window.putNull(position, i);
+                            }
+                            if (success) {
+                                i++;
+                            } else {
+                                window.freeLastRow();
+                            }
+                        } else {
+                            position++;
+                            if (!cursor.moveToNext()) {
                             }
                         }
                     }
                 }
             }
-            cursor.moveToPosition(oldPos);
         }
+        cursor.moveToPosition(oldPos);
     }
 
     public static void appendEscapedSQLString(StringBuilder sb, String sqlString) {
@@ -344,12 +360,15 @@ public class DatabaseUtils {
     public static final void appendValueToSql(StringBuilder sql, Object value) {
         if (value == null) {
             sql.append(WifiEnterpriseConfig.EMPTY_VALUE);
-        } else if (!(value instanceof Boolean)) {
-            appendEscapedSQLString(sql, value.toString());
-        } else if (((Boolean) value).booleanValue()) {
-            sql.append('1');
+        } else if (value instanceof Boolean) {
+            Boolean bool = (Boolean) value;
+            if (bool.booleanValue()) {
+                sql.append('1');
+            } else {
+                sql.append('0');
+            }
         } else {
-            sql.append('0');
+            appendEscapedSQLString(sql, value.toString());
         }
     }
 
@@ -374,12 +393,13 @@ public class DatabaseUtils {
 
     public static String getHexCollationKey(String name) {
         byte[] arr = getCollationKeyInBytes(name);
-        return new String(encodeHex(arr), 0, getKeyLen(arr) * 2);
+        char[] keys = encodeHex(arr);
+        return new String(keys, 0, getKeyLen(arr) * 2);
     }
 
     private static char[] encodeHex(byte[] input) {
         int l = input.length;
-        char[] out = new char[(l << 1)];
+        char[] out = new char[l << 1];
         int j = 0;
         for (int i = 0; i < l; i++) {
             int j2 = j + 1;
@@ -515,10 +535,11 @@ public class DatabaseUtils {
     public static void cursorLongToContentValues(Cursor cursor, String field, ContentValues values, String key) {
         int colIndex = cursor.getColumnIndex(field);
         if (!cursor.isNull(colIndex)) {
-            values.put(key, Long.valueOf(cursor.getLong(colIndex)));
-        } else {
-            values.put(key, (Long) null);
+            Long value = Long.valueOf(cursor.getLong(colIndex));
+            values.put(key, value);
+            return;
         }
+        values.put(key, (Long) null);
     }
 
     public static void cursorDoubleToCursorValues(Cursor cursor, String field, ContentValues values) {
@@ -552,29 +573,26 @@ public class DatabaseUtils {
     }
 
     public static long queryNumEntries(SQLiteDatabase db, String table) {
-        return queryNumEntries(db, table, (String) null, (String[]) null);
+        return queryNumEntries(db, table, null, null);
     }
 
     public static long queryNumEntries(SQLiteDatabase db, String table, String selection) {
-        return queryNumEntries(db, table, selection, (String[]) null);
+        return queryNumEntries(db, table, selection, null);
     }
 
     public static long queryNumEntries(SQLiteDatabase db, String table, String selection, String[] selectionArgs) {
         String s;
-        if (!TextUtils.isEmpty(selection)) {
-            s = " where " + selection;
-        } else {
+        if (TextUtils.isEmpty(selection)) {
             s = "";
+        } else {
+            s = " where " + selection;
         }
         return longForQuery(db, "select count(*) from " + table + s, selectionArgs);
     }
 
     public static boolean queryIsEmpty(SQLiteDatabase db, String table) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("select exists(select 1 from ");
-        sb.append(table);
-        sb.append(")");
-        return longForQuery(db, sb.toString(), (String[]) null) == 0;
+        long isEmpty = longForQuery(db, "select exists(select 1 from " + table + ")", null);
+        return isEmpty == 0;
     }
 
     public static long longForQuery(SQLiteDatabase db, String query, String[] selectionArgs) {
@@ -662,16 +680,17 @@ public class DatabaseUtils {
     }
 
     @Deprecated
+    /* loaded from: classes.dex */
     public static class InsertHelper {
         public static final int TABLE_INFO_PRAGMA_COLUMNNAME_INDEX = 1;
         public static final int TABLE_INFO_PRAGMA_DEFAULT_INDEX = 4;
         private HashMap<String, Integer> mColumns;
         private final SQLiteDatabase mDb;
+        private final String mTableName;
         private String mInsertSQL = null;
         private SQLiteStatement mInsertStatement = null;
-        private SQLiteStatement mPreparedStatement = null;
         private SQLiteStatement mReplaceStatement = null;
-        private final String mTableName;
+        private SQLiteStatement mPreparedStatement = null;
 
         public InsertHelper(SQLiteDatabase db, String tableName) {
             this.mDb = db;
@@ -688,7 +707,7 @@ public class DatabaseUtils {
             int i = 1;
             Cursor cur = null;
             try {
-                cur = this.mDb.rawQuery("PRAGMA table_info(" + this.mTableName + ")", (String[]) null);
+                cur = this.mDb.rawQuery("PRAGMA table_info(" + this.mTableName + ")", null);
                 this.mColumns = new HashMap<>(cur.getCount());
                 while (cur.moveToNext()) {
                     String columnName = cur.getString(1);
@@ -708,7 +727,7 @@ public class DatabaseUtils {
                     sbv.append(i == cur.getCount() ? ");" : ", ");
                     i++;
                 }
-                sb.append(sbv);
+                sb.append((CharSequence) sbv);
                 this.mInsertSQL = sb.toString();
             } finally {
                 if (cur != null) {
@@ -723,7 +742,8 @@ public class DatabaseUtils {
                     if (this.mInsertSQL == null) {
                         buildSQL();
                     }
-                    this.mReplaceStatement = this.mDb.compileStatement("INSERT OR REPLACE" + this.mInsertSQL.substring(6));
+                    String replaceSQL = "INSERT OR REPLACE" + this.mInsertSQL.substring(6);
+                    this.mReplaceStatement = this.mDb.compileStatement(replaceSQL);
                 }
                 return this.mReplaceStatement;
             }
@@ -742,14 +762,16 @@ public class DatabaseUtils {
                 SQLiteStatement stmt = getStatement(allowReplace);
                 stmt.clearBindings();
                 for (Map.Entry<String, Object> e : values.valueSet()) {
-                    DatabaseUtils.bindObjectToProgram(stmt, getColumnIndex(e.getKey()), e.getValue());
+                    String key = e.getKey();
+                    int i = getColumnIndex(key);
+                    DatabaseUtils.bindObjectToProgram(stmt, i, e.getValue());
                 }
                 long result = stmt.executeInsert();
                 this.mDb.setTransactionSuccessful();
                 return result;
             } catch (SQLException e2) {
-                Log.e(DatabaseUtils.TAG, "Error inserting " + values + " into table  " + this.mTableName, e2);
-                return -1;
+                Log.m69e(DatabaseUtils.TAG, "Error inserting " + values + " into table  " + this.mTableName, e2);
+                return -1L;
             } finally {
                 this.mDb.endTransaction();
             }
@@ -758,10 +780,10 @@ public class DatabaseUtils {
         public int getColumnIndex(String key) {
             getStatement(false);
             Integer index = this.mColumns.get(key);
-            if (index != null) {
-                return index.intValue();
+            if (index == null) {
+                throw new IllegalArgumentException("column '" + key + "' is invalid");
             }
-            throw new IllegalArgumentException("column '" + key + "' is invalid");
+            return index.intValue();
         }
 
         public void bind(int index, double value) {
@@ -769,7 +791,7 @@ public class DatabaseUtils {
         }
 
         public void bind(int index, float value) {
-            this.mPreparedStatement.bindDouble(index, (double) value);
+            this.mPreparedStatement.bindDouble(index, value);
         }
 
         public void bind(int index, long value) {
@@ -777,11 +799,11 @@ public class DatabaseUtils {
         }
 
         public void bind(int index, int value) {
-            this.mPreparedStatement.bindLong(index, (long) value);
+            this.mPreparedStatement.bindLong(index, value);
         }
 
         public void bind(int index, boolean value) {
-            this.mPreparedStatement.bindLong(index, value ? 1 : 0);
+            this.mPreparedStatement.bindLong(index, value ? 1L : 0L);
         }
 
         public void bindNull(int index) {
@@ -813,14 +835,13 @@ public class DatabaseUtils {
                 try {
                     return this.mPreparedStatement.executeInsert();
                 } catch (SQLException e) {
-                    Log.e(DatabaseUtils.TAG, "Error executing InsertHelper with table " + this.mTableName, e);
-                    return -1;
+                    Log.m69e(DatabaseUtils.TAG, "Error executing InsertHelper with table " + this.mTableName, e);
+                    return -1L;
                 } finally {
                     this.mPreparedStatement = null;
                 }
-            } else {
-                throw new IllegalStateException("you must prepare this inserter before calling execute");
             }
+            throw new IllegalStateException("you must prepare this inserter before calling execute");
         }
 
         public void prepareForInsert() {
@@ -852,8 +873,9 @@ public class DatabaseUtils {
     }
 
     public static void createDbFromSqlStatements(Context context, String dbName, int dbVersion, String sqlStatements) {
-        SQLiteDatabase db = context.openOrCreateDatabase(dbName, 0, (SQLiteDatabase.CursorFactory) null);
-        for (String statement : TextUtils.split(sqlStatements, ";\n")) {
+        SQLiteDatabase db = context.openOrCreateDatabase(dbName, 0, null);
+        String[] statements = TextUtils.split(sqlStatements, ";\n");
+        for (String statement : statements) {
             if (!TextUtils.isEmpty(statement)) {
                 db.execSQL(statement);
             }
@@ -881,11 +903,12 @@ public class DatabaseUtils {
             return 5;
         }
         if (prefixSql.equals("ROL")) {
-            if (!sql2.toUpperCase(Locale.ROOT).contains(" TO ")) {
-                return 6;
+            boolean isRollbackToSavepoint = sql2.toUpperCase(Locale.ROOT).contains(" TO ");
+            if (isRollbackToSavepoint) {
+                Log.m64w(TAG, "Statement '" + sql2 + "' may not work on API levels 16-27, use ';" + sql2 + "' instead");
+                return 99;
             }
-            Log.w(TAG, "Statement '" + sql2 + "' may not work on API levels 16-27, use ';" + sql2 + "' instead");
-            return 99;
+            return 6;
         } else if (prefixSql.equals("BEG")) {
             return 4;
         } else {
@@ -895,10 +918,7 @@ public class DatabaseUtils {
             if (prefixSql.equals("CRE") || prefixSql.equals("DRO") || prefixSql.equals("ALT")) {
                 return 8;
             }
-            if (prefixSql.equals("ANA") || prefixSql.equals("DET")) {
-                return 9;
-            }
-            return 99;
+            return (prefixSql.equals("ANA") || prefixSql.equals("DET")) ? 9 : 99;
         }
     }
 
@@ -906,7 +926,7 @@ public class DatabaseUtils {
         if (originalValues == null || originalValues.length == 0) {
             return newValues;
         }
-        String[] result = new String[(originalValues.length + newValues.length)];
+        String[] result = new String[originalValues.length + newValues.length];
         System.arraycopy(originalValues, 0, result, 0, originalValues.length);
         System.arraycopy(newValues, 0, result, originalValues.length, newValues.length);
         return result;

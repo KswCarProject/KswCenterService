@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/* loaded from: classes3.dex */
 public final class AttestedKeyPair {
     private final Certificate[] mAttestationRecord;
     private final KeyPair mKeyPair;

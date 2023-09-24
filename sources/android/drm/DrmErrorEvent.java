@@ -2,6 +2,7 @@ package android.drm;
 
 import java.util.HashMap;
 
+/* loaded from: classes.dex */
 public class DrmErrorEvent extends DrmEvent {
     public static final int TYPE_ACQUIRE_DRM_INFO_FAILED = 2008;
     public static final int TYPE_NOT_SUPPORTED = 2003;
@@ -24,7 +25,8 @@ public class DrmErrorEvent extends DrmEvent {
 
     private void checkTypeValidity(int type) {
         if (type < 2001 || type > 2008) {
-            throw new IllegalArgumentException("Unsupported type: " + type);
+            String msg = "Unsupported type: " + type;
+            throw new IllegalArgumentException(msg);
         }
     }
 }

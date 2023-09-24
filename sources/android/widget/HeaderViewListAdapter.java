@@ -8,6 +8,7 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+/* loaded from: classes4.dex */
 public class HeaderViewListAdapter implements WrapperListAdapter, Filterable {
     static final ArrayList<ListView.FixedViewInfo> EMPTY_INFO_LIST = new ArrayList<>();
     @UnsupportedAppUsage
@@ -43,19 +44,21 @@ public class HeaderViewListAdapter implements WrapperListAdapter, Filterable {
         return this.mFooterViewInfos.size();
     }
 
+    @Override // android.widget.Adapter
     public boolean isEmpty() {
         return this.mAdapter == null || this.mAdapter.isEmpty();
     }
 
     private boolean areAllListInfosSelectable(ArrayList<ListView.FixedViewInfo> infos) {
-        if (infos == null) {
-            return true;
-        }
-        Iterator<ListView.FixedViewInfo> it = infos.iterator();
-        while (it.hasNext()) {
-            if (!it.next().isSelectable) {
-                return false;
+        if (infos != null) {
+            Iterator<ListView.FixedViewInfo> it = infos.iterator();
+            while (it.hasNext()) {
+                ListView.FixedViewInfo info = it.next();
+                if (!info.isSelectable) {
+                    return false;
+                }
             }
+            return true;
         }
         return true;
     }
@@ -63,7 +66,8 @@ public class HeaderViewListAdapter implements WrapperListAdapter, Filterable {
     public boolean removeHeader(View v) {
         boolean z = false;
         for (int i = 0; i < this.mHeaderViewInfos.size(); i++) {
-            if (this.mHeaderViewInfos.get(i).view == v) {
+            ListView.FixedViewInfo info = this.mHeaderViewInfos.get(i);
+            if (info.view == v) {
                 this.mHeaderViewInfos.remove(i);
                 if (areAllListInfosSelectable(this.mHeaderViewInfos) && areAllListInfosSelectable(this.mFooterViewInfos)) {
                     z = true;
@@ -78,7 +82,8 @@ public class HeaderViewListAdapter implements WrapperListAdapter, Filterable {
     public boolean removeFooter(View v) {
         boolean z = false;
         for (int i = 0; i < this.mFooterViewInfos.size(); i++) {
-            if (this.mFooterViewInfos.get(i).view == v) {
+            ListView.FixedViewInfo info = this.mFooterViewInfos.get(i);
+            if (info.view == v) {
                 this.mFooterViewInfos.remove(i);
                 if (areAllListInfosSelectable(this.mHeaderViewInfos) && areAllListInfosSelectable(this.mFooterViewInfos)) {
                     z = true;
@@ -90,6 +95,7 @@ public class HeaderViewListAdapter implements WrapperListAdapter, Filterable {
         return false;
     }
 
+    @Override // android.widget.Adapter
     public int getCount() {
         if (this.mAdapter != null) {
             return getFootersCount() + getHeadersCount() + this.mAdapter.getCount();
@@ -97,16 +103,15 @@ public class HeaderViewListAdapter implements WrapperListAdapter, Filterable {
         return getFootersCount() + getHeadersCount();
     }
 
+    @Override // android.widget.ListAdapter
     public boolean areAllItemsEnabled() {
-        if (this.mAdapter == null) {
-            return true;
-        }
-        if (!this.mAreAllFixedViewsSelectable || !this.mAdapter.areAllItemsEnabled()) {
-            return false;
+        if (this.mAdapter != null) {
+            return this.mAreAllFixedViewsSelectable && this.mAdapter.areAllItemsEnabled();
         }
         return true;
     }
 
+    @Override // android.widget.ListAdapter
     public boolean isEnabled(int position) {
         int numHeaders = getHeadersCount();
         if (position < numHeaders) {
@@ -114,12 +119,13 @@ public class HeaderViewListAdapter implements WrapperListAdapter, Filterable {
         }
         int adjPosition = position - numHeaders;
         int adapterCount = 0;
-        if (this.mAdapter == null || adjPosition >= (adapterCount = this.mAdapter.getCount())) {
-            return this.mFooterViewInfos.get(adjPosition - adapterCount).isSelectable;
+        if (this.mAdapter != null && adjPosition < (adapterCount = this.mAdapter.getCount())) {
+            return this.mAdapter.isEnabled(adjPosition);
         }
-        return this.mAdapter.isEnabled(adjPosition);
+        return this.mFooterViewInfos.get(adjPosition - adapterCount).isSelectable;
     }
 
+    @Override // android.widget.Adapter
     public Object getItem(int position) {
         int numHeaders = getHeadersCount();
         if (position < numHeaders) {
@@ -127,21 +133,27 @@ public class HeaderViewListAdapter implements WrapperListAdapter, Filterable {
         }
         int adjPosition = position - numHeaders;
         int adapterCount = 0;
-        if (this.mAdapter == null || adjPosition >= (adapterCount = this.mAdapter.getCount())) {
-            return this.mFooterViewInfos.get(adjPosition - adapterCount).data;
+        if (this.mAdapter != null && adjPosition < (adapterCount = this.mAdapter.getCount())) {
+            return this.mAdapter.getItem(adjPosition);
         }
-        return this.mAdapter.getItem(adjPosition);
+        return this.mFooterViewInfos.get(adjPosition - adapterCount).data;
     }
 
+    @Override // android.widget.Adapter
     public long getItemId(int position) {
-        int adjPosition;
         int numHeaders = getHeadersCount();
-        if (this.mAdapter == null || position < numHeaders || (adjPosition = position - numHeaders) >= this.mAdapter.getCount()) {
-            return -1;
+        if (this.mAdapter != null && position >= numHeaders) {
+            int adjPosition = position - numHeaders;
+            int adapterCount = this.mAdapter.getCount();
+            if (adjPosition < adapterCount) {
+                return this.mAdapter.getItemId(adjPosition);
+            }
+            return -1L;
         }
-        return this.mAdapter.getItemId(adjPosition);
+        return -1L;
     }
 
+    @Override // android.widget.Adapter
     public boolean hasStableIds() {
         if (this.mAdapter != null) {
             return this.mAdapter.hasStableIds();
@@ -149,6 +161,7 @@ public class HeaderViewListAdapter implements WrapperListAdapter, Filterable {
         return false;
     }
 
+    @Override // android.widget.Adapter
     public View getView(int position, View convertView, ViewGroup parent) {
         int numHeaders = getHeadersCount();
         if (position < numHeaders) {
@@ -156,21 +169,27 @@ public class HeaderViewListAdapter implements WrapperListAdapter, Filterable {
         }
         int adjPosition = position - numHeaders;
         int adapterCount = 0;
-        if (this.mAdapter == null || adjPosition >= (adapterCount = this.mAdapter.getCount())) {
-            return this.mFooterViewInfos.get(adjPosition - adapterCount).view;
+        if (this.mAdapter != null && adjPosition < (adapterCount = this.mAdapter.getCount())) {
+            return this.mAdapter.getView(adjPosition, convertView, parent);
         }
-        return this.mAdapter.getView(adjPosition, convertView, parent);
+        return this.mFooterViewInfos.get(adjPosition - adapterCount).view;
     }
 
+    @Override // android.widget.Adapter
     public int getItemViewType(int position) {
-        int adjPosition;
         int numHeaders = getHeadersCount();
-        if (this.mAdapter == null || position < numHeaders || (adjPosition = position - numHeaders) >= this.mAdapter.getCount()) {
+        if (this.mAdapter != null && position >= numHeaders) {
+            int adjPosition = position - numHeaders;
+            int adapterCount = this.mAdapter.getCount();
+            if (adjPosition < adapterCount) {
+                return this.mAdapter.getItemViewType(adjPosition);
+            }
             return -2;
         }
-        return this.mAdapter.getItemViewType(adjPosition);
+        return -2;
     }
 
+    @Override // android.widget.Adapter
     public int getViewTypeCount() {
         if (this.mAdapter != null) {
             return this.mAdapter.getViewTypeCount();
@@ -178,18 +197,21 @@ public class HeaderViewListAdapter implements WrapperListAdapter, Filterable {
         return 1;
     }
 
+    @Override // android.widget.Adapter
     public void registerDataSetObserver(DataSetObserver observer) {
         if (this.mAdapter != null) {
             this.mAdapter.registerDataSetObserver(observer);
         }
     }
 
+    @Override // android.widget.Adapter
     public void unregisterDataSetObserver(DataSetObserver observer) {
         if (this.mAdapter != null) {
             this.mAdapter.unregisterDataSetObserver(observer);
         }
     }
 
+    @Override // android.widget.Filterable
     public Filter getFilter() {
         if (this.mIsFilterable) {
             return ((Filterable) this.mAdapter).getFilter();
@@ -197,6 +219,7 @@ public class HeaderViewListAdapter implements WrapperListAdapter, Filterable {
         return null;
     }
 
+    @Override // android.widget.WrapperListAdapter
     public ListAdapter getWrappedAdapter() {
         return this.mAdapter;
     }

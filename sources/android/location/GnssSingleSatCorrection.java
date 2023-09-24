@@ -1,15 +1,19 @@
 package android.location;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.util.Preconditions;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class GnssSingleSatCorrection implements Parcelable {
-    public static final Parcelable.Creator<GnssSingleSatCorrection> CREATOR = new Parcelable.Creator<GnssSingleSatCorrection>() {
+    public static final Parcelable.Creator<GnssSingleSatCorrection> CREATOR = new Parcelable.Creator<GnssSingleSatCorrection>() { // from class: android.location.GnssSingleSatCorrection.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public GnssSingleSatCorrection createFromParcel(Parcel parcel) {
-            boolean hasReflectingPlane = (parcel.readInt() & 8) != 0;
+            int mSingleSatCorrectionFlags = parcel.readInt();
+            boolean hasReflectingPlane = (mSingleSatCorrectionFlags & 8) != 0;
             Builder singleSatCorrectionBuilder = new Builder().setConstellationType(parcel.readInt()).setSatelliteId(parcel.readInt()).setCarrierFrequencyHz(parcel.readFloat()).setProbabilityLineOfSight(parcel.readFloat()).setExcessPathLengthMeters(parcel.readFloat()).setExcessPathLengthUncertaintyMeters(parcel.readFloat());
             if (hasReflectingPlane) {
                 singleSatCorrectionBuilder.setReflectingPlane(GnssReflectingPlane.CREATOR.createFromParcel(parcel));
@@ -17,6 +21,8 @@ public final class GnssSingleSatCorrection implements Parcelable {
             return singleSatCorrectionBuilder.build();
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public GnssSingleSatCorrection[] newArray(int i) {
             return new GnssSingleSatCorrection[i];
         }
@@ -93,25 +99,27 @@ public final class GnssSingleSatCorrection implements Parcelable {
         return (this.mSingleSatCorrectionFlags & 8) != 0;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
     public String toString() {
         StringBuilder builder = new StringBuilder("GnssSingleSatCorrection:\n");
-        builder.append(String.format("   %-29s = %s\n", new Object[]{"SingleSatCorrectionFlags = ", Integer.valueOf(this.mSingleSatCorrectionFlags)}));
-        builder.append(String.format("   %-29s = %s\n", new Object[]{"ConstellationType = ", Integer.valueOf(this.mConstellationType)}));
-        builder.append(String.format("   %-29s = %s\n", new Object[]{"SatId = ", Integer.valueOf(this.mSatId)}));
-        builder.append(String.format("   %-29s = %s\n", new Object[]{"CarrierFrequencyHz = ", Float.valueOf(this.mCarrierFrequencyHz)}));
-        builder.append(String.format("   %-29s = %s\n", new Object[]{"ProbSatIsLos = ", Float.valueOf(this.mProbSatIsLos)}));
-        builder.append(String.format("   %-29s = %s\n", new Object[]{"ExcessPathLengthMeters = ", Float.valueOf(this.mExcessPathLengthMeters)}));
-        builder.append(String.format("   %-29s = %s\n", new Object[]{"ExcessPathLengthUncertaintyMeters = ", Float.valueOf(this.mExcessPathLengthUncertaintyMeters)}));
+        builder.append(String.format("   %-29s = %s\n", "SingleSatCorrectionFlags = ", Integer.valueOf(this.mSingleSatCorrectionFlags)));
+        builder.append(String.format("   %-29s = %s\n", "ConstellationType = ", Integer.valueOf(this.mConstellationType)));
+        builder.append(String.format("   %-29s = %s\n", "SatId = ", Integer.valueOf(this.mSatId)));
+        builder.append(String.format("   %-29s = %s\n", "CarrierFrequencyHz = ", Float.valueOf(this.mCarrierFrequencyHz)));
+        builder.append(String.format("   %-29s = %s\n", "ProbSatIsLos = ", Float.valueOf(this.mProbSatIsLos)));
+        builder.append(String.format("   %-29s = %s\n", "ExcessPathLengthMeters = ", Float.valueOf(this.mExcessPathLengthMeters)));
+        builder.append(String.format("   %-29s = %s\n", "ExcessPathLengthUncertaintyMeters = ", Float.valueOf(this.mExcessPathLengthUncertaintyMeters)));
         if (hasReflectingPlane()) {
-            builder.append(String.format("   %-29s = %s\n", new Object[]{"ReflectingPlane = ", this.mReflectingPlane}));
+            builder.append(String.format("   %-29s = %s\n", "ReflectingPlane = ", this.mReflectingPlane));
         }
         return builder.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeInt(this.mSingleSatCorrectionFlags);
         parcel.writeInt(this.mConstellationType);
@@ -125,23 +133,16 @@ public final class GnssSingleSatCorrection implements Parcelable {
         }
     }
 
+    /* loaded from: classes.dex */
     public static final class Builder {
-        /* access modifiers changed from: private */
-        public float mCarrierFrequencyHz;
-        /* access modifiers changed from: private */
-        public int mConstellationType;
-        /* access modifiers changed from: private */
-        public float mExcessPathLengthMeters;
-        /* access modifiers changed from: private */
-        public float mExcessPathLengthUncertaintyMeters;
-        /* access modifiers changed from: private */
-        public float mProbSatIsLos;
-        /* access modifiers changed from: private */
-        public GnssReflectingPlane mReflectingPlane;
-        /* access modifiers changed from: private */
-        public int mSatId;
-        /* access modifiers changed from: private */
-        public int mSingleSatCorrectionFlags;
+        private float mCarrierFrequencyHz;
+        private int mConstellationType;
+        private float mExcessPathLengthMeters;
+        private float mExcessPathLengthUncertaintyMeters;
+        private float mProbSatIsLos;
+        private GnssReflectingPlane mReflectingPlane;
+        private int mSatId;
+        private int mSingleSatCorrectionFlags;
 
         public Builder setConstellationType(int constellationType) {
             this.mConstellationType = constellationType;
@@ -182,7 +183,7 @@ public final class GnssSingleSatCorrection implements Parcelable {
             if (reflectingPlane != null) {
                 this.mSingleSatCorrectionFlags = (byte) (this.mSingleSatCorrectionFlags | 8);
             } else {
-                this.mSingleSatCorrectionFlags = (byte) (this.mSingleSatCorrectionFlags & -9);
+                this.mSingleSatCorrectionFlags = (byte) (this.mSingleSatCorrectionFlags & (-9));
             }
             return this;
         }

@@ -9,9 +9,9 @@ import android.database.ContentObserver;
 import android.media.AudioManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.RemoteException;
+import android.p007os.Bundle;
+import android.p007os.Handler;
+import android.p007os.RemoteException;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
@@ -37,27 +37,25 @@ import com.wits.pms.statuscontrol.WitsStatus;
 import com.wits.pms.utils.UsbUtil;
 import java.util.List;
 
+/* loaded from: classes2.dex */
 public class CenterListener {
-    /* access modifiers changed from: private */
-    public static final String TAG = CenterListener.class.getName();
-    private Thread checkBootThread = new Thread() {
+    private static final String TAG = CenterListener.class.getName();
+    private Thread checkBootThread = new Thread() { // from class: com.wits.pms.listener.CenterListener.6
+        @Override // java.lang.Thread, java.lang.Runnable
         public void run() {
             for (int i = 0; i < 60; i++) {
                 try {
-                    sleep(2);
+                    sleep(2L);
                 } catch (InterruptedException e) {
                 }
             }
         }
     };
     private Handler handler;
-    /* access modifiers changed from: private */
-    public Context mContext;
-    /* access modifiers changed from: private */
-    public final LogicSystem mLogicSystem;
+    private Context mContext;
+    private final LogicSystem mLogicSystem;
     private MemoryKiller mMemoryKiller;
-    /* access modifiers changed from: private */
-    public boolean muted;
+    private boolean muted;
     private WifiReceiver wifiReceiver;
 
     public CenterListener(Context context, LogicSystem logicSystem) {
@@ -73,39 +71,43 @@ public class CenterListener {
         observeActivity();
         checkBootComplete();
         try {
-            PowerManagerApp.getManager().registerCmdListener(new ICmdListener.Stub() {
+            PowerManagerApp.getManager().registerCmdListener(new ICmdListener.Stub() { // from class: com.wits.pms.listener.CenterListener.1
+                @Override // com.wits.pms.ICmdListener
                 public boolean handleCommand(String jsonMsg) throws RemoteException {
                     WitsCommand witsCommand = WitsCommand.getWitsCommandFormJson(jsonMsg);
                     int command = witsCommand.getCommand();
-                    String access$000 = CenterListener.TAG;
-                    Log.d(access$000, "handleCommand   command = " + command + "  SubCommand = " + witsCommand.getSubCommand());
-                    if (command != 1 || witsCommand.getSubCommand() != 604) {
+                    String str = CenterListener.TAG;
+                    Log.m72d(str, "handleCommand   command = " + command + "  SubCommand = " + witsCommand.getSubCommand());
+                    if (command == 1 && witsCommand.getSubCommand() == 604) {
+                        int lastMode = PowerManagerApp.getStatusInt("lastMode");
+                        String str2 = CenterListener.TAG;
+                        Log.m68i(str2, "handleCommand  lastMode = " + lastMode);
                         return false;
                     }
-                    int lastMode = PowerManagerApp.getStatusInt("lastMode");
-                    String access$0002 = CenterListener.TAG;
-                    Log.i(access$0002, "handleCommand  lastMode = " + lastMode);
                     return false;
                 }
 
+                @Override // com.wits.pms.ICmdListener
                 public void updateStatusInfo(String jsonMsg) throws RemoteException {
                     WitsStatus witsStatus = WitsStatus.getWitsStatusFormJson(jsonMsg);
-                    String access$000 = CenterListener.TAG;
-                    Log.i(access$000, "updateStatusInfo: Status type=" + witsStatus.getType() + "  jsonMsg v2 = " + jsonMsg);
+                    String str = CenterListener.TAG;
+                    Log.m68i(str, "updateStatusInfo: Status type=" + witsStatus.getType() + "  jsonMsg v2 = " + jsonMsg);
                     int type = witsStatus.getType();
                     if (type == 1) {
                         CenterListener.this.mLogicSystem.updateStatus(SystemStatus.getStatusFormJson(witsStatus.jsonArg));
                         int lastMode = SystemStatus.getStatusFormJson(witsStatus.jsonArg).getLastMode();
-                        String access$0002 = CenterListener.TAG;
-                        Log.d(access$0002, "updateStatusInfo   lastMode = " + lastMode);
+                        String str2 = CenterListener.TAG;
+                        Log.m72d(str2, "updateStatusInfo   lastMode = " + lastMode);
                         if (lastMode == 5 || lastMode == 8) {
                             CenterControlImpl.getImpl().stopZlinkMusic();
                         }
-                        if (CenterListener.this.mLogicSystem.getSystemStatus().getAcc() == 0) {
+                        if (CenterListener.this.mLogicSystem.getSystemStatus().getAcc() != 0) {
+                            if (CenterListener.this.muted) {
+                                CenterControlImpl.getImpl().mute(false);
+                            }
+                        } else {
                             CenterControlImpl.getImpl().mute(true);
-                            boolean unused = CenterListener.this.muted = true;
-                        } else if (CenterListener.this.muted) {
-                            CenterControlImpl.getImpl().mute(false);
+                            CenterListener.this.muted = true;
                         }
                     } else if (type == 3) {
                         CenterListener.this.mLogicSystem.updateStatus(BtPhoneStatus.getStatusForJson(witsStatus.jsonArg));
@@ -124,10 +126,10 @@ public class CenterListener {
                     } else {
                         CenterListener.this.mLogicSystem.updateStatus(McuStatus.getStatusFromJson(witsStatus.jsonArg));
                         int systemMode = McuStatus.getStatusFromJson(witsStatus.jsonArg).systemMode;
-                        String access$0003 = CenterListener.TAG;
-                        Log.d(access$0003, "updateStatusInfo  systemMode = " + systemMode);
+                        String str3 = CenterListener.TAG;
+                        Log.m72d(str3, "updateStatusInfo  systemMode = " + systemMode);
                         if (systemMode == 2) {
-                            Log.d(CenterListener.TAG, "updateStatusInfo  CAR_MODE");
+                            Log.m72d(CenterListener.TAG, "updateStatusInfo  CAR_MODE");
                             CenterControlImpl.getImpl().stopZlinkMusic();
                             AutoKitCallBackImpl.getImpl(CenterListener.this.mContext).musicPause();
                             CenterControlImpl.getImpl().kuWoMusicPause();
@@ -141,19 +143,22 @@ public class CenterListener {
             });
         } catch (RemoteException e) {
         }
-        this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("wits_usb"), true, new ContentObserver(this.handler) {
+        this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("wits_usb"), true, new ContentObserver(this.handler) { // from class: com.wits.pms.listener.CenterListener.2
+            @Override // android.database.ContentObserver
             public void onChange(boolean selfChange) {
                 try {
-                    UsbUtil.updateUsbMode(Settings.System.getInt(CenterListener.this.mContext.getContentResolver(), "wits_usb"));
-                } catch (Settings.SettingNotFoundException e) {
+                    int usbMode = Settings.System.getInt(CenterListener.this.mContext.getContentResolver(), "wits_usb");
+                    UsbUtil.updateUsbMode(usbMode);
+                } catch (Settings.SettingNotFoundException e2) {
                 }
             }
         });
-        BroadcastReceiver receiver360 = new BroadcastReceiver() {
+        BroadcastReceiver receiver360 = new BroadcastReceiver() { // from class: com.wits.pms.listener.CenterListener.3
+            @Override // android.content.BroadcastReceiver
             public void onReceive(Context context, Intent intent) {
                 String message = intent.getStringExtra("msg");
-                String access$000 = CenterListener.TAG;
-                Log.d(access$000, "onReceive  message = " + message);
+                String str = CenterListener.TAG;
+                Log.m72d(str, "onReceive  message = " + message);
                 CallBackServiceImpl.getCallBackServiceImpl().handleReverse();
                 CallBackServiceImpl.getCallBackServiceImpl().handleLRReverse();
             }
@@ -168,12 +173,14 @@ public class CenterListener {
     }
 
     private void observeKswStatus() {
-        this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("usingNavi"), true, new ContentObserver(this.handler) {
+        this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("usingNavi"), true, new ContentObserver(this.handler) { // from class: com.wits.pms.listener.CenterListener.4
+            @Override // android.database.ContentObserver
             public void onChange(boolean selfChange) {
                 try {
                     int value = Settings.System.getInt(CenterListener.this.mContext.getContentResolver(), "usingNavi");
                     CenterListener.this.setBtVolume(value == 1);
-                    ((AudioManager) CenterListener.this.mContext.getSystemService("audio")).setStreamVolume(5, (int) ((Settings.System.getFloat(CenterListener.this.mContext.getContentResolver(), "NaviMix") * 10.0f) - 1.0f), 0);
+                    AudioManager audioManager = (AudioManager) CenterListener.this.mContext.getSystemService("audio");
+                    audioManager.setStreamVolume(5, (int) ((Settings.System.getFloat(CenterListener.this.mContext.getContentResolver(), "NaviMix") * 10.0f) - 1.0f), 0);
                     KswMcuSender.getSender().sendMessage(105, new byte[]{19, (byte) value, 0});
                 } catch (Settings.SettingNotFoundException e) {
                 }
@@ -181,99 +188,102 @@ public class CenterListener {
         });
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void setBtVolume(boolean on) throws Settings.SettingNotFoundException {
-        ((AudioManager) this.mContext.getSystemService("audio")).setStreamVolume(5, on ? (int) ((Settings.System.getFloat(this.mContext.getContentResolver(), "NaviMix") * 10.0f) - 1.0f) : 7, 0);
+        AudioManager audioManager = (AudioManager) this.mContext.getSystemService("audio");
+        audioManager.setStreamVolume(5, on ? (int) ((Settings.System.getFloat(this.mContext.getContentResolver(), "NaviMix") * 10.0f) - 1.0f) : 7, 0);
     }
 
     public void appStarted(String packageName, String className) {
         String str = TAG;
-        Log.d(str, "appStarted  packageName = " + packageName + "  className = " + className);
+        Log.m72d(str, "appStarted  packageName = " + packageName + "  className = " + className);
         SystemStatusControl.getStatus().topClass = className;
-        if (!SystemStatusControl.getStatus().topApp.equals(packageName)) {
-            SystemStatusControl.getStatus().topApp = packageName;
-            SystemStatusControl.getDefault().handleSystemStatus();
-            if (packageName.contains("net.easyconn")) {
-                CenterControlImpl.getImpl().mediaPause();
-                CenterControlImpl.getImpl().openSourceMode(3);
-                CenterControlImpl.getImpl().stopZlinkMusic();
+        if (SystemStatusControl.getStatus().topApp.equals(packageName)) {
+            return;
+        }
+        SystemStatusControl.getStatus().topApp = packageName;
+        SystemStatusControl.getDefault().handleSystemStatus();
+        if (packageName.contains("net.easyconn")) {
+            CenterControlImpl.getImpl().mediaPause();
+            CenterControlImpl.getImpl().openSourceMode(3);
+            CenterControlImpl.getImpl().stopZlinkMusic();
+        }
+        if (packageName.contains("com.wits.ksw.bt") || packageName.contains("com.wits.ksw.media") || packageName.contains("com.wits.ksw.music") || packageName.contains("com.wits.ksw.video")) {
+            CenterControlImpl.getImpl().stopZlinkMusic();
+        }
+        if (packageName.contains("com.mxtech")) {
+            CenterControlImpl.getImpl().openSourceMode(13);
+        }
+        if (packageName.contains(ZlinkMessage.ZLINK_NORMAL_ACTION) || packageName.contains("com.suding.speedplay")) {
+            Bundle bundle = new Bundle();
+            bundle.putString("command", "REQ_SPEC_FUNC_CMD");
+            bundle.putInt("specFuncCode", 126);
+        }
+        if (packageName.contains(AutoKitCallBackImpl.AutoKitPkgName)) {
+            CenterControlImpl.getImpl().openSourceMode(3);
+        }
+        if (packageName.contains("com.txznet.music")) {
+            CenterControlImpl.getImpl().openSourceMode(13);
+            if (className.equals("com.txznet.music.ui.SplashActivity")) {
+                CenterControlImpl.getImpl().txzMusicPlay(true);
+            } else {
+                CenterControlImpl.getImpl().txzMusicPlay(false);
             }
-            if (packageName.contains("com.wits.ksw.bt") || packageName.contains("com.wits.ksw.media")) {
-                CenterControlImpl.getImpl().stopZlinkMusic();
+        }
+        if (packageName.equals("cn.kuwo.kwmusiccar")) {
+            CenterControlImpl.getImpl().openSourceMode(13);
+            if (className.equals("cn.kuwo.kwmusiccar.WelcomeActivity")) {
+                CenterControlImpl.getImpl().kuWoMusicPlay(true);
+            } else {
+                CenterControlImpl.getImpl().kuWoMusicPlay(false);
             }
-            if (packageName.contains("com.mxtech")) {
-                CenterControlImpl.getImpl().openSourceMode(13);
-            }
-            if (packageName.contains(ZlinkMessage.ZLINK_NORMAL_ACTION) || packageName.contains("com.suding.speedplay")) {
-                Bundle bundle = new Bundle();
-                bundle.putString("command", "REQ_SPEC_FUNC_CMD");
-                bundle.putInt("specFuncCode", 126);
-            }
-            if (packageName.contains(AutoKitCallBackImpl.AutoKitPkgName)) {
-                CenterControlImpl.getImpl().openSourceMode(3);
-            }
-            if (packageName.contains("com.txznet.music")) {
-                CenterControlImpl.getImpl().openSourceMode(13);
-                if (className.equals("com.txznet.music.ui.SplashActivity")) {
-                    CenterControlImpl.getImpl().txzMusicPlay(true);
-                } else {
-                    CenterControlImpl.getImpl().txzMusicPlay(false);
-                }
-            }
-            if (packageName.equals("cn.kuwo.kwmusiccar")) {
-                CenterControlImpl.getImpl().openSourceMode(13);
-                if (className.equals("cn.kuwo.kwmusiccar.WelcomeActivity")) {
-                    CenterControlImpl.getImpl().kuWoMusicPlay(true);
-                } else {
-                    CenterControlImpl.getImpl().kuWoMusicPlay(false);
-                }
-            }
-            if (packageName.equals("com.qiyi.video")) {
-                WitsCommand.sendCommand(2, 118, "");
-            }
-            if (packageName.contains("cloudmusic")) {
-                CenterControlImpl.getImpl().openSourceMode(13);
-            }
-            String musicPkg = Settings.System.getString(this.mContext.getContentResolver(), "KEY_THIRD_APP_MUSIC_PKG");
-            String videoPkg = Settings.System.getString(this.mContext.getContentResolver(), "KEY_THIRD_APP_VIDEO_PKG");
-            if (!TextUtils.isEmpty(musicPkg) && musicPkg.equals(packageName)) {
-                CenterControlImpl.getImpl().openSourceMode(1);
-            }
-            if (!TextUtils.isEmpty(videoPkg) && videoPkg.equals(packageName)) {
-                CenterControlImpl.getImpl().openSourceMode(2);
-            }
+        }
+        if (packageName.equals("com.qiyi.video")) {
+            WitsCommand.sendCommand(2, 118, "");
+        }
+        if (packageName.contains("cloudmusic")) {
+            CenterControlImpl.getImpl().openSourceMode(13);
+        }
+        String musicPkg = Settings.System.getString(this.mContext.getContentResolver(), "KEY_THIRD_APP_MUSIC_PKG");
+        String videoPkg = Settings.System.getString(this.mContext.getContentResolver(), "KEY_THIRD_APP_VIDEO_PKG");
+        if (!TextUtils.isEmpty(musicPkg) && musicPkg.equals(packageName)) {
+            CenterControlImpl.getImpl().openSourceMode(1);
+        }
+        if (!TextUtils.isEmpty(videoPkg) && videoPkg.equals(packageName)) {
+            CenterControlImpl.getImpl().openSourceMode(2);
         }
     }
 
     private void observeActivity() {
         final ActivityManager am = (ActivityManager) this.mContext.getSystemService(Context.ACTIVITY_SERVICE);
-        new Thread() {
+        Thread thread = new Thread() { // from class: com.wits.pms.listener.CenterListener.5
             private String className;
             private String packageName;
 
+            @Override // java.lang.Thread, java.lang.Runnable
             public void run() {
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(1000L);
                 } catch (InterruptedException e) {
                 }
                 while (true) {
                     try {
-                        Thread.sleep(500);
+                        Thread.sleep(500L);
                     } catch (InterruptedException e2) {
                     }
                     boolean btSwitch = true;
                     List<ActivityManager.RunningTaskInfo> runningTasks = am.getRunningTasks(1);
                     if (runningTasks.size() > 0) {
-                        String packageName2 = runningTasks.get(0).topActivity.getPackageName();
-                        String className2 = runningTasks.get(0).topActivity.getClassName();
-                        if (!packageName2.equals(this.packageName)) {
-                            this.packageName = packageName2;
-                            CenterListener.this.appStarted(packageName2, className2);
-                            Settings.System.putString(CenterListener.this.mContext.getContentResolver(), "currentPkg", packageName2);
+                        String packageName = runningTasks.get(0).topActivity.getPackageName();
+                        String className = runningTasks.get(0).topActivity.getClassName();
+                        if (!packageName.equals(this.packageName)) {
+                            this.packageName = packageName;
+                            CenterListener.this.appStarted(packageName, className);
+                            Settings.System.putString(CenterListener.this.mContext.getContentResolver(), "currentPkg", packageName);
                         }
-                        if (!className2.equals(this.className)) {
-                            this.className = className2;
-                            CenterListener.this.appStarted(packageName2, className2);
+                        if (!className.equals(this.className)) {
+                            this.className = className;
+                            CenterListener.this.appStarted(packageName, className);
                         }
                         try {
                             if (Settings.System.getInt(CenterListener.this.mContext.getContentResolver(), "btSwitch", 1) != 1) {
@@ -284,19 +294,20 @@ public class CenterListener {
                             boolean airplayConnected = "1".equals(SystemProperties.get(ZlinkMessage.ZLINK_AIRPLAY_CONNECT));
                             boolean carplayWiredConnected = "1".equals(SystemProperties.get(ZlinkMessage.ZLINK_CARPLAY_WRIED_CONNECT));
                             boolean airplayWiredConnected = "1".equals(SystemProperties.get(ZlinkMessage.ZLINK_AIRPLAY_WIRED_CONNECT));
-                            Log.d(CenterListener.TAG, "zlinkConnected = " + zlinkConnected + "   hicarConnected = " + hicarConnected + "   airplayConnected = " + airplayConnected + "  carplayWiredConnected = " + carplayWiredConnected + "  btSwitch = " + btSwitch);
+                            Log.m72d(CenterListener.TAG, "zlinkConnected = " + zlinkConnected + "   hicarConnected = " + hicarConnected + "   airplayConnected = " + airplayConnected + "  carplayWiredConnected = " + carplayWiredConnected + "  btSwitch = " + btSwitch);
                             if ((zlinkConnected || hicarConnected || airplayConnected || carplayWiredConnected) && btSwitch && !airplayWiredConnected) {
                                 Settings.System.putInt(CenterListener.this.mContext.getContentResolver(), "btSwitch", 0);
                             }
                         } catch (Exception e3) {
-                            Log.e(CenterListener.TAG, "error");
+                            Log.m70e(CenterListener.TAG, "error");
                             e3.printStackTrace();
                         }
                         CenterListener.this.checkMemory();
                     }
                 }
             }
-        }.start();
+        };
+        thread.start();
     }
 
     private void observeWifiSwitch() {
@@ -311,26 +322,32 @@ public class CenterListener {
         this.mMemoryKiller = witsMemoryController;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void checkMemory() {
         try {
             this.mMemoryKiller.clearMemoryWits();
         } catch (Exception e) {
-            Log.e("MemoryKiller", "ERROR!", e);
+            Log.m69e("MemoryKiller", "ERROR!", e);
         }
     }
 
+    /* loaded from: classes2.dex */
     class WifiReceiver extends BroadcastReceiver {
         WifiReceiver() {
         }
 
+        @Override // android.content.BroadcastReceiver
         public void onReceive(Context context, Intent intent) {
-            if (!WifiManager.WIFI_STATE_CHANGED_ACTION.equals(intent.getAction()) || intent.getIntExtra("wifi_state", 0) != 1) {
+            if (WifiManager.WIFI_STATE_CHANGED_ACTION.equals(intent.getAction())) {
+                int wifiState = intent.getIntExtra("wifi_state", 0);
+                if (wifiState != 1) {
+                }
             }
             if (WifiManager.NETWORK_STATE_CHANGED_ACTION.equals(intent.getAction())) {
                 NetworkInfo info = (NetworkInfo) intent.getParcelableExtra("networkInfo");
                 if (!info.getState().equals(NetworkInfo.State.DISCONNECTED) && info.getState().equals(NetworkInfo.State.CONNECTED)) {
-                    ((WifiManager) CenterListener.this.mContext.getApplicationContext().getSystemService("wifi")).getConnectionInfo();
+                    WifiManager wifiManager = (WifiManager) CenterListener.this.mContext.getApplicationContext().getSystemService("wifi");
+                    wifiManager.getConnectionInfo();
                 }
             }
         }

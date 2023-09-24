@@ -12,31 +12,32 @@ import android.nfc.tech.NfcB;
 import android.nfc.tech.NfcBarcode;
 import android.nfc.tech.NfcF;
 import android.nfc.tech.NfcV;
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.RemoteException;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.RemoteException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 
+/* loaded from: classes3.dex */
 public final class Tag implements Parcelable {
-    public static final Parcelable.Creator<Tag> CREATOR = new Parcelable.Creator<Tag>() {
+    public static final Parcelable.Creator<Tag> CREATOR = new Parcelable.Creator<Tag>() { // from class: android.nfc.Tag.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Tag createFromParcel(Parcel in) {
-            INfcTag tagService;
             byte[] id = Tag.readBytesWithNull(in);
             int[] techList = new int[in.readInt()];
             in.readIntArray(techList);
             Bundle[] techExtras = (Bundle[]) in.createTypedArray(Bundle.CREATOR);
             int serviceHandle = in.readInt();
-            if (in.readInt() == 0) {
-                tagService = INfcTag.Stub.asInterface(in.readStrongBinder());
-            } else {
-                tagService = null;
-            }
+            int isMock = in.readInt();
+            INfcTag tagService = isMock == 0 ? INfcTag.Stub.asInterface(in.readStrongBinder()) : null;
             return new Tag(id, techList, techExtras, serviceHandle, tagService);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Tag[] newArray(int size) {
             return new Tag[size];
         }
@@ -51,21 +52,20 @@ public final class Tag implements Parcelable {
     final String[] mTechStringList;
 
     public Tag(byte[] id, int[] techList, Bundle[] techListExtras, int serviceHandle, INfcTag tagService) {
-        if (techList != null) {
-            this.mId = id;
-            this.mTechList = Arrays.copyOf(techList, techList.length);
-            this.mTechStringList = generateTechStringList(techList);
-            this.mTechExtras = (Bundle[]) Arrays.copyOf(techListExtras, techList.length);
-            this.mServiceHandle = serviceHandle;
-            this.mTagService = tagService;
-            this.mConnectedTechnology = -1;
-            return;
+        if (techList == null) {
+            throw new IllegalArgumentException("rawTargets cannot be null");
         }
-        throw new IllegalArgumentException("rawTargets cannot be null");
+        this.mId = id;
+        this.mTechList = Arrays.copyOf(techList, techList.length);
+        this.mTechStringList = generateTechStringList(techList);
+        this.mTechExtras = (Bundle[]) Arrays.copyOf(techListExtras, techList.length);
+        this.mServiceHandle = serviceHandle;
+        this.mTagService = tagService;
+        this.mConnectedTechnology = -1;
     }
 
     public static Tag createMockTag(byte[] id, int[] techList, Bundle[] techListExtras) {
-        return new Tag(id, techList, techListExtras, 0, (INfcTag) null);
+        return new Tag(id, techList, techListExtras, 0, null);
     }
 
     private String[] generateTechStringList(int[] techList) {
@@ -111,22 +111,19 @@ public final class Tag implements Parcelable {
     }
 
     static int[] getTechCodesFromStrings(String[] techStringList) throws IllegalArgumentException {
-        if (techStringList != null) {
-            int[] techIntList = new int[techStringList.length];
-            HashMap<String, Integer> stringToCodeMap = getTechStringToCodeMap();
-            int i = 0;
-            while (i < techStringList.length) {
-                Integer code = stringToCodeMap.get(techStringList[i]);
-                if (code != null) {
-                    techIntList[i] = code.intValue();
-                    i++;
-                } else {
-                    throw new IllegalArgumentException("Unknown tech type " + techStringList[i]);
-                }
-            }
-            return techIntList;
+        if (techStringList == null) {
+            throw new IllegalArgumentException("List cannot be null");
         }
-        throw new IllegalArgumentException("List cannot be null");
+        int[] techIntList = new int[techStringList.length];
+        HashMap<String, Integer> stringToCodeMap = getTechStringToCodeMap();
+        for (int i = 0; i < techStringList.length; i++) {
+            Integer code = stringToCodeMap.get(techStringList[i]);
+            if (code == null) {
+                throw new IllegalArgumentException("Unknown tech type " + techStringList[i]);
+            }
+            techIntList[i] = code.intValue();
+        }
+        return techIntList;
     }
 
     private static HashMap<String, Integer> getTechStringToCodeMap() {
@@ -164,22 +161,23 @@ public final class Tag implements Parcelable {
     public Tag rediscover() throws IOException {
         if (getConnectedTechnology() != -1) {
             throw new IllegalStateException("Close connection to the technology first!");
-        } else if (this.mTagService != null) {
-            try {
-                Tag newTag = this.mTagService.rediscover(getServiceHandle());
-                if (newTag != null) {
-                    return newTag;
-                }
-                throw new IOException("Failed to rediscover tag");
-            } catch (RemoteException e) {
-                throw new IOException("NFC service dead");
-            }
-        } else {
+        }
+        if (this.mTagService == null) {
             throw new IOException("Mock tags don't support this operation.");
+        }
+        try {
+            Tag newTag = this.mTagService.rediscover(getServiceHandle());
+            if (newTag != null) {
+                return newTag;
+            }
+            throw new IOException("Failed to rediscover tag");
+        } catch (RemoteException e) {
+            throw new IOException("NFC service dead");
         }
     }
 
     public boolean hasTech(int techType) {
+        int[] iArr;
         for (int tech : this.mTechList) {
             if (tech == techType) {
                 return true;
@@ -194,11 +192,11 @@ public final class Tag implements Parcelable {
         while (true) {
             if (idx >= this.mTechList.length) {
                 break;
-            } else if (this.mTechList[idx] == tech) {
+            } else if (this.mTechList[idx] != tech) {
+                idx++;
+            } else {
                 pos = idx;
                 break;
-            } else {
-                idx++;
             }
         }
         if (pos < 0) {
@@ -245,10 +243,12 @@ public final class Tag implements Parcelable {
         out.writeByteArray(b);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         int isMock = this.mTagService == null ? 1 : 0;
         writeBytesWithNull(dest, this.mId);

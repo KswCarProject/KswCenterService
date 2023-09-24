@@ -2,6 +2,7 @@ package android.media;
 
 import android.annotation.UnsupportedAppUsage;
 
+/* loaded from: classes3.dex */
 public class AudioMixPort extends AudioPort {
     private final int mIoHandle;
 
@@ -11,6 +12,7 @@ public class AudioMixPort extends AudioPort {
         this.mIoHandle = ioHandle;
     }
 
+    @Override // android.media.AudioPort
     public AudioMixPortConfig buildConfig(int samplingRate, int channelMask, int format, AudioGainConfig gain) {
         return new AudioMixPortConfig(this, samplingRate, channelMask, format, gain);
     }
@@ -20,8 +22,13 @@ public class AudioMixPort extends AudioPort {
         return this.mIoHandle;
     }
 
+    @Override // android.media.AudioPort
     public boolean equals(Object o) {
-        if (o == null || !(o instanceof AudioMixPort) || this.mIoHandle != ((AudioMixPort) o).ioHandle()) {
+        if (o == null || !(o instanceof AudioMixPort)) {
+            return false;
+        }
+        AudioMixPort other = (AudioMixPort) o;
+        if (this.mIoHandle != other.ioHandle()) {
             return false;
         }
         return super.equals(o);

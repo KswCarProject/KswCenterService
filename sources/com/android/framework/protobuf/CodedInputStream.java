@@ -1,6 +1,5 @@
 package com.android.framework.protobuf;
 
-import android.net.wifi.WifiScanner;
 import com.android.framework.protobuf.MessageLite;
 import com.ibm.icu.text.Bidi;
 import java.io.ByteArrayOutputStream;
@@ -11,37 +10,37 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/* loaded from: classes4.dex */
 public final class CodedInputStream {
     private static final int BUFFER_SIZE = 4096;
     private static final int DEFAULT_RECURSION_LIMIT = 100;
     private static final int DEFAULT_SIZE_LIMIT = 67108864;
-    /* access modifiers changed from: private */
-    public final byte[] buffer;
+    private final byte[] buffer;
     private final boolean bufferIsImmutable;
-    /* access modifiers changed from: private */
-    public int bufferPos;
+    private int bufferPos;
     private int bufferSize;
     private int bufferSizeAfterLimit;
-    private int currentLimit = Integer.MAX_VALUE;
-    private boolean enableAliasing = false;
+    private int currentLimit;
+    private boolean enableAliasing;
     private final InputStream input;
     private int lastTag;
     private int recursionDepth;
-    private int recursionLimit = 100;
-    private RefillCallback refillCallback = null;
-    private int sizeLimit = 67108864;
+    private int recursionLimit;
+    private RefillCallback refillCallback;
+    private int sizeLimit;
     private int totalBytesRetired;
 
+    /* loaded from: classes4.dex */
     private interface RefillCallback {
         void onRefill();
     }
 
-    public static CodedInputStream newInstance(InputStream input2) {
-        return new CodedInputStream(input2, 4096);
+    public static CodedInputStream newInstance(InputStream input) {
+        return new CodedInputStream(input, 4096);
     }
 
-    static CodedInputStream newInstance(InputStream input2, int bufferSize2) {
-        return new CodedInputStream(input2, bufferSize2);
+    static CodedInputStream newInstance(InputStream input, int bufferSize) {
+        return new CodedInputStream(input, bufferSize);
     }
 
     public static CodedInputStream newInstance(byte[] buf) {
@@ -52,8 +51,8 @@ public final class CodedInputStream {
         return newInstance(buf, off, len, false);
     }
 
-    static CodedInputStream newInstance(byte[] buf, int off, int len, boolean bufferIsImmutable2) {
-        CodedInputStream result = new CodedInputStream(buf, off, len, bufferIsImmutable2);
+    static CodedInputStream newInstance(byte[] buf, int off, int len, boolean bufferIsImmutable) {
+        CodedInputStream result = new CodedInputStream(buf, off, len, bufferIsImmutable);
         try {
             result.pushLimit(len);
             return result;
@@ -67,9 +66,9 @@ public final class CodedInputStream {
             return newInstance(buf.array(), buf.arrayOffset() + buf.position(), buf.remaining());
         }
         ByteBuffer temp = buf.duplicate();
-        byte[] buffer2 = new byte[temp.remaining()];
-        temp.get(buffer2);
-        return newInstance(buffer2);
+        byte[] buffer = new byte[temp.remaining()];
+        temp.get(buffer);
+        return newInstance(buffer);
     }
 
     public int readTag() throws IOException {
@@ -78,10 +77,10 @@ public final class CodedInputStream {
             return 0;
         }
         this.lastTag = readRawVarint32();
-        if (WireFormat.getTagFieldNumber(this.lastTag) != 0) {
-            return this.lastTag;
+        if (WireFormat.getTagFieldNumber(this.lastTag) == 0) {
+            throw InvalidProtocolBufferException.invalidTag();
         }
-        throw InvalidProtocolBufferException.invalidTag();
+        return this.lastTag;
     }
 
     public void checkLastTagWas(int value) throws InvalidProtocolBufferException {
@@ -155,57 +154,36 @@ public final class CodedInputStream {
         }
     }
 
-    /*  JADX ERROR: StackOverflow in pass: RegionMakerVisitor
-        jadx.core.utils.exceptions.JadxOverflowException: 
-        	at jadx.core.utils.ErrorsCounter.addError(ErrorsCounter.java:47)
-        	at jadx.core.utils.ErrorsCounter.methodError(ErrorsCounter.java:81)
-        */
-    public void skipMessage() throws java.io.IOException {
-        /*
-            r2 = this;
-        L_0x0000:
-            int r0 = r2.readTag()
-            if (r0 == 0) goto L_0x000e
-            boolean r1 = r2.skipField(r0)
-            if (r1 != 0) goto L_0x000d
-            goto L_0x000e
-        L_0x000d:
-            goto L_0x0000
-        L_0x000e:
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.framework.protobuf.CodedInputStream.skipMessage():void");
+    public void skipMessage() throws IOException {
+        int tag;
+        do {
+            tag = readTag();
+            if (tag == 0) {
+                return;
+            }
+        } while (skipField(tag));
     }
 
-    /*  JADX ERROR: StackOverflow in pass: RegionMakerVisitor
-        jadx.core.utils.exceptions.JadxOverflowException: 
-        	at jadx.core.utils.ErrorsCounter.addError(ErrorsCounter.java:47)
-        	at jadx.core.utils.ErrorsCounter.methodError(ErrorsCounter.java:81)
-        */
-    public void skipMessage(com.android.framework.protobuf.CodedOutputStream r3) throws java.io.IOException {
-        /*
-            r2 = this;
-        L_0x0000:
-            int r0 = r2.readTag()
-            if (r0 == 0) goto L_0x000e
-            boolean r1 = r2.skipField(r0, r3)
-            if (r1 != 0) goto L_0x000d
-            goto L_0x000e
-        L_0x000d:
-            goto L_0x0000
-        L_0x000e:
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.framework.protobuf.CodedInputStream.skipMessage(com.android.framework.protobuf.CodedOutputStream):void");
+    public void skipMessage(CodedOutputStream output) throws IOException {
+        int tag;
+        do {
+            tag = readTag();
+            if (tag == 0) {
+                return;
+            }
+        } while (skipField(tag, output));
     }
 
+    /* loaded from: classes4.dex */
     private class SkippedDataSink implements RefillCallback {
         private ByteArrayOutputStream byteArrayStream;
-        private int lastPos = CodedInputStream.this.bufferPos;
+        private int lastPos;
 
         private SkippedDataSink() {
+            this.lastPos = CodedInputStream.this.bufferPos;
         }
 
+        @Override // com.android.framework.protobuf.CodedInputStream.RefillCallback
         public void onRefill() {
             if (this.byteArrayStream == null) {
                 this.byteArrayStream = new ByteArrayOutputStream();
@@ -214,8 +192,7 @@ public final class CodedInputStream {
             this.lastPos = 0;
         }
 
-        /* access modifiers changed from: package-private */
-        public ByteBuffer getSkippedData() {
+        ByteBuffer getSkippedData() {
             if (this.byteArrayStream == null) {
                 return ByteBuffer.wrap(CodedInputStream.this.buffer, this.lastPos, CodedInputStream.this.bufferPos - this.lastPos);
             }
@@ -265,19 +242,19 @@ public final class CodedInputStream {
         } else if (size == 0) {
             return "";
         } else {
-            if (size > this.bufferSize) {
-                return new String(readRawBytesSlowPath(size), Internal.UTF_8);
+            if (size <= this.bufferSize) {
+                refillBuffer(size);
+                String result2 = new String(this.buffer, this.bufferPos, size, Internal.UTF_8);
+                this.bufferPos += size;
+                return result2;
             }
-            refillBuffer(size);
-            String result2 = new String(this.buffer, this.bufferPos, size, Internal.UTF_8);
-            this.bufferPos += size;
-            return result2;
+            return new String(readRawBytesSlowPath(size), Internal.UTF_8);
         }
     }
 
     public String readStringRequireUtf8() throws IOException {
-        int pos;
         byte[] bytes;
+        int pos;
         int size = readRawVarint32();
         int oldPos = this.bufferPos;
         if (size <= this.bufferSize - oldPos && size > 0) {
@@ -297,32 +274,31 @@ public final class CodedInputStream {
                 pos = 0;
             }
         }
-        if (Utf8.isValidUtf8(bytes, pos, pos + size)) {
-            return new String(bytes, pos, size, Internal.UTF_8);
+        if (!Utf8.isValidUtf8(bytes, pos, pos + size)) {
+            throw InvalidProtocolBufferException.invalidUtf8();
         }
-        throw InvalidProtocolBufferException.invalidUtf8();
+        return new String(bytes, pos, size, Internal.UTF_8);
     }
 
     public void readGroup(int fieldNumber, MessageLite.Builder builder, ExtensionRegistryLite extensionRegistry) throws IOException {
-        if (this.recursionDepth < this.recursionLimit) {
-            this.recursionDepth++;
-            builder.mergeFrom(this, extensionRegistry);
-            checkLastTagWas(WireFormat.makeTag(fieldNumber, 4));
-            this.recursionDepth--;
-            return;
+        if (this.recursionDepth >= this.recursionLimit) {
+            throw InvalidProtocolBufferException.recursionLimitExceeded();
         }
-        throw InvalidProtocolBufferException.recursionLimitExceeded();
+        this.recursionDepth++;
+        builder.mergeFrom(this, extensionRegistry);
+        checkLastTagWas(WireFormat.makeTag(fieldNumber, 4));
+        this.recursionDepth--;
     }
 
     public <T extends MessageLite> T readGroup(int fieldNumber, Parser<T> parser, ExtensionRegistryLite extensionRegistry) throws IOException {
-        if (this.recursionDepth < this.recursionLimit) {
-            this.recursionDepth++;
-            T result = (MessageLite) parser.parsePartialFrom(this, extensionRegistry);
-            checkLastTagWas(WireFormat.makeTag(fieldNumber, 4));
-            this.recursionDepth--;
-            return result;
+        if (this.recursionDepth >= this.recursionLimit) {
+            throw InvalidProtocolBufferException.recursionLimitExceeded();
         }
-        throw InvalidProtocolBufferException.recursionLimitExceeded();
+        this.recursionDepth++;
+        T result = parser.parsePartialFrom(this, extensionRegistry);
+        checkLastTagWas(WireFormat.makeTag(fieldNumber, 4));
+        this.recursionDepth--;
+        return result;
     }
 
     @Deprecated
@@ -332,40 +308,39 @@ public final class CodedInputStream {
 
     public void readMessage(MessageLite.Builder builder, ExtensionRegistryLite extensionRegistry) throws IOException {
         int length = readRawVarint32();
-        if (this.recursionDepth < this.recursionLimit) {
-            int oldLimit = pushLimit(length);
-            this.recursionDepth++;
-            builder.mergeFrom(this, extensionRegistry);
-            checkLastTagWas(0);
-            this.recursionDepth--;
-            popLimit(oldLimit);
-            return;
+        if (this.recursionDepth >= this.recursionLimit) {
+            throw InvalidProtocolBufferException.recursionLimitExceeded();
         }
-        throw InvalidProtocolBufferException.recursionLimitExceeded();
+        int oldLimit = pushLimit(length);
+        this.recursionDepth++;
+        builder.mergeFrom(this, extensionRegistry);
+        checkLastTagWas(0);
+        this.recursionDepth--;
+        popLimit(oldLimit);
     }
 
     public <T extends MessageLite> T readMessage(Parser<T> parser, ExtensionRegistryLite extensionRegistry) throws IOException {
         int length = readRawVarint32();
-        if (this.recursionDepth < this.recursionLimit) {
-            int oldLimit = pushLimit(length);
-            this.recursionDepth++;
-            T result = (MessageLite) parser.parsePartialFrom(this, extensionRegistry);
-            checkLastTagWas(0);
-            this.recursionDepth--;
-            popLimit(oldLimit);
-            return result;
+        if (this.recursionDepth >= this.recursionLimit) {
+            throw InvalidProtocolBufferException.recursionLimitExceeded();
         }
-        throw InvalidProtocolBufferException.recursionLimitExceeded();
+        int oldLimit = pushLimit(length);
+        this.recursionDepth++;
+        T result = parser.parsePartialFrom(this, extensionRegistry);
+        checkLastTagWas(0);
+        this.recursionDepth--;
+        popLimit(oldLimit);
+        return result;
     }
 
     public ByteString readBytes() throws IOException {
         ByteString result;
         int size = readRawVarint32();
         if (size <= this.bufferSize - this.bufferPos && size > 0) {
-            if (!this.bufferIsImmutable || !this.enableAliasing) {
-                result = ByteString.copyFrom(this.buffer, this.bufferPos, size);
-            } else {
+            if (this.bufferIsImmutable && this.enableAliasing) {
                 result = ByteString.wrap(this.buffer, this.bufferPos, size);
+            } else {
+                result = ByteString.copyFrom(this.buffer, this.bufferPos, size);
             }
             this.bufferPos += size;
             return result;
@@ -378,22 +353,23 @@ public final class CodedInputStream {
 
     public byte[] readByteArray() throws IOException {
         int size = readRawVarint32();
-        if (size > this.bufferSize - this.bufferPos || size <= 0) {
-            return readRawBytesSlowPath(size);
+        if (size <= this.bufferSize - this.bufferPos && size > 0) {
+            byte[] result = Arrays.copyOfRange(this.buffer, this.bufferPos, this.bufferPos + size);
+            this.bufferPos += size;
+            return result;
         }
-        byte[] result = Arrays.copyOfRange(this.buffer, this.bufferPos, this.bufferPos + size);
-        this.bufferPos += size;
-        return result;
+        byte[] result2 = readRawBytesSlowPath(size);
+        return result2;
     }
 
     public ByteBuffer readByteBuffer() throws IOException {
         ByteBuffer result;
         int size = readRawVarint32();
         if (size <= this.bufferSize - this.bufferPos && size > 0) {
-            if (this.input != null || this.bufferIsImmutable || !this.enableAliasing) {
-                result = ByteBuffer.wrap(Arrays.copyOfRange(this.buffer, this.bufferPos, this.bufferPos + size));
-            } else {
+            if (this.input == null && !this.bufferIsImmutable && this.enableAliasing) {
                 result = ByteBuffer.wrap(this.buffer, this.bufferPos, size).slice();
+            } else {
+                result = ByteBuffer.wrap(Arrays.copyOfRange(this.buffer, this.bufferPos, this.bufferPos + size));
             }
             this.bufferPos += size;
             return result;
@@ -428,112 +404,86 @@ public final class CodedInputStream {
         return decodeZigZag64(readRawVarint64());
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:29:0x0071, code lost:
-        if (r1[r2] < 0) goto L_0x0074;
+    /* JADX WARN: Code restructure failed: missing block: B:33:0x0071, code lost:
+        if (r1[r2] < 0) goto L35;
      */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public int readRawVarint32() throws java.io.IOException {
-        /*
-            r5 = this;
-            int r0 = r5.bufferPos
-            int r1 = r5.bufferSize
-            if (r1 != r0) goto L_0x0008
-            goto L_0x0074
-        L_0x0008:
-            byte[] r1 = r5.buffer
-            int r2 = r0 + 1
-            byte r0 = r1[r0]
-            r3 = r0
-            if (r0 < 0) goto L_0x0014
-            r5.bufferPos = r2
-            return r3
-        L_0x0014:
-            int r0 = r5.bufferSize
-            int r0 = r0 - r2
-            r4 = 9
-            if (r0 >= r4) goto L_0x001c
-            goto L_0x0074
-        L_0x001c:
-            int r0 = r2 + 1
-            byte r2 = r1[r2]
-            int r2 = r2 << 7
-            r2 = r2 ^ r3
-            r3 = r2
-            if (r2 >= 0) goto L_0x002b
-            r2 = r3 ^ -128(0xffffffffffffff80, float:NaN)
-        L_0x0028:
-            r3 = r2
-            r2 = r0
-            goto L_0x007b
-        L_0x002b:
-            int r2 = r0 + 1
-            byte r0 = r1[r0]
-            int r0 = r0 << 14
-            r0 = r0 ^ r3
-            r3 = r0
-            if (r0 < 0) goto L_0x0039
-            r0 = r3 ^ 16256(0x3f80, float:2.278E-41)
-            r3 = r0
-            goto L_0x007b
-        L_0x0039:
-            int r0 = r2 + 1
-            byte r2 = r1[r2]
-            int r2 = r2 << 21
-            r2 = r2 ^ r3
-            r3 = r2
-            if (r2 >= 0) goto L_0x0048
-            r2 = -2080896(0xffffffffffe03f80, float:NaN)
-            r2 = r2 ^ r3
-            goto L_0x0028
-        L_0x0048:
-            int r2 = r0 + 1
-            byte r0 = r1[r0]
-            int r4 = r0 << 28
-            r3 = r3 ^ r4
-            r4 = 266354560(0xfe03f80, float:2.2112565E-29)
-            r3 = r3 ^ r4
-            if (r0 >= 0) goto L_0x007b
-            int r4 = r2 + 1
-            byte r2 = r1[r2]
-            if (r2 >= 0) goto L_0x007a
-            int r2 = r4 + 1
-            byte r4 = r1[r4]
-            if (r4 >= 0) goto L_0x007b
-            int r4 = r2 + 1
-            byte r2 = r1[r2]
-            if (r2 >= 0) goto L_0x007a
-            int r2 = r4 + 1
-            byte r4 = r1[r4]
-            if (r4 >= 0) goto L_0x007b
-            int r4 = r2 + 1
-            byte r2 = r1[r2]
-            if (r2 >= 0) goto L_0x007a
-        L_0x0074:
-            long r0 = r5.readRawVarint64SlowPath()
-            int r0 = (int) r0
-            return r0
-        L_0x007a:
-            r2 = r4
-        L_0x007b:
-            r5.bufferPos = r2
-            return r3
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.framework.protobuf.CodedInputStream.readRawVarint32():int");
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public int readRawVarint32() throws IOException {
+        int pos;
+        int x;
+        int pos2;
+        int pos3 = this.bufferPos;
+        if (this.bufferSize != pos3) {
+            byte[] buffer = this.buffer;
+            int pos4 = pos3 + 1;
+            int pos5 = buffer[pos3];
+            if (pos5 >= 0) {
+                this.bufferPos = pos4;
+                return pos5;
+            } else if (this.bufferSize - pos4 >= 9) {
+                int pos6 = pos4 + 1;
+                int x2 = (buffer[pos4] << 7) ^ pos5;
+                if (x2 < 0) {
+                    pos2 = x2 ^ (-128);
+                } else {
+                    pos = pos6 + 1;
+                    int x3 = (buffer[pos6] << 14) ^ x2;
+                    if (x3 >= 0) {
+                        x = x3 ^ 16256;
+                    } else {
+                        pos6 = pos + 1;
+                        int x4 = (buffer[pos] << 21) ^ x3;
+                        if (x4 < 0) {
+                            pos2 = (-2080896) ^ x4;
+                        } else {
+                            pos = pos6 + 1;
+                            int y = buffer[pos6];
+                            x = (x4 ^ (y << 28)) ^ 266354560;
+                            if (y < 0) {
+                                int pos7 = pos + 1;
+                                if (buffer[pos] < 0) {
+                                    pos = pos7 + 1;
+                                    if (buffer[pos7] < 0) {
+                                        pos7 = pos + 1;
+                                        if (buffer[pos] < 0) {
+                                            pos = pos7 + 1;
+                                            if (buffer[pos7] < 0) {
+                                                pos7 = pos + 1;
+                                            }
+                                        }
+                                    }
+                                }
+                                pos = pos7;
+                            }
+                        }
+                    }
+                    this.bufferPos = pos;
+                    return x;
+                }
+                x = pos2;
+                pos = pos6;
+                this.bufferPos = pos;
+                return x;
+            }
+        }
+        return (int) readRawVarint64SlowPath();
     }
 
     private void skipRawVarint() throws IOException {
         if (this.bufferSize - this.bufferPos >= 10) {
-            byte[] buffer2 = this.buffer;
+            byte[] buffer = this.buffer;
             int pos = this.bufferPos;
             int i = 0;
             while (i < 10) {
                 int pos2 = pos + 1;
-                if (buffer2[pos] >= 0) {
-                    this.bufferPos = pos2;
-                    return;
-                } else {
+                if (buffer[pos] < 0) {
                     i++;
                     pos = pos2;
+                } else {
+                    this.bufferPos = pos2;
+                    return;
                 }
             }
         }
@@ -541,201 +491,132 @@ public final class CodedInputStream {
     }
 
     private void skipRawVarintSlowPath() throws IOException {
-        int i = 0;
-        while (i < 10) {
-            if (readRawByte() < 0) {
-                i++;
-            } else {
+        for (int i = 0; i < 10; i++) {
+            if (readRawByte() >= 0) {
                 return;
             }
         }
         throw InvalidProtocolBufferException.malformedVarint();
     }
 
-    static int readRawVarint32(InputStream input2) throws IOException {
-        int firstByte = input2.read();
-        if (firstByte != -1) {
-            return readRawVarint32(firstByte, input2);
+    static int readRawVarint32(InputStream input) throws IOException {
+        int firstByte = input.read();
+        if (firstByte == -1) {
+            throw InvalidProtocolBufferException.truncatedMessage();
         }
-        throw InvalidProtocolBufferException.truncatedMessage();
+        return readRawVarint32(firstByte, input);
     }
 
-    public static int readRawVarint32(int firstByte, InputStream input2) throws IOException {
+    public static int readRawVarint32(int firstByte, InputStream input) throws IOException {
         if ((firstByte & 128) == 0) {
             return firstByte;
         }
         int result = firstByte & 127;
         int offset = 7;
         while (offset < 32) {
-            int b = input2.read();
-            if (b != -1) {
-                result |= (b & 127) << offset;
-                if ((b & 128) == 0) {
-                    return result;
-                }
+            int b = input.read();
+            if (b == -1) {
+                throw InvalidProtocolBufferException.truncatedMessage();
+            }
+            result |= (b & 127) << offset;
+            if ((b & 128) != 0) {
                 offset += 7;
             } else {
-                throw InvalidProtocolBufferException.truncatedMessage();
+                return result;
             }
         }
         while (offset < 64) {
-            int b2 = input2.read();
+            int b2 = input.read();
             if (b2 == -1) {
                 throw InvalidProtocolBufferException.truncatedMessage();
-            } else if ((b2 & 128) == 0) {
-                return result;
-            } else {
+            }
+            if ((b2 & 128) != 0) {
                 offset += 7;
+            } else {
+                return result;
             }
         }
         throw InvalidProtocolBufferException.malformedVarint();
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:33:0x00bd, code lost:
-        if (((long) r1[r2]) < 0) goto L_0x00c0;
+    /* JADX WARN: Code restructure failed: missing block: B:37:0x00bd, code lost:
+        if (r1[r2] < 0) goto L38;
      */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public long readRawVarint64() throws java.io.IOException {
-        /*
-            r10 = this;
-            int r0 = r10.bufferPos
-            int r1 = r10.bufferSize
-            if (r1 != r0) goto L_0x0008
-            goto L_0x00c0
-        L_0x0008:
-            byte[] r1 = r10.buffer
-            int r2 = r0 + 1
-            byte r0 = r1[r0]
-            r3 = r0
-            if (r0 < 0) goto L_0x0015
-            r10.bufferPos = r2
-            long r4 = (long) r3
-            return r4
-        L_0x0015:
-            int r0 = r10.bufferSize
-            int r0 = r0 - r2
-            r4 = 9
-            if (r0 >= r4) goto L_0x001e
-            goto L_0x00c0
-        L_0x001e:
-            int r0 = r2 + 1
-            byte r2 = r1[r2]
-            int r2 = r2 << 7
-            r2 = r2 ^ r3
-            r3 = r2
-            if (r2 >= 0) goto L_0x002d
-            r2 = r3 ^ -128(0xffffffffffffff80, float:NaN)
-            long r4 = (long) r2
-            goto L_0x00c5
-        L_0x002d:
-            int r2 = r0 + 1
-            byte r0 = r1[r0]
-            int r0 = r0 << 14
-            r0 = r0 ^ r3
-            r3 = r0
-            if (r0 < 0) goto L_0x003d
-            r0 = r3 ^ 16256(0x3f80, float:2.278E-41)
-            long r4 = (long) r0
-        L_0x003a:
-            r0 = r2
-            goto L_0x00c5
-        L_0x003d:
-            int r0 = r2 + 1
-            byte r2 = r1[r2]
-            int r2 = r2 << 21
-            r2 = r2 ^ r3
-            r3 = r2
-            if (r2 >= 0) goto L_0x004e
-            r2 = -2080896(0xffffffffffe03f80, float:NaN)
-            r2 = r2 ^ r3
-            long r4 = (long) r2
-            goto L_0x00c5
-        L_0x004e:
-            long r4 = (long) r3
-            int r2 = r0 + 1
-            byte r0 = r1[r0]
-            long r6 = (long) r0
-            r0 = 28
-            long r6 = r6 << r0
-            long r4 = r4 ^ r6
-            r6 = r4
-            r8 = 0
-            int r0 = (r4 > r8 ? 1 : (r4 == r8 ? 0 : -1))
-            if (r0 < 0) goto L_0x0064
-            r4 = 266354560(0xfe03f80, double:1.315966377E-315)
-            long r4 = r4 ^ r6
-            goto L_0x003a
-        L_0x0064:
-            int r0 = r2 + 1
-            byte r2 = r1[r2]
-            long r4 = (long) r2
-            r2 = 35
-            long r4 = r4 << r2
-            long r4 = r4 ^ r6
-            r6 = r4
-            int r2 = (r4 > r8 ? 1 : (r4 == r8 ? 0 : -1))
-            if (r2 >= 0) goto L_0x0079
-            r4 = -34093383808(0xfffffff80fe03f80, double:NaN)
-            long r4 = r4 ^ r6
-            goto L_0x00c5
-        L_0x0079:
-            int r2 = r0 + 1
-            byte r0 = r1[r0]
-            long r4 = (long) r0
-            r0 = 42
-            long r4 = r4 << r0
-            long r4 = r4 ^ r6
-            r6 = r4
-            int r0 = (r4 > r8 ? 1 : (r4 == r8 ? 0 : -1))
-            if (r0 < 0) goto L_0x008e
-            r4 = 4363953127296(0x3f80fe03f80, double:2.1560793202584E-311)
-            long r4 = r4 ^ r6
-            goto L_0x003a
-        L_0x008e:
-            int r0 = r2 + 1
-            byte r2 = r1[r2]
-            long r4 = (long) r2
-            r2 = 49
-            long r4 = r4 << r2
-            long r4 = r4 ^ r6
-            r6 = r4
-            int r2 = (r4 > r8 ? 1 : (r4 == r8 ? 0 : -1))
-            if (r2 >= 0) goto L_0x00a3
-            r4 = -558586000294016(0xfffe03f80fe03f80, double:NaN)
-            long r4 = r4 ^ r6
-            goto L_0x00c5
-        L_0x00a3:
-            int r2 = r0 + 1
-            byte r0 = r1[r0]
-            long r4 = (long) r0
-            r0 = 56
-            long r4 = r4 << r0
-            long r4 = r4 ^ r6
-            r6 = 71499008037633920(0xfe03f80fe03f80, double:6.838959413692434E-304)
-            long r4 = r4 ^ r6
-            int r0 = (r4 > r8 ? 1 : (r4 == r8 ? 0 : -1))
-            if (r0 >= 0) goto L_0x003a
-            int r0 = r2 + 1
-            byte r2 = r1[r2]
-            long r6 = (long) r2
-            int r2 = (r6 > r8 ? 1 : (r6 == r8 ? 0 : -1))
-            if (r2 >= 0) goto L_0x00c5
-        L_0x00c0:
-            long r0 = r10.readRawVarint64SlowPath()
-            return r0
-        L_0x00c5:
-            r10.bufferPos = r0
-            return r4
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.framework.protobuf.CodedInputStream.readRawVarint64():long");
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public long readRawVarint64() throws IOException {
+        long x;
+        int pos = this.bufferPos;
+        if (this.bufferSize != pos) {
+            byte[] buffer = this.buffer;
+            int pos2 = pos + 1;
+            int pos3 = buffer[pos];
+            if (pos3 >= 0) {
+                this.bufferPos = pos2;
+                return pos3;
+            } else if (this.bufferSize - pos2 >= 9) {
+                int pos4 = pos2 + 1;
+                int y = (buffer[pos2] << 7) ^ pos3;
+                if (y < 0) {
+                    x = y ^ (-128);
+                } else {
+                    int pos5 = pos4 + 1;
+                    int y2 = (buffer[pos4] << 14) ^ y;
+                    if (y2 >= 0) {
+                        x = y2 ^ 16256;
+                    } else {
+                        pos4 = pos5 + 1;
+                        int y3 = (buffer[pos5] << 21) ^ y2;
+                        if (y3 < 0) {
+                            x = (-2080896) ^ y3;
+                        } else {
+                            long j = y3;
+                            pos5 = pos4 + 1;
+                            long x2 = j ^ (buffer[pos4] << 28);
+                            if (x2 >= 0) {
+                                x = 266354560 ^ x2;
+                            } else {
+                                pos4 = pos5 + 1;
+                                long x3 = (buffer[pos5] << 35) ^ x2;
+                                if (x3 < 0) {
+                                    x = (-34093383808L) ^ x3;
+                                } else {
+                                    pos5 = pos4 + 1;
+                                    long x4 = (buffer[pos4] << 42) ^ x3;
+                                    if (x4 >= 0) {
+                                        x = 4363953127296L ^ x4;
+                                    } else {
+                                        pos4 = pos5 + 1;
+                                        long x5 = (buffer[pos5] << 49) ^ x4;
+                                        if (x5 < 0) {
+                                            x = (-558586000294016L) ^ x5;
+                                        } else {
+                                            pos5 = pos4 + 1;
+                                            x = ((buffer[pos4] << 56) ^ x5) ^ 71499008037633920L;
+                                            if (x < 0) {
+                                                pos4 = pos5 + 1;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    pos4 = pos5;
+                }
+                this.bufferPos = pos4;
+                return x;
+            }
+        }
+        return readRawVarint64SlowPath();
     }
 
-    /* access modifiers changed from: package-private */
-    public long readRawVarint64SlowPath() throws IOException {
+    long readRawVarint64SlowPath() throws IOException {
         long result = 0;
         for (int shift = 0; shift < 64; shift += 7) {
             byte b = readRawByte();
-            result |= ((long) (b & Bidi.LEVEL_DEFAULT_RTL)) << shift;
+            result |= (b & Bidi.LEVEL_DEFAULT_RTL) << shift;
             if ((b & 128) == 0) {
                 return result;
             }
@@ -749,9 +630,9 @@ public final class CodedInputStream {
             refillBuffer(4);
             pos = this.bufferPos;
         }
-        byte[] buffer2 = this.buffer;
+        byte[] buffer = this.buffer;
         this.bufferPos = pos + 4;
-        return (buffer2[pos] & 255) | ((buffer2[pos + 1] & 255) << 8) | ((buffer2[pos + 2] & 255) << WifiScanner.PnoSettings.PnoNetwork.FLAG_SAME_NETWORK) | ((buffer2[pos + 3] & 255) << 24);
+        return (buffer[pos] & 255) | ((buffer[pos + 1] & 255) << 8) | ((buffer[pos + 2] & 255) << 16) | ((buffer[pos + 3] & 255) << 24);
     }
 
     public long readRawLittleEndian64() throws IOException {
@@ -760,9 +641,9 @@ public final class CodedInputStream {
             refillBuffer(8);
             pos = this.bufferPos;
         }
-        byte[] buffer2 = this.buffer;
+        byte[] buffer = this.buffer;
         this.bufferPos = pos + 8;
-        return (((long) buffer2[pos]) & 255) | ((((long) buffer2[pos + 1]) & 255) << 8) | ((((long) buffer2[pos + 2]) & 255) << 16) | ((((long) buffer2[pos + 3]) & 255) << 24) | ((((long) buffer2[pos + 4]) & 255) << 32) | ((((long) buffer2[pos + 5]) & 255) << 40) | ((((long) buffer2[pos + 6]) & 255) << 48) | ((((long) buffer2[pos + 7]) & 255) << 56);
+        return (buffer[pos] & 255) | ((buffer[pos + 1] & 255) << 8) | ((buffer[pos + 2] & 255) << 16) | ((buffer[pos + 3] & 255) << 24) | ((buffer[pos + 4] & 255) << 32) | ((buffer[pos + 5] & 255) << 40) | ((buffer[pos + 6] & 255) << 48) | ((buffer[pos + 7] & 255) << 56);
     }
 
     public static int decodeZigZag32(int n) {
@@ -773,20 +654,30 @@ public final class CodedInputStream {
         return (n >>> 1) ^ (-(1 & n));
     }
 
-    private CodedInputStream(byte[] buffer2, int off, int len, boolean bufferIsImmutable2) {
-        this.buffer = buffer2;
+    private CodedInputStream(byte[] buffer, int off, int len, boolean bufferIsImmutable) {
+        this.enableAliasing = false;
+        this.currentLimit = Integer.MAX_VALUE;
+        this.recursionLimit = 100;
+        this.sizeLimit = 67108864;
+        this.refillCallback = null;
+        this.buffer = buffer;
         this.bufferSize = off + len;
         this.bufferPos = off;
         this.totalBytesRetired = -off;
         this.input = null;
-        this.bufferIsImmutable = bufferIsImmutable2;
+        this.bufferIsImmutable = bufferIsImmutable;
     }
 
-    private CodedInputStream(InputStream input2, int bufferSize2) {
-        this.buffer = new byte[bufferSize2];
+    private CodedInputStream(InputStream input, int bufferSize) {
+        this.enableAliasing = false;
+        this.currentLimit = Integer.MAX_VALUE;
+        this.recursionLimit = 100;
+        this.sizeLimit = 67108864;
+        this.refillCallback = null;
+        this.buffer = new byte[bufferSize];
         this.bufferPos = 0;
         this.totalBytesRetired = 0;
-        this.input = input2;
+        this.input = input;
         this.bufferIsImmutable = false;
     }
 
@@ -795,21 +686,21 @@ public final class CodedInputStream {
     }
 
     public int setRecursionLimit(int limit) {
-        if (limit >= 0) {
-            int oldLimit = this.recursionLimit;
-            this.recursionLimit = limit;
-            return oldLimit;
+        if (limit < 0) {
+            throw new IllegalArgumentException("Recursion limit cannot be negative: " + limit);
         }
-        throw new IllegalArgumentException("Recursion limit cannot be negative: " + limit);
+        int oldLimit = this.recursionLimit;
+        this.recursionLimit = limit;
+        return oldLimit;
     }
 
     public int setSizeLimit(int limit) {
-        if (limit >= 0) {
-            int oldLimit = this.sizeLimit;
-            this.sizeLimit = limit;
-            return oldLimit;
+        if (limit < 0) {
+            throw new IllegalArgumentException("Size limit cannot be negative: " + limit);
         }
-        throw new IllegalArgumentException("Size limit cannot be negative: " + limit);
+        int oldLimit = this.sizeLimit;
+        this.sizeLimit = limit;
+        return oldLimit;
     }
 
     public void resetSizeCounter() {
@@ -817,17 +708,17 @@ public final class CodedInputStream {
     }
 
     public int pushLimit(int byteLimit) throws InvalidProtocolBufferException {
-        if (byteLimit >= 0) {
-            int byteLimit2 = byteLimit + this.totalBytesRetired + this.bufferPos;
-            int oldLimit = this.currentLimit;
-            if (byteLimit2 <= oldLimit) {
-                this.currentLimit = byteLimit2;
-                recomputeBufferSizeAfterLimit();
-                return oldLimit;
-            }
+        if (byteLimit < 0) {
+            throw InvalidProtocolBufferException.negativeSize();
+        }
+        int byteLimit2 = byteLimit + this.totalBytesRetired + this.bufferPos;
+        int oldLimit = this.currentLimit;
+        if (byteLimit2 > oldLimit) {
             throw InvalidProtocolBufferException.truncatedMessage();
         }
-        throw InvalidProtocolBufferException.negativeSize();
+        this.currentLimit = byteLimit2;
+        recomputeBufferSizeAfterLimit();
+        return oldLimit;
     }
 
     private void recomputeBufferSizeAfterLimit() {
@@ -850,7 +741,8 @@ public final class CodedInputStream {
         if (this.currentLimit == Integer.MAX_VALUE) {
             return -1;
         }
-        return this.currentLimit - (this.totalBytesRetired + this.bufferPos);
+        int currentAbsolutePosition = this.totalBytesRetired + this.bufferPos;
+        return this.currentLimit - currentAbsolutePosition;
     }
 
     public boolean isAtEnd() throws IOException {
@@ -891,14 +783,14 @@ public final class CodedInputStream {
                     throw new IllegalStateException("InputStream#read(byte[]) returned invalid result: " + bytesRead + "\nThe InputStream implementation is buggy.");
                 } else if (bytesRead > 0) {
                     this.bufferSize += bytesRead;
-                    if ((this.totalBytesRetired + n) - this.sizeLimit <= 0) {
-                        recomputeBufferSizeAfterLimit();
-                        if (this.bufferSize >= n) {
-                            return true;
-                        }
-                        return tryRefillBuffer(n);
+                    if ((this.totalBytesRetired + n) - this.sizeLimit > 0) {
+                        throw InvalidProtocolBufferException.sizeLimitExceeded();
                     }
-                    throw InvalidProtocolBufferException.sizeLimitExceeded();
+                    recomputeBufferSizeAfterLimit();
+                    if (this.bufferSize >= n) {
+                        return true;
+                    }
+                    return tryRefillBuffer(n);
                 }
             }
             return false;
@@ -917,101 +809,101 @@ public final class CodedInputStream {
 
     public byte[] readRawBytes(int size) throws IOException {
         int pos = this.bufferPos;
-        if (size > this.bufferSize - pos || size <= 0) {
-            return readRawBytesSlowPath(size);
+        if (size <= this.bufferSize - pos && size > 0) {
+            this.bufferPos = pos + size;
+            return Arrays.copyOfRange(this.buffer, pos, pos + size);
         }
-        this.bufferPos = pos + size;
-        return Arrays.copyOfRange(this.buffer, pos, pos + size);
+        return readRawBytesSlowPath(size);
     }
 
     private byte[] readRawBytesSlowPath(int size) throws IOException {
-        if (size > 0) {
-            int currentMessageSize = this.totalBytesRetired + this.bufferPos + size;
-            if (currentMessageSize > this.sizeLimit) {
-                throw InvalidProtocolBufferException.sizeLimitExceeded();
-            } else if (currentMessageSize > this.currentLimit) {
-                skipRawBytes((this.currentLimit - this.totalBytesRetired) - this.bufferPos);
-                throw InvalidProtocolBufferException.truncatedMessage();
-            } else if (this.input != null) {
-                int originalBufferPos = this.bufferPos;
-                int bufferedBytes = this.bufferSize - this.bufferPos;
-                this.totalBytesRetired += this.bufferSize;
-                this.bufferPos = 0;
-                this.bufferSize = 0;
-                int sizeLeft = size - bufferedBytes;
-                if (sizeLeft < 4096 || sizeLeft <= this.input.available()) {
-                    byte[] bytes = new byte[size];
-                    System.arraycopy(this.buffer, originalBufferPos, bytes, 0, bufferedBytes);
-                    int pos = bufferedBytes;
-                    while (pos < bytes.length) {
-                        int n = this.input.read(bytes, pos, size - pos);
-                        if (n != -1) {
-                            this.totalBytesRetired += n;
-                            pos += n;
-                        } else {
-                            throw InvalidProtocolBufferException.truncatedMessage();
-                        }
-                    }
-                    return bytes;
-                }
-                List<byte[]> chunks = new ArrayList<>();
-                while (sizeLeft > 0) {
-                    byte[] chunk = new byte[Math.min(sizeLeft, 4096)];
-                    int pos2 = 0;
-                    while (pos2 < chunk.length) {
-                        int n2 = this.input.read(chunk, pos2, chunk.length - pos2);
-                        if (n2 != -1) {
-                            this.totalBytesRetired += n2;
-                            pos2 += n2;
-                        } else {
-                            throw InvalidProtocolBufferException.truncatedMessage();
-                        }
-                    }
-                    sizeLeft -= chunk.length;
-                    chunks.add(chunk);
-                }
-                byte[] bytes2 = new byte[size];
-                System.arraycopy(this.buffer, originalBufferPos, bytes2, 0, bufferedBytes);
-                int pos3 = bufferedBytes;
-                for (byte[] chunk2 : chunks) {
-                    System.arraycopy(chunk2, 0, bytes2, pos3, chunk2.length);
-                    pos3 += chunk2.length;
-                }
-                return bytes2;
-            } else {
-                throw InvalidProtocolBufferException.truncatedMessage();
+        if (size <= 0) {
+            if (size == 0) {
+                return Internal.EMPTY_BYTE_ARRAY;
             }
-        } else if (size == 0) {
-            return Internal.EMPTY_BYTE_ARRAY;
-        } else {
             throw InvalidProtocolBufferException.negativeSize();
+        }
+        int currentMessageSize = this.totalBytesRetired + this.bufferPos + size;
+        if (currentMessageSize > this.sizeLimit) {
+            throw InvalidProtocolBufferException.sizeLimitExceeded();
+        }
+        if (currentMessageSize > this.currentLimit) {
+            skipRawBytes((this.currentLimit - this.totalBytesRetired) - this.bufferPos);
+            throw InvalidProtocolBufferException.truncatedMessage();
+        } else if (this.input == null) {
+            throw InvalidProtocolBufferException.truncatedMessage();
+        } else {
+            int originalBufferPos = this.bufferPos;
+            int bufferedBytes = this.bufferSize - this.bufferPos;
+            this.totalBytesRetired += this.bufferSize;
+            this.bufferPos = 0;
+            this.bufferSize = 0;
+            int sizeLeft = size - bufferedBytes;
+            if (sizeLeft < 4096 || sizeLeft <= this.input.available()) {
+                byte[] bytes = new byte[size];
+                System.arraycopy(this.buffer, originalBufferPos, bytes, 0, bufferedBytes);
+                int pos = bufferedBytes;
+                while (pos < bytes.length) {
+                    int n = this.input.read(bytes, pos, size - pos);
+                    if (n == -1) {
+                        throw InvalidProtocolBufferException.truncatedMessage();
+                    }
+                    this.totalBytesRetired += n;
+                    pos += n;
+                }
+                return bytes;
+            }
+            List<byte[]> chunks = new ArrayList<>();
+            while (sizeLeft > 0) {
+                byte[] chunk = new byte[Math.min(sizeLeft, 4096)];
+                int pos2 = 0;
+                while (pos2 < chunk.length) {
+                    int n2 = this.input.read(chunk, pos2, chunk.length - pos2);
+                    if (n2 == -1) {
+                        throw InvalidProtocolBufferException.truncatedMessage();
+                    }
+                    this.totalBytesRetired += n2;
+                    pos2 += n2;
+                }
+                sizeLeft -= chunk.length;
+                chunks.add(chunk);
+            }
+            byte[] bytes2 = new byte[size];
+            System.arraycopy(this.buffer, originalBufferPos, bytes2, 0, bufferedBytes);
+            int pos3 = bufferedBytes;
+            for (byte[] chunk2 : chunks) {
+                System.arraycopy(chunk2, 0, bytes2, pos3, chunk2.length);
+                pos3 += chunk2.length;
+            }
+            return bytes2;
         }
     }
 
     public void skipRawBytes(int size) throws IOException {
-        if (size > this.bufferSize - this.bufferPos || size < 0) {
-            skipRawBytesSlowPath(size);
-        } else {
+        if (size <= this.bufferSize - this.bufferPos && size >= 0) {
             this.bufferPos += size;
+        } else {
+            skipRawBytesSlowPath(size);
         }
     }
 
     private void skipRawBytesSlowPath(int size) throws IOException {
         if (size < 0) {
             throw InvalidProtocolBufferException.negativeSize();
-        } else if (this.totalBytesRetired + this.bufferPos + size <= this.currentLimit) {
-            int pos = this.bufferSize - this.bufferPos;
-            this.bufferPos = this.bufferSize;
-            refillBuffer(1);
-            while (size - pos > this.bufferSize) {
-                pos += this.bufferSize;
-                this.bufferPos = this.bufferSize;
-                refillBuffer(1);
-            }
-            this.bufferPos = size - pos;
-        } else {
-            skipRawBytes((this.currentLimit - this.totalBytesRetired) - this.bufferPos);
+        }
+        if (this.totalBytesRetired + this.bufferPos + size > this.currentLimit) {
+            int pos = this.currentLimit;
+            skipRawBytes((pos - this.totalBytesRetired) - this.bufferPos);
             throw InvalidProtocolBufferException.truncatedMessage();
         }
+        int pos2 = this.bufferSize - this.bufferPos;
+        this.bufferPos = this.bufferSize;
+        refillBuffer(1);
+        while (size - pos2 > this.bufferSize) {
+            pos2 += this.bufferSize;
+            this.bufferPos = this.bufferSize;
+            refillBuffer(1);
+        }
+        this.bufferPos = size - pos2;
     }
 }

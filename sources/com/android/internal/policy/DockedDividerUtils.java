@@ -2,6 +2,7 @@ package com.android.internal.policy;
 
 import android.graphics.Rect;
 
+/* loaded from: classes4.dex */
 public class DockedDividerUtils {
     public static void calculateBoundsForPosition(int position, int dockSide, Rect outRect, int displayWidth, int displayHeight, int dividerSize) {
         boolean z = false;

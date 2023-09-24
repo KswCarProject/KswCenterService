@@ -1,13 +1,14 @@
 package android.telephony;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Objects;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class CallQuality implements Parcelable {
     public static final int CALL_QUALITY_BAD = 4;
     public static final int CALL_QUALITY_EXCELLENT = 0;
@@ -15,11 +16,13 @@ public final class CallQuality implements Parcelable {
     public static final int CALL_QUALITY_GOOD = 1;
     public static final int CALL_QUALITY_NOT_AVAILABLE = 5;
     public static final int CALL_QUALITY_POOR = 3;
-    public static final Parcelable.Creator<CallQuality> CREATOR = new Parcelable.Creator() {
+    public static final Parcelable.Creator<CallQuality> CREATOR = new Parcelable.Creator() { // from class: android.telephony.CallQuality.1
+        @Override // android.p007os.Parcelable.Creator
         public CallQuality createFromParcel(Parcel in) {
             return new CallQuality(in);
         }
 
+        @Override // android.p007os.Parcelable.Creator
         public CallQuality[] newArray(int size) {
             return new CallQuality[size];
         }
@@ -37,6 +40,7 @@ public final class CallQuality implements Parcelable {
     private int mUplinkCallQualityLevel;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface CallQualityLevel {
     }
 
@@ -120,27 +124,29 @@ public final class CallQuality implements Parcelable {
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(this.mDownlinkCallQualityLevel), Integer.valueOf(this.mUplinkCallQualityLevel), Integer.valueOf(this.mCallDuration), Integer.valueOf(this.mNumRtpPacketsTransmitted), Integer.valueOf(this.mNumRtpPacketsReceived), Integer.valueOf(this.mNumRtpPacketsTransmittedLost), Integer.valueOf(this.mNumRtpPacketsNotReceived), Integer.valueOf(this.mAverageRelativeJitter), Integer.valueOf(this.mMaxRelativeJitter), Integer.valueOf(this.mAverageRoundTripTime), Integer.valueOf(this.mCodecType)});
+        return Objects.hash(Integer.valueOf(this.mDownlinkCallQualityLevel), Integer.valueOf(this.mUplinkCallQualityLevel), Integer.valueOf(this.mCallDuration), Integer.valueOf(this.mNumRtpPacketsTransmitted), Integer.valueOf(this.mNumRtpPacketsReceived), Integer.valueOf(this.mNumRtpPacketsTransmittedLost), Integer.valueOf(this.mNumRtpPacketsNotReceived), Integer.valueOf(this.mAverageRelativeJitter), Integer.valueOf(this.mMaxRelativeJitter), Integer.valueOf(this.mAverageRoundTripTime), Integer.valueOf(this.mCodecType));
     }
 
     public boolean equals(Object o) {
-        if (o == null || !(o instanceof CallQuality) || hashCode() != o.hashCode()) {
-            return false;
-        }
-        if (this == o) {
-            return true;
-        }
-        CallQuality s = (CallQuality) o;
-        if (this.mDownlinkCallQualityLevel == s.mDownlinkCallQualityLevel && this.mUplinkCallQualityLevel == s.mUplinkCallQualityLevel && this.mCallDuration == s.mCallDuration && this.mNumRtpPacketsTransmitted == s.mNumRtpPacketsTransmitted && this.mNumRtpPacketsReceived == s.mNumRtpPacketsReceived && this.mNumRtpPacketsTransmittedLost == s.mNumRtpPacketsTransmittedLost && this.mNumRtpPacketsNotReceived == s.mNumRtpPacketsNotReceived && this.mAverageRelativeJitter == s.mAverageRelativeJitter && this.mMaxRelativeJitter == s.mMaxRelativeJitter && this.mAverageRoundTripTime == s.mAverageRoundTripTime && this.mCodecType == s.mCodecType) {
+        if (o != null && (o instanceof CallQuality) && hashCode() == o.hashCode()) {
+            if (this == o) {
+                return true;
+            }
+            CallQuality s = (CallQuality) o;
+            if (this.mDownlinkCallQualityLevel != s.mDownlinkCallQualityLevel || this.mUplinkCallQualityLevel != s.mUplinkCallQualityLevel || this.mCallDuration != s.mCallDuration || this.mNumRtpPacketsTransmitted != s.mNumRtpPacketsTransmitted || this.mNumRtpPacketsReceived != s.mNumRtpPacketsReceived || this.mNumRtpPacketsTransmittedLost != s.mNumRtpPacketsTransmittedLost || this.mNumRtpPacketsNotReceived != s.mNumRtpPacketsNotReceived || this.mAverageRelativeJitter != s.mAverageRelativeJitter || this.mMaxRelativeJitter != s.mMaxRelativeJitter || this.mAverageRoundTripTime != s.mAverageRoundTripTime || this.mCodecType != s.mCodecType) {
+                return false;
+            }
             return true;
         }
         return false;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mDownlinkCallQualityLevel);
         dest.writeInt(this.mUplinkCallQualityLevel);

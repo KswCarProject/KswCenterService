@@ -1,9 +1,9 @@
 package android.view.textservice;
 
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.content.p002pm.ApplicationInfo;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.TextUtils;
 import android.util.Slog;
 import com.android.internal.inputmethod.SubtypeLocaleUtils;
@@ -15,21 +15,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
+/* loaded from: classes4.dex */
 public final class SpellCheckerSubtype implements Parcelable {
-    public static final Parcelable.Creator<SpellCheckerSubtype> CREATOR = new Parcelable.Creator<SpellCheckerSubtype>() {
-        public SpellCheckerSubtype createFromParcel(Parcel source) {
-            return new SpellCheckerSubtype(source);
-        }
-
-        public SpellCheckerSubtype[] newArray(int size) {
-            return new SpellCheckerSubtype[size];
-        }
-    };
     private static final String EXTRA_VALUE_KEY_VALUE_SEPARATOR = "=";
     private static final String EXTRA_VALUE_PAIR_SEPARATOR = ",";
     public static final int SUBTYPE_ID_NONE = 0;
     private static final String SUBTYPE_LANGUAGE_TAG_NONE = "";
-    private static final String TAG = SpellCheckerSubtype.class.getSimpleName();
     private HashMap<String, String> mExtraValueHashMapCache;
     private final String mSubtypeExtraValue;
     private final int mSubtypeHashCode;
@@ -37,6 +28,20 @@ public final class SpellCheckerSubtype implements Parcelable {
     private final String mSubtypeLanguageTag;
     private final String mSubtypeLocale;
     private final int mSubtypeNameResId;
+    private static final String TAG = SpellCheckerSubtype.class.getSimpleName();
+    public static final Parcelable.Creator<SpellCheckerSubtype> CREATOR = new Parcelable.Creator<SpellCheckerSubtype>() { // from class: android.view.textservice.SpellCheckerSubtype.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public SpellCheckerSubtype createFromParcel(Parcel source) {
+            return new SpellCheckerSubtype(source);
+        }
+
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public SpellCheckerSubtype[] newArray(int size) {
+            return new SpellCheckerSubtype[size];
+        }
+    };
 
     public SpellCheckerSubtype(int nameId, String locale, String languageTag, String extraValue, int subtypeId) {
         this.mSubtypeNameResId = nameId;
@@ -84,13 +89,14 @@ public final class SpellCheckerSubtype implements Parcelable {
     private HashMap<String, String> getExtraValueHashMap() {
         if (this.mExtraValueHashMapCache == null) {
             this.mExtraValueHashMapCache = new HashMap<>();
-            for (String split : this.mSubtypeExtraValue.split(",")) {
-                String[] pair = split.split(EXTRA_VALUE_KEY_VALUE_SEPARATOR);
+            String[] pairs = this.mSubtypeExtraValue.split(",");
+            for (String str : pairs) {
+                String[] pair = str.split(EXTRA_VALUE_KEY_VALUE_SEPARATOR);
                 if (pair.length == 1) {
-                    this.mExtraValueHashMapCache.put(pair[0], (Object) null);
+                    this.mExtraValueHashMapCache.put(pair[0], null);
                 } else if (pair.length > 1) {
                     if (pair.length > 2) {
-                        Slog.w(TAG, "ExtraValue has two or more '='s");
+                        Slog.m50w(TAG, "ExtraValue has two or more '='s");
                     }
                     this.mExtraValueHashMapCache.put(pair[0], pair[1]);
                 }
@@ -112,20 +118,11 @@ public final class SpellCheckerSubtype implements Parcelable {
     }
 
     public boolean equals(Object o) {
-        if (!(o instanceof SpellCheckerSubtype)) {
-            return false;
+        if (o instanceof SpellCheckerSubtype) {
+            SpellCheckerSubtype subtype = (SpellCheckerSubtype) o;
+            return (subtype.mSubtypeId == 0 && this.mSubtypeId == 0) ? subtype.hashCode() == hashCode() && subtype.getNameResId() == getNameResId() && subtype.getLocale().equals(getLocale()) && subtype.getLanguageTag().equals(getLanguageTag()) && subtype.getExtraValue().equals(getExtraValue()) : subtype.hashCode() == hashCode();
         }
-        SpellCheckerSubtype subtype = (SpellCheckerSubtype) o;
-        if (subtype.mSubtypeId == 0 && this.mSubtypeId == 0) {
-            if (subtype.hashCode() != hashCode() || subtype.getNameResId() != getNameResId() || !subtype.getLocale().equals(getLocale()) || !subtype.getLanguageTag().equals(getLanguageTag()) || !subtype.getExtraValue().equals(getExtraValue())) {
-                return false;
-            }
-            return true;
-        } else if (subtype.hashCode() == hashCode()) {
-            return true;
-        } else {
-            return false;
-        }
+        return false;
     }
 
     public Locale getLocaleObject() {
@@ -142,16 +139,15 @@ public final class SpellCheckerSubtype implements Parcelable {
             return localeStr;
         }
         CharSequence subtypeName = context.getPackageManager().getText(packageName, this.mSubtypeNameResId, appInfo);
-        if (TextUtils.isEmpty(subtypeName)) {
-            return localeStr;
-        }
-        return String.format(subtypeName.toString(), new Object[]{localeStr});
+        return !TextUtils.isEmpty(subtypeName) ? String.format(subtypeName.toString(), localeStr) : localeStr;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int parcelableFlags) {
         dest.writeInt(this.mSubtypeNameResId);
         dest.writeString(this.mSubtypeLocale);

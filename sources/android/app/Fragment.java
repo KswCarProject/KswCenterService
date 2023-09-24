@@ -10,11 +10,11 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.net.wifi.WifiEnterpriseConfig;
-import android.os.Bundle;
-import android.os.Looper;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.UserHandle;
+import android.p007os.Bundle;
+import android.p007os.Looper;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.UserHandle;
 import android.provider.SettingsStringUtil;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
@@ -32,12 +32,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 
 @Deprecated
+/* loaded from: classes.dex */
 public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuListener {
     static final int ACTIVITY_CREATED = 2;
     static final int CREATED = 1;
@@ -46,10 +47,6 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
     static final int RESUMED = 5;
     static final int STARTED = 4;
     static final int STOPPED = 3;
-    /* access modifiers changed from: private */
-    public static final Transition USE_DEFAULT_TRANSITION = new TransitionSet();
-    @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
-    private static final ArrayMap<String, Class<?>> sClassMap = new ArrayMap<>();
     @UnsupportedAppUsage
     boolean mAdded;
     AnimationInfo mAnimationInfo;
@@ -75,15 +72,12 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
     @UnsupportedAppUsage
     FragmentHostCallback mHost;
     boolean mInLayout;
-    @UnsupportedAppUsage
-    int mIndex = -1;
     boolean mIsCreated;
     boolean mIsNewlyAdded;
     LayoutInflater mLayoutInflater;
     LoaderManagerImpl mLoaderManager;
     @UnsupportedAppUsage
     boolean mLoadersStarted;
-    boolean mMenuVisible = true;
     Fragment mParentFragment;
     boolean mPerformedCreateView;
     boolean mRemoving;
@@ -93,17 +87,24 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
     @UnsupportedAppUsage
     Bundle mSavedFragmentState;
     SparseArray<Parcelable> mSavedViewState;
-    int mState = 0;
     String mTag;
     Fragment mTarget;
-    int mTargetIndex = -1;
     int mTargetRequestCode;
-    boolean mUserVisibleHint = true;
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
     View mView;
     @UnsupportedAppUsage
     String mWho;
+    @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
+    private static final ArrayMap<String, Class<?>> sClassMap = new ArrayMap<>();
+    private static final Transition USE_DEFAULT_TRANSITION = new TransitionSet();
+    int mState = 0;
+    @UnsupportedAppUsage
+    int mIndex = -1;
+    int mTargetIndex = -1;
+    boolean mMenuVisible = true;
+    boolean mUserVisibleHint = true;
 
+    /* loaded from: classes.dex */
     interface OnStartEnterTransitionListener {
         void onStartEnterTransition();
 
@@ -111,16 +112,21 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
     }
 
     @Deprecated
+    /* loaded from: classes.dex */
     public static class SavedState implements Parcelable {
-        public static final Parcelable.ClassLoaderCreator<SavedState> CREATOR = new Parcelable.ClassLoaderCreator<SavedState>() {
+        public static final Parcelable.ClassLoaderCreator<SavedState> CREATOR = new Parcelable.ClassLoaderCreator<SavedState>() { // from class: android.app.Fragment.SavedState.1
+            @Override // android.p007os.Parcelable.Creator
             public SavedState createFromParcel(Parcel in) {
-                return new SavedState(in, (ClassLoader) null);
+                return new SavedState(in, null);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.ClassLoaderCreator
             public SavedState createFromParcel(Parcel in, ClassLoader loader) {
                 return new SavedState(in, loader);
             }
 
+            @Override // android.p007os.Parcelable.Creator
             public SavedState[] newArray(int size) {
                 return new SavedState[size];
             }
@@ -138,16 +144,19 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
             }
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeBundle(this.mState);
         }
     }
 
     @Deprecated
+    /* loaded from: classes.dex */
     public static class InstantiationException extends AndroidRuntimeException {
         public InstantiationException(String msg, Exception cause) {
             super(msg, cause);
@@ -155,7 +164,7 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
     }
 
     public static Fragment instantiate(Context context, String fname) {
-        return instantiate(context, fname, (Bundle) null);
+        return instantiate(context, fname, null);
     }
 
     public static Fragment instantiate(Context context, String fname, Bundle args) {
@@ -163,11 +172,10 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
             Class<?> clazz = sClassMap.get(fname);
             if (clazz == null) {
                 clazz = context.getClassLoader().loadClass(fname);
-                if (Fragment.class.isAssignableFrom(clazz)) {
-                    sClassMap.put(fname, clazz);
-                } else {
+                if (!Fragment.class.isAssignableFrom(clazz)) {
                     throw new InstantiationException("Trying to instantiate a class " + fname + " that is not a Fragment", new ClassCastException());
                 }
+                sClassMap.put(fname, clazz);
             }
             Fragment f = (Fragment) clazz.getConstructor(new Class[0]).newInstance(new Object[0]);
             if (args != null) {
@@ -177,9 +185,9 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
             return f;
         } catch (ClassNotFoundException e) {
             throw new InstantiationException("Unable to instantiate fragment " + fname + ": make sure class name exists, is public, and has an empty constructor that is public", e);
-        } catch (InstantiationException e2) {
+        } catch (IllegalAccessException e2) {
             throw new InstantiationException("Unable to instantiate fragment " + fname + ": make sure class name exists, is public, and has an empty constructor that is public", e2);
-        } catch (IllegalAccessException e3) {
+        } catch (java.lang.InstantiationException e3) {
             throw new InstantiationException("Unable to instantiate fragment " + fname + ": make sure class name exists, is public, and has an empty constructor that is public", e3);
         } catch (NoSuchMethodException e4) {
             throw new InstantiationException("Unable to instantiate fragment " + fname + ": could not find Fragment constructor", e4);
@@ -188,8 +196,7 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public final void restoreViewState(Bundle savedInstanceState) {
+    final void restoreViewState(Bundle savedInstanceState) {
         if (this.mSavedViewState != null) {
             this.mView.restoreHierarchyState(this.mSavedViewState);
             this.mSavedViewState = null;
@@ -201,8 +208,7 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public final void setIndex(int index, Fragment parent) {
+    final void setIndex(int index, Fragment parent) {
         this.mIndex = index;
         if (parent != null) {
             this.mWho = parent.mWho + SettingsStringUtil.DELIMITER + this.mIndex;
@@ -211,8 +217,7 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
         this.mWho = "android:fragment:" + this.mIndex;
     }
 
-    /* access modifiers changed from: package-private */
-    public final boolean isInBackStack() {
+    final boolean isInBackStack() {
         return this.mBackStackNesting > 0;
     }
 
@@ -252,11 +257,10 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
     }
 
     public void setArguments(Bundle args) {
-        if (this.mIndex < 0 || !isStateSaved()) {
-            this.mArguments = args;
-            return;
+        if (this.mIndex >= 0 && isStateSaved()) {
+            throw new IllegalStateException("Fragment already active");
         }
-        throw new IllegalStateException("Fragment already active");
+        this.mArguments = args;
     }
 
     public final Bundle getArguments() {
@@ -271,30 +275,25 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
     }
 
     public void setInitialSavedState(SavedState state) {
-        if (this.mIndex < 0) {
-            this.mSavedFragmentState = (state == null || state.mState == null) ? null : state.mState;
-            return;
+        if (this.mIndex >= 0) {
+            throw new IllegalStateException("Fragment already active");
         }
-        throw new IllegalStateException("Fragment already active");
+        this.mSavedFragmentState = (state == null || state.mState == null) ? null : state.mState;
     }
 
     public void setTargetFragment(Fragment fragment, int requestCode) {
         FragmentManager mine = getFragmentManager();
         FragmentManager theirs = fragment != null ? fragment.getFragmentManager() : null;
-        if (mine == null || theirs == null || mine == theirs) {
-            Fragment check = fragment;
-            while (check != null) {
-                if (check != this) {
-                    check = check.getTargetFragment();
-                } else {
-                    throw new IllegalArgumentException("Setting " + fragment + " as the target of " + this + " would create a target cycle");
-                }
-            }
-            this.mTarget = fragment;
-            this.mTargetRequestCode = requestCode;
-            return;
+        if (mine != null && theirs != null && mine != theirs) {
+            throw new IllegalArgumentException("Fragment " + fragment + " must share the same FragmentManager to be set as a target fragment");
         }
-        throw new IllegalArgumentException("Fragment " + fragment + " must share the same FragmentManager to be set as a target fragment");
+        for (Fragment check = fragment; check != null; check = check.getTargetFragment()) {
+            if (check == this) {
+                throw new IllegalArgumentException("Setting " + fragment + " as the target of " + this + " would create a target cycle");
+            }
+        }
+        this.mTarget = fragment;
+        this.mTargetRequestCode = requestCode;
     }
 
     public final Fragment getTargetFragment() {
@@ -327,10 +326,10 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
     }
 
     public final Resources getResources() {
-        if (this.mHost != null) {
-            return this.mHost.getContext().getResources();
+        if (this.mHost == null) {
+            throw new IllegalStateException("Fragment " + this + " not attached to Activity");
         }
-        throw new IllegalStateException("Fragment " + this + " not attached to Activity");
+        return this.mHost.getContext().getResources();
     }
 
     public final CharSequence getText(int resId) {
@@ -390,7 +389,7 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
     }
 
     public final boolean isVisible() {
-        return isAdded() && !isHidden() && this.mView != null && this.mView.getWindowToken() != null && this.mView.getVisibility() == 0;
+        return (!isAdded() || isHidden() || this.mView == null || this.mView.getWindowToken() == null || this.mView.getVisibility() != 0) ? false : true;
     }
 
     public final boolean isHidden() {
@@ -430,7 +429,7 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
         boolean performDeferredStart;
         boolean useBrokenAddedCheck = false;
         Context context = getContext();
-        if (!(this.mFragmentManager == null || this.mFragmentManager.mHost == null)) {
+        if (this.mFragmentManager != null && this.mFragmentManager.mHost != null) {
             context = this.mFragmentManager.mHost.getContext();
         }
         boolean z = false;
@@ -461,65 +460,64 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
         if (this.mLoaderManager != null) {
             return this.mLoaderManager;
         }
-        if (this.mHost != null) {
-            this.mCheckedForLoaderManager = true;
-            this.mLoaderManager = this.mHost.getLoaderManager(this.mWho, this.mLoadersStarted, true);
-            return this.mLoaderManager;
+        if (this.mHost == null) {
+            throw new IllegalStateException("Fragment " + this + " not attached to Activity");
         }
-        throw new IllegalStateException("Fragment " + this + " not attached to Activity");
+        this.mCheckedForLoaderManager = true;
+        this.mLoaderManager = this.mHost.getLoaderManager(this.mWho, this.mLoadersStarted, true);
+        return this.mLoaderManager;
     }
 
     public void startActivity(Intent intent) {
-        startActivity(intent, (Bundle) null);
+        startActivity(intent, null);
     }
 
     public void startActivity(Intent intent, Bundle options) {
-        if (this.mHost == null) {
-            throw new IllegalStateException("Fragment " + this + " not attached to Activity");
-        } else if (options != null) {
-            this.mHost.onStartActivityFromFragment(this, intent, -1, options);
-        } else {
-            this.mHost.onStartActivityFromFragment(this, intent, -1, (Bundle) null);
+        if (this.mHost != null) {
+            if (options != null) {
+                this.mHost.onStartActivityFromFragment(this, intent, -1, options);
+                return;
+            } else {
+                this.mHost.onStartActivityFromFragment(this, intent, -1, null);
+                return;
+            }
         }
+        throw new IllegalStateException("Fragment " + this + " not attached to Activity");
     }
 
     public void startActivityForResult(Intent intent, int requestCode) {
-        startActivityForResult(intent, requestCode, (Bundle) null);
+        startActivityForResult(intent, requestCode, null);
     }
 
     public void startActivityForResult(Intent intent, int requestCode, Bundle options) {
-        if (this.mHost != null) {
-            this.mHost.onStartActivityFromFragment(this, intent, requestCode, options);
-            return;
+        if (this.mHost == null) {
+            throw new IllegalStateException("Fragment " + this + " not attached to Activity");
         }
-        throw new IllegalStateException("Fragment " + this + " not attached to Activity");
+        this.mHost.onStartActivityFromFragment(this, intent, requestCode, options);
     }
 
     public void startActivityForResultAsUser(Intent intent, int requestCode, Bundle options, UserHandle user) {
-        if (this.mHost != null) {
-            this.mHost.onStartActivityAsUserFromFragment(this, intent, requestCode, options, user);
-            return;
+        if (this.mHost == null) {
+            throw new IllegalStateException("Fragment " + this + " not attached to Activity");
         }
-        throw new IllegalStateException("Fragment " + this + " not attached to Activity");
+        this.mHost.onStartActivityAsUserFromFragment(this, intent, requestCode, options, user);
     }
 
     public void startIntentSenderForResult(IntentSender intent, int requestCode, Intent fillInIntent, int flagsMask, int flagsValues, int extraFlags, Bundle options) throws IntentSender.SendIntentException {
-        if (this.mHost != null) {
-            this.mHost.onStartIntentSenderFromFragment(this, intent, requestCode, fillInIntent, flagsMask, flagsValues, extraFlags, options);
-            return;
+        if (this.mHost == null) {
+            throw new IllegalStateException("Fragment " + this + " not attached to Activity");
         }
-        throw new IllegalStateException("Fragment " + this + " not attached to Activity");
+        this.mHost.onStartIntentSenderFromFragment(this, intent, requestCode, fillInIntent, flagsMask, flagsValues, extraFlags, options);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
     }
 
     public final void requestPermissions(String[] permissions, int requestCode) {
-        if (this.mHost != null) {
-            this.mHost.onRequestPermissionsFromFragment(this, permissions, requestCode);
-            return;
+        if (this.mHost == null) {
+            throw new IllegalStateException("Fragment " + this + " not attached to Activity");
         }
-        throw new IllegalStateException("Fragment " + this + " not attached to Activity");
+        this.mHost.onRequestPermissionsFromFragment(this, permissions, requestCode);
     }
 
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -533,27 +531,27 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
     }
 
     public LayoutInflater onGetLayoutInflater(Bundle savedInstanceState) {
-        if (this.mHost != null) {
-            LayoutInflater result = this.mHost.onGetLayoutInflater();
-            if (this.mHost.onUseFragmentManagerInflaterFactory()) {
-                getChildFragmentManager();
-                result.setPrivateFactory(this.mChildFragmentManager.getLayoutInflaterFactory());
-            }
-            return result;
+        if (this.mHost == null) {
+            throw new IllegalStateException("onGetLayoutInflater() cannot be executed until the Fragment is attached to the FragmentManager.");
         }
-        throw new IllegalStateException("onGetLayoutInflater() cannot be executed until the Fragment is attached to the FragmentManager.");
+        LayoutInflater result = this.mHost.onGetLayoutInflater();
+        if (this.mHost.onUseFragmentManagerInflaterFactory()) {
+            getChildFragmentManager();
+            result.setPrivateFactory(this.mChildFragmentManager.getLayoutInflaterFactory());
+        }
+        return result;
     }
 
     public final LayoutInflater getLayoutInflater() {
         if (this.mLayoutInflater == null) {
-            return performGetLayoutInflater((Bundle) null);
+            return performGetLayoutInflater(null);
         }
         return this.mLayoutInflater;
     }
 
-    /* access modifiers changed from: package-private */
-    public LayoutInflater performGetLayoutInflater(Bundle savedInstanceState) {
-        this.mLayoutInflater = onGetLayoutInflater(savedInstanceState);
+    LayoutInflater performGetLayoutInflater(Bundle savedInstanceState) {
+        LayoutInflater layoutInflater = onGetLayoutInflater(savedInstanceState);
+        this.mLayoutInflater = layoutInflater;
         return this.mLayoutInflater;
     }
 
@@ -563,17 +561,16 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
     }
 
     public void onInflate(Context context, AttributeSet attrs, Bundle savedInstanceState) {
-        boolean isReturnSet;
         boolean isEnterSet;
+        boolean isReturnSet;
         onInflate(attrs, savedInstanceState);
         this.mCalled = true;
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.Fragment);
-        Activity activity = null;
-        setEnterTransition(loadTransition(context, a, getEnterTransition(), (Transition) null, 4));
+        TypedArray a = context.obtainStyledAttributes(attrs, C3132R.styleable.Fragment);
+        setEnterTransition(loadTransition(context, a, getEnterTransition(), null, 4));
         setReturnTransition(loadTransition(context, a, getReturnTransition(), USE_DEFAULT_TRANSITION, 6));
-        setExitTransition(loadTransition(context, a, getExitTransition(), (Transition) null, 3));
+        setExitTransition(loadTransition(context, a, getExitTransition(), null, 3));
         setReenterTransition(loadTransition(context, a, getReenterTransition(), USE_DEFAULT_TRANSITION, 8));
-        setSharedElementEnterTransition(loadTransition(context, a, getSharedElementEnterTransition(), (Transition) null, 5));
+        setSharedElementEnterTransition(loadTransition(context, a, getSharedElementEnterTransition(), null, 5));
         setSharedElementReturnTransition(loadTransition(context, a, getSharedElementReturnTransition(), USE_DEFAULT_TRANSITION, 7));
         if (this.mAnimationInfo == null) {
             isEnterSet = false;
@@ -589,10 +586,7 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
             setAllowReturnTransitionOverlap(a.getBoolean(10, true));
         }
         a.recycle();
-        if (this.mHost != null) {
-            activity = this.mHost.getActivity();
-        }
-        Activity hostActivity = activity;
+        Activity hostActivity = this.mHost != null ? this.mHost.getActivity() : null;
         if (hostActivity != null) {
             this.mCalled = false;
             onInflate(hostActivity, attrs, savedInstanceState);
@@ -628,7 +622,8 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
     public void onCreate(Bundle savedInstanceState) {
         this.mCalled = true;
         Context context = getContext();
-        if ((context != null ? context.getApplicationInfo().targetSdkVersion : 0) >= 24) {
+        int version = context != null ? context.getApplicationInfo().targetSdkVersion : 0;
+        if (version >= 24) {
             restoreChildFragmentState(savedInstanceState, true);
             if (this.mChildFragmentManager != null && !this.mChildFragmentManager.isStateAtLeast(1)) {
                 this.mChildFragmentManager.dispatchCreate();
@@ -636,8 +631,7 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void restoreChildFragmentState(Bundle savedInstanceState, boolean provideNonConfig) {
+    void restoreChildFragmentState(Bundle savedInstanceState, boolean provideNonConfig) {
         Parcelable p;
         if (savedInstanceState != null && (p = savedInstanceState.getParcelable("android:fragments")) != null) {
             if (this.mChildFragmentManager == null) {
@@ -704,6 +698,7 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
     public void onPictureInPictureModeChanged(boolean isInPictureInPictureMode) {
     }
 
+    @Override // android.content.ComponentCallbacks
     public void onConfigurationChanged(Configuration newConfig) {
         this.mCalled = true;
     }
@@ -716,10 +711,12 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
         this.mCalled = true;
     }
 
+    @Override // android.content.ComponentCallbacks
     public void onLowMemory() {
         this.mCalled = true;
     }
 
+    @Override // android.content.ComponentCallbacks2
     public void onTrimMemory(int level) {
         this.mCalled = true;
     }
@@ -739,8 +736,7 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void initState() {
+    void initState() {
         this.mIndex = -1;
         this.mWho = null;
         this.mAdded = false;
@@ -783,6 +779,7 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
     public void onOptionsMenuClosed(Menu menu) {
     }
 
+    @Override // android.view.View.OnCreateContextMenuListener
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         getActivity().onCreateContextMenu(menu, v, menuInfo);
     }
@@ -792,7 +789,7 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
     }
 
     public void unregisterForContextMenu(View view) {
-        view.setOnCreateContextMenuListener((View.OnCreateContextMenuListener) null);
+        view.setOnCreateContextMenuListener(null);
     }
 
     public boolean onContextItemSelected(MenuItem item) {
@@ -801,30 +798,29 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
 
     public void setEnterSharedElementCallback(SharedElementCallback callback) {
         if (callback == null) {
-            if (this.mAnimationInfo != null) {
-                callback = SharedElementCallback.NULL_CALLBACK;
-            } else {
+            if (this.mAnimationInfo == null) {
                 return;
             }
+            callback = SharedElementCallback.NULL_CALLBACK;
         }
         ensureAnimationInfo().mEnterTransitionCallback = callback;
     }
 
     public void setExitSharedElementCallback(SharedElementCallback callback) {
         if (callback == null) {
-            if (this.mAnimationInfo != null) {
-                callback = SharedElementCallback.NULL_CALLBACK;
-            } else {
+            if (this.mAnimationInfo == null) {
                 return;
             }
+            callback = SharedElementCallback.NULL_CALLBACK;
         }
         ensureAnimationInfo().mExitTransitionCallback = callback;
     }
 
     public void setEnterTransition(Transition transition) {
-        if (shouldChangeTransition(transition, (Transition) null)) {
-            Transition unused = ensureAnimationInfo().mEnterTransition = transition;
+        if (!shouldChangeTransition(transition, null)) {
+            return;
         }
+        ensureAnimationInfo().mEnterTransition = transition;
     }
 
     public Transition getEnterTransition() {
@@ -835,25 +831,24 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
     }
 
     public void setReturnTransition(Transition transition) {
-        if (shouldChangeTransition(transition, USE_DEFAULT_TRANSITION)) {
-            Transition unused = ensureAnimationInfo().mReturnTransition = transition;
+        if (!shouldChangeTransition(transition, USE_DEFAULT_TRANSITION)) {
+            return;
         }
+        ensureAnimationInfo().mReturnTransition = transition;
     }
 
     public Transition getReturnTransition() {
         if (this.mAnimationInfo == null) {
             return null;
         }
-        if (this.mAnimationInfo.mReturnTransition == USE_DEFAULT_TRANSITION) {
-            return getEnterTransition();
-        }
-        return this.mAnimationInfo.mReturnTransition;
+        return this.mAnimationInfo.mReturnTransition == USE_DEFAULT_TRANSITION ? getEnterTransition() : this.mAnimationInfo.mReturnTransition;
     }
 
     public void setExitTransition(Transition transition) {
-        if (shouldChangeTransition(transition, (Transition) null)) {
-            Transition unused = ensureAnimationInfo().mExitTransition = transition;
+        if (!shouldChangeTransition(transition, null)) {
+            return;
         }
+        ensureAnimationInfo().mExitTransition = transition;
     }
 
     public Transition getExitTransition() {
@@ -864,25 +859,24 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
     }
 
     public void setReenterTransition(Transition transition) {
-        if (shouldChangeTransition(transition, USE_DEFAULT_TRANSITION)) {
-            Transition unused = ensureAnimationInfo().mReenterTransition = transition;
+        if (!shouldChangeTransition(transition, USE_DEFAULT_TRANSITION)) {
+            return;
         }
+        ensureAnimationInfo().mReenterTransition = transition;
     }
 
     public Transition getReenterTransition() {
         if (this.mAnimationInfo == null) {
             return null;
         }
-        if (this.mAnimationInfo.mReenterTransition == USE_DEFAULT_TRANSITION) {
-            return getExitTransition();
-        }
-        return this.mAnimationInfo.mReenterTransition;
+        return this.mAnimationInfo.mReenterTransition == USE_DEFAULT_TRANSITION ? getExitTransition() : this.mAnimationInfo.mReenterTransition;
     }
 
     public void setSharedElementEnterTransition(Transition transition) {
-        if (shouldChangeTransition(transition, (Transition) null)) {
-            Transition unused = ensureAnimationInfo().mSharedElementEnterTransition = transition;
+        if (!shouldChangeTransition(transition, null)) {
+            return;
         }
+        ensureAnimationInfo().mSharedElementEnterTransition = transition;
     }
 
     public Transition getSharedElementEnterTransition() {
@@ -893,9 +887,10 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
     }
 
     public void setSharedElementReturnTransition(Transition transition) {
-        if (shouldChangeTransition(transition, USE_DEFAULT_TRANSITION)) {
-            Transition unused = ensureAnimationInfo().mSharedElementReturnTransition = transition;
+        if (!shouldChangeTransition(transition, USE_DEFAULT_TRANSITION)) {
+            return;
         }
+        ensureAnimationInfo().mSharedElementReturnTransition = transition;
     }
 
     public Transition getSharedElementReturnTransition() {
@@ -909,7 +904,7 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
     }
 
     public void setAllowEnterTransitionOverlap(boolean allow) {
-        Boolean unused = ensureAnimationInfo().mAllowEnterTransitionOverlap = Boolean.valueOf(allow);
+        ensureAnimationInfo().mAllowEnterTransitionOverlap = Boolean.valueOf(allow);
     }
 
     public boolean getAllowEnterTransitionOverlap() {
@@ -920,7 +915,7 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
     }
 
     public void setAllowReturnTransitionOverlap(boolean allow) {
-        Boolean unused = ensureAnimationInfo().mAllowReturnTransitionOverlap = Boolean.valueOf(allow);
+        ensureAnimationInfo().mAllowReturnTransitionOverlap = Boolean.valueOf(allow);
     }
 
     public boolean getAllowReturnTransitionOverlap() {
@@ -938,7 +933,8 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
         if (this.mFragmentManager == null || this.mFragmentManager.mHost == null) {
             ensureAnimationInfo().mEnterTransitionPostponed = false;
         } else if (Looper.myLooper() != this.mFragmentManager.mHost.getHandler().getLooper()) {
-            this.mFragmentManager.mHost.getHandler().postAtFrontOfQueue(new Runnable() {
+            this.mFragmentManager.mHost.getHandler().postAtFrontOfQueue(new Runnable() { // from class: android.app.-$$Lambda$Fragment$m7ODa2MK0_rf4XCEL5JOn14G0h8
+                @Override // java.lang.Runnable
                 public final void run() {
                     Fragment.this.callStartTransitionListener();
                 }
@@ -948,7 +944,7 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void callStartTransitionListener() {
         OnStartEnterTransitionListener listener;
         if (this.mAnimationInfo == null) {
@@ -964,10 +960,7 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
     }
 
     private boolean shouldChangeTransition(Transition transition, Transition defaultValue) {
-        if (transition == defaultValue && this.mAnimationInfo == null) {
-            return false;
-        }
-        return true;
+        return (transition == defaultValue && this.mAnimationInfo == null) ? false : true;
     }
 
     public void dump(String prefix, FileDescriptor fd, PrintWriter writer, String[] args) {
@@ -1086,8 +1079,7 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public Fragment findFragmentByWho(String who) {
+    Fragment findFragmentByWho(String who) {
         if (who.equals(this.mWho)) {
             return this;
         }
@@ -1097,25 +1089,25 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
         return null;
     }
 
-    /* access modifiers changed from: package-private */
-    public void instantiateChildFragmentManager() {
+    void instantiateChildFragmentManager() {
         this.mChildFragmentManager = new FragmentManagerImpl();
-        this.mChildFragmentManager.attachController(this.mHost, new FragmentContainer() {
+        this.mChildFragmentManager.attachController(this.mHost, new FragmentContainer() { // from class: android.app.Fragment.1
+            @Override // android.app.FragmentContainer
             public <T extends View> T onFindViewById(int id) {
-                if (Fragment.this.mView != null) {
-                    return Fragment.this.mView.findViewById(id);
+                if (Fragment.this.mView == null) {
+                    throw new IllegalStateException("Fragment does not have a view");
                 }
-                throw new IllegalStateException("Fragment does not have a view");
+                return (T) Fragment.this.mView.findViewById(id);
             }
 
+            @Override // android.app.FragmentContainer
             public boolean onHasView() {
                 return Fragment.this.mView != null;
             }
         }, this);
     }
 
-    /* access modifiers changed from: package-private */
-    public void performCreate(Bundle savedInstanceState) {
+    void performCreate(Bundle savedInstanceState) {
         if (this.mChildFragmentManager != null) {
             this.mChildFragmentManager.noteStateNotSaved();
         }
@@ -1123,19 +1115,17 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
         this.mCalled = false;
         onCreate(savedInstanceState);
         this.mIsCreated = true;
-        if (this.mCalled) {
-            Context context = getContext();
-            if ((context != null ? context.getApplicationInfo().targetSdkVersion : 0) < 24) {
-                restoreChildFragmentState(savedInstanceState, false);
-                return;
-            }
-            return;
+        if (!this.mCalled) {
+            throw new SuperNotCalledException("Fragment " + this + " did not call through to super.onCreate()");
         }
-        throw new SuperNotCalledException("Fragment " + this + " did not call through to super.onCreate()");
+        Context context = getContext();
+        int version = context != null ? context.getApplicationInfo().targetSdkVersion : 0;
+        if (version < 24) {
+            restoreChildFragmentState(savedInstanceState, false);
+        }
     }
 
-    /* access modifiers changed from: package-private */
-    public View performCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    View performCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (this.mChildFragmentManager != null) {
             this.mChildFragmentManager.noteStateNotSaved();
         }
@@ -1143,8 +1133,7 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
         return onCreateView(inflater, container, savedInstanceState);
     }
 
-    /* access modifiers changed from: package-private */
-    public void performActivityCreated(Bundle savedInstanceState) {
+    void performActivityCreated(Bundle savedInstanceState) {
         if (this.mChildFragmentManager != null) {
             this.mChildFragmentManager.noteStateNotSaved();
         }
@@ -1158,8 +1147,7 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void performStart() {
+    void performStart() {
         if (this.mChildFragmentManager != null) {
             this.mChildFragmentManager.noteStateNotSaved();
             this.mChildFragmentManager.execPendingActions();
@@ -1167,21 +1155,18 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
         this.mState = 4;
         this.mCalled = false;
         onStart();
-        if (this.mCalled) {
-            if (this.mChildFragmentManager != null) {
-                this.mChildFragmentManager.dispatchStart();
-            }
-            if (this.mLoaderManager != null) {
-                this.mLoaderManager.doReportStart();
-                return;
-            }
-            return;
+        if (!this.mCalled) {
+            throw new SuperNotCalledException("Fragment " + this + " did not call through to super.onStart()");
         }
-        throw new SuperNotCalledException("Fragment " + this + " did not call through to super.onStart()");
+        if (this.mChildFragmentManager != null) {
+            this.mChildFragmentManager.dispatchStart();
+        }
+        if (this.mLoaderManager != null) {
+            this.mLoaderManager.doReportStart();
+        }
     }
 
-    /* access modifiers changed from: package-private */
-    public void performResume() {
+    void performResume() {
         if (this.mChildFragmentManager != null) {
             this.mChildFragmentManager.noteStateNotSaved();
             this.mChildFragmentManager.execPendingActions();
@@ -1197,73 +1182,64 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void noteStateNotSaved() {
+    void noteStateNotSaved() {
         if (this.mChildFragmentManager != null) {
             this.mChildFragmentManager.noteStateNotSaved();
         }
     }
 
-    /* access modifiers changed from: package-private */
     @Deprecated
-    public void performMultiWindowModeChanged(boolean isInMultiWindowMode) {
+    void performMultiWindowModeChanged(boolean isInMultiWindowMode) {
         onMultiWindowModeChanged(isInMultiWindowMode);
         if (this.mChildFragmentManager != null) {
             this.mChildFragmentManager.dispatchMultiWindowModeChanged(isInMultiWindowMode);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void performMultiWindowModeChanged(boolean isInMultiWindowMode, Configuration newConfig) {
+    void performMultiWindowModeChanged(boolean isInMultiWindowMode, Configuration newConfig) {
         onMultiWindowModeChanged(isInMultiWindowMode, newConfig);
         if (this.mChildFragmentManager != null) {
             this.mChildFragmentManager.dispatchMultiWindowModeChanged(isInMultiWindowMode, newConfig);
         }
     }
 
-    /* access modifiers changed from: package-private */
     @Deprecated
-    public void performPictureInPictureModeChanged(boolean isInPictureInPictureMode) {
+    void performPictureInPictureModeChanged(boolean isInPictureInPictureMode) {
         onPictureInPictureModeChanged(isInPictureInPictureMode);
         if (this.mChildFragmentManager != null) {
             this.mChildFragmentManager.dispatchPictureInPictureModeChanged(isInPictureInPictureMode);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void performPictureInPictureModeChanged(boolean isInPictureInPictureMode, Configuration newConfig) {
+    void performPictureInPictureModeChanged(boolean isInPictureInPictureMode, Configuration newConfig) {
         onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig);
         if (this.mChildFragmentManager != null) {
             this.mChildFragmentManager.dispatchPictureInPictureModeChanged(isInPictureInPictureMode, newConfig);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void performConfigurationChanged(Configuration newConfig) {
+    void performConfigurationChanged(Configuration newConfig) {
         onConfigurationChanged(newConfig);
         if (this.mChildFragmentManager != null) {
             this.mChildFragmentManager.dispatchConfigurationChanged(newConfig);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void performLowMemory() {
+    void performLowMemory() {
         onLowMemory();
         if (this.mChildFragmentManager != null) {
             this.mChildFragmentManager.dispatchLowMemory();
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void performTrimMemory(int level) {
+    void performTrimMemory(int level) {
         onTrimMemory(level);
         if (this.mChildFragmentManager != null) {
             this.mChildFragmentManager.dispatchTrimMemory(level);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean performCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    boolean performCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         boolean show = false;
         if (this.mHidden) {
             return false;
@@ -1278,8 +1254,7 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
         return show;
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean performPrepareOptionsMenu(Menu menu) {
+    boolean performPrepareOptionsMenu(Menu menu) {
         boolean show = false;
         if (this.mHidden) {
             return false;
@@ -1294,36 +1269,27 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
         return show;
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean performOptionsItemSelected(MenuItem item) {
-        if (this.mHidden) {
-            return false;
+    boolean performOptionsItemSelected(MenuItem item) {
+        if (!this.mHidden) {
+            if (this.mHasMenu && this.mMenuVisible && onOptionsItemSelected(item)) {
+                return true;
+            }
+            return this.mChildFragmentManager != null && this.mChildFragmentManager.dispatchOptionsItemSelected(item);
         }
-        if (this.mHasMenu && this.mMenuVisible && onOptionsItemSelected(item)) {
-            return true;
-        }
-        if (this.mChildFragmentManager == null || !this.mChildFragmentManager.dispatchOptionsItemSelected(item)) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean performContextItemSelected(MenuItem item) {
-        if (this.mHidden) {
-            return false;
+    boolean performContextItemSelected(MenuItem item) {
+        if (!this.mHidden) {
+            if (onContextItemSelected(item)) {
+                return true;
+            }
+            return this.mChildFragmentManager != null && this.mChildFragmentManager.dispatchContextItemSelected(item);
         }
-        if (onContextItemSelected(item)) {
-            return true;
-        }
-        if (this.mChildFragmentManager == null || !this.mChildFragmentManager.dispatchContextItemSelected(item)) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
-    /* access modifiers changed from: package-private */
-    public void performOptionsMenuClosed(Menu menu) {
+    void performOptionsMenuClosed(Menu menu) {
         if (!this.mHidden) {
             if (this.mHasMenu && this.mMenuVisible) {
                 onOptionsMenuClosed(menu);
@@ -1334,8 +1300,7 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void performSaveInstanceState(Bundle outState) {
+    void performSaveInstanceState(Bundle outState) {
         Parcelable p;
         onSaveInstanceState(outState);
         if (this.mChildFragmentManager != null && (p = this.mChildFragmentManager.saveAllState()) != null) {
@@ -1343,8 +1308,7 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void performPause() {
+    void performPause() {
         if (this.mChildFragmentManager != null) {
             this.mChildFragmentManager.dispatchPause();
         }
@@ -1356,8 +1320,7 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void performStop() {
+    void performStop() {
         if (this.mChildFragmentManager != null) {
             this.mChildFragmentManager.dispatchStop();
         }
@@ -1372,37 +1335,33 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
                 this.mCheckedForLoaderManager = true;
                 this.mLoaderManager = this.mHost.getLoaderManager(this.mWho, this.mLoadersStarted, false);
             }
-            if (this.mLoaderManager == null) {
-                return;
-            }
-            if (this.mHost.getRetainLoaders()) {
-                this.mLoaderManager.doRetain();
-            } else {
-                this.mLoaderManager.doStop();
+            if (this.mLoaderManager != null) {
+                if (this.mHost.getRetainLoaders()) {
+                    this.mLoaderManager.doRetain();
+                } else {
+                    this.mLoaderManager.doStop();
+                }
             }
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void performDestroyView() {
+    void performDestroyView() {
         if (this.mChildFragmentManager != null) {
             this.mChildFragmentManager.dispatchDestroyView();
         }
         this.mState = 1;
         this.mCalled = false;
         onDestroyView();
-        if (this.mCalled) {
-            if (this.mLoaderManager != null) {
-                this.mLoaderManager.doReportNextStart();
-            }
-            this.mPerformedCreateView = false;
-            return;
+        if (!this.mCalled) {
+            throw new SuperNotCalledException("Fragment " + this + " did not call through to super.onDestroyView()");
         }
-        throw new SuperNotCalledException("Fragment " + this + " did not call through to super.onDestroyView()");
+        if (this.mLoaderManager != null) {
+            this.mLoaderManager.doReportNextStart();
+        }
+        this.mPerformedCreateView = false;
     }
 
-    /* access modifiers changed from: package-private */
-    public void performDestroy() {
+    void performDestroy() {
         if (this.mChildFragmentManager != null) {
             this.mChildFragmentManager.dispatchDestroy();
         }
@@ -1410,46 +1369,40 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
         this.mCalled = false;
         this.mIsCreated = false;
         onDestroy();
-        if (this.mCalled) {
-            this.mChildFragmentManager = null;
-            return;
+        if (!this.mCalled) {
+            throw new SuperNotCalledException("Fragment " + this + " did not call through to super.onDestroy()");
         }
-        throw new SuperNotCalledException("Fragment " + this + " did not call through to super.onDestroy()");
+        this.mChildFragmentManager = null;
     }
 
-    /* access modifiers changed from: package-private */
-    public void performDetach() {
+    void performDetach() {
         this.mCalled = false;
         onDetach();
         this.mLayoutInflater = null;
         if (!this.mCalled) {
             throw new SuperNotCalledException("Fragment " + this + " did not call through to super.onDetach()");
-        } else if (this.mChildFragmentManager == null) {
-        } else {
-            if (this.mRetaining) {
-                this.mChildFragmentManager.dispatchDestroy();
-                this.mChildFragmentManager = null;
-                return;
+        } else if (this.mChildFragmentManager != null) {
+            if (!this.mRetaining) {
+                throw new IllegalStateException("Child FragmentManager of " + this + " was not  destroyed and this fragment is not retaining instance");
             }
-            throw new IllegalStateException("Child FragmentManager of " + this + " was not  destroyed and this fragment is not retaining instance");
+            this.mChildFragmentManager.dispatchDestroy();
+            this.mChildFragmentManager = null;
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void setOnStartEnterTransitionListener(OnStartEnterTransitionListener listener) {
+    void setOnStartEnterTransitionListener(OnStartEnterTransitionListener listener) {
         ensureAnimationInfo();
-        if (listener != this.mAnimationInfo.mStartEnterTransitionListener) {
-            if (listener == null || this.mAnimationInfo.mStartEnterTransitionListener == null) {
-                if (this.mAnimationInfo.mEnterTransitionPostponed) {
-                    this.mAnimationInfo.mStartEnterTransitionListener = listener;
-                }
-                if (listener != null) {
-                    listener.startListening();
-                    return;
-                }
-                return;
-            }
+        if (listener == this.mAnimationInfo.mStartEnterTransitionListener) {
+            return;
+        }
+        if (listener != null && this.mAnimationInfo.mStartEnterTransitionListener != null) {
             throw new IllegalStateException("Trying to set a replacement startPostponedEnterTransition on " + this);
+        }
+        if (this.mAnimationInfo.mEnterTransitionPostponed) {
+            this.mAnimationInfo.mStartEnterTransitionListener = listener;
+        }
+        if (listener != null) {
+            listener.startListening();
         }
     }
 
@@ -1458,15 +1411,15 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
             return currentValue;
         }
         int transitionId = typedArray.getResourceId(id, 0);
-        Transition transition = defaultValue;
         if (transitionId == 0 || transitionId == 17760256) {
-            return transition;
+            return defaultValue;
         }
-        Transition transition2 = TransitionInflater.from(context).inflateTransition(transitionId);
-        if (!(transition2 instanceof TransitionSet) || ((TransitionSet) transition2).getTransitionCount() != 0) {
-            return transition2;
+        TransitionInflater inflater = TransitionInflater.from(context);
+        Transition transition = inflater.inflateTransition(transitionId);
+        if ((transition instanceof TransitionSet) && ((TransitionSet) transition).getTransitionCount() == 0) {
+            return null;
         }
-        return null;
+        return transition;
     }
 
     private AnimationInfo ensureAnimationInfo() {
@@ -1476,136 +1429,117 @@ public class Fragment implements ComponentCallbacks2, View.OnCreateContextMenuLi
         return this.mAnimationInfo;
     }
 
-    /* access modifiers changed from: package-private */
-    public int getNextAnim() {
+    int getNextAnim() {
         if (this.mAnimationInfo == null) {
             return 0;
         }
         return this.mAnimationInfo.mNextAnim;
     }
 
-    /* access modifiers changed from: package-private */
-    public void setNextAnim(int animResourceId) {
-        if (this.mAnimationInfo != null || animResourceId != 0) {
-            ensureAnimationInfo().mNextAnim = animResourceId;
+    void setNextAnim(int animResourceId) {
+        if (this.mAnimationInfo == null && animResourceId == 0) {
+            return;
         }
+        ensureAnimationInfo().mNextAnim = animResourceId;
     }
 
-    /* access modifiers changed from: package-private */
-    public int getNextTransition() {
+    int getNextTransition() {
         if (this.mAnimationInfo == null) {
             return 0;
         }
         return this.mAnimationInfo.mNextTransition;
     }
 
-    /* access modifiers changed from: package-private */
-    public void setNextTransition(int nextTransition, int nextTransitionStyle) {
-        if (this.mAnimationInfo != null || nextTransition != 0 || nextTransitionStyle != 0) {
-            ensureAnimationInfo();
-            this.mAnimationInfo.mNextTransition = nextTransition;
-            this.mAnimationInfo.mNextTransitionStyle = nextTransitionStyle;
+    void setNextTransition(int nextTransition, int nextTransitionStyle) {
+        if (this.mAnimationInfo == null && nextTransition == 0 && nextTransitionStyle == 0) {
+            return;
         }
+        ensureAnimationInfo();
+        this.mAnimationInfo.mNextTransition = nextTransition;
+        this.mAnimationInfo.mNextTransitionStyle = nextTransitionStyle;
     }
 
-    /* access modifiers changed from: package-private */
-    public int getNextTransitionStyle() {
+    int getNextTransitionStyle() {
         if (this.mAnimationInfo == null) {
             return 0;
         }
         return this.mAnimationInfo.mNextTransitionStyle;
     }
 
-    /* access modifiers changed from: package-private */
-    public SharedElementCallback getEnterTransitionCallback() {
+    SharedElementCallback getEnterTransitionCallback() {
         if (this.mAnimationInfo == null) {
             return SharedElementCallback.NULL_CALLBACK;
         }
         return this.mAnimationInfo.mEnterTransitionCallback;
     }
 
-    /* access modifiers changed from: package-private */
-    public SharedElementCallback getExitTransitionCallback() {
+    SharedElementCallback getExitTransitionCallback() {
         if (this.mAnimationInfo == null) {
             return SharedElementCallback.NULL_CALLBACK;
         }
         return this.mAnimationInfo.mExitTransitionCallback;
     }
 
-    /* access modifiers changed from: package-private */
-    public Animator getAnimatingAway() {
+    Animator getAnimatingAway() {
         if (this.mAnimationInfo == null) {
             return null;
         }
         return this.mAnimationInfo.mAnimatingAway;
     }
 
-    /* access modifiers changed from: package-private */
-    public void setAnimatingAway(Animator animator) {
+    void setAnimatingAway(Animator animator) {
         ensureAnimationInfo().mAnimatingAway = animator;
     }
 
-    /* access modifiers changed from: package-private */
-    public int getStateAfterAnimating() {
+    int getStateAfterAnimating() {
         if (this.mAnimationInfo == null) {
             return 0;
         }
         return this.mAnimationInfo.mStateAfterAnimating;
     }
 
-    /* access modifiers changed from: package-private */
-    public void setStateAfterAnimating(int state) {
+    void setStateAfterAnimating(int state) {
         ensureAnimationInfo().mStateAfterAnimating = state;
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean isPostponed() {
+    boolean isPostponed() {
         if (this.mAnimationInfo == null) {
             return false;
         }
         return this.mAnimationInfo.mEnterTransitionPostponed;
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean isHideReplaced() {
+    boolean isHideReplaced() {
         if (this.mAnimationInfo == null) {
             return false;
         }
         return this.mAnimationInfo.mIsHideReplaced;
     }
 
-    /* access modifiers changed from: package-private */
-    public void setHideReplaced(boolean replaced) {
+    void setHideReplaced(boolean replaced) {
         ensureAnimationInfo().mIsHideReplaced = replaced;
     }
 
+    /* loaded from: classes.dex */
     static class AnimationInfo {
-        /* access modifiers changed from: private */
-        public Boolean mAllowEnterTransitionOverlap;
-        /* access modifiers changed from: private */
-        public Boolean mAllowReturnTransitionOverlap;
+        private Boolean mAllowEnterTransitionOverlap;
+        private Boolean mAllowReturnTransitionOverlap;
         Animator mAnimatingAway;
-        /* access modifiers changed from: private */
-        public Transition mEnterTransition = null;
-        SharedElementCallback mEnterTransitionCallback = SharedElementCallback.NULL_CALLBACK;
         boolean mEnterTransitionPostponed;
-        /* access modifiers changed from: private */
-        public Transition mExitTransition = null;
-        SharedElementCallback mExitTransitionCallback = SharedElementCallback.NULL_CALLBACK;
         boolean mIsHideReplaced;
         int mNextAnim;
         int mNextTransition;
         int mNextTransitionStyle;
-        /* access modifiers changed from: private */
-        public Transition mReenterTransition = Fragment.USE_DEFAULT_TRANSITION;
-        /* access modifiers changed from: private */
-        public Transition mReturnTransition = Fragment.USE_DEFAULT_TRANSITION;
-        /* access modifiers changed from: private */
-        public Transition mSharedElementEnterTransition = null;
-        /* access modifiers changed from: private */
-        public Transition mSharedElementReturnTransition = Fragment.USE_DEFAULT_TRANSITION;
         OnStartEnterTransitionListener mStartEnterTransitionListener;
         int mStateAfterAnimating;
+        private Transition mEnterTransition = null;
+        private Transition mReturnTransition = Fragment.USE_DEFAULT_TRANSITION;
+        private Transition mExitTransition = null;
+        private Transition mReenterTransition = Fragment.USE_DEFAULT_TRANSITION;
+        private Transition mSharedElementEnterTransition = null;
+        private Transition mSharedElementReturnTransition = Fragment.USE_DEFAULT_TRANSITION;
+        SharedElementCallback mEnterTransitionCallback = SharedElementCallback.NULL_CALLBACK;
+        SharedElementCallback mExitTransitionCallback = SharedElementCallback.NULL_CALLBACK;
 
         AnimationInfo() {
         }

@@ -2,13 +2,14 @@ package android.media;
 
 import android.annotation.UnsupportedAppUsage;
 import android.graphics.Rect;
-import android.os.Parcel;
+import android.p007os.Parcel;
 import android.util.Log;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+/* loaded from: classes3.dex */
 public final class TimedText {
     private static final int FIRST_PRIVATE_KEY = 101;
     private static final int FIRST_PUBLIC_KEY = 1;
@@ -38,32 +39,34 @@ public final class TimedText {
     private static final int LAST_PRIVATE_KEY = 107;
     private static final int LAST_PUBLIC_KEY = 16;
     private static final String TAG = "TimedText";
-    private int mBackgroundColorRGBA = -1;
-    private List<CharPos> mBlinkingPosList = null;
-    private int mDisplayFlags = -1;
-    private List<Font> mFontList = null;
-    private int mHighlightColorRGBA = -1;
-    private List<CharPos> mHighlightPosList = null;
-    private List<HyperText> mHyperTextList = null;
+    private int mBackgroundColorRGBA;
+    private List<CharPos> mBlinkingPosList;
+    private int mDisplayFlags;
+    private List<Font> mFontList;
+    private int mHighlightColorRGBA;
+    private List<CharPos> mHighlightPosList;
+    private List<HyperText> mHyperTextList;
     private Justification mJustification;
-    private List<Karaoke> mKaraokeList = null;
-    private final HashMap<Integer, Object> mKeyObjectMap = new HashMap<>();
-    private int mScrollDelay = -1;
-    private List<Style> mStyleList = null;
-    private Rect mTextBounds = null;
-    private String mTextChars = null;
-    private int mWrapText = -1;
+    private List<Karaoke> mKaraokeList;
+    private final HashMap<Integer, Object> mKeyObjectMap;
+    private int mScrollDelay;
+    private List<Style> mStyleList;
+    private Rect mTextBounds;
+    private String mTextChars;
+    private int mWrapText;
 
+    /* loaded from: classes3.dex */
     public static final class CharPos {
         public final int endChar;
         public final int startChar;
 
-        public CharPos(int startChar2, int endChar2) {
-            this.startChar = startChar2;
-            this.endChar = endChar2;
+        public CharPos(int startChar, int endChar) {
+            this.startChar = startChar;
+            this.endChar = endChar;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class Justification {
         public final int horizontalJustification;
         public final int verticalJustification;
@@ -74,6 +77,7 @@ public final class TimedText {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class Style {
         public final int colorRGBA;
         public final int endChar;
@@ -84,57 +88,76 @@ public final class TimedText {
         public final boolean isUnderlined;
         public final int startChar;
 
-        public Style(int startChar2, int endChar2, int fontId, boolean isBold2, boolean isItalic2, boolean isUnderlined2, int fontSize2, int colorRGBA2) {
-            this.startChar = startChar2;
-            this.endChar = endChar2;
+        public Style(int startChar, int endChar, int fontId, boolean isBold, boolean isItalic, boolean isUnderlined, int fontSize, int colorRGBA) {
+            this.startChar = startChar;
+            this.endChar = endChar;
             this.fontID = fontId;
-            this.isBold = isBold2;
-            this.isItalic = isItalic2;
-            this.isUnderlined = isUnderlined2;
-            this.fontSize = fontSize2;
-            this.colorRGBA = colorRGBA2;
+            this.isBold = isBold;
+            this.isItalic = isItalic;
+            this.isUnderlined = isUnderlined;
+            this.fontSize = fontSize;
+            this.colorRGBA = colorRGBA;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class Font {
-        public final int ID;
+
+        /* renamed from: ID */
+        public final int f126ID;
         public final String name;
 
-        public Font(int id, String name2) {
-            this.ID = id;
-            this.name = name2;
+        public Font(int id, String name) {
+            this.f126ID = id;
+            this.name = name;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class Karaoke {
         public final int endChar;
         public final int endTimeMs;
         public final int startChar;
         public final int startTimeMs;
 
-        public Karaoke(int startTimeMs2, int endTimeMs2, int startChar2, int endChar2) {
-            this.startTimeMs = startTimeMs2;
-            this.endTimeMs = endTimeMs2;
-            this.startChar = startChar2;
-            this.endChar = endChar2;
+        public Karaoke(int startTimeMs, int endTimeMs, int startChar, int endChar) {
+            this.startTimeMs = startTimeMs;
+            this.endTimeMs = endTimeMs;
+            this.startChar = startChar;
+            this.endChar = endChar;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class HyperText {
         public final String URL;
         public final String altString;
         public final int endChar;
         public final int startChar;
 
-        public HyperText(int startChar2, int endChar2, String url, String alt) {
-            this.startChar = startChar2;
-            this.endChar = endChar2;
+        public HyperText(int startChar, int endChar, String url, String alt) {
+            this.startChar = startChar;
+            this.endChar = endChar;
             this.URL = url;
             this.altString = alt;
         }
     }
 
     public TimedText(Parcel parcel) {
+        this.mKeyObjectMap = new HashMap<>();
+        this.mDisplayFlags = -1;
+        this.mBackgroundColorRGBA = -1;
+        this.mHighlightColorRGBA = -1;
+        this.mScrollDelay = -1;
+        this.mWrapText = -1;
+        this.mBlinkingPosList = null;
+        this.mHighlightPosList = null;
+        this.mKaraokeList = null;
+        this.mFontList = null;
+        this.mStyleList = null;
+        this.mHyperTextList = null;
+        this.mTextBounds = null;
+        this.mTextChars = null;
         if (!parseParcel(parcel)) {
             this.mKeyObjectMap.clear();
             throw new IllegalArgumentException("parseParcel() fails");
@@ -142,6 +165,20 @@ public final class TimedText {
     }
 
     public TimedText(String text, Rect bounds) {
+        this.mKeyObjectMap = new HashMap<>();
+        this.mDisplayFlags = -1;
+        this.mBackgroundColorRGBA = -1;
+        this.mHighlightColorRGBA = -1;
+        this.mScrollDelay = -1;
+        this.mWrapText = -1;
+        this.mBlinkingPosList = null;
+        this.mHighlightPosList = null;
+        this.mKaraokeList = null;
+        this.mFontList = null;
+        this.mStyleList = null;
+        this.mHyperTextList = null;
+        this.mTextBounds = null;
+        this.mTextChars = null;
         this.mTextChars = text;
         this.mTextBounds = bounds;
     }
@@ -165,11 +202,12 @@ public final class TimedText {
             if (type2 != 7) {
                 return false;
             }
-            this.mKeyObjectMap.put(Integer.valueOf(type2), Integer.valueOf(parcel.readInt()));
+            int mStartTimeMs = parcel.readInt();
+            this.mKeyObjectMap.put(Integer.valueOf(type2), Integer.valueOf(mStartTimeMs));
             if (parcel.readInt() != 16) {
                 return false;
             }
-            int readInt = parcel.readInt();
+            parcel.readInt();
             byte[] text = parcel.createByteArray();
             if (text == null || text.length == 0) {
                 this.mTextChars = null;
@@ -177,13 +215,13 @@ public final class TimedText {
                 this.mTextChars = new String(text);
             }
         } else if (type != 101) {
-            Log.w(TAG, "Invalid timed text key found: " + type);
+            Log.m64w(TAG, "Invalid timed text key found: " + type);
             return false;
         }
         while (parcel.dataAvail() > 0) {
             int key = parcel.readInt();
             if (!isValidKey(key)) {
-                Log.w(TAG, "Invalid timed text key found: " + key);
+                Log.m64w(TAG, "Invalid timed text key found: " + key);
                 return false;
             }
             Object object = null;
@@ -234,10 +272,15 @@ public final class TimedText {
                     break;
                 case 14:
                     int top = parcel.readInt();
-                    this.mTextBounds = new Rect(parcel.readInt(), top, parcel.readInt(), parcel.readInt());
+                    int left = parcel.readInt();
+                    int bottom = parcel.readInt();
+                    int right = parcel.readInt();
+                    this.mTextBounds = new Rect(left, top, right, bottom);
                     break;
                 case 15:
-                    this.mJustification = new Justification(parcel.readInt(), parcel.readInt());
+                    int horizontal = parcel.readInt();
+                    int vertical = parcel.readInt();
+                    this.mJustification = new Justification(horizontal, vertical);
                     object = this.mJustification;
                     break;
             }
@@ -263,46 +306,36 @@ public final class TimedText {
         int colorRGBA = -1;
         while (!endOfStyle && parcel.dataAvail() > 0) {
             int key = parcel.readInt();
-            if (key != 2) {
+            if (key == 2) {
+                int flags = parcel.readInt();
+                isBold = flags % 2 == 1;
+                isItalic = flags % 4 >= 2;
+                isUnderlined = flags / 4 == 1;
+            } else {
                 switch (key) {
                     case 103:
-                        Parcel parcel2 = parcel;
                         startChar = parcel.readInt();
-                        break;
+                        continue;
                     case 104:
-                        Parcel parcel3 = parcel;
                         endChar = parcel.readInt();
-                        break;
+                        continue;
                     case 105:
-                        Parcel parcel4 = parcel;
                         fontId = parcel.readInt();
-                        break;
+                        continue;
                     case 106:
-                        Parcel parcel5 = parcel;
                         fontSize = parcel.readInt();
-                        break;
+                        continue;
                     case 107:
-                        Parcel parcel6 = parcel;
-                        colorRGBA = parcel.readInt();
-                        break;
+                        int colorRGBA2 = parcel.readInt();
+                        colorRGBA = colorRGBA2;
+                        continue;
                     default:
                         parcel.setDataPosition(parcel.dataPosition() - 4);
                         endOfStyle = true;
-                        break;
+                        continue;
                 }
-            } else {
-                Parcel parcel7 = parcel;
-                int flags = parcel.readInt();
-                boolean z = true;
-                isBold = flags % 2 == 1;
-                isItalic = flags % 4 >= 2;
-                if (flags / 4 != 1) {
-                    z = false;
-                }
-                isUnderlined = z;
             }
         }
-        Parcel parcel8 = parcel;
         Style style = new Style(startChar, endChar, fontId, isBold, isItalic, isUnderlined, fontSize, colorRGBA);
         if (this.mStyleList == null) {
             this.mStyleList = new ArrayList();
@@ -313,7 +346,11 @@ public final class TimedText {
     private void readFont(Parcel parcel) {
         int entryCount = parcel.readInt();
         for (int i = 0; i < entryCount; i++) {
-            Font font = new Font(parcel.readInt(), new String(parcel.createByteArray(), 0, parcel.readInt()));
+            int id = parcel.readInt();
+            int nameLen = parcel.readInt();
+            byte[] text = parcel.createByteArray();
+            String name = new String(text, 0, nameLen);
+            Font font = new Font(id, name);
             if (this.mFontList == null) {
                 this.mFontList = new ArrayList();
             }
@@ -322,7 +359,9 @@ public final class TimedText {
     }
 
     private void readHighlight(Parcel parcel) {
-        CharPos pos = new CharPos(parcel.readInt(), parcel.readInt());
+        int startChar = parcel.readInt();
+        int endChar = parcel.readInt();
+        CharPos pos = new CharPos(startChar, endChar);
         if (this.mHighlightPosList == null) {
             this.mHighlightPosList = new ArrayList();
         }
@@ -332,7 +371,11 @@ public final class TimedText {
     private void readKaraoke(Parcel parcel) {
         int entryCount = parcel.readInt();
         for (int i = 0; i < entryCount; i++) {
-            Karaoke kara = new Karaoke(parcel.readInt(), parcel.readInt(), parcel.readInt(), parcel.readInt());
+            int startTimeMs = parcel.readInt();
+            int endTimeMs = parcel.readInt();
+            int startChar = parcel.readInt();
+            int endChar = parcel.readInt();
+            Karaoke kara = new Karaoke(startTimeMs, endTimeMs, startChar, endChar);
             if (this.mKaraokeList == null) {
                 this.mKaraokeList = new ArrayList();
             }
@@ -341,7 +384,15 @@ public final class TimedText {
     }
 
     private void readHyperText(Parcel parcel) {
-        HyperText hyperText = new HyperText(parcel.readInt(), parcel.readInt(), new String(parcel.createByteArray(), 0, parcel.readInt()), new String(parcel.createByteArray(), 0, parcel.readInt()));
+        int startChar = parcel.readInt();
+        int endChar = parcel.readInt();
+        int len = parcel.readInt();
+        byte[] url = parcel.createByteArray();
+        String urlString = new String(url, 0, len);
+        int len2 = parcel.readInt();
+        byte[] alt = parcel.createByteArray();
+        String altString = new String(alt, 0, len2);
+        HyperText hyperText = new HyperText(startChar, endChar, urlString, altString);
         if (this.mHyperTextList == null) {
             this.mHyperTextList = new ArrayList();
         }
@@ -349,7 +400,9 @@ public final class TimedText {
     }
 
     private void readBlinkingText(Parcel parcel) {
-        CharPos blinkingPos = new CharPos(parcel.readInt(), parcel.readInt());
+        int startChar = parcel.readInt();
+        int endChar = parcel.readInt();
+        CharPos blinkingPos = new CharPos(startChar, endChar);
         if (this.mBlinkingPosList == null) {
             this.mBlinkingPosList = new ArrayList();
         }
@@ -357,17 +410,17 @@ public final class TimedText {
     }
 
     private boolean isValidKey(int key) {
-        if ((key < 1 || key > 16) && (key < 101 || key > 107)) {
-            return false;
+        if ((key >= 1 && key <= 16) || (key >= 101 && key <= 107)) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     private boolean containsKey(int key) {
-        if (!isValidKey(key) || !this.mKeyObjectMap.containsKey(Integer.valueOf(key))) {
-            return false;
+        if (isValidKey(key) && this.mKeyObjectMap.containsKey(Integer.valueOf(key))) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     private Set keySet() {

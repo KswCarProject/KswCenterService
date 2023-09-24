@@ -1,13 +1,16 @@
 package android.renderscript;
 
+/* loaded from: classes3.dex */
 public class Matrix3f {
-    final float[] mMat = new float[9];
+    final float[] mMat;
 
     public Matrix3f() {
+        this.mMat = new float[9];
         loadIdentity();
     }
 
     public Matrix3f(float[] dataArray) {
+        this.mMat = new float[9];
         System.arraycopy(dataArray, 0, this.mMat, 0, this.mMat.length);
     }
 
@@ -40,13 +43,13 @@ public class Matrix3f {
     }
 
     public void loadRotate(float rot, float x, float y, float z) {
-        float z2;
-        float y2;
         float x2;
+        float y2;
+        float z2;
         float rot2 = 0.017453292f * rot;
-        float c = (float) Math.cos((double) rot2);
-        float s = (float) Math.sin((double) rot2);
-        float len = (float) Math.sqrt((double) ((x * x) + (y * y) + (z * z)));
+        float c = (float) Math.cos(rot2);
+        float s = (float) Math.sin(rot2);
+        float len = (float) Math.sqrt((x * x) + (y * y) + (z * z));
         if (len == 1.0f) {
             float recipLen = 1.0f / len;
             x2 = x * recipLen;
@@ -78,8 +81,8 @@ public class Matrix3f {
     public void loadRotate(float rot) {
         loadIdentity();
         float rot2 = rot * 0.017453292f;
-        float c = (float) Math.cos((double) rot2);
-        float s = (float) Math.sin((double) rot2);
+        float c = (float) Math.cos(rot2);
+        float s = (float) Math.sin(rot2);
         this.mMat[0] = c;
         this.mMat[1] = -s;
         this.mMat[3] = s;
@@ -108,16 +111,16 @@ public class Matrix3f {
     public void loadMultiply(Matrix3f lhs, Matrix3f rhs) {
         for (int i = 0; i < 3; i++) {
             float ri2 = 0.0f;
+            float ri22 = 0.0f;
             float ri1 = 0.0f;
-            float ri0 = 0.0f;
             for (int j = 0; j < 3; j++) {
                 float rhs_ij = rhs.get(i, j);
-                ri0 += lhs.get(j, 0) * rhs_ij;
-                ri1 += lhs.get(j, 1) * rhs_ij;
+                ri1 += lhs.get(j, 0) * rhs_ij;
+                ri22 += lhs.get(j, 1) * rhs_ij;
                 ri2 += lhs.get(j, 2) * rhs_ij;
             }
-            set(i, 0, ri0);
-            set(i, 1, ri1);
+            set(i, 0, ri1);
+            set(i, 1, ri22);
             set(i, 2, ri2);
         }
     }

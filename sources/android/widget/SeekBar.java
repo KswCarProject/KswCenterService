@@ -5,10 +5,12 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.accessibility.AccessibilityNodeInfo;
 
+/* loaded from: classes4.dex */
 public class SeekBar extends AbsSeekBar {
     @UnsupportedAppUsage
     private OnSeekBarChangeListener mOnSeekBarChangeListener;
 
+    /* loaded from: classes4.dex */
     public interface OnSeekBarChangeListener {
         void onProgressChanged(SeekBar seekBar, int i, boolean z);
 
@@ -18,7 +20,7 @@ public class SeekBar extends AbsSeekBar {
     }
 
     public SeekBar(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public SeekBar(Context context, AttributeSet attrs) {
@@ -33,9 +35,9 @@ public class SeekBar extends AbsSeekBar {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    /* access modifiers changed from: package-private */
+    @Override // android.widget.ProgressBar
     @UnsupportedAppUsage
-    public void onProgressRefresh(float scale, boolean fromUser, int progress) {
+    void onProgressRefresh(float scale, boolean fromUser, int progress) {
         super.onProgressRefresh(scale, fromUser, progress);
         if (this.mOnSeekBarChangeListener != null) {
             this.mOnSeekBarChangeListener.onProgressChanged(this, progress, fromUser);
@@ -46,26 +48,28 @@ public class SeekBar extends AbsSeekBar {
         this.mOnSeekBarChangeListener = l;
     }
 
-    /* access modifiers changed from: package-private */
-    public void onStartTrackingTouch() {
+    @Override // android.widget.AbsSeekBar
+    void onStartTrackingTouch() {
         super.onStartTrackingTouch();
         if (this.mOnSeekBarChangeListener != null) {
             this.mOnSeekBarChangeListener.onStartTrackingTouch(this);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void onStopTrackingTouch() {
+    @Override // android.widget.AbsSeekBar
+    void onStopTrackingTouch() {
         super.onStopTrackingTouch();
         if (this.mOnSeekBarChangeListener != null) {
             this.mOnSeekBarChangeListener.onStopTrackingTouch(this);
         }
     }
 
+    @Override // android.widget.AbsSeekBar, android.widget.ProgressBar, android.view.View
     public CharSequence getAccessibilityClassName() {
         return SeekBar.class.getName();
     }
 
+    @Override // android.widget.AbsSeekBar, android.widget.ProgressBar, android.view.View
     public void onInitializeAccessibilityNodeInfoInternal(AccessibilityNodeInfo info) {
         super.onInitializeAccessibilityNodeInfoInternal(info);
         if (canUserSetProgress()) {

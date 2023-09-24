@@ -1,14 +1,19 @@
 package android.app.job;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public class JobSnapshot implements Parcelable {
-    public static final Parcelable.Creator<JobSnapshot> CREATOR = new Parcelable.Creator<JobSnapshot>() {
+    public static final Parcelable.Creator<JobSnapshot> CREATOR = new Parcelable.Creator<JobSnapshot>() { // from class: android.app.job.JobSnapshot.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public JobSnapshot createFromParcel(Parcel in) {
             return new JobSnapshot(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public JobSnapshot[] newArray(int size) {
             return new JobSnapshot[size];
         }
@@ -42,10 +47,7 @@ public class JobSnapshot implements Parcelable {
     }
 
     public boolean isChargingSatisfied() {
-        if (!this.mJob.isRequireCharging() || satisfied(1)) {
-            return true;
-        }
-        return false;
+        return !this.mJob.isRequireCharging() || satisfied(1);
     }
 
     public boolean isBatteryNotLowSatisfied() {
@@ -60,10 +62,12 @@ public class JobSnapshot implements Parcelable {
         return !this.mJob.isRequireStorageNotLow() || satisfied(8);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         this.mJob.writeToParcel(out, flags);
         out.writeInt(this.mSatisfiedConstraints);

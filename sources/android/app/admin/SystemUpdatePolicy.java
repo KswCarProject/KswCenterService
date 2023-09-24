@@ -1,8 +1,8 @@
 package android.app.admin;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.util.Pair;
@@ -21,26 +21,34 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
 
+/* loaded from: classes.dex */
 public final class SystemUpdatePolicy implements Parcelable {
-    public static final Parcelable.Creator<SystemUpdatePolicy> CREATOR = new Parcelable.Creator<SystemUpdatePolicy>() {
+    public static final Parcelable.Creator<SystemUpdatePolicy> CREATOR = new Parcelable.Creator<SystemUpdatePolicy>() { // from class: android.app.admin.SystemUpdatePolicy.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SystemUpdatePolicy createFromParcel(Parcel source) {
             SystemUpdatePolicy policy = new SystemUpdatePolicy();
-            int unused = policy.mPolicyType = source.readInt();
-            int unused2 = policy.mMaintenanceWindowStart = source.readInt();
-            int unused3 = policy.mMaintenanceWindowEnd = source.readInt();
+            policy.mPolicyType = source.readInt();
+            policy.mMaintenanceWindowStart = source.readInt();
+            policy.mMaintenanceWindowEnd = source.readInt();
             int freezeCount = source.readInt();
             policy.mFreezePeriods.ensureCapacity(freezeCount);
             for (int i = 0; i < freezeCount; i++) {
-                policy.mFreezePeriods.add(new FreezePeriod(MonthDay.of(source.readInt(), source.readInt()), MonthDay.of(source.readInt(), source.readInt())));
+                MonthDay start = MonthDay.of(source.readInt(), source.readInt());
+                MonthDay end = MonthDay.of(source.readInt(), source.readInt());
+                policy.mFreezePeriods.add(new FreezePeriod(start, end));
             }
             return policy;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SystemUpdatePolicy[] newArray(int size) {
             return new SystemUpdatePolicy[size];
         }
@@ -61,25 +69,27 @@ public final class SystemUpdatePolicy implements Parcelable {
     public static final int TYPE_POSTPONE = 3;
     private static final int TYPE_UNKNOWN = -1;
     private static final int WINDOW_BOUNDARY = 1440;
-    /* access modifiers changed from: private */
-    public final ArrayList<FreezePeriod> mFreezePeriods;
-    /* access modifiers changed from: private */
-    public int mMaintenanceWindowEnd;
-    /* access modifiers changed from: private */
-    public int mMaintenanceWindowStart;
-    /* access modifiers changed from: private */
-    public int mPolicyType;
+    private final ArrayList<FreezePeriod> mFreezePeriods;
+    private int mMaintenanceWindowEnd;
+    private int mMaintenanceWindowStart;
+    private int mPolicyType;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     @interface SystemUpdatePolicyType {
     }
 
+    /* loaded from: classes.dex */
     public static final class ValidationFailedException extends IllegalArgumentException implements Parcelable {
-        public static final Parcelable.Creator<ValidationFailedException> CREATOR = new Parcelable.Creator<ValidationFailedException>() {
+        public static final Parcelable.Creator<ValidationFailedException> CREATOR = new Parcelable.Creator<ValidationFailedException>() { // from class: android.app.admin.SystemUpdatePolicy.ValidationFailedException.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public ValidationFailedException createFromParcel(Parcel source) {
                 return new ValidationFailedException(source.readInt(), source.readString());
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public ValidationFailedException[] newArray(int size) {
                 return new ValidationFailedException[size];
             }
@@ -94,6 +104,7 @@ public final class SystemUpdatePolicy implements Parcelable {
         private final int mErrorCode;
 
         @Retention(RetentionPolicy.SOURCE)
+        /* loaded from: classes.dex */
         @interface ValidationFailureType {
         }
 
@@ -126,10 +137,12 @@ public final class SystemUpdatePolicy implements Parcelable {
             return new ValidationFailedException(6, message);
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeInt(this.mErrorCode);
             dest.writeString(getMessage());
@@ -193,13 +206,16 @@ public final class SystemUpdatePolicy implements Parcelable {
     }
 
     public void validateType() {
-        if (this.mPolicyType != 1 && this.mPolicyType != 3) {
-            if (this.mPolicyType != 2) {
-                throw new IllegalArgumentException("Invalid system update policy type.");
-            } else if (this.mMaintenanceWindowStart < 0 || this.mMaintenanceWindowStart >= 1440 || this.mMaintenanceWindowEnd < 0 || this.mMaintenanceWindowEnd >= 1440) {
+        if (this.mPolicyType == 1 || this.mPolicyType == 3) {
+            return;
+        }
+        if (this.mPolicyType == 2) {
+            if (this.mMaintenanceWindowStart < 0 || this.mMaintenanceWindowStart >= 1440 || this.mMaintenanceWindowEnd < 0 || this.mMaintenanceWindowEnd >= 1440) {
                 throw new IllegalArgumentException("Invalid maintenance window");
             }
+            return;
         }
+        throw new IllegalArgumentException("Invalid system update policy type.");
     }
 
     public SystemUpdatePolicy setFreezePeriods(List<FreezePeriod> freezePeriods) {
@@ -234,11 +250,13 @@ public final class SystemUpdatePolicy implements Parcelable {
             if (it.hasNext()) {
                 interval = it.next();
                 if (interval.after(nowDate)) {
-                    nextFreezeStart = interval.toCurrentOrFutureRealDates(nowDate).first;
+                    LocalDate nextFreezeStart2 = interval.toCurrentOrFutureRealDates(nowDate).first;
+                    nextFreezeStart = nextFreezeStart2;
                 }
             }
             if (nextFreezeStart == null) {
-                nextFreezeStart = sortedPeriods.get(0).toCurrentOrFutureRealDates(nowDate).first;
+                LocalDate nextFreezeStart3 = sortedPeriods.get(0).toCurrentOrFutureRealDates(nowDate).first;
+                nextFreezeStart = nextFreezeStart3;
             }
             return dateToMillis(nextFreezeStart) - now;
         } while (!interval.contains(nowDate));
@@ -254,11 +272,13 @@ public final class SystemUpdatePolicy implements Parcelable {
     }
 
     @SystemApi
+    /* loaded from: classes.dex */
     public static class InstallationOption {
         private long mEffectiveTime;
         private final int mType;
 
         @Retention(RetentionPolicy.SOURCE)
+        /* loaded from: classes.dex */
         @interface InstallationOptionType {
         }
 
@@ -275,17 +295,17 @@ public final class SystemUpdatePolicy implements Parcelable {
             return this.mEffectiveTime;
         }
 
-        /* access modifiers changed from: protected */
-        public void limitEffectiveTime(long otherTime) {
+        protected void limitEffectiveTime(long otherTime) {
             this.mEffectiveTime = Long.min(this.mEffectiveTime, otherTime);
         }
     }
 
     @SystemApi
     public InstallationOption getInstallationOptionAt(long when) {
-        Pair<LocalDate, LocalDate> current = getCurrentFreezePeriod(millisToDate(when));
+        LocalDate whenDate = millisToDate(when);
+        Pair<LocalDate, LocalDate> current = getCurrentFreezePeriod(whenDate);
         if (current != null) {
-            return new InstallationOption(4, dateToMillis(roundUpLeapDay((LocalDate) current.second).plusDays(1)) - when);
+            return new InstallationOption(4, dateToMillis(roundUpLeapDay(current.second).plusDays(1L)) - when);
         }
         InstallationOption option = getInstallationOptionRegardlessFreezeAt(when);
         if (this.mFreezePeriods.size() > 0) {
@@ -301,21 +321,21 @@ public final class SystemUpdatePolicy implements Parcelable {
         if (this.mPolicyType == 2) {
             Calendar query = Calendar.getInstance();
             query.setTimeInMillis(when);
-            long whenMillis = TimeUnit.HOURS.toMillis((long) query.get(11)) + TimeUnit.MINUTES.toMillis((long) query.get(12)) + TimeUnit.SECONDS.toMillis((long) query.get(13)) + ((long) query.get(14));
-            long windowStartMillis = TimeUnit.MINUTES.toMillis((long) this.mMaintenanceWindowStart);
-            long windowEndMillis = TimeUnit.MINUTES.toMillis((long) this.mMaintenanceWindowEnd);
-            long dayInMillis = TimeUnit.DAYS.toMillis(1);
-            if ((windowStartMillis > whenMillis || whenMillis > windowEndMillis) && (windowStartMillis <= windowEndMillis || (windowStartMillis > whenMillis && whenMillis > windowEndMillis))) {
-                return new InstallationOption(4, ((windowStartMillis - whenMillis) + dayInMillis) % dayInMillis);
+            long whenMillis = TimeUnit.HOURS.toMillis(query.get(11)) + TimeUnit.MINUTES.toMillis(query.get(12)) + TimeUnit.SECONDS.toMillis(query.get(13)) + query.get(14);
+            long windowStartMillis = TimeUnit.MINUTES.toMillis(this.mMaintenanceWindowStart);
+            long windowEndMillis = TimeUnit.MINUTES.toMillis(this.mMaintenanceWindowEnd);
+            long dayInMillis = TimeUnit.DAYS.toMillis(1L);
+            if ((windowStartMillis <= whenMillis && whenMillis <= windowEndMillis) || (windowStartMillis > windowEndMillis && (windowStartMillis <= whenMillis || whenMillis <= windowEndMillis))) {
+                return new InstallationOption(1, ((windowEndMillis - whenMillis) + dayInMillis) % dayInMillis);
             }
-            return new InstallationOption(1, ((windowEndMillis - whenMillis) + dayInMillis) % dayInMillis);
+            return new InstallationOption(4, ((windowStartMillis - whenMillis) + dayInMillis) % dayInMillis);
         }
         throw new RuntimeException("Unknown policy type");
     }
 
     private static LocalDate roundUpLeapDay(LocalDate date) {
         if (date.isLeapYear() && date.getMonthValue() == 2 && date.getDayOfMonth() == 28) {
-            return date.plusDays(1);
+            return date.plusDays(1L);
         }
         return date;
     }
@@ -329,13 +349,22 @@ public final class SystemUpdatePolicy implements Parcelable {
     }
 
     public String toString() {
-        return String.format("SystemUpdatePolicy (type: %d, windowStart: %d, windowEnd: %d, freezes: [%s])", new Object[]{Integer.valueOf(this.mPolicyType), Integer.valueOf(this.mMaintenanceWindowStart), Integer.valueOf(this.mMaintenanceWindowEnd), this.mFreezePeriods.stream().map($$Lambda$SystemUpdatePolicy$cfrSWvZcAu30PIPvKA2LGQbmTew.INSTANCE).collect(Collectors.joining(SmsManager.REGEX_PREFIX_DELIMITER))});
+        return String.format("SystemUpdatePolicy (type: %d, windowStart: %d, windowEnd: %d, freezes: [%s])", Integer.valueOf(this.mPolicyType), Integer.valueOf(this.mMaintenanceWindowStart), Integer.valueOf(this.mMaintenanceWindowEnd), this.mFreezePeriods.stream().map(new Function() { // from class: android.app.admin.-$$Lambda$SystemUpdatePolicy$cfrSWvZcAu30PIPvKA2LGQbmTew
+            @Override // java.util.function.Function
+            public final Object apply(Object obj) {
+                String freezePeriod;
+                freezePeriod = ((FreezePeriod) obj).toString();
+                return freezePeriod;
+            }
+        }).collect(Collectors.joining(SmsManager.REGEX_PREFIX_DELIMITER)));
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mPolicyType);
         dest.writeInt(this.mMaintenanceWindowStart);
@@ -354,50 +383,44 @@ public final class SystemUpdatePolicy implements Parcelable {
     public static SystemUpdatePolicy restoreFromXml(XmlPullParser parser) {
         try {
             SystemUpdatePolicy policy = new SystemUpdatePolicy();
-            String value = parser.getAttributeValue((String) null, KEY_POLICY_TYPE);
+            String value = parser.getAttributeValue(null, KEY_POLICY_TYPE);
             if (value != null) {
                 policy.mPolicyType = Integer.parseInt(value);
-                String value2 = parser.getAttributeValue((String) null, KEY_INSTALL_WINDOW_START);
+                String value2 = parser.getAttributeValue(null, KEY_INSTALL_WINDOW_START);
                 if (value2 != null) {
                     policy.mMaintenanceWindowStart = Integer.parseInt(value2);
                 }
-                String value3 = parser.getAttributeValue((String) null, KEY_INSTALL_WINDOW_END);
+                String value3 = parser.getAttributeValue(null, KEY_INSTALL_WINDOW_END);
                 if (value3 != null) {
                     policy.mMaintenanceWindowEnd = Integer.parseInt(value3);
                 }
                 int outerDepth = parser.getDepth();
                 while (true) {
-                    int next = parser.next();
-                    int type = next;
-                    if (next == 1 || (type == 3 && parser.getDepth() <= outerDepth)) {
-                        return policy;
-                    }
-                    if (type != 3) {
-                        if (type != 4) {
-                            if (parser.getName().equals(KEY_FREEZE_TAG)) {
-                                policy.mFreezePeriods.add(new FreezePeriod(MonthDay.parse(parser.getAttributeValue((String) null, "start")), MonthDay.parse(parser.getAttributeValue((String) null, "end"))));
-                            }
-                        }
+                    int type = parser.next();
+                    if (type == 1 || (type == 3 && parser.getDepth() <= outerDepth)) {
+                        break;
+                    } else if (type != 3 && type != 4 && parser.getName().equals(KEY_FREEZE_TAG)) {
+                        policy.mFreezePeriods.add(new FreezePeriod(MonthDay.parse(parser.getAttributeValue(null, "start")), MonthDay.parse(parser.getAttributeValue(null, "end"))));
                     }
                 }
                 return policy;
             }
         } catch (IOException | NumberFormatException | XmlPullParserException e) {
-            Log.w(TAG, "Load xml failed", e);
+            Log.m63w(TAG, "Load xml failed", e);
         }
         return null;
     }
 
     public void saveToXml(XmlSerializer out) throws IOException {
-        out.attribute((String) null, KEY_POLICY_TYPE, Integer.toString(this.mPolicyType));
-        out.attribute((String) null, KEY_INSTALL_WINDOW_START, Integer.toString(this.mMaintenanceWindowStart));
-        out.attribute((String) null, KEY_INSTALL_WINDOW_END, Integer.toString(this.mMaintenanceWindowEnd));
+        out.attribute(null, KEY_POLICY_TYPE, Integer.toString(this.mPolicyType));
+        out.attribute(null, KEY_INSTALL_WINDOW_START, Integer.toString(this.mMaintenanceWindowStart));
+        out.attribute(null, KEY_INSTALL_WINDOW_END, Integer.toString(this.mMaintenanceWindowEnd));
         for (int i = 0; i < this.mFreezePeriods.size(); i++) {
             FreezePeriod interval = this.mFreezePeriods.get(i);
-            out.startTag((String) null, KEY_FREEZE_TAG);
-            out.attribute((String) null, "start", interval.getStart().toString());
-            out.attribute((String) null, "end", interval.getEnd().toString());
-            out.endTag((String) null, KEY_FREEZE_TAG);
+            out.startTag(null, KEY_FREEZE_TAG);
+            out.attribute(null, "start", interval.getStart().toString());
+            out.attribute(null, "end", interval.getEnd().toString());
+            out.endTag(null, KEY_FREEZE_TAG);
         }
     }
 }

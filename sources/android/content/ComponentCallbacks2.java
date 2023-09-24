@@ -3,6 +3,7 @@ package android.content;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes.dex */
 public interface ComponentCallbacks2 extends ComponentCallbacks {
     public static final int TRIM_MEMORY_BACKGROUND = 40;
     public static final int TRIM_MEMORY_COMPLETE = 80;
@@ -13,6 +14,7 @@ public interface ComponentCallbacks2 extends ComponentCallbacks {
     public static final int TRIM_MEMORY_UI_HIDDEN = 20;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface TrimMemoryLevel {
     }
 

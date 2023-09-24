@@ -7,10 +7,11 @@ import com.android.internal.util.Preconditions;
 import java.io.FileDescriptor;
 import java.util.Random;
 
+/* loaded from: classes3.dex */
 public class MtpServer implements Runnable {
     private static final int sID_LEN_BYTES = 16;
     private static final int sID_LEN_STR = 32;
-    private final Context mContext = this.mDatabase.getContext();
+    private final Context mContext;
     private final MtpDatabase mDatabase;
     private long mNativeContext;
     private final Runnable mOnTerminate;
@@ -42,11 +43,12 @@ public class MtpServer implements Runnable {
     public MtpServer(MtpDatabase database, FileDescriptor controlFd, boolean usePtp, Runnable onTerminate, String deviceInfoManufacturer, String deviceInfoModel, String deviceInfoDeviceVersion) {
         this.mDatabase = (MtpDatabase) Preconditions.checkNotNull(database);
         this.mOnTerminate = (Runnable) Preconditions.checkNotNull(onTerminate);
+        this.mContext = this.mDatabase.getContext();
         String strRandomId = null;
         int ii = 0;
         SharedPreferences sharedPref = this.mContext.getSharedPreferences("mtp-cfg", 0);
         if (sharedPref.contains("mtp-id")) {
-            strRandomId = sharedPref.getString("mtp-id", (String) null);
+            strRandomId = sharedPref.getString("mtp-id", null);
             if (strRandomId.length() != 32) {
                 strRandomId = null;
             } else {
@@ -54,11 +56,11 @@ public class MtpServer implements Runnable {
                     int ii2 = ii;
                     if (ii2 >= strRandomId.length()) {
                         break;
-                    } else if (Character.digit(strRandomId.charAt(ii2), 16) == -1) {
+                    } else if (Character.digit(strRandomId.charAt(ii2), 16) != -1) {
+                        ii = ii2 + 1;
+                    } else {
                         strRandomId = null;
                         break;
-                    } else {
-                        ii = ii2 + 1;
                     }
                 }
             }
@@ -68,20 +70,22 @@ public class MtpServer implements Runnable {
             sharedPref.edit().putString("mtp-id", strRandomId).apply();
         }
         native_setup(database, controlFd, usePtp, deviceInfoManufacturer, deviceInfoModel, deviceInfoDeviceVersion, strRandomId);
-        MtpDatabase mtpDatabase = database;
         database.setServer(this);
     }
 
     private String getRandId() {
+        Random randomVal = new Random();
         byte[] randomBytes = new byte[16];
-        new Random().nextBytes(randomBytes);
+        randomVal.nextBytes(randomBytes);
         return ByteStringUtils.toHexString(randomBytes);
     }
 
     public void start() {
-        new Thread(this, "MtpServer").start();
+        Thread thread = new Thread(this, "MtpServer");
+        thread.start();
     }
 
+    @Override // java.lang.Runnable
     public void run() {
         native_run();
         native_cleanup();

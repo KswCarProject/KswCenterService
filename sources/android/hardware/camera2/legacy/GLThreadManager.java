@@ -2,9 +2,9 @@ package android.hardware.camera2.legacy;
 
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.legacy.RequestThreadManager;
-import android.os.ConditionVariable;
-import android.os.Handler;
-import android.os.Message;
+import android.p007os.ConditionVariable;
+import android.p007os.Handler;
+import android.p007os.Message;
 import android.util.Log;
 import android.util.Pair;
 import android.util.Size;
@@ -12,6 +12,7 @@ import android.view.Surface;
 import com.android.internal.util.Preconditions;
 import java.util.Collection;
 
+/* loaded from: classes.dex */
 public class GLThreadManager {
     private static final boolean DEBUG = false;
     private static final int MSG_ALLOW_FRAMES = 5;
@@ -19,17 +20,18 @@ public class GLThreadManager {
     private static final int MSG_DROP_FRAMES = 4;
     private static final int MSG_NEW_CONFIGURATION = 1;
     private static final int MSG_NEW_FRAME = 2;
-    /* access modifiers changed from: private */
-    public final String TAG;
-    /* access modifiers changed from: private */
-    public CaptureCollector mCaptureCollector;
-    /* access modifiers changed from: private */
-    public final CameraDeviceState mDeviceState;
-    private final Handler.Callback mGLHandlerCb = new Handler.Callback() {
+    private final String TAG;
+    private CaptureCollector mCaptureCollector;
+    private final CameraDeviceState mDeviceState;
+    private final RequestHandlerThread mGLHandlerThread;
+    private final SurfaceTextureRenderer mTextureRenderer;
+    private final RequestThreadManager.FpsCounter mPrevCounter = new RequestThreadManager.FpsCounter("GL Preview Producer");
+    private final Handler.Callback mGLHandlerCb = new Handler.Callback() { // from class: android.hardware.camera2.legacy.GLThreadManager.1
         private boolean mCleanup = false;
         private boolean mConfigured = false;
         private boolean mDroppingFrames = false;
 
+        @Override // android.p007os.Handler.Callback
         public boolean handleMessage(Message msg) {
             if (this.mCleanup) {
                 return true;
@@ -42,19 +44,19 @@ public class GLThreadManager {
                             ConfigureHolder configure = (ConfigureHolder) msg.obj;
                             GLThreadManager.this.mTextureRenderer.cleanupEGLContext();
                             GLThreadManager.this.mTextureRenderer.configureSurfaces(configure.surfaces);
-                            CaptureCollector unused = GLThreadManager.this.mCaptureCollector = (CaptureCollector) Preconditions.checkNotNull(configure.collector);
+                            GLThreadManager.this.mCaptureCollector = (CaptureCollector) Preconditions.checkNotNull(configure.collector);
                             configure.condition.open();
                             this.mConfigured = true;
                             break;
                         case 2:
-                            if (!this.mDroppingFrames) {
-                                if (!this.mConfigured) {
-                                    Log.e(GLThreadManager.this.TAG, "Dropping frame, EGL context not configured!");
-                                }
-                                GLThreadManager.this.mTextureRenderer.drawIntoSurfaces(GLThreadManager.this.mCaptureCollector);
+                            if (this.mDroppingFrames) {
+                                Log.m64w(GLThreadManager.this.TAG, "Ignoring frame.");
                                 break;
                             } else {
-                                Log.w(GLThreadManager.this.TAG, "Ignoring frame.");
+                                if (!this.mConfigured) {
+                                    Log.m70e(GLThreadManager.this.TAG, "Dropping frame, EGL context not configured!");
+                                }
+                                GLThreadManager.this.mTextureRenderer.drawIntoSurfaces(GLThreadManager.this.mCaptureCollector);
                                 break;
                             }
                         case 3:
@@ -69,38 +71,35 @@ public class GLThreadManager {
                             this.mDroppingFrames = false;
                             break;
                         default:
-                            String access$200 = GLThreadManager.this.TAG;
-                            Log.e(access$200, "Unhandled message " + msg.what + " on GLThread.");
+                            String str = GLThreadManager.this.TAG;
+                            Log.m70e(str, "Unhandled message " + msg.what + " on GLThread.");
                             break;
                     }
                 }
             } catch (Exception e) {
-                Log.e(GLThreadManager.this.TAG, "Received exception on GL render thread: ", e);
+                Log.m69e(GLThreadManager.this.TAG, "Received exception on GL render thread: ", e);
                 GLThreadManager.this.mDeviceState.setError(1);
             }
             return true;
         }
     };
-    private final RequestHandlerThread mGLHandlerThread;
-    private final RequestThreadManager.FpsCounter mPrevCounter = new RequestThreadManager.FpsCounter("GL Preview Producer");
-    /* access modifiers changed from: private */
-    public final SurfaceTextureRenderer mTextureRenderer;
 
+    /* loaded from: classes.dex */
     private static class ConfigureHolder {
         public final CaptureCollector collector;
         public final ConditionVariable condition;
         public final Collection<Pair<Surface, Size>> surfaces;
 
-        public ConfigureHolder(ConditionVariable condition2, Collection<Pair<Surface, Size>> surfaces2, CaptureCollector collector2) {
-            this.condition = condition2;
-            this.surfaces = surfaces2;
-            this.collector = collector2;
+        public ConfigureHolder(ConditionVariable condition, Collection<Pair<Surface, Size>> surfaces, CaptureCollector collector) {
+            this.condition = condition;
+            this.surfaces = surfaces;
+            this.collector = collector;
         }
     }
 
     public GLThreadManager(int cameraId, int facing, CameraDeviceState state) {
         this.mTextureRenderer = new SurfaceTextureRenderer(facing);
-        this.TAG = String.format("CameraDeviceGLThread-%d", new Object[]{Integer.valueOf(cameraId)});
+        this.TAG = String.format("CameraDeviceGLThread-%d", Integer.valueOf(cameraId));
         this.mGLHandlerThread = new RequestHandlerThread(this.TAG, this.mGLHandlerCb);
         this.mDeviceState = state;
     }
@@ -120,7 +119,7 @@ public class GLThreadManager {
         try {
             this.mGLHandlerThread.join();
         } catch (InterruptedException e) {
-            Log.e(this.TAG, String.format("Thread %s (%d) interrupted while quitting.", new Object[]{this.mGLHandlerThread.getName(), Long.valueOf(this.mGLHandlerThread.getId())}));
+            Log.m70e(this.TAG, String.format("Thread %s (%d) interrupted while quitting.", this.mGLHandlerThread.getName(), Long.valueOf(this.mGLHandlerThread.getId())));
         }
     }
 
@@ -129,7 +128,7 @@ public class GLThreadManager {
         if (!handler.hasMessages(2)) {
             handler.sendMessage(handler.obtainMessage(2));
         } else {
-            Log.e(this.TAG, "GLThread dropping frame.  Not consuming frames quickly enough!");
+            Log.m70e(this.TAG, "GLThread dropping frame.  Not consuming frames quickly enough!");
         }
     }
 
@@ -137,7 +136,9 @@ public class GLThreadManager {
         Preconditions.checkNotNull(collector, "collector must not be null");
         Handler handler = this.mGLHandlerThread.getHandler();
         ConditionVariable condition = new ConditionVariable(false);
-        handler.sendMessage(handler.obtainMessage(1, 0, 0, new ConfigureHolder(condition, surfaces, collector)));
+        ConfigureHolder configure = new ConfigureHolder(condition, surfaces, collector);
+        Message m = handler.obtainMessage(1, 0, 0, configure);
+        handler.sendMessage(m);
         condition.block();
     }
 

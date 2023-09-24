@@ -5,8 +5,8 @@ import android.content.Context;
 import android.net.INetworkPolicyListener;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
-import android.os.RemoteException;
-import android.os.UserHandle;
+import android.p007os.RemoteException;
+import android.p007os.UserHandle;
 import android.security.keystore.KeyProperties;
 import android.util.DebugUtils;
 import android.util.Pair;
@@ -14,6 +14,7 @@ import android.util.Range;
 import java.time.ZonedDateTime;
 import java.util.Iterator;
 
+/* loaded from: classes3.dex */
 public class NetworkPolicyManager {
     private static final boolean ALLOW_PLATFORM_APP_POLICY = true;
     public static final String EXTRA_NETWORK_TEMPLATE = "android.net.NETWORK_TEMPLATE";
@@ -41,12 +42,11 @@ public class NetworkPolicyManager {
     private INetworkPolicyManager mService;
 
     public NetworkPolicyManager(Context context, INetworkPolicyManager service) {
-        if (service != null) {
-            this.mContext = context;
-            this.mService = service;
-            return;
+        if (service == null) {
+            throw new IllegalArgumentException("missing INetworkPolicyManager");
         }
-        throw new IllegalArgumentException("missing INetworkPolicyManager");
+        this.mContext = context;
+        this.mService = service;
     }
 
     @UnsupportedAppUsage
@@ -161,17 +161,20 @@ public class NetworkPolicyManager {
     @Deprecated
     public static Iterator<Pair<ZonedDateTime, ZonedDateTime>> cycleIterator(NetworkPolicy policy) {
         final Iterator<Range<ZonedDateTime>> it = policy.cycleIterator();
-        return new Iterator<Pair<ZonedDateTime, ZonedDateTime>>() {
+        return new Iterator<Pair<ZonedDateTime, ZonedDateTime>>() { // from class: android.net.NetworkPolicyManager.1
+            @Override // java.util.Iterator
             public boolean hasNext() {
                 return it.hasNext();
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // java.util.Iterator
             public Pair<ZonedDateTime, ZonedDateTime> next() {
-                if (!hasNext()) {
-                    return Pair.create(null, null);
+                if (hasNext()) {
+                    Range<ZonedDateTime> r = (Range) it.next();
+                    return Pair.create(r.getLower(), r.getUpper());
                 }
-                Range<ZonedDateTime> r = (Range) it.next();
-                return Pair.create(r.getLower(), r.getUpper());
+                return Pair.create(null, null);
             }
         };
     }
@@ -226,19 +229,25 @@ public class NetworkPolicyManager {
         return WifiInfo.removeDoubleQuotes(ssid);
     }
 
+    /* loaded from: classes3.dex */
     public static class Listener extends INetworkPolicyListener.Stub {
+        @Override // android.net.INetworkPolicyListener
         public void onUidRulesChanged(int uid, int uidRules) {
         }
 
+        @Override // android.net.INetworkPolicyListener
         public void onMeteredIfacesChanged(String[] meteredIfaces) {
         }
 
+        @Override // android.net.INetworkPolicyListener
         public void onRestrictBackgroundChanged(boolean restrictBackground) {
         }
 
+        @Override // android.net.INetworkPolicyListener
         public void onUidPoliciesChanged(int uid, int uidPolicies) {
         }
 
+        @Override // android.net.INetworkPolicyListener
         public void onSubscriptionOverride(int subId, int overrideMask, int overrideValue) {
         }
     }

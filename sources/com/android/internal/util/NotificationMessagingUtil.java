@@ -4,18 +4,20 @@ import android.app.Notification;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
+import android.p007os.Handler;
+import android.p007os.Looper;
 import android.provider.Settings;
 import android.service.notification.StatusBarNotification;
 import android.util.ArrayMap;
 import java.util.Objects;
 
+/* loaded from: classes4.dex */
 public class NotificationMessagingUtil {
     private static final String DEFAULT_SMS_APP_SETTING = "sms_default_application";
     private final Context mContext;
     private ArrayMap<Integer, String> mDefaultSmsApp = new ArrayMap<>();
-    private final ContentObserver mSmsContentObserver = new ContentObserver(new Handler(Looper.getMainLooper())) {
+    private final ContentObserver mSmsContentObserver = new ContentObserver(new Handler(Looper.getMainLooper())) { // from class: com.android.internal.util.NotificationMessagingUtil.1
+        @Override // android.database.ContentObserver
         public void onChange(boolean selfChange, Uri uri, int userId) {
             if (Settings.Secure.getUriFor("sms_default_application").equals(uri)) {
                 NotificationMessagingUtil.this.cacheDefaultSmsApp(userId);
@@ -32,10 +34,7 @@ public class NotificationMessagingUtil {
         if (importance < 2) {
             return false;
         }
-        if (hasMessagingStyle(sbn) || (isCategoryMessage(sbn) && isDefaultMessagingApp(sbn))) {
-            return true;
-        }
-        return false;
+        return hasMessagingStyle(sbn) || (isCategoryMessage(sbn) && isDefaultMessagingApp(sbn));
     }
 
     public boolean isMessaging(StatusBarNotification sbn) {
@@ -53,13 +52,14 @@ public class NotificationMessagingUtil {
         return Objects.equals(this.mDefaultSmsApp.get(Integer.valueOf(userId)), sbn.getPackageName());
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void cacheDefaultSmsApp(int userId) {
         this.mDefaultSmsApp.put(Integer.valueOf(userId), Settings.Secure.getStringForUser(this.mContext.getContentResolver(), "sms_default_application", userId));
     }
 
     private boolean hasMessagingStyle(StatusBarNotification sbn) {
-        return Notification.MessagingStyle.class.equals(sbn.getNotification().getNotificationStyle());
+        Class<? extends Notification.Style> style = sbn.getNotification().getNotificationStyle();
+        return Notification.MessagingStyle.class.equals(style);
     }
 
     private boolean isCategoryMessage(StatusBarNotification sbn) {

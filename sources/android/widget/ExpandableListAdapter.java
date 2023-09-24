@@ -4,6 +4,7 @@ import android.database.DataSetObserver;
 import android.view.View;
 import android.view.ViewGroup;
 
+/* loaded from: classes4.dex */
 public interface ExpandableListAdapter {
     boolean areAllItemsEnabled();
 

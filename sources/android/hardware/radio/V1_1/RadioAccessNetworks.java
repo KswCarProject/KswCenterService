@@ -2,6 +2,7 @@ package android.hardware.radio.V1_1;
 
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class RadioAccessNetworks {
     public static final int EUTRAN = 3;
     public static final int GERAN = 1;

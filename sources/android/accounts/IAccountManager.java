@@ -1,15 +1,17 @@
 package android.accounts;
 
+import android.accounts.IAccountManagerResponse;
 import android.content.IntentSender;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
-import android.os.UserHandle;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
+import android.p007os.UserHandle;
 import java.util.Map;
 
+/* loaded from: classes.dex */
 public interface IAccountManager extends IInterface {
     boolean accountAuthenticated(Account account) throws RemoteException;
 
@@ -113,188 +115,242 @@ public interface IAccountManager extends IInterface {
 
     void updateCredentials(IAccountManagerResponse iAccountManagerResponse, Account account, String str, boolean z, Bundle bundle) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements IAccountManager {
+        @Override // android.accounts.IAccountManager
         public String getPassword(Account account) throws RemoteException {
             return null;
         }
 
+        @Override // android.accounts.IAccountManager
         public String getUserData(Account account, String key) throws RemoteException {
             return null;
         }
 
+        @Override // android.accounts.IAccountManager
         public AuthenticatorDescription[] getAuthenticatorTypes(int userId) throws RemoteException {
             return null;
         }
 
+        @Override // android.accounts.IAccountManager
         public Account[] getAccounts(String accountType, String opPackageName) throws RemoteException {
             return null;
         }
 
+        @Override // android.accounts.IAccountManager
         public Account[] getAccountsForPackage(String packageName, int uid, String opPackageName) throws RemoteException {
             return null;
         }
 
+        @Override // android.accounts.IAccountManager
         public Account[] getAccountsByTypeForPackage(String type, String packageName, String opPackageName) throws RemoteException {
             return null;
         }
 
+        @Override // android.accounts.IAccountManager
         public Account[] getAccountsAsUser(String accountType, int userId, String opPackageName) throws RemoteException {
             return null;
         }
 
+        @Override // android.accounts.IAccountManager
         public void hasFeatures(IAccountManagerResponse response, Account account, String[] features, String opPackageName) throws RemoteException {
         }
 
+        @Override // android.accounts.IAccountManager
         public void getAccountByTypeAndFeatures(IAccountManagerResponse response, String accountType, String[] features, String opPackageName) throws RemoteException {
         }
 
+        @Override // android.accounts.IAccountManager
         public void getAccountsByFeatures(IAccountManagerResponse response, String accountType, String[] features, String opPackageName) throws RemoteException {
         }
 
+        @Override // android.accounts.IAccountManager
         public boolean addAccountExplicitly(Account account, String password, Bundle extras) throws RemoteException {
             return false;
         }
 
+        @Override // android.accounts.IAccountManager
         public void removeAccount(IAccountManagerResponse response, Account account, boolean expectActivityLaunch) throws RemoteException {
         }
 
+        @Override // android.accounts.IAccountManager
         public void removeAccountAsUser(IAccountManagerResponse response, Account account, boolean expectActivityLaunch, int userId) throws RemoteException {
         }
 
+        @Override // android.accounts.IAccountManager
         public boolean removeAccountExplicitly(Account account) throws RemoteException {
             return false;
         }
 
+        @Override // android.accounts.IAccountManager
         public void copyAccountToUser(IAccountManagerResponse response, Account account, int userFrom, int userTo) throws RemoteException {
         }
 
+        @Override // android.accounts.IAccountManager
         public void invalidateAuthToken(String accountType, String authToken) throws RemoteException {
         }
 
+        @Override // android.accounts.IAccountManager
         public String peekAuthToken(Account account, String authTokenType) throws RemoteException {
             return null;
         }
 
+        @Override // android.accounts.IAccountManager
         public void setAuthToken(Account account, String authTokenType, String authToken) throws RemoteException {
         }
 
+        @Override // android.accounts.IAccountManager
         public void setPassword(Account account, String password) throws RemoteException {
         }
 
+        @Override // android.accounts.IAccountManager
         public void clearPassword(Account account) throws RemoteException {
         }
 
+        @Override // android.accounts.IAccountManager
         public void setUserData(Account account, String key, String value) throws RemoteException {
         }
 
+        @Override // android.accounts.IAccountManager
         public void updateAppPermission(Account account, String authTokenType, int uid, boolean value) throws RemoteException {
         }
 
+        @Override // android.accounts.IAccountManager
         public void getAuthToken(IAccountManagerResponse response, Account account, String authTokenType, boolean notifyOnAuthFailure, boolean expectActivityLaunch, Bundle options) throws RemoteException {
         }
 
+        @Override // android.accounts.IAccountManager
         public void addAccount(IAccountManagerResponse response, String accountType, String authTokenType, String[] requiredFeatures, boolean expectActivityLaunch, Bundle options) throws RemoteException {
         }
 
+        @Override // android.accounts.IAccountManager
         public void addAccountAsUser(IAccountManagerResponse response, String accountType, String authTokenType, String[] requiredFeatures, boolean expectActivityLaunch, Bundle options, int userId) throws RemoteException {
         }
 
+        @Override // android.accounts.IAccountManager
         public void updateCredentials(IAccountManagerResponse response, Account account, String authTokenType, boolean expectActivityLaunch, Bundle options) throws RemoteException {
         }
 
+        @Override // android.accounts.IAccountManager
         public void editProperties(IAccountManagerResponse response, String accountType, boolean expectActivityLaunch) throws RemoteException {
         }
 
+        @Override // android.accounts.IAccountManager
         public void confirmCredentialsAsUser(IAccountManagerResponse response, Account account, Bundle options, boolean expectActivityLaunch, int userId) throws RemoteException {
         }
 
+        @Override // android.accounts.IAccountManager
         public boolean accountAuthenticated(Account account) throws RemoteException {
             return false;
         }
 
+        @Override // android.accounts.IAccountManager
         public void getAuthTokenLabel(IAccountManagerResponse response, String accountType, String authTokenType) throws RemoteException {
         }
 
+        @Override // android.accounts.IAccountManager
         public Account[] getSharedAccountsAsUser(int userId) throws RemoteException {
             return null;
         }
 
+        @Override // android.accounts.IAccountManager
         public boolean removeSharedAccountAsUser(Account account, int userId) throws RemoteException {
             return false;
         }
 
+        @Override // android.accounts.IAccountManager
         public void addSharedAccountsFromParentUser(int parentUserId, int userId, String opPackageName) throws RemoteException {
         }
 
+        @Override // android.accounts.IAccountManager
         public void renameAccount(IAccountManagerResponse response, Account accountToRename, String newName) throws RemoteException {
         }
 
+        @Override // android.accounts.IAccountManager
         public String getPreviousName(Account account) throws RemoteException {
             return null;
         }
 
+        @Override // android.accounts.IAccountManager
         public boolean renameSharedAccountAsUser(Account accountToRename, String newName, int userId) throws RemoteException {
             return false;
         }
 
+        @Override // android.accounts.IAccountManager
         public void startAddAccountSession(IAccountManagerResponse response, String accountType, String authTokenType, String[] requiredFeatures, boolean expectActivityLaunch, Bundle options) throws RemoteException {
         }
 
+        @Override // android.accounts.IAccountManager
         public void startUpdateCredentialsSession(IAccountManagerResponse response, Account account, String authTokenType, boolean expectActivityLaunch, Bundle options) throws RemoteException {
         }
 
+        @Override // android.accounts.IAccountManager
         public void finishSessionAsUser(IAccountManagerResponse response, Bundle sessionBundle, boolean expectActivityLaunch, Bundle appInfo, int userId) throws RemoteException {
         }
 
+        @Override // android.accounts.IAccountManager
         public boolean someUserHasAccount(Account account) throws RemoteException {
             return false;
         }
 
+        @Override // android.accounts.IAccountManager
         public void isCredentialsUpdateSuggested(IAccountManagerResponse response, Account account, String statusToken) throws RemoteException {
         }
 
+        @Override // android.accounts.IAccountManager
         public Map getPackagesAndVisibilityForAccount(Account account) throws RemoteException {
             return null;
         }
 
+        @Override // android.accounts.IAccountManager
         public boolean addAccountExplicitlyWithVisibility(Account account, String password, Bundle extras, Map visibility) throws RemoteException {
             return false;
         }
 
+        @Override // android.accounts.IAccountManager
         public boolean setAccountVisibility(Account a, String packageName, int newVisibility) throws RemoteException {
             return false;
         }
 
+        @Override // android.accounts.IAccountManager
         public int getAccountVisibility(Account a, String packageName) throws RemoteException {
             return 0;
         }
 
+        @Override // android.accounts.IAccountManager
         public Map getAccountsAndVisibilityForPackage(String packageName, String accountType) throws RemoteException {
             return null;
         }
 
+        @Override // android.accounts.IAccountManager
         public void registerAccountListener(String[] accountTypes, String opPackageName) throws RemoteException {
         }
 
+        @Override // android.accounts.IAccountManager
         public void unregisterAccountListener(String[] accountTypes, String opPackageName) throws RemoteException {
         }
 
+        @Override // android.accounts.IAccountManager
         public boolean hasAccountAccess(Account account, String packageName, UserHandle userHandle) throws RemoteException {
             return false;
         }
 
+        @Override // android.accounts.IAccountManager
         public IntentSender createRequestAccountAccessIntentSenderAsUser(Account account, String packageName, UserHandle userHandle) throws RemoteException {
             return null;
         }
 
+        @Override // android.accounts.IAccountManager
         public void onAccountAccessed(String token) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements IAccountManager {
         private static final String DESCRIPTOR = "android.accounts.IAccountManager";
         static final int TRANSACTION_accountAuthenticated = 29;
@@ -358,12 +414,13 @@ public interface IAccountManager extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IAccountManager)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IAccountManager)) {
+                return (IAccountManager) iin;
             }
-            return (IAccountManager) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -477,1064 +534,502 @@ public interface IAccountManager extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v14, resolved type: android.accounts.Account} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v20, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v24, resolved type: android.accounts.Account} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v28, resolved type: android.accounts.Account} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v36, resolved type: android.accounts.Account} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v60, resolved type: android.accounts.Account} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v87, resolved type: android.accounts.Account} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v106, resolved type: android.accounts.Account} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v114, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v129, resolved type: android.os.UserHandle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v133, resolved type: android.os.UserHandle} */
-        /* JADX WARNING: type inference failed for: r1v0 */
-        /* JADX WARNING: type inference failed for: r1v1 */
-        /* JADX WARNING: type inference failed for: r1v5 */
-        /* JADX WARNING: type inference failed for: r1v32 */
-        /* JADX WARNING: type inference failed for: r1v41 */
-        /* JADX WARNING: type inference failed for: r1v45 */
-        /* JADX WARNING: type inference failed for: r1v49 */
-        /* JADX WARNING: type inference failed for: r1v53 */
-        /* JADX WARNING: type inference failed for: r1v56 */
-        /* JADX WARNING: type inference failed for: r1v70 */
-        /* JADX WARNING: type inference failed for: r1v76 */
-        /* JADX WARNING: type inference failed for: r1v82 */
-        /* JADX WARNING: type inference failed for: r1v91 */
-        /* JADX WARNING: type inference failed for: r1v95 */
-        /* JADX WARNING: type inference failed for: r1v102 */
-        /* JADX WARNING: type inference failed for: r1v110 */
-        /* JADX WARNING: type inference failed for: r1v118 */
-        /* JADX WARNING: type inference failed for: r1v122 */
-        /* JADX WARNING: type inference failed for: r1v137 */
-        /* JADX WARNING: type inference failed for: r1v138 */
-        /* JADX WARNING: type inference failed for: r1v139 */
-        /* JADX WARNING: type inference failed for: r1v140 */
-        /* JADX WARNING: type inference failed for: r1v141 */
-        /* JADX WARNING: type inference failed for: r1v142 */
-        /* JADX WARNING: type inference failed for: r1v143 */
-        /* JADX WARNING: type inference failed for: r1v144 */
-        /* JADX WARNING: type inference failed for: r1v145 */
-        /* JADX WARNING: type inference failed for: r1v146 */
-        /* JADX WARNING: type inference failed for: r1v147 */
-        /* JADX WARNING: type inference failed for: r1v148 */
-        /* JADX WARNING: type inference failed for: r1v149 */
-        /* JADX WARNING: type inference failed for: r1v150 */
-        /* JADX WARNING: type inference failed for: r1v151 */
-        /* JADX WARNING: type inference failed for: r1v152 */
-        /* JADX WARNING: type inference failed for: r1v153 */
-        /* JADX WARNING: type inference failed for: r1v154 */
-        /* JADX WARNING: type inference failed for: r1v155 */
-        /* JADX WARNING: type inference failed for: r1v156 */
-        /* JADX WARNING: type inference failed for: r1v157 */
-        /* JADX WARNING: type inference failed for: r1v158 */
-        /* JADX WARNING: type inference failed for: r1v159 */
-        /* JADX WARNING: type inference failed for: r1v160 */
-        /* JADX WARNING: type inference failed for: r1v161 */
-        /* JADX WARNING: type inference failed for: r1v162 */
-        /* JADX WARNING: type inference failed for: r1v163 */
-        /* JADX WARNING: type inference failed for: r1v164 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r20, android.os.Parcel r21, android.os.Parcel r22, int r23) throws android.os.RemoteException {
-            /*
-                r19 = this;
-                r8 = r19
-                r9 = r20
-                r10 = r21
-                r11 = r22
-                java.lang.String r12 = "android.accounts.IAccountManager"
-                r0 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r13 = 1
-                if (r9 == r0) goto L_0x07ca
-                r0 = 0
-                r1 = 0
-                switch(r9) {
-                    case 1: goto L_0x07aa;
-                    case 2: goto L_0x0786;
-                    case 3: goto L_0x0774;
-                    case 4: goto L_0x075e;
-                    case 5: goto L_0x0744;
-                    case 6: goto L_0x072a;
-                    case 7: goto L_0x0710;
-                    case 8: goto L_0x06e6;
-                    case 9: goto L_0x06c8;
-                    case 10: goto L_0x06aa;
-                    case 11: goto L_0x0678;
-                    case 12: goto L_0x064e;
-                    case 13: goto L_0x0620;
-                    case 14: goto L_0x0600;
-                    case 15: goto L_0x05d6;
-                    case 16: goto L_0x05c4;
-                    case 17: goto L_0x05a0;
-                    case 18: goto L_0x057c;
-                    case 19: goto L_0x055c;
-                    case 20: goto L_0x0540;
-                    case 21: goto L_0x051c;
-                    case 22: goto L_0x04f2;
-                    case 23: goto L_0x04a5;
-                    case 24: goto L_0x0466;
-                    case 25: goto L_0x0420;
-                    case 26: goto L_0x03dc;
-                    case 27: goto L_0x03be;
-                    case 28: goto L_0x037a;
-                    case 29: goto L_0x035a;
-                    case 30: goto L_0x0340;
-                    case 31: goto L_0x032e;
-                    case 32: goto L_0x030a;
-                    case 33: goto L_0x02f4;
-                    case 34: goto L_0x02ce;
-                    case 35: goto L_0x02ae;
-                    case 36: goto L_0x0286;
-                    case 37: goto L_0x0247;
-                    case 38: goto L_0x0203;
-                    case 39: goto L_0x01bf;
-                    case 40: goto L_0x019f;
-                    case 41: goto L_0x0179;
-                    case 42: goto L_0x0159;
-                    case 43: goto L_0x011b;
-                    case 44: goto L_0x00f3;
-                    case 45: goto L_0x00cf;
-                    case 46: goto L_0x00b9;
-                    case 47: goto L_0x00a7;
-                    case 48: goto L_0x0095;
-                    case 49: goto L_0x0063;
-                    case 50: goto L_0x0028;
-                    case 51: goto L_0x001a;
-                    default: goto L_0x0015;
-                }
-            L_0x0015:
-                boolean r0 = super.onTransact(r20, r21, r22, r23)
-                return r0
-            L_0x001a:
-                r10.enforceInterface(r12)
-                java.lang.String r0 = r21.readString()
-                r8.onAccountAccessed(r0)
-                r22.writeNoException()
-                return r13
-            L_0x0028:
-                r10.enforceInterface(r12)
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x003a
-                android.os.Parcelable$Creator<android.accounts.Account> r2 = android.accounts.Account.CREATOR
-                java.lang.Object r2 = r2.createFromParcel(r10)
-                android.accounts.Account r2 = (android.accounts.Account) r2
-                goto L_0x003b
-            L_0x003a:
-                r2 = r1
-            L_0x003b:
-                java.lang.String r3 = r21.readString()
-                int r4 = r21.readInt()
-                if (r4 == 0) goto L_0x004e
-                android.os.Parcelable$Creator<android.os.UserHandle> r1 = android.os.UserHandle.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.os.UserHandle r1 = (android.os.UserHandle) r1
-                goto L_0x004f
-            L_0x004e:
-            L_0x004f:
-                android.content.IntentSender r4 = r8.createRequestAccountAccessIntentSenderAsUser(r2, r3, r1)
-                r22.writeNoException()
-                if (r4 == 0) goto L_0x005f
-                r11.writeInt(r13)
-                r4.writeToParcel(r11, r13)
-                goto L_0x0062
-            L_0x005f:
-                r11.writeInt(r0)
-            L_0x0062:
-                return r13
-            L_0x0063:
-                r10.enforceInterface(r12)
-                int r0 = r21.readInt()
-                if (r0 == 0) goto L_0x0075
-                android.os.Parcelable$Creator<android.accounts.Account> r0 = android.accounts.Account.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.accounts.Account r0 = (android.accounts.Account) r0
-                goto L_0x0076
-            L_0x0075:
-                r0 = r1
-            L_0x0076:
-                java.lang.String r2 = r21.readString()
-                int r3 = r21.readInt()
-                if (r3 == 0) goto L_0x0089
-                android.os.Parcelable$Creator<android.os.UserHandle> r1 = android.os.UserHandle.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.os.UserHandle r1 = (android.os.UserHandle) r1
-                goto L_0x008a
-            L_0x0089:
-            L_0x008a:
-                boolean r3 = r8.hasAccountAccess(r0, r2, r1)
-                r22.writeNoException()
-                r11.writeInt(r3)
-                return r13
-            L_0x0095:
-                r10.enforceInterface(r12)
-                java.lang.String[] r0 = r21.createStringArray()
-                java.lang.String r1 = r21.readString()
-                r8.unregisterAccountListener(r0, r1)
-                r22.writeNoException()
-                return r13
-            L_0x00a7:
-                r10.enforceInterface(r12)
-                java.lang.String[] r0 = r21.createStringArray()
-                java.lang.String r1 = r21.readString()
-                r8.registerAccountListener(r0, r1)
-                r22.writeNoException()
-                return r13
-            L_0x00b9:
-                r10.enforceInterface(r12)
-                java.lang.String r0 = r21.readString()
-                java.lang.String r1 = r21.readString()
-                java.util.Map r2 = r8.getAccountsAndVisibilityForPackage(r0, r1)
-                r22.writeNoException()
-                r11.writeMap(r2)
-                return r13
-            L_0x00cf:
-                r10.enforceInterface(r12)
-                int r0 = r21.readInt()
-                if (r0 == 0) goto L_0x00e2
-                android.os.Parcelable$Creator<android.accounts.Account> r0 = android.accounts.Account.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                r1 = r0
-                android.accounts.Account r1 = (android.accounts.Account) r1
-                goto L_0x00e3
-            L_0x00e2:
-            L_0x00e3:
-                r0 = r1
-                java.lang.String r1 = r21.readString()
-                int r2 = r8.getAccountVisibility(r0, r1)
-                r22.writeNoException()
-                r11.writeInt(r2)
-                return r13
-            L_0x00f3:
-                r10.enforceInterface(r12)
-                int r0 = r21.readInt()
-                if (r0 == 0) goto L_0x0106
-                android.os.Parcelable$Creator<android.accounts.Account> r0 = android.accounts.Account.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                r1 = r0
-                android.accounts.Account r1 = (android.accounts.Account) r1
-                goto L_0x0107
-            L_0x0106:
-            L_0x0107:
-                r0 = r1
-                java.lang.String r1 = r21.readString()
-                int r2 = r21.readInt()
-                boolean r3 = r8.setAccountVisibility(r0, r1, r2)
-                r22.writeNoException()
-                r11.writeInt(r3)
-                return r13
-            L_0x011b:
-                r10.enforceInterface(r12)
-                int r0 = r21.readInt()
-                if (r0 == 0) goto L_0x012d
-                android.os.Parcelable$Creator<android.accounts.Account> r0 = android.accounts.Account.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.accounts.Account r0 = (android.accounts.Account) r0
-                goto L_0x012e
-            L_0x012d:
-                r0 = r1
-            L_0x012e:
-                java.lang.String r2 = r21.readString()
-                int r3 = r21.readInt()
-                if (r3 == 0) goto L_0x0141
-                android.os.Parcelable$Creator<android.os.Bundle> r1 = android.os.Bundle.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.os.Bundle r1 = (android.os.Bundle) r1
-                goto L_0x0142
-            L_0x0141:
-            L_0x0142:
-                java.lang.Class r3 = r19.getClass()
-                java.lang.ClassLoader r3 = r3.getClassLoader()
-                java.util.HashMap r4 = r10.readHashMap(r3)
-                boolean r5 = r8.addAccountExplicitlyWithVisibility(r0, r2, r1, r4)
-                r22.writeNoException()
-                r11.writeInt(r5)
-                return r13
-            L_0x0159:
-                r10.enforceInterface(r12)
-                int r0 = r21.readInt()
-                if (r0 == 0) goto L_0x016c
-                android.os.Parcelable$Creator<android.accounts.Account> r0 = android.accounts.Account.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                r1 = r0
-                android.accounts.Account r1 = (android.accounts.Account) r1
-                goto L_0x016d
-            L_0x016c:
-            L_0x016d:
-                r0 = r1
-                java.util.Map r1 = r8.getPackagesAndVisibilityForAccount(r0)
-                r22.writeNoException()
-                r11.writeMap(r1)
-                return r13
-            L_0x0179:
-                r10.enforceInterface(r12)
-                android.os.IBinder r0 = r21.readStrongBinder()
-                android.accounts.IAccountManagerResponse r0 = android.accounts.IAccountManagerResponse.Stub.asInterface(r0)
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x0193
-                android.os.Parcelable$Creator<android.accounts.Account> r1 = android.accounts.Account.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.accounts.Account r1 = (android.accounts.Account) r1
-                goto L_0x0194
-            L_0x0193:
-            L_0x0194:
-                java.lang.String r2 = r21.readString()
-                r8.isCredentialsUpdateSuggested(r0, r1, r2)
-                r22.writeNoException()
-                return r13
-            L_0x019f:
-                r10.enforceInterface(r12)
-                int r0 = r21.readInt()
-                if (r0 == 0) goto L_0x01b2
-                android.os.Parcelable$Creator<android.accounts.Account> r0 = android.accounts.Account.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                r1 = r0
-                android.accounts.Account r1 = (android.accounts.Account) r1
-                goto L_0x01b3
-            L_0x01b2:
-            L_0x01b3:
-                r0 = r1
-                boolean r1 = r8.someUserHasAccount(r0)
-                r22.writeNoException()
-                r11.writeInt(r1)
-                return r13
-            L_0x01bf:
-                r10.enforceInterface(r12)
-                android.os.IBinder r2 = r21.readStrongBinder()
-                android.accounts.IAccountManagerResponse r6 = android.accounts.IAccountManagerResponse.Stub.asInterface(r2)
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x01d9
-                android.os.Parcelable$Creator<android.os.Bundle> r2 = android.os.Bundle.CREATOR
-                java.lang.Object r2 = r2.createFromParcel(r10)
-                android.os.Bundle r2 = (android.os.Bundle) r2
-                goto L_0x01da
-            L_0x01d9:
-                r2 = r1
-            L_0x01da:
-                int r3 = r21.readInt()
-                if (r3 == 0) goto L_0x01e2
-                r3 = r13
-                goto L_0x01e3
-            L_0x01e2:
-                r3 = r0
-            L_0x01e3:
-                int r0 = r21.readInt()
-                if (r0 == 0) goto L_0x01f3
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-                r4 = r0
-                goto L_0x01f4
-            L_0x01f3:
-                r4 = r1
-            L_0x01f4:
-                int r7 = r21.readInt()
-                r0 = r19
-                r1 = r6
-                r5 = r7
-                r0.finishSessionAsUser(r1, r2, r3, r4, r5)
-                r22.writeNoException()
-                return r13
-            L_0x0203:
-                r10.enforceInterface(r12)
-                android.os.IBinder r2 = r21.readStrongBinder()
-                android.accounts.IAccountManagerResponse r6 = android.accounts.IAccountManagerResponse.Stub.asInterface(r2)
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x021d
-                android.os.Parcelable$Creator<android.accounts.Account> r2 = android.accounts.Account.CREATOR
-                java.lang.Object r2 = r2.createFromParcel(r10)
-                android.accounts.Account r2 = (android.accounts.Account) r2
-                goto L_0x021e
-            L_0x021d:
-                r2 = r1
-            L_0x021e:
-                java.lang.String r7 = r21.readString()
-                int r3 = r21.readInt()
-                if (r3 == 0) goto L_0x022a
-                r4 = r13
-                goto L_0x022b
-            L_0x022a:
-                r4 = r0
-            L_0x022b:
-                int r0 = r21.readInt()
-                if (r0 == 0) goto L_0x023b
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-                r5 = r0
-                goto L_0x023c
-            L_0x023b:
-                r5 = r1
-            L_0x023c:
-                r0 = r19
-                r1 = r6
-                r3 = r7
-                r0.startUpdateCredentialsSession(r1, r2, r3, r4, r5)
-                r22.writeNoException()
-                return r13
-            L_0x0247:
-                r10.enforceInterface(r12)
-                android.os.IBinder r2 = r21.readStrongBinder()
-                android.accounts.IAccountManagerResponse r7 = android.accounts.IAccountManagerResponse.Stub.asInterface(r2)
-                java.lang.String r14 = r21.readString()
-                java.lang.String r15 = r21.readString()
-                java.lang.String[] r16 = r21.createStringArray()
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x0266
-                r5 = r13
-                goto L_0x0267
-            L_0x0266:
-                r5 = r0
-            L_0x0267:
-                int r0 = r21.readInt()
-                if (r0 == 0) goto L_0x0277
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-                r6 = r0
-                goto L_0x0278
-            L_0x0277:
-                r6 = r1
-            L_0x0278:
-                r0 = r19
-                r1 = r7
-                r2 = r14
-                r3 = r15
-                r4 = r16
-                r0.startAddAccountSession(r1, r2, r3, r4, r5, r6)
-                r22.writeNoException()
-                return r13
-            L_0x0286:
-                r10.enforceInterface(r12)
-                int r0 = r21.readInt()
-                if (r0 == 0) goto L_0x0299
-                android.os.Parcelable$Creator<android.accounts.Account> r0 = android.accounts.Account.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                r1 = r0
-                android.accounts.Account r1 = (android.accounts.Account) r1
-                goto L_0x029a
-            L_0x0299:
-            L_0x029a:
-                r0 = r1
-                java.lang.String r1 = r21.readString()
-                int r2 = r21.readInt()
-                boolean r3 = r8.renameSharedAccountAsUser(r0, r1, r2)
-                r22.writeNoException()
-                r11.writeInt(r3)
-                return r13
-            L_0x02ae:
-                r10.enforceInterface(r12)
-                int r0 = r21.readInt()
-                if (r0 == 0) goto L_0x02c1
-                android.os.Parcelable$Creator<android.accounts.Account> r0 = android.accounts.Account.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                r1 = r0
-                android.accounts.Account r1 = (android.accounts.Account) r1
-                goto L_0x02c2
-            L_0x02c1:
-            L_0x02c2:
-                r0 = r1
-                java.lang.String r1 = r8.getPreviousName(r0)
-                r22.writeNoException()
-                r11.writeString(r1)
-                return r13
-            L_0x02ce:
-                r10.enforceInterface(r12)
-                android.os.IBinder r0 = r21.readStrongBinder()
-                android.accounts.IAccountManagerResponse r0 = android.accounts.IAccountManagerResponse.Stub.asInterface(r0)
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x02e8
-                android.os.Parcelable$Creator<android.accounts.Account> r1 = android.accounts.Account.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.accounts.Account r1 = (android.accounts.Account) r1
-                goto L_0x02e9
-            L_0x02e8:
-            L_0x02e9:
-                java.lang.String r2 = r21.readString()
-                r8.renameAccount(r0, r1, r2)
-                r22.writeNoException()
-                return r13
-            L_0x02f4:
-                r10.enforceInterface(r12)
-                int r0 = r21.readInt()
-                int r1 = r21.readInt()
-                java.lang.String r2 = r21.readString()
-                r8.addSharedAccountsFromParentUser(r0, r1, r2)
-                r22.writeNoException()
-                return r13
-            L_0x030a:
-                r10.enforceInterface(r12)
-                int r0 = r21.readInt()
-                if (r0 == 0) goto L_0x031d
-                android.os.Parcelable$Creator<android.accounts.Account> r0 = android.accounts.Account.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                r1 = r0
-                android.accounts.Account r1 = (android.accounts.Account) r1
-                goto L_0x031e
-            L_0x031d:
-            L_0x031e:
-                r0 = r1
-                int r1 = r21.readInt()
-                boolean r2 = r8.removeSharedAccountAsUser(r0, r1)
-                r22.writeNoException()
-                r11.writeInt(r2)
-                return r13
-            L_0x032e:
-                r10.enforceInterface(r12)
-                int r0 = r21.readInt()
-                android.accounts.Account[] r1 = r8.getSharedAccountsAsUser(r0)
-                r22.writeNoException()
-                r11.writeTypedArray(r1, r13)
-                return r13
-            L_0x0340:
-                r10.enforceInterface(r12)
-                android.os.IBinder r0 = r21.readStrongBinder()
-                android.accounts.IAccountManagerResponse r0 = android.accounts.IAccountManagerResponse.Stub.asInterface(r0)
-                java.lang.String r1 = r21.readString()
-                java.lang.String r2 = r21.readString()
-                r8.getAuthTokenLabel(r0, r1, r2)
-                r22.writeNoException()
-                return r13
-            L_0x035a:
-                r10.enforceInterface(r12)
-                int r0 = r21.readInt()
-                if (r0 == 0) goto L_0x036d
-                android.os.Parcelable$Creator<android.accounts.Account> r0 = android.accounts.Account.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                r1 = r0
-                android.accounts.Account r1 = (android.accounts.Account) r1
-                goto L_0x036e
-            L_0x036d:
-            L_0x036e:
-                r0 = r1
-                boolean r1 = r8.accountAuthenticated(r0)
-                r22.writeNoException()
-                r11.writeInt(r1)
-                return r13
-            L_0x037a:
-                r10.enforceInterface(r12)
-                android.os.IBinder r2 = r21.readStrongBinder()
-                android.accounts.IAccountManagerResponse r6 = android.accounts.IAccountManagerResponse.Stub.asInterface(r2)
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x0394
-                android.os.Parcelable$Creator<android.accounts.Account> r2 = android.accounts.Account.CREATOR
-                java.lang.Object r2 = r2.createFromParcel(r10)
-                android.accounts.Account r2 = (android.accounts.Account) r2
-                goto L_0x0395
-            L_0x0394:
-                r2 = r1
-            L_0x0395:
-                int r3 = r21.readInt()
-                if (r3 == 0) goto L_0x03a5
-                android.os.Parcelable$Creator<android.os.Bundle> r1 = android.os.Bundle.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.os.Bundle r1 = (android.os.Bundle) r1
-            L_0x03a3:
-                r3 = r1
-                goto L_0x03a6
-            L_0x03a5:
-                goto L_0x03a3
-            L_0x03a6:
-                int r1 = r21.readInt()
-                if (r1 == 0) goto L_0x03ae
-                r4 = r13
-                goto L_0x03af
-            L_0x03ae:
-                r4 = r0
-            L_0x03af:
-                int r7 = r21.readInt()
-                r0 = r19
-                r1 = r6
-                r5 = r7
-                r0.confirmCredentialsAsUser(r1, r2, r3, r4, r5)
-                r22.writeNoException()
-                return r13
-            L_0x03be:
-                r10.enforceInterface(r12)
-                android.os.IBinder r1 = r21.readStrongBinder()
-                android.accounts.IAccountManagerResponse r1 = android.accounts.IAccountManagerResponse.Stub.asInterface(r1)
-                java.lang.String r2 = r21.readString()
-                int r3 = r21.readInt()
-                if (r3 == 0) goto L_0x03d5
-                r0 = r13
-            L_0x03d5:
-                r8.editProperties(r1, r2, r0)
-                r22.writeNoException()
-                return r13
-            L_0x03dc:
-                r10.enforceInterface(r12)
-                android.os.IBinder r2 = r21.readStrongBinder()
-                android.accounts.IAccountManagerResponse r6 = android.accounts.IAccountManagerResponse.Stub.asInterface(r2)
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x03f6
-                android.os.Parcelable$Creator<android.accounts.Account> r2 = android.accounts.Account.CREATOR
-                java.lang.Object r2 = r2.createFromParcel(r10)
-                android.accounts.Account r2 = (android.accounts.Account) r2
-                goto L_0x03f7
-            L_0x03f6:
-                r2 = r1
-            L_0x03f7:
-                java.lang.String r7 = r21.readString()
-                int r3 = r21.readInt()
-                if (r3 == 0) goto L_0x0403
-                r4 = r13
-                goto L_0x0404
-            L_0x0403:
-                r4 = r0
-            L_0x0404:
-                int r0 = r21.readInt()
-                if (r0 == 0) goto L_0x0414
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-                r5 = r0
-                goto L_0x0415
-            L_0x0414:
-                r5 = r1
-            L_0x0415:
-                r0 = r19
-                r1 = r6
-                r3 = r7
-                r0.updateCredentials(r1, r2, r3, r4, r5)
-                r22.writeNoException()
-                return r13
-            L_0x0420:
-                r10.enforceInterface(r12)
-                android.os.IBinder r2 = r21.readStrongBinder()
-                android.accounts.IAccountManagerResponse r14 = android.accounts.IAccountManagerResponse.Stub.asInterface(r2)
-                java.lang.String r15 = r21.readString()
-                java.lang.String r16 = r21.readString()
-                java.lang.String[] r17 = r21.createStringArray()
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x043f
-                r5 = r13
-                goto L_0x0440
-            L_0x043f:
-                r5 = r0
-            L_0x0440:
-                int r0 = r21.readInt()
-                if (r0 == 0) goto L_0x0450
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-                r6 = r0
-                goto L_0x0451
-            L_0x0450:
-                r6 = r1
-            L_0x0451:
-                int r18 = r21.readInt()
-                r0 = r19
-                r1 = r14
-                r2 = r15
-                r3 = r16
-                r4 = r17
-                r7 = r18
-                r0.addAccountAsUser(r1, r2, r3, r4, r5, r6, r7)
-                r22.writeNoException()
-                return r13
-            L_0x0466:
-                r10.enforceInterface(r12)
-                android.os.IBinder r2 = r21.readStrongBinder()
-                android.accounts.IAccountManagerResponse r7 = android.accounts.IAccountManagerResponse.Stub.asInterface(r2)
-                java.lang.String r14 = r21.readString()
-                java.lang.String r15 = r21.readString()
-                java.lang.String[] r16 = r21.createStringArray()
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x0485
-                r5 = r13
-                goto L_0x0486
-            L_0x0485:
-                r5 = r0
-            L_0x0486:
-                int r0 = r21.readInt()
-                if (r0 == 0) goto L_0x0496
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-                r6 = r0
-                goto L_0x0497
-            L_0x0496:
-                r6 = r1
-            L_0x0497:
-                r0 = r19
-                r1 = r7
-                r2 = r14
-                r3 = r15
-                r4 = r16
-                r0.addAccount(r1, r2, r3, r4, r5, r6)
-                r22.writeNoException()
-                return r13
-            L_0x04a5:
-                r10.enforceInterface(r12)
-                android.os.IBinder r2 = r21.readStrongBinder()
-                android.accounts.IAccountManagerResponse r7 = android.accounts.IAccountManagerResponse.Stub.asInterface(r2)
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x04bf
-                android.os.Parcelable$Creator<android.accounts.Account> r2 = android.accounts.Account.CREATOR
-                java.lang.Object r2 = r2.createFromParcel(r10)
-                android.accounts.Account r2 = (android.accounts.Account) r2
-                goto L_0x04c0
-            L_0x04bf:
-                r2 = r1
-            L_0x04c0:
-                java.lang.String r14 = r21.readString()
-                int r3 = r21.readInt()
-                if (r3 == 0) goto L_0x04cc
-                r4 = r13
-                goto L_0x04cd
-            L_0x04cc:
-                r4 = r0
-            L_0x04cd:
-                int r3 = r21.readInt()
-                if (r3 == 0) goto L_0x04d5
-                r5 = r13
-                goto L_0x04d6
-            L_0x04d5:
-                r5 = r0
-            L_0x04d6:
-                int r0 = r21.readInt()
-                if (r0 == 0) goto L_0x04e6
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-                r6 = r0
-                goto L_0x04e7
-            L_0x04e6:
-                r6 = r1
-            L_0x04e7:
-                r0 = r19
-                r1 = r7
-                r3 = r14
-                r0.getAuthToken(r1, r2, r3, r4, r5, r6)
-                r22.writeNoException()
-                return r13
-            L_0x04f2:
-                r10.enforceInterface(r12)
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x0504
-                android.os.Parcelable$Creator<android.accounts.Account> r1 = android.accounts.Account.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.accounts.Account r1 = (android.accounts.Account) r1
-                goto L_0x0505
-            L_0x0504:
-            L_0x0505:
-                java.lang.String r2 = r21.readString()
-                int r3 = r21.readInt()
-                int r4 = r21.readInt()
-                if (r4 == 0) goto L_0x0515
-                r0 = r13
-            L_0x0515:
-                r8.updateAppPermission(r1, r2, r3, r0)
-                r22.writeNoException()
-                return r13
-            L_0x051c:
-                r10.enforceInterface(r12)
-                int r0 = r21.readInt()
-                if (r0 == 0) goto L_0x052f
-                android.os.Parcelable$Creator<android.accounts.Account> r0 = android.accounts.Account.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                r1 = r0
-                android.accounts.Account r1 = (android.accounts.Account) r1
-                goto L_0x0530
-            L_0x052f:
-            L_0x0530:
-                r0 = r1
-                java.lang.String r1 = r21.readString()
-                java.lang.String r2 = r21.readString()
-                r8.setUserData(r0, r1, r2)
-                r22.writeNoException()
-                return r13
-            L_0x0540:
-                r10.enforceInterface(r12)
-                int r0 = r21.readInt()
-                if (r0 == 0) goto L_0x0553
-                android.os.Parcelable$Creator<android.accounts.Account> r0 = android.accounts.Account.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                r1 = r0
-                android.accounts.Account r1 = (android.accounts.Account) r1
-                goto L_0x0554
-            L_0x0553:
-            L_0x0554:
-                r0 = r1
-                r8.clearPassword(r0)
-                r22.writeNoException()
-                return r13
-            L_0x055c:
-                r10.enforceInterface(r12)
-                int r0 = r21.readInt()
-                if (r0 == 0) goto L_0x056f
-                android.os.Parcelable$Creator<android.accounts.Account> r0 = android.accounts.Account.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                r1 = r0
-                android.accounts.Account r1 = (android.accounts.Account) r1
-                goto L_0x0570
-            L_0x056f:
-            L_0x0570:
-                r0 = r1
-                java.lang.String r1 = r21.readString()
-                r8.setPassword(r0, r1)
-                r22.writeNoException()
-                return r13
-            L_0x057c:
-                r10.enforceInterface(r12)
-                int r0 = r21.readInt()
-                if (r0 == 0) goto L_0x058f
-                android.os.Parcelable$Creator<android.accounts.Account> r0 = android.accounts.Account.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                r1 = r0
-                android.accounts.Account r1 = (android.accounts.Account) r1
-                goto L_0x0590
-            L_0x058f:
-            L_0x0590:
-                r0 = r1
-                java.lang.String r1 = r21.readString()
-                java.lang.String r2 = r21.readString()
-                r8.setAuthToken(r0, r1, r2)
-                r22.writeNoException()
-                return r13
-            L_0x05a0:
-                r10.enforceInterface(r12)
-                int r0 = r21.readInt()
-                if (r0 == 0) goto L_0x05b3
-                android.os.Parcelable$Creator<android.accounts.Account> r0 = android.accounts.Account.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                r1 = r0
-                android.accounts.Account r1 = (android.accounts.Account) r1
-                goto L_0x05b4
-            L_0x05b3:
-            L_0x05b4:
-                r0 = r1
-                java.lang.String r1 = r21.readString()
-                java.lang.String r2 = r8.peekAuthToken(r0, r1)
-                r22.writeNoException()
-                r11.writeString(r2)
-                return r13
-            L_0x05c4:
-                r10.enforceInterface(r12)
-                java.lang.String r0 = r21.readString()
-                java.lang.String r1 = r21.readString()
-                r8.invalidateAuthToken(r0, r1)
-                r22.writeNoException()
-                return r13
-            L_0x05d6:
-                r10.enforceInterface(r12)
-                android.os.IBinder r0 = r21.readStrongBinder()
-                android.accounts.IAccountManagerResponse r0 = android.accounts.IAccountManagerResponse.Stub.asInterface(r0)
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x05f0
-                android.os.Parcelable$Creator<android.accounts.Account> r1 = android.accounts.Account.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.accounts.Account r1 = (android.accounts.Account) r1
-                goto L_0x05f1
-            L_0x05f0:
-            L_0x05f1:
-                int r2 = r21.readInt()
-                int r3 = r21.readInt()
-                r8.copyAccountToUser(r0, r1, r2, r3)
-                r22.writeNoException()
-                return r13
-            L_0x0600:
-                r10.enforceInterface(r12)
-                int r0 = r21.readInt()
-                if (r0 == 0) goto L_0x0613
-                android.os.Parcelable$Creator<android.accounts.Account> r0 = android.accounts.Account.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                r1 = r0
-                android.accounts.Account r1 = (android.accounts.Account) r1
-                goto L_0x0614
-            L_0x0613:
-            L_0x0614:
-                r0 = r1
-                boolean r1 = r8.removeAccountExplicitly(r0)
-                r22.writeNoException()
-                r11.writeInt(r1)
-                return r13
-            L_0x0620:
-                r10.enforceInterface(r12)
-                android.os.IBinder r2 = r21.readStrongBinder()
-                android.accounts.IAccountManagerResponse r2 = android.accounts.IAccountManagerResponse.Stub.asInterface(r2)
-                int r3 = r21.readInt()
-                if (r3 == 0) goto L_0x063a
-                android.os.Parcelable$Creator<android.accounts.Account> r1 = android.accounts.Account.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.accounts.Account r1 = (android.accounts.Account) r1
-                goto L_0x063b
-            L_0x063a:
-            L_0x063b:
-                int r3 = r21.readInt()
-                if (r3 == 0) goto L_0x0643
-                r0 = r13
-            L_0x0643:
-                int r3 = r21.readInt()
-                r8.removeAccountAsUser(r2, r1, r0, r3)
-                r22.writeNoException()
-                return r13
-            L_0x064e:
-                r10.enforceInterface(r12)
-                android.os.IBinder r2 = r21.readStrongBinder()
-                android.accounts.IAccountManagerResponse r2 = android.accounts.IAccountManagerResponse.Stub.asInterface(r2)
-                int r3 = r21.readInt()
-                if (r3 == 0) goto L_0x0668
-                android.os.Parcelable$Creator<android.accounts.Account> r1 = android.accounts.Account.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.accounts.Account r1 = (android.accounts.Account) r1
-                goto L_0x0669
-            L_0x0668:
-            L_0x0669:
-                int r3 = r21.readInt()
-                if (r3 == 0) goto L_0x0671
-                r0 = r13
-            L_0x0671:
-                r8.removeAccount(r2, r1, r0)
-                r22.writeNoException()
-                return r13
-            L_0x0678:
-                r10.enforceInterface(r12)
-                int r0 = r21.readInt()
-                if (r0 == 0) goto L_0x068a
-                android.os.Parcelable$Creator<android.accounts.Account> r0 = android.accounts.Account.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.accounts.Account r0 = (android.accounts.Account) r0
-                goto L_0x068b
-            L_0x068a:
-                r0 = r1
-            L_0x068b:
-                java.lang.String r2 = r21.readString()
-                int r3 = r21.readInt()
-                if (r3 == 0) goto L_0x069e
-                android.os.Parcelable$Creator<android.os.Bundle> r1 = android.os.Bundle.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.os.Bundle r1 = (android.os.Bundle) r1
-                goto L_0x069f
-            L_0x069e:
-            L_0x069f:
-                boolean r3 = r8.addAccountExplicitly(r0, r2, r1)
-                r22.writeNoException()
-                r11.writeInt(r3)
-                return r13
-            L_0x06aa:
-                r10.enforceInterface(r12)
-                android.os.IBinder r0 = r21.readStrongBinder()
-                android.accounts.IAccountManagerResponse r0 = android.accounts.IAccountManagerResponse.Stub.asInterface(r0)
-                java.lang.String r1 = r21.readString()
-                java.lang.String[] r2 = r21.createStringArray()
-                java.lang.String r3 = r21.readString()
-                r8.getAccountsByFeatures(r0, r1, r2, r3)
-                r22.writeNoException()
-                return r13
-            L_0x06c8:
-                r10.enforceInterface(r12)
-                android.os.IBinder r0 = r21.readStrongBinder()
-                android.accounts.IAccountManagerResponse r0 = android.accounts.IAccountManagerResponse.Stub.asInterface(r0)
-                java.lang.String r1 = r21.readString()
-                java.lang.String[] r2 = r21.createStringArray()
-                java.lang.String r3 = r21.readString()
-                r8.getAccountByTypeAndFeatures(r0, r1, r2, r3)
-                r22.writeNoException()
-                return r13
-            L_0x06e6:
-                r10.enforceInterface(r12)
-                android.os.IBinder r0 = r21.readStrongBinder()
-                android.accounts.IAccountManagerResponse r0 = android.accounts.IAccountManagerResponse.Stub.asInterface(r0)
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x0700
-                android.os.Parcelable$Creator<android.accounts.Account> r1 = android.accounts.Account.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.accounts.Account r1 = (android.accounts.Account) r1
-                goto L_0x0701
-            L_0x0700:
-            L_0x0701:
-                java.lang.String[] r2 = r21.createStringArray()
-                java.lang.String r3 = r21.readString()
-                r8.hasFeatures(r0, r1, r2, r3)
-                r22.writeNoException()
-                return r13
-            L_0x0710:
-                r10.enforceInterface(r12)
-                java.lang.String r0 = r21.readString()
-                int r1 = r21.readInt()
-                java.lang.String r2 = r21.readString()
-                android.accounts.Account[] r3 = r8.getAccountsAsUser(r0, r1, r2)
-                r22.writeNoException()
-                r11.writeTypedArray(r3, r13)
-                return r13
-            L_0x072a:
-                r10.enforceInterface(r12)
-                java.lang.String r0 = r21.readString()
-                java.lang.String r1 = r21.readString()
-                java.lang.String r2 = r21.readString()
-                android.accounts.Account[] r3 = r8.getAccountsByTypeForPackage(r0, r1, r2)
-                r22.writeNoException()
-                r11.writeTypedArray(r3, r13)
-                return r13
-            L_0x0744:
-                r10.enforceInterface(r12)
-                java.lang.String r0 = r21.readString()
-                int r1 = r21.readInt()
-                java.lang.String r2 = r21.readString()
-                android.accounts.Account[] r3 = r8.getAccountsForPackage(r0, r1, r2)
-                r22.writeNoException()
-                r11.writeTypedArray(r3, r13)
-                return r13
-            L_0x075e:
-                r10.enforceInterface(r12)
-                java.lang.String r0 = r21.readString()
-                java.lang.String r1 = r21.readString()
-                android.accounts.Account[] r2 = r8.getAccounts(r0, r1)
-                r22.writeNoException()
-                r11.writeTypedArray(r2, r13)
-                return r13
-            L_0x0774:
-                r10.enforceInterface(r12)
-                int r0 = r21.readInt()
-                android.accounts.AuthenticatorDescription[] r1 = r8.getAuthenticatorTypes(r0)
-                r22.writeNoException()
-                r11.writeTypedArray(r1, r13)
-                return r13
-            L_0x0786:
-                r10.enforceInterface(r12)
-                int r0 = r21.readInt()
-                if (r0 == 0) goto L_0x0799
-                android.os.Parcelable$Creator<android.accounts.Account> r0 = android.accounts.Account.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                r1 = r0
-                android.accounts.Account r1 = (android.accounts.Account) r1
-                goto L_0x079a
-            L_0x0799:
-            L_0x079a:
-                r0 = r1
-                java.lang.String r1 = r21.readString()
-                java.lang.String r2 = r8.getUserData(r0, r1)
-                r22.writeNoException()
-                r11.writeString(r2)
-                return r13
-            L_0x07aa:
-                r10.enforceInterface(r12)
-                int r0 = r21.readInt()
-                if (r0 == 0) goto L_0x07bd
-                android.os.Parcelable$Creator<android.accounts.Account> r0 = android.accounts.Account.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                r1 = r0
-                android.accounts.Account r1 = (android.accounts.Account) r1
-                goto L_0x07be
-            L_0x07bd:
-            L_0x07be:
-                r0 = r1
-                java.lang.String r1 = r8.getPassword(r0)
-                r22.writeNoException()
-                r11.writeString(r1)
-                return r13
-            L_0x07ca:
-                r11.writeString(r12)
-                return r13
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.accounts.IAccountManager.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            Account _arg0;
+            boolean _arg2;
+            Account _arg1;
+            Account _arg12;
+            Account _arg13;
+            Account _arg14;
+            Bundle _arg15;
+            Account _arg02;
+            Account _arg03;
+            Account _arg04;
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    Account _arg05 = data.readInt() != 0 ? Account.CREATOR.createFromParcel(data) : null;
+                    String _result = getPassword(_arg05);
+                    reply.writeNoException();
+                    reply.writeString(_result);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    Account _arg06 = data.readInt() != 0 ? Account.CREATOR.createFromParcel(data) : null;
+                    Account _arg07 = _arg06;
+                    String _arg16 = data.readString();
+                    String _result2 = getUserData(_arg07, _arg16);
+                    reply.writeNoException();
+                    reply.writeString(_result2);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg08 = data.readInt();
+                    AuthenticatorDescription[] _result3 = getAuthenticatorTypes(_arg08);
+                    reply.writeNoException();
+                    reply.writeTypedArray(_result3, 1);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg09 = data.readString();
+                    String _arg17 = data.readString();
+                    Account[] _result4 = getAccounts(_arg09, _arg17);
+                    reply.writeNoException();
+                    reply.writeTypedArray(_result4, 1);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg010 = data.readString();
+                    int _arg18 = data.readInt();
+                    Account[] _result5 = getAccountsForPackage(_arg010, _arg18, data.readString());
+                    reply.writeNoException();
+                    reply.writeTypedArray(_result5, 1);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg011 = data.readString();
+                    String _arg19 = data.readString();
+                    Account[] _result6 = getAccountsByTypeForPackage(_arg011, _arg19, data.readString());
+                    reply.writeNoException();
+                    reply.writeTypedArray(_result6, 1);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg012 = data.readString();
+                    int _arg110 = data.readInt();
+                    Account[] _result7 = getAccountsAsUser(_arg012, _arg110, data.readString());
+                    reply.writeNoException();
+                    reply.writeTypedArray(_result7, 1);
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAccountManagerResponse _arg013 = IAccountManagerResponse.Stub.asInterface(data.readStrongBinder());
+                    Account _arg111 = data.readInt() != 0 ? Account.CREATOR.createFromParcel(data) : null;
+                    String[] _arg22 = data.createStringArray();
+                    String _arg3 = data.readString();
+                    hasFeatures(_arg013, _arg111, _arg22, _arg3);
+                    reply.writeNoException();
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAccountManagerResponse _arg014 = IAccountManagerResponse.Stub.asInterface(data.readStrongBinder());
+                    String _arg112 = data.readString();
+                    String[] _arg23 = data.createStringArray();
+                    String _arg32 = data.readString();
+                    getAccountByTypeAndFeatures(_arg014, _arg112, _arg23, _arg32);
+                    reply.writeNoException();
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAccountManagerResponse _arg015 = IAccountManagerResponse.Stub.asInterface(data.readStrongBinder());
+                    String _arg113 = data.readString();
+                    String[] _arg24 = data.createStringArray();
+                    String _arg33 = data.readString();
+                    getAccountsByFeatures(_arg015, _arg113, _arg24, _arg33);
+                    reply.writeNoException();
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg0 = Account.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg0 = null;
+                    }
+                    String _arg114 = data.readString();
+                    boolean addAccountExplicitly = addAccountExplicitly(_arg0, _arg114, data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null);
+                    reply.writeNoException();
+                    reply.writeInt(addAccountExplicitly ? 1 : 0);
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAccountManagerResponse _arg016 = IAccountManagerResponse.Stub.asInterface(data.readStrongBinder());
+                    Account _arg115 = data.readInt() != 0 ? Account.CREATOR.createFromParcel(data) : null;
+                    _arg2 = data.readInt() != 0;
+                    removeAccount(_arg016, _arg115, _arg2);
+                    reply.writeNoException();
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAccountManagerResponse _arg017 = IAccountManagerResponse.Stub.asInterface(data.readStrongBinder());
+                    Account _arg116 = data.readInt() != 0 ? Account.CREATOR.createFromParcel(data) : null;
+                    _arg2 = data.readInt() != 0;
+                    int _arg34 = data.readInt();
+                    removeAccountAsUser(_arg017, _arg116, _arg2, _arg34);
+                    reply.writeNoException();
+                    return true;
+                case 14:
+                    data.enforceInterface(DESCRIPTOR);
+                    Account _arg018 = data.readInt() != 0 ? Account.CREATOR.createFromParcel(data) : null;
+                    boolean removeAccountExplicitly = removeAccountExplicitly(_arg018);
+                    reply.writeNoException();
+                    reply.writeInt(removeAccountExplicitly ? 1 : 0);
+                    return true;
+                case 15:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAccountManagerResponse _arg019 = IAccountManagerResponse.Stub.asInterface(data.readStrongBinder());
+                    Account _arg117 = data.readInt() != 0 ? Account.CREATOR.createFromParcel(data) : null;
+                    int _arg25 = data.readInt();
+                    int _arg35 = data.readInt();
+                    copyAccountToUser(_arg019, _arg117, _arg25, _arg35);
+                    reply.writeNoException();
+                    return true;
+                case 16:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg020 = data.readString();
+                    String _arg118 = data.readString();
+                    invalidateAuthToken(_arg020, _arg118);
+                    reply.writeNoException();
+                    return true;
+                case 17:
+                    data.enforceInterface(DESCRIPTOR);
+                    Account _arg021 = data.readInt() != 0 ? Account.CREATOR.createFromParcel(data) : null;
+                    Account _arg022 = _arg021;
+                    String _arg119 = data.readString();
+                    String _result8 = peekAuthToken(_arg022, _arg119);
+                    reply.writeNoException();
+                    reply.writeString(_result8);
+                    return true;
+                case 18:
+                    data.enforceInterface(DESCRIPTOR);
+                    Account _arg023 = data.readInt() != 0 ? Account.CREATOR.createFromParcel(data) : null;
+                    Account _arg024 = _arg023;
+                    String _arg120 = data.readString();
+                    setAuthToken(_arg024, _arg120, data.readString());
+                    reply.writeNoException();
+                    return true;
+                case 19:
+                    data.enforceInterface(DESCRIPTOR);
+                    Account _arg025 = data.readInt() != 0 ? Account.CREATOR.createFromParcel(data) : null;
+                    Account _arg026 = _arg025;
+                    String _arg121 = data.readString();
+                    setPassword(_arg026, _arg121);
+                    reply.writeNoException();
+                    return true;
+                case 20:
+                    data.enforceInterface(DESCRIPTOR);
+                    Account _arg027 = data.readInt() != 0 ? Account.CREATOR.createFromParcel(data) : null;
+                    clearPassword(_arg027);
+                    reply.writeNoException();
+                    return true;
+                case 21:
+                    data.enforceInterface(DESCRIPTOR);
+                    Account _arg028 = data.readInt() != 0 ? Account.CREATOR.createFromParcel(data) : null;
+                    Account _arg029 = _arg028;
+                    String _arg122 = data.readString();
+                    setUserData(_arg029, _arg122, data.readString());
+                    reply.writeNoException();
+                    return true;
+                case 22:
+                    data.enforceInterface(DESCRIPTOR);
+                    Account _arg030 = data.readInt() != 0 ? Account.CREATOR.createFromParcel(data) : null;
+                    String _arg123 = data.readString();
+                    int _arg26 = data.readInt();
+                    _arg2 = data.readInt() != 0;
+                    updateAppPermission(_arg030, _arg123, _arg26, _arg2);
+                    reply.writeNoException();
+                    return true;
+                case 23:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAccountManagerResponse _arg031 = IAccountManagerResponse.Stub.asInterface(data.readStrongBinder());
+                    if (data.readInt() != 0) {
+                        _arg1 = Account.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg1 = null;
+                    }
+                    String _arg27 = data.readString();
+                    boolean _arg36 = data.readInt() != 0;
+                    boolean _arg4 = data.readInt() != 0;
+                    Bundle _arg5 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    getAuthToken(_arg031, _arg1, _arg27, _arg36, _arg4, _arg5);
+                    reply.writeNoException();
+                    return true;
+                case 24:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAccountManagerResponse _arg032 = IAccountManagerResponse.Stub.asInterface(data.readStrongBinder());
+                    String _arg124 = data.readString();
+                    String _arg28 = data.readString();
+                    String[] _arg37 = data.createStringArray();
+                    boolean _arg42 = data.readInt() != 0;
+                    Bundle _arg52 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    addAccount(_arg032, _arg124, _arg28, _arg37, _arg42, _arg52);
+                    reply.writeNoException();
+                    return true;
+                case 25:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAccountManagerResponse _arg033 = IAccountManagerResponse.Stub.asInterface(data.readStrongBinder());
+                    String _arg125 = data.readString();
+                    String _arg29 = data.readString();
+                    String[] _arg38 = data.createStringArray();
+                    boolean _arg43 = data.readInt() != 0;
+                    Bundle _arg53 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    int _arg6 = data.readInt();
+                    addAccountAsUser(_arg033, _arg125, _arg29, _arg38, _arg43, _arg53, _arg6);
+                    reply.writeNoException();
+                    return true;
+                case 26:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAccountManagerResponse _arg034 = IAccountManagerResponse.Stub.asInterface(data.readStrongBinder());
+                    if (data.readInt() != 0) {
+                        _arg12 = Account.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg12 = null;
+                    }
+                    String _arg210 = data.readString();
+                    boolean _arg39 = data.readInt() != 0;
+                    Bundle _arg44 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    updateCredentials(_arg034, _arg12, _arg210, _arg39, _arg44);
+                    reply.writeNoException();
+                    return true;
+                case 27:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAccountManagerResponse _arg035 = IAccountManagerResponse.Stub.asInterface(data.readStrongBinder());
+                    String _arg126 = data.readString();
+                    _arg2 = data.readInt() != 0;
+                    editProperties(_arg035, _arg126, _arg2);
+                    reply.writeNoException();
+                    return true;
+                case 28:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAccountManagerResponse _arg036 = IAccountManagerResponse.Stub.asInterface(data.readStrongBinder());
+                    if (data.readInt() != 0) {
+                        _arg13 = Account.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg13 = null;
+                    }
+                    Bundle _arg211 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    boolean _arg310 = data.readInt() != 0;
+                    int _arg45 = data.readInt();
+                    confirmCredentialsAsUser(_arg036, _arg13, _arg211, _arg310, _arg45);
+                    reply.writeNoException();
+                    return true;
+                case 29:
+                    data.enforceInterface(DESCRIPTOR);
+                    Account _arg037 = data.readInt() != 0 ? Account.CREATOR.createFromParcel(data) : null;
+                    boolean accountAuthenticated = accountAuthenticated(_arg037);
+                    reply.writeNoException();
+                    reply.writeInt(accountAuthenticated ? 1 : 0);
+                    return true;
+                case 30:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAccountManagerResponse _arg038 = IAccountManagerResponse.Stub.asInterface(data.readStrongBinder());
+                    String _arg127 = data.readString();
+                    getAuthTokenLabel(_arg038, _arg127, data.readString());
+                    reply.writeNoException();
+                    return true;
+                case 31:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg039 = data.readInt();
+                    Account[] _result9 = getSharedAccountsAsUser(_arg039);
+                    reply.writeNoException();
+                    reply.writeTypedArray(_result9, 1);
+                    return true;
+                case 32:
+                    data.enforceInterface(DESCRIPTOR);
+                    Account _arg040 = data.readInt() != 0 ? Account.CREATOR.createFromParcel(data) : null;
+                    Account _arg041 = _arg040;
+                    int _arg128 = data.readInt();
+                    boolean removeSharedAccountAsUser = removeSharedAccountAsUser(_arg041, _arg128);
+                    reply.writeNoException();
+                    reply.writeInt(removeSharedAccountAsUser ? 1 : 0);
+                    return true;
+                case 33:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg042 = data.readInt();
+                    int _arg129 = data.readInt();
+                    addSharedAccountsFromParentUser(_arg042, _arg129, data.readString());
+                    reply.writeNoException();
+                    return true;
+                case 34:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAccountManagerResponse _arg043 = IAccountManagerResponse.Stub.asInterface(data.readStrongBinder());
+                    Account _arg130 = data.readInt() != 0 ? Account.CREATOR.createFromParcel(data) : null;
+                    renameAccount(_arg043, _arg130, data.readString());
+                    reply.writeNoException();
+                    return true;
+                case 35:
+                    data.enforceInterface(DESCRIPTOR);
+                    Account _arg044 = data.readInt() != 0 ? Account.CREATOR.createFromParcel(data) : null;
+                    String _result10 = getPreviousName(_arg044);
+                    reply.writeNoException();
+                    reply.writeString(_result10);
+                    return true;
+                case 36:
+                    data.enforceInterface(DESCRIPTOR);
+                    Account _arg045 = data.readInt() != 0 ? Account.CREATOR.createFromParcel(data) : null;
+                    Account _arg046 = _arg045;
+                    String _arg131 = data.readString();
+                    boolean renameSharedAccountAsUser = renameSharedAccountAsUser(_arg046, _arg131, data.readInt());
+                    reply.writeNoException();
+                    reply.writeInt(renameSharedAccountAsUser ? 1 : 0);
+                    return true;
+                case 37:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAccountManagerResponse _arg047 = IAccountManagerResponse.Stub.asInterface(data.readStrongBinder());
+                    String _arg132 = data.readString();
+                    String _arg212 = data.readString();
+                    String[] _arg311 = data.createStringArray();
+                    boolean _arg46 = data.readInt() != 0;
+                    Bundle _arg54 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    startAddAccountSession(_arg047, _arg132, _arg212, _arg311, _arg46, _arg54);
+                    reply.writeNoException();
+                    return true;
+                case 38:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAccountManagerResponse _arg048 = IAccountManagerResponse.Stub.asInterface(data.readStrongBinder());
+                    if (data.readInt() != 0) {
+                        _arg14 = Account.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg14 = null;
+                    }
+                    String _arg213 = data.readString();
+                    boolean _arg312 = data.readInt() != 0;
+                    Bundle _arg47 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    startUpdateCredentialsSession(_arg048, _arg14, _arg213, _arg312, _arg47);
+                    reply.writeNoException();
+                    return true;
+                case 39:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAccountManagerResponse _arg049 = IAccountManagerResponse.Stub.asInterface(data.readStrongBinder());
+                    if (data.readInt() != 0) {
+                        _arg15 = Bundle.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg15 = null;
+                    }
+                    boolean _arg214 = data.readInt() != 0;
+                    Bundle _arg313 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    int _arg48 = data.readInt();
+                    finishSessionAsUser(_arg049, _arg15, _arg214, _arg313, _arg48);
+                    reply.writeNoException();
+                    return true;
+                case 40:
+                    data.enforceInterface(DESCRIPTOR);
+                    Account _arg050 = data.readInt() != 0 ? Account.CREATOR.createFromParcel(data) : null;
+                    boolean someUserHasAccount = someUserHasAccount(_arg050);
+                    reply.writeNoException();
+                    reply.writeInt(someUserHasAccount ? 1 : 0);
+                    return true;
+                case 41:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAccountManagerResponse _arg051 = IAccountManagerResponse.Stub.asInterface(data.readStrongBinder());
+                    Account _arg133 = data.readInt() != 0 ? Account.CREATOR.createFromParcel(data) : null;
+                    isCredentialsUpdateSuggested(_arg051, _arg133, data.readString());
+                    reply.writeNoException();
+                    return true;
+                case 42:
+                    data.enforceInterface(DESCRIPTOR);
+                    Account _arg052 = data.readInt() != 0 ? Account.CREATOR.createFromParcel(data) : null;
+                    Map _result11 = getPackagesAndVisibilityForAccount(_arg052);
+                    reply.writeNoException();
+                    reply.writeMap(_result11);
+                    return true;
+                case 43:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg02 = Account.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg02 = null;
+                    }
+                    String _arg134 = data.readString();
+                    Bundle _arg215 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    ClassLoader cl = getClass().getClassLoader();
+                    Map _arg314 = data.readHashMap(cl);
+                    boolean addAccountExplicitlyWithVisibility = addAccountExplicitlyWithVisibility(_arg02, _arg134, _arg215, _arg314);
+                    reply.writeNoException();
+                    reply.writeInt(addAccountExplicitlyWithVisibility ? 1 : 0);
+                    return true;
+                case 44:
+                    data.enforceInterface(DESCRIPTOR);
+                    Account _arg053 = data.readInt() != 0 ? Account.CREATOR.createFromParcel(data) : null;
+                    Account _arg054 = _arg053;
+                    String _arg135 = data.readString();
+                    boolean accountVisibility = setAccountVisibility(_arg054, _arg135, data.readInt());
+                    reply.writeNoException();
+                    reply.writeInt(accountVisibility ? 1 : 0);
+                    return true;
+                case 45:
+                    data.enforceInterface(DESCRIPTOR);
+                    Account _arg055 = data.readInt() != 0 ? Account.CREATOR.createFromParcel(data) : null;
+                    Account _arg056 = _arg055;
+                    String _arg136 = data.readString();
+                    int _result12 = getAccountVisibility(_arg056, _arg136);
+                    reply.writeNoException();
+                    reply.writeInt(_result12);
+                    return true;
+                case 46:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg057 = data.readString();
+                    String _arg137 = data.readString();
+                    Map _result13 = getAccountsAndVisibilityForPackage(_arg057, _arg137);
+                    reply.writeNoException();
+                    reply.writeMap(_result13);
+                    return true;
+                case 47:
+                    data.enforceInterface(DESCRIPTOR);
+                    String[] _arg058 = data.createStringArray();
+                    String _arg138 = data.readString();
+                    registerAccountListener(_arg058, _arg138);
+                    reply.writeNoException();
+                    return true;
+                case 48:
+                    data.enforceInterface(DESCRIPTOR);
+                    String[] _arg059 = data.createStringArray();
+                    String _arg139 = data.readString();
+                    unregisterAccountListener(_arg059, _arg139);
+                    reply.writeNoException();
+                    return true;
+                case 49:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg03 = Account.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg03 = null;
+                    }
+                    String _arg140 = data.readString();
+                    UserHandle _arg216 = data.readInt() != 0 ? UserHandle.CREATOR.createFromParcel(data) : null;
+                    boolean hasAccountAccess = hasAccountAccess(_arg03, _arg140, _arg216);
+                    reply.writeNoException();
+                    reply.writeInt(hasAccountAccess ? 1 : 0);
+                    return true;
+                case 50:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg04 = Account.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg04 = null;
+                    }
+                    String _arg141 = data.readString();
+                    UserHandle _arg217 = data.readInt() != 0 ? UserHandle.CREATOR.createFromParcel(data) : null;
+                    IntentSender _result14 = createRequestAccountAccessIntentSenderAsUser(_arg04, _arg141, _arg217);
+                    reply.writeNoException();
+                    if (_result14 != null) {
+                        reply.writeInt(1);
+                        _result14.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 51:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg060 = data.readString();
+                    onAccountAccessed(_arg060);
+                    reply.writeNoException();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements IAccountManager {
             public static IAccountManager sDefaultImpl;
             private IBinder mRemote;
@@ -1543,6 +1038,7 @@ public interface IAccountManager extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -1551,6 +1047,7 @@ public interface IAccountManager extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.accounts.IAccountManager
             public String getPassword(Account account) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1562,13 +1059,12 @@ public interface IAccountManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(1, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPassword(account);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1576,6 +1072,7 @@ public interface IAccountManager extends IInterface {
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public String getUserData(Account account, String key) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1588,13 +1085,12 @@ public interface IAccountManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(key);
-                    if (!this.mRemote.transact(2, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getUserData(account, key);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1602,19 +1098,19 @@ public interface IAccountManager extends IInterface {
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public AuthenticatorDescription[] getAuthenticatorTypes(int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userId);
-                    if (!this.mRemote.transact(3, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAuthenticatorTypes(userId);
                     }
                     _reply.readException();
                     AuthenticatorDescription[] _result = (AuthenticatorDescription[]) _reply.createTypedArray(AuthenticatorDescription.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1622,6 +1118,7 @@ public interface IAccountManager extends IInterface {
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public Account[] getAccounts(String accountType, String opPackageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1629,13 +1126,12 @@ public interface IAccountManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(accountType);
                     _data.writeString(opPackageName);
-                    if (!this.mRemote.transact(4, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAccounts(accountType, opPackageName);
                     }
                     _reply.readException();
                     Account[] _result = (Account[]) _reply.createTypedArray(Account.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1643,6 +1139,7 @@ public interface IAccountManager extends IInterface {
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public Account[] getAccountsForPackage(String packageName, int uid, String opPackageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1651,13 +1148,12 @@ public interface IAccountManager extends IInterface {
                     _data.writeString(packageName);
                     _data.writeInt(uid);
                     _data.writeString(opPackageName);
-                    if (!this.mRemote.transact(5, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAccountsForPackage(packageName, uid, opPackageName);
                     }
                     _reply.readException();
                     Account[] _result = (Account[]) _reply.createTypedArray(Account.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1665,6 +1161,7 @@ public interface IAccountManager extends IInterface {
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public Account[] getAccountsByTypeForPackage(String type, String packageName, String opPackageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1673,13 +1170,12 @@ public interface IAccountManager extends IInterface {
                     _data.writeString(type);
                     _data.writeString(packageName);
                     _data.writeString(opPackageName);
-                    if (!this.mRemote.transact(6, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAccountsByTypeForPackage(type, packageName, opPackageName);
                     }
                     _reply.readException();
                     Account[] _result = (Account[]) _reply.createTypedArray(Account.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1687,6 +1183,7 @@ public interface IAccountManager extends IInterface {
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public Account[] getAccountsAsUser(String accountType, int userId, String opPackageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1695,13 +1192,12 @@ public interface IAccountManager extends IInterface {
                     _data.writeString(accountType);
                     _data.writeInt(userId);
                     _data.writeString(opPackageName);
-                    if (!this.mRemote.transact(7, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAccountsAsUser(accountType, userId, opPackageName);
                     }
                     _reply.readException();
                     Account[] _result = (Account[]) _reply.createTypedArray(Account.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1709,6 +1205,7 @@ public interface IAccountManager extends IInterface {
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public void hasFeatures(IAccountManagerResponse response, Account account, String[] features, String opPackageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1723,19 +1220,19 @@ public interface IAccountManager extends IInterface {
                     }
                     _data.writeStringArray(features);
                     _data.writeString(opPackageName);
-                    if (this.mRemote.transact(8, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().hasFeatures(response, account, features, opPackageName);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().hasFeatures(response, account, features, opPackageName);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public void getAccountByTypeAndFeatures(IAccountManagerResponse response, String accountType, String[] features, String opPackageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1745,19 +1242,19 @@ public interface IAccountManager extends IInterface {
                     _data.writeString(accountType);
                     _data.writeStringArray(features);
                     _data.writeString(opPackageName);
-                    if (this.mRemote.transact(9, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(9, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().getAccountByTypeAndFeatures(response, accountType, features, opPackageName);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().getAccountByTypeAndFeatures(response, accountType, features, opPackageName);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public void getAccountsByFeatures(IAccountManagerResponse response, String accountType, String[] features, String opPackageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1767,25 +1264,24 @@ public interface IAccountManager extends IInterface {
                     _data.writeString(accountType);
                     _data.writeStringArray(features);
                     _data.writeString(opPackageName);
-                    if (this.mRemote.transact(10, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(10, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().getAccountsByFeatures(response, accountType, features, opPackageName);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().getAccountsByFeatures(response, accountType, features, opPackageName);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public boolean addAccountExplicitly(Account account, String password, Bundle extras) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (account != null) {
                         _data.writeInt(1);
                         account.writeToParcel(_data, 0);
@@ -1799,15 +1295,12 @@ public interface IAccountManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(11, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(11, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().addAccountExplicitly(account, password, extras);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1815,6 +1308,7 @@ public interface IAccountManager extends IInterface {
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public void removeAccount(IAccountManagerResponse response, Account account, boolean expectActivityLaunch) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1827,20 +1321,20 @@ public interface IAccountManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(expectActivityLaunch);
-                    if (this.mRemote.transact(12, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(expectActivityLaunch ? 1 : 0);
+                    boolean _status = this.mRemote.transact(12, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().removeAccount(response, account, expectActivityLaunch);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().removeAccount(response, account, expectActivityLaunch);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public void removeAccountAsUser(IAccountManagerResponse response, Account account, boolean expectActivityLaunch, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1853,42 +1347,38 @@ public interface IAccountManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(expectActivityLaunch);
+                    _data.writeInt(expectActivityLaunch ? 1 : 0);
                     _data.writeInt(userId);
-                    if (this.mRemote.transact(13, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(13, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().removeAccountAsUser(response, account, expectActivityLaunch, userId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().removeAccountAsUser(response, account, expectActivityLaunch, userId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public boolean removeAccountExplicitly(Account account) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (account != null) {
                         _data.writeInt(1);
                         account.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(14, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(14, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().removeAccountExplicitly(account);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1896,6 +1386,7 @@ public interface IAccountManager extends IInterface {
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public void copyAccountToUser(IAccountManagerResponse response, Account account, int userFrom, int userTo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1910,19 +1401,19 @@ public interface IAccountManager extends IInterface {
                     }
                     _data.writeInt(userFrom);
                     _data.writeInt(userTo);
-                    if (this.mRemote.transact(15, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(15, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().copyAccountToUser(response, account, userFrom, userTo);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().copyAccountToUser(response, account, userFrom, userTo);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public void invalidateAuthToken(String accountType, String authToken) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1930,19 +1421,19 @@ public interface IAccountManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(accountType);
                     _data.writeString(authToken);
-                    if (this.mRemote.transact(16, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(16, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().invalidateAuthToken(accountType, authToken);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().invalidateAuthToken(accountType, authToken);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public String peekAuthToken(Account account, String authTokenType) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1955,13 +1446,12 @@ public interface IAccountManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(authTokenType);
-                    if (!this.mRemote.transact(17, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(17, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().peekAuthToken(account, authTokenType);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1969,6 +1459,7 @@ public interface IAccountManager extends IInterface {
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public void setAuthToken(Account account, String authTokenType, String authToken) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1982,19 +1473,19 @@ public interface IAccountManager extends IInterface {
                     }
                     _data.writeString(authTokenType);
                     _data.writeString(authToken);
-                    if (this.mRemote.transact(18, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(18, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setAuthToken(account, authTokenType, authToken);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setAuthToken(account, authTokenType, authToken);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public void setPassword(Account account, String password) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2007,19 +1498,19 @@ public interface IAccountManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(password);
-                    if (this.mRemote.transact(19, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(19, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setPassword(account, password);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setPassword(account, password);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public void clearPassword(Account account) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2031,19 +1522,19 @@ public interface IAccountManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(20, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(20, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().clearPassword(account);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().clearPassword(account);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public void setUserData(Account account, String key, String value) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2057,19 +1548,19 @@ public interface IAccountManager extends IInterface {
                     }
                     _data.writeString(key);
                     _data.writeString(value);
-                    if (this.mRemote.transact(21, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(21, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setUserData(account, key, value);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setUserData(account, key, value);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public void updateAppPermission(Account account, String authTokenType, int uid, boolean value) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2083,161 +1574,139 @@ public interface IAccountManager extends IInterface {
                     }
                     _data.writeString(authTokenType);
                     _data.writeInt(uid);
-                    _data.writeInt(value);
-                    if (this.mRemote.transact(22, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(value ? 1 : 0);
+                    boolean _status = this.mRemote.transact(22, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().updateAppPermission(account, authTokenType, uid, value);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().updateAppPermission(account, authTokenType, uid, value);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public void getAuthToken(IAccountManagerResponse response, Account account, String authTokenType, boolean notifyOnAuthFailure, boolean expectActivityLaunch, Bundle options) throws RemoteException {
-                Account account2 = account;
-                Bundle bundle = options;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(response != null ? response.asBinder() : null);
-                    if (account2 != null) {
+                    if (account != null) {
                         _data.writeInt(1);
-                        account2.writeToParcel(_data, 0);
+                        account.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeString(authTokenType);
                     try {
-                        _data.writeString(authTokenType);
-                    } catch (Throwable th) {
-                        th = th;
-                        boolean z = notifyOnAuthFailure;
-                        boolean z2 = expectActivityLaunch;
+                        _data.writeInt(notifyOnAuthFailure ? 1 : 0);
+                    } catch (Throwable th2) {
+                        th = th2;
                         _reply.recycle();
                         _data.recycle();
                         throw th;
                     }
                     try {
-                        _data.writeInt(notifyOnAuthFailure ? 1 : 0);
-                        try {
-                            _data.writeInt(expectActivityLaunch ? 1 : 0);
-                            if (bundle != null) {
-                                _data.writeInt(1);
-                                bundle.writeToParcel(_data, 0);
-                            } else {
-                                _data.writeInt(0);
-                            }
-                            if (this.mRemote.transact(23, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                _reply.readException();
-                                _reply.recycle();
-                                _data.recycle();
-                                return;
-                            }
+                        _data.writeInt(expectActivityLaunch ? 1 : 0);
+                        if (options != null) {
+                            _data.writeInt(1);
+                            options.writeToParcel(_data, 0);
+                        } else {
+                            _data.writeInt(0);
+                        }
+                        boolean _status = this.mRemote.transact(23, _data, _reply, 0);
+                        if (!_status && Stub.getDefaultImpl() != null) {
                             Stub.getDefaultImpl().getAuthToken(response, account, authTokenType, notifyOnAuthFailure, expectActivityLaunch, options);
                             _reply.recycle();
                             _data.recycle();
-                        } catch (Throwable th2) {
-                            th = th2;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
+                            return;
                         }
+                        _reply.readException();
+                        _reply.recycle();
+                        _data.recycle();
                     } catch (Throwable th3) {
                         th = th3;
-                        boolean z22 = expectActivityLaunch;
                         _reply.recycle();
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th4) {
                     th = th4;
-                    String str = authTokenType;
-                    boolean z3 = notifyOnAuthFailure;
-                    boolean z222 = expectActivityLaunch;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public void addAccount(IAccountManagerResponse response, String accountType, String authTokenType, String[] requiredFeatures, boolean expectActivityLaunch, Bundle options) throws RemoteException {
-                Bundle bundle = options;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(response != null ? response.asBinder() : null);
-                    try {
-                        _data.writeString(accountType);
-                    } catch (Throwable th) {
-                        th = th;
-                        String str = authTokenType;
-                        String[] strArr = requiredFeatures;
-                        boolean z = expectActivityLaunch;
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeString(accountType);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeString(authTokenType);
+                } catch (Throwable th3) {
+                    th = th3;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeStringArray(requiredFeatures);
+                } catch (Throwable th4) {
+                    th = th4;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(expectActivityLaunch ? 1 : 0);
+                    if (options != null) {
+                        _data.writeInt(1);
+                        options.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
+                    }
+                    boolean _status = this.mRemote.transact(24, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().addAccount(response, accountType, authTokenType, requiredFeatures, expectActivityLaunch, options);
                         _reply.recycle();
                         _data.recycle();
-                        throw th;
+                        return;
                     }
-                    try {
-                        _data.writeString(authTokenType);
-                        try {
-                            _data.writeStringArray(requiredFeatures);
-                        } catch (Throwable th2) {
-                            th = th2;
-                            boolean z2 = expectActivityLaunch;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                        try {
-                            _data.writeInt(expectActivityLaunch ? 1 : 0);
-                            if (bundle != null) {
-                                _data.writeInt(1);
-                                bundle.writeToParcel(_data, 0);
-                            } else {
-                                _data.writeInt(0);
-                            }
-                            if (this.mRemote.transact(24, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                _reply.readException();
-                                _reply.recycle();
-                                _data.recycle();
-                                return;
-                            }
-                            Stub.getDefaultImpl().addAccount(response, accountType, authTokenType, requiredFeatures, expectActivityLaunch, options);
-                            _reply.recycle();
-                            _data.recycle();
-                        } catch (Throwable th3) {
-                            th = th3;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                    } catch (Throwable th4) {
-                        th = th4;
-                        String[] strArr2 = requiredFeatures;
-                        boolean z22 = expectActivityLaunch;
-                        _reply.recycle();
-                        _data.recycle();
-                        throw th;
-                    }
+                    _reply.readException();
+                    _reply.recycle();
+                    _data.recycle();
                 } catch (Throwable th5) {
                     th = th5;
-                    String str2 = accountType;
-                    String str3 = authTokenType;
-                    String[] strArr22 = requiredFeatures;
-                    boolean z222 = expectActivityLaunch;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public void addAccountAsUser(IAccountManagerResponse response, String accountType, String authTokenType, String[] requiredFeatures, boolean expectActivityLaunch, Bundle options, int userId) throws RemoteException {
-                Bundle bundle = options;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
@@ -2247,57 +1716,50 @@ public interface IAccountManager extends IInterface {
                         _data.writeString(accountType);
                     } catch (Throwable th) {
                         th = th;
-                        String str = authTokenType;
-                        String[] strArr = requiredFeatures;
                         _reply.recycle();
                         _data.recycle();
                         throw th;
                     }
                     try {
                         _data.writeString(authTokenType);
-                        try {
-                            _data.writeStringArray(requiredFeatures);
-                            _data.writeInt(expectActivityLaunch ? 1 : 0);
-                            if (bundle != null) {
-                                _data.writeInt(1);
-                                bundle.writeToParcel(_data, 0);
-                            } else {
-                                _data.writeInt(0);
-                            }
-                            _data.writeInt(userId);
-                            if (this.mRemote.transact(25, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                _reply.readException();
-                                _reply.recycle();
-                                _data.recycle();
-                                return;
-                            }
+                    } catch (Throwable th2) {
+                        th = th2;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeStringArray(requiredFeatures);
+                        _data.writeInt(expectActivityLaunch ? 1 : 0);
+                        if (options != null) {
+                            _data.writeInt(1);
+                            options.writeToParcel(_data, 0);
+                        } else {
+                            _data.writeInt(0);
+                        }
+                        _data.writeInt(userId);
+                        boolean _status = this.mRemote.transact(25, _data, _reply, 0);
+                        if (!_status && Stub.getDefaultImpl() != null) {
                             Stub.getDefaultImpl().addAccountAsUser(response, accountType, authTokenType, requiredFeatures, expectActivityLaunch, options, userId);
                             _reply.recycle();
                             _data.recycle();
-                        } catch (Throwable th2) {
-                            th = th2;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
+                            return;
                         }
+                        _reply.readException();
+                        _reply.recycle();
+                        _data.recycle();
                     } catch (Throwable th3) {
                         th = th3;
-                        String[] strArr2 = requiredFeatures;
                         _reply.recycle();
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th4) {
                     th = th4;
-                    String str2 = accountType;
-                    String str3 = authTokenType;
-                    String[] strArr22 = requiredFeatures;
-                    _reply.recycle();
-                    _data.recycle();
-                    throw th;
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public void updateCredentials(IAccountManagerResponse response, Account account, String authTokenType, boolean expectActivityLaunch, Bundle options) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2311,26 +1773,26 @@ public interface IAccountManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(authTokenType);
-                    _data.writeInt(expectActivityLaunch);
+                    _data.writeInt(expectActivityLaunch ? 1 : 0);
                     if (options != null) {
                         _data.writeInt(1);
                         options.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(26, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(26, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().updateCredentials(response, account, authTokenType, expectActivityLaunch, options);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().updateCredentials(response, account, authTokenType, expectActivityLaunch, options);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public void editProperties(IAccountManagerResponse response, String accountType, boolean expectActivityLaunch) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2338,20 +1800,20 @@ public interface IAccountManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(response != null ? response.asBinder() : null);
                     _data.writeString(accountType);
-                    _data.writeInt(expectActivityLaunch);
-                    if (this.mRemote.transact(27, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(expectActivityLaunch ? 1 : 0);
+                    boolean _status = this.mRemote.transact(27, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().editProperties(response, accountType, expectActivityLaunch);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().editProperties(response, accountType, expectActivityLaunch);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public void confirmCredentialsAsUser(IAccountManagerResponse response, Account account, Bundle options, boolean expectActivityLaunch, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2370,42 +1832,38 @@ public interface IAccountManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(expectActivityLaunch);
+                    _data.writeInt(expectActivityLaunch ? 1 : 0);
                     _data.writeInt(userId);
-                    if (this.mRemote.transact(28, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(28, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().confirmCredentialsAsUser(response, account, options, expectActivityLaunch, userId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().confirmCredentialsAsUser(response, account, options, expectActivityLaunch, userId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public boolean accountAuthenticated(Account account) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (account != null) {
                         _data.writeInt(1);
                         account.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(29, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(29, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().accountAuthenticated(account);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2413,6 +1871,7 @@ public interface IAccountManager extends IInterface {
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public void getAuthTokenLabel(IAccountManagerResponse response, String accountType, String authTokenType) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2421,32 +1880,31 @@ public interface IAccountManager extends IInterface {
                     _data.writeStrongBinder(response != null ? response.asBinder() : null);
                     _data.writeString(accountType);
                     _data.writeString(authTokenType);
-                    if (this.mRemote.transact(30, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(30, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().getAuthTokenLabel(response, accountType, authTokenType);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().getAuthTokenLabel(response, accountType, authTokenType);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public Account[] getSharedAccountsAsUser(int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userId);
-                    if (!this.mRemote.transact(31, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(31, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getSharedAccountsAsUser(userId);
                     }
                     _reply.readException();
                     Account[] _result = (Account[]) _reply.createTypedArray(Account.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2454,12 +1912,12 @@ public interface IAccountManager extends IInterface {
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public boolean removeSharedAccountAsUser(Account account, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (account != null) {
                         _data.writeInt(1);
                         account.writeToParcel(_data, 0);
@@ -2467,15 +1925,12 @@ public interface IAccountManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(userId);
-                    if (!this.mRemote.transact(32, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(32, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().removeSharedAccountAsUser(account, userId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2483,6 +1938,7 @@ public interface IAccountManager extends IInterface {
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public void addSharedAccountsFromParentUser(int parentUserId, int userId, String opPackageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2491,19 +1947,19 @@ public interface IAccountManager extends IInterface {
                     _data.writeInt(parentUserId);
                     _data.writeInt(userId);
                     _data.writeString(opPackageName);
-                    if (this.mRemote.transact(33, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(33, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().addSharedAccountsFromParentUser(parentUserId, userId, opPackageName);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().addSharedAccountsFromParentUser(parentUserId, userId, opPackageName);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public void renameAccount(IAccountManagerResponse response, Account accountToRename, String newName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2517,19 +1973,19 @@ public interface IAccountManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(newName);
-                    if (this.mRemote.transact(34, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(34, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().renameAccount(response, accountToRename, newName);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().renameAccount(response, accountToRename, newName);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public String getPreviousName(Account account) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2541,13 +1997,12 @@ public interface IAccountManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(35, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(35, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPreviousName(account);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2555,12 +2010,12 @@ public interface IAccountManager extends IInterface {
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public boolean renameSharedAccountAsUser(Account accountToRename, String newName, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (accountToRename != null) {
                         _data.writeInt(1);
                         accountToRename.writeToParcel(_data, 0);
@@ -2569,15 +2024,12 @@ public interface IAccountManager extends IInterface {
                     }
                     _data.writeString(newName);
                     _data.writeInt(userId);
-                    if (!this.mRemote.transact(36, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(36, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().renameSharedAccountAsUser(accountToRename, newName, userId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2585,78 +2037,67 @@ public interface IAccountManager extends IInterface {
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public void startAddAccountSession(IAccountManagerResponse response, String accountType, String authTokenType, String[] requiredFeatures, boolean expectActivityLaunch, Bundle options) throws RemoteException {
-                Bundle bundle = options;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(response != null ? response.asBinder() : null);
-                    try {
-                        _data.writeString(accountType);
-                    } catch (Throwable th) {
-                        th = th;
-                        String str = authTokenType;
-                        String[] strArr = requiredFeatures;
-                        boolean z = expectActivityLaunch;
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeString(accountType);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeString(authTokenType);
+                } catch (Throwable th3) {
+                    th = th3;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeStringArray(requiredFeatures);
+                } catch (Throwable th4) {
+                    th = th4;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(expectActivityLaunch ? 1 : 0);
+                    if (options != null) {
+                        _data.writeInt(1);
+                        options.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
+                    }
+                    boolean _status = this.mRemote.transact(37, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().startAddAccountSession(response, accountType, authTokenType, requiredFeatures, expectActivityLaunch, options);
                         _reply.recycle();
                         _data.recycle();
-                        throw th;
+                        return;
                     }
-                    try {
-                        _data.writeString(authTokenType);
-                        try {
-                            _data.writeStringArray(requiredFeatures);
-                        } catch (Throwable th2) {
-                            th = th2;
-                            boolean z2 = expectActivityLaunch;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                        try {
-                            _data.writeInt(expectActivityLaunch ? 1 : 0);
-                            if (bundle != null) {
-                                _data.writeInt(1);
-                                bundle.writeToParcel(_data, 0);
-                            } else {
-                                _data.writeInt(0);
-                            }
-                            if (this.mRemote.transact(37, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                _reply.readException();
-                                _reply.recycle();
-                                _data.recycle();
-                                return;
-                            }
-                            Stub.getDefaultImpl().startAddAccountSession(response, accountType, authTokenType, requiredFeatures, expectActivityLaunch, options);
-                            _reply.recycle();
-                            _data.recycle();
-                        } catch (Throwable th3) {
-                            th = th3;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                    } catch (Throwable th4) {
-                        th = th4;
-                        String[] strArr2 = requiredFeatures;
-                        boolean z22 = expectActivityLaunch;
-                        _reply.recycle();
-                        _data.recycle();
-                        throw th;
-                    }
+                    _reply.readException();
+                    _reply.recycle();
+                    _data.recycle();
                 } catch (Throwable th5) {
                     th = th5;
-                    String str2 = accountType;
-                    String str3 = authTokenType;
-                    String[] strArr22 = requiredFeatures;
-                    boolean z222 = expectActivityLaunch;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public void startUpdateCredentialsSession(IAccountManagerResponse response, Account account, String authTokenType, boolean expectActivityLaunch, Bundle options) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2670,26 +2111,26 @@ public interface IAccountManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(authTokenType);
-                    _data.writeInt(expectActivityLaunch);
+                    _data.writeInt(expectActivityLaunch ? 1 : 0);
                     if (options != null) {
                         _data.writeInt(1);
                         options.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(38, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(38, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().startUpdateCredentialsSession(response, account, authTokenType, expectActivityLaunch, options);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().startUpdateCredentialsSession(response, account, authTokenType, expectActivityLaunch, options);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public void finishSessionAsUser(IAccountManagerResponse response, Bundle sessionBundle, boolean expectActivityLaunch, Bundle appInfo, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2702,7 +2143,7 @@ public interface IAccountManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(expectActivityLaunch);
+                    _data.writeInt(expectActivityLaunch ? 1 : 0);
                     if (appInfo != null) {
                         _data.writeInt(1);
                         appInfo.writeToParcel(_data, 0);
@@ -2710,40 +2151,36 @@ public interface IAccountManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(userId);
-                    if (this.mRemote.transact(39, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(39, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().finishSessionAsUser(response, sessionBundle, expectActivityLaunch, appInfo, userId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().finishSessionAsUser(response, sessionBundle, expectActivityLaunch, appInfo, userId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public boolean someUserHasAccount(Account account) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (account != null) {
                         _data.writeInt(1);
                         account.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(40, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(40, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().someUserHasAccount(account);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2751,6 +2188,7 @@ public interface IAccountManager extends IInterface {
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public void isCredentialsUpdateSuggested(IAccountManagerResponse response, Account account, String statusToken) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2764,19 +2202,19 @@ public interface IAccountManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(statusToken);
-                    if (this.mRemote.transact(41, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(41, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().isCredentialsUpdateSuggested(response, account, statusToken);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().isCredentialsUpdateSuggested(response, account, statusToken);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public Map getPackagesAndVisibilityForAccount(Account account) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2788,13 +2226,13 @@ public interface IAccountManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(42, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(42, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPackagesAndVisibilityForAccount(account);
                     }
                     _reply.readException();
-                    Map _result = _reply.readHashMap(getClass().getClassLoader());
-                    _reply.recycle();
-                    _data.recycle();
+                    ClassLoader cl = getClass().getClassLoader();
+                    Map _result = _reply.readHashMap(cl);
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2802,12 +2240,12 @@ public interface IAccountManager extends IInterface {
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public boolean addAccountExplicitlyWithVisibility(Account account, String password, Bundle extras, Map visibility) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (account != null) {
                         _data.writeInt(1);
                         account.writeToParcel(_data, 0);
@@ -2822,15 +2260,12 @@ public interface IAccountManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeMap(visibility);
-                    if (!this.mRemote.transact(43, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(43, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().addAccountExplicitlyWithVisibility(account, password, extras, visibility);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2838,12 +2273,12 @@ public interface IAccountManager extends IInterface {
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public boolean setAccountVisibility(Account a, String packageName, int newVisibility) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (a != null) {
                         _data.writeInt(1);
                         a.writeToParcel(_data, 0);
@@ -2852,15 +2287,12 @@ public interface IAccountManager extends IInterface {
                     }
                     _data.writeString(packageName);
                     _data.writeInt(newVisibility);
-                    if (!this.mRemote.transact(44, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(44, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setAccountVisibility(a, packageName, newVisibility);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2868,6 +2300,7 @@ public interface IAccountManager extends IInterface {
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public int getAccountVisibility(Account a, String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2880,13 +2313,12 @@ public interface IAccountManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(packageName);
-                    if (!this.mRemote.transact(45, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(45, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAccountVisibility(a, packageName);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2894,6 +2326,7 @@ public interface IAccountManager extends IInterface {
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public Map getAccountsAndVisibilityForPackage(String packageName, String accountType) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2901,13 +2334,13 @@ public interface IAccountManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(packageName);
                     _data.writeString(accountType);
-                    if (!this.mRemote.transact(46, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(46, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAccountsAndVisibilityForPackage(packageName, accountType);
                     }
                     _reply.readException();
-                    Map _result = _reply.readHashMap(getClass().getClassLoader());
-                    _reply.recycle();
-                    _data.recycle();
+                    ClassLoader cl = getClass().getClassLoader();
+                    Map _result = _reply.readHashMap(cl);
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2915,6 +2348,7 @@ public interface IAccountManager extends IInterface {
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public void registerAccountListener(String[] accountTypes, String opPackageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2922,19 +2356,19 @@ public interface IAccountManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStringArray(accountTypes);
                     _data.writeString(opPackageName);
-                    if (this.mRemote.transact(47, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(47, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().registerAccountListener(accountTypes, opPackageName);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().registerAccountListener(accountTypes, opPackageName);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public void unregisterAccountListener(String[] accountTypes, String opPackageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2942,25 +2376,24 @@ public interface IAccountManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStringArray(accountTypes);
                     _data.writeString(opPackageName);
-                    if (this.mRemote.transact(48, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(48, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().unregisterAccountListener(accountTypes, opPackageName);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().unregisterAccountListener(accountTypes, opPackageName);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public boolean hasAccountAccess(Account account, String packageName, UserHandle userHandle) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (account != null) {
                         _data.writeInt(1);
                         account.writeToParcel(_data, 0);
@@ -2974,15 +2407,12 @@ public interface IAccountManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(49, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(49, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().hasAccountAccess(account, packageName, userHandle);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2990,6 +2420,7 @@ public interface IAccountManager extends IInterface {
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public IntentSender createRequestAccountAccessIntentSenderAsUser(Account account, String packageName, UserHandle userHandle) throws RemoteException {
                 IntentSender _result;
                 Parcel _data = Parcel.obtain();
@@ -3009,7 +2440,8 @@ public interface IAccountManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(50, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(50, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().createRequestAccountAccessIntentSenderAsUser(account, packageName, userHandle);
                     }
                     _reply.readException();
@@ -3018,29 +2450,26 @@ public interface IAccountManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    IntentSender _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.accounts.IAccountManager
             public void onAccountAccessed(String token) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(token);
-                    if (this.mRemote.transact(51, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(51, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().onAccountAccessed(token);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().onAccountAccessed(token);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -3049,11 +2478,11 @@ public interface IAccountManager extends IInterface {
         }
 
         public static boolean setDefaultImpl(IAccountManager impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IAccountManager getDefaultImpl() {

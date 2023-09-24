@@ -1,5 +1,6 @@
 package android.animation;
 
+/* loaded from: classes.dex */
 public abstract class TypeConverter<T, V> {
     private Class<T> mFromClass;
     private Class<V> mToClass;
@@ -11,13 +12,11 @@ public abstract class TypeConverter<T, V> {
         this.mToClass = toClass;
     }
 
-    /* access modifiers changed from: package-private */
-    public Class<V> getTargetType() {
+    Class<V> getTargetType() {
         return this.mToClass;
     }
 
-    /* access modifiers changed from: package-private */
-    public Class<T> getSourceType() {
+    Class<T> getSourceType() {
         return this.mFromClass;
     }
 }

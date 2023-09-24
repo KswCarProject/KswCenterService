@@ -1,5 +1,6 @@
 package com.android.internal.util;
 
+/* loaded from: classes4.dex */
 public final class VirtualRefBasePtr {
     private long mNativePtr;
 
@@ -19,12 +20,11 @@ public final class VirtualRefBasePtr {
     public void release() {
         if (this.mNativePtr != 0) {
             nDecStrong(this.mNativePtr);
-            this.mNativePtr = 0;
+            this.mNativePtr = 0L;
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         try {
             release();
         } finally {

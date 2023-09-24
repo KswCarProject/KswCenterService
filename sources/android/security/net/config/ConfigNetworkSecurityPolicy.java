@@ -2,6 +2,7 @@ package android.security.net.config;
 
 import libcore.net.NetworkSecurityPolicy;
 
+/* loaded from: classes3.dex */
 public class ConfigNetworkSecurityPolicy extends NetworkSecurityPolicy {
     private final ApplicationConfig mConfig;
 

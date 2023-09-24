@@ -1,14 +1,16 @@
 package com.wits.pms;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes5.dex */
 public interface IContentObserver extends IInterface {
     void onChange() throws RemoteException;
 
+    /* loaded from: classes5.dex */
     public static abstract class Stub extends Binder implements IContentObserver {
         private static final String DESCRIPTOR = "com.wits.pms.IContentObserver";
         static final int TRANSACTION_onChange = 1;
@@ -22,30 +24,33 @@ public interface IContentObserver extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IContentObserver)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IContentObserver)) {
+                return (IContentObserver) iin;
             }
-            return (IContentObserver) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code == 1) {
-                data.enforceInterface(DESCRIPTOR);
-                onChange();
-                reply.writeNoException();
-                return true;
-            } else if (code != 1598968902) {
+            if (code != 1) {
+                if (code == 1598968902) {
+                    reply.writeString(DESCRIPTOR);
+                    return true;
+                }
                 return super.onTransact(code, data, reply, flags);
-            } else {
-                reply.writeString(DESCRIPTOR);
-                return true;
             }
+            data.enforceInterface(DESCRIPTOR);
+            onChange();
+            reply.writeNoException();
+            return true;
         }
 
+        /* loaded from: classes5.dex */
         private static class Proxy implements IContentObserver {
             private IBinder mRemote;
 
@@ -53,6 +58,7 @@ public interface IContentObserver extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -61,6 +67,7 @@ public interface IContentObserver extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // com.wits.pms.IContentObserver
             public void onChange() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();

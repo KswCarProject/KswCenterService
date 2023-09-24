@@ -1,35 +1,36 @@
 package android.app;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.Looper;
-import android.os.Message;
-import android.os.StrictMode;
+import android.p007os.Handler;
+import android.p007os.HandlerThread;
+import android.p007os.Looper;
+import android.p007os.Message;
+import android.p007os.StrictMode;
 import com.android.internal.annotations.GuardedBy;
 import com.android.internal.util.ExponentiallyBucketedHistogram;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+/* loaded from: classes.dex */
 public class QueuedWork {
     private static final boolean DEBUG = false;
     private static final long DELAY = 100;
-    private static final String LOG_TAG = QueuedWork.class.getSimpleName();
     private static final long MAX_WAIT_TIME_MILLIS = 512;
-    private static int mNumWaits = 0;
-    @GuardedBy({"sLock"})
-    private static final ExponentiallyBucketedHistogram mWaitTimes = new ExponentiallyBucketedHistogram(16);
-    @GuardedBy({"sLock"})
-    private static boolean sCanDelay = true;
-    @GuardedBy({"sLock"})
+    private static final String LOG_TAG = QueuedWork.class.getSimpleName();
+    private static final Object sLock = new Object();
+    private static Object sProcessingWork = new Object();
     @UnsupportedAppUsage
+    @GuardedBy({"sLock"})
     private static final LinkedList<Runnable> sFinishers = new LinkedList<>();
     @GuardedBy({"sLock"})
     private static Handler sHandler = null;
-    private static final Object sLock = new Object();
-    private static Object sProcessingWork = new Object();
     @GuardedBy({"sLock"})
     private static final LinkedList<Runnable> sWork = new LinkedList<>();
+    @GuardedBy({"sLock"})
+    private static boolean sCanDelay = true;
+    @GuardedBy({"sLock"})
+    private static final ExponentiallyBucketedHistogram mWaitTimes = new ExponentiallyBucketedHistogram(16);
+    private static int mNumWaits = 0;
 
     @UnsupportedAppUsage
     private static Handler getHandler() {
@@ -78,18 +79,7 @@ public class QueuedWork {
                         finisher = sFinishers.poll();
                     }
                     if (finisher == null) {
-                        sCanDelay = true;
-                        synchronized (sLock) {
-                            long waitTime = System.currentTimeMillis() - startTime;
-                            if (waitTime > 0 || 0 != 0) {
-                                mWaitTimes.add(Long.valueOf(waitTime).intValue());
-                                mNumWaits++;
-                                if (mNumWaits % 1024 == 0 || waitTime > 512) {
-                                    mWaitTimes.log(LOG_TAG, "waited: ");
-                                }
-                            }
-                        }
-                        return;
+                        break;
                     }
                     finisher.run();
                 } catch (Throwable th) {
@@ -97,7 +87,16 @@ public class QueuedWork {
                     throw th;
                 }
             }
-            while (true) {
+            sCanDelay = true;
+            synchronized (sLock) {
+                long waitTime = System.currentTimeMillis() - startTime;
+                if (waitTime > 0 || 0 != 0) {
+                    mWaitTimes.add(Long.valueOf(waitTime).intValue());
+                    mNumWaits++;
+                    if (mNumWaits % 1024 == 0 || waitTime > 512) {
+                        mWaitTimes.log(LOG_TAG, "waited: ");
+                    }
+                }
             }
         } finally {
             StrictMode.setThreadPolicy(oldPolicy);
@@ -109,10 +108,10 @@ public class QueuedWork {
         Handler handler = getHandler();
         synchronized (sLock) {
             sWork.add(work);
-            if (!shouldDelay || !sCanDelay) {
-                handler.sendEmptyMessage(1);
-            } else {
+            if (shouldDelay && sCanDelay) {
                 handler.sendEmptyMessageDelayed(1, DELAY);
+            } else {
+                handler.sendEmptyMessage(1);
             }
         }
     }
@@ -125,7 +124,7 @@ public class QueuedWork {
         return z;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static void processPendingWork() {
         LinkedList<Runnable> work;
         synchronized (sProcessingWork) {
@@ -135,14 +134,16 @@ public class QueuedWork {
                 getHandler().removeMessages(1);
             }
             if (work.size() > 0) {
-                Iterator it = work.iterator();
+                Iterator<Runnable> it = work.iterator();
                 while (it.hasNext()) {
-                    ((Runnable) it.next()).run();
+                    Runnable w = it.next();
+                    w.run();
                 }
             }
         }
     }
 
+    /* loaded from: classes.dex */
     private static class QueuedWorkHandler extends Handler {
         static final int MSG_RUN = 1;
 
@@ -150,6 +151,7 @@ public class QueuedWork {
             super(looper);
         }
 
+        @Override // android.p007os.Handler
         public void handleMessage(Message msg) {
             if (msg.what == 1) {
                 QueuedWork.processPendingWork();

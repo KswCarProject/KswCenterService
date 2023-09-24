@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.icu.util.Calendar;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.provider.MediaStore;
 import android.text.format.DateUtils;
 import android.util.AttributeSet;
@@ -20,22 +20,22 @@ import android.view.autofill.AutofillValue;
 import android.view.inspector.InspectionCompanion;
 import android.view.inspector.PropertyMapper;
 import android.view.inspector.PropertyReader;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.function.IntFunction;
 
+/* loaded from: classes4.dex */
 public class DatePicker extends FrameLayout {
-    /* access modifiers changed from: private */
-    public static final String LOG_TAG = DatePicker.class.getSimpleName();
+    private static final String LOG_TAG = DatePicker.class.getSimpleName();
     public static final int MODE_CALENDAR = 2;
     public static final int MODE_SPINNER = 1;
     @UnsupportedAppUsage
     private final DatePickerDelegate mDelegate;
     private final int mMode;
 
+    /* loaded from: classes4.dex */
     interface DatePickerDelegate {
         void autofill(AutofillValue autofillValue);
 
@@ -95,17 +95,21 @@ public class DatePicker extends FrameLayout {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface DatePickerMode {
     }
 
+    /* loaded from: classes4.dex */
     public interface OnDateChangedListener {
         void onDateChanged(DatePicker datePicker, int i, int i2, int i3);
     }
 
+    /* loaded from: classes4.dex */
     public interface ValidationCallback {
         void onValidationChanged(boolean z);
     }
 
+    /* loaded from: classes4.dex */
     public final class InspectionCompanion implements android.view.inspector.InspectionCompanion<DatePicker> {
         private int mCalendarViewShownId;
         private int mDatePickerModeId;
@@ -118,17 +122,14 @@ public class DatePicker extends FrameLayout {
         private int mSpinnersShownId;
         private int mYearId;
 
+        @Override // android.view.inspector.InspectionCompanion
         public void mapProperties(PropertyMapper propertyMapper) {
             this.mCalendarViewShownId = propertyMapper.mapBoolean("calendarViewShown", 16843596);
             SparseArray<String> datePickerModeEnumMapping = new SparseArray<>();
             datePickerModeEnumMapping.put(1, "spinner");
             datePickerModeEnumMapping.put(2, "calendar");
             Objects.requireNonNull(datePickerModeEnumMapping);
-            this.mDatePickerModeId = propertyMapper.mapIntEnum("datePickerMode", 16843955, new IntFunction() {
-                public final Object apply(int i) {
-                    return (String) SparseArray.this.get(i);
-                }
-            });
+            this.mDatePickerModeId = propertyMapper.mapIntEnum("datePickerMode", 16843955, new $$Lambda$QY3N4tzLteuFdjRnyJFCbR1ajSI(datePickerModeEnumMapping));
             this.mDayOfMonthId = propertyMapper.mapInt("dayOfMonth", 0);
             this.mFirstDayOfWeekId = propertyMapper.mapInt("firstDayOfWeek", 16843581);
             this.mMaxDateId = propertyMapper.mapLong("maxDate", 16843584);
@@ -139,25 +140,25 @@ public class DatePicker extends FrameLayout {
             this.mPropertiesMapped = true;
         }
 
+        @Override // android.view.inspector.InspectionCompanion
         public void readProperties(DatePicker node, PropertyReader propertyReader) {
-            if (this.mPropertiesMapped) {
-                propertyReader.readBoolean(this.mCalendarViewShownId, node.getCalendarViewShown());
-                propertyReader.readIntEnum(this.mDatePickerModeId, node.getMode());
-                propertyReader.readInt(this.mDayOfMonthId, node.getDayOfMonth());
-                propertyReader.readInt(this.mFirstDayOfWeekId, node.getFirstDayOfWeek());
-                propertyReader.readLong(this.mMaxDateId, node.getMaxDate());
-                propertyReader.readLong(this.mMinDateId, node.getMinDate());
-                propertyReader.readInt(this.mMonthId, node.getMonth());
-                propertyReader.readBoolean(this.mSpinnersShownId, node.getSpinnersShown());
-                propertyReader.readInt(this.mYearId, node.getYear());
-                return;
+            if (!this.mPropertiesMapped) {
+                throw new InspectionCompanion.UninitializedPropertyMapException();
             }
-            throw new InspectionCompanion.UninitializedPropertyMapException();
+            propertyReader.readBoolean(this.mCalendarViewShownId, node.getCalendarViewShown());
+            propertyReader.readIntEnum(this.mDatePickerModeId, node.getMode());
+            propertyReader.readInt(this.mDayOfMonthId, node.getDayOfMonth());
+            propertyReader.readInt(this.mFirstDayOfWeekId, node.getFirstDayOfWeek());
+            propertyReader.readLong(this.mMaxDateId, node.getMaxDate());
+            propertyReader.readLong(this.mMinDateId, node.getMinDate());
+            propertyReader.readInt(this.mMonthId, node.getMonth());
+            propertyReader.readBoolean(this.mSpinnersShownId, node.getSpinnersShown());
+            propertyReader.readInt(this.mYearId, node.getYear());
         }
     }
 
     public DatePicker(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public DatePicker(Context context, AttributeSet attrs) {
@@ -168,39 +169,34 @@ public class DatePicker extends FrameLayout {
         this(context, attrs, defStyleAttr, 0);
     }
 
-    public DatePicker(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public DatePicker(final Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         if (getImportantForAutofill() == 0) {
             setImportantForAutofill(1);
         }
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.DatePicker, defStyleAttr, defStyleRes);
-        saveAttributeDataForStyleable(context, R.styleable.DatePicker, attrs, a, defStyleAttr, defStyleRes);
+        TypedArray a = context.obtainStyledAttributes(attrs, C3132R.styleable.DatePicker, defStyleAttr, defStyleRes);
+        saveAttributeDataForStyleable(context, C3132R.styleable.DatePicker, attrs, a, defStyleAttr, defStyleRes);
         boolean isDialogMode = a.getBoolean(17, false);
         int requestedMode = a.getInt(16, 1);
         int firstDayOfWeek = a.getInt(3, 0);
         a.recycle();
-        if (requestedMode != 2 || !isDialogMode) {
+        if (requestedMode == 2 && isDialogMode) {
+            this.mMode = context.getResources().getInteger(C3132R.integer.date_picker_mode);
+        } else {
             this.mMode = requestedMode;
-        } else {
-            this.mMode = context.getResources().getInteger(R.integer.date_picker_mode);
         }
-        if (this.mMode != 2) {
-            this.mDelegate = createSpinnerUIDelegate(context, attrs, defStyleAttr, defStyleRes);
-        } else {
+        if (this.mMode == 2) {
             this.mDelegate = createCalendarUIDelegate(context, attrs, defStyleAttr, defStyleRes);
+        } else {
+            this.mDelegate = createSpinnerUIDelegate(context, attrs, defStyleAttr, defStyleRes);
         }
         if (firstDayOfWeek != 0) {
             setFirstDayOfWeek(firstDayOfWeek);
         }
-        this.mDelegate.setAutoFillChangeListener(new OnDateChangedListener(context) {
-            private final /* synthetic */ Context f$1;
-
-            {
-                this.f$1 = r2;
-            }
-
+        this.mDelegate.setAutoFillChangeListener(new OnDateChangedListener() { // from class: android.widget.-$$Lambda$DatePicker$AnJPL5BrPXPJa-Oc-WUAB-HJq84
+            @Override // android.widget.DatePicker.OnDateChangedListener
             public final void onDateChanged(DatePicker datePicker, int i, int i2, int i3) {
-                DatePicker.lambda$new$0(DatePicker.this, this.f$1, datePicker, i, i2, i3);
+                DatePicker.lambda$new$0(DatePicker.this, context, datePicker, i, i2, i3);
             }
         });
     }
@@ -269,32 +265,38 @@ public class DatePicker extends FrameLayout {
         this.mDelegate.setValidationCallback(callback);
     }
 
+    @Override // android.view.View
     public void setEnabled(boolean enabled) {
-        if (this.mDelegate.isEnabled() != enabled) {
-            super.setEnabled(enabled);
-            this.mDelegate.setEnabled(enabled);
+        if (this.mDelegate.isEnabled() == enabled) {
+            return;
         }
+        super.setEnabled(enabled);
+        this.mDelegate.setEnabled(enabled);
     }
 
+    @Override // android.view.View
     public boolean isEnabled() {
         return this.mDelegate.isEnabled();
     }
 
+    @Override // android.view.ViewGroup, android.view.View
     public boolean dispatchPopulateAccessibilityEventInternal(AccessibilityEvent event) {
         return this.mDelegate.dispatchPopulateAccessibilityEvent(event);
     }
 
+    @Override // android.view.View
     public void onPopulateAccessibilityEventInternal(AccessibilityEvent event) {
         super.onPopulateAccessibilityEventInternal(event);
         this.mDelegate.onPopulateAccessibilityEvent(event);
     }
 
+    @Override // android.widget.FrameLayout, android.view.ViewGroup, android.view.View
     public CharSequence getAccessibilityClassName() {
         return DatePicker.class.getName();
     }
 
-    /* access modifiers changed from: protected */
-    public void onConfigurationChanged(Configuration newConfig) {
+    @Override // android.view.View
+    protected void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         this.mDelegate.onConfigurationChanged(newConfig);
     }
@@ -335,23 +337,25 @@ public class DatePicker extends FrameLayout {
         this.mDelegate.setSpinnersShown(shown);
     }
 
-    /* access modifiers changed from: protected */
-    public void dispatchRestoreInstanceState(SparseArray<Parcelable> container) {
+    @Override // android.view.ViewGroup, android.view.View
+    protected void dispatchRestoreInstanceState(SparseArray<Parcelable> container) {
         dispatchThawSelfOnly(container);
     }
 
-    /* access modifiers changed from: protected */
-    public Parcelable onSaveInstanceState() {
-        return this.mDelegate.onSaveInstanceState(super.onSaveInstanceState());
+    @Override // android.view.View
+    protected Parcelable onSaveInstanceState() {
+        Parcelable superState = super.onSaveInstanceState();
+        return this.mDelegate.onSaveInstanceState(superState);
     }
 
-    /* access modifiers changed from: protected */
-    public void onRestoreInstanceState(Parcelable state) {
+    @Override // android.view.View
+    protected void onRestoreInstanceState(Parcelable state) {
         View.BaseSavedState ss = (View.BaseSavedState) state;
         super.onRestoreInstanceState(ss.getSuperState());
         this.mDelegate.onRestoreInstanceState(ss);
     }
 
+    /* loaded from: classes4.dex */
     static abstract class AbstractDatePickerDelegate implements DatePickerDelegate {
         protected OnDateChangedListener mAutoFillChangeListener;
         private long mAutofilledValue;
@@ -368,30 +372,33 @@ public class DatePicker extends FrameLayout {
             setCurrentLocale(Locale.getDefault());
         }
 
-        /* access modifiers changed from: protected */
-        public void setCurrentLocale(Locale locale) {
+        protected void setCurrentLocale(Locale locale) {
             if (!locale.equals(this.mCurrentLocale)) {
                 this.mCurrentLocale = locale;
                 onLocaleChanged(locale);
             }
         }
 
+        @Override // android.widget.DatePicker.DatePickerDelegate
         public void setOnDateChangedListener(OnDateChangedListener callback) {
             this.mOnDateChangedListener = callback;
         }
 
+        @Override // android.widget.DatePicker.DatePickerDelegate
         public void setAutoFillChangeListener(OnDateChangedListener callback) {
             this.mAutoFillChangeListener = callback;
         }
 
+        @Override // android.widget.DatePicker.DatePickerDelegate
         public void setValidationCallback(ValidationCallback callback) {
             this.mValidationCallback = callback;
         }
 
+        @Override // android.widget.DatePicker.DatePickerDelegate
         public final void autofill(AutofillValue value) {
             if (value == null || !value.isDate()) {
-                String access$000 = DatePicker.LOG_TAG;
-                Log.w(access$000, value + " could not be autofilled into " + this);
+                String str = DatePicker.LOG_TAG;
+                Log.m64w(str, value + " could not be autofilled into " + this);
                 return;
             }
             long time = value.getDateValue();
@@ -401,6 +408,7 @@ public class DatePicker extends FrameLayout {
             this.mAutofilledValue = time;
         }
 
+        @Override // android.widget.DatePicker.DatePickerDelegate
         public final AutofillValue getAutofillValue() {
             long time;
             if (this.mAutofilledValue != 0) {
@@ -411,37 +419,39 @@ public class DatePicker extends FrameLayout {
             return AutofillValue.forDate(time);
         }
 
-        /* access modifiers changed from: protected */
-        public void resetAutofilledValue() {
-            this.mAutofilledValue = 0;
+        protected void resetAutofilledValue() {
+            this.mAutofilledValue = 0L;
         }
 
-        /* access modifiers changed from: protected */
-        public void onValidationChanged(boolean valid) {
+        protected void onValidationChanged(boolean valid) {
             if (this.mValidationCallback != null) {
                 this.mValidationCallback.onValidationChanged(valid);
             }
         }
 
-        /* access modifiers changed from: protected */
-        public void onLocaleChanged(Locale locale) {
+        protected void onLocaleChanged(Locale locale) {
         }
 
+        @Override // android.widget.DatePicker.DatePickerDelegate
         public void onPopulateAccessibilityEvent(AccessibilityEvent event) {
             event.getText().add(getFormattedCurrentDate());
         }
 
-        /* access modifiers changed from: protected */
-        public String getFormattedCurrentDate() {
+        protected String getFormattedCurrentDate() {
             return DateUtils.formatDateTime(this.mContext, this.mCurrentDate.getTimeInMillis(), 22);
         }
 
+        /* loaded from: classes4.dex */
         static class SavedState extends View.BaseSavedState {
-            public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
+            public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() { // from class: android.widget.DatePicker.AbstractDatePickerDelegate.SavedState.1
+                /* JADX WARN: Can't rename method to resolve collision */
+                @Override // android.p007os.Parcelable.Creator
                 public SavedState createFromParcel(Parcel in) {
                     return new SavedState(in);
                 }
 
+                /* JADX WARN: Can't rename method to resolve collision */
+                @Override // android.p007os.Parcelable.Creator
                 public SavedState[] newArray(int size) {
                     return new SavedState[size];
                 }
@@ -483,6 +493,7 @@ public class DatePicker extends FrameLayout {
                 this.mListPositionOffset = in.readInt();
             }
 
+            @Override // android.view.View.BaseSavedState, android.view.AbsSavedState, android.p007os.Parcelable
             public void writeToParcel(Parcel dest, int flags) {
                 super.writeToParcel(dest, flags);
                 dest.writeInt(this.mSelectedYear);
@@ -529,21 +540,25 @@ public class DatePicker extends FrameLayout {
         }
     }
 
+    @Override // android.view.ViewGroup, android.view.View
     public void dispatchProvideAutofillStructure(ViewStructure structure, int flags) {
         structure.setAutofillId(getAutofillId());
         onProvideAutofillStructure(structure, flags);
     }
 
+    @Override // android.view.View
     public void autofill(AutofillValue value) {
         if (isEnabled()) {
             this.mDelegate.autofill(value);
         }
     }
 
+    @Override // android.view.View
     public int getAutofillType() {
         return isEnabled() ? 4 : 0;
     }
 
+    @Override // android.view.View
     public AutofillValue getAutofillValue() {
         if (isEnabled()) {
             return this.mDelegate.getAutofillValue();

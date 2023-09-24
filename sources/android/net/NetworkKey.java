@@ -4,19 +4,24 @@ import android.annotation.SystemApi;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiSsid;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
 import java.util.Objects;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public class NetworkKey implements Parcelable {
-    public static final Parcelable.Creator<NetworkKey> CREATOR = new Parcelable.Creator<NetworkKey>() {
+    public static final Parcelable.Creator<NetworkKey> CREATOR = new Parcelable.Creator<NetworkKey>() { // from class: android.net.NetworkKey.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NetworkKey createFromParcel(Parcel in) {
             return new NetworkKey(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NetworkKey[] newArray(int size) {
             return new NetworkKey[size];
         }
@@ -27,14 +32,15 @@ public class NetworkKey implements Parcelable {
     public final WifiKey wifiKey;
 
     public static NetworkKey createFromScanResult(ScanResult result) {
-        if (!(result == null || result.wifiSsid == null)) {
+        if (result != null && result.wifiSsid != null) {
             String ssid = result.wifiSsid.toString();
             String bssid = result.BSSID;
             if (!TextUtils.isEmpty(ssid) && !ssid.equals(WifiSsid.NONE) && !TextUtils.isEmpty(bssid)) {
                 try {
-                    return new NetworkKey(new WifiKey(String.format("\"%s\"", new Object[]{ssid}), bssid));
+                    WifiKey wifiKey = new WifiKey(String.format("\"%s\"", ssid), bssid);
+                    return new NetworkKey(wifiKey);
                 } catch (IllegalArgumentException e) {
-                    Log.e(TAG, "Unable to create WifiKey.", e);
+                    Log.m69e(TAG, "Unable to create WifiKey.", e);
                     return null;
                 }
             }
@@ -48,9 +54,10 @@ public class NetworkKey implements Parcelable {
             String bssid = wifiInfo.getBSSID();
             if (!TextUtils.isEmpty(ssid) && !ssid.equals(WifiSsid.NONE) && !TextUtils.isEmpty(bssid)) {
                 try {
-                    return new NetworkKey(new WifiKey(ssid, bssid));
+                    WifiKey wifiKey = new WifiKey(ssid, bssid);
+                    return new NetworkKey(wifiKey);
                 } catch (IllegalArgumentException e) {
-                    Log.e(TAG, "Unable to create WifiKey.", e);
+                    Log.m69e(TAG, "Unable to create WifiKey.", e);
                     return null;
                 }
             }
@@ -58,9 +65,9 @@ public class NetworkKey implements Parcelable {
         return null;
     }
 
-    public NetworkKey(WifiKey wifiKey2) {
+    public NetworkKey(WifiKey wifiKey) {
         this.type = 1;
-        this.wifiKey = wifiKey2;
+        this.wifiKey = wifiKey;
     }
 
     private NetworkKey(Parcel in) {
@@ -72,10 +79,12 @@ public class NetworkKey implements Parcelable {
         throw new IllegalArgumentException("Parcel has unknown type: " + this.type);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(this.type);
         if (this.type == 1) {
@@ -93,20 +102,20 @@ public class NetworkKey implements Parcelable {
             return false;
         }
         NetworkKey that = (NetworkKey) o;
-        if (this.type != that.type || !Objects.equals(this.wifiKey, that.wifiKey)) {
-            return false;
+        if (this.type == that.type && Objects.equals(this.wifiKey, that.wifiKey)) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(this.type), this.wifiKey});
+        return Objects.hash(Integer.valueOf(this.type), this.wifiKey);
     }
 
     public String toString() {
-        if (this.type != 1) {
-            return "InvalidKey";
+        if (this.type == 1) {
+            return this.wifiKey.toString();
         }
-        return this.wifiKey.toString();
+        return "InvalidKey";
     }
 }

@@ -1,7 +1,7 @@
 package android.service.autofill.augmented;
 
 import android.annotation.SystemApi;
-import android.os.RemoteException;
+import android.p007os.RemoteException;
 import android.service.autofill.augmented.AugmentedAutofillService;
 import android.util.Log;
 import android.util.Pair;
@@ -11,6 +11,7 @@ import com.android.internal.util.Preconditions;
 import java.util.List;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class FillController {
     private static final String TAG = FillController.class.getSimpleName();
     private final AugmentedAutofillService.AutofillProxy mProxy;
@@ -23,7 +24,7 @@ public final class FillController {
         Preconditions.checkNotNull(values);
         if (AugmentedAutofillService.sDebug) {
             String str = TAG;
-            Log.d(str, "autofill() with " + values.size() + " values");
+            Log.m72d(str, "autofill() with " + values.size() + " values");
         }
         try {
             this.mProxy.autofill(values);

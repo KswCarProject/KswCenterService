@@ -1,5 +1,6 @@
 package com.android.server.biometrics.face;
 
+/* loaded from: classes4.dex */
 public final class FaceActionStatsProto {
     public static final long ACCEPT = 1120986464257L;
     public static final long ACQUIRE = 1120986464259L;

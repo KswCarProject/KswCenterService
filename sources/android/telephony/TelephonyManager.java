@@ -12,18 +12,18 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkStats;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.ParcelableException;
-import android.os.PersistableBundle;
-import android.os.Process;
-import android.os.RemoteException;
-import android.os.ResultReceiver;
-import android.os.ServiceManager;
-import android.os.SystemProperties;
-import android.os.WorkSource;
+import android.p007os.AsyncTask;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.Handler;
+import android.p007os.ParcelableException;
+import android.p007os.PersistableBundle;
+import android.p007os.Process;
+import android.p007os.RemoteException;
+import android.p007os.ResultReceiver;
+import android.p007os.ServiceManager;
+import android.p007os.SystemProperties;
+import android.p007os.WorkSource;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.service.carrier.CarrierIdentifier;
@@ -43,7 +43,7 @@ import android.util.Log;
 import android.util.Pair;
 import android.util.SeempLog;
 import com.android.ims.internal.IImsServiceFeatureCallback;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.logging.nano.MetricsProto;
 import com.android.internal.telecom.ITelecomService;
@@ -79,6 +79,7 @@ import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/* loaded from: classes.dex */
 public class TelephonyManager {
     @SystemApi
     public static final String ACTION_ANOMALY_REPORTED = "android.telephony.action.ANOMALY_REPORTED";
@@ -90,8 +91,8 @@ public class TelephonyManager {
     public static final String ACTION_NETWORK_COUNTRY_CHANGED = "android.telephony.action.NETWORK_COUNTRY_CHANGED";
     public static final String ACTION_PHONE_STATE_CHANGED = "android.intent.action.PHONE_STATE";
     public static final String ACTION_PRECISE_CALL_STATE_CHANGED = "android.intent.action.PRECISE_CALL_STATE";
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public static final String ACTION_PRECISE_DATA_CONNECTION_STATE_CHANGED = "android.intent.action.PRECISE_DATA_CONNECTION_STATE_CHANGED";
     public static final String ACTION_PRIMARY_SUBSCRIPTION_LIST_CHANGED = "android.telephony.action.PRIMARY_SUBSCRIPTION_LIST_CHANGED";
     public static final String ACTION_RESPOND_VIA_MESSAGE = "android.intent.action.RESPOND_VIA_MESSAGE";
@@ -194,9 +195,6 @@ public class TelephonyManager {
     public static final String EXTRA_SPECIFIC_CARRIER_ID = "android.telephony.extra.SPECIFIC_CARRIER_ID";
     public static final String EXTRA_SPECIFIC_CARRIER_NAME = "android.telephony.extra.SPECIFIC_CARRIER_NAME";
     public static final String EXTRA_STATE = "state";
-    public static final String EXTRA_STATE_IDLE = PhoneConstants.State.IDLE.toString();
-    public static final String EXTRA_STATE_OFFHOOK = PhoneConstants.State.OFFHOOK.toString();
-    public static final String EXTRA_STATE_RINGING = PhoneConstants.State.RINGING.toString();
     public static final String EXTRA_SUBSCRIPTION_ID = "android.telephony.extra.SUBSCRIPTION_ID";
     @SystemApi
     public static final String EXTRA_VISUAL_VOICEMAIL_ENABLED_BY_USER_BOOL = "android.telephony.extra.VISUAL_VOICEMAIL_ENABLED_BY_USER_BOOL";
@@ -402,41 +400,51 @@ public class TelephonyManager {
     public static final int USSD_RETURN_SUCCESS = 100;
     public static final String VVM_TYPE_CVVM = "vvm_type_cvvm";
     public static final String VVM_TYPE_OMTP = "vvm_type_omtp";
-    private static String multiSimConfig = SystemProperties.get(TelephonyProperties.PROPERTY_MULTI_SIM_CONFIG);
-    private static TelephonyManager sInstance = new TelephonyManager();
-    private static final String sKernelCmdLine = getProcCmdLine();
-    private static final String sLteOnCdmaProductType = SystemProperties.get(TelephonyProperties.PROPERTY_LTE_ON_CDMA_PRODUCT_TYPE, "");
-    private static final Pattern sProductTypePattern = Pattern.compile("\\sproduct_type\\s*=\\s*(\\w+)");
     private final Context mContext;
     private final int mSubId;
     @UnsupportedAppUsage
     private SubscriptionManager mSubscriptionManager;
     private TelephonyScanManager mTelephonyScanManager;
+    private static String multiSimConfig = SystemProperties.get(TelephonyProperties.PROPERTY_MULTI_SIM_CONFIG);
+    private static TelephonyManager sInstance = new TelephonyManager();
+    public static final String EXTRA_STATE_IDLE = PhoneConstants.State.IDLE.toString();
+    public static final String EXTRA_STATE_RINGING = PhoneConstants.State.RINGING.toString();
+    public static final String EXTRA_STATE_OFFHOOK = PhoneConstants.State.OFFHOOK.toString();
+    private static final String sKernelCmdLine = getProcCmdLine();
+    private static final Pattern sProductTypePattern = Pattern.compile("\\sproduct_type\\s*=\\s*(\\w+)");
+    private static final String sLteOnCdmaProductType = SystemProperties.get(TelephonyProperties.PROPERTY_LTE_ON_CDMA_PRODUCT_TYPE, "");
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface CallState {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface DataState {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface DefaultSubscriptionSelectType {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface IndicationFilters {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface IndicationUpdateMode {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface IsMultiSimSupportedResult {
     }
 
+    /* loaded from: classes.dex */
     public enum MultiSimVariants {
         DSDS,
         DSDA,
@@ -445,53 +453,66 @@ public class TelephonyManager {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface NetworkSelectionMode {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface NetworkType {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface NetworkTypeBitMask {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface PrefNetworkMode {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface RadioPowerState {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface SetCarrierRestrictionResult {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface SetOpportunisticSubscriptionResult {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface SimActivationState {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface SimCombinationWarningType {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface SrvccState {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface UiccAppType {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface UpdateAvailableNetworksResult {
     }
 
+    /* loaded from: classes.dex */
     public interface WifiCallingChoices {
         public static final int ALWAYS_USE = 0;
         public static final int ASK_EVERY_TIME = 1;
@@ -521,8 +542,8 @@ public class TelephonyManager {
         this.mSubId = -1;
     }
 
-    @Deprecated
     @UnsupportedAppUsage(maxTargetSdk = 28)
+    @Deprecated
     public static TelephonyManager getDefault() {
         return sInstance;
     }
@@ -554,18 +575,13 @@ public class TelephonyManager {
     }
 
     public int getPhoneCount() {
-        ConnectivityManager cm;
         switch (getMultiSimConfiguration()) {
             case UNKNOWN:
-                if (this.mContext == null) {
-                    cm = null;
-                } else {
-                    cm = (ConnectivityManager) this.mContext.getSystemService("connectivity");
+                ConnectivityManager cm = this.mContext == null ? null : (ConnectivityManager) this.mContext.getSystemService("connectivity");
+                if (!isVoiceCapable() && !isSmsCapable() && cm != null && !cm.isNetworkSupported(0)) {
+                    return 0;
                 }
-                if (isVoiceCapable() || isSmsCapable() || cm == null || cm.isNetworkSupported(0)) {
-                    return 1;
-                }
-                return 0;
+                return 1;
             case DSDS:
             case DSDA:
                 return 2;
@@ -619,21 +635,21 @@ public class TelephonyManager {
 
     @Deprecated
     public String getDeviceId() {
-        Log.d(TAG, "fang getDeviceId() just 09.");
+        Log.m72d(TAG, "fang getDeviceId() just 09.");
         try {
             String imei = getTelephonyProperty(KEY_IMEI_STR, "none");
-            Log.d(TAG, " getDeviceId() imei01 = " + imei);
+            Log.m72d(TAG, " getDeviceId() imei01 = " + imei);
             String imei2 = getImei();
-            Log.d(TAG, " getDeviceId() imei02 = " + imei2);
+            Log.m72d(TAG, " getDeviceId() imei02 = " + imei2);
             if (imei2 != null && !imei2.isEmpty() && !imei2.equals("none") && imei2.length() >= 15 && !imei2.equals(imei)) {
-                Log.d(TAG, " getDeviceId() write to prop,imei02 = " + imei2);
+                Log.m72d(TAG, " getDeviceId() write to prop,imei02 = " + imei2);
                 imei = imei2;
                 setTelephonyProperty(KEY_IMEI_STR, imei2);
             }
-            Log.d(TAG, " getDeviceId() imei03 = " + getTelephonyProperty(KEY_IMEI_STR, "none"));
+            Log.m72d(TAG, " getDeviceId() imei03 = " + getTelephonyProperty(KEY_IMEI_STR, "none"));
             return imei;
         } catch (Exception ex) {
-            Log.d(TAG, " getDeviceId() call exception");
+            Log.m72d(TAG, " getDeviceId() call exception");
             ex.printStackTrace();
             return null;
         }
@@ -748,7 +764,7 @@ public class TelephonyManager {
             }
             String nai = info.getNaiForSubscriber(subId, this.mContext.getOpPackageName());
             if (Log.isLoggable(TAG, 2)) {
-                Rlog.v(TAG, "Nai = " + nai);
+                Rlog.m82v(TAG, "Nai = " + nai);
             }
             return nai;
         } catch (RemoteException e) {
@@ -764,26 +780,22 @@ public class TelephonyManager {
         try {
             ITelephony telephony = getITelephony();
             if (telephony == null) {
-                Rlog.d(TAG, "getCellLocation returning null because telephony is null");
+                Rlog.m88d(TAG, "getCellLocation returning null because telephony is null");
                 return null;
             }
             Bundle bundle = telephony.getCellLocation(this.mContext.getOpPackageName());
-            if (bundle != null) {
-                if (!bundle.isEmpty()) {
-                    CellLocation cl = CellLocation.newFromBundle(bundle);
-                    if (cl != null) {
-                        if (!cl.isEmpty()) {
-                            return cl;
-                        }
-                    }
-                    Rlog.d(TAG, "getCellLocation returning null because CellLocation is empty or phone type doesn't match CellLocation type");
-                    return null;
+            if (bundle != null && !bundle.isEmpty()) {
+                CellLocation cl = CellLocation.newFromBundle(bundle);
+                if (cl != null && !cl.isEmpty()) {
+                    return cl;
                 }
+                Rlog.m88d(TAG, "getCellLocation returning null because CellLocation is empty or phone type doesn't match CellLocation type");
+                return null;
             }
-            Rlog.d(TAG, "getCellLocation returning null because CellLocation is unavailable");
+            Rlog.m88d(TAG, "getCellLocation returning null because CellLocation is unavailable");
             return null;
         } catch (RemoteException ex) {
-            Rlog.d(TAG, "getCellLocation returning null due to RemoteException " + ex);
+            Rlog.m88d(TAG, "getCellLocation returning null due to RemoteException " + ex);
             return null;
         }
     }
@@ -798,7 +810,8 @@ public class TelephonyManager {
             if (telephony != null) {
                 telephony.enableLocationUpdatesForSubscriber(subId);
             }
-        } catch (RemoteException | NullPointerException e) {
+        } catch (RemoteException e) {
+        } catch (NullPointerException e2) {
         }
     }
 
@@ -812,7 +825,8 @@ public class TelephonyManager {
             if (telephony != null) {
                 telephony.disableLocationUpdatesForSubscriber(subId);
             }
-        } catch (RemoteException | NullPointerException e) {
+        } catch (RemoteException e) {
+        } catch (NullPointerException e2) {
         }
     }
 
@@ -875,7 +889,7 @@ public class TelephonyManager {
 
     @UnsupportedAppUsage
     private int getPhoneTypeFromProperty(int phoneId) {
-        String type = getTelephonyProperty(phoneId, TelephonyProperties.CURRENT_ACTIVE_PHONE, (String) null);
+        String type = getTelephonyProperty(phoneId, TelephonyProperties.CURRENT_ACTIVE_PHONE, null);
         if (type == null || type.isEmpty()) {
             return getPhoneTypeFromNetworkType(phoneId);
         }
@@ -887,11 +901,11 @@ public class TelephonyManager {
     }
 
     private int getPhoneTypeFromNetworkType(int phoneId) {
-        String mode = getTelephonyProperty(phoneId, "ro.telephony.default_network", (String) null);
-        if (mode == null || mode.isEmpty()) {
-            return 0;
+        String mode = getTelephonyProperty(phoneId, "ro.telephony.default_network", null);
+        if (mode != null && !mode.isEmpty()) {
+            return getPhoneType(Integer.parseInt(mode));
         }
-        return getPhoneType(Integer.parseInt(mode));
+        return 0;
     }
 
     @UnsupportedAppUsage
@@ -923,10 +937,7 @@ public class TelephonyManager {
             case 21:
                 return 2;
             case 11:
-                if (getLteOnCdmaModeStatic() == 1) {
-                    return 2;
-                }
-                return 1;
+                return getLteOnCdmaModeStatic() == 1 ? 2 : 1;
             default:
                 return 1;
         }
@@ -937,37 +948,36 @@ public class TelephonyManager {
         String cmdline = "";
         FileInputStream is = null;
         try {
-            FileInputStream is2 = new FileInputStream("/proc/cmdline");
-            byte[] buffer = new byte[2048];
-            int count = is2.read(buffer);
-            if (count > 0) {
-                cmdline = new String(buffer, 0, count);
-            }
             try {
-                is2.close();
-            } catch (IOException e) {
-            }
-        } catch (IOException e2) {
-            Rlog.d(TAG, "No /proc/cmdline exception=" + e2);
-            if (is != null) {
+                is = new FileInputStream("/proc/cmdline");
+                byte[] buffer = new byte[2048];
+                int count = is.read(buffer);
+                if (count > 0) {
+                    cmdline = new String(buffer, 0, count);
+                }
                 is.close();
+            } catch (IOException e) {
+                Rlog.m88d(TAG, "No /proc/cmdline exception=" + e);
+                if (is != null) {
+                    is.close();
+                }
             }
+            Rlog.m88d(TAG, "/proc/cmdline=" + cmdline);
+            return cmdline;
         } catch (Throwable th) {
             if (is != null) {
                 try {
                     is.close();
-                } catch (IOException e3) {
+                } catch (IOException e2) {
                 }
             }
             throw th;
         }
-        Rlog.d(TAG, "/proc/cmdline=" + cmdline);
-        return cmdline;
     }
 
     @SystemApi
     public static long getMaxNumberVerificationTimeoutMillis() {
-        return 60000;
+        return 60000L;
     }
 
     @UnsupportedAppUsage
@@ -988,7 +998,7 @@ public class TelephonyManager {
                 retVal = 0;
             }
         }
-        Rlog.d(TAG, "getLteOnCdmaMode=" + retVal + " curVal=" + curVal + " product_type='" + productType + "' lteOnCdmaProductType='" + sLteOnCdmaProductType + "'");
+        Rlog.m88d(TAG, "getLteOnCdmaMode=" + retVal + " curVal=" + curVal + " product_type='" + productType + "' lteOnCdmaProductType='" + sLteOnCdmaProductType + "'");
         return retVal;
     }
 
@@ -998,7 +1008,8 @@ public class TelephonyManager {
 
     @UnsupportedAppUsage(maxTargetSdk = 28)
     public String getNetworkOperatorName(int subId) {
-        return getTelephonyProperty(SubscriptionManager.getPhoneId(subId), TelephonyProperties.PROPERTY_OPERATOR_ALPHA, "");
+        int phoneId = SubscriptionManager.getPhoneId(subId);
+        return getTelephonyProperty(phoneId, TelephonyProperties.PROPERTY_OPERATOR_ALPHA, "");
     }
 
     public String getNetworkOperator() {
@@ -1007,7 +1018,8 @@ public class TelephonyManager {
 
     @UnsupportedAppUsage(maxTargetSdk = 28)
     public String getNetworkOperator(int subId) {
-        return getNetworkOperatorForPhone(SubscriptionManager.getPhoneId(subId));
+        int phoneId = SubscriptionManager.getPhoneId(subId);
+        return getNetworkOperatorForPhone(phoneId);
     }
 
     @UnsupportedAppUsage
@@ -1020,7 +1032,8 @@ public class TelephonyManager {
     }
 
     public PersistableBundle getCarrierConfig() {
-        return ((CarrierConfigManager) this.mContext.getSystemService(CarrierConfigManager.class)).getConfigForSubId(getSubId());
+        CarrierConfigManager carrierConfigManager = (CarrierConfigManager) this.mContext.getSystemService(CarrierConfigManager.class);
+        return carrierConfigManager.getConfigForSubId(getSubId());
     }
 
     public boolean isNetworkRoaming() {
@@ -1029,7 +1042,8 @@ public class TelephonyManager {
 
     @UnsupportedAppUsage
     public boolean isNetworkRoaming(int subId) {
-        return Boolean.parseBoolean(getTelephonyProperty(SubscriptionManager.getPhoneId(subId), TelephonyProperties.PROPERTY_OPERATOR_ISROAMING, (String) null));
+        int phoneId = SubscriptionManager.getPhoneId(subId);
+        return Boolean.parseBoolean(getTelephonyProperty(phoneId, TelephonyProperties.PROPERTY_OPERATOR_ISROAMING, null));
     }
 
     public String getNetworkCountryIso() {
@@ -1045,10 +1059,7 @@ public class TelephonyManager {
     public String getNetworkCountryIsoForPhone(int phoneId) {
         try {
             ITelephony telephony = getITelephony();
-            if (telephony == null) {
-                return "";
-            }
-            return telephony.getNetworkCountryIsoForPhone(phoneId);
+            return telephony == null ? "" : telephony.getNetworkCountryIsoForPhone(phoneId);
         } catch (RemoteException e) {
             return "";
         }
@@ -1062,10 +1073,10 @@ public class TelephonyManager {
     public int getNetworkType(int subId) {
         try {
             ITelephony telephony = getITelephony();
-            if (telephony != null) {
-                return telephony.getNetworkTypeForSubscriber(subId, getOpPackageName());
+            if (telephony == null) {
+                return 0;
             }
-            return 0;
+            return telephony.getNetworkTypeForSubscriber(subId, getOpPackageName());
         } catch (RemoteException e) {
             return 0;
         } catch (NullPointerException e2) {
@@ -1081,10 +1092,10 @@ public class TelephonyManager {
     public int getDataNetworkType(int subId) {
         try {
             ITelephony telephony = getITelephony();
-            if (telephony != null) {
-                return telephony.getDataNetworkTypeForSubscriber(subId, getOpPackageName());
+            if (telephony == null) {
+                return 0;
             }
-            return 0;
+            return telephony.getDataNetworkTypeForSubscriber(subId, getOpPackageName());
         } catch (RemoteException e) {
             return 0;
         } catch (NullPointerException e2) {
@@ -1100,10 +1111,10 @@ public class TelephonyManager {
     public int getVoiceNetworkType(int subId) {
         try {
             ITelephony telephony = getITelephony();
-            if (telephony != null) {
-                return telephony.getVoiceNetworkTypeForSubscriber(subId, getOpPackageName());
+            if (telephony == null) {
+                return 0;
             }
-            return 0;
+            return telephony.getVoiceNetworkTypeForSubscriber(subId, getOpPackageName());
         } catch (RemoteException e) {
             return 0;
         } catch (NullPointerException e2) {
@@ -1223,18 +1234,18 @@ public class TelephonyManager {
 
     private int getSimStateIncludingLoaded() {
         int slotIndex = getSlotIndex();
-        if (slotIndex >= 0) {
-            return SubscriptionManager.getSimStateForSlotIndex(slotIndex);
-        }
-        for (int i = 0; i < getPhoneCount(); i++) {
-            int simState = getSimState(i);
-            if (simState != 1) {
-                Rlog.d(TAG, "getSimState: default sim:" + slotIndex + ", sim state for slotIndex=" + i + " is " + simState + ", return state as unknown");
-                return 0;
+        if (slotIndex < 0) {
+            for (int i = 0; i < getPhoneCount(); i++) {
+                int simState = getSimState(i);
+                if (simState != 1) {
+                    Rlog.m88d(TAG, "getSimState: default sim:" + slotIndex + ", sim state for slotIndex=" + i + " is " + simState + ", return state as unknown");
+                    return 0;
+                }
             }
+            Rlog.m88d(TAG, "getSimState: default sim:" + slotIndex + ", all SIMs absent, return state as absent");
+            return 1;
         }
-        Rlog.d(TAG, "getSimState: default sim:" + slotIndex + ", all SIMs absent, return state as absent");
-        return 1;
+        return SubscriptionManager.getSimStateForSlotIndex(slotIndex);
     }
 
     @SystemApi
@@ -1304,7 +1315,8 @@ public class TelephonyManager {
 
     @UnsupportedAppUsage(maxTargetSdk = 28)
     public String getSimOperatorNumeric(int subId) {
-        return getSimOperatorNumericForPhone(SubscriptionManager.getPhoneId(subId));
+        int phoneId = SubscriptionManager.getPhoneId(subId);
+        return getSimOperatorNumericForPhone(phoneId);
     }
 
     @UnsupportedAppUsage(maxTargetSdk = 28)
@@ -1318,7 +1330,8 @@ public class TelephonyManager {
 
     @UnsupportedAppUsage(maxTargetSdk = 28)
     public String getSimOperatorName(int subId) {
-        return getSimOperatorNameForPhone(SubscriptionManager.getPhoneId(subId));
+        int phoneId = SubscriptionManager.getPhoneId(subId);
+        return getSimOperatorNameForPhone(phoneId);
     }
 
     @UnsupportedAppUsage
@@ -1332,7 +1345,8 @@ public class TelephonyManager {
 
     @UnsupportedAppUsage(maxTargetSdk = 28)
     public String getSimCountryIso(int subId) {
-        return getSimCountryIsoForPhone(SubscriptionManager.getPhoneId(subId));
+        int phoneId = SubscriptionManager.getPhoneId(subId);
+        return getSimCountryIsoForPhone(phoneId);
     }
 
     @UnsupportedAppUsage
@@ -1395,13 +1409,13 @@ public class TelephonyManager {
     public List<UiccCardInfo> getUiccCardsInfo() {
         try {
             ITelephony telephony = getITelephony();
-            if (telephony != null) {
-                return telephony.getUiccCardsInfo(this.mContext.getOpPackageName());
+            if (telephony == null) {
+                Log.m70e(TAG, "Error in getUiccCardsInfo: unable to connect to Telephony service.");
+                return new ArrayList();
             }
-            Log.e(TAG, "Error in getUiccCardsInfo: unable to connect to Telephony service.");
-            return new ArrayList();
+            return telephony.getUiccCardsInfo(this.mContext.getOpPackageName());
         } catch (RemoteException e) {
-            Log.e(TAG, "Error in getUiccCardsInfo: " + e);
+            Log.m70e(TAG, "Error in getUiccCardsInfo: " + e);
             return new ArrayList();
         }
     }
@@ -1421,9 +1435,10 @@ public class TelephonyManager {
 
     public void refreshUiccProfile() {
         try {
-            getITelephony().refreshUiccProfile(this.mSubId);
+            ITelephony telephony = getITelephony();
+            telephony.refreshUiccProfile(this.mSubId);
         } catch (RemoteException ex) {
-            Rlog.w(TAG, "RemoteException", ex);
+            Rlog.m79w(TAG, "RemoteException", ex);
         }
     }
 
@@ -1452,7 +1467,7 @@ public class TelephonyManager {
                 }
             }
         } catch (RemoteException e) {
-            Log.e(TAG, "getSlotsMapping RemoteException", e);
+            Log.m69e(TAG, "getSlotsMapping RemoteException", e);
         }
         return slotMapping;
     }
@@ -1481,28 +1496,24 @@ public class TelephonyManager {
         try {
             IPhoneSubInfo info = getSubscriberInfo();
             if (info == null) {
-                Rlog.e(TAG, "IMSI error: Subscriber Info is null");
+                Rlog.m86e(TAG, "IMSI error: Subscriber Info is null");
                 return null;
             }
             int subId = getSubId(SubscriptionManager.getDefaultDataSubscriptionId());
-            if (keyType != 1) {
-                if (keyType != 2) {
-                    throw new IllegalArgumentException("IMSI error: Invalid key type");
-                }
+            if (keyType != 1 && keyType != 2) {
+                throw new IllegalArgumentException("IMSI error: Invalid key type");
             }
             ImsiEncryptionInfo imsiEncryptionInfo = info.getCarrierInfoForImsiEncryption(subId, keyType, this.mContext.getOpPackageName());
-            if (imsiEncryptionInfo == null) {
-                if (isImsiEncryptionRequired(subId, keyType)) {
-                    Rlog.e(TAG, "IMSI error: key is required but not found");
-                    throw new IllegalArgumentException("IMSI error: key is required but not found");
-                }
+            if (imsiEncryptionInfo == null && isImsiEncryptionRequired(subId, keyType)) {
+                Rlog.m86e(TAG, "IMSI error: key is required but not found");
+                throw new IllegalArgumentException("IMSI error: key is required but not found");
             }
             return imsiEncryptionInfo;
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "getCarrierInfoForImsiEncryption RemoteException" + ex);
+            Rlog.m86e(TAG, "getCarrierInfoForImsiEncryption RemoteException" + ex);
             return null;
         } catch (NullPointerException ex2) {
-            Rlog.e(TAG, "getCarrierInfoForImsiEncryption NullPointerException" + ex2);
+            Rlog.m86e(TAG, "getCarrierInfoForImsiEncryption NullPointerException" + ex2);
             return null;
         }
     }
@@ -1511,15 +1522,16 @@ public class TelephonyManager {
         try {
             IPhoneSubInfo info = getSubscriberInfo();
             if (info == null) {
-                Rlog.e(TAG, "IMSI error: Subscriber Info is null");
+                Rlog.m86e(TAG, "IMSI error: Subscriber Info is null");
                 if (!isSystemProcess()) {
                     throw new RuntimeException("IMSI error: Subscriber Info is null");
                 }
                 return;
             }
-            info.resetCarrierKeysForImsiEncryption(getSubId(SubscriptionManager.getDefaultDataSubscriptionId()), this.mContext.getOpPackageName());
+            int subId = getSubId(SubscriptionManager.getDefaultDataSubscriptionId());
+            info.resetCarrierKeysForImsiEncryption(subId, this.mContext.getOpPackageName());
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "getCarrierInfoForImsiEncryption RemoteException" + ex);
+            Rlog.m86e(TAG, "getCarrierInfoForImsiEncryption RemoteException" + ex);
             if (!isSystemProcess()) {
                 ex.rethrowAsRuntimeException();
             }
@@ -1527,10 +1539,8 @@ public class TelephonyManager {
     }
 
     private static boolean isKeyEnabled(int keyAvailability, int keyType) {
-        if (((keyAvailability >> (keyType - 1)) & 1) == 1) {
-            return true;
-        }
-        return false;
+        int returnValue = (keyAvailability >> (keyType - 1)) & 1;
+        return returnValue == 1;
     }
 
     private boolean isImsiEncryptionRequired(int subId, int keyType) {
@@ -1539,18 +1549,20 @@ public class TelephonyManager {
         if (configManager == null || (pb = configManager.getConfigForSubId(subId)) == null) {
             return false;
         }
-        return isKeyEnabled(pb.getInt(CarrierConfigManager.IMSI_KEY_AVAILABILITY_INT), keyType);
+        int keyAvailability = pb.getInt(CarrierConfigManager.IMSI_KEY_AVAILABILITY_INT);
+        return isKeyEnabled(keyAvailability, keyType);
     }
 
     public void setCarrierInfoForImsiEncryption(ImsiEncryptionInfo imsiEncryptionInfo) {
         try {
             IPhoneSubInfo info = getSubscriberInfo();
-            if (info != null) {
-                info.setCarrierInfoForImsiEncryption(this.mSubId, this.mContext.getOpPackageName(), imsiEncryptionInfo);
+            if (info == null) {
+                return;
             }
-        } catch (NullPointerException e) {
+            info.setCarrierInfoForImsiEncryption(this.mSubId, this.mContext.getOpPackageName(), imsiEncryptionInfo);
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "setCarrierInfoForImsiEncryption RemoteException", ex);
+            Rlog.m85e(TAG, "setCarrierInfoForImsiEncryption RemoteException", ex);
+        } catch (NullPointerException e) {
         }
     }
 
@@ -1596,7 +1608,8 @@ public class TelephonyManager {
             if (telephony != null) {
                 number = telephony.getLine1NumberForDisplay(subId, this.mContext.getOpPackageName());
             }
-        } catch (RemoteException | NullPointerException e) {
+        } catch (RemoteException e) {
+        } catch (NullPointerException e2) {
         }
         if (number != null) {
             return number;
@@ -1607,9 +1620,9 @@ public class TelephonyManager {
                 return null;
             }
             return info.getLine1NumberForSubscriber(subId, this.mContext.getOpPackageName());
-        } catch (RemoteException e2) {
+        } catch (RemoteException e3) {
             return null;
-        } catch (NullPointerException e3) {
+        } catch (NullPointerException e4) {
             return null;
         }
     }
@@ -1625,7 +1638,9 @@ public class TelephonyManager {
                 return telephony.setLine1NumberForDisplayForSubscriber(subId, alphaTag, number);
             }
             return false;
-        } catch (RemoteException | NullPointerException e) {
+        } catch (RemoteException e) {
+            return false;
+        } catch (NullPointerException e2) {
             return false;
         }
     }
@@ -1642,7 +1657,8 @@ public class TelephonyManager {
             if (telephony != null) {
                 alphaTag = telephony.getLine1AlphaTagForDisplay(subId, getOpPackageName());
             }
-        } catch (RemoteException | NullPointerException e) {
+        } catch (RemoteException e) {
+        } catch (NullPointerException e2) {
         }
         if (alphaTag != null) {
             return alphaTag;
@@ -1653,9 +1669,9 @@ public class TelephonyManager {
                 return null;
             }
             return info.getLine1AlphaTagForSubscriber(subId, getOpPackageName());
-        } catch (RemoteException e2) {
+        } catch (RemoteException e3) {
             return null;
-        } catch (NullPointerException e3) {
+        } catch (NullPointerException e4) {
             return null;
         }
     }
@@ -1668,7 +1684,9 @@ public class TelephonyManager {
                 return telephony.getMergedSubscriberIds(getSubId(), getOpPackageName());
             }
             return null;
-        } catch (RemoteException | NullPointerException e) {
+        } catch (RemoteException e) {
+            return null;
+        } catch (NullPointerException e2) {
             return null;
         }
     }
@@ -1723,24 +1741,26 @@ public class TelephonyManager {
                 return telephony.setVoiceMailNumber(subId, alphaTag, number);
             }
             return false;
-        } catch (RemoteException | NullPointerException e) {
+        } catch (RemoteException e) {
+            return false;
+        } catch (NullPointerException e2) {
             return false;
         }
     }
 
-    @SuppressLint({"Doclava125"})
     @SystemApi
+    @SuppressLint({"Doclava125"})
     public void setVisualVoicemailEnabled(PhoneAccountHandle phoneAccountHandle, boolean enabled) {
     }
 
-    @SuppressLint({"Doclava125"})
     @SystemApi
+    @SuppressLint({"Doclava125"})
     public boolean isVisualVoicemailEnabled(PhoneAccountHandle phoneAccountHandle) {
         return false;
     }
 
-    @SuppressLint({"Doclava125"})
     @SystemApi
+    @SuppressLint({"Doclava125"})
     public Bundle getVisualVoicemailSettings() {
         try {
             ITelephony telephony = getITelephony();
@@ -1748,7 +1768,9 @@ public class TelephonyManager {
                 return telephony.getVisualVoicemailSettings(this.mContext.getOpPackageName(), this.mSubId);
             }
             return null;
-        } catch (RemoteException | NullPointerException e) {
+        } catch (RemoteException e) {
+            return null;
+        } catch (NullPointerException e2) {
             return null;
         }
     }
@@ -1760,7 +1782,9 @@ public class TelephonyManager {
                 return telephony.getVisualVoicemailPackageName(this.mContext.getOpPackageName(), getSubId());
             }
             return null;
-        } catch (RemoteException | NullPointerException e) {
+        } catch (RemoteException e) {
+            return null;
+        } catch (NullPointerException e2) {
             return null;
         }
     }
@@ -1778,16 +1802,16 @@ public class TelephonyManager {
     }
 
     public void enableVisualVoicemailSmsFilter(int subId, VisualVoicemailSmsFilterSettings settings) {
-        if (settings != null) {
-            try {
-                ITelephony telephony = getITelephony();
-                if (telephony != null) {
-                    telephony.enableVisualVoicemailSmsFilter(this.mContext.getOpPackageName(), subId, settings);
-                }
-            } catch (RemoteException | NullPointerException e) {
-            }
-        } else {
+        if (settings == null) {
             throw new IllegalArgumentException("Settings cannot be null");
+        }
+        try {
+            ITelephony telephony = getITelephony();
+            if (telephony != null) {
+                telephony.enableVisualVoicemailSmsFilter(this.mContext.getOpPackageName(), subId, settings);
+            }
+        } catch (RemoteException e) {
+        } catch (NullPointerException e2) {
         }
     }
 
@@ -1797,7 +1821,8 @@ public class TelephonyManager {
             if (telephony != null) {
                 telephony.disableVisualVoicemailSmsFilter(this.mContext.getOpPackageName(), subId);
             }
-        } catch (RemoteException | NullPointerException e) {
+        } catch (RemoteException e) {
+        } catch (NullPointerException e2) {
         }
     }
 
@@ -1808,7 +1833,9 @@ public class TelephonyManager {
                 return telephony.getVisualVoicemailSmsFilterSettings(this.mContext.getOpPackageName(), subId);
             }
             return null;
-        } catch (RemoteException | NullPointerException e) {
+        } catch (RemoteException e) {
+            return null;
+        } catch (NullPointerException e2) {
             return null;
         }
     }
@@ -1820,7 +1847,9 @@ public class TelephonyManager {
                 return telephony.getActiveVisualVoicemailSmsFilterSettings(subId);
             }
             return null;
-        } catch (RemoteException | NullPointerException e) {
+        } catch (RemoteException e) {
+            return null;
+        } catch (NullPointerException e2) {
             return null;
         }
     }
@@ -1846,7 +1875,8 @@ public class TelephonyManager {
             if (telephony != null) {
                 telephony.setVoiceActivationState(subId, activationState);
             }
-        } catch (RemoteException | NullPointerException e) {
+        } catch (RemoteException e) {
+        } catch (NullPointerException e2) {
         }
     }
 
@@ -1861,7 +1891,8 @@ public class TelephonyManager {
             if (telephony != null) {
                 telephony.setDataActivationState(subId, activationState);
             }
-        } catch (RemoteException | NullPointerException e) {
+        } catch (RemoteException e) {
+        } catch (NullPointerException e2) {
         }
     }
 
@@ -1877,7 +1908,9 @@ public class TelephonyManager {
                 return telephony.getVoiceActivationState(subId, getOpPackageName());
             }
             return 0;
-        } catch (RemoteException | NullPointerException e) {
+        } catch (RemoteException e) {
+            return 0;
+        } catch (NullPointerException e2) {
             return 0;
         }
     }
@@ -1894,7 +1927,9 @@ public class TelephonyManager {
                 return telephony.getDataActivationState(subId, getOpPackageName());
             }
             return 0;
-        } catch (RemoteException | NullPointerException e) {
+        } catch (RemoteException e) {
+            return 0;
+        } catch (NullPointerException e2) {
             return 0;
         }
     }
@@ -1941,11 +1976,13 @@ public class TelephonyManager {
     public void sendDialerSpecialCode(String inputCode) {
         try {
             ITelephony telephony = getITelephony();
-            if (telephony != null) {
-                telephony.sendDialerSpecialCode(this.mContext.getOpPackageName(), inputCode);
-            } else if (!isSystemProcess()) {
-                throw new RuntimeException("Telephony service unavailable");
+            if (telephony == null) {
+                if (!isSystemProcess()) {
+                    throw new RuntimeException("Telephony service unavailable");
+                }
+                return;
             }
+            telephony.sendDialerSpecialCode(this.mContext.getOpPackageName(), inputCode);
         } catch (RemoteException ex) {
             if (!isSystemProcess()) {
                 ex.rethrowAsRuntimeException();
@@ -2011,14 +2048,15 @@ public class TelephonyManager {
             }
             return 0;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelecomService#getCallState", e);
+            Log.m69e(TAG, "Error calling ITelecomService#getCallState", e);
             return 0;
         }
     }
 
     @UnsupportedAppUsage
     public int getCallState(int subId) {
-        return getCallStateForSlot(SubscriptionManager.getPhoneId(subId));
+        int phoneId = SubscriptionManager.getPhoneId(subId);
+        return getCallStateForSlot(phoneId);
     }
 
     public int getCallStateForSlot(int slotIndex) {
@@ -2097,28 +2135,29 @@ public class TelephonyManager {
 
     public void listen(PhoneStateListener listener, int events) {
         int i;
-        if (this.mContext != null) {
-            try {
-                boolean notifyNow = getITelephony() != null;
-                ITelephonyRegistry registry = getTelephonyRegistry();
-                if (registry != null) {
-                    int subId = this.mSubId;
-                    if (VMRuntime.getRuntime().getTargetSdkVersion() >= 29) {
-                        if (events == 0) {
-                            i = -1;
-                        } else {
-                            i = subId;
-                        }
-                        listener.mSubId = Integer.valueOf(i);
-                    } else if (listener.mSubId != null) {
-                        subId = listener.mSubId.intValue();
+        if (this.mContext == null) {
+            return;
+        }
+        try {
+            boolean notifyNow = getITelephony() != null;
+            ITelephonyRegistry registry = getTelephonyRegistry();
+            if (registry != null) {
+                int subId = this.mSubId;
+                if (VMRuntime.getRuntime().getTargetSdkVersion() >= 29) {
+                    if (events != 0) {
+                        i = subId;
+                    } else {
+                        i = -1;
                     }
-                    registry.listenForSubscriber(subId, getOpPackageName(), listener.callback, events, notifyNow);
-                    return;
+                    listener.mSubId = Integer.valueOf(i);
+                } else if (listener.mSubId != null) {
+                    subId = listener.mSubId.intValue();
                 }
-                Rlog.w(TAG, "telephony registry not ready.");
-            } catch (RemoteException e) {
+                registry.listenForSubscriber(subId, getOpPackageName(), listener.callback, events, notifyNow);
+                return;
             }
+            Rlog.m80w(TAG, "telephony registry not ready.");
+        } catch (RemoteException e) {
         }
     }
 
@@ -2183,14 +2222,14 @@ public class TelephonyManager {
         if (this.mContext == null) {
             return true;
         }
-        return this.mContext.getResources().getBoolean(R.bool.config_voice_capable);
+        return this.mContext.getResources().getBoolean(C3132R.bool.config_voice_capable);
     }
 
     public boolean isSmsCapable() {
         if (this.mContext == null) {
             return true;
         }
-        return this.mContext.getResources().getBoolean(R.bool.config_sms_capable);
+        return this.mContext.getResources().getBoolean(C3132R.bool.config_sms_capable);
     }
 
     public List<CellInfo> getAllCellInfo() {
@@ -2205,11 +2244,13 @@ public class TelephonyManager {
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class CellInfoCallback {
         public static final int ERROR_MODEM_ERROR = 2;
         public static final int ERROR_TIMEOUT = 1;
 
         @Retention(RetentionPolicy.SOURCE)
+        /* loaded from: classes.dex */
         public @interface CellInfoCallbackError {
         }
 
@@ -2220,144 +2261,118 @@ public class TelephonyManager {
         }
     }
 
-    public void requestCellInfoUpdate(final Executor executor, final CellInfoCallback callback) {
+    public void requestCellInfoUpdate(Executor executor, CellInfoCallback callback) {
         try {
             ITelephony telephony = getITelephony();
-            if (telephony != null) {
-                telephony.requestCellInfoUpdate(getSubId(), new ICellInfoCallback.Stub() {
-                    public void onCellInfo(List<CellInfo> cellInfo) {
-                        Binder.withCleanCallingIdentity((FunctionalUtils.ThrowingRunnable) new FunctionalUtils.ThrowingRunnable(executor, callback, cellInfo) {
-                            private final /* synthetic */ Executor f$0;
-                            private final /* synthetic */ TelephonyManager.CellInfoCallback f$1;
-                            private final /* synthetic */ List f$2;
-
-                            {
-                                this.f$0 = r1;
-                                this.f$1 = r2;
-                                this.f$2 = r3;
-                            }
-
-                            public final void runOrThrow() {
-                                this.f$0.execute(new Runnable(this.f$2) {
-                                    private final /* synthetic */ List f$1;
-
-                                    {
-                                        this.f$1 = r2;
-                                    }
-
-                                    public final void run() {
-                                        TelephonyManager.CellInfoCallback.this.onCellInfo(this.f$1);
-                                    }
-                                });
-                            }
-                        });
-                    }
-
-                    public void onError(int errorCode, ParcelableException detail) {
-                        Binder.withCleanCallingIdentity((FunctionalUtils.ThrowingRunnable) new FunctionalUtils.ThrowingRunnable(executor, callback, errorCode, detail) {
-                            private final /* synthetic */ Executor f$0;
-                            private final /* synthetic */ TelephonyManager.CellInfoCallback f$1;
-                            private final /* synthetic */ int f$2;
-                            private final /* synthetic */ ParcelableException f$3;
-
-                            {
-                                this.f$0 = r1;
-                                this.f$1 = r2;
-                                this.f$2 = r3;
-                                this.f$3 = r4;
-                            }
-
-                            public final void runOrThrow() {
-                                this.f$0.execute(new Runnable(this.f$2, this.f$3) {
-                                    private final /* synthetic */ int f$1;
-                                    private final /* synthetic */ ParcelableException f$2;
-
-                                    {
-                                        this.f$1 = r2;
-                                        this.f$2 = r3;
-                                    }
-
-                                    public final void run() {
-                                        TelephonyManager.CellInfoCallback.this.onError(this.f$1, this.f$2.getCause());
-                                    }
-                                });
-                            }
-                        });
-                    }
-                }, getOpPackageName());
+            if (telephony == null) {
+                return;
             }
+            telephony.requestCellInfoUpdate(getSubId(), new BinderC24211(executor, callback), getOpPackageName());
         } catch (RemoteException e) {
         }
     }
 
+    /* renamed from: android.telephony.TelephonyManager$1 */
+    /* loaded from: classes.dex */
+    class BinderC24211 extends ICellInfoCallback.Stub {
+        final /* synthetic */ CellInfoCallback val$callback;
+        final /* synthetic */ Executor val$executor;
+
+        BinderC24211(Executor executor, CellInfoCallback cellInfoCallback) {
+            this.val$executor = executor;
+            this.val$callback = cellInfoCallback;
+        }
+
+        @Override // android.telephony.ICellInfoCallback
+        public void onCellInfo(final List<CellInfo> cellInfo) {
+            final Executor executor = this.val$executor;
+            final CellInfoCallback cellInfoCallback = this.val$callback;
+            Binder.withCleanCallingIdentity(new FunctionalUtils.ThrowingRunnable() { // from class: android.telephony.-$$Lambda$TelephonyManager$1$888GQVMXufCYSJI5ivTjjUxEprI
+                @Override // com.android.internal.util.FunctionalUtils.ThrowingRunnable
+                public final void runOrThrow() {
+                    executor.execute(new Runnable() { // from class: android.telephony.-$$Lambda$TelephonyManager$1$scMPky6lOZrCjFC3d4STbtLfpHE
+                        @Override // java.lang.Runnable
+                        public final void run() {
+                            TelephonyManager.CellInfoCallback.this.onCellInfo(r2);
+                        }
+                    });
+                }
+            });
+        }
+
+        @Override // android.telephony.ICellInfoCallback
+        public void onError(final int errorCode, final ParcelableException detail) {
+            final Executor executor = this.val$executor;
+            final CellInfoCallback cellInfoCallback = this.val$callback;
+            Binder.withCleanCallingIdentity(new FunctionalUtils.ThrowingRunnable() { // from class: android.telephony.-$$Lambda$TelephonyManager$1$5jj__2hbfx_RMVO7qjBdMYFfP1s
+                @Override // com.android.internal.util.FunctionalUtils.ThrowingRunnable
+                public final void runOrThrow() {
+                    executor.execute(new Runnable() { // from class: android.telephony.-$$Lambda$TelephonyManager$1$DUDjwoHWG36BPTvbfvZqnIO3Y88
+                        @Override // java.lang.Runnable
+                        public final void run() {
+                            TelephonyManager.CellInfoCallback.this.onError(r2, r3.getCause());
+                        }
+                    });
+                }
+            });
+        }
+    }
+
     @SystemApi
-    public void requestCellInfoUpdate(WorkSource workSource, final Executor executor, final CellInfoCallback callback) {
+    public void requestCellInfoUpdate(WorkSource workSource, Executor executor, CellInfoCallback callback) {
         try {
             ITelephony telephony = getITelephony();
-            if (telephony != null) {
-                telephony.requestCellInfoUpdateWithWorkSource(getSubId(), new ICellInfoCallback.Stub() {
-                    public void onCellInfo(List<CellInfo> cellInfo) {
-                        Binder.withCleanCallingIdentity((FunctionalUtils.ThrowingRunnable) new FunctionalUtils.ThrowingRunnable(executor, callback, cellInfo) {
-                            private final /* synthetic */ Executor f$0;
-                            private final /* synthetic */ TelephonyManager.CellInfoCallback f$1;
-                            private final /* synthetic */ List f$2;
-
-                            {
-                                this.f$0 = r1;
-                                this.f$1 = r2;
-                                this.f$2 = r3;
-                            }
-
-                            public final void runOrThrow() {
-                                this.f$0.execute(new Runnable(this.f$2) {
-                                    private final /* synthetic */ List f$1;
-
-                                    {
-                                        this.f$1 = r2;
-                                    }
-
-                                    public final void run() {
-                                        TelephonyManager.CellInfoCallback.this.onCellInfo(this.f$1);
-                                    }
-                                });
-                            }
-                        });
-                    }
-
-                    public void onError(int errorCode, ParcelableException detail) {
-                        Binder.withCleanCallingIdentity((FunctionalUtils.ThrowingRunnable) new FunctionalUtils.ThrowingRunnable(executor, callback, errorCode, detail) {
-                            private final /* synthetic */ Executor f$0;
-                            private final /* synthetic */ TelephonyManager.CellInfoCallback f$1;
-                            private final /* synthetic */ int f$2;
-                            private final /* synthetic */ ParcelableException f$3;
-
-                            {
-                                this.f$0 = r1;
-                                this.f$1 = r2;
-                                this.f$2 = r3;
-                                this.f$3 = r4;
-                            }
-
-                            public final void runOrThrow() {
-                                this.f$0.execute(new Runnable(this.f$2, this.f$3) {
-                                    private final /* synthetic */ int f$1;
-                                    private final /* synthetic */ ParcelableException f$2;
-
-                                    {
-                                        this.f$1 = r2;
-                                        this.f$2 = r3;
-                                    }
-
-                                    public final void run() {
-                                        TelephonyManager.CellInfoCallback.this.onError(this.f$1, this.f$2.getCause());
-                                    }
-                                });
-                            }
-                        });
-                    }
-                }, getOpPackageName(), workSource);
+            if (telephony == null) {
+                return;
             }
+            telephony.requestCellInfoUpdateWithWorkSource(getSubId(), new BinderC24222(executor, callback), getOpPackageName(), workSource);
         } catch (RemoteException e) {
+        }
+    }
+
+    /* renamed from: android.telephony.TelephonyManager$2 */
+    /* loaded from: classes.dex */
+    class BinderC24222 extends ICellInfoCallback.Stub {
+        final /* synthetic */ CellInfoCallback val$callback;
+        final /* synthetic */ Executor val$executor;
+
+        BinderC24222(Executor executor, CellInfoCallback cellInfoCallback) {
+            this.val$executor = executor;
+            this.val$callback = cellInfoCallback;
+        }
+
+        @Override // android.telephony.ICellInfoCallback
+        public void onCellInfo(final List<CellInfo> cellInfo) {
+            final Executor executor = this.val$executor;
+            final CellInfoCallback cellInfoCallback = this.val$callback;
+            Binder.withCleanCallingIdentity(new FunctionalUtils.ThrowingRunnable() { // from class: android.telephony.-$$Lambda$TelephonyManager$2$hWPf2raNadUBIhTQLEUpRhHWKoI
+                @Override // com.android.internal.util.FunctionalUtils.ThrowingRunnable
+                public final void runOrThrow() {
+                    executor.execute(new Runnable() { // from class: android.telephony.-$$Lambda$TelephonyManager$2$l6Pazxfi7QghMr2Z0MpduhNe6yc
+                        @Override // java.lang.Runnable
+                        public final void run() {
+                            TelephonyManager.CellInfoCallback.this.onCellInfo(r2);
+                        }
+                    });
+                }
+            });
+        }
+
+        @Override // android.telephony.ICellInfoCallback
+        public void onError(final int errorCode, final ParcelableException detail) {
+            final Executor executor = this.val$executor;
+            final CellInfoCallback cellInfoCallback = this.val$callback;
+            Binder.withCleanCallingIdentity(new FunctionalUtils.ThrowingRunnable() { // from class: android.telephony.-$$Lambda$TelephonyManager$2$6owqHJtmTOa9dDQAz_9oKh9XFVk
+                @Override // com.android.internal.util.FunctionalUtils.ThrowingRunnable
+                public final void runOrThrow() {
+                    executor.execute(new Runnable() { // from class: android.telephony.-$$Lambda$TelephonyManager$2$Ulw55AvQUDkoL1gDNnPVlIOb8mw
+                        @Override // java.lang.Runnable
+                        public final void run() {
+                            TelephonyManager.CellInfoCallback.this.onError(r2, r3.getCause());
+                        }
+                    });
+                }
+            });
         }
     }
 
@@ -2367,7 +2382,8 @@ public class TelephonyManager {
             if (telephony != null) {
                 telephony.setCellInfoListRate(rateInMillis);
             }
-        } catch (RemoteException | NullPointerException e) {
+        } catch (RemoteException e) {
+        } catch (NullPointerException e2) {
         }
     }
 
@@ -2378,7 +2394,9 @@ public class TelephonyManager {
                 return telephony.getMmsUserAgent(getSubId());
             }
             return null;
-        } catch (RemoteException | NullPointerException e) {
+        } catch (RemoteException e) {
+            return null;
+        } catch (NullPointerException e2) {
             return null;
         }
     }
@@ -2390,7 +2408,9 @@ public class TelephonyManager {
                 return telephony.getMmsUAProfUrl(getSubId());
             }
             return null;
-        } catch (RemoteException | NullPointerException e) {
+        } catch (RemoteException e) {
+            return null;
+        } catch (NullPointerException e2) {
             return null;
         }
     }
@@ -2408,7 +2428,9 @@ public class TelephonyManager {
                 return telephony.iccOpenLogicalChannelBySlot(slotIndex, getOpPackageName(), aid, p2);
             }
             return null;
-        } catch (RemoteException | NullPointerException e) {
+        } catch (RemoteException e) {
+            return null;
+        } catch (NullPointerException e2) {
             return null;
         }
     }
@@ -2424,7 +2446,9 @@ public class TelephonyManager {
                 return telephony.iccOpenLogicalChannel(subId, getOpPackageName(), AID, p2);
             }
             return null;
-        } catch (RemoteException | NullPointerException e) {
+        } catch (RemoteException e) {
+            return null;
+        } catch (NullPointerException e2) {
             return null;
         }
     }
@@ -2437,7 +2461,9 @@ public class TelephonyManager {
                 return telephony.iccCloseLogicalChannelBySlot(slotIndex, channel);
             }
             return false;
-        } catch (RemoteException | NullPointerException e) {
+        } catch (RemoteException e) {
+            return false;
+        } catch (NullPointerException e2) {
             return false;
         }
     }
@@ -2453,7 +2479,9 @@ public class TelephonyManager {
                 return telephony.iccCloseLogicalChannel(subId, channel);
             }
             return false;
-        } catch (RemoteException | NullPointerException e) {
+        } catch (RemoteException e) {
+            return false;
+        } catch (NullPointerException e2) {
             return false;
         }
     }
@@ -2466,7 +2494,9 @@ public class TelephonyManager {
                 return telephony.iccTransmitApduLogicalChannelBySlot(slotIndex, channel, cla, instruction, p1, p2, p3, data);
             }
             return null;
-        } catch (RemoteException | NullPointerException e) {
+        } catch (RemoteException e) {
+            return null;
+        } catch (NullPointerException e2) {
             return null;
         }
     }
@@ -2482,7 +2512,9 @@ public class TelephonyManager {
                 return telephony.iccTransmitApduLogicalChannel(subId, channel, cla, instruction, p1, p2, p3, data);
             }
             return "";
-        } catch (RemoteException | NullPointerException e) {
+        } catch (RemoteException e) {
+            return "";
+        } catch (NullPointerException e2) {
             return "";
         }
     }
@@ -2491,11 +2523,13 @@ public class TelephonyManager {
     public String iccTransmitApduBasicChannelBySlot(int slotIndex, int cla, int instruction, int p1, int p2, int p3, String data) {
         try {
             ITelephony telephony = getITelephony();
-            if (telephony == null) {
-                return null;
+            if (telephony != null) {
+                return telephony.iccTransmitApduBasicChannelBySlot(slotIndex, getOpPackageName(), cla, instruction, p1, p2, p3, data);
             }
-            return telephony.iccTransmitApduBasicChannelBySlot(slotIndex, getOpPackageName(), cla, instruction, p1, p2, p3, data);
-        } catch (RemoteException | NullPointerException e) {
+            return null;
+        } catch (RemoteException e) {
+            return null;
+        } catch (NullPointerException e2) {
             return null;
         }
     }
@@ -2507,11 +2541,13 @@ public class TelephonyManager {
     public String iccTransmitApduBasicChannel(int subId, int cla, int instruction, int p1, int p2, int p3, String data) {
         try {
             ITelephony telephony = getITelephony();
-            if (telephony == null) {
-                return "";
+            if (telephony != null) {
+                return telephony.iccTransmitApduBasicChannel(subId, getOpPackageName(), cla, instruction, p1, p2, p3, data);
             }
-            return telephony.iccTransmitApduBasicChannel(subId, getOpPackageName(), cla, instruction, p1, p2, p3, data);
-        } catch (RemoteException | NullPointerException e) {
+            return "";
+        } catch (RemoteException e) {
+            return "";
+        } catch (NullPointerException e2) {
             return "";
         }
     }
@@ -2527,7 +2563,9 @@ public class TelephonyManager {
                 return telephony.iccExchangeSimIO(subId, fileID, command, p1, p2, p3, filePath);
             }
             return null;
-        } catch (RemoteException | NullPointerException e) {
+        } catch (RemoteException e) {
+            return null;
+        } catch (NullPointerException e2) {
             return null;
         }
     }
@@ -2543,7 +2581,9 @@ public class TelephonyManager {
                 return telephony.sendEnvelopeWithStatus(subId, content);
             }
             return "";
-        } catch (RemoteException | NullPointerException e) {
+        } catch (RemoteException e) {
+            return "";
+        } catch (NullPointerException e2) {
             return "";
         }
     }
@@ -2557,10 +2597,10 @@ public class TelephonyManager {
             }
             return "";
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "nvReadItem RemoteException", ex);
+            Rlog.m85e(TAG, "nvReadItem RemoteException", ex);
             return "";
         } catch (NullPointerException ex2) {
-            Rlog.e(TAG, "nvReadItem NPE", ex2);
+            Rlog.m85e(TAG, "nvReadItem NPE", ex2);
             return "";
         }
     }
@@ -2573,10 +2613,10 @@ public class TelephonyManager {
             }
             return false;
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "nvWriteItem RemoteException", ex);
+            Rlog.m85e(TAG, "nvWriteItem RemoteException", ex);
             return false;
         } catch (NullPointerException ex2) {
-            Rlog.e(TAG, "nvWriteItem NPE", ex2);
+            Rlog.m85e(TAG, "nvWriteItem NPE", ex2);
             return false;
         }
     }
@@ -2589,10 +2629,10 @@ public class TelephonyManager {
             }
             return false;
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "nvWriteCdmaPrl RemoteException", ex);
+            Rlog.m85e(TAG, "nvWriteCdmaPrl RemoteException", ex);
             return false;
         } catch (NullPointerException ex2) {
-            Rlog.e(TAG, "nvWriteCdmaPrl NPE", ex2);
+            Rlog.m85e(TAG, "nvWriteCdmaPrl NPE", ex2);
             return false;
         }
     }
@@ -2601,22 +2641,22 @@ public class TelephonyManager {
     public boolean nvResetConfig(int resetType) {
         try {
             ITelephony telephony = getITelephony();
-            if (telephony == null) {
+            if (telephony != null) {
+                if (resetType == 1) {
+                    return telephony.rebootModem(getSlotIndex());
+                }
+                if (resetType == 3) {
+                    return telephony.resetModemConfig(getSlotIndex());
+                }
+                Rlog.m86e(TAG, "nvResetConfig unsupported reset type");
                 return false;
             }
-            if (resetType == 1) {
-                return telephony.rebootModem(getSlotIndex());
-            }
-            if (resetType == 3) {
-                return telephony.resetModemConfig(getSlotIndex());
-            }
-            Rlog.e(TAG, "nvResetConfig unsupported reset type");
             return false;
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "nvResetConfig RemoteException", ex);
+            Rlog.m85e(TAG, "nvResetConfig RemoteException", ex);
             return false;
         } catch (NullPointerException ex2) {
-            Rlog.e(TAG, "nvResetConfig NPE", ex2);
+            Rlog.m85e(TAG, "nvResetConfig NPE", ex2);
             return false;
         }
     }
@@ -2630,10 +2670,10 @@ public class TelephonyManager {
             }
             return false;
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "resetRadioConfig RemoteException", ex);
+            Rlog.m85e(TAG, "resetRadioConfig RemoteException", ex);
             return false;
         } catch (NullPointerException ex2) {
-            Rlog.e(TAG, "resetRadioConfig NPE", ex2);
+            Rlog.m85e(TAG, "resetRadioConfig NPE", ex2);
             return false;
         }
     }
@@ -2647,10 +2687,10 @@ public class TelephonyManager {
             }
             return false;
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "rebootRadio RemoteException", ex);
+            Rlog.m85e(TAG, "rebootRadio RemoteException", ex);
             return false;
         } catch (NullPointerException ex2) {
-            Rlog.e(TAG, "rebootRadio NPE", ex2);
+            Rlog.m85e(TAG, "rebootRadio NPE", ex2);
             return false;
         }
     }
@@ -2679,8 +2719,8 @@ public class TelephonyManager {
         return SubscriptionManager.getPhoneId(getSubId(preferredSubId));
     }
 
-    @VisibleForTesting
     @UnsupportedAppUsage
+    @VisibleForTesting
     public int getSlotIndex() {
         int slotIndex = SubscriptionManager.getSlotIndex(getSubId());
         if (slotIndex == -1) {
@@ -2690,82 +2730,73 @@ public class TelephonyManager {
     }
 
     @SystemApi
-    public void requestNumberVerification(PhoneNumberRange range, long timeoutMillis, final Executor executor, final NumberVerificationCallback callback) {
+    public void requestNumberVerification(PhoneNumberRange range, long timeoutMillis, Executor executor, final NumberVerificationCallback callback) {
         if (executor == null) {
             throw new NullPointerException("Executor must be non-null");
-        } else if (callback != null) {
-            INumberVerificationCallback internalCallback = new INumberVerificationCallback.Stub() {
-                public void onCallReceived(String phoneNumber) {
-                    Binder.withCleanCallingIdentity((FunctionalUtils.ThrowingRunnable) new FunctionalUtils.ThrowingRunnable(executor, callback, phoneNumber) {
-                        private final /* synthetic */ Executor f$0;
-                        private final /* synthetic */ NumberVerificationCallback f$1;
-                        private final /* synthetic */ String f$2;
-
-                        {
-                            this.f$0 = r1;
-                            this.f$1 = r2;
-                            this.f$2 = r3;
-                        }
-
-                        public final void runOrThrow() {
-                            this.f$0.execute(new Runnable(this.f$2) {
-                                private final /* synthetic */ String f$1;
-
-                                {
-                                    this.f$1 = r2;
-                                }
-
-                                public final void run() {
-                                    NumberVerificationCallback.this.onCallReceived(this.f$1);
-                                }
-                            });
-                        }
-                    });
-                }
-
-                public void onVerificationFailed(int reason) {
-                    Binder.withCleanCallingIdentity((FunctionalUtils.ThrowingRunnable) new FunctionalUtils.ThrowingRunnable(executor, callback, reason) {
-                        private final /* synthetic */ Executor f$0;
-                        private final /* synthetic */ NumberVerificationCallback f$1;
-                        private final /* synthetic */ int f$2;
-
-                        {
-                            this.f$0 = r1;
-                            this.f$1 = r2;
-                            this.f$2 = r3;
-                        }
-
-                        public final void runOrThrow() {
-                            this.f$0.execute(new Runnable(this.f$2) {
-                                private final /* synthetic */ int f$1;
-
-                                {
-                                    this.f$1 = r2;
-                                }
-
-                                public final void run() {
-                                    NumberVerificationCallback.this.onVerificationFailed(this.f$1);
-                                }
-                            });
-                        }
-                    });
-                }
-            };
-            try {
-                ITelephony telephony = getITelephony();
-                if (telephony != null) {
-                    telephony.requestNumberVerification(range, timeoutMillis, internalCallback, getOpPackageName());
-                }
-            } catch (RemoteException ex) {
-                Rlog.e(TAG, "requestNumberVerification RemoteException", ex);
-                executor.execute(new Runnable() {
-                    public final void run() {
-                        NumberVerificationCallback.this.onVerificationFailed(0);
-                    }
-                });
-            }
-        } else {
+        }
+        if (callback == null) {
             throw new NullPointerException("Callback must be non-null");
+        }
+        INumberVerificationCallback internalCallback = new BinderC24233(executor, callback);
+        try {
+            ITelephony telephony = getITelephony();
+            if (telephony != null) {
+                telephony.requestNumberVerification(range, timeoutMillis, internalCallback, getOpPackageName());
+            }
+        } catch (RemoteException ex) {
+            Rlog.m85e(TAG, "requestNumberVerification RemoteException", ex);
+            executor.execute(new Runnable() { // from class: android.telephony.-$$Lambda$TelephonyManager$4i1RRVjnCzfQvX2hIGG9K8g4DaY
+                @Override // java.lang.Runnable
+                public final void run() {
+                    NumberVerificationCallback.this.onVerificationFailed(0);
+                }
+            });
+        }
+    }
+
+    /* renamed from: android.telephony.TelephonyManager$3 */
+    /* loaded from: classes.dex */
+    class BinderC24233 extends INumberVerificationCallback.Stub {
+        final /* synthetic */ NumberVerificationCallback val$callback;
+        final /* synthetic */ Executor val$executor;
+
+        BinderC24233(Executor executor, NumberVerificationCallback numberVerificationCallback) {
+            this.val$executor = executor;
+            this.val$callback = numberVerificationCallback;
+        }
+
+        @Override // com.android.internal.telephony.INumberVerificationCallback
+        public void onCallReceived(final String phoneNumber) {
+            final Executor executor = this.val$executor;
+            final NumberVerificationCallback numberVerificationCallback = this.val$callback;
+            Binder.withCleanCallingIdentity(new FunctionalUtils.ThrowingRunnable() { // from class: android.telephony.-$$Lambda$TelephonyManager$3$ue1tJSNmFJObWAJcaHRYIrfBRNg
+                @Override // com.android.internal.util.FunctionalUtils.ThrowingRunnable
+                public final void runOrThrow() {
+                    executor.execute(new Runnable() { // from class: android.telephony.-$$Lambda$TelephonyManager$3$LPMNUsxM8QRYWmnzGtrEYPm5sAs
+                        @Override // java.lang.Runnable
+                        public final void run() {
+                            NumberVerificationCallback.this.onCallReceived(r2);
+                        }
+                    });
+                }
+            });
+        }
+
+        @Override // com.android.internal.telephony.INumberVerificationCallback
+        public void onVerificationFailed(final int reason) {
+            final Executor executor = this.val$executor;
+            final NumberVerificationCallback numberVerificationCallback = this.val$callback;
+            Binder.withCleanCallingIdentity(new FunctionalUtils.ThrowingRunnable() { // from class: android.telephony.-$$Lambda$TelephonyManager$3$TrNEDm6VsUgT1BQFiXGiPDtbxuA
+                @Override // com.android.internal.util.FunctionalUtils.ThrowingRunnable
+                public final void runOrThrow() {
+                    executor.execute(new Runnable() { // from class: android.telephony.-$$Lambda$TelephonyManager$3$VM3y0XwyxZN6vR6ERQTngCQIICc
+                        @Override // java.lang.Runnable
+                        public final void run() {
+                            NumberVerificationCallback.this.onVerificationFailed(r2);
+                        }
+                    });
+                }
+            });
         }
     }
 
@@ -2782,7 +2813,7 @@ public class TelephonyManager {
             p = prop.split(SmsManager.REGEX_PREFIX_DELIMITER);
         }
         if (!SubscriptionManager.isValidPhoneId(phoneId)) {
-            Rlog.d(TAG, "setTelephonyProperty: invalid phoneId=" + phoneId + " property=" + property + " value: " + value + " prop=" + prop);
+            Rlog.m88d(TAG, "setTelephonyProperty: invalid phoneId=" + phoneId + " property=" + property + " value: " + value + " prop=" + prop);
             return;
         }
         for (int i = 0; i < phoneId; i++) {
@@ -2802,10 +2833,10 @@ public class TelephonyManager {
         try {
             propValLen = propVal2.getBytes("utf-8").length;
         } catch (UnsupportedEncodingException e) {
-            Rlog.d(TAG, "setTelephonyProperty: utf-8 not supported");
+            Rlog.m88d(TAG, "setTelephonyProperty: utf-8 not supported");
         }
         if (propValLen > 91) {
-            Rlog.d(TAG, "setTelephonyProperty: property too long phoneId=" + phoneId + " property=" + property + " value: " + value + " propVal=" + propVal2);
+            Rlog.m88d(TAG, "setTelephonyProperty: property too long phoneId=" + phoneId + " property=" + property + " value: " + value + " propVal=" + propVal2);
             return;
         }
         SystemProperties.set(property, propVal2);
@@ -2815,7 +2846,7 @@ public class TelephonyManager {
         if (value == null) {
             value = "";
         }
-        Rlog.d(TAG, "setTelephonyProperty: success property=" + property + " value: " + value);
+        Rlog.m88d(TAG, "setTelephonyProperty: success property=" + property + " value: " + value);
         SystemProperties.set(property, value);
     }
 
@@ -2841,7 +2872,9 @@ public class TelephonyManager {
         String v = Settings.Global.getString(cr, name);
         if (index == Integer.MAX_VALUE) {
             throw new IllegalArgumentException("putIntAtIndex index == MAX_VALUE index=" + index);
-        } else if (index >= 0) {
+        } else if (index < 0) {
+            throw new IllegalArgumentException("putIntAtIndex index < 0 index=" + index);
+        } else {
             if (v != null) {
                 valArray = v.split(SmsManager.REGEX_PREFIX_DELIMITER);
             }
@@ -2859,8 +2892,6 @@ public class TelephonyManager {
                 }
             }
             return Settings.Global.putString(cr, name, data2);
-        } else {
-            throw new IllegalArgumentException("putIntAtIndex index < 0 index=" + index);
         }
     }
 
@@ -2977,7 +3008,7 @@ public class TelephonyManager {
                 telephony.enableIms(slotId);
             }
         } catch (RemoteException e) {
-            Rlog.e(TAG, "enableIms, RemoteException: " + e.getMessage());
+            Rlog.m86e(TAG, "enableIms, RemoteException: " + e.getMessage());
         }
     }
 
@@ -2988,7 +3019,7 @@ public class TelephonyManager {
                 telephony.disableIms(slotId);
             }
         } catch (RemoteException e) {
-            Rlog.e(TAG, "disableIms, RemoteException: " + e.getMessage());
+            Rlog.m86e(TAG, "disableIms, RemoteException: " + e.getMessage());
         }
     }
 
@@ -3000,7 +3031,7 @@ public class TelephonyManager {
             }
             return null;
         } catch (RemoteException e) {
-            Rlog.e(TAG, "getImsMmTelFeatureAndListen, RemoteException: " + e.getMessage());
+            Rlog.m86e(TAG, "getImsMmTelFeatureAndListen, RemoteException: " + e.getMessage());
             return null;
         }
     }
@@ -3013,7 +3044,7 @@ public class TelephonyManager {
             }
             return null;
         } catch (RemoteException e) {
-            Rlog.e(TAG, "getImsRcsFeatureAndListen, RemoteException: " + e.getMessage());
+            Rlog.m86e(TAG, "getImsRcsFeatureAndListen, RemoteException: " + e.getMessage());
             return null;
         }
     }
@@ -3027,7 +3058,7 @@ public class TelephonyManager {
             }
             return null;
         } catch (RemoteException e) {
-            Rlog.e(TAG, "getImsRegistration, RemoteException: " + e.getMessage());
+            Rlog.m86e(TAG, "getImsRegistration, RemoteException: " + e.getMessage());
             return null;
         }
     }
@@ -3041,7 +3072,7 @@ public class TelephonyManager {
             }
             return null;
         } catch (RemoteException e) {
-            Rlog.e(TAG, "getImsRegistration, RemoteException: " + e.getMessage());
+            Rlog.m86e(TAG, "getImsRegistration, RemoteException: " + e.getMessage());
             return null;
         }
     }
@@ -3066,7 +3097,7 @@ public class TelephonyManager {
             }
             return -1;
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "getPreferredNetworkType RemoteException", ex);
+            Rlog.m85e(TAG, "getPreferredNetworkType RemoteException", ex);
             return -1;
         }
     }
@@ -3076,12 +3107,12 @@ public class TelephonyManager {
         try {
             ITelephony telephony = getITelephony();
             if (telephony != null) {
-                return (long) RadioAccessFamily.getRafFromNetworkType(telephony.getPreferredNetworkType(getSubId()));
+                return RadioAccessFamily.getRafFromNetworkType(telephony.getPreferredNetworkType(getSubId()));
             }
-            return 0;
+            return 0L;
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "getPreferredNetworkTypeBitmask RemoteException", ex);
-            return 0;
+            Rlog.m85e(TAG, "getPreferredNetworkTypeBitmask RemoteException", ex);
+            return 0L;
         }
     }
 
@@ -3092,9 +3123,9 @@ public class TelephonyManager {
                 telephony.setNetworkSelectionModeAutomatic(getSubId());
             }
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "setNetworkSelectionModeAutomatic RemoteException", ex);
+            Rlog.m85e(TAG, "setNetworkSelectionModeAutomatic RemoteException", ex);
         } catch (NullPointerException ex2) {
-            Rlog.e(TAG, "setNetworkSelectionModeAutomatic NPE", ex2);
+            Rlog.m85e(TAG, "setNetworkSelectionModeAutomatic NPE", ex2);
         }
     }
 
@@ -3105,9 +3136,9 @@ public class TelephonyManager {
                 return telephony.getCellNetworkScanResults(getSubId(), getOpPackageName());
             }
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "getAvailableNetworks RemoteException", ex);
+            Rlog.m85e(TAG, "getAvailableNetworks RemoteException", ex);
         } catch (NullPointerException ex2) {
-            Rlog.e(TAG, "getAvailableNetworks NPE", ex2);
+            Rlog.m85e(TAG, "getAvailableNetworks NPE", ex2);
         }
         return new CellNetworkScanResult(4, (List<OperatorInfo>) null);
     }
@@ -3138,7 +3169,7 @@ public class TelephonyManager {
             }
             return false;
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "setNetworkSelectionModeManual RemoteException", ex);
+            Rlog.m85e(TAG, "setNetworkSelectionModeManual RemoteException", ex);
             return false;
         }
     }
@@ -3146,12 +3177,13 @@ public class TelephonyManager {
     public int getNetworkSelectionMode() {
         try {
             ITelephony telephony = getITelephony();
-            if (telephony != null) {
-                return telephony.getNetworkSelectionMode(getSubId());
+            if (telephony == null) {
+                return 0;
             }
-            return 0;
+            int mode = telephony.getNetworkSelectionMode(getSubId());
+            return mode;
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "getNetworkSelectionMode RemoteException", ex);
+            Rlog.m85e(TAG, "getNetworkSelectionMode RemoteException", ex);
             return 0;
         }
     }
@@ -3164,7 +3196,7 @@ public class TelephonyManager {
             }
             return false;
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "getNetworkSelectionMode RemoteException", ex);
+            Rlog.m85e(TAG, "getNetworkSelectionMode RemoteException", ex);
             return false;
         }
     }
@@ -3178,7 +3210,7 @@ public class TelephonyManager {
             }
             return false;
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "setPreferredNetworkType RemoteException", ex);
+            Rlog.m85e(TAG, "setPreferredNetworkType RemoteException", ex);
             return false;
         }
     }
@@ -3192,7 +3224,7 @@ public class TelephonyManager {
             }
             return false;
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "setPreferredNetworkTypeBitmask RemoteException", ex);
+            Rlog.m85e(TAG, "setPreferredNetworkTypeBitmask RemoteException", ex);
             return false;
         }
     }
@@ -3217,10 +3249,10 @@ public class TelephonyManager {
             }
             return false;
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "hasMatchedTetherApnSetting RemoteException", ex);
+            Rlog.m85e(TAG, "hasMatchedTetherApnSetting RemoteException", ex);
             return false;
         } catch (NullPointerException ex2) {
-            Rlog.e(TAG, "hasMatchedTetherApnSetting NPE", ex2);
+            Rlog.m85e(TAG, "hasMatchedTetherApnSetting NPE", ex2);
             return false;
         }
     }
@@ -3232,14 +3264,13 @@ public class TelephonyManager {
     public boolean hasCarrierPrivileges(int subId) {
         try {
             ITelephony telephony = getITelephony();
-            if (telephony == null || telephony.getCarrierPrivilegeStatus(subId) != 1) {
-                return false;
+            if (telephony != null) {
+                return telephony.getCarrierPrivilegeStatus(subId) == 1;
             }
-            return true;
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "hasCarrierPrivileges RemoteException", ex);
+            Rlog.m85e(TAG, "hasCarrierPrivileges RemoteException", ex);
         } catch (NullPointerException ex2) {
-            Rlog.e(TAG, "hasCarrierPrivileges NPE", ex2);
+            Rlog.m85e(TAG, "hasCarrierPrivileges NPE", ex2);
         }
         return false;
     }
@@ -3256,10 +3287,10 @@ public class TelephonyManager {
             }
             return false;
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "setOperatorBrandOverride RemoteException", ex);
+            Rlog.m85e(TAG, "setOperatorBrandOverride RemoteException", ex);
             return false;
         } catch (NullPointerException ex2) {
-            Rlog.e(TAG, "setOperatorBrandOverride NPE", ex2);
+            Rlog.m85e(TAG, "setOperatorBrandOverride NPE", ex2);
             return false;
         }
     }
@@ -3277,10 +3308,10 @@ public class TelephonyManager {
             }
             return false;
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "setRoamingOverride RemoteException", ex);
+            Rlog.m85e(TAG, "setRoamingOverride RemoteException", ex);
             return false;
         } catch (NullPointerException ex2) {
-            Rlog.e(TAG, "setRoamingOverride NPE", ex2);
+            Rlog.m85e(TAG, "setRoamingOverride NPE", ex2);
             return false;
         }
     }
@@ -3325,8 +3356,8 @@ public class TelephonyManager {
         }
     }
 
-    @SuppressLint({"Doclava125"})
     @SystemApi
+    @SuppressLint({"Doclava125"})
     public int checkCarrierPrivilegesForPackage(String pkgName) {
         try {
             ITelephony telephony = getITelephony();
@@ -3335,16 +3366,16 @@ public class TelephonyManager {
             }
             return 0;
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "checkCarrierPrivilegesForPackage RemoteException", ex);
+            Rlog.m85e(TAG, "checkCarrierPrivilegesForPackage RemoteException", ex);
             return 0;
         } catch (NullPointerException ex2) {
-            Rlog.e(TAG, "checkCarrierPrivilegesForPackage NPE", ex2);
+            Rlog.m85e(TAG, "checkCarrierPrivilegesForPackage NPE", ex2);
             return 0;
         }
     }
 
-    @SuppressLint({"Doclava125"})
     @SystemApi
+    @SuppressLint({"Doclava125"})
     public int checkCarrierPrivilegesForPackageAnyPhone(String pkgName) {
         try {
             ITelephony telephony = getITelephony();
@@ -3353,10 +3384,10 @@ public class TelephonyManager {
             }
             return 0;
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "checkCarrierPrivilegesForPackageAnyPhone RemoteException", ex);
+            Rlog.m85e(TAG, "checkCarrierPrivilegesForPackageAnyPhone RemoteException", ex);
             return 0;
         } catch (NullPointerException ex2) {
-            Rlog.e(TAG, "checkCarrierPrivilegesForPackageAnyPhone NPE", ex2);
+            Rlog.m85e(TAG, "checkCarrierPrivilegesForPackageAnyPhone NPE", ex2);
             return 0;
         }
     }
@@ -3375,10 +3406,10 @@ public class TelephonyManager {
             }
             return null;
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "getCarrierPackageNamesForIntentAndPhone RemoteException", ex);
+            Rlog.m85e(TAG, "getCarrierPackageNamesForIntentAndPhone RemoteException", ex);
             return null;
         } catch (NullPointerException ex2) {
-            Rlog.e(TAG, "getCarrierPackageNamesForIntentAndPhone NPE", ex2);
+            Rlog.m85e(TAG, "getCarrierPackageNamesForIntentAndPhone NPE", ex2);
             return null;
         }
     }
@@ -3390,9 +3421,9 @@ public class TelephonyManager {
                 return telephony.getPackagesWithCarrierPrivileges(getPhoneId());
             }
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "getPackagesWithCarrierPrivileges RemoteException", ex);
+            Rlog.m85e(TAG, "getPackagesWithCarrierPrivileges RemoteException", ex);
         } catch (NullPointerException ex2) {
-            Rlog.e(TAG, "getPackagesWithCarrierPrivileges NPE", ex2);
+            Rlog.m85e(TAG, "getPackagesWithCarrierPrivileges NPE", ex2);
         }
         return Collections.EMPTY_LIST;
     }
@@ -3404,15 +3435,15 @@ public class TelephonyManager {
                 return telephony.getPackagesWithCarrierPrivilegesForAllPhones();
             }
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "getPackagesWithCarrierPrivilegesForAllPhones RemoteException", ex);
+            Rlog.m85e(TAG, "getPackagesWithCarrierPrivilegesForAllPhones RemoteException", ex);
         } catch (NullPointerException ex2) {
-            Rlog.e(TAG, "getPackagesWithCarrierPrivilegesForAllPhones NPE", ex2);
+            Rlog.m85e(TAG, "getPackagesWithCarrierPrivilegesForAllPhones NPE", ex2);
         }
         return Collections.EMPTY_LIST;
     }
 
-    @SuppressLint({"Doclava125"})
     @SystemApi
+    @SuppressLint({"Doclava125"})
     public void dial(String number) {
         try {
             ITelephony telephony = getITelephony();
@@ -3420,7 +3451,7 @@ public class TelephonyManager {
                 telephony.dial(number);
             }
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#dial", e);
+            Log.m69e(TAG, "Error calling ITelephony#dial", e);
         }
     }
 
@@ -3433,7 +3464,7 @@ public class TelephonyManager {
                 telephony.call(callingPackage, number);
             }
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#call", e);
+            Log.m69e(TAG, "Error calling ITelephony#call", e);
         }
     }
 
@@ -3448,8 +3479,8 @@ public class TelephonyManager {
     public void answerRingingCall() {
     }
 
-    @SuppressLint({"Doclava125"})
     @SystemApi
+    @SuppressLint({"Doclava125"})
     @Deprecated
     public void silenceRinger() {
     }
@@ -3457,19 +3488,22 @@ public class TelephonyManager {
     @SystemApi
     @Deprecated
     public boolean isOffhook() {
-        return ((TelecomManager) this.mContext.getSystemService(Context.TELECOM_SERVICE)).isInCall();
+        TelecomManager tm = (TelecomManager) this.mContext.getSystemService(Context.TELECOM_SERVICE);
+        return tm.isInCall();
     }
 
     @SystemApi
     @Deprecated
     public boolean isRinging() {
-        return ((TelecomManager) this.mContext.getSystemService(Context.TELECOM_SERVICE)).isRinging();
+        TelecomManager tm = (TelecomManager) this.mContext.getSystemService(Context.TELECOM_SERVICE);
+        return tm.isRinging();
     }
 
     @SystemApi
     @Deprecated
     public boolean isIdle() {
-        return !((TelecomManager) this.mContext.getSystemService(Context.TELECOM_SERVICE)).isInCall();
+        TelecomManager tm = (TelecomManager) this.mContext.getSystemService(Context.TELECOM_SERVICE);
+        return !tm.isInCall();
     }
 
     @SystemApi
@@ -3482,7 +3516,7 @@ public class TelephonyManager {
             }
             return false;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#isRadioOn", e);
+            Log.m69e(TAG, "Error calling ITelephony#isRadioOn", e);
             return false;
         }
     }
@@ -3496,7 +3530,7 @@ public class TelephonyManager {
             }
             return false;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#supplyPin", e);
+            Log.m69e(TAG, "Error calling ITelephony#supplyPin", e);
             return false;
         }
     }
@@ -3510,7 +3544,7 @@ public class TelephonyManager {
             }
             return false;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#supplyPuk", e);
+            Log.m69e(TAG, "Error calling ITelephony#supplyPuk", e);
             return false;
         }
     }
@@ -3523,7 +3557,7 @@ public class TelephonyManager {
                 return telephony.supplyPinReportResult(pin);
             }
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#supplyPinReportResult", e);
+            Log.m69e(TAG, "Error calling ITelephony#supplyPinReportResult", e);
         }
         return new int[0];
     }
@@ -3536,11 +3570,12 @@ public class TelephonyManager {
                 return telephony.supplyPukReportResult(puk, pin);
             }
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#]", e);
+            Log.m69e(TAG, "Error calling ITelephony#]", e);
         }
         return new int[0];
     }
 
+    /* loaded from: classes.dex */
     public static abstract class UssdResponseCallback {
         public void onReceiveUssdResponse(TelephonyManager telephonyManager, String request, CharSequence response) {
         }
@@ -3551,16 +3586,16 @@ public class TelephonyManager {
 
     public void sendUssdRequest(String ussdRequest, final UssdResponseCallback callback, Handler handler) {
         Preconditions.checkNotNull(callback, "UssdResponseCallback cannot be null.");
-        ResultReceiver wrappedCallback = new ResultReceiver(handler) {
-            /* access modifiers changed from: protected */
-            public void onReceiveResult(int resultCode, Bundle ussdResponse) {
-                Rlog.d(TelephonyManager.TAG, "USSD:" + resultCode);
+        ResultReceiver wrappedCallback = new ResultReceiver(handler) { // from class: android.telephony.TelephonyManager.4
+            @Override // android.p007os.ResultReceiver
+            protected void onReceiveResult(int resultCode, Bundle ussdResponse) {
+                Rlog.m88d(TelephonyManager.TAG, "USSD:" + resultCode);
                 Preconditions.checkNotNull(ussdResponse, "ussdResponse cannot be null.");
                 UssdResponse response = (UssdResponse) ussdResponse.getParcelable(TelephonyManager.USSD_RESPONSE);
                 if (resultCode == 100) {
-                    callback.onReceiveUssdResponse(this, response.getUssdRequest(), response.getReturnMessage());
+                    callback.onReceiveUssdResponse(telephonyManager, response.getUssdRequest(), response.getReturnMessage());
                 } else {
-                    callback.onReceiveUssdResponseFailed(this, response.getUssdRequest(), resultCode);
+                    callback.onReceiveUssdResponseFailed(telephonyManager, response.getUssdRequest(), resultCode);
                 }
             }
         };
@@ -3570,7 +3605,7 @@ public class TelephonyManager {
                 telephony.handleUssdRequest(getSubId(), ussdRequest, wrappedCallback);
             }
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#sendUSSDCode", e);
+            Log.m69e(TAG, "Error calling ITelephony#sendUSSDCode", e);
             UssdResponse response = new UssdResponse(ussdRequest, "");
             Bundle returnData = new Bundle();
             returnData.putParcelable(USSD_RESPONSE, response);
@@ -3586,7 +3621,7 @@ public class TelephonyManager {
             }
             return telephony.isConcurrentVoiceAndDataAllowed(getSubId());
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#isConcurrentVoiceAndDataAllowed", e);
+            Log.m69e(TAG, "Error calling ITelephony#isConcurrentVoiceAndDataAllowed", e);
             return false;
         }
     }
@@ -3600,7 +3635,7 @@ public class TelephonyManager {
             }
             return false;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#handlePinMmi", e);
+            Log.m69e(TAG, "Error calling ITelephony#handlePinMmi", e);
             return false;
         }
     }
@@ -3614,7 +3649,7 @@ public class TelephonyManager {
             }
             return false;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#handlePinMmi", e);
+            Log.m69e(TAG, "Error calling ITelephony#handlePinMmi", e);
             return false;
         }
     }
@@ -3627,7 +3662,7 @@ public class TelephonyManager {
                 telephony.toggleRadioOnOff();
             }
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#toggleRadioOnOff", e);
+            Log.m69e(TAG, "Error calling ITelephony#toggleRadioOnOff", e);
         }
     }
 
@@ -3640,7 +3675,7 @@ public class TelephonyManager {
             }
             return false;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#setRadio", e);
+            Log.m69e(TAG, "Error calling ITelephony#setRadio", e);
             return false;
         }
     }
@@ -3654,7 +3689,7 @@ public class TelephonyManager {
             }
             return false;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#setRadioPower", e);
+            Log.m69e(TAG, "Error calling ITelephony#setRadioPower", e);
             return false;
         }
     }
@@ -3672,8 +3707,8 @@ public class TelephonyManager {
         }
     }
 
-    @SuppressLint({"Doclava125"})
     @SystemApi
+    @SuppressLint({"Doclava125"})
     public void updateServiceLocation() {
         try {
             ITelephony telephony = getITelephony();
@@ -3681,7 +3716,7 @@ public class TelephonyManager {
                 telephony.updateServiceLocation();
             }
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#updateServiceLocation", e);
+            Log.m69e(TAG, "Error calling ITelephony#updateServiceLocation", e);
         }
     }
 
@@ -3694,7 +3729,7 @@ public class TelephonyManager {
             }
             return false;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#enableDataConnectivity", e);
+            Log.m69e(TAG, "Error calling ITelephony#enableDataConnectivity", e);
             return false;
         }
     }
@@ -3708,7 +3743,7 @@ public class TelephonyManager {
             }
             return false;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#disableDataConnectivity", e);
+            Log.m69e(TAG, "Error calling ITelephony#disableDataConnectivity", e);
             return false;
         }
     }
@@ -3722,7 +3757,7 @@ public class TelephonyManager {
             }
             return false;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#isDataAllowed", e);
+            Log.m69e(TAG, "Error calling ITelephony#isDataAllowed", e);
             return false;
         }
     }
@@ -3736,7 +3771,7 @@ public class TelephonyManager {
             }
             return false;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#needsOtaServiceProvisioning", e);
+            Log.m69e(TAG, "Error calling ITelephony#needsOtaServiceProvisioning", e);
             return false;
         }
     }
@@ -3749,13 +3784,13 @@ public class TelephonyManager {
     @Deprecated
     public void setDataEnabled(int subId, boolean enable) {
         try {
-            Log.d(TAG, "setDataEnabled: enabled=" + enable);
+            Log.m72d(TAG, "setDataEnabled: enabled=" + enable);
             ITelephony telephony = getITelephony();
             if (telephony != null) {
                 telephony.setUserDataEnabled(subId, enable);
             }
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#setUserDataEnabled", e);
+            Log.m69e(TAG, "Error calling ITelephony#setUserDataEnabled", e);
         }
     }
 
@@ -3772,12 +3807,13 @@ public class TelephonyManager {
     public boolean isDataRoamingEnabled() {
         try {
             ITelephony telephony = getITelephony();
-            if (telephony != null) {
-                return telephony.isDataRoamingEnabled(getSubId(SubscriptionManager.getDefaultDataSubscriptionId()));
+            if (telephony == null) {
+                return false;
             }
-            return false;
+            boolean isDataRoamingEnabled = telephony.isDataRoamingEnabled(getSubId(SubscriptionManager.getDefaultDataSubscriptionId()));
+            return isDataRoamingEnabled;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#isDataRoamingEnabled", e);
+            Log.m69e(TAG, "Error calling ITelephony#isDataRoamingEnabled", e);
             return false;
         }
     }
@@ -3785,12 +3821,13 @@ public class TelephonyManager {
     public int getCdmaRoamingMode() {
         try {
             ITelephony telephony = getITelephony();
-            if (telephony != null) {
-                return telephony.getCdmaRoamingMode(getSubId());
+            if (telephony == null) {
+                return -1;
             }
-            return -1;
+            int mode = telephony.getCdmaRoamingMode(getSubId());
+            return mode;
         } catch (RemoteException ex) {
-            Log.e(TAG, "Error calling ITelephony#getCdmaRoamingMode", ex);
+            Log.m69e(TAG, "Error calling ITelephony#getCdmaRoamingMode", ex);
             return -1;
         }
     }
@@ -3803,7 +3840,7 @@ public class TelephonyManager {
             }
             return false;
         } catch (RemoteException ex) {
-            Log.e(TAG, "Error calling ITelephony#setCdmaRoamingMode", ex);
+            Log.m69e(TAG, "Error calling ITelephony#setCdmaRoamingMode", ex);
             return false;
         }
     }
@@ -3816,7 +3853,7 @@ public class TelephonyManager {
             }
             return false;
         } catch (RemoteException ex) {
-            Log.e(TAG, "Error calling ITelephony#setCdmaSubscriptionMode", ex);
+            Log.m69e(TAG, "Error calling ITelephony#setCdmaSubscriptionMode", ex);
             return false;
         }
     }
@@ -3829,7 +3866,7 @@ public class TelephonyManager {
                 telephony.setDataRoamingEnabled(getSubId(SubscriptionManager.getDefaultDataSubscriptionId()), isEnabled);
             }
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#setDataRoamingEnabled", e);
+            Log.m69e(TAG, "Error calling ITelephony#setDataRoamingEnabled", e);
         }
     }
 
@@ -3838,12 +3875,13 @@ public class TelephonyManager {
     public boolean getDataEnabled(int subId) {
         try {
             ITelephony telephony = getITelephony();
-            if (telephony != null) {
-                return telephony.isUserDataEnabled(subId);
+            if (telephony == null) {
+                return false;
             }
-            return false;
+            boolean retVal = telephony.isUserDataEnabled(subId);
+            return retVal;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#isUserDataEnabled", e);
+            Log.m69e(TAG, "Error calling ITelephony#isUserDataEnabled", e);
             return false;
         } catch (NullPointerException e2) {
             return false;
@@ -3858,7 +3896,9 @@ public class TelephonyManager {
                 return telephony.invokeOemRilRequestRaw(oemReq, oemResp);
             }
             return -1;
-        } catch (RemoteException | NullPointerException e) {
+        } catch (RemoteException e) {
+            return -1;
+        } catch (NullPointerException e2) {
             return -1;
         }
     }
@@ -3871,7 +3911,7 @@ public class TelephonyManager {
                 telephony.enableVideoCalling(enable);
             }
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#enableVideoCalling", e);
+            Log.m69e(TAG, "Error calling ITelephony#enableVideoCalling", e);
         }
     }
 
@@ -3884,7 +3924,7 @@ public class TelephonyManager {
             }
             return false;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#isVideoCallingEnabled", e);
+            Log.m69e(TAG, "Error calling ITelephony#isVideoCallingEnabled", e);
             return false;
         }
     }
@@ -3897,10 +3937,10 @@ public class TelephonyManager {
             }
             return false;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#canChangeDtmfToneLength", e);
+            Log.m69e(TAG, "Error calling ITelephony#canChangeDtmfToneLength", e);
             return false;
         } catch (SecurityException e2) {
-            Log.e(TAG, "Permission error calling ITelephony#canChangeDtmfToneLength", e2);
+            Log.m69e(TAG, "Permission error calling ITelephony#canChangeDtmfToneLength", e2);
             return false;
         }
     }
@@ -3913,10 +3953,10 @@ public class TelephonyManager {
             }
             return false;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#isWorldPhone", e);
+            Log.m69e(TAG, "Error calling ITelephony#isWorldPhone", e);
             return false;
         } catch (SecurityException e2) {
-            Log.e(TAG, "Permission error calling ITelephony#isWorldPhone", e2);
+            Log.m69e(TAG, "Permission error calling ITelephony#isWorldPhone", e2);
             return false;
         }
     }
@@ -3930,7 +3970,7 @@ public class TelephonyManager {
             }
             return false;
         } catch (SecurityException e) {
-            Log.e(TAG, "Permission error calling TelecomManager#isTtySupported", e);
+            Log.m69e(TAG, "Permission error calling TelecomManager#isTtySupported", e);
             return false;
         }
     }
@@ -3943,10 +3983,10 @@ public class TelephonyManager {
             }
             return false;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#isRttSupported", e);
+            Log.m69e(TAG, "Error calling ITelephony#isRttSupported", e);
             return false;
         } catch (SecurityException e2) {
-            Log.e(TAG, "Permission error calling ITelephony#isWorldPhone", e2);
+            Log.m69e(TAG, "Permission error calling ITelephony#isWorldPhone", e2);
             return false;
         }
     }
@@ -3959,10 +3999,10 @@ public class TelephonyManager {
             }
             return false;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#isHearingAidCompatibilitySupported", e);
+            Log.m69e(TAG, "Error calling ITelephony#isHearingAidCompatibilitySupported", e);
             return false;
         } catch (SecurityException e2) {
-            Log.e(TAG, "Permission error calling ITelephony#isHearingAidCompatibilitySupported", e2);
+            Log.m69e(TAG, "Permission error calling ITelephony#isHearingAidCompatibilitySupported", e2);
             return false;
         }
     }
@@ -4020,7 +4060,8 @@ public class TelephonyManager {
     }
 
     public void setSimOperatorNumeric(String numeric) {
-        setSimOperatorNumericForPhone(getPhoneId(), numeric);
+        int phoneId = getPhoneId();
+        setSimOperatorNumericForPhone(phoneId, numeric);
     }
 
     @UnsupportedAppUsage
@@ -4029,7 +4070,8 @@ public class TelephonyManager {
     }
 
     public void setSimOperatorName(String name) {
-        setSimOperatorNameForPhone(getPhoneId(), name);
+        int phoneId = getPhoneId();
+        setSimOperatorNameForPhone(phoneId, name);
     }
 
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
@@ -4038,7 +4080,8 @@ public class TelephonyManager {
     }
 
     public void setSimCountryIso(String iso) {
-        setSimCountryIsoForPhone(getPhoneId(), iso);
+        int phoneId = getPhoneId();
+        setSimCountryIsoForPhone(phoneId, iso);
     }
 
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
@@ -4047,7 +4090,8 @@ public class TelephonyManager {
     }
 
     public void setSimState(String state) {
-        setSimStateForPhone(getPhoneId(), state);
+        int phoneId = getPhoneId();
+        setSimStateForPhone(phoneId, state);
     }
 
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
@@ -4068,14 +4112,15 @@ public class TelephonyManager {
                 telephony.setSimPowerStateForSlot(slotIndex, state);
             }
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#setSimPowerStateForSlot", e);
+            Log.m69e(TAG, "Error calling ITelephony#setSimPowerStateForSlot", e);
         } catch (SecurityException e2) {
-            Log.e(TAG, "Permission error calling ITelephony#setSimPowerStateForSlot", e2);
+            Log.m69e(TAG, "Permission error calling ITelephony#setSimPowerStateForSlot", e2);
         }
     }
 
     public void setBasebandVersion(String version) {
-        setBasebandVersionForPhone(getPhoneId(), version);
+        int phoneId = getPhoneId();
+        setBasebandVersionForPhone(phoneId, version);
     }
 
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
@@ -4084,17 +4129,19 @@ public class TelephonyManager {
     }
 
     public String getBasebandVersion() {
-        return getBasebandVersionForPhone(getPhoneId());
+        int phoneId = getPhoneId();
+        return getBasebandVersionForPhone(phoneId);
     }
 
     private String getBasebandVersionLegacy(int phoneId) {
-        if (!SubscriptionManager.isValidPhoneId(phoneId)) {
-            return null;
+        if (SubscriptionManager.isValidPhoneId(phoneId)) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(TelephonyProperties.PROPERTY_BASEBAND_VERSION);
+            sb.append(phoneId == 0 ? "" : Integer.toString(phoneId));
+            String prop = sb.toString();
+            return SystemProperties.get(prop);
         }
-        StringBuilder sb = new StringBuilder();
-        sb.append(TelephonyProperties.PROPERTY_BASEBAND_VERSION);
-        sb.append(phoneId == 0 ? "" : Integer.toString(phoneId));
-        return SystemProperties.get(sb.toString());
+        return null;
     }
 
     public String getBasebandVersionForPhone(int phoneId) {
@@ -4106,7 +4153,8 @@ public class TelephonyManager {
     }
 
     public void setPhoneType(int type) {
-        setPhoneType(getPhoneId(), type);
+        int phoneId = getPhoneId();
+        setPhoneType(phoneId, type);
     }
 
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
@@ -4117,7 +4165,8 @@ public class TelephonyManager {
     }
 
     public String getOtaSpNumberSchema(String defaultValue) {
-        return getOtaSpNumberSchemaForPhone(getPhoneId(), defaultValue);
+        int phoneId = getPhoneId();
+        return getOtaSpNumberSchemaForPhone(phoneId, defaultValue);
     }
 
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
@@ -4129,7 +4178,8 @@ public class TelephonyManager {
     }
 
     public boolean getSmsReceiveCapable(boolean defaultValue) {
-        return getSmsReceiveCapableForPhone(getPhoneId(), defaultValue);
+        int phoneId = getPhoneId();
+        return getSmsReceiveCapableForPhone(phoneId, defaultValue);
     }
 
     public boolean getSmsReceiveCapableForPhone(int phoneId, boolean defaultValue) {
@@ -4140,7 +4190,8 @@ public class TelephonyManager {
     }
 
     public boolean getSmsSendCapable(boolean defaultValue) {
-        return getSmsSendCapableForPhone(getPhoneId(), defaultValue);
+        int phoneId = getPhoneId();
+        return getSmsSendCapableForPhone(phoneId, defaultValue);
     }
 
     public boolean getSmsSendCapableForPhone(int phoneId, boolean defaultValue) {
@@ -4151,7 +4202,8 @@ public class TelephonyManager {
     }
 
     public void setNetworkOperatorName(String name) {
-        setNetworkOperatorNameForPhone(getPhoneId(), name);
+        int phoneId = getPhoneId();
+        setNetworkOperatorNameForPhone(phoneId, name);
     }
 
     @UnsupportedAppUsage
@@ -4162,7 +4214,8 @@ public class TelephonyManager {
     }
 
     public void setNetworkOperatorNumeric(String numeric) {
-        setNetworkOperatorNumericForPhone(getPhoneId(), numeric);
+        int phoneId = getPhoneId();
+        setNetworkOperatorNumericForPhone(phoneId, numeric);
     }
 
     @UnsupportedAppUsage
@@ -4171,7 +4224,8 @@ public class TelephonyManager {
     }
 
     public void setNetworkRoaming(boolean isRoaming) {
-        setNetworkRoamingForPhone(getPhoneId(), isRoaming);
+        int phoneId = getPhoneId();
+        setNetworkRoamingForPhone(phoneId, isRoaming);
     }
 
     @UnsupportedAppUsage
@@ -4182,7 +4236,8 @@ public class TelephonyManager {
     }
 
     public void setDataNetworkType(int type) {
-        setDataNetworkTypeForPhone(getPhoneId(SubscriptionManager.getDefaultDataSubscriptionId()), type);
+        int phoneId = getPhoneId(SubscriptionManager.getDefaultDataSubscriptionId());
+        setDataNetworkTypeForPhone(phoneId, type);
     }
 
     @UnsupportedAppUsage
@@ -4196,10 +4251,11 @@ public class TelephonyManager {
     public int getSubIdForPhoneAccount(PhoneAccount phoneAccount) {
         try {
             ITelephony service = getITelephony();
-            if (service != null) {
-                return service.getSubIdForPhoneAccount(phoneAccount);
+            if (service == null) {
+                return -1;
             }
-            return -1;
+            int retval = service.getSubIdForPhoneAccount(phoneAccount);
+            return retval;
         } catch (RemoteException e) {
             return -1;
         }
@@ -4208,10 +4264,11 @@ public class TelephonyManager {
     public PhoneAccountHandle getPhoneAccountHandleForSubscriptionId(int subscriptionId) {
         try {
             ITelephony service = getITelephony();
-            if (service != null) {
-                return service.getPhoneAccountHandleForSubscriptionId(subscriptionId);
+            if (service == null) {
+                return null;
             }
-            return null;
+            PhoneAccountHandle returnValue = service.getPhoneAccountHandleForSubscriptionId(subscriptionId);
+            return returnValue;
         } catch (RemoteException e) {
             return null;
         }
@@ -4220,10 +4277,11 @@ public class TelephonyManager {
     private int getSubIdForPhoneAccountHandle(PhoneAccountHandle phoneAccountHandle) {
         try {
             ITelecomService service = getTelecomService();
-            if (service != null) {
-                return getSubIdForPhoneAccount(service.getPhoneAccount(phoneAccountHandle));
+            if (service == null) {
+                return -1;
             }
-            return -1;
+            int retval = getSubIdForPhoneAccount(service.getPhoneAccount(phoneAccountHandle));
+            return retval;
         } catch (RemoteException e) {
             return -1;
         }
@@ -4231,7 +4289,7 @@ public class TelephonyManager {
 
     public void factoryReset(int subId) {
         try {
-            Log.d(TAG, "factoryReset: subId=" + subId);
+            Log.m72d(TAG, "factoryReset: subId=" + subId);
             ITelephony telephony = getITelephony();
             if (telephony != null) {
                 telephony.factoryReset(subId);
@@ -4244,12 +4302,12 @@ public class TelephonyManager {
     public Locale getSimLocale() {
         try {
             ITelephony telephony = getITelephony();
-            if (telephony == null) {
+            if (telephony != null) {
+                String languageTag = telephony.getSimLocaleForSubscriber(getSubId());
+                if (!TextUtils.isEmpty(languageTag)) {
+                    return Locale.forLanguageTag(languageTag);
+                }
                 return null;
-            }
-            String languageTag = telephony.getSimLocaleForSubscriber(getSubId());
-            if (!TextUtils.isEmpty(languageTag)) {
-                return Locale.forLanguageTag(languageTag);
             }
             return null;
         } catch (RemoteException e) {
@@ -4277,9 +4335,9 @@ public class TelephonyManager {
                 return;
             }
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#getModemActivityInfo", e);
+            Log.m69e(TAG, "Error calling ITelephony#getModemActivityInfo", e);
         }
-        result.send(0, (Bundle) null);
+        result.send(0, null);
     }
 
     public ServiceState getServiceState() {
@@ -4295,7 +4353,7 @@ public class TelephonyManager {
             }
             return null;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#getServiceStateForSubscriber", e);
+            Log.m69e(TAG, "Error calling ITelephony#getServiceStateForSubscriber", e);
             return null;
         } catch (NullPointerException e2) {
             UUID fromString = UUID.fromString("a3ab0b9d-f2aa-4baf-911d-7096c0d4645a");
@@ -4312,7 +4370,7 @@ public class TelephonyManager {
             }
             return null;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#getVoicemailRingtoneUri", e);
+            Log.m69e(TAG, "Error calling ITelephony#getVoicemailRingtoneUri", e);
             return null;
         }
     }
@@ -4324,7 +4382,7 @@ public class TelephonyManager {
                 service.setVoicemailRingtoneUri(getOpPackageName(), phoneAccountHandle, uri);
             }
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#setVoicemailRingtoneUri", e);
+            Log.m69e(TAG, "Error calling ITelephony#setVoicemailRingtoneUri", e);
         }
     }
 
@@ -4336,7 +4394,7 @@ public class TelephonyManager {
             }
             return false;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#isVoicemailVibrationEnabled", e);
+            Log.m69e(TAG, "Error calling ITelephony#isVoicemailVibrationEnabled", e);
             return false;
         }
     }
@@ -4348,7 +4406,7 @@ public class TelephonyManager {
                 service.setVoicemailVibrationEnabled(getOpPackageName(), phoneAccountHandle, enabled);
             }
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#isVoicemailVibrationEnabled", e);
+            Log.m69e(TAG, "Error calling ITelephony#isVoicemailVibrationEnabled", e);
         }
     }
 
@@ -4449,7 +4507,7 @@ public class TelephonyManager {
             }
             return null;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#getAidForAppType", e);
+            Log.m69e(TAG, "Error calling ITelephony#getAidForAppType", e);
             return null;
         }
     }
@@ -4466,7 +4524,7 @@ public class TelephonyManager {
             }
             return null;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#getEsn", e);
+            Log.m69e(TAG, "Error calling ITelephony#getEsn", e);
             return null;
         }
     }
@@ -4484,7 +4542,7 @@ public class TelephonyManager {
             }
             return null;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#getCdmaPrlVersion", e);
+            Log.m69e(TAG, "Error calling ITelephony#getCdmaPrlVersion", e);
             return null;
         }
     }
@@ -4498,14 +4556,19 @@ public class TelephonyManager {
             }
             return null;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#getTelephonyHistograms", e);
+            Log.m69e(TAG, "Error calling ITelephony#getTelephonyHistograms", e);
             return null;
         }
     }
 
     @SystemApi
     public int setAllowedCarriers(int slotIndex, List<CarrierIdentifier> carriers) {
-        if (carriers == null || !SubscriptionManager.isValidPhoneId(slotIndex) || setCarrierRestrictionRules(CarrierRestrictionRules.newBuilder().setAllowedCarriers(carriers).setDefaultCarrierRestriction(0).build()) != 0) {
+        if (carriers == null || !SubscriptionManager.isValidPhoneId(slotIndex)) {
+            return -1;
+        }
+        CarrierRestrictionRules carrierRestrictionRules = CarrierRestrictionRules.newBuilder().setAllowedCarriers(carriers).setDefaultCarrierRestriction(0).build();
+        int result = setCarrierRestrictionRules(carrierRestrictionRules);
+        if (result != 0) {
             return -1;
         }
         return carriers.size();
@@ -4520,10 +4583,10 @@ public class TelephonyManager {
             }
             return 2;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#setAllowedCarriers", e);
+            Log.m69e(TAG, "Error calling ITelephony#setAllowedCarriers", e);
             return 2;
         } catch (NullPointerException e2) {
-            Log.e(TAG, "Error calling ITelephony#setAllowedCarriers", e2);
+            Log.m69e(TAG, "Error calling ITelephony#setAllowedCarriers", e2);
             return 2;
         }
     }
@@ -4532,10 +4595,10 @@ public class TelephonyManager {
     @Deprecated
     public List<CarrierIdentifier> getAllowedCarriers(int slotIndex) {
         CarrierRestrictionRules carrierRestrictionRule;
-        if (!SubscriptionManager.isValidPhoneId(slotIndex) || (carrierRestrictionRule = getCarrierRestrictionRules()) == null) {
-            return new ArrayList(0);
+        if (SubscriptionManager.isValidPhoneId(slotIndex) && (carrierRestrictionRule = getCarrierRestrictionRules()) != null) {
+            return carrierRestrictionRule.getAllowedCarriers();
         }
-        return carrierRestrictionRule.getAllowedCarriers();
+        return new ArrayList(0);
     }
 
     @SystemApi
@@ -4547,10 +4610,10 @@ public class TelephonyManager {
             }
             return null;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#getAllowedCarriers", e);
+            Log.m69e(TAG, "Error calling ITelephony#getAllowedCarriers", e);
             return null;
         } catch (NullPointerException e2) {
-            Log.e(TAG, "Error calling ITelephony#getAllowedCarriers", e2);
+            Log.m69e(TAG, "Error calling ITelephony#getAllowedCarriers", e2);
             return null;
         }
     }
@@ -4563,7 +4626,7 @@ public class TelephonyManager {
                 service.carrierActionSetMeteredApnsEnabled(getSubId(SubscriptionManager.getDefaultDataSubscriptionId()), enabled);
             }
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#setCarrierDataEnabled", e);
+            Log.m69e(TAG, "Error calling ITelephony#setCarrierDataEnabled", e);
         }
     }
 
@@ -4574,7 +4637,7 @@ public class TelephonyManager {
                 service.carrierActionSetRadioEnabled(subId, enabled);
             }
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#carrierActionSetRadioEnabled", e);
+            Log.m69e(TAG, "Error calling ITelephony#carrierActionSetRadioEnabled", e);
         }
     }
 
@@ -4585,7 +4648,7 @@ public class TelephonyManager {
                 service.carrierActionReportDefaultNetworkStatus(subId, report);
             }
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#carrierActionReportDefaultNetworkStatus", e);
+            Log.m69e(TAG, "Error calling ITelephony#carrierActionReportDefaultNetworkStatus", e);
         }
     }
 
@@ -4596,15 +4659,12 @@ public class TelephonyManager {
                 service.carrierActionResetAll(subId);
             }
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#carrierActionResetAll", e);
+            Log.m69e(TAG, "Error calling ITelephony#carrierActionResetAll", e);
         }
     }
 
     public NetworkStats getVtDataUsage(int how) {
-        boolean perUidStats = true;
-        if (how != 1) {
-            perUidStats = false;
-        }
+        boolean perUidStats = how == 1;
         try {
             ITelephony service = getITelephony();
             if (service != null) {
@@ -4612,7 +4672,7 @@ public class TelephonyManager {
             }
             return null;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#getVtDataUsage", e);
+            Log.m69e(TAG, "Error calling ITelephony#getVtDataUsage", e);
             return null;
         }
     }
@@ -4624,7 +4684,7 @@ public class TelephonyManager {
                 service.setPolicyDataEnabled(enabled, subId);
             }
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#setPolicyDataEnabled", e);
+            Log.m69e(TAG, "Error calling ITelephony#setPolicyDataEnabled", e);
         }
     }
 
@@ -4636,7 +4696,7 @@ public class TelephonyManager {
             }
             return null;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#getClientRequestStats", e);
+            Log.m69e(TAG, "Error calling ITelephony#getClientRequestStats", e);
             return null;
         }
     }
@@ -4654,7 +4714,7 @@ public class TelephonyManager {
             }
             return telephony.getEmergencyCallbackMode(subId);
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#getEmergencyCallbackMode", e);
+            Log.m69e(TAG, "Error calling ITelephony#getEmergencyCallbackMode", e);
             return false;
         }
     }
@@ -4667,7 +4727,7 @@ public class TelephonyManager {
             }
             return true;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#isManualNetworkSelectionAllowed", e);
+            Log.m69e(TAG, "Error calling ITelephony#isManualNetworkSelectionAllowed", e);
             return true;
         }
     }
@@ -4680,7 +4740,7 @@ public class TelephonyManager {
             }
             return null;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#getSignalStrength", e);
+            Log.m69e(TAG, "Error calling ITelephony#getSignalStrength", e);
             return null;
         }
     }
@@ -4689,12 +4749,13 @@ public class TelephonyManager {
         try {
             int subId = getSubId(SubscriptionManager.getDefaultDataSubscriptionId());
             ITelephony telephony = getITelephony();
-            if (telephony != null) {
-                return telephony.isDataEnabled(subId);
+            if (telephony == null) {
+                return false;
             }
-            return false;
+            boolean retVal = telephony.isDataEnabled(subId);
+            return retVal;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelephony#isDataEnabled", e);
+            Log.m69e(TAG, "Error calling ITelephony#isDataEnabled", e);
             return false;
         } catch (NullPointerException e2) {
             return false;
@@ -4719,7 +4780,7 @@ public class TelephonyManager {
         try {
             ITelephony telephony = getITelephony();
             if (telephony != null) {
-                telephony.setCarrierTestOverride(getSubId(), mccmnc, imsi, iccid, gid1, gid2, plmn, spn, (String) null, (String) null);
+                telephony.setCarrierTestOverride(getSubId(), mccmnc, imsi, iccid, gid1, gid2, plmn, spn, null, null);
             }
         } catch (RemoteException e) {
         }
@@ -4763,12 +4824,13 @@ public class TelephonyManager {
         String pkgForDebug = this.mContext != null ? this.mContext.getOpPackageName() : MediaStore.UNKNOWN_STRING;
         try {
             IOns iOpportunisticNetworkService = getIOns();
-            if (iOpportunisticNetworkService != null) {
-                return iOpportunisticNetworkService.setEnable(enable, pkgForDebug);
+            if (iOpportunisticNetworkService == null) {
+                return false;
             }
-            return false;
+            boolean ret = iOpportunisticNetworkService.setEnable(enable, pkgForDebug);
+            return ret;
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "enableOpportunisticNetwork RemoteException", ex);
+            Rlog.m85e(TAG, "enableOpportunisticNetwork RemoteException", ex);
             return false;
         }
     }
@@ -4777,12 +4839,13 @@ public class TelephonyManager {
         String pkgForDebug = this.mContext != null ? this.mContext.getOpPackageName() : MediaStore.UNKNOWN_STRING;
         try {
             IOns iOpportunisticNetworkService = getIOns();
-            if (iOpportunisticNetworkService != null) {
-                return iOpportunisticNetworkService.isEnabled(pkgForDebug);
+            if (iOpportunisticNetworkService == null) {
+                return false;
             }
-            return false;
+            boolean isEnabled = iOpportunisticNetworkService.isEnabled(pkgForDebug);
+            return isEnabled;
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "enableOpportunisticNetwork RemoteException", ex);
+            Rlog.m85e(TAG, "enableOpportunisticNetwork RemoteException", ex);
             return false;
         }
     }
@@ -4791,20 +4854,20 @@ public class TelephonyManager {
     public long getSupportedRadioAccessFamily() {
         try {
             ITelephony telephony = getITelephony();
-            if (telephony != null) {
-                return (long) telephony.getRadioAccessFamily(getSlotIndex(), getOpPackageName());
+            if (telephony == null) {
+                return 0L;
             }
-            return 0;
+            return telephony.getRadioAccessFamily(getSlotIndex(), getOpPackageName());
         } catch (RemoteException e) {
-            return 0;
+            return 0L;
         } catch (NullPointerException e2) {
-            return 0;
+            return 0L;
         }
     }
 
     @SystemApi
     public boolean isEmergencyAssistanceEnabled() {
-        this.mContext.enforceCallingOrSelfPermission(Manifest.permission.READ_PRIVILEGED_PHONE_STATE, "isEmergencyAssistanceEnabled");
+        this.mContext.enforceCallingOrSelfPermission(Manifest.C0000permission.READ_PRIVILEGED_PHONE_STATE, "isEmergencyAssistanceEnabled");
         return true;
     }
 
@@ -4817,7 +4880,7 @@ public class TelephonyManager {
             }
             throw new IllegalStateException("telephony service is null.");
         } catch (RemoteException ex) {
-            Log.e(TAG, "getEmergencyNumberList RemoteException", ex);
+            Log.m69e(TAG, "getEmergencyNumberList RemoteException", ex);
             ex.rethrowAsRuntimeException();
             return emergencyNumberList;
         }
@@ -4843,7 +4906,7 @@ public class TelephonyManager {
             }
             throw new IllegalStateException("telephony service is null.");
         } catch (RemoteException ex) {
-            Log.e(TAG, "getEmergencyNumberList with Categories RemoteException", ex);
+            Log.m69e(TAG, "getEmergencyNumberList with Categories RemoteException", ex);
             ex.rethrowAsRuntimeException();
             return emergencyNumberList;
         }
@@ -4857,7 +4920,7 @@ public class TelephonyManager {
             }
             throw new IllegalStateException("telephony service is null.");
         } catch (RemoteException ex) {
-            Log.e(TAG, "isEmergencyNumber RemoteException", ex);
+            Log.m69e(TAG, "isEmergencyNumber RemoteException", ex);
             ex.rethrowAsRuntimeException();
             return false;
         }
@@ -4872,53 +4935,55 @@ public class TelephonyManager {
             }
             throw new IllegalStateException("telephony service is null.");
         } catch (RemoteException ex) {
-            Log.e(TAG, "isEmergencyNumber RemoteException", ex);
+            Log.m69e(TAG, "isEmergencyNumber RemoteException", ex);
             ex.rethrowAsRuntimeException();
             return false;
         }
     }
 
-    public void setPreferredOpportunisticDataSubscription(int subId, boolean needValidation, final Executor executor, final Consumer<Integer> callback) {
+    public void setPreferredOpportunisticDataSubscription(int subId, boolean needValidation, Executor executor, Consumer<Integer> callback) {
         String pkgForDebug = this.mContext != null ? this.mContext.getOpPackageName() : MediaStore.UNKNOWN_STRING;
         try {
             IOns iOpportunisticNetworkService = getIOns();
-            if (iOpportunisticNetworkService != null) {
-                iOpportunisticNetworkService.setPreferredDataSubscriptionId(subId, needValidation, new ISetOpportunisticDataCallback.Stub() {
-                    public void onComplete(int result) {
-                        if (executor != null && callback != null) {
-                            Binder.withCleanCallingIdentity((FunctionalUtils.ThrowingRunnable) new FunctionalUtils.ThrowingRunnable(executor, callback, result) {
-                                private final /* synthetic */ Executor f$0;
-                                private final /* synthetic */ Consumer f$1;
-                                private final /* synthetic */ int f$2;
-
-                                {
-                                    this.f$0 = r1;
-                                    this.f$1 = r2;
-                                    this.f$2 = r3;
-                                }
-
-                                public final void runOrThrow() {
-                                    this.f$0.execute(new Runnable(this.f$1, this.f$2) {
-                                        private final /* synthetic */ Consumer f$0;
-                                        private final /* synthetic */ int f$1;
-
-                                        {
-                                            this.f$0 = r1;
-                                            this.f$1 = r2;
-                                        }
-
-                                        public final void run() {
-                                            this.f$0.accept(Integer.valueOf(this.f$1));
-                                        }
-                                    });
-                                }
-                            });
-                        }
-                    }
-                }, pkgForDebug);
+            if (iOpportunisticNetworkService == null) {
+                return;
             }
+            ISetOpportunisticDataCallback callbackStub = new BinderC24255(executor, callback);
+            iOpportunisticNetworkService.setPreferredDataSubscriptionId(subId, needValidation, callbackStub, pkgForDebug);
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "setPreferredDataSubscriptionId RemoteException", ex);
+            Rlog.m85e(TAG, "setPreferredDataSubscriptionId RemoteException", ex);
+        }
+    }
+
+    /* renamed from: android.telephony.TelephonyManager$5 */
+    /* loaded from: classes.dex */
+    class BinderC24255 extends ISetOpportunisticDataCallback.Stub {
+        final /* synthetic */ Consumer val$callback;
+        final /* synthetic */ Executor val$executor;
+
+        BinderC24255(Executor executor, Consumer consumer) {
+            this.val$executor = executor;
+            this.val$callback = consumer;
+        }
+
+        @Override // com.android.internal.telephony.ISetOpportunisticDataCallback
+        public void onComplete(final int result) {
+            if (this.val$executor == null || this.val$callback == null) {
+                return;
+            }
+            final Executor executor = this.val$executor;
+            final Consumer consumer = this.val$callback;
+            Binder.withCleanCallingIdentity(new FunctionalUtils.ThrowingRunnable() { // from class: android.telephony.-$$Lambda$TelephonyManager$5$RFt1EExZlmUUXRBea_EWHl9kTkc
+                @Override // com.android.internal.util.FunctionalUtils.ThrowingRunnable
+                public final void runOrThrow() {
+                    executor.execute(new Runnable() { // from class: android.telephony.-$$Lambda$TelephonyManager$5$dLg4hbo46SmKP0wtKbXAlS8hCpg
+                        @Override // java.lang.Runnable
+                        public final void run() {
+                            r1.accept(Integer.valueOf(r2));
+                        }
+                    });
+                }
+            });
         }
     }
 
@@ -4926,12 +4991,13 @@ public class TelephonyManager {
         String pkgForDebug = this.mContext != null ? this.mContext.getOpPackageName() : MediaStore.UNKNOWN_STRING;
         try {
             IOns iOpportunisticNetworkService = getIOns();
-            if (iOpportunisticNetworkService != null) {
-                return iOpportunisticNetworkService.getPreferredDataSubscriptionId(pkgForDebug);
+            if (iOpportunisticNetworkService == null) {
+                return -1;
             }
-            return -1;
+            int subId = iOpportunisticNetworkService.getPreferredDataSubscriptionId(pkgForDebug);
+            return subId;
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "getPreferredDataSubscriptionId RemoteException", ex);
+            Rlog.m85e(TAG, "getPreferredDataSubscriptionId RemoteException", ex);
             return -1;
         }
     }
@@ -4940,69 +5006,56 @@ public class TelephonyManager {
         String pkgForDebug = this.mContext != null ? this.mContext.getOpPackageName() : MediaStore.UNKNOWN_STRING;
         try {
             IOns iOpportunisticNetworkService = getIOns();
-            if (iOpportunisticNetworkService != null) {
-                if (availableNetworks != null) {
-                    iOpportunisticNetworkService.updateAvailableNetworks(availableNetworks, new IUpdateAvailableNetworksCallback.Stub() {
-                        public void onComplete(int result) {
-                            if (executor != null && callback != null) {
-                                Binder.withCleanCallingIdentity((FunctionalUtils.ThrowingRunnable) new FunctionalUtils.ThrowingRunnable(executor, callback, result) {
-                                    private final /* synthetic */ Executor f$0;
-                                    private final /* synthetic */ Consumer f$1;
-                                    private final /* synthetic */ int f$2;
-
-                                    {
-                                        this.f$0 = r1;
-                                        this.f$1 = r2;
-                                        this.f$2 = r3;
-                                    }
-
-                                    public final void runOrThrow() {
-                                        this.f$0.execute(new Runnable(this.f$1, this.f$2) {
-                                            private final /* synthetic */ Consumer f$0;
-                                            private final /* synthetic */ int f$1;
-
-                                            {
-                                                this.f$0 = r1;
-                                                this.f$1 = r2;
-                                            }
-
-                                            public final void run() {
-                                                this.f$0.accept(Integer.valueOf(this.f$1));
-                                            }
-                                        });
-                                    }
-                                });
-                            }
-                        }
-                    }, pkgForDebug);
-                    return;
-                }
+            if (iOpportunisticNetworkService != null && availableNetworks != null) {
+                IUpdateAvailableNetworksCallback callbackStub = new BinderC24266(executor, callback);
+                iOpportunisticNetworkService.updateAvailableNetworks(availableNetworks, callbackStub, pkgForDebug);
+                return;
             }
-            Binder.withCleanCallingIdentity((FunctionalUtils.ThrowingRunnable) new FunctionalUtils.ThrowingRunnable(executor, callback) {
-                private final /* synthetic */ Executor f$0;
-                private final /* synthetic */ Consumer f$1;
-
-                {
-                    this.f$0 = r1;
-                    this.f$1 = r2;
-                }
-
+            Binder.withCleanCallingIdentity(new FunctionalUtils.ThrowingRunnable() { // from class: android.telephony.-$$Lambda$TelephonyManager$eMNW6lCcxHLvIrcBQvhUXUKuLFU
+                @Override // com.android.internal.util.FunctionalUtils.ThrowingRunnable
                 public final void runOrThrow() {
-                    this.f$0.execute(new Runnable(this.f$1) {
-                        private final /* synthetic */ Consumer f$0;
-
-                        {
-                            this.f$0 = r1;
-                        }
-
+                    executor.execute(new Runnable() { // from class: android.telephony.-$$Lambda$TelephonyManager$qjhLNTc5_Bq4btM7q4y_F5cdAK0
+                        @Override // java.lang.Runnable
                         public final void run() {
-                            this.f$0.accept(3);
+                            r1.accept(3);
                         }
                     });
                 }
             });
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "updateAvailableNetworks RemoteException", ex);
+            Rlog.m85e(TAG, "updateAvailableNetworks RemoteException", ex);
+        }
+    }
+
+    /* renamed from: android.telephony.TelephonyManager$6 */
+    /* loaded from: classes.dex */
+    class BinderC24266 extends IUpdateAvailableNetworksCallback.Stub {
+        final /* synthetic */ Consumer val$callback;
+        final /* synthetic */ Executor val$executor;
+
+        BinderC24266(Executor executor, Consumer consumer) {
+            this.val$executor = executor;
+            this.val$callback = consumer;
+        }
+
+        @Override // com.android.internal.telephony.IUpdateAvailableNetworksCallback
+        public void onComplete(final int result) {
+            if (this.val$executor == null || this.val$callback == null) {
+                return;
+            }
+            final Executor executor = this.val$executor;
+            final Consumer consumer = this.val$callback;
+            Binder.withCleanCallingIdentity(new FunctionalUtils.ThrowingRunnable() { // from class: android.telephony.-$$Lambda$TelephonyManager$6$1S5Pi2oZUOPIU8alAP53FlL2sjk
+                @Override // com.android.internal.util.FunctionalUtils.ThrowingRunnable
+                public final void runOrThrow() {
+                    executor.execute(new Runnable() { // from class: android.telephony.-$$Lambda$TelephonyManager$6$AFjFk42NCFYCMG8wA5-6SCfk7No
+                        @Override // java.lang.Runnable
+                        public final void run() {
+                            r1.accept(Integer.valueOf(r2));
+                        }
+                    });
+                }
+            });
         }
     }
 
@@ -5010,12 +5063,13 @@ public class TelephonyManager {
     public boolean enableModemForSlot(int slotIndex, boolean enable) {
         try {
             ITelephony telephony = getITelephony();
-            if (telephony != null) {
-                return telephony.enableModemForSlot(slotIndex, enable);
+            if (telephony == null) {
+                return false;
             }
-            return false;
+            boolean ret = telephony.enableModemForSlot(slotIndex, enable);
+            return ret;
         } catch (RemoteException ex) {
-            Log.e(TAG, "enableModem RemoteException", ex);
+            Log.m69e(TAG, "enableModem RemoteException", ex);
             return false;
         }
     }
@@ -5028,7 +5082,7 @@ public class TelephonyManager {
             }
             return false;
         } catch (RemoteException ex) {
-            Log.e(TAG, "enableModem RemoteException", ex);
+            Log.m69e(TAG, "enableModem RemoteException", ex);
             return false;
         }
     }
@@ -5041,7 +5095,7 @@ public class TelephonyManager {
                 service.setMultiSimCarrierRestriction(isMultiSimCarrierRestricted);
             }
         } catch (RemoteException e) {
-            Log.e(TAG, "setMultiSimCarrierRestriction RemoteException", e);
+            Log.m69e(TAG, "setMultiSimCarrierRestriction RemoteException", e);
         }
     }
 
@@ -5053,7 +5107,7 @@ public class TelephonyManager {
             }
             return 1;
         } catch (RemoteException e) {
-            Log.e(TAG, "isMultiSimSupported RemoteException", e);
+            Log.m69e(TAG, "isMultiSimSupported RemoteException", e);
             return 1;
         }
     }
@@ -5065,7 +5119,7 @@ public class TelephonyManager {
                 telephony.switchMultiSimConfig(numOfSims);
             }
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "switchMultiSimConfig RemoteException", ex);
+            Rlog.m85e(TAG, "switchMultiSimConfig RemoteException", ex);
         }
     }
 
@@ -5077,7 +5131,7 @@ public class TelephonyManager {
             }
             return false;
         } catch (RemoteException e) {
-            Log.e(TAG, "doesSwitchMultiSimConfigTriggerReboot RemoteException", e);
+            Log.m69e(TAG, "doesSwitchMultiSimConfigTriggerReboot RemoteException", e);
             return false;
         }
     }
@@ -5093,7 +5147,7 @@ public class TelephonyManager {
                 return new Pair<>(Integer.valueOf(version / 100), Integer.valueOf(version % 100));
             }
         } catch (RemoteException e) {
-            Log.e(TAG, "getRadioHalVersion() RemoteException", e);
+            Log.m69e(TAG, "getRadioHalVersion() RemoteException", e);
         }
         return new Pair<>(-1, -1);
     }
@@ -5107,10 +5161,10 @@ public class TelephonyManager {
             }
             return false;
         } catch (RemoteException ex) {
-            if (isSystemProcess()) {
+            if (!isSystemProcess()) {
+                ex.rethrowAsRuntimeException();
                 return false;
             }
-            ex.rethrowAsRuntimeException();
             return false;
         }
     }
@@ -5123,10 +5177,10 @@ public class TelephonyManager {
             }
             return true;
         } catch (RemoteException ex) {
-            if (isSystemProcess()) {
+            if (!isSystemProcess()) {
+                ex.rethrowAsRuntimeException();
                 return true;
             }
-            ex.rethrowAsRuntimeException();
             return true;
         }
     }
@@ -5139,10 +5193,10 @@ public class TelephonyManager {
             }
             return false;
         } catch (RemoteException ex) {
-            if (isSystemProcess()) {
+            if (!isSystemProcess()) {
+                ex.rethrowAsRuntimeException();
                 return false;
             }
-            ex.rethrowAsRuntimeException();
             return false;
         }
     }
@@ -5155,10 +5209,10 @@ public class TelephonyManager {
             }
             return false;
         } catch (RemoteException ex) {
-            if (isSystemProcess()) {
+            if (!isSystemProcess()) {
+                ex.rethrowAsRuntimeException();
                 return false;
             }
-            ex.rethrowAsRuntimeException();
             return false;
         }
     }

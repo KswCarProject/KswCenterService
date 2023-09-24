@@ -4,11 +4,12 @@ import android.annotation.SystemApi;
 import android.hardware.radio.ProgramList;
 import android.hardware.radio.ProgramSelector;
 import android.hardware.radio.RadioManager;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -18,19 +19,22 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class ProgramList implements AutoCloseable {
+    private OnCloseListener mOnCloseListener;
+    private final Object mLock = new Object();
+    private final Map<ProgramSelector.Identifier, RadioManager.ProgramInfo> mPrograms = new HashMap();
+    private final List<ListCallback> mListCallbacks = new ArrayList();
+    private final List<OnCompleteListener> mOnCompleteListeners = new ArrayList();
     private boolean mIsClosed = false;
     private boolean mIsComplete = false;
-    private final List<ListCallback> mListCallbacks = new ArrayList();
-    private final Object mLock = new Object();
-    private OnCloseListener mOnCloseListener;
-    private final List<OnCompleteListener> mOnCompleteListeners = new ArrayList();
-    private final Map<ProgramSelector.Identifier, RadioManager.ProgramInfo> mPrograms = new HashMap();
 
+    /* loaded from: classes.dex */
     interface OnCloseListener {
         void onClose();
     }
 
+    /* loaded from: classes.dex */
     public interface OnCompleteListener {
         void onComplete();
     }
@@ -38,6 +42,7 @@ public final class ProgramList implements AutoCloseable {
     ProgramList() {
     }
 
+    /* loaded from: classes.dex */
     public static abstract class ListCallback {
         public void onItemChanged(ProgramSelector.Identifier id) {
         }
@@ -46,245 +51,194 @@ public final class ProgramList implements AutoCloseable {
         }
     }
 
-    public void registerListCallback(final Executor executor, final ListCallback callback) {
-        registerListCallback(new ListCallback() {
-            public void onItemChanged(ProgramSelector.Identifier id) {
-                executor.execute(new Runnable(id) {
-                    private final /* synthetic */ ProgramSelector.Identifier f$1;
+    /* renamed from: android.hardware.radio.ProgramList$1 */
+    /* loaded from: classes.dex */
+    class C09231 extends ListCallback {
+        final /* synthetic */ ListCallback val$callback;
+        final /* synthetic */ Executor val$executor;
 
-                    {
-                        this.f$1 = r2;
-                    }
+        C09231(Executor executor, ListCallback listCallback) {
+            this.val$executor = executor;
+            this.val$callback = listCallback;
+        }
 
-                    public final void run() {
-                        ProgramList.ListCallback.this.onItemChanged(this.f$1);
-                    }
-                });
-            }
+        @Override // android.hardware.radio.ProgramList.ListCallback
+        public void onItemChanged(final ProgramSelector.Identifier id) {
+            Executor executor = this.val$executor;
+            final ListCallback listCallback = this.val$callback;
+            executor.execute(new Runnable() { // from class: android.hardware.radio.-$$Lambda$ProgramList$1$DVvry5MfhR6n8H2EZn67rvuhllI
+                @Override // java.lang.Runnable
+                public final void run() {
+                    ProgramList.ListCallback.this.onItemChanged(id);
+                }
+            });
+        }
 
-            public void onItemRemoved(ProgramSelector.Identifier id) {
-                executor.execute(new Runnable(id) {
-                    private final /* synthetic */ ProgramSelector.Identifier f$1;
+        @Override // android.hardware.radio.ProgramList.ListCallback
+        public void onItemRemoved(final ProgramSelector.Identifier id) {
+            Executor executor = this.val$executor;
+            final ListCallback listCallback = this.val$callback;
+            executor.execute(new Runnable() { // from class: android.hardware.radio.-$$Lambda$ProgramList$1$a_xWqo5pESOZhcJIWvpiCd2AXmY
+                @Override // java.lang.Runnable
+                public final void run() {
+                    ProgramList.ListCallback.this.onItemRemoved(id);
+                }
+            });
+        }
+    }
 
-                    {
-                        this.f$1 = r2;
-                    }
-
-                    public final void run() {
-                        ProgramList.ListCallback.this.onItemRemoved(this.f$1);
-                    }
-                });
-            }
-        });
+    public void registerListCallback(Executor executor, ListCallback callback) {
+        registerListCallback(new C09231(executor, callback));
     }
 
     public void registerListCallback(ListCallback callback) {
         synchronized (this.mLock) {
-            if (!this.mIsClosed) {
-                this.mListCallbacks.add((ListCallback) Objects.requireNonNull(callback));
+            if (this.mIsClosed) {
+                return;
             }
+            this.mListCallbacks.add((ListCallback) Objects.requireNonNull(callback));
         }
     }
 
     public void unregisterListCallback(ListCallback callback) {
         synchronized (this.mLock) {
-            if (!this.mIsClosed) {
-                this.mListCallbacks.remove(Objects.requireNonNull(callback));
+            if (this.mIsClosed) {
+                return;
             }
+            this.mListCallbacks.remove(Objects.requireNonNull(callback));
         }
     }
 
-    static /* synthetic */ void lambda$addOnCompleteListener$0(Executor executor, OnCompleteListener listener) {
+    static /* synthetic */ void lambda$addOnCompleteListener$0(Executor executor, final OnCompleteListener listener) {
         Objects.requireNonNull(listener);
-        executor.execute(new Runnable() {
+        executor.execute(new Runnable() { // from class: android.hardware.radio.-$$Lambda$1DA3e7WM2G0cVcFyFUhdDG0CYnw
+            @Override // java.lang.Runnable
             public final void run() {
                 ProgramList.OnCompleteListener.this.onComplete();
             }
         });
     }
 
-    public void addOnCompleteListener(Executor executor, OnCompleteListener listener) {
-        addOnCompleteListener(new OnCompleteListener(executor, listener) {
-            private final /* synthetic */ Executor f$0;
-            private final /* synthetic */ ProgramList.OnCompleteListener f$1;
-
-            {
-                this.f$0 = r1;
-                this.f$1 = r2;
-            }
-
+    public void addOnCompleteListener(final Executor executor, final OnCompleteListener listener) {
+        addOnCompleteListener(new OnCompleteListener() { // from class: android.hardware.radio.-$$Lambda$ProgramList$aDYMynqVdAUqeKXIxfNtN1u67zs
+            @Override // android.hardware.radio.ProgramList.OnCompleteListener
             public final void onComplete() {
-                ProgramList.lambda$addOnCompleteListener$0(this.f$0, this.f$1);
+                ProgramList.lambda$addOnCompleteListener$0(executor, listener);
             }
         });
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:11:0x001c, code lost:
-        return;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void addOnCompleteListener(android.hardware.radio.ProgramList.OnCompleteListener r4) {
-        /*
-            r3 = this;
-            java.lang.Object r0 = r3.mLock
-            monitor-enter(r0)
-            boolean r1 = r3.mIsClosed     // Catch:{ all -> 0x001d }
-            if (r1 == 0) goto L_0x0009
-            monitor-exit(r0)     // Catch:{ all -> 0x001d }
-            return
-        L_0x0009:
-            java.util.List<android.hardware.radio.ProgramList$OnCompleteListener> r1 = r3.mOnCompleteListeners     // Catch:{ all -> 0x001d }
-            java.lang.Object r2 = java.util.Objects.requireNonNull(r4)     // Catch:{ all -> 0x001d }
-            android.hardware.radio.ProgramList$OnCompleteListener r2 = (android.hardware.radio.ProgramList.OnCompleteListener) r2     // Catch:{ all -> 0x001d }
-            r1.add(r2)     // Catch:{ all -> 0x001d }
-            boolean r1 = r3.mIsComplete     // Catch:{ all -> 0x001d }
-            if (r1 == 0) goto L_0x001b
-            r4.onComplete()     // Catch:{ all -> 0x001d }
-        L_0x001b:
-            monitor-exit(r0)     // Catch:{ all -> 0x001d }
-            return
-        L_0x001d:
-            r1 = move-exception
-            monitor-exit(r0)     // Catch:{ all -> 0x001d }
-            throw r1
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.hardware.radio.ProgramList.addOnCompleteListener(android.hardware.radio.ProgramList$OnCompleteListener):void");
+    public void addOnCompleteListener(OnCompleteListener listener) {
+        synchronized (this.mLock) {
+            if (this.mIsClosed) {
+                return;
+            }
+            this.mOnCompleteListeners.add((OnCompleteListener) Objects.requireNonNull(listener));
+            if (this.mIsComplete) {
+                listener.onComplete();
+            }
+        }
     }
 
     public void removeOnCompleteListener(OnCompleteListener listener) {
         synchronized (this.mLock) {
-            if (!this.mIsClosed) {
-                this.mOnCompleteListeners.remove(Objects.requireNonNull(listener));
+            if (this.mIsClosed) {
+                return;
             }
+            this.mOnCompleteListeners.remove(Objects.requireNonNull(listener));
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void setOnCloseListener(OnCloseListener listener) {
+    void setOnCloseListener(OnCloseListener listener) {
         synchronized (this.mLock) {
-            if (this.mOnCloseListener == null) {
-                this.mOnCloseListener = listener;
-            } else {
+            if (this.mOnCloseListener != null) {
                 throw new IllegalStateException("Close callback is already set");
             }
+            this.mOnCloseListener = listener;
         }
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:11:0x0028, code lost:
-        return;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
+    @Override // java.lang.AutoCloseable
     public void close() {
-        /*
-            r2 = this;
-            java.lang.Object r0 = r2.mLock
-            monitor-enter(r0)
-            boolean r1 = r2.mIsClosed     // Catch:{ all -> 0x0029 }
-            if (r1 == 0) goto L_0x0009
-            monitor-exit(r0)     // Catch:{ all -> 0x0029 }
-            return
-        L_0x0009:
-            r1 = 1
-            r2.mIsClosed = r1     // Catch:{ all -> 0x0029 }
-            java.util.Map<android.hardware.radio.ProgramSelector$Identifier, android.hardware.radio.RadioManager$ProgramInfo> r1 = r2.mPrograms     // Catch:{ all -> 0x0029 }
-            r1.clear()     // Catch:{ all -> 0x0029 }
-            java.util.List<android.hardware.radio.ProgramList$ListCallback> r1 = r2.mListCallbacks     // Catch:{ all -> 0x0029 }
-            r1.clear()     // Catch:{ all -> 0x0029 }
-            java.util.List<android.hardware.radio.ProgramList$OnCompleteListener> r1 = r2.mOnCompleteListeners     // Catch:{ all -> 0x0029 }
-            r1.clear()     // Catch:{ all -> 0x0029 }
-            android.hardware.radio.ProgramList$OnCloseListener r1 = r2.mOnCloseListener     // Catch:{ all -> 0x0029 }
-            if (r1 == 0) goto L_0x0027
-            android.hardware.radio.ProgramList$OnCloseListener r1 = r2.mOnCloseListener     // Catch:{ all -> 0x0029 }
-            r1.onClose()     // Catch:{ all -> 0x0029 }
-            r1 = 0
-            r2.mOnCloseListener = r1     // Catch:{ all -> 0x0029 }
-        L_0x0027:
-            monitor-exit(r0)     // Catch:{ all -> 0x0029 }
-            return
-        L_0x0029:
-            r1 = move-exception
-            monitor-exit(r0)     // Catch:{ all -> 0x0029 }
-            throw r1
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.hardware.radio.ProgramList.close():void");
+        synchronized (this.mLock) {
+            if (this.mIsClosed) {
+                return;
+            }
+            this.mIsClosed = true;
+            this.mPrograms.clear();
+            this.mListCallbacks.clear();
+            this.mOnCompleteListeners.clear();
+            if (this.mOnCloseListener != null) {
+                this.mOnCloseListener.onClose();
+                this.mOnCloseListener = null;
+            }
+        }
     }
 
-    /* access modifiers changed from: package-private */
-    /* JADX WARNING: Code restructure failed: missing block: B:14:0x005a, code lost:
-        return;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void apply(android.hardware.radio.ProgramList.Chunk r4) {
-        /*
-            r3 = this;
-            java.lang.Object r0 = r3.mLock
-            monitor-enter(r0)
-            boolean r1 = r3.mIsClosed     // Catch:{ all -> 0x005b }
-            if (r1 == 0) goto L_0x0009
-            monitor-exit(r0)     // Catch:{ all -> 0x005b }
-            return
-        L_0x0009:
-            r1 = 0
-            r3.mIsComplete = r1     // Catch:{ all -> 0x005b }
-            boolean r1 = r4.isPurge()     // Catch:{ all -> 0x005b }
-            if (r1 == 0) goto L_0x0029
-            java.util.HashSet r1 = new java.util.HashSet     // Catch:{ all -> 0x005b }
-            java.util.Map<android.hardware.radio.ProgramSelector$Identifier, android.hardware.radio.RadioManager$ProgramInfo> r2 = r3.mPrograms     // Catch:{ all -> 0x005b }
-            java.util.Set r2 = r2.keySet()     // Catch:{ all -> 0x005b }
-            r1.<init>(r2)     // Catch:{ all -> 0x005b }
-            java.util.stream.Stream r1 = r1.stream()     // Catch:{ all -> 0x005b }
-            android.hardware.radio.-$$Lambda$ProgramList$F-JpTj3vYguKIUQbnLbTePTuqUE r2 = new android.hardware.radio.-$$Lambda$ProgramList$F-JpTj3vYguKIUQbnLbTePTuqUE     // Catch:{ all -> 0x005b }
-            r2.<init>()     // Catch:{ all -> 0x005b }
-            r1.forEach(r2)     // Catch:{ all -> 0x005b }
-        L_0x0029:
-            java.util.Set r1 = r4.getRemoved()     // Catch:{ all -> 0x005b }
-            java.util.stream.Stream r1 = r1.stream()     // Catch:{ all -> 0x005b }
-            android.hardware.radio.-$$Lambda$ProgramList$pKu0Zp5jwjix619hfB_Imj8Ke_g r2 = new android.hardware.radio.-$$Lambda$ProgramList$pKu0Zp5jwjix619hfB_Imj8Ke_g     // Catch:{ all -> 0x005b }
-            r2.<init>()     // Catch:{ all -> 0x005b }
-            r1.forEach(r2)     // Catch:{ all -> 0x005b }
-            java.util.Set r1 = r4.getModified()     // Catch:{ all -> 0x005b }
-            java.util.stream.Stream r1 = r1.stream()     // Catch:{ all -> 0x005b }
-            android.hardware.radio.-$$Lambda$ProgramList$eY050tMTgAcGV9hiWR-UDxhkfhw r2 = new android.hardware.radio.-$$Lambda$ProgramList$eY050tMTgAcGV9hiWR-UDxhkfhw     // Catch:{ all -> 0x005b }
-            r2.<init>()     // Catch:{ all -> 0x005b }
-            r1.forEach(r2)     // Catch:{ all -> 0x005b }
-            boolean r1 = r4.isComplete()     // Catch:{ all -> 0x005b }
-            if (r1 == 0) goto L_0x0059
-            r1 = 1
-            r3.mIsComplete = r1     // Catch:{ all -> 0x005b }
-            java.util.List<android.hardware.radio.ProgramList$OnCompleteListener> r1 = r3.mOnCompleteListeners     // Catch:{ all -> 0x005b }
-            android.hardware.radio.-$$Lambda$ProgramList$GfCj9jJ5znxw2TV4c2uykq35dgI r2 = android.hardware.radio.$$Lambda$ProgramList$GfCj9jJ5znxw2TV4c2uykq35dgI.INSTANCE     // Catch:{ all -> 0x005b }
-            r1.forEach(r2)     // Catch:{ all -> 0x005b }
-        L_0x0059:
-            monitor-exit(r0)     // Catch:{ all -> 0x005b }
-            return
-        L_0x005b:
-            r1 = move-exception
-            monitor-exit(r0)     // Catch:{ all -> 0x005b }
-            throw r1
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.hardware.radio.ProgramList.apply(android.hardware.radio.ProgramList$Chunk):void");
+    void apply(Chunk chunk) {
+        synchronized (this.mLock) {
+            if (this.mIsClosed) {
+                return;
+            }
+            this.mIsComplete = false;
+            if (chunk.isPurge()) {
+                new HashSet(this.mPrograms.keySet()).stream().forEach(new Consumer() { // from class: android.hardware.radio.-$$Lambda$ProgramList$F-JpTj3vYguKIUQbnLbTePTuqUE
+                    @Override // java.util.function.Consumer
+                    public final void accept(Object obj) {
+                        ProgramList.this.removeLocked((ProgramSelector.Identifier) obj);
+                    }
+                });
+            }
+            chunk.getRemoved().stream().forEach(new Consumer() { // from class: android.hardware.radio.-$$Lambda$ProgramList$pKu0Zp5jwjix619hfB_Imj8Ke_g
+                @Override // java.util.function.Consumer
+                public final void accept(Object obj) {
+                    ProgramList.this.removeLocked((ProgramSelector.Identifier) obj);
+                }
+            });
+            chunk.getModified().stream().forEach(new Consumer() { // from class: android.hardware.radio.-$$Lambda$ProgramList$eY050tMTgAcGV9hiWR-UDxhkfhw
+                @Override // java.util.function.Consumer
+                public final void accept(Object obj) {
+                    ProgramList.this.putLocked((RadioManager.ProgramInfo) obj);
+                }
+            });
+            if (chunk.isComplete()) {
+                this.mIsComplete = true;
+                this.mOnCompleteListeners.forEach(new Consumer() { // from class: android.hardware.radio.-$$Lambda$ProgramList$GfCj9jJ5znxw2TV4c2uykq35dgI
+                    @Override // java.util.function.Consumer
+                    public final void accept(Object obj) {
+                        ((ProgramList.OnCompleteListener) obj).onComplete();
+                    }
+                });
+            }
+        }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void putLocked(RadioManager.ProgramInfo value) {
-        this.mPrograms.put((ProgramSelector.Identifier) Objects.requireNonNull(value.getSelector().getPrimaryId()), value);
-        this.mListCallbacks.forEach(new Consumer() {
+        ProgramSelector.Identifier key = value.getSelector().getPrimaryId();
+        this.mPrograms.put((ProgramSelector.Identifier) Objects.requireNonNull(key), value);
+        final ProgramSelector.Identifier sel = value.getSelector().getPrimaryId();
+        this.mListCallbacks.forEach(new Consumer() { // from class: android.hardware.radio.-$$Lambda$ProgramList$fDnoTVk5UB7qTfD9S7SYPcadYn0
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
                 ((ProgramList.ListCallback) obj).onItemChanged(ProgramSelector.Identifier.this);
             }
         });
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void removeLocked(ProgramSelector.Identifier key) {
         RadioManager.ProgramInfo removed = this.mPrograms.remove(Objects.requireNonNull(key));
-        if (removed != null) {
-            this.mListCallbacks.forEach(new Consumer() {
-                public final void accept(Object obj) {
-                    ((ProgramList.ListCallback) obj).onItemRemoved(ProgramSelector.Identifier.this);
-                }
-            });
+        if (removed == null) {
+            return;
         }
+        final ProgramSelector.Identifier sel = removed.getSelector().getPrimaryId();
+        this.mListCallbacks.forEach(new Consumer() { // from class: android.hardware.radio.-$$Lambda$ProgramList$fHYelmhnUsVTYl6dFj75fMqCjGs
+            @Override // java.util.function.Consumer
+            public final void accept(Object obj) {
+                ((ProgramList.ListCallback) obj).onItemRemoved(ProgramSelector.Identifier.this);
+            }
+        });
     }
 
     public List<RadioManager.ProgramInfo> toList() {
@@ -303,12 +257,17 @@ public final class ProgramList implements AutoCloseable {
         return programInfo;
     }
 
+    /* loaded from: classes.dex */
     public static final class Filter implements Parcelable {
-        public static final Parcelable.Creator<Filter> CREATOR = new Parcelable.Creator<Filter>() {
+        public static final Parcelable.Creator<Filter> CREATOR = new Parcelable.Creator<Filter>() { // from class: android.hardware.radio.ProgramList.Filter.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public Filter createFromParcel(Parcel in) {
-                return new Filter(in);
+                return new Filter(in, null);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public Filter[] newArray(int size) {
                 return new Filter[size];
             }
@@ -318,6 +277,10 @@ public final class ProgramList implements AutoCloseable {
         private final Set<ProgramSelector.Identifier> mIdentifiers;
         private final boolean mIncludeCategories;
         private final Map<String, String> mVendorFilter;
+
+        /* synthetic */ Filter(Parcel x0, C09231 x1) {
+            this(x0);
+        }
 
         public Filter(Set<Integer> identifierTypes, Set<ProgramSelector.Identifier> identifiers, boolean includeCategories, boolean excludeModifications) {
             this.mIdentifierTypes = (Set) Objects.requireNonNull(identifierTypes);
@@ -346,20 +309,21 @@ public final class ProgramList implements AutoCloseable {
         private Filter(Parcel in) {
             this.mIdentifierTypes = Utils.createIntSet(in);
             this.mIdentifiers = Utils.createSet(in, ProgramSelector.Identifier.CREATOR);
-            boolean z = false;
             this.mIncludeCategories = in.readByte() != 0;
-            this.mExcludeModifications = in.readByte() != 0 ? true : z;
+            this.mExcludeModifications = in.readByte() != 0;
             this.mVendorFilter = Utils.readStringMap(in);
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             Utils.writeIntSet(dest, this.mIdentifierTypes);
             Utils.writeSet(dest, this.mIdentifiers);
-            dest.writeByte(this.mIncludeCategories ? (byte) 1 : 0);
-            dest.writeByte(this.mExcludeModifications ? (byte) 1 : 0);
+            dest.writeByte(this.mIncludeCategories ? (byte) 1 : (byte) 0);
+            dest.writeByte(this.mExcludeModifications ? (byte) 1 : (byte) 0);
             Utils.writeStringMap(dest, this.mVendorFilter);
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
@@ -385,12 +349,17 @@ public final class ProgramList implements AutoCloseable {
         }
     }
 
+    /* loaded from: classes.dex */
     public static final class Chunk implements Parcelable {
-        public static final Parcelable.Creator<Chunk> CREATOR = new Parcelable.Creator<Chunk>() {
+        public static final Parcelable.Creator<Chunk> CREATOR = new Parcelable.Creator<Chunk>() { // from class: android.hardware.radio.ProgramList.Chunk.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public Chunk createFromParcel(Parcel in) {
-                return new Chunk(in);
+                return new Chunk(in, null);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public Chunk[] newArray(int size) {
                 return new Chunk[size];
             }
@@ -400,6 +369,10 @@ public final class ProgramList implements AutoCloseable {
         private final boolean mPurge;
         private final Set<ProgramSelector.Identifier> mRemoved;
 
+        /* synthetic */ Chunk(Parcel x0, C09231 x1) {
+            this(x0);
+        }
+
         public Chunk(boolean purge, boolean complete, Set<RadioManager.ProgramInfo> modified, Set<ProgramSelector.Identifier> removed) {
             this.mPurge = purge;
             this.mComplete = complete;
@@ -408,20 +381,21 @@ public final class ProgramList implements AutoCloseable {
         }
 
         private Chunk(Parcel in) {
-            boolean z = false;
             this.mPurge = in.readByte() != 0;
-            this.mComplete = in.readByte() != 0 ? true : z;
+            this.mComplete = in.readByte() != 0;
             this.mModified = Utils.createSet(in, RadioManager.ProgramInfo.CREATOR);
             this.mRemoved = Utils.createSet(in, ProgramSelector.Identifier.CREATOR);
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
-            dest.writeByte(this.mPurge ? (byte) 1 : 0);
-            dest.writeByte(this.mComplete ? (byte) 1 : 0);
+            dest.writeByte(this.mPurge ? (byte) 1 : (byte) 0);
+            dest.writeByte(this.mComplete ? (byte) 1 : (byte) 0);
             Utils.writeSet(dest, this.mModified);
             Utils.writeSet(dest, this.mRemoved);
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }

@@ -1,18 +1,24 @@
 package android.app.usage;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.util.Preconditions;
 import java.util.Objects;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class CacheQuotaHint implements Parcelable {
-    public static final Parcelable.Creator<CacheQuotaHint> CREATOR = new Parcelable.Creator<CacheQuotaHint>() {
+    public static final Parcelable.Creator<CacheQuotaHint> CREATOR = new Parcelable.Creator<CacheQuotaHint>() { // from class: android.app.usage.CacheQuotaHint.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public CacheQuotaHint createFromParcel(Parcel in) {
-            return new Builder().setVolumeUuid(in.readString()).setUid(in.readInt()).setQuota(in.readLong()).setUsageStats((UsageStats) in.readParcelable(UsageStats.class.getClassLoader())).build();
+            Builder builder = new Builder();
+            return builder.setVolumeUuid(in.readString()).setUid(in.readInt()).setQuota(in.readLong()).setUsageStats((UsageStats) in.readParcelable(UsageStats.class.getClassLoader())).build();
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public CacheQuotaHint[] newArray(int size) {
             return new CacheQuotaHint[size];
         }
@@ -46,6 +52,7 @@ public final class CacheQuotaHint implements Parcelable {
         return this.mUsageStats;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.mUuid);
         dest.writeInt(this.mUid);
@@ -53,34 +60,29 @@ public final class CacheQuotaHint implements Parcelable {
         dest.writeParcelable(this.mUsageStats, 0);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
     public boolean equals(Object o) {
-        if (!(o instanceof CacheQuotaHint)) {
-            return false;
+        if (o instanceof CacheQuotaHint) {
+            CacheQuotaHint other = (CacheQuotaHint) o;
+            return Objects.equals(this.mUuid, other.mUuid) && Objects.equals(this.mUsageStats, other.mUsageStats) && this.mUid == other.mUid && this.mQuota == other.mQuota;
         }
-        CacheQuotaHint other = (CacheQuotaHint) o;
-        if (!Objects.equals(this.mUuid, other.mUuid) || !Objects.equals(this.mUsageStats, other.mUsageStats) || this.mUid != other.mUid || this.mQuota != other.mQuota) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{this.mUuid, Integer.valueOf(this.mUid), this.mUsageStats, Long.valueOf(this.mQuota)});
+        return Objects.hash(this.mUuid, Integer.valueOf(this.mUid), this.mUsageStats, Long.valueOf(this.mQuota));
     }
 
+    /* loaded from: classes.dex */
     public static final class Builder {
-        /* access modifiers changed from: private */
-        public long mQuota;
-        /* access modifiers changed from: private */
-        public int mUid;
-        /* access modifiers changed from: private */
-        public UsageStats mUsageStats;
-        /* access modifiers changed from: private */
-        public String mUuid;
+        private long mQuota;
+        private int mUid;
+        private UsageStats mUsageStats;
+        private String mUuid;
 
         public Builder() {
         }

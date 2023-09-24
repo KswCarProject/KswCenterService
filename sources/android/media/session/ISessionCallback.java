@@ -2,15 +2,17 @@ package android.media.session;
 
 import android.content.Intent;
 import android.media.Rating;
+import android.media.session.ISessionControllerCallback;
 import android.net.Uri;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
-import android.os.ResultReceiver;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
+import android.p007os.ResultReceiver;
 
+/* loaded from: classes3.dex */
 public interface ISessionCallback extends IInterface {
     void onAdjustVolume(String str, int i, int i2, ISessionControllerCallback iSessionControllerCallback, int i3) throws RemoteException;
 
@@ -60,84 +62,111 @@ public interface ISessionCallback extends IInterface {
 
     void onStop(String str, int i, int i2, ISessionControllerCallback iSessionControllerCallback) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements ISessionCallback {
+        @Override // android.media.session.ISessionCallback
         public void onCommand(String packageName, int pid, int uid, ISessionControllerCallback caller, String command, Bundle args, ResultReceiver cb) throws RemoteException {
         }
 
+        @Override // android.media.session.ISessionCallback
         public void onMediaButton(String packageName, int pid, int uid, Intent mediaButtonIntent, int sequenceNumber, ResultReceiver cb) throws RemoteException {
         }
 
+        @Override // android.media.session.ISessionCallback
         public void onMediaButtonFromController(String packageName, int pid, int uid, ISessionControllerCallback caller, Intent mediaButtonIntent) throws RemoteException {
         }
 
+        @Override // android.media.session.ISessionCallback
         public void onPrepare(String packageName, int pid, int uid, ISessionControllerCallback caller) throws RemoteException {
         }
 
+        @Override // android.media.session.ISessionCallback
         public void onPrepareFromMediaId(String packageName, int pid, int uid, ISessionControllerCallback caller, String mediaId, Bundle extras) throws RemoteException {
         }
 
+        @Override // android.media.session.ISessionCallback
         public void onPrepareFromSearch(String packageName, int pid, int uid, ISessionControllerCallback caller, String query, Bundle extras) throws RemoteException {
         }
 
+        @Override // android.media.session.ISessionCallback
         public void onPrepareFromUri(String packageName, int pid, int uid, ISessionControllerCallback caller, Uri uri, Bundle extras) throws RemoteException {
         }
 
+        @Override // android.media.session.ISessionCallback
         public void onPlay(String packageName, int pid, int uid, ISessionControllerCallback caller) throws RemoteException {
         }
 
+        @Override // android.media.session.ISessionCallback
         public void onPlayFromMediaId(String packageName, int pid, int uid, ISessionControllerCallback caller, String mediaId, Bundle extras) throws RemoteException {
         }
 
+        @Override // android.media.session.ISessionCallback
         public void onPlayFromSearch(String packageName, int pid, int uid, ISessionControllerCallback caller, String query, Bundle extras) throws RemoteException {
         }
 
+        @Override // android.media.session.ISessionCallback
         public void onPlayFromUri(String packageName, int pid, int uid, ISessionControllerCallback caller, Uri uri, Bundle extras) throws RemoteException {
         }
 
+        @Override // android.media.session.ISessionCallback
         public void onSkipToTrack(String packageName, int pid, int uid, ISessionControllerCallback caller, long id) throws RemoteException {
         }
 
+        @Override // android.media.session.ISessionCallback
         public void onPause(String packageName, int pid, int uid, ISessionControllerCallback caller) throws RemoteException {
         }
 
+        @Override // android.media.session.ISessionCallback
         public void onStop(String packageName, int pid, int uid, ISessionControllerCallback caller) throws RemoteException {
         }
 
+        @Override // android.media.session.ISessionCallback
         public void onNext(String packageName, int pid, int uid, ISessionControllerCallback caller) throws RemoteException {
         }
 
+        @Override // android.media.session.ISessionCallback
         public void onPrevious(String packageName, int pid, int uid, ISessionControllerCallback caller) throws RemoteException {
         }
 
+        @Override // android.media.session.ISessionCallback
         public void onFastForward(String packageName, int pid, int uid, ISessionControllerCallback caller) throws RemoteException {
         }
 
+        @Override // android.media.session.ISessionCallback
         public void onRewind(String packageName, int pid, int uid, ISessionControllerCallback caller) throws RemoteException {
         }
 
+        @Override // android.media.session.ISessionCallback
         public void onSeekTo(String packageName, int pid, int uid, ISessionControllerCallback caller, long pos) throws RemoteException {
         }
 
+        @Override // android.media.session.ISessionCallback
         public void onRate(String packageName, int pid, int uid, ISessionControllerCallback caller, Rating rating) throws RemoteException {
         }
 
+        @Override // android.media.session.ISessionCallback
         public void onSetPlaybackSpeed(String packageName, int pid, int uid, ISessionControllerCallback caller, float speed) throws RemoteException {
         }
 
+        @Override // android.media.session.ISessionCallback
         public void onCustomAction(String packageName, int pid, int uid, ISessionControllerCallback caller, String action, Bundle args) throws RemoteException {
         }
 
+        @Override // android.media.session.ISessionCallback
         public void onAdjustVolume(String packageName, int pid, int uid, ISessionControllerCallback caller, int direction) throws RemoteException {
         }
 
+        @Override // android.media.session.ISessionCallback
         public void onSetVolumeTo(String packageName, int pid, int uid, ISessionControllerCallback caller, int value) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements ISessionCallback {
         private static final String DESCRIPTOR = "android.media.session.ISessionCallback";
         static final int TRANSACTION_onAdjustVolume = 23;
@@ -174,12 +203,13 @@ public interface ISessionCallback extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof ISessionCallback)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof ISessionCallback)) {
+                return (ISessionCallback) iin;
             }
-            return (ISessionCallback) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -239,580 +269,242 @@ public interface ISessionCallback extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v2, resolved type: android.os.ResultReceiver} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v3, resolved type: android.os.ResultReceiver} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v8, resolved type: android.os.ResultReceiver} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v13, resolved type: android.os.ResultReceiver} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v19, resolved type: android.os.ResultReceiver} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r6v5, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v24, resolved type: android.os.ResultReceiver} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r6v6, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v29, resolved type: android.os.ResultReceiver} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r6v7, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v35, resolved type: android.os.ResultReceiver} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r6v8, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v40, resolved type: android.os.ResultReceiver} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r6v9, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v45, resolved type: android.os.ResultReceiver} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r6v10, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v60, resolved type: android.os.ResultReceiver} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r5v15, resolved type: android.media.Rating} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v67, resolved type: android.os.ResultReceiver} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r6v13, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v77, resolved type: android.os.ResultReceiver} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v78, resolved type: android.os.ResultReceiver} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v79, resolved type: android.os.ResultReceiver} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v80, resolved type: android.os.ResultReceiver} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v81, resolved type: android.os.ResultReceiver} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v82, resolved type: android.os.ResultReceiver} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v83, resolved type: android.os.ResultReceiver} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v84, resolved type: android.os.ResultReceiver} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v85, resolved type: android.os.ResultReceiver} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v86, resolved type: android.os.ResultReceiver} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v87, resolved type: android.os.ResultReceiver} */
-        /* JADX WARNING: type inference failed for: r5v2, types: [android.content.Intent] */
-        /* JADX WARNING: type inference failed for: r0v17, types: [android.content.Intent] */
-        /* JADX WARNING: type inference failed for: r0v23, types: [android.os.Bundle] */
-        /* JADX WARNING: type inference failed for: r0v28, types: [android.os.Bundle] */
-        /* JADX WARNING: type inference failed for: r0v33, types: [android.os.Bundle] */
-        /* JADX WARNING: type inference failed for: r0v39, types: [android.os.Bundle] */
-        /* JADX WARNING: type inference failed for: r0v44, types: [android.os.Bundle] */
-        /* JADX WARNING: type inference failed for: r0v49, types: [android.os.Bundle] */
-        /* JADX WARNING: type inference failed for: r0v64, types: [android.media.Rating] */
-        /* JADX WARNING: type inference failed for: r0v71, types: [android.os.Bundle] */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r19, android.os.Parcel r20, android.os.Parcel r21, int r22) throws android.os.RemoteException {
-            /*
-                r18 = this;
-                r8 = r18
-                r9 = r19
-                r10 = r20
-                java.lang.String r11 = "android.media.session.ISessionCallback"
-                r0 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r12 = 1
-                if (r9 == r0) goto L_0x043a
-                r0 = 0
-                switch(r9) {
-                    case 1: goto L_0x03f0;
-                    case 2: goto L_0x03b1;
-                    case 3: goto L_0x037f;
-                    case 4: goto L_0x0364;
-                    case 5: goto L_0x032c;
-                    case 6: goto L_0x02f4;
-                    case 7: goto L_0x02b1;
-                    case 8: goto L_0x0296;
-                    case 9: goto L_0x025e;
-                    case 10: goto L_0x0226;
-                    case 11: goto L_0x01e3;
-                    case 12: goto L_0x01bc;
-                    case 13: goto L_0x01a1;
-                    case 14: goto L_0x0186;
-                    case 15: goto L_0x016b;
-                    case 16: goto L_0x0150;
-                    case 17: goto L_0x0135;
-                    case 18: goto L_0x011a;
-                    case 19: goto L_0x00f3;
-                    case 20: goto L_0x00c1;
-                    case 21: goto L_0x009b;
-                    case 22: goto L_0x0063;
-                    case 23: goto L_0x003d;
-                    case 24: goto L_0x0017;
-                    default: goto L_0x0012;
-                }
-            L_0x0012:
-                boolean r0 = super.onTransact(r19, r20, r21, r22)
-                return r0
-            L_0x0017:
-                r10.enforceInterface(r11)
-                java.lang.String r6 = r20.readString()
-                int r7 = r20.readInt()
-                int r13 = r20.readInt()
-                android.os.IBinder r0 = r20.readStrongBinder()
-                android.media.session.ISessionControllerCallback r14 = android.media.session.ISessionControllerCallback.Stub.asInterface(r0)
-                int r15 = r20.readInt()
-                r0 = r18
-                r1 = r6
-                r2 = r7
-                r3 = r13
-                r4 = r14
-                r5 = r15
-                r0.onSetVolumeTo(r1, r2, r3, r4, r5)
-                return r12
-            L_0x003d:
-                r10.enforceInterface(r11)
-                java.lang.String r6 = r20.readString()
-                int r7 = r20.readInt()
-                int r13 = r20.readInt()
-                android.os.IBinder r0 = r20.readStrongBinder()
-                android.media.session.ISessionControllerCallback r14 = android.media.session.ISessionControllerCallback.Stub.asInterface(r0)
-                int r15 = r20.readInt()
-                r0 = r18
-                r1 = r6
-                r2 = r7
-                r3 = r13
-                r4 = r14
-                r5 = r15
-                r0.onAdjustVolume(r1, r2, r3, r4, r5)
-                return r12
-            L_0x0063:
-                r10.enforceInterface(r11)
-                java.lang.String r7 = r20.readString()
-                int r13 = r20.readInt()
-                int r14 = r20.readInt()
-                android.os.IBinder r1 = r20.readStrongBinder()
-                android.media.session.ISessionControllerCallback r15 = android.media.session.ISessionControllerCallback.Stub.asInterface(r1)
-                java.lang.String r16 = r20.readString()
-                int r1 = r20.readInt()
-                if (r1 == 0) goto L_0x008e
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-            L_0x008c:
-                r6 = r0
-                goto L_0x008f
-            L_0x008e:
-                goto L_0x008c
-            L_0x008f:
-                r0 = r18
-                r1 = r7
-                r2 = r13
-                r3 = r14
-                r4 = r15
-                r5 = r16
-                r0.onCustomAction(r1, r2, r3, r4, r5, r6)
-                return r12
-            L_0x009b:
-                r10.enforceInterface(r11)
-                java.lang.String r6 = r20.readString()
-                int r7 = r20.readInt()
-                int r13 = r20.readInt()
-                android.os.IBinder r0 = r20.readStrongBinder()
-                android.media.session.ISessionControllerCallback r14 = android.media.session.ISessionControllerCallback.Stub.asInterface(r0)
-                float r15 = r20.readFloat()
-                r0 = r18
-                r1 = r6
-                r2 = r7
-                r3 = r13
-                r4 = r14
-                r5 = r15
-                r0.onSetPlaybackSpeed(r1, r2, r3, r4, r5)
-                return r12
-            L_0x00c1:
-                r10.enforceInterface(r11)
-                java.lang.String r6 = r20.readString()
-                int r7 = r20.readInt()
-                int r13 = r20.readInt()
-                android.os.IBinder r1 = r20.readStrongBinder()
-                android.media.session.ISessionControllerCallback r14 = android.media.session.ISessionControllerCallback.Stub.asInterface(r1)
-                int r1 = r20.readInt()
-                if (r1 == 0) goto L_0x00e8
-                android.os.Parcelable$Creator<android.media.Rating> r0 = android.media.Rating.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.media.Rating r0 = (android.media.Rating) r0
-            L_0x00e6:
-                r5 = r0
-                goto L_0x00e9
-            L_0x00e8:
-                goto L_0x00e6
-            L_0x00e9:
-                r0 = r18
-                r1 = r6
-                r2 = r7
-                r3 = r13
-                r4 = r14
-                r0.onRate(r1, r2, r3, r4, r5)
-                return r12
-            L_0x00f3:
-                r10.enforceInterface(r11)
-                java.lang.String r7 = r20.readString()
-                int r13 = r20.readInt()
-                int r14 = r20.readInt()
-                android.os.IBinder r0 = r20.readStrongBinder()
-                android.media.session.ISessionControllerCallback r15 = android.media.session.ISessionControllerCallback.Stub.asInterface(r0)
-                long r16 = r20.readLong()
-                r0 = r18
-                r1 = r7
-                r2 = r13
-                r3 = r14
-                r4 = r15
-                r5 = r16
-                r0.onSeekTo(r1, r2, r3, r4, r5)
-                return r12
-            L_0x011a:
-                r10.enforceInterface(r11)
-                java.lang.String r0 = r20.readString()
-                int r1 = r20.readInt()
-                int r2 = r20.readInt()
-                android.os.IBinder r3 = r20.readStrongBinder()
-                android.media.session.ISessionControllerCallback r3 = android.media.session.ISessionControllerCallback.Stub.asInterface(r3)
-                r8.onRewind(r0, r1, r2, r3)
-                return r12
-            L_0x0135:
-                r10.enforceInterface(r11)
-                java.lang.String r0 = r20.readString()
-                int r1 = r20.readInt()
-                int r2 = r20.readInt()
-                android.os.IBinder r3 = r20.readStrongBinder()
-                android.media.session.ISessionControllerCallback r3 = android.media.session.ISessionControllerCallback.Stub.asInterface(r3)
-                r8.onFastForward(r0, r1, r2, r3)
-                return r12
-            L_0x0150:
-                r10.enforceInterface(r11)
-                java.lang.String r0 = r20.readString()
-                int r1 = r20.readInt()
-                int r2 = r20.readInt()
-                android.os.IBinder r3 = r20.readStrongBinder()
-                android.media.session.ISessionControllerCallback r3 = android.media.session.ISessionControllerCallback.Stub.asInterface(r3)
-                r8.onPrevious(r0, r1, r2, r3)
-                return r12
-            L_0x016b:
-                r10.enforceInterface(r11)
-                java.lang.String r0 = r20.readString()
-                int r1 = r20.readInt()
-                int r2 = r20.readInt()
-                android.os.IBinder r3 = r20.readStrongBinder()
-                android.media.session.ISessionControllerCallback r3 = android.media.session.ISessionControllerCallback.Stub.asInterface(r3)
-                r8.onNext(r0, r1, r2, r3)
-                return r12
-            L_0x0186:
-                r10.enforceInterface(r11)
-                java.lang.String r0 = r20.readString()
-                int r1 = r20.readInt()
-                int r2 = r20.readInt()
-                android.os.IBinder r3 = r20.readStrongBinder()
-                android.media.session.ISessionControllerCallback r3 = android.media.session.ISessionControllerCallback.Stub.asInterface(r3)
-                r8.onStop(r0, r1, r2, r3)
-                return r12
-            L_0x01a1:
-                r10.enforceInterface(r11)
-                java.lang.String r0 = r20.readString()
-                int r1 = r20.readInt()
-                int r2 = r20.readInt()
-                android.os.IBinder r3 = r20.readStrongBinder()
-                android.media.session.ISessionControllerCallback r3 = android.media.session.ISessionControllerCallback.Stub.asInterface(r3)
-                r8.onPause(r0, r1, r2, r3)
-                return r12
-            L_0x01bc:
-                r10.enforceInterface(r11)
-                java.lang.String r7 = r20.readString()
-                int r13 = r20.readInt()
-                int r14 = r20.readInt()
-                android.os.IBinder r0 = r20.readStrongBinder()
-                android.media.session.ISessionControllerCallback r15 = android.media.session.ISessionControllerCallback.Stub.asInterface(r0)
-                long r16 = r20.readLong()
-                r0 = r18
-                r1 = r7
-                r2 = r13
-                r3 = r14
-                r4 = r15
-                r5 = r16
-                r0.onSkipToTrack(r1, r2, r3, r4, r5)
-                return r12
-            L_0x01e3:
-                r10.enforceInterface(r11)
-                java.lang.String r7 = r20.readString()
-                int r13 = r20.readInt()
-                int r14 = r20.readInt()
-                android.os.IBinder r1 = r20.readStrongBinder()
-                android.media.session.ISessionControllerCallback r15 = android.media.session.ISessionControllerCallback.Stub.asInterface(r1)
-                int r1 = r20.readInt()
-                if (r1 == 0) goto L_0x020a
-                android.os.Parcelable$Creator<android.net.Uri> r1 = android.net.Uri.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.net.Uri r1 = (android.net.Uri) r1
-                r5 = r1
-                goto L_0x020b
-            L_0x020a:
-                r5 = r0
-            L_0x020b:
-                int r1 = r20.readInt()
-                if (r1 == 0) goto L_0x021b
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-            L_0x0219:
-                r6 = r0
-                goto L_0x021c
-            L_0x021b:
-                goto L_0x0219
-            L_0x021c:
-                r0 = r18
-                r1 = r7
-                r2 = r13
-                r3 = r14
-                r4 = r15
-                r0.onPlayFromUri(r1, r2, r3, r4, r5, r6)
-                return r12
-            L_0x0226:
-                r10.enforceInterface(r11)
-                java.lang.String r7 = r20.readString()
-                int r13 = r20.readInt()
-                int r14 = r20.readInt()
-                android.os.IBinder r1 = r20.readStrongBinder()
-                android.media.session.ISessionControllerCallback r15 = android.media.session.ISessionControllerCallback.Stub.asInterface(r1)
-                java.lang.String r16 = r20.readString()
-                int r1 = r20.readInt()
-                if (r1 == 0) goto L_0x0251
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-            L_0x024f:
-                r6 = r0
-                goto L_0x0252
-            L_0x0251:
-                goto L_0x024f
-            L_0x0252:
-                r0 = r18
-                r1 = r7
-                r2 = r13
-                r3 = r14
-                r4 = r15
-                r5 = r16
-                r0.onPlayFromSearch(r1, r2, r3, r4, r5, r6)
-                return r12
-            L_0x025e:
-                r10.enforceInterface(r11)
-                java.lang.String r7 = r20.readString()
-                int r13 = r20.readInt()
-                int r14 = r20.readInt()
-                android.os.IBinder r1 = r20.readStrongBinder()
-                android.media.session.ISessionControllerCallback r15 = android.media.session.ISessionControllerCallback.Stub.asInterface(r1)
-                java.lang.String r16 = r20.readString()
-                int r1 = r20.readInt()
-                if (r1 == 0) goto L_0x0289
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-            L_0x0287:
-                r6 = r0
-                goto L_0x028a
-            L_0x0289:
-                goto L_0x0287
-            L_0x028a:
-                r0 = r18
-                r1 = r7
-                r2 = r13
-                r3 = r14
-                r4 = r15
-                r5 = r16
-                r0.onPlayFromMediaId(r1, r2, r3, r4, r5, r6)
-                return r12
-            L_0x0296:
-                r10.enforceInterface(r11)
-                java.lang.String r0 = r20.readString()
-                int r1 = r20.readInt()
-                int r2 = r20.readInt()
-                android.os.IBinder r3 = r20.readStrongBinder()
-                android.media.session.ISessionControllerCallback r3 = android.media.session.ISessionControllerCallback.Stub.asInterface(r3)
-                r8.onPlay(r0, r1, r2, r3)
-                return r12
-            L_0x02b1:
-                r10.enforceInterface(r11)
-                java.lang.String r7 = r20.readString()
-                int r13 = r20.readInt()
-                int r14 = r20.readInt()
-                android.os.IBinder r1 = r20.readStrongBinder()
-                android.media.session.ISessionControllerCallback r15 = android.media.session.ISessionControllerCallback.Stub.asInterface(r1)
-                int r1 = r20.readInt()
-                if (r1 == 0) goto L_0x02d8
-                android.os.Parcelable$Creator<android.net.Uri> r1 = android.net.Uri.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.net.Uri r1 = (android.net.Uri) r1
-                r5 = r1
-                goto L_0x02d9
-            L_0x02d8:
-                r5 = r0
-            L_0x02d9:
-                int r1 = r20.readInt()
-                if (r1 == 0) goto L_0x02e9
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-            L_0x02e7:
-                r6 = r0
-                goto L_0x02ea
-            L_0x02e9:
-                goto L_0x02e7
-            L_0x02ea:
-                r0 = r18
-                r1 = r7
-                r2 = r13
-                r3 = r14
-                r4 = r15
-                r0.onPrepareFromUri(r1, r2, r3, r4, r5, r6)
-                return r12
-            L_0x02f4:
-                r10.enforceInterface(r11)
-                java.lang.String r7 = r20.readString()
-                int r13 = r20.readInt()
-                int r14 = r20.readInt()
-                android.os.IBinder r1 = r20.readStrongBinder()
-                android.media.session.ISessionControllerCallback r15 = android.media.session.ISessionControllerCallback.Stub.asInterface(r1)
-                java.lang.String r16 = r20.readString()
-                int r1 = r20.readInt()
-                if (r1 == 0) goto L_0x031f
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-            L_0x031d:
-                r6 = r0
-                goto L_0x0320
-            L_0x031f:
-                goto L_0x031d
-            L_0x0320:
-                r0 = r18
-                r1 = r7
-                r2 = r13
-                r3 = r14
-                r4 = r15
-                r5 = r16
-                r0.onPrepareFromSearch(r1, r2, r3, r4, r5, r6)
-                return r12
-            L_0x032c:
-                r10.enforceInterface(r11)
-                java.lang.String r7 = r20.readString()
-                int r13 = r20.readInt()
-                int r14 = r20.readInt()
-                android.os.IBinder r1 = r20.readStrongBinder()
-                android.media.session.ISessionControllerCallback r15 = android.media.session.ISessionControllerCallback.Stub.asInterface(r1)
-                java.lang.String r16 = r20.readString()
-                int r1 = r20.readInt()
-                if (r1 == 0) goto L_0x0357
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-            L_0x0355:
-                r6 = r0
-                goto L_0x0358
-            L_0x0357:
-                goto L_0x0355
-            L_0x0358:
-                r0 = r18
-                r1 = r7
-                r2 = r13
-                r3 = r14
-                r4 = r15
-                r5 = r16
-                r0.onPrepareFromMediaId(r1, r2, r3, r4, r5, r6)
-                return r12
-            L_0x0364:
-                r10.enforceInterface(r11)
-                java.lang.String r0 = r20.readString()
-                int r1 = r20.readInt()
-                int r2 = r20.readInt()
-                android.os.IBinder r3 = r20.readStrongBinder()
-                android.media.session.ISessionControllerCallback r3 = android.media.session.ISessionControllerCallback.Stub.asInterface(r3)
-                r8.onPrepare(r0, r1, r2, r3)
-                return r12
-            L_0x037f:
-                r10.enforceInterface(r11)
-                java.lang.String r6 = r20.readString()
-                int r7 = r20.readInt()
-                int r13 = r20.readInt()
-                android.os.IBinder r1 = r20.readStrongBinder()
-                android.media.session.ISessionControllerCallback r14 = android.media.session.ISessionControllerCallback.Stub.asInterface(r1)
-                int r1 = r20.readInt()
-                if (r1 == 0) goto L_0x03a6
-                android.os.Parcelable$Creator<android.content.Intent> r0 = android.content.Intent.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.Intent r0 = (android.content.Intent) r0
-            L_0x03a4:
-                r5 = r0
-                goto L_0x03a7
-            L_0x03a6:
-                goto L_0x03a4
-            L_0x03a7:
-                r0 = r18
-                r1 = r6
-                r2 = r7
-                r3 = r13
-                r4 = r14
-                r0.onMediaButtonFromController(r1, r2, r3, r4, r5)
-                return r12
-            L_0x03b1:
-                r10.enforceInterface(r11)
-                java.lang.String r7 = r20.readString()
-                int r13 = r20.readInt()
-                int r14 = r20.readInt()
-                int r1 = r20.readInt()
-                if (r1 == 0) goto L_0x03d0
-                android.os.Parcelable$Creator<android.content.Intent> r1 = android.content.Intent.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.content.Intent r1 = (android.content.Intent) r1
-                r4 = r1
-                goto L_0x03d1
-            L_0x03d0:
-                r4 = r0
-            L_0x03d1:
-                int r15 = r20.readInt()
-                int r1 = r20.readInt()
-                if (r1 == 0) goto L_0x03e5
-                android.os.Parcelable$Creator<android.os.ResultReceiver> r0 = android.os.ResultReceiver.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.os.ResultReceiver r0 = (android.os.ResultReceiver) r0
-            L_0x03e3:
-                r6 = r0
-                goto L_0x03e6
-            L_0x03e5:
-                goto L_0x03e3
-            L_0x03e6:
-                r0 = r18
-                r1 = r7
-                r2 = r13
-                r3 = r14
-                r5 = r15
-                r0.onMediaButton(r1, r2, r3, r4, r5, r6)
-                return r12
-            L_0x03f0:
-                r10.enforceInterface(r11)
-                java.lang.String r13 = r20.readString()
-                int r14 = r20.readInt()
-                int r15 = r20.readInt()
-                android.os.IBinder r1 = r20.readStrongBinder()
-                android.media.session.ISessionControllerCallback r16 = android.media.session.ISessionControllerCallback.Stub.asInterface(r1)
-                java.lang.String r17 = r20.readString()
-                int r1 = r20.readInt()
-                if (r1 == 0) goto L_0x041b
-                android.os.Parcelable$Creator<android.os.Bundle> r1 = android.os.Bundle.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.os.Bundle r1 = (android.os.Bundle) r1
-                r6 = r1
-                goto L_0x041c
-            L_0x041b:
-                r6 = r0
-            L_0x041c:
-                int r1 = r20.readInt()
-                if (r1 == 0) goto L_0x042c
-                android.os.Parcelable$Creator<android.os.ResultReceiver> r0 = android.os.ResultReceiver.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.os.ResultReceiver r0 = (android.os.ResultReceiver) r0
-            L_0x042a:
-                r7 = r0
-                goto L_0x042d
-            L_0x042c:
-                goto L_0x042a
-            L_0x042d:
-                r0 = r18
-                r1 = r13
-                r2 = r14
-                r3 = r15
-                r4 = r16
-                r5 = r17
-                r0.onCommand(r1, r2, r3, r4, r5, r6, r7)
-                return r12
-            L_0x043a:
-                r0 = r21
-                r0.writeString(r11)
-                return r12
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.media.session.ISessionCallback.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0 = data.readString();
+                    int _arg1 = data.readInt();
+                    int _arg2 = data.readInt();
+                    ISessionControllerCallback _arg3 = ISessionControllerCallback.Stub.asInterface(data.readStrongBinder());
+                    String _arg4 = data.readString();
+                    Bundle _arg5 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    ResultReceiver _arg6 = data.readInt() != 0 ? ResultReceiver.CREATOR.createFromParcel(data) : null;
+                    onCommand(_arg0, _arg1, _arg2, _arg3, _arg4, _arg5, _arg6);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg02 = data.readString();
+                    int _arg12 = data.readInt();
+                    int _arg22 = data.readInt();
+                    Intent _arg32 = data.readInt() != 0 ? Intent.CREATOR.createFromParcel(data) : null;
+                    int _arg42 = data.readInt();
+                    ResultReceiver _arg52 = data.readInt() != 0 ? ResultReceiver.CREATOR.createFromParcel(data) : null;
+                    onMediaButton(_arg02, _arg12, _arg22, _arg32, _arg42, _arg52);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg03 = data.readString();
+                    int _arg13 = data.readInt();
+                    int _arg23 = data.readInt();
+                    ISessionControllerCallback _arg33 = ISessionControllerCallback.Stub.asInterface(data.readStrongBinder());
+                    Intent _arg43 = data.readInt() != 0 ? Intent.CREATOR.createFromParcel(data) : null;
+                    onMediaButtonFromController(_arg03, _arg13, _arg23, _arg33, _arg43);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg04 = data.readString();
+                    int _arg14 = data.readInt();
+                    int _arg24 = data.readInt();
+                    ISessionControllerCallback _arg34 = ISessionControllerCallback.Stub.asInterface(data.readStrongBinder());
+                    onPrepare(_arg04, _arg14, _arg24, _arg34);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg05 = data.readString();
+                    int _arg15 = data.readInt();
+                    int _arg25 = data.readInt();
+                    ISessionControllerCallback _arg35 = ISessionControllerCallback.Stub.asInterface(data.readStrongBinder());
+                    String _arg44 = data.readString();
+                    Bundle _arg53 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    onPrepareFromMediaId(_arg05, _arg15, _arg25, _arg35, _arg44, _arg53);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg06 = data.readString();
+                    int _arg16 = data.readInt();
+                    int _arg26 = data.readInt();
+                    ISessionControllerCallback _arg36 = ISessionControllerCallback.Stub.asInterface(data.readStrongBinder());
+                    String _arg45 = data.readString();
+                    Bundle _arg54 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    onPrepareFromSearch(_arg06, _arg16, _arg26, _arg36, _arg45, _arg54);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg07 = data.readString();
+                    int _arg17 = data.readInt();
+                    int _arg27 = data.readInt();
+                    ISessionControllerCallback _arg37 = ISessionControllerCallback.Stub.asInterface(data.readStrongBinder());
+                    Uri _arg46 = data.readInt() != 0 ? Uri.CREATOR.createFromParcel(data) : null;
+                    Bundle _arg55 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    onPrepareFromUri(_arg07, _arg17, _arg27, _arg37, _arg46, _arg55);
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg08 = data.readString();
+                    int _arg18 = data.readInt();
+                    int _arg28 = data.readInt();
+                    ISessionControllerCallback _arg38 = ISessionControllerCallback.Stub.asInterface(data.readStrongBinder());
+                    onPlay(_arg08, _arg18, _arg28, _arg38);
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg09 = data.readString();
+                    int _arg19 = data.readInt();
+                    int _arg29 = data.readInt();
+                    ISessionControllerCallback _arg39 = ISessionControllerCallback.Stub.asInterface(data.readStrongBinder());
+                    String _arg47 = data.readString();
+                    Bundle _arg56 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    onPlayFromMediaId(_arg09, _arg19, _arg29, _arg39, _arg47, _arg56);
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg010 = data.readString();
+                    int _arg110 = data.readInt();
+                    int _arg210 = data.readInt();
+                    ISessionControllerCallback _arg310 = ISessionControllerCallback.Stub.asInterface(data.readStrongBinder());
+                    String _arg48 = data.readString();
+                    Bundle _arg57 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    onPlayFromSearch(_arg010, _arg110, _arg210, _arg310, _arg48, _arg57);
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg011 = data.readString();
+                    int _arg111 = data.readInt();
+                    int _arg211 = data.readInt();
+                    ISessionControllerCallback _arg311 = ISessionControllerCallback.Stub.asInterface(data.readStrongBinder());
+                    Uri _arg49 = data.readInt() != 0 ? Uri.CREATOR.createFromParcel(data) : null;
+                    Bundle _arg58 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    onPlayFromUri(_arg011, _arg111, _arg211, _arg311, _arg49, _arg58);
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg012 = data.readString();
+                    int _arg112 = data.readInt();
+                    int _arg212 = data.readInt();
+                    ISessionControllerCallback _arg312 = ISessionControllerCallback.Stub.asInterface(data.readStrongBinder());
+                    long _arg410 = data.readLong();
+                    onSkipToTrack(_arg012, _arg112, _arg212, _arg312, _arg410);
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg013 = data.readString();
+                    int _arg113 = data.readInt();
+                    int _arg213 = data.readInt();
+                    ISessionControllerCallback _arg313 = ISessionControllerCallback.Stub.asInterface(data.readStrongBinder());
+                    onPause(_arg013, _arg113, _arg213, _arg313);
+                    return true;
+                case 14:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg014 = data.readString();
+                    int _arg114 = data.readInt();
+                    int _arg214 = data.readInt();
+                    ISessionControllerCallback _arg314 = ISessionControllerCallback.Stub.asInterface(data.readStrongBinder());
+                    onStop(_arg014, _arg114, _arg214, _arg314);
+                    return true;
+                case 15:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg015 = data.readString();
+                    int _arg115 = data.readInt();
+                    int _arg215 = data.readInt();
+                    ISessionControllerCallback _arg315 = ISessionControllerCallback.Stub.asInterface(data.readStrongBinder());
+                    onNext(_arg015, _arg115, _arg215, _arg315);
+                    return true;
+                case 16:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg016 = data.readString();
+                    int _arg116 = data.readInt();
+                    int _arg216 = data.readInt();
+                    ISessionControllerCallback _arg316 = ISessionControllerCallback.Stub.asInterface(data.readStrongBinder());
+                    onPrevious(_arg016, _arg116, _arg216, _arg316);
+                    return true;
+                case 17:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg017 = data.readString();
+                    int _arg117 = data.readInt();
+                    int _arg217 = data.readInt();
+                    ISessionControllerCallback _arg317 = ISessionControllerCallback.Stub.asInterface(data.readStrongBinder());
+                    onFastForward(_arg017, _arg117, _arg217, _arg317);
+                    return true;
+                case 18:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg018 = data.readString();
+                    int _arg118 = data.readInt();
+                    int _arg218 = data.readInt();
+                    ISessionControllerCallback _arg318 = ISessionControllerCallback.Stub.asInterface(data.readStrongBinder());
+                    onRewind(_arg018, _arg118, _arg218, _arg318);
+                    return true;
+                case 19:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg019 = data.readString();
+                    int _arg119 = data.readInt();
+                    int _arg219 = data.readInt();
+                    ISessionControllerCallback _arg319 = ISessionControllerCallback.Stub.asInterface(data.readStrongBinder());
+                    long _arg411 = data.readLong();
+                    onSeekTo(_arg019, _arg119, _arg219, _arg319, _arg411);
+                    return true;
+                case 20:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg020 = data.readString();
+                    int _arg120 = data.readInt();
+                    int _arg220 = data.readInt();
+                    ISessionControllerCallback _arg320 = ISessionControllerCallback.Stub.asInterface(data.readStrongBinder());
+                    Rating _arg412 = data.readInt() != 0 ? Rating.CREATOR.createFromParcel(data) : null;
+                    onRate(_arg020, _arg120, _arg220, _arg320, _arg412);
+                    return true;
+                case 21:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg021 = data.readString();
+                    int _arg121 = data.readInt();
+                    int _arg221 = data.readInt();
+                    ISessionControllerCallback _arg321 = ISessionControllerCallback.Stub.asInterface(data.readStrongBinder());
+                    float _arg413 = data.readFloat();
+                    onSetPlaybackSpeed(_arg021, _arg121, _arg221, _arg321, _arg413);
+                    return true;
+                case 22:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg022 = data.readString();
+                    int _arg122 = data.readInt();
+                    int _arg222 = data.readInt();
+                    ISessionControllerCallback _arg322 = ISessionControllerCallback.Stub.asInterface(data.readStrongBinder());
+                    String _arg414 = data.readString();
+                    Bundle _arg59 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    onCustomAction(_arg022, _arg122, _arg222, _arg322, _arg414, _arg59);
+                    return true;
+                case 23:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg023 = data.readString();
+                    int _arg123 = data.readInt();
+                    int _arg223 = data.readInt();
+                    ISessionControllerCallback _arg323 = ISessionControllerCallback.Stub.asInterface(data.readStrongBinder());
+                    int _arg415 = data.readInt();
+                    onAdjustVolume(_arg023, _arg123, _arg223, _arg323, _arg415);
+                    return true;
+                case 24:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg024 = data.readString();
+                    int _arg124 = data.readInt();
+                    int _arg224 = data.readInt();
+                    ISessionControllerCallback _arg324 = ISessionControllerCallback.Stub.asInterface(data.readStrongBinder());
+                    int _arg416 = data.readInt();
+                    onSetVolumeTo(_arg024, _arg124, _arg224, _arg324, _arg416);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements ISessionCallback {
             public static ISessionCallback sDefaultImpl;
             private IBinder mRemote;
@@ -821,6 +513,7 @@ public interface ISessionCallback extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -829,141 +522,120 @@ public interface ISessionCallback extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.media.session.ISessionCallback
             public void onCommand(String packageName, int pid, int uid, ISessionControllerCallback caller, String command, Bundle args, ResultReceiver cb) throws RemoteException {
-                Bundle bundle = args;
-                ResultReceiver resultReceiver = cb;
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    try {
-                        _data.writeString(packageName);
-                        try {
-                            _data.writeInt(pid);
-                        } catch (Throwable th) {
-                            th = th;
-                            int i = uid;
-                            _data.recycle();
-                            throw th;
-                        }
-                        try {
-                            _data.writeInt(uid);
-                            _data.writeStrongBinder(caller != null ? caller.asBinder() : null);
-                            _data.writeString(command);
-                            if (bundle != null) {
-                                _data.writeInt(1);
-                                bundle.writeToParcel(_data, 0);
-                            } else {
-                                _data.writeInt(0);
-                            }
-                            if (resultReceiver != null) {
-                                _data.writeInt(1);
-                                resultReceiver.writeToParcel(_data, 0);
-                            } else {
-                                _data.writeInt(0);
-                            }
-                            if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                                _data.recycle();
-                                return;
-                            }
-                            Stub.getDefaultImpl().onCommand(packageName, pid, uid, caller, command, args, cb);
-                            _data.recycle();
-                        } catch (Throwable th2) {
-                            th = th2;
-                            _data.recycle();
-                            throw th;
-                        }
-                    } catch (Throwable th3) {
-                        th = th3;
-                        int i2 = pid;
-                        int i3 = uid;
-                        _data.recycle();
-                        throw th;
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeString(packageName);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(pid);
+                } catch (Throwable th3) {
+                    th = th3;
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(uid);
+                    _data.writeStrongBinder(caller != null ? caller.asBinder() : null);
+                    _data.writeString(command);
+                    if (args != null) {
+                        _data.writeInt(1);
+                        args.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
                     }
+                    if (cb != null) {
+                        _data.writeInt(1);
+                        cb.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
+                    }
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().onCommand(packageName, pid, uid, caller, command, args, cb);
+                        _data.recycle();
+                        return;
+                    }
+                    _data.recycle();
                 } catch (Throwable th4) {
                     th = th4;
-                    String str = packageName;
-                    int i22 = pid;
-                    int i32 = uid;
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.media.session.ISessionCallback
             public void onMediaButton(String packageName, int pid, int uid, Intent mediaButtonIntent, int sequenceNumber, ResultReceiver cb) throws RemoteException {
-                Intent intent = mediaButtonIntent;
-                ResultReceiver resultReceiver = cb;
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeString(packageName);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(pid);
+                } catch (Throwable th3) {
+                    th = th3;
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(uid);
+                    if (mediaButtonIntent != null) {
+                        _data.writeInt(1);
+                        mediaButtonIntent.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
+                    }
                     try {
-                        _data.writeString(packageName);
-                        try {
-                            _data.writeInt(pid);
-                        } catch (Throwable th) {
-                            th = th;
-                            int i = uid;
-                            int i2 = sequenceNumber;
-                            _data.recycle();
-                            throw th;
+                        _data.writeInt(sequenceNumber);
+                        if (cb != null) {
+                            _data.writeInt(1);
+                            cb.writeToParcel(_data, 0);
+                        } else {
+                            _data.writeInt(0);
                         }
-                        try {
-                            _data.writeInt(uid);
-                            if (intent != null) {
-                                _data.writeInt(1);
-                                intent.writeToParcel(_data, 0);
-                            } else {
-                                _data.writeInt(0);
-                            }
-                            try {
-                                _data.writeInt(sequenceNumber);
-                                if (resultReceiver != null) {
-                                    _data.writeInt(1);
-                                    resultReceiver.writeToParcel(_data, 0);
-                                } else {
-                                    _data.writeInt(0);
-                                }
-                                try {
-                                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                                        _data.recycle();
-                                        return;
-                                    }
-                                    Stub.getDefaultImpl().onMediaButton(packageName, pid, uid, mediaButtonIntent, sequenceNumber, cb);
-                                    _data.recycle();
-                                } catch (Throwable th2) {
-                                    th = th2;
-                                    _data.recycle();
-                                    throw th;
-                                }
-                            } catch (Throwable th3) {
-                                th = th3;
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th4) {
-                            th = th4;
-                            int i22 = sequenceNumber;
+                    } catch (Throwable th4) {
+                        th = th4;
+                    }
+                    try {
+                        boolean _status = this.mRemote.transact(2, _data, null, 1);
+                        if (!_status && Stub.getDefaultImpl() != null) {
+                            Stub.getDefaultImpl().onMediaButton(packageName, pid, uid, mediaButtonIntent, sequenceNumber, cb);
                             _data.recycle();
-                            throw th;
+                            return;
                         }
+                        _data.recycle();
                     } catch (Throwable th5) {
                         th = th5;
-                        int i3 = pid;
-                        int i4 = uid;
-                        int i222 = sequenceNumber;
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th6) {
                     th = th6;
-                    String str = packageName;
-                    int i32 = pid;
-                    int i42 = uid;
-                    int i2222 = sequenceNumber;
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.media.session.ISessionCallback
             public void onMediaButtonFromController(String packageName, int pid, int uid, ISessionControllerCallback caller, Intent mediaButtonIntent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -978,9 +650,8 @@ public interface ISessionCallback extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onMediaButtonFromController(packageName, pid, uid, caller, mediaButtonIntent);
                     }
                 } finally {
@@ -988,6 +659,7 @@ public interface ISessionCallback extends IInterface {
                 }
             }
 
+            @Override // android.media.session.ISessionCallback
             public void onPrepare(String packageName, int pid, int uid, ISessionControllerCallback caller) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -996,9 +668,8 @@ public interface ISessionCallback extends IInterface {
                     _data.writeInt(pid);
                     _data.writeInt(uid);
                     _data.writeStrongBinder(caller != null ? caller.asBinder() : null);
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onPrepare(packageName, pid, uid, caller);
                     }
                 } finally {
@@ -1006,27 +677,20 @@ public interface ISessionCallback extends IInterface {
                 }
             }
 
+            @Override // android.media.session.ISessionCallback
             public void onPrepareFromMediaId(String packageName, int pid, int uid, ISessionControllerCallback caller, String mediaId, Bundle extras) throws RemoteException {
-                Bundle bundle = extras;
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    try {
-                        _data.writeString(packageName);
-                    } catch (Throwable th) {
-                        th = th;
-                        int i = pid;
-                        int i2 = uid;
-                        String str = mediaId;
-                        _data.recycle();
-                        throw th;
-                    }
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeString(packageName);
                     try {
                         _data.writeInt(pid);
                     } catch (Throwable th2) {
                         th = th2;
-                        int i22 = uid;
-                        String str2 = mediaId;
                         _data.recycle();
                         throw th;
                     }
@@ -1035,67 +699,54 @@ public interface ISessionCallback extends IInterface {
                         _data.writeStrongBinder(caller != null ? caller.asBinder() : null);
                         try {
                             _data.writeString(mediaId);
-                            if (bundle != null) {
+                            if (extras != null) {
                                 _data.writeInt(1);
-                                bundle.writeToParcel(_data, 0);
+                                extras.writeToParcel(_data, 0);
                             } else {
                                 _data.writeInt(0);
                             }
-                            try {
-                                if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                                    _data.recycle();
-                                    return;
-                                }
-                                Stub.getDefaultImpl().onPrepareFromMediaId(packageName, pid, uid, caller, mediaId, extras);
-                                _data.recycle();
-                            } catch (Throwable th3) {
-                                th = th3;
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th4) {
-                            th = th4;
-                            _data.recycle();
-                            throw th;
+                        } catch (Throwable th3) {
+                            th = th3;
                         }
+                    } catch (Throwable th4) {
+                        th = th4;
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        boolean _status = this.mRemote.transact(5, _data, null, 1);
+                        if (!_status && Stub.getDefaultImpl() != null) {
+                            Stub.getDefaultImpl().onPrepareFromMediaId(packageName, pid, uid, caller, mediaId, extras);
+                            _data.recycle();
+                            return;
+                        }
+                        _data.recycle();
                     } catch (Throwable th5) {
                         th = th5;
-                        String str22 = mediaId;
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th6) {
                     th = th6;
-                    String str3 = packageName;
-                    int i3 = pid;
-                    int i222 = uid;
-                    String str222 = mediaId;
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.media.session.ISessionCallback
             public void onPrepareFromSearch(String packageName, int pid, int uid, ISessionControllerCallback caller, String query, Bundle extras) throws RemoteException {
-                Bundle bundle = extras;
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    try {
-                        _data.writeString(packageName);
-                    } catch (Throwable th) {
-                        th = th;
-                        int i = pid;
-                        int i2 = uid;
-                        String str = query;
-                        _data.recycle();
-                        throw th;
-                    }
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeString(packageName);
                     try {
                         _data.writeInt(pid);
                     } catch (Throwable th2) {
                         th = th2;
-                        int i22 = uid;
-                        String str2 = query;
                         _data.recycle();
                         throw th;
                     }
@@ -1104,89 +755,80 @@ public interface ISessionCallback extends IInterface {
                         _data.writeStrongBinder(caller != null ? caller.asBinder() : null);
                         try {
                             _data.writeString(query);
-                            if (bundle != null) {
+                            if (extras != null) {
                                 _data.writeInt(1);
-                                bundle.writeToParcel(_data, 0);
+                                extras.writeToParcel(_data, 0);
                             } else {
                                 _data.writeInt(0);
                             }
-                            try {
-                                if (this.mRemote.transact(6, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                                    _data.recycle();
-                                    return;
-                                }
-                                Stub.getDefaultImpl().onPrepareFromSearch(packageName, pid, uid, caller, query, extras);
-                                _data.recycle();
-                            } catch (Throwable th3) {
-                                th = th3;
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th4) {
-                            th = th4;
-                            _data.recycle();
-                            throw th;
+                        } catch (Throwable th3) {
+                            th = th3;
                         }
+                    } catch (Throwable th4) {
+                        th = th4;
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        boolean _status = this.mRemote.transact(6, _data, null, 1);
+                        if (!_status && Stub.getDefaultImpl() != null) {
+                            Stub.getDefaultImpl().onPrepareFromSearch(packageName, pid, uid, caller, query, extras);
+                            _data.recycle();
+                            return;
+                        }
+                        _data.recycle();
                     } catch (Throwable th5) {
                         th = th5;
-                        String str22 = query;
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th6) {
                     th = th6;
-                    String str3 = packageName;
-                    int i3 = pid;
-                    int i222 = uid;
-                    String str222 = query;
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.media.session.ISessionCallback
             public void onPrepareFromUri(String packageName, int pid, int uid, ISessionControllerCallback caller, Uri uri, Bundle extras) throws RemoteException {
-                Uri uri2 = uri;
-                Bundle bundle = extras;
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeString(packageName);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(pid);
                     try {
-                        _data.writeString(packageName);
-                        try {
-                            _data.writeInt(pid);
-                        } catch (Throwable th) {
-                            th = th;
-                            int i = uid;
-                            _data.recycle();
-                            throw th;
+                        _data.writeInt(uid);
+                        _data.writeStrongBinder(caller != null ? caller.asBinder() : null);
+                        if (uri != null) {
+                            _data.writeInt(1);
+                            uri.writeToParcel(_data, 0);
+                        } else {
+                            _data.writeInt(0);
+                        }
+                        if (extras != null) {
+                            _data.writeInt(1);
+                            extras.writeToParcel(_data, 0);
+                        } else {
+                            _data.writeInt(0);
                         }
                         try {
-                            _data.writeInt(uid);
-                            _data.writeStrongBinder(caller != null ? caller.asBinder() : null);
-                            if (uri2 != null) {
-                                _data.writeInt(1);
-                                uri2.writeToParcel(_data, 0);
-                            } else {
-                                _data.writeInt(0);
-                            }
-                            if (bundle != null) {
-                                _data.writeInt(1);
-                                bundle.writeToParcel(_data, 0);
-                            } else {
-                                _data.writeInt(0);
-                            }
-                            try {
-                                if (this.mRemote.transact(7, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                                    _data.recycle();
-                                    return;
-                                }
+                            boolean _status = this.mRemote.transact(7, _data, null, 1);
+                            if (!_status && Stub.getDefaultImpl() != null) {
                                 Stub.getDefaultImpl().onPrepareFromUri(packageName, pid, uid, caller, uri, extras);
                                 _data.recycle();
-                            } catch (Throwable th2) {
-                                th = th2;
-                                _data.recycle();
-                                throw th;
+                                return;
                             }
+                            _data.recycle();
                         } catch (Throwable th3) {
                             th = th3;
                             _data.recycle();
@@ -1194,21 +836,15 @@ public interface ISessionCallback extends IInterface {
                         }
                     } catch (Throwable th4) {
                         th = th4;
-                        int i2 = pid;
-                        int i3 = uid;
-                        _data.recycle();
-                        throw th;
                     }
                 } catch (Throwable th5) {
                     th = th5;
-                    String str = packageName;
-                    int i22 = pid;
-                    int i32 = uid;
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.media.session.ISessionCallback
             public void onPlay(String packageName, int pid, int uid, ISessionControllerCallback caller) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1217,9 +853,8 @@ public interface ISessionCallback extends IInterface {
                     _data.writeInt(pid);
                     _data.writeInt(uid);
                     _data.writeStrongBinder(caller != null ? caller.asBinder() : null);
-                    if (this.mRemote.transact(8, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(8, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onPlay(packageName, pid, uid, caller);
                     }
                 } finally {
@@ -1227,27 +862,20 @@ public interface ISessionCallback extends IInterface {
                 }
             }
 
+            @Override // android.media.session.ISessionCallback
             public void onPlayFromMediaId(String packageName, int pid, int uid, ISessionControllerCallback caller, String mediaId, Bundle extras) throws RemoteException {
-                Bundle bundle = extras;
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    try {
-                        _data.writeString(packageName);
-                    } catch (Throwable th) {
-                        th = th;
-                        int i = pid;
-                        int i2 = uid;
-                        String str = mediaId;
-                        _data.recycle();
-                        throw th;
-                    }
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeString(packageName);
                     try {
                         _data.writeInt(pid);
                     } catch (Throwable th2) {
                         th = th2;
-                        int i22 = uid;
-                        String str2 = mediaId;
                         _data.recycle();
                         throw th;
                     }
@@ -1256,67 +884,54 @@ public interface ISessionCallback extends IInterface {
                         _data.writeStrongBinder(caller != null ? caller.asBinder() : null);
                         try {
                             _data.writeString(mediaId);
-                            if (bundle != null) {
+                            if (extras != null) {
                                 _data.writeInt(1);
-                                bundle.writeToParcel(_data, 0);
+                                extras.writeToParcel(_data, 0);
                             } else {
                                 _data.writeInt(0);
                             }
-                            try {
-                                if (this.mRemote.transact(9, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                                    _data.recycle();
-                                    return;
-                                }
-                                Stub.getDefaultImpl().onPlayFromMediaId(packageName, pid, uid, caller, mediaId, extras);
-                                _data.recycle();
-                            } catch (Throwable th3) {
-                                th = th3;
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th4) {
-                            th = th4;
-                            _data.recycle();
-                            throw th;
+                        } catch (Throwable th3) {
+                            th = th3;
                         }
+                    } catch (Throwable th4) {
+                        th = th4;
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        boolean _status = this.mRemote.transact(9, _data, null, 1);
+                        if (!_status && Stub.getDefaultImpl() != null) {
+                            Stub.getDefaultImpl().onPlayFromMediaId(packageName, pid, uid, caller, mediaId, extras);
+                            _data.recycle();
+                            return;
+                        }
+                        _data.recycle();
                     } catch (Throwable th5) {
                         th = th5;
-                        String str22 = mediaId;
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th6) {
                     th = th6;
-                    String str3 = packageName;
-                    int i3 = pid;
-                    int i222 = uid;
-                    String str222 = mediaId;
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.media.session.ISessionCallback
             public void onPlayFromSearch(String packageName, int pid, int uid, ISessionControllerCallback caller, String query, Bundle extras) throws RemoteException {
-                Bundle bundle = extras;
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    try {
-                        _data.writeString(packageName);
-                    } catch (Throwable th) {
-                        th = th;
-                        int i = pid;
-                        int i2 = uid;
-                        String str = query;
-                        _data.recycle();
-                        throw th;
-                    }
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeString(packageName);
                     try {
                         _data.writeInt(pid);
                     } catch (Throwable th2) {
                         th = th2;
-                        int i22 = uid;
-                        String str2 = query;
                         _data.recycle();
                         throw th;
                     }
@@ -1325,173 +940,146 @@ public interface ISessionCallback extends IInterface {
                         _data.writeStrongBinder(caller != null ? caller.asBinder() : null);
                         try {
                             _data.writeString(query);
-                            if (bundle != null) {
+                            if (extras != null) {
                                 _data.writeInt(1);
-                                bundle.writeToParcel(_data, 0);
+                                extras.writeToParcel(_data, 0);
                             } else {
                                 _data.writeInt(0);
                             }
-                            try {
-                                if (this.mRemote.transact(10, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                                    _data.recycle();
-                                    return;
-                                }
-                                Stub.getDefaultImpl().onPlayFromSearch(packageName, pid, uid, caller, query, extras);
-                                _data.recycle();
-                            } catch (Throwable th3) {
-                                th = th3;
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th4) {
-                            th = th4;
-                            _data.recycle();
-                            throw th;
+                        } catch (Throwable th3) {
+                            th = th3;
                         }
+                    } catch (Throwable th4) {
+                        th = th4;
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        boolean _status = this.mRemote.transact(10, _data, null, 1);
+                        if (!_status && Stub.getDefaultImpl() != null) {
+                            Stub.getDefaultImpl().onPlayFromSearch(packageName, pid, uid, caller, query, extras);
+                            _data.recycle();
+                            return;
+                        }
+                        _data.recycle();
                     } catch (Throwable th5) {
                         th = th5;
-                        String str22 = query;
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th6) {
                     th = th6;
-                    String str3 = packageName;
-                    int i3 = pid;
-                    int i222 = uid;
-                    String str222 = query;
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.media.session.ISessionCallback
             public void onPlayFromUri(String packageName, int pid, int uid, ISessionControllerCallback caller, Uri uri, Bundle extras) throws RemoteException {
-                Uri uri2 = uri;
-                Bundle bundle = extras;
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeString(packageName);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(pid);
                     try {
-                        _data.writeString(packageName);
-                        try {
-                            _data.writeInt(pid);
-                        } catch (Throwable th) {
-                            th = th;
-                            int i = uid;
-                            _data.recycle();
-                            throw th;
+                        _data.writeInt(uid);
+                        _data.writeStrongBinder(caller != null ? caller.asBinder() : null);
+                        if (uri != null) {
+                            _data.writeInt(1);
+                            uri.writeToParcel(_data, 0);
+                        } else {
+                            _data.writeInt(0);
                         }
-                        try {
-                            _data.writeInt(uid);
-                            _data.writeStrongBinder(caller != null ? caller.asBinder() : null);
-                            if (uri2 != null) {
-                                _data.writeInt(1);
-                                uri2.writeToParcel(_data, 0);
-                            } else {
-                                _data.writeInt(0);
-                            }
-                            if (bundle != null) {
-                                _data.writeInt(1);
-                                bundle.writeToParcel(_data, 0);
-                            } else {
-                                _data.writeInt(0);
-                            }
-                            try {
-                                if (this.mRemote.transact(11, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                                    _data.recycle();
-                                    return;
-                                }
-                                Stub.getDefaultImpl().onPlayFromUri(packageName, pid, uid, caller, uri, extras);
-                                _data.recycle();
-                            } catch (Throwable th2) {
-                                th = th2;
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th3) {
-                            th = th3;
-                            _data.recycle();
-                            throw th;
+                        if (extras != null) {
+                            _data.writeInt(1);
+                            extras.writeToParcel(_data, 0);
+                        } else {
+                            _data.writeInt(0);
                         }
-                    } catch (Throwable th4) {
-                        th = th4;
-                        int i2 = pid;
-                        int i3 = uid;
-                        _data.recycle();
-                        throw th;
+                    } catch (Throwable th3) {
+                        th = th3;
                     }
+                } catch (Throwable th4) {
+                    th = th4;
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    boolean _status = this.mRemote.transact(11, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().onPlayFromUri(packageName, pid, uid, caller, uri, extras);
+                        _data.recycle();
+                        return;
+                    }
+                    _data.recycle();
                 } catch (Throwable th5) {
                     th = th5;
-                    String str = packageName;
-                    int i22 = pid;
-                    int i32 = uid;
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.media.session.ISessionCallback
             public void onSkipToTrack(String packageName, int pid, int uid, ISessionControllerCallback caller, long id) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeString(packageName);
                     try {
-                        _data.writeString(packageName);
-                    } catch (Throwable th) {
-                        th = th;
-                        int i = pid;
-                        int i2 = uid;
-                        long j = id;
+                        _data.writeInt(pid);
+                    } catch (Throwable th2) {
+                        th = th2;
                         _data.recycle();
                         throw th;
                     }
                     try {
-                        _data.writeInt(pid);
+                        _data.writeInt(uid);
+                        _data.writeStrongBinder(caller != null ? caller.asBinder() : null);
                         try {
-                            _data.writeInt(uid);
-                            _data.writeStrongBinder(caller != null ? caller.asBinder() : null);
-                            try {
-                                _data.writeLong(id);
-                            } catch (Throwable th2) {
-                                th = th2;
-                                _data.recycle();
-                                throw th;
-                            }
+                            _data.writeLong(id);
                         } catch (Throwable th3) {
                             th = th3;
-                            long j2 = id;
-                            _data.recycle();
-                            throw th;
                         }
-                        try {
-                            if (this.mRemote.transact(12, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                                _data.recycle();
-                                return;
-                            }
+                    } catch (Throwable th4) {
+                        th = th4;
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        boolean _status = this.mRemote.transact(12, _data, null, 1);
+                        if (!_status && Stub.getDefaultImpl() != null) {
                             Stub.getDefaultImpl().onSkipToTrack(packageName, pid, uid, caller, id);
                             _data.recycle();
-                        } catch (Throwable th4) {
-                            th = th4;
-                            _data.recycle();
-                            throw th;
+                            return;
                         }
+                        _data.recycle();
                     } catch (Throwable th5) {
                         th = th5;
-                        int i22 = uid;
-                        long j22 = id;
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th6) {
                     th = th6;
-                    String str = packageName;
-                    int i3 = pid;
-                    int i222 = uid;
-                    long j222 = id;
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.media.session.ISessionCallback
             public void onPause(String packageName, int pid, int uid, ISessionControllerCallback caller) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1500,9 +1088,8 @@ public interface ISessionCallback extends IInterface {
                     _data.writeInt(pid);
                     _data.writeInt(uid);
                     _data.writeStrongBinder(caller != null ? caller.asBinder() : null);
-                    if (this.mRemote.transact(13, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(13, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onPause(packageName, pid, uid, caller);
                     }
                 } finally {
@@ -1510,6 +1097,7 @@ public interface ISessionCallback extends IInterface {
                 }
             }
 
+            @Override // android.media.session.ISessionCallback
             public void onStop(String packageName, int pid, int uid, ISessionControllerCallback caller) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1518,9 +1106,8 @@ public interface ISessionCallback extends IInterface {
                     _data.writeInt(pid);
                     _data.writeInt(uid);
                     _data.writeStrongBinder(caller != null ? caller.asBinder() : null);
-                    if (this.mRemote.transact(14, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(14, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onStop(packageName, pid, uid, caller);
                     }
                 } finally {
@@ -1528,6 +1115,7 @@ public interface ISessionCallback extends IInterface {
                 }
             }
 
+            @Override // android.media.session.ISessionCallback
             public void onNext(String packageName, int pid, int uid, ISessionControllerCallback caller) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1536,9 +1124,8 @@ public interface ISessionCallback extends IInterface {
                     _data.writeInt(pid);
                     _data.writeInt(uid);
                     _data.writeStrongBinder(caller != null ? caller.asBinder() : null);
-                    if (this.mRemote.transact(15, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(15, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onNext(packageName, pid, uid, caller);
                     }
                 } finally {
@@ -1546,6 +1133,7 @@ public interface ISessionCallback extends IInterface {
                 }
             }
 
+            @Override // android.media.session.ISessionCallback
             public void onPrevious(String packageName, int pid, int uid, ISessionControllerCallback caller) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1554,9 +1142,8 @@ public interface ISessionCallback extends IInterface {
                     _data.writeInt(pid);
                     _data.writeInt(uid);
                     _data.writeStrongBinder(caller != null ? caller.asBinder() : null);
-                    if (this.mRemote.transact(16, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(16, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onPrevious(packageName, pid, uid, caller);
                     }
                 } finally {
@@ -1564,6 +1151,7 @@ public interface ISessionCallback extends IInterface {
                 }
             }
 
+            @Override // android.media.session.ISessionCallback
             public void onFastForward(String packageName, int pid, int uid, ISessionControllerCallback caller) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1572,9 +1160,8 @@ public interface ISessionCallback extends IInterface {
                     _data.writeInt(pid);
                     _data.writeInt(uid);
                     _data.writeStrongBinder(caller != null ? caller.asBinder() : null);
-                    if (this.mRemote.transact(17, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(17, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onFastForward(packageName, pid, uid, caller);
                     }
                 } finally {
@@ -1582,6 +1169,7 @@ public interface ISessionCallback extends IInterface {
                 }
             }
 
+            @Override // android.media.session.ISessionCallback
             public void onRewind(String packageName, int pid, int uid, ISessionControllerCallback caller) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1590,9 +1178,8 @@ public interface ISessionCallback extends IInterface {
                     _data.writeInt(pid);
                     _data.writeInt(uid);
                     _data.writeStrongBinder(caller != null ? caller.asBinder() : null);
-                    if (this.mRemote.transact(18, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(18, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onRewind(packageName, pid, uid, caller);
                     }
                 } finally {
@@ -1600,68 +1187,57 @@ public interface ISessionCallback extends IInterface {
                 }
             }
 
+            @Override // android.media.session.ISessionCallback
             public void onSeekTo(String packageName, int pid, int uid, ISessionControllerCallback caller, long pos) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeString(packageName);
                     try {
-                        _data.writeString(packageName);
-                    } catch (Throwable th) {
-                        th = th;
-                        int i = pid;
-                        int i2 = uid;
-                        long j = pos;
+                        _data.writeInt(pid);
+                    } catch (Throwable th2) {
+                        th = th2;
                         _data.recycle();
                         throw th;
                     }
                     try {
-                        _data.writeInt(pid);
+                        _data.writeInt(uid);
+                        _data.writeStrongBinder(caller != null ? caller.asBinder() : null);
                         try {
-                            _data.writeInt(uid);
-                            _data.writeStrongBinder(caller != null ? caller.asBinder() : null);
-                            try {
-                                _data.writeLong(pos);
-                            } catch (Throwable th2) {
-                                th = th2;
-                                _data.recycle();
-                                throw th;
-                            }
+                            _data.writeLong(pos);
                         } catch (Throwable th3) {
                             th = th3;
-                            long j2 = pos;
-                            _data.recycle();
-                            throw th;
                         }
-                        try {
-                            if (this.mRemote.transact(19, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                                _data.recycle();
-                                return;
-                            }
+                    } catch (Throwable th4) {
+                        th = th4;
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        boolean _status = this.mRemote.transact(19, _data, null, 1);
+                        if (!_status && Stub.getDefaultImpl() != null) {
                             Stub.getDefaultImpl().onSeekTo(packageName, pid, uid, caller, pos);
                             _data.recycle();
-                        } catch (Throwable th4) {
-                            th = th4;
-                            _data.recycle();
-                            throw th;
+                            return;
                         }
+                        _data.recycle();
                     } catch (Throwable th5) {
                         th = th5;
-                        int i22 = uid;
-                        long j22 = pos;
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th6) {
                     th = th6;
-                    String str = packageName;
-                    int i3 = pid;
-                    int i222 = uid;
-                    long j222 = pos;
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.media.session.ISessionCallback
             public void onRate(String packageName, int pid, int uid, ISessionControllerCallback caller, Rating rating) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1676,9 +1252,8 @@ public interface ISessionCallback extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(20, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(20, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onRate(packageName, pid, uid, caller, rating);
                     }
                 } finally {
@@ -1686,6 +1261,7 @@ public interface ISessionCallback extends IInterface {
                 }
             }
 
+            @Override // android.media.session.ISessionCallback
             public void onSetPlaybackSpeed(String packageName, int pid, int uid, ISessionControllerCallback caller, float speed) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1695,9 +1271,8 @@ public interface ISessionCallback extends IInterface {
                     _data.writeInt(uid);
                     _data.writeStrongBinder(caller != null ? caller.asBinder() : null);
                     _data.writeFloat(speed);
-                    if (this.mRemote.transact(21, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(21, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onSetPlaybackSpeed(packageName, pid, uid, caller, speed);
                     }
                 } finally {
@@ -1705,27 +1280,20 @@ public interface ISessionCallback extends IInterface {
                 }
             }
 
+            @Override // android.media.session.ISessionCallback
             public void onCustomAction(String packageName, int pid, int uid, ISessionControllerCallback caller, String action, Bundle args) throws RemoteException {
-                Bundle bundle = args;
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    try {
-                        _data.writeString(packageName);
-                    } catch (Throwable th) {
-                        th = th;
-                        int i = pid;
-                        int i2 = uid;
-                        String str = action;
-                        _data.recycle();
-                        throw th;
-                    }
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeString(packageName);
                     try {
                         _data.writeInt(pid);
                     } catch (Throwable th2) {
                         th = th2;
-                        int i22 = uid;
-                        String str2 = action;
                         _data.recycle();
                         throw th;
                     }
@@ -1734,46 +1302,41 @@ public interface ISessionCallback extends IInterface {
                         _data.writeStrongBinder(caller != null ? caller.asBinder() : null);
                         try {
                             _data.writeString(action);
-                            if (bundle != null) {
+                            if (args != null) {
                                 _data.writeInt(1);
-                                bundle.writeToParcel(_data, 0);
+                                args.writeToParcel(_data, 0);
                             } else {
                                 _data.writeInt(0);
                             }
-                            try {
-                                if (this.mRemote.transact(22, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                                    _data.recycle();
-                                    return;
-                                }
-                                Stub.getDefaultImpl().onCustomAction(packageName, pid, uid, caller, action, args);
-                                _data.recycle();
-                            } catch (Throwable th3) {
-                                th = th3;
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th4) {
-                            th = th4;
-                            _data.recycle();
-                            throw th;
+                        } catch (Throwable th3) {
+                            th = th3;
                         }
+                    } catch (Throwable th4) {
+                        th = th4;
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        boolean _status = this.mRemote.transact(22, _data, null, 1);
+                        if (!_status && Stub.getDefaultImpl() != null) {
+                            Stub.getDefaultImpl().onCustomAction(packageName, pid, uid, caller, action, args);
+                            _data.recycle();
+                            return;
+                        }
+                        _data.recycle();
                     } catch (Throwable th5) {
                         th = th5;
-                        String str22 = action;
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th6) {
                     th = th6;
-                    String str3 = packageName;
-                    int i3 = pid;
-                    int i222 = uid;
-                    String str222 = action;
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.media.session.ISessionCallback
             public void onAdjustVolume(String packageName, int pid, int uid, ISessionControllerCallback caller, int direction) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1783,9 +1346,8 @@ public interface ISessionCallback extends IInterface {
                     _data.writeInt(uid);
                     _data.writeStrongBinder(caller != null ? caller.asBinder() : null);
                     _data.writeInt(direction);
-                    if (this.mRemote.transact(23, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(23, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onAdjustVolume(packageName, pid, uid, caller, direction);
                     }
                 } finally {
@@ -1793,6 +1355,7 @@ public interface ISessionCallback extends IInterface {
                 }
             }
 
+            @Override // android.media.session.ISessionCallback
             public void onSetVolumeTo(String packageName, int pid, int uid, ISessionControllerCallback caller, int value) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1802,9 +1365,8 @@ public interface ISessionCallback extends IInterface {
                     _data.writeInt(uid);
                     _data.writeStrongBinder(caller != null ? caller.asBinder() : null);
                     _data.writeInt(value);
-                    if (this.mRemote.transact(24, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(24, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onSetVolumeTo(packageName, pid, uid, caller, value);
                     }
                 } finally {
@@ -1814,11 +1376,11 @@ public interface ISessionCallback extends IInterface {
         }
 
         public static boolean setDefaultImpl(ISessionCallback impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static ISessionCallback getDefaultImpl() {

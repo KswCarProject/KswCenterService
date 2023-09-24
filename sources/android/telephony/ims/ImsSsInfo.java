@@ -2,12 +2,13 @@ package android.telephony.ims;
 
 import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @SystemApi
+/* loaded from: classes4.dex */
 public final class ImsSsInfo implements Parcelable {
     public static final int CLIR_OUTGOING_DEFAULT = 0;
     public static final int CLIR_OUTGOING_INVOCATION = 1;
@@ -17,11 +18,15 @@ public final class ImsSsInfo implements Parcelable {
     public static final int CLIR_STATUS_TEMPORARILY_ALLOWED = 4;
     public static final int CLIR_STATUS_TEMPORARILY_RESTRICTED = 3;
     public static final int CLIR_STATUS_UNKNOWN = 2;
-    public static final Parcelable.Creator<ImsSsInfo> CREATOR = new Parcelable.Creator<ImsSsInfo>() {
+    public static final Parcelable.Creator<ImsSsInfo> CREATOR = new Parcelable.Creator<ImsSsInfo>() { // from class: android.telephony.ims.ImsSsInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ImsSsInfo createFromParcel(Parcel in) {
             return new ImsSsInfo(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ImsSsInfo[] newArray(int size) {
             return new ImsSsInfo[size];
         }
@@ -32,10 +37,8 @@ public final class ImsSsInfo implements Parcelable {
     public static final int SERVICE_NOT_PROVISIONED = 0;
     public static final int SERVICE_PROVISIONED = 1;
     public static final int SERVICE_PROVISIONING_UNKNOWN = -1;
-    /* access modifiers changed from: private */
-    public int mClirInterrogationStatus;
-    /* access modifiers changed from: private */
-    public int mClirOutgoingState;
+    private int mClirInterrogationStatus;
+    private int mClirOutgoingState;
     @UnsupportedAppUsage
     public String mIcbNum;
     public int mProvisionStatus;
@@ -43,18 +46,22 @@ public final class ImsSsInfo implements Parcelable {
     public int mStatus;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface ClirInterrogationStatus {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface ClirOutgoingState {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface ServiceProvisionStatus {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface ServiceStatus {
     }
 
@@ -65,6 +72,7 @@ public final class ImsSsInfo implements Parcelable {
         this.mClirOutgoingState = 0;
     }
 
+    /* loaded from: classes4.dex */
     public static final class Builder {
         private final ImsSsInfo mImsSsInfo = new ImsSsInfo();
 
@@ -83,12 +91,12 @@ public final class ImsSsInfo implements Parcelable {
         }
 
         public Builder setClirInterrogationStatus(int status) {
-            int unused = this.mImsSsInfo.mClirInterrogationStatus = status;
+            this.mImsSsInfo.mClirInterrogationStatus = status;
             return this;
         }
 
         public Builder setClirOutgoingState(int state) {
-            int unused = this.mImsSsInfo.mClirOutgoingState = state;
+            this.mImsSsInfo.mClirOutgoingState = state;
             return this;
         }
 
@@ -113,10 +121,12 @@ public final class ImsSsInfo implements Parcelable {
         readFromParcel(in);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(this.mStatus);
         out.writeString(this.mIcbNum);

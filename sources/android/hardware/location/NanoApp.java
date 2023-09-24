@@ -1,19 +1,24 @@
 package android.hardware.location;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.Log;
 import com.android.internal.util.Preconditions;
 
 @SystemApi
 @Deprecated
+/* loaded from: classes.dex */
 public class NanoApp implements Parcelable {
-    public static final Parcelable.Creator<NanoApp> CREATOR = new Parcelable.Creator<NanoApp>() {
+    public static final Parcelable.Creator<NanoApp> CREATOR = new Parcelable.Creator<NanoApp>() { // from class: android.hardware.location.NanoApp.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NanoApp createFromParcel(Parcel in) {
             return new NanoApp(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NanoApp[] newArray(int size) {
             return new NanoApp[size];
         }
@@ -33,7 +38,7 @@ public class NanoApp implements Parcelable {
     private String mPublisher;
 
     public NanoApp() {
-        this(0, (byte[]) null);
+        this(0L, (byte[]) null);
         this.mAppIdSet = false;
     }
 
@@ -41,7 +46,7 @@ public class NanoApp implements Parcelable {
     public NanoApp(int appId, byte[] appBinary) {
         this.TAG = "NanoApp";
         this.UNKNOWN = "Unknown";
-        Log.w("NanoApp", "NanoApp(int, byte[]) is deprecated, please use NanoApp(long, byte[]) instead.");
+        Log.m64w("NanoApp", "NanoApp(int, byte[]) is deprecated, please use NanoApp(long, byte[]) instead.");
     }
 
     public NanoApp(long appId, byte[] appBinary) {
@@ -154,22 +159,29 @@ public class NanoApp implements Parcelable {
         this.mNeededReadMemBytes = in.readInt();
         this.mNeededWriteMemBytes = in.readInt();
         this.mNeededExecMemBytes = in.readInt();
-        this.mNeededSensors = new int[in.readInt()];
+        int mNeededSensorsLength = in.readInt();
+        this.mNeededSensors = new int[mNeededSensorsLength];
         in.readIntArray(this.mNeededSensors);
-        this.mOutputEvents = new int[in.readInt()];
+        int mOutputEventsLength = in.readInt();
+        this.mOutputEvents = new int[mOutputEventsLength];
         in.readIntArray(this.mOutputEvents);
-        this.mAppBinary = new byte[in.readInt()];
+        int binaryLength = in.readInt();
+        this.mAppBinary = new byte[binaryLength];
         in.readByteArray(this.mAppBinary);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         if (this.mAppBinary == null) {
             throw new IllegalStateException("Must set non-null AppBinary for nanoapp " + this.mName);
-        } else if (this.mAppIdSet) {
+        } else if (!this.mAppIdSet) {
+            throw new IllegalStateException("Must set AppId for nanoapp " + this.mName);
+        } else {
             out.writeString(this.mPublisher);
             out.writeString(this.mName);
             out.writeLong(this.mAppId);
@@ -183,12 +195,11 @@ public class NanoApp implements Parcelable {
             out.writeIntArray(this.mOutputEvents);
             out.writeInt(this.mAppBinary.length);
             out.writeByteArray(this.mAppBinary);
-        } else {
-            throw new IllegalStateException("Must set AppId for nanoapp " + this.mName);
         }
     }
 
     public String toString() {
-        return ((("Id : " + this.mAppId) + ", Version : " + this.mAppVersion) + ", Name : " + this.mName) + ", Publisher : " + this.mPublisher;
+        String retVal = "Id : " + this.mAppId;
+        return ((retVal + ", Version : " + this.mAppVersion) + ", Name : " + this.mName) + ", Publisher : " + this.mPublisher;
     }
 }

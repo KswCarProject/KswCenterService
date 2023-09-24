@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
+/* loaded from: classes.dex */
 public class DrmRights {
     private String mAccountId;
     private byte[] mData;
@@ -11,7 +12,8 @@ public class DrmRights {
     private String mSubscriptionId;
 
     public DrmRights(String rightsFilePath, String mimeType) {
-        instantiate(new File(rightsFilePath), mimeType);
+        File file = new File(rightsFilePath);
+        instantiate(file, mimeType);
     }
 
     public DrmRights(String rightsFilePath, String mimeType, String accountId) {
@@ -37,22 +39,23 @@ public class DrmRights {
         }
         this.mMimeType = mimeType;
         if (!isValid()) {
-            throw new IllegalArgumentException("mimeType: " + this.mMimeType + ",data: " + Arrays.toString(this.mData));
+            String msg = "mimeType: " + this.mMimeType + ",data: " + Arrays.toString(this.mData);
+            throw new IllegalArgumentException(msg);
         }
     }
 
     public DrmRights(ProcessedData data, String mimeType) {
-        if (data != null) {
-            this.mData = data.getData();
-            this.mAccountId = data.getAccountId();
-            this.mSubscriptionId = data.getSubscriptionId();
-            this.mMimeType = mimeType;
-            if (!isValid()) {
-                throw new IllegalArgumentException("mimeType: " + this.mMimeType + ",data: " + Arrays.toString(this.mData));
-            }
-            return;
+        if (data == null) {
+            throw new IllegalArgumentException("data is null");
         }
-        throw new IllegalArgumentException("data is null");
+        this.mData = data.getData();
+        this.mAccountId = data.getAccountId();
+        this.mSubscriptionId = data.getSubscriptionId();
+        this.mMimeType = mimeType;
+        if (!isValid()) {
+            String msg = "mimeType: " + this.mMimeType + ",data: " + Arrays.toString(this.mData);
+            throw new IllegalArgumentException(msg);
+        }
     }
 
     public byte[] getData() {
@@ -71,8 +74,7 @@ public class DrmRights {
         return this.mSubscriptionId;
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean isValid() {
-        return this.mMimeType != null && !this.mMimeType.equals("") && this.mData != null && this.mData.length > 0;
+    boolean isValid() {
+        return (this.mMimeType == null || this.mMimeType.equals("") || this.mData == null || this.mData.length <= 0) ? false : true;
     }
 }

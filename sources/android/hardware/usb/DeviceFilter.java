@@ -8,6 +8,7 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
 
+/* loaded from: classes.dex */
 public class DeviceFilter {
     private static final String TAG = DeviceFilter.class.getSimpleName();
     public final int mClass;
@@ -46,25 +47,25 @@ public class DeviceFilter {
         int count = parser.getAttributeCount();
         int i = 0;
         String serialNumber = null;
-        String productName = null;
+        String serialNumber2 = null;
         String manufacturerName = null;
         int deviceProtocol = -1;
+        int deviceProtocol2 = -1;
         int deviceSubclass = -1;
         int deviceClass = -1;
         int productId = -1;
-        int vendorId = -1;
-        int i2 = 0;
+        int vendorId = 0;
         while (true) {
-            int i3 = i2;
-            if (i3 >= count) {
-                return new DeviceFilter(vendorId, productId, deviceClass, deviceSubclass, deviceProtocol, manufacturerName, productName, serialNumber);
+            int i2 = vendorId;
+            if (i2 >= count) {
+                return new DeviceFilter(productId, deviceClass, deviceSubclass, deviceProtocol2, deviceProtocol, manufacturerName, serialNumber2, serialNumber);
             }
-            String name = xmlPullParser.getAttributeName(i3);
-            String value = xmlPullParser.getAttributeValue(i3);
+            String name = xmlPullParser.getAttributeName(i2);
+            String value = xmlPullParser.getAttributeValue(i2);
             if ("manufacturer-name".equals(name)) {
                 manufacturerName = value;
             } else if ("product-name".equals(name)) {
-                productName = value;
+                serialNumber2 = value;
             } else if ("serial-number".equals(name)) {
                 serialNumber = value;
             } else {
@@ -76,53 +77,53 @@ public class DeviceFilter {
                 try {
                     int intValue = Integer.parseInt(value, radix);
                     if ("vendor-id".equals(name)) {
-                        vendorId = intValue;
-                    } else if ("product-id".equals(name)) {
                         productId = intValue;
-                    } else if ("class".equals(name)) {
+                    } else if ("product-id".equals(name)) {
                         deviceClass = intValue;
-                    } else if ("subclass".equals(name)) {
+                    } else if ("class".equals(name)) {
                         deviceSubclass = intValue;
+                    } else if ("subclass".equals(name)) {
+                        deviceProtocol2 = intValue;
                     } else if ("protocol".equals(name)) {
                         deviceProtocol = intValue;
                     }
                 } catch (NumberFormatException e) {
-                    Slog.e(TAG, "invalid number for field " + name, e);
+                    Slog.m55e(TAG, "invalid number for field " + name, e);
                 }
             }
-            i2 = i3 + 1;
+            vendorId = i2 + 1;
             xmlPullParser = parser;
             i = 0;
         }
     }
 
     public void write(XmlSerializer serializer) throws IOException {
-        serializer.startTag((String) null, "usb-device");
+        serializer.startTag(null, "usb-device");
         if (this.mVendorId != -1) {
-            serializer.attribute((String) null, "vendor-id", Integer.toString(this.mVendorId));
+            serializer.attribute(null, "vendor-id", Integer.toString(this.mVendorId));
         }
         if (this.mProductId != -1) {
-            serializer.attribute((String) null, "product-id", Integer.toString(this.mProductId));
+            serializer.attribute(null, "product-id", Integer.toString(this.mProductId));
         }
         if (this.mClass != -1) {
-            serializer.attribute((String) null, "class", Integer.toString(this.mClass));
+            serializer.attribute(null, "class", Integer.toString(this.mClass));
         }
         if (this.mSubclass != -1) {
-            serializer.attribute((String) null, "subclass", Integer.toString(this.mSubclass));
+            serializer.attribute(null, "subclass", Integer.toString(this.mSubclass));
         }
         if (this.mProtocol != -1) {
-            serializer.attribute((String) null, "protocol", Integer.toString(this.mProtocol));
+            serializer.attribute(null, "protocol", Integer.toString(this.mProtocol));
         }
         if (this.mManufacturerName != null) {
-            serializer.attribute((String) null, "manufacturer-name", this.mManufacturerName);
+            serializer.attribute(null, "manufacturer-name", this.mManufacturerName);
         }
         if (this.mProductName != null) {
-            serializer.attribute((String) null, "product-name", this.mProductName);
+            serializer.attribute(null, "product-name", this.mProductName);
         }
         if (this.mSerialNumber != null) {
-            serializer.attribute((String) null, "serial-number", this.mSerialNumber);
+            serializer.attribute(null, "serial-number", this.mSerialNumber);
         }
-        serializer.endTag((String) null, "usb-device");
+        serializer.endTag(null, "usb-device");
     }
 
     private boolean matches(int clasz, int subclass, int protocol) {
@@ -130,58 +131,58 @@ public class DeviceFilter {
     }
 
     public boolean matches(UsbDevice device) {
-        if (this.mVendorId != -1 && device.getVendorId() != this.mVendorId) {
-            return false;
-        }
-        if (this.mProductId != -1 && device.getProductId() != this.mProductId) {
-            return false;
-        }
-        if (this.mManufacturerName != null && device.getManufacturerName() == null) {
-            return false;
-        }
-        if (this.mProductName != null && device.getProductName() == null) {
-            return false;
-        }
-        if (this.mSerialNumber != null && device.getSerialNumber() == null) {
-            return false;
-        }
-        if (this.mManufacturerName != null && device.getManufacturerName() != null && !this.mManufacturerName.equals(device.getManufacturerName())) {
-            return false;
-        }
-        if (this.mProductName != null && device.getProductName() != null && !this.mProductName.equals(device.getProductName())) {
-            return false;
-        }
-        if (this.mSerialNumber != null && device.getSerialNumber() != null && !this.mSerialNumber.equals(device.getSerialNumber())) {
-            return false;
-        }
-        if (matches(device.getDeviceClass(), device.getDeviceSubclass(), device.getDeviceProtocol())) {
-            return true;
-        }
-        int count = device.getInterfaceCount();
-        for (int i = 0; i < count; i++) {
-            UsbInterface intf = device.getInterface(i);
-            if (matches(intf.getInterfaceClass(), intf.getInterfaceSubclass(), intf.getInterfaceProtocol())) {
-                return true;
+        if (this.mVendorId == -1 || device.getVendorId() == this.mVendorId) {
+            if (this.mProductId == -1 || device.getProductId() == this.mProductId) {
+                if (this.mManufacturerName == null || device.getManufacturerName() != null) {
+                    if (this.mProductName == null || device.getProductName() != null) {
+                        if (this.mSerialNumber == null || device.getSerialNumber() != null) {
+                            if (this.mManufacturerName == null || device.getManufacturerName() == null || this.mManufacturerName.equals(device.getManufacturerName())) {
+                                if (this.mProductName == null || device.getProductName() == null || this.mProductName.equals(device.getProductName())) {
+                                    if (this.mSerialNumber == null || device.getSerialNumber() == null || this.mSerialNumber.equals(device.getSerialNumber())) {
+                                        if (matches(device.getDeviceClass(), device.getDeviceSubclass(), device.getDeviceProtocol())) {
+                                            return true;
+                                        }
+                                        int count = device.getInterfaceCount();
+                                        for (int i = 0; i < count; i++) {
+                                            UsbInterface intf = device.getInterface(i);
+                                            if (matches(intf.getInterfaceClass(), intf.getInterfaceSubclass(), intf.getInterfaceProtocol())) {
+                                                return true;
+                                            }
+                                        }
+                                        return false;
+                                    }
+                                    return false;
+                                }
+                                return false;
+                            }
+                            return false;
+                        }
+                        return false;
+                    }
+                    return false;
+                }
+                return false;
             }
+            return false;
         }
         return false;
     }
 
     public boolean contains(DeviceFilter device) {
-        if (this.mVendorId != -1 && device.mVendorId != this.mVendorId) {
+        if (this.mVendorId == -1 || device.mVendorId == this.mVendorId) {
+            if (this.mProductId == -1 || device.mProductId == this.mProductId) {
+                if (this.mManufacturerName == null || Objects.equals(this.mManufacturerName, device.mManufacturerName)) {
+                    if (this.mProductName == null || Objects.equals(this.mProductName, device.mProductName)) {
+                        if (this.mSerialNumber == null || Objects.equals(this.mSerialNumber, device.mSerialNumber)) {
+                            return matches(device.mClass, device.mSubclass, device.mProtocol);
+                        }
+                        return false;
+                    }
+                    return false;
+                }
+                return false;
+            }
             return false;
-        }
-        if (this.mProductId != -1 && device.mProductId != this.mProductId) {
-            return false;
-        }
-        if (this.mManufacturerName != null && !Objects.equals(this.mManufacturerName, device.mManufacturerName)) {
-            return false;
-        }
-        if (this.mProductName != null && !Objects.equals(this.mProductName, device.mProductName)) {
-            return false;
-        }
-        if (this.mSerialNumber == null || Objects.equals(this.mSerialNumber, device.mSerialNumber)) {
-            return matches(device.mClass, device.mSubclass, device.mProtocol);
         }
         return false;
     }
@@ -192,29 +193,23 @@ public class DeviceFilter {
         }
         if (obj instanceof DeviceFilter) {
             DeviceFilter filter = (DeviceFilter) obj;
-            if (filter.mVendorId != this.mVendorId || filter.mProductId != this.mProductId || filter.mClass != this.mClass || filter.mSubclass != this.mSubclass || filter.mProtocol != this.mProtocol) {
+            if (filter.mVendorId == this.mVendorId && filter.mProductId == this.mProductId && filter.mClass == this.mClass && filter.mSubclass == this.mSubclass && filter.mProtocol == this.mProtocol) {
+                if ((filter.mManufacturerName == null || this.mManufacturerName != null) && ((filter.mManufacturerName != null || this.mManufacturerName == null) && ((filter.mProductName == null || this.mProductName != null) && ((filter.mProductName != null || this.mProductName == null) && ((filter.mSerialNumber == null || this.mSerialNumber != null) && (filter.mSerialNumber != null || this.mSerialNumber == null)))))) {
+                    return (filter.mManufacturerName == null || this.mManufacturerName == null || this.mManufacturerName.equals(filter.mManufacturerName)) && (filter.mProductName == null || this.mProductName == null || this.mProductName.equals(filter.mProductName)) && (filter.mSerialNumber == null || this.mSerialNumber == null || this.mSerialNumber.equals(filter.mSerialNumber));
+                }
                 return false;
-            }
-            if ((filter.mManufacturerName != null && this.mManufacturerName == null) || ((filter.mManufacturerName == null && this.mManufacturerName != null) || ((filter.mProductName != null && this.mProductName == null) || ((filter.mProductName == null && this.mProductName != null) || ((filter.mSerialNumber != null && this.mSerialNumber == null) || (filter.mSerialNumber == null && this.mSerialNumber != null)))))) {
-                return false;
-            }
-            if ((filter.mManufacturerName == null || this.mManufacturerName == null || this.mManufacturerName.equals(filter.mManufacturerName)) && ((filter.mProductName == null || this.mProductName == null || this.mProductName.equals(filter.mProductName)) && (filter.mSerialNumber == null || this.mSerialNumber == null || this.mSerialNumber.equals(filter.mSerialNumber)))) {
-                return true;
             }
             return false;
-        } else if (!(obj instanceof UsbDevice)) {
+        } else if (obj instanceof UsbDevice) {
+            UsbDevice device = (UsbDevice) obj;
+            if (device.getVendorId() == this.mVendorId && device.getProductId() == this.mProductId && device.getDeviceClass() == this.mClass && device.getDeviceSubclass() == this.mSubclass && device.getDeviceProtocol() == this.mProtocol) {
+                if ((this.mManufacturerName == null || device.getManufacturerName() != null) && ((this.mManufacturerName != null || device.getManufacturerName() == null) && ((this.mProductName == null || device.getProductName() != null) && ((this.mProductName != null || device.getProductName() == null) && ((this.mSerialNumber == null || device.getSerialNumber() != null) && (this.mSerialNumber != null || device.getSerialNumber() == null)))))) {
+                    return (device.getManufacturerName() == null || this.mManufacturerName.equals(device.getManufacturerName())) && (device.getProductName() == null || this.mProductName.equals(device.getProductName())) && (device.getSerialNumber() == null || this.mSerialNumber.equals(device.getSerialNumber()));
+                }
+                return false;
+            }
             return false;
         } else {
-            UsbDevice device = (UsbDevice) obj;
-            if (device.getVendorId() != this.mVendorId || device.getProductId() != this.mProductId || device.getDeviceClass() != this.mClass || device.getDeviceSubclass() != this.mSubclass || device.getDeviceProtocol() != this.mProtocol) {
-                return false;
-            }
-            if ((this.mManufacturerName != null && device.getManufacturerName() == null) || ((this.mManufacturerName == null && device.getManufacturerName() != null) || ((this.mProductName != null && device.getProductName() == null) || ((this.mProductName == null && device.getProductName() != null) || ((this.mSerialNumber != null && device.getSerialNumber() == null) || (this.mSerialNumber == null && device.getSerialNumber() != null)))))) {
-                return false;
-            }
-            if ((device.getManufacturerName() == null || this.mManufacturerName.equals(device.getManufacturerName())) && ((device.getProductName() == null || this.mProductName.equals(device.getProductName())) && (device.getSerialNumber() == null || this.mSerialNumber.equals(device.getSerialNumber())))) {
-                return true;
-            }
             return false;
         }
     }

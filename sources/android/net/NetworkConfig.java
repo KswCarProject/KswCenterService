@@ -3,6 +3,7 @@ package android.net;
 import android.telephony.SmsManager;
 import java.util.Locale;
 
+/* loaded from: classes3.dex */
 public class NetworkConfig {
     public boolean dependencyMet;
     public String name;

@@ -1,18 +1,23 @@
 package android.net.wifi;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class WifiUsabilityStatsEntry implements Parcelable {
-    public static final Parcelable.Creator<WifiUsabilityStatsEntry> CREATOR = new Parcelable.Creator<WifiUsabilityStatsEntry>() {
+    public static final Parcelable.Creator<WifiUsabilityStatsEntry> CREATOR = new Parcelable.Creator<WifiUsabilityStatsEntry>() { // from class: android.net.wifi.WifiUsabilityStatsEntry.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WifiUsabilityStatsEntry createFromParcel(Parcel in) {
             return new WifiUsabilityStatsEntry(in.readLong(), in.readInt(), in.readInt(), in.readLong(), in.readLong(), in.readLong(), in.readLong(), in.readLong(), in.readLong(), in.readLong(), in.readLong(), in.readLong(), in.readLong(), in.readLong(), in.readLong(), in.readLong(), in.readLong(), in.readLong(), in.readLong(), in.readInt(), in.readInt(), in.readInt(), in.readInt(), in.readInt(), in.readInt(), in.readInt(), in.readBoolean());
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WifiUsabilityStatsEntry[] newArray(int size) {
             return new WifiUsabilityStatsEntry[size];
         }
@@ -50,6 +55,7 @@ public final class WifiUsabilityStatsEntry implements Parcelable {
     private final long mTotalTxSuccess;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface ProbeStatus {
     }
 
@@ -83,10 +89,12 @@ public final class WifiUsabilityStatsEntry implements Parcelable {
         this.mIsSameRegisteredCell = isSameRegisteredCell;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(this.mTimeStampMillis);
         dest.writeInt(this.mRssi);

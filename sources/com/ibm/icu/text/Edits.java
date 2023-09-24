@@ -3,6 +3,7 @@ package com.ibm.icu.text;
 import java.nio.BufferOverflowException;
 import java.util.Arrays;
 
+/* loaded from: classes5.dex */
 public final class Edits {
     private static final int LENGTH_IN_1TRAIL = 61;
     private static final int LENGTH_IN_2TRAIL = 62;
@@ -36,29 +37,27 @@ public final class Edits {
     }
 
     public void addUnchanged(int unchangedLength) {
-        if (unchangedLength >= 0) {
-            int last = lastUnit();
-            if (last < 4095) {
-                int remaining = 4095 - last;
-                if (remaining >= unchangedLength) {
-                    setLastUnit(last + unchangedLength);
-                    return;
-                } else {
-                    setLastUnit(4095);
-                    unchangedLength -= remaining;
-                }
-            }
-            while (unchangedLength >= 4096) {
-                append(4095);
-                unchangedLength -= 4096;
-            }
-            if (unchangedLength > 0) {
-                append(unchangedLength - 1);
-                return;
-            }
-            return;
+        if (unchangedLength < 0) {
+            throw new IllegalArgumentException("addUnchanged(" + unchangedLength + "): length must not be negative");
         }
-        throw new IllegalArgumentException("addUnchanged(" + unchangedLength + "): length must not be negative");
+        int last = lastUnit();
+        if (last < 4095) {
+            int remaining = 4095 - last;
+            if (remaining >= unchangedLength) {
+                setLastUnit(last + unchangedLength);
+                return;
+            } else {
+                setLastUnit(4095);
+                unchangedLength -= remaining;
+            }
+        }
+        while (unchangedLength >= 4096) {
+            append(4095);
+            unchangedLength -= 4096;
+        }
+        if (unchangedLength > 0) {
+            append(unchangedLength - 1);
+        }
     }
 
     public void addReplace(int oldLength, int newLength) {
@@ -67,58 +66,59 @@ public final class Edits {
         int head3;
         if (oldLength < 0 || newLength < 0) {
             throw new IllegalArgumentException("addReplace(" + oldLength + ", " + newLength + "): both lengths must be non-negative");
-        } else if (oldLength != 0 || newLength != 0) {
+        } else if (oldLength == 0 && newLength == 0) {
+        } else {
             this.numChanges++;
             int newDelta = newLength - oldLength;
             if (newDelta != 0) {
-                if ((newDelta <= 0 || this.delta < 0 || newDelta <= Integer.MAX_VALUE - this.delta) && (newDelta >= 0 || this.delta >= 0 || newDelta >= Integer.MIN_VALUE - this.delta)) {
-                    this.delta += newDelta;
-                } else {
+                if ((newDelta > 0 && this.delta >= 0 && newDelta > Integer.MAX_VALUE - this.delta) || (newDelta < 0 && this.delta < 0 && newDelta < Integer.MIN_VALUE - this.delta)) {
                     throw new IndexOutOfBoundsException();
                 }
+                this.delta += newDelta;
             }
             if (oldLength > 0 && oldLength <= 6 && newLength <= 7) {
                 int u = (oldLength << 12) | (newLength << 9);
                 int last = lastUnit();
-                if (4095 >= last || last >= MAX_SHORT_CHANGE || (last & -512) != u || (last & 511) >= 511) {
-                    append(u);
-                } else {
+                if (4095 < last && last < MAX_SHORT_CHANGE && (last & (-512)) == u && (last & 511) < 511) {
                     setLastUnit(last + 1);
+                } else {
+                    append(u);
                 }
             } else if (oldLength < 61 && newLength < 61) {
-                append((oldLength << 6) | 28672 | newLength);
+                int head4 = (oldLength << 6) | 28672;
+                append(head4 | newLength);
             } else if (this.array.length - this.length >= 5 || growArray()) {
                 int limit = this.length + 1;
                 if (oldLength < 61) {
                     head = (oldLength << 6) | 28672;
-                } else if (oldLength <= 32767) {
-                    head = 28672 | 3904;
-                    this.array[limit] = (char) (oldLength | 32768);
-                    limit++;
-                } else {
+                } else if (oldLength > 32767) {
                     head = (((oldLength >> 30) + 62) << 6) | 28672;
                     int limit2 = limit + 1;
                     this.array[limit] = (char) ((oldLength >> 15) | 32768);
                     limit = limit2 + 1;
                     this.array[limit2] = (char) (oldLength | 32768);
+                } else {
+                    head = 28672 | 3904;
+                    this.array[limit] = (char) (oldLength | 32768);
+                    limit++;
                 }
                 if (newLength < 61) {
-                    head3 = head | newLength;
+                    head2 = head | newLength;
                 } else if (newLength <= 32767) {
                     this.array[limit] = (char) (newLength | 32768);
-                    head2 = head | 61;
+                    head3 = head | 61;
                     limit++;
-                    this.array[this.length] = (char) head2;
+                    this.array[this.length] = (char) head3;
                     this.length = limit;
                 } else {
-                    head3 = head | ((newLength >> 30) + 62);
+                    head2 = head | ((newLength >> 30) + 62);
                     int limit3 = limit + 1;
                     this.array[limit] = (char) ((newLength >> 15) | 32768);
                     limit = limit3 + 1;
                     this.array[limit3] = (char) (newLength | 32768);
                 }
-                head2 = head3;
-                this.array[this.length] = (char) head2;
+                head3 = head2;
+                this.array[this.length] = (char) head3;
                 this.length = limit;
             }
         }
@@ -139,16 +139,18 @@ public final class Edits {
             newCapacity = 2000;
         } else if (this.array.length == Integer.MAX_VALUE) {
             throw new BufferOverflowException();
-        } else if (this.array.length >= 1073741823) {
-            newCapacity = Integer.MAX_VALUE;
         } else {
-            newCapacity = this.array.length * 2;
+            if (this.array.length >= 1073741823) {
+                newCapacity = Integer.MAX_VALUE;
+            } else {
+                newCapacity = this.array.length * 2;
+            }
         }
-        if (newCapacity - this.array.length >= 5) {
-            this.array = Arrays.copyOf(this.array, newCapacity);
-            return true;
+        if (newCapacity - this.array.length < 5) {
+            throw new BufferOverflowException();
         }
-        throw new BufferOverflowException();
+        this.array = Arrays.copyOf(this.array, newCapacity);
+        return true;
     }
 
     public int lengthDelta() {
@@ -163,6 +165,7 @@ public final class Edits {
         return this.numChanges;
     }
 
+    /* loaded from: classes5.dex */
     public static final class Iterator {
         static final /* synthetic */ boolean $assertionsDisabled = false;
         private final char[] array;
@@ -179,10 +182,6 @@ public final class Edits {
         private int replIndex;
         private int srcIndex;
 
-        static {
-            Class<Edits> cls = Edits.class;
-        }
-
         private Iterator(char[] a, int len, boolean oc, boolean crs) {
             this.array = a;
             this.length = len;
@@ -198,9 +197,9 @@ public final class Edits {
                 char[] cArr = this.array;
                 int i = this.index;
                 this.index = i + 1;
-                return cArr[i] & 32767;
+                return cArr[i] & '\u7fff';
             }
-            int len = ((head & 1) << 30) | ((this.array[this.index] & 32767) << 15) | (this.array[this.index + 1] & 32767);
+            int len = ((head & 1) << 30) | ((this.array[this.index] & '\u7fff') << 15) | (this.array[this.index + 1] & '\u7fff');
             this.index += 2;
             return len;
         }
@@ -233,174 +232,94 @@ public final class Edits {
             return next(this.onlyChanges_);
         }
 
-        /* JADX WARNING: Incorrect type for immutable var: ssa=char, code=int, for r0v4, types: [char, int] */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        private boolean next(boolean r9) {
-            /*
-                r8 = this;
-                int r0 = r8.dir
-                r1 = 1
-                if (r0 <= 0) goto L_0x0009
-                r8.updateNextIndexes()
-                goto L_0x001b
-            L_0x0009:
-                int r0 = r8.dir
-                if (r0 >= 0) goto L_0x0019
-                int r0 = r8.remaining
-                if (r0 <= 0) goto L_0x0019
-                int r0 = r8.index
-                int r0 = r0 + r1
-                r8.index = r0
-                r8.dir = r1
-                return r1
-            L_0x0019:
-                r8.dir = r1
-            L_0x001b:
-                int r0 = r8.remaining
-                r2 = 0
-                if (r0 < r1) goto L_0x002c
-                int r0 = r8.remaining
-                if (r0 <= r1) goto L_0x002a
-                int r0 = r8.remaining
-                int r0 = r0 - r1
-                r8.remaining = r0
-                return r1
-            L_0x002a:
-                r8.remaining = r2
-            L_0x002c:
-                int r0 = r8.index
-                int r3 = r8.length
-                if (r0 < r3) goto L_0x0037
-                boolean r0 = r8.noNext()
-                return r0
-            L_0x0037:
-                char[] r0 = r8.array
-                int r3 = r8.index
-                int r4 = r3 + 1
-                r8.index = r4
-                char r0 = r0[r3]
-                r3 = 4095(0xfff, float:5.738E-42)
-                if (r0 > r3) goto L_0x0082
-                r8.changed = r2
-                int r2 = r0 + 1
-                r8.oldLength_ = r2
-            L_0x004b:
-                int r2 = r8.index
-                int r4 = r8.length
-                if (r2 >= r4) goto L_0x0067
-                char[] r2 = r8.array
-                int r4 = r8.index
-                char r2 = r2[r4]
-                r0 = r2
-                if (r2 > r3) goto L_0x0067
-                int r2 = r8.index
-                int r2 = r2 + r1
-                r8.index = r2
-                int r2 = r8.oldLength_
-                int r4 = r0 + 1
-                int r2 = r2 + r4
-                r8.oldLength_ = r2
-                goto L_0x004b
-            L_0x0067:
-                int r2 = r8.oldLength_
-                r8.newLength_ = r2
-                if (r9 == 0) goto L_0x0081
-                r8.updateNextIndexes()
-                int r2 = r8.index
-                int r4 = r8.length
-                if (r2 < r4) goto L_0x007b
-                boolean r1 = r8.noNext()
-                return r1
-            L_0x007b:
-                int r2 = r8.index
-                int r2 = r2 + r1
-                r8.index = r2
-                goto L_0x0082
-            L_0x0081:
-                return r1
-            L_0x0082:
-                r8.changed = r1
-                r2 = 28671(0x6fff, float:4.0177E-41)
-                if (r0 > r2) goto L_0x00a7
-                int r4 = r0 >> 12
-                int r5 = r0 >> 9
-                r5 = r5 & 7
-                r6 = r0 & 511(0x1ff, float:7.16E-43)
-                int r6 = r6 + r1
-                boolean r7 = r8.coarse
-                if (r7 == 0) goto L_0x009e
-                int r7 = r6 * r4
-                r8.oldLength_ = r7
-                int r7 = r6 * r5
-                r8.newLength_ = r7
-                goto L_0x00bf
-            L_0x009e:
-                r8.oldLength_ = r4
-                r8.newLength_ = r5
-                if (r6 <= r1) goto L_0x00a6
-                r8.remaining = r6
-            L_0x00a6:
-                return r1
-            L_0x00a7:
-                int r4 = r0 >> 6
-                r4 = r4 & 63
-                int r4 = r8.readLength(r4)
-                r8.oldLength_ = r4
-                r4 = r0 & 63
-                int r4 = r8.readLength(r4)
-                r8.newLength_ = r4
-                boolean r4 = r8.coarse
-                if (r4 != 0) goto L_0x00bf
-                return r1
-            L_0x00bf:
-                int r4 = r8.index
-                int r5 = r8.length
-                if (r4 >= r5) goto L_0x0105
-                char[] r4 = r8.array
-                int r5 = r8.index
-                char r4 = r4[r5]
-                r0 = r4
-                if (r4 <= r3) goto L_0x0105
-                int r4 = r8.index
-                int r4 = r4 + r1
-                r8.index = r4
-                if (r0 > r2) goto L_0x00eb
-                r4 = r0 & 511(0x1ff, float:7.16E-43)
-                int r4 = r4 + r1
-                int r5 = r8.oldLength_
-                int r6 = r0 >> 12
-                int r6 = r6 * r4
-                int r5 = r5 + r6
-                r8.oldLength_ = r5
-                int r5 = r8.newLength_
-                int r6 = r0 >> 9
-                r6 = r6 & 7
-                int r6 = r6 * r4
-                int r5 = r5 + r6
-                r8.newLength_ = r5
-                goto L_0x00bf
-            L_0x00eb:
-                int r4 = r8.oldLength_
-                int r5 = r0 >> 6
-                r5 = r5 & 63
-                int r5 = r8.readLength(r5)
-                int r4 = r4 + r5
-                r8.oldLength_ = r4
-                int r4 = r8.newLength_
-                r5 = r0 & 63
-                int r5 = r8.readLength(r5)
-                int r4 = r4 + r5
-                r8.newLength_ = r4
-                goto L_0x00bf
-            L_0x0105:
-                return r1
-            */
-            throw new UnsupportedOperationException("Method not decompiled: com.ibm.icu.text.Edits.Iterator.next(boolean):boolean");
+        private boolean next(boolean onlyChanges) {
+            char c;
+            if (this.dir > 0) {
+                updateNextIndexes();
+            } else if (this.dir < 0 && this.remaining > 0) {
+                this.index++;
+                this.dir = 1;
+                return true;
+            } else {
+                this.dir = 1;
+            }
+            if (this.remaining >= 1) {
+                if (this.remaining > 1) {
+                    this.remaining--;
+                    return true;
+                }
+                this.remaining = 0;
+            }
+            if (this.index >= this.length) {
+                return noNext();
+            }
+            char[] cArr = this.array;
+            int i = this.index;
+            this.index = i + 1;
+            char c2 = cArr[i];
+            if (c2 <= '\u0fff') {
+                this.changed = false;
+                this.oldLength_ = c2 + 1;
+                while (this.index < this.length) {
+                    char c3 = this.array[this.index];
+                    c2 = c3;
+                    if (c3 > '\u0fff') {
+                        break;
+                    }
+                    this.index++;
+                    this.oldLength_ += c2 + 1;
+                }
+                this.newLength_ = this.oldLength_;
+                if (!onlyChanges) {
+                    return true;
+                }
+                updateNextIndexes();
+                if (this.index >= this.length) {
+                    return noNext();
+                }
+                this.index++;
+            }
+            this.changed = true;
+            if (c2 <= Edits.MAX_SHORT_CHANGE) {
+                int oldLen = c2 >> '\f';
+                int newLen = (c2 >> '\t') & 7;
+                int num = (c2 & '\u01ff') + 1;
+                if (this.coarse) {
+                    this.oldLength_ = num * oldLen;
+                    this.newLength_ = num * newLen;
+                } else {
+                    this.oldLength_ = oldLen;
+                    this.newLength_ = newLen;
+                    if (num > 1) {
+                        this.remaining = num;
+                    }
+                    return true;
+                }
+            } else {
+                this.oldLength_ = readLength((c2 >> 6) & 63);
+                this.newLength_ = readLength(c2 & '?');
+                if (!this.coarse) {
+                    return true;
+                }
+            }
+            while (this.index < this.length && (c = this.array[this.index]) > '\u0fff') {
+                this.index++;
+                if (c <= Edits.MAX_SHORT_CHANGE) {
+                    int num2 = (c & '\u01ff') + 1;
+                    this.oldLength_ += (c >> '\f') * num2;
+                    this.newLength_ += ((c >> '\t') & 7) * num2;
+                } else {
+                    this.oldLength_ += readLength((c >> 6) & 63);
+                    this.newLength_ += readLength(c & '?');
+                }
+            }
+            return true;
         }
 
         private boolean previous() {
             char c;
-            int u;
+            char c2;
+            char c3;
             if (this.dir >= 0) {
                 if (this.dir > 0) {
                     if (this.remaining > 0) {
@@ -413,41 +332,37 @@ public final class Edits {
                 this.dir = -1;
             }
             if (this.remaining > 0) {
-                if (this.remaining <= (this.array[this.index] & 511)) {
+                if (this.remaining <= (this.array[this.index] & '\u01ff')) {
                     this.remaining++;
                     updatePreviousIndexes();
                     return true;
                 }
                 this.remaining = 0;
             }
-            if (this.index <= 0) {
+            int u = this.index;
+            if (u <= 0) {
                 return noNext();
             }
             char[] cArr = this.array;
             int i = this.index - 1;
             this.index = i;
-            char u2 = cArr[i];
-            if (u2 <= 4095) {
+            char c4 = cArr[i];
+            if (c4 <= '\u0fff') {
                 this.changed = false;
-                this.oldLength_ = u2 + 1;
-                while (this.index > 0) {
-                    char c2 = this.array[this.index - 1];
-                    int u3 = c2;
-                    if (c2 > 4095) {
-                        break;
-                    }
+                this.oldLength_ = c4 + 1;
+                while (this.index > 0 && (c3 = this.array[this.index - 1]) <= '\u0fff') {
                     this.index--;
-                    this.oldLength_ += u3 + 1;
+                    this.oldLength_ += c3 + 1;
                 }
                 this.newLength_ = this.oldLength_;
                 updatePreviousIndexes();
                 return true;
             }
             this.changed = true;
-            if (u2 <= Edits.MAX_SHORT_CHANGE) {
-                int oldLen = u2 >> 12;
-                int newLen = (u2 >> 9) & 7;
-                int num = (u2 & 511) + 1;
+            if (c4 <= Edits.MAX_SHORT_CHANGE) {
+                int oldLen = c4 >> '\f';
+                int newLen = (c4 >> '\t') & 7;
+                int num = (c4 & '\u01ff') + 1;
                 if (this.coarse) {
                     this.oldLength_ = num * oldLen;
                     this.newLength_ = num * newLen;
@@ -461,44 +376,38 @@ public final class Edits {
                     return true;
                 }
             } else {
-                if (u2 <= 32767) {
-                    this.oldLength_ = readLength((u2 >> 6) & 63);
-                    this.newLength_ = readLength(u2 & '?');
+                if (c4 <= '\u7fff') {
+                    this.oldLength_ = readLength((c4 >> 6) & 63);
+                    this.newLength_ = readLength(c4 & '?');
                 } else {
                     do {
                         char[] cArr2 = this.array;
                         int i2 = this.index - 1;
                         this.index = i2;
                         c = cArr2[i2];
-                        u = c;
-                    } while (c > 32767);
+                    } while (c > '\u7fff');
                     int headIndex = this.index;
                     this.index = headIndex + 1;
-                    this.oldLength_ = readLength((u >> 6) & 63);
-                    this.newLength_ = readLength(u & 63);
+                    this.oldLength_ = readLength((c >> 6) & 63);
+                    this.newLength_ = readLength(c & '?');
                     this.index = headIndex;
                 }
-                if (this.coarse == 0) {
+                if (!this.coarse) {
                     updatePreviousIndexes();
                     return true;
                 }
             }
-            while (this.index > 0) {
-                char c3 = this.array[this.index - 1];
-                int u4 = c3;
-                if (c3 <= 4095) {
-                    break;
-                }
+            while (this.index > 0 && (c2 = this.array[this.index - 1]) > '\u0fff') {
                 this.index--;
-                if (u4 <= Edits.MAX_SHORT_CHANGE) {
-                    int num2 = (u4 & 511) + 1;
-                    this.oldLength_ += (u4 >> 12) * num2;
-                    this.newLength_ += ((u4 >> 9) & 7) * num2;
-                } else if (u4 <= 32767) {
+                if (c2 <= Edits.MAX_SHORT_CHANGE) {
+                    int num2 = (c2 & '\u01ff') + 1;
+                    this.oldLength_ += (c2 >> '\f') * num2;
+                    this.newLength_ += ((c2 >> '\t') & 7) * num2;
+                } else if (c2 <= '\u7fff') {
                     int headIndex2 = this.index;
                     this.index = headIndex2 + 1;
-                    this.oldLength_ += readLength((u4 >> 6) & 63);
-                    this.newLength_ += readLength(u4 & 63);
+                    this.oldLength_ += readLength((c2 >> 6) & 63);
+                    this.newLength_ += readLength(c2 & '?');
                     this.index = headIndex2;
                 }
             }
@@ -515,10 +424,10 @@ public final class Edits {
         }
 
         private int findIndex(int i, boolean findSource) {
-            int spanLength;
             int spanStart;
-            int spanLength2;
+            int spanLength;
             int spanStart2;
+            int spanLength2;
             if (i < 0) {
                 return -1;
             }
@@ -532,15 +441,16 @@ public final class Edits {
             if (i < spanStart) {
                 if (i >= spanStart / 2) {
                     while (true) {
-                        boolean previous = previous();
+                        previous();
                         int spanStart3 = findSource ? this.srcIndex : this.destIndex;
                         if (i >= spanStart3) {
                             return 0;
                         }
                         if (this.remaining > 0) {
                             int spanLength3 = findSource ? this.oldLength_ : this.newLength_;
-                            int num = ((this.array[this.index] & 511) + 1) - this.remaining;
-                            if (i >= spanStart3 - (num * spanLength3)) {
+                            int num = ((this.array[this.index] & '\u01ff') + 1) - this.remaining;
+                            int len = num * spanLength3;
+                            if (i >= spanStart3 - len) {
                                 int n = (((spanStart3 - i) - 1) / spanLength3) + 1;
                                 this.srcIndex -= this.oldLength_ * n;
                                 this.replIndex -= this.newLength_ * n;
@@ -579,7 +489,8 @@ public final class Edits {
                     return 0;
                 }
                 if (this.remaining > 1) {
-                    if (i < spanStart2 + (this.remaining * spanLength2)) {
+                    int len2 = this.remaining * spanLength2;
+                    if (i < spanStart2 + len2) {
                         int n2 = (i - spanStart2) / spanLength2;
                         this.srcIndex += this.oldLength_ * n2;
                         this.replIndex += this.newLength_ * n2;
@@ -655,9 +566,9 @@ public final class Edits {
             sb.append("..");
             sb.append(this.srcIndex + this.oldLength_);
             if (this.changed) {
-                sb.append("] ⇝ dest[");
+                sb.append("] \u21dd dest[");
             } else {
-                sb.append("] ≡ dest[");
+                sb.append("] \u2261 dest[");
             }
             sb.append(this.destIndex);
             sb.append("..");
@@ -691,6 +602,29 @@ public final class Edits {
         return new Iterator(this.array, this.length, false, false);
     }
 
+    /* JADX WARN: Code restructure failed: missing block: B:28:0x0068, code lost:
+        if (r6 != 0) goto L92;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:29:0x006b, code lost:
+        if (r10 != 0) goto L91;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:30:0x006d, code lost:
+        if (r2 == 0) goto L90;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:31:0x006f, code lost:
+        addReplace(r10, r2);
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:32:0x0072, code lost:
+        return r13;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:34:0x007a, code lost:
+        throw new java.lang.IllegalArgumentException("The ab output string is shorter than the bc input string.");
+     */
+    /* JADX WARN: Removed duplicated region for block: B:93:0x00f8 A[SYNTHETIC] */
+    /* JADX WARN: Removed duplicated region for block: B:94:0x00f3 A[SYNTHETIC] */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
     public Edits mergeAndAppend(Edits ab, Edits bc) {
         Iterator abIter = ab.getFineIterator();
         Iterator bcIter = bc.getFineIterator();
@@ -743,34 +677,58 @@ public final class Edits {
             }
             if (bc_bLength == 0) {
                 throw new IllegalArgumentException("The bc input string is shorter than the ab output string.");
-            } else if (abIter.hasChange() || bcIter.hasChange()) {
-                if (abIter.hasChange() != 0 || !bcIter.hasChange()) {
-                    if (!abIter.hasChange() || bcIter.hasChange()) {
-                        if (ab_bLength == bc_bLength) {
-                            addReplace(pending_aLength + aLength, pending_cLength + cLength);
-                            pending_cLength = 0;
-                            pending_aLength = 0;
-                            bc_bLength = 0;
-                            ab_bLength = 0;
-                        }
-                    } else if (ab_bLength <= bc_bLength) {
-                        addReplace(pending_aLength + aLength, pending_cLength + ab_bLength);
-                        pending_cLength = 0;
-                        pending_aLength = 0;
-                        int i = bc_bLength - ab_bLength;
-                        bc_bLength = i;
-                        cLength = i;
-                        ab_bLength = 0;
-                    }
-                } else if (ab_bLength >= bc_bLength) {
+            }
+            if (!abIter.hasChange() && !bcIter.hasChange()) {
+                if (pending_aLength != 0 || pending_cLength != 0) {
+                    addReplace(pending_aLength, pending_cLength);
+                    pending_cLength = 0;
+                    pending_aLength = 0;
+                }
+                int unchangedLength = aLength <= cLength ? aLength : cLength;
+                addUnchanged(unchangedLength);
+                int i = aLength - unchangedLength;
+                aLength = i;
+                ab_bLength = i;
+                int i2 = cLength - unchangedLength;
+                cLength = i2;
+                bc_bLength = i2;
+            } else if (!abIter.hasChange() && bcIter.hasChange()) {
+                if (ab_bLength >= bc_bLength) {
                     addReplace(pending_aLength + bc_bLength, pending_cLength + cLength);
                     pending_cLength = 0;
                     pending_aLength = 0;
-                    int i2 = ab_bLength - bc_bLength;
-                    ab_bLength = i2;
-                    aLength = i2;
+                    int i3 = ab_bLength - bc_bLength;
+                    ab_bLength = i3;
+                    aLength = i3;
                     bc_bLength = 0;
+                } else {
+                    pending_aLength += aLength;
+                    pending_cLength += cLength;
+                    if (ab_bLength < bc_bLength) {
+                    }
                 }
+            } else if (abIter.hasChange() && !bcIter.hasChange()) {
+                if (ab_bLength <= bc_bLength) {
+                    addReplace(pending_aLength + aLength, pending_cLength + ab_bLength);
+                    pending_cLength = 0;
+                    pending_aLength = 0;
+                    int i4 = bc_bLength - ab_bLength;
+                    bc_bLength = i4;
+                    cLength = i4;
+                    ab_bLength = 0;
+                } else {
+                    pending_aLength += aLength;
+                    pending_cLength += cLength;
+                    if (ab_bLength < bc_bLength) {
+                    }
+                }
+            } else if (ab_bLength == bc_bLength) {
+                addReplace(pending_aLength + aLength, pending_cLength + cLength);
+                pending_cLength = 0;
+                pending_aLength = 0;
+                bc_bLength = 0;
+                ab_bLength = 0;
+            } else {
                 pending_aLength += aLength;
                 pending_cLength += cLength;
                 if (ab_bLength < bc_bLength) {
@@ -782,28 +740,7 @@ public final class Edits {
                     bc_bLength = 0;
                     aLength = 0;
                 }
-            } else {
-                if (!(pending_aLength == 0 && pending_cLength == 0)) {
-                    addReplace(pending_aLength, pending_cLength);
-                    pending_cLength = 0;
-                    pending_aLength = 0;
-                }
-                int unchangedLength = aLength <= cLength ? aLength : cLength;
-                addUnchanged(unchangedLength);
-                int i3 = aLength - unchangedLength;
-                aLength = i3;
-                ab_bLength = i3;
-                int i4 = cLength - unchangedLength;
-                cLength = i4;
-                bc_bLength = i4;
             }
         }
-        if (bc_bLength == 0) {
-            if (!(pending_aLength == 0 && pending_cLength == 0)) {
-                addReplace(pending_aLength, pending_cLength);
-            }
-            return this;
-        }
-        throw new IllegalArgumentException("The ab output string is shorter than the bc input string.");
     }
 }

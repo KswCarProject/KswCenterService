@@ -1,5 +1,6 @@
 package android;
 
+/* loaded from: classes.dex */
 public final class Section {
     public static final int SECTION_COMMAND = 2;
     public static final int SECTION_DUMPSYS = 3;

@@ -2,7 +2,9 @@ package android.text;
 
 import android.annotation.UnsupportedAppUsage;
 import android.app.ActivityThread;
+import android.app.Application;
 import android.graphics.drawable.Drawable;
+import android.media.TtmlUtils;
 import android.net.wifi.WifiEnterpriseConfig;
 import android.text.Layout;
 import android.text.style.AbsoluteSizeSpan;
@@ -29,6 +31,7 @@ import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.XMLReader;
 
+/* loaded from: classes4.dex */
 public class Html {
     public static final int FROM_HTML_MODE_COMPACT = 63;
     public static final int FROM_HTML_MODE_LEGACY = 0;
@@ -43,10 +46,12 @@ public class Html {
     public static final int TO_HTML_PARAGRAPH_LINES_CONSECUTIVE = 0;
     public static final int TO_HTML_PARAGRAPH_LINES_INDIVIDUAL = 1;
 
+    /* loaded from: classes4.dex */
     public interface ImageGetter {
         Drawable getDrawable(String str);
     }
 
+    /* loaded from: classes4.dex */
     public interface TagHandler {
         void handleTag(boolean z, String str, Editable editable, XMLReader xMLReader);
     }
@@ -56,16 +61,16 @@ public class Html {
 
     @Deprecated
     public static Spanned fromHtml(String source) {
-        return fromHtml(source, 0, (ImageGetter) null, (TagHandler) null);
+        return fromHtml(source, 0, null, null);
     }
 
     public static Spanned fromHtml(String source, int flags) {
-        return fromHtml(source, flags, (ImageGetter) null, (TagHandler) null);
+        return fromHtml(source, flags, null, null);
     }
 
+    /* loaded from: classes4.dex */
     private static class HtmlParser {
-        /* access modifiers changed from: private */
-        public static final HTMLSchema schema = new HTMLSchema();
+        private static final HTMLSchema schema = new HTMLSchema();
 
         private HtmlParser() {
         }
@@ -80,7 +85,8 @@ public class Html {
         Parser parser = new Parser();
         try {
             parser.setProperty("http://www.ccil.org/~cowan/tagsoup/properties/schema", HtmlParser.schema);
-            return new HtmlToSpannedConverter(source, imageGetter, tagHandler, parser, flags).convert();
+            HtmlToSpannedConverter converter = new HtmlToSpannedConverter(source, imageGetter, tagHandler, parser, flags);
+            return converter.convert();
         } catch (SAXNotRecognizedException e) {
             throw new RuntimeException(e);
         } catch (SAXNotSupportedException e2) {
@@ -164,7 +170,7 @@ public class Html {
     }
 
     private static String getTextDirection(Spanned text, int start, int end) {
-        if (TextDirectionHeuristics.FIRSTSTRONG_LTR.isRtl((CharSequence) text, start, end - start)) {
+        if (TextDirectionHeuristics.FIRSTSTRONG_LTR.isRtl(text, start, end - start)) {
             return " dir=\"rtl\"";
         }
         return " dir=\"ltr\"";
@@ -184,7 +190,9 @@ public class Html {
                     break;
                 }
                 AlignmentSpan s = alignmentSpans[i];
-                if ((text.getSpanFlags(s) & 51) == 51) {
+                if ((text.getSpanFlags(s) & 51) != 51) {
+                    i--;
+                } else {
                     Layout.Alignment alignment = s.getAlignment();
                     if (alignment == Layout.Alignment.ALIGN_NORMAL) {
                         textAlign = "text-align:start;";
@@ -193,8 +201,6 @@ public class Html {
                     } else if (alignment == Layout.Alignment.ALIGN_OPPOSITE) {
                         textAlign = "text-align:end;";
                     }
-                } else {
-                    i--;
                 }
             }
         }
@@ -227,7 +233,7 @@ public class Html {
         boolean isInList = false;
         int i = start;
         while (i <= end) {
-            int next = TextUtils.indexOf((CharSequence) text, 10, i, end);
+            int next = TextUtils.indexOf((CharSequence) text, '\n', i, end);
             if (next < 0) {
                 next = end;
             }
@@ -241,18 +247,19 @@ public class Html {
                 boolean isListItem = false;
                 ParagraphStyle[] paragraphStyles = (ParagraphStyle[]) text.getSpans(i, next, ParagraphStyle.class);
                 int length = paragraphStyles.length;
-                boolean z = false;
                 int i2 = 0;
                 while (true) {
                     if (i2 >= length) {
                         break;
                     }
                     ParagraphStyle paragraphStyle = paragraphStyles[i2];
-                    if ((text.getSpanFlags(paragraphStyle) & 51) == 51 && (paragraphStyle instanceof BulletSpan)) {
+                    int spanFlags = text.getSpanFlags(paragraphStyle);
+                    if ((spanFlags & 51) != 51 || !(paragraphStyle instanceof BulletSpan)) {
+                        i2++;
+                    } else {
                         isListItem = true;
                         break;
                     }
-                    i2++;
                 }
                 if (isListItem && !isInList) {
                     isInList = true;
@@ -268,10 +275,7 @@ public class Html {
                 out.append("<");
                 out.append(tagType);
                 out.append(getTextDirection(text, i, next));
-                if (!isListItem) {
-                    z = true;
-                }
-                out.append(getTextStyles(text, i, next, z, true));
+                out.append(getTextStyles(text, i, next, isListItem ? false : true, true));
                 out.append(">");
                 withinParagraph(out, text, i, next);
                 out.append("</");
@@ -292,12 +296,12 @@ public class Html {
         out.append(">");
         int i = start;
         while (i < end) {
-            int next = TextUtils.indexOf((CharSequence) text, 10, i, end);
+            int next = TextUtils.indexOf((CharSequence) text, '\n', i, end);
             if (next < 0) {
                 next = end;
             }
             int nl = 0;
-            while (next < end && text.charAt(next) == 10) {
+            while (next < end && text.charAt(next) == '\n') {
                 nl++;
                 next++;
             }
@@ -326,9 +330,9 @@ public class Html {
             int next = text.nextSpanTransition(j, end, CharacterStyle.class);
             CharacterStyle[] style = (CharacterStyle[]) text.getSpans(j, next, CharacterStyle.class);
             int i = j;
-            for (int j2 = 0; j2 < style.length; j2++) {
-                if (style[j2] instanceof StyleSpan) {
-                    int s = ((StyleSpan) style[j2]).getStyle();
+            for (int i2 = 0; i2 < style.length; i2++) {
+                if (style[i2] instanceof StyleSpan) {
+                    int s = ((StyleSpan) style[i2]).getStyle();
                     if ((s & 1) != 0) {
                         out.append("<b>");
                     }
@@ -336,84 +340,88 @@ public class Html {
                         out.append("<i>");
                     }
                 }
-                if ((style[j2] instanceof TypefaceSpan) && "monospace".equals(((TypefaceSpan) style[j2]).getFamily())) {
+                if ((style[i2] instanceof TypefaceSpan) && "monospace".equals(((TypefaceSpan) style[i2]).getFamily())) {
                     out.append("<tt>");
                 }
-                if (style[j2] instanceof SuperscriptSpan) {
+                if (style[i2] instanceof SuperscriptSpan) {
                     out.append("<sup>");
                 }
-                if (style[j2] instanceof SubscriptSpan) {
+                if (style[i2] instanceof SubscriptSpan) {
                     out.append("<sub>");
                 }
-                if (style[j2] instanceof UnderlineSpan) {
+                if (style[i2] instanceof UnderlineSpan) {
                     out.append("<u>");
                 }
-                if (style[j2] instanceof StrikethroughSpan) {
+                if (style[i2] instanceof StrikethroughSpan) {
                     out.append("<span style=\"text-decoration:line-through;\">");
                 }
-                if (style[j2] instanceof URLSpan) {
+                if (style[i2] instanceof URLSpan) {
                     out.append("<a href=\"");
-                    out.append(((URLSpan) style[j2]).getURL());
+                    out.append(((URLSpan) style[i2]).getURL());
                     out.append("\">");
                 }
-                if (style[j2] instanceof ImageSpan) {
+                if (style[i2] instanceof ImageSpan) {
                     out.append("<img src=\"");
-                    out.append(((ImageSpan) style[j2]).getSource());
+                    out.append(((ImageSpan) style[i2]).getSource());
                     out.append("\">");
                     i = next;
                 }
-                if (style[j2] instanceof AbsoluteSizeSpan) {
-                    AbsoluteSizeSpan s2 = (AbsoluteSizeSpan) style[j2];
-                    float sizeDip = (float) s2.getSize();
+                if (style[i2] instanceof AbsoluteSizeSpan) {
+                    AbsoluteSizeSpan s2 = (AbsoluteSizeSpan) style[i2];
+                    float sizeDip = s2.getSize();
                     if (!s2.getDip()) {
-                        sizeDip /= ActivityThread.currentApplication().getResources().getDisplayMetrics().density;
+                        Application application = ActivityThread.currentApplication();
+                        sizeDip /= application.getResources().getDisplayMetrics().density;
                     }
-                    out.append(String.format("<span style=\"font-size:%.0fpx\";>", new Object[]{Float.valueOf(sizeDip)}));
+                    out.append(String.format("<span style=\"font-size:%.0fpx\";>", Float.valueOf(sizeDip)));
                 }
-                if (style[j2] instanceof RelativeSizeSpan) {
-                    out.append(String.format("<span style=\"font-size:%.2fem;\">", new Object[]{Float.valueOf(((RelativeSizeSpan) style[j2]).getSizeChange())}));
+                if (style[i2] instanceof RelativeSizeSpan) {
+                    float sizeEm = ((RelativeSizeSpan) style[i2]).getSizeChange();
+                    out.append(String.format("<span style=\"font-size:%.2fem;\">", Float.valueOf(sizeEm)));
                 }
-                if (style[j2] instanceof ForegroundColorSpan) {
-                    out.append(String.format("<span style=\"color:#%06X;\">", new Object[]{Integer.valueOf(((ForegroundColorSpan) style[j2]).getForegroundColor() & 16777215)}));
+                if (style[i2] instanceof ForegroundColorSpan) {
+                    int color = ((ForegroundColorSpan) style[i2]).getForegroundColor();
+                    out.append(String.format("<span style=\"color:#%06X;\">", Integer.valueOf(color & 16777215)));
                 }
-                if (style[j2] instanceof BackgroundColorSpan) {
-                    out.append(String.format("<span style=\"background-color:#%06X;\">", new Object[]{Integer.valueOf(16777215 & ((BackgroundColorSpan) style[j2]).getBackgroundColor())}));
+                if (style[i2] instanceof BackgroundColorSpan) {
+                    int color2 = ((BackgroundColorSpan) style[i2]).getBackgroundColor();
+                    out.append(String.format("<span style=\"background-color:#%06X;\">", Integer.valueOf(16777215 & color2)));
                 }
             }
             withinStyle(out, text, i, next);
-            for (int j3 = style.length - 1; j3 >= 0; j3--) {
-                if (style[j3] instanceof BackgroundColorSpan) {
+            for (int j2 = style.length - 1; j2 >= 0; j2--) {
+                if (style[j2] instanceof BackgroundColorSpan) {
                     out.append("</span>");
                 }
-                if (style[j3] instanceof ForegroundColorSpan) {
+                if (style[j2] instanceof ForegroundColorSpan) {
                     out.append("</span>");
                 }
-                if (style[j3] instanceof RelativeSizeSpan) {
+                if (style[j2] instanceof RelativeSizeSpan) {
                     out.append("</span>");
                 }
-                if (style[j3] instanceof AbsoluteSizeSpan) {
+                if (style[j2] instanceof AbsoluteSizeSpan) {
                     out.append("</span>");
                 }
-                if (style[j3] instanceof URLSpan) {
+                if (style[j2] instanceof URLSpan) {
                     out.append("</a>");
                 }
-                if (style[j3] instanceof StrikethroughSpan) {
+                if (style[j2] instanceof StrikethroughSpan) {
                     out.append("</span>");
                 }
-                if (style[j3] instanceof UnderlineSpan) {
+                if (style[j2] instanceof UnderlineSpan) {
                     out.append("</u>");
                 }
-                if (style[j3] instanceof SubscriptSpan) {
+                if (style[j2] instanceof SubscriptSpan) {
                     out.append("</sub>");
                 }
-                if (style[j3] instanceof SuperscriptSpan) {
+                if (style[j2] instanceof SuperscriptSpan) {
                     out.append("</sup>");
                 }
-                if ((style[j3] instanceof TypefaceSpan) && ((TypefaceSpan) style[j3]).getFamily().equals("monospace")) {
+                if ((style[j2] instanceof TypefaceSpan) && ((TypefaceSpan) style[j2]).getFamily().equals("monospace")) {
                     out.append("</tt>");
                 }
-                if (style[j3] instanceof StyleSpan) {
-                    int s3 = ((StyleSpan) style[j3]).getStyle();
+                if (style[j2] instanceof StyleSpan) {
+                    int s3 = ((StyleSpan) style[j2]).getStyle();
                     if ((s3 & 1) != 0) {
                         out.append("</b>");
                     }
@@ -438,25 +446,26 @@ public class Html {
                 out.append("&gt;");
             } else if (c == '&') {
                 out.append("&amp;");
-            } else if (c < 55296 || c > 57343) {
-                if (c > '~' || c < ' ') {
+            } else if (c >= '\ud800' && c <= '\udfff') {
+                if (c < '\udc00' && i + 1 < end && (d = text.charAt(i + 1)) >= '\udc00' && d <= '\udfff') {
+                    i++;
+                    int codepoint = ((c - '\ud800') << 10) | 65536 | (d - UTF16.TRAIL_SURROGATE_MIN_VALUE);
                     out.append("&#");
-                    out.append(c);
+                    out.append(codepoint);
                     out.append(";");
-                } else if (c == ' ') {
-                    while (i + 1 < end && text.charAt(i + 1) == ' ') {
-                        out.append("&nbsp;");
-                        i++;
-                    }
-                    out.append(' ');
-                } else {
-                    out.append(c);
                 }
-            } else if (c < 56320 && i + 1 < end && (d = text.charAt(i + 1)) >= 56320 && d <= 57343) {
-                i++;
+            } else if (c > '~' || c < ' ') {
                 out.append("&#");
-                out.append(((c - 55296) << 10) | 65536 | (d - UTF16.TRAIL_SURROGATE_MIN_VALUE));
+                out.append((int) c);
                 out.append(";");
+            } else if (c == ' ') {
+                while (i + 1 < end && text.charAt(i + 1) == ' ') {
+                    out.append("&nbsp;");
+                    i++;
+                }
+                out.append(' ');
+            } else {
+                out.append(c);
             }
             i++;
         }

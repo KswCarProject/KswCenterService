@@ -5,10 +5,11 @@ import android.app.prediction.AppPredictor;
 import android.app.prediction.IPredictionCallback;
 import android.app.prediction.IPredictionManager;
 import android.content.Context;
-import android.content.pm.ParceledListSlice;
-import android.os.Binder;
-import android.os.RemoteException;
-import android.os.ServiceManager;
+import android.content.p002pm.ParceledListSlice;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
 import android.provider.SettingsStringUtil;
 import android.util.ArrayMap;
 import android.util.Log;
@@ -21,111 +22,117 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class AppPredictor {
     private static final String TAG = AppPredictor.class.getSimpleName();
+    private final IPredictionManager mPredictionManager;
+    private final AppPredictionSessionId mSessionId;
     private final CloseGuard mCloseGuard = CloseGuard.get();
     private final AtomicBoolean mIsClosed = new AtomicBoolean(false);
-    private final IPredictionManager mPredictionManager = IPredictionManager.Stub.asInterface(ServiceManager.getService(Context.APP_PREDICTION_SERVICE));
     private final ArrayMap<Callback, CallbackWrapper> mRegisteredCallbacks = new ArrayMap<>();
-    private final AppPredictionSessionId mSessionId;
 
+    /* loaded from: classes.dex */
     public interface Callback {
         void onTargetsAvailable(List<AppTarget> list);
     }
 
     AppPredictor(Context context, AppPredictionContext predictionContext) {
+        IBinder b = ServiceManager.getService(Context.APP_PREDICTION_SERVICE);
+        this.mPredictionManager = IPredictionManager.Stub.asInterface(b);
         this.mSessionId = new AppPredictionSessionId(context.getPackageName() + SettingsStringUtil.DELIMITER + UUID.randomUUID().toString());
         try {
             this.mPredictionManager.createPredictionSession(predictionContext, this.mSessionId);
         } catch (RemoteException e) {
-            Log.e(TAG, "Failed to create predictor", e);
+            Log.m69e(TAG, "Failed to create predictor", e);
             e.rethrowAsRuntimeException();
         }
         this.mCloseGuard.open("close");
     }
 
     public void notifyAppTargetEvent(AppTargetEvent event) {
-        if (!this.mIsClosed.get()) {
-            try {
-                this.mPredictionManager.notifyAppTargetEvent(this.mSessionId, event);
-            } catch (RemoteException e) {
-                Log.e(TAG, "Failed to notify app target event", e);
-                e.rethrowAsRuntimeException();
-            }
-        } else {
+        if (this.mIsClosed.get()) {
             throw new IllegalStateException("This client has already been destroyed.");
+        }
+        try {
+            this.mPredictionManager.notifyAppTargetEvent(this.mSessionId, event);
+        } catch (RemoteException e) {
+            Log.m69e(TAG, "Failed to notify app target event", e);
+            e.rethrowAsRuntimeException();
         }
     }
 
     public void notifyLaunchLocationShown(String launchLocation, List<AppTargetId> targetIds) {
-        if (!this.mIsClosed.get()) {
-            try {
-                this.mPredictionManager.notifyLaunchLocationShown(this.mSessionId, launchLocation, new ParceledListSlice(targetIds));
-            } catch (RemoteException e) {
-                Log.e(TAG, "Failed to notify location shown event", e);
-                e.rethrowAsRuntimeException();
-            }
-        } else {
+        if (this.mIsClosed.get()) {
             throw new IllegalStateException("This client has already been destroyed.");
+        }
+        try {
+            this.mPredictionManager.notifyLaunchLocationShown(this.mSessionId, launchLocation, new ParceledListSlice(targetIds));
+        } catch (RemoteException e) {
+            Log.m69e(TAG, "Failed to notify location shown event", e);
+            e.rethrowAsRuntimeException();
         }
     }
 
-    public void registerPredictionUpdates(Executor callbackExecutor, Callback callback) {
+    public void registerPredictionUpdates(Executor callbackExecutor, final Callback callback) {
         if (this.mIsClosed.get()) {
             throw new IllegalStateException("This client has already been destroyed.");
-        } else if (!this.mRegisteredCallbacks.containsKey(callback)) {
-            try {
-                Objects.requireNonNull(callback);
-                CallbackWrapper callbackWrapper = new CallbackWrapper(callbackExecutor, new Consumer() {
-                    public final void accept(Object obj) {
-                        AppPredictor.Callback.this.onTargetsAvailable((List) obj);
-                    }
-                });
-                this.mPredictionManager.registerPredictionUpdates(this.mSessionId, callbackWrapper);
-                this.mRegisteredCallbacks.put(callback, callbackWrapper);
-            } catch (RemoteException e) {
-                Log.e(TAG, "Failed to register for prediction updates", e);
-                e.rethrowAsRuntimeException();
-            }
+        }
+        if (this.mRegisteredCallbacks.containsKey(callback)) {
+            return;
+        }
+        try {
+            Objects.requireNonNull(callback);
+            CallbackWrapper callbackWrapper = new CallbackWrapper(callbackExecutor, new Consumer() { // from class: android.app.prediction.-$$Lambda$1lqxDplfWlUwgBrOynX9L0oK_uA
+                @Override // java.util.function.Consumer
+                public final void accept(Object obj) {
+                    AppPredictor.Callback.this.onTargetsAvailable((List) obj);
+                }
+            });
+            this.mPredictionManager.registerPredictionUpdates(this.mSessionId, callbackWrapper);
+            this.mRegisteredCallbacks.put(callback, callbackWrapper);
+        } catch (RemoteException e) {
+            Log.m69e(TAG, "Failed to register for prediction updates", e);
+            e.rethrowAsRuntimeException();
         }
     }
 
     public void unregisterPredictionUpdates(Callback callback) {
         if (this.mIsClosed.get()) {
             throw new IllegalStateException("This client has already been destroyed.");
-        } else if (this.mRegisteredCallbacks.containsKey(callback)) {
-            try {
-                this.mPredictionManager.unregisterPredictionUpdates(this.mSessionId, this.mRegisteredCallbacks.remove(callback));
-            } catch (RemoteException e) {
-                Log.e(TAG, "Failed to unregister for prediction updates", e);
-                e.rethrowAsRuntimeException();
-            }
+        }
+        if (!this.mRegisteredCallbacks.containsKey(callback)) {
+            return;
+        }
+        try {
+            CallbackWrapper callbackWrapper = this.mRegisteredCallbacks.remove(callback);
+            this.mPredictionManager.unregisterPredictionUpdates(this.mSessionId, callbackWrapper);
+        } catch (RemoteException e) {
+            Log.m69e(TAG, "Failed to unregister for prediction updates", e);
+            e.rethrowAsRuntimeException();
         }
     }
 
     public void requestPredictionUpdate() {
-        if (!this.mIsClosed.get()) {
-            try {
-                this.mPredictionManager.requestPredictionUpdate(this.mSessionId);
-            } catch (RemoteException e) {
-                Log.e(TAG, "Failed to request prediction update", e);
-                e.rethrowAsRuntimeException();
-            }
-        } else {
+        if (this.mIsClosed.get()) {
             throw new IllegalStateException("This client has already been destroyed.");
+        }
+        try {
+            this.mPredictionManager.requestPredictionUpdate(this.mSessionId);
+        } catch (RemoteException e) {
+            Log.m69e(TAG, "Failed to request prediction update", e);
+            e.rethrowAsRuntimeException();
         }
     }
 
     public void sortTargets(List<AppTarget> targets, Executor callbackExecutor, Consumer<List<AppTarget>> callback) {
-        if (!this.mIsClosed.get()) {
-            try {
-                this.mPredictionManager.sortAppTargets(this.mSessionId, new ParceledListSlice(targets), new CallbackWrapper(callbackExecutor, callback));
-            } catch (RemoteException e) {
-                Log.e(TAG, "Failed to sort targets", e);
-                e.rethrowAsRuntimeException();
-            }
-        } else {
+        if (this.mIsClosed.get()) {
             throw new IllegalStateException("This client has already been destroyed.");
+        }
+        try {
+            this.mPredictionManager.sortAppTargets(this.mSessionId, new ParceledListSlice(targets), new CallbackWrapper(callbackExecutor, callback));
+        } catch (RemoteException e) {
+            Log.m69e(TAG, "Failed to sort targets", e);
+            e.rethrowAsRuntimeException();
         }
     }
 
@@ -134,17 +141,17 @@ public final class AppPredictor {
             this.mCloseGuard.close();
             try {
                 this.mPredictionManager.onDestroyPredictionSession(this.mSessionId);
+                return;
             } catch (RemoteException e) {
-                Log.e(TAG, "Failed to notify app target event", e);
+                Log.m69e(TAG, "Failed to notify app target event", e);
                 e.rethrowAsRuntimeException();
+                return;
             }
-        } else {
-            throw new IllegalStateException("This client has already been destroyed.");
         }
+        throw new IllegalStateException("This client has already been destroyed.");
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         try {
             if (this.mCloseGuard != null) {
                 this.mCloseGuard.warnIfOpen();
@@ -161,6 +168,7 @@ public final class AppPredictor {
         return this.mSessionId;
     }
 
+    /* loaded from: classes.dex */
     static class CallbackWrapper extends IPredictionCallback.Stub {
         private final Consumer<List<AppTarget>> mCallback;
         private final Executor mExecutor;
@@ -170,18 +178,14 @@ public final class AppPredictor {
             this.mExecutor = callbackExecutor;
         }
 
-        public void onResult(ParceledListSlice result) {
+        @Override // android.app.prediction.IPredictionCallback
+        public void onResult(final ParceledListSlice result) {
             long identity = Binder.clearCallingIdentity();
             try {
-                this.mExecutor.execute(new Runnable(result) {
-                    private final /* synthetic */ ParceledListSlice f$1;
-
-                    {
-                        this.f$1 = r2;
-                    }
-
+                this.mExecutor.execute(new Runnable() { // from class: android.app.prediction.-$$Lambda$AppPredictor$CallbackWrapper$gCs3O3sYRlsXAOdelds31867YXo
+                    @Override // java.lang.Runnable
                     public final void run() {
-                        AppPredictor.CallbackWrapper.this.mCallback.accept(this.f$1.getList());
+                        AppPredictor.CallbackWrapper.this.mCallback.accept(result.getList());
                     }
                 });
             } finally {

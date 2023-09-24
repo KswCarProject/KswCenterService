@@ -4,8 +4,8 @@ import android.annotation.SystemApi;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.ServiceConnection;
-import android.os.IBinder;
-import android.os.RemoteException;
+import android.p007os.IBinder;
+import android.p007os.RemoteException;
 import android.telephony.mbms.InternalStreamingServiceCallback;
 import android.telephony.mbms.InternalStreamingSessionCallback;
 import android.telephony.mbms.MbmsStreamingSessionCallback;
@@ -22,133 +22,131 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
+/* loaded from: classes.dex */
 public class MbmsStreamingSession implements AutoCloseable {
     private static final String LOG_TAG = "MbmsStreamingSession";
     @SystemApi
     public static final String MBMS_STREAMING_SERVICE_ACTION = "android.telephony.action.EmbmsStreaming";
     public static final String MBMS_STREAMING_SERVICE_OVERRIDE_METADATA = "mbms-streaming-service-override";
-    /* access modifiers changed from: private */
-    public static AtomicBoolean sIsInitialized = new AtomicBoolean(false);
+    private static AtomicBoolean sIsInitialized = new AtomicBoolean(false);
     private final Context mContext;
-    /* access modifiers changed from: private */
-    public IBinder.DeathRecipient mDeathRecipient = new IBinder.DeathRecipient() {
+    private InternalStreamingSessionCallback mInternalCallback;
+    private int mSubscriptionId;
+    private AtomicReference<IMbmsStreamingService> mService = new AtomicReference<>(null);
+    private IBinder.DeathRecipient mDeathRecipient = new IBinder.DeathRecipient() { // from class: android.telephony.MbmsStreamingSession.1
+        @Override // android.p007os.IBinder.DeathRecipient
         public void binderDied() {
             MbmsStreamingSession.sIsInitialized.set(false);
             MbmsStreamingSession.this.sendErrorToApp(3, "Received death notification");
         }
     };
-    /* access modifiers changed from: private */
-    public InternalStreamingSessionCallback mInternalCallback;
     private Set<StreamingService> mKnownActiveStreamingServices = new ArraySet();
-    /* access modifiers changed from: private */
-    public AtomicReference<IMbmsStreamingService> mService = new AtomicReference<>((Object) null);
-    /* access modifiers changed from: private */
-    public int mSubscriptionId = -1;
 
     private MbmsStreamingSession(Context context, Executor executor, int subscriptionId, MbmsStreamingSessionCallback callback) {
+        this.mSubscriptionId = -1;
         this.mContext = context;
         this.mSubscriptionId = subscriptionId;
         this.mInternalCallback = new InternalStreamingSessionCallback(callback, executor);
     }
 
     public static MbmsStreamingSession create(Context context, Executor executor, int subscriptionId, final MbmsStreamingSessionCallback callback) {
-        if (sIsInitialized.compareAndSet(false, true)) {
-            MbmsStreamingSession session = new MbmsStreamingSession(context, executor, subscriptionId, callback);
-            final int result = session.bindAndInitialize();
-            if (result == 0) {
-                return session;
-            }
+        if (!sIsInitialized.compareAndSet(false, true)) {
+            throw new IllegalStateException("Cannot create two instances of MbmsStreamingSession");
+        }
+        MbmsStreamingSession session = new MbmsStreamingSession(context, executor, subscriptionId, callback);
+        final int result = session.bindAndInitialize();
+        if (result != 0) {
             sIsInitialized.set(false);
-            executor.execute(new Runnable() {
+            executor.execute(new Runnable() { // from class: android.telephony.MbmsStreamingSession.2
+                @Override // java.lang.Runnable
                 public void run() {
-                    MbmsStreamingSessionCallback.this.onError(result, (String) null);
+                    MbmsStreamingSessionCallback.this.onError(result, null);
                 }
             });
             return null;
         }
-        throw new IllegalStateException("Cannot create two instances of MbmsStreamingSession");
+        return session;
     }
 
     public static MbmsStreamingSession create(Context context, Executor executor, MbmsStreamingSessionCallback callback) {
         return create(context, executor, SubscriptionManager.getDefaultSubscriptionId(), callback);
     }
 
+    @Override // java.lang.AutoCloseable
     public void close() {
+        IMbmsStreamingService streamingService;
         try {
-            IMbmsStreamingService streamingService = this.mService.get();
-            if (streamingService == null) {
-                this.mService.set((Object) null);
-                sIsInitialized.set(false);
-                this.mInternalCallback.stop();
-                return;
-            }
+            streamingService = this.mService.get();
+        } catch (RemoteException e) {
+        } catch (Throwable th) {
+            this.mService.set(null);
+            sIsInitialized.set(false);
+            this.mInternalCallback.stop();
+            throw th;
+        }
+        if (streamingService != null) {
             streamingService.dispose(this.mSubscriptionId);
             for (StreamingService s : this.mKnownActiveStreamingServices) {
                 s.getCallback().stop();
             }
             this.mKnownActiveStreamingServices.clear();
-            this.mService.set((Object) null);
+            this.mService.set(null);
             sIsInitialized.set(false);
             this.mInternalCallback.stop();
-        } catch (RemoteException e) {
-        } catch (Throwable th) {
-            this.mService.set((Object) null);
-            sIsInitialized.set(false);
-            this.mInternalCallback.stop();
-            throw th;
+            return;
         }
+        this.mService.set(null);
+        sIsInitialized.set(false);
+        this.mInternalCallback.stop();
     }
 
     public void requestUpdateStreamingServices(List<String> serviceClassList) {
         IMbmsStreamingService streamingService = this.mService.get();
-        if (streamingService != null) {
-            try {
-                int returnCode = streamingService.requestUpdateStreamingServices(this.mSubscriptionId, serviceClassList);
-                if (returnCode != -1) {
-                    if (returnCode != 0) {
-                        sendErrorToApp(returnCode, (String) null);
-                    }
-                    return;
-                }
+        if (streamingService == null) {
+            throw new IllegalStateException("Middleware not yet bound");
+        }
+        try {
+            int returnCode = streamingService.requestUpdateStreamingServices(this.mSubscriptionId, serviceClassList);
+            if (returnCode == -1) {
                 close();
                 throw new IllegalStateException("Middleware must not return an unknown error code");
-            } catch (RemoteException e) {
-                Log.w(LOG_TAG, "Remote process died");
-                this.mService.set((Object) null);
-                sIsInitialized.set(false);
-                sendErrorToApp(3, (String) null);
             }
-        } else {
-            throw new IllegalStateException("Middleware not yet bound");
+            if (returnCode != 0) {
+                sendErrorToApp(returnCode, null);
+            }
+        } catch (RemoteException e) {
+            Log.m64w(LOG_TAG, "Remote process died");
+            this.mService.set(null);
+            sIsInitialized.set(false);
+            sendErrorToApp(3, null);
         }
     }
 
     public StreamingService startStreaming(StreamingServiceInfo serviceInfo, Executor executor, StreamingServiceCallback callback) {
         IMbmsStreamingService streamingService = this.mService.get();
-        if (streamingService != null) {
-            InternalStreamingServiceCallback serviceCallback = new InternalStreamingServiceCallback(callback, executor);
-            StreamingService serviceForApp = new StreamingService(this.mSubscriptionId, streamingService, this, serviceInfo, serviceCallback);
-            this.mKnownActiveStreamingServices.add(serviceForApp);
-            try {
-                int returnCode = streamingService.startStreaming(this.mSubscriptionId, serviceInfo.getServiceId(), serviceCallback);
-                if (returnCode == -1) {
-                    close();
-                    throw new IllegalStateException("Middleware must not return an unknown error code");
-                } else if (returnCode == 0) {
-                    return serviceForApp;
-                } else {
-                    sendErrorToApp(returnCode, (String) null);
-                    return null;
-                }
-            } catch (RemoteException e) {
-                Log.w(LOG_TAG, "Remote process died");
-                this.mService.set((Object) null);
-                sIsInitialized.set(false);
-                sendErrorToApp(3, (String) null);
-                return null;
-            }
-        } else {
+        if (streamingService == null) {
             throw new IllegalStateException("Middleware not yet bound");
+        }
+        InternalStreamingServiceCallback serviceCallback = new InternalStreamingServiceCallback(callback, executor);
+        StreamingService serviceForApp = new StreamingService(this.mSubscriptionId, streamingService, this, serviceInfo, serviceCallback);
+        this.mKnownActiveStreamingServices.add(serviceForApp);
+        try {
+            int returnCode = streamingService.startStreaming(this.mSubscriptionId, serviceInfo.getServiceId(), serviceCallback);
+            if (returnCode == -1) {
+                close();
+                throw new IllegalStateException("Middleware must not return an unknown error code");
+            } else if (returnCode != 0) {
+                sendErrorToApp(returnCode, null);
+                return null;
+            } else {
+                return serviceForApp;
+            }
+        } catch (RemoteException e) {
+            Log.m64w(LOG_TAG, "Remote process died");
+            this.mService.set(null);
+            sIsInitialized.set(false);
+            sendErrorToApp(3, null);
+            return null;
         }
     }
 
@@ -157,7 +155,8 @@ public class MbmsStreamingSession implements AutoCloseable {
     }
 
     private int bindAndInitialize() {
-        return MbmsUtils.startBinding(this.mContext, MBMS_STREAMING_SERVICE_ACTION, new ServiceConnection() {
+        return MbmsUtils.startBinding(this.mContext, MBMS_STREAMING_SERVICE_ACTION, new ServiceConnection() { // from class: android.telephony.MbmsStreamingSession.3
+            @Override // android.content.ServiceConnection
             public void onServiceConnected(ComponentName name, IBinder service) {
                 IMbmsStreamingService streamingService = IMbmsStreamingService.Stub.asInterface(service);
                 try {
@@ -178,24 +177,25 @@ public class MbmsStreamingSession implements AutoCloseable {
                         }
                     }
                 } catch (RemoteException e2) {
-                    Log.e(MbmsStreamingSession.LOG_TAG, "Service died before initialization");
+                    Log.m70e(MbmsStreamingSession.LOG_TAG, "Service died before initialization");
                     MbmsStreamingSession.this.sendErrorToApp(103, e2.toString());
                     MbmsStreamingSession.sIsInitialized.set(false);
                 } catch (RuntimeException e3) {
-                    Log.e(MbmsStreamingSession.LOG_TAG, "Runtime exception during initialization");
+                    Log.m70e(MbmsStreamingSession.LOG_TAG, "Runtime exception during initialization");
                     MbmsStreamingSession.this.sendErrorToApp(103, e3.toString());
                     MbmsStreamingSession.sIsInitialized.set(false);
                 }
             }
 
+            @Override // android.content.ServiceConnection
             public void onServiceDisconnected(ComponentName name) {
                 MbmsStreamingSession.sIsInitialized.set(false);
-                MbmsStreamingSession.this.mService.set((Object) null);
+                MbmsStreamingSession.this.mService.set(null);
             }
         });
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void sendErrorToApp(int errorCode, String message) {
         try {
             this.mInternalCallback.onError(errorCode, message);

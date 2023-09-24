@@ -5,18 +5,20 @@ import android.util.proto.ProtoOutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
+/* loaded from: classes4.dex */
 public class LocalLog {
-    private final ArrayList<String> mLines = new ArrayList<>(20);
-    private final int mMaxLines = 20;
     private final String mTag;
+    private final int mMaxLines = 20;
+    private final ArrayList<String> mLines = new ArrayList<>(20);
 
     public LocalLog(String tag) {
         this.mTag = tag;
     }
 
-    public void w(String msg) {
+    /* renamed from: w */
+    public void m26w(String msg) {
         synchronized (this.mLines) {
-            Slog.w(this.mTag, msg);
+            Slog.m50w(this.mTag, msg);
             if (this.mLines.size() >= 20) {
                 this.mLines.remove(0);
             }

@@ -1,5 +1,6 @@
 package com.android.server.connectivity;
 
+/* loaded from: classes4.dex */
 public final class CellularData {
     public static final long IS_ROAMING = 1133871366146L;
     public static final long NETWORK_MCCMNC = 1138166333443L;

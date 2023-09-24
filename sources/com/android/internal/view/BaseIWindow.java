@@ -2,9 +2,9 @@ package com.android.internal.view;
 
 import android.graphics.Rect;
 import android.hardware.input.InputManager;
-import android.os.Bundle;
-import android.os.ParcelFileDescriptor;
-import android.os.RemoteException;
+import android.p007os.Bundle;
+import android.p007os.ParcelFileDescriptor;
+import android.p007os.RemoteException;
 import android.util.MergedConfiguration;
 import android.view.DisplayCutout;
 import android.view.DragEvent;
@@ -12,8 +12,9 @@ import android.view.IWindow;
 import android.view.IWindowSession;
 import android.view.InsetsSourceControl;
 import android.view.InsetsState;
-import com.android.internal.os.IResultReceiver;
+import com.android.internal.p016os.IResultReceiver;
 
+/* loaded from: classes4.dex */
 public class BaseIWindow extends IWindow.Stub {
     public int mSeq;
     private IWindowSession mSession;
@@ -31,9 +32,11 @@ public class BaseIWindow extends IWindow.Stub {
         }
     }
 
+    @Override // android.view.IWindow
     public void insetsChanged(InsetsState insetsState) {
     }
 
+    @Override // android.view.IWindow
     public void insetsControlChanged(InsetsState insetsState, InsetsSourceControl[] activeControls) throws RemoteException {
     }
 
@@ -43,15 +46,19 @@ public class BaseIWindow extends IWindow.Stub {
     public void dispatchAppVisibility(boolean visible) {
     }
 
+    @Override // android.view.IWindow
     public void dispatchGetNewSurface() {
     }
 
+    @Override // android.view.IWindow
     public void windowFocusChanged(boolean hasFocus, boolean touchEnabled) {
     }
 
+    @Override // android.view.IWindow
     public void executeCommand(String command, String parameters, ParcelFileDescriptor out) {
     }
 
+    @Override // android.view.IWindow
     public void closeSystemDialogs(String reason) {
     }
 
@@ -64,6 +71,7 @@ public class BaseIWindow extends IWindow.Stub {
         }
     }
 
+    @Override // android.view.IWindow
     public void dispatchDragEvent(DragEvent event) {
         if (event.getAction() == 3) {
             try {
@@ -73,10 +81,12 @@ public class BaseIWindow extends IWindow.Stub {
         }
     }
 
+    @Override // android.view.IWindow
     public void updatePointerIcon(float x, float y) {
         InputManager.getInstance().setPointerIconType(1);
     }
 
+    @Override // android.view.IWindow
     public void dispatchSystemUiVisibilityChanged(int seq, int globalUi, int localValue, int localChanges) {
         this.mSeq = seq;
     }
@@ -84,18 +94,21 @@ public class BaseIWindow extends IWindow.Stub {
     public void dispatchWallpaperCommand(String action, int x, int y, int z, Bundle extras, boolean sync) {
         if (sync) {
             try {
-                this.mSession.wallpaperCommandComplete(asBinder(), (Bundle) null);
+                this.mSession.wallpaperCommandComplete(asBinder(), null);
             } catch (RemoteException e) {
             }
         }
     }
 
+    @Override // android.view.IWindow
     public void dispatchWindowShown() {
     }
 
+    @Override // android.view.IWindow
     public void requestAppKeyboardShortcuts(IResultReceiver receiver, int deviceId) {
     }
 
+    @Override // android.view.IWindow
     public void dispatchPointerCaptureChanged(boolean hasCapture) {
     }
 }

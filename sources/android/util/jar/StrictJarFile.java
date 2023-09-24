@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.security.cert.Certificate;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 import java.util.zip.ZipEntry;
@@ -19,9 +20,12 @@ import libcore.io.IoBridge;
 import libcore.io.IoUtils;
 import libcore.io.Streams;
 
+/* loaded from: classes4.dex */
 public final class StrictJarFile {
     private boolean closed;
-    private final FileDescriptor fd;
+
+    /* renamed from: fd */
+    private final FileDescriptor f2396fd;
     private final CloseGuard guard;
     private final boolean isSigned;
     private final StrictJarManifest manifest;
@@ -32,41 +36,42 @@ public final class StrictJarFile {
 
     private static native ZipEntry nativeFindEntry(long j, String str);
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static native ZipEntry nativeNextEntry(long j);
 
     private static native long nativeOpenJarFile(String str, int i) throws IOException;
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static native long nativeStartIteration(long j, String str);
 
     public StrictJarFile(String fileName) throws IOException, SecurityException {
         this(fileName, true, true);
     }
 
-    public StrictJarFile(FileDescriptor fd2) throws IOException, SecurityException {
-        this(fd2, true, true);
+    public StrictJarFile(FileDescriptor fd) throws IOException, SecurityException {
+        this(fd, true, true);
     }
 
-    public StrictJarFile(FileDescriptor fd2, boolean verify, boolean signatureSchemeRollbackProtectionsEnforced) throws IOException, SecurityException {
-        this("[fd:" + fd2.getInt$() + "]", fd2, verify, signatureSchemeRollbackProtectionsEnforced);
+    public StrictJarFile(FileDescriptor fd, boolean verify, boolean signatureSchemeRollbackProtectionsEnforced) throws IOException, SecurityException {
+        this("[fd:" + fd.getInt$() + "]", fd, verify, signatureSchemeRollbackProtectionsEnforced);
     }
 
     public StrictJarFile(String fileName, boolean verify, boolean signatureSchemeRollbackProtectionsEnforced) throws IOException, SecurityException {
         this(fileName, IoBridge.open(fileName, OsConstants.O_RDONLY), verify, signatureSchemeRollbackProtectionsEnforced);
     }
 
-    private StrictJarFile(String name, FileDescriptor fd2, boolean verify, boolean signatureSchemeRollbackProtectionsEnforced) throws IOException, SecurityException {
+    private StrictJarFile(String name, FileDescriptor fd, boolean verify, boolean signatureSchemeRollbackProtectionsEnforced) throws IOException, SecurityException {
         this.guard = CloseGuard.get();
-        this.nativeHandle = nativeOpenJarFile(name, fd2.getInt$());
-        this.fd = fd2;
+        this.nativeHandle = nativeOpenJarFile(name, fd.getInt$());
+        this.f2396fd = fd;
         boolean z = false;
-        if (verify) {
-            try {
+        try {
+            if (verify) {
                 HashMap<String, byte[]> metaEntries = getMetaEntries();
                 this.manifest = new StrictJarManifest(metaEntries.get("META-INF/MANIFEST.MF"), true);
                 this.verifier = new StrictJarVerifier(name, this.manifest, metaEntries, signatureSchemeRollbackProtectionsEnforced);
-                for (String file : this.manifest.getEntries().keySet()) {
+                Set<String> files = this.manifest.getEntries().keySet();
+                for (String file : files) {
                     if (findEntry(file) == null) {
                         throw new SecurityException("File " + file + " in manifest does not exist");
                     }
@@ -75,18 +80,18 @@ public final class StrictJarFile {
                     z = true;
                 }
                 this.isSigned = z;
-            } catch (IOException | SecurityException e) {
-                nativeClose(this.nativeHandle);
-                IoUtils.closeQuietly(fd2);
-                this.closed = true;
-                throw e;
+            } else {
+                this.isSigned = false;
+                this.manifest = null;
+                this.verifier = null;
             }
-        } else {
-            this.isSigned = false;
-            this.manifest = null;
-            this.verifier = null;
+            this.guard.open("close");
+        } catch (IOException | SecurityException e) {
+            nativeClose(this.nativeHandle);
+            IoUtils.closeQuietly(fd);
+            this.closed = true;
+            throw e;
         }
-        this.guard.open("close");
     }
 
     public StrictJarManifest getManifest() {
@@ -110,30 +115,33 @@ public final class StrictJarFile {
 
     @Deprecated
     public Certificate[] getCertificates(ZipEntry ze) {
-        if (!this.isSigned) {
-            return null;
+        if (this.isSigned) {
+            Certificate[][] certChains = this.verifier.getCertificateChains(ze.getName());
+            int count = 0;
+            for (Certificate[] chain : certChains) {
+                count += chain.length;
+            }
+            Certificate[] certs = new Certificate[count];
+            int i = 0;
+            for (Certificate[] chain2 : certChains) {
+                System.arraycopy(chain2, 0, certs, i, chain2.length);
+                i += chain2.length;
+            }
+            return certs;
         }
-        Certificate[][] certChains = this.verifier.getCertificateChains(ze.getName());
-        int count = 0;
-        for (Certificate[] chain : certChains) {
-            count += chain.length;
-        }
-        Certificate[] certs = new Certificate[count];
-        int i = 0;
-        for (Certificate[] chain2 : certChains) {
-            System.arraycopy(chain2, 0, certs, i, chain2.length);
-            i += chain2.length;
-        }
-        return certs;
+        return null;
     }
 
     public InputStream getInputStream(ZipEntry ze) {
-        StrictJarVerifier.VerifierEntry entry;
         InputStream is = getZipInputStream(ze);
-        if (!this.isSigned || (entry = this.verifier.initEntry(ze.getName())) == null) {
-            return is;
+        if (this.isSigned) {
+            StrictJarVerifier.VerifierEntry entry = this.verifier.initEntry(ze.getName());
+            if (entry == null) {
+                return is;
+            }
+            return new JarFileInputStream(is, ze.getSize(), entry);
         }
-        return new JarFileInputStream(is, ze.getSize(), entry);
+        return is;
     }
 
     public void close() throws IOException {
@@ -142,13 +150,12 @@ public final class StrictJarFile {
                 this.guard.close();
             }
             nativeClose(this.nativeHandle);
-            IoUtils.closeQuietly(this.fd);
+            IoUtils.closeQuietly(this.f2396fd);
             this.closed = true;
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         try {
             if (this.guard != null) {
                 this.guard.warnIfOpen();
@@ -161,11 +168,14 @@ public final class StrictJarFile {
 
     private InputStream getZipInputStream(ZipEntry ze) {
         if (ze.getMethod() == 0) {
-            return new FDStream(this.fd, ze.getDataOffset(), ze.getDataOffset() + ze.getSize());
+            return new FDStream(this.f2396fd, ze.getDataOffset(), ze.getDataOffset() + ze.getSize());
         }
-        return new ZipInflaterInputStream(new FDStream(this.fd, ze.getDataOffset(), ze.getDataOffset() + ze.getCompressedSize()), new Inflater(true), Math.max(1024, (int) Math.min(ze.getSize(), 65535)), ze);
+        FDStream wrapped = new FDStream(this.f2396fd, ze.getDataOffset(), ze.getDataOffset() + ze.getCompressedSize());
+        int bufSize = Math.max(1024, (int) Math.min(ze.getSize(), 65535L));
+        return new ZipInflaterInputStream(wrapped, new Inflater(true), bufSize, ze);
     }
 
+    /* loaded from: classes4.dex */
     static final class EntryIterator implements Iterator<ZipEntry> {
         private final long iterationHandle;
         private ZipEntry nextEntry;
@@ -174,6 +184,7 @@ public final class StrictJarFile {
             this.iterationHandle = StrictJarFile.nativeStartIteration(nativeHandle, prefix);
         }
 
+        @Override // java.util.Iterator
         public ZipEntry next() {
             if (this.nextEntry == null) {
                 return StrictJarFile.nativeNextEntry(this.iterationHandle);
@@ -183,6 +194,7 @@ public final class StrictJarFile {
             return ze;
         }
 
+        @Override // java.util.Iterator
         public boolean hasNext() {
             if (this.nextEntry != null) {
                 return true;
@@ -195,6 +207,7 @@ public final class StrictJarFile {
             return true;
         }
 
+        @Override // java.util.Iterator
         public void remove() {
             throw new UnsupportedOperationException();
         }
@@ -210,17 +223,20 @@ public final class StrictJarFile {
         return metaEntries;
     }
 
+    /* loaded from: classes4.dex */
     static final class JarFileInputStream extends FilterInputStream {
         private long count;
-        private boolean done = false;
+        private boolean done;
         private final StrictJarVerifier.VerifierEntry entry;
 
         JarFileInputStream(InputStream is, long size, StrictJarVerifier.VerifierEntry e) {
             super(is);
+            this.done = false;
             this.entry = e;
             this.count = size;
         }
 
+        @Override // java.io.FilterInputStream, java.io.InputStream
         public int read() throws IOException {
             if (this.done) {
                 return -1;
@@ -231,7 +247,7 @@ public final class StrictJarFile {
                     this.entry.write(r);
                     this.count--;
                 } else {
-                    this.count = 0;
+                    this.count = 0L;
                 }
                 if (this.count == 0) {
                     this.done = true;
@@ -244,6 +260,7 @@ public final class StrictJarFile {
             return -1;
         }
 
+        @Override // java.io.FilterInputStream, java.io.InputStream
         public int read(byte[] buffer, int byteOffset, int byteCount) throws IOException {
             if (this.done) {
                 return -1;
@@ -252,13 +269,13 @@ public final class StrictJarFile {
                 int r = super.read(buffer, byteOffset, byteCount);
                 if (r != -1) {
                     int size = r;
-                    if (this.count < ((long) size)) {
+                    if (this.count < size) {
                         size = (int) this.count;
                     }
                     this.entry.write(buffer, byteOffset, size);
-                    this.count -= (long) size;
+                    this.count -= size;
                 } else {
-                    this.count = 0;
+                    this.count = 0L;
                 }
                 if (this.count == 0) {
                     this.done = true;
@@ -271,6 +288,7 @@ public final class StrictJarFile {
             return -1;
         }
 
+        @Override // java.io.FilterInputStream, java.io.InputStream
         public int available() throws IOException {
             if (this.done) {
                 return 0;
@@ -278,28 +296,34 @@ public final class StrictJarFile {
             return super.available();
         }
 
+        @Override // java.io.FilterInputStream, java.io.InputStream
         public long skip(long byteCount) throws IOException {
             return Streams.skipByReading(this, byteCount);
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class ZipInflaterInputStream extends InflaterInputStream {
-        private long bytesRead = 0;
+        private long bytesRead;
         private boolean closed;
         private final ZipEntry entry;
 
-        public ZipInflaterInputStream(InputStream is, Inflater inf, int bsize, ZipEntry entry2) {
+        public ZipInflaterInputStream(InputStream is, Inflater inf, int bsize, ZipEntry entry) {
             super(is, inf, bsize);
-            this.entry = entry2;
+            this.bytesRead = 0L;
+            this.entry = entry;
         }
 
+        @Override // java.util.zip.InflaterInputStream, java.io.FilterInputStream, java.io.InputStream
         public int read(byte[] buffer, int byteOffset, int byteCount) throws IOException {
             try {
                 int i = super.read(buffer, byteOffset, byteCount);
-                if (i != -1) {
-                    this.bytesRead += (long) i;
-                } else if (this.entry.getSize() != this.bytesRead) {
-                    throw new IOException("Size mismatch on inflated file: " + this.bytesRead + " vs " + this.entry.getSize());
+                if (i == -1) {
+                    if (this.entry.getSize() != this.bytesRead) {
+                        throw new IOException("Size mismatch on inflated file: " + this.bytesRead + " vs " + this.entry.getSize());
+                    }
+                } else {
+                    this.bytesRead += i;
                 }
                 return i;
             } catch (IOException e) {
@@ -307,58 +331,67 @@ public final class StrictJarFile {
             }
         }
 
+        @Override // java.util.zip.InflaterInputStream, java.io.FilterInputStream, java.io.InputStream
         public int available() throws IOException {
-            if (!this.closed && super.available() != 0) {
-                return (int) (this.entry.getSize() - this.bytesRead);
+            if (this.closed || super.available() == 0) {
+                return 0;
             }
-            return 0;
+            return (int) (this.entry.getSize() - this.bytesRead);
         }
 
+        @Override // java.util.zip.InflaterInputStream, java.io.FilterInputStream, java.io.InputStream, java.io.Closeable, java.lang.AutoCloseable
         public void close() throws IOException {
             super.close();
             this.closed = true;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class FDStream extends InputStream {
         private long endOffset;
-        private final FileDescriptor fd;
+
+        /* renamed from: fd */
+        private final FileDescriptor f2397fd;
         private long offset;
 
-        public FDStream(FileDescriptor fd2, long initialOffset, long endOffset2) {
-            this.fd = fd2;
+        public FDStream(FileDescriptor fd, long initialOffset, long endOffset) {
+            this.f2397fd = fd;
             this.offset = initialOffset;
-            this.endOffset = endOffset2;
+            this.endOffset = endOffset;
         }
 
+        @Override // java.io.InputStream
         public int available() throws IOException {
             return this.offset < this.endOffset ? 1 : 0;
         }
 
+        @Override // java.io.InputStream
         public int read() throws IOException {
             return Streams.readSingleByte(this);
         }
 
+        @Override // java.io.InputStream
         public int read(byte[] buffer, int byteOffset, int byteCount) throws IOException {
-            synchronized (this.fd) {
+            synchronized (this.f2397fd) {
                 long length = this.endOffset - this.offset;
-                if (((long) byteCount) > length) {
+                if (byteCount > length) {
                     byteCount = (int) length;
                 }
                 try {
-                    Os.lseek(this.fd, this.offset, OsConstants.SEEK_SET);
-                    int count = IoBridge.read(this.fd, buffer, byteOffset, byteCount);
-                    if (count <= 0) {
-                        return -1;
+                    Os.lseek(this.f2397fd, this.offset, OsConstants.SEEK_SET);
+                    int count = IoBridge.read(this.f2397fd, buffer, byteOffset, byteCount);
+                    if (count > 0) {
+                        this.offset += count;
+                        return count;
                     }
-                    this.offset += (long) count;
-                    return count;
+                    return -1;
                 } catch (ErrnoException e) {
                     throw new IOException(e);
                 }
             }
         }
 
+        @Override // java.io.InputStream
         public long skip(long byteCount) throws IOException {
             if (byteCount > this.endOffset - this.offset) {
                 byteCount = this.endOffset - this.offset;

@@ -7,16 +7,21 @@ import android.graphics.Path;
 import android.util.AttributeSet;
 import android.util.PathParser;
 import android.view.InflateException;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import com.android.internal.view.animation.HasNativeInterpolator;
 import com.android.internal.view.animation.NativeInterpolatorFactory;
 import com.android.internal.view.animation.NativeInterpolatorFactoryHelper;
 
 @HasNativeInterpolator
+/* loaded from: classes4.dex */
 public class PathInterpolator extends BaseInterpolator implements NativeInterpolatorFactory {
     private static final float PRECISION = 0.002f;
-    private float[] mX;
-    private float[] mY;
+
+    /* renamed from: mX */
+    private float[] f2428mX;
+
+    /* renamed from: mY */
+    private float[] f2429mY;
 
     public PathInterpolator(Path path) {
         initPath(path);
@@ -37,9 +42,9 @@ public class PathInterpolator extends BaseInterpolator implements NativeInterpol
     public PathInterpolator(Resources res, Resources.Theme theme, AttributeSet attrs) {
         TypedArray a;
         if (theme != null) {
-            a = theme.obtainStyledAttributes(attrs, R.styleable.PathInterpolator, 0, 0);
+            a = theme.obtainStyledAttributes(attrs, C3132R.styleable.PathInterpolator, 0, 0);
         } else {
-            a = res.obtainAttributes(attrs, R.styleable.PathInterpolator);
+            a = res.obtainAttributes(attrs, C3132R.styleable.PathInterpolator);
         }
         parseInterpolatorFromTypeArray(a);
         setChangingConfiguration(a.getChangingConfigurations());
@@ -50,25 +55,30 @@ public class PathInterpolator extends BaseInterpolator implements NativeInterpol
         if (a.hasValue(4)) {
             String pathData = a.getString(4);
             Path path = PathParser.createPathFromPathData(pathData);
-            if (path != null) {
-                initPath(path);
-                return;
+            if (path == null) {
+                throw new InflateException("The path is null, which is created from " + pathData);
             }
-            throw new InflateException("The path is null, which is created from " + pathData);
+            initPath(path);
         } else if (!a.hasValue(0)) {
             throw new InflateException("pathInterpolator requires the controlX1 attribute");
-        } else if (a.hasValue(1)) {
-            float x1 = a.getFloat(0, 0.0f);
-            float y1 = a.getFloat(1, 0.0f);
-            boolean hasX2 = a.hasValue(2);
-            if (hasX2 != a.hasValue(3)) {
-                throw new InflateException("pathInterpolator requires both controlX2 and controlY2 for cubic Beziers.");
-            } else if (!hasX2) {
-                initQuad(x1, y1);
-            } else {
-                initCubic(x1, y1, a.getFloat(2, 0.0f), a.getFloat(3, 0.0f));
-            }
         } else {
+            if (a.hasValue(1)) {
+                float x1 = a.getFloat(0, 0.0f);
+                float y1 = a.getFloat(1, 0.0f);
+                boolean hasX2 = a.hasValue(2);
+                boolean hasY2 = a.hasValue(3);
+                if (hasX2 != hasY2) {
+                    throw new InflateException("pathInterpolator requires both controlX2 and controlY2 for cubic Beziers.");
+                }
+                if (!hasX2) {
+                    initQuad(x1, y1);
+                    return;
+                }
+                float x2 = a.getFloat(2, 0.0f);
+                float y2 = a.getFloat(3, 0.0f);
+                initCubic(x1, y1, x2, y2);
+                return;
+            }
             throw new InflateException("pathInterpolator requires the controlY1 attribute");
         }
     }
@@ -90,38 +100,38 @@ public class PathInterpolator extends BaseInterpolator implements NativeInterpol
     private void initPath(Path path) {
         float[] pointComponents = path.approximate(PRECISION);
         int numPoints = pointComponents.length / 3;
-        if (pointComponents[1] == 0.0f && pointComponents[2] == 0.0f && pointComponents[pointComponents.length - 2] == 1.0f && pointComponents[pointComponents.length - 1] == 1.0f) {
-            this.mX = new float[numPoints];
-            this.mY = new float[numPoints];
-            float prevX = 0.0f;
-            float prevFraction = 0.0f;
-            int componentIndex = 0;
-            int i = 0;
-            while (i < numPoints) {
-                int componentIndex2 = componentIndex + 1;
-                float fraction = pointComponents[componentIndex];
-                int componentIndex3 = componentIndex2 + 1;
-                float x = pointComponents[componentIndex2];
-                int componentIndex4 = componentIndex3 + 1;
-                float y = pointComponents[componentIndex3];
-                if (fraction == prevFraction && x != prevX) {
-                    throw new IllegalArgumentException("The Path cannot have discontinuity in the X axis.");
-                } else if (x >= prevX) {
-                    this.mX[i] = x;
-                    this.mY[i] = y;
-                    prevX = x;
-                    prevFraction = fraction;
-                    i++;
-                    componentIndex = componentIndex4;
-                } else {
-                    throw new IllegalArgumentException("The Path cannot loop back on itself.");
-                }
-            }
-            return;
+        if (pointComponents[1] != 0.0f || pointComponents[2] != 0.0f || pointComponents[pointComponents.length - 2] != 1.0f || pointComponents[pointComponents.length - 1] != 1.0f) {
+            throw new IllegalArgumentException("The Path must start at (0,0) and end at (1,1)");
         }
-        throw new IllegalArgumentException("The Path must start at (0,0) and end at (1,1)");
+        this.f2428mX = new float[numPoints];
+        this.f2429mY = new float[numPoints];
+        float prevX = 0.0f;
+        float prevFraction = 0.0f;
+        int componentIndex = 0;
+        int i = 0;
+        while (i < numPoints) {
+            int componentIndex2 = componentIndex + 1;
+            float fraction = pointComponents[componentIndex];
+            int componentIndex3 = componentIndex2 + 1;
+            float x = pointComponents[componentIndex2];
+            int componentIndex4 = componentIndex3 + 1;
+            float y = pointComponents[componentIndex3];
+            if (fraction == prevFraction && x != prevX) {
+                throw new IllegalArgumentException("The Path cannot have discontinuity in the X axis.");
+            }
+            if (x < prevX) {
+                throw new IllegalArgumentException("The Path cannot loop back on itself.");
+            }
+            this.f2428mX[i] = x;
+            this.f2429mY[i] = y;
+            prevX = x;
+            prevFraction = fraction;
+            i++;
+            componentIndex = componentIndex4;
+        }
     }
 
+    @Override // android.animation.TimeInterpolator
     public float getInterpolation(float t) {
         if (t <= 0.0f) {
             return 0.0f;
@@ -130,24 +140,28 @@ public class PathInterpolator extends BaseInterpolator implements NativeInterpol
             return 1.0f;
         }
         int startIndex = 0;
-        int endIndex = this.mX.length - 1;
+        int endIndex = this.f2428mX.length - 1;
         while (endIndex - startIndex > 1) {
             int midIndex = (startIndex + endIndex) / 2;
-            if (t < this.mX[midIndex]) {
+            if (t < this.f2428mX[midIndex]) {
                 endIndex = midIndex;
             } else {
                 startIndex = midIndex;
             }
         }
-        float xRange = this.mX[endIndex] - this.mX[startIndex];
+        float xRange = this.f2428mX[endIndex] - this.f2428mX[startIndex];
         if (xRange == 0.0f) {
-            return this.mY[startIndex];
+            return this.f2429mY[startIndex];
         }
-        float startY = this.mY[startIndex];
-        return ((this.mY[endIndex] - startY) * ((t - this.mX[startIndex]) / xRange)) + startY;
+        float tInRange = t - this.f2428mX[startIndex];
+        float fraction = tInRange / xRange;
+        float startY = this.f2429mY[startIndex];
+        float endY = this.f2429mY[endIndex];
+        return ((endY - startY) * fraction) + startY;
     }
 
+    @Override // com.android.internal.view.animation.NativeInterpolatorFactory
     public long createNativeInterpolator() {
-        return NativeInterpolatorFactoryHelper.createPathInterpolator(this.mX, this.mY);
+        return NativeInterpolatorFactoryHelper.createPathInterpolator(this.f2428mX, this.f2429mY);
     }
 }

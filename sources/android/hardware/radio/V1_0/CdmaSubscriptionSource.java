@@ -2,8 +2,11 @@ package android.hardware.radio.V1_0;
 
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class CdmaSubscriptionSource {
-    public static final int NV = 1;
+
+    /* renamed from: NV */
+    public static final int f86NV = 1;
     public static final int RUIM_SIM = 0;
 
     public static final String toString(int o) {

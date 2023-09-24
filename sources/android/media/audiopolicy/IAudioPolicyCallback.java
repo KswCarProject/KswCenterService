@@ -1,12 +1,13 @@
 package android.media.audiopolicy;
 
 import android.media.AudioFocusInfo;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes3.dex */
 public interface IAudioPolicyCallback extends IInterface {
     void notifyAudioFocusAbandon(AudioFocusInfo audioFocusInfo) throws RemoteException;
 
@@ -20,30 +21,39 @@ public interface IAudioPolicyCallback extends IInterface {
 
     void notifyVolumeAdjust(int i) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements IAudioPolicyCallback {
+        @Override // android.media.audiopolicy.IAudioPolicyCallback
         public void notifyAudioFocusGrant(AudioFocusInfo afi, int requestResult) throws RemoteException {
         }
 
+        @Override // android.media.audiopolicy.IAudioPolicyCallback
         public void notifyAudioFocusLoss(AudioFocusInfo afi, boolean wasNotified) throws RemoteException {
         }
 
+        @Override // android.media.audiopolicy.IAudioPolicyCallback
         public void notifyAudioFocusRequest(AudioFocusInfo afi, int requestResult) throws RemoteException {
         }
 
+        @Override // android.media.audiopolicy.IAudioPolicyCallback
         public void notifyAudioFocusAbandon(AudioFocusInfo afi) throws RemoteException {
         }
 
+        @Override // android.media.audiopolicy.IAudioPolicyCallback
         public void notifyMixStateUpdate(String regId, int state) throws RemoteException {
         }
 
+        @Override // android.media.audiopolicy.IAudioPolicyCallback
         public void notifyVolumeAdjust(int adjustment) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements IAudioPolicyCallback {
         private static final String DESCRIPTOR = "android.media.audiopolicy.IAudioPolicyCallback";
         static final int TRANSACTION_notifyAudioFocusAbandon = 4;
@@ -62,12 +72,13 @@ public interface IAudioPolicyCallback extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IAudioPolicyCallback)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IAudioPolicyCallback)) {
+                return (IAudioPolicyCallback) iin;
             }
-            return (IAudioPolicyCallback) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -91,59 +102,58 @@ public interface IAudioPolicyCallback extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                AudioFocusInfo _arg0 = null;
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = AudioFocusInfo.CREATOR.createFromParcel(data);
-                        }
-                        notifyAudioFocusGrant(_arg0, data.readInt());
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = AudioFocusInfo.CREATOR.createFromParcel(data);
-                        }
-                        notifyAudioFocusLoss(_arg0, data.readInt() != 0);
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = AudioFocusInfo.CREATOR.createFromParcel(data);
-                        }
-                        notifyAudioFocusRequest(_arg0, data.readInt());
-                        return true;
-                    case 4:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = AudioFocusInfo.CREATOR.createFromParcel(data);
-                        }
-                        notifyAudioFocusAbandon(_arg0);
-                        return true;
-                    case 5:
-                        data.enforceInterface(DESCRIPTOR);
-                        notifyMixStateUpdate(data.readString(), data.readInt());
-                        return true;
-                    case 6:
-                        data.enforceInterface(DESCRIPTOR);
-                        notifyVolumeAdjust(data.readInt());
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            AudioFocusInfo _arg0;
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0 ? AudioFocusInfo.CREATOR.createFromParcel(data) : null;
+                    int _arg1 = data.readInt();
+                    notifyAudioFocusGrant(_arg0, _arg1);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0 ? AudioFocusInfo.CREATOR.createFromParcel(data) : null;
+                    boolean _arg12 = data.readInt() != 0;
+                    notifyAudioFocusLoss(_arg0, _arg12);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0 ? AudioFocusInfo.CREATOR.createFromParcel(data) : null;
+                    int _arg13 = data.readInt();
+                    notifyAudioFocusRequest(_arg0, _arg13);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0 ? AudioFocusInfo.CREATOR.createFromParcel(data) : null;
+                    notifyAudioFocusAbandon(_arg0);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg02 = data.readString();
+                    int _arg14 = data.readInt();
+                    notifyMixStateUpdate(_arg02, _arg14);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    notifyVolumeAdjust(data.readInt());
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements IAudioPolicyCallback {
             public static IAudioPolicyCallback sDefaultImpl;
             private IBinder mRemote;
@@ -152,6 +162,7 @@ public interface IAudioPolicyCallback extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -160,6 +171,7 @@ public interface IAudioPolicyCallback extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.media.audiopolicy.IAudioPolicyCallback
             public void notifyAudioFocusGrant(AudioFocusInfo afi, int requestResult) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -171,9 +183,8 @@ public interface IAudioPolicyCallback extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(requestResult);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().notifyAudioFocusGrant(afi, requestResult);
                     }
                 } finally {
@@ -181,6 +192,7 @@ public interface IAudioPolicyCallback extends IInterface {
                 }
             }
 
+            @Override // android.media.audiopolicy.IAudioPolicyCallback
             public void notifyAudioFocusLoss(AudioFocusInfo afi, boolean wasNotified) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -191,10 +203,9 @@ public interface IAudioPolicyCallback extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(wasNotified);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(wasNotified ? 1 : 0);
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().notifyAudioFocusLoss(afi, wasNotified);
                     }
                 } finally {
@@ -202,6 +213,7 @@ public interface IAudioPolicyCallback extends IInterface {
                 }
             }
 
+            @Override // android.media.audiopolicy.IAudioPolicyCallback
             public void notifyAudioFocusRequest(AudioFocusInfo afi, int requestResult) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -213,9 +225,8 @@ public interface IAudioPolicyCallback extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(requestResult);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().notifyAudioFocusRequest(afi, requestResult);
                     }
                 } finally {
@@ -223,6 +234,7 @@ public interface IAudioPolicyCallback extends IInterface {
                 }
             }
 
+            @Override // android.media.audiopolicy.IAudioPolicyCallback
             public void notifyAudioFocusAbandon(AudioFocusInfo afi) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -233,9 +245,8 @@ public interface IAudioPolicyCallback extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().notifyAudioFocusAbandon(afi);
                     }
                 } finally {
@@ -243,15 +254,15 @@ public interface IAudioPolicyCallback extends IInterface {
                 }
             }
 
+            @Override // android.media.audiopolicy.IAudioPolicyCallback
             public void notifyMixStateUpdate(String regId, int state) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(regId);
                     _data.writeInt(state);
-                    if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(5, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().notifyMixStateUpdate(regId, state);
                     }
                 } finally {
@@ -259,14 +270,14 @@ public interface IAudioPolicyCallback extends IInterface {
                 }
             }
 
+            @Override // android.media.audiopolicy.IAudioPolicyCallback
             public void notifyVolumeAdjust(int adjustment) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(adjustment);
-                    if (this.mRemote.transact(6, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(6, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().notifyVolumeAdjust(adjustment);
                     }
                 } finally {
@@ -276,11 +287,11 @@ public interface IAudioPolicyCallback extends IInterface {
         }
 
         public static boolean setDefaultImpl(IAudioPolicyCallback impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IAudioPolicyCallback getDefaultImpl() {

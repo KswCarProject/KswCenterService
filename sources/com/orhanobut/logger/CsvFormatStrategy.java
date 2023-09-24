@@ -1,7 +1,8 @@
 package com.orhanobut.logger;
 
-import android.os.Environment;
-import android.os.HandlerThread;
+import android.p007os.Environment;
+import android.p007os.Handler;
+import android.p007os.HandlerThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.android.internal.content.NativeLibraryHelper;
@@ -11,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+/* loaded from: classes5.dex */
 public class CsvFormatStrategy implements FormatStrategy {
     private static final String NEW_LINE = System.getProperty("line.separator");
     private static final String NEW_LINE_REPLACEMENT = " <br> ";
@@ -37,9 +39,10 @@ public class CsvFormatStrategy implements FormatStrategy {
         return new Builder();
     }
 
+    @Override // com.orhanobut.logger.FormatStrategy
     public void log(int priority, @Nullable String onceOnlyTag, @NonNull String message) {
         Utils.checkNotNull(message);
-        String tag2 = formatTag(onceOnlyTag);
+        String tag = formatTag(onceOnlyTag);
         this.date.setTime(System.currentTimeMillis());
         StringBuilder builder = new StringBuilder();
         builder.append(Long.toString(this.date.getTime()));
@@ -48,24 +51,25 @@ public class CsvFormatStrategy implements FormatStrategy {
         builder.append(",");
         builder.append(Utils.logLevel(priority));
         builder.append(",");
-        builder.append(tag2);
+        builder.append(tag);
         if (message.contains(NEW_LINE)) {
             message = message.replaceAll(NEW_LINE, NEW_LINE_REPLACEMENT);
         }
         builder.append(",");
         builder.append(message);
         builder.append(NEW_LINE);
-        this.logStrategy.log(priority, tag2, builder.toString());
+        this.logStrategy.log(priority, tag, builder.toString());
     }
 
     @Nullable
-    private String formatTag(@Nullable String tag2) {
-        if (Utils.isEmpty(tag2) || Utils.equals(this.tag, tag2)) {
-            return this.tag;
+    private String formatTag(@Nullable String tag) {
+        if (!Utils.isEmpty(tag) && !Utils.equals(this.tag, tag)) {
+            return this.tag + NativeLibraryHelper.CLEAR_ABI_OVERRIDE + tag;
         }
-        return this.tag + NativeLibraryHelper.CLEAR_ABI_OVERRIDE + tag2;
+        return this.tag;
     }
 
+    /* loaded from: classes5.dex */
     public static final class Builder {
         private static final int MAX_BYTES = 512000;
         Date date;
@@ -96,8 +100,8 @@ public class CsvFormatStrategy implements FormatStrategy {
         }
 
         @NonNull
-        public Builder tag(@Nullable String tag2) {
-            this.tag = tag2;
+        public Builder tag(@Nullable String tag) {
+            this.tag = tag;
             return this;
         }
 
@@ -110,10 +114,12 @@ public class CsvFormatStrategy implements FormatStrategy {
                 this.dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS", Locale.UK);
             }
             if (this.logStrategy == null) {
-                String folder = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separatorChar + "logger";
+                String diskPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+                String folder = diskPath + File.separatorChar + "logger";
                 HandlerThread ht = new HandlerThread("AndroidFileLogger." + folder);
                 ht.start();
-                this.logStrategy = new DiskLogStrategy(new DiskLogStrategy.WriteHandler(ht.getLooper(), folder, MAX_BYTES));
+                Handler handler = new DiskLogStrategy.WriteHandler(ht.getLooper(), folder, MAX_BYTES);
+                this.logStrategy = new DiskLogStrategy(handler);
             }
             return new CsvFormatStrategy(this);
         }

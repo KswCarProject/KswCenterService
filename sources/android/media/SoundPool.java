@@ -4,10 +4,10 @@ import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.media.AudioAttributes;
 import android.media.VolumeShaper;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.os.ParcelFileDescriptor;
+import android.p007os.Handler;
+import android.p007os.Looper;
+import android.p007os.Message;
+import android.p007os.ParcelFileDescriptor;
 import android.util.AndroidRuntimeException;
 import android.util.Log;
 import java.io.File;
@@ -15,20 +15,19 @@ import java.io.FileDescriptor;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 
+/* loaded from: classes3.dex */
 public class SoundPool extends PlayerBase {
-    /* access modifiers changed from: private */
-    public static final boolean DEBUG = Log.isLoggable(TAG, 3);
+    private static final boolean DEBUG;
     private static final int SAMPLE_LOADED = 1;
     private static final String TAG = "SoundPool";
     private final AudioAttributes mAttributes;
     private EventHandler mEventHandler;
     private boolean mHasAppOpsPlayAudio;
-    /* access modifiers changed from: private */
-    public final Object mLock;
+    private final Object mLock;
     private long mNativeContext;
-    /* access modifiers changed from: private */
-    public OnLoadCompleteListener mOnLoadCompleteListener;
+    private OnLoadCompleteListener mOnLoadCompleteListener;
 
+    /* loaded from: classes3.dex */
     public interface OnLoadCompleteListener {
         void onLoadComplete(SoundPool soundPool, int i, int i2);
     }
@@ -65,6 +64,7 @@ public class SoundPool extends PlayerBase {
 
     static {
         System.loadLibrary("soundpool");
+        DEBUG = Log.isLoggable(TAG, 3);
     }
 
     public SoundPool(int maxStreams, int streamType, int srcQuality) {
@@ -74,13 +74,12 @@ public class SoundPool extends PlayerBase {
 
     private SoundPool(int maxStreams, AudioAttributes attributes) {
         super(attributes, 3);
-        if (native_setup(new WeakReference(this), maxStreams, attributes) == 0) {
-            this.mLock = new Object();
-            this.mAttributes = attributes;
-            baseRegisterPlayer();
-            return;
+        if (native_setup(new WeakReference(this), maxStreams, attributes) != 0) {
+            throw new RuntimeException("Native setup failed");
         }
-        throw new RuntimeException("Native setup failed");
+        this.mLock = new Object();
+        this.mAttributes = attributes;
+        baseRegisterPlayer();
     }
 
     public final void release() {
@@ -88,24 +87,24 @@ public class SoundPool extends PlayerBase {
         native_release();
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() {
+    protected void finalize() {
         release();
     }
 
     public int load(String path, int priority) {
+        int id = 0;
         try {
             File f = new File(path);
             ParcelFileDescriptor fd = ParcelFileDescriptor.open(f, 268435456);
             if (fd == null) {
                 return 0;
             }
-            int id = _load(fd.getFileDescriptor(), 0, f.length(), priority);
+            id = _load(fd.getFileDescriptor(), 0L, f.length(), priority);
             fd.close();
             return id;
         } catch (IOException e) {
-            Log.e(TAG, "error loading " + path);
-            return 0;
+            Log.m70e(TAG, "error loading " + path);
+            return id;
         }
     }
 
@@ -123,14 +122,14 @@ public class SoundPool extends PlayerBase {
     }
 
     public int load(AssetFileDescriptor afd, int priority) {
-        if (afd == null) {
-            return 0;
-        }
-        long len = afd.getLength();
-        if (len >= 0) {
+        if (afd != null) {
+            long len = afd.getLength();
+            if (len < 0) {
+                throw new AndroidRuntimeException("no length for fd");
+            }
             return _load(afd.getFileDescriptor(), afd.getStartOffset(), len, priority);
         }
-        throw new AndroidRuntimeException("no length for fd");
+        return 0;
     }
 
     public int load(FileDescriptor fd, long offset, long length, int priority) {
@@ -146,36 +145,36 @@ public class SoundPool extends PlayerBase {
         _setVolume(streamID, leftVolume, rightVolume);
     }
 
-    /* access modifiers changed from: package-private */
-    public int playerApplyVolumeShaper(VolumeShaper.Configuration configuration, VolumeShaper.Operation operation) {
+    @Override // android.media.PlayerBase
+    int playerApplyVolumeShaper(VolumeShaper.Configuration configuration, VolumeShaper.Operation operation) {
         return -1;
     }
 
-    /* access modifiers changed from: package-private */
-    public VolumeShaper.State playerGetVolumeShaperState(int id) {
+    @Override // android.media.PlayerBase
+    VolumeShaper.State playerGetVolumeShaperState(int id) {
         return null;
     }
 
-    /* access modifiers changed from: package-private */
-    public void playerSetVolume(boolean muting, float leftVolume, float rightVolume) {
+    @Override // android.media.PlayerBase
+    void playerSetVolume(boolean muting, float leftVolume, float rightVolume) {
         _mute(muting);
     }
 
-    /* access modifiers changed from: package-private */
-    public int playerSetAuxEffectSendLevel(boolean muting, float level) {
+    @Override // android.media.PlayerBase
+    int playerSetAuxEffectSendLevel(boolean muting, float level) {
         return 0;
     }
 
-    /* access modifiers changed from: package-private */
-    public void playerStart() {
+    @Override // android.media.PlayerBase
+    void playerStart() {
     }
 
-    /* access modifiers changed from: package-private */
-    public void playerPause() {
+    @Override // android.media.PlayerBase
+    void playerPause() {
     }
 
-    /* access modifiers changed from: package-private */
-    public void playerStop() {
+    @Override // android.media.PlayerBase
+    void playerStop() {
     }
 
     public void setVolume(int streamID, float volume) {
@@ -184,77 +183,79 @@ public class SoundPool extends PlayerBase {
 
     public void setOnLoadCompleteListener(OnLoadCompleteListener listener) {
         synchronized (this.mLock) {
-            if (listener != null) {
-                try {
-                    Looper myLooper = Looper.myLooper();
-                    Looper looper = myLooper;
-                    if (myLooper != null) {
+            try {
+                if (listener != null) {
+                    Looper looper = Looper.myLooper();
+                    if (looper != null) {
                         this.mEventHandler = new EventHandler(looper);
                     } else {
-                        Looper mainLooper = Looper.getMainLooper();
-                        Looper looper2 = mainLooper;
-                        if (mainLooper != null) {
+                        Looper looper2 = Looper.getMainLooper();
+                        if (looper2 != null) {
                             this.mEventHandler = new EventHandler(looper2);
                         } else {
                             this.mEventHandler = null;
                         }
                     }
-                } catch (Throwable th) {
-                    throw th;
+                } else {
+                    this.mEventHandler = null;
                 }
-            } else {
-                this.mEventHandler = null;
+                this.mOnLoadCompleteListener = listener;
+            } catch (Throwable th) {
+                throw th;
             }
-            this.mOnLoadCompleteListener = listener;
         }
     }
 
     private static void postEventFromNative(Object ref, int msg, int arg1, int arg2, Object obj) {
         SoundPool soundPool = (SoundPool) ((WeakReference) ref).get();
         if (soundPool != null && soundPool.mEventHandler != null) {
-            soundPool.mEventHandler.sendMessage(soundPool.mEventHandler.obtainMessage(msg, arg1, arg2, obj));
+            Message m = soundPool.mEventHandler.obtainMessage(msg, arg1, arg2, obj);
+            soundPool.mEventHandler.sendMessage(m);
         }
     }
 
+    /* loaded from: classes3.dex */
     private final class EventHandler extends Handler {
         public EventHandler(Looper looper) {
             super(looper);
         }
 
+        @Override // android.p007os.Handler
         public void handleMessage(Message msg) {
-            if (msg.what != 1) {
-                Log.e(SoundPool.TAG, "Unknown message type " + msg.what);
+            if (msg.what == 1) {
+                if (SoundPool.DEBUG) {
+                    Log.m72d(SoundPool.TAG, "Sample " + msg.arg1 + " loaded");
+                }
+                synchronized (SoundPool.this.mLock) {
+                    if (SoundPool.this.mOnLoadCompleteListener != null) {
+                        SoundPool.this.mOnLoadCompleteListener.onLoadComplete(SoundPool.this, msg.arg1, msg.arg2);
+                    }
+                }
                 return;
             }
-            if (SoundPool.DEBUG) {
-                Log.d(SoundPool.TAG, "Sample " + msg.arg1 + " loaded");
-            }
-            synchronized (SoundPool.this.mLock) {
-                if (SoundPool.this.mOnLoadCompleteListener != null) {
-                    SoundPool.this.mOnLoadCompleteListener.onLoadComplete(SoundPool.this, msg.arg1, msg.arg2);
-                }
-            }
+            Log.m70e(SoundPool.TAG, "Unknown message type " + msg.what);
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class Builder {
         private AudioAttributes mAudioAttributes;
         private int mMaxStreams = 1;
 
         public Builder setMaxStreams(int maxStreams) throws IllegalArgumentException {
-            if (maxStreams > 0) {
-                this.mMaxStreams = maxStreams;
-                return this;
+            if (maxStreams <= 0) {
+                throw new IllegalArgumentException("Strictly positive value required for the maximum number of streams");
             }
-            throw new IllegalArgumentException("Strictly positive value required for the maximum number of streams");
+            this.mMaxStreams = maxStreams;
+            return this;
         }
 
         public Builder setAudioAttributes(AudioAttributes attributes) throws IllegalArgumentException {
-            if (attributes != null) {
-                this.mAudioAttributes = attributes;
-                return this;
+            if (attributes == null) {
+                throw new IllegalArgumentException("Invalid null AudioAttributes");
             }
-            throw new IllegalArgumentException("Invalid null AudioAttributes");
+            this.mAudioAttributes = attributes;
+            return this;
         }
 
         public SoundPool build() {

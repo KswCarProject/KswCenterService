@@ -1,5 +1,6 @@
 package android.hardware.sidekick;
 
+/* loaded from: classes.dex */
 public abstract class SidekickInternal {
     public abstract void endDisplayControl();
 

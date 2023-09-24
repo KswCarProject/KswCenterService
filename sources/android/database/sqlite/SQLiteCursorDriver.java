@@ -3,6 +3,7 @@ package android.database.sqlite;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+/* loaded from: classes.dex */
 public interface SQLiteCursorDriver {
     void cursorClosed();
 

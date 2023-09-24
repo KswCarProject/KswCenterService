@@ -9,6 +9,7 @@ import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
 import org.mozilla.universalchardet.prober.HebrewProber;
 
+/* loaded from: classes3.dex */
 class FileSynthesisCallback extends AbstractSynthesisCallback {
     private static final boolean DBG = false;
     private static final int MAX_AUDIO_BUFFER_SIZE = 8192;
@@ -18,30 +19,35 @@ class FileSynthesisCallback extends AbstractSynthesisCallback {
     private int mAudioFormat;
     private int mChannelCount;
     private final TextToSpeechService.UtteranceProgressDispatcher mDispatcher;
-    private boolean mDone = false;
+    private boolean mDone;
     private FileChannel mFileChannel;
     private int mSampleRateInHz;
-    private boolean mStarted = false;
-    private final Object mStateLock = new Object();
+    private boolean mStarted;
+    private final Object mStateLock;
     protected int mStatusCode;
 
     FileSynthesisCallback(FileChannel fileChannel, TextToSpeechService.UtteranceProgressDispatcher dispatcher, boolean clientIsUsingV2) {
         super(clientIsUsingV2);
+        this.mStateLock = new Object();
+        this.mStarted = false;
+        this.mDone = false;
         this.mFileChannel = fileChannel;
         this.mDispatcher = dispatcher;
         this.mStatusCode = 0;
     }
 
-    /* access modifiers changed from: package-private */
-    public void stop() {
+    @Override // android.speech.tts.AbstractSynthesisCallback
+    void stop() {
         synchronized (this.mStateLock) {
-            if (!this.mDone) {
-                if (this.mStatusCode != -2) {
-                    this.mStatusCode = -2;
-                    cleanUp();
-                    this.mDispatcher.dispatchOnStop();
-                }
+            if (this.mDone) {
+                return;
             }
+            if (this.mStatusCode == -2) {
+                return;
+            }
+            this.mStatusCode = -2;
+            cleanUp();
+            this.mDispatcher.dispatchOnStop();
         }
     }
 
@@ -53,24 +59,25 @@ class FileSynthesisCallback extends AbstractSynthesisCallback {
         this.mFileChannel = null;
     }
 
+    @Override // android.speech.tts.SynthesisCallback
     public int getMaxBufferSize() {
         return 8192;
     }
 
+    @Override // android.speech.tts.SynthesisCallback
     public int start(int sampleRateInHz, int audioFormat, int channelCount) {
-        if (!(audioFormat == 3 || audioFormat == 2 || audioFormat == 4)) {
-            Log.e(TAG, "Audio format encoding " + audioFormat + " not supported. Please use one of AudioFormat.ENCODING_PCM_8BIT, AudioFormat.ENCODING_PCM_16BIT or AudioFormat.ENCODING_PCM_FLOAT");
+        if (audioFormat != 3 && audioFormat != 2 && audioFormat != 4) {
+            Log.m70e(TAG, "Audio format encoding " + audioFormat + " not supported. Please use one of AudioFormat.ENCODING_PCM_8BIT, AudioFormat.ENCODING_PCM_16BIT or AudioFormat.ENCODING_PCM_FLOAT");
         }
         this.mDispatcher.dispatchOnBeginSynthesis(sampleRateInHz, audioFormat, channelCount);
         synchronized (this.mStateLock) {
             if (this.mStatusCode == -2) {
-                int errorCodeOnStop = errorCodeOnStop();
-                return errorCodeOnStop;
+                return errorCodeOnStop();
             } else if (this.mStatusCode != 0) {
                 return -1;
             } else {
                 if (this.mStarted) {
-                    Log.e(TAG, "Start called twice");
+                    Log.m70e(TAG, "Start called twice");
                     return -1;
                 }
                 this.mStarted = true;
@@ -82,8 +89,8 @@ class FileSynthesisCallback extends AbstractSynthesisCallback {
                 try {
                     fileChannel.write(ByteBuffer.allocate(44));
                     return 0;
-                } catch (IOException e) {
-                    Log.e(TAG, "Failed to write wav header to output file descriptor", e);
+                } catch (IOException ex) {
+                    Log.m69e(TAG, "Failed to write wav header to output file descriptor", ex);
                     synchronized (this.mStateLock) {
                         cleanUp();
                         this.mStatusCode = -5;
@@ -94,20 +101,20 @@ class FileSynthesisCallback extends AbstractSynthesisCallback {
         }
     }
 
+    @Override // android.speech.tts.SynthesisCallback
     public int audioAvailable(byte[] buffer, int offset, int length) {
         synchronized (this.mStateLock) {
             if (this.mStatusCode == -2) {
-                int errorCodeOnStop = errorCodeOnStop();
-                return errorCodeOnStop;
+                return errorCodeOnStop();
             } else if (this.mStatusCode != 0) {
                 return -1;
             } else {
                 if (this.mFileChannel == null) {
-                    Log.e(TAG, "File not open");
+                    Log.m70e(TAG, "File not open");
                     this.mStatusCode = -5;
                     return -1;
                 } else if (!this.mStarted) {
-                    Log.e(TAG, "Start method was not called");
+                    Log.m70e(TAG, "Start method was not called");
                     return -1;
                 } else {
                     FileChannel fileChannel = this.mFileChannel;
@@ -117,8 +124,8 @@ class FileSynthesisCallback extends AbstractSynthesisCallback {
                     try {
                         fileChannel.write(ByteBuffer.wrap(buffer, offset, length));
                         return 0;
-                    } catch (IOException e) {
-                        Log.e(TAG, "Failed to write to output file descriptor", e);
+                    } catch (IOException ex) {
+                        Log.m69e(TAG, "Failed to write to output file descriptor", ex);
                         synchronized (this.mStateLock) {
                             cleanUp();
                             this.mStatusCode = -5;
@@ -130,19 +137,19 @@ class FileSynthesisCallback extends AbstractSynthesisCallback {
         }
     }
 
+    @Override // android.speech.tts.SynthesisCallback
     public int done() {
         synchronized (this.mStateLock) {
             if (this.mDone) {
-                Log.w(TAG, "Duplicate call to done()");
+                Log.m64w(TAG, "Duplicate call to done()");
                 return -1;
             } else if (this.mStatusCode == -2) {
-                int errorCodeOnStop = errorCodeOnStop();
-                return errorCodeOnStop;
+                return errorCodeOnStop();
             } else if (this.mStatusCode != 0 && this.mStatusCode != -2) {
                 this.mDispatcher.dispatchOnError(this.mStatusCode);
                 return -1;
             } else if (this.mFileChannel == null) {
-                Log.e(TAG, "File not open");
+                Log.m70e(TAG, "File not open");
                 return -1;
             } else {
                 this.mDone = true;
@@ -151,15 +158,16 @@ class FileSynthesisCallback extends AbstractSynthesisCallback {
                 int audioFormat = this.mAudioFormat;
                 int channelCount = this.mChannelCount;
                 try {
-                    fileChannel.position(0);
-                    fileChannel.write(makeWavHeader(sampleRateInHz, audioFormat, channelCount, (int) (fileChannel.size() - 44)));
+                    fileChannel.position(0L);
+                    int dataLength = (int) (fileChannel.size() - 44);
+                    fileChannel.write(makeWavHeader(sampleRateInHz, audioFormat, channelCount, dataLength));
                     synchronized (this.mStateLock) {
                         closeFile();
                         this.mDispatcher.dispatchOnSuccess();
                     }
                     return 0;
-                } catch (IOException e) {
-                    Log.e(TAG, "Failed to write to output file descriptor", e);
+                } catch (IOException ex) {
+                    Log.m69e(TAG, "Failed to write to output file descriptor", ex);
                     synchronized (this.mStateLock) {
                         cleanUp();
                         return -1;
@@ -169,19 +177,23 @@ class FileSynthesisCallback extends AbstractSynthesisCallback {
         }
     }
 
+    @Override // android.speech.tts.SynthesisCallback
     public void error() {
         error(-3);
     }
 
+    @Override // android.speech.tts.SynthesisCallback
     public void error(int errorCode) {
         synchronized (this.mStateLock) {
-            if (!this.mDone) {
-                cleanUp();
-                this.mStatusCode = errorCode;
+            if (this.mDone) {
+                return;
             }
+            cleanUp();
+            this.mStatusCode = errorCode;
         }
     }
 
+    @Override // android.speech.tts.SynthesisCallback
     public boolean hasStarted() {
         boolean z;
         synchronized (this.mStateLock) {
@@ -190,6 +202,7 @@ class FileSynthesisCallback extends AbstractSynthesisCallback {
         return z;
     }
 
+    @Override // android.speech.tts.SynthesisCallback
     public boolean hasFinished() {
         boolean z;
         synchronized (this.mStateLock) {
@@ -200,25 +213,30 @@ class FileSynthesisCallback extends AbstractSynthesisCallback {
 
     private ByteBuffer makeWavHeader(int sampleRateInHz, int audioFormat, int channelCount, int dataLength) {
         int sampleSizeInBytes = AudioFormat.getBytesPerSample(audioFormat);
-        ByteBuffer header = ByteBuffer.wrap(new byte[44]);
+        int byteRate = sampleRateInHz * sampleSizeInBytes * channelCount;
+        short blockAlign = (short) (sampleSizeInBytes * channelCount);
+        short bitsPerSample = (short) (sampleSizeInBytes * 8);
+        byte[] headerBuf = new byte[44];
+        ByteBuffer header = ByteBuffer.wrap(headerBuf);
         header.order(ByteOrder.LITTLE_ENDIAN);
         header.put(new byte[]{82, 73, 70, 70});
         header.putInt((dataLength + 44) - 8);
         header.put(new byte[]{87, 65, 86, 69});
         header.put(new byte[]{102, 109, 116, HebrewProber.SPACE});
         header.putInt(16);
-        header.putShort(1);
+        header.putShort((short) 1);
         header.putShort((short) channelCount);
         header.putInt(sampleRateInHz);
-        header.putInt(sampleRateInHz * sampleSizeInBytes * channelCount);
-        header.putShort((short) (sampleSizeInBytes * channelCount));
-        header.putShort((short) (sampleSizeInBytes * 8));
+        header.putInt(byteRate);
+        header.putShort(blockAlign);
+        header.putShort(bitsPerSample);
         header.put(new byte[]{100, 97, 116, 97});
         header.putInt(dataLength);
         header.flip();
         return header;
     }
 
+    @Override // android.speech.tts.SynthesisCallback
     public void rangeStart(int markerInFrames, int start, int end) {
         this.mDispatcher.dispatchOnRangeStart(markerInFrames, start, end);
     }

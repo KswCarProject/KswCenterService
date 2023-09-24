@@ -1,43 +1,42 @@
 package android.widget;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.Looper;
-import android.os.Message;
+import android.p007os.Handler;
+import android.p007os.HandlerThread;
+import android.p007os.Looper;
+import android.p007os.Message;
 import android.util.Log;
 
+/* loaded from: classes4.dex */
 public abstract class Filter {
     private static final int FILTER_TOKEN = -791613427;
     private static final int FINISH_TOKEN = -559038737;
     private static final String LOG_TAG = "Filter";
     private static final String THREAD_NAME = "Filter";
     private Delayer mDelayer;
-    /* access modifiers changed from: private */
-    public final Object mLock = new Object();
-    /* access modifiers changed from: private */
-    public Handler mResultHandler = new ResultsHandler();
-    /* access modifiers changed from: private */
-    public Handler mThreadHandler;
+    private final Object mLock = new Object();
+    private Handler mResultHandler = new ResultsHandler();
+    private Handler mThreadHandler;
 
+    /* loaded from: classes4.dex */
     public interface Delayer {
         long getPostingDelay(CharSequence charSequence);
     }
 
+    /* loaded from: classes4.dex */
     public interface FilterListener {
         void onFilterComplete(int i);
     }
 
+    /* loaded from: classes4.dex */
     protected static class FilterResults {
         public int count;
         public Object values;
     }
 
-    /* access modifiers changed from: protected */
-    public abstract FilterResults performFiltering(CharSequence charSequence);
+    protected abstract FilterResults performFiltering(CharSequence charSequence);
 
-    /* access modifiers changed from: protected */
-    public abstract void publishResults(CharSequence charSequence, FilterResults filterResults);
+    protected abstract void publishResults(CharSequence charSequence, FilterResults filterResults);
 
     @UnsupportedAppUsage
     public void setDelayer(Delayer delayer) {
@@ -47,7 +46,7 @@ public abstract class Filter {
     }
 
     public final void filter(CharSequence constraint) {
-        filter(constraint, (FilterListener) null);
+        filter(constraint, null);
     }
 
     public final void filter(CharSequence constraint, FilterListener listener) {
@@ -57,14 +56,10 @@ public abstract class Filter {
                 thread.start();
                 this.mThreadHandler = new RequestHandler(thread.getLooper());
             }
-            long delay = this.mDelayer == null ? 0 : this.mDelayer.getPostingDelay(constraint);
+            long delay = this.mDelayer == null ? 0L : this.mDelayer.getPostingDelay(constraint);
             Message message = this.mThreadHandler.obtainMessage(FILTER_TOKEN);
-            String str = null;
             RequestArguments args = new RequestArguments();
-            if (constraint != null) {
-                str = constraint.toString();
-            }
-            args.constraint = str;
+            args.constraint = constraint != null ? constraint.toString() : null;
             args.listener = listener;
             message.obj = args;
             this.mThreadHandler.removeMessages(FILTER_TOKEN);
@@ -77,58 +72,66 @@ public abstract class Filter {
         return resultValue == null ? "" : resultValue.toString();
     }
 
+    /* loaded from: classes4.dex */
     private class RequestHandler extends Handler {
         public RequestHandler(Looper looper) {
             super(looper);
         }
 
+        @Override // android.p007os.Handler
         public void handleMessage(Message msg) {
             int what = msg.what;
-            if (what == Filter.FILTER_TOKEN) {
-                RequestArguments args = (RequestArguments) msg.obj;
+            if (what != Filter.FILTER_TOKEN) {
+                if (what == Filter.FINISH_TOKEN) {
+                    synchronized (Filter.this.mLock) {
+                        if (Filter.this.mThreadHandler != null) {
+                            Filter.this.mThreadHandler.getLooper().quit();
+                            Filter.this.mThreadHandler = null;
+                        }
+                    }
+                    return;
+                }
+                return;
+            }
+            RequestArguments args = (RequestArguments) msg.obj;
+            try {
                 try {
                     args.results = Filter.this.performFiltering(args.constraint);
                 } catch (Exception e) {
                     args.results = new FilterResults();
-                    Log.w("Filter", "An exception occured during performFiltering()!", e);
-                } catch (Throwable th) {
-                    Message message = Filter.this.mResultHandler.obtainMessage(what);
-                    message.obj = args;
-                    message.sendToTarget();
-                    throw th;
+                    Log.m63w("Filter", "An exception occured during performFiltering()!", e);
                 }
-                Message message2 = Filter.this.mResultHandler.obtainMessage(what);
-                message2.obj = args;
-                message2.sendToTarget();
                 synchronized (Filter.this.mLock) {
                     if (Filter.this.mThreadHandler != null) {
-                        Filter.this.mThreadHandler.sendMessageDelayed(Filter.this.mThreadHandler.obtainMessage(Filter.FINISH_TOKEN), 3000);
+                        Message finishMessage = Filter.this.mThreadHandler.obtainMessage(Filter.FINISH_TOKEN);
+                        Filter.this.mThreadHandler.sendMessageDelayed(finishMessage, 3000L);
                     }
                 }
-            } else if (what == Filter.FINISH_TOKEN) {
-                synchronized (Filter.this.mLock) {
-                    if (Filter.this.mThreadHandler != null) {
-                        Filter.this.mThreadHandler.getLooper().quit();
-                        Handler unused = Filter.this.mThreadHandler = null;
-                    }
-                }
+            } finally {
+                Message message = Filter.this.mResultHandler.obtainMessage(what);
+                message.obj = args;
+                message.sendToTarget();
             }
         }
     }
 
+    /* loaded from: classes4.dex */
     private class ResultsHandler extends Handler {
         private ResultsHandler() {
         }
 
+        @Override // android.p007os.Handler
         public void handleMessage(Message msg) {
             RequestArguments args = (RequestArguments) msg.obj;
             Filter.this.publishResults(args.constraint, args.results);
             if (args.listener != null) {
-                args.listener.onFilterComplete(args.results != null ? args.results.count : -1);
+                int count = args.results != null ? args.results.count : -1;
+                args.listener.onFilterComplete(count);
             }
         }
     }
 
+    /* loaded from: classes4.dex */
     private static class RequestArguments {
         CharSequence constraint;
         FilterListener listener;

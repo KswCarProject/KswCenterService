@@ -7,6 +7,7 @@ import com.android.internal.util.Preconditions;
 import java.util.Arrays;
 import libcore.util.EmptyArray;
 
+/* loaded from: classes4.dex */
 public class LongArray implements Cloneable {
     private static final int MIN_CAPACITY_INCREMENT = 12;
     private int mSize;
@@ -42,7 +43,7 @@ public class LongArray implements Cloneable {
     public void resize(int newSize) {
         Preconditions.checkArgumentNonnegative(newSize);
         if (newSize <= this.mValues.length) {
-            Arrays.fill(this.mValues, newSize, this.mValues.length, 0);
+            Arrays.fill(this.mValues, newSize, this.mValues.length, 0L);
         } else {
             ensureCapacity(newSize - this.mSize);
         }
@@ -77,7 +78,8 @@ public class LongArray implements Cloneable {
         int minCapacity = currentSize + count;
         if (minCapacity >= this.mValues.length) {
             int targetCap = (currentSize < 6 ? 12 : currentSize >> 1) + currentSize;
-            long[] newValues = ArrayUtils.newUnpaddedLongArray(targetCap > minCapacity ? targetCap : minCapacity);
+            int newCapacity = targetCap > minCapacity ? targetCap : minCapacity;
+            long[] newValues = ArrayUtils.newUnpaddedLongArray(newCapacity);
             System.arraycopy(this.mValues, 0, newValues, 0, currentSize);
             this.mValues = newValues;
         }
@@ -87,7 +89,8 @@ public class LongArray implements Cloneable {
         this.mSize = 0;
     }
 
-    public LongArray clone() {
+    /* renamed from: clone */
+    public LongArray m174clone() {
         LongArray clone = null;
         try {
             clone = (LongArray) super.clone();
@@ -137,15 +140,15 @@ public class LongArray implements Cloneable {
     public static boolean elementsEqual(LongArray a, LongArray b) {
         if (a == null || b == null) {
             return a == b;
-        }
-        if (a.mSize != b.mSize) {
+        } else if (a.mSize != b.mSize) {
             return false;
-        }
-        for (int i = 0; i < a.mSize; i++) {
-            if (a.get(i) != b.get(i)) {
-                return false;
+        } else {
+            for (int i = 0; i < a.mSize; i++) {
+                if (a.get(i) != b.get(i)) {
+                    return false;
+                }
             }
+            return true;
         }
-        return true;
     }
 }

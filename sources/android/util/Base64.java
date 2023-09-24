@@ -3,6 +3,7 @@ package android.util;
 import android.annotation.UnsupportedAppUsage;
 import java.io.UnsupportedEncodingException;
 
+/* loaded from: classes4.dex */
 public class Base64 {
     static final /* synthetic */ boolean $assertionsDisabled = false;
     public static final int CRLF = 4;
@@ -12,8 +13,11 @@ public class Base64 {
     public static final int NO_WRAP = 2;
     public static final int URL_SAFE = 8;
 
+    /* loaded from: classes4.dex */
     static abstract class Coder {
-        public int op;
+
+        /* renamed from: op */
+        public int f288op;
         public byte[] output;
 
         public abstract int maxOutputSize(int i);
@@ -33,18 +37,19 @@ public class Base64 {
     }
 
     public static byte[] decode(byte[] input, int offset, int len, int flags) {
-        Decoder decoder = new Decoder(flags, new byte[((len * 3) / 4)]);
+        Decoder decoder = new Decoder(flags, new byte[(len * 3) / 4]);
         if (!decoder.process(input, offset, len, true)) {
             throw new IllegalArgumentException("bad base-64");
-        } else if (decoder.op == decoder.output.length) {
-            return decoder.output;
-        } else {
-            byte[] temp = new byte[decoder.op];
-            System.arraycopy(decoder.output, 0, temp, 0, decoder.op);
-            return temp;
         }
+        if (decoder.f288op == decoder.output.length) {
+            return decoder.output;
+        }
+        byte[] temp = new byte[decoder.f288op];
+        System.arraycopy(decoder.output, 0, temp, 0, decoder.f288op);
+        return temp;
     }
 
+    /* loaded from: classes4.dex */
     static class Decoder extends Coder {
         private static final int[] DECODE = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, -1, -1, 63, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -2, -1, -1, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, -1, -1, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
         private static final int[] DECODE_WEBSAFE = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, -1, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -2, -1, -1, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, 63, -1, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
@@ -61,227 +66,157 @@ public class Base64 {
             this.value = 0;
         }
 
+        @Override // android.util.Base64.Coder
         public int maxOutputSize(int len) {
             return ((len * 3) / 4) + 10;
         }
 
-        /* JADX WARNING: Removed duplicated region for block: B:49:0x00e8  */
-        /* JADX WARNING: Removed duplicated region for block: B:51:0x00ef  */
-        /* JADX WARNING: Removed duplicated region for block: B:63:0x00e5 A[SYNTHETIC] */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean process(byte[] r12, int r13, int r14, boolean r15) {
-            /*
-                r11 = this;
-                int r0 = r11.state
-                r1 = 0
-                r2 = 6
-                if (r0 != r2) goto L_0x0007
-                return r1
-            L_0x0007:
-                r0 = r13
-                int r14 = r14 + r13
-                int r3 = r11.state
-                int r4 = r11.value
-                r5 = 0
-                byte[] r6 = r11.output
-                int[] r7 = r11.alphabet
-            L_0x0012:
-                if (r0 >= r14) goto L_0x00e5
-                if (r3 != 0) goto L_0x005d
-            L_0x0016:
-                int r8 = r0 + 4
-                if (r8 > r14) goto L_0x0059
-                byte r8 = r12[r0]
-                r8 = r8 & 255(0xff, float:3.57E-43)
-                r8 = r7[r8]
-                int r8 = r8 << 18
-                int r9 = r0 + 1
-                byte r9 = r12[r9]
-                r9 = r9 & 255(0xff, float:3.57E-43)
-                r9 = r7[r9]
-                int r9 = r9 << 12
-                r8 = r8 | r9
-                int r9 = r0 + 2
-                byte r9 = r12[r9]
-                r9 = r9 & 255(0xff, float:3.57E-43)
-                r9 = r7[r9]
-                int r9 = r9 << r2
-                r8 = r8 | r9
-                int r9 = r0 + 3
-                byte r9 = r12[r9]
-                r9 = r9 & 255(0xff, float:3.57E-43)
-                r9 = r7[r9]
-                r8 = r8 | r9
-                r4 = r8
-                if (r8 < 0) goto L_0x0059
-                int r8 = r5 + 2
-                byte r9 = (byte) r4
-                r6[r8] = r9
-                int r8 = r5 + 1
-                int r9 = r4 >> 8
-                byte r9 = (byte) r9
-                r6[r8] = r9
-                int r8 = r4 >> 16
-                byte r8 = (byte) r8
-                r6[r5] = r8
-                int r5 = r5 + 3
-                int r0 = r0 + 4
-                goto L_0x0016
-            L_0x0059:
-                if (r0 < r14) goto L_0x005d
-                goto L_0x00e5
-            L_0x005d:
-                int r8 = r0 + 1
-                byte r0 = r12[r0]
-                r0 = r0 & 255(0xff, float:3.57E-43)
-                r0 = r7[r0]
-                r9 = -2
-                r10 = -1
-                switch(r3) {
-                    case 0: goto L_0x00d6;
-                    case 1: goto L_0x00c8;
-                    case 2: goto L_0x00ae;
-                    case 3: goto L_0x007c;
-                    case 4: goto L_0x0071;
-                    case 5: goto L_0x006c;
-                    default: goto L_0x006a;
+        /* JADX WARN: Removed duplicated region for block: B:53:0x00e8  */
+        /* JADX WARN: Removed duplicated region for block: B:55:0x00ef  */
+        /* JADX WARN: Removed duplicated region for block: B:69:0x00e5 A[SYNTHETIC] */
+        @Override // android.util.Base64.Coder
+        /*
+            Code decompiled incorrectly, please refer to instructions dump.
+        */
+        public boolean process(byte[] input, int offset, int len, boolean finish) {
+            if (this.state == 6) {
+                return false;
+            }
+            int p = offset;
+            int len2 = len + offset;
+            int state = this.state;
+            int value = this.value;
+            int op = 0;
+            byte[] output = this.output;
+            int[] alphabet = this.alphabet;
+            while (p < len2) {
+                if (state == 0) {
+                    while (p + 4 <= len2) {
+                        int i = (alphabet[input[p] & 255] << 18) | (alphabet[input[p + 1] & 255] << 12) | (alphabet[input[p + 2] & 255] << 6) | alphabet[input[p + 3] & 255];
+                        value = i;
+                        if (i >= 0) {
+                            output[op + 2] = (byte) value;
+                            output[op + 1] = (byte) (value >> 8);
+                            output[op] = (byte) (value >> 16);
+                            op += 3;
+                            p += 4;
+                        } else if (p >= len2) {
+                            if (finish) {
+                                this.state = state;
+                                this.value = value;
+                                this.f288op = op;
+                                return true;
+                            }
+                            switch (state) {
+                                case 1:
+                                    this.state = 6;
+                                    return false;
+                                case 2:
+                                    output[op] = (byte) (value >> 4);
+                                    op++;
+                                    break;
+                                case 3:
+                                    int op2 = op + 1;
+                                    output[op] = (byte) (value >> 10);
+                                    op = op2 + 1;
+                                    output[op2] = (byte) (value >> 2);
+                                    break;
+                                case 4:
+                                    this.state = 6;
+                                    return false;
+                            }
+                            this.state = state;
+                            this.f288op = op;
+                            return true;
+                        }
+                    }
+                    if (p >= len2) {
+                    }
                 }
-            L_0x006a:
-                goto L_0x00e1
-            L_0x006c:
-                if (r0 == r10) goto L_0x00e1
-                r11.state = r2
-                return r1
-            L_0x0071:
-                if (r0 != r9) goto L_0x0077
-                int r3 = r3 + 1
-                goto L_0x00e1
-            L_0x0077:
-                if (r0 == r10) goto L_0x00e1
-                r11.state = r2
-                return r1
-            L_0x007c:
-                if (r0 < 0) goto L_0x0097
-                int r9 = r4 << 6
-                r4 = r9 | r0
-                int r9 = r5 + 2
-                byte r10 = (byte) r4
-                r6[r9] = r10
-                int r9 = r5 + 1
-                int r10 = r4 >> 8
-                byte r10 = (byte) r10
-                r6[r9] = r10
-                int r9 = r4 >> 16
-                byte r9 = (byte) r9
-                r6[r5] = r9
-                int r5 = r5 + 3
-                r3 = 0
-                goto L_0x00e1
-            L_0x0097:
-                if (r0 != r9) goto L_0x00a9
-                int r9 = r5 + 1
-                int r10 = r4 >> 2
-                byte r10 = (byte) r10
-                r6[r9] = r10
-                int r9 = r4 >> 10
-                byte r9 = (byte) r9
-                r6[r5] = r9
-                int r5 = r5 + 2
-                r3 = 5
-                goto L_0x00e1
-            L_0x00a9:
-                if (r0 == r10) goto L_0x00e1
-                r11.state = r2
-                return r1
-            L_0x00ae:
-                if (r0 < 0) goto L_0x00b7
-                int r9 = r4 << 6
-                r4 = r9 | r0
-                int r3 = r3 + 1
-                goto L_0x00e1
-            L_0x00b7:
-                if (r0 != r9) goto L_0x00c3
-                int r9 = r5 + 1
-                int r10 = r4 >> 4
-                byte r10 = (byte) r10
-                r6[r5] = r10
-                r3 = 4
-                r5 = r9
-                goto L_0x00e1
-            L_0x00c3:
-                if (r0 == r10) goto L_0x00e1
-                r11.state = r2
-                return r1
-            L_0x00c8:
-                if (r0 < 0) goto L_0x00d1
-                int r9 = r4 << 6
-                r4 = r9 | r0
-                int r3 = r3 + 1
-                goto L_0x00e1
-            L_0x00d1:
-                if (r0 == r10) goto L_0x00e1
-                r11.state = r2
-                return r1
-            L_0x00d6:
-                if (r0 < 0) goto L_0x00dc
-                r4 = r0
-                int r3 = r3 + 1
-                goto L_0x00e1
-            L_0x00dc:
-                if (r0 == r10) goto L_0x00e1
-                r11.state = r2
-                return r1
-            L_0x00e1:
-                r0 = r8
-                goto L_0x0012
-            L_0x00e5:
-                r8 = 1
-                if (r15 != 0) goto L_0x00ef
-                r11.state = r3
-                r11.value = r4
-                r11.op = r5
-                return r8
-            L_0x00ef:
-                switch(r3) {
-                    case 0: goto L_0x0112;
-                    case 1: goto L_0x010f;
-                    case 2: goto L_0x0105;
-                    case 3: goto L_0x00f6;
-                    case 4: goto L_0x00f3;
-                    default: goto L_0x00f2;
+                int p2 = p + 1;
+                int d = alphabet[input[p] & 255];
+                switch (state) {
+                    case 0:
+                        if (d >= 0) {
+                            value = d;
+                            state++;
+                            break;
+                        } else if (d == -1) {
+                            break;
+                        } else {
+                            this.state = 6;
+                            return false;
+                        }
+                    case 1:
+                        if (d >= 0) {
+                            value = (value << 6) | d;
+                            state++;
+                            break;
+                        } else if (d == -1) {
+                            break;
+                        } else {
+                            this.state = 6;
+                            return false;
+                        }
+                    case 2:
+                        if (d >= 0) {
+                            value = (value << 6) | d;
+                            state++;
+                            break;
+                        } else if (d == -2) {
+                            output[op] = (byte) (value >> 4);
+                            state = 4;
+                            op++;
+                            break;
+                        } else if (d == -1) {
+                            break;
+                        } else {
+                            this.state = 6;
+                            return false;
+                        }
+                    case 3:
+                        if (d >= 0) {
+                            value = (value << 6) | d;
+                            output[op + 2] = (byte) value;
+                            output[op + 1] = (byte) (value >> 8);
+                            output[op] = (byte) (value >> 16);
+                            op += 3;
+                            state = 0;
+                            break;
+                        } else if (d == -2) {
+                            output[op + 1] = (byte) (value >> 2);
+                            output[op] = (byte) (value >> 10);
+                            op += 2;
+                            state = 5;
+                            break;
+                        } else if (d == -1) {
+                            break;
+                        } else {
+                            this.state = 6;
+                            return false;
+                        }
+                    case 4:
+                        if (d == -2) {
+                            state++;
+                            break;
+                        } else if (d == -1) {
+                            break;
+                        } else {
+                            this.state = 6;
+                            return false;
+                        }
+                    case 5:
+                        if (d == -1) {
+                            break;
+                        } else {
+                            this.state = 6;
+                            return false;
+                        }
                 }
-            L_0x00f2:
-                goto L_0x0113
-            L_0x00f3:
-                r11.state = r2
-                return r1
-            L_0x00f6:
-                int r1 = r5 + 1
-                int r2 = r4 >> 10
-                byte r2 = (byte) r2
-                r6[r5] = r2
-                int r5 = r1 + 1
-                int r2 = r4 >> 2
-                byte r2 = (byte) r2
-                r6[r1] = r2
-                goto L_0x0113
-            L_0x0105:
-                int r1 = r5 + 1
-                int r2 = r4 >> 4
-                byte r2 = (byte) r2
-                r6[r5] = r2
-                r5 = r1
-                goto L_0x0113
-            L_0x010f:
-                r11.state = r2
-                return r1
-            L_0x0112:
-            L_0x0113:
-                r11.state = r3
-                r11.op = r5
-                return r8
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.util.Base64.Decoder.process(byte[], int, int, boolean):boolean");
+                p = p2;
+            }
+            if (finish) {
+            }
         }
     }
 
@@ -306,9 +241,13 @@ public class Base64 {
     }
 
     public static byte[] encode(byte[] input, int offset, int len, int flags) {
-        Encoder encoder = new Encoder(flags, (byte[]) null);
+        Encoder encoder = new Encoder(flags, null);
         int output_len = (len / 3) * 4;
-        if (!encoder.do_padding) {
+        if (encoder.do_padding) {
+            if (len % 3 > 0) {
+                output_len += 4;
+            }
+        } else {
             switch (len % 3) {
                 case 1:
                     output_len += 2;
@@ -317,8 +256,6 @@ public class Base64 {
                     output_len += 3;
                     break;
             }
-        } else if (len % 3 > 0) {
-            output_len += 4;
         }
         if (encoder.do_newline && len > 0) {
             output_len += (((len - 1) / 57) + 1) * (encoder.do_cr ? 2 : 1);
@@ -328,6 +265,7 @@ public class Base64 {
         return encoder.output;
     }
 
+    /* loaded from: classes4.dex */
     static class Encoder extends Coder {
         static final /* synthetic */ boolean $assertionsDisabled = false;
         private static final byte[] ENCODE = {65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 43, 47};
@@ -341,366 +279,213 @@ public class Base64 {
         private final byte[] tail;
         int tailLen;
 
-        static {
-            Class<Base64> cls = Base64.class;
-        }
-
         public Encoder(int flags, byte[] output) {
             this.output = output;
-            boolean z = true;
             this.do_padding = (flags & 1) == 0;
             this.do_newline = (flags & 2) == 0;
-            this.do_cr = (flags & 4) == 0 ? false : z;
+            this.do_cr = (flags & 4) != 0;
             this.alphabet = (flags & 8) == 0 ? ENCODE : ENCODE_WEBSAFE;
             this.tail = new byte[2];
             this.tailLen = 0;
             this.count = this.do_newline ? 19 : -1;
         }
 
+        @Override // android.util.Base64.Coder
         public int maxOutputSize(int len) {
             return ((len * 8) / 5) + 10;
         }
 
-        /*  JADX ERROR: JadxOverflowException in pass: RegionMakerVisitor
-            jadx.core.utils.exceptions.JadxOverflowException: Regions count limit reached
-            	at jadx.core.utils.ErrorsCounter.addError(ErrorsCounter.java:47)
-            	at jadx.core.utils.ErrorsCounter.methodError(ErrorsCounter.java:81)
-            */
-        /* JADX WARNING: Can't fix incorrect switch cases order */
-        /* JADX WARNING: Removed duplicated region for block: B:20:0x009e  */
-        /* JADX WARNING: Removed duplicated region for block: B:27:0x00f3  */
-        /* JADX WARNING: Removed duplicated region for block: B:74:0x01de  */
-        /* JADX WARNING: Removed duplicated region for block: B:82:0x00f1 A[SYNTHETIC] */
-        public boolean process(byte[] r18, int r19, int r20, boolean r21) {
-            /*
-                r17 = this;
-                r0 = r17
-                byte[] r1 = r0.alphabet
-                byte[] r2 = r0.output
-                r3 = 0
-                int r4 = r0.count
-                r5 = r19
-                int r6 = r20 + r19
-                r7 = -1
-                int r8 = r0.tailLen
-                r9 = 0
-                r10 = 1
-                switch(r8) {
-                    case 0: goto L_0x0057;
-                    case 1: goto L_0x0036;
-                    case 2: goto L_0x0016;
-                    default: goto L_0x0015;
+        /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
+        @Override // android.util.Base64.Coder
+        public boolean process(byte[] input, int offset, int len, boolean finish) {
+            int p;
+            int op;
+            int p2;
+            int p3;
+            int p4;
+            int p5;
+            int op2;
+            byte[] alphabet = this.alphabet;
+            byte[] output = this.output;
+            int op3 = 0;
+            int count = this.count;
+            int len2 = len + offset;
+            int v = -1;
+            switch (this.tailLen) {
+                case 0:
+                default:
+                    p = offset;
+                    break;
+                case 1:
+                    if (offset + 2 <= len2) {
+                        int p6 = offset + 1;
+                        int p7 = input[offset];
+                        v = ((p7 & 255) << 8) | ((this.tail[0] & 255) << 16) | (input[p6] & 255);
+                        this.tailLen = 0;
+                        p = p6 + 1;
+                        break;
+                    }
+                    p = offset;
+                    break;
+                case 2:
+                    if (offset + 1 <= len2) {
+                        int i = ((this.tail[0] & 255) << 16) | ((this.tail[1] & 255) << 8);
+                        p = offset + 1;
+                        int p8 = input[offset];
+                        v = i | (p8 & 255);
+                        this.tailLen = 0;
+                        break;
+                    }
+                    p = offset;
+                    break;
+            }
+            if (v != -1) {
+                int op4 = 0 + 1;
+                output[0] = alphabet[(v >> 18) & 63];
+                int op5 = op4 + 1;
+                output[op4] = alphabet[(v >> 12) & 63];
+                int op6 = op5 + 1;
+                output[op5] = alphabet[(v >> 6) & 63];
+                op3 = op6 + 1;
+                output[op6] = alphabet[v & 63];
+                count--;
+                if (count == 0) {
+                    if (this.do_cr) {
+                        output[op3] = 13;
+                        op3++;
+                    }
+                    int op7 = op3 + 1;
+                    output[op3] = 10;
+                    count = 19;
+                    op3 = op7;
                 }
-            L_0x0015:
-                goto L_0x0058
-            L_0x0016:
-                int r8 = r5 + 1
-                if (r8 > r6) goto L_0x0058
-                byte[] r8 = r0.tail
-                byte r8 = r8[r9]
-                r8 = r8 & 255(0xff, float:3.57E-43)
-                int r8 = r8 << 16
-                byte[] r11 = r0.tail
-                byte r11 = r11[r10]
-                r11 = r11 & 255(0xff, float:3.57E-43)
-                int r11 = r11 << 8
-                r8 = r8 | r11
-                int r11 = r5 + 1
-                byte r5 = r18[r5]
-                r5 = r5 & 255(0xff, float:3.57E-43)
-                r7 = r8 | r5
-                r0.tailLen = r9
-                goto L_0x0059
-            L_0x0036:
-                int r8 = r5 + 2
-                if (r8 > r6) goto L_0x0058
-                byte[] r8 = r0.tail
-                byte r8 = r8[r9]
-                r8 = r8 & 255(0xff, float:3.57E-43)
-                int r8 = r8 << 16
-                int r11 = r5 + 1
-                byte r5 = r18[r5]
-                r5 = r5 & 255(0xff, float:3.57E-43)
-                int r5 = r5 << 8
-                r5 = r5 | r8
-                int r8 = r11 + 1
-                byte r11 = r18[r11]
-                r11 = r11 & 255(0xff, float:3.57E-43)
-                r7 = r5 | r11
-                r0.tailLen = r9
-                r11 = r8
-                goto L_0x0059
-            L_0x0057:
-            L_0x0058:
-                r11 = r5
-            L_0x0059:
-                r5 = -1
-                r8 = 13
-                r9 = 10
-                if (r7 == r5) goto L_0x009a
-                int r5 = r3 + 1
-                int r12 = r7 >> 18
-                r12 = r12 & 63
-                byte r12 = r1[r12]
-                r2[r3] = r12
-                int r3 = r5 + 1
-                int r12 = r7 >> 12
-                r12 = r12 & 63
-                byte r12 = r1[r12]
-                r2[r5] = r12
-                int r5 = r3 + 1
-                int r12 = r7 >> 6
-                r12 = r12 & 63
-                byte r12 = r1[r12]
-                r2[r3] = r12
-                int r3 = r5 + 1
-                r12 = r7 & 63
-                byte r12 = r1[r12]
-                r2[r5] = r12
-                int r4 = r4 + -1
-                if (r4 != 0) goto L_0x009a
-                boolean r5 = r0.do_cr
-                if (r5 == 0) goto L_0x0093
-                int r5 = r3 + 1
-                r2[r3] = r8
-                r3 = r5
-            L_0x0093:
-                int r5 = r3 + 1
-                r2[r3] = r9
-                r4 = 19
-            L_0x0099:
-                r3 = r5
-            L_0x009a:
-                int r5 = r11 + 3
-                if (r5 > r6) goto L_0x00f1
-                byte r5 = r18[r11]
-                r5 = r5 & 255(0xff, float:3.57E-43)
-                int r5 = r5 << 16
-                int r12 = r11 + 1
-                byte r12 = r18[r12]
-                r12 = r12 & 255(0xff, float:3.57E-43)
-                int r12 = r12 << 8
-                r5 = r5 | r12
-                int r12 = r11 + 2
-                byte r12 = r18[r12]
-                r12 = r12 & 255(0xff, float:3.57E-43)
-                r7 = r5 | r12
-                int r5 = r7 >> 18
-                r5 = r5 & 63
-                byte r5 = r1[r5]
-                r2[r3] = r5
-                int r5 = r3 + 1
-                int r12 = r7 >> 12
-                r12 = r12 & 63
-                byte r12 = r1[r12]
-                r2[r5] = r12
-                int r5 = r3 + 2
-                int r12 = r7 >> 6
-                r12 = r12 & 63
-                byte r12 = r1[r12]
-                r2[r5] = r12
-                int r5 = r3 + 3
-                r12 = r7 & 63
-                byte r12 = r1[r12]
-                r2[r5] = r12
-                int r11 = r11 + 3
-                int r3 = r3 + 4
-                int r4 = r4 + -1
-                if (r4 != 0) goto L_0x009a
-                boolean r5 = r0.do_cr
-                if (r5 == 0) goto L_0x00ea
-                int r5 = r3 + 1
-                r2[r3] = r8
-                r3 = r5
-            L_0x00ea:
-                int r5 = r3 + 1
-                r2[r3] = r9
-                r4 = 19
-                goto L_0x0099
-            L_0x00f1:
-                if (r21 == 0) goto L_0x01de
-                int r12 = r0.tailLen
-                int r12 = r11 - r12
-                int r13 = r6 + -1
-                r14 = 61
-                if (r12 != r13) goto L_0x014d
-                r12 = 0
-                int r13 = r0.tailLen
-                if (r13 <= 0) goto L_0x010c
-                byte[] r13 = r0.tail
-                int r15 = r12 + 1
-                byte r12 = r13[r12]
-                r13 = r11
-                r11 = r12
-                r12 = r15
-                goto L_0x0110
-            L_0x010c:
-                int r13 = r11 + 1
-                byte r11 = r18[r11]
-            L_0x0110:
-                r11 = r11 & 255(0xff, float:3.57E-43)
-                int r7 = r11 << 4
-                int r11 = r0.tailLen
-                int r11 = r11 - r12
-                r0.tailLen = r11
-                int r11 = r3 + 1
-                int r15 = r7 >> 6
-                r15 = r15 & 63
-                byte r15 = r1[r15]
-                r2[r3] = r15
-                int r3 = r11 + 1
-                r15 = r7 & 63
-                byte r15 = r1[r15]
-                r2[r11] = r15
-                boolean r11 = r0.do_padding
-                if (r11 == 0) goto L_0x0137
-                int r11 = r3 + 1
-                r2[r3] = r14
-                int r3 = r11 + 1
-                r2[r11] = r14
-            L_0x0137:
-                boolean r11 = r0.do_newline
-                if (r11 == 0) goto L_0x0149
-                boolean r11 = r0.do_cr
-                if (r11 == 0) goto L_0x0144
-                int r11 = r3 + 1
-                r2[r3] = r8
-                goto L_0x0145
-            L_0x0144:
-                r11 = r3
-            L_0x0145:
-                int r3 = r11 + 1
-                r2[r11] = r9
-            L_0x0149:
-            L_0x014a:
-                r11 = r13
-                goto L_0x01dc
-            L_0x014d:
-                int r12 = r0.tailLen
-                int r12 = r11 - r12
-                int r13 = r6 + -2
-                if (r12 != r13) goto L_0x01c4
-                r12 = 0
-                int r13 = r0.tailLen
-                if (r13 <= r10) goto L_0x0164
-                byte[] r13 = r0.tail
-                int r15 = r12 + 1
-                byte r12 = r13[r12]
-                r13 = r11
-                r11 = r12
-                r12 = r15
-                goto L_0x0168
-            L_0x0164:
-                int r13 = r11 + 1
-                byte r11 = r18[r11]
-            L_0x0168:
-                r11 = r11 & 255(0xff, float:3.57E-43)
-                int r11 = r11 << r9
-                int r10 = r0.tailLen
-                if (r10 <= 0) goto L_0x0177
-                byte[] r10 = r0.tail
-                int r15 = r12 + 1
-                byte r10 = r10[r12]
-                r12 = r15
-                goto L_0x0180
-            L_0x0177:
-                int r10 = r13 + 1
-                byte r13 = r18[r13]
-                r16 = r13
-                r13 = r10
-                r10 = r16
-            L_0x0180:
-                r10 = r10 & 255(0xff, float:3.57E-43)
-                int r10 = r10 << 2
-                r7 = r11 | r10
-                int r10 = r0.tailLen
-                int r10 = r10 - r12
-                r0.tailLen = r10
-                int r10 = r3 + 1
-                int r11 = r7 >> 12
-                r11 = r11 & 63
-                byte r11 = r1[r11]
-                r2[r3] = r11
-                int r3 = r10 + 1
-                int r11 = r7 >> 6
-                r11 = r11 & 63
-                byte r11 = r1[r11]
-                r2[r10] = r11
-                int r10 = r3 + 1
-                r11 = r7 & 63
-                byte r11 = r1[r11]
-                r2[r3] = r11
-                boolean r3 = r0.do_padding
-                if (r3 == 0) goto L_0x01b0
-                int r3 = r10 + 1
-                r2[r10] = r14
-                r10 = r3
-            L_0x01b0:
-                boolean r3 = r0.do_newline
-                if (r3 == 0) goto L_0x01c2
-                boolean r3 = r0.do_cr
-                if (r3 == 0) goto L_0x01bd
-                int r3 = r10 + 1
-                r2[r10] = r8
-                r10 = r3
-            L_0x01bd:
-                int r3 = r10 + 1
-                r2[r10] = r9
-                r10 = r3
-            L_0x01c2:
-                r3 = r10
-                goto L_0x014a
-            L_0x01c4:
-                boolean r10 = r0.do_newline
-                if (r10 == 0) goto L_0x01dc
-                if (r3 <= 0) goto L_0x01dc
-                r10 = 19
-                if (r4 == r10) goto L_0x01dc
-                boolean r10 = r0.do_cr
-                if (r10 == 0) goto L_0x01d7
-                int r10 = r3 + 1
-                r2[r3] = r8
-                goto L_0x01d8
-            L_0x01d7:
-                r10 = r3
-            L_0x01d8:
-                int r3 = r10 + 1
-                r2[r10] = r9
-            L_0x01dc:
-                goto L_0x020d
-            L_0x01de:
-                int r8 = r6 + -1
-                if (r11 != r8) goto L_0x01ef
-                byte[] r8 = r0.tail
-                int r9 = r0.tailLen
-                int r10 = r9 + 1
-                r0.tailLen = r10
-                byte r10 = r18[r11]
-                r8[r9] = r10
-                goto L_0x020d
-            L_0x01ef:
-                int r8 = r6 + -2
-                if (r11 != r8) goto L_0x020d
-                byte[] r8 = r0.tail
-                int r9 = r0.tailLen
-                int r10 = r9 + 1
-                r0.tailLen = r10
-                byte r10 = r18[r11]
-                r8[r9] = r10
-                byte[] r8 = r0.tail
-                int r9 = r0.tailLen
-                int r10 = r9 + 1
-                r0.tailLen = r10
-                int r10 = r11 + 1
-                byte r10 = r18[r10]
-                r8[r9] = r10
-            L_0x020d:
-                r0.op = r3
-                r0.count = r4
-                r8 = 1
-                return r8
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.util.Base64.Encoder.process(byte[], int, int, boolean):boolean");
+            }
+            while (p + 3 <= len2) {
+                int v2 = ((input[p] & 255) << 16) | ((input[p + 1] & 255) << 8) | (input[p + 2] & 255);
+                output[op3] = alphabet[(v2 >> 18) & 63];
+                output[op3 + 1] = alphabet[(v2 >> 12) & 63];
+                output[op3 + 2] = alphabet[(v2 >> 6) & 63];
+                output[op3 + 3] = alphabet[v2 & 63];
+                p += 3;
+                op3 += 4;
+                count--;
+                if (count == 0) {
+                    if (this.do_cr) {
+                        output[op3] = 13;
+                        op3++;
+                    }
+                    int op8 = op3 + 1;
+                    output[op3] = 10;
+                    count = 19;
+                    op3 = op8;
+                }
+            }
+            if (finish) {
+                if (p - this.tailLen == len2 - 1) {
+                    int t = 0;
+                    if (this.tailLen > 0) {
+                        int t2 = 0 + 1;
+                        int t3 = this.tail[0];
+                        p2 = p;
+                        p5 = t3;
+                        t = t2;
+                    } else {
+                        p2 = p + 1;
+                        p5 = input[p];
+                    }
+                    int v3 = (p5 & 255) << 4;
+                    this.tailLen -= t;
+                    int op9 = op3 + 1;
+                    output[op3] = alphabet[(v3 >> 6) & 63];
+                    op3 = op9 + 1;
+                    output[op9] = alphabet[v3 & 63];
+                    if (this.do_padding) {
+                        int op10 = op3 + 1;
+                        output[op3] = 61;
+                        op3 = op10 + 1;
+                        output[op10] = 61;
+                    }
+                    if (this.do_newline) {
+                        if (this.do_cr) {
+                            op2 = op3 + 1;
+                            output[op3] = 13;
+                        } else {
+                            op2 = op3;
+                        }
+                        op3 = op2 + 1;
+                        output[op2] = 10;
+                    }
+                } else if (p - this.tailLen == len2 - 2) {
+                    int t4 = 0;
+                    if (this.tailLen > 1) {
+                        int t5 = 0 + 1;
+                        int t6 = this.tail[0];
+                        p2 = p;
+                        p3 = t6;
+                        t4 = t5;
+                    } else {
+                        p2 = p + 1;
+                        p3 = input[p];
+                    }
+                    int i2 = (p3 & 255) << 10;
+                    if (this.tailLen > 0) {
+                        p4 = this.tail[t4];
+                        t4++;
+                    } else {
+                        int p9 = p2 + 1;
+                        int p10 = input[p2];
+                        p2 = p9;
+                        p4 = p10;
+                    }
+                    int v4 = i2 | ((p4 & 255) << 2);
+                    this.tailLen -= t4;
+                    int op11 = op3 + 1;
+                    output[op3] = alphabet[(v4 >> 12) & 63];
+                    int op12 = op11 + 1;
+                    output[op11] = alphabet[(v4 >> 6) & 63];
+                    int op13 = op12 + 1;
+                    output[op12] = alphabet[v4 & 63];
+                    if (this.do_padding) {
+                        output[op13] = 61;
+                        op13++;
+                    }
+                    if (this.do_newline) {
+                        if (this.do_cr) {
+                            output[op13] = 13;
+                            op13++;
+                        }
+                        output[op13] = 10;
+                        op13++;
+                    }
+                    op3 = op13;
+                } else if (this.do_newline && op3 > 0 && count != 19) {
+                    if (this.do_cr) {
+                        op = op3 + 1;
+                        output[op3] = 13;
+                    } else {
+                        op = op3;
+                    }
+                    op3 = op + 1;
+                    output[op] = 10;
+                }
+            } else if (p == len2 - 1) {
+                byte[] bArr = this.tail;
+                int i3 = this.tailLen;
+                this.tailLen = i3 + 1;
+                bArr[i3] = input[p];
+            } else if (p == len2 - 2) {
+                byte[] bArr2 = this.tail;
+                int i4 = this.tailLen;
+                this.tailLen = i4 + 1;
+                bArr2[i4] = input[p];
+                byte[] bArr3 = this.tail;
+                int i5 = this.tailLen;
+                this.tailLen = i5 + 1;
+                bArr3[i5] = input[p + 1];
+            }
+            this.f288op = op3;
+            this.count = count;
+            return true;
         }
     }
 

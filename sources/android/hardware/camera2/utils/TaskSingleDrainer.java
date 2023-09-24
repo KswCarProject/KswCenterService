@@ -3,6 +3,7 @@ package android.hardware.camera2.utils;
 import android.hardware.camera2.utils.TaskDrainer;
 import java.util.concurrent.Executor;
 
+/* loaded from: classes.dex */
 public class TaskSingleDrainer {
     private final Object mSingleTask = new Object();
     private final TaskDrainer<Object> mTaskDrainer;

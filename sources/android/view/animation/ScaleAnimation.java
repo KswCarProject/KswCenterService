@@ -6,8 +6,9 @@ import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.animation.Animation;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
+/* loaded from: classes4.dex */
 public class ScaleAnimation extends Animation {
     private float mFromX;
     private int mFromXData;
@@ -44,7 +45,7 @@ public class ScaleAnimation extends Animation {
         this.mPivotXValue = 0.0f;
         this.mPivotYValue = 0.0f;
         this.mResources = context.getResources();
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ScaleAnimation);
+        TypedArray a = context.obtainStyledAttributes(attrs, C3132R.styleable.ScaleAnimation);
         TypedValue tv = a.peekValue(2);
         this.mFromX = 0.0f;
         if (tv != null) {
@@ -176,15 +177,15 @@ public class ScaleAnimation extends Animation {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void applyTransformation(float interpolatedTime, Transformation t) {
+    @Override // android.view.animation.Animation
+    protected void applyTransformation(float interpolatedTime, Transformation t) {
         float sx = 1.0f;
         float sy = 1.0f;
         float scale = getScaleFactor();
-        if (!(this.mFromX == 1.0f && this.mToX == 1.0f)) {
+        if (this.mFromX != 1.0f || this.mToX != 1.0f) {
             sx = this.mFromX + ((this.mToX - this.mFromX) * interpolatedTime);
         }
-        if (!(this.mFromY == 1.0f && this.mToY == 1.0f)) {
+        if (this.mFromY != 1.0f || this.mToY != 1.0f) {
             sy = this.mFromY + ((this.mToY - this.mFromY) * interpolatedTime);
         }
         if (this.mPivotX == 0.0f && this.mPivotY == 0.0f) {
@@ -194,30 +195,28 @@ public class ScaleAnimation extends Animation {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public float resolveScale(float scale, int type, int data, int size, int psize) {
+    float resolveScale(float scale, int type, int data, int size, int psize) {
         float targetSize;
         if (type == 6) {
-            targetSize = TypedValue.complexToFraction(data, (float) size, (float) psize);
-        } else if (type != 5) {
-            return scale;
-        } else {
+            targetSize = TypedValue.complexToFraction(data, size, psize);
+        } else if (type == 5) {
             targetSize = TypedValue.complexToDimension(data, this.mResources.getDisplayMetrics());
+        } else {
+            return scale;
         }
         if (size == 0) {
             return 1.0f;
         }
-        return targetSize / ((float) size);
+        return targetSize / size;
     }
 
+    @Override // android.view.animation.Animation
     public void initialize(int width, int height, int parentWidth, int parentHeight) {
         super.initialize(width, height, parentWidth, parentHeight);
         this.mFromX = resolveScale(this.mFromX, this.mFromXType, this.mFromXData, width, parentWidth);
         this.mToX = resolveScale(this.mToX, this.mToXType, this.mToXData, width, parentWidth);
-        int i = height;
-        int i2 = parentHeight;
-        this.mFromY = resolveScale(this.mFromY, this.mFromYType, this.mFromYData, i, i2);
-        this.mToY = resolveScale(this.mToY, this.mToYType, this.mToYData, i, i2);
+        this.mFromY = resolveScale(this.mFromY, this.mFromYType, this.mFromYData, height, parentHeight);
+        this.mToY = resolveScale(this.mToY, this.mToYType, this.mToYData, height, parentHeight);
         this.mPivotX = resolveSize(this.mPivotXType, this.mPivotXValue, width, parentWidth);
         this.mPivotY = resolveSize(this.mPivotYType, this.mPivotYValue, height, parentHeight);
     }

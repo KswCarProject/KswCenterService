@@ -4,7 +4,6 @@ import android.annotation.UnsupportedAppUsage;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
@@ -18,7 +17,7 @@ import android.media.SubtitleTrack;
 import android.media.TtmlRenderer;
 import android.media.WebVttRenderer;
 import android.net.Uri;
-import android.os.Looper;
+import android.p007os.Looper;
 import android.telephony.SmsManager;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -35,6 +34,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
+/* loaded from: classes4.dex */
 public class VideoView extends SurfaceView implements MediaController.MediaPlayerControl, SubtitleController.Anchor {
     private static final int STATE_ERROR = -1;
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
@@ -46,75 +46,55 @@ public class VideoView extends SurfaceView implements MediaController.MediaPlaye
     private static final int STATE_PREPARING = 1;
     private static final String TAG = "VideoView";
     private AudioAttributes mAudioAttributes;
-    /* access modifiers changed from: private */
-    public int mAudioFocusType;
-    /* access modifiers changed from: private */
-    public AudioManager mAudioManager;
+    private int mAudioFocusType;
+    private AudioManager mAudioManager;
     private int mAudioSession;
     private MediaPlayer.OnBufferingUpdateListener mBufferingUpdateListener;
-    /* access modifiers changed from: private */
-    public boolean mCanPause;
-    /* access modifiers changed from: private */
-    public boolean mCanSeekBack;
-    /* access modifiers changed from: private */
-    public boolean mCanSeekForward;
+    private boolean mCanPause;
+    private boolean mCanSeekBack;
+    private boolean mCanSeekForward;
     private MediaPlayer.OnCompletionListener mCompletionListener;
-    /* access modifiers changed from: private */
     @UnsupportedAppUsage
-    public int mCurrentBufferPercentage;
-    /* access modifiers changed from: private */
+    private int mCurrentBufferPercentage;
     @UnsupportedAppUsage
-    public int mCurrentState;
+    private int mCurrentState;
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
     private MediaPlayer.OnErrorListener mErrorListener;
     @UnsupportedAppUsage
     private Map<String, String> mHeaders;
     private MediaPlayer.OnInfoListener mInfoListener;
-    /* access modifiers changed from: private */
     @UnsupportedAppUsage
-    public MediaController mMediaController;
-    /* access modifiers changed from: private */
+    private MediaController mMediaController;
     @UnsupportedAppUsage
-    public MediaPlayer mMediaPlayer;
-    /* access modifiers changed from: private */
-    public MediaPlayer.OnCompletionListener mOnCompletionListener;
-    /* access modifiers changed from: private */
-    public MediaPlayer.OnErrorListener mOnErrorListener;
-    /* access modifiers changed from: private */
-    public MediaPlayer.OnInfoListener mOnInfoListener;
-    /* access modifiers changed from: private */
-    public MediaPlayer.OnPreparedListener mOnPreparedListener;
+    private MediaPlayer mMediaPlayer;
+    private MediaPlayer.OnCompletionListener mOnCompletionListener;
+    private MediaPlayer.OnErrorListener mOnErrorListener;
+    private MediaPlayer.OnInfoListener mOnInfoListener;
+    private MediaPlayer.OnPreparedListener mOnPreparedListener;
     private final Vector<Pair<InputStream, MediaFormat>> mPendingSubtitleTracks;
     @UnsupportedAppUsage
     MediaPlayer.OnPreparedListener mPreparedListener;
     @UnsupportedAppUsage
     SurfaceHolder.Callback mSHCallback;
-    /* access modifiers changed from: private */
-    public int mSeekWhenPrepared;
+    private int mSeekWhenPrepared;
     MediaPlayer.OnVideoSizeChangedListener mSizeChangedListener;
     private SubtitleTrack.RenderingWidget mSubtitleWidget;
     private SubtitleTrack.RenderingWidget.OnChangedListener mSubtitlesChangedListener;
-    /* access modifiers changed from: private */
-    public int mSurfaceHeight;
-    /* access modifiers changed from: private */
+    private int mSurfaceHeight;
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
-    public SurfaceHolder mSurfaceHolder;
-    /* access modifiers changed from: private */
-    public int mSurfaceWidth;
-    /* access modifiers changed from: private */
+    private SurfaceHolder mSurfaceHolder;
+    private int mSurfaceWidth;
     @UnsupportedAppUsage
-    public int mTargetState;
+    private int mTargetState;
     @UnsupportedAppUsage
     private Uri mUri;
-    /* access modifiers changed from: private */
     @UnsupportedAppUsage
-    public int mVideoHeight;
-    /* access modifiers changed from: private */
+    private int mVideoHeight;
     @UnsupportedAppUsage
-    public int mVideoWidth;
+    private int mVideoWidth;
 
     public VideoView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public VideoView(Context context, AttributeSet attrs) {
@@ -133,26 +113,28 @@ public class VideoView extends SurfaceView implements MediaController.MediaPlaye
         this.mSurfaceHolder = null;
         this.mMediaPlayer = null;
         this.mAudioFocusType = 1;
-        this.mSizeChangedListener = new MediaPlayer.OnVideoSizeChangedListener() {
+        this.mSizeChangedListener = new MediaPlayer.OnVideoSizeChangedListener() { // from class: android.widget.VideoView.1
+            @Override // android.media.MediaPlayer.OnVideoSizeChangedListener
             public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
-                int unused = VideoView.this.mVideoWidth = mp.getVideoWidth();
-                int unused2 = VideoView.this.mVideoHeight = mp.getVideoHeight();
+                VideoView.this.mVideoWidth = mp.getVideoWidth();
+                VideoView.this.mVideoHeight = mp.getVideoHeight();
                 if (VideoView.this.mVideoWidth != 0 && VideoView.this.mVideoHeight != 0) {
                     VideoView.this.getHolder().setFixedSize(VideoView.this.mVideoWidth, VideoView.this.mVideoHeight);
                     VideoView.this.requestLayout();
                 }
             }
         };
-        this.mPreparedListener = new MediaPlayer.OnPreparedListener() {
+        this.mPreparedListener = new MediaPlayer.OnPreparedListener() { // from class: android.widget.VideoView.2
+            @Override // android.media.MediaPlayer.OnPreparedListener
             public void onPrepared(MediaPlayer mp) {
-                int unused = VideoView.this.mCurrentState = 2;
+                VideoView.this.mCurrentState = 2;
                 Metadata data = mp.getMetadata(false, false);
-                if (data != null) {
-                    boolean unused2 = VideoView.this.mCanPause = !data.has(1) || data.getBoolean(1);
-                    boolean unused3 = VideoView.this.mCanSeekBack = !data.has(2) || data.getBoolean(2);
-                    boolean unused4 = VideoView.this.mCanSeekForward = !data.has(3) || data.getBoolean(3);
+                if (data == null) {
+                    VideoView.this.mCanPause = VideoView.this.mCanSeekBack = VideoView.this.mCanSeekForward = true;
                 } else {
-                    boolean unused5 = VideoView.this.mCanPause = VideoView.this.mCanSeekBack = VideoView.this.mCanSeekForward = true;
+                    VideoView.this.mCanPause = !data.has(1) || data.getBoolean(1);
+                    VideoView.this.mCanSeekBack = !data.has(2) || data.getBoolean(2);
+                    VideoView.this.mCanSeekForward = !data.has(3) || data.getBoolean(3);
                 }
                 if (VideoView.this.mOnPreparedListener != null) {
                     VideoView.this.mOnPreparedListener.onPrepared(VideoView.this.mMediaPlayer);
@@ -160,26 +142,24 @@ public class VideoView extends SurfaceView implements MediaController.MediaPlaye
                 if (VideoView.this.mMediaController != null) {
                     VideoView.this.mMediaController.setEnabled(true);
                 }
-                int unused6 = VideoView.this.mVideoWidth = mp.getVideoWidth();
-                int unused7 = VideoView.this.mVideoHeight = mp.getVideoHeight();
+                VideoView.this.mVideoWidth = mp.getVideoWidth();
+                VideoView.this.mVideoHeight = mp.getVideoHeight();
                 int seekToPosition = VideoView.this.mSeekWhenPrepared;
                 if (seekToPosition != 0) {
                     VideoView.this.seekTo(seekToPosition);
                 }
                 if (VideoView.this.mVideoWidth != 0 && VideoView.this.mVideoHeight != 0) {
                     VideoView.this.getHolder().setFixedSize(VideoView.this.mVideoWidth, VideoView.this.mVideoHeight);
-                    if (VideoView.this.mSurfaceWidth != VideoView.this.mVideoWidth || VideoView.this.mSurfaceHeight != VideoView.this.mVideoHeight) {
-                        return;
-                    }
-                    if (VideoView.this.mTargetState == 3) {
-                        VideoView.this.start();
-                        if (VideoView.this.mMediaController != null) {
-                            VideoView.this.mMediaController.show();
-                        }
-                    } else if (VideoView.this.isPlaying()) {
-                    } else {
-                        if ((seekToPosition != 0 || VideoView.this.getCurrentPosition() > 0) && VideoView.this.mMediaController != null) {
-                            VideoView.this.mMediaController.show(0);
+                    if (VideoView.this.mSurfaceWidth == VideoView.this.mVideoWidth && VideoView.this.mSurfaceHeight == VideoView.this.mVideoHeight) {
+                        if (VideoView.this.mTargetState == 3) {
+                            VideoView.this.start();
+                            if (VideoView.this.mMediaController != null) {
+                                VideoView.this.mMediaController.show();
+                            }
+                        } else if (!VideoView.this.isPlaying()) {
+                            if ((seekToPosition != 0 || VideoView.this.getCurrentPosition() > 0) && VideoView.this.mMediaController != null) {
+                                VideoView.this.mMediaController.show(0);
+                            }
                         }
                     }
                 } else if (VideoView.this.mTargetState == 3) {
@@ -187,10 +167,11 @@ public class VideoView extends SurfaceView implements MediaController.MediaPlaye
                 }
             }
         };
-        this.mCompletionListener = new MediaPlayer.OnCompletionListener() {
+        this.mCompletionListener = new MediaPlayer.OnCompletionListener() { // from class: android.widget.VideoView.3
+            @Override // android.media.MediaPlayer.OnCompletionListener
             public void onCompletion(MediaPlayer mp) {
-                int unused = VideoView.this.mCurrentState = 5;
-                int unused2 = VideoView.this.mTargetState = 5;
+                VideoView.this.mCurrentState = 5;
+                VideoView.this.mTargetState = 5;
                 if (VideoView.this.mMediaController != null) {
                     VideoView.this.mMediaController.hide();
                 }
@@ -198,36 +179,39 @@ public class VideoView extends SurfaceView implements MediaController.MediaPlaye
                     VideoView.this.mOnCompletionListener.onCompletion(VideoView.this.mMediaPlayer);
                 }
                 if (VideoView.this.mAudioFocusType != 0) {
-                    VideoView.this.mAudioManager.abandonAudioFocus((AudioManager.OnAudioFocusChangeListener) null);
+                    VideoView.this.mAudioManager.abandonAudioFocus(null);
                 }
             }
         };
-        this.mInfoListener = new MediaPlayer.OnInfoListener() {
+        this.mInfoListener = new MediaPlayer.OnInfoListener() { // from class: android.widget.VideoView.4
+            @Override // android.media.MediaPlayer.OnInfoListener
             public boolean onInfo(MediaPlayer mp, int arg1, int arg2) {
-                if (VideoView.this.mOnInfoListener == null) {
+                if (VideoView.this.mOnInfoListener != null) {
+                    VideoView.this.mOnInfoListener.onInfo(mp, arg1, arg2);
                     return true;
                 }
-                VideoView.this.mOnInfoListener.onInfo(mp, arg1, arg2);
                 return true;
             }
         };
-        this.mErrorListener = new MediaPlayer.OnErrorListener() {
+        this.mErrorListener = new MediaPlayer.OnErrorListener() { // from class: android.widget.VideoView.5
+            @Override // android.media.MediaPlayer.OnErrorListener
             public boolean onError(MediaPlayer mp, int framework_err, int impl_err) {
                 int messageId;
-                Log.d(VideoView.TAG, "Error: " + framework_err + SmsManager.REGEX_PREFIX_DELIMITER + impl_err);
-                int unused = VideoView.this.mCurrentState = -1;
-                int unused2 = VideoView.this.mTargetState = -1;
+                Log.m72d(VideoView.TAG, "Error: " + framework_err + SmsManager.REGEX_PREFIX_DELIMITER + impl_err);
+                VideoView.this.mCurrentState = -1;
+                VideoView.this.mTargetState = -1;
                 if (VideoView.this.mMediaController != null) {
                     VideoView.this.mMediaController.hide();
                 }
                 if ((VideoView.this.mOnErrorListener == null || !VideoView.this.mOnErrorListener.onError(VideoView.this.mMediaPlayer, framework_err, impl_err)) && VideoView.this.getWindowToken() != null) {
-                    Resources resources = VideoView.this.mContext.getResources();
+                    VideoView.this.mContext.getResources();
                     if (framework_err == 200) {
                         messageId = 17039381;
                     } else {
                         messageId = 17039377;
                     }
-                    new AlertDialog.Builder(VideoView.this.mContext).setMessage(messageId).setPositiveButton(17039376, (DialogInterface.OnClickListener) new DialogInterface.OnClickListener() {
+                    new AlertDialog.Builder(VideoView.this.mContext).setMessage(messageId).setPositiveButton(17039376, new DialogInterface.OnClickListener() { // from class: android.widget.VideoView.5.1
+                        @Override // android.content.DialogInterface.OnClickListener
                         public void onClick(DialogInterface dialog, int whichButton) {
                             if (VideoView.this.mOnCompletionListener != null) {
                                 VideoView.this.mOnCompletionListener.onCompletion(VideoView.this.mMediaPlayer);
@@ -238,15 +222,17 @@ public class VideoView extends SurfaceView implements MediaController.MediaPlaye
                 return true;
             }
         };
-        this.mBufferingUpdateListener = new MediaPlayer.OnBufferingUpdateListener() {
+        this.mBufferingUpdateListener = new MediaPlayer.OnBufferingUpdateListener() { // from class: android.widget.VideoView.6
+            @Override // android.media.MediaPlayer.OnBufferingUpdateListener
             public void onBufferingUpdate(MediaPlayer mp, int percent) {
-                int unused = VideoView.this.mCurrentBufferPercentage = percent;
+                VideoView.this.mCurrentBufferPercentage = percent;
             }
         };
-        this.mSHCallback = new SurfaceHolder.Callback() {
+        this.mSHCallback = new SurfaceHolder.Callback() { // from class: android.widget.VideoView.7
+            @Override // android.view.SurfaceHolder.Callback
             public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
-                int unused = VideoView.this.mSurfaceWidth = w;
-                int unused2 = VideoView.this.mSurfaceHeight = h;
+                VideoView.this.mSurfaceWidth = w;
+                VideoView.this.mSurfaceHeight = h;
                 boolean hasValidSize = false;
                 boolean isValidState = VideoView.this.mTargetState == 3;
                 if (VideoView.this.mVideoWidth == w && VideoView.this.mVideoHeight == h) {
@@ -260,13 +246,15 @@ public class VideoView extends SurfaceView implements MediaController.MediaPlaye
                 }
             }
 
+            @Override // android.view.SurfaceHolder.Callback
             public void surfaceCreated(SurfaceHolder holder) {
-                SurfaceHolder unused = VideoView.this.mSurfaceHolder = holder;
+                VideoView.this.mSurfaceHolder = holder;
                 VideoView.this.openVideo();
             }
 
+            @Override // android.view.SurfaceHolder.Callback
             public void surfaceDestroyed(SurfaceHolder holder) {
-                SurfaceHolder unused = VideoView.this.mSurfaceHolder = null;
+                VideoView.this.mSurfaceHolder = null;
                 if (VideoView.this.mMediaController != null) {
                     VideoView.this.mMediaController.hide();
                 }
@@ -286,8 +274,8 @@ public class VideoView extends SurfaceView implements MediaController.MediaPlaye
         this.mTargetState = 0;
     }
 
-    /* access modifiers changed from: protected */
-    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    @Override // android.view.SurfaceView, android.view.View
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int width = getDefaultSize(this.mVideoWidth, widthMeasureSpec);
         int height = getDefaultSize(this.mVideoHeight, heightMeasureSpec);
         if (this.mVideoWidth > 0 && this.mVideoHeight > 0) {
@@ -295,7 +283,32 @@ public class VideoView extends SurfaceView implements MediaController.MediaPlaye
             int widthSpecSize = View.MeasureSpec.getSize(widthMeasureSpec);
             int heightSpecMode = View.MeasureSpec.getMode(heightMeasureSpec);
             int heightSpecSize = View.MeasureSpec.getSize(heightMeasureSpec);
-            if (widthSpecMode == 1073741824 && heightSpecMode == 1073741824) {
+            if (widthSpecMode != 1073741824 || heightSpecMode != 1073741824) {
+                if (widthSpecMode == 1073741824) {
+                    width = widthSpecSize;
+                    height = (this.mVideoHeight * width) / this.mVideoWidth;
+                    if (heightSpecMode == Integer.MIN_VALUE && height > heightSpecSize) {
+                        height = heightSpecSize;
+                    }
+                } else if (heightSpecMode == 1073741824) {
+                    height = heightSpecSize;
+                    width = (this.mVideoWidth * height) / this.mVideoHeight;
+                    if (widthSpecMode == Integer.MIN_VALUE && width > widthSpecSize) {
+                        width = widthSpecSize;
+                    }
+                } else {
+                    width = this.mVideoWidth;
+                    height = this.mVideoHeight;
+                    if (heightSpecMode == Integer.MIN_VALUE && height > heightSpecSize) {
+                        height = heightSpecSize;
+                        width = (this.mVideoWidth * height) / this.mVideoHeight;
+                    }
+                    if (widthSpecMode == Integer.MIN_VALUE && width > widthSpecSize) {
+                        width = widthSpecSize;
+                        height = (this.mVideoHeight * width) / this.mVideoWidth;
+                    }
+                }
+            } else {
                 width = widthSpecSize;
                 height = heightSpecSize;
                 if (this.mVideoWidth * height < this.mVideoHeight * width) {
@@ -303,34 +316,12 @@ public class VideoView extends SurfaceView implements MediaController.MediaPlaye
                 } else if (this.mVideoWidth * height > this.mVideoHeight * width) {
                     height = (this.mVideoHeight * width) / this.mVideoWidth;
                 }
-            } else if (widthSpecMode == 1073741824) {
-                width = widthSpecSize;
-                height = (this.mVideoHeight * width) / this.mVideoWidth;
-                if (heightSpecMode == Integer.MIN_VALUE && height > heightSpecSize) {
-                    height = heightSpecSize;
-                }
-            } else if (heightSpecMode == 1073741824) {
-                height = heightSpecSize;
-                width = (this.mVideoWidth * height) / this.mVideoHeight;
-                if (widthSpecMode == Integer.MIN_VALUE && width > widthSpecSize) {
-                    width = widthSpecSize;
-                }
-            } else {
-                width = this.mVideoWidth;
-                height = this.mVideoHeight;
-                if (heightSpecMode == Integer.MIN_VALUE && height > heightSpecSize) {
-                    height = heightSpecSize;
-                    width = (this.mVideoWidth * height) / this.mVideoHeight;
-                }
-                if (widthSpecMode == Integer.MIN_VALUE && width > widthSpecSize) {
-                    width = widthSpecSize;
-                    height = (this.mVideoHeight * width) / this.mVideoWidth;
-                }
             }
         }
         setMeasuredDimension(width, height);
     }
 
+    @Override // android.view.View
     public CharSequence getAccessibilityClassName() {
         return VideoView.class.getName();
     }
@@ -344,7 +335,7 @@ public class VideoView extends SurfaceView implements MediaController.MediaPlaye
     }
 
     public void setVideoURI(Uri uri) {
-        setVideoURI(uri, (Map<String, String>) null);
+        setVideoURI(uri, null);
     }
 
     public void setVideoURI(Uri uri, Map<String, String> headers) {
@@ -357,19 +348,17 @@ public class VideoView extends SurfaceView implements MediaController.MediaPlaye
     }
 
     public void setAudioFocusRequest(int focusGain) {
-        if (focusGain == 0 || focusGain == 1 || focusGain == 2 || focusGain == 3 || focusGain == 4) {
-            this.mAudioFocusType = focusGain;
-            return;
+        if (focusGain != 0 && focusGain != 1 && focusGain != 2 && focusGain != 3 && focusGain != 4) {
+            throw new IllegalArgumentException("Illegal audio focus type " + focusGain);
         }
-        throw new IllegalArgumentException("Illegal audio focus type " + focusGain);
+        this.mAudioFocusType = focusGain;
     }
 
     public void setAudioAttributes(AudioAttributes attributes) {
-        if (attributes != null) {
-            this.mAudioAttributes = attributes;
-            return;
+        if (attributes == null) {
+            throw new IllegalArgumentException("Illegal null AudioAttributes");
         }
-        throw new IllegalArgumentException("Illegal null AudioAttributes");
+        this.mAudioAttributes = attributes;
     }
 
     public void addSubtitleSource(InputStream is, MediaFormat format) {
@@ -391,67 +380,68 @@ public class VideoView extends SurfaceView implements MediaController.MediaPlaye
             this.mMediaPlayer = null;
             this.mCurrentState = 0;
             this.mTargetState = 0;
-            this.mAudioManager.abandonAudioFocus((AudioManager.OnAudioFocusChangeListener) null);
+            this.mAudioManager.abandonAudioFocus(null);
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void openVideo() {
-        if (this.mUri != null && this.mSurfaceHolder != null) {
-            release(false);
-            if (this.mAudioFocusType != 0) {
-                this.mAudioManager.requestAudioFocus((AudioManager.OnAudioFocusChangeListener) null, this.mAudioAttributes, this.mAudioFocusType, 0);
+        if (this.mUri == null || this.mSurfaceHolder == null) {
+            return;
+        }
+        release(false);
+        if (this.mAudioFocusType != 0) {
+            this.mAudioManager.requestAudioFocus(null, this.mAudioAttributes, this.mAudioFocusType, 0);
+        }
+        try {
+            this.mMediaPlayer = new MediaPlayer();
+            Context context = getContext();
+            SubtitleController controller = new SubtitleController(context, this.mMediaPlayer.getMediaTimeProvider(), this.mMediaPlayer);
+            controller.registerRenderer(new WebVttRenderer(context));
+            controller.registerRenderer(new TtmlRenderer(context));
+            controller.registerRenderer(new Cea708CaptionRenderer(context));
+            controller.registerRenderer(new ClosedCaptionRenderer(context));
+            this.mMediaPlayer.setSubtitleAnchor(controller, this);
+            if (this.mAudioSession != 0) {
+                this.mMediaPlayer.setAudioSessionId(this.mAudioSession);
+            } else {
+                this.mAudioSession = this.mMediaPlayer.getAudioSessionId();
             }
-            try {
-                this.mMediaPlayer = new MediaPlayer();
-                Context context = getContext();
-                SubtitleController controller = new SubtitleController(context, this.mMediaPlayer.getMediaTimeProvider(), this.mMediaPlayer);
-                controller.registerRenderer(new WebVttRenderer(context));
-                controller.registerRenderer(new TtmlRenderer(context));
-                controller.registerRenderer(new Cea708CaptionRenderer(context));
-                controller.registerRenderer(new ClosedCaptionRenderer(context));
-                this.mMediaPlayer.setSubtitleAnchor(controller, this);
-                if (this.mAudioSession != 0) {
-                    this.mMediaPlayer.setAudioSessionId(this.mAudioSession);
-                } else {
-                    this.mAudioSession = this.mMediaPlayer.getAudioSessionId();
+            this.mMediaPlayer.setOnPreparedListener(this.mPreparedListener);
+            this.mMediaPlayer.setOnVideoSizeChangedListener(this.mSizeChangedListener);
+            this.mMediaPlayer.setOnCompletionListener(this.mCompletionListener);
+            this.mMediaPlayer.setOnErrorListener(this.mErrorListener);
+            this.mMediaPlayer.setOnInfoListener(this.mInfoListener);
+            this.mMediaPlayer.setOnBufferingUpdateListener(this.mBufferingUpdateListener);
+            this.mCurrentBufferPercentage = 0;
+            this.mMediaPlayer.setDataSource(this.mContext, this.mUri, this.mHeaders);
+            this.mMediaPlayer.setDisplay(this.mSurfaceHolder);
+            this.mMediaPlayer.setAudioAttributes(this.mAudioAttributes);
+            this.mMediaPlayer.setScreenOnWhilePlaying(true);
+            this.mMediaPlayer.prepareAsync();
+            Iterator<Pair<InputStream, MediaFormat>> it = this.mPendingSubtitleTracks.iterator();
+            while (it.hasNext()) {
+                Pair<InputStream, MediaFormat> pending = it.next();
+                try {
+                    this.mMediaPlayer.addSubtitleSource(pending.first, pending.second);
+                } catch (IllegalStateException e) {
+                    this.mInfoListener.onInfo(this.mMediaPlayer, 901, 0);
                 }
-                this.mMediaPlayer.setOnPreparedListener(this.mPreparedListener);
-                this.mMediaPlayer.setOnVideoSizeChangedListener(this.mSizeChangedListener);
-                this.mMediaPlayer.setOnCompletionListener(this.mCompletionListener);
-                this.mMediaPlayer.setOnErrorListener(this.mErrorListener);
-                this.mMediaPlayer.setOnInfoListener(this.mInfoListener);
-                this.mMediaPlayer.setOnBufferingUpdateListener(this.mBufferingUpdateListener);
-                this.mCurrentBufferPercentage = 0;
-                this.mMediaPlayer.setDataSource(this.mContext, this.mUri, this.mHeaders);
-                this.mMediaPlayer.setDisplay(this.mSurfaceHolder);
-                this.mMediaPlayer.setAudioAttributes(this.mAudioAttributes);
-                this.mMediaPlayer.setScreenOnWhilePlaying(true);
-                this.mMediaPlayer.prepareAsync();
-                Iterator<Pair<InputStream, MediaFormat>> it = this.mPendingSubtitleTracks.iterator();
-                while (it.hasNext()) {
-                    Pair<InputStream, MediaFormat> pending = it.next();
-                    try {
-                        this.mMediaPlayer.addSubtitleSource((InputStream) pending.first, (MediaFormat) pending.second);
-                    } catch (IllegalStateException e) {
-                        this.mInfoListener.onInfo(this.mMediaPlayer, 901, 0);
-                    }
-                }
-                this.mCurrentState = 1;
-                attachMediaController();
-            } catch (IOException ex) {
-                Log.w(TAG, "Unable to open content: " + this.mUri, ex);
-                this.mCurrentState = -1;
-                this.mTargetState = -1;
-                this.mErrorListener.onError(this.mMediaPlayer, 1, 0);
-            } catch (IllegalArgumentException ex2) {
-                Log.w(TAG, "Unable to open content: " + this.mUri, ex2);
-                this.mCurrentState = -1;
-                this.mTargetState = -1;
-                this.mErrorListener.onError(this.mMediaPlayer, 1, 0);
-            } finally {
-                this.mPendingSubtitleTracks.clear();
             }
+            this.mCurrentState = 1;
+            attachMediaController();
+        } catch (IOException ex) {
+            Log.m63w(TAG, "Unable to open content: " + this.mUri, ex);
+            this.mCurrentState = -1;
+            this.mTargetState = -1;
+            this.mErrorListener.onError(this.mMediaPlayer, 1, 0);
+        } catch (IllegalArgumentException ex2) {
+            Log.m63w(TAG, "Unable to open content: " + this.mUri, ex2);
+            this.mCurrentState = -1;
+            this.mTargetState = -1;
+            this.mErrorListener.onError(this.mMediaPlayer, 1, 0);
+        } finally {
+            this.mPendingSubtitleTracks.clear();
         }
     }
 
@@ -466,7 +456,8 @@ public class VideoView extends SurfaceView implements MediaController.MediaPlaye
     private void attachMediaController() {
         if (this.mMediaPlayer != null && this.mMediaController != null) {
             this.mMediaController.setMediaPlayer(this);
-            this.mMediaController.setAnchorView(getParent() instanceof View ? (View) getParent() : this);
+            View anchorView = getParent() instanceof View ? (View) getParent() : this;
+            this.mMediaController.setAnchorView(anchorView);
             this.mMediaController.setEnabled(isInPlaybackState());
         }
     }
@@ -487,7 +478,7 @@ public class VideoView extends SurfaceView implements MediaController.MediaPlaye
         this.mOnInfoListener = l;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     @UnsupportedAppUsage
     public void release(boolean cleartargetstate) {
         if (this.mMediaPlayer != null) {
@@ -500,11 +491,12 @@ public class VideoView extends SurfaceView implements MediaController.MediaPlaye
                 this.mTargetState = 0;
             }
             if (this.mAudioFocusType != 0) {
-                this.mAudioManager.abandonAudioFocus((AudioManager.OnAudioFocusChangeListener) null);
+                this.mAudioManager.abandonAudioFocus(null);
             }
         }
     }
 
+    @Override // android.view.View
     public boolean onTouchEvent(MotionEvent ev) {
         if (ev.getAction() == 0 && isInPlaybackState() && this.mMediaController != null) {
             toggleMediaControlsVisiblity();
@@ -512,6 +504,7 @@ public class VideoView extends SurfaceView implements MediaController.MediaPlaye
         return super.onTouchEvent(ev);
     }
 
+    @Override // android.view.View
     public boolean onTrackballEvent(MotionEvent ev) {
         if (ev.getAction() == 0 && isInPlaybackState() && this.mMediaController != null) {
             toggleMediaControlsVisiblity();
@@ -519,6 +512,7 @@ public class VideoView extends SurfaceView implements MediaController.MediaPlaye
         return super.onTrackballEvent(ev);
     }
 
+    @Override // android.view.View, android.view.KeyEvent.Callback
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         boolean isKeyCodeSupported = (keyCode == 4 || keyCode == 24 || keyCode == 25 || keyCode == 164 || keyCode == 82 || keyCode == 5 || keyCode == 6) ? false : true;
         if (isInPlaybackState() && isKeyCodeSupported && this.mMediaController != null) {
@@ -558,6 +552,7 @@ public class VideoView extends SurfaceView implements MediaController.MediaPlaye
         }
     }
 
+    @Override // android.widget.MediaController.MediaPlayerControl
     public void start() {
         if (isInPlaybackState()) {
             this.mMediaPlayer.start();
@@ -566,6 +561,7 @@ public class VideoView extends SurfaceView implements MediaController.MediaPlaye
         this.mTargetState = 3;
     }
 
+    @Override // android.widget.MediaController.MediaPlayerControl
     public void pause() {
         if (isInPlaybackState() && this.mMediaPlayer.isPlaying()) {
             this.mMediaPlayer.pause();
@@ -582,6 +578,7 @@ public class VideoView extends SurfaceView implements MediaController.MediaPlaye
         openVideo();
     }
 
+    @Override // android.widget.MediaController.MediaPlayerControl
     public int getDuration() {
         if (isInPlaybackState()) {
             return this.mMediaPlayer.getDuration();
@@ -589,6 +586,7 @@ public class VideoView extends SurfaceView implements MediaController.MediaPlaye
         return -1;
     }
 
+    @Override // android.widget.MediaController.MediaPlayerControl
     public int getCurrentPosition() {
         if (isInPlaybackState()) {
             return this.mMediaPlayer.getCurrentPosition();
@@ -596,6 +594,7 @@ public class VideoView extends SurfaceView implements MediaController.MediaPlaye
         return 0;
     }
 
+    @Override // android.widget.MediaController.MediaPlayerControl
     public void seekTo(int msec) {
         if (isInPlaybackState()) {
             this.mMediaPlayer.seekTo(msec);
@@ -605,10 +604,12 @@ public class VideoView extends SurfaceView implements MediaController.MediaPlaye
         this.mSeekWhenPrepared = msec;
     }
 
+    @Override // android.widget.MediaController.MediaPlayerControl
     public boolean isPlaying() {
         return isInPlaybackState() && this.mMediaPlayer.isPlaying();
     }
 
+    @Override // android.widget.MediaController.MediaPlayerControl
     public int getBufferPercentage() {
         if (this.mMediaPlayer != null) {
             return this.mCurrentBufferPercentage;
@@ -620,18 +621,22 @@ public class VideoView extends SurfaceView implements MediaController.MediaPlaye
         return (this.mMediaPlayer == null || this.mCurrentState == -1 || this.mCurrentState == 0 || this.mCurrentState == 1) ? false : true;
     }
 
+    @Override // android.widget.MediaController.MediaPlayerControl
     public boolean canPause() {
         return this.mCanPause;
     }
 
+    @Override // android.widget.MediaController.MediaPlayerControl
     public boolean canSeekBackward() {
         return this.mCanSeekBack;
     }
 
+    @Override // android.widget.MediaController.MediaPlayerControl
     public boolean canSeekForward() {
         return this.mCanSeekForward;
     }
 
+    @Override // android.widget.MediaController.MediaPlayerControl
     public int getAudioSessionId() {
         if (this.mAudioSession == 0) {
             MediaPlayer foo = new MediaPlayer();
@@ -641,75 +646,82 @@ public class VideoView extends SurfaceView implements MediaController.MediaPlaye
         return this.mAudioSession;
     }
 
-    /* access modifiers changed from: protected */
-    public void onAttachedToWindow() {
+    @Override // android.view.SurfaceView, android.view.View
+    protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         if (this.mSubtitleWidget != null) {
             this.mSubtitleWidget.onAttachedToWindow();
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onDetachedFromWindow() {
+    @Override // android.view.SurfaceView, android.view.View
+    protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         if (this.mSubtitleWidget != null) {
             this.mSubtitleWidget.onDetachedFromWindow();
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onLayout(boolean changed, int left, int top, int right, int bottom) {
+    @Override // android.view.View
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         if (this.mSubtitleWidget != null) {
             measureAndLayoutSubtitleWidget();
         }
     }
 
+    @Override // android.view.SurfaceView, android.view.View
     public void draw(Canvas canvas) {
         super.draw(canvas);
         if (this.mSubtitleWidget != null) {
             int saveCount = canvas.save();
-            canvas.translate((float) getPaddingLeft(), (float) getPaddingTop());
+            canvas.translate(getPaddingLeft(), getPaddingTop());
             this.mSubtitleWidget.draw(canvas);
             canvas.restoreToCount(saveCount);
         }
     }
 
     private void measureAndLayoutSubtitleWidget() {
-        this.mSubtitleWidget.setSize((getWidth() - getPaddingLeft()) - getPaddingRight(), (getHeight() - getPaddingTop()) - getPaddingBottom());
+        int width = (getWidth() - getPaddingLeft()) - getPaddingRight();
+        int height = (getHeight() - getPaddingTop()) - getPaddingBottom();
+        this.mSubtitleWidget.setSize(width, height);
     }
 
+    @Override // android.media.SubtitleController.Anchor
     public void setSubtitleWidget(SubtitleTrack.RenderingWidget subtitleWidget) {
-        if (this.mSubtitleWidget != subtitleWidget) {
-            boolean attachedToWindow = isAttachedToWindow();
-            if (this.mSubtitleWidget != null) {
-                if (attachedToWindow) {
-                    this.mSubtitleWidget.onDetachedFromWindow();
-                }
-                this.mSubtitleWidget.setOnChangedListener((SubtitleTrack.RenderingWidget.OnChangedListener) null);
-            }
-            this.mSubtitleWidget = subtitleWidget;
-            if (subtitleWidget != null) {
-                if (this.mSubtitlesChangedListener == null) {
-                    this.mSubtitlesChangedListener = new SubtitleTrack.RenderingWidget.OnChangedListener() {
-                        public void onChanged(SubtitleTrack.RenderingWidget renderingWidget) {
-                            VideoView.this.invalidate();
-                        }
-                    };
-                }
-                setWillNotDraw(false);
-                subtitleWidget.setOnChangedListener(this.mSubtitlesChangedListener);
-                if (attachedToWindow) {
-                    subtitleWidget.onAttachedToWindow();
-                    requestLayout();
-                }
-            } else {
-                setWillNotDraw(true);
-            }
-            invalidate();
+        if (this.mSubtitleWidget == subtitleWidget) {
+            return;
         }
+        boolean attachedToWindow = isAttachedToWindow();
+        if (this.mSubtitleWidget != null) {
+            if (attachedToWindow) {
+                this.mSubtitleWidget.onDetachedFromWindow();
+            }
+            this.mSubtitleWidget.setOnChangedListener(null);
+        }
+        this.mSubtitleWidget = subtitleWidget;
+        if (subtitleWidget != null) {
+            if (this.mSubtitlesChangedListener == null) {
+                this.mSubtitlesChangedListener = new SubtitleTrack.RenderingWidget.OnChangedListener() { // from class: android.widget.VideoView.8
+                    @Override // android.media.SubtitleTrack.RenderingWidget.OnChangedListener
+                    public void onChanged(SubtitleTrack.RenderingWidget renderingWidget) {
+                        VideoView.this.invalidate();
+                    }
+                };
+            }
+            setWillNotDraw(false);
+            subtitleWidget.setOnChangedListener(this.mSubtitlesChangedListener);
+            if (attachedToWindow) {
+                subtitleWidget.onAttachedToWindow();
+                requestLayout();
+            }
+        } else {
+            setWillNotDraw(true);
+        }
+        invalidate();
     }
 
+    @Override // android.media.SubtitleController.Anchor
     public Looper getSubtitleLooper() {
         return Looper.getMainLooper();
     }

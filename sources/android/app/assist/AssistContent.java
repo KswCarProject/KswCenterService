@@ -5,16 +5,21 @@ import android.content.ClipData;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public class AssistContent implements Parcelable {
-    public static final Parcelable.Creator<AssistContent> CREATOR = new Parcelable.Creator<AssistContent>() {
+    public static final Parcelable.Creator<AssistContent> CREATOR = new Parcelable.Creator<AssistContent>() { // from class: android.app.assist.AssistContent.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AssistContent createFromParcel(Parcel in) {
             return new AssistContent(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AssistContent[] newArray(int size) {
             return new AssistContent[size];
         }
@@ -100,7 +105,6 @@ public class AssistContent implements Parcelable {
 
     @UnsupportedAppUsage
     AssistContent(Parcel in) {
-        boolean z = false;
         this.mIsAppProvidedIntent = false;
         this.mIsAppProvidedWebUri = false;
         if (in.readInt() != 0) {
@@ -117,12 +121,11 @@ public class AssistContent implements Parcelable {
         }
         this.mIsAppProvidedIntent = in.readInt() == 1;
         this.mExtras = in.readBundle();
-        this.mIsAppProvidedWebUri = in.readInt() == 1 ? true : z;
+        this.mIsAppProvidedWebUri = in.readInt() == 1;
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
-    public void writeToParcelInternal(Parcel dest, int flags) {
+    void writeToParcelInternal(Parcel dest, int flags) {
         if (this.mIntent != null) {
             dest.writeInt(1);
             this.mIntent.writeToParcel(dest, flags);
@@ -152,10 +155,12 @@ public class AssistContent implements Parcelable {
         dest.writeInt(this.mIsAppProvidedWebUri ? 1 : 0);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         writeToParcelInternal(dest, flags);
     }

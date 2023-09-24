@@ -1,5 +1,6 @@
 package com.android.server.job;
 
+/* loaded from: classes4.dex */
 public final class JobCountTrackerProto {
     public static final long CONFIG_NUM_MAX_BG_JOBS = 1120986464258L;
     public static final long CONFIG_NUM_MAX_TOTAL_JOBS = 1120986464257L;

@@ -6,6 +6,7 @@ import android.util.Size;
 import java.nio.ByteBuffer;
 import libcore.io.Memory;
 
+/* loaded from: classes3.dex */
 class ImageUtils {
     ImageUtils() {
     }
@@ -24,22 +25,22 @@ class ImageUtils {
             case 256:
             case 257:
             case 4098:
-            case ImageFormat.Y8:
-            case ImageFormat.Y16:
-            case ImageFormat.DEPTH16:
-            case ImageFormat.HEIC:
-            case ImageFormat.DEPTH_JPEG:
+            case ImageFormat.f57Y8 /* 538982489 */:
+            case ImageFormat.Y16 /* 540422489 */:
+            case ImageFormat.DEPTH16 /* 1144402265 */:
+            case ImageFormat.HEIC /* 1212500294 */:
+            case ImageFormat.DEPTH_JPEG /* 1768253795 */:
                 return 1;
             case 16:
                 return 2;
             case 17:
             case 35:
-            case ImageFormat.YV12:
+            case ImageFormat.YV12 /* 842094169 */:
                 return 3;
             case 34:
                 return 0;
             default:
-                throw new UnsupportedOperationException(String.format("Invalid format specified %d", new Object[]{Integer.valueOf(format)}));
+                throw new UnsupportedOperationException(String.format("Invalid format specified %d", Integer.valueOf(format)));
         }
     }
 
@@ -48,63 +49,67 @@ class ImageUtils {
         Image image = src;
         if (image == null || dst == null) {
             throw new IllegalArgumentException("Images should be non-null");
-        } else if (src.getFormat() != dst.getFormat()) {
+        }
+        if (src.getFormat() != dst.getFormat()) {
             throw new IllegalArgumentException("Src and dst images should have the same format");
-        } else if (src.getFormat() == 34 || dst.getFormat() == 34) {
+        }
+        if (src.getFormat() == 34 || dst.getFormat() == 34) {
             throw new IllegalArgumentException("PRIVATE format images are not copyable");
-        } else if (src.getFormat() == 36) {
+        }
+        if (src.getFormat() == 36) {
             throw new IllegalArgumentException("Copy of RAW_OPAQUE format has not been implemented");
-        } else if (src.getFormat() == 4098) {
+        }
+        if (src.getFormat() == 4098) {
             throw new IllegalArgumentException("Copy of RAW_DEPTH format has not been implemented");
-        } else if (dst.getOwner() instanceof ImageWriter) {
-            Size srcSize = new Size(src.getWidth(), src.getHeight());
-            Size dstSize = new Size(dst.getWidth(), dst.getHeight());
-            if (srcSize.equals(dstSize)) {
-                Image.Plane[] srcPlanes = src.getPlanes();
-                Image.Plane[] dstPlanes = dst.getPlanes();
-                int i = 0;
-                while (i < srcPlanes.length) {
-                    int srcRowStride = srcPlanes[i].getRowStride();
-                    int dstRowStride = dstPlanes[i].getRowStride();
-                    ByteBuffer srcBuffer = srcPlanes[i].getBuffer();
-                    ByteBuffer dstBuffer = dstPlanes[i].getBuffer();
-                    if (!srcBuffer.isDirect() || !dstBuffer.isDirect()) {
-                        throw new IllegalArgumentException("Source and destination ByteBuffers must be direct byteBuffer!");
-                    } else if (srcPlanes[i].getPixelStride() == dstPlanes[i].getPixelStride()) {
-                        int srcPos = srcBuffer.position();
-                        srcBuffer.rewind();
-                        dstBuffer.rewind();
-                        if (srcRowStride == dstRowStride) {
-                            dstBuffer.put(srcBuffer);
-                        } else {
-                            int srcOffset = srcBuffer.position();
-                            int dstOffset = dstBuffer.position();
-                            Size effectivePlaneSize = getEffectivePlaneSizeForImage(image, i);
-                            int dstOffset2 = dstOffset;
-                            int srcByteCount = effectivePlaneSize.getWidth() * srcPlanes[i].getPixelStride();
-                            int srcOffset2 = srcOffset;
-                            for (int row = 0; row < effectivePlaneSize.getHeight(); row++) {
-                                if (row == effectivePlaneSize.getHeight() - 1 && srcByteCount > (remainingBytes = srcBuffer.remaining() - srcOffset2)) {
-                                    srcByteCount = remainingBytes;
-                                }
-                                directByteBufferCopy(srcBuffer, srcOffset2, dstBuffer, dstOffset2, srcByteCount);
-                                srcOffset2 += srcRowStride;
-                                dstOffset2 += dstRowStride;
-                            }
-                        }
-                        srcBuffer.position(srcPos);
-                        dstBuffer.rewind();
-                        i++;
-                        image = src;
-                    } else {
-                        throw new IllegalArgumentException("Source plane image pixel stride " + srcPlanes[i].getPixelStride() + " must be same as destination image pixel stride " + dstPlanes[i].getPixelStride());
-                    }
-                }
-                return;
-            }
-            throw new IllegalArgumentException("source image size " + srcSize + " is different with destination image size " + dstSize);
-        } else {
+        }
+        if (!(dst.getOwner() instanceof ImageWriter)) {
             throw new IllegalArgumentException("Destination image is not from ImageWriter. Only the images from ImageWriter are writable");
+        }
+        Size srcSize = new Size(src.getWidth(), src.getHeight());
+        Size dstSize = new Size(dst.getWidth(), dst.getHeight());
+        if (!srcSize.equals(dstSize)) {
+            throw new IllegalArgumentException("source image size " + srcSize + " is different with destination image size " + dstSize);
+        }
+        Image.Plane[] srcPlanes = src.getPlanes();
+        Image.Plane[] dstPlanes = dst.getPlanes();
+        int i = 0;
+        while (i < srcPlanes.length) {
+            int srcRowStride = srcPlanes[i].getRowStride();
+            int dstRowStride = dstPlanes[i].getRowStride();
+            ByteBuffer srcBuffer = srcPlanes[i].getBuffer();
+            ByteBuffer dstBuffer = dstPlanes[i].getBuffer();
+            if (!srcBuffer.isDirect() || !dstBuffer.isDirect()) {
+                throw new IllegalArgumentException("Source and destination ByteBuffers must be direct byteBuffer!");
+            }
+            if (srcPlanes[i].getPixelStride() != dstPlanes[i].getPixelStride()) {
+                throw new IllegalArgumentException("Source plane image pixel stride " + srcPlanes[i].getPixelStride() + " must be same as destination image pixel stride " + dstPlanes[i].getPixelStride());
+            }
+            int srcPos = srcBuffer.position();
+            srcBuffer.rewind();
+            dstBuffer.rewind();
+            if (srcRowStride == dstRowStride) {
+                dstBuffer.put(srcBuffer);
+            } else {
+                int srcOffset = srcBuffer.position();
+                int dstOffset = dstBuffer.position();
+                Size effectivePlaneSize = getEffectivePlaneSizeForImage(image, i);
+                int srcByteCount = effectivePlaneSize.getWidth() * srcPlanes[i].getPixelStride();
+                int dstOffset2 = dstOffset;
+                int srcByteCount2 = srcByteCount;
+                int dstOffset3 = srcOffset;
+                for (int srcOffset2 = 0; srcOffset2 < effectivePlaneSize.getHeight(); srcOffset2++) {
+                    if (srcOffset2 == effectivePlaneSize.getHeight() - 1 && srcByteCount2 > (remainingBytes = srcBuffer.remaining() - dstOffset3)) {
+                        srcByteCount2 = remainingBytes;
+                    }
+                    directByteBufferCopy(srcBuffer, dstOffset3, dstBuffer, dstOffset2, srcByteCount2);
+                    dstOffset3 += srcRowStride;
+                    dstOffset2 += dstRowStride;
+                }
+            }
+            srcBuffer.position(srcPos);
+            dstBuffer.rewind();
+            i++;
+            image = src;
         }
     }
 
@@ -124,15 +129,15 @@ class ImageUtils {
             case 32:
             case 36:
             case 4098:
-            case ImageFormat.Y16:
-            case ImageFormat.DEPTH16:
+            case ImageFormat.Y16 /* 540422489 */:
+            case ImageFormat.DEPTH16 /* 1144402265 */:
                 estimatedBytePerPixel = 2.0d;
                 break;
             case 17:
             case 34:
             case 35:
             case 38:
-            case ImageFormat.YV12:
+            case ImageFormat.YV12 /* 842094169 */:
                 estimatedBytePerPixel = 1.5d;
                 break;
             case 37:
@@ -140,17 +145,17 @@ class ImageUtils {
                 break;
             case 256:
             case 257:
-            case ImageFormat.HEIC:
-            case ImageFormat.DEPTH_JPEG:
+            case ImageFormat.HEIC /* 1212500294 */:
+            case ImageFormat.DEPTH_JPEG /* 1768253795 */:
                 estimatedBytePerPixel = 0.3d;
                 break;
-            case ImageFormat.Y8:
+            case ImageFormat.f57Y8 /* 538982489 */:
                 estimatedBytePerPixel = 1.0d;
                 break;
             default:
-                throw new UnsupportedOperationException(String.format("Invalid format specified %d", new Object[]{Integer.valueOf(format)}));
+                throw new UnsupportedOperationException(String.format("Invalid format specified %d", Integer.valueOf(format)));
         }
-        return (int) (((double) (width * height)) * estimatedBytePerPixel * ((double) numImages));
+        return (int) (width * height * estimatedBytePerPixel * numImages);
     }
 
     private static Size getEffectivePlaneSizeForImage(Image image, int planeIdx) {
@@ -165,9 +170,9 @@ class ImageUtils {
             case 38:
             case 256:
             case 4098:
-            case ImageFormat.Y8:
-            case ImageFormat.Y16:
-            case ImageFormat.HEIC:
+            case ImageFormat.f57Y8 /* 538982489 */:
+            case ImageFormat.Y16 /* 540422489 */:
+            case ImageFormat.HEIC /* 1212500294 */:
                 return new Size(image.getWidth(), image.getHeight());
             case 16:
                 if (planeIdx == 0) {
@@ -176,7 +181,7 @@ class ImageUtils {
                 return new Size(image.getWidth(), image.getHeight() / 2);
             case 17:
             case 35:
-            case ImageFormat.YV12:
+            case ImageFormat.YV12 /* 842094169 */:
                 if (planeIdx == 0) {
                     return new Size(image.getWidth(), image.getHeight());
                 }
@@ -184,11 +189,11 @@ class ImageUtils {
             case 34:
                 return new Size(0, 0);
             default:
-                throw new UnsupportedOperationException(String.format("Invalid image format %d", new Object[]{Integer.valueOf(image.getFormat())}));
+                throw new UnsupportedOperationException(String.format("Invalid image format %d", Integer.valueOf(image.getFormat())));
         }
     }
 
     private static void directByteBufferCopy(ByteBuffer srcBuffer, int srcOffset, ByteBuffer dstBuffer, int dstOffset, int srcByteCount) {
-        Memory.memmove(dstBuffer, dstOffset, srcBuffer, srcOffset, (long) srcByteCount);
+        Memory.memmove(dstBuffer, dstOffset, srcBuffer, srcOffset, srcByteCount);
     }
 }

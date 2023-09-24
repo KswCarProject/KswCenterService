@@ -9,37 +9,44 @@ import android.filterfw.core.GenerateFieldPort;
 import android.filterfw.format.ImageFormat;
 import android.graphics.Bitmap;
 
+/* loaded from: classes.dex */
 public class BitmapSource extends Filter {
     @GenerateFieldPort(name = "bitmap")
     private Bitmap mBitmap;
     private Frame mImageFrame;
     @GenerateFieldPort(hasDefault = true, name = "recycleBitmap")
-    private boolean mRecycleBitmap = true;
+    private boolean mRecycleBitmap;
     @GenerateFieldPort(hasDefault = true, name = "repeatFrame")
-    boolean mRepeatFrame = false;
+    boolean mRepeatFrame;
     private int mTarget;
     @GenerateFieldPort(name = "target")
     String mTargetString;
 
     public BitmapSource(String name) {
         super(name);
+        this.mRecycleBitmap = true;
+        this.mRepeatFrame = false;
     }
 
+    @Override // android.filterfw.core.Filter
     public void setupPorts() {
-        addOutputPort(SliceItem.FORMAT_IMAGE, ImageFormat.create(3, 0));
+        FrameFormat outputFormat = ImageFormat.create(3, 0);
+        addOutputPort(SliceItem.FORMAT_IMAGE, outputFormat);
     }
 
     public void loadImage(FilterContext filterContext) {
         this.mTarget = FrameFormat.readTargetString(this.mTargetString);
-        this.mImageFrame = filterContext.getFrameManager().newFrame(ImageFormat.create(this.mBitmap.getWidth(), this.mBitmap.getHeight(), 3, this.mTarget));
+        FrameFormat outputFormat = ImageFormat.create(this.mBitmap.getWidth(), this.mBitmap.getHeight(), 3, this.mTarget);
+        this.mImageFrame = filterContext.getFrameManager().newFrame(outputFormat);
         this.mImageFrame.setBitmap(this.mBitmap);
-        this.mImageFrame.setTimestamp(-1);
+        this.mImageFrame.setTimestamp(-1L);
         if (this.mRecycleBitmap) {
             this.mBitmap.recycle();
         }
         this.mBitmap = null;
     }
 
+    @Override // android.filterfw.core.Filter
     public void fieldPortValueUpdated(String name, FilterContext context) {
         if ((name.equals("bitmap") || name.equals("target")) && this.mImageFrame != null) {
             this.mImageFrame.release();
@@ -47,6 +54,7 @@ public class BitmapSource extends Filter {
         }
     }
 
+    @Override // android.filterfw.core.Filter
     public void process(FilterContext context) {
         if (this.mImageFrame == null) {
             loadImage(context);
@@ -57,6 +65,7 @@ public class BitmapSource extends Filter {
         }
     }
 
+    @Override // android.filterfw.core.Filter
     public void tearDown(FilterContext env) {
         if (this.mImageFrame != null) {
             this.mImageFrame.release();

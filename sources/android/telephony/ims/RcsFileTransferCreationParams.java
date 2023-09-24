@@ -1,15 +1,20 @@
 package android.telephony.ims;
 
 import android.net.Uri;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes4.dex */
 public final class RcsFileTransferCreationParams implements Parcelable {
-    public static final Parcelable.Creator<RcsFileTransferCreationParams> CREATOR = new Parcelable.Creator<RcsFileTransferCreationParams>() {
+    public static final Parcelable.Creator<RcsFileTransferCreationParams> CREATOR = new Parcelable.Creator<RcsFileTransferCreationParams>() { // from class: android.telephony.ims.RcsFileTransferCreationParams.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RcsFileTransferCreationParams createFromParcel(Parcel in) {
             return new RcsFileTransferCreationParams(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RcsFileTransferCreationParams[] newArray(int size) {
             return new RcsFileTransferCreationParams[size];
         }
@@ -84,29 +89,19 @@ public final class RcsFileTransferCreationParams implements Parcelable {
         this.mFileTransferStatus = builder.mFileTransferStatus;
     }
 
+    /* loaded from: classes4.dex */
     public class Builder {
-        /* access modifiers changed from: private */
-        public String mContentMimeType;
-        /* access modifiers changed from: private */
-        public Uri mContentUri;
-        /* access modifiers changed from: private */
-        public long mFileSize;
-        /* access modifiers changed from: private */
-        public int mFileTransferStatus;
-        /* access modifiers changed from: private */
-        public int mHeight;
-        /* access modifiers changed from: private */
-        public long mLength;
-        /* access modifiers changed from: private */
-        public String mPreviewMimeType;
-        /* access modifiers changed from: private */
-        public Uri mPreviewUri;
-        /* access modifiers changed from: private */
-        public String mRcsFileTransferSessionId;
-        /* access modifiers changed from: private */
-        public long mTransferOffset;
-        /* access modifiers changed from: private */
-        public int mWidth;
+        private String mContentMimeType;
+        private Uri mContentUri;
+        private long mFileSize;
+        private int mFileTransferStatus;
+        private int mHeight;
+        private long mLength;
+        private String mPreviewMimeType;
+        private Uri mPreviewUri;
+        private String mRcsFileTransferSessionId;
+        private long mTransferOffset;
+        private int mWidth;
 
         public Builder() {
         }
@@ -185,10 +180,12 @@ public final class RcsFileTransferCreationParams implements Parcelable {
         this.mFileTransferStatus = in.readInt();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.mRcsFileTransferSessionId);
         dest.writeParcelable(this.mContentUri, flags);

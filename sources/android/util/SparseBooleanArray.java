@@ -5,6 +5,7 @@ import com.android.internal.util.ArrayUtils;
 import com.android.internal.util.GrowingArrayUtils;
 import libcore.util.EmptyArray;
 
+/* loaded from: classes4.dex */
 public class SparseBooleanArray implements Cloneable {
     @UnsupportedAppUsage(maxTargetSdk = 28)
     private int[] mKeys;
@@ -28,7 +29,8 @@ public class SparseBooleanArray implements Cloneable {
         this.mSize = 0;
     }
 
-    public SparseBooleanArray clone() {
+    /* renamed from: clone */
+    public SparseBooleanArray m178clone() {
         SparseBooleanArray clone = null;
         try {
             clone = (SparseBooleanArray) super.clone();
@@ -84,33 +86,31 @@ public class SparseBooleanArray implements Cloneable {
     }
 
     public int keyAt(int index) {
-        if (index < this.mSize || !UtilConfig.sThrowExceptionForUpperArrayOutOfBounds) {
-            return this.mKeys[index];
+        if (index >= this.mSize && UtilConfig.sThrowExceptionForUpperArrayOutOfBounds) {
+            throw new ArrayIndexOutOfBoundsException(index);
         }
-        throw new ArrayIndexOutOfBoundsException(index);
+        return this.mKeys[index];
     }
 
     public boolean valueAt(int index) {
-        if (index < this.mSize || !UtilConfig.sThrowExceptionForUpperArrayOutOfBounds) {
-            return this.mValues[index];
+        if (index >= this.mSize && UtilConfig.sThrowExceptionForUpperArrayOutOfBounds) {
+            throw new ArrayIndexOutOfBoundsException(index);
         }
-        throw new ArrayIndexOutOfBoundsException(index);
+        return this.mValues[index];
     }
 
     public void setValueAt(int index, boolean value) {
-        if (index < this.mSize || !UtilConfig.sThrowExceptionForUpperArrayOutOfBounds) {
-            this.mValues[index] = value;
-            return;
+        if (index >= this.mSize && UtilConfig.sThrowExceptionForUpperArrayOutOfBounds) {
+            throw new ArrayIndexOutOfBoundsException(index);
         }
-        throw new ArrayIndexOutOfBoundsException(index);
+        this.mValues[index] = value;
     }
 
     public void setKeyAt(int index, int key) {
-        if (index < this.mSize) {
-            this.mKeys[index] = key;
-            return;
+        if (index >= this.mSize) {
+            throw new ArrayIndexOutOfBoundsException(index);
         }
-        throw new ArrayIndexOutOfBoundsException(index);
+        this.mKeys[index] = key;
     }
 
     public int indexOfKey(int key) {
@@ -131,19 +131,19 @@ public class SparseBooleanArray implements Cloneable {
     }
 
     public void append(int key, boolean value) {
-        if (this.mSize == 0 || key > this.mKeys[this.mSize - 1]) {
-            this.mKeys = GrowingArrayUtils.append(this.mKeys, this.mSize, key);
-            this.mValues = GrowingArrayUtils.append(this.mValues, this.mSize, value);
-            this.mSize++;
+        if (this.mSize != 0 && key <= this.mKeys[this.mSize - 1]) {
+            put(key, value);
             return;
         }
-        put(key, value);
+        this.mKeys = GrowingArrayUtils.append(this.mKeys, this.mSize, key);
+        this.mValues = GrowingArrayUtils.append(this.mValues, this.mSize, value);
+        this.mSize++;
     }
 
     public int hashCode() {
         int hashCode = this.mSize;
         for (int i = 0; i < this.mSize; i++) {
-            hashCode = ((hashCode * 31) + this.mKeys[i]) | this.mValues[i];
+            hashCode = ((hashCode * 31) + this.mKeys[i]) | (this.mValues[i] ? 1 : 0);
         }
         return hashCode;
     }
@@ -152,19 +152,19 @@ public class SparseBooleanArray implements Cloneable {
         if (this == that) {
             return true;
         }
-        if (!(that instanceof SparseBooleanArray)) {
-            return false;
-        }
-        SparseBooleanArray other = (SparseBooleanArray) that;
-        if (this.mSize != other.mSize) {
-            return false;
-        }
-        for (int i = 0; i < this.mSize; i++) {
-            if (this.mKeys[i] != other.mKeys[i] || this.mValues[i] != other.mValues[i]) {
+        if (that instanceof SparseBooleanArray) {
+            SparseBooleanArray other = (SparseBooleanArray) that;
+            if (this.mSize != other.mSize) {
                 return false;
             }
+            for (int i = 0; i < this.mSize; i++) {
+                if (this.mKeys[i] != other.mKeys[i] || this.mValues[i] != other.mValues[i]) {
+                    return false;
+                }
+            }
+            return true;
         }
-        return true;
+        return false;
     }
 
     public String toString() {
@@ -177,9 +177,11 @@ public class SparseBooleanArray implements Cloneable {
             if (i > 0) {
                 buffer.append(", ");
             }
-            buffer.append(keyAt(i));
+            int key = keyAt(i);
+            buffer.append(key);
             buffer.append('=');
-            buffer.append(valueAt(i));
+            boolean value = valueAt(i);
+            buffer.append(value);
         }
         buffer.append('}');
         return buffer.toString();

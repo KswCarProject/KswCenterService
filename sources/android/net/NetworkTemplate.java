@@ -2,8 +2,8 @@ package android.net;
 
 import android.annotation.UnsupportedAppUsage;
 import android.net.wifi.WifiInfo;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.BackupUtils;
 import android.util.Log;
 import com.android.internal.annotations.VisibleForTesting;
@@ -15,18 +15,9 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 
+/* loaded from: classes3.dex */
 public class NetworkTemplate implements Parcelable {
     private static final int BACKUP_VERSION = 1;
-    @UnsupportedAppUsage
-    public static final Parcelable.Creator<NetworkTemplate> CREATOR = new Parcelable.Creator<NetworkTemplate>() {
-        public NetworkTemplate createFromParcel(Parcel in) {
-            return new NetworkTemplate(in);
-        }
-
-        public NetworkTemplate[] newArray(int size) {
-            return new NetworkTemplate[size];
-        }
-    };
     public static final int MATCH_BLUETOOTH = 8;
     public static final int MATCH_ETHERNET = 5;
     public static final int MATCH_MOBILE = 1;
@@ -35,7 +26,6 @@ public class NetworkTemplate implements Parcelable {
     public static final int MATCH_WIFI = 4;
     public static final int MATCH_WIFI_WILDCARD = 7;
     private static final String TAG = "NetworkTemplate";
-    private static boolean sForceAllNetworkTypes = false;
     private final int mDefaultNetwork;
     private final int mMatchRule;
     private final String[] mMatchSubscriberIds;
@@ -43,6 +33,21 @@ public class NetworkTemplate implements Parcelable {
     private final String mNetworkId;
     private final int mRoaming;
     private final String mSubscriberId;
+    private static boolean sForceAllNetworkTypes = false;
+    @UnsupportedAppUsage
+    public static final Parcelable.Creator<NetworkTemplate> CREATOR = new Parcelable.Creator<NetworkTemplate>() { // from class: android.net.NetworkTemplate.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public NetworkTemplate createFromParcel(Parcel in) {
+            return new NetworkTemplate(in);
+        }
+
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public NetworkTemplate[] newArray(int size) {
+            return new NetworkTemplate[size];
+        }
+    };
 
     private static boolean isKnownMatchRule(int rule) {
         if (rule != 1) {
@@ -73,40 +78,40 @@ public class NetworkTemplate implements Parcelable {
 
     @UnsupportedAppUsage
     public static NetworkTemplate buildTemplateMobileAll(String subscriberId) {
-        return new NetworkTemplate(1, subscriberId, (String) null);
+        return new NetworkTemplate(1, subscriberId, null);
     }
 
     @UnsupportedAppUsage
     public static NetworkTemplate buildTemplateMobileWildcard() {
-        return new NetworkTemplate(6, (String) null, (String) null);
+        return new NetworkTemplate(6, null, null);
     }
 
     @UnsupportedAppUsage
     public static NetworkTemplate buildTemplateWifiWildcard() {
-        return new NetworkTemplate(7, (String) null, (String) null);
+        return new NetworkTemplate(7, null, null);
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public static NetworkTemplate buildTemplateWifi() {
         return buildTemplateWifiWildcard();
     }
 
     public static NetworkTemplate buildTemplateWifi(String networkId) {
-        return new NetworkTemplate(4, (String) null, networkId);
+        return new NetworkTemplate(4, null, networkId);
     }
 
     @UnsupportedAppUsage
     public static NetworkTemplate buildTemplateEthernet() {
-        return new NetworkTemplate(5, (String) null, (String) null);
+        return new NetworkTemplate(5, null, null);
     }
 
     public static NetworkTemplate buildTemplateBluetooth() {
-        return new NetworkTemplate(8, (String) null, (String) null);
+        return new NetworkTemplate(8, null, null);
     }
 
     public static NetworkTemplate buildTemplateProxy() {
-        return new NetworkTemplate(9, (String) null, (String) null);
+        return new NetworkTemplate(9, null, null);
     }
 
     @UnsupportedAppUsage
@@ -127,7 +132,7 @@ public class NetworkTemplate implements Parcelable {
         this.mRoaming = roaming;
         this.mDefaultNetwork = defaultNetwork;
         if (!isKnownMatchRule(matchRule)) {
-            Log.e(TAG, "Unknown network template rule " + matchRule + " will not match any identity.");
+            Log.m70e(TAG, "Unknown network template rule " + matchRule + " will not match any identity.");
         }
     }
 
@@ -141,6 +146,7 @@ public class NetworkTemplate implements Parcelable {
         this.mDefaultNetwork = in.readInt();
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mMatchRule);
         dest.writeString(this.mSubscriberId);
@@ -151,6 +157,7 @@ public class NetworkTemplate implements Parcelable {
         dest.writeInt(this.mDefaultNetwork);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -187,26 +194,20 @@ public class NetworkTemplate implements Parcelable {
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(this.mMatchRule), this.mSubscriberId, this.mNetworkId, Integer.valueOf(this.mMetered), Integer.valueOf(this.mRoaming), Integer.valueOf(this.mDefaultNetwork)});
+        return Objects.hash(Integer.valueOf(this.mMatchRule), this.mSubscriberId, this.mNetworkId, Integer.valueOf(this.mMetered), Integer.valueOf(this.mRoaming), Integer.valueOf(this.mDefaultNetwork));
     }
 
     public boolean equals(Object obj) {
-        if (!(obj instanceof NetworkTemplate)) {
-            return false;
-        }
-        NetworkTemplate other = (NetworkTemplate) obj;
-        if (this.mMatchRule == other.mMatchRule && Objects.equals(this.mSubscriberId, other.mSubscriberId) && Objects.equals(this.mNetworkId, other.mNetworkId) && this.mMetered == other.mMetered && this.mRoaming == other.mRoaming && this.mDefaultNetwork == other.mDefaultNetwork) {
-            return true;
+        if (obj instanceof NetworkTemplate) {
+            NetworkTemplate other = (NetworkTemplate) obj;
+            return this.mMatchRule == other.mMatchRule && Objects.equals(this.mSubscriberId, other.mSubscriberId) && Objects.equals(this.mNetworkId, other.mNetworkId) && this.mMetered == other.mMetered && this.mRoaming == other.mRoaming && this.mDefaultNetwork == other.mDefaultNetwork;
         }
         return false;
     }
 
     public boolean isMatchRuleMobile() {
         int i = this.mMatchRule;
-        if (i == 1 || i == 6) {
-            return true;
-        }
-        return false;
+        return i == 1 || i == 6;
     }
 
     public boolean isPersistable() {
@@ -234,80 +235,77 @@ public class NetworkTemplate implements Parcelable {
     }
 
     public boolean matches(NetworkIdentity ident) {
-        if (!matchesMetered(ident) || !matchesRoaming(ident) || !matchesDefaultNetwork(ident)) {
-            return false;
+        if (matchesMetered(ident) && matchesRoaming(ident) && matchesDefaultNetwork(ident)) {
+            int i = this.mMatchRule;
+            if (i == 1) {
+                return matchesMobile(ident);
+            }
+            switch (i) {
+                case 4:
+                    return matchesWifi(ident);
+                case 5:
+                    return matchesEthernet(ident);
+                case 6:
+                    return matchesMobileWildcard(ident);
+                case 7:
+                    return matchesWifiWildcard(ident);
+                case 8:
+                    return matchesBluetooth(ident);
+                case 9:
+                    return matchesProxy(ident);
+                default:
+                    return false;
+            }
         }
-        int i = this.mMatchRule;
-        if (i == 1) {
-            return matchesMobile(ident);
-        }
-        switch (i) {
-            case 4:
-                return matchesWifi(ident);
-            case 5:
-                return matchesEthernet(ident);
-            case 6:
-                return matchesMobileWildcard(ident);
-            case 7:
-                return matchesWifiWildcard(ident);
-            case 8:
-                return matchesBluetooth(ident);
-            case 9:
-                return matchesProxy(ident);
-            default:
-                return false;
-        }
+        return false;
     }
 
     private boolean matchesMetered(NetworkIdentity ident) {
-        if (this.mMetered == -1) {
-            return true;
-        }
-        if (this.mMetered != 1 || !ident.mMetered) {
+        if (this.mMetered != -1) {
+            if (this.mMetered == 1 && ident.mMetered) {
+                return true;
+            }
             return this.mMetered == 0 && !ident.mMetered;
         }
         return true;
     }
 
     private boolean matchesRoaming(NetworkIdentity ident) {
-        if (this.mRoaming == -1) {
-            return true;
-        }
-        if (this.mRoaming != 1 || !ident.mRoaming) {
+        if (this.mRoaming != -1) {
+            if (this.mRoaming == 1 && ident.mRoaming) {
+                return true;
+            }
             return this.mRoaming == 0 && !ident.mRoaming;
         }
         return true;
     }
 
     private boolean matchesDefaultNetwork(NetworkIdentity ident) {
-        if (this.mDefaultNetwork == -1) {
-            return true;
-        }
-        if (this.mDefaultNetwork != 1 || !ident.mDefaultNetwork) {
+        if (this.mDefaultNetwork != -1) {
+            if (this.mDefaultNetwork == 1 && ident.mDefaultNetwork) {
+                return true;
+            }
             return this.mDefaultNetwork == 0 && !ident.mDefaultNetwork;
         }
         return true;
     }
 
     public boolean matchesSubscriberId(String subscriberId) {
-        return ArrayUtils.contains((T[]) this.mMatchSubscriberIds, subscriberId);
+        return ArrayUtils.contains(this.mMatchSubscriberIds, subscriberId);
     }
 
     private boolean matchesMobile(NetworkIdentity ident) {
         if (ident.mType == 6) {
             return true;
         }
-        if ((sForceAllNetworkTypes || (ident.mType == 0 && ident.mMetered)) && !ArrayUtils.isEmpty((T[]) this.mMatchSubscriberIds) && ArrayUtils.contains((T[]) this.mMatchSubscriberIds, ident.mSubscriberId)) {
-            return true;
-        }
-        return false;
+        return (sForceAllNetworkTypes || (ident.mType == 0 && ident.mMetered)) && !ArrayUtils.isEmpty(this.mMatchSubscriberIds) && ArrayUtils.contains(this.mMatchSubscriberIds, ident.mSubscriberId);
     }
 
     private boolean matchesWifi(NetworkIdentity ident) {
-        if (ident.mType != 1) {
-            return false;
+        if (ident.mType == 1) {
+            return Objects.equals(WifiInfo.removeDoubleQuotes(this.mNetworkId), WifiInfo.removeDoubleQuotes(ident.mNetworkId));
         }
-        return Objects.equals(WifiInfo.removeDoubleQuotes(this.mNetworkId), WifiInfo.removeDoubleQuotes(ident.mNetworkId));
+        return false;
     }
 
     private boolean matchesEthernet(NetworkIdentity ident) {
@@ -321,18 +319,12 @@ public class NetworkTemplate implements Parcelable {
         if (ident.mType == 6 || sForceAllNetworkTypes) {
             return true;
         }
-        if (ident.mType != 0 || !ident.mMetered) {
-            return false;
-        }
-        return true;
+        return ident.mType == 0 && ident.mMetered;
     }
 
     private boolean matchesWifiWildcard(NetworkIdentity ident) {
         int i = ident.mType;
-        if (i == 1 || i == 13) {
-            return true;
-        }
-        return false;
+        return i == 1 || i == 13;
     }
 
     private boolean matchesBluetooth(NetworkIdentity ident) {
@@ -370,10 +362,10 @@ public class NetworkTemplate implements Parcelable {
 
     @UnsupportedAppUsage
     public static NetworkTemplate normalize(NetworkTemplate template, String[] merged) {
-        if (!template.isMatchRuleMobile() || !ArrayUtils.contains((T[]) merged, template.mSubscriberId)) {
-            return template;
+        if (template.isMatchRuleMobile() && ArrayUtils.contains(merged, template.mSubscriberId)) {
+            return new NetworkTemplate(template.mMatchRule, merged[0], merged, template.mNetworkId);
         }
-        return new NetworkTemplate(template.mMatchRule, merged[0], merged, template.mNetworkId);
+        return template;
     }
 
     public byte[] getBytesForBackup() throws IOException {
@@ -394,9 +386,9 @@ public class NetworkTemplate implements Parcelable {
         int matchRule = in.readInt();
         String subscriberId = BackupUtils.readString(in);
         String networkId = BackupUtils.readString(in);
-        if (isKnownMatchRule(matchRule)) {
-            return new NetworkTemplate(matchRule, subscriberId, networkId);
+        if (!isKnownMatchRule(matchRule)) {
+            throw new BackupUtils.BadVersionException("Restored network template contains unknown match rule " + matchRule);
         }
-        throw new BackupUtils.BadVersionException("Restored network template contains unknown match rule " + matchRule);
+        return new NetworkTemplate(matchRule, subscriberId, networkId);
     }
 }

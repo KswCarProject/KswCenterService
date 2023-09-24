@@ -1,5 +1,6 @@
 package android.view.animation;
 
+/* loaded from: classes4.dex */
 public abstract class BaseInterpolator implements Interpolator {
     private int mChangingConfiguration;
 
@@ -7,8 +8,7 @@ public abstract class BaseInterpolator implements Interpolator {
         return this.mChangingConfiguration;
     }
 
-    /* access modifiers changed from: package-private */
-    public void setChangingConfiguration(int changingConfiguration) {
+    void setChangingConfiguration(int changingConfiguration) {
         this.mChangingConfiguration = changingConfiguration;
     }
 }

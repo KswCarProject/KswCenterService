@@ -2,8 +2,8 @@ package android.service.notification;
 
 import android.media.AudioSystem;
 import android.net.wifi.WifiEnterpriseConfig;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.provider.Contacts;
 import android.provider.MediaStore;
 import android.util.proto.ProtoOutputStream;
@@ -13,17 +13,22 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
 
+/* loaded from: classes3.dex */
 public final class ZenPolicy implements Parcelable {
-    public static final Parcelable.Creator<ZenPolicy> CREATOR = new Parcelable.Creator<ZenPolicy>() {
+    public static final Parcelable.Creator<ZenPolicy> CREATOR = new Parcelable.Creator<ZenPolicy>() { // from class: android.service.notification.ZenPolicy.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ZenPolicy createFromParcel(Parcel source) {
             ZenPolicy policy = new ZenPolicy();
-            ArrayList unused = policy.mPriorityCategories = source.readArrayList(Integer.class.getClassLoader());
-            ArrayList unused2 = policy.mVisualEffects = source.readArrayList(Integer.class.getClassLoader());
-            int unused3 = policy.mPriorityCalls = source.readInt();
-            int unused4 = policy.mPriorityMessages = source.readInt();
+            policy.mPriorityCategories = source.readArrayList(Integer.class.getClassLoader());
+            policy.mVisualEffects = source.readArrayList(Integer.class.getClassLoader());
+            policy.mPriorityCalls = source.readInt();
+            policy.mPriorityMessages = source.readInt();
             return policy;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ZenPolicy[] newArray(int size) {
             return new ZenPolicy[size];
         }
@@ -51,28 +56,28 @@ public final class ZenPolicy implements Parcelable {
     public static final int VISUAL_EFFECT_NOTIFICATION_LIST = 6;
     public static final int VISUAL_EFFECT_PEEK = 2;
     public static final int VISUAL_EFFECT_STATUS_BAR = 3;
-    /* access modifiers changed from: private */
-    public int mPriorityCalls = 0;
-    /* access modifiers changed from: private */
-    public ArrayList<Integer> mPriorityCategories = new ArrayList<>(Collections.nCopies(8, 0));
-    /* access modifiers changed from: private */
-    public int mPriorityMessages = 0;
-    /* access modifiers changed from: private */
-    public ArrayList<Integer> mVisualEffects = new ArrayList<>(Collections.nCopies(7, 0));
+    private int mPriorityMessages = 0;
+    private int mPriorityCalls = 0;
+    private ArrayList<Integer> mPriorityCategories = new ArrayList<>(Collections.nCopies(8, 0));
+    private ArrayList<Integer> mVisualEffects = new ArrayList<>(Collections.nCopies(7, 0));
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface PeopleType {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface PriorityCategory {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface State {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface VisualEffect {
     }
 
@@ -162,6 +167,7 @@ public final class ZenPolicy implements Parcelable {
         return true;
     }
 
+    /* loaded from: classes3.dex */
     public static final class Builder {
         private ZenPolicy mZenPolicy;
 
@@ -185,8 +191,8 @@ public final class ZenPolicy implements Parcelable {
             for (int i = 0; i < this.mZenPolicy.mPriorityCategories.size(); i++) {
                 this.mZenPolicy.mPriorityCategories.set(i, 1);
             }
-            int unused = this.mZenPolicy.mPriorityMessages = 1;
-            int unused2 = this.mZenPolicy.mPriorityCalls = 1;
+            this.mZenPolicy.mPriorityMessages = 1;
+            this.mZenPolicy.mPriorityCalls = 1;
             return this;
         }
 
@@ -194,8 +200,8 @@ public final class ZenPolicy implements Parcelable {
             for (int i = 0; i < this.mZenPolicy.mPriorityCategories.size(); i++) {
                 this.mZenPolicy.mPriorityCategories.set(i, 2);
             }
-            int unused = this.mZenPolicy.mPriorityMessages = 4;
-            int unused2 = this.mZenPolicy.mPriorityCalls = 4;
+            this.mZenPolicy.mPriorityMessages = 4;
+            this.mZenPolicy.mPriorityCalls = 4;
             return this;
         }
 
@@ -216,9 +222,9 @@ public final class ZenPolicy implements Parcelable {
         public Builder unsetPriorityCategory(int category) {
             this.mZenPolicy.mPriorityCategories.set(category, 0);
             if (category == 2) {
-                int unused = this.mZenPolicy.mPriorityMessages = 0;
+                this.mZenPolicy.mPriorityMessages = 0;
             } else if (category == 3) {
-                int unused2 = this.mZenPolicy.mPriorityCalls = 0;
+                this.mZenPolicy.mPriorityCalls = 0;
             }
             return this;
         }
@@ -244,12 +250,12 @@ public final class ZenPolicy implements Parcelable {
             }
             if (audienceType == 4) {
                 this.mZenPolicy.mPriorityCategories.set(2, 2);
-            } else if (audienceType != 1 && audienceType != 2 && audienceType != 3) {
-                return this;
-            } else {
+            } else if (audienceType == 1 || audienceType == 2 || audienceType == 3) {
                 this.mZenPolicy.mPriorityCategories.set(2, 1);
+            } else {
+                return this;
             }
-            int unused = this.mZenPolicy.mPriorityMessages = audienceType;
+            this.mZenPolicy.mPriorityMessages = audienceType;
             return this;
         }
 
@@ -259,12 +265,12 @@ public final class ZenPolicy implements Parcelable {
             }
             if (audienceType == 4) {
                 this.mZenPolicy.mPriorityCategories.set(3, 2);
-            } else if (audienceType != 1 && audienceType != 2 && audienceType != 3) {
-                return this;
-            } else {
+            } else if (audienceType == 1 || audienceType == 2 || audienceType == 3) {
                 this.mZenPolicy.mPriorityCategories.set(3, 1);
+            } else {
+                return this;
             }
-            int unused = this.mZenPolicy.mPriorityCalls = audienceType;
+            this.mZenPolicy.mPriorityCalls = audienceType;
             return this;
         }
 
@@ -375,10 +381,12 @@ public final class ZenPolicy implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeList(this.mPriorityCategories);
         dest.writeList(this.mVisualEffects);
@@ -387,7 +395,7 @@ public final class ZenPolicy implements Parcelable {
     }
 
     public String toString() {
-        return ZenPolicy.class.getSimpleName() + '{' + "priorityCategories=[" + priorityCategoriesToString() + "], visualEffects=[" + visualEffectsToString() + "], priorityCalls=" + peopleTypeToString(this.mPriorityCalls) + ", priorityMessages=" + peopleTypeToString(this.mPriorityMessages) + '}';
+        return ZenPolicy.class.getSimpleName() + "{priorityCategories=[" + priorityCategoriesToString() + "], visualEffects=[" + visualEffectsToString() + "], priorityCalls=" + peopleTypeToString(this.mPriorityCalls) + ", priorityMessages=" + peopleTypeToString(this.mPriorityMessages) + '}';
     }
 
     private String priorityCategoriesToString() {
@@ -491,21 +499,18 @@ public final class ZenPolicy implements Parcelable {
     }
 
     public boolean equals(Object o) {
-        if (!(o instanceof ZenPolicy)) {
-            return false;
+        if (o instanceof ZenPolicy) {
+            if (o == this) {
+                return true;
+            }
+            ZenPolicy other = (ZenPolicy) o;
+            return Objects.equals(other.mPriorityCategories, this.mPriorityCategories) && Objects.equals(other.mVisualEffects, this.mVisualEffects) && other.mPriorityCalls == this.mPriorityCalls && other.mPriorityMessages == this.mPriorityMessages;
         }
-        if (o == this) {
-            return true;
-        }
-        ZenPolicy other = (ZenPolicy) o;
-        if (!Objects.equals(other.mPriorityCategories, this.mPriorityCategories) || !Objects.equals(other.mVisualEffects, this.mVisualEffects) || other.mPriorityCalls != this.mPriorityCalls || other.mPriorityMessages != this.mPriorityMessages) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{this.mPriorityCategories, this.mVisualEffects, Integer.valueOf(this.mPriorityCalls), Integer.valueOf(this.mPriorityMessages)});
+        return Objects.hash(this.mPriorityCategories, this.mVisualEffects, Integer.valueOf(this.mPriorityCalls), Integer.valueOf(this.mPriorityMessages));
     }
 
     private int getZenPolicyPriorityCategoryState(int category) {
@@ -576,21 +581,22 @@ public final class ZenPolicy implements Parcelable {
 
     public void apply(ZenPolicy policyToApply) {
         int newState;
-        if (policyToApply != null) {
-            for (int category = 0; category < this.mPriorityCategories.size(); category++) {
-                if (!(this.mPriorityCategories.get(category).intValue() == 2 || (newState = policyToApply.mPriorityCategories.get(category).intValue()) == 0)) {
-                    this.mPriorityCategories.set(category, Integer.valueOf(newState));
-                    if (category == 2 && this.mPriorityMessages < policyToApply.mPriorityMessages) {
-                        this.mPriorityMessages = policyToApply.mPriorityMessages;
-                    } else if (category == 3 && this.mPriorityCalls < policyToApply.mPriorityCalls) {
-                        this.mPriorityCalls = policyToApply.mPriorityCalls;
-                    }
+        if (policyToApply == null) {
+            return;
+        }
+        for (int category = 0; category < this.mPriorityCategories.size(); category++) {
+            if (this.mPriorityCategories.get(category).intValue() != 2 && (newState = policyToApply.mPriorityCategories.get(category).intValue()) != 0) {
+                this.mPriorityCategories.set(category, Integer.valueOf(newState));
+                if (category == 2 && this.mPriorityMessages < policyToApply.mPriorityMessages) {
+                    this.mPriorityMessages = policyToApply.mPriorityMessages;
+                } else if (category == 3 && this.mPriorityCalls < policyToApply.mPriorityCalls) {
+                    this.mPriorityCalls = policyToApply.mPriorityCalls;
                 }
             }
-            for (int visualEffect = 0; visualEffect < this.mVisualEffects.size(); visualEffect++) {
-                if (!(this.mVisualEffects.get(visualEffect).intValue() == 2 || policyToApply.mVisualEffects.get(visualEffect).intValue() == 0)) {
-                    this.mVisualEffects.set(visualEffect, policyToApply.mVisualEffects.get(visualEffect));
-                }
+        }
+        for (int visualEffect = 0; visualEffect < this.mVisualEffects.size(); visualEffect++) {
+            if (this.mVisualEffects.get(visualEffect).intValue() != 2 && policyToApply.mVisualEffects.get(visualEffect).intValue() != 0) {
+                this.mVisualEffects.set(visualEffect, policyToApply.mVisualEffects.get(visualEffect));
             }
         }
     }

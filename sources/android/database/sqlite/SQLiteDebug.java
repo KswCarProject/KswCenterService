@@ -1,14 +1,16 @@
 package android.database.sqlite;
 
-import android.os.Build;
-import android.os.Process;
-import android.os.SystemProperties;
+import android.p007os.Build;
+import android.p007os.Process;
+import android.p007os.SystemProperties;
 import android.util.Log;
 import android.util.Printer;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class SQLiteDebug {
 
+    /* loaded from: classes.dex */
     public static class PagerStats {
         public ArrayList<DbStats> dbStats;
         public int largestMemAlloc;
@@ -18,15 +20,15 @@ public final class SQLiteDebug {
 
     private static native void nativeGetPagerStats(PagerStats pagerStats);
 
+    /* loaded from: classes.dex */
     public static final class NoPreloadHolder {
         public static final boolean DEBUG_LOG_DETAILED;
-        public static final boolean DEBUG_LOG_SLOW_QUERIES = Build.IS_DEBUGGABLE;
+        private static final String SLOW_QUERY_THRESHOLD_PROP = "db.log.slow_query_threshold";
         public static final boolean DEBUG_SQL_LOG = Log.isLoggable("SQLiteLog", 2);
         public static final boolean DEBUG_SQL_STATEMENTS = Log.isLoggable("SQLiteStatements", 2);
         public static final boolean DEBUG_SQL_TIME = Log.isLoggable("SQLiteTime", 2);
-        private static final String SLOW_QUERY_THRESHOLD_PROP = "db.log.slow_query_threshold";
-        /* access modifiers changed from: private */
-        public static final String SLOW_QUERY_THRESHOLD_UID_PROP = ("db.log.slow_query_threshold." + Process.myUid());
+        public static final boolean DEBUG_LOG_SLOW_QUERIES = Build.IS_DEBUGGABLE;
+        private static final String SLOW_QUERY_THRESHOLD_UID_PROP = "db.log.slow_query_threshold." + Process.myUid();
 
         static {
             boolean z = false;
@@ -41,9 +43,11 @@ public final class SQLiteDebug {
     }
 
     public static boolean shouldLogSlowQuery(long elapsedTimeMillis) {
-        return elapsedTimeMillis >= ((long) Math.min(SystemProperties.getInt("db.log.slow_query_threshold", Integer.MAX_VALUE), SystemProperties.getInt(NoPreloadHolder.SLOW_QUERY_THRESHOLD_UID_PROP, Integer.MAX_VALUE)));
+        int slowQueryMillis = Math.min(SystemProperties.getInt("db.log.slow_query_threshold", Integer.MAX_VALUE), SystemProperties.getInt(NoPreloadHolder.SLOW_QUERY_THRESHOLD_UID_PROP, Integer.MAX_VALUE));
+        return elapsedTimeMillis >= ((long) slowQueryMillis);
     }
 
+    /* loaded from: classes.dex */
     public static class DbStats {
         public String cache;
         public String dbName;
@@ -51,11 +55,11 @@ public final class SQLiteDebug {
         public int lookaside;
         public long pageSize;
 
-        public DbStats(String dbName2, long pageCount, long pageSize2, int lookaside2, int hits, int misses, int cachesize) {
-            this.dbName = dbName2;
-            this.pageSize = pageSize2 / 1024;
-            this.dbSize = (pageCount * pageSize2) / 1024;
-            this.lookaside = lookaside2;
+        public DbStats(String dbName, long pageCount, long pageSize, int lookaside, int hits, int misses, int cachesize) {
+            this.dbName = dbName;
+            this.pageSize = pageSize / 1024;
+            this.dbSize = (pageCount * pageSize) / 1024;
+            this.lookaside = lookaside;
             this.cache = hits + "/" + misses + "/" + cachesize;
         }
     }

@@ -1,15 +1,20 @@
 package android.app;
 
 import android.content.Intent;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public class ServiceStartArgs implements Parcelable {
-    public static final Parcelable.Creator<ServiceStartArgs> CREATOR = new Parcelable.Creator<ServiceStartArgs>() {
+    public static final Parcelable.Creator<ServiceStartArgs> CREATOR = new Parcelable.Creator<ServiceStartArgs>() { // from class: android.app.ServiceStartArgs.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ServiceStartArgs createFromParcel(Parcel in) {
             return new ServiceStartArgs(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ServiceStartArgs[] newArray(int size) {
             return new ServiceStartArgs[size];
         }
@@ -30,14 +35,16 @@ public class ServiceStartArgs implements Parcelable {
         return "ServiceStartArgs{taskRemoved=" + this.taskRemoved + ", startId=" + this.startId + ", flags=0x" + Integer.toHexString(this.flags) + ", args=" + this.args + "}";
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
-    public void writeToParcel(Parcel out, int flags2) {
+    @Override // android.p007os.Parcelable
+    public void writeToParcel(Parcel out, int flags) {
         out.writeInt(this.taskRemoved ? 1 : 0);
         out.writeInt(this.startId);
-        out.writeInt(flags2);
+        out.writeInt(flags);
         if (this.args != null) {
             out.writeInt(1);
             this.args.writeToParcel(out, 0);

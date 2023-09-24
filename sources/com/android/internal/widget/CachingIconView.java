@@ -15,6 +15,7 @@ import android.widget.RemoteViews;
 import java.util.Objects;
 
 @RemoteViews.RemoteView
+/* loaded from: classes4.dex */
 public class CachingIconView extends ImageView {
     private int mDesiredVisibility;
     private boolean mForceHidden;
@@ -27,6 +28,7 @@ public class CachingIconView extends ImageView {
         super(context, attrs);
     }
 
+    @Override // android.widget.ImageView
     @RemotableViewMethod(asyncImpl = "setImageIconAsync")
     public void setImageIcon(Icon icon) {
         if (!testAndSetCache(icon)) {
@@ -36,11 +38,13 @@ public class CachingIconView extends ImageView {
         }
     }
 
+    @Override // android.widget.ImageView
     public Runnable setImageIconAsync(Icon icon) {
         resetCache();
         return super.setImageIconAsync(icon);
     }
 
+    @Override // android.widget.ImageView
     @RemotableViewMethod(asyncImpl = "setImageResourceAsync")
     public void setImageResource(int resId) {
         if (!testAndSetCache(resId)) {
@@ -50,22 +54,26 @@ public class CachingIconView extends ImageView {
         }
     }
 
+    @Override // android.widget.ImageView
     public Runnable setImageResourceAsync(int resId) {
         resetCache();
         return super.setImageResourceAsync(resId);
     }
 
+    @Override // android.widget.ImageView
     @RemotableViewMethod(asyncImpl = "setImageURIAsync")
     public void setImageURI(Uri uri) {
         resetCache();
         super.setImageURI(uri);
     }
 
+    @Override // android.widget.ImageView
     public Runnable setImageURIAsync(Uri uri) {
         resetCache();
         return super.setImageURIAsync(uri);
     }
 
+    @Override // android.widget.ImageView
     public void setImageDrawable(Drawable drawable) {
         if (!this.mInternalSetDrawable) {
             resetCache();
@@ -73,14 +81,15 @@ public class CachingIconView extends ImageView {
         super.setImageDrawable(drawable);
     }
 
+    @Override // android.widget.ImageView
     @RemotableViewMethod
     public void setImageBitmap(Bitmap bm) {
         resetCache();
         super.setImageBitmap(bm);
     }
 
-    /* access modifiers changed from: protected */
-    public void onConfigurationChanged(Configuration newConfig) {
+    @Override // android.view.View
+    protected void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         resetCache();
     }
@@ -126,10 +135,10 @@ public class CachingIconView extends ImageView {
             return null;
         }
         String pkg = icon.getResPackage();
-        if (!TextUtils.isEmpty(pkg) && !pkg.equals(this.mContext.getPackageName())) {
-            return pkg;
+        if (TextUtils.isEmpty(pkg) || pkg.equals(this.mContext.getPackageName())) {
+            return null;
         }
-        return null;
+        return pkg;
     }
 
     private synchronized void resetCache() {
@@ -142,6 +151,7 @@ public class CachingIconView extends ImageView {
         updateVisibility();
     }
 
+    @Override // android.widget.ImageView, android.view.View
     @RemotableViewMethod
     public void setVisibility(int visibility) {
         this.mDesiredVisibility = visibility;
@@ -149,12 +159,7 @@ public class CachingIconView extends ImageView {
     }
 
     private void updateVisibility() {
-        int visibility;
-        if (this.mDesiredVisibility != 0 || !this.mForceHidden) {
-            visibility = this.mDesiredVisibility;
-        } else {
-            visibility = 4;
-        }
+        int visibility = (this.mDesiredVisibility == 0 && this.mForceHidden) ? 4 : this.mDesiredVisibility;
         super.setVisibility(visibility);
     }
 }

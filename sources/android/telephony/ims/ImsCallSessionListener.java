@@ -1,13 +1,14 @@
 package android.telephony.ims;
 
 import android.annotation.SystemApi;
-import android.os.RemoteException;
+import android.p007os.RemoteException;
 import android.telephony.CallQuality;
 import android.telephony.ims.aidl.IImsCallSessionListener;
 import android.telephony.ims.stub.ImsCallSessionImplBase;
 import com.android.ims.internal.IImsCallSession;
 
 @SystemApi
+/* loaded from: classes4.dex */
 public class ImsCallSessionListener {
     private final IImsCallSessionListener mListener;
 

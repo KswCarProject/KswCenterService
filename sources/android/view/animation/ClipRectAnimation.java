@@ -5,8 +5,9 @@ import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.animation.Animation;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
+/* loaded from: classes4.dex */
 public class ClipRectAnimation extends Animation {
     private int mFromBottomType;
     private float mFromBottomValue;
@@ -39,7 +40,7 @@ public class ClipRectAnimation extends Animation {
         this.mToTopType = 0;
         this.mToRightType = 0;
         this.mToBottomType = 0;
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ClipRectAnimation);
+        TypedArray a = context.obtainStyledAttributes(attrs, C3132R.styleable.ClipRectAnimation);
         Animation.Description d = Animation.Description.parseValue(a.peekValue(1));
         this.mFromLeftType = d.type;
         this.mFromLeftValue = d.value;
@@ -81,29 +82,35 @@ public class ClipRectAnimation extends Animation {
         if (fromClip == null || toClip == null) {
             throw new RuntimeException("Expected non-null animation clip rects");
         }
-        this.mFromLeftValue = (float) fromClip.left;
-        this.mFromTopValue = (float) fromClip.top;
-        this.mFromRightValue = (float) fromClip.right;
-        this.mFromBottomValue = (float) fromClip.bottom;
-        this.mToLeftValue = (float) toClip.left;
-        this.mToTopValue = (float) toClip.top;
-        this.mToRightValue = (float) toClip.right;
-        this.mToBottomValue = (float) toClip.bottom;
+        this.mFromLeftValue = fromClip.left;
+        this.mFromTopValue = fromClip.top;
+        this.mFromRightValue = fromClip.right;
+        this.mFromBottomValue = fromClip.bottom;
+        this.mToLeftValue = toClip.left;
+        this.mToTopValue = toClip.top;
+        this.mToRightValue = toClip.right;
+        this.mToBottomValue = toClip.bottom;
     }
 
     public ClipRectAnimation(int fromL, int fromT, int fromR, int fromB, int toL, int toT, int toR, int toB) {
         this(new Rect(fromL, fromT, fromR, fromB), new Rect(toL, toT, toR, toB));
     }
 
-    /* access modifiers changed from: protected */
-    public void applyTransformation(float it, Transformation tr) {
-        tr.setClipRect(this.mFromRect.left + ((int) (((float) (this.mToRect.left - this.mFromRect.left)) * it)), this.mFromRect.top + ((int) (((float) (this.mToRect.top - this.mFromRect.top)) * it)), this.mFromRect.right + ((int) (((float) (this.mToRect.right - this.mFromRect.right)) * it)), this.mFromRect.bottom + ((int) (((float) (this.mToRect.bottom - this.mFromRect.bottom)) * it)));
+    @Override // android.view.animation.Animation
+    protected void applyTransformation(float it, Transformation tr) {
+        int l = this.mFromRect.left + ((int) ((this.mToRect.left - this.mFromRect.left) * it));
+        int t = this.mFromRect.top + ((int) ((this.mToRect.top - this.mFromRect.top) * it));
+        int r = this.mFromRect.right + ((int) ((this.mToRect.right - this.mFromRect.right) * it));
+        int b = this.mFromRect.bottom + ((int) ((this.mToRect.bottom - this.mFromRect.bottom) * it));
+        tr.setClipRect(l, t, r, b);
     }
 
+    @Override // android.view.animation.Animation
     public boolean willChangeTransformationMatrix() {
         return false;
     }
 
+    @Override // android.view.animation.Animation
     public void initialize(int width, int height, int parentWidth, int parentHeight) {
         super.initialize(width, height, parentWidth, parentHeight);
         this.mFromRect.set((int) resolveSize(this.mFromLeftType, this.mFromLeftValue, width, parentWidth), (int) resolveSize(this.mFromTopType, this.mFromTopValue, height, parentHeight), (int) resolveSize(this.mFromRightType, this.mFromRightValue, width, parentWidth), (int) resolveSize(this.mFromBottomType, this.mFromBottomValue, height, parentHeight));

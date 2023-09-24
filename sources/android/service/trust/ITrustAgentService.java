@@ -1,15 +1,16 @@
 package android.service.trust;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.PersistableBundle;
-import android.os.RemoteException;
-import android.os.UserHandle;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.PersistableBundle;
+import android.p007os.RemoteException;
+import android.p007os.UserHandle;
 import android.service.trust.ITrustAgentServiceCallback;
 import java.util.List;
 
+/* loaded from: classes3.dex */
 public interface ITrustAgentService extends IInterface {
     void onConfigure(List<PersistableBundle> list, IBinder iBinder) throws RemoteException;
 
@@ -31,42 +32,55 @@ public interface ITrustAgentService extends IInterface {
 
     void setCallback(ITrustAgentServiceCallback iTrustAgentServiceCallback) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements ITrustAgentService {
+        @Override // android.service.trust.ITrustAgentService
         public void onUnlockAttempt(boolean successful) throws RemoteException {
         }
 
+        @Override // android.service.trust.ITrustAgentService
         public void onUnlockLockout(int timeoutMs) throws RemoteException {
         }
 
+        @Override // android.service.trust.ITrustAgentService
         public void onTrustTimeout() throws RemoteException {
         }
 
+        @Override // android.service.trust.ITrustAgentService
         public void onDeviceLocked() throws RemoteException {
         }
 
+        @Override // android.service.trust.ITrustAgentService
         public void onDeviceUnlocked() throws RemoteException {
         }
 
-        public void onConfigure(List<PersistableBundle> list, IBinder token) throws RemoteException {
+        @Override // android.service.trust.ITrustAgentService
+        public void onConfigure(List<PersistableBundle> options, IBinder token) throws RemoteException {
         }
 
+        @Override // android.service.trust.ITrustAgentService
         public void setCallback(ITrustAgentServiceCallback callback) throws RemoteException {
         }
 
+        @Override // android.service.trust.ITrustAgentService
         public void onEscrowTokenAdded(byte[] token, long handle, UserHandle user) throws RemoteException {
         }
 
+        @Override // android.service.trust.ITrustAgentService
         public void onTokenStateReceived(long handle, int tokenState) throws RemoteException {
         }
 
+        @Override // android.service.trust.ITrustAgentService
         public void onEscrowTokenRemoved(long handle, boolean successful) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements ITrustAgentService {
         private static final String DESCRIPTOR = "android.service.trust.ITrustAgentService";
         static final int TRANSACTION_onConfigure = 6;
@@ -89,12 +103,13 @@ public interface ITrustAgentService extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof ITrustAgentService)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof ITrustAgentService)) {
+                return (ITrustAgentService) iin;
             }
-            return (ITrustAgentService) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -126,78 +141,80 @@ public interface ITrustAgentService extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            boolean _arg1;
             UserHandle _arg2;
-            if (code != 1598968902) {
-                boolean _arg1 = false;
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg1 = true;
-                        }
-                        onUnlockAttempt(_arg1);
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        onUnlockLockout(data.readInt());
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        onTrustTimeout();
-                        return true;
-                    case 4:
-                        data.enforceInterface(DESCRIPTOR);
-                        onDeviceLocked();
-                        return true;
-                    case 5:
-                        data.enforceInterface(DESCRIPTOR);
-                        onDeviceUnlocked();
-                        return true;
-                    case 6:
-                        data.enforceInterface(DESCRIPTOR);
-                        onConfigure(data.createTypedArrayList(PersistableBundle.CREATOR), data.readStrongBinder());
-                        return true;
-                    case 7:
-                        data.enforceInterface(DESCRIPTOR);
-                        setCallback(ITrustAgentServiceCallback.Stub.asInterface(data.readStrongBinder()));
-                        return true;
-                    case 8:
-                        data.enforceInterface(DESCRIPTOR);
-                        byte[] _arg0 = data.createByteArray();
-                        long _arg12 = data.readLong();
-                        if (data.readInt() != 0) {
-                            _arg2 = UserHandle.CREATOR.createFromParcel(data);
-                        } else {
-                            _arg2 = null;
-                        }
-                        onEscrowTokenAdded(_arg0, _arg12, _arg2);
-                        return true;
-                    case 9:
-                        data.enforceInterface(DESCRIPTOR);
-                        onTokenStateReceived(data.readLong(), data.readInt());
-                        return true;
-                    case 10:
-                        data.enforceInterface(DESCRIPTOR);
-                        long _arg02 = data.readLong();
-                        if (data.readInt() != 0) {
-                            _arg1 = true;
-                        }
-                        onEscrowTokenRemoved(_arg02, _arg1);
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg1 = data.readInt() != 0;
+                    onUnlockAttempt(_arg1);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0 = data.readInt();
+                    onUnlockLockout(_arg0);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    onTrustTimeout();
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    onDeviceLocked();
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    onDeviceUnlocked();
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    List<PersistableBundle> _arg02 = data.createTypedArrayList(PersistableBundle.CREATOR);
+                    onConfigure(_arg02, data.readStrongBinder());
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    ITrustAgentServiceCallback _arg03 = ITrustAgentServiceCallback.Stub.asInterface(data.readStrongBinder());
+                    setCallback(_arg03);
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    byte[] _arg04 = data.createByteArray();
+                    long _arg12 = data.readLong();
+                    if (data.readInt() != 0) {
+                        _arg2 = UserHandle.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg2 = null;
+                    }
+                    onEscrowTokenAdded(_arg04, _arg12, _arg2);
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _arg05 = data.readLong();
+                    onTokenStateReceived(_arg05, data.readInt());
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _arg06 = data.readLong();
+                    _arg1 = data.readInt() != 0;
+                    onEscrowTokenRemoved(_arg06, _arg1);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements ITrustAgentService {
             public static ITrustAgentService sDefaultImpl;
             private IBinder mRemote;
@@ -206,6 +223,7 @@ public interface ITrustAgentService extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -214,14 +232,14 @@ public interface ITrustAgentService extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.service.trust.ITrustAgentService
             public void onUnlockAttempt(boolean successful) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(successful);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(successful ? 1 : 0);
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onUnlockAttempt(successful);
                     }
                 } finally {
@@ -229,14 +247,14 @@ public interface ITrustAgentService extends IInterface {
                 }
             }
 
+            @Override // android.service.trust.ITrustAgentService
             public void onUnlockLockout(int timeoutMs) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(timeoutMs);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onUnlockLockout(timeoutMs);
                     }
                 } finally {
@@ -244,13 +262,13 @@ public interface ITrustAgentService extends IInterface {
                 }
             }
 
+            @Override // android.service.trust.ITrustAgentService
             public void onTrustTimeout() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onTrustTimeout();
                     }
                 } finally {
@@ -258,13 +276,13 @@ public interface ITrustAgentService extends IInterface {
                 }
             }
 
+            @Override // android.service.trust.ITrustAgentService
             public void onDeviceLocked() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onDeviceLocked();
                     }
                 } finally {
@@ -272,13 +290,13 @@ public interface ITrustAgentService extends IInterface {
                 }
             }
 
+            @Override // android.service.trust.ITrustAgentService
             public void onDeviceUnlocked() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(5, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onDeviceUnlocked();
                     }
                 } finally {
@@ -286,15 +304,15 @@ public interface ITrustAgentService extends IInterface {
                 }
             }
 
+            @Override // android.service.trust.ITrustAgentService
             public void onConfigure(List<PersistableBundle> options, IBinder token) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeTypedList(options);
                     _data.writeStrongBinder(token);
-                    if (this.mRemote.transact(6, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(6, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onConfigure(options, token);
                     }
                 } finally {
@@ -302,14 +320,14 @@ public interface ITrustAgentService extends IInterface {
                 }
             }
 
+            @Override // android.service.trust.ITrustAgentService
             public void setCallback(ITrustAgentServiceCallback callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                    if (this.mRemote.transact(7, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(7, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().setCallback(callback);
                     }
                 } finally {
@@ -317,6 +335,7 @@ public interface ITrustAgentService extends IInterface {
                 }
             }
 
+            @Override // android.service.trust.ITrustAgentService
             public void onEscrowTokenAdded(byte[] token, long handle, UserHandle user) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -329,9 +348,8 @@ public interface ITrustAgentService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(8, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(8, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onEscrowTokenAdded(token, handle, user);
                     }
                 } finally {
@@ -339,15 +357,15 @@ public interface ITrustAgentService extends IInterface {
                 }
             }
 
+            @Override // android.service.trust.ITrustAgentService
             public void onTokenStateReceived(long handle, int tokenState) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeLong(handle);
                     _data.writeInt(tokenState);
-                    if (this.mRemote.transact(9, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(9, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onTokenStateReceived(handle, tokenState);
                     }
                 } finally {
@@ -355,15 +373,15 @@ public interface ITrustAgentService extends IInterface {
                 }
             }
 
+            @Override // android.service.trust.ITrustAgentService
             public void onEscrowTokenRemoved(long handle, boolean successful) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeLong(handle);
-                    _data.writeInt(successful);
-                    if (this.mRemote.transact(10, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(successful ? 1 : 0);
+                    boolean _status = this.mRemote.transact(10, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onEscrowTokenRemoved(handle, successful);
                     }
                 } finally {
@@ -373,11 +391,11 @@ public interface ITrustAgentService extends IInterface {
         }
 
         public static boolean setDefaultImpl(ITrustAgentService impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static ITrustAgentService getDefaultImpl() {

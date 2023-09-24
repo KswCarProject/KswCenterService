@@ -1,5 +1,6 @@
 package android.stats.dnsresolver;
 
+/* loaded from: classes3.dex */
 public final class DnsResolver {
     public static final int CS_FOUND = 2;
     public static final int CS_NOTFOUND = 1;
@@ -125,6 +126,7 @@ public final class DnsResolver {
     public static final int TT_UDP = 1;
     public static final int TT_UNKNOWN = 0;
 
+    /* loaded from: classes3.dex */
     public final class DnsQueryEvent {
         public static final long CACHE_HIT = 1159641169923L;
         public static final long CONNECTED = 1133871366152L;
@@ -140,6 +142,7 @@ public final class DnsResolver {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class DnsQueryEvents {
         public static final long DNS_QUERY_EVENT = 2246267895809L;
 

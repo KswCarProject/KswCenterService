@@ -2,12 +2,13 @@ package android.app.backup;
 
 import android.app.backup.IBackupManagerMonitor;
 import android.app.backup.IRestoreObserver;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes.dex */
 public interface IRestoreSession extends IInterface {
     void endRestoreSession() throws RemoteException;
 
@@ -19,31 +20,39 @@ public interface IRestoreSession extends IInterface {
 
     int restorePackages(long j, IRestoreObserver iRestoreObserver, String[] strArr, IBackupManagerMonitor iBackupManagerMonitor) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements IRestoreSession {
+        @Override // android.app.backup.IRestoreSession
         public int getAvailableRestoreSets(IRestoreObserver observer, IBackupManagerMonitor monitor) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.backup.IRestoreSession
         public int restoreAll(long token, IRestoreObserver observer, IBackupManagerMonitor monitor) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.backup.IRestoreSession
         public int restorePackages(long token, IRestoreObserver observer, String[] packages, IBackupManagerMonitor monitor) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.backup.IRestoreSession
         public int restorePackage(String packageName, IRestoreObserver observer, IBackupManagerMonitor monitor) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.backup.IRestoreSession
         public void endRestoreSession() throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements IRestoreSession {
         private static final String DESCRIPTOR = "android.app.backup.IRestoreSession";
         static final int TRANSACTION_endRestoreSession = 5;
@@ -61,12 +70,13 @@ public interface IRestoreSession extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IRestoreSession)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IRestoreSession)) {
+                return (IRestoreSession) iin;
             }
-            return (IRestoreSession) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -88,54 +98,65 @@ public interface IRestoreSession extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            int i = code;
-            Parcel parcel = data;
-            Parcel parcel2 = reply;
-            if (i != 1598968902) {
-                switch (i) {
-                    case 1:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _result = getAvailableRestoreSets(IRestoreObserver.Stub.asInterface(data.readStrongBinder()), IBackupManagerMonitor.Stub.asInterface(data.readStrongBinder()));
-                        reply.writeNoException();
-                        parcel2.writeInt(_result);
-                        return true;
-                    case 2:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _result2 = restoreAll(data.readLong(), IRestoreObserver.Stub.asInterface(data.readStrongBinder()), IBackupManagerMonitor.Stub.asInterface(data.readStrongBinder()));
-                        reply.writeNoException();
-                        parcel2.writeInt(_result2);
-                        return true;
-                    case 3:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _result3 = restorePackages(data.readLong(), IRestoreObserver.Stub.asInterface(data.readStrongBinder()), data.createStringArray(), IBackupManagerMonitor.Stub.asInterface(data.readStrongBinder()));
-                        reply.writeNoException();
-                        parcel2.writeInt(_result3);
-                        return true;
-                    case 4:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _result4 = restorePackage(data.readString(), IRestoreObserver.Stub.asInterface(data.readStrongBinder()), IBackupManagerMonitor.Stub.asInterface(data.readStrongBinder()));
-                        reply.writeNoException();
-                        parcel2.writeInt(_result4);
-                        return true;
-                    case 5:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        endRestoreSession();
-                        reply.writeNoException();
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
-                parcel2.writeString(DESCRIPTOR);
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
                 return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    IRestoreObserver _arg0 = IRestoreObserver.Stub.asInterface(data.readStrongBinder());
+                    IBackupManagerMonitor _arg1 = IBackupManagerMonitor.Stub.asInterface(data.readStrongBinder());
+                    int _result = getAvailableRestoreSets(_arg0, _arg1);
+                    reply.writeNoException();
+                    reply.writeInt(_result);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _arg02 = data.readLong();
+                    IRestoreObserver _arg12 = IRestoreObserver.Stub.asInterface(data.readStrongBinder());
+                    IBackupManagerMonitor _arg2 = IBackupManagerMonitor.Stub.asInterface(data.readStrongBinder());
+                    int _result2 = restoreAll(_arg02, _arg12, _arg2);
+                    reply.writeNoException();
+                    reply.writeInt(_result2);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _arg03 = data.readLong();
+                    IRestoreObserver _arg13 = IRestoreObserver.Stub.asInterface(data.readStrongBinder());
+                    String[] _arg22 = data.createStringArray();
+                    IBackupManagerMonitor _arg3 = IBackupManagerMonitor.Stub.asInterface(data.readStrongBinder());
+                    int _result3 = restorePackages(_arg03, _arg13, _arg22, _arg3);
+                    reply.writeNoException();
+                    reply.writeInt(_result3);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg04 = data.readString();
+                    IRestoreObserver _arg14 = IRestoreObserver.Stub.asInterface(data.readStrongBinder());
+                    IBackupManagerMonitor _arg23 = IBackupManagerMonitor.Stub.asInterface(data.readStrongBinder());
+                    int _result4 = restorePackage(_arg04, _arg14, _arg23);
+                    reply.writeNoException();
+                    reply.writeInt(_result4);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    endRestoreSession();
+                    reply.writeNoException();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
             }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements IRestoreSession {
             public static IRestoreSession sDefaultImpl;
             private IBinder mRemote;
@@ -144,6 +165,7 @@ public interface IRestoreSession extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -152,24 +174,20 @@ public interface IRestoreSession extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.app.backup.IRestoreSession
             public int getAvailableRestoreSets(IRestoreObserver observer, IBackupManagerMonitor monitor) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    IBinder iBinder = null;
                     _data.writeStrongBinder(observer != null ? observer.asBinder() : null);
-                    if (monitor != null) {
-                        iBinder = monitor.asBinder();
-                    }
-                    _data.writeStrongBinder(iBinder);
-                    if (!this.mRemote.transact(1, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeStrongBinder(monitor != null ? monitor.asBinder() : null);
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAvailableRestoreSets(observer, monitor);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -177,25 +195,21 @@ public interface IRestoreSession extends IInterface {
                 }
             }
 
+            @Override // android.app.backup.IRestoreSession
             public int restoreAll(long token, IRestoreObserver observer, IBackupManagerMonitor monitor) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeLong(token);
-                    IBinder iBinder = null;
                     _data.writeStrongBinder(observer != null ? observer.asBinder() : null);
-                    if (monitor != null) {
-                        iBinder = monitor.asBinder();
-                    }
-                    _data.writeStrongBinder(iBinder);
-                    if (!this.mRemote.transact(2, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeStrongBinder(monitor != null ? monitor.asBinder() : null);
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().restoreAll(token, observer, monitor);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -203,26 +217,22 @@ public interface IRestoreSession extends IInterface {
                 }
             }
 
+            @Override // android.app.backup.IRestoreSession
             public int restorePackages(long token, IRestoreObserver observer, String[] packages, IBackupManagerMonitor monitor) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeLong(token);
-                    IBinder iBinder = null;
                     _data.writeStrongBinder(observer != null ? observer.asBinder() : null);
                     _data.writeStringArray(packages);
-                    if (monitor != null) {
-                        iBinder = monitor.asBinder();
-                    }
-                    _data.writeStrongBinder(iBinder);
-                    if (!this.mRemote.transact(3, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeStrongBinder(monitor != null ? monitor.asBinder() : null);
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().restorePackages(token, observer, packages, monitor);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -230,25 +240,21 @@ public interface IRestoreSession extends IInterface {
                 }
             }
 
+            @Override // android.app.backup.IRestoreSession
             public int restorePackage(String packageName, IRestoreObserver observer, IBackupManagerMonitor monitor) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(packageName);
-                    IBinder iBinder = null;
                     _data.writeStrongBinder(observer != null ? observer.asBinder() : null);
-                    if (monitor != null) {
-                        iBinder = monitor.asBinder();
-                    }
-                    _data.writeStrongBinder(iBinder);
-                    if (!this.mRemote.transact(4, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeStrongBinder(monitor != null ? monitor.asBinder() : null);
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().restorePackage(packageName, observer, monitor);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -256,18 +262,18 @@ public interface IRestoreSession extends IInterface {
                 }
             }
 
+            @Override // android.app.backup.IRestoreSession
             public void endRestoreSession() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(5, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().endRestoreSession();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().endRestoreSession();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -276,11 +282,11 @@ public interface IRestoreSession extends IInterface {
         }
 
         public static boolean setDefaultImpl(IRestoreSession impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IRestoreSession getDefaultImpl() {

@@ -5,6 +5,7 @@ import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+/* loaded from: classes4.dex */
 public class Base64InputStream extends FilterInputStream {
     private static final int BUFFER_SIZE = 2048;
     private static byte[] EMPTY = new byte[0];
@@ -23,48 +24,55 @@ public class Base64InputStream extends FilterInputStream {
         this.eof = false;
         this.inputBuffer = new byte[2048];
         if (encode) {
-            this.coder = new Base64.Encoder(flags, (byte[]) null);
+            this.coder = new Base64.Encoder(flags, null);
         } else {
-            this.coder = new Base64.Decoder(flags, (byte[]) null);
+            this.coder = new Base64.Decoder(flags, null);
         }
         this.coder.output = new byte[this.coder.maxOutputSize(2048)];
         this.outputStart = 0;
         this.outputEnd = 0;
     }
 
+    @Override // java.io.FilterInputStream, java.io.InputStream
     public boolean markSupported() {
         return false;
     }
 
+    @Override // java.io.FilterInputStream, java.io.InputStream
     public void mark(int readlimit) {
         throw new UnsupportedOperationException();
     }
 
+    @Override // java.io.FilterInputStream, java.io.InputStream
     public void reset() {
         throw new UnsupportedOperationException();
     }
 
+    @Override // java.io.FilterInputStream, java.io.InputStream, java.io.Closeable, java.lang.AutoCloseable
     public void close() throws IOException {
         this.in.close();
         this.inputBuffer = null;
     }
 
+    @Override // java.io.FilterInputStream, java.io.InputStream
     public int available() {
         return this.outputEnd - this.outputStart;
     }
 
+    @Override // java.io.FilterInputStream, java.io.InputStream
     public long skip(long n) throws IOException {
         if (this.outputStart >= this.outputEnd) {
             refill();
         }
         if (this.outputStart >= this.outputEnd) {
-            return 0;
+            return 0L;
         }
-        long bytes = Math.min(n, (long) (this.outputEnd - this.outputStart));
-        this.outputStart = (int) (((long) this.outputStart) + bytes);
+        long bytes = Math.min(n, this.outputEnd - this.outputStart);
+        this.outputStart = (int) (this.outputStart + bytes);
         return bytes;
     }
 
+    @Override // java.io.FilterInputStream, java.io.InputStream
     public int read() throws IOException {
         if (this.outputStart >= this.outputEnd) {
             refill();
@@ -78,6 +86,7 @@ public class Base64InputStream extends FilterInputStream {
         return bArr[i] & 255;
     }
 
+    @Override // java.io.FilterInputStream, java.io.InputStream
     public int read(byte[] b, int off, int len) throws IOException {
         if (this.outputStart >= this.outputEnd) {
             refill();
@@ -93,20 +102,20 @@ public class Base64InputStream extends FilterInputStream {
 
     private void refill() throws IOException {
         boolean success;
-        if (!this.eof) {
-            int bytesRead = this.in.read(this.inputBuffer);
-            if (bytesRead == -1) {
-                this.eof = true;
-                success = this.coder.process(EMPTY, 0, 0, true);
-            } else {
-                success = this.coder.process(this.inputBuffer, 0, bytesRead, false);
-            }
-            if (success) {
-                this.outputEnd = this.coder.op;
-                this.outputStart = 0;
-                return;
-            }
+        if (this.eof) {
+            return;
+        }
+        int bytesRead = this.in.read(this.inputBuffer);
+        if (bytesRead == -1) {
+            this.eof = true;
+            success = this.coder.process(EMPTY, 0, 0, true);
+        } else {
+            success = this.coder.process(this.inputBuffer, 0, bytesRead, false);
+        }
+        if (!success) {
             throw new Base64DataException("bad base-64");
         }
+        this.outputEnd = this.coder.f288op;
+        this.outputStart = 0;
     }
 }

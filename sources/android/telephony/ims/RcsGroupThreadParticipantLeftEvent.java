@@ -3,6 +3,7 @@ package android.telephony.ims;
 import android.telephony.ims.RcsControllerCall;
 import android.telephony.ims.aidl.IRcs;
 
+/* loaded from: classes4.dex */
 public final class RcsGroupThreadParticipantLeftEvent extends RcsGroupThreadEvent {
     private RcsParticipant mLeavingParticipant;
 
@@ -15,11 +16,14 @@ public final class RcsGroupThreadParticipantLeftEvent extends RcsGroupThreadEven
         return this.mLeavingParticipant;
     }
 
-    /* access modifiers changed from: package-private */
-    public void persist(RcsControllerCall rcsControllerCall) throws RcsMessageStoreException {
-        rcsControllerCall.call(new RcsControllerCall.RcsServiceCall() {
+    @Override // android.telephony.ims.RcsEvent
+    void persist(RcsControllerCall rcsControllerCall) throws RcsMessageStoreException {
+        rcsControllerCall.call(new RcsControllerCall.RcsServiceCall() { // from class: android.telephony.ims.-$$Lambda$RcsGroupThreadParticipantLeftEvent$vX6x1bZueUi684uTuoFiWxhgs80
+            @Override // android.telephony.ims.RcsControllerCall.RcsServiceCall
             public final Object methodOnIRcs(IRcs iRcs, String str) {
-                return Integer.valueOf(iRcs.createGroupThreadParticipantLeftEvent(RcsGroupThreadParticipantLeftEvent.this.getTimestamp(), RcsGroupThreadParticipantLeftEvent.this.getRcsGroupThread().getThreadId(), RcsGroupThreadParticipantLeftEvent.this.getOriginatingParticipant().getId(), RcsGroupThreadParticipantLeftEvent.this.getLeavingParticipant().getId(), str));
+                Integer valueOf;
+                valueOf = Integer.valueOf(iRcs.createGroupThreadParticipantLeftEvent(r0.getTimestamp(), r0.getRcsGroupThread().getThreadId(), r0.getOriginatingParticipant().getId(), RcsGroupThreadParticipantLeftEvent.this.getLeavingParticipant().getId(), str));
+                return valueOf;
             }
         });
     }

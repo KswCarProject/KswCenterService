@@ -3,6 +3,7 @@ package org.mozilla.universalchardet.prober;
 import org.mozilla.universalchardet.prober.CharsetProber;
 import org.mozilla.universalchardet.prober.sequence.SequenceModel;
 
+/* loaded from: classes5.dex */
 public class SingleByteCharsetProber extends CharsetProber {
     public static final int NEGATIVE_CAT = 0;
     public static final float NEGATIVE_SHORTCUT_THRESHOLD = 0.05f;
@@ -38,25 +39,29 @@ public class SingleByteCharsetProber extends CharsetProber {
         reset();
     }
 
+    @Override // org.mozilla.universalchardet.prober.CharsetProber
     public String getCharSetName() {
         return this.nameProber == null ? this.model.getCharsetName() : this.nameProber.getCharSetName();
     }
 
+    @Override // org.mozilla.universalchardet.prober.CharsetProber
     public float getConfidence() {
-        if (this.totalSeqs <= 0) {
-            return 0.01f;
+        if (this.totalSeqs > 0) {
+            float typicalPositiveRatio = ((((this.seqCounters[3] * 1.0f) / this.totalSeqs) / this.model.getTypicalPositiveRatio()) * this.freqChar) / this.totalChar;
+            if (typicalPositiveRatio >= 1.0f) {
+                return 0.99f;
+            }
+            return typicalPositiveRatio;
         }
-        float typicalPositiveRatio = ((((((float) this.seqCounters[3]) * 1.0f) / ((float) this.totalSeqs)) / this.model.getTypicalPositiveRatio()) * ((float) this.freqChar)) / ((float) this.totalChar);
-        if (typicalPositiveRatio >= 1.0f) {
-            return 0.99f;
-        }
-        return typicalPositiveRatio;
+        return 0.01f;
     }
 
+    @Override // org.mozilla.universalchardet.prober.CharsetProber
     public CharsetProber.ProbingState getState() {
         return this.state;
     }
 
+    @Override // org.mozilla.universalchardet.prober.CharsetProber
     public CharsetProber.ProbingState handleData(byte[] bArr, int i, int i2) {
         CharsetProber.ProbingState probingState;
         int i3 = i2 + i;
@@ -69,13 +74,13 @@ public class SingleByteCharsetProber extends CharsetProber {
                 this.freqChar++;
                 if (this.lastOrder < 64) {
                     this.totalSeqs++;
-                    if (!this.reversed) {
+                    if (this.reversed) {
                         int[] iArr = this.seqCounters;
-                        byte precedence = this.model.getPrecedence((this.lastOrder * 64) + order);
+                        byte precedence = this.model.getPrecedence((order * 64) + this.lastOrder);
                         iArr[precedence] = iArr[precedence] + 1;
                     } else {
                         int[] iArr2 = this.seqCounters;
-                        byte precedence2 = this.model.getPrecedence((order * 64) + this.lastOrder);
+                        byte precedence2 = this.model.getPrecedence((this.lastOrder * 64) + order);
                         iArr2[precedence2] = iArr2[precedence2] + 1;
                     }
                 }
@@ -95,14 +100,14 @@ public class SingleByteCharsetProber extends CharsetProber {
         return this.state;
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean keepEnglishLetters() {
+    boolean keepEnglishLetters() {
         return this.model.getKeepEnglishLetter();
     }
 
+    @Override // org.mozilla.universalchardet.prober.CharsetProber
     public void reset() {
         this.state = CharsetProber.ProbingState.DETECTING;
-        this.lastOrder = 255;
+        this.lastOrder = (short) 255;
         for (int i = 0; i < 4; i++) {
             this.seqCounters[i] = 0;
         }
@@ -111,6 +116,7 @@ public class SingleByteCharsetProber extends CharsetProber {
         this.freqChar = 0;
     }
 
+    @Override // org.mozilla.universalchardet.prober.CharsetProber
     public void setOption() {
     }
 }

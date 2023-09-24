@@ -5,7 +5,8 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
-public interface GL11Ext extends GL {
+/* loaded from: classes5.dex */
+public interface GL11Ext extends InterfaceC3683GL {
     public static final int GL_MATRIX_INDEX_ARRAY_BUFFER_BINDING_OES = 35742;
     public static final int GL_MATRIX_INDEX_ARRAY_OES = 34884;
     public static final int GL_MATRIX_INDEX_ARRAY_POINTER_OES = 34889;

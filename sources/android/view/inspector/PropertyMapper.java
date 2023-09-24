@@ -3,6 +3,7 @@ package android.view.inspector;
 import java.util.Set;
 import java.util.function.IntFunction;
 
+/* loaded from: classes4.dex */
 public interface PropertyMapper {
     int mapBoolean(String str, int i);
 
@@ -32,9 +33,10 @@ public interface PropertyMapper {
 
     int mapShort(String str, int i);
 
+    /* loaded from: classes4.dex */
     public static class PropertyConflictException extends RuntimeException {
         public PropertyConflictException(String name, String newPropertyType, String existingPropertyType) {
-            super(String.format("Attempted to map property \"%s\" as type %s, but it is already mapped as %s.", new Object[]{name, newPropertyType, existingPropertyType}));
+            super(String.format("Attempted to map property \"%s\" as type %s, but it is already mapped as %s.", name, newPropertyType, existingPropertyType));
         }
     }
 }

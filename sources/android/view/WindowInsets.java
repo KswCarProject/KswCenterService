@@ -9,26 +9,20 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.Arrays;
 import java.util.Objects;
 
+/* loaded from: classes4.dex */
 public final class WindowInsets {
     @UnsupportedAppUsage
-    public static final WindowInsets CONSUMED = new WindowInsets((Rect) null, (Rect) null, false, false, (DisplayCutout) null);
-    /* access modifiers changed from: private */
-    public final boolean mAlwaysConsumeSystemBars;
+    public static final WindowInsets CONSUMED = new WindowInsets(null, null, false, false, null);
+    private final boolean mAlwaysConsumeSystemBars;
     private final DisplayCutout mDisplayCutout;
     private final boolean mDisplayCutoutConsumed;
-    /* access modifiers changed from: private */
-    public final boolean mIsRound;
-    /* access modifiers changed from: private */
-    public final boolean mStableInsetsConsumed;
-    /* access modifiers changed from: private */
-    public final boolean mSystemWindowInsetsConsumed;
+    private final boolean mIsRound;
+    private final boolean mStableInsetsConsumed;
+    private final boolean mSystemWindowInsetsConsumed;
     private Rect mTempRect;
-    /* access modifiers changed from: private */
-    public final Insets[] mTypeInsetsMap;
-    /* access modifiers changed from: private */
-    public final Insets[] mTypeMaxInsetsMap;
-    /* access modifiers changed from: private */
-    public final boolean[] mTypeVisibilityMap;
+    private final Insets[] mTypeInsetsMap;
+    private final Insets[] mTypeMaxInsetsMap;
+    private final boolean[] mTypeVisibilityMap;
 
     public WindowInsets(Rect systemWindowInsetsRect, Rect stableInsetsRect, boolean isRound, boolean alwaysConsumeSystemBars, DisplayCutout displayCutout) {
         this(createCompatTypeMap(systemWindowInsetsRect), createCompatTypeMap(stableInsetsRect), createCompatVisibilityMap(createCompatTypeMap(systemWindowInsetsRect)), isRound, alwaysConsumeSystemBars, displayCutout);
@@ -37,7 +31,6 @@ public final class WindowInsets {
     public WindowInsets(Insets[] typeInsetsMap, Insets[] typeMaxInsetsMap, boolean[] typeVisibilityMap, boolean isRound, boolean alwaysConsumeSystemBars, DisplayCutout displayCutout) {
         Insets[] insetsArr;
         Insets[] insetsArr2;
-        boolean z = false;
         this.mSystemWindowInsetsConsumed = typeInsetsMap == null;
         if (this.mSystemWindowInsetsConsumed) {
             insetsArr = new Insets[7];
@@ -55,45 +48,25 @@ public final class WindowInsets {
         this.mTypeVisibilityMap = typeVisibilityMap;
         this.mIsRound = isRound;
         this.mAlwaysConsumeSystemBars = alwaysConsumeSystemBars;
-        this.mDisplayCutoutConsumed = displayCutout == null ? true : z;
+        this.mDisplayCutoutConsumed = displayCutout == null;
         this.mDisplayCutout = (this.mDisplayCutoutConsumed || displayCutout.isEmpty()) ? null : displayCutout;
     }
 
-    /* JADX WARNING: Illegal instructions before constructor call */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public WindowInsets(android.view.WindowInsets r10) {
-        /*
-            r9 = this;
-            boolean r0 = r10.mSystemWindowInsetsConsumed
-            r1 = 0
-            if (r0 == 0) goto L_0x0007
-            r3 = r1
-            goto L_0x000a
-        L_0x0007:
-            android.graphics.Insets[] r0 = r10.mTypeInsetsMap
-            r3 = r0
-        L_0x000a:
-            boolean r0 = r10.mStableInsetsConsumed
-            if (r0 == 0) goto L_0x0010
-        L_0x000e:
-            r4 = r1
-            goto L_0x0013
-        L_0x0010:
-            android.graphics.Insets[] r1 = r10.mTypeMaxInsetsMap
-            goto L_0x000e
-        L_0x0013:
-            boolean[] r5 = r10.mTypeVisibilityMap
-            boolean r6 = r10.mIsRound
-            boolean r7 = r10.mAlwaysConsumeSystemBars
-            android.view.DisplayCutout r8 = displayCutoutCopyConstructorArgument(r10)
-            r2 = r9
-            r2.<init>(r3, r4, r5, r6, r7, r8)
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.view.WindowInsets.<init>(android.view.WindowInsets):void");
+    /* JADX WARN: Illegal instructions before constructor call */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public WindowInsets(WindowInsets src) {
+        this(r3, src.mStableInsetsConsumed ? null : src.mTypeMaxInsetsMap, src.mTypeVisibilityMap, src.mIsRound, src.mAlwaysConsumeSystemBars, displayCutoutCopyConstructorArgument(src));
+        Insets[] insetsArr;
+        if (!src.mSystemWindowInsetsConsumed) {
+            insetsArr = src.mTypeInsetsMap;
+        } else {
+            insetsArr = null;
+        }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static DisplayCutout displayCutoutCopyConstructorArgument(WindowInsets w) {
         if (w.mDisplayCutoutConsumed) {
             return null;
@@ -108,7 +81,7 @@ public final class WindowInsets {
         Insets insets;
         Insets result = null;
         for (int i = 1; i <= 64; i <<= 1) {
-            if (!((typeMask & i) == 0 || (insets = typeInsetsMap[Type.indexOf(i)]) == null)) {
+            if ((typeMask & i) != 0 && (insets = typeInsetsMap[Type.indexOf(i)]) != null) {
                 if (result == null) {
                     result = insets;
                 } else {
@@ -119,7 +92,7 @@ public final class WindowInsets {
         return result == null ? Insets.NONE : result;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static void setInsets(Insets[] typeInsetsMap, int typeMask, Insets insets) {
         for (int i = 1; i <= 64; i <<= 1) {
             if ((typeMask & i) != 0) {
@@ -130,7 +103,7 @@ public final class WindowInsets {
 
     @UnsupportedAppUsage
     public WindowInsets(Rect systemWindowInsets) {
-        this(createCompatTypeMap(systemWindowInsets), (Insets[]) null, new boolean[7], false, false, (DisplayCutout) null);
+        this(createCompatTypeMap(systemWindowInsets), null, new boolean[7], false, false, null);
     }
 
     private static Insets[] createCompatTypeMap(Rect insets) {
@@ -143,8 +116,8 @@ public final class WindowInsets {
     }
 
     static void assignCompatInsets(Insets[] typeInsetMap, Rect insets) {
-        typeInsetMap[Type.indexOf(1)] = Insets.of(0, insets.top, 0, 0);
-        typeInsetMap[Type.indexOf(4)] = Insets.of(insets.left, 0, insets.right, insets.bottom);
+        typeInsetMap[Type.indexOf(1)] = Insets.m132of(0, insets.top, 0, 0);
+        typeInsetMap[Type.indexOf(4)] = Insets.m132of(insets.left, 0, insets.right, insets.bottom);
     }
 
     private static boolean[] createCompatVisibilityMap(Insets[] typeInsetMap) {
@@ -180,10 +153,10 @@ public final class WindowInsets {
     }
 
     public Insets getMaxInsets(int typeMask) throws IllegalArgumentException {
-        if ((typeMask & 2) == 0) {
-            return getInsets(this.mTypeMaxInsetsMap, typeMask);
+        if ((typeMask & 2) != 0) {
+            throw new IllegalArgumentException("Unable to query the maximum insets for IME");
         }
-        throw new IllegalArgumentException("Unable to query the maximum insets for IME");
+        return getInsets(this.mTypeMaxInsetsMap, typeMask);
     }
 
     public boolean isVisible(int typeMask) {
@@ -216,7 +189,7 @@ public final class WindowInsets {
     }
 
     public boolean hasInsets() {
-        return !getInsets(this.mTypeInsetsMap, Type.all()).equals(Insets.NONE) || !getInsets(this.mTypeMaxInsetsMap, Type.all()).equals(Insets.NONE) || this.mDisplayCutout != null;
+        return (getInsets(this.mTypeInsetsMap, Type.all()).equals(Insets.NONE) && getInsets(this.mTypeMaxInsetsMap, Type.all()).equals(Insets.NONE) && this.mDisplayCutout == null) ? false : true;
     }
 
     public DisplayCutout getDisplayCutout() {
@@ -225,12 +198,12 @@ public final class WindowInsets {
 
     public WindowInsets consumeDisplayCutout() {
         Insets[] insetsArr;
-        if (this.mSystemWindowInsetsConsumed) {
-            insetsArr = null;
-        } else {
+        if (!this.mSystemWindowInsetsConsumed) {
             insetsArr = this.mTypeInsetsMap;
+        } else {
+            insetsArr = null;
         }
-        return new WindowInsets(insetsArr, this.mStableInsetsConsumed ? null : this.mTypeMaxInsetsMap, this.mTypeVisibilityMap, this.mIsRound, this.mAlwaysConsumeSystemBars, (DisplayCutout) null);
+        return new WindowInsets(insetsArr, this.mStableInsetsConsumed ? null : this.mTypeMaxInsetsMap, this.mTypeVisibilityMap, this.mIsRound, this.mAlwaysConsumeSystemBars, null);
     }
 
     public boolean isConsumed() {
@@ -242,7 +215,7 @@ public final class WindowInsets {
     }
 
     public WindowInsets consumeSystemWindowInsets() {
-        return new WindowInsets((Insets[]) null, this.mStableInsetsConsumed ? null : this.mTypeMaxInsetsMap, this.mTypeVisibilityMap, this.mIsRound, this.mAlwaysConsumeSystemBars, displayCutoutCopyConstructorArgument(this));
+        return new WindowInsets(null, this.mStableInsetsConsumed ? null : this.mTypeMaxInsetsMap, this.mTypeVisibilityMap, this.mIsRound, this.mAlwaysConsumeSystemBars, displayCutoutCopyConstructorArgument(this));
     }
 
     @Deprecated
@@ -250,7 +223,7 @@ public final class WindowInsets {
         if (this.mSystemWindowInsetsConsumed) {
             return this;
         }
-        return new Builder(this).setSystemWindowInsets(Insets.of(left, top, right, bottom)).build();
+        return new Builder(this).setSystemWindowInsets(Insets.m132of(left, top, right, bottom)).build();
     }
 
     @Deprecated
@@ -295,7 +268,7 @@ public final class WindowInsets {
     }
 
     public WindowInsets consumeStableInsets() {
-        return new WindowInsets(this.mSystemWindowInsetsConsumed ? null : this.mTypeInsetsMap, (Insets[]) null, this.mTypeVisibilityMap, this.mIsRound, this.mAlwaysConsumeSystemBars, displayCutoutCopyConstructorArgument(this));
+        return new WindowInsets(this.mSystemWindowInsetsConsumed ? null : this.mTypeInsetsMap, null, this.mTypeVisibilityMap, this.mIsRound, this.mAlwaysConsumeSystemBars, displayCutoutCopyConstructorArgument(this));
     }
 
     public boolean shouldAlwaysConsumeSystemBars() {
@@ -332,33 +305,27 @@ public final class WindowInsets {
     }
 
     public WindowInsets inset(int left, int top, int right, int bottom) {
-        Insets[] insetsArr;
-        DisplayCutout displayCutout;
+        Insets[] insetInsets;
         DisplayCutout inset;
         Preconditions.checkArgumentNonnegative(left);
         Preconditions.checkArgumentNonnegative(top);
         Preconditions.checkArgumentNonnegative(right);
         Preconditions.checkArgumentNonnegative(bottom);
-        if (this.mSystemWindowInsetsConsumed) {
-            insetsArr = null;
+        if (!this.mSystemWindowInsetsConsumed) {
+            insetInsets = insetInsets(this.mTypeInsetsMap, left, top, right, bottom);
         } else {
-            insetsArr = insetInsets(this.mTypeInsetsMap, left, top, right, bottom);
+            insetInsets = null;
         }
-        Insets[] insetInsets = this.mStableInsetsConsumed ? null : insetInsets(this.mTypeMaxInsetsMap, left, top, right, bottom);
+        Insets[] insetInsets2 = this.mStableInsetsConsumed ? null : insetInsets(this.mTypeMaxInsetsMap, left, top, right, bottom);
         boolean[] zArr = this.mTypeVisibilityMap;
         boolean z = this.mIsRound;
         boolean z2 = this.mAlwaysConsumeSystemBars;
-        if (this.mDisplayCutoutConsumed) {
-            displayCutout = null;
+        if (!this.mDisplayCutoutConsumed) {
+            inset = this.mDisplayCutout == null ? DisplayCutout.NO_CUTOUT : this.mDisplayCutout.inset(left, top, right, bottom);
         } else {
-            if (this.mDisplayCutout == null) {
-                inset = DisplayCutout.NO_CUTOUT;
-            } else {
-                inset = this.mDisplayCutout.inset(left, top, right, bottom);
-            }
-            displayCutout = inset;
+            inset = null;
         }
-        return new WindowInsets(insetsArr, insetInsets, zArr, z, z2, displayCutout);
+        return new WindowInsets(insetInsets, insetInsets2, zArr, z, z2, inset);
     }
 
     public boolean equals(Object o) {
@@ -376,40 +343,23 @@ public final class WindowInsets {
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(Arrays.hashCode(this.mTypeInsetsMap)), Integer.valueOf(Arrays.hashCode(this.mTypeMaxInsetsMap)), Integer.valueOf(Arrays.hashCode(this.mTypeVisibilityMap)), Boolean.valueOf(this.mIsRound), this.mDisplayCutout, Boolean.valueOf(this.mAlwaysConsumeSystemBars), Boolean.valueOf(this.mSystemWindowInsetsConsumed), Boolean.valueOf(this.mStableInsetsConsumed), Boolean.valueOf(this.mDisplayCutoutConsumed)});
+        return Objects.hash(Integer.valueOf(Arrays.hashCode(this.mTypeInsetsMap)), Integer.valueOf(Arrays.hashCode(this.mTypeMaxInsetsMap)), Integer.valueOf(Arrays.hashCode(this.mTypeVisibilityMap)), Boolean.valueOf(this.mIsRound), this.mDisplayCutout, Boolean.valueOf(this.mAlwaysConsumeSystemBars), Boolean.valueOf(this.mSystemWindowInsetsConsumed), Boolean.valueOf(this.mStableInsetsConsumed), Boolean.valueOf(this.mDisplayCutoutConsumed));
     }
 
-    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r4v0, resolved type: java.lang.Object} */
-    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r5v4, resolved type: android.graphics.Insets[]} */
-    /* JADX WARNING: Multi-variable type inference failed */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    private static android.graphics.Insets[] insetInsets(android.graphics.Insets[] r5, int r6, int r7, int r8, int r9) {
-        /*
-            r0 = 0
-            r1 = 0
-        L_0x0002:
-            r2 = 7
-            if (r1 >= r2) goto L_0x001f
-            r2 = r5[r1]
-            if (r2 != 0) goto L_0x000a
-            goto L_0x001c
-        L_0x000a:
-            android.graphics.Insets r3 = insetInsets((android.graphics.Insets) r2, (int) r6, (int) r7, (int) r8, (int) r9)
-            if (r3 == r2) goto L_0x001c
-            if (r0 != 0) goto L_0x001a
-            java.lang.Object r4 = r5.clone()
-            r5 = r4
-            android.graphics.Insets[] r5 = (android.graphics.Insets[]) r5
-            r0 = 1
-        L_0x001a:
-            r5[r1] = r3
-        L_0x001c:
-            int r1 = r1 + 1
-            goto L_0x0002
-        L_0x001f:
-            return r5
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.view.WindowInsets.insetInsets(android.graphics.Insets[], int, int, int, int):android.graphics.Insets[]");
+    private static Insets[] insetInsets(Insets[] typeInsetsMap, int left, int top, int right, int bottom) {
+        Insets insetInsets;
+        boolean cloned = false;
+        for (int i = 0; i < 7; i++) {
+            Insets insets = typeInsetsMap[i];
+            if (insets != null && (insetInsets = insetInsets(insets, left, top, right, bottom)) != insets) {
+                if (!cloned) {
+                    typeInsetsMap = (Insets[]) typeInsetsMap.clone();
+                    cloned = true;
+                }
+                typeInsetsMap[i] = insetInsets;
+            }
+        }
+        return typeInsetsMap;
     }
 
     private static Insets insetInsets(Insets insets, int left, int top, int right, int bottom) {
@@ -420,14 +370,14 @@ public final class WindowInsets {
         if (newLeft == left && newTop == top && newRight == right && newBottom == bottom) {
             return insets;
         }
-        return Insets.of(newLeft, newTop, newRight, newBottom);
+        return Insets.m132of(newLeft, newTop, newRight, newBottom);
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean isSystemWindowInsetsConsumed() {
+    boolean isSystemWindowInsetsConsumed() {
         return this.mSystemWindowInsetsConsumed;
     }
 
+    /* loaded from: classes4.dex */
     public static final class Builder {
         private boolean mAlwaysConsumeSystemBars;
         private DisplayCutout mDisplayCutout;
@@ -489,13 +439,13 @@ public final class WindowInsets {
         }
 
         public Builder setMaxInsets(int typeMask, Insets insets) throws IllegalArgumentException {
-            if (typeMask != 2) {
-                Preconditions.checkNotNull(insets);
-                WindowInsets.setInsets(this.mTypeMaxInsetsMap, typeMask, insets);
-                this.mStableInsetsConsumed = false;
-                return this;
+            if (typeMask == 2) {
+                throw new IllegalArgumentException("Maximum inset not available for IME");
             }
-            throw new IllegalArgumentException("Maximum inset not available for IME");
+            Preconditions.checkNotNull(insets);
+            WindowInsets.setInsets(this.mTypeMaxInsetsMap, typeMask, insets);
+            this.mStableInsetsConsumed = false;
+            return this;
         }
 
         public Builder setVisible(int typeMask, boolean visible) {
@@ -531,15 +481,16 @@ public final class WindowInsets {
 
         public WindowInsets build() {
             Insets[] insetsArr;
-            if (this.mSystemInsetsConsumed) {
-                insetsArr = null;
-            } else {
+            if (!this.mSystemInsetsConsumed) {
                 insetsArr = this.mTypeInsetsMap;
+            } else {
+                insetsArr = null;
             }
             return new WindowInsets(insetsArr, this.mStableInsetsConsumed ? null : this.mTypeMaxInsetsMap, this.mTypeVisibilityMap, this.mIsRound, this.mAlwaysConsumeSystemBars, this.mDisplayCutout);
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class Type {
         static final int FIRST = 1;
         static final int IME = 2;
@@ -553,33 +504,34 @@ public final class WindowInsets {
         static final int WINDOW_DECOR = 64;
 
         @Retention(RetentionPolicy.SOURCE)
+        /* loaded from: classes4.dex */
         public @interface InsetType {
         }
 
         static int indexOf(int type) {
-            if (type == 4) {
-                return 2;
-            }
-            if (type == 8) {
+            if (type != 4) {
+                if (type != 8) {
+                    if (type != 16) {
+                        if (type != 32) {
+                            if (type != 64) {
+                                switch (type) {
+                                    case 1:
+                                        return 0;
+                                    case 2:
+                                        return 1;
+                                    default:
+                                        throw new IllegalArgumentException("type needs to be >= FIRST and <= LAST, type=" + type);
+                                }
+                            }
+                            return 6;
+                        }
+                        return 5;
+                    }
+                    return 4;
+                }
                 return 3;
             }
-            if (type == 16) {
-                return 4;
-            }
-            if (type == 32) {
-                return 5;
-            }
-            if (type == 64) {
-                return 6;
-            }
-            switch (type) {
-                case 1:
-                    return 0;
-                case 2:
-                    return 1;
-                default:
-                    throw new IllegalArgumentException("type needs to be >= FIRST and <= LAST, type=" + type);
-            }
+            return 2;
         }
 
         private Type() {

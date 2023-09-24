@@ -2,17 +2,22 @@ package android.app.prediction;
 
 import android.annotation.SystemApi;
 import android.content.Context;
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class AppPredictionContext implements Parcelable {
-    public static final Parcelable.Creator<AppPredictionContext> CREATOR = new Parcelable.Creator<AppPredictionContext>() {
+    public static final Parcelable.Creator<AppPredictionContext> CREATOR = new Parcelable.Creator<AppPredictionContext>() { // from class: android.app.prediction.AppPredictionContext.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AppPredictionContext createFromParcel(Parcel parcel) {
             return new AppPredictionContext(parcel);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AppPredictionContext[] newArray(int size) {
             return new AppPredictionContext[size];
         }
@@ -56,20 +61,19 @@ public final class AppPredictionContext implements Parcelable {
         if (o == this) {
             return true;
         }
-        if (!getClass().equals(o != null ? o.getClass() : null)) {
-            return false;
+        if (getClass().equals(o != null ? o.getClass() : null)) {
+            AppPredictionContext other = (AppPredictionContext) o;
+            return this.mPredictedTargetCount == other.mPredictedTargetCount && this.mUiSurface.equals(other.mUiSurface) && this.mPackageName.equals(other.mPackageName);
         }
-        AppPredictionContext other = (AppPredictionContext) o;
-        if (this.mPredictedTargetCount != other.mPredictedTargetCount || !this.mUiSurface.equals(other.mUiSurface) || !this.mPackageName.equals(other.mPackageName)) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.mUiSurface);
         dest.writeInt(this.mPredictedTargetCount);
@@ -78,6 +82,7 @@ public final class AppPredictionContext implements Parcelable {
     }
 
     @SystemApi
+    /* loaded from: classes.dex */
     public static final class Builder {
         private Bundle mExtras;
         private final String mPackageName;

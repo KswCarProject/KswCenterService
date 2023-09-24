@@ -3,6 +3,7 @@ package android.hardware.camera2.params;
 import android.hardware.camera2.utils.HashCodeHelpers;
 import com.android.internal.util.Preconditions;
 
+/* loaded from: classes.dex */
 public final class OisSample {
     private final long mTimestampNs;
     private final float mXShift;
@@ -37,17 +38,18 @@ public final class OisSample {
             return false;
         }
         OisSample other = (OisSample) obj;
-        if (this.mTimestampNs == other.mTimestampNs && this.mXShift == other.mXShift && this.mYShift == other.mYShift) {
-            return true;
+        if (this.mTimestampNs != other.mTimestampNs || this.mXShift != other.mXShift || this.mYShift != other.mYShift) {
+            return false;
         }
-        return false;
+        return true;
     }
 
     public int hashCode() {
-        return HashCodeHelpers.hashCode(this.mXShift, this.mYShift, (float) HashCodeHelpers.hashCode((float) this.mTimestampNs));
+        int timestampHash = HashCodeHelpers.hashCode((float) this.mTimestampNs);
+        return HashCodeHelpers.hashCode(this.mXShift, this.mYShift, timestampHash);
     }
 
     public String toString() {
-        return String.format("OisSample{timestamp:%d, shift_x:%f, shift_y:%f}", new Object[]{Long.valueOf(this.mTimestampNs), Float.valueOf(this.mXShift), Float.valueOf(this.mYShift)});
+        return String.format("OisSample{timestamp:%d, shift_x:%f, shift_y:%f}", Long.valueOf(this.mTimestampNs), Float.valueOf(this.mXShift), Float.valueOf(this.mYShift));
     }
 }

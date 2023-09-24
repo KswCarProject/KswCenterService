@@ -2,11 +2,12 @@ package android.service.persistentdata;
 
 import android.annotation.SuppressLint;
 import android.annotation.SystemApi;
-import android.os.RemoteException;
+import android.p007os.RemoteException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public class PersistentDataBlockManager {
     public static final int FLASH_LOCK_LOCKED = 1;
     public static final int FLASH_LOCK_UNKNOWN = -1;
@@ -15,6 +16,7 @@ public class PersistentDataBlockManager {
     private IPersistentDataBlockService sService;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface FlashLockState {
     }
 

@@ -6,9 +6,8 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Map;
 
+/* loaded from: classes4.dex */
 public final class InternalNano {
-    protected static final Charset ISO_8859_1 = Charset.forName("ISO-8859-1");
-    public static final Object LAZY_INIT_LOCK = new Object();
     public static final int TYPE_BOOL = 8;
     public static final int TYPE_BYTES = 12;
     public static final int TYPE_DOUBLE = 1;
@@ -28,6 +27,8 @@ public final class InternalNano {
     public static final int TYPE_UINT32 = 13;
     public static final int TYPE_UINT64 = 4;
     protected static final Charset UTF_8 = Charset.forName("UTF-8");
+    protected static final Charset ISO_8859_1 = Charset.forName("ISO-8859-1");
+    public static final Object LAZY_INIT_LOCK = new Object();
 
     private InternalNano() {
     }
@@ -80,17 +81,29 @@ public final class InternalNano {
     }
 
     public static boolean equals(byte[][] field1, byte[][] field2) {
+        boolean atEndOf1;
+        boolean atEndOf2;
         int index1 = 0;
         int length1 = field1 == null ? 0 : field1.length;
         int index2 = 0;
         int length2 = field2 == null ? 0 : field2.length;
         while (true) {
-            if (index1 >= length1 || field1[index1] != null) {
+            if (index1 < length1 && field1[index1] == null) {
+                index1++;
+            } else {
                 while (index2 < length2 && field2[index2] == null) {
                     index2++;
                 }
-                boolean atEndOf1 = index1 >= length1;
-                boolean atEndOf2 = index2 >= length2;
+                if (index1 < length1) {
+                    atEndOf1 = false;
+                } else {
+                    atEndOf1 = true;
+                }
+                if (index2 < length2) {
+                    atEndOf2 = false;
+                } else {
+                    atEndOf2 = true;
+                }
                 if (atEndOf1 && atEndOf2) {
                     return true;
                 }
@@ -99,24 +112,34 @@ public final class InternalNano {
                 }
                 index1++;
                 index2++;
-            } else {
-                index1++;
             }
         }
     }
 
     public static boolean equals(Object[] field1, Object[] field2) {
+        boolean atEndOf1;
+        boolean atEndOf2;
         int index1 = 0;
         int length1 = field1 == null ? 0 : field1.length;
         int index2 = 0;
         int length2 = field2 == null ? 0 : field2.length;
         while (true) {
-            if (index1 >= length1 || field1[index1] != null) {
+            if (index1 < length1 && field1[index1] == null) {
+                index1++;
+            } else {
                 while (index2 < length2 && field2[index2] == null) {
                     index2++;
                 }
-                boolean atEndOf1 = index1 >= length1;
-                boolean atEndOf2 = index2 >= length2;
+                if (index1 < length1) {
+                    atEndOf1 = false;
+                } else {
+                    atEndOf1 = true;
+                }
+                if (index2 < length2) {
+                    atEndOf2 = false;
+                } else {
+                    atEndOf2 = true;
+                }
                 if (atEndOf1 && atEndOf2) {
                     return true;
                 }
@@ -125,8 +148,6 @@ public final class InternalNano {
                 }
                 index1++;
                 index2++;
-            } else {
-                index1++;
             }
         }
     }
@@ -213,26 +234,32 @@ public final class InternalNano {
                 return Boolean.FALSE;
             case 9:
                 return "";
-            case 12:
-                return WireFormatNano.EMPTY_BYTES;
+            case 10:
+            case 11:
             default:
                 throw new IllegalArgumentException("Type: " + type + " is not a primitive type.");
+            case 12:
+                return WireFormatNano.EMPTY_BYTES;
         }
     }
 
+    /* JADX WARN: Multi-variable type inference failed */
+    /* JADX WARN: Type inference failed for: r10v2, types: [java.lang.Object] */
+    /* JADX WARN: Type inference failed for: r10v7, types: [java.lang.Object] */
     public static final <K, V> Map<K, V> mergeMapEntry(CodedInputByteBufferNano input, Map<K, V> map, MapFactories.MapFactory mapFactory, int keyType, int valueType, V value, int keyTag, int valueTag) throws IOException {
         Map<K, V> map2 = mapFactory.forMap(map);
-        int oldLimit = input.pushLimit(input.readRawVarint32());
-        K key = null;
+        int length = input.readRawVarint32();
+        int oldLimit = input.pushLimit(length);
+        Object obj = null;
         while (true) {
             int tag = input.readTag();
             if (tag == 0) {
                 break;
             } else if (tag == keyTag) {
-                key = input.readPrimitiveField(keyType);
+                obj = input.readPrimitiveField(keyType);
             } else if (tag == valueTag) {
                 if (valueType == 11) {
-                    input.readMessage((MessageNano) value);
+                    input.readMessage(value);
                 } else {
                     value = input.readPrimitiveField(valueType);
                 }
@@ -242,13 +269,13 @@ public final class InternalNano {
         }
         input.checkLastTagWas(0);
         input.popLimit(oldLimit);
-        if (key == null) {
-            key = primitiveDefaultValue(keyType);
+        if (obj == null) {
+            obj = primitiveDefaultValue(keyType);
         }
-        if (value == null) {
-            value = primitiveDefaultValue(valueType);
+        if (value == 0) {
+            value = (V) primitiveDefaultValue(valueType);
         }
-        map2.put(key, value);
+        map2.put(obj, (Object) value);
         return map2;
     }
 
@@ -259,8 +286,9 @@ public final class InternalNano {
             if (key == null || value == null) {
                 throw new IllegalStateException("keys and values in maps cannot be null");
             }
+            int entrySize = CodedOutputByteBufferNano.computeFieldSize(1, keyType, key) + CodedOutputByteBufferNano.computeFieldSize(2, valueType, value);
             output.writeTag(number, 2);
-            output.writeRawVarint32(CodedOutputByteBufferNano.computeFieldSize(1, keyType, key) + CodedOutputByteBufferNano.computeFieldSize(2, valueType, value));
+            output.writeRawVarint32(entrySize);
             output.writeField(1, keyType, key);
             output.writeField(2, valueType, value);
         }
@@ -281,72 +309,46 @@ public final class InternalNano {
         return size;
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:18:0x0034  */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public static <K, V> boolean equals(java.util.Map<K, V> r6, java.util.Map<K, V> r7) {
-        /*
-            r0 = 1
-            if (r6 != r7) goto L_0x0004
-            return r0
-        L_0x0004:
-            r1 = 0
-            if (r6 != 0) goto L_0x0010
-            int r2 = r7.size()
-            if (r2 != 0) goto L_0x000e
-            goto L_0x000f
-        L_0x000e:
-            r0 = r1
-        L_0x000f:
-            return r0
-        L_0x0010:
-            if (r7 != 0) goto L_0x001b
-            int r2 = r6.size()
-            if (r2 != 0) goto L_0x0019
-            goto L_0x001a
-        L_0x0019:
-            r0 = r1
-        L_0x001a:
-            return r0
-        L_0x001b:
-            int r2 = r6.size()
-            int r3 = r7.size()
-            if (r2 == r3) goto L_0x0026
-            return r1
-        L_0x0026:
-            java.util.Set r2 = r6.entrySet()
-            java.util.Iterator r2 = r2.iterator()
-        L_0x002e:
-            boolean r3 = r2.hasNext()
-            if (r3 == 0) goto L_0x0059
-            java.lang.Object r3 = r2.next()
-            java.util.Map$Entry r3 = (java.util.Map.Entry) r3
-            java.lang.Object r4 = r3.getKey()
-            boolean r4 = r7.containsKey(r4)
-            if (r4 != 0) goto L_0x0045
-            return r1
-        L_0x0045:
-            java.lang.Object r4 = r3.getValue()
-            java.lang.Object r5 = r3.getKey()
-            java.lang.Object r5 = r7.get(r5)
-            boolean r4 = equalsMapValue(r4, r5)
-            if (r4 != 0) goto L_0x0058
-            return r1
-        L_0x0058:
-            goto L_0x002e
-        L_0x0059:
-            return r0
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.framework.protobuf.nano.InternalNano.equals(java.util.Map, java.util.Map):boolean");
+    /* JADX WARN: Removed duplicated region for block: B:24:0x0034  */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public static <K, V> boolean equals(Map<K, V> a, Map<K, V> b) {
+        if (a == b) {
+            return true;
+        }
+        if (a == null) {
+            if (b.size() == 0) {
+                return true;
+            }
+            return false;
+        } else if (b == null) {
+            if (a.size() == 0) {
+                return true;
+            }
+            return false;
+        } else if (a.size() != b.size()) {
+            return false;
+        } else {
+            for (Map.Entry<K, V> entry : a.entrySet()) {
+                if (!b.containsKey(entry.getKey()) || !equalsMapValue(entry.getValue(), b.get(entry.getKey()))) {
+                    return false;
+                }
+                while (r2.hasNext()) {
+                }
+            }
+            return true;
+        }
     }
 
     private static boolean equalsMapValue(Object a, Object b) {
         if (a == null || b == null) {
             throw new IllegalStateException("keys and values in maps cannot be null");
-        } else if (!(a instanceof byte[]) || !(b instanceof byte[])) {
-            return a.equals(b);
-        } else {
+        }
+        if ((a instanceof byte[]) && (b instanceof byte[])) {
             return Arrays.equals((byte[]) a, (byte[]) b);
         }
+        return a.equals(b);
     }
 
     public static <K, V> int hashCode(Map<K, V> map) {
@@ -369,7 +371,7 @@ public final class InternalNano {
 
     public static void cloneUnknownFieldData(ExtendableMessageNano original, ExtendableMessageNano cloned) {
         if (original.unknownFieldData != null) {
-            cloned.unknownFieldData = original.unknownFieldData.clone();
+            cloned.unknownFieldData = original.unknownFieldData.m190clone();
         }
     }
 }

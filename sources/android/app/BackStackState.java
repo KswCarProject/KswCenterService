@@ -1,19 +1,24 @@
 package android.app;
 
 import android.app.BackStackRecord;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
 import java.util.ArrayList;
 
-/* compiled from: BackStackRecord */
+/* compiled from: BackStackRecord.java */
+/* loaded from: classes.dex */
 final class BackStackState implements Parcelable {
-    public static final Parcelable.Creator<BackStackState> CREATOR = new Parcelable.Creator<BackStackState>() {
+    public static final Parcelable.Creator<BackStackState> CREATOR = new Parcelable.Creator<BackStackState>() { // from class: android.app.BackStackState.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public BackStackState createFromParcel(Parcel in) {
             return new BackStackState(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public BackStackState[] newArray(int size) {
             return new BackStackState[size];
         }
@@ -33,40 +38,40 @@ final class BackStackState implements Parcelable {
 
     public BackStackState(FragmentManagerImpl fm, BackStackRecord bse) {
         int numOps = bse.mOps.size();
-        this.mOps = new int[(numOps * 6)];
-        if (bse.mAddToBackStack) {
-            int pos = 0;
-            int opNum = 0;
-            while (opNum < numOps) {
-                BackStackRecord.Op op = bse.mOps.get(opNum);
-                int pos2 = pos + 1;
-                this.mOps[pos] = op.cmd;
-                int pos3 = pos2 + 1;
-                this.mOps[pos2] = op.fragment != null ? op.fragment.mIndex : -1;
-                int pos4 = pos3 + 1;
-                this.mOps[pos3] = op.enterAnim;
-                int pos5 = pos4 + 1;
-                this.mOps[pos4] = op.exitAnim;
-                int pos6 = pos5 + 1;
-                this.mOps[pos5] = op.popEnterAnim;
-                this.mOps[pos6] = op.popExitAnim;
-                opNum++;
-                pos = pos6 + 1;
-            }
-            this.mTransition = bse.mTransition;
-            this.mTransitionStyle = bse.mTransitionStyle;
-            this.mName = bse.mName;
-            this.mIndex = bse.mIndex;
-            this.mBreadCrumbTitleRes = bse.mBreadCrumbTitleRes;
-            this.mBreadCrumbTitleText = bse.mBreadCrumbTitleText;
-            this.mBreadCrumbShortTitleRes = bse.mBreadCrumbShortTitleRes;
-            this.mBreadCrumbShortTitleText = bse.mBreadCrumbShortTitleText;
-            this.mSharedElementSourceNames = bse.mSharedElementSourceNames;
-            this.mSharedElementTargetNames = bse.mSharedElementTargetNames;
-            this.mReorderingAllowed = bse.mReorderingAllowed;
-            return;
+        this.mOps = new int[numOps * 6];
+        if (!bse.mAddToBackStack) {
+            throw new IllegalStateException("Not on back stack");
         }
-        throw new IllegalStateException("Not on back stack");
+        int pos = 0;
+        int opNum = 0;
+        while (opNum < numOps) {
+            BackStackRecord.C0129Op op = bse.mOps.get(opNum);
+            int pos2 = pos + 1;
+            this.mOps[pos] = op.cmd;
+            int pos3 = pos2 + 1;
+            this.mOps[pos2] = op.fragment != null ? op.fragment.mIndex : -1;
+            int pos4 = pos3 + 1;
+            this.mOps[pos3] = op.enterAnim;
+            int pos5 = pos4 + 1;
+            this.mOps[pos4] = op.exitAnim;
+            int pos6 = pos5 + 1;
+            this.mOps[pos5] = op.popEnterAnim;
+            this.mOps[pos6] = op.popExitAnim;
+            opNum++;
+            pos = pos6 + 1;
+        }
+        int opNum2 = bse.mTransition;
+        this.mTransition = opNum2;
+        this.mTransitionStyle = bse.mTransitionStyle;
+        this.mName = bse.mName;
+        this.mIndex = bse.mIndex;
+        this.mBreadCrumbTitleRes = bse.mBreadCrumbTitleRes;
+        this.mBreadCrumbTitleText = bse.mBreadCrumbTitleText;
+        this.mBreadCrumbShortTitleRes = bse.mBreadCrumbShortTitleRes;
+        this.mBreadCrumbShortTitleText = bse.mBreadCrumbShortTitleText;
+        this.mSharedElementSourceNames = bse.mSharedElementSourceNames;
+        this.mSharedElementTargetNames = bse.mSharedElementTargetNames;
+        this.mReorderingAllowed = bse.mReorderingAllowed;
     }
 
     public BackStackState(Parcel in) {
@@ -89,16 +94,17 @@ final class BackStackState implements Parcelable {
         int pos = 0;
         int num = 0;
         while (pos < this.mOps.length) {
-            BackStackRecord.Op op = new BackStackRecord.Op();
+            BackStackRecord.C0129Op op = new BackStackRecord.C0129Op();
             int pos2 = pos + 1;
             op.cmd = this.mOps[pos];
             if (FragmentManagerImpl.DEBUG) {
-                Log.v("FragmentManager", "Instantiate " + bse + " op #" + num + " base fragment #" + this.mOps[pos2]);
+                Log.m66v("FragmentManager", "Instantiate " + bse + " op #" + num + " base fragment #" + this.mOps[pos2]);
             }
             int pos3 = pos2 + 1;
             int findex = this.mOps[pos2];
             if (findex >= 0) {
-                op.fragment = fm.mActive.get(findex);
+                Fragment f = fm.mActive.get(findex);
+                op.fragment = f;
             } else {
                 op.fragment = null;
             }
@@ -133,10 +139,12 @@ final class BackStackState implements Parcelable {
         return bse;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeIntArray(this.mOps);
         dest.writeInt(this.mTransition);

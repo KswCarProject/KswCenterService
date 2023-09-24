@@ -3,11 +3,12 @@ package android.text.style;
 import android.annotation.UnsupportedAppUsage;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.os.Parcel;
+import android.p007os.Parcel;
 import android.text.Layout;
 import android.text.ParcelableSpan;
 import android.text.Spanned;
 
+/* loaded from: classes4.dex */
 public class BulletSpan implements LeadingMarginSpan, ParcelableSpan {
     private static final int STANDARD_BULLET_RADIUS = 4;
     private static final int STANDARD_COLOR = 0;
@@ -50,22 +51,27 @@ public class BulletSpan implements LeadingMarginSpan, ParcelableSpan {
         this.mBulletRadius = src.readInt();
     }
 
+    @Override // android.text.ParcelableSpan
     public int getSpanTypeId() {
         return getSpanTypeIdInternal();
     }
 
+    @Override // android.text.ParcelableSpan
     public int getSpanTypeIdInternal() {
         return 8;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         writeToParcelInternal(dest, flags);
     }
 
+    @Override // android.text.ParcelableSpan
     public void writeToParcelInternal(Parcel dest, int flags) {
         dest.writeInt(this.mGapWidth);
         dest.writeInt(this.mWantColor ? 1 : 0);
@@ -73,6 +79,7 @@ public class BulletSpan implements LeadingMarginSpan, ParcelableSpan {
         dest.writeInt(this.mBulletRadius);
     }
 
+    @Override // android.text.style.LeadingMarginSpan
     public int getLeadingMargin(boolean first) {
         return (this.mBulletRadius * 2) + this.mGapWidth;
     }
@@ -89,12 +96,10 @@ public class BulletSpan implements LeadingMarginSpan, ParcelableSpan {
         return this.mColor;
     }
 
+    @Override // android.text.style.LeadingMarginSpan
     public void drawLeadingMargin(Canvas canvas, Paint paint, int x, int dir, int top, int baseline, int bottom, CharSequence text, int start, int end, boolean first, Layout layout) {
         int line;
-        Paint paint2 = paint;
-        int i = start;
-        Layout layout2 = layout;
-        if (((Spanned) text).getSpanStart(this) == i) {
+        if (((Spanned) text).getSpanStart(this) == start) {
             Paint.Style style = paint.getStyle();
             int oldcolor = 0;
             if (this.mWantColor) {
@@ -102,20 +107,19 @@ public class BulletSpan implements LeadingMarginSpan, ParcelableSpan {
                 paint.setColor(this.mColor);
             }
             paint.setStyle(Paint.Style.FILL);
-            if (layout2 != null) {
-                line = bottom - layout2.getLineExtra(layout2.getLineForOffset(i));
+            if (layout != null) {
+                int line2 = layout.getLineForOffset(start);
+                line = bottom - layout.getLineExtra(line2);
             } else {
                 line = bottom;
             }
-            Canvas canvas2 = canvas;
-            canvas.drawCircle((float) ((this.mBulletRadius * dir) + x), ((float) (top + line)) / 2.0f, (float) this.mBulletRadius, paint);
+            float yPosition = (top + line) / 2.0f;
+            float xPosition = (this.mBulletRadius * dir) + x;
+            canvas.drawCircle(xPosition, yPosition, this.mBulletRadius, paint);
             if (this.mWantColor) {
                 paint.setColor(oldcolor);
             }
             paint.setStyle(style);
-            return;
         }
-        Canvas canvas3 = canvas;
-        int i2 = bottom;
     }
 }

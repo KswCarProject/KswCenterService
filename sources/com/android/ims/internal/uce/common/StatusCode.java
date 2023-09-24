@@ -1,15 +1,20 @@
 package com.android.ims.internal.uce.common;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes4.dex */
 public class StatusCode implements Parcelable {
-    public static final Parcelable.Creator<StatusCode> CREATOR = new Parcelable.Creator<StatusCode>() {
+    public static final Parcelable.Creator<StatusCode> CREATOR = new Parcelable.Creator<StatusCode>() { // from class: com.android.ims.internal.uce.common.StatusCode.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public StatusCode createFromParcel(Parcel source) {
             return new StatusCode(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public StatusCode[] newArray(int size) {
             return new StatusCode[size];
         }
@@ -48,10 +53,12 @@ public class StatusCode implements Parcelable {
         this.mStatusCode = nStatusCode;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mStatusCode);
     }

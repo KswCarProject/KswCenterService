@@ -3,16 +3,17 @@ package android.preference;
 import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.preference.Preference;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.SeekBar;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
 @Deprecated
+/* loaded from: classes3.dex */
 public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarChangeListener {
     private int mMax;
     private int mProgress;
@@ -20,11 +21,11 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
 
     public SeekBarPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ProgressBar, defStyleAttr, defStyleRes);
+        TypedArray a = context.obtainStyledAttributes(attrs, C3132R.styleable.ProgressBar, defStyleAttr, defStyleRes);
         setMax(a.getInt(2, this.mMax));
         a.recycle();
-        TypedArray a2 = context.obtainStyledAttributes(attrs, R.styleable.SeekBarPreference, defStyleAttr, defStyleRes);
-        int layoutResId = a2.getResourceId(0, R.layout.preference_widget_seekbar);
+        TypedArray a2 = context.obtainStyledAttributes(attrs, C3132R.styleable.SeekBarPreference, defStyleAttr, defStyleRes);
+        int layoutResId = a2.getResourceId(0, C3132R.layout.preference_widget_seekbar);
         a2.recycle();
         setLayoutResource(layoutResId);
     }
@@ -36,43 +37,38 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
 
     @UnsupportedAppUsage
     public SeekBarPreference(Context context, AttributeSet attrs) {
-        this(context, attrs, R.attr.seekBarPreferenceStyle);
+        this(context, attrs, C3132R.attr.seekBarPreferenceStyle);
     }
 
     @UnsupportedAppUsage
     public SeekBarPreference(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
-    /* access modifiers changed from: protected */
-    public void onBindView(View view) {
+    @Override // android.preference.Preference
+    protected void onBindView(View view) {
         super.onBindView(view);
-        SeekBar seekBar = (SeekBar) view.findViewById(R.id.seekbar);
+        SeekBar seekBar = (SeekBar) view.findViewById(C3132R.C3134id.seekbar);
         seekBar.setOnSeekBarChangeListener(this);
         seekBar.setMax(this.mMax);
         seekBar.setProgress(this.mProgress);
         seekBar.setEnabled(isEnabled());
     }
 
-    /* access modifiers changed from: protected */
-    public void onSetInitialValue(boolean restoreValue, Object defaultValue) {
-        int i;
-        if (restoreValue) {
-            i = getPersistedInt(this.mProgress);
-        } else {
-            i = ((Integer) defaultValue).intValue();
-        }
-        setProgress(i);
+    @Override // android.preference.Preference
+    protected void onSetInitialValue(boolean restoreValue, Object defaultValue) {
+        setProgress(restoreValue ? getPersistedInt(this.mProgress) : ((Integer) defaultValue).intValue());
     }
 
-    /* access modifiers changed from: protected */
-    public Object onGetDefaultValue(TypedArray a, int index) {
+    @Override // android.preference.Preference
+    protected Object onGetDefaultValue(TypedArray a, int index) {
         return Integer.valueOf(a.getInt(index, 0));
     }
 
+    @Override // android.preference.Preference
     public boolean onKey(View v, int keyCode, KeyEvent event) {
         SeekBar seekBar;
-        if (event.getAction() == 0 && (seekBar = (SeekBar) v.findViewById(R.id.seekbar)) != null) {
+        if (event.getAction() == 0 && (seekBar = (SeekBar) v.findViewById(C3132R.C3134id.seekbar)) != null) {
             return seekBar.onKeyDown(keyCode, event);
         }
         return false;
@@ -109,29 +105,30 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
         return this.mProgress;
     }
 
-    /* access modifiers changed from: package-private */
-    public void syncProgress(SeekBar seekBar) {
+    void syncProgress(SeekBar seekBar) {
         int progress = seekBar.getProgress();
-        if (progress == this.mProgress) {
-            return;
-        }
-        if (callChangeListener(Integer.valueOf(progress))) {
-            setProgress(progress, false);
-        } else {
-            seekBar.setProgress(this.mProgress);
+        if (progress != this.mProgress) {
+            if (callChangeListener(Integer.valueOf(progress))) {
+                setProgress(progress, false);
+            } else {
+                seekBar.setProgress(this.mProgress);
+            }
         }
     }
 
+    @Override // android.widget.SeekBar.OnSeekBarChangeListener
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         if (fromUser && !this.mTrackingTouch) {
             syncProgress(seekBar);
         }
     }
 
+    @Override // android.widget.SeekBar.OnSeekBarChangeListener
     public void onStartTrackingTouch(SeekBar seekBar) {
         this.mTrackingTouch = true;
     }
 
+    @Override // android.widget.SeekBar.OnSeekBarChangeListener
     public void onStopTrackingTouch(SeekBar seekBar) {
         this.mTrackingTouch = false;
         if (seekBar.getProgress() != this.mProgress) {
@@ -139,8 +136,8 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
         }
     }
 
-    /* access modifiers changed from: protected */
-    public Parcelable onSaveInstanceState() {
+    @Override // android.preference.Preference
+    protected Parcelable onSaveInstanceState() {
         Parcelable superState = super.onSaveInstanceState();
         if (isPersistent()) {
             return superState;
@@ -151,8 +148,8 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
         return myState;
     }
 
-    /* access modifiers changed from: protected */
-    public void onRestoreInstanceState(Parcelable state) {
+    @Override // android.preference.Preference
+    protected void onRestoreInstanceState(Parcelable state) {
         if (!state.getClass().equals(SavedState.class)) {
             super.onRestoreInstanceState(state);
             return;
@@ -164,12 +161,17 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
         notifyChanged();
     }
 
+    /* loaded from: classes3.dex */
     private static class SavedState extends Preference.BaseSavedState {
-        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
+        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() { // from class: android.preference.SeekBarPreference.SavedState.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public SavedState createFromParcel(Parcel in) {
                 return new SavedState(in);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public SavedState[] newArray(int size) {
                 return new SavedState[size];
             }
@@ -183,6 +185,7 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
             this.max = source.readInt();
         }
 
+        @Override // android.view.AbsSavedState, android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             super.writeToParcel(dest, flags);
             dest.writeInt(this.progress);

@@ -1,5 +1,8 @@
 package android.media.effect;
 
+import java.lang.reflect.Constructor;
+
+/* loaded from: classes3.dex */
 public class EffectFactory {
     public static final String EFFECT_AUTOFIX = "android.media.effect.effects.AutoFixEffect";
     public static final String EFFECT_BACKDROPPER = "android.media.effect.effects.BackDropperEffect";
@@ -38,10 +41,10 @@ public class EffectFactory {
 
     public Effect createEffect(String effectName) {
         Class effectClass = getEffectClassByName(effectName);
-        if (effectClass != null) {
-            return instantiateEffect(effectClass, effectName);
+        if (effectClass == null) {
+            throw new IllegalArgumentException("Cannot instantiate unknown effect '" + effectName + "'!");
         }
-        throw new IllegalArgumentException("Cannot instantiate unknown effect '" + effectName + "'!");
+        return instantiateEffect(effectClass, effectName);
     }
 
     public static boolean isEffectSupported(String effectName) {
@@ -49,20 +52,16 @@ public class EffectFactory {
     }
 
     private static Class getEffectClassByName(String className) {
+        String[] strArr;
         Class effectClass = null;
         ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-        String[] strArr = EFFECT_PACKAGES;
-        int length = strArr.length;
-        int i = 0;
-        while (i < length) {
-            String packageName = strArr[i];
+        for (String packageName : EFFECT_PACKAGES) {
             try {
                 effectClass = contextClassLoader.loadClass(packageName + className);
-                if (effectClass != null) {
-                    break;
-                }
-                i++;
             } catch (ClassNotFoundException e) {
+            }
+            if (effectClass != null) {
+                break;
             }
         }
         return effectClass;
@@ -72,8 +71,10 @@ public class EffectFactory {
         try {
             effectClass.asSubclass(Effect.class);
             try {
+                Constructor effectConstructor = effectClass.getConstructor(EffectContext.class, String.class);
                 try {
-                    return (Effect) effectClass.getConstructor(new Class[]{EffectContext.class, String.class}).newInstance(new Object[]{this.mEffectContext, name});
+                    Effect effect = (Effect) effectConstructor.newInstance(this.mEffectContext, name);
+                    return effect;
                 } catch (Throwable t) {
                     throw new RuntimeException("There was an error constructing the effect '" + effectClass + "'!", t);
                 }

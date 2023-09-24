@@ -1,5 +1,6 @@
 package com.wits.pms.custom;
 
+/* loaded from: classes2.dex */
 public interface KswFunction {
     void closeScreen(boolean z);
 

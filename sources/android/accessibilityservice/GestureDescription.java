@@ -3,12 +3,13 @@ package android.accessibilityservice;
 import android.graphics.Path;
 import android.graphics.PathMeasure;
 import android.graphics.RectF;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.util.Preconditions;
 import java.util.ArrayList;
 import java.util.List;
 
+/* loaded from: classes.dex */
 public final class GestureDescription {
     private static final long MAX_GESTURE_DURATION_MS = 60000;
     private static final int MAX_STROKE_COUNT = 10;
@@ -20,7 +21,7 @@ public final class GestureDescription {
     }
 
     public static long getMaxGestureDuration() {
-        return 60000;
+        return 60000L;
     }
 
     private GestureDescription() {
@@ -42,7 +43,7 @@ public final class GestureDescription {
         return this.mStrokes.get(index);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public long getNextKeyPointAtLeast(long offset) {
         long nextKeyPoint = Long.MAX_VALUE;
         for (int i = 0; i < this.mStrokes.size(); i++) {
@@ -56,62 +57,65 @@ public final class GestureDescription {
             }
         }
         if (nextKeyPoint == Long.MAX_VALUE) {
-            return -1;
+            return -1L;
         }
         return nextKeyPoint;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public int getPointsForTime(long time, TouchPoint[] touchPoints) {
         int numPointsFound = 0;
-        for (int i = 0; i < this.mStrokes.size(); i++) {
-            StrokeDescription strokeDescription = this.mStrokes.get(i);
+        for (int numPointsFound2 = 0; numPointsFound2 < this.mStrokes.size(); numPointsFound2++) {
+            StrokeDescription strokeDescription = this.mStrokes.get(numPointsFound2);
             if (strokeDescription.hasPointForTime(time)) {
                 touchPoints[numPointsFound].mStrokeId = strokeDescription.getId();
                 touchPoints[numPointsFound].mContinuedStrokeId = strokeDescription.getContinuedStrokeId();
                 touchPoints[numPointsFound].mIsStartOfPath = strokeDescription.getContinuedStrokeId() < 0 && time == strokeDescription.mStartTime;
                 touchPoints[numPointsFound].mIsEndOfPath = !strokeDescription.willContinue() && time == strokeDescription.mEndTime;
                 strokeDescription.getPosForTime(time, this.mTempPos);
-                touchPoints[numPointsFound].mX = (float) Math.round(this.mTempPos[0]);
-                touchPoints[numPointsFound].mY = (float) Math.round(this.mTempPos[1]);
+                touchPoints[numPointsFound].f5mX = Math.round(this.mTempPos[0]);
+                touchPoints[numPointsFound].f6mY = Math.round(this.mTempPos[1]);
                 numPointsFound++;
             }
         }
         return numPointsFound;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static long getTotalDuration(List<StrokeDescription> paths) {
         long latestEnd = Long.MIN_VALUE;
         for (int i = 0; i < paths.size(); i++) {
-            latestEnd = Math.max(latestEnd, paths.get(i).mEndTime);
+            StrokeDescription path = paths.get(i);
+            latestEnd = Math.max(latestEnd, path.mEndTime);
         }
-        return Math.max(latestEnd, 0);
+        return Math.max(latestEnd, 0L);
     }
 
+    /* loaded from: classes.dex */
     public static class Builder {
         private final List<StrokeDescription> mStrokes = new ArrayList();
 
         public Builder addStroke(StrokeDescription strokeDescription) {
-            if (this.mStrokes.size() < 10) {
-                this.mStrokes.add(strokeDescription);
-                if (GestureDescription.getTotalDuration(this.mStrokes) <= 60000) {
-                    return this;
-                }
+            if (this.mStrokes.size() >= 10) {
+                throw new IllegalStateException("Attempting to add too many strokes to a gesture");
+            }
+            this.mStrokes.add(strokeDescription);
+            if (GestureDescription.getTotalDuration(this.mStrokes) > 60000) {
                 this.mStrokes.remove(strokeDescription);
                 throw new IllegalStateException("Gesture would exceed maximum duration with new stroke");
             }
-            throw new IllegalStateException("Attempting to add too many strokes to a gesture");
+            return this;
         }
 
         public GestureDescription build() {
-            if (this.mStrokes.size() != 0) {
-                return new GestureDescription(this.mStrokes);
+            if (this.mStrokes.size() == 0) {
+                throw new IllegalStateException("Gestures must have at least one stroke");
             }
-            throw new IllegalStateException("Gestures must have at least one stroke");
+            return new GestureDescription(this.mStrokes);
         }
     }
 
+    /* loaded from: classes.dex */
     public static class StrokeDescription {
         private static final int INVALID_STROKE_ID = -1;
         static int sIdCounter;
@@ -145,19 +149,19 @@ public final class GestureDescription {
                 Path tempPath = new Path(path);
                 tempPath.lineTo(-1.0f, -1.0f);
                 this.mTapLocation = new float[2];
-                new PathMeasure(tempPath, false).getPosTan(0.0f, this.mTapLocation, (float[]) null);
+                PathMeasure pathMeasure = new PathMeasure(tempPath, false);
+                pathMeasure.getPosTan(0.0f, this.mTapLocation, null);
             }
-            if (!this.mPathMeasure.nextContour()) {
-                this.mPathMeasure.setPath(this.mPath, false);
-                this.mStartTime = startTime;
-                this.mEndTime = startTime + duration;
-                this.mTimeToLengthConversion = getLength() / ((float) duration);
-                int i = sIdCounter;
-                sIdCounter = i + 1;
-                this.mId = i;
-                return;
+            if (this.mPathMeasure.nextContour()) {
+                throw new IllegalArgumentException("Path has more than one contour");
             }
-            throw new IllegalArgumentException("Path has more than one contour");
+            this.mPathMeasure.setPath(this.mPath, false);
+            this.mStartTime = startTime;
+            this.mEndTime = startTime + duration;
+            this.mTimeToLengthConversion = getLength() / ((float) duration);
+            int i = sIdCounter;
+            sIdCounter = i + 1;
+            this.mId = i;
         }
 
         public Path getPath() {
@@ -177,12 +181,12 @@ public final class GestureDescription {
         }
 
         public StrokeDescription continueStroke(Path path, long startTime, long duration, boolean willContinue) {
-            if (this.mContinued) {
-                StrokeDescription strokeDescription = new StrokeDescription(path, startTime, duration, willContinue);
-                strokeDescription.mContinuedStrokeId = this.mId;
-                return strokeDescription;
+            if (!this.mContinued) {
+                throw new IllegalStateException("Only strokes marked willContinue can be continued");
             }
-            throw new IllegalStateException("Only strokes marked willContinue can be continued");
+            StrokeDescription strokeDescription = new StrokeDescription(path, startTime, duration, willContinue);
+            strokeDescription.mContinuedStrokeId = this.mId;
+            return strokeDescription;
         }
 
         public boolean willContinue() {
@@ -193,36 +197,39 @@ public final class GestureDescription {
             return this.mContinuedStrokeId;
         }
 
-        /* access modifiers changed from: package-private */
-        public float getLength() {
+        float getLength() {
             return this.mPathMeasure.getLength();
         }
 
-        /* access modifiers changed from: package-private */
-        public boolean getPosForTime(long time, float[] pos) {
+        boolean getPosForTime(long time, float[] pos) {
             if (this.mTapLocation != null) {
                 pos[0] = this.mTapLocation[0];
                 pos[1] = this.mTapLocation[1];
                 return true;
             } else if (time == this.mEndTime) {
-                return this.mPathMeasure.getPosTan(getLength(), pos, (float[]) null);
+                return this.mPathMeasure.getPosTan(getLength(), pos, null);
             } else {
-                return this.mPathMeasure.getPosTan(this.mTimeToLengthConversion * ((float) (time - this.mStartTime)), pos, (float[]) null);
+                float length = this.mTimeToLengthConversion * ((float) (time - this.mStartTime));
+                return this.mPathMeasure.getPosTan(length, pos, null);
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public boolean hasPointForTime(long time) {
+        boolean hasPointForTime(long time) {
             return time >= this.mStartTime && time <= this.mEndTime;
         }
     }
 
+    /* loaded from: classes.dex */
     public static class TouchPoint implements Parcelable {
-        public static final Parcelable.Creator<TouchPoint> CREATOR = new Parcelable.Creator<TouchPoint>() {
+        public static final Parcelable.Creator<TouchPoint> CREATOR = new Parcelable.Creator<TouchPoint>() { // from class: android.accessibilityservice.GestureDescription.TouchPoint.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public TouchPoint createFromParcel(Parcel in) {
                 return new TouchPoint(in);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public TouchPoint[] newArray(int size) {
                 return new TouchPoint[size];
             }
@@ -233,8 +240,12 @@ public final class GestureDescription {
         public boolean mIsEndOfPath;
         public boolean mIsStartOfPath;
         public int mStrokeId;
-        public float mX;
-        public float mY;
+
+        /* renamed from: mX */
+        public float f5mX;
+
+        /* renamed from: mY */
+        public float f6mY;
 
         public TouchPoint() {
         }
@@ -247,11 +258,10 @@ public final class GestureDescription {
             this.mStrokeId = parcel.readInt();
             this.mContinuedStrokeId = parcel.readInt();
             int startEnd = parcel.readInt();
-            boolean z = false;
             this.mIsStartOfPath = (startEnd & 1) != 0;
-            this.mIsEndOfPath = (startEnd & 2) != 0 ? true : z;
-            this.mX = parcel.readFloat();
-            this.mY = parcel.readFloat();
+            this.mIsEndOfPath = (startEnd & 2) != 0;
+            this.f5mX = parcel.readFloat();
+            this.f6mY = parcel.readFloat();
         }
 
         public void copyFrom(TouchPoint other) {
@@ -259,33 +269,43 @@ public final class GestureDescription {
             this.mContinuedStrokeId = other.mContinuedStrokeId;
             this.mIsStartOfPath = other.mIsStartOfPath;
             this.mIsEndOfPath = other.mIsEndOfPath;
-            this.mX = other.mX;
-            this.mY = other.mY;
+            this.f5mX = other.f5mX;
+            this.f6mY = other.f6mY;
         }
 
         public String toString() {
-            return "TouchPoint{mStrokeId=" + this.mStrokeId + ", mContinuedStrokeId=" + this.mContinuedStrokeId + ", mIsStartOfPath=" + this.mIsStartOfPath + ", mIsEndOfPath=" + this.mIsEndOfPath + ", mX=" + this.mX + ", mY=" + this.mY + '}';
+            return "TouchPoint{mStrokeId=" + this.mStrokeId + ", mContinuedStrokeId=" + this.mContinuedStrokeId + ", mIsStartOfPath=" + this.mIsStartOfPath + ", mIsEndOfPath=" + this.mIsEndOfPath + ", mX=" + this.f5mX + ", mY=" + this.f6mY + '}';
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeInt(this.mStrokeId);
             dest.writeInt(this.mContinuedStrokeId);
-            dest.writeInt((int) (this.mIsStartOfPath | (this.mIsEndOfPath ? 2 : 0)));
-            dest.writeFloat(this.mX);
-            dest.writeFloat(this.mY);
+            boolean z = this.mIsStartOfPath;
+            int i = this.mIsEndOfPath ? 2 : 0;
+            int startEnd = z ? 1 : 0;
+            dest.writeInt(startEnd | i);
+            dest.writeFloat(this.f5mX);
+            dest.writeFloat(this.f6mY);
         }
     }
 
+    /* loaded from: classes.dex */
     public static class GestureStep implements Parcelable {
-        public static final Parcelable.Creator<GestureStep> CREATOR = new Parcelable.Creator<GestureStep>() {
+        public static final Parcelable.Creator<GestureStep> CREATOR = new Parcelable.Creator<GestureStep>() { // from class: android.accessibilityservice.GestureDescription.GestureStep.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public GestureStep createFromParcel(Parcel in) {
                 return new GestureStep(in);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public GestureStep[] newArray(int size) {
                 return new GestureStep[size];
             }
@@ -294,11 +314,11 @@ public final class GestureDescription {
         public long timeSinceGestureStart;
         public TouchPoint[] touchPoints;
 
-        public GestureStep(long timeSinceGestureStart2, int numTouchPoints2, TouchPoint[] touchPointsToCopy) {
-            this.timeSinceGestureStart = timeSinceGestureStart2;
-            this.numTouchPoints = numTouchPoints2;
-            this.touchPoints = new TouchPoint[numTouchPoints2];
-            for (int i = 0; i < numTouchPoints2; i++) {
+        public GestureStep(long timeSinceGestureStart, int numTouchPoints, TouchPoint[] touchPointsToCopy) {
+            this.timeSinceGestureStart = timeSinceGestureStart;
+            this.numTouchPoints = numTouchPoints;
+            this.touchPoints = new TouchPoint[numTouchPoints];
+            for (int i = 0; i < numTouchPoints; i++) {
                 this.touchPoints[i] = new TouchPoint(touchPointsToCopy[i]);
             }
         }
@@ -313,16 +333,19 @@ public final class GestureDescription {
             }
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeLong(this.timeSinceGestureStart);
             dest.writeParcelableArray(this.touchPoints, flags);
         }
     }
 
+    /* loaded from: classes.dex */
     public static class MotionEventGenerator {
         private static TouchPoint[] sCurrentTouchPoints;
 
@@ -331,9 +354,9 @@ public final class GestureDescription {
             TouchPoint[] currentTouchPoints = getCurrentTouchPoints(description.getStrokeCount());
             int currentTouchPointSize = 0;
             long timeSinceGestureStart = 0;
-            long nextKeyPointTime = description.getNextKeyPointAtLeast(0);
+            long nextKeyPointTime = description.getNextKeyPointAtLeast(0L);
             while (nextKeyPointTime >= 0) {
-                timeSinceGestureStart = currentTouchPointSize == 0 ? nextKeyPointTime : Math.min(nextKeyPointTime, ((long) sampleTimeMs) + timeSinceGestureStart);
+                timeSinceGestureStart = currentTouchPointSize == 0 ? nextKeyPointTime : Math.min(nextKeyPointTime, sampleTimeMs + timeSinceGestureStart);
                 currentTouchPointSize = description.getPointsForTime(timeSinceGestureStart, currentTouchPoints);
                 gestureSteps.add(new GestureStep(timeSinceGestureStart, currentTouchPointSize, currentTouchPoints));
                 nextKeyPointTime = description.getNextKeyPointAtLeast(1 + timeSinceGestureStart);

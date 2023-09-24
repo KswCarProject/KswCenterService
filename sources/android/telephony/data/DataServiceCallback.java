@@ -1,7 +1,7 @@
 package android.telephony.data;
 
 import android.annotation.SystemApi;
-import android.os.RemoteException;
+import android.p007os.RemoteException;
 import android.telephony.Rlog;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -9,6 +9,7 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public class DataServiceCallback {
     public static final int RESULT_ERROR_BUSY = 3;
     public static final int RESULT_ERROR_ILLEGAL_STATE = 4;
@@ -19,6 +20,7 @@ public class DataServiceCallback {
     private final WeakReference<IDataServiceCallback> mCallback;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface ResultCode {
     }
 
@@ -27,67 +29,67 @@ public class DataServiceCallback {
     }
 
     public void onSetupDataCallComplete(int result, DataCallResponse response) {
-        IDataServiceCallback callback = (IDataServiceCallback) this.mCallback.get();
+        IDataServiceCallback callback = this.mCallback.get();
         if (callback != null) {
             try {
                 callback.onSetupDataCallComplete(result, response);
             } catch (RemoteException e) {
-                Rlog.e(TAG, "Failed to onSetupDataCallComplete on the remote");
+                Rlog.m86e(TAG, "Failed to onSetupDataCallComplete on the remote");
             }
         }
     }
 
     public void onDeactivateDataCallComplete(int result) {
-        IDataServiceCallback callback = (IDataServiceCallback) this.mCallback.get();
+        IDataServiceCallback callback = this.mCallback.get();
         if (callback != null) {
             try {
                 callback.onDeactivateDataCallComplete(result);
             } catch (RemoteException e) {
-                Rlog.e(TAG, "Failed to onDeactivateDataCallComplete on the remote");
+                Rlog.m86e(TAG, "Failed to onDeactivateDataCallComplete on the remote");
             }
         }
     }
 
     public void onSetInitialAttachApnComplete(int result) {
-        IDataServiceCallback callback = (IDataServiceCallback) this.mCallback.get();
+        IDataServiceCallback callback = this.mCallback.get();
         if (callback != null) {
             try {
                 callback.onSetInitialAttachApnComplete(result);
             } catch (RemoteException e) {
-                Rlog.e(TAG, "Failed to onSetInitialAttachApnComplete on the remote");
+                Rlog.m86e(TAG, "Failed to onSetInitialAttachApnComplete on the remote");
             }
         }
     }
 
     public void onSetDataProfileComplete(int result) {
-        IDataServiceCallback callback = (IDataServiceCallback) this.mCallback.get();
+        IDataServiceCallback callback = this.mCallback.get();
         if (callback != null) {
             try {
                 callback.onSetDataProfileComplete(result);
             } catch (RemoteException e) {
-                Rlog.e(TAG, "Failed to onSetDataProfileComplete on the remote");
+                Rlog.m86e(TAG, "Failed to onSetDataProfileComplete on the remote");
             }
         }
     }
 
     public void onRequestDataCallListComplete(int result, List<DataCallResponse> dataCallList) {
-        IDataServiceCallback callback = (IDataServiceCallback) this.mCallback.get();
+        IDataServiceCallback callback = this.mCallback.get();
         if (callback != null) {
             try {
                 callback.onRequestDataCallListComplete(result, dataCallList);
             } catch (RemoteException e) {
-                Rlog.e(TAG, "Failed to onRequestDataCallListComplete on the remote");
+                Rlog.m86e(TAG, "Failed to onRequestDataCallListComplete on the remote");
             }
         }
     }
 
     public void onDataCallListChanged(List<DataCallResponse> dataCallList) {
-        IDataServiceCallback callback = (IDataServiceCallback) this.mCallback.get();
+        IDataServiceCallback callback = this.mCallback.get();
         if (callback != null) {
             try {
                 callback.onDataCallListChanged(dataCallList);
             } catch (RemoteException e) {
-                Rlog.e(TAG, "Failed to onDataCallListChanged on the remote");
+                Rlog.m86e(TAG, "Failed to onDataCallListChanged on the remote");
             }
         }
     }

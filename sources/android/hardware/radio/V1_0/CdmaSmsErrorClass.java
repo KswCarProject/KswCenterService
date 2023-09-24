@@ -2,6 +2,7 @@ package android.hardware.radio.V1_0;
 
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class CdmaSmsErrorClass {
     public static final int ERROR = 1;
     public static final int NO_ERROR = 0;

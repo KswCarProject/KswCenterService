@@ -6,9 +6,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.preference.Preference;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -19,14 +19,15 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
 @Deprecated
+/* loaded from: classes3.dex */
 public final class PreferenceScreen extends PreferenceGroup implements AdapterView.OnItemClickListener, DialogInterface.OnDismissListener {
     private Dialog mDialog;
     private Drawable mDividerDrawable;
     private boolean mDividerSpecified;
-    private int mLayoutResId = R.layout.preference_list_fragment;
+    private int mLayoutResId;
     @UnsupportedAppUsage
     private ListView mListView;
     @UnsupportedAppUsage
@@ -35,7 +36,8 @@ public final class PreferenceScreen extends PreferenceGroup implements AdapterVi
     @UnsupportedAppUsage
     public PreferenceScreen(Context context, AttributeSet attrs) {
         super(context, attrs, 16842891);
-        TypedArray a = context.obtainStyledAttributes((AttributeSet) null, R.styleable.PreferenceScreen, 16842891, 0);
+        this.mLayoutResId = C3132R.layout.preference_list_fragment;
+        TypedArray a = context.obtainStyledAttributes(null, C3132R.styleable.PreferenceScreen, 16842891, 0);
         this.mLayoutResId = a.getResourceId(1, this.mLayoutResId);
         if (a.hasValueOrEmpty(0)) {
             this.mDividerDrawable = a.getDrawable(0);
@@ -51,8 +53,7 @@ public final class PreferenceScreen extends PreferenceGroup implements AdapterVi
         return this.mRootAdapter;
     }
 
-    /* access modifiers changed from: protected */
-    public ListAdapter onCreateRootAdapter() {
+    protected ListAdapter onCreateRootAdapter() {
         return new PreferenceGroupAdapter(this);
     }
 
@@ -62,11 +63,12 @@ public final class PreferenceScreen extends PreferenceGroup implements AdapterVi
         onAttachedToActivity();
     }
 
-    /* access modifiers changed from: protected */
-    public void onClick() {
-        if (getIntent() == null && getFragment() == null && getPreferenceCount() != 0) {
-            showDialog((Bundle) null);
+    @Override // android.preference.Preference
+    protected void onClick() {
+        if (getIntent() != null || getFragment() != null || getPreferenceCount() == 0) {
+            return;
         }
+        showDialog(null);
     }
 
     private void showDialog(Bundle state) {
@@ -74,7 +76,8 @@ public final class PreferenceScreen extends PreferenceGroup implements AdapterVi
         if (this.mListView != null) {
             this.mListView.setAdapter((ListAdapter) null);
         }
-        View childPrefScreen = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(this.mLayoutResId, (ViewGroup) null);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View childPrefScreen = inflater.inflate(this.mLayoutResId, (ViewGroup) null);
         View titleView = childPrefScreen.findViewById(16908310);
         this.mListView = (ListView) childPrefScreen.findViewById(16908298);
         if (this.mDividerSpecified) {
@@ -104,6 +107,7 @@ public final class PreferenceScreen extends PreferenceGroup implements AdapterVi
         dialog.show();
     }
 
+    @Override // android.content.DialogInterface.OnDismissListener
     public void onDismiss(DialogInterface dialog) {
         this.mDialog = null;
         getPreferenceManager().removePreferencesScreen(dialog);
@@ -113,23 +117,25 @@ public final class PreferenceScreen extends PreferenceGroup implements AdapterVi
         return this.mDialog;
     }
 
+    @Override // android.widget.AdapterView.OnItemClickListener
     public void onItemClick(AdapterView parent, View view, int position, long id) {
         if (parent instanceof ListView) {
             position -= ((ListView) parent).getHeaderViewsCount();
         }
         Object item = getRootAdapter().getItem(position);
         if (item instanceof Preference) {
-            ((Preference) item).performClick(this);
+            Preference preference = (Preference) item;
+            preference.performClick(this);
         }
     }
 
-    /* access modifiers changed from: protected */
-    public boolean isOnSameScreenAsChildren() {
+    @Override // android.preference.PreferenceGroup
+    protected boolean isOnSameScreenAsChildren() {
         return false;
     }
 
-    /* access modifiers changed from: protected */
-    public Parcelable onSaveInstanceState() {
+    @Override // android.preference.Preference
+    protected Parcelable onSaveInstanceState() {
         Parcelable superState = super.onSaveInstanceState();
         Dialog dialog = this.mDialog;
         if (dialog == null || !dialog.isShowing()) {
@@ -141,8 +147,8 @@ public final class PreferenceScreen extends PreferenceGroup implements AdapterVi
         return myState;
     }
 
-    /* access modifiers changed from: protected */
-    public void onRestoreInstanceState(Parcelable state) {
+    @Override // android.preference.Preference
+    protected void onRestoreInstanceState(Parcelable state) {
         if (state == null || !state.getClass().equals(SavedState.class)) {
             super.onRestoreInstanceState(state);
             return;
@@ -154,12 +160,17 @@ public final class PreferenceScreen extends PreferenceGroup implements AdapterVi
         }
     }
 
+    /* loaded from: classes3.dex */
     private static class SavedState extends Preference.BaseSavedState {
-        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
+        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() { // from class: android.preference.PreferenceScreen.SavedState.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public SavedState createFromParcel(Parcel in) {
                 return new SavedState(in);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public SavedState[] newArray(int size) {
                 return new SavedState[size];
             }
@@ -169,10 +180,11 @@ public final class PreferenceScreen extends PreferenceGroup implements AdapterVi
 
         public SavedState(Parcel source) {
             super(source);
-            this.isDialogShowing = source.readInt() != 1 ? false : true;
+            this.isDialogShowing = source.readInt() == 1;
             this.dialogBundle = source.readBundle();
         }
 
+        @Override // android.view.AbsSavedState, android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             super.writeToParcel(dest, flags);
             dest.writeInt(this.isDialogShowing ? 1 : 0);

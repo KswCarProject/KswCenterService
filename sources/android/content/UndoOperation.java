@@ -1,9 +1,10 @@
 package android.content;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public abstract class UndoOperation<DATA> implements Parcelable {
     UndoOwner mOwner;
 
@@ -27,7 +28,7 @@ public abstract class UndoOperation<DATA> implements Parcelable {
     }
 
     public DATA getOwnerData() {
-        return this.mOwner.getData();
+        return (DATA) this.mOwner.getData();
     }
 
     public boolean matchOwner(UndoOwner owner) {
@@ -42,6 +43,7 @@ public abstract class UndoOperation<DATA> implements Parcelable {
         return true;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

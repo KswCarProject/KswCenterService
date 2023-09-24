@@ -1,5 +1,6 @@
 package android.security;
 
+/* loaded from: classes3.dex */
 public class KeyStoreException extends Exception {
     private final int mErrorCode;
 

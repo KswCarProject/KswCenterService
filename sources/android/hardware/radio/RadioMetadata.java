@@ -3,27 +3,19 @@ package android.hardware.radio;
 import android.annotation.SystemApi;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.ArrayMap;
 import android.util.Log;
 import android.util.SparseArray;
 import java.util.Set;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class RadioMetadata implements Parcelable {
-    public static final Parcelable.Creator<RadioMetadata> CREATOR = new Parcelable.Creator<RadioMetadata>() {
-        public RadioMetadata createFromParcel(Parcel in) {
-            return new RadioMetadata(in);
-        }
-
-        public RadioMetadata[] newArray(int size) {
-            return new RadioMetadata[size];
-        }
-    };
-    /* access modifiers changed from: private */
-    public static final ArrayMap<String, Integer> METADATA_KEYS_TYPE = new ArrayMap<>();
+    public static final Parcelable.Creator<RadioMetadata> CREATOR;
+    private static final ArrayMap<String, Integer> METADATA_KEYS_TYPE = new ArrayMap<>();
     public static final String METADATA_KEY_ALBUM = "android.hardware.radio.metadata.ALBUM";
     public static final String METADATA_KEY_ART = "android.hardware.radio.metadata.ART";
     public static final String METADATA_KEY_ARTIST = "android.hardware.radio.metadata.ARTIST";
@@ -55,7 +47,7 @@ public final class RadioMetadata implements Parcelable {
     private static final int NATIVE_KEY_GENRE = 8;
     private static final int NATIVE_KEY_ICON = 9;
     private static final int NATIVE_KEY_INVALID = -1;
-    private static final SparseArray<String> NATIVE_KEY_MAPPING = new SparseArray<>();
+    private static final SparseArray<String> NATIVE_KEY_MAPPING;
     private static final int NATIVE_KEY_RBDS_PTY = 3;
     private static final int NATIVE_KEY_RDS_PI = 0;
     private static final int NATIVE_KEY_RDS_PS = 1;
@@ -63,8 +55,7 @@ public final class RadioMetadata implements Parcelable {
     private static final int NATIVE_KEY_RDS_RT = 4;
     private static final int NATIVE_KEY_TITLE = 5;
     private static final String TAG = "BroadcastRadio.metadata";
-    /* access modifiers changed from: private */
-    public final Bundle mBundle;
+    private final Bundle mBundle;
 
     static {
         METADATA_KEYS_TYPE.put(METADATA_KEY_RDS_PI, 0);
@@ -86,6 +77,7 @@ public final class RadioMetadata implements Parcelable {
         METADATA_KEYS_TYPE.put(METADATA_KEY_DAB_SERVICE_NAME_SHORT, 1);
         METADATA_KEYS_TYPE.put(METADATA_KEY_DAB_COMPONENT_NAME, 1);
         METADATA_KEYS_TYPE.put(METADATA_KEY_DAB_COMPONENT_NAME_SHORT, 1);
+        NATIVE_KEY_MAPPING = new SparseArray<>();
         NATIVE_KEY_MAPPING.put(0, METADATA_KEY_RDS_PI);
         NATIVE_KEY_MAPPING.put(1, METADATA_KEY_RDS_PS);
         NATIVE_KEY_MAPPING.put(2, METADATA_KEY_RDS_PTY);
@@ -98,15 +90,33 @@ public final class RadioMetadata implements Parcelable {
         NATIVE_KEY_MAPPING.put(9, METADATA_KEY_ICON);
         NATIVE_KEY_MAPPING.put(10, METADATA_KEY_ART);
         NATIVE_KEY_MAPPING.put(11, METADATA_KEY_CLOCK);
+        CREATOR = new Parcelable.Creator<RadioMetadata>() { // from class: android.hardware.radio.RadioMetadata.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
+            public RadioMetadata createFromParcel(Parcel in) {
+                return new RadioMetadata(in);
+            }
+
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
+            public RadioMetadata[] newArray(int size) {
+                return new RadioMetadata[size];
+            }
+        };
     }
 
     @SystemApi
+    /* loaded from: classes.dex */
     public static final class Clock implements Parcelable {
-        public static final Parcelable.Creator<Clock> CREATOR = new Parcelable.Creator<Clock>() {
+        public static final Parcelable.Creator<Clock> CREATOR = new Parcelable.Creator<Clock>() { // from class: android.hardware.radio.RadioMetadata.Clock.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public Clock createFromParcel(Parcel in) {
                 return new Clock(in);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public Clock[] newArray(int size) {
                 return new Clock[size];
             }
@@ -114,10 +124,12 @@ public final class RadioMetadata implements Parcelable {
         private final int mTimezoneOffsetMinutes;
         private final long mUtcEpochSeconds;
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel out, int flags) {
             out.writeLong(this.mUtcEpochSeconds);
             out.writeInt(this.mTimezoneOffsetMinutes);
@@ -183,14 +195,13 @@ public final class RadioMetadata implements Parcelable {
         return this.mBundle.getString(key);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static void putInt(Bundle bundle, String key, int value) {
-        int type = ((Integer) METADATA_KEYS_TYPE.getOrDefault(key, -1)).intValue();
-        if (type == 0 || type == 2) {
-            bundle.putInt(key, value);
-            return;
+        int type = METADATA_KEYS_TYPE.getOrDefault(key, -1).intValue();
+        if (type != 0 && type != 2) {
+            throw new IllegalArgumentException("The " + key + " key cannot be used to put an int");
         }
-        throw new IllegalArgumentException("The " + key + " key cannot be used to put an int");
+        bundle.putInt(key, value);
     }
 
     public int getInt(String key) {
@@ -200,9 +211,10 @@ public final class RadioMetadata implements Parcelable {
     @Deprecated
     public Bitmap getBitmap(String key) {
         try {
-            return (Bitmap) this.mBundle.getParcelable(key);
+            Bitmap bmp = (Bitmap) this.mBundle.getParcelable(key);
+            return bmp;
         } catch (Exception e) {
-            Log.w(TAG, "Failed to retrieve a key as Bitmap.", e);
+            Log.m63w(TAG, "Failed to retrieve a key as Bitmap.", e);
             return null;
         }
     }
@@ -216,17 +228,20 @@ public final class RadioMetadata implements Parcelable {
 
     public Clock getClock(String key) {
         try {
-            return (Clock) this.mBundle.getParcelable(key);
+            Clock clock = (Clock) this.mBundle.getParcelable(key);
+            return clock;
         } catch (Exception e) {
-            Log.w(TAG, "Failed to retrieve a key as Clock.", e);
+            Log.m63w(TAG, "Failed to retrieve a key as Clock.", e);
             return null;
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeBundle(this.mBundle);
     }
@@ -243,6 +258,7 @@ public final class RadioMetadata implements Parcelable {
         return NATIVE_KEY_MAPPING.get(nativeKey, null);
     }
 
+    /* loaded from: classes.dex */
     public static final class Builder {
         private final Bundle mBundle;
 
@@ -301,24 +317,27 @@ public final class RadioMetadata implements Parcelable {
         }
 
         private Bitmap scaleBitmap(Bitmap bmp, int maxSize) {
-            float maxSizeF = (float) maxSize;
-            float scale = Math.min(maxSizeF / ((float) bmp.getWidth()), maxSizeF / ((float) bmp.getHeight()));
-            return Bitmap.createScaledBitmap(bmp, (int) (((float) bmp.getWidth()) * scale), (int) (((float) bmp.getHeight()) * scale), true);
+            float maxSizeF = maxSize;
+            float widthScale = maxSizeF / bmp.getWidth();
+            float heightScale = maxSizeF / bmp.getHeight();
+            float scale = Math.min(widthScale, heightScale);
+            int height = (int) (bmp.getHeight() * scale);
+            int width = (int) (bmp.getWidth() * scale);
+            return Bitmap.createScaledBitmap(bmp, width, height, true);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public int putIntFromNative(int nativeKey, int value) {
+    int putIntFromNative(int nativeKey, int value) {
+        String key = getKeyFromNativeKey(nativeKey);
         try {
-            putInt(this.mBundle, getKeyFromNativeKey(nativeKey), value);
+            putInt(this.mBundle, key, value);
             return 0;
         } catch (IllegalArgumentException e) {
             return -1;
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public int putStringFromNative(int nativeKey, String value) {
+    int putStringFromNative(int nativeKey, String value) {
         String key = getKeyFromNativeKey(nativeKey);
         if (!METADATA_KEYS_TYPE.containsKey(key) || METADATA_KEYS_TYPE.get(key).intValue() != 1) {
             return -1;
@@ -327,25 +346,23 @@ public final class RadioMetadata implements Parcelable {
         return 0;
     }
 
-    /* access modifiers changed from: package-private */
-    public int putBitmapFromNative(int nativeKey, byte[] value) {
+    int putBitmapFromNative(int nativeKey, byte[] value) {
         String key = getKeyFromNativeKey(nativeKey);
-        if (!METADATA_KEYS_TYPE.containsKey(key) || METADATA_KEYS_TYPE.get(key).intValue() != 2) {
-            return -1;
-        }
-        try {
-            Bitmap bmp = BitmapFactory.decodeByteArray(value, 0, value.length);
-            if (bmp != null) {
-                this.mBundle.putParcelable(key, bmp);
-                return 0;
+        if (METADATA_KEYS_TYPE.containsKey(key) && METADATA_KEYS_TYPE.get(key).intValue() == 2) {
+            try {
+                Bitmap bmp = BitmapFactory.decodeByteArray(value, 0, value.length);
+                if (bmp != null) {
+                    this.mBundle.putParcelable(key, bmp);
+                    return 0;
+                }
+            } catch (Exception e) {
             }
-        } catch (Exception e) {
+            return -1;
         }
         return -1;
     }
 
-    /* access modifiers changed from: package-private */
-    public int putClockFromNative(int nativeKey, long utcEpochSeconds, int timezoneOffsetInMinutes) {
+    int putClockFromNative(int nativeKey, long utcEpochSeconds, int timezoneOffsetInMinutes) {
         String key = getKeyFromNativeKey(nativeKey);
         if (!METADATA_KEYS_TYPE.containsKey(key) || METADATA_KEYS_TYPE.get(key).intValue() != 3) {
             return -1;

@@ -2,20 +2,25 @@ package android.service.notification;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.security.keystore.KeyProperties;
 import android.util.proto.ProtoOutputStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Objects;
 
+/* loaded from: classes3.dex */
 public final class Condition implements Parcelable {
-    public static final Parcelable.Creator<Condition> CREATOR = new Parcelable.Creator<Condition>() {
+    public static final Parcelable.Creator<Condition> CREATOR = new Parcelable.Creator<Condition>() { // from class: android.service.notification.Condition.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Condition createFromParcel(Parcel source) {
             return new Condition(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Condition[] newArray(int size) {
             return new Condition[size];
         }
@@ -29,48 +34,53 @@ public final class Condition implements Parcelable {
     public static final int STATE_UNKNOWN = 2;
     public final int flags;
     public final int icon;
-    public final Uri id;
+
+    /* renamed from: id */
+    public final Uri f239id;
     public final String line1;
     public final String line2;
     public final int state;
     public final String summary;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface State {
     }
 
-    public Condition(Uri id2, String summary2, int state2) {
-        this(id2, summary2, "", "", -1, state2, 2);
+    public Condition(Uri id, String summary, int state) {
+        this(id, summary, "", "", -1, state, 2);
     }
 
-    public Condition(Uri id2, String summary2, String line12, String line22, int icon2, int state2, int flags2) {
-        if (id2 == null) {
+    public Condition(Uri id, String summary, String line1, String line2, int icon, int state, int flags) {
+        if (id == null) {
             throw new IllegalArgumentException("id is required");
-        } else if (summary2 == null) {
-            throw new IllegalArgumentException("summary is required");
-        } else if (isValidState(state2)) {
-            this.id = id2;
-            this.summary = summary2;
-            this.line1 = line12;
-            this.line2 = line22;
-            this.icon = icon2;
-            this.state = state2;
-            this.flags = flags2;
-        } else {
-            throw new IllegalArgumentException("state is invalid: " + state2);
         }
+        if (summary == null) {
+            throw new IllegalArgumentException("summary is required");
+        }
+        if (!isValidState(state)) {
+            throw new IllegalArgumentException("state is invalid: " + state);
+        }
+        this.f239id = id;
+        this.summary = summary;
+        this.line1 = line1;
+        this.line2 = line2;
+        this.icon = icon;
+        this.state = state;
+        this.flags = flags;
     }
 
     public Condition(Parcel source) {
         this((Uri) source.readParcelable(Condition.class.getClassLoader()), source.readString(), source.readString(), source.readString(), source.readInt(), source.readInt(), source.readInt());
     }
 
-    private static boolean isValidState(int state2) {
-        return state2 >= 0 && state2 <= 3;
+    private static boolean isValidState(int state) {
+        return state >= 0 && state <= 3;
     }
 
-    public void writeToParcel(Parcel dest, int flags2) {
-        dest.writeParcelable(this.id, 0);
+    @Override // android.p007os.Parcelable
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(this.f239id, 0);
         dest.writeString(this.summary);
         dest.writeString(this.line1);
         dest.writeString(this.line2);
@@ -80,12 +90,12 @@ public final class Condition implements Parcelable {
     }
 
     public String toString() {
-        return Condition.class.getSimpleName() + '[' + "state=" + stateToString(this.state) + ",id=" + this.id + ",summary=" + this.summary + ",line1=" + this.line1 + ",line2=" + this.line2 + ",icon=" + this.icon + ",flags=" + this.flags + ']';
+        return Condition.class.getSimpleName() + "[state=" + stateToString(this.state) + ",id=" + this.f239id + ",summary=" + this.summary + ",line1=" + this.line1 + ",line2=" + this.line2 + ",icon=" + this.icon + ",flags=" + this.flags + ']';
     }
 
     public void writeToProto(ProtoOutputStream proto, long fieldId) {
         long token = proto.start(fieldId);
-        proto.write(1138166333441L, this.id.toString());
+        proto.write(1138166333441L, this.f239id.toString());
         proto.write(1138166333442L, this.summary);
         proto.write(1138166333443L, this.line1);
         proto.write(1138166333444L, this.line2);
@@ -95,55 +105,44 @@ public final class Condition implements Parcelable {
         proto.end(token);
     }
 
-    public static String stateToString(int state2) {
-        if (state2 == 0) {
+    public static String stateToString(int state) {
+        if (state == 0) {
             return "STATE_FALSE";
         }
-        if (state2 == 1) {
+        if (state == 1) {
             return "STATE_TRUE";
         }
-        if (state2 == 2) {
+        if (state == 2) {
             return "STATE_UNKNOWN";
         }
-        if (state2 == 3) {
+        if (state == 3) {
             return "STATE_ERROR";
         }
-        throw new IllegalArgumentException("state is invalid: " + state2);
+        throw new IllegalArgumentException("state is invalid: " + state);
     }
 
-    public static String relevanceToString(int flags2) {
-        boolean always = false;
-        boolean now = (flags2 & 1) != 0;
-        if ((flags2 & 2) != 0) {
-            always = true;
-        }
-        if (!now && !always) {
-            return KeyProperties.DIGEST_NONE;
-        }
-        if (!now || !always) {
-            return now ? "NOW" : "ALWAYS";
-        }
-        return "NOW, ALWAYS";
+    public static String relevanceToString(int flags) {
+        boolean now = (flags & 1) != 0;
+        boolean always = (flags & 2) != 0;
+        return (now || always) ? (now && always) ? "NOW, ALWAYS" : now ? "NOW" : "ALWAYS" : KeyProperties.DIGEST_NONE;
     }
 
     public boolean equals(Object o) {
-        if (!(o instanceof Condition)) {
-            return false;
+        if (o instanceof Condition) {
+            if (o == this) {
+                return true;
+            }
+            Condition other = (Condition) o;
+            return Objects.equals(other.f239id, this.f239id) && Objects.equals(other.summary, this.summary) && Objects.equals(other.line1, this.line1) && Objects.equals(other.line2, this.line2) && other.icon == this.icon && other.state == this.state && other.flags == this.flags;
         }
-        if (o == this) {
-            return true;
-        }
-        Condition other = (Condition) o;
-        if (!Objects.equals(other.id, this.id) || !Objects.equals(other.summary, this.summary) || !Objects.equals(other.line1, this.line1) || !Objects.equals(other.line2, this.line2) || other.icon != this.icon || other.state != this.state || other.flags != this.flags) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{this.id, this.summary, this.line1, this.line2, Integer.valueOf(this.icon), Integer.valueOf(this.state), Integer.valueOf(this.flags)});
+        return Objects.hash(this.f239id, this.summary, this.line1, this.line2, Integer.valueOf(this.icon), Integer.valueOf(this.state), Integer.valueOf(this.flags));
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -163,7 +162,7 @@ public final class Condition implements Parcelable {
         return new Uri.Builder().scheme(SCHEME).authority(context.getPackageName());
     }
 
-    public static boolean isValidId(Uri id2, String pkg) {
-        return id2 != null && SCHEME.equals(id2.getScheme()) && pkg.equals(id2.getAuthority());
+    public static boolean isValidId(Uri id, String pkg) {
+        return id != null && SCHEME.equals(id.getScheme()) && pkg.equals(id.getAuthority());
     }
 }

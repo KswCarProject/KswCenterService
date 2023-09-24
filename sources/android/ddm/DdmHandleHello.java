@@ -1,21 +1,22 @@
 package android.ddm;
 
-import android.os.Debug;
-import android.os.Process;
-import android.os.UserHandle;
+import android.p007os.Debug;
+import android.p007os.Process;
+import android.p007os.UserHandle;
 import dalvik.system.VMRuntime;
 import java.nio.ByteBuffer;
 import org.apache.harmony.dalvik.ddmc.Chunk;
 import org.apache.harmony.dalvik.ddmc.ChunkHandler;
 import org.apache.harmony.dalvik.ddmc.DdmServer;
 
+/* loaded from: classes.dex */
 public class DdmHandleHello extends ChunkHandler {
-    public static final int CHUNK_FEAT = type("FEAT");
+    private static final int CLIENT_PROTOCOL_VERSION = 1;
     public static final int CHUNK_HELO = type("HELO");
     public static final int CHUNK_WAIT = type("WAIT");
-    private static final int CLIENT_PROTOCOL_VERSION = 1;
-    private static final String[] FRAMEWORK_FEATURES = {"opengl-tracing", "view-hierarchy"};
+    public static final int CHUNK_FEAT = type("FEAT");
     private static DdmHandleHello mInstance = new DdmHandleHello();
+    private static final String[] FRAMEWORK_FEATURES = {"opengl-tracing", "view-hierarchy"};
 
     private DdmHandleHello() {
     }
@@ -43,8 +44,11 @@ public class DdmHandleHello extends ChunkHandler {
     }
 
     private Chunk handleHELO(Chunk request) {
-        int i = wrapChunk(request).getInt();
-        String vmIdent = System.getProperty("java.vm.name", "?") + " v" + System.getProperty("java.vm.version", "?");
+        ByteBuffer in = wrapChunk(request);
+        in.getInt();
+        String vmName = System.getProperty("java.vm.name", "?");
+        String vmVersion = System.getProperty("java.vm.version", "?");
+        String vmIdent = vmName + " v" + vmVersion;
         String appName = DdmHandleAppName.getAppName();
         VMRuntime vmRuntime = VMRuntime.getRuntime();
         String instructionSetDescription = vmRuntime.is64Bit() ? "64-bit" : "32-bit";
@@ -70,7 +74,7 @@ public class DdmHandleHello extends ChunkHandler {
         putString(out, instructionSetDescription);
         out.putInt(vmFlags.length());
         putString(out, vmFlags);
-        out.put(isNativeDebuggable ? (byte) 1 : 0);
+        out.put(isNativeDebuggable ? (byte) 1 : (byte) 0);
         Chunk reply = new Chunk(CHUNK_HELO, out);
         if (Debug.waitingForDebugger()) {
             sendWAIT(0);
@@ -102,6 +106,8 @@ public class DdmHandleHello extends ChunkHandler {
     }
 
     public static void sendWAIT(int reason) {
-        DdmServer.sendChunk(new Chunk(CHUNK_WAIT, new byte[]{(byte) reason}, 0, 1));
+        byte[] data = {(byte) reason};
+        Chunk waitChunk = new Chunk(CHUNK_WAIT, data, 0, 1);
+        DdmServer.sendChunk(waitChunk);
     }
 }

@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.TreeSet;
 
+/* loaded from: classes3.dex */
 public class NetworkUtils {
     private static final int[] ADDRESS_FAMILIES = {OsConstants.AF_INET, OsConstants.AF_INET6};
     private static final String TAG = "NetworkUtils";
@@ -60,8 +61,8 @@ public class NetworkUtils {
         return protectFromVpn(fd.getInt$());
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public static InetAddress intToInetAddress(int hostAddress) {
         return Inet4AddressUtils.intToInet4AddressHTL(hostAddress);
     }
@@ -71,8 +72,8 @@ public class NetworkUtils {
         return Inet4AddressUtils.inet4AddressToIntHTL(inetAddr);
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public static int prefixLengthToNetmaskInt(int prefixLength) throws IllegalArgumentException {
         return Inet4AddressUtils.prefixLengthToV4NetmaskIntHTL(prefixLength);
     }
@@ -81,14 +82,14 @@ public class NetworkUtils {
         return Integer.bitCount(netmask);
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public static int netmaskToPrefixLength(Inet4Address netmask) {
         return Inet4AddressUtils.netmaskToPrefixLength(netmask);
     }
 
-    @Deprecated
     @UnsupportedAppUsage(maxTargetSdk = 28)
+    @Deprecated
     public static InetAddress numericToInetAddress(String addrString) throws IllegalArgumentException {
         return InetAddress.parseNumericAddress(addrString);
     }
@@ -98,7 +99,8 @@ public class NetworkUtils {
             throw new RuntimeException("IP address with " + array.length + " bytes has invalid prefix length " + prefixLength);
         }
         int offset = prefixLength / 8;
-        byte mask = (byte) (255 << (8 - (prefixLength % 8)));
+        int remainder = prefixLength % 8;
+        byte mask = (byte) (255 << (8 - remainder));
         if (offset < array.length) {
             array[offset] = (byte) (array[offset] & mask);
         }
@@ -116,7 +118,8 @@ public class NetworkUtils {
         byte[] array = address.getAddress();
         maskRawAddress(array, prefixLength);
         try {
-            return InetAddress.getByAddress(array);
+            InetAddress netPart = InetAddress.getByAddress(array);
+            return netPart;
         } catch (UnknownHostException e) {
             throw new RuntimeException("getNetworkPart error - " + e.toString());
         }
@@ -134,12 +137,15 @@ public class NetworkUtils {
             String[] pieces = ipAndMaskString.split("/", 2);
             prefixLength = Integer.parseInt(pieces[1]);
             address = InetAddress.parseNumericAddress(pieces[0]);
-        } catch (ArrayIndexOutOfBoundsException | IllegalArgumentException | NullPointerException | NumberFormatException e) {
+        } catch (ArrayIndexOutOfBoundsException e) {
+        } catch (NullPointerException e2) {
+        } catch (NumberFormatException e3) {
+        } catch (IllegalArgumentException e4) {
         }
-        if (address != null && prefixLength != -1) {
-            return new Pair<>(address, Integer.valueOf(prefixLength));
+        if (address == null || prefixLength == -1) {
+            throw new IllegalArgumentException("Invalid IP address and mask " + ipAndMaskString);
         }
-        throw new IllegalArgumentException("Invalid IP address and mask " + ipAndMaskString);
+        return new Pair<>(address, Integer.valueOf(prefixLength));
     }
 
     public static boolean addressTypeMatches(InetAddress left, InetAddress right) {
@@ -148,9 +154,9 @@ public class NetworkUtils {
 
     public static InetAddress hexToInet6Address(String addrHexString) throws IllegalArgumentException {
         try {
-            return numericToInetAddress(String.format(Locale.US, "%s:%s:%s:%s:%s:%s:%s:%s", new Object[]{addrHexString.substring(0, 4), addrHexString.substring(4, 8), addrHexString.substring(8, 12), addrHexString.substring(12, 16), addrHexString.substring(16, 20), addrHexString.substring(20, 24), addrHexString.substring(24, 28), addrHexString.substring(28, 32)}));
+            return numericToInetAddress(String.format(Locale.US, "%s:%s:%s:%s:%s:%s:%s:%s", addrHexString.substring(0, 4), addrHexString.substring(4, 8), addrHexString.substring(8, 12), addrHexString.substring(12, 16), addrHexString.substring(16, 20), addrHexString.substring(20, 24), addrHexString.substring(24, 28), addrHexString.substring(28, 32)));
         } catch (Exception e) {
-            Log.e(TAG, "error in hexToInet6Address(" + addrHexString + "): " + e);
+            Log.m70e(TAG, "error in hexToInet6Address(" + addrHexString + "): " + e);
             throw new IllegalArgumentException(e);
         }
     }
@@ -175,8 +181,7 @@ public class NetworkUtils {
             return addr;
         }
         StringBuilder builder = new StringBuilder(16);
-        int i = 0;
-        while (i < 4) {
+        for (int i = 0; i < 4; i++) {
             try {
                 if (octets[i].length() > 3) {
                     return addr;
@@ -185,12 +190,12 @@ public class NetworkUtils {
                 if (i < 3) {
                     builder.append('.');
                 }
-                i++;
             } catch (NumberFormatException e) {
                 return addr;
             }
         }
-        return builder.toString();
+        String result = builder.toString();
+        return result;
     }
 
     private static TreeSet<IpPrefix> deduplicatePrefixSet(TreeSet<IpPrefix> src) {
@@ -201,7 +206,8 @@ public class NetworkUtils {
             Iterator<IpPrefix> it2 = dst.iterator();
             while (true) {
                 if (it2.hasNext()) {
-                    if (it2.next().containsPrefix(newPrefix)) {
+                    IpPrefix existingPrefix = it2.next();
+                    if (existingPrefix.containsPrefix(newPrefix)) {
                         break;
                     }
                 } else {
@@ -221,7 +227,8 @@ public class NetworkUtils {
             if (!prefix.isIPv4()) {
                 Log.wtf(TAG, "Non-IPv4 prefix in routedIPv4AddressCount");
             }
-            routedIPCount += 1 << (32 - prefix.getPrefixLength());
+            int rank = 32 - prefix.getPrefixLength();
+            routedIPCount += 1 << rank;
         }
         return routedIPCount;
     }
@@ -234,20 +241,22 @@ public class NetworkUtils {
             if (!prefix.isIPv6()) {
                 Log.wtf(TAG, "Non-IPv6 prefix in routedIPv6AddressCount");
             }
-            routedIPCount = routedIPCount.add(BigInteger.ONE.shiftLeft(128 - prefix.getPrefixLength()));
+            int rank = 128 - prefix.getPrefixLength();
+            routedIPCount = routedIPCount.add(BigInteger.ONE.shiftLeft(rank));
         }
         return routedIPCount;
     }
 
     public static boolean isWeaklyValidatedHostname(String hostname) {
-        if (!hostname.matches("^[a-zA-Z0-9_.-]+$")) {
-            return false;
-        }
-        for (int address_family : ADDRESS_FAMILIES) {
-            if (Os.inet_pton(address_family, hostname) != null) {
-                return false;
+        int[] iArr;
+        if (hostname.matches("^[a-zA-Z0-9_.-]+$")) {
+            for (int address_family : ADDRESS_FAMILIES) {
+                if (Os.inet_pton(address_family, hostname) != null) {
+                    return false;
+                }
             }
+            return true;
         }
-        return true;
+        return false;
     }
 }

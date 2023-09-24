@@ -2,18 +2,31 @@ package android.media;
 
 import android.annotation.UnsupportedAppUsage;
 import android.hardware.camera2.legacy.LegacyCameraDevice;
-import android.os.SystemProperties;
+import android.media.MediaCodecInfo;
+import android.media.MediaPlayer;
+import android.mtp.MtpConstants;
+import android.opengl.GLES20;
+import android.opengl.GLES30;
+import android.p007os.SystemProperties;
+import android.p007os.UserHandle;
+import android.p007os.health.HealthKeys;
+import android.support.graphics.drawable.PathInterpolatorCompat;
 import android.telephony.SmsManager;
+import android.text.Spanned;
 import android.util.Log;
 import android.util.Pair;
 import android.util.Range;
 import android.util.Rational;
 import android.util.Size;
+import android.view.SurfaceControl;
+import android.view.autofill.AutofillManager;
 import com.android.internal.content.NativeLibraryHelper;
 import com.android.internal.logging.nano.MetricsProto;
+import com.android.internal.util.Protocol;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -21,9 +34,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
+/* loaded from: classes3.dex */
 public final class MediaCodecInfo {
-    /* access modifiers changed from: private */
-    public static final Range<Integer> BITRATE_RANGE = Range.create(0, 500000000);
     private static final int DEFAULT_MAX_SUPPORTED_INSTANCES = 32;
     private static final int ERROR_NONE_SUPPORTED = 4;
     private static final int ERROR_UNRECOGNIZED = 1;
@@ -32,22 +44,18 @@ public final class MediaCodecInfo {
     private static final int FLAG_IS_HARDWARE_ACCELERATED = 8;
     private static final int FLAG_IS_SOFTWARE_ONLY = 4;
     private static final int FLAG_IS_VENDOR = 2;
-    /* access modifiers changed from: private */
-    public static final Range<Integer> FRAME_RATE_RANGE = Range.create(0, 960);
     private static final int MAX_SUPPORTED_INSTANCES_LIMIT = 256;
-    /* access modifiers changed from: private */
-    public static final Range<Integer> POSITIVE_INTEGERS = Range.create(1, Integer.MAX_VALUE);
-    /* access modifiers changed from: private */
-    public static final Range<Long> POSITIVE_LONGS = Range.create(1L, Long.MAX_VALUE);
-    /* access modifiers changed from: private */
-    public static final Range<Rational> POSITIVE_RATIONALS = Range.create(new Rational(1, Integer.MAX_VALUE), new Rational(Integer.MAX_VALUE, 1));
-    /* access modifiers changed from: private */
-    public static final Range<Integer> SIZE_RANGE = Range.create(1, 32768);
     private static final String TAG = "MediaCodecInfo";
     private String mCanonicalName;
     private Map<String, CodecCapabilities> mCaps = new HashMap();
     private int mFlags;
     private String mName;
+    private static final Range<Integer> POSITIVE_INTEGERS = Range.create(1, Integer.MAX_VALUE);
+    private static final Range<Long> POSITIVE_LONGS = Range.create(1L, Long.MAX_VALUE);
+    private static final Range<Rational> POSITIVE_RATIONALS = Range.create(new Rational(1, Integer.MAX_VALUE), new Rational(Integer.MAX_VALUE, 1));
+    private static final Range<Integer> SIZE_RANGE = Range.create(1, 32768);
+    private static final Range<Integer> FRAME_RATE_RANGE = Range.create(0, 960);
+    private static final Range<Integer> BITRATE_RANGE = Range.create(0, 500000000);
 
     MediaCodecInfo(String name, String canonicalName, int flags, CodecCapabilities[] caps) {
         this.mName = name;
@@ -93,14 +101,15 @@ public final class MediaCodecInfo {
         return types;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static int checkPowerOfTwo(int value, String message) {
-        if (((value - 1) & value) == 0) {
-            return value;
+        if (((value - 1) & value) != 0) {
+            throw new IllegalArgumentException(message);
         }
-        throw new IllegalArgumentException(message);
+        return value;
     }
 
+    /* loaded from: classes3.dex */
     private static class Feature {
         public boolean mDefault;
         public String mName;
@@ -113,6 +122,7 @@ public final class MediaCodecInfo {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class CodecCapabilities {
         public static final int COLOR_Format12bitRGB444 = 3;
         public static final int COLOR_Format16bitARGB1555 = 5;
@@ -166,17 +176,7 @@ public final class MediaCodecInfo {
         public static final int COLOR_FormatYUV444Interleaved = 29;
         public static final int COLOR_QCOM_FormatYUV420SemiPlanar = 2141391872;
         public static final int COLOR_TI_FormatYUV420PackedSemiPlanar = 2130706688;
-        public static final String FEATURE_AdaptivePlayback = "adaptive-playback";
-        public static final String FEATURE_DynamicTimestamp = "dynamic-timestamp";
-        public static final String FEATURE_FrameParsing = "frame-parsing";
-        public static final String FEATURE_IntraRefresh = "intra-refresh";
-        public static final String FEATURE_MultipleFrames = "multiple-frames";
-        public static final String FEATURE_PartialFrame = "partial-frame";
-        public static final String FEATURE_SecurePlayback = "secure-playback";
-        public static final String FEATURE_TunneledPlayback = "tunneled-playback";
         private static final String TAG = "CodecCapabilities";
-        private static final Feature[] decoderFeatures = {new Feature(FEATURE_AdaptivePlayback, 1, true), new Feature(FEATURE_SecurePlayback, 2, false), new Feature(FEATURE_TunneledPlayback, 4, false), new Feature(FEATURE_PartialFrame, 8, false), new Feature(FEATURE_FrameParsing, 16, false), new Feature(FEATURE_MultipleFrames, 32, false), new Feature(FEATURE_DynamicTimestamp, 64, false)};
-        private static final Feature[] encoderFeatures = {new Feature(FEATURE_IntraRefresh, 1, false), new Feature(FEATURE_MultipleFrames, 2, false), new Feature(FEATURE_DynamicTimestamp, 4, false)};
         public int[] colorFormats;
         private AudioCapabilities mAudioCaps;
         private MediaFormat mCapabilitiesInfo;
@@ -190,6 +190,16 @@ public final class MediaCodecInfo {
         private String mMime;
         private VideoCapabilities mVideoCaps;
         public CodecProfileLevel[] profileLevels;
+        public static final String FEATURE_AdaptivePlayback = "adaptive-playback";
+        public static final String FEATURE_SecurePlayback = "secure-playback";
+        public static final String FEATURE_TunneledPlayback = "tunneled-playback";
+        public static final String FEATURE_PartialFrame = "partial-frame";
+        public static final String FEATURE_FrameParsing = "frame-parsing";
+        public static final String FEATURE_MultipleFrames = "multiple-frames";
+        public static final String FEATURE_DynamicTimestamp = "dynamic-timestamp";
+        private static final Feature[] decoderFeatures = {new Feature(FEATURE_AdaptivePlayback, 1, true), new Feature(FEATURE_SecurePlayback, 2, false), new Feature(FEATURE_TunneledPlayback, 4, false), new Feature(FEATURE_PartialFrame, 8, false), new Feature(FEATURE_FrameParsing, 16, false), new Feature(FEATURE_MultipleFrames, 32, false), new Feature(FEATURE_DynamicTimestamp, 64, false)};
+        public static final String FEATURE_IntraRefresh = "intra-refresh";
+        private static final Feature[] encoderFeatures = {new Feature(FEATURE_IntraRefresh, 1, false), new Feature(FEATURE_MultipleFrames, 2, false), new Feature(FEATURE_DynamicTimestamp, 4, false)};
 
         public CodecCapabilities() {
         }
@@ -219,23 +229,17 @@ public final class MediaCodecInfo {
         }
 
         private boolean checkFeature(String name, int flags) {
-            Feature[] validFeatures = getValidFeatures();
-            int length = validFeatures.length;
-            int i = 0;
-            while (i < length) {
-                Feature feat = validFeatures[i];
-                if (!feat.mName.equals(name)) {
-                    i++;
-                } else if ((feat.mValue & flags) != 0) {
-                    return true;
-                } else {
-                    return false;
+            Feature[] validFeatures;
+            for (Feature feat : getValidFeatures()) {
+                if (feat.mName.equals(name)) {
+                    return (feat.mValue & flags) != 0;
                 }
             }
             return false;
         }
 
         public boolean isRegular() {
+            Feature[] validFeatures;
             for (Feature feat : getValidFeatures()) {
                 if (!feat.mDefault && isFeatureRequired(feat.mName)) {
                     return false;
@@ -245,6 +249,8 @@ public final class MediaCodecInfo {
         }
 
         public final boolean isFormatSupported(MediaFormat format) {
+            Feature[] validFeatures;
+            CodecProfileLevel[] codecProfileLevelArr;
             Map<String, Object> map = format.getMap();
             String mime = (String) map.get(MediaFormat.KEY_MIME);
             if (mime != null && !this.mMime.equalsIgnoreCase(mime)) {
@@ -279,16 +285,13 @@ public final class MediaCodecInfo {
             if (this.mAudioCaps != null && !this.mAudioCaps.supportsFormat(format)) {
                 return false;
             }
-            if (this.mVideoCaps != null && !this.mVideoCaps.supportsFormat(format)) {
-                return false;
-            }
-            if (this.mEncoderCaps == null || this.mEncoderCaps.supportsFormat(format)) {
-                return true;
+            if (this.mVideoCaps == null || this.mVideoCaps.supportsFormat(format)) {
+                return this.mEncoderCaps == null || this.mEncoderCaps.supportsFormat(format);
             }
             return false;
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public static boolean supportsBitrate(Range<Integer> bitrateRange, MediaFormat format) {
             Map<String, Object> map = format.getMap();
             Integer maxBitrate = (Integer) map.get(MediaFormat.KEY_MAX_BIT_RATE);
@@ -298,13 +301,14 @@ public final class MediaCodecInfo {
             } else if (maxBitrate != null) {
                 bitrate = Integer.valueOf(Math.max(bitrate.intValue(), maxBitrate.intValue()));
             }
-            if (bitrate == null || bitrate.intValue() <= 0) {
-                return true;
+            if (bitrate != null && bitrate.intValue() > 0) {
+                return bitrateRange.contains((Range<Integer>) bitrate);
             }
-            return bitrateRange.contains(bitrate);
+            return true;
         }
 
         private boolean supportsProfileLevel(int profile, Integer level) {
+            CodecProfileLevel[] codecProfileLevelArr;
             for (CodecProfileLevel pl : this.profileLevels) {
                 if (pl.profile == profile) {
                     if (level == null || this.mMime.equalsIgnoreCase(MediaFormat.MIMETYPE_AUDIO_AAC)) {
@@ -313,17 +317,12 @@ public final class MediaCodecInfo {
                     if ((!this.mMime.equalsIgnoreCase(MediaFormat.MIMETYPE_VIDEO_H263) || pl.level == level.intValue() || pl.level != 16 || level.intValue() <= 1) && (!this.mMime.equalsIgnoreCase(MediaFormat.MIMETYPE_VIDEO_MPEG4) || pl.level == level.intValue() || pl.level != 4 || level.intValue() <= 1)) {
                         if (this.mMime.equalsIgnoreCase(MediaFormat.MIMETYPE_VIDEO_HEVC)) {
                             boolean supportsHighTier = (pl.level & 44739242) != 0;
-                            if (((44739242 & level.intValue()) != 0) && !supportsHighTier) {
+                            boolean checkingHighTier = (44739242 & level.intValue()) != 0;
+                            if (checkingHighTier && !supportsHighTier) {
                             }
                         }
                         if (pl.level >= level.intValue()) {
-                            if (createFromProfileLevel(this.mMime, profile, pl.level) == null) {
-                                return true;
-                            }
-                            if (createFromProfileLevel(this.mMime, profile, level.intValue()) != null) {
-                                return true;
-                            }
-                            return false;
+                            return createFromProfileLevel(this.mMime, profile, pl.level) == null || createFromProfileLevel(this.mMime, profile, level.intValue()) != null;
                         }
                     }
                 }
@@ -402,13 +401,12 @@ public final class MediaCodecInfo {
         }
 
         CodecCapabilities(CodecProfileLevel[] profLevs, int[] colFmts, boolean encoder, MediaFormat defaultFormat, MediaFormat info) {
-            MediaFormat mediaFormat = info;
+            Feature[] validFeatures;
             Map<String, Object> map = info.getMap();
             this.colorFormats = colFmts;
-            int i = 0;
             this.mFlagsVerified = 0;
             this.mDefaultFormat = defaultFormat;
-            this.mCapabilitiesInfo = mediaFormat;
+            this.mCapabilitiesInfo = info;
             this.mMime = this.mDefaultFormat.getString(MediaFormat.KEY_MIME);
             CodecProfileLevel[] profLevs2 = profLevs;
             if (profLevs2.length == 0 && this.mMime.equalsIgnoreCase(MediaFormat.MIMETYPE_VIDEO_VP9)) {
@@ -419,21 +417,20 @@ public final class MediaCodecInfo {
             }
             this.profileLevels = profLevs2;
             if (this.mMime.toLowerCase().startsWith("audio/")) {
-                this.mAudioCaps = AudioCapabilities.create(mediaFormat, this);
+                this.mAudioCaps = AudioCapabilities.create(info, this);
                 this.mAudioCaps.getDefaultFormat(this.mDefaultFormat);
             } else if (this.mMime.toLowerCase().startsWith("video/") || this.mMime.equalsIgnoreCase(MediaFormat.MIMETYPE_IMAGE_ANDROID_HEIC)) {
-                this.mVideoCaps = VideoCapabilities.create(mediaFormat, this);
+                this.mVideoCaps = VideoCapabilities.create(info, this);
             }
             if (encoder) {
-                this.mEncoderCaps = EncoderCapabilities.create(mediaFormat, this);
+                this.mEncoderCaps = EncoderCapabilities.create(info, this);
                 this.mEncoderCaps.getDefaultFormat(this.mDefaultFormat);
             }
-            this.mMaxSupportedInstances = Utils.parseIntSafely(MediaCodecList.getGlobalSettings().get("max-concurrent-instances"), 32);
-            this.mMaxSupportedInstances = ((Integer) Range.create(1, 256).clamp(Integer.valueOf(Utils.parseIntSafely(map.get("max-concurrent-instances"), this.mMaxSupportedInstances)))).intValue();
-            Feature[] validFeatures = getValidFeatures();
-            int length = validFeatures.length;
-            while (i < length) {
-                Feature feat = validFeatures[i];
+            Map<String, Object> global = MediaCodecList.getGlobalSettings();
+            this.mMaxSupportedInstances = Utils.parseIntSafely(global.get("max-concurrent-instances"), 32);
+            int maxInstances = Utils.parseIntSafely(map.get("max-concurrent-instances"), this.mMaxSupportedInstances);
+            this.mMaxSupportedInstances = ((Integer) Range.create(1, 256).clamp(Integer.valueOf(maxInstances))).intValue();
+            for (Feature feat : getValidFeatures()) {
                 String key = MediaFormat.KEY_FEATURE_ + feat.mName;
                 Integer yesNo = (Integer) map.get(key);
                 if (yesNo != null) {
@@ -443,12 +440,11 @@ public final class MediaCodecInfo {
                     this.mFlagsSupported |= feat.mValue;
                     this.mDefaultFormat.setInteger(key, 1);
                 }
-                i++;
-                MediaFormat mediaFormat2 = info;
             }
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class AudioCapabilities {
         private static final int MAX_INPUT_CHANNEL_COUNT = 30;
         private static final String TAG = "AudioCapabilities";
@@ -496,26 +492,34 @@ public final class MediaCodecInfo {
         private void initWithPlatformLimits() {
             this.mBitrateRange = Range.create(0, Integer.MAX_VALUE);
             this.mMaxInputChannelCount = 30;
-            this.mSampleRateRanges = new Range[]{Range.create(Integer.valueOf(SystemProperties.getInt("ro.mediacodec.min_sample_rate", 7350)), Integer.valueOf(SystemProperties.getInt("ro.mediacodec.max_sample_rate", AudioFormat.SAMPLE_RATE_HZ_MAX)))};
+            int minSampleRate = SystemProperties.getInt("ro.mediacodec.min_sample_rate", 7350);
+            int maxSampleRate = SystemProperties.getInt("ro.mediacodec.max_sample_rate", AudioFormat.SAMPLE_RATE_HZ_MAX);
+            this.mSampleRateRanges = new Range[]{Range.create(Integer.valueOf(minSampleRate), Integer.valueOf(maxSampleRate))};
             this.mSampleRates = null;
         }
 
         private boolean supports(Integer sampleRate, Integer inputChannels) {
-            if (inputChannels == null || (inputChannels.intValue() >= 1 && inputChannels.intValue() <= this.mMaxInputChannelCount)) {
-                return sampleRate == null || Utils.binarySearchDistinctRanges(this.mSampleRateRanges, sampleRate) >= 0;
+            if (inputChannels != null && (inputChannels.intValue() < 1 || inputChannels.intValue() > this.mMaxInputChannelCount)) {
+                return false;
             }
-            return false;
+            if (sampleRate != null) {
+                int ix = Utils.binarySearchDistinctRanges(this.mSampleRateRanges, sampleRate);
+                if (ix < 0) {
+                    return false;
+                }
+            }
+            return true;
         }
 
         public boolean isSampleRateSupported(int sampleRate) {
-            return supports(Integer.valueOf(sampleRate), (Integer) null);
+            return supports(Integer.valueOf(sampleRate), null);
         }
 
         private void limitSampleRates(int[] rates) {
             Arrays.sort(rates);
             ArrayList<Range<Integer>> ranges = new ArrayList<>();
             for (int rate : rates) {
-                if (supports(Integer.valueOf(rate), (Integer) null)) {
+                if (supports(Integer.valueOf(rate), null)) {
                     ranges.add(Range.create(Integer.valueOf(rate), Integer.valueOf(rate)));
                 }
             }
@@ -531,6 +535,7 @@ public final class MediaCodecInfo {
         }
 
         private void limitSampleRates(Range<Integer>[] rateRanges) {
+            Range<Integer>[] rangeArr;
             Utils.sortDistinctRanges(rateRanges);
             this.mSampleRateRanges = Utils.intersectSortedDistinctRanges(this.mSampleRateRanges, rateRanges);
             for (Range<Integer> range : this.mSampleRateRanges) {
@@ -566,7 +571,7 @@ public final class MediaCodecInfo {
                 maxChannels = 48;
             } else if (mime.equalsIgnoreCase(MediaFormat.MIMETYPE_AUDIO_VORBIS)) {
                 bitRates = Range.create(32000, 500000);
-                sampleRateRange = Range.create(8000, Integer.valueOf(AudioFormat.SAMPLE_RATE_HZ_MAX));
+                sampleRateRange = Range.create(8000, Integer.valueOf((int) AudioFormat.SAMPLE_RATE_HZ_MAX));
                 maxChannels = 255;
             } else if (mime.equalsIgnoreCase(MediaFormat.MIMETYPE_AUDIO_OPUS)) {
                 bitRates = Range.create(6000, 510000);
@@ -599,14 +604,14 @@ public final class MediaCodecInfo {
                 bitRates = Range.create(16000, 2688000);
                 maxChannels = 24;
             } else {
-                Log.w(TAG, "Unsupported mime " + mime);
+                Log.m64w(TAG, "Unsupported mime " + mime);
                 CodecCapabilities codecCapabilities = this.mParent;
                 codecCapabilities.mError = codecCapabilities.mError | 2;
             }
             if (sampleRates != null) {
                 limitSampleRates(sampleRates);
             } else if (sampleRateRange != null) {
-                limitSampleRates((Range<Integer>[]) new Range[]{sampleRateRange});
+                limitSampleRates(new Range[]{sampleRateRange});
             }
             applyLimits(maxChannels, bitRates);
         }
@@ -625,7 +630,7 @@ public final class MediaCodecInfo {
                 String[] rateStrings = info.getString("sample-rate-ranges").split(SmsManager.REGEX_PREFIX_DELIMITER);
                 Range<Integer>[] rateRanges = new Range[rateStrings.length];
                 for (int i = 0; i < rateStrings.length; i++) {
-                    rateRanges[i] = Utils.parseIntRange(rateStrings[i], (Range<Integer>) null);
+                    rateRanges[i] = Utils.parseIntRange(rateStrings[i], null);
                 }
                 limitSampleRates(rateRanges);
             }
@@ -654,13 +659,13 @@ public final class MediaCodecInfo {
 
         public boolean supportsFormat(MediaFormat format) {
             Map<String, Object> map = format.getMap();
-            if (supports((Integer) map.get(MediaFormat.KEY_SAMPLE_RATE), (Integer) map.get(MediaFormat.KEY_CHANNEL_COUNT)) && CodecCapabilities.supportsBitrate(this.mBitrateRange, format)) {
-                return true;
-            }
-            return false;
+            Integer sampleRate = (Integer) map.get(MediaFormat.KEY_SAMPLE_RATE);
+            Integer channels = (Integer) map.get(MediaFormat.KEY_CHANNEL_COUNT);
+            return supports(sampleRate, channels) && CodecCapabilities.supportsBitrate(this.mBitrateRange, format);
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class VideoCapabilities {
         private static final String TAG = "VideoCapabilities";
         private boolean mAllowMbOverride;
@@ -714,17 +719,19 @@ public final class MediaCodecInfo {
         public Range<Integer> getSupportedWidthsFor(int height) {
             try {
                 Range<Integer> range = this.mWidthRange;
-                if (!this.mHeightRange.contains(Integer.valueOf(height)) || height % this.mHeightAlignment != 0) {
+                if (!this.mHeightRange.contains((Range<Integer>) Integer.valueOf(height)) || height % this.mHeightAlignment != 0) {
                     throw new IllegalArgumentException("unsupported height");
                 }
                 int heightInBlocks = Utils.divUp(height, this.mBlockHeight);
-                Range<Integer> range2 = range.intersect(Integer.valueOf(((Math.max(Utils.divUp(this.mBlockCountRange.getLower().intValue(), heightInBlocks), (int) Math.ceil(this.mBlockAspectRatioRange.getLower().doubleValue() * ((double) heightInBlocks))) - 1) * this.mBlockWidth) + this.mWidthAlignment), Integer.valueOf(this.mBlockWidth * Math.min(this.mBlockCountRange.getUpper().intValue() / heightInBlocks, (int) (this.mBlockAspectRatioRange.getUpper().doubleValue() * ((double) heightInBlocks)))));
+                int minWidthInBlocks = Math.max(Utils.divUp(this.mBlockCountRange.getLower().intValue(), heightInBlocks), (int) Math.ceil(this.mBlockAspectRatioRange.getLower().doubleValue() * heightInBlocks));
+                int maxWidthInBlocks = Math.min(this.mBlockCountRange.getUpper().intValue() / heightInBlocks, (int) (this.mBlockAspectRatioRange.getUpper().doubleValue() * heightInBlocks));
+                Range<Integer> range2 = range.intersect(Integer.valueOf(((minWidthInBlocks - 1) * this.mBlockWidth) + this.mWidthAlignment), Integer.valueOf(this.mBlockWidth * maxWidthInBlocks));
                 if (height > this.mSmallerDimensionUpperLimit) {
                     range2 = range2.intersect(1, Integer.valueOf(this.mSmallerDimensionUpperLimit));
                 }
-                return range2.intersect(Integer.valueOf((int) Math.ceil(this.mAspectRatioRange.getLower().doubleValue() * ((double) height))), Integer.valueOf((int) (this.mAspectRatioRange.getUpper().doubleValue() * ((double) height))));
+                return range2.intersect(Integer.valueOf((int) Math.ceil(this.mAspectRatioRange.getLower().doubleValue() * height)), Integer.valueOf((int) (this.mAspectRatioRange.getUpper().doubleValue() * height)));
             } catch (IllegalArgumentException e) {
-                Log.v(TAG, "could not get supported widths for " + height);
+                Log.m66v(TAG, "could not get supported widths for " + height);
                 throw new IllegalArgumentException("unsupported height");
             }
         }
@@ -732,28 +739,30 @@ public final class MediaCodecInfo {
         public Range<Integer> getSupportedHeightsFor(int width) {
             try {
                 Range<Integer> range = this.mHeightRange;
-                if (!this.mWidthRange.contains(Integer.valueOf(width)) || width % this.mWidthAlignment != 0) {
+                if (!this.mWidthRange.contains((Range<Integer>) Integer.valueOf(width)) || width % this.mWidthAlignment != 0) {
                     throw new IllegalArgumentException("unsupported width");
                 }
                 int widthInBlocks = Utils.divUp(width, this.mBlockWidth);
-                Range<Integer> range2 = range.intersect(Integer.valueOf(((Math.max(Utils.divUp(this.mBlockCountRange.getLower().intValue(), widthInBlocks), (int) Math.ceil(((double) widthInBlocks) / this.mBlockAspectRatioRange.getUpper().doubleValue())) - 1) * this.mBlockHeight) + this.mHeightAlignment), Integer.valueOf(this.mBlockHeight * Math.min(this.mBlockCountRange.getUpper().intValue() / widthInBlocks, (int) (((double) widthInBlocks) / this.mBlockAspectRatioRange.getLower().doubleValue()))));
+                int minHeightInBlocks = Math.max(Utils.divUp(this.mBlockCountRange.getLower().intValue(), widthInBlocks), (int) Math.ceil(widthInBlocks / this.mBlockAspectRatioRange.getUpper().doubleValue()));
+                int maxHeightInBlocks = Math.min(this.mBlockCountRange.getUpper().intValue() / widthInBlocks, (int) (widthInBlocks / this.mBlockAspectRatioRange.getLower().doubleValue()));
+                Range<Integer> range2 = range.intersect(Integer.valueOf(((minHeightInBlocks - 1) * this.mBlockHeight) + this.mHeightAlignment), Integer.valueOf(this.mBlockHeight * maxHeightInBlocks));
                 if (width > this.mSmallerDimensionUpperLimit) {
                     range2 = range2.intersect(1, Integer.valueOf(this.mSmallerDimensionUpperLimit));
                 }
-                return range2.intersect(Integer.valueOf((int) Math.ceil(((double) width) / this.mAspectRatioRange.getUpper().doubleValue())), Integer.valueOf((int) (((double) width) / this.mAspectRatioRange.getLower().doubleValue())));
+                return range2.intersect(Integer.valueOf((int) Math.ceil(width / this.mAspectRatioRange.getUpper().doubleValue())), Integer.valueOf((int) (width / this.mAspectRatioRange.getLower().doubleValue())));
             } catch (IllegalArgumentException e) {
-                Log.v(TAG, "could not get supported heights for " + width);
+                Log.m66v(TAG, "could not get supported heights for " + width);
                 throw new IllegalArgumentException("unsupported width");
             }
         }
 
         public Range<Double> getSupportedFrameRatesFor(int width, int height) {
             Range<Integer> range = this.mHeightRange;
-            if (supports(Integer.valueOf(width), Integer.valueOf(height), (Number) null)) {
-                int blockCount = Utils.divUp(width, this.mBlockWidth) * Utils.divUp(height, this.mBlockHeight);
-                return Range.create(Double.valueOf(Math.max(((double) this.mBlocksPerSecondRange.getLower().longValue()) / ((double) blockCount), (double) this.mFrameRateRange.getLower().intValue())), Double.valueOf(Math.min(((double) this.mBlocksPerSecondRange.getUpper().longValue()) / ((double) blockCount), (double) this.mFrameRateRange.getUpper().intValue())));
+            if (!supports(Integer.valueOf(width), Integer.valueOf(height), null)) {
+                throw new IllegalArgumentException("unsupported size");
             }
-            throw new IllegalArgumentException("unsupported size");
+            int blockCount = Utils.divUp(width, this.mBlockWidth) * Utils.divUp(height, this.mBlockHeight);
+            return Range.create(Double.valueOf(Math.max(this.mBlocksPerSecondRange.getLower().longValue() / blockCount, this.mFrameRateRange.getLower().intValue())), Double.valueOf(Math.min(this.mBlocksPerSecondRange.getUpper().longValue() / blockCount, this.mFrameRateRange.getUpper().intValue())));
         }
 
         private int getBlockCount(int width, int height) {
@@ -777,63 +786,64 @@ public final class MediaCodecInfo {
         private Range<Double> estimateFrameRatesFor(int width, int height) {
             Size size = findClosestSize(width, height);
             Range<Long> range = this.mMeasuredFrameRates.get(size);
-            Double ratio = Double.valueOf(((double) getBlockCount(size.getWidth(), size.getHeight())) / ((double) Math.max(getBlockCount(width, height), 1)));
-            return Range.create(Double.valueOf(((double) range.getLower().longValue()) * ratio.doubleValue()), Double.valueOf(((double) range.getUpper().longValue()) * ratio.doubleValue()));
+            Double ratio = Double.valueOf(getBlockCount(size.getWidth(), size.getHeight()) / Math.max(getBlockCount(width, height), 1));
+            return Range.create(Double.valueOf(range.getLower().longValue() * ratio.doubleValue()), Double.valueOf(range.getUpper().longValue() * ratio.doubleValue()));
         }
 
         public Range<Double> getAchievableFrameRatesFor(int width, int height) {
-            if (!supports(Integer.valueOf(width), Integer.valueOf(height), (Number) null)) {
+            if (!supports(Integer.valueOf(width), Integer.valueOf(height), null)) {
                 throw new IllegalArgumentException("unsupported size");
-            } else if (this.mMeasuredFrameRates != null && this.mMeasuredFrameRates.size() > 0) {
-                return estimateFrameRatesFor(width, height);
-            } else {
-                Log.w(TAG, "Codec did not publish any measurement data.");
+            }
+            if (this.mMeasuredFrameRates == null || this.mMeasuredFrameRates.size() <= 0) {
+                Log.m64w(TAG, "Codec did not publish any measurement data.");
                 return null;
             }
+            return estimateFrameRatesFor(width, height);
         }
 
+        /* loaded from: classes3.dex */
         public static final class PerformancePoint {
-            public static final PerformancePoint FHD_100 = new PerformancePoint(LegacyCameraDevice.MAX_DIMEN_FOR_ROUNDING, 1080, 100);
-            public static final PerformancePoint FHD_120 = new PerformancePoint(LegacyCameraDevice.MAX_DIMEN_FOR_ROUNDING, 1080, 120);
-            public static final PerformancePoint FHD_200 = new PerformancePoint(LegacyCameraDevice.MAX_DIMEN_FOR_ROUNDING, 1080, 200);
-            public static final PerformancePoint FHD_24 = new PerformancePoint(LegacyCameraDevice.MAX_DIMEN_FOR_ROUNDING, 1080, 24);
-            public static final PerformancePoint FHD_240 = new PerformancePoint(LegacyCameraDevice.MAX_DIMEN_FOR_ROUNDING, 1080, 240);
-            public static final PerformancePoint FHD_25 = new PerformancePoint(LegacyCameraDevice.MAX_DIMEN_FOR_ROUNDING, 1080, 25);
-            public static final PerformancePoint FHD_30 = new PerformancePoint(LegacyCameraDevice.MAX_DIMEN_FOR_ROUNDING, 1080, 30);
-            public static final PerformancePoint FHD_50 = new PerformancePoint(LegacyCameraDevice.MAX_DIMEN_FOR_ROUNDING, 1080, 50);
-            public static final PerformancePoint FHD_60 = new PerformancePoint(LegacyCameraDevice.MAX_DIMEN_FOR_ROUNDING, 1080, 60);
-            public static final PerformancePoint HD_100 = new PerformancePoint(1280, MetricsProto.MetricsEvent.ACTION_PERMISSION_DENIED_RECEIVE_WAP_PUSH, 100);
-            public static final PerformancePoint HD_120 = new PerformancePoint(1280, MetricsProto.MetricsEvent.ACTION_PERMISSION_DENIED_RECEIVE_WAP_PUSH, 120);
-            public static final PerformancePoint HD_200 = new PerformancePoint(1280, MetricsProto.MetricsEvent.ACTION_PERMISSION_DENIED_RECEIVE_WAP_PUSH, 200);
-            public static final PerformancePoint HD_24 = new PerformancePoint(1280, MetricsProto.MetricsEvent.ACTION_PERMISSION_DENIED_RECEIVE_WAP_PUSH, 24);
-            public static final PerformancePoint HD_240 = new PerformancePoint(1280, MetricsProto.MetricsEvent.ACTION_PERMISSION_DENIED_RECEIVE_WAP_PUSH, 240);
-            public static final PerformancePoint HD_25 = new PerformancePoint(1280, MetricsProto.MetricsEvent.ACTION_PERMISSION_DENIED_RECEIVE_WAP_PUSH, 25);
-            public static final PerformancePoint HD_30 = new PerformancePoint(1280, MetricsProto.MetricsEvent.ACTION_PERMISSION_DENIED_RECEIVE_WAP_PUSH, 30);
-            public static final PerformancePoint HD_50 = new PerformancePoint(1280, MetricsProto.MetricsEvent.ACTION_PERMISSION_DENIED_RECEIVE_WAP_PUSH, 50);
-            public static final PerformancePoint HD_60 = new PerformancePoint(1280, MetricsProto.MetricsEvent.ACTION_PERMISSION_DENIED_RECEIVE_WAP_PUSH, 60);
+            private Size mBlockSize;
+            private int mHeight;
+            private int mMaxFrameRate;
+            private long mMaxMacroBlockRate;
+            private int mWidth;
             public static final PerformancePoint SD_24 = new PerformancePoint(MetricsProto.MetricsEvent.ACTION_PERMISSION_DENIED_RECEIVE_WAP_PUSH, 480, 24);
             public static final PerformancePoint SD_25 = new PerformancePoint(MetricsProto.MetricsEvent.ACTION_PERMISSION_DENIED_RECEIVE_WAP_PUSH, 576, 25);
             public static final PerformancePoint SD_30 = new PerformancePoint(MetricsProto.MetricsEvent.ACTION_PERMISSION_DENIED_RECEIVE_WAP_PUSH, 480, 30);
             public static final PerformancePoint SD_48 = new PerformancePoint(MetricsProto.MetricsEvent.ACTION_PERMISSION_DENIED_RECEIVE_WAP_PUSH, 480, 48);
             public static final PerformancePoint SD_50 = new PerformancePoint(MetricsProto.MetricsEvent.ACTION_PERMISSION_DENIED_RECEIVE_WAP_PUSH, 576, 50);
             public static final PerformancePoint SD_60 = new PerformancePoint(MetricsProto.MetricsEvent.ACTION_PERMISSION_DENIED_RECEIVE_WAP_PUSH, 480, 60);
-            public static final PerformancePoint UHD_100 = new PerformancePoint(3840, 2160, 100);
-            public static final PerformancePoint UHD_120 = new PerformancePoint(3840, 2160, 120);
-            public static final PerformancePoint UHD_200 = new PerformancePoint(3840, 2160, 200);
+            public static final PerformancePoint HD_24 = new PerformancePoint(1280, MetricsProto.MetricsEvent.ACTION_PERMISSION_DENIED_RECEIVE_WAP_PUSH, 24);
+            public static final PerformancePoint HD_25 = new PerformancePoint(1280, MetricsProto.MetricsEvent.ACTION_PERMISSION_DENIED_RECEIVE_WAP_PUSH, 25);
+            public static final PerformancePoint HD_30 = new PerformancePoint(1280, MetricsProto.MetricsEvent.ACTION_PERMISSION_DENIED_RECEIVE_WAP_PUSH, 30);
+            public static final PerformancePoint HD_50 = new PerformancePoint(1280, MetricsProto.MetricsEvent.ACTION_PERMISSION_DENIED_RECEIVE_WAP_PUSH, 50);
+            public static final PerformancePoint HD_60 = new PerformancePoint(1280, MetricsProto.MetricsEvent.ACTION_PERMISSION_DENIED_RECEIVE_WAP_PUSH, 60);
+            public static final PerformancePoint HD_100 = new PerformancePoint(1280, MetricsProto.MetricsEvent.ACTION_PERMISSION_DENIED_RECEIVE_WAP_PUSH, 100);
+            public static final PerformancePoint HD_120 = new PerformancePoint(1280, MetricsProto.MetricsEvent.ACTION_PERMISSION_DENIED_RECEIVE_WAP_PUSH, 120);
+            public static final PerformancePoint HD_200 = new PerformancePoint(1280, MetricsProto.MetricsEvent.ACTION_PERMISSION_DENIED_RECEIVE_WAP_PUSH, 200);
+            public static final PerformancePoint HD_240 = new PerformancePoint(1280, MetricsProto.MetricsEvent.ACTION_PERMISSION_DENIED_RECEIVE_WAP_PUSH, 240);
+            public static final PerformancePoint FHD_24 = new PerformancePoint(LegacyCameraDevice.MAX_DIMEN_FOR_ROUNDING, 1080, 24);
+            public static final PerformancePoint FHD_25 = new PerformancePoint(LegacyCameraDevice.MAX_DIMEN_FOR_ROUNDING, 1080, 25);
+            public static final PerformancePoint FHD_30 = new PerformancePoint(LegacyCameraDevice.MAX_DIMEN_FOR_ROUNDING, 1080, 30);
+            public static final PerformancePoint FHD_50 = new PerformancePoint(LegacyCameraDevice.MAX_DIMEN_FOR_ROUNDING, 1080, 50);
+            public static final PerformancePoint FHD_60 = new PerformancePoint(LegacyCameraDevice.MAX_DIMEN_FOR_ROUNDING, 1080, 60);
+            public static final PerformancePoint FHD_100 = new PerformancePoint(LegacyCameraDevice.MAX_DIMEN_FOR_ROUNDING, 1080, 100);
+            public static final PerformancePoint FHD_120 = new PerformancePoint(LegacyCameraDevice.MAX_DIMEN_FOR_ROUNDING, 1080, 120);
+            public static final PerformancePoint FHD_200 = new PerformancePoint(LegacyCameraDevice.MAX_DIMEN_FOR_ROUNDING, 1080, 200);
+            public static final PerformancePoint FHD_240 = new PerformancePoint(LegacyCameraDevice.MAX_DIMEN_FOR_ROUNDING, 1080, 240);
             public static final PerformancePoint UHD_24 = new PerformancePoint(3840, 2160, 24);
-            public static final PerformancePoint UHD_240 = new PerformancePoint(3840, 2160, 240);
             public static final PerformancePoint UHD_25 = new PerformancePoint(3840, 2160, 25);
             public static final PerformancePoint UHD_30 = new PerformancePoint(3840, 2160, 30);
             public static final PerformancePoint UHD_50 = new PerformancePoint(3840, 2160, 50);
             public static final PerformancePoint UHD_60 = new PerformancePoint(3840, 2160, 60);
-            private Size mBlockSize;
-            private int mHeight;
-            private int mMaxFrameRate;
-            private long mMaxMacroBlockRate;
-            private int mWidth;
+            public static final PerformancePoint UHD_100 = new PerformancePoint(3840, 2160, 100);
+            public static final PerformancePoint UHD_120 = new PerformancePoint(3840, 2160, 120);
+            public static final PerformancePoint UHD_200 = new PerformancePoint(3840, 2160, 200);
+            public static final PerformancePoint UHD_240 = new PerformancePoint(3840, 2160, 240);
 
             public int getMaxMacroBlocks() {
-                return saturateLongToInt(((long) this.mWidth) * ((long) this.mHeight));
+                return saturateLongToInt(this.mWidth * this.mHeight);
             }
 
             public int getMaxFrameRate() {
@@ -847,7 +857,7 @@ public final class MediaCodecInfo {
             public String toString() {
                 int blockWidth = this.mBlockSize.getWidth() * 16;
                 int blockHeight = this.mBlockSize.getHeight() * 16;
-                int origRate = (int) Utils.divUp(this.mMaxMacroBlockRate, (long) getMaxMacroBlocks());
+                int origRate = (int) Utils.divUp(this.mMaxMacroBlockRate, getMaxMacroBlocks());
                 String info = (this.mWidth * 16) + "x" + (this.mHeight * 16) + "@" + origRate;
                 if (origRate < this.mMaxFrameRate) {
                     info = info + ", max " + this.mMaxFrameRate + "fps";
@@ -863,17 +873,17 @@ public final class MediaCodecInfo {
             }
 
             public PerformancePoint(int width, int height, int frameRate, int maxFrameRate, Size blockSize) {
-                int unused = MediaCodecInfo.checkPowerOfTwo(blockSize.getWidth(), "block width");
-                int unused2 = MediaCodecInfo.checkPowerOfTwo(blockSize.getHeight(), "block height");
+                MediaCodecInfo.checkPowerOfTwo(blockSize.getWidth(), "block width");
+                MediaCodecInfo.checkPowerOfTwo(blockSize.getHeight(), "block height");
                 this.mBlockSize = new Size(Utils.divUp(blockSize.getWidth(), 16), Utils.divUp(blockSize.getHeight(), 16));
-                this.mWidth = (int) (Utils.divUp(Math.max(1, (long) width), (long) Math.max(blockSize.getWidth(), 16)) * ((long) this.mBlockSize.getWidth()));
-                this.mHeight = (int) (Utils.divUp(Math.max(1, (long) height), (long) Math.max(blockSize.getHeight(), 16)) * ((long) this.mBlockSize.getHeight()));
+                this.mWidth = (int) (Utils.divUp(Math.max(1L, width), Math.max(blockSize.getWidth(), 16)) * this.mBlockSize.getWidth());
+                this.mHeight = (int) (Utils.divUp(Math.max(1L, height), Math.max(blockSize.getHeight(), 16)) * this.mBlockSize.getHeight());
                 this.mMaxFrameRate = Math.max(1, Math.max(frameRate, maxFrameRate));
-                this.mMaxMacroBlockRate = (long) (Math.max(1, frameRate) * getMaxMacroBlocks());
+                this.mMaxMacroBlockRate = Math.max(1, frameRate) * getMaxMacroBlocks();
             }
 
             public PerformancePoint(PerformancePoint pp, Size newBlockSize) {
-                this(pp.mWidth * 16, pp.mHeight * 16, (int) Utils.divUp(pp.mMaxMacroBlockRate, (long) pp.getMaxMacroBlocks()), pp.mMaxFrameRate, new Size(Math.max(newBlockSize.getWidth(), pp.mBlockSize.getWidth() * 16), Math.max(newBlockSize.getHeight(), pp.mBlockSize.getHeight() * 16)));
+                this(pp.mWidth * 16, pp.mHeight * 16, (int) Utils.divUp(pp.mMaxMacroBlockRate, pp.getMaxMacroBlocks()), pp.mMaxFrameRate, new Size(Math.max(newBlockSize.getWidth(), pp.mBlockSize.getWidth() * 16), Math.max(newBlockSize.getHeight(), pp.mBlockSize.getHeight() * 16)));
             }
 
             public PerformancePoint(int width, int height, int frameRate) {
@@ -901,7 +911,8 @@ public final class MediaCodecInfo {
             }
 
             public boolean covers(MediaFormat format) {
-                return covers(new PerformancePoint(format.getInteger("width", 0), format.getInteger("height", 0), Math.round((float) Math.ceil(format.getNumber(MediaFormat.KEY_FRAME_RATE, 0).doubleValue()))));
+                PerformancePoint other = new PerformancePoint(format.getInteger("width", 0), format.getInteger("height", 0), Math.round((float) Math.ceil(format.getNumber(MediaFormat.KEY_FRAME_RATE, 0).doubleValue())));
+                return covers(other);
             }
 
             public boolean covers(PerformancePoint other) {
@@ -916,15 +927,12 @@ public final class MediaCodecInfo {
             }
 
             public boolean equals(Object o) {
-                if (!(o instanceof PerformancePoint)) {
-                    return false;
-                }
-                PerformancePoint other = (PerformancePoint) o;
-                Size commonSize = getCommonBlockSize(other);
-                PerformancePoint aligned = new PerformancePoint(this, commonSize);
-                PerformancePoint otherAligned = new PerformancePoint(other, commonSize);
-                if (aligned.getMaxMacroBlocks() == otherAligned.getMaxMacroBlocks() && aligned.mMaxFrameRate == otherAligned.mMaxFrameRate && aligned.mMaxMacroBlockRate == otherAligned.mMaxMacroBlockRate) {
-                    return true;
+                if (o instanceof PerformancePoint) {
+                    PerformancePoint other = (PerformancePoint) o;
+                    Size commonSize = getCommonBlockSize(other);
+                    PerformancePoint aligned = new PerformancePoint(this, commonSize);
+                    PerformancePoint otherAligned = new PerformancePoint(other, commonSize);
+                    return aligned.getMaxMacroBlocks() == otherAligned.getMaxMacroBlocks() && aligned.mMaxFrameRate == otherAligned.mMaxFrameRate && aligned.mMaxMacroBlockRate == otherAligned.mMaxMacroBlockRate;
                 }
                 return false;
             }
@@ -939,44 +947,45 @@ public final class MediaCodecInfo {
         }
 
         public boolean isSizeSupported(int width, int height) {
-            return supports(Integer.valueOf(width), Integer.valueOf(height), (Number) null);
+            return supports(Integer.valueOf(width), Integer.valueOf(height), null);
         }
 
         private boolean supports(Integer width, Integer height, Number rate) {
             boolean ok = true;
             boolean z = true;
-            if (!(1 == 0 || width == null)) {
-                ok = this.mWidthRange.contains(width) && width.intValue() % this.mWidthAlignment == 0;
+            if (1 != 0 && width != null) {
+                ok = this.mWidthRange.contains((Range<Integer>) width) && width.intValue() % this.mWidthAlignment == 0;
             }
             if (ok && height != null) {
-                ok = this.mHeightRange.contains(height) && height.intValue() % this.mHeightAlignment == 0;
+                ok = this.mHeightRange.contains((Range<Integer>) height) && height.intValue() % this.mHeightAlignment == 0;
             }
             if (ok && rate != null) {
                 ok = this.mFrameRateRange.contains(Utils.intRangeFor(rate.doubleValue()));
             }
-            if (!ok || height == null || width == null) {
-                return ok;
-            }
-            boolean ok2 = Math.min(height.intValue(), width.intValue()) <= this.mSmallerDimensionUpperLimit;
-            int widthInBlocks = Utils.divUp(width.intValue(), this.mBlockWidth);
-            int heightInBlocks = Utils.divUp(height.intValue(), this.mBlockHeight);
-            int blockCount = widthInBlocks * heightInBlocks;
-            if (!ok2 || !this.mBlockCountRange.contains(Integer.valueOf(blockCount)) || !this.mBlockAspectRatioRange.contains(new Rational(widthInBlocks, heightInBlocks)) || !this.mAspectRatioRange.contains(new Rational(width.intValue(), height.intValue()))) {
-                z = false;
-            }
-            boolean ok3 = z;
-            if (!ok3 || rate == null) {
+            if (ok && height != null && width != null) {
+                boolean ok2 = Math.min(height.intValue(), width.intValue()) <= this.mSmallerDimensionUpperLimit;
+                int widthInBlocks = Utils.divUp(width.intValue(), this.mBlockWidth);
+                int heightInBlocks = Utils.divUp(height.intValue(), this.mBlockHeight);
+                int blockCount = widthInBlocks * heightInBlocks;
+                if (!ok2 || !this.mBlockCountRange.contains((Range<Integer>) Integer.valueOf(blockCount)) || !this.mBlockAspectRatioRange.contains((Range<Rational>) new Rational(widthInBlocks, heightInBlocks)) || !this.mAspectRatioRange.contains((Range<Rational>) new Rational(width.intValue(), height.intValue()))) {
+                    z = false;
+                }
+                boolean ok3 = z;
+                if (ok3 && rate != null) {
+                    double blocksPerSec = blockCount * rate.doubleValue();
+                    return this.mBlocksPerSecondRange.contains(Utils.longRangeFor(blocksPerSec));
+                }
                 return ok3;
             }
-            return this.mBlocksPerSecondRange.contains(Utils.longRangeFor(((double) blockCount) * rate.doubleValue()));
+            return ok;
         }
 
         public boolean supportsFormat(MediaFormat format) {
             Map<String, Object> map = format.getMap();
-            if (supports((Integer) map.get("width"), (Integer) map.get("height"), (Number) map.get(MediaFormat.KEY_FRAME_RATE)) && CodecCapabilities.supportsBitrate(this.mBitrateRange, format)) {
-                return true;
-            }
-            return false;
+            Integer width = (Integer) map.get("width");
+            Integer height = (Integer) map.get("height");
+            Number rate = (Number) map.get(MediaFormat.KEY_FRAME_RATE);
+            return supports(width, height, rate) && CodecCapabilities.supportsBitrate(this.mBitrateRange, format);
         }
 
         private VideoCapabilities() {
@@ -1040,24 +1049,23 @@ public final class MediaCodecInfo {
             while (it.hasNext()) {
                 String key = it.next();
                 if (key.startsWith("performance-point-")) {
-                    if (key.substring("performance-point-".length()).equals("none") && ret.size() == 0) {
+                    String subKey = key.substring("performance-point-".length());
+                    if (subKey.equals("none") && ret.size() == 0) {
                         return Collections.unmodifiableList(ret);
                     }
                     String[] temp = key.split(NativeLibraryHelper.CLEAR_ABI_OVERRIDE);
                     if (temp.length == 4) {
-                        Size size = Utils.parseSize(temp[2], (Size) null);
-                        if (size == null) {
-                            Map<String, Object> map2 = map;
-                        } else if (size.getWidth() * size.getHeight() > 0 && (range = Utils.parseLongRange(map.get(key), (Range<Long>) null)) != null && range.getLower().longValue() >= 0 && range.getUpper().longValue() >= 0) {
+                        String sizeStr = temp[2];
+                        Size size = Utils.parseSize(sizeStr, null);
+                        if (size != null && size.getWidth() * size.getHeight() > 0 && (range = Utils.parseLongRange(map.get(key), null)) != null && range.getLower().longValue() >= 0 && range.getUpper().longValue() >= 0) {
                             String prefix2 = prefix;
                             Set<String> keys2 = keys;
                             PerformancePoint given = new PerformancePoint(size.getWidth(), size.getHeight(), range.getLower().intValue(), range.getUpper().intValue(), new Size(this.mBlockWidth, this.mBlockHeight));
                             Iterator<String> it2 = it;
-                            String str = key;
-                            PerformancePoint performancePoint = new PerformancePoint(size.getHeight(), size.getWidth(), range.getLower().intValue(), range.getUpper().intValue(), new Size(this.mBlockWidth, this.mBlockHeight));
+                            PerformancePoint rotated = new PerformancePoint(size.getHeight(), size.getWidth(), range.getLower().intValue(), range.getUpper().intValue(), new Size(this.mBlockWidth, this.mBlockHeight));
                             ret.add(given);
-                            if (!given.covers(performancePoint)) {
-                                ret.add(performancePoint);
+                            if (!given.covers(rotated)) {
+                                ret.add(rotated);
                             }
                             prefix = prefix2;
                             keys = keys2;
@@ -1066,82 +1074,59 @@ public final class MediaCodecInfo {
                     }
                 }
             }
-            Map<String, Object> map3 = map;
-            String str2 = prefix;
-            Set<String> set = keys;
             if (ret.size() == 0) {
                 return null;
             }
-            ret.sort($$Lambda$MediaCodecInfo$VideoCapabilities$DpgwEngVFZT9EtP3qcxpiA2G0M.INSTANCE);
+            ret.sort(new Comparator() { // from class: android.media.-$$Lambda$MediaCodecInfo$VideoCapabilities$DpgwEn-gVFZT9EtP3qcxpiA2G0M
+                @Override // java.util.Comparator
+                public final int compare(Object obj, Object obj2) {
+                    return MediaCodecInfo.VideoCapabilities.lambda$getPerformancePoints$0((MediaCodecInfo.VideoCapabilities.PerformancePoint) obj, (MediaCodecInfo.VideoCapabilities.PerformancePoint) obj2);
+                }
+            });
             return Collections.unmodifiableList(ret);
         }
 
-        /* JADX WARNING: Code restructure failed: missing block: B:12:0x0045, code lost:
-            if (r6.getMaxFrameRate() < r7.getMaxFrameRate()) goto L_0x0016;
+        /* JADX WARN: Code restructure failed: missing block: B:11:0x002f, code lost:
+            if (r6.getMaxMacroBlockRate() < r7.getMaxMacroBlockRate()) goto L5;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:3:0x0014, code lost:
-            if (r6.getMaxMacroBlocks() < r7.getMaxMacroBlocks()) goto L_0x0016;
+        /* JADX WARN: Code restructure failed: missing block: B:17:0x0045, code lost:
+            if (r6.getMaxFrameRate() < r7.getMaxFrameRate()) goto L5;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:8:0x002f, code lost:
-            if (r6.getMaxMacroBlockRate() < r7.getMaxMacroBlockRate()) goto L_0x0016;
+        /* JADX WARN: Code restructure failed: missing block: B:5:0x0014, code lost:
+            if (r6.getMaxMacroBlocks() < r7.getMaxMacroBlocks()) goto L5;
          */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        static /* synthetic */ int lambda$getPerformancePoints$0(android.media.MediaCodecInfo.VideoCapabilities.PerformancePoint r6, android.media.MediaCodecInfo.VideoCapabilities.PerformancePoint r7) {
-            /*
-                int r0 = r6.getMaxMacroBlocks()
-                int r1 = r7.getMaxMacroBlocks()
-                r2 = 1
-                r3 = -1
-                if (r0 == r1) goto L_0x0019
-                int r0 = r6.getMaxMacroBlocks()
-                int r1 = r7.getMaxMacroBlocks()
-                if (r0 >= r1) goto L_0x0018
-            L_0x0016:
-                r2 = r3
-                goto L_0x004a
-            L_0x0018:
-                goto L_0x004a
-            L_0x0019:
-                long r0 = r6.getMaxMacroBlockRate()
-                long r4 = r7.getMaxMacroBlockRate()
-                int r0 = (r0 > r4 ? 1 : (r0 == r4 ? 0 : -1))
-                if (r0 == 0) goto L_0x0033
-                long r0 = r6.getMaxMacroBlockRate()
-                long r4 = r7.getMaxMacroBlockRate()
-                int r0 = (r0 > r4 ? 1 : (r0 == r4 ? 0 : -1))
-                if (r0 >= 0) goto L_0x0032
-                goto L_0x0016
-            L_0x0032:
-                goto L_0x004a
-            L_0x0033:
-                int r0 = r6.getMaxFrameRate()
-                int r1 = r7.getMaxFrameRate()
-                if (r0 == r1) goto L_0x0049
-                int r0 = r6.getMaxFrameRate()
-                int r1 = r7.getMaxFrameRate()
-                if (r0 >= r1) goto L_0x0048
-                goto L_0x0016
-            L_0x0048:
-                goto L_0x004a
-            L_0x0049:
-                r2 = 0
-            L_0x004a:
-                int r0 = -r2
-                return r0
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.media.MediaCodecInfo.VideoCapabilities.lambda$getPerformancePoints$0(android.media.MediaCodecInfo$VideoCapabilities$PerformancePoint, android.media.MediaCodecInfo$VideoCapabilities$PerformancePoint):int");
+        /* JADX WARN: Code restructure failed: missing block: B:6:0x0016, code lost:
+            r2 = -1;
+         */
+        /*
+            Code decompiled incorrectly, please refer to instructions dump.
+        */
+        static /* synthetic */ int lambda$getPerformancePoints$0(PerformancePoint a, PerformancePoint b) {
+            int i = 1;
+            if (a.getMaxMacroBlocks() == b.getMaxMacroBlocks()) {
+                if (a.getMaxMacroBlockRate() == b.getMaxMacroBlockRate()) {
+                    if (a.getMaxFrameRate() == b.getMaxFrameRate()) {
+                        i = 0;
+                    }
+                }
+            }
+            return -i;
         }
 
         private Map<Size, Range<Long>> getMeasuredFrameRates(Map<String, Object> map) {
-            Size size;
             Range<Long> range;
             Map<Size, Range<Long>> ret = new HashMap<>();
-            for (String key : map.keySet()) {
+            Set<String> keys = map.keySet();
+            for (String key : keys) {
                 if (key.startsWith("measured-frame-rate-")) {
-                    String substring = key.substring("measured-frame-rate-".length());
+                    key.substring("measured-frame-rate-".length());
                     String[] temp = key.split(NativeLibraryHelper.CLEAR_ABI_OVERRIDE);
-                    if (temp.length == 5 && (size = Utils.parseSize(temp[3], (Size) null)) != null && size.getWidth() * size.getHeight() > 0 && (range = Utils.parseLongRange(map.get(key), (Range<Long>) null)) != null && range.getLower().longValue() >= 0 && range.getUpper().longValue() >= 0) {
-                        ret.put(size, range);
+                    if (temp.length == 5) {
+                        String sizeStr = temp[3];
+                        Size size = Utils.parseSize(sizeStr, null);
+                        if (size != null && size.getWidth() * size.getHeight() > 0 && (range = Utils.parseLongRange(map.get(key), null)) != null && range.getLower().longValue() >= 0 && range.getUpper().longValue() >= 0) {
+                            ret.put(size, range);
+                        }
                     }
                 }
             }
@@ -1150,32 +1135,34 @@ public final class MediaCodecInfo {
 
         private static Pair<Range<Integer>, Range<Integer>> parseWidthHeightRanges(Object o) {
             Pair<Size, Size> range = Utils.parseSizeRange(o);
-            if (range == null) {
-                return null;
+            if (range != null) {
+                try {
+                    return Pair.create(Range.create(Integer.valueOf(range.first.getWidth()), Integer.valueOf(range.second.getWidth())), Range.create(Integer.valueOf(range.first.getHeight()), Integer.valueOf(range.second.getHeight())));
+                } catch (IllegalArgumentException e) {
+                    Log.m64w(TAG, "could not parse size range '" + o + "'");
+                    return null;
+                }
             }
-            try {
-                return Pair.create(Range.create(Integer.valueOf(((Size) range.first).getWidth()), Integer.valueOf(((Size) range.second).getWidth())), Range.create(Integer.valueOf(((Size) range.first).getHeight()), Integer.valueOf(((Size) range.second).getHeight())));
-            } catch (IllegalArgumentException e) {
-                Log.w(TAG, "could not parse size range '" + o + "'");
-                return null;
-            }
+            return null;
         }
 
         public static int equivalentVP9Level(MediaFormat info) {
+            int D;
             Map<String, Object> map = info.getMap();
             Size blockSize = Utils.parseSize(map.get("block-size"), new Size(8, 8));
             int BS = blockSize.getWidth() * blockSize.getHeight();
-            Range<Integer> counts = Utils.parseIntRange(map.get("block-count-range"), (Range<Integer>) null);
-            int BR = 0;
+            Range<Integer> counts = Utils.parseIntRange(map.get("block-count-range"), null);
             int FS = counts == null ? 0 : counts.getUpper().intValue() * BS;
-            Range<Long> blockRates = Utils.parseLongRange(map.get("blocks-per-second-range"), (Range<Long>) null);
-            long SR = blockRates == null ? 0 : ((long) BS) * blockRates.getUpper().longValue();
+            Range<Long> blockRates = Utils.parseLongRange(map.get("blocks-per-second-range"), null);
+            long SR = blockRates == null ? 0L : BS * blockRates.getUpper().longValue();
             Pair<Range<Integer>, Range<Integer>> dimensionRanges = parseWidthHeightRanges(map.get("size-range"));
-            int D = dimensionRanges == null ? 0 : Math.max(((Integer) ((Range) dimensionRanges.first).getUpper()).intValue(), ((Integer) ((Range) dimensionRanges.second).getUpper()).intValue());
-            Range<Integer> bitRates = Utils.parseIntRange(map.get("bitrate-range"), (Range<Integer>) null);
-            if (bitRates != null) {
-                BR = Utils.divUp(bitRates.getUpper().intValue(), 1000);
+            if (dimensionRanges == null) {
+                D = 0;
+            } else {
+                D = Math.max(dimensionRanges.first.getUpper().intValue(), dimensionRanges.second.getUpper().intValue());
             }
+            Range<Integer> bitRates = Utils.parseIntRange(map.get("bitrate-range"), null);
+            int BR = bitRates != null ? Utils.divUp(bitRates.getUpper().intValue(), 1000) : 0;
             if (SR <= 829440 && FS <= 36864 && BR <= 200 && D <= 512) {
                 return 1;
             }
@@ -1185,413 +1172,225 @@ public final class MediaCodecInfo {
             if (SR <= 4608000 && FS <= 122880 && BR <= 1800 && D <= 960) {
                 return 4;
             }
-            if (SR <= 9216000 && FS <= 245760 && BR <= 3600 && D <= 1344) {
-                return 8;
-            }
-            if (SR <= 20736000 && FS <= 552960 && BR <= 7200 && D <= 2048) {
-                return 16;
-            }
-            if (SR <= 36864000 && FS <= 983040 && BR <= 12000 && D <= 2752) {
-                return 32;
-            }
-            if (SR <= 83558400 && FS <= 2228224 && BR <= 18000 && D <= 4160) {
-                return 64;
-            }
-            if (SR <= 160432128 && FS <= 2228224 && BR <= 30000 && D <= 4160) {
-                return 128;
-            }
-            if (SR <= 311951360 && FS <= 8912896 && BR <= 60000 && D <= 8384) {
-                return 256;
-            }
-            if (SR <= 588251136 && FS <= 8912896 && BR <= 120000 && D <= 8384) {
+            if (SR > 9216000 || FS > 245760 || BR > 3600 || D > 1344) {
+                if (SR <= 20736000 && FS <= 552960 && BR <= 7200 && D <= 2048) {
+                    return 16;
+                }
+                if (SR <= 36864000 && FS <= 983040 && BR <= 12000 && D <= 2752) {
+                    return 32;
+                }
+                if (SR <= 83558400 && FS <= 2228224 && BR <= 18000 && D <= 4160) {
+                    return 64;
+                }
+                if (SR <= 160432128 && FS <= 2228224 && BR <= 30000 && D <= 4160) {
+                    return 128;
+                }
+                if (SR <= 311951360 && FS <= 8912896 && BR <= 60000 && D <= 8384) {
+                    return 256;
+                }
+                if (SR > 588251136 || FS > 8912896 || BR > 120000 || D > 8384) {
+                    if (SR <= 1176502272 && FS <= 8912896 && BR <= 180000 && D <= 8384) {
+                        return 1024;
+                    }
+                    if (SR <= 1176502272 && FS <= 35651584 && BR <= 180000 && D <= 16832) {
+                        return 2048;
+                    }
+                    if (SR > 2353004544L || FS > 35651584 || BR > 240000 || D > 16832) {
+                        return (SR > 4706009088L || FS > 35651584 || BR > 480000 || D <= 16832) ? 8192 : 8192;
+                    }
+                    return 4096;
+                }
                 return 512;
             }
-            if (SR <= 1176502272 && FS <= 8912896 && BR <= 180000 && D <= 8384) {
-                return 1024;
-            }
-            if (SR <= 1176502272 && FS <= 35651584 && BR <= 180000 && D <= 16832) {
-                return 2048;
-            }
-            if (SR > 2353004544L || FS > 35651584 || BR > 240000 || D > 16832) {
-                return (SR > 4706009088L || FS > 35651584 || BR > 480000 || D <= 16832) ? 8192 : 8192;
-            }
-            return 4096;
+            return 8;
         }
 
-        /* JADX WARNING: Removed duplicated region for block: B:25:0x01cd  */
-        /* JADX WARNING: Removed duplicated region for block: B:49:0x0272  */
-        /* JADX WARNING: Removed duplicated region for block: B:51:0x027e  */
-        /* JADX WARNING: Removed duplicated region for block: B:53:0x028a  */
-        /* JADX WARNING: Removed duplicated region for block: B:55:0x0296  */
-        /* JADX WARNING: Removed duplicated region for block: B:57:0x02b5  */
-        /* JADX WARNING: Removed duplicated region for block: B:59:0x02d5  */
-        /* JADX WARNING: Removed duplicated region for block: B:61:0x02f3  */
-        /* JADX WARNING: Removed duplicated region for block: B:63:0x02ff  */
-        /* JADX WARNING: Removed duplicated region for block: B:65:0x030b  */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        private void parseFromInfo(android.media.MediaFormat r31) {
-            /*
-                r30 = this;
-                r11 = r30
-                java.util.Map r12 = r31.getMap()
-                android.util.Size r0 = new android.util.Size
-                int r1 = r11.mBlockWidth
-                int r2 = r11.mBlockHeight
-                r0.<init>(r1, r2)
-                android.util.Size r1 = new android.util.Size
-                int r2 = r11.mWidthAlignment
-                int r3 = r11.mHeightAlignment
-                r1.<init>(r2, r3)
-                r2 = 0
-                r3 = 0
-                r4 = 0
-                r5 = 0
-                r6 = 0
-                r7 = 0
-                r8 = 0
-                r9 = 0
-                java.lang.String r10 = "block-size"
-                java.lang.Object r10 = r12.get(r10)
-                android.util.Size r13 = android.media.Utils.parseSize(r10, r0)
-                java.lang.String r0 = "alignment"
-                java.lang.Object r0 = r12.get(r0)
-                android.util.Size r14 = android.media.Utils.parseSize(r0, r1)
-                java.lang.String r0 = "block-count-range"
-                java.lang.Object r0 = r12.get(r0)
-                r1 = 0
-                android.util.Range r15 = android.media.Utils.parseIntRange(r0, r1)
-                java.lang.String r0 = "blocks-per-second-range"
-                java.lang.Object r0 = r12.get(r0)
-                android.util.Range r10 = android.media.Utils.parseLongRange(r0, r1)
-                java.util.Map r0 = r11.getMeasuredFrameRates(r12)
-                r11.mMeasuredFrameRates = r0
-                java.util.List r0 = r11.getPerformancePoints(r12)
-                r11.mPerformancePoints = r0
-                java.lang.String r0 = "size-range"
-                java.lang.Object r0 = r12.get(r0)
-                android.util.Pair r7 = parseWidthHeightRanges(r0)
-                if (r7 == 0) goto L_0x006c
-                F r0 = r7.first
-                r3 = r0
-                android.util.Range r3 = (android.util.Range) r3
-                S r0 = r7.second
-                r4 = r0
-                android.util.Range r4 = (android.util.Range) r4
-            L_0x006c:
-                java.lang.String r0 = "feature-can-swap-width-height"
-                boolean r0 = r12.containsKey(r0)
-                if (r0 == 0) goto L_0x00c9
-                if (r3 == 0) goto L_0x0098
-                java.lang.Comparable r0 = r3.getUpper()
-                java.lang.Integer r0 = (java.lang.Integer) r0
-                int r0 = r0.intValue()
-                java.lang.Comparable r2 = r4.getUpper()
-                java.lang.Integer r2 = (java.lang.Integer) r2
-                int r2 = r2.intValue()
-                int r0 = java.lang.Math.min(r0, r2)
-                r11.mSmallerDimensionUpperLimit = r0
-                android.util.Range r0 = r3.extend(r4)
-                r4 = r0
-                r3 = r0
-                goto L_0x00c9
-            L_0x0098:
-                java.lang.String r0 = "VideoCapabilities"
-                java.lang.String r2 = "feature can-swap-width-height is best used with size-range"
-                android.util.Log.w((java.lang.String) r0, (java.lang.String) r2)
-                android.util.Range<java.lang.Integer> r0 = r11.mWidthRange
-                java.lang.Comparable r0 = r0.getUpper()
-                java.lang.Integer r0 = (java.lang.Integer) r0
-                int r0 = r0.intValue()
-                android.util.Range<java.lang.Integer> r2 = r11.mHeightRange
-                java.lang.Comparable r2 = r2.getUpper()
-                java.lang.Integer r2 = (java.lang.Integer) r2
-                int r2 = r2.intValue()
-                int r0 = java.lang.Math.min(r0, r2)
-                r11.mSmallerDimensionUpperLimit = r0
-                android.util.Range<java.lang.Integer> r0 = r11.mWidthRange
-                android.util.Range<java.lang.Integer> r2 = r11.mHeightRange
-                android.util.Range r0 = r0.extend(r2)
-                r11.mHeightRange = r0
-                r11.mWidthRange = r0
-            L_0x00c9:
-                r29 = r4
-                r4 = r3
-                r3 = r29
-                java.lang.String r0 = "block-aspect-ratio-range"
-                java.lang.Object r0 = r12.get(r0)
-                android.util.Range r8 = android.media.Utils.parseRationalRange(r0, r1)
-                java.lang.String r0 = "pixel-aspect-ratio-range"
-                java.lang.Object r0 = r12.get(r0)
-                android.util.Range r9 = android.media.Utils.parseRationalRange(r0, r1)
-                java.lang.String r0 = "frame-rate-range"
-                java.lang.Object r0 = r12.get(r0)
-                android.util.Range r2 = android.media.Utils.parseIntRange(r0, r1)
-                if (r2 == 0) goto L_0x011f
-                android.util.Range r0 = android.media.MediaCodecInfo.FRAME_RATE_RANGE     // Catch:{ IllegalArgumentException -> 0x00f9 }
-                android.util.Range r0 = r2.intersect(r0)     // Catch:{ IllegalArgumentException -> 0x00f9 }
-                r2 = r0
-                goto L_0x011f
-            L_0x00f9:
-                r0 = move-exception
-                java.lang.String r5 = "VideoCapabilities"
-                java.lang.StringBuilder r1 = new java.lang.StringBuilder
-                r1.<init>()
-                r17 = r0
-                java.lang.String r0 = "frame rate range ("
-                r1.append(r0)
-                r1.append(r2)
-                java.lang.String r0 = ") is out of limits: "
-                r1.append(r0)
-                android.util.Range r0 = android.media.MediaCodecInfo.FRAME_RATE_RANGE
-                r1.append(r0)
-                java.lang.String r0 = r1.toString()
-                android.util.Log.w((java.lang.String) r5, (java.lang.String) r0)
-                r2 = 0
-            L_0x011f:
-                r5 = r2
-                java.lang.String r0 = "bitrate-range"
-                java.lang.Object r0 = r12.get(r0)
-                r1 = 0
-                android.util.Range r1 = android.media.Utils.parseIntRange(r0, r1)
-                if (r1 == 0) goto L_0x015d
-                android.util.Range r0 = android.media.MediaCodecInfo.BITRATE_RANGE     // Catch:{ IllegalArgumentException -> 0x0137 }
-                android.util.Range r0 = r1.intersect(r0)     // Catch:{ IllegalArgumentException -> 0x0137 }
-                r1 = r0
-                goto L_0x015e
-            L_0x0137:
-                r0 = move-exception
-                java.lang.String r2 = "VideoCapabilities"
-                java.lang.StringBuilder r6 = new java.lang.StringBuilder
-                r6.<init>()
-                r18 = r0
-                java.lang.String r0 = "bitrate range ("
-                r6.append(r0)
-                r6.append(r1)
-                java.lang.String r0 = ") is out of limits: "
-                r6.append(r0)
-                android.util.Range r0 = android.media.MediaCodecInfo.BITRATE_RANGE
-                r6.append(r0)
-                java.lang.String r0 = r6.toString()
-                android.util.Log.w((java.lang.String) r2, (java.lang.String) r0)
-                r1 = 0
-            L_0x015d:
-                r0 = r1
-            L_0x015e:
-                int r1 = r13.getWidth()
-                java.lang.String r2 = "block-size width must be power of two"
-                int unused = android.media.MediaCodecInfo.checkPowerOfTwo(r1, r2)
-                int r1 = r13.getHeight()
-                java.lang.String r2 = "block-size height must be power of two"
-                int unused = android.media.MediaCodecInfo.checkPowerOfTwo(r1, r2)
-                int r1 = r14.getWidth()
-                java.lang.String r2 = "alignment width must be power of two"
-                int unused = android.media.MediaCodecInfo.checkPowerOfTwo(r1, r2)
-                int r1 = r14.getHeight()
-                java.lang.String r2 = "alignment height must be power of two"
-                int unused = android.media.MediaCodecInfo.checkPowerOfTwo(r1, r2)
-                r2 = 2147483647(0x7fffffff, float:NaN)
-                r6 = 2147483647(0x7fffffff, float:NaN)
-                r16 = 2147483647(0x7fffffff, float:NaN)
-                r17 = 9223372036854775807(0x7fffffffffffffff, double:NaN)
-                int r19 = r13.getWidth()
-                int r20 = r13.getHeight()
-                int r21 = r14.getWidth()
-                int r22 = r14.getHeight()
-                r1 = r30
-                r23 = r3
-                r3 = r6
-                r6 = r4
-                r4 = r16
-                r25 = r5
-                r24 = r6
-                r5 = r17
-                r16 = r7
-                r7 = r19
-                r26 = r8
-                r8 = r20
-                r27 = r9
-                r9 = r21
-                r28 = r12
-                r12 = r10
-                r10 = r22
-                r1.applyMacroBlockLimits(r2, r3, r4, r5, r7, r8, r9, r10)
-                android.media.MediaCodecInfo$CodecCapabilities r1 = r11.mParent
-                int r1 = r1.mError
-                r1 = r1 & 2
-                if (r1 != 0) goto L_0x0272
-                boolean r1 = r11.mAllowMbOverride
-                if (r1 == 0) goto L_0x01dd
-                r4 = r23
-                r3 = r24
-                r5 = r25
-                r2 = r26
-                r1 = r27
-                goto L_0x027c
-            L_0x01dd:
-                r3 = r24
-                if (r3 == 0) goto L_0x01e9
-                android.util.Range<java.lang.Integer> r1 = r11.mWidthRange
-                android.util.Range r1 = r1.intersect(r3)
-                r11.mWidthRange = r1
-            L_0x01e9:
-                r4 = r23
-                if (r4 == 0) goto L_0x01f5
-                android.util.Range<java.lang.Integer> r1 = r11.mHeightRange
-                android.util.Range r1 = r1.intersect(r4)
-                r11.mHeightRange = r1
-            L_0x01f5:
-                if (r15 == 0) goto L_0x0212
-                android.util.Range<java.lang.Integer> r1 = r11.mBlockCountRange
-                int r2 = r11.mBlockWidth
-                int r5 = r11.mBlockHeight
-                int r2 = r2 * r5
-                int r5 = r13.getWidth()
-                int r2 = r2 / r5
-                int r5 = r13.getHeight()
-                int r2 = r2 / r5
-                android.util.Range r2 = android.media.Utils.factorRange((android.util.Range<java.lang.Integer>) r15, (int) r2)
-                android.util.Range r1 = r1.intersect(r2)
-                r11.mBlockCountRange = r1
-            L_0x0212:
-                if (r12 == 0) goto L_0x0230
-                android.util.Range<java.lang.Long> r1 = r11.mBlocksPerSecondRange
-                int r2 = r11.mBlockWidth
-                int r5 = r11.mBlockHeight
-                int r2 = r2 * r5
-                int r5 = r13.getWidth()
-                int r2 = r2 / r5
-                int r5 = r13.getHeight()
-                int r2 = r2 / r5
-                long r5 = (long) r2
-                android.util.Range r2 = android.media.Utils.factorRange((android.util.Range<java.lang.Long>) r12, (long) r5)
-                android.util.Range r1 = r1.intersect(r2)
-                r11.mBlocksPerSecondRange = r1
-            L_0x0230:
-                r1 = r27
-                if (r1 == 0) goto L_0x024e
-                android.util.Range<android.util.Rational> r2 = r11.mBlockAspectRatioRange
-                int r5 = r11.mBlockHeight
-                int r6 = r13.getHeight()
-                int r5 = r5 / r6
-                int r6 = r11.mBlockWidth
-                int r7 = r13.getWidth()
-                int r6 = r6 / r7
-                android.util.Range r5 = android.media.Utils.scaleRange(r1, r5, r6)
-                android.util.Range r2 = r2.intersect(r5)
-                r11.mBlockAspectRatioRange = r2
-            L_0x024e:
-                r2 = r26
-                if (r2 == 0) goto L_0x025a
-                android.util.Range<android.util.Rational> r5 = r11.mAspectRatioRange
-                android.util.Range r5 = r5.intersect(r2)
-                r11.mAspectRatioRange = r5
-            L_0x025a:
-                r5 = r25
-                if (r5 == 0) goto L_0x0266
-                android.util.Range<java.lang.Integer> r6 = r11.mFrameRateRange
-                android.util.Range r6 = r6.intersect(r5)
-                r11.mFrameRateRange = r6
-            L_0x0266:
-                if (r0 == 0) goto L_0x0326
-                android.util.Range<java.lang.Integer> r6 = r11.mBitrateRange
-                android.util.Range r6 = r6.intersect(r0)
-                r11.mBitrateRange = r6
-                goto L_0x0326
-            L_0x0272:
-                r4 = r23
-                r3 = r24
-                r5 = r25
-                r2 = r26
-                r1 = r27
-            L_0x027c:
-                if (r3 == 0) goto L_0x0288
-                android.util.Range r6 = android.media.MediaCodecInfo.SIZE_RANGE
-                android.util.Range r6 = r6.intersect(r3)
-                r11.mWidthRange = r6
-            L_0x0288:
-                if (r4 == 0) goto L_0x0294
-                android.util.Range r6 = android.media.MediaCodecInfo.SIZE_RANGE
-                android.util.Range r6 = r6.intersect(r4)
-                r11.mHeightRange = r6
-            L_0x0294:
-                if (r15 == 0) goto L_0x02b3
-                android.util.Range r6 = android.media.MediaCodecInfo.POSITIVE_INTEGERS
-                int r7 = r11.mBlockWidth
-                int r8 = r11.mBlockHeight
-                int r7 = r7 * r8
-                int r8 = r13.getWidth()
-                int r7 = r7 / r8
-                int r8 = r13.getHeight()
-                int r7 = r7 / r8
-                android.util.Range r7 = android.media.Utils.factorRange((android.util.Range<java.lang.Integer>) r15, (int) r7)
-                android.util.Range r6 = r6.intersect(r7)
-                r11.mBlockCountRange = r6
-            L_0x02b3:
-                if (r12 == 0) goto L_0x02d3
-                android.util.Range r6 = android.media.MediaCodecInfo.POSITIVE_LONGS
-                int r7 = r11.mBlockWidth
-                int r8 = r11.mBlockHeight
-                int r7 = r7 * r8
-                int r8 = r13.getWidth()
-                int r7 = r7 / r8
-                int r8 = r13.getHeight()
-                int r7 = r7 / r8
-                long r7 = (long) r7
-                android.util.Range r7 = android.media.Utils.factorRange((android.util.Range<java.lang.Long>) r12, (long) r7)
-                android.util.Range r6 = r6.intersect(r7)
-                r11.mBlocksPerSecondRange = r6
-            L_0x02d3:
-                if (r1 == 0) goto L_0x02f1
-                android.util.Range r6 = android.media.MediaCodecInfo.POSITIVE_RATIONALS
-                int r7 = r11.mBlockHeight
-                int r8 = r13.getHeight()
-                int r7 = r7 / r8
-                int r8 = r11.mBlockWidth
-                int r9 = r13.getWidth()
-                int r8 = r8 / r9
-                android.util.Range r7 = android.media.Utils.scaleRange(r1, r7, r8)
-                android.util.Range r6 = r6.intersect(r7)
-                r11.mBlockAspectRatioRange = r6
-            L_0x02f1:
-                if (r2 == 0) goto L_0x02fd
-                android.util.Range r6 = android.media.MediaCodecInfo.POSITIVE_RATIONALS
-                android.util.Range r6 = r6.intersect(r2)
-                r11.mAspectRatioRange = r6
-            L_0x02fd:
-                if (r5 == 0) goto L_0x0309
-                android.util.Range r6 = android.media.MediaCodecInfo.FRAME_RATE_RANGE
-                android.util.Range r6 = r6.intersect(r5)
-                r11.mFrameRateRange = r6
-            L_0x0309:
-                if (r0 == 0) goto L_0x0326
-                android.media.MediaCodecInfo$CodecCapabilities r6 = r11.mParent
-                int r6 = r6.mError
-                r6 = r6 & 2
-                if (r6 == 0) goto L_0x031e
-                android.util.Range r6 = android.media.MediaCodecInfo.BITRATE_RANGE
-                android.util.Range r6 = r6.intersect(r0)
-                r11.mBitrateRange = r6
-                goto L_0x0326
-            L_0x031e:
-                android.util.Range<java.lang.Integer> r6 = r11.mBitrateRange
-                android.util.Range r6 = r6.intersect(r0)
-                r11.mBitrateRange = r6
-            L_0x0326:
-                r30.updateLimits()
-                return
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.media.MediaCodecInfo.VideoCapabilities.parseFromInfo(android.media.MediaFormat):void");
+        /* JADX WARN: Removed duplicated region for block: B:25:0x01cd  */
+        /* JADX WARN: Removed duplicated region for block: B:49:0x0272  */
+        /* JADX WARN: Removed duplicated region for block: B:51:0x027e  */
+        /* JADX WARN: Removed duplicated region for block: B:53:0x028a  */
+        /* JADX WARN: Removed duplicated region for block: B:55:0x0296  */
+        /* JADX WARN: Removed duplicated region for block: B:57:0x02b5  */
+        /* JADX WARN: Removed duplicated region for block: B:59:0x02d5  */
+        /* JADX WARN: Removed duplicated region for block: B:61:0x02f3  */
+        /* JADX WARN: Removed duplicated region for block: B:63:0x02ff  */
+        /* JADX WARN: Removed duplicated region for block: B:65:0x030b  */
+        /*
+            Code decompiled incorrectly, please refer to instructions dump.
+        */
+        private void parseFromInfo(MediaFormat info) {
+            Range<Integer> bitRates;
+            Range<Integer> heights;
+            Range<Integer> widths;
+            Range<Integer> frameRates;
+            Range<Rational> ratios;
+            Range<Rational> blockRatios;
+            Map<String, Object> map = info.getMap();
+            Size blockSize = new Size(this.mBlockWidth, this.mBlockHeight);
+            Size alignment = new Size(this.mWidthAlignment, this.mHeightAlignment);
+            Range<Integer> widths2 = null;
+            Range<Integer> heights2 = null;
+            Size blockSize2 = Utils.parseSize(map.get("block-size"), blockSize);
+            Size alignment2 = Utils.parseSize(map.get("alignment"), alignment);
+            Range<Integer> counts = Utils.parseIntRange(map.get("block-count-range"), null);
+            Range<Long> blockRates = Utils.parseLongRange(map.get("blocks-per-second-range"), null);
+            this.mMeasuredFrameRates = getMeasuredFrameRates(map);
+            this.mPerformancePoints = getPerformancePoints(map);
+            Pair<Range<Integer>, Range<Integer>> sizeRanges = parseWidthHeightRanges(map.get("size-range"));
+            if (sizeRanges != null) {
+                Range<Integer> widths3 = sizeRanges.first;
+                widths2 = widths3;
+                Range<Integer> heights3 = sizeRanges.second;
+                heights2 = heights3;
+            }
+            if (map.containsKey("feature-can-swap-width-height")) {
+                if (widths2 != null) {
+                    this.mSmallerDimensionUpperLimit = Math.min(widths2.getUpper().intValue(), heights2.getUpper().intValue());
+                    Range<Integer> extend = widths2.extend(heights2);
+                    heights2 = extend;
+                    widths2 = extend;
+                } else {
+                    Log.m64w(TAG, "feature can-swap-width-height is best used with size-range");
+                    this.mSmallerDimensionUpperLimit = Math.min(this.mWidthRange.getUpper().intValue(), this.mHeightRange.getUpper().intValue());
+                    Range<Integer> extend2 = this.mWidthRange.extend(this.mHeightRange);
+                    this.mHeightRange = extend2;
+                    this.mWidthRange = extend2;
+                }
+            }
+            Range<Integer> heights4 = heights2;
+            Range<Integer> widths4 = widths2;
+            Range<Rational> ratios2 = Utils.parseRationalRange(map.get("block-aspect-ratio-range"), null);
+            Range<Rational> blockRatios2 = Utils.parseRationalRange(map.get("pixel-aspect-ratio-range"), null);
+            Range<Integer> frameRates2 = Utils.parseIntRange(map.get("frame-rate-range"), null);
+            if (frameRates2 != null) {
+                try {
+                    frameRates2 = frameRates2.intersect(MediaCodecInfo.FRAME_RATE_RANGE);
+                } catch (IllegalArgumentException e) {
+                    Log.m64w(TAG, "frame rate range (" + frameRates2 + ") is out of limits: " + MediaCodecInfo.FRAME_RATE_RANGE);
+                    frameRates2 = null;
+                }
+            }
+            Range<Integer> frameRates3 = frameRates2;
+            Range<Integer> bitRates2 = Utils.parseIntRange(map.get("bitrate-range"), null);
+            if (bitRates2 != null) {
+                try {
+                    bitRates = bitRates2.intersect(MediaCodecInfo.BITRATE_RANGE);
+                } catch (IllegalArgumentException e2) {
+                    Log.m64w(TAG, "bitrate range (" + bitRates2 + ") is out of limits: " + MediaCodecInfo.BITRATE_RANGE);
+                    bitRates2 = null;
+                }
+                MediaCodecInfo.checkPowerOfTwo(blockSize2.getWidth(), "block-size width must be power of two");
+                MediaCodecInfo.checkPowerOfTwo(blockSize2.getHeight(), "block-size height must be power of two");
+                MediaCodecInfo.checkPowerOfTwo(alignment2.getWidth(), "alignment width must be power of two");
+                MediaCodecInfo.checkPowerOfTwo(alignment2.getHeight(), "alignment height must be power of two");
+                applyMacroBlockLimits(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE, Long.MAX_VALUE, blockSize2.getWidth(), blockSize2.getHeight(), alignment2.getWidth(), alignment2.getHeight());
+                if ((this.mParent.mError & 2) != 0) {
+                    if (this.mAllowMbOverride) {
+                        heights = heights4;
+                        widths = widths4;
+                        frameRates = frameRates3;
+                        ratios = ratios2;
+                        blockRatios = blockRatios2;
+                    } else {
+                        if (widths4 != null) {
+                            this.mWidthRange = this.mWidthRange.intersect(widths4);
+                        }
+                        if (heights4 != null) {
+                            this.mHeightRange = this.mHeightRange.intersect(heights4);
+                        }
+                        if (counts != null) {
+                            this.mBlockCountRange = this.mBlockCountRange.intersect(Utils.factorRange(counts, ((this.mBlockWidth * this.mBlockHeight) / blockSize2.getWidth()) / blockSize2.getHeight()));
+                        }
+                        if (blockRates != null) {
+                            this.mBlocksPerSecondRange = this.mBlocksPerSecondRange.intersect(Utils.factorRange(blockRates, ((this.mBlockWidth * this.mBlockHeight) / blockSize2.getWidth()) / blockSize2.getHeight()));
+                        }
+                        if (blockRatios2 != null) {
+                            this.mBlockAspectRatioRange = this.mBlockAspectRatioRange.intersect(Utils.scaleRange(blockRatios2, this.mBlockHeight / blockSize2.getHeight(), this.mBlockWidth / blockSize2.getWidth()));
+                        }
+                        if (ratios2 != null) {
+                            this.mAspectRatioRange = this.mAspectRatioRange.intersect(ratios2);
+                        }
+                        if (frameRates3 != null) {
+                            this.mFrameRateRange = this.mFrameRateRange.intersect(frameRates3);
+                        }
+                        if (bitRates != null) {
+                            this.mBitrateRange = this.mBitrateRange.intersect(bitRates);
+                        }
+                        updateLimits();
+                    }
+                } else {
+                    heights = heights4;
+                    widths = widths4;
+                    frameRates = frameRates3;
+                    ratios = ratios2;
+                    blockRatios = blockRatios2;
+                }
+                if (widths != null) {
+                    this.mWidthRange = MediaCodecInfo.SIZE_RANGE.intersect(widths);
+                }
+                if (heights != null) {
+                    this.mHeightRange = MediaCodecInfo.SIZE_RANGE.intersect(heights);
+                }
+                if (counts != null) {
+                    this.mBlockCountRange = MediaCodecInfo.POSITIVE_INTEGERS.intersect(Utils.factorRange(counts, ((this.mBlockWidth * this.mBlockHeight) / blockSize2.getWidth()) / blockSize2.getHeight()));
+                }
+                if (blockRates != null) {
+                    this.mBlocksPerSecondRange = MediaCodecInfo.POSITIVE_LONGS.intersect(Utils.factorRange(blockRates, ((this.mBlockWidth * this.mBlockHeight) / blockSize2.getWidth()) / blockSize2.getHeight()));
+                }
+                if (blockRatios != null) {
+                    this.mBlockAspectRatioRange = MediaCodecInfo.POSITIVE_RATIONALS.intersect(Utils.scaleRange(blockRatios, this.mBlockHeight / blockSize2.getHeight(), this.mBlockWidth / blockSize2.getWidth()));
+                }
+                if (ratios != null) {
+                    this.mAspectRatioRange = MediaCodecInfo.POSITIVE_RATIONALS.intersect(ratios);
+                }
+                if (frameRates != null) {
+                    this.mFrameRateRange = MediaCodecInfo.FRAME_RATE_RANGE.intersect(frameRates);
+                }
+                if (bitRates != null) {
+                    if ((this.mParent.mError & 2) != 0) {
+                        this.mBitrateRange = MediaCodecInfo.BITRATE_RANGE.intersect(bitRates);
+                    } else {
+                        this.mBitrateRange = this.mBitrateRange.intersect(bitRates);
+                    }
+                }
+                updateLimits();
+            }
+            bitRates = bitRates2;
+            MediaCodecInfo.checkPowerOfTwo(blockSize2.getWidth(), "block-size width must be power of two");
+            MediaCodecInfo.checkPowerOfTwo(blockSize2.getHeight(), "block-size height must be power of two");
+            MediaCodecInfo.checkPowerOfTwo(alignment2.getWidth(), "alignment width must be power of two");
+            MediaCodecInfo.checkPowerOfTwo(alignment2.getHeight(), "alignment height must be power of two");
+            applyMacroBlockLimits(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE, Long.MAX_VALUE, blockSize2.getWidth(), blockSize2.getHeight(), alignment2.getWidth(), alignment2.getHeight());
+            if ((this.mParent.mError & 2) != 0) {
+            }
+            if (widths != null) {
+            }
+            if (heights != null) {
+            }
+            if (counts != null) {
+            }
+            if (blockRates != null) {
+            }
+            if (blockRatios != null) {
+            }
+            if (ratios != null) {
+            }
+            if (frameRates != null) {
+            }
+            if (bitRates != null) {
+            }
+            updateLimits();
         }
 
         private void applyBlockLimits(int blockWidth, int blockHeight, Range<Integer> counts, Range<Long> rates, Range<Rational> ratios) {
-            int unused = MediaCodecInfo.checkPowerOfTwo(blockWidth, "blockWidth must be a power of two");
-            int unused2 = MediaCodecInfo.checkPowerOfTwo(blockHeight, "blockHeight must be a power of two");
+            MediaCodecInfo.checkPowerOfTwo(blockWidth, "blockWidth must be a power of two");
+            MediaCodecInfo.checkPowerOfTwo(blockHeight, "blockHeight must be a power of two");
             int newBlockWidth = Math.max(blockWidth, this.mBlockWidth);
             int newBlockHeight = Math.max(blockHeight, this.mBlockHeight);
             int factor = ((newBlockWidth * newBlockHeight) / this.mBlockWidth) / this.mBlockHeight;
             if (factor != 1) {
                 this.mBlockCountRange = Utils.factorRange(this.mBlockCountRange, factor);
-                this.mBlocksPerSecondRange = Utils.factorRange(this.mBlocksPerSecondRange, (long) factor);
+                this.mBlocksPerSecondRange = Utils.factorRange(this.mBlocksPerSecondRange, factor);
                 this.mBlockAspectRatioRange = Utils.scaleRange(this.mBlockAspectRatioRange, newBlockHeight / this.mBlockHeight, newBlockWidth / this.mBlockWidth);
                 this.mHorizontalBlockRange = Utils.factorRange(this.mHorizontalBlockRange, newBlockWidth / this.mBlockWidth);
                 this.mVerticalBlockRange = Utils.factorRange(this.mVerticalBlockRange, newBlockHeight / this.mBlockHeight);
@@ -1599,7 +1398,7 @@ public final class MediaCodecInfo {
             int factor2 = ((newBlockWidth * newBlockHeight) / blockWidth) / blockHeight;
             if (factor2 != 1) {
                 counts = Utils.factorRange(counts, factor2);
-                rates = Utils.factorRange(rates, (long) factor2);
+                rates = Utils.factorRange(rates, factor2);
                 ratios = Utils.scaleRange(ratios, newBlockHeight / blockHeight, newBlockWidth / blockWidth);
             }
             this.mBlockCountRange = this.mBlockCountRange.intersect(counts);
@@ -1610,8 +1409,8 @@ public final class MediaCodecInfo {
         }
 
         private void applyAlignment(int widthAlignment, int heightAlignment) {
-            int unused = MediaCodecInfo.checkPowerOfTwo(widthAlignment, "widthAlignment must be a power of two");
-            int unused2 = MediaCodecInfo.checkPowerOfTwo(heightAlignment, "heightAlignment must be a power of two");
+            MediaCodecInfo.checkPowerOfTwo(widthAlignment, "widthAlignment must be a power of two");
+            MediaCodecInfo.checkPowerOfTwo(heightAlignment, "heightAlignment must be a power of two");
             if (widthAlignment > this.mBlockWidth || heightAlignment > this.mBlockHeight) {
                 applyBlockLimits(Math.max(widthAlignment, this.mBlockWidth), Math.max(heightAlignment, this.mBlockHeight), MediaCodecInfo.POSITIVE_INTEGERS, MediaCodecInfo.POSITIVE_LONGS, MediaCodecInfo.POSITIVE_RATIONALS);
             }
@@ -1632,8 +1431,8 @@ public final class MediaCodecInfo {
             this.mHeightRange = this.mHeightRange.intersect(Integer.valueOf(((this.mVerticalBlockRange.getLower().intValue() - 1) * this.mBlockHeight) + this.mHeightAlignment), Integer.valueOf(this.mVerticalBlockRange.getUpper().intValue() * this.mBlockHeight));
             this.mAspectRatioRange = this.mAspectRatioRange.intersect(new Rational(this.mWidthRange.getLower().intValue(), this.mHeightRange.getUpper().intValue()), new Rational(this.mWidthRange.getUpper().intValue(), this.mHeightRange.getLower().intValue()));
             this.mSmallerDimensionUpperLimit = Math.min(this.mSmallerDimensionUpperLimit, Math.min(this.mWidthRange.getUpper().intValue(), this.mHeightRange.getUpper().intValue()));
-            this.mBlocksPerSecondRange = this.mBlocksPerSecondRange.intersect(Long.valueOf(((long) this.mBlockCountRange.getLower().intValue()) * ((long) this.mFrameRateRange.getLower().intValue())), Long.valueOf(((long) this.mBlockCountRange.getUpper().intValue()) * ((long) this.mFrameRateRange.getUpper().intValue())));
-            this.mFrameRateRange = this.mFrameRateRange.intersect(Integer.valueOf((int) (this.mBlocksPerSecondRange.getLower().longValue() / ((long) this.mBlockCountRange.getUpper().intValue()))), Integer.valueOf((int) (((double) this.mBlocksPerSecondRange.getUpper().longValue()) / ((double) this.mBlockCountRange.getLower().intValue()))));
+            this.mBlocksPerSecondRange = this.mBlocksPerSecondRange.intersect(Long.valueOf(this.mBlockCountRange.getLower().intValue() * this.mFrameRateRange.getLower().intValue()), Long.valueOf(this.mBlockCountRange.getUpper().intValue() * this.mFrameRateRange.getUpper().intValue()));
+            this.mFrameRateRange = this.mFrameRateRange.intersect(Integer.valueOf((int) (this.mBlocksPerSecondRange.getLower().longValue() / this.mBlockCountRange.getUpper().intValue())), Integer.valueOf((int) (this.mBlocksPerSecondRange.getUpper().longValue() / this.mBlockCountRange.getLower().intValue())));
         }
 
         private void applyMacroBlockLimits(int maxHorizontalBlocks, int maxVerticalBlocks, int maxBlocks, long maxBlocksPerSecond, int blockWidth, int blockHeight, int widthAlignment, int heightAlignment) {
@@ -1643,2146 +1442,1647 @@ public final class MediaCodecInfo {
         private void applyMacroBlockLimits(int minHorizontalBlocks, int minVerticalBlocks, int maxHorizontalBlocks, int maxVerticalBlocks, int maxBlocks, long maxBlocksPerSecond, int blockWidth, int blockHeight, int widthAlignment, int heightAlignment) {
             applyAlignment(widthAlignment, heightAlignment);
             applyBlockLimits(blockWidth, blockHeight, Range.create(1, Integer.valueOf(maxBlocks)), Range.create(1L, Long.valueOf(maxBlocksPerSecond)), Range.create(new Rational(1, maxVerticalBlocks), new Rational(maxHorizontalBlocks, 1)));
-            int i = minHorizontalBlocks;
             this.mHorizontalBlockRange = this.mHorizontalBlockRange.intersect(Integer.valueOf(Utils.divUp(minHorizontalBlocks, this.mBlockWidth / blockWidth)), Integer.valueOf(maxHorizontalBlocks / (this.mBlockWidth / blockWidth)));
-            int i2 = minVerticalBlocks;
             this.mVerticalBlockRange = this.mVerticalBlockRange.intersect(Integer.valueOf(Utils.divUp(minVerticalBlocks, this.mBlockHeight / blockHeight)), Integer.valueOf(maxVerticalBlocks / (this.mBlockHeight / blockHeight)));
         }
 
-        /* JADX WARNING: Code restructure failed: missing block: B:128:0x05b5, code lost:
-            r37 = r0;
-            r38 = r9;
-            r39 = r14;
-            r6 = r18;
-            r14 = r19;
-            r0 = r20;
-            r9 = r21;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:135:0x0615, code lost:
-            if (r23 == false) goto L_0x0619;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:136:0x0617, code lost:
-            r17 = r17 & -5;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:137:0x0619, code lost:
-            r40 = r12;
-            r4 = java.lang.Math.max((long) r1, r4);
-            r8 = java.lang.Math.max(r2, r8);
-            r3 = java.lang.Math.max(r6 * 1000, r3);
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:138:0x062a, code lost:
-            if (r22 == false) goto L_0x063a;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:139:0x062c, code lost:
-            r11 = java.lang.Math.max(r0, r11);
-            r12 = java.lang.Math.max(r9, r15);
-            r7 = java.lang.Math.max(r14, r7);
-            r15 = r12;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:140:0x063a, code lost:
-            r12 = (int) java.lang.Math.sqrt((double) (r2 * 2));
-            r11 = java.lang.Math.max(r12, r11);
-            r13 = java.lang.Math.max(r12, r15);
-            r7 = java.lang.Math.max(java.lang.Math.max(r14, 60), r7);
-            r15 = r13;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:141:0x0656, code lost:
-            r10 = r10 + 1;
-            r9 = r38;
-            r14 = r39;
-            r12 = r40;
-            r13 = r58;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:63:0x0276, code lost:
-            r30 = r0;
-            r31 = r8;
-            r32 = r13;
-            r11 = 0;
-            r13 = 0;
-            r0 = 0;
-            r8 = 0;
-            r1 = r28;
-            r2 = r29;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:77:0x0376, code lost:
-            r30 = r0;
-            r31 = r8;
-            r32 = r13;
-            r11 = r16;
-            r13 = r18;
-            r0 = r19;
-            r8 = r20;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:78:0x0384, code lost:
-            if (r21 == false) goto L_0x038a;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:79:0x0386, code lost:
-            r17 = r17 & -5;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:80:0x038a, code lost:
-            r4 = java.lang.Math.max((long) r1, r4);
-            r7 = java.lang.Math.max(r2, r7);
-            r3 = java.lang.Math.max(r11 * 1000, r3);
-            r12 = java.lang.Math.max(r0, r12);
-            r9 = java.lang.Math.max(r8, r9);
-            r6 = java.lang.Math.max(r13, r6);
-            r10 = r10 + 1;
-            r8 = r31;
-            r13 = r32;
-            r14 = r14;
-            r15 = r15;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:89:0x045e, code lost:
-            r37 = r0;
-            r38 = r9;
-            r39 = r14;
-            r6 = 0;
-            r14 = 0;
-            r0 = 0;
-            r9 = 0;
-            r1 = r35;
-            r2 = r36;
-         */
-        /* JADX WARNING: Removed duplicated region for block: B:332:0x01d1 A[SYNTHETIC] */
-        /* JADX WARNING: Removed duplicated region for block: B:52:0x01cd  */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
+        /* JADX WARN: Removed duplicated region for block: B:138:0x0617  */
+        /* JADX WARN: Removed duplicated region for block: B:141:0x062c  */
+        /* JADX WARN: Removed duplicated region for block: B:142:0x063a  */
+        /* JADX WARN: Removed duplicated region for block: B:200:0x0837  */
+        /* JADX WARN: Removed duplicated region for block: B:201:0x0841  */
+        /* JADX WARN: Removed duplicated region for block: B:338:0x01d1 A[SYNTHETIC] */
+        /* JADX WARN: Removed duplicated region for block: B:341:0x038a A[SYNTHETIC] */
+        /* JADX WARN: Removed duplicated region for block: B:54:0x01cd  */
+        /* JADX WARN: Removed duplicated region for block: B:81:0x0386  */
+        /*
+            Code decompiled incorrectly, please refer to instructions dump.
+        */
         private void applyLevelLimits() {
-            /*
-                r58 = this;
-                r12 = r58
-                r0 = 0
-                r2 = 0
-                r3 = 0
-                r13 = 0
-                r4 = 4
-                android.media.MediaCodecInfo$CodecCapabilities r5 = r12.mParent
-                android.media.MediaCodecInfo$CodecProfileLevel[] r14 = r5.profileLevels
-                android.media.MediaCodecInfo$CodecCapabilities r5 = r12.mParent
-                java.lang.String r15 = r5.getMimeType()
-                java.lang.String r5 = "video/avc"
-                boolean r5 = r15.equalsIgnoreCase(r5)
-                r9 = 4
-                if (r5 == 0) goto L_0x021c
-                r2 = 99
-                r0 = 1485(0x5cd, double:7.337E-321)
-                r3 = 64000(0xfa00, float:8.9683E-41)
-                r5 = 396(0x18c, float:5.55E-43)
-                int r13 = r14.length
-                r17 = r4
-                r10 = 0
-                r4 = r2
-                r56 = r5
-                r5 = r3
-                r2 = r0
-                r1 = r56
-            L_0x0030:
-                if (r10 >= r13) goto L_0x01ed
-                r0 = r14[r10]
-                r18 = 0
-                r19 = 0
-                r20 = 0
-                r21 = 0
-                r22 = 1
-                int r8 = r0.level
-                switch(r8) {
-                    case 1: goto L_0x0143;
-                    case 2: goto L_0x0139;
-                    case 4: goto L_0x012f;
-                    case 8: goto L_0x0125;
-                    case 16: goto L_0x011b;
-                    case 32: goto L_0x0111;
-                    case 64: goto L_0x0107;
-                    case 128: goto L_0x00fd;
-                    case 256: goto L_0x00f2;
-                    case 512: goto L_0x00e7;
-                    case 1024: goto L_0x00dc;
-                    case 2048: goto L_0x00d1;
-                    case 4096: goto L_0x00c5;
-                    case 8192: goto L_0x00b9;
-                    case 16384: goto L_0x00ae;
-                    case 32768: goto L_0x00a2;
-                    case 65536: goto L_0x0095;
-                    case 131072: goto L_0x0088;
-                    case 262144: goto L_0x007b;
-                    case 524288: goto L_0x006f;
-                    default: goto L_0x0043;
+            int i;
+            int errors;
+            int maxBps;
+            int FS;
+            int i2;
+            CodecProfileLevel[] profileLevels;
+            int FS2;
+            long SR;
+            int FS3;
+            int FS4;
+            long SR2;
+            CodecProfileLevel[] profileLevels2;
+            CodecProfileLevel[] profileLevels3;
+            int FR;
+            int minW;
+            int minH;
+            int MBPS;
+            int FS5;
+            int FR2;
+            int W;
+            int H;
+            int MBPS2;
+            int FS6;
+            int BR;
+            int i3;
+            CodecProfileLevel[] profileLevels4;
+            int BR2;
+            int FR3;
+            int W2;
+            int H2;
+            long j;
+            int MBPS3;
+            int FS7;
+            int FR4;
+            int W3;
+            int H3;
+            int MBPS4;
+            int FS8;
+            int BR3;
+            int i4;
+            boolean z;
+            int BR4;
+            int FR5;
+            int W4;
+            int H4;
+            int i5;
+            int BR5;
+            boolean z2 = false;
+            CodecProfileLevel[] profileLevels5 = this.mParent.profileLevels;
+            String mime = this.mParent.getMimeType();
+            int i6 = 4;
+            if (mime.equalsIgnoreCase(MediaFormat.MIMETYPE_VIDEO_AVC)) {
+                int maxDPBBlocks = profileLevels5.length;
+                errors = 4;
+                int i7 = 0;
+                int maxBlocks = 99;
+                int maxBps2 = 64000;
+                long maxBlocksPerSecond = 1485;
+                int maxDPBBlocks2 = 396;
+                while (i7 < maxDPBBlocks) {
+                    CodecProfileLevel profileLevel = profileLevels5[i7];
+                    int MBPS5 = 0;
+                    int FS9 = 0;
+                    int BR6 = 0;
+                    int DPB = 0;
+                    boolean supported = true;
+                    switch (profileLevel.level) {
+                        case 1:
+                            MBPS5 = 1485;
+                            FS9 = 99;
+                            BR6 = 64;
+                            DPB = 396;
+                            break;
+                        case 2:
+                            MBPS5 = 1485;
+                            FS9 = 99;
+                            BR6 = 128;
+                            DPB = 396;
+                            break;
+                        case 4:
+                            MBPS5 = PathInterpolatorCompat.MAX_NUM_POINTS;
+                            FS9 = 396;
+                            BR6 = 192;
+                            DPB = 900;
+                            break;
+                        case 8:
+                            MBPS5 = 6000;
+                            FS9 = 396;
+                            BR6 = MetricsProto.MetricsEvent.ACTION_SHOW_SETTINGS_SUGGESTION;
+                            DPB = 2376;
+                            break;
+                        case 16:
+                            MBPS5 = 11880;
+                            FS9 = 396;
+                            BR6 = 768;
+                            DPB = 2376;
+                            break;
+                        case 32:
+                            MBPS5 = 11880;
+                            FS9 = 396;
+                            BR6 = 2000;
+                            DPB = 2376;
+                            break;
+                        case 64:
+                            MBPS5 = 19800;
+                            FS9 = 792;
+                            BR6 = 4000;
+                            DPB = 4752;
+                            break;
+                        case 128:
+                            MBPS5 = 20250;
+                            FS9 = 1620;
+                            BR6 = 4000;
+                            DPB = 8100;
+                            break;
+                        case 256:
+                            MBPS5 = 40500;
+                            FS9 = 1620;
+                            BR6 = 10000;
+                            DPB = 8100;
+                            break;
+                        case 512:
+                            MBPS5 = 108000;
+                            FS9 = 3600;
+                            BR6 = 14000;
+                            DPB = 18000;
+                            break;
+                        case 1024:
+                            MBPS5 = 216000;
+                            FS9 = 5120;
+                            BR6 = 20000;
+                            DPB = MtpConstants.DEVICE_PROPERTY_UNDEFINED;
+                            break;
+                        case 2048:
+                            MBPS5 = 245760;
+                            FS9 = 8192;
+                            BR6 = 20000;
+                            DPB = 32768;
+                            break;
+                        case 4096:
+                            MBPS5 = 245760;
+                            FS9 = 8192;
+                            BR6 = 50000;
+                            DPB = 32768;
+                            break;
+                        case 8192:
+                            MBPS5 = 522240;
+                            FS9 = 8704;
+                            BR6 = 50000;
+                            DPB = GLES20.GL_STENCIL_BACK_FUNC;
+                            break;
+                        case 16384:
+                            MBPS5 = 589824;
+                            FS9 = 22080;
+                            BR6 = 135000;
+                            DPB = 110400;
+                            break;
+                        case 32768:
+                            MBPS5 = SurfaceControl.FX_SURFACE_MASK;
+                            FS9 = 36864;
+                            BR6 = 240000;
+                            DPB = 184320;
+                            break;
+                        case 65536:
+                            MBPS5 = 2073600;
+                            FS9 = 36864;
+                            BR6 = 240000;
+                            DPB = 184320;
+                            break;
+                        case 131072:
+                            MBPS5 = 4177920;
+                            FS9 = Protocol.BASE_WIFI_P2P_MANAGER;
+                            BR6 = 240000;
+                            DPB = 696320;
+                            break;
+                        case 262144:
+                            MBPS5 = 8355840;
+                            FS9 = Protocol.BASE_WIFI_P2P_MANAGER;
+                            BR6 = 480000;
+                            DPB = 696320;
+                            break;
+                        case 524288:
+                            MBPS5 = Spanned.SPAN_PRIORITY;
+                            FS9 = Protocol.BASE_WIFI_P2P_MANAGER;
+                            BR6 = 800000;
+                            DPB = 696320;
+                            break;
+                        default:
+                            Log.m64w(TAG, "Unrecognized level " + profileLevel.level + " for " + mime);
+                            errors |= 1;
+                            break;
+                    }
+                    int MBPS6 = MBPS5;
+                    int FS10 = FS9;
+                    int BR7 = BR6;
+                    int DPB2 = DPB;
+                    int i8 = profileLevel.profile;
+                    if (i8 != i6) {
+                        if (i8 != 8) {
+                            if (i8 == 16) {
+                                i5 = maxDPBBlocks;
+                                BR5 = BR7 * PathInterpolatorCompat.MAX_NUM_POINTS;
+                            } else if (i8 != 32 && i8 != 64) {
+                                if (i8 != 65536) {
+                                    if (i8 != 524288) {
+                                        switch (i8) {
+                                            case 1:
+                                            case 2:
+                                                break;
+                                            default:
+                                                StringBuilder sb = new StringBuilder();
+                                                i5 = maxDPBBlocks;
+                                                sb.append("Unrecognized profile ");
+                                                sb.append(profileLevel.profile);
+                                                sb.append(" for ");
+                                                sb.append(mime);
+                                                Log.m64w(TAG, sb.toString());
+                                                errors |= 1;
+                                                BR5 = BR7 * 1000;
+                                                break;
+                                        }
+                                    }
+                                }
+                                i5 = maxDPBBlocks;
+                                BR5 = BR7 * 1000;
+                            }
+                            if (supported) {
+                                errors &= -5;
+                            }
+                            maxBlocksPerSecond = Math.max(MBPS6, maxBlocksPerSecond);
+                            maxBlocks = Math.max(FS10, maxBlocks);
+                            maxBps2 = Math.max(BR5, maxBps2);
+                            maxDPBBlocks2 = Math.max(maxDPBBlocks2, DPB2);
+                            i7++;
+                            maxDPBBlocks = i5;
+                            i6 = 4;
+                        }
+                        i5 = maxDPBBlocks;
+                        BR5 = BR7 * MetricsProto.MetricsEvent.FIELD_SELECTION_RANGE_START;
+                        if (supported) {
+                        }
+                        maxBlocksPerSecond = Math.max(MBPS6, maxBlocksPerSecond);
+                        maxBlocks = Math.max(FS10, maxBlocks);
+                        maxBps2 = Math.max(BR5, maxBps2);
+                        maxDPBBlocks2 = Math.max(maxDPBBlocks2, DPB2);
+                        i7++;
+                        maxDPBBlocks = i5;
+                        i6 = 4;
+                    }
+                    i5 = maxDPBBlocks;
+                    Log.m64w(TAG, "Unsupported profile " + profileLevel.profile + " for " + mime);
+                    errors |= 2;
+                    supported = false;
+                    BR5 = BR7 * 1000;
+                    if (supported) {
+                    }
+                    maxBlocksPerSecond = Math.max(MBPS6, maxBlocksPerSecond);
+                    maxBlocks = Math.max(FS10, maxBlocks);
+                    maxBps2 = Math.max(BR5, maxBps2);
+                    maxDPBBlocks2 = Math.max(maxDPBBlocks2, DPB2);
+                    i7++;
+                    maxDPBBlocks = i5;
+                    i6 = 4;
                 }
-            L_0x0043:
-                java.lang.String r8 = "VideoCapabilities"
-                java.lang.StringBuilder r6 = new java.lang.StringBuilder
-                r6.<init>()
-                java.lang.String r7 = "Unrecognized level "
-                r6.append(r7)
-                int r7 = r0.level
-                r6.append(r7)
-                java.lang.String r7 = " for "
-                r6.append(r7)
-                r6.append(r15)
-                java.lang.String r6 = r6.toString()
-                android.util.Log.w((java.lang.String) r8, (java.lang.String) r6)
-                r17 = r17 | 1
-            L_0x0065:
-                r7 = r18
-                r8 = r19
-                r6 = r20
-                r25 = r21
-                goto L_0x014d
-            L_0x006f:
-                r18 = 16711680(0xff0000, float:2.3418052E-38)
-                r19 = 139264(0x22000, float:1.9515E-40)
-                r20 = 800000(0xc3500, float:1.121039E-39)
-                r21 = 696320(0xaa000, float:9.75752E-40)
-                goto L_0x0065
-            L_0x007b:
-                r18 = 8355840(0x7f8000, float:1.1709026E-38)
-                r19 = 139264(0x22000, float:1.9515E-40)
-                r20 = 480000(0x75300, float:6.72623E-40)
-                r21 = 696320(0xaa000, float:9.75752E-40)
-                goto L_0x0065
-            L_0x0088:
-                r18 = 4177920(0x3fc000, float:5.854513E-39)
-                r19 = 139264(0x22000, float:1.9515E-40)
-                r20 = 240000(0x3a980, float:3.36312E-40)
-                r21 = 696320(0xaa000, float:9.75752E-40)
-                goto L_0x0065
-            L_0x0095:
-                r18 = 2073600(0x1fa400, float:2.905732E-39)
-                r19 = 36864(0x9000, float:5.1657E-41)
-                r20 = 240000(0x3a980, float:3.36312E-40)
-                r21 = 184320(0x2d000, float:2.58287E-40)
-                goto L_0x0065
-            L_0x00a2:
-                r18 = 983040(0xf0000, float:1.377532E-39)
-                r19 = 36864(0x9000, float:5.1657E-41)
-                r20 = 240000(0x3a980, float:3.36312E-40)
-                r21 = 184320(0x2d000, float:2.58287E-40)
-                goto L_0x0065
-            L_0x00ae:
-                r18 = 589824(0x90000, float:8.2652E-40)
-                r19 = 22080(0x5640, float:3.094E-41)
-                r20 = 135000(0x20f58, float:1.89175E-40)
-                r21 = 110400(0x1af40, float:1.54703E-40)
-                goto L_0x0065
-            L_0x00b9:
-                r18 = 522240(0x7f800, float:7.31814E-40)
-                r19 = 8704(0x2200, float:1.2197E-41)
-                r20 = 50000(0xc350, float:7.0065E-41)
-                r21 = 34816(0x8800, float:4.8788E-41)
-                goto L_0x0065
-            L_0x00c5:
-                r18 = 245760(0x3c000, float:3.44383E-40)
-                r19 = 8192(0x2000, float:1.14794E-41)
-                r20 = 50000(0xc350, float:7.0065E-41)
-                r21 = 32768(0x8000, float:4.5918E-41)
-                goto L_0x0065
-            L_0x00d1:
-                r18 = 245760(0x3c000, float:3.44383E-40)
-                r19 = 8192(0x2000, float:1.14794E-41)
-                r20 = 20000(0x4e20, float:2.8026E-41)
-                r21 = 32768(0x8000, float:4.5918E-41)
-                goto L_0x0065
-            L_0x00dc:
-                r18 = 216000(0x34bc0, float:3.0268E-40)
-                r19 = 5120(0x1400, float:7.175E-42)
-                r20 = 20000(0x4e20, float:2.8026E-41)
-                r21 = 20480(0x5000, float:2.8699E-41)
-                goto L_0x0065
-            L_0x00e7:
-                r18 = 108000(0x1a5e0, float:1.5134E-40)
-                r19 = 3600(0xe10, float:5.045E-42)
-                r20 = 14000(0x36b0, float:1.9618E-41)
-                r21 = 18000(0x4650, float:2.5223E-41)
-                goto L_0x0065
-            L_0x00f2:
-                r18 = 40500(0x9e34, float:5.6753E-41)
-                r19 = 1620(0x654, float:2.27E-42)
-                r20 = 10000(0x2710, float:1.4013E-41)
-                r21 = 8100(0x1fa4, float:1.135E-41)
-                goto L_0x0065
-            L_0x00fd:
-                r18 = 20250(0x4f1a, float:2.8376E-41)
-                r19 = 1620(0x654, float:2.27E-42)
-                r20 = 4000(0xfa0, float:5.605E-42)
-                r21 = 8100(0x1fa4, float:1.135E-41)
-                goto L_0x0065
-            L_0x0107:
-                r18 = 19800(0x4d58, float:2.7746E-41)
-                r19 = 792(0x318, float:1.11E-42)
-                r20 = 4000(0xfa0, float:5.605E-42)
-                r21 = 4752(0x1290, float:6.659E-42)
-                goto L_0x0065
-            L_0x0111:
-                r18 = 11880(0x2e68, float:1.6647E-41)
-                r19 = 396(0x18c, float:5.55E-43)
-                r20 = 2000(0x7d0, float:2.803E-42)
-                r21 = 2376(0x948, float:3.33E-42)
-                goto L_0x0065
-            L_0x011b:
-                r18 = 11880(0x2e68, float:1.6647E-41)
-                r19 = 396(0x18c, float:5.55E-43)
-                r20 = 768(0x300, float:1.076E-42)
-                r21 = 2376(0x948, float:3.33E-42)
-                goto L_0x0065
-            L_0x0125:
-                r18 = 6000(0x1770, float:8.408E-42)
-                r19 = 396(0x18c, float:5.55E-43)
-                r20 = 384(0x180, float:5.38E-43)
-                r21 = 2376(0x948, float:3.33E-42)
-                goto L_0x0065
-            L_0x012f:
-                r18 = 3000(0xbb8, float:4.204E-42)
-                r19 = 396(0x18c, float:5.55E-43)
-                r20 = 192(0xc0, float:2.69E-43)
-                r21 = 900(0x384, float:1.261E-42)
-                goto L_0x0065
-            L_0x0139:
-                r18 = 1485(0x5cd, float:2.081E-42)
-                r19 = 99
-                r20 = 128(0x80, float:1.794E-43)
-                r21 = 396(0x18c, float:5.55E-43)
-                goto L_0x0065
-            L_0x0143:
-                r18 = 1485(0x5cd, float:2.081E-42)
-                r19 = 99
-                r20 = 64
-                r21 = 396(0x18c, float:5.55E-43)
-                goto L_0x0065
-            L_0x014d:
-                int r11 = r0.profile
-                if (r11 == r9) goto L_0x0199
-                r9 = 8
-                if (r11 == r9) goto L_0x0196
-                r9 = 16
-                if (r11 == r9) goto L_0x019c
-                r9 = 32
-                if (r11 == r9) goto L_0x0199
-                r9 = 64
-                if (r11 == r9) goto L_0x0199
-                r9 = 65536(0x10000, float:9.18355E-41)
-                if (r11 == r9) goto L_0x0193
-                r9 = 524288(0x80000, float:7.34684E-40)
-                if (r11 == r9) goto L_0x0196
-                switch(r11) {
-                    case 1: goto L_0x0193;
-                    case 2: goto L_0x0193;
-                    default: goto L_0x016c;
+                int maxLengthInBlocks = (int) Math.sqrt(maxBlocks * 8);
+                long maxBlocksPerSecond2 = maxBlocksPerSecond;
+                applyMacroBlockLimits(maxLengthInBlocks, maxLengthInBlocks, maxBlocks, maxBlocksPerSecond2, 16, 16, 1, 1);
+                i = 1;
+                j = maxBlocksPerSecond2;
+                maxBps = maxBps2;
+            } else if (!mime.equalsIgnoreCase(MediaFormat.MIMETYPE_VIDEO_MPEG2)) {
+                String mime2 = mime;
+                if (mime2.equalsIgnoreCase(MediaFormat.MIMETYPE_VIDEO_MPEG4)) {
+                    int maxBps3 = 64000;
+                    CodecProfileLevel[] profileLevels6 = profileLevels5;
+                    int H5 = profileLevels6.length;
+                    errors = 4;
+                    int maxWidth = 11;
+                    int maxHeight = 9;
+                    int maxRate = 15;
+                    int i9 = 0;
+                    long maxBlocksPerSecond3 = 1485;
+                    int maxBlocks2 = 99;
+                    while (i9 < H5) {
+                        CodecProfileLevel profileLevel2 = profileLevels6[i9];
+                        boolean strict = false;
+                        boolean supported2 = true;
+                        switch (profileLevel2.profile) {
+                            case 1:
+                                MBPS = 0;
+                                FS5 = 0;
+                                int MBPS7 = profileLevel2.level;
+                                if (MBPS7 == 4) {
+                                    FR2 = 30;
+                                    W = 11;
+                                    H = 9;
+                                    MBPS2 = 1485;
+                                    FS6 = 99;
+                                    BR = 64;
+                                } else if (MBPS7 == 8) {
+                                    FR2 = 30;
+                                    W = 22;
+                                    H = 18;
+                                    MBPS2 = 5940;
+                                    FS6 = 396;
+                                    BR = 128;
+                                } else if (MBPS7 == 16) {
+                                    FR2 = 30;
+                                    W = 22;
+                                    H = 18;
+                                    MBPS2 = 11880;
+                                    FS6 = 396;
+                                    BR = MetricsProto.MetricsEvent.ACTION_SHOW_SETTINGS_SUGGESTION;
+                                } else if (MBPS7 == 64) {
+                                    FR2 = 30;
+                                    W = 40;
+                                    H = 30;
+                                    MBPS2 = 36000;
+                                    FS6 = 1200;
+                                    BR = 4000;
+                                } else if (MBPS7 == 128) {
+                                    FR2 = 30;
+                                    W = 45;
+                                    H = 36;
+                                    MBPS2 = 40500;
+                                    FS6 = 1620;
+                                    BR = 8000;
+                                } else if (MBPS7 != 256) {
+                                    switch (MBPS7) {
+                                        case 1:
+                                            strict = true;
+                                            FR2 = 15;
+                                            W = 11;
+                                            H = 9;
+                                            MBPS2 = 1485;
+                                            FS6 = 99;
+                                            BR = 64;
+                                            break;
+                                        case 2:
+                                            strict = true;
+                                            FR2 = 15;
+                                            W = 11;
+                                            H = 9;
+                                            MBPS2 = 1485;
+                                            FS6 = 99;
+                                            BR = 128;
+                                            break;
+                                        default:
+                                            Log.m64w(TAG, "Unrecognized profile/level " + profileLevel2.profile + "/" + profileLevel2.level + " for " + mime2);
+                                            errors |= 1;
+                                            i3 = H5;
+                                            profileLevels4 = profileLevels6;
+                                            BR2 = 0;
+                                            FR3 = 0;
+                                            W2 = 0;
+                                            H2 = 0;
+                                            MBPS2 = MBPS;
+                                            FS6 = FS5;
+                                            if (supported2) {
+                                                errors &= -5;
+                                            }
+                                            String mime3 = mime2;
+                                            maxBlocksPerSecond3 = Math.max(MBPS2, maxBlocksPerSecond3);
+                                            maxBlocks2 = Math.max(FS6, maxBlocks2);
+                                            maxBps3 = Math.max(BR2 * 1000, maxBps3);
+                                            if (strict) {
+                                                int maxHeight2 = FS6 * 2;
+                                                int maxDim = (int) Math.sqrt(maxHeight2);
+                                                maxWidth = Math.max(maxDim, maxWidth);
+                                                int maxHeight3 = Math.max(maxDim, maxHeight);
+                                                int W5 = Math.max(Math.max(FR3, 60), maxRate);
+                                                maxRate = W5;
+                                                maxHeight = maxHeight3;
+                                            } else {
+                                                maxWidth = Math.max(W2, maxWidth);
+                                                int maxHeight4 = Math.max(H2, maxHeight);
+                                                maxRate = Math.max(FR3, maxRate);
+                                                maxHeight = maxHeight4;
+                                            }
+                                            i9++;
+                                            H5 = i3;
+                                            profileLevels6 = profileLevels4;
+                                            mime2 = mime3;
+                                    }
+                                } else {
+                                    FR2 = 30;
+                                    W = 80;
+                                    H = 45;
+                                    MBPS2 = 108000;
+                                    FS6 = 3600;
+                                    BR = 12000;
+                                }
+                                i3 = H5;
+                                profileLevels4 = profileLevels6;
+                                BR2 = BR;
+                                FR3 = FR2;
+                                W2 = W;
+                                H2 = H;
+                                if (supported2) {
+                                }
+                                String mime32 = mime2;
+                                maxBlocksPerSecond3 = Math.max(MBPS2, maxBlocksPerSecond3);
+                                maxBlocks2 = Math.max(FS6, maxBlocks2);
+                                maxBps3 = Math.max(BR2 * 1000, maxBps3);
+                                if (strict) {
+                                }
+                                i9++;
+                                H5 = i3;
+                                profileLevels6 = profileLevels4;
+                                mime2 = mime32;
+                            case 2:
+                            case 4:
+                            case 8:
+                            case 16:
+                            case 32:
+                            case 64:
+                            case 128:
+                            case 256:
+                            case 512:
+                            case 1024:
+                            case 2048:
+                            case 4096:
+                            case 8192:
+                            case 16384:
+                                MBPS = 0;
+                                FS5 = 0;
+                                Log.m68i(TAG, "Unsupported profile " + profileLevel2.profile + " for " + mime2);
+                                errors |= 2;
+                                supported2 = false;
+                                i3 = H5;
+                                profileLevels4 = profileLevels6;
+                                BR2 = 0;
+                                FR3 = 0;
+                                W2 = 0;
+                                H2 = 0;
+                                MBPS2 = MBPS;
+                                FS6 = FS5;
+                                if (supported2) {
+                                }
+                                String mime322 = mime2;
+                                maxBlocksPerSecond3 = Math.max(MBPS2, maxBlocksPerSecond3);
+                                maxBlocks2 = Math.max(FS6, maxBlocks2);
+                                maxBps3 = Math.max(BR2 * 1000, maxBps3);
+                                if (strict) {
+                                }
+                                i9++;
+                                H5 = i3;
+                                profileLevels6 = profileLevels4;
+                                mime2 = mime322;
+                                break;
+                            case 32768:
+                                int BR8 = profileLevel2.level;
+                                MBPS = 0;
+                                if (BR8 == 1 || BR8 == 4) {
+                                    FR2 = 30;
+                                    W = 11;
+                                    H = 9;
+                                    MBPS2 = 2970;
+                                    FS6 = 99;
+                                    BR = 128;
+                                } else if (BR8 == 8) {
+                                    FR2 = 30;
+                                    W = 22;
+                                    H = 18;
+                                    MBPS2 = 5940;
+                                    FS6 = 396;
+                                    BR = MetricsProto.MetricsEvent.ACTION_SHOW_SETTINGS_SUGGESTION;
+                                } else if (BR8 == 16) {
+                                    FR2 = 30;
+                                    W = 22;
+                                    H = 18;
+                                    MBPS2 = 11880;
+                                    FS6 = 396;
+                                    BR = 768;
+                                } else if (BR8 == 24) {
+                                    FR2 = 30;
+                                    W = 22;
+                                    H = 18;
+                                    MBPS2 = 11880;
+                                    FS6 = 396;
+                                    BR = 1500;
+                                } else if (BR8 == 32) {
+                                    FR2 = 30;
+                                    W = 44;
+                                    H = 36;
+                                    MBPS2 = 23760;
+                                    FS6 = 792;
+                                    BR = PathInterpolatorCompat.MAX_NUM_POINTS;
+                                } else if (BR8 != 128) {
+                                    StringBuilder sb2 = new StringBuilder();
+                                    FS5 = 0;
+                                    sb2.append("Unrecognized profile/level ");
+                                    sb2.append(profileLevel2.profile);
+                                    sb2.append("/");
+                                    sb2.append(profileLevel2.level);
+                                    sb2.append(" for ");
+                                    sb2.append(mime2);
+                                    Log.m64w(TAG, sb2.toString());
+                                    errors |= 1;
+                                    i3 = H5;
+                                    profileLevels4 = profileLevels6;
+                                    BR2 = 0;
+                                    FR3 = 0;
+                                    W2 = 0;
+                                    H2 = 0;
+                                    MBPS2 = MBPS;
+                                    FS6 = FS5;
+                                    if (supported2) {
+                                    }
+                                    String mime3222 = mime2;
+                                    maxBlocksPerSecond3 = Math.max(MBPS2, maxBlocksPerSecond3);
+                                    maxBlocks2 = Math.max(FS6, maxBlocks2);
+                                    maxBps3 = Math.max(BR2 * 1000, maxBps3);
+                                    if (strict) {
+                                    }
+                                    i9++;
+                                    H5 = i3;
+                                    profileLevels6 = profileLevels4;
+                                    mime2 = mime3222;
+                                } else {
+                                    FR2 = 30;
+                                    W = 45;
+                                    H = 36;
+                                    MBPS2 = 48600;
+                                    FS6 = 1620;
+                                    BR = 8000;
+                                }
+                                i3 = H5;
+                                profileLevels4 = profileLevels6;
+                                BR2 = BR;
+                                FR3 = FR2;
+                                W2 = W;
+                                H2 = H;
+                                if (supported2) {
+                                }
+                                String mime32222 = mime2;
+                                maxBlocksPerSecond3 = Math.max(MBPS2, maxBlocksPerSecond3);
+                                maxBlocks2 = Math.max(FS6, maxBlocks2);
+                                maxBps3 = Math.max(BR2 * 1000, maxBps3);
+                                if (strict) {
+                                }
+                                i9++;
+                                H5 = i3;
+                                profileLevels6 = profileLevels4;
+                                mime2 = mime32222;
+                                break;
+                            default:
+                                MBPS = 0;
+                                FS5 = 0;
+                                Log.m64w(TAG, "Unrecognized profile " + profileLevel2.profile + " for " + mime2);
+                                errors |= 1;
+                                i3 = H5;
+                                profileLevels4 = profileLevels6;
+                                BR2 = 0;
+                                FR3 = 0;
+                                W2 = 0;
+                                H2 = 0;
+                                MBPS2 = MBPS;
+                                FS6 = FS5;
+                                if (supported2) {
+                                }
+                                String mime322222 = mime2;
+                                maxBlocksPerSecond3 = Math.max(MBPS2, maxBlocksPerSecond3);
+                                maxBlocks2 = Math.max(FS6, maxBlocks2);
+                                maxBps3 = Math.max(BR2 * 1000, maxBps3);
+                                if (strict) {
+                                }
+                                i9++;
+                                H5 = i3;
+                                profileLevels6 = profileLevels4;
+                                mime2 = mime322222;
+                                break;
+                        }
+                    }
+                    int maxBps4 = maxBps3;
+                    int maxBps5 = maxBlocks2;
+                    applyMacroBlockLimits(maxWidth, maxHeight, maxBps5, maxBlocksPerSecond3, 16, 16, 1, 1);
+                    this.mFrameRateRange = this.mFrameRateRange.intersect(12, Integer.valueOf(maxRate));
+                    maxBps = maxBps4;
+                    i = 1;
+                } else {
+                    VideoCapabilities videoCapabilities = this;
+                    if (mime2.equalsIgnoreCase(MediaFormat.MIMETYPE_VIDEO_H263)) {
+                        int maxHeight5 = 9;
+                        int maxWidth2 = 11;
+                        int minH2 = 9;
+                        CodecProfileLevel[] profileLevels7 = profileLevels5;
+                        int length = profileLevels7.length;
+                        errors = 4;
+                        int minAlignment = 16;
+                        int minAlignment2 = 11;
+                        long maxBlocksPerSecond4 = 1485;
+                        int minW2 = 0;
+                        int maxBlocks3 = 99;
+                        int maxBps6 = 64000;
+                        int maxRate2 = 15;
+                        while (minW2 < length) {
+                            CodecProfileLevel profileLevel3 = profileLevels7[minW2];
+                            int MBPS8 = 0;
+                            int BR9 = 0;
+                            int FR6 = 0;
+                            int W6 = 0;
+                            int H6 = 0;
+                            int minW3 = minAlignment2;
+                            int minH3 = minH2;
+                            boolean strict2 = false;
+                            int i10 = profileLevel3.level;
+                            int i11 = length;
+                            if (i10 == 4) {
+                                profileLevels3 = profileLevels7;
+                                strict2 = true;
+                                FR6 = 30;
+                                W6 = 22;
+                                H6 = 18;
+                                BR9 = 6;
+                                MBPS8 = 22 * 18 * 30;
+                            } else if (i10 == 8) {
+                                profileLevels3 = profileLevels7;
+                                strict2 = true;
+                                FR6 = 30;
+                                W6 = 22;
+                                H6 = 18;
+                                BR9 = 32;
+                                MBPS8 = 22 * 18 * 30;
+                            } else if (i10 == 16) {
+                                profileLevels3 = profileLevels7;
+                                strict2 = profileLevel3.profile == 1 || profileLevel3.profile == 4;
+                                if (!strict2) {
+                                    minW3 = 1;
+                                    minH3 = 1;
+                                    minAlignment = 4;
+                                }
+                                FR6 = 15;
+                                W6 = 11;
+                                H6 = 9;
+                                BR9 = 2;
+                                MBPS8 = 11 * 9 * 15;
+                            } else if (i10 == 32) {
+                                profileLevels3 = profileLevels7;
+                                minW3 = 1;
+                                minH3 = 1;
+                                minAlignment = 4;
+                                FR6 = 60;
+                                W6 = 22;
+                                H6 = 18;
+                                BR9 = 64;
+                                MBPS8 = 22 * 18 * 50;
+                            } else if (i10 == 64) {
+                                profileLevels3 = profileLevels7;
+                                minW3 = 1;
+                                minH3 = 1;
+                                minAlignment = 4;
+                                FR6 = 60;
+                                W6 = 45;
+                                H6 = 18;
+                                BR9 = 128;
+                                MBPS8 = 45 * 18 * 50;
+                            } else if (i10 != 128) {
+                                switch (i10) {
+                                    case 1:
+                                        profileLevels3 = profileLevels7;
+                                        strict2 = true;
+                                        FR6 = 15;
+                                        W6 = 11;
+                                        H6 = 9;
+                                        BR9 = 1;
+                                        MBPS8 = 11 * 9 * 15;
+                                        break;
+                                    case 2:
+                                        profileLevels3 = profileLevels7;
+                                        strict2 = true;
+                                        FR6 = 30;
+                                        W6 = 22;
+                                        H6 = 18;
+                                        BR9 = 2;
+                                        MBPS8 = 22 * 18 * 15;
+                                        break;
+                                    default:
+                                        StringBuilder sb3 = new StringBuilder();
+                                        profileLevels3 = profileLevels7;
+                                        sb3.append("Unrecognized profile/level ");
+                                        sb3.append(profileLevel3.profile);
+                                        sb3.append("/");
+                                        sb3.append(profileLevel3.level);
+                                        sb3.append(" for ");
+                                        sb3.append(mime2);
+                                        Log.m64w(TAG, sb3.toString());
+                                        errors |= 1;
+                                        break;
+                                }
+                            } else {
+                                profileLevels3 = profileLevels7;
+                                minW3 = 1;
+                                minH3 = 1;
+                                minAlignment = 4;
+                                FR6 = 60;
+                                W6 = 45;
+                                H6 = 36;
+                                BR9 = 256;
+                                MBPS8 = 45 * 36 * 50;
+                            }
+                            int i12 = minW2;
+                            int MBPS9 = MBPS8;
+                            int FR7 = FR6;
+                            int W7 = W6;
+                            int H7 = H6;
+                            int minHeight = minH2;
+                            int minHeight2 = profileLevel3.profile;
+                            int minWidth = minAlignment2;
+                            if (minHeight2 != 4 && minHeight2 != 8 && minHeight2 != 16 && minHeight2 != 32 && minHeight2 != 64 && minHeight2 != 128 && minHeight2 != 256) {
+                                switch (minHeight2) {
+                                    case 1:
+                                    case 2:
+                                        break;
+                                    default:
+                                        StringBuilder sb4 = new StringBuilder();
+                                        FR = FR7;
+                                        sb4.append("Unrecognized profile ");
+                                        sb4.append(profileLevel3.profile);
+                                        sb4.append(" for ");
+                                        sb4.append(mime2);
+                                        Log.m64w(TAG, sb4.toString());
+                                        errors |= 1;
+                                        break;
+                                }
+                                if (strict2) {
+                                    videoCapabilities.mAllowMbOverride = true;
+                                    minW = minW3;
+                                    minH = minH3;
+                                } else {
+                                    minW = 11;
+                                    minH = 9;
+                                }
+                                errors &= -5;
+                                maxBlocksPerSecond4 = Math.max(MBPS9, maxBlocksPerSecond4);
+                                maxBlocks3 = Math.max(W7 * H7, maxBlocks3);
+                                maxBps6 = Math.max(64000 * BR9, maxBps6);
+                                maxWidth2 = Math.max(W7, maxWidth2);
+                                maxHeight5 = Math.max(H7, maxHeight5);
+                                maxRate2 = Math.max(FR, maxRate2);
+                                int minWidth2 = Math.min(minW, minWidth);
+                                minH2 = Math.min(minH, minHeight);
+                                minW2 = i12 + 1;
+                                minAlignment2 = minWidth2;
+                                length = i11;
+                                profileLevels7 = profileLevels3;
+                                videoCapabilities = this;
+                            }
+                            FR = FR7;
+                            if (strict2) {
+                            }
+                            errors &= -5;
+                            maxBlocksPerSecond4 = Math.max(MBPS9, maxBlocksPerSecond4);
+                            maxBlocks3 = Math.max(W7 * H7, maxBlocks3);
+                            maxBps6 = Math.max(64000 * BR9, maxBps6);
+                            maxWidth2 = Math.max(W7, maxWidth2);
+                            maxHeight5 = Math.max(H7, maxHeight5);
+                            maxRate2 = Math.max(FR, maxRate2);
+                            int minWidth22 = Math.min(minW, minWidth);
+                            minH2 = Math.min(minH, minHeight);
+                            minW2 = i12 + 1;
+                            minAlignment2 = minWidth22;
+                            length = i11;
+                            profileLevels7 = profileLevels3;
+                            videoCapabilities = this;
+                        }
+                        int minHeight3 = minH2;
+                        int minWidth3 = minAlignment2;
+                        if (!this.mAllowMbOverride) {
+                            this.mBlockAspectRatioRange = Range.create(new Rational(11, 9), new Rational(11, 9));
+                        }
+                        int maxRate3 = maxRate2;
+                        int maxRate4 = maxWidth2;
+                        applyMacroBlockLimits(minWidth3, minHeight3, maxRate4, maxHeight5, maxBlocks3, maxBlocksPerSecond4, 16, 16, minAlignment, minAlignment);
+                        this.mFrameRateRange = Range.create(1, Integer.valueOf(maxRate3));
+                        maxBps = maxBps6;
+                        i = 1;
+                    } else {
+                        int i13 = 1;
+                        if (mime2.equalsIgnoreCase(MediaFormat.MIMETYPE_VIDEO_VP8)) {
+                            int length2 = profileLevels5.length;
+                            errors = 4;
+                            int i14 = 0;
+                            while (i14 < length2) {
+                                CodecProfileLevel profileLevel4 = profileLevels5[i14];
+                                int i15 = profileLevel4.level;
+                                if (i15 != 4 && i15 != 8) {
+                                    switch (i15) {
+                                        case 1:
+                                        case 2:
+                                            break;
+                                        default:
+                                            Log.m64w(TAG, "Unrecognized level " + profileLevel4.level + " for " + mime2);
+                                            errors |= 1;
+                                            break;
+                                    }
+                                }
+                                int i16 = i13;
+                                if (profileLevel4.profile != i16) {
+                                    Log.m64w(TAG, "Unrecognized profile " + profileLevel4.profile + " for " + mime2);
+                                    errors |= 1;
+                                }
+                                errors &= -5;
+                                i14++;
+                                i13 = i16;
+                            }
+                            i = i13;
+                            applyMacroBlockLimits(32767, 32767, Integer.MAX_VALUE, 2147483647L, 16, 16, 1, 1);
+                            maxBps = 100000000;
+                        } else {
+                            CodecProfileLevel[] profileLevels8 = profileLevels5;
+                            i = 1;
+                            if (mime2.equalsIgnoreCase(MediaFormat.MIMETYPE_VIDEO_VP9)) {
+                                int maxBlocks4 = 36864;
+                                int length3 = profileLevels8.length;
+                                maxBps = 200000;
+                                errors = 4;
+                                int maxDim2 = 512;
+                                long maxBlocksPerSecond5 = 829440;
+                                int i17 = 0;
+                                while (i17 < length3) {
+                                    CodecProfileLevel profileLevel5 = profileLevels8[i17];
+                                    int BR10 = 0;
+                                    int D = 0;
+                                    switch (profileLevel5.level) {
+                                        case 1:
+                                            SR = 829440;
+                                            FS3 = 36864;
+                                            BR10 = 200;
+                                            D = 512;
+                                            FS4 = FS3;
+                                            SR2 = SR;
+                                            break;
+                                        case 2:
+                                            SR = 2764800;
+                                            FS3 = 73728;
+                                            BR10 = 800;
+                                            D = 768;
+                                            FS4 = FS3;
+                                            SR2 = SR;
+                                            break;
+                                        case 4:
+                                            SR = 4608000;
+                                            FS3 = 122880;
+                                            BR10 = 1800;
+                                            D = 960;
+                                            FS4 = FS3;
+                                            SR2 = SR;
+                                            break;
+                                        case 8:
+                                            SR = 9216000;
+                                            FS3 = 245760;
+                                            BR10 = 3600;
+                                            D = 1344;
+                                            FS4 = FS3;
+                                            SR2 = SR;
+                                            break;
+                                        case 16:
+                                            SR = 20736000;
+                                            FS3 = 552960;
+                                            BR10 = 7200;
+                                            D = 2048;
+                                            FS4 = FS3;
+                                            SR2 = SR;
+                                            break;
+                                        case 32:
+                                            SR = 36864000;
+                                            FS3 = SurfaceControl.FX_SURFACE_MASK;
+                                            BR10 = 12000;
+                                            D = 2752;
+                                            FS4 = FS3;
+                                            SR2 = SR;
+                                            break;
+                                        case 64:
+                                            SR = 83558400;
+                                            FS3 = 2228224;
+                                            BR10 = 18000;
+                                            D = 4160;
+                                            FS4 = FS3;
+                                            SR2 = SR;
+                                            break;
+                                        case 128:
+                                            SR = 160432128;
+                                            FS3 = 2228224;
+                                            BR10 = 30000;
+                                            D = 4160;
+                                            FS4 = FS3;
+                                            SR2 = SR;
+                                            break;
+                                        case 256:
+                                            SR = 311951360;
+                                            FS3 = 8912896;
+                                            BR10 = MediaPlayer.ProvisioningThread.TIMEOUT_MS;
+                                            D = 8384;
+                                            FS4 = FS3;
+                                            SR2 = SR;
+                                            break;
+                                        case 512:
+                                            SR = 588251136;
+                                            FS3 = 8912896;
+                                            BR10 = AutofillManager.MAX_TEMP_AUGMENTED_SERVICE_DURATION_MS;
+                                            D = 8384;
+                                            FS4 = FS3;
+                                            SR2 = SR;
+                                            break;
+                                        case 1024:
+                                            SR = 1176502272;
+                                            FS3 = 8912896;
+                                            BR10 = 180000;
+                                            D = 8384;
+                                            FS4 = FS3;
+                                            SR2 = SR;
+                                            break;
+                                        case 2048:
+                                            SR = 1176502272;
+                                            FS3 = 35651584;
+                                            BR10 = 180000;
+                                            D = 16832;
+                                            FS4 = FS3;
+                                            SR2 = SR;
+                                            break;
+                                        case 4096:
+                                            SR = 2353004544L;
+                                            FS3 = 35651584;
+                                            BR10 = 240000;
+                                            D = 16832;
+                                            FS4 = FS3;
+                                            SR2 = SR;
+                                            break;
+                                        case 8192:
+                                            SR = 4706009088L;
+                                            FS3 = 35651584;
+                                            BR10 = 480000;
+                                            D = 16832;
+                                            FS4 = FS3;
+                                            SR2 = SR;
+                                            break;
+                                        default:
+                                            Log.m64w(TAG, "Unrecognized level " + profileLevel5.level + " for " + mime2);
+                                            errors |= 1;
+                                            SR2 = 0L;
+                                            FS4 = 0;
+                                            break;
+                                    }
+                                    int i18 = length3;
+                                    int i19 = profileLevel5.profile;
+                                    if (i19 != 4 && i19 != 8 && i19 != 4096 && i19 != 8192 && i19 != 16384 && i19 != 32768) {
+                                        switch (i19) {
+                                            case 1:
+                                            case 2:
+                                                break;
+                                            default:
+                                                StringBuilder sb5 = new StringBuilder();
+                                                profileLevels2 = profileLevels8;
+                                                sb5.append("Unrecognized profile ");
+                                                sb5.append(profileLevel5.profile);
+                                                sb5.append(" for ");
+                                                sb5.append(mime2);
+                                                Log.m64w(TAG, sb5.toString());
+                                                errors |= 1;
+                                                continue;
+                                                errors &= -5;
+                                                maxBlocksPerSecond5 = Math.max(SR2, maxBlocksPerSecond5);
+                                                maxBlocks4 = Math.max(FS4, maxBlocks4);
+                                                maxBps = Math.max(BR10 * 1000, maxBps);
+                                                maxDim2 = Math.max(D, maxDim2);
+                                                i17++;
+                                                length3 = i18;
+                                                profileLevels8 = profileLevels2;
+                                        }
+                                    }
+                                    profileLevels2 = profileLevels8;
+                                    errors &= -5;
+                                    maxBlocksPerSecond5 = Math.max(SR2, maxBlocksPerSecond5);
+                                    maxBlocks4 = Math.max(FS4, maxBlocks4);
+                                    maxBps = Math.max(BR10 * 1000, maxBps);
+                                    maxDim2 = Math.max(D, maxDim2);
+                                    i17++;
+                                    length3 = i18;
+                                    profileLevels8 = profileLevels2;
+                                }
+                                int maxLengthInBlocks2 = Utils.divUp(maxDim2, 8);
+                                applyMacroBlockLimits(maxLengthInBlocks2, maxLengthInBlocks2, Utils.divUp(maxBlocks4, 64), Utils.divUp(maxBlocksPerSecond5, 64L), 8, 8, 1, 1);
+                            } else if (mime2.equalsIgnoreCase(MediaFormat.MIMETYPE_VIDEO_HEVC)) {
+                                long maxBlocksPerSecond6 = 576 * 15;
+                                long maxBlocksPerSecond7 = maxBlocksPerSecond6;
+                                int maxBlocks5 = 576;
+                                maxBps = 128000;
+                                errors = 4;
+                                for (CodecProfileLevel profileLevel6 : profileLevels8) {
+                                    double FR8 = 0.0d;
+                                    int FS11 = 0;
+                                    int BR11 = 0;
+                                    switch (profileLevel6.level) {
+                                        case 1:
+                                        case 2:
+                                            FR8 = 15.0d;
+                                            FS11 = 36864;
+                                            BR11 = 128;
+                                            break;
+                                        case 4:
+                                        case 8:
+                                            FR8 = 30.0d;
+                                            FS11 = 122880;
+                                            BR11 = 1500;
+                                            break;
+                                        case 16:
+                                        case 32:
+                                            FR8 = 30.0d;
+                                            FS11 = 245760;
+                                            BR11 = PathInterpolatorCompat.MAX_NUM_POINTS;
+                                            break;
+                                        case 64:
+                                        case 128:
+                                            FR8 = 30.0d;
+                                            FS11 = 552960;
+                                            BR11 = 6000;
+                                            break;
+                                        case 256:
+                                        case 512:
+                                            FR8 = 33.75d;
+                                            FS11 = SurfaceControl.FX_SURFACE_MASK;
+                                            BR11 = 10000;
+                                            break;
+                                        case 1024:
+                                            FR8 = 30.0d;
+                                            FS11 = 2228224;
+                                            BR11 = 12000;
+                                            break;
+                                        case 2048:
+                                            FR8 = 30.0d;
+                                            FS11 = 2228224;
+                                            BR11 = 30000;
+                                            break;
+                                        case 4096:
+                                            FR8 = 60.0d;
+                                            FS11 = 2228224;
+                                            BR11 = 20000;
+                                            break;
+                                        case 8192:
+                                            FR8 = 60.0d;
+                                            FS11 = 2228224;
+                                            BR11 = 50000;
+                                            break;
+                                        case 16384:
+                                            FR8 = 30.0d;
+                                            FS11 = 8912896;
+                                            BR11 = 25000;
+                                            break;
+                                        case 32768:
+                                            FR8 = 30.0d;
+                                            FS11 = 8912896;
+                                            BR11 = UserHandle.PER_USER_RANGE;
+                                            break;
+                                        case 65536:
+                                            FR8 = 60.0d;
+                                            FS11 = 8912896;
+                                            BR11 = HealthKeys.BASE_PACKAGE;
+                                            break;
+                                        case 131072:
+                                            FR8 = 60.0d;
+                                            FS11 = 8912896;
+                                            BR11 = Protocol.BASE_WIFI_SCANNER_SERVICE;
+                                            break;
+                                        case 262144:
+                                            FR8 = 120.0d;
+                                            FS11 = 8912896;
+                                            BR11 = MediaPlayer.ProvisioningThread.TIMEOUT_MS;
+                                            break;
+                                        case 524288:
+                                            FR8 = 120.0d;
+                                            FS11 = 8912896;
+                                            BR11 = 240000;
+                                            break;
+                                        case 1048576:
+                                            FR8 = 30.0d;
+                                            FS11 = 35651584;
+                                            BR11 = MediaPlayer.ProvisioningThread.TIMEOUT_MS;
+                                            break;
+                                        case 2097152:
+                                            FR8 = 30.0d;
+                                            FS11 = 35651584;
+                                            BR11 = 240000;
+                                            break;
+                                        case 4194304:
+                                            FR8 = 60.0d;
+                                            FS11 = 35651584;
+                                            BR11 = AutofillManager.MAX_TEMP_AUGMENTED_SERVICE_DURATION_MS;
+                                            break;
+                                        case 8388608:
+                                            FR8 = 60.0d;
+                                            FS11 = 35651584;
+                                            BR11 = 480000;
+                                            break;
+                                        case 16777216:
+                                            FR8 = 120.0d;
+                                            FS11 = 35651584;
+                                            BR11 = 240000;
+                                            break;
+                                        case 33554432:
+                                            FR8 = 120.0d;
+                                            FS11 = 35651584;
+                                            BR11 = 800000;
+                                            break;
+                                        default:
+                                            Log.m64w(TAG, "Unrecognized level " + profileLevel6.level + " for " + mime2);
+                                            errors |= 1;
+                                            break;
+                                    }
+                                    int i20 = profileLevel6.profile;
+                                    if (i20 != 4 && i20 != 4096 && i20 != 8192) {
+                                        switch (i20) {
+                                            case 1:
+                                            case 2:
+                                                break;
+                                            default:
+                                                Log.m64w(TAG, "Unrecognized profile " + profileLevel6.profile + " for " + mime2);
+                                                errors |= 1;
+                                                continue;
+                                        }
+                                    }
+                                    errors &= -5;
+                                    maxBlocksPerSecond7 = Math.max((int) (FS2 * FR8), maxBlocksPerSecond7);
+                                    maxBlocks5 = Math.max(FS11 >> 6, maxBlocks5);
+                                    maxBps = Math.max(BR11 * 1000, maxBps);
+                                }
+                                int maxLengthInBlocks3 = (int) Math.sqrt(maxBlocks5 * 8);
+                                applyMacroBlockLimits(maxLengthInBlocks3, maxLengthInBlocks3, maxBlocks5, maxBlocksPerSecond7, 8, 8, 1, 1);
+                            } else {
+                                CodecProfileLevel[] profileLevels9 = profileLevels8;
+                                if (mime2.equalsIgnoreCase(MediaFormat.MIMETYPE_VIDEO_AV1)) {
+                                    int maxBlocks6 = 36864;
+                                    int length4 = profileLevels9.length;
+                                    maxBps = 200000;
+                                    errors = 4;
+                                    int maxDim3 = 512;
+                                    long maxBlocksPerSecond8 = 829440;
+                                    int i21 = 0;
+                                    while (i21 < length4) {
+                                        CodecProfileLevel profileLevel7 = profileLevels9[i21];
+                                        long SR3 = 0;
+                                        int BR12 = 0;
+                                        int D2 = 0;
+                                        switch (profileLevel7.level) {
+                                            case 1:
+                                                SR3 = 5529600;
+                                                FS = Protocol.BASE_WIFI_MONITOR;
+                                                BR12 = 1500;
+                                                D2 = 2048;
+                                                i2 = length4;
+                                                break;
+                                            case 2:
+                                            case 4:
+                                            case 8:
+                                                SR3 = 10454400;
+                                                FS = 278784;
+                                                BR12 = PathInterpolatorCompat.MAX_NUM_POINTS;
+                                                D2 = 2816;
+                                                i2 = length4;
+                                                break;
+                                            case 16:
+                                                SR3 = 24969600;
+                                                FS = 665856;
+                                                BR12 = 6000;
+                                                D2 = 4352;
+                                                i2 = length4;
+                                                break;
+                                            case 32:
+                                            case 64:
+                                            case 128:
+                                                SR3 = 39938400;
+                                                FS = 1065024;
+                                                BR12 = 10000;
+                                                D2 = 5504;
+                                                i2 = length4;
+                                                break;
+                                            case 256:
+                                                SR3 = 77856768;
+                                                FS = 2359296;
+                                                BR12 = 12000;
+                                                D2 = GLES30.GL_COLOR;
+                                                i2 = length4;
+                                                break;
+                                            case 512:
+                                            case 1024:
+                                            case 2048:
+                                                SR3 = 155713536;
+                                                FS = 2359296;
+                                                BR12 = 20000;
+                                                D2 = GLES30.GL_COLOR;
+                                                i2 = length4;
+                                                break;
+                                            case 4096:
+                                                SR3 = 273715200;
+                                                FS = 8912896;
+                                                BR12 = 30000;
+                                                D2 = 8192;
+                                                i2 = length4;
+                                                break;
+                                            case 8192:
+                                                SR3 = 547430400;
+                                                FS = 8912896;
+                                                BR12 = HealthKeys.BASE_PACKAGE;
+                                                D2 = 8192;
+                                                i2 = length4;
+                                                break;
+                                            case 16384:
+                                                SR3 = 1094860800;
+                                                FS = 8912896;
+                                                BR12 = MediaPlayer.ProvisioningThread.TIMEOUT_MS;
+                                                D2 = 8192;
+                                                i2 = length4;
+                                                break;
+                                            case 32768:
+                                                SR3 = 1176502272;
+                                                FS = 8912896;
+                                                BR12 = MediaPlayer.ProvisioningThread.TIMEOUT_MS;
+                                                D2 = 8192;
+                                                i2 = length4;
+                                                break;
+                                            case 65536:
+                                                SR3 = 1176502272;
+                                                FS = 35651584;
+                                                BR12 = MediaPlayer.ProvisioningThread.TIMEOUT_MS;
+                                                D2 = 16384;
+                                                i2 = length4;
+                                                break;
+                                            case 131072:
+                                                SR3 = 2189721600L;
+                                                FS = 35651584;
+                                                BR12 = UserHandle.PER_USER_RANGE;
+                                                D2 = 16384;
+                                                i2 = length4;
+                                                break;
+                                            case 262144:
+                                                SR3 = 4379443200L;
+                                                FS = 35651584;
+                                                BR12 = Protocol.BASE_WIFI_SCANNER_SERVICE;
+                                                D2 = 16384;
+                                                i2 = length4;
+                                                break;
+                                            case 524288:
+                                                SR3 = 4706009088L;
+                                                FS = 35651584;
+                                                BR12 = Protocol.BASE_WIFI_SCANNER_SERVICE;
+                                                D2 = 16384;
+                                                i2 = length4;
+                                                break;
+                                            default:
+                                                StringBuilder sb6 = new StringBuilder();
+                                                i2 = length4;
+                                                sb6.append("Unrecognized level ");
+                                                sb6.append(profileLevel7.level);
+                                                sb6.append(" for ");
+                                                sb6.append(mime2);
+                                                Log.m64w(TAG, sb6.toString());
+                                                errors |= 1;
+                                                FS = 0;
+                                                break;
+                                        }
+                                        int i22 = profileLevel7.profile;
+                                        if (i22 != 4096 && i22 != 8192) {
+                                            switch (i22) {
+                                                case 1:
+                                                case 2:
+                                                    break;
+                                                default:
+                                                    StringBuilder sb7 = new StringBuilder();
+                                                    profileLevels = profileLevels9;
+                                                    sb7.append("Unrecognized profile ");
+                                                    sb7.append(profileLevel7.profile);
+                                                    sb7.append(" for ");
+                                                    sb7.append(mime2);
+                                                    Log.m64w(TAG, sb7.toString());
+                                                    errors |= 1;
+                                                    continue;
+                                                    errors &= -5;
+                                                    maxBlocksPerSecond8 = Math.max(SR3, maxBlocksPerSecond8);
+                                                    maxBlocks6 = Math.max(FS, maxBlocks6);
+                                                    maxBps = Math.max(BR12 * 1000, maxBps);
+                                                    maxDim3 = Math.max(D2, maxDim3);
+                                                    i21++;
+                                                    length4 = i2;
+                                                    profileLevels9 = profileLevels;
+                                            }
+                                        }
+                                        profileLevels = profileLevels9;
+                                        errors &= -5;
+                                        maxBlocksPerSecond8 = Math.max(SR3, maxBlocksPerSecond8);
+                                        maxBlocks6 = Math.max(FS, maxBlocks6);
+                                        maxBps = Math.max(BR12 * 1000, maxBps);
+                                        maxDim3 = Math.max(D2, maxDim3);
+                                        i21++;
+                                        length4 = i2;
+                                        profileLevels9 = profileLevels;
+                                    }
+                                    int maxLengthInBlocks4 = Utils.divUp(maxDim3, 8);
+                                    applyMacroBlockLimits(maxLengthInBlocks4, maxLengthInBlocks4, Utils.divUp(maxBlocks6, 64), Utils.divUp(maxBlocksPerSecond8, 64L), 8, 8, 1, 1);
+                                } else {
+                                    Log.m64w(TAG, "Unsupported mime " + mime2);
+                                    errors = 4 | 2;
+                                    maxBps = 64000;
+                                }
+                            }
+                        }
+                    }
                 }
-            L_0x016c:
-                java.lang.String r9 = "VideoCapabilities"
-                java.lang.StringBuilder r11 = new java.lang.StringBuilder
-                r11.<init>()
-                r26 = r13
-                java.lang.String r13 = "Unrecognized profile "
-                r11.append(r13)
-                int r13 = r0.profile
-                r11.append(r13)
-                java.lang.String r13 = " for "
-                r11.append(r13)
-                r11.append(r15)
-                java.lang.String r11 = r11.toString()
-                android.util.Log.w((java.lang.String) r9, (java.lang.String) r11)
-                r17 = r17 | 1
-                int r6 = r6 * 1000
-                goto L_0x01cb
-            L_0x0193:
-                r26 = r13
-                goto L_0x01c9
-            L_0x0196:
-                r26 = r13
-                goto L_0x01a1
-            L_0x0199:
-                r26 = r13
-                goto L_0x01a4
-            L_0x019c:
-                r26 = r13
-                int r6 = r6 * 3000
-                goto L_0x01cb
-            L_0x01a1:
-                int r6 = r6 * 1250
-                goto L_0x01cb
-            L_0x01a4:
-                java.lang.String r9 = "VideoCapabilities"
-                java.lang.StringBuilder r11 = new java.lang.StringBuilder
-                r11.<init>()
-                java.lang.String r13 = "Unsupported profile "
-                r11.append(r13)
-                int r13 = r0.profile
-                r11.append(r13)
-                java.lang.String r13 = " for "
-                r11.append(r13)
-                r11.append(r15)
-                java.lang.String r11 = r11.toString()
-                android.util.Log.w((java.lang.String) r9, (java.lang.String) r11)
-                r17 = r17 | 2
-                r9 = 0
-                r22 = r9
-            L_0x01c9:
-                int r6 = r6 * 1000
-            L_0x01cb:
-                if (r22 == 0) goto L_0x01d1
-                r9 = r17 & -5
-                r17 = r9
-            L_0x01d1:
-                long r11 = (long) r7
-                long r2 = java.lang.Math.max(r11, r2)
-                int r4 = java.lang.Math.max(r8, r4)
-                int r5 = java.lang.Math.max(r6, r5)
-                r9 = r25
-                int r1 = java.lang.Math.max(r1, r9)
-                int r10 = r10 + 1
-                r13 = r26
-                r9 = 4
-                r12 = r58
-                goto L_0x0030
-            L_0x01ed:
-                int r0 = r4 * 8
-                double r6 = (double) r0
-                double r6 = java.lang.Math.sqrt(r6)
-                int r10 = (int) r6
-                r6 = 16
-                r7 = 16
-                r8 = 1
-                r9 = 1
-                r0 = r58
-                r11 = r1
-                r1 = r10
-                r12 = r2
-                r2 = r10
-                r3 = r4
-                r16 = r4
-                r18 = r5
-                r4 = r12
-                r0.applyMacroBlockLimits(r1, r2, r3, r4, r6, r7, r8, r9)
-                r32 = r11
-                r55 = r14
-                r20 = 1
-                r56 = r12
-                r13 = r15
-                r15 = r16
-                r12 = r18
-            L_0x0218:
-                r18 = r56
-                goto L_0x0e12
-            L_0x021c:
-                java.lang.String r5 = "video/mpeg2"
-                boolean r5 = r15.equalsIgnoreCase(r5)
-                if (r5 == 0) goto L_0x03f6
-                r5 = 11
-                r6 = 9
-                r7 = 15
-                r2 = 99
-                r0 = 1485(0x5cd, double:7.337E-321)
-                r3 = 64000(0xfa00, float:8.9683E-41)
-                int r8 = r14.length
-                r17 = r4
-                r12 = r5
-                r9 = r6
-                r6 = r7
-                r10 = 0
-                r4 = r0
-                r7 = r2
-            L_0x023b:
-                if (r10 >= r8) goto L_0x03b5
-                r0 = r14[r10]
-                r1 = 0
-                r2 = 0
-                r16 = 0
-                r18 = 0
-                r19 = 0
-                r20 = 0
-                r21 = 1
-                int r11 = r0.profile
-                switch(r11) {
-                    case 0: goto L_0x0332;
-                    case 1: goto L_0x02b3;
-                    case 2: goto L_0x028a;
-                    case 3: goto L_0x028a;
-                    case 4: goto L_0x028a;
-                    case 5: goto L_0x028a;
-                    default: goto L_0x0250;
+                this.mBitrateRange = Range.create(Integer.valueOf(i), Integer.valueOf(maxBps));
+                this.mParent.mError |= errors;
+            } else {
+                int maxBps7 = 64000;
+                int H8 = profileLevels5.length;
+                errors = 4;
+                int maxWidth3 = 11;
+                int maxHeight6 = 9;
+                int maxRate5 = 15;
+                int i23 = 0;
+                long maxBlocksPerSecond9 = 1485;
+                int maxBlocks7 = 99;
+                while (i23 < H8) {
+                    CodecProfileLevel profileLevel8 = profileLevels5[i23];
+                    boolean supported3 = true;
+                    switch (profileLevel8.profile) {
+                        case 0:
+                            MBPS3 = 0;
+                            FS7 = 0;
+                            int MBPS10 = profileLevel8.level;
+                            if (MBPS10 != 1) {
+                                Log.m64w(TAG, "Unrecognized profile/level " + profileLevel8.profile + "/" + profileLevel8.level + " for " + mime);
+                                errors |= 1;
+                                i4 = H8;
+                                z = z2;
+                                BR4 = 0;
+                                FR5 = 0;
+                                W4 = 0;
+                                H4 = 0;
+                                MBPS4 = MBPS3;
+                                FS8 = FS7;
+                                if (!supported3) {
+                                    errors &= -5;
+                                }
+                                maxBlocksPerSecond9 = Math.max(MBPS4, maxBlocksPerSecond9);
+                                maxBlocks7 = Math.max(FS8, maxBlocks7);
+                                maxBps7 = Math.max(BR4 * 1000, maxBps7);
+                                maxWidth3 = Math.max(W4, maxWidth3);
+                                maxHeight6 = Math.max(H4, maxHeight6);
+                                maxRate5 = Math.max(FR5, maxRate5);
+                                i23++;
+                                H8 = i4;
+                                z2 = z;
+                                profileLevels5 = profileLevels5;
+                                mime = mime;
+                            } else {
+                                FR4 = 30;
+                                W3 = 45;
+                                H3 = 36;
+                                MBPS4 = 40500;
+                                FS8 = 1620;
+                                BR3 = 15000;
+                                i4 = H8;
+                                z = z2;
+                                BR4 = BR3;
+                                FR5 = FR4;
+                                W4 = W3;
+                                H4 = H3;
+                                if (!supported3) {
+                                }
+                                maxBlocksPerSecond9 = Math.max(MBPS4, maxBlocksPerSecond9);
+                                maxBlocks7 = Math.max(FS8, maxBlocks7);
+                                maxBps7 = Math.max(BR4 * 1000, maxBps7);
+                                maxWidth3 = Math.max(W4, maxWidth3);
+                                maxHeight6 = Math.max(H4, maxHeight6);
+                                maxRate5 = Math.max(FR5, maxRate5);
+                                i23++;
+                                H8 = i4;
+                                z2 = z;
+                                profileLevels5 = profileLevels5;
+                                mime = mime;
+                            }
+                        case 1:
+                            MBPS3 = 0;
+                            FS7 = 0;
+                            int MBPS11 = profileLevel8.level;
+                            switch (MBPS11) {
+                                case 0:
+                                    FR4 = 30;
+                                    W3 = 22;
+                                    H3 = 18;
+                                    MBPS4 = 11880;
+                                    FS8 = 396;
+                                    BR3 = 4000;
+                                    i4 = H8;
+                                    z = z2;
+                                    BR4 = BR3;
+                                    FR5 = FR4;
+                                    W4 = W3;
+                                    H4 = H3;
+                                    if (!supported3) {
+                                    }
+                                    maxBlocksPerSecond9 = Math.max(MBPS4, maxBlocksPerSecond9);
+                                    maxBlocks7 = Math.max(FS8, maxBlocks7);
+                                    maxBps7 = Math.max(BR4 * 1000, maxBps7);
+                                    maxWidth3 = Math.max(W4, maxWidth3);
+                                    maxHeight6 = Math.max(H4, maxHeight6);
+                                    maxRate5 = Math.max(FR5, maxRate5);
+                                    i23++;
+                                    H8 = i4;
+                                    z2 = z;
+                                    profileLevels5 = profileLevels5;
+                                    mime = mime;
+                                    break;
+                                case 1:
+                                    FR4 = 30;
+                                    W3 = 45;
+                                    H3 = 36;
+                                    MBPS4 = 40500;
+                                    FS8 = 1620;
+                                    BR3 = 15000;
+                                    i4 = H8;
+                                    z = z2;
+                                    BR4 = BR3;
+                                    FR5 = FR4;
+                                    W4 = W3;
+                                    H4 = H3;
+                                    if (!supported3) {
+                                    }
+                                    maxBlocksPerSecond9 = Math.max(MBPS4, maxBlocksPerSecond9);
+                                    maxBlocks7 = Math.max(FS8, maxBlocks7);
+                                    maxBps7 = Math.max(BR4 * 1000, maxBps7);
+                                    maxWidth3 = Math.max(W4, maxWidth3);
+                                    maxHeight6 = Math.max(H4, maxHeight6);
+                                    maxRate5 = Math.max(FR5, maxRate5);
+                                    i23++;
+                                    H8 = i4;
+                                    z2 = z;
+                                    profileLevels5 = profileLevels5;
+                                    mime = mime;
+                                    break;
+                                case 2:
+                                    FR4 = 60;
+                                    W3 = 90;
+                                    H3 = 68;
+                                    MBPS4 = 183600;
+                                    FS8 = 6120;
+                                    BR3 = MediaPlayer.ProvisioningThread.TIMEOUT_MS;
+                                    i4 = H8;
+                                    z = z2;
+                                    BR4 = BR3;
+                                    FR5 = FR4;
+                                    W4 = W3;
+                                    H4 = H3;
+                                    if (!supported3) {
+                                    }
+                                    maxBlocksPerSecond9 = Math.max(MBPS4, maxBlocksPerSecond9);
+                                    maxBlocks7 = Math.max(FS8, maxBlocks7);
+                                    maxBps7 = Math.max(BR4 * 1000, maxBps7);
+                                    maxWidth3 = Math.max(W4, maxWidth3);
+                                    maxHeight6 = Math.max(H4, maxHeight6);
+                                    maxRate5 = Math.max(FR5, maxRate5);
+                                    i23++;
+                                    H8 = i4;
+                                    z2 = z;
+                                    profileLevels5 = profileLevels5;
+                                    mime = mime;
+                                    break;
+                                case 3:
+                                    FR4 = 60;
+                                    W3 = 120;
+                                    H3 = 68;
+                                    MBPS4 = 244800;
+                                    FS8 = 8160;
+                                    BR3 = 80000;
+                                    i4 = H8;
+                                    z = z2;
+                                    BR4 = BR3;
+                                    FR5 = FR4;
+                                    W4 = W3;
+                                    H4 = H3;
+                                    if (!supported3) {
+                                    }
+                                    maxBlocksPerSecond9 = Math.max(MBPS4, maxBlocksPerSecond9);
+                                    maxBlocks7 = Math.max(FS8, maxBlocks7);
+                                    maxBps7 = Math.max(BR4 * 1000, maxBps7);
+                                    maxWidth3 = Math.max(W4, maxWidth3);
+                                    maxHeight6 = Math.max(H4, maxHeight6);
+                                    maxRate5 = Math.max(FR5, maxRate5);
+                                    i23++;
+                                    H8 = i4;
+                                    z2 = z;
+                                    profileLevels5 = profileLevels5;
+                                    mime = mime;
+                                    break;
+                                case 4:
+                                    FR4 = 60;
+                                    W3 = 120;
+                                    H3 = 68;
+                                    MBPS4 = 489600;
+                                    FS8 = 8160;
+                                    BR3 = 80000;
+                                    i4 = H8;
+                                    z = z2;
+                                    BR4 = BR3;
+                                    FR5 = FR4;
+                                    W4 = W3;
+                                    H4 = H3;
+                                    if (!supported3) {
+                                    }
+                                    maxBlocksPerSecond9 = Math.max(MBPS4, maxBlocksPerSecond9);
+                                    maxBlocks7 = Math.max(FS8, maxBlocks7);
+                                    maxBps7 = Math.max(BR4 * 1000, maxBps7);
+                                    maxWidth3 = Math.max(W4, maxWidth3);
+                                    maxHeight6 = Math.max(H4, maxHeight6);
+                                    maxRate5 = Math.max(FR5, maxRate5);
+                                    i23++;
+                                    H8 = i4;
+                                    z2 = z;
+                                    profileLevels5 = profileLevels5;
+                                    mime = mime;
+                                    break;
+                                default:
+                                    Log.m64w(TAG, "Unrecognized profile/level " + profileLevel8.profile + "/" + profileLevel8.level + " for " + mime);
+                                    errors |= 1;
+                                    i4 = H8;
+                                    z = z2;
+                                    BR4 = 0;
+                                    FR5 = 0;
+                                    W4 = 0;
+                                    H4 = 0;
+                                    MBPS4 = MBPS3;
+                                    FS8 = FS7;
+                                    if (!supported3) {
+                                    }
+                                    maxBlocksPerSecond9 = Math.max(MBPS4, maxBlocksPerSecond9);
+                                    maxBlocks7 = Math.max(FS8, maxBlocks7);
+                                    maxBps7 = Math.max(BR4 * 1000, maxBps7);
+                                    maxWidth3 = Math.max(W4, maxWidth3);
+                                    maxHeight6 = Math.max(H4, maxHeight6);
+                                    maxRate5 = Math.max(FR5, maxRate5);
+                                    i23++;
+                                    H8 = i4;
+                                    z2 = z;
+                                    profileLevels5 = profileLevels5;
+                                    mime = mime;
+                                    break;
+                            }
+                        case 2:
+                        case 3:
+                        case 4:
+                        case 5:
+                            MBPS3 = 0;
+                            StringBuilder sb8 = new StringBuilder();
+                            FS7 = 0;
+                            sb8.append("Unsupported profile ");
+                            sb8.append(profileLevel8.profile);
+                            sb8.append(" for ");
+                            sb8.append(mime);
+                            Log.m68i(TAG, sb8.toString());
+                            errors |= 2;
+                            supported3 = false;
+                            i4 = H8;
+                            z = z2;
+                            BR4 = 0;
+                            FR5 = 0;
+                            W4 = 0;
+                            H4 = 0;
+                            MBPS4 = MBPS3;
+                            FS8 = FS7;
+                            if (!supported3) {
+                            }
+                            maxBlocksPerSecond9 = Math.max(MBPS4, maxBlocksPerSecond9);
+                            maxBlocks7 = Math.max(FS8, maxBlocks7);
+                            maxBps7 = Math.max(BR4 * 1000, maxBps7);
+                            maxWidth3 = Math.max(W4, maxWidth3);
+                            maxHeight6 = Math.max(H4, maxHeight6);
+                            maxRate5 = Math.max(FR5, maxRate5);
+                            i23++;
+                            H8 = i4;
+                            z2 = z;
+                            profileLevels5 = profileLevels5;
+                            mime = mime;
+                            break;
+                        default:
+                            MBPS3 = 0;
+                            FS7 = 0;
+                            Log.m64w(TAG, "Unrecognized profile " + profileLevel8.profile + " for " + mime);
+                            errors |= 1;
+                            i4 = H8;
+                            z = z2;
+                            BR4 = 0;
+                            FR5 = 0;
+                            W4 = 0;
+                            H4 = 0;
+                            MBPS4 = MBPS3;
+                            FS8 = FS7;
+                            if (!supported3) {
+                            }
+                            maxBlocksPerSecond9 = Math.max(MBPS4, maxBlocksPerSecond9);
+                            maxBlocks7 = Math.max(FS8, maxBlocks7);
+                            maxBps7 = Math.max(BR4 * 1000, maxBps7);
+                            maxWidth3 = Math.max(W4, maxWidth3);
+                            maxHeight6 = Math.max(H4, maxHeight6);
+                            maxRate5 = Math.max(FR5, maxRate5);
+                            i23++;
+                            H8 = i4;
+                            z2 = z;
+                            profileLevels5 = profileLevels5;
+                            mime = mime;
+                            break;
+                    }
                 }
-            L_0x0250:
-                r28 = r1
-                r29 = r2
-                java.lang.String r1 = "VideoCapabilities"
-                java.lang.StringBuilder r2 = new java.lang.StringBuilder
-                r2.<init>()
-                java.lang.String r11 = "Unrecognized profile "
-                r2.append(r11)
-                int r11 = r0.profile
-                r2.append(r11)
-                java.lang.String r11 = " for "
-                r2.append(r11)
-                r2.append(r15)
-                java.lang.String r2 = r2.toString()
-                android.util.Log.w((java.lang.String) r1, (java.lang.String) r2)
-                r17 = r17 | 1
-            L_0x0276:
-                r30 = r0
-                r31 = r8
-                r32 = r13
-                r11 = r16
-                r13 = r18
-                r0 = r19
-                r8 = r20
-                r1 = r28
-                r2 = r29
-                goto L_0x0384
-            L_0x028a:
-                java.lang.String r11 = "VideoCapabilities"
-                r28 = r1
-                java.lang.StringBuilder r1 = new java.lang.StringBuilder
-                r1.<init>()
-                r29 = r2
-                java.lang.String r2 = "Unsupported profile "
-                r1.append(r2)
-                int r2 = r0.profile
-                r1.append(r2)
-                java.lang.String r2 = " for "
-                r1.append(r2)
-                r1.append(r15)
-                java.lang.String r1 = r1.toString()
-                android.util.Log.i(r11, r1)
-                r17 = r17 | 2
-                r21 = 0
-                goto L_0x0276
-            L_0x02b3:
-                r28 = r1
-                r29 = r2
-                int r1 = r0.level
-                switch(r1) {
-                    case 0: goto L_0x0325;
-                    case 1: goto L_0x0317;
-                    case 2: goto L_0x0308;
-                    case 3: goto L_0x02f9;
-                    case 4: goto L_0x02e9;
-                    default: goto L_0x02bc;
-                }
-            L_0x02bc:
-                java.lang.String r1 = "VideoCapabilities"
-                java.lang.StringBuilder r2 = new java.lang.StringBuilder
-                r2.<init>()
-                java.lang.String r11 = "Unrecognized profile/level "
-                r2.append(r11)
-                int r11 = r0.profile
-                r2.append(r11)
-                java.lang.String r11 = "/"
-                r2.append(r11)
-                int r11 = r0.level
-                r2.append(r11)
-                java.lang.String r11 = " for "
-                r2.append(r11)
-                r2.append(r15)
-                java.lang.String r2 = r2.toString()
-                android.util.Log.w((java.lang.String) r1, (java.lang.String) r2)
-                r17 = r17 | 1
-                goto L_0x0276
-            L_0x02e9:
-                r18 = 60
-                r19 = 120(0x78, float:1.68E-43)
-                r20 = 68
-                r1 = 489600(0x77880, float:6.86076E-40)
-                r2 = 8160(0x1fe0, float:1.1435E-41)
-                r16 = 80000(0x13880, float:1.12104E-40)
-                goto L_0x0376
-            L_0x02f9:
-                r18 = 60
-                r19 = 120(0x78, float:1.68E-43)
-                r20 = 68
-                r1 = 244800(0x3bc40, float:3.43038E-40)
-                r2 = 8160(0x1fe0, float:1.1435E-41)
-                r16 = 80000(0x13880, float:1.12104E-40)
-                goto L_0x0376
-            L_0x0308:
-                r18 = 60
-                r19 = 90
-                r20 = 68
-                r1 = 183600(0x2cd30, float:2.57278E-40)
-                r2 = 6120(0x17e8, float:8.576E-42)
-                r16 = 60000(0xea60, float:8.4078E-41)
-                goto L_0x0376
-            L_0x0317:
-                r18 = 30
-                r19 = 45
-                r20 = 36
-                r1 = 40500(0x9e34, float:5.6753E-41)
-                r2 = 1620(0x654, float:2.27E-42)
-                r16 = 15000(0x3a98, float:2.102E-41)
-                goto L_0x0376
-            L_0x0325:
-                r18 = 30
-                r19 = 22
-                r20 = 18
-                r1 = 11880(0x2e68, float:1.6647E-41)
-                r2 = 396(0x18c, float:5.55E-43)
-                r16 = 4000(0xfa0, float:5.605E-42)
-                goto L_0x0376
-            L_0x0332:
-                r28 = r1
-                r29 = r2
-                int r1 = r0.level
-                r11 = 1
-                if (r1 == r11) goto L_0x0369
-                java.lang.String r1 = "VideoCapabilities"
-                java.lang.StringBuilder r2 = new java.lang.StringBuilder
-                r2.<init>()
-                java.lang.String r11 = "Unrecognized profile/level "
-                r2.append(r11)
-                int r11 = r0.profile
-                r2.append(r11)
-                java.lang.String r11 = "/"
-                r2.append(r11)
-                int r11 = r0.level
-                r2.append(r11)
-                java.lang.String r11 = " for "
-                r2.append(r11)
-                r2.append(r15)
-                java.lang.String r2 = r2.toString()
-                android.util.Log.w((java.lang.String) r1, (java.lang.String) r2)
-                r17 = r17 | 1
-                goto L_0x0276
-            L_0x0369:
-                r18 = 30
-                r19 = 45
-                r20 = 36
-                r1 = 40500(0x9e34, float:5.6753E-41)
-                r2 = 1620(0x654, float:2.27E-42)
-                r16 = 15000(0x3a98, float:2.102E-41)
-            L_0x0376:
-                r30 = r0
-                r31 = r8
-                r32 = r13
-                r11 = r16
-                r13 = r18
-                r0 = r19
-                r8 = r20
-            L_0x0384:
-                if (r21 == 0) goto L_0x038a
-                r16 = r17 & -5
-                r17 = r16
-            L_0x038a:
-                r33 = r14
-                r34 = r15
-                long r14 = (long) r1
-                long r4 = java.lang.Math.max(r14, r4)
-                int r7 = java.lang.Math.max(r2, r7)
-                int r14 = r11 * 1000
-                int r3 = java.lang.Math.max(r14, r3)
-                int r12 = java.lang.Math.max(r0, r12)
-                int r9 = java.lang.Math.max(r8, r9)
-                int r6 = java.lang.Math.max(r13, r6)
-                int r10 = r10 + 1
-                r8 = r31
-                r13 = r32
-                r14 = r33
-                r15 = r34
-                goto L_0x023b
-            L_0x03b5:
-                r32 = r13
-                r33 = r14
-                r34 = r15
-                r8 = 16
-                r10 = 16
-                r11 = 1
-                r13 = 1
-                r0 = r58
-                r1 = r12
-                r2 = r9
-                r14 = r3
-                r3 = r7
-                r15 = r4
-                r18 = r6
-                r6 = r8
-                r19 = r7
-                r7 = r10
-                r8 = r11
-                r10 = r9
-                r9 = r13
-                r0.applyMacroBlockLimits(r1, r2, r3, r4, r6, r7, r8, r9)
-                r13 = r58
-                android.util.Range<java.lang.Integer> r0 = r13.mFrameRateRange
-                r1 = 12
-                java.lang.Integer r1 = java.lang.Integer.valueOf(r1)
-                java.lang.Integer r2 = java.lang.Integer.valueOf(r18)
-                android.util.Range r0 = r0.intersect(r1, r2)
-                r13.mFrameRateRange = r0
-                r12 = r14
-                r55 = r33
-                r13 = r34
-                r20 = 1
-                r56 = r15
-                r15 = r19
-                goto L_0x0218
-            L_0x03f6:
-                r32 = r13
-                r33 = r14
-                r34 = r15
-                r13 = r58
-                java.lang.String r5 = "video/mp4v-es"
-                r12 = r34
-                boolean r5 = r12.equalsIgnoreCase(r5)
-                if (r5 == 0) goto L_0x069d
-                r5 = 11
-                r7 = 9
-                r8 = 15
-                r2 = 99
-                r0 = 1485(0x5cd, double:7.337E-321)
-                r3 = 64000(0xfa00, float:8.9683E-41)
-                r14 = r33
-                int r9 = r14.length
-                r17 = r4
-                r11 = r5
-                r15 = r7
-                r7 = r8
-                r10 = 0
-                r4 = r0
-                r8 = r2
-            L_0x0421:
-                if (r10 >= r9) goto L_0x0662
-                r0 = r14[r10]
-                r1 = 0
-                r2 = 0
-                r18 = 0
-                r19 = 0
-                r20 = 0
-                r21 = 0
-                r22 = 0
-                r23 = 1
-                int r6 = r0.profile
-                switch(r6) {
-                    case 1: goto L_0x054a;
-                    case 2: goto L_0x0520;
-                    case 4: goto L_0x0520;
-                    case 8: goto L_0x0520;
-                    case 16: goto L_0x0520;
-                    case 32: goto L_0x0520;
-                    case 64: goto L_0x0520;
-                    case 128: goto L_0x0520;
-                    case 256: goto L_0x0520;
-                    case 512: goto L_0x0520;
-                    case 1024: goto L_0x0520;
-                    case 2048: goto L_0x0520;
-                    case 4096: goto L_0x0520;
-                    case 8192: goto L_0x0520;
-                    case 16384: goto L_0x0520;
-                    case 32768: goto L_0x0472;
-                    default: goto L_0x0438;
-                }
-            L_0x0438:
-                r35 = r1
-                r36 = r2
-                java.lang.String r1 = "VideoCapabilities"
-                java.lang.StringBuilder r2 = new java.lang.StringBuilder
-                r2.<init>()
-                java.lang.String r6 = "Unrecognized profile "
-                r2.append(r6)
-                int r6 = r0.profile
-                r2.append(r6)
-                java.lang.String r6 = " for "
-                r2.append(r6)
-                r2.append(r12)
-                java.lang.String r2 = r2.toString()
-                android.util.Log.w((java.lang.String) r1, (java.lang.String) r2)
-                r17 = r17 | 1
-            L_0x045e:
-                r37 = r0
-                r38 = r9
-                r39 = r14
-                r6 = r18
-                r14 = r19
-                r0 = r20
-                r9 = r21
-                r1 = r35
-                r2 = r36
-                goto L_0x0615
-            L_0x0472:
-                int r6 = r0.level
-                r35 = r1
-                r1 = 1
-                if (r6 == r1) goto L_0x0510
-                r1 = 4
-                if (r6 == r1) goto L_0x0510
-                r1 = 8
-                if (r6 == r1) goto L_0x0500
-                r1 = 16
-                if (r6 == r1) goto L_0x04f0
-                r1 = 24
-                if (r6 == r1) goto L_0x04e0
-                r1 = 32
-                if (r6 == r1) goto L_0x04d0
-                r1 = 128(0x80, float:1.794E-43)
-                if (r6 == r1) goto L_0x04bf
-                java.lang.String r1 = "VideoCapabilities"
-                java.lang.StringBuilder r6 = new java.lang.StringBuilder
-                r6.<init>()
-                r36 = r2
-                java.lang.String r2 = "Unrecognized profile/level "
-                r6.append(r2)
-                int r2 = r0.profile
-                r6.append(r2)
-                java.lang.String r2 = "/"
-                r6.append(r2)
-                int r2 = r0.level
-                r6.append(r2)
-                java.lang.String r2 = " for "
-                r6.append(r2)
-                r6.append(r12)
-                java.lang.String r2 = r6.toString()
-                android.util.Log.w((java.lang.String) r1, (java.lang.String) r2)
-                r17 = r17 | 1
-                goto L_0x045e
-            L_0x04bf:
-                r36 = r2
-                r19 = 30
-                r20 = 45
-                r21 = 36
-                r1 = 48600(0xbdd8, float:6.8103E-41)
-                r2 = 1620(0x654, float:2.27E-42)
-                r18 = 8000(0x1f40, float:1.121E-41)
-                goto L_0x05b5
-            L_0x04d0:
-                r36 = r2
-                r19 = 30
-                r20 = 44
-                r21 = 36
-                r1 = 23760(0x5cd0, float:3.3295E-41)
-                r2 = 792(0x318, float:1.11E-42)
-                r18 = 3000(0xbb8, float:4.204E-42)
-                goto L_0x05b5
-            L_0x04e0:
-                r36 = r2
-                r19 = 30
-                r20 = 22
-                r21 = 18
-                r1 = 11880(0x2e68, float:1.6647E-41)
-                r2 = 396(0x18c, float:5.55E-43)
-                r18 = 1500(0x5dc, float:2.102E-42)
-                goto L_0x05b5
-            L_0x04f0:
-                r36 = r2
-                r19 = 30
-                r20 = 22
-                r21 = 18
-                r1 = 11880(0x2e68, float:1.6647E-41)
-                r2 = 396(0x18c, float:5.55E-43)
-                r18 = 768(0x300, float:1.076E-42)
-                goto L_0x05b5
-            L_0x0500:
-                r36 = r2
-                r19 = 30
-                r20 = 22
-                r21 = 18
-                r1 = 5940(0x1734, float:8.324E-42)
-                r2 = 396(0x18c, float:5.55E-43)
-                r18 = 384(0x180, float:5.38E-43)
-                goto L_0x05b5
-            L_0x0510:
-                r36 = r2
-                r19 = 30
-                r20 = 11
-                r21 = 9
-                r1 = 2970(0xb9a, float:4.162E-42)
-                r2 = 99
-                r18 = 128(0x80, float:1.794E-43)
-                goto L_0x05b5
-            L_0x0520:
-                r35 = r1
-                r36 = r2
-                java.lang.String r1 = "VideoCapabilities"
-                java.lang.StringBuilder r2 = new java.lang.StringBuilder
-                r2.<init>()
-                java.lang.String r6 = "Unsupported profile "
-                r2.append(r6)
-                int r6 = r0.profile
-                r2.append(r6)
-                java.lang.String r6 = " for "
-                r2.append(r6)
-                r2.append(r12)
-                java.lang.String r2 = r2.toString()
-                android.util.Log.i(r1, r2)
-                r17 = r17 | 2
-                r23 = 0
-                goto L_0x045e
-            L_0x054a:
-                r35 = r1
-                r36 = r2
-                int r1 = r0.level
-                r2 = 4
-                if (r1 == r2) goto L_0x0608
-                r2 = 8
-                if (r1 == r2) goto L_0x05fb
-                r2 = 16
-                if (r1 == r2) goto L_0x05ee
-                r2 = 64
-                if (r1 == r2) goto L_0x05e0
-                r2 = 128(0x80, float:1.794E-43)
-                if (r1 == r2) goto L_0x05d2
-                r2 = 256(0x100, float:3.59E-43)
-                if (r1 == r2) goto L_0x05c4
-                switch(r1) {
-                    case 1: goto L_0x05a7;
-                    case 2: goto L_0x0598;
-                    default: goto L_0x056a;
-                }
-            L_0x056a:
-                java.lang.String r1 = "VideoCapabilities"
-                java.lang.StringBuilder r2 = new java.lang.StringBuilder
-                r2.<init>()
-                java.lang.String r6 = "Unrecognized profile/level "
-                r2.append(r6)
-                int r6 = r0.profile
-                r2.append(r6)
-                java.lang.String r6 = "/"
-                r2.append(r6)
-                int r6 = r0.level
-                r2.append(r6)
-                java.lang.String r6 = " for "
-                r2.append(r6)
-                r2.append(r12)
-                java.lang.String r2 = r2.toString()
-                android.util.Log.w((java.lang.String) r1, (java.lang.String) r2)
-                r17 = r17 | 1
-                goto L_0x045e
-            L_0x0598:
-                r22 = 1
-                r19 = 15
-                r20 = 11
-                r21 = 9
-                r1 = 1485(0x5cd, float:2.081E-42)
-                r2 = 99
-                r18 = 128(0x80, float:1.794E-43)
-                goto L_0x05b5
-            L_0x05a7:
-                r22 = 1
-                r19 = 15
-                r20 = 11
-                r21 = 9
-                r1 = 1485(0x5cd, float:2.081E-42)
-                r2 = 99
-                r18 = 64
-            L_0x05b5:
-                r37 = r0
-                r38 = r9
-                r39 = r14
-                r6 = r18
-                r14 = r19
-                r0 = r20
-                r9 = r21
-                goto L_0x0615
-            L_0x05c4:
-                r19 = 30
-                r20 = 80
-                r21 = 45
-                r1 = 108000(0x1a5e0, float:1.5134E-40)
-                r2 = 3600(0xe10, float:5.045E-42)
-                r18 = 12000(0x2ee0, float:1.6816E-41)
-                goto L_0x05b5
-            L_0x05d2:
-                r19 = 30
-                r20 = 45
-                r21 = 36
-                r1 = 40500(0x9e34, float:5.6753E-41)
-                r2 = 1620(0x654, float:2.27E-42)
-                r18 = 8000(0x1f40, float:1.121E-41)
-                goto L_0x05b5
-            L_0x05e0:
-                r19 = 30
-                r20 = 40
-                r21 = 30
-                r1 = 36000(0x8ca0, float:5.0447E-41)
-                r2 = 1200(0x4b0, float:1.682E-42)
-                r18 = 4000(0xfa0, float:5.605E-42)
-                goto L_0x05b5
-            L_0x05ee:
-                r19 = 30
-                r20 = 22
-                r21 = 18
-                r1 = 11880(0x2e68, float:1.6647E-41)
-                r2 = 396(0x18c, float:5.55E-43)
-                r18 = 384(0x180, float:5.38E-43)
-                goto L_0x05b5
-            L_0x05fb:
-                r19 = 30
-                r20 = 22
-                r21 = 18
-                r1 = 5940(0x1734, float:8.324E-42)
-                r2 = 396(0x18c, float:5.55E-43)
-                r18 = 128(0x80, float:1.794E-43)
-                goto L_0x05b5
-            L_0x0608:
-                r19 = 30
-                r20 = 11
-                r21 = 9
-                r1 = 1485(0x5cd, float:2.081E-42)
-                r2 = 99
-                r18 = 64
-                goto L_0x05b5
-            L_0x0615:
-                if (r23 == 0) goto L_0x0619
-                r17 = r17 & -5
-            L_0x0619:
-                r40 = r12
-                long r12 = (long) r1
-                long r4 = java.lang.Math.max(r12, r4)
-                int r8 = java.lang.Math.max(r2, r8)
-                int r12 = r6 * 1000
-                int r3 = java.lang.Math.max(r12, r3)
-                if (r22 == 0) goto L_0x063a
-                int r11 = java.lang.Math.max(r0, r11)
-                int r12 = java.lang.Math.max(r9, r15)
-                int r7 = java.lang.Math.max(r14, r7)
-                r15 = r12
-                goto L_0x0656
-            L_0x063a:
-                int r12 = r2 * 2
-                double r12 = (double) r12
-                double r12 = java.lang.Math.sqrt(r12)
-                int r12 = (int) r12
-                int r11 = java.lang.Math.max(r12, r11)
-                int r13 = java.lang.Math.max(r12, r15)
-                r15 = 60
-                int r15 = java.lang.Math.max(r14, r15)
-                int r0 = java.lang.Math.max(r15, r7)
-                r7 = r0
-                r15 = r13
-            L_0x0656:
-                int r10 = r10 + 1
-                r9 = r38
-                r14 = r39
-                r12 = r40
-                r13 = r58
-                goto L_0x0421
-            L_0x0662:
-                r40 = r12
-                r39 = r14
-                r6 = 16
-                r9 = 16
-                r10 = 1
-                r12 = 1
-                r0 = r58
-                r1 = r11
-                r2 = r15
-                r13 = r3
-                r3 = r8
-                r18 = r4
-                r14 = r7
-                r7 = r9
-                r16 = r8
-                r8 = r10
-                r9 = r12
-                r0.applyMacroBlockLimits(r1, r2, r3, r4, r6, r7, r8, r9)
-                r12 = r58
-                android.util.Range<java.lang.Integer> r0 = r12.mFrameRateRange
-                r1 = 12
-                java.lang.Integer r1 = java.lang.Integer.valueOf(r1)
-                java.lang.Integer r2 = java.lang.Integer.valueOf(r14)
-                android.util.Range r0 = r0.intersect(r1, r2)
-                r12.mFrameRateRange = r0
-                r12 = r13
-                r15 = r16
-                r55 = r39
-                r13 = r40
-                r20 = 1
-                goto L_0x0e12
-            L_0x069d:
-                r40 = r12
-                r12 = r13
-                r39 = r33
-                java.lang.String r5 = "video/3gpp"
-                r13 = r40
-                boolean r5 = r13.equalsIgnoreCase(r5)
-                if (r5 == 0) goto L_0x08e6
-                r5 = 11
-                r6 = 9
-                r7 = 15
-                r8 = r5
-                r9 = r6
-                r11 = 16
-                r2 = 99
-                r0 = 1485(0x5cd, double:7.337E-321)
-                r3 = 64000(0xfa00, float:8.9683E-41)
-                r14 = r39
-                int r15 = r14.length
-                r17 = r4
-                r18 = r11
-                r11 = r8
-                r4 = r0
-                r0 = 0
-                r56 = r7
-                r7 = r2
-                r2 = r3
-                r3 = r56
-            L_0x06ce:
-                if (r0 >= r15) goto L_0x0885
-                r1 = r14[r0]
-                r19 = 0
-                r20 = 0
-                r21 = 0
-                r22 = 0
-                r23 = 0
-                r25 = r11
-                r26 = r9
-                r27 = 0
-                int r10 = r1.level
-                r41 = r15
-                r15 = 4
-                if (r10 == r15) goto L_0x07d8
-                r15 = 8
-                if (r10 == r15) goto L_0x07c6
-                r15 = 16
-                if (r10 == r15) goto L_0x079b
-                r15 = 32
-                if (r10 == r15) goto L_0x0786
-                r15 = 64
-                if (r10 == r15) goto L_0x0771
-                r15 = 128(0x80, float:1.794E-43)
-                if (r10 == r15) goto L_0x075c
-                switch(r10) {
-                    case 1: goto L_0x074b;
-                    case 2: goto L_0x073a;
-                    default: goto L_0x0700;
-                }
-            L_0x0700:
-                java.lang.String r10 = "VideoCapabilities"
-                java.lang.StringBuilder r15 = new java.lang.StringBuilder
-                r15.<init>()
-                r42 = r14
-                java.lang.String r14 = "Unrecognized profile/level "
-                r15.append(r14)
-                int r14 = r1.profile
-                r15.append(r14)
-                java.lang.String r14 = "/"
-                r15.append(r14)
-                int r14 = r1.level
-                r15.append(r14)
-                java.lang.String r14 = " for "
-                r15.append(r14)
-                r15.append(r13)
-                java.lang.String r14 = r15.toString()
-                android.util.Log.w((java.lang.String) r10, (java.lang.String) r14)
-                r17 = r17 | 1
-            L_0x072e:
-                r43 = r0
-                r10 = r19
-                r0 = r21
-                r14 = r22
-                r15 = r23
-                goto L_0x07ea
-            L_0x073a:
-                r42 = r14
-                r27 = 1
-                r21 = 30
-                r22 = 22
-                r23 = 18
-                r20 = 2
-                int r10 = r22 * r23
-                int r19 = r10 * 15
-                goto L_0x072e
-            L_0x074b:
-                r42 = r14
-                r27 = 1
-                r21 = 15
-                r22 = 11
-                r23 = 9
-                r20 = 1
-                int r10 = r22 * r23
-                int r19 = r10 * r21
-                goto L_0x072e
-            L_0x075c:
-                r42 = r14
-                r25 = 1
-                r26 = 1
-                r18 = 4
-                r21 = 60
-                r22 = 45
-                r23 = 36
-                r20 = 256(0x100, float:3.59E-43)
-                int r10 = r22 * r23
-                int r19 = r10 * 50
-                goto L_0x072e
-            L_0x0771:
-                r42 = r14
-                r25 = 1
-                r26 = 1
-                r18 = 4
-                r21 = 60
-                r22 = 45
-                r23 = 18
-                r20 = 128(0x80, float:1.794E-43)
-                int r10 = r22 * r23
-                int r19 = r10 * 50
-                goto L_0x072e
-            L_0x0786:
-                r42 = r14
-                r25 = 1
-                r26 = 1
-                r18 = 4
-                r21 = 60
-                r22 = 22
-                r23 = 18
-                r20 = 64
-                int r10 = r22 * r23
-                int r19 = r10 * 50
-                goto L_0x072e
-            L_0x079b:
-                r42 = r14
-                int r10 = r1.profile
-                r14 = 1
-                if (r10 == r14) goto L_0x07aa
-                int r10 = r1.profile
-                r14 = 4
-                if (r10 != r14) goto L_0x07a8
-                goto L_0x07aa
-            L_0x07a8:
-                r10 = 0
-                goto L_0x07ab
-            L_0x07aa:
-                r10 = 1
-            L_0x07ab:
-                r27 = r10
-                if (r27 != 0) goto L_0x07b8
-                r10 = 1
-                r14 = 1
-                r15 = 4
-                r25 = r10
-                r26 = r14
-                r18 = r15
-            L_0x07b8:
-                r21 = 15
-                r22 = 11
-                r23 = 9
-                r20 = 2
-                int r10 = r22 * r23
-                int r19 = r10 * r21
-                goto L_0x072e
-            L_0x07c6:
-                r42 = r14
-                r27 = 1
-                r21 = 30
-                r22 = 22
-                r23 = 18
-                r20 = 32
-                int r10 = r22 * r23
-                int r19 = r10 * r21
-                goto L_0x072e
-            L_0x07d8:
-                r42 = r14
-                r27 = 1
-                r21 = 30
-                r22 = 22
-                r23 = 18
-                r20 = 6
-                int r10 = r22 * r23
-                int r19 = r10 * r21
-                goto L_0x072e
-            L_0x07ea:
-                r44 = r9
-                int r9 = r1.profile
-                r45 = r11
-                r11 = 4
-                if (r9 == r11) goto L_0x0833
-                r11 = 8
-                if (r9 == r11) goto L_0x0833
-                r11 = 16
-                if (r9 == r11) goto L_0x0833
-                r11 = 32
-                if (r9 == r11) goto L_0x0833
-                r11 = 64
-                if (r9 == r11) goto L_0x0833
-                r11 = 128(0x80, float:1.794E-43)
-                if (r9 == r11) goto L_0x0833
-                r11 = 256(0x100, float:3.59E-43)
-                if (r9 == r11) goto L_0x0833
-                switch(r9) {
-                    case 1: goto L_0x0833;
-                    case 2: goto L_0x0833;
-                    default: goto L_0x080e;
-                }
-            L_0x080e:
-                java.lang.String r9 = "VideoCapabilities"
-                java.lang.StringBuilder r11 = new java.lang.StringBuilder
-                r11.<init>()
-                r46 = r0
-                java.lang.String r0 = "Unrecognized profile "
-                r11.append(r0)
-                int r0 = r1.profile
-                r11.append(r0)
-                java.lang.String r0 = " for "
-                r11.append(r0)
-                r11.append(r13)
-                java.lang.String r0 = r11.toString()
-                android.util.Log.w((java.lang.String) r9, (java.lang.String) r0)
-                r17 = r17 | 1
-                goto L_0x0835
-            L_0x0833:
-                r46 = r0
-            L_0x0835:
-                if (r27 == 0) goto L_0x0841
-                r25 = 11
-                r26 = 9
-                r0 = r25
-                r9 = r26
-                r11 = 1
-                goto L_0x0848
-            L_0x0841:
-                r11 = 1
-                r12.mAllowMbOverride = r11
-                r0 = r25
-                r9 = r26
-            L_0x0848:
-                r17 = r17 & -5
-                long r11 = (long) r10
-                long r4 = java.lang.Math.max(r11, r4)
-                int r11 = r14 * r15
-                int r7 = java.lang.Math.max(r11, r7)
-                r11 = 64000(0xfa00, float:8.9683E-41)
-                int r11 = r11 * r20
-                int r2 = java.lang.Math.max(r11, r2)
-                int r8 = java.lang.Math.max(r14, r8)
-                int r6 = java.lang.Math.max(r15, r6)
-                r11 = r46
-                int r3 = java.lang.Math.max(r11, r3)
-                r12 = r45
-                int r12 = java.lang.Math.min(r0, r12)
-                r47 = r10
-                r10 = r44
-                int r9 = java.lang.Math.min(r9, r10)
-                int r0 = r43 + 1
-                r11 = r12
-                r15 = r41
-                r14 = r42
-                r12 = r58
-                goto L_0x06ce
-            L_0x0885:
-                r10 = r9
-                r12 = r11
-                r42 = r14
-                r14 = r58
-                boolean r0 = r14.mAllowMbOverride
-                if (r0 != 0) goto L_0x08a7
-                android.util.Rational r0 = new android.util.Rational
-                r1 = 11
-                r9 = 9
-                r0.<init>(r1, r9)
-                android.util.Rational r1 = new android.util.Rational
-                r9 = 11
-                r11 = 9
-                r1.<init>(r9, r11)
-                android.util.Range r0 = android.util.Range.create(r0, r1)
-                r14.mBlockAspectRatioRange = r0
-            L_0x08a7:
-                r9 = 16
-                r11 = 16
-                r0 = r58
-                r1 = r12
-                r15 = r2
-                r2 = r10
-                r16 = r3
-                r3 = r8
-                r19 = r4
-                r4 = r6
-                r5 = r7
-                r21 = r6
-                r22 = r7
-                r6 = r19
-                r23 = r8
-                r8 = r9
-                r24 = r10
-                r9 = r11
-                r10 = r18
-                r48 = 1
-                r11 = r18
-                r0.applyMacroBlockLimits(r1, r2, r3, r4, r5, r6, r8, r9, r10, r11)
-                java.lang.Integer r0 = java.lang.Integer.valueOf(r48)
-                java.lang.Integer r1 = java.lang.Integer.valueOf(r16)
-                android.util.Range r0 = android.util.Range.create(r0, r1)
-                r14.mFrameRateRange = r0
-                r12 = r15
-                r18 = r19
-                r15 = r22
-                r55 = r42
-                r20 = r48
-                goto L_0x0e12
-            L_0x08e6:
-                r14 = r12
-                r42 = r39
-                r48 = 1
-                java.lang.String r5 = "video/x-vnd.on2.vp8"
-                boolean r5 = r13.equalsIgnoreCase(r5)
-                if (r5 == 0) goto L_0x0992
-                r10 = 2147483647(0x7fffffff, float:NaN)
-                r11 = 2147483647(0x7fffffff, double:1.060997895E-314)
-                r15 = 100000000(0x5f5e100, float:2.3122341E-35)
-                r9 = r42
-                int r0 = r9.length
-                r17 = r4
-                r1 = 0
-            L_0x0903:
-                if (r1 >= r0) goto L_0x0968
-                r2 = r9[r1]
-                int r3 = r2.level
-                r4 = 4
-                if (r3 == r4) goto L_0x0936
-                r4 = 8
-                if (r3 == r4) goto L_0x0936
-                switch(r3) {
-                    case 1: goto L_0x0936;
-                    case 2: goto L_0x0936;
-                    default: goto L_0x0913;
-                }
-            L_0x0913:
-                java.lang.String r3 = "VideoCapabilities"
-                java.lang.StringBuilder r4 = new java.lang.StringBuilder
-                r4.<init>()
-                java.lang.String r5 = "Unrecognized level "
-                r4.append(r5)
-                int r5 = r2.level
-                r4.append(r5)
-                java.lang.String r5 = " for "
-                r4.append(r5)
-                r4.append(r13)
-                java.lang.String r4 = r4.toString()
-                android.util.Log.w((java.lang.String) r3, (java.lang.String) r4)
-                r17 = r17 | 1
-                goto L_0x0937
-            L_0x0936:
-            L_0x0937:
-                int r3 = r2.profile
-                r8 = r48
-                if (r3 == r8) goto L_0x0960
-                java.lang.String r3 = "VideoCapabilities"
-                java.lang.StringBuilder r4 = new java.lang.StringBuilder
-                r4.<init>()
-                java.lang.String r5 = "Unrecognized profile "
-                r4.append(r5)
-                int r5 = r2.profile
-                r4.append(r5)
-                java.lang.String r5 = " for "
-                r4.append(r5)
-                r4.append(r13)
-                java.lang.String r4 = r4.toString()
-                android.util.Log.w((java.lang.String) r3, (java.lang.String) r4)
-                r17 = r17 | 1
-                goto L_0x0961
-            L_0x0960:
-            L_0x0961:
-                r17 = r17 & -5
-                int r1 = r1 + 1
-                r48 = r8
-                goto L_0x0903
-            L_0x0968:
-                r8 = r48
-                r16 = 16
-                r1 = 32767(0x7fff, float:4.5916E-41)
-                r2 = 32767(0x7fff, float:4.5916E-41)
-                r6 = 16
-                r7 = 16
-                r18 = 1
-                r19 = 1
-                r0 = r58
-                r3 = r10
-                r4 = r11
-                r20 = r8
-                r8 = r18
-                r49 = r10
-                r10 = r9
-                r9 = r19
-                r0.applyMacroBlockLimits(r1, r2, r3, r4, r6, r7, r8, r9)
-                r55 = r10
-                r18 = r11
-                r12 = r15
-                r15 = r49
-                goto L_0x0e12
-            L_0x0992:
-                r10 = r42
-                r20 = r48
-                java.lang.String r5 = "video/x-vnd.on2.vp9"
-                boolean r5 = r13.equalsIgnoreCase(r5)
-                if (r5 == 0) goto L_0x0b18
-                r0 = 829440(0xca800, double:4.09798E-318)
-                r2 = 36864(0x9000, float:5.1657E-41)
-                r3 = 200000(0x30d40, float:2.8026E-40)
-                r5 = 512(0x200, float:7.175E-43)
-                int r8 = r10.length
-                r12 = r3
-                r17 = r4
-                r11 = r5
-                r3 = r0
-                r0 = 0
-            L_0x09b1:
-                if (r0 >= r8) goto L_0x0aed
-                r1 = r10[r0]
-                r18 = 0
-                r5 = 0
-                r9 = 0
-                r15 = 0
-                int r6 = r1.level
-                switch(r6) {
-                    case 1: goto L_0x0a7c;
-                    case 2: goto L_0x0a71;
-                    case 4: goto L_0x0a66;
-                    case 8: goto L_0x0a5b;
-                    case 16: goto L_0x0a50;
-                    case 32: goto L_0x0a46;
-                    case 64: goto L_0x0a3c;
-                    case 128: goto L_0x0a32;
-                    case 256: goto L_0x0a27;
-                    case 512: goto L_0x0a1c;
-                    case 1024: goto L_0x0a11;
-                    case 2048: goto L_0x0a05;
-                    case 4096: goto L_0x09f7;
-                    case 8192: goto L_0x09e9;
-                    default: goto L_0x09bf;
-                }
-            L_0x09bf:
-                java.lang.String r6 = "VideoCapabilities"
-                java.lang.StringBuilder r7 = new java.lang.StringBuilder
-                r7.<init>()
-                r50 = r5
-                java.lang.String r5 = "Unrecognized level "
-                r7.append(r5)
-                int r5 = r1.level
-                r7.append(r5)
-                java.lang.String r5 = " for "
-                r7.append(r5)
-                r7.append(r13)
-                java.lang.String r5 = r7.toString()
-                android.util.Log.w((java.lang.String) r6, (java.lang.String) r5)
-                r17 = r17 | 1
-                r5 = r18
-                r7 = r50
-                goto L_0x0a89
-            L_0x09e9:
-                r18 = 4706009088(0x118800000, double:2.3250774194E-314)
-                r5 = 35651584(0x2200000, float:1.1754944E-37)
-                r9 = 480000(0x75300, float:6.72623E-40)
-                r15 = 16832(0x41c0, float:2.3587E-41)
-                goto L_0x0a86
-            L_0x09f7:
-                r18 = 2353004544(0x8c400000, double:1.1625387097E-314)
-                r5 = 35651584(0x2200000, float:1.1754944E-37)
-                r9 = 240000(0x3a980, float:3.36312E-40)
-                r15 = 16832(0x41c0, float:2.3587E-41)
-                goto L_0x0a86
-            L_0x0a05:
-                r18 = 1176502272(0x46200000, double:5.81269355E-315)
-                r5 = 35651584(0x2200000, float:1.1754944E-37)
-                r9 = 180000(0x2bf20, float:2.52234E-40)
-                r15 = 16832(0x41c0, float:2.3587E-41)
-                goto L_0x0a86
-            L_0x0a11:
-                r18 = 1176502272(0x46200000, double:5.81269355E-315)
-                r5 = 8912896(0x880000, float:1.2489627E-38)
-                r9 = 180000(0x2bf20, float:2.52234E-40)
-                r15 = 8384(0x20c0, float:1.1748E-41)
-                goto L_0x0a86
-            L_0x0a1c:
-                r18 = 588251136(0x23100000, double:2.906346774E-315)
-                r5 = 8912896(0x880000, float:1.2489627E-38)
-                r9 = 120000(0x1d4c0, float:1.68156E-40)
-                r15 = 8384(0x20c0, float:1.1748E-41)
-                goto L_0x0a86
-            L_0x0a27:
-                r18 = 311951360(0x12980000, double:1.5412445E-315)
-                r5 = 8912896(0x880000, float:1.2489627E-38)
-                r9 = 60000(0xea60, float:8.4078E-41)
-                r15 = 8384(0x20c0, float:1.1748E-41)
-                goto L_0x0a86
-            L_0x0a32:
-                r18 = 160432128(0x9900000, double:7.9264003E-316)
-                r5 = 2228224(0x220000, float:3.122407E-39)
-                r9 = 30000(0x7530, float:4.2039E-41)
-                r15 = 4160(0x1040, float:5.83E-42)
-                goto L_0x0a86
-            L_0x0a3c:
-                r18 = 83558400(0x4fb0000, double:4.1283335E-316)
-                r5 = 2228224(0x220000, float:3.122407E-39)
-                r9 = 18000(0x4650, float:2.5223E-41)
-                r15 = 4160(0x1040, float:5.83E-42)
-                goto L_0x0a86
-            L_0x0a46:
-                r18 = 36864000(0x2328000, double:1.8213236E-316)
-                r5 = 983040(0xf0000, float:1.377532E-39)
-                r9 = 12000(0x2ee0, float:1.6816E-41)
-                r15 = 2752(0xac0, float:3.856E-42)
-                goto L_0x0a86
-            L_0x0a50:
-                r18 = 20736000(0x13c6800, double:1.0244945E-316)
-                r5 = 552960(0x87000, float:7.74862E-40)
-                r9 = 7200(0x1c20, float:1.009E-41)
-                r15 = 2048(0x800, float:2.87E-42)
-                goto L_0x0a86
-            L_0x0a5b:
-                r18 = 9216000(0x8ca000, double:4.553309E-317)
-                r5 = 245760(0x3c000, float:3.44383E-40)
-                r9 = 3600(0xe10, float:5.045E-42)
-                r15 = 1344(0x540, float:1.883E-42)
-                goto L_0x0a86
-            L_0x0a66:
-                r18 = 4608000(0x465000, double:2.2766545E-317)
-                r5 = 122880(0x1e000, float:1.72192E-40)
-                r9 = 1800(0x708, float:2.522E-42)
-                r15 = 960(0x3c0, float:1.345E-42)
-                goto L_0x0a86
-            L_0x0a71:
-                r18 = 2764800(0x2a3000, double:1.3659927E-317)
-                r5 = 73728(0x12000, float:1.03315E-40)
-                r9 = 800(0x320, float:1.121E-42)
-                r15 = 768(0x300, float:1.076E-42)
-                goto L_0x0a86
-            L_0x0a7c:
-                r18 = 829440(0xca800, double:4.09798E-318)
-                r5 = 36864(0x9000, float:5.1657E-41)
-                r9 = 200(0xc8, float:2.8E-43)
-                r15 = 512(0x200, float:7.175E-43)
-            L_0x0a86:
-                r7 = r5
-                r5 = r18
-            L_0x0a89:
-                r51 = r8
-                int r8 = r1.profile
-                r14 = 4
-                if (r8 == r14) goto L_0x0acd
-                r14 = 8
-                if (r8 == r14) goto L_0x0acd
-                r14 = 4096(0x1000, float:5.74E-42)
-                if (r8 == r14) goto L_0x0acd
-                r14 = 8192(0x2000, float:1.14794E-41)
-                if (r8 == r14) goto L_0x0acd
-                r14 = 16384(0x4000, float:2.2959E-41)
-                if (r8 == r14) goto L_0x0acd
-                r14 = 32768(0x8000, float:4.5918E-41)
-                if (r8 == r14) goto L_0x0acd
-                switch(r8) {
-                    case 1: goto L_0x0acd;
-                    case 2: goto L_0x0acd;
-                    default: goto L_0x0aa8;
-                }
-            L_0x0aa8:
-                java.lang.String r8 = "VideoCapabilities"
-                java.lang.StringBuilder r14 = new java.lang.StringBuilder
-                r14.<init>()
-                r52 = r10
-                java.lang.String r10 = "Unrecognized profile "
-                r14.append(r10)
-                int r10 = r1.profile
-                r14.append(r10)
-                java.lang.String r10 = " for "
-                r14.append(r10)
-                r14.append(r13)
-                java.lang.String r10 = r14.toString()
-                android.util.Log.w((java.lang.String) r8, (java.lang.String) r10)
-                r17 = r17 | 1
-                goto L_0x0acf
-            L_0x0acd:
-                r52 = r10
-            L_0x0acf:
-                r17 = r17 & -5
-                long r3 = java.lang.Math.max(r5, r3)
-                int r2 = java.lang.Math.max(r7, r2)
-                int r8 = r9 * 1000
-                int r12 = java.lang.Math.max(r8, r12)
-                int r11 = java.lang.Math.max(r15, r11)
-                int r0 = r0 + 1
-                r8 = r51
-                r10 = r52
-                r14 = r58
-                goto L_0x09b1
-            L_0x0aed:
-                r52 = r10
-                r10 = 8
-                r0 = 8
-                int r14 = android.media.Utils.divUp((int) r11, (int) r0)
-                r0 = 64
-                int r15 = android.media.Utils.divUp((int) r2, (int) r0)
-                r0 = 64
-                long r18 = android.media.Utils.divUp((long) r3, (long) r0)
-                r6 = 8
-                r7 = 8
-                r8 = 1
-                r9 = 1
-                r0 = r58
-                r1 = r14
-                r2 = r14
-                r3 = r15
-                r4 = r18
-                r0.applyMacroBlockLimits(r1, r2, r3, r4, r6, r7, r8, r9)
-                r55 = r52
-                goto L_0x0e12
-            L_0x0b18:
-                r52 = r10
-                java.lang.String r5 = "video/hevc"
-                boolean r5 = r13.equalsIgnoreCase(r5)
-                if (r5 == 0) goto L_0x0c84
-                r2 = 576(0x240, float:8.07E-43)
-                int r5 = r2 * 15
-                long r0 = (long) r5
-                r3 = 128000(0x1f400, float:1.79366E-40)
-                r10 = r52
-                int r5 = r10.length
-                r14 = r0
-                r11 = r2
-                r12 = r3
-                r17 = r4
-                r0 = 0
-            L_0x0b34:
-                if (r0 >= r5) goto L_0x0c60
-                r1 = r10[r0]
-                r2 = 0
-                r4 = 0
-                r6 = 0
-                int r7 = r1.level
-                switch(r7) {
-                    case 1: goto L_0x0c0b;
-                    case 2: goto L_0x0c0b;
-                    case 4: goto L_0x0c03;
-                    case 8: goto L_0x0c03;
-                    case 16: goto L_0x0bfb;
-                    case 32: goto L_0x0bfb;
-                    case 64: goto L_0x0bf3;
-                    case 128: goto L_0x0bf3;
-                    case 256: goto L_0x0be9;
-                    case 512: goto L_0x0be9;
-                    case 1024: goto L_0x0be2;
-                    case 2048: goto L_0x0bdb;
-                    case 4096: goto L_0x0bd4;
-                    case 8192: goto L_0x0bcc;
-                    case 16384: goto L_0x0bc5;
-                    case 32768: goto L_0x0bbd;
-                    case 65536: goto L_0x0bb5;
-                    case 131072: goto L_0x0bad;
-                    case 262144: goto L_0x0ba4;
-                    case 524288: goto L_0x0b9b;
-                    case 1048576: goto L_0x0b92;
-                    case 2097152: goto L_0x0b89;
-                    case 4194304: goto L_0x0b80;
-                    case 8388608: goto L_0x0b77;
-                    case 16777216: goto L_0x0b6e;
-                    case 33554432: goto L_0x0b65;
-                    default: goto L_0x0b41;
-                }
-            L_0x0b41:
-                java.lang.String r7 = "VideoCapabilities"
-                java.lang.StringBuilder r8 = new java.lang.StringBuilder
-                r8.<init>()
-                java.lang.String r9 = "Unrecognized level "
-                r8.append(r9)
-                int r9 = r1.level
-                r8.append(r9)
-                java.lang.String r9 = " for "
-                r8.append(r9)
-                r8.append(r13)
-                java.lang.String r8 = r8.toString()
-                android.util.Log.w((java.lang.String) r7, (java.lang.String) r8)
-                r17 = r17 | 1
-                goto L_0x0c12
-            L_0x0b65:
-                r2 = 4638144666238189568(0x405e000000000000, double:120.0)
-                r4 = 35651584(0x2200000, float:1.1754944E-37)
-                r6 = 800000(0xc3500, float:1.121039E-39)
-                goto L_0x0c12
-            L_0x0b6e:
-                r2 = 4638144666238189568(0x405e000000000000, double:120.0)
-                r4 = 35651584(0x2200000, float:1.1754944E-37)
-                r6 = 240000(0x3a980, float:3.36312E-40)
-                goto L_0x0c12
-            L_0x0b77:
-                r2 = 4633641066610819072(0x404e000000000000, double:60.0)
-                r4 = 35651584(0x2200000, float:1.1754944E-37)
-                r6 = 480000(0x75300, float:6.72623E-40)
-                goto L_0x0c12
-            L_0x0b80:
-                r2 = 4633641066610819072(0x404e000000000000, double:60.0)
-                r4 = 35651584(0x2200000, float:1.1754944E-37)
-                r6 = 120000(0x1d4c0, float:1.68156E-40)
-                goto L_0x0c12
-            L_0x0b89:
-                r2 = 4629137466983448576(0x403e000000000000, double:30.0)
-                r4 = 35651584(0x2200000, float:1.1754944E-37)
-                r6 = 240000(0x3a980, float:3.36312E-40)
-                goto L_0x0c12
-            L_0x0b92:
-                r2 = 4629137466983448576(0x403e000000000000, double:30.0)
-                r4 = 35651584(0x2200000, float:1.1754944E-37)
-                r6 = 60000(0xea60, float:8.4078E-41)
-                goto L_0x0c12
-            L_0x0b9b:
-                r2 = 4638144666238189568(0x405e000000000000, double:120.0)
-                r4 = 8912896(0x880000, float:1.2489627E-38)
-                r6 = 240000(0x3a980, float:3.36312E-40)
-                goto L_0x0c12
-            L_0x0ba4:
-                r2 = 4638144666238189568(0x405e000000000000, double:120.0)
-                r4 = 8912896(0x880000, float:1.2489627E-38)
-                r6 = 60000(0xea60, float:8.4078E-41)
-                goto L_0x0c12
-            L_0x0bad:
-                r2 = 4633641066610819072(0x404e000000000000, double:60.0)
-                r4 = 8912896(0x880000, float:1.2489627E-38)
-                r6 = 160000(0x27100, float:2.24208E-40)
-                goto L_0x0c12
-            L_0x0bb5:
-                r2 = 4633641066610819072(0x404e000000000000, double:60.0)
-                r4 = 8912896(0x880000, float:1.2489627E-38)
-                r6 = 40000(0x9c40, float:5.6052E-41)
-                goto L_0x0c12
-            L_0x0bbd:
-                r2 = 4629137466983448576(0x403e000000000000, double:30.0)
-                r4 = 8912896(0x880000, float:1.2489627E-38)
-                r6 = 100000(0x186a0, float:1.4013E-40)
-                goto L_0x0c12
-            L_0x0bc5:
-                r2 = 4629137466983448576(0x403e000000000000, double:30.0)
-                r4 = 8912896(0x880000, float:1.2489627E-38)
-                r6 = 25000(0x61a8, float:3.5032E-41)
-                goto L_0x0c12
-            L_0x0bcc:
-                r2 = 4633641066610819072(0x404e000000000000, double:60.0)
-                r4 = 2228224(0x220000, float:3.122407E-39)
-                r6 = 50000(0xc350, float:7.0065E-41)
-                goto L_0x0c12
-            L_0x0bd4:
-                r2 = 4633641066610819072(0x404e000000000000, double:60.0)
-                r4 = 2228224(0x220000, float:3.122407E-39)
-                r6 = 20000(0x4e20, float:2.8026E-41)
-                goto L_0x0c12
-            L_0x0bdb:
-                r2 = 4629137466983448576(0x403e000000000000, double:30.0)
-                r4 = 2228224(0x220000, float:3.122407E-39)
-                r6 = 30000(0x7530, float:4.2039E-41)
-                goto L_0x0c12
-            L_0x0be2:
-                r2 = 4629137466983448576(0x403e000000000000, double:30.0)
-                r4 = 2228224(0x220000, float:3.122407E-39)
-                r6 = 12000(0x2ee0, float:1.6816E-41)
-                goto L_0x0c12
-            L_0x0be9:
-                r2 = 4629946707541491712(0x4040e00000000000, double:33.75)
-                r4 = 983040(0xf0000, float:1.377532E-39)
-                r6 = 10000(0x2710, float:1.4013E-41)
-                goto L_0x0c12
-            L_0x0bf3:
-                r2 = 4629137466983448576(0x403e000000000000, double:30.0)
-                r4 = 552960(0x87000, float:7.74862E-40)
-                r6 = 6000(0x1770, float:8.408E-42)
-                goto L_0x0c12
-            L_0x0bfb:
-                r2 = 4629137466983448576(0x403e000000000000, double:30.0)
-                r4 = 245760(0x3c000, float:3.44383E-40)
-                r6 = 3000(0xbb8, float:4.204E-42)
-                goto L_0x0c12
-            L_0x0c03:
-                r2 = 4629137466983448576(0x403e000000000000, double:30.0)
-                r4 = 122880(0x1e000, float:1.72192E-40)
-                r6 = 1500(0x5dc, float:2.102E-42)
-                goto L_0x0c12
-            L_0x0c0b:
-                r2 = 4624633867356078080(0x402e000000000000, double:15.0)
-                r4 = 36864(0x9000, float:5.1657E-41)
-                r6 = 128(0x80, float:1.794E-43)
-            L_0x0c12:
-                int r7 = r1.profile
-                r8 = 4
-                if (r7 == r8) goto L_0x0c45
-                r9 = 4096(0x1000, float:5.74E-42)
-                if (r7 == r9) goto L_0x0c45
-                r9 = 8192(0x2000, float:1.14794E-41)
-                if (r7 == r9) goto L_0x0c45
-                switch(r7) {
-                    case 1: goto L_0x0c45;
-                    case 2: goto L_0x0c45;
-                    default: goto L_0x0c22;
-                }
-            L_0x0c22:
-                java.lang.String r7 = "VideoCapabilities"
-                java.lang.StringBuilder r9 = new java.lang.StringBuilder
-                r9.<init>()
-                java.lang.String r8 = "Unrecognized profile "
-                r9.append(r8)
-                int r8 = r1.profile
-                r9.append(r8)
-                java.lang.String r8 = " for "
-                r9.append(r8)
-                r9.append(r13)
-                java.lang.String r8 = r9.toString()
-                android.util.Log.w((java.lang.String) r7, (java.lang.String) r8)
-                r17 = r17 | 1
-                goto L_0x0c46
-            L_0x0c45:
-            L_0x0c46:
-                int r4 = r4 >> 6
-                r17 = r17 & -5
-                double r7 = (double) r4
-                double r7 = r7 * r2
-                int r7 = (int) r7
-                long r7 = (long) r7
-                long r14 = java.lang.Math.max(r7, r14)
-                int r11 = java.lang.Math.max(r4, r11)
-                int r7 = r6 * 1000
-                int r12 = java.lang.Math.max(r7, r12)
-                int r0 = r0 + 1
-                goto L_0x0b34
-            L_0x0c60:
-                int r0 = r11 * 8
-                double r0 = (double) r0
-                double r0 = java.lang.Math.sqrt(r0)
-                int r9 = (int) r0
-                r6 = 8
-                r7 = 8
-                r8 = 1
-                r16 = 1
-                r0 = r58
-                r1 = r9
-                r2 = r9
-                r3 = r11
-                r4 = r14
-                r18 = r9
-                r9 = r16
-                r0.applyMacroBlockLimits(r1, r2, r3, r4, r6, r7, r8, r9)
-                r55 = r10
-                r18 = r14
-                r15 = r11
-                goto L_0x0e12
-            L_0x0c84:
-                r10 = r52
-                java.lang.String r5 = "video/av01"
-                boolean r5 = r13.equalsIgnoreCase(r5)
-                if (r5 == 0) goto L_0x0df1
-                r0 = 829440(0xca800, double:4.09798E-318)
-                r2 = 36864(0x9000, float:5.1657E-41)
-                r3 = 200000(0x30d40, float:2.8026E-40)
-                r5 = 512(0x200, float:7.175E-43)
-                int r6 = r10.length
-                r12 = r3
-                r17 = r4
-                r11 = r5
-                r3 = r0
-                r0 = 0
-            L_0x0ca1:
-                if (r0 >= r6) goto L_0x0dca
-                r1 = r10[r0]
-                r7 = 0
-                r5 = 0
-                r9 = 0
-                r14 = 0
-                int r15 = r1.level
-                switch(r15) {
-                    case 1: goto L_0x0d6e;
-                    case 2: goto L_0x0d63;
-                    case 4: goto L_0x0d63;
-                    case 8: goto L_0x0d63;
-                    case 16: goto L_0x0d58;
-                    case 32: goto L_0x0d4d;
-                    case 64: goto L_0x0d4d;
-                    case 128: goto L_0x0d4d;
-                    case 256: goto L_0x0d43;
-                    case 512: goto L_0x0d39;
-                    case 1024: goto L_0x0d39;
-                    case 2048: goto L_0x0d39;
-                    case 4096: goto L_0x0d2f;
-                    case 8192: goto L_0x0d24;
-                    case 16384: goto L_0x0d19;
-                    case 32768: goto L_0x0d0e;
-                    case 65536: goto L_0x0d03;
-                    case 131072: goto L_0x0cf5;
-                    case 262144: goto L_0x0ce7;
-                    case 524288: goto L_0x0cd9;
-                    default: goto L_0x0caf;
-                }
-            L_0x0caf:
-                java.lang.String r15 = "VideoCapabilities"
-                r53 = r5
-                java.lang.StringBuilder r5 = new java.lang.StringBuilder
-                r5.<init>()
-                r54 = r6
-                java.lang.String r6 = "Unrecognized level "
-                r5.append(r6)
-                int r6 = r1.level
-                r5.append(r6)
-                java.lang.String r6 = " for "
-                r5.append(r6)
-                r5.append(r13)
-                java.lang.String r5 = r5.toString()
-                android.util.Log.w((java.lang.String) r15, (java.lang.String) r5)
-                r17 = r17 | 1
-                r5 = r53
-                goto L_0x0d7a
-            L_0x0cd9:
-                r7 = 4706009088(0x118800000, double:2.3250774194E-314)
-                r5 = 35651584(0x2200000, float:1.1754944E-37)
-                r9 = 160000(0x27100, float:2.24208E-40)
-                r14 = 16384(0x4000, float:2.2959E-41)
-                goto L_0x0d78
-            L_0x0ce7:
-                r7 = 4379443200(0x105090000, double:2.163732433E-314)
-                r5 = 35651584(0x2200000, float:1.1754944E-37)
-                r9 = 160000(0x27100, float:2.24208E-40)
-                r14 = 16384(0x4000, float:2.2959E-41)
-                goto L_0x0d78
-            L_0x0cf5:
-                r7 = 2189721600(0x82848000, double:1.0818662165E-314)
-                r5 = 35651584(0x2200000, float:1.1754944E-37)
-                r9 = 100000(0x186a0, float:1.4013E-40)
-                r14 = 16384(0x4000, float:2.2959E-41)
-                goto L_0x0d78
-            L_0x0d03:
-                r7 = 1176502272(0x46200000, double:5.81269355E-315)
-                r5 = 35651584(0x2200000, float:1.1754944E-37)
-                r9 = 60000(0xea60, float:8.4078E-41)
-                r14 = 16384(0x4000, float:2.2959E-41)
-                goto L_0x0d78
-            L_0x0d0e:
-                r7 = 1176502272(0x46200000, double:5.81269355E-315)
-                r5 = 8912896(0x880000, float:1.2489627E-38)
-                r9 = 60000(0xea60, float:8.4078E-41)
-                r14 = 8192(0x2000, float:1.14794E-41)
-                goto L_0x0d78
-            L_0x0d19:
-                r7 = 1094860800(0x41424000, double:5.409331083E-315)
-                r5 = 8912896(0x880000, float:1.2489627E-38)
-                r9 = 60000(0xea60, float:8.4078E-41)
-                r14 = 8192(0x2000, float:1.14794E-41)
-                goto L_0x0d78
-            L_0x0d24:
-                r7 = 547430400(0x20a12000, double:2.70466554E-315)
-                r5 = 8912896(0x880000, float:1.2489627E-38)
-                r9 = 40000(0x9c40, float:5.6052E-41)
-                r14 = 8192(0x2000, float:1.14794E-41)
-                goto L_0x0d78
-            L_0x0d2f:
-                r7 = 273715200(0x10509000, double:1.35233277E-315)
-                r5 = 8912896(0x880000, float:1.2489627E-38)
-                r9 = 30000(0x7530, float:4.2039E-41)
-                r14 = 8192(0x2000, float:1.14794E-41)
-                goto L_0x0d78
-            L_0x0d39:
-                r7 = 155713536(0x9480000, double:7.69327087E-316)
-                r5 = 2359296(0x240000, float:3.306078E-39)
-                r9 = 20000(0x4e20, float:2.8026E-41)
-                r14 = 6144(0x1800, float:8.61E-42)
-                goto L_0x0d78
-            L_0x0d43:
-                r7 = 77856768(0x4a40000, double:3.84663544E-316)
-                r5 = 2359296(0x240000, float:3.306078E-39)
-                r9 = 12000(0x2ee0, float:1.6816E-41)
-                r14 = 6144(0x1800, float:8.61E-42)
-                goto L_0x0d78
-            L_0x0d4d:
-                r7 = 39938400(0x2616960, double:1.97321914E-316)
-                r5 = 1065024(0x104040, float:1.492416E-39)
-                r9 = 10000(0x2710, float:1.4013E-41)
-                r14 = 5504(0x1580, float:7.713E-42)
-                goto L_0x0d78
-            L_0x0d58:
-                r7 = 24969600(0x17d0180, double:1.23366216E-316)
-                r5 = 665856(0xa2900, float:9.33063E-40)
-                r9 = 6000(0x1770, float:8.408E-42)
-                r14 = 4352(0x1100, float:6.098E-42)
-                goto L_0x0d78
-            L_0x0d63:
-                r7 = 10454400(0x9f8580, double:5.16516E-317)
-                r5 = 278784(0x44100, float:3.9066E-40)
-                r9 = 3000(0xbb8, float:4.204E-42)
-                r14 = 2816(0xb00, float:3.946E-42)
-                goto L_0x0d78
-            L_0x0d6e:
-                r7 = 5529600(0x546000, double:2.7319854E-317)
-                r5 = 147456(0x24000, float:2.0663E-40)
-                r9 = 1500(0x5dc, float:2.102E-42)
-                r14 = 2048(0x800, float:2.87E-42)
-            L_0x0d78:
-                r54 = r6
-            L_0x0d7a:
-                int r6 = r1.profile
-                r15 = 4096(0x1000, float:5.74E-42)
-                if (r6 == r15) goto L_0x0dac
-                r15 = 8192(0x2000, float:1.14794E-41)
-                if (r6 == r15) goto L_0x0dac
-                switch(r6) {
-                    case 1: goto L_0x0dac;
-                    case 2: goto L_0x0dac;
-                    default: goto L_0x0d87;
-                }
-            L_0x0d87:
-                java.lang.String r6 = "VideoCapabilities"
-                java.lang.StringBuilder r15 = new java.lang.StringBuilder
-                r15.<init>()
-                r55 = r10
-                java.lang.String r10 = "Unrecognized profile "
-                r15.append(r10)
-                int r10 = r1.profile
-                r15.append(r10)
-                java.lang.String r10 = " for "
-                r15.append(r10)
-                r15.append(r13)
-                java.lang.String r10 = r15.toString()
-                android.util.Log.w((java.lang.String) r6, (java.lang.String) r10)
-                r17 = r17 | 1
-                goto L_0x0dae
-            L_0x0dac:
-                r55 = r10
-            L_0x0dae:
-                r17 = r17 & -5
-                long r3 = java.lang.Math.max(r7, r3)
-                int r2 = java.lang.Math.max(r5, r2)
-                int r6 = r9 * 1000
-                int r12 = java.lang.Math.max(r6, r12)
-                int r11 = java.lang.Math.max(r14, r11)
-                int r0 = r0 + 1
-                r6 = r54
-                r10 = r55
-                goto L_0x0ca1
-            L_0x0dca:
-                r55 = r10
-                r10 = 8
-                r0 = 8
-                int r14 = android.media.Utils.divUp((int) r11, (int) r0)
-                r0 = 64
-                int r15 = android.media.Utils.divUp((int) r2, (int) r0)
-                r0 = 64
-                long r18 = android.media.Utils.divUp((long) r3, (long) r0)
-                r6 = 8
-                r7 = 8
-                r8 = 1
-                r9 = 1
-                r0 = r58
-                r1 = r14
-                r2 = r14
-                r3 = r15
-                r4 = r18
-                r0.applyMacroBlockLimits(r1, r2, r3, r4, r6, r7, r8, r9)
-                goto L_0x0e12
-            L_0x0df1:
-                r55 = r10
-                java.lang.String r5 = "VideoCapabilities"
-                java.lang.StringBuilder r6 = new java.lang.StringBuilder
-                r6.<init>()
-                java.lang.String r7 = "Unsupported mime "
-                r6.append(r7)
-                r6.append(r13)
-                java.lang.String r6 = r6.toString()
-                android.util.Log.w((java.lang.String) r5, (java.lang.String) r6)
-                r5 = 64000(0xfa00, float:8.9683E-41)
-                r17 = r4 | 2
-                r18 = r0
-                r15 = r2
-                r12 = r5
-            L_0x0e12:
-                java.lang.Integer r0 = java.lang.Integer.valueOf(r20)
-                java.lang.Integer r1 = java.lang.Integer.valueOf(r12)
-                android.util.Range r0 = android.util.Range.create(r0, r1)
-                r1 = r58
-                r1.mBitrateRange = r0
-                android.media.MediaCodecInfo$CodecCapabilities r0 = r1.mParent
-                int r2 = r0.mError
-                r2 = r2 | r17
-                r0.mError = r2
-                return
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.media.MediaCodecInfo.VideoCapabilities.applyLevelLimits():void");
+                int maxBps8 = maxBps7;
+                int maxBps9 = maxBlocks7;
+                applyMacroBlockLimits(maxWidth3, maxHeight6, maxBps9, maxBlocksPerSecond9, 16, 16, 1, 1);
+                this.mFrameRateRange = this.mFrameRateRange.intersect(12, Integer.valueOf(maxRate5));
+                maxBps = maxBps8;
+                i = 1;
+                j = maxBlocksPerSecond9;
+            }
+            this.mBitrateRange = Range.create(Integer.valueOf(i), Integer.valueOf(maxBps));
+            this.mParent.mError |= errors;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class EncoderCapabilities {
         public static final int BITRATE_MODE_CBR = 2;
         public static final int BITRATE_MODE_CQ = 0;
@@ -3805,6 +3105,7 @@ public final class MediaCodecInfo {
         }
 
         private static int parseBitrateMode(String mode) {
+            Feature[] featureArr;
             for (Feature feat : bitrates) {
                 if (feat.mName.equalsIgnoreCase(mode)) {
                     return feat.mValue;
@@ -3814,6 +3115,7 @@ public final class MediaCodecInfo {
         }
 
         public boolean isBitrateModeSupported(int mode) {
+            Feature[] featureArr;
             for (Feature feat : bitrates) {
                 if (mode == feat.mValue) {
                     return (this.mBitControl & (1 << mode)) != 0;
@@ -3851,6 +3153,7 @@ public final class MediaCodecInfo {
         }
 
         private void parseFromInfo(MediaFormat info) {
+            String[] split;
             Map<String, Object> map = info.getMap();
             if (info.containsKey("complexity-range")) {
                 this.mComplexityRange = Utils.parseIntRange(info.getString("complexity-range"), this.mComplexityRange);
@@ -3859,10 +3162,8 @@ public final class MediaCodecInfo {
                 this.mQualityRange = Utils.parseIntRange(info.getString("quality-range"), this.mQualityRange);
             }
             if (info.containsKey("feature-bitrate-modes")) {
-                String[] split = info.getString("feature-bitrate-modes").split(SmsManager.REGEX_PREFIX_DELIMITER);
-                int length = split.length;
-                for (int i = 0; i < length; i++) {
-                    this.mBitControl |= 1 << parseBitrateMode(split[i]);
+                for (String mode : info.getString("feature-bitrate-modes").split(SmsManager.REGEX_PREFIX_DELIMITER)) {
+                    this.mBitControl |= 1 << parseBitrateMode(mode);
                 }
             }
             try {
@@ -3878,36 +3179,35 @@ public final class MediaCodecInfo {
 
         private boolean supports(Integer complexity, Integer quality, Integer profile) {
             boolean ok = true;
-            if (!(1 == 0 || complexity == null)) {
-                ok = this.mComplexityRange.contains(complexity);
+            if (1 != 0 && complexity != null) {
+                ok = this.mComplexityRange.contains((Range<Integer>) complexity);
             }
             if (ok && quality != null) {
-                ok = this.mQualityRange.contains(quality);
+                ok = this.mQualityRange.contains((Range<Integer>) quality);
             }
-            if (!ok || profile == null) {
-                return ok;
-            }
-            CodecProfileLevel[] codecProfileLevelArr = this.mParent.profileLevels;
-            int length = codecProfileLevelArr.length;
-            boolean ok2 = false;
-            int i = 0;
-            while (true) {
-                if (i >= length) {
-                    break;
-                } else if (codecProfileLevelArr[i].profile == profile.intValue()) {
-                    profile = null;
-                    break;
-                } else {
-                    i++;
+            if (ok && profile != null) {
+                CodecProfileLevel[] codecProfileLevelArr = this.mParent.profileLevels;
+                int length = codecProfileLevelArr.length;
+                int i = 0;
+                while (true) {
+                    if (i >= length) {
+                        break;
+                    }
+                    CodecProfileLevel pl = codecProfileLevelArr[i];
+                    if (pl.profile != profile.intValue()) {
+                        i++;
+                    } else {
+                        profile = null;
+                        break;
+                    }
                 }
+                return profile == null;
             }
-            if (profile == null) {
-                ok2 = true;
-            }
-            return ok2;
+            return ok;
         }
 
         public void getDefaultFormat(MediaFormat format) {
+            Feature[] featureArr;
             if (!this.mQualityRange.getUpper().equals(this.mQualityRange.getLower()) && this.mDefaultQuality != null) {
                 format.setInteger(MediaFormat.KEY_QUALITY, this.mDefaultQuality.intValue());
             }
@@ -3947,10 +3247,12 @@ public final class MediaCodecInfo {
                     throw new IllegalArgumentException("conflicting values for profile and aac-profile");
                 }
             }
-            return supports(complexity, (Integer) map.get(MediaFormat.KEY_QUALITY), profile);
+            Integer quality = (Integer) map.get(MediaFormat.KEY_QUALITY);
+            return supports(complexity, quality, profile);
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class CodecProfileLevel {
         public static final int AACObjectELD = 39;
         public static final int AACObjectERLC = 17;
@@ -4161,23 +3463,20 @@ public final class MediaCodecInfo {
                 return false;
             }
             CodecProfileLevel other = (CodecProfileLevel) obj;
-            if (other.profile == this.profile && other.level == this.level) {
-                return true;
-            }
-            return false;
+            return other.profile == this.profile && other.level == this.level;
         }
 
         public int hashCode() {
-            return Long.hashCode((((long) this.profile) << 32) | ((long) this.level));
+            return Long.hashCode((this.profile << 32) | this.level);
         }
     }
 
     public final CodecCapabilities getCapabilitiesForType(String type) {
         CodecCapabilities caps = this.mCaps.get(type);
-        if (caps != null) {
-            return caps.dup();
+        if (caps == null) {
+            throw new IllegalArgumentException("codec does not support type");
         }
-        throw new IllegalArgumentException("codec does not support type");
+        return caps.dup();
     }
 
     public MediaCodecInfo makeRegular() {

@@ -1,29 +1,32 @@
 package android.net.lowpan;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.util.HexDump;
 import java.util.Arrays;
 import java.util.Objects;
 
+/* loaded from: classes3.dex */
 public class LowpanCredential implements Parcelable {
-    public static final Parcelable.Creator<LowpanCredential> CREATOR = new Parcelable.Creator<LowpanCredential>() {
+    public static final Parcelable.Creator<LowpanCredential> CREATOR = new Parcelable.Creator<LowpanCredential>() { // from class: android.net.lowpan.LowpanCredential.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public LowpanCredential createFromParcel(Parcel in) {
             LowpanCredential credential = new LowpanCredential();
-            byte[] unused = credential.mMasterKey = in.createByteArray();
-            int unused2 = credential.mMasterKeyIndex = in.readInt();
+            credential.mMasterKey = in.createByteArray();
+            credential.mMasterKeyIndex = in.readInt();
             return credential;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public LowpanCredential[] newArray(int size) {
             return new LowpanCredential[size];
         }
     };
     public static final int UNSPECIFIED_KEY_INDEX = 0;
-    /* access modifiers changed from: private */
-    public byte[] mMasterKey = null;
-    /* access modifiers changed from: private */
-    public int mMasterKeyIndex = 0;
+    private byte[] mMasterKey = null;
+    private int mMasterKeyIndex = 0;
 
     LowpanCredential() {
     }
@@ -44,32 +47,18 @@ public class LowpanCredential implements Parcelable {
         return new LowpanCredential(masterKey, keyIndex);
     }
 
-    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v0, resolved type: java.lang.Object} */
-    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v2, resolved type: byte[]} */
-    /* access modifiers changed from: package-private */
-    /* JADX WARNING: Multi-variable type inference failed */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void setMasterKey(byte[] r2) {
-        /*
-            r1 = this;
-            if (r2 == 0) goto L_0x0009
-            java.lang.Object r0 = r2.clone()
-            r2 = r0
-            byte[] r2 = (byte[]) r2
-        L_0x0009:
-            r1.mMasterKey = r2
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.net.lowpan.LowpanCredential.setMasterKey(byte[]):void");
+    void setMasterKey(byte[] masterKey) {
+        if (masterKey != null) {
+            masterKey = (byte[]) masterKey.clone();
+        }
+        this.mMasterKey = masterKey;
     }
 
-    /* access modifiers changed from: package-private */
-    public void setMasterKeyIndex(int keyIndex) {
+    void setMasterKeyIndex(int keyIndex) {
         this.mMasterKeyIndex = keyIndex;
     }
 
-    /* access modifiers changed from: package-private */
-    public void setMasterKey(byte[] masterKey, int keyIndex) {
+    void setMasterKey(byte[] masterKey, int keyIndex) {
         setMasterKey(masterKey);
         setMasterKeyIndex(keyIndex);
     }
@@ -123,24 +112,23 @@ public class LowpanCredential implements Parcelable {
     }
 
     public boolean equals(Object obj) {
-        if (!(obj instanceof LowpanCredential)) {
-            return false;
+        if (obj instanceof LowpanCredential) {
+            LowpanCredential rhs = (LowpanCredential) obj;
+            return Arrays.equals(this.mMasterKey, rhs.mMasterKey) && this.mMasterKeyIndex == rhs.mMasterKeyIndex;
         }
-        LowpanCredential rhs = (LowpanCredential) obj;
-        if (!Arrays.equals(this.mMasterKey, rhs.mMasterKey) || this.mMasterKeyIndex != rhs.mMasterKeyIndex) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(Arrays.hashCode(this.mMasterKey)), Integer.valueOf(this.mMasterKeyIndex)});
+        return Objects.hash(Integer.valueOf(Arrays.hashCode(this.mMasterKey)), Integer.valueOf(this.mMasterKeyIndex));
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeByteArray(this.mMasterKey);
         dest.writeInt(this.mMasterKeyIndex);

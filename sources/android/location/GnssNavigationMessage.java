@@ -1,31 +1,13 @@
 package android.location;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.security.InvalidParameterException;
 
+/* loaded from: classes.dex */
 public final class GnssNavigationMessage implements Parcelable {
-    public static final Parcelable.Creator<GnssNavigationMessage> CREATOR = new Parcelable.Creator<GnssNavigationMessage>() {
-        public GnssNavigationMessage createFromParcel(Parcel parcel) {
-            GnssNavigationMessage navigationMessage = new GnssNavigationMessage();
-            navigationMessage.setType(parcel.readInt());
-            navigationMessage.setSvid(parcel.readInt());
-            navigationMessage.setMessageId(parcel.readInt());
-            navigationMessage.setSubmessageId(parcel.readInt());
-            byte[] data = new byte[parcel.readInt()];
-            parcel.readByteArray(data);
-            navigationMessage.setData(data);
-            navigationMessage.setStatus(parcel.readInt());
-            return navigationMessage;
-        }
-
-        public GnssNavigationMessage[] newArray(int size) {
-            return new GnssNavigationMessage[size];
-        }
-    };
-    private static final byte[] EMPTY_ARRAY = new byte[0];
     public static final int STATUS_PARITY_PASSED = 1;
     public static final int STATUS_PARITY_REBUILT = 2;
     public static final int STATUS_UNKNOWN = 0;
@@ -45,17 +27,44 @@ public final class GnssNavigationMessage implements Parcelable {
     private int mSubmessageId;
     private int mSvid;
     private int mType;
+    private static final byte[] EMPTY_ARRAY = new byte[0];
+    public static final Parcelable.Creator<GnssNavigationMessage> CREATOR = new Parcelable.Creator<GnssNavigationMessage>() { // from class: android.location.GnssNavigationMessage.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public GnssNavigationMessage createFromParcel(Parcel parcel) {
+            GnssNavigationMessage navigationMessage = new GnssNavigationMessage();
+            navigationMessage.setType(parcel.readInt());
+            navigationMessage.setSvid(parcel.readInt());
+            navigationMessage.setMessageId(parcel.readInt());
+            navigationMessage.setSubmessageId(parcel.readInt());
+            int dataLength = parcel.readInt();
+            byte[] data = new byte[dataLength];
+            parcel.readByteArray(data);
+            navigationMessage.setData(data);
+            navigationMessage.setStatus(parcel.readInt());
+            return navigationMessage;
+        }
+
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public GnssNavigationMessage[] newArray(int size) {
+            return new GnssNavigationMessage[size];
+        }
+    };
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface GnssNavigationMessageType {
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Callback {
         public static final int STATUS_LOCATION_DISABLED = 2;
         public static final int STATUS_NOT_SUPPORTED = 0;
         public static final int STATUS_READY = 1;
 
         @Retention(RetentionPolicy.SOURCE)
+        /* loaded from: classes.dex */
         public @interface GnssNavigationMessageStatus {
         }
 
@@ -93,38 +102,38 @@ public final class GnssNavigationMessage implements Parcelable {
 
     private String getTypeString() {
         int i = this.mType;
-        if (i == 0) {
-            return "Unknown";
-        }
-        if (i == 769) {
-            return "Glonass L1 C/A";
-        }
-        switch (i) {
-            case 257:
-                return "GPS L1 C/A";
-            case 258:
-                return "GPS L2-CNAV";
-            case 259:
-                return "GPS L5-CNAV";
-            case 260:
-                return "GPS CNAV2";
-            default:
+        if (i != 0) {
+            if (i != 769) {
                 switch (i) {
-                    case 1281:
-                        return "Beidou D1";
-                    case 1282:
-                        return "Beidou D2";
+                    case 257:
+                        return "GPS L1 C/A";
+                    case 258:
+                        return "GPS L2-CNAV";
+                    case 259:
+                        return "GPS L5-CNAV";
+                    case 260:
+                        return "GPS CNAV2";
                     default:
                         switch (i) {
-                            case 1537:
-                                return "Galileo I";
-                            case 1538:
-                                return "Galileo F";
+                            case 1281:
+                                return "Beidou D1";
+                            case 1282:
+                                return "Beidou D2";
                             default:
-                                return "<Invalid:" + this.mType + ">";
+                                switch (i) {
+                                    case 1537:
+                                        return "Galileo I";
+                                    case 1538:
+                                        return "Galileo F";
+                                    default:
+                                        return "<Invalid:" + this.mType + ">";
+                                }
                         }
                 }
+            }
+            return "Glonass L1 C/A";
         }
+        return "Unknown";
     }
 
     public int getSvid() {
@@ -156,11 +165,10 @@ public final class GnssNavigationMessage implements Parcelable {
     }
 
     public void setData(byte[] value) {
-        if (value != null) {
-            this.mData = value;
-            return;
+        if (value == null) {
+            throw new InvalidParameterException("Data must be a non-null array");
         }
-        throw new InvalidParameterException("Data must be a non-null array");
+        this.mData = value;
     }
 
     public int getStatus() {
@@ -184,6 +192,7 @@ public final class GnssNavigationMessage implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeInt(this.mType);
         parcel.writeInt(this.mSvid);
@@ -194,22 +203,24 @@ public final class GnssNavigationMessage implements Parcelable {
         parcel.writeInt(this.mStatus);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
     public String toString() {
+        byte[] bArr;
         StringBuilder builder = new StringBuilder("GnssNavigationMessage:\n");
-        builder.append(String.format("   %-15s = %s\n", new Object[]{"Type", getTypeString()}));
-        builder.append(String.format("   %-15s = %s\n", new Object[]{"Svid", Integer.valueOf(this.mSvid)}));
-        builder.append(String.format("   %-15s = %s\n", new Object[]{"Status", getStatusString()}));
-        builder.append(String.format("   %-15s = %s\n", new Object[]{"MessageId", Integer.valueOf(this.mMessageId)}));
-        builder.append(String.format("   %-15s = %s\n", new Object[]{"SubmessageId", Integer.valueOf(this.mSubmessageId)}));
-        builder.append(String.format("   %-15s = %s\n", new Object[]{"Data", "{"}));
+        builder.append(String.format("   %-15s = %s\n", "Type", getTypeString()));
+        builder.append(String.format("   %-15s = %s\n", "Svid", Integer.valueOf(this.mSvid)));
+        builder.append(String.format("   %-15s = %s\n", "Status", getStatusString()));
+        builder.append(String.format("   %-15s = %s\n", "MessageId", Integer.valueOf(this.mMessageId)));
+        builder.append(String.format("   %-15s = %s\n", "SubmessageId", Integer.valueOf(this.mSubmessageId)));
+        builder.append(String.format("   %-15s = %s\n", "Data", "{"));
         String prefix = "        ";
         for (byte value : this.mData) {
             builder.append(prefix);
-            builder.append(value);
+            builder.append((int) value);
             prefix = ", ";
         }
         builder.append(" }");

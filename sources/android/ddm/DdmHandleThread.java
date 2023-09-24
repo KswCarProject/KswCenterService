@@ -6,12 +6,13 @@ import org.apache.harmony.dalvik.ddmc.ChunkHandler;
 import org.apache.harmony.dalvik.ddmc.DdmServer;
 import org.apache.harmony.dalvik.ddmc.DdmVmInternal;
 
+/* loaded from: classes.dex */
 public class DdmHandleThread extends ChunkHandler {
-    public static final int CHUNK_STKL = type("STKL");
+    public static final int CHUNK_THEN = type("THEN");
     public static final int CHUNK_THCR = type("THCR");
     public static final int CHUNK_THDE = type("THDE");
-    public static final int CHUNK_THEN = type("THEN");
     public static final int CHUNK_THST = type("THST");
+    public static final int CHUNK_STKL = type("STKL");
     private static DdmHandleThread mInstance = new DdmHandleThread();
 
     private DdmHandleThread() {
@@ -44,12 +45,14 @@ public class DdmHandleThread extends ChunkHandler {
     }
 
     private Chunk handleTHEN(Chunk request) {
-        DdmVmInternal.threadNotify(wrapChunk(request).get() != 0);
+        ByteBuffer in = wrapChunk(request);
+        boolean enable = in.get() != 0;
+        DdmVmInternal.threadNotify(enable);
         return null;
     }
 
     private Chunk handleTHST(Chunk request) {
-        ByteBuffer wrapChunk = wrapChunk(request);
+        wrapChunk(request);
         byte[] status = DdmVmInternal.getThreadStats();
         if (status != null) {
             return new Chunk(CHUNK_THST, status, 0, status.length);
@@ -58,7 +61,8 @@ public class DdmHandleThread extends ChunkHandler {
     }
 
     private Chunk handleSTKL(Chunk request) {
-        int threadId = wrapChunk(request).getInt();
+        ByteBuffer in = wrapChunk(request);
+        int threadId = in.getInt();
         StackTraceElement[] trace = DdmVmInternal.getStackTraceById(threadId);
         if (trace == null) {
             return createFailChunk(1, "Stack trace unavailable");
@@ -67,15 +71,16 @@ public class DdmHandleThread extends ChunkHandler {
     }
 
     private Chunk createStackChunk(StackTraceElement[] trace, int threadId) {
-        int bufferSize = 0 + 4 + 4 + 4;
+        int bufferSize = 0 + 4;
+        int bufferSize2 = bufferSize + 4 + 4;
         for (StackTraceElement elem : trace) {
-            int bufferSize2 = bufferSize + (elem.getClassName().length() * 2) + 4 + (elem.getMethodName().length() * 2) + 4 + 4;
+            int bufferSize3 = bufferSize2 + (elem.getClassName().length() * 2) + 4 + (elem.getMethodName().length() * 2) + 4 + 4;
             if (elem.getFileName() != null) {
-                bufferSize2 += elem.getFileName().length() * 2;
+                bufferSize3 += elem.getFileName().length() * 2;
             }
-            bufferSize = bufferSize2 + 4;
+            bufferSize2 = bufferSize3 + 4;
         }
-        ByteBuffer out = ByteBuffer.allocate(bufferSize);
+        ByteBuffer out = ByteBuffer.allocate(bufferSize2);
         out.putInt(0);
         out.putInt(threadId);
         out.putInt(trace.length);

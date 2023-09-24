@@ -1,14 +1,16 @@
 package android.accessibilityservice;
 
+import android.accessibilityservice.IAccessibilityServiceConnection;
 import android.graphics.Region;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.view.KeyEvent;
 import android.view.accessibility.AccessibilityEvent;
 
+/* loaded from: classes.dex */
 public interface IAccessibilityServiceClient extends IInterface {
     void clearAccessibilityCache() throws RemoteException;
 
@@ -36,51 +38,67 @@ public interface IAccessibilityServiceClient extends IInterface {
 
     void onSoftKeyboardShowModeChanged(int i) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements IAccessibilityServiceClient {
+        @Override // android.accessibilityservice.IAccessibilityServiceClient
         public void init(IAccessibilityServiceConnection connection, int connectionId, IBinder windowToken) throws RemoteException {
         }
 
+        @Override // android.accessibilityservice.IAccessibilityServiceClient
         public void onAccessibilityEvent(AccessibilityEvent event, boolean serviceWantsEvent) throws RemoteException {
         }
 
+        @Override // android.accessibilityservice.IAccessibilityServiceClient
         public void onInterrupt() throws RemoteException {
         }
 
+        @Override // android.accessibilityservice.IAccessibilityServiceClient
         public void onGesture(int gesture) throws RemoteException {
         }
 
+        @Override // android.accessibilityservice.IAccessibilityServiceClient
         public void clearAccessibilityCache() throws RemoteException {
         }
 
+        @Override // android.accessibilityservice.IAccessibilityServiceClient
         public void onKeyEvent(KeyEvent event, int sequence) throws RemoteException {
         }
 
+        @Override // android.accessibilityservice.IAccessibilityServiceClient
         public void onMagnificationChanged(int displayId, Region region, float scale, float centerX, float centerY) throws RemoteException {
         }
 
+        @Override // android.accessibilityservice.IAccessibilityServiceClient
         public void onSoftKeyboardShowModeChanged(int showMode) throws RemoteException {
         }
 
+        @Override // android.accessibilityservice.IAccessibilityServiceClient
         public void onPerformGestureResult(int sequence, boolean completedSuccessfully) throws RemoteException {
         }
 
+        @Override // android.accessibilityservice.IAccessibilityServiceClient
         public void onFingerprintCapturingGesturesChanged(boolean capturing) throws RemoteException {
         }
 
+        @Override // android.accessibilityservice.IAccessibilityServiceClient
         public void onFingerprintGesture(int gesture) throws RemoteException {
         }
 
+        @Override // android.accessibilityservice.IAccessibilityServiceClient
         public void onAccessibilityButtonClicked() throws RemoteException {
         }
 
+        @Override // android.accessibilityservice.IAccessibilityServiceClient
         public void onAccessibilityButtonAvailabilityChanged(boolean available) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements IAccessibilityServiceClient {
         private static final String DESCRIPTOR = "android.accessibilityservice.IAccessibilityServiceClient";
         static final int TRANSACTION_clearAccessibilityCache = 5;
@@ -106,12 +124,13 @@ public interface IAccessibilityServiceClient extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IAccessibilityServiceClient)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IAccessibilityServiceClient)) {
+                return (IAccessibilityServiceClient) iin;
             }
-            return (IAccessibilityServiceClient) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -149,173 +168,97 @@ public interface IAccessibilityServiceClient extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v5, resolved type: android.view.accessibility.AccessibilityEvent} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v10, resolved type: android.view.KeyEvent} */
-        /* JADX WARNING: type inference failed for: r0v2 */
-        /* JADX WARNING: type inference failed for: r0v14 */
-        /* JADX WARNING: type inference failed for: r0v27 */
-        /* JADX WARNING: type inference failed for: r0v28 */
-        /* JADX WARNING: type inference failed for: r0v29 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r16, android.os.Parcel r17, android.os.Parcel r18, int r19) throws android.os.RemoteException {
-            /*
-                r15 = this;
-                r6 = r15
-                r7 = r16
-                r8 = r17
-                java.lang.String r9 = "android.accessibilityservice.IAccessibilityServiceClient"
-                r0 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r10 = 1
-                if (r7 == r0) goto L_0x00fe
-                r0 = 0
-                r1 = 0
-                switch(r7) {
-                    case 1: goto L_0x00e7;
-                    case 2: goto L_0x00c8;
-                    case 3: goto L_0x00c1;
-                    case 4: goto L_0x00b6;
-                    case 5: goto L_0x00af;
-                    case 6: goto L_0x0094;
-                    case 7: goto L_0x0067;
-                    case 8: goto L_0x005c;
-                    case 9: goto L_0x0049;
-                    case 10: goto L_0x0039;
-                    case 11: goto L_0x002e;
-                    case 12: goto L_0x0027;
-                    case 13: goto L_0x0017;
-                    default: goto L_0x0012;
-                }
-            L_0x0012:
-                boolean r0 = super.onTransact(r16, r17, r18, r19)
-                return r0
-            L_0x0017:
-                r8.enforceInterface(r9)
-                int r0 = r17.readInt()
-                if (r0 == 0) goto L_0x0022
-                r1 = r10
-            L_0x0022:
-                r0 = r1
-                r15.onAccessibilityButtonAvailabilityChanged(r0)
-                return r10
-            L_0x0027:
-                r8.enforceInterface(r9)
-                r15.onAccessibilityButtonClicked()
-                return r10
-            L_0x002e:
-                r8.enforceInterface(r9)
-                int r0 = r17.readInt()
-                r15.onFingerprintGesture(r0)
-                return r10
-            L_0x0039:
-                r8.enforceInterface(r9)
-                int r0 = r17.readInt()
-                if (r0 == 0) goto L_0x0044
-                r1 = r10
-            L_0x0044:
-                r0 = r1
-                r15.onFingerprintCapturingGesturesChanged(r0)
-                return r10
-            L_0x0049:
-                r8.enforceInterface(r9)
-                int r0 = r17.readInt()
-                int r2 = r17.readInt()
-                if (r2 == 0) goto L_0x0058
-                r1 = r10
-            L_0x0058:
-                r15.onPerformGestureResult(r0, r1)
-                return r10
-            L_0x005c:
-                r8.enforceInterface(r9)
-                int r0 = r17.readInt()
-                r15.onSoftKeyboardShowModeChanged(r0)
-                return r10
-            L_0x0067:
-                r8.enforceInterface(r9)
-                int r11 = r17.readInt()
-                int r1 = r17.readInt()
-                if (r1 == 0) goto L_0x007e
-                android.os.Parcelable$Creator<android.graphics.Region> r0 = android.graphics.Region.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                android.graphics.Region r0 = (android.graphics.Region) r0
-            L_0x007c:
-                r2 = r0
-                goto L_0x007f
-            L_0x007e:
-                goto L_0x007c
-            L_0x007f:
-                float r12 = r17.readFloat()
-                float r13 = r17.readFloat()
-                float r14 = r17.readFloat()
-                r0 = r15
-                r1 = r11
-                r3 = r12
-                r4 = r13
-                r5 = r14
-                r0.onMagnificationChanged(r1, r2, r3, r4, r5)
-                return r10
-            L_0x0094:
-                r8.enforceInterface(r9)
-                int r1 = r17.readInt()
-                if (r1 == 0) goto L_0x00a6
-                android.os.Parcelable$Creator<android.view.KeyEvent> r0 = android.view.KeyEvent.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                android.view.KeyEvent r0 = (android.view.KeyEvent) r0
-                goto L_0x00a7
-            L_0x00a6:
-            L_0x00a7:
-                int r1 = r17.readInt()
-                r15.onKeyEvent(r0, r1)
-                return r10
-            L_0x00af:
-                r8.enforceInterface(r9)
-                r15.clearAccessibilityCache()
-                return r10
-            L_0x00b6:
-                r8.enforceInterface(r9)
-                int r0 = r17.readInt()
-                r15.onGesture(r0)
-                return r10
-            L_0x00c1:
-                r8.enforceInterface(r9)
-                r15.onInterrupt()
-                return r10
-            L_0x00c8:
-                r8.enforceInterface(r9)
-                int r2 = r17.readInt()
-                if (r2 == 0) goto L_0x00da
-                android.os.Parcelable$Creator<android.view.accessibility.AccessibilityEvent> r0 = android.view.accessibility.AccessibilityEvent.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                android.view.accessibility.AccessibilityEvent r0 = (android.view.accessibility.AccessibilityEvent) r0
-                goto L_0x00db
-            L_0x00da:
-            L_0x00db:
-                int r2 = r17.readInt()
-                if (r2 == 0) goto L_0x00e3
-                r1 = r10
-            L_0x00e3:
-                r15.onAccessibilityEvent(r0, r1)
-                return r10
-            L_0x00e7:
-                r8.enforceInterface(r9)
-                android.os.IBinder r0 = r17.readStrongBinder()
-                android.accessibilityservice.IAccessibilityServiceConnection r0 = android.accessibilityservice.IAccessibilityServiceConnection.Stub.asInterface(r0)
-                int r1 = r17.readInt()
-                android.os.IBinder r2 = r17.readStrongBinder()
-                r15.init(r0, r1, r2)
-                return r10
-            L_0x00fe:
-                r0 = r18
-                r0.writeString(r9)
-                return r10
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.accessibilityservice.IAccessibilityServiceClient.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            boolean _arg1;
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAccessibilityServiceConnection _arg0 = IAccessibilityServiceConnection.Stub.asInterface(data.readStrongBinder());
+                    int _arg12 = data.readInt();
+                    IBinder _arg2 = data.readStrongBinder();
+                    init(_arg0, _arg12, _arg2);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    AccessibilityEvent _arg02 = data.readInt() != 0 ? AccessibilityEvent.CREATOR.createFromParcel(data) : null;
+                    _arg1 = data.readInt() != 0;
+                    onAccessibilityEvent(_arg02, _arg1);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    onInterrupt();
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg03 = data.readInt();
+                    onGesture(_arg03);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    clearAccessibilityCache();
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    KeyEvent _arg04 = data.readInt() != 0 ? KeyEvent.CREATOR.createFromParcel(data) : null;
+                    onKeyEvent(_arg04, data.readInt());
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg05 = data.readInt();
+                    Region _arg13 = data.readInt() != 0 ? Region.CREATOR.createFromParcel(data) : null;
+                    float _arg22 = data.readFloat();
+                    float _arg3 = data.readFloat();
+                    float _arg4 = data.readFloat();
+                    onMagnificationChanged(_arg05, _arg13, _arg22, _arg3, _arg4);
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg06 = data.readInt();
+                    onSoftKeyboardShowModeChanged(_arg06);
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg07 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    onPerformGestureResult(_arg07, _arg1);
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg1 = data.readInt() != 0;
+                    boolean _arg08 = _arg1;
+                    onFingerprintCapturingGesturesChanged(_arg08);
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg09 = data.readInt();
+                    onFingerprintGesture(_arg09);
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    onAccessibilityButtonClicked();
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg1 = data.readInt() != 0;
+                    boolean _arg010 = _arg1;
+                    onAccessibilityButtonAvailabilityChanged(_arg010);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements IAccessibilityServiceClient {
             public static IAccessibilityServiceClient sDefaultImpl;
             private IBinder mRemote;
@@ -324,6 +267,7 @@ public interface IAccessibilityServiceClient extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -332,6 +276,7 @@ public interface IAccessibilityServiceClient extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.accessibilityservice.IAccessibilityServiceClient
             public void init(IAccessibilityServiceConnection connection, int connectionId, IBinder windowToken) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -339,9 +284,8 @@ public interface IAccessibilityServiceClient extends IInterface {
                     _data.writeStrongBinder(connection != null ? connection.asBinder() : null);
                     _data.writeInt(connectionId);
                     _data.writeStrongBinder(windowToken);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().init(connection, connectionId, windowToken);
                     }
                 } finally {
@@ -349,6 +293,7 @@ public interface IAccessibilityServiceClient extends IInterface {
                 }
             }
 
+            @Override // android.accessibilityservice.IAccessibilityServiceClient
             public void onAccessibilityEvent(AccessibilityEvent event, boolean serviceWantsEvent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -359,10 +304,9 @@ public interface IAccessibilityServiceClient extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(serviceWantsEvent);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(serviceWantsEvent ? 1 : 0);
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onAccessibilityEvent(event, serviceWantsEvent);
                     }
                 } finally {
@@ -370,13 +314,13 @@ public interface IAccessibilityServiceClient extends IInterface {
                 }
             }
 
+            @Override // android.accessibilityservice.IAccessibilityServiceClient
             public void onInterrupt() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onInterrupt();
                     }
                 } finally {
@@ -384,14 +328,14 @@ public interface IAccessibilityServiceClient extends IInterface {
                 }
             }
 
+            @Override // android.accessibilityservice.IAccessibilityServiceClient
             public void onGesture(int gesture) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(gesture);
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onGesture(gesture);
                     }
                 } finally {
@@ -399,13 +343,13 @@ public interface IAccessibilityServiceClient extends IInterface {
                 }
             }
 
+            @Override // android.accessibilityservice.IAccessibilityServiceClient
             public void clearAccessibilityCache() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(5, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().clearAccessibilityCache();
                     }
                 } finally {
@@ -413,6 +357,7 @@ public interface IAccessibilityServiceClient extends IInterface {
                 }
             }
 
+            @Override // android.accessibilityservice.IAccessibilityServiceClient
             public void onKeyEvent(KeyEvent event, int sequence) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -424,9 +369,8 @@ public interface IAccessibilityServiceClient extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(sequence);
-                    if (this.mRemote.transact(6, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(6, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onKeyEvent(event, sequence);
                     }
                 } finally {
@@ -434,6 +378,7 @@ public interface IAccessibilityServiceClient extends IInterface {
                 }
             }
 
+            @Override // android.accessibilityservice.IAccessibilityServiceClient
             public void onMagnificationChanged(int displayId, Region region, float scale, float centerX, float centerY) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -448,9 +393,8 @@ public interface IAccessibilityServiceClient extends IInterface {
                     _data.writeFloat(scale);
                     _data.writeFloat(centerX);
                     _data.writeFloat(centerY);
-                    if (this.mRemote.transact(7, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(7, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onMagnificationChanged(displayId, region, scale, centerX, centerY);
                     }
                 } finally {
@@ -458,14 +402,14 @@ public interface IAccessibilityServiceClient extends IInterface {
                 }
             }
 
+            @Override // android.accessibilityservice.IAccessibilityServiceClient
             public void onSoftKeyboardShowModeChanged(int showMode) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(showMode);
-                    if (this.mRemote.transact(8, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(8, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onSoftKeyboardShowModeChanged(showMode);
                     }
                 } finally {
@@ -473,15 +417,15 @@ public interface IAccessibilityServiceClient extends IInterface {
                 }
             }
 
+            @Override // android.accessibilityservice.IAccessibilityServiceClient
             public void onPerformGestureResult(int sequence, boolean completedSuccessfully) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(sequence);
-                    _data.writeInt(completedSuccessfully);
-                    if (this.mRemote.transact(9, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(completedSuccessfully ? 1 : 0);
+                    boolean _status = this.mRemote.transact(9, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onPerformGestureResult(sequence, completedSuccessfully);
                     }
                 } finally {
@@ -489,14 +433,14 @@ public interface IAccessibilityServiceClient extends IInterface {
                 }
             }
 
+            @Override // android.accessibilityservice.IAccessibilityServiceClient
             public void onFingerprintCapturingGesturesChanged(boolean capturing) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(capturing);
-                    if (this.mRemote.transact(10, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(capturing ? 1 : 0);
+                    boolean _status = this.mRemote.transact(10, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onFingerprintCapturingGesturesChanged(capturing);
                     }
                 } finally {
@@ -504,14 +448,14 @@ public interface IAccessibilityServiceClient extends IInterface {
                 }
             }
 
+            @Override // android.accessibilityservice.IAccessibilityServiceClient
             public void onFingerprintGesture(int gesture) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(gesture);
-                    if (this.mRemote.transact(11, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(11, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onFingerprintGesture(gesture);
                     }
                 } finally {
@@ -519,13 +463,13 @@ public interface IAccessibilityServiceClient extends IInterface {
                 }
             }
 
+            @Override // android.accessibilityservice.IAccessibilityServiceClient
             public void onAccessibilityButtonClicked() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(12, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(12, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onAccessibilityButtonClicked();
                     }
                 } finally {
@@ -533,14 +477,14 @@ public interface IAccessibilityServiceClient extends IInterface {
                 }
             }
 
+            @Override // android.accessibilityservice.IAccessibilityServiceClient
             public void onAccessibilityButtonAvailabilityChanged(boolean available) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(available);
-                    if (this.mRemote.transact(13, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(available ? 1 : 0);
+                    boolean _status = this.mRemote.transact(13, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onAccessibilityButtonAvailabilityChanged(available);
                     }
                 } finally {
@@ -550,11 +494,11 @@ public interface IAccessibilityServiceClient extends IInterface {
         }
 
         public static boolean setDefaultImpl(IAccessibilityServiceClient impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IAccessibilityServiceClient getDefaultImpl() {

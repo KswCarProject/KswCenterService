@@ -6,9 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+/* loaded from: classes4.dex */
 public class ViewSwitcher extends ViewAnimator {
     ViewFactory mFactory;
 
+    /* loaded from: classes4.dex */
     public interface ViewFactory {
         View makeView();
     }
@@ -21,20 +23,22 @@ public class ViewSwitcher extends ViewAnimator {
         super(context, attrs);
     }
 
+    @Override // android.widget.ViewAnimator, android.view.ViewGroup
     public void addView(View child, int index, ViewGroup.LayoutParams params) {
-        if (getChildCount() < 2) {
-            super.addView(child, index, params);
-            return;
+        if (getChildCount() >= 2) {
+            throw new IllegalStateException("Can't add more than 2 views to a ViewSwitcher");
         }
-        throw new IllegalStateException("Can't add more than 2 views to a ViewSwitcher");
+        super.addView(child, index, params);
     }
 
+    @Override // android.widget.ViewAnimator, android.widget.FrameLayout, android.view.ViewGroup, android.view.View
     public CharSequence getAccessibilityClassName() {
         return ViewSwitcher.class.getName();
     }
 
     public View getNextView() {
-        return getChildAt(this.mWhichChild == 0 ? 1 : 0);
+        int which = this.mWhichChild == 0 ? 1 : 0;
+        return getChildAt(which);
     }
 
     private View obtainView() {
@@ -43,7 +47,7 @@ public class ViewSwitcher extends ViewAnimator {
         if (lp == null) {
             lp = new FrameLayout.LayoutParams(-1, -2);
         }
-        addView(child, (ViewGroup.LayoutParams) lp);
+        addView(child, lp);
         return child;
     }
 

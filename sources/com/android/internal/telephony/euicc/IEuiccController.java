@@ -2,15 +2,16 @@ package com.android.internal.telephony.euicc;
 
 import android.app.PendingIntent;
 import android.content.Intent;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.telephony.euicc.DownloadableSubscription;
 import android.telephony.euicc.EuiccInfo;
 
+/* loaded from: classes4.dex */
 public interface IEuiccController extends IInterface {
     void continueOperation(int i, Intent intent, Bundle bundle) throws RemoteException;
 
@@ -36,51 +37,66 @@ public interface IEuiccController extends IInterface {
 
     void updateSubscriptionNickname(int i, int i2, String str, String str2, PendingIntent pendingIntent) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IEuiccController {
+        @Override // com.android.internal.telephony.euicc.IEuiccController
         public void continueOperation(int cardId, Intent resolutionIntent, Bundle resolutionExtras) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.euicc.IEuiccController
         public void getDownloadableSubscriptionMetadata(int cardId, DownloadableSubscription subscription, String callingPackage, PendingIntent callbackIntent) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.euicc.IEuiccController
         public void getDefaultDownloadableSubscriptionList(int cardId, String callingPackage, PendingIntent callbackIntent) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.euicc.IEuiccController
         public String getEid(int cardId, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.euicc.IEuiccController
         public int getOtaStatus(int cardId) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.euicc.IEuiccController
         public void downloadSubscription(int cardId, DownloadableSubscription subscription, boolean switchAfterDownload, String callingPackage, Bundle resolvedBundle, PendingIntent callbackIntent) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.euicc.IEuiccController
         public EuiccInfo getEuiccInfo(int cardId) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.euicc.IEuiccController
         public void deleteSubscription(int cardId, int subscriptionId, String callingPackage, PendingIntent callbackIntent) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.euicc.IEuiccController
         public void switchToSubscription(int cardId, int subscriptionId, String callingPackage, PendingIntent callbackIntent) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.euicc.IEuiccController
         public void updateSubscriptionNickname(int cardId, int subscriptionId, String nickname, String callingPackage, PendingIntent callbackIntent) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.euicc.IEuiccController
         public void eraseSubscriptions(int cardId, PendingIntent callbackIntent) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.euicc.IEuiccController
         public void retainSubscriptionsForFactoryReset(int cardId, PendingIntent callbackIntent) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IEuiccController {
         private static final String DESCRIPTOR = "com.android.internal.telephony.euicc.IEuiccController";
         static final int TRANSACTION_continueOperation = 1;
@@ -105,12 +121,13 @@ public interface IEuiccController extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IEuiccController)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IEuiccController)) {
+                return (IEuiccController) iin;
             }
-            return (IEuiccController) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -146,276 +163,135 @@ public interface IEuiccController extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v1, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v5, resolved type: android.app.PendingIntent} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v9, resolved type: android.app.PendingIntent} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v17, resolved type: android.app.PendingIntent} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v21, resolved type: android.app.PendingIntent} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v26, resolved type: android.app.PendingIntent} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v30, resolved type: android.app.PendingIntent} */
-        /* JADX WARNING: type inference failed for: r1v0 */
-        /* JADX WARNING: type inference failed for: r1v34 */
-        /* JADX WARNING: type inference failed for: r1v35 */
-        /* JADX WARNING: type inference failed for: r1v36 */
-        /* JADX WARNING: type inference failed for: r1v37 */
-        /* JADX WARNING: type inference failed for: r1v38 */
-        /* JADX WARNING: type inference failed for: r1v39 */
-        /* JADX WARNING: type inference failed for: r1v40 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r17, android.os.Parcel r18, android.os.Parcel r19, int r20) throws android.os.RemoteException {
-            /*
-                r16 = this;
-                r7 = r16
-                r8 = r17
-                r9 = r18
-                r10 = r19
-                java.lang.String r11 = "com.android.internal.telephony.euicc.IEuiccController"
-                r0 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r12 = 1
-                if (r8 == r0) goto L_0x01ce
-                r0 = 0
-                r1 = 0
-                switch(r8) {
-                    case 1: goto L_0x01a3;
-                    case 2: goto L_0x0174;
-                    case 3: goto L_0x0155;
-                    case 4: goto L_0x013f;
-                    case 5: goto L_0x012d;
-                    case 6: goto L_0x00df;
-                    case 7: goto L_0x00c4;
-                    case 8: goto L_0x00a1;
-                    case 9: goto L_0x007e;
-                    case 10: goto L_0x0050;
-                    case 11: goto L_0x0035;
-                    case 12: goto L_0x001a;
-                    default: goto L_0x0015;
-                }
-            L_0x0015:
-                boolean r0 = super.onTransact(r17, r18, r19, r20)
-                return r0
-            L_0x001a:
-                r9.enforceInterface(r11)
-                int r0 = r18.readInt()
-                int r2 = r18.readInt()
-                if (r2 == 0) goto L_0x0030
-                android.os.Parcelable$Creator<android.app.PendingIntent> r1 = android.app.PendingIntent.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r9)
-                android.app.PendingIntent r1 = (android.app.PendingIntent) r1
-                goto L_0x0031
-            L_0x0030:
-            L_0x0031:
-                r7.retainSubscriptionsForFactoryReset(r0, r1)
-                return r12
-            L_0x0035:
-                r9.enforceInterface(r11)
-                int r0 = r18.readInt()
-                int r2 = r18.readInt()
-                if (r2 == 0) goto L_0x004b
-                android.os.Parcelable$Creator<android.app.PendingIntent> r1 = android.app.PendingIntent.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r9)
-                android.app.PendingIntent r1 = (android.app.PendingIntent) r1
-                goto L_0x004c
-            L_0x004b:
-            L_0x004c:
-                r7.eraseSubscriptions(r0, r1)
-                return r12
-            L_0x0050:
-                r9.enforceInterface(r11)
-                int r6 = r18.readInt()
-                int r13 = r18.readInt()
-                java.lang.String r14 = r18.readString()
-                java.lang.String r15 = r18.readString()
-                int r0 = r18.readInt()
-                if (r0 == 0) goto L_0x0073
-                android.os.Parcelable$Creator<android.app.PendingIntent> r0 = android.app.PendingIntent.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r9)
-                android.app.PendingIntent r0 = (android.app.PendingIntent) r0
-                r5 = r0
-                goto L_0x0074
-            L_0x0073:
-                r5 = r1
-            L_0x0074:
-                r0 = r16
-                r1 = r6
-                r2 = r13
-                r3 = r14
-                r4 = r15
-                r0.updateSubscriptionNickname(r1, r2, r3, r4, r5)
-                return r12
-            L_0x007e:
-                r9.enforceInterface(r11)
-                int r0 = r18.readInt()
-                int r2 = r18.readInt()
-                java.lang.String r3 = r18.readString()
-                int r4 = r18.readInt()
-                if (r4 == 0) goto L_0x009c
-                android.os.Parcelable$Creator<android.app.PendingIntent> r1 = android.app.PendingIntent.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r9)
-                android.app.PendingIntent r1 = (android.app.PendingIntent) r1
-                goto L_0x009d
-            L_0x009c:
-            L_0x009d:
-                r7.switchToSubscription(r0, r2, r3, r1)
-                return r12
-            L_0x00a1:
-                r9.enforceInterface(r11)
-                int r0 = r18.readInt()
-                int r2 = r18.readInt()
-                java.lang.String r3 = r18.readString()
-                int r4 = r18.readInt()
-                if (r4 == 0) goto L_0x00bf
-                android.os.Parcelable$Creator<android.app.PendingIntent> r1 = android.app.PendingIntent.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r9)
-                android.app.PendingIntent r1 = (android.app.PendingIntent) r1
-                goto L_0x00c0
-            L_0x00bf:
-            L_0x00c0:
-                r7.deleteSubscription(r0, r2, r3, r1)
-                return r12
-            L_0x00c4:
-                r9.enforceInterface(r11)
-                int r1 = r18.readInt()
-                android.telephony.euicc.EuiccInfo r2 = r7.getEuiccInfo(r1)
-                r19.writeNoException()
-                if (r2 == 0) goto L_0x00db
-                r10.writeInt(r12)
-                r2.writeToParcel(r10, r12)
-                goto L_0x00de
-            L_0x00db:
-                r10.writeInt(r0)
-            L_0x00de:
-                return r12
-            L_0x00df:
-                r9.enforceInterface(r11)
-                int r13 = r18.readInt()
-                int r2 = r18.readInt()
-                if (r2 == 0) goto L_0x00f5
-                android.os.Parcelable$Creator<android.telephony.euicc.DownloadableSubscription> r2 = android.telephony.euicc.DownloadableSubscription.CREATOR
-                java.lang.Object r2 = r2.createFromParcel(r9)
-                android.telephony.euicc.DownloadableSubscription r2 = (android.telephony.euicc.DownloadableSubscription) r2
-                goto L_0x00f6
-            L_0x00f5:
-                r2 = r1
-            L_0x00f6:
-                int r3 = r18.readInt()
-                if (r3 == 0) goto L_0x00fe
-                r3 = r12
-                goto L_0x00ff
-            L_0x00fe:
-                r3 = r0
-            L_0x00ff:
-                java.lang.String r14 = r18.readString()
-                int r0 = r18.readInt()
-                if (r0 == 0) goto L_0x0113
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r9)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-                r5 = r0
-                goto L_0x0114
-            L_0x0113:
-                r5 = r1
-            L_0x0114:
-                int r0 = r18.readInt()
-                if (r0 == 0) goto L_0x0124
-                android.os.Parcelable$Creator<android.app.PendingIntent> r0 = android.app.PendingIntent.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r9)
-                android.app.PendingIntent r0 = (android.app.PendingIntent) r0
-                r6 = r0
-                goto L_0x0125
-            L_0x0124:
-                r6 = r1
-            L_0x0125:
-                r0 = r16
-                r1 = r13
-                r4 = r14
-                r0.downloadSubscription(r1, r2, r3, r4, r5, r6)
-                return r12
-            L_0x012d:
-                r9.enforceInterface(r11)
-                int r0 = r18.readInt()
-                int r1 = r7.getOtaStatus(r0)
-                r19.writeNoException()
-                r10.writeInt(r1)
-                return r12
-            L_0x013f:
-                r9.enforceInterface(r11)
-                int r0 = r18.readInt()
-                java.lang.String r1 = r18.readString()
-                java.lang.String r2 = r7.getEid(r0, r1)
-                r19.writeNoException()
-                r10.writeString(r2)
-                return r12
-            L_0x0155:
-                r9.enforceInterface(r11)
-                int r0 = r18.readInt()
-                java.lang.String r2 = r18.readString()
-                int r3 = r18.readInt()
-                if (r3 == 0) goto L_0x016f
-                android.os.Parcelable$Creator<android.app.PendingIntent> r1 = android.app.PendingIntent.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r9)
-                android.app.PendingIntent r1 = (android.app.PendingIntent) r1
-                goto L_0x0170
-            L_0x016f:
-            L_0x0170:
-                r7.getDefaultDownloadableSubscriptionList(r0, r2, r1)
-                return r12
-            L_0x0174:
-                r9.enforceInterface(r11)
-                int r0 = r18.readInt()
-                int r2 = r18.readInt()
-                if (r2 == 0) goto L_0x018a
-                android.os.Parcelable$Creator<android.telephony.euicc.DownloadableSubscription> r2 = android.telephony.euicc.DownloadableSubscription.CREATOR
-                java.lang.Object r2 = r2.createFromParcel(r9)
-                android.telephony.euicc.DownloadableSubscription r2 = (android.telephony.euicc.DownloadableSubscription) r2
-                goto L_0x018b
-            L_0x018a:
-                r2 = r1
-            L_0x018b:
-                java.lang.String r3 = r18.readString()
-                int r4 = r18.readInt()
-                if (r4 == 0) goto L_0x019e
-                android.os.Parcelable$Creator<android.app.PendingIntent> r1 = android.app.PendingIntent.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r9)
-                android.app.PendingIntent r1 = (android.app.PendingIntent) r1
-                goto L_0x019f
-            L_0x019e:
-            L_0x019f:
-                r7.getDownloadableSubscriptionMetadata(r0, r2, r3, r1)
-                return r12
-            L_0x01a3:
-                r9.enforceInterface(r11)
-                int r0 = r18.readInt()
-                int r2 = r18.readInt()
-                if (r2 == 0) goto L_0x01b9
-                android.os.Parcelable$Creator<android.content.Intent> r2 = android.content.Intent.CREATOR
-                java.lang.Object r2 = r2.createFromParcel(r9)
-                android.content.Intent r2 = (android.content.Intent) r2
-                goto L_0x01ba
-            L_0x01b9:
-                r2 = r1
-            L_0x01ba:
-                int r3 = r18.readInt()
-                if (r3 == 0) goto L_0x01c9
-                android.os.Parcelable$Creator<android.os.Bundle> r1 = android.os.Bundle.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r9)
-                android.os.Bundle r1 = (android.os.Bundle) r1
-                goto L_0x01ca
-            L_0x01c9:
-            L_0x01ca:
-                r7.continueOperation(r0, r2, r1)
-                return r12
-            L_0x01ce:
-                r10.writeString(r11)
-                return r12
-            */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.internal.telephony.euicc.IEuiccController.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            Intent _arg1;
+            DownloadableSubscription _arg12;
+            DownloadableSubscription _arg13;
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0 = data.readInt();
+                    if (data.readInt() != 0) {
+                        _arg1 = Intent.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg1 = null;
+                    }
+                    Bundle _arg2 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    continueOperation(_arg0, _arg1, _arg2);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    if (data.readInt() != 0) {
+                        _arg12 = DownloadableSubscription.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg12 = null;
+                    }
+                    String _arg22 = data.readString();
+                    PendingIntent _arg3 = data.readInt() != 0 ? PendingIntent.CREATOR.createFromParcel(data) : null;
+                    getDownloadableSubscriptionMetadata(_arg02, _arg12, _arg22, _arg3);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg03 = data.readInt();
+                    String _arg14 = data.readString();
+                    PendingIntent _arg23 = data.readInt() != 0 ? PendingIntent.CREATOR.createFromParcel(data) : null;
+                    getDefaultDownloadableSubscriptionList(_arg03, _arg14, _arg23);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg04 = data.readInt();
+                    String _arg15 = data.readString();
+                    String _result = getEid(_arg04, _arg15);
+                    reply.writeNoException();
+                    reply.writeString(_result);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg05 = data.readInt();
+                    int _result2 = getOtaStatus(_arg05);
+                    reply.writeNoException();
+                    reply.writeInt(_result2);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg06 = data.readInt();
+                    if (data.readInt() != 0) {
+                        _arg13 = DownloadableSubscription.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg13 = null;
+                    }
+                    boolean _arg24 = data.readInt() != 0;
+                    String _arg32 = data.readString();
+                    Bundle _arg4 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    PendingIntent _arg5 = data.readInt() != 0 ? PendingIntent.CREATOR.createFromParcel(data) : null;
+                    downloadSubscription(_arg06, _arg13, _arg24, _arg32, _arg4, _arg5);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg07 = data.readInt();
+                    EuiccInfo _result3 = getEuiccInfo(_arg07);
+                    reply.writeNoException();
+                    if (_result3 != null) {
+                        reply.writeInt(1);
+                        _result3.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg08 = data.readInt();
+                    int _arg16 = data.readInt();
+                    String _arg25 = data.readString();
+                    PendingIntent _arg33 = data.readInt() != 0 ? PendingIntent.CREATOR.createFromParcel(data) : null;
+                    deleteSubscription(_arg08, _arg16, _arg25, _arg33);
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg09 = data.readInt();
+                    int _arg17 = data.readInt();
+                    String _arg26 = data.readString();
+                    PendingIntent _arg34 = data.readInt() != 0 ? PendingIntent.CREATOR.createFromParcel(data) : null;
+                    switchToSubscription(_arg09, _arg17, _arg26, _arg34);
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg010 = data.readInt();
+                    int _arg18 = data.readInt();
+                    String _arg27 = data.readString();
+                    String _arg35 = data.readString();
+                    PendingIntent _arg42 = data.readInt() != 0 ? PendingIntent.CREATOR.createFromParcel(data) : null;
+                    updateSubscriptionNickname(_arg010, _arg18, _arg27, _arg35, _arg42);
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg011 = data.readInt();
+                    PendingIntent _arg19 = data.readInt() != 0 ? PendingIntent.CREATOR.createFromParcel(data) : null;
+                    eraseSubscriptions(_arg011, _arg19);
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg012 = data.readInt();
+                    PendingIntent _arg110 = data.readInt() != 0 ? PendingIntent.CREATOR.createFromParcel(data) : null;
+                    retainSubscriptionsForFactoryReset(_arg012, _arg110);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IEuiccController {
             public static IEuiccController sDefaultImpl;
             private IBinder mRemote;
@@ -424,6 +300,7 @@ public interface IEuiccController extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -432,6 +309,7 @@ public interface IEuiccController extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // com.android.internal.telephony.euicc.IEuiccController
             public void continueOperation(int cardId, Intent resolutionIntent, Bundle resolutionExtras) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -449,9 +327,8 @@ public interface IEuiccController extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().continueOperation(cardId, resolutionIntent, resolutionExtras);
                     }
                 } finally {
@@ -459,6 +336,7 @@ public interface IEuiccController extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.euicc.IEuiccController
             public void getDownloadableSubscriptionMetadata(int cardId, DownloadableSubscription subscription, String callingPackage, PendingIntent callbackIntent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -477,9 +355,8 @@ public interface IEuiccController extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().getDownloadableSubscriptionMetadata(cardId, subscription, callingPackage, callbackIntent);
                     }
                 } finally {
@@ -487,6 +364,7 @@ public interface IEuiccController extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.euicc.IEuiccController
             public void getDefaultDownloadableSubscriptionList(int cardId, String callingPackage, PendingIntent callbackIntent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -499,9 +377,8 @@ public interface IEuiccController extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().getDefaultDownloadableSubscriptionList(cardId, callingPackage, callbackIntent);
                     }
                 } finally {
@@ -509,6 +386,7 @@ public interface IEuiccController extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.euicc.IEuiccController
             public String getEid(int cardId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -516,13 +394,12 @@ public interface IEuiccController extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(cardId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(4, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getEid(cardId, callingPackage);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -530,19 +407,19 @@ public interface IEuiccController extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.euicc.IEuiccController
             public int getOtaStatus(int cardId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(cardId);
-                    if (!this.mRemote.transact(5, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getOtaStatus(cardId);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -550,62 +427,56 @@ public interface IEuiccController extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.euicc.IEuiccController
             public void downloadSubscription(int cardId, DownloadableSubscription subscription, boolean switchAfterDownload, String callingPackage, Bundle resolvedBundle, PendingIntent callbackIntent) throws RemoteException {
-                DownloadableSubscription downloadableSubscription = subscription;
-                Bundle bundle = resolvedBundle;
-                PendingIntent pendingIntent = callbackIntent;
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     try {
                         _data.writeInt(cardId);
-                        if (downloadableSubscription != null) {
+                        if (subscription != null) {
                             _data.writeInt(1);
-                            downloadableSubscription.writeToParcel(_data, 0);
+                            subscription.writeToParcel(_data, 0);
                         } else {
                             _data.writeInt(0);
                         }
-                        try {
-                            _data.writeInt(switchAfterDownload ? 1 : 0);
-                        } catch (Throwable th) {
-                            th = th;
-                            String str = callingPackage;
-                            _data.recycle();
-                            throw th;
-                        }
-                    } catch (Throwable th2) {
-                        th = th2;
-                        boolean z = switchAfterDownload;
-                        String str2 = callingPackage;
+                    } catch (Throwable th) {
+                        th = th;
                         _data.recycle();
                         throw th;
                     }
                     try {
-                        _data.writeString(callingPackage);
-                        if (bundle != null) {
-                            _data.writeInt(1);
-                            bundle.writeToParcel(_data, 0);
-                        } else {
-                            _data.writeInt(0);
-                        }
-                        if (pendingIntent != null) {
-                            _data.writeInt(1);
-                            pendingIntent.writeToParcel(_data, 0);
-                        } else {
-                            _data.writeInt(0);
-                        }
+                        _data.writeInt(switchAfterDownload ? 1 : 0);
                         try {
-                            if (this.mRemote.transact(6, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                                _data.recycle();
-                                return;
+                            _data.writeString(callingPackage);
+                            if (resolvedBundle != null) {
+                                _data.writeInt(1);
+                                resolvedBundle.writeToParcel(_data, 0);
+                            } else {
+                                _data.writeInt(0);
                             }
+                            if (callbackIntent != null) {
+                                _data.writeInt(1);
+                                callbackIntent.writeToParcel(_data, 0);
+                            } else {
+                                _data.writeInt(0);
+                            }
+                        } catch (Throwable th2) {
+                            th = th2;
+                        }
+                    } catch (Throwable th3) {
+                        th = th3;
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        boolean _status = this.mRemote.transact(6, _data, null, 1);
+                        if (!_status && Stub.getDefaultImpl() != null) {
                             Stub.getDefaultImpl().downloadSubscription(cardId, subscription, switchAfterDownload, callingPackage, resolvedBundle, callbackIntent);
                             _data.recycle();
-                        } catch (Throwable th3) {
-                            th = th3;
-                            _data.recycle();
-                            throw th;
+                            return;
                         }
+                        _data.recycle();
                     } catch (Throwable th4) {
                         th = th4;
                         _data.recycle();
@@ -613,14 +484,10 @@ public interface IEuiccController extends IInterface {
                     }
                 } catch (Throwable th5) {
                     th = th5;
-                    int i = cardId;
-                    boolean z2 = switchAfterDownload;
-                    String str22 = callingPackage;
-                    _data.recycle();
-                    throw th;
                 }
             }
 
+            @Override // com.android.internal.telephony.euicc.IEuiccController
             public EuiccInfo getEuiccInfo(int cardId) throws RemoteException {
                 EuiccInfo _result;
                 Parcel _data = Parcel.obtain();
@@ -628,7 +495,8 @@ public interface IEuiccController extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(cardId);
-                    if (!this.mRemote.transact(7, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getEuiccInfo(cardId);
                     }
                     _reply.readException();
@@ -637,16 +505,14 @@ public interface IEuiccController extends IInterface {
                     } else {
                         _result = null;
                     }
-                    EuiccInfo _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.euicc.IEuiccController
             public void deleteSubscription(int cardId, int subscriptionId, String callingPackage, PendingIntent callbackIntent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -660,9 +526,8 @@ public interface IEuiccController extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(8, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(8, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().deleteSubscription(cardId, subscriptionId, callingPackage, callbackIntent);
                     }
                 } finally {
@@ -670,6 +535,7 @@ public interface IEuiccController extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.euicc.IEuiccController
             public void switchToSubscription(int cardId, int subscriptionId, String callingPackage, PendingIntent callbackIntent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -683,9 +549,8 @@ public interface IEuiccController extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(9, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(9, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().switchToSubscription(cardId, subscriptionId, callingPackage, callbackIntent);
                     }
                 } finally {
@@ -693,6 +558,7 @@ public interface IEuiccController extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.euicc.IEuiccController
             public void updateSubscriptionNickname(int cardId, int subscriptionId, String nickname, String callingPackage, PendingIntent callbackIntent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -707,9 +573,8 @@ public interface IEuiccController extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(10, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(10, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().updateSubscriptionNickname(cardId, subscriptionId, nickname, callingPackage, callbackIntent);
                     }
                 } finally {
@@ -717,6 +582,7 @@ public interface IEuiccController extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.euicc.IEuiccController
             public void eraseSubscriptions(int cardId, PendingIntent callbackIntent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -728,9 +594,8 @@ public interface IEuiccController extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(11, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(11, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().eraseSubscriptions(cardId, callbackIntent);
                     }
                 } finally {
@@ -738,6 +603,7 @@ public interface IEuiccController extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.euicc.IEuiccController
             public void retainSubscriptionsForFactoryReset(int cardId, PendingIntent callbackIntent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -749,9 +615,8 @@ public interface IEuiccController extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(12, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(12, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().retainSubscriptionsForFactoryReset(cardId, callbackIntent);
                     }
                 } finally {
@@ -761,11 +626,11 @@ public interface IEuiccController extends IInterface {
         }
 
         public static boolean setDefaultImpl(IEuiccController impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IEuiccController getDefaultImpl() {

@@ -1,16 +1,21 @@
 package android.view;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.view.IRemoteAnimationRunner;
 
+/* loaded from: classes4.dex */
 public class RemoteAnimationAdapter implements Parcelable {
-    public static final Parcelable.Creator<RemoteAnimationAdapter> CREATOR = new Parcelable.Creator<RemoteAnimationAdapter>() {
+    public static final Parcelable.Creator<RemoteAnimationAdapter> CREATOR = new Parcelable.Creator<RemoteAnimationAdapter>() { // from class: android.view.RemoteAnimationAdapter.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RemoteAnimationAdapter createFromParcel(Parcel in) {
             return new RemoteAnimationAdapter(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RemoteAnimationAdapter[] newArray(int size) {
             return new RemoteAnimationAdapter[size];
         }
@@ -65,10 +70,12 @@ public class RemoteAnimationAdapter implements Parcelable {
         return this.mCallingPid;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeStrongInterface(this.mRunner);
         dest.writeLong(this.mDuration);

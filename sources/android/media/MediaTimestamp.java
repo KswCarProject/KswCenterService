@@ -1,5 +1,6 @@
 package android.media;
 
+/* loaded from: classes3.dex */
 public final class MediaTimestamp {
     public static final MediaTimestamp TIMESTAMP_UNKNOWN = new MediaTimestamp(-1, -1, 0.0f);
     public final float clockRate;
@@ -23,15 +24,15 @@ public final class MediaTimestamp {
         return this.clockRate;
     }
 
-    public MediaTimestamp(long mediaTimeUs2, long nanoTimeNs, float clockRate2) {
-        this.mediaTimeUs = mediaTimeUs2;
+    public MediaTimestamp(long mediaTimeUs, long nanoTimeNs, float clockRate) {
+        this.mediaTimeUs = mediaTimeUs;
         this.nanoTime = nanoTimeNs;
-        this.clockRate = clockRate2;
+        this.clockRate = clockRate;
     }
 
     MediaTimestamp() {
-        this.mediaTimeUs = 0;
-        this.nanoTime = 0;
+        this.mediaTimeUs = 0L;
+        this.nanoTime = 0L;
         this.clockRate = 1.0f;
     }
 

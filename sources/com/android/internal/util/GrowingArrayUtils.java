@@ -2,15 +2,18 @@ package com.android.internal.util;
 
 import android.annotation.UnsupportedAppUsage;
 
+/* loaded from: classes4.dex */
 public final class GrowingArrayUtils {
     static final /* synthetic */ boolean $assertionsDisabled = false;
 
+    /* JADX WARN: Multi-variable type inference failed */
+    /* JADX WARN: Type inference failed for: r0v3, types: [java.lang.Object[], java.lang.Object] */
     @UnsupportedAppUsage
     public static <T> T[] append(T[] array, int currentSize, T element) {
         if (currentSize + 1 > array.length) {
-            T[] newArray = ArrayUtils.newUnpaddedArray(array.getClass().getComponentType(), growSize(currentSize));
-            System.arraycopy(array, 0, newArray, 0, currentSize);
-            array = newArray;
+            ?? newUnpaddedArray = ArrayUtils.newUnpaddedArray(array.getClass().getComponentType(), growSize(currentSize));
+            System.arraycopy(array, 0, newUnpaddedArray, 0, currentSize);
+            array = newUnpaddedArray;
         }
         array[currentSize] = element;
         return array;
@@ -63,7 +66,7 @@ public final class GrowingArrayUtils {
             array[index] = element;
             return array;
         }
-        T[] newArray = ArrayUtils.newUnpaddedArray(array.getClass().getComponentType(), growSize(currentSize));
+        T[] newArray = (T[]) ArrayUtils.newUnpaddedArray(array.getClass().getComponentType(), growSize(currentSize));
         System.arraycopy(array, 0, newArray, 0, index);
         newArray[index] = element;
         System.arraycopy(array, index, newArray, index + 1, array.length - index);

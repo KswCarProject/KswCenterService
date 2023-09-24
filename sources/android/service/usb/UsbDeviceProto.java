@@ -1,5 +1,6 @@
 package android.service.usb;
 
+/* loaded from: classes3.dex */
 public final class UsbDeviceProto {
     public static final long CLASS = 1120986464260L;
     public static final long CONFIGURATIONS = 2246267895819L;

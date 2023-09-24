@@ -1,16 +1,21 @@
 package android.media.projection;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.UserHandle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.UserHandle;
 import java.util.Objects;
 
+/* loaded from: classes3.dex */
 public final class MediaProjectionInfo implements Parcelable {
-    public static final Parcelable.Creator<MediaProjectionInfo> CREATOR = new Parcelable.Creator<MediaProjectionInfo>() {
+    public static final Parcelable.Creator<MediaProjectionInfo> CREATOR = new Parcelable.Creator<MediaProjectionInfo>() { // from class: android.media.projection.MediaProjectionInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public MediaProjectionInfo createFromParcel(Parcel in) {
             return new MediaProjectionInfo(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public MediaProjectionInfo[] newArray(int size) {
             return new MediaProjectionInfo[size];
         }
@@ -37,28 +42,27 @@ public final class MediaProjectionInfo implements Parcelable {
     }
 
     public boolean equals(Object o) {
-        if (!(o instanceof MediaProjectionInfo)) {
-            return false;
+        if (o instanceof MediaProjectionInfo) {
+            MediaProjectionInfo other = (MediaProjectionInfo) o;
+            return Objects.equals(other.mPackageName, this.mPackageName) && Objects.equals(other.mUserHandle, this.mUserHandle);
         }
-        MediaProjectionInfo other = (MediaProjectionInfo) o;
-        if (!Objects.equals(other.mPackageName, this.mPackageName) || !Objects.equals(other.mUserHandle, this.mUserHandle)) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{this.mPackageName, this.mUserHandle});
+        return Objects.hash(this.mPackageName, this.mUserHandle);
     }
 
     public String toString() {
         return "MediaProjectionInfo{mPackageName=" + this.mPackageName + ", mUserHandle=" + this.mUserHandle + "}";
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(this.mPackageName);
         UserHandle.writeToParcel(this.mUserHandle, out);

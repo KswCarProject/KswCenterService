@@ -6,13 +6,14 @@ import android.net.ParseException;
 import android.net.Uri;
 import android.net.WebAddress;
 import com.android.internal.midi.MidiConstants;
-import com.android.internal.os.BatteryStatsHistory;
+import com.android.internal.p016os.BatteryStatsHistory;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/* loaded from: classes4.dex */
 public final class URLUtil {
     static final String ASSET_BASE = "file:///android_asset/";
     static final String CONTENT_BASE = "content:";
@@ -24,7 +25,6 @@ public final class URLUtil {
     private static final boolean TRACE = false;
 
     public static String guessUrl(String inUrl) {
-        String retVal = inUrl;
         if (inUrl.length() == 0 || inUrl.startsWith("about:") || inUrl.startsWith("data:") || inUrl.startsWith(FILE_BASE) || inUrl.startsWith("javascript:")) {
             return inUrl;
         }
@@ -38,7 +38,7 @@ public final class URLUtil {
             }
             return webAddress.toString();
         } catch (ParseException e) {
-            return retVal;
+            return inUrl;
         }
     }
 
@@ -50,7 +50,8 @@ public final class URLUtil {
         StringBuilder buffer = new StringBuilder();
         buffer.append(template.substring(0, placeHolderIndex));
         try {
-            buffer.append(URLEncoder.encode(inQuery, "utf-8"));
+            String query = URLEncoder.encode(inQuery, "utf-8");
+            buffer.append(query);
             buffer.append(template.substring(queryPlaceHolder.length() + placeHolderIndex));
             return buffer.toString();
         } catch (UnsupportedEncodingException e) {
@@ -109,16 +110,16 @@ public final class URLUtil {
     }
 
     private static int parseHex(byte b) {
-        if (b >= 48 && b <= 57) {
-            return b + MidiConstants.STATUS_CHANNEL_PRESSURE;
-        }
-        if (b >= 65 && b <= 70) {
+        if (b < 48 || b > 57) {
+            if (b < 65 || b > 70) {
+                if (b < 97 || b > 102) {
+                    throw new IllegalArgumentException("Invalid hex char '" + ((int) b) + "'");
+                }
+                return (b - 97) + 10;
+            }
             return (b - 65) + 10;
         }
-        if (b >= 97 && b <= 102) {
-            return (b - 97) + 10;
-        }
-        throw new IllegalArgumentException("Invalid hex char '" + b + "'");
+        return b + MidiConstants.STATUS_CHANNEL_PRESSURE;
     }
 
     public static boolean isAssetUrl(String url) {
@@ -136,7 +137,7 @@ public final class URLUtil {
     }
 
     public static boolean isFileUrl(String url) {
-        return url != null && url.startsWith(FILE_BASE) && !url.startsWith(ASSET_BASE) && !url.startsWith(PROXY_BASE);
+        return (url == null || !url.startsWith(FILE_BASE) || url.startsWith(ASSET_BASE) || url.startsWith(PROXY_BASE)) ? false : true;
     }
 
     public static boolean isAboutUrl(String url) {
@@ -152,27 +153,18 @@ public final class URLUtil {
     }
 
     public static boolean isHttpUrl(String url) {
-        if (url == null || url.length() <= 6 || !url.substring(0, 7).equalsIgnoreCase("http://")) {
-            return false;
-        }
-        return true;
+        return url != null && url.length() > 6 && url.substring(0, 7).equalsIgnoreCase("http://");
     }
 
     public static boolean isHttpsUrl(String url) {
-        if (url == null || url.length() <= 7 || !url.substring(0, 8).equalsIgnoreCase("https://")) {
-            return false;
-        }
-        return true;
+        return url != null && url.length() > 7 && url.substring(0, 8).equalsIgnoreCase("https://");
     }
 
     public static boolean isNetworkUrl(String url) {
         if (url == null || url.length() == 0) {
             return false;
         }
-        if (isHttpUrl(url) || isHttpsUrl(url)) {
-            return true;
-        }
-        return false;
+        return isHttpUrl(url) || isHttpsUrl(url);
     }
 
     public static boolean isContentUrl(String url) {
@@ -183,10 +175,7 @@ public final class URLUtil {
         if (url == null || url.length() == 0) {
             return false;
         }
-        if (isAssetUrl(url) || isResourceUrl(url) || isFileUrl(url) || isAboutUrl(url) || isHttpUrl(url) || isHttpsUrl(url) || isJavaScriptUrl(url) || isContentUrl(url)) {
-            return true;
-        }
-        return false;
+        return isAssetUrl(url) || isResourceUrl(url) || isFileUrl(url) || isAboutUrl(url) || isHttpUrl(url) || isHttpsUrl(url) || isJavaScriptUrl(url) || isContentUrl(url);
     }
 
     public static String stripAnchor(String url) {
@@ -220,22 +209,25 @@ public final class URLUtil {
         }
         int dotIndex = filename.indexOf(46);
         if (dotIndex < 0) {
-            if (!(mimeType == null || (extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType)) == null)) {
+            if (mimeType != null && (extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType)) != null) {
                 extension = "." + extension;
             }
             if (extension == null) {
-                if (mimeType == null || !mimeType.toLowerCase(Locale.ROOT).startsWith("text/")) {
-                    extension = BatteryStatsHistory.FILE_SUFFIX;
-                } else if (mimeType.equalsIgnoreCase(ClipDescription.MIMETYPE_TEXT_HTML)) {
-                    extension = ".html";
+                if (mimeType != null && mimeType.toLowerCase(Locale.ROOT).startsWith("text/")) {
+                    if (mimeType.equalsIgnoreCase(ClipDescription.MIMETYPE_TEXT_HTML)) {
+                        extension = ".html";
+                    } else {
+                        extension = ".txt";
+                    }
                 } else {
-                    extension = ".txt";
+                    extension = BatteryStatsHistory.FILE_SUFFIX;
                 }
             }
         } else {
             if (mimeType != null) {
-                String typeFromExt = MimeTypeMap.getSingleton().getMimeTypeFromExtension(filename.substring(filename.lastIndexOf(46) + 1));
-                if (!(typeFromExt == null || typeFromExt.equalsIgnoreCase(mimeType) || (extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType)) == null)) {
+                int lastDotIndex = filename.lastIndexOf(46);
+                String typeFromExt = MimeTypeMap.getSingleton().getMimeTypeFromExtension(filename.substring(lastDotIndex + 1));
+                if (typeFromExt != null && !typeFromExt.equalsIgnoreCase(mimeType) && (extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType)) != null) {
                     extension = "." + extension;
                 }
             }

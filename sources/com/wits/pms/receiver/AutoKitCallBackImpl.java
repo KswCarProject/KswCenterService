@@ -1,10 +1,11 @@
 package com.wits.pms.receiver;
 
 import android.content.Context;
-import android.os.RemoteException;
+import android.p007os.RemoteException;
 import com.wits.pms.bean.AutoKitMessage;
 import com.wits.pms.statuscontrol.PowerManagerApp;
 
+/* loaded from: classes2.dex */
 public class AutoKitCallBackImpl {
     public static final int AUTO_BOX_CONTROL_CMD_NEXT = 13;
     public static final int AUTO_BOX_CONTROL_CMD_PAUSE = 11;
@@ -38,16 +39,16 @@ public class AutoKitCallBackImpl {
     private static Context mContext;
 
     public static void init(Context context) {
-        if (context != null) {
-            mContext = context.getApplicationContext();
-            autoKitCallBack = new AutoKitCallBackImpl();
-            return;
+        if (context == null) {
+            try {
+                throw new Exception();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return;
+            }
         }
-        try {
-            throw new Exception();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        mContext = context.getApplicationContext();
+        autoKitCallBack = new AutoKitCallBackImpl();
     }
 
     public static AutoKitCallBackImpl getImpl(Context context) {

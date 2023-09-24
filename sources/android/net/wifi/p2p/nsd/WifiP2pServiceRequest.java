@@ -1,17 +1,26 @@
 package android.net.wifi.p2p.nsd;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.Locale;
 
+/* loaded from: classes3.dex */
 public class WifiP2pServiceRequest implements Parcelable {
     @UnsupportedAppUsage
-    public static final Parcelable.Creator<WifiP2pServiceRequest> CREATOR = new Parcelable.Creator<WifiP2pServiceRequest>() {
+    public static final Parcelable.Creator<WifiP2pServiceRequest> CREATOR = new Parcelable.Creator<WifiP2pServiceRequest>() { // from class: android.net.wifi.p2p.nsd.WifiP2pServiceRequest.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WifiP2pServiceRequest createFromParcel(Parcel in) {
-            return new WifiP2pServiceRequest(in.readInt(), in.readInt(), in.readInt(), in.readString());
+            int servType = in.readInt();
+            int length = in.readInt();
+            int transId = in.readInt();
+            String query = in.readString();
+            return new WifiP2pServiceRequest(servType, length, transId, query);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WifiP2pServiceRequest[] newArray(int size) {
             return new WifiP2pServiceRequest[size];
         }
@@ -50,10 +59,10 @@ public class WifiP2pServiceRequest implements Parcelable {
 
     public String getSupplicantQuery() {
         StringBuffer sb = new StringBuffer();
-        sb.append(String.format(Locale.US, "%02x", new Object[]{Integer.valueOf(this.mLength & 255)}));
-        sb.append(String.format(Locale.US, "%02x", new Object[]{Integer.valueOf((this.mLength >> 8) & 255)}));
-        sb.append(String.format(Locale.US, "%02x", new Object[]{Integer.valueOf(this.mProtocolType)}));
-        sb.append(String.format(Locale.US, "%02x", new Object[]{Integer.valueOf(this.mTransId)}));
+        sb.append(String.format(Locale.US, "%02x", Integer.valueOf(this.mLength & 255)));
+        sb.append(String.format(Locale.US, "%02x", Integer.valueOf((this.mLength >> 8) & 255)));
+        sb.append(String.format(Locale.US, "%02x", Integer.valueOf(this.mProtocolType)));
+        sb.append(String.format(Locale.US, "%02x", Integer.valueOf(this.mTransId)));
         if (this.mQuery != null) {
             sb.append(this.mQuery);
         }
@@ -61,20 +70,23 @@ public class WifiP2pServiceRequest implements Parcelable {
     }
 
     private void validateQuery(String query) {
-        if (query != null) {
-            if (query.length() % 2 == 1) {
-                throw new IllegalArgumentException("query size is invalid. query=" + query);
-            } else if (query.length() / 2 <= 65535) {
-                String query2 = query.toLowerCase(Locale.ROOT);
-                for (char c : query2.toCharArray()) {
-                    if ((c < '0' || c > '9') && (c < 'a' || c > 'f')) {
-                        throw new IllegalArgumentException("query should be hex string. query=" + query2);
-                    }
-                }
-            } else {
+        if (query == null) {
+            return;
+        }
+        if (query.length() % 2 != 1) {
+            if (query.length() / 2 > 65535) {
                 throw new IllegalArgumentException("query size is too large. len=" + query.length());
             }
+            String query2 = query.toLowerCase(Locale.ROOT);
+            char[] chars = query2.toCharArray();
+            for (char c : chars) {
+                if ((c < '0' || c > '9') && (c < 'a' || c > 'f')) {
+                    throw new IllegalArgumentException("query should be hex string. query=" + query2);
+                }
+            }
+            return;
         }
+        throw new IllegalArgumentException("query size is invalid. query=" + query);
     }
 
     public static WifiP2pServiceRequest newInstance(int protocolType, String queryData) {
@@ -82,37 +94,40 @@ public class WifiP2pServiceRequest implements Parcelable {
     }
 
     public static WifiP2pServiceRequest newInstance(int protocolType) {
-        return new WifiP2pServiceRequest(protocolType, (String) null);
+        return new WifiP2pServiceRequest(protocolType, null);
     }
 
     public boolean equals(Object o) {
         if (o == this) {
             return true;
         }
-        if (!(o instanceof WifiP2pServiceRequest)) {
+        if (o instanceof WifiP2pServiceRequest) {
+            WifiP2pServiceRequest req = (WifiP2pServiceRequest) o;
+            if (req.mProtocolType == this.mProtocolType && req.mLength == this.mLength) {
+                if (req.mQuery == null && this.mQuery == null) {
+                    return true;
+                }
+                if (req.mQuery != null) {
+                    return req.mQuery.equals(this.mQuery);
+                }
+                return false;
+            }
             return false;
-        }
-        WifiP2pServiceRequest req = (WifiP2pServiceRequest) o;
-        if (req.mProtocolType != this.mProtocolType || req.mLength != this.mLength) {
-            return false;
-        }
-        if (req.mQuery == null && this.mQuery == null) {
-            return true;
-        }
-        if (req.mQuery != null) {
-            return req.mQuery.equals(this.mQuery);
         }
         return false;
     }
 
     public int hashCode() {
-        return (((((17 * 31) + this.mProtocolType) * 31) + this.mLength) * 31) + (this.mQuery == null ? 0 : this.mQuery.hashCode());
+        int result = (17 * 31) + this.mProtocolType;
+        return (((result * 31) + this.mLength) * 31) + (this.mQuery == null ? 0 : this.mQuery.hashCode());
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mProtocolType);
         dest.writeInt(this.mLength);

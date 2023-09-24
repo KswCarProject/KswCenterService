@@ -1,8 +1,8 @@
 package android.net.nsd;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.util.Base64;
@@ -14,24 +14,28 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
 
+/* loaded from: classes3.dex */
 public final class NsdServiceInfo implements Parcelable {
-    public static final Parcelable.Creator<NsdServiceInfo> CREATOR = new Parcelable.Creator<NsdServiceInfo>() {
+    public static final Parcelable.Creator<NsdServiceInfo> CREATOR = new Parcelable.Creator<NsdServiceInfo>() { // from class: android.net.nsd.NsdServiceInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NsdServiceInfo createFromParcel(Parcel in) {
             NsdServiceInfo info = new NsdServiceInfo();
-            String unused = info.mServiceName = in.readString();
-            String unused2 = info.mServiceType = in.readString();
+            info.mServiceName = in.readString();
+            info.mServiceType = in.readString();
             if (in.readInt() == 1) {
                 try {
-                    InetAddress unused3 = info.mHost = InetAddress.getByAddress(in.createByteArray());
+                    info.mHost = InetAddress.getByAddress(in.createByteArray());
                 } catch (UnknownHostException e) {
                 }
             }
-            int unused4 = info.mPort = in.readInt();
+            info.mPort = in.readInt();
             int recordCount = in.readInt();
             for (int i = 0; i < recordCount; i++) {
                 byte[] valueArray = null;
                 if (in.readInt() == 1) {
-                    valueArray = new byte[in.readInt()];
+                    int valueLength = in.readInt();
+                    valueArray = new byte[valueLength];
                     in.readByteArray(valueArray);
                 }
                 info.mTxtRecord.put(in.readString(), valueArray);
@@ -39,21 +43,18 @@ public final class NsdServiceInfo implements Parcelable {
             return info;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NsdServiceInfo[] newArray(int size) {
             return new NsdServiceInfo[size];
         }
     };
     private static final String TAG = "NsdServiceInfo";
-    /* access modifiers changed from: private */
-    public InetAddress mHost;
-    /* access modifiers changed from: private */
-    public int mPort;
-    /* access modifiers changed from: private */
-    public String mServiceName;
-    /* access modifiers changed from: private */
-    public String mServiceType;
-    /* access modifiers changed from: private */
-    public final ArrayMap<String, byte[]> mTxtRecord = new ArrayMap<>();
+    private InetAddress mHost;
+    private int mPort;
+    private String mServiceName;
+    private String mServiceType;
+    private final ArrayMap<String, byte[]> mTxtRecord = new ArrayMap<>();
 
     public NsdServiceInfo() {
     }
@@ -96,101 +97,92 @@ public final class NsdServiceInfo implements Parcelable {
     }
 
     public void setTxtRecords(String rawRecords) {
+        byte[] value;
+        String key;
         int pos = 0;
         byte[] txtRecordsRawBytes = Base64.decode(rawRecords, 0);
         while (pos < txtRecordsRawBytes.length) {
             int recordLen = txtRecordsRawBytes[pos] & 255;
             int pos2 = pos + 1;
-            if (recordLen != 0) {
-                try {
-                    if (pos2 + recordLen > txtRecordsRawBytes.length) {
-                        Log.w(TAG, "Corrupt record length (pos = " + pos2 + "): " + recordLen);
-                        recordLen = txtRecordsRawBytes.length - pos2;
-                    }
-                    int valueLen = 0;
-                    byte[] value = null;
-                    String key = null;
-                    for (int i = pos2; i < pos2 + recordLen; i++) {
-                        if (key != null) {
-                            if (value == null) {
-                                value = new byte[((recordLen - key.length()) - 1)];
-                            }
-                            value[valueLen] = txtRecordsRawBytes[i];
-                            valueLen++;
-                        } else if (txtRecordsRawBytes[i] == 61) {
-                            key = new String(txtRecordsRawBytes, pos2, i - pos2, StandardCharsets.US_ASCII);
-                        }
-                    }
-                    if (key == null) {
-                        key = new String(txtRecordsRawBytes, pos2, recordLen, StandardCharsets.US_ASCII);
-                    }
-                    if (TextUtils.isEmpty(key)) {
-                        throw new IllegalArgumentException("Invalid txt record (key is empty)");
-                    } else if (!getAttributes().containsKey(key)) {
-                        setAttribute(key, value);
-                        pos = pos2 + recordLen;
-                    } else {
-                        throw new IllegalArgumentException("Invalid txt record (duplicate key \"" + key + "\")");
-                    }
-                } catch (IllegalArgumentException e) {
-                    Log.e(TAG, "While parsing txt records (pos = " + pos2 + "): " + e.getMessage());
-                }
-            } else {
+            if (recordLen == 0) {
                 throw new IllegalArgumentException("Zero sized txt record");
             }
+            try {
+                if (pos2 + recordLen > txtRecordsRawBytes.length) {
+                    Log.m64w(TAG, "Corrupt record length (pos = " + pos2 + "): " + recordLen);
+                    recordLen = txtRecordsRawBytes.length - pos2;
+                }
+                int valueLen = 0;
+                value = null;
+                key = null;
+                for (int i = pos2; i < pos2 + recordLen; i++) {
+                    if (key == null) {
+                        if (txtRecordsRawBytes[i] == 61) {
+                            key = new String(txtRecordsRawBytes, pos2, i - pos2, StandardCharsets.US_ASCII);
+                        }
+                    } else {
+                        if (value == null) {
+                            value = new byte[(recordLen - key.length()) - 1];
+                        }
+                        value[valueLen] = txtRecordsRawBytes[i];
+                        valueLen++;
+                    }
+                }
+                if (key == null) {
+                    key = new String(txtRecordsRawBytes, pos2, recordLen, StandardCharsets.US_ASCII);
+                }
+            } catch (IllegalArgumentException e) {
+                Log.m70e(TAG, "While parsing txt records (pos = " + pos2 + "): " + e.getMessage());
+            }
+            if (TextUtils.isEmpty(key)) {
+                throw new IllegalArgumentException("Invalid txt record (key is empty)");
+            }
+            if (getAttributes().containsKey(key)) {
+                throw new IllegalArgumentException("Invalid txt record (duplicate key \"" + key + "\")");
+            }
+            setAttribute(key, value);
+            pos = pos2 + recordLen;
         }
     }
 
     @UnsupportedAppUsage
     public void setAttribute(String key, byte[] value) {
-        if (!TextUtils.isEmpty(key)) {
-            int i = 0;
-            int i2 = 0;
-            while (i2 < key.length()) {
-                char character = key.charAt(i2);
-                if (character < ' ' || character > '~') {
-                    throw new IllegalArgumentException("Key strings must be printable US-ASCII");
-                } else if (character != '=') {
-                    i2++;
-                } else {
-                    throw new IllegalArgumentException("Key strings must not include '='");
-                }
+        if (TextUtils.isEmpty(key)) {
+            throw new IllegalArgumentException("Key cannot be empty");
+        }
+        for (int i = 0; i < key.length(); i++) {
+            char character = key.charAt(i);
+            if (character < ' ' || character > '~') {
+                throw new IllegalArgumentException("Key strings must be printable US-ASCII");
             }
-            if (key.length() + (value == null ? 0 : value.length) < 255) {
-                if (key.length() > 9) {
-                    Log.w(TAG, "Key lengths > 9 are discouraged: " + key);
-                }
-                int length = key.length() + getTxtRecordSize();
-                if (value != null) {
-                    i = value.length;
-                }
-                int futureSize = length + i + 2;
-                if (futureSize <= 1300) {
-                    if (futureSize > 400) {
-                        Log.w(TAG, "Total length of all attributes exceeds 400 bytes; truncation may occur");
-                    }
-                    this.mTxtRecord.put(key, value);
-                    return;
-                }
-                throw new IllegalArgumentException("Total length of attributes must be < 1300 bytes");
+            if (character == '=') {
+                throw new IllegalArgumentException("Key strings must not include '='");
             }
+        }
+        int i2 = key.length();
+        if (i2 + (value == null ? 0 : value.length) >= 255) {
             throw new IllegalArgumentException("Key length + value length must be < 255 bytes");
         }
-        throw new IllegalArgumentException("Key cannot be empty");
+        if (key.length() > 9) {
+            Log.m64w(TAG, "Key lengths > 9 are discouraged: " + key);
+        }
+        int txtRecordSize = getTxtRecordSize();
+        int futureSize = key.length() + txtRecordSize + (value != null ? value.length : 0) + 2;
+        if (futureSize > 1300) {
+            throw new IllegalArgumentException("Total length of attributes must be < 1300 bytes");
+        }
+        if (futureSize > 400) {
+            Log.m64w(TAG, "Total length of all attributes exceeds 400 bytes; truncation may occur");
+        }
+        this.mTxtRecord.put(key, value);
     }
 
     public void setAttribute(String key, String value) {
-        byte[] bArr;
-        if (value == null) {
-            try {
-                bArr = null;
-            } catch (UnsupportedEncodingException e) {
-                throw new IllegalArgumentException("Value must be UTF-8");
-            }
-        } else {
-            bArr = value.getBytes("UTF-8");
+        try {
+            setAttribute(key, value == null ? null : value.getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalArgumentException("Value must be UTF-8");
         }
-        setAttribute(key, bArr);
     }
 
     public void removeAttribute(String key) {
@@ -253,10 +245,12 @@ public final class NsdServiceInfo implements Parcelable {
         return sb.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.mServiceName);
         dest.writeString(this.mServiceType);

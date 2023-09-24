@@ -1,9 +1,9 @@
 package android.view.textclassifier;
 
-import android.os.Bundle;
-import android.os.LocaleList;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Bundle;
+import android.p007os.LocaleList;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.SpannedString;
 import android.util.ArrayMap;
 import android.view.textclassifier.TextClassifier;
@@ -12,12 +12,17 @@ import com.android.internal.util.Preconditions;
 import java.util.Locale;
 import java.util.Map;
 
+/* loaded from: classes4.dex */
 public final class TextSelection implements Parcelable {
-    public static final Parcelable.Creator<TextSelection> CREATOR = new Parcelable.Creator<TextSelection>() {
+    public static final Parcelable.Creator<TextSelection> CREATOR = new Parcelable.Creator<TextSelection>() { // from class: android.view.textclassifier.TextSelection.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public TextSelection createFromParcel(Parcel in) {
             return new TextSelection(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public TextSelection[] newArray(int size) {
             return new TextSelection[size];
         }
@@ -65,9 +70,10 @@ public final class TextSelection implements Parcelable {
     }
 
     public String toString() {
-        return String.format(Locale.US, "TextSelection {id=%s, startIndex=%d, endIndex=%d, entities=%s}", new Object[]{this.mId, Integer.valueOf(this.mStartIndex), Integer.valueOf(this.mEndIndex), this.mEntityConfidence});
+        return String.format(Locale.US, "TextSelection {id=%s, startIndex=%d, endIndex=%d, entities=%s}", this.mId, Integer.valueOf(this.mStartIndex), Integer.valueOf(this.mEndIndex), this.mEntityConfidence);
     }
 
+    /* loaded from: classes4.dex */
     public static final class Builder {
         private final int mEndIndex;
         private final Map<String, Float> mEntityConfidence = new ArrayMap();
@@ -76,9 +82,8 @@ public final class TextSelection implements Parcelable {
         private final int mStartIndex;
 
         public Builder(int startIndex, int endIndex) {
-            boolean z = false;
             Preconditions.checkArgument(startIndex >= 0);
-            Preconditions.checkArgument(endIndex > startIndex ? true : z);
+            Preconditions.checkArgument(endIndex > startIndex);
             this.mStartIndex = startIndex;
             this.mEndIndex = endIndex;
         }
@@ -104,12 +109,17 @@ public final class TextSelection implements Parcelable {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class Request implements Parcelable {
-        public static final Parcelable.Creator<Request> CREATOR = new Parcelable.Creator<Request>() {
+        public static final Parcelable.Creator<Request> CREATOR = new Parcelable.Creator<Request>() { // from class: android.view.textclassifier.TextSelection.Request.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public Request createFromParcel(Parcel in) {
                 return Request.readFromParcel(in);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public Request[] newArray(int size) {
                 return new Request[size];
             }
@@ -164,6 +174,7 @@ public final class TextSelection implements Parcelable {
             return this.mExtras;
         }
 
+        /* loaded from: classes4.dex */
         public static final class Builder {
             private boolean mDarkLaunchAllowed;
             private LocaleList mDefaultLocales;
@@ -199,10 +210,12 @@ public final class TextSelection implements Parcelable {
             }
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeCharSequence(this.mText);
             dest.writeInt(this.mStartIndex);
@@ -212,22 +225,26 @@ public final class TextSelection implements Parcelable {
             dest.writeBundle(this.mExtras);
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public static Request readFromParcel(Parcel in) {
             CharSequence text = in.readCharSequence();
             int startIndex = in.readInt();
             int endIndex = in.readInt();
+            LocaleList defaultLocales = (LocaleList) in.readParcelable(null);
             String callingPackageName = in.readString();
-            Request request = new Request(text, startIndex, endIndex, (LocaleList) in.readParcelable((ClassLoader) null), false, in.readBundle());
+            Bundle extras = in.readBundle();
+            Request request = new Request(text, startIndex, endIndex, defaultLocales, false, extras);
             request.setCallingPackageName(callingPackageName);
             return request;
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mStartIndex);
         dest.writeInt(this.mEndIndex);

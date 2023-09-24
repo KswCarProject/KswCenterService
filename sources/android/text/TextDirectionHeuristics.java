@@ -4,22 +4,24 @@ import android.content.res.Configuration;
 import java.nio.CharBuffer;
 import java.util.Locale;
 
+/* loaded from: classes4.dex */
 public class TextDirectionHeuristics {
-    public static final TextDirectionHeuristic ANYRTL_LTR = new TextDirectionHeuristicInternal(AnyStrong.INSTANCE_RTL, false);
-    public static final TextDirectionHeuristic FIRSTSTRONG_LTR = new TextDirectionHeuristicInternal(FirstStrong.INSTANCE, false);
-    public static final TextDirectionHeuristic FIRSTSTRONG_RTL = new TextDirectionHeuristicInternal(FirstStrong.INSTANCE, true);
-    public static final TextDirectionHeuristic LOCALE = TextDirectionHeuristicLocale.INSTANCE;
-    public static final TextDirectionHeuristic LTR = new TextDirectionHeuristicInternal((TextDirectionAlgorithm) null, false);
-    public static final TextDirectionHeuristic RTL = new TextDirectionHeuristicInternal((TextDirectionAlgorithm) null, true);
     private static final int STATE_FALSE = 1;
     private static final int STATE_TRUE = 0;
     private static final int STATE_UNKNOWN = 2;
+    public static final TextDirectionHeuristic LTR = new TextDirectionHeuristicInternal(null, false);
+    public static final TextDirectionHeuristic RTL = new TextDirectionHeuristicInternal(null, true);
+    public static final TextDirectionHeuristic FIRSTSTRONG_LTR = new TextDirectionHeuristicInternal(FirstStrong.INSTANCE, false);
+    public static final TextDirectionHeuristic FIRSTSTRONG_RTL = new TextDirectionHeuristicInternal(FirstStrong.INSTANCE, true);
+    public static final TextDirectionHeuristic ANYRTL_LTR = new TextDirectionHeuristicInternal(AnyStrong.INSTANCE_RTL, false);
+    public static final TextDirectionHeuristic LOCALE = TextDirectionHeuristicLocale.INSTANCE;
 
+    /* loaded from: classes4.dex */
     private interface TextDirectionAlgorithm {
         int checkRtl(CharSequence charSequence, int i, int i2);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static int isRtlCodePoint(int codePoint) {
         switch (Character.getDirectionality(codePoint)) {
             case -1:
@@ -37,28 +39,30 @@ public class TextDirectionHeuristics {
         }
     }
 
+    /* loaded from: classes4.dex */
     private static abstract class TextDirectionHeuristicImpl implements TextDirectionHeuristic {
         private final TextDirectionAlgorithm mAlgorithm;
 
-        /* access modifiers changed from: protected */
-        public abstract boolean defaultIsRtl();
+        protected abstract boolean defaultIsRtl();
 
         public TextDirectionHeuristicImpl(TextDirectionAlgorithm algorithm) {
             this.mAlgorithm = algorithm;
         }
 
+        @Override // android.text.TextDirectionHeuristic
         public boolean isRtl(char[] array, int start, int count) {
-            return isRtl((CharSequence) CharBuffer.wrap(array), start, count);
+            return isRtl(CharBuffer.wrap(array), start, count);
         }
 
+        @Override // android.text.TextDirectionHeuristic
         public boolean isRtl(CharSequence cs, int start, int count) {
             if (cs == null || start < 0 || count < 0 || cs.length() - count < start) {
                 throw new IllegalArgumentException();
-            } else if (this.mAlgorithm == null) {
-                return defaultIsRtl();
-            } else {
-                return doCheck(cs, start, count);
             }
+            if (this.mAlgorithm == null) {
+                return defaultIsRtl();
+            }
+            return doCheck(cs, start, count);
         }
 
         private boolean doCheck(CharSequence cs, int start, int count) {
@@ -73,6 +77,7 @@ public class TextDirectionHeuristics {
         }
     }
 
+    /* loaded from: classes4.dex */
     private static class TextDirectionHeuristicInternal extends TextDirectionHeuristicImpl {
         private final boolean mDefaultIsRtl;
 
@@ -81,15 +86,17 @@ public class TextDirectionHeuristics {
             this.mDefaultIsRtl = defaultIsRtl;
         }
 
-        /* access modifiers changed from: protected */
-        public boolean defaultIsRtl() {
+        @Override // android.text.TextDirectionHeuristics.TextDirectionHeuristicImpl
+        protected boolean defaultIsRtl() {
             return this.mDefaultIsRtl;
         }
     }
 
+    /* loaded from: classes4.dex */
     private static class FirstStrong implements TextDirectionAlgorithm {
         public static final FirstStrong INSTANCE = new FirstStrong();
 
+        @Override // android.text.TextDirectionHeuristics.TextDirectionAlgorithm
         public int checkRtl(CharSequence cs, int start, int count) {
             int result = 2;
             int openIsolateCount = 0;
@@ -115,75 +122,56 @@ public class TextDirectionHeuristics {
         }
     }
 
+    /* loaded from: classes4.dex */
     private static class AnyStrong implements TextDirectionAlgorithm {
-        public static final AnyStrong INSTANCE_LTR = new AnyStrong(false);
-        public static final AnyStrong INSTANCE_RTL = new AnyStrong(true);
         private final boolean mLookForRtl;
+        public static final AnyStrong INSTANCE_RTL = new AnyStrong(true);
+        public static final AnyStrong INSTANCE_LTR = new AnyStrong(false);
 
-        /* JADX WARNING: Code restructure failed: missing block: B:36:0x0039, code lost:
+        /* JADX WARN: Code restructure failed: missing block: B:42:0x0039, code lost:
             continue;
          */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public int checkRtl(java.lang.CharSequence r7, int r8, int r9) {
-            /*
-                r6 = this;
-                r0 = 0
-                r1 = 0
-                r2 = r8
-                int r3 = r8 + r9
-            L_0x0005:
-                if (r2 >= r3) goto L_0x003f
-                int r4 = java.lang.Character.codePointAt(r7, r2)
-                r5 = 8294(0x2066, float:1.1622E-41)
-                if (r5 > r4) goto L_0x0016
-                r5 = 8296(0x2068, float:1.1625E-41)
-                if (r4 > r5) goto L_0x0016
-                int r1 = r1 + 1
-                goto L_0x0039
-            L_0x0016:
-                r5 = 8297(0x2069, float:1.1627E-41)
-                if (r4 != r5) goto L_0x001f
-                if (r1 <= 0) goto L_0x0039
-                int r1 = r1 + -1
-                goto L_0x0039
-            L_0x001f:
-                if (r1 != 0) goto L_0x0039
-                int r5 = android.text.TextDirectionHeuristics.isRtlCodePoint(r4)
-                switch(r5) {
-                    case 0: goto L_0x0031;
-                    case 1: goto L_0x0029;
-                    default: goto L_0x0028;
+        @Override // android.text.TextDirectionHeuristics.TextDirectionAlgorithm
+        /*
+            Code decompiled incorrectly, please refer to instructions dump.
+        */
+        public int checkRtl(CharSequence cs, int start, int count) {
+            boolean haveUnlookedFor = false;
+            int openIsolateCount = 0;
+            int i = start;
+            int end = start + count;
+            while (i < end) {
+                int cp = Character.codePointAt(cs, i);
+                if (8294 <= cp && cp <= 8296) {
+                    openIsolateCount++;
+                } else if (cp == 8297) {
+                    if (openIsolateCount > 0) {
+                        openIsolateCount--;
+                    }
+                } else if (openIsolateCount == 0) {
+                    switch (TextDirectionHeuristics.isRtlCodePoint(cp)) {
+                        case 0:
+                            if (this.mLookForRtl) {
+                                return 0;
+                            }
+                            haveUnlookedFor = true;
+                            continue;
+                        case 1:
+                            if (!this.mLookForRtl) {
+                                return 1;
+                            }
+                            haveUnlookedFor = true;
+                            continue;
+                    }
+                } else {
+                    continue;
                 }
-            L_0x0028:
-                goto L_0x0039
-            L_0x0029:
-                boolean r5 = r6.mLookForRtl
-                if (r5 != 0) goto L_0x002f
-                r5 = 1
-                return r5
-            L_0x002f:
-                r0 = 1
-                goto L_0x0039
-            L_0x0031:
-                boolean r5 = r6.mLookForRtl
-                if (r5 == 0) goto L_0x0037
-                r5 = 0
-                return r5
-            L_0x0037:
-                r0 = 1
-            L_0x0039:
-                int r5 = java.lang.Character.charCount(r4)
-                int r2 = r2 + r5
-                goto L_0x0005
-            L_0x003f:
-                if (r0 == 0) goto L_0x0044
-                boolean r2 = r6.mLookForRtl
-                return r2
-            L_0x0044:
-                r2 = 2
-                return r2
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.text.TextDirectionHeuristics.AnyStrong.checkRtl(java.lang.CharSequence, int, int):int");
+                i += Character.charCount(cp);
+            }
+            if (haveUnlookedFor) {
+                return this.mLookForRtl ? 1 : 0;
+            }
+            return 2;
         }
 
         private AnyStrong(boolean lookForRtl) {
@@ -191,16 +179,18 @@ public class TextDirectionHeuristics {
         }
     }
 
+    /* loaded from: classes4.dex */
     private static class TextDirectionHeuristicLocale extends TextDirectionHeuristicImpl {
         public static final TextDirectionHeuristicLocale INSTANCE = new TextDirectionHeuristicLocale();
 
         public TextDirectionHeuristicLocale() {
-            super((TextDirectionAlgorithm) null);
+            super(null);
         }
 
-        /* access modifiers changed from: protected */
-        public boolean defaultIsRtl() {
-            return TextUtils.getLayoutDirectionFromLocale(Locale.getDefault()) == 1;
+        @Override // android.text.TextDirectionHeuristics.TextDirectionHeuristicImpl
+        protected boolean defaultIsRtl() {
+            int dir = TextUtils.getLayoutDirectionFromLocale(Locale.getDefault());
+            return dir == 1;
         }
     }
 }

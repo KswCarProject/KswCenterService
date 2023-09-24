@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.RemoteViews;
 
 @RemoteViews.RemoteView
+/* loaded from: classes4.dex */
 public class NotificationExpandButton extends ImageView {
     public NotificationExpandButton(Context context) {
         super(context);
@@ -26,6 +27,7 @@ public class NotificationExpandButton extends ImageView {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
+    @Override // android.view.View
     public void getBoundsOnScreen(Rect outRect, boolean clipToParent) {
         super.getBoundsOnScreen(outRect, clipToParent);
         extendRectToMinTouchSize(outRect);
@@ -39,6 +41,7 @@ public class NotificationExpandButton extends ImageView {
         rect.bottom = rect.top + touchTargetSize;
     }
 
+    @Override // android.view.View
     public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo info) {
         super.onInitializeAccessibilityNodeInfo(info);
         info.setClassName(Button.class.getName());

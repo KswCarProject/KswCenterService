@@ -8,8 +8,8 @@ import android.graphics.fonts.FontFamily;
 import android.graphics.fonts.FontStyle;
 import android.graphics.fonts.FontVariationAxis;
 import android.graphics.fonts.SystemFonts;
-import android.media.tv.TvContract;
-import android.os.ParcelFileDescriptor;
+import android.media.p006tv.TvContract;
+import android.p007os.ParcelFileDescriptor;
 import android.provider.FontRequest;
 import android.provider.FontsContract;
 import android.text.FontConfig;
@@ -21,6 +21,7 @@ import com.android.internal.annotations.GuardedBy;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.content.NativeLibraryHelper;
 import com.android.internal.util.Preconditions;
+import dalvik.annotation.optimization.CriticalNative;
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.IOException;
@@ -35,57 +36,55 @@ import java.util.List;
 import java.util.Map;
 import libcore.util.NativeAllocationRegistry;
 
+/* loaded from: classes.dex */
 public class Typeface {
     public static final int BOLD = 1;
     public static final int BOLD_ITALIC = 3;
     public static final Typeface DEFAULT;
     public static final Typeface DEFAULT_BOLD;
     private static final String DEFAULT_FAMILY = "sans-serif";
-    private static final int[] EMPTY_AXES = new int[0];
     public static final int ITALIC = 2;
-    public static final Typeface MONOSPACE = create("monospace", 0);
+    public static final Typeface MONOSPACE;
     public static final int NORMAL = 0;
     public static final int RESOLVE_BY_FONT_TABLE = -1;
-    public static final Typeface SANS_SERIF = create(DEFAULT_FAMILY, 0);
-    public static final Typeface SERIF = create("serif", 0);
+    public static final Typeface SANS_SERIF;
+    public static final Typeface SERIF;
     private static final int STYLE_ITALIC = 1;
     public static final int STYLE_MASK = 3;
     private static final int STYLE_NORMAL = 0;
-    private static String TAG = "Typeface";
     static Typeface sDefaultTypeface;
     @UnsupportedAppUsage(trackingBug = 123769446)
     static Typeface[] sDefaults;
-    /* access modifiers changed from: private */
-    public static final Object sDynamicCacheLock = new Object();
-    /* access modifiers changed from: private */
-    @GuardedBy({"sDynamicCacheLock"})
-    public static final LruCache<String, Typeface> sDynamicTypefaceCache = new LruCache<>(16);
-    private static final NativeAllocationRegistry sRegistry = NativeAllocationRegistry.createMalloced(Typeface.class.getClassLoader(), nativeGetReleaseFunc());
-    private static final Object sStyledCacheLock = new Object();
-    @GuardedBy({"sStyledCacheLock"})
-    private static final LongSparseArray<SparseArray<Typeface>> sStyledTypefaceCache = new LongSparseArray<>(3);
-    @Deprecated
-    @UnsupportedAppUsage(trackingBug = 123768928)
-    static final Map<String, FontFamily[]> sSystemFallbackMap = Collections.emptyMap();
     @UnsupportedAppUsage(trackingBug = 123769347)
     static final Map<String, Typeface> sSystemFontMap;
-    private static final Object sWeightCacheLock = new Object();
-    @GuardedBy({"sWeightCacheLock"})
-    private static final LongSparseArray<SparseArray<Typeface>> sWeightTypefaceCache = new LongSparseArray<>(3);
-    /* access modifiers changed from: private */
     @UnsupportedAppUsage
-    public int mStyle;
+    private int mStyle;
     private int[] mSupportedAxes;
-    /* access modifiers changed from: private */
-    public int mWeight;
+    private int mWeight;
     @UnsupportedAppUsage
     public long native_instance;
+    private static String TAG = "Typeface";
+    private static final NativeAllocationRegistry sRegistry = NativeAllocationRegistry.createMalloced(Typeface.class.getClassLoader(), nativeGetReleaseFunc());
+    @GuardedBy({"sStyledCacheLock"})
+    private static final LongSparseArray<SparseArray<Typeface>> sStyledTypefaceCache = new LongSparseArray<>(3);
+    private static final Object sStyledCacheLock = new Object();
+    @GuardedBy({"sWeightCacheLock"})
+    private static final LongSparseArray<SparseArray<Typeface>> sWeightTypefaceCache = new LongSparseArray<>(3);
+    private static final Object sWeightCacheLock = new Object();
+    @GuardedBy({"sDynamicCacheLock"})
+    private static final LruCache<String, Typeface> sDynamicTypefaceCache = new LruCache<>(16);
+    private static final Object sDynamicCacheLock = new Object();
+    @UnsupportedAppUsage(trackingBug = 123768928)
+    @Deprecated
+    static final Map<String, FontFamily[]> sSystemFallbackMap = Collections.emptyMap();
+    private static final int[] EMPTY_AXES = new int[0];
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface Style {
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     @UnsupportedAppUsage
     public static native long nativeCreateFromArray(long[] jArr, int i, int i2);
 
@@ -98,16 +97,20 @@ public class Typeface {
     @UnsupportedAppUsage
     private static native long nativeCreateWeightAlias(long j, int i);
 
+    @CriticalNative
     private static native long nativeGetReleaseFunc();
 
+    @CriticalNative
     private static native int nativeGetStyle(long j);
 
     private static native int[] nativeGetSupportedAxes(long j);
 
+    @CriticalNative
     private static native int nativeGetWeight(long j);
 
     private static native void nativeRegisterGenericFamily(String str, long j);
 
+    @CriticalNative
     private static native void nativeSetDefault(long j);
 
     static {
@@ -120,8 +123,12 @@ public class Typeface {
         String str = null;
         DEFAULT = create(str, 0);
         DEFAULT_BOLD = create(str, 1);
+        SANS_SERIF = create(DEFAULT_FAMILY, 0);
+        SERIF = create("serif", 0);
+        MONOSPACE = create("monospace", 0);
         sDefaults = new Typeface[]{DEFAULT, DEFAULT_BOLD, create(str, 2), create(str, 3)};
-        for (String genericFamily : new String[]{"serif", DEFAULT_FAMILY, "cursive", "fantasy", "monospace", "system-ui"}) {
+        String[] genericFamilies = {"serif", DEFAULT_FAMILY, "cursive", "fantasy", "monospace", "system-ui"};
+        for (String genericFamily : genericFamilies) {
             registerGenericFamilyNative(genericFamily, systemFontMap.get(genericFamily));
         }
     }
@@ -150,6 +157,7 @@ public class Typeface {
 
     public static Typeface createFromResources(FontResourcesParser.FamilyResourceEntry entry, AssetManager mgr, String path) {
         Typeface typeface;
+        FontFamily.Builder familyBuilder;
         int i;
         if (entry instanceof FontResourcesParser.ProviderResourceEntry) {
             FontResourcesParser.ProviderResourceEntry providerEntry = (FontResourcesParser.ProviderResourceEntry) entry;
@@ -165,17 +173,19 @@ public class Typeface {
                     certs.add(byteArraySet);
                 }
             }
-            Typeface typeface2 = FontsContract.getFontSync(new FontRequest(providerEntry.getAuthority(), providerEntry.getPackage(), providerEntry.getQuery(), certs));
+            FontRequest request = new FontRequest(providerEntry.getAuthority(), providerEntry.getPackage(), providerEntry.getQuery(), certs);
+            Typeface typeface2 = FontsContract.getFontSync(request);
             return typeface2 == null ? DEFAULT : typeface2;
         }
         Typeface typeface3 = findFromCache(mgr, path);
         if (typeface3 != null) {
             return typeface3;
         }
+        FontResourcesParser.FontFamilyFilesResourceEntry filesEntry = (FontResourcesParser.FontFamilyFilesResourceEntry) entry;
         try {
-            FontResourcesParser.FontFileResourceEntry[] entries = ((FontResourcesParser.FontFamilyFilesResourceEntry) entry).getEntries();
+            FontResourcesParser.FontFileResourceEntry[] entries = filesEntry.getEntries();
             int length = entries.length;
-            FontFamily.Builder familyBuilder = null;
+            familyBuilder = null;
             int i3 = 0;
             while (true) {
                 i = 1;
@@ -200,38 +210,40 @@ public class Typeface {
                 }
                 i3++;
             }
-            if (familyBuilder == null) {
-                return DEFAULT;
-            }
-            FontFamily family = familyBuilder.build();
-            FontStyle normal = new FontStyle(400, 0);
-            Font bestFont = family.getFont(0);
-            int bestScore = normal.getMatchScore(bestFont.getStyle());
-            while (i < family.getSize()) {
-                Font candidate = family.getFont(i);
-                int score = normal.getMatchScore(candidate.getStyle());
-                if (score < bestScore) {
-                    bestFont = candidate;
-                    bestScore = score;
-                }
-                i++;
-            }
-            typeface = new CustomFallbackBuilder(family).setStyle(bestFont.getStyle()).build();
-            Typeface typeface4 = typeface;
-            synchronized (sDynamicCacheLock) {
-                sDynamicTypefaceCache.put(Builder.createAssetUid(mgr, path, 0, (FontVariationAxis[]) null, -1, -1, DEFAULT_FAMILY), typeface4);
-            }
-            return typeface4;
-        } catch (IllegalArgumentException e) {
-            return null;
-        } catch (IOException e2) {
+        } catch (IOException e) {
             typeface = DEFAULT;
+        } catch (IllegalArgumentException e2) {
+            return null;
         }
+        if (familyBuilder == null) {
+            return DEFAULT;
+        }
+        android.graphics.fonts.FontFamily family = familyBuilder.build();
+        FontStyle normal = new FontStyle(400, 0);
+        Font bestFont = family.getFont(0);
+        int bestScore = normal.getMatchScore(bestFont.getStyle());
+        while (i < family.getSize()) {
+            Font candidate = family.getFont(i);
+            int score = normal.getMatchScore(candidate.getStyle());
+            if (score < bestScore) {
+                bestFont = candidate;
+                bestScore = score;
+            }
+            i++;
+        }
+        typeface = new CustomFallbackBuilder(family).setStyle(bestFont.getStyle()).build();
+        Typeface typeface4 = typeface;
+        synchronized (sDynamicCacheLock) {
+            String key = Builder.createAssetUid(mgr, path, 0, null, -1, -1, DEFAULT_FAMILY);
+            sDynamicTypefaceCache.put(key, typeface4);
+        }
+        return typeface4;
     }
 
     public static Typeface findFromCache(AssetManager mgr, String path) {
         synchronized (sDynamicCacheLock) {
-            Typeface typeface = sDynamicTypefaceCache.get(Builder.createAssetUid(mgr, path, 0, (FontVariationAxis[]) null, -1, -1, DEFAULT_FAMILY));
+            String key = Builder.createAssetUid(mgr, path, 0, null, -1, -1, DEFAULT_FAMILY);
+            Typeface typeface = sDynamicTypefaceCache.get(key);
             if (typeface != null) {
                 return typeface;
             }
@@ -239,6 +251,7 @@ public class Typeface {
         }
     }
 
+    /* loaded from: classes.dex */
     public static final class Builder {
         public static final int BOLD_WEIGHT = 700;
         public static final int NORMAL_WEIGHT = 400;
@@ -298,7 +311,7 @@ public class Typeface {
         }
 
         public Builder setItalic(boolean italic) {
-            this.mItalic = italic;
+            this.mItalic = italic ? 1 : 0;
             this.mFontBuilder.setSlant(this.mItalic);
             return this;
         }
@@ -323,7 +336,7 @@ public class Typeface {
             return this;
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public static String createAssetUid(AssetManager mgr, String path, int ttcIndex, FontVariationAxis[] axes, int weight, int italic, String fallback) {
             SparseArray<String> pkgs = mgr.getAssignedPackageIdentifiers();
             StringBuilder builder = new StringBuilder();
@@ -353,19 +366,20 @@ public class Typeface {
         }
 
         private Typeface resolveFallbackTypeface() {
-            if (this.mFallbackFamilyName == null) {
-                return null;
+            if (this.mFallbackFamilyName != null) {
+                Typeface base = Typeface.getSystemDefaultTypeface(this.mFallbackFamilyName);
+                if (this.mWeight == -1 && this.mItalic == -1) {
+                    return base;
+                }
+                int weight = this.mWeight == -1 ? base.mWeight : this.mWeight;
+                boolean z = false;
+                if (this.mItalic != -1 ? this.mItalic == 1 : (base.mStyle & 2) != 0) {
+                    z = true;
+                }
+                boolean italic = z;
+                return Typeface.createWeightStyle(base, weight, italic);
             }
-            Typeface base = Typeface.getSystemDefaultTypeface(this.mFallbackFamilyName);
-            if (this.mWeight == -1 && this.mItalic == -1) {
-                return base;
-            }
-            int weight = this.mWeight == -1 ? base.mWeight : this.mWeight;
-            boolean italic = false;
-            if (this.mItalic != -1 ? this.mItalic == 1 : (base.mStyle & 2) != 0) {
-                italic = true;
-            }
-            return Typeface.createWeightStyle(base, weight, italic);
+            return null;
         }
 
         public Typeface build() {
@@ -388,7 +402,10 @@ public class Typeface {
                         }
                     }
                 }
-                CustomFallbackBuilder builder = new CustomFallbackBuilder(new FontFamily.Builder(font).build()).setStyle(new FontStyle(this.mWeight == -1 ? font.getStyle().getWeight() : this.mWeight, this.mItalic == -1 ? font.getStyle().getSlant() : this.mItalic));
+                android.graphics.fonts.FontFamily family = new FontFamily.Builder(font).build();
+                int weight = this.mWeight == -1 ? font.getStyle().getWeight() : this.mWeight;
+                int slant = this.mItalic == -1 ? font.getStyle().getSlant() : this.mItalic;
+                CustomFallbackBuilder builder = new CustomFallbackBuilder(family).setStyle(new FontStyle(weight, slant));
                 if (this.mFallbackFamilyName != null) {
                     builder.setSystemFallback(this.mFallbackFamilyName);
                 }
@@ -405,17 +422,18 @@ public class Typeface {
         }
     }
 
+    /* loaded from: classes.dex */
     public static final class CustomFallbackBuilder {
         private static final int MAX_CUSTOM_FALLBACK = 64;
-        private String mFallbackName = null;
-        private final ArrayList<FontFamily> mFamilies = new ArrayList<>();
         private FontStyle mStyle;
+        private final ArrayList<android.graphics.fonts.FontFamily> mFamilies = new ArrayList<>();
+        private String mFallbackName = null;
 
         public static int getMaxCustomFallbackCount() {
             return 64;
         }
 
-        public CustomFallbackBuilder(FontFamily family) {
+        public CustomFallbackBuilder(android.graphics.fonts.FontFamily family) {
             Preconditions.checkNotNull(family);
             this.mFamilies.add(family);
         }
@@ -431,7 +449,7 @@ public class Typeface {
             return this;
         }
 
-        public CustomFallbackBuilder addCustomFallback(FontFamily family) {
+        public CustomFallbackBuilder addCustomFallback(android.graphics.fonts.FontFamily family) {
             Preconditions.checkNotNull(family);
             boolean z = this.mFamilies.size() < getMaxCustomFallbackCount();
             Preconditions.checkArgument(z, "Custom fallback limit exceeded(" + getMaxCustomFallbackCount() + ")");
@@ -441,8 +459,8 @@ public class Typeface {
 
         public Typeface build() {
             int userFallbackSize = this.mFamilies.size();
-            FontFamily[] fallback = SystemFonts.getSystemFallback(this.mFallbackName);
-            long[] ptrArray = new long[(fallback.length + userFallbackSize)];
+            android.graphics.fonts.FontFamily[] fallback = SystemFonts.getSystemFallback(this.mFallbackName);
+            long[] ptrArray = new long[fallback.length + userFallbackSize];
             int italic = 0;
             for (int i = 0; i < userFallbackSize; i++) {
                 ptrArray[i] = this.mFamilies.get(i).getNativePtr();
@@ -451,7 +469,7 @@ public class Typeface {
                 ptrArray[i2 + userFallbackSize] = fallback[i2].getNativePtr();
             }
             int weight = this.mStyle == null ? 400 : this.mStyle.getWeight();
-            if (!(this.mStyle == null || this.mStyle.getSlant() == 0)) {
+            if (this.mStyle != null && this.mStyle.getSlant() != 0) {
                 italic = 1;
             }
             return new Typeface(Typeface.nativeCreateFromArray(ptrArray, weight, italic));
@@ -463,7 +481,7 @@ public class Typeface {
     }
 
     public static Typeface create(Typeface family, int style) {
-        if ((style & -4) != 0) {
+        if ((style & (-4)) != 0) {
             style = 0;
         }
         if (family == null) {
@@ -498,9 +516,9 @@ public class Typeface {
         return createWeightStyle(family, weight, italic);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static Typeface createWeightStyle(Typeface base, int weight, boolean italic) {
-        int key = (weight << 1) | italic;
+        int key = (weight << 1) | (italic ? 1 : 0);
         synchronized (sWeightCacheLock) {
             SparseArray<Typeface> innerCache = sWeightTypefaceCache.get(base.native_instance);
             if (innerCache == null) {
@@ -513,13 +531,14 @@ public class Typeface {
                 }
             }
             Typeface typeface2 = new Typeface(nativeCreateFromTypefaceWithExactStyle(base.native_instance, weight, italic));
-            innerCache.put((int) key, typeface2);
+            innerCache.put(key, typeface2);
             return typeface2;
         }
     }
 
     public static Typeface createFromTypefaceWithVariation(Typeface family, List<FontVariationAxis> axes) {
-        return new Typeface(nativeCreateFromTypefaceWithVariation((family == null ? DEFAULT : family).native_instance, axes));
+        Typeface base = family == null ? DEFAULT : family;
+        return new Typeface(nativeCreateFromTypefaceWithVariation(base.native_instance, axes));
     }
 
     public static Typeface defaultFromStyle(int style) {
@@ -553,10 +572,10 @@ public class Typeface {
         if (typeface != null) {
             return typeface;
         }
-        if (file.exists()) {
-            return DEFAULT;
+        if (!file.exists()) {
+            throw new RuntimeException("Font asset not found " + file.getAbsolutePath());
         }
-        throw new RuntimeException("Font asset not found " + file.getAbsolutePath());
+        return DEFAULT;
     }
 
     public static Typeface createFromFile(String path) {
@@ -564,8 +583,8 @@ public class Typeface {
         return createFromFile(new File(path));
     }
 
-    @Deprecated
     @UnsupportedAppUsage(trackingBug = 123768928)
+    @Deprecated
     private static Typeface createFromFamilies(FontFamily[] families) {
         long[] ptrArray = new long[families.length];
         for (int i = 0; i < families.length; i++) {
@@ -574,7 +593,7 @@ public class Typeface {
         return new Typeface(nativeCreateFromArray(ptrArray, -1, -1));
     }
 
-    private static Typeface createFromFamilies(FontFamily[] families) {
+    private static Typeface createFromFamilies(android.graphics.fonts.FontFamily[] families) {
         long[] ptrArray = new long[families.length];
         for (int i = 0; i < families.length; i++) {
             ptrArray[i] = families[i].getNativePtr();
@@ -582,17 +601,17 @@ public class Typeface {
         return new Typeface(nativeCreateFromArray(ptrArray, -1, -1));
     }
 
-    @Deprecated
     @UnsupportedAppUsage(trackingBug = 123768395)
+    @Deprecated
     private static Typeface createFromFamiliesWithDefault(FontFamily[] families, int weight, int italic) {
         return createFromFamiliesWithDefault(families, DEFAULT_FAMILY, weight, italic);
     }
 
-    @Deprecated
     @UnsupportedAppUsage(trackingBug = 123768928)
+    @Deprecated
     private static Typeface createFromFamiliesWithDefault(FontFamily[] families, String fallbackName, int weight, int italic) {
-        FontFamily[] fallback = SystemFonts.getSystemFallback(fallbackName);
-        long[] ptrArray = new long[(families.length + fallback.length)];
+        android.graphics.fonts.FontFamily[] fallback = SystemFonts.getSystemFallback(fallbackName);
+        long[] ptrArray = new long[families.length + fallback.length];
         for (int i = 0; i < families.length; i++) {
             ptrArray[i] = families[i].mNativePtr;
         }
@@ -606,32 +625,32 @@ public class Typeface {
     private Typeface(long ni) {
         this.mStyle = 0;
         this.mWeight = 0;
-        if (ni != 0) {
-            this.native_instance = ni;
-            sRegistry.registerNativeAllocation(this, this.native_instance);
-            this.mStyle = nativeGetStyle(ni);
-            this.mWeight = nativeGetWeight(ni);
-            return;
+        if (ni == 0) {
+            throw new RuntimeException("native typeface cannot be made");
         }
-        throw new RuntimeException("native typeface cannot be made");
+        this.native_instance = ni;
+        sRegistry.registerNativeAllocation(this, this.native_instance);
+        this.mStyle = nativeGetStyle(ni);
+        this.mWeight = nativeGetWeight(ni);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static Typeface getSystemDefaultTypeface(String familyName) {
         Typeface tf = sSystemFontMap.get(familyName);
         return tf == null ? DEFAULT : tf;
     }
 
     @VisibleForTesting
-    public static void initSystemDefaultTypefaces(Map<String, Typeface> systemFontMap, Map<String, FontFamily[]> fallbacks, FontConfig.Alias[] aliases) {
+    public static void initSystemDefaultTypefaces(Map<String, Typeface> systemFontMap, Map<String, android.graphics.fonts.FontFamily[]> fallbacks, FontConfig.Alias[] aliases) {
         Typeface base;
-        for (Map.Entry<String, FontFamily[]> entry : fallbacks.entrySet()) {
+        for (Map.Entry<String, android.graphics.fonts.FontFamily[]> entry : fallbacks.entrySet()) {
             systemFontMap.put(entry.getKey(), createFromFamilies(entry.getValue()));
         }
         for (FontConfig.Alias alias : aliases) {
             if (!systemFontMap.containsKey(alias.getName()) && (base = systemFontMap.get(alias.getToName())) != null) {
                 int weight = alias.getWeight();
-                systemFontMap.put(alias.getName(), weight == 400 ? base : new Typeface(nativeCreateWeightAlias(base.native_instance, weight)));
+                Typeface newFace = weight == 400 ? base : new Typeface(nativeCreateWeightAlias(base.native_instance, weight));
+                systemFontMap.put(alias.getName(), newFace);
             }
         }
     }
@@ -657,7 +676,8 @@ public class Typeface {
     }
 
     public int hashCode() {
-        return (((17 * 31) + ((int) (this.native_instance ^ (this.native_instance >>> 32)))) * 31) + this.mStyle;
+        int result = (17 * 31) + ((int) (this.native_instance ^ (this.native_instance >>> 32)));
+        return (result * 31) + this.mStyle;
     }
 
     public boolean isSupportedAxes(int axis) {

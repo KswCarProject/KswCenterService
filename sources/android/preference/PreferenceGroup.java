@@ -2,16 +2,17 @@ package android.preference;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.Bundle;
+import android.p007os.Bundle;
 import android.preference.GenericInflater;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 @Deprecated
+/* loaded from: classes3.dex */
 public abstract class PreferenceGroup extends Preference implements GenericInflater.Parent<Preference> {
     private boolean mAttachedToActivity;
     private int mCurrentPreferenceOrder;
@@ -24,7 +25,7 @@ public abstract class PreferenceGroup extends Preference implements GenericInfla
         this.mCurrentPreferenceOrder = 0;
         this.mAttachedToActivity = false;
         this.mPreferenceList = new ArrayList();
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.PreferenceGroup, defStyleAttr, defStyleRes);
+        TypedArray a = context.obtainStyledAttributes(attrs, C3132R.styleable.PreferenceGroup, defStyleAttr, defStyleRes);
         this.mOrderingAsAdded = a.getBoolean(0, this.mOrderingAsAdded);
         a.recycle();
     }
@@ -45,6 +46,7 @@ public abstract class PreferenceGroup extends Preference implements GenericInfla
         return this.mOrderingAsAdded;
     }
 
+    @Override // android.preference.GenericInflater.Parent
     public void addItemFromInflater(Preference preference) {
         addPreference(preference);
     }
@@ -77,7 +79,7 @@ public abstract class PreferenceGroup extends Preference implements GenericInfla
         synchronized (this) {
             int insertionIndex = Collections.binarySearch(this.mPreferenceList, preference);
             if (insertionIndex < 0) {
-                insertionIndex = (insertionIndex * -1) - 1;
+                insertionIndex = (insertionIndex * (-1)) - 1;
             }
             this.mPreferenceList.add(insertionIndex, preference);
         }
@@ -101,7 +103,7 @@ public abstract class PreferenceGroup extends Preference implements GenericInfla
         synchronized (this) {
             preference.onPrepareForRemoval();
             if (preference.getParent() == this) {
-                preference.assignParent((PreferenceGroup) null);
+                preference.assignParent(null);
             }
             remove = this.mPreferenceList.remove(preference);
         }
@@ -118,8 +120,7 @@ public abstract class PreferenceGroup extends Preference implements GenericInfla
         notifyHierarchyChanged();
     }
 
-    /* access modifiers changed from: protected */
-    public boolean onPrepareAddPreference(Preference preference) {
+    protected boolean onPrepareAddPreference(Preference preference) {
         preference.onParentChanged(this, shouldDisableDependents());
         return true;
     }
@@ -143,13 +144,12 @@ public abstract class PreferenceGroup extends Preference implements GenericInfla
         return null;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean isOnSameScreenAsChildren() {
+    protected boolean isOnSameScreenAsChildren() {
         return true;
     }
 
-    /* access modifiers changed from: protected */
-    public void onAttachedToActivity() {
+    @Override // android.preference.Preference
+    protected void onAttachedToActivity() {
         super.onAttachedToActivity();
         this.mAttachedToActivity = true;
         int preferenceCount = getPreferenceCount();
@@ -158,12 +158,13 @@ public abstract class PreferenceGroup extends Preference implements GenericInfla
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onPrepareForRemoval() {
+    @Override // android.preference.Preference
+    protected void onPrepareForRemoval() {
         super.onPrepareForRemoval();
         this.mAttachedToActivity = false;
     }
 
+    @Override // android.preference.Preference
     public void notifyDependencyChange(boolean disableDependents) {
         super.notifyDependencyChange(disableDependents);
         int preferenceCount = getPreferenceCount();
@@ -172,15 +173,14 @@ public abstract class PreferenceGroup extends Preference implements GenericInfla
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void sortPreferences() {
+    void sortPreferences() {
         synchronized (this) {
             Collections.sort(this.mPreferenceList);
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void dispatchSaveInstanceState(Bundle container) {
+    @Override // android.preference.Preference
+    protected void dispatchSaveInstanceState(Bundle container) {
         super.dispatchSaveInstanceState(container);
         int preferenceCount = getPreferenceCount();
         for (int i = 0; i < preferenceCount; i++) {
@@ -188,8 +188,8 @@ public abstract class PreferenceGroup extends Preference implements GenericInfla
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void dispatchRestoreInstanceState(Bundle container) {
+    @Override // android.preference.Preference
+    protected void dispatchRestoreInstanceState(Bundle container) {
         super.dispatchRestoreInstanceState(container);
         int preferenceCount = getPreferenceCount();
         for (int i = 0; i < preferenceCount; i++) {

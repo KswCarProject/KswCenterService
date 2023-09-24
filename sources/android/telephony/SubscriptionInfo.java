@@ -3,20 +3,19 @@ package android.telephony;
 import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
+import android.content.p002pm.PackageInfo;
+import android.content.p002pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.Rect;
 import android.graphics.Typeface;
-import android.os.Build;
-import android.os.Parcel;
-import android.os.ParcelUuid;
-import android.os.Parcelable;
+import android.p007os.Build;
+import android.p007os.Parcel;
+import android.p007os.ParcelUuid;
+import android.p007os.Parcelable;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -25,19 +24,45 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public class SubscriptionInfo implements Parcelable {
-    public static final Parcelable.Creator<SubscriptionInfo> CREATOR = new Parcelable.Creator<SubscriptionInfo>() {
+    public static final Parcelable.Creator<SubscriptionInfo> CREATOR = new Parcelable.Creator<SubscriptionInfo>() { // from class: android.telephony.SubscriptionInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SubscriptionInfo createFromParcel(Parcel source) {
-            Parcel parcel = source;
-            Bitmap bitmap = (Bitmap) parcel.readParcelable(Bitmap.class.getClassLoader());
+            int id = source.readInt();
+            String iccId = source.readString();
+            int simSlotIndex = source.readInt();
+            CharSequence displayName = source.readCharSequence();
+            CharSequence carrierName = source.readCharSequence();
+            int nameSource = source.readInt();
+            int iconTint = source.readInt();
+            String number = source.readString();
+            int dataRoaming = source.readInt();
+            String mcc = source.readString();
+            String mnc = source.readString();
+            String countryIso = source.readString();
+            Bitmap iconBitmap = (Bitmap) source.readParcelable(Bitmap.class.getClassLoader());
+            boolean isEmbedded = source.readBoolean();
+            UiccAccessRule[] accessRules = (UiccAccessRule[]) source.createTypedArray(UiccAccessRule.CREATOR);
+            String cardString = source.readString();
+            int cardId = source.readInt();
+            boolean isOpportunistic = source.readBoolean();
+            String groupUUID = source.readString();
+            boolean isGroupDisabled = source.readBoolean();
+            int carrierid = source.readInt();
+            int profileClass = source.readInt();
+            int subType = source.readInt();
             String[] ehplmns = source.readStringArray();
             String[] hplmns = source.readStringArray();
-            String[] hplmns2 = ehplmns;
-            SubscriptionInfo info = new SubscriptionInfo(source.readInt(), source.readString(), source.readInt(), source.readCharSequence(), source.readCharSequence(), source.readInt(), source.readInt(), source.readString(), source.readInt(), bitmap, source.readString(), source.readString(), source.readString(), source.readBoolean(), (UiccAccessRule[]) parcel.createTypedArray(UiccAccessRule.CREATOR), source.readString(), source.readInt(), source.readBoolean(), source.readString(), source.readBoolean(), source.readInt(), source.readInt(), source.readInt(), source.readString());
-            info.setAssociatedPlmns(hplmns2, hplmns);
+            String groupOwner = source.readString();
+            SubscriptionInfo info = new SubscriptionInfo(id, iccId, simSlotIndex, displayName, carrierName, nameSource, iconTint, number, dataRoaming, iconBitmap, mcc, mnc, countryIso, isEmbedded, accessRules, cardString, cardId, isOpportunistic, groupUUID, isGroupDisabled, carrierid, profileClass, subType, groupOwner);
+            info.setAssociatedPlmns(ehplmns, hplmns);
             return info;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SubscriptionInfo[] newArray(int size) {
             return new SubscriptionInfo[size];
         }
@@ -71,11 +96,11 @@ public class SubscriptionInfo implements Parcelable {
     private int mSubscriptionType;
 
     public SubscriptionInfo(int id, String iccId, int simSlotIndex, CharSequence displayName, CharSequence carrierName, int nameSource, int iconTint, String number, int roaming, Bitmap icon, String mcc, String mnc, String countryIso, boolean isEmbedded, UiccAccessRule[] accessRules, String cardString) {
-        this(id, iccId, simSlotIndex, displayName, carrierName, nameSource, iconTint, number, roaming, icon, mcc, mnc, countryIso, isEmbedded, accessRules, cardString, -1, false, (String) null, false, -1, -1, 0, (String) null);
+        this(id, iccId, simSlotIndex, displayName, carrierName, nameSource, iconTint, number, roaming, icon, mcc, mnc, countryIso, isEmbedded, accessRules, cardString, -1, false, null, false, -1, -1, 0, null);
     }
 
     public SubscriptionInfo(int id, String iccId, int simSlotIndex, CharSequence displayName, CharSequence carrierName, int nameSource, int iconTint, String number, int roaming, Bitmap icon, String mcc, String mnc, String countryIso, boolean isEmbedded, UiccAccessRule[] accessRules, String cardString, boolean isOpportunistic, String groupUUID, int carrierId, int profileClass) {
-        this(id, iccId, simSlotIndex, displayName, carrierName, nameSource, iconTint, number, roaming, icon, mcc, mnc, countryIso, isEmbedded, accessRules, cardString, -1, isOpportunistic, groupUUID, false, carrierId, profileClass, 0, (String) null);
+        this(id, iccId, simSlotIndex, displayName, carrierName, nameSource, iconTint, number, roaming, icon, mcc, mnc, countryIso, isEmbedded, accessRules, cardString, -1, isOpportunistic, groupUUID, false, carrierId, profileClass, 0, null);
     }
 
     public SubscriptionInfo(int id, String iccId, int simSlotIndex, CharSequence displayName, CharSequence carrierName, int nameSource, int iconTint, String number, int roaming, Bitmap icon, String mcc, String mnc, String countryIso, boolean isEmbedded, UiccAccessRule[] accessRules, String cardString, int cardId, boolean isOpportunistic, String groupUUID, boolean isGroupDisabled, int carrierId, int profileClass, int subType, String groupOwner) {
@@ -158,15 +183,17 @@ public class SubscriptionInfo implements Parcelable {
         Paint paint = new Paint();
         paint.setColorFilter(new PorterDuffColorFilter(this.mIconTint, PorterDuff.Mode.SRC_ATOP));
         canvas.drawBitmap(this.mIconBitmap, 0.0f, 0.0f, paint);
-        paint.setColorFilter((ColorFilter) null);
+        paint.setColorFilter(null);
         paint.setAntiAlias(true);
         paint.setTypeface(Typeface.create("sans-serif", 0));
         paint.setColor(-1);
         paint.setTextSize(metrics.density * 16.0f);
-        String index = String.format("%d", new Object[]{Integer.valueOf(this.mSimSlotIndex + 1)});
+        String index = String.format("%d", Integer.valueOf(this.mSimSlotIndex + 1));
         Rect textBound = new Rect();
         paint.getTextBounds(index, 0, 1, textBound);
-        canvas.drawText(index, (((float) width) / 2.0f) - ((float) textBound.centerX()), (((float) height) / 2.0f) - ((float) textBound.centerY()), paint);
+        float xOffset = (width / 2.0f) - textBound.centerX();
+        float yOffset = (height / 2.0f) - textBound.centerY();
+        canvas.drawText(index, xOffset, yOffset, paint);
         return workingBitmap;
     }
 
@@ -195,7 +222,7 @@ public class SubscriptionInfo implements Parcelable {
             }
             return Integer.valueOf(this.mMcc).intValue();
         } catch (NumberFormatException e) {
-            Log.w(SubscriptionInfo.class.getSimpleName(), "MCC string is not a number");
+            Log.m64w(SubscriptionInfo.class.getSimpleName(), "MCC string is not a number");
             return 0;
         }
     }
@@ -208,7 +235,7 @@ public class SubscriptionInfo implements Parcelable {
             }
             return Integer.valueOf(this.mMnc).intValue();
         } catch (NumberFormatException e) {
-            Log.w(SubscriptionInfo.class.getSimpleName(), "MNC string is not a number");
+            Log.m64w(SubscriptionInfo.class.getSimpleName(), "MNC string is not a number");
             return 0;
         }
     }
@@ -265,22 +292,24 @@ public class SubscriptionInfo implements Parcelable {
 
     @Deprecated
     public boolean canManageSubscription(Context context, String packageName) {
+        UiccAccessRule[] uiccAccessRuleArr;
         if (!isEmbedded()) {
             throw new UnsupportedOperationException("Not an embedded subscription");
-        } else if (this.mAccessRules == null) {
+        }
+        if (this.mAccessRules == null) {
             return false;
-        } else {
-            try {
-                PackageInfo packageInfo = context.getPackageManager().getPackageInfo(packageName, 64);
-                for (UiccAccessRule rule : this.mAccessRules) {
-                    if (rule.getCarrierPrivilegeStatus(packageInfo) == 1) {
-                        return true;
-                    }
+        }
+        PackageManager packageManager = context.getPackageManager();
+        try {
+            PackageInfo packageInfo = packageManager.getPackageInfo(packageName, 64);
+            for (UiccAccessRule rule : this.mAccessRules) {
+                if (rule.getCarrierPrivilegeStatus(packageInfo) == 1) {
+                    return true;
                 }
-                return false;
-            } catch (PackageManager.NameNotFoundException e) {
-                throw new IllegalArgumentException("Unknown package: " + packageName, e);
             }
+            return false;
+        } catch (PackageManager.NameNotFoundException e) {
+            throw new IllegalArgumentException("Unknown package: " + packageName, e);
         }
     }
 
@@ -288,11 +317,11 @@ public class SubscriptionInfo implements Parcelable {
     public List<UiccAccessRule> getAccessRules() {
         if (!isEmbedded()) {
             throw new UnsupportedOperationException("Not an embedded subscription");
-        } else if (this.mAccessRules == null) {
-            return null;
-        } else {
-            return Arrays.asList(this.mAccessRules);
         }
+        if (this.mAccessRules == null) {
+            return null;
+        }
+        return Arrays.asList(this.mAccessRules);
     }
 
     public String getCardString() {
@@ -311,6 +340,7 @@ public class SubscriptionInfo implements Parcelable {
         return this.mIsGroupDisabled;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mId);
         dest.writeString(this.mIccId);
@@ -340,6 +370,7 @@ public class SubscriptionInfo implements Parcelable {
         dest.writeString(this.mGroupOwner);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -348,20 +379,21 @@ public class SubscriptionInfo implements Parcelable {
         if (iccId == null) {
             return null;
         }
-        if (iccId.length() <= 9 || Build.IS_DEBUGGABLE) {
-            return iccId;
+        if (iccId.length() > 9 && !Build.IS_DEBUGGABLE) {
+            String iccIdToPrint = iccId.substring(0, 9) + Rlog.pii(false, (Object) iccId.substring(9));
+            return iccIdToPrint;
         }
-        return iccId.substring(0, 9) + Rlog.pii(false, (Object) iccId.substring(9));
+        return iccId;
     }
 
     public String toString() {
         String iccIdToPrint = givePrintableIccid(this.mIccId);
         String cardStringToPrint = givePrintableIccid(this.mCardString);
-        return "{id=" + this.mId + ", iccId=" + iccIdToPrint + " simSlotIndex=" + this.mSimSlotIndex + " carrierId=" + this.mCarrierId + " displayName=" + this.mDisplayName + " carrierName=" + this.mCarrierName + " nameSource=" + this.mNameSource + " iconTint=" + this.mIconTint + " mNumber=" + Rlog.pii(Build.IS_DEBUGGABLE, (Object) this.mNumber) + " dataRoaming=" + this.mDataRoaming + " iconBitmap=" + this.mIconBitmap + " mcc " + this.mMcc + " mnc " + this.mMnc + "mCountryIso=" + this.mCountryIso + " isEmbedded " + this.mIsEmbedded + " accessRules " + Arrays.toString(this.mAccessRules) + " cardString=" + cardStringToPrint + " cardId=" + this.mCardId + " isOpportunistic " + this.mIsOpportunistic + " mGroupUUID=" + this.mGroupUUID + " mIsGroupDisabled=" + this.mIsGroupDisabled + " profileClass=" + this.mProfileClass + " ehplmns = " + Arrays.toString(this.mEhplmns) + " hplmns = " + Arrays.toString(this.mHplmns) + " subscriptionType=" + this.mSubscriptionType + " mGroupOwner=" + this.mGroupOwner + "}";
+        return "{id=" + this.mId + ", iccId=" + iccIdToPrint + " simSlotIndex=" + this.mSimSlotIndex + " carrierId=" + this.mCarrierId + " displayName=" + ((Object) this.mDisplayName) + " carrierName=" + ((Object) this.mCarrierName) + " nameSource=" + this.mNameSource + " iconTint=" + this.mIconTint + " mNumber=" + Rlog.pii(Build.IS_DEBUGGABLE, this.mNumber) + " dataRoaming=" + this.mDataRoaming + " iconBitmap=" + this.mIconBitmap + " mcc " + this.mMcc + " mnc " + this.mMnc + "mCountryIso=" + this.mCountryIso + " isEmbedded " + this.mIsEmbedded + " accessRules " + Arrays.toString(this.mAccessRules) + " cardString=" + cardStringToPrint + " cardId=" + this.mCardId + " isOpportunistic " + this.mIsOpportunistic + " mGroupUUID=" + this.mGroupUUID + " mIsGroupDisabled=" + this.mIsGroupDisabled + " profileClass=" + this.mProfileClass + " ehplmns = " + Arrays.toString(this.mEhplmns) + " hplmns = " + Arrays.toString(this.mHplmns) + " subscriptionType=" + this.mSubscriptionType + " mGroupOwner=" + this.mGroupOwner + "}";
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(this.mId), Integer.valueOf(this.mSimSlotIndex), Integer.valueOf(this.mNameSource), Integer.valueOf(this.mIconTint), Integer.valueOf(this.mDataRoaming), Boolean.valueOf(this.mIsEmbedded), Boolean.valueOf(this.mIsOpportunistic), this.mGroupUUID, this.mIccId, this.mNumber, this.mMcc, this.mMnc, this.mCountryIso, this.mCardString, Integer.valueOf(this.mCardId), this.mDisplayName, this.mCarrierName, this.mAccessRules, Boolean.valueOf(this.mIsGroupDisabled), Integer.valueOf(this.mCarrierId), Integer.valueOf(this.mProfileClass), this.mGroupOwner});
+        return Objects.hash(Integer.valueOf(this.mId), Integer.valueOf(this.mSimSlotIndex), Integer.valueOf(this.mNameSource), Integer.valueOf(this.mIconTint), Integer.valueOf(this.mDataRoaming), Boolean.valueOf(this.mIsEmbedded), Boolean.valueOf(this.mIsOpportunistic), this.mGroupUUID, this.mIccId, this.mNumber, this.mMcc, this.mMnc, this.mCountryIso, this.mCardString, Integer.valueOf(this.mCardId), this.mDisplayName, this.mCarrierName, this.mAccessRules, Boolean.valueOf(this.mIsGroupDisabled), Integer.valueOf(this.mCarrierId), Integer.valueOf(this.mProfileClass), this.mGroupOwner);
     }
 
     public boolean equals(Object obj) {

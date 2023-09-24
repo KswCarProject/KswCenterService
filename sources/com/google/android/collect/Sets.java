@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+/* loaded from: classes4.dex */
 public class Sets {
     @UnsupportedAppUsage
     public static <K> HashSet<K> newHashSet() {
@@ -15,7 +16,8 @@ public class Sets {
 
     @UnsupportedAppUsage
     public static <E> HashSet<E> newHashSet(E... elements) {
-        HashSet<E> set = new HashSet<>(((elements.length * 4) / 3) + 1);
+        int capacity = ((elements.length * 4) / 3) + 1;
+        HashSet<E> set = new HashSet<>(capacity);
         Collections.addAll(set, elements);
         return set;
     }
@@ -38,7 +40,8 @@ public class Sets {
 
     @UnsupportedAppUsage
     public static <E> ArraySet<E> newArraySet(E... elements) {
-        ArraySet<E> set = new ArraySet<>(((elements.length * 4) / 3) + 1);
+        int capacity = ((elements.length * 4) / 3) + 1;
+        ArraySet<E> set = new ArraySet<>(capacity);
         Collections.addAll(set, elements);
         return set;
     }

@@ -1,8 +1,8 @@
 package android.net.wifi.aware;
 
 import android.net.wifi.aware.TlvBufferUtils;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.nio.charset.StandardCharsets;
@@ -11,12 +11,17 @@ import java.util.List;
 import java.util.Objects;
 import libcore.util.HexEncoding;
 
+/* loaded from: classes3.dex */
 public final class SubscribeConfig implements Parcelable {
-    public static final Parcelable.Creator<SubscribeConfig> CREATOR = new Parcelable.Creator<SubscribeConfig>() {
+    public static final Parcelable.Creator<SubscribeConfig> CREATOR = new Parcelable.Creator<SubscribeConfig>() { // from class: android.net.wifi.aware.SubscribeConfig.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SubscribeConfig[] newArray(int size) {
             return new SubscribeConfig[size];
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SubscribeConfig createFromParcel(Parcel in) {
             byte[] serviceName = in.createByteArray();
             byte[] ssi = in.createByteArray();
@@ -25,7 +30,10 @@ public final class SubscribeConfig implements Parcelable {
             int ttlSec = in.readInt();
             boolean enableTerminateNotification = in.readInt() != 0;
             int minDistanceMm = in.readInt();
-            return new SubscribeConfig(serviceName, ssi, matchFilter, subscribeType, ttlSec, enableTerminateNotification, in.readInt() != 0, minDistanceMm, in.readInt() != 0, in.readInt());
+            boolean minDistanceMmSet = in.readInt() != 0;
+            int maxDistanceMm = in.readInt();
+            boolean maxDistanceMmSet = in.readInt() != 0;
+            return new SubscribeConfig(serviceName, ssi, matchFilter, subscribeType, ttlSec, enableTerminateNotification, minDistanceMmSet, minDistanceMm, maxDistanceMmSet, maxDistanceMm);
         }
     };
     public static final int SUBSCRIBE_TYPE_ACTIVE = 1;
@@ -42,6 +50,7 @@ public final class SubscribeConfig implements Parcelable {
     public final int mTtlSec;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface SubscribeTypes {
     }
 
@@ -59,17 +68,10 @@ public final class SubscribeConfig implements Parcelable {
     }
 
     public String toString() {
-        String str;
         StringBuilder sb = new StringBuilder();
         sb.append("SubscribeConfig [mServiceName='");
-        if (this.mServiceName == null) {
-            str = "<null>";
-        } else {
-            str = String.valueOf(HexEncoding.encode(this.mServiceName));
-        }
-        sb.append(str);
+        sb.append(this.mServiceName == null ? "<null>" : String.valueOf(HexEncoding.encode(this.mServiceName)));
         sb.append(", mServiceName.length=");
-        int i = 0;
         sb.append(this.mServiceName == null ? 0 : this.mServiceName.length);
         sb.append(", mServiceSpecificInfo='");
         sb.append(this.mServiceSpecificInfo == null ? "<null>" : String.valueOf(HexEncoding.encode(this.mServiceSpecificInfo)));
@@ -78,10 +80,7 @@ public final class SubscribeConfig implements Parcelable {
         sb.append(", mMatchFilter=");
         sb.append(new TlvBufferUtils.TlvIterable(0, 1, this.mMatchFilter).toString());
         sb.append(", mMatchFilter.length=");
-        if (this.mMatchFilter != null) {
-            i = this.mMatchFilter.length;
-        }
-        sb.append(i);
+        sb.append(this.mMatchFilter != null ? this.mMatchFilter.length : 0);
         sb.append(", mSubscribeType=");
         sb.append(this.mSubscribeType);
         sb.append(", mTtlSec=");
@@ -100,10 +99,12 @@ public final class SubscribeConfig implements Parcelable {
         return sb.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeByteArray(this.mServiceName);
         dest.writeByteArray(this.mServiceSpecificInfo);
@@ -121,91 +122,88 @@ public final class SubscribeConfig implements Parcelable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof SubscribeConfig)) {
+        if (o instanceof SubscribeConfig) {
+            SubscribeConfig lhs = (SubscribeConfig) o;
+            if (Arrays.equals(this.mServiceName, lhs.mServiceName) && Arrays.equals(this.mServiceSpecificInfo, lhs.mServiceSpecificInfo) && Arrays.equals(this.mMatchFilter, lhs.mMatchFilter) && this.mSubscribeType == lhs.mSubscribeType && this.mTtlSec == lhs.mTtlSec && this.mEnableTerminateNotification == lhs.mEnableTerminateNotification && this.mMinDistanceMmSet == lhs.mMinDistanceMmSet && this.mMaxDistanceMmSet == lhs.mMaxDistanceMmSet) {
+                if (!this.mMinDistanceMmSet || this.mMinDistanceMm == lhs.mMinDistanceMm) {
+                    return !this.mMaxDistanceMmSet || this.mMaxDistanceMm == lhs.mMaxDistanceMm;
+                }
+                return false;
+            }
             return false;
-        }
-        SubscribeConfig lhs = (SubscribeConfig) o;
-        if (!Arrays.equals(this.mServiceName, lhs.mServiceName) || !Arrays.equals(this.mServiceSpecificInfo, lhs.mServiceSpecificInfo) || !Arrays.equals(this.mMatchFilter, lhs.mMatchFilter) || this.mSubscribeType != lhs.mSubscribeType || this.mTtlSec != lhs.mTtlSec || this.mEnableTerminateNotification != lhs.mEnableTerminateNotification || this.mMinDistanceMmSet != lhs.mMinDistanceMmSet || this.mMaxDistanceMmSet != lhs.mMaxDistanceMmSet) {
-            return false;
-        }
-        if (this.mMinDistanceMmSet && this.mMinDistanceMm != lhs.mMinDistanceMm) {
-            return false;
-        }
-        if (!this.mMaxDistanceMmSet || this.mMaxDistanceMm == lhs.mMaxDistanceMm) {
-            return true;
         }
         return false;
     }
 
     public int hashCode() {
-        int result = Objects.hash(new Object[]{Integer.valueOf(Arrays.hashCode(this.mServiceName)), Integer.valueOf(Arrays.hashCode(this.mServiceSpecificInfo)), Integer.valueOf(Arrays.hashCode(this.mMatchFilter)), Integer.valueOf(this.mSubscribeType), Integer.valueOf(this.mTtlSec), Boolean.valueOf(this.mEnableTerminateNotification), Boolean.valueOf(this.mMinDistanceMmSet), Boolean.valueOf(this.mMaxDistanceMmSet)});
+        int result = Objects.hash(Integer.valueOf(Arrays.hashCode(this.mServiceName)), Integer.valueOf(Arrays.hashCode(this.mServiceSpecificInfo)), Integer.valueOf(Arrays.hashCode(this.mMatchFilter)), Integer.valueOf(this.mSubscribeType), Integer.valueOf(this.mTtlSec), Boolean.valueOf(this.mEnableTerminateNotification), Boolean.valueOf(this.mMinDistanceMmSet), Boolean.valueOf(this.mMaxDistanceMmSet));
         if (this.mMinDistanceMmSet) {
-            result = Objects.hash(new Object[]{Integer.valueOf(result), Integer.valueOf(this.mMinDistanceMm)});
+            result = Objects.hash(Integer.valueOf(result), Integer.valueOf(this.mMinDistanceMm));
         }
-        if (!this.mMaxDistanceMmSet) {
-            return result;
-        }
-        return Objects.hash(new Object[]{Integer.valueOf(result), Integer.valueOf(this.mMaxDistanceMm)});
+        return this.mMaxDistanceMmSet ? Objects.hash(Integer.valueOf(result), Integer.valueOf(this.mMaxDistanceMm)) : result;
     }
 
     public void assertValid(Characteristics characteristics, boolean rttSupported) throws IllegalArgumentException {
         WifiAwareUtils.validateServiceName(this.mServiceName);
         if (!TlvBufferUtils.isValid(this.mMatchFilter, 0, 1)) {
             throw new IllegalArgumentException("Invalid matchFilter configuration - LV fields do not match up to length");
-        } else if (this.mSubscribeType < 0 || this.mSubscribeType > 1) {
+        }
+        if (this.mSubscribeType < 0 || this.mSubscribeType > 1) {
             throw new IllegalArgumentException("Invalid subscribeType - " + this.mSubscribeType);
-        } else if (this.mTtlSec >= 0) {
+        } else if (this.mTtlSec < 0) {
+            throw new IllegalArgumentException("Invalid ttlSec - must be non-negative");
+        } else {
             if (characteristics != null) {
                 int maxServiceNameLength = characteristics.getMaxServiceNameLength();
-                if (maxServiceNameLength == 0 || this.mServiceName.length <= maxServiceNameLength) {
-                    int maxServiceSpecificInfoLength = characteristics.getMaxServiceSpecificInfoLength();
-                    if (maxServiceSpecificInfoLength == 0 || this.mServiceSpecificInfo == null || this.mServiceSpecificInfo.length <= maxServiceSpecificInfoLength) {
-                        int maxMatchFilterLength = characteristics.getMaxMatchFilterLength();
-                        if (!(maxMatchFilterLength == 0 || this.mMatchFilter == null || this.mMatchFilter.length <= maxMatchFilterLength)) {
-                            throw new IllegalArgumentException("Match filter longer than supported by device characteristics");
-                        }
-                    } else {
-                        throw new IllegalArgumentException("Service specific info longer than supported by device characteristics");
-                    }
-                } else {
+                if (maxServiceNameLength != 0 && this.mServiceName.length > maxServiceNameLength) {
                     throw new IllegalArgumentException("Service name longer than supported by device characteristics");
                 }
-            }
-            if (this.mMinDistanceMmSet != 0 && this.mMinDistanceMm < 0) {
-                throw new IllegalArgumentException("Minimum distance must be non-negative");
-            } else if (this.mMaxDistanceMmSet && this.mMaxDistanceMm < 0) {
-                throw new IllegalArgumentException("Maximum distance must be non-negative");
-            } else if (this.mMinDistanceMmSet && this.mMaxDistanceMmSet && this.mMaxDistanceMm <= this.mMinDistanceMm) {
-                throw new IllegalArgumentException("Maximum distance must be greater than minimum distance");
-            } else if (rttSupported) {
-            } else {
-                if (this.mMinDistanceMmSet || this.mMaxDistanceMmSet) {
-                    throw new IllegalArgumentException("Ranging is not supported");
+                int maxServiceSpecificInfoLength = characteristics.getMaxServiceSpecificInfoLength();
+                if (maxServiceSpecificInfoLength != 0 && this.mServiceSpecificInfo != null && this.mServiceSpecificInfo.length > maxServiceSpecificInfoLength) {
+                    throw new IllegalArgumentException("Service specific info longer than supported by device characteristics");
+                }
+                int maxMatchFilterLength = characteristics.getMaxMatchFilterLength();
+                if (maxMatchFilterLength != 0 && this.mMatchFilter != null && this.mMatchFilter.length > maxMatchFilterLength) {
+                    throw new IllegalArgumentException("Match filter longer than supported by device characteristics");
                 }
             }
-        } else {
-            throw new IllegalArgumentException("Invalid ttlSec - must be non-negative");
+            if (this.mMinDistanceMmSet && this.mMinDistanceMm < 0) {
+                throw new IllegalArgumentException("Minimum distance must be non-negative");
+            }
+            if (this.mMaxDistanceMmSet && this.mMaxDistanceMm < 0) {
+                throw new IllegalArgumentException("Maximum distance must be non-negative");
+            }
+            if (this.mMinDistanceMmSet && this.mMaxDistanceMmSet && this.mMaxDistanceMm <= this.mMinDistanceMm) {
+                throw new IllegalArgumentException("Maximum distance must be greater than minimum distance");
+            }
+            if (rttSupported) {
+                return;
+            }
+            if (this.mMinDistanceMmSet || this.mMaxDistanceMmSet) {
+                throw new IllegalArgumentException("Ranging is not supported");
+            }
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class Builder {
-        private boolean mEnableTerminateNotification = true;
         private byte[] mMatchFilter;
         private int mMaxDistanceMm;
-        private boolean mMaxDistanceMmSet = false;
         private int mMinDistanceMm;
-        private boolean mMinDistanceMmSet = false;
         private byte[] mServiceName;
         private byte[] mServiceSpecificInfo;
         private int mSubscribeType = 0;
         private int mTtlSec = 0;
+        private boolean mEnableTerminateNotification = true;
+        private boolean mMinDistanceMmSet = false;
+        private boolean mMaxDistanceMmSet = false;
 
         public Builder setServiceName(String serviceName) {
-            if (serviceName != null) {
-                this.mServiceName = serviceName.getBytes(StandardCharsets.UTF_8);
-                return this;
+            if (serviceName == null) {
+                throw new IllegalArgumentException("Invalid service name - must be non-null");
             }
-            throw new IllegalArgumentException("Invalid service name - must be non-null");
+            this.mServiceName = serviceName.getBytes(StandardCharsets.UTF_8);
+            return this;
         }
 
         public Builder setServiceSpecificInfo(byte[] serviceSpecificInfo) {
@@ -227,11 +225,11 @@ public final class SubscribeConfig implements Parcelable {
         }
 
         public Builder setTtlSec(int ttlSec) {
-            if (ttlSec >= 0) {
-                this.mTtlSec = ttlSec;
-                return this;
+            if (ttlSec < 0) {
+                throw new IllegalArgumentException("Invalid ttlSec - must be non-negative");
             }
-            throw new IllegalArgumentException("Invalid ttlSec - must be non-negative");
+            this.mTtlSec = ttlSec;
+            return this;
         }
 
         public Builder setTerminateNotificationEnabled(boolean enable) {

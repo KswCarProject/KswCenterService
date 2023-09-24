@@ -4,6 +4,7 @@ import android.content.Context;
 import com.wits.pms.interfaces.MemoryKiller;
 import com.wits.pms.statuscontrol.PowerManagerApp;
 
+/* loaded from: classes2.dex */
 public class KswMemoryController extends MemoryKiller {
     public KswMemoryController(Context mContext) {
         super(mContext);
@@ -20,6 +21,7 @@ public class KswMemoryController extends MemoryKiller {
         }
     }
 
+    @Override // com.wits.pms.interfaces.MemoryKiller
     public void clearMemoryForCustom() {
         for (MemoryKiller.AppProcess appProcess : this.mAppList) {
             if (!appProcess.isUsingMediaApp() && appProcess.isWhiteListApp()) {

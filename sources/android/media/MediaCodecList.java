@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 
+/* loaded from: classes3.dex */
 public final class MediaCodecList {
     public static final int ALL_CODECS = 1;
     public static final int REGULAR_CODECS = 0;
@@ -41,10 +42,10 @@ public final class MediaCodecList {
 
     public static final MediaCodecInfo getCodecInfoAt(int index) {
         initCodecList();
-        if (index >= 0 && index <= sRegularCodecInfos.length) {
-            return sRegularCodecInfos[index];
+        if (index < 0 || index > sRegularCodecInfos.length) {
+            throw new IllegalArgumentException();
         }
-        throw new IllegalArgumentException();
+        return sRegularCodecInfos[index];
     }
 
     static final Map<String, Object> getGlobalSettings() {
@@ -76,7 +77,7 @@ public final class MediaCodecList {
                             regulars.add(info2);
                         }
                     } catch (Exception e) {
-                        Log.e(TAG, "Could not get codec capabilities", e);
+                        Log.m69e(TAG, "Could not get codec capabilities", e);
                     }
                 }
                 sRegularCodecInfos = (MediaCodecInfo[]) regulars.toArray(new MediaCodecInfo[regulars.size()]);
@@ -92,7 +93,8 @@ public final class MediaCodecList {
         int length = supportedTypes.length;
         int i = 0;
         while (i < length) {
-            caps[typeIx] = getCodecCapabilities(index, supportedTypes[i]);
+            String type = supportedTypes[i];
+            caps[typeIx] = getCodecCapabilities(index, type);
             i++;
             typeIx++;
         }
@@ -130,6 +132,7 @@ public final class MediaCodecList {
     }
 
     private String findCodecForFormat(boolean encoder, MediaFormat format) {
+        MediaCodecInfo[] mediaCodecInfoArr;
         String mime = format.getString(MediaFormat.KEY_MIME);
         for (MediaCodecInfo info : this.mCodecInfos) {
             if (info.isEncoder() == encoder) {

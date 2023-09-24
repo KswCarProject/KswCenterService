@@ -1,15 +1,20 @@
 package android.telephony.ims;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.annotations.VisibleForTesting;
 
+/* loaded from: classes4.dex */
 public class RcsGroupThreadNameChangedEventDescriptor extends RcsGroupThreadEventDescriptor {
-    public static final Parcelable.Creator<RcsGroupThreadNameChangedEventDescriptor> CREATOR = new Parcelable.Creator<RcsGroupThreadNameChangedEventDescriptor>() {
+    public static final Parcelable.Creator<RcsGroupThreadNameChangedEventDescriptor> CREATOR = new Parcelable.Creator<RcsGroupThreadNameChangedEventDescriptor>() { // from class: android.telephony.ims.RcsGroupThreadNameChangedEventDescriptor.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RcsGroupThreadNameChangedEventDescriptor createFromParcel(Parcel in) {
             return new RcsGroupThreadNameChangedEventDescriptor(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RcsGroupThreadNameChangedEventDescriptor[] newArray(int size) {
             return new RcsGroupThreadNameChangedEventDescriptor[size];
         }
@@ -21,6 +26,7 @@ public class RcsGroupThreadNameChangedEventDescriptor extends RcsGroupThreadEven
         this.mNewName = newName;
     }
 
+    @Override // android.telephony.ims.RcsEventDescriptor
     @VisibleForTesting(visibility = VisibleForTesting.Visibility.PROTECTED)
     public RcsGroupThreadNameChangedEvent createRcsEvent(RcsControllerCall rcsControllerCall) {
         return new RcsGroupThreadNameChangedEvent(this.mTimestamp, new RcsGroupThread(rcsControllerCall, this.mRcsGroupThreadId), new RcsParticipant(rcsControllerCall, this.mOriginatingParticipantId), this.mNewName);
@@ -31,10 +37,12 @@ public class RcsGroupThreadNameChangedEventDescriptor extends RcsGroupThreadEven
         this.mNewName = in.readString();
     }
 
+    @Override // android.telephony.ims.RcsEventDescriptor, android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.telephony.ims.RcsGroupThreadEventDescriptor, android.telephony.ims.RcsEventDescriptor, android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
         dest.writeString(this.mNewName);

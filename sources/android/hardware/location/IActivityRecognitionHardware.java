@@ -1,12 +1,13 @@
 package android.hardware.location;
 
 import android.hardware.location.IActivityRecognitionHardwareSink;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes.dex */
 public interface IActivityRecognitionHardware extends IInterface {
     boolean disableActivityEvent(String str, int i) throws RemoteException;
 
@@ -22,40 +23,50 @@ public interface IActivityRecognitionHardware extends IInterface {
 
     boolean unregisterSink(IActivityRecognitionHardwareSink iActivityRecognitionHardwareSink) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements IActivityRecognitionHardware {
+        @Override // android.hardware.location.IActivityRecognitionHardware
         public String[] getSupportedActivities() throws RemoteException {
             return null;
         }
 
+        @Override // android.hardware.location.IActivityRecognitionHardware
         public boolean isActivitySupported(String activityType) throws RemoteException {
             return false;
         }
 
+        @Override // android.hardware.location.IActivityRecognitionHardware
         public boolean registerSink(IActivityRecognitionHardwareSink sink) throws RemoteException {
             return false;
         }
 
+        @Override // android.hardware.location.IActivityRecognitionHardware
         public boolean unregisterSink(IActivityRecognitionHardwareSink sink) throws RemoteException {
             return false;
         }
 
+        @Override // android.hardware.location.IActivityRecognitionHardware
         public boolean enableActivityEvent(String activityType, int eventType, long reportLatencyNs) throws RemoteException {
             return false;
         }
 
+        @Override // android.hardware.location.IActivityRecognitionHardware
         public boolean disableActivityEvent(String activityType, int eventType) throws RemoteException {
             return false;
         }
 
+        @Override // android.hardware.location.IActivityRecognitionHardware
         public boolean flush() throws RemoteException {
             return false;
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements IActivityRecognitionHardware {
         private static final String DESCRIPTOR = "android.hardware.location.IActivityRecognitionHardware";
         static final int TRANSACTION_disableActivityEvent = 6;
@@ -75,12 +86,13 @@ public interface IActivityRecognitionHardware extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IActivityRecognitionHardware)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IActivityRecognitionHardware)) {
+                return (IActivityRecognitionHardware) iin;
             }
-            return (IActivityRecognitionHardware) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -106,64 +118,74 @@ public interface IActivityRecognitionHardware extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        String[] _result = getSupportedActivities();
-                        reply.writeNoException();
-                        reply.writeStringArray(_result);
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        boolean _result2 = isActivitySupported(data.readString());
-                        reply.writeNoException();
-                        reply.writeInt(_result2);
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        boolean _result3 = registerSink(IActivityRecognitionHardwareSink.Stub.asInterface(data.readStrongBinder()));
-                        reply.writeNoException();
-                        reply.writeInt(_result3);
-                        return true;
-                    case 4:
-                        data.enforceInterface(DESCRIPTOR);
-                        boolean _result4 = unregisterSink(IActivityRecognitionHardwareSink.Stub.asInterface(data.readStrongBinder()));
-                        reply.writeNoException();
-                        reply.writeInt(_result4);
-                        return true;
-                    case 5:
-                        data.enforceInterface(DESCRIPTOR);
-                        boolean _result5 = enableActivityEvent(data.readString(), data.readInt(), data.readLong());
-                        reply.writeNoException();
-                        reply.writeInt(_result5);
-                        return true;
-                    case 6:
-                        data.enforceInterface(DESCRIPTOR);
-                        boolean _result6 = disableActivityEvent(data.readString(), data.readInt());
-                        reply.writeNoException();
-                        reply.writeInt(_result6);
-                        return true;
-                    case 7:
-                        data.enforceInterface(DESCRIPTOR);
-                        boolean _result7 = flush();
-                        reply.writeNoException();
-                        reply.writeInt(_result7);
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    String[] _result = getSupportedActivities();
+                    reply.writeNoException();
+                    reply.writeStringArray(_result);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0 = data.readString();
+                    boolean isActivitySupported = isActivitySupported(_arg0);
+                    reply.writeNoException();
+                    reply.writeInt(isActivitySupported ? 1 : 0);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    IActivityRecognitionHardwareSink _arg02 = IActivityRecognitionHardwareSink.Stub.asInterface(data.readStrongBinder());
+                    boolean registerSink = registerSink(_arg02);
+                    reply.writeNoException();
+                    reply.writeInt(registerSink ? 1 : 0);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    IActivityRecognitionHardwareSink _arg03 = IActivityRecognitionHardwareSink.Stub.asInterface(data.readStrongBinder());
+                    boolean unregisterSink = unregisterSink(_arg03);
+                    reply.writeNoException();
+                    reply.writeInt(unregisterSink ? 1 : 0);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg04 = data.readString();
+                    int _arg1 = data.readInt();
+                    long _arg2 = data.readLong();
+                    boolean enableActivityEvent = enableActivityEvent(_arg04, _arg1, _arg2);
+                    reply.writeNoException();
+                    reply.writeInt(enableActivityEvent ? 1 : 0);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg05 = data.readString();
+                    int _arg12 = data.readInt();
+                    boolean disableActivityEvent = disableActivityEvent(_arg05, _arg12);
+                    reply.writeNoException();
+                    reply.writeInt(disableActivityEvent ? 1 : 0);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean flush = flush();
+                    reply.writeNoException();
+                    reply.writeInt(flush ? 1 : 0);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements IActivityRecognitionHardware {
             public static IActivityRecognitionHardware sDefaultImpl;
             private IBinder mRemote;
@@ -172,6 +194,7 @@ public interface IActivityRecognitionHardware extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -180,18 +203,18 @@ public interface IActivityRecognitionHardware extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.hardware.location.IActivityRecognitionHardware
             public String[] getSupportedActivities() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(1, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getSupportedActivities();
                     }
                     _reply.readException();
                     String[] _result = _reply.createStringArray();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -199,78 +222,67 @@ public interface IActivityRecognitionHardware extends IInterface {
                 }
             }
 
+            @Override // android.hardware.location.IActivityRecognitionHardware
             public boolean isActivitySupported(String activityType) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(activityType);
-                    boolean z = false;
-                    if (!this.mRemote.transact(2, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isActivitySupported(activityType);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.location.IActivityRecognitionHardware
             public boolean registerSink(IActivityRecognitionHardwareSink sink) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(sink != null ? sink.asBinder() : null);
-                    boolean z = false;
-                    if (!this.mRemote.transact(3, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().registerSink(sink);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.location.IActivityRecognitionHardware
             public boolean unregisterSink(IActivityRecognitionHardwareSink sink) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(sink != null ? sink.asBinder() : null);
-                    boolean z = false;
-                    if (!this.mRemote.transact(4, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().unregisterSink(sink);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.location.IActivityRecognitionHardware
             public boolean enableActivityEvent(String activityType, int eventType, long reportLatencyNs) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -279,24 +291,20 @@ public interface IActivityRecognitionHardware extends IInterface {
                     _data.writeString(activityType);
                     _data.writeInt(eventType);
                     _data.writeLong(reportLatencyNs);
-                    boolean z = false;
-                    if (!this.mRemote.transact(5, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().enableActivityEvent(activityType, eventType, reportLatencyNs);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.location.IActivityRecognitionHardware
             public boolean disableActivityEvent(String activityType, int eventType) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -304,41 +312,32 @@ public interface IActivityRecognitionHardware extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(activityType);
                     _data.writeInt(eventType);
-                    boolean z = false;
-                    if (!this.mRemote.transact(6, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().disableActivityEvent(activityType, eventType);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.location.IActivityRecognitionHardware
             public boolean flush() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(7, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().flush();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -347,11 +346,11 @@ public interface IActivityRecognitionHardware extends IInterface {
         }
 
         public static boolean setDefaultImpl(IActivityRecognitionHardware impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IActivityRecognitionHardware getDefaultImpl() {

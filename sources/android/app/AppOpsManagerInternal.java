@@ -4,8 +4,10 @@ import android.util.SparseIntArray;
 import com.android.internal.util.function.QuadFunction;
 import com.android.internal.util.function.TriFunction;
 
+/* loaded from: classes.dex */
 public abstract class AppOpsManagerInternal {
 
+    /* loaded from: classes.dex */
     public interface CheckOpsDelegate {
         int checkAudioOperation(int i, int i2, int i3, String str, QuadFunction<Integer, Integer, Integer, String, Integer> quadFunction);
 

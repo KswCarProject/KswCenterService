@@ -1,16 +1,21 @@
 package android.service.resolver;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class ResolverTarget implements Parcelable {
-    public static final Parcelable.Creator<ResolverTarget> CREATOR = new Parcelable.Creator<ResolverTarget>() {
+    public static final Parcelable.Creator<ResolverTarget> CREATOR = new Parcelable.Creator<ResolverTarget>() { // from class: android.service.resolver.ResolverTarget.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ResolverTarget createFromParcel(Parcel source) {
             return new ResolverTarget(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ResolverTarget[] newArray(int size) {
             return new ResolverTarget[size];
         }
@@ -77,10 +82,12 @@ public final class ResolverTarget implements Parcelable {
         return "ResolverTarget{" + this.mRecencyScore + ", " + this.mTimeSpentScore + ", " + this.mLaunchScore + ", " + this.mChooserScore + ", " + this.mSelectProbability + "}";
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeFloat(this.mRecencyScore);
         dest.writeFloat(this.mTimeSpentScore);

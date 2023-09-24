@@ -8,8 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+/* loaded from: classes4.dex */
 public abstract class ResourceCursorAdapter extends CursorAdapter {
-    private LayoutInflater mDropDownInflater = this.mInflater;
+    private LayoutInflater mDropDownInflater;
     private int mDropDownLayout;
     private LayoutInflater mInflater;
     private int mLayout;
@@ -20,6 +21,7 @@ public abstract class ResourceCursorAdapter extends CursorAdapter {
         this.mDropDownLayout = layout;
         this.mLayout = layout;
         this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.mDropDownInflater = this.mInflater;
     }
 
     public ResourceCursorAdapter(Context context, int layout, Cursor c, boolean autoRequery) {
@@ -27,6 +29,7 @@ public abstract class ResourceCursorAdapter extends CursorAdapter {
         this.mDropDownLayout = layout;
         this.mLayout = layout;
         this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.mDropDownInflater = this.mInflater;
     }
 
     public ResourceCursorAdapter(Context context, int layout, Cursor c, int flags) {
@@ -34,8 +37,10 @@ public abstract class ResourceCursorAdapter extends CursorAdapter {
         this.mDropDownLayout = layout;
         this.mLayout = layout;
         this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.mDropDownInflater = this.mInflater;
     }
 
+    @Override // android.widget.CursorAdapter, android.widget.ThemedSpinnerAdapter
     public void setDropDownViewTheme(Resources.Theme theme) {
         super.setDropDownViewTheme(theme);
         if (theme == null) {
@@ -43,14 +48,17 @@ public abstract class ResourceCursorAdapter extends CursorAdapter {
         } else if (theme == this.mInflater.getContext().getTheme()) {
             this.mDropDownInflater = this.mInflater;
         } else {
-            this.mDropDownInflater = LayoutInflater.from(new ContextThemeWrapper(this.mContext, theme));
+            Context context = new ContextThemeWrapper(this.mContext, theme);
+            this.mDropDownInflater = LayoutInflater.from(context);
         }
     }
 
+    @Override // android.widget.CursorAdapter
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         return this.mInflater.inflate(this.mLayout, parent, false);
     }
 
+    @Override // android.widget.CursorAdapter
     public View newDropDownView(Context context, Cursor cursor, ViewGroup parent) {
         return this.mDropDownInflater.inflate(this.mDropDownLayout, parent, false);
     }

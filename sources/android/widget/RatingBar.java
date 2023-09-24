@@ -10,18 +10,21 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.view.inspector.InspectionCompanion;
 import android.view.inspector.PropertyMapper;
 import android.view.inspector.PropertyReader;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
+/* loaded from: classes4.dex */
 public class RatingBar extends AbsSeekBar {
     private int mNumStars;
     @UnsupportedAppUsage
     private OnRatingBarChangeListener mOnRatingBarChangeListener;
     private int mProgressOnStartTracking;
 
+    /* loaded from: classes4.dex */
     public interface OnRatingBarChangeListener {
         void onRatingChanged(RatingBar ratingBar, float f, boolean z);
     }
 
+    /* loaded from: classes4.dex */
     public final class InspectionCompanion implements android.view.inspector.InspectionCompanion<RatingBar> {
         private int mIsIndicatorId;
         private int mNumStarsId;
@@ -29,6 +32,7 @@ public class RatingBar extends AbsSeekBar {
         private int mRatingId;
         private int mStepSizeId;
 
+        @Override // android.view.inspector.InspectionCompanion
         public void mapProperties(PropertyMapper propertyMapper) {
             this.mIsIndicatorId = propertyMapper.mapBoolean("isIndicator", 16843079);
             this.mNumStarsId = propertyMapper.mapInt("numStars", 16843076);
@@ -37,15 +41,15 @@ public class RatingBar extends AbsSeekBar {
             this.mPropertiesMapped = true;
         }
 
+        @Override // android.view.inspector.InspectionCompanion
         public void readProperties(RatingBar node, PropertyReader propertyReader) {
-            if (this.mPropertiesMapped) {
-                propertyReader.readBoolean(this.mIsIndicatorId, node.isIndicator());
-                propertyReader.readInt(this.mNumStarsId, node.getNumStars());
-                propertyReader.readFloat(this.mRatingId, node.getRating());
-                propertyReader.readFloat(this.mStepSizeId, node.getStepSize());
-                return;
+            if (!this.mPropertiesMapped) {
+                throw new InspectionCompanion.UninitializedPropertyMapException();
             }
-            throw new InspectionCompanion.UninitializedPropertyMapException();
+            propertyReader.readBoolean(this.mIsIndicatorId, node.isIndicator());
+            propertyReader.readInt(this.mNumStarsId, node.getNumStars());
+            propertyReader.readFloat(this.mRatingId, node.getRating());
+            propertyReader.readFloat(this.mStepSizeId, node.getStepSize());
         }
     }
 
@@ -56,8 +60,8 @@ public class RatingBar extends AbsSeekBar {
     public RatingBar(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         this.mNumStars = 5;
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.RatingBar, defStyleAttr, defStyleRes);
-        saveAttributeDataForStyleable(context, R.styleable.RatingBar, attrs, a, defStyleAttr, defStyleRes);
+        TypedArray a = context.obtainStyledAttributes(attrs, C3132R.styleable.RatingBar, defStyleAttr, defStyleRes);
+        saveAttributeDataForStyleable(context, C3132R.styleable.RatingBar, attrs, a, defStyleAttr, defStyleRes);
         int numStars = a.getInt(0, this.mNumStars);
         setIsIndicator(a.getBoolean(3, !this.mIsUserSeekable));
         float rating = a.getFloat(1, -1.0f);
@@ -82,7 +86,7 @@ public class RatingBar extends AbsSeekBar {
     }
 
     public RatingBar(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public void setOnRatingBarChangeListener(OnRatingBarChangeListener listener) {
@@ -107,10 +111,11 @@ public class RatingBar extends AbsSeekBar {
     }
 
     public void setNumStars(int numStars) {
-        if (numStars > 0) {
-            this.mNumStars = numStars;
-            requestLayout();
+        if (numStars <= 0) {
+            return;
         }
+        this.mNumStars = numStars;
+        requestLayout();
     }
 
     public int getNumStars() {
@@ -122,35 +127,37 @@ public class RatingBar extends AbsSeekBar {
     }
 
     public float getRating() {
-        return ((float) getProgress()) / getProgressPerStar();
+        return getProgress() / getProgressPerStar();
     }
 
     public void setStepSize(float stepSize) {
-        if (stepSize > 0.0f) {
-            float newMax = ((float) this.mNumStars) / stepSize;
-            setMax((int) newMax);
-            setProgress((int) ((newMax / ((float) getMax())) * ((float) getProgress())));
+        if (stepSize <= 0.0f) {
+            return;
         }
+        float newMax = this.mNumStars / stepSize;
+        int newProgress = (int) ((newMax / getMax()) * getProgress());
+        setMax((int) newMax);
+        setProgress(newProgress);
     }
 
     public float getStepSize() {
-        return ((float) getNumStars()) / ((float) getMax());
+        return getNumStars() / getMax();
     }
 
     private float getProgressPerStar() {
         if (this.mNumStars > 0) {
-            return (((float) getMax()) * 1.0f) / ((float) this.mNumStars);
+            return (getMax() * 1.0f) / this.mNumStars;
         }
         return 1.0f;
     }
 
-    /* access modifiers changed from: package-private */
-    public Shape getDrawableShape() {
+    @Override // android.widget.ProgressBar
+    Shape getDrawableShape() {
         return new RectShape();
     }
 
-    /* access modifiers changed from: package-private */
-    public void onProgressRefresh(float scale, boolean fromUser, int progress) {
+    @Override // android.widget.ProgressBar
+    void onProgressRefresh(float scale, boolean fromUser, int progress) {
         super.onProgressRefresh(scale, fromUser, progress);
         updateSecondaryProgress(progress);
         if (!fromUser) {
@@ -161,55 +168,61 @@ public class RatingBar extends AbsSeekBar {
     private void updateSecondaryProgress(int progress) {
         float ratio = getProgressPerStar();
         if (ratio > 0.0f) {
-            setSecondaryProgress((int) (Math.ceil((double) (((float) progress) / ratio)) * ((double) ratio)));
+            float progressInStars = progress / ratio;
+            int secondaryProgress = (int) (Math.ceil(progressInStars) * ratio);
+            setSecondaryProgress(secondaryProgress);
         }
     }
 
-    /* access modifiers changed from: protected */
-    public synchronized void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    @Override // android.widget.AbsSeekBar, android.widget.ProgressBar, android.view.View
+    protected synchronized void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         if (this.mSampleWidth > 0) {
-            setMeasuredDimension(resolveSizeAndState(this.mSampleWidth * this.mNumStars, widthMeasureSpec, 0), getMeasuredHeight());
+            int width = this.mSampleWidth * this.mNumStars;
+            setMeasuredDimension(resolveSizeAndState(width, widthMeasureSpec, 0), getMeasuredHeight());
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void onStartTrackingTouch() {
+    @Override // android.widget.AbsSeekBar
+    void onStartTrackingTouch() {
         this.mProgressOnStartTracking = getProgress();
         super.onStartTrackingTouch();
     }
 
-    /* access modifiers changed from: package-private */
-    public void onStopTrackingTouch() {
+    @Override // android.widget.AbsSeekBar
+    void onStopTrackingTouch() {
         super.onStopTrackingTouch();
         if (getProgress() != this.mProgressOnStartTracking) {
             dispatchRatingChange(true);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void onKeyChange() {
+    @Override // android.widget.AbsSeekBar
+    void onKeyChange() {
         super.onKeyChange();
         dispatchRatingChange(true);
     }
 
-    /* access modifiers changed from: package-private */
-    public void dispatchRatingChange(boolean fromUser) {
+    void dispatchRatingChange(boolean fromUser) {
         if (this.mOnRatingBarChangeListener != null) {
             this.mOnRatingBarChangeListener.onRatingChanged(this, getRating(), fromUser);
         }
     }
 
+    @Override // android.widget.AbsSeekBar, android.widget.ProgressBar
     public synchronized void setMax(int max) {
-        if (max > 0) {
-            super.setMax(max);
+        if (max <= 0) {
+            return;
         }
+        super.setMax(max);
     }
 
+    @Override // android.widget.AbsSeekBar, android.widget.ProgressBar, android.view.View
     public CharSequence getAccessibilityClassName() {
         return RatingBar.class.getName();
     }
 
+    @Override // android.widget.AbsSeekBar, android.widget.ProgressBar, android.view.View
     public void onInitializeAccessibilityNodeInfoInternal(AccessibilityNodeInfo info) {
         super.onInitializeAccessibilityNodeInfoInternal(info);
         if (canUserSetProgress()) {
@@ -217,8 +230,8 @@ public class RatingBar extends AbsSeekBar {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean canUserSetProgress() {
+    @Override // android.widget.AbsSeekBar
+    boolean canUserSetProgress() {
         return super.canUserSetProgress() && !isIndicator();
     }
 }

@@ -1,7 +1,8 @@
 package com.android.internal.util;
 
-import android.os.SystemClock;
+import android.p007os.SystemClock;
 
+/* loaded from: classes4.dex */
 public class TokenBucket {
     private int mAvailable;
     private final int mCapacity;
@@ -59,11 +60,12 @@ public class TokenBucket {
 
     private void fill() {
         long now = scaledTime();
-        this.mAvailable = Math.min(this.mCapacity, this.mAvailable + ((int) (now - this.mLastFill)));
+        int diff = (int) (now - this.mLastFill);
+        this.mAvailable = Math.min(this.mCapacity, this.mAvailable + diff);
         this.mLastFill = now;
     }
 
     private long scaledTime() {
-        return SystemClock.elapsedRealtime() / ((long) this.mFillDelta);
+        return SystemClock.elapsedRealtime() / this.mFillDelta;
     }
 }

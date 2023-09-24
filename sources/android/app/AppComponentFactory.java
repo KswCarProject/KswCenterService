@@ -3,8 +3,9 @@ package android.app;
 import android.content.BroadcastReceiver;
 import android.content.ContentProvider;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
+import android.content.p002pm.ApplicationInfo;
 
+/* loaded from: classes.dex */
 public class AppComponentFactory {
     public static final AppComponentFactory DEFAULT = new AppComponentFactory();
 

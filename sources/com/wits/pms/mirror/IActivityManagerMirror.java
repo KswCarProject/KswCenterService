@@ -6,9 +6,10 @@ import com.wits.reflect.MethodName;
 import com.wits.reflect.RefClass;
 import com.wits.reflect.RefMethod;
 
+/* loaded from: classes2.dex */
 public class IActivityManagerMirror {
     public static final String TAG = IActivityManagerMirror.class.getSimpleName();
-    public static final Class<?> TYPE = RefClass.load((Class<?>) IActivityManagerMirror.class, "android.app.IActivityManager");
+    public static final Class<?> TYPE = RefClass.load(IActivityManagerMirror.class, "android.app.IActivityManager");
     @MethodName(name = "getConfiguration", params = {})
     public static RefMethod<Configuration> getConfiguration;
     @MethodName(name = "updateConfiguration", params = {Configuration.class})

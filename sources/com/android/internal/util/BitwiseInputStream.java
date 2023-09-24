@@ -2,11 +2,13 @@ package com.android.internal.util;
 
 import android.annotation.UnsupportedAppUsage;
 
+/* loaded from: classes4.dex */
 public class BitwiseInputStream {
     private byte[] mBuf;
     private int mEnd;
     private int mPos = 0;
 
+    /* loaded from: classes4.dex */
     public static class AccessException extends Exception {
         public AccessException(String s) {
             super("BitwiseInputStream access failed: " + s);
@@ -35,7 +37,7 @@ public class BitwiseInputStream {
         if (offset < 8) {
             data |= this.mBuf[index + 1] & 255;
         }
-        int data2 = (data >>> offset) & (-1 >>> (32 - bits));
+        int data2 = (data >>> offset) & ((-1) >>> (32 - bits));
         this.mPos += bits;
         return data2;
     }
@@ -53,10 +55,9 @@ public class BitwiseInputStream {
 
     @UnsupportedAppUsage
     public void skip(int bits) throws AccessException {
-        if (this.mPos + bits <= this.mEnd) {
-            this.mPos += bits;
-            return;
+        if (this.mPos + bits > this.mEnd) {
+            throw new AccessException("illegal skip (pos " + this.mPos + ", end " + this.mEnd + ", bits " + bits + ")");
         }
-        throw new AccessException("illegal skip (pos " + this.mPos + ", end " + this.mEnd + ", bits " + bits + ")");
+        this.mPos += bits;
     }
 }

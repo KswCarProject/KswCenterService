@@ -1,5 +1,6 @@
 package android.bluetooth;
 
+/* loaded from: classes.dex */
 public abstract class BluetoothGattServerCallback {
     public void onConnectionStateChange(BluetoothDevice device, int status, int newState) {
     }

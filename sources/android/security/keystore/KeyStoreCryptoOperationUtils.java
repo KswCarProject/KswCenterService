@@ -7,6 +7,7 @@ import java.security.InvalidKeyException;
 import java.security.SecureRandom;
 import libcore.util.EmptyArray;
 
+/* loaded from: classes3.dex */
 abstract class KeyStoreCryptoOperationUtils {
     private static volatile SecureRandom sRng;
 
@@ -28,13 +29,13 @@ abstract class KeyStoreCryptoOperationUtils {
         if (beginOpResultCode == 1) {
             return null;
         }
-        if (beginOpResultCode == -55) {
-            return new InvalidAlgorithmParameterException("Caller-provided IV not permitted");
-        }
-        if (beginOpResultCode != -52) {
+        if (beginOpResultCode != -55) {
+            if (beginOpResultCode == -52) {
+                return new InvalidAlgorithmParameterException("Invalid IV");
+            }
             return getInvalidKeyExceptionForInit(keyStore, key, beginOpResultCode);
         }
-        return new InvalidAlgorithmParameterException("Invalid IV");
+        return new InvalidAlgorithmParameterException("Caller-provided IV not permitted");
     }
 
     static byte[] getRandomBytesToMixIntoKeystoreRng(SecureRandom rng, int sizeBytes) {

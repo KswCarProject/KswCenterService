@@ -3,6 +3,7 @@ package android.hardware.radio.V1_0;
 import android.security.keystore.KeyProperties;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class DataCallFailCause {
     public static final int ACTIVATION_REJECT_GGSN = 30;
     public static final int ACTIVATION_REJECT_UNSPECIFIED = 31;
@@ -573,27 +574,27 @@ public final class DataCallFailCause {
             list.add("OEM_DCFAILCAUSE_15");
             flipped |= 4111;
         }
-        if ((o & -1) == -1) {
+        if ((o & (-1)) == -1) {
             list.add("VOICE_REGISTRATION_FAIL");
             flipped |= -1;
         }
-        if ((o & -2) == -2) {
+        if ((o & (-2)) == -2) {
             list.add("DATA_REGISTRATION_FAIL");
             flipped |= -2;
         }
-        if ((o & -3) == -3) {
+        if ((o & (-3)) == -3) {
             list.add("SIGNAL_LOST");
             flipped |= -3;
         }
-        if ((o & -4) == -4) {
+        if ((o & (-4)) == -4) {
             list.add("PREF_RADIO_TECH_CHANGED");
             flipped |= -4;
         }
-        if ((o & -5) == -5) {
+        if ((o & (-5)) == -5) {
             list.add("RADIO_POWER_OFF");
             flipped |= -5;
         }
-        if ((o & -6) == -6) {
+        if ((o & (-6)) == -6) {
             list.add("TETHERED_CALL_ACTIVE");
             flipped |= -6;
         }
@@ -602,7 +603,7 @@ public final class DataCallFailCause {
             flipped |= 65535;
         }
         if (o != flipped) {
-            list.add("0x" + Integer.toHexString((~((int) flipped)) & o));
+            list.add("0x" + Integer.toHexString((~flipped) & o));
         }
         return String.join(" | ", list);
     }

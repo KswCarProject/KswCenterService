@@ -7,10 +7,11 @@ import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Bundle;
+import android.p007os.Bundle;
 import android.provider.Settings;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
+/* loaded from: classes4.dex */
 public class ResolverTargetActionsDialogFragment extends DialogFragment implements DialogInterface.OnClickListener {
     private static final int APP_INFO_INDEX = 0;
     private static final String NAME_KEY = "componentName";
@@ -26,14 +27,19 @@ public class ResolverTargetActionsDialogFragment extends DialogFragment implemen
         setArguments(args);
     }
 
+    @Override // android.app.DialogFragment
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        return new AlertDialog.Builder(getContext()).setCancelable(true).setItems((int) R.array.resolver_target_actions, (DialogInterface.OnClickListener) this).setTitle(getArguments().getCharSequence("title")).create();
+        Bundle args = getArguments();
+        return new AlertDialog.Builder(getContext()).setCancelable(true).setItems(C3132R.array.resolver_target_actions, this).setTitle(args.getCharSequence("title")).create();
     }
 
+    @Override // android.content.DialogInterface.OnClickListener
     public void onClick(DialogInterface dialog, int which) {
-        ComponentName name = (ComponentName) getArguments().getParcelable(NAME_KEY);
+        Bundle args = getArguments();
+        ComponentName name = (ComponentName) args.getParcelable(NAME_KEY);
         if (which == 0) {
-            startActivity(new Intent().setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData(Uri.fromParts("package", name.getPackageName(), (String) null)).addFlags(524288));
+            Intent in = new Intent().setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData(Uri.fromParts("package", name.getPackageName(), null)).addFlags(524288);
+            startActivity(in);
         }
         dismiss();
     }

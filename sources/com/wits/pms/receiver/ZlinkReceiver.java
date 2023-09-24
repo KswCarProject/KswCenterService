@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import com.wits.pms.bean.ZlinkMessage;
 
+/* loaded from: classes2.dex */
 public class ZlinkReceiver extends BroadcastReceiver {
+    @Override // android.content.BroadcastReceiver
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals(ZlinkMessage.ZLINK_NORMAL_ACTION)) {
             handleReceive(intent);
@@ -13,6 +15,7 @@ public class ZlinkReceiver extends BroadcastReceiver {
     }
 
     private void handleReceive(Intent intent) {
-        ReceiverHandler.handle(new ZlinkMessage(intent));
+        ZlinkMessage zlinkMessage = new ZlinkMessage(intent);
+        ReceiverHandler.handle(zlinkMessage);
     }
 }

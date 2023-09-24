@@ -3,9 +3,9 @@ package android.service.euicc;
 import android.annotation.SystemApi;
 import android.app.Service;
 import android.content.Intent;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.RemoteException;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.RemoteException;
 import android.service.euicc.IEuiccService;
 import android.telephony.euicc.DownloadableSubscription;
 import android.telephony.euicc.EuiccInfo;
@@ -20,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public abstract class EuiccService extends Service {
     public static final String ACTION_BIND_CARRIER_PROVISIONING_SERVICE = "android.service.euicc.action.BIND_CARRIER_PROVISIONING_SERVICE";
     public static final String ACTION_DELETE_SUBSCRIPTION_PRIVILEGED = "android.service.euicc.action.DELETE_SUBSCRIPTION_PRIVILEGED";
@@ -51,19 +52,21 @@ public abstract class EuiccService extends Service {
     public static final int RESULT_OK = 0;
     public static final int RESULT_RESOLVABLE_ERRORS = -2;
     private static final String TAG = "EuiccService";
-    /* access modifiers changed from: private */
-    public ThreadPoolExecutor mExecutor;
+    private ThreadPoolExecutor mExecutor;
     private final IEuiccService.Stub mStubWrapper = new IEuiccServiceWrapper();
 
+    /* loaded from: classes3.dex */
     public static abstract class OtaStatusChangedCallback {
         public abstract void onOtaStatusChanged(int i);
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface ResolvableError {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface Result {
     }
 
@@ -97,11 +100,13 @@ public abstract class EuiccService extends Service {
         RESOLUTION_ACTIONS.add(ACTION_RESOLVE_RESOLVABLE_ERRORS);
     }
 
+    @Override // android.app.Service
     public void onCreate() {
         super.onCreate();
-        this.mExecutor = new ThreadPoolExecutor(4, 4, 30, TimeUnit.SECONDS, new LinkedBlockingQueue(), new ThreadFactory() {
+        this.mExecutor = new ThreadPoolExecutor(4, 4, 30L, TimeUnit.SECONDS, new LinkedBlockingQueue(), new ThreadFactory() { // from class: android.service.euicc.EuiccService.1
             private final AtomicInteger mCount = new AtomicInteger(1);
 
+            @Override // java.util.concurrent.ThreadFactory
             public Thread newThread(Runnable r) {
                 return new Thread(r, "EuiccService #" + this.mCount.getAndIncrement());
             }
@@ -109,11 +114,13 @@ public abstract class EuiccService extends Service {
         this.mExecutor.allowCoreThreadTimeOut(true);
     }
 
+    @Override // android.app.Service
     public void onDestroy() {
         this.mExecutor.shutdownNow();
         super.onDestroy();
     }
 
+    @Override // android.app.Service
     public IBinder onBind(Intent intent) {
         return this.mStubWrapper;
     }
@@ -127,49 +134,53 @@ public abstract class EuiccService extends Service {
         return Integer.MIN_VALUE;
     }
 
+    /* loaded from: classes3.dex */
     private class IEuiccServiceWrapper extends IEuiccService.Stub {
         private IEuiccServiceWrapper() {
         }
 
-        public void downloadSubscription(int slotId, DownloadableSubscription subscription, boolean switchAfterDownload, boolean forceDeactivateSim, Bundle resolvedBundle, IDownloadSubscriptionCallback callback) {
-            final int i = slotId;
-            final DownloadableSubscription downloadableSubscription = subscription;
-            final boolean z = switchAfterDownload;
-            final boolean z2 = forceDeactivateSim;
-            final Bundle bundle = resolvedBundle;
-            final IDownloadSubscriptionCallback iDownloadSubscriptionCallback = callback;
-            EuiccService.this.mExecutor.execute(new Runnable() {
+        @Override // android.service.euicc.IEuiccService
+        public void downloadSubscription(final int slotId, final DownloadableSubscription subscription, final boolean switchAfterDownload, final boolean forceDeactivateSim, final Bundle resolvedBundle, final IDownloadSubscriptionCallback callback) {
+            EuiccService.this.mExecutor.execute(new Runnable() { // from class: android.service.euicc.EuiccService.IEuiccServiceWrapper.1
+                @Override // java.lang.Runnable
                 public void run() {
                     DownloadSubscriptionResult result;
                     try {
-                        result = EuiccService.this.onDownloadSubscription(i, downloadableSubscription, z, z2, bundle);
+                        result = EuiccService.this.onDownloadSubscription(slotId, subscription, switchAfterDownload, forceDeactivateSim, resolvedBundle);
                     } catch (AbstractMethodError e) {
-                        Log.w(EuiccService.TAG, "The new onDownloadSubscription(int, DownloadableSubscription, boolean, boolean, Bundle) is not implemented. Fall back to the old one.", e);
-                        result = new DownloadSubscriptionResult(EuiccService.this.onDownloadSubscription(i, downloadableSubscription, z, z2), 0, -1);
+                        Log.m63w(EuiccService.TAG, "The new onDownloadSubscription(int, DownloadableSubscription, boolean, boolean, Bundle) is not implemented. Fall back to the old one.", e);
+                        int resultCode = EuiccService.this.onDownloadSubscription(slotId, subscription, switchAfterDownload, forceDeactivateSim);
+                        result = new DownloadSubscriptionResult(resultCode, 0, -1);
                     }
                     try {
-                        iDownloadSubscriptionCallback.onComplete(result);
+                        callback.onComplete(result);
                     } catch (RemoteException e2) {
                     }
                 }
             });
         }
 
+        @Override // android.service.euicc.IEuiccService
         public void getEid(final int slotId, final IGetEidCallback callback) {
-            EuiccService.this.mExecutor.execute(new Runnable() {
+            EuiccService.this.mExecutor.execute(new Runnable() { // from class: android.service.euicc.EuiccService.IEuiccServiceWrapper.2
+                @Override // java.lang.Runnable
                 public void run() {
+                    String eid = EuiccService.this.onGetEid(slotId);
                     try {
-                        callback.onSuccess(EuiccService.this.onGetEid(slotId));
+                        callback.onSuccess(eid);
                     } catch (RemoteException e) {
                     }
                 }
             });
         }
 
+        @Override // android.service.euicc.IEuiccService
         public void startOtaIfNecessary(final int slotId, final IOtaStatusChangedCallback statusChangedCallback) {
-            EuiccService.this.mExecutor.execute(new Runnable() {
+            EuiccService.this.mExecutor.execute(new Runnable() { // from class: android.service.euicc.EuiccService.IEuiccServiceWrapper.3
+                @Override // java.lang.Runnable
                 public void run() {
-                    EuiccService.this.onStartOtaIfNecessary(slotId, new OtaStatusChangedCallback() {
+                    EuiccService.this.onStartOtaIfNecessary(slotId, new OtaStatusChangedCallback() { // from class: android.service.euicc.EuiccService.IEuiccServiceWrapper.3.1
+                        @Override // android.service.euicc.EuiccService.OtaStatusChangedCallback
                         public void onOtaStatusChanged(int status) {
                             try {
                                 statusChangedCallback.onOtaStatusChanged(status);
@@ -181,122 +192,140 @@ public abstract class EuiccService extends Service {
             });
         }
 
+        @Override // android.service.euicc.IEuiccService
         public void getOtaStatus(final int slotId, final IGetOtaStatusCallback callback) {
-            EuiccService.this.mExecutor.execute(new Runnable() {
+            EuiccService.this.mExecutor.execute(new Runnable() { // from class: android.service.euicc.EuiccService.IEuiccServiceWrapper.4
+                @Override // java.lang.Runnable
                 public void run() {
+                    int status = EuiccService.this.onGetOtaStatus(slotId);
                     try {
-                        callback.onSuccess(EuiccService.this.onGetOtaStatus(slotId));
+                        callback.onSuccess(status);
                     } catch (RemoteException e) {
                     }
                 }
             });
         }
 
-        public void getDownloadableSubscriptionMetadata(int slotId, DownloadableSubscription subscription, boolean forceDeactivateSim, IGetDownloadableSubscriptionMetadataCallback callback) {
-            final int i = slotId;
-            final DownloadableSubscription downloadableSubscription = subscription;
-            final boolean z = forceDeactivateSim;
-            final IGetDownloadableSubscriptionMetadataCallback iGetDownloadableSubscriptionMetadataCallback = callback;
-            EuiccService.this.mExecutor.execute(new Runnable() {
+        @Override // android.service.euicc.IEuiccService
+        public void getDownloadableSubscriptionMetadata(final int slotId, final DownloadableSubscription subscription, final boolean forceDeactivateSim, final IGetDownloadableSubscriptionMetadataCallback callback) {
+            EuiccService.this.mExecutor.execute(new Runnable() { // from class: android.service.euicc.EuiccService.IEuiccServiceWrapper.5
+                @Override // java.lang.Runnable
                 public void run() {
+                    GetDownloadableSubscriptionMetadataResult result = EuiccService.this.onGetDownloadableSubscriptionMetadata(slotId, subscription, forceDeactivateSim);
                     try {
-                        iGetDownloadableSubscriptionMetadataCallback.onComplete(EuiccService.this.onGetDownloadableSubscriptionMetadata(i, downloadableSubscription, z));
+                        callback.onComplete(result);
                     } catch (RemoteException e) {
                     }
                 }
             });
         }
 
+        @Override // android.service.euicc.IEuiccService
         public void getDefaultDownloadableSubscriptionList(final int slotId, final boolean forceDeactivateSim, final IGetDefaultDownloadableSubscriptionListCallback callback) {
-            EuiccService.this.mExecutor.execute(new Runnable() {
+            EuiccService.this.mExecutor.execute(new Runnable() { // from class: android.service.euicc.EuiccService.IEuiccServiceWrapper.6
+                @Override // java.lang.Runnable
                 public void run() {
+                    GetDefaultDownloadableSubscriptionListResult result = EuiccService.this.onGetDefaultDownloadableSubscriptionList(slotId, forceDeactivateSim);
                     try {
-                        callback.onComplete(EuiccService.this.onGetDefaultDownloadableSubscriptionList(slotId, forceDeactivateSim));
+                        callback.onComplete(result);
                     } catch (RemoteException e) {
                     }
                 }
             });
         }
 
+        @Override // android.service.euicc.IEuiccService
         public void getEuiccProfileInfoList(final int slotId, final IGetEuiccProfileInfoListCallback callback) {
-            EuiccService.this.mExecutor.execute(new Runnable() {
+            EuiccService.this.mExecutor.execute(new Runnable() { // from class: android.service.euicc.EuiccService.IEuiccServiceWrapper.7
+                @Override // java.lang.Runnable
                 public void run() {
+                    GetEuiccProfileInfoListResult result = EuiccService.this.onGetEuiccProfileInfoList(slotId);
                     try {
-                        callback.onComplete(EuiccService.this.onGetEuiccProfileInfoList(slotId));
+                        callback.onComplete(result);
                     } catch (RemoteException e) {
                     }
                 }
             });
         }
 
+        @Override // android.service.euicc.IEuiccService
         public void getEuiccInfo(final int slotId, final IGetEuiccInfoCallback callback) {
-            EuiccService.this.mExecutor.execute(new Runnable() {
+            EuiccService.this.mExecutor.execute(new Runnable() { // from class: android.service.euicc.EuiccService.IEuiccServiceWrapper.8
+                @Override // java.lang.Runnable
                 public void run() {
+                    EuiccInfo euiccInfo = EuiccService.this.onGetEuiccInfo(slotId);
                     try {
-                        callback.onSuccess(EuiccService.this.onGetEuiccInfo(slotId));
+                        callback.onSuccess(euiccInfo);
                     } catch (RemoteException e) {
                     }
                 }
             });
         }
 
+        @Override // android.service.euicc.IEuiccService
         public void deleteSubscription(final int slotId, final String iccid, final IDeleteSubscriptionCallback callback) {
-            EuiccService.this.mExecutor.execute(new Runnable() {
+            EuiccService.this.mExecutor.execute(new Runnable() { // from class: android.service.euicc.EuiccService.IEuiccServiceWrapper.9
+                @Override // java.lang.Runnable
                 public void run() {
+                    int result = EuiccService.this.onDeleteSubscription(slotId, iccid);
                     try {
-                        callback.onComplete(EuiccService.this.onDeleteSubscription(slotId, iccid));
+                        callback.onComplete(result);
                     } catch (RemoteException e) {
                     }
                 }
             });
         }
 
-        public void switchToSubscription(int slotId, String iccid, boolean forceDeactivateSim, ISwitchToSubscriptionCallback callback) {
-            final int i = slotId;
-            final String str = iccid;
-            final boolean z = forceDeactivateSim;
-            final ISwitchToSubscriptionCallback iSwitchToSubscriptionCallback = callback;
-            EuiccService.this.mExecutor.execute(new Runnable() {
+        @Override // android.service.euicc.IEuiccService
+        public void switchToSubscription(final int slotId, final String iccid, final boolean forceDeactivateSim, final ISwitchToSubscriptionCallback callback) {
+            EuiccService.this.mExecutor.execute(new Runnable() { // from class: android.service.euicc.EuiccService.IEuiccServiceWrapper.10
+                @Override // java.lang.Runnable
                 public void run() {
+                    int result = EuiccService.this.onSwitchToSubscription(slotId, iccid, forceDeactivateSim);
                     try {
-                        iSwitchToSubscriptionCallback.onComplete(EuiccService.this.onSwitchToSubscription(i, str, z));
+                        callback.onComplete(result);
                     } catch (RemoteException e) {
                     }
                 }
             });
         }
 
-        public void updateSubscriptionNickname(int slotId, String iccid, String nickname, IUpdateSubscriptionNicknameCallback callback) {
-            final int i = slotId;
-            final String str = iccid;
-            final String str2 = nickname;
-            final IUpdateSubscriptionNicknameCallback iUpdateSubscriptionNicknameCallback = callback;
-            EuiccService.this.mExecutor.execute(new Runnable() {
+        @Override // android.service.euicc.IEuiccService
+        public void updateSubscriptionNickname(final int slotId, final String iccid, final String nickname, final IUpdateSubscriptionNicknameCallback callback) {
+            EuiccService.this.mExecutor.execute(new Runnable() { // from class: android.service.euicc.EuiccService.IEuiccServiceWrapper.11
+                @Override // java.lang.Runnable
                 public void run() {
+                    int result = EuiccService.this.onUpdateSubscriptionNickname(slotId, iccid, nickname);
                     try {
-                        iUpdateSubscriptionNicknameCallback.onComplete(EuiccService.this.onUpdateSubscriptionNickname(i, str, str2));
+                        callback.onComplete(result);
                     } catch (RemoteException e) {
                     }
                 }
             });
         }
 
+        @Override // android.service.euicc.IEuiccService
         public void eraseSubscriptions(final int slotId, final IEraseSubscriptionsCallback callback) {
-            EuiccService.this.mExecutor.execute(new Runnable() {
+            EuiccService.this.mExecutor.execute(new Runnable() { // from class: android.service.euicc.EuiccService.IEuiccServiceWrapper.12
+                @Override // java.lang.Runnable
                 public void run() {
+                    int result = EuiccService.this.onEraseSubscriptions(slotId);
                     try {
-                        callback.onComplete(EuiccService.this.onEraseSubscriptions(slotId));
+                        callback.onComplete(result);
                     } catch (RemoteException e) {
                     }
                 }
             });
         }
 
+        @Override // android.service.euicc.IEuiccService
         public void retainSubscriptionsForFactoryReset(final int slotId, final IRetainSubscriptionsForFactoryResetCallback callback) {
-            EuiccService.this.mExecutor.execute(new Runnable() {
+            EuiccService.this.mExecutor.execute(new Runnable() { // from class: android.service.euicc.EuiccService.IEuiccServiceWrapper.13
+                @Override // java.lang.Runnable
                 public void run() {
+                    int result = EuiccService.this.onRetainSubscriptionsForFactoryReset(slotId);
                     try {
-                        callback.onComplete(EuiccService.this.onRetainSubscriptionsForFactoryReset(slotId));
+                        callback.onComplete(result);
                     } catch (RemoteException e) {
                     }
                 }

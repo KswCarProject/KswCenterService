@@ -2,12 +2,12 @@ package android.util;
 
 import android.annotation.UnsupportedAppUsage;
 
+/* loaded from: classes4.dex */
 public abstract class Singleton<T> {
     @UnsupportedAppUsage
     private T mInstance;
 
-    /* access modifiers changed from: protected */
-    public abstract T create();
+    protected abstract T create();
 
     @UnsupportedAppUsage
     public final T get() {

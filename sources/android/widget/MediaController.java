@@ -3,7 +3,6 @@ package android.widget;
 import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
 import android.content.res.Resources;
-import android.os.IBinder;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -16,11 +15,12 @@ import android.view.WindowManager;
 import android.view.accessibility.AccessibilityManager;
 import android.widget.FrameLayout;
 import android.widget.SeekBar;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import com.android.internal.policy.PhoneWindow;
 import java.util.Formatter;
 import java.util.Locale;
 
+/* loaded from: classes4.dex */
 public class MediaController extends FrameLayout {
     private static final int sDefaultTimeout = 3000;
     private final AccessibilityManager mAccessibilityManager;
@@ -28,17 +28,13 @@ public class MediaController extends FrameLayout {
     private View mAnchor;
     @UnsupportedAppUsage
     private final Context mContext;
-    /* access modifiers changed from: private */
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
-    public TextView mCurrentTime;
-    /* access modifiers changed from: private */
+    private TextView mCurrentTime;
     @UnsupportedAppUsage
-    public View mDecor;
-    /* access modifiers changed from: private */
+    private View mDecor;
     @UnsupportedAppUsage
-    public WindowManager.LayoutParams mDecorLayoutParams;
-    /* access modifiers changed from: private */
-    public boolean mDragging;
+    private WindowManager.LayoutParams mDecorLayoutParams;
+    private boolean mDragging;
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
     private TextView mEndTime;
     private final Runnable mFadeOut;
@@ -59,9 +55,8 @@ public class MediaController extends FrameLayout {
     private CharSequence mPauseDescription;
     private final View.OnClickListener mPauseListener;
     private CharSequence mPlayDescription;
-    /* access modifiers changed from: private */
     @UnsupportedAppUsage
-    public MediaPlayerControl mPlayer;
+    private MediaPlayerControl mPlayer;
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
     private ImageButton mPrevButton;
     private View.OnClickListener mPrevListener;
@@ -75,19 +70,17 @@ public class MediaController extends FrameLayout {
     private View mRoot;
     @UnsupportedAppUsage
     private final SeekBar.OnSeekBarChangeListener mSeekListener;
-    /* access modifiers changed from: private */
-    public final Runnable mShowProgress;
-    /* access modifiers changed from: private */
+    private final Runnable mShowProgress;
     @UnsupportedAppUsage
-    public boolean mShowing;
+    private boolean mShowing;
     private final View.OnTouchListener mTouchListener;
     private final boolean mUseFastForward;
     @UnsupportedAppUsage
     private Window mWindow;
-    /* access modifiers changed from: private */
     @UnsupportedAppUsage
-    public WindowManager mWindowManager;
+    private WindowManager mWindowManager;
 
+    /* loaded from: classes4.dex */
     public interface MediaPlayerControl {
         boolean canPause();
 
@@ -114,7 +107,8 @@ public class MediaController extends FrameLayout {
 
     public MediaController(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.mLayoutChangeListener = new View.OnLayoutChangeListener() {
+        this.mLayoutChangeListener = new View.OnLayoutChangeListener() { // from class: android.widget.MediaController.1
+            @Override // android.view.View.OnLayoutChangeListener
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
                 MediaController.this.updateFloatingWindowLayout();
                 if (MediaController.this.mShowing) {
@@ -122,70 +116,82 @@ public class MediaController extends FrameLayout {
                 }
             }
         };
-        this.mTouchListener = new View.OnTouchListener() {
+        this.mTouchListener = new View.OnTouchListener() { // from class: android.widget.MediaController.2
+            @Override // android.view.View.OnTouchListener
             public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() != 0 || !MediaController.this.mShowing) {
+                if (event.getAction() == 0 && MediaController.this.mShowing) {
+                    MediaController.this.hide();
                     return false;
                 }
-                MediaController.this.hide();
                 return false;
             }
         };
-        this.mFadeOut = new Runnable() {
+        this.mFadeOut = new Runnable() { // from class: android.widget.MediaController.3
+            @Override // java.lang.Runnable
             public void run() {
                 MediaController.this.hide();
             }
         };
-        this.mShowProgress = new Runnable() {
+        this.mShowProgress = new Runnable() { // from class: android.widget.MediaController.4
+            @Override // java.lang.Runnable
             public void run() {
                 int pos = MediaController.this.setProgress();
                 if (!MediaController.this.mDragging && MediaController.this.mShowing && MediaController.this.mPlayer.isPlaying()) {
-                    MediaController.this.postDelayed(MediaController.this.mShowProgress, (long) (1000 - (pos % 1000)));
+                    MediaController.this.postDelayed(MediaController.this.mShowProgress, 1000 - (pos % 1000));
                 }
             }
         };
-        this.mPauseListener = new View.OnClickListener() {
+        this.mPauseListener = new View.OnClickListener() { // from class: android.widget.MediaController.5
+            @Override // android.view.View.OnClickListener
             public void onClick(View v) {
                 MediaController.this.doPauseResume();
                 MediaController.this.show(3000);
             }
         };
-        this.mSeekListener = new SeekBar.OnSeekBarChangeListener() {
+        this.mSeekListener = new SeekBar.OnSeekBarChangeListener() { // from class: android.widget.MediaController.6
+            @Override // android.widget.SeekBar.OnSeekBarChangeListener
             public void onStartTrackingTouch(SeekBar bar) {
                 MediaController.this.show(3600000);
-                boolean unused = MediaController.this.mDragging = true;
+                MediaController.this.mDragging = true;
                 MediaController.this.removeCallbacks(MediaController.this.mShowProgress);
             }
 
+            @Override // android.widget.SeekBar.OnSeekBarChangeListener
             public void onProgressChanged(SeekBar bar, int progress, boolean fromuser) {
                 if (fromuser) {
-                    long newposition = (((long) progress) * ((long) MediaController.this.mPlayer.getDuration())) / 1000;
+                    long duration = MediaController.this.mPlayer.getDuration();
+                    long newposition = (progress * duration) / 1000;
                     MediaController.this.mPlayer.seekTo((int) newposition);
                     if (MediaController.this.mCurrentTime != null) {
-                        MediaController.this.mCurrentTime.setText((CharSequence) MediaController.this.stringForTime((int) newposition));
+                        MediaController.this.mCurrentTime.setText(MediaController.this.stringForTime((int) newposition));
                     }
                 }
             }
 
+            @Override // android.widget.SeekBar.OnSeekBarChangeListener
             public void onStopTrackingTouch(SeekBar bar) {
-                boolean unused = MediaController.this.mDragging = false;
-                int unused2 = MediaController.this.setProgress();
+                MediaController.this.mDragging = false;
+                MediaController.this.setProgress();
                 MediaController.this.updatePausePlay();
                 MediaController.this.show(3000);
                 MediaController.this.post(MediaController.this.mShowProgress);
             }
         };
-        this.mRewListener = new View.OnClickListener() {
+        this.mRewListener = new View.OnClickListener() { // from class: android.widget.MediaController.7
+            @Override // android.view.View.OnClickListener
             public void onClick(View v) {
-                MediaController.this.mPlayer.seekTo(MediaController.this.mPlayer.getCurrentPosition() - 5000);
-                int unused = MediaController.this.setProgress();
+                int pos = MediaController.this.mPlayer.getCurrentPosition();
+                MediaController.this.mPlayer.seekTo(pos - 5000);
+                MediaController.this.setProgress();
                 MediaController.this.show(3000);
             }
         };
-        this.mFfwdListener = new View.OnClickListener() {
+        this.mFfwdListener = new View.OnClickListener() { // from class: android.widget.MediaController.8
+            @Override // android.view.View.OnClickListener
             public void onClick(View v) {
-                MediaController.this.mPlayer.seekTo(MediaController.this.mPlayer.getCurrentPosition() + 15000);
-                int unused = MediaController.this.setProgress();
+                int pos = MediaController.this.mPlayer.getCurrentPosition();
+                MediaController.this.mPlayer.seekTo(pos + 15000);
+                MediaController.this.setProgress();
                 MediaController.this.show(3000);
             }
         };
@@ -196,6 +202,7 @@ public class MediaController extends FrameLayout {
         this.mAccessibilityManager = AccessibilityManager.getInstance(context);
     }
 
+    @Override // android.view.View
     public void onFinishInflate() {
         if (this.mRoot != null) {
             initControllerView(this.mRoot);
@@ -204,7 +211,8 @@ public class MediaController extends FrameLayout {
 
     public MediaController(Context context, boolean useFastForward) {
         super(context);
-        this.mLayoutChangeListener = new View.OnLayoutChangeListener() {
+        this.mLayoutChangeListener = new View.OnLayoutChangeListener() { // from class: android.widget.MediaController.1
+            @Override // android.view.View.OnLayoutChangeListener
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
                 MediaController.this.updateFloatingWindowLayout();
                 if (MediaController.this.mShowing) {
@@ -212,70 +220,82 @@ public class MediaController extends FrameLayout {
                 }
             }
         };
-        this.mTouchListener = new View.OnTouchListener() {
+        this.mTouchListener = new View.OnTouchListener() { // from class: android.widget.MediaController.2
+            @Override // android.view.View.OnTouchListener
             public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() != 0 || !MediaController.this.mShowing) {
+                if (event.getAction() == 0 && MediaController.this.mShowing) {
+                    MediaController.this.hide();
                     return false;
                 }
-                MediaController.this.hide();
                 return false;
             }
         };
-        this.mFadeOut = new Runnable() {
+        this.mFadeOut = new Runnable() { // from class: android.widget.MediaController.3
+            @Override // java.lang.Runnable
             public void run() {
                 MediaController.this.hide();
             }
         };
-        this.mShowProgress = new Runnable() {
+        this.mShowProgress = new Runnable() { // from class: android.widget.MediaController.4
+            @Override // java.lang.Runnable
             public void run() {
                 int pos = MediaController.this.setProgress();
                 if (!MediaController.this.mDragging && MediaController.this.mShowing && MediaController.this.mPlayer.isPlaying()) {
-                    MediaController.this.postDelayed(MediaController.this.mShowProgress, (long) (1000 - (pos % 1000)));
+                    MediaController.this.postDelayed(MediaController.this.mShowProgress, 1000 - (pos % 1000));
                 }
             }
         };
-        this.mPauseListener = new View.OnClickListener() {
+        this.mPauseListener = new View.OnClickListener() { // from class: android.widget.MediaController.5
+            @Override // android.view.View.OnClickListener
             public void onClick(View v) {
                 MediaController.this.doPauseResume();
                 MediaController.this.show(3000);
             }
         };
-        this.mSeekListener = new SeekBar.OnSeekBarChangeListener() {
+        this.mSeekListener = new SeekBar.OnSeekBarChangeListener() { // from class: android.widget.MediaController.6
+            @Override // android.widget.SeekBar.OnSeekBarChangeListener
             public void onStartTrackingTouch(SeekBar bar) {
                 MediaController.this.show(3600000);
-                boolean unused = MediaController.this.mDragging = true;
+                MediaController.this.mDragging = true;
                 MediaController.this.removeCallbacks(MediaController.this.mShowProgress);
             }
 
+            @Override // android.widget.SeekBar.OnSeekBarChangeListener
             public void onProgressChanged(SeekBar bar, int progress, boolean fromuser) {
                 if (fromuser) {
-                    long newposition = (((long) progress) * ((long) MediaController.this.mPlayer.getDuration())) / 1000;
+                    long duration = MediaController.this.mPlayer.getDuration();
+                    long newposition = (progress * duration) / 1000;
                     MediaController.this.mPlayer.seekTo((int) newposition);
                     if (MediaController.this.mCurrentTime != null) {
-                        MediaController.this.mCurrentTime.setText((CharSequence) MediaController.this.stringForTime((int) newposition));
+                        MediaController.this.mCurrentTime.setText(MediaController.this.stringForTime((int) newposition));
                     }
                 }
             }
 
+            @Override // android.widget.SeekBar.OnSeekBarChangeListener
             public void onStopTrackingTouch(SeekBar bar) {
-                boolean unused = MediaController.this.mDragging = false;
-                int unused2 = MediaController.this.setProgress();
+                MediaController.this.mDragging = false;
+                MediaController.this.setProgress();
                 MediaController.this.updatePausePlay();
                 MediaController.this.show(3000);
                 MediaController.this.post(MediaController.this.mShowProgress);
             }
         };
-        this.mRewListener = new View.OnClickListener() {
+        this.mRewListener = new View.OnClickListener() { // from class: android.widget.MediaController.7
+            @Override // android.view.View.OnClickListener
             public void onClick(View v) {
-                MediaController.this.mPlayer.seekTo(MediaController.this.mPlayer.getCurrentPosition() - 5000);
-                int unused = MediaController.this.setProgress();
+                int pos = MediaController.this.mPlayer.getCurrentPosition();
+                MediaController.this.mPlayer.seekTo(pos - 5000);
+                MediaController.this.setProgress();
                 MediaController.this.show(3000);
             }
         };
-        this.mFfwdListener = new View.OnClickListener() {
+        this.mFfwdListener = new View.OnClickListener() { // from class: android.widget.MediaController.8
+            @Override // android.view.View.OnClickListener
             public void onClick(View v) {
-                MediaController.this.mPlayer.seekTo(MediaController.this.mPlayer.getCurrentPosition() + 15000);
-                int unused = MediaController.this.setProgress();
+                int pos = MediaController.this.mPlayer.getCurrentPosition();
+                MediaController.this.mPlayer.seekTo(pos + 15000);
+                MediaController.this.setProgress();
                 MediaController.this.show(3000);
             }
         };
@@ -293,11 +313,11 @@ public class MediaController extends FrameLayout {
     private void initFloatingWindow() {
         this.mWindowManager = (WindowManager) this.mContext.getSystemService(Context.WINDOW_SERVICE);
         this.mWindow = new PhoneWindow(this.mContext);
-        this.mWindow.setWindowManager(this.mWindowManager, (IBinder) null, (String) null);
+        this.mWindow.setWindowManager(this.mWindowManager, null, null);
         this.mWindow.requestFeature(1);
         this.mDecor = this.mWindow.getDecorView();
         this.mDecor.setOnTouchListener(this.mTouchListener);
-        this.mWindow.setContentView((View) this);
+        this.mWindow.setContentView(this);
         this.mWindow.setBackgroundDrawableResource(17170445);
         this.mWindow.setVolumeControlStream(3);
         setFocusable(true);
@@ -311,7 +331,7 @@ public class MediaController extends FrameLayout {
         WindowManager.LayoutParams p = this.mDecorLayoutParams;
         p.gravity = 51;
         p.height = -2;
-        p.x = 0;
+        p.f2425x = 0;
         p.format = -3;
         p.type = 1000;
         p.flags |= 8519712;
@@ -319,15 +339,15 @@ public class MediaController extends FrameLayout {
         p.windowAnimations = 0;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void updateFloatingWindowLayout() {
         int[] anchorPos = new int[2];
         this.mAnchor.getLocationOnScreen(anchorPos);
         this.mDecor.measure(View.MeasureSpec.makeMeasureSpec(this.mAnchor.getWidth(), Integer.MIN_VALUE), View.MeasureSpec.makeMeasureSpec(this.mAnchor.getHeight(), Integer.MIN_VALUE));
         WindowManager.LayoutParams p = this.mDecorLayoutParams;
         p.width = this.mAnchor.getWidth();
-        p.x = anchorPos[0] + ((this.mAnchor.getWidth() - p.width) / 2);
-        p.y = (anchorPos[1] + this.mAnchor.getHeight()) - this.mDecor.getMeasuredHeight();
+        p.f2425x = anchorPos[0] + ((this.mAnchor.getWidth() - p.width) / 2);
+        p.f2426y = (anchorPos[1] + this.mAnchor.getHeight()) - this.mDecor.getMeasuredHeight();
     }
 
     public void setMediaPlayer(MediaPlayerControl player) {
@@ -345,61 +365,58 @@ public class MediaController extends FrameLayout {
         }
         FrameLayout.LayoutParams frameParams = new FrameLayout.LayoutParams(-1, -1);
         removeAllViews();
-        addView(makeControllerView(), (ViewGroup.LayoutParams) frameParams);
+        View v = makeControllerView();
+        addView(v, frameParams);
     }
 
-    /* access modifiers changed from: protected */
-    public View makeControllerView() {
-        this.mRoot = ((LayoutInflater) this.mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate((int) R.layout.media_controller, (ViewGroup) null);
+    protected View makeControllerView() {
+        LayoutInflater inflate = (LayoutInflater) this.mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.mRoot = inflate.inflate(C3132R.layout.media_controller, (ViewGroup) null);
         initControllerView(this.mRoot);
         return this.mRoot;
     }
 
     private void initControllerView(View v) {
         Resources res = this.mContext.getResources();
-        this.mPlayDescription = res.getText(R.string.lockscreen_transport_play_description);
-        this.mPauseDescription = res.getText(R.string.lockscreen_transport_pause_description);
-        this.mPauseButton = (ImageButton) v.findViewById(R.id.pause);
+        this.mPlayDescription = res.getText(C3132R.string.lockscreen_transport_play_description);
+        this.mPauseDescription = res.getText(C3132R.string.lockscreen_transport_pause_description);
+        this.mPauseButton = (ImageButton) v.findViewById(C3132R.C3134id.pause);
         if (this.mPauseButton != null) {
             this.mPauseButton.requestFocus();
             this.mPauseButton.setOnClickListener(this.mPauseListener);
         }
-        this.mFfwdButton = (ImageButton) v.findViewById(R.id.ffwd);
-        int i = 0;
+        this.mFfwdButton = (ImageButton) v.findViewById(C3132R.C3134id.ffwd);
         if (this.mFfwdButton != null) {
             this.mFfwdButton.setOnClickListener(this.mFfwdListener);
             if (!this.mFromXml) {
                 this.mFfwdButton.setVisibility(this.mUseFastForward ? 0 : 8);
             }
         }
-        this.mRewButton = (ImageButton) v.findViewById(R.id.rew);
+        this.mRewButton = (ImageButton) v.findViewById(C3132R.C3134id.rew);
         if (this.mRewButton != null) {
             this.mRewButton.setOnClickListener(this.mRewListener);
             if (!this.mFromXml) {
-                ImageButton imageButton = this.mRewButton;
-                if (!this.mUseFastForward) {
-                    i = 8;
-                }
-                imageButton.setVisibility(i);
+                this.mRewButton.setVisibility(this.mUseFastForward ? 0 : 8);
             }
         }
-        this.mNextButton = (ImageButton) v.findViewById(R.id.next);
+        this.mNextButton = (ImageButton) v.findViewById(C3132R.C3134id.next);
         if (this.mNextButton != null && !this.mFromXml && !this.mListenersSet) {
             this.mNextButton.setVisibility(8);
         }
-        this.mPrevButton = (ImageButton) v.findViewById(R.id.prev);
+        this.mPrevButton = (ImageButton) v.findViewById(C3132R.C3134id.prev);
         if (this.mPrevButton != null && !this.mFromXml && !this.mListenersSet) {
             this.mPrevButton.setVisibility(8);
         }
-        this.mProgress = (ProgressBar) v.findViewById(R.id.mediacontroller_progress);
+        this.mProgress = (ProgressBar) v.findViewById(C3132R.C3134id.mediacontroller_progress);
         if (this.mProgress != null) {
             if (this.mProgress instanceof SeekBar) {
-                ((SeekBar) this.mProgress).setOnSeekBarChangeListener(this.mSeekListener);
+                SeekBar seeker = (SeekBar) this.mProgress;
+                seeker.setOnSeekBarChangeListener(this.mSeekListener);
             }
             this.mProgress.setMax(1000);
         }
-        this.mEndTime = (TextView) v.findViewById(R.id.time);
-        this.mCurrentTime = (TextView) v.findViewById(R.id.time_current);
+        this.mEndTime = (TextView) v.findViewById(C3132R.C3134id.time);
+        this.mCurrentTime = (TextView) v.findViewById(C3132R.C3134id.time_current);
         this.mFormatBuilder = new StringBuilder();
         this.mFormatter = new Formatter(this.mFormatBuilder, Locale.getDefault());
         installPrevNextListeners();
@@ -442,7 +459,7 @@ public class MediaController extends FrameLayout {
         post(this.mShowProgress);
         if (timeout != 0 && !this.mAccessibilityManager.isTouchExplorationEnabled()) {
             removeCallbacks(this.mFadeOut);
-            postDelayed(this.mFadeOut, (long) timeout);
+            postDelayed(this.mFadeOut, timeout);
         }
     }
 
@@ -456,26 +473,23 @@ public class MediaController extends FrameLayout {
                 removeCallbacks(this.mShowProgress);
                 this.mWindowManager.removeView(this.mDecor);
             } catch (IllegalArgumentException e) {
-                Log.w("MediaController", "already removed");
+                Log.m64w("MediaController", "already removed");
             }
             this.mShowing = false;
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public String stringForTime(int timeMs) {
         int totalSeconds = timeMs / 1000;
         int seconds = totalSeconds % 60;
         int minutes = (totalSeconds / 60) % 60;
         int hours = totalSeconds / 3600;
         this.mFormatBuilder.setLength(0);
-        if (hours > 0) {
-            return this.mFormatter.format("%d:%02d:%02d", new Object[]{Integer.valueOf(hours), Integer.valueOf(minutes), Integer.valueOf(seconds)}).toString();
-        }
-        return this.mFormatter.format("%02d:%02d", new Object[]{Integer.valueOf(minutes), Integer.valueOf(seconds)}).toString();
+        return hours > 0 ? this.mFormatter.format("%d:%02d:%02d", Integer.valueOf(hours), Integer.valueOf(minutes), Integer.valueOf(seconds)).toString() : this.mFormatter.format("%02d:%02d", Integer.valueOf(minutes), Integer.valueOf(seconds)).toString();
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public int setProgress() {
         if (this.mPlayer == null || this.mDragging) {
             return 0;
@@ -484,19 +498,22 @@ public class MediaController extends FrameLayout {
         int duration = this.mPlayer.getDuration();
         if (this.mProgress != null) {
             if (duration > 0) {
-                this.mProgress.setProgress((int) ((((long) position) * 1000) / ((long) duration)));
+                long pos = (position * 1000) / duration;
+                this.mProgress.setProgress((int) pos);
             }
-            this.mProgress.setSecondaryProgress(this.mPlayer.getBufferPercentage() * 10);
+            int percent = this.mPlayer.getBufferPercentage();
+            this.mProgress.setSecondaryProgress(percent * 10);
         }
         if (this.mEndTime != null) {
-            this.mEndTime.setText((CharSequence) stringForTime(duration));
+            this.mEndTime.setText(stringForTime(duration));
         }
         if (this.mCurrentTime != null) {
-            this.mCurrentTime.setText((CharSequence) stringForTime(position));
+            this.mCurrentTime.setText(stringForTime(position));
         }
         return position;
     }
 
+    @Override // android.view.View
     public boolean onTouchEvent(MotionEvent event) {
         int action = event.getAction();
         if (action != 3) {
@@ -510,17 +527,18 @@ public class MediaController extends FrameLayout {
                 default:
                     return true;
             }
-        } else {
-            hide();
-            return true;
         }
+        hide();
+        return true;
     }
 
+    @Override // android.view.View
     public boolean onTrackballEvent(MotionEvent ev) {
         show(3000);
         return false;
     }
 
+    @Override // android.view.ViewGroup, android.view.View
     public boolean dispatchKeyEvent(KeyEvent event) {
         int keyCode = event.getKeyCode();
         boolean uniqueDown = event.getRepeatCount() == 0 && event.getAction() == 0;
@@ -561,21 +579,22 @@ public class MediaController extends FrameLayout {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     @UnsupportedAppUsage
     public void updatePausePlay() {
-        if (this.mRoot != null && this.mPauseButton != null) {
-            if (this.mPlayer.isPlaying()) {
-                this.mPauseButton.setImageResource(17301539);
-                this.mPauseButton.setContentDescription(this.mPauseDescription);
-                return;
-            }
-            this.mPauseButton.setImageResource(17301540);
-            this.mPauseButton.setContentDescription(this.mPlayDescription);
+        if (this.mRoot == null || this.mPauseButton == null) {
+            return;
         }
+        if (this.mPlayer.isPlaying()) {
+            this.mPauseButton.setImageResource(17301539);
+            this.mPauseButton.setContentDescription(this.mPauseDescription);
+            return;
+        }
+        this.mPauseButton.setImageResource(17301540);
+        this.mPauseButton.setContentDescription(this.mPlayDescription);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void doPauseResume() {
         if (this.mPlayer.isPlaying()) {
             this.mPlayer.pause();
@@ -585,6 +604,7 @@ public class MediaController extends FrameLayout {
         updatePausePlay();
     }
 
+    @Override // android.view.View
     public void setEnabled(boolean enabled) {
         if (this.mPauseButton != null) {
             this.mPauseButton.setEnabled(enabled);
@@ -613,23 +633,19 @@ public class MediaController extends FrameLayout {
         super.setEnabled(enabled);
     }
 
+    @Override // android.widget.FrameLayout, android.view.ViewGroup, android.view.View
     public CharSequence getAccessibilityClassName() {
         return MediaController.class.getName();
     }
 
     private void installPrevNextListeners() {
-        boolean z = false;
         if (this.mNextButton != null) {
             this.mNextButton.setOnClickListener(this.mNextListener);
             this.mNextButton.setEnabled(this.mNextListener != null);
         }
         if (this.mPrevButton != null) {
             this.mPrevButton.setOnClickListener(this.mPrevListener);
-            ImageButton imageButton = this.mPrevButton;
-            if (this.mPrevListener != null) {
-                z = true;
-            }
-            imageButton.setEnabled(z);
+            this.mPrevButton.setEnabled(this.mPrevListener != null);
         }
     }
 

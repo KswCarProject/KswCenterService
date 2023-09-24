@@ -1,5 +1,6 @@
 package com.android.framework.protobuf.nano;
 
+/* loaded from: classes4.dex */
 public final class FieldArray implements Cloneable {
     private static final FieldData DELETED = new FieldData();
     private FieldData[] mData;
@@ -19,8 +20,7 @@ public final class FieldArray implements Cloneable {
         this.mSize = 0;
     }
 
-    /* access modifiers changed from: package-private */
-    public FieldData get(int fieldNumber) {
+    FieldData get(int fieldNumber) {
         int i = binarySearch(fieldNumber);
         if (i < 0 || this.mData[i] == DELETED) {
             return null;
@@ -28,8 +28,7 @@ public final class FieldArray implements Cloneable {
         return this.mData[i];
     }
 
-    /* access modifiers changed from: package-private */
-    public void remove(int fieldNumber) {
+    void remove(int fieldNumber) {
         int i = binarySearch(fieldNumber);
         if (i >= 0 && this.mData[i] != DELETED) {
             this.mData[i] = DELETED;
@@ -37,18 +36,19 @@ public final class FieldArray implements Cloneable {
         }
     }
 
-    private void gc() {
+    /* renamed from: gc */
+    private void m34gc() {
         int n = this.mSize;
         int[] keys = this.mFieldNumbers;
         FieldData[] values = this.mData;
         int o = 0;
-        for (int i = 0; i < n; i++) {
-            FieldData val = values[i];
+        for (int o2 = 0; o2 < n; o2++) {
+            FieldData val = values[o2];
             if (val != DELETED) {
-                if (i != o) {
-                    keys[o] = keys[i];
+                if (o2 != o) {
+                    keys[o] = keys[o2];
                     values[o] = val;
-                    values[i] = null;
+                    values[o2] = null;
                 }
                 o++;
             }
@@ -57,45 +57,43 @@ public final class FieldArray implements Cloneable {
         this.mSize = o;
     }
 
-    /* access modifiers changed from: package-private */
-    public void put(int fieldNumber, FieldData data) {
+    void put(int fieldNumber, FieldData data) {
         int i = binarySearch(fieldNumber);
         if (i >= 0) {
             this.mData[i] = data;
             return;
         }
         int i2 = ~i;
-        if (i2 >= this.mSize || this.mData[i2] != DELETED) {
-            if (this.mGarbage && this.mSize >= this.mFieldNumbers.length) {
-                gc();
-                i2 = ~binarySearch(fieldNumber);
-            }
-            if (this.mSize >= this.mFieldNumbers.length) {
-                int n = idealIntArraySize(this.mSize + 1);
-                int[] nkeys = new int[n];
-                FieldData[] nvalues = new FieldData[n];
-                System.arraycopy(this.mFieldNumbers, 0, nkeys, 0, this.mFieldNumbers.length);
-                System.arraycopy(this.mData, 0, nvalues, 0, this.mData.length);
-                this.mFieldNumbers = nkeys;
-                this.mData = nvalues;
-            }
-            if (this.mSize - i2 != 0) {
-                System.arraycopy(this.mFieldNumbers, i2, this.mFieldNumbers, i2 + 1, this.mSize - i2);
-                System.arraycopy(this.mData, i2, this.mData, i2 + 1, this.mSize - i2);
-            }
+        if (i2 < this.mSize && this.mData[i2] == DELETED) {
             this.mFieldNumbers[i2] = fieldNumber;
             this.mData[i2] = data;
-            this.mSize++;
             return;
+        }
+        if (this.mGarbage && this.mSize >= this.mFieldNumbers.length) {
+            m34gc();
+            i2 = ~binarySearch(fieldNumber);
+        }
+        if (this.mSize >= this.mFieldNumbers.length) {
+            int n = idealIntArraySize(this.mSize + 1);
+            int[] nkeys = new int[n];
+            FieldData[] nvalues = new FieldData[n];
+            System.arraycopy(this.mFieldNumbers, 0, nkeys, 0, this.mFieldNumbers.length);
+            System.arraycopy(this.mData, 0, nvalues, 0, this.mData.length);
+            this.mFieldNumbers = nkeys;
+            this.mData = nvalues;
+        }
+        if (this.mSize - i2 != 0) {
+            System.arraycopy(this.mFieldNumbers, i2, this.mFieldNumbers, i2 + 1, this.mSize - i2);
+            System.arraycopy(this.mData, i2, this.mData, i2 + 1, this.mSize - i2);
         }
         this.mFieldNumbers[i2] = fieldNumber;
         this.mData[i2] = data;
+        this.mSize++;
     }
 
-    /* access modifiers changed from: package-private */
-    public int size() {
+    int size() {
         if (this.mGarbage) {
-            gc();
+            m34gc();
         }
         return this.mSize;
     }
@@ -104,10 +102,9 @@ public final class FieldArray implements Cloneable {
         return size() == 0;
     }
 
-    /* access modifiers changed from: package-private */
-    public FieldData dataAt(int index) {
+    FieldData dataAt(int index) {
         if (this.mGarbage) {
-            gc();
+            m34gc();
         }
         return this.mData[index];
     }
@@ -116,22 +113,19 @@ public final class FieldArray implements Cloneable {
         if (o == this) {
             return true;
         }
-        if (!(o instanceof FieldArray)) {
-            return false;
+        if (o instanceof FieldArray) {
+            FieldArray other = (FieldArray) o;
+            if (size() != other.size()) {
+                return false;
+            }
+            return arrayEquals(this.mFieldNumbers, other.mFieldNumbers, this.mSize) && arrayEquals(this.mData, other.mData, this.mSize);
         }
-        FieldArray other = (FieldArray) o;
-        if (size() != other.size()) {
-            return false;
-        }
-        if (!arrayEquals(this.mFieldNumbers, other.mFieldNumbers, this.mSize) || !arrayEquals(this.mData, other.mData, this.mSize)) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
     public int hashCode() {
         if (this.mGarbage) {
-            gc();
+            m34gc();
         }
         int result = 17;
         for (int i = 0; i < this.mSize; i++) {
@@ -161,10 +155,10 @@ public final class FieldArray implements Cloneable {
             int midVal = this.mFieldNumbers[mid];
             if (midVal < value) {
                 lo = mid + 1;
-            } else if (midVal <= value) {
-                return mid;
-            } else {
+            } else if (midVal > value) {
                 hi = mid - 1;
+            } else {
+                return mid;
             }
         }
         return ~lo;
@@ -188,7 +182,8 @@ public final class FieldArray implements Cloneable {
         return true;
     }
 
-    public final FieldArray clone() {
+    /* renamed from: clone */
+    public final FieldArray m190clone() {
         int size = size();
         FieldArray clone = new FieldArray(size);
         int i = 0;
@@ -197,7 +192,7 @@ public final class FieldArray implements Cloneable {
             int i2 = i;
             if (i2 < size) {
                 if (this.mData[i2] != null) {
-                    clone.mData[i2] = this.mData[i2].clone();
+                    clone.mData[i2] = this.mData[i2].m191clone();
                 }
                 i = i2 + 1;
             } else {

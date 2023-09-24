@@ -7,18 +7,18 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.ContentObserver;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.UserHandle;
+import android.p007os.Handler;
+import android.p007os.UserHandle;
 import android.provider.Settings;
 import android.util.Slog;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import com.android.internal.annotations.VisibleForTesting;
 import java.util.Arrays;
 import java.util.List;
 
+/* loaded from: classes3.dex */
 public class MultinetworkPolicyTracker {
-    /* access modifiers changed from: private */
-    public static String TAG = MultinetworkPolicyTracker.class.getSimpleName();
+    private static String TAG = MultinetworkPolicyTracker.class.getSimpleName();
     private volatile boolean mAvoidBadWifi;
     private final BroadcastReceiver mBroadcastReceiver;
     private final Context mContext;
@@ -27,32 +27,27 @@ public class MultinetworkPolicyTracker {
     private final Runnable mReevaluateRunnable;
     private final ContentResolver mResolver;
     private final SettingObserver mSettingObserver;
-    /* access modifiers changed from: private */
-    public final List<Uri> mSettingsUris;
+    private final List<Uri> mSettingsUris;
 
     public MultinetworkPolicyTracker(Context ctx, Handler handler) {
-        this(ctx, handler, (Runnable) null);
+        this(ctx, handler, null);
     }
 
-    public MultinetworkPolicyTracker(Context ctx, Handler handler, Runnable avoidBadWifiCallback) {
+    public MultinetworkPolicyTracker(Context ctx, Handler handler, final Runnable avoidBadWifiCallback) {
         this.mAvoidBadWifi = true;
         this.mContext = ctx;
         this.mHandler = handler;
-        this.mReevaluateRunnable = new Runnable(avoidBadWifiCallback) {
-            private final /* synthetic */ Runnable f$1;
-
-            {
-                this.f$1 = r2;
-            }
-
+        this.mReevaluateRunnable = new Runnable() { // from class: android.net.util.-$$Lambda$MultinetworkPolicyTracker$0siHK6f4lHJz8hbdHbT6G4Kp-V4
+            @Override // java.lang.Runnable
             public final void run() {
-                MultinetworkPolicyTracker.lambda$new$0(MultinetworkPolicyTracker.this, this.f$1);
+                MultinetworkPolicyTracker.lambda$new$0(MultinetworkPolicyTracker.this, avoidBadWifiCallback);
             }
         };
-        this.mSettingsUris = Arrays.asList(new Uri[]{Settings.Global.getUriFor(Settings.Global.NETWORK_AVOID_BAD_WIFI), Settings.Global.getUriFor(Settings.Global.NETWORK_METERED_MULTIPATH_PREFERENCE)});
+        this.mSettingsUris = Arrays.asList(Settings.Global.getUriFor(Settings.Global.NETWORK_AVOID_BAD_WIFI), Settings.Global.getUriFor(Settings.Global.NETWORK_METERED_MULTIPATH_PREFERENCE));
         this.mResolver = this.mContext.getContentResolver();
         this.mSettingObserver = new SettingObserver();
-        this.mBroadcastReceiver = new BroadcastReceiver() {
+        this.mBroadcastReceiver = new BroadcastReceiver() { // from class: android.net.util.MultinetworkPolicyTracker.1
+            @Override // android.content.BroadcastReceiver
             public void onReceive(Context context, Intent intent) {
                 MultinetworkPolicyTracker.this.reevaluate();
             }
@@ -74,7 +69,7 @@ public class MultinetworkPolicyTracker {
         }
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Intent.ACTION_CONFIGURATION_CHANGED);
-        this.mContext.registerReceiverAsUser(this.mBroadcastReceiver, UserHandle.ALL, intentFilter, (String) null, (Handler) null);
+        this.mContext.registerReceiverAsUser(this.mBroadcastReceiver, UserHandle.ALL, intentFilter, null, null);
         reevaluate();
     }
 
@@ -92,7 +87,7 @@ public class MultinetworkPolicyTracker {
     }
 
     public boolean configRestrictsAvoidBadWifi() {
-        return this.mContext.getResources().getInteger(R.integer.config_networkAvoidBadWifi) == 0;
+        return this.mContext.getResources().getInteger(C3132R.integer.config_networkAvoidBadWifi) == 0;
     }
 
     public boolean shouldNotifyWifiUnvalidated() {
@@ -112,37 +107,38 @@ public class MultinetworkPolicyTracker {
         boolean settingAvoidBadWifi = "1".equals(getAvoidBadWifiSetting());
         boolean prev = this.mAvoidBadWifi;
         this.mAvoidBadWifi = settingAvoidBadWifi || !configRestrictsAvoidBadWifi();
-        if (this.mAvoidBadWifi != prev) {
-            return true;
-        }
-        return false;
+        return this.mAvoidBadWifi != prev;
     }
 
     public int configMeteredMultipathPreference() {
-        return this.mContext.getResources().getInteger(R.integer.config_networkMeteredMultipathPreference);
+        return this.mContext.getResources().getInteger(C3132R.integer.config_networkMeteredMultipathPreference);
     }
 
     public void updateMeteredMultipathPreference() {
+        String setting = Settings.Global.getString(this.mResolver, Settings.Global.NETWORK_METERED_MULTIPATH_PREFERENCE);
         try {
-            this.mMeteredMultipathPreference = Integer.parseInt(Settings.Global.getString(this.mResolver, Settings.Global.NETWORK_METERED_MULTIPATH_PREFERENCE));
+            this.mMeteredMultipathPreference = Integer.parseInt(setting);
         } catch (NumberFormatException e) {
             this.mMeteredMultipathPreference = configMeteredMultipathPreference();
         }
     }
 
+    /* loaded from: classes3.dex */
     private class SettingObserver extends ContentObserver {
         public SettingObserver() {
-            super((Handler) null);
+            super(null);
         }
 
+        @Override // android.database.ContentObserver
         public void onChange(boolean selfChange) {
             Slog.wtf(MultinetworkPolicyTracker.TAG, "Should never be reached.");
         }
 
+        @Override // android.database.ContentObserver
         public void onChange(boolean selfChange, Uri uri) {
             if (!MultinetworkPolicyTracker.this.mSettingsUris.contains(uri)) {
-                String access$000 = MultinetworkPolicyTracker.TAG;
-                Slog.wtf(access$000, "Unexpected settings observation: " + uri);
+                String str = MultinetworkPolicyTracker.TAG;
+                Slog.wtf(str, "Unexpected settings observation: " + uri);
             }
             MultinetworkPolicyTracker.this.reevaluate();
         }

@@ -1,5 +1,6 @@
 package android.hardware.usb;
 
+/* loaded from: classes.dex */
 public final class UsbConstants {
     public static final int USB_CLASS_APP_SPEC = 254;
     public static final int USB_CLASS_AUDIO = 1;

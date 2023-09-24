@@ -1,25 +1,30 @@
 package com.android.internal.telecom;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.telecom.PhoneAccountSuggestion;
 import java.util.List;
 
+/* loaded from: classes4.dex */
 public interface IPhoneAccountSuggestionCallback extends IInterface {
     void suggestPhoneAccounts(String str, List<PhoneAccountSuggestion> list) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IPhoneAccountSuggestionCallback {
-        public void suggestPhoneAccounts(String number, List<PhoneAccountSuggestion> list) throws RemoteException {
+        @Override // com.android.internal.telecom.IPhoneAccountSuggestionCallback
+        public void suggestPhoneAccounts(String number, List<PhoneAccountSuggestion> suggestions) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IPhoneAccountSuggestionCallback {
         private static final String DESCRIPTOR = "com.android.internal.telecom.IPhoneAccountSuggestionCallback";
         static final int TRANSACTION_suggestPhoneAccounts = 1;
@@ -33,40 +38,46 @@ public interface IPhoneAccountSuggestionCallback extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IPhoneAccountSuggestionCallback)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IPhoneAccountSuggestionCallback)) {
+                return (IPhoneAccountSuggestionCallback) iin;
             }
-            return (IPhoneAccountSuggestionCallback) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
 
         public static String getDefaultTransactionName(int transactionCode) {
-            if (transactionCode != 1) {
-                return null;
+            if (transactionCode == 1) {
+                return "suggestPhoneAccounts";
             }
-            return "suggestPhoneAccounts";
+            return null;
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code == 1) {
-                data.enforceInterface(DESCRIPTOR);
-                suggestPhoneAccounts(data.readString(), data.createTypedArrayList(PhoneAccountSuggestion.CREATOR));
-                return true;
-            } else if (code != 1598968902) {
+            if (code != 1) {
+                if (code == 1598968902) {
+                    reply.writeString(DESCRIPTOR);
+                    return true;
+                }
                 return super.onTransact(code, data, reply, flags);
-            } else {
-                reply.writeString(DESCRIPTOR);
-                return true;
             }
+            data.enforceInterface(DESCRIPTOR);
+            String _arg0 = data.readString();
+            List<PhoneAccountSuggestion> _arg1 = data.createTypedArrayList(PhoneAccountSuggestion.CREATOR);
+            suggestPhoneAccounts(_arg0, _arg1);
+            return true;
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IPhoneAccountSuggestionCallback {
             public static IPhoneAccountSuggestionCallback sDefaultImpl;
             private IBinder mRemote;
@@ -75,6 +86,7 @@ public interface IPhoneAccountSuggestionCallback extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -83,15 +95,15 @@ public interface IPhoneAccountSuggestionCallback extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // com.android.internal.telecom.IPhoneAccountSuggestionCallback
             public void suggestPhoneAccounts(String number, List<PhoneAccountSuggestion> suggestions) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(number);
                     _data.writeTypedList(suggestions);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().suggestPhoneAccounts(number, suggestions);
                     }
                 } finally {
@@ -101,11 +113,11 @@ public interface IPhoneAccountSuggestionCallback extends IInterface {
         }
 
         public static boolean setDefaultImpl(IPhoneAccountSuggestionCallback impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IPhoneAccountSuggestionCallback getDefaultImpl() {

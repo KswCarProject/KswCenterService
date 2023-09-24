@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 
+/* loaded from: classes.dex */
 public class DelegatedAdminReceiver extends BroadcastReceiver {
     private static final String TAG = "DelegatedAdminReceiver";
 
@@ -17,14 +18,21 @@ public class DelegatedAdminReceiver extends BroadcastReceiver {
         throw new UnsupportedOperationException("onNetworkLogsAvailable should be implemented");
     }
 
+    @Override // android.content.BroadcastReceiver
     public final void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
         if (DeviceAdminReceiver.ACTION_CHOOSE_PRIVATE_KEY_ALIAS.equals(action)) {
-            setResultData(onChoosePrivateKeyAlias(context, intent, intent.getIntExtra(DeviceAdminReceiver.EXTRA_CHOOSE_PRIVATE_KEY_SENDER_UID, -1), (Uri) intent.getParcelableExtra(DeviceAdminReceiver.EXTRA_CHOOSE_PRIVATE_KEY_URI), intent.getStringExtra(DeviceAdminReceiver.EXTRA_CHOOSE_PRIVATE_KEY_ALIAS)));
+            int uid = intent.getIntExtra(DeviceAdminReceiver.EXTRA_CHOOSE_PRIVATE_KEY_SENDER_UID, -1);
+            Uri uri = (Uri) intent.getParcelableExtra(DeviceAdminReceiver.EXTRA_CHOOSE_PRIVATE_KEY_URI);
+            String alias = intent.getStringExtra(DeviceAdminReceiver.EXTRA_CHOOSE_PRIVATE_KEY_ALIAS);
+            String chosenAlias = onChoosePrivateKeyAlias(context, intent, uid, uri, alias);
+            setResultData(chosenAlias);
         } else if (DeviceAdminReceiver.ACTION_NETWORK_LOGS_AVAILABLE.equals(action)) {
-            onNetworkLogsAvailable(context, intent, intent.getLongExtra(DeviceAdminReceiver.EXTRA_NETWORK_LOGS_TOKEN, -1), intent.getIntExtra(DeviceAdminReceiver.EXTRA_NETWORK_LOGS_COUNT, 0));
+            long batchToken = intent.getLongExtra(DeviceAdminReceiver.EXTRA_NETWORK_LOGS_TOKEN, -1L);
+            int networkLogsCount = intent.getIntExtra(DeviceAdminReceiver.EXTRA_NETWORK_LOGS_COUNT, 0);
+            onNetworkLogsAvailable(context, intent, batchToken, networkLogsCount);
         } else {
-            Log.w(TAG, "Unhandled broadcast: " + action);
+            Log.m64w(TAG, "Unhandled broadcast: " + action);
         }
     }
 }

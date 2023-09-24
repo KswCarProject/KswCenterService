@@ -3,26 +3,24 @@ package android.database.sqlite;
 import android.annotation.UnsupportedAppUsage;
 import java.io.Closeable;
 
+/* loaded from: classes.dex */
 public abstract class SQLiteClosable implements Closeable {
     @UnsupportedAppUsage
     private int mReferenceCount = 1;
 
-    /* access modifiers changed from: protected */
-    public abstract void onAllReferencesReleased();
+    protected abstract void onAllReferencesReleased();
 
-    /* access modifiers changed from: protected */
     @Deprecated
-    public void onAllReferencesReleasedFromContainer() {
+    protected void onAllReferencesReleasedFromContainer() {
         onAllReferencesReleased();
     }
 
     public void acquireReference() {
         synchronized (this) {
-            if (this.mReferenceCount > 0) {
-                this.mReferenceCount++;
-            } else {
+            if (this.mReferenceCount <= 0) {
                 throw new IllegalStateException("attempt to re-open an already-closed object: " + this);
             }
+            this.mReferenceCount++;
         }
     }
 
@@ -59,6 +57,7 @@ public abstract class SQLiteClosable implements Closeable {
         }
     }
 
+    @Override // java.io.Closeable, java.lang.AutoCloseable
     public void close() {
         releaseReference();
     }

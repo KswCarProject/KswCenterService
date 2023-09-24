@@ -1,12 +1,13 @@
 package android.print;
 
 import android.content.ComponentName;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes3.dex */
 public interface IPrintSpoolerClient extends IInterface {
     void onAllPrintJobsForServiceHandled(ComponentName componentName) throws RemoteException;
 
@@ -16,24 +17,31 @@ public interface IPrintSpoolerClient extends IInterface {
 
     void onPrintJobStateChanged(PrintJobInfo printJobInfo) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements IPrintSpoolerClient {
+        @Override // android.print.IPrintSpoolerClient
         public void onPrintJobQueued(PrintJobInfo printJob) throws RemoteException {
         }
 
+        @Override // android.print.IPrintSpoolerClient
         public void onAllPrintJobsForServiceHandled(ComponentName printService) throws RemoteException {
         }
 
+        @Override // android.print.IPrintSpoolerClient
         public void onAllPrintJobsHandled() throws RemoteException {
         }
 
+        @Override // android.print.IPrintSpoolerClient
         public void onPrintJobStateChanged(PrintJobInfo printJob) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements IPrintSpoolerClient {
         private static final String DESCRIPTOR = "android.print.IPrintSpoolerClient";
         static final int TRANSACTION_onAllPrintJobsForServiceHandled = 2;
@@ -50,12 +58,13 @@ public interface IPrintSpoolerClient extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IPrintSpoolerClient)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IPrintSpoolerClient)) {
+                return (IPrintSpoolerClient) iin;
             }
-            return (IPrintSpoolerClient) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -75,84 +84,43 @@ public interface IPrintSpoolerClient extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v2, resolved type: android.print.PrintJobInfo} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v6, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v10, resolved type: android.print.PrintJobInfo} */
-        /* JADX WARNING: type inference failed for: r1v1 */
-        /* JADX WARNING: type inference failed for: r1v15 */
-        /* JADX WARNING: type inference failed for: r1v16 */
-        /* JADX WARNING: type inference failed for: r1v17 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r5, android.os.Parcel r6, android.os.Parcel r7, int r8) throws android.os.RemoteException {
-            /*
-                r4 = this;
-                java.lang.String r0 = "android.print.IPrintSpoolerClient"
-                r1 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r2 = 1
-                if (r5 == r1) goto L_0x005d
-                r1 = 0
-                switch(r5) {
-                    case 1: goto L_0x0046;
-                    case 2: goto L_0x002f;
-                    case 3: goto L_0x0028;
-                    case 4: goto L_0x0011;
-                    default: goto L_0x000c;
-                }
-            L_0x000c:
-                boolean r1 = super.onTransact(r5, r6, r7, r8)
-                return r1
-            L_0x0011:
-                r6.enforceInterface(r0)
-                int r3 = r6.readInt()
-                if (r3 == 0) goto L_0x0023
-                android.os.Parcelable$Creator<android.print.PrintJobInfo> r1 = android.print.PrintJobInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r6)
-                android.print.PrintJobInfo r1 = (android.print.PrintJobInfo) r1
-                goto L_0x0024
-            L_0x0023:
-            L_0x0024:
-                r4.onPrintJobStateChanged(r1)
-                return r2
-            L_0x0028:
-                r6.enforceInterface(r0)
-                r4.onAllPrintJobsHandled()
-                return r2
-            L_0x002f:
-                r6.enforceInterface(r0)
-                int r3 = r6.readInt()
-                if (r3 == 0) goto L_0x0041
-                android.os.Parcelable$Creator<android.content.ComponentName> r1 = android.content.ComponentName.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r6)
-                android.content.ComponentName r1 = (android.content.ComponentName) r1
-                goto L_0x0042
-            L_0x0041:
-            L_0x0042:
-                r4.onAllPrintJobsForServiceHandled(r1)
-                return r2
-            L_0x0046:
-                r6.enforceInterface(r0)
-                int r3 = r6.readInt()
-                if (r3 == 0) goto L_0x0058
-                android.os.Parcelable$Creator<android.print.PrintJobInfo> r1 = android.print.PrintJobInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r6)
-                android.print.PrintJobInfo r1 = (android.print.PrintJobInfo) r1
-                goto L_0x0059
-            L_0x0058:
-            L_0x0059:
-                r4.onPrintJobQueued(r1)
-                return r2
-            L_0x005d:
-                r7.writeString(r0)
-                return r2
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.print.IPrintSpoolerClient.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    PrintJobInfo _arg0 = data.readInt() != 0 ? PrintJobInfo.CREATOR.createFromParcel(data) : null;
+                    onPrintJobQueued(_arg0);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg02 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    onAllPrintJobsForServiceHandled(_arg02);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    onAllPrintJobsHandled();
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    PrintJobInfo _arg03 = data.readInt() != 0 ? PrintJobInfo.CREATOR.createFromParcel(data) : null;
+                    onPrintJobStateChanged(_arg03);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements IPrintSpoolerClient {
             public static IPrintSpoolerClient sDefaultImpl;
             private IBinder mRemote;
@@ -161,6 +129,7 @@ public interface IPrintSpoolerClient extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -169,6 +138,7 @@ public interface IPrintSpoolerClient extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.print.IPrintSpoolerClient
             public void onPrintJobQueued(PrintJobInfo printJob) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -179,9 +149,8 @@ public interface IPrintSpoolerClient extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onPrintJobQueued(printJob);
                     }
                 } finally {
@@ -189,6 +158,7 @@ public interface IPrintSpoolerClient extends IInterface {
                 }
             }
 
+            @Override // android.print.IPrintSpoolerClient
             public void onAllPrintJobsForServiceHandled(ComponentName printService) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -199,9 +169,8 @@ public interface IPrintSpoolerClient extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onAllPrintJobsForServiceHandled(printService);
                     }
                 } finally {
@@ -209,13 +178,13 @@ public interface IPrintSpoolerClient extends IInterface {
                 }
             }
 
+            @Override // android.print.IPrintSpoolerClient
             public void onAllPrintJobsHandled() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onAllPrintJobsHandled();
                     }
                 } finally {
@@ -223,6 +192,7 @@ public interface IPrintSpoolerClient extends IInterface {
                 }
             }
 
+            @Override // android.print.IPrintSpoolerClient
             public void onPrintJobStateChanged(PrintJobInfo printJob) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -233,9 +203,8 @@ public interface IPrintSpoolerClient extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onPrintJobStateChanged(printJob);
                     }
                 } finally {
@@ -245,11 +214,11 @@ public interface IPrintSpoolerClient extends IInterface {
         }
 
         public static boolean setDefaultImpl(IPrintSpoolerClient impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IPrintSpoolerClient getDefaultImpl() {

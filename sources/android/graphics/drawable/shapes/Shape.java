@@ -5,6 +5,7 @@ import android.graphics.Outline;
 import android.graphics.Paint;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public abstract class Shape implements Cloneable {
     private float mHeight;
     private float mWidth;
@@ -37,14 +38,15 @@ public abstract class Shape implements Cloneable {
         return true;
     }
 
-    /* access modifiers changed from: protected */
-    public void onResize(float width, float height) {
+    protected void onResize(float width, float height) {
     }
 
     public void getOutline(Outline outline) {
     }
 
-    public Shape clone() throws CloneNotSupportedException {
+    @Override // 
+    /* renamed from: clone */
+    public Shape mo159clone() throws CloneNotSupportedException {
         return (Shape) super.clone();
     }
 
@@ -63,6 +65,6 @@ public abstract class Shape implements Cloneable {
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Float.valueOf(this.mWidth), Float.valueOf(this.mHeight)});
+        return Objects.hash(Float.valueOf(this.mWidth), Float.valueOf(this.mHeight));
     }
 }

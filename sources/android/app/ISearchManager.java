@@ -2,15 +2,16 @@ package android.app;
 
 import android.annotation.UnsupportedAppUsage;
 import android.content.ComponentName;
-import android.content.pm.ResolveInfo;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.content.p002pm.ResolveInfo;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import java.util.List;
 
+/* loaded from: classes.dex */
 public interface ISearchManager extends IInterface {
     List<ResolveInfo> getGlobalSearchActivities() throws RemoteException;
 
@@ -27,39 +28,49 @@ public interface ISearchManager extends IInterface {
 
     boolean launchLegacyAssist(String str, int i, Bundle bundle) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements ISearchManager {
+        @Override // android.app.ISearchManager
         public SearchableInfo getSearchableInfo(ComponentName launchActivity) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.ISearchManager
         public List<SearchableInfo> getSearchablesInGlobalSearch() throws RemoteException {
             return null;
         }
 
+        @Override // android.app.ISearchManager
         public List<ResolveInfo> getGlobalSearchActivities() throws RemoteException {
             return null;
         }
 
+        @Override // android.app.ISearchManager
         public ComponentName getGlobalSearchActivity() throws RemoteException {
             return null;
         }
 
+        @Override // android.app.ISearchManager
         public ComponentName getWebSearchActivity() throws RemoteException {
             return null;
         }
 
+        @Override // android.app.ISearchManager
         public void launchAssist(Bundle args) throws RemoteException {
         }
 
+        @Override // android.app.ISearchManager
         public boolean launchLegacyAssist(String hint, int userHandle, Bundle args) throws RemoteException {
             return false;
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements ISearchManager {
         private static final String DESCRIPTOR = "android.app.ISearchManager";
         static final int TRANSACTION_getGlobalSearchActivities = 3;
@@ -79,12 +90,13 @@ public interface ISearchManager extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof ISearchManager)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof ISearchManager)) {
+                return (ISearchManager) iin;
             }
-            return (ISearchManager) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -110,135 +122,85 @@ public interface ISearchManager extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v1, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v10, resolved type: android.os.Bundle} */
-        /* JADX WARNING: type inference failed for: r3v0 */
-        /* JADX WARNING: type inference failed for: r3v7 */
-        /* JADX WARNING: type inference failed for: r3v14 */
-        /* JADX WARNING: type inference failed for: r3v15 */
-        /* JADX WARNING: type inference failed for: r3v16 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r7, android.os.Parcel r8, android.os.Parcel r9, int r10) throws android.os.RemoteException {
-            /*
-                r6 = this;
-                java.lang.String r0 = "android.app.ISearchManager"
-                r1 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r2 = 1
-                if (r7 == r1) goto L_0x00c5
-                r1 = 0
-                r3 = 0
-                switch(r7) {
-                    case 1: goto L_0x009e;
-                    case 2: goto L_0x0090;
-                    case 3: goto L_0x0082;
-                    case 4: goto L_0x006b;
-                    case 5: goto L_0x0054;
-                    case 6: goto L_0x0038;
-                    case 7: goto L_0x0012;
-                    default: goto L_0x000d;
-                }
-            L_0x000d:
-                boolean r1 = super.onTransact(r7, r8, r9, r10)
-                return r1
-            L_0x0012:
-                r8.enforceInterface(r0)
-                java.lang.String r1 = r8.readString()
-                int r4 = r8.readInt()
-                int r5 = r8.readInt()
-                if (r5 == 0) goto L_0x002c
-                android.os.Parcelable$Creator<android.os.Bundle> r3 = android.os.Bundle.CREATOR
-                java.lang.Object r3 = r3.createFromParcel(r8)
-                android.os.Bundle r3 = (android.os.Bundle) r3
-                goto L_0x002d
-            L_0x002c:
-            L_0x002d:
-                boolean r5 = r6.launchLegacyAssist(r1, r4, r3)
-                r9.writeNoException()
-                r9.writeInt(r5)
-                return r2
-            L_0x0038:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                if (r1 == 0) goto L_0x004b
-                android.os.Parcelable$Creator<android.os.Bundle> r1 = android.os.Bundle.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                r3 = r1
-                android.os.Bundle r3 = (android.os.Bundle) r3
-                goto L_0x004c
-            L_0x004b:
-            L_0x004c:
-                r1 = r3
-                r6.launchAssist(r1)
-                r9.writeNoException()
-                return r2
-            L_0x0054:
-                r8.enforceInterface(r0)
-                android.content.ComponentName r3 = r6.getWebSearchActivity()
-                r9.writeNoException()
-                if (r3 == 0) goto L_0x0067
-                r9.writeInt(r2)
-                r3.writeToParcel((android.os.Parcel) r9, (int) r2)
-                goto L_0x006a
-            L_0x0067:
-                r9.writeInt(r1)
-            L_0x006a:
-                return r2
-            L_0x006b:
-                r8.enforceInterface(r0)
-                android.content.ComponentName r3 = r6.getGlobalSearchActivity()
-                r9.writeNoException()
-                if (r3 == 0) goto L_0x007e
-                r9.writeInt(r2)
-                r3.writeToParcel((android.os.Parcel) r9, (int) r2)
-                goto L_0x0081
-            L_0x007e:
-                r9.writeInt(r1)
-            L_0x0081:
-                return r2
-            L_0x0082:
-                r8.enforceInterface(r0)
-                java.util.List r1 = r6.getGlobalSearchActivities()
-                r9.writeNoException()
-                r9.writeTypedList(r1)
-                return r2
-            L_0x0090:
-                r8.enforceInterface(r0)
-                java.util.List r1 = r6.getSearchablesInGlobalSearch()
-                r9.writeNoException()
-                r9.writeTypedList(r1)
-                return r2
-            L_0x009e:
-                r8.enforceInterface(r0)
-                int r4 = r8.readInt()
-                if (r4 == 0) goto L_0x00b0
-                android.os.Parcelable$Creator<android.content.ComponentName> r3 = android.content.ComponentName.CREATOR
-                java.lang.Object r3 = r3.createFromParcel(r8)
-                android.content.ComponentName r3 = (android.content.ComponentName) r3
-                goto L_0x00b1
-            L_0x00b0:
-            L_0x00b1:
-                android.app.SearchableInfo r4 = r6.getSearchableInfo(r3)
-                r9.writeNoException()
-                if (r4 == 0) goto L_0x00c1
-                r9.writeInt(r2)
-                r4.writeToParcel(r9, r2)
-                goto L_0x00c4
-            L_0x00c1:
-                r9.writeInt(r1)
-            L_0x00c4:
-                return r2
-            L_0x00c5:
-                r9.writeString(r0)
-                return r2
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.app.ISearchManager.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    SearchableInfo _result = getSearchableInfo(_arg0);
+                    reply.writeNoException();
+                    if (_result != null) {
+                        reply.writeInt(1);
+                        _result.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    List<SearchableInfo> _result2 = getSearchablesInGlobalSearch();
+                    reply.writeNoException();
+                    reply.writeTypedList(_result2);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    List<ResolveInfo> _result3 = getGlobalSearchActivities();
+                    reply.writeNoException();
+                    reply.writeTypedList(_result3);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _result4 = getGlobalSearchActivity();
+                    reply.writeNoException();
+                    if (_result4 != null) {
+                        reply.writeInt(1);
+                        _result4.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _result5 = getWebSearchActivity();
+                    reply.writeNoException();
+                    if (_result5 != null) {
+                        reply.writeInt(1);
+                        _result5.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    Bundle _arg02 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    launchAssist(_arg02);
+                    reply.writeNoException();
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg03 = data.readString();
+                    int _arg1 = data.readInt();
+                    Bundle _arg2 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    boolean launchLegacyAssist = launchLegacyAssist(_arg03, _arg1, _arg2);
+                    reply.writeNoException();
+                    reply.writeInt(launchLegacyAssist ? 1 : 0);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements ISearchManager {
             public static ISearchManager sDefaultImpl;
             private IBinder mRemote;
@@ -247,6 +209,7 @@ public interface ISearchManager extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -255,6 +218,7 @@ public interface ISearchManager extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.app.ISearchManager
             public SearchableInfo getSearchableInfo(ComponentName launchActivity) throws RemoteException {
                 SearchableInfo _result;
                 Parcel _data = Parcel.obtain();
@@ -267,7 +231,8 @@ public interface ISearchManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(1, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getSearchableInfo(launchActivity);
                     }
                     _reply.readException();
@@ -276,28 +241,25 @@ public interface ISearchManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    SearchableInfo _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.ISearchManager
             public List<SearchableInfo> getSearchablesInGlobalSearch() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(2, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getSearchablesInGlobalSearch();
                     }
                     _reply.readException();
                     List<SearchableInfo> _result = _reply.createTypedArrayList(SearchableInfo.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -305,18 +267,18 @@ public interface ISearchManager extends IInterface {
                 }
             }
 
+            @Override // android.app.ISearchManager
             public List<ResolveInfo> getGlobalSearchActivities() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(3, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getGlobalSearchActivities();
                     }
                     _reply.readException();
                     List<ResolveInfo> _result = _reply.createTypedArrayList(ResolveInfo.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -324,13 +286,15 @@ public interface ISearchManager extends IInterface {
                 }
             }
 
+            @Override // android.app.ISearchManager
             public ComponentName getGlobalSearchActivity() throws RemoteException {
                 ComponentName _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(4, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getGlobalSearchActivity();
                     }
                     _reply.readException();
@@ -339,23 +303,22 @@ public interface ISearchManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    ComponentName _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.ISearchManager
             public ComponentName getWebSearchActivity() throws RemoteException {
                 ComponentName _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(5, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getWebSearchActivity();
                     }
                     _reply.readException();
@@ -364,16 +327,14 @@ public interface ISearchManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    ComponentName _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.ISearchManager
             public void launchAssist(Bundle args) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -385,19 +346,19 @@ public interface ISearchManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(6, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().launchAssist(args);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().launchAssist(args);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.ISearchManager
             public boolean launchLegacyAssist(String hint, int userHandle, Bundle args) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -405,22 +366,18 @@ public interface ISearchManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(hint);
                     _data.writeInt(userHandle);
-                    boolean _result = true;
                     if (args != null) {
                         _data.writeInt(1);
                         args.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(7, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().launchLegacyAssist(hint, userHandle, args);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -430,11 +387,11 @@ public interface ISearchManager extends IInterface {
         }
 
         public static boolean setDefaultImpl(ISearchManager impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static ISearchManager getDefaultImpl() {

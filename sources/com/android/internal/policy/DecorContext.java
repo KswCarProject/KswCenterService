@@ -13,6 +13,7 @@ import com.android.internal.annotations.VisibleForTesting;
 import java.lang.ref.WeakReference;
 
 @VisibleForTesting(visibility = VisibleForTesting.Visibility.PACKAGE)
+/* loaded from: classes4.dex */
 public class DecorContext extends ContextThemeWrapper {
     private WeakReference<Context> mActivityContext;
     private Resources mActivityResources;
@@ -27,51 +28,56 @@ public class DecorContext extends ContextThemeWrapper {
         this.mActivityResources = activityContext.getResources();
     }
 
-    /* access modifiers changed from: package-private */
-    public void setPhoneWindow(PhoneWindow phoneWindow) {
+    void setPhoneWindow(PhoneWindow phoneWindow) {
         this.mPhoneWindow = phoneWindow;
         this.mWindowManager = null;
     }
 
+    @Override // android.view.ContextThemeWrapper, android.content.ContextWrapper, android.content.Context
     public Object getSystemService(String name) {
         Context activityContext;
         if (Context.WINDOW_SERVICE.equals(name)) {
             if (this.mWindowManager == null) {
-                this.mWindowManager = ((WindowManagerImpl) super.getSystemService(Context.WINDOW_SERVICE)).createLocalWindowManager(this.mPhoneWindow);
+                WindowManagerImpl wm = (WindowManagerImpl) super.getSystemService(Context.WINDOW_SERVICE);
+                this.mWindowManager = wm.createLocalWindowManager(this.mPhoneWindow);
             }
             return this.mWindowManager;
-        } else if (!"content_capture".equals(name)) {
-            return super.getSystemService(name);
-        } else {
-            if (this.mContentCaptureManager == null && (activityContext = (Context) this.mActivityContext.get()) != null) {
+        } else if ("content_capture".equals(name)) {
+            if (this.mContentCaptureManager == null && (activityContext = this.mActivityContext.get()) != null) {
                 this.mContentCaptureManager = (ContentCaptureManager) activityContext.getSystemService(name);
             }
             return this.mContentCaptureManager;
+        } else {
+            return super.getSystemService(name);
         }
     }
 
+    @Override // android.view.ContextThemeWrapper, android.content.ContextWrapper, android.content.Context
     public Resources getResources() {
-        Context activityContext = (Context) this.mActivityContext.get();
+        Context activityContext = this.mActivityContext.get();
         if (activityContext != null) {
             this.mActivityResources = activityContext.getResources();
         }
         return this.mActivityResources;
     }
 
+    @Override // android.view.ContextThemeWrapper, android.content.ContextWrapper, android.content.Context
     public AssetManager getAssets() {
         return this.mActivityResources.getAssets();
     }
 
+    @Override // android.content.ContextWrapper, android.content.Context
     public AutofillOptions getAutofillOptions() {
-        Context activityContext = (Context) this.mActivityContext.get();
+        Context activityContext = this.mActivityContext.get();
         if (activityContext != null) {
             return activityContext.getAutofillOptions();
         }
         return null;
     }
 
+    @Override // android.content.ContextWrapper, android.content.Context
     public ContentCaptureOptions getContentCaptureOptions() {
-        Context activityContext = (Context) this.mActivityContext.get();
+        Context activityContext = this.mActivityContext.get();
         if (activityContext != null) {
             return activityContext.getContentCaptureOptions();
         }

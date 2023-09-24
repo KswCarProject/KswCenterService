@@ -14,23 +14,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/* loaded from: classes4.dex */
 public class SimpleAdapter extends BaseAdapter implements Filterable, ThemedSpinnerAdapter {
-    /* access modifiers changed from: private */
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
-    public List<? extends Map<String, ?>> mData;
+    private List<? extends Map<String, ?>> mData;
     private LayoutInflater mDropDownInflater;
     private int mDropDownResource;
     private SimpleFilter mFilter;
-    /* access modifiers changed from: private */
-    public String[] mFrom;
+    private String[] mFrom;
     private final LayoutInflater mInflater;
     private int mResource;
-    /* access modifiers changed from: private */
-    public int[] mTo;
-    /* access modifiers changed from: private */
-    public ArrayList<Map<String, ?>> mUnfilteredData;
+    private int[] mTo;
+    private ArrayList<Map<String, ?>> mUnfilteredData;
     private ViewBinder mViewBinder;
 
+    /* loaded from: classes4.dex */
     public interface ViewBinder {
         boolean setViewValue(View view, Object obj, String str);
     }
@@ -44,18 +42,22 @@ public class SimpleAdapter extends BaseAdapter implements Filterable, ThemedSpin
         this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
+    @Override // android.widget.Adapter
     public int getCount() {
         return this.mData.size();
     }
 
+    @Override // android.widget.Adapter
     public Object getItem(int position) {
         return this.mData.get(position);
     }
 
+    @Override // android.widget.Adapter
     public long getItemId(int position) {
-        return (long) position;
+        return position;
     }
 
+    @Override // android.widget.Adapter
     public View getView(int position, View convertView, ViewGroup parent) {
         return createViewFromResource(this.mInflater, position, convertView, parent, this.mResource);
     }
@@ -75,16 +77,19 @@ public class SimpleAdapter extends BaseAdapter implements Filterable, ThemedSpin
         this.mDropDownResource = resource;
     }
 
+    @Override // android.widget.ThemedSpinnerAdapter
     public void setDropDownViewTheme(Resources.Theme theme) {
         if (theme == null) {
             this.mDropDownInflater = null;
         } else if (theme == this.mInflater.getContext().getTheme()) {
             this.mDropDownInflater = this.mInflater;
         } else {
-            this.mDropDownInflater = LayoutInflater.from(new ContextThemeWrapper(this.mInflater.getContext(), theme));
+            Context context = new ContextThemeWrapper(this.mInflater.getContext(), theme);
+            this.mDropDownInflater = LayoutInflater.from(context);
         }
     }
 
+    @Override // android.widget.ThemedSpinnerAdapter
     public Resources.Theme getDropDownViewTheme() {
         if (this.mDropDownInflater == null) {
             return null;
@@ -92,52 +97,57 @@ public class SimpleAdapter extends BaseAdapter implements Filterable, ThemedSpin
         return this.mDropDownInflater.getContext().getTheme();
     }
 
+    @Override // android.widget.BaseAdapter, android.widget.SpinnerAdapter
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
-        return createViewFromResource(this.mDropDownInflater == null ? this.mInflater : this.mDropDownInflater, position, convertView, parent, this.mDropDownResource);
+        LayoutInflater inflater = this.mDropDownInflater == null ? this.mInflater : this.mDropDownInflater;
+        return createViewFromResource(inflater, position, convertView, parent, this.mDropDownResource);
     }
 
     private void bindView(int position, View view) {
-        Map dataSet = (Map) this.mData.get(position);
-        if (dataSet != null) {
-            ViewBinder binder = this.mViewBinder;
-            String[] from = this.mFrom;
-            int[] to = this.mTo;
-            int count = to.length;
-            for (int i = 0; i < count; i++) {
-                View v = view.findViewById(to[i]);
-                if (v != null) {
-                    Object data = dataSet.get(from[i]);
-                    String text = data == null ? "" : data.toString();
-                    if (text == null) {
-                        text = "";
-                    }
-                    boolean bound = false;
-                    if (binder != null) {
-                        bound = binder.setViewValue(v, data, text);
-                    }
-                    if (bound) {
-                        continue;
-                    } else if (v instanceof Checkable) {
-                        if (data instanceof Boolean) {
-                            ((Checkable) v).setChecked(((Boolean) data).booleanValue());
-                        } else if (v instanceof TextView) {
-                            setViewText((TextView) v, text);
-                        } else {
-                            StringBuilder sb = new StringBuilder();
-                            sb.append(v.getClass().getName());
-                            sb.append(" should be bound to a Boolean, not a ");
-                            sb.append(data == null ? "<unknown type>" : data.getClass());
-                            throw new IllegalStateException(sb.toString());
-                        }
+        Map dataSet = this.mData.get(position);
+        if (dataSet == null) {
+            return;
+        }
+        ViewBinder binder = this.mViewBinder;
+        String[] from = this.mFrom;
+        int[] to = this.mTo;
+        int count = to.length;
+        for (int i = 0; i < count; i++) {
+            View v = view.findViewById(to[i]);
+            if (v != null) {
+                Object data = dataSet.get(from[i]);
+                String text = data == null ? "" : data.toString();
+                if (text == null) {
+                    text = "";
+                }
+                boolean bound = false;
+                if (binder != null) {
+                    bound = binder.setViewValue(v, data, text);
+                }
+                if (bound) {
+                    continue;
+                } else if (v instanceof Checkable) {
+                    if (data instanceof Boolean) {
+                        ((Checkable) v).setChecked(((Boolean) data).booleanValue());
                     } else if (v instanceof TextView) {
                         setViewText((TextView) v, text);
-                    } else if (!(v instanceof ImageView)) {
-                        throw new IllegalStateException(v.getClass().getName() + " is not a  view that can be bounds by this SimpleAdapter");
-                    } else if (data instanceof Integer) {
+                    } else {
+                        StringBuilder sb = new StringBuilder();
+                        sb.append(v.getClass().getName());
+                        sb.append(" should be bound to a Boolean, not a ");
+                        sb.append(data == null ? "<unknown type>" : data.getClass());
+                        throw new IllegalStateException(sb.toString());
+                    }
+                } else if (v instanceof TextView) {
+                    setViewText((TextView) v, text);
+                } else if (v instanceof ImageView) {
+                    if (data instanceof Integer) {
                         setViewImage((ImageView) v, ((Integer) data).intValue());
                     } else {
                         setViewImage((ImageView) v, text);
                     }
+                } else {
+                    throw new IllegalStateException(v.getClass().getName() + " is not a  view that can be bounds by this SimpleAdapter");
                 }
             }
         }
@@ -164,9 +174,10 @@ public class SimpleAdapter extends BaseAdapter implements Filterable, ThemedSpin
     }
 
     public void setViewText(TextView v, String text) {
-        v.setText((CharSequence) text);
+        v.setText(text);
     }
 
+    @Override // android.widget.Filterable
     public Filter getFilter() {
         if (this.mFilter == null) {
             this.mFilter = new SimpleFilter();
@@ -174,15 +185,16 @@ public class SimpleAdapter extends BaseAdapter implements Filterable, ThemedSpin
         return this.mFilter;
     }
 
+    /* loaded from: classes4.dex */
     private class SimpleFilter extends Filter {
         private SimpleFilter() {
         }
 
-        /* access modifiers changed from: protected */
-        public Filter.FilterResults performFiltering(CharSequence prefix) {
+        @Override // android.widget.Filter
+        protected Filter.FilterResults performFiltering(CharSequence prefix) {
             Filter.FilterResults results = new Filter.FilterResults();
             if (SimpleAdapter.this.mUnfilteredData == null) {
-                ArrayList unused = SimpleAdapter.this.mUnfilteredData = new ArrayList(SimpleAdapter.this.mData);
+                SimpleAdapter.this.mUnfilteredData = new ArrayList(SimpleAdapter.this.mData);
             }
             if (prefix == null || prefix.length() == 0) {
                 ArrayList<Map<String, ?>> list = SimpleAdapter.this.mUnfilteredData;
@@ -198,17 +210,19 @@ public class SimpleAdapter extends BaseAdapter implements Filterable, ThemedSpin
                     if (h != null) {
                         int len = SimpleAdapter.this.mTo.length;
                         for (int j = 0; j < len; j++) {
-                            String[] words = ((String) h.get(SimpleAdapter.this.mFrom[j])).split(WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER);
+                            String str = (String) h.get(SimpleAdapter.this.mFrom[j]);
+                            String[] words = str.split(WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER);
                             int wordCount = words.length;
                             int k = 0;
                             while (true) {
-                                if (k >= wordCount) {
-                                    break;
-                                } else if (words[k].toLowerCase().startsWith(prefixString)) {
-                                    newValues.add(h);
-                                    break;
-                                } else {
-                                    k++;
+                                if (k < wordCount) {
+                                    String word = words[k];
+                                    if (!word.toLowerCase().startsWith(prefixString)) {
+                                        k++;
+                                    } else {
+                                        newValues.add(h);
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -220,9 +234,9 @@ public class SimpleAdapter extends BaseAdapter implements Filterable, ThemedSpin
             return results;
         }
 
-        /* access modifiers changed from: protected */
-        public void publishResults(CharSequence constraint, Filter.FilterResults results) {
-            List unused = SimpleAdapter.this.mData = (List) results.values;
+        @Override // android.widget.Filter
+        protected void publishResults(CharSequence constraint, Filter.FilterResults results) {
+            SimpleAdapter.this.mData = (List) results.values;
             if (results.count > 0) {
                 SimpleAdapter.this.notifyDataSetChanged();
             } else {

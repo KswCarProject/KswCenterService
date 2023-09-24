@@ -4,8 +4,8 @@ import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.icu.util.Calendar;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.MathUtils;
@@ -18,27 +18,28 @@ import android.view.autofill.AutofillValue;
 import android.view.inspector.InspectionCompanion;
 import android.view.inspector.PropertyMapper;
 import android.view.inspector.PropertyReader;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.function.IntFunction;
 import libcore.icu.LocaleData;
 
+/* loaded from: classes4.dex */
 public class TimePicker extends FrameLayout {
-    /* access modifiers changed from: private */
-    public static final String LOG_TAG = TimePicker.class.getSimpleName();
+    private static final String LOG_TAG = TimePicker.class.getSimpleName();
     public static final int MODE_CLOCK = 2;
     public static final int MODE_SPINNER = 1;
     @UnsupportedAppUsage
     private final TimePickerDelegate mDelegate;
     private final int mMode;
 
+    /* loaded from: classes4.dex */
     public interface OnTimeChangedListener {
         void onTimeChanged(TimePicker timePicker, int i, int i2);
     }
 
+    /* loaded from: classes4.dex */
     interface TimePickerDelegate {
         void autofill(AutofillValue autofillValue);
 
@@ -88,9 +89,11 @@ public class TimePicker extends FrameLayout {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface TimePickerMode {
     }
 
+    /* loaded from: classes4.dex */
     public final class InspectionCompanion implements android.view.inspector.InspectionCompanion<TimePicker> {
         private int m24HourId;
         private int mHourId;
@@ -98,6 +101,7 @@ public class TimePicker extends FrameLayout {
         private boolean mPropertiesMapped = false;
         private int mTimePickerModeId;
 
+        @Override // android.view.inspector.InspectionCompanion
         public void mapProperties(PropertyMapper propertyMapper) {
             this.m24HourId = propertyMapper.mapBoolean("24Hour", 0);
             this.mHourId = propertyMapper.mapInt("hour", 0);
@@ -106,28 +110,24 @@ public class TimePicker extends FrameLayout {
             timePickerModeEnumMapping.put(1, "spinner");
             timePickerModeEnumMapping.put(2, "clock");
             Objects.requireNonNull(timePickerModeEnumMapping);
-            this.mTimePickerModeId = propertyMapper.mapIntEnum("timePickerMode", 16843956, new IntFunction() {
-                public final Object apply(int i) {
-                    return (String) SparseArray.this.get(i);
-                }
-            });
+            this.mTimePickerModeId = propertyMapper.mapIntEnum("timePickerMode", 16843956, new $$Lambda$QY3N4tzLteuFdjRnyJFCbR1ajSI(timePickerModeEnumMapping));
             this.mPropertiesMapped = true;
         }
 
+        @Override // android.view.inspector.InspectionCompanion
         public void readProperties(TimePicker node, PropertyReader propertyReader) {
-            if (this.mPropertiesMapped) {
-                propertyReader.readBoolean(this.m24HourId, node.is24HourView());
-                propertyReader.readInt(this.mHourId, node.getHour());
-                propertyReader.readInt(this.mMinuteId, node.getMinute());
-                propertyReader.readIntEnum(this.mTimePickerModeId, node.getMode());
-                return;
+            if (!this.mPropertiesMapped) {
+                throw new InspectionCompanion.UninitializedPropertyMapException();
             }
-            throw new InspectionCompanion.UninitializedPropertyMapException();
+            propertyReader.readBoolean(this.m24HourId, node.is24HourView());
+            propertyReader.readInt(this.mHourId, node.getHour());
+            propertyReader.readInt(this.mMinuteId, node.getMinute());
+            propertyReader.readIntEnum(this.mTimePickerModeId, node.getMode());
         }
     }
 
     public TimePicker(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public TimePicker(Context context, AttributeSet attrs) {
@@ -138,35 +138,30 @@ public class TimePicker extends FrameLayout {
         this(context, attrs, defStyleAttr, 0);
     }
 
-    public TimePicker(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public TimePicker(final Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         if (getImportantForAutofill() == 0) {
             setImportantForAutofill(1);
         }
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.TimePicker, defStyleAttr, defStyleRes);
-        saveAttributeDataForStyleable(context, R.styleable.TimePicker, attrs, a, defStyleAttr, defStyleRes);
+        TypedArray a = context.obtainStyledAttributes(attrs, C3132R.styleable.TimePicker, defStyleAttr, defStyleRes);
+        saveAttributeDataForStyleable(context, C3132R.styleable.TimePicker, attrs, a, defStyleAttr, defStyleRes);
         boolean isDialogMode = a.getBoolean(10, false);
         int requestedMode = a.getInt(8, 1);
         a.recycle();
-        if (requestedMode != 2 || !isDialogMode) {
+        if (requestedMode == 2 && isDialogMode) {
+            this.mMode = context.getResources().getInteger(C3132R.integer.time_picker_mode);
+        } else {
             this.mMode = requestedMode;
-        } else {
-            this.mMode = context.getResources().getInteger(R.integer.time_picker_mode);
         }
-        if (this.mMode != 2) {
-            this.mDelegate = new TimePickerSpinnerDelegate(this, context, attrs, defStyleAttr, defStyleRes);
-        } else {
+        if (this.mMode == 2) {
             this.mDelegate = new TimePickerClockDelegate(this, context, attrs, defStyleAttr, defStyleRes);
+        } else {
+            this.mDelegate = new TimePickerSpinnerDelegate(this, context, attrs, defStyleAttr, defStyleRes);
         }
-        this.mDelegate.setAutoFillChangeListener(new OnTimeChangedListener(context) {
-            private final /* synthetic */ Context f$1;
-
-            {
-                this.f$1 = r2;
-            }
-
+        this.mDelegate.setAutoFillChangeListener(new OnTimeChangedListener() { // from class: android.widget.-$$Lambda$TimePicker$2FhAB9WgnLgn4zn4f9rRT7DNfjw
+            @Override // android.widget.TimePicker.OnTimeChangedListener
             public final void onTimeChanged(TimePicker timePicker, int i, int i2) {
-                TimePicker.lambda$new$0(TimePicker.this, this.f$1, timePicker, i, i2);
+                TimePicker.lambda$new$0(TimePicker.this, context, timePicker, i, i2);
             }
         });
     }
@@ -219,9 +214,10 @@ public class TimePicker extends FrameLayout {
     }
 
     public void setIs24HourView(Boolean is24HourView) {
-        if (is24HourView != null) {
-            this.mDelegate.setIs24Hour(is24HourView.booleanValue());
+        if (is24HourView == null) {
+            return;
         }
+        this.mDelegate.setIs24Hour(is24HourView.booleanValue());
     }
 
     public boolean is24HourView() {
@@ -232,15 +228,18 @@ public class TimePicker extends FrameLayout {
         this.mDelegate.setOnTimeChangedListener(onTimeChangedListener);
     }
 
+    @Override // android.view.View
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
         this.mDelegate.setEnabled(enabled);
     }
 
+    @Override // android.view.View
     public boolean isEnabled() {
         return this.mDelegate.isEnabled();
     }
 
+    @Override // android.view.View
     public int getBaseline() {
         return this.mDelegate.getBaseline();
     }
@@ -249,22 +248,25 @@ public class TimePicker extends FrameLayout {
         return this.mDelegate.validateInput();
     }
 
-    /* access modifiers changed from: protected */
-    public Parcelable onSaveInstanceState() {
-        return this.mDelegate.onSaveInstanceState(super.onSaveInstanceState());
+    @Override // android.view.View
+    protected Parcelable onSaveInstanceState() {
+        Parcelable superState = super.onSaveInstanceState();
+        return this.mDelegate.onSaveInstanceState(superState);
     }
 
-    /* access modifiers changed from: protected */
-    public void onRestoreInstanceState(Parcelable state) {
+    @Override // android.view.View
+    protected void onRestoreInstanceState(Parcelable state) {
         View.BaseSavedState ss = (View.BaseSavedState) state;
         super.onRestoreInstanceState(ss.getSuperState());
         this.mDelegate.onRestoreInstanceState(ss);
     }
 
+    @Override // android.widget.FrameLayout, android.view.ViewGroup, android.view.View
     public CharSequence getAccessibilityClassName() {
         return TimePicker.class.getName();
     }
 
+    @Override // android.view.ViewGroup, android.view.View
     public boolean dispatchPopulateAccessibilityEventInternal(AccessibilityEvent event) {
         return this.mDelegate.dispatchPopulateAccessibilityEvent(event);
     }
@@ -286,13 +288,15 @@ public class TimePicker extends FrameLayout {
     }
 
     static String[] getAmPmStrings(Context context) {
-        LocaleData d = LocaleData.get(context.getResources().getConfiguration().locale);
+        Locale locale = context.getResources().getConfiguration().locale;
+        LocaleData d = LocaleData.get(locale);
         String[] result = new String[2];
         result[0] = d.amPm[0].length() > 4 ? d.narrowAm : d.amPm[0];
         result[1] = d.amPm[1].length() > 4 ? d.narrowPm : d.amPm[1];
         return result;
     }
 
+    /* loaded from: classes4.dex */
     static abstract class AbstractTimePickerDelegate implements TimePickerDelegate {
         protected OnTimeChangedListener mAutoFillChangeListener;
         private long mAutofilledValue;
@@ -307,18 +311,21 @@ public class TimePicker extends FrameLayout {
             this.mLocale = context.getResources().getConfiguration().locale;
         }
 
+        @Override // android.widget.TimePicker.TimePickerDelegate
         public void setOnTimeChangedListener(OnTimeChangedListener callback) {
             this.mOnTimeChangedListener = callback;
         }
 
+        @Override // android.widget.TimePicker.TimePickerDelegate
         public void setAutoFillChangeListener(OnTimeChangedListener callback) {
             this.mAutoFillChangeListener = callback;
         }
 
+        @Override // android.widget.TimePicker.TimePickerDelegate
         public final void autofill(AutofillValue value) {
             if (value == null || !value.isDate()) {
-                String access$000 = TimePicker.LOG_TAG;
-                Log.w(access$000, value + " could not be autofilled into " + this);
+                String str = TimePicker.LOG_TAG;
+                Log.m64w(str, value + " could not be autofilled into " + this);
                 return;
             }
             long time = value.getDateValue();
@@ -328,6 +335,7 @@ public class TimePicker extends FrameLayout {
             this.mAutofilledValue = time;
         }
 
+        @Override // android.widget.TimePicker.TimePickerDelegate
         public final AutofillValue getAutofillValue() {
             if (this.mAutofilledValue != 0) {
                 return AutofillValue.forDate(this.mAutofilledValue);
@@ -338,17 +346,21 @@ public class TimePicker extends FrameLayout {
             return AutofillValue.forDate(cal.getTimeInMillis());
         }
 
-        /* access modifiers changed from: protected */
-        public void resetAutofilledValue() {
-            this.mAutofilledValue = 0;
+        protected void resetAutofilledValue() {
+            this.mAutofilledValue = 0L;
         }
 
+        /* loaded from: classes4.dex */
         protected static class SavedState extends View.BaseSavedState {
-            public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
+            public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() { // from class: android.widget.TimePicker.AbstractTimePickerDelegate.SavedState.1
+                /* JADX WARN: Can't rename method to resolve collision */
+                @Override // android.p007os.Parcelable.Creator
                 public SavedState createFromParcel(Parcel in) {
                     return new SavedState(in);
                 }
 
+                /* JADX WARN: Can't rename method to resolve collision */
+                @Override // android.p007os.Parcelable.Creator
                 public SavedState[] newArray(int size) {
                     return new SavedState[size];
                 }
@@ -374,7 +386,7 @@ public class TimePicker extends FrameLayout {
                 super(in);
                 this.mHour = in.readInt();
                 this.mMinute = in.readInt();
-                this.mIs24HourMode = in.readInt() != 1 ? false : true;
+                this.mIs24HourMode = in.readInt() == 1;
                 this.mCurrentItemShowing = in.readInt();
             }
 
@@ -394,6 +406,7 @@ public class TimePicker extends FrameLayout {
                 return this.mCurrentItemShowing;
             }
 
+            @Override // android.view.View.BaseSavedState, android.view.AbsSavedState, android.p007os.Parcelable
             public void writeToParcel(Parcel dest, int flags) {
                 super.writeToParcel(dest, flags);
                 dest.writeInt(this.mHour);
@@ -404,21 +417,25 @@ public class TimePicker extends FrameLayout {
         }
     }
 
+    @Override // android.view.ViewGroup, android.view.View
     public void dispatchProvideAutofillStructure(ViewStructure structure, int flags) {
         structure.setAutofillId(getAutofillId());
         onProvideAutofillStructure(structure, flags);
     }
 
+    @Override // android.view.View
     public void autofill(AutofillValue value) {
         if (isEnabled()) {
             this.mDelegate.autofill(value);
         }
     }
 
+    @Override // android.view.View
     public int getAutofillType() {
         return isEnabled() ? 4 : 0;
     }
 
+    @Override // android.view.View
     public AutofillValue getAutofillValue() {
         if (isEnabled()) {
             return this.mDelegate.getAutofillValue();

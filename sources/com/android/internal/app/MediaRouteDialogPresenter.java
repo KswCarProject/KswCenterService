@@ -9,17 +9,19 @@ import android.media.MediaRouter;
 import android.util.Log;
 import android.view.View;
 
+/* loaded from: classes4.dex */
 public abstract class MediaRouteDialogPresenter {
     private static final String CHOOSER_FRAGMENT_TAG = "android.app.MediaRouteButton:MediaRouteChooserDialogFragment";
     private static final String CONTROLLER_FRAGMENT_TAG = "android.app.MediaRouteButton:MediaRouteControllerDialogFragment";
     private static final String TAG = "MediaRouter";
 
     public static DialogFragment showDialogFragment(Activity activity, int routeTypes, View.OnClickListener extendedSettingsClickListener) {
+        MediaRouter router = (MediaRouter) activity.getSystemService(Context.MEDIA_ROUTER_SERVICE);
         FragmentManager fm = activity.getFragmentManager();
-        MediaRouter.RouteInfo route = ((MediaRouter) activity.getSystemService(Context.MEDIA_ROUTER_SERVICE)).getSelectedRoute();
+        MediaRouter.RouteInfo route = router.getSelectedRoute();
         if (route.isDefault() || !route.matchesTypes(routeTypes)) {
             if (fm.findFragmentByTag(CHOOSER_FRAGMENT_TAG) != null) {
-                Log.w(TAG, "showDialog(): Route chooser dialog already showing!");
+                Log.m64w(TAG, "showDialog(): Route chooser dialog already showing!");
                 return null;
             }
             MediaRouteChooserDialogFragment f = new MediaRouteChooserDialogFragment();
@@ -28,7 +30,7 @@ public abstract class MediaRouteDialogPresenter {
             f.show(fm, CHOOSER_FRAGMENT_TAG);
             return f;
         } else if (fm.findFragmentByTag(CONTROLLER_FRAGMENT_TAG) != null) {
-            Log.w(TAG, "showDialog(): Route controller dialog already showing!");
+            Log.m64w(TAG, "showDialog(): Route controller dialog already showing!");
             return null;
         } else {
             MediaRouteControllerDialogFragment f2 = new MediaRouteControllerDialogFragment();
@@ -46,12 +48,12 @@ public abstract class MediaRouteDialogPresenter {
             theme = 16974126;
         }
         MediaRouter.RouteInfo route = router.getSelectedRoute();
-        if (!route.isDefault() && route.matchesTypes(routeTypes)) {
-            return new MediaRouteControllerDialog(context, theme);
+        if (route.isDefault() || !route.matchesTypes(routeTypes)) {
+            MediaRouteChooserDialog d = new MediaRouteChooserDialog(context, theme);
+            d.setRouteTypes(routeTypes);
+            d.setExtendedSettingsClickListener(extendedSettingsClickListener);
+            return d;
         }
-        MediaRouteChooserDialog d = new MediaRouteChooserDialog(context, theme);
-        d.setRouteTypes(routeTypes);
-        d.setExtendedSettingsClickListener(extendedSettingsClickListener);
-        return d;
+        return new MediaRouteControllerDialog(context, theme);
     }
 }

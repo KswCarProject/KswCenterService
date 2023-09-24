@@ -1,7 +1,8 @@
 package android.media.browse;
 
-import android.os.Bundle;
+import android.p007os.Bundle;
 
+/* loaded from: classes3.dex */
 public class MediaBrowserUtils {
     public static boolean areSameOptions(Bundle options1, Bundle options2) {
         if (options1 == options2) {
@@ -25,10 +26,10 @@ public class MediaBrowserUtils {
     }
 
     public static boolean hasDuplicatedItems(Bundle options1, Bundle options2) {
-        int endIndex1;
         int startIndex1;
-        int endIndex2;
+        int endIndex1;
         int startIndex2;
+        int endIndex2;
         int page1 = options1 == null ? -1 : options1.getInt("android.media.browse.extra.PAGE", -1);
         int page2 = options2 == null ? -1 : options2.getInt("android.media.browse.extra.PAGE", -1);
         int pageSize1 = options1 == null ? -1 : options1.getInt("android.media.browse.extra.PAGE_SIZE", -1);
@@ -50,9 +51,9 @@ public class MediaBrowserUtils {
         if (startIndex1 <= startIndex2 && startIndex2 <= endIndex1) {
             return true;
         }
-        if (startIndex1 > endIndex2 || endIndex2 > endIndex1) {
-            return false;
+        if (startIndex1 <= endIndex2 && endIndex2 <= endIndex1) {
+            return true;
         }
-        return true;
+        return false;
     }
 }

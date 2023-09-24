@@ -2,27 +2,33 @@ package android.location;
 
 import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.Locale;
 
+/* loaded from: classes.dex */
 public class GeocoderParams implements Parcelable {
-    public static final Parcelable.Creator<GeocoderParams> CREATOR = new Parcelable.Creator<GeocoderParams>() {
+    public static final Parcelable.Creator<GeocoderParams> CREATOR = new Parcelable.Creator<GeocoderParams>() { // from class: android.location.GeocoderParams.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public GeocoderParams createFromParcel(Parcel in) {
             GeocoderParams gp = new GeocoderParams();
-            Locale unused = gp.mLocale = new Locale(in.readString(), in.readString(), in.readString());
-            String unused2 = gp.mPackageName = in.readString();
+            String language = in.readString();
+            String country = in.readString();
+            String variant = in.readString();
+            gp.mLocale = new Locale(language, country, variant);
+            gp.mPackageName = in.readString();
             return gp;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public GeocoderParams[] newArray(int size) {
             return new GeocoderParams[size];
         }
     };
-    /* access modifiers changed from: private */
-    public Locale mLocale;
-    /* access modifiers changed from: private */
-    public String mPackageName;
+    private Locale mLocale;
+    private String mPackageName;
 
     private GeocoderParams() {
     }
@@ -42,10 +48,12 @@ public class GeocoderParams implements Parcelable {
         return this.mPackageName;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeString(this.mLocale.getLanguage());
         parcel.writeString(this.mLocale.getCountry());

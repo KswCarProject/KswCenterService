@@ -2,6 +2,7 @@ package android.view.inspector;
 
 import android.graphics.Color;
 
+/* loaded from: classes4.dex */
 public interface PropertyReader {
     void readBoolean(int i, boolean z);
 
@@ -35,20 +36,21 @@ public interface PropertyReader {
 
     void readShort(int i, short s);
 
+    /* loaded from: classes4.dex */
     public static class PropertyTypeMismatchException extends RuntimeException {
         public PropertyTypeMismatchException(int id, String expectedPropertyType, String actualPropertyType, String propertyName) {
             super(formatMessage(id, expectedPropertyType, actualPropertyType, propertyName));
         }
 
         public PropertyTypeMismatchException(int id, String expectedPropertyType, String actualPropertyType) {
-            super(formatMessage(id, expectedPropertyType, actualPropertyType, (String) null));
+            super(formatMessage(id, expectedPropertyType, actualPropertyType, null));
         }
 
         private static String formatMessage(int id, String expectedPropertyType, String actualPropertyType, String propertyName) {
             if (propertyName == null) {
-                return String.format("Attempted to read property with ID 0x%08X as type %s, but the ID is of type %s.", new Object[]{Integer.valueOf(id), expectedPropertyType, actualPropertyType});
+                return String.format("Attempted to read property with ID 0x%08X as type %s, but the ID is of type %s.", Integer.valueOf(id), expectedPropertyType, actualPropertyType);
             }
-            return String.format("Attempted to read property \"%s\" with ID 0x%08X as type %s, but the ID is of type %s.", new Object[]{propertyName, Integer.valueOf(id), expectedPropertyType, actualPropertyType});
+            return String.format("Attempted to read property \"%s\" with ID 0x%08X as type %s, but the ID is of type %s.", propertyName, Integer.valueOf(id), expectedPropertyType, actualPropertyType);
         }
     }
 }

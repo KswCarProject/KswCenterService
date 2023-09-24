@@ -1,18 +1,23 @@
 package android.content;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.TextUtils;
 import android.util.proto.ProtoOutputStream;
 import java.io.PrintWriter;
 
+/* loaded from: classes.dex */
 public final class ComponentName implements Parcelable, Cloneable, Comparable<ComponentName> {
-    public static final Parcelable.Creator<ComponentName> CREATOR = new Parcelable.Creator<ComponentName>() {
+    public static final Parcelable.Creator<ComponentName> CREATOR = new Parcelable.Creator<ComponentName>() { // from class: android.content.ComponentName.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ComponentName createFromParcel(Parcel in) {
             return new ComponentName(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ComponentName[] newArray(int size) {
             return new ComponentName[size];
         }
@@ -21,21 +26,22 @@ public final class ComponentName implements Parcelable, Cloneable, Comparable<Co
     private final String mPackage;
 
     @FunctionalInterface
+    /* loaded from: classes.dex */
     public interface WithComponentName {
         ComponentName getComponentName();
     }
 
     public static ComponentName createRelative(String pkg, String cls) {
         String fullName;
-        if (!TextUtils.isEmpty(cls)) {
-            if (cls.charAt(0) == '.') {
-                fullName = pkg + cls;
-            } else {
-                fullName = cls;
-            }
-            return new ComponentName(pkg, fullName);
+        if (TextUtils.isEmpty(cls)) {
+            throw new IllegalArgumentException("class name cannot be empty");
         }
-        throw new IllegalArgumentException("class name cannot be empty");
+        if (cls.charAt(0) == '.') {
+            fullName = pkg + cls;
+        } else {
+            fullName = cls;
+        }
+        return new ComponentName(pkg, fullName);
     }
 
     public static ComponentName createRelative(Context pkg, String cls) {
@@ -45,21 +51,20 @@ public final class ComponentName implements Parcelable, Cloneable, Comparable<Co
     public ComponentName(String pkg, String cls) {
         if (pkg == null) {
             throw new NullPointerException("package name is null");
-        } else if (cls != null) {
-            this.mPackage = pkg;
-            this.mClass = cls;
-        } else {
+        }
+        if (cls == null) {
             throw new NullPointerException("class name is null");
         }
+        this.mPackage = pkg;
+        this.mClass = cls;
     }
 
     public ComponentName(Context pkg, String cls) {
-        if (cls != null) {
-            this.mPackage = pkg.getPackageName();
-            this.mClass = cls;
-            return;
+        if (cls == null) {
+            throw new NullPointerException("class name is null");
         }
-        throw new NullPointerException("class name is null");
+        this.mPackage = pkg.getPackageName();
+        this.mClass = cls;
     }
 
     public ComponentName(Context pkg, Class<?> cls) {
@@ -67,7 +72,8 @@ public final class ComponentName implements Parcelable, Cloneable, Comparable<Co
         this.mClass = cls.getName();
     }
 
-    public ComponentName clone() {
+    /* renamed from: clone */
+    public ComponentName m156clone() {
         return new ComponentName(this.mPackage, this.mClass);
     }
 
@@ -79,81 +85,33 @@ public final class ComponentName implements Parcelable, Cloneable, Comparable<Co
         return this.mClass;
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:2:0x000a, code lost:
-        r0 = r4.mPackage.length();
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public java.lang.String getShortClassName() {
-        /*
-            r4 = this;
-            java.lang.String r0 = r4.mClass
-            java.lang.String r1 = r4.mPackage
-            boolean r0 = r0.startsWith(r1)
-            if (r0 == 0) goto L_0x0029
-            java.lang.String r0 = r4.mPackage
-            int r0 = r0.length()
-            java.lang.String r1 = r4.mClass
-            int r1 = r1.length()
-            if (r1 <= r0) goto L_0x0029
-            java.lang.String r2 = r4.mClass
-            char r2 = r2.charAt(r0)
-            r3 = 46
-            if (r2 != r3) goto L_0x0029
-            java.lang.String r2 = r4.mClass
-            java.lang.String r2 = r2.substring(r0, r1)
-            return r2
-        L_0x0029:
-            java.lang.String r0 = r4.mClass
-            return r0
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.content.ComponentName.getShortClassName():java.lang.String");
+    public String getShortClassName() {
+        int PN;
+        int CN;
+        if (this.mClass.startsWith(this.mPackage) && (CN = this.mClass.length()) > (PN = this.mPackage.length()) && this.mClass.charAt(PN) == '.') {
+            return this.mClass.substring(PN, CN);
+        }
+        return this.mClass;
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:2:0x0006, code lost:
-        r0 = r5.length();
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    private static void appendShortClassName(java.lang.StringBuilder r4, java.lang.String r5, java.lang.String r6) {
-        /*
-            boolean r0 = r6.startsWith(r5)
-            if (r0 == 0) goto L_0x001c
-            int r0 = r5.length()
-            int r1 = r6.length()
-            if (r1 <= r0) goto L_0x001c
-            char r2 = r6.charAt(r0)
-            r3 = 46
-            if (r2 != r3) goto L_0x001c
-            r4.append(r6, r0, r1)
-            return
-        L_0x001c:
-            r4.append(r6)
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.content.ComponentName.appendShortClassName(java.lang.StringBuilder, java.lang.String, java.lang.String):void");
+    private static void appendShortClassName(StringBuilder sb, String packageName, String className) {
+        int PN;
+        int CN;
+        if (className.startsWith(packageName) && (CN = className.length()) > (PN = packageName.length()) && className.charAt(PN) == '.') {
+            sb.append((CharSequence) className, PN, CN);
+        } else {
+            sb.append(className);
+        }
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:2:0x0006, code lost:
-        r0 = r5.length();
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    private static void printShortClassName(java.io.PrintWriter r4, java.lang.String r5, java.lang.String r6) {
-        /*
-            boolean r0 = r6.startsWith(r5)
-            if (r0 == 0) goto L_0x001e
-            int r0 = r5.length()
-            int r1 = r6.length()
-            if (r1 <= r0) goto L_0x001e
-            char r2 = r6.charAt(r0)
-            r3 = 46
-            if (r2 != r3) goto L_0x001e
-            int r2 = r1 - r0
-            r4.write(r6, r0, r2)
-            return
-        L_0x001e:
-            r4.print(r6)
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.content.ComponentName.printShortClassName(java.io.PrintWriter, java.lang.String, java.lang.String):void");
+    private static void printShortClassName(PrintWriter pw, String packageName, String className) {
+        int PN;
+        int CN;
+        if (className.startsWith(packageName) && (CN = className.length()) > (PN = packageName.length()) && className.charAt(PN) == '.') {
+            pw.write(className, PN, CN - PN);
+        } else {
+            pw.print(className);
+        }
     }
 
     public static String flattenToShortString(ComponentName componentName) {
@@ -223,10 +181,10 @@ public final class ComponentName implements Parcelable, Cloneable, Comparable<Co
         if (obj != null) {
             try {
                 ComponentName other = (ComponentName) obj;
-                if (!this.mPackage.equals(other.mPackage) || !this.mClass.equals(other.mClass)) {
-                    return false;
+                if (this.mPackage.equals(other.mPackage)) {
+                    return this.mClass.equals(other.mClass);
                 }
-                return true;
+                return false;
             } catch (ClassCastException e) {
             }
         }
@@ -237,6 +195,7 @@ public final class ComponentName implements Parcelable, Cloneable, Comparable<Co
         return this.mPackage.hashCode() + this.mClass.hashCode();
     }
 
+    @Override // java.lang.Comparable
     public int compareTo(ComponentName that) {
         int v = this.mPackage.compareTo(that.mPackage);
         if (v != 0) {
@@ -245,10 +204,12 @@ public final class ComponentName implements Parcelable, Cloneable, Comparable<Co
         return this.mClass.compareTo(that.mClass);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(this.mPackage);
         out.writeString(this.mClass);
@@ -258,7 +219,7 @@ public final class ComponentName implements Parcelable, Cloneable, Comparable<Co
         if (c != null) {
             c.writeToParcel(out, 0);
         } else {
-            out.writeString((String) null);
+            out.writeString(null);
         }
     }
 
@@ -272,14 +233,13 @@ public final class ComponentName implements Parcelable, Cloneable, Comparable<Co
 
     public ComponentName(Parcel in) {
         this.mPackage = in.readString();
-        if (this.mPackage != null) {
-            this.mClass = in.readString();
-            if (this.mClass == null) {
-                throw new NullPointerException("class name is null");
-            }
-            return;
+        if (this.mPackage == null) {
+            throw new NullPointerException("package name is null");
         }
-        throw new NullPointerException("package name is null");
+        this.mClass = in.readString();
+        if (this.mClass == null) {
+            throw new NullPointerException("class name is null");
+        }
     }
 
     private ComponentName(String pkg, Parcel in) {

@@ -1,8 +1,8 @@
 package android.net.wifi.p2p;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.TextUtils;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,17 +10,22 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 
+/* loaded from: classes3.dex */
 public class WifiP2pDeviceList implements Parcelable {
-    public static final Parcelable.Creator<WifiP2pDeviceList> CREATOR = new Parcelable.Creator<WifiP2pDeviceList>() {
+    public static final Parcelable.Creator<WifiP2pDeviceList> CREATOR = new Parcelable.Creator<WifiP2pDeviceList>() { // from class: android.net.wifi.p2p.WifiP2pDeviceList.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WifiP2pDeviceList createFromParcel(Parcel in) {
             WifiP2pDeviceList deviceList = new WifiP2pDeviceList();
             int deviceCount = in.readInt();
             for (int i = 0; i < deviceCount; i++) {
-                deviceList.update((WifiP2pDevice) in.readParcelable((ClassLoader) null));
+                deviceList.update((WifiP2pDevice) in.readParcelable(null));
             }
             return deviceList;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WifiP2pDeviceList[] newArray(int size) {
             return new WifiP2pDeviceList[size];
         }
@@ -51,7 +56,8 @@ public class WifiP2pDeviceList implements Parcelable {
     private void validateDevice(WifiP2pDevice device) {
         if (device == null) {
             throw new IllegalArgumentException("Null device");
-        } else if (TextUtils.isEmpty(device.deviceAddress)) {
+        }
+        if (TextUtils.isEmpty(device.deviceAddress)) {
             throw new IllegalArgumentException("Empty deviceAddress");
         }
     }
@@ -141,10 +147,10 @@ public class WifiP2pDeviceList implements Parcelable {
     public boolean isGroupOwner(String deviceAddress) {
         validateDeviceAddress(deviceAddress);
         WifiP2pDevice device = this.mDevices.get(deviceAddress);
-        if (device != null) {
-            return device.isGroupOwner();
+        if (device == null) {
+            throw new IllegalArgumentException("Device not found " + deviceAddress);
         }
-        throw new IllegalArgumentException("Device not found " + deviceAddress);
+        return device.isGroupOwner();
     }
 
     public String toString() {
@@ -156,10 +162,12 @@ public class WifiP2pDeviceList implements Parcelable {
         return sbuf.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mDevices.size());
         for (WifiP2pDevice device : this.mDevices.values()) {

@@ -2,6 +2,7 @@ package com.wits.pms.mcu;
 
 import com.android.internal.content.NativeLibraryHelper;
 
+/* loaded from: classes2.dex */
 public class McuMessage {
     public byte[] data;
     public int dataType;
@@ -9,57 +10,58 @@ public class McuMessage {
     private int len;
     public byte[] outData;
 
-    public McuMessage(int frameHead2, int dataType2, byte[] data2) {
-        this.frameHead = frameHead2;
-        this.dataType = dataType2;
-        this.data = data2;
-        obtain(data2);
+    public McuMessage(int frameHead, int dataType, byte[] data) {
+        this.frameHead = frameHead;
+        this.dataType = dataType;
+        this.data = data;
+        obtain(data);
     }
 
-    public void obtain(byte[] data2) {
-        this.len = data2.length + 2;
-        byte[] bytes = new byte[(this.len + 1)];
+    public void obtain(byte[] data) {
+        this.len = data.length + 2;
+        byte[] bytes = new byte[this.len + 1];
         bytes[0] = (byte) this.frameHead;
         bytes[1] = (byte) this.dataType;
-        System.arraycopy(data2, 0, bytes, 2, data2.length);
-        bytes[this.len] = (byte) sumCheck(bytes);
+        System.arraycopy(data, 0, bytes, 2, data.length);
+        byte checkSum = (byte) sumCheck(bytes);
+        bytes[this.len] = checkSum;
         this.outData = bytes;
     }
 
     public McuMessage() {
     }
 
-    public static McuMessage parse(byte[] data2) {
-        if (!check(data2)) {
-            return null;
+    public static McuMessage parse(byte[] data) {
+        if (check(data)) {
+            McuMessage mcuMessage = new McuMessage();
+            mcuMessage.frameHead = data[0];
+            mcuMessage.dataType = data[1];
+            mcuMessage.len = data[3];
+            mcuMessage.outData = data;
+            mcuMessage.data = new byte[data[3] + 5];
+            System.arraycopy(data, 2, mcuMessage.data, 0, mcuMessage.data.length);
+            return mcuMessage;
         }
-        McuMessage mcuMessage = new McuMessage();
-        mcuMessage.frameHead = data2[0];
-        mcuMessage.dataType = data2[1];
-        mcuMessage.len = data2[3];
-        mcuMessage.outData = data2;
-        mcuMessage.data = new byte[(data2[3] + 5)];
-        System.arraycopy(data2, 2, mcuMessage.data, 0, mcuMessage.data.length);
-        return mcuMessage;
+        return null;
     }
 
     public static int sumCheck(byte[] b) {
         int sum = 0;
-        for (int i = 1; i < b.length - 1; i++) {
-            sum += b[i] & 255;
+        for (int sum2 = 1; sum2 < b.length - 1; sum2++) {
+            sum += b[sum2] & 255;
         }
-        return ~sum;
+        int i = ~sum;
+        return i;
     }
 
     public static boolean check(byte[] b) {
         int sum = 0;
-        for (int i = 1; i < b.length - 1; i++) {
-            sum += b[i] & 255;
+        for (int sum2 = 1; sum2 < b.length - 1; sum2++) {
+            sum += b[sum2] & 255;
         }
-        if (b[b.length - 1] + sum == 255) {
-            return true;
-        }
-        return false;
+        int i = b.length;
+        int result = b[i - 1] + sum;
+        return result == 255;
     }
 
     public String toString() {
@@ -71,15 +73,16 @@ public class McuMessage {
         sb.append("--");
         sb.append(method);
         sb.append("-----[");
-        for (byte b : msg.getData()) {
-            String hex = Integer.toHexString(b & 255);
+        for (int i = 0; i < msg.getData().length; i++) {
+            String hex = Integer.toHexString(msg.getData()[i] & 255);
             if (hex.length() == 1) {
                 hex = '0' + hex;
             }
             sb.append(hex.toUpperCase());
             sb.append(NativeLibraryHelper.CLEAR_ABI_OVERRIDE);
         }
-        sb.replace(sb.length() - 1, sb.length(), "");
+        int i2 = sb.length();
+        sb.replace(i2 - 1, sb.length(), "");
         sb.append(" ]\n");
         return sb.toString();
     }

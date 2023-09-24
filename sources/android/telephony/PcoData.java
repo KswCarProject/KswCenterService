@@ -1,14 +1,17 @@
 package android.telephony;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public class PcoData implements Parcelable {
-    public static final Parcelable.Creator<PcoData> CREATOR = new Parcelable.Creator() {
+    public static final Parcelable.Creator<PcoData> CREATOR = new Parcelable.Creator() { // from class: android.telephony.PcoData.1
+        @Override // android.p007os.Parcelable.Creator
         public PcoData createFromParcel(Parcel in) {
             return new PcoData(in);
         }
 
+        @Override // android.p007os.Parcelable.Creator
         public PcoData[] newArray(int size) {
             return new PcoData[size];
         }
@@ -18,11 +21,11 @@ public class PcoData implements Parcelable {
     public final byte[] contents;
     public final int pcoId;
 
-    public PcoData(int cid2, String bearerProto2, int pcoId2, byte[] contents2) {
-        this.cid = cid2;
-        this.bearerProto = bearerProto2;
-        this.pcoId = pcoId2;
-        this.contents = contents2;
+    public PcoData(int cid, String bearerProto, int pcoId, byte[] contents) {
+        this.cid = cid;
+        this.bearerProto = bearerProto;
+        this.pcoId = pcoId;
+        this.contents = contents;
     }
 
     public PcoData(Parcel in) {
@@ -32,6 +35,7 @@ public class PcoData implements Parcelable {
         this.contents = in.createByteArray();
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(this.cid);
         out.writeString(this.bearerProto);
@@ -39,6 +43,7 @@ public class PcoData implements Parcelable {
         out.writeByteArray(this.contents);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

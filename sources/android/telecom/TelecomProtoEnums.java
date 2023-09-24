@@ -1,5 +1,6 @@
 package android.telecom;
 
+/* loaded from: classes3.dex */
 public final class TelecomProtoEnums {
     public static final int ABORTED = 8;
     public static final int ACTIVE = 5;

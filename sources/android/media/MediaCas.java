@@ -5,25 +5,29 @@ import android.hardware.cas.V1_0.ICas;
 import android.hardware.cas.V1_0.IMediaCasService;
 import android.hardware.cas.V1_1.ICasListener;
 import android.media.MediaCasException;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.IHwBinder;
-import android.os.Looper;
-import android.os.Message;
-import android.os.RemoteException;
+import android.p007os.Bundle;
+import android.p007os.Handler;
+import android.p007os.HandlerThread;
+import android.p007os.IHwBinder;
+import android.p007os.IHwInterface;
+import android.p007os.Looper;
+import android.p007os.Message;
+import android.p007os.RemoteException;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.util.Singleton;
 import java.util.ArrayList;
 
+/* loaded from: classes3.dex */
 public final class MediaCas implements AutoCloseable {
     private static final String TAG = "MediaCas";
-    private static final Singleton<IMediaCasService> sService = new Singleton<IMediaCasService>() {
-        /* access modifiers changed from: protected */
+    private static final Singleton<IMediaCasService> sService = new Singleton<IMediaCasService>() { // from class: android.media.MediaCas.1
+        /* JADX INFO: Access modifiers changed from: protected */
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.util.Singleton
         public IMediaCasService create() {
             try {
-                Log.d(MediaCas.TAG, "Tried to get cas@1.1 service");
+                Log.m72d(MediaCas.TAG, "Tried to get cas@1.1 service");
                 android.hardware.cas.V1_1.IMediaCasService serviceV11 = android.hardware.cas.V1_1.IMediaCasService.getService(true);
                 if (serviceV11 != null) {
                     return serviceV11;
@@ -31,20 +35,22 @@ public final class MediaCas implements AutoCloseable {
                 return null;
             } catch (Exception e) {
                 try {
-                    Log.d(MediaCas.TAG, "Tried to get cas@1.0 service");
+                    Log.m72d(MediaCas.TAG, "Tried to get cas@1.0 service");
                     return IMediaCasService.getService(true);
                 } catch (Exception e2) {
-                    Log.d(MediaCas.TAG, "Failed to get cas@1.0 service");
+                    Log.m72d(MediaCas.TAG, "Failed to get cas@1.0 service");
                     return null;
                 }
             }
         }
     };
-    private final ICasListener.Stub mBinder = new ICasListener.Stub() {
+    private final ICasListener.Stub mBinder = new ICasListener.Stub() { // from class: android.media.MediaCas.2
+        @Override // android.hardware.cas.V1_0.ICasListener
         public void onEvent(int event, int arg, ArrayList<Byte> data) throws RemoteException {
             MediaCas.this.mEventHandler.sendMessage(MediaCas.this.mEventHandler.obtainMessage(0, event, arg, data));
         }
 
+        @Override // android.hardware.cas.V1_1.ICasListener
         public void onSessionEvent(ArrayList<Byte> sessionId, int event, int arg, ArrayList<Byte> data) throws RemoteException {
             Message msg = MediaCas.this.mEventHandler.obtainMessage();
             msg.what = 1;
@@ -57,34 +63,31 @@ public final class MediaCas implements AutoCloseable {
             MediaCas.this.mEventHandler.sendMessage(msg);
         }
     };
-    /* access modifiers changed from: private */
-    public EventHandler mEventHandler;
+    private EventHandler mEventHandler;
     private HandlerThread mHandlerThread;
-    /* access modifiers changed from: private */
-    public ICas mICas;
-    /* access modifiers changed from: private */
-    public android.hardware.cas.V1_1.ICas mICasV11;
-    /* access modifiers changed from: private */
-    public EventListener mListener;
+    private ICas mICas;
+    private android.hardware.cas.V1_1.ICas mICasV11;
+    private EventListener mListener;
 
     static IMediaCasService getService() {
         return sService.get();
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void validateInternalStates() {
         if (this.mICas == null) {
             throw new IllegalStateException();
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void cleanupAndRethrowIllegalState() {
         this.mICas = null;
         this.mICasV11 = null;
         throw new IllegalStateException();
     }
 
+    /* loaded from: classes3.dex */
     private class EventHandler extends Handler {
         private static final String DATA_KEY = "data";
         private static final int MSG_CAS_EVENT = 0;
@@ -95,16 +98,19 @@ public final class MediaCas implements AutoCloseable {
             super(looper);
         }
 
+        @Override // android.p007os.Handler
         public void handleMessage(Message msg) {
             if (msg.what == 0) {
                 MediaCas.this.mListener.onEvent(MediaCas.this, msg.arg1, msg.arg2, MediaCas.this.toBytes((ArrayList) msg.obj));
             } else if (msg.what == 1) {
                 Bundle bundle = msg.getData();
-                MediaCas.this.mListener.onSessionEvent(MediaCas.this, MediaCas.this.createFromSessionId(MediaCas.this.toByteArray(bundle.getByteArray("sessionId"))), msg.arg1, msg.arg2, bundle.getByteArray("data"));
+                ArrayList<Byte> sessionId = MediaCas.this.toByteArray(bundle.getByteArray("sessionId"));
+                MediaCas.this.mListener.onSessionEvent(MediaCas.this, MediaCas.this.createFromSessionId(sessionId), msg.arg1, msg.arg2, bundle.getByteArray("data"));
             }
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class PluginDescriptor {
         private final int mCASystemId;
         private final String mName;
@@ -132,7 +138,7 @@ public final class MediaCas implements AutoCloseable {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public ArrayList<Byte> toByteArray(byte[] data, int offset, int length) {
         ArrayList<Byte> byteArray = new ArrayList<>(length);
         for (int i = 0; i < length; i++) {
@@ -141,7 +147,7 @@ public final class MediaCas implements AutoCloseable {
         return byteArray;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public ArrayList<Byte> toByteArray(byte[] data) {
         if (data == null) {
             return new ArrayList<>();
@@ -149,7 +155,7 @@ public final class MediaCas implements AutoCloseable {
         return toByteArray(data, 0, data.length);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public byte[] toBytes(ArrayList<Byte> byteArray) {
         byte[] data = null;
         if (byteArray != null) {
@@ -161,6 +167,7 @@ public final class MediaCas implements AutoCloseable {
         return data;
     }
 
+    /* loaded from: classes3.dex */
     public final class Session implements AutoCloseable {
         final ArrayList<Byte> mSessionId;
 
@@ -199,18 +206,18 @@ public final class MediaCas implements AutoCloseable {
 
         public void sendSessionEvent(int event, int arg, byte[] data) throws MediaCasException {
             MediaCas.this.validateInternalStates();
-            if (MediaCas.this.mICasV11 != null) {
-                try {
-                    MediaCasException.throwExceptionIfNeeded(MediaCas.this.mICasV11.sendSessionEvent(this.mSessionId, event, arg, MediaCas.this.toByteArray(data)));
-                } catch (RemoteException e) {
-                    MediaCas.this.cleanupAndRethrowIllegalState();
-                }
-            } else {
-                Log.d(MediaCas.TAG, "Send Session Event isn't supported by cas@1.0 interface");
+            if (MediaCas.this.mICasV11 == null) {
+                Log.m72d(MediaCas.TAG, "Send Session Event isn't supported by cas@1.0 interface");
                 throw new MediaCasException.UnsupportedCasException("Send Session Event is not supported");
+            }
+            try {
+                MediaCasException.throwExceptionIfNeeded(MediaCas.this.mICasV11.sendSessionEvent(this.mSessionId, event, arg, MediaCas.this.toByteArray(data)));
+            } catch (RemoteException e) {
+                MediaCas.this.cleanupAndRethrowIllegalState();
             }
         }
 
+        @Override // java.lang.AutoCloseable
         public void close() {
             MediaCas.this.validateInternalStates();
             try {
@@ -221,8 +228,7 @@ public final class MediaCas implements AutoCloseable {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public Session createFromSessionId(ArrayList<Byte> sessionId) {
+    Session createFromSessionId(ArrayList<Byte> sessionId) {
         if (sessionId == null || sessionId.size() == 0) {
             return null;
         }
@@ -231,14 +237,14 @@ public final class MediaCas implements AutoCloseable {
 
     public static boolean isSystemIdSupported(int CA_system_id) {
         IMediaCasService service = getService();
-        if (service == null) {
-            return false;
+        if (service != null) {
+            try {
+                return service.isSystemIdSupported(CA_system_id);
+            } catch (RemoteException e) {
+                return false;
+            }
         }
-        try {
-            return service.isSystemIdSupported(CA_system_id);
-        } catch (RemoteException e) {
-            return false;
-        }
+        return false;
     }
 
     public static PluginDescriptor[] enumeratePlugins() {
@@ -262,75 +268,75 @@ public final class MediaCas implements AutoCloseable {
 
     public MediaCas(int CA_system_id) throws MediaCasException.UnsupportedCasException {
         try {
-            IMediaCasService service = getService();
-            android.hardware.cas.V1_1.IMediaCasService serviceV11 = android.hardware.cas.V1_1.IMediaCasService.castFrom(service);
-            if (serviceV11 == null) {
-                Log.d(TAG, "Used cas@1_0 interface to create plugin");
-                this.mICas = service.createPlugin(CA_system_id, this.mBinder);
-            } else {
-                Log.d(TAG, "Used cas@1.1 interface to create plugin");
-                android.hardware.cas.V1_1.ICas createPluginExt = serviceV11.createPluginExt(CA_system_id, this.mBinder);
-                this.mICasV11 = createPluginExt;
-                this.mICas = createPluginExt;
-            }
-            if (this.mICas == null) {
+            try {
+                IMediaCasService service = getService();
+                android.hardware.cas.V1_1.IMediaCasService serviceV11 = android.hardware.cas.V1_1.IMediaCasService.castFrom((IHwInterface) service);
+                if (serviceV11 == null) {
+                    Log.m72d(TAG, "Used cas@1_0 interface to create plugin");
+                    this.mICas = service.createPlugin(CA_system_id, this.mBinder);
+                } else {
+                    Log.m72d(TAG, "Used cas@1.1 interface to create plugin");
+                    android.hardware.cas.V1_1.ICas createPluginExt = serviceV11.createPluginExt(CA_system_id, this.mBinder);
+                    this.mICasV11 = createPluginExt;
+                    this.mICas = createPluginExt;
+                }
+                if (this.mICas != null) {
+                    return;
+                }
                 throw new MediaCasException.UnsupportedCasException("Unsupported CA_system_id " + CA_system_id);
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "Failed to create plugin: " + e);
-            this.mICas = null;
-            if (this.mICas == null) {
+            } catch (Exception e) {
+                Log.m70e(TAG, "Failed to create plugin: " + e);
+                this.mICas = null;
+                if (this.mICas != null) {
+                    return;
+                }
                 throw new MediaCasException.UnsupportedCasException("Unsupported CA_system_id " + CA_system_id);
             }
         } catch (Throwable th) {
-            if (this.mICas == null) {
-                throw new MediaCasException.UnsupportedCasException("Unsupported CA_system_id " + CA_system_id);
+            if (this.mICas != null) {
+                throw th;
             }
-            throw th;
+            throw new MediaCasException.UnsupportedCasException("Unsupported CA_system_id " + CA_system_id);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public IHwBinder getBinder() {
+    IHwBinder getBinder() {
         validateInternalStates();
         return this.mICas.asBinder();
     }
 
+    /* loaded from: classes3.dex */
     public interface EventListener {
         void onEvent(MediaCas mediaCas, int i, int i2, byte[] bArr);
 
-        void onSessionEvent(MediaCas mediaCas, Session session, int event, int arg, byte[] data) {
-            Log.d(MediaCas.TAG, "Received MediaCas Session event");
+        default void onSessionEvent(MediaCas mediaCas, Session session, int event, int arg, byte[] data) {
+            Log.m72d(MediaCas.TAG, "Received MediaCas Session event");
         }
     }
 
     public void setEventListener(EventListener listener, Handler handler) {
         this.mListener = listener;
-        Looper looper = null;
         if (this.mListener == null) {
             this.mEventHandler = null;
             return;
         }
-        if (handler != null) {
-            looper = handler.getLooper();
-        }
-        Looper looper2 = looper;
-        if (looper2 == null) {
+        Looper looper = handler != null ? handler.getLooper() : null;
+        if (looper == null) {
             Looper myLooper = Looper.myLooper();
-            looper2 = myLooper;
+            looper = myLooper;
             if (myLooper == null) {
                 Looper mainLooper = Looper.getMainLooper();
-                looper2 = mainLooper;
+                looper = mainLooper;
                 if (mainLooper == null) {
                     if (this.mHandlerThread == null || !this.mHandlerThread.isAlive()) {
                         this.mHandlerThread = new HandlerThread("MediaCasEventThread", -2);
                         this.mHandlerThread.start();
                     }
-                    looper2 = this.mHandlerThread.getLooper();
+                    looper = this.mHandlerThread.getLooper();
                 }
             }
         }
-        this.mEventHandler = new EventHandler(looper2);
+        this.mEventHandler = new EventHandler(looper);
     }
 
     public void setPrivateData(byte[] data) throws MediaCasException {
@@ -342,6 +348,7 @@ public final class MediaCas implements AutoCloseable {
         }
     }
 
+    /* loaded from: classes3.dex */
     private class OpenSessionCallback implements ICas.openSessionCallback {
         public Session mSession;
         public int mStatus;
@@ -349,6 +356,7 @@ public final class MediaCas implements AutoCloseable {
         private OpenSessionCallback() {
         }
 
+        @Override // android.hardware.cas.V1_0.ICas.openSessionCallback
         public void onValues(int status, ArrayList<Byte> sessionId) {
             this.mStatus = status;
             this.mSession = MediaCas.this.createFromSessionId(sessionId);
@@ -408,6 +416,7 @@ public final class MediaCas implements AutoCloseable {
         }
     }
 
+    @Override // java.lang.AutoCloseable
     public void close() {
         if (this.mICas != null) {
             try {
@@ -421,8 +430,7 @@ public final class MediaCas implements AutoCloseable {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() {
+    protected void finalize() {
         close();
     }
 }

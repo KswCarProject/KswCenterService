@@ -2,6 +2,7 @@ package android.media;
 
 import android.annotation.UnsupportedAppUsage;
 
+/* loaded from: classes3.dex */
 public class AudioDevicePortConfig extends AudioPortConfig {
     @UnsupportedAppUsage
     AudioDevicePortConfig(AudioDevicePort devicePort, int samplingRate, int channelMask, int format, AudioGainConfig gain) {
@@ -12,6 +13,7 @@ public class AudioDevicePortConfig extends AudioPortConfig {
         this(config.port(), config.samplingRate(), config.channelMask(), config.format(), config.gain());
     }
 
+    @Override // android.media.AudioPortConfig
     public AudioDevicePort port() {
         return (AudioDevicePort) this.mPort;
     }

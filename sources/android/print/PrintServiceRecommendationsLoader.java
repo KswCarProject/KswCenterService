@@ -2,48 +2,51 @@ package android.print;
 
 import android.content.Context;
 import android.content.Loader;
-import android.os.Handler;
-import android.os.Message;
+import android.p007os.Handler;
+import android.p007os.Message;
 import android.print.PrintManager;
 import android.printservice.recommendation.RecommendationInfo;
 import com.android.internal.util.Preconditions;
 import java.util.List;
 
+/* loaded from: classes3.dex */
 public class PrintServiceRecommendationsLoader extends Loader<List<RecommendationInfo>> {
-    private final Handler mHandler = new MyHandler();
+    private final Handler mHandler;
     private PrintManager.PrintServiceRecommendationsChangeListener mListener;
     private final PrintManager mPrintManager;
 
     public PrintServiceRecommendationsLoader(PrintManager printManager, Context context) {
         super((Context) Preconditions.checkNotNull(context));
+        this.mHandler = new MyHandler();
         this.mPrintManager = (PrintManager) Preconditions.checkNotNull(printManager);
     }
 
-    /* access modifiers changed from: protected */
-    public void onForceLoad() {
+    @Override // android.content.Loader
+    protected void onForceLoad() {
         queueNewResult();
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void queueNewResult() {
         Message m = this.mHandler.obtainMessage(0);
         m.obj = this.mPrintManager.getPrintServiceRecommendations();
         this.mHandler.sendMessage(m);
     }
 
-    /* access modifiers changed from: protected */
-    public void onStartLoading() {
-        this.mListener = new PrintManager.PrintServiceRecommendationsChangeListener() {
+    @Override // android.content.Loader
+    protected void onStartLoading() {
+        this.mListener = new PrintManager.PrintServiceRecommendationsChangeListener() { // from class: android.print.PrintServiceRecommendationsLoader.1
+            @Override // android.print.PrintManager.PrintServiceRecommendationsChangeListener
             public void onPrintServiceRecommendationsChanged() {
                 PrintServiceRecommendationsLoader.this.queueNewResult();
             }
         };
-        this.mPrintManager.addPrintServiceRecommendationsChangeListener(this.mListener, (Handler) null);
+        this.mPrintManager.addPrintServiceRecommendationsChangeListener(this.mListener, null);
         deliverResult(this.mPrintManager.getPrintServiceRecommendations());
     }
 
-    /* access modifiers changed from: protected */
-    public void onStopLoading() {
+    @Override // android.content.Loader
+    protected void onStopLoading() {
         if (this.mListener != null) {
             this.mPrintManager.removePrintServiceRecommendationsChangeListener(this.mListener);
             this.mListener = null;
@@ -51,16 +54,18 @@ public class PrintServiceRecommendationsLoader extends Loader<List<Recommendatio
         this.mHandler.removeMessages(0);
     }
 
-    /* access modifiers changed from: protected */
-    public void onReset() {
+    @Override // android.content.Loader
+    protected void onReset() {
         onStopLoading();
     }
 
+    /* loaded from: classes3.dex */
     private class MyHandler extends Handler {
         public MyHandler() {
             super(PrintServiceRecommendationsLoader.this.getContext().getMainLooper());
         }
 
+        @Override // android.p007os.Handler
         public void handleMessage(Message msg) {
             if (PrintServiceRecommendationsLoader.this.isStarted()) {
                 PrintServiceRecommendationsLoader.this.deliverResult((List) msg.obj);

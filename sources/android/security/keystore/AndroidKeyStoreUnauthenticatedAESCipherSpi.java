@@ -13,6 +13,7 @@ import java.security.spec.InvalidParameterSpecException;
 import java.util.Arrays;
 import javax.crypto.spec.IvParameterSpec;
 
+/* loaded from: classes3.dex */
 class AndroidKeyStoreUnauthenticatedAESCipherSpi extends AndroidKeyStoreCipherSpiBase {
     private static final int BLOCK_SIZE_BYTES = 16;
     private byte[] mIv;
@@ -21,12 +22,15 @@ class AndroidKeyStoreUnauthenticatedAESCipherSpi extends AndroidKeyStoreCipherSp
     private final int mKeymasterBlockMode;
     private final int mKeymasterPadding;
 
+    /* loaded from: classes3.dex */
     static abstract class ECB extends AndroidKeyStoreUnauthenticatedAESCipherSpi {
         protected ECB(int keymasterPadding) {
             super(1, keymasterPadding, false);
         }
 
+        /* loaded from: classes3.dex */
         public static class NoPadding extends ECB {
+            @Override // android.security.keystore.AndroidKeyStoreCipherSpiBase
             public /* bridge */ /* synthetic */ void finalize() throws Throwable {
                 super.finalize();
             }
@@ -36,7 +40,9 @@ class AndroidKeyStoreUnauthenticatedAESCipherSpi extends AndroidKeyStoreCipherSp
             }
         }
 
+        /* loaded from: classes3.dex */
         public static class PKCS7Padding extends ECB {
+            @Override // android.security.keystore.AndroidKeyStoreCipherSpiBase
             public /* bridge */ /* synthetic */ void finalize() throws Throwable {
                 super.finalize();
             }
@@ -47,12 +53,15 @@ class AndroidKeyStoreUnauthenticatedAESCipherSpi extends AndroidKeyStoreCipherSp
         }
     }
 
+    /* loaded from: classes3.dex */
     static abstract class CBC extends AndroidKeyStoreUnauthenticatedAESCipherSpi {
         protected CBC(int keymasterPadding) {
             super(2, keymasterPadding, true);
         }
 
+        /* loaded from: classes3.dex */
         public static class NoPadding extends CBC {
+            @Override // android.security.keystore.AndroidKeyStoreCipherSpiBase
             public /* bridge */ /* synthetic */ void finalize() throws Throwable {
                 super.finalize();
             }
@@ -62,7 +71,9 @@ class AndroidKeyStoreUnauthenticatedAESCipherSpi extends AndroidKeyStoreCipherSp
             }
         }
 
+        /* loaded from: classes3.dex */
         public static class PKCS7Padding extends CBC {
+            @Override // android.security.keystore.AndroidKeyStoreCipherSpiBase
             public /* bridge */ /* synthetic */ void finalize() throws Throwable {
                 super.finalize();
             }
@@ -73,12 +84,15 @@ class AndroidKeyStoreUnauthenticatedAESCipherSpi extends AndroidKeyStoreCipherSp
         }
     }
 
+    /* loaded from: classes3.dex */
     static abstract class CTR extends AndroidKeyStoreUnauthenticatedAESCipherSpi {
         protected CTR(int keymasterPadding) {
             super(3, keymasterPadding, true);
         }
 
+        /* loaded from: classes3.dex */
         public static class NoPadding extends CTR {
+            @Override // android.security.keystore.AndroidKeyStoreCipherSpiBase
             public /* bridge */ /* synthetic */ void finalize() throws Throwable {
                 super.finalize();
             }
@@ -95,41 +109,41 @@ class AndroidKeyStoreUnauthenticatedAESCipherSpi extends AndroidKeyStoreCipherSp
         this.mIvRequired = ivRequired;
     }
 
-    /* access modifiers changed from: protected */
-    public final void resetAll() {
+    @Override // android.security.keystore.AndroidKeyStoreCipherSpiBase
+    protected final void resetAll() {
         this.mIv = null;
         this.mIvHasBeenUsed = false;
         super.resetAll();
     }
 
-    /* access modifiers changed from: protected */
-    public final void resetWhilePreservingInitState() {
+    @Override // android.security.keystore.AndroidKeyStoreCipherSpiBase
+    protected final void resetWhilePreservingInitState() {
         super.resetWhilePreservingInitState();
     }
 
-    /* access modifiers changed from: protected */
-    public final void initKey(int opmode, Key key) throws InvalidKeyException {
+    @Override // android.security.keystore.AndroidKeyStoreCipherSpiBase
+    protected final void initKey(int opmode, Key key) throws InvalidKeyException {
         if (!(key instanceof AndroidKeyStoreSecretKey)) {
             StringBuilder sb = new StringBuilder();
             sb.append("Unsupported key: ");
             sb.append(key != null ? key.getClass().getName() : "null");
             throw new InvalidKeyException(sb.toString());
-        } else if (KeyProperties.KEY_ALGORITHM_AES.equalsIgnoreCase(key.getAlgorithm())) {
-            setKey((AndroidKeyStoreSecretKey) key);
-        } else {
+        } else if (!KeyProperties.KEY_ALGORITHM_AES.equalsIgnoreCase(key.getAlgorithm())) {
             throw new InvalidKeyException("Unsupported key algorithm: " + key.getAlgorithm() + ". Only " + KeyProperties.KEY_ALGORITHM_AES + " supported");
+        } else {
+            setKey((AndroidKeyStoreSecretKey) key);
         }
     }
 
-    /* access modifiers changed from: protected */
-    public final void initAlgorithmSpecificParameters() throws InvalidKeyException {
+    @Override // android.security.keystore.AndroidKeyStoreCipherSpiBase
+    protected final void initAlgorithmSpecificParameters() throws InvalidKeyException {
         if (this.mIvRequired && !isEncrypting()) {
             throw new InvalidKeyException("IV required when decrypting. Use IvParameterSpec or AlgorithmParameters to provide it.");
         }
     }
 
-    /* access modifiers changed from: protected */
-    public final void initAlgorithmSpecificParameters(AlgorithmParameterSpec params) throws InvalidAlgorithmParameterException {
+    @Override // android.security.keystore.AndroidKeyStoreCipherSpiBase
+    protected final void initAlgorithmSpecificParameters(AlgorithmParameterSpec params) throws InvalidAlgorithmParameterException {
         if (!this.mIvRequired) {
             if (params != null) {
                 throw new InvalidAlgorithmParameterException("Unsupported parameters: " + params);
@@ -138,18 +152,18 @@ class AndroidKeyStoreUnauthenticatedAESCipherSpi extends AndroidKeyStoreCipherSp
             if (!isEncrypting()) {
                 throw new InvalidAlgorithmParameterException("IvParameterSpec must be provided when decrypting");
             }
-        } else if (params instanceof IvParameterSpec) {
+        } else if (!(params instanceof IvParameterSpec)) {
+            throw new InvalidAlgorithmParameterException("Only IvParameterSpec supported");
+        } else {
             this.mIv = ((IvParameterSpec) params).getIV();
             if (this.mIv == null) {
                 throw new InvalidAlgorithmParameterException("Null IV in IvParameterSpec");
             }
-        } else {
-            throw new InvalidAlgorithmParameterException("Only IvParameterSpec supported");
         }
     }
 
-    /* access modifiers changed from: protected */
-    public final void initAlgorithmSpecificParameters(AlgorithmParameters params) throws InvalidAlgorithmParameterException {
+    @Override // android.security.keystore.AndroidKeyStoreCipherSpiBase
+    protected final void initAlgorithmSpecificParameters(AlgorithmParameters params) throws InvalidAlgorithmParameterException {
         if (!this.mIvRequired) {
             if (params != null) {
                 throw new InvalidAlgorithmParameterException("Unsupported parameters: " + params);
@@ -158,56 +172,54 @@ class AndroidKeyStoreUnauthenticatedAESCipherSpi extends AndroidKeyStoreCipherSp
             if (!isEncrypting()) {
                 throw new InvalidAlgorithmParameterException("IV required when decrypting. Use IvParameterSpec or AlgorithmParameters to provide it.");
             }
-        } else if (KeyProperties.KEY_ALGORITHM_AES.equalsIgnoreCase(params.getAlgorithm())) {
+        } else if (!KeyProperties.KEY_ALGORITHM_AES.equalsIgnoreCase(params.getAlgorithm())) {
+            throw new InvalidAlgorithmParameterException("Unsupported AlgorithmParameters algorithm: " + params.getAlgorithm() + ". Supported: AES");
+        } else {
             try {
-                this.mIv = ((IvParameterSpec) params.getParameterSpec(IvParameterSpec.class)).getIV();
+                IvParameterSpec ivSpec = (IvParameterSpec) params.getParameterSpec(IvParameterSpec.class);
+                this.mIv = ivSpec.getIV();
                 if (this.mIv == null) {
                     throw new InvalidAlgorithmParameterException("Null IV in AlgorithmParameters");
                 }
             } catch (InvalidParameterSpecException e) {
-                if (isEncrypting()) {
-                    this.mIv = null;
-                    return;
+                if (!isEncrypting()) {
+                    throw new InvalidAlgorithmParameterException("IV required when decrypting, but not found in parameters: " + params, e);
                 }
-                throw new InvalidAlgorithmParameterException("IV required when decrypting, but not found in parameters: " + params, e);
+                this.mIv = null;
             }
-        } else {
-            throw new InvalidAlgorithmParameterException("Unsupported AlgorithmParameters algorithm: " + params.getAlgorithm() + ". Supported: AES");
         }
     }
 
-    /* access modifiers changed from: protected */
-    public final int getAdditionalEntropyAmountForBegin() {
-        if (!this.mIvRequired || this.mIv != null || !isEncrypting()) {
-            return 0;
+    @Override // android.security.keystore.AndroidKeyStoreCipherSpiBase
+    protected final int getAdditionalEntropyAmountForBegin() {
+        if (this.mIvRequired && this.mIv == null && isEncrypting()) {
+            return 16;
         }
-        return 16;
-    }
-
-    /* access modifiers changed from: protected */
-    public final int getAdditionalEntropyAmountForFinish() {
         return 0;
     }
 
-    /* access modifiers changed from: protected */
-    public final void addAlgorithmSpecificParametersToBegin(KeymasterArguments keymasterArgs) {
-        if (!isEncrypting() || !this.mIvRequired || !this.mIvHasBeenUsed) {
-            keymasterArgs.addEnum(KeymasterDefs.KM_TAG_ALGORITHM, 32);
-            keymasterArgs.addEnum(KeymasterDefs.KM_TAG_BLOCK_MODE, this.mKeymasterBlockMode);
-            keymasterArgs.addEnum(KeymasterDefs.KM_TAG_PADDING, this.mKeymasterPadding);
-            if (this.mIvRequired && this.mIv != null) {
-                keymasterArgs.addBytes(KeymasterDefs.KM_TAG_NONCE, this.mIv);
-                return;
-            }
-            return;
-        }
-        throw new IllegalStateException("IV has already been used. Reusing IV in encryption mode violates security best practices.");
+    @Override // android.security.keystore.AndroidKeyStoreCipherSpiBase
+    protected final int getAdditionalEntropyAmountForFinish() {
+        return 0;
     }
 
-    /* access modifiers changed from: protected */
-    public final void loadAlgorithmSpecificParametersFromBeginResult(KeymasterArguments keymasterArgs) {
+    @Override // android.security.keystore.AndroidKeyStoreCipherSpiBase
+    protected final void addAlgorithmSpecificParametersToBegin(KeymasterArguments keymasterArgs) {
+        if (isEncrypting() && this.mIvRequired && this.mIvHasBeenUsed) {
+            throw new IllegalStateException("IV has already been used. Reusing IV in encryption mode violates security best practices.");
+        }
+        keymasterArgs.addEnum(KeymasterDefs.KM_TAG_ALGORITHM, 32);
+        keymasterArgs.addEnum(KeymasterDefs.KM_TAG_BLOCK_MODE, this.mKeymasterBlockMode);
+        keymasterArgs.addEnum(KeymasterDefs.KM_TAG_PADDING, this.mKeymasterPadding);
+        if (this.mIvRequired && this.mIv != null) {
+            keymasterArgs.addBytes(KeymasterDefs.KM_TAG_NONCE, this.mIv);
+        }
+    }
+
+    @Override // android.security.keystore.AndroidKeyStoreCipherSpiBase
+    protected final void loadAlgorithmSpecificParametersFromBeginResult(KeymasterArguments keymasterArgs) {
         this.mIvHasBeenUsed = true;
-        byte[] returnedIv = keymasterArgs.getBytes(KeymasterDefs.KM_TAG_NONCE, (byte[]) null);
+        byte[] returnedIv = keymasterArgs.getBytes(KeymasterDefs.KM_TAG_NONCE, null);
         if (returnedIv != null && returnedIv.length == 0) {
             returnedIv = null;
         }
@@ -222,34 +234,34 @@ class AndroidKeyStoreUnauthenticatedAESCipherSpi extends AndroidKeyStoreCipherSp
         }
     }
 
-    /* access modifiers changed from: protected */
-    public final int engineGetBlockSize() {
+    @Override // javax.crypto.CipherSpi
+    protected final int engineGetBlockSize() {
         return 16;
     }
 
-    /* access modifiers changed from: protected */
-    public final int engineGetOutputSize(int inputLen) {
+    @Override // javax.crypto.CipherSpi
+    protected final int engineGetOutputSize(int inputLen) {
         return inputLen + 48;
     }
 
-    /* access modifiers changed from: protected */
-    public final byte[] engineGetIV() {
+    @Override // javax.crypto.CipherSpi
+    protected final byte[] engineGetIV() {
         return ArrayUtils.cloneIfNotEmpty(this.mIv);
     }
 
-    /* access modifiers changed from: protected */
-    public final AlgorithmParameters engineGetParameters() {
-        if (!this.mIvRequired || this.mIv == null || this.mIv.length <= 0) {
-            return null;
+    @Override // android.security.keystore.AndroidKeyStoreCipherSpiBase, javax.crypto.CipherSpi
+    protected final AlgorithmParameters engineGetParameters() {
+        if (this.mIvRequired && this.mIv != null && this.mIv.length > 0) {
+            try {
+                AlgorithmParameters params = AlgorithmParameters.getInstance(KeyProperties.KEY_ALGORITHM_AES);
+                params.init(new IvParameterSpec(this.mIv));
+                return params;
+            } catch (NoSuchAlgorithmException e) {
+                throw new ProviderException("Failed to obtain AES AlgorithmParameters", e);
+            } catch (InvalidParameterSpecException e2) {
+                throw new ProviderException("Failed to initialize AES AlgorithmParameters with an IV", e2);
+            }
         }
-        try {
-            AlgorithmParameters params = AlgorithmParameters.getInstance(KeyProperties.KEY_ALGORITHM_AES);
-            params.init(new IvParameterSpec(this.mIv));
-            return params;
-        } catch (NoSuchAlgorithmException e) {
-            throw new ProviderException("Failed to obtain AES AlgorithmParameters", e);
-        } catch (InvalidParameterSpecException e2) {
-            throw new ProviderException("Failed to initialize AES AlgorithmParameters with an IV", e2);
-        }
+        return null;
     }
 }

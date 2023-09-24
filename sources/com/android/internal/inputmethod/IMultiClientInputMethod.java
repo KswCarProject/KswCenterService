@@ -1,13 +1,14 @@
 package com.android.internal.inputmethod;
 
 import android.content.ContentResolver;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import com.android.internal.inputmethod.IMultiClientInputMethodPrivilegedOperations;
 
+/* loaded from: classes4.dex */
 public interface IMultiClientInputMethod extends IInterface {
     void addClient(int i, int i2, int i3, int i4) throws RemoteException;
 
@@ -15,21 +16,27 @@ public interface IMultiClientInputMethod extends IInterface {
 
     void removeClient(int i) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IMultiClientInputMethod {
+        @Override // com.android.internal.inputmethod.IMultiClientInputMethod
         public void initialize(IMultiClientInputMethodPrivilegedOperations privOps) throws RemoteException {
         }
 
+        @Override // com.android.internal.inputmethod.IMultiClientInputMethod
         public void addClient(int clientId, int uid, int pid, int selfReportedDisplayId) throws RemoteException {
         }
 
+        @Override // com.android.internal.inputmethod.IMultiClientInputMethod
         public void removeClient(int clientId) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IMultiClientInputMethod {
         private static final String DESCRIPTOR = "com.android.internal.inputmethod.IMultiClientInputMethod";
         static final int TRANSACTION_addClient = 2;
@@ -45,12 +52,13 @@ public interface IMultiClientInputMethod extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IMultiClientInputMethod)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IMultiClientInputMethod)) {
+                return (IMultiClientInputMethod) iin;
             }
-            return (IMultiClientInputMethod) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -68,34 +76,42 @@ public interface IMultiClientInputMethod extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        initialize(IMultiClientInputMethodPrivilegedOperations.Stub.asInterface(data.readStrongBinder()));
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        addClient(data.readInt(), data.readInt(), data.readInt(), data.readInt());
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        removeClient(data.readInt());
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    IMultiClientInputMethodPrivilegedOperations _arg0 = IMultiClientInputMethodPrivilegedOperations.Stub.asInterface(data.readStrongBinder());
+                    initialize(_arg0);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    int _arg1 = data.readInt();
+                    int _arg2 = data.readInt();
+                    int _arg3 = data.readInt();
+                    addClient(_arg02, _arg1, _arg2, _arg3);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg03 = data.readInt();
+                    removeClient(_arg03);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IMultiClientInputMethod {
             public static IMultiClientInputMethod sDefaultImpl;
             private IBinder mRemote;
@@ -104,6 +120,7 @@ public interface IMultiClientInputMethod extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -112,14 +129,14 @@ public interface IMultiClientInputMethod extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // com.android.internal.inputmethod.IMultiClientInputMethod
             public void initialize(IMultiClientInputMethodPrivilegedOperations privOps) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(privOps != null ? privOps.asBinder() : null);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().initialize(privOps);
                     }
                 } finally {
@@ -127,6 +144,7 @@ public interface IMultiClientInputMethod extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.inputmethod.IMultiClientInputMethod
             public void addClient(int clientId, int uid, int pid, int selfReportedDisplayId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -135,9 +153,8 @@ public interface IMultiClientInputMethod extends IInterface {
                     _data.writeInt(uid);
                     _data.writeInt(pid);
                     _data.writeInt(selfReportedDisplayId);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().addClient(clientId, uid, pid, selfReportedDisplayId);
                     }
                 } finally {
@@ -145,14 +162,14 @@ public interface IMultiClientInputMethod extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.inputmethod.IMultiClientInputMethod
             public void removeClient(int clientId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(clientId);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().removeClient(clientId);
                     }
                 } finally {
@@ -162,11 +179,11 @@ public interface IMultiClientInputMethod extends IInterface {
         }
 
         public static boolean setDefaultImpl(IMultiClientInputMethod impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IMultiClientInputMethod getDefaultImpl() {

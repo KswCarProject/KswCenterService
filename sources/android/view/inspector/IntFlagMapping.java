@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+/* loaded from: classes4.dex */
 public final class IntFlagMapping {
     private final List<Flag> mFlags = new ArrayList();
 
@@ -24,10 +25,10 @@ public final class IntFlagMapping {
         this.mFlags.add(new Flag(mask, target, name));
     }
 
+    /* loaded from: classes4.dex */
     private static final class Flag {
         private final int mMask;
-        /* access modifiers changed from: private */
-        public final String mName;
+        private final String mName;
         private final int mTarget;
 
         private Flag(int mask, int target, String name) {
@@ -36,7 +37,7 @@ public final class IntFlagMapping {
             this.mName = (String) Objects.requireNonNull(name);
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public boolean isEnabledFor(int value) {
             return (this.mMask & value) == this.mTarget;
         }

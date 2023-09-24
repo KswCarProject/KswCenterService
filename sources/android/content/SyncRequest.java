@@ -2,16 +2,21 @@ package android.content;
 
 import android.accounts.Account;
 import android.annotation.UnsupportedAppUsage;
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public class SyncRequest implements Parcelable {
-    public static final Parcelable.Creator<SyncRequest> CREATOR = new Parcelable.Creator<SyncRequest>() {
+    public static final Parcelable.Creator<SyncRequest> CREATOR = new Parcelable.Creator<SyncRequest>() { // from class: android.content.SyncRequest.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SyncRequest createFromParcel(Parcel in) {
             return new SyncRequest(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SyncRequest[] newArray(int size) {
             return new SyncRequest[size];
         }
@@ -60,10 +65,12 @@ public class SyncRequest implements Parcelable {
         return this.mSyncRunTimeSecs;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeBundle(this.mExtras);
         parcel.writeLong(this.mSyncFlexTimeSecs);
@@ -77,15 +84,14 @@ public class SyncRequest implements Parcelable {
     }
 
     private SyncRequest(Parcel in) {
-        boolean z = true;
         this.mExtras = Bundle.setDefusable(in.readBundle(), true);
         this.mSyncFlexTimeSecs = in.readLong();
         this.mSyncRunTimeSecs = in.readLong();
         this.mIsPeriodic = in.readInt() != 0;
         this.mDisallowMetered = in.readInt() != 0;
         this.mIsAuthority = in.readInt() != 0;
-        this.mIsExpedited = in.readInt() == 0 ? false : z;
-        this.mAccountToSync = (Account) in.readParcelable((ClassLoader) null);
+        this.mIsExpedited = in.readInt() != 0;
+        this.mAccountToSync = (Account) in.readParcelable(null);
         this.mAuthority = in.readString();
     }
 
@@ -94,80 +100,69 @@ public class SyncRequest implements Parcelable {
         this.mSyncRunTimeSecs = b.mSyncRunTimeSecs;
         this.mAccountToSync = b.mAccount;
         this.mAuthority = b.mAuthority;
-        boolean z = false;
         this.mIsPeriodic = b.mSyncType == 1;
-        this.mIsAuthority = b.mSyncTarget == 2 ? true : z;
+        this.mIsAuthority = b.mSyncTarget == 2;
         this.mIsExpedited = b.mExpedited;
         this.mExtras = new Bundle(b.mCustomExtras);
         this.mExtras.putAll(b.mSyncConfigExtras);
         this.mDisallowMetered = b.mDisallowMetered;
     }
 
+    /* loaded from: classes.dex */
     public static class Builder {
         private static final int SYNC_TARGET_ADAPTER = 2;
         private static final int SYNC_TARGET_UNKNOWN = 0;
         private static final int SYNC_TYPE_ONCE = 2;
         private static final int SYNC_TYPE_PERIODIC = 1;
         private static final int SYNC_TYPE_UNKNOWN = 0;
-        /* access modifiers changed from: private */
-        public Account mAccount;
-        /* access modifiers changed from: private */
-        public String mAuthority;
-        /* access modifiers changed from: private */
-        public Bundle mCustomExtras;
-        /* access modifiers changed from: private */
-        public boolean mDisallowMetered;
-        /* access modifiers changed from: private */
-        public boolean mExpedited;
+        private Account mAccount;
+        private String mAuthority;
+        private Bundle mCustomExtras;
+        private boolean mDisallowMetered;
+        private boolean mExpedited;
         private boolean mIgnoreBackoff;
         private boolean mIgnoreSettings;
         private boolean mIsManual;
         private boolean mNoRetry;
         private boolean mRequiresCharging;
-        /* access modifiers changed from: private */
-        public Bundle mSyncConfigExtras;
-        /* access modifiers changed from: private */
-        public long mSyncFlexTimeSecs;
-        /* access modifiers changed from: private */
-        public long mSyncRunTimeSecs;
-        /* access modifiers changed from: private */
-        public int mSyncTarget = 0;
-        /* access modifiers changed from: private */
-        public int mSyncType = 0;
+        private Bundle mSyncConfigExtras;
+        private long mSyncFlexTimeSecs;
+        private long mSyncRunTimeSecs;
+        private int mSyncType = 0;
+        private int mSyncTarget = 0;
 
         public Builder syncOnce() {
-            if (this.mSyncType == 0) {
-                this.mSyncType = 2;
-                setupInterval(0, 0);
-                return this;
+            if (this.mSyncType != 0) {
+                throw new IllegalArgumentException("Sync type has already been defined.");
             }
-            throw new IllegalArgumentException("Sync type has already been defined.");
+            this.mSyncType = 2;
+            setupInterval(0L, 0L);
+            return this;
         }
 
         public Builder syncPeriodic(long pollFrequency, long beforeSeconds) {
-            if (this.mSyncType == 0) {
-                this.mSyncType = 1;
-                setupInterval(pollFrequency, beforeSeconds);
-                return this;
+            if (this.mSyncType != 0) {
+                throw new IllegalArgumentException("Sync type has already been defined.");
             }
-            throw new IllegalArgumentException("Sync type has already been defined.");
+            this.mSyncType = 1;
+            setupInterval(pollFrequency, beforeSeconds);
+            return this;
         }
 
         private void setupInterval(long at, long before) {
-            if (before <= at) {
-                this.mSyncRunTimeSecs = at;
-                this.mSyncFlexTimeSecs = before;
-                return;
+            if (before > at) {
+                throw new IllegalArgumentException("Specified run time for the sync must be after the specified flex time.");
             }
-            throw new IllegalArgumentException("Specified run time for the sync must be after the specified flex time.");
+            this.mSyncRunTimeSecs = at;
+            this.mSyncFlexTimeSecs = before;
         }
 
         public Builder setDisallowMetered(boolean disallow) {
-            if (!this.mIgnoreSettings || !disallow) {
-                this.mDisallowMetered = disallow;
-                return this;
+            if (this.mIgnoreSettings && disallow) {
+                throw new IllegalArgumentException("setDisallowMetered(true) after having specified that settings are ignored.");
             }
-            throw new IllegalArgumentException("setDisallowMetered(true) after having specified that settings are ignored.");
+            this.mDisallowMetered = disallow;
+            return this;
         }
 
         public Builder setRequiresCharging(boolean requiresCharging) {
@@ -178,14 +173,14 @@ public class SyncRequest implements Parcelable {
         public Builder setSyncAdapter(Account account, String authority) {
             if (this.mSyncTarget != 0) {
                 throw new IllegalArgumentException("Sync target has already been defined.");
-            } else if (authority == null || authority.length() != 0) {
-                this.mSyncTarget = 2;
-                this.mAccount = account;
-                this.mAuthority = authority;
-                return this;
-            } else {
+            }
+            if (authority != null && authority.length() == 0) {
                 throw new IllegalArgumentException("Authority must be non-empty");
             }
+            this.mSyncTarget = 2;
+            this.mAccount = account;
+            this.mAuthority = authority;
+            return this;
         }
 
         public Builder setExtras(Bundle bundle) {
@@ -199,11 +194,11 @@ public class SyncRequest implements Parcelable {
         }
 
         public Builder setIgnoreSettings(boolean ignoreSettings) {
-            if (!this.mDisallowMetered || !ignoreSettings) {
-                this.mIgnoreSettings = ignoreSettings;
-                return this;
+            if (this.mDisallowMetered && ignoreSettings) {
+                throw new IllegalArgumentException("setIgnoreSettings(true) after having specified sync settings with this builder.");
             }
-            throw new IllegalArgumentException("setIgnoreSettings(true) after having specified sync settings with this builder.");
+            this.mIgnoreSettings = ignoreSettings;
+            return this;
         }
 
         public Builder setIgnoreBackoff(boolean ignoreBackoff) {
@@ -251,11 +246,11 @@ public class SyncRequest implements Parcelable {
             }
             if (this.mSyncType == 1 && (ContentResolver.invalidPeriodicExtras(this.mCustomExtras) || ContentResolver.invalidPeriodicExtras(this.mSyncConfigExtras))) {
                 throw new IllegalArgumentException("Illegal extras were set");
-            } else if (this.mSyncTarget != 0) {
-                return new SyncRequest(this);
-            } else {
+            }
+            if (this.mSyncTarget == 0) {
                 throw new IllegalArgumentException("Must specify an adapter with setSyncAdapter(Account, String");
             }
+            return new SyncRequest(this);
         }
     }
 }

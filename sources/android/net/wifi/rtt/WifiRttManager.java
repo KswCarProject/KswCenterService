@@ -3,12 +3,13 @@ package android.net.wifi.rtt;
 import android.annotation.SystemApi;
 import android.content.Context;
 import android.net.wifi.rtt.IRttCallback;
-import android.os.Binder;
-import android.os.RemoteException;
-import android.os.WorkSource;
+import android.p007os.Binder;
+import android.p007os.RemoteException;
+import android.p007os.WorkSource;
 import java.util.List;
 import java.util.concurrent.Executor;
 
+/* loaded from: classes3.dex */
 public class WifiRttManager {
     public static final String ACTION_WIFI_RTT_STATE_CHANGED = "android.net.wifi.rtt.action.WIFI_RTT_STATE_CHANGED";
     private static final String TAG = "WifiRttManager";
@@ -30,51 +31,60 @@ public class WifiRttManager {
     }
 
     public void startRanging(RangingRequest request, Executor executor, RangingResultCallback callback) {
-        startRanging((WorkSource) null, request, executor, callback);
+        startRanging(null, request, executor, callback);
     }
 
     @SystemApi
-    public void startRanging(WorkSource workSource, RangingRequest request, final Executor executor, final RangingResultCallback callback) {
+    public void startRanging(WorkSource workSource, RangingRequest request, Executor executor, RangingResultCallback callback) {
         if (executor == null) {
             throw new IllegalArgumentException("Null executor provided");
-        } else if (callback != null) {
-            try {
-                this.mService.startRanging(new Binder(), this.mContext.getOpPackageName(), workSource, request, new IRttCallback.Stub() {
-                    public void onRangingFailure(int status) throws RemoteException {
-                        clearCallingIdentity();
-                        executor.execute(new Runnable(status) {
-                            private final /* synthetic */ int f$1;
-
-                            {
-                                this.f$1 = r2;
-                            }
-
-                            public final void run() {
-                                RangingResultCallback.this.onRangingFailure(this.f$1);
-                            }
-                        });
-                    }
-
-                    public void onRangingResults(List<RangingResult> results) throws RemoteException {
-                        clearCallingIdentity();
-                        executor.execute(new Runnable(results) {
-                            private final /* synthetic */ List f$1;
-
-                            {
-                                this.f$1 = r2;
-                            }
-
-                            public final void run() {
-                                RangingResultCallback.this.onRangingResults(this.f$1);
-                            }
-                        });
-                    }
-                });
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
-        } else {
+        }
+        if (callback == null) {
             throw new IllegalArgumentException("Null callback provided");
+        }
+        Binder binder = new Binder();
+        try {
+            this.mService.startRanging(binder, this.mContext.getOpPackageName(), workSource, request, new BinderC14411(executor, callback));
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
+        }
+    }
+
+    /* renamed from: android.net.wifi.rtt.WifiRttManager$1 */
+    /* loaded from: classes3.dex */
+    class BinderC14411 extends IRttCallback.Stub {
+        final /* synthetic */ RangingResultCallback val$callback;
+        final /* synthetic */ Executor val$executor;
+
+        BinderC14411(Executor executor, RangingResultCallback rangingResultCallback) {
+            this.val$executor = executor;
+            this.val$callback = rangingResultCallback;
+        }
+
+        @Override // android.net.wifi.rtt.IRttCallback
+        public void onRangingFailure(final int status) throws RemoteException {
+            clearCallingIdentity();
+            Executor executor = this.val$executor;
+            final RangingResultCallback rangingResultCallback = this.val$callback;
+            executor.execute(new Runnable() { // from class: android.net.wifi.rtt.-$$Lambda$WifiRttManager$1$j3tVizFtxt_z0tTXfTNSFM4Loi8
+                @Override // java.lang.Runnable
+                public final void run() {
+                    RangingResultCallback.this.onRangingFailure(status);
+                }
+            });
+        }
+
+        @Override // android.net.wifi.rtt.IRttCallback
+        public void onRangingResults(final List<RangingResult> results) throws RemoteException {
+            clearCallingIdentity();
+            Executor executor = this.val$executor;
+            final RangingResultCallback rangingResultCallback = this.val$callback;
+            executor.execute(new Runnable() { // from class: android.net.wifi.rtt.-$$Lambda$WifiRttManager$1$3uT7vOEOvW11feiFUB6LWvcBJEk
+                @Override // java.lang.Runnable
+                public final void run() {
+                    RangingResultCallback.this.onRangingResults(results);
+                }
+            });
         }
     }
 

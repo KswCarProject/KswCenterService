@@ -4,16 +4,17 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.UserInfo;
-import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.os.UserManager;
+import android.content.p002pm.ApplicationInfo;
+import android.content.p002pm.PackageManager;
+import android.content.p002pm.UserInfo;
+import android.p007os.Bundle;
+import android.p007os.PersistableBundle;
+import android.p007os.UserManager;
 import android.util.Log;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import com.android.internal.app.AlertController;
 
+/* loaded from: classes4.dex */
 public class ConfirmUserCreationActivity extends AlertActivity implements DialogInterface.OnClickListener {
     private static final String TAG = "CreateUser";
     private String mAccountName;
@@ -23,6 +24,7 @@ public class ConfirmUserCreationActivity extends AlertActivity implements Dialog
     private UserManager mUserManager;
     private String mUserName;
 
+    @Override // com.android.internal.app.AlertActivity, android.app.Activity
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Intent intent = getIntent();
@@ -49,44 +51,47 @@ public class ConfirmUserCreationActivity extends AlertActivity implements Dialog
 
     private String checkUserCreationRequirements() {
         String callingPackage = getCallingPackage();
-        if (callingPackage != null) {
-            try {
-                ApplicationInfo appInfo = getPackageManager().getApplicationInfo(callingPackage, 0);
-                boolean cantCreateUser = this.mUserManager.hasUserRestriction(UserManager.DISALLOW_ADD_USER) || !this.mUserManager.isAdminUser();
-                boolean cantCreateAnyMoreUsers = !this.mUserManager.canAddMoreUsers();
-                boolean accountExists = (this.mAccountName == null || this.mAccountType == null || (!AccountManager.get(this).someUserHasAccount(new Account(this.mAccountName, this.mAccountType)) && !this.mUserManager.someUserHasSeedAccount(this.mAccountName, this.mAccountType))) ? false : true;
-                this.mCanProceed = true;
-                String appName = appInfo.loadLabel(getPackageManager()).toString();
-                if (cantCreateUser) {
-                    setResult(1);
-                    return null;
-                } else if (cantCreateAnyMoreUsers) {
-                    setResult(2);
-                    return null;
-                } else if (accountExists) {
-                    return getString(R.string.user_creation_account_exists, appName, this.mAccountName);
-                } else {
-                    return getString(R.string.user_creation_adding, appName, this.mAccountName);
-                }
-            } catch (PackageManager.NameNotFoundException e) {
-                throw new SecurityException("Cannot find the calling package");
-            }
-        } else {
+        if (callingPackage == null) {
             throw new SecurityException("User Creation intent must be launched with startActivityForResult");
+        }
+        try {
+            ApplicationInfo appInfo = getPackageManager().getApplicationInfo(callingPackage, 0);
+            boolean cantCreateUser = this.mUserManager.hasUserRestriction(UserManager.DISALLOW_ADD_USER) || !this.mUserManager.isAdminUser();
+            boolean cantCreateAnyMoreUsers = !this.mUserManager.canAddMoreUsers();
+            Account account = new Account(this.mAccountName, this.mAccountType);
+            boolean accountExists = (this.mAccountName == null || this.mAccountType == null || (!AccountManager.get(this).someUserHasAccount(account) && !this.mUserManager.someUserHasSeedAccount(this.mAccountName, this.mAccountType))) ? false : true;
+            this.mCanProceed = true;
+            String appName = appInfo.loadLabel(getPackageManager()).toString();
+            if (cantCreateUser) {
+                setResult(1);
+                return null;
+            } else if (cantCreateAnyMoreUsers) {
+                setResult(2);
+                return null;
+            } else if (accountExists) {
+                String message = getString(C3132R.string.user_creation_account_exists, appName, this.mAccountName);
+                return message;
+            } else {
+                String message2 = getString(C3132R.string.user_creation_adding, appName, this.mAccountName);
+                return message2;
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            throw new SecurityException("Cannot find the calling package");
         }
     }
 
+    @Override // android.content.DialogInterface.OnClickListener
     public void onClick(DialogInterface dialog, int which) {
         setResult(0);
         if (which == -1 && this.mCanProceed) {
-            Log.i(TAG, "Ok, creating user");
+            Log.m68i(TAG, "Ok, creating user");
             UserInfo user = this.mUserManager.createUser(this.mUserName, 0);
             if (user == null) {
-                Log.e(TAG, "Couldn't create user");
+                Log.m70e(TAG, "Couldn't create user");
                 finish();
                 return;
             }
-            this.mUserManager.setSeedAccountData(user.id, this.mAccountName, this.mAccountType, this.mAccountOptions);
+            this.mUserManager.setSeedAccountData(user.f30id, this.mAccountName, this.mAccountType, this.mAccountOptions);
             setResult(-1);
         }
         finish();

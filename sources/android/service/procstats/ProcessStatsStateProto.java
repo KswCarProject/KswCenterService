@@ -1,5 +1,6 @@
 package android.service.procstats;
 
+/* loaded from: classes3.dex */
 public final class ProcessStatsStateProto {
     public static final long DURATION_MS = 1112396529668L;
     public static final long MEMORY_STATE = 1159641169922L;

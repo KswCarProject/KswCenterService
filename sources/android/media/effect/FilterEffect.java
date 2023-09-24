@@ -2,8 +2,11 @@ package android.media.effect;
 
 import android.filterfw.core.FilterContext;
 import android.filterfw.core.Frame;
+import android.filterfw.core.FrameFormat;
+import android.filterfw.core.FrameManager;
 import android.filterfw.format.ImageFormat;
 
+/* loaded from: classes3.dex */
 public abstract class FilterEffect extends Effect {
     protected EffectContext mEffectContext;
     private String mName;
@@ -13,30 +16,29 @@ public abstract class FilterEffect extends Effect {
         this.mName = name;
     }
 
+    @Override // android.media.effect.Effect
     public String getName() {
         return this.mName;
     }
 
-    /* access modifiers changed from: protected */
-    public void beginGLEffect() {
+    protected void beginGLEffect() {
         this.mEffectContext.assertValidGLState();
         this.mEffectContext.saveGLState();
     }
 
-    /* access modifiers changed from: protected */
-    public void endGLEffect() {
+    protected void endGLEffect() {
         this.mEffectContext.restoreGLState();
     }
 
-    /* access modifiers changed from: protected */
-    public FilterContext getFilterContext() {
+    protected FilterContext getFilterContext() {
         return this.mEffectContext.mFilterContext;
     }
 
-    /* access modifiers changed from: protected */
-    public Frame frameFromTexture(int texId, int width, int height) {
-        Frame frame = getFilterContext().getFrameManager().newBoundFrame(ImageFormat.create(width, height, 3, 3), 100, (long) texId);
-        frame.setTimestamp(-1);
+    protected Frame frameFromTexture(int texId, int width, int height) {
+        FrameManager manager = getFilterContext().getFrameManager();
+        FrameFormat format = ImageFormat.create(width, height, 3, 3);
+        Frame frame = manager.newBoundFrame(format, 100, texId);
+        frame.setTimestamp(-1L);
         return frame;
     }
 }

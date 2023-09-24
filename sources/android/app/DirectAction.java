@@ -1,18 +1,23 @@
 package android.app;
 
 import android.content.LocusId;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.util.Preconditions;
 
+/* loaded from: classes.dex */
 public final class DirectAction implements Parcelable {
-    public static final Parcelable.Creator<DirectAction> CREATOR = new Parcelable.Creator<DirectAction>() {
+    public static final Parcelable.Creator<DirectAction> CREATOR = new Parcelable.Creator<DirectAction>() { // from class: android.app.DirectAction.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public DirectAction createFromParcel(Parcel in) {
             return new DirectAction(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public DirectAction[] newArray(int size) {
             return new DirectAction[size];
         }
@@ -72,6 +77,7 @@ public final class DirectAction implements Parcelable {
         return this.mLocusId;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -93,6 +99,7 @@ public final class DirectAction implements Parcelable {
         return this.mID.equals(((DirectAction) other).mID);
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mTaskId);
         dest.writeStrongBinder(this.mActivityId);
@@ -101,6 +108,7 @@ public final class DirectAction implements Parcelable {
         dest.writeString(this.mLocusId.getId());
     }
 
+    /* loaded from: classes.dex */
     public static final class Builder {
         private Bundle mExtras;
         private String mId;

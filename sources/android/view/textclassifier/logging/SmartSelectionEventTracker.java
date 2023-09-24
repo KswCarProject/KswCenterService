@@ -16,6 +16,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.Objects;
 import java.util.UUID;
 
+/* loaded from: classes4.dex */
 public final class SmartSelectionEventTracker {
     private static final String CUSTOM_EDITTEXT = "customedit";
     private static final String CUSTOM_TEXTVIEW = "customview";
@@ -44,18 +45,19 @@ public final class SmartSelectionEventTracker {
     private final Context mContext;
     private int mIndex;
     private long mLastEventTime;
-    private final MetricsLogger mMetricsLogger = new MetricsLogger();
+    private final MetricsLogger mMetricsLogger;
     private String mModelName;
     private int mOrigStart;
-    private final int[] mPrevIndices = new int[2];
+    private final int[] mPrevIndices;
     private String mSessionId;
     private long mSessionStartTime;
-    private final int[] mSmartIndices = new int[2];
+    private final int[] mSmartIndices;
     private boolean mSmartSelectionTriggered;
     private final int mWidgetType;
     private final String mWidgetVersion;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface WidgetType {
         public static final int CUSTOM_EDITTEXT = 7;
         public static final int CUSTOM_TEXTVIEW = 6;
@@ -70,12 +72,18 @@ public final class SmartSelectionEventTracker {
 
     @UnsupportedAppUsage
     public SmartSelectionEventTracker(Context context, int widgetType) {
+        this.mMetricsLogger = new MetricsLogger();
+        this.mSmartIndices = new int[2];
+        this.mPrevIndices = new int[2];
         this.mWidgetType = widgetType;
         this.mWidgetVersion = null;
         this.mContext = (Context) Preconditions.checkNotNull(context);
     }
 
     public SmartSelectionEventTracker(Context context, int widgetType, String widgetVersion) {
+        this.mMetricsLogger = new MetricsLogger();
+        this.mSmartIndices = new int[2];
+        this.mPrevIndices = new int[2];
         this.mWidgetType = widgetType;
         this.mWidgetVersion = widgetVersion;
         this.mContext = (Context) Preconditions.checkNotNull(context);
@@ -84,47 +92,40 @@ public final class SmartSelectionEventTracker {
     @UnsupportedAppUsage
     public void logEvent(SelectionEvent event) {
         Preconditions.checkNotNull(event);
-        boolean z = true;
-        if (event.mEventType == 1 || this.mSessionId != null) {
-            long now = System.currentTimeMillis();
-            switch (event.mEventType) {
-                case 1:
-                    this.mSessionId = startNewSession();
-                    if (event.mEnd != event.mStart + 1) {
-                        z = false;
-                    }
-                    Preconditions.checkArgument(z);
-                    this.mOrigStart = event.mStart;
-                    this.mSessionStartTime = now;
-                    break;
-                case 2:
-                case 5:
-                    if (this.mPrevIndices[0] == event.mStart && this.mPrevIndices[1] == event.mEnd) {
-                        return;
-                    }
-                case 3:
-                case 4:
-                    this.mSmartSelectionTriggered = true;
-                    this.mModelName = getModelName(event);
-                    this.mSmartIndices[0] = event.mStart;
-                    this.mSmartIndices[1] = event.mEnd;
-                    break;
-            }
-            writeEvent(event, now);
-            if (event.isTerminal()) {
-                endSession();
-                return;
-            }
+        if (event.mEventType != 1 && this.mSessionId == null) {
+            Log.m72d(LOG_TAG, "Selection session not yet started. Ignoring event");
             return;
         }
-        Log.d(LOG_TAG, "Selection session not yet started. Ignoring event");
+        long now = System.currentTimeMillis();
+        switch (event.mEventType) {
+            case 1:
+                this.mSessionId = startNewSession();
+                Preconditions.checkArgument(event.mEnd == event.mStart + 1);
+                this.mOrigStart = event.mStart;
+                this.mSessionStartTime = now;
+                break;
+            case 2:
+            case 5:
+                if (this.mPrevIndices[0] == event.mStart && this.mPrevIndices[1] == event.mEnd) {
+                    return;
+                }
+                break;
+            case 3:
+            case 4:
+                this.mSmartSelectionTriggered = true;
+                this.mModelName = getModelName(event);
+                this.mSmartIndices[0] = event.mStart;
+                this.mSmartIndices[1] = event.mEnd;
+                break;
+        }
+        writeEvent(event, now);
+        if (event.isTerminal()) {
+            endSession();
+        }
     }
 
     private void writeEvent(SelectionEvent event, long now) {
-        long prevEventDelta = 0;
-        if (this.mLastEventTime != 0) {
-            prevEventDelta = now - this.mLastEventTime;
-        }
+        long prevEventDelta = this.mLastEventTime != 0 ? now - this.mLastEventTime : 0L;
         LogMaker log = new LogMaker(1100).setType(getLogType(event)).setSubtype(1).setPackageName(this.mContext.getPackageName()).addTaggedData(1117, Long.valueOf(now - this.mSessionStartTime)).addTaggedData(1118, Long.valueOf(prevEventDelta)).addTaggedData(1120, Integer.valueOf(this.mIndex)).addTaggedData(1255, getWidgetTypeName()).addTaggedData(1262, this.mWidgetVersion).addTaggedData(1256, this.mModelName).addTaggedData(1254, event.mEntityType).addTaggedData(1252, Integer.valueOf(getSmartRangeDelta(this.mSmartIndices[0]))).addTaggedData(1253, Integer.valueOf(getSmartRangeDelta(this.mSmartIndices[1]))).addTaggedData(1250, Integer.valueOf(getRangeDelta(event.mStart))).addTaggedData(1251, Integer.valueOf(getRangeDelta(event.mEnd))).addTaggedData(1119, this.mSessionId);
         this.mMetricsLogger.write(log);
         debugLog(log);
@@ -149,16 +150,16 @@ public final class SmartSelectionEventTracker {
         this.mPrevIndices[1] = 0;
         iArr2[0] = 0;
         this.mIndex = 0;
-        this.mSessionStartTime = 0;
-        this.mLastEventTime = 0;
+        this.mSessionStartTime = 0L;
+        this.mLastEventTime = 0L;
         this.mSmartSelectionTriggered = false;
-        this.mModelName = getModelName((SelectionEvent) null);
+        this.mModelName = getModelName(null);
         this.mSessionId = null;
     }
 
     private static int getLogType(SelectionEvent event) {
-        int access$000 = event.mEventType;
-        switch (access$000) {
+        int i = event.mEventType;
+        switch (i) {
             case 1:
                 return 1101;
             case 2:
@@ -170,7 +171,7 @@ public final class SmartSelectionEventTracker {
             case 5:
                 return MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_AUTO;
             default:
-                switch (access$000) {
+                switch (i) {
                     case 100:
                         return MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_OVERTYPE;
                     case 101:
@@ -190,7 +191,7 @@ public final class SmartSelectionEventTracker {
                     case 108:
                         return MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_OTHER;
                     default:
-                        switch (access$000) {
+                        switch (i) {
                             case 200:
                                 return MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_SELECT_ALL;
                             case 201:
@@ -208,33 +209,33 @@ public final class SmartSelectionEventTracker {
                 return "SELECTION_STARTED";
             case 1102:
                 return "SELECTION_MODIFIED";
-            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_SELECT_ALL /*1103*/:
+            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_SELECT_ALL /* 1103 */:
                 return "SELECT_ALL";
-            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_RESET /*1104*/:
+            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_RESET /* 1104 */:
                 return "RESET";
-            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_SMART_SINGLE /*1105*/:
+            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_SMART_SINGLE /* 1105 */:
                 return "SMART_SELECTION_SINGLE";
-            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_SMART_MULTI /*1106*/:
+            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_SMART_MULTI /* 1106 */:
                 return "SMART_SELECTION_MULTI";
-            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_AUTO /*1107*/:
+            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_AUTO /* 1107 */:
                 return "AUTO_SELECTION";
-            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_OVERTYPE /*1108*/:
+            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_OVERTYPE /* 1108 */:
                 return "OVERTYPE";
-            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_COPY /*1109*/:
+            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_COPY /* 1109 */:
                 return "COPY";
-            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_PASTE /*1110*/:
+            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_PASTE /* 1110 */:
                 return "PASTE";
-            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_CUT /*1111*/:
+            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_CUT /* 1111 */:
                 return "CUT";
-            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_SHARE /*1112*/:
+            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_SHARE /* 1112 */:
                 return "SHARE";
-            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_SMART_SHARE /*1113*/:
+            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_SMART_SHARE /* 1113 */:
                 return "SMART_SHARE";
-            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_DRAG /*1114*/:
+            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_DRAG /* 1114 */:
                 return "DRAG";
-            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_ABANDON /*1115*/:
+            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_ABANDON /* 1115 */:
                 return "ABANDON";
-            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_OTHER /*1116*/:
+            case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_OTHER /* 1116 */:
                 return "OTHER";
             default:
                 return "unknown";
@@ -288,40 +289,41 @@ public final class SmartSelectionEventTracker {
 
     private static void debugLog(LogMaker log) {
         String widget;
-        LogMaker logMaker = log;
-        String widgetType = Objects.toString(logMaker.getTaggedData(1255), "unknown");
-        String widgetVersion = Objects.toString(logMaker.getTaggedData(1262), "");
+        String widgetType = Objects.toString(log.getTaggedData(1255), "unknown");
+        String widgetVersion = Objects.toString(log.getTaggedData(1262), "");
         if (widgetVersion.isEmpty()) {
             widget = widgetType;
         } else {
             widget = widgetType + NativeLibraryHelper.CLEAR_ABI_OVERRIDE + widgetVersion;
         }
-        int index = Integer.parseInt(Objects.toString(logMaker.getTaggedData(1120), "0"));
+        int index = Integer.parseInt(Objects.toString(log.getTaggedData(1120), "0"));
         if (log.getType() == 1101) {
-            String sessionId = Objects.toString(logMaker.getTaggedData(1119), "");
-            Log.d(LOG_TAG, String.format("New selection session: %s (%s)", new Object[]{widget, sessionId.substring(sessionId.lastIndexOf(NativeLibraryHelper.CLEAR_ABI_OVERRIDE) + 1)}));
+            String sessionId = Objects.toString(log.getTaggedData(1119), "");
+            Log.m72d(LOG_TAG, String.format("New selection session: %s (%s)", widget, sessionId.substring(sessionId.lastIndexOf(NativeLibraryHelper.CLEAR_ABI_OVERRIDE) + 1)));
         }
-        String model = Objects.toString(logMaker.getTaggedData(1256), "unknown");
-        String entity = Objects.toString(logMaker.getTaggedData(1254), "unknown");
-        Log.d(LOG_TAG, String.format("%2d: %s/%s, range=%d,%d - smart_range=%d,%d (%s/%s)", new Object[]{Integer.valueOf(index), getLogTypeString(log.getType()), entity, Integer.valueOf(Integer.parseInt(Objects.toString(logMaker.getTaggedData(1250), "0"))), Integer.valueOf(Integer.parseInt(Objects.toString(logMaker.getTaggedData(1251), "0"))), Integer.valueOf(Integer.parseInt(Objects.toString(logMaker.getTaggedData(1252), "0"))), Integer.valueOf(Integer.parseInt(Objects.toString(logMaker.getTaggedData(1253), "0"))), widget, model}));
+        String model = Objects.toString(log.getTaggedData(1256), "unknown");
+        String entity = Objects.toString(log.getTaggedData(1254), "unknown");
+        String type = getLogTypeString(log.getType());
+        int smartStart = Integer.parseInt(Objects.toString(log.getTaggedData(1252), "0"));
+        int smartEnd = Integer.parseInt(Objects.toString(log.getTaggedData(1253), "0"));
+        int eventStart = Integer.parseInt(Objects.toString(log.getTaggedData(1250), "0"));
+        int eventEnd = Integer.parseInt(Objects.toString(log.getTaggedData(1251), "0"));
+        Log.m72d(LOG_TAG, String.format("%2d: %s/%s, range=%d,%d - smart_range=%d,%d (%s/%s)", Integer.valueOf(index), type, entity, Integer.valueOf(eventStart), Integer.valueOf(eventEnd), Integer.valueOf(smartStart), Integer.valueOf(smartEnd), widget, model));
     }
 
+    /* loaded from: classes4.dex */
     public static final class SelectionEvent {
         private static final String NO_VERSION_TAG = "";
         public static final int OUT_OF_BOUNDS = Integer.MAX_VALUE;
         public static final int OUT_OF_BOUNDS_NEGATIVE = Integer.MIN_VALUE;
-        /* access modifiers changed from: private */
-        public final int mEnd;
-        /* access modifiers changed from: private */
-        public final String mEntityType;
-        /* access modifiers changed from: private */
-        public int mEventType;
-        /* access modifiers changed from: private */
-        public final int mStart;
-        /* access modifiers changed from: private */
-        public final String mVersionTag;
+        private final int mEnd;
+        private final String mEntityType;
+        private int mEventType;
+        private final int mStart;
+        private final String mVersionTag;
 
         @Retention(RetentionPolicy.SOURCE)
+        /* loaded from: classes4.dex */
         public @interface ActionType {
             public static final int ABANDON = 107;
             public static final int COPY = 101;
@@ -337,6 +339,7 @@ public final class SmartSelectionEventTracker {
         }
 
         @Retention(RetentionPolicy.SOURCE)
+        /* loaded from: classes4.dex */
         private @interface EventType {
             public static final int AUTO_SELECTION = 5;
             public static final int SELECTION_MODIFIED = 2;
@@ -366,33 +369,28 @@ public final class SmartSelectionEventTracker {
 
         @UnsupportedAppUsage
         public static SelectionEvent selectionModified(int start, int end, TextClassification classification) {
-            String entityType;
-            if (classification.getEntityCount() > 0) {
-                entityType = classification.getEntity(0);
-            } else {
-                entityType = "";
-            }
-            return new SelectionEvent(start, end, 2, entityType, getVersionInfo(classification.getId()));
+            String entityType = classification.getEntityCount() > 0 ? classification.getEntity(0) : "";
+            String versionTag = getVersionInfo(classification.getId());
+            return new SelectionEvent(start, end, 2, entityType, versionTag);
         }
 
         @UnsupportedAppUsage
         public static SelectionEvent selectionModified(int start, int end, TextSelection selection) {
             int i;
-            String entityType;
-            if (!getSourceClassifier(selection.getId()).equals(TextClassifier.DEFAULT_LOG_TAG)) {
-                i = 5;
-            } else if (end - start > 1) {
-                i = 4;
+            boolean smartSelection = getSourceClassifier(selection.getId()).equals(TextClassifier.DEFAULT_LOG_TAG);
+            if (smartSelection) {
+                if (end - start > 1) {
+                    i = 4;
+                } else {
+                    i = 3;
+                }
             } else {
-                i = 3;
+                i = 5;
             }
             int eventType = i;
-            if (selection.getEntityCount() > 0) {
-                entityType = selection.getEntity(0);
-            } else {
-                entityType = "";
-            }
-            return new SelectionEvent(start, end, eventType, entityType, getVersionInfo(selection.getId()));
+            String entityType = selection.getEntityCount() > 0 ? selection.getEntity(0) : "";
+            String versionTag = getVersionInfo(selection.getId());
+            return new SelectionEvent(start, end, eventType, entityType, versionTag);
         }
 
         @UnsupportedAppUsage
@@ -402,22 +400,18 @@ public final class SmartSelectionEventTracker {
 
         @UnsupportedAppUsage
         public static SelectionEvent selectionAction(int start, int end, int actionType, TextClassification classification) {
-            String entityType;
-            if (classification.getEntityCount() > 0) {
-                entityType = classification.getEntity(0);
-            } else {
-                entityType = "";
-            }
-            return new SelectionEvent(start, end, actionType, entityType, getVersionInfo(classification.getId()));
+            String entityType = classification.getEntityCount() > 0 ? classification.getEntity(0) : "";
+            String versionTag = getVersionInfo(classification.getId());
+            return new SelectionEvent(start, end, actionType, entityType, versionTag);
         }
 
         private static String getVersionInfo(String signature) {
             int start = signature.indexOf("|");
             int end = signature.indexOf("|", start);
-            if (start < 0 || end < start) {
-                return "";
+            if (start >= 0 && end >= start) {
+                return signature.substring(start, end);
             }
-            return signature.substring(start, end);
+            return "";
         }
 
         private static String getSourceClassifier(String signature) {
@@ -428,7 +422,7 @@ public final class SmartSelectionEventTracker {
             return "";
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public boolean isTerminal() {
             switch (this.mEventType) {
                 case 100:

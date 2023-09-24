@@ -5,10 +5,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+/* loaded from: classes4.dex */
 public class ExtensionRegistryLite {
-    private static final ExtensionRegistryLite EMPTY = new ExtensionRegistryLite(true);
-    private static volatile boolean eagerlyParseMessageSets = false;
     private final Map<ObjectIntPair, GeneratedMessageLite.GeneratedExtension<?, ?>> extensionsByNumber;
+    private static volatile boolean eagerlyParseMessageSets = false;
+    private static final ExtensionRegistryLite EMPTY = new ExtensionRegistryLite(true);
 
     public static boolean isEagerlyParseMessageSets() {
         return eagerlyParseMessageSets;
@@ -31,7 +32,7 @@ public class ExtensionRegistryLite {
     }
 
     public <ContainingType extends MessageLite> GeneratedMessageLite.GeneratedExtension<ContainingType, ?> findLiteExtensionByNumber(ContainingType containingTypeDefaultInstance, int fieldNumber) {
-        return this.extensionsByNumber.get(new ObjectIntPair(containingTypeDefaultInstance, fieldNumber));
+        return (GeneratedMessageLite.GeneratedExtension<ContainingType, ?>) this.extensionsByNumber.get(new ObjectIntPair(containingTypeDefaultInstance, fieldNumber));
     }
 
     public final void add(GeneratedMessageLite.GeneratedExtension<?, ?> extension) {
@@ -54,13 +55,14 @@ public class ExtensionRegistryLite {
         this.extensionsByNumber = Collections.emptyMap();
     }
 
+    /* loaded from: classes4.dex */
     private static final class ObjectIntPair {
         private final int number;
         private final Object object;
 
-        ObjectIntPair(Object object2, int number2) {
-            this.object = object2;
-            this.number = number2;
+        ObjectIntPair(Object object, int number) {
+            this.object = object;
+            this.number = number;
         }
 
         public int hashCode() {
@@ -68,12 +70,9 @@ public class ExtensionRegistryLite {
         }
 
         public boolean equals(Object obj) {
-            if (!(obj instanceof ObjectIntPair)) {
-                return false;
-            }
-            ObjectIntPair other = (ObjectIntPair) obj;
-            if (this.object == other.object && this.number == other.number) {
-                return true;
+            if (obj instanceof ObjectIntPair) {
+                ObjectIntPair other = (ObjectIntPair) obj;
+                return this.object == other.object && this.number == other.number;
             }
             return false;
         }

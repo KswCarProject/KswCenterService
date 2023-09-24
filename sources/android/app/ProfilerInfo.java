@@ -1,19 +1,24 @@
 package android.app;
 
-import android.os.Parcel;
-import android.os.ParcelFileDescriptor;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.ParcelFileDescriptor;
+import android.p007os.Parcelable;
 import android.util.Slog;
 import android.util.proto.ProtoOutputStream;
 import java.io.IOException;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public class ProfilerInfo implements Parcelable {
-    public static final Parcelable.Creator<ProfilerInfo> CREATOR = new Parcelable.Creator<ProfilerInfo>() {
+    public static final Parcelable.Creator<ProfilerInfo> CREATOR = new Parcelable.Creator<ProfilerInfo>() { // from class: android.app.ProfilerInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ProfilerInfo createFromParcel(Parcel in) {
             return new ProfilerInfo(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ProfilerInfo[] newArray(int size) {
             return new ProfilerInfo[size];
         }
@@ -27,14 +32,14 @@ public class ProfilerInfo implements Parcelable {
     public final int samplingInterval;
     public final boolean streamingOutput;
 
-    public ProfilerInfo(String filename, ParcelFileDescriptor fd, int interval, boolean autoStop, boolean streaming, String agent2, boolean attachAgentDuringBind2) {
+    public ProfilerInfo(String filename, ParcelFileDescriptor fd, int interval, boolean autoStop, boolean streaming, String agent, boolean attachAgentDuringBind) {
         this.profileFile = filename;
         this.profileFd = fd;
         this.samplingInterval = interval;
         this.autoStopProfiler = autoStop;
         this.streamingOutput = streaming;
-        this.agent = agent2;
-        this.attachAgentDuringBind = attachAgentDuringBind2;
+        this.agent = agent;
+        this.attachAgentDuringBind = attachAgentDuringBind;
     }
 
     public ProfilerInfo(ProfilerInfo in) {
@@ -47,8 +52,8 @@ public class ProfilerInfo implements Parcelable {
         this.attachAgentDuringBind = in.attachAgentDuringBind;
     }
 
-    public ProfilerInfo setAgent(String agent2, boolean attachAgentDuringBind2) {
-        return new ProfilerInfo(this.profileFile, this.profileFd, this.samplingInterval, this.autoStopProfiler, this.streamingOutput, agent2, attachAgentDuringBind2);
+    public ProfilerInfo setAgent(String agent, boolean attachAgentDuringBind) {
+        return new ProfilerInfo(this.profileFile, this.profileFd, this.samplingInterval, this.autoStopProfiler, this.streamingOutput, agent, attachAgentDuringBind);
     }
 
     public void closeFd() {
@@ -56,12 +61,13 @@ public class ProfilerInfo implements Parcelable {
             try {
                 this.profileFd.close();
             } catch (IOException e) {
-                Slog.w(TAG, "Failure closing profile fd", e);
+                Slog.m49w(TAG, "Failure closing profile fd", e);
             }
             this.profileFd = null;
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         if (this.profileFd != null) {
             return this.profileFd.describeContents();
@@ -69,6 +75,7 @@ public class ProfilerInfo implements Parcelable {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(this.profileFile);
         if (this.profileFd != null) {
@@ -101,9 +108,8 @@ public class ProfilerInfo implements Parcelable {
         this.profileFile = in.readString();
         this.profileFd = in.readInt() != 0 ? ParcelFileDescriptor.CREATOR.createFromParcel(in) : null;
         this.samplingInterval = in.readInt();
-        boolean z = false;
         this.autoStopProfiler = in.readInt() != 0;
-        this.streamingOutput = in.readInt() != 0 ? true : z;
+        this.streamingOutput = in.readInt() != 0;
         this.agent = in.readString();
         this.attachAgentDuringBind = in.readBoolean();
     }
@@ -123,6 +129,7 @@ public class ProfilerInfo implements Parcelable {
     }
 
     public int hashCode() {
-        return (((((((((17 * 31) + Objects.hashCode(this.profileFile)) * 31) + this.samplingInterval) * 31) + (this.autoStopProfiler ? 1 : 0)) * 31) + (this.streamingOutput ? 1 : 0)) * 31) + Objects.hashCode(this.agent);
+        int result = (17 * 31) + Objects.hashCode(this.profileFile);
+        return (((((((result * 31) + this.samplingInterval) * 31) + (this.autoStopProfiler ? 1 : 0)) * 31) + (this.streamingOutput ? 1 : 0)) * 31) + Objects.hashCode(this.agent);
     }
 }

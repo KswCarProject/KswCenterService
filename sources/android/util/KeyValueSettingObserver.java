@@ -3,13 +3,13 @@ package android.util;
 import android.content.ContentResolver;
 import android.database.ContentObserver;
 import android.net.Uri;
-import android.os.Handler;
+import android.p007os.Handler;
 
+/* loaded from: classes4.dex */
 public abstract class KeyValueSettingObserver {
     private static final String TAG = "KeyValueSettingObserver";
     private final ContentObserver mObserver;
-    /* access modifiers changed from: private */
-    public final KeyValueListParser mParser = new KeyValueListParser(',');
+    private final KeyValueListParser mParser = new KeyValueListParser(',');
     private final ContentResolver mResolver;
     private final Uri mSettingUri;
 
@@ -33,21 +33,23 @@ public abstract class KeyValueSettingObserver {
         this.mResolver.unregisterContentObserver(this.mObserver);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void setParserValue() {
         String setting = getSettingValue(this.mResolver);
         try {
             this.mParser.setString(setting);
         } catch (IllegalArgumentException e) {
-            Slog.e(TAG, "Malformed setting: " + setting);
+            Slog.m56e(TAG, "Malformed setting: " + setting);
         }
     }
 
+    /* loaded from: classes4.dex */
     private class SettingObserver extends ContentObserver {
         private SettingObserver(Handler handler) {
             super(handler);
         }
 
+        @Override // android.database.ContentObserver
         public void onChange(boolean selfChange) {
             KeyValueSettingObserver.this.setParserValue();
             KeyValueSettingObserver.this.update(KeyValueSettingObserver.this.mParser);

@@ -1,16 +1,17 @@
 package android.media.session;
 
-import android.content.pm.ParceledListSlice;
+import android.content.p002pm.ParceledListSlice;
 import android.media.MediaMetadata;
 import android.media.session.MediaController;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.text.TextUtils;
 
+/* loaded from: classes3.dex */
 public interface ISessionControllerCallback extends IInterface {
     void onEvent(String str, Bundle bundle) throws RemoteException;
 
@@ -28,36 +29,47 @@ public interface ISessionControllerCallback extends IInterface {
 
     void onVolumeInfoChanged(MediaController.PlaybackInfo playbackInfo) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements ISessionControllerCallback {
+        @Override // android.media.session.ISessionControllerCallback
         public void onEvent(String event, Bundle extras) throws RemoteException {
         }
 
+        @Override // android.media.session.ISessionControllerCallback
         public void onSessionDestroyed() throws RemoteException {
         }
 
+        @Override // android.media.session.ISessionControllerCallback
         public void onPlaybackStateChanged(PlaybackState state) throws RemoteException {
         }
 
+        @Override // android.media.session.ISessionControllerCallback
         public void onMetadataChanged(MediaMetadata metadata) throws RemoteException {
         }
 
+        @Override // android.media.session.ISessionControllerCallback
         public void onQueueChanged(ParceledListSlice queue) throws RemoteException {
         }
 
+        @Override // android.media.session.ISessionControllerCallback
         public void onQueueTitleChanged(CharSequence title) throws RemoteException {
         }
 
+        @Override // android.media.session.ISessionControllerCallback
         public void onExtrasChanged(Bundle extras) throws RemoteException {
         }
 
+        @Override // android.media.session.ISessionControllerCallback
         public void onVolumeInfoChanged(MediaController.PlaybackInfo info) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements ISessionControllerCallback {
         private static final String DESCRIPTOR = "android.media.session.ISessionControllerCallback";
         static final int TRANSACTION_onEvent = 1;
@@ -78,12 +90,13 @@ public interface ISessionControllerCallback extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof ISessionControllerCallback)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof ISessionControllerCallback)) {
+                return (ISessionControllerCallback) iin;
             }
-            return (ISessionControllerCallback) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -111,145 +124,64 @@ public interface ISessionControllerCallback extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v2, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v6, resolved type: android.media.session.PlaybackState} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v10, resolved type: android.media.MediaMetadata} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v14, resolved type: android.content.pm.ParceledListSlice} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v22, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v26, resolved type: android.media.session.MediaController$PlaybackInfo} */
-        /* JADX WARNING: type inference failed for: r1v1 */
-        /* JADX WARNING: type inference failed for: r1v18, types: [java.lang.CharSequence] */
-        /* JADX WARNING: type inference failed for: r1v31 */
-        /* JADX WARNING: type inference failed for: r1v32 */
-        /* JADX WARNING: type inference failed for: r1v33 */
-        /* JADX WARNING: type inference failed for: r1v34 */
-        /* JADX WARNING: type inference failed for: r1v35 */
-        /* JADX WARNING: type inference failed for: r1v36 */
-        /* JADX WARNING: type inference failed for: r1v37 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r6, android.os.Parcel r7, android.os.Parcel r8, int r9) throws android.os.RemoteException {
-            /*
-                r5 = this;
-                java.lang.String r0 = "android.media.session.ISessionControllerCallback"
-                r1 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r2 = 1
-                if (r6 == r1) goto L_0x00bd
-                r1 = 0
-                switch(r6) {
-                    case 1: goto L_0x00a2;
-                    case 2: goto L_0x009b;
-                    case 3: goto L_0x0084;
-                    case 4: goto L_0x006d;
-                    case 5: goto L_0x0056;
-                    case 6: goto L_0x003f;
-                    case 7: goto L_0x0028;
-                    case 8: goto L_0x0011;
-                    default: goto L_0x000c;
-                }
-            L_0x000c:
-                boolean r1 = super.onTransact(r6, r7, r8, r9)
-                return r1
-            L_0x0011:
-                r7.enforceInterface(r0)
-                int r3 = r7.readInt()
-                if (r3 == 0) goto L_0x0023
-                android.os.Parcelable$Creator<android.media.session.MediaController$PlaybackInfo> r1 = android.media.session.MediaController.PlaybackInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r7)
-                android.media.session.MediaController$PlaybackInfo r1 = (android.media.session.MediaController.PlaybackInfo) r1
-                goto L_0x0024
-            L_0x0023:
-            L_0x0024:
-                r5.onVolumeInfoChanged(r1)
-                return r2
-            L_0x0028:
-                r7.enforceInterface(r0)
-                int r3 = r7.readInt()
-                if (r3 == 0) goto L_0x003a
-                android.os.Parcelable$Creator<android.os.Bundle> r1 = android.os.Bundle.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r7)
-                android.os.Bundle r1 = (android.os.Bundle) r1
-                goto L_0x003b
-            L_0x003a:
-            L_0x003b:
-                r5.onExtrasChanged(r1)
-                return r2
-            L_0x003f:
-                r7.enforceInterface(r0)
-                int r3 = r7.readInt()
-                if (r3 == 0) goto L_0x0051
-                android.os.Parcelable$Creator<java.lang.CharSequence> r1 = android.text.TextUtils.CHAR_SEQUENCE_CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r7)
-                java.lang.CharSequence r1 = (java.lang.CharSequence) r1
-                goto L_0x0052
-            L_0x0051:
-            L_0x0052:
-                r5.onQueueTitleChanged(r1)
-                return r2
-            L_0x0056:
-                r7.enforceInterface(r0)
-                int r3 = r7.readInt()
-                if (r3 == 0) goto L_0x0068
-                android.os.Parcelable$ClassLoaderCreator<android.content.pm.ParceledListSlice> r1 = android.content.pm.ParceledListSlice.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r7)
-                android.content.pm.ParceledListSlice r1 = (android.content.pm.ParceledListSlice) r1
-                goto L_0x0069
-            L_0x0068:
-            L_0x0069:
-                r5.onQueueChanged(r1)
-                return r2
-            L_0x006d:
-                r7.enforceInterface(r0)
-                int r3 = r7.readInt()
-                if (r3 == 0) goto L_0x007f
-                android.os.Parcelable$Creator<android.media.MediaMetadata> r1 = android.media.MediaMetadata.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r7)
-                android.media.MediaMetadata r1 = (android.media.MediaMetadata) r1
-                goto L_0x0080
-            L_0x007f:
-            L_0x0080:
-                r5.onMetadataChanged(r1)
-                return r2
-            L_0x0084:
-                r7.enforceInterface(r0)
-                int r3 = r7.readInt()
-                if (r3 == 0) goto L_0x0096
-                android.os.Parcelable$Creator<android.media.session.PlaybackState> r1 = android.media.session.PlaybackState.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r7)
-                android.media.session.PlaybackState r1 = (android.media.session.PlaybackState) r1
-                goto L_0x0097
-            L_0x0096:
-            L_0x0097:
-                r5.onPlaybackStateChanged(r1)
-                return r2
-            L_0x009b:
-                r7.enforceInterface(r0)
-                r5.onSessionDestroyed()
-                return r2
-            L_0x00a2:
-                r7.enforceInterface(r0)
-                java.lang.String r3 = r7.readString()
-                int r4 = r7.readInt()
-                if (r4 == 0) goto L_0x00b8
-                android.os.Parcelable$Creator<android.os.Bundle> r1 = android.os.Bundle.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r7)
-                android.os.Bundle r1 = (android.os.Bundle) r1
-                goto L_0x00b9
-            L_0x00b8:
-            L_0x00b9:
-                r5.onEvent(r3, r1)
-                return r2
-            L_0x00bd:
-                r8.writeString(r0)
-                return r2
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.media.session.ISessionControllerCallback.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0 = data.readString();
+                    Bundle _arg1 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    onEvent(_arg0, _arg1);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    onSessionDestroyed();
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    PlaybackState _arg02 = data.readInt() != 0 ? PlaybackState.CREATOR.createFromParcel(data) : null;
+                    onPlaybackStateChanged(_arg02);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    MediaMetadata _arg03 = data.readInt() != 0 ? MediaMetadata.CREATOR.createFromParcel(data) : null;
+                    onMetadataChanged(_arg03);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    ParceledListSlice _arg04 = data.readInt() != 0 ? ParceledListSlice.CREATOR.createFromParcel(data) : null;
+                    onQueueChanged(_arg04);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    CharSequence _arg05 = data.readInt() != 0 ? TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(data) : null;
+                    onQueueTitleChanged(_arg05);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    Bundle _arg06 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    onExtrasChanged(_arg06);
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    MediaController.PlaybackInfo _arg07 = data.readInt() != 0 ? MediaController.PlaybackInfo.CREATOR.createFromParcel(data) : null;
+                    onVolumeInfoChanged(_arg07);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements ISessionControllerCallback {
             public static ISessionControllerCallback sDefaultImpl;
             private IBinder mRemote;
@@ -258,6 +190,7 @@ public interface ISessionControllerCallback extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -266,6 +199,7 @@ public interface ISessionControllerCallback extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.media.session.ISessionControllerCallback
             public void onEvent(String event, Bundle extras) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -277,9 +211,8 @@ public interface ISessionControllerCallback extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onEvent(event, extras);
                     }
                 } finally {
@@ -287,13 +220,13 @@ public interface ISessionControllerCallback extends IInterface {
                 }
             }
 
+            @Override // android.media.session.ISessionControllerCallback
             public void onSessionDestroyed() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onSessionDestroyed();
                     }
                 } finally {
@@ -301,6 +234,7 @@ public interface ISessionControllerCallback extends IInterface {
                 }
             }
 
+            @Override // android.media.session.ISessionControllerCallback
             public void onPlaybackStateChanged(PlaybackState state) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -311,9 +245,8 @@ public interface ISessionControllerCallback extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onPlaybackStateChanged(state);
                     }
                 } finally {
@@ -321,6 +254,7 @@ public interface ISessionControllerCallback extends IInterface {
                 }
             }
 
+            @Override // android.media.session.ISessionControllerCallback
             public void onMetadataChanged(MediaMetadata metadata) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -331,9 +265,8 @@ public interface ISessionControllerCallback extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onMetadataChanged(metadata);
                     }
                 } finally {
@@ -341,6 +274,7 @@ public interface ISessionControllerCallback extends IInterface {
                 }
             }
 
+            @Override // android.media.session.ISessionControllerCallback
             public void onQueueChanged(ParceledListSlice queue) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -351,9 +285,8 @@ public interface ISessionControllerCallback extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(5, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onQueueChanged(queue);
                     }
                 } finally {
@@ -361,6 +294,7 @@ public interface ISessionControllerCallback extends IInterface {
                 }
             }
 
+            @Override // android.media.session.ISessionControllerCallback
             public void onQueueTitleChanged(CharSequence title) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -371,9 +305,8 @@ public interface ISessionControllerCallback extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(6, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(6, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onQueueTitleChanged(title);
                     }
                 } finally {
@@ -381,6 +314,7 @@ public interface ISessionControllerCallback extends IInterface {
                 }
             }
 
+            @Override // android.media.session.ISessionControllerCallback
             public void onExtrasChanged(Bundle extras) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -391,9 +325,8 @@ public interface ISessionControllerCallback extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(7, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(7, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onExtrasChanged(extras);
                     }
                 } finally {
@@ -401,6 +334,7 @@ public interface ISessionControllerCallback extends IInterface {
                 }
             }
 
+            @Override // android.media.session.ISessionControllerCallback
             public void onVolumeInfoChanged(MediaController.PlaybackInfo info) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -411,9 +345,8 @@ public interface ISessionControllerCallback extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(8, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(8, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onVolumeInfoChanged(info);
                     }
                 } finally {
@@ -423,11 +356,11 @@ public interface ISessionControllerCallback extends IInterface {
         }
 
         public static boolean setDefaultImpl(ISessionControllerCallback impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static ISessionControllerCallback getDefaultImpl() {

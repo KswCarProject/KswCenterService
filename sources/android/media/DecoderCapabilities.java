@@ -4,12 +4,15 @@ import android.annotation.UnsupportedAppUsage;
 import java.util.ArrayList;
 import java.util.List;
 
+/* loaded from: classes3.dex */
 public class DecoderCapabilities {
 
+    /* loaded from: classes3.dex */
     public enum AudioDecoder {
         AUDIO_DECODER_WMA
     }
 
+    /* loaded from: classes3.dex */
     public enum VideoDecoder {
         VIDEO_DECODER_WMV
     }

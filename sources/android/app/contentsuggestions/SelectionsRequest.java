@@ -2,17 +2,22 @@ package android.app.contentsuggestions;
 
 import android.annotation.SystemApi;
 import android.graphics.Point;
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class SelectionsRequest implements Parcelable {
-    public static final Parcelable.Creator<SelectionsRequest> CREATOR = new Parcelable.Creator<SelectionsRequest>() {
+    public static final Parcelable.Creator<SelectionsRequest> CREATOR = new Parcelable.Creator<SelectionsRequest>() { // from class: android.app.contentsuggestions.SelectionsRequest.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SelectionsRequest createFromParcel(Parcel source) {
             return new SelectionsRequest(source.readInt(), (Point) source.readTypedObject(Point.CREATOR), source.readBundle());
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SelectionsRequest[] newArray(int size) {
             return new SelectionsRequest[size];
         }
@@ -39,10 +44,12 @@ public final class SelectionsRequest implements Parcelable {
         return this.mExtras == null ? new Bundle() : this.mExtras;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mTaskId);
         dest.writeTypedObject(this.mInterestPoint, flags);
@@ -50,6 +57,7 @@ public final class SelectionsRequest implements Parcelable {
     }
 
     @SystemApi
+    /* loaded from: classes.dex */
     public static final class Builder {
         private Bundle mExtras;
         private Point mInterestPoint;

@@ -1,19 +1,24 @@
 package android.view.autofill;
 
-import android.os.Looper;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Looper;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
 import com.android.internal.util.Preconditions;
 import java.util.Objects;
 
+/* loaded from: classes4.dex */
 public final class AutofillValue implements Parcelable {
-    public static final Parcelable.Creator<AutofillValue> CREATOR = new Parcelable.Creator<AutofillValue>() {
+    public static final Parcelable.Creator<AutofillValue> CREATOR = new Parcelable.Creator<AutofillValue>() { // from class: android.view.autofill.AutofillValue.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AutofillValue createFromParcel(Parcel source) {
             return new AutofillValue(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AutofillValue[] newArray(int size) {
             return new AutofillValue[size];
         }
@@ -93,26 +98,28 @@ public final class AutofillValue implements Parcelable {
     }
 
     public String toString() {
-        if (!Helper.sDebug) {
-            return super.toString();
+        if (Helper.sDebug) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("[type=");
+            sb.append(this.mType);
+            StringBuilder string = sb.append(", value=");
+            if (isText()) {
+                Helper.appendRedacted(string, (CharSequence) this.mValue);
+            } else {
+                string.append(this.mValue);
+            }
+            string.append(']');
+            return string.toString();
         }
-        StringBuilder sb = new StringBuilder();
-        sb.append("[type=");
-        sb.append(this.mType);
-        StringBuilder string = sb.append(", value=");
-        if (isText()) {
-            Helper.appendRedacted(string, (CharSequence) this.mValue);
-        } else {
-            string.append(this.mValue);
-        }
-        string.append(']');
-        return string.toString();
+        return super.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeInt(this.mType);
         switch (this.mType) {
@@ -140,7 +147,8 @@ public final class AutofillValue implements Parcelable {
                 this.mValue = parcel.readCharSequence();
                 return;
             case 2:
-                this.mValue = Boolean.valueOf(parcel.readInt() != 0);
+                int rawValue = parcel.readInt();
+                this.mValue = Boolean.valueOf(rawValue != 0);
                 return;
             case 3:
                 this.mValue = Integer.valueOf(parcel.readInt());
@@ -155,23 +163,23 @@ public final class AutofillValue implements Parcelable {
 
     public static AutofillValue forText(CharSequence value) {
         if (Helper.sVerbose && !Looper.getMainLooper().isCurrentThread()) {
-            Log.v(TAG, "forText() not called on main thread: " + Thread.currentThread());
+            Log.m66v(TAG, "forText() not called on main thread: " + Thread.currentThread());
         }
         if (value == null) {
             return null;
         }
-        return new AutofillValue(1, (Object) TextUtils.trimNoCopySpans(value));
+        return new AutofillValue(1, TextUtils.trimNoCopySpans(value));
     }
 
     public static AutofillValue forToggle(boolean value) {
-        return new AutofillValue(2, (Object) Boolean.valueOf(value));
+        return new AutofillValue(2, Boolean.valueOf(value));
     }
 
     public static AutofillValue forList(int value) {
-        return new AutofillValue(3, (Object) Integer.valueOf(value));
+        return new AutofillValue(3, Integer.valueOf(value));
     }
 
     public static AutofillValue forDate(long value) {
-        return new AutofillValue(4, (Object) Long.valueOf(value));
+        return new AutofillValue(4, Long.valueOf(value));
     }
 }

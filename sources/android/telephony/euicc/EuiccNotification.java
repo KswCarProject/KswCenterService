@@ -1,21 +1,26 @@
 package android.telephony.euicc;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Arrays;
 import java.util.Objects;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class EuiccNotification implements Parcelable {
     public static final int ALL_EVENTS = 15;
-    public static final Parcelable.Creator<EuiccNotification> CREATOR = new Parcelable.Creator<EuiccNotification>() {
+    public static final Parcelable.Creator<EuiccNotification> CREATOR = new Parcelable.Creator<EuiccNotification>() { // from class: android.telephony.euicc.EuiccNotification.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public EuiccNotification createFromParcel(Parcel source) {
             return new EuiccNotification(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public EuiccNotification[] newArray(int size) {
             return new EuiccNotification[size];
         }
@@ -30,6 +35,7 @@ public final class EuiccNotification implements Parcelable {
     private final String mTargetAddr;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface Event {
     }
 
@@ -64,14 +70,15 @@ public final class EuiccNotification implements Parcelable {
             return false;
         }
         EuiccNotification that = (EuiccNotification) obj;
-        if (this.mSeq != that.mSeq || !Objects.equals(this.mTargetAddr, that.mTargetAddr) || this.mEvent != that.mEvent || !Arrays.equals(this.mData, that.mData)) {
-            return false;
+        if (this.mSeq == that.mSeq && Objects.equals(this.mTargetAddr, that.mTargetAddr) && this.mEvent == that.mEvent && Arrays.equals(this.mData, that.mData)) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        return (((((((1 * 31) + this.mSeq) * 31) + Objects.hashCode(this.mTargetAddr)) * 31) + this.mEvent) * 31) + Arrays.hashCode(this.mData);
+        int result = (1 * 31) + this.mSeq;
+        return (((((result * 31) + Objects.hashCode(this.mTargetAddr)) * 31) + this.mEvent) * 31) + Arrays.hashCode(this.mData);
     }
 
     public String toString() {
@@ -94,10 +101,12 @@ public final class EuiccNotification implements Parcelable {
         return sb.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mSeq);
         dest.writeString(this.mTargetAddr);

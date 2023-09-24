@@ -1,19 +1,24 @@
 package android.telecom;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes3.dex */
 public class VideoProfile implements Parcelable {
-    public static final Parcelable.Creator<VideoProfile> CREATOR = new Parcelable.Creator<VideoProfile>() {
+    public static final Parcelable.Creator<VideoProfile> CREATOR = new Parcelable.Creator<VideoProfile>() { // from class: android.telecom.VideoProfile.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public VideoProfile createFromParcel(Parcel source) {
             int state = source.readInt();
             int quality = source.readInt();
-            ClassLoader classLoader = VideoProfile.class.getClassLoader();
+            VideoProfile.class.getClassLoader();
             return new VideoProfile(state, quality);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public VideoProfile[] newArray(int size) {
             return new VideoProfile[size];
         }
@@ -32,10 +37,12 @@ public class VideoProfile implements Parcelable {
     private final int mVideoState;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface VideoQuality {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface VideoState {
     }
 
@@ -56,10 +63,12 @@ public class VideoProfile implements Parcelable {
         return this.mQuality;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mVideoState);
         dest.writeInt(this.mQuality);
@@ -89,17 +98,11 @@ public class VideoProfile implements Parcelable {
     }
 
     public static boolean isAudioOnly(int videoState) {
-        if (hasState(videoState, 1) || hasState(videoState, 2)) {
-            return false;
-        }
-        return true;
+        return (hasState(videoState, 1) || hasState(videoState, 2)) ? false : true;
     }
 
     public static boolean isVideo(int videoState) {
-        if (hasState(videoState, 1) || hasState(videoState, 2) || hasState(videoState, 3)) {
-            return true;
-        }
-        return false;
+        return hasState(videoState, 1) || hasState(videoState, 2) || hasState(videoState, 3);
     }
 
     public static boolean isTransmissionEnabled(int videoState) {
@@ -122,12 +125,21 @@ public class VideoProfile implements Parcelable {
         return (videoState & state) == state;
     }
 
+    /* loaded from: classes3.dex */
     public static final class CameraCapabilities implements Parcelable {
-        public static final Parcelable.Creator<CameraCapabilities> CREATOR = new Parcelable.Creator<CameraCapabilities>() {
+        public static final Parcelable.Creator<CameraCapabilities> CREATOR = new Parcelable.Creator<CameraCapabilities>() { // from class: android.telecom.VideoProfile.CameraCapabilities.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public CameraCapabilities createFromParcel(Parcel source) {
-                return new CameraCapabilities(source.readInt(), source.readInt(), source.readByte() != 0, source.readFloat());
+                int width = source.readInt();
+                int height = source.readInt();
+                boolean supportsZoom = source.readByte() != 0;
+                float maxZoom = source.readFloat();
+                return new CameraCapabilities(width, height, supportsZoom, maxZoom);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public CameraCapabilities[] newArray(int size) {
                 return new CameraCapabilities[size];
             }
@@ -148,14 +160,16 @@ public class VideoProfile implements Parcelable {
             this.mMaxZoom = maxZoom;
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeInt(getWidth());
             dest.writeInt(getHeight());
-            dest.writeByte(isZoomSupported() ? (byte) 1 : 0);
+            dest.writeByte(isZoomSupported() ? (byte) 1 : (byte) 0);
             dest.writeFloat(getMaxZoom());
         }
 

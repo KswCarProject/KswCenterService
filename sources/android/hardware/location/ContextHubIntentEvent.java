@@ -5,6 +5,7 @@ import android.content.Intent;
 import com.android.internal.util.Preconditions;
 
 @SystemApi
+/* loaded from: classes.dex */
 public class ContextHubIntentEvent {
     private final ContextHubInfo mContextHubInfo;
     private final int mEventType;
@@ -21,11 +22,11 @@ public class ContextHubIntentEvent {
     }
 
     private ContextHubIntentEvent(ContextHubInfo contextHubInfo, int eventType) {
-        this(contextHubInfo, eventType, -1, (NanoAppMessage) null, -1);
+        this(contextHubInfo, eventType, -1L, null, -1);
     }
 
     private ContextHubIntentEvent(ContextHubInfo contextHubInfo, int eventType, long nanoAppId) {
-        this(contextHubInfo, eventType, nanoAppId, (NanoAppMessage) null, -1);
+        this(contextHubInfo, eventType, nanoAppId, null, -1);
     }
 
     private ContextHubIntentEvent(ContextHubInfo contextHubInfo, int eventType, long nanoAppId, NanoAppMessage nanoAppMessage) {
@@ -33,42 +34,46 @@ public class ContextHubIntentEvent {
     }
 
     private ContextHubIntentEvent(ContextHubInfo contextHubInfo, int eventType, long nanoAppId, int nanoAppAbortCode) {
-        this(contextHubInfo, eventType, nanoAppId, (NanoAppMessage) null, nanoAppAbortCode);
+        this(contextHubInfo, eventType, nanoAppId, null, nanoAppAbortCode);
     }
 
     public static ContextHubIntentEvent fromIntent(Intent intent) {
         Preconditions.checkNotNull(intent, "Intent cannot be null");
         hasExtraOrThrow(intent, ContextHubManager.EXTRA_CONTEXT_HUB_INFO);
         ContextHubInfo info = (ContextHubInfo) intent.getParcelableExtra(ContextHubManager.EXTRA_CONTEXT_HUB_INFO);
-        if (info != null) {
-            int eventType = getIntExtraOrThrow(intent, ContextHubManager.EXTRA_EVENT_TYPE);
-            switch (eventType) {
-                case 0:
-                case 1:
-                case 2:
-                case 3:
-                case 4:
-                case 5:
-                    long nanoAppId = getLongExtraOrThrow(intent, ContextHubManager.EXTRA_NANOAPP_ID);
-                    if (eventType == 5) {
-                        hasExtraOrThrow(intent, ContextHubManager.EXTRA_MESSAGE);
-                        NanoAppMessage message = (NanoAppMessage) intent.getParcelableExtra(ContextHubManager.EXTRA_MESSAGE);
-                        if (message != null) {
-                            return new ContextHubIntentEvent(info, eventType, nanoAppId, message);
-                        }
-                        throw new IllegalArgumentException("NanoAppMessage extra was null");
-                    } else if (eventType == 4) {
-                        return new ContextHubIntentEvent(info, eventType, nanoAppId, getIntExtraOrThrow(intent, ContextHubManager.EXTRA_NANOAPP_ABORT_CODE));
-                    } else {
-                        return new ContextHubIntentEvent(info, eventType, nanoAppId);
-                    }
-                case 6:
-                    return new ContextHubIntentEvent(info, eventType);
-                default:
-                    throw new IllegalArgumentException("Unknown intent event type " + eventType);
-            }
-        } else {
+        if (info == null) {
             throw new IllegalArgumentException("ContextHubInfo extra was null");
+        }
+        int eventType = getIntExtraOrThrow(intent, ContextHubManager.EXTRA_EVENT_TYPE);
+        switch (eventType) {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+                long nanoAppId = getLongExtraOrThrow(intent, ContextHubManager.EXTRA_NANOAPP_ID);
+                if (eventType == 5) {
+                    hasExtraOrThrow(intent, ContextHubManager.EXTRA_MESSAGE);
+                    NanoAppMessage message = (NanoAppMessage) intent.getParcelableExtra(ContextHubManager.EXTRA_MESSAGE);
+                    if (message == null) {
+                        throw new IllegalArgumentException("NanoAppMessage extra was null");
+                    }
+                    ContextHubIntentEvent event = new ContextHubIntentEvent(info, eventType, nanoAppId, message);
+                    return event;
+                } else if (eventType == 4) {
+                    int nanoAppAbortCode = getIntExtraOrThrow(intent, ContextHubManager.EXTRA_NANOAPP_ABORT_CODE);
+                    ContextHubIntentEvent event2 = new ContextHubIntentEvent(info, eventType, nanoAppId, nanoAppAbortCode);
+                    return event2;
+                } else {
+                    ContextHubIntentEvent event3 = new ContextHubIntentEvent(info, eventType, nanoAppId);
+                    return event3;
+                }
+            case 6:
+                ContextHubIntentEvent event4 = new ContextHubIntentEvent(info, eventType);
+                return event4;
+            default:
+                throw new IllegalArgumentException("Unknown intent event type " + eventType);
         }
     }
 
@@ -81,24 +86,24 @@ public class ContextHubIntentEvent {
     }
 
     public long getNanoAppId() {
-        if (this.mEventType != 6) {
-            return this.mNanoAppId;
+        if (this.mEventType == 6) {
+            throw new UnsupportedOperationException("Cannot invoke getNanoAppId() on Context Hub reset event");
         }
-        throw new UnsupportedOperationException("Cannot invoke getNanoAppId() on Context Hub reset event");
+        return this.mNanoAppId;
     }
 
     public int getNanoAppAbortCode() {
-        if (this.mEventType == 4) {
-            return this.mNanoAppAbortCode;
+        if (this.mEventType != 4) {
+            throw new UnsupportedOperationException("Cannot invoke getNanoAppAbortCode() on non-abort event: " + this.mEventType);
         }
-        throw new UnsupportedOperationException("Cannot invoke getNanoAppAbortCode() on non-abort event: " + this.mEventType);
+        return this.mNanoAppAbortCode;
     }
 
     public NanoAppMessage getNanoAppMessage() {
-        if (this.mEventType == 5) {
-            return this.mNanoAppMessage;
+        if (this.mEventType != 5) {
+            throw new UnsupportedOperationException("Cannot invoke getNanoAppMessage() on non-message event: " + this.mEventType);
         }
-        throw new UnsupportedOperationException("Cannot invoke getNanoAppMessage() on non-message event: " + this.mEventType);
+        return this.mNanoAppMessage;
     }
 
     public String toString() {
@@ -160,6 +165,6 @@ public class ContextHubIntentEvent {
 
     private static long getLongExtraOrThrow(Intent intent, String extra) {
         hasExtraOrThrow(intent, extra);
-        return intent.getLongExtra(extra, -1);
+        return intent.getLongExtra(extra, -1L);
     }
 }

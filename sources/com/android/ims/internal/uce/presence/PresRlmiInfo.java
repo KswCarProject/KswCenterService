@@ -1,15 +1,20 @@
 package com.android.ims.internal.uce.presence;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes4.dex */
 public class PresRlmiInfo implements Parcelable {
-    public static final Parcelable.Creator<PresRlmiInfo> CREATOR = new Parcelable.Creator<PresRlmiInfo>() {
+    public static final Parcelable.Creator<PresRlmiInfo> CREATOR = new Parcelable.Creator<PresRlmiInfo>() { // from class: com.android.ims.internal.uce.presence.PresRlmiInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PresRlmiInfo createFromParcel(Parcel source) {
             return new PresRlmiInfo(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PresRlmiInfo[] newArray(int size) {
             return new PresRlmiInfo[size];
         }
@@ -101,10 +106,12 @@ public class PresRlmiInfo implements Parcelable {
         this.mListName = "";
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.mUri);
         dest.writeInt(this.mVersion);

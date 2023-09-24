@@ -1,13 +1,15 @@
 package android.net;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.net.INetworkPolicyListener;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.telephony.SubscriptionPlan;
 
+/* loaded from: classes3.dex */
 public interface INetworkPolicyManager extends IInterface {
     void addUidPolicy(int i, int i2) throws RemoteException;
 
@@ -62,90 +64,116 @@ public interface INetworkPolicyManager extends IInterface {
 
     void unregisterListener(INetworkPolicyListener iNetworkPolicyListener) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements INetworkPolicyManager {
+        @Override // android.net.INetworkPolicyManager
         public void setUidPolicy(int uid, int policy) throws RemoteException {
         }
 
+        @Override // android.net.INetworkPolicyManager
         public void addUidPolicy(int uid, int policy) throws RemoteException {
         }
 
+        @Override // android.net.INetworkPolicyManager
         public void removeUidPolicy(int uid, int policy) throws RemoteException {
         }
 
+        @Override // android.net.INetworkPolicyManager
         public int getUidPolicy(int uid) throws RemoteException {
             return 0;
         }
 
+        @Override // android.net.INetworkPolicyManager
         public int[] getUidsWithPolicy(int policy) throws RemoteException {
             return null;
         }
 
+        @Override // android.net.INetworkPolicyManager
         public void registerListener(INetworkPolicyListener listener) throws RemoteException {
         }
 
+        @Override // android.net.INetworkPolicyManager
         public void unregisterListener(INetworkPolicyListener listener) throws RemoteException {
         }
 
+        @Override // android.net.INetworkPolicyManager
         public void setNetworkPolicies(NetworkPolicy[] policies) throws RemoteException {
         }
 
+        @Override // android.net.INetworkPolicyManager
         public NetworkPolicy[] getNetworkPolicies(String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.net.INetworkPolicyManager
         public void snoozeLimit(NetworkTemplate template) throws RemoteException {
         }
 
+        @Override // android.net.INetworkPolicyManager
         public void setRestrictBackground(boolean restrictBackground) throws RemoteException {
         }
 
+        @Override // android.net.INetworkPolicyManager
         public boolean getRestrictBackground() throws RemoteException {
             return false;
         }
 
+        @Override // android.net.INetworkPolicyManager
         public void onTetheringChanged(String iface, boolean tethering) throws RemoteException {
         }
 
+        @Override // android.net.INetworkPolicyManager
         public int getRestrictBackgroundByCaller() throws RemoteException {
             return 0;
         }
 
+        @Override // android.net.INetworkPolicyManager
         public void setDeviceIdleMode(boolean enabled) throws RemoteException {
         }
 
+        @Override // android.net.INetworkPolicyManager
         public void setWifiMeteredOverride(String networkId, int meteredOverride) throws RemoteException {
         }
 
+        @Override // android.net.INetworkPolicyManager
         public NetworkQuotaInfo getNetworkQuotaInfo(NetworkState state) throws RemoteException {
             return null;
         }
 
+        @Override // android.net.INetworkPolicyManager
         public SubscriptionPlan[] getSubscriptionPlans(int subId, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.net.INetworkPolicyManager
         public void setSubscriptionPlans(int subId, SubscriptionPlan[] plans, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.net.INetworkPolicyManager
         public String getSubscriptionPlansOwner(int subId) throws RemoteException {
             return null;
         }
 
+        @Override // android.net.INetworkPolicyManager
         public void setSubscriptionOverride(int subId, int overrideMask, int overrideValue, long timeoutMillis, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.net.INetworkPolicyManager
         public void factoryReset(String subscriber) throws RemoteException {
         }
 
+        @Override // android.net.INetworkPolicyManager
         public boolean isUidNetworkingBlocked(int uid, boolean meteredNetwork) throws RemoteException {
             return false;
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements INetworkPolicyManager {
         private static final String DESCRIPTOR = "android.net.INetworkPolicyManager";
         static final int TRANSACTION_addUidPolicy = 2;
@@ -181,12 +209,13 @@ public interface INetworkPolicyManager extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof INetworkPolicyManager)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof INetworkPolicyManager)) {
+                return (INetworkPolicyManager) iin;
             }
-            return (INetworkPolicyManager) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -244,270 +273,184 @@ public interface INetworkPolicyManager extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v15, resolved type: android.net.NetworkTemplate} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v27, resolved type: android.net.NetworkState} */
-        /* JADX WARNING: type inference failed for: r0v1 */
-        /* JADX WARNING: type inference failed for: r0v38 */
-        /* JADX WARNING: type inference failed for: r0v39 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r20, android.os.Parcel r21, android.os.Parcel r22, int r23) throws android.os.RemoteException {
-            /*
-                r19 = this;
-                r7 = r19
-                r8 = r20
-                r9 = r21
-                r10 = r22
-                java.lang.String r11 = "android.net.INetworkPolicyManager"
-                r0 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r12 = 1
-                if (r8 == r0) goto L_0x01f8
-                r0 = 0
-                r1 = 0
-                switch(r8) {
-                    case 1: goto L_0x01e6;
-                    case 2: goto L_0x01d4;
-                    case 3: goto L_0x01c2;
-                    case 4: goto L_0x01b0;
-                    case 5: goto L_0x019e;
-                    case 6: goto L_0x018c;
-                    case 7: goto L_0x017a;
-                    case 8: goto L_0x0168;
-                    case 9: goto L_0x0156;
-                    case 10: goto L_0x013c;
-                    case 11: goto L_0x0129;
-                    case 12: goto L_0x011b;
-                    case 13: goto L_0x0105;
-                    case 14: goto L_0x00f7;
-                    case 15: goto L_0x00e4;
-                    case 16: goto L_0x00d2;
-                    case 17: goto L_0x00ab;
-                    case 18: goto L_0x0095;
-                    case 19: goto L_0x007b;
-                    case 20: goto L_0x0069;
-                    case 21: goto L_0x0042;
-                    case 22: goto L_0x0034;
-                    case 23: goto L_0x001a;
-                    default: goto L_0x0015;
-                }
-            L_0x0015:
-                boolean r0 = super.onTransact(r20, r21, r22, r23)
-                return r0
-            L_0x001a:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x0029
-                r1 = r12
-            L_0x0029:
-                boolean r2 = r7.isUidNetworkingBlocked(r0, r1)
-                r22.writeNoException()
-                r10.writeInt(r2)
-                return r12
-            L_0x0034:
-                r9.enforceInterface(r11)
-                java.lang.String r0 = r21.readString()
-                r7.factoryReset(r0)
-                r22.writeNoException()
-                return r12
-            L_0x0042:
-                r9.enforceInterface(r11)
-                int r13 = r21.readInt()
-                int r14 = r21.readInt()
-                int r15 = r21.readInt()
-                long r16 = r21.readLong()
-                java.lang.String r18 = r21.readString()
-                r0 = r19
-                r1 = r13
-                r2 = r14
-                r3 = r15
-                r4 = r16
-                r6 = r18
-                r0.setSubscriptionOverride(r1, r2, r3, r4, r6)
-                r22.writeNoException()
-                return r12
-            L_0x0069:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                java.lang.String r1 = r7.getSubscriptionPlansOwner(r0)
-                r22.writeNoException()
-                r10.writeString(r1)
-                return r12
-            L_0x007b:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                android.os.Parcelable$Creator<android.telephony.SubscriptionPlan> r1 = android.telephony.SubscriptionPlan.CREATOR
-                java.lang.Object[] r1 = r9.createTypedArray(r1)
-                android.telephony.SubscriptionPlan[] r1 = (android.telephony.SubscriptionPlan[]) r1
-                java.lang.String r2 = r21.readString()
-                r7.setSubscriptionPlans(r0, r1, r2)
-                r22.writeNoException()
-                return r12
-            L_0x0095:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                java.lang.String r1 = r21.readString()
-                android.telephony.SubscriptionPlan[] r2 = r7.getSubscriptionPlans(r0, r1)
-                r22.writeNoException()
-                r10.writeTypedArray(r2, r12)
-                return r12
-            L_0x00ab:
-                r9.enforceInterface(r11)
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x00bd
-                android.os.Parcelable$Creator<android.net.NetworkState> r0 = android.net.NetworkState.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r9)
-                android.net.NetworkState r0 = (android.net.NetworkState) r0
-                goto L_0x00be
-            L_0x00bd:
-            L_0x00be:
-                android.net.NetworkQuotaInfo r2 = r7.getNetworkQuotaInfo(r0)
-                r22.writeNoException()
-                if (r2 == 0) goto L_0x00ce
-                r10.writeInt(r12)
-                r2.writeToParcel(r10, r12)
-                goto L_0x00d1
-            L_0x00ce:
-                r10.writeInt(r1)
-            L_0x00d1:
-                return r12
-            L_0x00d2:
-                r9.enforceInterface(r11)
-                java.lang.String r0 = r21.readString()
-                int r1 = r21.readInt()
-                r7.setWifiMeteredOverride(r0, r1)
-                r22.writeNoException()
-                return r12
-            L_0x00e4:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                if (r0 == 0) goto L_0x00ef
-                r1 = r12
-            L_0x00ef:
-                r0 = r1
-                r7.setDeviceIdleMode(r0)
-                r22.writeNoException()
-                return r12
-            L_0x00f7:
-                r9.enforceInterface(r11)
-                int r0 = r19.getRestrictBackgroundByCaller()
-                r22.writeNoException()
-                r10.writeInt(r0)
-                return r12
-            L_0x0105:
-                r9.enforceInterface(r11)
-                java.lang.String r0 = r21.readString()
-                int r2 = r21.readInt()
-                if (r2 == 0) goto L_0x0114
-                r1 = r12
-            L_0x0114:
-                r7.onTetheringChanged(r0, r1)
-                r22.writeNoException()
-                return r12
-            L_0x011b:
-                r9.enforceInterface(r11)
-                boolean r0 = r19.getRestrictBackground()
-                r22.writeNoException()
-                r10.writeInt(r0)
-                return r12
-            L_0x0129:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                if (r0 == 0) goto L_0x0134
-                r1 = r12
-            L_0x0134:
-                r0 = r1
-                r7.setRestrictBackground(r0)
-                r22.writeNoException()
-                return r12
-            L_0x013c:
-                r9.enforceInterface(r11)
-                int r1 = r21.readInt()
-                if (r1 == 0) goto L_0x014e
-                android.os.Parcelable$Creator<android.net.NetworkTemplate> r0 = android.net.NetworkTemplate.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r9)
-                android.net.NetworkTemplate r0 = (android.net.NetworkTemplate) r0
-                goto L_0x014f
-            L_0x014e:
-            L_0x014f:
-                r7.snoozeLimit(r0)
-                r22.writeNoException()
-                return r12
-            L_0x0156:
-                r9.enforceInterface(r11)
-                java.lang.String r0 = r21.readString()
-                android.net.NetworkPolicy[] r1 = r7.getNetworkPolicies(r0)
-                r22.writeNoException()
-                r10.writeTypedArray(r1, r12)
-                return r12
-            L_0x0168:
-                r9.enforceInterface(r11)
-                android.os.Parcelable$Creator<android.net.NetworkPolicy> r0 = android.net.NetworkPolicy.CREATOR
-                java.lang.Object[] r0 = r9.createTypedArray(r0)
-                android.net.NetworkPolicy[] r0 = (android.net.NetworkPolicy[]) r0
-                r7.setNetworkPolicies(r0)
-                r22.writeNoException()
-                return r12
-            L_0x017a:
-                r9.enforceInterface(r11)
-                android.os.IBinder r0 = r21.readStrongBinder()
-                android.net.INetworkPolicyListener r0 = android.net.INetworkPolicyListener.Stub.asInterface(r0)
-                r7.unregisterListener(r0)
-                r22.writeNoException()
-                return r12
-            L_0x018c:
-                r9.enforceInterface(r11)
-                android.os.IBinder r0 = r21.readStrongBinder()
-                android.net.INetworkPolicyListener r0 = android.net.INetworkPolicyListener.Stub.asInterface(r0)
-                r7.registerListener(r0)
-                r22.writeNoException()
-                return r12
-            L_0x019e:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                int[] r1 = r7.getUidsWithPolicy(r0)
-                r22.writeNoException()
-                r10.writeIntArray(r1)
-                return r12
-            L_0x01b0:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                int r1 = r7.getUidPolicy(r0)
-                r22.writeNoException()
-                r10.writeInt(r1)
-                return r12
-            L_0x01c2:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                int r1 = r21.readInt()
-                r7.removeUidPolicy(r0, r1)
-                r22.writeNoException()
-                return r12
-            L_0x01d4:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                int r1 = r21.readInt()
-                r7.addUidPolicy(r0, r1)
-                r22.writeNoException()
-                return r12
-            L_0x01e6:
-                r9.enforceInterface(r11)
-                int r0 = r21.readInt()
-                int r1 = r21.readInt()
-                r7.setUidPolicy(r0, r1)
-                r22.writeNoException()
-                return r12
-            L_0x01f8:
-                r10.writeString(r11)
-                return r12
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.net.INetworkPolicyManager.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            boolean _arg1;
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0 = data.readInt();
+                    setUidPolicy(_arg0, data.readInt());
+                    reply.writeNoException();
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    addUidPolicy(_arg02, data.readInt());
+                    reply.writeNoException();
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg03 = data.readInt();
+                    removeUidPolicy(_arg03, data.readInt());
+                    reply.writeNoException();
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg04 = data.readInt();
+                    int _result = getUidPolicy(_arg04);
+                    reply.writeNoException();
+                    reply.writeInt(_result);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg05 = data.readInt();
+                    int[] _result2 = getUidsWithPolicy(_arg05);
+                    reply.writeNoException();
+                    reply.writeIntArray(_result2);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    INetworkPolicyListener _arg06 = INetworkPolicyListener.Stub.asInterface(data.readStrongBinder());
+                    registerListener(_arg06);
+                    reply.writeNoException();
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    INetworkPolicyListener _arg07 = INetworkPolicyListener.Stub.asInterface(data.readStrongBinder());
+                    unregisterListener(_arg07);
+                    reply.writeNoException();
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    NetworkPolicy[] _arg08 = (NetworkPolicy[]) data.createTypedArray(NetworkPolicy.CREATOR);
+                    setNetworkPolicies(_arg08);
+                    reply.writeNoException();
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg09 = data.readString();
+                    NetworkPolicy[] _result3 = getNetworkPolicies(_arg09);
+                    reply.writeNoException();
+                    reply.writeTypedArray(_result3, 1);
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    NetworkTemplate _arg010 = data.readInt() != 0 ? NetworkTemplate.CREATOR.createFromParcel(data) : null;
+                    snoozeLimit(_arg010);
+                    reply.writeNoException();
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg1 = data.readInt() != 0;
+                    boolean _arg011 = _arg1;
+                    setRestrictBackground(_arg011);
+                    reply.writeNoException();
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean restrictBackground = getRestrictBackground();
+                    reply.writeNoException();
+                    reply.writeInt(restrictBackground ? 1 : 0);
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg012 = data.readString();
+                    _arg1 = data.readInt() != 0;
+                    onTetheringChanged(_arg012, _arg1);
+                    reply.writeNoException();
+                    return true;
+                case 14:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result4 = getRestrictBackgroundByCaller();
+                    reply.writeNoException();
+                    reply.writeInt(_result4);
+                    return true;
+                case 15:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg1 = data.readInt() != 0;
+                    boolean _arg013 = _arg1;
+                    setDeviceIdleMode(_arg013);
+                    reply.writeNoException();
+                    return true;
+                case 16:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg014 = data.readString();
+                    setWifiMeteredOverride(_arg014, data.readInt());
+                    reply.writeNoException();
+                    return true;
+                case 17:
+                    data.enforceInterface(DESCRIPTOR);
+                    NetworkState _arg015 = data.readInt() != 0 ? NetworkState.CREATOR.createFromParcel(data) : null;
+                    NetworkQuotaInfo _result5 = getNetworkQuotaInfo(_arg015);
+                    reply.writeNoException();
+                    if (_result5 != null) {
+                        reply.writeInt(1);
+                        _result5.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 18:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg016 = data.readInt();
+                    SubscriptionPlan[] _result6 = getSubscriptionPlans(_arg016, data.readString());
+                    reply.writeNoException();
+                    reply.writeTypedArray(_result6, 1);
+                    return true;
+                case 19:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg017 = data.readInt();
+                    String _arg2 = data.readString();
+                    setSubscriptionPlans(_arg017, (SubscriptionPlan[]) data.createTypedArray(SubscriptionPlan.CREATOR), _arg2);
+                    reply.writeNoException();
+                    return true;
+                case 20:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg018 = data.readInt();
+                    String _result7 = getSubscriptionPlansOwner(_arg018);
+                    reply.writeNoException();
+                    reply.writeString(_result7);
+                    return true;
+                case 21:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg019 = data.readInt();
+                    int _arg12 = data.readInt();
+                    int _arg22 = data.readInt();
+                    long _arg3 = data.readLong();
+                    String _arg4 = data.readString();
+                    setSubscriptionOverride(_arg019, _arg12, _arg22, _arg3, _arg4);
+                    reply.writeNoException();
+                    return true;
+                case 22:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg020 = data.readString();
+                    factoryReset(_arg020);
+                    reply.writeNoException();
+                    return true;
+                case 23:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg021 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    boolean isUidNetworkingBlocked = isUidNetworkingBlocked(_arg021, _arg1);
+                    reply.writeNoException();
+                    reply.writeInt(isUidNetworkingBlocked ? 1 : 0);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements INetworkPolicyManager {
             public static INetworkPolicyManager sDefaultImpl;
             private IBinder mRemote;
@@ -516,6 +459,7 @@ public interface INetworkPolicyManager extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -524,6 +468,7 @@ public interface INetworkPolicyManager extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.net.INetworkPolicyManager
             public void setUidPolicy(int uid, int policy) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -531,19 +476,19 @@ public interface INetworkPolicyManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(uid);
                     _data.writeInt(policy);
-                    if (this.mRemote.transact(1, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setUidPolicy(uid, policy);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setUidPolicy(uid, policy);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.INetworkPolicyManager
             public void addUidPolicy(int uid, int policy) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -551,19 +496,19 @@ public interface INetworkPolicyManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(uid);
                     _data.writeInt(policy);
-                    if (this.mRemote.transact(2, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().addUidPolicy(uid, policy);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().addUidPolicy(uid, policy);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.INetworkPolicyManager
             public void removeUidPolicy(int uid, int policy) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -571,32 +516,31 @@ public interface INetworkPolicyManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(uid);
                     _data.writeInt(policy);
-                    if (this.mRemote.transact(3, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().removeUidPolicy(uid, policy);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().removeUidPolicy(uid, policy);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.INetworkPolicyManager
             public int getUidPolicy(int uid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(uid);
-                    if (!this.mRemote.transact(4, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getUidPolicy(uid);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -604,19 +548,19 @@ public interface INetworkPolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.net.INetworkPolicyManager
             public int[] getUidsWithPolicy(int policy) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(policy);
-                    if (!this.mRemote.transact(5, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getUidsWithPolicy(policy);
                     }
                     _reply.readException();
                     int[] _result = _reply.createIntArray();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -624,76 +568,76 @@ public interface INetworkPolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.net.INetworkPolicyManager
             public void registerListener(INetworkPolicyListener listener) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(listener != null ? listener.asBinder() : null);
-                    if (this.mRemote.transact(6, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().registerListener(listener);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().registerListener(listener);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.INetworkPolicyManager
             public void unregisterListener(INetworkPolicyListener listener) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(listener != null ? listener.asBinder() : null);
-                    if (this.mRemote.transact(7, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().unregisterListener(listener);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().unregisterListener(listener);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.INetworkPolicyManager
             public void setNetworkPolicies(NetworkPolicy[] policies) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeTypedArray(policies, 0);
-                    if (this.mRemote.transact(8, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setNetworkPolicies(policies);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setNetworkPolicies(policies);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.INetworkPolicyManager
             public NetworkPolicy[] getNetworkPolicies(String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(9, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(9, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getNetworkPolicies(callingPackage);
                     }
                     _reply.readException();
                     NetworkPolicy[] _result = (NetworkPolicy[]) _reply.createTypedArray(NetworkPolicy.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -701,6 +645,7 @@ public interface INetworkPolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.net.INetworkPolicyManager
             public void snoozeLimit(NetworkTemplate template) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -712,93 +657,88 @@ public interface INetworkPolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(10, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(10, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().snoozeLimit(template);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().snoozeLimit(template);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.INetworkPolicyManager
             public void setRestrictBackground(boolean restrictBackground) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(restrictBackground);
-                    if (this.mRemote.transact(11, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(restrictBackground ? 1 : 0);
+                    boolean _status = this.mRemote.transact(11, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setRestrictBackground(restrictBackground);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setRestrictBackground(restrictBackground);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.INetworkPolicyManager
             public boolean getRestrictBackground() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(12, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(12, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getRestrictBackground();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.INetworkPolicyManager
             public void onTetheringChanged(String iface, boolean tethering) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(iface);
-                    _data.writeInt(tethering);
-                    if (this.mRemote.transact(13, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(tethering ? 1 : 0);
+                    boolean _status = this.mRemote.transact(13, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().onTetheringChanged(iface, tethering);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().onTetheringChanged(iface, tethering);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.INetworkPolicyManager
             public int getRestrictBackgroundByCaller() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(14, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(14, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getRestrictBackgroundByCaller();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -806,25 +746,26 @@ public interface INetworkPolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.net.INetworkPolicyManager
             public void setDeviceIdleMode(boolean enabled) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(enabled);
-                    if (this.mRemote.transact(15, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(enabled ? 1 : 0);
+                    boolean _status = this.mRemote.transact(15, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setDeviceIdleMode(enabled);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setDeviceIdleMode(enabled);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.INetworkPolicyManager
             public void setWifiMeteredOverride(String networkId, int meteredOverride) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -832,19 +773,19 @@ public interface INetworkPolicyManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(networkId);
                     _data.writeInt(meteredOverride);
-                    if (this.mRemote.transact(16, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(16, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setWifiMeteredOverride(networkId, meteredOverride);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setWifiMeteredOverride(networkId, meteredOverride);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.INetworkPolicyManager
             public NetworkQuotaInfo getNetworkQuotaInfo(NetworkState state) throws RemoteException {
                 NetworkQuotaInfo _result;
                 Parcel _data = Parcel.obtain();
@@ -857,7 +798,8 @@ public interface INetworkPolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(17, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(17, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getNetworkQuotaInfo(state);
                     }
                     _reply.readException();
@@ -866,30 +808,6 @@ public interface INetworkPolicyManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    NetworkQuotaInfo _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public SubscriptionPlan[] getSubscriptionPlans(int subId, String callingPackage) throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(subId);
-                    _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(18, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
-                        return Stub.getDefaultImpl().getSubscriptionPlans(subId, callingPackage);
-                    }
-                    _reply.readException();
-                    SubscriptionPlan[] _result = (SubscriptionPlan[]) _reply.createTypedArray(SubscriptionPlan.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -897,6 +815,28 @@ public interface INetworkPolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.net.INetworkPolicyManager
+            public SubscriptionPlan[] getSubscriptionPlans(int subId, String callingPackage) throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    _data.writeInt(subId);
+                    _data.writeString(callingPackage);
+                    boolean _status = this.mRemote.transact(18, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        return Stub.getDefaultImpl().getSubscriptionPlans(subId, callingPackage);
+                    }
+                    _reply.readException();
+                    SubscriptionPlan[] _result = (SubscriptionPlan[]) _reply.createTypedArray(SubscriptionPlan.CREATOR);
+                    return _result;
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // android.net.INetworkPolicyManager
             public void setSubscriptionPlans(int subId, SubscriptionPlan[] plans, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -905,32 +845,31 @@ public interface INetworkPolicyManager extends IInterface {
                     _data.writeInt(subId);
                     _data.writeTypedArray(plans, 0);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(19, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(19, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setSubscriptionPlans(subId, plans, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setSubscriptionPlans(subId, plans, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.INetworkPolicyManager
             public String getSubscriptionPlansOwner(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    if (!this.mRemote.transact(20, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(20, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getSubscriptionPlansOwner(subId);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -938,121 +877,101 @@ public interface INetworkPolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.net.INetworkPolicyManager
             public void setSubscriptionOverride(int subId, int overrideMask, int overrideValue, long timeoutMillis, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeInt(subId);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(overrideMask);
+                } catch (Throwable th3) {
+                    th = th3;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(overrideValue);
                     try {
-                        _data.writeInt(subId);
-                        try {
-                            _data.writeInt(overrideMask);
-                        } catch (Throwable th) {
-                            th = th;
-                            int i = overrideValue;
-                            long j = timeoutMillis;
-                            String str = callingPackage;
+                        _data.writeLong(timeoutMillis);
+                    } catch (Throwable th4) {
+                        th = th4;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeString(callingPackage);
+                        boolean _status = this.mRemote.transact(21, _data, _reply, 0);
+                        if (!_status && Stub.getDefaultImpl() != null) {
+                            Stub.getDefaultImpl().setSubscriptionOverride(subId, overrideMask, overrideValue, timeoutMillis, callingPackage);
                             _reply.recycle();
                             _data.recycle();
-                            throw th;
+                            return;
                         }
-                        try {
-                            _data.writeInt(overrideValue);
-                            try {
-                                _data.writeLong(timeoutMillis);
-                            } catch (Throwable th2) {
-                                th = th2;
-                                String str2 = callingPackage;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                            try {
-                                _data.writeString(callingPackage);
-                                if (this.mRemote.transact(21, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                    _reply.readException();
-                                    _reply.recycle();
-                                    _data.recycle();
-                                    return;
-                                }
-                                Stub.getDefaultImpl().setSubscriptionOverride(subId, overrideMask, overrideValue, timeoutMillis, callingPackage);
-                                _reply.recycle();
-                                _data.recycle();
-                            } catch (Throwable th3) {
-                                th = th3;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th4) {
-                            th = th4;
-                            long j2 = timeoutMillis;
-                            String str22 = callingPackage;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
+                        _reply.readException();
+                        _reply.recycle();
+                        _data.recycle();
                     } catch (Throwable th5) {
                         th = th5;
-                        int i2 = overrideMask;
-                        int i3 = overrideValue;
-                        long j22 = timeoutMillis;
-                        String str222 = callingPackage;
                         _reply.recycle();
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th6) {
                     th = th6;
-                    int i4 = subId;
-                    int i22 = overrideMask;
-                    int i32 = overrideValue;
-                    long j222 = timeoutMillis;
-                    String str2222 = callingPackage;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.net.INetworkPolicyManager
             public void factoryReset(String subscriber) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(subscriber);
-                    if (this.mRemote.transact(22, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(22, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().factoryReset(subscriber);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().factoryReset(subscriber);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.INetworkPolicyManager
             public boolean isUidNetworkingBlocked(int uid, boolean meteredNetwork) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(uid);
-                    _data.writeInt(meteredNetwork);
-                    boolean z = false;
-                    if (!this.mRemote.transact(23, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(meteredNetwork ? 1 : 0);
+                    boolean _status = this.mRemote.transact(23, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isUidNetworkingBlocked(uid, meteredNetwork);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -1061,11 +980,11 @@ public interface INetworkPolicyManager extends IInterface {
         }
 
         public static boolean setDefaultImpl(INetworkPolicyManager impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static INetworkPolicyManager getDefaultImpl() {

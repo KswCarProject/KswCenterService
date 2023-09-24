@@ -1,65 +1,69 @@
 package android.content;
 
 import android.app.ActivityThread;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.ArraySet;
 import android.util.Log;
 import android.view.autofill.AutofillManager;
 import java.io.PrintWriter;
 
+/* loaded from: classes.dex */
 public final class AutofillOptions implements Parcelable {
-    public static final Parcelable.Creator<AutofillOptions> CREATOR = new Parcelable.Creator<AutofillOptions>() {
-        public AutofillOptions createFromParcel(Parcel parcel) {
-            AutofillOptions options = new AutofillOptions(parcel.readInt(), parcel.readBoolean());
-            options.augmentedAutofillEnabled = parcel.readBoolean();
-            options.whitelistedActivitiesForAugmentedAutofill = parcel.readArraySet((ClassLoader) null);
-            return options;
-        }
-
-        public AutofillOptions[] newArray(int size) {
-            return new AutofillOptions[size];
-        }
-    };
-    private static final String TAG = AutofillOptions.class.getSimpleName();
     public boolean augmentedAutofillEnabled;
     public final boolean compatModeEnabled;
     public final int loggingLevel;
     public ArraySet<ComponentName> whitelistedActivitiesForAugmentedAutofill;
+    private static final String TAG = AutofillOptions.class.getSimpleName();
+    public static final Parcelable.Creator<AutofillOptions> CREATOR = new Parcelable.Creator<AutofillOptions>() { // from class: android.content.AutofillOptions.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public AutofillOptions createFromParcel(Parcel parcel) {
+            int loggingLevel = parcel.readInt();
+            boolean compatMode = parcel.readBoolean();
+            AutofillOptions options = new AutofillOptions(loggingLevel, compatMode);
+            options.augmentedAutofillEnabled = parcel.readBoolean();
+            options.whitelistedActivitiesForAugmentedAutofill = parcel.readArraySet(null);
+            return options;
+        }
 
-    public AutofillOptions(int loggingLevel2, boolean compatModeEnabled2) {
-        this.loggingLevel = loggingLevel2;
-        this.compatModeEnabled = compatModeEnabled2;
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public AutofillOptions[] newArray(int size) {
+            return new AutofillOptions[size];
+        }
+    };
+
+    public AutofillOptions(int loggingLevel, boolean compatModeEnabled) {
+        this.loggingLevel = loggingLevel;
+        this.compatModeEnabled = compatModeEnabled;
     }
 
     public boolean isAugmentedAutofillEnabled(Context context) {
         AutofillManager.AutofillClient autofillClient;
-        if (!this.augmentedAutofillEnabled || (autofillClient = context.getAutofillClient()) == null) {
-            return false;
-        }
-        ComponentName component = autofillClient.autofillClientGetComponentName();
-        if (this.whitelistedActivitiesForAugmentedAutofill == null || this.whitelistedActivitiesForAugmentedAutofill.contains(component)) {
-            return true;
+        if (this.augmentedAutofillEnabled && (autofillClient = context.getAutofillClient()) != null) {
+            ComponentName component = autofillClient.autofillClientGetComponentName();
+            return this.whitelistedActivitiesForAugmentedAutofill == null || this.whitelistedActivitiesForAugmentedAutofill.contains(component);
         }
         return false;
     }
 
     public static AutofillOptions forWhitelistingItself() {
         ActivityThread at = ActivityThread.currentActivityThread();
-        if (at != null) {
-            String packageName = at.getApplication().getPackageName();
-            if ("android.autofillservice.cts".equals(packageName)) {
-                AutofillOptions options = new AutofillOptions(4, true);
-                options.augmentedAutofillEnabled = true;
-                String str = TAG;
-                Log.i(str, "forWhitelistingItself(" + packageName + "): " + options);
-                return options;
-            }
-            String str2 = TAG;
-            Log.e(str2, "forWhitelistingItself(): called by " + packageName);
+        if (at == null) {
+            throw new IllegalStateException("No ActivityThread");
+        }
+        String packageName = at.getApplication().getPackageName();
+        if (!"android.autofillservice.cts".equals(packageName)) {
+            String str = TAG;
+            Log.m70e(str, "forWhitelistingItself(): called by " + packageName);
             throw new SecurityException("Thou shall not pass!");
         }
-        throw new IllegalStateException("No ActivityThread");
+        AutofillOptions options = new AutofillOptions(4, true);
+        options.augmentedAutofillEnabled = true;
+        String str2 = TAG;
+        Log.m68i(str2, "forWhitelistingItself(" + packageName + "): " + options);
+        return options;
     }
 
     public String toString() {
@@ -79,10 +83,12 @@ public final class AutofillOptions implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeInt(this.loggingLevel);
         parcel.writeBoolean(this.compatModeEnabled);

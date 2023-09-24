@@ -8,11 +8,12 @@ import com.android.internal.widget.ViewPager;
 import java.util.ArrayList;
 import java.util.function.Predicate;
 
+/* loaded from: classes4.dex */
 class DayPickerViewPager extends ViewPager {
     private final ArrayList<View> mMatchParentChildren;
 
     public DayPickerViewPager(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public DayPickerViewPager(Context context, AttributeSet attrs) {
@@ -28,24 +29,22 @@ class DayPickerViewPager extends ViewPager {
         this.mMatchParentChildren = new ArrayList<>(1);
     }
 
-    /* access modifiers changed from: protected */
-    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    @Override // com.android.internal.widget.ViewPager, android.view.View
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int childWidthMeasureSpec;
         int childHeightMeasureSpec;
-        int i = widthMeasureSpec;
-        int i2 = heightMeasureSpec;
         populate();
         int count = getChildCount();
-        int i3 = 0;
-        int i4 = 1073741824;
+        int i = 0;
+        int i2 = 1073741824;
         boolean measureMatchParentChildren = (View.MeasureSpec.getMode(widthMeasureSpec) == 1073741824 && View.MeasureSpec.getMode(heightMeasureSpec) == 1073741824) ? false : true;
         int maxWidth = 0;
         int childState = 0;
         int maxHeight = 0;
-        for (int i5 = 0; i5 < count; i5++) {
-            View child = getChildAt(i5);
+        for (int maxHeight2 = 0; maxHeight2 < count; maxHeight2++) {
+            View child = getChildAt(maxHeight2);
             if (child.getVisibility() != 8) {
-                measureChild(child, i, i2);
+                measureChild(child, widthMeasureSpec, heightMeasureSpec);
                 ViewPager.LayoutParams lp = (ViewPager.LayoutParams) child.getLayoutParams();
                 maxWidth = Math.max(maxWidth, child.getMeasuredWidth());
                 maxHeight = Math.max(maxHeight, child.getMeasuredHeight());
@@ -55,54 +54,57 @@ class DayPickerViewPager extends ViewPager {
                 }
             }
         }
-        int maxWidth2 = maxWidth + getPaddingLeft() + getPaddingRight();
-        int maxHeight2 = Math.max(maxHeight + getPaddingTop() + getPaddingBottom(), getSuggestedMinimumHeight());
-        int maxWidth3 = Math.max(maxWidth2, getSuggestedMinimumWidth());
+        int i3 = getPaddingLeft();
+        int maxWidth2 = maxWidth + i3 + getPaddingRight();
+        int maxHeight3 = Math.max(maxHeight + getPaddingTop() + getPaddingBottom(), getSuggestedMinimumHeight());
+        int maxHeight4 = getSuggestedMinimumWidth();
+        int maxWidth3 = Math.max(maxWidth2, maxHeight4);
         Drawable drawable = getForeground();
         if (drawable != null) {
-            maxHeight2 = Math.max(maxHeight2, drawable.getMinimumHeight());
+            maxHeight3 = Math.max(maxHeight3, drawable.getMinimumHeight());
             maxWidth3 = Math.max(maxWidth3, drawable.getMinimumWidth());
         }
-        setMeasuredDimension(resolveSizeAndState(maxWidth3, i, childState), resolveSizeAndState(maxHeight2, i2, childState << 16));
+        setMeasuredDimension(resolveSizeAndState(maxWidth3, widthMeasureSpec, childState), resolveSizeAndState(maxHeight3, heightMeasureSpec, childState << 16));
         int count2 = this.mMatchParentChildren.size();
         if (count2 > 1) {
-            while (i3 < count2) {
-                View child2 = this.mMatchParentChildren.get(i3);
+            while (i < count2) {
+                View child2 = this.mMatchParentChildren.get(i);
                 ViewPager.LayoutParams lp2 = (ViewPager.LayoutParams) child2.getLayoutParams();
                 if (lp2.width == -1) {
-                    childWidthMeasureSpec = View.MeasureSpec.makeMeasureSpec((getMeasuredWidth() - getPaddingLeft()) - getPaddingRight(), i4);
+                    childWidthMeasureSpec = View.MeasureSpec.makeMeasureSpec((getMeasuredWidth() - getPaddingLeft()) - getPaddingRight(), i2);
                 } else {
-                    childWidthMeasureSpec = getChildMeasureSpec(i, getPaddingLeft() + getPaddingRight(), lp2.width);
+                    childWidthMeasureSpec = getChildMeasureSpec(widthMeasureSpec, getPaddingLeft() + getPaddingRight(), lp2.width);
                 }
                 if (lp2.height == -1) {
-                    childHeightMeasureSpec = View.MeasureSpec.makeMeasureSpec((getMeasuredHeight() - getPaddingTop()) - getPaddingBottom(), i4);
+                    childHeightMeasureSpec = View.MeasureSpec.makeMeasureSpec((getMeasuredHeight() - getPaddingTop()) - getPaddingBottom(), i2);
                 } else {
-                    childHeightMeasureSpec = getChildMeasureSpec(i2, getPaddingTop() + getPaddingBottom(), lp2.height);
+                    childHeightMeasureSpec = getChildMeasureSpec(heightMeasureSpec, getPaddingTop() + getPaddingBottom(), lp2.height);
                 }
                 child2.measure(childWidthMeasureSpec, childHeightMeasureSpec);
-                i3++;
-                i4 = 1073741824;
+                i++;
+                i2 = 1073741824;
             }
         }
         this.mMatchParentChildren.clear();
     }
 
-    /* access modifiers changed from: protected */
-    public <T extends View> T findViewByPredicateTraversal(Predicate<View> predicate, View childToSkip) {
-        View v;
-        View v2;
+    @Override // android.view.ViewGroup, android.view.View
+    protected <T extends View> T findViewByPredicateTraversal(Predicate<View> predicate, View childToSkip) {
+        T t;
+        T t2;
         if (predicate.test(this)) {
             return this;
         }
-        SimpleMonthView current = ((DayPickerPagerAdapter) getAdapter()).getView(getCurrent());
-        if (current != childToSkip && current != null && (v2 = current.findViewByPredicate(predicate)) != null) {
-            return v2;
+        DayPickerPagerAdapter adapter = (DayPickerPagerAdapter) getAdapter();
+        SimpleMonthView current = adapter.getView(getCurrent());
+        if (current != childToSkip && current != null && (t2 = (T) current.findViewByPredicate(predicate)) != null) {
+            return t2;
         }
         int len = getChildCount();
         for (int i = 0; i < len; i++) {
             View child = getChildAt(i);
-            if (child != childToSkip && child != current && (v = child.findViewByPredicate(predicate)) != null) {
-                return v;
+            if (child != childToSkip && child != current && (t = (T) child.findViewByPredicate(predicate)) != null) {
+                return t;
             }
         }
         return null;

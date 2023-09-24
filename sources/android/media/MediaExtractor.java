@@ -1,12 +1,15 @@
 package android.media;
 
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.media.DrmInitData;
 import android.media.MediaCas;
 import android.media.MediaCodec;
-import android.os.IBinder;
-import android.os.IHwBinder;
-import android.os.PersistableBundle;
+import android.net.Uri;
+import android.p007os.IBinder;
+import android.p007os.IHwBinder;
+import android.p007os.PersistableBundle;
 import com.android.internal.util.Preconditions;
 import java.io.FileDescriptor;
 import java.io.IOException;
@@ -20,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+/* loaded from: classes3.dex */
 public final class MediaExtractor {
     public static final int SAMPLE_FLAG_ENCRYPTED = 2;
     public static final int SAMPLE_FLAG_PARTIAL_FRAME = 4;
@@ -31,10 +35,12 @@ public final class MediaExtractor {
     private long mNativeContext;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface SampleFlag {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface SeekMode {
     }
 
@@ -92,87 +98,57 @@ public final class MediaExtractor {
         native_setup();
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:23:0x0055, code lost:
-        if (r1 == null) goto L_0x005f;
+    /* JADX WARN: Code restructure failed: missing block: B:26:0x0055, code lost:
+        if (0 == 0) goto L26;
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:24:0x0057, code lost:
+    /* JADX WARN: Code restructure failed: missing block: B:27:0x0057, code lost:
         r1.close();
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:26:0x005c, code lost:
-        if (r1 == null) goto L_0x005f;
+    /* JADX WARN: Code restructure failed: missing block: B:29:0x005c, code lost:
+        if (0 == 0) goto L26;
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:27:0x005f, code lost:
+    /* JADX WARN: Code restructure failed: missing block: B:31:0x005f, code lost:
         setDataSource(r11.toString(), r12);
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:28:0x0066, code lost:
+    /* JADX WARN: Code restructure failed: missing block: B:32:0x0066, code lost:
         return;
      */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public final void setDataSource(android.content.Context r10, android.net.Uri r11, java.util.Map<java.lang.String, java.lang.String> r12) throws java.io.IOException {
-        /*
-            r9 = this;
-            java.lang.String r0 = r11.getScheme()
-            if (r0 == 0) goto L_0x0067
-            java.lang.String r1 = "file"
-            boolean r1 = r0.equals(r1)
-            if (r1 == 0) goto L_0x000f
-            goto L_0x0067
-        L_0x000f:
-            r1 = 0
-            android.content.ContentResolver r2 = r10.getContentResolver()     // Catch:{ SecurityException -> 0x005b, IOException -> 0x0054, all -> 0x004d }
-            java.lang.String r3 = "r"
-            android.content.res.AssetFileDescriptor r3 = r2.openAssetFileDescriptor(r11, r3)     // Catch:{ SecurityException -> 0x005b, IOException -> 0x0054, all -> 0x004d }
-            r1 = r3
-            if (r1 != 0) goto L_0x0024
-            if (r1 == 0) goto L_0x0023
-            r1.close()
-        L_0x0023:
-            return
-        L_0x0024:
-            long r3 = r1.getDeclaredLength()     // Catch:{ SecurityException -> 0x005b, IOException -> 0x0054, all -> 0x004d }
-            r5 = 0
-            int r3 = (r3 > r5 ? 1 : (r3 == r5 ? 0 : -1))
-            if (r3 >= 0) goto L_0x0036
-            java.io.FileDescriptor r3 = r1.getFileDescriptor()     // Catch:{ SecurityException -> 0x005b, IOException -> 0x0054, all -> 0x004d }
-            r9.setDataSource((java.io.FileDescriptor) r3)     // Catch:{ SecurityException -> 0x005b, IOException -> 0x0054, all -> 0x004d }
-            goto L_0x0047
-        L_0x0036:
-            java.io.FileDescriptor r4 = r1.getFileDescriptor()     // Catch:{ SecurityException -> 0x005b, IOException -> 0x0054, all -> 0x004d }
-            long r5 = r1.getStartOffset()     // Catch:{ SecurityException -> 0x005b, IOException -> 0x0054, all -> 0x004d }
-            long r7 = r1.getDeclaredLength()     // Catch:{ SecurityException -> 0x005b, IOException -> 0x0054, all -> 0x004d }
-            r3 = r9
-            r3.setDataSource((java.io.FileDescriptor) r4, (long) r5, (long) r7)     // Catch:{ SecurityException -> 0x005b, IOException -> 0x0054, all -> 0x004d }
-        L_0x0047:
-            if (r1 == 0) goto L_0x004c
-            r1.close()
-        L_0x004c:
-            return
-        L_0x004d:
-            r2 = move-exception
-            if (r1 == 0) goto L_0x0053
-            r1.close()
-        L_0x0053:
-            throw r2
-        L_0x0054:
-            r2 = move-exception
-            if (r1 == 0) goto L_0x005f
-        L_0x0057:
-            r1.close()
-            goto L_0x005f
-        L_0x005b:
-            r2 = move-exception
-            if (r1 == 0) goto L_0x005f
-            goto L_0x0057
-        L_0x005f:
-            java.lang.String r2 = r11.toString()
-            r9.setDataSource(r2, r12)
-            return
-        L_0x0067:
-            java.lang.String r1 = r11.getPath()
-            r9.setDataSource((java.lang.String) r1)
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.media.MediaExtractor.setDataSource(android.content.Context, android.net.Uri, java.util.Map):void");
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public final void setDataSource(Context context, Uri uri, Map<String, String> headers) throws IOException {
+        String scheme = uri.getScheme();
+        if (scheme == null || scheme.equals(ContentResolver.SCHEME_FILE)) {
+            setDataSource(uri.getPath());
+            return;
+        }
+        AssetFileDescriptor fd = null;
+        try {
+            ContentResolver resolver = context.getContentResolver();
+            AssetFileDescriptor fd2 = resolver.openAssetFileDescriptor(uri, "r");
+            if (fd2 == null) {
+                if (fd2 != null) {
+                    fd2.close();
+                    return;
+                }
+                return;
+            }
+            if (fd2.getDeclaredLength() < 0) {
+                setDataSource(fd2.getFileDescriptor());
+            } else {
+                setDataSource(fd2.getFileDescriptor(), fd2.getStartOffset(), fd2.getDeclaredLength());
+            }
+            if (fd2 != null) {
+                fd2.close();
+            }
+        } catch (IOException e) {
+        } catch (SecurityException e2) {
+        } catch (Throwable th) {
+            if (0 != 0) {
+                fd.close();
+            }
+            throw th;
+        }
     }
 
     public final void setDataSource(String path, Map<String, String> headers) throws IOException {
@@ -192,20 +168,20 @@ public final class MediaExtractor {
     }
 
     public final void setDataSource(String path) throws IOException {
-        nativeSetDataSource(MediaHTTPService.createHttpServiceBinderIfNecessary(path), path, (String[]) null, (String[]) null);
+        nativeSetDataSource(MediaHTTPService.createHttpServiceBinderIfNecessary(path), path, null, null);
     }
 
     public final void setDataSource(AssetFileDescriptor afd) throws IOException, IllegalArgumentException, IllegalStateException {
         Preconditions.checkNotNull(afd);
         if (afd.getDeclaredLength() < 0) {
             setDataSource(afd.getFileDescriptor());
-            return;
+        } else {
+            setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getDeclaredLength());
         }
-        setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getDeclaredLength());
     }
 
     public final void setDataSource(FileDescriptor fd) throws IOException {
-        setDataSource(fd, 0, 576460752303423487L);
+        setDataSource(fd, 0L, 576460752303423487L);
     }
 
     public final void setMediaCas(MediaCas mediaCas) {
@@ -213,6 +189,7 @@ public final class MediaExtractor {
         nativeSetMediaCas(mediaCas.getBinder());
     }
 
+    /* loaded from: classes3.dex */
     public static final class CasInfo {
         private final byte[] mPrivateData;
         private final MediaCas.Session mSession;
@@ -247,30 +224,29 @@ public final class MediaExtractor {
 
     public CasInfo getCasInfo(int index) {
         Map<String, Object> formatMap = getTrackFormatNative(index);
-        if (!formatMap.containsKey(MediaFormat.KEY_CA_SYSTEM_ID)) {
-            return null;
+        if (formatMap.containsKey(MediaFormat.KEY_CA_SYSTEM_ID)) {
+            int systemId = ((Integer) formatMap.get(MediaFormat.KEY_CA_SYSTEM_ID)).intValue();
+            MediaCas.Session session = null;
+            byte[] privateData = null;
+            if (formatMap.containsKey(MediaFormat.KEY_CA_PRIVATE_DATA)) {
+                ByteBuffer buf = (ByteBuffer) formatMap.get(MediaFormat.KEY_CA_PRIVATE_DATA);
+                buf.rewind();
+                privateData = new byte[buf.remaining()];
+                buf.get(privateData);
+            }
+            if (this.mMediaCas != null && formatMap.containsKey(MediaFormat.KEY_CA_SESSION_ID)) {
+                ByteBuffer buf2 = (ByteBuffer) formatMap.get(MediaFormat.KEY_CA_SESSION_ID);
+                buf2.rewind();
+                byte[] sessionId = new byte[buf2.remaining()];
+                buf2.get(sessionId);
+                session = this.mMediaCas.createFromSessionId(toByteArray(sessionId));
+            }
+            return new CasInfo(systemId, session, privateData);
         }
-        int systemId = ((Integer) formatMap.get(MediaFormat.KEY_CA_SYSTEM_ID)).intValue();
-        MediaCas.Session session = null;
-        byte[] privateData = null;
-        if (formatMap.containsKey(MediaFormat.KEY_CA_PRIVATE_DATA)) {
-            ByteBuffer buf = (ByteBuffer) formatMap.get(MediaFormat.KEY_CA_PRIVATE_DATA);
-            buf.rewind();
-            privateData = new byte[buf.remaining()];
-            buf.get(privateData);
-        }
-        if (this.mMediaCas != null && formatMap.containsKey(MediaFormat.KEY_CA_SESSION_ID)) {
-            ByteBuffer buf2 = (ByteBuffer) formatMap.get(MediaFormat.KEY_CA_SESSION_ID);
-            buf2.rewind();
-            byte[] sessionId = new byte[buf2.remaining()];
-            buf2.get(sessionId);
-            session = this.mMediaCas.createFromSessionId(toByteArray(sessionId));
-        }
-        return new CasInfo(systemId, session, privateData);
+        return null;
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() {
+    protected void finalize() {
         native_finalize();
     }
 
@@ -283,26 +259,26 @@ public final class MediaExtractor {
             Map<UUID, byte[]> psshMap = getPsshInfo();
             final Map<UUID, DrmInitData.SchemeInitData> initDataMap = new HashMap<>();
             for (Map.Entry<UUID, byte[]> e : psshMap.entrySet()) {
-                initDataMap.put(e.getKey(), new DrmInitData.SchemeInitData("cenc", e.getValue()));
+                UUID uuid = e.getKey();
+                initDataMap.put(uuid, new DrmInitData.SchemeInitData("cenc", e.getValue()));
             }
-            return new DrmInitData() {
+            return new DrmInitData() { // from class: android.media.MediaExtractor.1
+                @Override // android.media.DrmInitData
                 public DrmInitData.SchemeInitData get(UUID schemeUuid) {
                     return (DrmInitData.SchemeInitData) initDataMap.get(schemeUuid);
                 }
             };
         }
         int numTracks = getTrackCount();
-        int i = 0;
-        while (i < numTracks) {
+        for (int i = 0; i < numTracks; i++) {
             Map<String, Object> trackFormatMap = getTrackFormatNative(i);
-            if (!trackFormatMap.containsKey("crypto-key")) {
-                i++;
-            } else {
+            if (trackFormatMap.containsKey("crypto-key")) {
                 ByteBuffer buf = (ByteBuffer) trackFormatMap.get("crypto-key");
                 buf.rewind();
                 final byte[] data = new byte[buf.remaining()];
                 buf.get(data);
-                return new DrmInitData() {
+                return new DrmInitData() { // from class: android.media.MediaExtractor.2
+                    @Override // android.media.DrmInitData
                     public DrmInitData.SchemeInitData get(UUID schemeUuid) {
                         return new DrmInitData.SchemeInitData("webm", data);
                     }
@@ -327,9 +303,12 @@ public final class MediaExtractor {
             psshMap = new HashMap<>();
             while (rawpssh.remaining() > 0) {
                 rawpssh.order(ByteOrder.BIG_ENDIAN);
-                UUID uuid = new UUID(rawpssh.getLong(), rawpssh.getLong());
+                long msb = rawpssh.getLong();
+                long lsb = rawpssh.getLong();
+                UUID uuid = new UUID(msb, lsb);
                 rawpssh.order(ByteOrder.nativeOrder());
-                byte[] psshdata = new byte[rawpssh.getInt()];
+                int datalen = rawpssh.getInt();
+                byte[] psshdata = new byte[datalen];
                 rawpssh.get(psshdata);
                 psshMap.put(uuid, psshdata);
             }
@@ -342,7 +321,8 @@ public final class MediaExtractor {
     }
 
     public PersistableBundle getMetrics() {
-        return native_getMetrics();
+        PersistableBundle bundle = native_getMetrics();
+        return bundle;
     }
 
     static {
@@ -350,6 +330,7 @@ public final class MediaExtractor {
         native_init();
     }
 
+    /* loaded from: classes3.dex */
     public static final class MetricsConstants {
         public static final String FORMAT = "android.media.mediaextractor.fmt";
         public static final String MIME_TYPE = "android.media.mediaextractor.mime";

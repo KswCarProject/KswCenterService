@@ -1,5 +1,6 @@
 package android.hardware.biometrics;
 
+/* loaded from: classes.dex */
 public interface BiometricFaceConstants {
     public static final int BIOMETRIC_ERROR_NO_DEVICE_CREDENTIAL = 14;
     public static final int FACE_ACQUIRED_FACE_OBSCURED = 19;

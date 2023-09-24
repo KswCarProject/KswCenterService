@@ -1,8 +1,8 @@
 package android.nfc.cardemulation;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.Log;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,9 +11,12 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
 
+/* loaded from: classes3.dex */
 public class AidGroup implements Parcelable {
     @UnsupportedAppUsage
-    public static final Parcelable.Creator<AidGroup> CREATOR = new Parcelable.Creator<AidGroup>() {
+    public static final Parcelable.Creator<AidGroup> CREATOR = new Parcelable.Creator<AidGroup>() { // from class: android.nfc.cardemulation.AidGroup.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AidGroup createFromParcel(Parcel source) {
             String category = source.readString();
             int listSize = source.readInt();
@@ -21,9 +24,11 @@ public class AidGroup implements Parcelable {
             if (listSize > 0) {
                 source.readStringList(aidList);
             }
-            return new AidGroup((List<String>) aidList, category);
+            return new AidGroup(aidList, category);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AidGroup[] newArray(int size) {
             return new AidGroup[size];
         }
@@ -37,35 +42,35 @@ public class AidGroup implements Parcelable {
     @UnsupportedAppUsage
     protected String description;
 
-    public AidGroup(List<String> aids2, String category2) {
-        if (aids2 == null || aids2.size() == 0) {
+    public AidGroup(List<String> aids, String category) {
+        if (aids == null || aids.size() == 0) {
             throw new IllegalArgumentException("No AIDS in AID group.");
-        } else if (aids2.size() <= 256) {
-            for (String aid : aids2) {
-                if (!CardEmulation.isValidAid(aid)) {
-                    throw new IllegalArgumentException("AID " + aid + " is not a valid AID.");
-                }
-            }
-            if (isValidCategory(category2)) {
-                this.category = category2;
-            } else {
-                this.category = "other";
-            }
-            this.aids = new ArrayList(aids2.size());
-            for (String aid2 : aids2) {
-                this.aids.add(aid2.toUpperCase());
-            }
-            this.description = null;
-        } else {
+        }
+        if (aids.size() > 256) {
             throw new IllegalArgumentException("Too many AIDs in AID group.");
         }
+        for (String aid : aids) {
+            if (!CardEmulation.isValidAid(aid)) {
+                throw new IllegalArgumentException("AID " + aid + " is not a valid AID.");
+            }
+        }
+        if (isValidCategory(category)) {
+            this.category = category;
+        } else {
+            this.category = "other";
+        }
+        this.aids = new ArrayList(aids.size());
+        for (String aid2 : aids) {
+            this.aids.add(aid2.toUpperCase());
+        }
+        this.description = null;
     }
 
     @UnsupportedAppUsage
-    AidGroup(String category2, String description2) {
+    AidGroup(String category, String description) {
         this.aids = new ArrayList();
-        this.category = category2;
-        this.description = description2;
+        this.category = category;
+        this.description = description;
     }
 
     @UnsupportedAppUsage
@@ -87,10 +92,12 @@ public class AidGroup implements Parcelable {
         return out.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.category);
         dest.writeInt(this.aids.size());
@@ -101,8 +108,8 @@ public class AidGroup implements Parcelable {
 
     @UnsupportedAppUsage
     public static AidGroup createFromXml(XmlPullParser parser) throws XmlPullParserException, IOException {
-        String category2 = null;
-        ArrayList<String> aids2 = new ArrayList<>();
+        String category = null;
+        ArrayList<String> aids = new ArrayList<>();
         boolean inGroup = false;
         int eventType = parser.getEventType();
         int minDepth = parser.getDepth();
@@ -111,25 +118,26 @@ public class AidGroup implements Parcelable {
             if (eventType == 2) {
                 if (tagName.equals("aid")) {
                     if (inGroup) {
-                        String aid = parser.getAttributeValue((String) null, "value");
+                        String aid = parser.getAttributeValue(null, "value");
                         if (aid != null) {
-                            aids2.add(aid.toUpperCase());
+                            aids.add(aid.toUpperCase());
                         }
                     } else {
-                        Log.d(TAG, "Ignoring <aid> tag while not in group");
+                        Log.m72d(TAG, "Ignoring <aid> tag while not in group");
                     }
                 } else if (tagName.equals("aid-group")) {
-                    category2 = parser.getAttributeValue((String) null, "category");
-                    if (category2 == null) {
-                        Log.e(TAG, "<aid-group> tag without valid category");
+                    category = parser.getAttributeValue(null, "category");
+                    if (category == null) {
+                        Log.m70e(TAG, "<aid-group> tag without valid category");
                         return null;
                     }
                     inGroup = true;
                 } else {
-                    Log.d(TAG, "Ignoring unexpected tag: " + tagName);
+                    Log.m72d(TAG, "Ignoring unexpected tag: " + tagName);
                 }
-            } else if (eventType == 3 && tagName.equals("aid-group") && inGroup && aids2.size() > 0) {
-                return new AidGroup((List<String>) aids2, category2);
+            } else if (eventType == 3 && tagName.equals("aid-group") && inGroup && aids.size() > 0) {
+                AidGroup group = new AidGroup(aids, category);
+                return group;
             }
             eventType = parser.next();
         }
@@ -138,17 +146,17 @@ public class AidGroup implements Parcelable {
 
     @UnsupportedAppUsage
     public void writeAsXml(XmlSerializer out) throws IOException {
-        out.startTag((String) null, "aid-group");
-        out.attribute((String) null, "category", this.category);
+        out.startTag(null, "aid-group");
+        out.attribute(null, "category", this.category);
         for (String aid : this.aids) {
-            out.startTag((String) null, "aid");
-            out.attribute((String) null, "value", aid);
-            out.endTag((String) null, "aid");
+            out.startTag(null, "aid");
+            out.attribute(null, "value", aid);
+            out.endTag(null, "aid");
         }
-        out.endTag((String) null, "aid-group");
+        out.endTag(null, "aid-group");
     }
 
-    static boolean isValidCategory(String category2) {
-        return CardEmulation.CATEGORY_PAYMENT.equals(category2) || "other".equals(category2);
+    static boolean isValidCategory(String category) {
+        return CardEmulation.CATEGORY_PAYMENT.equals(category) || "other".equals(category);
     }
 }

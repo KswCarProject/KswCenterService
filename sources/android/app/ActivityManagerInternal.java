@@ -4,16 +4,17 @@ import android.content.ComponentName;
 import android.content.IIntentReceiver;
 import android.content.IIntentSender;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.content.pm.ActivityPresentationInfo;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.UserInfo;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.TransactionTooLargeException;
+import android.content.p002pm.ActivityInfo;
+import android.content.p002pm.ActivityPresentationInfo;
+import android.content.p002pm.ApplicationInfo;
+import android.content.p002pm.UserInfo;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.TransactionTooLargeException;
 import java.util.ArrayList;
 import java.util.List;
 
+/* loaded from: classes.dex */
 public abstract class ActivityManagerInternal {
     public static final int ALLOW_FULL_ONLY = 2;
     public static final int ALLOW_NON_FULL = 0;

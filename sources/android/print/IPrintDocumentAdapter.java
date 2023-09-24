@@ -1,14 +1,19 @@
 package android.print;
 
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.ParcelFileDescriptor;
-import android.os.RemoteException;
+import android.media.TtmlUtils;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.ParcelFileDescriptor;
+import android.p007os.RemoteException;
+import android.print.ILayoutResultCallback;
+import android.print.IPrintDocumentAdapterObserver;
+import android.print.IWriteResultCallback;
 import android.provider.Telephony;
 
+/* loaded from: classes3.dex */
 public interface IPrintDocumentAdapter extends IInterface {
     void finish() throws RemoteException;
 
@@ -22,30 +27,39 @@ public interface IPrintDocumentAdapter extends IInterface {
 
     void write(PageRange[] pageRangeArr, ParcelFileDescriptor parcelFileDescriptor, IWriteResultCallback iWriteResultCallback, int i) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements IPrintDocumentAdapter {
+        @Override // android.print.IPrintDocumentAdapter
         public void setObserver(IPrintDocumentAdapterObserver observer) throws RemoteException {
         }
 
+        @Override // android.print.IPrintDocumentAdapter
         public void start() throws RemoteException {
         }
 
+        @Override // android.print.IPrintDocumentAdapter
         public void layout(PrintAttributes oldAttributes, PrintAttributes newAttributes, ILayoutResultCallback callback, Bundle metadata, int sequence) throws RemoteException {
         }
 
+        @Override // android.print.IPrintDocumentAdapter
         public void write(PageRange[] pages, ParcelFileDescriptor fd, IWriteResultCallback callback, int sequence) throws RemoteException {
         }
 
+        @Override // android.print.IPrintDocumentAdapter
         public void finish() throws RemoteException {
         }
 
+        @Override // android.print.IPrintDocumentAdapter
         public void kill(String reason) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements IPrintDocumentAdapter {
         private static final String DESCRIPTOR = "android.print.IPrintDocumentAdapter";
         static final int TRANSACTION_finish = 5;
@@ -64,12 +78,13 @@ public interface IPrintDocumentAdapter extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IPrintDocumentAdapter)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IPrintDocumentAdapter)) {
+                return (IPrintDocumentAdapter) iin;
             }
-            return (IPrintDocumentAdapter) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -93,124 +108,59 @@ public interface IPrintDocumentAdapter extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v1, resolved type: android.os.ParcelFileDescriptor} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v4, resolved type: android.os.ParcelFileDescriptor} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r8v0, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v9, resolved type: android.os.ParcelFileDescriptor} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v15, resolved type: android.os.ParcelFileDescriptor} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v16, resolved type: android.os.ParcelFileDescriptor} */
-        /* JADX WARNING: type inference failed for: r1v8, types: [android.os.Bundle] */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r11, android.os.Parcel r12, android.os.Parcel r13, int r14) throws android.os.RemoteException {
-            /*
-                r10 = this;
-                java.lang.String r0 = "android.print.IPrintDocumentAdapter"
-                r1 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r2 = 1
-                if (r11 == r1) goto L_0x00ad
-                r1 = 0
-                switch(r11) {
-                    case 1: goto L_0x009e;
-                    case 2: goto L_0x0097;
-                    case 3: goto L_0x004e;
-                    case 4: goto L_0x0023;
-                    case 5: goto L_0x001c;
-                    case 6: goto L_0x0011;
-                    default: goto L_0x000c;
-                }
-            L_0x000c:
-                boolean r1 = super.onTransact(r11, r12, r13, r14)
-                return r1
-            L_0x0011:
-                r12.enforceInterface(r0)
-                java.lang.String r1 = r12.readString()
-                r10.kill(r1)
-                return r2
-            L_0x001c:
-                r12.enforceInterface(r0)
-                r10.finish()
-                return r2
-            L_0x0023:
-                r12.enforceInterface(r0)
-                android.os.Parcelable$Creator<android.print.PageRange> r3 = android.print.PageRange.CREATOR
-                java.lang.Object[] r3 = r12.createTypedArray(r3)
-                android.print.PageRange[] r3 = (android.print.PageRange[]) r3
-                int r4 = r12.readInt()
-                if (r4 == 0) goto L_0x003d
-                android.os.Parcelable$Creator<android.os.ParcelFileDescriptor> r1 = android.os.ParcelFileDescriptor.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r12)
-                android.os.ParcelFileDescriptor r1 = (android.os.ParcelFileDescriptor) r1
-                goto L_0x003e
-            L_0x003d:
-            L_0x003e:
-                android.os.IBinder r4 = r12.readStrongBinder()
-                android.print.IWriteResultCallback r4 = android.print.IWriteResultCallback.Stub.asInterface(r4)
-                int r5 = r12.readInt()
-                r10.write(r3, r1, r4, r5)
-                return r2
-            L_0x004e:
-                r12.enforceInterface(r0)
-                int r3 = r12.readInt()
-                if (r3 == 0) goto L_0x0061
-                android.os.Parcelable$Creator<android.print.PrintAttributes> r3 = android.print.PrintAttributes.CREATOR
-                java.lang.Object r3 = r3.createFromParcel(r12)
-                android.print.PrintAttributes r3 = (android.print.PrintAttributes) r3
-                r5 = r3
-                goto L_0x0062
-            L_0x0061:
-                r5 = r1
-            L_0x0062:
-                int r3 = r12.readInt()
-                if (r3 == 0) goto L_0x0072
-                android.os.Parcelable$Creator<android.print.PrintAttributes> r3 = android.print.PrintAttributes.CREATOR
-                java.lang.Object r3 = r3.createFromParcel(r12)
-                android.print.PrintAttributes r3 = (android.print.PrintAttributes) r3
-                r6 = r3
-                goto L_0x0073
-            L_0x0072:
-                r6 = r1
-            L_0x0073:
-                android.os.IBinder r3 = r12.readStrongBinder()
-                android.print.ILayoutResultCallback r3 = android.print.ILayoutResultCallback.Stub.asInterface(r3)
-                int r4 = r12.readInt()
-                if (r4 == 0) goto L_0x008b
-                android.os.Parcelable$Creator<android.os.Bundle> r1 = android.os.Bundle.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r12)
-                android.os.Bundle r1 = (android.os.Bundle) r1
-            L_0x0089:
-                r8 = r1
-                goto L_0x008c
-            L_0x008b:
-                goto L_0x0089
-            L_0x008c:
-                int r1 = r12.readInt()
-                r4 = r10
-                r7 = r3
-                r9 = r1
-                r4.layout(r5, r6, r7, r8, r9)
-                return r2
-            L_0x0097:
-                r12.enforceInterface(r0)
-                r10.start()
-                return r2
-            L_0x009e:
-                r12.enforceInterface(r0)
-                android.os.IBinder r1 = r12.readStrongBinder()
-                android.print.IPrintDocumentAdapterObserver r1 = android.print.IPrintDocumentAdapterObserver.Stub.asInterface(r1)
-                r10.setObserver(r1)
-                return r2
-            L_0x00ad:
-                r13.writeString(r0)
-                return r2
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.print.IPrintDocumentAdapter.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    IPrintDocumentAdapterObserver _arg0 = IPrintDocumentAdapterObserver.Stub.asInterface(data.readStrongBinder());
+                    setObserver(_arg0);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    start();
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    PrintAttributes _arg02 = data.readInt() != 0 ? PrintAttributes.CREATOR.createFromParcel(data) : null;
+                    PrintAttributes _arg1 = data.readInt() != 0 ? PrintAttributes.CREATOR.createFromParcel(data) : null;
+                    ILayoutResultCallback _arg2 = ILayoutResultCallback.Stub.asInterface(data.readStrongBinder());
+                    Bundle _arg3 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    int _arg4 = data.readInt();
+                    layout(_arg02, _arg1, _arg2, _arg3, _arg4);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    PageRange[] _arg03 = (PageRange[]) data.createTypedArray(PageRange.CREATOR);
+                    ParcelFileDescriptor _arg12 = data.readInt() != 0 ? ParcelFileDescriptor.CREATOR.createFromParcel(data) : null;
+                    IWriteResultCallback _arg22 = IWriteResultCallback.Stub.asInterface(data.readStrongBinder());
+                    int _arg32 = data.readInt();
+                    write(_arg03, _arg12, _arg22, _arg32);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    finish();
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg04 = data.readString();
+                    kill(_arg04);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements IPrintDocumentAdapter {
             public static IPrintDocumentAdapter sDefaultImpl;
             private IBinder mRemote;
@@ -219,6 +169,7 @@ public interface IPrintDocumentAdapter extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -227,14 +178,14 @@ public interface IPrintDocumentAdapter extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.print.IPrintDocumentAdapter
             public void setObserver(IPrintDocumentAdapterObserver observer) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(observer != null ? observer.asBinder() : null);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().setObserver(observer);
                     }
                 } finally {
@@ -242,13 +193,13 @@ public interface IPrintDocumentAdapter extends IInterface {
                 }
             }
 
+            @Override // android.print.IPrintDocumentAdapter
             public void start() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().start();
                     }
                 } finally {
@@ -256,6 +207,7 @@ public interface IPrintDocumentAdapter extends IInterface {
                 }
             }
 
+            @Override // android.print.IPrintDocumentAdapter
             public void layout(PrintAttributes oldAttributes, PrintAttributes newAttributes, ILayoutResultCallback callback, Bundle metadata, int sequence) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -280,9 +232,8 @@ public interface IPrintDocumentAdapter extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(sequence);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().layout(oldAttributes, newAttributes, callback, metadata, sequence);
                     }
                 } finally {
@@ -290,6 +241,7 @@ public interface IPrintDocumentAdapter extends IInterface {
                 }
             }
 
+            @Override // android.print.IPrintDocumentAdapter
             public void write(PageRange[] pages, ParcelFileDescriptor fd, IWriteResultCallback callback, int sequence) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -303,9 +255,8 @@ public interface IPrintDocumentAdapter extends IInterface {
                     }
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
                     _data.writeInt(sequence);
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().write(pages, fd, callback, sequence);
                     }
                 } finally {
@@ -313,13 +264,13 @@ public interface IPrintDocumentAdapter extends IInterface {
                 }
             }
 
+            @Override // android.print.IPrintDocumentAdapter
             public void finish() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(5, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().finish();
                     }
                 } finally {
@@ -327,14 +278,14 @@ public interface IPrintDocumentAdapter extends IInterface {
                 }
             }
 
+            @Override // android.print.IPrintDocumentAdapter
             public void kill(String reason) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(reason);
-                    if (this.mRemote.transact(6, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(6, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().kill(reason);
                     }
                 } finally {
@@ -344,11 +295,11 @@ public interface IPrintDocumentAdapter extends IInterface {
         }
 
         public static boolean setDefaultImpl(IPrintDocumentAdapter impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IPrintDocumentAdapter getDefaultImpl() {

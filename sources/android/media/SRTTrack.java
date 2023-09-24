@@ -1,8 +1,9 @@
 package android.media;
 
 import android.media.SubtitleTrack;
-import android.os.Handler;
-import android.os.Parcel;
+import android.p007os.Handler;
+import android.p007os.Message;
+import android.p007os.Parcel;
 import android.provider.SettingsStringUtil;
 import android.telephony.SmsManager;
 import android.util.Log;
@@ -17,7 +18,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-/* compiled from: SRTRenderer */
+/* compiled from: SRTRenderer.java */
+/* loaded from: classes3.dex */
 class SRTTrack extends WebVttTrack {
     private static final int KEY_LOCAL_SETTING = 102;
     private static final int KEY_START_TIME = 7;
@@ -32,153 +34,143 @@ class SRTTrack extends WebVttTrack {
     }
 
     SRTTrack(Handler eventHandler, MediaFormat format) {
-        super((WebVttRenderingWidget) null, format);
+        super(null, format);
         this.mEventHandler = eventHandler;
     }
 
-    /* access modifiers changed from: protected */
-    public void onData(SubtitleData data) {
+    @Override // android.media.SubtitleTrack
+    protected void onData(SubtitleData data) {
         try {
             TextTrackCue cue = new TextTrackCue();
             cue.mStartTimeMs = data.getStartTimeUs() / 1000;
             cue.mEndTimeMs = (data.getStartTimeUs() + data.getDurationUs()) / 1000;
-            String[] lines = new String(data.getData(), "UTF-8").split("\\r?\\n");
-            cue.mLines = new TextTrackCueSpan[lines.length][];
+            String paragraph = new String(data.getData(), "UTF-8");
+            String[] lines = paragraph.split("\\r?\\n");
+            cue.mLines = new TextTrackCueSpan[lines.length];
             int length = lines.length;
             int i = 0;
             int i2 = 0;
             while (i2 < length) {
-                cue.mLines[i] = new TextTrackCueSpan[]{new TextTrackCueSpan(lines[i2], -1)};
+                String line = lines[i2];
+                TextTrackCueSpan[] span = new TextTrackCueSpan[1];
+                span[0] = new TextTrackCueSpan(line, -1L);
+                cue.mLines[i] = span;
                 i2++;
                 i++;
             }
             addCue(cue);
         } catch (UnsupportedEncodingException e) {
-            Log.w(TAG, "subtitle data is not UTF-8 encoded: " + e);
+            Log.m64w(TAG, "subtitle data is not UTF-8 encoded: " + e);
         }
     }
 
+    @Override // android.media.WebVttTrack, android.media.SubtitleTrack
     public void onData(byte[] data, boolean eos, long runID) {
+        String header;
         try {
-            try {
-                Reader r = new InputStreamReader(new ByteArrayInputStream(data), "UTF-8");
-                BufferedReader br = new BufferedReader(r);
-                while (true) {
-                    String readLine = br.readLine();
-                    String str = readLine;
-                    if (readLine == null) {
-                        break;
+        } catch (UnsupportedEncodingException e) {
+            e = e;
+        } catch (IOException e2) {
+            ioe = e2;
+        }
+        try {
+            Reader r = new InputStreamReader(new ByteArrayInputStream(data), "UTF-8");
+            BufferedReader br = new BufferedReader(r);
+            while (br.readLine() != null && (header = br.readLine()) != null) {
+                TextTrackCue cue = new TextTrackCue();
+                String[] startEnd = header.split("-->");
+                cue.mStartTimeMs = parseMs(startEnd[0]);
+                int i = 1;
+                cue.mEndTimeMs = parseMs(startEnd[1]);
+                try {
+                    cue.mRunID = runID;
+                    List<String> paragraph = new ArrayList<>();
+                    while (true) {
+                        String s = br.readLine();
+                        if (s == null || s.trim().equals("")) {
+                            break;
+                        }
+                        paragraph.add(s);
                     }
-                    String header = br.readLine();
-                    if (header == null) {
-                        break;
+                    int i2 = 0;
+                    cue.mLines = new TextTrackCueSpan[paragraph.size()];
+                    cue.mStrings = (String[]) paragraph.toArray(new String[0]);
+                    for (String line : paragraph) {
+                        TextTrackCueSpan[] span = new TextTrackCueSpan[i];
+                        Reader r2 = r;
+                        BufferedReader br2 = br;
+                        span[0] = new TextTrackCueSpan(line, -1L);
+                        cue.mStrings[i2] = line;
+                        int i3 = i2 + 1;
+                        cue.mLines[i2] = span;
+                        i2 = i3;
+                        r = r2;
+                        br = br2;
+                        i = 1;
                     }
-                    TextTrackCue cue = new TextTrackCue();
-                    String[] startEnd = header.split("-->");
-                    cue.mStartTimeMs = parseMs(startEnd[0]);
-                    int i = 1;
-                    cue.mEndTimeMs = parseMs(startEnd[1]);
+                    Reader r3 = r;
+                    BufferedReader br3 = br;
                     try {
-                        cue.mRunID = runID;
-                        List<String> paragraph = new ArrayList<>();
-                        while (true) {
-                            String readLine2 = br.readLine();
-                            String s = readLine2;
-                            if (readLine2 == null || s.trim().equals("")) {
-                                int i2 = 0;
-                                cue.mLines = new TextTrackCueSpan[paragraph.size()][];
-                                cue.mStrings = (String[]) paragraph.toArray(new String[0]);
-                            } else {
-                                paragraph.add(s);
-                            }
-                        }
-                        int i22 = 0;
-                        cue.mLines = new TextTrackCueSpan[paragraph.size()][];
-                        cue.mStrings = (String[]) paragraph.toArray(new String[0]);
-                        for (String line : paragraph) {
-                            TextTrackCueSpan[] span = new TextTrackCueSpan[i];
-                            Reader r2 = r;
-                            BufferedReader br2 = br;
-                            span[0] = new TextTrackCueSpan(line, -1);
-                            cue.mStrings[i22] = line;
-                            int i3 = i22 + 1;
-                            cue.mLines[i22] = span;
-                            i22 = i3;
-                            r = r2;
-                            br = br2;
-                            i = 1;
-                        }
-                        Reader r3 = r;
-                        BufferedReader br3 = br;
-                        try {
-                            addCue(cue);
-                            r = r3;
-                            br = br3;
-                        } catch (UnsupportedEncodingException e) {
-                            e = e;
-                            Log.w(TAG, "subtitle data is not UTF-8 encoded: " + e);
-                        } catch (IOException e2) {
-                            ioe = e2;
-                            Log.e(TAG, ioe.getMessage(), ioe);
-                        }
+                        addCue(cue);
+                        r = r3;
+                        br = br3;
                     } catch (UnsupportedEncodingException e3) {
                         e = e3;
-                        Log.w(TAG, "subtitle data is not UTF-8 encoded: " + e);
+                        Log.m64w(TAG, "subtitle data is not UTF-8 encoded: " + e);
                     } catch (IOException e4) {
                         ioe = e4;
-                        Log.e(TAG, ioe.getMessage(), ioe);
+                        Log.m69e(TAG, ioe.getMessage(), ioe);
                     }
+                } catch (UnsupportedEncodingException e5) {
+                    e = e5;
+                } catch (IOException e6) {
+                    ioe = e6;
                 }
-                long j = runID;
-            } catch (UnsupportedEncodingException e5) {
-                e = e5;
-                long j2 = runID;
-                Log.w(TAG, "subtitle data is not UTF-8 encoded: " + e);
-            } catch (IOException e6) {
-                ioe = e6;
-                long j3 = runID;
-                Log.e(TAG, ioe.getMessage(), ioe);
             }
         } catch (UnsupportedEncodingException e7) {
             e = e7;
-            byte[] bArr = data;
-            long j22 = runID;
-            Log.w(TAG, "subtitle data is not UTF-8 encoded: " + e);
+            Log.m64w(TAG, "subtitle data is not UTF-8 encoded: " + e);
         } catch (IOException e8) {
             ioe = e8;
-            byte[] bArr2 = data;
-            long j32 = runID;
-            Log.e(TAG, ioe.getMessage(), ioe);
+            Log.m69e(TAG, ioe.getMessage(), ioe);
         }
     }
 
+    @Override // android.media.WebVttTrack, android.media.SubtitleTrack
     public void updateView(Vector<SubtitleTrack.Cue> activeCues) {
+        String[] strArr;
         if (getRenderingWidget() != null) {
             super.updateView(activeCues);
         } else if (this.mEventHandler != null) {
             Iterator<SubtitleTrack.Cue> it = activeCues.iterator();
             while (it.hasNext()) {
                 SubtitleTrack.Cue cue = it.next();
+                TextTrackCue ttc = (TextTrackCue) cue;
                 Parcel parcel = Parcel.obtain();
                 parcel.writeInt(102);
                 parcel.writeInt(7);
                 parcel.writeInt((int) cue.mStartTimeMs);
                 parcel.writeInt(16);
                 StringBuilder sb = new StringBuilder();
-                for (String line : ((TextTrackCue) cue).mStrings) {
+                for (String line : ttc.mStrings) {
                     sb.append(line);
-                    sb.append(10);
+                    sb.append('\n');
                 }
                 byte[] buf = sb.toString().getBytes();
                 parcel.writeInt(buf.length);
                 parcel.writeByteArray(buf);
-                this.mEventHandler.sendMessage(this.mEventHandler.obtainMessage(99, 0, 0, parcel));
+                Message msg = this.mEventHandler.obtainMessage(99, 0, 0, parcel);
+                this.mEventHandler.sendMessage(msg);
             }
             activeCues.clear();
         }
     }
 
     private static long parseMs(String in) {
-        return (Long.parseLong(in.split(SettingsStringUtil.DELIMITER)[0].trim()) * 60 * 60 * 1000) + (60 * Long.parseLong(in.split(SettingsStringUtil.DELIMITER)[1].trim()) * 1000) + (1000 * Long.parseLong(in.split(SettingsStringUtil.DELIMITER)[2].split(SmsManager.REGEX_PREFIX_DELIMITER)[0].trim())) + Long.parseLong(in.split(SettingsStringUtil.DELIMITER)[2].split(SmsManager.REGEX_PREFIX_DELIMITER)[1].trim());
+        long hours = Long.parseLong(in.split(SettingsStringUtil.DELIMITER)[0].trim());
+        long minutes = Long.parseLong(in.split(SettingsStringUtil.DELIMITER)[1].trim());
+        long seconds = Long.parseLong(in.split(SettingsStringUtil.DELIMITER)[2].split(SmsManager.REGEX_PREFIX_DELIMITER)[0].trim());
+        long millies = Long.parseLong(in.split(SettingsStringUtil.DELIMITER)[2].split(SmsManager.REGEX_PREFIX_DELIMITER)[1].trim());
+        return (hours * 60 * 60 * 1000) + (60 * minutes * 1000) + (1000 * seconds) + millies;
     }
 }

@@ -2,6 +2,7 @@ package android.graphics;
 
 import android.annotation.UnsupportedAppUsage;
 
+/* loaded from: classes.dex */
 public class ColorMatrixColorFilter extends ColorFilter {
     @UnsupportedAppUsage
     private final ColorMatrix mMatrix = new ColorMatrix();
@@ -13,11 +14,10 @@ public class ColorMatrixColorFilter extends ColorFilter {
     }
 
     public ColorMatrixColorFilter(float[] array) {
-        if (array.length >= 20) {
-            this.mMatrix.set(array);
-            return;
+        if (array.length < 20) {
+            throw new ArrayIndexOutOfBoundsException();
         }
-        throw new ArrayIndexOutOfBoundsException();
+        this.mMatrix.set(array);
     }
 
     public void getColorMatrix(ColorMatrix colorMatrix) {
@@ -39,15 +39,15 @@ public class ColorMatrixColorFilter extends ColorFilter {
         discardNativeInstance();
         if (array == null) {
             this.mMatrix.reset();
-        } else if (array.length >= 20) {
-            this.mMatrix.set(array);
-        } else {
+        } else if (array.length < 20) {
             throw new ArrayIndexOutOfBoundsException();
+        } else {
+            this.mMatrix.set(array);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public long createNativeInstance() {
+    @Override // android.graphics.ColorFilter
+    long createNativeInstance() {
         return nativeColorMatrixFilter(this.mMatrix.getArray());
     }
 }

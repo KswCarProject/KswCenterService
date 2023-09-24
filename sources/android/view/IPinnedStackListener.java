@@ -1,13 +1,15 @@
 package android.view;
 
-import android.content.pm.ParceledListSlice;
+import android.content.p002pm.ParceledListSlice;
 import android.graphics.Rect;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
+import android.view.IPinnedStackController;
 
+/* loaded from: classes4.dex */
 public interface IPinnedStackListener extends IInterface {
     void onActionsChanged(ParceledListSlice parceledListSlice) throws RemoteException;
 
@@ -21,30 +23,39 @@ public interface IPinnedStackListener extends IInterface {
 
     void onShelfVisibilityChanged(boolean z, int i) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IPinnedStackListener {
+        @Override // android.view.IPinnedStackListener
         public void onListenerRegistered(IPinnedStackController controller) throws RemoteException {
         }
 
+        @Override // android.view.IPinnedStackListener
         public void onMovementBoundsChanged(Rect insetBounds, Rect normalBounds, Rect animatingBounds, boolean fromImeAdjustment, boolean fromShelfAdjustment, int displayRotation) throws RemoteException {
         }
 
+        @Override // android.view.IPinnedStackListener
         public void onImeVisibilityChanged(boolean imeVisible, int imeHeight) throws RemoteException {
         }
 
+        @Override // android.view.IPinnedStackListener
         public void onShelfVisibilityChanged(boolean shelfVisible, int shelfHeight) throws RemoteException {
         }
 
+        @Override // android.view.IPinnedStackListener
         public void onMinimizedStateChanged(boolean isMinimized) throws RemoteException {
         }
 
+        @Override // android.view.IPinnedStackListener
         public void onActionsChanged(ParceledListSlice actions) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IPinnedStackListener {
         private static final String DESCRIPTOR = "android.view.IPinnedStackListener";
         static final int TRANSACTION_onActionsChanged = 6;
@@ -63,12 +74,13 @@ public interface IPinnedStackListener extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IPinnedStackListener)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IPinnedStackListener)) {
+                return (IPinnedStackListener) iin;
             }
-            return (IPinnedStackListener) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -92,145 +104,75 @@ public interface IPinnedStackListener extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v2, resolved type: android.content.pm.ParceledListSlice} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v5, resolved type: android.content.pm.ParceledListSlice} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v1, resolved type: android.graphics.Rect} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v18, resolved type: android.content.pm.ParceledListSlice} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v23, resolved type: android.content.pm.ParceledListSlice} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v24, resolved type: android.content.pm.ParceledListSlice} */
-        /* JADX WARNING: type inference failed for: r0v11, types: [android.graphics.Rect] */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r14, android.os.Parcel r15, android.os.Parcel r16, int r17) throws android.os.RemoteException {
-            /*
-                r13 = this;
-                r7 = r13
-                r8 = r14
-                r9 = r15
-                java.lang.String r10 = "android.view.IPinnedStackListener"
-                r0 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r11 = 1
-                if (r8 == r0) goto L_0x00c2
-                r0 = 0
-                r5 = 0
-                switch(r8) {
-                    case 1: goto L_0x00b3;
-                    case 2: goto L_0x0064;
-                    case 3: goto L_0x0050;
-                    case 4: goto L_0x003c;
-                    case 5: goto L_0x002c;
-                    case 6: goto L_0x0015;
-                    default: goto L_0x0010;
-                }
-            L_0x0010:
-                boolean r0 = super.onTransact(r14, r15, r16, r17)
-                return r0
-            L_0x0015:
-                r15.enforceInterface(r10)
-                int r1 = r15.readInt()
-                if (r1 == 0) goto L_0x0027
-                android.os.Parcelable$ClassLoaderCreator<android.content.pm.ParceledListSlice> r0 = android.content.pm.ParceledListSlice.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r15)
-                android.content.pm.ParceledListSlice r0 = (android.content.pm.ParceledListSlice) r0
-                goto L_0x0028
-            L_0x0027:
-            L_0x0028:
-                r13.onActionsChanged(r0)
-                return r11
-            L_0x002c:
-                r15.enforceInterface(r10)
-                int r0 = r15.readInt()
-                if (r0 == 0) goto L_0x0037
-                r5 = r11
-            L_0x0037:
-                r0 = r5
-                r13.onMinimizedStateChanged(r0)
-                return r11
-            L_0x003c:
-                r15.enforceInterface(r10)
-                int r0 = r15.readInt()
-                if (r0 == 0) goto L_0x0047
-                r5 = r11
-            L_0x0047:
-                r0 = r5
-                int r1 = r15.readInt()
-                r13.onShelfVisibilityChanged(r0, r1)
-                return r11
-            L_0x0050:
-                r15.enforceInterface(r10)
-                int r0 = r15.readInt()
-                if (r0 == 0) goto L_0x005b
-                r5 = r11
-            L_0x005b:
-                r0 = r5
-                int r1 = r15.readInt()
-                r13.onImeVisibilityChanged(r0, r1)
-                return r11
-            L_0x0064:
-                r15.enforceInterface(r10)
-                int r1 = r15.readInt()
-                if (r1 == 0) goto L_0x0076
-                android.os.Parcelable$Creator<android.graphics.Rect> r1 = android.graphics.Rect.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r15)
-                android.graphics.Rect r1 = (android.graphics.Rect) r1
-                goto L_0x0077
-            L_0x0076:
-                r1 = r0
-            L_0x0077:
-                int r2 = r15.readInt()
-                if (r2 == 0) goto L_0x0086
-                android.os.Parcelable$Creator<android.graphics.Rect> r2 = android.graphics.Rect.CREATOR
-                java.lang.Object r2 = r2.createFromParcel(r15)
-                android.graphics.Rect r2 = (android.graphics.Rect) r2
-                goto L_0x0087
-            L_0x0086:
-                r2 = r0
-            L_0x0087:
-                int r3 = r15.readInt()
-                if (r3 == 0) goto L_0x0097
-                android.os.Parcelable$Creator<android.graphics.Rect> r0 = android.graphics.Rect.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r15)
-                android.graphics.Rect r0 = (android.graphics.Rect) r0
-            L_0x0095:
-                r3 = r0
-                goto L_0x0098
-            L_0x0097:
-                goto L_0x0095
-            L_0x0098:
-                int r0 = r15.readInt()
-                if (r0 == 0) goto L_0x00a0
-                r4 = r11
-                goto L_0x00a1
-            L_0x00a0:
-                r4 = r5
-            L_0x00a1:
-                int r0 = r15.readInt()
-                if (r0 == 0) goto L_0x00a9
-                r5 = r11
-            L_0x00a9:
-                int r12 = r15.readInt()
-                r0 = r13
-                r6 = r12
-                r0.onMovementBoundsChanged(r1, r2, r3, r4, r5, r6)
-                return r11
-            L_0x00b3:
-                r15.enforceInterface(r10)
-                android.os.IBinder r0 = r15.readStrongBinder()
-                android.view.IPinnedStackController r0 = android.view.IPinnedStackController.Stub.asInterface(r0)
-                r13.onListenerRegistered(r0)
-                return r11
-            L_0x00c2:
-                r0 = r16
-                r0.writeString(r10)
-                return r11
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.view.IPinnedStackListener.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            Rect _arg0;
+            Rect _arg1;
+            boolean _arg4;
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    IPinnedStackController _arg02 = IPinnedStackController.Stub.asInterface(data.readStrongBinder());
+                    onListenerRegistered(_arg02);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg0 = Rect.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg0 = null;
+                    }
+                    if (data.readInt() != 0) {
+                        _arg1 = Rect.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg1 = null;
+                    }
+                    Rect _arg2 = data.readInt() != 0 ? Rect.CREATOR.createFromParcel(data) : null;
+                    boolean _arg3 = data.readInt() != 0;
+                    _arg4 = data.readInt() != 0;
+                    int _arg5 = data.readInt();
+                    onMovementBoundsChanged(_arg0, _arg1, _arg2, _arg3, _arg4, _arg5);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg4 = data.readInt() != 0;
+                    boolean _arg03 = _arg4;
+                    int _arg12 = data.readInt();
+                    onImeVisibilityChanged(_arg03, _arg12);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg4 = data.readInt() != 0;
+                    boolean _arg04 = _arg4;
+                    int _arg13 = data.readInt();
+                    onShelfVisibilityChanged(_arg04, _arg13);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg4 = data.readInt() != 0;
+                    boolean _arg05 = _arg4;
+                    onMinimizedStateChanged(_arg05);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    ParceledListSlice _arg06 = data.readInt() != 0 ? ParceledListSlice.CREATOR.createFromParcel(data) : null;
+                    onActionsChanged(_arg06);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IPinnedStackListener {
             public static IPinnedStackListener sDefaultImpl;
             private IBinder mRemote;
@@ -239,6 +181,7 @@ public interface IPinnedStackListener extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -247,14 +190,14 @@ public interface IPinnedStackListener extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.view.IPinnedStackListener
             public void onListenerRegistered(IPinnedStackController controller) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(controller != null ? controller.asBinder() : null);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onListenerRegistered(controller);
                     }
                 } finally {
@@ -262,86 +205,75 @@ public interface IPinnedStackListener extends IInterface {
                 }
             }
 
+            @Override // android.view.IPinnedStackListener
             public void onMovementBoundsChanged(Rect insetBounds, Rect normalBounds, Rect animatingBounds, boolean fromImeAdjustment, boolean fromShelfAdjustment, int displayRotation) throws RemoteException {
-                Rect rect = insetBounds;
-                Rect rect2 = normalBounds;
-                Rect rect3 = animatingBounds;
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (rect != null) {
+                    if (insetBounds != null) {
                         _data.writeInt(1);
-                        rect.writeToParcel(_data, 0);
+                        insetBounds.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (rect2 != null) {
+                    if (normalBounds != null) {
                         _data.writeInt(1);
-                        rect2.writeToParcel(_data, 0);
+                        normalBounds.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (rect3 != null) {
+                    if (animatingBounds != null) {
                         _data.writeInt(1);
-                        rect3.writeToParcel(_data, 0);
+                        animatingBounds.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
                     try {
                         _data.writeInt(fromImeAdjustment ? 1 : 0);
-                        try {
-                            _data.writeInt(fromShelfAdjustment ? 1 : 0);
-                        } catch (Throwable th) {
-                            th = th;
-                            int i = displayRotation;
-                            _data.recycle();
-                            throw th;
-                        }
+                    } catch (Throwable th) {
+                        th = th;
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeInt(fromShelfAdjustment ? 1 : 0);
                         try {
                             _data.writeInt(displayRotation);
-                            try {
-                                if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                                    _data.recycle();
-                                    return;
-                                }
-                                Stub.getDefaultImpl().onMovementBoundsChanged(insetBounds, normalBounds, animatingBounds, fromImeAdjustment, fromShelfAdjustment, displayRotation);
-                                _data.recycle();
-                            } catch (Throwable th2) {
-                                th = th2;
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th3) {
-                            th = th3;
-                            _data.recycle();
-                            throw th;
+                        } catch (Throwable th2) {
+                            th = th2;
                         }
+                    } catch (Throwable th3) {
+                        th = th3;
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        boolean _status = this.mRemote.transact(2, _data, null, 1);
+                        if (!_status && Stub.getDefaultImpl() != null) {
+                            Stub.getDefaultImpl().onMovementBoundsChanged(insetBounds, normalBounds, animatingBounds, fromImeAdjustment, fromShelfAdjustment, displayRotation);
+                            _data.recycle();
+                            return;
+                        }
+                        _data.recycle();
                     } catch (Throwable th4) {
                         th = th4;
-                        boolean z = fromShelfAdjustment;
-                        int i2 = displayRotation;
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th5) {
                     th = th5;
-                    boolean z2 = fromImeAdjustment;
-                    boolean z3 = fromShelfAdjustment;
-                    int i22 = displayRotation;
-                    _data.recycle();
-                    throw th;
                 }
             }
 
+            @Override // android.view.IPinnedStackListener
             public void onImeVisibilityChanged(boolean imeVisible, int imeHeight) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(imeVisible);
+                    _data.writeInt(imeVisible ? 1 : 0);
                     _data.writeInt(imeHeight);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onImeVisibilityChanged(imeVisible, imeHeight);
                     }
                 } finally {
@@ -349,15 +281,15 @@ public interface IPinnedStackListener extends IInterface {
                 }
             }
 
+            @Override // android.view.IPinnedStackListener
             public void onShelfVisibilityChanged(boolean shelfVisible, int shelfHeight) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(shelfVisible);
+                    _data.writeInt(shelfVisible ? 1 : 0);
                     _data.writeInt(shelfHeight);
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onShelfVisibilityChanged(shelfVisible, shelfHeight);
                     }
                 } finally {
@@ -365,14 +297,14 @@ public interface IPinnedStackListener extends IInterface {
                 }
             }
 
+            @Override // android.view.IPinnedStackListener
             public void onMinimizedStateChanged(boolean isMinimized) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(isMinimized);
-                    if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(isMinimized ? 1 : 0);
+                    boolean _status = this.mRemote.transact(5, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onMinimizedStateChanged(isMinimized);
                     }
                 } finally {
@@ -380,6 +312,7 @@ public interface IPinnedStackListener extends IInterface {
                 }
             }
 
+            @Override // android.view.IPinnedStackListener
             public void onActionsChanged(ParceledListSlice actions) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -390,9 +323,8 @@ public interface IPinnedStackListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(6, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(6, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onActionsChanged(actions);
                     }
                 } finally {
@@ -402,11 +334,11 @@ public interface IPinnedStackListener extends IInterface {
         }
 
         public static boolean setDefaultImpl(IPinnedStackListener impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IPinnedStackListener getDefaultImpl() {

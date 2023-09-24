@@ -1,6 +1,6 @@
 package android.app.backup;
 
-import android.os.ParcelFileDescriptor;
+import android.p007os.ParcelFileDescriptor;
 import android.util.ArrayMap;
 import android.util.Log;
 import java.io.ByteArrayInputStream;
@@ -15,17 +15,16 @@ import java.util.zip.CRC32;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterInputStream;
 
+/* loaded from: classes.dex */
 public abstract class BlobBackupHelper implements BackupHelper {
     private static final boolean DEBUG = false;
     private static final String TAG = "BlobBackupHelper";
     private final int mCurrentBlobVersion;
     private final String[] mKeys;
 
-    /* access modifiers changed from: protected */
-    public abstract void applyRestoredPayload(String str, byte[] bArr);
+    protected abstract void applyRestoredPayload(String str, byte[] bArr);
 
-    /* access modifiers changed from: protected */
-    public abstract byte[] getBackupPayload(String str);
+    protected abstract byte[] getBackupPayload(String str);
 
     public BlobBackupHelper(int currentBlobVersion, String... keys) {
         this.mCurrentBlobVersion = currentBlobVersion;
@@ -34,21 +33,24 @@ public abstract class BlobBackupHelper implements BackupHelper {
 
     private ArrayMap<String, Long> readOldState(ParcelFileDescriptor oldStateFd) {
         ArrayMap<String, Long> state = new ArrayMap<>();
-        DataInputStream in = new DataInputStream(new FileInputStream(oldStateFd.getFileDescriptor()));
+        FileInputStream fis = new FileInputStream(oldStateFd.getFileDescriptor());
+        DataInputStream in = new DataInputStream(fis);
         try {
             int version = in.readInt();
             if (version <= this.mCurrentBlobVersion) {
                 int numKeys = in.readInt();
                 for (int i = 0; i < numKeys; i++) {
-                    state.put(in.readUTF(), Long.valueOf(in.readLong()));
+                    String key = in.readUTF();
+                    long checksum = in.readLong();
+                    state.put(key, Long.valueOf(checksum));
                 }
             } else {
-                Log.w(TAG, "Prior state from unrecognized version " + version);
+                Log.m64w(TAG, "Prior state from unrecognized version " + version);
             }
         } catch (EOFException e) {
             state.clear();
         } catch (Exception e2) {
-            Log.e(TAG, "Error examining prior backup state " + e2.getMessage());
+            Log.m70e(TAG, "Error examining prior backup state " + e2.getMessage());
             state.clear();
         }
         return state;
@@ -56,17 +58,19 @@ public abstract class BlobBackupHelper implements BackupHelper {
 
     private void writeBackupState(ArrayMap<String, Long> state, ParcelFileDescriptor stateFile) {
         try {
-            DataOutputStream out = new DataOutputStream(new FileOutputStream(stateFile.getFileDescriptor()));
+            FileOutputStream fos = new FileOutputStream(stateFile.getFileDescriptor());
+            DataOutputStream out = new DataOutputStream(fos);
             out.writeInt(this.mCurrentBlobVersion);
             int N = state != null ? state.size() : 0;
             out.writeInt(N);
             for (int i = 0; i < N; i++) {
+                String key = state.keyAt(i);
                 long checksum = state.valueAt(i).longValue();
-                out.writeUTF(state.keyAt(i));
+                out.writeUTF(key);
                 out.writeLong(checksum);
             }
         } catch (IOException e) {
-            Log.e(TAG, "Unable to write updated state", e);
+            Log.m69e(TAG, "Unable to write updated state", e);
         }
     }
 
@@ -76,13 +80,15 @@ public abstract class BlobBackupHelper implements BackupHelper {
         }
         try {
             ByteArrayOutputStream sink = new ByteArrayOutputStream();
-            new DataOutputStream(sink).writeInt(this.mCurrentBlobVersion);
+            DataOutputStream headerOut = new DataOutputStream(sink);
+            headerOut.writeInt(this.mCurrentBlobVersion);
             DeflaterOutputStream out = new DeflaterOutputStream(sink);
             out.write(data);
             out.close();
-            return sink.toByteArray();
+            byte[] result = sink.toByteArray();
+            return result;
         } catch (IOException e) {
-            Log.w(TAG, "Unable to process payload: " + e.getMessage());
+            Log.m64w(TAG, "Unable to process payload: " + e.getMessage());
             return null;
         }
     }
@@ -93,107 +99,108 @@ public abstract class BlobBackupHelper implements BackupHelper {
         }
         try {
             ByteArrayInputStream source = new ByteArrayInputStream(compressedData);
-            int version = new DataInputStream(source).readInt();
+            DataInputStream headerIn = new DataInputStream(source);
+            int version = headerIn.readInt();
             if (version > this.mCurrentBlobVersion) {
-                Log.w(TAG, "Saved payload from unrecognized version " + version);
+                Log.m64w(TAG, "Saved payload from unrecognized version " + version);
                 return null;
             }
             InflaterInputStream in = new InflaterInputStream(source);
             ByteArrayOutputStream inflated = new ByteArrayOutputStream();
             byte[] buffer = new byte[4096];
             while (true) {
-                int read = in.read(buffer);
-                int nRead = read;
-                if (read > 0) {
+                int nRead = in.read(buffer);
+                if (nRead > 0) {
                     inflated.write(buffer, 0, nRead);
                 } else {
                     in.close();
                     inflated.flush();
-                    return inflated.toByteArray();
+                    byte[] result = inflated.toByteArray();
+                    return result;
                 }
             }
         } catch (IOException e) {
-            Log.w(TAG, "Unable to process restored payload: " + e.getMessage());
+            Log.m64w(TAG, "Unable to process restored payload: " + e.getMessage());
             return null;
         }
     }
 
     private long checksum(byte[] buffer) {
-        if (buffer == null) {
-            return -1;
-        }
-        try {
-            CRC32 crc = new CRC32();
-            ByteArrayInputStream bis = new ByteArrayInputStream(buffer);
-            byte[] buf = new byte[4096];
-            while (true) {
-                int read = bis.read(buf);
-                int nRead = read;
-                if (read < 0) {
-                    return crc.getValue();
+        if (buffer != null) {
+            try {
+                CRC32 crc = new CRC32();
+                ByteArrayInputStream bis = new ByteArrayInputStream(buffer);
+                byte[] buf = new byte[4096];
+                while (true) {
+                    int nRead = bis.read(buf);
+                    if (nRead >= 0) {
+                        crc.update(buf, 0, nRead);
+                    } else {
+                        return crc.getValue();
+                    }
                 }
-                crc.update(buf, 0, nRead);
+            } catch (Exception e) {
+                return -1L;
             }
-        } catch (Exception e) {
-            return -1;
+        } else {
+            return -1L;
         }
     }
 
+    @Override // android.app.backup.BackupHelper
     public void performBackup(ParcelFileDescriptor oldStateFd, BackupDataOutput data, ParcelFileDescriptor newStateFd) {
+        String[] strArr;
         ArrayMap<String, Long> oldState = readOldState(oldStateFd);
         ArrayMap<String, Long> newState = new ArrayMap<>();
         try {
-            for (String key : this.mKeys) {
-                byte[] payload = deflate(getBackupPayload(key));
-                long checksum = checksum(payload);
-                newState.put(key, Long.valueOf(checksum));
-                Long oldChecksum = oldState.get(key);
-                if (oldChecksum == null || checksum != oldChecksum.longValue()) {
-                    if (payload != null) {
-                        data.writeEntityHeader(key, payload.length);
-                        data.writeEntityData(payload, payload.length);
-                    } else {
-                        data.writeEntityHeader(key, -1);
+            try {
+                for (String key : this.mKeys) {
+                    byte[] payload = deflate(getBackupPayload(key));
+                    long checksum = checksum(payload);
+                    newState.put(key, Long.valueOf(checksum));
+                    Long oldChecksum = oldState.get(key);
+                    if (oldChecksum == null || checksum != oldChecksum.longValue()) {
+                        if (payload != null) {
+                            data.writeEntityHeader(key, payload.length);
+                            data.writeEntityData(payload, payload.length);
+                        } else {
+                            data.writeEntityHeader(key, -1);
+                        }
                     }
                 }
+            } catch (Exception e) {
+                Log.m64w(TAG, "Unable to record notification state: " + e.getMessage());
+                newState.clear();
             }
-        } catch (Exception e) {
-            Log.w(TAG, "Unable to record notification state: " + e.getMessage());
-            newState.clear();
-        } catch (Throwable th) {
+        } finally {
             writeBackupState(newState, newStateFd);
-            throw th;
         }
-        writeBackupState(newState, newStateFd);
     }
 
+    @Override // android.app.backup.BackupHelper
     public void restoreEntity(BackupDataInputStream data) {
         String key = data.getKey();
         int which = 0;
-        while (true) {
+        while (which < this.mKeys.length && !key.equals(this.mKeys[which])) {
             try {
-                if (which >= this.mKeys.length) {
-                    break;
-                } else if (key.equals(this.mKeys[which])) {
-                    break;
-                } else {
-                    which++;
-                }
+                which++;
             } catch (Exception e) {
-                Log.e(TAG, "Exception restoring entity " + key + " : " + e.getMessage());
+                Log.m70e(TAG, "Exception restoring entity " + key + " : " + e.getMessage());
                 return;
             }
         }
         if (which >= this.mKeys.length) {
-            Log.e(TAG, "Unrecognized key " + key + ", ignoring");
+            Log.m70e(TAG, "Unrecognized key " + key + ", ignoring");
             return;
         }
         byte[] compressed = new byte[data.size()];
         data.read(compressed);
-        applyRestoredPayload(key, inflate(compressed));
+        byte[] payload = inflate(compressed);
+        applyRestoredPayload(key, payload);
     }
 
+    @Override // android.app.backup.BackupHelper
     public void writeNewStateDescription(ParcelFileDescriptor newState) {
-        writeBackupState((ArrayMap<String, Long>) null, newState);
+        writeBackupState(null, newState);
     }
 }

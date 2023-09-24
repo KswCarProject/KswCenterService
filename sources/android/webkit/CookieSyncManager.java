@@ -3,17 +3,19 @@ package android.webkit;
 import android.content.Context;
 
 @Deprecated
+/* loaded from: classes4.dex */
 public final class CookieSyncManager extends WebSyncManager {
     private static boolean sGetInstanceAllowed = false;
     private static final Object sLock = new Object();
     private static CookieSyncManager sRef;
 
+    @Override // android.webkit.WebSyncManager, java.lang.Runnable
     public /* bridge */ /* synthetic */ void run() {
         super.run();
     }
 
     private CookieSyncManager() {
-        super((Context) null, (String) null);
+        super(null, null);
     }
 
     public static CookieSyncManager getInstance() {
@@ -29,37 +31,40 @@ public final class CookieSyncManager extends WebSyncManager {
     }
 
     public static CookieSyncManager createInstance(Context context) {
-        CookieSyncManager instance;
+        CookieSyncManager cookieSyncManager;
         synchronized (sLock) {
-            if (context != null) {
-                setGetInstanceIsAllowed();
-                instance = getInstance();
-            } else {
+            if (context == null) {
                 throw new IllegalArgumentException("Invalid context argument");
             }
+            setGetInstanceIsAllowed();
+            cookieSyncManager = getInstance();
         }
-        return instance;
+        return cookieSyncManager;
     }
 
+    @Override // android.webkit.WebSyncManager
     @Deprecated
     public void sync() {
         CookieManager.getInstance().flush();
     }
 
-    /* access modifiers changed from: protected */
+    @Override // android.webkit.WebSyncManager
     @Deprecated
-    public void syncFromRamToFlash() {
+    protected void syncFromRamToFlash() {
         CookieManager.getInstance().flush();
     }
 
+    @Override // android.webkit.WebSyncManager
     @Deprecated
     public void resetSync() {
     }
 
+    @Override // android.webkit.WebSyncManager
     @Deprecated
     public void startSync() {
     }
 
+    @Override // android.webkit.WebSyncManager
     @Deprecated
     public void stopSync() {
     }

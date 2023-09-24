@@ -1,16 +1,21 @@
 package android.telephony.ims;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes4.dex */
 public final class RcsQueryContinuationToken implements Parcelable {
-    public static final Parcelable.Creator<RcsQueryContinuationToken> CREATOR = new Parcelable.Creator<RcsQueryContinuationToken>() {
+    public static final Parcelable.Creator<RcsQueryContinuationToken> CREATOR = new Parcelable.Creator<RcsQueryContinuationToken>() { // from class: android.telephony.ims.RcsQueryContinuationToken.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RcsQueryContinuationToken createFromParcel(Parcel in) {
             return new RcsQueryContinuationToken(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RcsQueryContinuationToken[] newArray(int size) {
             return new RcsQueryContinuationToken[size];
         }
@@ -26,6 +31,7 @@ public final class RcsQueryContinuationToken implements Parcelable {
     private final String mRawQuery;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface ContinuationTokenType {
     }
 
@@ -59,10 +65,12 @@ public final class RcsQueryContinuationToken implements Parcelable {
         this.mOffset = in.readInt();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mQueryType);
         dest.writeString(this.mRawQuery);

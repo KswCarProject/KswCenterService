@@ -4,10 +4,12 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+/* loaded from: classes4.dex */
 public class BackupUtils {
     public static final int NOT_NULL = 1;
     public static final int NULL = 0;
 
+    /* loaded from: classes4.dex */
     public static class BadVersionException extends Exception {
         public BadVersionException(String message) {
             super(message);

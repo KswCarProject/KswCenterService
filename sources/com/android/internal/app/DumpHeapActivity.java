@@ -8,13 +8,13 @@ import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Parcelable;
+import android.p007os.Bundle;
 import android.util.DebugUtils;
 import android.util.Slog;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import com.ibm.icu.text.PluralRules;
 
+/* loaded from: classes4.dex */
 public class DumpHeapActivity extends Activity {
     public static final String ACTION_DELETE_DUMPHEAP = "com.android.server.am.DELETE_DUMPHEAP";
     public static final String EXTRA_DELAY_DELETE = "delay_delete";
@@ -29,12 +29,12 @@ public class DumpHeapActivity extends Activity {
     String mProcess;
     long mSize;
 
-    /* access modifiers changed from: protected */
-    public void onCreate(Bundle savedInstanceState) {
+    @Override // android.app.Activity
+    protected void onCreate(Bundle savedInstanceState) {
         int messageId;
         super.onCreate(savedInstanceState);
         this.mProcess = getIntent().getStringExtra(KEY_PROCESS);
-        this.mSize = getIntent().getLongExtra(KEY_SIZE, 0);
+        this.mSize = getIntent().getLongExtra(KEY_SIZE, 0L);
         boolean isUserInitiated = getIntent().getBooleanExtra(KEY_IS_USER_INITIATED, false);
         boolean isSystemProcess = getIntent().getBooleanExtra(KEY_IS_SYSTEM_PROCESS, false);
         String directLaunch = getIntent().getStringExtra(KEY_DIRECT_LAUNCH);
@@ -45,7 +45,7 @@ public class DumpHeapActivity extends Activity {
             intent.setClipData(clip);
             intent.addFlags(1);
             intent.setType(clip.getDescription().getMimeType(0));
-            intent.putExtra(Intent.EXTRA_STREAM, (Parcelable) JAVA_URI);
+            intent.putExtra(Intent.EXTRA_STREAM, JAVA_URI);
             try {
                 startActivity(intent);
                 scheduleDelete();
@@ -53,60 +53,61 @@ public class DumpHeapActivity extends Activity {
                 finish();
                 return;
             } catch (ActivityNotFoundException e) {
-                Slog.i("DumpHeapActivity", "Unable to direct launch to " + directLaunch + PluralRules.KEYWORD_RULE_SEPARATOR + e.getMessage());
+                Slog.m54i("DumpHeapActivity", "Unable to direct launch to " + directLaunch + PluralRules.KEYWORD_RULE_SEPARATOR + e.getMessage());
             }
         }
         if (isUserInitiated) {
-            messageId = R.string.dump_heap_ready_text;
+            messageId = C3132R.string.dump_heap_ready_text;
         } else if (isSystemProcess) {
-            messageId = R.string.dump_heap_system_text;
+            messageId = C3132R.string.dump_heap_system_text;
         } else {
-            messageId = R.string.dump_heap_text;
+            messageId = C3132R.string.dump_heap_text;
         }
         AlertDialog.Builder b = new AlertDialog.Builder(this, 16974394);
-        b.setTitle((int) R.string.dump_heap_title);
-        b.setMessage((CharSequence) getString(messageId, this.mProcess, DebugUtils.sizeValueToString(this.mSize, (StringBuilder) null)));
-        b.setNegativeButton(17039360, (DialogInterface.OnClickListener) new DialogInterface.OnClickListener() {
+        b.setTitle(C3132R.string.dump_heap_title);
+        b.setMessage(getString(messageId, this.mProcess, DebugUtils.sizeValueToString(this.mSize, null)));
+        b.setNegativeButton(17039360, new DialogInterface.OnClickListener() { // from class: com.android.internal.app.DumpHeapActivity.1
+            @Override // android.content.DialogInterface.OnClickListener
             public void onClick(DialogInterface dialog, int which) {
                 DumpHeapActivity.this.mHandled = true;
                 DumpHeapActivity.this.sendBroadcast(new Intent(DumpHeapActivity.ACTION_DELETE_DUMPHEAP));
                 DumpHeapActivity.this.finish();
             }
         });
-        b.setPositiveButton(17039370, (DialogInterface.OnClickListener) new DialogInterface.OnClickListener() {
+        b.setPositiveButton(17039370, new DialogInterface.OnClickListener() { // from class: com.android.internal.app.DumpHeapActivity.2
+            @Override // android.content.DialogInterface.OnClickListener
             public void onClick(DialogInterface dialog, int which) {
                 DumpHeapActivity.this.mHandled = true;
                 DumpHeapActivity.this.scheduleDelete();
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                ClipData clip = ClipData.newUri(DumpHeapActivity.this.getContentResolver(), "Heap Dump", DumpHeapActivity.JAVA_URI);
-                intent.setClipData(clip);
-                intent.addFlags(1);
-                intent.setType(clip.getDescription().getMimeType(0));
-                intent.putExtra(Intent.EXTRA_STREAM, (Parcelable) DumpHeapActivity.JAVA_URI);
-                DumpHeapActivity.this.startActivity(Intent.createChooser(intent, DumpHeapActivity.this.getText(R.string.dump_heap_title)));
+                Intent intent2 = new Intent(Intent.ACTION_SEND);
+                ClipData clip2 = ClipData.newUri(DumpHeapActivity.this.getContentResolver(), "Heap Dump", DumpHeapActivity.JAVA_URI);
+                intent2.setClipData(clip2);
+                intent2.addFlags(1);
+                intent2.setType(clip2.getDescription().getMimeType(0));
+                intent2.putExtra(Intent.EXTRA_STREAM, DumpHeapActivity.JAVA_URI);
+                DumpHeapActivity.this.startActivity(Intent.createChooser(intent2, DumpHeapActivity.this.getText(C3132R.string.dump_heap_title)));
                 DumpHeapActivity.this.finish();
             }
         });
         this.mDialog = b.show();
     }
 
-    /* access modifiers changed from: package-private */
-    public void scheduleDelete() {
+    void scheduleDelete() {
         Intent broadcast = new Intent(ACTION_DELETE_DUMPHEAP);
         broadcast.putExtra(EXTRA_DELAY_DELETE, true);
         sendBroadcast(broadcast);
     }
 
-    /* access modifiers changed from: protected */
-    public void onStop() {
+    @Override // android.app.Activity
+    protected void onStop() {
         super.onStop();
         if (!isChangingConfigurations() && !this.mHandled) {
             sendBroadcast(new Intent(ACTION_DELETE_DUMPHEAP));
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onDestroy() {
+    @Override // android.app.Activity
+    protected void onDestroy() {
         super.onDestroy();
         this.mDialog.dismiss();
     }

@@ -6,10 +6,11 @@ import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.RemoteViews;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.lang.ref.WeakReference;
 
 @RemoteViews.RemoteView
+/* loaded from: classes4.dex */
 public final class ViewStub extends View {
     private OnInflateListener mInflateListener;
     private int mInflatedId;
@@ -17,6 +18,7 @@ public final class ViewStub extends View {
     private LayoutInflater mInflater;
     private int mLayoutResource;
 
+    /* loaded from: classes4.dex */
     public interface OnInflateListener {
         void onInflate(ViewStub viewStub, View view);
     }
@@ -40,8 +42,8 @@ public final class ViewStub extends View {
 
     public ViewStub(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context);
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ViewStub, defStyleAttr, defStyleRes);
-        saveAttributeDataForStyleable(context, R.styleable.ViewStub, attrs, a, defStyleAttr, defStyleRes);
+        TypedArray a = context.obtainStyledAttributes(attrs, C3132R.styleable.ViewStub, defStyleAttr, defStyleRes);
+        saveAttributeDataForStyleable(context, C3132R.styleable.ViewStub, attrs, a, defStyleAttr, defStyleRes);
         this.mInflatedId = a.getResourceId(2, -1);
         this.mLayoutResource = a.getResourceId(1, 0);
         this.mID = a.getResourceId(0, -1);
@@ -86,22 +88,24 @@ public final class ViewStub extends View {
         return this.mInflater;
     }
 
-    /* access modifiers changed from: protected */
-    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    @Override // android.view.View
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         setMeasuredDimension(0, 0);
     }
 
+    @Override // android.view.View
     public void draw(Canvas canvas) {
     }
 
-    /* access modifiers changed from: protected */
-    public void dispatchDraw(Canvas canvas) {
+    @Override // android.view.View
+    protected void dispatchDraw(Canvas canvas) {
     }
 
+    @Override // android.view.View
     @RemotableViewMethod(asyncImpl = "setVisibilityAsync")
     public void setVisibility(int visibility) {
         if (this.mInflatedViewRef != null) {
-            View view = (View) this.mInflatedViewRef.get();
+            View view = this.mInflatedViewRef.get();
             if (view != null) {
                 view.setVisibility(visibility);
                 return;
@@ -116,7 +120,8 @@ public final class ViewStub extends View {
 
     public Runnable setVisibilityAsync(int visibility) {
         if (visibility == 0 || visibility == 4) {
-            return new ViewReplaceRunnable(inflateViewNoAdd((ViewGroup) getParent()));
+            ViewGroup parent = (ViewGroup) getParent();
+            return new ViewReplaceRunnable(inflateViewNoAdd(parent));
         }
         return null;
     }
@@ -135,7 +140,7 @@ public final class ViewStub extends View {
         return view;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void replaceSelfWithView(View view, ViewGroup parent) {
         int index = parent.indexOfChild(this);
         parent.removeViewInLayout(this);
@@ -149,33 +154,35 @@ public final class ViewStub extends View {
 
     public View inflate() {
         ViewParent viewParent = getParent();
-        if (viewParent == null || !(viewParent instanceof ViewGroup)) {
-            throw new IllegalStateException("ViewStub must have a non-null ViewGroup viewParent");
-        } else if (this.mLayoutResource != 0) {
-            ViewGroup parent = (ViewGroup) viewParent;
-            View view = inflateViewNoAdd(parent);
-            replaceSelfWithView(view, parent);
-            this.mInflatedViewRef = new WeakReference<>(view);
-            if (this.mInflateListener != null) {
-                this.mInflateListener.onInflate(this, view);
+        if (viewParent != null && (viewParent instanceof ViewGroup)) {
+            if (this.mLayoutResource != 0) {
+                ViewGroup parent = (ViewGroup) viewParent;
+                View view = inflateViewNoAdd(parent);
+                replaceSelfWithView(view, parent);
+                this.mInflatedViewRef = new WeakReference<>(view);
+                if (this.mInflateListener != null) {
+                    this.mInflateListener.onInflate(this, view);
+                }
+                return view;
             }
-            return view;
-        } else {
             throw new IllegalArgumentException("ViewStub must have a valid layoutResource");
         }
+        throw new IllegalStateException("ViewStub must have a non-null ViewGroup viewParent");
     }
 
     public void setOnInflateListener(OnInflateListener inflateListener) {
         this.mInflateListener = inflateListener;
     }
 
+    /* loaded from: classes4.dex */
     public class ViewReplaceRunnable implements Runnable {
         public final View view;
 
-        ViewReplaceRunnable(View view2) {
-            this.view = view2;
+        ViewReplaceRunnable(View view) {
+            this.view = view;
         }
 
+        @Override // java.lang.Runnable
         public void run() {
             ViewStub.this.replaceSelfWithView(this.view, (ViewGroup) ViewStub.this.getParent());
         }

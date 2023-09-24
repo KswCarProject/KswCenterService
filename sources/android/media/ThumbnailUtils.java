@@ -12,14 +12,15 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
-import android.os.CancellationSignal;
-import android.os.Environment;
-import android.os.ParcelFileDescriptor;
+import android.p007os.CancellationSignal;
+import android.p007os.Environment;
+import android.p007os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.util.Size;
 import com.android.internal.util.ArrayUtils;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -27,13 +28,14 @@ import java.util.Objects;
 import java.util.function.ToIntFunction;
 import libcore.io.IoUtils;
 
+/* loaded from: classes3.dex */
 public class ThumbnailUtils {
     private static final int OPTIONS_NONE = 0;
     public static final int OPTIONS_RECYCLE_INPUT = 2;
     private static final int OPTIONS_SCALE_UP = 1;
     private static final String TAG = "ThumbnailUtils";
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public static final int TARGET_SIZE_MICRO_THUMBNAIL = 96;
 
     private static Size convertKind(int kind) {
@@ -49,21 +51,25 @@ public class ThumbnailUtils {
         throw new IllegalArgumentException("Unsupported kind: " + kind);
     }
 
+    /* loaded from: classes3.dex */
     private static class Resizer implements ImageDecoder.OnHeaderDecodedListener {
         private final CancellationSignal signal;
         private final Size size;
 
-        public Resizer(Size size2, CancellationSignal signal2) {
-            this.size = size2;
-            this.signal = signal2;
+        public Resizer(Size size, CancellationSignal signal) {
+            this.size = size;
+            this.signal = signal;
         }
 
+        @Override // android.graphics.ImageDecoder.OnHeaderDecodedListener
         public void onHeaderDecoded(ImageDecoder decoder, ImageDecoder.ImageInfo info, ImageDecoder.Source source) {
             if (this.signal != null) {
                 this.signal.throwIfCanceled();
             }
             decoder.setAllocator(1);
-            int sample = Math.max(info.getSize().getWidth() / this.size.getWidth(), info.getSize().getHeight() / this.size.getHeight());
+            int widthSample = info.getSize().getWidth() / this.size.getWidth();
+            int heightSample = info.getSize().getHeight() / this.size.getHeight();
+            int sample = Math.max(widthSample, heightSample);
             if (sample > 1) {
                 decoder.setTargetSampleSize(sample);
             }
@@ -73,46 +79,54 @@ public class ThumbnailUtils {
     @Deprecated
     public static Bitmap createAudioThumbnail(String filePath, int kind) {
         try {
-            return createAudioThumbnail(new File(filePath), convertKind(kind), (CancellationSignal) null);
+            return createAudioThumbnail(new File(filePath), convertKind(kind), null);
         } catch (IOException e) {
-            Log.w(TAG, (Throwable) e);
+            Log.m62w(TAG, e);
             return null;
         }
     }
 
     public static Bitmap createAudioThumbnail(File file, Size size, CancellationSignal signal) throws IOException {
-        MediaMetadataRetriever retriever;
         if (signal != null) {
             signal.throwIfCanceled();
         }
         Resizer resizer = new Resizer(size, signal);
         try {
-            retriever = new MediaMetadataRetriever();
+            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
             retriever.setDataSource(file.getAbsolutePath());
             byte[] raw = retriever.getEmbeddedPicture();
             if (raw != null) {
                 Bitmap decodeBitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(raw), resizer);
-                $closeResource((Throwable) null, retriever);
+                $closeResource(null, retriever);
                 return decodeBitmap;
             }
-            $closeResource((Throwable) null, retriever);
-            if (!"unknown".equals(Environment.getExternalStorageState(file))) {
-                File parent = file.getParentFile();
-                File grandParent = parent != null ? parent.getParentFile() : null;
-                if (parent != null && parent.getName().equals(Environment.DIRECTORY_DOWNLOADS)) {
-                    throw new IOException("No thumbnails in Downloads directories");
-                } else if (grandParent == null || !"unknown".equals(Environment.getExternalStorageState(grandParent))) {
-                    File bestFile = Arrays.asList(ArrayUtils.defeatNullable(file.getParentFile().listFiles($$Lambda$ThumbnailUtils$P13h9YbyD69p6ss1gYpoef43_MU.INSTANCE))).stream().max(new Comparator($$Lambda$ThumbnailUtils$qOH5vebuTwPi2G92PTa6rgwKGoc.INSTANCE) {
-                        private final /* synthetic */ ToIntFunction f$0;
-
-                        {
-                            this.f$0 = r1;
+            $closeResource(null, retriever);
+            if ("unknown".equals(Environment.getExternalStorageState(file))) {
+                throw new IOException("No embedded album art found");
+            }
+            File parent = file.getParentFile();
+            File grandParent = parent != null ? parent.getParentFile() : null;
+            if (parent == null || !parent.getName().equals(Environment.DIRECTORY_DOWNLOADS)) {
+                if (grandParent == null || !"unknown".equals(Environment.getExternalStorageState(grandParent))) {
+                    File[] found = ArrayUtils.defeatNullable(file.getParentFile().listFiles(new FilenameFilter() { // from class: android.media.-$$Lambda$ThumbnailUtils$P13h9YbyD69p6ss1gYpoef43_MU
+                        @Override // java.io.FilenameFilter
+                        public final boolean accept(File file2, String str) {
+                            return ThumbnailUtils.lambda$createAudioThumbnail$0(file2, str);
                         }
-
+                    }));
+                    final ToIntFunction<File> score = new ToIntFunction() { // from class: android.media.-$$Lambda$ThumbnailUtils$qOH5vebuTwPi2G92PTa6rgwKGoc
+                        @Override // java.util.function.ToIntFunction
+                        public final int applyAsInt(Object obj) {
+                            return ThumbnailUtils.lambda$createAudioThumbnail$1((File) obj);
+                        }
+                    };
+                    Comparator<File> bestScore = new Comparator() { // from class: android.media.-$$Lambda$ThumbnailUtils$HhGKNQZck57eO__Paj6KyQm6lCk
+                        @Override // java.util.Comparator
                         public final int compare(Object obj, Object obj2) {
-                            return ThumbnailUtils.lambda$createAudioThumbnail$2(this.f$0, (File) obj, (File) obj2);
+                            return ThumbnailUtils.lambda$createAudioThumbnail$2(score, (File) obj, (File) obj2);
                         }
-                    }).orElse((Object) null);
+                    };
+                    File bestFile = (File) Arrays.asList(found).stream().max(bestScore).orElse(null);
                     if (bestFile != null) {
                         if (signal != null) {
                             signal.throwIfCanceled();
@@ -120,29 +134,24 @@ public class ThumbnailUtils {
                         return ImageDecoder.decodeBitmap(ImageDecoder.createSource(bestFile), resizer);
                     }
                     throw new IOException("No album art found");
-                } else {
-                    throw new IOException("No thumbnails in top-level directories");
                 }
-            } else {
-                throw new IOException("No embedded album art found");
+                throw new IOException("No thumbnails in top-level directories");
             }
+            throw new IOException("No thumbnails in Downloads directories");
         } catch (RuntimeException e) {
             throw new IOException("Failed to create thumbnail", e);
-        } catch (Throwable th) {
-            $closeResource(r2, retriever);
-            throw th;
         }
     }
 
     private static /* synthetic */ void $closeResource(Throwable x0, AutoCloseable x1) {
-        if (x0 != null) {
-            try {
-                x1.close();
-            } catch (Throwable th) {
-                x0.addSuppressed(th);
-            }
-        } else {
+        if (x0 == null) {
             x1.close();
+            return;
+        }
+        try {
+            x1.close();
+        } catch (Throwable th) {
+            x0.addSuppressed(th);
         }
     }
 
@@ -162,10 +171,7 @@ public class ThumbnailUtils {
         if (lower.contains("albumart") && lower.endsWith(".jpg")) {
             return 2;
         }
-        if (lower.endsWith(".jpg")) {
-            return 1;
-        }
-        return 0;
+        return lower.endsWith(".jpg") ? 1 : 0;
     }
 
     static /* synthetic */ int lambda$createAudioThumbnail$2(ToIntFunction score, File a, File b) {
@@ -175,22 +181,19 @@ public class ThumbnailUtils {
     @Deprecated
     public static Bitmap createImageThumbnail(String filePath, int kind) {
         try {
-            return createImageThumbnail(new File(filePath), convertKind(kind), (CancellationSignal) null);
+            return createImageThumbnail(new File(filePath), convertKind(kind), null);
         } catch (IOException e) {
-            Log.w(TAG, (Throwable) e);
+            Log.m62w(TAG, e);
             return null;
         }
     }
 
     public static Bitmap createImageThumbnail(File file, Size size, CancellationSignal signal) throws IOException {
         byte[] raw;
-        MediaMetadataRetriever retriever;
-        Throwable th;
-        CancellationSignal cancellationSignal = signal;
-        if (cancellationSignal != null) {
+        if (signal != null) {
             signal.throwIfCanceled();
         }
-        Resizer resizer = new Resizer(size, cancellationSignal);
+        Resizer resizer = new Resizer(size, signal);
         String mimeType = MediaFile.getMimeTypeForFile(file.getName());
         Bitmap bitmap = null;
         ExifInterface exif = null;
@@ -205,71 +208,64 @@ public class ThumbnailUtils {
             } else if (attributeInt == 8) {
                 orientation = 270;
             }
-        } else {
-            File file2 = file;
         }
         ExifInterface exif2 = exif;
         if (mimeType.equals("image/heif") || mimeType.equals("image/heif-sequence") || mimeType.equals("image/heic") || mimeType.equals("image/heic-sequence")) {
             try {
-                retriever = new MediaMetadataRetriever();
+                MediaMetadataRetriever retriever = new MediaMetadataRetriever();
                 retriever.setDataSource(file.getAbsolutePath());
                 bitmap = retriever.getThumbnailImageAtIndex(-1, new MediaMetadataRetriever.BitmapParams(), size.getWidth(), size.getWidth() * size.getHeight());
-                $closeResource((Throwable) null, retriever);
+                $closeResource(null, retriever);
             } catch (RuntimeException e) {
                 throw new IOException("Failed to create thumbnail", e);
-            } catch (Throwable th2) {
-                $closeResource(th, retriever);
-                throw th2;
             }
         }
-        if (!(bitmap != null || exif2 == null || (raw = exif2.getThumbnailBytes()) == null)) {
+        if (bitmap == null && exif2 != null && (raw = exif2.getThumbnailBytes()) != null) {
             try {
                 bitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(raw), resizer);
             } catch (ImageDecoder.DecodeException e2) {
-                Log.w(TAG, (Throwable) e2);
+                Log.m62w(TAG, e2);
             }
         }
-        if (cancellationSignal != null) {
+        if (signal != null) {
             signal.throwIfCanceled();
         }
         if (bitmap == null) {
-            return ImageDecoder.decodeBitmap(ImageDecoder.createSource(file), resizer);
-        }
-        if (orientation == 0 || bitmap == null) {
+            Bitmap bitmap2 = ImageDecoder.decodeBitmap(ImageDecoder.createSource(file), resizer);
+            return bitmap2;
+        } else if (orientation != 0 && bitmap != null) {
+            int width = bitmap.getWidth();
+            int height = bitmap.getHeight();
+            Matrix m = new Matrix();
+            m.setRotate(orientation, width / 2, height / 2);
+            return Bitmap.createBitmap(bitmap, 0, 0, width, height, m, false);
+        } else {
             return bitmap;
         }
-        int width = bitmap.getWidth();
-        int height = bitmap.getHeight();
-        Matrix m = new Matrix();
-        m.setRotate((float) orientation, (float) (width / 2), (float) (height / 2));
-        return Bitmap.createBitmap(bitmap, 0, 0, width, height, m, false);
     }
 
     @Deprecated
     public static Bitmap createVideoThumbnail(String filePath, int kind) {
         try {
-            return createVideoThumbnail(new File(filePath), convertKind(kind), (CancellationSignal) null);
+            return createVideoThumbnail(new File(filePath), convertKind(kind), null);
         } catch (IOException e) {
-            Log.w(TAG, (Throwable) e);
+            Log.m62w(TAG, e);
             return null;
         }
     }
 
     public static Bitmap createVideoThumbnail(File file, Size size, CancellationSignal signal) throws IOException {
-        MediaMetadataRetriever mmr;
-        Throwable th;
-        CancellationSignal cancellationSignal = signal;
-        if (cancellationSignal != null) {
+        if (signal != null) {
             signal.throwIfCanceled();
         }
-        Resizer resizer = new Resizer(size, cancellationSignal);
+        Resizer resizer = new Resizer(size, signal);
         try {
-            mmr = new MediaMetadataRetriever();
+            MediaMetadataRetriever mmr = new MediaMetadataRetriever();
             mmr.setDataSource(file.getAbsolutePath());
             byte[] raw = mmr.getEmbeddedPicture();
             if (raw != null) {
                 Bitmap decodeBitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(raw), resizer);
-                $closeResource((Throwable) null, mmr);
+                $closeResource(null, mmr);
                 return decodeBitmap;
             }
             int width = Integer.parseInt(mmr.extractMetadata(18));
@@ -277,17 +273,14 @@ public class ThumbnailUtils {
             long duration = Long.parseLong(mmr.extractMetadata(9));
             if (size.getWidth() <= width || size.getHeight() <= height) {
                 Bitmap bitmap = (Bitmap) Objects.requireNonNull(mmr.getScaledFrameAtTime(duration / 2, 2, size.getWidth(), size.getHeight()));
-                $closeResource((Throwable) null, mmr);
+                $closeResource(null, mmr);
                 return bitmap;
             }
             Bitmap bitmap2 = (Bitmap) Objects.requireNonNull(mmr.getFrameAtTime(duration / 2, 2));
-            $closeResource((Throwable) null, mmr);
+            $closeResource(null, mmr);
             return bitmap2;
         } catch (RuntimeException e) {
             throw new IOException("Failed to create thumbnail", e);
-        } catch (Throwable th2) {
-            $closeResource(th, mmr);
-            throw th2;
         }
     }
 
@@ -301,35 +294,36 @@ public class ThumbnailUtils {
             return null;
         }
         if (source.getWidth() < source.getHeight()) {
-            scale = ((float) width) / ((float) source.getWidth());
+            scale = width / source.getWidth();
         } else {
-            scale = ((float) height) / ((float) source.getHeight());
+            scale = height / source.getHeight();
         }
         Matrix matrix = new Matrix();
         matrix.setScale(scale, scale);
-        return transform(matrix, source, width, height, options | 1);
+        Bitmap thumbnail = transform(matrix, source, width, height, options | 1);
+        return thumbnail;
     }
 
-    @Deprecated
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
+    @Deprecated
     private static int computeSampleSize(BitmapFactory.Options options, int minSideLength, int maxNumOfPixels) {
         return 1;
     }
 
-    @Deprecated
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
+    @Deprecated
     private static int computeInitialSampleSize(BitmapFactory.Options options, int minSideLength, int maxNumOfPixels) {
         return 1;
     }
 
-    @Deprecated
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
+    @Deprecated
     private static void closeSilently(ParcelFileDescriptor c) {
         IoUtils.closeQuietly(c);
     }
 
-    @Deprecated
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
+    @Deprecated
     private static ParcelFileDescriptor makeInputStream(Uri uri, ContentResolver cr) {
         try {
             return cr.openFileDescriptor(uri, "r");
@@ -338,74 +332,65 @@ public class ThumbnailUtils {
         }
     }
 
-    @Deprecated
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
+    @Deprecated
     private static Bitmap transform(Matrix scaler, Bitmap source, int targetWidth, int targetHeight, int options) {
-        Bitmap b1;
         Matrix matrix = scaler;
-        Bitmap bitmap = source;
-        int i = targetWidth;
-        int i2 = targetHeight;
-        boolean z = true;
         boolean scaleUp = (options & 1) != 0;
-        if ((options & 2) == 0) {
-            z = false;
-        }
-        boolean recycle = z;
-        int deltaX = source.getWidth() - i;
-        int deltaY = source.getHeight() - i2;
-        if (scaleUp || (deltaX >= 0 && deltaY >= 0)) {
-            float bitmapWidthF = (float) source.getWidth();
-            float bitmapHeightF = (float) source.getHeight();
-            if (bitmapWidthF / bitmapHeightF > ((float) i) / ((float) i2)) {
-                float scale = ((float) i2) / bitmapHeightF;
-                if (scale < 0.9f || scale > 1.0f) {
-                    matrix.setScale(scale, scale);
-                } else {
-                    matrix = null;
-                }
-            } else {
-                float scale2 = ((float) i) / bitmapWidthF;
-                if (scale2 < 0.9f || scale2 > 1.0f) {
-                    matrix.setScale(scale2, scale2);
-                } else {
-                    matrix = null;
-                }
-            }
-            Matrix scaler2 = matrix;
-            if (scaler2 != null) {
-                float f = bitmapHeightF;
-                b1 = Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), scaler2, true);
-            } else {
-                b1 = bitmap;
-            }
-            if (recycle && b1 != bitmap) {
+        boolean recycle = (options & 2) != 0;
+        int deltaX = source.getWidth() - targetWidth;
+        int deltaY = source.getHeight() - targetHeight;
+        if (!scaleUp && (deltaX < 0 || deltaY < 0)) {
+            Bitmap b2 = Bitmap.createBitmap(targetWidth, targetHeight, Bitmap.Config.ARGB_8888);
+            Canvas c = new Canvas(b2);
+            int deltaXHalf = Math.max(0, deltaX / 2);
+            int deltaYHalf = Math.max(0, deltaY / 2);
+            Rect src = new Rect(deltaXHalf, deltaYHalf, Math.min(targetWidth, source.getWidth()) + deltaXHalf, Math.min(targetHeight, source.getHeight()) + deltaYHalf);
+            int dstX = (targetWidth - src.width()) / 2;
+            int dstY = (targetHeight - src.height()) / 2;
+            Rect dst = new Rect(dstX, dstY, targetWidth - dstX, targetHeight - dstY);
+            c.drawBitmap(source, src, dst, (Paint) null);
+            if (recycle) {
                 source.recycle();
             }
-            Bitmap b2 = Bitmap.createBitmap(b1, Math.max(0, b1.getWidth() - i) / 2, Math.max(0, b1.getHeight() - i2) / 2, i, i2);
-            if (b2 != b1 && (recycle || b1 != bitmap)) {
-                b1.recycle();
-            }
+            c.setBitmap(null);
             return b2;
         }
-        Bitmap b22 = Bitmap.createBitmap(i, i2, Bitmap.Config.ARGB_8888);
-        Canvas c = new Canvas(b22);
-        int deltaXHalf = Math.max(0, deltaX / 2);
-        int deltaYHalf = Math.max(0, deltaY / 2);
-        Rect src = new Rect(deltaXHalf, deltaYHalf, Math.min(i, source.getWidth()) + deltaXHalf, Math.min(i2, source.getHeight()) + deltaYHalf);
-        int dstX = (i - src.width()) / 2;
-        int dstY = (i2 - src.height()) / 2;
-        int i3 = deltaXHalf;
-        int i4 = deltaYHalf;
-        c.drawBitmap(bitmap, src, new Rect(dstX, dstY, i - dstX, i2 - dstY), (Paint) null);
-        if (recycle) {
+        float bitmapWidthF = source.getWidth();
+        float bitmapHeightF = source.getHeight();
+        float bitmapAspect = bitmapWidthF / bitmapHeightF;
+        float viewAspect = targetWidth / targetHeight;
+        if (bitmapAspect > viewAspect) {
+            float scale = targetHeight / bitmapHeightF;
+            if (scale < 0.9f || scale > 1.0f) {
+                matrix.setScale(scale, scale);
+            } else {
+                matrix = null;
+            }
+        } else {
+            float scale2 = targetWidth / bitmapWidthF;
+            if (scale2 < 0.9f || scale2 > 1.0f) {
+                matrix.setScale(scale2, scale2);
+            } else {
+                matrix = null;
+            }
+        }
+        Matrix scaler2 = matrix;
+        Bitmap b1 = scaler2 != null ? Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), scaler2, true) : source;
+        if (recycle && b1 != source) {
             source.recycle();
         }
-        c.setBitmap((Bitmap) null);
+        int dx1 = Math.max(0, b1.getWidth() - targetWidth);
+        int dy1 = Math.max(0, b1.getHeight() - targetHeight);
+        Bitmap b22 = Bitmap.createBitmap(b1, dx1 / 2, dy1 / 2, targetWidth, targetHeight);
+        if (b22 != b1 && (recycle || b1 != source)) {
+            b1.recycle();
+        }
         return b22;
     }
 
     @Deprecated
+    /* loaded from: classes3.dex */
     private static class SizedThumbnailBitmap {
         public Bitmap mBitmap;
         public byte[] mThumbnailData;
@@ -416,8 +401,8 @@ public class ThumbnailUtils {
         }
     }
 
-    @Deprecated
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
+    @Deprecated
     private static void createThumbnailFromEXIF(String filePath, int targetSize, int maxPixels, SizedThumbnailBitmap sizedThumbBitmap) {
     }
 }

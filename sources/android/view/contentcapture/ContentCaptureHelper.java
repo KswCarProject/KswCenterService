@@ -1,6 +1,6 @@
 package android.view.contentcapture;
 
-import android.os.Build;
+import android.p007os.Build;
 import android.provider.DeviceConfig;
 import android.util.ArraySet;
 import android.util.Log;
@@ -8,10 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+/* loaded from: classes4.dex */
 public final class ContentCaptureHelper {
     private static final String TAG = ContentCaptureHelper.class.getSimpleName();
-    public static boolean sDebug = true;
     public static boolean sVerbose = false;
+    public static boolean sDebug = true;
 
     public static String getSanitizedString(CharSequence text) {
         if (text == null) {
@@ -25,12 +26,15 @@ public final class ContentCaptureHelper {
     }
 
     public static void setLoggingLevel() {
-        setLoggingLevel(DeviceConfig.getInt("content_capture", ContentCaptureManager.DEVICE_CONFIG_PROPERTY_LOGGING_LEVEL, getDefaultLoggingLevel()));
+        int defaultLevel = getDefaultLoggingLevel();
+        int level = DeviceConfig.getInt("content_capture", ContentCaptureManager.DEVICE_CONFIG_PROPERTY_LOGGING_LEVEL, defaultLevel);
+        setLoggingLevel(level);
     }
 
+    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
     public static void setLoggingLevel(int level) {
         String str = TAG;
-        Log.i(str, "Setting logging level to " + getLoggingLevelAsString(level));
+        Log.m68i(str, "Setting logging level to " + getLoggingLevelAsString(level));
         sDebug = false;
         sVerbose = false;
         switch (level) {
@@ -43,7 +47,7 @@ public final class ContentCaptureHelper {
                 break;
             default:
                 String str2 = TAG;
-                Log.w(str2, "setLoggingLevel(): invalud level: " + level);
+                Log.m64w(str2, "setLoggingLevel(): invalud level: " + level);
                 return;
         }
         sDebug = true;

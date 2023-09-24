@@ -1,28 +1,33 @@
 package android.location;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.Half;
 
 @SystemApi
+/* loaded from: classes.dex */
 public class GpsClock implements Parcelable {
-    public static final Parcelable.Creator<GpsClock> CREATOR = new Parcelable.Creator<GpsClock>() {
+    public static final Parcelable.Creator<GpsClock> CREATOR = new Parcelable.Creator<GpsClock>() { // from class: android.location.GpsClock.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public GpsClock createFromParcel(Parcel parcel) {
             GpsClock gpsClock = new GpsClock();
-            short unused = gpsClock.mFlags = (short) parcel.readInt();
-            short unused2 = gpsClock.mLeapSecond = (short) parcel.readInt();
-            byte unused3 = gpsClock.mType = parcel.readByte();
-            long unused4 = gpsClock.mTimeInNs = parcel.readLong();
-            double unused5 = gpsClock.mTimeUncertaintyInNs = parcel.readDouble();
-            long unused6 = gpsClock.mFullBiasInNs = parcel.readLong();
-            double unused7 = gpsClock.mBiasInNs = parcel.readDouble();
-            double unused8 = gpsClock.mBiasUncertaintyInNs = parcel.readDouble();
-            double unused9 = gpsClock.mDriftInNsPerSec = parcel.readDouble();
-            double unused10 = gpsClock.mDriftUncertaintyInNsPerSec = parcel.readDouble();
+            gpsClock.mFlags = (short) parcel.readInt();
+            gpsClock.mLeapSecond = (short) parcel.readInt();
+            gpsClock.mType = parcel.readByte();
+            gpsClock.mTimeInNs = parcel.readLong();
+            gpsClock.mTimeUncertaintyInNs = parcel.readDouble();
+            gpsClock.mFullBiasInNs = parcel.readLong();
+            gpsClock.mBiasInNs = parcel.readDouble();
+            gpsClock.mBiasUncertaintyInNs = parcel.readDouble();
+            gpsClock.mDriftInNsPerSec = parcel.readDouble();
+            gpsClock.mDriftUncertaintyInNsPerSec = parcel.readDouble();
             return gpsClock;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public GpsClock[] newArray(int size) {
             return new GpsClock[size];
         }
@@ -38,26 +43,16 @@ public class GpsClock implements Parcelable {
     public static final byte TYPE_GPS_TIME = 2;
     public static final byte TYPE_LOCAL_HW_TIME = 1;
     public static final byte TYPE_UNKNOWN = 0;
-    /* access modifiers changed from: private */
-    public double mBiasInNs;
-    /* access modifiers changed from: private */
-    public double mBiasUncertaintyInNs;
-    /* access modifiers changed from: private */
-    public double mDriftInNsPerSec;
-    /* access modifiers changed from: private */
-    public double mDriftUncertaintyInNsPerSec;
-    /* access modifiers changed from: private */
-    public short mFlags;
-    /* access modifiers changed from: private */
-    public long mFullBiasInNs;
-    /* access modifiers changed from: private */
-    public short mLeapSecond;
-    /* access modifiers changed from: private */
-    public long mTimeInNs;
-    /* access modifiers changed from: private */
-    public double mTimeUncertaintyInNs;
-    /* access modifiers changed from: private */
-    public byte mType;
+    private double mBiasInNs;
+    private double mBiasUncertaintyInNs;
+    private double mDriftInNsPerSec;
+    private double mDriftUncertaintyInNsPerSec;
+    private short mFlags;
+    private long mFullBiasInNs;
+    private short mLeapSecond;
+    private long mTimeInNs;
+    private double mTimeUncertaintyInNs;
+    private byte mType;
 
     GpsClock() {
         initialize();
@@ -97,12 +92,12 @@ public class GpsClock implements Parcelable {
             case 2:
                 return "GpsTime";
             default:
-                return "<Invalid:" + this.mType + ">";
+                return "<Invalid:" + ((int) this.mType) + ">";
         }
     }
 
     public boolean hasLeapSecond() {
-        return isFlagSet(1);
+        return isFlagSet((short) 1);
     }
 
     public short getLeapSecond() {
@@ -110,12 +105,12 @@ public class GpsClock implements Parcelable {
     }
 
     public void setLeapSecond(short leapSecond) {
-        setFlag(1);
+        setFlag((short) 1);
         this.mLeapSecond = leapSecond;
     }
 
     public void resetLeapSecond() {
-        resetFlag(1);
+        resetFlag((short) 1);
         this.mLeapSecond = Half.NEGATIVE_ZERO;
     }
 
@@ -128,7 +123,7 @@ public class GpsClock implements Parcelable {
     }
 
     public boolean hasTimeUncertaintyInNs() {
-        return isFlagSet(2);
+        return isFlagSet((short) 2);
     }
 
     public double getTimeUncertaintyInNs() {
@@ -136,17 +131,17 @@ public class GpsClock implements Parcelable {
     }
 
     public void setTimeUncertaintyInNs(double timeUncertaintyInNs) {
-        setFlag(2);
+        setFlag((short) 2);
         this.mTimeUncertaintyInNs = timeUncertaintyInNs;
     }
 
     public void resetTimeUncertaintyInNs() {
-        resetFlag(2);
+        resetFlag((short) 2);
         this.mTimeUncertaintyInNs = Double.NaN;
     }
 
     public boolean hasFullBiasInNs() {
-        return isFlagSet(4);
+        return isFlagSet((short) 4);
     }
 
     public long getFullBiasInNs() {
@@ -154,17 +149,17 @@ public class GpsClock implements Parcelable {
     }
 
     public void setFullBiasInNs(long value) {
-        setFlag(4);
+        setFlag((short) 4);
         this.mFullBiasInNs = value;
     }
 
     public void resetFullBiasInNs() {
-        resetFlag(4);
+        resetFlag((short) 4);
         this.mFullBiasInNs = Long.MIN_VALUE;
     }
 
     public boolean hasBiasInNs() {
-        return isFlagSet(8);
+        return isFlagSet((short) 8);
     }
 
     public double getBiasInNs() {
@@ -172,17 +167,17 @@ public class GpsClock implements Parcelable {
     }
 
     public void setBiasInNs(double biasInNs) {
-        setFlag(8);
+        setFlag((short) 8);
         this.mBiasInNs = biasInNs;
     }
 
     public void resetBiasInNs() {
-        resetFlag(8);
+        resetFlag((short) 8);
         this.mBiasInNs = Double.NaN;
     }
 
     public boolean hasBiasUncertaintyInNs() {
-        return isFlagSet(16);
+        return isFlagSet((short) 16);
     }
 
     public double getBiasUncertaintyInNs() {
@@ -190,12 +185,12 @@ public class GpsClock implements Parcelable {
     }
 
     public void setBiasUncertaintyInNs(double biasUncertaintyInNs) {
-        setFlag(16);
+        setFlag((short) 16);
         this.mBiasUncertaintyInNs = biasUncertaintyInNs;
     }
 
     public void resetBiasUncertaintyInNs() {
-        resetFlag(16);
+        resetFlag((short) 16);
         this.mBiasUncertaintyInNs = Double.NaN;
     }
 
@@ -235,6 +230,7 @@ public class GpsClock implements Parcelable {
         this.mDriftUncertaintyInNsPerSec = Double.NaN;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeInt(this.mFlags);
         parcel.writeInt(this.mLeapSecond);
@@ -248,16 +244,16 @@ public class GpsClock implements Parcelable {
         parcel.writeDouble(this.mDriftUncertaintyInNsPerSec);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
     public String toString() {
         StringBuilder builder = new StringBuilder("GpsClock:\n");
-        builder.append(String.format("   %-15s = %s\n", new Object[]{"Type", getTypeString()}));
+        builder.append(String.format("   %-15s = %s\n", "Type", getTypeString()));
         Object[] objArr = new Object[2];
         objArr[0] = "LeapSecond";
-        Double d = null;
         objArr[1] = hasLeapSecond() ? Short.valueOf(this.mLeapSecond) : null;
         builder.append(String.format("   %-15s = %s\n", objArr));
         Object[] objArr2 = new Object[4];
@@ -280,16 +276,13 @@ public class GpsClock implements Parcelable {
         objArr5[0] = "DriftInNsPerSec";
         objArr5[1] = hasDriftInNsPerSec() ? Double.valueOf(this.mDriftInNsPerSec) : null;
         objArr5[2] = "DriftUncertaintyInNsPerSec";
-        if (hasDriftUncertaintyInNsPerSec()) {
-            d = Double.valueOf(this.mDriftUncertaintyInNsPerSec);
-        }
-        objArr5[3] = d;
+        objArr5[3] = hasDriftUncertaintyInNsPerSec() ? Double.valueOf(this.mDriftUncertaintyInNsPerSec) : null;
         builder.append(String.format("   %-15s = %-25s   %-26s = %s\n", objArr5));
         return builder.toString();
     }
 
     private void initialize() {
-        this.mFlags = 0;
+        this.mFlags = (short) 0;
         resetLeapSecond();
         setType((byte) 0);
         setTimeInNs(Long.MIN_VALUE);

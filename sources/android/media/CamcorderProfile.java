@@ -3,6 +3,7 @@ package android.media;
 import android.annotation.UnsupportedAppUsage;
 import android.hardware.Camera;
 
+/* loaded from: classes3.dex */
 public class CamcorderProfile {
     public static final int QUALITY_1080P = 6;
     public static final int QUALITY_2160P = 8;
@@ -70,39 +71,40 @@ public class CamcorderProfile {
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
     private static final native void native_init();
 
-    public static CamcorderProfile get(int quality2) {
+    public static CamcorderProfile get(int quality) {
         int numberOfCameras = Camera.getNumberOfCameras();
         Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
         for (int i = 0; i < numberOfCameras; i++) {
             Camera.getCameraInfo(i, cameraInfo);
             if (cameraInfo.facing == 0) {
-                return get(i, quality2);
+                return get(i, quality);
             }
         }
         return null;
     }
 
-    public static CamcorderProfile get(int cameraId, int quality2) {
-        if ((quality2 >= 0 && quality2 <= 12) || ((quality2 >= 1000 && quality2 <= 1012) || ((quality2 >= 2000 && quality2 <= 2008) || (quality2 >= 3001 && quality2 <= 3002)))) {
-            return native_get_camcorder_profile(cameraId, quality2);
+    public static CamcorderProfile get(int cameraId, int quality) {
+        if ((quality < 0 || quality > 12) && ((quality < 1000 || quality > 1012) && ((quality < 2000 || quality > 2008) && (quality < 3001 || quality > 3002)))) {
+            String errMessage = "Unsupported quality level: " + quality;
+            throw new IllegalArgumentException(errMessage);
         }
-        throw new IllegalArgumentException("Unsupported quality level: " + quality2);
+        return native_get_camcorder_profile(cameraId, quality);
     }
 
-    public static boolean hasProfile(int quality2) {
+    public static boolean hasProfile(int quality) {
         int numberOfCameras = Camera.getNumberOfCameras();
         Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
         for (int i = 0; i < numberOfCameras; i++) {
             Camera.getCameraInfo(i, cameraInfo);
             if (cameraInfo.facing == 0) {
-                return hasProfile(i, quality2);
+                return hasProfile(i, quality);
             }
         }
         return false;
     }
 
-    public static boolean hasProfile(int cameraId, int quality2) {
-        return native_has_camcorder_profile(cameraId, quality2);
+    public static boolean hasProfile(int cameraId, int quality) {
+        return native_has_camcorder_profile(cameraId, quality);
     }
 
     static {
@@ -110,18 +112,18 @@ public class CamcorderProfile {
         native_init();
     }
 
-    private CamcorderProfile(int duration2, int quality2, int fileFormat2, int videoCodec2, int videoBitRate2, int videoFrameRate2, int videoWidth, int videoHeight, int audioCodec2, int audioBitRate2, int audioSampleRate2, int audioChannels2) {
-        this.duration = duration2;
-        this.quality = quality2;
-        this.fileFormat = fileFormat2;
-        this.videoCodec = videoCodec2;
-        this.videoBitRate = videoBitRate2;
-        this.videoFrameRate = videoFrameRate2;
+    private CamcorderProfile(int duration, int quality, int fileFormat, int videoCodec, int videoBitRate, int videoFrameRate, int videoWidth, int videoHeight, int audioCodec, int audioBitRate, int audioSampleRate, int audioChannels) {
+        this.duration = duration;
+        this.quality = quality;
+        this.fileFormat = fileFormat;
+        this.videoCodec = videoCodec;
+        this.videoBitRate = videoBitRate;
+        this.videoFrameRate = videoFrameRate;
         this.videoFrameWidth = videoWidth;
         this.videoFrameHeight = videoHeight;
-        this.audioCodec = audioCodec2;
-        this.audioBitRate = audioBitRate2;
-        this.audioSampleRate = audioSampleRate2;
-        this.audioChannels = audioChannels2;
+        this.audioCodec = audioCodec;
+        this.audioBitRate = audioBitRate;
+        this.audioSampleRate = audioSampleRate;
+        this.audioChannels = audioChannels;
     }
 }

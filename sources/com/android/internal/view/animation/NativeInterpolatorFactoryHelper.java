@@ -1,5 +1,6 @@
 package com.android.internal.view.animation;
 
+/* loaded from: classes4.dex */
 public final class NativeInterpolatorFactoryHelper {
     public static native long createAccelerateDecelerateInterpolator();
 

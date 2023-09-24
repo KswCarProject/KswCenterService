@@ -3,33 +3,26 @@ package android.util;
 import android.net.wifi.WifiEnterpriseConfig;
 import java.util.Objects;
 
+/* loaded from: classes4.dex */
 public class Pair<F, S> {
     public final F first;
     public final S second;
 
-    public Pair(F first2, S second2) {
-        this.first = first2;
-        this.second = second2;
+    public Pair(F first, S second) {
+        this.first = first;
+        this.second = second;
     }
 
     public boolean equals(Object o) {
-        if (!(o instanceof Pair)) {
-            return false;
+        if (o instanceof Pair) {
+            Pair<?, ?> p = (Pair) o;
+            return Objects.equals(p.first, this.first) && Objects.equals(p.second, this.second);
         }
-        Pair<?, ?> p = (Pair) o;
-        if (!Objects.equals(p.first, this.first) || !Objects.equals(p.second, this.second)) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        int i = 0;
-        int hashCode = this.first == null ? 0 : this.first.hashCode();
-        if (this.second != null) {
-            i = this.second.hashCode();
-        }
-        return hashCode ^ i;
+        return (this.first == null ? 0 : this.first.hashCode()) ^ (this.second != null ? this.second.hashCode() : 0);
     }
 
     public String toString() {

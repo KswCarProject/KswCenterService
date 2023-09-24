@@ -1,15 +1,20 @@
 package android.telecom;
 
-import android.os.Parcel;
-import android.os.ParcelFileDescriptor;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.ParcelFileDescriptor;
+import android.p007os.Parcelable;
 
+/* loaded from: classes3.dex */
 public class ParcelableRttCall implements Parcelable {
-    public static final Parcelable.Creator<ParcelableRttCall> CREATOR = new Parcelable.Creator<ParcelableRttCall>() {
+    public static final Parcelable.Creator<ParcelableRttCall> CREATOR = new Parcelable.Creator<ParcelableRttCall>() { // from class: android.telecom.ParcelableRttCall.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ParcelableRttCall createFromParcel(Parcel in) {
             return new ParcelableRttCall(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ParcelableRttCall[] newArray(int size) {
             return new ParcelableRttCall[size];
         }
@@ -30,10 +35,12 @@ public class ParcelableRttCall implements Parcelable {
         this.mReceiveStream = (ParcelFileDescriptor) in.readParcelable(ParcelFileDescriptor.class.getClassLoader());
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mRttMode);
         dest.writeParcelable(this.mTransmitStream, flags);

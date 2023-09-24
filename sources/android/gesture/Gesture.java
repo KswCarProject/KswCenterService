@@ -5,8 +5,8 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.Log;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -16,47 +16,52 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/* loaded from: classes.dex */
 public class Gesture implements Parcelable {
     private static final boolean BITMAP_RENDERING_ANTIALIAS = true;
     private static final boolean BITMAP_RENDERING_DITHER = true;
     private static final int BITMAP_RENDERING_WIDTH = 2;
-    public static final Parcelable.Creator<Gesture> CREATOR = new Parcelable.Creator<Gesture>() {
+    private static final long GESTURE_ID_BASE = System.currentTimeMillis();
+    private static final AtomicInteger sGestureCount = new AtomicInteger(0);
+    public static final Parcelable.Creator<Gesture> CREATOR = new Parcelable.Creator<Gesture>() { // from class: android.gesture.Gesture.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Gesture createFromParcel(Parcel in) {
             Gesture gesture = null;
             long gestureID = in.readLong();
             DataInputStream inStream = new DataInputStream(new ByteArrayInputStream(in.createByteArray()));
             try {
-                gesture = Gesture.deserialize(inStream);
-            } catch (IOException e) {
-                Log.e(GestureConstants.LOG_TAG, "Error reading Gesture from parcel:", e);
-            } catch (Throwable th) {
+                try {
+                    gesture = Gesture.deserialize(inStream);
+                } catch (IOException e) {
+                    Log.m69e(GestureConstants.LOG_TAG, "Error reading Gesture from parcel:", e);
+                }
+                if (gesture != null) {
+                    gesture.mGestureID = gestureID;
+                }
+                return gesture;
+            } finally {
                 GestureUtils.closeStream(inStream);
-                throw th;
             }
-            GestureUtils.closeStream(inStream);
-            if (gesture != null) {
-                long unused = gesture.mGestureID = gestureID;
-            }
-            return gesture;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Gesture[] newArray(int size) {
             return new Gesture[size];
         }
     };
-    private static final long GESTURE_ID_BASE = System.currentTimeMillis();
-    private static final AtomicInteger sGestureCount = new AtomicInteger(0);
     private final RectF mBoundingBox = new RectF();
-    /* access modifiers changed from: private */
-    public long mGestureID = (GESTURE_ID_BASE + ((long) sGestureCount.incrementAndGet()));
     private final ArrayList<GestureStroke> mStrokes = new ArrayList<>();
+    private long mGestureID = GESTURE_ID_BASE + sGestureCount.incrementAndGet();
 
     public Object clone() {
         Gesture gesture = new Gesture();
         gesture.mBoundingBox.set(this.mBoundingBox.left, this.mBoundingBox.top, this.mBoundingBox.right, this.mBoundingBox.bottom);
         int count = this.mStrokes.size();
         for (int i = 0; i < count; i++) {
-            gesture.mStrokes.add((GestureStroke) this.mStrokes.get(i).clone());
+            GestureStroke stroke = this.mStrokes.get(i);
+            gesture.mStrokes.add((GestureStroke) stroke.clone());
         }
         return gesture;
     }
@@ -79,9 +84,9 @@ public class Gesture implements Parcelable {
         ArrayList<GestureStroke> strokes = this.mStrokes;
         int count = strokes.size();
         for (int i = 0; i < count; i++) {
-            len = (int) (((float) len) + strokes.get(i).length);
+            len = (int) (len + strokes.get(i).length);
         }
-        return (float) len;
+        return len;
     }
 
     public RectF getBoundingBox() {
@@ -89,7 +94,7 @@ public class Gesture implements Parcelable {
     }
 
     public Path toPath() {
-        return toPath((Path) null);
+        return toPath(null);
     }
 
     public Path toPath(Path path) {
@@ -105,7 +110,7 @@ public class Gesture implements Parcelable {
     }
 
     public Path toPath(int width, int height, int edge, int numSample) {
-        return toPath((Path) null, width, height, edge, numSample);
+        return toPath(null, width, height, edge, numSample);
     }
 
     public Path toPath(Path path, int width, int height, int edge, int numSample) {
@@ -115,13 +120,12 @@ public class Gesture implements Parcelable {
         ArrayList<GestureStroke> strokes = this.mStrokes;
         int count = strokes.size();
         for (int i = 0; i < count; i++) {
-            path.addPath(strokes.get(i).toPath((float) (width - (edge * 2)), (float) (height - (edge * 2)), numSample));
+            path.addPath(strokes.get(i).toPath(width - (edge * 2), height - (edge * 2), numSample));
         }
         return path;
     }
 
-    /* access modifiers changed from: package-private */
-    public void setID(long id) {
+    void setID(long id) {
         this.mGestureID = id;
     }
 
@@ -132,7 +136,7 @@ public class Gesture implements Parcelable {
     public Bitmap toBitmap(int width, int height, int edge, int numSample, int color) {
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
-        canvas.translate((float) edge, (float) edge);
+        canvas.translate(edge, edge);
         Paint paint = new Paint();
         paint.setAntiAlias(true);
         paint.setDither(true);
@@ -144,16 +148,14 @@ public class Gesture implements Parcelable {
         ArrayList<GestureStroke> strokes = this.mStrokes;
         int count = strokes.size();
         for (int i = 0; i < count; i++) {
-            canvas.drawPath(strokes.get(i).toPath((float) (width - (edge * 2)), (float) (height - (edge * 2)), numSample), paint);
+            Path path = strokes.get(i).toPath(width - (edge * 2), height - (edge * 2), numSample);
+            canvas.drawPath(path, paint);
         }
         return bitmap;
     }
 
     public Bitmap toBitmap(int width, int height, int inset, int color) {
-        int i = width;
-        int i2 = height;
-        int i3 = inset;
-        Bitmap bitmap = Bitmap.createBitmap(i, i2, Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         Paint paint = new Paint();
         paint.setAntiAlias(true);
@@ -166,19 +168,18 @@ public class Gesture implements Parcelable {
         Path path = toPath();
         RectF bounds = new RectF();
         path.computeBounds(bounds, true);
-        float sx = ((float) (i - (i3 * 2))) / bounds.width();
-        float sy = ((float) (i2 - (i3 * 2))) / bounds.height();
+        float sx = (width - (inset * 2)) / bounds.width();
+        float sy = (height - (inset * 2)) / bounds.height();
         float scale = sx > sy ? sy : sx;
         paint.setStrokeWidth(2.0f / scale);
-        path.offset((-bounds.left) + ((((float) i) - (bounds.width() * scale)) / 2.0f), (-bounds.top) + ((((float) i2) - (bounds.height() * scale)) / 2.0f));
-        canvas.translate((float) i3, (float) i3);
+        path.offset((-bounds.left) + ((width - (bounds.width() * scale)) / 2.0f), (-bounds.top) + ((height - (bounds.height() * scale)) / 2.0f));
+        canvas.translate(inset, inset);
         canvas.scale(scale, scale);
         canvas.drawPath(path, paint);
         return bitmap;
     }
 
-    /* access modifiers changed from: package-private */
-    public void serialize(DataOutputStream out) throws IOException {
+    void serialize(DataOutputStream out) throws IOException {
         ArrayList<GestureStroke> strokes = this.mStrokes;
         int count = strokes.size();
         out.writeLong(this.mGestureID);
@@ -198,28 +199,29 @@ public class Gesture implements Parcelable {
         return gesture;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeLong(this.mGestureID);
         boolean result = false;
         ByteArrayOutputStream byteStream = new ByteArrayOutputStream(32768);
         DataOutputStream outStream = new DataOutputStream(byteStream);
         try {
-            serialize(outStream);
-            result = true;
-        } catch (IOException e) {
-            Log.e(GestureConstants.LOG_TAG, "Error writing Gesture to parcel:", e);
-        } catch (Throwable th) {
+            try {
+                serialize(outStream);
+                result = true;
+            } catch (IOException e) {
+                Log.m69e(GestureConstants.LOG_TAG, "Error writing Gesture to parcel:", e);
+            }
+            if (result) {
+                out.writeByteArray(byteStream.toByteArray());
+            }
+        } finally {
             GestureUtils.closeStream(outStream);
             GestureUtils.closeStream(byteStream);
-            throw th;
-        }
-        GestureUtils.closeStream(outStream);
-        GestureUtils.closeStream(byteStream);
-        if (result) {
-            out.writeByteArray(byteStream.toByteArray());
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

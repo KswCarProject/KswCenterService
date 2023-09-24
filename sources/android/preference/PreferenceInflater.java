@@ -9,6 +9,7 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 @Deprecated
+/* loaded from: classes3.dex */
 class PreferenceInflater extends GenericInflater<Preference, PreferenceGroup> {
     private static final String EXTRA_TAG_NAME = "extra";
     private static final String INTENT_TAG_NAME = "intent";
@@ -25,6 +26,7 @@ class PreferenceInflater extends GenericInflater<Preference, PreferenceGroup> {
         init(preferenceManager);
     }
 
+    @Override // android.preference.GenericInflater
     public GenericInflater<Preference, PreferenceGroup> cloneInContext(Context newContext) {
         return new PreferenceInflater(this, this.mPreferenceManager, newContext);
     }
@@ -34,7 +36,8 @@ class PreferenceInflater extends GenericInflater<Preference, PreferenceGroup> {
         setDefaultPackage("android.preference.");
     }
 
-    /* access modifiers changed from: protected */
+    /* JADX INFO: Access modifiers changed from: protected */
+    @Override // android.preference.GenericInflater
     public boolean onCreateCustomFromTag(XmlPullParser parser, Preference parentPreference, AttributeSet attrs) throws XmlPullParserException {
         String tag = parser.getName();
         if (tag.equals("intent")) {
@@ -49,9 +52,7 @@ class PreferenceInflater extends GenericInflater<Preference, PreferenceGroup> {
                 ex.initCause(e);
                 throw ex;
             }
-        } else if (!tag.equals(EXTRA_TAG_NAME)) {
-            return false;
-        } else {
+        } else if (tag.equals(EXTRA_TAG_NAME)) {
             getContext().getResources().parseBundleExtra(EXTRA_TAG_NAME, attrs, parentPreference.getExtras());
             try {
                 XmlUtils.skipCurrentTag(parser);
@@ -61,15 +62,18 @@ class PreferenceInflater extends GenericInflater<Preference, PreferenceGroup> {
                 ex2.initCause(e2);
                 throw ex2;
             }
+        } else {
+            return false;
         }
     }
 
-    /* access modifiers changed from: protected */
+    /* JADX INFO: Access modifiers changed from: protected */
+    @Override // android.preference.GenericInflater
     public PreferenceGroup onMergeRoots(PreferenceGroup givenRoot, boolean attachToGivenRoot, PreferenceGroup xmlRoot) {
-        if (givenRoot != null) {
-            return givenRoot;
+        if (givenRoot == null) {
+            xmlRoot.onAttachedToHierarchy(this.mPreferenceManager);
+            return xmlRoot;
         }
-        xmlRoot.onAttachedToHierarchy(this.mPreferenceManager);
-        return xmlRoot;
+        return givenRoot;
     }
 }

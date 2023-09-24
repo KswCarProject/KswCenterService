@@ -6,6 +6,7 @@ import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+/* loaded from: classes4.dex */
 public class Base64OutputStream extends FilterOutputStream {
     private static byte[] EMPTY = new byte[0];
     private int bpos;
@@ -13,23 +14,24 @@ public class Base64OutputStream extends FilterOutputStream {
     private final Base64.Coder coder;
     private final int flags;
 
-    public Base64OutputStream(OutputStream out, int flags2) {
-        this(out, flags2, true);
+    public Base64OutputStream(OutputStream out, int flags) {
+        this(out, flags, true);
     }
 
     @UnsupportedAppUsage
-    public Base64OutputStream(OutputStream out, int flags2, boolean encode) {
+    public Base64OutputStream(OutputStream out, int flags, boolean encode) {
         super(out);
         this.buffer = null;
         this.bpos = 0;
-        this.flags = flags2;
+        this.flags = flags;
         if (encode) {
-            this.coder = new Base64.Encoder(flags2, (byte[]) null);
+            this.coder = new Base64.Encoder(flags, null);
         } else {
-            this.coder = new Base64.Decoder(flags2, (byte[]) null);
+            this.coder = new Base64.Decoder(flags, null);
         }
     }
 
+    @Override // java.io.FilterOutputStream, java.io.OutputStream
     public void write(int b) throws IOException {
         if (this.buffer == null) {
             this.buffer = new byte[1024];
@@ -51,13 +53,16 @@ public class Base64OutputStream extends FilterOutputStream {
         }
     }
 
+    @Override // java.io.FilterOutputStream, java.io.OutputStream
     public void write(byte[] b, int off, int len) throws IOException {
-        if (len > 0) {
-            flushBuffer();
-            internalWrite(b, off, len, false);
+        if (len <= 0) {
+            return;
         }
+        flushBuffer();
+        internalWrite(b, off, len, false);
     }
 
+    @Override // java.io.FilterOutputStream, java.io.OutputStream, java.io.Closeable, java.lang.AutoCloseable
     public void close() throws IOException {
         IOException thrown = null;
         try {
@@ -86,11 +91,10 @@ public class Base64OutputStream extends FilterOutputStream {
 
     private void internalWrite(byte[] b, int off, int len, boolean finish) throws IOException {
         this.coder.output = embiggen(this.coder.output, this.coder.maxOutputSize(len));
-        if (this.coder.process(b, off, len, finish)) {
-            this.out.write(this.coder.output, 0, this.coder.op);
-            return;
+        if (!this.coder.process(b, off, len, finish)) {
+            throw new Base64DataException("bad base-64");
         }
-        throw new Base64DataException("bad base-64");
+        this.out.write(this.coder.output, 0, this.coder.f288op);
     }
 
     private byte[] embiggen(byte[] b, int len) {

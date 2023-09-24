@@ -1,14 +1,22 @@
 package android.hardware.location;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public class ActivityRecognitionEvent implements Parcelable {
-    public static final Parcelable.Creator<ActivityRecognitionEvent> CREATOR = new Parcelable.Creator<ActivityRecognitionEvent>() {
+    public static final Parcelable.Creator<ActivityRecognitionEvent> CREATOR = new Parcelable.Creator<ActivityRecognitionEvent>() { // from class: android.hardware.location.ActivityRecognitionEvent.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ActivityRecognitionEvent createFromParcel(Parcel source) {
-            return new ActivityRecognitionEvent(source.readString(), source.readInt(), source.readLong());
+            String activity = source.readString();
+            int eventType = source.readInt();
+            long timestampNs = source.readLong();
+            return new ActivityRecognitionEvent(activity, eventType, timestampNs);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ActivityRecognitionEvent[] newArray(int size) {
             return new ActivityRecognitionEvent[size];
         }
@@ -35,10 +43,12 @@ public class ActivityRecognitionEvent implements Parcelable {
         return this.mTimestampNs;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeString(this.mActivity);
         parcel.writeInt(this.mEventType);
@@ -46,6 +56,6 @@ public class ActivityRecognitionEvent implements Parcelable {
     }
 
     public String toString() {
-        return String.format("Activity='%s', EventType=%s, TimestampNs=%s", new Object[]{this.mActivity, Integer.valueOf(this.mEventType), Long.valueOf(this.mTimestampNs)});
+        return String.format("Activity='%s', EventType=%s, TimestampNs=%s", this.mActivity, Integer.valueOf(this.mEventType), Long.valueOf(this.mTimestampNs));
     }
 }

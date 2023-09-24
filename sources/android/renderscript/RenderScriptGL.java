@@ -7,29 +7,53 @@ import android.renderscript.RenderScript;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
+/* loaded from: classes3.dex */
 public class RenderScriptGL extends RenderScript {
-    int mHeight = 0;
+    int mHeight;
     SurfaceConfig mSurfaceConfig;
-    int mWidth = 0;
+    int mWidth;
 
+    /* loaded from: classes3.dex */
     public static class SurfaceConfig {
-        int mAlphaMin = 0;
-        int mAlphaPref = 0;
-        int mColorMin = 8;
-        int mColorPref = 8;
-        int mDepthMin = 0;
-        int mDepthPref = 0;
-        int mSamplesMin = 1;
-        int mSamplesPref = 1;
-        float mSamplesQ = 1.0f;
-        int mStencilMin = 0;
-        int mStencilPref = 0;
+        int mAlphaMin;
+        int mAlphaPref;
+        int mColorMin;
+        int mColorPref;
+        int mDepthMin;
+        int mDepthPref;
+        int mSamplesMin;
+        int mSamplesPref;
+        float mSamplesQ;
+        int mStencilMin;
+        int mStencilPref;
 
         @UnsupportedAppUsage
         public SurfaceConfig() {
+            this.mDepthMin = 0;
+            this.mDepthPref = 0;
+            this.mStencilMin = 0;
+            this.mStencilPref = 0;
+            this.mColorMin = 8;
+            this.mColorPref = 8;
+            this.mAlphaMin = 0;
+            this.mAlphaPref = 0;
+            this.mSamplesMin = 1;
+            this.mSamplesPref = 1;
+            this.mSamplesQ = 1.0f;
         }
 
         public SurfaceConfig(SurfaceConfig sc) {
+            this.mDepthMin = 0;
+            this.mDepthPref = 0;
+            this.mStencilMin = 0;
+            this.mStencilPref = 0;
+            this.mColorMin = 8;
+            this.mColorPref = 8;
+            this.mAlphaMin = 0;
+            this.mAlphaPref = 0;
+            this.mSamplesMin = 1;
+            this.mSamplesPref = 1;
+            this.mSamplesQ = 1.0f;
             this.mDepthMin = sc.mDepthMin;
             this.mDepthPref = sc.mDepthPref;
             this.mStencilMin = sc.mStencilMin;
@@ -46,7 +70,8 @@ public class RenderScriptGL extends RenderScript {
         private void validateRange(int umin, int upref, int rmin, int rmax) {
             if (umin < rmin || umin > rmax) {
                 throw new RSIllegalArgumentException("Minimum value provided out of range.");
-            } else if (upref < umin) {
+            }
+            if (upref < umin) {
                 throw new RSIllegalArgumentException("preferred must be >= Minimum.");
             }
         }
@@ -81,23 +106,21 @@ public class RenderScriptGL extends RenderScript {
         }
     }
 
-    /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     @UnsupportedAppUsage
     public RenderScriptGL(Context ctx, SurfaceConfig sc) {
         super(ctx);
         this.mSurfaceConfig = new SurfaceConfig(sc);
         int sdkVersion = ctx.getApplicationInfo().targetSdkVersion;
-        long nDeviceCreate = nDeviceCreate();
+        this.mWidth = 0;
+        this.mHeight = 0;
+        long device = nDeviceCreate();
         int dpi = ctx.getResources().getDisplayMetrics().densityDpi;
-        int i = dpi;
-        int i2 = sdkVersion;
-        this.mContext = nContextCreateGL(nDeviceCreate, 0, sdkVersion, this.mSurfaceConfig.mColorMin, this.mSurfaceConfig.mColorPref, this.mSurfaceConfig.mAlphaMin, this.mSurfaceConfig.mAlphaPref, this.mSurfaceConfig.mDepthMin, this.mSurfaceConfig.mDepthPref, this.mSurfaceConfig.mStencilMin, this.mSurfaceConfig.mStencilPref, this.mSurfaceConfig.mSamplesMin, this.mSurfaceConfig.mSamplesPref, this.mSurfaceConfig.mSamplesQ, dpi);
-        if (this.mContext != 0) {
-            this.mMessageThread = new RenderScript.MessageThread(this);
-            this.mMessageThread.start();
-            return;
+        this.mContext = nContextCreateGL(device, 0, sdkVersion, this.mSurfaceConfig.mColorMin, this.mSurfaceConfig.mColorPref, this.mSurfaceConfig.mAlphaMin, this.mSurfaceConfig.mAlphaPref, this.mSurfaceConfig.mDepthMin, this.mSurfaceConfig.mDepthPref, this.mSurfaceConfig.mStencilMin, this.mSurfaceConfig.mStencilPref, this.mSurfaceConfig.mSamplesMin, this.mSurfaceConfig.mSamplesPref, this.mSurfaceConfig.mSamplesQ, dpi);
+        if (this.mContext == 0) {
+            throw new RSDriverException("Failed to create RS context.");
         }
-        throw new RSDriverException("Failed to create RS context.");
+        this.mMessageThread = new RenderScript.MessageThread(this);
+        this.mMessageThread.start();
     }
 
     @UnsupportedAppUsage
@@ -144,29 +167,29 @@ public class RenderScriptGL extends RenderScript {
     @UnsupportedAppUsage
     public void bindRootScript(Script s) {
         validate();
-        nContextBindRootScript((long) ((int) safeID(s)));
+        nContextBindRootScript((int) safeID(s));
     }
 
     @UnsupportedAppUsage
     public void bindProgramStore(ProgramStore p) {
         validate();
-        nContextBindProgramStore((long) ((int) safeID(p)));
+        nContextBindProgramStore((int) safeID(p));
     }
 
     public void bindProgramFragment(ProgramFragment p) {
         validate();
-        nContextBindProgramFragment((long) ((int) safeID(p)));
+        nContextBindProgramFragment((int) safeID(p));
     }
 
     @UnsupportedAppUsage
     public void bindProgramRaster(ProgramRaster p) {
         validate();
-        nContextBindProgramRaster((long) ((int) safeID(p)));
+        nContextBindProgramRaster((int) safeID(p));
     }
 
     @UnsupportedAppUsage
     public void bindProgramVertex(ProgramVertex p) {
         validate();
-        nContextBindProgramVertex((long) ((int) safeID(p)));
+        nContextBindProgramVertex((int) safeID(p));
     }
 }

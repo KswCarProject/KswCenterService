@@ -2,6 +2,7 @@ package android.app.admin;
 
 import com.android.server.LocalServices;
 
+/* loaded from: classes.dex */
 public abstract class DevicePolicyCache {
     public abstract int getPasswordQuality(int i);
 
@@ -15,17 +16,19 @@ public abstract class DevicePolicyCache {
         return dpmi != null ? dpmi.getDevicePolicyCache() : EmptyDevicePolicyCache.INSTANCE;
     }
 
+    /* loaded from: classes.dex */
     private static class EmptyDevicePolicyCache extends DevicePolicyCache {
-        /* access modifiers changed from: private */
-        public static final EmptyDevicePolicyCache INSTANCE = new EmptyDevicePolicyCache();
+        private static final EmptyDevicePolicyCache INSTANCE = new EmptyDevicePolicyCache();
 
         private EmptyDevicePolicyCache() {
         }
 
+        @Override // android.app.admin.DevicePolicyCache
         public boolean getScreenCaptureDisabled(int userHandle) {
             return false;
         }
 
+        @Override // android.app.admin.DevicePolicyCache
         public int getPasswordQuality(int userHandle) {
             return 0;
         }

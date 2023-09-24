@@ -5,20 +5,25 @@ import android.app.job.IJobCallback;
 import android.content.ClipData;
 import android.net.Network;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.PersistableBundle;
-import android.os.RemoteException;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.PersistableBundle;
+import android.p007os.RemoteException;
 import com.android.internal.location.GpsNetInitiatedHandler;
 
+/* loaded from: classes.dex */
 public class JobParameters implements Parcelable {
-    public static final Parcelable.Creator<JobParameters> CREATOR = new Parcelable.Creator<JobParameters>() {
+    public static final Parcelable.Creator<JobParameters> CREATOR = new Parcelable.Creator<JobParameters>() { // from class: android.app.job.JobParameters.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public JobParameters createFromParcel(Parcel in) {
             return new JobParameters(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public JobParameters[] newArray(int size) {
             return new JobParameters[size];
         }
@@ -61,17 +66,17 @@ public class JobParameters implements Parcelable {
         }
     }
 
-    public JobParameters(IBinder callback2, int jobId2, PersistableBundle extras2, Bundle transientExtras2, ClipData clipData2, int clipGrantFlags2, boolean overrideDeadlineExpired2, Uri[] triggeredContentUris, String[] triggeredContentAuthorities, Network network2) {
-        this.jobId = jobId2;
-        this.extras = extras2;
-        this.transientExtras = transientExtras2;
-        this.clipData = clipData2;
-        this.clipGrantFlags = clipGrantFlags2;
-        this.callback = callback2;
-        this.overrideDeadlineExpired = overrideDeadlineExpired2;
+    public JobParameters(IBinder callback, int jobId, PersistableBundle extras, Bundle transientExtras, ClipData clipData, int clipGrantFlags, boolean overrideDeadlineExpired, Uri[] triggeredContentUris, String[] triggeredContentAuthorities, Network network) {
+        this.jobId = jobId;
+        this.extras = extras;
+        this.transientExtras = transientExtras;
+        this.clipData = clipData;
+        this.clipGrantFlags = clipGrantFlags;
+        this.callback = callback;
+        this.overrideDeadlineExpired = overrideDeadlineExpired;
         this.mTriggeredContentUris = triggeredContentUris;
         this.mTriggeredContentAuthorities = triggeredContentAuthorities;
-        this.network = network2;
+        this.network = network;
     }
 
     public int getJobId() {
@@ -145,7 +150,6 @@ public class JobParameters implements Parcelable {
         this.jobId = in.readInt();
         this.extras = in.readPersistableBundle();
         this.transientExtras = in.readBundle();
-        boolean z = false;
         if (in.readInt() != 0) {
             this.clipData = ClipData.CREATOR.createFromParcel(in);
             this.clipGrantFlags = in.readInt();
@@ -154,7 +158,7 @@ public class JobParameters implements Parcelable {
             this.clipGrantFlags = 0;
         }
         this.callback = in.readStrongBinder();
-        this.overrideDeadlineExpired = in.readInt() == 1 ? true : z;
+        this.overrideDeadlineExpired = in.readInt() == 1;
         this.mTriggeredContentUris = (Uri[]) in.createTypedArray(Uri.CREATOR);
         this.mTriggeredContentAuthorities = in.createStringArray();
         if (in.readInt() != 0) {
@@ -166,15 +170,17 @@ public class JobParameters implements Parcelable {
         this.debugStopReason = in.readString();
     }
 
-    public void setStopReason(int reason, String debugStopReason2) {
+    public void setStopReason(int reason, String debugStopReason) {
         this.stopReason = reason;
-        this.debugStopReason = debugStopReason2;
+        this.debugStopReason = debugStopReason;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.jobId);
         dest.writePersistableBundle(this.extras);

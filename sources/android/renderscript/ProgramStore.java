@@ -2,6 +2,7 @@ package android.renderscript;
 
 import android.annotation.UnsupportedAppUsage;
 
+/* loaded from: classes3.dex */
 public class ProgramStore extends BaseObj {
     BlendDstFunc mBlendDst;
     BlendSrcFunc mBlendSrc;
@@ -13,6 +14,7 @@ public class ProgramStore extends BaseObj {
     boolean mDepthMask;
     boolean mDither;
 
+    /* loaded from: classes3.dex */
     public enum DepthFunc {
         ALWAYS(0),
         LESS(1),
@@ -24,11 +26,12 @@ public class ProgramStore extends BaseObj {
         
         int mID;
 
-        private DepthFunc(int id) {
+        DepthFunc(int id) {
             this.mID = id;
         }
     }
 
+    /* loaded from: classes3.dex */
     public enum BlendSrcFunc {
         ZERO(0),
         ONE(1),
@@ -42,11 +45,12 @@ public class ProgramStore extends BaseObj {
         
         int mID;
 
-        private BlendSrcFunc(int id) {
+        BlendSrcFunc(int id) {
             this.mID = id;
         }
     }
 
+    /* loaded from: classes3.dex */
     public enum BlendDstFunc {
         ZERO(0),
         ONE(1),
@@ -59,7 +63,7 @@ public class ProgramStore extends BaseObj {
         
         int mID;
 
-        private BlendDstFunc(int id) {
+        BlendDstFunc(int id) {
             this.mID = id;
         }
     }
@@ -153,17 +157,18 @@ public class ProgramStore extends BaseObj {
         return rs.mProgramStore_BLEND_ALPHA_DEPTH_NO_DEPTH;
     }
 
+    /* loaded from: classes3.dex */
     public static class Builder {
-        BlendDstFunc mBlendDst = BlendDstFunc.ZERO;
-        BlendSrcFunc mBlendSrc = BlendSrcFunc.ONE;
-        boolean mColorMaskA = true;
-        boolean mColorMaskB = true;
-        boolean mColorMaskG = true;
-        boolean mColorMaskR = true;
-        DepthFunc mDepthFunc = DepthFunc.ALWAYS;
-        boolean mDepthMask = false;
         boolean mDither;
         RenderScript mRS;
+        DepthFunc mDepthFunc = DepthFunc.ALWAYS;
+        boolean mDepthMask = false;
+        boolean mColorMaskR = true;
+        boolean mColorMaskG = true;
+        boolean mColorMaskB = true;
+        boolean mColorMaskA = true;
+        BlendSrcFunc mBlendSrc = BlendSrcFunc.ONE;
+        BlendDstFunc mBlendDst = BlendDstFunc.ZERO;
 
         @UnsupportedAppUsage
         public Builder(RenderScript rs) {
@@ -206,7 +211,8 @@ public class ProgramStore extends BaseObj {
         @UnsupportedAppUsage
         public ProgramStore create() {
             this.mRS.validate();
-            ProgramStore programStore = new ProgramStore(this.mRS.nProgramStoreCreate(this.mColorMaskR, this.mColorMaskG, this.mColorMaskB, this.mColorMaskA, this.mDepthMask, this.mDither, this.mBlendSrc.mID, this.mBlendDst.mID, this.mDepthFunc.mID), this.mRS);
+            long id = this.mRS.nProgramStoreCreate(this.mColorMaskR, this.mColorMaskG, this.mColorMaskB, this.mColorMaskA, this.mDepthMask, this.mDither, this.mBlendSrc.mID, this.mBlendDst.mID, this.mDepthFunc.mID);
+            ProgramStore programStore = new ProgramStore(id, this.mRS);
             programStore.mDepthFunc = this.mDepthFunc;
             programStore.mDepthMask = this.mDepthMask;
             programStore.mColorMaskR = this.mColorMaskR;

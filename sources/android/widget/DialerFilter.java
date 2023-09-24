@@ -9,12 +9,12 @@ import android.text.Spannable;
 import android.text.TextWatcher;
 import android.text.method.DialerKeyListener;
 import android.text.method.KeyListener;
-import android.text.method.MovementMethod;
 import android.text.method.TextKeyListener;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 
 @Deprecated
+/* loaded from: classes4.dex */
 public class DialerFilter extends RelativeLayout {
     public static final int DIGITS_AND_LETTERS = 1;
     public static final int DIGITS_AND_LETTERS_NO_DIGITS = 2;
@@ -38,37 +38,36 @@ public class DialerFilter extends RelativeLayout {
         super(context, attrs);
     }
 
-    /* access modifiers changed from: protected */
-    public void onFinishInflate() {
+    @Override // android.view.View
+    protected void onFinishInflate() {
         super.onFinishInflate();
         this.mInputFilters = new InputFilter[]{new InputFilter.AllCaps()};
         this.mHint = (EditText) findViewById(16908293);
-        if (this.mHint != null) {
-            this.mHint.setFilters(this.mInputFilters);
-            this.mLetters = this.mHint;
-            this.mLetters.setKeyListener(TextKeyListener.getInstance());
-            this.mLetters.setMovementMethod((MovementMethod) null);
-            this.mLetters.setFocusable(false);
-            this.mPrimary = (EditText) findViewById(16908300);
-            if (this.mPrimary != null) {
-                this.mPrimary.setFilters(this.mInputFilters);
-                this.mDigits = this.mPrimary;
-                this.mDigits.setKeyListener(DialerKeyListener.getInstance());
-                this.mDigits.setMovementMethod((MovementMethod) null);
-                this.mDigits.setFocusable(false);
-                this.mIcon = (ImageView) findViewById(16908294);
-                setFocusable(true);
-                this.mIsQwerty = true;
-                setMode(1);
-                return;
-            }
+        if (this.mHint == null) {
+            throw new IllegalStateException("DialerFilter must have a child EditText named hint");
+        }
+        this.mHint.setFilters(this.mInputFilters);
+        this.mLetters = this.mHint;
+        this.mLetters.setKeyListener(TextKeyListener.getInstance());
+        this.mLetters.setMovementMethod(null);
+        this.mLetters.setFocusable(false);
+        this.mPrimary = (EditText) findViewById(16908300);
+        if (this.mPrimary == null) {
             throw new IllegalStateException("DialerFilter must have a child EditText named primary");
         }
-        throw new IllegalStateException("DialerFilter must have a child EditText named hint");
+        this.mPrimary.setFilters(this.mInputFilters);
+        this.mDigits = this.mPrimary;
+        this.mDigits.setKeyListener(DialerKeyListener.getInstance());
+        this.mDigits.setMovementMethod(null);
+        this.mDigits.setFocusable(false);
+        this.mIcon = (ImageView) findViewById(16908294);
+        setFocusable(true);
+        this.mIsQwerty = true;
+        setMode(1);
     }
 
-    /* access modifiers changed from: protected */
-    public void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
+    @Override // android.view.View
+    protected void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
         super.onFocusChanged(focused, direction, previouslyFocusedRect);
         if (this.mIcon != null) {
             this.mIcon.setVisibility(focused ? 0 : 8);
@@ -79,6 +78,7 @@ public class DialerFilter extends RelativeLayout {
         return this.mIsQwerty;
     }
 
+    @Override // android.view.View, android.view.KeyEvent.Callback
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         boolean handled = false;
         switch (keyCode) {
@@ -122,21 +122,24 @@ public class DialerFilter extends RelativeLayout {
                         switch (this.mMode) {
                             case 1:
                                 handled = this.mLetters.onKeyDown(keyCode, event);
-                                if (!KeyEvent.isModifierKey(keyCode)) {
-                                    if (event.isPrintingKey() || keyCode == 62 || keyCode == 61) {
-                                        if (event.getMatch(DialerKeyListener.CHARACTERS) == 0) {
-                                            setMode(2);
-                                            break;
-                                        } else {
-                                            handled &= this.mDigits.onKeyDown(keyCode, event);
-                                            break;
-                                        }
-                                    }
-                                } else {
+                                if (KeyEvent.isModifierKey(keyCode)) {
                                     this.mDigits.onKeyDown(keyCode, event);
                                     handled = true;
                                     break;
+                                } else {
+                                    boolean isPrint = event.isPrintingKey();
+                                    if (isPrint || keyCode == 62 || keyCode == 61) {
+                                        char c = event.getMatch(DialerKeyListener.CHARACTERS);
+                                        if (c != 0) {
+                                            handled &= this.mDigits.onKeyDown(keyCode, event);
+                                            break;
+                                        } else {
+                                            setMode(2);
+                                            break;
+                                        }
+                                    }
                                 }
+                                break;
                             case 2:
                             case 5:
                                 handled = this.mLetters.onKeyDown(keyCode, event);
@@ -146,17 +149,19 @@ public class DialerFilter extends RelativeLayout {
                                 handled = this.mDigits.onKeyDown(keyCode, event);
                                 break;
                         }
-                        break;
                 }
         }
-        if (!handled) {
-            return super.onKeyDown(keyCode, event);
+        if (handled) {
+            return true;
         }
-        return true;
+        return super.onKeyDown(keyCode, event);
     }
 
+    @Override // android.view.View, android.view.KeyEvent.Callback
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        return this.mLetters.onKeyUp(keyCode, event) || this.mDigits.onKeyUp(keyCode, event);
+        boolean a = this.mLetters.onKeyUp(keyCode, event);
+        boolean b = this.mDigits.onKeyUp(keyCode, event);
+        return a || b;
     }
 
     public int getMode() {
@@ -221,11 +226,11 @@ public class DialerFilter extends RelativeLayout {
             this.mDigits = this.mPrimary;
         }
         this.mLetters.setKeyListener(lettersInput);
-        this.mLetters.setText((CharSequence) lettersText);
+        this.mLetters.setText(lettersText);
         Editable lettersText2 = this.mLetters.getText();
         Selection.setSelection(lettersText2, lettersText2.length());
         this.mDigits.setKeyListener(digitsInput);
-        this.mDigits.setText((CharSequence) digitsText);
+        this.mDigits.setText(digitsText);
         Editable digitsText2 = this.mDigits.getText();
         Selection.setSelection(digitsText2, digitsText2.length());
         this.mPrimary.setFilters(this.mInputFilters);
@@ -273,8 +278,10 @@ public class DialerFilter extends RelativeLayout {
     }
 
     public void clearText() {
-        this.mLetters.getText().clear();
-        this.mDigits.getText().clear();
+        Editable text = this.mLetters.getText();
+        text.clear();
+        Editable text2 = this.mDigits.getText();
+        text2.clear();
         if (this.mIsQwerty) {
             setMode(1);
         } else {
@@ -283,13 +290,15 @@ public class DialerFilter extends RelativeLayout {
     }
 
     public void setLettersWatcher(TextWatcher watcher) {
-        Editable span = this.mLetters.getText();
-        span.setSpan(watcher, 0, span.length(), 18);
+        Spannable text = this.mLetters.getText();
+        Spannable span = text;
+        span.setSpan(watcher, 0, text.length(), 18);
     }
 
     public void setDigitsWatcher(TextWatcher watcher) {
-        Editable span = this.mDigits.getText();
-        span.setSpan(watcher, 0, span.length(), 18);
+        Spannable text = this.mDigits.getText();
+        Spannable span = text;
+        span.setSpan(watcher, 0, text.length(), 18);
     }
 
     public void setFilterWatcher(TextWatcher watcher) {
@@ -310,7 +319,6 @@ public class DialerFilter extends RelativeLayout {
         text.removeSpan(watcher);
     }
 
-    /* access modifiers changed from: protected */
-    public void onModeChange(int oldMode, int newMode) {
+    protected void onModeChange(int oldMode, int newMode) {
     }
 }

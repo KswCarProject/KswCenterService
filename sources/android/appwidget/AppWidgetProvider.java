@@ -3,9 +3,11 @@ package android.appwidget;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
+import android.p007os.Bundle;
 
+/* loaded from: classes.dex */
 public class AppWidgetProvider extends BroadcastReceiver {
+    @Override // android.content.BroadcastReceiver
     public void onReceive(Context context, Intent intent) {
         Bundle extras;
         int[] appWidgetIds;
@@ -18,12 +20,15 @@ public class AppWidgetProvider extends BroadcastReceiver {
         } else if (AppWidgetManager.ACTION_APPWIDGET_DELETED.equals(action)) {
             Bundle extras3 = intent.getExtras();
             if (extras3 != null && extras3.containsKey(AppWidgetManager.EXTRA_APPWIDGET_ID)) {
-                onDeleted(context, new int[]{extras3.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID)});
+                int appWidgetId = extras3.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID);
+                onDeleted(context, new int[]{appWidgetId});
             }
         } else if (AppWidgetManager.ACTION_APPWIDGET_OPTIONS_CHANGED.equals(action)) {
             Bundle extras4 = intent.getExtras();
             if (extras4 != null && extras4.containsKey(AppWidgetManager.EXTRA_APPWIDGET_ID) && extras4.containsKey(AppWidgetManager.EXTRA_APPWIDGET_OPTIONS)) {
-                onAppWidgetOptionsChanged(context, AppWidgetManager.getInstance(context), extras4.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID), extras4.getBundle(AppWidgetManager.EXTRA_APPWIDGET_OPTIONS));
+                int appWidgetId2 = extras4.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID);
+                Bundle widgetExtras = extras4.getBundle(AppWidgetManager.EXTRA_APPWIDGET_OPTIONS);
+                onAppWidgetOptionsChanged(context, AppWidgetManager.getInstance(context), appWidgetId2, widgetExtras);
             }
         } else if (AppWidgetManager.ACTION_APPWIDGET_ENABLED.equals(action)) {
             onEnabled(context);

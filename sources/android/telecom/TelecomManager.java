@@ -7,13 +7,12 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.RemoteException;
-import android.os.ServiceManager;
+import android.p007os.Bundle;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import android.util.Log;
 import com.android.internal.telecom.ITelecomService;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -21,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/* loaded from: classes3.dex */
 public class TelecomManager {
     public static final String ACTION_CALL_TYPE = "codeaurora.telecom.action.CALL_TYPE";
     public static final String ACTION_CHANGE_DEFAULT_DIALER = "android.telecom.action.CHANGE_DEFAULT_DIALER";
@@ -108,6 +108,7 @@ public class TelecomManager {
     private final ITelecomService mTelecomServiceOverride;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface TtyMode {
     }
 
@@ -117,7 +118,7 @@ public class TelecomManager {
     }
 
     public TelecomManager(Context context) {
-        this(context, (ITelecomService) null);
+        this(context, null);
     }
 
     public TelecomManager(Context context, ITelecomService telecomServiceImpl) {
@@ -137,7 +138,7 @@ public class TelecomManager {
             }
             return null;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelecomService#getDefaultOutgoingPhoneAccount", e);
+            android.util.Log.m69e(TAG, "Error calling ITelecomService#getDefaultOutgoingPhoneAccount", e);
             return null;
         }
     }
@@ -149,7 +150,7 @@ public class TelecomManager {
             }
             return null;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelecomService#getUserSelectedOutgoingPhoneAccount", e);
+            android.util.Log.m69e(TAG, "Error calling ITelecomService#getUserSelectedOutgoingPhoneAccount", e);
             return null;
         }
     }
@@ -161,7 +162,7 @@ public class TelecomManager {
                 getTelecomService().setUserSelectedOutgoingPhoneAccount(accountHandle);
             }
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelecomService#setUserSelectedOutgoingPhoneAccount");
+            android.util.Log.m70e(TAG, "Error calling ITelecomService#setUserSelectedOutgoingPhoneAccount");
         }
     }
 
@@ -172,7 +173,7 @@ public class TelecomManager {
             }
             return null;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelecomService#getSimCallManager");
+            android.util.Log.m70e(TAG, "Error calling ITelecomService#getSimCallManager");
             return null;
         }
     }
@@ -184,7 +185,7 @@ public class TelecomManager {
             }
             return null;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelecomService#getSimCallManager");
+            android.util.Log.m70e(TAG, "Error calling ITelecomService#getSimCallManager");
             return null;
         }
     }
@@ -197,7 +198,7 @@ public class TelecomManager {
             }
             return null;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelecomService#getSimCallManagerForUser");
+            android.util.Log.m70e(TAG, "Error calling ITelecomService#getSimCallManagerForUser");
             return null;
         }
     }
@@ -214,7 +215,7 @@ public class TelecomManager {
                 return getTelecomService().getPhoneAccountsSupportingScheme(uriScheme, this.mContext.getOpPackageName());
             }
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelecomService#getPhoneAccountsSupportingScheme", e);
+            android.util.Log.m69e(TAG, "Error calling ITelecomService#getPhoneAccountsSupportingScheme", e);
         }
         return new ArrayList();
     }
@@ -229,7 +230,7 @@ public class TelecomManager {
                 return getTelecomService().getSelfManagedPhoneAccounts(this.mContext.getOpPackageName());
             }
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelecomService#getSelfManagedPhoneAccounts()", e);
+            android.util.Log.m69e(TAG, "Error calling ITelecomService#getSelfManagedPhoneAccounts()", e);
         }
         return new ArrayList();
     }
@@ -241,13 +242,13 @@ public class TelecomManager {
                 return getTelecomService().getCallCapablePhoneAccounts(includeDisabledAccounts, this.mContext.getOpPackageName());
             }
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelecomService#getCallCapablePhoneAccounts(" + includeDisabledAccounts + ")", e);
+            android.util.Log.m69e(TAG, "Error calling ITelecomService#getCallCapablePhoneAccounts(" + includeDisabledAccounts + ")", e);
         }
         return new ArrayList();
     }
 
-    @SuppressLint({"Doclava125"})
     @SystemApi
+    @SuppressLint({"Doclava125"})
     public List<PhoneAccountHandle> getPhoneAccountsForPackage() {
         try {
             if (isServiceConnected()) {
@@ -255,7 +256,7 @@ public class TelecomManager {
             }
             return null;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelecomService#getPhoneAccountsForPackage", e);
+            android.util.Log.m69e(TAG, "Error calling ITelecomService#getPhoneAccountsForPackage", e);
             return null;
         }
     }
@@ -267,7 +268,7 @@ public class TelecomManager {
             }
             return null;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelecomService#getPhoneAccount", e);
+            android.util.Log.m69e(TAG, "Error calling ITelecomService#getPhoneAccount", e);
             return null;
         }
     }
@@ -280,7 +281,7 @@ public class TelecomManager {
             }
             return 0;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelecomService#getAllPhoneAccountsCount", e);
+            android.util.Log.m69e(TAG, "Error calling ITelecomService#getAllPhoneAccountsCount", e);
             return 0;
         }
     }
@@ -292,7 +293,7 @@ public class TelecomManager {
                 return getTelecomService().getAllPhoneAccounts();
             }
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelecomService#getAllPhoneAccounts", e);
+            android.util.Log.m69e(TAG, "Error calling ITelecomService#getAllPhoneAccounts", e);
         }
         return Collections.EMPTY_LIST;
     }
@@ -304,7 +305,7 @@ public class TelecomManager {
                 return getTelecomService().getAllPhoneAccountHandles();
             }
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelecomService#getAllPhoneAccountHandles", e);
+            android.util.Log.m69e(TAG, "Error calling ITelecomService#getAllPhoneAccountHandles", e);
         }
         return Collections.EMPTY_LIST;
     }
@@ -315,7 +316,7 @@ public class TelecomManager {
                 getTelecomService().registerPhoneAccount(account);
             }
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelecomService#registerPhoneAccount", e);
+            android.util.Log.m69e(TAG, "Error calling ITelecomService#registerPhoneAccount", e);
         }
     }
 
@@ -325,25 +326,25 @@ public class TelecomManager {
                 getTelecomService().unregisterPhoneAccount(accountHandle);
             }
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelecomService#unregisterPhoneAccount", e);
+            android.util.Log.m69e(TAG, "Error calling ITelecomService#unregisterPhoneAccount", e);
         }
     }
 
-    @SuppressLint({"Doclava125"})
     @SystemApi
+    @SuppressLint({"Doclava125"})
     public void clearPhoneAccounts() {
         clearAccounts();
     }
 
-    @SuppressLint({"Doclava125"})
     @SystemApi
+    @SuppressLint({"Doclava125"})
     public void clearAccounts() {
         try {
             if (isServiceConnected()) {
                 getTelecomService().clearAccounts(this.mContext.getPackageName());
             }
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelecomService#clearAccounts", e);
+            android.util.Log.m69e(TAG, "Error calling ITelecomService#clearAccounts", e);
         }
     }
 
@@ -353,12 +354,12 @@ public class TelecomManager {
                 getTelecomService().clearAccounts(packageName);
             }
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelecomService#clearAccountsForPackage", e);
+            android.util.Log.m69e(TAG, "Error calling ITelecomService#clearAccountsForPackage", e);
         }
     }
 
-    @SuppressLint({"Doclava125"})
     @SystemApi
+    @SuppressLint({"Doclava125"})
     public ComponentName getDefaultPhoneApp() {
         try {
             if (isServiceConnected()) {
@@ -366,7 +367,7 @@ public class TelecomManager {
             }
             return null;
         } catch (RemoteException e) {
-            Log.e(TAG, "RemoteException attempting to get the default phone app.", e);
+            android.util.Log.m69e(TAG, "RemoteException attempting to get the default phone app.", e);
             return null;
         }
     }
@@ -378,7 +379,7 @@ public class TelecomManager {
             }
             return null;
         } catch (RemoteException e) {
-            Log.e(TAG, "RemoteException attempting to get the default dialer package name.", e);
+            android.util.Log.m69e(TAG, "RemoteException attempting to get the default dialer package name.", e);
             return null;
         }
     }
@@ -392,7 +393,7 @@ public class TelecomManager {
             }
             return false;
         } catch (RemoteException e) {
-            Log.e(TAG, "RemoteException attempting to set the default dialer.", e);
+            android.util.Log.m69e(TAG, "RemoteException attempting to set the default dialer.", e);
             return false;
         }
     }
@@ -404,7 +405,7 @@ public class TelecomManager {
             }
             return null;
         } catch (RemoteException e) {
-            Log.e(TAG, "RemoteException attempting to get the system dialer package name.", e);
+            android.util.Log.m69e(TAG, "RemoteException attempting to get the system dialer package name.", e);
             return null;
         }
     }
@@ -416,7 +417,7 @@ public class TelecomManager {
             }
             return false;
         } catch (RemoteException e) {
-            Log.e(TAG, "RemoteException calling ITelecomService#isVoiceMailNumber.", e);
+            android.util.Log.m69e(TAG, "RemoteException calling ITelecomService#isVoiceMailNumber.", e);
             return false;
         }
     }
@@ -428,7 +429,7 @@ public class TelecomManager {
             }
             return null;
         } catch (RemoteException e) {
-            Log.e(TAG, "RemoteException calling ITelecomService#hasVoiceMailNumber.", e);
+            android.util.Log.m69e(TAG, "RemoteException calling ITelecomService#hasVoiceMailNumber.", e);
             return null;
         }
     }
@@ -440,7 +441,7 @@ public class TelecomManager {
             }
             return null;
         } catch (RemoteException e) {
-            Log.e(TAG, "RemoteException calling ITelecomService#getLine1Number.", e);
+            android.util.Log.m69e(TAG, "RemoteException calling ITelecomService#getLine1Number.", e);
             return null;
         }
     }
@@ -452,7 +453,7 @@ public class TelecomManager {
             }
             return false;
         } catch (RemoteException e) {
-            Log.e(TAG, "RemoteException calling isInCall().", e);
+            android.util.Log.m69e(TAG, "RemoteException calling isInCall().", e);
             return false;
         }
     }
@@ -464,7 +465,7 @@ public class TelecomManager {
             }
             return false;
         } catch (RemoteException e) {
-            Log.e(TAG, "RemoteException calling isInManagedCall().", e);
+            android.util.Log.m69e(TAG, "RemoteException calling isInManagedCall().", e);
             return false;
         }
     }
@@ -477,7 +478,7 @@ public class TelecomManager {
             }
             return 0;
         } catch (RemoteException e) {
-            Log.d(TAG, "RemoteException calling getCallState().", e);
+            android.util.Log.m71d(TAG, "RemoteException calling getCallState().", e);
             return 0;
         }
     }
@@ -490,7 +491,7 @@ public class TelecomManager {
             }
             return false;
         } catch (RemoteException e) {
-            Log.e(TAG, "RemoteException attempting to get ringing state of phone app.", e);
+            android.util.Log.m69e(TAG, "RemoteException attempting to get ringing state of phone app.", e);
             return false;
         }
     }
@@ -503,7 +504,7 @@ public class TelecomManager {
             }
             return false;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelecomService#endCall", e);
+            android.util.Log.m69e(TAG, "Error calling ITelecomService#endCall", e);
             return false;
         }
     }
@@ -515,7 +516,7 @@ public class TelecomManager {
                 getTelecomService().acceptRingingCall(this.mContext.getPackageName());
             }
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelecomService#acceptRingingCall", e);
+            android.util.Log.m69e(TAG, "Error calling ITelecomService#acceptRingingCall", e);
         }
     }
 
@@ -526,7 +527,7 @@ public class TelecomManager {
                 getTelecomService().acceptRingingCallWithVideoState(this.mContext.getPackageName(), videoState);
             }
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelecomService#acceptRingingCallWithVideoState", e);
+            android.util.Log.m69e(TAG, "Error calling ITelecomService#acceptRingingCallWithVideoState", e);
         }
     }
 
@@ -536,7 +537,7 @@ public class TelecomManager {
                 getTelecomService().silenceRinger(this.mContext.getOpPackageName());
             }
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelecomService#silenceRinger", e);
+            android.util.Log.m69e(TAG, "Error calling ITelecomService#silenceRinger", e);
         }
     }
 
@@ -547,7 +548,7 @@ public class TelecomManager {
             }
             return false;
         } catch (RemoteException e) {
-            Log.e(TAG, "RemoteException attempting to get TTY supported state.", e);
+            android.util.Log.m69e(TAG, "RemoteException attempting to get TTY supported state.", e);
             return false;
         }
     }
@@ -560,84 +561,69 @@ public class TelecomManager {
             }
             return 0;
         } catch (RemoteException e) {
-            Log.e(TAG, "RemoteException attempting to get the current TTY mode.", e);
+            android.util.Log.m69e(TAG, "RemoteException attempting to get the current TTY mode.", e);
             return 0;
         }
     }
 
     public void addNewIncomingCall(PhoneAccountHandle phoneAccount, Bundle extras) {
-        Bundle bundle;
         try {
-            if (!isServiceConnected()) {
-                return;
-            }
-            if (extras == null || !extras.getBoolean("android.telecom.extra.IS_HANDOVER") || this.mContext.getApplicationContext().getApplicationInfo().targetSdkVersion <= 27) {
-                ITelecomService telecomService = getTelecomService();
-                if (extras == null) {
-                    bundle = new Bundle();
+            if (isServiceConnected()) {
+                if (extras != null && extras.getBoolean("android.telecom.extra.IS_HANDOVER") && this.mContext.getApplicationContext().getApplicationInfo().targetSdkVersion > 27) {
+                    android.util.Log.m70e("TAG", "addNewIncomingCall failed. Use public api acceptHandover for API > O-MR1");
                 } else {
-                    bundle = extras;
+                    getTelecomService().addNewIncomingCall(phoneAccount, extras == null ? new Bundle() : extras);
                 }
-                telecomService.addNewIncomingCall(phoneAccount, bundle);
-                return;
             }
-            Log.e("TAG", "addNewIncomingCall failed. Use public api acceptHandover for API > O-MR1");
         } catch (RemoteException e) {
-            Log.e(TAG, "RemoteException adding a new incoming call: " + phoneAccount, e);
+            android.util.Log.m69e(TAG, "RemoteException adding a new incoming call: " + phoneAccount, e);
         }
     }
 
     @SystemApi
     public void addNewUnknownCall(PhoneAccountHandle phoneAccount, Bundle extras) {
-        Bundle bundle;
         try {
             if (isServiceConnected()) {
-                ITelecomService telecomService = getTelecomService();
-                if (extras == null) {
-                    bundle = new Bundle();
-                } else {
-                    bundle = extras;
-                }
-                telecomService.addNewUnknownCall(phoneAccount, bundle);
+                getTelecomService().addNewUnknownCall(phoneAccount, extras == null ? new Bundle() : extras);
             }
         } catch (RemoteException e) {
-            Log.e(TAG, "RemoteException adding a new unknown call: " + phoneAccount, e);
+            android.util.Log.m69e(TAG, "RemoteException adding a new unknown call: " + phoneAccount, e);
         }
     }
 
     public boolean handleMmi(String dialString) {
         ITelecomService service = getTelecomService();
-        if (service == null) {
-            return false;
+        if (service != null) {
+            try {
+                return service.handlePinMmi(dialString, this.mContext.getOpPackageName());
+            } catch (RemoteException e) {
+                android.util.Log.m69e(TAG, "Error calling ITelecomService#handlePinMmi", e);
+                return false;
+            }
         }
-        try {
-            return service.handlePinMmi(dialString, this.mContext.getOpPackageName());
-        } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelecomService#handlePinMmi", e);
-            return false;
-        }
+        return false;
     }
 
     public boolean handleMmi(String dialString, PhoneAccountHandle accountHandle) {
         ITelecomService service = getTelecomService();
-        if (service == null) {
-            return false;
+        if (service != null) {
+            try {
+                return service.handlePinMmiForPhoneAccount(accountHandle, dialString, this.mContext.getOpPackageName());
+            } catch (RemoteException e) {
+                android.util.Log.m69e(TAG, "Error calling ITelecomService#handlePinMmi", e);
+                return false;
+            }
         }
-        try {
-            return service.handlePinMmiForPhoneAccount(accountHandle, dialString, this.mContext.getOpPackageName());
-        } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelecomService#handlePinMmi", e);
-            return false;
-        }
+        return false;
     }
 
     public Uri getAdnUriForPhoneAccount(PhoneAccountHandle accountHandle) {
         ITelecomService service = getTelecomService();
-        if (!(service == null || accountHandle == null)) {
+        if (service != null && accountHandle != null) {
             try {
                 return service.getAdnUriForPhoneAccount(accountHandle, this.mContext.getOpPackageName());
             } catch (RemoteException e) {
-                Log.e(TAG, "Error calling ITelecomService#getAdnUriForPhoneAccount", e);
+                android.util.Log.m69e(TAG, "Error calling ITelecomService#getAdnUriForPhoneAccount", e);
             }
         }
         return Uri.parse("content://icc/adn");
@@ -649,7 +635,7 @@ public class TelecomManager {
             try {
                 service.cancelMissedCallsNotification(this.mContext.getOpPackageName());
             } catch (RemoteException e) {
-                Log.e(TAG, "Error calling ITelecomService#cancelMissedCallsNotification", e);
+                android.util.Log.m69e(TAG, "Error calling ITelecomService#cancelMissedCallsNotification", e);
             }
         }
     }
@@ -660,7 +646,7 @@ public class TelecomManager {
             try {
                 service.showInCallScreen(showDialpad, this.mContext.getOpPackageName());
             } catch (RemoteException e) {
-                Log.e(TAG, "Error calling ITelecomService#showCallScreen", e);
+                android.util.Log.m69e(TAG, "Error calling ITelecomService#showCallScreen", e);
             }
         }
     }
@@ -670,17 +656,17 @@ public class TelecomManager {
         ITelecomService service = getTelecomService();
         if (service != null) {
             if (address == null) {
-                Log.w(TAG, "Cannot place call to empty address.");
+                android.util.Log.m64w(TAG, "Cannot place call to empty address.");
             }
-            if (extras == null) {
+            if (extras != null) {
+                bundle = extras;
+            } else {
                 try {
                     bundle = new Bundle();
                 } catch (RemoteException e) {
-                    Log.e(TAG, "Error calling ITelecomService#placeCall", e);
+                    android.util.Log.m69e(TAG, "Error calling ITelecomService#placeCall", e);
                     return;
                 }
-            } else {
-                bundle = extras;
             }
             service.placeCall(address, bundle, this.mContext.getOpPackageName());
         }
@@ -693,7 +679,7 @@ public class TelecomManager {
             try {
                 service.enablePhoneAccount(handle, isEnabled);
             } catch (RemoteException e) {
-                Log.e(TAG, "Error enablePhoneAbbount", e);
+                android.util.Log.m69e(TAG, "Error enablePhoneAbbount", e);
             }
         }
     }
@@ -705,9 +691,10 @@ public class TelecomManager {
             return null;
         }
         try {
-            return service.dumpCallAnalytics();
+            TelecomAnalytics result = service.dumpCallAnalytics();
+            return result;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error dumping call analytics", e);
+            android.util.Log.m69e(TAG, "Error dumping call analytics", e);
             return null;
         }
     }
@@ -718,20 +705,21 @@ public class TelecomManager {
             return null;
         }
         try {
-            return service.createManageBlockedNumbersIntent();
+            Intent result = service.createManageBlockedNumbersIntent();
+            return result;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelecomService#createManageBlockedNumbersIntent", e);
+            android.util.Log.m69e(TAG, "Error calling ITelecomService#createManageBlockedNumbersIntent", e);
             return null;
         }
     }
 
     public boolean isIncomingCallPermitted(PhoneAccountHandle phoneAccountHandle) {
         ITelecomService service;
-        if (!(phoneAccountHandle == null || (service = getTelecomService()) == null)) {
+        if (phoneAccountHandle != null && (service = getTelecomService()) != null) {
             try {
                 return service.isIncomingCallPermitted(phoneAccountHandle);
             } catch (RemoteException e) {
-                Log.e(TAG, "Error isIncomingCallPermitted", e);
+                android.util.Log.m69e(TAG, "Error isIncomingCallPermitted", e);
             }
         }
         return false;
@@ -739,15 +727,15 @@ public class TelecomManager {
 
     public boolean isOutgoingCallPermitted(PhoneAccountHandle phoneAccountHandle) {
         ITelecomService service = getTelecomService();
-        if (service == null) {
-            return false;
+        if (service != null) {
+            try {
+                return service.isOutgoingCallPermitted(phoneAccountHandle);
+            } catch (RemoteException e) {
+                android.util.Log.m69e(TAG, "Error isOutgoingCallPermitted", e);
+                return false;
+            }
         }
-        try {
-            return service.isOutgoingCallPermitted(phoneAccountHandle);
-        } catch (RemoteException e) {
-            Log.e(TAG, "Error isOutgoingCallPermitted", e);
-            return false;
-        }
+        return false;
     }
 
     public void acceptHandover(Uri srcAddr, int videoState, PhoneAccountHandle destAcct) {
@@ -756,19 +744,19 @@ public class TelecomManager {
                 getTelecomService().acceptHandover(srcAddr, videoState, destAcct);
             }
         } catch (RemoteException e) {
-            Log.e(TAG, "RemoteException acceptHandover: " + e);
+            android.util.Log.m70e(TAG, "RemoteException acceptHandover: " + e);
         }
     }
 
     @SystemApi
     public boolean isInEmergencyCall() {
         try {
-            if (isServiceConnected()) {
-                return getTelecomService().isInEmergencyCall();
+            if (!isServiceConnected()) {
+                return false;
             }
-            return false;
+            return getTelecomService().isInEmergencyCall();
         } catch (RemoteException e) {
-            Log.e(TAG, "RemoteException isInEmergencyCall: " + e);
+            android.util.Log.m70e(TAG, "RemoteException isInEmergencyCall: " + e);
             return false;
         }
     }
@@ -779,7 +767,7 @@ public class TelecomManager {
                 getTelecomService().handleCallIntent(intent);
             }
         } catch (RemoteException e) {
-            Log.e(TAG, "RemoteException handleCallIntent: " + e);
+            android.util.Log.m70e(TAG, "RemoteException handleCallIntent: " + e);
         }
     }
 
@@ -793,7 +781,7 @@ public class TelecomManager {
     private boolean isServiceConnected() {
         boolean isConnected = getTelecomService() != null;
         if (!isConnected) {
-            Log.w(TAG, "Telecom Service not found.");
+            android.util.Log.m64w(TAG, "Telecom Service not found.");
         }
         return isConnected;
     }

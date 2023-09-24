@@ -3,8 +3,9 @@ package com.android.internal.app;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
-import android.os.Bundle;
+import android.p007os.Bundle;
 
+/* loaded from: classes4.dex */
 public class MediaRouteControllerDialogFragment extends DialogFragment {
     public MediaRouteControllerDialogFragment() {
         setCancelable(true);
@@ -14,6 +15,7 @@ public class MediaRouteControllerDialogFragment extends DialogFragment {
         return new MediaRouteControllerDialog(context, getTheme());
     }
 
+    @Override // android.app.DialogFragment
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         return onCreateControllerDialog(getContext(), savedInstanceState);
     }

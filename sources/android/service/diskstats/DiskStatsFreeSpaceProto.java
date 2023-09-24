@@ -1,5 +1,6 @@
 package android.service.diskstats;
 
+/* loaded from: classes3.dex */
 public final class DiskStatsFreeSpaceProto {
     public static final long AVAILABLE_SPACE_KB = 1112396529666L;
     public static final long FOLDER = 1159641169921L;

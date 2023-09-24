@@ -5,17 +5,18 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.IBinder;
-import android.os.Looper;
-import android.os.Message;
-import android.os.Messenger;
-import android.os.RemoteException;
+import android.p007os.Handler;
+import android.p007os.HandlerThread;
+import android.p007os.IBinder;
+import android.p007os.Looper;
+import android.p007os.Message;
+import android.p007os.Messenger;
+import android.p007os.RemoteException;
 import android.util.Slog;
 import java.util.Objects;
 import java.util.Stack;
 
+/* loaded from: classes4.dex */
 public class AsyncChannel {
     private static final int BASE = 69632;
     public static final int CMD_CHANNEL_DISCONNECT = 69635;
@@ -37,8 +38,7 @@ public class AsyncChannel {
     private static String[] sCmdToString = new String[5];
     private AsyncChannelConnection mConnection;
     private DeathMonitor mDeathMonitor;
-    /* access modifiers changed from: private */
-    public Messenger mDstMessenger;
+    private Messenger mDstMessenger;
     private Context mSrcContext;
     private Handler mSrcHandler;
     private Messenger mSrcMessenger;
@@ -54,10 +54,10 @@ public class AsyncChannel {
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
     protected static String cmdToString(int cmd) {
         int cmd2 = cmd - 69632;
-        if (cmd2 < 0 || cmd2 >= sCmdToString.length) {
-            return null;
+        if (cmd2 >= 0 && cmd2 < sCmdToString.length) {
+            return sCmdToString[cmd2];
         }
-        return sCmdToString[cmd2];
+        return null;
     }
 
     public int connectSrcHandlerToPackageSync(Context srcContext, Handler srcHandler, String dstPackageName, String dstClassName) {
@@ -68,7 +68,8 @@ public class AsyncChannel {
         this.mDstMessenger = null;
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.setClassName(dstPackageName, dstClassName);
-        return srcContext.bindService(intent, this.mConnection, 1) ^ true ? 1 : 0;
+        boolean result = srcContext.bindService(intent, this.mConnection, 1);
+        return !result;
     }
 
     @UnsupportedAppUsage
@@ -84,13 +85,14 @@ public class AsyncChannel {
     public int fullyConnectSync(Context srcContext, Handler srcHandler, Handler dstHandler) {
         int status = connectSync(srcContext, srcHandler, dstHandler);
         if (status == 0) {
-            return sendMessageSynchronously((int) CMD_CHANNEL_FULL_CONNECTION).arg1;
+            Message response = sendMessageSynchronously(CMD_CHANNEL_FULL_CONNECTION);
+            return response.arg1;
         }
         return status;
     }
 
     public void connect(Context srcContext, Handler srcHandler, String dstPackageName, String dstClassName) {
-        new Thread(new Runnable(srcContext, srcHandler, dstPackageName, dstClassName) {
+        new Thread(new Runnable(srcContext, srcHandler, dstPackageName, dstClassName) { // from class: com.android.internal.util.AsyncChannel.1ConnectAsync
             String mDstClassName;
             String mDstPackageName;
             Context mSrcCtx;
@@ -103,8 +105,10 @@ public class AsyncChannel {
                 this.mDstClassName = dstClassName;
             }
 
+            @Override // java.lang.Runnable
             public void run() {
-                AsyncChannel.this.replyHalfConnected(AsyncChannel.this.connectSrcHandlerToPackageSync(this.mSrcCtx, this.mSrcHdlr, this.mDstPackageName, this.mDstClassName));
+                int result = AsyncChannel.this.connectSrcHandlerToPackageSync(this.mSrcCtx, this.mSrcHdlr, this.mDstPackageName, this.mDstClassName);
+                AsyncChannel.this.replyHalfConnected(result);
             }
         }).start();
     }
@@ -132,7 +136,7 @@ public class AsyncChannel {
     }
 
     public void connect(AsyncService srcAsyncService, Messenger dstMessenger) {
-        connect((Context) srcAsyncService, srcAsyncService.getHandler(), dstMessenger);
+        connect(srcAsyncService, srcAsyncService.getHandler(), dstMessenger);
     }
 
     public void disconnected() {
@@ -146,7 +150,7 @@ public class AsyncChannel {
 
     @UnsupportedAppUsage
     public void disconnect() {
-        if (!(this.mConnection == null || this.mSrcContext == null)) {
+        if (this.mConnection != null && this.mSrcContext != null) {
             this.mSrcContext.unbindService(this.mConnection);
             this.mConnection = null;
         }
@@ -270,20 +274,23 @@ public class AsyncChannel {
 
     @UnsupportedAppUsage
     public Message sendMessageSynchronously(Message msg) {
-        return SyncMessenger.sendMessageSynchronously(this.mDstMessenger, msg);
+        Message resultMsg = SyncMessenger.sendMessageSynchronously(this.mDstMessenger, msg);
+        return resultMsg;
     }
 
     public Message sendMessageSynchronously(int what) {
         Message msg = Message.obtain();
         msg.what = what;
-        return sendMessageSynchronously(msg);
+        Message resultMsg = sendMessageSynchronously(msg);
+        return resultMsg;
     }
 
     public Message sendMessageSynchronously(int what, int arg1) {
         Message msg = Message.obtain();
         msg.what = what;
         msg.arg1 = arg1;
-        return sendMessageSynchronously(msg);
+        Message resultMsg = sendMessageSynchronously(msg);
+        return resultMsg;
     }
 
     @UnsupportedAppUsage
@@ -292,7 +299,8 @@ public class AsyncChannel {
         msg.what = what;
         msg.arg1 = arg1;
         msg.arg2 = arg2;
-        return sendMessageSynchronously(msg);
+        Message resultMsg = sendMessageSynchronously(msg);
+        return resultMsg;
     }
 
     public Message sendMessageSynchronously(int what, int arg1, int arg2, Object obj) {
@@ -301,37 +309,40 @@ public class AsyncChannel {
         msg.arg1 = arg1;
         msg.arg2 = arg2;
         msg.obj = obj;
-        return sendMessageSynchronously(msg);
+        Message resultMsg = sendMessageSynchronously(msg);
+        return resultMsg;
     }
 
     public Message sendMessageSynchronously(int what, Object obj) {
         Message msg = Message.obtain();
         msg.what = what;
         msg.obj = obj;
-        return sendMessageSynchronously(msg);
+        Message resultMsg = sendMessageSynchronously(msg);
+        return resultMsg;
     }
 
+    /* loaded from: classes4.dex */
     private static class SyncMessenger {
-        private static int sCount = 0;
-        private static Stack<SyncMessenger> sStack = new Stack<>();
         private SyncHandler mHandler;
         private HandlerThread mHandlerThread;
         private Messenger mMessenger;
+        private static Stack<SyncMessenger> sStack = new Stack<>();
+        private static int sCount = 0;
 
         private SyncMessenger() {
         }
 
+        /* loaded from: classes4.dex */
         private class SyncHandler extends Handler {
-            /* access modifiers changed from: private */
-            public Object mLockObject;
-            /* access modifiers changed from: private */
-            public Message mResultMsg;
+            private Object mLockObject;
+            private Message mResultMsg;
 
             private SyncHandler(Looper looper) {
                 super(looper);
                 this.mLockObject = new Object();
             }
 
+            @Override // android.p007os.Handler
             public void handleMessage(Message msg) {
                 Message msgCopy = Message.obtain();
                 msgCopy.copyFrom(msg);
@@ -356,7 +367,7 @@ public class AsyncChannel {
                     sm.mHandlerThread.start();
                     Objects.requireNonNull(sm);
                     sm.mHandler = new SyncHandler(sm.mHandlerThread.getLooper());
-                    sm.mMessenger = new Messenger((Handler) sm.mHandler);
+                    sm.mMessenger = new Messenger(sm.mHandler);
                 } else {
                     sm = sStack.pop();
                 }
@@ -370,27 +381,27 @@ public class AsyncChannel {
             }
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public static Message sendMessageSynchronously(Messenger dstMessenger, Message msg) {
             SyncMessenger sm = obtain();
             Message resultMsg = null;
-            if (!(dstMessenger == null || msg == null)) {
+            if (dstMessenger != null && msg != null) {
                 try {
                     msg.replyTo = sm.mMessenger;
                     synchronized (sm.mHandler.mLockObject) {
                         if (sm.mHandler.mResultMsg != null) {
                             Slog.wtf(AsyncChannel.TAG, "mResultMsg should be null here");
-                            Message unused = sm.mHandler.mResultMsg = null;
+                            sm.mHandler.mResultMsg = null;
                         }
                         dstMessenger.send(msg);
                         sm.mHandler.mLockObject.wait();
                         resultMsg = sm.mHandler.mResultMsg;
-                        Message unused2 = sm.mHandler.mResultMsg = null;
+                        sm.mHandler.mResultMsg = null;
                     }
-                } catch (InterruptedException e) {
-                    Slog.e(AsyncChannel.TAG, "error in sendMessageSynchronously", e);
-                } catch (RemoteException e2) {
-                    Slog.e(AsyncChannel.TAG, "error in sendMessageSynchronously", e2);
+                } catch (RemoteException e) {
+                    Slog.m55e(AsyncChannel.TAG, "error in sendMessageSynchronously", e);
+                } catch (InterruptedException e2) {
+                    Slog.m55e(AsyncChannel.TAG, "error in sendMessageSynchronously", e2);
                 }
             }
             sm.recycle();
@@ -398,7 +409,7 @@ public class AsyncChannel {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void replyHalfConnected(int status) {
         Message msg = this.mSrcHandler.obtainMessage(69632);
         msg.arg1 = status;
@@ -411,52 +422,58 @@ public class AsyncChannel {
     }
 
     private boolean linkToDeathMonitor() {
-        if (this.mConnection != null || this.mDeathMonitor != null) {
-            return true;
+        if (this.mConnection == null && this.mDeathMonitor == null) {
+            this.mDeathMonitor = new DeathMonitor();
+            try {
+                this.mDstMessenger.getBinder().linkToDeath(this.mDeathMonitor, 0);
+                return true;
+            } catch (RemoteException e) {
+                this.mDeathMonitor = null;
+                return false;
+            }
         }
-        this.mDeathMonitor = new DeathMonitor();
-        try {
-            this.mDstMessenger.getBinder().linkToDeath(this.mDeathMonitor, 0);
-            return true;
-        } catch (RemoteException e) {
-            this.mDeathMonitor = null;
-            return false;
-        }
+        return true;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void replyDisconnected(int status) {
-        if (this.mSrcHandler != null) {
-            Message msg = this.mSrcHandler.obtainMessage(CMD_CHANNEL_DISCONNECTED);
-            msg.arg1 = status;
-            msg.obj = this;
-            msg.replyTo = this.mDstMessenger;
-            this.mSrcHandler.sendMessage(msg);
+        if (this.mSrcHandler == null) {
+            return;
         }
+        Message msg = this.mSrcHandler.obtainMessage(CMD_CHANNEL_DISCONNECTED);
+        msg.arg1 = status;
+        msg.obj = this;
+        msg.replyTo = this.mDstMessenger;
+        this.mSrcHandler.sendMessage(msg);
     }
 
+    /* loaded from: classes4.dex */
     class AsyncChannelConnection implements ServiceConnection {
         AsyncChannelConnection() {
         }
 
+        @Override // android.content.ServiceConnection
         public void onServiceConnected(ComponentName className, IBinder service) {
-            Messenger unused = AsyncChannel.this.mDstMessenger = new Messenger(service);
+            AsyncChannel.this.mDstMessenger = new Messenger(service);
             AsyncChannel.this.replyHalfConnected(0);
         }
 
+        @Override // android.content.ServiceConnection
         public void onServiceDisconnected(ComponentName className) {
             AsyncChannel.this.replyDisconnected(0);
         }
     }
 
     private static void log(String s) {
-        Slog.d(TAG, s);
+        Slog.m58d(TAG, s);
     }
 
+    /* loaded from: classes4.dex */
     private final class DeathMonitor implements IBinder.DeathRecipient {
         DeathMonitor() {
         }
 
+        @Override // android.p007os.IBinder.DeathRecipient
         public void binderDied() {
             AsyncChannel.this.replyDisconnected(4);
         }

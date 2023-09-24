@@ -6,19 +6,18 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.DrawableWrapper;
-import android.os.SystemClock;
+import android.p007os.SystemClock;
 import android.util.AttributeSet;
 import android.util.TypedValue;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.io.IOException;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+/* loaded from: classes.dex */
 public class AnimatedRotateDrawable extends DrawableWrapper implements Animatable {
-    /* access modifiers changed from: private */
-    public float mCurrentDegrees;
-    /* access modifiers changed from: private */
-    public float mIncrement;
+    private float mCurrentDegrees;
+    private float mIncrement;
     private final Runnable mNextFrame;
     private boolean mRunning;
     private AnimatedRotateState mState;
@@ -30,23 +29,25 @@ public class AnimatedRotateDrawable extends DrawableWrapper implements Animatabl
     }
 
     public AnimatedRotateDrawable() {
-        this(new AnimatedRotateState((AnimatedRotateState) null, (Resources) null), (Resources) null);
+        this(new AnimatedRotateState(null, null), null);
     }
 
+    @Override // android.graphics.drawable.DrawableWrapper, android.graphics.drawable.Drawable
     public void draw(Canvas canvas) {
         Drawable drawable = getDrawable();
         Rect bounds = drawable.getBounds();
         int w = bounds.right - bounds.left;
         int h = bounds.bottom - bounds.top;
         AnimatedRotateState st = this.mState;
-        float px = st.mPivotXRel ? ((float) w) * st.mPivotX : st.mPivotX;
-        float py = st.mPivotYRel ? ((float) h) * st.mPivotY : st.mPivotY;
+        float px = st.mPivotXRel ? w * st.mPivotX : st.mPivotX;
+        float py = st.mPivotYRel ? h * st.mPivotY : st.mPivotY;
         int saveCount = canvas.save();
-        canvas.rotate(this.mCurrentDegrees, ((float) bounds.left) + px, ((float) bounds.top) + py);
+        canvas.rotate(this.mCurrentDegrees, bounds.left + px, bounds.top + py);
         drawable.draw(canvas);
         canvas.restoreToCount(saveCount);
     }
 
+    @Override // android.graphics.drawable.Animatable
     public void start() {
         if (!this.mRunning) {
             this.mRunning = true;
@@ -54,34 +55,40 @@ public class AnimatedRotateDrawable extends DrawableWrapper implements Animatabl
         }
     }
 
+    @Override // android.graphics.drawable.Animatable
     public void stop() {
         this.mRunning = false;
         unscheduleSelf(this.mNextFrame);
     }
 
+    @Override // android.graphics.drawable.Animatable
     public boolean isRunning() {
         return this.mRunning;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void nextFrame() {
         unscheduleSelf(this.mNextFrame);
-        scheduleSelf(this.mNextFrame, SystemClock.uptimeMillis() + ((long) this.mState.mFrameDuration));
+        scheduleSelf(this.mNextFrame, SystemClock.uptimeMillis() + this.mState.mFrameDuration);
     }
 
+    @Override // android.graphics.drawable.DrawableWrapper, android.graphics.drawable.Drawable
     public boolean setVisible(boolean visible, boolean restart) {
         boolean changed = super.setVisible(visible, restart);
-        if (!visible) {
+        if (visible) {
+            if (changed || restart) {
+                this.mCurrentDegrees = 0.0f;
+                nextFrame();
+            }
+        } else {
             unscheduleSelf(this.mNextFrame);
-        } else if (changed || restart) {
-            this.mCurrentDegrees = 0.0f;
-            nextFrame();
         }
         return changed;
     }
 
+    @Override // android.graphics.drawable.DrawableWrapper, android.graphics.drawable.Drawable
     public void inflate(Resources r, XmlPullParser parser, AttributeSet attrs, Resources.Theme theme) throws XmlPullParserException, IOException {
-        TypedArray a = obtainAttributes(r, theme, attrs, R.styleable.AnimatedRotateDrawable);
+        TypedArray a = obtainAttributes(r, theme, attrs, C3132R.styleable.AnimatedRotateDrawable);
         super.inflate(r, parser, attrs, theme);
         updateStateFromTypedArray(a);
         verifyRequiredAttributes(a);
@@ -89,25 +96,27 @@ public class AnimatedRotateDrawable extends DrawableWrapper implements Animatabl
         updateLocalState();
     }
 
+    @Override // android.graphics.drawable.DrawableWrapper, android.graphics.drawable.Drawable
     public void applyTheme(Resources.Theme t) {
         super.applyTheme(t);
         AnimatedRotateState state = this.mState;
-        if (state != null) {
-            if (state.mThemeAttrs != null) {
-                TypedArray a = t.resolveAttributes(state.mThemeAttrs, R.styleable.AnimatedRotateDrawable);
+        if (state == null) {
+            return;
+        }
+        if (state.mThemeAttrs != null) {
+            TypedArray a = t.resolveAttributes(state.mThemeAttrs, C3132R.styleable.AnimatedRotateDrawable);
+            try {
                 try {
                     updateStateFromTypedArray(a);
                     verifyRequiredAttributes(a);
                 } catch (XmlPullParserException e) {
                     rethrowAsRuntimeException(e);
-                } catch (Throwable th) {
-                    a.recycle();
-                    throw th;
                 }
+            } finally {
                 a.recycle();
             }
-            updateLocalState();
         }
+        updateLocalState();
     }
 
     private void verifyRequiredAttributes(TypedArray a) throws XmlPullParserException {
@@ -121,32 +130,29 @@ public class AnimatedRotateDrawable extends DrawableWrapper implements Animatabl
 
     private void updateStateFromTypedArray(TypedArray a) {
         AnimatedRotateState state = this.mState;
-        if (state != null) {
-            state.mChangingConfigurations |= a.getChangingConfigurations();
-            int[] unused = state.mThemeAttrs = a.extractThemeAttrs();
-            boolean z = false;
-            if (a.hasValue(2)) {
-                TypedValue tv = a.peekValue(2);
-                state.mPivotXRel = tv.type == 6;
-                state.mPivotX = state.mPivotXRel ? tv.getFraction(1.0f, 1.0f) : tv.getFloat();
-            }
-            if (a.hasValue(3)) {
-                TypedValue tv2 = a.peekValue(3);
-                if (tv2.type == 6) {
-                    z = true;
-                }
-                state.mPivotYRel = z;
-                state.mPivotY = state.mPivotYRel ? tv2.getFraction(1.0f, 1.0f) : tv2.getFloat();
-            }
-            setFramesCount(a.getInt(5, state.mFramesCount));
-            setFramesDuration(a.getInt(4, state.mFrameDuration));
+        if (state == null) {
+            return;
         }
+        state.mChangingConfigurations |= a.getChangingConfigurations();
+        state.mThemeAttrs = a.extractThemeAttrs();
+        if (a.hasValue(2)) {
+            TypedValue tv = a.peekValue(2);
+            state.mPivotXRel = tv.type == 6;
+            state.mPivotX = state.mPivotXRel ? tv.getFraction(1.0f, 1.0f) : tv.getFloat();
+        }
+        if (a.hasValue(3)) {
+            TypedValue tv2 = a.peekValue(3);
+            state.mPivotYRel = tv2.type == 6;
+            state.mPivotY = state.mPivotYRel ? tv2.getFraction(1.0f, 1.0f) : tv2.getFloat();
+        }
+        setFramesCount(a.getInt(5, state.mFramesCount));
+        setFramesDuration(a.getInt(4, state.mFrameDuration));
     }
 
     @UnsupportedAppUsage
     public void setFramesCount(int framesCount) {
         this.mState.mFramesCount = framesCount;
-        this.mIncrement = 360.0f / ((float) this.mState.mFramesCount);
+        this.mIncrement = 360.0f / this.mState.mFramesCount;
     }
 
     @UnsupportedAppUsage
@@ -154,24 +160,30 @@ public class AnimatedRotateDrawable extends DrawableWrapper implements Animatabl
         this.mState.mFrameDuration = framesDuration;
     }
 
-    /* access modifiers changed from: package-private */
-    public DrawableWrapper.DrawableWrapperState mutateConstantState() {
-        this.mState = new AnimatedRotateState(this.mState, (Resources) null);
+    @Override // android.graphics.drawable.DrawableWrapper
+    DrawableWrapper.DrawableWrapperState mutateConstantState() {
+        this.mState = new AnimatedRotateState(this.mState, null);
         return this.mState;
     }
 
+    /* loaded from: classes.dex */
     static final class AnimatedRotateState extends DrawableWrapper.DrawableWrapperState {
-        int mFrameDuration = 150;
-        int mFramesCount = 12;
-        float mPivotX = 0.0f;
-        boolean mPivotXRel = false;
-        float mPivotY = 0.0f;
-        boolean mPivotYRel = false;
-        /* access modifiers changed from: private */
-        public int[] mThemeAttrs;
+        int mFrameDuration;
+        int mFramesCount;
+        float mPivotX;
+        boolean mPivotXRel;
+        float mPivotY;
+        boolean mPivotYRel;
+        private int[] mThemeAttrs;
 
         public AnimatedRotateState(AnimatedRotateState orig, Resources res) {
             super(orig, res);
+            this.mPivotXRel = false;
+            this.mPivotX = 0.0f;
+            this.mPivotYRel = false;
+            this.mPivotY = 0.0f;
+            this.mFrameDuration = 150;
+            this.mFramesCount = 12;
             if (orig != null) {
                 this.mPivotXRel = orig.mPivotXRel;
                 this.mPivotX = orig.mPivotX;
@@ -182,6 +194,7 @@ public class AnimatedRotateDrawable extends DrawableWrapper implements Animatabl
             }
         }
 
+        @Override // android.graphics.drawable.DrawableWrapper.DrawableWrapperState, android.graphics.drawable.Drawable.ConstantState
         public Drawable newDrawable(Resources res) {
             return new AnimatedRotateDrawable(this, res);
         }
@@ -189,11 +202,12 @@ public class AnimatedRotateDrawable extends DrawableWrapper implements Animatabl
 
     private AnimatedRotateDrawable(AnimatedRotateState state, Resources res) {
         super(state, res);
-        this.mNextFrame = new Runnable() {
+        this.mNextFrame = new Runnable() { // from class: android.graphics.drawable.AnimatedRotateDrawable.1
+            @Override // java.lang.Runnable
             public void run() {
                 AnimatedRotateDrawable.access$216(AnimatedRotateDrawable.this, AnimatedRotateDrawable.this.mIncrement);
                 if (AnimatedRotateDrawable.this.mCurrentDegrees > 360.0f - AnimatedRotateDrawable.this.mIncrement) {
-                    float unused = AnimatedRotateDrawable.this.mCurrentDegrees = 0.0f;
+                    AnimatedRotateDrawable.this.mCurrentDegrees = 0.0f;
                 }
                 AnimatedRotateDrawable.this.invalidateSelf();
                 AnimatedRotateDrawable.this.nextFrame();
@@ -204,7 +218,8 @@ public class AnimatedRotateDrawable extends DrawableWrapper implements Animatabl
     }
 
     private void updateLocalState() {
-        this.mIncrement = 360.0f / ((float) this.mState.mFramesCount);
+        AnimatedRotateState state = this.mState;
+        this.mIncrement = 360.0f / state.mFramesCount;
         Drawable drawable = getDrawable();
         if (drawable != null) {
             drawable.setFilterBitmap(true);

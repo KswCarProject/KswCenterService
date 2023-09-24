@@ -1,16 +1,21 @@
 package android.hardware.input;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.TextUtils;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public final class InputDeviceIdentifier implements Parcelable {
-    public static final Parcelable.Creator<InputDeviceIdentifier> CREATOR = new Parcelable.Creator<InputDeviceIdentifier>() {
+    public static final Parcelable.Creator<InputDeviceIdentifier> CREATOR = new Parcelable.Creator<InputDeviceIdentifier>() { // from class: android.hardware.input.InputDeviceIdentifier.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public InputDeviceIdentifier createFromParcel(Parcel source) {
             return new InputDeviceIdentifier(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public InputDeviceIdentifier[] newArray(int size) {
             return new InputDeviceIdentifier[size];
         }
@@ -31,10 +36,12 @@ public final class InputDeviceIdentifier implements Parcelable {
         this.mProductId = src.readInt();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.mDescriptor);
         dest.writeInt(this.mVendorId);
@@ -68,6 +75,6 @@ public final class InputDeviceIdentifier implements Parcelable {
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{this.mDescriptor, Integer.valueOf(this.mVendorId), Integer.valueOf(this.mProductId)});
+        return Objects.hash(this.mDescriptor, Integer.valueOf(this.mVendorId), Integer.valueOf(this.mProductId));
     }
 }

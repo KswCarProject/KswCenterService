@@ -2,17 +2,22 @@ package android.app.servertransaction;
 
 import android.app.ClientTransactionHandler;
 import android.content.res.Configuration;
-import android.os.IBinder;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.IBinder;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public class MultiWindowModeChangeItem extends ClientTransactionItem {
-    public static final Parcelable.Creator<MultiWindowModeChangeItem> CREATOR = new Parcelable.Creator<MultiWindowModeChangeItem>() {
+    public static final Parcelable.Creator<MultiWindowModeChangeItem> CREATOR = new Parcelable.Creator<MultiWindowModeChangeItem>() { // from class: android.app.servertransaction.MultiWindowModeChangeItem.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public MultiWindowModeChangeItem createFromParcel(Parcel in) {
             return new MultiWindowModeChangeItem(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public MultiWindowModeChangeItem[] newArray(int size) {
             return new MultiWindowModeChangeItem[size];
         }
@@ -20,6 +25,7 @@ public class MultiWindowModeChangeItem extends ClientTransactionItem {
     private boolean mIsInMultiWindowMode;
     private Configuration mOverrideConfig;
 
+    @Override // android.app.servertransaction.BaseClientRequest
     public void execute(ClientTransactionHandler client, IBinder token, PendingTransactionActions pendingActions) {
         client.handleMultiWindowModeChanged(token, this.mIsInMultiWindowMode, this.mOverrideConfig);
     }
@@ -37,12 +43,14 @@ public class MultiWindowModeChangeItem extends ClientTransactionItem {
         return instance;
     }
 
+    @Override // android.app.servertransaction.ObjectPoolItem
     public void recycle() {
         this.mIsInMultiWindowMode = false;
         this.mOverrideConfig = null;
         ObjectPool.recycle(this);
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeBoolean(this.mIsInMultiWindowMode);
         dest.writeTypedObject(this.mOverrideConfig, flags);
@@ -61,14 +69,15 @@ public class MultiWindowModeChangeItem extends ClientTransactionItem {
             return false;
         }
         MultiWindowModeChangeItem other = (MultiWindowModeChangeItem) o;
-        if (this.mIsInMultiWindowMode != other.mIsInMultiWindowMode || !Objects.equals(this.mOverrideConfig, other.mOverrideConfig)) {
-            return false;
+        if (this.mIsInMultiWindowMode == other.mIsInMultiWindowMode && Objects.equals(this.mOverrideConfig, other.mOverrideConfig)) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        return (((17 * 31) + (this.mIsInMultiWindowMode ? 1 : 0)) * 31) + this.mOverrideConfig.hashCode();
+        int result = (17 * 31) + (this.mIsInMultiWindowMode ? 1 : 0);
+        return (result * 31) + this.mOverrideConfig.hashCode();
     }
 
     public String toString() {

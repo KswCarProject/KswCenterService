@@ -4,6 +4,7 @@ import android.content.Context;
 import android.hardware.SensorListener;
 
 @Deprecated
+/* loaded from: classes4.dex */
 public abstract class OrientationListener implements SensorListener {
     public static final int ORIENTATION_UNKNOWN = -1;
     private OrientationEventListener mOrientationEventLis;
@@ -18,6 +19,7 @@ public abstract class OrientationListener implements SensorListener {
         this.mOrientationEventLis = new OrientationEventListenerInternal(context, rate);
     }
 
+    /* loaded from: classes4.dex */
     class OrientationEventListenerInternal extends OrientationEventListener {
         OrientationEventListenerInternal(Context context) {
             super(context);
@@ -28,6 +30,7 @@ public abstract class OrientationListener implements SensorListener {
             registerListener(OrientationListener.this);
         }
 
+        @Override // android.view.OrientationEventListener
         public void onOrientationChanged(int orientation) {
             OrientationListener.this.onOrientationChanged(orientation);
         }
@@ -41,9 +44,11 @@ public abstract class OrientationListener implements SensorListener {
         this.mOrientationEventLis.disable();
     }
 
+    @Override // android.hardware.SensorListener
     public void onAccuracyChanged(int sensor, int accuracy) {
     }
 
+    @Override // android.hardware.SensorListener
     public void onSensorChanged(int sensor, float[] values) {
     }
 }

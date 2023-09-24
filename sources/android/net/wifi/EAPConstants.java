@@ -1,5 +1,6 @@
 package android.net.wifi;
 
+/* loaded from: classes3.dex */
 public final class EAPConstants {
     public static final int EAP_3Com = 24;
     public static final int EAP_AKA = 23;

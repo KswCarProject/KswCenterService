@@ -4,63 +4,73 @@ import android.security.keymaster.KeymasterArguments;
 import android.security.keymaster.KeymasterDefs;
 import java.security.InvalidKeyException;
 
+/* loaded from: classes3.dex */
 abstract class AndroidKeyStoreRSASignatureSpi extends AndroidKeyStoreSignatureSpiBase {
     private final int mKeymasterDigest;
     private final int mKeymasterPadding;
 
+    /* loaded from: classes3.dex */
     static abstract class PKCS1Padding extends AndroidKeyStoreRSASignatureSpi {
         PKCS1Padding(int keymasterDigest) {
             super(keymasterDigest, 5);
         }
 
-        /* access modifiers changed from: protected */
-        public final int getAdditionalEntropyAmountForSign() {
+        @Override // android.security.keystore.AndroidKeyStoreSignatureSpiBase
+        protected final int getAdditionalEntropyAmountForSign() {
             return 0;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class NONEWithPKCS1Padding extends PKCS1Padding {
         public NONEWithPKCS1Padding() {
             super(0);
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class MD5WithPKCS1Padding extends PKCS1Padding {
         public MD5WithPKCS1Padding() {
             super(1);
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class SHA1WithPKCS1Padding extends PKCS1Padding {
         public SHA1WithPKCS1Padding() {
             super(2);
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class SHA224WithPKCS1Padding extends PKCS1Padding {
         public SHA224WithPKCS1Padding() {
             super(3);
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class SHA256WithPKCS1Padding extends PKCS1Padding {
         public SHA256WithPKCS1Padding() {
             super(4);
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class SHA384WithPKCS1Padding extends PKCS1Padding {
         public SHA384WithPKCS1Padding() {
             super(5);
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class SHA512WithPKCS1Padding extends PKCS1Padding {
         public SHA512WithPKCS1Padding() {
             super(6);
         }
     }
 
+    /* loaded from: classes3.dex */
     static abstract class PSSPadding extends AndroidKeyStoreRSASignatureSpi {
         private static final int SALT_LENGTH_BYTES = 20;
 
@@ -68,36 +78,41 @@ abstract class AndroidKeyStoreRSASignatureSpi extends AndroidKeyStoreSignatureSp
             super(keymasterDigest, 3);
         }
 
-        /* access modifiers changed from: protected */
-        public final int getAdditionalEntropyAmountForSign() {
+        @Override // android.security.keystore.AndroidKeyStoreSignatureSpiBase
+        protected final int getAdditionalEntropyAmountForSign() {
             return 20;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class SHA1WithPSSPadding extends PSSPadding {
         public SHA1WithPSSPadding() {
             super(2);
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class SHA224WithPSSPadding extends PSSPadding {
         public SHA224WithPSSPadding() {
             super(3);
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class SHA256WithPSSPadding extends PSSPadding {
         public SHA256WithPSSPadding() {
             super(4);
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class SHA384WithPSSPadding extends PSSPadding {
         public SHA384WithPSSPadding() {
             super(5);
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class SHA512WithPSSPadding extends PSSPadding {
         public SHA512WithPSSPadding() {
             super(6);
@@ -109,27 +124,26 @@ abstract class AndroidKeyStoreRSASignatureSpi extends AndroidKeyStoreSignatureSp
         this.mKeymasterPadding = keymasterPadding;
     }
 
-    /* access modifiers changed from: protected */
-    public final void initKey(AndroidKeyStoreKey key) throws InvalidKeyException {
-        if (KeyProperties.KEY_ALGORITHM_RSA.equalsIgnoreCase(key.getAlgorithm())) {
-            super.initKey(key);
-            return;
+    @Override // android.security.keystore.AndroidKeyStoreSignatureSpiBase
+    protected final void initKey(AndroidKeyStoreKey key) throws InvalidKeyException {
+        if (!KeyProperties.KEY_ALGORITHM_RSA.equalsIgnoreCase(key.getAlgorithm())) {
+            throw new InvalidKeyException("Unsupported key algorithm: " + key.getAlgorithm() + ". Only" + KeyProperties.KEY_ALGORITHM_RSA + " supported");
         }
-        throw new InvalidKeyException("Unsupported key algorithm: " + key.getAlgorithm() + ". Only" + KeyProperties.KEY_ALGORITHM_RSA + " supported");
+        super.initKey(key);
     }
 
-    /* access modifiers changed from: protected */
-    public final void resetAll() {
+    @Override // android.security.keystore.AndroidKeyStoreSignatureSpiBase
+    protected final void resetAll() {
         super.resetAll();
     }
 
-    /* access modifiers changed from: protected */
-    public final void resetWhilePreservingInitState() {
+    @Override // android.security.keystore.AndroidKeyStoreSignatureSpiBase
+    protected final void resetWhilePreservingInitState() {
         super.resetWhilePreservingInitState();
     }
 
-    /* access modifiers changed from: protected */
-    public final void addAlgorithmSpecificParametersToBegin(KeymasterArguments keymasterArgs) {
+    @Override // android.security.keystore.AndroidKeyStoreSignatureSpiBase
+    protected final void addAlgorithmSpecificParametersToBegin(KeymasterArguments keymasterArgs) {
         keymasterArgs.addEnum(KeymasterDefs.KM_TAG_ALGORITHM, 1);
         keymasterArgs.addEnum(KeymasterDefs.KM_TAG_DIGEST, this.mKeymasterDigest);
         keymasterArgs.addEnum(KeymasterDefs.KM_TAG_PADDING, this.mKeymasterPadding);

@@ -3,16 +3,18 @@ package android.text;
 import com.android.internal.util.ArrayUtils;
 import libcore.util.EmptyArray;
 
+/* loaded from: classes4.dex */
 public final class AutoGrowArray {
     private static final int MAX_CAPACITY_TO_BE_KEPT = 10000;
     private static final int MIN_CAPACITY_INCREMENT = 12;
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static int computeNewCapacity(int currentSize, int requested) {
         int targetCapacity = (currentSize < 6 ? 12 : currentSize >> 1) + currentSize;
         return targetCapacity > requested ? targetCapacity : requested;
     }
 
+    /* loaded from: classes4.dex */
     public static class ByteArray {
         private int mSize;
         private byte[] mValues;
@@ -48,7 +50,8 @@ public final class AutoGrowArray {
         private void ensureCapacity(int count) {
             int requestedSize = this.mSize + count;
             if (requestedSize >= this.mValues.length) {
-                byte[] newValues = ArrayUtils.newUnpaddedByteArray(AutoGrowArray.computeNewCapacity(this.mSize, requestedSize));
+                int newCapacity = AutoGrowArray.computeNewCapacity(this.mSize, requestedSize);
+                byte[] newValues = ArrayUtils.newUnpaddedByteArray(newCapacity);
                 System.arraycopy(this.mValues, 0, newValues, 0, this.mSize);
                 this.mValues = newValues;
             }
@@ -82,6 +85,7 @@ public final class AutoGrowArray {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class IntArray {
         private int mSize;
         private int[] mValues;
@@ -117,7 +121,8 @@ public final class AutoGrowArray {
         private void ensureCapacity(int count) {
             int requestedSize = this.mSize + count;
             if (requestedSize >= this.mValues.length) {
-                int[] newValues = ArrayUtils.newUnpaddedIntArray(AutoGrowArray.computeNewCapacity(this.mSize, requestedSize));
+                int newCapacity = AutoGrowArray.computeNewCapacity(this.mSize, requestedSize);
+                int[] newValues = ArrayUtils.newUnpaddedIntArray(newCapacity);
                 System.arraycopy(this.mValues, 0, newValues, 0, this.mSize);
                 this.mValues = newValues;
             }
@@ -151,6 +156,7 @@ public final class AutoGrowArray {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class FloatArray {
         private int mSize;
         private float[] mValues;
@@ -186,7 +192,8 @@ public final class AutoGrowArray {
         private void ensureCapacity(int count) {
             int requestedSize = this.mSize + count;
             if (requestedSize >= this.mValues.length) {
-                float[] newValues = ArrayUtils.newUnpaddedFloatArray(AutoGrowArray.computeNewCapacity(this.mSize, requestedSize));
+                int newCapacity = AutoGrowArray.computeNewCapacity(this.mSize, requestedSize);
+                float[] newValues = ArrayUtils.newUnpaddedFloatArray(newCapacity);
                 System.arraycopy(this.mValues, 0, newValues, 0, this.mSize);
                 this.mValues = newValues;
             }

@@ -1,15 +1,20 @@
 package android.bluetooth;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.EventLog;
 
+/* loaded from: classes.dex */
 public final class BluetoothHidDeviceAppSdpSettings implements Parcelable {
-    public static final Parcelable.Creator<BluetoothHidDeviceAppSdpSettings> CREATOR = new Parcelable.Creator<BluetoothHidDeviceAppSdpSettings>() {
+    public static final Parcelable.Creator<BluetoothHidDeviceAppSdpSettings> CREATOR = new Parcelable.Creator<BluetoothHidDeviceAppSdpSettings>() { // from class: android.bluetooth.BluetoothHidDeviceAppSdpSettings.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public BluetoothHidDeviceAppSdpSettings createFromParcel(Parcel in) {
             return new BluetoothHidDeviceAppSdpSettings(in.readString(), in.readString(), in.readString(), in.readByte(), in.createByteArray());
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public BluetoothHidDeviceAppSdpSettings[] newArray(int size) {
             return new BluetoothHidDeviceAppSdpSettings[size];
         }
@@ -29,8 +34,9 @@ public final class BluetoothHidDeviceAppSdpSettings implements Parcelable {
         if (descriptors == null || descriptors.length > 2048) {
             EventLog.writeEvent(1397638484, "119819889", -1, "");
             throw new IllegalArgumentException("descriptors must be not null and shorter than 2048");
+        } else {
+            this.mDescriptors = (byte[]) descriptors.clone();
         }
-        this.mDescriptors = (byte[]) descriptors.clone();
     }
 
     public String getName() {
@@ -53,10 +59,12 @@ public final class BluetoothHidDeviceAppSdpSettings implements Parcelable {
         return this.mDescriptors;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(this.mName);
         out.writeString(this.mDescription);

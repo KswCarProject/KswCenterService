@@ -9,16 +9,17 @@ import android.util.AttributeSet;
 import android.view.RemotableViewMethod;
 import android.widget.Button;
 import android.widget.RemoteViews;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
 @RemoteViews.RemoteView
+/* loaded from: classes4.dex */
 public class EmphasizedNotificationButton extends Button {
     private final RippleDrawable mRipple;
     private final int mStrokeColor;
     private final int mStrokeWidth;
 
     public EmphasizedNotificationButton(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public EmphasizedNotificationButton(Context context, AttributeSet attrs) {
@@ -31,9 +32,10 @@ public class EmphasizedNotificationButton extends Button {
 
     public EmphasizedNotificationButton(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        this.mRipple = (RippleDrawable) ((DrawableWrapper) getBackground().mutate()).getDrawable();
-        this.mStrokeWidth = getResources().getDimensionPixelSize(R.dimen.emphasized_button_stroke_width);
-        this.mStrokeColor = getContext().getColor(R.color.material_grey_300);
+        DrawableWrapper background = (DrawableWrapper) getBackground().mutate();
+        this.mRipple = (RippleDrawable) background.getDrawable();
+        this.mStrokeWidth = getResources().getDimensionPixelSize(C3132R.dimen.emphasized_button_stroke_width);
+        this.mStrokeColor = getContext().getColor(C3132R.color.material_grey_300);
         this.mRipple.mutate();
     }
 
@@ -45,18 +47,15 @@ public class EmphasizedNotificationButton extends Button {
 
     @RemotableViewMethod
     public void setButtonBackground(ColorStateList color) {
-        ((GradientDrawable) this.mRipple.getDrawable(0)).setColor(color);
+        GradientDrawable inner = (GradientDrawable) this.mRipple.getDrawable(0);
+        inner.setColor(color);
         invalidate();
     }
 
     @RemotableViewMethod
     public void setHasStroke(boolean hasStroke) {
-        int i = 0;
         GradientDrawable inner = (GradientDrawable) this.mRipple.getDrawable(0);
-        if (hasStroke) {
-            i = this.mStrokeWidth;
-        }
-        inner.setStroke(i, this.mStrokeColor);
+        inner.setStroke(hasStroke ? this.mStrokeWidth : 0, this.mStrokeColor);
         invalidate();
     }
 }

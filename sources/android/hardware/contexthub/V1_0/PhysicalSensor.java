@@ -1,22 +1,23 @@
 package android.hardware.contexthub.V1_0;
 
-import android.os.HidlSupport;
-import android.os.HwBlob;
-import android.os.HwParcel;
+import android.p007os.HidlSupport;
+import android.p007os.HwBlob;
+import android.p007os.HwParcel;
 import java.util.ArrayList;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public final class PhysicalSensor {
     public int fifoMaxCount;
     public int fifoReservedCount;
     public long maxDelayMs;
     public long minDelayMs;
-    public String name = new String();
     public float peakPowerMw;
     public int sensorType;
-    public String type = new String();
-    public String vendor = new String();
     public int version;
+    public String type = new String();
+    public String name = new String();
+    public String vendor = new String();
 
     public final boolean equals(Object otherObject) {
         if (this == otherObject) {
@@ -33,64 +34,64 @@ public final class PhysicalSensor {
     }
 
     public final int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(HidlSupport.deepHashCode(Integer.valueOf(this.sensorType))), Integer.valueOf(HidlSupport.deepHashCode(this.type)), Integer.valueOf(HidlSupport.deepHashCode(this.name)), Integer.valueOf(HidlSupport.deepHashCode(this.vendor)), Integer.valueOf(HidlSupport.deepHashCode(Integer.valueOf(this.version))), Integer.valueOf(HidlSupport.deepHashCode(Integer.valueOf(this.fifoReservedCount))), Integer.valueOf(HidlSupport.deepHashCode(Integer.valueOf(this.fifoMaxCount))), Integer.valueOf(HidlSupport.deepHashCode(Long.valueOf(this.minDelayMs))), Integer.valueOf(HidlSupport.deepHashCode(Long.valueOf(this.maxDelayMs))), Integer.valueOf(HidlSupport.deepHashCode(Float.valueOf(this.peakPowerMw)))});
+        return Objects.hash(Integer.valueOf(HidlSupport.deepHashCode(Integer.valueOf(this.sensorType))), Integer.valueOf(HidlSupport.deepHashCode(this.type)), Integer.valueOf(HidlSupport.deepHashCode(this.name)), Integer.valueOf(HidlSupport.deepHashCode(this.vendor)), Integer.valueOf(HidlSupport.deepHashCode(Integer.valueOf(this.version))), Integer.valueOf(HidlSupport.deepHashCode(Integer.valueOf(this.fifoReservedCount))), Integer.valueOf(HidlSupport.deepHashCode(Integer.valueOf(this.fifoMaxCount))), Integer.valueOf(HidlSupport.deepHashCode(Long.valueOf(this.minDelayMs))), Integer.valueOf(HidlSupport.deepHashCode(Long.valueOf(this.maxDelayMs))), Integer.valueOf(HidlSupport.deepHashCode(Float.valueOf(this.peakPowerMw))));
     }
 
     public final String toString() {
-        return "{" + ".sensorType = " + SensorType.toString(this.sensorType) + ", .type = " + this.type + ", .name = " + this.name + ", .vendor = " + this.vendor + ", .version = " + this.version + ", .fifoReservedCount = " + this.fifoReservedCount + ", .fifoMaxCount = " + this.fifoMaxCount + ", .minDelayMs = " + this.minDelayMs + ", .maxDelayMs = " + this.maxDelayMs + ", .peakPowerMw = " + this.peakPowerMw + "}";
+        return "{.sensorType = " + SensorType.toString(this.sensorType) + ", .type = " + this.type + ", .name = " + this.name + ", .vendor = " + this.vendor + ", .version = " + this.version + ", .fifoReservedCount = " + this.fifoReservedCount + ", .fifoMaxCount = " + this.fifoMaxCount + ", .minDelayMs = " + this.minDelayMs + ", .maxDelayMs = " + this.maxDelayMs + ", .peakPowerMw = " + this.peakPowerMw + "}";
     }
 
     public final void readFromParcel(HwParcel parcel) {
-        readEmbeddedFromParcel(parcel, parcel.readBuffer(96), 0);
+        HwBlob blob = parcel.readBuffer(96L);
+        readEmbeddedFromParcel(parcel, blob, 0L);
     }
 
     public static final ArrayList<PhysicalSensor> readVectorFromParcel(HwParcel parcel) {
         ArrayList<PhysicalSensor> _hidl_vec = new ArrayList<>();
-        HwBlob _hidl_blob = parcel.readBuffer(16);
-        int _hidl_vec_size = _hidl_blob.getInt32(8);
-        HwBlob childBlob = parcel.readEmbeddedBuffer((long) (_hidl_vec_size * 96), _hidl_blob.handle(), 0, true);
+        HwBlob _hidl_blob = parcel.readBuffer(16L);
+        int _hidl_vec_size = _hidl_blob.getInt32(8L);
+        HwBlob childBlob = parcel.readEmbeddedBuffer(_hidl_vec_size * 96, _hidl_blob.handle(), 0L, true);
         _hidl_vec.clear();
         for (int _hidl_index_0 = 0; _hidl_index_0 < _hidl_vec_size; _hidl_index_0++) {
             PhysicalSensor _hidl_vec_element = new PhysicalSensor();
-            _hidl_vec_element.readEmbeddedFromParcel(parcel, childBlob, (long) (_hidl_index_0 * 96));
+            _hidl_vec_element.readEmbeddedFromParcel(parcel, childBlob, _hidl_index_0 * 96);
             _hidl_vec.add(_hidl_vec_element);
         }
         return _hidl_vec;
     }
 
     public final void readEmbeddedFromParcel(HwParcel parcel, HwBlob _hidl_blob, long _hidl_offset) {
-        HwBlob hwBlob = _hidl_blob;
-        this.sensorType = hwBlob.getInt32(_hidl_offset + 0);
-        this.type = hwBlob.getString(_hidl_offset + 8);
-        parcel.readEmbeddedBuffer((long) (this.type.getBytes().length + 1), _hidl_blob.handle(), _hidl_offset + 8 + 0, false);
-        this.name = hwBlob.getString(_hidl_offset + 24);
-        parcel.readEmbeddedBuffer((long) (this.name.getBytes().length + 1), _hidl_blob.handle(), _hidl_offset + 24 + 0, false);
-        this.vendor = hwBlob.getString(_hidl_offset + 40);
-        parcel.readEmbeddedBuffer((long) (this.vendor.getBytes().length + 1), _hidl_blob.handle(), _hidl_offset + 40 + 0, false);
-        this.version = hwBlob.getInt32(_hidl_offset + 56);
-        this.fifoReservedCount = hwBlob.getInt32(_hidl_offset + 60);
-        this.fifoMaxCount = hwBlob.getInt32(_hidl_offset + 64);
-        this.minDelayMs = hwBlob.getInt64(_hidl_offset + 72);
-        this.maxDelayMs = hwBlob.getInt64(_hidl_offset + 80);
-        this.peakPowerMw = hwBlob.getFloat(_hidl_offset + 88);
+        this.sensorType = _hidl_blob.getInt32(_hidl_offset + 0);
+        this.type = _hidl_blob.getString(_hidl_offset + 8);
+        parcel.readEmbeddedBuffer(this.type.getBytes().length + 1, _hidl_blob.handle(), _hidl_offset + 8 + 0, false);
+        this.name = _hidl_blob.getString(_hidl_offset + 24);
+        parcel.readEmbeddedBuffer(this.name.getBytes().length + 1, _hidl_blob.handle(), _hidl_offset + 24 + 0, false);
+        this.vendor = _hidl_blob.getString(_hidl_offset + 40);
+        parcel.readEmbeddedBuffer(this.vendor.getBytes().length + 1, _hidl_blob.handle(), _hidl_offset + 40 + 0, false);
+        this.version = _hidl_blob.getInt32(_hidl_offset + 56);
+        this.fifoReservedCount = _hidl_blob.getInt32(_hidl_offset + 60);
+        this.fifoMaxCount = _hidl_blob.getInt32(_hidl_offset + 64);
+        this.minDelayMs = _hidl_blob.getInt64(_hidl_offset + 72);
+        this.maxDelayMs = _hidl_blob.getInt64(_hidl_offset + 80);
+        this.peakPowerMw = _hidl_blob.getFloat(_hidl_offset + 88);
     }
 
     public final void writeToParcel(HwParcel parcel) {
         HwBlob _hidl_blob = new HwBlob(96);
-        writeEmbeddedToBlob(_hidl_blob, 0);
+        writeEmbeddedToBlob(_hidl_blob, 0L);
         parcel.writeBuffer(_hidl_blob);
     }
 
     public static final void writeVectorToParcel(HwParcel parcel, ArrayList<PhysicalSensor> _hidl_vec) {
         HwBlob _hidl_blob = new HwBlob(16);
         int _hidl_vec_size = _hidl_vec.size();
-        _hidl_blob.putInt32(8, _hidl_vec_size);
-        _hidl_blob.putBool(12, false);
+        _hidl_blob.putInt32(8L, _hidl_vec_size);
+        _hidl_blob.putBool(12L, false);
         HwBlob childBlob = new HwBlob(_hidl_vec_size * 96);
         for (int _hidl_index_0 = 0; _hidl_index_0 < _hidl_vec_size; _hidl_index_0++) {
-            _hidl_vec.get(_hidl_index_0).writeEmbeddedToBlob(childBlob, (long) (_hidl_index_0 * 96));
+            _hidl_vec.get(_hidl_index_0).writeEmbeddedToBlob(childBlob, _hidl_index_0 * 96);
         }
-        _hidl_blob.putBlob(0, childBlob);
+        _hidl_blob.putBlob(0L, childBlob);
         parcel.writeBuffer(_hidl_blob);
     }
 

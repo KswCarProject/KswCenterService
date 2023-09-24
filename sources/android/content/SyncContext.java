@@ -1,10 +1,11 @@
 package android.content;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.IBinder;
-import android.os.RemoteException;
-import android.os.SystemClock;
+import android.p007os.IBinder;
+import android.p007os.RemoteException;
+import android.p007os.SystemClock;
 
+/* loaded from: classes.dex */
 public class SyncContext {
     private static final long HEARTBEAT_SEND_INTERVAL_IN_MS = 1000;
     private long mLastHeartbeatSendTime = 0;
@@ -22,14 +23,15 @@ public class SyncContext {
 
     private void updateHeartbeat() {
         long now = SystemClock.elapsedRealtime();
-        if (now >= this.mLastHeartbeatSendTime + 1000) {
-            try {
-                this.mLastHeartbeatSendTime = now;
-                if (this.mSyncContext != null) {
-                    this.mSyncContext.sendHeartbeat();
-                }
-            } catch (RemoteException e) {
+        if (now < this.mLastHeartbeatSendTime + 1000) {
+            return;
+        }
+        try {
+            this.mLastHeartbeatSendTime = now;
+            if (this.mSyncContext != null) {
+                this.mSyncContext.sendHeartbeat();
             }
+        } catch (RemoteException e) {
         }
     }
 

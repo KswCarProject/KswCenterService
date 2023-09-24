@@ -1,5 +1,6 @@
 package android.util;
 
+/* loaded from: classes4.dex */
 public final class ByteStringUtils {
     private static final char[] HEX_LOWERCASE_ARRAY = "0123456789abcdef".toCharArray();
     private static final char[] HEX_UPPERCASE_ARRAY = "0123456789ABCDEF".toCharArray();
@@ -12,7 +13,8 @@ public final class ByteStringUtils {
             return null;
         }
         int byteLength = bytes.length;
-        char[] chars = new char[(byteLength * 2)];
+        int charCount = byteLength * 2;
+        char[] chars = new char[charCount];
         for (int i = 0; i < byteLength; i++) {
             int byteHex = bytes[i] & 255;
             chars[i * 2] = HEX_UPPERCASE_ARRAY[byteHex >>> 4];
@@ -26,7 +28,8 @@ public final class ByteStringUtils {
             return null;
         }
         char[] chars = str.toCharArray();
-        byte[] bytes = new byte[(chars.length / 2)];
+        int charLength = chars.length;
+        byte[] bytes = new byte[charLength / 2];
         for (int i = 0; i < bytes.length; i++) {
             bytes[i] = (byte) (((getIndex(chars[i * 2]) << 4) & 240) | (getIndex(chars[(i * 2) + 1]) & 15));
         }

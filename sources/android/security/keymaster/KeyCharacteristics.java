@@ -1,19 +1,24 @@
 package android.security.keymaster;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/* loaded from: classes3.dex */
 public class KeyCharacteristics implements Parcelable {
-    public static final Parcelable.Creator<KeyCharacteristics> CREATOR = new Parcelable.Creator<KeyCharacteristics>() {
+    public static final Parcelable.Creator<KeyCharacteristics> CREATOR = new Parcelable.Creator<KeyCharacteristics>() { // from class: android.security.keymaster.KeyCharacteristics.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public KeyCharacteristics createFromParcel(Parcel in) {
             return new KeyCharacteristics(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public KeyCharacteristics[] newArray(int length) {
             return new KeyCharacteristics[length];
         }
@@ -34,10 +39,12 @@ public class KeyCharacteristics implements Parcelable {
         this.hwEnforced = other.hwEnforced;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         this.swEnforced.writeToParcel(out, flags);
         this.hwEnforced.writeToParcel(out, flags);
@@ -81,11 +88,11 @@ public class KeyCharacteristics implements Parcelable {
     }
 
     public Date getDate(int tag) {
-        Date result = this.swEnforced.getDate(tag, (Date) null);
+        Date result = this.swEnforced.getDate(tag, null);
         if (result != null) {
             return result;
         }
-        return this.hwEnforced.getDate(tag, (Date) null);
+        return this.hwEnforced.getDate(tag, null);
     }
 
     public boolean getBoolean(int tag) {

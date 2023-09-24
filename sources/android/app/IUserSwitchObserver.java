@@ -1,12 +1,13 @@
 package android.app;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.IRemoteCallback;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.IRemoteCallback;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes.dex */
 public interface IUserSwitchObserver extends IInterface {
     void onForegroundProfileSwitch(int i) throws RemoteException;
 
@@ -16,24 +17,31 @@ public interface IUserSwitchObserver extends IInterface {
 
     void onUserSwitching(int i, IRemoteCallback iRemoteCallback) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements IUserSwitchObserver {
+        @Override // android.app.IUserSwitchObserver
         public void onUserSwitching(int newUserId, IRemoteCallback reply) throws RemoteException {
         }
 
+        @Override // android.app.IUserSwitchObserver
         public void onUserSwitchComplete(int newUserId) throws RemoteException {
         }
 
+        @Override // android.app.IUserSwitchObserver
         public void onForegroundProfileSwitch(int newProfileId) throws RemoteException {
         }
 
+        @Override // android.app.IUserSwitchObserver
         public void onLockedBootComplete(int newUserId) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements IUserSwitchObserver {
         private static final String DESCRIPTOR = "android.app.IUserSwitchObserver";
         static final int TRANSACTION_onForegroundProfileSwitch = 3;
@@ -50,12 +58,13 @@ public interface IUserSwitchObserver extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IUserSwitchObserver)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IUserSwitchObserver)) {
+                return (IUserSwitchObserver) iin;
             }
-            return (IUserSwitchObserver) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -75,38 +84,45 @@ public interface IUserSwitchObserver extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        onUserSwitching(data.readInt(), IRemoteCallback.Stub.asInterface(data.readStrongBinder()));
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        onUserSwitchComplete(data.readInt());
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        onForegroundProfileSwitch(data.readInt());
-                        return true;
-                    case 4:
-                        data.enforceInterface(DESCRIPTOR);
-                        onLockedBootComplete(data.readInt());
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0 = data.readInt();
+                    IRemoteCallback _arg1 = IRemoteCallback.Stub.asInterface(data.readStrongBinder());
+                    onUserSwitching(_arg0, _arg1);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    onUserSwitchComplete(_arg02);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg03 = data.readInt();
+                    onForegroundProfileSwitch(_arg03);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg04 = data.readInt();
+                    onLockedBootComplete(_arg04);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements IUserSwitchObserver {
             public static IUserSwitchObserver sDefaultImpl;
             private IBinder mRemote;
@@ -115,6 +131,7 @@ public interface IUserSwitchObserver extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -123,15 +140,15 @@ public interface IUserSwitchObserver extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.app.IUserSwitchObserver
             public void onUserSwitching(int newUserId, IRemoteCallback reply) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(newUserId);
                     _data.writeStrongBinder(reply != null ? reply.asBinder() : null);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onUserSwitching(newUserId, reply);
                     }
                 } finally {
@@ -139,14 +156,14 @@ public interface IUserSwitchObserver extends IInterface {
                 }
             }
 
+            @Override // android.app.IUserSwitchObserver
             public void onUserSwitchComplete(int newUserId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(newUserId);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onUserSwitchComplete(newUserId);
                     }
                 } finally {
@@ -154,14 +171,14 @@ public interface IUserSwitchObserver extends IInterface {
                 }
             }
 
+            @Override // android.app.IUserSwitchObserver
             public void onForegroundProfileSwitch(int newProfileId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(newProfileId);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onForegroundProfileSwitch(newProfileId);
                     }
                 } finally {
@@ -169,14 +186,14 @@ public interface IUserSwitchObserver extends IInterface {
                 }
             }
 
+            @Override // android.app.IUserSwitchObserver
             public void onLockedBootComplete(int newUserId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(newUserId);
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onLockedBootComplete(newUserId);
                     }
                 } finally {
@@ -186,11 +203,11 @@ public interface IUserSwitchObserver extends IInterface {
         }
 
         public static boolean setDefaultImpl(IUserSwitchObserver impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IUserSwitchObserver getDefaultImpl() {

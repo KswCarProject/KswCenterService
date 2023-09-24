@@ -2,29 +2,35 @@ package android.filterfw.core;
 
 import java.lang.reflect.Field;
 
+/* loaded from: classes.dex */
 public class FieldPort extends InputPort {
     protected Field mField;
     protected boolean mHasFrame;
     protected Object mValue;
-    protected boolean mValueWaiting = false;
+    protected boolean mValueWaiting;
 
     public FieldPort(Filter filter, String name, Field field, boolean hasDefault) {
         super(filter, name);
+        this.mValueWaiting = false;
         this.mField = field;
         this.mHasFrame = hasDefault;
     }
 
+    @Override // android.filterfw.core.FilterPort
     public void clear() {
     }
 
+    @Override // android.filterfw.core.FilterPort
     public void pushFrame(Frame frame) {
         setFieldFrame(frame, false);
     }
 
+    @Override // android.filterfw.core.FilterPort
     public void setFrame(Frame frame) {
         setFieldFrame(frame, true);
     }
 
+    @Override // android.filterfw.core.InputPort
     public Object getTarget() {
         try {
             return this.mField.get(this.mFilter);
@@ -33,6 +39,7 @@ public class FieldPort extends InputPort {
         }
     }
 
+    @Override // android.filterfw.core.InputPort
     public synchronized void transfer(FilterContext context) {
         if (this.mValueWaiting) {
             try {
@@ -47,24 +54,27 @@ public class FieldPort extends InputPort {
         }
     }
 
+    @Override // android.filterfw.core.FilterPort
     public synchronized Frame pullFrame() {
         throw new RuntimeException("Cannot pull frame on " + this + "!");
     }
 
+    @Override // android.filterfw.core.FilterPort
     public synchronized boolean hasFrame() {
         return this.mHasFrame;
     }
 
+    @Override // android.filterfw.core.InputPort
     public synchronized boolean acceptsFrame() {
         return !this.mValueWaiting;
     }
 
+    @Override // android.filterfw.core.FilterPort
     public String toString() {
         return "field " + super.toString();
     }
 
-    /* access modifiers changed from: protected */
-    public synchronized void setFieldFrame(Frame frame, boolean isAssignment) {
+    protected synchronized void setFieldFrame(Frame frame, boolean isAssignment) {
         assertPortIsOpen();
         checkFrameType(frame, isAssignment);
         Object value = frame.getObjectValue();

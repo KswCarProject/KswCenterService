@@ -7,16 +7,17 @@ import android.content.ServiceConnection;
 import android.media.IMediaScannerListener;
 import android.media.IMediaScannerService;
 import android.net.Uri;
-import android.os.IBinder;
-import android.os.RemoteException;
+import android.p007os.IBinder;
+import android.p007os.RemoteException;
 
+/* loaded from: classes3.dex */
 public class MediaScannerConnection implements ServiceConnection {
     private static final String TAG = "MediaScannerConnection";
-    /* access modifiers changed from: private */
-    public MediaScannerConnectionClient mClient;
+    private MediaScannerConnectionClient mClient;
     private boolean mConnected;
     private Context mContext;
-    private final IMediaScannerListener.Stub mListener = new IMediaScannerListener.Stub() {
+    private final IMediaScannerListener.Stub mListener = new IMediaScannerListener.Stub() { // from class: android.media.MediaScannerConnection.1
+        @Override // android.media.IMediaScannerListener
         public void scanCompleted(String path, Uri uri) {
             MediaScannerConnectionClient client = MediaScannerConnection.this.mClient;
             if (client != null) {
@@ -26,12 +27,15 @@ public class MediaScannerConnection implements ServiceConnection {
     };
     private IMediaScannerService mService;
 
+    /* loaded from: classes3.dex */
     public interface MediaScannerConnectionClient extends OnScanCompletedListener {
         void onMediaScannerConnected();
 
+        @Override // android.media.MediaScannerConnection.OnScanCompletedListener
         void onScanCompleted(String str, Uri uri);
     }
 
+    /* loaded from: classes3.dex */
     public interface OnScanCompletedListener {
         void onScanCompleted(String str, Uri uri);
     }
@@ -69,7 +73,11 @@ public class MediaScannerConnection implements ServiceConnection {
     }
 
     public synchronized boolean isConnected() {
-        return this.mService != null && this.mConnected;
+        boolean z;
+        if (this.mService != null) {
+            z = this.mConnected;
+        }
+        return z;
     }
 
     public void scanFile(String path, String mimeType) {
@@ -84,6 +92,7 @@ public class MediaScannerConnection implements ServiceConnection {
         }
     }
 
+    /* loaded from: classes3.dex */
     static class ClientProxy implements MediaScannerConnectionClient {
         final OnScanCompletedListener mClient;
         MediaScannerConnection mConnection;
@@ -97,10 +106,12 @@ public class MediaScannerConnection implements ServiceConnection {
             this.mClient = client;
         }
 
+        @Override // android.media.MediaScannerConnection.MediaScannerConnectionClient
         public void onMediaScannerConnected() {
             scanNextPath();
         }
 
+        @Override // android.media.MediaScannerConnection.MediaScannerConnectionClient, android.media.MediaScannerConnection.OnScanCompletedListener
         public void onScanCompleted(String path, Uri uri) {
             if (this.mClient != null) {
                 this.mClient.onScanCompleted(path, uri);
@@ -108,17 +119,13 @@ public class MediaScannerConnection implements ServiceConnection {
             scanNextPath();
         }
 
-        /* access modifiers changed from: package-private */
-        public void scanNextPath() {
-            String mimeType = null;
+        void scanNextPath() {
             if (this.mNextPath >= this.mPaths.length) {
                 this.mConnection.disconnect();
                 this.mConnection = null;
                 return;
             }
-            if (this.mMimeTypes != null) {
-                mimeType = this.mMimeTypes[this.mNextPath];
-            }
+            String mimeType = this.mMimeTypes != null ? this.mMimeTypes[this.mNextPath] : null;
             this.mConnection.scanFile(this.mPaths[this.mNextPath], mimeType);
             this.mNextPath++;
         }
@@ -131,15 +138,17 @@ public class MediaScannerConnection implements ServiceConnection {
         connection.connect();
     }
 
+    @Override // android.content.ServiceConnection
     public void onServiceConnected(ComponentName className, IBinder service) {
         synchronized (this) {
             this.mService = IMediaScannerService.Stub.asInterface(service);
-            if (!(this.mService == null || this.mClient == null)) {
+            if (this.mService != null && this.mClient != null) {
                 this.mClient.onMediaScannerConnected();
             }
         }
     }
 
+    @Override // android.content.ServiceConnection
     public void onServiceDisconnected(ComponentName className) {
         synchronized (this) {
             this.mService = null;

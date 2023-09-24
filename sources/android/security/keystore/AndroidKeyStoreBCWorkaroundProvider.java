@@ -1,8 +1,9 @@
 package android.security.keystore;
 
-import android.os.SystemProperties;
+import android.p007os.SystemProperties;
 import java.security.Provider;
 
+/* loaded from: classes3.dex */
 class AndroidKeyStoreBCWorkaroundProvider extends Provider {
     private static final String DESEDE_SYSTEM_PROPERTY = "ro.hardware.keystore_desede";
     private static final String KEYSTORE_PRIVATE_KEY_CLASS_NAME = "android.security.keystore.AndroidKeyStorePrivateKey";

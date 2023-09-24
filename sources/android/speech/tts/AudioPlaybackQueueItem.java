@@ -4,20 +4,18 @@ import android.content.Context;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.ConditionVariable;
+import android.p007os.ConditionVariable;
 import android.speech.tts.TextToSpeechService;
 import android.util.Log;
-import android.view.SurfaceHolder;
 
+/* loaded from: classes3.dex */
 class AudioPlaybackQueueItem extends PlaybackQueueItem {
     private static final String TAG = "TTS.AudioQueueItem";
     private final TextToSpeechService.AudioOutputParams mAudioParams;
     private final Context mContext;
-    /* access modifiers changed from: private */
-    public final ConditionVariable mDone = new ConditionVariable();
-    /* access modifiers changed from: private */
-    public volatile boolean mFinished = false;
-    private MediaPlayer mPlayer = null;
+    private final ConditionVariable mDone;
+    private volatile boolean mFinished;
+    private MediaPlayer mPlayer;
     private final Uri mUri;
 
     AudioPlaybackQueueItem(TextToSpeechService.UtteranceProgressDispatcher dispatcher, Object callerIdentity, Context context, Uri uri, TextToSpeechService.AudioOutputParams audioParams) {
@@ -25,8 +23,12 @@ class AudioPlaybackQueueItem extends PlaybackQueueItem {
         this.mContext = context;
         this.mUri = uri;
         this.mAudioParams = audioParams;
+        this.mDone = new ConditionVariable();
+        this.mPlayer = null;
+        this.mFinished = false;
     }
 
+    @Override // android.speech.tts.PlaybackQueueItem, java.lang.Runnable
     public void run() {
         int i;
         TextToSpeechService.UtteranceProgressDispatcher dispatcher = getDispatcher();
@@ -40,22 +42,24 @@ class AudioPlaybackQueueItem extends PlaybackQueueItem {
         } else {
             i = 0;
         }
-        this.mPlayer = MediaPlayer.create(context, uri, (SurfaceHolder) null, audioAttributes, i);
+        this.mPlayer = MediaPlayer.create(context, uri, null, audioAttributes, i);
         if (this.mPlayer == null) {
             dispatcher.dispatchOnError(-5);
             return;
         }
         try {
-            this.mPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+            this.mPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() { // from class: android.speech.tts.AudioPlaybackQueueItem.1
+                @Override // android.media.MediaPlayer.OnErrorListener
                 public boolean onError(MediaPlayer mp, int what, int extra) {
-                    Log.w(AudioPlaybackQueueItem.TAG, "Audio playback error: " + what + ", " + extra);
+                    Log.m64w(AudioPlaybackQueueItem.TAG, "Audio playback error: " + what + ", " + extra);
                     AudioPlaybackQueueItem.this.mDone.open();
                     return true;
                 }
             });
-            this.mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            this.mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() { // from class: android.speech.tts.AudioPlaybackQueueItem.2
+                @Override // android.media.MediaPlayer.OnCompletionListener
                 public void onCompletion(MediaPlayer mp) {
-                    boolean unused = AudioPlaybackQueueItem.this.mFinished = true;
+                    AudioPlaybackQueueItem.this.mFinished = true;
                     AudioPlaybackQueueItem.this.mDone.open();
                 }
             });
@@ -64,7 +68,7 @@ class AudioPlaybackQueueItem extends PlaybackQueueItem {
             this.mDone.block();
             finish();
         } catch (IllegalArgumentException ex) {
-            Log.w(TAG, "MediaPlayer failed", ex);
+            Log.m63w(TAG, "MediaPlayer failed", ex);
             this.mDone.open();
         }
         if (this.mFinished) {
@@ -88,10 +92,7 @@ class AudioPlaybackQueueItem extends PlaybackQueueItem {
     }
 
     private static final float clip(float value, float min, float max) {
-        if (value < min) {
-            return min;
-        }
-        return value < max ? value : max;
+        return value < min ? min : value < max ? value : max;
     }
 
     private void finish() {
@@ -102,8 +103,8 @@ class AudioPlaybackQueueItem extends PlaybackQueueItem {
         this.mPlayer.release();
     }
 
-    /* access modifiers changed from: package-private */
-    public void stop(int errorCode) {
+    @Override // android.speech.tts.PlaybackQueueItem
+    void stop(int errorCode) {
         this.mDone.open();
     }
 }

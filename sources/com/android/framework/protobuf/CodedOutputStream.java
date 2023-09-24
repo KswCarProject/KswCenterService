@@ -13,20 +13,18 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import sun.misc.Unsafe;
 
+/* loaded from: classes4.dex */
 public abstract class CodedOutputStream extends ByteOutput {
-    /* access modifiers changed from: private */
-    public static final long ARRAY_BASE_OFFSET = ((long) byteArrayBaseOffset());
     public static final int DEFAULT_BUFFER_SIZE = 4096;
     private static final int FIXED_32_SIZE = 4;
     private static final int FIXED_64_SIZE = 8;
-    /* access modifiers changed from: private */
-    public static final boolean HAS_UNSAFE_ARRAY_OPERATIONS = supportsUnsafeArrayOperations();
     @Deprecated
     public static final int LITTLE_ENDIAN_32_SIZE = 4;
     private static final int MAX_VARINT_SIZE = 10;
-    /* access modifiers changed from: private */
-    public static final Unsafe UNSAFE = getUnsafe();
     private static final Logger logger = Logger.getLogger(CodedOutputStream.class.getName());
+    private static final Unsafe UNSAFE = getUnsafe();
+    private static final boolean HAS_UNSAFE_ARRAY_OPERATIONS = supportsUnsafeArrayOperations();
+    private static final long ARRAY_BASE_OFFSET = byteArrayBaseOffset();
 
     public abstract void flush() throws IOException;
 
@@ -34,10 +32,13 @@ public abstract class CodedOutputStream extends ByteOutput {
 
     public abstract int spaceLeft();
 
+    @Override // com.android.framework.protobuf.ByteOutput
     public abstract void write(byte b) throws IOException;
 
+    @Override // com.android.framework.protobuf.ByteOutput
     public abstract void write(ByteBuffer byteBuffer) throws IOException;
 
+    @Override // com.android.framework.protobuf.ByteOutput
     public abstract void write(byte[] bArr, int i, int i2) throws IOException;
 
     public abstract void writeBool(int i, boolean z) throws IOException;
@@ -46,8 +47,7 @@ public abstract class CodedOutputStream extends ByteOutput {
 
     public abstract void writeByteArray(int i, byte[] bArr, int i2, int i3) throws IOException;
 
-    /* access modifiers changed from: package-private */
-    public abstract void writeByteArrayNoTag(byte[] bArr, int i, int i2) throws IOException;
+    abstract void writeByteArrayNoTag(byte[] bArr, int i, int i2) throws IOException;
 
     public abstract void writeByteBuffer(int i, ByteBuffer byteBuffer) throws IOException;
 
@@ -67,8 +67,10 @@ public abstract class CodedOutputStream extends ByteOutput {
 
     public abstract void writeInt32NoTag(int i) throws IOException;
 
+    @Override // com.android.framework.protobuf.ByteOutput
     public abstract void writeLazy(ByteBuffer byteBuffer) throws IOException;
 
+    @Override // com.android.framework.protobuf.ByteOutput
     public abstract void writeLazy(byte[] bArr, int i, int i2) throws IOException;
 
     public abstract void writeMessage(int i, MessageLite messageLite) throws IOException;
@@ -131,10 +133,10 @@ public abstract class CodedOutputStream extends ByteOutput {
     }
 
     static CodedOutputStream newInstance(ByteOutput byteOutput, int bufferSize) {
-        if (bufferSize >= 0) {
-            return new ByteOutputEncoder(byteOutput, bufferSize);
+        if (bufferSize < 0) {
+            throw new IllegalArgumentException("bufferSize must be positive");
         }
-        throw new IllegalArgumentException("bufferSize must be positive");
+        return new ByteOutputEncoder(byteOutput, bufferSize);
     }
 
     private CodedOutputStream() {
@@ -189,7 +191,7 @@ public abstract class CodedOutputStream extends ByteOutput {
     }
 
     public final void writeRawBytes(ByteString value) throws IOException {
-        value.writeTo((ByteOutput) this);
+        value.writeTo(this);
     }
 
     public final void writeSInt32NoTag(int value) throws IOException {
@@ -221,7 +223,7 @@ public abstract class CodedOutputStream extends ByteOutput {
     }
 
     public final void writeBoolNoTag(boolean value) throws IOException {
-        write(value ? (byte) 1 : 0);
+        write(value ? (byte) 1 : (byte) 0);
     }
 
     public final void writeEnumNoTag(int value) throws IOException {
@@ -336,16 +338,16 @@ public abstract class CodedOutputStream extends ByteOutput {
     }
 
     public static int computeUInt32SizeNoTag(int value) {
-        if ((value & -128) == 0) {
+        if ((value & (-128)) == 0) {
             return 1;
         }
-        if ((value & -16384) == 0) {
+        if ((value & (-16384)) == 0) {
             return 2;
         }
-        if ((-2097152 & value) == 0) {
+        if (((-2097152) & value) == 0) {
             return 3;
         }
-        if ((-268435456 & value) == 0) {
+        if (((-268435456) & value) == 0) {
             return 4;
         }
         return 5;
@@ -368,22 +370,22 @@ public abstract class CodedOutputStream extends ByteOutput {
     }
 
     public static int computeUInt64SizeNoTag(long value) {
-        if ((-128 & value) == 0) {
+        if (((-128) & value) == 0) {
             return 1;
         }
         if (value < 0) {
             return 10;
         }
         int n = 2;
-        if ((-34359738368L & value) != 0) {
+        if (((-34359738368L) & value) != 0) {
             n = 2 + 4;
             value >>>= 28;
         }
-        if ((-2097152 & value) != 0) {
+        if (((-2097152) & value) != 0) {
             n += 2;
             value >>>= 14;
         }
-        if ((-16384 & value) != 0) {
+        if (((-16384) & value) != 0) {
             return n + 1;
         }
         return n;
@@ -422,7 +424,8 @@ public abstract class CodedOutputStream extends ByteOutput {
         try {
             length = Utf8.encodedLength(value);
         } catch (Utf8.UnpairedSurrogateException e) {
-            length = value.getBytes(Internal.UTF_8).length;
+            byte[] bytes = value.getBytes(Internal.UTF_8);
+            length = bytes.length;
         }
         return computeLengthDelimitedFieldSize(length);
     }
@@ -465,6 +468,7 @@ public abstract class CodedOutputStream extends ByteOutput {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class OutOfSpaceException extends IOException {
         private static final String MESSAGE = "CodedOutputStream was writing to a flat byte array and ran out of space.";
         private static final long serialVersionUID = -6947486886997889499L;
@@ -478,17 +482,16 @@ public abstract class CodedOutputStream extends ByteOutput {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public final void inefficientWriteStringNoTag(String value, Utf8.UnpairedSurrogateException cause) throws IOException {
-        logger.log(Level.WARNING, "Converting ill-formed UTF-16. Your Protocol Buffer will not round trip correctly!", cause);
+    final void inefficientWriteStringNoTag(String value, Utf8.UnpairedSurrogateException cause) throws IOException {
+        logger.log(Level.WARNING, "Converting ill-formed UTF-16. Your Protocol Buffer will not round trip correctly!", (Throwable) cause);
         byte[] bytes = value.getBytes(Internal.UTF_8);
         try {
             writeUInt32NoTag(bytes.length);
             writeLazy(bytes, 0, bytes.length);
-        } catch (IndexOutOfBoundsException e) {
-            throw new OutOfSpaceException(e);
-        } catch (OutOfSpaceException e2) {
-            throw e2;
+        } catch (OutOfSpaceException e) {
+            throw e;
+        } catch (IndexOutOfBoundsException e2) {
+            throw new OutOfSpaceException(e2);
         }
     }
 
@@ -544,95 +547,111 @@ public abstract class CodedOutputStream extends ByteOutput {
         writeFixed64NoTag(value);
     }
 
+    /* loaded from: classes4.dex */
     private static class ArrayEncoder extends CodedOutputStream {
         private final byte[] buffer;
         private final int limit;
         private final int offset;
         private int position;
 
-        ArrayEncoder(byte[] buffer2, int offset2, int length) {
+        ArrayEncoder(byte[] buffer, int offset, int length) {
             super();
-            if (buffer2 == null) {
+            if (buffer == null) {
                 throw new NullPointerException("buffer");
-            } else if ((offset2 | length | (buffer2.length - (offset2 + length))) >= 0) {
-                this.buffer = buffer2;
-                this.offset = offset2;
-                this.position = offset2;
-                this.limit = offset2 + length;
-            } else {
-                throw new IllegalArgumentException(String.format("Array range is invalid. Buffer.length=%d, offset=%d, length=%d", new Object[]{Integer.valueOf(buffer2.length), Integer.valueOf(offset2), Integer.valueOf(length)}));
             }
+            if ((offset | length | (buffer.length - (offset + length))) < 0) {
+                throw new IllegalArgumentException(String.format("Array range is invalid. Buffer.length=%d, offset=%d, length=%d", Integer.valueOf(buffer.length), Integer.valueOf(offset), Integer.valueOf(length)));
+            }
+            this.buffer = buffer;
+            this.offset = offset;
+            this.position = offset;
+            this.limit = offset + length;
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public final void writeTag(int fieldNumber, int wireType) throws IOException {
             writeUInt32NoTag(WireFormat.makeTag(fieldNumber, wireType));
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public final void writeInt32(int fieldNumber, int value) throws IOException {
             writeTag(fieldNumber, 0);
             writeInt32NoTag(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public final void writeUInt32(int fieldNumber, int value) throws IOException {
             writeTag(fieldNumber, 0);
             writeUInt32NoTag(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public final void writeFixed32(int fieldNumber, int value) throws IOException {
             writeTag(fieldNumber, 5);
             writeFixed32NoTag(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public final void writeUInt64(int fieldNumber, long value) throws IOException {
             writeTag(fieldNumber, 0);
             writeUInt64NoTag(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public final void writeFixed64(int fieldNumber, long value) throws IOException {
             writeTag(fieldNumber, 1);
             writeFixed64NoTag(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public final void writeBool(int fieldNumber, boolean value) throws IOException {
             writeTag(fieldNumber, 0);
-            write(value ? (byte) 1 : 0);
+            write(value ? (byte) 1 : (byte) 0);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public final void writeString(int fieldNumber, String value) throws IOException {
             writeTag(fieldNumber, 2);
             writeStringNoTag(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public final void writeBytes(int fieldNumber, ByteString value) throws IOException {
             writeTag(fieldNumber, 2);
             writeBytesNoTag(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public final void writeByteArray(int fieldNumber, byte[] value) throws IOException {
             writeByteArray(fieldNumber, value, 0, value.length);
         }
 
-        public final void writeByteArray(int fieldNumber, byte[] value, int offset2, int length) throws IOException {
+        @Override // com.android.framework.protobuf.CodedOutputStream
+        public final void writeByteArray(int fieldNumber, byte[] value, int offset, int length) throws IOException {
             writeTag(fieldNumber, 2);
-            writeByteArrayNoTag(value, offset2, length);
+            writeByteArrayNoTag(value, offset, length);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public final void writeByteBuffer(int fieldNumber, ByteBuffer value) throws IOException {
             writeTag(fieldNumber, 2);
             writeUInt32NoTag(value.capacity());
             writeRawBytes(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public final void writeBytesNoTag(ByteString value) throws IOException {
             writeUInt32NoTag(value.size());
-            value.writeTo((ByteOutput) this);
+            value.writeTo(this);
         }
 
-        public final void writeByteArrayNoTag(byte[] value, int offset2, int length) throws IOException {
+        @Override // com.android.framework.protobuf.CodedOutputStream
+        public final void writeByteArrayNoTag(byte[] value, int offset, int length) throws IOException {
             writeUInt32NoTag(length);
-            write(value, offset2, length);
+            write(value, offset, length);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public final void writeRawBytes(ByteBuffer value) throws IOException {
             if (value.hasArray()) {
                 write(value.array(), value.arrayOffset(), value.capacity());
@@ -643,11 +662,13 @@ public abstract class CodedOutputStream extends ByteOutput {
             write(duplicated);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public final void writeMessage(int fieldNumber, MessageLite value) throws IOException {
             writeTag(fieldNumber, 2);
             writeMessageNoTag(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public final void writeMessageSetExtension(int fieldNumber, MessageLite value) throws IOException {
             writeTag(1, 3);
             writeUInt32(2, fieldNumber);
@@ -655,6 +676,7 @@ public abstract class CodedOutputStream extends ByteOutput {
             writeTag(1, 4);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public final void writeRawMessageSetExtension(int fieldNumber, ByteString value) throws IOException {
             writeTag(1, 3);
             writeUInt32(2, fieldNumber);
@@ -662,11 +684,13 @@ public abstract class CodedOutputStream extends ByteOutput {
             writeTag(1, 4);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public final void writeMessageNoTag(MessageLite value) throws IOException {
             writeUInt32NoTag(value.getSerializedSize());
-            value.writeTo((CodedOutputStream) this);
+            value.writeTo(this);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream, com.android.framework.protobuf.ByteOutput
         public final void write(byte value) throws IOException {
             try {
                 byte[] bArr = this.buffer;
@@ -674,38 +698,24 @@ public abstract class CodedOutputStream extends ByteOutput {
                 this.position = i + 1;
                 bArr[i] = value;
             } catch (IndexOutOfBoundsException e) {
-                throw new OutOfSpaceException(new IndexOutOfBoundsException(String.format("Pos: %d, limit: %d, len: %d", new Object[]{Integer.valueOf(this.position), Integer.valueOf(this.limit), 1})));
+                throw new OutOfSpaceException(new IndexOutOfBoundsException(String.format("Pos: %d, limit: %d, len: %d", Integer.valueOf(this.position), Integer.valueOf(this.limit), 1)));
             }
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public final void writeInt32NoTag(int value) throws IOException {
             if (value >= 0) {
                 writeUInt32NoTag(value);
             } else {
-                writeUInt64NoTag((long) value);
+                writeUInt64NoTag(value);
             }
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public final void writeUInt32NoTag(int value) throws IOException {
-            if (!CodedOutputStream.HAS_UNSAFE_ARRAY_OPERATIONS || spaceLeft() < 10) {
-                while ((value & -128) != 0) {
-                    byte[] bArr = this.buffer;
-                    int i = this.position;
-                    this.position = i + 1;
-                    bArr[i] = (byte) ((value & 127) | 128);
-                    value >>>= 7;
-                }
-                try {
-                    byte[] bArr2 = this.buffer;
-                    int i2 = this.position;
-                    this.position = i2 + 1;
-                    bArr2[i2] = (byte) value;
-                } catch (IndexOutOfBoundsException e) {
-                    throw new OutOfSpaceException(new IndexOutOfBoundsException(String.format("Pos: %d, limit: %d, len: %d", new Object[]{Integer.valueOf(this.position), Integer.valueOf(this.limit), 1})));
-                }
-            } else {
-                long pos = CodedOutputStream.ARRAY_BASE_OFFSET + ((long) this.position);
-                while ((value & -128) != 0) {
+            if (CodedOutputStream.HAS_UNSAFE_ARRAY_OPERATIONS && spaceLeft() >= 10) {
+                long pos = CodedOutputStream.ARRAY_BASE_OFFSET + this.position;
+                while ((value & (-128)) != 0) {
                     CodedOutputStream.UNSAFE.putByte(this.buffer, pos, (byte) ((value & 127) | 128));
                     this.position++;
                     value >>>= 7;
@@ -714,9 +724,26 @@ public abstract class CodedOutputStream extends ByteOutput {
                 long j = 1 + pos;
                 CodedOutputStream.UNSAFE.putByte(this.buffer, pos, (byte) value);
                 this.position++;
+                return;
             }
+            while ((value & (-128)) != 0) {
+                try {
+                    byte[] bArr = this.buffer;
+                    int i = this.position;
+                    this.position = i + 1;
+                    bArr[i] = (byte) ((value & 127) | 128);
+                    value >>>= 7;
+                } catch (IndexOutOfBoundsException e) {
+                    throw new OutOfSpaceException(new IndexOutOfBoundsException(String.format("Pos: %d, limit: %d, len: %d", Integer.valueOf(this.position), Integer.valueOf(this.limit), 1)));
+                }
+            }
+            byte[] bArr2 = this.buffer;
+            int i2 = this.position;
+            this.position = i2 + 1;
+            bArr2[i2] = (byte) value;
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public final void writeFixed32NoTag(int value) throws IOException {
             try {
                 byte[] bArr = this.buffer;
@@ -736,41 +763,43 @@ public abstract class CodedOutputStream extends ByteOutput {
                 this.position = i4 + 1;
                 bArr4[i4] = (byte) ((value >> 24) & 255);
             } catch (IndexOutOfBoundsException e) {
-                throw new OutOfSpaceException(new IndexOutOfBoundsException(String.format("Pos: %d, limit: %d, len: %d", new Object[]{Integer.valueOf(this.position), Integer.valueOf(this.limit), 1})));
+                throw new OutOfSpaceException(new IndexOutOfBoundsException(String.format("Pos: %d, limit: %d, len: %d", Integer.valueOf(this.position), Integer.valueOf(this.limit), 1)));
             }
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public final void writeUInt64NoTag(long value) throws IOException {
-            if (!CodedOutputStream.HAS_UNSAFE_ARRAY_OPERATIONS || spaceLeft() < 10) {
-                while ((value & -128) != 0) {
-                    byte[] bArr = this.buffer;
-                    int i = this.position;
-                    this.position = i + 1;
-                    bArr[i] = (byte) ((((int) value) & 127) | 128);
-                    value >>>= 7;
-                }
-                try {
-                    byte[] bArr2 = this.buffer;
-                    int i2 = this.position;
-                    this.position = i2 + 1;
-                    bArr2[i2] = (byte) ((int) value);
-                } catch (IndexOutOfBoundsException e) {
-                    throw new OutOfSpaceException(new IndexOutOfBoundsException(String.format("Pos: %d, limit: %d, len: %d", new Object[]{Integer.valueOf(this.position), Integer.valueOf(this.limit), 1})));
-                }
-            } else {
-                long pos = CodedOutputStream.ARRAY_BASE_OFFSET + ((long) this.position);
-                while ((value & -128) != 0) {
+            if (CodedOutputStream.HAS_UNSAFE_ARRAY_OPERATIONS && spaceLeft() >= 10) {
+                long pos = CodedOutputStream.ARRAY_BASE_OFFSET + this.position;
+                while ((value & (-128)) != 0) {
                     CodedOutputStream.UNSAFE.putByte(this.buffer, pos, (byte) ((((int) value) & 127) | 128));
                     this.position++;
                     value >>>= 7;
                     pos = 1 + pos;
                 }
                 long j = 1 + pos;
-                CodedOutputStream.UNSAFE.putByte(this.buffer, pos, (byte) ((int) value));
+                CodedOutputStream.UNSAFE.putByte(this.buffer, pos, (byte) value);
                 this.position++;
+                return;
             }
+            while ((value & (-128)) != 0) {
+                try {
+                    byte[] bArr = this.buffer;
+                    int i = this.position;
+                    this.position = i + 1;
+                    bArr[i] = (byte) ((((int) value) & 127) | 128);
+                    value >>>= 7;
+                } catch (IndexOutOfBoundsException e) {
+                    throw new OutOfSpaceException(new IndexOutOfBoundsException(String.format("Pos: %d, limit: %d, len: %d", Integer.valueOf(this.position), Integer.valueOf(this.limit), 1)));
+                }
+            }
+            byte[] bArr2 = this.buffer;
+            int i2 = this.position;
+            this.position = i2 + 1;
+            bArr2[i2] = (byte) value;
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public final void writeFixed64NoTag(long value) throws IOException {
             try {
                 byte[] bArr = this.buffer;
@@ -806,52 +835,60 @@ public abstract class CodedOutputStream extends ByteOutput {
                 this.position = i8 + 1;
                 bArr8[i8] = (byte) (((int) (value >> 56)) & 255);
             } catch (IndexOutOfBoundsException e) {
-                throw new OutOfSpaceException(new IndexOutOfBoundsException(String.format("Pos: %d, limit: %d, len: %d", new Object[]{Integer.valueOf(this.position), Integer.valueOf(this.limit), 1})));
+                throw new OutOfSpaceException(new IndexOutOfBoundsException(String.format("Pos: %d, limit: %d, len: %d", Integer.valueOf(this.position), Integer.valueOf(this.limit), 1)));
             }
         }
 
-        public final void write(byte[] value, int offset2, int length) throws IOException {
+        @Override // com.android.framework.protobuf.CodedOutputStream, com.android.framework.protobuf.ByteOutput
+        public final void write(byte[] value, int offset, int length) throws IOException {
             try {
-                System.arraycopy(value, offset2, this.buffer, this.position, length);
+                System.arraycopy(value, offset, this.buffer, this.position, length);
                 this.position += length;
             } catch (IndexOutOfBoundsException e) {
-                throw new OutOfSpaceException(new IndexOutOfBoundsException(String.format("Pos: %d, limit: %d, len: %d", new Object[]{Integer.valueOf(this.position), Integer.valueOf(this.limit), Integer.valueOf(length)})));
+                throw new OutOfSpaceException(new IndexOutOfBoundsException(String.format("Pos: %d, limit: %d, len: %d", Integer.valueOf(this.position), Integer.valueOf(this.limit), Integer.valueOf(length))));
             }
         }
 
-        public final void writeLazy(byte[] value, int offset2, int length) throws IOException {
-            write(value, offset2, length);
+        @Override // com.android.framework.protobuf.CodedOutputStream, com.android.framework.protobuf.ByteOutput
+        public final void writeLazy(byte[] value, int offset, int length) throws IOException {
+            write(value, offset, length);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream, com.android.framework.protobuf.ByteOutput
         public final void write(ByteBuffer value) throws IOException {
             int length = value.remaining();
             try {
                 value.get(this.buffer, this.position, length);
                 this.position += length;
             } catch (IndexOutOfBoundsException e) {
-                throw new OutOfSpaceException(new IndexOutOfBoundsException(String.format("Pos: %d, limit: %d, len: %d", new Object[]{Integer.valueOf(this.position), Integer.valueOf(this.limit), Integer.valueOf(length)})));
+                throw new OutOfSpaceException(new IndexOutOfBoundsException(String.format("Pos: %d, limit: %d, len: %d", Integer.valueOf(this.position), Integer.valueOf(this.limit), Integer.valueOf(length))));
             }
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream, com.android.framework.protobuf.ByteOutput
         public final void writeLazy(ByteBuffer value) throws IOException {
             write(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public final void writeStringNoTag(String value) throws IOException {
             int oldPosition = this.position;
             try {
-                int maxLengthVarIntSize = computeUInt32SizeNoTag(value.length() * 3);
+                int maxLength = value.length() * 3;
+                int maxLengthVarIntSize = computeUInt32SizeNoTag(maxLength);
                 int minLengthVarIntSize = computeUInt32SizeNoTag(value.length());
                 if (minLengthVarIntSize == maxLengthVarIntSize) {
                     this.position = oldPosition + minLengthVarIntSize;
                     int newPosition = Utf8.encode(value, this.buffer, this.position, spaceLeft());
                     this.position = oldPosition;
-                    writeUInt32NoTag((newPosition - oldPosition) - minLengthVarIntSize);
+                    int length = (newPosition - oldPosition) - minLengthVarIntSize;
+                    writeUInt32NoTag(length);
                     this.position = newPosition;
-                    return;
+                } else {
+                    int length2 = Utf8.encodedLength(value);
+                    writeUInt32NoTag(length2);
+                    this.position = Utf8.encode(value, this.buffer, this.position, spaceLeft());
                 }
-                writeUInt32NoTag(Utf8.encodedLength(value));
-                this.position = Utf8.encode(value, this.buffer, this.position, spaceLeft());
             } catch (Utf8.UnpairedSurrogateException e) {
                 this.position = oldPosition;
                 inefficientWriteStringNoTag(value, e);
@@ -860,109 +897,129 @@ public abstract class CodedOutputStream extends ByteOutput {
             }
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void flush() {
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public final int spaceLeft() {
             return this.limit - this.position;
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public final int getTotalBytesWritten() {
             return this.position - this.offset;
         }
     }
 
+    /* loaded from: classes4.dex */
     private static final class NioHeapEncoder extends ArrayEncoder {
         private final ByteBuffer byteBuffer;
         private int initialPosition;
 
-        NioHeapEncoder(ByteBuffer byteBuffer2) {
-            super(byteBuffer2.array(), byteBuffer2.arrayOffset() + byteBuffer2.position(), byteBuffer2.remaining());
-            this.byteBuffer = byteBuffer2;
-            this.initialPosition = byteBuffer2.position();
+        NioHeapEncoder(ByteBuffer byteBuffer) {
+            super(byteBuffer.array(), byteBuffer.arrayOffset() + byteBuffer.position(), byteBuffer.remaining());
+            this.byteBuffer = byteBuffer;
+            this.initialPosition = byteBuffer.position();
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream.ArrayEncoder, com.android.framework.protobuf.CodedOutputStream
         public void flush() {
             this.byteBuffer.position(this.initialPosition + getTotalBytesWritten());
         }
     }
 
+    /* loaded from: classes4.dex */
     private static final class NioEncoder extends CodedOutputStream {
         private final ByteBuffer buffer;
         private final int initialPosition;
         private final ByteBuffer originalBuffer;
 
-        NioEncoder(ByteBuffer buffer2) {
+        NioEncoder(ByteBuffer buffer) {
             super();
-            this.originalBuffer = buffer2;
-            this.buffer = buffer2.duplicate().order(ByteOrder.LITTLE_ENDIAN);
-            this.initialPosition = buffer2.position();
+            this.originalBuffer = buffer;
+            this.buffer = buffer.duplicate().order(ByteOrder.LITTLE_ENDIAN);
+            this.initialPosition = buffer.position();
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeTag(int fieldNumber, int wireType) throws IOException {
             writeUInt32NoTag(WireFormat.makeTag(fieldNumber, wireType));
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeInt32(int fieldNumber, int value) throws IOException {
             writeTag(fieldNumber, 0);
             writeInt32NoTag(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeUInt32(int fieldNumber, int value) throws IOException {
             writeTag(fieldNumber, 0);
             writeUInt32NoTag(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeFixed32(int fieldNumber, int value) throws IOException {
             writeTag(fieldNumber, 5);
             writeFixed32NoTag(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeUInt64(int fieldNumber, long value) throws IOException {
             writeTag(fieldNumber, 0);
             writeUInt64NoTag(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeFixed64(int fieldNumber, long value) throws IOException {
             writeTag(fieldNumber, 1);
             writeFixed64NoTag(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeBool(int fieldNumber, boolean value) throws IOException {
             writeTag(fieldNumber, 0);
-            write(value ? (byte) 1 : 0);
+            write(value ? (byte) 1 : (byte) 0);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeString(int fieldNumber, String value) throws IOException {
             writeTag(fieldNumber, 2);
             writeStringNoTag(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeBytes(int fieldNumber, ByteString value) throws IOException {
             writeTag(fieldNumber, 2);
             writeBytesNoTag(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeByteArray(int fieldNumber, byte[] value) throws IOException {
             writeByteArray(fieldNumber, value, 0, value.length);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeByteArray(int fieldNumber, byte[] value, int offset, int length) throws IOException {
             writeTag(fieldNumber, 2);
             writeByteArrayNoTag(value, offset, length);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeByteBuffer(int fieldNumber, ByteBuffer value) throws IOException {
             writeTag(fieldNumber, 2);
             writeUInt32NoTag(value.capacity());
             writeRawBytes(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeMessage(int fieldNumber, MessageLite value) throws IOException {
             writeTag(fieldNumber, 2);
             writeMessageNoTag(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeMessageSetExtension(int fieldNumber, MessageLite value) throws IOException {
             writeTag(1, 3);
             writeUInt32(2, fieldNumber);
@@ -970,6 +1027,7 @@ public abstract class CodedOutputStream extends ByteOutput {
             writeTag(1, 4);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeRawMessageSetExtension(int fieldNumber, ByteString value) throws IOException {
             writeTag(1, 3);
             writeUInt32(2, fieldNumber);
@@ -977,11 +1035,13 @@ public abstract class CodedOutputStream extends ByteOutput {
             writeTag(1, 4);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeMessageNoTag(MessageLite value) throws IOException {
             writeUInt32NoTag(value.getSerializedSize());
-            value.writeTo((CodedOutputStream) this);
+            value.writeTo(this);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream, com.android.framework.protobuf.ByteOutput
         public void write(byte value) throws IOException {
             try {
                 this.buffer.put(value);
@@ -990,16 +1050,19 @@ public abstract class CodedOutputStream extends ByteOutput {
             }
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeBytesNoTag(ByteString value) throws IOException {
             writeUInt32NoTag(value.size());
-            value.writeTo((ByteOutput) this);
+            value.writeTo(this);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeByteArrayNoTag(byte[] value, int offset, int length) throws IOException {
             writeUInt32NoTag(length);
             write(value, offset, length);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeRawBytes(ByteBuffer value) throws IOException {
             if (value.hasArray()) {
                 write(value.array(), value.arrayOffset(), value.capacity());
@@ -1010,26 +1073,29 @@ public abstract class CodedOutputStream extends ByteOutput {
             write(duplicated);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeInt32NoTag(int value) throws IOException {
             if (value >= 0) {
                 writeUInt32NoTag(value);
             } else {
-                writeUInt64NoTag((long) value);
+                writeUInt64NoTag(value);
             }
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeUInt32NoTag(int value) throws IOException {
-            while ((value & -128) != 0) {
-                this.buffer.put((byte) ((value & 127) | 128));
-                value >>>= 7;
+            while ((value & (-128)) != 0) {
+                try {
+                    this.buffer.put((byte) ((value & 127) | 128));
+                    value >>>= 7;
+                } catch (BufferOverflowException e) {
+                    throw new OutOfSpaceException(e);
+                }
             }
-            try {
-                this.buffer.put((byte) value);
-            } catch (BufferOverflowException e) {
-                throw new OutOfSpaceException(e);
-            }
+            this.buffer.put((byte) value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeFixed32NoTag(int value) throws IOException {
             try {
                 this.buffer.putInt(value);
@@ -1038,18 +1104,20 @@ public abstract class CodedOutputStream extends ByteOutput {
             }
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeUInt64NoTag(long value) throws IOException {
-            while ((-128 & value) != 0) {
-                this.buffer.put((byte) ((((int) value) & 127) | 128));
-                value >>>= 7;
+            while (((-128) & value) != 0) {
+                try {
+                    this.buffer.put((byte) ((((int) value) & 127) | 128));
+                    value >>>= 7;
+                } catch (BufferOverflowException e) {
+                    throw new OutOfSpaceException(e);
+                }
             }
-            try {
-                this.buffer.put((byte) ((int) value));
-            } catch (BufferOverflowException e) {
-                throw new OutOfSpaceException(e);
-            }
+            this.buffer.put((byte) value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeFixed64NoTag(long value) throws IOException {
             try {
                 this.buffer.putLong(value);
@@ -1058,6 +1126,7 @@ public abstract class CodedOutputStream extends ByteOutput {
             }
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream, com.android.framework.protobuf.ByteOutput
         public void write(byte[] value, int offset, int length) throws IOException {
             try {
                 this.buffer.put(value, offset, length);
@@ -1068,10 +1137,12 @@ public abstract class CodedOutputStream extends ByteOutput {
             }
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream, com.android.framework.protobuf.ByteOutput
         public void writeLazy(byte[] value, int offset, int length) throws IOException {
             write(value, offset, length);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream, com.android.framework.protobuf.ByteOutput
         public void write(ByteBuffer value) throws IOException {
             try {
                 this.buffer.put(value);
@@ -1080,14 +1151,17 @@ public abstract class CodedOutputStream extends ByteOutput {
             }
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream, com.android.framework.protobuf.ByteOutput
         public void writeLazy(ByteBuffer value) throws IOException {
             write(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeStringNoTag(String value) throws IOException {
             int startPos = this.buffer.position();
             try {
-                int maxLengthVarIntSize = computeUInt32SizeNoTag(value.length() * 3);
+                int maxEncodedSize = value.length() * 3;
+                int maxLengthVarIntSize = computeUInt32SizeNoTag(maxEncodedSize);
                 int minLengthVarIntSize = computeUInt32SizeNoTag(value.length());
                 if (minLengthVarIntSize == maxLengthVarIntSize) {
                     int startOfBytes = this.buffer.position() + minLengthVarIntSize;
@@ -1097,10 +1171,11 @@ public abstract class CodedOutputStream extends ByteOutput {
                     this.buffer.position(startPos);
                     writeUInt32NoTag(endOfBytes - startOfBytes);
                     this.buffer.position(endOfBytes);
-                    return;
+                } else {
+                    int length = Utf8.encodedLength(value);
+                    writeUInt32NoTag(length);
+                    encode(value);
                 }
-                writeUInt32NoTag(Utf8.encodedLength(value));
-                encode(value);
             } catch (Utf8.UnpairedSurrogateException e) {
                 this.buffer.position(startPos);
                 inefficientWriteStringNoTag(value, e);
@@ -1109,14 +1184,17 @@ public abstract class CodedOutputStream extends ByteOutput {
             }
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void flush() {
             this.originalBuffer.position(this.buffer.position());
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public int spaceLeft() {
             return this.buffer.remaining();
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public int getTotalBytesWritten() {
             return this.buffer.position() - this.initialPosition;
         }
@@ -1130,6 +1208,7 @@ public abstract class CodedOutputStream extends ByteOutput {
         }
     }
 
+    /* loaded from: classes4.dex */
     private static abstract class AbstractBufferedEncoder extends CodedOutputStream {
         final byte[] buffer;
         final int limit;
@@ -1138,24 +1217,24 @@ public abstract class CodedOutputStream extends ByteOutput {
 
         AbstractBufferedEncoder(int bufferSize) {
             super();
-            if (bufferSize >= 0) {
-                this.buffer = new byte[Math.max(bufferSize, 20)];
-                this.limit = this.buffer.length;
-                return;
+            if (bufferSize < 0) {
+                throw new IllegalArgumentException("bufferSize must be >= 0");
             }
-            throw new IllegalArgumentException("bufferSize must be >= 0");
+            this.buffer = new byte[Math.max(bufferSize, 20)];
+            this.limit = this.buffer.length;
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public final int spaceLeft() {
             throw new UnsupportedOperationException("spaceLeft() can only be called on CodedOutputStreams that are writing to a flat array or ByteBuffer.");
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public final int getTotalBytesWritten() {
             return this.totalBytesWritten;
         }
 
-        /* access modifiers changed from: package-private */
-        public final void buffer(byte value) {
+        final void buffer(byte value) {
             byte[] bArr = this.buffer;
             int i = this.position;
             this.position = i + 1;
@@ -1163,26 +1242,23 @@ public abstract class CodedOutputStream extends ByteOutput {
             this.totalBytesWritten++;
         }
 
-        /* access modifiers changed from: package-private */
-        public final void bufferTag(int fieldNumber, int wireType) {
+        final void bufferTag(int fieldNumber, int wireType) {
             bufferUInt32NoTag(WireFormat.makeTag(fieldNumber, wireType));
         }
 
-        /* access modifiers changed from: package-private */
-        public final void bufferInt32NoTag(int value) {
+        final void bufferInt32NoTag(int value) {
             if (value >= 0) {
                 bufferUInt32NoTag(value);
             } else {
-                bufferUInt64NoTag((long) value);
+                bufferUInt64NoTag(value);
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public final void bufferUInt32NoTag(int value) {
+        final void bufferUInt32NoTag(int value) {
             if (CodedOutputStream.HAS_UNSAFE_ARRAY_OPERATIONS) {
-                long originalPos = CodedOutputStream.ARRAY_BASE_OFFSET + ((long) this.position);
+                long originalPos = CodedOutputStream.ARRAY_BASE_OFFSET + this.position;
                 long pos = originalPos;
-                while ((value & -128) != 0) {
+                while ((value & (-128)) != 0) {
                     CodedOutputStream.UNSAFE.putByte(this.buffer, pos, (byte) ((value & 127) | 128));
                     value >>>= 7;
                     pos = 1 + pos;
@@ -1193,7 +1269,7 @@ public abstract class CodedOutputStream extends ByteOutput {
                 this.totalBytesWritten += delta;
                 return;
             }
-            while ((value & -128) != 0) {
+            while ((value & (-128)) != 0) {
                 byte[] bArr = this.buffer;
                 int i = this.position;
                 this.position = i + 1;
@@ -1208,25 +1284,24 @@ public abstract class CodedOutputStream extends ByteOutput {
             this.totalBytesWritten++;
         }
 
-        /* access modifiers changed from: package-private */
-        public final void bufferUInt64NoTag(long value) {
+        final void bufferUInt64NoTag(long value) {
             if (CodedOutputStream.HAS_UNSAFE_ARRAY_OPERATIONS) {
-                long originalPos = CodedOutputStream.ARRAY_BASE_OFFSET + ((long) this.position);
+                long originalPos = CodedOutputStream.ARRAY_BASE_OFFSET + this.position;
                 long value2 = value;
                 long pos = originalPos;
-                for (long j = 0; (value2 & -128) != j; j = 0) {
+                for (long j = 0; (value2 & (-128)) != j; j = 0) {
                     CodedOutputStream.UNSAFE.putByte(this.buffer, pos, (byte) ((((int) value2) & 127) | 128));
                     value2 >>>= 7;
                     pos = 1 + pos;
                 }
-                CodedOutputStream.UNSAFE.putByte(this.buffer, pos, (byte) ((int) value2));
+                CodedOutputStream.UNSAFE.putByte(this.buffer, pos, (byte) value2);
                 int delta = (int) ((1 + pos) - originalPos);
                 this.position += delta;
                 this.totalBytesWritten += delta;
                 return;
             }
             long value3 = value;
-            while ((value3 & -128) != 0) {
+            while ((value3 & (-128)) != 0) {
                 byte[] bArr = this.buffer;
                 int i = this.position;
                 this.position = i + 1;
@@ -1237,12 +1312,11 @@ public abstract class CodedOutputStream extends ByteOutput {
             byte[] bArr2 = this.buffer;
             int i2 = this.position;
             this.position = i2 + 1;
-            bArr2[i2] = (byte) ((int) value3);
+            bArr2[i2] = (byte) value3;
             this.totalBytesWritten++;
         }
 
-        /* access modifiers changed from: package-private */
-        public final void bufferFixed32NoTag(int value) {
+        final void bufferFixed32NoTag(int value) {
             byte[] bArr = this.buffer;
             int i = this.position;
             this.position = i + 1;
@@ -1262,24 +1336,23 @@ public abstract class CodedOutputStream extends ByteOutput {
             this.totalBytesWritten += 4;
         }
 
-        /* access modifiers changed from: package-private */
-        public final void bufferFixed64NoTag(long value) {
+        final void bufferFixed64NoTag(long value) {
             byte[] bArr = this.buffer;
             int i = this.position;
             this.position = i + 1;
-            bArr[i] = (byte) ((int) (value & 255));
+            bArr[i] = (byte) (value & 255);
             byte[] bArr2 = this.buffer;
             int i2 = this.position;
             this.position = i2 + 1;
-            bArr2[i2] = (byte) ((int) ((value >> 8) & 255));
+            bArr2[i2] = (byte) ((value >> 8) & 255);
             byte[] bArr3 = this.buffer;
             int i3 = this.position;
             this.position = i3 + 1;
-            bArr3[i3] = (byte) ((int) ((value >> 16) & 255));
+            bArr3[i3] = (byte) ((value >> 16) & 255);
             byte[] bArr4 = this.buffer;
             int i4 = this.position;
             this.position = i4 + 1;
-            bArr4[i4] = (byte) ((int) (255 & (value >> 24)));
+            bArr4[i4] = (byte) (255 & (value >> 24));
             byte[] bArr5 = this.buffer;
             int i5 = this.position;
             this.position = i5 + 1;
@@ -1300,93 +1373,108 @@ public abstract class CodedOutputStream extends ByteOutput {
         }
     }
 
+    /* loaded from: classes4.dex */
     private static final class ByteOutputEncoder extends AbstractBufferedEncoder {
         private final ByteOutput out;
 
-        ByteOutputEncoder(ByteOutput out2, int bufferSize) {
+        ByteOutputEncoder(ByteOutput out, int bufferSize) {
             super(bufferSize);
-            if (out2 != null) {
-                this.out = out2;
-                return;
+            if (out == null) {
+                throw new NullPointerException("out");
             }
-            throw new NullPointerException("out");
+            this.out = out;
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeTag(int fieldNumber, int wireType) throws IOException {
             writeUInt32NoTag(WireFormat.makeTag(fieldNumber, wireType));
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeInt32(int fieldNumber, int value) throws IOException {
             flushIfNotAvailable(20);
             bufferTag(fieldNumber, 0);
             bufferInt32NoTag(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeUInt32(int fieldNumber, int value) throws IOException {
             flushIfNotAvailable(20);
             bufferTag(fieldNumber, 0);
             bufferUInt32NoTag(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeFixed32(int fieldNumber, int value) throws IOException {
             flushIfNotAvailable(14);
             bufferTag(fieldNumber, 5);
             bufferFixed32NoTag(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeUInt64(int fieldNumber, long value) throws IOException {
             flushIfNotAvailable(20);
             bufferTag(fieldNumber, 0);
             bufferUInt64NoTag(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeFixed64(int fieldNumber, long value) throws IOException {
             flushIfNotAvailable(18);
             bufferTag(fieldNumber, 1);
             bufferFixed64NoTag(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeBool(int fieldNumber, boolean value) throws IOException {
             flushIfNotAvailable(11);
             bufferTag(fieldNumber, 0);
-            buffer(value ? (byte) 1 : 0);
+            buffer(value ? (byte) 1 : (byte) 0);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeString(int fieldNumber, String value) throws IOException {
             writeTag(fieldNumber, 2);
             writeStringNoTag(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeBytes(int fieldNumber, ByteString value) throws IOException {
             writeTag(fieldNumber, 2);
             writeBytesNoTag(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeByteArray(int fieldNumber, byte[] value) throws IOException {
             writeByteArray(fieldNumber, value, 0, value.length);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeByteArray(int fieldNumber, byte[] value, int offset, int length) throws IOException {
             writeTag(fieldNumber, 2);
             writeByteArrayNoTag(value, offset, length);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeByteBuffer(int fieldNumber, ByteBuffer value) throws IOException {
             writeTag(fieldNumber, 2);
             writeUInt32NoTag(value.capacity());
             writeRawBytes(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeBytesNoTag(ByteString value) throws IOException {
             writeUInt32NoTag(value.size());
-            value.writeTo((ByteOutput) this);
+            value.writeTo(this);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeByteArrayNoTag(byte[] value, int offset, int length) throws IOException {
             writeUInt32NoTag(length);
             write(value, offset, length);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeRawBytes(ByteBuffer value) throws IOException {
             if (value.hasArray()) {
                 write(value.array(), value.arrayOffset(), value.capacity());
@@ -1397,11 +1485,13 @@ public abstract class CodedOutputStream extends ByteOutput {
             write(duplicated);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeMessage(int fieldNumber, MessageLite value) throws IOException {
             writeTag(fieldNumber, 2);
             writeMessageNoTag(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeMessageSetExtension(int fieldNumber, MessageLite value) throws IOException {
             writeTag(1, 3);
             writeUInt32(2, fieldNumber);
@@ -1409,6 +1499,7 @@ public abstract class CodedOutputStream extends ByteOutput {
             writeTag(1, 4);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeRawMessageSetExtension(int fieldNumber, ByteString value) throws IOException {
             writeTag(1, 3);
             writeUInt32(2, fieldNumber);
@@ -1416,11 +1507,13 @@ public abstract class CodedOutputStream extends ByteOutput {
             writeTag(1, 4);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeMessageNoTag(MessageLite value) throws IOException {
             writeUInt32NoTag(value.getSerializedSize());
-            value.writeTo((CodedOutputStream) this);
+            value.writeTo(this);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream, com.android.framework.protobuf.ByteOutput
         public void write(byte value) throws IOException {
             if (this.position == this.limit) {
                 doFlush();
@@ -1428,34 +1521,40 @@ public abstract class CodedOutputStream extends ByteOutput {
             buffer(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeInt32NoTag(int value) throws IOException {
             if (value >= 0) {
                 writeUInt32NoTag(value);
             } else {
-                writeUInt64NoTag((long) value);
+                writeUInt64NoTag(value);
             }
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeUInt32NoTag(int value) throws IOException {
             flushIfNotAvailable(10);
             bufferUInt32NoTag(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeFixed32NoTag(int value) throws IOException {
             flushIfNotAvailable(4);
             bufferFixed32NoTag(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeUInt64NoTag(long value) throws IOException {
             flushIfNotAvailable(10);
             bufferUInt64NoTag(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeFixed64NoTag(long value) throws IOException {
             flushIfNotAvailable(8);
             bufferFixed64NoTag(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeStringNoTag(String value) throws IOException {
             int maxLength = value.length() * 3;
             int maxLengthVarIntSize = computeUInt32SizeNoTag(maxLength);
@@ -1480,12 +1579,12 @@ public abstract class CodedOutputStream extends ByteOutput {
                     bufferUInt32NoTag(length);
                     this.position = newPosition;
                     this.totalBytesWritten += length;
-                    return;
+                } else {
+                    int length2 = Utf8.encodedLength(value);
+                    bufferUInt32NoTag(length2);
+                    this.position = Utf8.encode(value, this.buffer, this.position, length2);
+                    this.totalBytesWritten += length2;
                 }
-                int length2 = Utf8.encodedLength(value);
-                bufferUInt32NoTag(length2);
-                this.position = Utf8.encode(value, this.buffer, this.position, length2);
-                this.totalBytesWritten += length2;
             } catch (Utf8.UnpairedSurrogateException e) {
                 this.totalBytesWritten -= this.position - oldPosition;
                 this.position = oldPosition;
@@ -1495,24 +1594,28 @@ public abstract class CodedOutputStream extends ByteOutput {
             }
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void flush() throws IOException {
             if (this.position > 0) {
                 doFlush();
             }
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream, com.android.framework.protobuf.ByteOutput
         public void write(byte[] value, int offset, int length) throws IOException {
             flush();
             this.out.write(value, offset, length);
             this.totalBytesWritten += length;
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream, com.android.framework.protobuf.ByteOutput
         public void writeLazy(byte[] value, int offset, int length) throws IOException {
             flush();
             this.out.writeLazy(value, offset, length);
             this.totalBytesWritten += length;
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream, com.android.framework.protobuf.ByteOutput
         public void write(ByteBuffer value) throws IOException {
             flush();
             int length = value.remaining();
@@ -1520,6 +1623,7 @@ public abstract class CodedOutputStream extends ByteOutput {
             this.totalBytesWritten += length;
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream, com.android.framework.protobuf.ByteOutput
         public void writeLazy(ByteBuffer value) throws IOException {
             flush();
             int length = value.remaining();
@@ -1539,93 +1643,108 @@ public abstract class CodedOutputStream extends ByteOutput {
         }
     }
 
+    /* loaded from: classes4.dex */
     private static final class OutputStreamEncoder extends AbstractBufferedEncoder {
         private final OutputStream out;
 
-        OutputStreamEncoder(OutputStream out2, int bufferSize) {
+        OutputStreamEncoder(OutputStream out, int bufferSize) {
             super(bufferSize);
-            if (out2 != null) {
-                this.out = out2;
-                return;
+            if (out == null) {
+                throw new NullPointerException("out");
             }
-            throw new NullPointerException("out");
+            this.out = out;
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeTag(int fieldNumber, int wireType) throws IOException {
             writeUInt32NoTag(WireFormat.makeTag(fieldNumber, wireType));
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeInt32(int fieldNumber, int value) throws IOException {
             flushIfNotAvailable(20);
             bufferTag(fieldNumber, 0);
             bufferInt32NoTag(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeUInt32(int fieldNumber, int value) throws IOException {
             flushIfNotAvailable(20);
             bufferTag(fieldNumber, 0);
             bufferUInt32NoTag(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeFixed32(int fieldNumber, int value) throws IOException {
             flushIfNotAvailable(14);
             bufferTag(fieldNumber, 5);
             bufferFixed32NoTag(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeUInt64(int fieldNumber, long value) throws IOException {
             flushIfNotAvailable(20);
             bufferTag(fieldNumber, 0);
             bufferUInt64NoTag(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeFixed64(int fieldNumber, long value) throws IOException {
             flushIfNotAvailable(18);
             bufferTag(fieldNumber, 1);
             bufferFixed64NoTag(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeBool(int fieldNumber, boolean value) throws IOException {
             flushIfNotAvailable(11);
             bufferTag(fieldNumber, 0);
-            buffer(value ? (byte) 1 : 0);
+            buffer(value ? (byte) 1 : (byte) 0);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeString(int fieldNumber, String value) throws IOException {
             writeTag(fieldNumber, 2);
             writeStringNoTag(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeBytes(int fieldNumber, ByteString value) throws IOException {
             writeTag(fieldNumber, 2);
             writeBytesNoTag(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeByteArray(int fieldNumber, byte[] value) throws IOException {
             writeByteArray(fieldNumber, value, 0, value.length);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeByteArray(int fieldNumber, byte[] value, int offset, int length) throws IOException {
             writeTag(fieldNumber, 2);
             writeByteArrayNoTag(value, offset, length);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeByteBuffer(int fieldNumber, ByteBuffer value) throws IOException {
             writeTag(fieldNumber, 2);
             writeUInt32NoTag(value.capacity());
             writeRawBytes(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeBytesNoTag(ByteString value) throws IOException {
             writeUInt32NoTag(value.size());
-            value.writeTo((ByteOutput) this);
+            value.writeTo(this);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeByteArrayNoTag(byte[] value, int offset, int length) throws IOException {
             writeUInt32NoTag(length);
             write(value, offset, length);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeRawBytes(ByteBuffer value) throws IOException {
             if (value.hasArray()) {
                 write(value.array(), value.arrayOffset(), value.capacity());
@@ -1636,11 +1755,13 @@ public abstract class CodedOutputStream extends ByteOutput {
             write(duplicated);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeMessage(int fieldNumber, MessageLite value) throws IOException {
             writeTag(fieldNumber, 2);
             writeMessageNoTag(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeMessageSetExtension(int fieldNumber, MessageLite value) throws IOException {
             writeTag(1, 3);
             writeUInt32(2, fieldNumber);
@@ -1648,6 +1769,7 @@ public abstract class CodedOutputStream extends ByteOutput {
             writeTag(1, 4);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeRawMessageSetExtension(int fieldNumber, ByteString value) throws IOException {
             writeTag(1, 3);
             writeUInt32(2, fieldNumber);
@@ -1655,11 +1777,13 @@ public abstract class CodedOutputStream extends ByteOutput {
             writeTag(1, 4);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeMessageNoTag(MessageLite value) throws IOException {
             writeUInt32NoTag(value.getSerializedSize());
-            value.writeTo((CodedOutputStream) this);
+            value.writeTo(this);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream, com.android.framework.protobuf.ByteOutput
         public void write(byte value) throws IOException {
             if (this.position == this.limit) {
                 doFlush();
@@ -1667,36 +1791,41 @@ public abstract class CodedOutputStream extends ByteOutput {
             buffer(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeInt32NoTag(int value) throws IOException {
             if (value >= 0) {
                 writeUInt32NoTag(value);
             } else {
-                writeUInt64NoTag((long) value);
+                writeUInt64NoTag(value);
             }
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeUInt32NoTag(int value) throws IOException {
             flushIfNotAvailable(10);
             bufferUInt32NoTag(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeFixed32NoTag(int value) throws IOException {
             flushIfNotAvailable(4);
             bufferFixed32NoTag(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeUInt64NoTag(long value) throws IOException {
             flushIfNotAvailable(10);
             bufferUInt64NoTag(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeFixed64NoTag(long value) throws IOException {
             flushIfNotAvailable(8);
             bufferFixed64NoTag(value);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void writeStringNoTag(String value) throws IOException {
-            int oldPosition;
             int length;
             try {
                 int maxLength = value.length() * 3;
@@ -1712,37 +1841,41 @@ public abstract class CodedOutputStream extends ByteOutput {
                     doFlush();
                 }
                 int minLengthVarIntSize = computeUInt32SizeNoTag(value.length());
-                oldPosition = this.position;
-                if (minLengthVarIntSize == maxLengthVarIntSize) {
-                    this.position = oldPosition + minLengthVarIntSize;
-                    int newPosition = Utf8.encode(value, this.buffer, this.position, this.limit - this.position);
+                int oldPosition = this.position;
+                try {
+                    if (minLengthVarIntSize == maxLengthVarIntSize) {
+                        this.position = oldPosition + minLengthVarIntSize;
+                        int newPosition = Utf8.encode(value, this.buffer, this.position, this.limit - this.position);
+                        this.position = oldPosition;
+                        length = (newPosition - oldPosition) - minLengthVarIntSize;
+                        bufferUInt32NoTag(length);
+                        this.position = newPosition;
+                    } else {
+                        length = Utf8.encodedLength(value);
+                        bufferUInt32NoTag(length);
+                        this.position = Utf8.encode(value, this.buffer, this.position, length);
+                    }
+                    this.totalBytesWritten += length;
+                } catch (Utf8.UnpairedSurrogateException e) {
+                    this.totalBytesWritten -= this.position - oldPosition;
                     this.position = oldPosition;
-                    length = (newPosition - oldPosition) - minLengthVarIntSize;
-                    bufferUInt32NoTag(length);
-                    this.position = newPosition;
-                } else {
-                    length = Utf8.encodedLength(value);
-                    bufferUInt32NoTag(length);
-                    this.position = Utf8.encode(value, this.buffer, this.position, length);
+                    throw e;
+                } catch (ArrayIndexOutOfBoundsException e2) {
+                    throw new OutOfSpaceException(e2);
                 }
-                this.totalBytesWritten += length;
-            } catch (Utf8.UnpairedSurrogateException e) {
-                this.totalBytesWritten -= this.position - oldPosition;
-                this.position = oldPosition;
-                throw e;
-            } catch (ArrayIndexOutOfBoundsException e2) {
-                throw new OutOfSpaceException(e2);
             } catch (Utf8.UnpairedSurrogateException e3) {
                 inefficientWriteStringNoTag(value, e3);
             }
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream
         public void flush() throws IOException {
             if (this.position > 0) {
                 doFlush();
             }
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream, com.android.framework.protobuf.ByteOutput
         public void write(byte[] value, int offset, int length) throws IOException {
             if (this.limit - this.position >= length) {
                 System.arraycopy(value, offset, this.buffer, this.position, length);
@@ -1766,10 +1899,12 @@ public abstract class CodedOutputStream extends ByteOutput {
             this.totalBytesWritten += length2;
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream, com.android.framework.protobuf.ByteOutput
         public void writeLazy(byte[] value, int offset, int length) throws IOException {
             write(value, offset, length);
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream, com.android.framework.protobuf.ByteOutput
         public void write(ByteBuffer value) throws IOException {
             int length = value.remaining();
             if (this.limit - this.position >= length) {
@@ -1795,6 +1930,7 @@ public abstract class CodedOutputStream extends ByteOutput {
             this.totalBytesWritten += length2;
         }
 
+        @Override // com.android.framework.protobuf.CodedOutputStream, com.android.framework.protobuf.ByteOutput
         public void writeLazy(ByteBuffer value) throws IOException {
             write(value);
         }
@@ -1814,14 +1950,15 @@ public abstract class CodedOutputStream extends ByteOutput {
     private static Unsafe getUnsafe() {
         Unsafe unsafe = null;
         try {
-            unsafe = (Unsafe) AccessController.doPrivileged(new PrivilegedExceptionAction<Unsafe>() {
+            unsafe = (Unsafe) AccessController.doPrivileged(new PrivilegedExceptionAction<Unsafe>() { // from class: com.android.framework.protobuf.CodedOutputStream.1
+                @Override // java.security.PrivilegedExceptionAction
                 public Unsafe run() throws Exception {
-                    Class<Unsafe> k = Unsafe.class;
-                    for (Field f : k.getDeclaredFields()) {
+                    Field[] declaredFields;
+                    for (Field f : Unsafe.class.getDeclaredFields()) {
                         f.setAccessible(true);
-                        Object x = f.get((Object) null);
-                        if (k.isInstance(x)) {
-                            return k.cast(x);
+                        Object x = f.get(null);
+                        if (Unsafe.class.isInstance(x)) {
+                            return (Unsafe) Unsafe.class.cast(x);
                         }
                     }
                     return null;
@@ -1837,8 +1974,8 @@ public abstract class CodedOutputStream extends ByteOutput {
         boolean supported = false;
         if (UNSAFE != null) {
             try {
-                UNSAFE.getClass().getMethod("arrayBaseOffset", new Class[]{Class.class});
-                UNSAFE.getClass().getMethod("putByte", new Class[]{Object.class, Long.TYPE, Byte.TYPE});
+                UNSAFE.getClass().getMethod("arrayBaseOffset", Class.class);
+                UNSAFE.getClass().getMethod("putByte", Object.class, Long.TYPE, Byte.TYPE);
                 supported = true;
             } catch (Throwable th) {
             }

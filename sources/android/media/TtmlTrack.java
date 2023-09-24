@@ -11,44 +11,48 @@ import java.util.TreeSet;
 import java.util.Vector;
 import org.xmlpull.v1.XmlPullParserException;
 
-/* compiled from: TtmlRenderer */
+/* compiled from: TtmlRenderer.java */
+/* loaded from: classes3.dex */
 class TtmlTrack extends SubtitleTrack implements TtmlNodeListener {
     private static final String TAG = "TtmlTrack";
     private Long mCurrentRunID;
-    private final TtmlParser mParser = new TtmlParser(this);
+    private final TtmlParser mParser;
     private String mParsingData;
     private final TtmlRenderingWidget mRenderingWidget;
     private TtmlNode mRootNode;
-    private final TreeSet<Long> mTimeEvents = new TreeSet<>();
-    private final LinkedList<TtmlNode> mTtmlNodes = new LinkedList<>();
+    private final TreeSet<Long> mTimeEvents;
+    private final LinkedList<TtmlNode> mTtmlNodes;
 
     TtmlTrack(TtmlRenderingWidget renderingWidget, MediaFormat format) {
         super(format);
+        this.mParser = new TtmlParser(this);
+        this.mTtmlNodes = new LinkedList<>();
+        this.mTimeEvents = new TreeSet<>();
         this.mRenderingWidget = renderingWidget;
         this.mParsingData = "";
     }
 
+    @Override // android.media.SubtitleTrack
     public TtmlRenderingWidget getRenderingWidget() {
         return this.mRenderingWidget;
     }
 
+    @Override // android.media.SubtitleTrack
     public void onData(byte[] data, boolean eos, long runID) {
         try {
             String str = new String(data, "UTF-8");
             synchronized (this.mParser) {
-                if (this.mCurrentRunID != null) {
-                    if (runID != this.mCurrentRunID.longValue()) {
-                        throw new IllegalStateException("Run #" + this.mCurrentRunID + " in progress.  Cannot process run #" + runID);
-                    }
+                if (this.mCurrentRunID != null && runID != this.mCurrentRunID.longValue()) {
+                    throw new IllegalStateException("Run #" + this.mCurrentRunID + " in progress.  Cannot process run #" + runID);
                 }
                 this.mCurrentRunID = Long.valueOf(runID);
                 this.mParsingData += str;
                 if (eos) {
                     try {
                         this.mParser.parse(this.mParsingData, this.mCurrentRunID.longValue());
-                    } catch (XmlPullParserException e) {
+                    } catch (IOException e) {
                         e.printStackTrace();
-                    } catch (IOException e2) {
+                    } catch (XmlPullParserException e2) {
                         e2.printStackTrace();
                     }
                     finishedRun(runID);
@@ -57,21 +61,22 @@ class TtmlTrack extends SubtitleTrack implements TtmlNodeListener {
                 }
             }
         } catch (UnsupportedEncodingException e3) {
-            Log.w(TAG, "subtitle data is not UTF-8 encoded: " + e3);
+            Log.m64w(TAG, "subtitle data is not UTF-8 encoded: " + e3);
         }
     }
 
+    @Override // android.media.TtmlNodeListener
     public void onTtmlNodeParsed(TtmlNode node) {
         this.mTtmlNodes.addLast(node);
         addTimeEvents(node);
     }
 
+    @Override // android.media.TtmlNodeListener
     public void onRootNodeParsed(TtmlNode node) {
         this.mRootNode = node;
         while (true) {
-            TtmlCue nextResult = getNextResult();
-            TtmlCue cue = nextResult;
-            if (nextResult != null) {
+            TtmlCue cue = getNextResult();
+            if (cue != null) {
                 addCue(cue);
             } else {
                 this.mRootNode = null;
@@ -82,24 +87,27 @@ class TtmlTrack extends SubtitleTrack implements TtmlNodeListener {
         }
     }
 
+    @Override // android.media.SubtitleTrack
     public void updateView(Vector<SubtitleTrack.Cue> activeCues) {
-        if (this.mVisible) {
-            if (this.DEBUG && this.mTimeProvider != null) {
-                try {
-                    Log.d(TAG, "at " + (this.mTimeProvider.getCurrentTimeUs(false, true) / 1000) + " ms the active cues are:");
-                } catch (IllegalStateException e) {
-                    Log.d(TAG, "at (illegal state) the active cues are:");
-                }
-            }
-            this.mRenderingWidget.setActiveCues(activeCues);
+        if (!this.mVisible) {
+            return;
         }
+        if (this.DEBUG && this.mTimeProvider != null) {
+            try {
+                Log.m72d(TAG, "at " + (this.mTimeProvider.getCurrentTimeUs(false, true) / 1000) + " ms the active cues are:");
+            } catch (IllegalStateException e) {
+                Log.m72d(TAG, "at (illegal state) the active cues are:");
+            }
+        }
+        this.mRenderingWidget.setActiveCues(activeCues);
     }
 
     public TtmlCue getNextResult() {
         while (this.mTimeEvents.size() >= 2) {
             long start = this.mTimeEvents.pollFirst().longValue();
             long end = this.mTimeEvents.first().longValue();
-            if (!getActiveNodes(start, end).isEmpty()) {
+            List<TtmlNode> activeCues = getActiveNodes(start, end);
+            if (!activeCues.isEmpty()) {
                 return new TtmlCue(start, end, TtmlUtils.applySpacePolicy(TtmlUtils.extractText(this.mRootNode, start, end), false), TtmlUtils.extractTtmlFragment(this.mRootNode, start, end));
             }
         }

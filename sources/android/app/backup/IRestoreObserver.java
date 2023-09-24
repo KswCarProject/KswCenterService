@@ -1,11 +1,12 @@
 package android.app.backup;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes.dex */
 public interface IRestoreObserver extends IInterface {
     void onUpdate(int i, String str) throws RemoteException;
 
@@ -15,24 +16,31 @@ public interface IRestoreObserver extends IInterface {
 
     void restoreStarting(int i) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements IRestoreObserver {
+        @Override // android.app.backup.IRestoreObserver
         public void restoreSetsAvailable(RestoreSet[] result) throws RemoteException {
         }
 
+        @Override // android.app.backup.IRestoreObserver
         public void restoreStarting(int numPackages) throws RemoteException {
         }
 
+        @Override // android.app.backup.IRestoreObserver
         public void onUpdate(int nowBeingRestored, String curentPackage) throws RemoteException {
         }
 
+        @Override // android.app.backup.IRestoreObserver
         public void restoreFinished(int error) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements IRestoreObserver {
         private static final String DESCRIPTOR = "android.app.backup.IRestoreObserver";
         static final int TRANSACTION_onUpdate = 3;
@@ -49,12 +57,13 @@ public interface IRestoreObserver extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IRestoreObserver)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IRestoreObserver)) {
+                return (IRestoreObserver) iin;
             }
-            return (IRestoreObserver) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -74,38 +83,45 @@ public interface IRestoreObserver extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        restoreSetsAvailable((RestoreSet[]) data.createTypedArray(RestoreSet.CREATOR));
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        restoreStarting(data.readInt());
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        onUpdate(data.readInt(), data.readString());
-                        return true;
-                    case 4:
-                        data.enforceInterface(DESCRIPTOR);
-                        restoreFinished(data.readInt());
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    RestoreSet[] _arg0 = (RestoreSet[]) data.createTypedArray(RestoreSet.CREATOR);
+                    restoreSetsAvailable(_arg0);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    restoreStarting(_arg02);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg03 = data.readInt();
+                    String _arg1 = data.readString();
+                    onUpdate(_arg03, _arg1);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg04 = data.readInt();
+                    restoreFinished(_arg04);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements IRestoreObserver {
             public static IRestoreObserver sDefaultImpl;
             private IBinder mRemote;
@@ -114,6 +130,7 @@ public interface IRestoreObserver extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -122,14 +139,14 @@ public interface IRestoreObserver extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.app.backup.IRestoreObserver
             public void restoreSetsAvailable(RestoreSet[] result) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeTypedArray(result, 0);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().restoreSetsAvailable(result);
                     }
                 } finally {
@@ -137,14 +154,14 @@ public interface IRestoreObserver extends IInterface {
                 }
             }
 
+            @Override // android.app.backup.IRestoreObserver
             public void restoreStarting(int numPackages) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(numPackages);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().restoreStarting(numPackages);
                     }
                 } finally {
@@ -152,15 +169,15 @@ public interface IRestoreObserver extends IInterface {
                 }
             }
 
+            @Override // android.app.backup.IRestoreObserver
             public void onUpdate(int nowBeingRestored, String curentPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(nowBeingRestored);
                     _data.writeString(curentPackage);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onUpdate(nowBeingRestored, curentPackage);
                     }
                 } finally {
@@ -168,14 +185,14 @@ public interface IRestoreObserver extends IInterface {
                 }
             }
 
+            @Override // android.app.backup.IRestoreObserver
             public void restoreFinished(int error) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(error);
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().restoreFinished(error);
                     }
                 } finally {
@@ -185,11 +202,11 @@ public interface IRestoreObserver extends IInterface {
         }
 
         public static boolean setDefaultImpl(IRestoreObserver impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IRestoreObserver getDefaultImpl() {

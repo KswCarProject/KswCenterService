@@ -2,10 +2,10 @@ package android.media.audiofx;
 
 import android.annotation.UnsupportedAppUsage;
 import android.app.ActivityThread;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.os.Parcel;
+import android.p007os.Handler;
+import android.p007os.Looper;
+import android.p007os.Message;
+import android.p007os.Parcel;
 import android.util.Log;
 import java.lang.ref.WeakReference;
 import java.nio.ByteBuffer;
@@ -13,6 +13,7 @@ import java.nio.ByteOrder;
 import java.util.Objects;
 import java.util.UUID;
 
+/* loaded from: classes3.dex */
 public class AudioEffect {
     public static final String ACTION_CLOSE_AUDIO_EFFECT_CONTROL_SESSION = "android.media.action.CLOSE_AUDIO_EFFECT_CONTROL_SESSION";
     public static final String ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL = "android.media.action.DISPLAY_AUDIO_EFFECT_CONTROL_PANEL";
@@ -25,17 +26,17 @@ public class AudioEffect {
     public static final String EFFECT_AUXILIARY = "Auxiliary";
     public static final String EFFECT_INSERT = "Insert";
     public static final String EFFECT_PRE_PROCESSING = "Pre Processing";
-    public static final UUID EFFECT_TYPE_AEC = UUID.fromString("7b491460-8d4d-11e0-bd61-0002a5d5c51b");
-    public static final UUID EFFECT_TYPE_AGC = UUID.fromString("0a8abfe0-654c-11e0-ba26-0002a5d5c51b");
-    public static final UUID EFFECT_TYPE_BASS_BOOST = UUID.fromString("0634f220-ddd4-11db-a0fc-0002a5d5c51b");
-    public static final UUID EFFECT_TYPE_DYNAMICS_PROCESSING = UUID.fromString("7261676f-6d75-7369-6364-28e2fd3ac39e");
-    public static final UUID EFFECT_TYPE_ENV_REVERB = UUID.fromString("c2e5d5f0-94bd-4763-9cac-4e234d06839e");
-    public static final UUID EFFECT_TYPE_EQUALIZER = UUID.fromString("0bed4300-ddd6-11db-8f34-0002a5d5c51b");
-    public static final UUID EFFECT_TYPE_LOUDNESS_ENHANCER = UUID.fromString("fe3199be-aed0-413f-87bb-11260eb63cf1");
-    public static final UUID EFFECT_TYPE_NS = UUID.fromString("58b4b260-8e06-11e0-aa8e-0002a5d5c51b");
-    public static final UUID EFFECT_TYPE_NULL = UUID.fromString("ec7178ec-e5e1-4432-a3f4-4657e6795210");
-    public static final UUID EFFECT_TYPE_PRESET_REVERB = UUID.fromString("47382d60-ddd8-11db-bf3a-0002a5d5c51b");
-    public static final UUID EFFECT_TYPE_VIRTUALIZER = UUID.fromString("37cc2c00-dddd-11db-8577-0002a5d5c51b");
+    public static final UUID EFFECT_TYPE_AEC;
+    public static final UUID EFFECT_TYPE_AGC;
+    public static final UUID EFFECT_TYPE_BASS_BOOST;
+    public static final UUID EFFECT_TYPE_DYNAMICS_PROCESSING;
+    public static final UUID EFFECT_TYPE_ENV_REVERB;
+    public static final UUID EFFECT_TYPE_EQUALIZER;
+    public static final UUID EFFECT_TYPE_LOUDNESS_ENHANCER;
+    public static final UUID EFFECT_TYPE_NS;
+    public static final UUID EFFECT_TYPE_NULL;
+    public static final UUID EFFECT_TYPE_PRESET_REVERB;
+    public static final UUID EFFECT_TYPE_VIRTUALIZER;
     public static final int ERROR = -1;
     public static final int ERROR_BAD_VALUE = -4;
     public static final int ERROR_DEAD_OBJECT = -7;
@@ -52,29 +53,29 @@ public class AudioEffect {
     public static final int STATE_UNINITIALIZED = 0;
     public static final int SUCCESS = 0;
     private static final String TAG = "AudioEffect-JAVA";
-    /* access modifiers changed from: private */
-    public OnControlStatusChangeListener mControlChangeStatusListener = null;
     private Descriptor mDescriptor;
-    /* access modifiers changed from: private */
-    public OnEnableStatusChangeListener mEnableStatusChangeListener = null;
     private int mId;
     private long mJniData;
-    public final Object mListenerLock = new Object();
     private long mNativeAudioEffect;
-    public NativeEventHandler mNativeEventHandler = null;
-    /* access modifiers changed from: private */
-    public OnParameterChangeListener mParameterChangeListener = null;
-    private int mState = 0;
+    private int mState;
     private final Object mStateLock = new Object();
+    private OnEnableStatusChangeListener mEnableStatusChangeListener = null;
+    private OnControlStatusChangeListener mControlChangeStatusListener = null;
+    private OnParameterChangeListener mParameterChangeListener = null;
+    public final Object mListenerLock = new Object();
+    public NativeEventHandler mNativeEventHandler = null;
 
+    /* loaded from: classes3.dex */
     public interface OnControlStatusChangeListener {
         void onControlStatusChange(AudioEffect audioEffect, boolean z);
     }
 
+    /* loaded from: classes3.dex */
     public interface OnEnableStatusChangeListener {
         void onEnableStatusChange(AudioEffect audioEffect, boolean z);
     }
 
+    /* loaded from: classes3.dex */
     public interface OnParameterChangeListener {
         void onParameterChange(AudioEffect audioEffect, int i, byte[] bArr, byte[] bArr2);
     }
@@ -106,8 +107,20 @@ public class AudioEffect {
     static {
         System.loadLibrary("audioeffect_jni");
         native_init();
+        EFFECT_TYPE_ENV_REVERB = UUID.fromString("c2e5d5f0-94bd-4763-9cac-4e234d06839e");
+        EFFECT_TYPE_PRESET_REVERB = UUID.fromString("47382d60-ddd8-11db-bf3a-0002a5d5c51b");
+        EFFECT_TYPE_EQUALIZER = UUID.fromString("0bed4300-ddd6-11db-8f34-0002a5d5c51b");
+        EFFECT_TYPE_BASS_BOOST = UUID.fromString("0634f220-ddd4-11db-a0fc-0002a5d5c51b");
+        EFFECT_TYPE_VIRTUALIZER = UUID.fromString("37cc2c00-dddd-11db-8577-0002a5d5c51b");
+        EFFECT_TYPE_AGC = UUID.fromString("0a8abfe0-654c-11e0-ba26-0002a5d5c51b");
+        EFFECT_TYPE_AEC = UUID.fromString("7b491460-8d4d-11e0-bd61-0002a5d5c51b");
+        EFFECT_TYPE_NS = UUID.fromString("58b4b260-8e06-11e0-aa8e-0002a5d5c51b");
+        EFFECT_TYPE_LOUDNESS_ENHANCER = UUID.fromString("fe3199be-aed0-413f-87bb-11260eb63cf1");
+        EFFECT_TYPE_DYNAMICS_PROCESSING = UUID.fromString("7261676f-6d75-7369-6364-28e2fd3ac39e");
+        EFFECT_TYPE_NULL = UUID.fromString("ec7178ec-e5e1-4432-a3f4-4657e6795210");
     }
 
+    /* loaded from: classes3.dex */
     public static class Descriptor {
         public String connectMode;
         public String implementor;
@@ -118,12 +131,12 @@ public class AudioEffect {
         public Descriptor() {
         }
 
-        public Descriptor(String type2, String uuid2, String connectMode2, String name2, String implementor2) {
-            this.type = UUID.fromString(type2);
-            this.uuid = UUID.fromString(uuid2);
-            this.connectMode = connectMode2;
-            this.name = name2;
-            this.implementor = implementor2;
+        public Descriptor(String type, String uuid, String connectMode, String name, String implementor) {
+            this.type = UUID.fromString(type);
+            this.uuid = UUID.fromString(uuid);
+            this.connectMode = connectMode;
+            this.name = name;
+            this.implementor = implementor;
         }
 
         public Descriptor(Parcel in) {
@@ -135,7 +148,7 @@ public class AudioEffect {
         }
 
         public int hashCode() {
-            return Objects.hash(new Object[]{this.type, this.uuid, this.connectMode, this.name, this.implementor});
+            return Objects.hash(this.type, this.uuid, this.connectMode, this.name, this.implementor);
         }
 
         public void writeToParcel(Parcel dest) {
@@ -154,16 +167,16 @@ public class AudioEffect {
                 return false;
             }
             Descriptor that = (Descriptor) o;
-            if (!this.type.equals(that.type) || !this.uuid.equals(that.uuid) || !this.connectMode.equals(that.connectMode) || !this.name.equals(that.name) || !this.implementor.equals(that.implementor)) {
-                return false;
+            if (this.type.equals(that.type) && this.uuid.equals(that.uuid) && this.connectMode.equals(that.connectMode) && this.name.equals(that.name) && this.implementor.equals(that.implementor)) {
+                return true;
             }
-            return true;
+            return false;
         }
     }
 
     @UnsupportedAppUsage
     public AudioEffect(UUID type, UUID uuid, int priority, int audioSession) throws IllegalArgumentException, UnsupportedOperationException, RuntimeException {
-        UUID uuid2 = type;
+        this.mState = 0;
         int[] id = new int[1];
         Descriptor[] desc = new Descriptor[1];
         int initResult = native_setup(new WeakReference(this), type.toString(), uuid.toString(), priority, audioSession, id, desc, ActivityThread.currentOpPackageName());
@@ -175,14 +188,14 @@ public class AudioEffect {
             }
             return;
         }
-        Log.e(TAG, "Error code " + initResult + " when initializing AudioEffect.");
+        Log.m70e(TAG, "Error code " + initResult + " when initializing AudioEffect.");
         switch (initResult) {
             case -5:
                 throw new UnsupportedOperationException("Effect library not loaded");
             case -4:
-                throw new IllegalArgumentException("Effect type: " + uuid2 + " not supported.");
+                throw new IllegalArgumentException("Effect type: " + type + " not supported.");
             default:
-                throw new RuntimeException("Cannot initialize effect engine for type: " + uuid2 + " Error: " + initResult);
+                throw new RuntimeException("Cannot initialize effect engine for type: " + type + " Error: " + initResult);
         }
     }
 
@@ -193,8 +206,7 @@ public class AudioEffect {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() {
+    protected void finalize() {
         native_finalize();
     }
 
@@ -235,15 +247,20 @@ public class AudioEffect {
     }
 
     public int setParameter(int param, int value) throws IllegalStateException {
-        return setParameter(intToByteArray(param), intToByteArray(value));
+        byte[] p = intToByteArray(param);
+        byte[] v = intToByteArray(value);
+        return setParameter(p, v);
     }
 
     public int setParameter(int param, short value) throws IllegalStateException {
-        return setParameter(intToByteArray(param), shortToByteArray(value));
+        byte[] p = intToByteArray(param);
+        byte[] v = shortToByteArray(value);
+        return setParameter(p, v);
     }
 
     public int setParameter(int param, byte[] value) throws IllegalStateException {
-        return setParameter(intToByteArray(param), value);
+        byte[] p = intToByteArray(param);
+        return setParameter(p, value);
     }
 
     public int setParameter(int[] param, int[] value) throws IllegalStateException {
@@ -252,11 +269,13 @@ public class AudioEffect {
         }
         byte[] p = intToByteArray(param[0]);
         if (param.length > 1) {
-            p = concatArrays(p, intToByteArray(param[1]));
+            byte[] p2 = intToByteArray(param[1]);
+            p = concatArrays(p, p2);
         }
         byte[] v = intToByteArray(value[0]);
         if (value.length > 1) {
-            v = concatArrays(v, intToByteArray(value[1]));
+            byte[] v2 = intToByteArray(value[1]);
+            v = concatArrays(v, v2);
         }
         return setParameter(p, v);
     }
@@ -268,11 +287,13 @@ public class AudioEffect {
         }
         byte[] p = intToByteArray(param[0]);
         if (param.length > 1) {
-            p = concatArrays(p, intToByteArray(param[1]));
+            byte[] p2 = intToByteArray(param[1]);
+            p = concatArrays(p, p2);
         }
         byte[] v = shortToByteArray(value[0]);
         if (value.length > 1) {
-            v = concatArrays(v, shortToByteArray(value[1]));
+            byte[] v2 = shortToByteArray(value[1]);
+            v = concatArrays(v, v2);
         }
         return setParameter(p, v);
     }
@@ -283,7 +304,8 @@ public class AudioEffect {
         }
         byte[] p = intToByteArray(param[0]);
         if (param.length > 1) {
-            p = concatArrays(p, intToByteArray(param[1]));
+            byte[] p2 = intToByteArray(param[1]);
+            p = concatArrays(p, p2);
         }
         return setParameter(p, value);
     }
@@ -294,7 +316,8 @@ public class AudioEffect {
     }
 
     public int getParameter(int param, byte[] value) throws IllegalStateException {
-        return getParameter(intToByteArray(param), value);
+        byte[] p = intToByteArray(param);
+        return getParameter(p, value);
     }
 
     public int getParameter(int param, int[] value) throws IllegalStateException {
@@ -302,16 +325,16 @@ public class AudioEffect {
             return -4;
         }
         byte[] p = intToByteArray(param);
-        byte[] v = new byte[(value.length * 4)];
+        byte[] v = new byte[value.length * 4];
         int status = getParameter(p, v);
-        if (status != 4 && status != 8) {
-            return -1;
+        if (status == 4 || status == 8) {
+            value[0] = byteArrayToInt(v);
+            if (status == 8) {
+                value[1] = byteArrayToInt(v, 4);
+            }
+            return status / 4;
         }
-        value[0] = byteArrayToInt(v);
-        if (status == 8) {
-            value[1] = byteArrayToInt(v, 4);
-        }
-        return status / 4;
+        return -1;
     }
 
     public int getParameter(int param, short[] value) throws IllegalStateException {
@@ -319,16 +342,16 @@ public class AudioEffect {
             return -4;
         }
         byte[] p = intToByteArray(param);
-        byte[] v = new byte[(value.length * 2)];
+        byte[] v = new byte[value.length * 2];
         int status = getParameter(p, v);
-        if (status != 2 && status != 4) {
-            return -1;
+        if (status == 2 || status == 4) {
+            value[0] = byteArrayToShort(v);
+            if (status == 4) {
+                value[1] = byteArrayToShort(v, 2);
+            }
+            return status / 2;
         }
-        value[0] = byteArrayToShort(v);
-        if (status == 4) {
-            value[1] = byteArrayToShort(v, 2);
-        }
-        return status / 2;
+        return -1;
     }
 
     @UnsupportedAppUsage
@@ -338,18 +361,19 @@ public class AudioEffect {
         }
         byte[] p = intToByteArray(param[0]);
         if (param.length > 1) {
-            p = concatArrays(p, intToByteArray(param[1]));
+            byte[] p2 = intToByteArray(param[1]);
+            p = concatArrays(p, p2);
         }
-        byte[] v = new byte[(value.length * 4)];
+        byte[] v = new byte[value.length * 4];
         int status = getParameter(p, v);
-        if (status != 4 && status != 8) {
-            return -1;
+        if (status == 4 || status == 8) {
+            value[0] = byteArrayToInt(v);
+            if (status == 8) {
+                value[1] = byteArrayToInt(v, 4);
+            }
+            return status / 4;
         }
-        value[0] = byteArrayToInt(v);
-        if (status == 8) {
-            value[1] = byteArrayToInt(v, 4);
-        }
-        return status / 4;
+        return -1;
     }
 
     public int getParameter(int[] param, short[] value) throws IllegalStateException {
@@ -358,18 +382,19 @@ public class AudioEffect {
         }
         byte[] p = intToByteArray(param[0]);
         if (param.length > 1) {
-            p = concatArrays(p, intToByteArray(param[1]));
+            byte[] p2 = intToByteArray(param[1]);
+            p = concatArrays(p, p2);
         }
-        byte[] v = new byte[(value.length * 2)];
+        byte[] v = new byte[value.length * 2];
         int status = getParameter(p, v);
-        if (status != 2 && status != 4) {
-            return -1;
+        if (status == 2 || status == 4) {
+            value[0] = byteArrayToShort(v);
+            if (status == 4) {
+                value[1] = byteArrayToShort(v, 2);
+            }
+            return status / 2;
         }
-        value[0] = byteArrayToShort(v);
-        if (status == 4) {
-            value[1] = byteArrayToShort(v, 2);
-        }
-        return status / 2;
+        return -1;
     }
 
     @UnsupportedAppUsage
@@ -379,7 +404,8 @@ public class AudioEffect {
         }
         byte[] p = intToByteArray(param[0]);
         if (param.length > 1) {
-            p = concatArrays(p, intToByteArray(param[1]));
+            byte[] p2 = intToByteArray(param[1]);
+            p = concatArrays(p, p2);
         }
         return getParameter(p, value);
     }
@@ -433,21 +459,20 @@ public class AudioEffect {
     }
 
     private void createNativeEventHandler() {
-        Looper myLooper = Looper.myLooper();
-        Looper looper = myLooper;
-        if (myLooper != null) {
+        Looper looper = Looper.myLooper();
+        if (looper != null) {
             this.mNativeEventHandler = new NativeEventHandler(this, looper);
             return;
         }
-        Looper mainLooper = Looper.getMainLooper();
-        Looper looper2 = mainLooper;
-        if (mainLooper != null) {
+        Looper looper2 = Looper.getMainLooper();
+        if (looper2 != null) {
             this.mNativeEventHandler = new NativeEventHandler(this, looper2);
         } else {
             this.mNativeEventHandler = null;
         }
     }
 
+    /* loaded from: classes3.dex */
     private class NativeEventHandler extends Handler {
         private AudioEffect mAudioEffect;
 
@@ -456,61 +481,54 @@ public class AudioEffect {
             this.mAudioEffect = ae;
         }
 
+        @Override // android.p007os.Handler
         public void handleMessage(Message msg) {
             OnControlStatusChangeListener controlStatusChangeListener;
             OnEnableStatusChangeListener enableStatusChangeListener;
             OnParameterChangeListener parameterChangeListener;
-            if (this.mAudioEffect != null) {
-                boolean z = true;
-                switch (msg.what) {
-                    case 0:
-                        synchronized (AudioEffect.this.mListenerLock) {
-                            controlStatusChangeListener = this.mAudioEffect.mControlChangeStatusListener;
-                        }
-                        if (controlStatusChangeListener != null) {
-                            AudioEffect audioEffect = this.mAudioEffect;
-                            if (msg.arg1 == 0) {
-                                z = false;
-                            }
-                            controlStatusChangeListener.onControlStatusChange(audioEffect, z);
-                            return;
-                        }
+            if (this.mAudioEffect == null) {
+                return;
+            }
+            switch (msg.what) {
+                case 0:
+                    synchronized (AudioEffect.this.mListenerLock) {
+                        controlStatusChangeListener = this.mAudioEffect.mControlChangeStatusListener;
+                    }
+                    if (controlStatusChangeListener != null) {
+                        controlStatusChangeListener.onControlStatusChange(this.mAudioEffect, msg.arg1 != 0);
                         return;
-                    case 1:
-                        synchronized (AudioEffect.this.mListenerLock) {
-                            enableStatusChangeListener = this.mAudioEffect.mEnableStatusChangeListener;
-                        }
-                        if (enableStatusChangeListener != null) {
-                            AudioEffect audioEffect2 = this.mAudioEffect;
-                            if (msg.arg1 == 0) {
-                                z = false;
-                            }
-                            enableStatusChangeListener.onEnableStatusChange(audioEffect2, z);
-                            return;
-                        }
+                    }
+                    return;
+                case 1:
+                    synchronized (AudioEffect.this.mListenerLock) {
+                        enableStatusChangeListener = this.mAudioEffect.mEnableStatusChangeListener;
+                    }
+                    if (enableStatusChangeListener != null) {
+                        enableStatusChangeListener.onEnableStatusChange(this.mAudioEffect, msg.arg1 != 0);
                         return;
-                    case 2:
-                        synchronized (AudioEffect.this.mListenerLock) {
-                            parameterChangeListener = this.mAudioEffect.mParameterChangeListener;
-                        }
-                        if (parameterChangeListener != null) {
-                            int vOffset = msg.arg1;
-                            byte[] p = (byte[]) msg.obj;
-                            int status = AudioEffect.byteArrayToInt(p, 0);
-                            int psize = AudioEffect.byteArrayToInt(p, 4);
-                            int vsize = AudioEffect.byteArrayToInt(p, 8);
-                            byte[] param = new byte[psize];
-                            byte[] value = new byte[vsize];
-                            System.arraycopy(p, 12, param, 0, psize);
-                            System.arraycopy(p, vOffset, value, 0, vsize);
-                            parameterChangeListener.onParameterChange(this.mAudioEffect, status, param, value);
-                            return;
-                        }
+                    }
+                    return;
+                case 2:
+                    synchronized (AudioEffect.this.mListenerLock) {
+                        parameterChangeListener = this.mAudioEffect.mParameterChangeListener;
+                    }
+                    if (parameterChangeListener != null) {
+                        int vOffset = msg.arg1;
+                        byte[] p = (byte[]) msg.obj;
+                        int status = AudioEffect.byteArrayToInt(p, 0);
+                        int psize = AudioEffect.byteArrayToInt(p, 4);
+                        int vsize = AudioEffect.byteArrayToInt(p, 8);
+                        byte[] param = new byte[psize];
+                        byte[] value = new byte[vsize];
+                        System.arraycopy(p, 12, param, 0, psize);
+                        System.arraycopy(p, vOffset, value, 0, vsize);
+                        parameterChangeListener.onParameterChange(this.mAudioEffect, status, param, value);
                         return;
-                    default:
-                        Log.e(AudioEffect.TAG, "handleMessage() Unknown event type: " + msg.what);
-                        return;
-                }
+                    }
+                    return;
+                default:
+                    Log.m70e(AudioEffect.TAG, "handleMessage() Unknown event type: " + msg.what);
+                    return;
             }
         }
     }
@@ -518,7 +536,8 @@ public class AudioEffect {
     private static void postEventFromNative(Object effect_ref, int what, int arg1, int arg2, Object obj) {
         AudioEffect effect = (AudioEffect) ((WeakReference) effect_ref).get();
         if (effect != null && effect.mNativeEventHandler != null) {
-            effect.mNativeEventHandler.sendMessage(effect.mNativeEventHandler.obtainMessage(what, arg1, arg2, obj));
+            Message m = effect.mNativeEventHandler.obtainMessage(what, arg1, arg2, obj);
+            effect.mNativeEventHandler.sendMessage(m);
         }
     }
 

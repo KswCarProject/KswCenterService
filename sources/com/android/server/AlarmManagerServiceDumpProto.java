@@ -1,5 +1,6 @@
 package com.android.server;
 
+/* loaded from: classes4.dex */
 public final class AlarmManagerServiceDumpProto {
     public static final long ALARM_STATS = 2246267895847L;
     public static final long ALLOW_WHILE_IDLE_DISPATCHES = 2246267895848L;
@@ -43,6 +44,7 @@ public final class AlarmManagerServiceDumpProto {
     public static final long TOTAL_DELAY_TIME_MS = 1112396529690L;
     public static final long USE_ALLOW_WHILE_IDLE_SHORT_TIME = 2220498092067L;
 
+    /* loaded from: classes4.dex */
     public final class LastAllowWhileIdleDispatch {
         public static final long NEXT_ALLOWED_MS = 1112396529667L;
         public static final long TIME_MS = 1112396529666L;
@@ -52,6 +54,7 @@ public final class AlarmManagerServiceDumpProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public final class TopAlarm {
         public static final long FILTER = 1146756268035L;
         public static final long PACKAGE_NAME = 1138166333442L;
@@ -61,6 +64,7 @@ public final class AlarmManagerServiceDumpProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public final class AlarmStat {
         public static final long BROADCAST = 1146756268033L;
         public static final long FILTERS = 2246267895810L;

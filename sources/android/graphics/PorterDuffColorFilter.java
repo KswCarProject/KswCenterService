@@ -3,6 +3,7 @@ package android.graphics;
 import android.annotation.UnsupportedAppUsage;
 import android.graphics.PorterDuff;
 
+/* loaded from: classes.dex */
 public class PorterDuffColorFilter extends ColorFilter {
     private int mColor;
     private PorterDuff.Mode mMode;
@@ -24,8 +25,8 @@ public class PorterDuffColorFilter extends ColorFilter {
         return this.mMode;
     }
 
-    /* access modifiers changed from: package-private */
-    public long createNativeInstance() {
+    @Override // android.graphics.ColorFilter
+    long createNativeInstance() {
         return native_CreateBlendModeFilter(this.mColor, this.mMode.nativeInt);
     }
 

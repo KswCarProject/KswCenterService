@@ -1,13 +1,14 @@
 package android.webkit;
 
 import android.annotation.UnsupportedAppUsage;
-import android.content.pm.PackageInfo;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.content.p002pm.PackageInfo;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes4.dex */
 public interface IWebViewUpdateService extends IInterface {
     String changeProviderAndSetting(String str) throws RemoteException;
 
@@ -29,46 +30,58 @@ public interface IWebViewUpdateService extends IInterface {
 
     WebViewProviderResponse waitForAndGetProvider() throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IWebViewUpdateService {
+        @Override // android.webkit.IWebViewUpdateService
         public void notifyRelroCreationCompleted() throws RemoteException {
         }
 
+        @Override // android.webkit.IWebViewUpdateService
         public WebViewProviderResponse waitForAndGetProvider() throws RemoteException {
             return null;
         }
 
+        @Override // android.webkit.IWebViewUpdateService
         public String changeProviderAndSetting(String newProvider) throws RemoteException {
             return null;
         }
 
+        @Override // android.webkit.IWebViewUpdateService
         public WebViewProviderInfo[] getValidWebViewPackages() throws RemoteException {
             return null;
         }
 
+        @Override // android.webkit.IWebViewUpdateService
         public WebViewProviderInfo[] getAllWebViewPackages() throws RemoteException {
             return null;
         }
 
+        @Override // android.webkit.IWebViewUpdateService
         public String getCurrentWebViewPackageName() throws RemoteException {
             return null;
         }
 
+        @Override // android.webkit.IWebViewUpdateService
         public PackageInfo getCurrentWebViewPackage() throws RemoteException {
             return null;
         }
 
+        @Override // android.webkit.IWebViewUpdateService
         public boolean isMultiProcessEnabled() throws RemoteException {
             return false;
         }
 
+        @Override // android.webkit.IWebViewUpdateService
         public void enableMultiProcess(boolean enable) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IWebViewUpdateService {
         private static final String DESCRIPTOR = "android.webkit.IWebViewUpdateService";
         static final int TRANSACTION_changeProviderAndSetting = 3;
@@ -90,12 +103,13 @@ public interface IWebViewUpdateService extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IWebViewUpdateService)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IWebViewUpdateService)) {
+                return (IWebViewUpdateService) iin;
             }
-            return (IWebViewUpdateService) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -125,88 +139,88 @@ public interface IWebViewUpdateService extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                boolean _arg0 = false;
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        notifyRelroCreationCompleted();
-                        reply.writeNoException();
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        WebViewProviderResponse _result = waitForAndGetProvider();
-                        reply.writeNoException();
-                        if (_result != null) {
-                            reply.writeInt(1);
-                            _result.writeToParcel(reply, 1);
-                        } else {
-                            reply.writeInt(0);
-                        }
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        String _result2 = changeProviderAndSetting(data.readString());
-                        reply.writeNoException();
-                        reply.writeString(_result2);
-                        return true;
-                    case 4:
-                        data.enforceInterface(DESCRIPTOR);
-                        WebViewProviderInfo[] _result3 = getValidWebViewPackages();
-                        reply.writeNoException();
-                        reply.writeTypedArray(_result3, 1);
-                        return true;
-                    case 5:
-                        data.enforceInterface(DESCRIPTOR);
-                        WebViewProviderInfo[] _result4 = getAllWebViewPackages();
-                        reply.writeNoException();
-                        reply.writeTypedArray(_result4, 1);
-                        return true;
-                    case 6:
-                        data.enforceInterface(DESCRIPTOR);
-                        String _result5 = getCurrentWebViewPackageName();
-                        reply.writeNoException();
-                        reply.writeString(_result5);
-                        return true;
-                    case 7:
-                        data.enforceInterface(DESCRIPTOR);
-                        PackageInfo _result6 = getCurrentWebViewPackage();
-                        reply.writeNoException();
-                        if (_result6 != null) {
-                            reply.writeInt(1);
-                            _result6.writeToParcel(reply, 1);
-                        } else {
-                            reply.writeInt(0);
-                        }
-                        return true;
-                    case 8:
-                        data.enforceInterface(DESCRIPTOR);
-                        boolean _result7 = isMultiProcessEnabled();
-                        reply.writeNoException();
-                        reply.writeInt(_result7);
-                        return true;
-                    case 9:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = true;
-                        }
-                        enableMultiProcess(_arg0);
-                        reply.writeNoException();
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    notifyRelroCreationCompleted();
+                    reply.writeNoException();
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    WebViewProviderResponse _result = waitForAndGetProvider();
+                    reply.writeNoException();
+                    if (_result != null) {
+                        reply.writeInt(1);
+                        _result.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0 = data.readString();
+                    String _result2 = changeProviderAndSetting(_arg0);
+                    reply.writeNoException();
+                    reply.writeString(_result2);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    WebViewProviderInfo[] _result3 = getValidWebViewPackages();
+                    reply.writeNoException();
+                    reply.writeTypedArray(_result3, 1);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    WebViewProviderInfo[] _result4 = getAllWebViewPackages();
+                    reply.writeNoException();
+                    reply.writeTypedArray(_result4, 1);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _result5 = getCurrentWebViewPackageName();
+                    reply.writeNoException();
+                    reply.writeString(_result5);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    PackageInfo _result6 = getCurrentWebViewPackage();
+                    reply.writeNoException();
+                    if (_result6 != null) {
+                        reply.writeInt(1);
+                        _result6.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isMultiProcessEnabled = isMultiProcessEnabled();
+                    reply.writeNoException();
+                    reply.writeInt(isMultiProcessEnabled ? 1 : 0);
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean _arg02 = data.readInt() != 0;
+                    enableMultiProcess(_arg02);
+                    reply.writeNoException();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IWebViewUpdateService {
             public static IWebViewUpdateService sDefaultImpl;
             private IBinder mRemote;
@@ -215,6 +229,7 @@ public interface IWebViewUpdateService extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -223,31 +238,33 @@ public interface IWebViewUpdateService extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.webkit.IWebViewUpdateService
             public void notifyRelroCreationCompleted() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(1, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().notifyRelroCreationCompleted();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().notifyRelroCreationCompleted();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.webkit.IWebViewUpdateService
             public WebViewProviderResponse waitForAndGetProvider() throws RemoteException {
                 WebViewProviderResponse _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(2, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().waitForAndGetProvider();
                     }
                     _reply.readException();
@@ -256,29 +273,26 @@ public interface IWebViewUpdateService extends IInterface {
                     } else {
                         _result = null;
                     }
-                    WebViewProviderResponse _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.webkit.IWebViewUpdateService
             public String changeProviderAndSetting(String newProvider) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(newProvider);
-                    if (!this.mRemote.transact(3, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().changeProviderAndSetting(newProvider);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -286,18 +300,18 @@ public interface IWebViewUpdateService extends IInterface {
                 }
             }
 
+            @Override // android.webkit.IWebViewUpdateService
             public WebViewProviderInfo[] getValidWebViewPackages() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(4, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getValidWebViewPackages();
                     }
                     _reply.readException();
                     WebViewProviderInfo[] _result = (WebViewProviderInfo[]) _reply.createTypedArray(WebViewProviderInfo.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -305,18 +319,18 @@ public interface IWebViewUpdateService extends IInterface {
                 }
             }
 
+            @Override // android.webkit.IWebViewUpdateService
             public WebViewProviderInfo[] getAllWebViewPackages() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(5, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAllWebViewPackages();
                     }
                     _reply.readException();
                     WebViewProviderInfo[] _result = (WebViewProviderInfo[]) _reply.createTypedArray(WebViewProviderInfo.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -324,18 +338,18 @@ public interface IWebViewUpdateService extends IInterface {
                 }
             }
 
+            @Override // android.webkit.IWebViewUpdateService
             public String getCurrentWebViewPackageName() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(6, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCurrentWebViewPackageName();
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -343,13 +357,15 @@ public interface IWebViewUpdateService extends IInterface {
                 }
             }
 
+            @Override // android.webkit.IWebViewUpdateService
             public PackageInfo getCurrentWebViewPackage() throws RemoteException {
                 PackageInfo _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(7, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCurrentWebViewPackage();
                     }
                     _reply.readException();
@@ -358,52 +374,45 @@ public interface IWebViewUpdateService extends IInterface {
                     } else {
                         _result = null;
                     }
-                    PackageInfo _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.webkit.IWebViewUpdateService
             public boolean isMultiProcessEnabled() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(8, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isMultiProcessEnabled();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.webkit.IWebViewUpdateService
             public void enableMultiProcess(boolean enable) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(enable);
-                    if (this.mRemote.transact(9, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(enable ? 1 : 0);
+                    boolean _status = this.mRemote.transact(9, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().enableMultiProcess(enable);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().enableMultiProcess(enable);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -412,11 +421,11 @@ public interface IWebViewUpdateService extends IInterface {
         }
 
         public static boolean setDefaultImpl(IWebViewUpdateService impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IWebViewUpdateService getDefaultImpl() {

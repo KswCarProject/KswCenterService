@@ -1,13 +1,14 @@
 package android.webkit;
 
 import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.UserInfo;
-import android.os.UserManager;
+import android.content.p002pm.PackageInfo;
+import android.content.p002pm.PackageManager;
+import android.content.p002pm.UserInfo;
+import android.p007os.UserManager;
 import java.util.ArrayList;
 import java.util.List;
 
+/* loaded from: classes4.dex */
 public class UserPackage {
     public static final int MINIMUM_SUPPORTED_SDK = 29;
     private final PackageInfo mPackageInfo;
@@ -24,7 +25,7 @@ public class UserPackage {
         for (UserInfo user : users) {
             PackageInfo packageInfo = null;
             try {
-                packageInfo = context.getPackageManager().getPackageInfoAsUser(packageName, packageFlags, user.id);
+                packageInfo = context.getPackageManager().getPackageInfoAsUser(packageName, packageFlags, user.f30id);
             } catch (PackageManager.NameNotFoundException e) {
             }
             userPackages.add(new UserPackage(user, packageInfo));
@@ -40,10 +41,7 @@ public class UserPackage {
     }
 
     public boolean isInstalledPackage() {
-        if (this.mPackageInfo == null || (this.mPackageInfo.applicationInfo.flags & 8388608) == 0 || (this.mPackageInfo.applicationInfo.privateFlags & 1) != 0) {
-            return false;
-        }
-        return true;
+        return (this.mPackageInfo == null || (this.mPackageInfo.applicationInfo.flags & 8388608) == 0 || (this.mPackageInfo.applicationInfo.privateFlags & 1) != 0) ? false : true;
     }
 
     public static boolean hasCorrectTargetSdkVersion(PackageInfo packageInfo) {
@@ -59,6 +57,7 @@ public class UserPackage {
     }
 
     private static List<UserInfo> getAllUsers(Context context) {
-        return ((UserManager) context.getSystemService("user")).getUsers(false);
+        UserManager userManager = (UserManager) context.getSystemService("user");
+        return userManager.getUsers(false);
     }
 }

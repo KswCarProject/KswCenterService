@@ -1,5 +1,6 @@
 package com.android.internal.telephony;
 
+/* loaded from: classes4.dex */
 public class DctConstants {
     public static final String APN_TYPE_KEY = "apnType";
     public static final int BASE = 270336;
@@ -47,6 +48,7 @@ public class DctConstants {
     public static final int INVALID = -1;
     public static final String PROVISIONING_URL_KEY = "provisioningUrl";
 
+    /* loaded from: classes4.dex */
     public enum Activity {
         NONE,
         DATAIN,
@@ -55,6 +57,7 @@ public class DctConstants {
         DORMANT
     }
 
+    /* loaded from: classes4.dex */
     public enum State {
         IDLE,
         CONNECTING,

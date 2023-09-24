@@ -3,6 +3,7 @@ package android.hardware.radio.V1_0;
 import android.database.sqlite.SQLiteGlobal;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class TtyMode {
     public static final int FULL = 1;
     public static final int HCO = 2;

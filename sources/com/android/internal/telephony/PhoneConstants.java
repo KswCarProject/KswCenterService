@@ -1,25 +1,14 @@
 package com.android.internal.telephony;
 
+/* loaded from: classes4.dex */
 public class PhoneConstants {
     public static final String ACTION_SUBSCRIPTION_PHONE_STATE_CHANGED = "android.intent.action.SUBSCRIPTION_PHONE_STATE";
     public static final int APN_ALREADY_ACTIVE = 0;
     public static final int APN_ALREADY_INACTIVE = 4;
     public static final int APN_REQUEST_FAILED = 3;
     public static final int APN_REQUEST_STARTED = 1;
-    public static final String[] APN_TYPES = {APN_TYPE_DEFAULT, APN_TYPE_MMS, APN_TYPE_SUPL, APN_TYPE_DUN, APN_TYPE_HIPRI, APN_TYPE_FOTA, APN_TYPE_IMS, APN_TYPE_CBS, APN_TYPE_IA, APN_TYPE_EMERGENCY, APN_TYPE_MCX};
     public static final String APN_TYPE_ALL = "*";
-    public static final String APN_TYPE_CBS = "cbs";
-    public static final String APN_TYPE_DEFAULT = "default";
-    public static final String APN_TYPE_DUN = "dun";
-    public static final String APN_TYPE_EMERGENCY = "emergency";
-    public static final String APN_TYPE_FOTA = "fota";
-    public static final String APN_TYPE_HIPRI = "hipri";
-    public static final String APN_TYPE_IA = "ia";
-    public static final String APN_TYPE_IMS = "ims";
-    public static final String APN_TYPE_MCX = "mcx";
-    public static final String APN_TYPE_MMS = "mms";
     public static final int APN_TYPE_NOT_AVAILABLE = 2;
-    public static final String APN_TYPE_SUPL = "supl";
     public static final int APPTYPE_CSIM = 4;
     public static final int APPTYPE_ISIM = 5;
     public static final int APPTYPE_RUIM = 3;
@@ -86,13 +75,27 @@ public class PhoneConstants {
     public static final String SUBSCRIPTION_KEY = "subscription";
     public static final String SUB_SETTING = "subSettings";
     public static final int UNSET_MTU = 0;
+    public static final String APN_TYPE_DEFAULT = "default";
+    public static final String APN_TYPE_MMS = "mms";
+    public static final String APN_TYPE_SUPL = "supl";
+    public static final String APN_TYPE_DUN = "dun";
+    public static final String APN_TYPE_HIPRI = "hipri";
+    public static final String APN_TYPE_FOTA = "fota";
+    public static final String APN_TYPE_IMS = "ims";
+    public static final String APN_TYPE_CBS = "cbs";
+    public static final String APN_TYPE_IA = "ia";
+    public static final String APN_TYPE_EMERGENCY = "emergency";
+    public static final String APN_TYPE_MCX = "mcx";
+    public static final String[] APN_TYPES = {APN_TYPE_DEFAULT, APN_TYPE_MMS, APN_TYPE_SUPL, APN_TYPE_DUN, APN_TYPE_HIPRI, APN_TYPE_FOTA, APN_TYPE_IMS, APN_TYPE_CBS, APN_TYPE_IA, APN_TYPE_EMERGENCY, APN_TYPE_MCX};
 
+    /* loaded from: classes4.dex */
     public enum CardUnavailableReason {
         REASON_CARD_REMOVED,
         REASON_RADIO_UNAVAILABLE,
         REASON_SIM_REFRESH_RESET
     }
 
+    /* loaded from: classes4.dex */
     public enum DataState {
         CONNECTED,
         CONNECTING,
@@ -100,6 +103,7 @@ public class PhoneConstants {
         SUSPENDED
     }
 
+    /* loaded from: classes4.dex */
     public enum State {
         IDLE,
         RINGING,

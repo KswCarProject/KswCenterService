@@ -16,6 +16,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+/* loaded from: classes5.dex */
 class RBBITableBuilder {
     static final /* synthetic */ boolean $assertionsDisabled = false;
     private List<RBBIStateDescriptor> fDStates = new ArrayList();
@@ -23,17 +24,18 @@ class RBBITableBuilder {
     private int fRootIx;
     private List<short[]> fSafeTable;
 
+    /* loaded from: classes5.dex */
     static class RBBIStateDescriptor {
         int fAccepting;
         int[] fDtran;
         int fLookAhead;
         boolean fMarked;
-        Set<RBBINode> fPositions = new HashSet();
-        SortedSet<Integer> fTagVals = new TreeSet();
         int fTagsIdx;
+        SortedSet<Integer> fTagVals = new TreeSet();
+        Set<RBBINode> fPositions = new HashSet();
 
         RBBIStateDescriptor(int maxInputSymbol) {
-            this.fDtran = new int[(maxInputSymbol + 1)];
+            this.fDtran = new int[maxInputSymbol + 1];
         }
     }
 
@@ -42,164 +44,163 @@ class RBBITableBuilder {
         this.fRB = rb;
     }
 
-    /* access modifiers changed from: package-private */
-    public void buildForwardTable() {
-        if (this.fRB.fTreeRoots[this.fRootIx] != null) {
-            this.fRB.fTreeRoots[this.fRootIx] = this.fRB.fTreeRoots[this.fRootIx].flattenVariables();
-            if (this.fRB.fDebugEnv != null && this.fRB.fDebugEnv.indexOf("ftree") >= 0) {
-                System.out.println("Parse tree after flattening variable references.");
-                this.fRB.fTreeRoots[this.fRootIx].printTree(true);
-            }
-            if (this.fRB.fSetBuilder.sawBOF()) {
-                RBBINode bofTop = new RBBINode(8);
-                RBBINode bofLeaf = new RBBINode(3);
-                bofTop.fLeftChild = bofLeaf;
-                bofTop.fRightChild = this.fRB.fTreeRoots[this.fRootIx];
-                bofLeaf.fParent = bofTop;
-                bofLeaf.fVal = 2;
-                this.fRB.fTreeRoots[this.fRootIx] = bofTop;
-            }
-            RBBINode cn = new RBBINode(8);
-            cn.fLeftChild = this.fRB.fTreeRoots[this.fRootIx];
-            this.fRB.fTreeRoots[this.fRootIx].fParent = cn;
-            cn.fRightChild = new RBBINode(6);
-            cn.fRightChild.fParent = cn;
-            this.fRB.fTreeRoots[this.fRootIx] = cn;
-            this.fRB.fTreeRoots[this.fRootIx].flattenSets();
-            if (this.fRB.fDebugEnv != null && this.fRB.fDebugEnv.indexOf("stree") >= 0) {
-                System.out.println("Parse tree after flattening Unicode Set references.");
-                this.fRB.fTreeRoots[this.fRootIx].printTree(true);
-            }
-            calcNullable(this.fRB.fTreeRoots[this.fRootIx]);
-            calcFirstPos(this.fRB.fTreeRoots[this.fRootIx]);
-            calcLastPos(this.fRB.fTreeRoots[this.fRootIx]);
-            calcFollowPos(this.fRB.fTreeRoots[this.fRootIx]);
-            if (this.fRB.fDebugEnv != null && this.fRB.fDebugEnv.indexOf("pos") >= 0) {
-                System.out.print("\n");
-                printPosSets(this.fRB.fTreeRoots[this.fRootIx]);
-            }
-            if (this.fRB.fChainRules) {
-                calcChainedFollowPos(this.fRB.fTreeRoots[this.fRootIx]);
-            }
-            if (this.fRB.fSetBuilder.sawBOF()) {
-                bofFixup();
-            }
-            buildStateTable();
-            flagAcceptingStates();
-            flagLookAheadStates();
-            flagTaggedStates();
-            mergeRuleStatusVals();
+    void buildForwardTable() {
+        if (this.fRB.fTreeRoots[this.fRootIx] == null) {
+            return;
         }
+        this.fRB.fTreeRoots[this.fRootIx] = this.fRB.fTreeRoots[this.fRootIx].flattenVariables();
+        if (this.fRB.fDebugEnv != null && this.fRB.fDebugEnv.indexOf("ftree") >= 0) {
+            System.out.println("Parse tree after flattening variable references.");
+            this.fRB.fTreeRoots[this.fRootIx].printTree(true);
+        }
+        if (this.fRB.fSetBuilder.sawBOF()) {
+            RBBINode bofTop = new RBBINode(8);
+            RBBINode bofLeaf = new RBBINode(3);
+            bofTop.fLeftChild = bofLeaf;
+            bofTop.fRightChild = this.fRB.fTreeRoots[this.fRootIx];
+            bofLeaf.fParent = bofTop;
+            bofLeaf.fVal = 2;
+            this.fRB.fTreeRoots[this.fRootIx] = bofTop;
+        }
+        RBBINode cn = new RBBINode(8);
+        cn.fLeftChild = this.fRB.fTreeRoots[this.fRootIx];
+        this.fRB.fTreeRoots[this.fRootIx].fParent = cn;
+        cn.fRightChild = new RBBINode(6);
+        cn.fRightChild.fParent = cn;
+        this.fRB.fTreeRoots[this.fRootIx] = cn;
+        this.fRB.fTreeRoots[this.fRootIx].flattenSets();
+        if (this.fRB.fDebugEnv != null && this.fRB.fDebugEnv.indexOf("stree") >= 0) {
+            System.out.println("Parse tree after flattening Unicode Set references.");
+            this.fRB.fTreeRoots[this.fRootIx].printTree(true);
+        }
+        calcNullable(this.fRB.fTreeRoots[this.fRootIx]);
+        calcFirstPos(this.fRB.fTreeRoots[this.fRootIx]);
+        calcLastPos(this.fRB.fTreeRoots[this.fRootIx]);
+        calcFollowPos(this.fRB.fTreeRoots[this.fRootIx]);
+        if (this.fRB.fDebugEnv != null && this.fRB.fDebugEnv.indexOf("pos") >= 0) {
+            System.out.print("\n");
+            printPosSets(this.fRB.fTreeRoots[this.fRootIx]);
+        }
+        if (this.fRB.fChainRules) {
+            calcChainedFollowPos(this.fRB.fTreeRoots[this.fRootIx]);
+        }
+        if (this.fRB.fSetBuilder.sawBOF()) {
+            bofFixup();
+        }
+        buildStateTable();
+        flagAcceptingStates();
+        flagLookAheadStates();
+        flagTaggedStates();
+        mergeRuleStatusVals();
     }
 
-    /* access modifiers changed from: package-private */
-    public void calcNullable(RBBINode n) {
-        if (n != null) {
-            boolean z = false;
-            if (n.fType == 0 || n.fType == 6) {
-                n.fNullable = false;
-            } else if (n.fType == 4 || n.fType == 5) {
+    void calcNullable(RBBINode n) {
+        if (n == null) {
+            return;
+        }
+        boolean z = false;
+        if (n.fType == 0 || n.fType == 6) {
+            n.fNullable = false;
+        } else if (n.fType == 4 || n.fType == 5) {
+            n.fNullable = true;
+        } else {
+            calcNullable(n.fLeftChild);
+            calcNullable(n.fRightChild);
+            if (n.fType == 9) {
+                if (n.fLeftChild.fNullable || n.fRightChild.fNullable) {
+                    z = true;
+                }
+                n.fNullable = z;
+            } else if (n.fType == 8) {
+                if (n.fLeftChild.fNullable && n.fRightChild.fNullable) {
+                    z = true;
+                }
+                n.fNullable = z;
+            } else if (n.fType == 10 || n.fType == 12) {
                 n.fNullable = true;
             } else {
-                calcNullable(n.fLeftChild);
-                calcNullable(n.fRightChild);
-                if (n.fType == 9) {
-                    if (n.fLeftChild.fNullable || n.fRightChild.fNullable) {
-                        z = true;
-                    }
-                    n.fNullable = z;
-                } else if (n.fType == 8) {
-                    if (n.fLeftChild.fNullable && n.fRightChild.fNullable) {
-                        z = true;
-                    }
-                    n.fNullable = z;
-                } else if (n.fType == 10 || n.fType == 12) {
-                    n.fNullable = true;
-                } else {
-                    n.fNullable = false;
-                }
+                n.fNullable = false;
             }
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void calcFirstPos(RBBINode n) {
-        if (n != null) {
-            if (n.fType == 3 || n.fType == 6 || n.fType == 4 || n.fType == 5) {
-                n.fFirstPosSet.add(n);
-                return;
-            }
-            calcFirstPos(n.fLeftChild);
-            calcFirstPos(n.fRightChild);
-            if (n.fType == 9) {
-                n.fFirstPosSet.addAll(n.fLeftChild.fFirstPosSet);
+    void calcFirstPos(RBBINode n) {
+        if (n == null) {
+            return;
+        }
+        if (n.fType == 3 || n.fType == 6 || n.fType == 4 || n.fType == 5) {
+            n.fFirstPosSet.add(n);
+            return;
+        }
+        calcFirstPos(n.fLeftChild);
+        calcFirstPos(n.fRightChild);
+        if (n.fType == 9) {
+            n.fFirstPosSet.addAll(n.fLeftChild.fFirstPosSet);
+            n.fFirstPosSet.addAll(n.fRightChild.fFirstPosSet);
+        } else if (n.fType == 8) {
+            n.fFirstPosSet.addAll(n.fLeftChild.fFirstPosSet);
+            if (n.fLeftChild.fNullable) {
                 n.fFirstPosSet.addAll(n.fRightChild.fFirstPosSet);
-            } else if (n.fType == 8) {
-                n.fFirstPosSet.addAll(n.fLeftChild.fFirstPosSet);
-                if (n.fLeftChild.fNullable) {
-                    n.fFirstPosSet.addAll(n.fRightChild.fFirstPosSet);
-                }
-            } else if (n.fType == 10 || n.fType == 12 || n.fType == 11) {
-                n.fFirstPosSet.addAll(n.fLeftChild.fFirstPosSet);
             }
+        } else if (n.fType == 10 || n.fType == 12 || n.fType == 11) {
+            n.fFirstPosSet.addAll(n.fLeftChild.fFirstPosSet);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void calcLastPos(RBBINode n) {
-        if (n != null) {
-            if (n.fType == 3 || n.fType == 6 || n.fType == 4 || n.fType == 5) {
-                n.fLastPosSet.add(n);
-                return;
-            }
-            calcLastPos(n.fLeftChild);
-            calcLastPos(n.fRightChild);
-            if (n.fType == 9) {
-                n.fLastPosSet.addAll(n.fLeftChild.fLastPosSet);
-                n.fLastPosSet.addAll(n.fRightChild.fLastPosSet);
-            } else if (n.fType == 8) {
-                n.fLastPosSet.addAll(n.fRightChild.fLastPosSet);
-                if (n.fRightChild.fNullable) {
-                    n.fLastPosSet.addAll(n.fLeftChild.fLastPosSet);
-                }
-            } else if (n.fType == 10 || n.fType == 12 || n.fType == 11) {
+    void calcLastPos(RBBINode n) {
+        if (n == null) {
+            return;
+        }
+        if (n.fType == 3 || n.fType == 6 || n.fType == 4 || n.fType == 5) {
+            n.fLastPosSet.add(n);
+            return;
+        }
+        calcLastPos(n.fLeftChild);
+        calcLastPos(n.fRightChild);
+        if (n.fType == 9) {
+            n.fLastPosSet.addAll(n.fLeftChild.fLastPosSet);
+            n.fLastPosSet.addAll(n.fRightChild.fLastPosSet);
+        } else if (n.fType == 8) {
+            n.fLastPosSet.addAll(n.fRightChild.fLastPosSet);
+            if (n.fRightChild.fNullable) {
                 n.fLastPosSet.addAll(n.fLeftChild.fLastPosSet);
             }
+        } else if (n.fType == 10 || n.fType == 12 || n.fType == 11) {
+            n.fLastPosSet.addAll(n.fLeftChild.fLastPosSet);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void calcFollowPos(RBBINode n) {
-        if (n != null && n.fType != 3 && n.fType != 6) {
-            calcFollowPos(n.fLeftChild);
-            calcFollowPos(n.fRightChild);
-            if (n.fType == 8) {
-                for (RBBINode i : n.fLeftChild.fLastPosSet) {
-                    i.fFollowPos.addAll(n.fRightChild.fFirstPosSet);
-                }
+    void calcFollowPos(RBBINode n) {
+        if (n == null || n.fType == 3 || n.fType == 6) {
+            return;
+        }
+        calcFollowPos(n.fLeftChild);
+        calcFollowPos(n.fRightChild);
+        if (n.fType == 8) {
+            for (RBBINode i : n.fLeftChild.fLastPosSet) {
+                i.fFollowPos.addAll(n.fRightChild.fFirstPosSet);
             }
-            if (n.fType == 10 || n.fType == 11) {
-                for (RBBINode i2 : n.fLastPosSet) {
-                    i2.fFollowPos.addAll(n.fFirstPosSet);
-                }
+        }
+        if (n.fType == 10 || n.fType == 11) {
+            for (RBBINode i2 : n.fLastPosSet) {
+                i2.fFollowPos.addAll(n.fFirstPosSet);
             }
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void addRuleRootNodes(List<RBBINode> dest, RBBINode node) {
-        if (node != null) {
-            if (node.fRuleRoot) {
-                dest.add(node);
-                return;
-            }
-            addRuleRootNodes(dest, node.fLeftChild);
-            addRuleRootNodes(dest, node.fRightChild);
+    void addRuleRootNodes(List<RBBINode> dest, RBBINode node) {
+        if (node == null) {
+            return;
         }
+        if (node.fRuleRoot) {
+            dest.add(node);
+            return;
+        }
+        addRuleRootNodes(dest, node.fLeftChild);
+        addRuleRootNodes(dest, node.fRightChild);
     }
 
-    /* access modifiers changed from: package-private */
-    public void calcChainedFollowPos(RBBINode tree) {
+    void calcChainedFollowPos(RBBINode tree) {
         int c;
         List<RBBINode> endMarkerNodes = new ArrayList<>();
         List<RBBINode> leafNodes = new ArrayList<>();
@@ -220,12 +221,18 @@ class RBBITableBuilder {
                 if (!it.hasNext()) {
                     break;
                 }
-                if (tNode.fFollowPos.contains(it.next())) {
+                RBBINode endMarkerNode = it.next();
+                if (tNode.fFollowPos.contains(endMarkerNode)) {
                     endNode = tNode;
                     break;
                 }
             }
-            if (endNode != null && (!this.fRB.fLBCMNoChain || (c = this.fRB.fSetBuilder.getFirstChar(endNode.fVal)) == -1 || UCharacter.getIntPropertyValue(c, 4104) != 9)) {
+            if (endNode != null) {
+                if (this.fRB.fLBCMNoChain && (c = this.fRB.fSetBuilder.getFirstChar(endNode.fVal)) != -1) {
+                    int cLBProp = UCharacter.getIntPropertyValue(c, 4104);
+                    if (cLBProp == 9) {
+                    }
+                }
                 for (RBBINode startNode : matchStartNodes) {
                     if (startNode.fType == 3 && endNode.fVal == startNode.fVal) {
                         endNode.fFollowPos.addAll(startNode.fFollowPos);
@@ -235,26 +242,22 @@ class RBBITableBuilder {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void bofFixup() {
+    void bofFixup() {
         RBBINode bofNode = this.fRB.fTreeRoots[this.fRootIx].fLeftChild.fLeftChild;
-        boolean z = false;
         Assert.assrt(bofNode.fType == 3);
-        if (bofNode.fVal == 2) {
-            z = true;
-        }
-        Assert.assrt(z);
-        for (RBBINode startNode : this.fRB.fTreeRoots[this.fRootIx].fLeftChild.fRightChild.fFirstPosSet) {
+        Assert.assrt(bofNode.fVal == 2);
+        Set<RBBINode> matchStartNodes = this.fRB.fTreeRoots[this.fRootIx].fLeftChild.fRightChild.fFirstPosSet;
+        for (RBBINode startNode : matchStartNodes) {
             if (startNode.fType == 3 && startNode.fVal == bofNode.fVal) {
                 bofNode.fFollowPos.addAll(startNode.fFollowPos);
             }
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void buildStateTable() {
+    void buildStateTable() {
         int lastInputSymbol = this.fRB.fSetBuilder.getNumCharCategories() - 1;
-        this.fDStates.add(new RBBIStateDescriptor(lastInputSymbol));
+        RBBIStateDescriptor failState = new RBBIStateDescriptor(lastInputSymbol);
+        this.fDStates.add(failState);
         RBBIStateDescriptor initialState = new RBBIStateDescriptor(lastInputSymbol);
         initialState.fPositions.addAll(this.fRB.fTreeRoots[this.fRootIx].fFirstPosSet);
         this.fDStates.add(initialState);
@@ -266,11 +269,12 @@ class RBBITableBuilder {
                     break;
                 }
                 RBBIStateDescriptor temp = this.fDStates.get(tx);
-                if (!temp.fMarked) {
+                if (temp.fMarked) {
+                    tx++;
+                } else {
                     T = temp;
                     break;
                 }
-                tx++;
             }
             if (T != null) {
                 T.fMarked = true;
@@ -279,7 +283,7 @@ class RBBITableBuilder {
                     for (RBBINode p : T.fPositions) {
                         if (p.fType == 3 && p.fVal == a) {
                             if (U == null) {
-                                U = new HashSet<>();
+                                U = new HashSet();
                             }
                             U.addAll(p.fFollowPos);
                         }
@@ -295,13 +299,14 @@ class RBBITableBuilder {
                                 break;
                             }
                             RBBIStateDescriptor temp2 = this.fDStates.get(ix2);
-                            if (U.equals(temp2.fPositions)) {
+                            if (!U.equals(temp2.fPositions)) {
+                                ix = ix2 + 1;
+                            } else {
                                 U = temp2.fPositions;
                                 ux = ix2;
                                 UinDstates = true;
                                 break;
                             }
-                            ix = ix2 + 1;
                         }
                         if (!UinDstates) {
                             RBBIStateDescriptor newState = new RBBIStateDescriptor(lastInputSymbol);
@@ -318,8 +323,7 @@ class RBBITableBuilder {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void flagAcceptingStates() {
+    void flagAcceptingStates() {
         List<RBBINode> endMarkerNodes = new ArrayList<>();
         this.fRB.fTreeRoots[this.fRootIx].findNodes(endMarkerNodes, 6);
         for (int i = 0; i < endMarkerNodes.size(); i++) {
@@ -344,8 +348,7 @@ class RBBITableBuilder {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void flagLookAheadStates() {
+    void flagLookAheadStates() {
         List<RBBINode> lookAheadNodes = new ArrayList<>();
         this.fRB.fTreeRoots[this.fRootIx].findNodes(lookAheadNodes, 4);
         for (int i = 0; i < lookAheadNodes.size(); i++) {
@@ -359,8 +362,7 @@ class RBBITableBuilder {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void flagTaggedStates() {
+    void flagTaggedStates() {
         List<RBBINode> tagNodes = new ArrayList<>();
         this.fRB.fTreeRoots[this.fRootIx].findNodes(tagNodes, 5);
         for (int i = 0; i < tagNodes.size(); i++) {
@@ -374,15 +376,15 @@ class RBBITableBuilder {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void mergeRuleStatusVals() {
+    void mergeRuleStatusVals() {
         int n = 0;
         if (this.fRB.fRuleStatusVals.size() == 0) {
             this.fRB.fRuleStatusVals.add(1);
             this.fRB.fRuleStatusVals.add(0);
             SortedSet<Integer> s0 = new TreeSet<>();
             this.fRB.fStatusSets.put(s0, 0);
-            new TreeSet<>().add(0);
+            SortedSet<Integer> s1 = new TreeSet<>();
+            s1.add(0);
             this.fRB.fStatusSets.put(s0, 0);
         }
         while (true) {
@@ -405,89 +407,60 @@ class RBBITableBuilder {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void printPosSets(RBBINode n) {
-        if (n != null) {
-            RBBINode.printNode(n);
-            PrintStream printStream = System.out;
-            printStream.print("         Nullable:  " + n.fNullable);
-            System.out.print("         firstpos:  ");
-            printSet(n.fFirstPosSet);
-            System.out.print("         lastpos:   ");
-            printSet(n.fLastPosSet);
-            System.out.print("         followpos: ");
-            printSet(n.fFollowPos);
-            printPosSets(n.fLeftChild);
-            printPosSets(n.fRightChild);
+    void printPosSets(RBBINode n) {
+        if (n == null) {
+            return;
         }
+        RBBINode.printNode(n);
+        PrintStream printStream = System.out;
+        printStream.print("         Nullable:  " + n.fNullable);
+        System.out.print("         firstpos:  ");
+        printSet(n.fFirstPosSet);
+        System.out.print("         lastpos:   ");
+        printSet(n.fLastPosSet);
+        System.out.print("         followpos: ");
+        printSet(n.fFollowPos);
+        printPosSets(n.fLeftChild);
+        printPosSets(n.fRightChild);
     }
 
-    /* access modifiers changed from: package-private */
-    /* JADX WARNING: Code restructure failed: missing block: B:15:0x0047, code lost:
+    /* JADX WARN: Code restructure failed: missing block: B:18:0x0047, code lost:
         r11.first++;
      */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public boolean findDuplCharClassFrom(com.ibm.icu.text.RBBIRuleBuilder.IntPair r11) {
-        /*
-            r10 = this;
-            java.util.List<com.ibm.icu.text.RBBITableBuilder$RBBIStateDescriptor> r0 = r10.fDStates
-            int r0 = r0.size()
-            com.ibm.icu.text.RBBIRuleBuilder r1 = r10.fRB
-            com.ibm.icu.text.RBBISetBuilder r1 = r1.fSetBuilder
-            int r1 = r1.getNumCharCategories()
-            r2 = 0
-            r3 = 0
-            r4 = r2
-            r2 = r3
-        L_0x0012:
-            int r5 = r11.first
-            int r6 = r1 + -1
-            if (r5 >= r6) goto L_0x004d
-            int r5 = r11.first
-            r6 = 1
-        L_0x001b:
-            int r5 = r5 + r6
-            r11.second = r5
-            int r5 = r11.second
-            if (r5 >= r1) goto L_0x0047
-            r5 = r2
-            r2 = r3
-        L_0x0024:
-            if (r2 >= r0) goto L_0x0040
-            java.util.List<com.ibm.icu.text.RBBITableBuilder$RBBIStateDescriptor> r7 = r10.fDStates
-            java.lang.Object r7 = r7.get(r2)
-            com.ibm.icu.text.RBBITableBuilder$RBBIStateDescriptor r7 = (com.ibm.icu.text.RBBITableBuilder.RBBIStateDescriptor) r7
-            int[] r8 = r7.fDtran
-            int r9 = r11.first
-            r4 = r8[r9]
-            int[] r8 = r7.fDtran
-            int r9 = r11.second
-            r5 = r8[r9]
-            if (r4 == r5) goto L_0x003d
-            goto L_0x0040
-        L_0x003d:
-            int r2 = r2 + 1
-            goto L_0x0024
-        L_0x0040:
-            r2 = r5
-            if (r4 != r2) goto L_0x0044
-            return r6
-        L_0x0044:
-            int r5 = r11.second
-            goto L_0x001b
-        L_0x0047:
-            int r5 = r11.first
-            int r5 = r5 + r6
-            r11.first = r5
-            goto L_0x0012
-        L_0x004d:
-            return r3
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.ibm.icu.text.RBBITableBuilder.findDuplCharClassFrom(com.ibm.icu.text.RBBIRuleBuilder$IntPair):boolean");
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    boolean findDuplCharClassFrom(RBBIRuleBuilder.IntPair categories) {
+        int numStates = this.fDStates.size();
+        int numCols = this.fRB.fSetBuilder.getNumCharCategories();
+        int table_base = 0;
+        int table_dupl = 0;
+        while (categories.first < numCols - 1) {
+            int i = categories.first;
+            while (true) {
+                categories.second = i + 1;
+                if (categories.second < numCols) {
+                    int table_dupl2 = table_dupl;
+                    for (int table_dupl3 = 0; table_dupl3 < numStates; table_dupl3++) {
+                        RBBIStateDescriptor sd = this.fDStates.get(table_dupl3);
+                        table_base = sd.fDtran[categories.first];
+                        table_dupl2 = sd.fDtran[categories.second];
+                        if (table_base != table_dupl2) {
+                            break;
+                        }
+                    }
+                    table_dupl = table_dupl2;
+                    if (table_base == table_dupl) {
+                        return true;
+                    }
+                    i = categories.second;
+                }
+            }
+        }
+        return false;
     }
 
-    /* access modifiers changed from: package-private */
-    public void removeColumn(int column) {
+    void removeColumn(int column) {
         int numStates = this.fDStates.size();
         for (int state = 0; state < numStates; state++) {
             RBBIStateDescriptor sd = this.fDStates.get(state);
@@ -497,163 +470,79 @@ class RBBITableBuilder {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    /* JADX WARNING: Code restructure failed: missing block: B:29:0x006f, code lost:
+    /* JADX WARN: Code restructure failed: missing block: B:32:0x006f, code lost:
         r12.first++;
      */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public boolean findDuplicateState(com.ibm.icu.text.RBBIRuleBuilder.IntPair r12) {
-        /*
-            r11 = this;
-            java.util.List<com.ibm.icu.text.RBBITableBuilder$RBBIStateDescriptor> r0 = r11.fDStates
-            int r0 = r0.size()
-            com.ibm.icu.text.RBBIRuleBuilder r1 = r11.fRB
-            com.ibm.icu.text.RBBISetBuilder r1 = r1.fSetBuilder
-            int r1 = r1.getNumCharCategories()
-        L_0x000e:
-            int r2 = r12.first
-            int r3 = r0 + -1
-            r4 = 0
-            if (r2 >= r3) goto L_0x0075
-            java.util.List<com.ibm.icu.text.RBBITableBuilder$RBBIStateDescriptor> r2 = r11.fDStates
-            int r3 = r12.first
-            java.lang.Object r2 = r2.get(r3)
-            com.ibm.icu.text.RBBITableBuilder$RBBIStateDescriptor r2 = (com.ibm.icu.text.RBBITableBuilder.RBBIStateDescriptor) r2
-            int r3 = r12.first
-            r5 = 1
-        L_0x0022:
-            int r3 = r3 + r5
-            r12.second = r3
-            int r3 = r12.second
-            if (r3 >= r0) goto L_0x006f
-            java.util.List<com.ibm.icu.text.RBBITableBuilder$RBBIStateDescriptor> r3 = r11.fDStates
-            int r6 = r12.second
-            java.lang.Object r3 = r3.get(r6)
-            com.ibm.icu.text.RBBITableBuilder$RBBIStateDescriptor r3 = (com.ibm.icu.text.RBBITableBuilder.RBBIStateDescriptor) r3
-            int r6 = r2.fAccepting
-            int r7 = r3.fAccepting
-            if (r6 != r7) goto L_0x006c
-            int r6 = r2.fLookAhead
-            int r7 = r3.fLookAhead
-            if (r6 != r7) goto L_0x006c
-            int r6 = r2.fTagsIdx
-            int r7 = r3.fTagsIdx
-            if (r6 == r7) goto L_0x0046
-            goto L_0x006c
-        L_0x0046:
-            r6 = 1
-            r7 = r4
-        L_0x0048:
-            if (r7 >= r1) goto L_0x0069
-            int[] r8 = r2.fDtran
-            r8 = r8[r7]
-            int[] r9 = r3.fDtran
-            r9 = r9[r7]
-            if (r8 == r9) goto L_0x0066
-            int r10 = r12.first
-            if (r8 == r10) goto L_0x005c
-            int r10 = r12.second
-            if (r8 != r10) goto L_0x0064
-        L_0x005c:
-            int r10 = r12.first
-            if (r9 == r10) goto L_0x0066
-            int r10 = r12.second
-            if (r9 == r10) goto L_0x0066
-        L_0x0064:
-            r6 = 0
-            goto L_0x0069
-        L_0x0066:
-            int r7 = r7 + 1
-            goto L_0x0048
-        L_0x0069:
-            if (r6 == 0) goto L_0x006c
-            return r5
-        L_0x006c:
-            int r3 = r12.second
-            goto L_0x0022
-        L_0x006f:
-            int r2 = r12.first
-            int r2 = r2 + r5
-            r12.first = r2
-            goto L_0x000e
-        L_0x0075:
-            return r4
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.ibm.icu.text.RBBITableBuilder.findDuplicateState(com.ibm.icu.text.RBBIRuleBuilder$IntPair):boolean");
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    boolean findDuplicateState(RBBIRuleBuilder.IntPair states) {
+        int numStates = this.fDStates.size();
+        int numCols = this.fRB.fSetBuilder.getNumCharCategories();
+        while (states.first < numStates - 1) {
+            RBBIStateDescriptor firstSD = this.fDStates.get(states.first);
+            int i = states.first;
+            while (true) {
+                states.second = i + 1;
+                if (states.second < numStates) {
+                    RBBIStateDescriptor duplSD = this.fDStates.get(states.second);
+                    if (firstSD.fAccepting == duplSD.fAccepting && firstSD.fLookAhead == duplSD.fLookAhead && firstSD.fTagsIdx == duplSD.fTagsIdx) {
+                        boolean rowsMatch = true;
+                        for (int col = 0; col < numCols; col++) {
+                            int firstVal = firstSD.fDtran[col];
+                            int duplVal = duplSD.fDtran[col];
+                            if (firstVal != duplVal && ((firstVal != states.first && firstVal != states.second) || (duplVal != states.first && duplVal != states.second))) {
+                                rowsMatch = false;
+                                break;
+                            }
+                        }
+                        if (rowsMatch) {
+                            return true;
+                        }
+                    }
+                    i = states.second;
+                }
+            }
+        }
+        return false;
     }
 
-    /* access modifiers changed from: package-private */
-    /* JADX WARNING: Code restructure failed: missing block: B:23:0x0051, code lost:
+    /* JADX WARN: Code restructure failed: missing block: B:25:0x0051, code lost:
         r12.first++;
      */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public boolean findDuplicateSafeState(com.ibm.icu.text.RBBIRuleBuilder.IntPair r12) {
-        /*
-            r11 = this;
-            java.util.List<short[]> r0 = r11.fSafeTable
-            int r0 = r0.size()
-        L_0x0006:
-            int r1 = r12.first
-            int r2 = r0 + -1
-            r3 = 0
-            if (r1 >= r2) goto L_0x0057
-            java.util.List<short[]> r1 = r11.fSafeTable
-            int r2 = r12.first
-            java.lang.Object r1 = r1.get(r2)
-            short[] r1 = (short[]) r1
-            int r2 = r12.first
-            r4 = 1
-        L_0x001a:
-            int r2 = r2 + r4
-            r12.second = r2
-            int r2 = r12.second
-            if (r2 >= r0) goto L_0x0051
-            java.util.List<short[]> r2 = r11.fSafeTable
-            int r5 = r12.second
-            java.lang.Object r2 = r2.get(r5)
-            short[] r2 = (short[]) r2
-            r5 = 1
-            int r6 = r1.length
-            r7 = r3
-        L_0x002e:
-            if (r7 >= r6) goto L_0x004b
-            short r8 = r1[r7]
-            short r9 = r2[r7]
-            if (r8 == r9) goto L_0x0048
-            int r10 = r12.first
-            if (r8 == r10) goto L_0x003e
-            int r10 = r12.second
-            if (r8 != r10) goto L_0x0046
-        L_0x003e:
-            int r10 = r12.first
-            if (r9 == r10) goto L_0x0048
-            int r10 = r12.second
-            if (r9 == r10) goto L_0x0048
-        L_0x0046:
-            r5 = 0
-            goto L_0x004b
-        L_0x0048:
-            int r7 = r7 + 1
-            goto L_0x002e
-        L_0x004b:
-            if (r5 == 0) goto L_0x004e
-            return r4
-        L_0x004e:
-            int r2 = r12.second
-            goto L_0x001a
-        L_0x0051:
-            int r1 = r12.first
-            int r1 = r1 + r4
-            r12.first = r1
-            goto L_0x0006
-        L_0x0057:
-            return r3
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.ibm.icu.text.RBBITableBuilder.findDuplicateSafeState(com.ibm.icu.text.RBBIRuleBuilder$IntPair):boolean");
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    boolean findDuplicateSafeState(RBBIRuleBuilder.IntPair states) {
+        int numStates = this.fSafeTable.size();
+        while (states.first < numStates - 1) {
+            short[] firstRow = this.fSafeTable.get(states.first);
+            int i = states.first;
+            while (true) {
+                states.second = i + 1;
+                if (states.second < numStates) {
+                    short[] duplRow = this.fSafeTable.get(states.second);
+                    boolean rowsMatch = true;
+                    int numCols = firstRow.length;
+                    for (int col = 0; col < numCols; col++) {
+                        short s = firstRow[col];
+                        short s2 = duplRow[col];
+                        if (s != s2 && ((s != states.first && s != states.second) || (s2 != states.first && s2 != states.second))) {
+                            rowsMatch = false;
+                            break;
+                        }
+                    }
+                    if (rowsMatch) {
+                        return true;
+                    }
+                    i = states.second;
+                }
+            }
+        }
+        return false;
     }
 
-    /* access modifiers changed from: package-private */
-    public void removeState(RBBIRuleBuilder.IntPair duplStates) {
+    void removeState(RBBIRuleBuilder.IntPair duplStates) {
         int keepState = duplStates.first;
         int duplState = duplStates.second;
         this.fDStates.remove(duplState);
@@ -671,7 +560,8 @@ class RBBITableBuilder {
                 }
                 sd.fDtran[col] = newVal;
             }
-            if (sd.fAccepting == duplState) {
+            int col2 = sd.fAccepting;
+            if (col2 == duplState) {
                 sd.fAccepting = keepState;
             } else if (sd.fAccepting > duplState) {
                 sd.fAccepting--;
@@ -684,8 +574,7 @@ class RBBITableBuilder {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void removeSafeState(RBBIRuleBuilder.IntPair duplStates) {
+    void removeSafeState(RBBIRuleBuilder.IntPair duplStates) {
         int keepState = duplStates.first;
         int duplState = duplStates.second;
         this.fSafeTable.remove(duplState);
@@ -693,20 +582,19 @@ class RBBITableBuilder {
         for (int state = 0; state < numStates; state++) {
             short[] row = this.fSafeTable.get(state);
             for (int col = 0; col < row.length; col++) {
-                short existingVal = row[col];
-                int newVal = existingVal;
-                if (existingVal == duplState) {
+                short s = row[col];
+                int newVal = s;
+                if (s == duplState) {
                     newVal = keepState;
-                } else if (existingVal > duplState) {
-                    newVal = existingVal - 1;
+                } else if (s > duplState) {
+                    newVal = s - 1;
                 }
                 row[col] = (short) newVal;
             }
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public int removeDuplicateStates() {
+    int removeDuplicateStates() {
         int numStatesRemoved = 0;
         RBBIRuleBuilder.IntPair dupls = new RBBIRuleBuilder.IntPair(3, 0);
         while (findDuplicateState(dupls)) {
@@ -716,16 +604,18 @@ class RBBITableBuilder {
         return numStatesRemoved;
     }
 
-    /* access modifiers changed from: package-private */
-    public int getTableSize() {
+    int getTableSize() {
         if (this.fRB.fTreeRoots[this.fRootIx] == null) {
             return 0;
         }
-        return (16 + (this.fDStates.size() * ((this.fRB.fSetBuilder.getNumCharCategories() * 2) + 8)) + 7) & -8;
+        int numRows = this.fDStates.size();
+        int numCols = this.fRB.fSetBuilder.getNumCharCategories();
+        int rowSize = (numCols * 2) + 8;
+        int size = 16 + (numRows * rowSize);
+        return (size + 7) & (-8);
     }
 
-    /* access modifiers changed from: package-private */
-    public RBBIDataWrapper.RBBIStateTable exportTable() {
+    RBBIDataWrapper.RBBIStateTable exportTable() {
         RBBIDataWrapper.RBBIStateTable table = new RBBIDataWrapper.RBBIStateTable();
         if (this.fRB.fTreeRoots[this.fRootIx] == null) {
             return table;
@@ -733,7 +623,8 @@ class RBBITableBuilder {
         Assert.assrt(this.fRB.fSetBuilder.getNumCharCategories() < 32767 && this.fDStates.size() < 32767);
         table.fNumStates = this.fDStates.size();
         int rowLen = this.fRB.fSetBuilder.getNumCharCategories() + 4;
-        table.fTable = new short[((getTableSize() - 16) / 2)];
+        int tableSize = (getTableSize() - 16) / 2;
+        table.fTable = new short[tableSize];
         table.fRowLen = rowLen * 2;
         if (this.fRB.fLookAheadHardBreak) {
             table.fFlags |= 1;
@@ -757,8 +648,7 @@ class RBBITableBuilder {
         return table;
     }
 
-    /* access modifiers changed from: package-private */
-    public void buildSafeReverseTable() {
+    void buildSafeReverseTable() {
         StringBuilder safePairs = new StringBuilder();
         int numCharClasses = this.fRB.fSetBuilder.getNumCharCategories();
         int numStates = this.fDStates.size();
@@ -766,8 +656,11 @@ class RBBITableBuilder {
             for (int c2 = 0; c2 < numCharClasses; c2++) {
                 int endState = 0;
                 int wantedEndState = -1;
-                for (int startState = 1; startState < numStates; startState++) {
-                    endState = this.fDStates.get(this.fDStates.get(startState).fDtran[c1]).fDtran[c2];
+                for (int wantedEndState2 = 1; wantedEndState2 < numStates; wantedEndState2++) {
+                    RBBIStateDescriptor startStateD = this.fDStates.get(wantedEndState2);
+                    int s2 = startStateD.fDtran[c1];
+                    RBBIStateDescriptor s2StateD = this.fDStates.get(s2);
+                    endState = s2StateD.fDtran[c2];
                     if (wantedEndState < 0) {
                         wantedEndState = endState;
                     } else if (wantedEndState != endState) {
@@ -784,15 +677,18 @@ class RBBITableBuilder {
         for (int row = 0; row < numCharClasses + 2; row++) {
             this.fSafeTable.add(new short[numCharClasses]);
         }
-        short[] startState2 = this.fSafeTable.get(1);
+        short[] startState = this.fSafeTable.get(1);
         for (int charClass = 0; charClass < numCharClasses; charClass++) {
-            startState2[charClass] = (short) (charClass + 2);
+            startState[charClass] = (short) (charClass + 2);
         }
         for (int row2 = 2; row2 < numCharClasses + 2; row2++) {
-            System.arraycopy(startState2, 0, this.fSafeTable.get(row2), 0, startState2.length);
+            System.arraycopy(startState, 0, this.fSafeTable.get(row2), 0, startState.length);
         }
         for (int pairIdx = 0; pairIdx < safePairs.length(); pairIdx += 2) {
-            this.fSafeTable.get(safePairs.charAt(pairIdx + 1) + 2)[safePairs.charAt(pairIdx)] = 0;
+            int c12 = safePairs.charAt(pairIdx);
+            int c22 = safePairs.charAt(pairIdx + 1);
+            short[] rowState = this.fSafeTable.get(c22 + 2);
+            rowState[c12] = 0;
         }
         RBBIRuleBuilder.IntPair states = new RBBIRuleBuilder.IntPair(1, 0);
         while (findDuplicateSafeState(states)) {
@@ -800,21 +696,24 @@ class RBBITableBuilder {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public int getSafeTableSize() {
+    int getSafeTableSize() {
         if (this.fSafeTable == null) {
             return 0;
         }
-        return (16 + (this.fSafeTable.size() * ((this.fSafeTable.get(0).length * 2) + 8)) + 7) & -8;
+        int numRows = this.fSafeTable.size();
+        int numCols = this.fSafeTable.get(0).length;
+        int rowSize = (numCols * 2) + 8;
+        int size = 16 + (numRows * rowSize);
+        return (size + 7) & (-8);
     }
 
-    /* access modifiers changed from: package-private */
-    public RBBIDataWrapper.RBBIStateTable exportSafeTable() {
+    RBBIDataWrapper.RBBIStateTable exportSafeTable() {
         RBBIDataWrapper.RBBIStateTable table = new RBBIDataWrapper.RBBIStateTable();
         table.fNumStates = this.fSafeTable.size();
         int numCharCategories = this.fSafeTable.get(0).length;
         int rowLen = numCharCategories + 4;
-        table.fTable = new short[((getSafeTableSize() - 16) / 2)];
+        int tableSize = (getSafeTableSize() - 16) / 2;
+        table.fTable = new short[tableSize];
         table.fRowLen = rowLen * 2;
         for (int state = 0; state < table.fNumStates; state++) {
             short[] rowArray = this.fSafeTable.get(state);
@@ -826,16 +725,14 @@ class RBBITableBuilder {
         return table;
     }
 
-    /* access modifiers changed from: package-private */
-    public void printSet(Collection<RBBINode> s) {
+    void printSet(Collection<RBBINode> s) {
         for (RBBINode n : s) {
             RBBINode.printInt(n.fSerialNum, 8);
         }
         System.out.println();
     }
 
-    /* access modifiers changed from: package-private */
-    public void printStates() {
+    void printStates() {
         System.out.print("state |           i n p u t     s y m b o l s \n");
         System.out.print("      | Acc  LA    Tag");
         for (int c = 0; c < this.fRB.fSetBuilder.getNumCharCategories(); c++) {
@@ -863,8 +760,7 @@ class RBBITableBuilder {
         System.out.print("\n\n");
     }
 
-    /* access modifiers changed from: package-private */
-    public void printReverseTable() {
+    void printReverseTable() {
         System.out.printf("    Safe Reverse Table \n", new Object[0]);
         if (this.fSafeTable == null) {
             System.out.printf("   --- nullptr ---\n", new Object[0]);
@@ -874,31 +770,27 @@ class RBBITableBuilder {
         System.out.printf("state |           i n p u t     s y m b o l s \n", new Object[0]);
         System.out.printf("      | Acc  LA    Tag", new Object[0]);
         for (int c = 0; c < numCharCategories; c++) {
-            System.out.printf(" %2d", new Object[]{Integer.valueOf(c)});
+            System.out.printf(" %2d", Integer.valueOf(c));
         }
         System.out.printf("\n", new Object[0]);
         System.out.printf("      |---------------", new Object[0]);
-        int c2 = 0;
-        while (c2 < numCharCategories) {
+        for (int c2 = 0; c2 < numCharCategories; c2++) {
             System.out.printf("---", new Object[0]);
-            c2++;
         }
         System.out.printf("\n", new Object[0]);
-        int i = c2;
-        for (int n = 0; n < this.fSafeTable.size(); n++) {
-            short[] rowArray = this.fSafeTable.get(n);
-            System.out.printf("  %3d | ", new Object[]{Integer.valueOf(n)});
-            System.out.printf("%3d %3d %5d ", new Object[]{0, 0, 0});
-            for (int c3 = 0; c3 < numCharCategories; c3++) {
-                System.out.printf(" %2d", new Object[]{Short.valueOf(rowArray[c3])});
+        for (int c3 = 0; c3 < this.fSafeTable.size(); c3++) {
+            short[] rowArray = this.fSafeTable.get(c3);
+            System.out.printf("  %3d | ", Integer.valueOf(c3));
+            System.out.printf("%3d %3d %5d ", 0, 0, 0);
+            for (int c4 = 0; c4 < numCharCategories; c4++) {
+                System.out.printf(" %2d", Short.valueOf(rowArray[c4]));
             }
             System.out.printf("\n", new Object[0]);
         }
         System.out.printf("\n\n", new Object[0]);
     }
 
-    /* access modifiers changed from: package-private */
-    public void printRuleStatusTable() {
+    void printRuleStatusTable() {
         int nextRecord = 0;
         List<Integer> tbl = this.fRB.fRuleStatusVals;
         System.out.print("index |  tags \n");
@@ -908,7 +800,8 @@ class RBBITableBuilder {
             nextRecord = tbl.get(thisRecord).intValue() + thisRecord + 1;
             RBBINode.printInt(thisRecord, 7);
             for (int i = thisRecord + 1; i < nextRecord; i++) {
-                RBBINode.printInt(tbl.get(i).intValue(), 7);
+                int val = tbl.get(i).intValue();
+                RBBINode.printInt(val, 7);
             }
             System.out.print("\n");
         }

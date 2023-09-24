@@ -1,5 +1,6 @@
 package com.android.server;
 
+/* loaded from: classes4.dex */
 public final class InFlightProto {
     public static final long ALARM_TYPE = 1159641169924L;
     public static final long BROADCAST_STATS = 1146756268038L;

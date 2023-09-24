@@ -1,12 +1,13 @@
 package android.net;
 
 import android.content.Context;
-import android.os.RemoteException;
-import android.os.ServiceManager;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
 import android.util.Log;
 import com.android.internal.net.INetworkWatchlistManager;
 import com.android.internal.util.Preconditions;
 
+/* loaded from: classes3.dex */
 public class NetworkWatchlistManager {
     private static final String SHARED_MEMORY_TAG = "NETWORK_WATCHLIST_SHARED_MEMORY";
     private static final String TAG = "NetworkWatchlistManager";
@@ -27,7 +28,7 @@ public class NetworkWatchlistManager {
         try {
             this.mNetworkWatchlistManager.reportWatchlistIfNecessary();
         } catch (RemoteException e) {
-            Log.e(TAG, "Cannot report records", e);
+            Log.m69e(TAG, "Cannot report records", e);
             e.rethrowFromSystemServer();
         }
     }
@@ -36,7 +37,7 @@ public class NetworkWatchlistManager {
         try {
             this.mNetworkWatchlistManager.reloadWatchlist();
         } catch (RemoteException e) {
-            Log.e(TAG, "Unable to reload watchlist");
+            Log.m70e(TAG, "Unable to reload watchlist");
             e.rethrowFromSystemServer();
         }
     }
@@ -45,7 +46,7 @@ public class NetworkWatchlistManager {
         try {
             return this.mNetworkWatchlistManager.getWatchlistConfigHash();
         } catch (RemoteException e) {
-            Log.e(TAG, "Unable to get watchlist config hash");
+            Log.m70e(TAG, "Unable to get watchlist config hash");
             throw e.rethrowFromSystemServer();
         }
     }

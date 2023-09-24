@@ -1,7 +1,8 @@
 package android.app.backup;
 
-import android.os.ParcelFileDescriptor;
+import android.p007os.ParcelFileDescriptor;
 
+/* loaded from: classes.dex */
 public interface BackupHelper {
     void performBackup(ParcelFileDescriptor parcelFileDescriptor, BackupDataOutput backupDataOutput, ParcelFileDescriptor parcelFileDescriptor2);
 

@@ -1,27 +1,18 @@
 package android.telephony;
 
 import android.hardware.radio.V1_4.NrSignalStrength;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.PersistableBundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.PersistableBundle;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public final class CellSignalStrengthNr extends CellSignalStrength implements Parcelable {
-    public static final Parcelable.Creator<CellSignalStrengthNr> CREATOR = new Parcelable.Creator<CellSignalStrengthNr>() {
-        public CellSignalStrengthNr createFromParcel(Parcel in) {
-            return new CellSignalStrengthNr(in);
-        }
-
-        public CellSignalStrengthNr[] newArray(int size) {
-            return new CellSignalStrengthNr[size];
-        }
-    };
     private static final int SIGNAL_GOOD_THRESHOLD = -105;
     private static final int SIGNAL_GREAT_THRESHOLD = -95;
     private static final int SIGNAL_MODERATE_THRESHOLD = -115;
     private static final String TAG = "CellSignalStrengthNr";
     public static final int UNKNOWN_ASU_LEVEL = 99;
-    private static final CellSignalStrengthNr sInvalid = new CellSignalStrengthNr();
     private int mCsiRsrp;
     private int mCsiRsrq;
     private int mCsiSinr;
@@ -29,6 +20,20 @@ public final class CellSignalStrengthNr extends CellSignalStrength implements Pa
     private int mSsRsrp;
     private int mSsRsrq;
     private int mSsSinr;
+    private static final CellSignalStrengthNr sInvalid = new CellSignalStrengthNr();
+    public static final Parcelable.Creator<CellSignalStrengthNr> CREATOR = new Parcelable.Creator<CellSignalStrengthNr>() { // from class: android.telephony.CellSignalStrengthNr.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public CellSignalStrengthNr createFromParcel(Parcel in) {
+            return new CellSignalStrengthNr(in);
+        }
+
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public CellSignalStrengthNr[] newArray(int size) {
+            return new CellSignalStrengthNr[size];
+        }
+    };
 
     public CellSignalStrengthNr() {
         setDefaultValues();
@@ -41,7 +46,7 @@ public final class CellSignalStrengthNr extends CellSignalStrength implements Pa
         this.mSsRsrp = inRangeOrUnavailable(ssRsrp, -140, -44);
         this.mSsRsrq = inRangeOrUnavailable(ssRsrq, -20, -3);
         this.mSsSinr = inRangeOrUnavailable(ssSinr, -23, 40);
-        updateLevel((PersistableBundle) null, (ServiceState) null);
+        updateLevel(null, null);
     }
 
     public CellSignalStrengthNr(NrSignalStrength ss) {
@@ -72,10 +77,12 @@ public final class CellSignalStrengthNr extends CellSignalStrength implements Pa
         return this.mCsiSinr;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mCsiRsrp);
         dest.writeInt(this.mCsiRsrq);
@@ -96,6 +103,7 @@ public final class CellSignalStrengthNr extends CellSignalStrength implements Pa
         this.mLevel = in.readInt();
     }
 
+    @Override // android.telephony.CellSignalStrength
     public void setDefaultValues() {
         this.mCsiRsrp = Integer.MAX_VALUE;
         this.mCsiRsrq = Integer.MAX_VALUE;
@@ -106,10 +114,12 @@ public final class CellSignalStrengthNr extends CellSignalStrength implements Pa
         this.mLevel = 0;
     }
 
+    @Override // android.telephony.CellSignalStrength
     public int getLevel() {
         return this.mLevel;
     }
 
+    @Override // android.telephony.CellSignalStrength
     public void updateLevel(PersistableBundle cc, ServiceState ss) {
         if (this.mSsRsrp == Integer.MAX_VALUE) {
             this.mLevel = 0;
@@ -124,6 +134,7 @@ public final class CellSignalStrengthNr extends CellSignalStrength implements Pa
         }
     }
 
+    @Override // android.telephony.CellSignalStrength
     public int getAsuLevel() {
         int nrDbm = getDbm();
         if (nrDbm == Integer.MAX_VALUE) {
@@ -135,9 +146,11 @@ public final class CellSignalStrengthNr extends CellSignalStrength implements Pa
         if (nrDbm >= -43) {
             return 97;
         }
-        return nrDbm + 140;
+        int asuLevel = nrDbm + 140;
+        return asuLevel;
     }
 
+    @Override // android.telephony.CellSignalStrength
     public int getDbm() {
         return this.mSsRsrp;
     }
@@ -152,25 +165,26 @@ public final class CellSignalStrengthNr extends CellSignalStrength implements Pa
         this.mLevel = s.mLevel;
     }
 
+    @Override // android.telephony.CellSignalStrength
     public CellSignalStrengthNr copy() {
         return new CellSignalStrengthNr(this);
     }
 
+    @Override // android.telephony.CellSignalStrength
     public int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(this.mCsiRsrp), Integer.valueOf(this.mCsiRsrq), Integer.valueOf(this.mCsiSinr), Integer.valueOf(this.mSsRsrp), Integer.valueOf(this.mSsRsrq), Integer.valueOf(this.mSsSinr), Integer.valueOf(this.mLevel)});
+        return Objects.hash(Integer.valueOf(this.mCsiRsrp), Integer.valueOf(this.mCsiRsrq), Integer.valueOf(this.mCsiSinr), Integer.valueOf(this.mSsRsrp), Integer.valueOf(this.mSsRsrq), Integer.valueOf(this.mSsSinr), Integer.valueOf(this.mLevel));
     }
 
+    @Override // android.telephony.CellSignalStrength
     public boolean isValid() {
         return !equals(sInvalid);
     }
 
+    @Override // android.telephony.CellSignalStrength
     public boolean equals(Object obj) {
-        if (!(obj instanceof CellSignalStrengthNr)) {
-            return false;
-        }
-        CellSignalStrengthNr o = (CellSignalStrengthNr) obj;
-        if (this.mCsiRsrp == o.mCsiRsrp && this.mCsiRsrq == o.mCsiRsrq && this.mCsiSinr == o.mCsiSinr && this.mSsRsrp == o.mSsRsrp && this.mSsRsrq == o.mSsRsrq && this.mSsSinr == o.mSsSinr && this.mLevel == o.mLevel) {
-            return true;
+        if (obj instanceof CellSignalStrengthNr) {
+            CellSignalStrengthNr o = (CellSignalStrengthNr) obj;
+            return this.mCsiRsrp == o.mCsiRsrp && this.mCsiRsrq == o.mCsiRsrq && this.mCsiSinr == o.mCsiSinr && this.mSsRsrp == o.mSsRsrp && this.mSsRsrq == o.mSsRsrq && this.mSsSinr == o.mSsSinr && this.mLevel == o.mLevel;
         }
         return false;
     }

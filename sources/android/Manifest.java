@@ -2,9 +2,12 @@ package android;
 
 import android.annotation.SystemApi;
 
+/* loaded from: classes.dex */
 public final class Manifest {
 
-    public static final class permission {
+    /* renamed from: android.Manifest$permission */
+    /* loaded from: classes.dex */
+    public static final class C0000permission {
         public static final String ACCEPT_HANDOVER = "android.permission.ACCEPT_HANDOVER";
         @SystemApi
         public static final String ACCESS_AMBIENT_LIGHT_STATS = "android.permission.ACCESS_AMBIENT_LIGHT_STATS";
@@ -761,6 +764,7 @@ public final class Manifest {
         public static final String WRITE_VOICEMAIL = "com.android.voicemail.permission.WRITE_VOICEMAIL";
     }
 
+    /* loaded from: classes.dex */
     public static final class permission_group {
         public static final String ACTIVITY_RECOGNITION = "android.permission-group.ACTIVITY_RECOGNITION";
         public static final String CALENDAR = "android.permission-group.CALENDAR";

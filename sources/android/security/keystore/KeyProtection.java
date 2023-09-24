@@ -3,6 +3,7 @@ package android.security.keystore;
 import java.security.KeyStore;
 import java.util.Date;
 
+/* loaded from: classes3.dex */
 public final class KeyProtection implements KeyStore.ProtectionParameter, UserAuthArgs {
     private final String[] mBlockModes;
     private final long mBoundToSecureUserId;
@@ -71,10 +72,10 @@ public final class KeyProtection implements KeyStore.ProtectionParameter, UserAu
     }
 
     public String[] getDigests() {
-        if (this.mDigests != null) {
-            return ArrayUtils.cloneIfNotEmpty(this.mDigests);
+        if (this.mDigests == null) {
+            throw new IllegalStateException("Digests not specified");
         }
-        throw new IllegalStateException("Digests not specified");
+        return ArrayUtils.cloneIfNotEmpty(this.mDigests);
     }
 
     public boolean isDigestsSpecified() {
@@ -89,30 +90,37 @@ public final class KeyProtection implements KeyStore.ProtectionParameter, UserAu
         return this.mRandomizedEncryptionRequired;
     }
 
+    @Override // android.security.keystore.UserAuthArgs
     public boolean isUserAuthenticationRequired() {
         return this.mUserAuthenticationRequired;
     }
 
+    @Override // android.security.keystore.UserAuthArgs
     public boolean isUserConfirmationRequired() {
         return this.mUserConfirmationRequired;
     }
 
+    @Override // android.security.keystore.UserAuthArgs
     public int getUserAuthenticationValidityDurationSeconds() {
         return this.mUserAuthenticationValidityDurationSeconds;
     }
 
+    @Override // android.security.keystore.UserAuthArgs
     public boolean isUserPresenceRequired() {
         return this.mUserPresenceRequred;
     }
 
+    @Override // android.security.keystore.UserAuthArgs
     public boolean isUserAuthenticationValidWhileOnBody() {
         return this.mUserAuthenticationValidWhileOnBody;
     }
 
+    @Override // android.security.keystore.UserAuthArgs
     public boolean isInvalidatedByBiometricEnrollment() {
         return this.mInvalidatedByBiometricEnrollment;
     }
 
+    @Override // android.security.keystore.UserAuthArgs
     public long getBoundToSpecificSecureUserId() {
         return this.mBoundToSecureUserId;
     }
@@ -121,6 +129,7 @@ public final class KeyProtection implements KeyStore.ProtectionParameter, UserAu
         return this.mCriticalToDeviceEncryption;
     }
 
+    @Override // android.security.keystore.UserAuthArgs
     public boolean isUnlockedDeviceRequired() {
         return this.mUnlockedDeviceRequired;
     }
@@ -129,26 +138,27 @@ public final class KeyProtection implements KeyStore.ProtectionParameter, UserAu
         return this.mIsStrongBoxBacked;
     }
 
+    /* loaded from: classes3.dex */
     public static final class Builder {
         private String[] mBlockModes;
-        private long mBoundToSecureUserId = 0;
-        private boolean mCriticalToDeviceEncryption = false;
         private String[] mDigests;
         private String[] mEncryptionPaddings;
-        private boolean mInvalidatedByBiometricEnrollment = true;
-        private boolean mIsStrongBoxBacked = false;
         private Date mKeyValidityForConsumptionEnd;
         private Date mKeyValidityForOriginationEnd;
         private Date mKeyValidityStart;
         private int mPurposes;
-        private boolean mRandomizedEncryptionRequired = true;
         private String[] mSignaturePaddings;
-        private boolean mUnlockedDeviceRequired = false;
         private boolean mUserAuthenticationRequired;
         private boolean mUserAuthenticationValidWhileOnBody;
-        private int mUserAuthenticationValidityDurationSeconds = -1;
         private boolean mUserConfirmationRequired;
+        private boolean mRandomizedEncryptionRequired = true;
+        private int mUserAuthenticationValidityDurationSeconds = -1;
         private boolean mUserPresenceRequired = false;
+        private boolean mInvalidatedByBiometricEnrollment = true;
+        private boolean mUnlockedDeviceRequired = false;
+        private long mBoundToSecureUserId = 0;
+        private boolean mCriticalToDeviceEncryption = false;
+        private boolean mIsStrongBoxBacked = false;
 
         public Builder(int purposes) {
             this.mPurposes = purposes;
@@ -211,11 +221,11 @@ public final class KeyProtection implements KeyStore.ProtectionParameter, UserAu
         }
 
         public Builder setUserAuthenticationValidityDurationSeconds(int seconds) {
-            if (seconds >= -1) {
-                this.mUserAuthenticationValidityDurationSeconds = seconds;
-                return this;
+            if (seconds < -1) {
+                throw new IllegalArgumentException("seconds must be -1 or larger");
             }
-            throw new IllegalArgumentException("seconds must be -1 or larger");
+            this.mUserAuthenticationValidityDurationSeconds = seconds;
+            return this;
         }
 
         public Builder setUserPresenceRequired(boolean required) {

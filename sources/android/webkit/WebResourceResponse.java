@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.StringBufferInputStream;
 import java.util.Map;
 
+/* loaded from: classes4.dex */
 public class WebResourceResponse {
     private String mEncoding;
     @UnsupportedAppUsage
@@ -51,26 +52,27 @@ public class WebResourceResponse {
         checkImmutable();
         if (statusCode < 100) {
             throw new IllegalArgumentException("statusCode can't be less than 100.");
-        } else if (statusCode > 599) {
+        }
+        if (statusCode > 599) {
             throw new IllegalArgumentException("statusCode can't be greater than 599.");
-        } else if (statusCode > 299 && statusCode < 400) {
+        }
+        if (statusCode > 299 && statusCode < 400) {
             throw new IllegalArgumentException("statusCode can't be in the [300, 399] range.");
-        } else if (reasonPhrase == null) {
+        }
+        if (reasonPhrase == null) {
             throw new IllegalArgumentException("reasonPhrase can't be null.");
-        } else if (!reasonPhrase.trim().isEmpty()) {
-            int i = 0;
-            while (i < reasonPhrase.length()) {
-                if (reasonPhrase.charAt(i) <= 127) {
-                    i++;
-                } else {
-                    throw new IllegalArgumentException("reasonPhrase can't contain non-ASCII characters.");
-                }
-            }
-            this.mStatusCode = statusCode;
-            this.mReasonPhrase = reasonPhrase;
-        } else {
+        }
+        if (reasonPhrase.trim().isEmpty()) {
             throw new IllegalArgumentException("reasonPhrase can't be empty.");
         }
+        for (int i = 0; i < reasonPhrase.length(); i++) {
+            int c = reasonPhrase.charAt(i);
+            if (c > 127) {
+                throw new IllegalArgumentException("reasonPhrase can't contain non-ASCII characters.");
+            }
+        }
+        this.mStatusCode = statusCode;
+        this.mReasonPhrase = reasonPhrase;
     }
 
     public int getStatusCode() {
@@ -92,11 +94,10 @@ public class WebResourceResponse {
 
     public void setData(InputStream data) {
         checkImmutable();
-        if (data == null || !StringBufferInputStream.class.isAssignableFrom(data.getClass())) {
-            this.mInputStream = data;
-            return;
+        if (data != null && StringBufferInputStream.class.isAssignableFrom(data.getClass())) {
+            throw new IllegalArgumentException("StringBufferInputStream is deprecated and must not be passed to a WebResourceResponse");
         }
-        throw new IllegalArgumentException("StringBufferInputStream is deprecated and must not be passed to a WebResourceResponse");
+        this.mInputStream = data;
     }
 
     public InputStream getData() {

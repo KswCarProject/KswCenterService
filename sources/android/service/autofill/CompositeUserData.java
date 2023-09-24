@@ -1,20 +1,27 @@
 package android.service.autofill;
 
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.ArrayMap;
 import android.view.autofill.Helper;
 import com.android.internal.util.Preconditions;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/* loaded from: classes3.dex */
 public final class CompositeUserData implements FieldClassificationUserData, Parcelable {
-    public static final Parcelable.Creator<CompositeUserData> CREATOR = new Parcelable.Creator<CompositeUserData>() {
+    public static final Parcelable.Creator<CompositeUserData> CREATOR = new Parcelable.Creator<CompositeUserData>() { // from class: android.service.autofill.CompositeUserData.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public CompositeUserData createFromParcel(Parcel parcel) {
-            return new CompositeUserData((UserData) parcel.readParcelable((ClassLoader) null), (UserData) parcel.readParcelable((ClassLoader) null));
+            UserData genericUserData = (UserData) parcel.readParcelable(null);
+            UserData packageUserData = (UserData) parcel.readParcelable(null);
+            return new CompositeUserData(genericUserData, packageUserData);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public CompositeUserData[] newArray(int size) {
             return new CompositeUserData[size];
         }
@@ -50,6 +57,7 @@ public final class CompositeUserData implements FieldClassificationUserData, Par
         values.toArray(this.mValues);
     }
 
+    @Override // android.service.autofill.FieldClassificationUserData
     public String getFieldClassificationAlgorithm() {
         String packageDefaultAlgo = this.mPackageUserData.getFieldClassificationAlgorithm();
         if (packageDefaultAlgo != null) {
@@ -61,6 +69,7 @@ public final class CompositeUserData implements FieldClassificationUserData, Par
         return this.mGenericUserData.getFieldClassificationAlgorithm();
     }
 
+    @Override // android.service.autofill.FieldClassificationUserData
     public Bundle getDefaultFieldClassificationArgs() {
         Bundle packageDefaultArgs = this.mPackageUserData.getDefaultFieldClassificationArgs();
         if (packageDefaultArgs != null) {
@@ -72,6 +81,7 @@ public final class CompositeUserData implements FieldClassificationUserData, Par
         return this.mGenericUserData.getDefaultFieldClassificationArgs();
     }
 
+    @Override // android.service.autofill.FieldClassificationUserData
     public String getFieldClassificationAlgorithmForCategory(String categoryId) {
         Preconditions.checkNotNull(categoryId);
         ArrayMap<String, String> categoryAlgorithms = getFieldClassificationAlgorithms();
@@ -81,16 +91,12 @@ public final class CompositeUserData implements FieldClassificationUserData, Par
         return categoryAlgorithms.get(categoryId);
     }
 
+    @Override // android.service.autofill.FieldClassificationUserData
     public ArrayMap<String, String> getFieldClassificationAlgorithms() {
-        ArrayMap<String, String> genericAlgos;
         ArrayMap<String, String> packageAlgos = this.mPackageUserData.getFieldClassificationAlgorithms();
-        if (this.mGenericUserData == null) {
-            genericAlgos = null;
-        } else {
-            genericAlgos = this.mGenericUserData.getFieldClassificationAlgorithms();
-        }
+        ArrayMap<String, String> genericAlgos = this.mGenericUserData == null ? null : this.mGenericUserData.getFieldClassificationAlgorithms();
         ArrayMap<String, String> categoryAlgorithms = null;
-        if (!(packageAlgos == null && genericAlgos == null)) {
+        if (packageAlgos != null || genericAlgos != null) {
             categoryAlgorithms = new ArrayMap<>();
             if (genericAlgos != null) {
                 categoryAlgorithms.putAll((ArrayMap<? extends String, ? extends String>) genericAlgos);
@@ -102,16 +108,12 @@ public final class CompositeUserData implements FieldClassificationUserData, Par
         return categoryAlgorithms;
     }
 
+    @Override // android.service.autofill.FieldClassificationUserData
     public ArrayMap<String, Bundle> getFieldClassificationArgs() {
-        ArrayMap<String, Bundle> genericArgs;
         ArrayMap<String, Bundle> packageArgs = this.mPackageUserData.getFieldClassificationArgs();
-        if (this.mGenericUserData == null) {
-            genericArgs = null;
-        } else {
-            genericArgs = this.mGenericUserData.getFieldClassificationArgs();
-        }
+        ArrayMap<String, Bundle> genericArgs = this.mGenericUserData == null ? null : this.mGenericUserData.getFieldClassificationArgs();
         ArrayMap<String, Bundle> categoryArgs = null;
-        if (!(packageArgs == null && genericArgs == null)) {
+        if (packageArgs != null || genericArgs != null) {
             categoryArgs = new ArrayMap<>();
             if (genericArgs != null) {
                 categoryArgs.putAll((ArrayMap<? extends String, ? extends Bundle>) genericArgs);
@@ -123,28 +125,33 @@ public final class CompositeUserData implements FieldClassificationUserData, Par
         return categoryArgs;
     }
 
+    @Override // android.service.autofill.FieldClassificationUserData
     public String[] getCategoryIds() {
         return this.mCategories;
     }
 
+    @Override // android.service.autofill.FieldClassificationUserData
     public String[] getValues() {
         return this.mValues;
     }
 
     public String toString() {
-        if (!Helper.sDebug) {
-            return super.toString();
+        if (Helper.sDebug) {
+            StringBuilder sb = new StringBuilder("genericUserData=");
+            sb.append(this.mGenericUserData);
+            sb.append(", packageUserData=");
+            StringBuilder builder = sb.append(this.mPackageUserData);
+            return builder.toString();
         }
-        StringBuilder sb = new StringBuilder("genericUserData=");
-        sb.append(this.mGenericUserData);
-        sb.append(", packageUserData=");
-        return sb.append(this.mPackageUserData).toString();
+        return super.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeParcelable(this.mGenericUserData, 0);
         parcel.writeParcelable(this.mPackageUserData, 0);

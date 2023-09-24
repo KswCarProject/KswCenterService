@@ -2,6 +2,7 @@ package android.animation;
 
 import android.graphics.Rect;
 
+/* loaded from: classes.dex */
 public class RectEvaluator implements TypeEvaluator<Rect> {
     private Rect mRect;
 
@@ -12,11 +13,12 @@ public class RectEvaluator implements TypeEvaluator<Rect> {
         this.mRect = reuseRect;
     }
 
+    @Override // android.animation.TypeEvaluator
     public Rect evaluate(float fraction, Rect startValue, Rect endValue) {
-        int left = startValue.left + ((int) (((float) (endValue.left - startValue.left)) * fraction));
-        int top = startValue.top + ((int) (((float) (endValue.top - startValue.top)) * fraction));
-        int right = startValue.right + ((int) (((float) (endValue.right - startValue.right)) * fraction));
-        int bottom = startValue.bottom + ((int) (((float) (endValue.bottom - startValue.bottom)) * fraction));
+        int left = startValue.left + ((int) ((endValue.left - startValue.left) * fraction));
+        int top = startValue.top + ((int) ((endValue.top - startValue.top) * fraction));
+        int right = startValue.right + ((int) ((endValue.right - startValue.right) * fraction));
+        int bottom = startValue.bottom + ((int) ((endValue.bottom - startValue.bottom) * fraction));
         if (this.mRect == null) {
             return new Rect(left, top, right, bottom);
         }

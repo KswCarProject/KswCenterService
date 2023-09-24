@@ -1,34 +1,30 @@
 package android.hardware.hdmi;
 
-import android.os.Handler;
-import android.os.Looper;
-import android.os.RemoteException;
+import android.p007os.Handler;
+import android.p007os.Looper;
+import android.p007os.RemoteException;
 import android.util.Log;
 import com.android.internal.annotations.VisibleForTesting;
 
+/* loaded from: classes.dex */
 public final class HdmiAudioSystemClient extends HdmiClient {
     private static final int REPORT_AUDIO_STATUS_INTERVAL_MS = 500;
     private static final String TAG = "HdmiAudioSystemClient";
-    /* access modifiers changed from: private */
-    public boolean mCanSendAudioStatus;
-    /* access modifiers changed from: private */
-    public final Handler mHandler;
-    /* access modifiers changed from: private */
-    public boolean mLastIsMute;
-    /* access modifiers changed from: private */
-    public int mLastMaxVolume;
-    /* access modifiers changed from: private */
-    public int mLastVolume;
-    /* access modifiers changed from: private */
-    public boolean mPendingReportAudioStatus;
+    private boolean mCanSendAudioStatus;
+    private final Handler mHandler;
+    private boolean mLastIsMute;
+    private int mLastMaxVolume;
+    private int mLastVolume;
+    private boolean mPendingReportAudioStatus;
 
+    /* loaded from: classes.dex */
     public interface SetSystemAudioModeCallback {
         void onComplete(int i);
     }
 
     @VisibleForTesting(visibility = VisibleForTesting.Visibility.PACKAGE)
     public HdmiAudioSystemClient(IHdmiControlService service) {
-        this(service, (Handler) null);
+        this(service, null);
     }
 
     @VisibleForTesting(visibility = VisibleForTesting.Visibility.PACKAGE)
@@ -38,6 +34,7 @@ public final class HdmiAudioSystemClient extends HdmiClient {
         this.mHandler = handler == null ? new Handler(Looper.getMainLooper()) : handler;
     }
 
+    @Override // android.hardware.hdmi.HdmiClient
     public int getDeviceType() {
         return 5;
     }
@@ -46,40 +43,43 @@ public final class HdmiAudioSystemClient extends HdmiClient {
         if (isMuteAdjust) {
             try {
                 this.mService.reportAudioStatus(getDeviceType(), volume, maxVolume, isMute);
+                return;
             } catch (RemoteException e) {
-            }
-        } else {
-            this.mLastVolume = volume;
-            this.mLastMaxVolume = maxVolume;
-            this.mLastIsMute = isMute;
-            if (this.mCanSendAudioStatus) {
-                try {
-                    this.mService.reportAudioStatus(getDeviceType(), volume, maxVolume, isMute);
-                    this.mCanSendAudioStatus = false;
-                    this.mHandler.postDelayed(new Runnable() {
-                        public void run() {
-                            if (HdmiAudioSystemClient.this.mPendingReportAudioStatus) {
-                                try {
-                                    HdmiAudioSystemClient.this.mService.reportAudioStatus(HdmiAudioSystemClient.this.getDeviceType(), HdmiAudioSystemClient.this.mLastVolume, HdmiAudioSystemClient.this.mLastMaxVolume, HdmiAudioSystemClient.this.mLastIsMute);
-                                    HdmiAudioSystemClient.this.mHandler.postDelayed(this, 500);
-                                } catch (RemoteException e) {
-                                    boolean unused = HdmiAudioSystemClient.this.mCanSendAudioStatus = true;
-                                } catch (Throwable th) {
-                                    boolean unused2 = HdmiAudioSystemClient.this.mPendingReportAudioStatus = false;
-                                    throw th;
-                                }
-                                boolean unused3 = HdmiAudioSystemClient.this.mPendingReportAudioStatus = false;
-                                return;
-                            }
-                            boolean unused4 = HdmiAudioSystemClient.this.mCanSendAudioStatus = true;
-                        }
-                    }, 500);
-                } catch (RemoteException e2) {
-                }
-            } else {
-                this.mPendingReportAudioStatus = true;
+                return;
             }
         }
+        this.mLastVolume = volume;
+        this.mLastMaxVolume = maxVolume;
+        this.mLastIsMute = isMute;
+        if (this.mCanSendAudioStatus) {
+            try {
+                this.mService.reportAudioStatus(getDeviceType(), volume, maxVolume, isMute);
+                this.mCanSendAudioStatus = false;
+                this.mHandler.postDelayed(new Runnable() { // from class: android.hardware.hdmi.HdmiAudioSystemClient.1
+                    @Override // java.lang.Runnable
+                    public void run() {
+                        if (!HdmiAudioSystemClient.this.mPendingReportAudioStatus) {
+                            HdmiAudioSystemClient.this.mCanSendAudioStatus = true;
+                            return;
+                        }
+                        try {
+                            try {
+                                HdmiAudioSystemClient.this.mService.reportAudioStatus(HdmiAudioSystemClient.this.getDeviceType(), HdmiAudioSystemClient.this.mLastVolume, HdmiAudioSystemClient.this.mLastMaxVolume, HdmiAudioSystemClient.this.mLastIsMute);
+                                HdmiAudioSystemClient.this.mHandler.postDelayed(this, 500L);
+                            } catch (RemoteException e2) {
+                                HdmiAudioSystemClient.this.mCanSendAudioStatus = true;
+                            }
+                        } finally {
+                            HdmiAudioSystemClient.this.mPendingReportAudioStatus = false;
+                        }
+                    }
+                }, 500L);
+                return;
+            } catch (RemoteException e2) {
+                return;
+            }
+        }
+        this.mPendingReportAudioStatus = true;
     }
 
     public void setSystemAudioMode(boolean state, SetSystemAudioModeCallback callback) {
@@ -89,7 +89,7 @@ public final class HdmiAudioSystemClient extends HdmiClient {
         try {
             this.mService.setSystemAudioModeOnForAudioOnlySource();
         } catch (RemoteException e) {
-            Log.d(TAG, "Failed to set System Audio Mode on for Audio Only source");
+            Log.m72d(TAG, "Failed to set System Audio Mode on for Audio Only source");
         }
     }
 }

@@ -1,49 +1,54 @@
 package android.net.wifi.p2p;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.LruCache;
 import java.util.Collection;
 import java.util.Map;
 
+/* loaded from: classes3.dex */
 public class WifiP2pGroupList implements Parcelable {
-    public static final Parcelable.Creator<WifiP2pGroupList> CREATOR = new Parcelable.Creator<WifiP2pGroupList>() {
+    public static final Parcelable.Creator<WifiP2pGroupList> CREATOR = new Parcelable.Creator<WifiP2pGroupList>() { // from class: android.net.wifi.p2p.WifiP2pGroupList.2
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WifiP2pGroupList createFromParcel(Parcel in) {
             WifiP2pGroupList grpList = new WifiP2pGroupList();
             int deviceCount = in.readInt();
             for (int i = 0; i < deviceCount; i++) {
-                grpList.add((WifiP2pGroup) in.readParcelable((ClassLoader) null));
+                grpList.add((WifiP2pGroup) in.readParcelable(null));
             }
             return grpList;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WifiP2pGroupList[] newArray(int size) {
             return new WifiP2pGroupList[size];
         }
     };
     private static final int CREDENTIAL_MAX_NUM = 32;
-    /* access modifiers changed from: private */
-    public boolean isClearCalled;
+    private boolean isClearCalled;
     @UnsupportedAppUsage
     private final LruCache<Integer, WifiP2pGroup> mGroups;
-    /* access modifiers changed from: private */
-    public final GroupDeleteListener mListener;
+    private final GroupDeleteListener mListener;
 
+    /* loaded from: classes3.dex */
     public interface GroupDeleteListener {
         void onDeleteGroup(int i);
     }
 
     public WifiP2pGroupList() {
-        this((WifiP2pGroupList) null, (GroupDeleteListener) null);
+        this(null, null);
     }
 
     @UnsupportedAppUsage
     public WifiP2pGroupList(WifiP2pGroupList source, GroupDeleteListener listener) {
         this.isClearCalled = false;
         this.mListener = listener;
-        this.mGroups = new LruCache<Integer, WifiP2pGroup>(32) {
-            /* access modifiers changed from: protected */
+        this.mGroups = new LruCache<Integer, WifiP2pGroup>(32) { // from class: android.net.wifi.p2p.WifiP2pGroupList.1
+            /* JADX INFO: Access modifiers changed from: protected */
+            @Override // android.util.LruCache
             public void entryRemoved(boolean evicted, Integer netId, WifiP2pGroup oldValue, WifiP2pGroup newValue) {
                 if (WifiP2pGroupList.this.mListener != null && !WifiP2pGroupList.this.isClearCalled) {
                     WifiP2pGroupList.this.mListener.onDeleteGroup(oldValue.getNetworkId());
@@ -70,8 +75,7 @@ public class WifiP2pGroupList implements Parcelable {
         this.mGroups.remove(Integer.valueOf(netId));
     }
 
-    /* access modifiers changed from: package-private */
-    public void remove(String deviceAddress) {
+    void remove(String deviceAddress) {
         remove(getNetworkId(deviceAddress));
     }
 
@@ -89,7 +93,8 @@ public class WifiP2pGroupList implements Parcelable {
         if (deviceAddress == null) {
             return -1;
         }
-        for (WifiP2pGroup grp : this.mGroups.snapshot().values()) {
+        Collection<WifiP2pGroup> groups = this.mGroups.snapshot().values();
+        for (WifiP2pGroup grp : groups) {
             if (deviceAddress.equalsIgnoreCase(grp.getOwner().deviceAddress)) {
                 this.mGroups.get(Integer.valueOf(grp.getNetworkId()));
                 return grp.getNetworkId();
@@ -102,7 +107,8 @@ public class WifiP2pGroupList implements Parcelable {
         if (deviceAddress == null || ssid == null) {
             return -1;
         }
-        for (WifiP2pGroup grp : this.mGroups.snapshot().values()) {
+        Collection<WifiP2pGroup> groups = this.mGroups.snapshot().values();
+        for (WifiP2pGroup grp : groups) {
             if (deviceAddress.equalsIgnoreCase(grp.getOwner().deviceAddress) && ssid.equals(grp.getNetworkName())) {
                 this.mGroups.get(Integer.valueOf(grp.getNetworkId()));
                 return grp.getNetworkId();
@@ -120,7 +126,8 @@ public class WifiP2pGroupList implements Parcelable {
     }
 
     public boolean contains(int netId) {
-        for (WifiP2pGroup grp : this.mGroups.snapshot().values()) {
+        Collection<WifiP2pGroup> groups = this.mGroups.snapshot().values();
+        for (WifiP2pGroup grp : groups) {
             if (netId == grp.getNetworkId()) {
                 return true;
             }
@@ -130,17 +137,20 @@ public class WifiP2pGroupList implements Parcelable {
 
     public String toString() {
         StringBuffer sbuf = new StringBuffer();
-        for (WifiP2pGroup grp : this.mGroups.snapshot().values()) {
+        Collection<WifiP2pGroup> groups = this.mGroups.snapshot().values();
+        for (WifiP2pGroup grp : groups) {
             sbuf.append(grp);
             sbuf.append("\n");
         }
         return sbuf.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         Collection<WifiP2pGroup> groups = this.mGroups.snapshot().values();
         dest.writeInt(groups.size());

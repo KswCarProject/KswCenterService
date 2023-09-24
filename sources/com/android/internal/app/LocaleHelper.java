@@ -3,7 +3,7 @@ package com.android.internal.app;
 import android.annotation.UnsupportedAppUsage;
 import android.icu.text.ListFormatter;
 import android.icu.util.ULocale;
-import android.os.LocaleList;
+import android.p007os.LocaleList;
 import android.text.TextUtils;
 import com.android.internal.app.LocaleStore;
 import java.text.Collator;
@@ -11,6 +11,7 @@ import java.util.Comparator;
 import java.util.Locale;
 import libcore.icu.ICU;
 
+/* loaded from: classes4.dex */
 public class LocaleHelper {
     public static String toSentenceCase(String str, Locale locale) {
         if (str.isEmpty()) {
@@ -51,10 +52,11 @@ public class LocaleHelper {
         String languageTag = locale.toLanguageTag();
         ULocale uDisplayLocale = ULocale.forLocale(displayLocale);
         String country = ULocale.getDisplayCountry(languageTag, uDisplayLocale);
-        if (locale.getUnicodeLocaleType("nu") == null) {
-            return country;
+        String numberingSystem = locale.getUnicodeLocaleType("nu");
+        if (numberingSystem != null) {
+            return String.format("%s (%s)", country, ULocale.getDisplayKeywordValue(languageTag, "numbers", uDisplayLocale));
         }
-        return String.format("%s (%s)", new Object[]{country, ULocale.getDisplayKeywordValue(languageTag, "numbers", uDisplayLocale)});
+        return country;
     }
 
     public static String getDisplayCountry(Locale locale) {
@@ -80,15 +82,17 @@ public class LocaleHelper {
         if (ellipsisNeeded) {
             localeNames[maxLocales] = TextUtils.getEllipsisString(TextUtils.TruncateAt.END);
         }
-        return ListFormatter.getInstance(dispLocale).format((Object[]) localeNames);
+        ListFormatter lfn = ListFormatter.getInstance(dispLocale);
+        return lfn.format(localeNames);
     }
 
     public static Locale addLikelySubtags(Locale locale) {
         return ICU.addLikelySubtags(locale);
     }
 
+    /* loaded from: classes4.dex */
     public static final class LocaleInfoComparator implements Comparator<LocaleStore.LocaleInfo> {
-        private static final String PREFIX_ARABIC = "ال";
+        private static final String PREFIX_ARABIC = "\u0627\u0644";
         private final Collator mCollator;
         private final boolean mCountryMode;
 
@@ -99,12 +103,13 @@ public class LocaleHelper {
         }
 
         private String removePrefixForCompare(Locale locale, String str) {
-            if (!"ar".equals(locale.getLanguage()) || !str.startsWith(PREFIX_ARABIC)) {
-                return str;
+            if ("ar".equals(locale.getLanguage()) && str.startsWith(PREFIX_ARABIC)) {
+                return str.substring(PREFIX_ARABIC.length());
             }
-            return str.substring(PREFIX_ARABIC.length());
+            return str;
         }
 
+        @Override // java.util.Comparator
         @UnsupportedAppUsage
         public int compare(LocaleStore.LocaleInfo lhs, LocaleStore.LocaleInfo rhs) {
             if (lhs.isSuggested() == rhs.isSuggested()) {

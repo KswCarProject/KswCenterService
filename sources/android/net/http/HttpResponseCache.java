@@ -13,6 +13,7 @@ import java.net.URLConnection;
 import java.util.List;
 import java.util.Map;
 
+/* loaded from: classes3.dex */
 public final class HttpResponseCache extends ResponseCache implements HasCacheHolder, Closeable {
     private final AndroidResponseCacheAdapter mDelegate;
 
@@ -33,21 +34,26 @@ public final class HttpResponseCache extends ResponseCache implements HasCacheHo
             ResponseCache installed = ResponseCache.getDefault();
             if (installed instanceof HttpResponseCache) {
                 HttpResponseCache installedResponseCache = (HttpResponseCache) installed;
-                if (installedResponseCache.getCacheHolder().isEquivalent(directory, maxSize)) {
+                HasCacheHolder.CacheHolder cacheHolder = installedResponseCache.getCacheHolder();
+                if (cacheHolder.isEquivalent(directory, maxSize)) {
                     return installedResponseCache;
                 }
                 installedResponseCache.close();
             }
-            HttpResponseCache responseCache = new HttpResponseCache(new AndroidResponseCacheAdapter(HasCacheHolder.CacheHolder.create(directory, maxSize)));
+            HasCacheHolder.CacheHolder cacheHolder2 = HasCacheHolder.CacheHolder.create(directory, maxSize);
+            AndroidResponseCacheAdapter androidResponseCacheAdapter = new AndroidResponseCacheAdapter(cacheHolder2);
+            HttpResponseCache responseCache = new HttpResponseCache(androidResponseCacheAdapter);
             ResponseCache.setDefault(responseCache);
             return responseCache;
         }
     }
 
+    @Override // java.net.ResponseCache
     public CacheResponse get(URI uri, String requestMethod, Map<String, List<String>> requestHeaders) throws IOException {
         return this.mDelegate.get(uri, requestMethod, requestHeaders);
     }
 
+    @Override // java.net.ResponseCache
     public CacheRequest put(URI uri, URLConnection urlConnection) throws IOException {
         return this.mDelegate.put(uri, urlConnection);
     }
@@ -56,7 +62,7 @@ public final class HttpResponseCache extends ResponseCache implements HasCacheHo
         try {
             return this.mDelegate.getSize();
         } catch (IOException e) {
-            return -1;
+            return -1L;
         }
     }
 
@@ -83,16 +89,17 @@ public final class HttpResponseCache extends ResponseCache implements HasCacheHo
         return this.mDelegate.getRequestCount();
     }
 
+    @Override // java.io.Closeable, java.lang.AutoCloseable
     public void close() throws IOException {
         if (ResponseCache.getDefault() == this) {
-            ResponseCache.setDefault((ResponseCache) null);
+            ResponseCache.setDefault(null);
         }
         this.mDelegate.close();
     }
 
     public void delete() throws IOException {
         if (ResponseCache.getDefault() == this) {
-            ResponseCache.setDefault((ResponseCache) null);
+            ResponseCache.setDefault(null);
         }
         this.mDelegate.delete();
     }

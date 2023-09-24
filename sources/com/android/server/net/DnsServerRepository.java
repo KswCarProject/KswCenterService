@@ -9,13 +9,14 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-/* compiled from: NetlinkTracker */
+/* compiled from: NetlinkTracker.java */
+/* loaded from: classes4.dex */
 class DnsServerRepository {
     public static final int NUM_CURRENT_SERVERS = 3;
     public static final int NUM_SERVERS = 12;
     public static final String TAG = "DnsServerRepository";
-    private ArrayList<DnsServerEntry> mAllServers = new ArrayList<>(12);
     private Set<InetAddress> mCurrentServers = new HashSet();
+    private ArrayList<DnsServerEntry> mAllServers = new ArrayList<>(12);
     private HashMap<InetAddress, DnsServerEntry> mIndex = new HashMap<>(12);
 
     public synchronized void setDnsServersOn(LinkProperties lp) {
@@ -42,23 +43,21 @@ class DnsServerRepository {
 
     private synchronized boolean updateExistingEntry(InetAddress address, long expiry) {
         DnsServerEntry existing = this.mIndex.get(address);
-        if (existing == null) {
-            return false;
+        if (existing != null) {
+            existing.expiry = expiry;
+            return true;
         }
-        existing.expiry = expiry;
-        return true;
+        return false;
     }
 
     private synchronized boolean updateCurrentServers() {
         boolean changed;
         long now = System.currentTimeMillis();
         changed = false;
-        int i = this.mAllServers.size() - 1;
-        while (i >= 0 && (i >= 12 || this.mAllServers.get(i).expiry < now)) {
+        for (int i = this.mAllServers.size() - 1; i >= 0 && (i >= 12 || this.mAllServers.get(i).expiry < now); i--) {
             DnsServerEntry removed = this.mAllServers.remove(i);
             this.mIndex.remove(removed.address);
             changed |= this.mCurrentServers.remove(removed.address);
-            i--;
         }
         Iterator<DnsServerEntry> it = this.mAllServers.iterator();
         while (it.hasNext()) {

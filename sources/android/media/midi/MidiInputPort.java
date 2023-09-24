@@ -1,7 +1,7 @@
 package android.media.midi;
 
-import android.os.IBinder;
-import android.os.RemoteException;
+import android.p007os.IBinder;
+import android.p007os.RemoteException;
 import android.util.Log;
 import dalvik.system.CloseGuard;
 import java.io.Closeable;
@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import libcore.io.IoUtils;
 
+/* loaded from: classes3.dex */
 public final class MidiInputPort extends MidiReceiver implements Closeable {
     private static final String TAG = "MidiInputPort";
     private final byte[] mBuffer;
@@ -34,41 +35,42 @@ public final class MidiInputPort extends MidiReceiver implements Closeable {
     }
 
     MidiInputPort(FileDescriptor fd, int portNumber) {
-        this((IMidiDeviceServer) null, (IBinder) null, fd, portNumber);
+        this(null, null, fd, portNumber);
     }
 
     public final int getPortNumber() {
         return this.mPortNumber;
     }
 
+    @Override // android.media.midi.MidiReceiver
     public void onSend(byte[] msg, int offset, int count, long timestamp) throws IOException {
         if (offset < 0 || count < 0 || offset + count > msg.length) {
             throw new IllegalArgumentException("offset or count out of range");
-        } else if (count <= 1015) {
-            synchronized (this.mBuffer) {
-                if (this.mOutputStream != null) {
-                    this.mOutputStream.write(this.mBuffer, 0, MidiPortImpl.packData(msg, offset, count, timestamp, this.mBuffer));
-                } else {
-                    throw new IOException("MidiInputPort is closed");
-                }
-            }
-        } else {
+        }
+        if (count > 1015) {
             throw new IllegalArgumentException("count exceeds max message size");
         }
-    }
-
-    public void onFlush() throws IOException {
         synchronized (this.mBuffer) {
-            if (this.mOutputStream != null) {
-                this.mOutputStream.write(this.mBuffer, 0, MidiPortImpl.packFlush(this.mBuffer));
-            } else {
+            if (this.mOutputStream == null) {
                 throw new IOException("MidiInputPort is closed");
             }
+            int length = MidiPortImpl.packData(msg, offset, count, timestamp, this.mBuffer);
+            this.mOutputStream.write(this.mBuffer, 0, length);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public FileDescriptor claimFileDescriptor() {
+    @Override // android.media.midi.MidiReceiver
+    public void onFlush() throws IOException {
+        synchronized (this.mBuffer) {
+            if (this.mOutputStream == null) {
+                throw new IOException("MidiInputPort is closed");
+            }
+            int length = MidiPortImpl.packFlush(this.mBuffer);
+            this.mOutputStream.write(this.mBuffer, 0, length);
+        }
+    }
+
+    FileDescriptor claimFileDescriptor() {
         synchronized (this.mGuard) {
             synchronized (this.mBuffer) {
                 FileDescriptor fd = this.mFileDescriptor;
@@ -84,44 +86,43 @@ public final class MidiInputPort extends MidiReceiver implements Closeable {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public IBinder getToken() {
+    IBinder getToken() {
         return this.mToken;
     }
 
-    /* access modifiers changed from: package-private */
-    public IMidiDeviceServer getDeviceServer() {
+    IMidiDeviceServer getDeviceServer() {
         return this.mDeviceServer;
     }
 
+    @Override // java.io.Closeable, java.lang.AutoCloseable
     public void close() throws IOException {
         synchronized (this.mGuard) {
-            if (!this.mIsClosed) {
-                this.mGuard.close();
-                synchronized (this.mBuffer) {
-                    if (this.mFileDescriptor != null) {
-                        IoUtils.closeQuietly(this.mFileDescriptor);
-                        this.mFileDescriptor = null;
-                    }
-                    if (this.mOutputStream != null) {
-                        this.mOutputStream.close();
-                        this.mOutputStream = null;
-                    }
-                }
-                if (this.mDeviceServer != null) {
-                    try {
-                        this.mDeviceServer.closePort(this.mToken);
-                    } catch (RemoteException e) {
-                        Log.e(TAG, "RemoteException in MidiInputPort.close()");
-                    }
-                }
-                this.mIsClosed = true;
+            if (this.mIsClosed) {
+                return;
             }
+            this.mGuard.close();
+            synchronized (this.mBuffer) {
+                if (this.mFileDescriptor != null) {
+                    IoUtils.closeQuietly(this.mFileDescriptor);
+                    this.mFileDescriptor = null;
+                }
+                if (this.mOutputStream != null) {
+                    this.mOutputStream.close();
+                    this.mOutputStream = null;
+                }
+            }
+            if (this.mDeviceServer != null) {
+                try {
+                    this.mDeviceServer.closePort(this.mToken);
+                } catch (RemoteException e) {
+                    Log.m70e(TAG, "RemoteException in MidiInputPort.close()");
+                }
+            }
+            this.mIsClosed = true;
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         try {
             if (this.mGuard != null) {
                 this.mGuard.warnIfOpen();

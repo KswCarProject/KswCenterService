@@ -4,37 +4,31 @@ import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.database.DataSetObserver;
-import android.os.Handler;
+import android.p007os.Handler;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorFilter;
 
+/* loaded from: classes4.dex */
 public abstract class CursorTreeAdapter extends BaseExpandableListAdapter implements Filterable, CursorFilter.CursorFilterClient {
-    /* access modifiers changed from: private */
-    public boolean mAutoRequery;
+    private boolean mAutoRequery;
     SparseArray<MyCursorHelper> mChildrenCursorHelpers;
     private Context mContext;
     CursorFilter mCursorFilter;
     FilterQueryProvider mFilterQueryProvider;
     MyCursorHelper mGroupCursorHelper;
-    /* access modifiers changed from: private */
-    public Handler mHandler;
+    private Handler mHandler;
 
-    /* access modifiers changed from: protected */
-    public abstract void bindChildView(View view, Context context, Cursor cursor, boolean z);
+    protected abstract void bindChildView(View view, Context context, Cursor cursor, boolean z);
 
-    /* access modifiers changed from: protected */
-    public abstract void bindGroupView(View view, Context context, Cursor cursor, boolean z);
+    protected abstract void bindGroupView(View view, Context context, Cursor cursor, boolean z);
 
-    /* access modifiers changed from: protected */
-    public abstract Cursor getChildrenCursor(Cursor cursor);
+    protected abstract Cursor getChildrenCursor(Cursor cursor);
 
-    /* access modifiers changed from: protected */
-    public abstract View newChildView(Context context, Cursor cursor, boolean z, ViewGroup viewGroup);
+    protected abstract View newChildView(Context context, Cursor cursor, boolean z, ViewGroup viewGroup);
 
-    /* access modifiers changed from: protected */
-    public abstract View newGroupView(Context context, Cursor cursor, boolean z, ViewGroup viewGroup);
+    protected abstract View newGroupView(Context context, Cursor cursor, boolean z, ViewGroup viewGroup);
 
     public CursorTreeAdapter(Cursor cursor, Context context) {
         init(cursor, context, true);
@@ -52,43 +46,17 @@ public abstract class CursorTreeAdapter extends BaseExpandableListAdapter implem
         this.mChildrenCursorHelpers = new SparseArray<>();
     }
 
-    /* access modifiers changed from: package-private */
-    /* JADX WARNING: Code restructure failed: missing block: B:12:0x002c, code lost:
-        return r0;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public synchronized android.widget.CursorTreeAdapter.MyCursorHelper getChildrenCursorHelper(int r4, boolean r5) {
-        /*
-            r3 = this;
-            monitor-enter(r3)
-            android.util.SparseArray<android.widget.CursorTreeAdapter$MyCursorHelper> r0 = r3.mChildrenCursorHelpers     // Catch:{ all -> 0x002d }
-            java.lang.Object r0 = r0.get(r4)     // Catch:{ all -> 0x002d }
-            android.widget.CursorTreeAdapter$MyCursorHelper r0 = (android.widget.CursorTreeAdapter.MyCursorHelper) r0     // Catch:{ all -> 0x002d }
-            if (r0 != 0) goto L_0x002b
-            android.widget.CursorTreeAdapter$MyCursorHelper r1 = r3.mGroupCursorHelper     // Catch:{ all -> 0x002d }
-            android.database.Cursor r1 = r1.moveTo(r4)     // Catch:{ all -> 0x002d }
-            if (r1 != 0) goto L_0x0016
-            r1 = 0
-            monitor-exit(r3)
-            return r1
-        L_0x0016:
-            android.widget.CursorTreeAdapter$MyCursorHelper r1 = r3.mGroupCursorHelper     // Catch:{ all -> 0x002d }
-            android.database.Cursor r1 = r1.getCursor()     // Catch:{ all -> 0x002d }
-            android.database.Cursor r1 = r3.getChildrenCursor(r1)     // Catch:{ all -> 0x002d }
-            android.widget.CursorTreeAdapter$MyCursorHelper r2 = new android.widget.CursorTreeAdapter$MyCursorHelper     // Catch:{ all -> 0x002d }
-            r2.<init>(r1)     // Catch:{ all -> 0x002d }
-            r0 = r2
-            android.util.SparseArray<android.widget.CursorTreeAdapter$MyCursorHelper> r2 = r3.mChildrenCursorHelpers     // Catch:{ all -> 0x002d }
-            r2.put(r4, r0)     // Catch:{ all -> 0x002d }
-        L_0x002b:
-            monitor-exit(r3)
-            return r0
-        L_0x002d:
-            r4 = move-exception
-            monitor-exit(r3)
-            throw r4
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.widget.CursorTreeAdapter.getChildrenCursorHelper(int, boolean):android.widget.CursorTreeAdapter$MyCursorHelper");
+    synchronized MyCursorHelper getChildrenCursorHelper(int groupPosition, boolean requestCursor) {
+        MyCursorHelper cursorHelper = this.mChildrenCursorHelpers.get(groupPosition);
+        if (cursorHelper == null) {
+            if (this.mGroupCursorHelper.moveTo(groupPosition) == null) {
+                return null;
+            }
+            Cursor cursor = getChildrenCursor(this.mGroupCursorHelper.getCursor());
+            cursorHelper = new MyCursorHelper(cursor);
+            this.mChildrenCursorHelpers.put(groupPosition, cursorHelper);
+        }
+        return cursorHelper;
     }
 
     public void setGroupCursor(Cursor cursor) {
@@ -96,17 +64,21 @@ public abstract class CursorTreeAdapter extends BaseExpandableListAdapter implem
     }
 
     public void setChildrenCursor(int groupPosition, Cursor childrenCursor) {
-        getChildrenCursorHelper(groupPosition, false).changeCursor(childrenCursor, false);
+        MyCursorHelper childrenCursorHelper = getChildrenCursorHelper(groupPosition, false);
+        childrenCursorHelper.changeCursor(childrenCursor, false);
     }
 
+    @Override // android.widget.ExpandableListAdapter
     public Cursor getChild(int groupPosition, int childPosition) {
         return getChildrenCursorHelper(groupPosition, true).moveTo(childPosition);
     }
 
+    @Override // android.widget.ExpandableListAdapter
     public long getChildId(int groupPosition, int childPosition) {
         return getChildrenCursorHelper(groupPosition, true).getId(childPosition);
     }
 
+    @Override // android.widget.ExpandableListAdapter
     public int getChildrenCount(int groupPosition) {
         MyCursorHelper helper = getChildrenCursorHelper(groupPosition, true);
         if (!this.mGroupCursorHelper.isValid() || helper == null) {
@@ -115,52 +87,60 @@ public abstract class CursorTreeAdapter extends BaseExpandableListAdapter implem
         return helper.getCount();
     }
 
+    @Override // android.widget.ExpandableListAdapter
     public Cursor getGroup(int groupPosition) {
         return this.mGroupCursorHelper.moveTo(groupPosition);
     }
 
+    @Override // android.widget.ExpandableListAdapter
     public int getGroupCount() {
         return this.mGroupCursorHelper.getCount();
     }
 
+    @Override // android.widget.ExpandableListAdapter
     public long getGroupId(int groupPosition) {
         return this.mGroupCursorHelper.getId(groupPosition);
     }
 
+    @Override // android.widget.ExpandableListAdapter
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         View v;
         Cursor cursor = this.mGroupCursorHelper.moveTo(groupPosition);
-        if (cursor != null) {
-            if (convertView == null) {
-                v = newGroupView(this.mContext, cursor, isExpanded, parent);
-            } else {
-                v = convertView;
-            }
-            bindGroupView(v, this.mContext, cursor, isExpanded);
-            return v;
+        if (cursor == null) {
+            throw new IllegalStateException("this should only be called when the cursor is valid");
         }
-        throw new IllegalStateException("this should only be called when the cursor is valid");
+        if (convertView == null) {
+            v = newGroupView(this.mContext, cursor, isExpanded, parent);
+        } else {
+            v = convertView;
+        }
+        bindGroupView(v, this.mContext, cursor, isExpanded);
+        return v;
     }
 
+    @Override // android.widget.ExpandableListAdapter
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         View v;
-        Cursor cursor = getChildrenCursorHelper(groupPosition, true).moveTo(childPosition);
-        if (cursor != null) {
-            if (convertView == null) {
-                v = newChildView(this.mContext, cursor, isLastChild, parent);
-            } else {
-                v = convertView;
-            }
-            bindChildView(v, this.mContext, cursor, isLastChild);
-            return v;
+        MyCursorHelper cursorHelper = getChildrenCursorHelper(groupPosition, true);
+        Cursor cursor = cursorHelper.moveTo(childPosition);
+        if (cursor == null) {
+            throw new IllegalStateException("this should only be called when the cursor is valid");
         }
-        throw new IllegalStateException("this should only be called when the cursor is valid");
+        if (convertView == null) {
+            v = newChildView(this.mContext, cursor, isLastChild, parent);
+        } else {
+            v = convertView;
+        }
+        bindChildView(v, this.mContext, cursor, isLastChild);
+        return v;
     }
 
+    @Override // android.widget.ExpandableListAdapter
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
     }
 
+    @Override // android.widget.ExpandableListAdapter
     public boolean hasStableIds() {
         return true;
     }
@@ -172,6 +152,7 @@ public abstract class CursorTreeAdapter extends BaseExpandableListAdapter implem
         this.mChildrenCursorHelpers.clear();
     }
 
+    @Override // android.widget.BaseExpandableListAdapter
     public void notifyDataSetChanged() {
         notifyDataSetChanged(true);
     }
@@ -183,26 +164,29 @@ public abstract class CursorTreeAdapter extends BaseExpandableListAdapter implem
         super.notifyDataSetChanged();
     }
 
+    @Override // android.widget.BaseExpandableListAdapter
     public void notifyDataSetInvalidated() {
         releaseCursorHelpers();
         super.notifyDataSetInvalidated();
     }
 
+    @Override // android.widget.BaseExpandableListAdapter, android.widget.ExpandableListAdapter
     public void onGroupCollapsed(int groupPosition) {
         deactivateChildrenCursorHelper(groupPosition);
     }
 
-    /* access modifiers changed from: package-private */
-    public synchronized void deactivateChildrenCursorHelper(int groupPosition) {
+    synchronized void deactivateChildrenCursorHelper(int groupPosition) {
         MyCursorHelper cursorHelper = getChildrenCursorHelper(groupPosition, true);
         this.mChildrenCursorHelpers.remove(groupPosition);
         cursorHelper.deactivate();
     }
 
+    @Override // android.widget.CursorFilter.CursorFilterClient
     public String convertToString(Cursor cursor) {
         return cursor == null ? "" : cursor.toString();
     }
 
+    @Override // android.widget.CursorFilter.CursorFilterClient
     public Cursor runQueryOnBackgroundThread(CharSequence constraint) {
         if (this.mFilterQueryProvider != null) {
             return this.mFilterQueryProvider.runQuery(constraint);
@@ -210,6 +194,7 @@ public abstract class CursorTreeAdapter extends BaseExpandableListAdapter implem
         return this.mGroupCursorHelper.getCursor();
     }
 
+    @Override // android.widget.Filterable
     public Filter getFilter() {
         if (this.mCursorFilter == null) {
             this.mCursorFilter = new CursorFilter(this);
@@ -225,21 +210,22 @@ public abstract class CursorTreeAdapter extends BaseExpandableListAdapter implem
         this.mFilterQueryProvider = filterQueryProvider;
     }
 
+    @Override // android.widget.CursorFilter.CursorFilterClient
     public void changeCursor(Cursor cursor) {
         this.mGroupCursorHelper.changeCursor(cursor, true);
     }
 
+    @Override // android.widget.CursorFilter.CursorFilterClient
     public Cursor getCursor() {
         return this.mGroupCursorHelper.getCursor();
     }
 
+    /* loaded from: classes4.dex */
     class MyCursorHelper {
         private MyContentObserver mContentObserver;
-        /* access modifiers changed from: private */
-        public Cursor mCursor;
+        private Cursor mCursor;
         private MyDataSetObserver mDataSetObserver;
-        /* access modifiers changed from: private */
-        public boolean mDataValid;
+        private boolean mDataValid;
         private int mRowIDColumn;
 
         MyCursorHelper(Cursor cursor) {
@@ -255,96 +241,97 @@ public abstract class CursorTreeAdapter extends BaseExpandableListAdapter implem
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public Cursor getCursor() {
+        Cursor getCursor() {
             return this.mCursor;
         }
 
-        /* access modifiers changed from: package-private */
-        public int getCount() {
-            if (!this.mDataValid || this.mCursor == null) {
-                return 0;
+        int getCount() {
+            if (this.mDataValid && this.mCursor != null) {
+                return this.mCursor.getCount();
             }
-            return this.mCursor.getCount();
+            return 0;
         }
 
-        /* access modifiers changed from: package-private */
-        public long getId(int position) {
-            if (!this.mDataValid || this.mCursor == null || !this.mCursor.moveToPosition(position)) {
-                return 0;
+        long getId(int position) {
+            if (this.mDataValid && this.mCursor != null && this.mCursor.moveToPosition(position)) {
+                return this.mCursor.getLong(this.mRowIDColumn);
             }
-            return this.mCursor.getLong(this.mRowIDColumn);
+            return 0L;
         }
 
-        /* access modifiers changed from: package-private */
-        public Cursor moveTo(int position) {
-            if (!this.mDataValid || this.mCursor == null || !this.mCursor.moveToPosition(position)) {
-                return null;
+        Cursor moveTo(int position) {
+            if (this.mDataValid && this.mCursor != null && this.mCursor.moveToPosition(position)) {
+                return this.mCursor;
             }
-            return this.mCursor;
+            return null;
         }
 
-        /* access modifiers changed from: package-private */
-        public void changeCursor(Cursor cursor, boolean releaseCursors) {
-            if (cursor != this.mCursor) {
-                deactivate();
-                this.mCursor = cursor;
-                if (cursor != null) {
-                    cursor.registerContentObserver(this.mContentObserver);
-                    cursor.registerDataSetObserver(this.mDataSetObserver);
-                    this.mRowIDColumn = cursor.getColumnIndex("_id");
-                    this.mDataValid = true;
-                    CursorTreeAdapter.this.notifyDataSetChanged(releaseCursors);
-                    return;
-                }
-                this.mRowIDColumn = -1;
-                this.mDataValid = false;
-                CursorTreeAdapter.this.notifyDataSetInvalidated();
+        void changeCursor(Cursor cursor, boolean releaseCursors) {
+            if (cursor == this.mCursor) {
+                return;
             }
+            deactivate();
+            this.mCursor = cursor;
+            if (cursor != null) {
+                cursor.registerContentObserver(this.mContentObserver);
+                cursor.registerDataSetObserver(this.mDataSetObserver);
+                this.mRowIDColumn = cursor.getColumnIndex("_id");
+                this.mDataValid = true;
+                CursorTreeAdapter.this.notifyDataSetChanged(releaseCursors);
+                return;
+            }
+            this.mRowIDColumn = -1;
+            this.mDataValid = false;
+            CursorTreeAdapter.this.notifyDataSetInvalidated();
         }
 
-        /* access modifiers changed from: package-private */
-        public void deactivate() {
-            if (this.mCursor != null) {
-                this.mCursor.unregisterContentObserver(this.mContentObserver);
-                this.mCursor.unregisterDataSetObserver(this.mDataSetObserver);
-                this.mCursor.close();
-                this.mCursor = null;
+        void deactivate() {
+            if (this.mCursor == null) {
+                return;
             }
+            this.mCursor.unregisterContentObserver(this.mContentObserver);
+            this.mCursor.unregisterDataSetObserver(this.mDataSetObserver);
+            this.mCursor.close();
+            this.mCursor = null;
         }
 
-        /* access modifiers changed from: package-private */
-        public boolean isValid() {
+        boolean isValid() {
             return this.mDataValid && this.mCursor != null;
         }
 
+        /* loaded from: classes4.dex */
         private class MyContentObserver extends ContentObserver {
             public MyContentObserver() {
                 super(CursorTreeAdapter.this.mHandler);
             }
 
+            @Override // android.database.ContentObserver
             public boolean deliverSelfNotifications() {
                 return true;
             }
 
+            @Override // android.database.ContentObserver
             public void onChange(boolean selfChange) {
                 if (CursorTreeAdapter.this.mAutoRequery && MyCursorHelper.this.mCursor != null && !MyCursorHelper.this.mCursor.isClosed()) {
-                    boolean unused = MyCursorHelper.this.mDataValid = MyCursorHelper.this.mCursor.requery();
+                    MyCursorHelper.this.mDataValid = MyCursorHelper.this.mCursor.requery();
                 }
             }
         }
 
+        /* loaded from: classes4.dex */
         private class MyDataSetObserver extends DataSetObserver {
             private MyDataSetObserver() {
             }
 
+            @Override // android.database.DataSetObserver
             public void onChanged() {
-                boolean unused = MyCursorHelper.this.mDataValid = true;
+                MyCursorHelper.this.mDataValid = true;
                 CursorTreeAdapter.this.notifyDataSetChanged();
             }
 
+            @Override // android.database.DataSetObserver
             public void onInvalidated() {
-                boolean unused = MyCursorHelper.this.mDataValid = false;
+                MyCursorHelper.this.mDataValid = false;
                 CursorTreeAdapter.this.notifyDataSetInvalidated();
             }
         }

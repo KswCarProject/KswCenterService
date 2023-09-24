@@ -3,12 +3,12 @@ package com.ibm.icu.text;
 import android.bluetooth.BluetoothHidDevice;
 import com.android.internal.telephony.GsmAlphabet;
 
+/* loaded from: classes5.dex */
 abstract class CharsetRecog_2022 extends CharsetRecognizer {
     CharsetRecog_2022() {
     }
 
-    /* access modifiers changed from: package-private */
-    public int match(byte[] text, int textLen, byte[][] escapeSequences) {
+    int match(byte[] text, int textLen, byte[][] escapeSequences) {
         int shifts = 0;
         int misses = 0;
         int hits = 0;
@@ -17,10 +17,9 @@ abstract class CharsetRecog_2022 extends CharsetRecognizer {
             if (text[i] == 27) {
                 for (byte[] seq : escapeSequences) {
                     if (textLen - i >= seq.length) {
-                        int j = 1;
-                        while (j < seq.length) {
-                            if (seq[j] == text[i + j]) {
-                                j++;
+                        for (int j = 1; j < seq.length; j++) {
+                            if (seq[j] != text[i + j]) {
+                                break;
                             }
                         }
                         hits++;
@@ -30,12 +29,11 @@ abstract class CharsetRecog_2022 extends CharsetRecognizer {
                 }
                 misses++;
             }
-            if (text[i] == 14 || text[i] == 15) {
+            int escN = text[i];
+            if (escN == 14 || text[i] == 15) {
                 shifts++;
-                i++;
-            } else {
-                i++;
             }
+            i++;
         }
         if (hits == 0) {
             return 0;
@@ -50,19 +48,20 @@ abstract class CharsetRecog_2022 extends CharsetRecognizer {
         return quality;
     }
 
+    /* loaded from: classes5.dex */
     static class CharsetRecog_2022JP extends CharsetRecog_2022 {
         private byte[][] escapeSequences = {new byte[]{GsmAlphabet.GSM_EXTENDED_ESCAPE, 36, 40, 67}, new byte[]{GsmAlphabet.GSM_EXTENDED_ESCAPE, 36, 40, 68}, new byte[]{GsmAlphabet.GSM_EXTENDED_ESCAPE, 36, BluetoothHidDevice.SUBCLASS1_KEYBOARD}, new byte[]{GsmAlphabet.GSM_EXTENDED_ESCAPE, 36, 65}, new byte[]{GsmAlphabet.GSM_EXTENDED_ESCAPE, 36, 66}, new byte[]{GsmAlphabet.GSM_EXTENDED_ESCAPE, 38, BluetoothHidDevice.SUBCLASS1_KEYBOARD}, new byte[]{GsmAlphabet.GSM_EXTENDED_ESCAPE, 40, 66}, new byte[]{GsmAlphabet.GSM_EXTENDED_ESCAPE, 40, 72}, new byte[]{GsmAlphabet.GSM_EXTENDED_ESCAPE, 40, 73}, new byte[]{GsmAlphabet.GSM_EXTENDED_ESCAPE, 40, 74}, new byte[]{GsmAlphabet.GSM_EXTENDED_ESCAPE, 46, 65}, new byte[]{GsmAlphabet.GSM_EXTENDED_ESCAPE, 46, 70}};
 
         CharsetRecog_2022JP() {
         }
 
-        /* access modifiers changed from: package-private */
-        public String getName() {
+        @Override // com.ibm.icu.text.CharsetRecognizer
+        String getName() {
             return "ISO-2022-JP";
         }
 
-        /* access modifiers changed from: package-private */
-        public CharsetMatch match(CharsetDetector det) {
+        @Override // com.ibm.icu.text.CharsetRecognizer
+        CharsetMatch match(CharsetDetector det) {
             int confidence = match(det.fInputBytes, det.fInputLen, this.escapeSequences);
             if (confidence == 0) {
                 return null;
@@ -71,19 +70,20 @@ abstract class CharsetRecog_2022 extends CharsetRecognizer {
         }
     }
 
+    /* loaded from: classes5.dex */
     static class CharsetRecog_2022KR extends CharsetRecog_2022 {
         private byte[][] escapeSequences = {new byte[]{GsmAlphabet.GSM_EXTENDED_ESCAPE, 36, 41, 67}};
 
         CharsetRecog_2022KR() {
         }
 
-        /* access modifiers changed from: package-private */
-        public String getName() {
+        @Override // com.ibm.icu.text.CharsetRecognizer
+        String getName() {
             return "ISO-2022-KR";
         }
 
-        /* access modifiers changed from: package-private */
-        public CharsetMatch match(CharsetDetector det) {
+        @Override // com.ibm.icu.text.CharsetRecognizer
+        CharsetMatch match(CharsetDetector det) {
             int confidence = match(det.fInputBytes, det.fInputLen, this.escapeSequences);
             if (confidence == 0) {
                 return null;
@@ -92,19 +92,20 @@ abstract class CharsetRecog_2022 extends CharsetRecognizer {
         }
     }
 
+    /* loaded from: classes5.dex */
     static class CharsetRecog_2022CN extends CharsetRecog_2022 {
         private byte[][] escapeSequences = {new byte[]{GsmAlphabet.GSM_EXTENDED_ESCAPE, 36, 41, 65}, new byte[]{GsmAlphabet.GSM_EXTENDED_ESCAPE, 36, 41, 71}, new byte[]{GsmAlphabet.GSM_EXTENDED_ESCAPE, 36, 42, 72}, new byte[]{GsmAlphabet.GSM_EXTENDED_ESCAPE, 36, 41, 69}, new byte[]{GsmAlphabet.GSM_EXTENDED_ESCAPE, 36, 43, 73}, new byte[]{GsmAlphabet.GSM_EXTENDED_ESCAPE, 36, 43, 74}, new byte[]{GsmAlphabet.GSM_EXTENDED_ESCAPE, 36, 43, 75}, new byte[]{GsmAlphabet.GSM_EXTENDED_ESCAPE, 36, 43, 76}, new byte[]{GsmAlphabet.GSM_EXTENDED_ESCAPE, 36, 43, 77}, new byte[]{GsmAlphabet.GSM_EXTENDED_ESCAPE, 78}, new byte[]{GsmAlphabet.GSM_EXTENDED_ESCAPE, 79}};
 
         CharsetRecog_2022CN() {
         }
 
-        /* access modifiers changed from: package-private */
-        public String getName() {
+        @Override // com.ibm.icu.text.CharsetRecognizer
+        String getName() {
             return "ISO-2022-CN";
         }
 
-        /* access modifiers changed from: package-private */
-        public CharsetMatch match(CharsetDetector det) {
+        @Override // com.ibm.icu.text.CharsetRecognizer
+        CharsetMatch match(CharsetDetector det) {
             int confidence = match(det.fInputBytes, det.fInputLen, this.escapeSequences);
             if (confidence == 0) {
                 return null;

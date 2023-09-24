@@ -2,10 +2,10 @@ package com.wits.pms.receiver;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.RemoteException;
-import android.os.UserHandle;
+import android.p007os.Build;
+import android.p007os.Bundle;
+import android.p007os.RemoteException;
+import android.p007os.UserHandle;
 import android.provider.Telephony;
 import android.text.TextUtils;
 import android.util.Log;
@@ -14,25 +14,24 @@ import com.wits.pms.bean.TxzMessage;
 import com.wits.pms.statuscontrol.PowerManagerApp;
 import com.wits.pms.utils.Utils;
 
+/* loaded from: classes2.dex */
 public class CenterCallBackImpl {
     static final String TAG = "CenterCallBack";
     private static CenterCallBackImpl centerCall;
-    /* access modifiers changed from: private */
-    public static Context mContext;
-    /* access modifiers changed from: private */
-    public static String mPreMediaPkgName = null;
+    private static Context mContext;
+    private static String mPreMediaPkgName = null;
 
     public static void init(Context context) {
-        if (context != null) {
-            mContext = context.getApplicationContext();
-            centerCall = new CenterCallBackImpl();
-            return;
+        if (context == null) {
+            try {
+                throw new Exception();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return;
+            }
         }
-        try {
-            throw new Exception();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        mContext = context.getApplicationContext();
+        centerCall = new CenterCallBackImpl();
     }
 
     public static CenterCallBackImpl getImpl(Context context) {
@@ -43,21 +42,24 @@ public class CenterCallBackImpl {
     }
 
     public CenterCallBackImpl() {
-        PowerManagerApp.registerIContentObserver("isPlayingMusic", new IContentObserver.Stub() {
+        PowerManagerApp.registerIContentObserver("isPlayingMusic", new IContentObserver.Stub() { // from class: com.wits.pms.receiver.CenterCallBackImpl.1
+            @Override // com.wits.pms.IContentObserver
             public void onChange() throws RemoteException {
-                if (PowerManagerApp.getStatusBoolean("isPlayingMusic")) {
+                boolean bluetoothPlaying = PowerManagerApp.getStatusBoolean("isPlayingMusic");
+                if (bluetoothPlaying) {
                     CenterCallBackImpl.this.musicType(3);
                 }
             }
         });
-        PowerManagerApp.registerIContentObserver("topApp", new IContentObserver.Stub() {
+        PowerManagerApp.registerIContentObserver("topApp", new IContentObserver.Stub() { // from class: com.wits.pms.receiver.CenterCallBackImpl.2
+            @Override // com.wits.pms.IContentObserver
             public void onChange() throws RemoteException {
                 String pkgName = PowerManagerApp.getStatusString("topApp");
-                Log.i(CenterCallBackImpl.TAG, "onChange: topApp = " + pkgName);
+                Log.m68i(CenterCallBackImpl.TAG, "onChange: topApp = " + pkgName);
                 if ("com.txznet.music".equals(pkgName)) {
                     CenterCallBackImpl.this.musicType(1);
                 }
-                if ("com.wits.ksw.media".equals(pkgName)) {
+                if ("com.wits.ksw.media".equals(pkgName) || "com.wits.ksw.music".equals(pkgName) || "com.wits.ksw.video".equals(pkgName)) {
                     CenterCallBackImpl.this.musicType(2);
                 }
                 if (pkgName.contains("cn.kuwo.kwmusiccar") || pkgName.contains("com.ximalaya.ting.android.car")) {
@@ -69,21 +71,22 @@ public class CenterCallBackImpl {
                     if (Build.DISPLAY.contains("M600") && Integer.parseInt(Build.VERSION.RELEASE) > 10) {
                         try {
                             Utils.updateLocationEnabled(CenterCallBackImpl.mContext, false, UserHandle.myUserId(), 1);
-                            Thread.sleep(50);
+                            Thread.sleep(50L);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                         Utils.updateLocationEnabled(CenterCallBackImpl.mContext, true, UserHandle.myUserId(), 1);
                     }
-                    Log.d(CenterCallBackImpl.TAG, "onChange: top is google map");
+                    Log.m72d(CenterCallBackImpl.TAG, "onChange: top is google map");
                 }
             }
         });
-        PowerManagerApp.registerIContentObserver("currentMediaPkg", new IContentObserver.Stub() {
+        PowerManagerApp.registerIContentObserver("currentMediaPkg", new IContentObserver.Stub() { // from class: com.wits.pms.receiver.CenterCallBackImpl.3
+            @Override // com.wits.pms.IContentObserver
             public void onChange() throws RemoteException {
                 String pkgName = PowerManagerApp.getStatusString("currentMediaPkg");
                 if (pkgName.contains("cn.kuwo.kwmusiccar") || pkgName.contains("com.ximalaya.ting.android.car")) {
-                    Log.i(CenterCallBackImpl.TAG, "onChange: currentMediaPkg =" + pkgName);
+                    Log.m68i(CenterCallBackImpl.TAG, "onChange: currentMediaPkg =" + pkgName);
                     CenterCallBackImpl.this.appFocus(CenterCallBackImpl.mPreMediaPkgName, pkgName);
                     if (!TextUtils.equals(pkgName, CenterCallBackImpl.mPreMediaPkgName)) {
                         String unused = CenterCallBackImpl.mPreMediaPkgName = pkgName;
@@ -91,7 +94,8 @@ public class CenterCallBackImpl {
                 }
             }
         });
-        PowerManagerApp.registerIContentObserver("play", new IContentObserver.Stub() {
+        PowerManagerApp.registerIContentObserver("play", new IContentObserver.Stub() { // from class: com.wits.pms.receiver.CenterCallBackImpl.4
+            @Override // com.wits.pms.IContentObserver
             public void onChange() throws RemoteException {
                 if (PowerManagerApp.getStatusBoolean("play")) {
                     CenterCallBackImpl.this.musicType(2);
@@ -104,7 +108,7 @@ public class CenterCallBackImpl {
         Intent txzIntent = new Intent();
         txzIntent.putExtras(message.bundle);
         txzIntent.setAction("com.txznet.adapter.recv");
-        Log.v(TAG, "keyType: " + txzIntent.getIntExtra(Telephony.CarrierColumns.KEY_TYPE, 0) + " - action: " + txzIntent.getStringExtra("action"));
+        Log.m66v(TAG, "keyType: " + txzIntent.getIntExtra(Telephony.CarrierColumns.KEY_TYPE, 0) + " - action: " + txzIntent.getStringExtra("action"));
         mContext.sendBroadcast(txzIntent);
     }
 
@@ -114,33 +118,36 @@ public class CenterCallBackImpl {
         }
         Bundle bundle = new Bundle();
         bundle.putString("setCllback", pkgName);
-        sendBroadCast(new TxzMessage(2000, "app.status", bundle));
+        TxzMessage txzMessage = new TxzMessage(2000, "app.status", bundle);
+        sendBroadCast(txzMessage);
     }
 
     public void appFocus(String losePkg, String focusPkg) {
         Bundle bundle = new Bundle();
         bundle.putString("lose", losePkg);
         bundle.putString("focus", focusPkg);
-        sendBroadCast(new TxzMessage(2000, "app.media.focus", bundle));
+        TxzMessage txzMessage = new TxzMessage(2000, "app.media.focus", bundle);
+        sendBroadCast(txzMessage);
     }
 
     public void wifiOpened() {
-        sendBroadCast(new TxzMessage(2010, "wifi.open", new Bundle()));
+        Bundle bundle = new Bundle();
+        TxzMessage txzMessage = new TxzMessage(2010, "wifi.open", bundle);
+        sendBroadCast(txzMessage);
     }
 
     public void wifiClosed() {
-        sendBroadCast(new TxzMessage(2010, "wifi.close", new Bundle()));
+        Bundle bundle = new Bundle();
+        TxzMessage txzMessage = new TxzMessage(2010, "wifi.close", bundle);
+        sendBroadCast(txzMessage);
     }
 
     public void wifiConnectStatus(int status, String wifiName) {
         Bundle bundle = new Bundle();
-        boolean z = true;
-        if (status != 1) {
-            z = false;
-        }
-        bundle.putBoolean("type", z);
+        bundle.putBoolean("type", status == 1);
         bundle.putString("name", wifiName);
-        sendBroadCast(new TxzMessage(2010, "wifi.connect", bundle));
+        TxzMessage txzMessage = new TxzMessage(2010, "wifi.connect", bundle);
+        sendBroadCast(txzMessage);
     }
 
     public void carSystemStatus(String status) {
@@ -150,73 +157,98 @@ public class CenterCallBackImpl {
         Bundle bundle = new Bundle();
         bundle.putBoolean("auto", auto);
         bundle.putInt("number", number);
-        sendBroadCast(new TxzMessage(2020, "light.status", bundle));
+        TxzMessage txzMessage = new TxzMessage(2020, "light.status", bundle);
+        sendBroadCast(txzMessage);
     }
 
     public void soundChanged(int value) {
         Bundle bundle = new Bundle();
         bundle.putInt("number", value);
-        sendBroadCast(new TxzMessage(2030, "volume.status", bundle));
+        TxzMessage txzMessage = new TxzMessage(2030, "volume.status", bundle);
+        sendBroadCast(txzMessage);
     }
 
     public void btConnected() {
-        sendBroadCast(new TxzMessage(2040, "bluetooth.connect", new Bundle()));
+        Bundle bundle = new Bundle();
+        TxzMessage txzMessage = new TxzMessage(2040, "bluetooth.connect", bundle);
+        sendBroadCast(txzMessage);
     }
 
     public void btDisconnected() {
-        sendBroadCast(new TxzMessage(2040, "bluetooth.disconnect", new Bundle()));
+        Bundle bundle = new Bundle();
+        TxzMessage txzMessage = new TxzMessage(2040, "bluetooth.disconnect", bundle);
+        sendBroadCast(txzMessage);
     }
 
     public void btIdle() {
-        sendBroadCast(new TxzMessage(2040, "bluetooth.idle", new Bundle()));
+        Bundle bundle = new Bundle();
+        TxzMessage txzMessage = new TxzMessage(2040, "bluetooth.idle", bundle);
+        sendBroadCast(txzMessage);
     }
 
     public void btIncoming(String name, String number) {
         Bundle bundle = new Bundle();
         bundle.putString("name", name);
         bundle.putString("number", number);
-        sendBroadCast(new TxzMessage(2040, "bluetooth.incoming", bundle));
+        TxzMessage txzMessage = new TxzMessage(2040, "bluetooth.incoming", bundle);
+        sendBroadCast(txzMessage);
     }
 
     public void btCall(String name, String number) {
         Bundle bundle = new Bundle();
         bundle.putString("name", name);
         bundle.putString("number", number);
-        sendBroadCast(new TxzMessage(2040, "bluetooth.call", bundle));
+        TxzMessage txzMessage = new TxzMessage(2040, "bluetooth.call", bundle);
+        sendBroadCast(txzMessage);
     }
 
     public void btHandUp() {
-        sendBroadCast(new TxzMessage(2040, "bluetooth.hangup", new Bundle()));
+        Bundle bundle = new Bundle();
+        TxzMessage txzMessage = new TxzMessage(2040, "bluetooth.hangup", bundle);
+        sendBroadCast(txzMessage);
     }
 
     public void btRejected() {
-        sendBroadCast(new TxzMessage(2040, "bluetooth.reject", new Bundle()));
+        Bundle bundle = new Bundle();
+        TxzMessage txzMessage = new TxzMessage(2040, "bluetooth.reject", bundle);
+        sendBroadCast(txzMessage);
     }
 
     public void btAccept() {
-        sendBroadCast(new TxzMessage(2040, "bluetooth.offhook", new Bundle()));
+        Bundle bundle = new Bundle();
+        TxzMessage txzMessage = new TxzMessage(2040, "bluetooth.offhook", bundle);
+        sendBroadCast(txzMessage);
     }
 
     public void btContactSync(String contactJson) {
         Bundle bundle = new Bundle();
         bundle.putString("contact", contactJson);
-        sendBroadCast(new TxzMessage(2040, "bluetooth.contact", bundle));
+        TxzMessage txzMessage = new TxzMessage(2040, "bluetooth.contact", bundle);
+        sendBroadCast(txzMessage);
     }
 
     public void musicOpened() {
-        sendBroadCast(new TxzMessage(2060, "music.open", new Bundle()));
+        Bundle bundle = new Bundle();
+        TxzMessage txzMessage = new TxzMessage(2060, "music.open", bundle);
+        sendBroadCast(txzMessage);
     }
 
     public void musicClosed() {
-        sendBroadCast(new TxzMessage(2060, "music.close", new Bundle()));
+        Bundle bundle = new Bundle();
+        TxzMessage txzMessage = new TxzMessage(2060, "music.close", bundle);
+        sendBroadCast(txzMessage);
     }
 
     public void musicShowing() {
-        sendBroadCast(new TxzMessage(2060, "music.show", new Bundle()));
+        Bundle bundle = new Bundle();
+        TxzMessage txzMessage = new TxzMessage(2060, "music.show", bundle);
+        sendBroadCast(txzMessage);
     }
 
     public void musicBackApp() {
-        sendBroadCast(new TxzMessage(2060, "music.dismiss", new Bundle()));
+        Bundle bundle = new Bundle();
+        TxzMessage txzMessage = new TxzMessage(2060, "music.dismiss", bundle);
+        sendBroadCast(txzMessage);
     }
 
     public void musicStatus(int status) {
@@ -237,7 +269,8 @@ public class CenterCallBackImpl {
                 break;
         }
         bundle.putString("status", playStatus);
-        sendBroadCast(new TxzMessage(2060, "music.status", bundle));
+        TxzMessage txzMessage = new TxzMessage(2060, "music.status", bundle);
+        sendBroadCast(txzMessage);
     }
 
     public void musicType(int type) {
@@ -257,7 +290,8 @@ public class CenterCallBackImpl {
                 action = "";
                 break;
         }
-        sendBroadCast(new TxzMessage(2061, action, bundle));
+        TxzMessage txzMessage = new TxzMessage(2061, action, bundle);
+        sendBroadCast(txzMessage);
     }
 
     public void autoVoiceControl() {

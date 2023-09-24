@@ -4,8 +4,8 @@ import android.annotation.SystemApi;
 import android.hardware.hdmi.HdmiControlManager;
 import android.hardware.hdmi.HdmiSwitchClient;
 import android.hardware.hdmi.IHdmiControlCallback;
-import android.os.Binder;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.RemoteException;
 import android.util.Log;
 import com.android.internal.util.FunctionalUtils;
 import com.android.internal.util.Preconditions;
@@ -14,10 +14,12 @@ import java.util.List;
 import java.util.concurrent.Executor;
 
 @SystemApi
+/* loaded from: classes.dex */
 public class HdmiSwitchClient extends HdmiClient {
     private static final String TAG = "HdmiSwitchClient";
 
     @SystemApi
+    /* loaded from: classes.dex */
     public interface OnSelectListener {
         void onSelect(@HdmiControlManager.ControlCallbackResult int i);
     }
@@ -27,13 +29,15 @@ public class HdmiSwitchClient extends HdmiClient {
     }
 
     private static IHdmiControlCallback getCallbackWrapper(final OnSelectListener listener) {
-        return new IHdmiControlCallback.Stub() {
+        return new IHdmiControlCallback.Stub() { // from class: android.hardware.hdmi.HdmiSwitchClient.1
+            @Override // android.hardware.hdmi.IHdmiControlCallback
             public void onComplete(int result) {
                 OnSelectListener.this.onSelect(result);
             }
         };
     }
 
+    @Override // android.hardware.hdmi.HdmiClient
     public int getDeviceType() {
         return 6;
     }
@@ -43,7 +47,7 @@ public class HdmiSwitchClient extends HdmiClient {
         try {
             this.mService.deviceSelect(logicalAddress, getCallbackWrapper(listener));
         } catch (RemoteException e) {
-            Log.e(TAG, "failed to select device: ", e);
+            Log.m69e(TAG, "failed to select device: ", e);
             throw e.rethrowFromSystemServer();
         }
     }
@@ -54,85 +58,87 @@ public class HdmiSwitchClient extends HdmiClient {
         try {
             this.mService.portSelect(portId, getCallbackWrapper(listener));
         } catch (RemoteException e) {
-            Log.e(TAG, "failed to select port: ", e);
+            Log.m69e(TAG, "failed to select port: ", e);
             throw e.rethrowFromSystemServer();
         }
     }
 
-    public void selectDevice(int logicalAddress, final Executor executor, final OnSelectListener listener) {
+    public void selectDevice(int logicalAddress, Executor executor, OnSelectListener listener) {
         Preconditions.checkNotNull(listener);
         try {
-            this.mService.deviceSelect(logicalAddress, new IHdmiControlCallback.Stub() {
-                public void onComplete(int result) {
-                    Binder.withCleanCallingIdentity((FunctionalUtils.ThrowingRunnable) new FunctionalUtils.ThrowingRunnable(executor, listener, result) {
-                        private final /* synthetic */ Executor f$0;
-                        private final /* synthetic */ HdmiSwitchClient.OnSelectListener f$1;
-                        private final /* synthetic */ int f$2;
+            this.mService.deviceSelect(logicalAddress, new BinderC08892(executor, listener));
+        } catch (RemoteException e) {
+            Log.m69e(TAG, "failed to select device: ", e);
+            throw e.rethrowFromSystemServer();
+        }
+    }
 
-                        {
-                            this.f$0 = r1;
-                            this.f$1 = r2;
-                            this.f$2 = r3;
-                        }
+    /* renamed from: android.hardware.hdmi.HdmiSwitchClient$2 */
+    /* loaded from: classes.dex */
+    class BinderC08892 extends IHdmiControlCallback.Stub {
+        final /* synthetic */ Executor val$executor;
+        final /* synthetic */ OnSelectListener val$listener;
 
-                        public final void runOrThrow() {
-                            this.f$0.execute(new Runnable(this.f$2) {
-                                private final /* synthetic */ int f$1;
+        BinderC08892(Executor executor, OnSelectListener onSelectListener) {
+            this.val$executor = executor;
+            this.val$listener = onSelectListener;
+        }
 
-                                {
-                                    this.f$1 = r2;
-                                }
-
-                                public final void run() {
-                                    HdmiSwitchClient.OnSelectListener.this.onSelect(this.f$1);
-                                }
-                            });
+        @Override // android.hardware.hdmi.IHdmiControlCallback
+        public void onComplete(final int result) {
+            final Executor executor = this.val$executor;
+            final OnSelectListener onSelectListener = this.val$listener;
+            Binder.withCleanCallingIdentity(new FunctionalUtils.ThrowingRunnable() { // from class: android.hardware.hdmi.-$$Lambda$HdmiSwitchClient$2$knvX6ZgANoRRFcb_fUHlUdWIjCQ
+                @Override // com.android.internal.util.FunctionalUtils.ThrowingRunnable
+                public final void runOrThrow() {
+                    executor.execute(new Runnable() { // from class: android.hardware.hdmi.-$$Lambda$HdmiSwitchClient$2$wYF9AcLTW87bh8nh0L1O42--jdg
+                        @Override // java.lang.Runnable
+                        public final void run() {
+                            HdmiSwitchClient.OnSelectListener.this.onSelect(r2);
                         }
                     });
                 }
             });
-        } catch (RemoteException e) {
-            Log.e(TAG, "failed to select device: ", e);
-            throw e.rethrowFromSystemServer();
         }
     }
 
     @SystemApi
-    public void selectPort(int portId, final Executor executor, final OnSelectListener listener) {
+    public void selectPort(int portId, Executor executor, OnSelectListener listener) {
         Preconditions.checkNotNull(listener);
         try {
-            this.mService.portSelect(portId, new IHdmiControlCallback.Stub() {
-                public void onComplete(int result) {
-                    Binder.withCleanCallingIdentity((FunctionalUtils.ThrowingRunnable) new FunctionalUtils.ThrowingRunnable(executor, listener, result) {
-                        private final /* synthetic */ Executor f$0;
-                        private final /* synthetic */ HdmiSwitchClient.OnSelectListener f$1;
-                        private final /* synthetic */ int f$2;
+            this.mService.portSelect(portId, new BinderC08903(executor, listener));
+        } catch (RemoteException e) {
+            Log.m69e(TAG, "failed to select port: ", e);
+            throw e.rethrowFromSystemServer();
+        }
+    }
 
-                        {
-                            this.f$0 = r1;
-                            this.f$1 = r2;
-                            this.f$2 = r3;
-                        }
+    /* renamed from: android.hardware.hdmi.HdmiSwitchClient$3 */
+    /* loaded from: classes.dex */
+    class BinderC08903 extends IHdmiControlCallback.Stub {
+        final /* synthetic */ Executor val$executor;
+        final /* synthetic */ OnSelectListener val$listener;
 
-                        public final void runOrThrow() {
-                            this.f$0.execute(new Runnable(this.f$2) {
-                                private final /* synthetic */ int f$1;
+        BinderC08903(Executor executor, OnSelectListener onSelectListener) {
+            this.val$executor = executor;
+            this.val$listener = onSelectListener;
+        }
 
-                                {
-                                    this.f$1 = r2;
-                                }
-
-                                public final void run() {
-                                    HdmiSwitchClient.OnSelectListener.this.onSelect(this.f$1);
-                                }
-                            });
+        @Override // android.hardware.hdmi.IHdmiControlCallback
+        public void onComplete(final int result) {
+            final Executor executor = this.val$executor;
+            final OnSelectListener onSelectListener = this.val$listener;
+            Binder.withCleanCallingIdentity(new FunctionalUtils.ThrowingRunnable() { // from class: android.hardware.hdmi.-$$Lambda$HdmiSwitchClient$3$Cqxvec1NmkC6VlEdX5OEOabobXY
+                @Override // com.android.internal.util.FunctionalUtils.ThrowingRunnable
+                public final void runOrThrow() {
+                    executor.execute(new Runnable() { // from class: android.hardware.hdmi.-$$Lambda$HdmiSwitchClient$3$apecUZ8P9DH90drOKNmw2Y8Fspg
+                        @Override // java.lang.Runnable
+                        public final void run() {
+                            HdmiSwitchClient.OnSelectListener.this.onSelect(r2);
                         }
                     });
                 }
             });
-        } catch (RemoteException e) {
-            Log.e(TAG, "failed to select port: ", e);
-            throw e.rethrowFromSystemServer();
         }
     }
 
@@ -140,7 +146,7 @@ public class HdmiSwitchClient extends HdmiClient {
         try {
             return this.mService.getDeviceList();
         } catch (RemoteException e) {
-            Log.e("TAG", "Failed to call getDeviceList():", e);
+            Log.m69e("TAG", "Failed to call getDeviceList():", e);
             return Collections.emptyList();
         }
     }

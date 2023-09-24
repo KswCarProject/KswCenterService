@@ -5,15 +5,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 
 @Deprecated
+/* loaded from: classes4.dex */
 public class Plugin {
-    /* access modifiers changed from: private */
-    public String mDescription;
+    private String mDescription;
     private String mFileName;
     private PreferencesClickHandler mHandler = new DefaultClickHandler();
-    /* access modifiers changed from: private */
-    public String mName;
+    private String mName;
     private String mPath;
 
+    /* loaded from: classes4.dex */
     public interface PreferencesClickHandler {
         void handleClickEvent(Context context);
     }
@@ -84,19 +84,22 @@ public class Plugin {
     }
 
     @Deprecated
+    /* loaded from: classes4.dex */
     private class DefaultClickHandler implements PreferencesClickHandler, DialogInterface.OnClickListener {
         private AlertDialog mDialog;
 
         private DefaultClickHandler() {
         }
 
+        @Override // android.webkit.Plugin.PreferencesClickHandler
         @Deprecated
         public void handleClickEvent(Context context) {
             if (this.mDialog == null) {
-                this.mDialog = new AlertDialog.Builder(context).setTitle((CharSequence) Plugin.this.mName).setMessage((CharSequence) Plugin.this.mDescription).setPositiveButton(17039370, (DialogInterface.OnClickListener) this).setCancelable(false).show();
+                this.mDialog = new AlertDialog.Builder(context).setTitle(Plugin.this.mName).setMessage(Plugin.this.mDescription).setPositiveButton(17039370, this).setCancelable(false).show();
             }
         }
 
+        @Override // android.content.DialogInterface.OnClickListener
         @Deprecated
         public void onClick(DialogInterface dialog, int which) {
             this.mDialog.dismiss();

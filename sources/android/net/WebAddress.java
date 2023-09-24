@@ -9,13 +9,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public class WebAddress {
     static final int MATCH_GROUP_AUTHORITY = 2;
     static final int MATCH_GROUP_HOST = 3;
     static final int MATCH_GROUP_PATH = 5;
     static final int MATCH_GROUP_PORT = 4;
     static final int MATCH_GROUP_SCHEME = 1;
-    static Pattern sAddressPattern = Pattern.compile("(?:(http|https|file)\\:\\/\\/)?(?:([-A-Za-z0-9$_.+!*'(),;?&=]+(?:\\:[-A-Za-z0-9$_.+!*'(),;?&=]+)?)@)?([a-zA-Z0-9 -퟿豈-﷏ﷰ-￯%_-][a-zA-Z0-9 -퟿豈-﷏ﷰ-￯%_\\.-]*|\\[[0-9a-fA-F:\\.]+\\])?(?:\\:([0-9]*))?(\\/?[^#]*)?.*", 2);
+    static Pattern sAddressPattern = Pattern.compile("(?:(http|https|file)\\:\\/\\/)?(?:([-A-Za-z0-9$_.+!*'(),;?&=]+(?:\\:[-A-Za-z0-9$_.+!*'(),;?&=]+)?)@)?([a-zA-Z0-9\u00a0-\ud7ff\uf900-\ufdcf\ufdf0-\uffef%_-][a-zA-Z0-9\u00a0-\ud7ff\uf900-\ufdcf\ufdf0-\uffef%_\\.-]*|\\[[0-9a-fA-F:\\.]+\\])?(?:\\:([0-9]*))?(\\/?[^#]*)?.*", 2);
     private String mAuthInfo;
     @UnsupportedAppUsage
     private String mHost;
@@ -27,60 +28,62 @@ public class WebAddress {
     private String mScheme;
 
     public WebAddress(String address) throws ParseException {
-        if (address != null) {
-            this.mScheme = "";
-            this.mHost = "";
-            this.mPort = -1;
-            this.mPath = "/";
-            this.mAuthInfo = "";
-            Matcher m = sAddressPattern.matcher(address);
-            if (m.matches()) {
-                String t = m.group(1);
-                if (t != null) {
-                    this.mScheme = t.toLowerCase(Locale.ROOT);
+        if (address == null) {
+            throw new NullPointerException();
+        }
+        this.mScheme = "";
+        this.mHost = "";
+        this.mPort = -1;
+        this.mPath = "/";
+        this.mAuthInfo = "";
+        Matcher m = sAddressPattern.matcher(address);
+        if (m.matches()) {
+            String t = m.group(1);
+            if (t != null) {
+                this.mScheme = t.toLowerCase(Locale.ROOT);
+            }
+            String t2 = m.group(2);
+            if (t2 != null) {
+                this.mAuthInfo = t2;
+            }
+            String t3 = m.group(3);
+            if (t3 != null) {
+                this.mHost = t3;
+            }
+            String t4 = m.group(4);
+            if (t4 != null && t4.length() > 0) {
+                try {
+                    this.mPort = Integer.parseInt(t4);
+                } catch (NumberFormatException e) {
+                    throw new ParseException("Bad port");
                 }
-                String t2 = m.group(2);
-                if (t2 != null) {
-                    this.mAuthInfo = t2;
+            }
+            String t5 = m.group(5);
+            if (t5 != null && t5.length() > 0) {
+                if (t5.charAt(0) == '/') {
+                    this.mPath = t5;
+                } else {
+                    this.mPath = "/" + t5;
                 }
-                String t3 = m.group(3);
-                if (t3 != null) {
-                    this.mHost = t3;
-                }
-                String t4 = m.group(4);
-                if (t4 != null && t4.length() > 0) {
-                    try {
-                        this.mPort = Integer.parseInt(t4);
-                    } catch (NumberFormatException e) {
-                        throw new ParseException("Bad port");
-                    }
-                }
-                String t5 = m.group(5);
-                if (t5 != null && t5.length() > 0) {
-                    if (t5.charAt(0) == '/') {
-                        this.mPath = t5;
-                    } else {
-                        this.mPath = "/" + t5;
-                    }
-                }
-                if (this.mPort == 443 && this.mScheme.equals("")) {
-                    this.mScheme = IntentFilter.SCHEME_HTTPS;
-                } else if (this.mPort == -1) {
+            }
+            if (this.mPort != 443 || !this.mScheme.equals("")) {
+                if (this.mPort == -1) {
                     if (this.mScheme.equals(IntentFilter.SCHEME_HTTPS)) {
                         this.mPort = 443;
                     } else {
                         this.mPort = 80;
                     }
                 }
-                if (this.mScheme.equals("")) {
-                    this.mScheme = IntentFilter.SCHEME_HTTP;
-                    return;
-                }
+            } else {
+                this.mScheme = IntentFilter.SCHEME_HTTPS;
+            }
+            if (this.mScheme.equals("")) {
+                this.mScheme = IntentFilter.SCHEME_HTTP;
                 return;
             }
-            throw new ParseException("Bad address");
+            return;
         }
-        throw new NullPointerException();
+        throw new ParseException("Bad address");
     }
 
     public String toString() {

@@ -5,32 +5,36 @@ import android.hardware.radio.V1_2.CellInfoCdma;
 import android.hardware.radio.V1_2.CellInfoGsm;
 import android.hardware.radio.V1_2.CellInfoTdscdma;
 import android.hardware.radio.V1_2.CellInfoWcdma;
-import android.os.HidlSupport;
-import android.os.HwBlob;
-import android.os.HwParcel;
+import android.p007os.HidlSupport;
+import android.p007os.HwBlob;
+import android.p007os.HwParcel;
 import java.util.ArrayList;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public final class CellInfo {
     public int connectionStatus;
     public Info info = new Info();
     public boolean isRegistered;
 
+    /* loaded from: classes.dex */
     public static final class Info {
-        private byte hidl_d;
+        private byte hidl_d = 0;
         private Object hidl_o;
 
         public Info() {
-            this.hidl_d = 0;
             this.hidl_o = null;
             this.hidl_o = new CellInfoGsm();
         }
 
+        /* loaded from: classes.dex */
         public static final class hidl_discriminator {
             public static final byte cdma = 1;
             public static final byte gsm = 0;
             public static final byte lte = 4;
-            public static final byte nr = 5;
+
+            /* renamed from: nr */
+            public static final byte f99nr = 5;
             public static final byte tdscdma = 3;
             public static final byte wcdma = 2;
 
@@ -58,98 +62,100 @@ public final class CellInfo {
         }
 
         public void gsm(CellInfoGsm gsm) {
-            this.hidl_d = 0;
+            this.hidl_d = (byte) 0;
             this.hidl_o = gsm;
         }
 
         public CellInfoGsm gsm() {
             if (this.hidl_d != 0) {
                 String className = this.hidl_o != null ? this.hidl_o.getClass().getName() : "null";
-                throw new IllegalStateException("Read access to inactive union components is disallowed. Discriminator value is " + this.hidl_d + " (corresponding to " + hidl_discriminator.getName(this.hidl_d) + "), and hidl_o is of type " + className + ".");
-            } else if (this.hidl_o == null || CellInfoGsm.class.isInstance(this.hidl_o)) {
-                return (CellInfoGsm) this.hidl_o;
-            } else {
+                throw new IllegalStateException("Read access to inactive union components is disallowed. Discriminator value is " + ((int) this.hidl_d) + " (corresponding to " + hidl_discriminator.getName(this.hidl_d) + "), and hidl_o is of type " + className + ".");
+            } else if (this.hidl_o != null && !CellInfoGsm.class.isInstance(this.hidl_o)) {
                 throw new Error("Union is in a corrupted state.");
+            } else {
+                return (CellInfoGsm) this.hidl_o;
             }
         }
 
         public void cdma(CellInfoCdma cdma) {
-            this.hidl_d = 1;
+            this.hidl_d = (byte) 1;
             this.hidl_o = cdma;
         }
 
         public CellInfoCdma cdma() {
             if (this.hidl_d != 1) {
                 String className = this.hidl_o != null ? this.hidl_o.getClass().getName() : "null";
-                throw new IllegalStateException("Read access to inactive union components is disallowed. Discriminator value is " + this.hidl_d + " (corresponding to " + hidl_discriminator.getName(this.hidl_d) + "), and hidl_o is of type " + className + ".");
-            } else if (this.hidl_o == null || CellInfoCdma.class.isInstance(this.hidl_o)) {
-                return (CellInfoCdma) this.hidl_o;
-            } else {
+                throw new IllegalStateException("Read access to inactive union components is disallowed. Discriminator value is " + ((int) this.hidl_d) + " (corresponding to " + hidl_discriminator.getName(this.hidl_d) + "), and hidl_o is of type " + className + ".");
+            } else if (this.hidl_o != null && !CellInfoCdma.class.isInstance(this.hidl_o)) {
                 throw new Error("Union is in a corrupted state.");
+            } else {
+                return (CellInfoCdma) this.hidl_o;
             }
         }
 
         public void wcdma(CellInfoWcdma wcdma) {
-            this.hidl_d = 2;
+            this.hidl_d = (byte) 2;
             this.hidl_o = wcdma;
         }
 
         public CellInfoWcdma wcdma() {
             if (this.hidl_d != 2) {
                 String className = this.hidl_o != null ? this.hidl_o.getClass().getName() : "null";
-                throw new IllegalStateException("Read access to inactive union components is disallowed. Discriminator value is " + this.hidl_d + " (corresponding to " + hidl_discriminator.getName(this.hidl_d) + "), and hidl_o is of type " + className + ".");
-            } else if (this.hidl_o == null || CellInfoWcdma.class.isInstance(this.hidl_o)) {
-                return (CellInfoWcdma) this.hidl_o;
-            } else {
+                throw new IllegalStateException("Read access to inactive union components is disallowed. Discriminator value is " + ((int) this.hidl_d) + " (corresponding to " + hidl_discriminator.getName(this.hidl_d) + "), and hidl_o is of type " + className + ".");
+            } else if (this.hidl_o != null && !CellInfoWcdma.class.isInstance(this.hidl_o)) {
                 throw new Error("Union is in a corrupted state.");
+            } else {
+                return (CellInfoWcdma) this.hidl_o;
             }
         }
 
         public void tdscdma(CellInfoTdscdma tdscdma) {
-            this.hidl_d = 3;
+            this.hidl_d = (byte) 3;
             this.hidl_o = tdscdma;
         }
 
         public CellInfoTdscdma tdscdma() {
             if (this.hidl_d != 3) {
                 String className = this.hidl_o != null ? this.hidl_o.getClass().getName() : "null";
-                throw new IllegalStateException("Read access to inactive union components is disallowed. Discriminator value is " + this.hidl_d + " (corresponding to " + hidl_discriminator.getName(this.hidl_d) + "), and hidl_o is of type " + className + ".");
-            } else if (this.hidl_o == null || CellInfoTdscdma.class.isInstance(this.hidl_o)) {
-                return (CellInfoTdscdma) this.hidl_o;
-            } else {
+                throw new IllegalStateException("Read access to inactive union components is disallowed. Discriminator value is " + ((int) this.hidl_d) + " (corresponding to " + hidl_discriminator.getName(this.hidl_d) + "), and hidl_o is of type " + className + ".");
+            } else if (this.hidl_o != null && !CellInfoTdscdma.class.isInstance(this.hidl_o)) {
                 throw new Error("Union is in a corrupted state.");
+            } else {
+                return (CellInfoTdscdma) this.hidl_o;
             }
         }
 
         public void lte(CellInfoLte lte) {
-            this.hidl_d = 4;
+            this.hidl_d = (byte) 4;
             this.hidl_o = lte;
         }
 
         public CellInfoLte lte() {
             if (this.hidl_d != 4) {
                 String className = this.hidl_o != null ? this.hidl_o.getClass().getName() : "null";
-                throw new IllegalStateException("Read access to inactive union components is disallowed. Discriminator value is " + this.hidl_d + " (corresponding to " + hidl_discriminator.getName(this.hidl_d) + "), and hidl_o is of type " + className + ".");
-            } else if (this.hidl_o == null || CellInfoLte.class.isInstance(this.hidl_o)) {
-                return (CellInfoLte) this.hidl_o;
-            } else {
+                throw new IllegalStateException("Read access to inactive union components is disallowed. Discriminator value is " + ((int) this.hidl_d) + " (corresponding to " + hidl_discriminator.getName(this.hidl_d) + "), and hidl_o is of type " + className + ".");
+            } else if (this.hidl_o != null && !CellInfoLte.class.isInstance(this.hidl_o)) {
                 throw new Error("Union is in a corrupted state.");
+            } else {
+                return (CellInfoLte) this.hidl_o;
             }
         }
 
-        public void nr(CellInfoNr nr) {
-            this.hidl_d = 5;
+        /* renamed from: nr */
+        public void m120nr(CellInfoNr nr) {
+            this.hidl_d = (byte) 5;
             this.hidl_o = nr;
         }
 
-        public CellInfoNr nr() {
+        /* renamed from: nr */
+        public CellInfoNr m121nr() {
             if (this.hidl_d != 5) {
                 String className = this.hidl_o != null ? this.hidl_o.getClass().getName() : "null";
-                throw new IllegalStateException("Read access to inactive union components is disallowed. Discriminator value is " + this.hidl_d + " (corresponding to " + hidl_discriminator.getName(this.hidl_d) + "), and hidl_o is of type " + className + ".");
-            } else if (this.hidl_o == null || CellInfoNr.class.isInstance(this.hidl_o)) {
-                return (CellInfoNr) this.hidl_o;
-            } else {
+                throw new IllegalStateException("Read access to inactive union components is disallowed. Discriminator value is " + ((int) this.hidl_d) + " (corresponding to " + hidl_discriminator.getName(this.hidl_d) + "), and hidl_o is of type " + className + ".");
+            } else if (this.hidl_o != null && !CellInfoNr.class.isInstance(this.hidl_o)) {
                 throw new Error("Union is in a corrupted state.");
+            } else {
+                return (CellInfoNr) this.hidl_o;
             }
         }
 
@@ -172,7 +178,7 @@ public final class CellInfo {
         }
 
         public final int hashCode() {
-            return Objects.hash(new Object[]{Integer.valueOf(HidlSupport.deepHashCode(this.hidl_o)), Integer.valueOf(Objects.hashCode(Byte.valueOf(this.hidl_d)))});
+            return Objects.hash(Integer.valueOf(HidlSupport.deepHashCode(this.hidl_o)), Integer.valueOf(Objects.hashCode(Byte.valueOf(this.hidl_d))));
         }
 
         public final String toString() {
@@ -201,28 +207,29 @@ public final class CellInfo {
                     break;
                 case 5:
                     builder.append(".nr = ");
-                    builder.append(nr());
+                    builder.append(m121nr());
                     break;
                 default:
-                    throw new Error("Unknown union discriminator (value: " + this.hidl_d + ").");
+                    throw new Error("Unknown union discriminator (value: " + ((int) this.hidl_d) + ").");
             }
             builder.append("}");
             return builder.toString();
         }
 
         public final void readFromParcel(HwParcel parcel) {
-            readEmbeddedFromParcel(parcel, parcel.readBuffer(128), 0);
+            HwBlob blob = parcel.readBuffer(128L);
+            readEmbeddedFromParcel(parcel, blob, 0L);
         }
 
         public static final ArrayList<Info> readVectorFromParcel(HwParcel parcel) {
             ArrayList<Info> _hidl_vec = new ArrayList<>();
-            HwBlob _hidl_blob = parcel.readBuffer(16);
-            int _hidl_vec_size = _hidl_blob.getInt32(8);
-            HwBlob childBlob = parcel.readEmbeddedBuffer((long) (_hidl_vec_size * 128), _hidl_blob.handle(), 0, true);
+            HwBlob _hidl_blob = parcel.readBuffer(16L);
+            int _hidl_vec_size = _hidl_blob.getInt32(8L);
+            HwBlob childBlob = parcel.readEmbeddedBuffer(_hidl_vec_size * 128, _hidl_blob.handle(), 0L, true);
             _hidl_vec.clear();
             for (int _hidl_index_0 = 0; _hidl_index_0 < _hidl_vec_size; _hidl_index_0++) {
                 Info _hidl_vec_element = new Info();
-                _hidl_vec_element.readEmbeddedFromParcel(parcel, childBlob, (long) (_hidl_index_0 * 128));
+                _hidl_vec_element.readEmbeddedFromParcel(parcel, childBlob, _hidl_index_0 * 128);
                 _hidl_vec.add(_hidl_vec_element);
             }
             return _hidl_vec;
@@ -256,26 +263,26 @@ public final class CellInfo {
                     ((CellInfoNr) this.hidl_o).readEmbeddedFromParcel(parcel, _hidl_blob, 8 + _hidl_offset);
                     return;
                 default:
-                    throw new IllegalStateException("Unknown union discriminator (value: " + this.hidl_d + ").");
+                    throw new IllegalStateException("Unknown union discriminator (value: " + ((int) this.hidl_d) + ").");
             }
         }
 
         public final void writeToParcel(HwParcel parcel) {
             HwBlob _hidl_blob = new HwBlob(128);
-            writeEmbeddedToBlob(_hidl_blob, 0);
+            writeEmbeddedToBlob(_hidl_blob, 0L);
             parcel.writeBuffer(_hidl_blob);
         }
 
         public static final void writeVectorToParcel(HwParcel parcel, ArrayList<Info> _hidl_vec) {
             HwBlob _hidl_blob = new HwBlob(16);
             int _hidl_vec_size = _hidl_vec.size();
-            _hidl_blob.putInt32(8, _hidl_vec_size);
-            _hidl_blob.putBool(12, false);
+            _hidl_blob.putInt32(8L, _hidl_vec_size);
+            _hidl_blob.putBool(12L, false);
             HwBlob childBlob = new HwBlob(_hidl_vec_size * 128);
             for (int _hidl_index_0 = 0; _hidl_index_0 < _hidl_vec_size; _hidl_index_0++) {
-                _hidl_vec.get(_hidl_index_0).writeEmbeddedToBlob(childBlob, (long) (_hidl_index_0 * 128));
+                _hidl_vec.get(_hidl_index_0).writeEmbeddedToBlob(childBlob, _hidl_index_0 * 128);
             }
-            _hidl_blob.putBlob(0, childBlob);
+            _hidl_blob.putBlob(0L, childBlob);
             parcel.writeBuffer(_hidl_blob);
         }
 
@@ -298,10 +305,10 @@ public final class CellInfo {
                     lte().writeEmbeddedToBlob(_hidl_blob, 8 + _hidl_offset);
                     return;
                 case 5:
-                    nr().writeEmbeddedToBlob(_hidl_blob, 8 + _hidl_offset);
+                    m121nr().writeEmbeddedToBlob(_hidl_blob, 8 + _hidl_offset);
                     return;
                 default:
-                    throw new Error("Unknown union discriminator (value: " + this.hidl_d + ").");
+                    throw new Error("Unknown union discriminator (value: " + ((int) this.hidl_d) + ").");
             }
         }
     }
@@ -321,26 +328,27 @@ public final class CellInfo {
     }
 
     public final int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(HidlSupport.deepHashCode(Boolean.valueOf(this.isRegistered))), Integer.valueOf(HidlSupport.deepHashCode(Integer.valueOf(this.connectionStatus))), Integer.valueOf(HidlSupport.deepHashCode(this.info))});
+        return Objects.hash(Integer.valueOf(HidlSupport.deepHashCode(Boolean.valueOf(this.isRegistered))), Integer.valueOf(HidlSupport.deepHashCode(Integer.valueOf(this.connectionStatus))), Integer.valueOf(HidlSupport.deepHashCode(this.info)));
     }
 
     public final String toString() {
-        return "{" + ".isRegistered = " + this.isRegistered + ", .connectionStatus = " + CellConnectionStatus.toString(this.connectionStatus) + ", .info = " + this.info + "}";
+        return "{.isRegistered = " + this.isRegistered + ", .connectionStatus = " + CellConnectionStatus.toString(this.connectionStatus) + ", .info = " + this.info + "}";
     }
 
     public final void readFromParcel(HwParcel parcel) {
-        readEmbeddedFromParcel(parcel, parcel.readBuffer(136), 0);
+        HwBlob blob = parcel.readBuffer(136L);
+        readEmbeddedFromParcel(parcel, blob, 0L);
     }
 
     public static final ArrayList<CellInfo> readVectorFromParcel(HwParcel parcel) {
         ArrayList<CellInfo> _hidl_vec = new ArrayList<>();
-        HwBlob _hidl_blob = parcel.readBuffer(16);
-        int _hidl_vec_size = _hidl_blob.getInt32(8);
-        HwBlob childBlob = parcel.readEmbeddedBuffer((long) (_hidl_vec_size * 136), _hidl_blob.handle(), 0, true);
+        HwBlob _hidl_blob = parcel.readBuffer(16L);
+        int _hidl_vec_size = _hidl_blob.getInt32(8L);
+        HwBlob childBlob = parcel.readEmbeddedBuffer(_hidl_vec_size * 136, _hidl_blob.handle(), 0L, true);
         _hidl_vec.clear();
         for (int _hidl_index_0 = 0; _hidl_index_0 < _hidl_vec_size; _hidl_index_0++) {
             CellInfo _hidl_vec_element = new CellInfo();
-            _hidl_vec_element.readEmbeddedFromParcel(parcel, childBlob, (long) (_hidl_index_0 * 136));
+            _hidl_vec_element.readEmbeddedFromParcel(parcel, childBlob, _hidl_index_0 * 136);
             _hidl_vec.add(_hidl_vec_element);
         }
         return _hidl_vec;
@@ -354,20 +362,20 @@ public final class CellInfo {
 
     public final void writeToParcel(HwParcel parcel) {
         HwBlob _hidl_blob = new HwBlob(136);
-        writeEmbeddedToBlob(_hidl_blob, 0);
+        writeEmbeddedToBlob(_hidl_blob, 0L);
         parcel.writeBuffer(_hidl_blob);
     }
 
     public static final void writeVectorToParcel(HwParcel parcel, ArrayList<CellInfo> _hidl_vec) {
         HwBlob _hidl_blob = new HwBlob(16);
         int _hidl_vec_size = _hidl_vec.size();
-        _hidl_blob.putInt32(8, _hidl_vec_size);
-        _hidl_blob.putBool(12, false);
+        _hidl_blob.putInt32(8L, _hidl_vec_size);
+        _hidl_blob.putBool(12L, false);
         HwBlob childBlob = new HwBlob(_hidl_vec_size * 136);
         for (int _hidl_index_0 = 0; _hidl_index_0 < _hidl_vec_size; _hidl_index_0++) {
-            _hidl_vec.get(_hidl_index_0).writeEmbeddedToBlob(childBlob, (long) (_hidl_index_0 * 136));
+            _hidl_vec.get(_hidl_index_0).writeEmbeddedToBlob(childBlob, _hidl_index_0 * 136);
         }
-        _hidl_blob.putBlob(0, childBlob);
+        _hidl_blob.putBlob(0L, childBlob);
         parcel.writeBuffer(_hidl_blob);
     }
 

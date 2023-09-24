@@ -4,6 +4,7 @@ import android.net.NetworkCapabilities;
 import com.android.internal.util.BitUtils;
 import java.util.Arrays;
 
+/* loaded from: classes3.dex */
 public final class DnsEvent {
     private static final int SIZE_LIMIT = 20000;
     public int eventCount;
@@ -14,22 +15,21 @@ public final class DnsEvent {
     public int successCount;
     public final long transports;
 
-    public DnsEvent(int netId2, long transports2, int initialCapacity) {
-        this.netId = netId2;
-        this.transports = transports2;
+    public DnsEvent(int netId, long transports, int initialCapacity) {
+        this.netId = netId;
+        this.transports = transports;
         this.eventTypes = new byte[initialCapacity];
         this.returnCodes = new byte[initialCapacity];
         this.latenciesMs = new int[initialCapacity];
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean addResult(byte eventType, byte returnCode, int latencyMs) {
+    boolean addResult(byte eventType, byte returnCode, int latencyMs) {
         boolean isSuccess = returnCode == 0;
         if (this.eventCount >= 20000) {
             return isSuccess;
         }
         if (this.eventCount == this.eventTypes.length) {
-            resize((int) (((double) this.eventCount) * 1.4d));
+            resize((int) (this.eventCount * 1.4d));
         }
         this.eventTypes[this.eventCount] = eventType;
         this.returnCodes[this.eventCount] = returnCode;
@@ -48,6 +48,7 @@ public final class DnsEvent {
     }
 
     public String toString() {
+        int[] unpackBits;
         StringBuilder sb = new StringBuilder("DnsEvent(");
         sb.append("netId=");
         sb.append(this.netId);
@@ -56,8 +57,8 @@ public final class DnsEvent {
             builder.append(NetworkCapabilities.transportNameOf(t));
             builder.append(", ");
         }
-        builder.append(String.format("%d events, ", new Object[]{Integer.valueOf(this.eventCount)}));
-        builder.append(String.format("%d success)", new Object[]{Integer.valueOf(this.successCount)}));
+        builder.append(String.format("%d events, ", Integer.valueOf(this.eventCount)));
+        builder.append(String.format("%d success)", Integer.valueOf(this.successCount)));
         return builder.toString();
     }
 }

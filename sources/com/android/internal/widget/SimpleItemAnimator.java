@@ -3,6 +3,7 @@ package com.android.internal.widget;
 import android.view.View;
 import com.android.internal.widget.RecyclerView;
 
+/* loaded from: classes4.dex */
 public abstract class SimpleItemAnimator extends RecyclerView.ItemAnimator {
     private static final boolean DEBUG = false;
     private static final String TAG = "SimpleItemAnimator";
@@ -24,50 +25,56 @@ public abstract class SimpleItemAnimator extends RecyclerView.ItemAnimator {
         this.mSupportsChangeAnimations = supportsChangeAnimations;
     }
 
+    @Override // com.android.internal.widget.RecyclerView.ItemAnimator
     public boolean canReuseUpdatedViewHolder(RecyclerView.ViewHolder viewHolder) {
         return !this.mSupportsChangeAnimations || viewHolder.isInvalid();
     }
 
+    @Override // com.android.internal.widget.RecyclerView.ItemAnimator
     public boolean animateDisappearance(RecyclerView.ViewHolder viewHolder, RecyclerView.ItemAnimator.ItemHolderInfo preLayoutInfo, RecyclerView.ItemAnimator.ItemHolderInfo postLayoutInfo) {
         int oldLeft = preLayoutInfo.left;
         int oldTop = preLayoutInfo.top;
         View disappearingItemView = viewHolder.itemView;
         int newLeft = postLayoutInfo == null ? disappearingItemView.getLeft() : postLayoutInfo.left;
         int newTop = postLayoutInfo == null ? disappearingItemView.getTop() : postLayoutInfo.top;
-        if (viewHolder.isRemoved() || (oldLeft == newLeft && oldTop == newTop)) {
-            return animateRemove(viewHolder);
+        if (!viewHolder.isRemoved() && (oldLeft != newLeft || oldTop != newTop)) {
+            disappearingItemView.layout(newLeft, newTop, disappearingItemView.getWidth() + newLeft, disappearingItemView.getHeight() + newTop);
+            return animateMove(viewHolder, oldLeft, oldTop, newLeft, newTop);
         }
-        disappearingItemView.layout(newLeft, newTop, disappearingItemView.getWidth() + newLeft, disappearingItemView.getHeight() + newTop);
-        return animateMove(viewHolder, oldLeft, oldTop, newLeft, newTop);
+        return animateRemove(viewHolder);
     }
 
+    @Override // com.android.internal.widget.RecyclerView.ItemAnimator
     public boolean animateAppearance(RecyclerView.ViewHolder viewHolder, RecyclerView.ItemAnimator.ItemHolderInfo preLayoutInfo, RecyclerView.ItemAnimator.ItemHolderInfo postLayoutInfo) {
-        if (preLayoutInfo == null || (preLayoutInfo.left == postLayoutInfo.left && preLayoutInfo.top == postLayoutInfo.top)) {
-            return animateAdd(viewHolder);
+        if (preLayoutInfo != null && (preLayoutInfo.left != postLayoutInfo.left || preLayoutInfo.top != postLayoutInfo.top)) {
+            return animateMove(viewHolder, preLayoutInfo.left, preLayoutInfo.top, postLayoutInfo.left, postLayoutInfo.top);
         }
-        return animateMove(viewHolder, preLayoutInfo.left, preLayoutInfo.top, postLayoutInfo.left, postLayoutInfo.top);
+        return animateAdd(viewHolder);
     }
 
+    @Override // com.android.internal.widget.RecyclerView.ItemAnimator
     public boolean animatePersistence(RecyclerView.ViewHolder viewHolder, RecyclerView.ItemAnimator.ItemHolderInfo preInfo, RecyclerView.ItemAnimator.ItemHolderInfo postInfo) {
-        if (preInfo.left == postInfo.left && preInfo.top == postInfo.top) {
-            dispatchMoveFinished(viewHolder);
-            return false;
+        if (preInfo.left != postInfo.left || preInfo.top != postInfo.top) {
+            return animateMove(viewHolder, preInfo.left, preInfo.top, postInfo.left, postInfo.top);
         }
-        return animateMove(viewHolder, preInfo.left, preInfo.top, postInfo.left, postInfo.top);
+        dispatchMoveFinished(viewHolder);
+        return false;
     }
 
+    @Override // com.android.internal.widget.RecyclerView.ItemAnimator
     public boolean animateChange(RecyclerView.ViewHolder oldHolder, RecyclerView.ViewHolder newHolder, RecyclerView.ItemAnimator.ItemHolderInfo preInfo, RecyclerView.ItemAnimator.ItemHolderInfo postInfo) {
         int toLeft;
-        int toTop;
+        int i;
         int fromLeft = preInfo.left;
         int fromTop = preInfo.top;
         if (newHolder.shouldIgnore()) {
             toLeft = preInfo.left;
-            toTop = preInfo.top;
+            i = preInfo.top;
         } else {
             toLeft = postInfo.left;
-            toTop = postInfo.top;
+            i = postInfo.top;
         }
+        int toTop = i;
         return animateChange(oldHolder, newHolder, fromLeft, fromTop, toLeft, toTop);
     }
 

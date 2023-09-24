@@ -7,28 +7,31 @@ import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.res.Configuration;
-import android.os.Bundle;
+import android.p007os.Bundle;
 import android.util.Log;
 import android.view.autofill.AutofillManager;
 import android.view.autofill.Helper;
 import com.ibm.icu.text.PluralRules;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public class Application extends ContextWrapper implements ComponentCallbacks2 {
     private static final String TAG = "Application";
     @UnsupportedAppUsage
-    private ArrayList<ActivityLifecycleCallbacks> mActivityLifecycleCallbacks = new ArrayList<>();
+    private ArrayList<ActivityLifecycleCallbacks> mActivityLifecycleCallbacks;
     @UnsupportedAppUsage
-    private ArrayList<OnProvideAssistDataListener> mAssistCallbacks = null;
+    private ArrayList<OnProvideAssistDataListener> mAssistCallbacks;
     @UnsupportedAppUsage
-    private ArrayList<ComponentCallbacks> mComponentCallbacks = new ArrayList<>();
+    private ArrayList<ComponentCallbacks> mComponentCallbacks;
     @UnsupportedAppUsage
     public LoadedApk mLoadedApk;
 
+    /* loaded from: classes.dex */
     public interface OnProvideAssistDataListener {
         void onProvideAssistData(Activity activity, Bundle bundle);
     }
 
+    /* loaded from: classes.dex */
     public interface ActivityLifecycleCallbacks {
         void onActivityCreated(Activity activity, Bundle bundle);
 
@@ -44,51 +47,54 @@ public class Application extends ContextWrapper implements ComponentCallbacks2 {
 
         void onActivityStopped(Activity activity);
 
-        void onActivityPreCreated(Activity activity, Bundle savedInstanceState) {
+        default void onActivityPreCreated(Activity activity, Bundle savedInstanceState) {
         }
 
-        void onActivityPostCreated(Activity activity, Bundle savedInstanceState) {
+        default void onActivityPostCreated(Activity activity, Bundle savedInstanceState) {
         }
 
-        void onActivityPreStarted(Activity activity) {
+        default void onActivityPreStarted(Activity activity) {
         }
 
-        void onActivityPostStarted(Activity activity) {
+        default void onActivityPostStarted(Activity activity) {
         }
 
-        void onActivityPreResumed(Activity activity) {
+        default void onActivityPreResumed(Activity activity) {
         }
 
-        void onActivityPostResumed(Activity activity) {
+        default void onActivityPostResumed(Activity activity) {
         }
 
-        void onActivityPrePaused(Activity activity) {
+        default void onActivityPrePaused(Activity activity) {
         }
 
-        void onActivityPostPaused(Activity activity) {
+        default void onActivityPostPaused(Activity activity) {
         }
 
-        void onActivityPreStopped(Activity activity) {
+        default void onActivityPreStopped(Activity activity) {
         }
 
-        void onActivityPostStopped(Activity activity) {
+        default void onActivityPostStopped(Activity activity) {
         }
 
-        void onActivityPreSaveInstanceState(Activity activity, Bundle outState) {
+        default void onActivityPreSaveInstanceState(Activity activity, Bundle outState) {
         }
 
-        void onActivityPostSaveInstanceState(Activity activity, Bundle outState) {
+        default void onActivityPostSaveInstanceState(Activity activity, Bundle outState) {
         }
 
-        void onActivityPreDestroyed(Activity activity) {
+        default void onActivityPreDestroyed(Activity activity) {
         }
 
-        void onActivityPostDestroyed(Activity activity) {
+        default void onActivityPostDestroyed(Activity activity) {
         }
     }
 
     public Application() {
-        super((Context) null);
+        super(null);
+        this.mComponentCallbacks = new ArrayList<>();
+        this.mActivityLifecycleCallbacks = new ArrayList<>();
+        this.mAssistCallbacks = null;
     }
 
     public void onCreate() {
@@ -97,6 +103,7 @@ public class Application extends ContextWrapper implements ComponentCallbacks2 {
     public void onTerminate() {
     }
 
+    @Override // android.content.ComponentCallbacks
     public void onConfigurationChanged(Configuration newConfig) {
         Object[] callbacks = collectComponentCallbacks();
         if (callbacks != null) {
@@ -106,6 +113,7 @@ public class Application extends ContextWrapper implements ComponentCallbacks2 {
         }
     }
 
+    @Override // android.content.ComponentCallbacks
     public void onLowMemory() {
         Object[] callbacks = collectComponentCallbacks();
         if (callbacks != null) {
@@ -115,6 +123,7 @@ public class Application extends ContextWrapper implements ComponentCallbacks2 {
         }
     }
 
+    @Override // android.content.ComponentCallbacks2
     public void onTrimMemory(int level) {
         Object[] callbacks = collectComponentCallbacks();
         if (callbacks != null) {
@@ -126,12 +135,14 @@ public class Application extends ContextWrapper implements ComponentCallbacks2 {
         }
     }
 
+    @Override // android.content.Context
     public void registerComponentCallbacks(ComponentCallbacks callback) {
         synchronized (this.mComponentCallbacks) {
             this.mComponentCallbacks.add(callback);
         }
     }
 
+    @Override // android.content.Context
     public void unregisterComponentCallbacks(ComponentCallbacks callback) {
         synchronized (this.mComponentCallbacks) {
             this.mComponentCallbacks.remove(callback);
@@ -171,16 +182,14 @@ public class Application extends ContextWrapper implements ComponentCallbacks2 {
         return ActivityThread.currentProcessName();
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public final void attach(Context context) {
+    final void attach(Context context) {
         attachBaseContext(context);
         this.mLoadedApk = ContextImpl.getImpl(context).mPackageInfo;
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void dispatchActivityPreCreated(Activity activity, Bundle savedInstanceState) {
+    void dispatchActivityPreCreated(Activity activity, Bundle savedInstanceState) {
         Object[] callbacks = collectActivityLifecycleCallbacks();
         if (callbacks != null) {
             for (Object obj : callbacks) {
@@ -189,9 +198,8 @@ public class Application extends ContextWrapper implements ComponentCallbacks2 {
         }
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void dispatchActivityCreated(Activity activity, Bundle savedInstanceState) {
+    void dispatchActivityCreated(Activity activity, Bundle savedInstanceState) {
         Object[] callbacks = collectActivityLifecycleCallbacks();
         if (callbacks != null) {
             for (Object obj : callbacks) {
@@ -200,9 +208,8 @@ public class Application extends ContextWrapper implements ComponentCallbacks2 {
         }
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void dispatchActivityPostCreated(Activity activity, Bundle savedInstanceState) {
+    void dispatchActivityPostCreated(Activity activity, Bundle savedInstanceState) {
         Object[] callbacks = collectActivityLifecycleCallbacks();
         if (callbacks != null) {
             for (Object obj : callbacks) {
@@ -211,9 +218,8 @@ public class Application extends ContextWrapper implements ComponentCallbacks2 {
         }
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void dispatchActivityPreStarted(Activity activity) {
+    void dispatchActivityPreStarted(Activity activity) {
         Object[] callbacks = collectActivityLifecycleCallbacks();
         if (callbacks != null) {
             for (Object obj : callbacks) {
@@ -222,9 +228,8 @@ public class Application extends ContextWrapper implements ComponentCallbacks2 {
         }
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void dispatchActivityStarted(Activity activity) {
+    void dispatchActivityStarted(Activity activity) {
         Object[] callbacks = collectActivityLifecycleCallbacks();
         if (callbacks != null) {
             for (Object obj : callbacks) {
@@ -233,9 +238,8 @@ public class Application extends ContextWrapper implements ComponentCallbacks2 {
         }
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void dispatchActivityPostStarted(Activity activity) {
+    void dispatchActivityPostStarted(Activity activity) {
         Object[] callbacks = collectActivityLifecycleCallbacks();
         if (callbacks != null) {
             for (Object obj : callbacks) {
@@ -244,9 +248,8 @@ public class Application extends ContextWrapper implements ComponentCallbacks2 {
         }
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void dispatchActivityPreResumed(Activity activity) {
+    void dispatchActivityPreResumed(Activity activity) {
         Object[] callbacks = collectActivityLifecycleCallbacks();
         if (callbacks != null) {
             for (Object obj : callbacks) {
@@ -255,9 +258,8 @@ public class Application extends ContextWrapper implements ComponentCallbacks2 {
         }
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void dispatchActivityResumed(Activity activity) {
+    void dispatchActivityResumed(Activity activity) {
         Object[] callbacks = collectActivityLifecycleCallbacks();
         if (callbacks != null) {
             for (Object obj : callbacks) {
@@ -266,9 +268,8 @@ public class Application extends ContextWrapper implements ComponentCallbacks2 {
         }
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void dispatchActivityPostResumed(Activity activity) {
+    void dispatchActivityPostResumed(Activity activity) {
         Object[] callbacks = collectActivityLifecycleCallbacks();
         if (callbacks != null) {
             for (Object obj : callbacks) {
@@ -277,9 +278,8 @@ public class Application extends ContextWrapper implements ComponentCallbacks2 {
         }
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void dispatchActivityPrePaused(Activity activity) {
+    void dispatchActivityPrePaused(Activity activity) {
         Object[] callbacks = collectActivityLifecycleCallbacks();
         if (callbacks != null) {
             for (Object obj : callbacks) {
@@ -288,9 +288,8 @@ public class Application extends ContextWrapper implements ComponentCallbacks2 {
         }
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void dispatchActivityPaused(Activity activity) {
+    void dispatchActivityPaused(Activity activity) {
         Object[] callbacks = collectActivityLifecycleCallbacks();
         if (callbacks != null) {
             for (Object obj : callbacks) {
@@ -299,9 +298,8 @@ public class Application extends ContextWrapper implements ComponentCallbacks2 {
         }
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void dispatchActivityPostPaused(Activity activity) {
+    void dispatchActivityPostPaused(Activity activity) {
         Object[] callbacks = collectActivityLifecycleCallbacks();
         if (callbacks != null) {
             for (Object obj : callbacks) {
@@ -310,9 +308,8 @@ public class Application extends ContextWrapper implements ComponentCallbacks2 {
         }
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void dispatchActivityPreStopped(Activity activity) {
+    void dispatchActivityPreStopped(Activity activity) {
         Object[] callbacks = collectActivityLifecycleCallbacks();
         if (callbacks != null) {
             for (Object obj : callbacks) {
@@ -321,9 +318,8 @@ public class Application extends ContextWrapper implements ComponentCallbacks2 {
         }
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void dispatchActivityStopped(Activity activity) {
+    void dispatchActivityStopped(Activity activity) {
         Object[] callbacks = collectActivityLifecycleCallbacks();
         if (callbacks != null) {
             for (Object obj : callbacks) {
@@ -332,9 +328,8 @@ public class Application extends ContextWrapper implements ComponentCallbacks2 {
         }
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void dispatchActivityPostStopped(Activity activity) {
+    void dispatchActivityPostStopped(Activity activity) {
         Object[] callbacks = collectActivityLifecycleCallbacks();
         if (callbacks != null) {
             for (Object obj : callbacks) {
@@ -343,9 +338,8 @@ public class Application extends ContextWrapper implements ComponentCallbacks2 {
         }
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void dispatchActivityPreSaveInstanceState(Activity activity, Bundle outState) {
+    void dispatchActivityPreSaveInstanceState(Activity activity, Bundle outState) {
         Object[] callbacks = collectActivityLifecycleCallbacks();
         if (callbacks != null) {
             for (Object obj : callbacks) {
@@ -354,9 +348,8 @@ public class Application extends ContextWrapper implements ComponentCallbacks2 {
         }
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void dispatchActivitySaveInstanceState(Activity activity, Bundle outState) {
+    void dispatchActivitySaveInstanceState(Activity activity, Bundle outState) {
         Object[] callbacks = collectActivityLifecycleCallbacks();
         if (callbacks != null) {
             for (Object obj : callbacks) {
@@ -365,9 +358,8 @@ public class Application extends ContextWrapper implements ComponentCallbacks2 {
         }
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void dispatchActivityPostSaveInstanceState(Activity activity, Bundle outState) {
+    void dispatchActivityPostSaveInstanceState(Activity activity, Bundle outState) {
         Object[] callbacks = collectActivityLifecycleCallbacks();
         if (callbacks != null) {
             for (Object obj : callbacks) {
@@ -376,9 +368,8 @@ public class Application extends ContextWrapper implements ComponentCallbacks2 {
         }
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void dispatchActivityPreDestroyed(Activity activity) {
+    void dispatchActivityPreDestroyed(Activity activity) {
         Object[] callbacks = collectActivityLifecycleCallbacks();
         if (callbacks != null) {
             for (Object obj : callbacks) {
@@ -387,9 +378,8 @@ public class Application extends ContextWrapper implements ComponentCallbacks2 {
         }
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void dispatchActivityDestroyed(Activity activity) {
+    void dispatchActivityDestroyed(Activity activity) {
         Object[] callbacks = collectActivityLifecycleCallbacks();
         if (callbacks != null) {
             for (Object obj : callbacks) {
@@ -398,9 +388,8 @@ public class Application extends ContextWrapper implements ComponentCallbacks2 {
         }
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void dispatchActivityPostDestroyed(Activity activity) {
+    void dispatchActivityPostDestroyed(Activity activity) {
         Object[] callbacks = collectActivityLifecycleCallbacks();
         if (callbacks != null) {
             for (Object obj : callbacks) {
@@ -430,59 +419,21 @@ public class Application extends ContextWrapper implements ComponentCallbacks2 {
         return callbacks;
     }
 
-    /* access modifiers changed from: package-private */
-    /* JADX WARNING: Code restructure failed: missing block: B:11:0x0012, code lost:
-        if (r1 >= r0.length) goto L_0x001e;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:12:0x0014, code lost:
-        ((android.app.Application.OnProvideAssistDataListener) r0[r1]).onProvideAssistData(r4, r5);
-        r1 = r1 + 1;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:21:?, code lost:
-        return;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:22:?, code lost:
-        return;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:8:0x000e, code lost:
-        if (r0 == null) goto L_?;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:9:0x0010, code lost:
-        r1 = 0;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void dispatchOnProvideAssistData(android.app.Activity r4, android.os.Bundle r5) {
-        /*
-            r3 = this;
-            monitor-enter(r3)
-            java.util.ArrayList<android.app.Application$OnProvideAssistDataListener> r0 = r3.mAssistCallbacks     // Catch:{ all -> 0x001f }
-            if (r0 != 0) goto L_0x0007
-            monitor-exit(r3)     // Catch:{ all -> 0x001f }
-            return
-        L_0x0007:
-            java.util.ArrayList<android.app.Application$OnProvideAssistDataListener> r0 = r3.mAssistCallbacks     // Catch:{ all -> 0x001f }
-            java.lang.Object[] r0 = r0.toArray()     // Catch:{ all -> 0x001f }
-            monitor-exit(r3)     // Catch:{ all -> 0x001f }
-            if (r0 == 0) goto L_0x001e
-            r1 = 0
-        L_0x0011:
-            int r2 = r0.length
-            if (r1 >= r2) goto L_0x001e
-            r2 = r0[r1]
-            android.app.Application$OnProvideAssistDataListener r2 = (android.app.Application.OnProvideAssistDataListener) r2
-            r2.onProvideAssistData(r4, r5)
-            int r1 = r1 + 1
-            goto L_0x0011
-        L_0x001e:
-            return
-        L_0x001f:
-            r0 = move-exception
-            monitor-exit(r3)     // Catch:{ all -> 0x001f }
-            throw r0
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.app.Application.dispatchOnProvideAssistData(android.app.Activity, android.os.Bundle):void");
+    void dispatchOnProvideAssistData(Activity activity, Bundle data) {
+        synchronized (this) {
+            if (this.mAssistCallbacks == null) {
+                return;
+            }
+            Object[] callbacks = this.mAssistCallbacks.toArray();
+            if (callbacks != null) {
+                for (Object obj : callbacks) {
+                    ((OnProvideAssistDataListener) obj).onProvideAssistData(activity, data);
+                }
+            }
+        }
     }
 
+    @Override // android.content.ContextWrapper, android.content.Context
     public AutofillManager.AutofillClient getAutofillClient() {
         Activity activity;
         AutofillManager.AutofillClient client = super.getAutofillClient();
@@ -490,27 +441,24 @@ public class Application extends ContextWrapper implements ComponentCallbacks2 {
             return client;
         }
         if (Helper.sVerbose) {
-            Log.v(TAG, "getAutofillClient(): null on super, trying to find activity thread");
+            Log.m66v(TAG, "getAutofillClient(): null on super, trying to find activity thread");
         }
         ActivityThread activityThread = ActivityThread.currentActivityThread();
         if (activityThread == null) {
             return null;
         }
         int activityCount = activityThread.mActivities.size();
-        int i = 0;
-        while (i < activityCount) {
+        for (int i = 0; i < activityCount; i++) {
             ActivityThread.ActivityClientRecord record = activityThread.mActivities.valueAt(i);
-            if (record == null || (activity = record.activity) == null || !activity.getWindow().getDecorView().hasFocus()) {
-                i++;
-            } else {
+            if (record != null && (activity = record.activity) != null && activity.getWindow().getDecorView().hasFocus()) {
                 if (Helper.sVerbose) {
-                    Log.v(TAG, "getAutofillClient(): found activity for " + this + PluralRules.KEYWORD_RULE_SEPARATOR + activity);
+                    Log.m66v(TAG, "getAutofillClient(): found activity for " + this + PluralRules.KEYWORD_RULE_SEPARATOR + activity);
                 }
                 return activity;
             }
         }
-        if (Helper.sVerbose != 0) {
-            Log.v(TAG, "getAutofillClient(): none of the " + activityCount + " activities on " + this + " have focus");
+        if (Helper.sVerbose) {
+            Log.m66v(TAG, "getAutofillClient(): none of the " + activityCount + " activities on " + this + " have focus");
         }
         return null;
     }

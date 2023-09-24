@@ -8,9 +8,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
 @Deprecated
+/* loaded from: classes4.dex */
 public class ZoomControls extends LinearLayout {
     @UnsupportedAppUsage
     private final ZoomButton mZoomIn;
@@ -18,15 +19,16 @@ public class ZoomControls extends LinearLayout {
     private final ZoomButton mZoomOut;
 
     public ZoomControls(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public ZoomControls(Context context, AttributeSet attrs) {
         super(context, attrs);
         setFocusable(false);
-        ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate((int) R.layout.zoom_controls, (ViewGroup) this, true);
-        this.mZoomIn = (ZoomButton) findViewById(R.id.zoomIn);
-        this.mZoomOut = (ZoomButton) findViewById(R.id.zoomOut);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater.inflate(C3132R.layout.zoom_controls, (ViewGroup) this, true);
+        this.mZoomIn = (ZoomButton) findViewById(C3132R.C3134id.zoomIn);
+        this.mZoomOut = (ZoomButton) findViewById(C3132R.C3134id.zoomOut);
     }
 
     public void setOnZoomInClickListener(View.OnClickListener listener) {
@@ -42,6 +44,7 @@ public class ZoomControls extends LinearLayout {
         this.mZoomOut.setZoomSpeed(speed);
     }
 
+    @Override // android.view.View
     public boolean onTouchEvent(MotionEvent event) {
         return true;
     }
@@ -56,7 +59,7 @@ public class ZoomControls extends LinearLayout {
 
     private void fade(int visibility, float startAlpha, float endAlpha) {
         AlphaAnimation anim = new AlphaAnimation(startAlpha, endAlpha);
-        anim.setDuration(500);
+        anim.setDuration(500L);
         startAnimation(anim);
         setVisibility(visibility);
     }
@@ -69,10 +72,12 @@ public class ZoomControls extends LinearLayout {
         this.mZoomOut.setEnabled(isEnabled);
     }
 
+    @Override // android.view.ViewGroup, android.view.View
     public boolean hasFocus() {
         return this.mZoomIn.hasFocus() || this.mZoomOut.hasFocus();
     }
 
+    @Override // android.widget.LinearLayout, android.view.ViewGroup, android.view.View
     public CharSequence getAccessibilityClassName() {
         return ZoomControls.class.getName();
     }

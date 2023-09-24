@@ -8,18 +8,18 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 
+/* loaded from: classes.dex */
 public class LifecycleRegistry extends Lifecycle {
+    private final LifecycleOwner mLifecycleOwner;
+    private FastSafeIterableMap<LifecycleObserver, ObserverWithState> mObserverMap = new FastSafeIterableMap<>();
     private int mAddingObserverCounter = 0;
     private boolean mHandlingEvent = false;
-    private final LifecycleOwner mLifecycleOwner;
     private boolean mNewEventOccurred = false;
-    private FastSafeIterableMap<LifecycleObserver, ObserverWithState> mObserverMap = new FastSafeIterableMap<>();
     private ArrayList<Lifecycle.State> mParentStates = new ArrayList<>();
-    private Lifecycle.State mState;
+    private Lifecycle.State mState = Lifecycle.State.INITIALIZED;
 
     public LifecycleRegistry(@NonNull LifecycleOwner provider) {
         this.mLifecycleOwner = provider;
-        this.mState = Lifecycle.State.INITIALIZED;
     }
 
     public void markState(Lifecycle.State state) {
@@ -43,39 +43,37 @@ public class LifecycleRegistry extends Lifecycle {
         }
         Lifecycle.State eldestObserverState = this.mObserverMap.eldest().getValue().mState;
         Lifecycle.State newestObserverState = this.mObserverMap.newest().getValue().mState;
-        if (eldestObserverState == newestObserverState && this.mState == newestObserverState) {
-            return true;
-        }
-        return false;
+        return eldestObserverState == newestObserverState && this.mState == newestObserverState;
     }
 
     private Lifecycle.State calculateTargetState(LifecycleObserver observer) {
         Map.Entry<LifecycleObserver, ObserverWithState> previous = this.mObserverMap.ceil(observer);
-        Lifecycle.State parentState = null;
         Lifecycle.State siblingState = previous != null ? previous.getValue().mState : null;
-        if (!this.mParentStates.isEmpty()) {
-            parentState = this.mParentStates.get(this.mParentStates.size() - 1);
-        }
+        Lifecycle.State parentState = this.mParentStates.isEmpty() ? null : this.mParentStates.get(this.mParentStates.size() - 1);
         return min(min(this.mState, siblingState), parentState);
     }
 
+    @Override // android.arch.lifecycle.Lifecycle
     public void addObserver(LifecycleObserver observer) {
-        ObserverWithState statefulObserver = new ObserverWithState(observer, this.mState == Lifecycle.State.DESTROYED ? Lifecycle.State.DESTROYED : Lifecycle.State.INITIALIZED);
-        if (this.mObserverMap.putIfAbsent(observer, statefulObserver) == null) {
-            boolean isReentrance = this.mAddingObserverCounter != 0 || this.mHandlingEvent;
-            Lifecycle.State targetState = calculateTargetState(observer);
-            this.mAddingObserverCounter++;
-            while (statefulObserver.mState.compareTo(targetState) < 0 && this.mObserverMap.contains(observer)) {
-                pushParentState(statefulObserver.mState);
-                statefulObserver.dispatchEvent(this.mLifecycleOwner, upEvent(statefulObserver.mState));
-                popParentState();
-                targetState = calculateTargetState(observer);
-            }
-            if (!isReentrance) {
-                sync();
-            }
-            this.mAddingObserverCounter--;
+        Lifecycle.State initialState = this.mState == Lifecycle.State.DESTROYED ? Lifecycle.State.DESTROYED : Lifecycle.State.INITIALIZED;
+        ObserverWithState statefulObserver = new ObserverWithState(observer, initialState);
+        ObserverWithState previous = this.mObserverMap.putIfAbsent(observer, statefulObserver);
+        if (previous != null) {
+            return;
         }
+        boolean isReentrance = this.mAddingObserverCounter != 0 || this.mHandlingEvent;
+        Lifecycle.State targetState = calculateTargetState(observer);
+        this.mAddingObserverCounter++;
+        while (statefulObserver.mState.compareTo(targetState) < 0 && this.mObserverMap.contains(observer)) {
+            pushParentState(statefulObserver.mState);
+            statefulObserver.dispatchEvent(this.mLifecycleOwner, upEvent(statefulObserver.mState));
+            popParentState();
+            targetState = calculateTargetState(observer);
+        }
+        if (!isReentrance) {
+            sync();
+        }
+        this.mAddingObserverCounter--;
     }
 
     private void popParentState() {
@@ -86,6 +84,7 @@ public class LifecycleRegistry extends Lifecycle {
         this.mParentStates.add(state);
     }
 
+    @Override // android.arch.lifecycle.Lifecycle
     public void removeObserver(LifecycleObserver observer) {
         this.mObserverMap.remove(observer);
     }
@@ -94,6 +93,7 @@ public class LifecycleRegistry extends Lifecycle {
         return this.mObserverMap.size();
     }
 
+    @Override // android.arch.lifecycle.Lifecycle
     public Lifecycle.State getCurrentState() {
         return this.mState;
     }
@@ -148,6 +148,7 @@ public class LifecycleRegistry extends Lifecycle {
         }
     }
 
+    /* JADX WARN: Multi-variable type inference failed */
     private void forwardPass() {
         Iterator<Map.Entry<LifecycleObserver, ObserverWithState>> ascendingIterator = this.mObserverMap.iteratorWithAdditions();
         while (ascendingIterator.hasNext() && !this.mNewEventOccurred) {
@@ -193,6 +194,7 @@ public class LifecycleRegistry extends Lifecycle {
         return (state2 == null || state2.compareTo(state1) >= 0) ? state1 : state2;
     }
 
+    /* loaded from: classes.dex */
     static class ObserverWithState {
         GenericLifecycleObserver mLifecycleObserver;
         Lifecycle.State mState;
@@ -202,8 +204,7 @@ public class LifecycleRegistry extends Lifecycle {
             this.mState = initialState;
         }
 
-        /* access modifiers changed from: package-private */
-        public void dispatchEvent(LifecycleOwner owner, Lifecycle.Event event) {
+        void dispatchEvent(LifecycleOwner owner, Lifecycle.Event event) {
             Lifecycle.State newState = LifecycleRegistry.getStateAfter(event);
             this.mState = LifecycleRegistry.min(this.mState, newState);
             this.mLifecycleObserver.onStateChanged(owner, event);

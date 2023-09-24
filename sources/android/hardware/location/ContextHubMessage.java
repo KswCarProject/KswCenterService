@@ -2,19 +2,24 @@ package android.hardware.location;
 
 import android.annotation.SystemApi;
 import android.net.wifi.WifiEnterpriseConfig;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.telecom.Logging.Session;
 import java.util.Arrays;
 
 @SystemApi
 @Deprecated
+/* loaded from: classes.dex */
 public class ContextHubMessage implements Parcelable {
-    public static final Parcelable.Creator<ContextHubMessage> CREATOR = new Parcelable.Creator<ContextHubMessage>() {
+    public static final Parcelable.Creator<ContextHubMessage> CREATOR = new Parcelable.Creator<ContextHubMessage>() { // from class: android.hardware.location.ContextHubMessage.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ContextHubMessage createFromParcel(Parcel in) {
             return new ContextHubMessage(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ContextHubMessage[] newArray(int size) {
             return new ContextHubMessage[size];
         }
@@ -54,6 +59,7 @@ public class ContextHubMessage implements Parcelable {
         this.mData = Arrays.copyOf(data, data.length);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -61,10 +67,12 @@ public class ContextHubMessage implements Parcelable {
     private ContextHubMessage(Parcel in) {
         this.mType = in.readInt();
         this.mVersion = in.readInt();
-        this.mData = new byte[in.readInt()];
+        int bufferLength = in.readInt();
+        this.mData = new byte[bufferLength];
         in.readByteArray(this.mData);
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(this.mType);
         out.writeInt(this.mVersion);
@@ -73,11 +81,10 @@ public class ContextHubMessage implements Parcelable {
     }
 
     public String toString() {
-        String ret;
         int length = this.mData.length;
-        String ret2 = "ContextHubMessage[type = " + this.mType + ", length = " + this.mData.length + " bytes](";
+        String ret = "ContextHubMessage[type = " + this.mType + ", length = " + this.mData.length + " bytes](";
         if (length > 0) {
-            ret2 = ret2 + "data = 0x";
+            ret = ret + "data = 0x";
         }
         for (int i = 0; i < Math.min(length, 16); i++) {
             ret = ret + Byte.toHexString(this.mData[i], true);

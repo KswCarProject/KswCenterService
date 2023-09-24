@@ -1,8 +1,9 @@
 package android.telephony;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public class SmsCbCmasInfo implements Parcelable {
     public static final int CMAS_CATEGORY_CBRNE = 10;
     public static final int CMAS_CATEGORY_ENV = 7;
@@ -43,11 +44,15 @@ public class SmsCbCmasInfo implements Parcelable {
     public static final int CMAS_URGENCY_EXPECTED = 1;
     public static final int CMAS_URGENCY_IMMEDIATE = 0;
     public static final int CMAS_URGENCY_UNKNOWN = -1;
-    public static final Parcelable.Creator<SmsCbCmasInfo> CREATOR = new Parcelable.Creator<SmsCbCmasInfo>() {
+    public static final Parcelable.Creator<SmsCbCmasInfo> CREATOR = new Parcelable.Creator<SmsCbCmasInfo>() { // from class: android.telephony.SmsCbCmasInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SmsCbCmasInfo createFromParcel(Parcel in) {
             return new SmsCbCmasInfo(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SmsCbCmasInfo[] newArray(int size) {
             return new SmsCbCmasInfo[size];
         }
@@ -77,6 +82,7 @@ public class SmsCbCmasInfo implements Parcelable {
         this.mCertainty = in.readInt();
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mMessageClass);
         dest.writeInt(this.mCategory);
@@ -114,6 +120,7 @@ public class SmsCbCmasInfo implements Parcelable {
         return "SmsCbCmasInfo{messageClass=" + this.mMessageClass + ", category=" + this.mCategory + ", responseType=" + this.mResponseType + ", severity=" + this.mSeverity + ", urgency=" + this.mUrgency + ", certainty=" + this.mCertainty + '}';
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

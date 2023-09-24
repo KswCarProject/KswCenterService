@@ -7,6 +7,7 @@ import android.content.res.AssetManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 
+/* loaded from: classes4.dex */
 public class ContextThemeWrapper extends ContextWrapper {
     @UnsupportedAppUsage
     private LayoutInflater mInflater;
@@ -19,7 +20,7 @@ public class ContextThemeWrapper extends ContextWrapper {
     private int mThemeResource;
 
     public ContextThemeWrapper() {
-        super((Context) null);
+        super(null);
     }
 
     public ContextThemeWrapper(Context base, int themeResId) {
@@ -32,29 +33,31 @@ public class ContextThemeWrapper extends ContextWrapper {
         this.mTheme = theme;
     }
 
-    /* access modifiers changed from: protected */
-    public void attachBaseContext(Context newBase) {
+    @Override // android.content.ContextWrapper
+    protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(newBase);
     }
 
     public void applyOverrideConfiguration(Configuration overrideConfiguration) {
         if (this.mResources != null) {
             throw new IllegalStateException("getResources() or getAssets() has already been called");
-        } else if (this.mOverrideConfiguration == null) {
-            this.mOverrideConfiguration = new Configuration(overrideConfiguration);
-        } else {
+        }
+        if (this.mOverrideConfiguration != null) {
             throw new IllegalStateException("Override configuration has already been set");
         }
+        this.mOverrideConfiguration = new Configuration(overrideConfiguration);
     }
 
     public Configuration getOverrideConfiguration() {
         return this.mOverrideConfiguration;
     }
 
+    @Override // android.content.ContextWrapper, android.content.Context
     public AssetManager getAssets() {
         return getResourcesInternal().getAssets();
     }
 
+    @Override // android.content.ContextWrapper, android.content.Context
     public Resources getResources() {
         return getResourcesInternal();
     }
@@ -64,12 +67,14 @@ public class ContextThemeWrapper extends ContextWrapper {
             if (this.mOverrideConfiguration == null) {
                 this.mResources = super.getResources();
             } else {
-                this.mResources = createConfigurationContext(this.mOverrideConfiguration).getResources();
+                Context resContext = createConfigurationContext(this.mOverrideConfiguration);
+                this.mResources = resContext.getResources();
             }
         }
         return this.mResources;
     }
 
+    @Override // android.content.ContextWrapper, android.content.Context
     public void setTheme(int resid) {
         if (this.mThemeResource != resid) {
             this.mThemeResource = resid;
@@ -81,11 +86,13 @@ public class ContextThemeWrapper extends ContextWrapper {
         this.mTheme = theme;
     }
 
+    @Override // android.content.ContextWrapper, android.content.Context
     @UnsupportedAppUsage
     public int getThemeResId() {
         return this.mThemeResource;
     }
 
+    @Override // android.content.ContextWrapper, android.content.Context
     public Resources.Theme getTheme() {
         if (this.mTheme != null) {
             return this.mTheme;
@@ -95,18 +102,18 @@ public class ContextThemeWrapper extends ContextWrapper {
         return this.mTheme;
     }
 
+    @Override // android.content.ContextWrapper, android.content.Context
     public Object getSystemService(String name) {
-        if (!Context.LAYOUT_INFLATER_SERVICE.equals(name)) {
-            return getBaseContext().getSystemService(name);
+        if (Context.LAYOUT_INFLATER_SERVICE.equals(name)) {
+            if (this.mInflater == null) {
+                this.mInflater = LayoutInflater.from(getBaseContext()).cloneInContext(this);
+            }
+            return this.mInflater;
         }
-        if (this.mInflater == null) {
-            this.mInflater = LayoutInflater.from(getBaseContext()).cloneInContext(this);
-        }
-        return this.mInflater;
+        return getBaseContext().getSystemService(name);
     }
 
-    /* access modifiers changed from: protected */
-    public void onApplyThemeResource(Resources.Theme theme, int resId, boolean first) {
+    protected void onApplyThemeResource(Resources.Theme theme, int resId, boolean first) {
         theme.applyStyle(resId, true);
     }
 

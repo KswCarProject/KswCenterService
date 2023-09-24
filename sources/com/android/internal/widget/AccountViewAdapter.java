@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import java.util.List;
 
+/* loaded from: classes4.dex */
 public class AccountViewAdapter extends BaseAdapter {
     private Context mContext;
     private List<AccountElements> mData;
@@ -16,16 +17,19 @@ public class AccountViewAdapter extends BaseAdapter {
         this.mData = data;
     }
 
+    @Override // android.widget.Adapter
     public int getCount() {
         return this.mData.size();
     }
 
+    @Override // android.widget.Adapter
     public Object getItem(int position) {
         return this.mData.get(position);
     }
 
+    @Override // android.widget.Adapter
     public long getItemId(int position) {
-        return (long) position;
+        return position;
     }
 
     public void updateData(List<AccountElements> data) {
@@ -33,6 +37,7 @@ public class AccountViewAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    @Override // android.widget.Adapter
     public View getView(int position, View convertView, ViewGroup parent) {
         AccountItemView view;
         if (convertView == null) {
@@ -40,10 +45,12 @@ public class AccountViewAdapter extends BaseAdapter {
         } else {
             view = (AccountItemView) convertView;
         }
-        view.setViewItem((AccountElements) getItem(position));
+        AccountElements elements = (AccountElements) getItem(position);
+        view.setViewItem(elements);
         return view;
     }
 
+    /* loaded from: classes4.dex */
     public static class AccountElements {
         private Drawable mDrawable;
         private int mIcon;
@@ -51,7 +58,7 @@ public class AccountViewAdapter extends BaseAdapter {
         private String mNumber;
 
         public AccountElements(int icon, String name, String number) {
-            this(icon, (Drawable) null, name, number);
+            this(icon, null, name, number);
         }
 
         public AccountElements(Drawable drawable, String name, String number) {

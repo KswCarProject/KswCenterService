@@ -1,60 +1,62 @@
 package com.android.internal.util;
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.os.IProgressListener;
-import android.os.RemoteCallbackList;
-import android.os.RemoteException;
+import android.p007os.Bundle;
+import android.p007os.IProgressListener;
+import android.p007os.RemoteCallbackList;
+import android.p007os.RemoteException;
 import android.util.MathUtils;
 import com.android.internal.annotations.GuardedBy;
 
+/* loaded from: classes4.dex */
 public class ProgressReporter {
     private static final int STATE_FINISHED = 2;
     private static final int STATE_INIT = 0;
     private static final int STATE_STARTED = 1;
-    @GuardedBy({"this"})
-    private Bundle mExtras = new Bundle();
     private final int mId;
     @GuardedBy({"this"})
     private final RemoteCallbackList<IProgressListener> mListeners = new RemoteCallbackList<>();
     @GuardedBy({"this"})
+    private int mState = 0;
+    @GuardedBy({"this"})
     private int mProgress = 0;
     @GuardedBy({"this"})
-    private int[] mSegmentRange = {0, 100};
+    private Bundle mExtras = new Bundle();
     @GuardedBy({"this"})
-    private int mState = 0;
+    private int[] mSegmentRange = {0, 100};
 
     public ProgressReporter(int id) {
         this.mId = id;
     }
 
     public void addListener(IProgressListener listener) {
-        if (listener != null) {
-            synchronized (this) {
-                this.mListeners.register(listener);
-                switch (this.mState) {
-                    case 1:
-                        try {
-                            listener.onStarted(this.mId, (Bundle) null);
-                            listener.onProgress(this.mId, this.mProgress, this.mExtras);
-                            break;
-                        } catch (RemoteException e) {
-                            break;
-                        }
-                    case 2:
-                        try {
-                            listener.onFinished(this.mId, (Bundle) null);
-                            break;
-                        } catch (RemoteException e2) {
-                            break;
-                        }
-                }
+        if (listener == null) {
+            return;
+        }
+        synchronized (this) {
+            this.mListeners.register(listener);
+            switch (this.mState) {
+                case 1:
+                    try {
+                        listener.onStarted(this.mId, null);
+                        listener.onProgress(this.mId, this.mProgress, this.mExtras);
+                        break;
+                    } catch (RemoteException e) {
+                        break;
+                    }
+                case 2:
+                    try {
+                        listener.onFinished(this.mId, null);
+                        break;
+                    } catch (RemoteException e2) {
+                        break;
+                    }
             }
         }
     }
 
     public void setProgress(int progress) {
-        setProgress(progress, 100, (CharSequence) null);
+        setProgress(progress, 100, null);
     }
 
     public void setProgress(int progress, CharSequence title) {
@@ -62,20 +64,19 @@ public class ProgressReporter {
     }
 
     public void setProgress(int n, int m) {
-        setProgress(n, m, (CharSequence) null);
+        setProgress(n, m, null);
     }
 
     public void setProgress(int n, int m, CharSequence title) {
         synchronized (this) {
-            if (this.mState == 1) {
-                this.mProgress = this.mSegmentRange[0] + MathUtils.constrain((this.mSegmentRange[1] * n) / m, 0, this.mSegmentRange[1]);
-                if (title != null) {
-                    this.mExtras.putCharSequence(Intent.EXTRA_TITLE, title);
-                }
-                notifyProgress(this.mId, this.mProgress, this.mExtras);
-            } else {
+            if (this.mState != 1) {
                 throw new IllegalStateException("Must be started to change progress");
             }
+            this.mProgress = this.mSegmentRange[0] + MathUtils.constrain((this.mSegmentRange[1] * n) / m, 0, this.mSegmentRange[1]);
+            if (title != null) {
+                this.mExtras.putCharSequence(Intent.EXTRA_TITLE, title);
+            }
+            notifyProgress(this.mId, this.mProgress, this.mExtras);
         }
     }
 
@@ -95,20 +96,18 @@ public class ProgressReporter {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public int getProgress() {
+    int getProgress() {
         return this.mProgress;
     }
 
-    /* access modifiers changed from: package-private */
-    public int[] getSegmentRange() {
+    int[] getSegmentRange() {
         return this.mSegmentRange;
     }
 
     public void start() {
         synchronized (this) {
             this.mState = 1;
-            notifyStarted(this.mId, (Bundle) null);
+            notifyStarted(this.mId, null);
             notifyProgress(this.mId, this.mProgress, this.mExtras);
         }
     }
@@ -116,7 +115,7 @@ public class ProgressReporter {
     public void finish() {
         synchronized (this) {
             this.mState = 2;
-            notifyFinished(this.mId, (Bundle) null);
+            notifyFinished(this.mId, null);
             this.mListeners.kill();
         }
     }

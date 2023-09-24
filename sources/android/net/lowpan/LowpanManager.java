@@ -4,27 +4,27 @@ import android.content.Context;
 import android.net.lowpan.ILowpanManager;
 import android.net.lowpan.ILowpanManagerListener;
 import android.net.lowpan.LowpanManager;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Looper;
-import android.os.RemoteException;
-import android.os.ServiceManager;
+import android.p007os.Handler;
+import android.p007os.IBinder;
+import android.p007os.Looper;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+/* loaded from: classes3.dex */
 public class LowpanManager {
     private static final String TAG = LowpanManager.class.getSimpleName();
-    private final Map<IBinder, WeakReference<LowpanInterface>> mBinderCache = new WeakHashMap();
+    private final Map<IBinder, WeakReference<LowpanInterface>> mBinderCache;
     private final Context mContext;
-    /* access modifiers changed from: private */
-    public final Map<String, LowpanInterface> mInterfaceCache = new HashMap();
-    private final Map<Integer, ILowpanManagerListener> mListenerMap = new HashMap();
-    /* access modifiers changed from: private */
-    public final Looper mLooper;
+    private final Map<String, LowpanInterface> mInterfaceCache;
+    private final Map<Integer, ILowpanManagerListener> mListenerMap;
+    private final Looper mLooper;
     private final ILowpanManager mService;
 
+    /* loaded from: classes3.dex */
     public static abstract class Callback {
         public void onInterfaceAdded(LowpanInterface lowpanInterface) {
         }
@@ -40,18 +40,25 @@ public class LowpanManager {
     public static LowpanManager getManager() {
         IBinder binder = ServiceManager.getService("lowpan");
         if (binder != null) {
-            return new LowpanManager(ILowpanManager.Stub.asInterface(binder));
+            ILowpanManager service = ILowpanManager.Stub.asInterface(binder);
+            return new LowpanManager(service);
         }
         return null;
     }
 
     LowpanManager(ILowpanManager service) {
+        this.mListenerMap = new HashMap();
+        this.mInterfaceCache = new HashMap();
+        this.mBinderCache = new WeakHashMap();
         this.mService = service;
         this.mContext = null;
         this.mLooper = null;
     }
 
     public LowpanManager(Context context, ILowpanManager service, Looper looper) {
+        this.mListenerMap = new HashMap();
+        this.mInterfaceCache = new HashMap();
+        this.mBinderCache = new WeakHashMap();
         this.mContext = context;
         this.mService = service;
         this.mLooper = looper;
@@ -61,7 +68,7 @@ public class LowpanManager {
         LowpanInterface iface = null;
         synchronized (this.mBinderCache) {
             if (this.mBinderCache.containsKey(ifaceService.asBinder())) {
-                iface = (LowpanInterface) this.mBinderCache.get(ifaceService.asBinder()).get();
+                iface = this.mBinderCache.get(ifaceService.asBinder()).get();
             }
         }
         return iface;
@@ -72,7 +79,7 @@ public class LowpanManager {
         try {
             synchronized (this.mBinderCache) {
                 if (this.mBinderCache.containsKey(ifaceService.asBinder())) {
-                    iface = (LowpanInterface) this.mBinderCache.get(ifaceService.asBinder()).get();
+                    iface = this.mBinderCache.get(ifaceService.asBinder()).get();
                 }
                 if (iface == null) {
                     final String ifaceName = ifaceService.getName();
@@ -80,12 +87,13 @@ public class LowpanManager {
                     synchronized (this.mInterfaceCache) {
                         this.mInterfaceCache.put(iface.getName(), iface);
                     }
-                    this.mBinderCache.put(ifaceService.asBinder(), new WeakReference(iface));
-                    ifaceService.asBinder().linkToDeath(new IBinder.DeathRecipient() {
+                    this.mBinderCache.put(ifaceService.asBinder(), new WeakReference<>(iface));
+                    ifaceService.asBinder().linkToDeath(new IBinder.DeathRecipient() { // from class: android.net.lowpan.LowpanManager.1
+                        @Override // android.p007os.IBinder.DeathRecipient
                         public void binderDied() {
                             synchronized (LowpanManager.this.mInterfaceCache) {
-                                LowpanInterface iface = (LowpanInterface) LowpanManager.this.mInterfaceCache.get(ifaceName);
-                                if (iface != null && iface.getService() == ifaceService) {
+                                LowpanInterface iface2 = (LowpanInterface) LowpanManager.this.mInterfaceCache.get(ifaceName);
+                                if (iface2 != null && iface2.getService() == ifaceService) {
                                     LowpanManager.this.mInterfaceCache.remove(ifaceName);
                                 }
                             }
@@ -134,66 +142,69 @@ public class LowpanManager {
         }
     }
 
-    public void registerCallback(final Callback cb, final Handler handler) throws LowpanException {
-        ILowpanManagerListener.Stub listenerBinder = new ILowpanManagerListener.Stub() {
-            private Handler mHandler;
+    /* renamed from: android.net.lowpan.LowpanManager$2 */
+    /* loaded from: classes3.dex */
+    class BinderC13322 extends ILowpanManagerListener.Stub {
+        private Handler mHandler;
+        final /* synthetic */ Callback val$cb;
+        final /* synthetic */ Handler val$handler;
 
-            {
-                if (handler != null) {
-                    this.mHandler = handler;
-                } else if (LowpanManager.this.mLooper != null) {
+        BinderC13322(Handler handler, Callback callback) {
+            this.val$handler = handler;
+            this.val$cb = callback;
+            if (this.val$handler == null) {
+                if (LowpanManager.this.mLooper != null) {
                     this.mHandler = new Handler(LowpanManager.this.mLooper);
+                    return;
                 } else {
                     this.mHandler = new Handler();
+                    return;
                 }
             }
+            this.mHandler = this.val$handler;
+        }
 
-            public void onInterfaceAdded(ILowpanInterface ifaceService) {
-                this.mHandler.post(new Runnable(ifaceService, cb) {
-                    private final /* synthetic */ ILowpanInterface f$1;
-                    private final /* synthetic */ LowpanManager.Callback f$2;
-
-                    {
-                        this.f$1 = r2;
-                        this.f$2 = r3;
-                    }
-
-                    public final void run() {
-                        LowpanManager.AnonymousClass2.lambda$onInterfaceAdded$0(LowpanManager.AnonymousClass2.this, this.f$1, this.f$2);
-                    }
-                });
-            }
-
-            public static /* synthetic */ void lambda$onInterfaceAdded$0(AnonymousClass2 r1, ILowpanInterface ifaceService, Callback cb) {
-                LowpanInterface iface = LowpanManager.this.getInterface(ifaceService);
-                if (iface != null) {
-                    cb.onInterfaceAdded(iface);
+        @Override // android.net.lowpan.ILowpanManagerListener
+        public void onInterfaceAdded(final ILowpanInterface ifaceService) {
+            final Callback callback = this.val$cb;
+            Runnable runnable = new Runnable() { // from class: android.net.lowpan.-$$Lambda$LowpanManager$2$2qKIy18LeIjTlm4mROg-pHOPNU0
+                @Override // java.lang.Runnable
+                public final void run() {
+                    LowpanManager.BinderC13322.lambda$onInterfaceAdded$0(LowpanManager.BinderC13322.this, ifaceService, callback);
                 }
+            };
+            this.mHandler.post(runnable);
+        }
+
+        public static /* synthetic */ void lambda$onInterfaceAdded$0(BinderC13322 binderC13322, ILowpanInterface ifaceService, Callback cb) {
+            LowpanInterface iface = LowpanManager.this.getInterface(ifaceService);
+            if (iface != null) {
+                cb.onInterfaceAdded(iface);
             }
+        }
 
-            public void onInterfaceRemoved(ILowpanInterface ifaceService) {
-                this.mHandler.post(new Runnable(ifaceService, cb) {
-                    private final /* synthetic */ ILowpanInterface f$1;
-                    private final /* synthetic */ LowpanManager.Callback f$2;
-
-                    {
-                        this.f$1 = r2;
-                        this.f$2 = r3;
-                    }
-
-                    public final void run() {
-                        LowpanManager.AnonymousClass2.lambda$onInterfaceRemoved$1(LowpanManager.AnonymousClass2.this, this.f$1, this.f$2);
-                    }
-                });
-            }
-
-            public static /* synthetic */ void lambda$onInterfaceRemoved$1(AnonymousClass2 r1, ILowpanInterface ifaceService, Callback cb) {
-                LowpanInterface iface = LowpanManager.this.getInterfaceNoCreate(ifaceService);
-                if (iface != null) {
-                    cb.onInterfaceRemoved(iface);
+        @Override // android.net.lowpan.ILowpanManagerListener
+        public void onInterfaceRemoved(final ILowpanInterface ifaceService) {
+            final Callback callback = this.val$cb;
+            Runnable runnable = new Runnable() { // from class: android.net.lowpan.-$$Lambda$LowpanManager$2$jhNE3pUzRwHtqpTRJOtHQRfgQ70
+                @Override // java.lang.Runnable
+                public final void run() {
+                    LowpanManager.BinderC13322.lambda$onInterfaceRemoved$1(LowpanManager.BinderC13322.this, ifaceService, callback);
                 }
+            };
+            this.mHandler.post(runnable);
+        }
+
+        public static /* synthetic */ void lambda$onInterfaceRemoved$1(BinderC13322 binderC13322, ILowpanInterface ifaceService, Callback cb) {
+            LowpanInterface iface = LowpanManager.this.getInterfaceNoCreate(ifaceService);
+            if (iface != null) {
+                cb.onInterfaceRemoved(iface);
             }
-        };
+        }
+    }
+
+    public void registerCallback(Callback cb, Handler handler) throws LowpanException {
+        ILowpanManagerListener.Stub listenerBinder = new BinderC13322(handler, cb);
         try {
             this.mService.addListener(listenerBinder);
             synchronized (this.mListenerMap) {
@@ -205,7 +216,7 @@ public class LowpanManager {
     }
 
     public void registerCallback(Callback cb) throws LowpanException {
-        registerCallback(cb, (Handler) null);
+        registerCallback(cb, null);
     }
 
     public void unregisterCallback(Callback cb) {
@@ -218,11 +229,11 @@ public class LowpanManager {
         if (listenerBinder != null) {
             try {
                 this.mService.removeListener(listenerBinder);
+                return;
             } catch (RemoteException x) {
                 throw x.rethrowFromSystemServer();
             }
-        } else {
-            throw new RuntimeException("Attempt to unregister an unknown callback");
         }
+        throw new RuntimeException("Attempt to unregister an unknown callback");
     }
 }

@@ -6,16 +6,21 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
+/* loaded from: classes4.dex */
 public class BaseMovementMethod implements MovementMethod {
+    @Override // android.text.method.MovementMethod
     public boolean canSelectArbitrarily() {
         return false;
     }
 
+    @Override // android.text.method.MovementMethod
     public void initialize(TextView widget, Spannable text) {
     }
 
+    @Override // android.text.method.MovementMethod
     public boolean onKeyDown(TextView widget, Spannable text, int keyCode, KeyEvent event) {
-        boolean handled = handleMovementKey(widget, text, keyCode, getMovementMetaState(text, event), event);
+        int movementMetaState = getMovementMetaState(text, event);
+        boolean handled = handleMovementKey(widget, text, keyCode, movementMetaState, event);
         if (handled) {
             MetaKeyKeyListener.adjustMetaAfterKeypress(text);
             MetaKeyKeyListener.resetLockedMeta(text);
@@ -23,103 +28,90 @@ public class BaseMovementMethod implements MovementMethod {
         return handled;
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:11:0x002e  */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public boolean onKeyOther(android.widget.TextView r12, android.text.Spannable r13, android.view.KeyEvent r14) {
-        /*
-            r11 = this;
-            int r6 = r11.getMovementMetaState(r13, r14)
-            int r7 = r14.getKeyCode()
-            r0 = 0
-            if (r7 == 0) goto L_0x0035
-            int r1 = r14.getAction()
-            r2 = 2
-            if (r1 != r2) goto L_0x0035
-            int r8 = r14.getRepeatCount()
-            r1 = 0
-            r9 = r1
-        L_0x0018:
-            r10 = r0
-            if (r10 >= r8) goto L_0x002c
-            r0 = r11
-            r1 = r12
-            r2 = r13
-            r3 = r7
-            r4 = r6
-            r5 = r14
-            boolean r0 = r0.handleMovementKey(r1, r2, r3, r4, r5)
-            if (r0 != 0) goto L_0x0028
-            goto L_0x002c
-        L_0x0028:
-            r9 = 1
-            int r0 = r10 + 1
-            goto L_0x0018
-        L_0x002c:
-            if (r9 == 0) goto L_0x0034
-            android.text.method.MetaKeyKeyListener.adjustMetaAfterKeypress((android.text.Spannable) r13)
-            android.text.method.MetaKeyKeyListener.resetLockedMeta((android.text.Spannable) r13)
-        L_0x0034:
-            return r9
-        L_0x0035:
-            return r0
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.text.method.BaseMovementMethod.onKeyOther(android.widget.TextView, android.text.Spannable, android.view.KeyEvent):boolean");
-    }
-
-    public boolean onKeyUp(TextView widget, Spannable text, int keyCode, KeyEvent event) {
-        return false;
-    }
-
-    public void onTakeFocus(TextView widget, Spannable text, int direction) {
-    }
-
-    public boolean onTouchEvent(TextView widget, Spannable text, MotionEvent event) {
-        return false;
-    }
-
-    public boolean onTrackballEvent(TextView widget, Spannable text, MotionEvent event) {
-        return false;
-    }
-
-    public boolean onGenericMotionEvent(TextView widget, Spannable text, MotionEvent event) {
-        float hscroll;
-        float vscroll;
-        if ((event.getSource() & 2) == 0 || event.getAction() != 8) {
+    @Override // android.text.method.MovementMethod
+    public boolean onKeyOther(TextView widget, Spannable text, KeyEvent event) {
+        int movementMetaState = getMovementMetaState(text, event);
+        int keyCode = event.getKeyCode();
+        int i = 0;
+        if (keyCode == 0 || event.getAction() != 2) {
             return false;
         }
-        if ((event.getMetaState() & 1) != 0) {
-            vscroll = 0.0f;
-            hscroll = event.getAxisValue(9);
-        } else {
-            vscroll = -event.getAxisValue(9);
-            hscroll = event.getAxisValue(10);
-        }
+        int repeat = event.getRepeatCount();
         boolean handled = false;
-        if (hscroll < 0.0f) {
-            handled = false | scrollLeft(widget, text, (int) Math.ceil((double) (-hscroll)));
-        } else if (hscroll > 0.0f) {
-            handled = false | scrollRight(widget, text, (int) Math.ceil((double) hscroll));
+        while (true) {
+            int i2 = i;
+            if (i2 >= repeat || !handleMovementKey(widget, text, keyCode, movementMetaState, event)) {
+                break;
+            }
+            handled = true;
+            i = i2 + 1;
         }
-        if (vscroll < 0.0f) {
-            return handled | scrollUp(widget, text, (int) Math.ceil((double) (-vscroll)));
-        }
-        if (vscroll > 0.0f) {
-            return handled | scrollDown(widget, text, (int) Math.ceil((double) vscroll));
+        if (handled) {
+            MetaKeyKeyListener.adjustMetaAfterKeypress(text);
+            MetaKeyKeyListener.resetLockedMeta(text);
         }
         return handled;
     }
 
-    /* access modifiers changed from: protected */
-    public int getMovementMetaState(Spannable buffer, KeyEvent event) {
-        return KeyEvent.normalizeMetaState(MetaKeyKeyListener.getMetaState((CharSequence) buffer, event) & -1537) & -194;
+    @Override // android.text.method.MovementMethod
+    public boolean onKeyUp(TextView widget, Spannable text, int keyCode, KeyEvent event) {
+        return false;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean handleMovementKey(TextView widget, Spannable buffer, int keyCode, int movementMetaState, KeyEvent event) {
+    @Override // android.text.method.MovementMethod
+    public void onTakeFocus(TextView widget, Spannable text, int direction) {
+    }
+
+    @Override // android.text.method.MovementMethod
+    public boolean onTouchEvent(TextView widget, Spannable text, MotionEvent event) {
+        return false;
+    }
+
+    @Override // android.text.method.MovementMethod
+    public boolean onTrackballEvent(TextView widget, Spannable text, MotionEvent event) {
+        return false;
+    }
+
+    @Override // android.text.method.MovementMethod
+    public boolean onGenericMotionEvent(TextView widget, Spannable text, MotionEvent event) {
+        float vscroll;
+        float hscroll;
+        if ((event.getSource() & 2) != 0 && event.getAction() == 8) {
+            if ((event.getMetaState() & 1) != 0) {
+                vscroll = 0.0f;
+                hscroll = event.getAxisValue(9);
+            } else {
+                float vscroll2 = event.getAxisValue(9);
+                vscroll = -vscroll2;
+                hscroll = event.getAxisValue(10);
+            }
+            boolean handled = false;
+            if (hscroll < 0.0f) {
+                handled = false | scrollLeft(widget, text, (int) Math.ceil(-hscroll));
+            } else if (hscroll > 0.0f) {
+                handled = false | scrollRight(widget, text, (int) Math.ceil(hscroll));
+            }
+            if (vscroll < 0.0f) {
+                return handled | scrollUp(widget, text, (int) Math.ceil(-vscroll));
+            }
+            if (vscroll > 0.0f) {
+                return handled | scrollDown(widget, text, (int) Math.ceil(vscroll));
+            }
+            return handled;
+        }
+        return false;
+    }
+
+    protected int getMovementMetaState(Spannable buffer, KeyEvent event) {
+        int metaState = MetaKeyKeyListener.getMetaState(buffer, event) & (-1537);
+        return KeyEvent.normalizeMetaState(metaState) & (-194);
+    }
+
+    protected boolean handleMovementKey(TextView widget, Spannable buffer, int keyCode, int movementMetaState, KeyEvent event) {
         switch (keyCode) {
             case 19:
                 if (KeyEvent.metaStateHasNoModifiers(movementMetaState)) {
-                    return up(widget, buffer);
+                    return mo76up(widget, buffer);
                 }
                 if (KeyEvent.metaStateHasModifiers(movementMetaState, 2)) {
                     return top(widget, buffer);
@@ -192,73 +184,60 @@ public class BaseMovementMethod implements MovementMethod {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public boolean left(TextView widget, Spannable buffer) {
+    protected boolean left(TextView widget, Spannable buffer) {
         return false;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean right(TextView widget, Spannable buffer) {
+    protected boolean right(TextView widget, Spannable buffer) {
         return false;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean up(TextView widget, Spannable buffer) {
+    /* renamed from: up */
+    protected boolean mo76up(TextView widget, Spannable buffer) {
         return false;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean down(TextView widget, Spannable buffer) {
+    protected boolean down(TextView widget, Spannable buffer) {
         return false;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean pageUp(TextView widget, Spannable buffer) {
+    protected boolean pageUp(TextView widget, Spannable buffer) {
         return false;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean pageDown(TextView widget, Spannable buffer) {
+    protected boolean pageDown(TextView widget, Spannable buffer) {
         return false;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean top(TextView widget, Spannable buffer) {
+    protected boolean top(TextView widget, Spannable buffer) {
         return false;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean bottom(TextView widget, Spannable buffer) {
+    protected boolean bottom(TextView widget, Spannable buffer) {
         return false;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean lineStart(TextView widget, Spannable buffer) {
+    protected boolean lineStart(TextView widget, Spannable buffer) {
         return false;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean lineEnd(TextView widget, Spannable buffer) {
+    protected boolean lineEnd(TextView widget, Spannable buffer) {
         return false;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean leftWord(TextView widget, Spannable buffer) {
+    protected boolean leftWord(TextView widget, Spannable buffer) {
         return false;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean rightWord(TextView widget, Spannable buffer) {
+    protected boolean rightWord(TextView widget, Spannable buffer) {
         return false;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean home(TextView widget, Spannable buffer) {
+    protected boolean home(TextView widget, Spannable buffer) {
         return false;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean end(TextView widget, Spannable buffer) {
+    protected boolean end(TextView widget, Spannable buffer) {
         return false;
     }
 
@@ -279,7 +258,7 @@ public class BaseMovementMethod implements MovementMethod {
     }
 
     private int getCharacterWidth(TextView widget) {
-        return (int) Math.ceil((double) widget.getPaint().getFontSpacing());
+        return (int) Math.ceil(widget.getPaint().getFontSpacing());
     }
 
     private int getScrollBoundsLeft(TextView widget) {
@@ -290,8 +269,8 @@ public class BaseMovementMethod implements MovementMethod {
             return 0;
         }
         int left = Integer.MAX_VALUE;
-        for (int line = topLine; line <= bottomLine; line++) {
-            int lineLeft = (int) Math.floor((double) layout.getLineLeft(line));
+        for (int left2 = topLine; left2 <= bottomLine; left2++) {
+            int lineLeft = (int) Math.floor(layout.getLineLeft(left2));
             if (lineLeft < left) {
                 left = lineLeft;
             }
@@ -307,8 +286,8 @@ public class BaseMovementMethod implements MovementMethod {
             return 0;
         }
         int right = Integer.MIN_VALUE;
-        for (int line = topLine; line <= bottomLine; line++) {
-            int lineRight = (int) Math.ceil((double) layout.getLineRight(line));
+        for (int right2 = topLine; right2 <= bottomLine; right2++) {
+            int lineRight = (int) Math.ceil(layout.getLineRight(right2));
             if (lineRight > right) {
                 right = lineRight;
             }
@@ -316,45 +295,41 @@ public class BaseMovementMethod implements MovementMethod {
         return right;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean scrollLeft(TextView widget, Spannable buffer, int amount) {
+    protected boolean scrollLeft(TextView widget, Spannable buffer, int amount) {
         int minScrollX = getScrollBoundsLeft(widget);
         int scrollX = widget.getScrollX();
-        if (scrollX <= minScrollX) {
-            return false;
+        if (scrollX > minScrollX) {
+            widget.scrollTo(Math.max(scrollX - (getCharacterWidth(widget) * amount), minScrollX), widget.getScrollY());
+            return true;
         }
-        widget.scrollTo(Math.max(scrollX - (getCharacterWidth(widget) * amount), minScrollX), widget.getScrollY());
-        return true;
+        return false;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean scrollRight(TextView widget, Spannable buffer, int amount) {
+    protected boolean scrollRight(TextView widget, Spannable buffer, int amount) {
         int maxScrollX = getScrollBoundsRight(widget) - getInnerWidth(widget);
         int scrollX = widget.getScrollX();
-        if (scrollX >= maxScrollX) {
-            return false;
+        if (scrollX < maxScrollX) {
+            widget.scrollTo(Math.min((getCharacterWidth(widget) * amount) + scrollX, maxScrollX), widget.getScrollY());
+            return true;
         }
-        widget.scrollTo(Math.min((getCharacterWidth(widget) * amount) + scrollX, maxScrollX), widget.getScrollY());
-        return true;
+        return false;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean scrollUp(TextView widget, Spannable buffer, int amount) {
+    protected boolean scrollUp(TextView widget, Spannable buffer, int amount) {
         Layout layout = widget.getLayout();
         int top = widget.getScrollY();
         int topLine = layout.getLineForVertical(top);
         if (layout.getLineTop(topLine) == top) {
             topLine--;
         }
-        if (topLine < 0) {
-            return false;
+        if (topLine >= 0) {
+            Touch.scrollTo(widget, layout, widget.getScrollX(), layout.getLineTop(Math.max((topLine - amount) + 1, 0)));
+            return true;
         }
-        Touch.scrollTo(widget, layout, widget.getScrollX(), layout.getLineTop(Math.max((topLine - amount) + 1, 0)));
-        return true;
+        return false;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean scrollDown(TextView widget, Spannable buffer, int amount) {
+    protected boolean scrollDown(TextView widget, Spannable buffer, int amount) {
         Layout layout = widget.getLayout();
         int innerHeight = getInnerHeight(widget);
         int bottom = widget.getScrollY() + innerHeight;
@@ -363,74 +338,72 @@ public class BaseMovementMethod implements MovementMethod {
             bottomLine++;
         }
         int limit = layout.getLineCount() - 1;
-        if (bottomLine > limit) {
-            return false;
+        if (bottomLine <= limit) {
+            Touch.scrollTo(widget, layout, widget.getScrollX(), layout.getLineTop(Math.min((bottomLine + amount) - 1, limit) + 1) - innerHeight);
+            return true;
         }
-        Touch.scrollTo(widget, layout, widget.getScrollX(), layout.getLineTop(Math.min((bottomLine + amount) - 1, limit) + 1) - innerHeight);
-        return true;
+        return false;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean scrollPageUp(TextView widget, Spannable buffer) {
+    protected boolean scrollPageUp(TextView widget, Spannable buffer) {
         Layout layout = widget.getLayout();
-        int topLine = layout.getLineForVertical(widget.getScrollY() - getInnerHeight(widget));
-        if (topLine < 0) {
-            return false;
+        int top = widget.getScrollY() - getInnerHeight(widget);
+        int topLine = layout.getLineForVertical(top);
+        if (topLine >= 0) {
+            Touch.scrollTo(widget, layout, widget.getScrollX(), layout.getLineTop(topLine));
+            return true;
         }
-        Touch.scrollTo(widget, layout, widget.getScrollX(), layout.getLineTop(topLine));
-        return true;
+        return false;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean scrollPageDown(TextView widget, Spannable buffer) {
+    protected boolean scrollPageDown(TextView widget, Spannable buffer) {
         Layout layout = widget.getLayout();
         int innerHeight = getInnerHeight(widget);
-        int bottomLine = layout.getLineForVertical(widget.getScrollY() + innerHeight + innerHeight);
-        if (bottomLine > layout.getLineCount() - 1) {
-            return false;
+        int bottom = widget.getScrollY() + innerHeight + innerHeight;
+        int bottomLine = layout.getLineForVertical(bottom);
+        if (bottomLine <= layout.getLineCount() - 1) {
+            Touch.scrollTo(widget, layout, widget.getScrollX(), layout.getLineTop(bottomLine + 1) - innerHeight);
+            return true;
         }
-        Touch.scrollTo(widget, layout, widget.getScrollX(), layout.getLineTop(bottomLine + 1) - innerHeight);
-        return true;
+        return false;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean scrollTop(TextView widget, Spannable buffer) {
+    protected boolean scrollTop(TextView widget, Spannable buffer) {
         Layout layout = widget.getLayout();
-        if (getTopLine(widget) < 0) {
-            return false;
+        if (getTopLine(widget) >= 0) {
+            Touch.scrollTo(widget, layout, widget.getScrollX(), layout.getLineTop(0));
+            return true;
         }
-        Touch.scrollTo(widget, layout, widget.getScrollX(), layout.getLineTop(0));
-        return true;
+        return false;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean scrollBottom(TextView widget, Spannable buffer) {
+    protected boolean scrollBottom(TextView widget, Spannable buffer) {
         Layout layout = widget.getLayout();
         int lineCount = layout.getLineCount();
-        if (getBottomLine(widget) > lineCount - 1) {
-            return false;
+        if (getBottomLine(widget) <= lineCount - 1) {
+            Touch.scrollTo(widget, layout, widget.getScrollX(), layout.getLineTop(lineCount) - getInnerHeight(widget));
+            return true;
         }
-        Touch.scrollTo(widget, layout, widget.getScrollX(), layout.getLineTop(lineCount) - getInnerHeight(widget));
-        return true;
+        return false;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean scrollLineStart(TextView widget, Spannable buffer) {
+    protected boolean scrollLineStart(TextView widget, Spannable buffer) {
         int minScrollX = getScrollBoundsLeft(widget);
-        if (widget.getScrollX() <= minScrollX) {
-            return false;
+        int scrollX = widget.getScrollX();
+        if (scrollX > minScrollX) {
+            widget.scrollTo(minScrollX, widget.getScrollY());
+            return true;
         }
-        widget.scrollTo(minScrollX, widget.getScrollY());
-        return true;
+        return false;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean scrollLineEnd(TextView widget, Spannable buffer) {
+    protected boolean scrollLineEnd(TextView widget, Spannable buffer) {
         int maxScrollX = getScrollBoundsRight(widget) - getInnerWidth(widget);
-        if (widget.getScrollX() >= maxScrollX) {
-            return false;
+        int scrollX = widget.getScrollX();
+        if (scrollX < maxScrollX) {
+            widget.scrollTo(maxScrollX, widget.getScrollY());
+            return true;
         }
-        widget.scrollTo(maxScrollX, widget.getScrollY());
-        return true;
+        return false;
     }
 }

@@ -1,9 +1,12 @@
 package android.service.notification;
 
+/* loaded from: classes3.dex */
 public final class ConditionProto {
     public static final long FLAGS = 1120986464263L;
     public static final long ICON = 1120986464261L;
-    public static final long ID = 1138166333441L;
+
+    /* renamed from: ID */
+    public static final long f240ID = 1138166333441L;
     public static final long LINE_1 = 1138166333443L;
     public static final long LINE_2 = 1138166333444L;
     public static final long STATE = 1159641169926L;

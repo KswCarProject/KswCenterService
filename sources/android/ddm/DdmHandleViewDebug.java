@@ -9,18 +9,16 @@ import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Method;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import org.apache.harmony.dalvik.ddmc.Chunk;
 import org.apache.harmony.dalvik.ddmc.ChunkHandler;
 import org.apache.harmony.dalvik.ddmc.DdmServer;
 
+/* loaded from: classes.dex */
 public class DdmHandleViewDebug extends ChunkHandler {
-    private static final int CHUNK_VULW = type("VULW");
-    private static final int CHUNK_VUOP = type("VUOP");
-    private static final int CHUNK_VURT = type("VURT");
     private static final int ERR_EXCEPTION = -3;
     private static final int ERR_INVALID_OP = -1;
     private static final int ERR_INVALID_PARAM = -2;
@@ -33,6 +31,9 @@ public class DdmHandleViewDebug extends ChunkHandler {
     private static final int VURT_CAPTURE_LAYERS = 2;
     private static final int VURT_DUMP_HIERARCHY = 1;
     private static final int VURT_DUMP_THEME = 3;
+    private static final int CHUNK_VULW = type("VULW");
+    private static final int CHUNK_VURT = type("VURT");
+    private static final int CHUNK_VUOP = type("VUOP");
     private static final DdmHandleViewDebug sInstance = new DdmHandleViewDebug();
 
     private DdmHandleViewDebug() {
@@ -61,32 +62,10 @@ public class DdmHandleViewDebug extends ChunkHandler {
         if (rootView == null) {
             return createFailChunk(-2, "Invalid View Root");
         }
-        if (type != CHUNK_VURT) {
-            View targetView = getTargetView(rootView, in);
-            if (targetView == null) {
-                return createFailChunk(-2, "Invalid target view");
+        if (type == CHUNK_VURT) {
+            if (op == 1) {
+                return dumpHierarchy(rootView, in);
             }
-            if (type == CHUNK_VUOP) {
-                switch (op) {
-                    case 1:
-                        return captureView(rootView, targetView);
-                    case 2:
-                        return dumpDisplayLists(rootView, targetView);
-                    case 3:
-                        return profileView(rootView, targetView);
-                    case 4:
-                        return invokeViewMethod(rootView, targetView, in);
-                    case 5:
-                        return setLayoutParameter(rootView, targetView, in);
-                    default:
-                        return createFailChunk(-1, "Unknown view operation: " + op);
-                }
-            } else {
-                throw new RuntimeException("Unknown packet " + ChunkHandler.name(type));
-            }
-        } else if (op == 1) {
-            return dumpHierarchy(rootView, in);
-        } else {
             if (op == 2) {
                 return captureLayers(rootView);
             }
@@ -95,6 +74,27 @@ public class DdmHandleViewDebug extends ChunkHandler {
             }
             return createFailChunk(-1, "Unknown view root operation: " + op);
         }
+        View targetView = getTargetView(rootView, in);
+        if (targetView == null) {
+            return createFailChunk(-2, "Invalid target view");
+        }
+        if (type == CHUNK_VUOP) {
+            switch (op) {
+                case 1:
+                    return captureView(rootView, targetView);
+                case 2:
+                    return dumpDisplayLists(rootView, targetView);
+                case 3:
+                    return profileView(rootView, targetView);
+                case 4:
+                    return invokeViewMethod(rootView, targetView, in);
+                case 5:
+                    return setLayoutParameter(rootView, targetView, in);
+                default:
+                    return createFailChunk(-1, "Unknown view operation: " + op);
+            }
+        }
+        throw new RuntimeException("Unknown packet " + ChunkHandler.name(type));
     }
 
     private Chunk listWindows() {
@@ -115,7 +115,9 @@ public class DdmHandleViewDebug extends ChunkHandler {
 
     private View getRootView(ByteBuffer in) {
         try {
-            return WindowManagerGlobal.getInstance().getRootView(getString(in, in.getInt()));
+            int viewRootNameLength = in.getInt();
+            String viewRootName = getString(in, viewRootNameLength);
+            return WindowManagerGlobal.getInstance().getRootView(viewRootName);
         } catch (BufferUnderflowException e) {
             return null;
         }
@@ -123,51 +125,59 @@ public class DdmHandleViewDebug extends ChunkHandler {
 
     private View getTargetView(View root, ByteBuffer in) {
         try {
-            return ViewDebug.findView(root, getString(in, in.getInt()));
+            int viewLength = in.getInt();
+            String viewName = getString(in, viewLength);
+            return ViewDebug.findView(root, viewName);
         } catch (BufferUnderflowException e) {
             return null;
         }
     }
 
+    /* JADX WARN: Multi-variable type inference failed */
+    /* JADX WARN: Type inference failed for: r2v0 */
+    /* JADX WARN: Type inference failed for: r2v4, types: [byte[]] */
     private Chunk dumpHierarchy(View rootView, ByteBuffer in) {
+        int i = 1;
         boolean skipChildren = in.getInt() > 0;
         boolean includeProperties = in.getInt() > 0;
         boolean v2 = in.hasRemaining() && in.getInt() > 0;
         long start = System.currentTimeMillis();
         ByteArrayOutputStream b = new ByteArrayOutputStream(2097152);
-        if (v2) {
-            try {
+        try {
+            if (v2) {
                 ViewDebug.dumpv2(rootView, b);
-            } catch (IOException | InterruptedException e) {
-                return createFailChunk(1, "Unexpected error while obtaining view hierarchy: " + e.getMessage());
+            } else {
+                ViewDebug.dump(rootView, skipChildren, includeProperties, b);
             }
-        } else {
-            ViewDebug.dump(rootView, skipChildren, includeProperties, b);
+            long end = System.currentTimeMillis();
+            Log.m72d(TAG, "Time to obtain view hierarchy (ms): " + (end - start));
+            i = b.toByteArray();
+            return new Chunk(CHUNK_VURT, (byte[]) i, 0, i.length);
+        } catch (IOException | InterruptedException e) {
+            return createFailChunk(i, "Unexpected error while obtaining view hierarchy: " + e.getMessage());
         }
-        long end = System.currentTimeMillis();
-        Log.d(TAG, "Time to obtain view hierarchy (ms): " + (end - start));
-        byte[] data = b.toByteArray();
-        return new Chunk(CHUNK_VURT, data, 0, data.length);
     }
 
     private Chunk captureLayers(View rootView) {
         ByteArrayOutputStream b = new ByteArrayOutputStream(1024);
         DataOutputStream dos = new DataOutputStream(b);
         try {
-            ViewDebug.captureLayers(rootView, dos);
             try {
-                dos.close();
-            } catch (IOException e) {
+                ViewDebug.captureLayers(rootView, dos);
+                try {
+                    dos.close();
+                } catch (IOException e) {
+                }
+                byte[] data = b.toByteArray();
+                return new Chunk(CHUNK_VURT, data, 0, data.length);
+            } catch (IOException e2) {
+                Chunk createFailChunk = createFailChunk(1, "Unexpected error while obtaining view hierarchy: " + e2.getMessage());
+                try {
+                    dos.close();
+                } catch (IOException e3) {
+                }
+                return createFailChunk;
             }
-            byte[] data = b.toByteArray();
-            return new Chunk(CHUNK_VURT, data, 0, data.length);
-        } catch (IOException e2) {
-            Chunk createFailChunk = createFailChunk(1, "Unexpected error while obtaining view hierarchy: " + e2.getMessage());
-            try {
-                dos.close();
-            } catch (IOException e3) {
-            }
-            return createFailChunk;
         } catch (Throwable th) {
             try {
                 dos.close();
@@ -191,7 +201,7 @@ public class DdmHandleViewDebug extends ChunkHandler {
     private Chunk captureView(View rootView, View targetView) {
         ByteArrayOutputStream b = new ByteArrayOutputStream(1024);
         try {
-            ViewDebug.capture(rootView, (OutputStream) b, targetView);
+            ViewDebug.capture(rootView, b, targetView);
             byte[] data = b.toByteArray();
             return new Chunk(CHUNK_VUOP, data, 0, data.length);
         } catch (IOException e) {
@@ -200,7 +210,8 @@ public class DdmHandleViewDebug extends ChunkHandler {
     }
 
     private Chunk dumpDisplayLists(final View rootView, final View targetView) {
-        rootView.post(new Runnable() {
+        rootView.post(new Runnable() { // from class: android.ddm.DdmHandleViewDebug.1
+            @Override // java.lang.Runnable
             public void run() {
                 ViewDebug.outputDisplayList(rootView, targetView);
             }
@@ -209,9 +220,10 @@ public class DdmHandleViewDebug extends ChunkHandler {
     }
 
     private Chunk invokeViewMethod(View rootView, View targetView, ByteBuffer in) {
-        Object[] args;
         Class<?>[] argTypes;
-        String methodName = getString(in, in.getInt());
+        Object[] args;
+        int l = in.getInt();
+        String methodName = getString(in, l);
         if (!in.hasRemaining()) {
             argTypes = new Class[0];
             args = new Object[0];
@@ -227,49 +239,51 @@ public class DdmHandleViewDebug extends ChunkHandler {
                 } else if (c == 'S') {
                     argTypes2[i] = Short.TYPE;
                     args2[i] = Short.valueOf(in.getShort());
-                } else if (c != 'Z') {
+                } else if (c == 'Z') {
+                    argTypes2[i] = Boolean.TYPE;
+                    args2[i] = Boolean.valueOf(in.get() != 0);
+                } else {
                     switch (c) {
                         case 'B':
                             argTypes2[i] = Byte.TYPE;
                             args2[i] = Byte.valueOf(in.get());
-                            break;
+                            continue;
                         case 'C':
                             argTypes2[i] = Character.TYPE;
                             args2[i] = Character.valueOf(in.getChar());
-                            break;
+                            continue;
                         case 'D':
                             argTypes2[i] = Double.TYPE;
                             args2[i] = Double.valueOf(in.getDouble());
-                            break;
+                            continue;
                         default:
                             switch (c) {
                                 case 'I':
                                     argTypes2[i] = Integer.TYPE;
                                     args2[i] = Integer.valueOf(in.getInt());
-                                    break;
+                                    continue;
                                 case 'J':
                                     argTypes2[i] = Long.TYPE;
                                     args2[i] = Long.valueOf(in.getLong());
-                                    break;
+                                    continue;
+                                    continue;
                                 default:
-                                    Log.e(TAG, "arg " + i + ", unrecognized type: " + c);
+                                    Log.m70e(TAG, "arg " + i + ", unrecognized type: " + c);
                                     return createFailChunk(-2, "Unsupported parameter type (" + c + ") to invoke view method.");
                             }
                     }
-                } else {
-                    argTypes2[i] = Boolean.TYPE;
-                    args2[i] = Boolean.valueOf(in.get() != 0);
                 }
             }
             argTypes = argTypes2;
             args = args2;
         }
         try {
+            Method method = targetView.getClass().getMethod(methodName, argTypes);
             try {
-                ViewDebug.invokeViewMethod(targetView, targetView.getClass().getMethod(methodName, argTypes), args);
+                ViewDebug.invokeViewMethod(targetView, method, args);
                 return null;
             } catch (Exception e) {
-                Log.e(TAG, "Exception while invoking method: " + e.getCause().getMessage());
+                Log.m70e(TAG, "Exception while invoking method: " + e.getCause().getMessage());
                 String msg = e.getCause().getMessage();
                 if (msg == null) {
                     msg = e.getCause().toString();
@@ -277,18 +291,20 @@ public class DdmHandleViewDebug extends ChunkHandler {
                 return createFailChunk(-3, msg);
             }
         } catch (NoSuchMethodException e2) {
-            Log.e(TAG, "No such method: " + e2.getMessage());
+            Log.m70e(TAG, "No such method: " + e2.getMessage());
             return createFailChunk(-2, "No such method: " + e2.getMessage());
         }
     }
 
     private Chunk setLayoutParameter(View rootView, View targetView, ByteBuffer in) {
-        String param = getString(in, in.getInt());
+        int l = in.getInt();
+        String param = getString(in, l);
+        int value = in.getInt();
         try {
-            ViewDebug.setLayoutParameter(targetView, param, in.getInt());
+            ViewDebug.setLayoutParameter(targetView, param, value);
             return null;
         } catch (Exception e) {
-            Log.e(TAG, "Exception setting layout parameter: " + e);
+            Log.m70e(TAG, "Exception setting layout parameter: " + e);
             return createFailChunk(-3, "Error accessing field " + param + SettingsStringUtil.DELIMITER + e.getMessage());
         }
     }
@@ -297,20 +313,22 @@ public class DdmHandleViewDebug extends ChunkHandler {
         ByteArrayOutputStream b = new ByteArrayOutputStream(32768);
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(b), 32768);
         try {
-            ViewDebug.profileViewAndChildren(targetView, bw);
             try {
-                bw.close();
-            } catch (IOException e) {
+                ViewDebug.profileViewAndChildren(targetView, bw);
+                try {
+                    bw.close();
+                } catch (IOException e) {
+                }
+                byte[] data = b.toByteArray();
+                return new Chunk(CHUNK_VUOP, data, 0, data.length);
+            } catch (IOException e2) {
+                Chunk createFailChunk = createFailChunk(1, "Unexpected error while profiling view: " + e2.getMessage());
+                try {
+                    bw.close();
+                } catch (IOException e3) {
+                }
+                return createFailChunk;
             }
-            byte[] data = b.toByteArray();
-            return new Chunk(CHUNK_VUOP, data, 0, data.length);
-        } catch (IOException e2) {
-            Chunk createFailChunk = createFailChunk(1, "Unexpected error while profiling view: " + e2.getMessage());
-            try {
-                bw.close();
-            } catch (IOException e3) {
-            }
-            return createFailChunk;
         } catch (Throwable th) {
             try {
                 bw.close();

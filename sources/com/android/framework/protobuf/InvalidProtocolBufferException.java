@@ -2,20 +2,23 @@ package com.android.framework.protobuf;
 
 import java.io.IOException;
 
+/* loaded from: classes4.dex */
 public class InvalidProtocolBufferException extends IOException {
     private static final long serialVersionUID = -1616151763072450476L;
-    private MessageLite unfinishedMessage = null;
+    private MessageLite unfinishedMessage;
 
     public InvalidProtocolBufferException(String description) {
         super(description);
+        this.unfinishedMessage = null;
     }
 
     public InvalidProtocolBufferException(IOException e) {
         super(e.getMessage(), e);
+        this.unfinishedMessage = null;
     }
 
-    public InvalidProtocolBufferException setUnfinishedMessage(MessageLite unfinishedMessage2) {
-        this.unfinishedMessage = unfinishedMessage2;
+    public InvalidProtocolBufferException setUnfinishedMessage(MessageLite unfinishedMessage) {
+        this.unfinishedMessage = unfinishedMessage;
         return this;
     }
 

@@ -1,5 +1,6 @@
 package android.opengl;
 
+/* loaded from: classes3.dex */
 public class EGLConfig extends EGLObjectHandle {
     private EGLConfig(long handle) {
         super(handle);
@@ -9,11 +10,9 @@ public class EGLConfig extends EGLObjectHandle {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof EGLConfig)) {
-            return false;
-        }
-        if (getNativeHandle() == ((EGLConfig) o).getNativeHandle()) {
-            return true;
+        if (o instanceof EGLConfig) {
+            EGLConfig that = (EGLConfig) o;
+            return getNativeHandle() == that.getNativeHandle();
         }
         return false;
     }

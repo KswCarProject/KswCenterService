@@ -2,16 +2,17 @@ package android.service.carrier;
 
 import android.app.Service;
 import android.content.Intent;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.PersistableBundle;
-import android.os.RemoteException;
-import android.os.ResultReceiver;
-import android.os.ServiceManager;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.PersistableBundle;
+import android.p007os.RemoteException;
+import android.p007os.ResultReceiver;
+import android.p007os.ServiceManager;
 import android.service.carrier.ICarrierService;
 import android.util.Log;
 import com.android.internal.telephony.ITelephonyRegistry;
 
+/* loaded from: classes3.dex */
 public abstract class CarrierService extends Service {
     public static final String CARRIER_SERVICE_INTERFACE = "android.service.carrier.CarrierService";
     private static final String LOG_TAG = "CarrierService";
@@ -35,10 +36,12 @@ public abstract class CarrierService extends Service {
         }
     }
 
+    @Override // android.app.Service
     public IBinder onBind(Intent intent) {
         return this.mStubWrapper;
     }
 
+    /* loaded from: classes3.dex */
     public class ICarrierServiceWrapper extends ICarrierService.Stub {
         public static final String KEY_CONFIG_BUNDLE = "config_bundle";
         public static final int RESULT_ERROR = 1;
@@ -47,14 +50,15 @@ public abstract class CarrierService extends Service {
         public ICarrierServiceWrapper() {
         }
 
+        @Override // android.service.carrier.ICarrierService
         public void getCarrierConfig(CarrierIdentifier id, ResultReceiver result) {
             try {
                 Bundle data = new Bundle();
                 data.putParcelable(KEY_CONFIG_BUNDLE, CarrierService.this.onLoadConfig(id));
                 result.send(0, data);
             } catch (Exception e) {
-                Log.e(CarrierService.LOG_TAG, "Error in onLoadConfig: " + e.getMessage(), e);
-                result.send(1, (Bundle) null);
+                Log.m69e(CarrierService.LOG_TAG, "Error in onLoadConfig: " + e.getMessage(), e);
+                result.send(1, null);
             }
         }
     }

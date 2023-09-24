@@ -2,6 +2,7 @@ package android.hardware.camera2.utils;
 
 import java.util.List;
 
+/* loaded from: classes.dex */
 public class ListUtils {
     public static <T> boolean listContains(List<T> list, T needle) {
         if (list == null) {
@@ -11,10 +12,7 @@ public class ListUtils {
     }
 
     public static <T> boolean listElementsEqualTo(List<T> list, T single) {
-        if (list != null && list.size() == 1 && list.contains(single)) {
-            return true;
-        }
-        return false;
+        return list != null && list.size() == 1 && list.contains(single);
     }
 
     public static <T> String listToString(List<T> list) {

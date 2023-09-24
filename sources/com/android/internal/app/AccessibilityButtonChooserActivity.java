@@ -4,9 +4,10 @@ import android.accessibilityservice.AccessibilityServiceInfo;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
+import android.p007os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityManager;
@@ -16,27 +17,28 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import com.android.internal.widget.ResolverDrawerLayout;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/* loaded from: classes4.dex */
 public class AccessibilityButtonChooserActivity extends Activity {
     private static final String MAGNIFICATION_COMPONENT_ID = "com.android.server.accessibility.MagnificationController";
     private AccessibilityButtonTarget mMagnificationTarget = null;
-    /* access modifiers changed from: private */
-    public List<AccessibilityButtonTarget> mTargets = null;
+    private List<AccessibilityButtonTarget> mTargets = null;
 
-    /* access modifiers changed from: protected */
-    public void onCreate(Bundle savedInstanceState) {
+    @Override // android.app.Activity
+    protected void onCreate(Bundle savedInstanceState) {
         int i;
         int i2;
         super.onCreate(savedInstanceState);
-        setContentView((int) R.layout.accessibility_button_chooser);
-        ResolverDrawerLayout rdl = (ResolverDrawerLayout) findViewById(R.id.contentPanel);
+        setContentView(C3132R.layout.accessibility_button_chooser);
+        ResolverDrawerLayout rdl = (ResolverDrawerLayout) findViewById(C3132R.C3134id.contentPanel);
         if (rdl != null) {
-            rdl.setOnDismissedListener(new ResolverDrawerLayout.OnDismissedListener() {
+            rdl.setOnDismissedListener(new ResolverDrawerLayout.OnDismissedListener() { // from class: com.android.internal.app.-$$Lambda$EK3sgUmlvAVQupMeTV9feOrWuPE
+                @Override // com.android.internal.widget.ResolverDrawerLayout.OnDismissedListener
                 public final void onDismissed() {
                     AccessibilityButtonChooserActivity.this.finish();
                 }
@@ -44,27 +46,27 @@ public class AccessibilityButtonChooserActivity extends Activity {
         }
         String component = Settings.Secure.getString(getContentResolver(), Settings.Secure.ACCESSIBILITY_BUTTON_TARGET_COMPONENT);
         if (isGestureNavigateEnabled()) {
-            TextView promptPrologue = (TextView) findViewById(R.id.accessibility_button_prompt_prologue);
+            TextView promptPrologue = (TextView) findViewById(C3132R.C3134id.accessibility_button_prompt_prologue);
             if (isTouchExploreOn()) {
-                i2 = R.string.accessibility_gesture_3finger_prompt_text;
+                i2 = C3132R.string.accessibility_gesture_3finger_prompt_text;
             } else {
-                i2 = R.string.accessibility_gesture_prompt_text;
+                i2 = C3132R.string.accessibility_gesture_prompt_text;
             }
             promptPrologue.setText(i2);
         }
         if (TextUtils.isEmpty(component)) {
-            TextView prompt = (TextView) findViewById(R.id.accessibility_button_prompt);
+            TextView prompt = (TextView) findViewById(C3132R.C3134id.accessibility_button_prompt);
             if (isGestureNavigateEnabled()) {
                 if (isTouchExploreOn()) {
-                    i = R.string.accessibility_gesture_3finger_instructional_text;
+                    i = C3132R.string.accessibility_gesture_3finger_instructional_text;
                 } else {
-                    i = R.string.accessibility_gesture_instructional_text;
+                    i = C3132R.string.accessibility_gesture_instructional_text;
                 }
                 prompt.setText(i);
             }
             prompt.setVisibility(0);
         }
-        this.mMagnificationTarget = new AccessibilityButtonTarget(this, MAGNIFICATION_COMPONENT_ID, R.string.accessibility_magnification_chooser_text, R.drawable.ic_accessibility_magnification);
+        this.mMagnificationTarget = new AccessibilityButtonTarget(this, MAGNIFICATION_COMPONENT_ID, C3132R.string.accessibility_magnification_chooser_text, C3132R.C3133drawable.ic_accessibility_magnification);
         this.mTargets = getServiceAccessibilityButtonTargets(this);
         if (Settings.Secure.getInt(getContentResolver(), Settings.Secure.ACCESSIBILITY_DISPLAY_MAGNIFICATION_NAVBAR_ENABLED, 0) == 1) {
             this.mTargets.add(this.mMagnificationTarget);
@@ -72,17 +74,18 @@ public class AccessibilityButtonChooserActivity extends Activity {
         if (this.mTargets.size() < 2) {
             finish();
         }
-        GridView gridview = (GridView) findViewById(R.id.accessibility_button_chooser_grid);
+        GridView gridview = (GridView) findViewById(C3132R.C3134id.accessibility_button_chooser_grid);
         gridview.setAdapter((ListAdapter) new TargetAdapter());
-        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public final void onItemClick(AdapterView adapterView, View view, int i, long j) {
-                AccessibilityButtonChooserActivity.this.onTargetSelected(AccessibilityButtonChooserActivity.this.mTargets.get(i));
+        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() { // from class: com.android.internal.app.-$$Lambda$AccessibilityButtonChooserActivity$VBT2N_0vKxB2VkOg6zxi5sAX6xc
+            @Override // android.widget.AdapterView.OnItemClickListener
+            public final void onItemClick(AdapterView adapterView, View view, int i3, long j) {
+                r0.onTargetSelected(AccessibilityButtonChooserActivity.this.mTargets.get(i3));
             }
         });
     }
 
     private boolean isGestureNavigateEnabled() {
-        return 2 == getResources().getInteger(R.integer.config_navBarInteractionMode);
+        return 2 == getResources().getInteger(C3132R.integer.config_navBarInteractionMode);
     }
 
     private boolean isTouchExploreOn() {
@@ -90,7 +93,8 @@ public class AccessibilityButtonChooserActivity extends Activity {
     }
 
     private static List<AccessibilityButtonTarget> getServiceAccessibilityButtonTargets(Context context) {
-        List<AccessibilityServiceInfo> services = ((AccessibilityManager) context.getSystemService(Context.ACCESSIBILITY_SERVICE)).getEnabledAccessibilityServiceList(-1);
+        AccessibilityManager ams = (AccessibilityManager) context.getSystemService(Context.ACCESSIBILITY_SERVICE);
+        List<AccessibilityServiceInfo> services = ams.getEnabledAccessibilityServiceList(-1);
         if (services == null) {
             return Collections.emptyList();
         }
@@ -103,37 +107,46 @@ public class AccessibilityButtonChooserActivity extends Activity {
         return targets;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void onTargetSelected(AccessibilityButtonTarget target) {
         Settings.Secure.putString(getContentResolver(), Settings.Secure.ACCESSIBILITY_BUTTON_TARGET_COMPONENT, target.getId());
         finish();
     }
 
+    /* loaded from: classes4.dex */
     private class TargetAdapter extends BaseAdapter {
         private TargetAdapter() {
         }
 
+        @Override // android.widget.Adapter
         public int getCount() {
             return AccessibilityButtonChooserActivity.this.mTargets.size();
         }
 
+        @Override // android.widget.Adapter
         public Object getItem(int position) {
             return null;
         }
 
+        @Override // android.widget.Adapter
         public long getItemId(int position) {
-            return (long) position;
+            return position;
         }
 
+        @Override // android.widget.Adapter
         public View getView(int position, View convertView, ViewGroup parent) {
-            View root = AccessibilityButtonChooserActivity.this.getLayoutInflater().inflate((int) R.layout.accessibility_button_chooser_item, parent, false);
+            LayoutInflater inflater = AccessibilityButtonChooserActivity.this.getLayoutInflater();
+            View root = inflater.inflate(C3132R.layout.accessibility_button_chooser_item, parent, false);
             AccessibilityButtonTarget target = (AccessibilityButtonTarget) AccessibilityButtonChooserActivity.this.mTargets.get(position);
-            ((ImageView) root.findViewById(R.id.accessibility_button_target_icon)).setImageDrawable(target.getDrawable());
-            ((TextView) root.findViewById(R.id.accessibility_button_target_label)).setText(target.getLabel());
+            ImageView iconView = (ImageView) root.findViewById(C3132R.C3134id.accessibility_button_target_icon);
+            TextView labelView = (TextView) root.findViewById(C3132R.C3134id.accessibility_button_target_label);
+            iconView.setImageDrawable(target.getDrawable());
+            labelView.setText(target.getLabel());
             return root;
         }
     }
 
+    /* loaded from: classes4.dex */
     private static class AccessibilityButtonTarget {
         public Drawable mDrawable;
         public String mId;

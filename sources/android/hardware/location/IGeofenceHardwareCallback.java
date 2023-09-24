@@ -1,12 +1,13 @@
 package android.hardware.location;
 
 import android.location.Location;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes.dex */
 public interface IGeofenceHardwareCallback extends IInterface {
     void onGeofenceAdd(int i, int i2) throws RemoteException;
 
@@ -18,27 +19,35 @@ public interface IGeofenceHardwareCallback extends IInterface {
 
     void onGeofenceTransition(int i, int i2, Location location, long j, int i3) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements IGeofenceHardwareCallback {
+        @Override // android.hardware.location.IGeofenceHardwareCallback
         public void onGeofenceTransition(int geofenceId, int transition, Location location, long timestamp, int monitoringType) throws RemoteException {
         }
 
+        @Override // android.hardware.location.IGeofenceHardwareCallback
         public void onGeofenceAdd(int geofenceId, int status) throws RemoteException {
         }
 
+        @Override // android.hardware.location.IGeofenceHardwareCallback
         public void onGeofenceRemove(int geofenceId, int status) throws RemoteException {
         }
 
+        @Override // android.hardware.location.IGeofenceHardwareCallback
         public void onGeofencePause(int geofenceId, int status) throws RemoteException {
         }
 
+        @Override // android.hardware.location.IGeofenceHardwareCallback
         public void onGeofenceResume(int geofenceId, int status) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements IGeofenceHardwareCallback {
         private static final String DESCRIPTOR = "android.hardware.location.IGeofenceHardwareCallback";
         static final int TRANSACTION_onGeofenceAdd = 2;
@@ -56,12 +65,13 @@ public interface IGeofenceHardwareCallback extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IGeofenceHardwareCallback)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IGeofenceHardwareCallback)) {
+                return (IGeofenceHardwareCallback) iin;
             }
-            return (IGeofenceHardwareCallback) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -83,53 +93,57 @@ public interface IGeofenceHardwareCallback extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            Location location;
-            int i = code;
-            Parcel parcel = data;
-            if (i != 1598968902) {
-                switch (i) {
-                    case 1:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _arg0 = data.readInt();
-                        int _arg1 = data.readInt();
-                        if (data.readInt() != 0) {
-                            location = Location.CREATOR.createFromParcel(parcel);
-                        } else {
-                            location = null;
-                        }
-                        Location _arg2 = location;
-                        onGeofenceTransition(_arg0, _arg1, _arg2, data.readLong(), data.readInt());
-                        return true;
-                    case 2:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        onGeofenceAdd(data.readInt(), data.readInt());
-                        return true;
-                    case 3:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        onGeofenceRemove(data.readInt(), data.readInt());
-                        return true;
-                    case 4:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        onGeofencePause(data.readInt(), data.readInt());
-                        return true;
-                    case 5:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        onGeofenceResume(data.readInt(), data.readInt());
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0 = data.readInt();
+                    int _arg1 = data.readInt();
+                    Location _arg2 = data.readInt() != 0 ? Location.CREATOR.createFromParcel(data) : null;
+                    long _arg3 = data.readLong();
+                    int _arg4 = data.readInt();
+                    onGeofenceTransition(_arg0, _arg1, _arg2, _arg3, _arg4);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    int _arg12 = data.readInt();
+                    onGeofenceAdd(_arg02, _arg12);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg03 = data.readInt();
+                    int _arg13 = data.readInt();
+                    onGeofenceRemove(_arg03, _arg13);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg04 = data.readInt();
+                    int _arg14 = data.readInt();
+                    onGeofencePause(_arg04, _arg14);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg05 = data.readInt();
+                    int _arg15 = data.readInt();
+                    onGeofenceResume(_arg05, _arg15);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements IGeofenceHardwareCallback {
             public static IGeofenceHardwareCallback sDefaultImpl;
             private IBinder mRemote;
@@ -138,6 +152,7 @@ public interface IGeofenceHardwareCallback extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -146,57 +161,48 @@ public interface IGeofenceHardwareCallback extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.hardware.location.IGeofenceHardwareCallback
             public void onGeofenceTransition(int geofenceId, int transition, Location location, long timestamp, int monitoringType) throws RemoteException {
-                Location location2 = location;
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    try {
-                        _data.writeInt(geofenceId);
-                    } catch (Throwable th) {
-                        th = th;
-                        int i = transition;
-                        long j = timestamp;
-                        int i2 = monitoringType;
-                        _data.recycle();
-                        throw th;
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeInt(geofenceId);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(transition);
+                    if (location != null) {
+                        _data.writeInt(1);
+                        location.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
                     }
                     try {
-                        _data.writeInt(transition);
-                        if (location2 != null) {
-                            _data.writeInt(1);
-                            location2.writeToParcel(_data, 0);
-                        } else {
-                            _data.writeInt(0);
-                        }
-                        try {
-                            _data.writeLong(timestamp);
-                        } catch (Throwable th2) {
-                            th = th2;
-                            int i22 = monitoringType;
-                            _data.recycle();
-                            throw th;
-                        }
+                        _data.writeLong(timestamp);
                         try {
                             _data.writeInt(monitoringType);
                         } catch (Throwable th3) {
                             th = th3;
-                            _data.recycle();
-                            throw th;
                         }
                     } catch (Throwable th4) {
                         th = th4;
-                        long j2 = timestamp;
-                        int i222 = monitoringType;
                         _data.recycle();
                         throw th;
                     }
                     try {
-                        if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
+                        boolean _status = this.mRemote.transact(1, _data, null, 1);
+                        if (!_status && Stub.getDefaultImpl() != null) {
+                            Stub.getDefaultImpl().onGeofenceTransition(geofenceId, transition, location, timestamp, monitoringType);
                             _data.recycle();
                             return;
                         }
-                        Stub.getDefaultImpl().onGeofenceTransition(geofenceId, transition, location, timestamp, monitoringType);
                         _data.recycle();
                     } catch (Throwable th5) {
                         th = th5;
@@ -205,24 +211,20 @@ public interface IGeofenceHardwareCallback extends IInterface {
                     }
                 } catch (Throwable th6) {
                     th = th6;
-                    int i3 = geofenceId;
-                    int i4 = transition;
-                    long j22 = timestamp;
-                    int i2222 = monitoringType;
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.hardware.location.IGeofenceHardwareCallback
             public void onGeofenceAdd(int geofenceId, int status) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(geofenceId);
                     _data.writeInt(status);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onGeofenceAdd(geofenceId, status);
                     }
                 } finally {
@@ -230,15 +232,15 @@ public interface IGeofenceHardwareCallback extends IInterface {
                 }
             }
 
+            @Override // android.hardware.location.IGeofenceHardwareCallback
             public void onGeofenceRemove(int geofenceId, int status) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(geofenceId);
                     _data.writeInt(status);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onGeofenceRemove(geofenceId, status);
                     }
                 } finally {
@@ -246,15 +248,15 @@ public interface IGeofenceHardwareCallback extends IInterface {
                 }
             }
 
+            @Override // android.hardware.location.IGeofenceHardwareCallback
             public void onGeofencePause(int geofenceId, int status) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(geofenceId);
                     _data.writeInt(status);
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onGeofencePause(geofenceId, status);
                     }
                 } finally {
@@ -262,15 +264,15 @@ public interface IGeofenceHardwareCallback extends IInterface {
                 }
             }
 
+            @Override // android.hardware.location.IGeofenceHardwareCallback
             public void onGeofenceResume(int geofenceId, int status) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(geofenceId);
                     _data.writeInt(status);
-                    if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(5, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onGeofenceResume(geofenceId, status);
                     }
                 } finally {
@@ -280,11 +282,11 @@ public interface IGeofenceHardwareCallback extends IInterface {
         }
 
         public static boolean setDefaultImpl(IGeofenceHardwareCallback impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IGeofenceHardwareCallback getDefaultImpl() {

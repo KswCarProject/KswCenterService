@@ -1,10 +1,10 @@
 package android.net;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.SystemProperties;
+import android.p007os.SystemProperties;
 import android.util.Log;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.internal.os.RoSystemProperties;
+import com.android.internal.p016os.RoSystemProperties;
 import com.android.org.conscrypt.OpenSSLSocketImpl;
 import com.android.org.conscrypt.SSLClientSessionCache;
 import java.io.IOException;
@@ -15,7 +15,6 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
-import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import javax.net.SocketFactory;
 import javax.net.ssl.HttpsURLConnection;
@@ -30,16 +29,20 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 @Deprecated
+/* loaded from: classes3.dex */
 public class SSLCertificateSocketFactory extends SSLSocketFactory {
     @UnsupportedAppUsage
-    private static final TrustManager[] INSECURE_TRUST_MANAGER = {new X509TrustManager() {
+    private static final TrustManager[] INSECURE_TRUST_MANAGER = {new X509TrustManager() { // from class: android.net.SSLCertificateSocketFactory.1
+        @Override // javax.net.ssl.X509TrustManager
         public X509Certificate[] getAcceptedIssuers() {
             return null;
         }
 
+        @Override // javax.net.ssl.X509TrustManager
         public void checkClientTrusted(X509Certificate[] certs, String authType) {
         }
 
+        @Override // javax.net.ssl.X509TrustManager
         public void checkServerTrusted(X509Certificate[] certs, String authType) {
         }
     }};
@@ -68,12 +71,11 @@ public class SSLCertificateSocketFactory extends SSLSocketFactory {
 
     @Deprecated
     public SSLCertificateSocketFactory(int handshakeTimeoutMillis) {
-        this(handshakeTimeoutMillis, (SSLSessionCache) null, true);
+        this(handshakeTimeoutMillis, null, true);
     }
 
     @UnsupportedAppUsage
     private SSLCertificateSocketFactory(int handshakeTimeoutMillis, SSLSessionCache cache, boolean secure) {
-        SSLClientSessionCache sSLClientSessionCache = null;
         this.mInsecureFactory = null;
         this.mSecureFactory = null;
         this.mTrustManagers = null;
@@ -82,12 +84,12 @@ public class SSLCertificateSocketFactory extends SSLSocketFactory {
         this.mAlpnProtocols = null;
         this.mChannelIdPrivateKey = null;
         this.mHandshakeTimeoutMillis = handshakeTimeoutMillis;
-        this.mSessionCache = cache != null ? cache.mSessionCache : sSLClientSessionCache;
+        this.mSessionCache = cache != null ? cache.mSessionCache : null;
         this.mSecure = secure;
     }
 
     public static SocketFactory getDefault(int handshakeTimeoutMillis) {
-        return new SSLCertificateSocketFactory(handshakeTimeoutMillis, (SSLSessionCache) null, true);
+        return new SSLCertificateSocketFactory(handshakeTimeoutMillis, null, true);
     }
 
     public static SSLSocketFactory getDefault(int handshakeTimeoutMillis, SSLSessionCache cache) {
@@ -100,20 +102,22 @@ public class SSLCertificateSocketFactory extends SSLSocketFactory {
 
     @Deprecated
     public static org.apache.http.conn.ssl.SSLSocketFactory getHttpSocketFactory(int handshakeTimeoutMillis, SSLSessionCache cache) {
-        return new org.apache.http.conn.ssl.SSLSocketFactory((SSLSocketFactory) new SSLCertificateSocketFactory(handshakeTimeoutMillis, cache, true));
+        return new org.apache.http.conn.ssl.SSLSocketFactory(new SSLCertificateSocketFactory(handshakeTimeoutMillis, cache, true));
     }
 
     @UnsupportedAppUsage
     public static void verifyHostname(Socket socket, String hostname) throws IOException {
         if (!(socket instanceof SSLSocket)) {
             throw new IllegalArgumentException("Attempt to verify non-SSL socket");
-        } else if (!isSslCheckRelaxed()) {
+        }
+        if (!isSslCheckRelaxed()) {
             SSLSocket ssl = (SSLSocket) socket;
             ssl.startHandshake();
             SSLSession session = ssl.getSession();
             if (session == null) {
                 throw new SSLException("Cannot verify SSL socket without session");
-            } else if (!HttpsURLConnection.getDefaultHostnameVerifier().verify(hostname, session)) {
+            }
+            if (!HttpsURLConnection.getDefaultHostnameVerifier().verify(hostname, session)) {
                 throw new SSLPeerUnverifiedException("Cannot verify hostname: " + hostname);
             }
         }
@@ -123,38 +127,33 @@ public class SSLCertificateSocketFactory extends SSLSocketFactory {
     private SSLSocketFactory makeSocketFactory(KeyManager[] keyManagers, TrustManager[] trustManagers) {
         try {
             SSLContext sslContext = SSLContext.getInstance(org.apache.http.conn.ssl.SSLSocketFactory.TLS, "AndroidOpenSSL");
-            sslContext.init(keyManagers, trustManagers, (SecureRandom) null);
+            sslContext.init(keyManagers, trustManagers, null);
             sslContext.getClientSessionContext().setPersistentCache(this.mSessionCache);
             return sslContext.getSocketFactory();
         } catch (KeyManagementException | NoSuchAlgorithmException | NoSuchProviderException e) {
-            Log.wtf(TAG, (Throwable) e);
+            Log.wtf(TAG, e);
             return (SSLSocketFactory) SSLSocketFactory.getDefault();
         }
     }
 
     @UnsupportedAppUsage
     private static boolean isSslCheckRelaxed() {
-        if (!RoSystemProperties.DEBUGGABLE || !SystemProperties.getBoolean("socket.relaxsslcheck", false)) {
-            return false;
-        }
-        return true;
+        return RoSystemProperties.DEBUGGABLE && SystemProperties.getBoolean("socket.relaxsslcheck", false);
     }
 
     @UnsupportedAppUsage
     private synchronized SSLSocketFactory getDelegate() {
-        if (this.mSecure) {
-            if (!isSslCheckRelaxed()) {
-                if (this.mSecureFactory == null) {
-                    this.mSecureFactory = makeSocketFactory(this.mKeyManagers, this.mTrustManagers);
-                }
-                return this.mSecureFactory;
+        if (this.mSecure && !isSslCheckRelaxed()) {
+            if (this.mSecureFactory == null) {
+                this.mSecureFactory = makeSocketFactory(this.mKeyManagers, this.mTrustManagers);
             }
+            return this.mSecureFactory;
         }
         if (this.mInsecureFactory == null) {
             if (this.mSecure) {
-                Log.w(TAG, "*** BYPASSING SSL SECURITY CHECKS (socket.relaxsslcheck=yes) ***");
+                Log.m64w(TAG, "*** BYPASSING SSL SECURITY CHECKS (socket.relaxsslcheck=yes) ***");
             } else {
-                Log.w(TAG, "Bypassing SSL security checks at caller's request");
+                Log.m64w(TAG, "Bypassing SSL security checks at caller's request");
             }
             this.mInsecureFactory = makeSocketFactory(this.mKeyManagers, INSECURE_TRUST_MANAGER);
         }
@@ -177,36 +176,37 @@ public class SSLCertificateSocketFactory extends SSLSocketFactory {
 
     @VisibleForTesting
     public static byte[] toLengthPrefixedList(byte[]... items) {
-        if (items.length != 0) {
-            int totalLength = 0;
-            for (byte[] s : items) {
-                if (s.length == 0 || s.length > 255) {
-                    throw new IllegalArgumentException("s.length == 0 || s.length > 255: " + s.length);
-                }
-                totalLength += s.length + 1;
-            }
-            byte[] result = new byte[totalLength];
-            int length = items.length;
-            int pos = 0;
-            int pos2 = 0;
-            while (pos2 < length) {
-                byte[] s2 = items[pos2];
-                int pos3 = pos + 1;
-                result[pos] = (byte) s2.length;
-                int pos4 = s2.length;
-                int pos5 = pos3;
-                int pos6 = 0;
-                while (pos6 < pos4) {
-                    result[pos5] = s2[pos6];
-                    pos6++;
-                    pos5++;
-                }
-                pos2++;
-                pos = pos5;
-            }
-            return result;
+        if (items.length == 0) {
+            throw new IllegalArgumentException("items.length == 0");
         }
-        throw new IllegalArgumentException("items.length == 0");
+        int totalLength = 0;
+        for (byte[] s : items) {
+            if (s.length == 0 || s.length > 255) {
+                throw new IllegalArgumentException("s.length == 0 || s.length > 255: " + s.length);
+            }
+            totalLength += s.length + 1;
+        }
+        byte[] result = new byte[totalLength];
+        int length = items.length;
+        int pos = 0;
+        int pos2 = 0;
+        while (pos2 < length) {
+            byte[] s2 = items[pos2];
+            int pos3 = pos + 1;
+            result[pos] = (byte) s2.length;
+            int pos4 = s2.length;
+            int pos5 = pos3;
+            int pos6 = 0;
+            while (pos6 < pos4) {
+                byte b = s2[pos6];
+                result[pos5] = b;
+                pos6++;
+                pos5++;
+            }
+            pos2++;
+            pos = pos5;
+        }
+        return result;
     }
 
     public byte[] getNpnSelectedProtocol(Socket socket) {
@@ -244,12 +244,13 @@ public class SSLCertificateSocketFactory extends SSLSocketFactory {
 
     @UnsupportedAppUsage
     private static OpenSSLSocketImpl castToOpenSSLSocket(Socket socket) {
-        if (socket instanceof OpenSSLSocketImpl) {
-            return (OpenSSLSocketImpl) socket;
+        if (!(socket instanceof OpenSSLSocketImpl)) {
+            throw new IllegalArgumentException("Socket not created by this factory: " + socket);
         }
-        throw new IllegalArgumentException("Socket not created by this factory: " + socket);
+        return (OpenSSLSocketImpl) socket;
     }
 
+    @Override // javax.net.ssl.SSLSocketFactory
     public Socket createSocket(Socket k, String host, int port, boolean close) throws IOException {
         OpenSSLSocketImpl s = getDelegate().createSocket(k, host, port, close);
         s.setNpnProtocols(this.mNpnProtocols);
@@ -262,6 +263,7 @@ public class SSLCertificateSocketFactory extends SSLSocketFactory {
         return s;
     }
 
+    @Override // javax.net.SocketFactory
     public Socket createSocket() throws IOException {
         OpenSSLSocketImpl s = getDelegate().createSocket();
         s.setNpnProtocols(this.mNpnProtocols);
@@ -271,6 +273,7 @@ public class SSLCertificateSocketFactory extends SSLSocketFactory {
         return s;
     }
 
+    @Override // javax.net.SocketFactory
     public Socket createSocket(InetAddress addr, int port, InetAddress localAddr, int localPort) throws IOException {
         OpenSSLSocketImpl s = getDelegate().createSocket(addr, port, localAddr, localPort);
         s.setNpnProtocols(this.mNpnProtocols);
@@ -280,6 +283,7 @@ public class SSLCertificateSocketFactory extends SSLSocketFactory {
         return s;
     }
 
+    @Override // javax.net.SocketFactory
     public Socket createSocket(InetAddress addr, int port) throws IOException {
         OpenSSLSocketImpl s = getDelegate().createSocket(addr, port);
         s.setNpnProtocols(this.mNpnProtocols);
@@ -289,6 +293,7 @@ public class SSLCertificateSocketFactory extends SSLSocketFactory {
         return s;
     }
 
+    @Override // javax.net.SocketFactory
     public Socket createSocket(String host, int port, InetAddress localAddr, int localPort) throws IOException {
         OpenSSLSocketImpl s = getDelegate().createSocket(host, port, localAddr, localPort);
         s.setNpnProtocols(this.mNpnProtocols);
@@ -301,6 +306,7 @@ public class SSLCertificateSocketFactory extends SSLSocketFactory {
         return s;
     }
 
+    @Override // javax.net.SocketFactory
     public Socket createSocket(String host, int port) throws IOException {
         OpenSSLSocketImpl s = getDelegate().createSocket(host, port);
         s.setNpnProtocols(this.mNpnProtocols);
@@ -313,10 +319,12 @@ public class SSLCertificateSocketFactory extends SSLSocketFactory {
         return s;
     }
 
+    @Override // javax.net.ssl.SSLSocketFactory
     public String[] getDefaultCipherSuites() {
         return getDelegate().getDefaultCipherSuites();
     }
 
+    @Override // javax.net.ssl.SSLSocketFactory
     public String[] getSupportedCipherSuites() {
         return getDelegate().getSupportedCipherSuites();
     }

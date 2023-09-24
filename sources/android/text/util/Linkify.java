@@ -30,9 +30,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import libcore.util.EmptyArray;
 
+/* loaded from: classes4.dex */
 public class Linkify {
     public static final int ALL = 15;
-    private static final Function<String, URLSpan> DEFAULT_SPAN_FACTORY = $$Lambda$Linkify$7J_cMhIF2bcttjkxA2jDFP8sKw.INSTANCE;
     public static final int EMAIL_ADDRESSES = 2;
     private static final String LOG_TAG = "Linkify";
     @Deprecated
@@ -40,49 +40,61 @@ public class Linkify {
     public static final int PHONE_NUMBERS = 4;
     private static final int PHONE_NUMBER_MINIMUM_DIGITS = 5;
     public static final int WEB_URLS = 1;
-    public static final MatchFilter sPhoneNumberMatchFilter = new MatchFilter() {
+    public static final MatchFilter sUrlMatchFilter = new MatchFilter() { // from class: android.text.util.Linkify.1
+        @Override // android.text.util.Linkify.MatchFilter
+        public final boolean acceptMatch(CharSequence s, int start, int end) {
+            if (start == 0 || s.charAt(start - 1) != '@') {
+                return true;
+            }
+            return false;
+        }
+    };
+    public static final MatchFilter sPhoneNumberMatchFilter = new MatchFilter() { // from class: android.text.util.Linkify.2
+        @Override // android.text.util.Linkify.MatchFilter
         public final boolean acceptMatch(CharSequence s, int start, int end) {
             int digitCount = 0;
-            for (int i = start; i < end; i++) {
-                if (Character.isDigit(s.charAt(i)) && (digitCount = digitCount + 1) >= 5) {
+            for (int digitCount2 = start; digitCount2 < end; digitCount2++) {
+                if (Character.isDigit(s.charAt(digitCount2)) && (digitCount = digitCount + 1) >= 5) {
                     return true;
                 }
             }
             return false;
         }
     };
-    public static final TransformFilter sPhoneNumberTransformFilter = new TransformFilter() {
+    public static final TransformFilter sPhoneNumberTransformFilter = new TransformFilter() { // from class: android.text.util.Linkify.3
+        @Override // android.text.util.Linkify.TransformFilter
         public final String transformUrl(Matcher match, String url) {
             return Patterns.digitsAndPlusOnly(match);
         }
     };
-    public static final MatchFilter sUrlMatchFilter = new MatchFilter() {
-        public final boolean acceptMatch(CharSequence s, int start, int end) {
-            if (start != 0 && s.charAt(start - 1) == '@') {
-                return false;
-            }
-            return true;
+    private static final Function<String, URLSpan> DEFAULT_SPAN_FACTORY = new Function() { // from class: android.text.util.-$$Lambda$Linkify$7J_-cMhIF2bcttjkxA2jDFP8sKw
+        @Override // java.util.function.Function
+        public final Object apply(Object obj) {
+            return Linkify.lambda$static$0((String) obj);
         }
     };
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface LinkifyMask {
     }
 
+    /* loaded from: classes4.dex */
     public interface MatchFilter {
         boolean acceptMatch(CharSequence charSequence, int i, int i2);
     }
 
+    /* loaded from: classes4.dex */
     public interface TransformFilter {
         String transformUrl(Matcher matcher, String str);
     }
 
     public static final boolean addLinks(Spannable text, int mask) {
-        return addLinks(text, mask, (Context) null, (Function<String, URLSpan>) null);
+        return addLinks(text, mask, null, null);
     }
 
     public static final boolean addLinks(Spannable text, int mask, Function<String, URLSpan> urlSpanFactory) {
-        return addLinks(text, mask, (Context) null, urlSpanFactory);
+        return addLinks(text, mask, null, urlSpanFactory);
     }
 
     private static boolean addLinks(Spannable text, int mask, Context context, Function<String, URLSpan> urlSpanFactory) {
@@ -98,10 +110,10 @@ public class Linkify {
             }
             ArrayList<LinkSpec> links = new ArrayList<>();
             if ((mask & 1) != 0) {
-                gatherLinks(links, text, Patterns.AUTOLINK_WEB_URL, new String[]{"http://", "https://", "rtsp://"}, sUrlMatchFilter, (TransformFilter) null);
+                gatherLinks(links, text, Patterns.AUTOLINK_WEB_URL, new String[]{"http://", "https://", "rtsp://"}, sUrlMatchFilter, null);
             }
             if ((mask & 2) != 0) {
-                gatherLinks(links, text, Patterns.AUTOLINK_EMAIL_ADDRESS, new String[]{"mailto:"}, (MatchFilter) null, (TransformFilter) null);
+                gatherLinks(links, text, Patterns.AUTOLINK_EMAIL_ADDRESS, new String[]{"mailto:"}, null, null);
             }
             if ((mask & 4) != 0) {
                 gatherTelLinks(links, text, context);
@@ -123,17 +135,17 @@ public class Linkify {
     }
 
     public static boolean containsUnsupportedCharacters(String text) {
-        if (text.contains("‬")) {
-            Log.e(LOG_TAG, "Unsupported character for applying links: u202C");
+        if (text.contains("\u202c")) {
+            Log.m70e(LOG_TAG, "Unsupported character for applying links: u202C");
             return true;
-        } else if (text.contains("‭")) {
-            Log.e(LOG_TAG, "Unsupported character for applying links: u202D");
+        } else if (text.contains("\u202d")) {
+            Log.m70e(LOG_TAG, "Unsupported character for applying links: u202D");
             return true;
-        } else if (!text.contains("‮")) {
-            return false;
+        } else if (text.contains("\u202e")) {
+            Log.m70e(LOG_TAG, "Unsupported character for applying links: u202E");
+            return true;
         } else {
-            Log.e(LOG_TAG, "Unsupported character for applying links: u202E");
-            return true;
+            return false;
         }
     }
 
@@ -143,20 +155,20 @@ public class Linkify {
         }
         Context context = text.getContext();
         CharSequence t = text.getText();
-        if (!(t instanceof Spannable)) {
-            SpannableString s = SpannableString.valueOf(t);
-            if (!addLinks(s, mask, context, (Function<String, URLSpan>) null)) {
+        if (t instanceof Spannable) {
+            if (!addLinks((Spannable) t, mask, context, null)) {
                 return false;
             }
             addLinkMovementMethod(text);
-            text.setText((CharSequence) s);
-            return true;
-        } else if (!addLinks((Spannable) t, mask, context, (Function<String, URLSpan>) null)) {
-            return false;
-        } else {
-            addLinkMovementMethod(text);
             return true;
         }
+        SpannableString s = SpannableString.valueOf(t);
+        if (!addLinks(s, mask, context, null)) {
+            return false;
+        }
+        addLinkMovementMethod(text);
+        text.setText(s);
+        return true;
     }
 
     private static final void addLinkMovementMethod(TextView t) {
@@ -176,8 +188,9 @@ public class Linkify {
 
     public static final void addLinks(TextView text, Pattern pattern, String defaultScheme, String[] schemes, MatchFilter matchFilter, TransformFilter transformFilter) {
         SpannableString spannable = SpannableString.valueOf(text.getText());
-        if (addLinks((Spannable) spannable, pattern, defaultScheme, schemes, matchFilter, transformFilter)) {
-            text.setText((CharSequence) spannable);
+        boolean linksAdded = addLinks(spannable, pattern, defaultScheme, schemes, matchFilter, transformFilter);
+        if (linksAdded) {
+            text.setText(spannable);
             addLinkMovementMethod(text);
         }
     }
@@ -191,48 +204,50 @@ public class Linkify {
     }
 
     public static final boolean addLinks(Spannable spannable, Pattern pattern, String defaultScheme, String[] schemes, MatchFilter matchFilter, TransformFilter transformFilter) {
-        return addLinks(spannable, pattern, defaultScheme, schemes, matchFilter, transformFilter, (Function<String, URLSpan>) null);
+        return addLinks(spannable, pattern, defaultScheme, schemes, matchFilter, transformFilter, null);
     }
 
     public static final boolean addLinks(Spannable spannable, Pattern pattern, String defaultScheme, String[] schemes, MatchFilter matchFilter, TransformFilter transformFilter, Function<String, URLSpan> urlSpanFactory) {
-        if (spannable == null || !containsUnsupportedCharacters(spannable.toString())) {
-            if (defaultScheme == null) {
-                defaultScheme = "";
-            }
-            if (schemes == null || schemes.length < 1) {
-                schemes = EmptyArray.STRING;
-            }
-            String[] schemesCopy = new String[(schemes.length + 1)];
-            schemesCopy[0] = defaultScheme.toLowerCase(Locale.ROOT);
-            for (int index = 0; index < schemes.length; index++) {
-                String scheme = schemes[index];
-                schemesCopy[index + 1] = scheme == null ? "" : scheme.toLowerCase(Locale.ROOT);
-            }
-            boolean hasMatches = false;
-            Matcher m = pattern.matcher(spannable);
-            while (m.find()) {
-                int start = m.start();
-                int end = m.end();
-                boolean allowed = true;
-                if (matchFilter != null) {
-                    allowed = matchFilter.acceptMatch(spannable, start, end);
-                }
-                if (allowed) {
-                    applyLink(makeUrl(m.group(0), schemesCopy, m, transformFilter), start, end, spannable, urlSpanFactory);
-                    hasMatches = true;
-                }
-            }
-            return hasMatches;
+        if (spannable != null && containsUnsupportedCharacters(spannable.toString())) {
+            EventLog.writeEvent(1397638484, "116321860", -1, "");
+            return false;
         }
-        EventLog.writeEvent(1397638484, "116321860", -1, "");
-        return false;
+        if (defaultScheme == null) {
+            defaultScheme = "";
+        }
+        if (schemes == null || schemes.length < 1) {
+            schemes = EmptyArray.STRING;
+        }
+        String[] schemesCopy = new String[schemes.length + 1];
+        schemesCopy[0] = defaultScheme.toLowerCase(Locale.ROOT);
+        for (int index = 0; index < schemes.length; index++) {
+            String scheme = schemes[index];
+            schemesCopy[index + 1] = scheme == null ? "" : scheme.toLowerCase(Locale.ROOT);
+        }
+        boolean hasMatches = false;
+        Matcher m = pattern.matcher(spannable);
+        while (m.find()) {
+            int start = m.start();
+            int end = m.end();
+            boolean allowed = true;
+            if (matchFilter != null) {
+                allowed = matchFilter.acceptMatch(spannable, start, end);
+            }
+            if (allowed) {
+                String url = makeUrl(m.group(0), schemesCopy, m, transformFilter);
+                applyLink(url, start, end, spannable, urlSpanFactory);
+                hasMatches = true;
+            }
+        }
+        return hasMatches;
     }
 
     private static void applyLink(String url, int start, int end, Spannable text, Function<String, URLSpan> urlSpanFactory) {
         if (urlSpanFactory == null) {
             urlSpanFactory = DEFAULT_SPAN_FACTORY;
         }
-        text.setSpan(urlSpanFactory.apply(url), start, end, 33);
+        URLSpan span = urlSpanFactory.apply(url);
+        text.setSpan(span, start, end, 33);
     }
 
     private static final String makeUrl(String url, String[] prefixes, Matcher matcher, TransformFilter filter) {
@@ -243,22 +258,23 @@ public class Linkify {
         int i = 0;
         while (true) {
             int i2 = i;
-            if (i2 >= prefixes.length) {
+            int i3 = prefixes.length;
+            if (i2 >= i3) {
                 break;
             }
-            if (url.regionMatches(true, 0, prefixes[i2], 0, prefixes[i2].length())) {
+            if (!url.regionMatches(true, 0, prefixes[i2], 0, prefixes[i2].length())) {
+                i = i2 + 1;
+            } else {
                 hasPrefix = true;
                 if (!url.regionMatches(false, 0, prefixes[i2], 0, prefixes[i2].length())) {
                     url = prefixes[i2] + url.substring(prefixes[i2].length());
                 }
-            } else {
-                i = i2 + 1;
             }
         }
-        if (hasPrefix || prefixes.length <= 0) {
-            return url;
+        if (!hasPrefix && prefixes.length > 0) {
+            return prefixes[0] + url;
         }
-        return prefixes[0] + url;
+        return url;
     }
 
     private static final void gatherLinks(ArrayList<LinkSpec> links, Spannable s, Pattern pattern, String[] schemes, MatchFilter matchFilter, TransformFilter transformFilter) {
@@ -268,7 +284,8 @@ public class Linkify {
             int end = m.end();
             if (matchFilter == null || matchFilter.acceptMatch(s, start, end)) {
                 LinkSpec spec = new LinkSpec();
-                spec.url = makeUrl(m.group(0), schemes, m, transformFilter);
+                String url = makeUrl(m.group(0), schemes, m, transformFilter);
+                spec.url = url;
                 spec.start = start;
                 spec.end = end;
                 links.add(spec);
@@ -278,14 +295,16 @@ public class Linkify {
 
     @UnsupportedAppUsage
     private static void gatherTelLinks(ArrayList<LinkSpec> links, Spannable s, Context context) {
-        TelephonyManager tm;
+        TelephonyManager from;
         PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
         if (context == null) {
-            tm = TelephonyManager.getDefault();
+            from = TelephonyManager.getDefault();
         } else {
-            tm = TelephonyManager.from(context);
+            from = TelephonyManager.from(context);
         }
-        for (PhoneNumberMatch match : phoneUtil.findNumbers(s.toString(), tm.getSimCountryIso().toUpperCase(Locale.US), PhoneNumberUtil.Leniency.POSSIBLE, Long.MAX_VALUE)) {
+        TelephonyManager tm = from;
+        Iterable<PhoneNumberMatch> matches = phoneUtil.findNumbers(s.toString(), tm.getSimCountryIso().toUpperCase(Locale.US), PhoneNumberUtil.Leniency.POSSIBLE, Long.MAX_VALUE);
+        for (PhoneNumberMatch match : matches) {
             LinkSpec spec = new LinkSpec();
             spec.url = WebView.SCHEME_TEL + PhoneNumberUtils.normalizeNumber(match.rawString());
             spec.start = match.start();
@@ -295,22 +314,18 @@ public class Linkify {
     }
 
     private static final void gatherMapLinks(ArrayList<LinkSpec> links, Spannable s) {
-        String address;
+        int start;
         String string = s.toString();
         int base = 0;
         while (true) {
             try {
-                String findAddress = WebView.findAddress(string);
-                address = findAddress;
-                if (findAddress == null) {
-                    break;
-                }
-                int start = string.indexOf(address);
-                if (start < 0) {
+                String address = WebView.findAddress(string);
+                if (address == null || (start = string.indexOf(address)) < 0) {
                     break;
                 }
                 LinkSpec spec = new LinkSpec();
-                int end = start + address.length();
+                int length = address.length();
+                int end = start + length;
                 spec.start = base + start;
                 spec.end = base + end;
                 string = string.substring(end);
@@ -325,24 +340,22 @@ public class Linkify {
                 return;
             }
         }
-        String str = address;
     }
 
     private static final void pruneOverlaps(ArrayList<LinkSpec> links) {
-        Collections.sort(links, new Comparator<LinkSpec>() {
+        Comparator<LinkSpec> c = new Comparator<LinkSpec>() { // from class: android.text.util.Linkify.4
+            @Override // java.util.Comparator
             public final int compare(LinkSpec a, LinkSpec b) {
                 if (a.start < b.start) {
                     return -1;
                 }
-                if (a.start > b.start || a.end < b.end) {
-                    return 1;
+                if (a.start <= b.start && a.end >= b.end) {
+                    return a.end > b.end ? -1 : 0;
                 }
-                if (a.end > b.end) {
-                    return -1;
-                }
-                return 0;
+                return 1;
             }
-        });
+        };
+        Collections.sort(links, c);
         int len = links.size();
         int i = 0;
         while (i < len - 1) {

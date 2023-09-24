@@ -1,9 +1,10 @@
 package com.wits.pms.statuscontrol;
 
-import android.os.RemoteException;
+import android.p007os.RemoteException;
 import com.google.gson.Gson;
 import com.wits.pms.statuscontrol.McuStatus;
 
+/* loaded from: classes2.dex */
 public class WitsCommand {
     public static final int BT_TYPE = 3;
     public static final int HICAR_TYPE = 7;
@@ -17,6 +18,7 @@ public class WitsCommand {
     private boolean needResult;
     private int subCommand;
 
+    /* loaded from: classes2.dex */
     public static final class BtSubCommand {
         public static final int AUTO_CONN = 106;
         public static final int CLOSE_BT = 105;
@@ -36,6 +38,7 @@ public class WitsCommand {
         public static final int VOICE_TO_SYSTEM = 111;
     }
 
+    /* loaded from: classes2.dex */
     public static final class HiCarSubCommand {
         public static final int HICAR_ANSWER = 111;
         public static final int HICAR_APP = 101;
@@ -44,12 +47,14 @@ public class WitsCommand {
         public static final int HICAR_VOICE = 102;
     }
 
+    /* loaded from: classes2.dex */
     public static final class MediaSubCommand {
         public static final int CLOSE_MUSIC = 106;
         public static final int CLOSE_PIP = 118;
         public static final int CLOSE_VIDEO = 112;
     }
 
+    /* loaded from: classes2.dex */
     public static final class OtaSubCommand {
         public static final int OTA_DOWNLOAD_COMPLETED = 100;
         public static final int OTA_FILE_ERROR = 102;
@@ -62,10 +67,12 @@ public class WitsCommand {
         public static final int OTA_UPGRADING = 104;
     }
 
+    /* loaded from: classes2.dex */
     public static final class PIP_Command {
         public static final int WINDOWS_MODE = 100;
     }
 
+    /* loaded from: classes2.dex */
     public static final class SystemCommand {
         public static final int ACCEPT_PHONE = 116;
         public static final int AIRCON_CONTROL = 612;
@@ -83,6 +90,7 @@ public class WitsCommand {
         public static final int HANDUP_PHONE = 117;
         public static final int HOME = 114;
         public static final int KSW_MCU_MSG = 699;
+        public static final int MCU_REBOOT = 202;
         public static final int MCU_UPDATE = 700;
         public static final int MEDIA_NEXT = 104;
         public static final int MEDIA_PAUSE = 106;
@@ -121,88 +129,88 @@ public class WitsCommand {
         return this.command;
     }
 
-    public void setCommand(int command2) {
-        this.command = command2;
+    public void setCommand(int command) {
+        this.command = command;
     }
 
     public int getSubCommand() {
         return this.subCommand;
     }
 
-    public void setSubCommand(int subCommand2) {
-        this.subCommand = subCommand2;
+    public void setSubCommand(int subCommand) {
+        this.subCommand = subCommand;
     }
 
     public String getJsonArg() {
         return this.jsonArg;
     }
 
-    public void setJsonArg(String jsonArg2) {
-        this.jsonArg = jsonArg2;
+    public void setJsonArg(String jsonArg) {
+        this.jsonArg = jsonArg;
     }
 
-    public static WitsCommand getWitsCommandFormJson(String jsonArg2) {
-        return (WitsCommand) new Gson().fromJson(jsonArg2, WitsCommand.class);
+    public static WitsCommand getWitsCommandFormJson(String jsonArg) {
+        return (WitsCommand) new Gson().fromJson(jsonArg, (Class<Object>) WitsCommand.class);
     }
 
-    public WitsCommand(int command2, int subCommand2, String jsonArg2) {
-        this.command = command2;
-        this.subCommand = subCommand2;
-        this.jsonArg = jsonArg2;
+    public WitsCommand(int command, int subCommand, String jsonArg) {
+        this.command = command;
+        this.subCommand = subCommand;
+        this.jsonArg = jsonArg;
     }
 
-    public WitsCommand(int command2, int subCommand2, String jsonArg2, boolean needResult2) {
-        this.command = command2;
-        this.subCommand = subCommand2;
-        this.jsonArg = jsonArg2;
-        this.needResult = needResult2;
+    public WitsCommand(int command, int subCommand, String jsonArg, boolean needResult) {
+        this.command = command;
+        this.subCommand = subCommand;
+        this.jsonArg = jsonArg;
+        this.needResult = needResult;
     }
 
-    public WitsCommand(int command2, int subCommand2) {
-        this.command = command2;
-        this.subCommand = subCommand2;
+    public WitsCommand(int command, int subCommand) {
+        this.command = command;
+        this.subCommand = subCommand;
     }
 
-    public static boolean sendCommandGetResult(int command2, int subCommand2, String arg) {
+    public static boolean sendCommandGetResult(int command, int subCommand, String arg) {
         try {
-            return PowerManagerApp.getManager().sendCommand(new Gson().toJson((Object) new WitsCommand(command2, subCommand2, arg, true)));
+            return PowerManagerApp.getManager().sendCommand(new Gson().toJson(new WitsCommand(command, subCommand, arg, true)));
         } catch (RemoteException e) {
             e.printStackTrace();
             return false;
         }
     }
 
-    public static void sendCommand(int command2, int subCommand2, String arg) {
+    public static void sendCommand(int command, int subCommand, String arg) {
         try {
-            PowerManagerApp.getManager().sendCommand(new Gson().toJson((Object) new WitsCommand(command2, subCommand2, arg)));
+            PowerManagerApp.getManager().sendCommand(new Gson().toJson(new WitsCommand(command, subCommand, arg)));
         } catch (RemoteException e) {
             e.printStackTrace();
         }
     }
 
-    public static void sendCommand(int command2, int subCommand2) {
+    public static void sendCommand(int command, int subCommand) {
         try {
-            PowerManagerApp.getManager().sendCommand(new Gson().toJson((Object) new WitsCommand(command2, subCommand2, "")));
+            PowerManagerApp.getManager().sendCommand(new Gson().toJson(new WitsCommand(command, subCommand, "")));
         } catch (RemoteException e) {
             e.printStackTrace();
         }
     }
 
     public static void sendMcuCommand(McuStatus.KswMcuMsg mcuMsg) {
-        sendCommand(1, 699, new Gson().toJson((Object) mcuMsg));
+        sendCommand(1, 699, new Gson().toJson(mcuMsg));
     }
 
     public boolean isNeedResult() {
         return this.needResult;
     }
 
-    public void setNeedResult(boolean needResult2) {
-        this.needResult = needResult2;
+    public void setNeedResult(boolean needResult) {
+        this.needResult = needResult;
     }
 
-    public static boolean sendCommandWithBack(int command2, int subCommand2, String arg) {
+    public static boolean sendCommandWithBack(int command, int subCommand, String arg) {
         try {
-            PowerManagerApp.getManager().sendCommand(new Gson().toJson((Object) new WitsCommand(command2, subCommand2, arg)));
+            PowerManagerApp.getManager().sendCommand(new Gson().toJson(new WitsCommand(command, subCommand, arg)));
             return false;
         } catch (RemoteException e) {
             e.printStackTrace();

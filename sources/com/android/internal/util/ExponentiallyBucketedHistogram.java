@@ -4,6 +4,7 @@ import android.util.Log;
 import com.ibm.icu.text.PluralRules;
 import java.util.Arrays;
 
+/* loaded from: classes4.dex */
 public class ExponentiallyBucketedHistogram {
     private final int[] mData;
 
@@ -44,6 +45,6 @@ public class ExponentiallyBucketedHistogram {
             builder.append(this.mData[i]);
         }
         builder.append("]");
-        Log.d(tag, builder.toString());
+        Log.m72d(tag, builder.toString());
     }
 }

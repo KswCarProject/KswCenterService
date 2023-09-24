@@ -2,6 +2,7 @@ package android.media;
 
 import android.annotation.UnsupportedAppUsage;
 
+/* loaded from: classes3.dex */
 public class ToneGenerator {
     public static final int MAX_VOLUME = 100;
     public static final int MIN_VOLUME = 0;
@@ -128,8 +129,7 @@ public class ToneGenerator {
         return startTone(toneType, -1);
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() {
+    protected void finalize() {
         native_finalize();
     }
 }

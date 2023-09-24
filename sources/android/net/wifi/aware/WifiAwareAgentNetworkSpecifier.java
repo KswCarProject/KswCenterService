@@ -1,8 +1,8 @@
 package android.net.wifi.aware;
 
 import android.net.NetworkSpecifier;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.security.keystore.KeyProperties;
 import android.telephony.SmsManager;
 import android.util.Log;
@@ -14,16 +14,22 @@ import java.util.Set;
 import java.util.StringJoiner;
 import libcore.util.HexEncoding;
 
+/* loaded from: classes3.dex */
 public class WifiAwareAgentNetworkSpecifier extends NetworkSpecifier implements Parcelable {
-    public static final Parcelable.Creator<WifiAwareAgentNetworkSpecifier> CREATOR = new Parcelable.Creator<WifiAwareAgentNetworkSpecifier>() {
+    public static final Parcelable.Creator<WifiAwareAgentNetworkSpecifier> CREATOR = new Parcelable.Creator<WifiAwareAgentNetworkSpecifier>() { // from class: android.net.wifi.aware.WifiAwareAgentNetworkSpecifier.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WifiAwareAgentNetworkSpecifier createFromParcel(Parcel in) {
             WifiAwareAgentNetworkSpecifier agentNs = new WifiAwareAgentNetworkSpecifier();
-            for (Object obj : in.readArray((ClassLoader) null)) {
+            Object[] objs = in.readArray(null);
+            for (Object obj : objs) {
                 agentNs.mNetworkSpecifiers.add((ByteArrayWrapper) obj);
             }
             return agentNs;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WifiAwareAgentNetworkSpecifier[] newArray(int size) {
             return new WifiAwareAgentNetworkSpecifier[size];
         }
@@ -31,8 +37,7 @@ public class WifiAwareAgentNetworkSpecifier extends NetworkSpecifier implements 
     private static final String TAG = "WifiAwareAgentNs";
     private static final boolean VDBG = false;
     private MessageDigest mDigester;
-    /* access modifiers changed from: private */
-    public Set<ByteArrayWrapper> mNetworkSpecifiers = new HashSet();
+    private Set<ByteArrayWrapper> mNetworkSpecifiers = new HashSet();
 
     public WifiAwareAgentNetworkSpecifier() {
         initialize();
@@ -54,10 +59,12 @@ public class WifiAwareAgentNetworkSpecifier extends NetworkSpecifier implements 
         return this.mNetworkSpecifiers.isEmpty();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeArray(this.mNetworkSpecifiers.toArray());
     }
@@ -84,27 +91,31 @@ public class WifiAwareAgentNetworkSpecifier extends NetworkSpecifier implements 
         return sj.toString();
     }
 
+    @Override // android.net.NetworkSpecifier
     public boolean satisfiedBy(NetworkSpecifier other) {
-        if (!(other instanceof WifiAwareAgentNetworkSpecifier)) {
-            return false;
-        }
-        WifiAwareAgentNetworkSpecifier otherNs = (WifiAwareAgentNetworkSpecifier) other;
-        for (ByteArrayWrapper baw : this.mNetworkSpecifiers) {
-            if (!otherNs.mNetworkSpecifiers.contains(baw)) {
-                return false;
+        if (other instanceof WifiAwareAgentNetworkSpecifier) {
+            WifiAwareAgentNetworkSpecifier otherNs = (WifiAwareAgentNetworkSpecifier) other;
+            for (ByteArrayWrapper baw : this.mNetworkSpecifiers) {
+                if (!otherNs.mNetworkSpecifiers.contains(baw)) {
+                    return false;
+                }
             }
+            return true;
         }
-        return true;
+        return false;
     }
 
     public boolean satisfiesAwareNetworkSpecifier(WifiAwareNetworkSpecifier ns) {
-        return this.mNetworkSpecifiers.contains(convert(ns));
+        ByteArrayWrapper nsBytes = convert(ns);
+        return this.mNetworkSpecifiers.contains(nsBytes);
     }
 
+    @Override // android.net.NetworkSpecifier
     public void assertValidFromUid(int requestorUid) {
         throw new SecurityException("WifiAwareAgentNetworkSpecifier should not be used in network requests");
     }
 
+    @Override // android.net.NetworkSpecifier
     public NetworkSpecifier redact() {
         return null;
     }
@@ -113,7 +124,7 @@ public class WifiAwareAgentNetworkSpecifier extends NetworkSpecifier implements 
         try {
             this.mDigester = MessageDigest.getInstance(KeyProperties.DIGEST_SHA256);
         } catch (NoSuchAlgorithmException e) {
-            Log.e(TAG, "Can not instantiate a SHA-256 digester!? Will match nothing.");
+            Log.m70e(TAG, "Can not instantiate a SHA-256 digester!? Will match nothing.");
         }
     }
 
@@ -129,12 +140,17 @@ public class WifiAwareAgentNetworkSpecifier extends NetworkSpecifier implements 
         return new ByteArrayWrapper(this.mDigester.digest());
     }
 
+    /* loaded from: classes3.dex */
     private static class ByteArrayWrapper implements Parcelable {
-        public static final Parcelable.Creator<ByteArrayWrapper> CREATOR = new Parcelable.Creator<ByteArrayWrapper>() {
+        public static final Parcelable.Creator<ByteArrayWrapper> CREATOR = new Parcelable.Creator<ByteArrayWrapper>() { // from class: android.net.wifi.aware.WifiAwareAgentNetworkSpecifier.ByteArrayWrapper.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public ByteArrayWrapper createFromParcel(Parcel in) {
                 return new ByteArrayWrapper(in.readBlob());
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public ByteArrayWrapper[] newArray(int size) {
                 return new ByteArrayWrapper[size];
             }
@@ -159,10 +175,12 @@ public class WifiAwareAgentNetworkSpecifier extends NetworkSpecifier implements 
             return Arrays.equals(((ByteArrayWrapper) obj).mData, this.mData);
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeBlob(this.mData);
         }

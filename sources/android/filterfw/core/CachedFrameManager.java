@@ -4,46 +4,50 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+/* loaded from: classes.dex */
 public class CachedFrameManager extends SimpleFrameManager {
-    private SortedMap<Integer, Frame> mAvailableFrames = new TreeMap();
     private int mStorageCapacity = 25165824;
     private int mStorageSize = 0;
     private int mTimeStamp = 0;
+    private SortedMap<Integer, Frame> mAvailableFrames = new TreeMap();
 
+    @Override // android.filterfw.core.SimpleFrameManager, android.filterfw.core.FrameManager
     public Frame newFrame(FrameFormat format) {
-        Frame result = findAvailableFrame(format, 0, 0);
+        Frame result = findAvailableFrame(format, 0, 0L);
         if (result == null) {
             result = super.newFrame(format);
         }
-        result.setTimestamp(-2);
+        result.setTimestamp(-2L);
         return result;
     }
 
+    @Override // android.filterfw.core.SimpleFrameManager, android.filterfw.core.FrameManager
     public Frame newBoundFrame(FrameFormat format, int bindingType, long bindingId) {
         Frame result = findAvailableFrame(format, bindingType, bindingId);
         if (result == null) {
             result = super.newBoundFrame(format, bindingType, bindingId);
         }
-        result.setTimestamp(-2);
+        result.setTimestamp(-2L);
         return result;
     }
 
+    @Override // android.filterfw.core.SimpleFrameManager, android.filterfw.core.FrameManager
     public Frame retainFrame(Frame frame) {
         return super.retainFrame(frame);
     }
 
+    @Override // android.filterfw.core.SimpleFrameManager, android.filterfw.core.FrameManager
     public Frame releaseFrame(Frame frame) {
         if (frame.isReusable()) {
             int refCount = frame.decRefCount();
-            if (refCount != 0 || !frame.hasNativeAllocation()) {
-                if (refCount < 0) {
-                    throw new RuntimeException("Frame reference count dropped below 0!");
+            if (refCount == 0 && frame.hasNativeAllocation()) {
+                if (!storeFrame(frame)) {
+                    frame.releaseNativeAllocation();
+                    return null;
                 }
-            } else if (storeFrame(frame)) {
                 return null;
-            } else {
-                frame.releaseNativeAllocation();
-                return null;
+            } else if (refCount < 0) {
+                throw new RuntimeException("Frame reference count dropped below 0!");
             }
         } else {
             super.releaseFrame(frame);
@@ -58,6 +62,7 @@ public class CachedFrameManager extends SimpleFrameManager {
         this.mAvailableFrames.clear();
     }
 
+    @Override // android.filterfw.core.FrameManager
     public void tearDown() {
         clearCache();
     }
@@ -83,7 +88,7 @@ public class CachedFrameManager extends SimpleFrameManager {
 
     private void dropOldestFrame() {
         int oldest = this.mAvailableFrames.firstKey().intValue();
-        Frame frame = (Frame) this.mAvailableFrames.get(Integer.valueOf(oldest));
+        Frame frame = this.mAvailableFrames.get(Integer.valueOf(oldest));
         this.mStorageSize -= frame.getFormat().getSize();
         frame.releaseNativeAllocation();
         this.mAvailableFrames.remove(Integer.valueOf(oldest));

@@ -1,14 +1,13 @@
 package android.media;
 
 import android.media.AudioRouting;
-import android.os.Handler;
+import android.p007os.Handler;
 
+/* loaded from: classes3.dex */
 class NativeRoutingEventHandlerDelegate {
-    /* access modifiers changed from: private */
-    public AudioRouting mAudioRouting;
+    private AudioRouting mAudioRouting;
     private Handler mHandler;
-    /* access modifiers changed from: private */
-    public AudioRouting.OnRoutingChangedListener mOnRoutingChangedListener;
+    private AudioRouting.OnRoutingChangedListener mOnRoutingChangedListener;
 
     NativeRoutingEventHandlerDelegate(AudioRouting audioRouting, AudioRouting.OnRoutingChangedListener listener, Handler handler) {
         this.mAudioRouting = audioRouting;
@@ -16,10 +15,10 @@ class NativeRoutingEventHandlerDelegate {
         this.mHandler = handler;
     }
 
-    /* access modifiers changed from: package-private */
-    public void notifyClient() {
+    void notifyClient() {
         if (this.mHandler != null) {
-            this.mHandler.post(new Runnable() {
+            this.mHandler.post(new Runnable() { // from class: android.media.NativeRoutingEventHandlerDelegate.1
+                @Override // java.lang.Runnable
                 public void run() {
                     if (NativeRoutingEventHandlerDelegate.this.mOnRoutingChangedListener != null) {
                         NativeRoutingEventHandlerDelegate.this.mOnRoutingChangedListener.onRoutingChanged(NativeRoutingEventHandlerDelegate.this.mAudioRouting);

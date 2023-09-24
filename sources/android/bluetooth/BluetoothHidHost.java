@@ -3,13 +3,14 @@ package android.bluetooth;
 import android.bluetooth.BluetoothProfile;
 import android.bluetooth.IBluetoothHidHost;
 import android.content.Context;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.RemoteException;
 import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+/* loaded from: classes.dex */
 public final class BluetoothHidHost implements BluetoothProfile {
     public static final String ACTION_CONNECTION_STATE_CHANGED = "android.bluetooth.input.profile.action.CONNECTION_STATE_CHANGED";
     public static final String ACTION_HANDSHAKE = "android.bluetooth.input.profile.action.HANDSHAKE";
@@ -41,19 +42,19 @@ public final class BluetoothHidHost implements BluetoothProfile {
     private static final boolean VDBG = false;
     public static final int VIRTUAL_UNPLUG_STATUS_FAIL = 1;
     public static final int VIRTUAL_UNPLUG_STATUS_SUCCESS = 0;
-    private BluetoothAdapter mAdapter = BluetoothAdapter.getDefaultAdapter();
-    private final BluetoothProfileConnector<IBluetoothHidHost> mProfileConnector = new BluetoothProfileConnector(this, 4, TAG, IBluetoothHidHost.class.getName()) {
+    private final BluetoothProfileConnector<IBluetoothHidHost> mProfileConnector = new BluetoothProfileConnector(this, 4, TAG, IBluetoothHidHost.class.getName()) { // from class: android.bluetooth.BluetoothHidHost.1
+        @Override // android.bluetooth.BluetoothProfileConnector
         public IBluetoothHidHost getServiceInterface(IBinder service) {
             return IBluetoothHidHost.Stub.asInterface(Binder.allowBlocking(service));
         }
     };
+    private BluetoothAdapter mAdapter = BluetoothAdapter.getDefaultAdapter();
 
     BluetoothHidHost(Context context, BluetoothProfile.ServiceListener listener) {
         this.mProfileConnector.connect(context, listener);
     }
 
-    /* access modifiers changed from: package-private */
-    public void close() {
+    void close() {
         this.mProfileConnector.disconnect();
     }
 
@@ -64,119 +65,122 @@ public final class BluetoothHidHost implements BluetoothProfile {
     public boolean connect(BluetoothDevice device) {
         log("connect(" + device + ")");
         IBluetoothHidHost service = getService();
-        if (service == null || !isEnabled() || !isValidDevice(device)) {
-            if (service == null) {
-                Log.w(TAG, "Proxy not attached to service");
+        if (service != null && isEnabled() && isValidDevice(device)) {
+            try {
+                return service.connect(device);
+            } catch (RemoteException e) {
+                Log.m70e(TAG, "Stack:" + Log.getStackTraceString(new Throwable()));
+                return false;
             }
-            return false;
         }
-        try {
-            return service.connect(device);
-        } catch (RemoteException e) {
-            Log.e(TAG, "Stack:" + Log.getStackTraceString(new Throwable()));
-            return false;
+        if (service == null) {
+            Log.m64w(TAG, "Proxy not attached to service");
         }
+        return false;
     }
 
     public boolean disconnect(BluetoothDevice device) {
         log("disconnect(" + device + ")");
         IBluetoothHidHost service = getService();
-        if (service == null || !isEnabled() || !isValidDevice(device)) {
-            if (service == null) {
-                Log.w(TAG, "Proxy not attached to service");
+        if (service != null && isEnabled() && isValidDevice(device)) {
+            try {
+                return service.disconnect(device);
+            } catch (RemoteException e) {
+                Log.m70e(TAG, "Stack:" + Log.getStackTraceString(new Throwable()));
+                return false;
             }
-            return false;
         }
-        try {
-            return service.disconnect(device);
-        } catch (RemoteException e) {
-            Log.e(TAG, "Stack:" + Log.getStackTraceString(new Throwable()));
-            return false;
+        if (service == null) {
+            Log.m64w(TAG, "Proxy not attached to service");
         }
+        return false;
     }
 
+    @Override // android.bluetooth.BluetoothProfile
     public List<BluetoothDevice> getConnectedDevices() {
         IBluetoothHidHost service = getService();
-        if (service == null || !isEnabled()) {
-            if (service == null) {
-                Log.w(TAG, "Proxy not attached to service");
+        if (service != null && isEnabled()) {
+            try {
+                return service.getConnectedDevices();
+            } catch (RemoteException e) {
+                Log.m70e(TAG, "Stack:" + Log.getStackTraceString(new Throwable()));
+                return new ArrayList();
             }
-            return new ArrayList();
         }
-        try {
-            return service.getConnectedDevices();
-        } catch (RemoteException e) {
-            Log.e(TAG, "Stack:" + Log.getStackTraceString(new Throwable()));
-            return new ArrayList();
+        if (service == null) {
+            Log.m64w(TAG, "Proxy not attached to service");
         }
+        return new ArrayList();
     }
 
+    @Override // android.bluetooth.BluetoothProfile
     public List<BluetoothDevice> getDevicesMatchingConnectionStates(int[] states) {
         IBluetoothHidHost service = getService();
-        if (service == null || !isEnabled()) {
-            if (service == null) {
-                Log.w(TAG, "Proxy not attached to service");
+        if (service != null && isEnabled()) {
+            try {
+                return service.getDevicesMatchingConnectionStates(states);
+            } catch (RemoteException e) {
+                Log.m70e(TAG, "Stack:" + Log.getStackTraceString(new Throwable()));
+                return new ArrayList();
             }
-            return new ArrayList();
         }
-        try {
-            return service.getDevicesMatchingConnectionStates(states);
-        } catch (RemoteException e) {
-            Log.e(TAG, "Stack:" + Log.getStackTraceString(new Throwable()));
-            return new ArrayList();
+        if (service == null) {
+            Log.m64w(TAG, "Proxy not attached to service");
         }
+        return new ArrayList();
     }
 
+    @Override // android.bluetooth.BluetoothProfile
     public int getConnectionState(BluetoothDevice device) {
         IBluetoothHidHost service = getService();
-        if (service == null || !isEnabled() || !isValidDevice(device)) {
-            if (service == null) {
-                Log.w(TAG, "Proxy not attached to service");
+        if (service != null && isEnabled() && isValidDevice(device)) {
+            try {
+                return service.getConnectionState(device);
+            } catch (RemoteException e) {
+                Log.m70e(TAG, "Stack:" + Log.getStackTraceString(new Throwable()));
+                return 0;
             }
-            return 0;
         }
-        try {
-            return service.getConnectionState(device);
-        } catch (RemoteException e) {
-            Log.e(TAG, "Stack:" + Log.getStackTraceString(new Throwable()));
-            return 0;
+        if (service == null) {
+            Log.m64w(TAG, "Proxy not attached to service");
         }
+        return 0;
     }
 
     public boolean setPriority(BluetoothDevice device, int priority) {
         log("setPriority(" + device + ", " + priority + ")");
         IBluetoothHidHost service = getService();
-        if (service == null || !isEnabled() || !isValidDevice(device)) {
-            if (service == null) {
-                Log.w(TAG, "Proxy not attached to service");
+        if (service != null && isEnabled() && isValidDevice(device)) {
+            if (priority != 0 && priority != 100) {
+                return false;
             }
-            return false;
-        } else if (priority != 0 && priority != 100) {
-            return false;
-        } else {
             try {
                 return service.setPriority(device, priority);
             } catch (RemoteException e) {
-                Log.e(TAG, "Stack:" + Log.getStackTraceString(new Throwable()));
+                Log.m70e(TAG, "Stack:" + Log.getStackTraceString(new Throwable()));
                 return false;
             }
         }
+        if (service == null) {
+            Log.m64w(TAG, "Proxy not attached to service");
+        }
+        return false;
     }
 
     public int getPriority(BluetoothDevice device) {
         IBluetoothHidHost service = getService();
-        if (service == null || !isEnabled() || !isValidDevice(device)) {
-            if (service == null) {
-                Log.w(TAG, "Proxy not attached to service");
+        if (service != null && isEnabled() && isValidDevice(device)) {
+            try {
+                return service.getPriority(device);
+            } catch (RemoteException e) {
+                Log.m70e(TAG, "Stack:" + Log.getStackTraceString(new Throwable()));
+                return 0;
             }
-            return 0;
         }
-        try {
-            return service.getPriority(device);
-        } catch (RemoteException e) {
-            Log.e(TAG, "Stack:" + Log.getStackTraceString(new Throwable()));
-            return 0;
+        if (service == null) {
+            Log.m64w(TAG, "Proxy not attached to service");
         }
+        return 0;
     }
 
     private boolean isEnabled() {
@@ -190,137 +194,137 @@ public final class BluetoothHidHost implements BluetoothProfile {
     public boolean virtualUnplug(BluetoothDevice device) {
         log("virtualUnplug(" + device + ")");
         IBluetoothHidHost service = getService();
-        if (service == null || !isEnabled() || !isValidDevice(device)) {
-            if (service == null) {
-                Log.w(TAG, "Proxy not attached to service");
+        if (service != null && isEnabled() && isValidDevice(device)) {
+            try {
+                return service.virtualUnplug(device);
+            } catch (RemoteException e) {
+                Log.m70e(TAG, "Stack:" + Log.getStackTraceString(new Throwable()));
+                return false;
             }
-            return false;
         }
-        try {
-            return service.virtualUnplug(device);
-        } catch (RemoteException e) {
-            Log.e(TAG, "Stack:" + Log.getStackTraceString(new Throwable()));
-            return false;
+        if (service == null) {
+            Log.m64w(TAG, "Proxy not attached to service");
         }
+        return false;
     }
 
     public boolean getProtocolMode(BluetoothDevice device) {
         IBluetoothHidHost service = getService();
-        if (service == null || !isEnabled() || !isValidDevice(device)) {
-            if (service == null) {
-                Log.w(TAG, "Proxy not attached to service");
+        if (service != null && isEnabled() && isValidDevice(device)) {
+            try {
+                return service.getProtocolMode(device);
+            } catch (RemoteException e) {
+                Log.m70e(TAG, "Stack:" + Log.getStackTraceString(new Throwable()));
+                return false;
             }
-            return false;
         }
-        try {
-            return service.getProtocolMode(device);
-        } catch (RemoteException e) {
-            Log.e(TAG, "Stack:" + Log.getStackTraceString(new Throwable()));
-            return false;
+        if (service == null) {
+            Log.m64w(TAG, "Proxy not attached to service");
         }
+        return false;
     }
 
     public boolean setProtocolMode(BluetoothDevice device, int protocolMode) {
         log("setProtocolMode(" + device + ")");
         IBluetoothHidHost service = getService();
-        if (service == null || !isEnabled() || !isValidDevice(device)) {
-            if (service == null) {
-                Log.w(TAG, "Proxy not attached to service");
+        if (service != null && isEnabled() && isValidDevice(device)) {
+            try {
+                return service.setProtocolMode(device, protocolMode);
+            } catch (RemoteException e) {
+                Log.m70e(TAG, "Stack:" + Log.getStackTraceString(new Throwable()));
+                return false;
             }
-            return false;
         }
-        try {
-            return service.setProtocolMode(device, protocolMode);
-        } catch (RemoteException e) {
-            Log.e(TAG, "Stack:" + Log.getStackTraceString(new Throwable()));
-            return false;
+        if (service == null) {
+            Log.m64w(TAG, "Proxy not attached to service");
         }
+        return false;
     }
 
     public boolean getReport(BluetoothDevice device, byte reportType, byte reportId, int bufferSize) {
         IBluetoothHidHost service = getService();
-        if (service == null || !isEnabled() || !isValidDevice(device)) {
-            if (service == null) {
-                Log.w(TAG, "Proxy not attached to service");
+        if (service != null && isEnabled() && isValidDevice(device)) {
+            try {
+                return service.getReport(device, reportType, reportId, bufferSize);
+            } catch (RemoteException e) {
+                Log.m70e(TAG, "Stack:" + Log.getStackTraceString(new Throwable()));
+                return false;
             }
-            return false;
         }
-        try {
-            return service.getReport(device, reportType, reportId, bufferSize);
-        } catch (RemoteException e) {
-            Log.e(TAG, "Stack:" + Log.getStackTraceString(new Throwable()));
-            return false;
+        if (service == null) {
+            Log.m64w(TAG, "Proxy not attached to service");
         }
+        return false;
     }
 
     public boolean setReport(BluetoothDevice device, byte reportType, String report) {
         IBluetoothHidHost service = getService();
-        if (service == null || !isEnabled() || !isValidDevice(device)) {
-            if (service == null) {
-                Log.w(TAG, "Proxy not attached to service");
+        if (service != null && isEnabled() && isValidDevice(device)) {
+            try {
+                return service.setReport(device, reportType, report);
+            } catch (RemoteException e) {
+                Log.m70e(TAG, "Stack:" + Log.getStackTraceString(new Throwable()));
+                return false;
             }
-            return false;
         }
-        try {
-            return service.setReport(device, reportType, report);
-        } catch (RemoteException e) {
-            Log.e(TAG, "Stack:" + Log.getStackTraceString(new Throwable()));
-            return false;
+        if (service == null) {
+            Log.m64w(TAG, "Proxy not attached to service");
         }
+        return false;
     }
 
     public boolean sendData(BluetoothDevice device, String report) {
         log("sendData(" + device + "), report=" + report);
         IBluetoothHidHost service = getService();
-        if (service == null || !isEnabled() || !isValidDevice(device)) {
-            if (service == null) {
-                Log.w(TAG, "Proxy not attached to service");
+        if (service != null && isEnabled() && isValidDevice(device)) {
+            try {
+                return service.sendData(device, report);
+            } catch (RemoteException e) {
+                Log.m70e(TAG, "Stack:" + Log.getStackTraceString(new Throwable()));
+                return false;
             }
-            return false;
         }
-        try {
-            return service.sendData(device, report);
-        } catch (RemoteException e) {
-            Log.e(TAG, "Stack:" + Log.getStackTraceString(new Throwable()));
-            return false;
+        if (service == null) {
+            Log.m64w(TAG, "Proxy not attached to service");
         }
+        return false;
     }
 
     public boolean getIdleTime(BluetoothDevice device) {
         log("getIdletime(" + device + ")");
         IBluetoothHidHost service = getService();
-        if (service == null || !isEnabled() || !isValidDevice(device)) {
-            if (service == null) {
-                Log.w(TAG, "Proxy not attached to service");
+        if (service != null && isEnabled() && isValidDevice(device)) {
+            try {
+                return service.getIdleTime(device);
+            } catch (RemoteException e) {
+                Log.m70e(TAG, "Stack:" + Log.getStackTraceString(new Throwable()));
+                return false;
             }
-            return false;
         }
-        try {
-            return service.getIdleTime(device);
-        } catch (RemoteException e) {
-            Log.e(TAG, "Stack:" + Log.getStackTraceString(new Throwable()));
-            return false;
+        if (service == null) {
+            Log.m64w(TAG, "Proxy not attached to service");
         }
+        return false;
     }
 
     public boolean setIdleTime(BluetoothDevice device, byte idleTime) {
-        log("setIdletime(" + device + "), idleTime=" + idleTime);
+        log("setIdletime(" + device + "), idleTime=" + ((int) idleTime));
         IBluetoothHidHost service = getService();
-        if (service == null || !isEnabled() || !isValidDevice(device)) {
-            if (service == null) {
-                Log.w(TAG, "Proxy not attached to service");
+        if (service != null && isEnabled() && isValidDevice(device)) {
+            try {
+                return service.setIdleTime(device, idleTime);
+            } catch (RemoteException e) {
+                Log.m70e(TAG, "Stack:" + Log.getStackTraceString(new Throwable()));
+                return false;
             }
-            return false;
         }
-        try {
-            return service.setIdleTime(device, idleTime);
-        } catch (RemoteException e) {
-            Log.e(TAG, "Stack:" + Log.getStackTraceString(new Throwable()));
-            return false;
+        if (service == null) {
+            Log.m64w(TAG, "Proxy not attached to service");
         }
+        return false;
     }
 
     private static void log(String msg) {
-        Log.d(TAG, msg);
+        Log.m72d(TAG, msg);
     }
 }

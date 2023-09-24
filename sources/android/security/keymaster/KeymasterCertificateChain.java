@@ -1,16 +1,21 @@
 package android.security.keymaster;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.ArrayList;
 import java.util.List;
 
+/* loaded from: classes3.dex */
 public class KeymasterCertificateChain implements Parcelable {
-    public static final Parcelable.Creator<KeymasterCertificateChain> CREATOR = new Parcelable.Creator<KeymasterCertificateChain>() {
+    public static final Parcelable.Creator<KeymasterCertificateChain> CREATOR = new Parcelable.Creator<KeymasterCertificateChain>() { // from class: android.security.keymaster.KeymasterCertificateChain.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public KeymasterCertificateChain createFromParcel(Parcel in) {
             return new KeymasterCertificateChain(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public KeymasterCertificateChain[] newArray(int size) {
             return new KeymasterCertificateChain[size];
         }
@@ -21,8 +26,8 @@ public class KeymasterCertificateChain implements Parcelable {
         this.mCertificates = null;
     }
 
-    public KeymasterCertificateChain(List<byte[]> mCertificates2) {
-        this.mCertificates = mCertificates2;
+    public KeymasterCertificateChain(List<byte[]> mCertificates) {
+        this.mCertificates = mCertificates;
     }
 
     private KeymasterCertificateChain(Parcel in) {
@@ -37,6 +42,7 @@ public class KeymasterCertificateChain implements Parcelable {
         return this.mCertificates;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         if (this.mCertificates == null) {
             out.writeInt(0);
@@ -56,6 +62,7 @@ public class KeymasterCertificateChain implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

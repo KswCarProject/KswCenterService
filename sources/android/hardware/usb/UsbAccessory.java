@@ -2,17 +2,28 @@ package android.hardware.usb;
 
 import android.app.ActivityThread;
 import android.hardware.usb.IUsbSerialReader;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.RemoteException;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.RemoteException;
 import com.android.internal.util.Preconditions;
 
+/* loaded from: classes.dex */
 public class UsbAccessory implements Parcelable {
-    public static final Parcelable.Creator<UsbAccessory> CREATOR = new Parcelable.Creator<UsbAccessory>() {
+    public static final Parcelable.Creator<UsbAccessory> CREATOR = new Parcelable.Creator<UsbAccessory>() { // from class: android.hardware.usb.UsbAccessory.2
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public UsbAccessory createFromParcel(Parcel in) {
-            return new UsbAccessory(in.readString(), in.readString(), in.readString(), in.readString(), in.readString(), IUsbSerialReader.Stub.asInterface(in.readStrongBinder()));
+            String manufacturer = in.readString();
+            String model = in.readString();
+            String description = in.readString();
+            String version = in.readString();
+            String uri = in.readString();
+            IUsbSerialReader serialNumberReader = IUsbSerialReader.Stub.asInterface(in.readStrongBinder());
+            return new UsbAccessory(manufacturer, model, description, version, uri, serialNumberReader);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public UsbAccessory[] newArray(int size) {
             return new UsbAccessory[size];
         }
@@ -45,7 +56,8 @@ public class UsbAccessory implements Parcelable {
 
     @Deprecated
     public UsbAccessory(String manufacturer, String model, String description, String version, String uri, final String serialNumber) {
-        this(manufacturer, model, description, version, uri, (IUsbSerialReader) new IUsbSerialReader.Stub() {
+        this(manufacturer, model, description, version, uri, new IUsbSerialReader.Stub() { // from class: android.hardware.usb.UsbAccessory.1
+            @Override // android.hardware.usb.IUsbSerialReader
             public String getSerial(String packageName) {
                 return serialNumber;
             }
@@ -89,33 +101,27 @@ public class UsbAccessory implements Parcelable {
     }
 
     public boolean equals(Object obj) {
-        if (!(obj instanceof UsbAccessory)) {
-            return false;
+        if (obj instanceof UsbAccessory) {
+            UsbAccessory accessory = (UsbAccessory) obj;
+            return compare(this.mManufacturer, accessory.getManufacturer()) && compare(this.mModel, accessory.getModel()) && compare(this.mDescription, accessory.getDescription()) && compare(this.mVersion, accessory.getVersion()) && compare(this.mUri, accessory.getUri()) && compare(getSerial(), accessory.getSerial());
         }
-        UsbAccessory accessory = (UsbAccessory) obj;
-        if (!compare(this.mManufacturer, accessory.getManufacturer()) || !compare(this.mModel, accessory.getModel()) || !compare(this.mDescription, accessory.getDescription()) || !compare(this.mVersion, accessory.getVersion()) || !compare(this.mUri, accessory.getUri()) || !compare(getSerial(), accessory.getSerial())) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        int i = 0;
-        int hashCode = ((this.mManufacturer.hashCode() ^ this.mModel.hashCode()) ^ (this.mDescription == null ? 0 : this.mDescription.hashCode())) ^ (this.mVersion == null ? 0 : this.mVersion.hashCode());
-        if (this.mUri != null) {
-            i = this.mUri.hashCode();
-        }
-        return hashCode ^ i;
+        return (((this.mManufacturer.hashCode() ^ this.mModel.hashCode()) ^ (this.mDescription == null ? 0 : this.mDescription.hashCode())) ^ (this.mVersion == null ? 0 : this.mVersion.hashCode())) ^ (this.mUri != null ? this.mUri.hashCode() : 0);
     }
 
     public String toString() {
         return "UsbAccessory[mManufacturer=" + this.mManufacturer + ", mModel=" + this.mModel + ", mDescription=" + this.mDescription + ", mVersion=" + this.mVersion + ", mUri=" + this.mUri + ", mSerialNumberReader=" + this.mSerialNumberReader + "]";
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeString(this.mManufacturer);
         parcel.writeString(this.mModel);

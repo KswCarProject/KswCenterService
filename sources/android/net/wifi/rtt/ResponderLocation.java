@@ -5,8 +5,8 @@ import android.location.Address;
 import android.location.Location;
 import android.net.MacAddress;
 import android.net.Uri;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.TextUtils;
 import android.util.SparseArray;
 import android.webkit.MimeTypeMap;
@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+/* loaded from: classes3.dex */
 public final class ResponderLocation implements Parcelable {
     public static final int ALTITUDE_FLOORS = 2;
     private static final int ALTITUDE_FRACTION_BITS = 8;
@@ -29,15 +30,6 @@ public final class ResponderLocation implements Parcelable {
     private static final int BYTE_MASK = 255;
     private static final int CIVIC_COUNTRY_CODE_INDEX = 0;
     private static final int CIVIC_TLV_LIST_INDEX = 2;
-    public static final Parcelable.Creator<ResponderLocation> CREATOR = new Parcelable.Creator<ResponderLocation>() {
-        public ResponderLocation createFromParcel(Parcel in) {
-            return new ResponderLocation(in);
-        }
-
-        public ResponderLocation[] newArray(int size) {
-            return new ResponderLocation[size];
-        }
-    };
     public static final int DATUM_NAD83_MLLW = 3;
     public static final int DATUM_NAD83_NAV88 = 2;
     public static final int DATUM_UNDEFINED = 0;
@@ -46,8 +38,6 @@ public final class ResponderLocation implements Parcelable {
     private static final int LATLNG_UNCERTAINTY_BASE = 8;
     private static final double LAT_ABS_LIMIT = 90.0d;
     public static final int LCI_VERSION_1 = 1;
-    private static final byte[] LEAD_LCI_ELEMENT_BYTES = {1, 0, 8};
-    private static final byte[] LEAD_LCR_ELEMENT_BYTES = {1, 0, MEASUREMENT_TYPE_LCR};
     private static final double LNG_ABS_LIMIT = 180.0d;
     public static final int LOCATION_FIXED = 0;
     public static final int LOCATION_MOVEMENT_UNKNOWN = 2;
@@ -60,7 +50,6 @@ public final class ResponderLocation implements Parcelable {
     private static final byte MEASUREMENT_REPORT_MODE = 0;
     private static final byte MEASUREMENT_TOKEN_AUTONOMOUS = 1;
     private static final byte MEASUREMENT_TYPE_LCI = 8;
-    private static final byte MEASUREMENT_TYPE_LCR = 11;
     private static final int MIN_BUFFER_SIZE = 3;
     private static final int MSB_IN_BYTE = 128;
     private static final byte SUBELEMENT_BSSID_LIST = 7;
@@ -72,7 +61,6 @@ public final class ResponderLocation implements Parcelable {
     private static final int SUBELEMENT_LCI_ALT_INDEX = 6;
     private static final int SUBELEMENT_LCI_ALT_TYPE_INDEX = 4;
     private static final int SUBELEMENT_LCI_ALT_UNCERTAINTY_INDEX = 5;
-    private static final int[] SUBELEMENT_LCI_BIT_FIELD_LENGTHS = {6, 34, 6, 34, 4, 6, 30, 3, 1, 1, 1, 2};
     private static final int SUBELEMENT_LCI_DATUM_INDEX = 7;
     private static final int SUBELEMENT_LCI_DEPENDENT_STA_INDEX = 10;
     private static final int SUBELEMENT_LCI_LAT_INDEX = 1;
@@ -96,13 +84,11 @@ public final class ResponderLocation implements Parcelable {
     private static final int SUBELEMENT_USAGE_MASK_STA_LOCATION_POLICY = 4;
     private static final int SUBELEMENT_USAGE_PARAMS_INDEX = 0;
     private static final byte SUBELEMENT_Z = 4;
-    private static final int[] SUBELEMENT_Z_BIT_FIELD_LENGTHS = {2, 14, 24, 8};
     private static final int SUBELEMENT_Z_FLOOR_NUMBER_INDEX = 1;
     private static final int SUBELEMENT_Z_HEIGHT_ABOVE_FLOOR_INDEX = 2;
     private static final int SUBELEMENT_Z_HEIGHT_ABOVE_FLOOR_UNCERTAINTY_INDEX = 3;
     private static final int SUBELEMENT_Z_LAT_EXPECTED_TO_MOVE_INDEX = 0;
     private static final int SUBELEMENT_Z_LENGTH = 6;
-    private static final String[] SUPPORTED_IMAGE_FILE_EXTENSIONS = {"", "png", "gif", "jpg", "svg", "dxf", "dwg", "dwf", "cad", "tif", "gml", "kml", "bmp", "pgm", "ppm", "xbm", "xpm", "ico"};
     private static final int UNCERTAINTY_UNDEFINED = 0;
     private static final int Z_FLOOR_HEIGHT_FRACTION_BITS = 12;
     private static final int Z_FLOOR_NUMBER_FRACTION_BITS = 4;
@@ -139,20 +125,44 @@ public final class ResponderLocation implements Parcelable {
     private boolean mUsageExtraInfoOnAssociation;
     private boolean mUsageRetentionExpires;
     private boolean mUsageRetransmit;
+    private static final byte[] LEAD_LCI_ELEMENT_BYTES = {1, 0, 8};
+    private static final int[] SUBELEMENT_LCI_BIT_FIELD_LENGTHS = {6, 34, 6, 34, 4, 6, 30, 3, 1, 1, 1, 2};
+    private static final int[] SUBELEMENT_Z_BIT_FIELD_LENGTHS = {2, 14, 24, 8};
+    private static final byte MEASUREMENT_TYPE_LCR = 11;
+    private static final byte[] LEAD_LCR_ELEMENT_BYTES = {1, 0, MEASUREMENT_TYPE_LCR};
+    private static final String[] SUPPORTED_IMAGE_FILE_EXTENSIONS = {"", "png", "gif", "jpg", "svg", "dxf", "dwg", "dwf", "cad", "tif", "gml", "kml", "bmp", "pgm", "ppm", "xbm", "xpm", "ico"};
+    public static final Parcelable.Creator<ResponderLocation> CREATOR = new Parcelable.Creator<ResponderLocation>() { // from class: android.net.wifi.rtt.ResponderLocation.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public ResponderLocation createFromParcel(Parcel in) {
+            return new ResponderLocation(in);
+        }
+
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public ResponderLocation[] newArray(int size) {
+            return new ResponderLocation[size];
+        }
+    };
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface AltitudeType {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface DatumType {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface ExpectedToMoveType {
     }
 
     public ResponderLocation(byte[] lciBuffer, byte[] lcrBuffer) {
+        boolean isLciValid;
+        boolean isLcrValid;
         boolean z = false;
         this.mIsLciValid = false;
         this.mIsZValid = false;
@@ -174,7 +184,17 @@ public final class ResponderLocation implements Parcelable {
         if (lcrBuffer != null && lcrBuffer.length > LEAD_LCR_ELEMENT_BYTES.length) {
             isLcrIeValid = parseInformationElementBuffer(11, lcrBuffer, LEAD_LCR_ELEMENT_BYTES);
         }
-        this.mIsValid = ((isLciIeValid && this.mIsUsageValid && (this.mIsLciValid || this.mIsZValid || this.mIsBssidListValid)) || (isLcrIeValid && this.mIsUsageValid && (this.mIsLocationCivicValid || this.mIsMapImageValid))) ? true : z;
+        if (!isLciIeValid || !this.mIsUsageValid || (!this.mIsLciValid && !this.mIsZValid && !this.mIsBssidListValid)) {
+            isLciValid = false;
+        } else {
+            isLciValid = true;
+        }
+        if (!isLcrIeValid || !this.mIsUsageValid || (!this.mIsLocationCivicValid && !this.mIsMapImageValid)) {
+            isLcrValid = false;
+        } else {
+            isLcrValid = true;
+        }
+        this.mIsValid = (isLciValid || isLcrValid) ? true : z;
         if (!this.mIsValid) {
             setLciSubelementDefaults();
             setZaxisSubelementDefaults();
@@ -184,20 +204,66 @@ public final class ResponderLocation implements Parcelable {
     }
 
     private ResponderLocation(Parcel in) {
-        boolean z = false;
+        boolean z;
+        boolean z2;
+        boolean z3;
+        boolean z4;
+        boolean z5;
+        boolean z6;
+        boolean z7;
+        boolean z8;
+        boolean z9;
+        boolean z10;
+        boolean z11;
+        boolean z12;
         this.mIsLciValid = false;
         this.mIsZValid = false;
         this.mIsUsageValid = true;
         this.mIsBssidListValid = false;
         this.mIsLocationCivicValid = false;
         this.mIsMapImageValid = false;
-        this.mIsValid = in.readByte() != 0;
-        this.mIsLciValid = in.readByte() != 0;
-        this.mIsZValid = in.readByte() != 0;
-        this.mIsUsageValid = in.readByte() != 0;
-        this.mIsBssidListValid = in.readByte() != 0;
-        this.mIsLocationCivicValid = in.readByte() != 0;
-        this.mIsMapImageValid = in.readByte() != 0;
+        if (in.readByte() == 0) {
+            z = false;
+        } else {
+            z = true;
+        }
+        this.mIsValid = z;
+        if (in.readByte() == 0) {
+            z2 = false;
+        } else {
+            z2 = true;
+        }
+        this.mIsLciValid = z2;
+        if (in.readByte() == 0) {
+            z3 = false;
+        } else {
+            z3 = true;
+        }
+        this.mIsZValid = z3;
+        if (in.readByte() == 0) {
+            z4 = false;
+        } else {
+            z4 = true;
+        }
+        this.mIsUsageValid = z4;
+        if (in.readByte() == 0) {
+            z5 = false;
+        } else {
+            z5 = true;
+        }
+        this.mIsBssidListValid = z5;
+        if (in.readByte() == 0) {
+            z6 = false;
+        } else {
+            z6 = true;
+        }
+        this.mIsLocationCivicValid = z6;
+        if (in.readByte() == 0) {
+            z7 = false;
+        } else {
+            z7 = true;
+        }
+        this.mIsMapImageValid = z7;
         this.mLatitudeUncertainty = in.readDouble();
         this.mLatitude = in.readDouble();
         this.mLongitudeUncertainty = in.readDouble();
@@ -206,17 +272,42 @@ public final class ResponderLocation implements Parcelable {
         this.mAltitudeUncertainty = in.readDouble();
         this.mAltitude = in.readDouble();
         this.mDatum = in.readInt();
-        this.mLciRegisteredLocationAgreement = in.readByte() != 0;
-        this.mLciRegisteredLocationDse = in.readByte() != 0;
-        this.mLciDependentStation = in.readByte() != 0;
+        if (in.readByte() == 0) {
+            z8 = false;
+        } else {
+            z8 = true;
+        }
+        this.mLciRegisteredLocationAgreement = z8;
+        if (in.readByte() == 0) {
+            z9 = false;
+        } else {
+            z9 = true;
+        }
+        this.mLciRegisteredLocationDse = z9;
+        if (in.readByte() == 0) {
+            z10 = false;
+        } else {
+            z10 = true;
+        }
+        this.mLciDependentStation = z10;
         this.mLciVersion = in.readInt();
         this.mExpectedToMove = in.readInt();
         this.mFloorNumber = in.readDouble();
         this.mHeightAboveFloorMeters = in.readDouble();
         this.mHeightAboveFloorUncertaintyMeters = in.readDouble();
-        this.mUsageRetransmit = in.readByte() != 0;
-        this.mUsageRetentionExpires = in.readByte() != 0;
-        this.mUsageExtraInfoOnAssociation = in.readByte() != 0 ? true : z;
+        if (in.readByte() == 0) {
+            z11 = false;
+        } else {
+            z11 = true;
+        }
+        this.mUsageRetransmit = z11;
+        if (in.readByte() == 0) {
+            z12 = false;
+        } else {
+            z12 = true;
+        }
+        this.mUsageRetentionExpires = z12;
+        this.mUsageExtraInfoOnAssociation = in.readByte() != 0;
         this.mBssidList = in.readArrayList(MacAddress.class.getClassLoader());
         this.mCivicLocationCountryCode = in.readString();
         this.mCivicLocationString = in.readString();
@@ -230,18 +321,20 @@ public final class ResponderLocation implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeByte(this.mIsValid ? (byte) 1 : 0);
-        parcel.writeByte(this.mIsLciValid ? (byte) 1 : 0);
-        parcel.writeByte(this.mIsZValid ? (byte) 1 : 0);
-        parcel.writeByte(this.mIsUsageValid ? (byte) 1 : 0);
-        parcel.writeByte(this.mIsBssidListValid ? (byte) 1 : 0);
-        parcel.writeByte(this.mIsLocationCivicValid ? (byte) 1 : 0);
-        parcel.writeByte(this.mIsMapImageValid ? (byte) 1 : 0);
+        parcel.writeByte(this.mIsValid ? (byte) 1 : (byte) 0);
+        parcel.writeByte(this.mIsLciValid ? (byte) 1 : (byte) 0);
+        parcel.writeByte(this.mIsZValid ? (byte) 1 : (byte) 0);
+        parcel.writeByte(this.mIsUsageValid ? (byte) 1 : (byte) 0);
+        parcel.writeByte(this.mIsBssidListValid ? (byte) 1 : (byte) 0);
+        parcel.writeByte(this.mIsLocationCivicValid ? (byte) 1 : (byte) 0);
+        parcel.writeByte(this.mIsMapImageValid ? (byte) 1 : (byte) 0);
         parcel.writeDouble(this.mLatitudeUncertainty);
         parcel.writeDouble(this.mLatitude);
         parcel.writeDouble(this.mLongitudeUncertainty);
@@ -250,17 +343,17 @@ public final class ResponderLocation implements Parcelable {
         parcel.writeDouble(this.mAltitudeUncertainty);
         parcel.writeDouble(this.mAltitude);
         parcel.writeInt(this.mDatum);
-        parcel.writeByte(this.mLciRegisteredLocationAgreement ? (byte) 1 : 0);
-        parcel.writeByte(this.mLciRegisteredLocationDse ? (byte) 1 : 0);
-        parcel.writeByte(this.mLciDependentStation ? (byte) 1 : 0);
+        parcel.writeByte(this.mLciRegisteredLocationAgreement ? (byte) 1 : (byte) 0);
+        parcel.writeByte(this.mLciRegisteredLocationDse ? (byte) 1 : (byte) 0);
+        parcel.writeByte(this.mLciDependentStation ? (byte) 1 : (byte) 0);
         parcel.writeInt(this.mLciVersion);
         parcel.writeInt(this.mExpectedToMove);
         parcel.writeDouble(this.mFloorNumber);
         parcel.writeDouble(this.mHeightAboveFloorMeters);
         parcel.writeDouble(this.mHeightAboveFloorUncertaintyMeters);
-        parcel.writeByte(this.mUsageRetransmit ? (byte) 1 : 0);
-        parcel.writeByte(this.mUsageRetentionExpires ? (byte) 1 : 0);
-        parcel.writeByte(this.mUsageExtraInfoOnAssociation ? (byte) 1 : 0);
+        parcel.writeByte(this.mUsageRetransmit ? (byte) 1 : (byte) 0);
+        parcel.writeByte(this.mUsageRetentionExpires ? (byte) 1 : (byte) 0);
+        parcel.writeByte(this.mUsageExtraInfoOnAssociation ? (byte) 1 : (byte) 0);
         parcel.writeList(this.mBssidList);
         parcel.writeString(this.mCivicLocationCountryCode);
         parcel.writeString(this.mCivicLocationString);
@@ -275,65 +368,68 @@ public final class ResponderLocation implements Parcelable {
 
     private boolean parseInformationElementBuffer(int ieType, byte[] buffer, byte[] expectedLeadBytes) {
         int bufferLength = buffer.length;
-        if (bufferLength < 3 || bufferLength > 256 || !Arrays.equals(Arrays.copyOfRange(buffer, 0, expectedLeadBytes.length), expectedLeadBytes)) {
+        if (bufferLength >= 3 && bufferLength <= 256) {
+            byte[] leadBufferBytes = Arrays.copyOfRange(buffer, 0, expectedLeadBytes.length);
+            if (Arrays.equals(leadBufferBytes, expectedLeadBytes)) {
+                int bufferPtr = 0 + expectedLeadBytes.length;
+                while (bufferPtr + 1 < bufferLength) {
+                    int bufferPtr2 = bufferPtr + 1;
+                    byte subelement = buffer[bufferPtr];
+                    int bufferPtr3 = bufferPtr2 + 1;
+                    int subelementLength = buffer[bufferPtr2];
+                    if (bufferPtr3 + subelementLength > bufferLength || subelementLength <= 0) {
+                        return false;
+                    }
+                    byte[] subelementData = Arrays.copyOfRange(buffer, bufferPtr3, bufferPtr3 + subelementLength);
+                    if (ieType == 8) {
+                        if (subelement == 0) {
+                            this.mIsLciValid = parseSubelementLci(subelementData);
+                            if (!this.mIsLciValid || this.mLciVersion != 1) {
+                                setLciSubelementDefaults();
+                            }
+                        } else if (subelement == 4) {
+                            this.mIsZValid = parseSubelementZ(subelementData);
+                            if (!this.mIsZValid) {
+                                setZaxisSubelementDefaults();
+                            }
+                        } else {
+                            switch (subelement) {
+                                case 6:
+                                    this.mIsUsageValid = parseSubelementUsage(subelementData);
+                                    continue;
+                                case 7:
+                                    this.mIsBssidListValid = parseSubelementBssidList(subelementData);
+                                    if (!this.mIsBssidListValid) {
+                                        setBssidListSubelementDefaults();
+                                        break;
+                                    } else {
+                                        continue;
+                                    }
+                            }
+                        }
+                    } else if (ieType == 11) {
+                        if (subelement == 0) {
+                            this.mIsLocationCivicValid = parseSubelementLocationCivic(subelementData);
+                            if (!this.mIsLocationCivicValid) {
+                                setCivicLocationSubelementDefaults();
+                            }
+                        } else if (subelement == 5) {
+                            this.mIsMapImageValid = parseSubelementMapImage(subelementData);
+                            if (!this.mIsMapImageValid) {
+                                setMapImageSubelementDefaults();
+                            }
+                        }
+                    }
+                    bufferPtr = bufferPtr3 + subelementLength;
+                }
+                return true;
+            }
             return false;
         }
-        int bufferPtr = 0 + expectedLeadBytes.length;
-        while (bufferPtr + 1 < bufferLength) {
-            int bufferPtr2 = bufferPtr + 1;
-            byte bufferPtr3 = buffer[bufferPtr];
-            int bufferPtr4 = bufferPtr2 + 1;
-            byte bufferPtr5 = buffer[bufferPtr2];
-            if (bufferPtr4 + bufferPtr5 > bufferLength || bufferPtr5 <= 0) {
-                return false;
-            }
-            byte[] subelementData = Arrays.copyOfRange(buffer, bufferPtr4, bufferPtr4 + bufferPtr5);
-            if (ieType == 8) {
-                if (bufferPtr3 == 0) {
-                    this.mIsLciValid = parseSubelementLci(subelementData);
-                    if (!this.mIsLciValid || this.mLciVersion != 1) {
-                        setLciSubelementDefaults();
-                    }
-                } else if (bufferPtr3 != 4) {
-                    switch (bufferPtr3) {
-                        case 6:
-                            this.mIsUsageValid = parseSubelementUsage(subelementData);
-                            break;
-                        case 7:
-                            this.mIsBssidListValid = parseSubelementBssidList(subelementData);
-                            if (this.mIsBssidListValid) {
-                                break;
-                            } else {
-                                setBssidListSubelementDefaults();
-                                break;
-                            }
-                    }
-                } else {
-                    this.mIsZValid = parseSubelementZ(subelementData);
-                    if (!this.mIsZValid) {
-                        setZaxisSubelementDefaults();
-                    }
-                }
-            } else if (ieType == 11) {
-                if (bufferPtr3 == 0) {
-                    this.mIsLocationCivicValid = parseSubelementLocationCivic(subelementData);
-                    if (!this.mIsLocationCivicValid) {
-                        setCivicLocationSubelementDefaults();
-                    }
-                } else if (bufferPtr3 == 5) {
-                    this.mIsMapImageValid = parseSubelementMapImage(subelementData);
-                    if (!this.mIsMapImageValid) {
-                        setMapImageSubelementDefaults();
-                    }
-                }
-            }
-            bufferPtr = bufferPtr4 + bufferPtr5;
-        }
-        return true;
+        return false;
     }
 
     private boolean parseSubelementLci(byte[] buffer) {
-        boolean z = false;
         if (buffer.length > 16) {
             return false;
         }
@@ -348,40 +444,38 @@ public final class ResponderLocation implements Parcelable {
         this.mLongitude = decodeLciLatLng(subelementLciFields, SUBELEMENT_LCI_BIT_FIELD_LENGTHS, 3, LNG_ABS_LIMIT);
         this.mAltitudeType = ((int) subelementLciFields[4]) & 255;
         this.mAltitudeUncertainty = decodeLciAltUncertainty(subelementLciFields[5]);
-        this.mAltitude = (double) Math.scalb((float) subelementLciFields[6], -8);
+        this.mAltitude = Math.scalb((float) subelementLciFields[6], -8);
         this.mDatum = ((int) subelementLciFields[7]) & 255;
         this.mLciRegisteredLocationAgreement = subelementLciFields[8] == 1;
         this.mLciRegisteredLocationDse = subelementLciFields[9] == 1;
-        if (subelementLciFields[10] == 1) {
-            z = true;
-        }
-        this.mLciDependentStation = z;
+        this.mLciDependentStation = subelementLciFields[10] == 1;
         this.mLciVersion = (int) subelementLciFields[11];
         return true;
     }
 
     private double decodeLciLatLng(long[] fields, int[] bitFieldSizes, int offset, double limit) {
         double angle;
-        if ((fields[offset] & ((long) Math.pow(2.0d, (double) (bitFieldSizes[offset] - 1)))) != 0) {
-            angle = Math.scalb(((double) fields[offset]) - Math.pow(2.0d, (double) bitFieldSizes[offset]), -25);
+        if ((fields[offset] & ((long) Math.pow(2.0d, bitFieldSizes[offset] - 1))) != 0) {
+            angle = Math.scalb(fields[offset] - Math.pow(2.0d, bitFieldSizes[offset]), -25);
         } else {
-            angle = (double) Math.scalb((float) fields[offset], -25);
+            angle = Math.scalb((float) fields[offset], -25);
         }
         if (angle > limit) {
             return limit;
         }
         if (angle < (-limit)) {
-            return -limit;
+            double angle2 = -limit;
+            return angle2;
         }
         return angle;
     }
 
     private double decodeLciLatLngUncertainty(long encodedValue) {
-        return Math.pow(2.0d, (double) (8 - encodedValue));
+        return Math.pow(2.0d, 8 - encodedValue);
     }
 
     private double decodeLciAltUncertainty(long encodedValue) {
-        return Math.pow(2.0d, (double) (21 - encodedValue));
+        return Math.pow(2.0d, 21 - encodedValue);
     }
 
     private boolean parseSubelementZ(byte[] buffer) {
@@ -400,42 +494,46 @@ public final class ResponderLocation implements Parcelable {
         if (zHeightUncertainty <= 0 || zHeightUncertainty >= 25) {
             return false;
         }
-        this.mHeightAboveFloorUncertaintyMeters = Math.pow(2.0d, (double) ((12 - zHeightUncertainty) - 1));
+        this.mHeightAboveFloorUncertaintyMeters = Math.pow(2.0d, (12 - zHeightUncertainty) - 1);
         return true;
     }
 
     private double decodeZUnsignedToSignedValue(long[] fieldValues, int[] fieldLengths, int index, int fraction) {
         int value = (int) fieldValues[index];
-        if (value > ((int) Math.pow(2.0d, (double) (fieldLengths[index] - 1))) - 1) {
-            value = (int) (((double) value) - Math.pow(2.0d, (double) fieldLengths[index]));
+        int maxPositiveValue = ((int) Math.pow(2.0d, fieldLengths[index] - 1)) - 1;
+        if (value > maxPositiveValue) {
+            value = (int) (value - Math.pow(2.0d, fieldLengths[index]));
         }
-        return (double) Math.scalb((float) value, -fraction);
+        return Math.scalb(value, -fraction);
     }
 
     private boolean parseSubelementUsage(byte[] buffer) {
-        if (buffer.length != 1 && buffer.length != 3) {
-            return false;
+        if (buffer.length == 1 || buffer.length == 3) {
+            this.mUsageRetransmit = (buffer[0] & 1) != 0;
+            this.mUsageRetentionExpires = (buffer[0] & 2) != 0;
+            this.mUsageExtraInfoOnAssociation = (buffer[0] & 4) != 0;
+            return this.mUsageRetransmit && !this.mUsageRetentionExpires;
         }
-        this.mUsageRetransmit = (buffer[0] & 1) != 0;
-        this.mUsageRetentionExpires = (buffer[0] & 2) != 0;
-        this.mUsageExtraInfoOnAssociation = (buffer[0] & 4) != 0;
-        if (!this.mUsageRetransmit || this.mUsageRetentionExpires) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
     private boolean parseSubelementBssidList(byte[] buffer) {
-        int bssidListLength;
-        if (buffer.length < 1 || (buffer.length - 1) % 6 != 0 || (buffer[0] & 255) != (bssidListLength = (buffer.length - 1) / 6)) {
-            return false;
+        if (buffer.length >= 1 && (buffer.length - 1) % 6 == 0) {
+            int maxBssidIndicator = buffer[0] & 255;
+            int bssidListLength = (buffer.length - 1) / 6;
+            if (maxBssidIndicator != bssidListLength) {
+                return false;
+            }
+            int bssidOffset = 1;
+            for (int i = 0; i < bssidListLength; i++) {
+                byte[] bssid = Arrays.copyOfRange(buffer, bssidOffset, bssidOffset + 6);
+                MacAddress macAddress = MacAddress.fromBytes(bssid);
+                this.mBssidList.add(macAddress);
+                bssidOffset += 6;
+            }
+            return true;
         }
-        int bssidOffset = 1;
-        for (int i = 0; i < bssidListLength; i++) {
-            this.mBssidList.add(MacAddress.fromBytes(Arrays.copyOfRange(buffer, bssidOffset, bssidOffset + 6)));
-            bssidOffset += 6;
-        }
-        return true;
+        return false;
     }
 
     private boolean parseSubelementLocationCivic(byte[] buffer) {
@@ -444,25 +542,26 @@ public final class ResponderLocation implements Parcelable {
         }
         this.mCivicLocationCountryCode = new String(Arrays.copyOfRange(buffer, 0, 2)).toUpperCase();
         CivicLocation civicLocation = new CivicLocation(Arrays.copyOfRange(buffer, 2, buffer.length), this.mCivicLocationCountryCode);
-        if (!civicLocation.isValid()) {
-            return false;
+        if (civicLocation.isValid()) {
+            this.mCivicLocation = civicLocation;
+            this.mCivicLocationString = civicLocation.toString();
+            return true;
         }
-        this.mCivicLocation = civicLocation;
-        this.mCivicLocationString = civicLocation.toString();
-        return true;
+        return false;
     }
 
     private boolean parseSubelementMapImage(byte[] buffer) {
         if (buffer.length > 256) {
             return false;
         }
-        byte mapImageType = buffer[0];
+        int mapImageType = buffer[0];
         int supportedTypesMax = SUPPORTED_IMAGE_FILE_EXTENSIONS.length - 1;
         if (mapImageType < 0 || mapImageType > supportedTypesMax) {
             return false;
         }
         this.mMapImageType = mapImageType;
-        this.mMapImageUri = Uri.parse(new String(Arrays.copyOfRange(buffer, 1, buffer.length), StandardCharsets.UTF_8));
+        byte[] urlBytes = Arrays.copyOfRange(buffer, 1, buffer.length);
+        this.mMapImageUri = Uri.parse(new String(urlBytes, StandardCharsets.UTF_8));
         return true;
     }
 
@@ -492,20 +591,22 @@ public final class ResponderLocation implements Parcelable {
         }
         long[] fieldData = new long[bitFieldSizes.length];
         int bufferBitPos = 0;
-        for (int fieldIndex = 0; fieldIndex < bitFieldSizes.length; fieldIndex++) {
-            int bitFieldSize = bitFieldSizes[fieldIndex];
+        for (int bufferBitPos2 = 0; bufferBitPos2 < bitFieldSizes.length; bufferBitPos2++) {
+            int bitFieldSize = bitFieldSizes[bufferBitPos2];
             long field = 0;
             for (int n = 0; n < bitFieldSize; n++) {
-                field |= ((long) getBitAtBitOffsetInByteArray(buffer, bufferBitPos + n)) << n;
+                field |= getBitAtBitOffsetInByteArray(buffer, bufferBitPos + n) << n;
             }
-            fieldData[fieldIndex] = field;
+            fieldData[bufferBitPos2] = field;
             bufferBitPos += bitFieldSize;
         }
         return fieldData;
     }
 
     private int getBitAtBitOffsetInByteArray(byte[] buffer, int bufferBitOffset) {
-        return (buffer[bufferBitOffset / 8] & (128 >> (bufferBitOffset % 8))) == 0 ? 0 : 1;
+        int bufferIndex = bufferBitOffset / 8;
+        int bitOffsetInByte = bufferBitOffset % 8;
+        return (buffer[bufferIndex] & (128 >> bitOffsetInByte)) == 0 ? 0 : 1;
     }
 
     private void swapEndianByteByByte(byte[] buffer) {
@@ -587,7 +688,7 @@ public final class ResponderLocation implements Parcelable {
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Boolean.valueOf(this.mIsValid), Boolean.valueOf(this.mIsLciValid), Boolean.valueOf(this.mIsZValid), Boolean.valueOf(this.mIsUsageValid), Boolean.valueOf(this.mIsBssidListValid), Boolean.valueOf(this.mIsLocationCivicValid), Boolean.valueOf(this.mIsMapImageValid), Double.valueOf(this.mLatitudeUncertainty), Double.valueOf(this.mLatitude), Double.valueOf(this.mLongitudeUncertainty), Double.valueOf(this.mLongitude), Integer.valueOf(this.mAltitudeType), Double.valueOf(this.mAltitudeUncertainty), Double.valueOf(this.mAltitude), Integer.valueOf(this.mDatum), Boolean.valueOf(this.mLciRegisteredLocationAgreement), Boolean.valueOf(this.mLciRegisteredLocationDse), Boolean.valueOf(this.mLciDependentStation), Integer.valueOf(this.mLciVersion), Integer.valueOf(this.mExpectedToMove), Double.valueOf(this.mFloorNumber), Double.valueOf(this.mHeightAboveFloorMeters), Double.valueOf(this.mHeightAboveFloorUncertaintyMeters), Boolean.valueOf(this.mUsageRetransmit), Boolean.valueOf(this.mUsageRetentionExpires), Boolean.valueOf(this.mUsageExtraInfoOnAssociation), this.mBssidList, this.mCivicLocationCountryCode, this.mCivicLocationString, this.mCivicLocation, Integer.valueOf(this.mMapImageType), this.mMapImageUri});
+        return Objects.hash(Boolean.valueOf(this.mIsValid), Boolean.valueOf(this.mIsLciValid), Boolean.valueOf(this.mIsZValid), Boolean.valueOf(this.mIsUsageValid), Boolean.valueOf(this.mIsBssidListValid), Boolean.valueOf(this.mIsLocationCivicValid), Boolean.valueOf(this.mIsMapImageValid), Double.valueOf(this.mLatitudeUncertainty), Double.valueOf(this.mLatitude), Double.valueOf(this.mLongitudeUncertainty), Double.valueOf(this.mLongitude), Integer.valueOf(this.mAltitudeType), Double.valueOf(this.mAltitudeUncertainty), Double.valueOf(this.mAltitude), Integer.valueOf(this.mDatum), Boolean.valueOf(this.mLciRegisteredLocationAgreement), Boolean.valueOf(this.mLciRegisteredLocationDse), Boolean.valueOf(this.mLciDependentStation), Integer.valueOf(this.mLciVersion), Integer.valueOf(this.mExpectedToMove), Double.valueOf(this.mFloorNumber), Double.valueOf(this.mHeightAboveFloorMeters), Double.valueOf(this.mHeightAboveFloorUncertaintyMeters), Boolean.valueOf(this.mUsageRetransmit), Boolean.valueOf(this.mUsageRetentionExpires), Boolean.valueOf(this.mUsageExtraInfoOnAssociation), this.mBssidList, this.mCivicLocationCountryCode, this.mCivicLocationString, this.mCivicLocation, Integer.valueOf(this.mMapImageType), this.mMapImageUri);
     }
 
     public boolean isValid() {
@@ -599,101 +700,101 @@ public final class ResponderLocation implements Parcelable {
     }
 
     public double getLatitudeUncertainty() {
-        if (this.mIsLciValid) {
-            return this.mLatitudeUncertainty;
+        if (!this.mIsLciValid) {
+            throw new IllegalStateException("getLatitudeUncertainty(): invoked on an invalid result: mIsLciValid = false.");
         }
-        throw new IllegalStateException("getLatitudeUncertainty(): invoked on an invalid result: mIsLciValid = false.");
+        return this.mLatitudeUncertainty;
     }
 
     public double getLatitude() {
-        if (this.mIsLciValid) {
-            return this.mLatitude;
+        if (!this.mIsLciValid) {
+            throw new IllegalStateException("getLatitude(): invoked on an invalid result: mIsLciValid = false.");
         }
-        throw new IllegalStateException("getLatitude(): invoked on an invalid result: mIsLciValid = false.");
+        return this.mLatitude;
     }
 
     public double getLongitudeUncertainty() {
-        if (this.mIsLciValid) {
-            return this.mLongitudeUncertainty;
+        if (!this.mIsLciValid) {
+            throw new IllegalStateException("getLongitudeUncertainty(): invoked on an invalid result: mIsLciValid = false.");
         }
-        throw new IllegalStateException("getLongitudeUncertainty(): invoked on an invalid result: mIsLciValid = false.");
+        return this.mLongitudeUncertainty;
     }
 
     public double getLongitude() {
-        if (this.mIsLciValid) {
-            return this.mLongitude;
+        if (!this.mIsLciValid) {
+            throw new IllegalStateException("getLatitudeUncertainty(): invoked on an invalid result: mIsLciValid = false.");
         }
-        throw new IllegalStateException("getLatitudeUncertainty(): invoked on an invalid result: mIsLciValid = false.");
+        return this.mLongitude;
     }
 
     public int getAltitudeType() {
-        if (this.mIsLciValid) {
-            return this.mAltitudeType;
+        if (!this.mIsLciValid) {
+            throw new IllegalStateException("getLatitudeUncertainty(): invoked on an invalid result: mIsLciValid = false.");
         }
-        throw new IllegalStateException("getLatitudeUncertainty(): invoked on an invalid result: mIsLciValid = false.");
+        return this.mAltitudeType;
     }
 
     public double getAltitudeUncertainty() {
-        if (this.mIsLciValid) {
-            return this.mAltitudeUncertainty;
+        if (!this.mIsLciValid) {
+            throw new IllegalStateException("getLatitudeUncertainty(): invoked on an invalid result: mIsLciValid = false.");
         }
-        throw new IllegalStateException("getLatitudeUncertainty(): invoked on an invalid result: mIsLciValid = false.");
+        return this.mAltitudeUncertainty;
     }
 
     public double getAltitude() {
-        if (this.mIsLciValid) {
-            return this.mAltitude;
+        if (!this.mIsLciValid) {
+            throw new IllegalStateException("getAltitude(): invoked on an invalid result: mIsLciValid = false.");
         }
-        throw new IllegalStateException("getAltitude(): invoked on an invalid result: mIsLciValid = false.");
+        return this.mAltitude;
     }
 
     public int getDatum() {
-        if (this.mIsLciValid) {
-            return this.mDatum;
+        if (!this.mIsLciValid) {
+            throw new IllegalStateException("getDatum(): invoked on an invalid result: mIsLciValid = false.");
         }
-        throw new IllegalStateException("getDatum(): invoked on an invalid result: mIsLciValid = false.");
+        return this.mDatum;
     }
 
     public boolean getRegisteredLocationAgreementIndication() {
-        if (this.mIsLciValid) {
-            return this.mLciRegisteredLocationAgreement;
+        if (!this.mIsLciValid) {
+            throw new IllegalStateException("getRegisteredLocationAgreementIndication(): invoked on an invalid result: mIsLciValid = false.");
         }
-        throw new IllegalStateException("getRegisteredLocationAgreementIndication(): invoked on an invalid result: mIsLciValid = false.");
+        return this.mLciRegisteredLocationAgreement;
     }
 
     public boolean getRegisteredLocationDseIndication() {
-        if (this.mIsLciValid) {
-            return this.mLciRegisteredLocationDse;
+        if (!this.mIsLciValid) {
+            throw new IllegalStateException("getRegisteredLocationDseIndication(): invoked on an invalid result: mIsLciValid = false.");
         }
-        throw new IllegalStateException("getRegisteredLocationDseIndication(): invoked on an invalid result: mIsLciValid = false.");
+        return this.mLciRegisteredLocationDse;
     }
 
     public boolean getDependentStationIndication() {
-        if (this.mIsLciValid) {
-            return this.mLciDependentStation;
+        if (!this.mIsLciValid) {
+            throw new IllegalStateException("getDependentStationIndication(): invoked on an invalid result: mIsLciValid = false.");
         }
-        throw new IllegalStateException("getDependentStationIndication(): invoked on an invalid result: mIsLciValid = false.");
+        return this.mLciDependentStation;
     }
 
     public int getLciVersion() {
-        if (this.mIsLciValid) {
-            return this.mLciVersion;
+        if (!this.mIsLciValid) {
+            throw new IllegalStateException("getLciVersion(): invoked on an invalid result: mIsLciValid = false.");
         }
-        throw new IllegalStateException("getLciVersion(): invoked on an invalid result: mIsLciValid = false.");
+        return this.mLciVersion;
     }
 
     public Location toLocation() {
-        if (this.mIsLciValid) {
-            Location location = new Location(LOCATION_PROVIDER);
-            location.setLatitude(this.mLatitude);
-            location.setLongitude(this.mLongitude);
-            location.setAccuracy(((float) (this.mLatitudeUncertainty + this.mLongitudeUncertainty)) / 2.0f);
-            location.setAltitude(this.mAltitude);
-            location.setVerticalAccuracyMeters((float) this.mAltitudeUncertainty);
-            location.setTime(System.currentTimeMillis());
-            return location;
+        if (!this.mIsLciValid) {
+            throw new IllegalStateException("toLocation(): invoked on an invalid result: mIsLciValid = false.");
         }
-        throw new IllegalStateException("toLocation(): invoked on an invalid result: mIsLciValid = false.");
+        Location location = new Location(LOCATION_PROVIDER);
+        location.setLatitude(this.mLatitude);
+        location.setLongitude(this.mLongitude);
+        location.setAccuracy(((float) (this.mLatitudeUncertainty + this.mLongitudeUncertainty)) / 2.0f);
+        location.setAltitude(this.mAltitude);
+        location.setVerticalAccuracyMeters((float) this.mAltitudeUncertainty);
+        location.setTime(System.currentTimeMillis());
+        return location;
     }
 
     public boolean isZaxisSubelementValid() {
@@ -701,31 +802,31 @@ public final class ResponderLocation implements Parcelable {
     }
 
     public int getExpectedToMove() {
-        if (this.mIsZValid) {
-            return this.mExpectedToMove;
+        if (!this.mIsZValid) {
+            throw new IllegalStateException("getExpectedToMove(): invoked on an invalid result: mIsZValid = false.");
         }
-        throw new IllegalStateException("getExpectedToMove(): invoked on an invalid result: mIsZValid = false.");
+        return this.mExpectedToMove;
     }
 
     public double getFloorNumber() {
-        if (this.mIsZValid) {
-            return this.mFloorNumber;
+        if (!this.mIsZValid) {
+            throw new IllegalStateException("getFloorNumber(): invoked on an invalid result: mIsZValid = false)");
         }
-        throw new IllegalStateException("getFloorNumber(): invoked on an invalid result: mIsZValid = false)");
+        return this.mFloorNumber;
     }
 
     public double getHeightAboveFloorMeters() {
-        if (this.mIsZValid) {
-            return this.mHeightAboveFloorMeters;
+        if (!this.mIsZValid) {
+            throw new IllegalStateException("getHeightAboveFloorMeters(): invoked on an invalid result: mIsZValid = false)");
         }
-        throw new IllegalStateException("getHeightAboveFloorMeters(): invoked on an invalid result: mIsZValid = false)");
+        return this.mHeightAboveFloorMeters;
     }
 
     public double getHeightAboveFloorUncertaintyMeters() {
-        if (this.mIsZValid) {
-            return this.mHeightAboveFloorUncertaintyMeters;
+        if (!this.mIsZValid) {
+            throw new IllegalStateException("getHeightAboveFloorUncertaintyMeters():invoked on an invalid result: mIsZValid = false)");
         }
-        throw new IllegalStateException("getHeightAboveFloorUncertaintyMeters():invoked on an invalid result: mIsZValid = false)");
+        return this.mHeightAboveFloorUncertaintyMeters;
     }
 
     public boolean getRetransmitPolicyIndication() {
@@ -746,17 +847,17 @@ public final class ResponderLocation implements Parcelable {
     }
 
     public Address toCivicLocationAddress() {
-        if (this.mCivicLocation == null || !this.mCivicLocation.isValid()) {
-            return null;
+        if (this.mCivicLocation != null && this.mCivicLocation.isValid()) {
+            return this.mCivicLocation.toAddress();
         }
-        return this.mCivicLocation.toAddress();
+        return null;
     }
 
     public SparseArray toCivicLocationSparseArray() {
-        if (this.mCivicLocation == null || !this.mCivicLocation.isValid()) {
-            return null;
+        if (this.mCivicLocation != null && this.mCivicLocation.isValid()) {
+            return this.mCivicLocation.toSparseArray();
         }
-        return this.mCivicLocation.toSparseArray();
+        return null;
     }
 
     public String getCivicLocationCountryCode() {

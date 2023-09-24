@@ -2,15 +2,15 @@ package android.media;
 
 import android.annotation.UnsupportedAppUsage;
 import android.media.IMediaHTTPService;
-import android.os.IBinder;
+import android.p007os.IBinder;
 import android.util.Log;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookieStore;
 import java.net.HttpCookie;
-import java.net.URI;
 import java.util.List;
 
+/* loaded from: classes3.dex */
 public class MediaHTTPService extends IMediaHTTPService.Stub {
     private static final String TAG = "MediaHTTPService";
     private Boolean mCookieStoreInitialized = new Boolean(false);
@@ -18,9 +18,10 @@ public class MediaHTTPService extends IMediaHTTPService.Stub {
 
     public MediaHTTPService(List<HttpCookie> cookies) {
         this.mCookies = cookies;
-        Log.v(TAG, "MediaHTTPService(" + this + "): Cookies: " + cookies);
+        Log.m66v(TAG, "MediaHTTPService(" + this + "): Cookies: " + cookies);
     }
 
+    @Override // android.media.IMediaHTTPService
     public IMediaHTTPConnection makeHTTPConnection() {
         synchronized (this.mCookieStoreInitialized) {
             if (!this.mCookieStoreInitialized.booleanValue()) {
@@ -28,26 +29,27 @@ public class MediaHTTPService extends IMediaHTTPService.Stub {
                 if (cookieHandler == null) {
                     cookieHandler = new CookieManager();
                     CookieHandler.setDefault(cookieHandler);
-                    Log.v(TAG, "makeHTTPConnection: CookieManager created: " + cookieHandler);
+                    Log.m66v(TAG, "makeHTTPConnection: CookieManager created: " + cookieHandler);
                 } else {
-                    Log.v(TAG, "makeHTTPConnection: CookieHandler (" + cookieHandler + ") exists.");
+                    Log.m66v(TAG, "makeHTTPConnection: CookieHandler (" + cookieHandler + ") exists.");
                 }
                 if (this.mCookies != null) {
                     if (cookieHandler instanceof CookieManager) {
-                        CookieStore store = ((CookieManager) cookieHandler).getCookieStore();
+                        CookieManager cookieManager = (CookieManager) cookieHandler;
+                        CookieStore store = cookieManager.getCookieStore();
                         for (HttpCookie cookie : this.mCookies) {
                             try {
-                                store.add((URI) null, cookie);
+                                store.add(null, cookie);
                             } catch (Exception e) {
-                                Log.v(TAG, "makeHTTPConnection: CookieStore.add" + e);
+                                Log.m66v(TAG, "makeHTTPConnection: CookieStore.add" + e);
                             }
                         }
                     } else {
-                        Log.w(TAG, "makeHTTPConnection: The installed CookieHandler is not a CookieManager. Can’t add the provided cookies to the cookie store.");
+                        Log.m64w(TAG, "makeHTTPConnection: The installed CookieHandler is not a CookieManager. Can\u2019t add the provided cookies to the cookie store.");
                     }
                 }
                 this.mCookieStoreInitialized = true;
-                Log.v(TAG, "makeHTTPConnection(" + this + "): cookieHandler: " + cookieHandler + " Cookies: " + this.mCookies);
+                Log.m66v(TAG, "makeHTTPConnection(" + this + "): cookieHandler: " + cookieHandler + " Cookies: " + this.mCookies);
             }
         }
         return new MediaHTTPConnection();
@@ -55,17 +57,17 @@ public class MediaHTTPService extends IMediaHTTPService.Stub {
 
     @UnsupportedAppUsage
     static IBinder createHttpServiceBinderIfNecessary(String path) {
-        return createHttpServiceBinderIfNecessary(path, (List<HttpCookie>) null);
+        return createHttpServiceBinderIfNecessary(path, null);
     }
 
     static IBinder createHttpServiceBinderIfNecessary(String path, List<HttpCookie> cookies) {
         if (path.startsWith("http://") || path.startsWith("https://")) {
             return new MediaHTTPService(cookies).asBinder();
         }
-        if (!path.startsWith("widevine://")) {
+        if (path.startsWith("widevine://")) {
+            Log.m72d(TAG, "Widevine classic is no longer supported");
             return null;
         }
-        Log.d(TAG, "Widevine classic is no longer supported");
         return null;
     }
 }

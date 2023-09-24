@@ -2,6 +2,7 @@ package android.graphics;
 
 import android.graphics.BitmapFactory;
 
+/* loaded from: classes.dex */
 public final class LargeBitmap {
     private long mNativeLargeBitmap;
     private boolean mRecycled = false;
@@ -20,10 +21,10 @@ public final class LargeBitmap {
 
     public Bitmap decodeRegion(Rect rect, BitmapFactory.Options options) {
         checkRecycled("decodeRegion called on recycled large bitmap");
-        if (rect.left >= 0 && rect.top >= 0 && rect.right <= getWidth() && rect.bottom <= getHeight()) {
-            return nativeDecodeRegion(this.mNativeLargeBitmap, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, options);
+        if (rect.left < 0 || rect.top < 0 || rect.right > getWidth() || rect.bottom > getHeight()) {
+            throw new IllegalArgumentException("rectangle is not inside the image");
         }
-        throw new IllegalArgumentException("rectangle is not inside the image");
+        return nativeDecodeRegion(this.mNativeLargeBitmap, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, options);
     }
 
     public int getWidth() {
@@ -53,8 +54,7 @@ public final class LargeBitmap {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() {
+    protected void finalize() {
         recycle();
     }
 }

@@ -19,6 +19,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.Random;
 
+/* loaded from: classes4.dex */
 public abstract class ContentCaptureSession implements AutoCloseable {
     public static final int FLUSH_REASON_FULL = 1;
     public static final int FLUSH_REASON_IDLE_TIMEOUT = 5;
@@ -41,9 +42,7 @@ public abstract class ContentCaptureSession implements AutoCloseable {
     public static final int STATE_SERVICE_RESURRECTED = 4096;
     public static final int STATE_SERVICE_UPDATING = 2048;
     public static final int STATE_WAITING_FOR_SERVER = 1;
-    private static final String TAG = ContentCaptureSession.class.getSimpleName();
     public static final int UNKNOWN_STATE = 0;
-    private static final Random sIdGenerator = new Random();
     @GuardedBy({"mLock"})
     private ArrayList<ContentCaptureSession> mChildren;
     private ContentCaptureContext mClientContext;
@@ -53,36 +52,31 @@ public abstract class ContentCaptureSession implements AutoCloseable {
     protected final int mId;
     private final Object mLock;
     private int mState;
+    private static final String TAG = ContentCaptureSession.class.getSimpleName();
+    private static final Random sIdGenerator = new Random();
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface FlushReason {
     }
 
-    /* access modifiers changed from: package-private */
-    public abstract void flush(int i);
+    abstract void flush(int i);
 
-    /* access modifiers changed from: package-private */
-    public abstract MainContentCaptureSession getMainCaptureSession();
+    abstract MainContentCaptureSession getMainCaptureSession();
 
-    /* access modifiers changed from: package-private */
-    public abstract void internalNotifyViewAppeared(ViewNode.ViewStructureImpl viewStructureImpl);
+    abstract void internalNotifyViewAppeared(ViewNode.ViewStructureImpl viewStructureImpl);
 
-    /* access modifiers changed from: package-private */
-    public abstract void internalNotifyViewDisappeared(AutofillId autofillId);
+    abstract void internalNotifyViewDisappeared(AutofillId autofillId);
 
-    /* access modifiers changed from: package-private */
-    public abstract void internalNotifyViewTextChanged(AutofillId autofillId, CharSequence charSequence);
+    abstract void internalNotifyViewTextChanged(AutofillId autofillId, CharSequence charSequence);
 
     public abstract void internalNotifyViewTreeEvent(boolean z);
 
-    /* access modifiers changed from: package-private */
-    public abstract ContentCaptureSession newChild(ContentCaptureContext contentCaptureContext);
+    abstract ContentCaptureSession newChild(ContentCaptureContext contentCaptureContext);
 
-    /* access modifiers changed from: package-private */
-    public abstract void onDestroy();
+    abstract void onDestroy();
 
-    /* access modifiers changed from: package-private */
-    public abstract void updateContentCaptureContext(ContentCaptureContext contentCaptureContext);
+    abstract void updateContentCaptureContext(ContentCaptureContext contentCaptureContext);
 
     protected ContentCaptureSession() {
         this(getRandomSessionId());
@@ -91,9 +85,8 @@ public abstract class ContentCaptureSession implements AutoCloseable {
     @VisibleForTesting
     public ContentCaptureSession(int id) {
         this.mLock = new Object();
-        boolean z = false;
         this.mState = 0;
-        Preconditions.checkArgument(id != 0 ? true : z);
+        Preconditions.checkArgument(id != 0);
         this.mId = id;
     }
 
@@ -117,7 +110,7 @@ public abstract class ContentCaptureSession implements AutoCloseable {
         ContentCaptureSession child = newChild(context);
         if (ContentCaptureHelper.sDebug) {
             String str = TAG;
-            Log.d(str, "createContentCaptureSession(" + context + ": parent=" + this.mId + ", child=" + child.mId);
+            Log.m72d(str, "createContentCaptureSession(" + context + ": parent=" + this.mId + ", child=" + child.mId);
         }
         synchronized (this.mLock) {
             if (this.mChildren == null) {
@@ -137,127 +130,45 @@ public abstract class ContentCaptureSession implements AutoCloseable {
         return this.mClientContext;
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:30:?, code lost:
-        flush(4);
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:32:0x00ba, code lost:
-        return;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:33:0x00bb, code lost:
-        r0 = move-exception;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:34:0x00bc, code lost:
-        onDestroy();
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:35:0x00bf, code lost:
-        throw r0;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:9:0x0029, code lost:
-        return;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
     public final void destroy() {
-        /*
-            r8 = this;
-            java.lang.Object r0 = r8.mLock
-            monitor-enter(r0)
-            boolean r1 = r8.mDestroyed     // Catch:{ all -> 0x00c0 }
-            if (r1 == 0) goto L_0x002a
-            boolean r1 = android.view.contentcapture.ContentCaptureHelper.sDebug     // Catch:{ all -> 0x00c0 }
-            if (r1 == 0) goto L_0x0028
-            java.lang.String r1 = TAG     // Catch:{ all -> 0x00c0 }
-            java.lang.StringBuilder r2 = new java.lang.StringBuilder     // Catch:{ all -> 0x00c0 }
-            r2.<init>()     // Catch:{ all -> 0x00c0 }
-            java.lang.String r3 = "destroy("
-            r2.append(r3)     // Catch:{ all -> 0x00c0 }
-            int r3 = r8.mId     // Catch:{ all -> 0x00c0 }
-            r2.append(r3)     // Catch:{ all -> 0x00c0 }
-            java.lang.String r3 = "): already destroyed"
-            r2.append(r3)     // Catch:{ all -> 0x00c0 }
-            java.lang.String r2 = r2.toString()     // Catch:{ all -> 0x00c0 }
-            android.util.Log.d(r1, r2)     // Catch:{ all -> 0x00c0 }
-        L_0x0028:
-            monitor-exit(r0)     // Catch:{ all -> 0x00c0 }
-            return
-        L_0x002a:
-            r1 = 1
-            r8.mDestroyed = r1     // Catch:{ all -> 0x00c0 }
-            boolean r1 = android.view.contentcapture.ContentCaptureHelper.sVerbose     // Catch:{ all -> 0x00c0 }
-            if (r1 == 0) goto L_0x0057
-            java.lang.String r1 = TAG     // Catch:{ all -> 0x00c0 }
-            java.lang.StringBuilder r2 = new java.lang.StringBuilder     // Catch:{ all -> 0x00c0 }
-            r2.<init>()     // Catch:{ all -> 0x00c0 }
-            java.lang.String r3 = "destroy(): state="
-            r2.append(r3)     // Catch:{ all -> 0x00c0 }
-            int r3 = r8.mState     // Catch:{ all -> 0x00c0 }
-            java.lang.String r3 = getStateAsString(r3)     // Catch:{ all -> 0x00c0 }
-            r2.append(r3)     // Catch:{ all -> 0x00c0 }
-            java.lang.String r3 = ", mId="
-            r2.append(r3)     // Catch:{ all -> 0x00c0 }
-            int r3 = r8.mId     // Catch:{ all -> 0x00c0 }
-            r2.append(r3)     // Catch:{ all -> 0x00c0 }
-            java.lang.String r2 = r2.toString()     // Catch:{ all -> 0x00c0 }
-            android.util.Log.v(r1, r2)     // Catch:{ all -> 0x00c0 }
-        L_0x0057:
-            java.util.ArrayList<android.view.contentcapture.ContentCaptureSession> r1 = r8.mChildren     // Catch:{ all -> 0x00c0 }
-            if (r1 == 0) goto L_0x00b1
-            java.util.ArrayList<android.view.contentcapture.ContentCaptureSession> r1 = r8.mChildren     // Catch:{ all -> 0x00c0 }
-            int r1 = r1.size()     // Catch:{ all -> 0x00c0 }
-            boolean r2 = android.view.contentcapture.ContentCaptureHelper.sVerbose     // Catch:{ all -> 0x00c0 }
-            if (r2 == 0) goto L_0x0080
-            java.lang.String r2 = TAG     // Catch:{ all -> 0x00c0 }
-            java.lang.StringBuilder r3 = new java.lang.StringBuilder     // Catch:{ all -> 0x00c0 }
-            r3.<init>()     // Catch:{ all -> 0x00c0 }
-            java.lang.String r4 = "Destroying "
-            r3.append(r4)     // Catch:{ all -> 0x00c0 }
-            r3.append(r1)     // Catch:{ all -> 0x00c0 }
-            java.lang.String r4 = " children first"
-            r3.append(r4)     // Catch:{ all -> 0x00c0 }
-            java.lang.String r3 = r3.toString()     // Catch:{ all -> 0x00c0 }
-            android.util.Log.v(r2, r3)     // Catch:{ all -> 0x00c0 }
-        L_0x0080:
-            r2 = 0
-        L_0x0081:
-            if (r2 >= r1) goto L_0x00b1
-            java.util.ArrayList<android.view.contentcapture.ContentCaptureSession> r3 = r8.mChildren     // Catch:{ all -> 0x00c0 }
-            java.lang.Object r3 = r3.get(r2)     // Catch:{ all -> 0x00c0 }
-            android.view.contentcapture.ContentCaptureSession r3 = (android.view.contentcapture.ContentCaptureSession) r3     // Catch:{ all -> 0x00c0 }
-            r3.destroy()     // Catch:{ Exception -> 0x008f }
-            goto L_0x00ae
-        L_0x008f:
-            r4 = move-exception
-            java.lang.String r5 = TAG     // Catch:{ all -> 0x00c0 }
-            java.lang.StringBuilder r6 = new java.lang.StringBuilder     // Catch:{ all -> 0x00c0 }
-            r6.<init>()     // Catch:{ all -> 0x00c0 }
-            java.lang.String r7 = "exception destroying child session #"
-            r6.append(r7)     // Catch:{ all -> 0x00c0 }
-            r6.append(r2)     // Catch:{ all -> 0x00c0 }
-            java.lang.String r7 = ": "
-            r6.append(r7)     // Catch:{ all -> 0x00c0 }
-            r6.append(r4)     // Catch:{ all -> 0x00c0 }
-            java.lang.String r6 = r6.toString()     // Catch:{ all -> 0x00c0 }
-            android.util.Log.w((java.lang.String) r5, (java.lang.String) r6)     // Catch:{ all -> 0x00c0 }
-        L_0x00ae:
-            int r2 = r2 + 1
-            goto L_0x0081
-        L_0x00b1:
-            monitor-exit(r0)     // Catch:{ all -> 0x00c0 }
-            r0 = 4
-            r8.flush(r0)     // Catch:{ all -> 0x00bb }
-            r8.onDestroy()
-            return
-        L_0x00bb:
-            r0 = move-exception
-            r8.onDestroy()
-            throw r0
-        L_0x00c0:
-            r1 = move-exception
-            monitor-exit(r0)     // Catch:{ all -> 0x00c0 }
-            throw r1
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.view.contentcapture.ContentCaptureSession.destroy():void");
+        synchronized (this.mLock) {
+            if (this.mDestroyed) {
+                if (ContentCaptureHelper.sDebug) {
+                    String str = TAG;
+                    Log.m72d(str, "destroy(" + this.mId + "): already destroyed");
+                }
+                return;
+            }
+            this.mDestroyed = true;
+            if (ContentCaptureHelper.sVerbose) {
+                String str2 = TAG;
+                Log.m66v(str2, "destroy(): state=" + getStateAsString(this.mState) + ", mId=" + this.mId);
+            }
+            if (this.mChildren != null) {
+                int numberChildren = this.mChildren.size();
+                if (ContentCaptureHelper.sVerbose) {
+                    String str3 = TAG;
+                    Log.m66v(str3, "Destroying " + numberChildren + " children first");
+                }
+                for (int i = 0; i < numberChildren; i++) {
+                    ContentCaptureSession child = this.mChildren.get(i);
+                    try {
+                        child.destroy();
+                    } catch (Exception e) {
+                        String str4 = TAG;
+                        Log.m64w(str4, "exception destroying child session #" + i + PluralRules.KEYWORD_RULE_SEPARATOR + e);
+                    }
+                }
+            }
+            try {
+                flush(4);
+            } finally {
+                onDestroy();
+            }
+        }
     }
 
+    @Override // java.lang.AutoCloseable
     public void close() {
         destroy();
     }
@@ -265,11 +176,10 @@ public abstract class ContentCaptureSession implements AutoCloseable {
     public final void notifyViewAppeared(ViewStructure node) {
         Preconditions.checkNotNull(node);
         if (isContentCaptureEnabled()) {
-            if (node instanceof ViewNode.ViewStructureImpl) {
-                internalNotifyViewAppeared((ViewNode.ViewStructureImpl) node);
-                return;
+            if (!(node instanceof ViewNode.ViewStructureImpl)) {
+                throw new IllegalArgumentException("Invalid node class: " + node.getClass());
             }
-            throw new IllegalArgumentException("Invalid node class: " + node.getClass());
+            internalNotifyViewAppeared((ViewNode.ViewStructureImpl) node);
         }
     }
 
@@ -311,8 +221,7 @@ public abstract class ContentCaptureSession implements AutoCloseable {
         return new ViewNode.ViewStructureImpl(parentId, virtualId, this.mId);
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean isContentCaptureEnabled() {
+    boolean isContentCaptureEnabled() {
         boolean z;
         synchronized (this.mLock) {
             z = !this.mDestroyed;
@@ -320,8 +229,7 @@ public abstract class ContentCaptureSession implements AutoCloseable {
         return z;
     }
 
-    /* access modifiers changed from: package-private */
-    public void dump(String prefix, PrintWriter pw) {
+    void dump(String prefix, PrintWriter pw) {
         pw.print(prefix);
         pw.print("id: ");
         pw.println(this.mId);
@@ -341,10 +249,11 @@ public abstract class ContentCaptureSession implements AutoCloseable {
                 pw.print("number children: ");
                 pw.println(numberChildren);
                 for (int i = 0; i < numberChildren; i++) {
+                    ContentCaptureSession child = this.mChildren.get(i);
                     pw.print(prefix);
                     pw.print(i);
                     pw.println(PluralRules.KEYWORD_RULE_SEPARATOR);
-                    this.mChildren.get(i).dump(prefix2, pw);
+                    child.dump(prefix2, pw);
                 }
             }
         }
@@ -355,16 +264,10 @@ public abstract class ContentCaptureSession implements AutoCloseable {
     }
 
     protected static String getStateAsString(int state) {
-        String str;
         StringBuilder sb = new StringBuilder();
         sb.append(state);
         sb.append(" (");
-        if (state == 0) {
-            str = IccCardConstants.INTENT_VALUE_ICC_UNKNOWN;
-        } else {
-            str = DebugUtils.flagsToString(ContentCaptureSession.class, "STATE_", state);
-        }
-        sb.append(str);
+        sb.append(state == 0 ? IccCardConstants.INTENT_VALUE_ICC_UNKNOWN : DebugUtils.flagsToString(ContentCaptureSession.class, "STATE_", state));
         sb.append(")");
         return sb.toString();
     }

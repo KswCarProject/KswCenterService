@@ -2,27 +2,29 @@ package android.renderscript;
 
 import android.renderscript.Script;
 
+/* loaded from: classes3.dex */
 public class ScriptIntrinsicBlend extends ScriptIntrinsic {
     ScriptIntrinsicBlend(long id, RenderScript rs) {
         super(id, rs);
     }
 
     public static ScriptIntrinsicBlend create(RenderScript rs, Element e) {
-        return new ScriptIntrinsicBlend(rs.nScriptIntrinsicCreate(7, e.getID(rs)), rs);
+        long id = rs.nScriptIntrinsicCreate(7, e.getID(rs));
+        return new ScriptIntrinsicBlend(id, rs);
     }
 
     private void blend(int id, Allocation ain, Allocation aout, Script.LaunchOptions opt) {
         if (!ain.getElement().isCompatible(Element.U8_4(this.mRS))) {
             throw new RSIllegalArgumentException("Input is not of expected format.");
-        } else if (aout.getElement().isCompatible(Element.U8_4(this.mRS))) {
-            forEach(id, ain, aout, (FieldPacker) null, opt);
-        } else {
+        }
+        if (!aout.getElement().isCompatible(Element.U8_4(this.mRS))) {
             throw new RSIllegalArgumentException("Output is not of expected format.");
         }
+        forEach(id, ain, aout, (FieldPacker) null, opt);
     }
 
     public void forEachClear(Allocation ain, Allocation aout) {
-        forEachClear(ain, aout, (Script.LaunchOptions) null);
+        forEachClear(ain, aout, null);
     }
 
     public void forEachClear(Allocation ain, Allocation aout, Script.LaunchOptions opt) {
@@ -30,19 +32,19 @@ public class ScriptIntrinsicBlend extends ScriptIntrinsic {
     }
 
     public Script.KernelID getKernelIDClear() {
-        return createKernelID(0, 3, (Element) null, (Element) null);
+        return createKernelID(0, 3, null, null);
     }
 
     public void forEachSrc(Allocation ain, Allocation aout) {
-        forEachSrc(ain, aout, (Script.LaunchOptions) null);
+        forEachSrc(ain, aout, null);
     }
 
     public void forEachSrc(Allocation ain, Allocation aout, Script.LaunchOptions opt) {
-        blend(1, ain, aout, (Script.LaunchOptions) null);
+        blend(1, ain, aout, null);
     }
 
     public Script.KernelID getKernelIDSrc() {
-        return createKernelID(1, 3, (Element) null, (Element) null);
+        return createKernelID(1, 3, null, null);
     }
 
     public void forEachDst(Allocation ain, Allocation aout) {
@@ -52,11 +54,11 @@ public class ScriptIntrinsicBlend extends ScriptIntrinsic {
     }
 
     public Script.KernelID getKernelIDDst() {
-        return createKernelID(2, 3, (Element) null, (Element) null);
+        return createKernelID(2, 3, null, null);
     }
 
     public void forEachSrcOver(Allocation ain, Allocation aout) {
-        forEachSrcOver(ain, aout, (Script.LaunchOptions) null);
+        forEachSrcOver(ain, aout, null);
     }
 
     public void forEachSrcOver(Allocation ain, Allocation aout, Script.LaunchOptions opt) {
@@ -64,11 +66,11 @@ public class ScriptIntrinsicBlend extends ScriptIntrinsic {
     }
 
     public Script.KernelID getKernelIDSrcOver() {
-        return createKernelID(3, 3, (Element) null, (Element) null);
+        return createKernelID(3, 3, null, null);
     }
 
     public void forEachDstOver(Allocation ain, Allocation aout) {
-        forEachDstOver(ain, aout, (Script.LaunchOptions) null);
+        forEachDstOver(ain, aout, null);
     }
 
     public void forEachDstOver(Allocation ain, Allocation aout, Script.LaunchOptions opt) {
@@ -76,11 +78,11 @@ public class ScriptIntrinsicBlend extends ScriptIntrinsic {
     }
 
     public Script.KernelID getKernelIDDstOver() {
-        return createKernelID(4, 3, (Element) null, (Element) null);
+        return createKernelID(4, 3, null, null);
     }
 
     public void forEachSrcIn(Allocation ain, Allocation aout) {
-        forEachSrcIn(ain, aout, (Script.LaunchOptions) null);
+        forEachSrcIn(ain, aout, null);
     }
 
     public void forEachSrcIn(Allocation ain, Allocation aout, Script.LaunchOptions opt) {
@@ -88,11 +90,11 @@ public class ScriptIntrinsicBlend extends ScriptIntrinsic {
     }
 
     public Script.KernelID getKernelIDSrcIn() {
-        return createKernelID(5, 3, (Element) null, (Element) null);
+        return createKernelID(5, 3, null, null);
     }
 
     public void forEachDstIn(Allocation ain, Allocation aout) {
-        forEachDstIn(ain, aout, (Script.LaunchOptions) null);
+        forEachDstIn(ain, aout, null);
     }
 
     public void forEachDstIn(Allocation ain, Allocation aout, Script.LaunchOptions opt) {
@@ -100,11 +102,11 @@ public class ScriptIntrinsicBlend extends ScriptIntrinsic {
     }
 
     public Script.KernelID getKernelIDDstIn() {
-        return createKernelID(6, 3, (Element) null, (Element) null);
+        return createKernelID(6, 3, null, null);
     }
 
     public void forEachSrcOut(Allocation ain, Allocation aout) {
-        forEachSrcOut(ain, aout, (Script.LaunchOptions) null);
+        forEachSrcOut(ain, aout, null);
     }
 
     public void forEachSrcOut(Allocation ain, Allocation aout, Script.LaunchOptions opt) {
@@ -112,11 +114,11 @@ public class ScriptIntrinsicBlend extends ScriptIntrinsic {
     }
 
     public Script.KernelID getKernelIDSrcOut() {
-        return createKernelID(7, 3, (Element) null, (Element) null);
+        return createKernelID(7, 3, null, null);
     }
 
     public void forEachDstOut(Allocation ain, Allocation aout) {
-        forEachDstOut(ain, aout, (Script.LaunchOptions) null);
+        forEachDstOut(ain, aout, null);
     }
 
     public void forEachDstOut(Allocation ain, Allocation aout, Script.LaunchOptions opt) {
@@ -124,11 +126,11 @@ public class ScriptIntrinsicBlend extends ScriptIntrinsic {
     }
 
     public Script.KernelID getKernelIDDstOut() {
-        return createKernelID(8, 3, (Element) null, (Element) null);
+        return createKernelID(8, 3, null, null);
     }
 
     public void forEachSrcAtop(Allocation ain, Allocation aout) {
-        forEachSrcAtop(ain, aout, (Script.LaunchOptions) null);
+        forEachSrcAtop(ain, aout, null);
     }
 
     public void forEachSrcAtop(Allocation ain, Allocation aout, Script.LaunchOptions opt) {
@@ -136,11 +138,11 @@ public class ScriptIntrinsicBlend extends ScriptIntrinsic {
     }
 
     public Script.KernelID getKernelIDSrcAtop() {
-        return createKernelID(9, 3, (Element) null, (Element) null);
+        return createKernelID(9, 3, null, null);
     }
 
     public void forEachDstAtop(Allocation ain, Allocation aout) {
-        forEachDstAtop(ain, aout, (Script.LaunchOptions) null);
+        forEachDstAtop(ain, aout, null);
     }
 
     public void forEachDstAtop(Allocation ain, Allocation aout, Script.LaunchOptions opt) {
@@ -148,11 +150,11 @@ public class ScriptIntrinsicBlend extends ScriptIntrinsic {
     }
 
     public Script.KernelID getKernelIDDstAtop() {
-        return createKernelID(10, 3, (Element) null, (Element) null);
+        return createKernelID(10, 3, null, null);
     }
 
     public void forEachXor(Allocation ain, Allocation aout) {
-        forEachXor(ain, aout, (Script.LaunchOptions) null);
+        forEachXor(ain, aout, null);
     }
 
     public void forEachXor(Allocation ain, Allocation aout, Script.LaunchOptions opt) {
@@ -160,11 +162,11 @@ public class ScriptIntrinsicBlend extends ScriptIntrinsic {
     }
 
     public Script.KernelID getKernelIDXor() {
-        return createKernelID(11, 3, (Element) null, (Element) null);
+        return createKernelID(11, 3, null, null);
     }
 
     public void forEachMultiply(Allocation ain, Allocation aout) {
-        forEachMultiply(ain, aout, (Script.LaunchOptions) null);
+        forEachMultiply(ain, aout, null);
     }
 
     public void forEachMultiply(Allocation ain, Allocation aout, Script.LaunchOptions opt) {
@@ -172,11 +174,11 @@ public class ScriptIntrinsicBlend extends ScriptIntrinsic {
     }
 
     public Script.KernelID getKernelIDMultiply() {
-        return createKernelID(14, 3, (Element) null, (Element) null);
+        return createKernelID(14, 3, null, null);
     }
 
     public void forEachAdd(Allocation ain, Allocation aout) {
-        forEachAdd(ain, aout, (Script.LaunchOptions) null);
+        forEachAdd(ain, aout, null);
     }
 
     public void forEachAdd(Allocation ain, Allocation aout, Script.LaunchOptions opt) {
@@ -184,11 +186,11 @@ public class ScriptIntrinsicBlend extends ScriptIntrinsic {
     }
 
     public Script.KernelID getKernelIDAdd() {
-        return createKernelID(34, 3, (Element) null, (Element) null);
+        return createKernelID(34, 3, null, null);
     }
 
     public void forEachSubtract(Allocation ain, Allocation aout) {
-        forEachSubtract(ain, aout, (Script.LaunchOptions) null);
+        forEachSubtract(ain, aout, null);
     }
 
     public void forEachSubtract(Allocation ain, Allocation aout, Script.LaunchOptions opt) {
@@ -196,6 +198,6 @@ public class ScriptIntrinsicBlend extends ScriptIntrinsic {
     }
 
     public Script.KernelID getKernelIDSubtract() {
-        return createKernelID(35, 3, (Element) null, (Element) null);
+        return createKernelID(35, 3, null, null);
     }
 }

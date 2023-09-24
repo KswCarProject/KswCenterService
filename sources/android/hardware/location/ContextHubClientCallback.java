@@ -3,6 +3,7 @@ package android.hardware.location;
 import android.annotation.SystemApi;
 
 @SystemApi
+/* loaded from: classes.dex */
 public class ContextHubClientCallback {
     public void onMessageFromNanoApp(ContextHubClient client, NanoAppMessage message) {
     }

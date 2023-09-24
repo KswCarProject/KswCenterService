@@ -1,20 +1,25 @@
 package android.bluetooth;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.ParcelUuid;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.ParcelUuid;
+import android.p007os.Parcelable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
+/* loaded from: classes.dex */
 public class BluetoothGattCharacteristic implements Parcelable {
-    public static final Parcelable.Creator<BluetoothGattCharacteristic> CREATOR = new Parcelable.Creator<BluetoothGattCharacteristic>() {
+    public static final Parcelable.Creator<BluetoothGattCharacteristic> CREATOR = new Parcelable.Creator<BluetoothGattCharacteristic>() { // from class: android.bluetooth.BluetoothGattCharacteristic.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public BluetoothGattCharacteristic createFromParcel(Parcel in) {
             return new BluetoothGattCharacteristic(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public BluetoothGattCharacteristic[] newArray(int size) {
             return new BluetoothGattCharacteristic[size];
         }
@@ -60,7 +65,7 @@ public class BluetoothGattCharacteristic implements Parcelable {
 
     public BluetoothGattCharacteristic(UUID uuid, int properties, int permissions) {
         this.mKeySize = 16;
-        initCharacteristic((BluetoothGattService) null, uuid, 0, properties, permissions);
+        initCharacteristic(null, uuid, 0, properties, permissions);
     }
 
     BluetoothGattCharacteristic(BluetoothGattService service, UUID uuid, int instanceId, int properties, int permissions) {
@@ -70,7 +75,7 @@ public class BluetoothGattCharacteristic implements Parcelable {
 
     public BluetoothGattCharacteristic(UUID uuid, int instanceId, int properties, int permissions) {
         this.mKeySize = 16;
-        initCharacteristic((BluetoothGattService) null, uuid, instanceId, properties, permissions);
+        initCharacteristic(null, uuid, instanceId, properties, permissions);
     }
 
     private void initCharacteristic(BluetoothGattService service, UUID uuid, int instanceId, int properties, int permissions) {
@@ -88,10 +93,12 @@ public class BluetoothGattCharacteristic implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeParcelable(new ParcelUuid(this.mUuid), 0);
         out.writeInt(this.mInstance);
@@ -104,7 +111,7 @@ public class BluetoothGattCharacteristic implements Parcelable {
 
     private BluetoothGattCharacteristic(Parcel in) {
         this.mKeySize = 16;
-        this.mUuid = ((ParcelUuid) in.readParcelable((ClassLoader) null)).getUuid();
+        this.mUuid = ((ParcelUuid) in.readParcelable(null)).getUuid();
         this.mInstance = in.readInt();
         this.mProperties = in.readInt();
         this.mPermissions = in.readInt();
@@ -132,8 +139,7 @@ public class BluetoothGattCharacteristic implements Parcelable {
         return true;
     }
 
-    /* access modifiers changed from: package-private */
-    public BluetoothGattDescriptor getDescriptor(UUID uuid, int instanceId) {
+    BluetoothGattDescriptor getDescriptor(UUID uuid, int instanceId) {
         for (BluetoothGattDescriptor descriptor : this.mDescriptors) {
             if (descriptor.getUuid().equals(uuid) && descriptor.getInstanceId() == instanceId) {
                 return descriptor;
@@ -146,9 +152,8 @@ public class BluetoothGattCharacteristic implements Parcelable {
         return this.mService;
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void setService(BluetoothGattService service) {
+    void setService(BluetoothGattService service) {
         this.mService = service;
     }
 
@@ -228,20 +233,20 @@ public class BluetoothGattCharacteristic implements Parcelable {
         if (getTypeLen(formatType) + offset > this.mValue.length) {
             return null;
         }
-        if (formatType == 50) {
-            return Float.valueOf(bytesToFloat(this.mValue[offset], this.mValue[offset + 1]));
+        if (formatType != 50) {
+            if (formatType != 52) {
+                return null;
+            }
+            return Float.valueOf(bytesToFloat(this.mValue[offset], this.mValue[offset + 1], this.mValue[offset + 2], this.mValue[offset + 3]));
         }
-        if (formatType != 52) {
-            return null;
-        }
-        return Float.valueOf(bytesToFloat(this.mValue[offset], this.mValue[offset + 1], this.mValue[offset + 2], this.mValue[offset + 3]));
+        return Float.valueOf(bytesToFloat(this.mValue[offset], this.mValue[offset + 1]));
     }
 
     public String getStringValue(int offset) {
         if (this.mValue == null || offset > this.mValue.length) {
             return null;
         }
-        byte[] strBytes = new byte[(this.mValue.length - offset)];
+        byte[] strBytes = new byte[this.mValue.length - offset];
         for (int i = 0; i != this.mValue.length - offset; i++) {
             strBytes[i] = this.mValue[offset + i];
         }
@@ -253,118 +258,51 @@ public class BluetoothGattCharacteristic implements Parcelable {
         return true;
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:11:0x002d, code lost:
-        r2 = r7 + 1;
-        r4.mValue[r7] = (byte) (r5 & 255);
-        r1 = r2 + 1;
-        r4.mValue[r2] = (byte) ((r5 >> 8) & 255);
-        r4.mValue[r1] = (byte) ((r5 >> 16) & 255);
-        r4.mValue[r1 + 1] = (byte) ((r5 >> 24) & 255);
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:12:0x0056, code lost:
-        r4.mValue[r7] = (byte) (r5 & 255);
-        r4.mValue[r7 + 1] = (byte) ((r5 >> 8) & 255);
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:13:0x0069, code lost:
-        r4.mValue[r7] = (byte) (r5 & 255);
-        r2 = r7;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:14:?, code lost:
-        return true;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:15:?, code lost:
-        return true;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:16:?, code lost:
-        return true;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public boolean setValue(int r5, int r6, int r7) {
-        /*
-            r4 = this;
-            int r0 = r4.getTypeLen(r6)
-            int r0 = r0 + r7
-            byte[] r1 = r4.mValue
-            if (r1 != 0) goto L_0x000d
-            byte[] r1 = new byte[r0]
-            r4.mValue = r1
-        L_0x000d:
-            byte[] r1 = r4.mValue
-            int r1 = r1.length
-            r2 = 0
-            if (r0 <= r1) goto L_0x0014
-            return r2
-        L_0x0014:
-            switch(r6) {
-                case 17: goto L_0x0069;
-                case 18: goto L_0x0056;
-                case 20: goto L_0x002d;
-                case 33: goto L_0x0026;
-                case 34: goto L_0x001f;
-                case 36: goto L_0x0018;
-                default: goto L_0x0017;
-            }
-        L_0x0017:
-            return r2
-        L_0x0018:
-            r1 = 32
-            int r5 = r4.intToSignedBits(r5, r1)
-            goto L_0x002d
-        L_0x001f:
-            r1 = 16
-            int r5 = r4.intToSignedBits(r5, r1)
-            goto L_0x0056
-        L_0x0026:
-            r1 = 8
-            int r5 = r4.intToSignedBits(r5, r1)
-            goto L_0x0069
-        L_0x002d:
-            byte[] r1 = r4.mValue
-            int r2 = r7 + 1
-            r3 = r5 & 255(0xff, float:3.57E-43)
-            byte r3 = (byte) r3
-            r1[r7] = r3
-            byte[] r7 = r4.mValue
-            int r1 = r2 + 1
-            int r3 = r5 >> 8
-            r3 = r3 & 255(0xff, float:3.57E-43)
-            byte r3 = (byte) r3
-            r7[r2] = r3
-            byte[] r7 = r4.mValue
-            int r2 = r1 + 1
-            int r3 = r5 >> 16
-            r3 = r3 & 255(0xff, float:3.57E-43)
-            byte r3 = (byte) r3
-            r7[r1] = r3
-            byte[] r7 = r4.mValue
-            int r1 = r5 >> 24
-            r1 = r1 & 255(0xff, float:3.57E-43)
-            byte r1 = (byte) r1
-            r7[r2] = r1
-            goto L_0x0072
-        L_0x0056:
-            byte[] r1 = r4.mValue
-            int r2 = r7 + 1
-            r3 = r5 & 255(0xff, float:3.57E-43)
-            byte r3 = (byte) r3
-            r1[r7] = r3
-            byte[] r7 = r4.mValue
-            int r1 = r5 >> 8
-            r1 = r1 & 255(0xff, float:3.57E-43)
-            byte r1 = (byte) r1
-            r7[r2] = r1
-            goto L_0x0072
-        L_0x0069:
-            byte[] r1 = r4.mValue
-            r2 = r5 & 255(0xff, float:3.57E-43)
-            byte r2 = (byte) r2
-            r1[r7] = r2
-            r2 = r7
-        L_0x0072:
-            r7 = 1
-            return r7
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.bluetooth.BluetoothGattCharacteristic.setValue(int, int, int):boolean");
+    public boolean setValue(int value, int formatType, int offset) {
+        int len = getTypeLen(formatType) + offset;
+        if (this.mValue == null) {
+            this.mValue = new byte[len];
+        }
+        if (len > this.mValue.length) {
+            return false;
+        }
+        switch (formatType) {
+            case 17:
+                this.mValue[offset] = (byte) (value & 255);
+                return true;
+            case 18:
+                this.mValue[offset] = (byte) (value & 255);
+                this.mValue[offset + 1] = (byte) ((value >> 8) & 255);
+                return true;
+            case 20:
+                int offset2 = offset + 1;
+                this.mValue[offset] = (byte) (value & 255);
+                int offset3 = offset2 + 1;
+                this.mValue[offset2] = (byte) ((value >> 8) & 255);
+                this.mValue[offset3] = (byte) ((value >> 16) & 255);
+                this.mValue[offset3 + 1] = (byte) ((value >> 24) & 255);
+                return true;
+            case 33:
+                value = intToSignedBits(value, 8);
+                this.mValue[offset] = (byte) (value & 255);
+                return true;
+            case 34:
+                value = intToSignedBits(value, 16);
+                this.mValue[offset] = (byte) (value & 255);
+                this.mValue[offset + 1] = (byte) ((value >> 8) & 255);
+                return true;
+            case 36:
+                value = intToSignedBits(value, 32);
+                int offset22 = offset + 1;
+                this.mValue[offset] = (byte) (value & 255);
+                int offset32 = offset22 + 1;
+                this.mValue[offset22] = (byte) ((value >> 8) & 255);
+                this.mValue[offset32] = (byte) ((value >> 16) & 255);
+                this.mValue[offset32 + 1] = (byte) ((value >> 24) & 255);
+                return true;
+            default:
+                return false;
+        }
     }
 
     public boolean setValue(int mantissa, int exponent, int formatType, int offset) {
@@ -383,7 +321,6 @@ public class BluetoothGattCharacteristic implements Parcelable {
             this.mValue[offset2] = (byte) ((mantissa2 >> 8) & 15);
             byte[] bArr = this.mValue;
             bArr[offset2] = (byte) (bArr[offset2] + ((byte) ((exponent2 & 15) << 4)));
-            int i = offset2;
             return true;
         } else if (formatType != 52) {
             return false;
@@ -424,16 +361,19 @@ public class BluetoothGattCharacteristic implements Parcelable {
     }
 
     private float bytesToFloat(byte b0, byte b1) {
-        return (float) (((double) unsignedToSigned(unsignedByteToInt(b0) + ((unsignedByteToInt(b1) & 15) << 8), 12)) * Math.pow(10.0d, (double) unsignedToSigned(unsignedByteToInt(b1) >> 4, 4)));
+        int mantissa = unsignedToSigned(unsignedByteToInt(b0) + ((unsignedByteToInt(b1) & 15) << 8), 12);
+        int exponent = unsignedToSigned(unsignedByteToInt(b1) >> 4, 4);
+        return (float) (mantissa * Math.pow(10.0d, exponent));
     }
 
     private float bytesToFloat(byte b0, byte b1, byte b2, byte b3) {
-        return (float) (((double) unsignedToSigned(unsignedByteToInt(b0) + (unsignedByteToInt(b1) << 8) + (unsignedByteToInt(b2) << 16), 24)) * Math.pow(10.0d, (double) b3));
+        int mantissa = unsignedToSigned(unsignedByteToInt(b0) + (unsignedByteToInt(b1) << 8) + (unsignedByteToInt(b2) << 16), 24);
+        return (float) (mantissa * Math.pow(10.0d, b3));
     }
 
     private int unsignedToSigned(int unsigned, int size) {
         if (((1 << (size - 1)) & unsigned) != 0) {
-            return ((1 << (size - 1)) - (unsigned & ((1 << (size - 1)) - 1))) * -1;
+            return ((1 << (size - 1)) - (unsigned & ((1 << (size - 1)) - 1))) * (-1);
         }
         return unsigned;
     }

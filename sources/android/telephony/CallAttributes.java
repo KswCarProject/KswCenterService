@@ -1,17 +1,20 @@
 package android.telephony;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.Objects;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class CallAttributes implements Parcelable {
-    public static final Parcelable.Creator<CallAttributes> CREATOR = new Parcelable.Creator() {
+    public static final Parcelable.Creator<CallAttributes> CREATOR = new Parcelable.Creator() { // from class: android.telephony.CallAttributes.1
+        @Override // android.p007os.Parcelable.Creator
         public CallAttributes createFromParcel(Parcel in) {
             return new CallAttributes(in);
         }
 
+        @Override // android.p007os.Parcelable.Creator
         public CallAttributes[] newArray(int size) {
             return new CallAttributes[size];
         }
@@ -49,27 +52,29 @@ public final class CallAttributes implements Parcelable {
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{this.mPreciseCallState, Integer.valueOf(this.mNetworkType), this.mCallQuality});
+        return Objects.hash(this.mPreciseCallState, Integer.valueOf(this.mNetworkType), this.mCallQuality);
     }
 
     public boolean equals(Object o) {
-        if (o == null || !(o instanceof CallAttributes) || hashCode() != o.hashCode()) {
-            return false;
-        }
-        if (this == o) {
+        if (o != null && (o instanceof CallAttributes) && hashCode() == o.hashCode()) {
+            if (this == o) {
+                return true;
+            }
+            CallAttributes s = (CallAttributes) o;
+            if (!Objects.equals(this.mPreciseCallState, s.mPreciseCallState) || this.mNetworkType != s.mNetworkType || !Objects.equals(this.mCallQuality, s.mCallQuality)) {
+                return false;
+            }
             return true;
         }
-        CallAttributes s = (CallAttributes) o;
-        if (!Objects.equals(this.mPreciseCallState, s.mPreciseCallState) || this.mNetworkType != s.mNetworkType || !Objects.equals(this.mCallQuality, s.mCallQuality)) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(this.mPreciseCallState, flags);
         dest.writeInt(this.mNetworkType);

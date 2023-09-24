@@ -1,8 +1,8 @@
 package android.app;
 
 import android.graphics.Rect;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.provider.CalendarContract;
 import android.provider.ContactsContract;
 import android.provider.Settings;
@@ -12,6 +12,7 @@ import android.util.proto.WireTypeMismatchException;
 import android.view.Surface;
 import java.io.IOException;
 
+/* loaded from: classes.dex */
 public class WindowConfiguration implements Parcelable, Comparable<WindowConfiguration> {
     public static final int ACTIVITY_TYPE_ASSISTANT = 4;
     public static final int ACTIVITY_TYPE_HOME = 2;
@@ -21,11 +22,15 @@ public class WindowConfiguration implements Parcelable, Comparable<WindowConfigu
     private static final int ALWAYS_ON_TOP_OFF = 2;
     private static final int ALWAYS_ON_TOP_ON = 1;
     private static final int ALWAYS_ON_TOP_UNDEFINED = 0;
-    public static final Parcelable.Creator<WindowConfiguration> CREATOR = new Parcelable.Creator<WindowConfiguration>() {
+    public static final Parcelable.Creator<WindowConfiguration> CREATOR = new Parcelable.Creator<WindowConfiguration>() { // from class: android.app.WindowConfiguration.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WindowConfiguration createFromParcel(Parcel in) {
             return new WindowConfiguration(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WindowConfiguration[] newArray(int size) {
             return new WindowConfiguration[size];
         }
@@ -58,15 +63,19 @@ public class WindowConfiguration implements Parcelable, Comparable<WindowConfigu
     @WindowingMode
     private int mWindowingMode;
 
+    /* loaded from: classes.dex */
     public @interface ActivityType {
     }
 
+    /* loaded from: classes.dex */
     private @interface AlwaysOnTop {
     }
 
+    /* loaded from: classes.dex */
     public @interface WindowConfig {
     }
 
+    /* loaded from: classes.dex */
     public @interface WindowingMode {
     }
 
@@ -88,6 +97,7 @@ public class WindowConfiguration implements Parcelable, Comparable<WindowConfigu
         readFromParcel(in);
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(this.mBounds, flags);
         dest.writeParcelable(this.mAppBounds, flags);
@@ -108,6 +118,7 @@ public class WindowConfiguration implements Parcelable, Comparable<WindowConfigu
         this.mDisplayWindowingMode = source.readInt();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -173,13 +184,13 @@ public class WindowConfiguration implements Parcelable, Comparable<WindowConfigu
     }
 
     public void setActivityType(@ActivityType int activityType) {
-        if (this.mActivityType != activityType) {
-            if (!ActivityThread.isSystem() || this.mActivityType == 0 || activityType == 0) {
-                this.mActivityType = activityType;
-                return;
-            }
+        if (this.mActivityType == activityType) {
+            return;
+        }
+        if (ActivityThread.isSystem() && this.mActivityType != 0 && activityType != 0) {
             throw new IllegalStateException("Can't change activity type once set: " + this + " activityType=" + activityTypeToString(activityType));
         }
+        this.mActivityType = activityType;
     }
 
     @ActivityType
@@ -202,8 +213,8 @@ public class WindowConfiguration implements Parcelable, Comparable<WindowConfigu
     }
 
     public void setToDefaults() {
-        setAppBounds((Rect) null);
-        setBounds((Rect) null);
+        setAppBounds(null);
+        setBounds(null);
         setWindowingMode(0);
         setActivityType(0);
         setAlwaysOnTop(0);
@@ -222,36 +233,33 @@ public class WindowConfiguration implements Parcelable, Comparable<WindowConfigu
             changed |= 2;
             setAppBounds(delta.mAppBounds);
         }
-        if (!(delta.mWindowingMode == 0 || this.mWindowingMode == delta.mWindowingMode)) {
+        if (delta.mWindowingMode != 0 && this.mWindowingMode != delta.mWindowingMode) {
             changed |= 4;
             setWindowingMode(delta.mWindowingMode);
         }
-        if (!(delta.mActivityType == 0 || this.mActivityType == delta.mActivityType)) {
+        if (delta.mActivityType != 0 && this.mActivityType != delta.mActivityType) {
             changed |= 8;
             setActivityType(delta.mActivityType);
         }
-        if (!(delta.mAlwaysOnTop == 0 || this.mAlwaysOnTop == delta.mAlwaysOnTop)) {
+        if (delta.mAlwaysOnTop != 0 && this.mAlwaysOnTop != delta.mAlwaysOnTop) {
             changed |= 16;
             setAlwaysOnTop(delta.mAlwaysOnTop);
         }
-        if (!(delta.mRotation == -1 || delta.mRotation == this.mRotation)) {
+        if (delta.mRotation != -1 && delta.mRotation != this.mRotation) {
             changed |= 32;
             setRotation(delta.mRotation);
         }
-        if (delta.mDisplayWindowingMode == 0 || this.mDisplayWindowingMode == delta.mDisplayWindowingMode) {
-            return changed;
+        if (delta.mDisplayWindowingMode != 0 && this.mDisplayWindowingMode != delta.mDisplayWindowingMode) {
+            int changed2 = changed | 64;
+            setDisplayWindowingMode(delta.mDisplayWindowingMode);
+            return changed2;
         }
-        int changed2 = changed | 64;
-        setDisplayWindowingMode(delta.mDisplayWindowingMode);
-        return changed2;
+        return changed;
     }
 
     @WindowConfig
     public long diff(WindowConfiguration other, boolean compareUndefined) {
-        long changes = 0;
-        if (!this.mBounds.equals(other.mBounds)) {
-            changes = 0 | 1;
-        }
+        long changes = this.mBounds.equals(other.mBounds) ? 0L : 0 | 1;
         if ((compareUndefined || other.mAppBounds != null) && this.mAppBounds != other.mAppBounds && (this.mAppBounds == null || !this.mAppBounds.equals(other.mAppBounds))) {
             changes |= 2;
         }
@@ -273,6 +281,7 @@ public class WindowConfiguration implements Parcelable, Comparable<WindowConfigu
         return changes;
     }
 
+    @Override // java.lang.Comparable
     public int compareTo(WindowConfiguration that) {
         if (this.mAppBounds == null && that.mAppBounds != null) {
             return 1;
@@ -280,7 +289,7 @@ public class WindowConfiguration implements Parcelable, Comparable<WindowConfigu
         if (this.mAppBounds != null && that.mAppBounds == null) {
             return -1;
         }
-        if (!(this.mAppBounds == null || that.mAppBounds == null)) {
+        if (this.mAppBounds != null && that.mAppBounds != null) {
             int n = this.mAppBounds.left - that.mAppBounds.left;
             if (n != 0) {
                 return n;
@@ -331,10 +340,7 @@ public class WindowConfiguration implements Parcelable, Comparable<WindowConfigu
             return n12;
         }
         int n13 = this.mDisplayWindowingMode - that.mDisplayWindowingMode;
-        if (n13 != 0) {
-            return n13;
-        }
-        return n13;
+        return n13 != 0 ? n13 : n13;
     }
 
     public boolean equals(Object that) {
@@ -344,10 +350,10 @@ public class WindowConfiguration implements Parcelable, Comparable<WindowConfigu
         if (that == this) {
             return true;
         }
-        if ((that instanceof WindowConfiguration) && compareTo((WindowConfiguration) that) == 0) {
-            return true;
+        if (!(that instanceof WindowConfiguration) || compareTo((WindowConfiguration) that) != 0) {
+            return false;
         }
-        return false;
+        return true;
     }
 
     public int hashCode() {
@@ -359,7 +365,6 @@ public class WindowConfiguration implements Parcelable, Comparable<WindowConfigu
     }
 
     public String toString() {
-        String str;
         StringBuilder sb = new StringBuilder();
         sb.append("{ mBounds=");
         sb.append(this.mBounds);
@@ -374,12 +379,7 @@ public class WindowConfiguration implements Parcelable, Comparable<WindowConfigu
         sb.append(" mAlwaysOnTop=");
         sb.append(alwaysOnTopToString(this.mAlwaysOnTop));
         sb.append(" mRotation=");
-        if (this.mRotation == -1) {
-            str = "undefined";
-        } else {
-            str = Surface.rotationToString(this.mRotation);
-        }
-        sb.append(str);
+        sb.append(this.mRotation == -1 ? "undefined" : Surface.rotationToString(this.mRotation));
         sb.append("}");
         return sb.toString();
     }

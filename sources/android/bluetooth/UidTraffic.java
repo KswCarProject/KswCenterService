@@ -1,14 +1,19 @@
 package android.bluetooth;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public class UidTraffic implements Cloneable, Parcelable {
-    public static final Parcelable.Creator<UidTraffic> CREATOR = new Parcelable.Creator<UidTraffic>() {
+    public static final Parcelable.Creator<UidTraffic> CREATOR = new Parcelable.Creator<UidTraffic>() { // from class: android.bluetooth.UidTraffic.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public UidTraffic createFromParcel(Parcel source) {
             return new UidTraffic(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public UidTraffic[] newArray(int size) {
             return new UidTraffic[size];
         }
@@ -33,6 +38,7 @@ public class UidTraffic implements Cloneable, Parcelable {
         this.mTxBytes = in.readLong();
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mAppUid);
         dest.writeLong(this.mRxBytes);
@@ -67,11 +73,13 @@ public class UidTraffic implements Cloneable, Parcelable {
         return this.mTxBytes;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
-    public UidTraffic clone() {
+    /* renamed from: clone */
+    public UidTraffic m155clone() {
         return new UidTraffic(this.mAppUid, this.mRxBytes, this.mTxBytes);
     }
 

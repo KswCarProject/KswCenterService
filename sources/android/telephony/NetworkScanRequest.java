@@ -1,18 +1,23 @@
 package android.telephony;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/* loaded from: classes.dex */
 public final class NetworkScanRequest implements Parcelable {
-    public static final Parcelable.Creator<NetworkScanRequest> CREATOR = new Parcelable.Creator<NetworkScanRequest>() {
+    public static final Parcelable.Creator<NetworkScanRequest> CREATOR = new Parcelable.Creator<NetworkScanRequest>() { // from class: android.telephony.NetworkScanRequest.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NetworkScanRequest createFromParcel(Parcel in) {
             return new NetworkScanRequest(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NetworkScanRequest[] newArray(int size) {
             return new NetworkScanRequest[size];
         }
@@ -38,6 +43,7 @@ public final class NetworkScanRequest implements Parcelable {
     private RadioAccessSpecifier[] mSpecifiers;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface ScanType {
     }
 
@@ -90,10 +96,12 @@ public final class NetworkScanRequest implements Parcelable {
         return (ArrayList) this.mMccMncs.clone();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mScanType);
         dest.writeParcelableArray(this.mSpecifiers, flags);
@@ -118,21 +126,13 @@ public final class NetworkScanRequest implements Parcelable {
     public boolean equals(Object o) {
         try {
             NetworkScanRequest nsr = (NetworkScanRequest) o;
-            if (o != null && this.mScanType == nsr.mScanType && Arrays.equals(this.mSpecifiers, nsr.mSpecifiers) && this.mSearchPeriodicity == nsr.mSearchPeriodicity && this.mMaxSearchTime == nsr.mMaxSearchTime && this.mIncrementalResults == nsr.mIncrementalResults && this.mIncrementalResultsPeriodicity == nsr.mIncrementalResultsPeriodicity && this.mMccMncs != null && this.mMccMncs.equals(nsr.mMccMncs)) {
-                return true;
-            }
-            return false;
+            return o != null && this.mScanType == nsr.mScanType && Arrays.equals(this.mSpecifiers, nsr.mSpecifiers) && this.mSearchPeriodicity == nsr.mSearchPeriodicity && this.mMaxSearchTime == nsr.mMaxSearchTime && this.mIncrementalResults == nsr.mIncrementalResults && this.mIncrementalResultsPeriodicity == nsr.mIncrementalResultsPeriodicity && this.mMccMncs != null && this.mMccMncs.equals(nsr.mMccMncs);
         } catch (ClassCastException e) {
             return false;
         }
     }
 
     public int hashCode() {
-        int hashCode = (this.mScanType * 31) + (Arrays.hashCode(this.mSpecifiers) * 37) + (this.mSearchPeriodicity * 41) + (this.mMaxSearchTime * 43);
-        int i = 1;
-        if (!this.mIncrementalResults) {
-            i = 0;
-        }
-        return hashCode + (i * 47) + (this.mIncrementalResultsPeriodicity * 53) + (this.mMccMncs.hashCode() * 59);
+        return (this.mScanType * 31) + (Arrays.hashCode(this.mSpecifiers) * 37) + (this.mSearchPeriodicity * 41) + (this.mMaxSearchTime * 43) + ((!this.mIncrementalResults ? 0 : 1) * 47) + (this.mIncrementalResultsPeriodicity * 53) + (this.mMccMncs.hashCode() * 59);
     }
 }

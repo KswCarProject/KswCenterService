@@ -14,12 +14,13 @@ import java.util.Queue;
 import java.util.concurrent.TimeUnit;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public class MetricsReader {
-    private int[] LOGTAGS = {524292};
-    private int mCheckpointTag = -1;
     private Queue<LogMaker> mPendingQueue = new LinkedList();
-    private LogReader mReader = new LogReader();
     private Queue<LogMaker> mSeenQueue = new LinkedList();
+    private int[] LOGTAGS = {524292};
+    private LogReader mReader = new LogReader();
+    private int mCheckpointTag = -1;
 
     @VisibleForTesting
     public void setLogReader(LogReader reader) {
@@ -40,11 +41,14 @@ public class MetricsReader {
             Event event = it.next();
             long eventTimestampMs = event.getTimeMillis();
             Object data = event.getData();
-            LogMaker log = new LogMaker(data instanceof Object[] ? (Object[]) data : new Object[]{data}).setTimestamp(eventTimestampMs).setUid(event.getUid()).setProcessId(event.getProcessId());
-            if (log.getCategory() != 920) {
+            Object[] objects = data instanceof Object[] ? (Object[]) data : new Object[]{data};
+            LogMaker log = new LogMaker(objects).setTimestamp(eventTimestampMs).setUid(event.getUid()).setProcessId(event.getProcessId());
+            if (log.getCategory() == 920) {
+                if (log.getSubtype() == this.mCheckpointTag) {
+                    this.mPendingQueue.clear();
+                }
+            } else {
                 this.mPendingQueue.offer(log);
-            } else if (log.getSubtype() == this.mCheckpointTag) {
-                this.mPendingQueue.clear();
             }
         }
     }
@@ -78,6 +82,7 @@ public class MetricsReader {
     }
 
     @VisibleForTesting
+    /* loaded from: classes3.dex */
     public static class Event {
         Object mData;
         int mPid;
@@ -120,18 +125,23 @@ public class MetricsReader {
     }
 
     @VisibleForTesting
+    /* loaded from: classes3.dex */
     public static class LogReader {
         public void readEvents(int[] tags, long horizonMs, Collection<Event> events) throws IOException {
             ArrayList<EventLog.Event> nativeEvents = new ArrayList<>();
-            EventLog.readEventsOnWrapping(tags, TimeUnit.NANOSECONDS.convert(horizonMs, TimeUnit.MILLISECONDS), nativeEvents);
+            long horizonNs = TimeUnit.NANOSECONDS.convert(horizonMs, TimeUnit.MILLISECONDS);
+            EventLog.readEventsOnWrapping(tags, horizonNs, nativeEvents);
             Iterator<EventLog.Event> it = nativeEvents.iterator();
             while (it.hasNext()) {
-                events.add(new Event(it.next()));
+                EventLog.Event nativeEvent = it.next();
+                Event event = new Event(nativeEvent);
+                events.add(event);
             }
         }
 
         public void writeCheckpoint(int tag) {
-            new MetricsLogger().action((int) MetricsProto.MetricsEvent.METRICS_CHECKPOINT, tag);
+            MetricsLogger logger = new MetricsLogger();
+            logger.action(MetricsProto.MetricsEvent.METRICS_CHECKPOINT, tag);
         }
     }
 }

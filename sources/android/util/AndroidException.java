@@ -1,5 +1,6 @@
 package android.util;
 
+/* loaded from: classes4.dex */
 public class AndroidException extends Exception {
     public AndroidException() {
     }

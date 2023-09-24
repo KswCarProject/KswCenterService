@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.RandomAccess;
 
+/* loaded from: classes4.dex */
 final class DoubleArrayList extends AbstractProtobufList<Double> implements Internal.DoubleList, RandomAccess {
     private static final DoubleArrayList EMPTY_LIST = new DoubleArrayList();
     private double[] array;
@@ -22,11 +23,12 @@ final class DoubleArrayList extends AbstractProtobufList<Double> implements Inte
         this(new double[10], 0);
     }
 
-    private DoubleArrayList(double[] array2, int size2) {
-        this.array = array2;
-        this.size = size2;
+    private DoubleArrayList(double[] array, int size) {
+        this.array = array;
+        this.size = size;
     }
 
+    @Override // com.android.framework.protobuf.AbstractProtobufList, java.util.AbstractList, java.util.Collection, java.util.List
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -47,38 +49,47 @@ final class DoubleArrayList extends AbstractProtobufList<Double> implements Inte
         return true;
     }
 
+    @Override // com.android.framework.protobuf.AbstractProtobufList, java.util.AbstractList, java.util.Collection, java.util.List
     public int hashCode() {
         int result = 1;
         for (int i = 0; i < this.size; i++) {
-            result = (result * 31) + Internal.hashLong(Double.doubleToLongBits(this.array[i]));
+            long bits = Double.doubleToLongBits(this.array[i]);
+            result = (result * 31) + Internal.hashLong(bits);
         }
         return result;
     }
 
-    public Internal.DoubleList mutableCopyWithCapacity(int capacity) {
-        if (capacity >= this.size) {
-            return new DoubleArrayList(Arrays.copyOf(this.array, capacity), this.size);
+    @Override // com.android.framework.protobuf.Internal.ProtobufList, com.android.framework.protobuf.Internal.BooleanList
+    /* renamed from: mutableCopyWithCapacity */
+    public Internal.ProtobufList<Double> mutableCopyWithCapacity2(int capacity) {
+        if (capacity < this.size) {
+            throw new IllegalArgumentException();
         }
-        throw new IllegalArgumentException();
+        return new DoubleArrayList(Arrays.copyOf(this.array, capacity), this.size);
     }
 
+    @Override // java.util.AbstractList, java.util.List
     public Double get(int index) {
         return Double.valueOf(getDouble(index));
     }
 
+    @Override // com.android.framework.protobuf.Internal.DoubleList
     public double getDouble(int index) {
         ensureIndexInRange(index);
         return this.array[index];
     }
 
+    @Override // java.util.AbstractCollection, java.util.Collection, java.util.List
     public int size() {
         return this.size;
     }
 
+    @Override // com.android.framework.protobuf.AbstractProtobufList, java.util.AbstractList, java.util.List
     public Double set(int index, Double element) {
         return Double.valueOf(setDouble(index, element.doubleValue()));
     }
 
+    @Override // com.android.framework.protobuf.Internal.DoubleList
     public double setDouble(int index, double element) {
         ensureIsMutable();
         ensureIndexInRange(index);
@@ -87,10 +98,12 @@ final class DoubleArrayList extends AbstractProtobufList<Double> implements Inte
         return previousValue;
     }
 
+    @Override // com.android.framework.protobuf.AbstractProtobufList, java.util.AbstractList, java.util.List
     public void add(int index, Double element) {
         addDouble(index, element.doubleValue());
     }
 
+    @Override // com.android.framework.protobuf.Internal.DoubleList
     public void addDouble(double element) {
         addDouble(this.size, element);
     }
@@ -103,7 +116,8 @@ final class DoubleArrayList extends AbstractProtobufList<Double> implements Inte
         if (this.size < this.array.length) {
             System.arraycopy(this.array, index, this.array, index + 1, this.size - index);
         } else {
-            double[] newArray = new double[(((this.size * 3) / 2) + 1)];
+            int length = ((this.size * 3) / 2) + 1;
+            double[] newArray = new double[length];
             System.arraycopy(this.array, 0, newArray, 0, index);
             System.arraycopy(this.array, index, newArray, index + 1, this.size - index);
             this.array = newArray;
@@ -113,31 +127,34 @@ final class DoubleArrayList extends AbstractProtobufList<Double> implements Inte
         this.modCount++;
     }
 
+    @Override // com.android.framework.protobuf.AbstractProtobufList, java.util.AbstractCollection, java.util.Collection, java.util.List
     public boolean addAll(Collection<? extends Double> collection) {
         ensureIsMutable();
         if (collection == null) {
             throw new NullPointerException();
-        } else if (!(collection instanceof DoubleArrayList)) {
+        }
+        if (!(collection instanceof DoubleArrayList)) {
             return super.addAll(collection);
-        } else {
-            DoubleArrayList list = (DoubleArrayList) collection;
-            if (list.size == 0) {
-                return false;
-            }
-            if (Integer.MAX_VALUE - this.size >= list.size) {
-                int newSize = this.size + list.size;
-                if (newSize > this.array.length) {
-                    this.array = Arrays.copyOf(this.array, newSize);
-                }
-                System.arraycopy(list.array, 0, this.array, this.size, list.size);
-                this.size = newSize;
-                this.modCount++;
-                return true;
-            }
+        }
+        DoubleArrayList list = (DoubleArrayList) collection;
+        if (list.size == 0) {
+            return false;
+        }
+        int overflow = Integer.MAX_VALUE - this.size;
+        if (overflow < list.size) {
             throw new OutOfMemoryError();
         }
+        int newSize = this.size + list.size;
+        if (newSize > this.array.length) {
+            this.array = Arrays.copyOf(this.array, newSize);
+        }
+        System.arraycopy(list.array, 0, this.array, this.size, list.size);
+        this.size = newSize;
+        this.modCount++;
+        return true;
     }
 
+    @Override // com.android.framework.protobuf.AbstractProtobufList, java.util.AbstractCollection, java.util.Collection, java.util.List
     public boolean remove(Object o) {
         ensureIsMutable();
         for (int i = 0; i < this.size; i++) {
@@ -151,6 +168,7 @@ final class DoubleArrayList extends AbstractProtobufList<Double> implements Inte
         return false;
     }
 
+    @Override // com.android.framework.protobuf.AbstractProtobufList, java.util.AbstractList, java.util.List
     public Double remove(int index) {
         ensureIsMutable();
         ensureIndexInRange(index);

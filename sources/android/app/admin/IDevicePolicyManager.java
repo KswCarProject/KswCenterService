@@ -3,31 +3,33 @@ package android.app.admin;
 import android.annotation.UnsupportedAppUsage;
 import android.app.IApplicationThread;
 import android.app.IServiceConnection;
+import android.app.admin.StartInstallingUpdateCallback;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.IPackageDataObserver;
-import android.content.pm.ParceledListSlice;
-import android.content.pm.StringParceledListSlice;
+import android.content.p002pm.IPackageDataObserver;
+import android.content.p002pm.ParceledListSlice;
+import android.content.p002pm.StringParceledListSlice;
 import android.graphics.Bitmap;
 import android.net.ProxyInfo;
 import android.net.Uri;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.ParcelFileDescriptor;
-import android.os.PersistableBundle;
-import android.os.RemoteCallback;
-import android.os.RemoteException;
-import android.os.UserHandle;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.ParcelFileDescriptor;
+import android.p007os.PersistableBundle;
+import android.p007os.RemoteCallback;
+import android.p007os.RemoteException;
+import android.p007os.UserHandle;
 import android.security.keymaster.KeymasterCertificateChain;
 import android.security.keystore.ParcelableKeyGenParameterSpec;
 import android.telephony.data.ApnSetting;
 import android.text.TextUtils;
 import java.util.List;
 
+/* loaded from: classes.dex */
 public interface IDevicePolicyManager extends IInterface {
     void addCrossProfileIntentFilter(ComponentName componentName, IntentFilter intentFilter, int i) throws RemoteException;
 
@@ -590,1036 +592,1319 @@ public interface IDevicePolicyManager extends IInterface {
 
     void wipeDataWithReason(int i, String str) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements IDevicePolicyManager {
+        @Override // android.app.admin.IDevicePolicyManager
         public void setPasswordQuality(ComponentName who, int quality, boolean parent) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public int getPasswordQuality(ComponentName who, int userHandle, boolean parent) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setPasswordMinimumLength(ComponentName who, int length, boolean parent) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public int getPasswordMinimumLength(ComponentName who, int userHandle, boolean parent) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setPasswordMinimumUpperCase(ComponentName who, int length, boolean parent) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public int getPasswordMinimumUpperCase(ComponentName who, int userHandle, boolean parent) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setPasswordMinimumLowerCase(ComponentName who, int length, boolean parent) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public int getPasswordMinimumLowerCase(ComponentName who, int userHandle, boolean parent) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setPasswordMinimumLetters(ComponentName who, int length, boolean parent) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public int getPasswordMinimumLetters(ComponentName who, int userHandle, boolean parent) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setPasswordMinimumNumeric(ComponentName who, int length, boolean parent) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public int getPasswordMinimumNumeric(ComponentName who, int userHandle, boolean parent) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setPasswordMinimumSymbols(ComponentName who, int length, boolean parent) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public int getPasswordMinimumSymbols(ComponentName who, int userHandle, boolean parent) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setPasswordMinimumNonLetter(ComponentName who, int length, boolean parent) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public int getPasswordMinimumNonLetter(ComponentName who, int userHandle, boolean parent) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setPasswordHistoryLength(ComponentName who, int length, boolean parent) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public int getPasswordHistoryLength(ComponentName who, int userHandle, boolean parent) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setPasswordExpirationTimeout(ComponentName who, long expiration, boolean parent) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public long getPasswordExpirationTimeout(ComponentName who, int userHandle, boolean parent) throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public long getPasswordExpiration(ComponentName who, int userHandle, boolean parent) throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean isActivePasswordSufficient(int userHandle, boolean parent) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean isProfileActivePasswordSufficientForParent(int userHandle) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public int getPasswordComplexity() throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean isUsingUnifiedPassword(ComponentName admin) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public int getCurrentFailedPasswordAttempts(int userHandle, boolean parent) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public int getProfileWithMinimumFailedPasswordsForWipe(int userHandle, boolean parent) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setMaximumFailedPasswordsForWipe(ComponentName admin, int num, boolean parent) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public int getMaximumFailedPasswordsForWipe(ComponentName admin, int userHandle, boolean parent) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean resetPassword(String password, int flags) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setMaximumTimeToLock(ComponentName who, long timeMs, boolean parent) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public long getMaximumTimeToLock(ComponentName who, int userHandle, boolean parent) throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setRequiredStrongAuthTimeout(ComponentName who, long timeMs, boolean parent) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public long getRequiredStrongAuthTimeout(ComponentName who, int userId, boolean parent) throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void lockNow(int flags, boolean parent) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void wipeDataWithReason(int flags, String wipeReasonForUser) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public ComponentName setGlobalProxy(ComponentName admin, String proxySpec, String exclusionList) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public ComponentName getGlobalProxyAdmin(int userHandle) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setRecommendedGlobalProxy(ComponentName admin, ProxyInfo proxyInfo) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public int setStorageEncryption(ComponentName who, boolean encrypt) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean getStorageEncryption(ComponentName who, int userHandle) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public int getStorageEncryptionStatus(String callerPackage, int userHandle) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean requestBugreport(ComponentName who) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setCameraDisabled(ComponentName who, boolean disabled) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean getCameraDisabled(ComponentName who, int userHandle) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setScreenCaptureDisabled(ComponentName who, boolean disabled) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean getScreenCaptureDisabled(ComponentName who, int userHandle) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setKeyguardDisabledFeatures(ComponentName who, int which, boolean parent) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public int getKeyguardDisabledFeatures(ComponentName who, int userHandle, boolean parent) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setActiveAdmin(ComponentName policyReceiver, boolean refreshing, int userHandle) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean isAdminActive(ComponentName policyReceiver, int userHandle) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public List<ComponentName> getActiveAdmins(int userHandle) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean packageHasActiveAdmins(String packageName, int userHandle) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void getRemoveWarning(ComponentName policyReceiver, RemoteCallback result, int userHandle) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void removeActiveAdmin(ComponentName policyReceiver, int userHandle) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void forceRemoveActiveAdmin(ComponentName policyReceiver, int userHandle) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean hasGrantedPolicy(ComponentName policyReceiver, int usesPolicy, int userHandle) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setActivePasswordState(PasswordMetrics metrics, int userHandle) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void reportPasswordChanged(int userId) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void reportFailedPasswordAttempt(int userHandle) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void reportSuccessfulPasswordAttempt(int userHandle) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void reportFailedBiometricAttempt(int userHandle) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void reportSuccessfulBiometricAttempt(int userHandle) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void reportKeyguardDismissed(int userHandle) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void reportKeyguardSecured(int userHandle) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean setDeviceOwner(ComponentName who, String ownerName, int userId) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public ComponentName getDeviceOwnerComponent(boolean callingUserOnly) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean hasDeviceOwner() throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public String getDeviceOwnerName() throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void clearDeviceOwner(String packageName) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public int getDeviceOwnerUserId() throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean setProfileOwner(ComponentName who, String ownerName, int userHandle) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public ComponentName getProfileOwnerAsUser(int userHandle) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public ComponentName getProfileOwner(int userHandle) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public String getProfileOwnerName(int userHandle) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setProfileEnabled(ComponentName who) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setProfileName(ComponentName who, String profileName) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void clearProfileOwner(ComponentName who) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean hasUserSetupCompleted() throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean checkDeviceIdentifierAccess(String packageName, int pid, int uid) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setDeviceOwnerLockScreenInfo(ComponentName who, CharSequence deviceOwnerInfo) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public CharSequence getDeviceOwnerLockScreenInfo() throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public String[] setPackagesSuspended(ComponentName admin, String callerPackage, String[] packageNames, boolean suspended) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean isPackageSuspended(ComponentName admin, String callerPackage, String packageName) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean installCaCert(ComponentName admin, String callerPackage, byte[] certBuffer) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void uninstallCaCerts(ComponentName admin, String callerPackage, String[] aliases) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void enforceCanManageCaCerts(ComponentName admin, String callerPackage) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean approveCaCert(String alias, int userHandle, boolean approval) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean isCaCertApproved(String alias, int userHandle) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean installKeyPair(ComponentName who, String callerPackage, byte[] privKeyBuffer, byte[] certBuffer, byte[] certChainBuffer, String alias, boolean requestAccess, boolean isUserSelectable) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean removeKeyPair(ComponentName who, String callerPackage, String alias) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean generateKeyPair(ComponentName who, String callerPackage, String algorithm, ParcelableKeyGenParameterSpec keySpec, int idAttestationFlags, KeymasterCertificateChain attestationChain) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean setKeyPairCertificate(ComponentName who, String callerPackage, String alias, byte[] certBuffer, byte[] certChainBuffer, boolean isUserSelectable) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void choosePrivateKeyAlias(int uid, Uri uri, String alias, IBinder aliasCallback) throws RemoteException {
         }
 
-        public void setDelegatedScopes(ComponentName who, String delegatePackage, List<String> list) throws RemoteException {
+        @Override // android.app.admin.IDevicePolicyManager
+        public void setDelegatedScopes(ComponentName who, String delegatePackage, List<String> scopes) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public List<String> getDelegatedScopes(ComponentName who, String delegatePackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public List<String> getDelegatePackages(ComponentName who, String scope) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setCertInstallerPackage(ComponentName who, String installerPackage) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public String getCertInstallerPackage(ComponentName who) throws RemoteException {
             return null;
         }
 
-        public boolean setAlwaysOnVpnPackage(ComponentName who, String vpnPackage, boolean lockdown, List<String> list) throws RemoteException {
+        @Override // android.app.admin.IDevicePolicyManager
+        public boolean setAlwaysOnVpnPackage(ComponentName who, String vpnPackage, boolean lockdown, List<String> lockdownWhitelist) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public String getAlwaysOnVpnPackage(ComponentName who) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean isAlwaysOnVpnLockdownEnabled(ComponentName who) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public List<String> getAlwaysOnVpnLockdownWhitelist(ComponentName who) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void addPersistentPreferredActivity(ComponentName admin, IntentFilter filter, ComponentName activity) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void clearPackagePersistentPreferredActivities(ComponentName admin, String packageName) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setDefaultSmsApplication(ComponentName admin, String packageName) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setApplicationRestrictions(ComponentName who, String callerPackage, String packageName, Bundle settings) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public Bundle getApplicationRestrictions(ComponentName who, String callerPackage, String packageName) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean setApplicationRestrictionsManagingPackage(ComponentName admin, String packageName) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public String getApplicationRestrictionsManagingPackage(ComponentName admin) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean isCallerApplicationRestrictionsManagingPackage(String callerPackage) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setRestrictionsProvider(ComponentName who, ComponentName provider) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public ComponentName getRestrictionsProvider(int userHandle) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setUserRestriction(ComponentName who, String key, boolean enable) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public Bundle getUserRestrictions(ComponentName who) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void addCrossProfileIntentFilter(ComponentName admin, IntentFilter filter, int flags) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void clearCrossProfileIntentFilters(ComponentName admin) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean setPermittedAccessibilityServices(ComponentName admin, List packageList) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public List getPermittedAccessibilityServices(ComponentName admin) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public List getPermittedAccessibilityServicesForUser(int userId) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean isAccessibilityServicePermittedByAdmin(ComponentName admin, String packageName, int userId) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean setPermittedInputMethods(ComponentName admin, List packageList) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public List getPermittedInputMethods(ComponentName admin) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public List getPermittedInputMethodsForCurrentUser() throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean isInputMethodPermittedByAdmin(ComponentName admin, String packageName, int userId) throws RemoteException {
             return false;
         }
 
-        public boolean setPermittedCrossProfileNotificationListeners(ComponentName admin, List<String> list) throws RemoteException {
+        @Override // android.app.admin.IDevicePolicyManager
+        public boolean setPermittedCrossProfileNotificationListeners(ComponentName admin, List<String> packageList) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public List<String> getPermittedCrossProfileNotificationListeners(ComponentName admin) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean isNotificationListenerServicePermitted(String packageName, int userId) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public Intent createAdminSupportIntent(String restriction) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean setApplicationHidden(ComponentName admin, String callerPackage, String packageName, boolean hidden) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean isApplicationHidden(ComponentName admin, String callerPackage, String packageName) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public UserHandle createAndManageUser(ComponentName who, String name, ComponentName profileOwner, PersistableBundle adminExtras, int flags) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean removeUser(ComponentName who, UserHandle userHandle) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean switchUser(ComponentName who, UserHandle userHandle) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public int startUserInBackground(ComponentName who, UserHandle userHandle) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public int stopUser(ComponentName who, UserHandle userHandle) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public int logoutUser(ComponentName who) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public List<UserHandle> getSecondaryUsers(ComponentName who) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void enableSystemApp(ComponentName admin, String callerPackage, String packageName) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public int enableSystemAppWithIntent(ComponentName admin, String callerPackage, Intent intent) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean installExistingPackage(ComponentName admin, String callerPackage, String packageName) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setAccountManagementDisabled(ComponentName who, String accountType, boolean disabled) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public String[] getAccountTypesWithManagementDisabled() throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public String[] getAccountTypesWithManagementDisabledAsUser(int userId) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setLockTaskPackages(ComponentName who, String[] packages) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public String[] getLockTaskPackages(ComponentName who) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean isLockTaskPermitted(String pkg) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setLockTaskFeatures(ComponentName who, int flags) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public int getLockTaskFeatures(ComponentName who) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setGlobalSetting(ComponentName who, String setting, String value) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setSystemSetting(ComponentName who, String setting, String value) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setSecureSetting(ComponentName who, String setting, String value) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean setTime(ComponentName who, long millis) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean setTimeZone(ComponentName who, String timeZone) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setMasterVolumeMuted(ComponentName admin, boolean on) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean isMasterVolumeMuted(ComponentName admin) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void notifyLockTaskModeChanged(boolean isEnabled, String pkg, int userId) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setUninstallBlocked(ComponentName admin, String callerPackage, String packageName, boolean uninstallBlocked) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean isUninstallBlocked(ComponentName admin, String packageName) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setCrossProfileCallerIdDisabled(ComponentName who, boolean disabled) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean getCrossProfileCallerIdDisabled(ComponentName who) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean getCrossProfileCallerIdDisabledForUser(int userId) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setCrossProfileContactsSearchDisabled(ComponentName who, boolean disabled) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean getCrossProfileContactsSearchDisabled(ComponentName who) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean getCrossProfileContactsSearchDisabledForUser(int userId) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void startManagedQuickContact(String lookupKey, long contactId, boolean isContactIdIgnored, long directoryId, Intent originalIntent) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setBluetoothContactSharingDisabled(ComponentName who, boolean disabled) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean getBluetoothContactSharingDisabled(ComponentName who) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean getBluetoothContactSharingDisabledForUser(int userId) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setTrustAgentConfiguration(ComponentName admin, ComponentName agent, PersistableBundle args, boolean parent) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public List<PersistableBundle> getTrustAgentConfiguration(ComponentName admin, ComponentName agent, int userId, boolean parent) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean addCrossProfileWidgetProvider(ComponentName admin, String packageName) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean removeCrossProfileWidgetProvider(ComponentName admin, String packageName) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public List<String> getCrossProfileWidgetProviders(ComponentName admin) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setAutoTimeRequired(ComponentName who, boolean required) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean getAutoTimeRequired() throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setForceEphemeralUsers(ComponentName who, boolean forceEpehemeralUsers) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean getForceEphemeralUsers(ComponentName who) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean isRemovingAdmin(ComponentName adminReceiver, int userHandle) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setUserIcon(ComponentName admin, Bitmap icon) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setSystemUpdatePolicy(ComponentName who, SystemUpdatePolicy policy) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public SystemUpdatePolicy getSystemUpdatePolicy() throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void clearSystemUpdatePolicyFreezePeriodRecord() throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean setKeyguardDisabled(ComponentName admin, boolean disabled) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean setStatusBarDisabled(ComponentName who, boolean disabled) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean getDoNotAskCredentialsOnBoot() throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void notifyPendingSystemUpdate(SystemUpdateInfo info) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public SystemUpdateInfo getPendingSystemUpdate(ComponentName admin) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setPermissionPolicy(ComponentName admin, String callerPackage, int policy) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public int getPermissionPolicy(ComponentName admin) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setPermissionGrantState(ComponentName admin, String callerPackage, String packageName, String permission, int grantState, RemoteCallback resultReceiver) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public int getPermissionGrantState(ComponentName admin, String callerPackage, String packageName, String permission) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean isProvisioningAllowed(String action, String packageName) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public int checkProvisioningPreCondition(String action, String packageName) throws RemoteException {
             return 0;
         }
 
-        public void setKeepUninstalledPackages(ComponentName admin, String callerPackage, List<String> list) throws RemoteException {
+        @Override // android.app.admin.IDevicePolicyManager
+        public void setKeepUninstalledPackages(ComponentName admin, String callerPackage, List<String> packageList) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public List<String> getKeepUninstalledPackages(ComponentName admin, String callerPackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean isManagedProfile(ComponentName admin) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean isSystemOnlyUser(ComponentName admin) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public String getWifiMacAddress(ComponentName admin) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void reboot(ComponentName admin) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setShortSupportMessage(ComponentName admin, CharSequence message) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public CharSequence getShortSupportMessage(ComponentName admin) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setLongSupportMessage(ComponentName admin, CharSequence message) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public CharSequence getLongSupportMessage(ComponentName admin) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public CharSequence getShortSupportMessageForUser(ComponentName admin, int userHandle) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public CharSequence getLongSupportMessageForUser(ComponentName admin, int userHandle) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean isSeparateProfileChallengeAllowed(int userHandle) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setOrganizationColor(ComponentName admin, int color) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setOrganizationColorForUser(int color, int userId) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public int getOrganizationColor(ComponentName admin) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public int getOrganizationColorForUser(int userHandle) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setOrganizationName(ComponentName admin, CharSequence title) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public CharSequence getOrganizationName(ComponentName admin) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public CharSequence getDeviceOwnerOrganizationName() throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public CharSequence getOrganizationNameForUser(int userHandle) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public int getUserProvisioningState() throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setUserProvisioningState(int state, int userHandle) throws RemoteException {
         }
 
-        public void setAffiliationIds(ComponentName admin, List<String> list) throws RemoteException {
+        @Override // android.app.admin.IDevicePolicyManager
+        public void setAffiliationIds(ComponentName admin, List<String> ids) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public List<String> getAffiliationIds(ComponentName admin) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean isAffiliatedUser() throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setSecurityLoggingEnabled(ComponentName admin, boolean enabled) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean isSecurityLoggingEnabled(ComponentName admin) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public ParceledListSlice retrieveSecurityLogs(ComponentName admin) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public ParceledListSlice retrievePreRebootSecurityLogs(ComponentName admin) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public long forceNetworkLogs() throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public long forceSecurityLogs() throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean isUninstallInQueue(String packageName) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void uninstallPackageWithActiveAdmins(String packageName) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean isDeviceProvisioned() throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean isDeviceProvisioningConfigApplied() throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setDeviceProvisioningConfigApplied() throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void forceUpdateUserSetupComplete() throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setBackupServiceEnabled(ComponentName admin, boolean enabled) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean isBackupServiceEnabled(ComponentName admin) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setNetworkLoggingEnabled(ComponentName admin, String packageName, boolean enabled) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean isNetworkLoggingEnabled(ComponentName admin, String packageName) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public List<NetworkEvent> retrieveNetworkLogs(ComponentName admin, String packageName, long batchToken) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean bindDeviceAdminServiceAsUser(ComponentName admin, IApplicationThread caller, IBinder token, Intent service, IServiceConnection connection, int flags, int targetUserId) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public List<UserHandle> getBindDeviceAdminTargetUsers(ComponentName admin) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean isEphemeralUser(ComponentName admin) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public long getLastSecurityLogRetrievalTime() throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public long getLastBugReportRequestTime() throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public long getLastNetworkLogRetrievalTime() throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean setResetPasswordToken(ComponentName admin, byte[] token) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean clearResetPasswordToken(ComponentName admin) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean isResetPasswordTokenActive(ComponentName admin) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean resetPasswordWithToken(ComponentName admin, String password, byte[] token, int flags) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean isCurrentInputMethodSetByOwner() throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public StringParceledListSlice getOwnerInstalledCaCerts(UserHandle user) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void clearApplicationUserData(ComponentName admin, String packageName, IPackageDataObserver callback) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setLogoutEnabled(ComponentName admin, boolean enabled) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean isLogoutEnabled() throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public List<String> getDisallowedSystemApps(ComponentName admin, int userId, String provisioningAction) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void transferOwnership(ComponentName admin, ComponentName target, PersistableBundle bundle) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public PersistableBundle getTransferOwnershipBundle() throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setStartUserSessionMessage(ComponentName admin, CharSequence startUserSessionMessage) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setEndUserSessionMessage(ComponentName admin, CharSequence endUserSessionMessage) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public CharSequence getStartUserSessionMessage(ComponentName admin) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public CharSequence getEndUserSessionMessage(ComponentName admin) throws RemoteException {
             return null;
         }
 
-        public List<String> setMeteredDataDisabledPackages(ComponentName admin, List<String> list) throws RemoteException {
+        @Override // android.app.admin.IDevicePolicyManager
+        public List<String> setMeteredDataDisabledPackages(ComponentName admin, List<String> packageNames) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public List<String> getMeteredDataDisabledPackages(ComponentName admin) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public int addOverrideApn(ComponentName admin, ApnSetting apnSetting) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean updateOverrideApn(ComponentName admin, int apnId, ApnSetting apnSetting) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean removeOverrideApn(ComponentName admin, int apnId) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public List<ApnSetting> getOverrideApns(ComponentName admin) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void setOverrideApnsEnabled(ComponentName admin, boolean enabled) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean isOverrideApnEnabled(ComponentName admin) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean isMeteredDataDisabledPackageForUser(ComponentName admin, String packageName, int userId) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public int setGlobalPrivateDns(ComponentName admin, int mode, String privateDnsHost) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public int getGlobalPrivateDnsMode(ComponentName admin) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public String getGlobalPrivateDnsHost(ComponentName admin) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void grantDeviceIdsAccessToProfileOwner(ComponentName who, int userId) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public void installUpdateFromFile(ComponentName admin, ParcelFileDescriptor updateFileDescriptor, StartInstallingUpdateCallback listener) throws RemoteException {
         }
 
-        public void setCrossProfileCalendarPackages(ComponentName admin, List<String> list) throws RemoteException {
+        @Override // android.app.admin.IDevicePolicyManager
+        public void setCrossProfileCalendarPackages(ComponentName admin, List<String> packageNames) throws RemoteException {
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public List<String> getCrossProfileCalendarPackages(ComponentName admin) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean isPackageAllowedToAccessCalendarForUser(String packageName, int userHandle) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public List<String> getCrossProfileCalendarPackagesForUser(int userHandle) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean isManagedKiosk() throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean isUnattendedManagedKiosk() throws RemoteException {
             return false;
         }
 
+        @Override // android.app.admin.IDevicePolicyManager
         public boolean startViewCalendarEventInManagedProfile(String packageName, long eventId, long start, long end, boolean allDay, int flags) throws RemoteException {
             return false;
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements IDevicePolicyManager {
         private static final String DESCRIPTOR = "android.app.admin.IDevicePolicyManager";
         static final int TRANSACTION_addCrossProfileIntentFilter = 116;
@@ -1912,12 +2197,13 @@ public interface IDevicePolicyManager extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IDevicePolicyManager)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IDevicePolicyManager)) {
+                return (IDevicePolicyManager) iin;
             }
-            return (IDevicePolicyManager) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -2489,4868 +2775,2380 @@ public interface IDevicePolicyManager extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r10v0, resolved type: android.os.Parcel} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v2, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v6, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v10, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v14, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v18, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v22, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v26, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v30, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v34, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v38, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v42, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v46, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v50, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v54, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v58, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v62, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v66, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v70, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v74, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v78, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v82, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v89, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v95, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v99, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v104, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v108, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v112, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v116, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v122, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v127, resolved type: android.net.ProxyInfo} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v131, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v135, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v140, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v144, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v148, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v152, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v156, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v160, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v164, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v168, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v172, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v178, resolved type: android.os.RemoteCallback} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v182, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v186, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v190, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v194, resolved type: android.app.admin.PasswordMetrics} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v205, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v217, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v224, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v228, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v232, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v243, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v247, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v251, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v255, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v259, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v266, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v282, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v286, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v290, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v294, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v298, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v302, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v306, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v310, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v314, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v318, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v322, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v326, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v330, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v334, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v338, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v342, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v347, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v352, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v356, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v364, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v368, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v372, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v377, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v381, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v385, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v390, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v394, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v398, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v404, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v408, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v418, resolved type: android.os.UserHandle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v422, resolved type: android.os.UserHandle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v426, resolved type: android.os.UserHandle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v430, resolved type: android.os.UserHandle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v434, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v438, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v442, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v450, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v454, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v460, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v464, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v469, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v473, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v477, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v481, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v485, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v489, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v493, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v497, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v501, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v507, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v511, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v515, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v519, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v524, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v528, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v538, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v542, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v547, resolved type: android.os.PersistableBundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v551, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v555, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v559, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v563, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v567, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v572, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v576, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v580, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v584, resolved type: android.graphics.Bitmap} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v588, resolved type: android.app.admin.SystemUpdatePolicy} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v593, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v597, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v602, resolved type: android.app.admin.SystemUpdateInfo} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v606, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v610, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v614, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v619, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v625, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v629, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v633, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v637, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v641, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v645, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v653, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v661, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v665, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v669, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v674, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v679, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v688, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v696, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v700, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v705, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v709, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v713, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v717, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v727, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v731, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v735, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v739, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v743, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v748, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v752, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v759, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v763, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v767, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v771, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v776, resolved type: android.os.UserHandle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v780, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v784, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v789, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v793, resolved type: android.os.PersistableBundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v806, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v810, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v814, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v818, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v822, resolved type: android.telephony.data.ApnSetting} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v826, resolved type: android.telephony.data.ApnSetting} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v830, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v834, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v838, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v842, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v846, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v850, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v854, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v858, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v862, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v870, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v874, resolved type: android.content.ComponentName} */
-        /* JADX WARNING: type inference failed for: r0v1 */
-        /* JADX WARNING: type inference failed for: r0v238, types: [java.lang.CharSequence] */
-        /* JADX WARNING: type inference failed for: r0v270 */
-        /* JADX WARNING: type inference failed for: r0v278, types: [android.net.Uri] */
-        /* JADX WARNING: type inference failed for: r0v360, types: [android.content.IntentFilter] */
-        /* JADX WARNING: type inference failed for: r0v412 */
-        /* JADX WARNING: type inference failed for: r0v446, types: [android.content.Intent] */
-        /* JADX WARNING: type inference failed for: r0v533 */
-        /* JADX WARNING: type inference failed for: r0v649, types: [java.lang.CharSequence] */
-        /* JADX WARNING: type inference failed for: r0v657, types: [java.lang.CharSequence] */
-        /* JADX WARNING: type inference failed for: r0v684, types: [java.lang.CharSequence] */
-        /* JADX WARNING: type inference failed for: r0v798, types: [java.lang.CharSequence] */
-        /* JADX WARNING: type inference failed for: r0v802, types: [java.lang.CharSequence] */
-        /* JADX WARNING: type inference failed for: r0v866, types: [android.os.ParcelFileDescriptor] */
-        /* JADX WARNING: type inference failed for: r0v884 */
-        /* JADX WARNING: type inference failed for: r0v885 */
-        /* JADX WARNING: type inference failed for: r0v886 */
-        /* JADX WARNING: type inference failed for: r0v887 */
-        /* JADX WARNING: type inference failed for: r0v888 */
-        /* JADX WARNING: type inference failed for: r0v889 */
-        /* JADX WARNING: type inference failed for: r0v890 */
-        /* JADX WARNING: type inference failed for: r0v891 */
-        /* JADX WARNING: type inference failed for: r0v892 */
-        /* JADX WARNING: type inference failed for: r0v893 */
-        /* JADX WARNING: type inference failed for: r0v894 */
-        /* JADX WARNING: type inference failed for: r0v895 */
-        /* JADX WARNING: type inference failed for: r0v896 */
-        /* JADX WARNING: type inference failed for: r0v897 */
-        /* JADX WARNING: type inference failed for: r0v898 */
-        /* JADX WARNING: type inference failed for: r0v899 */
-        /* JADX WARNING: type inference failed for: r0v900 */
-        /* JADX WARNING: type inference failed for: r0v901 */
-        /* JADX WARNING: type inference failed for: r0v902 */
-        /* JADX WARNING: type inference failed for: r0v903 */
-        /* JADX WARNING: type inference failed for: r0v904 */
-        /* JADX WARNING: type inference failed for: r0v905 */
-        /* JADX WARNING: type inference failed for: r0v906 */
-        /* JADX WARNING: type inference failed for: r0v907 */
-        /* JADX WARNING: type inference failed for: r0v908 */
-        /* JADX WARNING: type inference failed for: r0v909 */
-        /* JADX WARNING: type inference failed for: r0v910 */
-        /* JADX WARNING: type inference failed for: r0v911 */
-        /* JADX WARNING: type inference failed for: r0v912 */
-        /* JADX WARNING: type inference failed for: r0v913 */
-        /* JADX WARNING: type inference failed for: r0v914 */
-        /* JADX WARNING: type inference failed for: r0v915 */
-        /* JADX WARNING: type inference failed for: r0v916 */
-        /* JADX WARNING: type inference failed for: r0v917 */
-        /* JADX WARNING: type inference failed for: r0v918 */
-        /* JADX WARNING: type inference failed for: r0v919 */
-        /* JADX WARNING: type inference failed for: r0v920 */
-        /* JADX WARNING: type inference failed for: r0v921 */
-        /* JADX WARNING: type inference failed for: r0v922 */
-        /* JADX WARNING: type inference failed for: r0v923 */
-        /* JADX WARNING: type inference failed for: r0v924 */
-        /* JADX WARNING: type inference failed for: r0v925 */
-        /* JADX WARNING: type inference failed for: r0v926 */
-        /* JADX WARNING: type inference failed for: r0v927 */
-        /* JADX WARNING: type inference failed for: r0v928 */
-        /* JADX WARNING: type inference failed for: r0v929 */
-        /* JADX WARNING: type inference failed for: r0v930 */
-        /* JADX WARNING: type inference failed for: r0v931 */
-        /* JADX WARNING: type inference failed for: r0v932 */
-        /* JADX WARNING: type inference failed for: r0v933 */
-        /* JADX WARNING: type inference failed for: r0v934 */
-        /* JADX WARNING: type inference failed for: r0v935 */
-        /* JADX WARNING: type inference failed for: r0v936 */
-        /* JADX WARNING: type inference failed for: r0v937 */
-        /* JADX WARNING: type inference failed for: r0v938 */
-        /* JADX WARNING: type inference failed for: r0v939 */
-        /* JADX WARNING: type inference failed for: r0v940 */
-        /* JADX WARNING: type inference failed for: r0v941 */
-        /* JADX WARNING: type inference failed for: r0v942 */
-        /* JADX WARNING: type inference failed for: r0v943 */
-        /* JADX WARNING: type inference failed for: r0v944 */
-        /* JADX WARNING: type inference failed for: r0v945 */
-        /* JADX WARNING: type inference failed for: r0v946 */
-        /* JADX WARNING: type inference failed for: r0v947 */
-        /* JADX WARNING: type inference failed for: r0v948 */
-        /* JADX WARNING: type inference failed for: r0v949 */
-        /* JADX WARNING: type inference failed for: r0v950 */
-        /* JADX WARNING: type inference failed for: r0v951 */
-        /* JADX WARNING: type inference failed for: r0v952 */
-        /* JADX WARNING: type inference failed for: r0v953 */
-        /* JADX WARNING: type inference failed for: r0v954 */
-        /* JADX WARNING: type inference failed for: r0v955 */
-        /* JADX WARNING: type inference failed for: r0v956 */
-        /* JADX WARNING: type inference failed for: r0v957 */
-        /* JADX WARNING: type inference failed for: r0v958 */
-        /* JADX WARNING: type inference failed for: r0v959 */
-        /* JADX WARNING: type inference failed for: r0v960 */
-        /* JADX WARNING: type inference failed for: r0v961 */
-        /* JADX WARNING: type inference failed for: r0v962 */
-        /* JADX WARNING: type inference failed for: r0v963 */
-        /* JADX WARNING: type inference failed for: r0v964 */
-        /* JADX WARNING: type inference failed for: r0v965 */
-        /* JADX WARNING: type inference failed for: r0v966 */
-        /* JADX WARNING: type inference failed for: r0v967 */
-        /* JADX WARNING: type inference failed for: r0v968 */
-        /* JADX WARNING: type inference failed for: r0v969 */
-        /* JADX WARNING: type inference failed for: r0v970 */
-        /* JADX WARNING: type inference failed for: r0v971 */
-        /* JADX WARNING: type inference failed for: r0v972 */
-        /* JADX WARNING: type inference failed for: r0v973 */
-        /* JADX WARNING: type inference failed for: r0v974 */
-        /* JADX WARNING: type inference failed for: r0v975 */
-        /* JADX WARNING: type inference failed for: r0v976 */
-        /* JADX WARNING: type inference failed for: r0v977 */
-        /* JADX WARNING: type inference failed for: r0v978 */
-        /* JADX WARNING: type inference failed for: r0v979 */
-        /* JADX WARNING: type inference failed for: r0v980 */
-        /* JADX WARNING: type inference failed for: r0v981 */
-        /* JADX WARNING: type inference failed for: r0v982 */
-        /* JADX WARNING: type inference failed for: r0v983 */
-        /* JADX WARNING: type inference failed for: r0v984 */
-        /* JADX WARNING: type inference failed for: r0v985 */
-        /* JADX WARNING: type inference failed for: r0v986 */
-        /* JADX WARNING: type inference failed for: r0v987 */
-        /* JADX WARNING: type inference failed for: r0v988 */
-        /* JADX WARNING: type inference failed for: r0v989 */
-        /* JADX WARNING: type inference failed for: r0v990 */
-        /* JADX WARNING: type inference failed for: r0v991 */
-        /* JADX WARNING: type inference failed for: r0v992 */
-        /* JADX WARNING: type inference failed for: r0v993 */
-        /* JADX WARNING: type inference failed for: r0v994 */
-        /* JADX WARNING: type inference failed for: r0v995 */
-        /* JADX WARNING: type inference failed for: r0v996 */
-        /* JADX WARNING: type inference failed for: r0v997 */
-        /* JADX WARNING: type inference failed for: r0v998 */
-        /* JADX WARNING: type inference failed for: r0v999 */
-        /* JADX WARNING: type inference failed for: r0v1000 */
-        /* JADX WARNING: type inference failed for: r0v1001 */
-        /* JADX WARNING: type inference failed for: r0v1002 */
-        /* JADX WARNING: type inference failed for: r0v1003 */
-        /* JADX WARNING: type inference failed for: r0v1004 */
-        /* JADX WARNING: type inference failed for: r0v1005 */
-        /* JADX WARNING: type inference failed for: r0v1006 */
-        /* JADX WARNING: type inference failed for: r0v1007 */
-        /* JADX WARNING: type inference failed for: r0v1008 */
-        /* JADX WARNING: type inference failed for: r0v1009 */
-        /* JADX WARNING: type inference failed for: r0v1010 */
-        /* JADX WARNING: type inference failed for: r0v1011 */
-        /* JADX WARNING: type inference failed for: r0v1012 */
-        /* JADX WARNING: type inference failed for: r0v1013 */
-        /* JADX WARNING: type inference failed for: r0v1014 */
-        /* JADX WARNING: type inference failed for: r0v1015 */
-        /* JADX WARNING: type inference failed for: r0v1016 */
-        /* JADX WARNING: type inference failed for: r0v1017 */
-        /* JADX WARNING: type inference failed for: r0v1018 */
-        /* JADX WARNING: type inference failed for: r0v1019 */
-        /* JADX WARNING: type inference failed for: r0v1020 */
-        /* JADX WARNING: type inference failed for: r0v1021 */
-        /* JADX WARNING: type inference failed for: r0v1022 */
-        /* JADX WARNING: type inference failed for: r0v1023 */
-        /* JADX WARNING: type inference failed for: r0v1024 */
-        /* JADX WARNING: type inference failed for: r0v1025 */
-        /* JADX WARNING: type inference failed for: r0v1026 */
-        /* JADX WARNING: type inference failed for: r0v1027 */
-        /* JADX WARNING: type inference failed for: r0v1028 */
-        /* JADX WARNING: type inference failed for: r0v1029 */
-        /* JADX WARNING: type inference failed for: r0v1030 */
-        /* JADX WARNING: type inference failed for: r0v1031 */
-        /* JADX WARNING: type inference failed for: r0v1032 */
-        /* JADX WARNING: type inference failed for: r0v1033 */
-        /* JADX WARNING: type inference failed for: r0v1034 */
-        /* JADX WARNING: type inference failed for: r0v1035 */
-        /* JADX WARNING: type inference failed for: r0v1036 */
-        /* JADX WARNING: type inference failed for: r0v1037 */
-        /* JADX WARNING: type inference failed for: r0v1038 */
-        /* JADX WARNING: type inference failed for: r0v1039 */
-        /* JADX WARNING: type inference failed for: r0v1040 */
-        /* JADX WARNING: type inference failed for: r0v1041 */
-        /* JADX WARNING: type inference failed for: r0v1042 */
-        /* JADX WARNING: type inference failed for: r0v1043 */
-        /* JADX WARNING: type inference failed for: r0v1044 */
-        /* JADX WARNING: type inference failed for: r0v1045 */
-        /* JADX WARNING: type inference failed for: r0v1046 */
-        /* JADX WARNING: type inference failed for: r0v1047 */
-        /* JADX WARNING: type inference failed for: r0v1048 */
-        /* JADX WARNING: type inference failed for: r0v1049 */
-        /* JADX WARNING: type inference failed for: r0v1050 */
-        /* JADX WARNING: type inference failed for: r0v1051 */
-        /* JADX WARNING: type inference failed for: r0v1052 */
-        /* JADX WARNING: type inference failed for: r0v1053 */
-        /* JADX WARNING: type inference failed for: r0v1054 */
-        /* JADX WARNING: type inference failed for: r0v1055 */
-        /* JADX WARNING: type inference failed for: r0v1056 */
-        /* JADX WARNING: type inference failed for: r0v1057 */
-        /* JADX WARNING: type inference failed for: r0v1058 */
-        /* JADX WARNING: type inference failed for: r0v1059 */
-        /* JADX WARNING: type inference failed for: r0v1060 */
-        /* JADX WARNING: type inference failed for: r0v1061 */
-        /* JADX WARNING: type inference failed for: r0v1062 */
-        /* JADX WARNING: type inference failed for: r0v1063 */
-        /* JADX WARNING: type inference failed for: r0v1064 */
-        /* JADX WARNING: type inference failed for: r0v1065 */
-        /* JADX WARNING: type inference failed for: r0v1066 */
-        /* JADX WARNING: type inference failed for: r0v1067 */
-        /* JADX WARNING: type inference failed for: r0v1068 */
-        /* JADX WARNING: type inference failed for: r0v1069 */
-        /* JADX WARNING: type inference failed for: r0v1070 */
-        /* JADX WARNING: type inference failed for: r0v1071 */
-        /* JADX WARNING: type inference failed for: r0v1072 */
-        /* JADX WARNING: type inference failed for: r0v1073 */
-        /* JADX WARNING: type inference failed for: r0v1074 */
-        /* JADX WARNING: type inference failed for: r0v1075 */
-        /* JADX WARNING: type inference failed for: r0v1076 */
-        /* JADX WARNING: type inference failed for: r0v1077 */
-        /* JADX WARNING: type inference failed for: r0v1078 */
-        /* JADX WARNING: type inference failed for: r0v1079 */
-        /* JADX WARNING: type inference failed for: r0v1080 */
-        /* JADX WARNING: type inference failed for: r0v1081 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r21, android.os.Parcel r22, android.os.Parcel r23, int r24) throws android.os.RemoteException {
-            /*
-                r20 = this;
-                r8 = r20
-                r9 = r21
-                r10 = r22
-                r11 = r23
-                java.lang.String r12 = "android.app.admin.IDevicePolicyManager"
-                r0 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r13 = 1
-                if (r9 == r0) goto L_0x22c1
-                r6 = 0
-                r0 = 0
-                switch(r9) {
-                    case 1: goto L_0x229a;
-                    case 2: goto L_0x226f;
-                    case 3: goto L_0x2248;
-                    case 4: goto L_0x221d;
-                    case 5: goto L_0x21f6;
-                    case 6: goto L_0x21cb;
-                    case 7: goto L_0x21a4;
-                    case 8: goto L_0x2179;
-                    case 9: goto L_0x2152;
-                    case 10: goto L_0x2127;
-                    case 11: goto L_0x2100;
-                    case 12: goto L_0x20d5;
-                    case 13: goto L_0x20ae;
-                    case 14: goto L_0x2083;
-                    case 15: goto L_0x205c;
-                    case 16: goto L_0x2031;
-                    case 17: goto L_0x200a;
-                    case 18: goto L_0x1fdf;
-                    case 19: goto L_0x1fb8;
-                    case 20: goto L_0x1f8d;
-                    case 21: goto L_0x1f62;
-                    case 22: goto L_0x1f47;
-                    case 23: goto L_0x1f35;
-                    case 24: goto L_0x1f27;
-                    case 25: goto L_0x1f09;
-                    case 26: goto L_0x1eee;
-                    case 27: goto L_0x1ed3;
-                    case 28: goto L_0x1eac;
-                    case 29: goto L_0x1e81;
-                    case 30: goto L_0x1e6b;
-                    case 31: goto L_0x1e44;
-                    case 32: goto L_0x1e19;
-                    case 33: goto L_0x1df2;
-                    case 34: goto L_0x1dc7;
-                    case 35: goto L_0x1db0;
-                    case 36: goto L_0x1d9e;
-                    case 37: goto L_0x1d6f;
-                    case 38: goto L_0x1d54;
-                    case 39: goto L_0x1d2a;
-                    case 40: goto L_0x1d03;
-                    case 41: goto L_0x1ce1;
-                    case 42: goto L_0x1ccb;
-                    case 43: goto L_0x1cad;
-                    case 44: goto L_0x1c8a;
-                    case 45: goto L_0x1c68;
-                    case 46: goto L_0x1c45;
-                    case 47: goto L_0x1c23;
-                    case 48: goto L_0x1bfc;
-                    case 49: goto L_0x1bd1;
-                    case 50: goto L_0x1baa;
-                    case 51: goto L_0x1b88;
-                    case 52: goto L_0x1b76;
-                    case 53: goto L_0x1b60;
-                    case 54: goto L_0x1b32;
-                    case 55: goto L_0x1b14;
-                    case 56: goto L_0x1af6;
-                    case 57: goto L_0x1ad0;
-                    case 58: goto L_0x1ab2;
-                    case 59: goto L_0x1aa4;
-                    case 60: goto L_0x1a96;
-                    case 61: goto L_0x1a88;
-                    case 62: goto L_0x1a7a;
-                    case 63: goto L_0x1a6c;
-                    case 64: goto L_0x1a5e;
-                    case 65: goto L_0x1a50;
-                    case 66: goto L_0x1a2a;
-                    case 67: goto L_0x1a0a;
-                    case 68: goto L_0x19fc;
-                    case 69: goto L_0x19ee;
-                    case 70: goto L_0x19e0;
-                    case 71: goto L_0x19d2;
-                    case 72: goto L_0x19ac;
-                    case 73: goto L_0x1991;
-                    case 74: goto L_0x1976;
-                    case 75: goto L_0x1964;
-                    case 76: goto L_0x194a;
-                    case 77: goto L_0x192c;
-                    case 78: goto L_0x1912;
-                    case 79: goto L_0x1904;
-                    case 80: goto L_0x18ea;
-                    case 81: goto L_0x18c0;
-                    case 82: goto L_0x18a9;
-                    case 83: goto L_0x187a;
-                    case 84: goto L_0x1854;
-                    case 85: goto L_0x182e;
-                    case 86: goto L_0x180c;
-                    case 87: goto L_0x17ee;
-                    case 88: goto L_0x17cf;
-                    case 89: goto L_0x17b9;
-                    case 90: goto L_0x17b4;
-                    case 91: goto L_0x178e;
-                    case 92: goto L_0x173d;
-                    case 93: goto L_0x1738;
-                    case 94: goto L_0x1712;
-                    case 95: goto L_0x16f0;
-                    case 96: goto L_0x16ce;
-                    case 97: goto L_0x16ac;
-                    case 98: goto L_0x168e;
-                    case 99: goto L_0x1670;
-                    case 100: goto L_0x1641;
-                    case 101: goto L_0x1623;
-                    case 102: goto L_0x1605;
-                    case 103: goto L_0x15e7;
-                    case 104: goto L_0x15ad;
-                    case 105: goto L_0x158f;
-                    case 106: goto L_0x1571;
-                    case 107: goto L_0x153f;
-                    case 108: goto L_0x1510;
-                    case 109: goto L_0x14ee;
-                    case 110: goto L_0x14d0;
-                    case 111: goto L_0x14be;
-                    case 112: goto L_0x1494;
-                    case 113: goto L_0x1479;
-                    case 114: goto L_0x1452;
-                    case 115: goto L_0x142b;
-                    case 116: goto L_0x13fd;
-                    case 117: goto L_0x13e3;
-                    case 118: goto L_0x13b9;
-                    case 119: goto L_0x139b;
-                    case 120: goto L_0x1389;
-                    case 121: goto L_0x1363;
-                    case 122: goto L_0x1339;
-                    case 123: goto L_0x131b;
-                    case 124: goto L_0x130d;
-                    case 125: goto L_0x12e7;
-                    case 126: goto L_0x12c5;
-                    case 127: goto L_0x12a7;
-                    case 128: goto L_0x1291;
-                    case 129: goto L_0x1276;
-                    case 130: goto L_0x1247;
-                    case 131: goto L_0x1221;
-                    case 132: goto L_0x11cc;
-                    case 133: goto L_0x119e;
-                    case 134: goto L_0x1170;
-                    case 135: goto L_0x1142;
-                    case 136: goto L_0x1114;
-                    case 137: goto L_0x10f6;
-                    case 138: goto L_0x10d8;
-                    case 139: goto L_0x10b6;
-                    case 140: goto L_0x1084;
-                    case 141: goto L_0x105e;
-                    case 142: goto L_0x1037;
-                    case 143: goto L_0x1029;
-                    case 144: goto L_0x1017;
-                    case 145: goto L_0x0ff9;
-                    case 146: goto L_0x0fdb;
-                    case 147: goto L_0x0fc9;
-                    case 148: goto L_0x0fab;
-                    case 149: goto L_0x0f8d;
-                    case 150: goto L_0x0f6b;
-                    case 151: goto L_0x0f49;
-                    case 152: goto L_0x0f27;
-                    case 153: goto L_0x0f05;
-                    case 154: goto L_0x0ee3;
-                    case 155: goto L_0x0ec0;
-                    case 156: goto L_0x0ea2;
-                    case 157: goto L_0x0e87;
-                    case 158: goto L_0x0e5c;
-                    case 159: goto L_0x0e3a;
-                    case 160: goto L_0x0e17;
-                    case 161: goto L_0x0df9;
-                    case 162: goto L_0x0de7;
-                    case 163: goto L_0x0dc4;
-                    case 164: goto L_0x0da6;
-                    case 165: goto L_0x0d94;
-                    case 166: goto L_0x0d5e;
-                    case 167: goto L_0x0d3b;
-                    case 168: goto L_0x0d1d;
-                    case 169: goto L_0x0d0b;
-                    case 170: goto L_0x0cc8;
-                    case 171: goto L_0x0c8d;
-                    case 172: goto L_0x0c6b;
-                    case 173: goto L_0x0c49;
-                    case 174: goto L_0x0c2b;
-                    case 175: goto L_0x0c08;
-                    case 176: goto L_0x0bfa;
-                    case 177: goto L_0x0bd7;
-                    case 178: goto L_0x0bb9;
-                    case 179: goto L_0x0b97;
-                    case 180: goto L_0x0b6d;
-                    case 181: goto L_0x0b43;
-                    case 182: goto L_0x0b2c;
-                    case 183: goto L_0x0b22;
-                    case 184: goto L_0x0afb;
-                    case 185: goto L_0x0ad4;
-                    case 186: goto L_0x0ac6;
-                    case 187: goto L_0x0aac;
-                    case 188: goto L_0x0a85;
-                    case 189: goto L_0x0a63;
-                    case 190: goto L_0x0a45;
-                    case 191: goto L_0x0a40;
-                    case 192: goto L_0x0a16;
-                    case 193: goto L_0x0a00;
-                    case 194: goto L_0x09ea;
-                    case 195: goto L_0x09c8;
-                    case 196: goto L_0x09a6;
-                    case 197: goto L_0x0988;
-                    case 198: goto L_0x096a;
-                    case 199: goto L_0x094c;
-                    case 200: goto L_0x0932;
-                    case 201: goto L_0x0908;
-                    case 202: goto L_0x08e1;
-                    case 203: goto L_0x08b7;
-                    case 204: goto L_0x0890;
-                    case 205: goto L_0x0865;
-                    case 206: goto L_0x083a;
-                    case 207: goto L_0x0828;
-                    case 208: goto L_0x080a;
-                    case 209: goto L_0x07f8;
-                    case 210: goto L_0x07da;
-                    case 211: goto L_0x07c8;
-                    case 212: goto L_0x079e;
-                    case 213: goto L_0x0777;
-                    case 214: goto L_0x0760;
-                    case 215: goto L_0x0745;
-                    case 216: goto L_0x0737;
-                    case 217: goto L_0x0725;
-                    case 218: goto L_0x0707;
-                    case 219: goto L_0x06e9;
-                    case 220: goto L_0x06db;
-                    case 221: goto L_0x06b8;
-                    case 222: goto L_0x069a;
-                    case 223: goto L_0x0673;
-                    case 224: goto L_0x064c;
-                    case 225: goto L_0x063e;
-                    case 226: goto L_0x0630;
-                    case 227: goto L_0x061e;
-                    case 228: goto L_0x0610;
-                    case 229: goto L_0x0602;
-                    case 230: goto L_0x05f4;
-                    case 231: goto L_0x05ea;
-                    case 232: goto L_0x05e0;
-                    case 233: goto L_0x05bd;
-                    case 234: goto L_0x059f;
-                    case 235: goto L_0x0578;
-                    case 236: goto L_0x0556;
-                    case 237: goto L_0x0530;
-                    case 238: goto L_0x052b;
-                    case 239: goto L_0x050d;
-                    case 240: goto L_0x04ef;
-                    case 241: goto L_0x04e1;
-                    case 242: goto L_0x04d3;
-                    case 243: goto L_0x04c5;
-                    case 244: goto L_0x04a3;
-                    case 245: goto L_0x0485;
-                    case 246: goto L_0x0467;
-                    case 247: goto L_0x043d;
-                    case 248: goto L_0x042f;
-                    case 249: goto L_0x0408;
-                    case 250: goto L_0x03e2;
-                    case 251: goto L_0x03bf;
-                    case 252: goto L_0x03b1;
-                    case 253: goto L_0x038b;
-                    case 254: goto L_0x0351;
-                    case 255: goto L_0x033a;
-                    case 256: goto L_0x0310;
-                    case 257: goto L_0x02e6;
-                    case 258: goto L_0x02bf;
-                    case 259: goto L_0x0298;
-                    case 260: goto L_0x0276;
-                    case 261: goto L_0x0258;
-                    case 262: goto L_0x022a;
-                    case 263: goto L_0x01f8;
-                    case 264: goto L_0x01d6;
-                    case 265: goto L_0x01b8;
-                    case 266: goto L_0x0195;
-                    case 267: goto L_0x0177;
-                    case 268: goto L_0x0151;
-                    case 269: goto L_0x012b;
-                    case 270: goto L_0x010d;
-                    case 271: goto L_0x00ef;
-                    case 272: goto L_0x00d1;
-                    case 273: goto L_0x009f;
-                    case 274: goto L_0x0081;
-                    case 275: goto L_0x0063;
-                    case 276: goto L_0x004d;
-                    case 277: goto L_0x003b;
-                    case 278: goto L_0x002d;
-                    case 279: goto L_0x001f;
-                    case 280: goto L_0x001a;
-                    default: goto L_0x0015;
-                }
-            L_0x0015:
-                boolean r0 = super.onTransact(r21, r22, r23, r24)
-                return r0
-            L_0x001a:
-                boolean r0 = r8.onTransact$startViewCalendarEventInManagedProfile$(r10, r11)
-                return r0
-            L_0x001f:
-                r10.enforceInterface(r12)
-                boolean r0 = r20.isUnattendedManagedKiosk()
-                r23.writeNoException()
-                r11.writeInt(r0)
-                return r13
-            L_0x002d:
-                r10.enforceInterface(r12)
-                boolean r0 = r20.isManagedKiosk()
-                r23.writeNoException()
-                r11.writeInt(r0)
-                return r13
-            L_0x003b:
-                r10.enforceInterface(r12)
-                int r0 = r22.readInt()
-                java.util.List r1 = r8.getCrossProfileCalendarPackagesForUser(r0)
-                r23.writeNoException()
-                r11.writeStringList(r1)
-                return r13
-            L_0x004d:
-                r10.enforceInterface(r12)
-                java.lang.String r0 = r22.readString()
-                int r1 = r22.readInt()
-                boolean r2 = r8.isPackageAllowedToAccessCalendarForUser(r0, r1)
-                r23.writeNoException()
-                r11.writeInt(r2)
-                return r13
-            L_0x0063:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0075
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0076
-            L_0x0075:
-            L_0x0076:
-                java.util.List r1 = r8.getCrossProfileCalendarPackages(r0)
-                r23.writeNoException()
-                r11.writeStringList(r1)
-                return r13
-            L_0x0081:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0093
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0094
-            L_0x0093:
-            L_0x0094:
-                java.util.ArrayList r1 = r22.createStringArrayList()
-                r8.setCrossProfileCalendarPackages(r0, r1)
-                r23.writeNoException()
-                return r13
-            L_0x009f:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x00b1
-                android.os.Parcelable$Creator<android.content.ComponentName> r1 = android.content.ComponentName.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.content.ComponentName r1 = (android.content.ComponentName) r1
-                goto L_0x00b2
-            L_0x00b1:
-                r1 = r0
-            L_0x00b2:
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x00c1
-                android.os.Parcelable$Creator<android.os.ParcelFileDescriptor> r0 = android.os.ParcelFileDescriptor.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.os.ParcelFileDescriptor r0 = (android.os.ParcelFileDescriptor) r0
-                goto L_0x00c2
-            L_0x00c1:
-            L_0x00c2:
-                android.os.IBinder r2 = r22.readStrongBinder()
-                android.app.admin.StartInstallingUpdateCallback r2 = android.app.admin.StartInstallingUpdateCallback.Stub.asInterface(r2)
-                r8.installUpdateFromFile(r1, r0, r2)
-                r23.writeNoException()
-                return r13
-            L_0x00d1:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x00e3
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x00e4
-            L_0x00e3:
-            L_0x00e4:
-                int r1 = r22.readInt()
-                r8.grantDeviceIdsAccessToProfileOwner(r0, r1)
-                r23.writeNoException()
-                return r13
-            L_0x00ef:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0101
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0102
-            L_0x0101:
-            L_0x0102:
-                java.lang.String r1 = r8.getGlobalPrivateDnsHost(r0)
-                r23.writeNoException()
-                r11.writeString(r1)
-                return r13
-            L_0x010d:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x011f
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0120
-            L_0x011f:
-            L_0x0120:
-                int r1 = r8.getGlobalPrivateDnsMode(r0)
-                r23.writeNoException()
-                r11.writeInt(r1)
-                return r13
-            L_0x012b:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x013d
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x013e
-            L_0x013d:
-            L_0x013e:
-                int r1 = r22.readInt()
-                java.lang.String r2 = r22.readString()
-                int r3 = r8.setGlobalPrivateDns(r0, r1, r2)
-                r23.writeNoException()
-                r11.writeInt(r3)
-                return r13
-            L_0x0151:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0163
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0164
-            L_0x0163:
-            L_0x0164:
-                java.lang.String r1 = r22.readString()
-                int r2 = r22.readInt()
-                boolean r3 = r8.isMeteredDataDisabledPackageForUser(r0, r1, r2)
-                r23.writeNoException()
-                r11.writeInt(r3)
-                return r13
-            L_0x0177:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0189
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x018a
-            L_0x0189:
-            L_0x018a:
-                boolean r1 = r8.isOverrideApnEnabled(r0)
-                r23.writeNoException()
-                r11.writeInt(r1)
-                return r13
-            L_0x0195:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x01a7
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x01a8
-            L_0x01a7:
-            L_0x01a8:
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x01b0
-                r6 = r13
-            L_0x01b0:
-                r1 = r6
-                r8.setOverrideApnsEnabled(r0, r1)
-                r23.writeNoException()
-                return r13
-            L_0x01b8:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x01ca
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x01cb
-            L_0x01ca:
-            L_0x01cb:
-                java.util.List r1 = r8.getOverrideApns(r0)
-                r23.writeNoException()
-                r11.writeTypedList(r1)
-                return r13
-            L_0x01d6:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x01e8
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x01e9
-            L_0x01e8:
-            L_0x01e9:
-                int r1 = r22.readInt()
-                boolean r2 = r8.removeOverrideApn(r0, r1)
-                r23.writeNoException()
-                r11.writeInt(r2)
-                return r13
-            L_0x01f8:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x020a
-                android.os.Parcelable$Creator<android.content.ComponentName> r1 = android.content.ComponentName.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.content.ComponentName r1 = (android.content.ComponentName) r1
-                goto L_0x020b
-            L_0x020a:
-                r1 = r0
-            L_0x020b:
-                int r2 = r22.readInt()
-                int r3 = r22.readInt()
-                if (r3 == 0) goto L_0x021e
-                android.os.Parcelable$Creator<android.telephony.data.ApnSetting> r0 = android.telephony.data.ApnSetting.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.telephony.data.ApnSetting r0 = (android.telephony.data.ApnSetting) r0
-                goto L_0x021f
-            L_0x021e:
-            L_0x021f:
-                boolean r3 = r8.updateOverrideApn(r1, r2, r0)
-                r23.writeNoException()
-                r11.writeInt(r3)
-                return r13
-            L_0x022a:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x023c
-                android.os.Parcelable$Creator<android.content.ComponentName> r1 = android.content.ComponentName.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.content.ComponentName r1 = (android.content.ComponentName) r1
-                goto L_0x023d
-            L_0x023c:
-                r1 = r0
-            L_0x023d:
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x024c
-                android.os.Parcelable$Creator<android.telephony.data.ApnSetting> r0 = android.telephony.data.ApnSetting.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.telephony.data.ApnSetting r0 = (android.telephony.data.ApnSetting) r0
-                goto L_0x024d
-            L_0x024c:
-            L_0x024d:
-                int r2 = r8.addOverrideApn(r1, r0)
-                r23.writeNoException()
-                r11.writeInt(r2)
-                return r13
-            L_0x0258:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x026a
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x026b
-            L_0x026a:
-            L_0x026b:
-                java.util.List r1 = r8.getMeteredDataDisabledPackages(r0)
-                r23.writeNoException()
-                r11.writeStringList(r1)
-                return r13
-            L_0x0276:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0288
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0289
-            L_0x0288:
-            L_0x0289:
-                java.util.ArrayList r1 = r22.createStringArrayList()
-                java.util.List r2 = r8.setMeteredDataDisabledPackages(r0, r1)
-                r23.writeNoException()
-                r11.writeStringList(r2)
-                return r13
-            L_0x0298:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x02aa
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x02ab
-            L_0x02aa:
-            L_0x02ab:
-                java.lang.CharSequence r1 = r8.getEndUserSessionMessage(r0)
-                r23.writeNoException()
-                if (r1 == 0) goto L_0x02bb
-                r11.writeInt(r13)
-                android.text.TextUtils.writeToParcel(r1, r11, r13)
-                goto L_0x02be
-            L_0x02bb:
-                r11.writeInt(r6)
-            L_0x02be:
-                return r13
-            L_0x02bf:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x02d1
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x02d2
-            L_0x02d1:
-            L_0x02d2:
-                java.lang.CharSequence r1 = r8.getStartUserSessionMessage(r0)
-                r23.writeNoException()
-                if (r1 == 0) goto L_0x02e2
-                r11.writeInt(r13)
-                android.text.TextUtils.writeToParcel(r1, r11, r13)
-                goto L_0x02e5
-            L_0x02e2:
-                r11.writeInt(r6)
-            L_0x02e5:
-                return r13
-            L_0x02e6:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x02f8
-                android.os.Parcelable$Creator<android.content.ComponentName> r1 = android.content.ComponentName.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.content.ComponentName r1 = (android.content.ComponentName) r1
-                goto L_0x02f9
-            L_0x02f8:
-                r1 = r0
-            L_0x02f9:
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x0308
-                android.os.Parcelable$Creator<java.lang.CharSequence> r0 = android.text.TextUtils.CHAR_SEQUENCE_CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                java.lang.CharSequence r0 = (java.lang.CharSequence) r0
-                goto L_0x0309
-            L_0x0308:
-            L_0x0309:
-                r8.setEndUserSessionMessage(r1, r0)
-                r23.writeNoException()
-                return r13
-            L_0x0310:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0322
-                android.os.Parcelable$Creator<android.content.ComponentName> r1 = android.content.ComponentName.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.content.ComponentName r1 = (android.content.ComponentName) r1
-                goto L_0x0323
-            L_0x0322:
-                r1 = r0
-            L_0x0323:
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x0332
-                android.os.Parcelable$Creator<java.lang.CharSequence> r0 = android.text.TextUtils.CHAR_SEQUENCE_CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                java.lang.CharSequence r0 = (java.lang.CharSequence) r0
-                goto L_0x0333
-            L_0x0332:
-            L_0x0333:
-                r8.setStartUserSessionMessage(r1, r0)
-                r23.writeNoException()
-                return r13
-            L_0x033a:
-                r10.enforceInterface(r12)
-                android.os.PersistableBundle r0 = r20.getTransferOwnershipBundle()
-                r23.writeNoException()
-                if (r0 == 0) goto L_0x034d
-                r11.writeInt(r13)
-                r0.writeToParcel(r11, r13)
-                goto L_0x0350
-            L_0x034d:
-                r11.writeInt(r6)
-            L_0x0350:
-                return r13
-            L_0x0351:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0363
-                android.os.Parcelable$Creator<android.content.ComponentName> r1 = android.content.ComponentName.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.content.ComponentName r1 = (android.content.ComponentName) r1
-                goto L_0x0364
-            L_0x0363:
-                r1 = r0
-            L_0x0364:
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x0373
-                android.os.Parcelable$Creator<android.content.ComponentName> r2 = android.content.ComponentName.CREATOR
-                java.lang.Object r2 = r2.createFromParcel(r10)
-                android.content.ComponentName r2 = (android.content.ComponentName) r2
-                goto L_0x0374
-            L_0x0373:
-                r2 = r0
-            L_0x0374:
-                int r3 = r22.readInt()
-                if (r3 == 0) goto L_0x0383
-                android.os.Parcelable$Creator<android.os.PersistableBundle> r0 = android.os.PersistableBundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.os.PersistableBundle r0 = (android.os.PersistableBundle) r0
-                goto L_0x0384
-            L_0x0383:
-            L_0x0384:
-                r8.transferOwnership(r1, r2, r0)
-                r23.writeNoException()
-                return r13
-            L_0x038b:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x039d
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x039e
-            L_0x039d:
-            L_0x039e:
-                int r1 = r22.readInt()
-                java.lang.String r2 = r22.readString()
-                java.util.List r3 = r8.getDisallowedSystemApps(r0, r1, r2)
-                r23.writeNoException()
-                r11.writeStringList(r3)
-                return r13
-            L_0x03b1:
-                r10.enforceInterface(r12)
-                boolean r0 = r20.isLogoutEnabled()
-                r23.writeNoException()
-                r11.writeInt(r0)
-                return r13
-            L_0x03bf:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x03d1
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x03d2
-            L_0x03d1:
-            L_0x03d2:
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x03da
-                r6 = r13
-            L_0x03da:
-                r1 = r6
-                r8.setLogoutEnabled(r0, r1)
-                r23.writeNoException()
-                return r13
-            L_0x03e2:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x03f4
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x03f5
-            L_0x03f4:
-            L_0x03f5:
-                java.lang.String r1 = r22.readString()
-                android.os.IBinder r2 = r22.readStrongBinder()
-                android.content.pm.IPackageDataObserver r2 = android.content.pm.IPackageDataObserver.Stub.asInterface(r2)
-                r8.clearApplicationUserData(r0, r1, r2)
-                r23.writeNoException()
-                return r13
-            L_0x0408:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x041a
-                android.os.Parcelable$Creator<android.os.UserHandle> r0 = android.os.UserHandle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.os.UserHandle r0 = (android.os.UserHandle) r0
-                goto L_0x041b
-            L_0x041a:
-            L_0x041b:
-                android.content.pm.StringParceledListSlice r1 = r8.getOwnerInstalledCaCerts(r0)
-                r23.writeNoException()
-                if (r1 == 0) goto L_0x042b
-                r11.writeInt(r13)
-                r1.writeToParcel(r11, r13)
-                goto L_0x042e
-            L_0x042b:
-                r11.writeInt(r6)
-            L_0x042e:
-                return r13
-            L_0x042f:
-                r10.enforceInterface(r12)
-                boolean r0 = r20.isCurrentInputMethodSetByOwner()
-                r23.writeNoException()
-                r11.writeInt(r0)
-                return r13
-            L_0x043d:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x044f
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0450
-            L_0x044f:
-            L_0x0450:
-                java.lang.String r1 = r22.readString()
-                byte[] r2 = r22.createByteArray()
-                int r3 = r22.readInt()
-                boolean r4 = r8.resetPasswordWithToken(r0, r1, r2, r3)
-                r23.writeNoException()
-                r11.writeInt(r4)
-                return r13
-            L_0x0467:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0479
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x047a
-            L_0x0479:
-            L_0x047a:
-                boolean r1 = r8.isResetPasswordTokenActive(r0)
-                r23.writeNoException()
-                r11.writeInt(r1)
-                return r13
-            L_0x0485:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0497
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0498
-            L_0x0497:
-            L_0x0498:
-                boolean r1 = r8.clearResetPasswordToken(r0)
-                r23.writeNoException()
-                r11.writeInt(r1)
-                return r13
-            L_0x04a3:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x04b5
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x04b6
-            L_0x04b5:
-            L_0x04b6:
-                byte[] r1 = r22.createByteArray()
-                boolean r2 = r8.setResetPasswordToken(r0, r1)
-                r23.writeNoException()
-                r11.writeInt(r2)
-                return r13
-            L_0x04c5:
-                r10.enforceInterface(r12)
-                long r0 = r20.getLastNetworkLogRetrievalTime()
-                r23.writeNoException()
-                r11.writeLong(r0)
-                return r13
-            L_0x04d3:
-                r10.enforceInterface(r12)
-                long r0 = r20.getLastBugReportRequestTime()
-                r23.writeNoException()
-                r11.writeLong(r0)
-                return r13
-            L_0x04e1:
-                r10.enforceInterface(r12)
-                long r0 = r20.getLastSecurityLogRetrievalTime()
-                r23.writeNoException()
-                r11.writeLong(r0)
-                return r13
-            L_0x04ef:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0501
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0502
-            L_0x0501:
-            L_0x0502:
-                boolean r1 = r8.isEphemeralUser(r0)
-                r23.writeNoException()
-                r11.writeInt(r1)
-                return r13
-            L_0x050d:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x051f
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0520
-            L_0x051f:
-            L_0x0520:
-                java.util.List r1 = r8.getBindDeviceAdminTargetUsers(r0)
-                r23.writeNoException()
-                r11.writeTypedList(r1)
-                return r13
-            L_0x052b:
-                boolean r0 = r8.onTransact$bindDeviceAdminServiceAsUser$(r10, r11)
-                return r0
-            L_0x0530:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0542
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0543
-            L_0x0542:
-            L_0x0543:
-                java.lang.String r1 = r22.readString()
-                long r2 = r22.readLong()
-                java.util.List r4 = r8.retrieveNetworkLogs(r0, r1, r2)
-                r23.writeNoException()
-                r11.writeTypedList(r4)
-                return r13
-            L_0x0556:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0568
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0569
-            L_0x0568:
-            L_0x0569:
-                java.lang.String r1 = r22.readString()
-                boolean r2 = r8.isNetworkLoggingEnabled(r0, r1)
-                r23.writeNoException()
-                r11.writeInt(r2)
-                return r13
-            L_0x0578:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x058a
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x058b
-            L_0x058a:
-            L_0x058b:
-                java.lang.String r1 = r22.readString()
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x0597
-                r6 = r13
-            L_0x0597:
-                r2 = r6
-                r8.setNetworkLoggingEnabled(r0, r1, r2)
-                r23.writeNoException()
-                return r13
-            L_0x059f:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x05b1
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x05b2
-            L_0x05b1:
-            L_0x05b2:
-                boolean r1 = r8.isBackupServiceEnabled(r0)
-                r23.writeNoException()
-                r11.writeInt(r1)
-                return r13
-            L_0x05bd:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x05cf
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x05d0
-            L_0x05cf:
-            L_0x05d0:
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x05d8
-                r6 = r13
-            L_0x05d8:
-                r1 = r6
-                r8.setBackupServiceEnabled(r0, r1)
-                r23.writeNoException()
-                return r13
-            L_0x05e0:
-                r10.enforceInterface(r12)
-                r20.forceUpdateUserSetupComplete()
-                r23.writeNoException()
-                return r13
-            L_0x05ea:
-                r10.enforceInterface(r12)
-                r20.setDeviceProvisioningConfigApplied()
-                r23.writeNoException()
-                return r13
-            L_0x05f4:
-                r10.enforceInterface(r12)
-                boolean r0 = r20.isDeviceProvisioningConfigApplied()
-                r23.writeNoException()
-                r11.writeInt(r0)
-                return r13
-            L_0x0602:
-                r10.enforceInterface(r12)
-                boolean r0 = r20.isDeviceProvisioned()
-                r23.writeNoException()
-                r11.writeInt(r0)
-                return r13
-            L_0x0610:
-                r10.enforceInterface(r12)
-                java.lang.String r0 = r22.readString()
-                r8.uninstallPackageWithActiveAdmins(r0)
-                r23.writeNoException()
-                return r13
-            L_0x061e:
-                r10.enforceInterface(r12)
-                java.lang.String r0 = r22.readString()
-                boolean r1 = r8.isUninstallInQueue(r0)
-                r23.writeNoException()
-                r11.writeInt(r1)
-                return r13
-            L_0x0630:
-                r10.enforceInterface(r12)
-                long r0 = r20.forceSecurityLogs()
-                r23.writeNoException()
-                r11.writeLong(r0)
-                return r13
-            L_0x063e:
-                r10.enforceInterface(r12)
-                long r0 = r20.forceNetworkLogs()
-                r23.writeNoException()
-                r11.writeLong(r0)
-                return r13
-            L_0x064c:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x065e
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x065f
-            L_0x065e:
-            L_0x065f:
-                android.content.pm.ParceledListSlice r1 = r8.retrievePreRebootSecurityLogs(r0)
-                r23.writeNoException()
-                if (r1 == 0) goto L_0x066f
-                r11.writeInt(r13)
-                r1.writeToParcel(r11, r13)
-                goto L_0x0672
-            L_0x066f:
-                r11.writeInt(r6)
-            L_0x0672:
-                return r13
-            L_0x0673:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0685
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0686
-            L_0x0685:
-            L_0x0686:
-                android.content.pm.ParceledListSlice r1 = r8.retrieveSecurityLogs(r0)
-                r23.writeNoException()
-                if (r1 == 0) goto L_0x0696
-                r11.writeInt(r13)
-                r1.writeToParcel(r11, r13)
-                goto L_0x0699
-            L_0x0696:
-                r11.writeInt(r6)
-            L_0x0699:
-                return r13
-            L_0x069a:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x06ac
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x06ad
-            L_0x06ac:
-            L_0x06ad:
-                boolean r1 = r8.isSecurityLoggingEnabled(r0)
-                r23.writeNoException()
-                r11.writeInt(r1)
-                return r13
-            L_0x06b8:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x06ca
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x06cb
-            L_0x06ca:
-            L_0x06cb:
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x06d3
-                r6 = r13
-            L_0x06d3:
-                r1 = r6
-                r8.setSecurityLoggingEnabled(r0, r1)
-                r23.writeNoException()
-                return r13
-            L_0x06db:
-                r10.enforceInterface(r12)
-                boolean r0 = r20.isAffiliatedUser()
-                r23.writeNoException()
-                r11.writeInt(r0)
-                return r13
-            L_0x06e9:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x06fb
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x06fc
-            L_0x06fb:
-            L_0x06fc:
-                java.util.List r1 = r8.getAffiliationIds(r0)
-                r23.writeNoException()
-                r11.writeStringList(r1)
-                return r13
-            L_0x0707:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0719
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x071a
-            L_0x0719:
-            L_0x071a:
-                java.util.ArrayList r1 = r22.createStringArrayList()
-                r8.setAffiliationIds(r0, r1)
-                r23.writeNoException()
-                return r13
-            L_0x0725:
-                r10.enforceInterface(r12)
-                int r0 = r22.readInt()
-                int r1 = r22.readInt()
-                r8.setUserProvisioningState(r0, r1)
-                r23.writeNoException()
-                return r13
-            L_0x0737:
-                r10.enforceInterface(r12)
-                int r0 = r20.getUserProvisioningState()
-                r23.writeNoException()
-                r11.writeInt(r0)
-                return r13
-            L_0x0745:
-                r10.enforceInterface(r12)
-                int r0 = r22.readInt()
-                java.lang.CharSequence r1 = r8.getOrganizationNameForUser(r0)
-                r23.writeNoException()
-                if (r1 == 0) goto L_0x075c
-                r11.writeInt(r13)
-                android.text.TextUtils.writeToParcel(r1, r11, r13)
-                goto L_0x075f
-            L_0x075c:
-                r11.writeInt(r6)
-            L_0x075f:
-                return r13
-            L_0x0760:
-                r10.enforceInterface(r12)
-                java.lang.CharSequence r0 = r20.getDeviceOwnerOrganizationName()
-                r23.writeNoException()
-                if (r0 == 0) goto L_0x0773
-                r11.writeInt(r13)
-                android.text.TextUtils.writeToParcel(r0, r11, r13)
-                goto L_0x0776
-            L_0x0773:
-                r11.writeInt(r6)
-            L_0x0776:
-                return r13
-            L_0x0777:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0789
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x078a
-            L_0x0789:
-            L_0x078a:
-                java.lang.CharSequence r1 = r8.getOrganizationName(r0)
-                r23.writeNoException()
-                if (r1 == 0) goto L_0x079a
-                r11.writeInt(r13)
-                android.text.TextUtils.writeToParcel(r1, r11, r13)
-                goto L_0x079d
-            L_0x079a:
-                r11.writeInt(r6)
-            L_0x079d:
-                return r13
-            L_0x079e:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x07b0
-                android.os.Parcelable$Creator<android.content.ComponentName> r1 = android.content.ComponentName.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.content.ComponentName r1 = (android.content.ComponentName) r1
-                goto L_0x07b1
-            L_0x07b0:
-                r1 = r0
-            L_0x07b1:
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x07c0
-                android.os.Parcelable$Creator<java.lang.CharSequence> r0 = android.text.TextUtils.CHAR_SEQUENCE_CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                java.lang.CharSequence r0 = (java.lang.CharSequence) r0
-                goto L_0x07c1
-            L_0x07c0:
-            L_0x07c1:
-                r8.setOrganizationName(r1, r0)
-                r23.writeNoException()
-                return r13
-            L_0x07c8:
-                r10.enforceInterface(r12)
-                int r0 = r22.readInt()
-                int r1 = r8.getOrganizationColorForUser(r0)
-                r23.writeNoException()
-                r11.writeInt(r1)
-                return r13
-            L_0x07da:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x07ec
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x07ed
-            L_0x07ec:
-            L_0x07ed:
-                int r1 = r8.getOrganizationColor(r0)
-                r23.writeNoException()
-                r11.writeInt(r1)
-                return r13
-            L_0x07f8:
-                r10.enforceInterface(r12)
-                int r0 = r22.readInt()
-                int r1 = r22.readInt()
-                r8.setOrganizationColorForUser(r0, r1)
-                r23.writeNoException()
-                return r13
-            L_0x080a:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x081c
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x081d
-            L_0x081c:
-            L_0x081d:
-                int r1 = r22.readInt()
-                r8.setOrganizationColor(r0, r1)
-                r23.writeNoException()
-                return r13
-            L_0x0828:
-                r10.enforceInterface(r12)
-                int r0 = r22.readInt()
-                boolean r1 = r8.isSeparateProfileChallengeAllowed(r0)
-                r23.writeNoException()
-                r11.writeInt(r1)
-                return r13
-            L_0x083a:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x084c
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x084d
-            L_0x084c:
-            L_0x084d:
-                int r1 = r22.readInt()
-                java.lang.CharSequence r2 = r8.getLongSupportMessageForUser(r0, r1)
-                r23.writeNoException()
-                if (r2 == 0) goto L_0x0861
-                r11.writeInt(r13)
-                android.text.TextUtils.writeToParcel(r2, r11, r13)
-                goto L_0x0864
-            L_0x0861:
-                r11.writeInt(r6)
-            L_0x0864:
-                return r13
-            L_0x0865:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0877
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0878
-            L_0x0877:
-            L_0x0878:
-                int r1 = r22.readInt()
-                java.lang.CharSequence r2 = r8.getShortSupportMessageForUser(r0, r1)
-                r23.writeNoException()
-                if (r2 == 0) goto L_0x088c
-                r11.writeInt(r13)
-                android.text.TextUtils.writeToParcel(r2, r11, r13)
-                goto L_0x088f
-            L_0x088c:
-                r11.writeInt(r6)
-            L_0x088f:
-                return r13
-            L_0x0890:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x08a2
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x08a3
-            L_0x08a2:
-            L_0x08a3:
-                java.lang.CharSequence r1 = r8.getLongSupportMessage(r0)
-                r23.writeNoException()
-                if (r1 == 0) goto L_0x08b3
-                r11.writeInt(r13)
-                android.text.TextUtils.writeToParcel(r1, r11, r13)
-                goto L_0x08b6
-            L_0x08b3:
-                r11.writeInt(r6)
-            L_0x08b6:
-                return r13
-            L_0x08b7:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x08c9
-                android.os.Parcelable$Creator<android.content.ComponentName> r1 = android.content.ComponentName.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.content.ComponentName r1 = (android.content.ComponentName) r1
-                goto L_0x08ca
-            L_0x08c9:
-                r1 = r0
-            L_0x08ca:
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x08d9
-                android.os.Parcelable$Creator<java.lang.CharSequence> r0 = android.text.TextUtils.CHAR_SEQUENCE_CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                java.lang.CharSequence r0 = (java.lang.CharSequence) r0
-                goto L_0x08da
-            L_0x08d9:
-            L_0x08da:
-                r8.setLongSupportMessage(r1, r0)
-                r23.writeNoException()
-                return r13
-            L_0x08e1:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x08f3
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x08f4
-            L_0x08f3:
-            L_0x08f4:
-                java.lang.CharSequence r1 = r8.getShortSupportMessage(r0)
-                r23.writeNoException()
-                if (r1 == 0) goto L_0x0904
-                r11.writeInt(r13)
-                android.text.TextUtils.writeToParcel(r1, r11, r13)
-                goto L_0x0907
-            L_0x0904:
-                r11.writeInt(r6)
-            L_0x0907:
-                return r13
-            L_0x0908:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x091a
-                android.os.Parcelable$Creator<android.content.ComponentName> r1 = android.content.ComponentName.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.content.ComponentName r1 = (android.content.ComponentName) r1
-                goto L_0x091b
-            L_0x091a:
-                r1 = r0
-            L_0x091b:
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x092a
-                android.os.Parcelable$Creator<java.lang.CharSequence> r0 = android.text.TextUtils.CHAR_SEQUENCE_CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                java.lang.CharSequence r0 = (java.lang.CharSequence) r0
-                goto L_0x092b
-            L_0x092a:
-            L_0x092b:
-                r8.setShortSupportMessage(r1, r0)
-                r23.writeNoException()
-                return r13
-            L_0x0932:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0944
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0945
-            L_0x0944:
-            L_0x0945:
-                r8.reboot(r0)
-                r23.writeNoException()
-                return r13
-            L_0x094c:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x095e
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x095f
-            L_0x095e:
-            L_0x095f:
-                java.lang.String r1 = r8.getWifiMacAddress(r0)
-                r23.writeNoException()
-                r11.writeString(r1)
-                return r13
-            L_0x096a:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x097c
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x097d
-            L_0x097c:
-            L_0x097d:
-                boolean r1 = r8.isSystemOnlyUser(r0)
-                r23.writeNoException()
-                r11.writeInt(r1)
-                return r13
-            L_0x0988:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x099a
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x099b
-            L_0x099a:
-            L_0x099b:
-                boolean r1 = r8.isManagedProfile(r0)
-                r23.writeNoException()
-                r11.writeInt(r1)
-                return r13
-            L_0x09a6:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x09b8
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x09b9
-            L_0x09b8:
-            L_0x09b9:
-                java.lang.String r1 = r22.readString()
-                java.util.List r2 = r8.getKeepUninstalledPackages(r0, r1)
-                r23.writeNoException()
-                r11.writeStringList(r2)
-                return r13
-            L_0x09c8:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x09da
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x09db
-            L_0x09da:
-            L_0x09db:
-                java.lang.String r1 = r22.readString()
-                java.util.ArrayList r2 = r22.createStringArrayList()
-                r8.setKeepUninstalledPackages(r0, r1, r2)
-                r23.writeNoException()
-                return r13
-            L_0x09ea:
-                r10.enforceInterface(r12)
-                java.lang.String r0 = r22.readString()
-                java.lang.String r1 = r22.readString()
-                int r2 = r8.checkProvisioningPreCondition(r0, r1)
-                r23.writeNoException()
-                r11.writeInt(r2)
-                return r13
-            L_0x0a00:
-                r10.enforceInterface(r12)
-                java.lang.String r0 = r22.readString()
-                java.lang.String r1 = r22.readString()
-                boolean r2 = r8.isProvisioningAllowed(r0, r1)
-                r23.writeNoException()
-                r11.writeInt(r2)
-                return r13
-            L_0x0a16:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0a28
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0a29
-            L_0x0a28:
-            L_0x0a29:
-                java.lang.String r1 = r22.readString()
-                java.lang.String r2 = r22.readString()
-                java.lang.String r3 = r22.readString()
-                int r4 = r8.getPermissionGrantState(r0, r1, r2, r3)
-                r23.writeNoException()
-                r11.writeInt(r4)
-                return r13
-            L_0x0a40:
-                boolean r0 = r8.onTransact$setPermissionGrantState$(r10, r11)
-                return r0
-            L_0x0a45:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0a57
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0a58
-            L_0x0a57:
-            L_0x0a58:
-                int r1 = r8.getPermissionPolicy(r0)
-                r23.writeNoException()
-                r11.writeInt(r1)
-                return r13
-            L_0x0a63:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0a75
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0a76
-            L_0x0a75:
-            L_0x0a76:
-                java.lang.String r1 = r22.readString()
-                int r2 = r22.readInt()
-                r8.setPermissionPolicy(r0, r1, r2)
-                r23.writeNoException()
-                return r13
-            L_0x0a85:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0a97
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0a98
-            L_0x0a97:
-            L_0x0a98:
-                android.app.admin.SystemUpdateInfo r1 = r8.getPendingSystemUpdate(r0)
-                r23.writeNoException()
-                if (r1 == 0) goto L_0x0aa8
-                r11.writeInt(r13)
-                r1.writeToParcel(r11, r13)
-                goto L_0x0aab
-            L_0x0aa8:
-                r11.writeInt(r6)
-            L_0x0aab:
-                return r13
-            L_0x0aac:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0abe
-                android.os.Parcelable$Creator<android.app.admin.SystemUpdateInfo> r0 = android.app.admin.SystemUpdateInfo.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.app.admin.SystemUpdateInfo r0 = (android.app.admin.SystemUpdateInfo) r0
-                goto L_0x0abf
-            L_0x0abe:
-            L_0x0abf:
-                r8.notifyPendingSystemUpdate(r0)
-                r23.writeNoException()
-                return r13
-            L_0x0ac6:
-                r10.enforceInterface(r12)
-                boolean r0 = r20.getDoNotAskCredentialsOnBoot()
-                r23.writeNoException()
-                r11.writeInt(r0)
-                return r13
-            L_0x0ad4:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0ae6
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0ae7
-            L_0x0ae6:
-            L_0x0ae7:
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0aef
-                r6 = r13
-            L_0x0aef:
-                r1 = r6
-                boolean r2 = r8.setStatusBarDisabled(r0, r1)
-                r23.writeNoException()
-                r11.writeInt(r2)
-                return r13
-            L_0x0afb:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0b0d
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0b0e
-            L_0x0b0d:
-            L_0x0b0e:
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0b16
-                r6 = r13
-            L_0x0b16:
-                r1 = r6
-                boolean r2 = r8.setKeyguardDisabled(r0, r1)
-                r23.writeNoException()
-                r11.writeInt(r2)
-                return r13
-            L_0x0b22:
-                r10.enforceInterface(r12)
-                r20.clearSystemUpdatePolicyFreezePeriodRecord()
-                r23.writeNoException()
-                return r13
-            L_0x0b2c:
-                r10.enforceInterface(r12)
-                android.app.admin.SystemUpdatePolicy r0 = r20.getSystemUpdatePolicy()
-                r23.writeNoException()
-                if (r0 == 0) goto L_0x0b3f
-                r11.writeInt(r13)
-                r0.writeToParcel(r11, r13)
-                goto L_0x0b42
-            L_0x0b3f:
-                r11.writeInt(r6)
-            L_0x0b42:
-                return r13
-            L_0x0b43:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0b55
-                android.os.Parcelable$Creator<android.content.ComponentName> r1 = android.content.ComponentName.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.content.ComponentName r1 = (android.content.ComponentName) r1
-                goto L_0x0b56
-            L_0x0b55:
-                r1 = r0
-            L_0x0b56:
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x0b65
-                android.os.Parcelable$Creator<android.app.admin.SystemUpdatePolicy> r0 = android.app.admin.SystemUpdatePolicy.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.app.admin.SystemUpdatePolicy r0 = (android.app.admin.SystemUpdatePolicy) r0
-                goto L_0x0b66
-            L_0x0b65:
-            L_0x0b66:
-                r8.setSystemUpdatePolicy(r1, r0)
-                r23.writeNoException()
-                return r13
-            L_0x0b6d:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0b7f
-                android.os.Parcelable$Creator<android.content.ComponentName> r1 = android.content.ComponentName.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.content.ComponentName r1 = (android.content.ComponentName) r1
-                goto L_0x0b80
-            L_0x0b7f:
-                r1 = r0
-            L_0x0b80:
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x0b8f
-                android.os.Parcelable$Creator<android.graphics.Bitmap> r0 = android.graphics.Bitmap.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.graphics.Bitmap r0 = (android.graphics.Bitmap) r0
-                goto L_0x0b90
-            L_0x0b8f:
-            L_0x0b90:
-                r8.setUserIcon(r1, r0)
-                r23.writeNoException()
-                return r13
-            L_0x0b97:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0ba9
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0baa
-            L_0x0ba9:
-            L_0x0baa:
-                int r1 = r22.readInt()
-                boolean r2 = r8.isRemovingAdmin(r0, r1)
-                r23.writeNoException()
-                r11.writeInt(r2)
-                return r13
-            L_0x0bb9:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0bcb
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0bcc
-            L_0x0bcb:
-            L_0x0bcc:
-                boolean r1 = r8.getForceEphemeralUsers(r0)
-                r23.writeNoException()
-                r11.writeInt(r1)
-                return r13
-            L_0x0bd7:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0be9
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0bea
-            L_0x0be9:
-            L_0x0bea:
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0bf2
-                r6 = r13
-            L_0x0bf2:
-                r1 = r6
-                r8.setForceEphemeralUsers(r0, r1)
-                r23.writeNoException()
-                return r13
-            L_0x0bfa:
-                r10.enforceInterface(r12)
-                boolean r0 = r20.getAutoTimeRequired()
-                r23.writeNoException()
-                r11.writeInt(r0)
-                return r13
-            L_0x0c08:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0c1a
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0c1b
-            L_0x0c1a:
-            L_0x0c1b:
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0c23
-                r6 = r13
-            L_0x0c23:
-                r1 = r6
-                r8.setAutoTimeRequired(r0, r1)
-                r23.writeNoException()
-                return r13
-            L_0x0c2b:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0c3d
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0c3e
-            L_0x0c3d:
-            L_0x0c3e:
-                java.util.List r1 = r8.getCrossProfileWidgetProviders(r0)
-                r23.writeNoException()
-                r11.writeStringList(r1)
-                return r13
-            L_0x0c49:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0c5b
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0c5c
-            L_0x0c5b:
-            L_0x0c5c:
-                java.lang.String r1 = r22.readString()
-                boolean r2 = r8.removeCrossProfileWidgetProvider(r0, r1)
-                r23.writeNoException()
-                r11.writeInt(r2)
-                return r13
-            L_0x0c6b:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0c7d
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0c7e
-            L_0x0c7d:
-            L_0x0c7e:
-                java.lang.String r1 = r22.readString()
-                boolean r2 = r8.addCrossProfileWidgetProvider(r0, r1)
-                r23.writeNoException()
-                r11.writeInt(r2)
-                return r13
-            L_0x0c8d:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0c9f
-                android.os.Parcelable$Creator<android.content.ComponentName> r1 = android.content.ComponentName.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.content.ComponentName r1 = (android.content.ComponentName) r1
-                goto L_0x0ca0
-            L_0x0c9f:
-                r1 = r0
-            L_0x0ca0:
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x0caf
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0cb0
-            L_0x0caf:
-            L_0x0cb0:
-                int r2 = r22.readInt()
-                int r3 = r22.readInt()
-                if (r3 == 0) goto L_0x0cbc
-                r6 = r13
-            L_0x0cbc:
-                r3 = r6
-                java.util.List r4 = r8.getTrustAgentConfiguration(r1, r0, r2, r3)
-                r23.writeNoException()
-                r11.writeTypedList(r4)
-                return r13
-            L_0x0cc8:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0cda
-                android.os.Parcelable$Creator<android.content.ComponentName> r1 = android.content.ComponentName.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.content.ComponentName r1 = (android.content.ComponentName) r1
-                goto L_0x0cdb
-            L_0x0cda:
-                r1 = r0
-            L_0x0cdb:
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x0cea
-                android.os.Parcelable$Creator<android.content.ComponentName> r2 = android.content.ComponentName.CREATOR
-                java.lang.Object r2 = r2.createFromParcel(r10)
-                android.content.ComponentName r2 = (android.content.ComponentName) r2
-                goto L_0x0ceb
-            L_0x0cea:
-                r2 = r0
-            L_0x0ceb:
-                int r3 = r22.readInt()
-                if (r3 == 0) goto L_0x0cfa
-                android.os.Parcelable$Creator<android.os.PersistableBundle> r0 = android.os.PersistableBundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.os.PersistableBundle r0 = (android.os.PersistableBundle) r0
-                goto L_0x0cfb
-            L_0x0cfa:
-            L_0x0cfb:
-                int r3 = r22.readInt()
-                if (r3 == 0) goto L_0x0d03
-                r6 = r13
-            L_0x0d03:
-                r3 = r6
-                r8.setTrustAgentConfiguration(r1, r2, r0, r3)
-                r23.writeNoException()
-                return r13
-            L_0x0d0b:
-                r10.enforceInterface(r12)
-                int r0 = r22.readInt()
-                boolean r1 = r8.getBluetoothContactSharingDisabledForUser(r0)
-                r23.writeNoException()
-                r11.writeInt(r1)
-                return r13
-            L_0x0d1d:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0d2f
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0d30
-            L_0x0d2f:
-            L_0x0d30:
-                boolean r1 = r8.getBluetoothContactSharingDisabled(r0)
-                r23.writeNoException()
-                r11.writeInt(r1)
-                return r13
-            L_0x0d3b:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0d4d
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0d4e
-            L_0x0d4d:
-            L_0x0d4e:
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0d56
-                r6 = r13
-            L_0x0d56:
-                r1 = r6
-                r8.setBluetoothContactSharingDisabled(r0, r1)
-                r23.writeNoException()
-                return r13
-            L_0x0d5e:
-                r10.enforceInterface(r12)
-                java.lang.String r14 = r22.readString()
-                long r15 = r22.readLong()
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0d71
-                r4 = r13
-                goto L_0x0d72
-            L_0x0d71:
-                r4 = r6
-            L_0x0d72:
-                long r17 = r22.readLong()
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0d86
-                android.os.Parcelable$Creator<android.content.Intent> r0 = android.content.Intent.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.Intent r0 = (android.content.Intent) r0
-            L_0x0d84:
-                r7 = r0
-                goto L_0x0d87
-            L_0x0d86:
-                goto L_0x0d84
-            L_0x0d87:
-                r0 = r20
-                r1 = r14
-                r2 = r15
-                r5 = r17
-                r0.startManagedQuickContact(r1, r2, r4, r5, r7)
-                r23.writeNoException()
-                return r13
-            L_0x0d94:
-                r10.enforceInterface(r12)
-                int r0 = r22.readInt()
-                boolean r1 = r8.getCrossProfileContactsSearchDisabledForUser(r0)
-                r23.writeNoException()
-                r11.writeInt(r1)
-                return r13
-            L_0x0da6:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0db8
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0db9
-            L_0x0db8:
-            L_0x0db9:
-                boolean r1 = r8.getCrossProfileContactsSearchDisabled(r0)
-                r23.writeNoException()
-                r11.writeInt(r1)
-                return r13
-            L_0x0dc4:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0dd6
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0dd7
-            L_0x0dd6:
-            L_0x0dd7:
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0ddf
-                r6 = r13
-            L_0x0ddf:
-                r1 = r6
-                r8.setCrossProfileContactsSearchDisabled(r0, r1)
-                r23.writeNoException()
-                return r13
-            L_0x0de7:
-                r10.enforceInterface(r12)
-                int r0 = r22.readInt()
-                boolean r1 = r8.getCrossProfileCallerIdDisabledForUser(r0)
-                r23.writeNoException()
-                r11.writeInt(r1)
-                return r13
-            L_0x0df9:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0e0b
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0e0c
-            L_0x0e0b:
-            L_0x0e0c:
-                boolean r1 = r8.getCrossProfileCallerIdDisabled(r0)
-                r23.writeNoException()
-                r11.writeInt(r1)
-                return r13
-            L_0x0e17:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0e29
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0e2a
-            L_0x0e29:
-            L_0x0e2a:
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0e32
-                r6 = r13
-            L_0x0e32:
-                r1 = r6
-                r8.setCrossProfileCallerIdDisabled(r0, r1)
-                r23.writeNoException()
-                return r13
-            L_0x0e3a:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0e4c
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0e4d
-            L_0x0e4c:
-            L_0x0e4d:
-                java.lang.String r1 = r22.readString()
-                boolean r2 = r8.isUninstallBlocked(r0, r1)
-                r23.writeNoException()
-                r11.writeInt(r2)
-                return r13
-            L_0x0e5c:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0e6e
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0e6f
-            L_0x0e6e:
-            L_0x0e6f:
-                java.lang.String r1 = r22.readString()
-                java.lang.String r2 = r22.readString()
-                int r3 = r22.readInt()
-                if (r3 == 0) goto L_0x0e7f
-                r6 = r13
-            L_0x0e7f:
-                r3 = r6
-                r8.setUninstallBlocked(r0, r1, r2, r3)
-                r23.writeNoException()
-                return r13
-            L_0x0e87:
-                r10.enforceInterface(r12)
-                int r0 = r22.readInt()
-                if (r0 == 0) goto L_0x0e92
-                r6 = r13
-            L_0x0e92:
-                r0 = r6
-                java.lang.String r1 = r22.readString()
-                int r2 = r22.readInt()
-                r8.notifyLockTaskModeChanged(r0, r1, r2)
-                r23.writeNoException()
-                return r13
-            L_0x0ea2:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0eb4
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0eb5
-            L_0x0eb4:
-            L_0x0eb5:
-                boolean r1 = r8.isMasterVolumeMuted(r0)
-                r23.writeNoException()
-                r11.writeInt(r1)
-                return r13
-            L_0x0ec0:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0ed2
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0ed3
-            L_0x0ed2:
-            L_0x0ed3:
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0edb
-                r6 = r13
-            L_0x0edb:
-                r1 = r6
-                r8.setMasterVolumeMuted(r0, r1)
-                r23.writeNoException()
-                return r13
-            L_0x0ee3:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0ef5
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0ef6
-            L_0x0ef5:
-            L_0x0ef6:
-                java.lang.String r1 = r22.readString()
-                boolean r2 = r8.setTimeZone(r0, r1)
-                r23.writeNoException()
-                r11.writeInt(r2)
-                return r13
-            L_0x0f05:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0f17
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0f18
-            L_0x0f17:
-            L_0x0f18:
-                long r1 = r22.readLong()
-                boolean r3 = r8.setTime(r0, r1)
-                r23.writeNoException()
-                r11.writeInt(r3)
-                return r13
-            L_0x0f27:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0f39
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0f3a
-            L_0x0f39:
-            L_0x0f3a:
-                java.lang.String r1 = r22.readString()
-                java.lang.String r2 = r22.readString()
-                r8.setSecureSetting(r0, r1, r2)
-                r23.writeNoException()
-                return r13
-            L_0x0f49:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0f5b
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0f5c
-            L_0x0f5b:
-            L_0x0f5c:
-                java.lang.String r1 = r22.readString()
-                java.lang.String r2 = r22.readString()
-                r8.setSystemSetting(r0, r1, r2)
-                r23.writeNoException()
-                return r13
-            L_0x0f6b:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0f7d
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0f7e
-            L_0x0f7d:
-            L_0x0f7e:
-                java.lang.String r1 = r22.readString()
-                java.lang.String r2 = r22.readString()
-                r8.setGlobalSetting(r0, r1, r2)
-                r23.writeNoException()
-                return r13
-            L_0x0f8d:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0f9f
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0fa0
-            L_0x0f9f:
-            L_0x0fa0:
-                int r1 = r8.getLockTaskFeatures(r0)
-                r23.writeNoException()
-                r11.writeInt(r1)
-                return r13
-            L_0x0fab:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0fbd
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0fbe
-            L_0x0fbd:
-            L_0x0fbe:
-                int r1 = r22.readInt()
-                r8.setLockTaskFeatures(r0, r1)
-                r23.writeNoException()
-                return r13
-            L_0x0fc9:
-                r10.enforceInterface(r12)
-                java.lang.String r0 = r22.readString()
-                boolean r1 = r8.isLockTaskPermitted(r0)
-                r23.writeNoException()
-                r11.writeInt(r1)
-                return r13
-            L_0x0fdb:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x0fed
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0fee
-            L_0x0fed:
-            L_0x0fee:
-                java.lang.String[] r1 = r8.getLockTaskPackages(r0)
-                r23.writeNoException()
-                r11.writeStringArray(r1)
-                return r13
-            L_0x0ff9:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x100b
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x100c
-            L_0x100b:
-            L_0x100c:
-                java.lang.String[] r1 = r22.createStringArray()
-                r8.setLockTaskPackages(r0, r1)
-                r23.writeNoException()
-                return r13
-            L_0x1017:
-                r10.enforceInterface(r12)
-                int r0 = r22.readInt()
-                java.lang.String[] r1 = r8.getAccountTypesWithManagementDisabledAsUser(r0)
-                r23.writeNoException()
-                r11.writeStringArray(r1)
-                return r13
-            L_0x1029:
-                r10.enforceInterface(r12)
-                java.lang.String[] r0 = r20.getAccountTypesWithManagementDisabled()
-                r23.writeNoException()
-                r11.writeStringArray(r0)
-                return r13
-            L_0x1037:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1049
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x104a
-            L_0x1049:
-            L_0x104a:
-                java.lang.String r1 = r22.readString()
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x1056
-                r6 = r13
-            L_0x1056:
-                r2 = r6
-                r8.setAccountManagementDisabled(r0, r1, r2)
-                r23.writeNoException()
-                return r13
-            L_0x105e:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1070
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1071
-            L_0x1070:
-            L_0x1071:
-                java.lang.String r1 = r22.readString()
-                java.lang.String r2 = r22.readString()
-                boolean r3 = r8.installExistingPackage(r0, r1, r2)
-                r23.writeNoException()
-                r11.writeInt(r3)
-                return r13
-            L_0x1084:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1096
-                android.os.Parcelable$Creator<android.content.ComponentName> r1 = android.content.ComponentName.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.content.ComponentName r1 = (android.content.ComponentName) r1
-                goto L_0x1097
-            L_0x1096:
-                r1 = r0
-            L_0x1097:
-                java.lang.String r2 = r22.readString()
-                int r3 = r22.readInt()
-                if (r3 == 0) goto L_0x10aa
-                android.os.Parcelable$Creator<android.content.Intent> r0 = android.content.Intent.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.Intent r0 = (android.content.Intent) r0
-                goto L_0x10ab
-            L_0x10aa:
-            L_0x10ab:
-                int r3 = r8.enableSystemAppWithIntent(r1, r2, r0)
-                r23.writeNoException()
-                r11.writeInt(r3)
-                return r13
-            L_0x10b6:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x10c8
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x10c9
-            L_0x10c8:
-            L_0x10c9:
-                java.lang.String r1 = r22.readString()
-                java.lang.String r2 = r22.readString()
-                r8.enableSystemApp(r0, r1, r2)
-                r23.writeNoException()
-                return r13
-            L_0x10d8:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x10ea
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x10eb
-            L_0x10ea:
-            L_0x10eb:
-                java.util.List r1 = r8.getSecondaryUsers(r0)
-                r23.writeNoException()
-                r11.writeTypedList(r1)
-                return r13
-            L_0x10f6:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1108
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1109
-            L_0x1108:
-            L_0x1109:
-                int r1 = r8.logoutUser(r0)
-                r23.writeNoException()
-                r11.writeInt(r1)
-                return r13
-            L_0x1114:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1126
-                android.os.Parcelable$Creator<android.content.ComponentName> r1 = android.content.ComponentName.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.content.ComponentName r1 = (android.content.ComponentName) r1
-                goto L_0x1127
-            L_0x1126:
-                r1 = r0
-            L_0x1127:
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x1136
-                android.os.Parcelable$Creator<android.os.UserHandle> r0 = android.os.UserHandle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.os.UserHandle r0 = (android.os.UserHandle) r0
-                goto L_0x1137
-            L_0x1136:
-            L_0x1137:
-                int r2 = r8.stopUser(r1, r0)
-                r23.writeNoException()
-                r11.writeInt(r2)
-                return r13
-            L_0x1142:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1154
-                android.os.Parcelable$Creator<android.content.ComponentName> r1 = android.content.ComponentName.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.content.ComponentName r1 = (android.content.ComponentName) r1
-                goto L_0x1155
-            L_0x1154:
-                r1 = r0
-            L_0x1155:
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x1164
-                android.os.Parcelable$Creator<android.os.UserHandle> r0 = android.os.UserHandle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.os.UserHandle r0 = (android.os.UserHandle) r0
-                goto L_0x1165
-            L_0x1164:
-            L_0x1165:
-                int r2 = r8.startUserInBackground(r1, r0)
-                r23.writeNoException()
-                r11.writeInt(r2)
-                return r13
-            L_0x1170:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1182
-                android.os.Parcelable$Creator<android.content.ComponentName> r1 = android.content.ComponentName.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.content.ComponentName r1 = (android.content.ComponentName) r1
-                goto L_0x1183
-            L_0x1182:
-                r1 = r0
-            L_0x1183:
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x1192
-                android.os.Parcelable$Creator<android.os.UserHandle> r0 = android.os.UserHandle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.os.UserHandle r0 = (android.os.UserHandle) r0
-                goto L_0x1193
-            L_0x1192:
-            L_0x1193:
-                boolean r2 = r8.switchUser(r1, r0)
-                r23.writeNoException()
-                r11.writeInt(r2)
-                return r13
-            L_0x119e:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x11b0
-                android.os.Parcelable$Creator<android.content.ComponentName> r1 = android.content.ComponentName.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.content.ComponentName r1 = (android.content.ComponentName) r1
-                goto L_0x11b1
-            L_0x11b0:
-                r1 = r0
-            L_0x11b1:
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x11c0
-                android.os.Parcelable$Creator<android.os.UserHandle> r0 = android.os.UserHandle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.os.UserHandle r0 = (android.os.UserHandle) r0
-                goto L_0x11c1
-            L_0x11c0:
-            L_0x11c1:
-                boolean r2 = r8.removeUser(r1, r0)
-                r23.writeNoException()
-                r11.writeInt(r2)
-                return r13
-            L_0x11cc:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x11de
-                android.os.Parcelable$Creator<android.content.ComponentName> r1 = android.content.ComponentName.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.content.ComponentName r1 = (android.content.ComponentName) r1
-                goto L_0x11df
-            L_0x11de:
-                r1 = r0
-            L_0x11df:
-                java.lang.String r7 = r22.readString()
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x11f3
-                android.os.Parcelable$Creator<android.content.ComponentName> r2 = android.content.ComponentName.CREATOR
-                java.lang.Object r2 = r2.createFromParcel(r10)
-                android.content.ComponentName r2 = (android.content.ComponentName) r2
-                r3 = r2
-                goto L_0x11f4
-            L_0x11f3:
-                r3 = r0
-            L_0x11f4:
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x1204
-                android.os.Parcelable$Creator<android.os.PersistableBundle> r0 = android.os.PersistableBundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.os.PersistableBundle r0 = (android.os.PersistableBundle) r0
-            L_0x1202:
-                r4 = r0
-                goto L_0x1205
-            L_0x1204:
-                goto L_0x1202
-            L_0x1205:
-                int r14 = r22.readInt()
-                r0 = r20
-                r2 = r7
-                r5 = r14
-                android.os.UserHandle r0 = r0.createAndManageUser(r1, r2, r3, r4, r5)
-                r23.writeNoException()
-                if (r0 == 0) goto L_0x121d
-                r11.writeInt(r13)
-                r0.writeToParcel((android.os.Parcel) r11, (int) r13)
-                goto L_0x1220
-            L_0x121d:
-                r11.writeInt(r6)
-            L_0x1220:
-                return r13
-            L_0x1221:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1233
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1234
-            L_0x1233:
-            L_0x1234:
-                java.lang.String r1 = r22.readString()
-                java.lang.String r2 = r22.readString()
-                boolean r3 = r8.isApplicationHidden(r0, r1, r2)
-                r23.writeNoException()
-                r11.writeInt(r3)
-                return r13
-            L_0x1247:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1259
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x125a
-            L_0x1259:
-            L_0x125a:
-                java.lang.String r1 = r22.readString()
-                java.lang.String r2 = r22.readString()
-                int r3 = r22.readInt()
-                if (r3 == 0) goto L_0x126a
-                r6 = r13
-            L_0x126a:
-                r3 = r6
-                boolean r4 = r8.setApplicationHidden(r0, r1, r2, r3)
-                r23.writeNoException()
-                r11.writeInt(r4)
-                return r13
-            L_0x1276:
-                r10.enforceInterface(r12)
-                java.lang.String r0 = r22.readString()
-                android.content.Intent r1 = r8.createAdminSupportIntent(r0)
-                r23.writeNoException()
-                if (r1 == 0) goto L_0x128d
-                r11.writeInt(r13)
-                r1.writeToParcel(r11, r13)
-                goto L_0x1290
-            L_0x128d:
-                r11.writeInt(r6)
-            L_0x1290:
-                return r13
-            L_0x1291:
-                r10.enforceInterface(r12)
-                java.lang.String r0 = r22.readString()
-                int r1 = r22.readInt()
-                boolean r2 = r8.isNotificationListenerServicePermitted(r0, r1)
-                r23.writeNoException()
-                r11.writeInt(r2)
-                return r13
-            L_0x12a7:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x12b9
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x12ba
-            L_0x12b9:
-            L_0x12ba:
-                java.util.List r1 = r8.getPermittedCrossProfileNotificationListeners(r0)
-                r23.writeNoException()
-                r11.writeStringList(r1)
-                return r13
-            L_0x12c5:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x12d7
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x12d8
-            L_0x12d7:
-            L_0x12d8:
-                java.util.ArrayList r1 = r22.createStringArrayList()
-                boolean r2 = r8.setPermittedCrossProfileNotificationListeners(r0, r1)
-                r23.writeNoException()
-                r11.writeInt(r2)
-                return r13
-            L_0x12e7:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x12f9
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x12fa
-            L_0x12f9:
-            L_0x12fa:
-                java.lang.String r1 = r22.readString()
-                int r2 = r22.readInt()
-                boolean r3 = r8.isInputMethodPermittedByAdmin(r0, r1, r2)
-                r23.writeNoException()
-                r11.writeInt(r3)
-                return r13
-            L_0x130d:
-                r10.enforceInterface(r12)
-                java.util.List r0 = r20.getPermittedInputMethodsForCurrentUser()
-                r23.writeNoException()
-                r11.writeList(r0)
-                return r13
-            L_0x131b:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x132d
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x132e
-            L_0x132d:
-            L_0x132e:
-                java.util.List r1 = r8.getPermittedInputMethods(r0)
-                r23.writeNoException()
-                r11.writeList(r1)
-                return r13
-            L_0x1339:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x134b
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x134c
-            L_0x134b:
-            L_0x134c:
-                java.lang.Class r1 = r20.getClass()
-                java.lang.ClassLoader r1 = r1.getClassLoader()
-                java.util.ArrayList r2 = r10.readArrayList(r1)
-                boolean r3 = r8.setPermittedInputMethods(r0, r2)
-                r23.writeNoException()
-                r11.writeInt(r3)
-                return r13
-            L_0x1363:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1375
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1376
-            L_0x1375:
-            L_0x1376:
-                java.lang.String r1 = r22.readString()
-                int r2 = r22.readInt()
-                boolean r3 = r8.isAccessibilityServicePermittedByAdmin(r0, r1, r2)
-                r23.writeNoException()
-                r11.writeInt(r3)
-                return r13
-            L_0x1389:
-                r10.enforceInterface(r12)
-                int r0 = r22.readInt()
-                java.util.List r1 = r8.getPermittedAccessibilityServicesForUser(r0)
-                r23.writeNoException()
-                r11.writeList(r1)
-                return r13
-            L_0x139b:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x13ad
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x13ae
-            L_0x13ad:
-            L_0x13ae:
-                java.util.List r1 = r8.getPermittedAccessibilityServices(r0)
-                r23.writeNoException()
-                r11.writeList(r1)
-                return r13
-            L_0x13b9:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x13cb
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x13cc
-            L_0x13cb:
-            L_0x13cc:
-                java.lang.Class r1 = r20.getClass()
-                java.lang.ClassLoader r1 = r1.getClassLoader()
-                java.util.ArrayList r2 = r10.readArrayList(r1)
-                boolean r3 = r8.setPermittedAccessibilityServices(r0, r2)
-                r23.writeNoException()
-                r11.writeInt(r3)
-                return r13
-            L_0x13e3:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x13f5
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x13f6
-            L_0x13f5:
-            L_0x13f6:
-                r8.clearCrossProfileIntentFilters(r0)
-                r23.writeNoException()
-                return r13
-            L_0x13fd:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x140f
-                android.os.Parcelable$Creator<android.content.ComponentName> r1 = android.content.ComponentName.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.content.ComponentName r1 = (android.content.ComponentName) r1
-                goto L_0x1410
-            L_0x140f:
-                r1 = r0
-            L_0x1410:
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x141f
-                android.os.Parcelable$Creator<android.content.IntentFilter> r0 = android.content.IntentFilter.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.IntentFilter r0 = (android.content.IntentFilter) r0
-                goto L_0x1420
-            L_0x141f:
-            L_0x1420:
-                int r2 = r22.readInt()
-                r8.addCrossProfileIntentFilter(r1, r0, r2)
-                r23.writeNoException()
-                return r13
-            L_0x142b:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x143d
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x143e
-            L_0x143d:
-            L_0x143e:
-                android.os.Bundle r1 = r8.getUserRestrictions(r0)
-                r23.writeNoException()
-                if (r1 == 0) goto L_0x144e
-                r11.writeInt(r13)
-                r1.writeToParcel(r11, r13)
-                goto L_0x1451
-            L_0x144e:
-                r11.writeInt(r6)
-            L_0x1451:
-                return r13
-            L_0x1452:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1464
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1465
-            L_0x1464:
-            L_0x1465:
-                java.lang.String r1 = r22.readString()
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x1471
-                r6 = r13
-            L_0x1471:
-                r2 = r6
-                r8.setUserRestriction(r0, r1, r2)
-                r23.writeNoException()
-                return r13
-            L_0x1479:
-                r10.enforceInterface(r12)
-                int r0 = r22.readInt()
-                android.content.ComponentName r1 = r8.getRestrictionsProvider(r0)
-                r23.writeNoException()
-                if (r1 == 0) goto L_0x1490
-                r11.writeInt(r13)
-                r1.writeToParcel((android.os.Parcel) r11, (int) r13)
-                goto L_0x1493
-            L_0x1490:
-                r11.writeInt(r6)
-            L_0x1493:
-                return r13
-            L_0x1494:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x14a6
-                android.os.Parcelable$Creator<android.content.ComponentName> r1 = android.content.ComponentName.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.content.ComponentName r1 = (android.content.ComponentName) r1
-                goto L_0x14a7
-            L_0x14a6:
-                r1 = r0
-            L_0x14a7:
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x14b6
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x14b7
-            L_0x14b6:
-            L_0x14b7:
-                r8.setRestrictionsProvider(r1, r0)
-                r23.writeNoException()
-                return r13
-            L_0x14be:
-                r10.enforceInterface(r12)
-                java.lang.String r0 = r22.readString()
-                boolean r1 = r8.isCallerApplicationRestrictionsManagingPackage(r0)
-                r23.writeNoException()
-                r11.writeInt(r1)
-                return r13
-            L_0x14d0:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x14e2
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x14e3
-            L_0x14e2:
-            L_0x14e3:
-                java.lang.String r1 = r8.getApplicationRestrictionsManagingPackage(r0)
-                r23.writeNoException()
-                r11.writeString(r1)
-                return r13
-            L_0x14ee:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1500
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1501
-            L_0x1500:
-            L_0x1501:
-                java.lang.String r1 = r22.readString()
-                boolean r2 = r8.setApplicationRestrictionsManagingPackage(r0, r1)
-                r23.writeNoException()
-                r11.writeInt(r2)
-                return r13
-            L_0x1510:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1522
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1523
-            L_0x1522:
-            L_0x1523:
-                java.lang.String r1 = r22.readString()
-                java.lang.String r2 = r22.readString()
-                android.os.Bundle r3 = r8.getApplicationRestrictions(r0, r1, r2)
-                r23.writeNoException()
-                if (r3 == 0) goto L_0x153b
-                r11.writeInt(r13)
-                r3.writeToParcel(r11, r13)
-                goto L_0x153e
-            L_0x153b:
-                r11.writeInt(r6)
-            L_0x153e:
-                return r13
-            L_0x153f:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1551
-                android.os.Parcelable$Creator<android.content.ComponentName> r1 = android.content.ComponentName.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.content.ComponentName r1 = (android.content.ComponentName) r1
-                goto L_0x1552
-            L_0x1551:
-                r1 = r0
-            L_0x1552:
-                java.lang.String r2 = r22.readString()
-                java.lang.String r3 = r22.readString()
-                int r4 = r22.readInt()
-                if (r4 == 0) goto L_0x1569
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-                goto L_0x156a
-            L_0x1569:
-            L_0x156a:
-                r8.setApplicationRestrictions(r1, r2, r3, r0)
-                r23.writeNoException()
-                return r13
-            L_0x1571:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1583
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1584
-            L_0x1583:
-            L_0x1584:
-                java.lang.String r1 = r22.readString()
-                r8.setDefaultSmsApplication(r0, r1)
-                r23.writeNoException()
-                return r13
-            L_0x158f:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x15a1
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x15a2
-            L_0x15a1:
-            L_0x15a2:
-                java.lang.String r1 = r22.readString()
-                r8.clearPackagePersistentPreferredActivities(r0, r1)
-                r23.writeNoException()
-                return r13
-            L_0x15ad:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x15bf
-                android.os.Parcelable$Creator<android.content.ComponentName> r1 = android.content.ComponentName.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.content.ComponentName r1 = (android.content.ComponentName) r1
-                goto L_0x15c0
-            L_0x15bf:
-                r1 = r0
-            L_0x15c0:
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x15cf
-                android.os.Parcelable$Creator<android.content.IntentFilter> r2 = android.content.IntentFilter.CREATOR
-                java.lang.Object r2 = r2.createFromParcel(r10)
-                android.content.IntentFilter r2 = (android.content.IntentFilter) r2
-                goto L_0x15d0
-            L_0x15cf:
-                r2 = r0
-            L_0x15d0:
-                int r3 = r22.readInt()
-                if (r3 == 0) goto L_0x15df
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x15e0
-            L_0x15df:
-            L_0x15e0:
-                r8.addPersistentPreferredActivity(r1, r2, r0)
-                r23.writeNoException()
-                return r13
-            L_0x15e7:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x15f9
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x15fa
-            L_0x15f9:
-            L_0x15fa:
-                java.util.List r1 = r8.getAlwaysOnVpnLockdownWhitelist(r0)
-                r23.writeNoException()
-                r11.writeStringList(r1)
-                return r13
-            L_0x1605:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1617
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1618
-            L_0x1617:
-            L_0x1618:
-                boolean r1 = r8.isAlwaysOnVpnLockdownEnabled(r0)
-                r23.writeNoException()
-                r11.writeInt(r1)
-                return r13
-            L_0x1623:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1635
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1636
-            L_0x1635:
-            L_0x1636:
-                java.lang.String r1 = r8.getAlwaysOnVpnPackage(r0)
-                r23.writeNoException()
-                r11.writeString(r1)
-                return r13
-            L_0x1641:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1653
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1654
-            L_0x1653:
-            L_0x1654:
-                java.lang.String r1 = r22.readString()
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x1660
-                r6 = r13
-            L_0x1660:
-                r2 = r6
-                java.util.ArrayList r3 = r22.createStringArrayList()
-                boolean r4 = r8.setAlwaysOnVpnPackage(r0, r1, r2, r3)
-                r23.writeNoException()
-                r11.writeInt(r4)
-                return r13
-            L_0x1670:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1682
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1683
-            L_0x1682:
-            L_0x1683:
-                java.lang.String r1 = r8.getCertInstallerPackage(r0)
-                r23.writeNoException()
-                r11.writeString(r1)
-                return r13
-            L_0x168e:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x16a0
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x16a1
-            L_0x16a0:
-            L_0x16a1:
-                java.lang.String r1 = r22.readString()
-                r8.setCertInstallerPackage(r0, r1)
-                r23.writeNoException()
-                return r13
-            L_0x16ac:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x16be
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x16bf
-            L_0x16be:
-            L_0x16bf:
-                java.lang.String r1 = r22.readString()
-                java.util.List r2 = r8.getDelegatePackages(r0, r1)
-                r23.writeNoException()
-                r11.writeStringList(r2)
-                return r13
-            L_0x16ce:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x16e0
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x16e1
-            L_0x16e0:
-            L_0x16e1:
-                java.lang.String r1 = r22.readString()
-                java.util.List r2 = r8.getDelegatedScopes(r0, r1)
-                r23.writeNoException()
-                r11.writeStringList(r2)
-                return r13
-            L_0x16f0:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1702
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1703
-            L_0x1702:
-            L_0x1703:
-                java.lang.String r1 = r22.readString()
-                java.util.ArrayList r2 = r22.createStringArrayList()
-                r8.setDelegatedScopes(r0, r1, r2)
-                r23.writeNoException()
-                return r13
-            L_0x1712:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x1728
-                android.os.Parcelable$Creator<android.net.Uri> r0 = android.net.Uri.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.net.Uri r0 = (android.net.Uri) r0
-                goto L_0x1729
-            L_0x1728:
-            L_0x1729:
-                java.lang.String r2 = r22.readString()
-                android.os.IBinder r3 = r22.readStrongBinder()
-                r8.choosePrivateKeyAlias(r1, r0, r2, r3)
-                r23.writeNoException()
-                return r13
-            L_0x1738:
-                boolean r0 = r8.onTransact$setKeyPairCertificate$(r10, r11)
-                return r0
-            L_0x173d:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x174f
-                android.os.Parcelable$Creator<android.content.ComponentName> r1 = android.content.ComponentName.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.content.ComponentName r1 = (android.content.ComponentName) r1
-                goto L_0x1750
-            L_0x174f:
-                r1 = r0
-            L_0x1750:
-                java.lang.String r7 = r22.readString()
-                java.lang.String r14 = r22.readString()
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x1768
-                android.os.Parcelable$Creator<android.security.keystore.ParcelableKeyGenParameterSpec> r0 = android.security.keystore.ParcelableKeyGenParameterSpec.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.security.keystore.ParcelableKeyGenParameterSpec r0 = (android.security.keystore.ParcelableKeyGenParameterSpec) r0
-            L_0x1766:
-                r4 = r0
-                goto L_0x1769
-            L_0x1768:
-                goto L_0x1766
-            L_0x1769:
-                int r15 = r22.readInt()
-                android.security.keymaster.KeymasterCertificateChain r0 = new android.security.keymaster.KeymasterCertificateChain
-                r0.<init>()
-                r6 = r0
-                r0 = r20
-                r2 = r7
-                r3 = r14
-                r5 = r15
-                r19 = r6
-                boolean r0 = r0.generateKeyPair(r1, r2, r3, r4, r5, r6)
-                r23.writeNoException()
-                r11.writeInt(r0)
-                r11.writeInt(r13)
-                r2 = r19
-                r2.writeToParcel(r11, r13)
-                return r13
-            L_0x178e:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x17a0
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x17a1
-            L_0x17a0:
-            L_0x17a1:
-                java.lang.String r1 = r22.readString()
-                java.lang.String r2 = r22.readString()
-                boolean r3 = r8.removeKeyPair(r0, r1, r2)
-                r23.writeNoException()
-                r11.writeInt(r3)
-                return r13
-            L_0x17b4:
-                boolean r0 = r8.onTransact$installKeyPair$(r10, r11)
-                return r0
-            L_0x17b9:
-                r10.enforceInterface(r12)
-                java.lang.String r0 = r22.readString()
-                int r1 = r22.readInt()
-                boolean r2 = r8.isCaCertApproved(r0, r1)
-                r23.writeNoException()
-                r11.writeInt(r2)
-                return r13
-            L_0x17cf:
-                r10.enforceInterface(r12)
-                java.lang.String r0 = r22.readString()
-                int r1 = r22.readInt()
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x17e2
-                r6 = r13
-            L_0x17e2:
-                r2 = r6
-                boolean r3 = r8.approveCaCert(r0, r1, r2)
-                r23.writeNoException()
-                r11.writeInt(r3)
-                return r13
-            L_0x17ee:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1800
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1801
-            L_0x1800:
-            L_0x1801:
-                java.lang.String r1 = r22.readString()
-                r8.enforceCanManageCaCerts(r0, r1)
-                r23.writeNoException()
-                return r13
-            L_0x180c:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x181e
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x181f
-            L_0x181e:
-            L_0x181f:
-                java.lang.String r1 = r22.readString()
-                java.lang.String[] r2 = r22.createStringArray()
-                r8.uninstallCaCerts(r0, r1, r2)
-                r23.writeNoException()
-                return r13
-            L_0x182e:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1840
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1841
-            L_0x1840:
-            L_0x1841:
-                java.lang.String r1 = r22.readString()
-                byte[] r2 = r22.createByteArray()
-                boolean r3 = r8.installCaCert(r0, r1, r2)
-                r23.writeNoException()
-                r11.writeInt(r3)
-                return r13
-            L_0x1854:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1866
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1867
-            L_0x1866:
-            L_0x1867:
-                java.lang.String r1 = r22.readString()
-                java.lang.String r2 = r22.readString()
-                boolean r3 = r8.isPackageSuspended(r0, r1, r2)
-                r23.writeNoException()
-                r11.writeInt(r3)
-                return r13
-            L_0x187a:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x188c
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x188d
-            L_0x188c:
-            L_0x188d:
-                java.lang.String r1 = r22.readString()
-                java.lang.String[] r2 = r22.createStringArray()
-                int r3 = r22.readInt()
-                if (r3 == 0) goto L_0x189d
-                r6 = r13
-            L_0x189d:
-                r3 = r6
-                java.lang.String[] r4 = r8.setPackagesSuspended(r0, r1, r2, r3)
-                r23.writeNoException()
-                r11.writeStringArray(r4)
-                return r13
-            L_0x18a9:
-                r10.enforceInterface(r12)
-                java.lang.CharSequence r0 = r20.getDeviceOwnerLockScreenInfo()
-                r23.writeNoException()
-                if (r0 == 0) goto L_0x18bc
-                r11.writeInt(r13)
-                android.text.TextUtils.writeToParcel(r0, r11, r13)
-                goto L_0x18bf
-            L_0x18bc:
-                r11.writeInt(r6)
-            L_0x18bf:
-                return r13
-            L_0x18c0:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x18d2
-                android.os.Parcelable$Creator<android.content.ComponentName> r1 = android.content.ComponentName.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.content.ComponentName r1 = (android.content.ComponentName) r1
-                goto L_0x18d3
-            L_0x18d2:
-                r1 = r0
-            L_0x18d3:
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x18e2
-                android.os.Parcelable$Creator<java.lang.CharSequence> r0 = android.text.TextUtils.CHAR_SEQUENCE_CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                java.lang.CharSequence r0 = (java.lang.CharSequence) r0
-                goto L_0x18e3
-            L_0x18e2:
-            L_0x18e3:
-                r8.setDeviceOwnerLockScreenInfo(r1, r0)
-                r23.writeNoException()
-                return r13
-            L_0x18ea:
-                r10.enforceInterface(r12)
-                java.lang.String r0 = r22.readString()
-                int r1 = r22.readInt()
-                int r2 = r22.readInt()
-                boolean r3 = r8.checkDeviceIdentifierAccess(r0, r1, r2)
-                r23.writeNoException()
-                r11.writeInt(r3)
-                return r13
-            L_0x1904:
-                r10.enforceInterface(r12)
-                boolean r0 = r20.hasUserSetupCompleted()
-                r23.writeNoException()
-                r11.writeInt(r0)
-                return r13
-            L_0x1912:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1924
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1925
-            L_0x1924:
-            L_0x1925:
-                r8.clearProfileOwner(r0)
-                r23.writeNoException()
-                return r13
-            L_0x192c:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x193e
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x193f
-            L_0x193e:
-            L_0x193f:
-                java.lang.String r1 = r22.readString()
-                r8.setProfileName(r0, r1)
-                r23.writeNoException()
-                return r13
-            L_0x194a:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x195c
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x195d
-            L_0x195c:
-            L_0x195d:
-                r8.setProfileEnabled(r0)
-                r23.writeNoException()
-                return r13
-            L_0x1964:
-                r10.enforceInterface(r12)
-                int r0 = r22.readInt()
-                java.lang.String r1 = r8.getProfileOwnerName(r0)
-                r23.writeNoException()
-                r11.writeString(r1)
-                return r13
-            L_0x1976:
-                r10.enforceInterface(r12)
-                int r0 = r22.readInt()
-                android.content.ComponentName r1 = r8.getProfileOwner(r0)
-                r23.writeNoException()
-                if (r1 == 0) goto L_0x198d
-                r11.writeInt(r13)
-                r1.writeToParcel((android.os.Parcel) r11, (int) r13)
-                goto L_0x1990
-            L_0x198d:
-                r11.writeInt(r6)
-            L_0x1990:
-                return r13
-            L_0x1991:
-                r10.enforceInterface(r12)
-                int r0 = r22.readInt()
-                android.content.ComponentName r1 = r8.getProfileOwnerAsUser(r0)
-                r23.writeNoException()
-                if (r1 == 0) goto L_0x19a8
-                r11.writeInt(r13)
-                r1.writeToParcel((android.os.Parcel) r11, (int) r13)
-                goto L_0x19ab
-            L_0x19a8:
-                r11.writeInt(r6)
-            L_0x19ab:
-                return r13
-            L_0x19ac:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x19be
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x19bf
-            L_0x19be:
-            L_0x19bf:
-                java.lang.String r1 = r22.readString()
-                int r2 = r22.readInt()
-                boolean r3 = r8.setProfileOwner(r0, r1, r2)
-                r23.writeNoException()
-                r11.writeInt(r3)
-                return r13
-            L_0x19d2:
-                r10.enforceInterface(r12)
-                int r0 = r20.getDeviceOwnerUserId()
-                r23.writeNoException()
-                r11.writeInt(r0)
-                return r13
-            L_0x19e0:
-                r10.enforceInterface(r12)
-                java.lang.String r0 = r22.readString()
-                r8.clearDeviceOwner(r0)
-                r23.writeNoException()
-                return r13
-            L_0x19ee:
-                r10.enforceInterface(r12)
-                java.lang.String r0 = r20.getDeviceOwnerName()
-                r23.writeNoException()
-                r11.writeString(r0)
-                return r13
-            L_0x19fc:
-                r10.enforceInterface(r12)
-                boolean r0 = r20.hasDeviceOwner()
-                r23.writeNoException()
-                r11.writeInt(r0)
-                return r13
-            L_0x1a0a:
-                r10.enforceInterface(r12)
-                int r0 = r22.readInt()
-                if (r0 == 0) goto L_0x1a15
-                r0 = r13
-                goto L_0x1a16
-            L_0x1a15:
-                r0 = r6
-            L_0x1a16:
-                android.content.ComponentName r1 = r8.getDeviceOwnerComponent(r0)
-                r23.writeNoException()
-                if (r1 == 0) goto L_0x1a26
-                r11.writeInt(r13)
-                r1.writeToParcel((android.os.Parcel) r11, (int) r13)
-                goto L_0x1a29
-            L_0x1a26:
-                r11.writeInt(r6)
-            L_0x1a29:
-                return r13
-            L_0x1a2a:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1a3c
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1a3d
-            L_0x1a3c:
-            L_0x1a3d:
-                java.lang.String r1 = r22.readString()
-                int r2 = r22.readInt()
-                boolean r3 = r8.setDeviceOwner(r0, r1, r2)
-                r23.writeNoException()
-                r11.writeInt(r3)
-                return r13
-            L_0x1a50:
-                r10.enforceInterface(r12)
-                int r0 = r22.readInt()
-                r8.reportKeyguardSecured(r0)
-                r23.writeNoException()
-                return r13
-            L_0x1a5e:
-                r10.enforceInterface(r12)
-                int r0 = r22.readInt()
-                r8.reportKeyguardDismissed(r0)
-                r23.writeNoException()
-                return r13
-            L_0x1a6c:
-                r10.enforceInterface(r12)
-                int r0 = r22.readInt()
-                r8.reportSuccessfulBiometricAttempt(r0)
-                r23.writeNoException()
-                return r13
-            L_0x1a7a:
-                r10.enforceInterface(r12)
-                int r0 = r22.readInt()
-                r8.reportFailedBiometricAttempt(r0)
-                r23.writeNoException()
-                return r13
-            L_0x1a88:
-                r10.enforceInterface(r12)
-                int r0 = r22.readInt()
-                r8.reportSuccessfulPasswordAttempt(r0)
-                r23.writeNoException()
-                return r13
-            L_0x1a96:
-                r10.enforceInterface(r12)
-                int r0 = r22.readInt()
-                r8.reportFailedPasswordAttempt(r0)
-                r23.writeNoException()
-                return r13
-            L_0x1aa4:
-                r10.enforceInterface(r12)
-                int r0 = r22.readInt()
-                r8.reportPasswordChanged(r0)
-                r23.writeNoException()
-                return r13
-            L_0x1ab2:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1ac4
-                android.os.Parcelable$Creator<android.app.admin.PasswordMetrics> r0 = android.app.admin.PasswordMetrics.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.app.admin.PasswordMetrics r0 = (android.app.admin.PasswordMetrics) r0
-                goto L_0x1ac5
-            L_0x1ac4:
-            L_0x1ac5:
-                int r1 = r22.readInt()
-                r8.setActivePasswordState(r0, r1)
-                r23.writeNoException()
-                return r13
-            L_0x1ad0:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1ae2
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1ae3
-            L_0x1ae2:
-            L_0x1ae3:
-                int r1 = r22.readInt()
-                int r2 = r22.readInt()
-                boolean r3 = r8.hasGrantedPolicy(r0, r1, r2)
-                r23.writeNoException()
-                r11.writeInt(r3)
-                return r13
-            L_0x1af6:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1b08
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1b09
-            L_0x1b08:
-            L_0x1b09:
-                int r1 = r22.readInt()
-                r8.forceRemoveActiveAdmin(r0, r1)
-                r23.writeNoException()
-                return r13
-            L_0x1b14:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1b26
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1b27
-            L_0x1b26:
-            L_0x1b27:
-                int r1 = r22.readInt()
-                r8.removeActiveAdmin(r0, r1)
-                r23.writeNoException()
-                return r13
-            L_0x1b32:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1b44
-                android.os.Parcelable$Creator<android.content.ComponentName> r1 = android.content.ComponentName.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.content.ComponentName r1 = (android.content.ComponentName) r1
-                goto L_0x1b45
-            L_0x1b44:
-                r1 = r0
-            L_0x1b45:
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x1b54
-                android.os.Parcelable$Creator<android.os.RemoteCallback> r0 = android.os.RemoteCallback.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.os.RemoteCallback r0 = (android.os.RemoteCallback) r0
-                goto L_0x1b55
-            L_0x1b54:
-            L_0x1b55:
-                int r2 = r22.readInt()
-                r8.getRemoveWarning(r1, r0, r2)
-                r23.writeNoException()
-                return r13
-            L_0x1b60:
-                r10.enforceInterface(r12)
-                java.lang.String r0 = r22.readString()
-                int r1 = r22.readInt()
-                boolean r2 = r8.packageHasActiveAdmins(r0, r1)
-                r23.writeNoException()
-                r11.writeInt(r2)
-                return r13
-            L_0x1b76:
-                r10.enforceInterface(r12)
-                int r0 = r22.readInt()
-                java.util.List r1 = r8.getActiveAdmins(r0)
-                r23.writeNoException()
-                r11.writeTypedList(r1)
-                return r13
-            L_0x1b88:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1b9a
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1b9b
-            L_0x1b9a:
-            L_0x1b9b:
-                int r1 = r22.readInt()
-                boolean r2 = r8.isAdminActive(r0, r1)
-                r23.writeNoException()
-                r11.writeInt(r2)
-                return r13
-            L_0x1baa:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1bbc
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1bbd
-            L_0x1bbc:
-            L_0x1bbd:
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1bc5
-                r6 = r13
-            L_0x1bc5:
-                r1 = r6
-                int r2 = r22.readInt()
-                r8.setActiveAdmin(r0, r1, r2)
-                r23.writeNoException()
-                return r13
-            L_0x1bd1:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1be3
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1be4
-            L_0x1be3:
-            L_0x1be4:
-                int r1 = r22.readInt()
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x1bf0
-                r6 = r13
-            L_0x1bf0:
-                r2 = r6
-                int r3 = r8.getKeyguardDisabledFeatures(r0, r1, r2)
-                r23.writeNoException()
-                r11.writeInt(r3)
-                return r13
-            L_0x1bfc:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1c0e
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1c0f
-            L_0x1c0e:
-            L_0x1c0f:
-                int r1 = r22.readInt()
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x1c1b
-                r6 = r13
-            L_0x1c1b:
-                r2 = r6
-                r8.setKeyguardDisabledFeatures(r0, r1, r2)
-                r23.writeNoException()
-                return r13
-            L_0x1c23:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1c35
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1c36
-            L_0x1c35:
-            L_0x1c36:
-                int r1 = r22.readInt()
-                boolean r2 = r8.getScreenCaptureDisabled(r0, r1)
-                r23.writeNoException()
-                r11.writeInt(r2)
-                return r13
-            L_0x1c45:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1c57
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1c58
-            L_0x1c57:
-            L_0x1c58:
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1c60
-                r6 = r13
-            L_0x1c60:
-                r1 = r6
-                r8.setScreenCaptureDisabled(r0, r1)
-                r23.writeNoException()
-                return r13
-            L_0x1c68:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1c7a
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1c7b
-            L_0x1c7a:
-            L_0x1c7b:
-                int r1 = r22.readInt()
-                boolean r2 = r8.getCameraDisabled(r0, r1)
-                r23.writeNoException()
-                r11.writeInt(r2)
-                return r13
-            L_0x1c8a:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1c9c
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1c9d
-            L_0x1c9c:
-            L_0x1c9d:
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1ca5
-                r6 = r13
-            L_0x1ca5:
-                r1 = r6
-                r8.setCameraDisabled(r0, r1)
-                r23.writeNoException()
-                return r13
-            L_0x1cad:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1cbf
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1cc0
-            L_0x1cbf:
-            L_0x1cc0:
-                boolean r1 = r8.requestBugreport(r0)
-                r23.writeNoException()
-                r11.writeInt(r1)
-                return r13
-            L_0x1ccb:
-                r10.enforceInterface(r12)
-                java.lang.String r0 = r22.readString()
-                int r1 = r22.readInt()
-                int r2 = r8.getStorageEncryptionStatus(r0, r1)
-                r23.writeNoException()
-                r11.writeInt(r2)
-                return r13
-            L_0x1ce1:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1cf3
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1cf4
-            L_0x1cf3:
-            L_0x1cf4:
-                int r1 = r22.readInt()
-                boolean r2 = r8.getStorageEncryption(r0, r1)
-                r23.writeNoException()
-                r11.writeInt(r2)
-                return r13
-            L_0x1d03:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1d15
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1d16
-            L_0x1d15:
-            L_0x1d16:
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1d1e
-                r6 = r13
-            L_0x1d1e:
-                r1 = r6
-                int r2 = r8.setStorageEncryption(r0, r1)
-                r23.writeNoException()
-                r11.writeInt(r2)
-                return r13
-            L_0x1d2a:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1d3c
-                android.os.Parcelable$Creator<android.content.ComponentName> r1 = android.content.ComponentName.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.content.ComponentName r1 = (android.content.ComponentName) r1
-                goto L_0x1d3d
-            L_0x1d3c:
-                r1 = r0
-            L_0x1d3d:
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x1d4c
-                android.os.Parcelable$Creator<android.net.ProxyInfo> r0 = android.net.ProxyInfo.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.net.ProxyInfo r0 = (android.net.ProxyInfo) r0
-                goto L_0x1d4d
-            L_0x1d4c:
-            L_0x1d4d:
-                r8.setRecommendedGlobalProxy(r1, r0)
-                r23.writeNoException()
-                return r13
-            L_0x1d54:
-                r10.enforceInterface(r12)
-                int r0 = r22.readInt()
-                android.content.ComponentName r1 = r8.getGlobalProxyAdmin(r0)
-                r23.writeNoException()
-                if (r1 == 0) goto L_0x1d6b
-                r11.writeInt(r13)
-                r1.writeToParcel((android.os.Parcel) r11, (int) r13)
-                goto L_0x1d6e
-            L_0x1d6b:
-                r11.writeInt(r6)
-            L_0x1d6e:
-                return r13
-            L_0x1d6f:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1d81
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1d82
-            L_0x1d81:
-            L_0x1d82:
-                java.lang.String r1 = r22.readString()
-                java.lang.String r2 = r22.readString()
-                android.content.ComponentName r3 = r8.setGlobalProxy(r0, r1, r2)
-                r23.writeNoException()
-                if (r3 == 0) goto L_0x1d9a
-                r11.writeInt(r13)
-                r3.writeToParcel((android.os.Parcel) r11, (int) r13)
-                goto L_0x1d9d
-            L_0x1d9a:
-                r11.writeInt(r6)
-            L_0x1d9d:
-                return r13
-            L_0x1d9e:
-                r10.enforceInterface(r12)
-                int r0 = r22.readInt()
-                java.lang.String r1 = r22.readString()
-                r8.wipeDataWithReason(r0, r1)
-                r23.writeNoException()
-                return r13
-            L_0x1db0:
-                r10.enforceInterface(r12)
-                int r0 = r22.readInt()
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1dbf
-                r6 = r13
-            L_0x1dbf:
-                r1 = r6
-                r8.lockNow(r0, r1)
-                r23.writeNoException()
-                return r13
-            L_0x1dc7:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1dd9
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1dda
-            L_0x1dd9:
-            L_0x1dda:
-                int r1 = r22.readInt()
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x1de6
-                r6 = r13
-            L_0x1de6:
-                r2 = r6
-                long r3 = r8.getRequiredStrongAuthTimeout(r0, r1, r2)
-                r23.writeNoException()
-                r11.writeLong(r3)
-                return r13
-            L_0x1df2:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1e04
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1e05
-            L_0x1e04:
-            L_0x1e05:
-                long r1 = r22.readLong()
-                int r3 = r22.readInt()
-                if (r3 == 0) goto L_0x1e11
-                r6 = r13
-            L_0x1e11:
-                r3 = r6
-                r8.setRequiredStrongAuthTimeout(r0, r1, r3)
-                r23.writeNoException()
-                return r13
-            L_0x1e19:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1e2b
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1e2c
-            L_0x1e2b:
-            L_0x1e2c:
-                int r1 = r22.readInt()
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x1e38
-                r6 = r13
-            L_0x1e38:
-                r2 = r6
-                long r3 = r8.getMaximumTimeToLock(r0, r1, r2)
-                r23.writeNoException()
-                r11.writeLong(r3)
-                return r13
-            L_0x1e44:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1e56
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1e57
-            L_0x1e56:
-            L_0x1e57:
-                long r1 = r22.readLong()
-                int r3 = r22.readInt()
-                if (r3 == 0) goto L_0x1e63
-                r6 = r13
-            L_0x1e63:
-                r3 = r6
-                r8.setMaximumTimeToLock(r0, r1, r3)
-                r23.writeNoException()
-                return r13
-            L_0x1e6b:
-                r10.enforceInterface(r12)
-                java.lang.String r0 = r22.readString()
-                int r1 = r22.readInt()
-                boolean r2 = r8.resetPassword(r0, r1)
-                r23.writeNoException()
-                r11.writeInt(r2)
-                return r13
-            L_0x1e81:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1e93
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1e94
-            L_0x1e93:
-            L_0x1e94:
-                int r1 = r22.readInt()
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x1ea0
-                r6 = r13
-            L_0x1ea0:
-                r2 = r6
-                int r3 = r8.getMaximumFailedPasswordsForWipe(r0, r1, r2)
-                r23.writeNoException()
-                r11.writeInt(r3)
-                return r13
-            L_0x1eac:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1ebe
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1ebf
-            L_0x1ebe:
-            L_0x1ebf:
-                int r1 = r22.readInt()
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x1ecb
-                r6 = r13
-            L_0x1ecb:
-                r2 = r6
-                r8.setMaximumFailedPasswordsForWipe(r0, r1, r2)
-                r23.writeNoException()
-                return r13
-            L_0x1ed3:
-                r10.enforceInterface(r12)
-                int r0 = r22.readInt()
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1ee2
-                r6 = r13
-            L_0x1ee2:
-                r1 = r6
-                int r2 = r8.getProfileWithMinimumFailedPasswordsForWipe(r0, r1)
-                r23.writeNoException()
-                r11.writeInt(r2)
-                return r13
-            L_0x1eee:
-                r10.enforceInterface(r12)
-                int r0 = r22.readInt()
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1efd
-                r6 = r13
-            L_0x1efd:
-                r1 = r6
-                int r2 = r8.getCurrentFailedPasswordAttempts(r0, r1)
-                r23.writeNoException()
-                r11.writeInt(r2)
-                return r13
-            L_0x1f09:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1f1b
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1f1c
-            L_0x1f1b:
-            L_0x1f1c:
-                boolean r1 = r8.isUsingUnifiedPassword(r0)
-                r23.writeNoException()
-                r11.writeInt(r1)
-                return r13
-            L_0x1f27:
-                r10.enforceInterface(r12)
-                int r0 = r20.getPasswordComplexity()
-                r23.writeNoException()
-                r11.writeInt(r0)
-                return r13
-            L_0x1f35:
-                r10.enforceInterface(r12)
-                int r0 = r22.readInt()
-                boolean r1 = r8.isProfileActivePasswordSufficientForParent(r0)
-                r23.writeNoException()
-                r11.writeInt(r1)
-                return r13
-            L_0x1f47:
-                r10.enforceInterface(r12)
-                int r0 = r22.readInt()
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1f56
-                r6 = r13
-            L_0x1f56:
-                r1 = r6
-                boolean r2 = r8.isActivePasswordSufficient(r0, r1)
-                r23.writeNoException()
-                r11.writeInt(r2)
-                return r13
-            L_0x1f62:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1f74
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1f75
-            L_0x1f74:
-            L_0x1f75:
-                int r1 = r22.readInt()
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x1f81
-                r6 = r13
-            L_0x1f81:
-                r2 = r6
-                long r3 = r8.getPasswordExpiration(r0, r1, r2)
-                r23.writeNoException()
-                r11.writeLong(r3)
-                return r13
-            L_0x1f8d:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1f9f
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1fa0
-            L_0x1f9f:
-            L_0x1fa0:
-                int r1 = r22.readInt()
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x1fac
-                r6 = r13
-            L_0x1fac:
-                r2 = r6
-                long r3 = r8.getPasswordExpirationTimeout(r0, r1, r2)
-                r23.writeNoException()
-                r11.writeLong(r3)
-                return r13
-            L_0x1fb8:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1fca
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1fcb
-            L_0x1fca:
-            L_0x1fcb:
-                long r1 = r22.readLong()
-                int r3 = r22.readInt()
-                if (r3 == 0) goto L_0x1fd7
-                r6 = r13
-            L_0x1fd7:
-                r3 = r6
-                r8.setPasswordExpirationTimeout(r0, r1, r3)
-                r23.writeNoException()
-                return r13
-            L_0x1fdf:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x1ff1
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x1ff2
-            L_0x1ff1:
-            L_0x1ff2:
-                int r1 = r22.readInt()
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x1ffe
-                r6 = r13
-            L_0x1ffe:
-                r2 = r6
-                int r3 = r8.getPasswordHistoryLength(r0, r1, r2)
-                r23.writeNoException()
-                r11.writeInt(r3)
-                return r13
-            L_0x200a:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x201c
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x201d
-            L_0x201c:
-            L_0x201d:
-                int r1 = r22.readInt()
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x2029
-                r6 = r13
-            L_0x2029:
-                r2 = r6
-                r8.setPasswordHistoryLength(r0, r1, r2)
-                r23.writeNoException()
-                return r13
-            L_0x2031:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x2043
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x2044
-            L_0x2043:
-            L_0x2044:
-                int r1 = r22.readInt()
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x2050
-                r6 = r13
-            L_0x2050:
-                r2 = r6
-                int r3 = r8.getPasswordMinimumNonLetter(r0, r1, r2)
-                r23.writeNoException()
-                r11.writeInt(r3)
-                return r13
-            L_0x205c:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x206e
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x206f
-            L_0x206e:
-            L_0x206f:
-                int r1 = r22.readInt()
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x207b
-                r6 = r13
-            L_0x207b:
-                r2 = r6
-                r8.setPasswordMinimumNonLetter(r0, r1, r2)
-                r23.writeNoException()
-                return r13
-            L_0x2083:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x2095
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x2096
-            L_0x2095:
-            L_0x2096:
-                int r1 = r22.readInt()
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x20a2
-                r6 = r13
-            L_0x20a2:
-                r2 = r6
-                int r3 = r8.getPasswordMinimumSymbols(r0, r1, r2)
-                r23.writeNoException()
-                r11.writeInt(r3)
-                return r13
-            L_0x20ae:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x20c0
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x20c1
-            L_0x20c0:
-            L_0x20c1:
-                int r1 = r22.readInt()
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x20cd
-                r6 = r13
-            L_0x20cd:
-                r2 = r6
-                r8.setPasswordMinimumSymbols(r0, r1, r2)
-                r23.writeNoException()
-                return r13
-            L_0x20d5:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x20e7
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x20e8
-            L_0x20e7:
-            L_0x20e8:
-                int r1 = r22.readInt()
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x20f4
-                r6 = r13
-            L_0x20f4:
-                r2 = r6
-                int r3 = r8.getPasswordMinimumNumeric(r0, r1, r2)
-                r23.writeNoException()
-                r11.writeInt(r3)
-                return r13
-            L_0x2100:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x2112
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x2113
-            L_0x2112:
-            L_0x2113:
-                int r1 = r22.readInt()
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x211f
-                r6 = r13
-            L_0x211f:
-                r2 = r6
-                r8.setPasswordMinimumNumeric(r0, r1, r2)
-                r23.writeNoException()
-                return r13
-            L_0x2127:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x2139
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x213a
-            L_0x2139:
-            L_0x213a:
-                int r1 = r22.readInt()
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x2146
-                r6 = r13
-            L_0x2146:
-                r2 = r6
-                int r3 = r8.getPasswordMinimumLetters(r0, r1, r2)
-                r23.writeNoException()
-                r11.writeInt(r3)
-                return r13
-            L_0x2152:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x2164
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x2165
-            L_0x2164:
-            L_0x2165:
-                int r1 = r22.readInt()
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x2171
-                r6 = r13
-            L_0x2171:
-                r2 = r6
-                r8.setPasswordMinimumLetters(r0, r1, r2)
-                r23.writeNoException()
-                return r13
-            L_0x2179:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x218b
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x218c
-            L_0x218b:
-            L_0x218c:
-                int r1 = r22.readInt()
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x2198
-                r6 = r13
-            L_0x2198:
-                r2 = r6
-                int r3 = r8.getPasswordMinimumLowerCase(r0, r1, r2)
-                r23.writeNoException()
-                r11.writeInt(r3)
-                return r13
-            L_0x21a4:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x21b6
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x21b7
-            L_0x21b6:
-            L_0x21b7:
-                int r1 = r22.readInt()
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x21c3
-                r6 = r13
-            L_0x21c3:
-                r2 = r6
-                r8.setPasswordMinimumLowerCase(r0, r1, r2)
-                r23.writeNoException()
-                return r13
-            L_0x21cb:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x21dd
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x21de
-            L_0x21dd:
-            L_0x21de:
-                int r1 = r22.readInt()
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x21ea
-                r6 = r13
-            L_0x21ea:
-                r2 = r6
-                int r3 = r8.getPasswordMinimumUpperCase(r0, r1, r2)
-                r23.writeNoException()
-                r11.writeInt(r3)
-                return r13
-            L_0x21f6:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x2208
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x2209
-            L_0x2208:
-            L_0x2209:
-                int r1 = r22.readInt()
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x2215
-                r6 = r13
-            L_0x2215:
-                r2 = r6
-                r8.setPasswordMinimumUpperCase(r0, r1, r2)
-                r23.writeNoException()
-                return r13
-            L_0x221d:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x222f
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x2230
-            L_0x222f:
-            L_0x2230:
-                int r1 = r22.readInt()
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x223c
-                r6 = r13
-            L_0x223c:
-                r2 = r6
-                int r3 = r8.getPasswordMinimumLength(r0, r1, r2)
-                r23.writeNoException()
-                r11.writeInt(r3)
-                return r13
-            L_0x2248:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x225a
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x225b
-            L_0x225a:
-            L_0x225b:
-                int r1 = r22.readInt()
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x2267
-                r6 = r13
-            L_0x2267:
-                r2 = r6
-                r8.setPasswordMinimumLength(r0, r1, r2)
-                r23.writeNoException()
-                return r13
-            L_0x226f:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x2281
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x2282
-            L_0x2281:
-            L_0x2282:
-                int r1 = r22.readInt()
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x228e
-                r6 = r13
-            L_0x228e:
-                r2 = r6
-                int r3 = r8.getPasswordQuality(r0, r1, r2)
-                r23.writeNoException()
-                r11.writeInt(r3)
-                return r13
-            L_0x229a:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                if (r1 == 0) goto L_0x22ac
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x22ad
-            L_0x22ac:
-            L_0x22ad:
-                int r1 = r22.readInt()
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x22b9
-                r6 = r13
-            L_0x22b9:
-                r2 = r6
-                r8.setPasswordQuality(r0, r1, r2)
-                r23.writeNoException()
-                return r13
-            L_0x22c1:
-                r11.writeString(r12)
-                return r13
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.app.admin.IDevicePolicyManager.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            ComponentName _arg0;
+            ComponentName _arg02;
+            ComponentName _arg03;
+            ComponentName _arg04;
+            ComponentName _arg05;
+            IntentFilter _arg1;
+            ComponentName _arg06;
+            ComponentName _arg07;
+            ComponentName _arg08;
+            ComponentName _arg09;
+            ComponentName _arg010;
+            ComponentName _arg011;
+            ComponentName _arg012;
+            ComponentName _arg013;
+            ComponentName _arg014;
+            ComponentName _arg015;
+            ComponentName _arg12;
+            ComponentName _arg016;
+            ComponentName _arg017;
+            ComponentName _arg018;
+            ComponentName _arg019;
+            ComponentName _arg020;
+            ComponentName _arg021;
+            ComponentName _arg022;
+            ComponentName _arg13;
+            ComponentName _arg023;
+            ComponentName _arg024;
+            ComponentName _arg025;
+            ComponentName _arg026;
+            ComponentName _arg027;
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg028 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg14 = data.readInt();
+                    boolean _arg2 = data.readInt() != 0;
+                    setPasswordQuality(_arg028, _arg14, _arg2);
+                    reply.writeNoException();
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg029 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg15 = data.readInt();
+                    boolean _arg22 = data.readInt() != 0;
+                    int _result = getPasswordQuality(_arg029, _arg15, _arg22);
+                    reply.writeNoException();
+                    reply.writeInt(_result);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg030 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg16 = data.readInt();
+                    boolean _arg23 = data.readInt() != 0;
+                    setPasswordMinimumLength(_arg030, _arg16, _arg23);
+                    reply.writeNoException();
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg031 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg17 = data.readInt();
+                    boolean _arg24 = data.readInt() != 0;
+                    int _result2 = getPasswordMinimumLength(_arg031, _arg17, _arg24);
+                    reply.writeNoException();
+                    reply.writeInt(_result2);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg032 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg18 = data.readInt();
+                    boolean _arg25 = data.readInt() != 0;
+                    setPasswordMinimumUpperCase(_arg032, _arg18, _arg25);
+                    reply.writeNoException();
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg033 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg19 = data.readInt();
+                    boolean _arg26 = data.readInt() != 0;
+                    int _result3 = getPasswordMinimumUpperCase(_arg033, _arg19, _arg26);
+                    reply.writeNoException();
+                    reply.writeInt(_result3);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg034 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg110 = data.readInt();
+                    boolean _arg27 = data.readInt() != 0;
+                    setPasswordMinimumLowerCase(_arg034, _arg110, _arg27);
+                    reply.writeNoException();
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg035 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg111 = data.readInt();
+                    boolean _arg28 = data.readInt() != 0;
+                    int _result4 = getPasswordMinimumLowerCase(_arg035, _arg111, _arg28);
+                    reply.writeNoException();
+                    reply.writeInt(_result4);
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg036 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg112 = data.readInt();
+                    boolean _arg29 = data.readInt() != 0;
+                    setPasswordMinimumLetters(_arg036, _arg112, _arg29);
+                    reply.writeNoException();
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg037 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg113 = data.readInt();
+                    boolean _arg210 = data.readInt() != 0;
+                    int _result5 = getPasswordMinimumLetters(_arg037, _arg113, _arg210);
+                    reply.writeNoException();
+                    reply.writeInt(_result5);
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg038 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg114 = data.readInt();
+                    boolean _arg211 = data.readInt() != 0;
+                    setPasswordMinimumNumeric(_arg038, _arg114, _arg211);
+                    reply.writeNoException();
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg039 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg115 = data.readInt();
+                    boolean _arg212 = data.readInt() != 0;
+                    int _result6 = getPasswordMinimumNumeric(_arg039, _arg115, _arg212);
+                    reply.writeNoException();
+                    reply.writeInt(_result6);
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg040 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg116 = data.readInt();
+                    boolean _arg213 = data.readInt() != 0;
+                    setPasswordMinimumSymbols(_arg040, _arg116, _arg213);
+                    reply.writeNoException();
+                    return true;
+                case 14:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg041 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg117 = data.readInt();
+                    boolean _arg214 = data.readInt() != 0;
+                    int _result7 = getPasswordMinimumSymbols(_arg041, _arg117, _arg214);
+                    reply.writeNoException();
+                    reply.writeInt(_result7);
+                    return true;
+                case 15:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg042 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg118 = data.readInt();
+                    boolean _arg215 = data.readInt() != 0;
+                    setPasswordMinimumNonLetter(_arg042, _arg118, _arg215);
+                    reply.writeNoException();
+                    return true;
+                case 16:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg043 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg119 = data.readInt();
+                    boolean _arg216 = data.readInt() != 0;
+                    int _result8 = getPasswordMinimumNonLetter(_arg043, _arg119, _arg216);
+                    reply.writeNoException();
+                    reply.writeInt(_result8);
+                    return true;
+                case 17:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg044 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg120 = data.readInt();
+                    boolean _arg217 = data.readInt() != 0;
+                    setPasswordHistoryLength(_arg044, _arg120, _arg217);
+                    reply.writeNoException();
+                    return true;
+                case 18:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg045 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg121 = data.readInt();
+                    boolean _arg218 = data.readInt() != 0;
+                    int _result9 = getPasswordHistoryLength(_arg045, _arg121, _arg218);
+                    reply.writeNoException();
+                    reply.writeInt(_result9);
+                    return true;
+                case 19:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg046 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    long _arg122 = data.readLong();
+                    boolean _arg219 = data.readInt() != 0;
+                    setPasswordExpirationTimeout(_arg046, _arg122, _arg219);
+                    reply.writeNoException();
+                    return true;
+                case 20:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg047 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg123 = data.readInt();
+                    boolean _arg220 = data.readInt() != 0;
+                    long _result10 = getPasswordExpirationTimeout(_arg047, _arg123, _arg220);
+                    reply.writeNoException();
+                    reply.writeLong(_result10);
+                    return true;
+                case 21:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg048 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg124 = data.readInt();
+                    boolean _arg221 = data.readInt() != 0;
+                    long _result11 = getPasswordExpiration(_arg048, _arg124, _arg221);
+                    reply.writeNoException();
+                    reply.writeLong(_result11);
+                    return true;
+                case 22:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg049 = data.readInt();
+                    boolean _arg125 = data.readInt() != 0;
+                    boolean isActivePasswordSufficient = isActivePasswordSufficient(_arg049, _arg125);
+                    reply.writeNoException();
+                    reply.writeInt(isActivePasswordSufficient ? 1 : 0);
+                    return true;
+                case 23:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg050 = data.readInt();
+                    boolean isProfileActivePasswordSufficientForParent = isProfileActivePasswordSufficientForParent(_arg050);
+                    reply.writeNoException();
+                    reply.writeInt(isProfileActivePasswordSufficientForParent ? 1 : 0);
+                    return true;
+                case 24:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result12 = getPasswordComplexity();
+                    reply.writeNoException();
+                    reply.writeInt(_result12);
+                    return true;
+                case 25:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg051 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    boolean isUsingUnifiedPassword = isUsingUnifiedPassword(_arg051);
+                    reply.writeNoException();
+                    reply.writeInt(isUsingUnifiedPassword ? 1 : 0);
+                    return true;
+                case 26:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg052 = data.readInt();
+                    boolean _arg126 = data.readInt() != 0;
+                    int _result13 = getCurrentFailedPasswordAttempts(_arg052, _arg126);
+                    reply.writeNoException();
+                    reply.writeInt(_result13);
+                    return true;
+                case 27:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg053 = data.readInt();
+                    boolean _arg127 = data.readInt() != 0;
+                    int _result14 = getProfileWithMinimumFailedPasswordsForWipe(_arg053, _arg127);
+                    reply.writeNoException();
+                    reply.writeInt(_result14);
+                    return true;
+                case 28:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg054 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg128 = data.readInt();
+                    boolean _arg222 = data.readInt() != 0;
+                    setMaximumFailedPasswordsForWipe(_arg054, _arg128, _arg222);
+                    reply.writeNoException();
+                    return true;
+                case 29:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg055 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg129 = data.readInt();
+                    boolean _arg223 = data.readInt() != 0;
+                    int _result15 = getMaximumFailedPasswordsForWipe(_arg055, _arg129, _arg223);
+                    reply.writeNoException();
+                    reply.writeInt(_result15);
+                    return true;
+                case 30:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg056 = data.readString();
+                    int _arg130 = data.readInt();
+                    boolean resetPassword = resetPassword(_arg056, _arg130);
+                    reply.writeNoException();
+                    reply.writeInt(resetPassword ? 1 : 0);
+                    return true;
+                case 31:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg057 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    long _arg131 = data.readLong();
+                    boolean _arg224 = data.readInt() != 0;
+                    setMaximumTimeToLock(_arg057, _arg131, _arg224);
+                    reply.writeNoException();
+                    return true;
+                case 32:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg058 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg132 = data.readInt();
+                    boolean _arg225 = data.readInt() != 0;
+                    long _result16 = getMaximumTimeToLock(_arg058, _arg132, _arg225);
+                    reply.writeNoException();
+                    reply.writeLong(_result16);
+                    return true;
+                case 33:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg059 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    long _arg133 = data.readLong();
+                    boolean _arg226 = data.readInt() != 0;
+                    setRequiredStrongAuthTimeout(_arg059, _arg133, _arg226);
+                    reply.writeNoException();
+                    return true;
+                case 34:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg060 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg134 = data.readInt();
+                    boolean _arg227 = data.readInt() != 0;
+                    long _result17 = getRequiredStrongAuthTimeout(_arg060, _arg134, _arg227);
+                    reply.writeNoException();
+                    reply.writeLong(_result17);
+                    return true;
+                case 35:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg061 = data.readInt();
+                    boolean _arg135 = data.readInt() != 0;
+                    lockNow(_arg061, _arg135);
+                    reply.writeNoException();
+                    return true;
+                case 36:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg062 = data.readInt();
+                    String _arg136 = data.readString();
+                    wipeDataWithReason(_arg062, _arg136);
+                    reply.writeNoException();
+                    return true;
+                case 37:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg063 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg137 = data.readString();
+                    String _arg228 = data.readString();
+                    ComponentName _result18 = setGlobalProxy(_arg063, _arg137, _arg228);
+                    reply.writeNoException();
+                    if (_result18 != null) {
+                        reply.writeInt(1);
+                        _result18.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 38:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg064 = data.readInt();
+                    ComponentName _result19 = getGlobalProxyAdmin(_arg064);
+                    reply.writeNoException();
+                    if (_result19 != null) {
+                        reply.writeInt(1);
+                        _result19.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 39:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg0 = ComponentName.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg0 = null;
+                    }
+                    ProxyInfo _arg138 = data.readInt() != 0 ? ProxyInfo.CREATOR.createFromParcel(data) : null;
+                    setRecommendedGlobalProxy(_arg0, _arg138);
+                    reply.writeNoException();
+                    return true;
+                case 40:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg065 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    boolean _arg139 = data.readInt() != 0;
+                    int _result20 = setStorageEncryption(_arg065, _arg139);
+                    reply.writeNoException();
+                    reply.writeInt(_result20);
+                    return true;
+                case 41:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg066 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg140 = data.readInt();
+                    boolean storageEncryption = getStorageEncryption(_arg066, _arg140);
+                    reply.writeNoException();
+                    reply.writeInt(storageEncryption ? 1 : 0);
+                    return true;
+                case 42:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg067 = data.readString();
+                    int _arg141 = data.readInt();
+                    int _result21 = getStorageEncryptionStatus(_arg067, _arg141);
+                    reply.writeNoException();
+                    reply.writeInt(_result21);
+                    return true;
+                case 43:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg068 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    boolean requestBugreport = requestBugreport(_arg068);
+                    reply.writeNoException();
+                    reply.writeInt(requestBugreport ? 1 : 0);
+                    return true;
+                case 44:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg069 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    boolean _arg142 = data.readInt() != 0;
+                    setCameraDisabled(_arg069, _arg142);
+                    reply.writeNoException();
+                    return true;
+                case 45:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg070 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg143 = data.readInt();
+                    boolean cameraDisabled = getCameraDisabled(_arg070, _arg143);
+                    reply.writeNoException();
+                    reply.writeInt(cameraDisabled ? 1 : 0);
+                    return true;
+                case 46:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg071 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    boolean _arg144 = data.readInt() != 0;
+                    setScreenCaptureDisabled(_arg071, _arg144);
+                    reply.writeNoException();
+                    return true;
+                case 47:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg072 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg145 = data.readInt();
+                    boolean screenCaptureDisabled = getScreenCaptureDisabled(_arg072, _arg145);
+                    reply.writeNoException();
+                    reply.writeInt(screenCaptureDisabled ? 1 : 0);
+                    return true;
+                case 48:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg073 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg146 = data.readInt();
+                    boolean _arg229 = data.readInt() != 0;
+                    setKeyguardDisabledFeatures(_arg073, _arg146, _arg229);
+                    reply.writeNoException();
+                    return true;
+                case 49:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg074 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg147 = data.readInt();
+                    boolean _arg230 = data.readInt() != 0;
+                    int _result22 = getKeyguardDisabledFeatures(_arg074, _arg147, _arg230);
+                    reply.writeNoException();
+                    reply.writeInt(_result22);
+                    return true;
+                case 50:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg075 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    boolean _arg148 = data.readInt() != 0;
+                    int _arg231 = data.readInt();
+                    setActiveAdmin(_arg075, _arg148, _arg231);
+                    reply.writeNoException();
+                    return true;
+                case 51:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg076 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg149 = data.readInt();
+                    boolean isAdminActive = isAdminActive(_arg076, _arg149);
+                    reply.writeNoException();
+                    reply.writeInt(isAdminActive ? 1 : 0);
+                    return true;
+                case 52:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg077 = data.readInt();
+                    List<ComponentName> _result23 = getActiveAdmins(_arg077);
+                    reply.writeNoException();
+                    reply.writeTypedList(_result23);
+                    return true;
+                case 53:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg078 = data.readString();
+                    int _arg150 = data.readInt();
+                    boolean packageHasActiveAdmins = packageHasActiveAdmins(_arg078, _arg150);
+                    reply.writeNoException();
+                    reply.writeInt(packageHasActiveAdmins ? 1 : 0);
+                    return true;
+                case 54:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg02 = ComponentName.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg02 = null;
+                    }
+                    RemoteCallback _arg151 = data.readInt() != 0 ? RemoteCallback.CREATOR.createFromParcel(data) : null;
+                    int _arg232 = data.readInt();
+                    getRemoveWarning(_arg02, _arg151, _arg232);
+                    reply.writeNoException();
+                    return true;
+                case 55:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg079 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg152 = data.readInt();
+                    removeActiveAdmin(_arg079, _arg152);
+                    reply.writeNoException();
+                    return true;
+                case 56:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg080 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg153 = data.readInt();
+                    forceRemoveActiveAdmin(_arg080, _arg153);
+                    reply.writeNoException();
+                    return true;
+                case 57:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg081 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg154 = data.readInt();
+                    int _arg233 = data.readInt();
+                    boolean hasGrantedPolicy = hasGrantedPolicy(_arg081, _arg154, _arg233);
+                    reply.writeNoException();
+                    reply.writeInt(hasGrantedPolicy ? 1 : 0);
+                    return true;
+                case 58:
+                    data.enforceInterface(DESCRIPTOR);
+                    PasswordMetrics _arg082 = data.readInt() != 0 ? PasswordMetrics.CREATOR.createFromParcel(data) : null;
+                    int _arg155 = data.readInt();
+                    setActivePasswordState(_arg082, _arg155);
+                    reply.writeNoException();
+                    return true;
+                case 59:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg083 = data.readInt();
+                    reportPasswordChanged(_arg083);
+                    reply.writeNoException();
+                    return true;
+                case 60:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg084 = data.readInt();
+                    reportFailedPasswordAttempt(_arg084);
+                    reply.writeNoException();
+                    return true;
+                case 61:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg085 = data.readInt();
+                    reportSuccessfulPasswordAttempt(_arg085);
+                    reply.writeNoException();
+                    return true;
+                case 62:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg086 = data.readInt();
+                    reportFailedBiometricAttempt(_arg086);
+                    reply.writeNoException();
+                    return true;
+                case 63:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg087 = data.readInt();
+                    reportSuccessfulBiometricAttempt(_arg087);
+                    reply.writeNoException();
+                    return true;
+                case 64:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg088 = data.readInt();
+                    reportKeyguardDismissed(_arg088);
+                    reply.writeNoException();
+                    return true;
+                case 65:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg089 = data.readInt();
+                    reportKeyguardSecured(_arg089);
+                    reply.writeNoException();
+                    return true;
+                case 66:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg090 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg156 = data.readString();
+                    int _arg234 = data.readInt();
+                    boolean deviceOwner = setDeviceOwner(_arg090, _arg156, _arg234);
+                    reply.writeNoException();
+                    reply.writeInt(deviceOwner ? 1 : 0);
+                    return true;
+                case 67:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean _arg091 = data.readInt() != 0;
+                    ComponentName _result24 = getDeviceOwnerComponent(_arg091);
+                    reply.writeNoException();
+                    if (_result24 != null) {
+                        reply.writeInt(1);
+                        _result24.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 68:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean hasDeviceOwner = hasDeviceOwner();
+                    reply.writeNoException();
+                    reply.writeInt(hasDeviceOwner ? 1 : 0);
+                    return true;
+                case 69:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _result25 = getDeviceOwnerName();
+                    reply.writeNoException();
+                    reply.writeString(_result25);
+                    return true;
+                case 70:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg092 = data.readString();
+                    clearDeviceOwner(_arg092);
+                    reply.writeNoException();
+                    return true;
+                case 71:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result26 = getDeviceOwnerUserId();
+                    reply.writeNoException();
+                    reply.writeInt(_result26);
+                    return true;
+                case 72:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg093 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg157 = data.readString();
+                    int _arg235 = data.readInt();
+                    boolean profileOwner = setProfileOwner(_arg093, _arg157, _arg235);
+                    reply.writeNoException();
+                    reply.writeInt(profileOwner ? 1 : 0);
+                    return true;
+                case 73:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg094 = data.readInt();
+                    ComponentName _result27 = getProfileOwnerAsUser(_arg094);
+                    reply.writeNoException();
+                    if (_result27 != null) {
+                        reply.writeInt(1);
+                        _result27.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 74:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg095 = data.readInt();
+                    ComponentName _result28 = getProfileOwner(_arg095);
+                    reply.writeNoException();
+                    if (_result28 != null) {
+                        reply.writeInt(1);
+                        _result28.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 75:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg096 = data.readInt();
+                    String _result29 = getProfileOwnerName(_arg096);
+                    reply.writeNoException();
+                    reply.writeString(_result29);
+                    return true;
+                case 76:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg097 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    setProfileEnabled(_arg097);
+                    reply.writeNoException();
+                    return true;
+                case 77:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg098 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg158 = data.readString();
+                    setProfileName(_arg098, _arg158);
+                    reply.writeNoException();
+                    return true;
+                case 78:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg099 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    clearProfileOwner(_arg099);
+                    reply.writeNoException();
+                    return true;
+                case 79:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean hasUserSetupCompleted = hasUserSetupCompleted();
+                    reply.writeNoException();
+                    reply.writeInt(hasUserSetupCompleted ? 1 : 0);
+                    return true;
+                case 80:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0100 = data.readString();
+                    int _arg159 = data.readInt();
+                    int _arg236 = data.readInt();
+                    boolean checkDeviceIdentifierAccess = checkDeviceIdentifierAccess(_arg0100, _arg159, _arg236);
+                    reply.writeNoException();
+                    reply.writeInt(checkDeviceIdentifierAccess ? 1 : 0);
+                    return true;
+                case 81:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg03 = ComponentName.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg03 = null;
+                    }
+                    CharSequence _arg160 = data.readInt() != 0 ? TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(data) : null;
+                    setDeviceOwnerLockScreenInfo(_arg03, _arg160);
+                    reply.writeNoException();
+                    return true;
+                case 82:
+                    data.enforceInterface(DESCRIPTOR);
+                    CharSequence _result30 = getDeviceOwnerLockScreenInfo();
+                    reply.writeNoException();
+                    if (_result30 != null) {
+                        reply.writeInt(1);
+                        TextUtils.writeToParcel(_result30, reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 83:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0101 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg161 = data.readString();
+                    String[] _arg237 = data.createStringArray();
+                    boolean _arg3 = data.readInt() != 0;
+                    String[] _result31 = setPackagesSuspended(_arg0101, _arg161, _arg237, _arg3);
+                    reply.writeNoException();
+                    reply.writeStringArray(_result31);
+                    return true;
+                case 84:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0102 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg162 = data.readString();
+                    String _arg238 = data.readString();
+                    boolean isPackageSuspended = isPackageSuspended(_arg0102, _arg162, _arg238);
+                    reply.writeNoException();
+                    reply.writeInt(isPackageSuspended ? 1 : 0);
+                    return true;
+                case 85:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0103 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg163 = data.readString();
+                    byte[] _arg239 = data.createByteArray();
+                    boolean installCaCert = installCaCert(_arg0103, _arg163, _arg239);
+                    reply.writeNoException();
+                    reply.writeInt(installCaCert ? 1 : 0);
+                    return true;
+                case 86:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0104 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg164 = data.readString();
+                    String[] _arg240 = data.createStringArray();
+                    uninstallCaCerts(_arg0104, _arg164, _arg240);
+                    reply.writeNoException();
+                    return true;
+                case 87:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0105 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg165 = data.readString();
+                    enforceCanManageCaCerts(_arg0105, _arg165);
+                    reply.writeNoException();
+                    return true;
+                case 88:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0106 = data.readString();
+                    int _arg166 = data.readInt();
+                    boolean _arg241 = data.readInt() != 0;
+                    boolean approveCaCert = approveCaCert(_arg0106, _arg166, _arg241);
+                    reply.writeNoException();
+                    reply.writeInt(approveCaCert ? 1 : 0);
+                    return true;
+                case 89:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0107 = data.readString();
+                    int _arg167 = data.readInt();
+                    boolean isCaCertApproved = isCaCertApproved(_arg0107, _arg167);
+                    reply.writeNoException();
+                    reply.writeInt(isCaCertApproved ? 1 : 0);
+                    return true;
+                case 90:
+                    return onTransact$installKeyPair$(data, reply);
+                case 91:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0108 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg168 = data.readString();
+                    String _arg242 = data.readString();
+                    boolean removeKeyPair = removeKeyPair(_arg0108, _arg168, _arg242);
+                    reply.writeNoException();
+                    reply.writeInt(removeKeyPair ? 1 : 0);
+                    return true;
+                case 92:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg04 = ComponentName.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg04 = null;
+                    }
+                    String _arg169 = data.readString();
+                    String _arg243 = data.readString();
+                    ParcelableKeyGenParameterSpec _arg32 = data.readInt() != 0 ? ParcelableKeyGenParameterSpec.CREATOR.createFromParcel(data) : null;
+                    int _arg4 = data.readInt();
+                    KeymasterCertificateChain _arg5 = new KeymasterCertificateChain();
+                    boolean generateKeyPair = generateKeyPair(_arg04, _arg169, _arg243, _arg32, _arg4, _arg5);
+                    reply.writeNoException();
+                    reply.writeInt(generateKeyPair ? 1 : 0);
+                    reply.writeInt(1);
+                    _arg5.writeToParcel(reply, 1);
+                    return true;
+                case 93:
+                    return onTransact$setKeyPairCertificate$(data, reply);
+                case 94:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0109 = data.readInt();
+                    Uri _arg170 = data.readInt() != 0 ? Uri.CREATOR.createFromParcel(data) : null;
+                    String _arg244 = data.readString();
+                    IBinder _arg33 = data.readStrongBinder();
+                    choosePrivateKeyAlias(_arg0109, _arg170, _arg244, _arg33);
+                    reply.writeNoException();
+                    return true;
+                case 95:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0110 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg171 = data.readString();
+                    List<String> _arg245 = data.createStringArrayList();
+                    setDelegatedScopes(_arg0110, _arg171, _arg245);
+                    reply.writeNoException();
+                    return true;
+                case 96:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0111 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg172 = data.readString();
+                    List<String> _result32 = getDelegatedScopes(_arg0111, _arg172);
+                    reply.writeNoException();
+                    reply.writeStringList(_result32);
+                    return true;
+                case 97:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0112 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg173 = data.readString();
+                    List<String> _result33 = getDelegatePackages(_arg0112, _arg173);
+                    reply.writeNoException();
+                    reply.writeStringList(_result33);
+                    return true;
+                case 98:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0113 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg174 = data.readString();
+                    setCertInstallerPackage(_arg0113, _arg174);
+                    reply.writeNoException();
+                    return true;
+                case 99:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0114 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _result34 = getCertInstallerPackage(_arg0114);
+                    reply.writeNoException();
+                    reply.writeString(_result34);
+                    return true;
+                case 100:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0115 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg175 = data.readString();
+                    boolean _arg246 = data.readInt() != 0;
+                    List<String> _arg34 = data.createStringArrayList();
+                    boolean alwaysOnVpnPackage = setAlwaysOnVpnPackage(_arg0115, _arg175, _arg246, _arg34);
+                    reply.writeNoException();
+                    reply.writeInt(alwaysOnVpnPackage ? 1 : 0);
+                    return true;
+                case 101:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0116 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _result35 = getAlwaysOnVpnPackage(_arg0116);
+                    reply.writeNoException();
+                    reply.writeString(_result35);
+                    return true;
+                case 102:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0117 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    boolean isAlwaysOnVpnLockdownEnabled = isAlwaysOnVpnLockdownEnabled(_arg0117);
+                    reply.writeNoException();
+                    reply.writeInt(isAlwaysOnVpnLockdownEnabled ? 1 : 0);
+                    return true;
+                case 103:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0118 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    List<String> _result36 = getAlwaysOnVpnLockdownWhitelist(_arg0118);
+                    reply.writeNoException();
+                    reply.writeStringList(_result36);
+                    return true;
+                case 104:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg05 = ComponentName.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg05 = null;
+                    }
+                    if (data.readInt() != 0) {
+                        _arg1 = IntentFilter.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg1 = null;
+                    }
+                    ComponentName _arg247 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    addPersistentPreferredActivity(_arg05, _arg1, _arg247);
+                    reply.writeNoException();
+                    return true;
+                case 105:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0119 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg176 = data.readString();
+                    clearPackagePersistentPreferredActivities(_arg0119, _arg176);
+                    reply.writeNoException();
+                    return true;
+                case 106:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0120 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg177 = data.readString();
+                    setDefaultSmsApplication(_arg0120, _arg177);
+                    reply.writeNoException();
+                    return true;
+                case 107:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg06 = ComponentName.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg06 = null;
+                    }
+                    String _arg178 = data.readString();
+                    String _arg248 = data.readString();
+                    Bundle _arg35 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    setApplicationRestrictions(_arg06, _arg178, _arg248, _arg35);
+                    reply.writeNoException();
+                    return true;
+                case 108:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0121 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg179 = data.readString();
+                    String _arg249 = data.readString();
+                    Bundle _result37 = getApplicationRestrictions(_arg0121, _arg179, _arg249);
+                    reply.writeNoException();
+                    if (_result37 != null) {
+                        reply.writeInt(1);
+                        _result37.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 109:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0122 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg180 = data.readString();
+                    boolean applicationRestrictionsManagingPackage = setApplicationRestrictionsManagingPackage(_arg0122, _arg180);
+                    reply.writeNoException();
+                    reply.writeInt(applicationRestrictionsManagingPackage ? 1 : 0);
+                    return true;
+                case 110:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0123 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _result38 = getApplicationRestrictionsManagingPackage(_arg0123);
+                    reply.writeNoException();
+                    reply.writeString(_result38);
+                    return true;
+                case 111:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0124 = data.readString();
+                    boolean isCallerApplicationRestrictionsManagingPackage = isCallerApplicationRestrictionsManagingPackage(_arg0124);
+                    reply.writeNoException();
+                    reply.writeInt(isCallerApplicationRestrictionsManagingPackage ? 1 : 0);
+                    return true;
+                case 112:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg07 = ComponentName.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg07 = null;
+                    }
+                    ComponentName _arg181 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    setRestrictionsProvider(_arg07, _arg181);
+                    reply.writeNoException();
+                    return true;
+                case 113:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0125 = data.readInt();
+                    ComponentName _result39 = getRestrictionsProvider(_arg0125);
+                    reply.writeNoException();
+                    if (_result39 != null) {
+                        reply.writeInt(1);
+                        _result39.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 114:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0126 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg182 = data.readString();
+                    boolean _arg250 = data.readInt() != 0;
+                    setUserRestriction(_arg0126, _arg182, _arg250);
+                    reply.writeNoException();
+                    return true;
+                case 115:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0127 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    Bundle _result40 = getUserRestrictions(_arg0127);
+                    reply.writeNoException();
+                    if (_result40 != null) {
+                        reply.writeInt(1);
+                        _result40.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 116:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg08 = ComponentName.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg08 = null;
+                    }
+                    IntentFilter _arg183 = data.readInt() != 0 ? IntentFilter.CREATOR.createFromParcel(data) : null;
+                    int _arg251 = data.readInt();
+                    addCrossProfileIntentFilter(_arg08, _arg183, _arg251);
+                    reply.writeNoException();
+                    return true;
+                case 117:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0128 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    clearCrossProfileIntentFilters(_arg0128);
+                    reply.writeNoException();
+                    return true;
+                case 118:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0129 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    ClassLoader cl = getClass().getClassLoader();
+                    List _arg184 = data.readArrayList(cl);
+                    boolean permittedAccessibilityServices = setPermittedAccessibilityServices(_arg0129, _arg184);
+                    reply.writeNoException();
+                    reply.writeInt(permittedAccessibilityServices ? 1 : 0);
+                    return true;
+                case 119:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0130 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    List _result41 = getPermittedAccessibilityServices(_arg0130);
+                    reply.writeNoException();
+                    reply.writeList(_result41);
+                    return true;
+                case 120:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0131 = data.readInt();
+                    List _result42 = getPermittedAccessibilityServicesForUser(_arg0131);
+                    reply.writeNoException();
+                    reply.writeList(_result42);
+                    return true;
+                case 121:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0132 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg185 = data.readString();
+                    int _arg252 = data.readInt();
+                    boolean isAccessibilityServicePermittedByAdmin = isAccessibilityServicePermittedByAdmin(_arg0132, _arg185, _arg252);
+                    reply.writeNoException();
+                    reply.writeInt(isAccessibilityServicePermittedByAdmin ? 1 : 0);
+                    return true;
+                case 122:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0133 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    ClassLoader cl2 = getClass().getClassLoader();
+                    List _arg186 = data.readArrayList(cl2);
+                    boolean permittedInputMethods = setPermittedInputMethods(_arg0133, _arg186);
+                    reply.writeNoException();
+                    reply.writeInt(permittedInputMethods ? 1 : 0);
+                    return true;
+                case 123:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0134 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    List _result43 = getPermittedInputMethods(_arg0134);
+                    reply.writeNoException();
+                    reply.writeList(_result43);
+                    return true;
+                case 124:
+                    data.enforceInterface(DESCRIPTOR);
+                    List _result44 = getPermittedInputMethodsForCurrentUser();
+                    reply.writeNoException();
+                    reply.writeList(_result44);
+                    return true;
+                case 125:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0135 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg187 = data.readString();
+                    int _arg253 = data.readInt();
+                    boolean isInputMethodPermittedByAdmin = isInputMethodPermittedByAdmin(_arg0135, _arg187, _arg253);
+                    reply.writeNoException();
+                    reply.writeInt(isInputMethodPermittedByAdmin ? 1 : 0);
+                    return true;
+                case 126:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0136 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    List<String> _arg188 = data.createStringArrayList();
+                    boolean permittedCrossProfileNotificationListeners = setPermittedCrossProfileNotificationListeners(_arg0136, _arg188);
+                    reply.writeNoException();
+                    reply.writeInt(permittedCrossProfileNotificationListeners ? 1 : 0);
+                    return true;
+                case 127:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0137 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    List<String> _result45 = getPermittedCrossProfileNotificationListeners(_arg0137);
+                    reply.writeNoException();
+                    reply.writeStringList(_result45);
+                    return true;
+                case 128:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0138 = data.readString();
+                    int _arg189 = data.readInt();
+                    boolean isNotificationListenerServicePermitted = isNotificationListenerServicePermitted(_arg0138, _arg189);
+                    reply.writeNoException();
+                    reply.writeInt(isNotificationListenerServicePermitted ? 1 : 0);
+                    return true;
+                case 129:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0139 = data.readString();
+                    Intent _result46 = createAdminSupportIntent(_arg0139);
+                    reply.writeNoException();
+                    if (_result46 != null) {
+                        reply.writeInt(1);
+                        _result46.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 130:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0140 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg190 = data.readString();
+                    String _arg254 = data.readString();
+                    boolean _arg36 = data.readInt() != 0;
+                    boolean applicationHidden = setApplicationHidden(_arg0140, _arg190, _arg254, _arg36);
+                    reply.writeNoException();
+                    reply.writeInt(applicationHidden ? 1 : 0);
+                    return true;
+                case 131:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0141 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg191 = data.readString();
+                    String _arg255 = data.readString();
+                    boolean isApplicationHidden = isApplicationHidden(_arg0141, _arg191, _arg255);
+                    reply.writeNoException();
+                    reply.writeInt(isApplicationHidden ? 1 : 0);
+                    return true;
+                case 132:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg09 = ComponentName.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg09 = null;
+                    }
+                    String _arg192 = data.readString();
+                    ComponentName _arg256 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    PersistableBundle _arg37 = data.readInt() != 0 ? PersistableBundle.CREATOR.createFromParcel(data) : null;
+                    int _arg42 = data.readInt();
+                    UserHandle _result47 = createAndManageUser(_arg09, _arg192, _arg256, _arg37, _arg42);
+                    reply.writeNoException();
+                    if (_result47 != null) {
+                        reply.writeInt(1);
+                        _result47.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 133:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg010 = ComponentName.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg010 = null;
+                    }
+                    UserHandle _arg193 = data.readInt() != 0 ? UserHandle.CREATOR.createFromParcel(data) : null;
+                    boolean removeUser = removeUser(_arg010, _arg193);
+                    reply.writeNoException();
+                    reply.writeInt(removeUser ? 1 : 0);
+                    return true;
+                case 134:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg011 = ComponentName.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg011 = null;
+                    }
+                    UserHandle _arg194 = data.readInt() != 0 ? UserHandle.CREATOR.createFromParcel(data) : null;
+                    boolean switchUser = switchUser(_arg011, _arg194);
+                    reply.writeNoException();
+                    reply.writeInt(switchUser ? 1 : 0);
+                    return true;
+                case 135:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg012 = ComponentName.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg012 = null;
+                    }
+                    UserHandle _arg195 = data.readInt() != 0 ? UserHandle.CREATOR.createFromParcel(data) : null;
+                    int _result48 = startUserInBackground(_arg012, _arg195);
+                    reply.writeNoException();
+                    reply.writeInt(_result48);
+                    return true;
+                case 136:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg013 = ComponentName.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg013 = null;
+                    }
+                    UserHandle _arg196 = data.readInt() != 0 ? UserHandle.CREATOR.createFromParcel(data) : null;
+                    int _result49 = stopUser(_arg013, _arg196);
+                    reply.writeNoException();
+                    reply.writeInt(_result49);
+                    return true;
+                case 137:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0142 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _result50 = logoutUser(_arg0142);
+                    reply.writeNoException();
+                    reply.writeInt(_result50);
+                    return true;
+                case 138:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0143 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    List<UserHandle> _result51 = getSecondaryUsers(_arg0143);
+                    reply.writeNoException();
+                    reply.writeTypedList(_result51);
+                    return true;
+                case 139:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0144 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg197 = data.readString();
+                    String _arg257 = data.readString();
+                    enableSystemApp(_arg0144, _arg197, _arg257);
+                    reply.writeNoException();
+                    return true;
+                case 140:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg014 = ComponentName.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg014 = null;
+                    }
+                    String _arg198 = data.readString();
+                    Intent _arg258 = data.readInt() != 0 ? Intent.CREATOR.createFromParcel(data) : null;
+                    int _result52 = enableSystemAppWithIntent(_arg014, _arg198, _arg258);
+                    reply.writeNoException();
+                    reply.writeInt(_result52);
+                    return true;
+                case 141:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0145 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg199 = data.readString();
+                    String _arg259 = data.readString();
+                    boolean installExistingPackage = installExistingPackage(_arg0145, _arg199, _arg259);
+                    reply.writeNoException();
+                    reply.writeInt(installExistingPackage ? 1 : 0);
+                    return true;
+                case 142:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0146 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg1100 = data.readString();
+                    boolean _arg260 = data.readInt() != 0;
+                    setAccountManagementDisabled(_arg0146, _arg1100, _arg260);
+                    reply.writeNoException();
+                    return true;
+                case 143:
+                    data.enforceInterface(DESCRIPTOR);
+                    String[] _result53 = getAccountTypesWithManagementDisabled();
+                    reply.writeNoException();
+                    reply.writeStringArray(_result53);
+                    return true;
+                case 144:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0147 = data.readInt();
+                    String[] _result54 = getAccountTypesWithManagementDisabledAsUser(_arg0147);
+                    reply.writeNoException();
+                    reply.writeStringArray(_result54);
+                    return true;
+                case 145:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0148 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String[] _arg1101 = data.createStringArray();
+                    setLockTaskPackages(_arg0148, _arg1101);
+                    reply.writeNoException();
+                    return true;
+                case 146:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0149 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String[] _result55 = getLockTaskPackages(_arg0149);
+                    reply.writeNoException();
+                    reply.writeStringArray(_result55);
+                    return true;
+                case 147:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0150 = data.readString();
+                    boolean isLockTaskPermitted = isLockTaskPermitted(_arg0150);
+                    reply.writeNoException();
+                    reply.writeInt(isLockTaskPermitted ? 1 : 0);
+                    return true;
+                case 148:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0151 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg1102 = data.readInt();
+                    setLockTaskFeatures(_arg0151, _arg1102);
+                    reply.writeNoException();
+                    return true;
+                case 149:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0152 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _result56 = getLockTaskFeatures(_arg0152);
+                    reply.writeNoException();
+                    reply.writeInt(_result56);
+                    return true;
+                case 150:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0153 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg1103 = data.readString();
+                    String _arg261 = data.readString();
+                    setGlobalSetting(_arg0153, _arg1103, _arg261);
+                    reply.writeNoException();
+                    return true;
+                case 151:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0154 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg1104 = data.readString();
+                    String _arg262 = data.readString();
+                    setSystemSetting(_arg0154, _arg1104, _arg262);
+                    reply.writeNoException();
+                    return true;
+                case 152:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0155 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg1105 = data.readString();
+                    String _arg263 = data.readString();
+                    setSecureSetting(_arg0155, _arg1105, _arg263);
+                    reply.writeNoException();
+                    return true;
+                case 153:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0156 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    long _arg1106 = data.readLong();
+                    boolean time = setTime(_arg0156, _arg1106);
+                    reply.writeNoException();
+                    reply.writeInt(time ? 1 : 0);
+                    return true;
+                case 154:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0157 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg1107 = data.readString();
+                    boolean timeZone = setTimeZone(_arg0157, _arg1107);
+                    reply.writeNoException();
+                    reply.writeInt(timeZone ? 1 : 0);
+                    return true;
+                case 155:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0158 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    boolean _arg1108 = data.readInt() != 0;
+                    setMasterVolumeMuted(_arg0158, _arg1108);
+                    reply.writeNoException();
+                    return true;
+                case 156:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0159 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    boolean isMasterVolumeMuted = isMasterVolumeMuted(_arg0159);
+                    reply.writeNoException();
+                    reply.writeInt(isMasterVolumeMuted ? 1 : 0);
+                    return true;
+                case 157:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean _arg0160 = data.readInt() != 0;
+                    String _arg1109 = data.readString();
+                    int _arg264 = data.readInt();
+                    notifyLockTaskModeChanged(_arg0160, _arg1109, _arg264);
+                    reply.writeNoException();
+                    return true;
+                case 158:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0161 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg1110 = data.readString();
+                    String _arg265 = data.readString();
+                    boolean _arg38 = data.readInt() != 0;
+                    setUninstallBlocked(_arg0161, _arg1110, _arg265, _arg38);
+                    reply.writeNoException();
+                    return true;
+                case 159:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0162 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg1111 = data.readString();
+                    boolean isUninstallBlocked = isUninstallBlocked(_arg0162, _arg1111);
+                    reply.writeNoException();
+                    reply.writeInt(isUninstallBlocked ? 1 : 0);
+                    return true;
+                case 160:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0163 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    boolean _arg1112 = data.readInt() != 0;
+                    setCrossProfileCallerIdDisabled(_arg0163, _arg1112);
+                    reply.writeNoException();
+                    return true;
+                case 161:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0164 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    boolean crossProfileCallerIdDisabled = getCrossProfileCallerIdDisabled(_arg0164);
+                    reply.writeNoException();
+                    reply.writeInt(crossProfileCallerIdDisabled ? 1 : 0);
+                    return true;
+                case 162:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0165 = data.readInt();
+                    boolean crossProfileCallerIdDisabledForUser = getCrossProfileCallerIdDisabledForUser(_arg0165);
+                    reply.writeNoException();
+                    reply.writeInt(crossProfileCallerIdDisabledForUser ? 1 : 0);
+                    return true;
+                case 163:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0166 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    boolean _arg1113 = data.readInt() != 0;
+                    setCrossProfileContactsSearchDisabled(_arg0166, _arg1113);
+                    reply.writeNoException();
+                    return true;
+                case 164:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0167 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    boolean crossProfileContactsSearchDisabled = getCrossProfileContactsSearchDisabled(_arg0167);
+                    reply.writeNoException();
+                    reply.writeInt(crossProfileContactsSearchDisabled ? 1 : 0);
+                    return true;
+                case 165:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0168 = data.readInt();
+                    boolean crossProfileContactsSearchDisabledForUser = getCrossProfileContactsSearchDisabledForUser(_arg0168);
+                    reply.writeNoException();
+                    reply.writeInt(crossProfileContactsSearchDisabledForUser ? 1 : 0);
+                    return true;
+                case 166:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0169 = data.readString();
+                    long _arg1114 = data.readLong();
+                    boolean _arg266 = data.readInt() != 0;
+                    long _arg39 = data.readLong();
+                    Intent _arg43 = data.readInt() != 0 ? Intent.CREATOR.createFromParcel(data) : null;
+                    startManagedQuickContact(_arg0169, _arg1114, _arg266, _arg39, _arg43);
+                    reply.writeNoException();
+                    return true;
+                case 167:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0170 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    boolean _arg1115 = data.readInt() != 0;
+                    setBluetoothContactSharingDisabled(_arg0170, _arg1115);
+                    reply.writeNoException();
+                    return true;
+                case 168:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0171 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    boolean bluetoothContactSharingDisabled = getBluetoothContactSharingDisabled(_arg0171);
+                    reply.writeNoException();
+                    reply.writeInt(bluetoothContactSharingDisabled ? 1 : 0);
+                    return true;
+                case 169:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0172 = data.readInt();
+                    boolean bluetoothContactSharingDisabledForUser = getBluetoothContactSharingDisabledForUser(_arg0172);
+                    reply.writeNoException();
+                    reply.writeInt(bluetoothContactSharingDisabledForUser ? 1 : 0);
+                    return true;
+                case 170:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg015 = ComponentName.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg015 = null;
+                    }
+                    if (data.readInt() != 0) {
+                        _arg12 = ComponentName.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg12 = null;
+                    }
+                    PersistableBundle _arg267 = data.readInt() != 0 ? PersistableBundle.CREATOR.createFromParcel(data) : null;
+                    boolean _arg310 = data.readInt() != 0;
+                    setTrustAgentConfiguration(_arg015, _arg12, _arg267, _arg310);
+                    reply.writeNoException();
+                    return true;
+                case 171:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg016 = ComponentName.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg016 = null;
+                    }
+                    ComponentName _arg1116 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg268 = data.readInt();
+                    boolean _arg311 = data.readInt() != 0;
+                    List<PersistableBundle> _result57 = getTrustAgentConfiguration(_arg016, _arg1116, _arg268, _arg311);
+                    reply.writeNoException();
+                    reply.writeTypedList(_result57);
+                    return true;
+                case 172:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0173 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg1117 = data.readString();
+                    boolean addCrossProfileWidgetProvider = addCrossProfileWidgetProvider(_arg0173, _arg1117);
+                    reply.writeNoException();
+                    reply.writeInt(addCrossProfileWidgetProvider ? 1 : 0);
+                    return true;
+                case 173:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0174 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg1118 = data.readString();
+                    boolean removeCrossProfileWidgetProvider = removeCrossProfileWidgetProvider(_arg0174, _arg1118);
+                    reply.writeNoException();
+                    reply.writeInt(removeCrossProfileWidgetProvider ? 1 : 0);
+                    return true;
+                case 174:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0175 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    List<String> _result58 = getCrossProfileWidgetProviders(_arg0175);
+                    reply.writeNoException();
+                    reply.writeStringList(_result58);
+                    return true;
+                case 175:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0176 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    boolean _arg1119 = data.readInt() != 0;
+                    setAutoTimeRequired(_arg0176, _arg1119);
+                    reply.writeNoException();
+                    return true;
+                case 176:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean autoTimeRequired = getAutoTimeRequired();
+                    reply.writeNoException();
+                    reply.writeInt(autoTimeRequired ? 1 : 0);
+                    return true;
+                case 177:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0177 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    boolean _arg1120 = data.readInt() != 0;
+                    setForceEphemeralUsers(_arg0177, _arg1120);
+                    reply.writeNoException();
+                    return true;
+                case 178:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0178 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    boolean forceEphemeralUsers = getForceEphemeralUsers(_arg0178);
+                    reply.writeNoException();
+                    reply.writeInt(forceEphemeralUsers ? 1 : 0);
+                    return true;
+                case 179:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0179 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg1121 = data.readInt();
+                    boolean isRemovingAdmin = isRemovingAdmin(_arg0179, _arg1121);
+                    reply.writeNoException();
+                    reply.writeInt(isRemovingAdmin ? 1 : 0);
+                    return true;
+                case 180:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg017 = ComponentName.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg017 = null;
+                    }
+                    Bitmap _arg1122 = data.readInt() != 0 ? Bitmap.CREATOR.createFromParcel(data) : null;
+                    setUserIcon(_arg017, _arg1122);
+                    reply.writeNoException();
+                    return true;
+                case 181:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg018 = ComponentName.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg018 = null;
+                    }
+                    SystemUpdatePolicy _arg1123 = data.readInt() != 0 ? SystemUpdatePolicy.CREATOR.createFromParcel(data) : null;
+                    setSystemUpdatePolicy(_arg018, _arg1123);
+                    reply.writeNoException();
+                    return true;
+                case 182:
+                    data.enforceInterface(DESCRIPTOR);
+                    SystemUpdatePolicy _result59 = getSystemUpdatePolicy();
+                    reply.writeNoException();
+                    if (_result59 != null) {
+                        reply.writeInt(1);
+                        _result59.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 183:
+                    data.enforceInterface(DESCRIPTOR);
+                    clearSystemUpdatePolicyFreezePeriodRecord();
+                    reply.writeNoException();
+                    return true;
+                case 184:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0180 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    boolean _arg1124 = data.readInt() != 0;
+                    boolean keyguardDisabled = setKeyguardDisabled(_arg0180, _arg1124);
+                    reply.writeNoException();
+                    reply.writeInt(keyguardDisabled ? 1 : 0);
+                    return true;
+                case 185:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0181 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    boolean _arg1125 = data.readInt() != 0;
+                    boolean statusBarDisabled = setStatusBarDisabled(_arg0181, _arg1125);
+                    reply.writeNoException();
+                    reply.writeInt(statusBarDisabled ? 1 : 0);
+                    return true;
+                case 186:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean doNotAskCredentialsOnBoot = getDoNotAskCredentialsOnBoot();
+                    reply.writeNoException();
+                    reply.writeInt(doNotAskCredentialsOnBoot ? 1 : 0);
+                    return true;
+                case 187:
+                    data.enforceInterface(DESCRIPTOR);
+                    SystemUpdateInfo _arg0182 = data.readInt() != 0 ? SystemUpdateInfo.CREATOR.createFromParcel(data) : null;
+                    notifyPendingSystemUpdate(_arg0182);
+                    reply.writeNoException();
+                    return true;
+                case 188:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0183 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    SystemUpdateInfo _result60 = getPendingSystemUpdate(_arg0183);
+                    reply.writeNoException();
+                    if (_result60 != null) {
+                        reply.writeInt(1);
+                        _result60.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 189:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0184 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg1126 = data.readString();
+                    int _arg269 = data.readInt();
+                    setPermissionPolicy(_arg0184, _arg1126, _arg269);
+                    reply.writeNoException();
+                    return true;
+                case 190:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0185 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _result61 = getPermissionPolicy(_arg0185);
+                    reply.writeNoException();
+                    reply.writeInt(_result61);
+                    return true;
+                case 191:
+                    return onTransact$setPermissionGrantState$(data, reply);
+                case 192:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0186 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg1127 = data.readString();
+                    String _arg270 = data.readString();
+                    String _arg312 = data.readString();
+                    int _result62 = getPermissionGrantState(_arg0186, _arg1127, _arg270, _arg312);
+                    reply.writeNoException();
+                    reply.writeInt(_result62);
+                    return true;
+                case 193:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0187 = data.readString();
+                    String _arg1128 = data.readString();
+                    boolean isProvisioningAllowed = isProvisioningAllowed(_arg0187, _arg1128);
+                    reply.writeNoException();
+                    reply.writeInt(isProvisioningAllowed ? 1 : 0);
+                    return true;
+                case 194:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0188 = data.readString();
+                    String _arg1129 = data.readString();
+                    int _result63 = checkProvisioningPreCondition(_arg0188, _arg1129);
+                    reply.writeNoException();
+                    reply.writeInt(_result63);
+                    return true;
+                case 195:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0189 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg1130 = data.readString();
+                    List<String> _arg271 = data.createStringArrayList();
+                    setKeepUninstalledPackages(_arg0189, _arg1130, _arg271);
+                    reply.writeNoException();
+                    return true;
+                case 196:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0190 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg1131 = data.readString();
+                    List<String> _result64 = getKeepUninstalledPackages(_arg0190, _arg1131);
+                    reply.writeNoException();
+                    reply.writeStringList(_result64);
+                    return true;
+                case 197:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0191 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    boolean isManagedProfile = isManagedProfile(_arg0191);
+                    reply.writeNoException();
+                    reply.writeInt(isManagedProfile ? 1 : 0);
+                    return true;
+                case 198:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0192 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    boolean isSystemOnlyUser = isSystemOnlyUser(_arg0192);
+                    reply.writeNoException();
+                    reply.writeInt(isSystemOnlyUser ? 1 : 0);
+                    return true;
+                case 199:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0193 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _result65 = getWifiMacAddress(_arg0193);
+                    reply.writeNoException();
+                    reply.writeString(_result65);
+                    return true;
+                case 200:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0194 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    reboot(_arg0194);
+                    reply.writeNoException();
+                    return true;
+                case 201:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg019 = ComponentName.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg019 = null;
+                    }
+                    CharSequence _arg1132 = data.readInt() != 0 ? TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(data) : null;
+                    setShortSupportMessage(_arg019, _arg1132);
+                    reply.writeNoException();
+                    return true;
+                case 202:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0195 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    CharSequence _result66 = getShortSupportMessage(_arg0195);
+                    reply.writeNoException();
+                    if (_result66 != null) {
+                        reply.writeInt(1);
+                        TextUtils.writeToParcel(_result66, reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 203:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg020 = ComponentName.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg020 = null;
+                    }
+                    CharSequence _arg1133 = data.readInt() != 0 ? TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(data) : null;
+                    setLongSupportMessage(_arg020, _arg1133);
+                    reply.writeNoException();
+                    return true;
+                case 204:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0196 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    CharSequence _result67 = getLongSupportMessage(_arg0196);
+                    reply.writeNoException();
+                    if (_result67 != null) {
+                        reply.writeInt(1);
+                        TextUtils.writeToParcel(_result67, reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 205:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0197 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg1134 = data.readInt();
+                    CharSequence _result68 = getShortSupportMessageForUser(_arg0197, _arg1134);
+                    reply.writeNoException();
+                    if (_result68 != null) {
+                        reply.writeInt(1);
+                        TextUtils.writeToParcel(_result68, reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 206:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0198 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg1135 = data.readInt();
+                    CharSequence _result69 = getLongSupportMessageForUser(_arg0198, _arg1135);
+                    reply.writeNoException();
+                    if (_result69 != null) {
+                        reply.writeInt(1);
+                        TextUtils.writeToParcel(_result69, reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 207:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0199 = data.readInt();
+                    boolean isSeparateProfileChallengeAllowed = isSeparateProfileChallengeAllowed(_arg0199);
+                    reply.writeNoException();
+                    reply.writeInt(isSeparateProfileChallengeAllowed ? 1 : 0);
+                    return true;
+                case 208:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0200 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg1136 = data.readInt();
+                    setOrganizationColor(_arg0200, _arg1136);
+                    reply.writeNoException();
+                    return true;
+                case 209:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0201 = data.readInt();
+                    int _arg1137 = data.readInt();
+                    setOrganizationColorForUser(_arg0201, _arg1137);
+                    reply.writeNoException();
+                    return true;
+                case 210:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0202 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _result70 = getOrganizationColor(_arg0202);
+                    reply.writeNoException();
+                    reply.writeInt(_result70);
+                    return true;
+                case 211:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0203 = data.readInt();
+                    int _result71 = getOrganizationColorForUser(_arg0203);
+                    reply.writeNoException();
+                    reply.writeInt(_result71);
+                    return true;
+                case 212:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg021 = ComponentName.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg021 = null;
+                    }
+                    CharSequence _arg1138 = data.readInt() != 0 ? TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(data) : null;
+                    setOrganizationName(_arg021, _arg1138);
+                    reply.writeNoException();
+                    return true;
+                case 213:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0204 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    CharSequence _result72 = getOrganizationName(_arg0204);
+                    reply.writeNoException();
+                    if (_result72 != null) {
+                        reply.writeInt(1);
+                        TextUtils.writeToParcel(_result72, reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 214:
+                    data.enforceInterface(DESCRIPTOR);
+                    CharSequence _result73 = getDeviceOwnerOrganizationName();
+                    reply.writeNoException();
+                    if (_result73 != null) {
+                        reply.writeInt(1);
+                        TextUtils.writeToParcel(_result73, reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 215:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0205 = data.readInt();
+                    CharSequence _result74 = getOrganizationNameForUser(_arg0205);
+                    reply.writeNoException();
+                    if (_result74 != null) {
+                        reply.writeInt(1);
+                        TextUtils.writeToParcel(_result74, reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 216:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result75 = getUserProvisioningState();
+                    reply.writeNoException();
+                    reply.writeInt(_result75);
+                    return true;
+                case 217:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0206 = data.readInt();
+                    int _arg1139 = data.readInt();
+                    setUserProvisioningState(_arg0206, _arg1139);
+                    reply.writeNoException();
+                    return true;
+                case 218:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0207 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    List<String> _arg1140 = data.createStringArrayList();
+                    setAffiliationIds(_arg0207, _arg1140);
+                    reply.writeNoException();
+                    return true;
+                case 219:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0208 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    List<String> _result76 = getAffiliationIds(_arg0208);
+                    reply.writeNoException();
+                    reply.writeStringList(_result76);
+                    return true;
+                case 220:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isAffiliatedUser = isAffiliatedUser();
+                    reply.writeNoException();
+                    reply.writeInt(isAffiliatedUser ? 1 : 0);
+                    return true;
+                case 221:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0209 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    boolean _arg1141 = data.readInt() != 0;
+                    setSecurityLoggingEnabled(_arg0209, _arg1141);
+                    reply.writeNoException();
+                    return true;
+                case 222:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0210 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    boolean isSecurityLoggingEnabled = isSecurityLoggingEnabled(_arg0210);
+                    reply.writeNoException();
+                    reply.writeInt(isSecurityLoggingEnabled ? 1 : 0);
+                    return true;
+                case 223:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0211 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    ParceledListSlice _result77 = retrieveSecurityLogs(_arg0211);
+                    reply.writeNoException();
+                    if (_result77 != null) {
+                        reply.writeInt(1);
+                        _result77.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 224:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0212 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    ParceledListSlice _result78 = retrievePreRebootSecurityLogs(_arg0212);
+                    reply.writeNoException();
+                    if (_result78 != null) {
+                        reply.writeInt(1);
+                        _result78.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 225:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _result79 = forceNetworkLogs();
+                    reply.writeNoException();
+                    reply.writeLong(_result79);
+                    return true;
+                case 226:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _result80 = forceSecurityLogs();
+                    reply.writeNoException();
+                    reply.writeLong(_result80);
+                    return true;
+                case 227:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0213 = data.readString();
+                    boolean isUninstallInQueue = isUninstallInQueue(_arg0213);
+                    reply.writeNoException();
+                    reply.writeInt(isUninstallInQueue ? 1 : 0);
+                    return true;
+                case 228:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0214 = data.readString();
+                    uninstallPackageWithActiveAdmins(_arg0214);
+                    reply.writeNoException();
+                    return true;
+                case 229:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isDeviceProvisioned = isDeviceProvisioned();
+                    reply.writeNoException();
+                    reply.writeInt(isDeviceProvisioned ? 1 : 0);
+                    return true;
+                case 230:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isDeviceProvisioningConfigApplied = isDeviceProvisioningConfigApplied();
+                    reply.writeNoException();
+                    reply.writeInt(isDeviceProvisioningConfigApplied ? 1 : 0);
+                    return true;
+                case 231:
+                    data.enforceInterface(DESCRIPTOR);
+                    setDeviceProvisioningConfigApplied();
+                    reply.writeNoException();
+                    return true;
+                case 232:
+                    data.enforceInterface(DESCRIPTOR);
+                    forceUpdateUserSetupComplete();
+                    reply.writeNoException();
+                    return true;
+                case 233:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0215 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    boolean _arg1142 = data.readInt() != 0;
+                    setBackupServiceEnabled(_arg0215, _arg1142);
+                    reply.writeNoException();
+                    return true;
+                case 234:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0216 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    boolean isBackupServiceEnabled = isBackupServiceEnabled(_arg0216);
+                    reply.writeNoException();
+                    reply.writeInt(isBackupServiceEnabled ? 1 : 0);
+                    return true;
+                case 235:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0217 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg1143 = data.readString();
+                    boolean _arg272 = data.readInt() != 0;
+                    setNetworkLoggingEnabled(_arg0217, _arg1143, _arg272);
+                    reply.writeNoException();
+                    return true;
+                case 236:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0218 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg1144 = data.readString();
+                    boolean isNetworkLoggingEnabled = isNetworkLoggingEnabled(_arg0218, _arg1144);
+                    reply.writeNoException();
+                    reply.writeInt(isNetworkLoggingEnabled ? 1 : 0);
+                    return true;
+                case 237:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0219 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg1145 = data.readString();
+                    long _arg273 = data.readLong();
+                    List<NetworkEvent> _result81 = retrieveNetworkLogs(_arg0219, _arg1145, _arg273);
+                    reply.writeNoException();
+                    reply.writeTypedList(_result81);
+                    return true;
+                case 238:
+                    return onTransact$bindDeviceAdminServiceAsUser$(data, reply);
+                case 239:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0220 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    List<UserHandle> _result82 = getBindDeviceAdminTargetUsers(_arg0220);
+                    reply.writeNoException();
+                    reply.writeTypedList(_result82);
+                    return true;
+                case 240:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0221 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    boolean isEphemeralUser = isEphemeralUser(_arg0221);
+                    reply.writeNoException();
+                    reply.writeInt(isEphemeralUser ? 1 : 0);
+                    return true;
+                case 241:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _result83 = getLastSecurityLogRetrievalTime();
+                    reply.writeNoException();
+                    reply.writeLong(_result83);
+                    return true;
+                case 242:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _result84 = getLastBugReportRequestTime();
+                    reply.writeNoException();
+                    reply.writeLong(_result84);
+                    return true;
+                case 243:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _result85 = getLastNetworkLogRetrievalTime();
+                    reply.writeNoException();
+                    reply.writeLong(_result85);
+                    return true;
+                case 244:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0222 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    byte[] _arg1146 = data.createByteArray();
+                    boolean resetPasswordToken = setResetPasswordToken(_arg0222, _arg1146);
+                    reply.writeNoException();
+                    reply.writeInt(resetPasswordToken ? 1 : 0);
+                    return true;
+                case 245:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0223 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    boolean clearResetPasswordToken = clearResetPasswordToken(_arg0223);
+                    reply.writeNoException();
+                    reply.writeInt(clearResetPasswordToken ? 1 : 0);
+                    return true;
+                case 246:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0224 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    boolean isResetPasswordTokenActive = isResetPasswordTokenActive(_arg0224);
+                    reply.writeNoException();
+                    reply.writeInt(isResetPasswordTokenActive ? 1 : 0);
+                    return true;
+                case 247:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0225 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg1147 = data.readString();
+                    byte[] _arg274 = data.createByteArray();
+                    int _arg313 = data.readInt();
+                    boolean resetPasswordWithToken = resetPasswordWithToken(_arg0225, _arg1147, _arg274, _arg313);
+                    reply.writeNoException();
+                    reply.writeInt(resetPasswordWithToken ? 1 : 0);
+                    return true;
+                case 248:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isCurrentInputMethodSetByOwner = isCurrentInputMethodSetByOwner();
+                    reply.writeNoException();
+                    reply.writeInt(isCurrentInputMethodSetByOwner ? 1 : 0);
+                    return true;
+                case 249:
+                    data.enforceInterface(DESCRIPTOR);
+                    UserHandle _arg0226 = data.readInt() != 0 ? UserHandle.CREATOR.createFromParcel(data) : null;
+                    StringParceledListSlice _result86 = getOwnerInstalledCaCerts(_arg0226);
+                    reply.writeNoException();
+                    if (_result86 != null) {
+                        reply.writeInt(1);
+                        _result86.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 250:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0227 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg1148 = data.readString();
+                    IPackageDataObserver _arg275 = IPackageDataObserver.Stub.asInterface(data.readStrongBinder());
+                    clearApplicationUserData(_arg0227, _arg1148, _arg275);
+                    reply.writeNoException();
+                    return true;
+                case 251:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0228 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    boolean _arg1149 = data.readInt() != 0;
+                    setLogoutEnabled(_arg0228, _arg1149);
+                    reply.writeNoException();
+                    return true;
+                case 252:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isLogoutEnabled = isLogoutEnabled();
+                    reply.writeNoException();
+                    reply.writeInt(isLogoutEnabled ? 1 : 0);
+                    return true;
+                case 253:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0229 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg1150 = data.readInt();
+                    String _arg276 = data.readString();
+                    List<String> _result87 = getDisallowedSystemApps(_arg0229, _arg1150, _arg276);
+                    reply.writeNoException();
+                    reply.writeStringList(_result87);
+                    return true;
+                case 254:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg022 = ComponentName.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg022 = null;
+                    }
+                    if (data.readInt() != 0) {
+                        _arg13 = ComponentName.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg13 = null;
+                    }
+                    PersistableBundle _arg277 = data.readInt() != 0 ? PersistableBundle.CREATOR.createFromParcel(data) : null;
+                    transferOwnership(_arg022, _arg13, _arg277);
+                    reply.writeNoException();
+                    return true;
+                case 255:
+                    data.enforceInterface(DESCRIPTOR);
+                    PersistableBundle _result88 = getTransferOwnershipBundle();
+                    reply.writeNoException();
+                    if (_result88 != null) {
+                        reply.writeInt(1);
+                        _result88.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 256:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg023 = ComponentName.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg023 = null;
+                    }
+                    CharSequence _arg1151 = data.readInt() != 0 ? TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(data) : null;
+                    setStartUserSessionMessage(_arg023, _arg1151);
+                    reply.writeNoException();
+                    return true;
+                case 257:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg024 = ComponentName.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg024 = null;
+                    }
+                    CharSequence _arg1152 = data.readInt() != 0 ? TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(data) : null;
+                    setEndUserSessionMessage(_arg024, _arg1152);
+                    reply.writeNoException();
+                    return true;
+                case 258:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0230 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    CharSequence _result89 = getStartUserSessionMessage(_arg0230);
+                    reply.writeNoException();
+                    if (_result89 != null) {
+                        reply.writeInt(1);
+                        TextUtils.writeToParcel(_result89, reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 259:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0231 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    CharSequence _result90 = getEndUserSessionMessage(_arg0231);
+                    reply.writeNoException();
+                    if (_result90 != null) {
+                        reply.writeInt(1);
+                        TextUtils.writeToParcel(_result90, reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 260:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0232 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    List<String> _arg1153 = data.createStringArrayList();
+                    List<String> _result91 = setMeteredDataDisabledPackages(_arg0232, _arg1153);
+                    reply.writeNoException();
+                    reply.writeStringList(_result91);
+                    return true;
+                case 261:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0233 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    List<String> _result92 = getMeteredDataDisabledPackages(_arg0233);
+                    reply.writeNoException();
+                    reply.writeStringList(_result92);
+                    return true;
+                case 262:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg025 = ComponentName.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg025 = null;
+                    }
+                    ApnSetting _arg1154 = data.readInt() != 0 ? ApnSetting.CREATOR.createFromParcel(data) : null;
+                    int _result93 = addOverrideApn(_arg025, _arg1154);
+                    reply.writeNoException();
+                    reply.writeInt(_result93);
+                    return true;
+                case 263:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg026 = ComponentName.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg026 = null;
+                    }
+                    int _arg1155 = data.readInt();
+                    ApnSetting _arg278 = data.readInt() != 0 ? ApnSetting.CREATOR.createFromParcel(data) : null;
+                    boolean updateOverrideApn = updateOverrideApn(_arg026, _arg1155, _arg278);
+                    reply.writeNoException();
+                    reply.writeInt(updateOverrideApn ? 1 : 0);
+                    return true;
+                case 264:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0234 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg1156 = data.readInt();
+                    boolean removeOverrideApn = removeOverrideApn(_arg0234, _arg1156);
+                    reply.writeNoException();
+                    reply.writeInt(removeOverrideApn ? 1 : 0);
+                    return true;
+                case 265:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0235 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    List<ApnSetting> _result94 = getOverrideApns(_arg0235);
+                    reply.writeNoException();
+                    reply.writeTypedList(_result94);
+                    return true;
+                case 266:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0236 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    boolean _arg1157 = data.readInt() != 0;
+                    setOverrideApnsEnabled(_arg0236, _arg1157);
+                    reply.writeNoException();
+                    return true;
+                case 267:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0237 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    boolean isOverrideApnEnabled = isOverrideApnEnabled(_arg0237);
+                    reply.writeNoException();
+                    reply.writeInt(isOverrideApnEnabled ? 1 : 0);
+                    return true;
+                case 268:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0238 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg1158 = data.readString();
+                    int _arg279 = data.readInt();
+                    boolean isMeteredDataDisabledPackageForUser = isMeteredDataDisabledPackageForUser(_arg0238, _arg1158, _arg279);
+                    reply.writeNoException();
+                    reply.writeInt(isMeteredDataDisabledPackageForUser ? 1 : 0);
+                    return true;
+                case 269:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0239 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg1159 = data.readInt();
+                    String _arg280 = data.readString();
+                    int _result95 = setGlobalPrivateDns(_arg0239, _arg1159, _arg280);
+                    reply.writeNoException();
+                    reply.writeInt(_result95);
+                    return true;
+                case 270:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0240 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _result96 = getGlobalPrivateDnsMode(_arg0240);
+                    reply.writeNoException();
+                    reply.writeInt(_result96);
+                    return true;
+                case 271:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0241 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _result97 = getGlobalPrivateDnsHost(_arg0241);
+                    reply.writeNoException();
+                    reply.writeString(_result97);
+                    return true;
+                case 272:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0242 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _arg1160 = data.readInt();
+                    grantDeviceIdsAccessToProfileOwner(_arg0242, _arg1160);
+                    reply.writeNoException();
+                    return true;
+                case 273:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg027 = ComponentName.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg027 = null;
+                    }
+                    ParcelFileDescriptor _arg1161 = data.readInt() != 0 ? ParcelFileDescriptor.CREATOR.createFromParcel(data) : null;
+                    StartInstallingUpdateCallback _arg281 = StartInstallingUpdateCallback.Stub.asInterface(data.readStrongBinder());
+                    installUpdateFromFile(_arg027, _arg1161, _arg281);
+                    reply.writeNoException();
+                    return true;
+                case 274:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0243 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    List<String> _arg1162 = data.createStringArrayList();
+                    setCrossProfileCalendarPackages(_arg0243, _arg1162);
+                    reply.writeNoException();
+                    return true;
+                case 275:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0244 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    List<String> _result98 = getCrossProfileCalendarPackages(_arg0244);
+                    reply.writeNoException();
+                    reply.writeStringList(_result98);
+                    return true;
+                case 276:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0245 = data.readString();
+                    int _arg1163 = data.readInt();
+                    boolean isPackageAllowedToAccessCalendarForUser = isPackageAllowedToAccessCalendarForUser(_arg0245, _arg1163);
+                    reply.writeNoException();
+                    reply.writeInt(isPackageAllowedToAccessCalendarForUser ? 1 : 0);
+                    return true;
+                case 277:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0246 = data.readInt();
+                    List<String> _result99 = getCrossProfileCalendarPackagesForUser(_arg0246);
+                    reply.writeNoException();
+                    reply.writeStringList(_result99);
+                    return true;
+                case 278:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isManagedKiosk = isManagedKiosk();
+                    reply.writeNoException();
+                    reply.writeInt(isManagedKiosk ? 1 : 0);
+                    return true;
+                case 279:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isUnattendedManagedKiosk = isUnattendedManagedKiosk();
+                    reply.writeNoException();
+                    reply.writeInt(isUnattendedManagedKiosk ? 1 : 0);
+                    return true;
+                case 280:
+                    return onTransact$startViewCalendarEventInManagedProfile$(data, reply);
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements IDevicePolicyManager {
             public static IDevicePolicyManager sDefaultImpl;
             private IBinder mRemote;
@@ -7359,6 +5157,7 @@ public interface IDevicePolicyManager extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -7367,6 +5166,7 @@ public interface IDevicePolicyManager extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setPasswordQuality(ComponentName who, int quality, boolean parent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -7379,20 +5179,20 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(quality);
-                    _data.writeInt(parent);
-                    if (this.mRemote.transact(1, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(parent ? 1 : 0);
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setPasswordQuality(who, quality, parent);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setPasswordQuality(who, quality, parent);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public int getPasswordQuality(ComponentName who, int userHandle, boolean parent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -7405,14 +5205,13 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(userHandle);
-                    _data.writeInt(parent);
-                    if (!this.mRemote.transact(2, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(parent ? 1 : 0);
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPasswordQuality(who, userHandle, parent);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -7420,6 +5219,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setPasswordMinimumLength(ComponentName who, int length, boolean parent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -7432,20 +5232,20 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(length);
-                    _data.writeInt(parent);
-                    if (this.mRemote.transact(3, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(parent ? 1 : 0);
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setPasswordMinimumLength(who, length, parent);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setPasswordMinimumLength(who, length, parent);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public int getPasswordMinimumLength(ComponentName who, int userHandle, boolean parent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -7458,14 +5258,13 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(userHandle);
-                    _data.writeInt(parent);
-                    if (!this.mRemote.transact(4, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(parent ? 1 : 0);
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPasswordMinimumLength(who, userHandle, parent);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -7473,6 +5272,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setPasswordMinimumUpperCase(ComponentName who, int length, boolean parent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -7485,20 +5285,20 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(length);
-                    _data.writeInt(parent);
-                    if (this.mRemote.transact(5, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(parent ? 1 : 0);
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setPasswordMinimumUpperCase(who, length, parent);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setPasswordMinimumUpperCase(who, length, parent);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public int getPasswordMinimumUpperCase(ComponentName who, int userHandle, boolean parent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -7511,14 +5311,13 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(userHandle);
-                    _data.writeInt(parent);
-                    if (!this.mRemote.transact(6, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(parent ? 1 : 0);
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPasswordMinimumUpperCase(who, userHandle, parent);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -7526,6 +5325,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setPasswordMinimumLowerCase(ComponentName who, int length, boolean parent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -7538,20 +5338,20 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(length);
-                    _data.writeInt(parent);
-                    if (this.mRemote.transact(7, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(parent ? 1 : 0);
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setPasswordMinimumLowerCase(who, length, parent);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setPasswordMinimumLowerCase(who, length, parent);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public int getPasswordMinimumLowerCase(ComponentName who, int userHandle, boolean parent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -7564,14 +5364,13 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(userHandle);
-                    _data.writeInt(parent);
-                    if (!this.mRemote.transact(8, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(parent ? 1 : 0);
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPasswordMinimumLowerCase(who, userHandle, parent);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -7579,6 +5378,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setPasswordMinimumLetters(ComponentName who, int length, boolean parent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -7591,20 +5391,20 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(length);
-                    _data.writeInt(parent);
-                    if (this.mRemote.transact(9, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(parent ? 1 : 0);
+                    boolean _status = this.mRemote.transact(9, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setPasswordMinimumLetters(who, length, parent);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setPasswordMinimumLetters(who, length, parent);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public int getPasswordMinimumLetters(ComponentName who, int userHandle, boolean parent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -7617,14 +5417,13 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(userHandle);
-                    _data.writeInt(parent);
-                    if (!this.mRemote.transact(10, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(parent ? 1 : 0);
+                    boolean _status = this.mRemote.transact(10, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPasswordMinimumLetters(who, userHandle, parent);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -7632,6 +5431,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setPasswordMinimumNumeric(ComponentName who, int length, boolean parent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -7644,20 +5444,20 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(length);
-                    _data.writeInt(parent);
-                    if (this.mRemote.transact(11, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(parent ? 1 : 0);
+                    boolean _status = this.mRemote.transact(11, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setPasswordMinimumNumeric(who, length, parent);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setPasswordMinimumNumeric(who, length, parent);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public int getPasswordMinimumNumeric(ComponentName who, int userHandle, boolean parent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -7670,14 +5470,13 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(userHandle);
-                    _data.writeInt(parent);
-                    if (!this.mRemote.transact(12, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(parent ? 1 : 0);
+                    boolean _status = this.mRemote.transact(12, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPasswordMinimumNumeric(who, userHandle, parent);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -7685,6 +5484,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setPasswordMinimumSymbols(ComponentName who, int length, boolean parent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -7697,20 +5497,20 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(length);
-                    _data.writeInt(parent);
-                    if (this.mRemote.transact(13, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(parent ? 1 : 0);
+                    boolean _status = this.mRemote.transact(13, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setPasswordMinimumSymbols(who, length, parent);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setPasswordMinimumSymbols(who, length, parent);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public int getPasswordMinimumSymbols(ComponentName who, int userHandle, boolean parent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -7723,14 +5523,13 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(userHandle);
-                    _data.writeInt(parent);
-                    if (!this.mRemote.transact(14, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(parent ? 1 : 0);
+                    boolean _status = this.mRemote.transact(14, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPasswordMinimumSymbols(who, userHandle, parent);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -7738,6 +5537,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setPasswordMinimumNonLetter(ComponentName who, int length, boolean parent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -7750,20 +5550,20 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(length);
-                    _data.writeInt(parent);
-                    if (this.mRemote.transact(15, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(parent ? 1 : 0);
+                    boolean _status = this.mRemote.transact(15, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setPasswordMinimumNonLetter(who, length, parent);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setPasswordMinimumNonLetter(who, length, parent);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public int getPasswordMinimumNonLetter(ComponentName who, int userHandle, boolean parent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -7776,14 +5576,13 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(userHandle);
-                    _data.writeInt(parent);
-                    if (!this.mRemote.transact(16, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(parent ? 1 : 0);
+                    boolean _status = this.mRemote.transact(16, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPasswordMinimumNonLetter(who, userHandle, parent);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -7791,6 +5590,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setPasswordHistoryLength(ComponentName who, int length, boolean parent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -7803,20 +5603,20 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(length);
-                    _data.writeInt(parent);
-                    if (this.mRemote.transact(17, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(parent ? 1 : 0);
+                    boolean _status = this.mRemote.transact(17, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setPasswordHistoryLength(who, length, parent);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setPasswordHistoryLength(who, length, parent);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public int getPasswordHistoryLength(ComponentName who, int userHandle, boolean parent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -7829,14 +5629,13 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(userHandle);
-                    _data.writeInt(parent);
-                    if (!this.mRemote.transact(18, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(parent ? 1 : 0);
+                    boolean _status = this.mRemote.transact(18, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPasswordHistoryLength(who, userHandle, parent);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -7844,6 +5643,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setPasswordExpirationTimeout(ComponentName who, long expiration, boolean parent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -7856,20 +5656,20 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeLong(expiration);
-                    _data.writeInt(parent);
-                    if (this.mRemote.transact(19, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(parent ? 1 : 0);
+                    boolean _status = this.mRemote.transact(19, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setPasswordExpirationTimeout(who, expiration, parent);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setPasswordExpirationTimeout(who, expiration, parent);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public long getPasswordExpirationTimeout(ComponentName who, int userHandle, boolean parent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -7882,14 +5682,13 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(userHandle);
-                    _data.writeInt(parent);
-                    if (!this.mRemote.transact(20, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(parent ? 1 : 0);
+                    boolean _status = this.mRemote.transact(20, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPasswordExpirationTimeout(who, userHandle, parent);
                     }
                     _reply.readException();
                     long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -7897,6 +5696,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public long getPasswordExpiration(ComponentName who, int userHandle, boolean parent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -7909,14 +5709,13 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(userHandle);
-                    _data.writeInt(parent);
-                    if (!this.mRemote.transact(21, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(parent ? 1 : 0);
+                    boolean _status = this.mRemote.transact(21, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPasswordExpiration(who, userHandle, parent);
                     }
                     _reply.readException();
                     long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -7924,67 +5723,59 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean isActivePasswordSufficient(int userHandle, boolean parent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userHandle);
-                    _data.writeInt(parent);
-                    boolean z = false;
-                    if (!this.mRemote.transact(22, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(parent ? 1 : 0);
+                    boolean _status = this.mRemote.transact(22, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isActivePasswordSufficient(userHandle, parent);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean isProfileActivePasswordSufficientForParent(int userHandle) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userHandle);
-                    boolean z = false;
-                    if (!this.mRemote.transact(23, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(23, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isProfileActivePasswordSufficientForParent(userHandle);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public int getPasswordComplexity() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(24, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(24, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPasswordComplexity();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -7992,27 +5783,24 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean isUsingUnifiedPassword(ComponentName admin) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (admin != null) {
                         _data.writeInt(1);
                         admin.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(25, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(25, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isUsingUnifiedPassword(admin);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -8020,20 +5808,20 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public int getCurrentFailedPasswordAttempts(int userHandle, boolean parent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userHandle);
-                    _data.writeInt(parent);
-                    if (!this.mRemote.transact(26, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(parent ? 1 : 0);
+                    boolean _status = this.mRemote.transact(26, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCurrentFailedPasswordAttempts(userHandle, parent);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -8041,20 +5829,20 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public int getProfileWithMinimumFailedPasswordsForWipe(int userHandle, boolean parent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userHandle);
-                    _data.writeInt(parent);
-                    if (!this.mRemote.transact(27, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(parent ? 1 : 0);
+                    boolean _status = this.mRemote.transact(27, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getProfileWithMinimumFailedPasswordsForWipe(userHandle, parent);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -8062,6 +5850,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setMaximumFailedPasswordsForWipe(ComponentName admin, int num, boolean parent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8074,20 +5863,20 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(num);
-                    _data.writeInt(parent);
-                    if (this.mRemote.transact(28, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(parent ? 1 : 0);
+                    boolean _status = this.mRemote.transact(28, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setMaximumFailedPasswordsForWipe(admin, num, parent);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setMaximumFailedPasswordsForWipe(admin, num, parent);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public int getMaximumFailedPasswordsForWipe(ComponentName admin, int userHandle, boolean parent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8100,14 +5889,13 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(userHandle);
-                    _data.writeInt(parent);
-                    if (!this.mRemote.transact(29, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(parent ? 1 : 0);
+                    boolean _status = this.mRemote.transact(29, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getMaximumFailedPasswordsForWipe(admin, userHandle, parent);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -8115,6 +5903,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean resetPassword(String password, int flags) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8122,24 +5911,20 @@ public interface IDevicePolicyManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(password);
                     _data.writeInt(flags);
-                    boolean z = false;
-                    if (!this.mRemote.transact(30, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(30, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().resetPassword(password, flags);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setMaximumTimeToLock(ComponentName who, long timeMs, boolean parent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8152,20 +5937,20 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeLong(timeMs);
-                    _data.writeInt(parent);
-                    if (this.mRemote.transact(31, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(parent ? 1 : 0);
+                    boolean _status = this.mRemote.transact(31, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setMaximumTimeToLock(who, timeMs, parent);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setMaximumTimeToLock(who, timeMs, parent);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public long getMaximumTimeToLock(ComponentName who, int userHandle, boolean parent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8178,14 +5963,13 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(userHandle);
-                    _data.writeInt(parent);
-                    if (!this.mRemote.transact(32, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(parent ? 1 : 0);
+                    boolean _status = this.mRemote.transact(32, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getMaximumTimeToLock(who, userHandle, parent);
                     }
                     _reply.readException();
                     long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -8193,6 +5977,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setRequiredStrongAuthTimeout(ComponentName who, long timeMs, boolean parent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8205,20 +5990,20 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeLong(timeMs);
-                    _data.writeInt(parent);
-                    if (this.mRemote.transact(33, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(parent ? 1 : 0);
+                    boolean _status = this.mRemote.transact(33, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setRequiredStrongAuthTimeout(who, timeMs, parent);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setRequiredStrongAuthTimeout(who, timeMs, parent);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public long getRequiredStrongAuthTimeout(ComponentName who, int userId, boolean parent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8231,14 +6016,13 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(userId);
-                    _data.writeInt(parent);
-                    if (!this.mRemote.transact(34, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(parent ? 1 : 0);
+                    boolean _status = this.mRemote.transact(34, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getRequiredStrongAuthTimeout(who, userId, parent);
                     }
                     _reply.readException();
                     long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -8246,26 +6030,27 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void lockNow(int flags, boolean parent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(flags);
-                    _data.writeInt(parent);
-                    if (this.mRemote.transact(35, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(parent ? 1 : 0);
+                    boolean _status = this.mRemote.transact(35, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().lockNow(flags, parent);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().lockNow(flags, parent);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void wipeDataWithReason(int flags, String wipeReasonForUser) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8273,19 +6058,19 @@ public interface IDevicePolicyManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(flags);
                     _data.writeString(wipeReasonForUser);
-                    if (this.mRemote.transact(36, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(36, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().wipeDataWithReason(flags, wipeReasonForUser);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().wipeDataWithReason(flags, wipeReasonForUser);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public ComponentName setGlobalProxy(ComponentName admin, String proxySpec, String exclusionList) throws RemoteException {
                 ComponentName _result;
                 Parcel _data = Parcel.obtain();
@@ -8300,7 +6085,8 @@ public interface IDevicePolicyManager extends IInterface {
                     }
                     _data.writeString(proxySpec);
                     _data.writeString(exclusionList);
-                    if (!this.mRemote.transact(37, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(37, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setGlobalProxy(admin, proxySpec, exclusionList);
                     }
                     _reply.readException();
@@ -8309,16 +6095,14 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    ComponentName _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public ComponentName getGlobalProxyAdmin(int userHandle) throws RemoteException {
                 ComponentName _result;
                 Parcel _data = Parcel.obtain();
@@ -8326,7 +6110,8 @@ public interface IDevicePolicyManager extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userHandle);
-                    if (!this.mRemote.transact(38, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(38, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getGlobalProxyAdmin(userHandle);
                     }
                     _reply.readException();
@@ -8335,16 +6120,14 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    ComponentName _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setRecommendedGlobalProxy(ComponentName admin, ProxyInfo proxyInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8362,19 +6145,19 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(39, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(39, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setRecommendedGlobalProxy(admin, proxyInfo);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setRecommendedGlobalProxy(admin, proxyInfo);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public int setStorageEncryption(ComponentName who, boolean encrypt) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8386,14 +6169,13 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(encrypt);
-                    if (!this.mRemote.transact(40, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(encrypt ? 1 : 0);
+                    boolean _status = this.mRemote.transact(40, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setStorageEncryption(who, encrypt);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -8401,12 +6183,12 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean getStorageEncryption(ComponentName who, int userHandle) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (who != null) {
                         _data.writeInt(1);
                         who.writeToParcel(_data, 0);
@@ -8414,15 +6196,12 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(userHandle);
-                    if (!this.mRemote.transact(41, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(41, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getStorageEncryption(who, userHandle);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -8430,6 +6209,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public int getStorageEncryptionStatus(String callerPackage, int userHandle) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8437,13 +6217,12 @@ public interface IDevicePolicyManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callerPackage);
                     _data.writeInt(userHandle);
-                    if (!this.mRemote.transact(42, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(42, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getStorageEncryptionStatus(callerPackage, userHandle);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -8451,27 +6230,24 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean requestBugreport(ComponentName who) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (who != null) {
                         _data.writeInt(1);
                         who.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(43, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(43, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().requestBugreport(who);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -8479,6 +6255,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setCameraDisabled(ComponentName who, boolean disabled) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8490,26 +6267,25 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(disabled);
-                    if (this.mRemote.transact(44, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(disabled ? 1 : 0);
+                    boolean _status = this.mRemote.transact(44, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setCameraDisabled(who, disabled);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setCameraDisabled(who, disabled);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean getCameraDisabled(ComponentName who, int userHandle) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (who != null) {
                         _data.writeInt(1);
                         who.writeToParcel(_data, 0);
@@ -8517,15 +6293,12 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(userHandle);
-                    if (!this.mRemote.transact(45, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(45, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCameraDisabled(who, userHandle);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -8533,6 +6306,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setScreenCaptureDisabled(ComponentName who, boolean disabled) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8544,26 +6318,25 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(disabled);
-                    if (this.mRemote.transact(46, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(disabled ? 1 : 0);
+                    boolean _status = this.mRemote.transact(46, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setScreenCaptureDisabled(who, disabled);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setScreenCaptureDisabled(who, disabled);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean getScreenCaptureDisabled(ComponentName who, int userHandle) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (who != null) {
                         _data.writeInt(1);
                         who.writeToParcel(_data, 0);
@@ -8571,15 +6344,12 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(userHandle);
-                    if (!this.mRemote.transact(47, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(47, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getScreenCaptureDisabled(who, userHandle);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -8587,6 +6357,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setKeyguardDisabledFeatures(ComponentName who, int which, boolean parent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8599,20 +6370,20 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(which);
-                    _data.writeInt(parent);
-                    if (this.mRemote.transact(48, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(parent ? 1 : 0);
+                    boolean _status = this.mRemote.transact(48, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setKeyguardDisabledFeatures(who, which, parent);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setKeyguardDisabledFeatures(who, which, parent);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public int getKeyguardDisabledFeatures(ComponentName who, int userHandle, boolean parent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8625,14 +6396,13 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(userHandle);
-                    _data.writeInt(parent);
-                    if (!this.mRemote.transact(49, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(parent ? 1 : 0);
+                    boolean _status = this.mRemote.transact(49, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getKeyguardDisabledFeatures(who, userHandle, parent);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -8640,6 +6410,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setActiveAdmin(ComponentName policyReceiver, boolean refreshing, int userHandle) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8651,27 +6422,26 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(refreshing);
+                    _data.writeInt(refreshing ? 1 : 0);
                     _data.writeInt(userHandle);
-                    if (this.mRemote.transact(50, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(50, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setActiveAdmin(policyReceiver, refreshing, userHandle);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setActiveAdmin(policyReceiver, refreshing, userHandle);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean isAdminActive(ComponentName policyReceiver, int userHandle) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (policyReceiver != null) {
                         _data.writeInt(1);
                         policyReceiver.writeToParcel(_data, 0);
@@ -8679,15 +6449,12 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(userHandle);
-                    if (!this.mRemote.transact(51, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(51, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isAdminActive(policyReceiver, userHandle);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -8695,19 +6462,19 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public List<ComponentName> getActiveAdmins(int userHandle) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userHandle);
-                    if (!this.mRemote.transact(52, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(52, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getActiveAdmins(userHandle);
                     }
                     _reply.readException();
                     List<ComponentName> _result = _reply.createTypedArrayList(ComponentName.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -8715,6 +6482,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean packageHasActiveAdmins(String packageName, int userHandle) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8722,24 +6490,20 @@ public interface IDevicePolicyManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(packageName);
                     _data.writeInt(userHandle);
-                    boolean z = false;
-                    if (!this.mRemote.transact(53, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(53, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().packageHasActiveAdmins(packageName, userHandle);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void getRemoveWarning(ComponentName policyReceiver, RemoteCallback result, int userHandle) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8758,19 +6522,19 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(userHandle);
-                    if (this.mRemote.transact(54, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(54, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().getRemoveWarning(policyReceiver, result, userHandle);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().getRemoveWarning(policyReceiver, result, userHandle);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void removeActiveAdmin(ComponentName policyReceiver, int userHandle) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8783,19 +6547,19 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(userHandle);
-                    if (this.mRemote.transact(55, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(55, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().removeActiveAdmin(policyReceiver, userHandle);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().removeActiveAdmin(policyReceiver, userHandle);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void forceRemoveActiveAdmin(ComponentName policyReceiver, int userHandle) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8808,25 +6572,24 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(userHandle);
-                    if (this.mRemote.transact(56, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(56, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().forceRemoveActiveAdmin(policyReceiver, userHandle);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().forceRemoveActiveAdmin(policyReceiver, userHandle);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean hasGrantedPolicy(ComponentName policyReceiver, int usesPolicy, int userHandle) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (policyReceiver != null) {
                         _data.writeInt(1);
                         policyReceiver.writeToParcel(_data, 0);
@@ -8835,15 +6598,12 @@ public interface IDevicePolicyManager extends IInterface {
                     }
                     _data.writeInt(usesPolicy);
                     _data.writeInt(userHandle);
-                    if (!this.mRemote.transact(57, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(57, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().hasGrantedPolicy(policyReceiver, usesPolicy, userHandle);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -8851,6 +6611,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setActivePasswordState(PasswordMetrics metrics, int userHandle) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8863,158 +6624,157 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(userHandle);
-                    if (this.mRemote.transact(58, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(58, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setActivePasswordState(metrics, userHandle);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setActivePasswordState(metrics, userHandle);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void reportPasswordChanged(int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userId);
-                    if (this.mRemote.transact(59, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(59, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().reportPasswordChanged(userId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().reportPasswordChanged(userId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void reportFailedPasswordAttempt(int userHandle) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userHandle);
-                    if (this.mRemote.transact(60, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(60, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().reportFailedPasswordAttempt(userHandle);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().reportFailedPasswordAttempt(userHandle);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void reportSuccessfulPasswordAttempt(int userHandle) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userHandle);
-                    if (this.mRemote.transact(61, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(61, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().reportSuccessfulPasswordAttempt(userHandle);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().reportSuccessfulPasswordAttempt(userHandle);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void reportFailedBiometricAttempt(int userHandle) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userHandle);
-                    if (this.mRemote.transact(62, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(62, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().reportFailedBiometricAttempt(userHandle);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().reportFailedBiometricAttempt(userHandle);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void reportSuccessfulBiometricAttempt(int userHandle) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userHandle);
-                    if (this.mRemote.transact(63, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(63, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().reportSuccessfulBiometricAttempt(userHandle);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().reportSuccessfulBiometricAttempt(userHandle);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void reportKeyguardDismissed(int userHandle) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userHandle);
-                    if (this.mRemote.transact(64, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(64, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().reportKeyguardDismissed(userHandle);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().reportKeyguardDismissed(userHandle);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void reportKeyguardSecured(int userHandle) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userHandle);
-                    if (this.mRemote.transact(65, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(65, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().reportKeyguardSecured(userHandle);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().reportKeyguardSecured(userHandle);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean setDeviceOwner(ComponentName who, String ownerName, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (who != null) {
                         _data.writeInt(1);
                         who.writeToParcel(_data, 0);
@@ -9023,15 +6783,12 @@ public interface IDevicePolicyManager extends IInterface {
                     }
                     _data.writeString(ownerName);
                     _data.writeInt(userId);
-                    if (!this.mRemote.transact(66, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(66, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setDeviceOwner(who, ownerName, userId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -9039,14 +6796,16 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public ComponentName getDeviceOwnerComponent(boolean callingUserOnly) throws RemoteException {
                 ComponentName _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(callingUserOnly);
-                    if (!this.mRemote.transact(67, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(callingUserOnly ? 1 : 0);
+                    boolean _status = this.mRemote.transact(67, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getDeviceOwnerComponent(callingUserOnly);
                     }
                     _reply.readException();
@@ -9055,51 +6814,6 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    ComponentName _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public boolean hasDeviceOwner() throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(68, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
-                        return Stub.getDefaultImpl().hasDeviceOwner();
-                    }
-                    _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public String getDeviceOwnerName() throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(69, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
-                        return Stub.getDefaultImpl().getDeviceOwnerName();
-                    }
-                    _reply.readException();
-                    String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -9107,37 +6821,75 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
+            public boolean hasDeviceOwner() throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    boolean _status = this.mRemote.transact(68, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        return Stub.getDefaultImpl().hasDeviceOwner();
+                    }
+                    _reply.readException();
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // android.app.admin.IDevicePolicyManager
+            public String getDeviceOwnerName() throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    boolean _status = this.mRemote.transact(69, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        return Stub.getDefaultImpl().getDeviceOwnerName();
+                    }
+                    _reply.readException();
+                    String _result = _reply.readString();
+                    return _result;
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // android.app.admin.IDevicePolicyManager
             public void clearDeviceOwner(String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(packageName);
-                    if (this.mRemote.transact(70, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(70, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().clearDeviceOwner(packageName);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().clearDeviceOwner(packageName);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public int getDeviceOwnerUserId() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(71, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(71, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getDeviceOwnerUserId();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -9145,12 +6897,12 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean setProfileOwner(ComponentName who, String ownerName, int userHandle) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (who != null) {
                         _data.writeInt(1);
                         who.writeToParcel(_data, 0);
@@ -9159,15 +6911,12 @@ public interface IDevicePolicyManager extends IInterface {
                     }
                     _data.writeString(ownerName);
                     _data.writeInt(userHandle);
-                    if (!this.mRemote.transact(72, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(72, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setProfileOwner(who, ownerName, userHandle);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -9175,6 +6924,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public ComponentName getProfileOwnerAsUser(int userHandle) throws RemoteException {
                 ComponentName _result;
                 Parcel _data = Parcel.obtain();
@@ -9182,7 +6932,8 @@ public interface IDevicePolicyManager extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userHandle);
-                    if (!this.mRemote.transact(73, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(73, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getProfileOwnerAsUser(userHandle);
                     }
                     _reply.readException();
@@ -9191,16 +6942,14 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    ComponentName _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public ComponentName getProfileOwner(int userHandle) throws RemoteException {
                 ComponentName _result;
                 Parcel _data = Parcel.obtain();
@@ -9208,7 +6957,8 @@ public interface IDevicePolicyManager extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userHandle);
-                    if (!this.mRemote.transact(74, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(74, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getProfileOwner(userHandle);
                     }
                     _reply.readException();
@@ -9217,29 +6967,6 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    ComponentName _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public String getProfileOwnerName(int userHandle) throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(userHandle);
-                    if (!this.mRemote.transact(75, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
-                        return Stub.getDefaultImpl().getProfileOwnerName(userHandle);
-                    }
-                    _reply.readException();
-                    String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -9247,6 +6974,27 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
+            public String getProfileOwnerName(int userHandle) throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    _data.writeInt(userHandle);
+                    boolean _status = this.mRemote.transact(75, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        return Stub.getDefaultImpl().getProfileOwnerName(userHandle);
+                    }
+                    _reply.readException();
+                    String _result = _reply.readString();
+                    return _result;
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // android.app.admin.IDevicePolicyManager
             public void setProfileEnabled(ComponentName who) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -9258,19 +7006,19 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(76, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(76, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setProfileEnabled(who);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setProfileEnabled(who);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setProfileName(ComponentName who, String profileName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -9283,19 +7031,19 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(profileName);
-                    if (this.mRemote.transact(77, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(77, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setProfileName(who, profileName);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setProfileName(who, profileName);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void clearProfileOwner(ComponentName who) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -9307,42 +7055,38 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(78, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(78, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().clearProfileOwner(who);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().clearProfileOwner(who);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean hasUserSetupCompleted() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(79, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(79, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().hasUserSetupCompleted();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean checkDeviceIdentifierAccess(String packageName, int pid, int uid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -9351,24 +7095,20 @@ public interface IDevicePolicyManager extends IInterface {
                     _data.writeString(packageName);
                     _data.writeInt(pid);
                     _data.writeInt(uid);
-                    boolean z = false;
-                    if (!this.mRemote.transact(80, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(80, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().checkDeviceIdentifierAccess(packageName, pid, uid);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setDeviceOwnerLockScreenInfo(ComponentName who, CharSequence deviceOwnerInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -9386,26 +7126,27 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(81, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(81, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setDeviceOwnerLockScreenInfo(who, deviceOwnerInfo);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setDeviceOwnerLockScreenInfo(who, deviceOwnerInfo);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public CharSequence getDeviceOwnerLockScreenInfo() throws RemoteException {
                 CharSequence _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(82, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(82, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getDeviceOwnerLockScreenInfo();
                     }
                     _reply.readException();
@@ -9414,16 +7155,14 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    CharSequence _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public String[] setPackagesSuspended(ComponentName admin, String callerPackage, String[] packageNames, boolean suspended) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -9437,14 +7176,13 @@ public interface IDevicePolicyManager extends IInterface {
                     }
                     _data.writeString(callerPackage);
                     _data.writeStringArray(packageNames);
-                    _data.writeInt(suspended);
-                    if (!this.mRemote.transact(83, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(suspended ? 1 : 0);
+                    boolean _status = this.mRemote.transact(83, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setPackagesSuspended(admin, callerPackage, packageNames, suspended);
                     }
                     _reply.readException();
                     String[] _result = _reply.createStringArray();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -9452,12 +7190,12 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean isPackageSuspended(ComponentName admin, String callerPackage, String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (admin != null) {
                         _data.writeInt(1);
                         admin.writeToParcel(_data, 0);
@@ -9466,15 +7204,12 @@ public interface IDevicePolicyManager extends IInterface {
                     }
                     _data.writeString(callerPackage);
                     _data.writeString(packageName);
-                    if (!this.mRemote.transact(84, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(84, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isPackageSuspended(admin, callerPackage, packageName);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -9482,12 +7217,12 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean installCaCert(ComponentName admin, String callerPackage, byte[] certBuffer) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (admin != null) {
                         _data.writeInt(1);
                         admin.writeToParcel(_data, 0);
@@ -9496,15 +7231,12 @@ public interface IDevicePolicyManager extends IInterface {
                     }
                     _data.writeString(callerPackage);
                     _data.writeByteArray(certBuffer);
-                    if (!this.mRemote.transact(85, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(85, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().installCaCert(admin, callerPackage, certBuffer);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -9512,6 +7244,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void uninstallCaCerts(ComponentName admin, String callerPackage, String[] aliases) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -9525,19 +7258,19 @@ public interface IDevicePolicyManager extends IInterface {
                     }
                     _data.writeString(callerPackage);
                     _data.writeStringArray(aliases);
-                    if (this.mRemote.transact(86, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(86, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().uninstallCaCerts(admin, callerPackage, aliases);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().uninstallCaCerts(admin, callerPackage, aliases);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void enforceCanManageCaCerts(ComponentName admin, String callerPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -9550,19 +7283,19 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(callerPackage);
-                    if (this.mRemote.transact(87, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(87, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().enforceCanManageCaCerts(admin, callerPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().enforceCanManageCaCerts(admin, callerPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean approveCaCert(String alias, int userHandle, boolean approval) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -9570,25 +7303,21 @@ public interface IDevicePolicyManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(alias);
                     _data.writeInt(userHandle);
-                    _data.writeInt(approval);
-                    boolean z = false;
-                    if (!this.mRemote.transact(88, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(approval ? 1 : 0);
+                    boolean _status = this.mRemote.transact(88, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().approveCaCert(alias, userHandle, approval);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean isCaCertApproved(String alias, int userHandle) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -9596,98 +7325,82 @@ public interface IDevicePolicyManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(alias);
                     _data.writeInt(userHandle);
-                    boolean z = false;
-                    if (!this.mRemote.transact(89, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(89, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isCaCertApproved(alias, userHandle);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean installKeyPair(ComponentName who, String callerPackage, byte[] privKeyBuffer, byte[] certBuffer, byte[] certChainBuffer, String alias, boolean requestAccess, boolean isUserSelectable) throws RemoteException {
-                ComponentName componentName = who;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
-                    if (componentName != null) {
+                    if (who != null) {
                         _data.writeInt(1);
-                        componentName.writeToParcel(_data, 0);
+                        who.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    try {
-                        _data.writeString(callerPackage);
-                        try {
-                            _data.writeByteArray(privKeyBuffer);
-                        } catch (Throwable th) {
-                            th = th;
-                            byte[] bArr = certBuffer;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                        try {
-                            _data.writeByteArray(certBuffer);
-                            _data.writeByteArray(certChainBuffer);
-                            _data.writeString(alias);
-                            _data.writeInt(requestAccess ? 1 : 0);
-                            _data.writeInt(isUserSelectable ? 1 : 0);
-                            if (this.mRemote.transact(90, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                _reply.readException();
-                                if (_reply.readInt() == 0) {
-                                    _result = false;
-                                }
-                                _reply.recycle();
-                                _data.recycle();
-                                return _result;
-                            }
-                            boolean installKeyPair = Stub.getDefaultImpl().installKeyPair(who, callerPackage, privKeyBuffer, certBuffer, certChainBuffer, alias, requestAccess, isUserSelectable);
-                            _reply.recycle();
-                            _data.recycle();
-                            return installKeyPair;
-                        } catch (Throwable th2) {
-                            th = th2;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                    } catch (Throwable th3) {
-                        th = th3;
-                        byte[] bArr2 = privKeyBuffer;
-                        byte[] bArr3 = certBuffer;
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeString(callerPackage);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeByteArray(privKeyBuffer);
+                } catch (Throwable th3) {
+                    th = th3;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeByteArray(certBuffer);
+                    _data.writeByteArray(certChainBuffer);
+                    _data.writeString(alias);
+                    _data.writeInt(requestAccess ? 1 : 0);
+                    _data.writeInt(isUserSelectable ? 1 : 0);
+                    boolean _status = this.mRemote.transact(90, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        boolean installKeyPair = Stub.getDefaultImpl().installKeyPair(who, callerPackage, privKeyBuffer, certBuffer, certChainBuffer, alias, requestAccess, isUserSelectable);
                         _reply.recycle();
                         _data.recycle();
-                        throw th;
+                        return installKeyPair;
                     }
+                    _reply.readException();
+                    boolean _result = _reply.readInt() != 0;
+                    _reply.recycle();
+                    _data.recycle();
+                    return _result;
                 } catch (Throwable th4) {
                     th = th4;
-                    String str = callerPackage;
-                    byte[] bArr22 = privKeyBuffer;
-                    byte[] bArr32 = certBuffer;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean removeKeyPair(ComponentName who, String callerPackage, String alias) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (who != null) {
                         _data.writeInt(1);
                         who.writeToParcel(_data, 0);
@@ -9696,15 +7409,12 @@ public interface IDevicePolicyManager extends IInterface {
                     }
                     _data.writeString(callerPackage);
                     _data.writeString(alias);
-                    if (!this.mRemote.transact(91, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(91, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().removeKeyPair(who, callerPackage, alias);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -9712,187 +7422,153 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean generateKeyPair(ComponentName who, String callerPackage, String algorithm, ParcelableKeyGenParameterSpec keySpec, int idAttestationFlags, KeymasterCertificateChain attestationChain) throws RemoteException {
-                ComponentName componentName = who;
-                ParcelableKeyGenParameterSpec parcelableKeyGenParameterSpec = keySpec;
+                boolean _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
-                    if (componentName != null) {
+                    _result = true;
+                    if (who != null) {
                         _data.writeInt(1);
-                        componentName.writeToParcel(_data, 0);
+                        who.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    try {
-                        _data.writeString(callerPackage);
-                        try {
-                            _data.writeString(algorithm);
-                            if (parcelableKeyGenParameterSpec != null) {
-                                _data.writeInt(1);
-                                parcelableKeyGenParameterSpec.writeToParcel(_data, 0);
-                            } else {
-                                _data.writeInt(0);
-                            }
-                        } catch (Throwable th) {
-                            th = th;
-                            int i = idAttestationFlags;
-                            KeymasterCertificateChain keymasterCertificateChain = attestationChain;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                    } catch (Throwable th2) {
-                        th = th2;
-                        String str = algorithm;
-                        int i2 = idAttestationFlags;
-                        KeymasterCertificateChain keymasterCertificateChain2 = attestationChain;
-                        _reply.recycle();
-                        _data.recycle();
-                        throw th;
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeString(callerPackage);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeString(algorithm);
+                    if (keySpec != null) {
+                        _data.writeInt(1);
+                        keySpec.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
                     }
                     try {
                         _data.writeInt(idAttestationFlags);
                         try {
-                            if (this.mRemote.transact(92, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                _reply.readException();
-                                if (_reply.readInt() == 0) {
-                                    _result = false;
-                                }
-                                if (_reply.readInt() != 0) {
-                                    try {
-                                        attestationChain.readFromParcel(_reply);
-                                    } catch (Throwable th3) {
-                                        th = th3;
-                                    }
-                                } else {
-                                    KeymasterCertificateChain keymasterCertificateChain3 = attestationChain;
-                                }
+                            boolean _status = this.mRemote.transact(92, _data, _reply, 0);
+                            if (!_status && Stub.getDefaultImpl() != null) {
+                                boolean generateKeyPair = Stub.getDefaultImpl().generateKeyPair(who, callerPackage, algorithm, keySpec, idAttestationFlags, attestationChain);
                                 _reply.recycle();
                                 _data.recycle();
-                                return _result;
+                                return generateKeyPair;
                             }
-                            boolean generateKeyPair = Stub.getDefaultImpl().generateKeyPair(who, callerPackage, algorithm, keySpec, idAttestationFlags, attestationChain);
+                            _reply.readException();
+                            if (_reply.readInt() == 0) {
+                                _result = false;
+                            }
+                            if (_reply.readInt() != 0) {
+                                try {
+                                    attestationChain.readFromParcel(_reply);
+                                } catch (Throwable th3) {
+                                    th = th3;
+                                    _reply.recycle();
+                                    _data.recycle();
+                                    throw th;
+                                }
+                            }
                             _reply.recycle();
                             _data.recycle();
-                            return generateKeyPair;
+                            return _result;
                         } catch (Throwable th4) {
                             th = th4;
-                            KeymasterCertificateChain keymasterCertificateChain22 = attestationChain;
                             _reply.recycle();
                             _data.recycle();
                             throw th;
                         }
                     } catch (Throwable th5) {
                         th = th5;
-                        KeymasterCertificateChain keymasterCertificateChain222 = attestationChain;
-                        _reply.recycle();
-                        _data.recycle();
-                        throw th;
                     }
                 } catch (Throwable th6) {
                     th = th6;
-                    String str2 = callerPackage;
-                    String str3 = algorithm;
-                    int i22 = idAttestationFlags;
-                    KeymasterCertificateChain keymasterCertificateChain2222 = attestationChain;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean setKeyPairCertificate(ComponentName who, String callerPackage, String alias, byte[] certBuffer, byte[] certChainBuffer, boolean isUserSelectable) throws RemoteException {
-                ComponentName componentName = who;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
-                    if (componentName != null) {
+                    if (who != null) {
                         _data.writeInt(1);
-                        componentName.writeToParcel(_data, 0);
+                        who.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeString(callerPackage);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeString(alias);
                     try {
-                        _data.writeString(callerPackage);
-                        try {
-                            _data.writeString(alias);
-                        } catch (Throwable th) {
-                            th = th;
-                            byte[] bArr = certBuffer;
-                            byte[] bArr2 = certChainBuffer;
-                            boolean z = isUserSelectable;
+                        _data.writeByteArray(certBuffer);
+                    } catch (Throwable th3) {
+                        th = th3;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeByteArray(certChainBuffer);
+                    } catch (Throwable th4) {
+                        th = th4;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeInt(isUserSelectable ? 1 : 0);
+                        boolean _status = this.mRemote.transact(93, _data, _reply, 0);
+                        if (!_status && Stub.getDefaultImpl() != null) {
+                            boolean keyPairCertificate = Stub.getDefaultImpl().setKeyPairCertificate(who, callerPackage, alias, certBuffer, certChainBuffer, isUserSelectable);
                             _reply.recycle();
                             _data.recycle();
-                            throw th;
+                            return keyPairCertificate;
                         }
-                        try {
-                            _data.writeByteArray(certBuffer);
-                            try {
-                                _data.writeByteArray(certChainBuffer);
-                            } catch (Throwable th2) {
-                                th = th2;
-                                boolean z2 = isUserSelectable;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                            try {
-                                _data.writeInt(isUserSelectable ? 1 : 0);
-                                if (this.mRemote.transact(93, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                    _reply.readException();
-                                    if (_reply.readInt() == 0) {
-                                        _result = false;
-                                    }
-                                    _reply.recycle();
-                                    _data.recycle();
-                                    return _result;
-                                }
-                                boolean keyPairCertificate = Stub.getDefaultImpl().setKeyPairCertificate(who, callerPackage, alias, certBuffer, certChainBuffer, isUserSelectable);
-                                _reply.recycle();
-                                _data.recycle();
-                                return keyPairCertificate;
-                            } catch (Throwable th3) {
-                                th = th3;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th4) {
-                            th = th4;
-                            byte[] bArr22 = certChainBuffer;
-                            boolean z22 = isUserSelectable;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
+                        _reply.readException();
+                        boolean _result = _reply.readInt() != 0;
+                        _reply.recycle();
+                        _data.recycle();
+                        return _result;
                     } catch (Throwable th5) {
                         th = th5;
-                        String str = alias;
-                        byte[] bArr3 = certBuffer;
-                        byte[] bArr222 = certChainBuffer;
-                        boolean z222 = isUserSelectable;
                         _reply.recycle();
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th6) {
                     th = th6;
-                    String str2 = callerPackage;
-                    String str3 = alias;
-                    byte[] bArr32 = certBuffer;
-                    byte[] bArr2222 = certChainBuffer;
-                    boolean z2222 = isUserSelectable;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void choosePrivateKeyAlias(int uid, Uri uri, String alias, IBinder aliasCallback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -9907,19 +7583,19 @@ public interface IDevicePolicyManager extends IInterface {
                     }
                     _data.writeString(alias);
                     _data.writeStrongBinder(aliasCallback);
-                    if (this.mRemote.transact(94, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(94, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().choosePrivateKeyAlias(uid, uri, alias, aliasCallback);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().choosePrivateKeyAlias(uid, uri, alias, aliasCallback);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setDelegatedScopes(ComponentName who, String delegatePackage, List<String> scopes) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -9933,19 +7609,19 @@ public interface IDevicePolicyManager extends IInterface {
                     }
                     _data.writeString(delegatePackage);
                     _data.writeStringList(scopes);
-                    if (this.mRemote.transact(95, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(95, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setDelegatedScopes(who, delegatePackage, scopes);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setDelegatedScopes(who, delegatePackage, scopes);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public List<String> getDelegatedScopes(ComponentName who, String delegatePackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -9958,13 +7634,12 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(delegatePackage);
-                    if (!this.mRemote.transact(96, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(96, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getDelegatedScopes(who, delegatePackage);
                     }
                     _reply.readException();
                     List<String> _result = _reply.createStringArrayList();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -9972,6 +7647,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public List<String> getDelegatePackages(ComponentName who, String scope) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -9984,13 +7660,12 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(scope);
-                    if (!this.mRemote.transact(97, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(97, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getDelegatePackages(who, scope);
                     }
                     _reply.readException();
                     List<String> _result = _reply.createStringArrayList();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -9998,6 +7673,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setCertInstallerPackage(ComponentName who, String installerPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -10010,19 +7686,19 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(installerPackage);
-                    if (this.mRemote.transact(98, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(98, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setCertInstallerPackage(who, installerPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setCertInstallerPackage(who, installerPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public String getCertInstallerPackage(ComponentName who) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -10034,13 +7710,12 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(99, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(99, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCertInstallerPackage(who);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -10048,12 +7723,12 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean setAlwaysOnVpnPackage(ComponentName who, String vpnPackage, boolean lockdown, List<String> lockdownWhitelist) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (who != null) {
                         _data.writeInt(1);
                         who.writeToParcel(_data, 0);
@@ -10061,17 +7736,14 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(vpnPackage);
-                    _data.writeInt(lockdown);
+                    _data.writeInt(lockdown ? 1 : 0);
                     _data.writeStringList(lockdownWhitelist);
-                    if (!this.mRemote.transact(100, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(100, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setAlwaysOnVpnPackage(who, vpnPackage, lockdown, lockdownWhitelist);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -10079,6 +7751,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public String getAlwaysOnVpnPackage(ComponentName who) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -10090,13 +7763,12 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(101, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(101, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAlwaysOnVpnPackage(who);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -10104,27 +7776,24 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean isAlwaysOnVpnLockdownEnabled(ComponentName who) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (who != null) {
                         _data.writeInt(1);
                         who.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(102, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(102, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isAlwaysOnVpnLockdownEnabled(who);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -10132,6 +7801,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public List<String> getAlwaysOnVpnLockdownWhitelist(ComponentName who) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -10143,13 +7813,12 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(103, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(103, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAlwaysOnVpnLockdownWhitelist(who);
                     }
                     _reply.readException();
                     List<String> _result = _reply.createStringArrayList();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -10157,6 +7826,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void addPersistentPreferredActivity(ComponentName admin, IntentFilter filter, ComponentName activity) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -10180,19 +7850,19 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(104, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(104, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().addPersistentPreferredActivity(admin, filter, activity);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().addPersistentPreferredActivity(admin, filter, activity);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void clearPackagePersistentPreferredActivities(ComponentName admin, String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -10205,19 +7875,19 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(packageName);
-                    if (this.mRemote.transact(105, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(105, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().clearPackagePersistentPreferredActivities(admin, packageName);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().clearPackagePersistentPreferredActivities(admin, packageName);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setDefaultSmsApplication(ComponentName admin, String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -10230,19 +7900,19 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(packageName);
-                    if (this.mRemote.transact(106, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(106, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setDefaultSmsApplication(admin, packageName);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setDefaultSmsApplication(admin, packageName);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setApplicationRestrictions(ComponentName who, String callerPackage, String packageName, Bundle settings) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -10262,19 +7932,19 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(107, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(107, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setApplicationRestrictions(who, callerPackage, packageName, settings);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setApplicationRestrictions(who, callerPackage, packageName, settings);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public Bundle getApplicationRestrictions(ComponentName who, String callerPackage, String packageName) throws RemoteException {
                 Bundle _result;
                 Parcel _data = Parcel.obtain();
@@ -10289,7 +7959,8 @@ public interface IDevicePolicyManager extends IInterface {
                     }
                     _data.writeString(callerPackage);
                     _data.writeString(packageName);
-                    if (!this.mRemote.transact(108, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(108, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getApplicationRestrictions(who, callerPackage, packageName);
                     }
                     _reply.readException();
@@ -10298,38 +7969,6 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    Bundle _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public boolean setApplicationRestrictionsManagingPackage(ComponentName admin, String packageName) throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
-                    if (admin != null) {
-                        _data.writeInt(1);
-                        admin.writeToParcel(_data, 0);
-                    } else {
-                        _data.writeInt(0);
-                    }
-                    _data.writeString(packageName);
-                    if (!this.mRemote.transact(109, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
-                        return Stub.getDefaultImpl().setApplicationRestrictionsManagingPackage(admin, packageName);
-                    }
-                    _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -10337,6 +7976,33 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
+            public boolean setApplicationRestrictionsManagingPackage(ComponentName admin, String packageName) throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    if (admin != null) {
+                        _data.writeInt(1);
+                        admin.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
+                    }
+                    _data.writeString(packageName);
+                    boolean _status = this.mRemote.transact(109, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        return Stub.getDefaultImpl().setApplicationRestrictionsManagingPackage(admin, packageName);
+                    }
+                    _reply.readException();
+                    boolean _result = _reply.readInt() != 0;
+                    return _result;
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // android.app.admin.IDevicePolicyManager
             public String getApplicationRestrictionsManagingPackage(ComponentName admin) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -10348,13 +8014,12 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(110, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(110, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getApplicationRestrictionsManagingPackage(admin);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -10362,30 +8027,27 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean isCallerApplicationRestrictionsManagingPackage(String callerPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callerPackage);
-                    boolean z = false;
-                    if (!this.mRemote.transact(111, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(111, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isCallerApplicationRestrictionsManagingPackage(callerPackage);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setRestrictionsProvider(ComponentName who, ComponentName provider) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -10403,19 +8065,19 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(112, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(112, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setRestrictionsProvider(who, provider);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setRestrictionsProvider(who, provider);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public ComponentName getRestrictionsProvider(int userHandle) throws RemoteException {
                 ComponentName _result;
                 Parcel _data = Parcel.obtain();
@@ -10423,7 +8085,8 @@ public interface IDevicePolicyManager extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userHandle);
-                    if (!this.mRemote.transact(113, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(113, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getRestrictionsProvider(userHandle);
                     }
                     _reply.readException();
@@ -10432,16 +8095,14 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    ComponentName _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setUserRestriction(ComponentName who, String key, boolean enable) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -10454,20 +8115,20 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(key);
-                    _data.writeInt(enable);
-                    if (this.mRemote.transact(114, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(enable ? 1 : 0);
+                    boolean _status = this.mRemote.transact(114, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setUserRestriction(who, key, enable);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setUserRestriction(who, key, enable);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public Bundle getUserRestrictions(ComponentName who) throws RemoteException {
                 Bundle _result;
                 Parcel _data = Parcel.obtain();
@@ -10480,7 +8141,8 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(115, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(115, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getUserRestrictions(who);
                     }
                     _reply.readException();
@@ -10489,16 +8151,14 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    Bundle _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void addCrossProfileIntentFilter(ComponentName admin, IntentFilter filter, int flags) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -10517,19 +8177,19 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(flags);
-                    if (this.mRemote.transact(116, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(116, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().addCrossProfileIntentFilter(admin, filter, flags);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().addCrossProfileIntentFilter(admin, filter, flags);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void clearCrossProfileIntentFilters(ComponentName admin) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -10541,25 +8201,24 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(117, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(117, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().clearCrossProfileIntentFilters(admin);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().clearCrossProfileIntentFilters(admin);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean setPermittedAccessibilityServices(ComponentName admin, List packageList) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (admin != null) {
                         _data.writeInt(1);
                         admin.writeToParcel(_data, 0);
@@ -10567,15 +8226,12 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeList(packageList);
-                    if (!this.mRemote.transact(118, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(118, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setPermittedAccessibilityServices(admin, packageList);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -10583,6 +8239,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public List getPermittedAccessibilityServices(ComponentName admin) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -10594,13 +8251,13 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(119, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(119, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPermittedAccessibilityServices(admin);
                     }
                     _reply.readException();
-                    List _result = _reply.readArrayList(getClass().getClassLoader());
-                    _reply.recycle();
-                    _data.recycle();
+                    ClassLoader cl = getClass().getClassLoader();
+                    List _result = _reply.readArrayList(cl);
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -10608,19 +8265,20 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public List getPermittedAccessibilityServicesForUser(int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userId);
-                    if (!this.mRemote.transact(120, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(120, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPermittedAccessibilityServicesForUser(userId);
                     }
                     _reply.readException();
-                    List _result = _reply.readArrayList(getClass().getClassLoader());
-                    _reply.recycle();
-                    _data.recycle();
+                    ClassLoader cl = getClass().getClassLoader();
+                    List _result = _reply.readArrayList(cl);
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -10628,12 +8286,12 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean isAccessibilityServicePermittedByAdmin(ComponentName admin, String packageName, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (admin != null) {
                         _data.writeInt(1);
                         admin.writeToParcel(_data, 0);
@@ -10642,15 +8300,12 @@ public interface IDevicePolicyManager extends IInterface {
                     }
                     _data.writeString(packageName);
                     _data.writeInt(userId);
-                    if (!this.mRemote.transact(121, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(121, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isAccessibilityServicePermittedByAdmin(admin, packageName, userId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -10658,12 +8313,12 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean setPermittedInputMethods(ComponentName admin, List packageList) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (admin != null) {
                         _data.writeInt(1);
                         admin.writeToParcel(_data, 0);
@@ -10671,15 +8326,12 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeList(packageList);
-                    if (!this.mRemote.transact(122, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(122, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setPermittedInputMethods(admin, packageList);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -10687,6 +8339,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public List getPermittedInputMethods(ComponentName admin) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -10698,13 +8351,13 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(123, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(123, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPermittedInputMethods(admin);
                     }
                     _reply.readException();
-                    List _result = _reply.readArrayList(getClass().getClassLoader());
-                    _reply.recycle();
-                    _data.recycle();
+                    ClassLoader cl = getClass().getClassLoader();
+                    List _result = _reply.readArrayList(cl);
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -10712,18 +8365,19 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public List getPermittedInputMethodsForCurrentUser() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(124, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(124, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPermittedInputMethodsForCurrentUser();
                     }
                     _reply.readException();
-                    List _result = _reply.readArrayList(getClass().getClassLoader());
-                    _reply.recycle();
-                    _data.recycle();
+                    ClassLoader cl = getClass().getClassLoader();
+                    List _result = _reply.readArrayList(cl);
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -10731,12 +8385,12 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean isInputMethodPermittedByAdmin(ComponentName admin, String packageName, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (admin != null) {
                         _data.writeInt(1);
                         admin.writeToParcel(_data, 0);
@@ -10745,15 +8399,12 @@ public interface IDevicePolicyManager extends IInterface {
                     }
                     _data.writeString(packageName);
                     _data.writeInt(userId);
-                    if (!this.mRemote.transact(125, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(125, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isInputMethodPermittedByAdmin(admin, packageName, userId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -10761,12 +8412,12 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean setPermittedCrossProfileNotificationListeners(ComponentName admin, List<String> packageList) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (admin != null) {
                         _data.writeInt(1);
                         admin.writeToParcel(_data, 0);
@@ -10774,15 +8425,12 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeStringList(packageList);
-                    if (!this.mRemote.transact(126, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(126, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setPermittedCrossProfileNotificationListeners(admin, packageList);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -10790,6 +8438,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public List<String> getPermittedCrossProfileNotificationListeners(ComponentName admin) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -10801,13 +8450,12 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(127, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(127, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPermittedCrossProfileNotificationListeners(admin);
                     }
                     _reply.readException();
                     List<String> _result = _reply.createStringArrayList();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -10815,6 +8463,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean isNotificationListenerServicePermitted(String packageName, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -10822,24 +8471,20 @@ public interface IDevicePolicyManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(packageName);
                     _data.writeInt(userId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(128, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(128, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isNotificationListenerServicePermitted(packageName, userId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public Intent createAdminSupportIntent(String restriction) throws RemoteException {
                 Intent _result;
                 Parcel _data = Parcel.obtain();
@@ -10847,7 +8492,8 @@ public interface IDevicePolicyManager extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(restriction);
-                    if (!this.mRemote.transact(129, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(129, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().createAdminSupportIntent(restriction);
                     }
                     _reply.readException();
@@ -10856,22 +8502,19 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    Intent _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean setApplicationHidden(ComponentName admin, String callerPackage, String packageName, boolean hidden) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (admin != null) {
                         _data.writeInt(1);
                         admin.writeToParcel(_data, 0);
@@ -10880,16 +8523,13 @@ public interface IDevicePolicyManager extends IInterface {
                     }
                     _data.writeString(callerPackage);
                     _data.writeString(packageName);
-                    _data.writeInt(hidden);
-                    if (!this.mRemote.transact(130, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(hidden ? 1 : 0);
+                    boolean _status = this.mRemote.transact(130, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setApplicationHidden(admin, callerPackage, packageName, hidden);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -10897,12 +8537,12 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean isApplicationHidden(ComponentName admin, String callerPackage, String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (admin != null) {
                         _data.writeInt(1);
                         admin.writeToParcel(_data, 0);
@@ -10911,15 +8551,12 @@ public interface IDevicePolicyManager extends IInterface {
                     }
                     _data.writeString(callerPackage);
                     _data.writeString(packageName);
-                    if (!this.mRemote.transact(131, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(131, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isApplicationHidden(admin, callerPackage, packageName);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -10927,6 +8564,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public UserHandle createAndManageUser(ComponentName who, String name, ComponentName profileOwner, PersistableBundle adminExtras, int flags) throws RemoteException {
                 UserHandle _result;
                 Parcel _data = Parcel.obtain();
@@ -10953,7 +8591,8 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(flags);
-                    if (!this.mRemote.transact(132, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(132, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().createAndManageUser(who, name, profileOwner, adminExtras, flags);
                     }
                     _reply.readException();
@@ -10962,22 +8601,19 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    UserHandle _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean removeUser(ComponentName who, UserHandle userHandle) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (who != null) {
                         _data.writeInt(1);
                         who.writeToParcel(_data, 0);
@@ -10990,15 +8626,12 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(133, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(133, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().removeUser(who, userHandle);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -11006,12 +8639,12 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean switchUser(ComponentName who, UserHandle userHandle) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (who != null) {
                         _data.writeInt(1);
                         who.writeToParcel(_data, 0);
@@ -11024,15 +8657,12 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(134, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(134, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().switchUser(who, userHandle);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -11040,6 +8670,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public int startUserInBackground(ComponentName who, UserHandle userHandle) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -11057,13 +8688,12 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(135, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(135, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().startUserInBackground(who, userHandle);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -11071,6 +8701,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public int stopUser(ComponentName who, UserHandle userHandle) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -11088,13 +8719,12 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(136, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(136, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().stopUser(who, userHandle);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -11102,6 +8732,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public int logoutUser(ComponentName who) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -11113,13 +8744,12 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(137, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(137, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().logoutUser(who);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -11127,6 +8757,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public List<UserHandle> getSecondaryUsers(ComponentName who) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -11138,13 +8769,12 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(138, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(138, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getSecondaryUsers(who);
                     }
                     _reply.readException();
                     List<UserHandle> _result = _reply.createTypedArrayList(UserHandle.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -11152,6 +8782,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void enableSystemApp(ComponentName admin, String callerPackage, String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -11165,19 +8796,19 @@ public interface IDevicePolicyManager extends IInterface {
                     }
                     _data.writeString(callerPackage);
                     _data.writeString(packageName);
-                    if (this.mRemote.transact(139, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(139, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().enableSystemApp(admin, callerPackage, packageName);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().enableSystemApp(admin, callerPackage, packageName);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public int enableSystemAppWithIntent(ComponentName admin, String callerPackage, Intent intent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -11196,13 +8827,12 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(140, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(140, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().enableSystemAppWithIntent(admin, callerPackage, intent);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -11210,12 +8840,12 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean installExistingPackage(ComponentName admin, String callerPackage, String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (admin != null) {
                         _data.writeInt(1);
                         admin.writeToParcel(_data, 0);
@@ -11224,15 +8854,12 @@ public interface IDevicePolicyManager extends IInterface {
                     }
                     _data.writeString(callerPackage);
                     _data.writeString(packageName);
-                    if (!this.mRemote.transact(141, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(141, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().installExistingPackage(admin, callerPackage, packageName);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -11240,6 +8867,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setAccountManagementDisabled(ComponentName who, String accountType, boolean disabled) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -11252,32 +8880,31 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(accountType);
-                    _data.writeInt(disabled);
-                    if (this.mRemote.transact(142, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(disabled ? 1 : 0);
+                    boolean _status = this.mRemote.transact(142, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setAccountManagementDisabled(who, accountType, disabled);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setAccountManagementDisabled(who, accountType, disabled);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public String[] getAccountTypesWithManagementDisabled() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(143, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(143, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAccountTypesWithManagementDisabled();
                     }
                     _reply.readException();
                     String[] _result = _reply.createStringArray();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -11285,19 +8912,19 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public String[] getAccountTypesWithManagementDisabledAsUser(int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userId);
-                    if (!this.mRemote.transact(144, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(144, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAccountTypesWithManagementDisabledAsUser(userId);
                     }
                     _reply.readException();
                     String[] _result = _reply.createStringArray();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -11305,6 +8932,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setLockTaskPackages(ComponentName who, String[] packages) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -11317,19 +8945,19 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeStringArray(packages);
-                    if (this.mRemote.transact(145, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(145, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setLockTaskPackages(who, packages);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setLockTaskPackages(who, packages);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public String[] getLockTaskPackages(ComponentName who) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -11341,13 +8969,12 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(146, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(146, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getLockTaskPackages(who);
                     }
                     _reply.readException();
                     String[] _result = _reply.createStringArray();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -11355,30 +8982,27 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean isLockTaskPermitted(String pkg) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(pkg);
-                    boolean z = false;
-                    if (!this.mRemote.transact(147, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(147, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isLockTaskPermitted(pkg);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setLockTaskFeatures(ComponentName who, int flags) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -11391,19 +9015,19 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(flags);
-                    if (this.mRemote.transact(148, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(148, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setLockTaskFeatures(who, flags);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setLockTaskFeatures(who, flags);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public int getLockTaskFeatures(ComponentName who) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -11415,13 +9039,12 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(149, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(149, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getLockTaskFeatures(who);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -11429,6 +9052,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setGlobalSetting(ComponentName who, String setting, String value) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -11442,19 +9066,19 @@ public interface IDevicePolicyManager extends IInterface {
                     }
                     _data.writeString(setting);
                     _data.writeString(value);
-                    if (this.mRemote.transact(150, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(150, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setGlobalSetting(who, setting, value);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setGlobalSetting(who, setting, value);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setSystemSetting(ComponentName who, String setting, String value) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -11468,19 +9092,19 @@ public interface IDevicePolicyManager extends IInterface {
                     }
                     _data.writeString(setting);
                     _data.writeString(value);
-                    if (this.mRemote.transact(151, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(151, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setSystemSetting(who, setting, value);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setSystemSetting(who, setting, value);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setSecureSetting(ComponentName who, String setting, String value) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -11494,25 +9118,24 @@ public interface IDevicePolicyManager extends IInterface {
                     }
                     _data.writeString(setting);
                     _data.writeString(value);
-                    if (this.mRemote.transact(152, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(152, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setSecureSetting(who, setting, value);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setSecureSetting(who, setting, value);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean setTime(ComponentName who, long millis) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (who != null) {
                         _data.writeInt(1);
                         who.writeToParcel(_data, 0);
@@ -11520,15 +9143,12 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeLong(millis);
-                    if (!this.mRemote.transact(153, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(153, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setTime(who, millis);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -11536,12 +9156,12 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean setTimeZone(ComponentName who, String timeZone) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (who != null) {
                         _data.writeInt(1);
                         who.writeToParcel(_data, 0);
@@ -11549,15 +9169,12 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(timeZone);
-                    if (!this.mRemote.transact(154, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(154, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setTimeZone(who, timeZone);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -11565,6 +9182,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setMasterVolumeMuted(ComponentName admin, boolean on) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -11576,41 +9194,37 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(on);
-                    if (this.mRemote.transact(155, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(on ? 1 : 0);
+                    boolean _status = this.mRemote.transact(155, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setMasterVolumeMuted(admin, on);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setMasterVolumeMuted(admin, on);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean isMasterVolumeMuted(ComponentName admin) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (admin != null) {
                         _data.writeInt(1);
                         admin.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(156, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(156, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isMasterVolumeMuted(admin);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -11618,27 +9232,28 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void notifyLockTaskModeChanged(boolean isEnabled, String pkg, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(isEnabled);
+                    _data.writeInt(isEnabled ? 1 : 0);
                     _data.writeString(pkg);
                     _data.writeInt(userId);
-                    if (this.mRemote.transact(157, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(157, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().notifyLockTaskModeChanged(isEnabled, pkg, userId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().notifyLockTaskModeChanged(isEnabled, pkg, userId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setUninstallBlocked(ComponentName admin, String callerPackage, String packageName, boolean uninstallBlocked) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -11652,26 +9267,25 @@ public interface IDevicePolicyManager extends IInterface {
                     }
                     _data.writeString(callerPackage);
                     _data.writeString(packageName);
-                    _data.writeInt(uninstallBlocked);
-                    if (this.mRemote.transact(158, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(uninstallBlocked ? 1 : 0);
+                    boolean _status = this.mRemote.transact(158, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setUninstallBlocked(admin, callerPackage, packageName, uninstallBlocked);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setUninstallBlocked(admin, callerPackage, packageName, uninstallBlocked);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean isUninstallBlocked(ComponentName admin, String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (admin != null) {
                         _data.writeInt(1);
                         admin.writeToParcel(_data, 0);
@@ -11679,15 +9293,12 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(packageName);
-                    if (!this.mRemote.transact(159, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(159, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isUninstallBlocked(admin, packageName);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -11695,6 +9306,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setCrossProfileCallerIdDisabled(ComponentName who, boolean disabled) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -11706,41 +9318,37 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(disabled);
-                    if (this.mRemote.transact(160, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(disabled ? 1 : 0);
+                    boolean _status = this.mRemote.transact(160, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setCrossProfileCallerIdDisabled(who, disabled);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setCrossProfileCallerIdDisabled(who, disabled);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean getCrossProfileCallerIdDisabled(ComponentName who) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (who != null) {
                         _data.writeInt(1);
                         who.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(161, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(161, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCrossProfileCallerIdDisabled(who);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -11748,30 +9356,27 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean getCrossProfileCallerIdDisabledForUser(int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(162, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(162, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCrossProfileCallerIdDisabledForUser(userId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setCrossProfileContactsSearchDisabled(ComponentName who, boolean disabled) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -11783,41 +9388,37 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(disabled);
-                    if (this.mRemote.transact(163, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(disabled ? 1 : 0);
+                    boolean _status = this.mRemote.transact(163, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setCrossProfileContactsSearchDisabled(who, disabled);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setCrossProfileContactsSearchDisabled(who, disabled);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean getCrossProfileContactsSearchDisabled(ComponentName who) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (who != null) {
                         _data.writeInt(1);
                         who.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(164, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(164, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCrossProfileContactsSearchDisabled(who);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -11825,90 +9426,79 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean getCrossProfileContactsSearchDisabledForUser(int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(165, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(165, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCrossProfileContactsSearchDisabledForUser(userId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void startManagedQuickContact(String lookupKey, long contactId, boolean isContactIdIgnored, long directoryId, Intent originalIntent) throws RemoteException {
-                Intent intent = originalIntent;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    try {
-                        _data.writeString(lookupKey);
-                        try {
-                            _data.writeLong(contactId);
-                        } catch (Throwable th) {
-                            th = th;
-                            boolean z = isContactIdIgnored;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                        try {
-                            _data.writeInt(isContactIdIgnored ? 1 : 0);
-                            _data.writeLong(directoryId);
-                            if (intent != null) {
-                                _data.writeInt(1);
-                                intent.writeToParcel(_data, 0);
-                            } else {
-                                _data.writeInt(0);
-                            }
-                            if (this.mRemote.transact(166, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                _reply.readException();
-                                _reply.recycle();
-                                _data.recycle();
-                                return;
-                            }
-                            Stub.getDefaultImpl().startManagedQuickContact(lookupKey, contactId, isContactIdIgnored, directoryId, originalIntent);
-                            _reply.recycle();
-                            _data.recycle();
-                        } catch (Throwable th2) {
-                            th = th2;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                    } catch (Throwable th3) {
-                        th = th3;
-                        long j = contactId;
-                        boolean z2 = isContactIdIgnored;
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeString(lookupKey);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeLong(contactId);
+                } catch (Throwable th3) {
+                    th = th3;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(isContactIdIgnored ? 1 : 0);
+                    _data.writeLong(directoryId);
+                    if (originalIntent != null) {
+                        _data.writeInt(1);
+                        originalIntent.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
+                    }
+                    boolean _status = this.mRemote.transact(166, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().startManagedQuickContact(lookupKey, contactId, isContactIdIgnored, directoryId, originalIntent);
                         _reply.recycle();
                         _data.recycle();
-                        throw th;
+                        return;
                     }
+                    _reply.readException();
+                    _reply.recycle();
+                    _data.recycle();
                 } catch (Throwable th4) {
                     th = th4;
-                    String str = lookupKey;
-                    long j2 = contactId;
-                    boolean z22 = isContactIdIgnored;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setBluetoothContactSharingDisabled(ComponentName who, boolean disabled) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -11920,41 +9510,37 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(disabled);
-                    if (this.mRemote.transact(167, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(disabled ? 1 : 0);
+                    boolean _status = this.mRemote.transact(167, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setBluetoothContactSharingDisabled(who, disabled);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setBluetoothContactSharingDisabled(who, disabled);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean getBluetoothContactSharingDisabled(ComponentName who) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (who != null) {
                         _data.writeInt(1);
                         who.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(168, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(168, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getBluetoothContactSharingDisabled(who);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -11962,30 +9548,27 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean getBluetoothContactSharingDisabledForUser(int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(169, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(169, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getBluetoothContactSharingDisabledForUser(userId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setTrustAgentConfiguration(ComponentName admin, ComponentName agent, PersistableBundle args, boolean parent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -12009,20 +9592,20 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(parent);
-                    if (this.mRemote.transact(170, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(parent ? 1 : 0);
+                    boolean _status = this.mRemote.transact(170, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setTrustAgentConfiguration(admin, agent, args, parent);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setTrustAgentConfiguration(admin, agent, args, parent);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public List<PersistableBundle> getTrustAgentConfiguration(ComponentName admin, ComponentName agent, int userId, boolean parent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -12041,14 +9624,13 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(userId);
-                    _data.writeInt(parent);
-                    if (!this.mRemote.transact(171, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(parent ? 1 : 0);
+                    boolean _status = this.mRemote.transact(171, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getTrustAgentConfiguration(admin, agent, userId, parent);
                     }
                     _reply.readException();
                     List<PersistableBundle> _result = _reply.createTypedArrayList(PersistableBundle.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -12056,12 +9638,12 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean addCrossProfileWidgetProvider(ComponentName admin, String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (admin != null) {
                         _data.writeInt(1);
                         admin.writeToParcel(_data, 0);
@@ -12069,15 +9651,12 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(packageName);
-                    if (!this.mRemote.transact(172, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(172, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().addCrossProfileWidgetProvider(admin, packageName);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -12085,12 +9664,12 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean removeCrossProfileWidgetProvider(ComponentName admin, String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (admin != null) {
                         _data.writeInt(1);
                         admin.writeToParcel(_data, 0);
@@ -12098,15 +9677,12 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(packageName);
-                    if (!this.mRemote.transact(173, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(173, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().removeCrossProfileWidgetProvider(admin, packageName);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -12114,6 +9690,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public List<String> getCrossProfileWidgetProviders(ComponentName admin) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -12125,13 +9702,12 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(174, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(174, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCrossProfileWidgetProviders(admin);
                     }
                     _reply.readException();
                     List<String> _result = _reply.createStringArrayList();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -12139,6 +9715,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setAutoTimeRequired(ComponentName who, boolean required) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -12150,43 +9727,39 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(required);
-                    if (this.mRemote.transact(175, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(required ? 1 : 0);
+                    boolean _status = this.mRemote.transact(175, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setAutoTimeRequired(who, required);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setAutoTimeRequired(who, required);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean getAutoTimeRequired() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(176, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(176, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAutoTimeRequired();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setForceEphemeralUsers(ComponentName who, boolean forceEpehemeralUsers) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -12198,41 +9771,37 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(forceEpehemeralUsers);
-                    if (this.mRemote.transact(177, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(forceEpehemeralUsers ? 1 : 0);
+                    boolean _status = this.mRemote.transact(177, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setForceEphemeralUsers(who, forceEpehemeralUsers);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setForceEphemeralUsers(who, forceEpehemeralUsers);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean getForceEphemeralUsers(ComponentName who) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (who != null) {
                         _data.writeInt(1);
                         who.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(178, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(178, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getForceEphemeralUsers(who);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -12240,12 +9809,12 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean isRemovingAdmin(ComponentName adminReceiver, int userHandle) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (adminReceiver != null) {
                         _data.writeInt(1);
                         adminReceiver.writeToParcel(_data, 0);
@@ -12253,15 +9822,12 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(userHandle);
-                    if (!this.mRemote.transact(179, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(179, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isRemovingAdmin(adminReceiver, userHandle);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -12269,6 +9835,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setUserIcon(ComponentName admin, Bitmap icon) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -12286,19 +9853,19 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(180, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(180, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setUserIcon(admin, icon);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setUserIcon(admin, icon);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setSystemUpdatePolicy(ComponentName who, SystemUpdatePolicy policy) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -12316,26 +9883,27 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(181, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(181, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setSystemUpdatePolicy(who, policy);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setSystemUpdatePolicy(who, policy);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public SystemUpdatePolicy getSystemUpdatePolicy() throws RemoteException {
                 SystemUpdatePolicy _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(182, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(182, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getSystemUpdatePolicy();
                     }
                     _reply.readException();
@@ -12344,56 +9912,50 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    SystemUpdatePolicy _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void clearSystemUpdatePolicyFreezePeriodRecord() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(183, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(183, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().clearSystemUpdatePolicyFreezePeriodRecord();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().clearSystemUpdatePolicyFreezePeriodRecord();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean setKeyguardDisabled(ComponentName admin, boolean disabled) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (admin != null) {
                         _data.writeInt(1);
                         admin.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(disabled);
-                    if (!this.mRemote.transact(184, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(disabled ? 1 : 0);
+                    boolean _status = this.mRemote.transact(184, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setKeyguardDisabled(admin, disabled);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -12401,28 +9963,25 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean setStatusBarDisabled(ComponentName who, boolean disabled) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (who != null) {
                         _data.writeInt(1);
                         who.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(disabled);
-                    if (!this.mRemote.transact(185, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(disabled ? 1 : 0);
+                    boolean _status = this.mRemote.transact(185, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setStatusBarDisabled(who, disabled);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -12430,29 +9989,26 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean getDoNotAskCredentialsOnBoot() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(186, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(186, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getDoNotAskCredentialsOnBoot();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void notifyPendingSystemUpdate(SystemUpdateInfo info) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -12464,19 +10020,19 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(187, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(187, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().notifyPendingSystemUpdate(info);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().notifyPendingSystemUpdate(info);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public SystemUpdateInfo getPendingSystemUpdate(ComponentName admin) throws RemoteException {
                 SystemUpdateInfo _result;
                 Parcel _data = Parcel.obtain();
@@ -12489,7 +10045,8 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(188, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(188, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPendingSystemUpdate(admin);
                     }
                     _reply.readException();
@@ -12498,16 +10055,14 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    SystemUpdateInfo _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setPermissionPolicy(ComponentName admin, String callerPackage, int policy) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -12521,19 +10076,19 @@ public interface IDevicePolicyManager extends IInterface {
                     }
                     _data.writeString(callerPackage);
                     _data.writeInt(policy);
-                    if (this.mRemote.transact(189, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(189, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setPermissionPolicy(admin, callerPackage, policy);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setPermissionPolicy(admin, callerPackage, policy);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public int getPermissionPolicy(ComponentName admin) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -12545,13 +10100,12 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(190, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(190, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPermissionPolicy(admin);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -12559,84 +10113,72 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setPermissionGrantState(ComponentName admin, String callerPackage, String packageName, String permission, int grantState, RemoteCallback resultReceiver) throws RemoteException {
-                ComponentName componentName = admin;
-                RemoteCallback remoteCallback = resultReceiver;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (componentName != null) {
+                    if (admin != null) {
                         _data.writeInt(1);
-                        componentName.writeToParcel(_data, 0);
+                        admin.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    try {
-                        _data.writeString(callerPackage);
-                        try {
-                            _data.writeString(packageName);
-                        } catch (Throwable th) {
-                            th = th;
-                            String str = permission;
-                            int i = grantState;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                        try {
-                            _data.writeString(permission);
-                        } catch (Throwable th2) {
-                            th = th2;
-                            int i2 = grantState;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                    } catch (Throwable th3) {
-                        th = th3;
-                        String str2 = packageName;
-                        String str3 = permission;
-                        int i22 = grantState;
-                        _reply.recycle();
-                        _data.recycle();
-                        throw th;
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeString(callerPackage);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeString(packageName);
+                } catch (Throwable th3) {
+                    th = th3;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeString(permission);
+                } catch (Throwable th4) {
+                    th = th4;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(grantState);
+                    if (resultReceiver != null) {
+                        _data.writeInt(1);
+                        resultReceiver.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
                     }
-                    try {
-                        _data.writeInt(grantState);
-                        if (remoteCallback != null) {
-                            _data.writeInt(1);
-                            remoteCallback.writeToParcel(_data, 0);
-                        } else {
-                            _data.writeInt(0);
-                        }
-                        if (this.mRemote.transact(191, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                            _reply.readException();
-                            _reply.recycle();
-                            _data.recycle();
-                            return;
-                        }
+                    boolean _status = this.mRemote.transact(191, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().setPermissionGrantState(admin, callerPackage, packageName, permission, grantState, resultReceiver);
                         _reply.recycle();
                         _data.recycle();
-                    } catch (Throwable th4) {
-                        th = th4;
-                        _reply.recycle();
-                        _data.recycle();
-                        throw th;
+                        return;
                     }
+                    _reply.readException();
+                    _reply.recycle();
+                    _data.recycle();
                 } catch (Throwable th5) {
                     th = th5;
-                    String str4 = callerPackage;
-                    String str22 = packageName;
-                    String str32 = permission;
-                    int i222 = grantState;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public int getPermissionGrantState(ComponentName admin, String callerPackage, String packageName, String permission) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -12651,13 +10193,12 @@ public interface IDevicePolicyManager extends IInterface {
                     _data.writeString(callerPackage);
                     _data.writeString(packageName);
                     _data.writeString(permission);
-                    if (!this.mRemote.transact(192, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(192, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPermissionGrantState(admin, callerPackage, packageName, permission);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -12665,6 +10206,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean isProvisioningAllowed(String action, String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -12672,24 +10214,20 @@ public interface IDevicePolicyManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(action);
                     _data.writeString(packageName);
-                    boolean z = false;
-                    if (!this.mRemote.transact(193, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(193, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isProvisioningAllowed(action, packageName);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public int checkProvisioningPreCondition(String action, String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -12697,13 +10235,12 @@ public interface IDevicePolicyManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(action);
                     _data.writeString(packageName);
-                    if (!this.mRemote.transact(194, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(194, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().checkProvisioningPreCondition(action, packageName);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -12711,6 +10248,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setKeepUninstalledPackages(ComponentName admin, String callerPackage, List<String> packageList) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -12724,19 +10262,19 @@ public interface IDevicePolicyManager extends IInterface {
                     }
                     _data.writeString(callerPackage);
                     _data.writeStringList(packageList);
-                    if (this.mRemote.transact(195, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(195, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setKeepUninstalledPackages(admin, callerPackage, packageList);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setKeepUninstalledPackages(admin, callerPackage, packageList);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public List<String> getKeepUninstalledPackages(ComponentName admin, String callerPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -12749,13 +10287,12 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(callerPackage);
-                    if (!this.mRemote.transact(196, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(196, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getKeepUninstalledPackages(admin, callerPackage);
                     }
                     _reply.readException();
                     List<String> _result = _reply.createStringArrayList();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -12763,27 +10300,24 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean isManagedProfile(ComponentName admin) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (admin != null) {
                         _data.writeInt(1);
                         admin.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(197, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(197, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isManagedProfile(admin);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -12791,27 +10325,24 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean isSystemOnlyUser(ComponentName admin) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (admin != null) {
                         _data.writeInt(1);
                         admin.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(198, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(198, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isSystemOnlyUser(admin);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -12819,6 +10350,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public String getWifiMacAddress(ComponentName admin) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -12830,13 +10362,12 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(199, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(199, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getWifiMacAddress(admin);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -12844,6 +10375,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void reboot(ComponentName admin) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -12855,19 +10387,19 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(200, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(200, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().reboot(admin);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().reboot(admin);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setShortSupportMessage(ComponentName admin, CharSequence message) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -12885,19 +10417,19 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(201, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(201, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setShortSupportMessage(admin, message);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setShortSupportMessage(admin, message);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public CharSequence getShortSupportMessage(ComponentName admin) throws RemoteException {
                 CharSequence _result;
                 Parcel _data = Parcel.obtain();
@@ -12910,7 +10442,8 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(202, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(202, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getShortSupportMessage(admin);
                     }
                     _reply.readException();
@@ -12919,16 +10452,14 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    CharSequence _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setLongSupportMessage(ComponentName admin, CharSequence message) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -12946,19 +10477,19 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(203, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(203, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setLongSupportMessage(admin, message);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setLongSupportMessage(admin, message);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public CharSequence getLongSupportMessage(ComponentName admin) throws RemoteException {
                 CharSequence _result;
                 Parcel _data = Parcel.obtain();
@@ -12971,7 +10502,8 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(204, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(204, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getLongSupportMessage(admin);
                     }
                     _reply.readException();
@@ -12980,16 +10512,14 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    CharSequence _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public CharSequence getShortSupportMessageForUser(ComponentName admin, int userHandle) throws RemoteException {
                 CharSequence _result;
                 Parcel _data = Parcel.obtain();
@@ -13003,7 +10533,8 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(userHandle);
-                    if (!this.mRemote.transact(205, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(205, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getShortSupportMessageForUser(admin, userHandle);
                     }
                     _reply.readException();
@@ -13012,16 +10543,14 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    CharSequence _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public CharSequence getLongSupportMessageForUser(ComponentName admin, int userHandle) throws RemoteException {
                 CharSequence _result;
                 Parcel _data = Parcel.obtain();
@@ -13035,7 +10564,8 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(userHandle);
-                    if (!this.mRemote.transact(206, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(206, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getLongSupportMessageForUser(admin, userHandle);
                     }
                     _reply.readException();
@@ -13044,40 +10574,34 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    CharSequence _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean isSeparateProfileChallengeAllowed(int userHandle) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userHandle);
-                    boolean z = false;
-                    if (!this.mRemote.transact(207, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(207, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isSeparateProfileChallengeAllowed(userHandle);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setOrganizationColor(ComponentName admin, int color) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -13090,19 +10614,19 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(color);
-                    if (this.mRemote.transact(208, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(208, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setOrganizationColor(admin, color);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setOrganizationColor(admin, color);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setOrganizationColorForUser(int color, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -13110,19 +10634,19 @@ public interface IDevicePolicyManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(color);
                     _data.writeInt(userId);
-                    if (this.mRemote.transact(209, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(209, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setOrganizationColorForUser(color, userId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setOrganizationColorForUser(color, userId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public int getOrganizationColor(ComponentName admin) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -13134,13 +10658,12 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(210, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(210, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getOrganizationColor(admin);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -13148,19 +10671,19 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public int getOrganizationColorForUser(int userHandle) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userHandle);
-                    if (!this.mRemote.transact(211, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(211, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getOrganizationColorForUser(userHandle);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -13168,6 +10691,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setOrganizationName(ComponentName admin, CharSequence title) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -13185,19 +10709,19 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(212, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(212, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setOrganizationName(admin, title);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setOrganizationName(admin, title);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public CharSequence getOrganizationName(ComponentName admin) throws RemoteException {
                 CharSequence _result;
                 Parcel _data = Parcel.obtain();
@@ -13210,7 +10734,8 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(213, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(213, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getOrganizationName(admin);
                     }
                     _reply.readException();
@@ -13219,23 +10744,22 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    CharSequence _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public CharSequence getDeviceOwnerOrganizationName() throws RemoteException {
                 CharSequence _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(214, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(214, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getDeviceOwnerOrganizationName();
                     }
                     _reply.readException();
@@ -13244,16 +10768,14 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    CharSequence _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public CharSequence getOrganizationNameForUser(int userHandle) throws RemoteException {
                 CharSequence _result;
                 Parcel _data = Parcel.obtain();
@@ -13261,7 +10783,8 @@ public interface IDevicePolicyManager extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userHandle);
-                    if (!this.mRemote.transact(215, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(215, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getOrganizationNameForUser(userHandle);
                     }
                     _reply.readException();
@@ -13270,28 +10793,6 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    CharSequence _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public int getUserProvisioningState() throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(216, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
-                        return Stub.getDefaultImpl().getUserProvisioningState();
-                    }
-                    _reply.readException();
-                    int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -13299,6 +10800,26 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
+            public int getUserProvisioningState() throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    boolean _status = this.mRemote.transact(216, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        return Stub.getDefaultImpl().getUserProvisioningState();
+                    }
+                    _reply.readException();
+                    int _result = _reply.readInt();
+                    return _result;
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // android.app.admin.IDevicePolicyManager
             public void setUserProvisioningState(int state, int userHandle) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -13306,19 +10827,19 @@ public interface IDevicePolicyManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(state);
                     _data.writeInt(userHandle);
-                    if (this.mRemote.transact(217, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(217, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setUserProvisioningState(state, userHandle);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setUserProvisioningState(state, userHandle);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setAffiliationIds(ComponentName admin, List<String> ids) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -13331,19 +10852,19 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeStringList(ids);
-                    if (this.mRemote.transact(218, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(218, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setAffiliationIds(admin, ids);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setAffiliationIds(admin, ids);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public List<String> getAffiliationIds(ComponentName admin) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -13355,13 +10876,12 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(219, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(219, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAffiliationIds(admin);
                     }
                     _reply.readException();
                     List<String> _result = _reply.createStringArrayList();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -13369,29 +10889,26 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean isAffiliatedUser() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(220, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(220, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isAffiliatedUser();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setSecurityLoggingEnabled(ComponentName admin, boolean enabled) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -13403,41 +10920,37 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(enabled);
-                    if (this.mRemote.transact(221, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(enabled ? 1 : 0);
+                    boolean _status = this.mRemote.transact(221, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setSecurityLoggingEnabled(admin, enabled);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setSecurityLoggingEnabled(admin, enabled);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean isSecurityLoggingEnabled(ComponentName admin) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (admin != null) {
                         _data.writeInt(1);
                         admin.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(222, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(222, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isSecurityLoggingEnabled(admin);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -13445,6 +10958,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public ParceledListSlice retrieveSecurityLogs(ComponentName admin) throws RemoteException {
                 ParceledListSlice _result;
                 Parcel _data = Parcel.obtain();
@@ -13457,7 +10971,8 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(223, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(223, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().retrieveSecurityLogs(admin);
                     }
                     _reply.readException();
@@ -13466,16 +10981,14 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    ParceledListSlice _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public ParceledListSlice retrievePreRebootSecurityLogs(ComponentName admin) throws RemoteException {
                 ParceledListSlice _result;
                 Parcel _data = Parcel.obtain();
@@ -13488,7 +11001,8 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(224, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(224, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().retrievePreRebootSecurityLogs(admin);
                     }
                     _reply.readException();
@@ -13497,28 +11011,25 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    ParceledListSlice _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public long forceNetworkLogs() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(225, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(225, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().forceNetworkLogs();
                     }
                     _reply.readException();
                     long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -13526,18 +11037,18 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public long forceSecurityLogs() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(226, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(226, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().forceSecurityLogs();
                     }
                     _reply.readException();
                     long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -13545,131 +11056,120 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean isUninstallInQueue(String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(packageName);
-                    boolean z = false;
-                    if (!this.mRemote.transact(227, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(227, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isUninstallInQueue(packageName);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void uninstallPackageWithActiveAdmins(String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(packageName);
-                    if (this.mRemote.transact(228, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(228, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().uninstallPackageWithActiveAdmins(packageName);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().uninstallPackageWithActiveAdmins(packageName);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean isDeviceProvisioned() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(229, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(229, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isDeviceProvisioned();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean isDeviceProvisioningConfigApplied() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(230, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(230, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isDeviceProvisioningConfigApplied();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setDeviceProvisioningConfigApplied() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(231, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(231, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setDeviceProvisioningConfigApplied();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setDeviceProvisioningConfigApplied();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void forceUpdateUserSetupComplete() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(232, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(232, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().forceUpdateUserSetupComplete();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().forceUpdateUserSetupComplete();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setBackupServiceEnabled(ComponentName admin, boolean enabled) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -13681,41 +11181,37 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(enabled);
-                    if (this.mRemote.transact(233, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(enabled ? 1 : 0);
+                    boolean _status = this.mRemote.transact(233, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setBackupServiceEnabled(admin, enabled);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setBackupServiceEnabled(admin, enabled);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean isBackupServiceEnabled(ComponentName admin) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (admin != null) {
                         _data.writeInt(1);
                         admin.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(234, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(234, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isBackupServiceEnabled(admin);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -13723,6 +11219,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setNetworkLoggingEnabled(ComponentName admin, String packageName, boolean enabled) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -13735,26 +11232,25 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(packageName);
-                    _data.writeInt(enabled);
-                    if (this.mRemote.transact(235, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(enabled ? 1 : 0);
+                    boolean _status = this.mRemote.transact(235, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setNetworkLoggingEnabled(admin, packageName, enabled);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setNetworkLoggingEnabled(admin, packageName, enabled);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean isNetworkLoggingEnabled(ComponentName admin, String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (admin != null) {
                         _data.writeInt(1);
                         admin.writeToParcel(_data, 0);
@@ -13762,15 +11258,12 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(packageName);
-                    if (!this.mRemote.transact(236, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(236, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isNetworkLoggingEnabled(admin, packageName);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -13778,6 +11271,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public List<NetworkEvent> retrieveNetworkLogs(ComponentName admin, String packageName, long batchToken) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -13791,13 +11285,12 @@ public interface IDevicePolicyManager extends IInterface {
                     }
                     _data.writeString(packageName);
                     _data.writeLong(batchToken);
-                    if (!this.mRemote.transact(237, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(237, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().retrieveNetworkLogs(admin, packageName, batchToken);
                     }
                     _reply.readException();
                     List<NetworkEvent> _result = _reply.createTypedArrayList(NetworkEvent.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -13805,64 +11298,54 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean bindDeviceAdminServiceAsUser(ComponentName admin, IApplicationThread caller, IBinder token, Intent service, IServiceConnection connection, int flags, int targetUserId) throws RemoteException {
-                ComponentName componentName = admin;
-                Intent intent = service;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
-                    if (componentName != null) {
+                    if (admin != null) {
                         _data.writeInt(1);
-                        componentName.writeToParcel(_data, 0);
+                        admin.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    IBinder iBinder = null;
                     _data.writeStrongBinder(caller != null ? caller.asBinder() : null);
-                    try {
-                        _data.writeStrongBinder(token);
-                        if (intent != null) {
-                            _data.writeInt(1);
-                            intent.writeToParcel(_data, 0);
-                        } else {
-                            _data.writeInt(0);
-                        }
-                        if (connection != null) {
-                            iBinder = connection.asBinder();
-                        }
-                        _data.writeStrongBinder(iBinder);
-                        _data.writeInt(flags);
-                        _data.writeInt(targetUserId);
-                        if (this.mRemote.transact(238, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                            _reply.readException();
-                            if (_reply.readInt() == 0) {
-                                _result = false;
-                            }
-                            _reply.recycle();
-                            _data.recycle();
-                            return _result;
-                        }
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeStrongBinder(token);
+                    if (service != null) {
+                        _data.writeInt(1);
+                        service.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
+                    }
+                    _data.writeStrongBinder(connection != null ? connection.asBinder() : null);
+                    _data.writeInt(flags);
+                    _data.writeInt(targetUserId);
+                    boolean _status = this.mRemote.transact(238, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         boolean bindDeviceAdminServiceAsUser = Stub.getDefaultImpl().bindDeviceAdminServiceAsUser(admin, caller, token, service, connection, flags, targetUserId);
                         _reply.recycle();
                         _data.recycle();
                         return bindDeviceAdminServiceAsUser;
-                    } catch (Throwable th) {
-                        th = th;
-                        _reply.recycle();
-                        _data.recycle();
-                        throw th;
                     }
+                    _reply.readException();
+                    boolean _result = _reply.readInt() != 0;
+                    _reply.recycle();
+                    _data.recycle();
+                    return _result;
                 } catch (Throwable th2) {
                     th = th2;
-                    IBinder iBinder2 = token;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public List<UserHandle> getBindDeviceAdminTargetUsers(ComponentName admin) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -13874,13 +11357,12 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(239, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(239, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getBindDeviceAdminTargetUsers(admin);
                     }
                     _reply.readException();
                     List<UserHandle> _result = _reply.createTypedArrayList(UserHandle.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -13888,27 +11370,24 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean isEphemeralUser(ComponentName admin) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (admin != null) {
                         _data.writeInt(1);
                         admin.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(240, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(240, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isEphemeralUser(admin);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -13916,18 +11395,18 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public long getLastSecurityLogRetrievalTime() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(241, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(241, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getLastSecurityLogRetrievalTime();
                     }
                     _reply.readException();
                     long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -13935,18 +11414,18 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public long getLastBugReportRequestTime() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(242, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(242, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getLastBugReportRequestTime();
                     }
                     _reply.readException();
                     long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -13954,18 +11433,18 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public long getLastNetworkLogRetrievalTime() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(243, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(243, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getLastNetworkLogRetrievalTime();
                     }
                     _reply.readException();
                     long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -13973,12 +11452,12 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean setResetPasswordToken(ComponentName admin, byte[] token) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (admin != null) {
                         _data.writeInt(1);
                         admin.writeToParcel(_data, 0);
@@ -13986,15 +11465,12 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeByteArray(token);
-                    if (!this.mRemote.transact(244, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(244, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setResetPasswordToken(admin, token);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -14002,27 +11478,24 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean clearResetPasswordToken(ComponentName admin) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (admin != null) {
                         _data.writeInt(1);
                         admin.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(245, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(245, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().clearResetPasswordToken(admin);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -14030,27 +11503,24 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean isResetPasswordTokenActive(ComponentName admin) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (admin != null) {
                         _data.writeInt(1);
                         admin.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(246, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(246, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isResetPasswordTokenActive(admin);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -14058,12 +11528,12 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean resetPasswordWithToken(ComponentName admin, String password, byte[] token, int flags) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (admin != null) {
                         _data.writeInt(1);
                         admin.writeToParcel(_data, 0);
@@ -14073,15 +11543,12 @@ public interface IDevicePolicyManager extends IInterface {
                     _data.writeString(password);
                     _data.writeByteArray(token);
                     _data.writeInt(flags);
-                    if (!this.mRemote.transact(247, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(247, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().resetPasswordWithToken(admin, password, token, flags);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -14089,29 +11556,26 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean isCurrentInputMethodSetByOwner() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(248, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(248, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isCurrentInputMethodSetByOwner();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public StringParceledListSlice getOwnerInstalledCaCerts(UserHandle user) throws RemoteException {
                 StringParceledListSlice _result;
                 Parcel _data = Parcel.obtain();
@@ -14124,7 +11588,8 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(249, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(249, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getOwnerInstalledCaCerts(user);
                     }
                     _reply.readException();
@@ -14133,16 +11598,14 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    StringParceledListSlice _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void clearApplicationUserData(ComponentName admin, String packageName, IPackageDataObserver callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -14156,19 +11619,19 @@ public interface IDevicePolicyManager extends IInterface {
                     }
                     _data.writeString(packageName);
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                    if (this.mRemote.transact(250, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(250, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().clearApplicationUserData(admin, packageName, callback);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().clearApplicationUserData(admin, packageName, callback);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setLogoutEnabled(ComponentName admin, boolean enabled) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -14180,43 +11643,39 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(enabled);
-                    if (this.mRemote.transact(251, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(enabled ? 1 : 0);
+                    boolean _status = this.mRemote.transact(251, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setLogoutEnabled(admin, enabled);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setLogoutEnabled(admin, enabled);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean isLogoutEnabled() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(252, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(252, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isLogoutEnabled();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public List<String> getDisallowedSystemApps(ComponentName admin, int userId, String provisioningAction) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -14230,13 +11689,12 @@ public interface IDevicePolicyManager extends IInterface {
                     }
                     _data.writeInt(userId);
                     _data.writeString(provisioningAction);
-                    if (!this.mRemote.transact(253, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(253, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getDisallowedSystemApps(admin, userId, provisioningAction);
                     }
                     _reply.readException();
                     List<String> _result = _reply.createStringArrayList();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -14244,6 +11702,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void transferOwnership(ComponentName admin, ComponentName target, PersistableBundle bundle) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -14267,26 +11726,27 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(254, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(254, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().transferOwnership(admin, target, bundle);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().transferOwnership(admin, target, bundle);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public PersistableBundle getTransferOwnershipBundle() throws RemoteException {
                 PersistableBundle _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(255, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(255, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getTransferOwnershipBundle();
                     }
                     _reply.readException();
@@ -14295,16 +11755,14 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    PersistableBundle _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setStartUserSessionMessage(ComponentName admin, CharSequence startUserSessionMessage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -14322,19 +11780,19 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(256, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(256, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setStartUserSessionMessage(admin, startUserSessionMessage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setStartUserSessionMessage(admin, startUserSessionMessage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setEndUserSessionMessage(ComponentName admin, CharSequence endUserSessionMessage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -14352,19 +11810,19 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(257, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(257, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setEndUserSessionMessage(admin, endUserSessionMessage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setEndUserSessionMessage(admin, endUserSessionMessage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public CharSequence getStartUserSessionMessage(ComponentName admin) throws RemoteException {
                 CharSequence _result;
                 Parcel _data = Parcel.obtain();
@@ -14377,7 +11835,8 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(258, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(258, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getStartUserSessionMessage(admin);
                     }
                     _reply.readException();
@@ -14386,16 +11845,14 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    CharSequence _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public CharSequence getEndUserSessionMessage(ComponentName admin) throws RemoteException {
                 CharSequence _result;
                 Parcel _data = Parcel.obtain();
@@ -14408,7 +11865,8 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(259, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(259, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getEndUserSessionMessage(admin);
                     }
                     _reply.readException();
@@ -14417,16 +11875,14 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    CharSequence _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public List<String> setMeteredDataDisabledPackages(ComponentName admin, List<String> packageNames) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -14439,13 +11895,12 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeStringList(packageNames);
-                    if (!this.mRemote.transact(260, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(260, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setMeteredDataDisabledPackages(admin, packageNames);
                     }
                     _reply.readException();
                     List<String> _result = _reply.createStringArrayList();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -14453,6 +11908,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public List<String> getMeteredDataDisabledPackages(ComponentName admin) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -14464,13 +11920,12 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(261, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(261, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getMeteredDataDisabledPackages(admin);
                     }
                     _reply.readException();
                     List<String> _result = _reply.createStringArrayList();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -14478,6 +11933,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public int addOverrideApn(ComponentName admin, ApnSetting apnSetting) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -14495,13 +11951,12 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(262, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(262, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().addOverrideApn(admin, apnSetting);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -14509,12 +11964,12 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean updateOverrideApn(ComponentName admin, int apnId, ApnSetting apnSetting) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (admin != null) {
                         _data.writeInt(1);
                         admin.writeToParcel(_data, 0);
@@ -14528,15 +11983,12 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(263, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(263, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().updateOverrideApn(admin, apnId, apnSetting);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -14544,12 +11996,12 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean removeOverrideApn(ComponentName admin, int apnId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (admin != null) {
                         _data.writeInt(1);
                         admin.writeToParcel(_data, 0);
@@ -14557,15 +12009,12 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(apnId);
-                    if (!this.mRemote.transact(264, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(264, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().removeOverrideApn(admin, apnId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -14573,6 +12022,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public List<ApnSetting> getOverrideApns(ComponentName admin) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -14584,13 +12034,12 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(265, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(265, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getOverrideApns(admin);
                     }
                     _reply.readException();
                     List<ApnSetting> _result = _reply.createTypedArrayList(ApnSetting.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -14598,6 +12047,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setOverrideApnsEnabled(ComponentName admin, boolean enabled) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -14609,41 +12059,37 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(enabled);
-                    if (this.mRemote.transact(266, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(enabled ? 1 : 0);
+                    boolean _status = this.mRemote.transact(266, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setOverrideApnsEnabled(admin, enabled);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setOverrideApnsEnabled(admin, enabled);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean isOverrideApnEnabled(ComponentName admin) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (admin != null) {
                         _data.writeInt(1);
                         admin.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(267, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(267, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isOverrideApnEnabled(admin);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -14651,12 +12097,12 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean isMeteredDataDisabledPackageForUser(ComponentName admin, String packageName, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (admin != null) {
                         _data.writeInt(1);
                         admin.writeToParcel(_data, 0);
@@ -14665,15 +12111,12 @@ public interface IDevicePolicyManager extends IInterface {
                     }
                     _data.writeString(packageName);
                     _data.writeInt(userId);
-                    if (!this.mRemote.transact(268, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(268, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isMeteredDataDisabledPackageForUser(admin, packageName, userId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -14681,6 +12124,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public int setGlobalPrivateDns(ComponentName admin, int mode, String privateDnsHost) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -14694,13 +12138,12 @@ public interface IDevicePolicyManager extends IInterface {
                     }
                     _data.writeInt(mode);
                     _data.writeString(privateDnsHost);
-                    if (!this.mRemote.transact(269, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(269, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setGlobalPrivateDns(admin, mode, privateDnsHost);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -14708,6 +12151,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public int getGlobalPrivateDnsMode(ComponentName admin) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -14719,13 +12163,12 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(270, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(270, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getGlobalPrivateDnsMode(admin);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -14733,6 +12176,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public String getGlobalPrivateDnsHost(ComponentName admin) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -14744,13 +12188,12 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(271, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(271, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getGlobalPrivateDnsHost(admin);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -14758,6 +12201,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void grantDeviceIdsAccessToProfileOwner(ComponentName who, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -14770,19 +12214,19 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(userId);
-                    if (this.mRemote.transact(272, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(272, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().grantDeviceIdsAccessToProfileOwner(who, userId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().grantDeviceIdsAccessToProfileOwner(who, userId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void installUpdateFromFile(ComponentName admin, ParcelFileDescriptor updateFileDescriptor, StartInstallingUpdateCallback listener) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -14801,19 +12245,19 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeStrongBinder(listener != null ? listener.asBinder() : null);
-                    if (this.mRemote.transact(273, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(273, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().installUpdateFromFile(admin, updateFileDescriptor, listener);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().installUpdateFromFile(admin, updateFileDescriptor, listener);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public void setCrossProfileCalendarPackages(ComponentName admin, List<String> packageNames) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -14826,19 +12270,19 @@ public interface IDevicePolicyManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeStringList(packageNames);
-                    if (this.mRemote.transact(274, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(274, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setCrossProfileCalendarPackages(admin, packageNames);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setCrossProfileCalendarPackages(admin, packageNames);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public List<String> getCrossProfileCalendarPackages(ComponentName admin) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -14850,13 +12294,12 @@ public interface IDevicePolicyManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(275, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(275, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCrossProfileCalendarPackages(admin);
                     }
                     _reply.readException();
                     List<String> _result = _reply.createStringArrayList();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -14864,6 +12307,7 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean isPackageAllowedToAccessCalendarForUser(String packageName, int userHandle) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -14871,37 +12315,32 @@ public interface IDevicePolicyManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(packageName);
                     _data.writeInt(userHandle);
-                    boolean z = false;
-                    if (!this.mRemote.transact(276, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(276, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isPackageAllowedToAccessCalendarForUser(packageName, userHandle);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public List<String> getCrossProfileCalendarPackagesForUser(int userHandle) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userHandle);
-                    if (!this.mRemote.transact(277, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(277, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCrossProfileCalendarPackagesForUser(userHandle);
                     }
                     _reply.readException();
                     List<String> _result = _reply.createStringArrayList();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -14909,97 +12348,81 @@ public interface IDevicePolicyManager extends IInterface {
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean isManagedKiosk() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(278, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(278, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isManagedKiosk();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean isUnattendedManagedKiosk() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(279, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(279, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isUnattendedManagedKiosk();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.admin.IDevicePolicyManager
             public boolean startViewCalendarEventInManagedProfile(String packageName, long eventId, long start, long end, boolean allDay, int flags) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeString(packageName);
                     try {
-                        _data.writeString(packageName);
-                        try {
-                            _data.writeLong(eventId);
-                            _data.writeLong(start);
-                            _data.writeLong(end);
-                            _data.writeInt(allDay ? 1 : 0);
-                            _data.writeInt(flags);
-                            boolean z = false;
-                            if (this.mRemote.transact(280, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                _reply.readException();
-                                if (_reply.readInt() != 0) {
-                                    z = true;
-                                }
-                                boolean _status = z;
-                                _reply.recycle();
-                                _data.recycle();
-                                return _status;
-                            }
+                        _data.writeLong(eventId);
+                        _data.writeLong(start);
+                        _data.writeLong(end);
+                        _data.writeInt(allDay ? 1 : 0);
+                        _data.writeInt(flags);
+                        boolean _status = this.mRemote.transact(280, _data, _reply, 0);
+                        if (!_status && Stub.getDefaultImpl() != null) {
                             boolean startViewCalendarEventInManagedProfile = Stub.getDefaultImpl().startViewCalendarEventInManagedProfile(packageName, eventId, start, end, allDay, flags);
                             _reply.recycle();
                             _data.recycle();
                             return startViewCalendarEventInManagedProfile;
-                        } catch (Throwable th) {
-                            th = th;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
                         }
+                        _reply.readException();
+                        boolean _status2 = _reply.readInt() != 0;
+                        _reply.recycle();
+                        _data.recycle();
+                        return _status2;
                     } catch (Throwable th2) {
                         th = th2;
-                        long j = eventId;
                         _reply.recycle();
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th3) {
                     th = th3;
-                    String str = packageName;
-                    long j2 = eventId;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
@@ -15008,89 +12431,83 @@ public interface IDevicePolicyManager extends IInterface {
         }
 
         private boolean onTransact$installKeyPair$(Parcel data, Parcel reply) throws RemoteException {
-            ComponentName _arg0;
-            Parcel parcel = data;
-            parcel.enforceInterface(DESCRIPTOR);
-            if (data.readInt() != 0) {
-                _arg0 = ComponentName.CREATOR.createFromParcel(parcel);
-            } else {
-                _arg0 = null;
-            }
-            boolean _result = installKeyPair(_arg0, data.readString(), data.createByteArray(), data.createByteArray(), data.createByteArray(), data.readString(), data.readInt() != 0, data.readInt() != 0);
+            data.enforceInterface(DESCRIPTOR);
+            ComponentName _arg0 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+            String _arg1 = data.readString();
+            byte[] _arg2 = data.createByteArray();
+            byte[] _arg3 = data.createByteArray();
+            byte[] _arg4 = data.createByteArray();
+            String _arg5 = data.readString();
+            boolean _arg6 = data.readInt() != 0;
+            boolean _arg7 = data.readInt() != 0;
+            boolean installKeyPair = installKeyPair(_arg0, _arg1, _arg2, _arg3, _arg4, _arg5, _arg6, _arg7);
             reply.writeNoException();
-            reply.writeInt(_result);
+            reply.writeInt(installKeyPair ? 1 : 0);
             return true;
         }
 
         private boolean onTransact$setKeyPairCertificate$(Parcel data, Parcel reply) throws RemoteException {
-            ComponentName _arg0;
             data.enforceInterface(DESCRIPTOR);
-            if (data.readInt() != 0) {
-                _arg0 = ComponentName.CREATOR.createFromParcel(data);
-            } else {
-                _arg0 = null;
-            }
-            boolean _result = setKeyPairCertificate(_arg0, data.readString(), data.readString(), data.createByteArray(), data.createByteArray(), data.readInt() != 0);
+            ComponentName _arg0 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+            String _arg1 = data.readString();
+            String _arg2 = data.readString();
+            byte[] _arg3 = data.createByteArray();
+            byte[] _arg4 = data.createByteArray();
+            boolean _arg5 = data.readInt() != 0;
+            boolean keyPairCertificate = setKeyPairCertificate(_arg0, _arg1, _arg2, _arg3, _arg4, _arg5);
             reply.writeNoException();
-            reply.writeInt(_result);
+            reply.writeInt(keyPairCertificate ? 1 : 0);
             return true;
         }
 
         private boolean onTransact$setPermissionGrantState$(Parcel data, Parcel reply) throws RemoteException {
-            ComponentName _arg0;
             data.enforceInterface(DESCRIPTOR);
-            RemoteCallback _arg5 = null;
-            if (data.readInt() != 0) {
-                _arg0 = ComponentName.CREATOR.createFromParcel(data);
-            } else {
-                _arg0 = null;
-            }
+            ComponentName _arg0 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
             String _arg1 = data.readString();
             String _arg2 = data.readString();
             String _arg3 = data.readString();
             int _arg4 = data.readInt();
-            if (data.readInt() != 0) {
-                _arg5 = RemoteCallback.CREATOR.createFromParcel(data);
-            }
+            RemoteCallback _arg5 = data.readInt() != 0 ? RemoteCallback.CREATOR.createFromParcel(data) : null;
             setPermissionGrantState(_arg0, _arg1, _arg2, _arg3, _arg4, _arg5);
             reply.writeNoException();
             return true;
         }
 
         private boolean onTransact$bindDeviceAdminServiceAsUser$(Parcel data, Parcel reply) throws RemoteException {
-            ComponentName _arg0;
             data.enforceInterface(DESCRIPTOR);
-            Intent _arg3 = null;
-            if (data.readInt() != 0) {
-                _arg0 = ComponentName.CREATOR.createFromParcel(data);
-            } else {
-                _arg0 = null;
-            }
+            ComponentName _arg0 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
             IApplicationThread _arg1 = IApplicationThread.Stub.asInterface(data.readStrongBinder());
             IBinder _arg2 = data.readStrongBinder();
-            if (data.readInt() != 0) {
-                _arg3 = Intent.CREATOR.createFromParcel(data);
-            }
-            boolean _result = bindDeviceAdminServiceAsUser(_arg0, _arg1, _arg2, _arg3, IServiceConnection.Stub.asInterface(data.readStrongBinder()), data.readInt(), data.readInt());
+            Intent _arg3 = data.readInt() != 0 ? Intent.CREATOR.createFromParcel(data) : null;
+            IServiceConnection _arg4 = IServiceConnection.Stub.asInterface(data.readStrongBinder());
+            int _arg5 = data.readInt();
+            int _arg6 = data.readInt();
+            boolean bindDeviceAdminServiceAsUser = bindDeviceAdminServiceAsUser(_arg0, _arg1, _arg2, _arg3, _arg4, _arg5, _arg6);
             reply.writeNoException();
-            reply.writeInt(_result);
+            reply.writeInt(bindDeviceAdminServiceAsUser ? 1 : 0);
             return true;
         }
 
         private boolean onTransact$startViewCalendarEventInManagedProfile$(Parcel data, Parcel reply) throws RemoteException {
             data.enforceInterface(DESCRIPTOR);
-            boolean _result = startViewCalendarEventInManagedProfile(data.readString(), data.readLong(), data.readLong(), data.readLong(), data.readInt() != 0, data.readInt());
+            String _arg0 = data.readString();
+            long _arg1 = data.readLong();
+            long _arg2 = data.readLong();
+            long _arg3 = data.readLong();
+            boolean _arg4 = data.readInt() != 0;
+            int _arg5 = data.readInt();
+            boolean startViewCalendarEventInManagedProfile = startViewCalendarEventInManagedProfile(_arg0, _arg1, _arg2, _arg3, _arg4, _arg5);
             reply.writeNoException();
-            reply.writeInt(_result);
+            reply.writeInt(startViewCalendarEventInManagedProfile ? 1 : 0);
             return true;
         }
 
         public static boolean setDefaultImpl(IDevicePolicyManager impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IDevicePolicyManager getDefaultImpl() {

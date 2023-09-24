@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.TextView;
 import java.util.Locale;
 
+/* loaded from: classes4.dex */
 public class AllCapsTransformationMethod implements TransformationMethod2 {
     private static final String TAG = "AllCapsTransformationMethod";
     private boolean mEnabled;
@@ -20,9 +21,10 @@ public class AllCapsTransformationMethod implements TransformationMethod2 {
         this.mLocale = context.getResources().getConfiguration().getLocales().get(0);
     }
 
+    @Override // android.text.method.TransformationMethod
     public CharSequence getTransformation(CharSequence source, View view) {
         if (!this.mEnabled) {
-            Log.w(TAG, "Caller did not enable length changes; not transforming text");
+            Log.m64w(TAG, "Caller did not enable length changes; not transforming text");
             return source;
         } else if (source == null) {
             return null;
@@ -34,13 +36,16 @@ public class AllCapsTransformationMethod implements TransformationMethod2 {
             if (locale == null) {
                 locale = this.mLocale;
             }
-            return TextUtils.toUpperCase(locale, source, source instanceof Spanned);
+            boolean copySpans = source instanceof Spanned;
+            return TextUtils.toUpperCase(locale, source, copySpans);
         }
     }
 
+    @Override // android.text.method.TransformationMethod
     public void onFocusChanged(View view, CharSequence sourceText, boolean focused, int direction, Rect previouslyFocusedRect) {
     }
 
+    @Override // android.text.method.TransformationMethod2
     public void setLengthChangesAllowed(boolean allowLengthChanges) {
         this.mEnabled = allowLengthChanges;
     }

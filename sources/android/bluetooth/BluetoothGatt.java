@@ -2,15 +2,16 @@ package android.bluetooth;
 
 import android.annotation.UnsupportedAppUsage;
 import android.bluetooth.IBluetoothGattCallback;
-import android.os.Handler;
-import android.os.ParcelUuid;
-import android.os.RemoteException;
+import android.p007os.Handler;
+import android.p007os.ParcelUuid;
+import android.p007os.RemoteException;
 import android.util.Log;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
+/* loaded from: classes.dex */
 public final class BluetoothGatt implements BluetoothProfile {
     static final int AUTHENTICATION_MITM = 2;
     static final int AUTHENTICATION_NONE = 0;
@@ -39,18 +40,32 @@ public final class BluetoothGatt implements BluetoothProfile {
     public static final int GATT_WRITE_NOT_PERMITTED = 3;
     private static final String TAG = "BluetoothGatt";
     private static final boolean VDBG = false;
-    /* access modifiers changed from: private */
-    @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
-    public int mAuthRetryState;
-    /* access modifiers changed from: private */
     @UnsupportedAppUsage
-    public boolean mAutoConnect;
-    private final IBluetoothGattCallback mBluetoothGattCallback = new IBluetoothGattCallback.Stub() {
+    private boolean mAutoConnect;
+    @UnsupportedAppUsage
+    private volatile BluetoothGattCallback mCallback;
+    @UnsupportedAppUsage
+    private int mClientIf;
+    private BluetoothDevice mDevice;
+    private Handler mHandler;
+    private boolean mOpportunistic;
+    private int mPhy;
+    @UnsupportedAppUsage
+    private IBluetoothGatt mService;
+    @UnsupportedAppUsage
+    private int mTransport;
+    private final Object mStateLock = new Object();
+    private final Object mDeviceBusyLock = new Object();
+    @UnsupportedAppUsage
+    private Boolean mDeviceBusy = false;
+    private final IBluetoothGattCallback mBluetoothGattCallback = new IBluetoothGattCallback.Stub() { // from class: android.bluetooth.BluetoothGatt.1
+        @Override // android.bluetooth.IBluetoothGattCallback
         public void onClientRegistered(int status, int clientIf) {
-            Log.d(BluetoothGatt.TAG, "onClientRegistered() - status=" + status + " clientIf=" + clientIf);
-            int unused = BluetoothGatt.this.mClientIf = clientIf;
+            Log.m72d(BluetoothGatt.TAG, "onClientRegistered() - status=" + status + " clientIf=" + clientIf);
+            BluetoothGatt.this.mClientIf = clientIf;
             if (status != 0) {
-                BluetoothGatt.this.runOrQueueCallback(new Runnable() {
+                BluetoothGatt.this.runOrQueueCallback(new Runnable() { // from class: android.bluetooth.BluetoothGatt.1.1
+                    @Override // java.lang.Runnable
                     public void run() {
                         BluetoothGattCallback callback = BluetoothGatt.this.mCallback;
                         if (callback != null) {
@@ -59,21 +74,23 @@ public final class BluetoothGatt implements BluetoothProfile {
                     }
                 });
                 synchronized (BluetoothGatt.this.mStateLock) {
-                    int unused2 = BluetoothGatt.this.mConnState = 0;
+                    BluetoothGatt.this.mConnState = 0;
                 }
                 return;
             }
             try {
                 BluetoothGatt.this.mService.clientConnect(BluetoothGatt.this.mClientIf, BluetoothGatt.this.mDevice.getAddress(), !BluetoothGatt.this.mAutoConnect, BluetoothGatt.this.mTransport, BluetoothGatt.this.mOpportunistic, BluetoothGatt.this.mPhy);
             } catch (RemoteException e) {
-                Log.e(BluetoothGatt.TAG, "", e);
+                Log.m69e(BluetoothGatt.TAG, "", e);
             }
         }
 
+        @Override // android.bluetooth.IBluetoothGattCallback
         public void onPhyUpdate(String address, final int txPhy, final int rxPhy, final int status) {
-            Log.d(BluetoothGatt.TAG, "onPhyUpdate() - status=" + status + " address=" + address + " txPhy=" + txPhy + " rxPhy=" + rxPhy);
+            Log.m72d(BluetoothGatt.TAG, "onPhyUpdate() - status=" + status + " address=" + address + " txPhy=" + txPhy + " rxPhy=" + rxPhy);
             if (address.equals(BluetoothGatt.this.mDevice.getAddress())) {
-                BluetoothGatt.this.runOrQueueCallback(new Runnable() {
+                BluetoothGatt.this.runOrQueueCallback(new Runnable() { // from class: android.bluetooth.BluetoothGatt.1.2
+                    @Override // java.lang.Runnable
                     public void run() {
                         BluetoothGattCallback callback = BluetoothGatt.this.mCallback;
                         if (callback != null) {
@@ -84,10 +101,12 @@ public final class BluetoothGatt implements BluetoothProfile {
             }
         }
 
+        @Override // android.bluetooth.IBluetoothGattCallback
         public void onPhyRead(String address, final int txPhy, final int rxPhy, final int status) {
-            Log.d(BluetoothGatt.TAG, "onPhyRead() - status=" + status + " address=" + address + " txPhy=" + txPhy + " rxPhy=" + rxPhy);
+            Log.m72d(BluetoothGatt.TAG, "onPhyRead() - status=" + status + " address=" + address + " txPhy=" + txPhy + " rxPhy=" + rxPhy);
             if (address.equals(BluetoothGatt.this.mDevice.getAddress())) {
-                BluetoothGatt.this.runOrQueueCallback(new Runnable() {
+                BluetoothGatt.this.runOrQueueCallback(new Runnable() { // from class: android.bluetooth.BluetoothGatt.1.3
+                    @Override // java.lang.Runnable
                     public void run() {
                         BluetoothGattCallback callback = BluetoothGatt.this.mCallback;
                         if (callback != null) {
@@ -98,95 +117,96 @@ public final class BluetoothGatt implements BluetoothProfile {
             }
         }
 
+        @Override // android.bluetooth.IBluetoothGattCallback
         public void onClientConnectionState(final int status, int clientIf, boolean connected, String address) {
-            Log.d(BluetoothGatt.TAG, "onClientConnectionState() - status=" + status + " clientIf=" + clientIf + " device=" + address);
-            if (address.equals(BluetoothGatt.this.mDevice.getAddress())) {
-                final int profileState = connected ? 2 : 0;
-                BluetoothGatt.this.runOrQueueCallback(new Runnable() {
-                    public void run() {
-                        BluetoothGattCallback callback = BluetoothGatt.this.mCallback;
-                        if (callback != null) {
-                            callback.onConnectionStateChange(BluetoothGatt.this, status, profileState);
-                        }
+            Log.m72d(BluetoothGatt.TAG, "onClientConnectionState() - status=" + status + " clientIf=" + clientIf + " device=" + address);
+            if (!address.equals(BluetoothGatt.this.mDevice.getAddress())) {
+                return;
+            }
+            final int profileState = connected ? 2 : 0;
+            BluetoothGatt.this.runOrQueueCallback(new Runnable() { // from class: android.bluetooth.BluetoothGatt.1.4
+                @Override // java.lang.Runnable
+                public void run() {
+                    BluetoothGattCallback callback = BluetoothGatt.this.mCallback;
+                    if (callback != null) {
+                        callback.onConnectionStateChange(BluetoothGatt.this, status, profileState);
                     }
-                });
-                synchronized (BluetoothGatt.this.mStateLock) {
+                }
+            });
+            synchronized (BluetoothGatt.this.mStateLock) {
+                try {
                     if (connected) {
-                        try {
-                            int unused = BluetoothGatt.this.mConnState = 2;
-                        } catch (Throwable th) {
-                            while (true) {
-                                throw th;
-                            }
-                        }
+                        BluetoothGatt.this.mConnState = 2;
                     } else {
-                        int unused2 = BluetoothGatt.this.mConnState = 0;
+                        BluetoothGatt.this.mConnState = 0;
                     }
+                } catch (Throwable th) {
+                    throw th;
                 }
-                synchronized (BluetoothGatt.this.mDeviceBusyLock) {
-                    Boolean unused3 = BluetoothGatt.this.mDeviceBusy = false;
-                }
+            }
+            synchronized (BluetoothGatt.this.mDeviceBusyLock) {
+                BluetoothGatt.this.mDeviceBusy = false;
             }
         }
 
+        @Override // android.bluetooth.IBluetoothGattCallback
         public void onSearchComplete(String address, List<BluetoothGattService> services, final int status) {
-            Log.d(BluetoothGatt.TAG, "onSearchComplete() = Device=" + address + " Status=" + status);
-            if (address.equals(BluetoothGatt.this.mDevice.getAddress())) {
-                for (BluetoothGattService s : services) {
-                    s.setDevice(BluetoothGatt.this.mDevice);
-                }
-                BluetoothGatt.this.mServices.addAll(services);
-                for (BluetoothGattService fixedService : BluetoothGatt.this.mServices) {
-                    ArrayList<BluetoothGattService> includedServices = new ArrayList<>(fixedService.getIncludedServices());
-                    fixedService.getIncludedServices().clear();
-                    Iterator<BluetoothGattService> it = includedServices.iterator();
-                    while (it.hasNext()) {
-                        BluetoothGattService brokenRef = it.next();
-                        BluetoothGattService includedService = BluetoothGatt.this.getService(BluetoothGatt.this.mDevice, brokenRef.getUuid(), brokenRef.getInstanceId());
-                        if (includedService != null) {
-                            fixedService.addIncludedService(includedService);
-                        } else {
-                            Log.e(BluetoothGatt.TAG, "Broken GATT database: can't find included service.");
-                        }
-                    }
-                }
-                BluetoothGatt.this.runOrQueueCallback(new Runnable() {
-                    public void run() {
-                        BluetoothGattCallback callback = BluetoothGatt.this.mCallback;
-                        if (callback != null) {
-                            callback.onServicesDiscovered(BluetoothGatt.this, status);
-                        }
-                    }
-                });
+            Log.m72d(BluetoothGatt.TAG, "onSearchComplete() = Device=" + address + " Status=" + status);
+            if (!address.equals(BluetoothGatt.this.mDevice.getAddress())) {
+                return;
             }
+            for (BluetoothGattService s : services) {
+                s.setDevice(BluetoothGatt.this.mDevice);
+            }
+            BluetoothGatt.this.mServices.addAll(services);
+            for (BluetoothGattService fixedService : BluetoothGatt.this.mServices) {
+                ArrayList<BluetoothGattService> includedServices = new ArrayList<>(fixedService.getIncludedServices());
+                fixedService.getIncludedServices().clear();
+                Iterator<BluetoothGattService> it = includedServices.iterator();
+                while (it.hasNext()) {
+                    BluetoothGattService brokenRef = it.next();
+                    BluetoothGattService includedService = BluetoothGatt.this.getService(BluetoothGatt.this.mDevice, brokenRef.getUuid(), brokenRef.getInstanceId());
+                    if (includedService != null) {
+                        fixedService.addIncludedService(includedService);
+                    } else {
+                        Log.m70e(BluetoothGatt.TAG, "Broken GATT database: can't find included service.");
+                    }
+                }
+            }
+            BluetoothGatt.this.runOrQueueCallback(new Runnable() { // from class: android.bluetooth.BluetoothGatt.1.5
+                @Override // java.lang.Runnable
+                public void run() {
+                    BluetoothGattCallback callback = BluetoothGatt.this.mCallback;
+                    if (callback != null) {
+                        callback.onServicesDiscovered(BluetoothGatt.this, status);
+                    }
+                }
+            });
         }
 
+        @Override // android.bluetooth.IBluetoothGattCallback
         public void onCharacteristicRead(String address, final int status, int handle, final byte[] value) {
             if (address.equals(BluetoothGatt.this.mDevice.getAddress())) {
                 synchronized (BluetoothGatt.this.mDeviceBusyLock) {
-                    Boolean unused = BluetoothGatt.this.mDeviceBusy = false;
+                    BluetoothGatt.this.mDeviceBusy = false;
                 }
                 if (status == 5 || status == 15) {
-                    int authReq = 2;
                     if (BluetoothGatt.this.mAuthRetryState != 2) {
                         try {
-                            if (BluetoothGatt.this.mAuthRetryState == 0) {
-                                authReq = 1;
-                            }
+                            int authReq = BluetoothGatt.this.mAuthRetryState == 0 ? 1 : 2;
                             BluetoothGatt.this.mService.readCharacteristic(BluetoothGatt.this.mClientIf, address, handle, authReq);
                             BluetoothGatt.access$1408(BluetoothGatt.this);
                             return;
                         } catch (RemoteException e) {
-                            Log.e(BluetoothGatt.TAG, "", e);
+                            Log.m69e(BluetoothGatt.TAG, "", e);
                         }
                     }
                 }
-                int unused2 = BluetoothGatt.this.mAuthRetryState = 0;
+                BluetoothGatt.this.mAuthRetryState = 0;
                 final BluetoothGattCharacteristic characteristic = BluetoothGatt.this.getCharacteristicById(BluetoothGatt.this.mDevice, handle);
-                if (characteristic == null) {
-                    Log.w(BluetoothGatt.TAG, "onCharacteristicRead() failed to find characteristic!");
-                } else {
-                    BluetoothGatt.this.runOrQueueCallback(new Runnable() {
+                if (characteristic != null) {
+                    BluetoothGatt.this.runOrQueueCallback(new Runnable() { // from class: android.bluetooth.BluetoothGatt.1.6
+                        @Override // java.lang.Runnable
                         public void run() {
                             BluetoothGattCallback callback = BluetoothGatt.this.mCallback;
                             if (callback != null) {
@@ -197,154 +217,153 @@ public final class BluetoothGatt implements BluetoothProfile {
                             }
                         }
                     });
+                } else {
+                    Log.m64w(BluetoothGatt.TAG, "onCharacteristicRead() failed to find characteristic!");
                 }
             }
         }
 
+        @Override // android.bluetooth.IBluetoothGattCallback
         public void onCharacteristicWrite(String address, final int status, int handle) {
             if (address.equals(BluetoothGatt.this.mDevice.getAddress())) {
                 synchronized (BluetoothGatt.this.mDeviceBusyLock) {
-                    Boolean unused = BluetoothGatt.this.mDeviceBusy = false;
+                    BluetoothGatt.this.mDeviceBusy = false;
                 }
                 final BluetoothGattCharacteristic characteristic = BluetoothGatt.this.getCharacteristicById(BluetoothGatt.this.mDevice, handle);
-                if (characteristic != null) {
-                    if (status == 5 || status == 15) {
-                        int authReq = 2;
-                        if (BluetoothGatt.this.mAuthRetryState != 2) {
-                            try {
-                                if (BluetoothGatt.this.mAuthRetryState == 0) {
-                                    authReq = 1;
-                                }
-                                BluetoothGatt.this.mService.writeCharacteristic(BluetoothGatt.this.mClientIf, address, handle, characteristic.getWriteType(), authReq, characteristic.getValue());
-                                BluetoothGatt.access$1408(BluetoothGatt.this);
-                                return;
-                            } catch (RemoteException e) {
-                                Log.e(BluetoothGatt.TAG, "", e);
+                if (characteristic == null) {
+                    return;
+                }
+                if (status == 5 || status == 15) {
+                    int i = 2;
+                    if (BluetoothGatt.this.mAuthRetryState != 2) {
+                        try {
+                            if (BluetoothGatt.this.mAuthRetryState == 0) {
+                                i = 1;
                             }
+                            int authReq = i;
+                            BluetoothGatt.this.mService.writeCharacteristic(BluetoothGatt.this.mClientIf, address, handle, characteristic.getWriteType(), authReq, characteristic.getValue());
+                            BluetoothGatt.access$1408(BluetoothGatt.this);
+                            return;
+                        } catch (RemoteException e) {
+                            Log.m69e(BluetoothGatt.TAG, "", e);
                         }
                     }
-                    int unused2 = BluetoothGatt.this.mAuthRetryState = 0;
-                    BluetoothGatt.this.runOrQueueCallback(new Runnable() {
-                        public void run() {
-                            BluetoothGattCallback callback = BluetoothGatt.this.mCallback;
-                            if (callback != null) {
-                                callback.onCharacteristicWrite(BluetoothGatt.this, characteristic, status);
-                            }
-                        }
-                    });
                 }
+                BluetoothGatt.this.mAuthRetryState = 0;
+                BluetoothGatt.this.runOrQueueCallback(new Runnable() { // from class: android.bluetooth.BluetoothGatt.1.7
+                    @Override // java.lang.Runnable
+                    public void run() {
+                        BluetoothGattCallback callback = BluetoothGatt.this.mCallback;
+                        if (callback != null) {
+                            callback.onCharacteristicWrite(BluetoothGatt.this, characteristic, status);
+                        }
+                    }
+                });
             }
         }
 
-        /* JADX WARNING: Code restructure failed: missing block: B:3:0x0011, code lost:
-            r0 = r3.this$0.getCharacteristicById(android.bluetooth.BluetoothGatt.access$500(r3.this$0), r5);
-         */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public void onNotify(java.lang.String r4, int r5, final byte[] r6) {
-            /*
-                r3 = this;
-                android.bluetooth.BluetoothGatt r0 = android.bluetooth.BluetoothGatt.this
-                android.bluetooth.BluetoothDevice r0 = r0.mDevice
-                java.lang.String r0 = r0.getAddress()
-                boolean r0 = r4.equals(r0)
-                if (r0 != 0) goto L_0x0011
-                return
-            L_0x0011:
-                android.bluetooth.BluetoothGatt r0 = android.bluetooth.BluetoothGatt.this
-                android.bluetooth.BluetoothGatt r1 = android.bluetooth.BluetoothGatt.this
-                android.bluetooth.BluetoothDevice r1 = r1.mDevice
-                android.bluetooth.BluetoothGattCharacteristic r0 = r0.getCharacteristicById(r1, r5)
-                if (r0 != 0) goto L_0x0020
-                return
-            L_0x0020:
-                android.bluetooth.BluetoothGatt r1 = android.bluetooth.BluetoothGatt.this
-                android.bluetooth.BluetoothGatt$1$8 r2 = new android.bluetooth.BluetoothGatt$1$8
-                r2.<init>(r0, r6)
-                r1.runOrQueueCallback(r2)
-                return
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.bluetooth.BluetoothGatt.AnonymousClass1.onNotify(java.lang.String, int, byte[]):void");
+        @Override // android.bluetooth.IBluetoothGattCallback
+        public void onNotify(String address, int handle, final byte[] value) {
+            final BluetoothGattCharacteristic characteristic;
+            if (address.equals(BluetoothGatt.this.mDevice.getAddress()) && (characteristic = BluetoothGatt.this.getCharacteristicById(BluetoothGatt.this.mDevice, handle)) != null) {
+                BluetoothGatt.this.runOrQueueCallback(new Runnable() { // from class: android.bluetooth.BluetoothGatt.1.8
+                    @Override // java.lang.Runnable
+                    public void run() {
+                        BluetoothGattCallback callback = BluetoothGatt.this.mCallback;
+                        if (callback != null) {
+                            characteristic.setValue(value);
+                            callback.onCharacteristicChanged(BluetoothGatt.this, characteristic);
+                        }
+                    }
+                });
+            }
         }
 
+        @Override // android.bluetooth.IBluetoothGattCallback
         public void onDescriptorRead(String address, final int status, int handle, final byte[] value) {
             if (address.equals(BluetoothGatt.this.mDevice.getAddress())) {
                 synchronized (BluetoothGatt.this.mDeviceBusyLock) {
-                    Boolean unused = BluetoothGatt.this.mDeviceBusy = false;
+                    BluetoothGatt.this.mDeviceBusy = false;
                 }
                 final BluetoothGattDescriptor descriptor = BluetoothGatt.this.getDescriptorById(BluetoothGatt.this.mDevice, handle);
-                if (descriptor != null) {
-                    if (status == 5 || status == 15) {
-                        int authReq = 2;
-                        if (BluetoothGatt.this.mAuthRetryState != 2) {
-                            try {
-                                if (BluetoothGatt.this.mAuthRetryState == 0) {
-                                    authReq = 1;
-                                }
-                                BluetoothGatt.this.mService.readDescriptor(BluetoothGatt.this.mClientIf, address, handle, authReq);
-                                BluetoothGatt.access$1408(BluetoothGatt.this);
-                                return;
-                            } catch (RemoteException e) {
-                                Log.e(BluetoothGatt.TAG, "", e);
-                            }
+                if (descriptor == null) {
+                    return;
+                }
+                if (status == 5 || status == 15) {
+                    if (BluetoothGatt.this.mAuthRetryState != 2) {
+                        try {
+                            int authReq = BluetoothGatt.this.mAuthRetryState == 0 ? 1 : 2;
+                            BluetoothGatt.this.mService.readDescriptor(BluetoothGatt.this.mClientIf, address, handle, authReq);
+                            BluetoothGatt.access$1408(BluetoothGatt.this);
+                            return;
+                        } catch (RemoteException e) {
+                            Log.m69e(BluetoothGatt.TAG, "", e);
                         }
                     }
-                    int unused2 = BluetoothGatt.this.mAuthRetryState = 0;
-                    BluetoothGatt.this.runOrQueueCallback(new Runnable() {
-                        public void run() {
-                            BluetoothGattCallback callback = BluetoothGatt.this.mCallback;
-                            if (callback != null) {
-                                if (status == 0) {
-                                    descriptor.setValue(value);
-                                }
-                                callback.onDescriptorRead(BluetoothGatt.this, descriptor, status);
-                            }
-                        }
-                    });
                 }
+                BluetoothGatt.this.mAuthRetryState = 0;
+                BluetoothGatt.this.runOrQueueCallback(new Runnable() { // from class: android.bluetooth.BluetoothGatt.1.9
+                    @Override // java.lang.Runnable
+                    public void run() {
+                        BluetoothGattCallback callback = BluetoothGatt.this.mCallback;
+                        if (callback != null) {
+                            if (status == 0) {
+                                descriptor.setValue(value);
+                            }
+                            callback.onDescriptorRead(BluetoothGatt.this, descriptor, status);
+                        }
+                    }
+                });
             }
         }
 
+        @Override // android.bluetooth.IBluetoothGattCallback
         public void onDescriptorWrite(String address, final int status, int handle) {
             if (address.equals(BluetoothGatt.this.mDevice.getAddress())) {
                 synchronized (BluetoothGatt.this.mDeviceBusyLock) {
-                    Boolean unused = BluetoothGatt.this.mDeviceBusy = false;
+                    BluetoothGatt.this.mDeviceBusy = false;
                 }
                 final BluetoothGattDescriptor descriptor = BluetoothGatt.this.getDescriptorById(BluetoothGatt.this.mDevice, handle);
-                if (descriptor != null) {
-                    if (status == 5 || status == 15) {
-                        int authReq = 2;
-                        if (BluetoothGatt.this.mAuthRetryState != 2) {
-                            try {
-                                if (BluetoothGatt.this.mAuthRetryState == 0) {
-                                    authReq = 1;
-                                }
-                                BluetoothGatt.this.mService.writeDescriptor(BluetoothGatt.this.mClientIf, address, handle, authReq, descriptor.getValue());
-                                BluetoothGatt.access$1408(BluetoothGatt.this);
-                                return;
-                            } catch (RemoteException e) {
-                                Log.e(BluetoothGatt.TAG, "", e);
+                if (descriptor == null) {
+                    return;
+                }
+                if (status == 5 || status == 15) {
+                    int i = 2;
+                    if (BluetoothGatt.this.mAuthRetryState != 2) {
+                        try {
+                            if (BluetoothGatt.this.mAuthRetryState == 0) {
+                                i = 1;
                             }
+                            int authReq = i;
+                            BluetoothGatt.this.mService.writeDescriptor(BluetoothGatt.this.mClientIf, address, handle, authReq, descriptor.getValue());
+                            BluetoothGatt.access$1408(BluetoothGatt.this);
+                            return;
+                        } catch (RemoteException e) {
+                            Log.m69e(BluetoothGatt.TAG, "", e);
                         }
                     }
-                    int unused2 = BluetoothGatt.this.mAuthRetryState = 0;
-                    BluetoothGatt.this.runOrQueueCallback(new Runnable() {
-                        public void run() {
-                            BluetoothGattCallback callback = BluetoothGatt.this.mCallback;
-                            if (callback != null) {
-                                callback.onDescriptorWrite(BluetoothGatt.this, descriptor, status);
-                            }
-                        }
-                    });
                 }
+                BluetoothGatt.this.mAuthRetryState = 0;
+                BluetoothGatt.this.runOrQueueCallback(new Runnable() { // from class: android.bluetooth.BluetoothGatt.1.10
+                    @Override // java.lang.Runnable
+                    public void run() {
+                        BluetoothGattCallback callback = BluetoothGatt.this.mCallback;
+                        if (callback != null) {
+                            callback.onDescriptorWrite(BluetoothGatt.this, descriptor, status);
+                        }
+                    }
+                });
             }
         }
 
+        @Override // android.bluetooth.IBluetoothGattCallback
         public void onExecuteWrite(String address, final int status) {
             if (address.equals(BluetoothGatt.this.mDevice.getAddress())) {
                 synchronized (BluetoothGatt.this.mDeviceBusyLock) {
-                    Boolean unused = BluetoothGatt.this.mDeviceBusy = false;
+                    BluetoothGatt.this.mDeviceBusy = false;
                 }
-                BluetoothGatt.this.runOrQueueCallback(new Runnable() {
+                BluetoothGatt.this.runOrQueueCallback(new Runnable() { // from class: android.bluetooth.BluetoothGatt.1.11
+                    @Override // java.lang.Runnable
                     public void run() {
                         BluetoothGattCallback callback = BluetoothGatt.this.mCallback;
                         if (callback != null) {
@@ -355,9 +374,11 @@ public final class BluetoothGatt implements BluetoothProfile {
             }
         }
 
+        @Override // android.bluetooth.IBluetoothGattCallback
         public void onReadRemoteRssi(String address, final int rssi, final int status) {
             if (address.equals(BluetoothGatt.this.mDevice.getAddress())) {
-                BluetoothGatt.this.runOrQueueCallback(new Runnable() {
+                BluetoothGatt.this.runOrQueueCallback(new Runnable() { // from class: android.bluetooth.BluetoothGatt.1.12
+                    @Override // java.lang.Runnable
                     public void run() {
                         BluetoothGattCallback callback = BluetoothGatt.this.mCallback;
                         if (callback != null) {
@@ -368,10 +389,12 @@ public final class BluetoothGatt implements BluetoothProfile {
             }
         }
 
+        @Override // android.bluetooth.IBluetoothGattCallback
         public void onConfigureMTU(String address, final int mtu, final int status) {
-            Log.d(BluetoothGatt.TAG, "onConfigureMTU() - Device=" + address + " mtu=" + mtu + " status=" + status);
+            Log.m72d(BluetoothGatt.TAG, "onConfigureMTU() - Device=" + address + " mtu=" + mtu + " status=" + status);
             if (address.equals(BluetoothGatt.this.mDevice.getAddress())) {
-                BluetoothGatt.this.runOrQueueCallback(new Runnable() {
+                BluetoothGatt.this.runOrQueueCallback(new Runnable() { // from class: android.bluetooth.BluetoothGatt.1.13
+                    @Override // java.lang.Runnable
                     public void run() {
                         BluetoothGattCallback callback = BluetoothGatt.this.mCallback;
                         if (callback != null) {
@@ -382,54 +405,26 @@ public final class BluetoothGatt implements BluetoothProfile {
             }
         }
 
-        public void onConnectionUpdated(String address, int interval, int latency, int timeout, int status) {
-            Log.d(BluetoothGatt.TAG, "onConnectionUpdated() - Device=" + address + " interval=" + interval + " latency=" + latency + " timeout=" + timeout + " status=" + status);
+        @Override // android.bluetooth.IBluetoothGattCallback
+        public void onConnectionUpdated(String address, final int interval, final int latency, final int timeout, final int status) {
+            Log.m72d(BluetoothGatt.TAG, "onConnectionUpdated() - Device=" + address + " interval=" + interval + " latency=" + latency + " timeout=" + timeout + " status=" + status);
             if (address.equals(BluetoothGatt.this.mDevice.getAddress())) {
-                final int i = interval;
-                final int i2 = latency;
-                final int i3 = timeout;
-                final int i4 = status;
-                BluetoothGatt.this.runOrQueueCallback(new Runnable() {
+                BluetoothGatt.this.runOrQueueCallback(new Runnable() { // from class: android.bluetooth.BluetoothGatt.1.14
+                    @Override // java.lang.Runnable
                     public void run() {
                         BluetoothGattCallback callback = BluetoothGatt.this.mCallback;
                         if (callback != null) {
-                            callback.onConnectionUpdated(BluetoothGatt.this, i, i2, i3, i4);
+                            callback.onConnectionUpdated(BluetoothGatt.this, interval, latency, timeout, status);
                         }
                     }
                 });
             }
         }
     };
-    /* access modifiers changed from: private */
-    @UnsupportedAppUsage
-    public volatile BluetoothGattCallback mCallback;
-    /* access modifiers changed from: private */
-    @UnsupportedAppUsage
-    public int mClientIf;
-    /* access modifiers changed from: private */
-    public int mConnState;
-    /* access modifiers changed from: private */
-    public BluetoothDevice mDevice;
-    /* access modifiers changed from: private */
-    @UnsupportedAppUsage
-    public Boolean mDeviceBusy = false;
-    /* access modifiers changed from: private */
-    public final Object mDeviceBusyLock = new Object();
-    private Handler mHandler;
-    /* access modifiers changed from: private */
-    public boolean mOpportunistic;
-    /* access modifiers changed from: private */
-    public int mPhy;
-    /* access modifiers changed from: private */
-    @UnsupportedAppUsage
-    public IBluetoothGatt mService;
-    /* access modifiers changed from: private */
-    public List<BluetoothGattService> mServices;
-    /* access modifiers changed from: private */
-    public final Object mStateLock = new Object();
-    /* access modifiers changed from: private */
-    @UnsupportedAppUsage
-    public int mTransport;
+    private List<BluetoothGattService> mServices = new ArrayList();
+    private int mConnState = 0;
+    @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
+    private int mAuthRetryState = 0;
 
     static /* synthetic */ int access$1408(BluetoothGatt x0) {
         int i = x0.mAuthRetryState;
@@ -443,20 +438,16 @@ public final class BluetoothGatt implements BluetoothProfile {
         this.mTransport = transport;
         this.mPhy = phy;
         this.mOpportunistic = opportunistic;
-        this.mServices = new ArrayList();
-        this.mConnState = 0;
-        this.mAuthRetryState = 0;
     }
 
     public void close() {
-        Log.d(TAG, "close()");
+        Log.m72d(TAG, "close()");
         unregisterApp();
         this.mConnState = 4;
         this.mAuthRetryState = 0;
     }
 
-    /* access modifiers changed from: package-private */
-    public BluetoothGattService getService(BluetoothDevice device, UUID uuid, int instanceId) {
+    BluetoothGattService getService(BluetoothDevice device, UUID uuid, int instanceId) {
         for (BluetoothGattService svc : this.mServices) {
             if (svc.getDevice().equals(device) && svc.getInstanceId() == instanceId && svc.getUuid().equals(uuid)) {
                 return svc;
@@ -465,15 +456,23 @@ public final class BluetoothGatt implements BluetoothProfile {
         return null;
     }
 
-    /* access modifiers changed from: package-private */
-    public BluetoothGattCharacteristic getCharacteristicById(BluetoothDevice device, int instanceId) {
+    BluetoothGattCharacteristic getCharacteristicById(BluetoothDevice device, int instanceId) {
         for (BluetoothGattService svc : this.mServices) {
-            Iterator<BluetoothGattCharacteristic> it = svc.getCharacteristics().iterator();
-            while (true) {
-                if (it.hasNext()) {
-                    BluetoothGattCharacteristic charac = it.next();
-                    if (charac.getInstanceId() == instanceId) {
-                        return charac;
+            for (BluetoothGattCharacteristic charac : svc.getCharacteristics()) {
+                if (charac.getInstanceId() == instanceId) {
+                    return charac;
+                }
+            }
+        }
+        return null;
+    }
+
+    BluetoothGattDescriptor getDescriptorById(BluetoothDevice device, int instanceId) {
+        for (BluetoothGattService svc : this.mServices) {
+            for (BluetoothGattCharacteristic charac : svc.getCharacteristics()) {
+                for (BluetoothGattDescriptor desc : charac.getDescriptors()) {
+                    if (desc.getInstanceId() == instanceId) {
+                        return desc;
                     }
                 }
             }
@@ -481,82 +480,61 @@ public final class BluetoothGatt implements BluetoothProfile {
         return null;
     }
 
-    /* access modifiers changed from: package-private */
-    public BluetoothGattDescriptor getDescriptorById(BluetoothDevice device, int instanceId) {
-        for (BluetoothGattService svc : this.mServices) {
-            Iterator<BluetoothGattCharacteristic> it = svc.getCharacteristics().iterator();
-            while (true) {
-                if (it.hasNext()) {
-                    Iterator<BluetoothGattDescriptor> it2 = it.next().getDescriptors().iterator();
-                    while (true) {
-                        if (it2.hasNext()) {
-                            BluetoothGattDescriptor desc = it2.next();
-                            if (desc.getInstanceId() == instanceId) {
-                                return desc;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void runOrQueueCallback(Runnable cb) {
         if (this.mHandler == null) {
             try {
                 cb.run();
+                return;
             } catch (Exception ex) {
-                Log.w(TAG, "Unhandled exception in callback", ex);
+                Log.m63w(TAG, "Unhandled exception in callback", ex);
+                return;
             }
-        } else {
-            this.mHandler.post(cb);
         }
+        this.mHandler.post(cb);
     }
 
     private boolean registerApp(BluetoothGattCallback callback, Handler handler) {
-        Log.d(TAG, "registerApp()");
+        Log.m72d(TAG, "registerApp()");
         if (this.mService == null) {
             return false;
         }
         this.mCallback = callback;
         this.mHandler = handler;
         UUID uuid = UUID.randomUUID();
-        Log.d(TAG, "registerApp() - UUID=" + uuid);
+        Log.m72d(TAG, "registerApp() - UUID=" + uuid);
         try {
             this.mService.registerClient(new ParcelUuid(uuid), this.mBluetoothGattCallback);
             return true;
         } catch (RemoteException e) {
-            Log.e(TAG, "", e);
+            Log.m69e(TAG, "", e);
             return false;
         }
     }
 
     @UnsupportedAppUsage
     private void unregisterApp() {
-        Log.d(TAG, "unregisterApp() - mClientIf=" + this.mClientIf);
-        if (this.mService != null && this.mClientIf != 0) {
-            try {
-                this.mCallback = null;
-                this.mService.unregisterClient(this.mClientIf);
-                this.mClientIf = 0;
-            } catch (RemoteException e) {
-                Log.e(TAG, "", e);
-            }
+        Log.m72d(TAG, "unregisterApp() - mClientIf=" + this.mClientIf);
+        if (this.mService == null || this.mClientIf == 0) {
+            return;
+        }
+        try {
+            this.mCallback = null;
+            this.mService.unregisterClient(this.mClientIf);
+            this.mClientIf = 0;
+        } catch (RemoteException e) {
+            Log.m69e(TAG, "", e);
         }
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public boolean connect(Boolean autoConnect, BluetoothGattCallback callback, Handler handler) {
-        Log.d(TAG, "connect() - device: " + this.mDevice.getAddress() + ", auto: " + autoConnect);
+    boolean connect(Boolean autoConnect, BluetoothGattCallback callback, Handler handler) {
+        Log.m72d(TAG, "connect() - device: " + this.mDevice.getAddress() + ", auto: " + autoConnect);
         synchronized (this.mStateLock) {
-            if (this.mConnState == 0) {
-                this.mConnState = 1;
-            } else {
+            if (this.mConnState != 0) {
                 throw new IllegalStateException("Not idle");
             }
+            this.mConnState = 1;
         }
         this.mAutoConnect = autoConnect.booleanValue();
         if (registerApp(callback, handler)) {
@@ -565,18 +543,19 @@ public final class BluetoothGatt implements BluetoothProfile {
         synchronized (this.mStateLock) {
             this.mConnState = 0;
         }
-        Log.e(TAG, "Failed to register callback");
+        Log.m70e(TAG, "Failed to register callback");
         return false;
     }
 
     public void disconnect() {
-        Log.d(TAG, "cancelOpen() - device: " + this.mDevice.getAddress());
-        if (this.mService != null && this.mClientIf != 0) {
-            try {
-                this.mService.clientDisconnect(this.mClientIf, this.mDevice.getAddress());
-            } catch (RemoteException e) {
-                Log.e(TAG, "", e);
-            }
+        Log.m72d(TAG, "cancelOpen() - device: " + this.mDevice.getAddress());
+        if (this.mService == null || this.mClientIf == 0) {
+            return;
+        }
+        try {
+            this.mService.clientDisconnect(this.mClientIf, this.mDevice.getAddress());
+        } catch (RemoteException e) {
+            Log.m69e(TAG, "", e);
         }
     }
 
@@ -585,7 +564,7 @@ public final class BluetoothGatt implements BluetoothProfile {
             this.mService.clientConnect(this.mClientIf, this.mDevice.getAddress(), false, this.mTransport, this.mOpportunistic, this.mPhy);
             return true;
         } catch (RemoteException e) {
-            Log.e(TAG, "", e);
+            Log.m69e(TAG, "", e);
             return false;
         }
     }
@@ -594,7 +573,7 @@ public final class BluetoothGatt implements BluetoothProfile {
         try {
             this.mService.clientSetPreferredPhy(this.mClientIf, this.mDevice.getAddress(), txPhy, rxPhy, phyOptions);
         } catch (RemoteException e) {
-            Log.e(TAG, "", e);
+            Log.m69e(TAG, "", e);
         }
     }
 
@@ -602,7 +581,7 @@ public final class BluetoothGatt implements BluetoothProfile {
         try {
             this.mService.clientReadPhy(this.mClientIf, this.mDevice.getAddress());
         } catch (RemoteException e) {
-            Log.e(TAG, "", e);
+            Log.m69e(TAG, "", e);
         }
     }
 
@@ -611,7 +590,7 @@ public final class BluetoothGatt implements BluetoothProfile {
     }
 
     public boolean discoverServices() {
-        Log.d(TAG, "discoverServices() - device: " + this.mDevice.getAddress());
+        Log.m72d(TAG, "discoverServices() - device: " + this.mDevice.getAddress());
         if (this.mService == null || this.mClientIf == 0) {
             return false;
         }
@@ -620,13 +599,13 @@ public final class BluetoothGatt implements BluetoothProfile {
             this.mService.discoverServices(this.mClientIf, this.mDevice.getAddress());
             return true;
         } catch (RemoteException e) {
-            Log.e(TAG, "", e);
+            Log.m69e(TAG, "", e);
             return false;
         }
     }
 
     public boolean discoverServiceByUuid(UUID uuid) {
-        Log.d(TAG, "discoverServiceByUuid() - device: " + this.mDevice.getAddress());
+        Log.m72d(TAG, "discoverServiceByUuid() - device: " + this.mDevice.getAddress());
         if (this.mService == null || this.mClientIf == 0) {
             return false;
         }
@@ -635,7 +614,7 @@ public final class BluetoothGatt implements BluetoothProfile {
             this.mService.discoverServiceByUuid(this.mClientIf, this.mDevice.getAddress(), new ParcelUuid(uuid));
             return true;
         } catch (RemoteException e) {
-            Log.e(TAG, "", e);
+            Log.m69e(TAG, "", e);
             return false;
         }
     }
@@ -674,7 +653,7 @@ public final class BluetoothGatt implements BluetoothProfile {
                 this.mService.readCharacteristic(this.mClientIf, device.getAddress(), characteristic.getInstanceId(), 0);
                 return true;
             } catch (RemoteException e) {
-                Log.e(TAG, "", e);
+                Log.m69e(TAG, "", e);
                 this.mDeviceBusy = false;
                 return false;
             }
@@ -694,7 +673,7 @@ public final class BluetoothGatt implements BluetoothProfile {
                 this.mService.readUsingCharacteristicUuid(this.mClientIf, this.mDevice.getAddress(), new ParcelUuid(uuid), startHandle, endHandle, 0);
                 return true;
             } catch (RemoteException e) {
-                Log.e(TAG, "", e);
+                Log.m69e(TAG, "", e);
                 this.mDeviceBusy = false;
                 return false;
             }
@@ -716,7 +695,7 @@ public final class BluetoothGatt implements BluetoothProfile {
                 this.mService.writeCharacteristic(this.mClientIf, device.getAddress(), characteristic.getInstanceId(), characteristic.getWriteType(), 0, characteristic.getValue());
                 return true;
             } catch (RemoteException e) {
-                Log.e(TAG, "", e);
+                Log.m69e(TAG, "", e);
                 this.mDeviceBusy = false;
                 return false;
             }
@@ -739,7 +718,7 @@ public final class BluetoothGatt implements BluetoothProfile {
                 this.mService.readDescriptor(this.mClientIf, device.getAddress(), descriptor.getInstanceId(), 0);
                 return true;
             } catch (RemoteException e) {
-                Log.e(TAG, "", e);
+                Log.m69e(TAG, "", e);
                 this.mDeviceBusy = false;
                 return false;
             }
@@ -762,7 +741,7 @@ public final class BluetoothGatt implements BluetoothProfile {
                 this.mService.writeDescriptor(this.mClientIf, device.getAddress(), descriptor.getInstanceId(), 0, descriptor.getValue());
                 return true;
             } catch (RemoteException e) {
-                Log.e(TAG, "", e);
+                Log.m69e(TAG, "", e);
                 this.mDeviceBusy = false;
                 return false;
             }
@@ -777,7 +756,7 @@ public final class BluetoothGatt implements BluetoothProfile {
             this.mService.beginReliableWrite(this.mClientIf, this.mDevice.getAddress());
             return true;
         } catch (RemoteException e) {
-            Log.e(TAG, "", e);
+            Log.m69e(TAG, "", e);
             return false;
         }
     }
@@ -795,7 +774,7 @@ public final class BluetoothGatt implements BluetoothProfile {
                 this.mService.endReliableWrite(this.mClientIf, this.mDevice.getAddress(), true);
                 return true;
             } catch (RemoteException e) {
-                Log.e(TAG, "", e);
+                Log.m69e(TAG, "", e);
                 this.mDeviceBusy = false;
                 return false;
             }
@@ -803,24 +782,25 @@ public final class BluetoothGatt implements BluetoothProfile {
     }
 
     public void abortReliableWrite() {
-        if (this.mService != null && this.mClientIf != 0) {
-            try {
-                this.mService.endReliableWrite(this.mClientIf, this.mDevice.getAddress(), false);
-            } catch (RemoteException e) {
-                Log.e(TAG, "", e);
-            }
+        if (this.mService == null || this.mClientIf == 0) {
+            return;
+        }
+        try {
+            this.mService.endReliableWrite(this.mClientIf, this.mDevice.getAddress(), false);
+        } catch (RemoteException e) {
+            Log.m69e(TAG, "", e);
         }
     }
 
     @Deprecated
-    public void abortReliableWrite(BluetoothDevice mDevice2) {
+    public void abortReliableWrite(BluetoothDevice mDevice) {
         abortReliableWrite();
     }
 
     public boolean setCharacteristicNotification(BluetoothGattCharacteristic characteristic, boolean enable) {
         BluetoothGattService service;
         BluetoothDevice device;
-        Log.d(TAG, "setCharacteristicNotification() - uuid: " + characteristic.getUuid() + " enable: " + enable);
+        Log.m72d(TAG, "setCharacteristicNotification() - uuid: " + characteristic.getUuid() + " enable: " + enable);
         if (this.mService == null || this.mClientIf == 0 || (service = characteristic.getService()) == null || (device = service.getDevice()) == null) {
             return false;
         }
@@ -828,14 +808,14 @@ public final class BluetoothGatt implements BluetoothProfile {
             this.mService.registerForNotification(this.mClientIf, device.getAddress(), characteristic.getInstanceId(), enable);
             return true;
         } catch (RemoteException e) {
-            Log.e(TAG, "", e);
+            Log.m69e(TAG, "", e);
             return false;
         }
     }
 
     @UnsupportedAppUsage
     public boolean refresh() {
-        Log.d(TAG, "refresh() - device: " + this.mDevice.getAddress());
+        Log.m72d(TAG, "refresh() - device: " + this.mDevice.getAddress());
         if (this.mService == null || this.mClientIf == 0) {
             return false;
         }
@@ -843,13 +823,13 @@ public final class BluetoothGatt implements BluetoothProfile {
             this.mService.refreshDevice(this.mClientIf, this.mDevice.getAddress());
             return true;
         } catch (RemoteException e) {
-            Log.e(TAG, "", e);
+            Log.m69e(TAG, "", e);
             return false;
         }
     }
 
     public boolean readRemoteRssi() {
-        Log.d(TAG, "readRssi() - device: " + this.mDevice.getAddress());
+        Log.m72d(TAG, "readRssi() - device: " + this.mDevice.getAddress());
         if (this.mService == null || this.mClientIf == 0) {
             return false;
         }
@@ -857,13 +837,13 @@ public final class BluetoothGatt implements BluetoothProfile {
             this.mService.readRemoteRssi(this.mClientIf, this.mDevice.getAddress());
             return true;
         } catch (RemoteException e) {
-            Log.e(TAG, "", e);
+            Log.m69e(TAG, "", e);
             return false;
         }
     }
 
     public boolean requestMtu(int mtu) {
-        Log.d(TAG, "configureMTU() - device: " + this.mDevice.getAddress() + " mtu: " + mtu);
+        Log.m72d(TAG, "configureMTU() - device: " + this.mDevice.getAddress() + " mtu: " + mtu);
         if (this.mService == null || this.mClientIf == 0) {
             return false;
         }
@@ -871,7 +851,7 @@ public final class BluetoothGatt implements BluetoothProfile {
             this.mService.configureMTU(this.mClientIf, this.mDevice.getAddress(), mtu);
             return true;
         } catch (RemoteException e) {
-            Log.e(TAG, "", e);
+            Log.m69e(TAG, "", e);
             return false;
         }
     }
@@ -880,7 +860,7 @@ public final class BluetoothGatt implements BluetoothProfile {
         if (connectionPriority < 0 || connectionPriority > 2) {
             throw new IllegalArgumentException("connectionPriority not within valid range");
         }
-        Log.d(TAG, "requestConnectionPriority() - params: " + connectionPriority);
+        Log.m72d(TAG, "requestConnectionPriority() - params: " + connectionPriority);
         if (this.mService == null || this.mClientIf == 0) {
             return false;
         }
@@ -888,15 +868,13 @@ public final class BluetoothGatt implements BluetoothProfile {
             this.mService.connectionParameterUpdate(this.mClientIf, this.mDevice.getAddress(), connectionPriority);
             return true;
         } catch (RemoteException e) {
-            Log.e(TAG, "", e);
+            Log.m69e(TAG, "", e);
             return false;
         }
     }
 
     public boolean requestLeConnectionUpdate(int minConnectionInterval, int maxConnectionInterval, int slaveLatency, int supervisionTimeout, int minConnectionEventLen, int maxConnectionEventLen) {
-        int i = minConnectionInterval;
-        int i2 = maxConnectionInterval;
-        Log.d(TAG, "requestLeConnectionUpdate() - min=(" + i + ")" + (((double) i) * 1.25d) + "msec, max=(" + i2 + ")" + (((double) i2) * 1.25d) + "msec, latency=" + slaveLatency + ", timeout=" + supervisionTimeout + "msec, min_ce=" + minConnectionEventLen + ", max_ce=" + maxConnectionEventLen);
+        Log.m72d(TAG, "requestLeConnectionUpdate() - min=(" + minConnectionInterval + ")" + (minConnectionInterval * 1.25d) + "msec, max=(" + maxConnectionInterval + ")" + (maxConnectionInterval * 1.25d) + "msec, latency=" + slaveLatency + ", timeout=" + supervisionTimeout + "msec, min_ce=" + minConnectionEventLen + ", max_ce=" + maxConnectionEventLen);
         if (this.mService == null || this.mClientIf == 0) {
             return false;
         }
@@ -904,19 +882,22 @@ public final class BluetoothGatt implements BluetoothProfile {
             this.mService.leConnectionUpdate(this.mClientIf, this.mDevice.getAddress(), minConnectionInterval, maxConnectionInterval, slaveLatency, supervisionTimeout, minConnectionEventLen, maxConnectionEventLen);
             return true;
         } catch (RemoteException e) {
-            Log.e(TAG, "", e);
+            Log.m69e(TAG, "", e);
             return false;
         }
     }
 
+    @Override // android.bluetooth.BluetoothProfile
     public int getConnectionState(BluetoothDevice device) {
         throw new UnsupportedOperationException("Use BluetoothManager#getConnectionState instead.");
     }
 
+    @Override // android.bluetooth.BluetoothProfile
     public List<BluetoothDevice> getConnectedDevices() {
         throw new UnsupportedOperationException("Use BluetoothManager#getConnectedDevices instead.");
     }
 
+    @Override // android.bluetooth.BluetoothProfile
     public List<BluetoothDevice> getDevicesMatchingConnectionStates(int[] states) {
         throw new UnsupportedOperationException("Use BluetoothManager#getDevicesMatchingConnectionStates instead.");
     }

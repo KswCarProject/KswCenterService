@@ -1,11 +1,13 @@
 package com.android.internal.util;
 
+/* loaded from: classes4.dex */
 public class IntPair {
     private IntPair() {
     }
 
-    public static long of(int first, int second) {
-        return (((long) first) << 32) | (((long) second) & 4294967295L);
+    /* renamed from: of */
+    public static long m27of(int first, int second) {
+        return (first << 32) | (second & 4294967295L);
     }
 
     public static int first(long intPair) {

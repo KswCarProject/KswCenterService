@@ -2,6 +2,7 @@ package android.hardware.radio.V1_0;
 
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class CdmaSmsDigitMode {
     public static final int EIGHT_BIT = 1;
     public static final int FOUR_BIT = 0;

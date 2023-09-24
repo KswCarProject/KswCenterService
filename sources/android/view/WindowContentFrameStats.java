@@ -1,15 +1,20 @@
 package android.view;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes4.dex */
 public final class WindowContentFrameStats extends FrameStats implements Parcelable {
-    public static final Parcelable.Creator<WindowContentFrameStats> CREATOR = new Parcelable.Creator<WindowContentFrameStats>() {
+    public static final Parcelable.Creator<WindowContentFrameStats> CREATOR = new Parcelable.Creator<WindowContentFrameStats>() { // from class: android.view.WindowContentFrameStats.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WindowContentFrameStats createFromParcel(Parcel parcel) {
             return new WindowContentFrameStats(parcel);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WindowContentFrameStats[] newArray(int size) {
             return new WindowContentFrameStats[size];
         }
@@ -36,23 +41,25 @@ public final class WindowContentFrameStats extends FrameStats implements Parcela
     }
 
     public long getFramePostedTimeNano(int index) {
-        if (this.mFramesPostedTimeNano != null) {
-            return this.mFramesPostedTimeNano[index];
+        if (this.mFramesPostedTimeNano == null) {
+            throw new IndexOutOfBoundsException();
         }
-        throw new IndexOutOfBoundsException();
+        return this.mFramesPostedTimeNano[index];
     }
 
     public long getFrameReadyTimeNano(int index) {
-        if (this.mFramesReadyTimeNano != null) {
-            return this.mFramesReadyTimeNano[index];
+        if (this.mFramesReadyTimeNano == null) {
+            throw new IndexOutOfBoundsException();
         }
-        throw new IndexOutOfBoundsException();
+        return this.mFramesReadyTimeNano[index];
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeLong(this.mRefreshPeriodNano);
         parcel.writeLongArray(this.mFramesPostedTimeNano);

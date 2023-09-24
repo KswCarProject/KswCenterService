@@ -1,9 +1,9 @@
 package com.android.ims;
 
-import android.os.Handler;
-import android.os.HandlerExecutor;
-import android.os.Looper;
-import android.os.RemoteException;
+import android.p007os.Handler;
+import android.p007os.HandlerExecutor;
+import android.p007os.Looper;
+import android.p007os.RemoteException;
 import android.telephony.Rlog;
 import android.telephony.ims.ProvisioningManager;
 import android.telephony.ims.aidl.IImsConfig;
@@ -11,6 +11,7 @@ import android.telephony.ims.aidl.IImsConfigCallback;
 import java.util.concurrent.Executor;
 
 @Deprecated
+/* loaded from: classes4.dex */
 public class ImsConfig {
     public static final String ACTION_IMS_CONFIG_CHANGED = "com.android.intent.action.IMS_CONFIG_CHANGED";
     public static final String ACTION_IMS_FEATURE_CHANGED = "com.android.intent.action.IMS_FEATURE_CHANGED";
@@ -20,6 +21,7 @@ public class ImsConfig {
     private boolean DBG = true;
     private final IImsConfig miConfig;
 
+    /* loaded from: classes4.dex */
     public static class ConfigConstants {
         public static final int AMR_BANDWIDTH_EFFICIENT_PT = 50;
         public static final int AMR_DEFAULT_MODE = 53;
@@ -93,6 +95,7 @@ public class ImsConfig {
         public static final int VOWT_B = 61;
     }
 
+    /* loaded from: classes4.dex */
     public static class FeatureConstants {
         public static final int FEATURE_TYPE_UNKNOWN = -1;
         public static final int FEATURE_TYPE_UT_OVER_LTE = 4;
@@ -103,12 +106,16 @@ public class ImsConfig {
         public static final int FEATURE_TYPE_VOICE_OVER_WIFI = 2;
     }
 
+    /* loaded from: classes4.dex */
     public static class FeatureValueConstants {
         public static final int ERROR = -1;
         public static final int OFF = 0;
-        public static final int ON = 1;
+
+        /* renamed from: ON */
+        public static final int f2467ON = 1;
     }
 
+    /* loaded from: classes4.dex */
     public static class OperationStatusConstants {
         public static final int FAILED = 1;
         public static final int SUCCESS = 0;
@@ -118,17 +125,20 @@ public class ImsConfig {
         public static final int UNSUPPORTED_CAUSE_RAT = 3;
     }
 
+    /* loaded from: classes4.dex */
     public static class OperationValuesConstants {
         public static final int VIDEO_QUALITY_HIGH = 1;
         public static final int VIDEO_QUALITY_LOW = 0;
         public static final int VIDEO_QUALITY_UNKNOWN = -1;
     }
 
+    /* loaded from: classes4.dex */
     public static class VideoQualityFeatureValuesConstants {
         public static final int HIGH = 1;
         public static final int LOW = 0;
     }
 
+    /* loaded from: classes4.dex */
     public static class WfcModeFeatureValueConstants {
         public static final int CELLULAR_PREFERRED = 1;
         public static final int WIFI_ONLY = 0;
@@ -147,7 +157,7 @@ public class ImsConfig {
         try {
             int ret = this.miConfig.getConfigInt(item);
             if (this.DBG) {
-                Rlog.d(TAG, "getInt(): item = " + item + ", ret =" + ret);
+                Rlog.m88d(TAG, "getInt(): item = " + item + ", ret =" + ret);
             }
             return ret;
         } catch (RemoteException e) {
@@ -163,7 +173,7 @@ public class ImsConfig {
         try {
             String ret = this.miConfig.getConfigString(item);
             if (this.DBG) {
-                Rlog.d(TAG, "getConfigString(): item = " + item + ", ret =" + ret);
+                Rlog.m88d(TAG, "getConfigString(): item = " + item + ", ret =" + ret);
             }
             return ret;
         } catch (RemoteException e) {
@@ -181,12 +191,12 @@ public class ImsConfig {
 
     public int setConfig(int item, int value) throws ImsException {
         if (this.DBG) {
-            Rlog.d(TAG, "setConfig(): item = " + item + "value = " + value);
+            Rlog.m88d(TAG, "setConfig(): item = " + item + "value = " + value);
         }
         try {
             int ret = this.miConfig.setConfigInt(item, value);
             if (this.DBG) {
-                Rlog.d(TAG, "setConfig(): item = " + item + " value = " + value + " ret = " + ret);
+                Rlog.m88d(TAG, "setConfig(): item = " + item + " value = " + value + " ret = " + ret);
             }
             return ret;
         } catch (RemoteException e) {
@@ -196,12 +206,12 @@ public class ImsConfig {
 
     public int setConfig(int item, String value) throws ImsException {
         if (this.DBG) {
-            Rlog.d(TAG, "setConfig(): item = " + item + "value = " + value);
+            Rlog.m88d(TAG, "setConfig(): item = " + item + "value = " + value);
         }
         try {
             int ret = this.miConfig.setConfigString(item, value);
             if (this.DBG) {
-                Rlog.d(TAG, "setConfig(): item = " + item + " value = " + value + " ret = " + ret);
+                Rlog.m88d(TAG, "setConfig(): item = " + item + " value = " + value + " ret = " + ret);
             }
             return ret;
         } catch (RemoteException e) {
@@ -216,7 +226,7 @@ public class ImsConfig {
 
     public void addConfigCallback(IImsConfigCallback callback) throws ImsException {
         if (this.DBG) {
-            Rlog.d(TAG, "addConfigCallback: " + callback);
+            Rlog.m88d(TAG, "addConfigCallback: " + callback);
         }
         try {
             this.miConfig.addImsConfigCallback(callback);
@@ -227,7 +237,7 @@ public class ImsConfig {
 
     public void removeConfigCallback(IImsConfigCallback callback) throws ImsException {
         if (this.DBG) {
-            Rlog.d(TAG, "removeConfigCallback: " + callback);
+            Rlog.m88d(TAG, "removeConfigCallback: " + callback);
         }
         try {
             this.miConfig.removeImsConfigCallback(callback);

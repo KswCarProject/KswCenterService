@@ -1,9 +1,11 @@
 package android.telephony.ims;
 
 import android.telephony.ims.RcsControllerCall;
+import android.telephony.ims.RcsMessageQueryParams;
 import android.telephony.ims.aidl.IRcs;
 import com.android.internal.annotations.VisibleForTesting;
 
+/* loaded from: classes4.dex */
 public abstract class RcsThread {
     protected final RcsControllerCall mRcsControllerCall;
     protected int mThreadId;
@@ -16,59 +18,57 @@ public abstract class RcsThread {
     }
 
     public RcsMessageSnippet getSnippet() throws RcsMessageStoreException {
-        return (RcsMessageSnippet) this.mRcsControllerCall.call(new RcsControllerCall.RcsServiceCall() {
+        return (RcsMessageSnippet) this.mRcsControllerCall.call(new RcsControllerCall.RcsServiceCall() { // from class: android.telephony.ims.-$$Lambda$RcsThread$TwqOqnkLjl05BhB2arTpJkBo73Y
+            @Override // android.telephony.ims.RcsControllerCall.RcsServiceCall
             public final Object methodOnIRcs(IRcs iRcs, String str) {
-                return iRcs.getMessageSnippet(RcsThread.this.mThreadId, str);
+                RcsMessageSnippet messageSnippet;
+                messageSnippet = iRcs.getMessageSnippet(RcsThread.this.mThreadId, str);
+                return messageSnippet;
             }
         });
     }
 
-    public RcsIncomingMessage addIncomingMessage(RcsIncomingMessageCreationParams rcsIncomingMessageCreationParams) throws RcsMessageStoreException {
-        return new RcsIncomingMessage(this.mRcsControllerCall, ((Integer) this.mRcsControllerCall.call(new RcsControllerCall.RcsServiceCall(rcsIncomingMessageCreationParams) {
-            private final /* synthetic */ RcsIncomingMessageCreationParams f$1;
-
-            {
-                this.f$1 = r2;
-            }
-
+    public RcsIncomingMessage addIncomingMessage(final RcsIncomingMessageCreationParams rcsIncomingMessageCreationParams) throws RcsMessageStoreException {
+        int messageId = ((Integer) this.mRcsControllerCall.call(new RcsControllerCall.RcsServiceCall() { // from class: android.telephony.ims.-$$Lambda$RcsThread$9gFw0KtL-BczxOxCksL2zOV2xHM
+            @Override // android.telephony.ims.RcsControllerCall.RcsServiceCall
             public final Object methodOnIRcs(IRcs iRcs, String str) {
-                return Integer.valueOf(iRcs.addIncomingMessage(RcsThread.this.mThreadId, this.f$1, str));
+                Integer valueOf;
+                valueOf = Integer.valueOf(iRcs.addIncomingMessage(RcsThread.this.mThreadId, rcsIncomingMessageCreationParams, str));
+                return valueOf;
             }
-        })).intValue());
+        })).intValue();
+        return new RcsIncomingMessage(this.mRcsControllerCall, messageId);
     }
 
-    public RcsOutgoingMessage addOutgoingMessage(RcsOutgoingMessageCreationParams rcsOutgoingMessageCreationParams) throws RcsMessageStoreException {
-        return new RcsOutgoingMessage(this.mRcsControllerCall, ((Integer) this.mRcsControllerCall.call(new RcsControllerCall.RcsServiceCall(rcsOutgoingMessageCreationParams) {
-            private final /* synthetic */ RcsOutgoingMessageCreationParams f$1;
-
-            {
-                this.f$1 = r2;
-            }
-
+    public RcsOutgoingMessage addOutgoingMessage(final RcsOutgoingMessageCreationParams rcsOutgoingMessageCreationParams) throws RcsMessageStoreException {
+        int messageId = ((Integer) this.mRcsControllerCall.call(new RcsControllerCall.RcsServiceCall() { // from class: android.telephony.ims.-$$Lambda$RcsThread$_9zf-uqUJl6VjAbIMvQwKcAyzUs
+            @Override // android.telephony.ims.RcsControllerCall.RcsServiceCall
             public final Object methodOnIRcs(IRcs iRcs, String str) {
-                return Integer.valueOf(iRcs.addOutgoingMessage(RcsThread.this.mThreadId, this.f$1, str));
+                Integer valueOf;
+                valueOf = Integer.valueOf(iRcs.addOutgoingMessage(RcsThread.this.mThreadId, rcsOutgoingMessageCreationParams, str));
+                return valueOf;
             }
-        })).intValue());
+        })).intValue();
+        return new RcsOutgoingMessage(this.mRcsControllerCall, messageId);
     }
 
-    public void deleteMessage(RcsMessage rcsMessage) throws RcsMessageStoreException {
-        this.mRcsControllerCall.callWithNoReturn(new RcsControllerCall.RcsServiceCallWithNoReturn(rcsMessage) {
-            private final /* synthetic */ RcsMessage f$1;
-
-            {
-                this.f$1 = r2;
-            }
-
+    public void deleteMessage(final RcsMessage rcsMessage) throws RcsMessageStoreException {
+        this.mRcsControllerCall.callWithNoReturn(new RcsControllerCall.RcsServiceCallWithNoReturn() { // from class: android.telephony.ims.-$$Lambda$RcsThread$uAkHFwrvypgP5w5y0Uy4uwQ6blY
+            @Override // android.telephony.ims.RcsControllerCall.RcsServiceCallWithNoReturn
             public final void methodOnIRcs(IRcs iRcs, String str) {
-                iRcs.deleteMessage(this.f$1.getId(), this.f$1.isIncoming(), RcsThread.this.mThreadId, RcsThread.this.isGroup(), str);
+                iRcs.deleteMessage(r1.getId(), rcsMessage.isIncoming(), r0.mThreadId, RcsThread.this.isGroup(), str);
             }
         });
     }
 
     public RcsMessageQueryResult getMessages() throws RcsMessageStoreException {
-        return new RcsMessageQueryResult(this.mRcsControllerCall, (RcsMessageQueryResultParcelable) this.mRcsControllerCall.call(new RcsControllerCall.RcsServiceCall() {
+        final RcsMessageQueryParams queryParams = new RcsMessageQueryParams.Builder().setThread(this).build();
+        return new RcsMessageQueryResult(this.mRcsControllerCall, (RcsMessageQueryResultParcelable) this.mRcsControllerCall.call(new RcsControllerCall.RcsServiceCall() { // from class: android.telephony.ims.-$$Lambda$RcsThread$A9iPL3bU3iiRv1xCYNUNP76n6Vw
+            @Override // android.telephony.ims.RcsControllerCall.RcsServiceCall
             public final Object methodOnIRcs(IRcs iRcs, String str) {
-                return iRcs.getMessages(RcsMessageQueryParams.this, str);
+                RcsMessageQueryResultParcelable messages;
+                messages = iRcs.getMessages(RcsMessageQueryParams.this, str);
+                return messages;
             }
         }));
     }

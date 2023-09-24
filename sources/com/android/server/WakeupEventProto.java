@@ -1,5 +1,6 @@
 package com.android.server;
 
+/* loaded from: classes4.dex */
 public final class WakeupEventProto {
     public static final long ACTION = 1138166333442L;
     public static final long UID = 1120986464257L;

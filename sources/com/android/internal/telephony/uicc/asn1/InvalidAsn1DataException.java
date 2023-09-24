@@ -1,5 +1,6 @@
 package com.android.internal.telephony.uicc.asn1;
 
+/* loaded from: classes4.dex */
 public class InvalidAsn1DataException extends Exception {
     private final int mTag;
 
@@ -17,6 +18,7 @@ public class InvalidAsn1DataException extends Exception {
         return this.mTag;
     }
 
+    @Override // java.lang.Throwable
     public String getMessage() {
         return super.getMessage() + " (tag=" + this.mTag + ")";
     }

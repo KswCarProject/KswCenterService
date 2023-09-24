@@ -5,6 +5,7 @@ import android.annotation.UnsupportedAppUsage;
 import java.io.FileDescriptor;
 import java.io.IOException;
 
+/* loaded from: classes.dex */
 public class BackupDataOutput {
     @UnsupportedAppUsage
     long mBackupWriter;
@@ -23,7 +24,7 @@ public class BackupDataOutput {
 
     @SystemApi
     public BackupDataOutput(FileDescriptor fd) {
-        this(fd, -1, 0);
+        this(fd, -1L, 0);
     }
 
     @SystemApi
@@ -32,16 +33,15 @@ public class BackupDataOutput {
     }
 
     public BackupDataOutput(FileDescriptor fd, long quota, int transportFlags) {
-        if (fd != null) {
-            this.mQuota = quota;
-            this.mTransportFlags = transportFlags;
-            this.mBackupWriter = ctor(fd);
-            if (this.mBackupWriter == 0) {
-                throw new RuntimeException("Native initialization failed with fd=" + fd);
-            }
-            return;
+        if (fd == null) {
+            throw new NullPointerException();
         }
-        throw new NullPointerException();
+        this.mQuota = quota;
+        this.mTransportFlags = transportFlags;
+        this.mBackupWriter = ctor(fd);
+        if (this.mBackupWriter == 0) {
+            throw new RuntimeException("Native initialization failed with fd=" + fd);
+        }
     }
 
     public long getQuota() {
@@ -72,8 +72,7 @@ public class BackupDataOutput {
         setKeyPrefix_native(this.mBackupWriter, keyPrefix);
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         try {
             dtor(this.mBackupWriter);
         } finally {

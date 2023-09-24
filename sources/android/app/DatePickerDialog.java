@@ -3,16 +3,17 @@ package android.app;
 import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Bundle;
+import android.p007os.Bundle;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.util.Calendar;
 
+/* loaded from: classes.dex */
 public class DatePickerDialog extends AlertDialog implements DialogInterface.OnClickListener, DatePicker.OnDateChangedListener {
     private static final String DAY = "day";
     private static final String MONTH = "month";
@@ -22,29 +23,31 @@ public class DatePickerDialog extends AlertDialog implements DialogInterface.OnC
     private OnDateSetListener mDateSetListener;
     private final DatePicker.ValidationCallback mValidationCallback;
 
+    /* loaded from: classes.dex */
     public interface OnDateSetListener {
         void onDateSet(DatePicker datePicker, int i, int i2, int i3);
     }
 
     public DatePickerDialog(Context context) {
-        this(context, 0, (OnDateSetListener) null, Calendar.getInstance(), -1, -1, -1);
+        this(context, 0, null, Calendar.getInstance(), -1, -1, -1);
     }
 
     public DatePickerDialog(Context context, int themeResId) {
-        this(context, themeResId, (OnDateSetListener) null, Calendar.getInstance(), -1, -1, -1);
+        this(context, themeResId, null, Calendar.getInstance(), -1, -1, -1);
     }
 
     public DatePickerDialog(Context context, OnDateSetListener listener, int year, int month, int dayOfMonth) {
-        this(context, 0, listener, (Calendar) null, year, month, dayOfMonth);
+        this(context, 0, listener, null, year, month, dayOfMonth);
     }
 
     public DatePickerDialog(Context context, int themeResId, OnDateSetListener listener, int year, int monthOfYear, int dayOfMonth) {
-        this(context, themeResId, listener, (Calendar) null, year, monthOfYear, dayOfMonth);
+        this(context, themeResId, listener, null, year, monthOfYear, dayOfMonth);
     }
 
     private DatePickerDialog(Context context, int themeResId, OnDateSetListener listener, Calendar calendar, int year, int monthOfYear, int dayOfMonth) {
         super(context, resolveDialogTheme(context, themeResId));
-        this.mValidationCallback = new DatePicker.ValidationCallback() {
+        this.mValidationCallback = new DatePicker.ValidationCallback() { // from class: android.app.DatePickerDialog.1
+            @Override // android.widget.DatePicker.ValidationCallback
             public void onValidationChanged(boolean valid) {
                 Button positive = DatePickerDialog.this.getButton(-1);
                 if (positive != null) {
@@ -53,31 +56,33 @@ public class DatePickerDialog extends AlertDialog implements DialogInterface.OnC
             }
         };
         Context themeContext = getContext();
-        View view = LayoutInflater.from(themeContext).inflate((int) R.layout.date_picker_dialog, (ViewGroup) null);
+        LayoutInflater inflater = LayoutInflater.from(themeContext);
+        View view = inflater.inflate(C3132R.layout.date_picker_dialog, (ViewGroup) null);
         setView(view);
-        setButton(-1, (CharSequence) themeContext.getString(17039370), (DialogInterface.OnClickListener) this);
-        setButton(-2, (CharSequence) themeContext.getString(17039360), (DialogInterface.OnClickListener) this);
+        setButton(-1, themeContext.getString(17039370), this);
+        setButton(-2, themeContext.getString(17039360), this);
         setButtonPanelLayoutHint(1);
         if (calendar != null) {
             year = calendar.get(1);
             monthOfYear = calendar.get(2);
             dayOfMonth = calendar.get(5);
         }
-        this.mDatePicker = (DatePicker) view.findViewById(R.id.datePicker);
+        this.mDatePicker = (DatePicker) view.findViewById(C3132R.C3134id.datePicker);
         this.mDatePicker.init(year, monthOfYear, dayOfMonth, this);
         this.mDatePicker.setValidationCallback(this.mValidationCallback);
         this.mDateSetListener = listener;
     }
 
     static int resolveDialogTheme(Context context, int themeResId) {
-        if (themeResId != 0) {
-            return themeResId;
+        if (themeResId == 0) {
+            TypedValue outValue = new TypedValue();
+            context.getTheme().resolveAttribute(16843948, outValue, true);
+            return outValue.resourceId;
         }
-        TypedValue outValue = new TypedValue();
-        context.getTheme().resolveAttribute(16843948, outValue, true);
-        return outValue.resourceId;
+        return themeResId;
     }
 
+    @Override // android.widget.DatePicker.OnDateChangedListener
     public void onDateChanged(DatePicker view, int year, int month, int dayOfMonth) {
         this.mDatePicker.init(year, month, dayOfMonth, this);
     }
@@ -86,6 +91,7 @@ public class DatePickerDialog extends AlertDialog implements DialogInterface.OnC
         this.mDateSetListener = listener;
     }
 
+    @Override // android.content.DialogInterface.OnClickListener
     public void onClick(DialogInterface dialog, int which) {
         switch (which) {
             case -2:
@@ -111,6 +117,7 @@ public class DatePickerDialog extends AlertDialog implements DialogInterface.OnC
         this.mDatePicker.updateDate(year, month, dayOfMonth);
     }
 
+    @Override // android.app.Dialog
     public Bundle onSaveInstanceState() {
         Bundle state = super.onSaveInstanceState();
         state.putInt("year", this.mDatePicker.getYear());
@@ -119,8 +126,12 @@ public class DatePickerDialog extends AlertDialog implements DialogInterface.OnC
         return state;
     }
 
+    @Override // android.app.Dialog
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        this.mDatePicker.init(savedInstanceState.getInt("year"), savedInstanceState.getInt(MONTH), savedInstanceState.getInt(DAY), this);
+        int year = savedInstanceState.getInt("year");
+        int month = savedInstanceState.getInt(MONTH);
+        int day = savedInstanceState.getInt(DAY);
+        this.mDatePicker.init(year, month, day, this);
     }
 }

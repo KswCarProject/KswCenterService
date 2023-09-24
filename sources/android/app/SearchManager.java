@@ -8,18 +8,19 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ResolveInfo;
+import android.content.p002pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Rect;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.RemoteException;
-import android.os.ServiceManager;
+import android.p007os.Bundle;
+import android.p007os.Handler;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import java.util.List;
 
+/* loaded from: classes.dex */
 public class SearchManager implements DialogInterface.OnDismissListener, DialogInterface.OnCancelListener {
     public static final String ACTION_KEY = "action_key";
     public static final String ACTION_MSG = "action_msg";
@@ -79,18 +80,20 @@ public class SearchManager implements DialogInterface.OnDismissListener, DialogI
     public static final String SUGGEST_URI_PATH_SHORTCUT = "search_suggest_shortcut";
     private static final String TAG = "SearchManager";
     public static final String USER_QUERY = "user_query";
-    OnCancelListener mCancelListener = null;
     private final Context mContext;
-    OnDismissListener mDismissListener = null;
     final Handler mHandler;
     @UnsupportedAppUsage
     private SearchDialog mSearchDialog;
-    private final ISearchManager mService;
+    OnDismissListener mDismissListener = null;
+    OnCancelListener mCancelListener = null;
+    private final ISearchManager mService = ISearchManager.Stub.asInterface(ServiceManager.getServiceOrThrow("search"));
 
+    /* loaded from: classes.dex */
     public interface OnCancelListener {
         void onCancel();
     }
 
+    /* loaded from: classes.dex */
     public interface OnDismissListener {
         void onDismiss();
     }
@@ -99,18 +102,20 @@ public class SearchManager implements DialogInterface.OnDismissListener, DialogI
     SearchManager(Context context, Handler handler) throws ServiceManager.ServiceNotFoundException {
         this.mContext = context;
         this.mHandler = handler;
-        this.mService = ISearchManager.Stub.asInterface(ServiceManager.getServiceOrThrow("search"));
     }
 
     public void startSearch(String initialQuery, boolean selectInitialQuery, ComponentName launchActivity, Bundle appSearchData, boolean globalSearch) {
-        startSearch(initialQuery, selectInitialQuery, launchActivity, appSearchData, globalSearch, (Rect) null);
+        startSearch(initialQuery, selectInitialQuery, launchActivity, appSearchData, globalSearch, null);
     }
 
     @UnsupportedAppUsage
     public void startSearch(String initialQuery, boolean selectInitialQuery, ComponentName launchActivity, Bundle appSearchData, boolean globalSearch, Rect sourceBounds) {
         if (globalSearch) {
             startGlobalSearch(initialQuery, selectInitialQuery, appSearchData, sourceBounds);
-        } else if (((UiModeManager) this.mContext.getSystemService(UiModeManager.class)).getCurrentModeType() != 4) {
+            return;
+        }
+        UiModeManager uiModeManager = (UiModeManager) this.mContext.getSystemService(UiModeManager.class);
+        if (uiModeManager.getCurrentModeType() != 4) {
             ensureSearchDialog();
             this.mSearchDialog.show(initialQuery, selectInitialQuery, launchActivity, appSearchData);
         }
@@ -124,12 +129,11 @@ public class SearchManager implements DialogInterface.OnDismissListener, DialogI
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void startGlobalSearch(String initialQuery, boolean selectInitialQuery, Bundle appSearchData, Rect sourceBounds) {
+    void startGlobalSearch(String initialQuery, boolean selectInitialQuery, Bundle appSearchData, Rect sourceBounds) {
         Bundle appSearchData2;
         ComponentName globalSearchActivity = getGlobalSearchActivity();
         if (globalSearchActivity == null) {
-            Log.w(TAG, "No global search activity found.");
+            Log.m64w(TAG, "No global search activity found.");
             return;
         }
         Intent intent = new Intent(INTENT_ACTION_GLOBAL_SEARCH);
@@ -154,7 +158,7 @@ public class SearchManager implements DialogInterface.OnDismissListener, DialogI
         try {
             this.mContext.startActivity(intent);
         } catch (ActivityNotFoundException e) {
-            Log.e(TAG, "Global search activity not found: " + globalSearchActivity);
+            Log.m70e(TAG, "Global search activity not found: " + globalSearchActivity);
         }
     }
 
@@ -185,7 +189,7 @@ public class SearchManager implements DialogInterface.OnDismissListener, DialogI
 
     public void triggerSearch(String query, ComponentName launchActivity, Bundle appSearchData) {
         if (query == null || TextUtils.getTrimmedLength(query) == 0) {
-            Log.w(TAG, "triggerSearch called with empty query, ignoring.");
+            Log.m64w(TAG, "triggerSearch called with empty query, ignoring.");
             return;
         }
         startSearch(query, false, launchActivity, appSearchData, false);
@@ -214,6 +218,7 @@ public class SearchManager implements DialogInterface.OnDismissListener, DialogI
         this.mCancelListener = listener;
     }
 
+    @Override // android.content.DialogInterface.OnCancelListener
     @Deprecated
     public void onCancel(DialogInterface dialog) {
         if (this.mCancelListener != null) {
@@ -221,6 +226,7 @@ public class SearchManager implements DialogInterface.OnDismissListener, DialogI
         }
     }
 
+    @Override // android.content.DialogInterface.OnDismissListener
     @Deprecated
     public void onDismiss(DialogInterface dialog) {
         if (this.mDismissListener != null) {
@@ -264,7 +270,8 @@ public class SearchManager implements DialogInterface.OnDismissListener, DialogI
         if (limit > 0) {
             uriBuilder.appendQueryParameter("limit", String.valueOf(limit));
         }
-        return this.mContext.getContentResolver().query(uriBuilder.build(), (String[]) null, selection, selArgs2, (String) null);
+        Uri uri = uriBuilder.build();
+        return this.mContext.getContentResolver().query(uri, null, selection, selArgs2, null);
     }
 
     public List<SearchableInfo> getSearchablesInGlobalSearch() {
@@ -276,11 +283,14 @@ public class SearchManager implements DialogInterface.OnDismissListener, DialogI
     }
 
     public Intent getAssistIntent(boolean inclContext) {
-        Bundle extras;
         try {
             Intent intent = new Intent(Intent.ACTION_ASSIST);
-            if (inclContext && (extras = ActivityTaskManager.getService().getAssistContextExtras(0)) != null) {
-                intent.replaceExtras(extras);
+            if (inclContext) {
+                IActivityTaskManager am = ActivityTaskManager.getService();
+                Bundle extras = am.getAssistContextExtras(0);
+                if (extras != null) {
+                    intent.replaceExtras(extras);
+                }
             }
             return intent;
         } catch (RemoteException re) {
@@ -291,9 +301,10 @@ public class SearchManager implements DialogInterface.OnDismissListener, DialogI
     @UnsupportedAppUsage
     public void launchAssist(Bundle args) {
         try {
-            if (this.mService != null) {
-                this.mService.launchAssist(args);
+            if (this.mService == null) {
+                return;
             }
+            this.mService.launchAssist(args);
         } catch (RemoteException re) {
             throw re.rethrowFromSystemServer();
         }

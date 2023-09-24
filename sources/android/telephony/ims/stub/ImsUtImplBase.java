@@ -1,91 +1,112 @@
 package android.telephony.ims.stub;
 
 import android.annotation.SystemApi;
-import android.os.Bundle;
-import android.os.RemoteException;
+import android.p007os.Bundle;
+import android.p007os.RemoteException;
 import android.telephony.ims.ImsUtListener;
 import com.android.ims.internal.IImsUt;
 import com.android.ims.internal.IImsUtListener;
 
 @SystemApi
+/* loaded from: classes4.dex */
 public class ImsUtImplBase {
-    private IImsUt.Stub mServiceImpl = new IImsUt.Stub() {
+    private IImsUt.Stub mServiceImpl = new IImsUt.Stub() { // from class: android.telephony.ims.stub.ImsUtImplBase.1
+        @Override // com.android.ims.internal.IImsUt
         public void close() throws RemoteException {
             ImsUtImplBase.this.close();
         }
 
+        @Override // com.android.ims.internal.IImsUt
         public int queryCallBarring(int cbType) throws RemoteException {
             return ImsUtImplBase.this.queryCallBarring(cbType);
         }
 
+        @Override // com.android.ims.internal.IImsUt
         public int queryCallForward(int condition, String number) throws RemoteException {
             return ImsUtImplBase.this.queryCallForward(condition, number);
         }
 
+        @Override // com.android.ims.internal.IImsUt
         public int queryCFForServiceClass(int condition, String number, int serviceClass) throws RemoteException {
             return ImsUtImplBase.this.queryCFForServiceClass(condition, number, serviceClass);
         }
 
+        @Override // com.android.ims.internal.IImsUt
         public int queryCallWaiting() throws RemoteException {
             return ImsUtImplBase.this.queryCallWaiting();
         }
 
+        @Override // com.android.ims.internal.IImsUt
         public int queryCLIR() throws RemoteException {
             return ImsUtImplBase.this.queryCLIR();
         }
 
+        @Override // com.android.ims.internal.IImsUt
         public int queryCLIP() throws RemoteException {
             return ImsUtImplBase.this.queryCLIP();
         }
 
+        @Override // com.android.ims.internal.IImsUt
         public int queryCOLR() throws RemoteException {
             return ImsUtImplBase.this.queryCOLR();
         }
 
+        @Override // com.android.ims.internal.IImsUt
         public int queryCOLP() throws RemoteException {
             return ImsUtImplBase.this.queryCOLP();
         }
 
+        @Override // com.android.ims.internal.IImsUt
         public int transact(Bundle ssInfo) throws RemoteException {
             return ImsUtImplBase.this.transact(ssInfo);
         }
 
+        @Override // com.android.ims.internal.IImsUt
         public int updateCallBarring(int cbType, int action, String[] barrList) throws RemoteException {
             return ImsUtImplBase.this.updateCallBarring(cbType, action, barrList);
         }
 
+        @Override // com.android.ims.internal.IImsUt
         public int updateCallForward(int action, int condition, String number, int serviceClass, int timeSeconds) throws RemoteException {
             return ImsUtImplBase.this.updateCallForward(action, condition, number, serviceClass, timeSeconds);
         }
 
+        @Override // com.android.ims.internal.IImsUt
         public int updateCallWaiting(boolean enable, int serviceClass) throws RemoteException {
             return ImsUtImplBase.this.updateCallWaiting(enable, serviceClass);
         }
 
+        @Override // com.android.ims.internal.IImsUt
         public int updateCLIR(int clirMode) throws RemoteException {
             return ImsUtImplBase.this.updateCLIR(clirMode);
         }
 
+        @Override // com.android.ims.internal.IImsUt
         public int updateCLIP(boolean enable) throws RemoteException {
             return ImsUtImplBase.this.updateCLIP(enable);
         }
 
+        @Override // com.android.ims.internal.IImsUt
         public int updateCOLR(int presentation) throws RemoteException {
             return ImsUtImplBase.this.updateCOLR(presentation);
         }
 
+        @Override // com.android.ims.internal.IImsUt
         public int updateCOLP(boolean enable) throws RemoteException {
             return ImsUtImplBase.this.updateCOLP(enable);
         }
 
+        @Override // com.android.ims.internal.IImsUt
         public void setListener(IImsUtListener listener) throws RemoteException {
             ImsUtImplBase.this.setListener(new ImsUtListener(listener));
         }
 
+        @Override // com.android.ims.internal.IImsUt
         public int queryCallBarringForServiceClass(int cbType, int serviceClass) throws RemoteException {
             return ImsUtImplBase.this.queryCallBarringForServiceClass(cbType, serviceClass);
         }
 
+        @Override // com.android.ims.internal.IImsUt
         public int updateCallBarringForServiceClass(int cbType, int action, String[] barrList, int serviceClass) throws RemoteException {
             return ImsUtImplBase.this.updateCallBarringForServiceClass(cbType, action, barrList, serviceClass);
         }

@@ -1,5 +1,6 @@
 package android.app;
 
+/* loaded from: classes.dex */
 public final class AlarmManagerProto {
     public static final int ELAPSED_REALTIME = 3;
     public static final int ELAPSED_REALTIME_WAKEUP = 2;

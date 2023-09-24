@@ -2,8 +2,8 @@ package android.net;
 
 import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.system.ErrnoException;
 import android.system.Os;
 import android.system.OsConstants;
@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.Proxy;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.SocketException;
@@ -28,21 +27,14 @@ import java.util.concurrent.TimeUnit;
 import javax.net.SocketFactory;
 import libcore.io.IoUtils;
 
+/* loaded from: classes3.dex */
 public class Network implements Parcelable {
-    public static final Parcelable.Creator<Network> CREATOR = new Parcelable.Creator<Network>() {
-        public Network createFromParcel(Parcel in) {
-            return new Network(in.readInt());
-        }
-
-        public Network[] newArray(int size) {
-            return new Network[size];
-        }
-    };
+    public static final Parcelable.Creator<Network> CREATOR;
     private static final long HANDLE_MAGIC = 3405697037L;
     private static final int HANDLE_MAGIC_SIZE = 32;
     private static final boolean httpKeepAlive = Boolean.parseBoolean(System.getProperty("http.keepAlive", "true"));
-    private static final long httpKeepAliveDurationMs = Long.parseLong(System.getProperty("http.keepAliveDuration", "300000"));
-    private static final int httpMaxConnections = (httpKeepAlive ? Integer.parseInt(System.getProperty("http.maxConnections", "5")) : 0);
+    private static final long httpKeepAliveDurationMs;
+    private static final int httpMaxConnections;
     private final Object mLock;
     private volatile NetworkBoundSocketFactory mNetworkBoundSocketFactory;
     private final transient boolean mPrivateDnsBypass;
@@ -50,15 +42,34 @@ public class Network implements Parcelable {
     @UnsupportedAppUsage
     public final int netId;
 
-    @UnsupportedAppUsage
-    public Network(int netId2) {
-        this(netId2, false);
+    static {
+        httpMaxConnections = httpKeepAlive ? Integer.parseInt(System.getProperty("http.maxConnections", "5")) : 0;
+        httpKeepAliveDurationMs = Long.parseLong(System.getProperty("http.keepAliveDuration", "300000"));
+        CREATOR = new Parcelable.Creator<Network>() { // from class: android.net.Network.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
+            public Network createFromParcel(Parcel in) {
+                int netId = in.readInt();
+                return new Network(netId);
+            }
+
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
+            public Network[] newArray(int size) {
+                return new Network[size];
+            }
+        };
     }
 
-    public Network(int netId2, boolean privateDnsBypass) {
+    @UnsupportedAppUsage
+    public Network(int netId) {
+        this(netId, false);
+    }
+
+    public Network(int netId, boolean privateDnsBypass) {
         this.mNetworkBoundSocketFactory = null;
         this.mLock = new Object();
-        this.netId = netId2;
+        this.netId = netId;
         this.mPrivateDnsBypass = privateDnsBypass;
     }
 
@@ -82,22 +93,21 @@ public class Network implements Parcelable {
 
     public int getNetIdForResolv() {
         if (this.mPrivateDnsBypass) {
-            return (int) (2147483648L | ((long) this.netId));
+            return (int) (2147483648L | this.netId);
         }
         return this.netId;
     }
 
+    /* loaded from: classes3.dex */
     private class NetworkBoundSocketFactory extends SocketFactory {
         private NetworkBoundSocketFactory() {
         }
 
         private Socket connectToHost(String host, int port, SocketAddress localAddress) throws IOException {
-            Socket socket;
             InetAddress[] hostAddresses = Network.this.getAllByName(host);
-            int i = 0;
-            while (i < hostAddresses.length) {
+            for (int i = 0; i < hostAddresses.length; i++) {
                 try {
-                    socket = createSocket();
+                    Socket socket = createSocket();
                     if (localAddress != null) {
                         socket.bind(localAddress);
                     }
@@ -107,25 +117,20 @@ public class Network implements Parcelable {
                     }
                     return socket;
                 } catch (IOException e) {
-                    if (i != hostAddresses.length - 1) {
-                        i++;
-                    } else {
+                    if (i == hostAddresses.length - 1) {
                         throw e;
                     }
-                } catch (Throwable th) {
-                    if (1 != 0) {
-                        IoUtils.closeQuietly(socket);
-                    }
-                    throw th;
                 }
             }
             throw new UnknownHostException(host);
         }
 
+        @Override // javax.net.SocketFactory
         public Socket createSocket(String host, int port, InetAddress localHost, int localPort) throws IOException {
             return connectToHost(host, port, new InetSocketAddress(localHost, localPort));
         }
 
+        @Override // javax.net.SocketFactory
         public Socket createSocket(InetAddress address, int port, InetAddress localAddress, int localPort) throws IOException {
             Socket socket = createSocket();
             boolean failed = true;
@@ -141,6 +146,7 @@ public class Network implements Parcelable {
             }
         }
 
+        @Override // javax.net.SocketFactory
         public Socket createSocket(InetAddress host, int port) throws IOException {
             Socket socket = createSocket();
             boolean failed = true;
@@ -155,10 +161,12 @@ public class Network implements Parcelable {
             }
         }
 
+        @Override // javax.net.SocketFactory
         public Socket createSocket(String host, int port) throws IOException {
-            return connectToHost(host, port, (SocketAddress) null);
+            return connectToHost(host, port, null);
         }
 
+        @Override // javax.net.SocketFactory
         public Socket createSocket() throws IOException {
             Socket socket = new Socket();
             boolean failed = true;
@@ -188,9 +196,11 @@ public class Network implements Parcelable {
     private void maybeInitUrlConnectionFactory() {
         synchronized (this.mLock) {
             if (this.mUrlConnectionFactory == null) {
-                Dns dnsLookup = new Dns() {
+                Dns dnsLookup = new Dns() { // from class: android.net.-$$Lambda$Network$KD6DxaMRJIcajhj36TU1K7lJnHQ
                     public final List lookup(String str) {
-                        return Arrays.asList(Network.this.getAllByName(str));
+                        List asList;
+                        asList = Arrays.asList(Network.this.getAllByName(str));
+                        return asList;
                     }
                 };
                 HttpURLConnectionFactory urlConnectionFactory = new HttpURLConnectionFactory();
@@ -202,26 +212,27 @@ public class Network implements Parcelable {
     }
 
     public URLConnection openConnection(URL url) throws IOException {
-        Proxy proxy;
+        java.net.Proxy proxy;
         ConnectivityManager cm = ConnectivityManager.getInstanceOrNull();
-        if (cm != null) {
-            ProxyInfo proxyInfo = cm.getProxyForNetwork(this);
-            if (proxyInfo != null) {
-                proxy = proxyInfo.makeProxy();
-            } else {
-                proxy = Proxy.NO_PROXY;
-            }
-            return openConnection(url, proxy);
+        if (cm == null) {
+            throw new IOException("No ConnectivityManager yet constructed, please construct one");
         }
-        throw new IOException("No ConnectivityManager yet constructed, please construct one");
+        ProxyInfo proxyInfo = cm.getProxyForNetwork(this);
+        if (proxyInfo != null) {
+            proxy = proxyInfo.makeProxy();
+        } else {
+            proxy = java.net.Proxy.NO_PROXY;
+        }
+        return openConnection(url, proxy);
     }
 
-    public URLConnection openConnection(URL url, Proxy proxy) throws IOException {
-        if (proxy != null) {
-            maybeInitUrlConnectionFactory();
-            return this.mUrlConnectionFactory.openConnection(url, getSocketFactory(), proxy);
+    public URLConnection openConnection(URL url, java.net.Proxy proxy) throws IOException {
+        if (proxy == null) {
+            throw new IllegalArgumentException("proxy is null");
         }
-        throw new IllegalArgumentException("proxy is null");
+        maybeInitUrlConnectionFactory();
+        SocketFactory socketFactory = getSocketFactory();
+        return this.mUrlConnectionFactory.openConnection(url, socketFactory, proxy);
     }
 
     public void bindSocket(DatagramSocket socket) throws IOException {
@@ -235,15 +246,10 @@ public class Network implements Parcelable {
     }
 
     public void bindSocket(FileDescriptor fd) throws IOException {
+        InetAddress inetPeer;
         try {
-            if (((InetSocketAddress) Os.getpeername(fd)).getAddress().isAnyLocalAddress()) {
-                int err = NetworkUtils.bindSocketToNetwork(fd.getInt$(), this.netId);
-                if (err != 0) {
-                    throw new ErrnoException("Binding socket to network " + this.netId, -err).rethrowAsSocketException();
-                }
-                return;
-            }
-            throw new SocketException("Socket is connected");
+            SocketAddress peer = Os.getpeername(fd);
+            inetPeer = ((InetSocketAddress) peer).getAddress();
         } catch (ErrnoException e) {
             if (e.errno != OsConstants.ENOTCONN) {
                 throw e.rethrowAsSocketException();
@@ -251,36 +257,46 @@ public class Network implements Parcelable {
         } catch (ClassCastException e2) {
             throw new SocketException("Only AF_INET/AF_INET6 sockets supported");
         }
+        if (!inetPeer.isAnyLocalAddress()) {
+            throw new SocketException("Socket is connected");
+        }
+        int err = NetworkUtils.bindSocketToNetwork(fd.getInt$(), this.netId);
+        if (err != 0) {
+            throw new ErrnoException("Binding socket to network " + this.netId, -err).rethrowAsSocketException();
+        }
     }
 
     public static Network fromNetworkHandle(long networkHandle) {
         if (networkHandle == 0) {
             throw new IllegalArgumentException("Network.fromNetworkHandle refusing to instantiate NETID_UNSET Network.");
-        } else if ((4294967295L & networkHandle) == HANDLE_MAGIC && networkHandle >= 0) {
-            return new Network((int) (networkHandle >> 32));
-        } else {
+        }
+        if ((4294967295L & networkHandle) != HANDLE_MAGIC || networkHandle < 0) {
             throw new IllegalArgumentException("Value passed to fromNetworkHandle() is not a network handle.");
         }
+        return new Network((int) (networkHandle >> 32));
     }
 
     public long getNetworkHandle() {
         if (this.netId == 0) {
-            return 0;
+            return 0L;
         }
-        return (((long) this.netId) << 32) | HANDLE_MAGIC;
+        return (this.netId << 32) | HANDLE_MAGIC;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.netId);
     }
 
     public boolean equals(Object obj) {
-        if ((obj instanceof Network) && this.netId == ((Network) obj).netId) {
-            return true;
+        if (obj instanceof Network) {
+            Network other = (Network) obj;
+            return this.netId == other.netId;
         }
         return false;
     }

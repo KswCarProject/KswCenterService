@@ -1,15 +1,20 @@
 package android.view.inputmethod;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.TextUtils;
 
+/* loaded from: classes4.dex */
 public final class CorrectionInfo implements Parcelable {
-    public static final Parcelable.Creator<CorrectionInfo> CREATOR = new Parcelable.Creator<CorrectionInfo>() {
+    public static final Parcelable.Creator<CorrectionInfo> CREATOR = new Parcelable.Creator<CorrectionInfo>() { // from class: android.view.inputmethod.CorrectionInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public CorrectionInfo createFromParcel(Parcel source) {
             return new CorrectionInfo(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public CorrectionInfo[] newArray(int size) {
             return new CorrectionInfo[size];
         }
@@ -43,15 +48,17 @@ public final class CorrectionInfo implements Parcelable {
     }
 
     public String toString() {
-        return "CorrectionInfo{#" + this.mOffset + " \"" + this.mOldText + "\" -> \"" + this.mNewText + "\"}";
+        return "CorrectionInfo{#" + this.mOffset + " \"" + ((Object) this.mOldText) + "\" -> \"" + ((Object) this.mNewText) + "\"}";
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mOffset);
         TextUtils.writeToParcel(this.mOldText, dest, flags);
         TextUtils.writeToParcel(this.mNewText, dest, flags);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

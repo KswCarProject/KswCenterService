@@ -2,6 +2,7 @@ package android.hardware.radio.V1_4;
 
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class EmergencyServiceCategory {
     public static final int AIEC = 64;
     public static final int AMBULANCE = 2;

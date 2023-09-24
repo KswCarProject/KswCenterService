@@ -3,29 +3,30 @@ package android.mtp;
 import android.content.Context;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbDeviceConnection;
-import android.os.CancellationSignal;
-import android.os.ParcelFileDescriptor;
-import android.os.UserManager;
+import android.p007os.CancellationSignal;
+import android.p007os.ParcelFileDescriptor;
+import android.p007os.UserManager;
 import com.android.internal.annotations.GuardedBy;
 import com.android.internal.util.Preconditions;
 import dalvik.system.CloseGuard;
 import java.io.IOException;
 
+/* loaded from: classes3.dex */
 public final class MtpDevice {
     private static final String TAG = "MtpDevice";
     @GuardedBy({"mLock"})
-    private CloseGuard mCloseGuard = CloseGuard.get();
-    @GuardedBy({"mLock"})
     private UsbDeviceConnection mConnection;
     private final UsbDevice mDevice;
-    private final Object mLock = new Object();
     private long mNativeContext;
+    @GuardedBy({"mLock"})
+    private CloseGuard mCloseGuard = CloseGuard.get();
+    private final Object mLock = new Object();
 
     private native void native_close();
 
     private native boolean native_delete_object(int i);
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public native void native_discard_event_request(int i);
 
     private native MtpDeviceInfo native_get_device_info();
@@ -81,7 +82,8 @@ public final class MtpDevice {
         synchronized (this.mLock) {
             if (context != null) {
                 try {
-                    if (!((UserManager) context.getSystemService("user")).hasUserRestriction(UserManager.DISALLOW_USB_FILE_TRANSFER)) {
+                    UserManager userManager = (UserManager) context.getSystemService("user");
+                    if (!userManager.hasUserRestriction(UserManager.DISALLOW_USB_FILE_TRANSFER)) {
                         result = native_open(this.mDevice.getDeviceName(), connection.getFileDescriptor());
                     }
                 } catch (Throwable th) {
@@ -109,8 +111,7 @@ public final class MtpDevice {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         try {
             if (this.mCloseGuard != null) {
                 this.mCloseGuard.warnIfOpen();
@@ -147,7 +148,7 @@ public final class MtpDevice {
 
     public byte[] getObject(int objectHandle, int objectSize) {
         Preconditions.checkArgumentNonnegative(objectSize, "objectSize should not be negative");
-        return native_get_object(objectHandle, (long) objectSize);
+        return native_get_object(objectHandle, objectSize);
     }
 
     public long getPartialObject(int objectHandle, long offset, long size, byte[] buffer) throws IOException {
@@ -155,7 +156,7 @@ public final class MtpDevice {
     }
 
     public long getPartialObject64(int objectHandle, long offset, long size, byte[] buffer) throws IOException {
-        return (long) native_get_partial_object_64(objectHandle, offset, size, buffer);
+        return native_get_partial_object_64(objectHandle, offset, size, buffer);
     }
 
     public byte[] getThumbnail(int objectHandle) {
@@ -175,11 +176,11 @@ public final class MtpDevice {
     }
 
     public long getParent(int objectHandle) {
-        return (long) native_get_parent(objectHandle);
+        return native_get_parent(objectHandle);
     }
 
     public long getStorageId(int objectHandle) {
-        return (long) native_get_storage_id(objectHandle);
+        return native_get_storage_id(objectHandle);
     }
 
     public boolean importFile(int objectHandle, String destPath) {
@@ -202,7 +203,8 @@ public final class MtpDevice {
         final int handle = native_submit_event_request();
         Preconditions.checkState(handle >= 0, "Other thread is reading an event.");
         if (signal != null) {
-            signal.setOnCancelListener(new CancellationSignal.OnCancelListener() {
+            signal.setOnCancelListener(new CancellationSignal.OnCancelListener() { // from class: android.mtp.MtpDevice.1
+                @Override // android.p007os.CancellationSignal.OnCancelListener
                 public void onCancel() {
                     MtpDevice.this.native_discard_event_request(handle);
                 }
@@ -212,7 +214,7 @@ public final class MtpDevice {
             return native_reap_event_request(handle);
         } finally {
             if (signal != null) {
-                signal.setOnCancelListener((CancellationSignal.OnCancelListener) null);
+                signal.setOnCancelListener(null);
             }
         }
     }

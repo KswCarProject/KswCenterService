@@ -4,22 +4,35 @@ import android.app.ActivityThread;
 import android.net.MacAddress;
 import android.net.MatchAllNetworkSpecifier;
 import android.net.NetworkSpecifier;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.PatternMatcher;
-import android.os.Process;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.PatternMatcher;
+import android.p007os.Process;
 import android.text.TextUtils;
 import android.util.Pair;
 import com.android.internal.util.Preconditions;
+import java.nio.charset.CharsetEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
+/* loaded from: classes3.dex */
 public final class WifiNetworkSpecifier extends NetworkSpecifier implements Parcelable {
-    public static final Parcelable.Creator<WifiNetworkSpecifier> CREATOR = new Parcelable.Creator<WifiNetworkSpecifier>() {
+    public static final Parcelable.Creator<WifiNetworkSpecifier> CREATOR = new Parcelable.Creator<WifiNetworkSpecifier>() { // from class: android.net.wifi.WifiNetworkSpecifier.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WifiNetworkSpecifier createFromParcel(Parcel in) {
-            return new WifiNetworkSpecifier((PatternMatcher) in.readParcelable((ClassLoader) null), Pair.create((MacAddress) in.readParcelable((ClassLoader) null), (MacAddress) in.readParcelable((ClassLoader) null)), (WifiConfiguration) in.readParcelable((ClassLoader) null), in.readInt(), in.readString());
+            PatternMatcher ssidPatternMatcher = (PatternMatcher) in.readParcelable(null);
+            MacAddress baseAddress = (MacAddress) in.readParcelable(null);
+            MacAddress mask = (MacAddress) in.readParcelable(null);
+            Pair<MacAddress, MacAddress> bssidPatternMatcher = Pair.create(baseAddress, mask);
+            WifiConfiguration wifiConfiguration = (WifiConfiguration) in.readParcelable(null);
+            int requestorUid = in.readInt();
+            String requestorPackageName = in.readString();
+            return new WifiNetworkSpecifier(ssidPatternMatcher, bssidPatternMatcher, wifiConfiguration, requestorUid, requestorPackageName);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WifiNetworkSpecifier[] newArray(int size) {
             return new WifiNetworkSpecifier[size];
         }
@@ -30,21 +43,22 @@ public final class WifiNetworkSpecifier extends NetworkSpecifier implements Parc
     public final PatternMatcher ssidPatternMatcher;
     public final WifiConfiguration wifiConfiguration;
 
+    /* loaded from: classes3.dex */
     public static final class Builder {
-        private static final Pair<MacAddress, MacAddress> MATCH_ALL_BSSID_PATTERN = new Pair<>(MacAddress.ALL_ZEROS_ADDRESS, MacAddress.ALL_ZEROS_ADDRESS);
         private static final String MATCH_ALL_SSID_PATTERN_PATH = ".*";
         private static final String MATCH_EMPTY_SSID_PATTERN_PATH = "";
-        private static final MacAddress MATCH_EXACT_BSSID_PATTERN_MASK = MacAddress.BROADCAST_ADDRESS;
         private static final Pair<MacAddress, MacAddress> MATCH_NO_BSSID_PATTERN1 = new Pair<>(MacAddress.BROADCAST_ADDRESS, MacAddress.BROADCAST_ADDRESS);
         private static final Pair<MacAddress, MacAddress> MATCH_NO_BSSID_PATTERN2 = new Pair<>(MacAddress.ALL_ZEROS_ADDRESS, MacAddress.BROADCAST_ADDRESS);
+        private static final Pair<MacAddress, MacAddress> MATCH_ALL_BSSID_PATTERN = new Pair<>(MacAddress.ALL_ZEROS_ADDRESS, MacAddress.ALL_ZEROS_ADDRESS);
+        private static final MacAddress MATCH_EXACT_BSSID_PATTERN_MASK = MacAddress.BROADCAST_ADDRESS;
+        private PatternMatcher mSsidPatternMatcher = null;
         private Pair<MacAddress, MacAddress> mBssidPatternMatcher = null;
         private boolean mIsEnhancedOpen = false;
-        private boolean mIsHiddenSSID = false;
-        private PatternMatcher mSsidPatternMatcher = null;
-        private WifiEnterpriseConfig mWpa2EnterpriseConfig = null;
         private String mWpa2PskPassphrase = null;
-        private WifiEnterpriseConfig mWpa3EnterpriseConfig = null;
         private String mWpa3SaePassphrase = null;
+        private WifiEnterpriseConfig mWpa2EnterpriseConfig = null;
+        private WifiEnterpriseConfig mWpa3EnterpriseConfig = null;
+        private boolean mIsHiddenSSID = false;
 
         public Builder setSsidPattern(PatternMatcher ssidPattern) {
             Preconditions.checkNotNull(ssidPattern);
@@ -54,11 +68,12 @@ public final class WifiNetworkSpecifier extends NetworkSpecifier implements Parc
 
         public Builder setSsid(String ssid) {
             Preconditions.checkNotNull(ssid);
-            if (StandardCharsets.UTF_8.newEncoder().canEncode(ssid)) {
-                this.mSsidPatternMatcher = new PatternMatcher(ssid, 0);
-                return this;
+            CharsetEncoder unicodeEncoder = StandardCharsets.UTF_8.newEncoder();
+            if (!unicodeEncoder.canEncode(ssid)) {
+                throw new IllegalArgumentException("SSID is not a valid unicode string");
             }
-            throw new IllegalArgumentException("SSID is not a valid unicode string");
+            this.mSsidPatternMatcher = new PatternMatcher(ssid, 0);
+            return this;
         }
 
         public Builder setBssidPattern(MacAddress baseAddress, MacAddress mask) {
@@ -80,20 +95,22 @@ public final class WifiNetworkSpecifier extends NetworkSpecifier implements Parc
 
         public Builder setWpa2Passphrase(String passphrase) {
             Preconditions.checkNotNull(passphrase);
-            if (StandardCharsets.US_ASCII.newEncoder().canEncode(passphrase)) {
-                this.mWpa2PskPassphrase = passphrase;
-                return this;
+            CharsetEncoder asciiEncoder = StandardCharsets.US_ASCII.newEncoder();
+            if (!asciiEncoder.canEncode(passphrase)) {
+                throw new IllegalArgumentException("passphrase not ASCII encodable");
             }
-            throw new IllegalArgumentException("passphrase not ASCII encodable");
+            this.mWpa2PskPassphrase = passphrase;
+            return this;
         }
 
         public Builder setWpa3Passphrase(String passphrase) {
             Preconditions.checkNotNull(passphrase);
-            if (StandardCharsets.US_ASCII.newEncoder().canEncode(passphrase)) {
-                this.mWpa3SaePassphrase = passphrase;
-                return this;
+            CharsetEncoder asciiEncoder = StandardCharsets.US_ASCII.newEncoder();
+            if (!asciiEncoder.canEncode(passphrase)) {
+                throw new IllegalArgumentException("passphrase not ASCII encodable");
             }
-            throw new IllegalArgumentException("passphrase not ASCII encodable");
+            this.mWpa3SaePassphrase = passphrase;
+            return this;
         }
 
         public Builder setWpa2EnterpriseConfig(WifiEnterpriseConfig enterpriseConfig) {
@@ -139,7 +156,7 @@ public final class WifiNetworkSpecifier extends NetworkSpecifier implements Parc
                 wifiConfiguration.SSID = "\"" + this.mSsidPatternMatcher.getPath() + "\"";
             }
             if (this.mBssidPatternMatcher.second == MATCH_EXACT_BSSID_PATTERN_MASK) {
-                wifiConfiguration.BSSID = ((MacAddress) this.mBssidPatternMatcher.first).toString();
+                wifiConfiguration.BSSID = this.mBssidPatternMatcher.first.toString();
             }
             setSecurityParamsInWifiConfiguration(wifiConfiguration);
             wifiConfiguration.hiddenSSID = this.mIsHiddenSSID;
@@ -160,46 +177,39 @@ public final class WifiNetworkSpecifier extends NetworkSpecifier implements Parc
         }
 
         private boolean hasSetMatchNonePattern() {
-            if ((this.mSsidPatternMatcher.getType() == 1 || !this.mSsidPatternMatcher.getPath().equals("")) && !this.mBssidPatternMatcher.equals(MATCH_NO_BSSID_PATTERN1) && !this.mBssidPatternMatcher.equals(MATCH_NO_BSSID_PATTERN2)) {
-                return false;
-            }
-            return true;
+            return (this.mSsidPatternMatcher.getType() != 1 && this.mSsidPatternMatcher.getPath().equals("")) || this.mBssidPatternMatcher.equals(MATCH_NO_BSSID_PATTERN1) || this.mBssidPatternMatcher.equals(MATCH_NO_BSSID_PATTERN2);
         }
 
         private boolean hasSetMatchAllPattern() {
-            if (!this.mSsidPatternMatcher.match("") || !this.mBssidPatternMatcher.equals(MATCH_ALL_BSSID_PATTERN)) {
-                return false;
+            if (this.mSsidPatternMatcher.match("") && this.mBssidPatternMatcher.equals(MATCH_ALL_BSSID_PATTERN)) {
+                return true;
             }
-            return true;
+            return false;
         }
 
         private void validateSecurityParams() {
-            int i = 0;
-            int numSecurityTypes = false + (this.mIsEnhancedOpen ? 1 : 0) + (TextUtils.isEmpty(this.mWpa2PskPassphrase) ^ true ? 1 : 0) + (TextUtils.isEmpty(this.mWpa3SaePassphrase) ^ true ? 1 : 0) + (this.mWpa2EnterpriseConfig != null ? 1 : 0);
-            if (this.mWpa3EnterpriseConfig != null) {
-                i = 1;
-            }
-            if (numSecurityTypes + i > 1) {
+            int numSecurityTypes = 0 + (this.mIsEnhancedOpen ? 1 : 0);
+            if (numSecurityTypes + (!TextUtils.isEmpty(this.mWpa2PskPassphrase) ? 1 : 0) + (!TextUtils.isEmpty(this.mWpa3SaePassphrase) ? 1 : 0) + (this.mWpa2EnterpriseConfig != null ? 1 : 0) + (this.mWpa3EnterpriseConfig != null ? 1 : 0) > 1) {
                 throw new IllegalStateException("only one of setIsEnhancedOpen, setWpa2Passphrase,setWpa3Passphrase, setWpa2EnterpriseConfig or setWpa3EnterpriseConfig can be invoked for network specifier");
             }
         }
 
         public WifiNetworkSpecifier build() {
-            if (hasSetAnyPattern()) {
-                setMatchAnyPatternIfUnset();
-                if (hasSetMatchNonePattern()) {
-                    throw new IllegalStateException("cannot set match-none pattern for specifier");
-                } else if (hasSetMatchAllPattern()) {
-                    throw new IllegalStateException("cannot set match-all pattern for specifier");
-                } else if (!this.mIsHiddenSSID || this.mSsidPatternMatcher.getType() == 0) {
-                    validateSecurityParams();
-                    return new WifiNetworkSpecifier(this.mSsidPatternMatcher, this.mBssidPatternMatcher, buildWifiConfiguration(), Process.myUid(), ActivityThread.currentApplication().getApplicationContext().getOpPackageName());
-                } else {
-                    throw new IllegalStateException("setSsid should also be invoked when setIsHiddenSsid is invoked for network specifier");
-                }
-            } else {
+            if (!hasSetAnyPattern()) {
                 throw new IllegalStateException("one of setSsidPattern/setSsid/setBssidPattern/setBssid should be invoked for specifier");
             }
+            setMatchAnyPatternIfUnset();
+            if (hasSetMatchNonePattern()) {
+                throw new IllegalStateException("cannot set match-none pattern for specifier");
+            }
+            if (hasSetMatchAllPattern()) {
+                throw new IllegalStateException("cannot set match-all pattern for specifier");
+            }
+            if (this.mIsHiddenSSID && this.mSsidPatternMatcher.getType() != 0) {
+                throw new IllegalStateException("setSsid should also be invoked when setIsHiddenSsid is invoked for network specifier");
+            }
+            validateSecurityParams();
+            return new WifiNetworkSpecifier(this.mSsidPatternMatcher, this.mBssidPatternMatcher, buildWifiConfiguration(), Process.myUid(), ActivityThread.currentApplication().getApplicationContext().getOpPackageName());
         }
     }
 
@@ -207,53 +217,53 @@ public final class WifiNetworkSpecifier extends NetworkSpecifier implements Parc
         throw new IllegalAccessException("Use the builder to create an instance");
     }
 
-    public WifiNetworkSpecifier(PatternMatcher ssidPatternMatcher2, Pair<MacAddress, MacAddress> bssidPatternMatcher2, WifiConfiguration wifiConfiguration2, int requestorUid2, String requestorPackageName2) {
-        Preconditions.checkNotNull(ssidPatternMatcher2);
-        Preconditions.checkNotNull(bssidPatternMatcher2);
-        Preconditions.checkNotNull(wifiConfiguration2);
-        Preconditions.checkNotNull(requestorPackageName2);
-        this.ssidPatternMatcher = ssidPatternMatcher2;
-        this.bssidPatternMatcher = bssidPatternMatcher2;
-        this.wifiConfiguration = wifiConfiguration2;
-        this.requestorUid = requestorUid2;
-        this.requestorPackageName = requestorPackageName2;
+    public WifiNetworkSpecifier(PatternMatcher ssidPatternMatcher, Pair<MacAddress, MacAddress> bssidPatternMatcher, WifiConfiguration wifiConfiguration, int requestorUid, String requestorPackageName) {
+        Preconditions.checkNotNull(ssidPatternMatcher);
+        Preconditions.checkNotNull(bssidPatternMatcher);
+        Preconditions.checkNotNull(wifiConfiguration);
+        Preconditions.checkNotNull(requestorPackageName);
+        this.ssidPatternMatcher = ssidPatternMatcher;
+        this.bssidPatternMatcher = bssidPatternMatcher;
+        this.wifiConfiguration = wifiConfiguration;
+        this.requestorUid = requestorUid;
+        this.requestorPackageName = requestorPackageName;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(this.ssidPatternMatcher, flags);
-        dest.writeParcelable((Parcelable) this.bssidPatternMatcher.first, flags);
-        dest.writeParcelable((Parcelable) this.bssidPatternMatcher.second, flags);
+        dest.writeParcelable(this.bssidPatternMatcher.first, flags);
+        dest.writeParcelable(this.bssidPatternMatcher.second, flags);
         dest.writeParcelable(this.wifiConfiguration, flags);
         dest.writeInt(this.requestorUid);
         dest.writeString(this.requestorPackageName);
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{this.ssidPatternMatcher.getPath(), Integer.valueOf(this.ssidPatternMatcher.getType()), this.bssidPatternMatcher, this.wifiConfiguration.allowedKeyManagement, Integer.valueOf(this.requestorUid), this.requestorPackageName});
+        return Objects.hash(this.ssidPatternMatcher.getPath(), Integer.valueOf(this.ssidPatternMatcher.getType()), this.bssidPatternMatcher, this.wifiConfiguration.allowedKeyManagement, Integer.valueOf(this.requestorUid), this.requestorPackageName);
     }
 
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }
-        if (!(obj instanceof WifiNetworkSpecifier)) {
-            return false;
+        if (obj instanceof WifiNetworkSpecifier) {
+            WifiNetworkSpecifier lhs = (WifiNetworkSpecifier) obj;
+            return Objects.equals(this.ssidPatternMatcher.getPath(), lhs.ssidPatternMatcher.getPath()) && Objects.equals(Integer.valueOf(this.ssidPatternMatcher.getType()), Integer.valueOf(lhs.ssidPatternMatcher.getType())) && Objects.equals(this.bssidPatternMatcher, lhs.bssidPatternMatcher) && Objects.equals(this.wifiConfiguration.allowedKeyManagement, lhs.wifiConfiguration.allowedKeyManagement) && this.requestorUid == lhs.requestorUid && TextUtils.equals(this.requestorPackageName, lhs.requestorPackageName);
         }
-        WifiNetworkSpecifier lhs = (WifiNetworkSpecifier) obj;
-        if (!Objects.equals(this.ssidPatternMatcher.getPath(), lhs.ssidPatternMatcher.getPath()) || !Objects.equals(Integer.valueOf(this.ssidPatternMatcher.getType()), Integer.valueOf(lhs.ssidPatternMatcher.getType())) || !Objects.equals(this.bssidPatternMatcher, lhs.bssidPatternMatcher) || !Objects.equals(this.wifiConfiguration.allowedKeyManagement, lhs.wifiConfiguration.allowedKeyManagement) || this.requestorUid != lhs.requestorUid || !TextUtils.equals(this.requestorPackageName, lhs.requestorPackageName)) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
     public String toString() {
-        return "WifiNetworkSpecifier [" + ", SSID Match pattern=" + this.ssidPatternMatcher + ", BSSID Match pattern=" + this.bssidPatternMatcher + ", SSID=" + this.wifiConfiguration.SSID + ", BSSID=" + this.wifiConfiguration.BSSID + ", requestorUid=" + this.requestorUid + ", requestorPackageName=" + this.requestorPackageName + "]";
+        return "WifiNetworkSpecifier [, SSID Match pattern=" + this.ssidPatternMatcher + ", BSSID Match pattern=" + this.bssidPatternMatcher + ", SSID=" + this.wifiConfiguration.SSID + ", BSSID=" + this.wifiConfiguration.BSSID + ", requestorUid=" + this.requestorUid + ", requestorPackageName=" + this.requestorPackageName + "]";
     }
 
+    @Override // android.net.NetworkSpecifier
     public boolean satisfiedBy(NetworkSpecifier other) {
         if (this == other || other == null || (other instanceof MatchAllNetworkSpecifier)) {
             return true;
@@ -264,8 +274,9 @@ public final class WifiNetworkSpecifier extends NetworkSpecifier implements Parc
         return equals(other);
     }
 
-    public void assertValidFromUid(int requestorUid2) {
-        if (this.requestorUid != requestorUid2) {
+    @Override // android.net.NetworkSpecifier
+    public void assertValidFromUid(int requestorUid) {
+        if (this.requestorUid != requestorUid) {
             throw new SecurityException("mismatched UIDs");
         }
     }

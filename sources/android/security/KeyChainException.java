@@ -1,5 +1,6 @@
 package android.security;
 
+/* loaded from: classes3.dex */
 public class KeyChainException extends Exception {
     public KeyChainException() {
     }
@@ -12,7 +13,6 @@ public class KeyChainException extends Exception {
         super(message, cause);
     }
 
-    /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     public KeyChainException(Throwable cause) {
         super(cause == null ? null : cause.toString(), cause);
     }

@@ -1,17 +1,22 @@
 package android.app.servertransaction;
 
 import android.app.ClientTransactionHandler;
-import android.os.IBinder;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.Trace;
+import android.p007os.IBinder;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.Trace;
 
+/* loaded from: classes.dex */
 public class StopActivityItem extends ActivityLifecycleItem {
-    public static final Parcelable.Creator<StopActivityItem> CREATOR = new Parcelable.Creator<StopActivityItem>() {
+    public static final Parcelable.Creator<StopActivityItem> CREATOR = new Parcelable.Creator<StopActivityItem>() { // from class: android.app.servertransaction.StopActivityItem.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public StopActivityItem createFromParcel(Parcel in) {
             return new StopActivityItem(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public StopActivityItem[] newArray(int size) {
             return new StopActivityItem[size];
         }
@@ -20,16 +25,19 @@ public class StopActivityItem extends ActivityLifecycleItem {
     private int mConfigChanges;
     private boolean mShowWindow;
 
+    @Override // android.app.servertransaction.BaseClientRequest
     public void execute(ClientTransactionHandler client, IBinder token, PendingTransactionActions pendingActions) {
-        Trace.traceBegin(64, "activityStop");
+        Trace.traceBegin(64L, "activityStop");
         client.handleStopActivity(token, this.mShowWindow, this.mConfigChanges, pendingActions, true, "STOP_ACTIVITY_ITEM");
-        Trace.traceEnd(64);
+        Trace.traceEnd(64L);
     }
 
+    @Override // android.app.servertransaction.BaseClientRequest
     public void postExecute(ClientTransactionHandler client, IBinder token, PendingTransactionActions pendingActions) {
         client.reportStop(pendingActions);
     }
 
+    @Override // android.app.servertransaction.ActivityLifecycleItem
     public int getTargetState() {
         return 5;
     }
@@ -47,6 +55,7 @@ public class StopActivityItem extends ActivityLifecycleItem {
         return instance;
     }
 
+    @Override // android.app.servertransaction.ActivityLifecycleItem, android.app.servertransaction.ObjectPoolItem
     public void recycle() {
         super.recycle();
         this.mShowWindow = false;
@@ -54,6 +63,7 @@ public class StopActivityItem extends ActivityLifecycleItem {
         ObjectPool.recycle(this);
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeBoolean(this.mShowWindow);
         dest.writeInt(this.mConfigChanges);
@@ -79,7 +89,8 @@ public class StopActivityItem extends ActivityLifecycleItem {
     }
 
     public int hashCode() {
-        return (((17 * 31) + (this.mShowWindow ? 1 : 0)) * 31) + this.mConfigChanges;
+        int result = (17 * 31) + (this.mShowWindow ? 1 : 0);
+        return (result * 31) + this.mConfigChanges;
     }
 
     public String toString() {

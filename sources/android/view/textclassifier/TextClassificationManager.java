@@ -4,8 +4,7 @@ import android.annotation.UnsupportedAppUsage;
 import android.app.ActivityThread;
 import android.content.Context;
 import android.database.ContentObserver;
-import android.os.Handler;
-import android.os.ServiceManager;
+import android.p007os.ServiceManager;
 import android.provider.DeviceConfig;
 import android.provider.Settings;
 import android.service.textclassifier.TextClassifierService;
@@ -16,27 +15,34 @@ import com.android.internal.util.Preconditions;
 import java.lang.ref.WeakReference;
 import java.util.function.Supplier;
 
+/* loaded from: classes4.dex */
 public final class TextClassificationManager {
     private static final String LOG_TAG = "TextClassificationManager";
-    private static final TextClassificationConstants sDefaultSettings = new TextClassificationConstants($$Lambda$TextClassificationManager$VwZ4EV_1i6FbjO7TtyaAnFL3oe0.INSTANCE);
+    private static final TextClassificationConstants sDefaultSettings = new TextClassificationConstants(new Supplier() { // from class: android.view.textclassifier.-$$Lambda$TextClassificationManager$VwZ4EV_1i6FbjO7TtyaAnFL3oe0
+        @Override // java.util.function.Supplier
+        public final Object get() {
+            return TextClassificationManager.lambda$static$0();
+        }
+    });
     private final Context mContext;
     @GuardedBy({"mLock"})
     private TextClassifier mCustomTextClassifier;
-    private final TextClassificationSessionFactory mDefaultSessionFactory = new TextClassificationSessionFactory() {
+    @GuardedBy({"mLock"})
+    private TextClassifier mLocalTextClassifier;
+    @GuardedBy({"mLock"})
+    private TextClassificationConstants mSettings;
+    @GuardedBy({"mLock"})
+    private TextClassifier mSystemTextClassifier;
+    private final Object mLock = new Object();
+    private final TextClassificationSessionFactory mDefaultSessionFactory = new TextClassificationSessionFactory() { // from class: android.view.textclassifier.-$$Lambda$TextClassificationManager$SIydN2POphTO3AmPTLEMmXPLSKY
+        @Override // android.view.textclassifier.TextClassificationSessionFactory
         public final TextClassifier createTextClassificationSession(TextClassificationContext textClassificationContext) {
             return TextClassificationManager.lambda$new$1(TextClassificationManager.this, textClassificationContext);
         }
     };
     @GuardedBy({"mLock"})
-    private TextClassifier mLocalTextClassifier;
-    private final Object mLock = new Object();
-    @GuardedBy({"mLock"})
-    private TextClassificationSessionFactory mSessionFactory;
-    @GuardedBy({"mLock"})
-    private TextClassificationConstants mSettings;
-    private final SettingsObserver mSettingsObserver;
-    @GuardedBy({"mLock"})
-    private TextClassifier mSystemTextClassifier;
+    private TextClassificationSessionFactory mSessionFactory = this.mDefaultSessionFactory;
+    private final SettingsObserver mSettingsObserver = new SettingsObserver(this);
 
     static /* synthetic */ String lambda$static$0() {
         return null;
@@ -48,21 +54,16 @@ public final class TextClassificationManager {
 
     public TextClassificationManager(Context context) {
         this.mContext = (Context) Preconditions.checkNotNull(context);
-        this.mSessionFactory = this.mDefaultSessionFactory;
-        this.mSettingsObserver = new SettingsObserver(this);
     }
 
     public TextClassifier getTextClassifier() {
         synchronized (this.mLock) {
             if (this.mCustomTextClassifier != null) {
-                TextClassifier textClassifier = this.mCustomTextClassifier;
-                return textClassifier;
+                return this.mCustomTextClassifier;
             } else if (isSystemTextClassifierEnabled()) {
-                TextClassifier systemTextClassifier = getSystemTextClassifier();
-                return systemTextClassifier;
+                return getSystemTextClassifier();
             } else {
-                TextClassifier localTextClassifier = getLocalTextClassifier();
-                return localTextClassifier;
+                return getLocalTextClassifier();
             }
         }
     }
@@ -75,19 +76,22 @@ public final class TextClassificationManager {
 
     @UnsupportedAppUsage
     public TextClassifier getTextClassifier(int type) {
-        if (type != 0) {
-            return getSystemTextClassifier();
+        if (type == 0) {
+            return getLocalTextClassifier();
         }
-        return getLocalTextClassifier();
+        return getSystemTextClassifier();
     }
 
     private TextClassificationConstants getSettings() {
         TextClassificationConstants textClassificationConstants;
         synchronized (this.mLock) {
             if (this.mSettings == null) {
-                this.mSettings = new TextClassificationConstants(new Supplier() {
+                this.mSettings = new TextClassificationConstants(new Supplier() { // from class: android.view.textclassifier.-$$Lambda$TextClassificationManager$oweIEhDWxy3_0kZSXp3oRbSuNW4
+                    @Override // java.util.function.Supplier
                     public final Object get() {
-                        return Settings.Global.getString(TextClassificationManager.this.getApplicationContext().getContentResolver(), Settings.Global.TEXT_CLASSIFIER_CONSTANTS);
+                        String string;
+                        string = Settings.Global.getString(TextClassificationManager.this.getApplicationContext().getContentResolver(), Settings.Global.TEXT_CLASSIFIER_CONSTANTS);
+                        return string;
                     }
                 });
             }
@@ -111,20 +115,19 @@ public final class TextClassificationManager {
 
     public void setTextClassificationSessionFactory(TextClassificationSessionFactory factory) {
         synchronized (this.mLock) {
-            if (factory != null) {
-                try {
+            try {
+                if (factory != null) {
                     this.mSessionFactory = factory;
-                } catch (Throwable th) {
-                    throw th;
+                } else {
+                    this.mSessionFactory = this.mDefaultSessionFactory;
                 }
-            } else {
-                this.mSessionFactory = this.mDefaultSessionFactory;
+            } catch (Throwable th) {
+                throw th;
             }
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         try {
             if (this.mSettingsObserver != null) {
                 getApplicationContext().getContentResolver().unregisterContentObserver(this.mSettingsObserver);
@@ -140,9 +143,9 @@ public final class TextClassificationManager {
             if (this.mSystemTextClassifier == null && isSystemTextClassifierEnabled()) {
                 try {
                     this.mSystemTextClassifier = new SystemTextClassifier(this.mContext, getSettings());
-                    Log.d(LOG_TAG, "Initialized SystemTextClassifier");
+                    Log.m40d(LOG_TAG, "Initialized SystemTextClassifier");
                 } catch (ServiceManager.ServiceNotFoundException e) {
-                    Log.e(LOG_TAG, "Could not initialize SystemTextClassifier", e);
+                    Log.m39e(LOG_TAG, "Could not initialize SystemTextClassifier", e);
                 }
             }
         }
@@ -159,7 +162,7 @@ public final class TextClassificationManager {
                 if (getSettings().isLocalTextClassifierEnabled()) {
                     this.mLocalTextClassifier = new TextClassifierImpl(this.mContext, getSettings(), TextClassifier.NO_OP);
                 } else {
-                    Log.d(LOG_TAG, "Local TextClassifier disabled");
+                    Log.m40d(LOG_TAG, "Local TextClassifier disabled");
                     this.mLocalTextClassifier = TextClassifier.NO_OP;
                 }
             }
@@ -177,7 +180,7 @@ public final class TextClassificationManager {
         invalidate();
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void invalidate() {
         synchronized (this.mLock) {
             this.mSettings = null;
@@ -186,8 +189,7 @@ public final class TextClassificationManager {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public Context getApplicationContext() {
+    Context getApplicationContext() {
         if (this.mContext.getApplicationContext() != null) {
             return this.mContext.getApplicationContext();
         }
@@ -209,26 +211,29 @@ public final class TextClassificationManager {
         return sDefaultSettings;
     }
 
+    /* loaded from: classes4.dex */
     private static final class SettingsObserver extends ContentObserver implements DeviceConfig.OnPropertiesChangedListener {
         private final WeakReference<TextClassificationManager> mTcm;
 
         SettingsObserver(TextClassificationManager tcm) {
-            super((Handler) null);
+            super(null);
             this.mTcm = new WeakReference<>(tcm);
             tcm.getApplicationContext().getContentResolver().registerContentObserver(Settings.Global.getUriFor(Settings.Global.TEXT_CLASSIFIER_CONSTANTS), false, this);
             DeviceConfig.addOnPropertiesChangedListener(DeviceConfig.NAMESPACE_TEXTCLASSIFIER, ActivityThread.currentApplication().getMainExecutor(), this);
         }
 
+        @Override // android.database.ContentObserver
         public void onChange(boolean selfChange) {
             invalidateSettings();
         }
 
+        @Override // android.provider.DeviceConfig.OnPropertiesChangedListener
         public void onPropertiesChanged(DeviceConfig.Properties properties) {
             invalidateSettings();
         }
 
         private void invalidateSettings() {
-            TextClassificationManager tcm = (TextClassificationManager) this.mTcm.get();
+            TextClassificationManager tcm = this.mTcm.get();
             if (tcm != null) {
                 tcm.invalidate();
             }

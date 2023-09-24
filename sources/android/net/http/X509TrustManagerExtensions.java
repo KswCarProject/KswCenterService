@@ -9,6 +9,7 @@ import java.security.cert.X509Certificate;
 import java.util.List;
 import javax.net.ssl.X509TrustManager;
 
+/* loaded from: classes3.dex */
 public class X509TrustManagerExtensions {
     private final Method mCheckServerTrusted;
     private final TrustManagerImpl mDelegate;
@@ -26,10 +27,10 @@ public class X509TrustManagerExtensions {
         this.mDelegate = null;
         this.mTrustManager = tm;
         try {
-            this.mCheckServerTrusted = tm.getClass().getMethod("checkServerTrusted", new Class[]{X509Certificate[].class, String.class, String.class});
+            this.mCheckServerTrusted = tm.getClass().getMethod("checkServerTrusted", X509Certificate[].class, String.class, String.class);
             Method isSameTrustConfiguration = null;
             try {
-                isSameTrustConfiguration = tm.getClass().getMethod("isSameTrustConfiguration", new Class[]{String.class, String.class});
+                isSameTrustConfiguration = tm.getClass().getMethod("isSameTrustConfiguration", String.class, String.class);
             } catch (ReflectiveOperationException e) {
             }
             this.mIsSameTrustConfiguration = isSameTrustConfiguration;
@@ -43,17 +44,17 @@ public class X509TrustManagerExtensions {
             return this.mDelegate.checkServerTrusted(chain, authType, host);
         }
         try {
-            return (List) this.mCheckServerTrusted.invoke(this.mTrustManager, new Object[]{chain, authType, host});
+            return (List) this.mCheckServerTrusted.invoke(this.mTrustManager, chain, authType, host);
         } catch (IllegalAccessException e) {
             throw new CertificateException("Failed to call checkServerTrusted", e);
         } catch (InvocationTargetException e2) {
             if (e2.getCause() instanceof CertificateException) {
                 throw ((CertificateException) e2.getCause());
-            } else if (e2.getCause() instanceof RuntimeException) {
-                throw ((RuntimeException) e2.getCause());
-            } else {
-                throw new CertificateException("checkServerTrusted failed", e2.getCause());
             }
+            if (e2.getCause() instanceof RuntimeException) {
+                throw ((RuntimeException) e2.getCause());
+            }
+            throw new CertificateException("checkServerTrusted failed", e2.getCause());
         }
     }
 
@@ -66,7 +67,7 @@ public class X509TrustManagerExtensions {
             return true;
         }
         try {
-            return ((Boolean) this.mIsSameTrustConfiguration.invoke(this.mTrustManager, new Object[]{hostname1, hostname2})).booleanValue();
+            return ((Boolean) this.mIsSameTrustConfiguration.invoke(this.mTrustManager, hostname1, hostname2)).booleanValue();
         } catch (IllegalAccessException e) {
             throw new RuntimeException("Failed to call isSameTrustConfiguration", e);
         } catch (InvocationTargetException e2) {

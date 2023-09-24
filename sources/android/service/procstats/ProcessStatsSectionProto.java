@@ -1,5 +1,6 @@
 package android.service.procstats;
 
+/* loaded from: classes3.dex */
 public final class ProcessStatsSectionProto {
     public static final long AVAILABLE_PAGES = 2246267895818L;
     public static final long END_REALTIME_MS = 1112396529666L;

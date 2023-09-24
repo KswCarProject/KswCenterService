@@ -2,12 +2,13 @@ package com.android.internal.telephony;
 
 import android.annotation.UnsupportedAppUsage;
 import android.content.Intent;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes4.dex */
 public interface IWapPushManager extends IInterface {
     @UnsupportedAppUsage
     boolean addPackage(String str, String str2, String str3, String str4, int i, boolean z, boolean z2) throws RemoteException;
@@ -20,28 +21,35 @@ public interface IWapPushManager extends IInterface {
     @UnsupportedAppUsage
     boolean updatePackage(String str, String str2, String str3, String str4, int i, boolean z, boolean z2) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IWapPushManager {
+        @Override // com.android.internal.telephony.IWapPushManager
         public int processMessage(String app_id, String content_type, Intent intent) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.IWapPushManager
         public boolean addPackage(String x_app_id, String content_type, String package_name, String class_name, int app_type, boolean need_signature, boolean further_processing) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.IWapPushManager
         public boolean updatePackage(String x_app_id, String content_type, String package_name, String class_name, int app_type, boolean need_signature, boolean further_processing) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.IWapPushManager
         public boolean deletePackage(String x_app_id, String content_type, String package_name, String class_name) throws RemoteException {
             return false;
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IWapPushManager {
         private static final String DESCRIPTOR = "com.android.internal.telephony.IWapPushManager";
         static final int TRANSACTION_addPackage = 2;
@@ -58,12 +66,13 @@ public interface IWapPushManager extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IWapPushManager)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IWapPushManager)) {
+                return (IWapPushManager) iin;
             }
-            return (IWapPushManager) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -83,57 +92,74 @@ public interface IWapPushManager extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
             Intent _arg2;
-            int i = code;
-            Parcel parcel = data;
-            Parcel parcel2 = reply;
-            if (i != 1598968902) {
-                switch (i) {
-                    case 1:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        String _arg0 = data.readString();
-                        String _arg1 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg2 = Intent.CREATOR.createFromParcel(parcel);
-                        } else {
-                            _arg2 = null;
-                        }
-                        int _result = processMessage(_arg0, _arg1, _arg2);
-                        reply.writeNoException();
-                        parcel2.writeInt(_result);
-                        return true;
-                    case 2:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        boolean _result2 = addPackage(data.readString(), data.readString(), data.readString(), data.readString(), data.readInt(), data.readInt() != 0, data.readInt() != 0);
-                        reply.writeNoException();
-                        parcel2.writeInt(_result2);
-                        return true;
-                    case 3:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        boolean _result3 = updatePackage(data.readString(), data.readString(), data.readString(), data.readString(), data.readInt(), data.readInt() != 0, data.readInt() != 0);
-                        reply.writeNoException();
-                        parcel2.writeInt(_result3);
-                        return true;
-                    case 4:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        boolean _result4 = deletePackage(data.readString(), data.readString(), data.readString(), data.readString());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result4);
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
-                parcel2.writeString(DESCRIPTOR);
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
                 return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0 = data.readString();
+                    String _arg1 = data.readString();
+                    if (data.readInt() != 0) {
+                        _arg2 = Intent.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg2 = null;
+                    }
+                    int _result = processMessage(_arg0, _arg1, _arg2);
+                    reply.writeNoException();
+                    reply.writeInt(_result);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg02 = data.readString();
+                    String _arg12 = data.readString();
+                    String _arg22 = data.readString();
+                    String _arg3 = data.readString();
+                    int _arg4 = data.readInt();
+                    boolean _arg5 = data.readInt() != 0;
+                    boolean _arg6 = data.readInt() != 0;
+                    boolean addPackage = addPackage(_arg02, _arg12, _arg22, _arg3, _arg4, _arg5, _arg6);
+                    reply.writeNoException();
+                    reply.writeInt(addPackage ? 1 : 0);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg03 = data.readString();
+                    String _arg13 = data.readString();
+                    String _arg23 = data.readString();
+                    String _arg32 = data.readString();
+                    int _arg42 = data.readInt();
+                    boolean _arg52 = data.readInt() != 0;
+                    boolean _arg62 = data.readInt() != 0;
+                    boolean updatePackage = updatePackage(_arg03, _arg13, _arg23, _arg32, _arg42, _arg52, _arg62);
+                    reply.writeNoException();
+                    reply.writeInt(updatePackage ? 1 : 0);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg04 = data.readString();
+                    String _arg14 = data.readString();
+                    String _arg24 = data.readString();
+                    String _arg33 = data.readString();
+                    boolean deletePackage = deletePackage(_arg04, _arg14, _arg24, _arg33);
+                    reply.writeNoException();
+                    reply.writeInt(deletePackage ? 1 : 0);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
             }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IWapPushManager {
             public static IWapPushManager sDefaultImpl;
             private IBinder mRemote;
@@ -142,6 +168,7 @@ public interface IWapPushManager extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -150,6 +177,7 @@ public interface IWapPushManager extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // com.android.internal.telephony.IWapPushManager
             public int processMessage(String app_id, String content_type, Intent intent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -163,13 +191,12 @@ public interface IWapPushManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(1, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().processMessage(app_id, content_type, intent);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -177,176 +204,137 @@ public interface IWapPushManager extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.IWapPushManager
             public boolean addPackage(String x_app_id, String content_type, String package_name, String class_name, int app_type, boolean need_signature, boolean further_processing) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    try {
-                        _data.writeString(x_app_id);
-                        try {
-                            _data.writeString(content_type);
-                        } catch (Throwable th) {
-                            th = th;
-                            String str = package_name;
-                            String str2 = class_name;
-                            int i = app_type;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                        try {
-                            _data.writeString(package_name);
-                            try {
-                                _data.writeString(class_name);
-                            } catch (Throwable th2) {
-                                th = th2;
-                                int i2 = app_type;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                            try {
-                                _data.writeInt(app_type);
-                                _data.writeInt(need_signature ? 1 : 0);
-                                _data.writeInt(further_processing ? 1 : 0);
-                                boolean z = false;
-                                if (this.mRemote.transact(2, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                    _reply.readException();
-                                    if (_reply.readInt() != 0) {
-                                        z = true;
-                                    }
-                                    boolean _status = z;
-                                    _reply.recycle();
-                                    _data.recycle();
-                                    return _status;
-                                }
-                                boolean addPackage = Stub.getDefaultImpl().addPackage(x_app_id, content_type, package_name, class_name, app_type, need_signature, further_processing);
-                                _reply.recycle();
-                                _data.recycle();
-                                return addPackage;
-                            } catch (Throwable th3) {
-                                th = th3;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th4) {
-                            th = th4;
-                            String str22 = class_name;
-                            int i22 = app_type;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                    } catch (Throwable th5) {
-                        th = th5;
-                        String str3 = content_type;
-                        String str4 = package_name;
-                        String str222 = class_name;
-                        int i222 = app_type;
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeString(x_app_id);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeString(content_type);
+                } catch (Throwable th3) {
+                    th = th3;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeString(package_name);
+                } catch (Throwable th4) {
+                    th = th4;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeString(class_name);
+                } catch (Throwable th5) {
+                    th = th5;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(app_type);
+                    _data.writeInt(need_signature ? 1 : 0);
+                    _data.writeInt(further_processing ? 1 : 0);
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        boolean addPackage = Stub.getDefaultImpl().addPackage(x_app_id, content_type, package_name, class_name, app_type, need_signature, further_processing);
                         _reply.recycle();
                         _data.recycle();
-                        throw th;
+                        return addPackage;
                     }
+                    _reply.readException();
+                    boolean _status2 = _reply.readInt() != 0;
+                    _reply.recycle();
+                    _data.recycle();
+                    return _status2;
                 } catch (Throwable th6) {
                     th = th6;
-                    String str5 = x_app_id;
-                    String str32 = content_type;
-                    String str42 = package_name;
-                    String str2222 = class_name;
-                    int i2222 = app_type;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // com.android.internal.telephony.IWapPushManager
             public boolean updatePackage(String x_app_id, String content_type, String package_name, String class_name, int app_type, boolean need_signature, boolean further_processing) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    try {
-                        _data.writeString(x_app_id);
-                        try {
-                            _data.writeString(content_type);
-                        } catch (Throwable th) {
-                            th = th;
-                            String str = package_name;
-                            String str2 = class_name;
-                            int i = app_type;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                        try {
-                            _data.writeString(package_name);
-                            try {
-                                _data.writeString(class_name);
-                            } catch (Throwable th2) {
-                                th = th2;
-                                int i2 = app_type;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                            try {
-                                _data.writeInt(app_type);
-                                _data.writeInt(need_signature ? 1 : 0);
-                                _data.writeInt(further_processing ? 1 : 0);
-                                boolean z = false;
-                                if (this.mRemote.transact(3, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                    _reply.readException();
-                                    if (_reply.readInt() != 0) {
-                                        z = true;
-                                    }
-                                    boolean _status = z;
-                                    _reply.recycle();
-                                    _data.recycle();
-                                    return _status;
-                                }
-                                boolean updatePackage = Stub.getDefaultImpl().updatePackage(x_app_id, content_type, package_name, class_name, app_type, need_signature, further_processing);
-                                _reply.recycle();
-                                _data.recycle();
-                                return updatePackage;
-                            } catch (Throwable th3) {
-                                th = th3;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th4) {
-                            th = th4;
-                            String str22 = class_name;
-                            int i22 = app_type;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                    } catch (Throwable th5) {
-                        th = th5;
-                        String str3 = content_type;
-                        String str4 = package_name;
-                        String str222 = class_name;
-                        int i222 = app_type;
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeString(x_app_id);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeString(content_type);
+                } catch (Throwable th3) {
+                    th = th3;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeString(package_name);
+                } catch (Throwable th4) {
+                    th = th4;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeString(class_name);
+                } catch (Throwable th5) {
+                    th = th5;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(app_type);
+                    _data.writeInt(need_signature ? 1 : 0);
+                    _data.writeInt(further_processing ? 1 : 0);
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        boolean updatePackage = Stub.getDefaultImpl().updatePackage(x_app_id, content_type, package_name, class_name, app_type, need_signature, further_processing);
                         _reply.recycle();
                         _data.recycle();
-                        throw th;
+                        return updatePackage;
                     }
+                    _reply.readException();
+                    boolean _status2 = _reply.readInt() != 0;
+                    _reply.recycle();
+                    _data.recycle();
+                    return _status2;
                 } catch (Throwable th6) {
                     th = th6;
-                    String str5 = x_app_id;
-                    String str32 = content_type;
-                    String str42 = package_name;
-                    String str2222 = class_name;
-                    int i2222 = app_type;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // com.android.internal.telephony.IWapPushManager
             public boolean deletePackage(String x_app_id, String content_type, String package_name, String class_name) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -356,18 +344,13 @@ public interface IWapPushManager extends IInterface {
                     _data.writeString(content_type);
                     _data.writeString(package_name);
                     _data.writeString(class_name);
-                    boolean z = false;
-                    if (!this.mRemote.transact(4, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().deletePackage(x_app_id, content_type, package_name, class_name);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -376,11 +359,11 @@ public interface IWapPushManager extends IInterface {
         }
 
         public static boolean setDefaultImpl(IWapPushManager impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IWapPushManager getDefaultImpl() {

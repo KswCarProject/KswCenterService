@@ -2,6 +2,7 @@ package android.hardware.radio.V1_0;
 
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class SimRefreshType {
     public static final int SIM_FILE_UPDATE = 0;
     public static final int SIM_INIT = 1;

@@ -1,9 +1,10 @@
 package android.telephony.ims;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.annotations.VisibleForTesting;
 
+/* loaded from: classes4.dex */
 public abstract class RcsEventDescriptor implements Parcelable {
     protected final long mTimestamp;
 
@@ -18,10 +19,12 @@ public abstract class RcsEventDescriptor implements Parcelable {
         this.mTimestamp = in.readLong();
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(this.mTimestamp);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

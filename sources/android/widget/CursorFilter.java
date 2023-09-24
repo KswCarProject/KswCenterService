@@ -3,9 +3,11 @@ package android.widget;
 import android.database.Cursor;
 import android.widget.Filter;
 
+/* loaded from: classes4.dex */
 class CursorFilter extends Filter {
     CursorFilterClient mClient;
 
+    /* loaded from: classes4.dex */
     interface CursorFilterClient {
         void changeCursor(Cursor cursor);
 
@@ -20,12 +22,13 @@ class CursorFilter extends Filter {
         this.mClient = client;
     }
 
+    @Override // android.widget.Filter
     public CharSequence convertResultToString(Object resultValue) {
         return this.mClient.convertToString((Cursor) resultValue);
     }
 
-    /* access modifiers changed from: protected */
-    public Filter.FilterResults performFiltering(CharSequence constraint) {
+    @Override // android.widget.Filter
+    protected Filter.FilterResults performFiltering(CharSequence constraint) {
         Cursor cursor = this.mClient.runQueryOnBackgroundThread(constraint);
         Filter.FilterResults results = new Filter.FilterResults();
         if (cursor != null) {
@@ -38,8 +41,8 @@ class CursorFilter extends Filter {
         return results;
     }
 
-    /* access modifiers changed from: protected */
-    public void publishResults(CharSequence constraint, Filter.FilterResults results) {
+    @Override // android.widget.Filter
+    protected void publishResults(CharSequence constraint, Filter.FilterResults results) {
         Cursor oldCursor = this.mClient.getCursor();
         if (results.values != null && results.values != oldCursor) {
             this.mClient.changeCursor((Cursor) results.values);

@@ -1,6 +1,6 @@
 package android.telephony.mbms;
 
-import android.os.Parcel;
+import android.p007os.Parcel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -12,6 +12,7 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
 
+/* loaded from: classes4.dex */
 public class ServiceInfo {
     static final int MAP_LIMIT = 1000;
     private final String className;
@@ -24,9 +25,12 @@ public class ServiceInfo {
     public ServiceInfo(Map<Locale, String> newNames, String newClassName, List<Locale> newLocales, String newServiceId, Date start, Date end) {
         if (newNames == null || newClassName == null || newLocales == null || newServiceId == null || start == null || end == null) {
             throw new IllegalArgumentException("Bad ServiceInfo construction");
-        } else if (newNames.size() > 1000) {
+        }
+        if (newNames.size() > 1000) {
             throw new RuntimeException("bad map length " + newNames.size());
-        } else if (newLocales.size() <= 1000) {
+        } else if (newLocales.size() > 1000) {
+            throw new RuntimeException("bad locales length " + newLocales.size());
+        } else {
             this.names = new HashMap(newNames.size());
             this.names.putAll(newNames);
             this.className = newClassName;
@@ -34,8 +38,6 @@ public class ServiceInfo {
             this.serviceId = newServiceId;
             this.sessionStartTime = (Date) start.clone();
             this.sessionEndTime = (Date) end.clone();
-        } else {
-            throw new RuntimeException("bad locales length " + newLocales.size());
         }
     }
 
@@ -50,7 +52,9 @@ public class ServiceInfo {
             if (mapCount <= 0) {
                 break;
             }
-            this.names.put((Locale) in.readSerializable(), in.readString());
+            Locale locale = (Locale) in.readSerializable();
+            String name = in.readString();
+            this.names.put(locale, name);
             mapCount = mapCount2;
         }
         this.className = in.readString();
@@ -62,7 +66,8 @@ public class ServiceInfo {
         while (true) {
             int localesCount2 = localesCount - 1;
             if (localesCount > 0) {
-                this.locales.add((Locale) in.readSerializable());
+                Locale l = (Locale) in.readSerializable();
+                this.locales.add(l);
                 localesCount = localesCount2;
             } else {
                 this.serviceId = in.readString();
@@ -81,7 +86,8 @@ public class ServiceInfo {
             dest.writeString(this.names.get(l));
         }
         dest.writeString(this.className);
-        dest.writeInt(this.locales.size());
+        int localesCount = this.locales.size();
+        dest.writeInt(localesCount);
         for (Locale l2 : this.locales) {
             dest.writeSerializable(l2);
         }
@@ -91,10 +97,10 @@ public class ServiceInfo {
     }
 
     public CharSequence getNameForLocale(Locale locale) {
-        if (this.names.containsKey(locale)) {
-            return this.names.get(locale);
+        if (!this.names.containsKey(locale)) {
+            throw new NoSuchElementException("Locale not supported");
         }
-        throw new NoSuchElementException("Locale not supported");
+        return this.names.get(locale);
     }
 
     public Set<Locale> getNamedContentLocales() {
@@ -129,13 +135,13 @@ public class ServiceInfo {
             return false;
         }
         ServiceInfo that = (ServiceInfo) o;
-        if (!Objects.equals(this.names, that.names) || !Objects.equals(this.className, that.className) || !Objects.equals(this.locales, that.locales) || !Objects.equals(this.serviceId, that.serviceId) || !Objects.equals(this.sessionStartTime, that.sessionStartTime) || !Objects.equals(this.sessionEndTime, that.sessionEndTime)) {
-            return false;
+        if (Objects.equals(this.names, that.names) && Objects.equals(this.className, that.className) && Objects.equals(this.locales, that.locales) && Objects.equals(this.serviceId, that.serviceId) && Objects.equals(this.sessionStartTime, that.sessionStartTime) && Objects.equals(this.sessionEndTime, that.sessionEndTime)) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{this.names, this.className, this.locales, this.serviceId, this.sessionStartTime, this.sessionEndTime});
+        return Objects.hash(this.names, this.className, this.locales, this.serviceId, this.sessionStartTime, this.sessionEndTime);
     }
 }

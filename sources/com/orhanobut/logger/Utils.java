@@ -8,6 +8,7 @@ import java.io.StringWriter;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 
+/* loaded from: classes5.dex */
 final class Utils {
     private Utils() {
     }
@@ -109,9 +110,9 @@ final class Utils {
 
     @NonNull
     static <T> T checkNotNull(@Nullable T obj) {
-        if (obj != null) {
-            return obj;
+        if (obj == null) {
+            throw new NullPointerException();
         }
-        throw new NullPointerException();
+        return obj;
     }
 }

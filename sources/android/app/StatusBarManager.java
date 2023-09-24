@@ -3,16 +3,17 @@ package android.app;
 import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.RemoteException;
-import android.os.ServiceManager;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
 import android.util.Pair;
 import android.util.Slog;
 import com.android.internal.statusbar.IStatusBarService;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes.dex */
 public class StatusBarManager {
     public static final int CAMERA_LAUNCH_SOURCE_LIFT_TRIGGER = 2;
     public static final int CAMERA_LAUNCH_SOURCE_POWER_DOUBLE_TAP = 1;
@@ -36,8 +37,8 @@ public class StatusBarManager {
     public static final int DISABLE_NONE = 0;
     public static final int DISABLE_NOTIFICATION_ALERTS = 262144;
     public static final int DISABLE_NOTIFICATION_ICONS = 131072;
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public static final int DISABLE_NOTIFICATION_TICKER = 524288;
     public static final int DISABLE_RECENT = 16777216;
     public static final int DISABLE_SEARCH = 33554432;
@@ -56,18 +57,22 @@ public class StatusBarManager {
     private IBinder mToken = new Binder();
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface Disable2Flags {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface DisableFlags {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface WindowType {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface WindowVisibleState {
     }
 
@@ -81,7 +86,7 @@ public class StatusBarManager {
         if (this.mService == null) {
             this.mService = IStatusBarService.Stub.asInterface(ServiceManager.getService(Context.STATUS_BAR_SERVICE));
             if (this.mService == null) {
-                Slog.w("StatusBarManager", "warning: no STATUS_BAR_SERVICE");
+                Slog.m50w("StatusBarManager", "warning: no STATUS_BAR_SERVICE");
             }
         }
         return this.mService;
@@ -138,7 +143,7 @@ public class StatusBarManager {
 
     @UnsupportedAppUsage
     public void expandSettingsPanel() {
-        expandSettingsPanel((String) null);
+        expandSettingsPanel(null);
     }
 
     @UnsupportedAppUsage
@@ -195,12 +200,8 @@ public class StatusBarManager {
             int userId = Binder.getCallingUserHandle().getIdentifier();
             IStatusBarService svc = getService();
             if (svc != null) {
-                int i = 0;
                 svc.disableForUser(disabled ? DEFAULT_SETUP_DISABLE_FLAGS : 0, this.mToken, this.mContext.getPackageName(), userId);
-                if (disabled) {
-                    i = 16;
-                }
-                svc.disable2ForUser(i, this.mToken, this.mContext.getPackageName(), userId);
+                svc.disable2ForUser(disabled ? 16 : 0, this.mToken, this.mContext.getPackageName(), userId);
             }
         } catch (RemoteException ex) {
             throw ex.rethrowFromSystemServer();
@@ -223,19 +224,11 @@ public class StatusBarManager {
     }
 
     public static String windowStateToString(int state) {
-        if (state == 1) {
-            return "WINDOW_STATE_HIDING";
-        }
-        if (state == 2) {
-            return "WINDOW_STATE_HIDDEN";
-        }
-        if (state == 0) {
-            return "WINDOW_STATE_SHOWING";
-        }
-        return "WINDOW_STATE_UNKNOWN";
+        return state == 1 ? "WINDOW_STATE_HIDING" : state == 2 ? "WINDOW_STATE_HIDDEN" : state == 0 ? "WINDOW_STATE_SHOWING" : "WINDOW_STATE_UNKNOWN";
     }
 
     @SystemApi
+    /* loaded from: classes.dex */
     public static final class DisableInfo {
         private boolean mNavigateHome;
         private boolean mNotificationPeeking;
@@ -244,12 +237,11 @@ public class StatusBarManager {
         private boolean mStatusBarExpansion;
 
         public DisableInfo(int flags1, int flags2) {
-            boolean z = false;
             this.mStatusBarExpansion = (65536 & flags1) != 0;
             this.mNavigateHome = (2097152 & flags1) != 0;
             this.mNotificationPeeking = (262144 & flags1) != 0;
             this.mRecents = (16777216 & flags1) != 0;
-            this.mSearch = (33554432 & flags1) != 0 ? true : z;
+            this.mSearch = (33554432 & flags1) != 0;
         }
 
         public DisableInfo() {
@@ -302,7 +294,7 @@ public class StatusBarManager {
 
         @SystemApi
         public boolean areAllComponentsEnabled() {
-            return !this.mStatusBarExpansion && !this.mNavigateHome && !this.mNotificationPeeking && !this.mRecents && !this.mSearch;
+            return (this.mStatusBarExpansion || this.mNavigateHome || this.mNotificationPeeking || this.mRecents || this.mSearch) ? false : true;
         }
 
         public void setEnableAll() {
@@ -342,10 +334,7 @@ public class StatusBarManager {
         }
 
         public Pair<Integer, Integer> toFlags() {
-            int disable1 = 0;
-            if (this.mStatusBarExpansion) {
-                disable1 = 0 | 65536;
-            }
+            int disable1 = this.mStatusBarExpansion ? 0 | 65536 : 0;
             if (this.mNavigateHome) {
                 disable1 |= 2097152;
             }

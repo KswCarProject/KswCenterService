@@ -1,8 +1,8 @@
 package android.printservice;
 
-import android.content.pm.ParceledListSlice;
-import android.os.CancellationSignal;
-import android.os.RemoteException;
+import android.content.p002pm.ParceledListSlice;
+import android.p007os.CancellationSignal;
+import android.p007os.RemoteException;
 import android.print.PrinterId;
 import android.print.PrinterInfo;
 import android.util.ArrayMap;
@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/* loaded from: classes3.dex */
 public abstract class PrinterDiscoverySession {
     private static final String LOG_TAG = "PrinterDiscoverySession";
     private static int sIdCounter = 0;
@@ -40,20 +41,18 @@ public abstract class PrinterDiscoverySession {
         this.mId = i;
     }
 
-    /* access modifiers changed from: package-private */
-    public void setObserver(IPrintServiceClient observer) {
+    void setObserver(IPrintServiceClient observer) {
         this.mObserver = observer;
         if (!this.mPrinters.isEmpty()) {
             try {
                 this.mObserver.onPrintersAdded(new ParceledListSlice(getPrinters()));
             } catch (RemoteException re) {
-                Log.e(LOG_TAG, "Error sending added printers", re);
+                Log.m69e(LOG_TAG, "Error sending added printers", re);
             }
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public int getId() {
+    int getId() {
         return this.mId;
     }
 
@@ -68,7 +67,7 @@ public abstract class PrinterDiscoverySession {
     public final void addPrinters(List<PrinterInfo> printers) {
         PrintService.throwIfNotCalledOnMainThread();
         if (this.mIsDestroyed) {
-            Log.w(LOG_TAG, "Not adding printers - session destroyed.");
+            Log.m64w(LOG_TAG, "Not adding printers - session destroyed.");
             return;
         }
         int i = 0;
@@ -89,29 +88,31 @@ public abstract class PrinterDiscoverySession {
             if (addedPrinters != null) {
                 try {
                     this.mObserver.onPrintersAdded(new ParceledListSlice(addedPrinters));
+                    return;
                 } catch (RemoteException re) {
-                    Log.e(LOG_TAG, "Error sending added printers", re);
+                    Log.m69e(LOG_TAG, "Error sending added printers", re);
+                    return;
                 }
             }
-        } else {
-            if (this.mLastSentPrinters == null) {
-                this.mLastSentPrinters = new ArrayMap<>(this.mPrinters);
+            return;
+        }
+        if (this.mLastSentPrinters == null) {
+            this.mLastSentPrinters = new ArrayMap<>(this.mPrinters);
+        }
+        int addedPrinterCount2 = printers.size();
+        while (i < addedPrinterCount2) {
+            PrinterInfo addedPrinter2 = printers.get(i);
+            if (this.mPrinters.get(addedPrinter2.getId()) == null) {
+                this.mPrinters.put(addedPrinter2.getId(), addedPrinter2);
             }
-            int addedPrinterCount2 = printers.size();
-            while (i < addedPrinterCount2) {
-                PrinterInfo addedPrinter2 = printers.get(i);
-                if (this.mPrinters.get(addedPrinter2.getId()) == null) {
-                    this.mPrinters.put(addedPrinter2.getId(), addedPrinter2);
-                }
-                i++;
-            }
+            i++;
         }
     }
 
     public final void removePrinters(List<PrinterId> printerIds) {
         PrintService.throwIfNotCalledOnMainThread();
         if (this.mIsDestroyed) {
-            Log.w(LOG_TAG, "Not removing printers - session destroyed.");
+            Log.m64w(LOG_TAG, "Not removing printers - session destroyed.");
             return;
         }
         int i = 0;
@@ -125,22 +126,24 @@ public abstract class PrinterDiscoverySession {
                 }
                 i++;
             }
-            if (removedPrinterIds.isEmpty() == 0) {
+            if (!removedPrinterIds.isEmpty()) {
                 try {
                     this.mObserver.onPrintersRemoved(new ParceledListSlice(removedPrinterIds));
+                    return;
                 } catch (RemoteException re) {
-                    Log.e(LOG_TAG, "Error sending removed printers", re);
+                    Log.m69e(LOG_TAG, "Error sending removed printers", re);
+                    return;
                 }
             }
-        } else {
-            if (this.mLastSentPrinters == null) {
-                this.mLastSentPrinters = new ArrayMap<>(this.mPrinters);
-            }
-            int removedPrinterIdCount2 = printerIds.size();
-            while (i < removedPrinterIdCount2) {
-                this.mPrinters.remove(printerIds.get(i));
-                i++;
-            }
+            return;
+        }
+        if (this.mLastSentPrinters == null) {
+            this.mLastSentPrinters = new ArrayMap<>(this.mPrinters);
+        }
+        int removedPrinterIdCount2 = printerIds.size();
+        while (i < removedPrinterIdCount2) {
+            this.mPrinters.remove(printerIds.get(i));
+            i++;
         }
     }
 
@@ -163,7 +166,7 @@ public abstract class PrinterDiscoverySession {
             try {
                 this.mObserver.onPrintersAdded(new ParceledListSlice(addedPrinters));
             } catch (RemoteException re) {
-                Log.e(LOG_TAG, "Error sending added printers", re);
+                Log.m69e(LOG_TAG, "Error sending added printers", re);
             }
         }
         List<PrinterId> removedPrinterIds = null;
@@ -179,7 +182,7 @@ public abstract class PrinterDiscoverySession {
             try {
                 this.mObserver.onPrintersRemoved(new ParceledListSlice(removedPrinterIds));
             } catch (RemoteException re2) {
-                Log.e(LOG_TAG, "Error sending removed printers", re2);
+                Log.m69e(LOG_TAG, "Error sending removed printers", re2);
             }
         }
         this.mLastSentPrinters = null;
@@ -206,8 +209,7 @@ public abstract class PrinterDiscoverySession {
         return this.mIsDiscoveryStarted;
     }
 
-    /* access modifiers changed from: package-private */
-    public void startPrinterDiscovery(List<PrinterId> priorityList) {
+    void startPrinterDiscovery(List<PrinterId> priorityList) {
         if (!this.mIsDestroyed) {
             this.mIsDiscoveryStarted = true;
             sendOutOfDiscoveryPeriodPrinterChanges();
@@ -218,45 +220,40 @@ public abstract class PrinterDiscoverySession {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void stopPrinterDiscovery() {
+    void stopPrinterDiscovery() {
         if (!this.mIsDestroyed) {
             this.mIsDiscoveryStarted = false;
             onStopPrinterDiscovery();
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void validatePrinters(List<PrinterId> printerIds) {
+    void validatePrinters(List<PrinterId> printerIds) {
         if (!this.mIsDestroyed && this.mObserver != null) {
             onValidatePrinters(printerIds);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void startPrinterStateTracking(PrinterId printerId) {
+    void startPrinterStateTracking(PrinterId printerId) {
         if (!this.mIsDestroyed && this.mObserver != null && !this.mTrackedPrinters.contains(printerId)) {
             this.mTrackedPrinters.add(printerId);
             onStartPrinterStateTracking(printerId);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void requestCustomPrinterIcon(PrinterId printerId) {
+    void requestCustomPrinterIcon(PrinterId printerId) {
         if (!this.mIsDestroyed && this.mObserver != null) {
-            onRequestCustomPrinterIcon(printerId, new CancellationSignal(), new CustomPrinterIconCallback(printerId, this.mObserver));
+            CustomPrinterIconCallback callback = new CustomPrinterIconCallback(printerId, this.mObserver);
+            onRequestCustomPrinterIcon(printerId, new CancellationSignal(), callback);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void stopPrinterStateTracking(PrinterId printerId) {
+    void stopPrinterStateTracking(PrinterId printerId) {
         if (!this.mIsDestroyed && this.mObserver != null && this.mTrackedPrinters.remove(printerId)) {
             onStopPrinterStateTracking(printerId);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void destroy() {
+    void destroy() {
         if (!this.mIsDestroyed) {
             this.mIsDestroyed = true;
             this.mIsDiscoveryStarted = false;

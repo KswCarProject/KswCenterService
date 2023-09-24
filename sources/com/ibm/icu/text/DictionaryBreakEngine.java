@@ -3,20 +3,21 @@ package com.ibm.icu.text;
 import com.ibm.icu.impl.CharacterIteration;
 import java.text.CharacterIterator;
 
+/* loaded from: classes5.dex */
 abstract class DictionaryBreakEngine implements LanguageBreakEngine {
     UnicodeSet fSet = new UnicodeSet();
 
-    /* access modifiers changed from: package-private */
-    public abstract int divideUpDictionaryRange(CharacterIterator characterIterator, int i, int i2, DequeI dequeI);
+    abstract int divideUpDictionaryRange(CharacterIterator characterIterator, int i, int i2, DequeI dequeI);
 
+    /* loaded from: classes5.dex */
     static class PossibleWord {
         private static final int POSSIBLE_WORD_LIST_MAX = 20;
-        private int[] count = new int[1];
         private int current;
-        private int[] lengths = new int[20];
         private int mark;
-        private int offset = -1;
         private int prefix;
+        private int[] lengths = new int[20];
+        private int[] count = new int[1];
+        private int offset = -1;
 
         public int candidates(CharacterIterator fIter, DictionaryMatcher dict, int rangeEnd) {
             int start = fIter.getIndex();
@@ -41,15 +42,15 @@ abstract class DictionaryBreakEngine implements LanguageBreakEngine {
         }
 
         public boolean backUp(CharacterIterator fIter) {
-            if (this.current <= 0) {
-                return false;
+            if (this.current > 0) {
+                int i = this.offset;
+                int[] iArr = this.lengths;
+                int i2 = this.current - 1;
+                this.current = i2;
+                fIter.setIndex(i + iArr[i2]);
+                return true;
             }
-            int i = this.offset;
-            int[] iArr = this.lengths;
-            int i2 = this.current - 1;
-            this.current = i2;
-            fIter.setIndex(i + iArr[i2]);
-            return true;
+            return false;
         }
 
         public int longestPrefix() {
@@ -61,15 +62,12 @@ abstract class DictionaryBreakEngine implements LanguageBreakEngine {
         }
     }
 
+    /* loaded from: classes5.dex */
     static class DequeI implements Cloneable {
         static final /* synthetic */ boolean $assertionsDisabled = false;
         private int[] data = new int[50];
-        private int firstIdx = 4;
         private int lastIdx = 4;
-
-        static {
-            Class<DictionaryBreakEngine> cls = DictionaryBreakEngine.class;
-        }
+        private int firstIdx = 4;
 
         DequeI() {
         }
@@ -80,32 +78,28 @@ abstract class DictionaryBreakEngine implements LanguageBreakEngine {
             return result;
         }
 
-        /* access modifiers changed from: package-private */
-        public int size() {
+        int size() {
             return this.firstIdx - this.lastIdx;
         }
 
-        /* access modifiers changed from: package-private */
-        public boolean isEmpty() {
+        boolean isEmpty() {
             return size() == 0;
         }
 
         private void grow() {
-            int[] newData = new int[(this.data.length * 2)];
+            int[] newData = new int[this.data.length * 2];
             System.arraycopy(this.data, 0, newData, 0, this.data.length);
             this.data = newData;
         }
 
-        /* access modifiers changed from: package-private */
-        public void offer(int v) {
+        void offer(int v) {
             int[] iArr = this.data;
             int i = this.lastIdx - 1;
             this.lastIdx = i;
             iArr[i] = v;
         }
 
-        /* access modifiers changed from: package-private */
-        public void push(int v) {
+        void push(int v) {
             if (this.firstIdx >= this.data.length) {
                 grow();
             }
@@ -115,34 +109,29 @@ abstract class DictionaryBreakEngine implements LanguageBreakEngine {
             iArr[i] = v;
         }
 
-        /* access modifiers changed from: package-private */
-        public int pop() {
+        int pop() {
             int[] iArr = this.data;
             int i = this.firstIdx - 1;
             this.firstIdx = i;
             return iArr[i];
         }
 
-        /* access modifiers changed from: package-private */
-        public int peek() {
+        int peek() {
             return this.data[this.firstIdx - 1];
         }
 
-        /* access modifiers changed from: package-private */
-        public int peekLast() {
+        int peekLast() {
             return this.data[this.lastIdx];
         }
 
-        /* access modifiers changed from: package-private */
-        public int pollLast() {
+        int pollLast() {
             int[] iArr = this.data;
             int i = this.lastIdx;
             this.lastIdx = i + 1;
             return iArr[i];
         }
 
-        /* access modifiers changed from: package-private */
-        public boolean contains(int v) {
+        boolean contains(int v) {
             for (int i = this.lastIdx; i < this.firstIdx; i++) {
                 if (this.data[i] == v) {
                     return true;
@@ -151,44 +140,40 @@ abstract class DictionaryBreakEngine implements LanguageBreakEngine {
             return false;
         }
 
-        /* access modifiers changed from: package-private */
-        public int elementAt(int i) {
+        int elementAt(int i) {
             return this.data[this.lastIdx + i];
         }
 
-        /* access modifiers changed from: package-private */
-        public void removeAllElements() {
+        void removeAllElements() {
             this.firstIdx = 4;
             this.lastIdx = 4;
         }
     }
 
+    @Override // com.ibm.icu.text.LanguageBreakEngine
     public boolean handles(int c) {
         return this.fSet.contains(c);
     }
 
+    @Override // com.ibm.icu.text.LanguageBreakEngine
     public int findBreaks(CharacterIterator text, int startPos, int endPos, DequeI foundBreaks) {
         int current;
         int start = text.getIndex();
         int c = CharacterIteration.current32(text);
         while (true) {
-            int index = text.getIndex();
-            current = index;
-            if (index >= endPos || !this.fSet.contains(c)) {
-                int result = divideUpDictionaryRange(text, start, current, foundBreaks);
-                text.setIndex(current);
-            } else {
-                CharacterIteration.next32(text);
-                c = CharacterIteration.current32(text);
+            current = text.getIndex();
+            if (current >= endPos || !this.fSet.contains(c)) {
+                break;
             }
+            CharacterIteration.next32(text);
+            c = CharacterIteration.current32(text);
         }
-        int result2 = divideUpDictionaryRange(text, start, current, foundBreaks);
+        int result = divideUpDictionaryRange(text, start, current, foundBreaks);
         text.setIndex(current);
-        return result2;
+        return result;
     }
 
-    /* access modifiers changed from: package-private */
-    public void setCharacters(UnicodeSet set) {
+    void setCharacters(UnicodeSet set) {
         this.fSet = new UnicodeSet(set);
         this.fSet.compact();
     }

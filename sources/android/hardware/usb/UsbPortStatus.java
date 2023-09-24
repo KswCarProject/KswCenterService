@@ -1,14 +1,15 @@
 package android.hardware.usb;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.annotations.Immutable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @SystemApi
 @Immutable
+/* loaded from: classes.dex */
 public final class UsbPortStatus implements Parcelable {
     public static final int CONTAMINANT_DETECTION_DETECTED = 3;
     public static final int CONTAMINANT_DETECTION_DISABLED = 1;
@@ -19,11 +20,21 @@ public final class UsbPortStatus implements Parcelable {
     public static final int CONTAMINANT_PROTECTION_NONE = 0;
     public static final int CONTAMINANT_PROTECTION_SINK = 1;
     public static final int CONTAMINANT_PROTECTION_SOURCE = 2;
-    public static final Parcelable.Creator<UsbPortStatus> CREATOR = new Parcelable.Creator<UsbPortStatus>() {
+    public static final Parcelable.Creator<UsbPortStatus> CREATOR = new Parcelable.Creator<UsbPortStatus>() { // from class: android.hardware.usb.UsbPortStatus.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public UsbPortStatus createFromParcel(Parcel in) {
-            return new UsbPortStatus(in.readInt(), in.readInt(), in.readInt(), in.readInt(), in.readInt(), in.readInt());
+            int currentMode = in.readInt();
+            int currentPowerRole = in.readInt();
+            int currentDataRole = in.readInt();
+            int supportedRoleCombinations = in.readInt();
+            int contaminantProtectionStatus = in.readInt();
+            int contaminantDetectionStatus = in.readInt();
+            return new UsbPortStatus(currentMode, currentPowerRole, currentDataRole, supportedRoleCombinations, contaminantProtectionStatus, contaminantDetectionStatus);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public UsbPortStatus[] newArray(int size) {
             return new UsbPortStatus[size];
         }
@@ -48,22 +59,27 @@ public final class UsbPortStatus implements Parcelable {
     private final int mSupportedRoleCombinations;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     @interface ContaminantDetectionStatus {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     @interface ContaminantProtectionStatus {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     @interface UsbDataRole {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     @interface UsbPortMode {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     @interface UsbPowerRole {
     }
 
@@ -112,10 +128,12 @@ public final class UsbPortStatus implements Parcelable {
         return "UsbPortStatus{connected=" + isConnected() + ", currentMode=" + UsbPort.modeToString(this.mCurrentMode) + ", currentPowerRole=" + UsbPort.powerRoleToString(this.mCurrentPowerRole) + ", currentDataRole=" + UsbPort.dataRoleToString(this.mCurrentDataRole) + ", supportedRoleCombinations=" + UsbPort.roleCombinationsToString(this.mSupportedRoleCombinations) + ", contaminantDetectionStatus=" + getContaminantDetectionStatus() + ", contaminantProtectionStatus=" + getContaminantProtectionStatus() + "}";
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mCurrentMode);
         dest.writeInt(this.mCurrentPowerRole);

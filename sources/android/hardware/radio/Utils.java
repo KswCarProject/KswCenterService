@@ -1,8 +1,8 @@
 package android.hardware.radio;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.RemoteException;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -12,6 +12,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 
+/* loaded from: classes.dex */
 final class Utils {
     private static final String TAG = "BroadcastRadio.utils";
 
@@ -35,11 +36,14 @@ final class Utils {
         Map<String, String> map = new HashMap<>(size);
         while (true) {
             int size2 = size - 1;
-            if (size <= 0) {
+            if (size > 0) {
+                String key = in.readString();
+                String value = in.readString();
+                map.put(key, value);
+                size = size2;
+            } else {
                 return map;
             }
-            map.put(in.readString(), in.readString());
-            size = size2;
         }
     }
 
@@ -60,21 +64,25 @@ final class Utils {
         Map<String, Integer> map = new HashMap<>(size);
         while (true) {
             int size2 = size - 1;
-            if (size <= 0) {
+            if (size > 0) {
+                String key = in.readString();
+                int value = in.readInt();
+                map.put(key, Integer.valueOf(value));
+                size = size2;
+            } else {
                 return map;
             }
-            map.put(in.readString(), Integer.valueOf(in.readInt()));
-            size = size2;
         }
     }
 
-    static <T extends Parcelable> void writeSet(Parcel dest, Set<T> set) {
+    static <T extends Parcelable> void writeSet(final Parcel dest, Set<T> set) {
         if (set == null) {
             dest.writeInt(0);
             return;
         }
         dest.writeInt(set.size());
-        set.stream().forEach(new Consumer() {
+        set.stream().forEach(new Consumer() { // from class: android.hardware.radio.-$$Lambda$Utils$Cu3trYWUZE7O75pNHuKMUbHskAY
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
                 Parcel.this.writeTypedObject((Parcelable) obj, 0);
             }
@@ -83,24 +91,26 @@ final class Utils {
 
     static <T> Set<T> createSet(Parcel in, Parcelable.Creator<T> c) {
         int size = in.readInt();
-        Set<T> set = new HashSet<>(size);
+        HashSet hashSet = new HashSet(size);
         while (true) {
             int size2 = size - 1;
-            if (size <= 0) {
-                return set;
+            if (size > 0) {
+                hashSet.add(in.readTypedObject(c));
+                size = size2;
+            } else {
+                return hashSet;
             }
-            set.add(in.readTypedObject(c));
-            size = size2;
         }
     }
 
-    static void writeIntSet(Parcel dest, Set<Integer> set) {
+    static void writeIntSet(final Parcel dest, Set<Integer> set) {
         if (set == null) {
             dest.writeInt(0);
             return;
         }
         dest.writeInt(set.size());
-        set.stream().forEach(new Consumer() {
+        set.stream().forEach(new Consumer() { // from class: android.hardware.radio.-$$Lambda$Utils$CpgxAbBJVMfl2IUCmgGvKDeq9_U
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
                 Parcel.this.writeInt(((Integer) Objects.requireNonNull((Integer) obj)).intValue());
             }
@@ -112,11 +122,12 @@ final class Utils {
         Set<Integer> set = new HashSet<>(size);
         while (true) {
             int size2 = size - 1;
-            if (size <= 0) {
+            if (size > 0) {
+                set.add(Integer.valueOf(in.readInt()));
+                size = size2;
+            } else {
                 return set;
             }
-            set.add(Integer.valueOf(in.readInt()));
-            size = size2;
         }
     }
 

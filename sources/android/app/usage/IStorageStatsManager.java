@@ -1,11 +1,12 @@
 package android.app.usage;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes.dex */
 public interface IStorageStatsManager extends IInterface {
     long getCacheBytes(String str, String str2) throws RemoteException;
 
@@ -27,52 +28,65 @@ public interface IStorageStatsManager extends IInterface {
 
     StorageStats queryStatsForUser(String str, int i, String str2) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements IStorageStatsManager {
+        @Override // android.app.usage.IStorageStatsManager
         public boolean isQuotaSupported(String volumeUuid, String callingPackage) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.usage.IStorageStatsManager
         public boolean isReservedSupported(String volumeUuid, String callingPackage) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.usage.IStorageStatsManager
         public long getTotalBytes(String volumeUuid, String callingPackage) throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // android.app.usage.IStorageStatsManager
         public long getFreeBytes(String volumeUuid, String callingPackage) throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // android.app.usage.IStorageStatsManager
         public long getCacheBytes(String volumeUuid, String callingPackage) throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // android.app.usage.IStorageStatsManager
         public long getCacheQuotaBytes(String volumeUuid, int uid, String callingPackage) throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // android.app.usage.IStorageStatsManager
         public StorageStats queryStatsForPackage(String volumeUuid, String packageName, int userId, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.usage.IStorageStatsManager
         public StorageStats queryStatsForUid(String volumeUuid, int uid, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.usage.IStorageStatsManager
         public StorageStats queryStatsForUser(String volumeUuid, int userId, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.usage.IStorageStatsManager
         public ExternalStorageStats queryExternalStatsForUser(String volumeUuid, int userId, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements IStorageStatsManager {
         private static final String DESCRIPTOR = "android.app.usage.IStorageStatsManager";
         static final int TRANSACTION_getCacheBytes = 5;
@@ -95,12 +109,13 @@ public interface IStorageStatsManager extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IStorageStatsManager)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IStorageStatsManager)) {
+                return (IStorageStatsManager) iin;
             }
-            return (IStorageStatsManager) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -132,102 +147,130 @@ public interface IStorageStatsManager extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        boolean _result = isQuotaSupported(data.readString(), data.readString());
-                        reply.writeNoException();
-                        reply.writeInt(_result);
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        boolean _result2 = isReservedSupported(data.readString(), data.readString());
-                        reply.writeNoException();
-                        reply.writeInt(_result2);
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        long _result3 = getTotalBytes(data.readString(), data.readString());
-                        reply.writeNoException();
-                        reply.writeLong(_result3);
-                        return true;
-                    case 4:
-                        data.enforceInterface(DESCRIPTOR);
-                        long _result4 = getFreeBytes(data.readString(), data.readString());
-                        reply.writeNoException();
-                        reply.writeLong(_result4);
-                        return true;
-                    case 5:
-                        data.enforceInterface(DESCRIPTOR);
-                        long _result5 = getCacheBytes(data.readString(), data.readString());
-                        reply.writeNoException();
-                        reply.writeLong(_result5);
-                        return true;
-                    case 6:
-                        data.enforceInterface(DESCRIPTOR);
-                        long _result6 = getCacheQuotaBytes(data.readString(), data.readInt(), data.readString());
-                        reply.writeNoException();
-                        reply.writeLong(_result6);
-                        return true;
-                    case 7:
-                        data.enforceInterface(DESCRIPTOR);
-                        StorageStats _result7 = queryStatsForPackage(data.readString(), data.readString(), data.readInt(), data.readString());
-                        reply.writeNoException();
-                        if (_result7 != null) {
-                            reply.writeInt(1);
-                            _result7.writeToParcel(reply, 1);
-                        } else {
-                            reply.writeInt(0);
-                        }
-                        return true;
-                    case 8:
-                        data.enforceInterface(DESCRIPTOR);
-                        StorageStats _result8 = queryStatsForUid(data.readString(), data.readInt(), data.readString());
-                        reply.writeNoException();
-                        if (_result8 != null) {
-                            reply.writeInt(1);
-                            _result8.writeToParcel(reply, 1);
-                        } else {
-                            reply.writeInt(0);
-                        }
-                        return true;
-                    case 9:
-                        data.enforceInterface(DESCRIPTOR);
-                        StorageStats _result9 = queryStatsForUser(data.readString(), data.readInt(), data.readString());
-                        reply.writeNoException();
-                        if (_result9 != null) {
-                            reply.writeInt(1);
-                            _result9.writeToParcel(reply, 1);
-                        } else {
-                            reply.writeInt(0);
-                        }
-                        return true;
-                    case 10:
-                        data.enforceInterface(DESCRIPTOR);
-                        ExternalStorageStats _result10 = queryExternalStatsForUser(data.readString(), data.readInt(), data.readString());
-                        reply.writeNoException();
-                        if (_result10 != null) {
-                            reply.writeInt(1);
-                            _result10.writeToParcel(reply, 1);
-                        } else {
-                            reply.writeInt(0);
-                        }
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0 = data.readString();
+                    String _arg1 = data.readString();
+                    boolean isQuotaSupported = isQuotaSupported(_arg0, _arg1);
+                    reply.writeNoException();
+                    reply.writeInt(isQuotaSupported ? 1 : 0);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg02 = data.readString();
+                    String _arg12 = data.readString();
+                    boolean isReservedSupported = isReservedSupported(_arg02, _arg12);
+                    reply.writeNoException();
+                    reply.writeInt(isReservedSupported ? 1 : 0);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg03 = data.readString();
+                    String _arg13 = data.readString();
+                    long _result = getTotalBytes(_arg03, _arg13);
+                    reply.writeNoException();
+                    reply.writeLong(_result);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg04 = data.readString();
+                    String _arg14 = data.readString();
+                    long _result2 = getFreeBytes(_arg04, _arg14);
+                    reply.writeNoException();
+                    reply.writeLong(_result2);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg05 = data.readString();
+                    String _arg15 = data.readString();
+                    long _result3 = getCacheBytes(_arg05, _arg15);
+                    reply.writeNoException();
+                    reply.writeLong(_result3);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg06 = data.readString();
+                    int _arg16 = data.readInt();
+                    String _arg2 = data.readString();
+                    long _result4 = getCacheQuotaBytes(_arg06, _arg16, _arg2);
+                    reply.writeNoException();
+                    reply.writeLong(_result4);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg07 = data.readString();
+                    String _arg17 = data.readString();
+                    int _arg22 = data.readInt();
+                    String _arg3 = data.readString();
+                    StorageStats _result5 = queryStatsForPackage(_arg07, _arg17, _arg22, _arg3);
+                    reply.writeNoException();
+                    if (_result5 != null) {
+                        reply.writeInt(1);
+                        _result5.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg08 = data.readString();
+                    int _arg18 = data.readInt();
+                    String _arg23 = data.readString();
+                    StorageStats _result6 = queryStatsForUid(_arg08, _arg18, _arg23);
+                    reply.writeNoException();
+                    if (_result6 != null) {
+                        reply.writeInt(1);
+                        _result6.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg09 = data.readString();
+                    int _arg19 = data.readInt();
+                    String _arg24 = data.readString();
+                    StorageStats _result7 = queryStatsForUser(_arg09, _arg19, _arg24);
+                    reply.writeNoException();
+                    if (_result7 != null) {
+                        reply.writeInt(1);
+                        _result7.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg010 = data.readString();
+                    int _arg110 = data.readInt();
+                    String _arg25 = data.readString();
+                    ExternalStorageStats _result8 = queryExternalStatsForUser(_arg010, _arg110, _arg25);
+                    reply.writeNoException();
+                    if (_result8 != null) {
+                        reply.writeInt(1);
+                        _result8.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements IStorageStatsManager {
             public static IStorageStatsManager sDefaultImpl;
             private IBinder mRemote;
@@ -236,6 +279,7 @@ public interface IStorageStatsManager extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -244,6 +288,7 @@ public interface IStorageStatsManager extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.app.usage.IStorageStatsManager
             public boolean isQuotaSupported(String volumeUuid, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -251,24 +296,20 @@ public interface IStorageStatsManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(volumeUuid);
                     _data.writeString(callingPackage);
-                    boolean z = false;
-                    if (!this.mRemote.transact(1, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isQuotaSupported(volumeUuid, callingPackage);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.usage.IStorageStatsManager
             public boolean isReservedSupported(String volumeUuid, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -276,24 +317,20 @@ public interface IStorageStatsManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(volumeUuid);
                     _data.writeString(callingPackage);
-                    boolean z = false;
-                    if (!this.mRemote.transact(2, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isReservedSupported(volumeUuid, callingPackage);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.usage.IStorageStatsManager
             public long getTotalBytes(String volumeUuid, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -301,13 +338,12 @@ public interface IStorageStatsManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(volumeUuid);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(3, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getTotalBytes(volumeUuid, callingPackage);
                     }
                     _reply.readException();
                     long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -315,6 +351,7 @@ public interface IStorageStatsManager extends IInterface {
                 }
             }
 
+            @Override // android.app.usage.IStorageStatsManager
             public long getFreeBytes(String volumeUuid, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -322,13 +359,12 @@ public interface IStorageStatsManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(volumeUuid);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(4, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getFreeBytes(volumeUuid, callingPackage);
                     }
                     _reply.readException();
                     long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -336,6 +372,7 @@ public interface IStorageStatsManager extends IInterface {
                 }
             }
 
+            @Override // android.app.usage.IStorageStatsManager
             public long getCacheBytes(String volumeUuid, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -343,13 +380,12 @@ public interface IStorageStatsManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(volumeUuid);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(5, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCacheBytes(volumeUuid, callingPackage);
                     }
                     _reply.readException();
                     long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -357,6 +393,7 @@ public interface IStorageStatsManager extends IInterface {
                 }
             }
 
+            @Override // android.app.usage.IStorageStatsManager
             public long getCacheQuotaBytes(String volumeUuid, int uid, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -365,13 +402,12 @@ public interface IStorageStatsManager extends IInterface {
                     _data.writeString(volumeUuid);
                     _data.writeInt(uid);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(6, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCacheQuotaBytes(volumeUuid, uid, callingPackage);
                     }
                     _reply.readException();
                     long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -379,6 +415,7 @@ public interface IStorageStatsManager extends IInterface {
                 }
             }
 
+            @Override // android.app.usage.IStorageStatsManager
             public StorageStats queryStatsForPackage(String volumeUuid, String packageName, int userId, String callingPackage) throws RemoteException {
                 StorageStats _result;
                 Parcel _data = Parcel.obtain();
@@ -389,7 +426,8 @@ public interface IStorageStatsManager extends IInterface {
                     _data.writeString(packageName);
                     _data.writeInt(userId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(7, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().queryStatsForPackage(volumeUuid, packageName, userId, callingPackage);
                     }
                     _reply.readException();
@@ -398,16 +436,14 @@ public interface IStorageStatsManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    StorageStats _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.usage.IStorageStatsManager
             public StorageStats queryStatsForUid(String volumeUuid, int uid, String callingPackage) throws RemoteException {
                 StorageStats _result;
                 Parcel _data = Parcel.obtain();
@@ -417,7 +453,8 @@ public interface IStorageStatsManager extends IInterface {
                     _data.writeString(volumeUuid);
                     _data.writeInt(uid);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(8, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().queryStatsForUid(volumeUuid, uid, callingPackage);
                     }
                     _reply.readException();
@@ -426,16 +463,14 @@ public interface IStorageStatsManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    StorageStats _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.usage.IStorageStatsManager
             public StorageStats queryStatsForUser(String volumeUuid, int userId, String callingPackage) throws RemoteException {
                 StorageStats _result;
                 Parcel _data = Parcel.obtain();
@@ -445,7 +480,8 @@ public interface IStorageStatsManager extends IInterface {
                     _data.writeString(volumeUuid);
                     _data.writeInt(userId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(9, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(9, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().queryStatsForUser(volumeUuid, userId, callingPackage);
                     }
                     _reply.readException();
@@ -454,16 +490,14 @@ public interface IStorageStatsManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    StorageStats _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.usage.IStorageStatsManager
             public ExternalStorageStats queryExternalStatsForUser(String volumeUuid, int userId, String callingPackage) throws RemoteException {
                 ExternalStorageStats _result;
                 Parcel _data = Parcel.obtain();
@@ -473,7 +507,8 @@ public interface IStorageStatsManager extends IInterface {
                     _data.writeString(volumeUuid);
                     _data.writeInt(userId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(10, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(10, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().queryExternalStatsForUser(volumeUuid, userId, callingPackage);
                     }
                     _reply.readException();
@@ -482,10 +517,7 @@ public interface IStorageStatsManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    ExternalStorageStats _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -494,11 +526,11 @@ public interface IStorageStatsManager extends IInterface {
         }
 
         public static boolean setDefaultImpl(IStorageStatsManager impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IStorageStatsManager getDefaultImpl() {

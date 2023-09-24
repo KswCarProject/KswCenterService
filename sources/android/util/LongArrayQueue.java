@@ -5,6 +5,7 @@ import com.android.internal.util.GrowingArrayUtils;
 import java.util.NoSuchElementException;
 import libcore.util.EmptyArray;
 
+/* loaded from: classes4.dex */
 public class LongArrayQueue {
     private int mHead;
     private int mSize;
@@ -27,17 +28,17 @@ public class LongArrayQueue {
     }
 
     private void grow() {
-        if (this.mSize >= this.mValues.length) {
-            long[] newArray = ArrayUtils.newUnpaddedLongArray(GrowingArrayUtils.growSize(this.mSize));
-            int r = this.mValues.length - this.mHead;
-            System.arraycopy(this.mValues, this.mHead, newArray, 0, r);
-            System.arraycopy(this.mValues, 0, newArray, r, this.mHead);
-            this.mValues = newArray;
-            this.mHead = 0;
-            this.mTail = this.mSize;
-            return;
+        if (this.mSize < this.mValues.length) {
+            throw new IllegalStateException("Queue not full yet!");
         }
-        throw new IllegalStateException("Queue not full yet!");
+        int newSize = GrowingArrayUtils.growSize(this.mSize);
+        long[] newArray = ArrayUtils.newUnpaddedLongArray(newSize);
+        int r = this.mValues.length - this.mHead;
+        System.arraycopy(this.mValues, this.mHead, newArray, 0, r);
+        System.arraycopy(this.mValues, 0, newArray, r, this.mHead);
+        this.mValues = newArray;
+        this.mHead = 0;
+        this.mTail = this.mSize;
     }
 
     public int size() {
@@ -60,33 +61,35 @@ public class LongArrayQueue {
     }
 
     public long removeFirst() {
-        if (this.mSize != 0) {
-            long ret = this.mValues[this.mHead];
-            this.mHead = (this.mHead + 1) % this.mValues.length;
-            this.mSize--;
-            return ret;
+        if (this.mSize == 0) {
+            throw new NoSuchElementException("Queue is empty!");
         }
-        throw new NoSuchElementException("Queue is empty!");
+        long ret = this.mValues[this.mHead];
+        this.mHead = (this.mHead + 1) % this.mValues.length;
+        this.mSize--;
+        return ret;
     }
 
     public long get(int position) {
         if (position < 0 || position >= this.mSize) {
             throw new IndexOutOfBoundsException("Index " + position + " not valid for a queue of size " + this.mSize);
         }
-        return this.mValues[(this.mHead + position) % this.mValues.length];
+        int index = (this.mHead + position) % this.mValues.length;
+        return this.mValues[index];
     }
 
     public long peekFirst() {
-        if (this.mSize != 0) {
-            return this.mValues[this.mHead];
+        if (this.mSize == 0) {
+            throw new NoSuchElementException("Queue is empty!");
         }
-        throw new NoSuchElementException("Queue is empty!");
+        return this.mValues[this.mHead];
     }
 
     public long peekLast() {
-        if (this.mSize != 0) {
-            return this.mValues[(this.mTail == 0 ? this.mValues.length : this.mTail) - 1];
+        if (this.mSize == 0) {
+            throw new NoSuchElementException("Queue is empty!");
         }
-        throw new NoSuchElementException("Queue is empty!");
+        int index = (this.mTail == 0 ? this.mValues.length : this.mTail) - 1;
+        return this.mValues[index];
     }
 }

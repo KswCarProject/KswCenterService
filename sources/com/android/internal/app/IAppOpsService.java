@@ -2,15 +2,19 @@ package com.android.internal.app;
 
 import android.annotation.UnsupportedAppUsage;
 import android.app.AppOpsManager;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteCallback;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteCallback;
+import android.p007os.RemoteException;
+import com.android.internal.app.IAppOpsActiveCallback;
+import com.android.internal.app.IAppOpsCallback;
+import com.android.internal.app.IAppOpsNotedCallback;
 import java.util.List;
 
+/* loaded from: classes4.dex */
 public interface IAppOpsService extends IInterface {
     void addHistoricalOps(AppOpsManager.HistoricalOps historicalOps) throws RemoteException;
 
@@ -89,133 +93,172 @@ public interface IAppOpsService extends IInterface {
 
     void stopWatchingNoted(IAppOpsNotedCallback iAppOpsNotedCallback) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IAppOpsService {
+        @Override // com.android.internal.app.IAppOpsService
         public int checkOperation(int code, int uid, String packageName) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.app.IAppOpsService
         public int noteOperation(int code, int uid, String packageName) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.app.IAppOpsService
         public int startOperation(IBinder token, int code, int uid, String packageName, boolean startIfModeDefault) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.app.IAppOpsService
         public void finishOperation(IBinder token, int code, int uid, String packageName) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IAppOpsService
         public void startWatchingMode(int op, String packageName, IAppOpsCallback callback) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IAppOpsService
         public void stopWatchingMode(IAppOpsCallback callback) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IAppOpsService
         public IBinder getToken(IBinder clientToken) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.app.IAppOpsService
         public int permissionToOpCode(String permission) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.app.IAppOpsService
         public int checkAudioOperation(int code, int usage, int uid, String packageName) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.app.IAppOpsService
         public int noteProxyOperation(int code, int proxyUid, String proxyPackageName, int callingUid, String callingPackageName) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.app.IAppOpsService
         public int checkPackage(int uid, String packageName) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.app.IAppOpsService
         public List<AppOpsManager.PackageOps> getPackagesForOps(int[] ops) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.app.IAppOpsService
         public List<AppOpsManager.PackageOps> getOpsForPackage(int uid, String packageName, int[] ops) throws RemoteException {
             return null;
         }
 
-        public void getHistoricalOps(int uid, String packageName, List<String> list, long beginTimeMillis, long endTimeMillis, int flags, RemoteCallback callback) throws RemoteException {
+        @Override // com.android.internal.app.IAppOpsService
+        public void getHistoricalOps(int uid, String packageName, List<String> ops, long beginTimeMillis, long endTimeMillis, int flags, RemoteCallback callback) throws RemoteException {
         }
 
-        public void getHistoricalOpsFromDiskRaw(int uid, String packageName, List<String> list, long beginTimeMillis, long endTimeMillis, int flags, RemoteCallback callback) throws RemoteException {
+        @Override // com.android.internal.app.IAppOpsService
+        public void getHistoricalOpsFromDiskRaw(int uid, String packageName, List<String> ops, long beginTimeMillis, long endTimeMillis, int flags, RemoteCallback callback) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IAppOpsService
         public void offsetHistory(long duration) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IAppOpsService
         public void setHistoryParameters(int mode, long baseSnapshotInterval, int compressionStep) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IAppOpsService
         public void addHistoricalOps(AppOpsManager.HistoricalOps ops) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IAppOpsService
         public void resetHistoryParameters() throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IAppOpsService
         public void clearHistory() throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IAppOpsService
         public List<AppOpsManager.PackageOps> getUidOps(int uid, int[] ops) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.app.IAppOpsService
         public void setUidMode(int code, int uid, int mode) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IAppOpsService
         public void setMode(int code, int uid, String packageName, int mode) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IAppOpsService
         public void resetAllModes(int reqUserId, String reqPackageName) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IAppOpsService
         public void setAudioRestriction(int code, int usage, int uid, int mode, String[] exceptionPackages) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IAppOpsService
         public void setUserRestrictions(Bundle restrictions, IBinder token, int userHandle) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IAppOpsService
         public void setUserRestriction(int code, boolean restricted, IBinder token, int userHandle, String[] exceptionPackages) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IAppOpsService
         public void removeUser(int userHandle) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IAppOpsService
         public void startWatchingActive(int[] ops, IAppOpsActiveCallback callback) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IAppOpsService
         public void stopWatchingActive(IAppOpsActiveCallback callback) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IAppOpsService
         public boolean isOperationActive(int code, int uid, String packageName) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.app.IAppOpsService
         public void startWatchingModeWithFlags(int op, String packageName, int flags, IAppOpsCallback callback) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IAppOpsService
         public void startWatchingNoted(int[] ops, IAppOpsNotedCallback callback) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IAppOpsService
         public void stopWatchingNoted(IAppOpsNotedCallback callback) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IAppOpsService
         public int checkOperationRaw(int code, int uid, String packageName) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.app.IAppOpsService
         public void reloadNonHistoricalState() throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IAppOpsService {
         private static final String DESCRIPTOR = "com.android.internal.app.IAppOpsService";
         static final int TRANSACTION_addHistoricalOps = 18;
@@ -264,12 +307,13 @@ public interface IAppOpsService extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IAppOpsService)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IAppOpsService)) {
+                return (IAppOpsService) iin;
             }
-            return (IAppOpsService) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -353,461 +397,314 @@ public interface IAppOpsService extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v0, resolved type: android.app.AppOpsManager$HistoricalOps} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v17, resolved type: android.app.AppOpsManager$HistoricalOps} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v25, resolved type: android.app.AppOpsManager$HistoricalOps} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v40, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v38, resolved type: android.app.AppOpsManager$HistoricalOps} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v39, resolved type: android.app.AppOpsManager$HistoricalOps} */
-        /* JADX WARNING: type inference failed for: r1v28, types: [android.os.Bundle] */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r25, android.os.Parcel r26, android.os.Parcel r27, int r28) throws android.os.RemoteException {
-            /*
-                r24 = this;
-                r10 = r24
-                r11 = r25
-                r12 = r26
-                r13 = r27
-                java.lang.String r14 = "com.android.internal.app.IAppOpsService"
-                r0 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r15 = 1
-                if (r11 == r0) goto L_0x03ca
-                r0 = 0
-                r1 = 0
-                switch(r11) {
-                    case 1: goto L_0x03b0;
-                    case 2: goto L_0x0396;
-                    case 3: goto L_0x0369;
-                    case 4: goto L_0x034f;
-                    case 5: goto L_0x0335;
-                    case 6: goto L_0x0323;
-                    case 7: goto L_0x0311;
-                    case 8: goto L_0x02ff;
-                    case 9: goto L_0x02e1;
-                    case 10: goto L_0x02b7;
-                    case 11: goto L_0x02a1;
-                    case 12: goto L_0x028f;
-                    case 13: goto L_0x0275;
-                    case 14: goto L_0x0234;
-                    case 15: goto L_0x01f3;
-                    case 16: goto L_0x01e5;
-                    case 17: goto L_0x01cf;
-                    case 18: goto L_0x01b3;
-                    case 19: goto L_0x01a9;
-                    case 20: goto L_0x019f;
-                    case 21: goto L_0x0189;
-                    case 22: goto L_0x0173;
-                    case 23: goto L_0x0159;
-                    case 24: goto L_0x0147;
-                    case 25: goto L_0x0121;
-                    case 26: goto L_0x00fd;
-                    case 27: goto L_0x00d4;
-                    case 28: goto L_0x00c6;
-                    case 29: goto L_0x00b0;
-                    case 30: goto L_0x009e;
-                    case 31: goto L_0x0084;
-                    case 32: goto L_0x0066;
-                    case 33: goto L_0x0050;
-                    case 34: goto L_0x003e;
-                    case 35: goto L_0x0024;
-                    case 36: goto L_0x001a;
-                    default: goto L_0x0015;
-                }
-            L_0x0015:
-                boolean r0 = super.onTransact(r25, r26, r27, r28)
-                return r0
-            L_0x001a:
-                r12.enforceInterface(r14)
-                r24.reloadNonHistoricalState()
-                r27.writeNoException()
-                return r15
-            L_0x0024:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                int r1 = r26.readInt()
-                java.lang.String r2 = r26.readString()
-                int r3 = r10.checkOperationRaw(r0, r1, r2)
-                r27.writeNoException()
-                r13.writeInt(r3)
-                return r15
-            L_0x003e:
-                r12.enforceInterface(r14)
-                android.os.IBinder r0 = r26.readStrongBinder()
-                com.android.internal.app.IAppOpsNotedCallback r0 = com.android.internal.app.IAppOpsNotedCallback.Stub.asInterface(r0)
-                r10.stopWatchingNoted(r0)
-                r27.writeNoException()
-                return r15
-            L_0x0050:
-                r12.enforceInterface(r14)
-                int[] r0 = r26.createIntArray()
-                android.os.IBinder r1 = r26.readStrongBinder()
-                com.android.internal.app.IAppOpsNotedCallback r1 = com.android.internal.app.IAppOpsNotedCallback.Stub.asInterface(r1)
-                r10.startWatchingNoted(r0, r1)
-                r27.writeNoException()
-                return r15
-            L_0x0066:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                java.lang.String r1 = r26.readString()
-                int r2 = r26.readInt()
-                android.os.IBinder r3 = r26.readStrongBinder()
-                com.android.internal.app.IAppOpsCallback r3 = com.android.internal.app.IAppOpsCallback.Stub.asInterface(r3)
-                r10.startWatchingModeWithFlags(r0, r1, r2, r3)
-                r27.writeNoException()
-                return r15
-            L_0x0084:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                int r1 = r26.readInt()
-                java.lang.String r2 = r26.readString()
-                boolean r3 = r10.isOperationActive(r0, r1, r2)
-                r27.writeNoException()
-                r13.writeInt(r3)
-                return r15
-            L_0x009e:
-                r12.enforceInterface(r14)
-                android.os.IBinder r0 = r26.readStrongBinder()
-                com.android.internal.app.IAppOpsActiveCallback r0 = com.android.internal.app.IAppOpsActiveCallback.Stub.asInterface(r0)
-                r10.stopWatchingActive(r0)
-                r27.writeNoException()
-                return r15
-            L_0x00b0:
-                r12.enforceInterface(r14)
-                int[] r0 = r26.createIntArray()
-                android.os.IBinder r1 = r26.readStrongBinder()
-                com.android.internal.app.IAppOpsActiveCallback r1 = com.android.internal.app.IAppOpsActiveCallback.Stub.asInterface(r1)
-                r10.startWatchingActive(r0, r1)
-                r27.writeNoException()
-                return r15
-            L_0x00c6:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                r10.removeUser(r0)
-                r27.writeNoException()
-                return r15
-            L_0x00d4:
-                r12.enforceInterface(r14)
-                int r6 = r26.readInt()
-                int r1 = r26.readInt()
-                if (r1 == 0) goto L_0x00e3
-                r2 = r15
-                goto L_0x00e4
-            L_0x00e3:
-                r2 = r0
-            L_0x00e4:
-                android.os.IBinder r7 = r26.readStrongBinder()
-                int r8 = r26.readInt()
-                java.lang.String[] r9 = r26.createStringArray()
-                r0 = r24
-                r1 = r6
-                r3 = r7
-                r4 = r8
-                r5 = r9
-                r0.setUserRestriction(r1, r2, r3, r4, r5)
-                r27.writeNoException()
-                return r15
-            L_0x00fd:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                if (r0 == 0) goto L_0x0110
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r12)
-                r1 = r0
-                android.os.Bundle r1 = (android.os.Bundle) r1
-                goto L_0x0111
-            L_0x0110:
-            L_0x0111:
-                r0 = r1
-                android.os.IBinder r1 = r26.readStrongBinder()
-                int r2 = r26.readInt()
-                r10.setUserRestrictions(r0, r1, r2)
-                r27.writeNoException()
-                return r15
-            L_0x0121:
-                r12.enforceInterface(r14)
-                int r6 = r26.readInt()
-                int r7 = r26.readInt()
-                int r8 = r26.readInt()
-                int r9 = r26.readInt()
-                java.lang.String[] r16 = r26.createStringArray()
-                r0 = r24
-                r1 = r6
-                r2 = r7
-                r3 = r8
-                r4 = r9
-                r5 = r16
-                r0.setAudioRestriction(r1, r2, r3, r4, r5)
-                r27.writeNoException()
-                return r15
-            L_0x0147:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                java.lang.String r1 = r26.readString()
-                r10.resetAllModes(r0, r1)
-                r27.writeNoException()
-                return r15
-            L_0x0159:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                int r1 = r26.readInt()
-                java.lang.String r2 = r26.readString()
-                int r3 = r26.readInt()
-                r10.setMode(r0, r1, r2, r3)
-                r27.writeNoException()
-                return r15
-            L_0x0173:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                int r1 = r26.readInt()
-                int r2 = r26.readInt()
-                r10.setUidMode(r0, r1, r2)
-                r27.writeNoException()
-                return r15
-            L_0x0189:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                int[] r1 = r26.createIntArray()
-                java.util.List r2 = r10.getUidOps(r0, r1)
-                r27.writeNoException()
-                r13.writeTypedList(r2)
-                return r15
-            L_0x019f:
-                r12.enforceInterface(r14)
-                r24.clearHistory()
-                r27.writeNoException()
-                return r15
-            L_0x01a9:
-                r12.enforceInterface(r14)
-                r24.resetHistoryParameters()
-                r27.writeNoException()
-                return r15
-            L_0x01b3:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                if (r0 == 0) goto L_0x01c6
-                android.os.Parcelable$Creator<android.app.AppOpsManager$HistoricalOps> r0 = android.app.AppOpsManager.HistoricalOps.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r12)
-                r1 = r0
-                android.app.AppOpsManager$HistoricalOps r1 = (android.app.AppOpsManager.HistoricalOps) r1
-                goto L_0x01c7
-            L_0x01c6:
-            L_0x01c7:
-                r0 = r1
-                r10.addHistoricalOps(r0)
-                r27.writeNoException()
-                return r15
-            L_0x01cf:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                long r1 = r26.readLong()
-                int r3 = r26.readInt()
-                r10.setHistoryParameters(r0, r1, r3)
-                r27.writeNoException()
-                return r15
-            L_0x01e5:
-                r12.enforceInterface(r14)
-                long r0 = r26.readLong()
-                r10.offsetHistory(r0)
-                r27.writeNoException()
-                return r15
-            L_0x01f3:
-                r12.enforceInterface(r14)
-                int r16 = r26.readInt()
-                java.lang.String r17 = r26.readString()
-                java.util.ArrayList r18 = r26.createStringArrayList()
-                long r19 = r26.readLong()
-                long r21 = r26.readLong()
-                int r23 = r26.readInt()
-                int r0 = r26.readInt()
-                if (r0 == 0) goto L_0x021e
-                android.os.Parcelable$Creator<android.os.RemoteCallback> r0 = android.os.RemoteCallback.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r12)
-                android.os.RemoteCallback r0 = (android.os.RemoteCallback) r0
-                r9 = r0
-                goto L_0x021f
-            L_0x021e:
-                r9 = r1
-            L_0x021f:
-                r0 = r24
-                r1 = r16
-                r2 = r17
-                r3 = r18
-                r4 = r19
-                r6 = r21
-                r8 = r23
-                r0.getHistoricalOpsFromDiskRaw(r1, r2, r3, r4, r6, r8, r9)
-                r27.writeNoException()
-                return r15
-            L_0x0234:
-                r12.enforceInterface(r14)
-                int r16 = r26.readInt()
-                java.lang.String r17 = r26.readString()
-                java.util.ArrayList r18 = r26.createStringArrayList()
-                long r19 = r26.readLong()
-                long r21 = r26.readLong()
-                int r23 = r26.readInt()
-                int r0 = r26.readInt()
-                if (r0 == 0) goto L_0x025f
-                android.os.Parcelable$Creator<android.os.RemoteCallback> r0 = android.os.RemoteCallback.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r12)
-                android.os.RemoteCallback r0 = (android.os.RemoteCallback) r0
-                r9 = r0
-                goto L_0x0260
-            L_0x025f:
-                r9 = r1
-            L_0x0260:
-                r0 = r24
-                r1 = r16
-                r2 = r17
-                r3 = r18
-                r4 = r19
-                r6 = r21
-                r8 = r23
-                r0.getHistoricalOps(r1, r2, r3, r4, r6, r8, r9)
-                r27.writeNoException()
-                return r15
-            L_0x0275:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                java.lang.String r1 = r26.readString()
-                int[] r2 = r26.createIntArray()
-                java.util.List r3 = r10.getOpsForPackage(r0, r1, r2)
-                r27.writeNoException()
-                r13.writeTypedList(r3)
-                return r15
-            L_0x028f:
-                r12.enforceInterface(r14)
-                int[] r0 = r26.createIntArray()
-                java.util.List r1 = r10.getPackagesForOps(r0)
-                r27.writeNoException()
-                r13.writeTypedList(r1)
-                return r15
-            L_0x02a1:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                java.lang.String r1 = r26.readString()
-                int r2 = r10.checkPackage(r0, r1)
-                r27.writeNoException()
-                r13.writeInt(r2)
-                return r15
-            L_0x02b7:
-                r12.enforceInterface(r14)
-                int r6 = r26.readInt()
-                int r7 = r26.readInt()
-                java.lang.String r8 = r26.readString()
-                int r9 = r26.readInt()
-                java.lang.String r16 = r26.readString()
-                r0 = r24
-                r1 = r6
-                r2 = r7
-                r3 = r8
-                r4 = r9
-                r5 = r16
-                int r0 = r0.noteProxyOperation(r1, r2, r3, r4, r5)
-                r27.writeNoException()
-                r13.writeInt(r0)
-                return r15
-            L_0x02e1:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                int r1 = r26.readInt()
-                int r2 = r26.readInt()
-                java.lang.String r3 = r26.readString()
-                int r4 = r10.checkAudioOperation(r0, r1, r2, r3)
-                r27.writeNoException()
-                r13.writeInt(r4)
-                return r15
-            L_0x02ff:
-                r12.enforceInterface(r14)
-                java.lang.String r0 = r26.readString()
-                int r1 = r10.permissionToOpCode(r0)
-                r27.writeNoException()
-                r13.writeInt(r1)
-                return r15
-            L_0x0311:
-                r12.enforceInterface(r14)
-                android.os.IBinder r0 = r26.readStrongBinder()
-                android.os.IBinder r1 = r10.getToken(r0)
-                r27.writeNoException()
-                r13.writeStrongBinder(r1)
-                return r15
-            L_0x0323:
-                r12.enforceInterface(r14)
-                android.os.IBinder r0 = r26.readStrongBinder()
-                com.android.internal.app.IAppOpsCallback r0 = com.android.internal.app.IAppOpsCallback.Stub.asInterface(r0)
-                r10.stopWatchingMode(r0)
-                r27.writeNoException()
-                return r15
-            L_0x0335:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                java.lang.String r1 = r26.readString()
-                android.os.IBinder r2 = r26.readStrongBinder()
-                com.android.internal.app.IAppOpsCallback r2 = com.android.internal.app.IAppOpsCallback.Stub.asInterface(r2)
-                r10.startWatchingMode(r0, r1, r2)
-                r27.writeNoException()
-                return r15
-            L_0x034f:
-                r12.enforceInterface(r14)
-                android.os.IBinder r0 = r26.readStrongBinder()
-                int r1 = r26.readInt()
-                int r2 = r26.readInt()
-                java.lang.String r3 = r26.readString()
-                r10.finishOperation(r0, r1, r2, r3)
-                r27.writeNoException()
-                return r15
-            L_0x0369:
-                r12.enforceInterface(r14)
-                android.os.IBinder r6 = r26.readStrongBinder()
-                int r7 = r26.readInt()
-                int r8 = r26.readInt()
-                java.lang.String r9 = r26.readString()
-                int r1 = r26.readInt()
-                if (r1 == 0) goto L_0x0384
-                r5 = r15
-                goto L_0x0385
-            L_0x0384:
-                r5 = r0
-            L_0x0385:
-                r0 = r24
-                r1 = r6
-                r2 = r7
-                r3 = r8
-                r4 = r9
-                int r0 = r0.startOperation(r1, r2, r3, r4, r5)
-                r27.writeNoException()
-                r13.writeInt(r0)
-                return r15
-            L_0x0396:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                int r1 = r26.readInt()
-                java.lang.String r2 = r26.readString()
-                int r3 = r10.noteOperation(r0, r1, r2)
-                r27.writeNoException()
-                r13.writeInt(r3)
-                return r15
-            L_0x03b0:
-                r12.enforceInterface(r14)
-                int r0 = r26.readInt()
-                int r1 = r26.readInt()
-                java.lang.String r2 = r26.readString()
-                int r3 = r10.checkOperation(r0, r1, r2)
-                r27.writeNoException()
-                r13.writeInt(r3)
-                return r15
-            L_0x03ca:
-                r13.writeString(r14)
-                return r15
-            */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.internal.app.IAppOpsService.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0 = data.readInt();
+                    int _arg1 = data.readInt();
+                    String _arg2 = data.readString();
+                    int _result = checkOperation(_arg0, _arg1, _arg2);
+                    reply.writeNoException();
+                    reply.writeInt(_result);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    int _arg12 = data.readInt();
+                    String _arg22 = data.readString();
+                    int _result2 = noteOperation(_arg02, _arg12, _arg22);
+                    reply.writeNoException();
+                    reply.writeInt(_result2);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg03 = data.readStrongBinder();
+                    int _arg13 = data.readInt();
+                    int _arg23 = data.readInt();
+                    String _arg3 = data.readString();
+                    boolean _arg4 = data.readInt() != 0;
+                    int _result3 = startOperation(_arg03, _arg13, _arg23, _arg3, _arg4);
+                    reply.writeNoException();
+                    reply.writeInt(_result3);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg04 = data.readStrongBinder();
+                    int _arg14 = data.readInt();
+                    int _arg24 = data.readInt();
+                    String _arg32 = data.readString();
+                    finishOperation(_arg04, _arg14, _arg24, _arg32);
+                    reply.writeNoException();
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg05 = data.readInt();
+                    String _arg15 = data.readString();
+                    IAppOpsCallback _arg25 = IAppOpsCallback.Stub.asInterface(data.readStrongBinder());
+                    startWatchingMode(_arg05, _arg15, _arg25);
+                    reply.writeNoException();
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAppOpsCallback _arg06 = IAppOpsCallback.Stub.asInterface(data.readStrongBinder());
+                    stopWatchingMode(_arg06);
+                    reply.writeNoException();
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg07 = data.readStrongBinder();
+                    IBinder _result4 = getToken(_arg07);
+                    reply.writeNoException();
+                    reply.writeStrongBinder(_result4);
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg08 = data.readString();
+                    int _result5 = permissionToOpCode(_arg08);
+                    reply.writeNoException();
+                    reply.writeInt(_result5);
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg09 = data.readInt();
+                    int _arg16 = data.readInt();
+                    int _arg26 = data.readInt();
+                    String _arg33 = data.readString();
+                    int _result6 = checkAudioOperation(_arg09, _arg16, _arg26, _arg33);
+                    reply.writeNoException();
+                    reply.writeInt(_result6);
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg010 = data.readInt();
+                    int _arg17 = data.readInt();
+                    String _arg27 = data.readString();
+                    int _arg34 = data.readInt();
+                    String _arg42 = data.readString();
+                    int _result7 = noteProxyOperation(_arg010, _arg17, _arg27, _arg34, _arg42);
+                    reply.writeNoException();
+                    reply.writeInt(_result7);
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg011 = data.readInt();
+                    String _arg18 = data.readString();
+                    int _result8 = checkPackage(_arg011, _arg18);
+                    reply.writeNoException();
+                    reply.writeInt(_result8);
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    int[] _arg012 = data.createIntArray();
+                    List<AppOpsManager.PackageOps> _result9 = getPackagesForOps(_arg012);
+                    reply.writeNoException();
+                    reply.writeTypedList(_result9);
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg013 = data.readInt();
+                    String _arg19 = data.readString();
+                    int[] _arg28 = data.createIntArray();
+                    List<AppOpsManager.PackageOps> _result10 = getOpsForPackage(_arg013, _arg19, _arg28);
+                    reply.writeNoException();
+                    reply.writeTypedList(_result10);
+                    return true;
+                case 14:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg014 = data.readInt();
+                    String _arg110 = data.readString();
+                    List<String> _arg29 = data.createStringArrayList();
+                    long _arg35 = data.readLong();
+                    long _arg43 = data.readLong();
+                    int _arg5 = data.readInt();
+                    RemoteCallback _arg6 = data.readInt() != 0 ? RemoteCallback.CREATOR.createFromParcel(data) : null;
+                    getHistoricalOps(_arg014, _arg110, _arg29, _arg35, _arg43, _arg5, _arg6);
+                    reply.writeNoException();
+                    return true;
+                case 15:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg015 = data.readInt();
+                    String _arg111 = data.readString();
+                    List<String> _arg210 = data.createStringArrayList();
+                    long _arg36 = data.readLong();
+                    long _arg44 = data.readLong();
+                    int _arg52 = data.readInt();
+                    RemoteCallback _arg62 = data.readInt() != 0 ? RemoteCallback.CREATOR.createFromParcel(data) : null;
+                    getHistoricalOpsFromDiskRaw(_arg015, _arg111, _arg210, _arg36, _arg44, _arg52, _arg62);
+                    reply.writeNoException();
+                    return true;
+                case 16:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _arg016 = data.readLong();
+                    offsetHistory(_arg016);
+                    reply.writeNoException();
+                    return true;
+                case 17:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg017 = data.readInt();
+                    long _arg112 = data.readLong();
+                    int _arg211 = data.readInt();
+                    setHistoryParameters(_arg017, _arg112, _arg211);
+                    reply.writeNoException();
+                    return true;
+                case 18:
+                    data.enforceInterface(DESCRIPTOR);
+                    AppOpsManager.HistoricalOps _arg018 = data.readInt() != 0 ? AppOpsManager.HistoricalOps.CREATOR.createFromParcel(data) : null;
+                    addHistoricalOps(_arg018);
+                    reply.writeNoException();
+                    return true;
+                case 19:
+                    data.enforceInterface(DESCRIPTOR);
+                    resetHistoryParameters();
+                    reply.writeNoException();
+                    return true;
+                case 20:
+                    data.enforceInterface(DESCRIPTOR);
+                    clearHistory();
+                    reply.writeNoException();
+                    return true;
+                case 21:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg019 = data.readInt();
+                    int[] _arg113 = data.createIntArray();
+                    List<AppOpsManager.PackageOps> _result11 = getUidOps(_arg019, _arg113);
+                    reply.writeNoException();
+                    reply.writeTypedList(_result11);
+                    return true;
+                case 22:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg020 = data.readInt();
+                    int _arg114 = data.readInt();
+                    int _arg212 = data.readInt();
+                    setUidMode(_arg020, _arg114, _arg212);
+                    reply.writeNoException();
+                    return true;
+                case 23:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg021 = data.readInt();
+                    int _arg115 = data.readInt();
+                    String _arg213 = data.readString();
+                    int _arg37 = data.readInt();
+                    setMode(_arg021, _arg115, _arg213, _arg37);
+                    reply.writeNoException();
+                    return true;
+                case 24:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg022 = data.readInt();
+                    String _arg116 = data.readString();
+                    resetAllModes(_arg022, _arg116);
+                    reply.writeNoException();
+                    return true;
+                case 25:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg023 = data.readInt();
+                    int _arg117 = data.readInt();
+                    int _arg214 = data.readInt();
+                    int _arg38 = data.readInt();
+                    String[] _arg45 = data.createStringArray();
+                    setAudioRestriction(_arg023, _arg117, _arg214, _arg38, _arg45);
+                    reply.writeNoException();
+                    return true;
+                case 26:
+                    data.enforceInterface(DESCRIPTOR);
+                    Bundle _arg024 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    Bundle _arg025 = _arg024;
+                    IBinder _arg118 = data.readStrongBinder();
+                    int _arg215 = data.readInt();
+                    setUserRestrictions(_arg025, _arg118, _arg215);
+                    reply.writeNoException();
+                    return true;
+                case 27:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg026 = data.readInt();
+                    boolean _arg119 = data.readInt() != 0;
+                    IBinder _arg216 = data.readStrongBinder();
+                    int _arg39 = data.readInt();
+                    String[] _arg46 = data.createStringArray();
+                    setUserRestriction(_arg026, _arg119, _arg216, _arg39, _arg46);
+                    reply.writeNoException();
+                    return true;
+                case 28:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg027 = data.readInt();
+                    removeUser(_arg027);
+                    reply.writeNoException();
+                    return true;
+                case 29:
+                    data.enforceInterface(DESCRIPTOR);
+                    int[] _arg028 = data.createIntArray();
+                    IAppOpsActiveCallback _arg120 = IAppOpsActiveCallback.Stub.asInterface(data.readStrongBinder());
+                    startWatchingActive(_arg028, _arg120);
+                    reply.writeNoException();
+                    return true;
+                case 30:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAppOpsActiveCallback _arg029 = IAppOpsActiveCallback.Stub.asInterface(data.readStrongBinder());
+                    stopWatchingActive(_arg029);
+                    reply.writeNoException();
+                    return true;
+                case 31:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg030 = data.readInt();
+                    int _arg121 = data.readInt();
+                    String _arg217 = data.readString();
+                    boolean isOperationActive = isOperationActive(_arg030, _arg121, _arg217);
+                    reply.writeNoException();
+                    reply.writeInt(isOperationActive ? 1 : 0);
+                    return true;
+                case 32:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg031 = data.readInt();
+                    String _arg122 = data.readString();
+                    int _arg218 = data.readInt();
+                    IAppOpsCallback _arg310 = IAppOpsCallback.Stub.asInterface(data.readStrongBinder());
+                    startWatchingModeWithFlags(_arg031, _arg122, _arg218, _arg310);
+                    reply.writeNoException();
+                    return true;
+                case 33:
+                    data.enforceInterface(DESCRIPTOR);
+                    int[] _arg032 = data.createIntArray();
+                    IAppOpsNotedCallback _arg123 = IAppOpsNotedCallback.Stub.asInterface(data.readStrongBinder());
+                    startWatchingNoted(_arg032, _arg123);
+                    reply.writeNoException();
+                    return true;
+                case 34:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAppOpsNotedCallback _arg033 = IAppOpsNotedCallback.Stub.asInterface(data.readStrongBinder());
+                    stopWatchingNoted(_arg033);
+                    reply.writeNoException();
+                    return true;
+                case 35:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg034 = data.readInt();
+                    int _arg124 = data.readInt();
+                    String _arg219 = data.readString();
+                    int _result12 = checkOperationRaw(_arg034, _arg124, _arg219);
+                    reply.writeNoException();
+                    reply.writeInt(_result12);
+                    return true;
+                case 36:
+                    data.enforceInterface(DESCRIPTOR);
+                    reloadNonHistoricalState();
+                    reply.writeNoException();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IAppOpsService {
             public static IAppOpsService sDefaultImpl;
             private IBinder mRemote;
@@ -816,6 +713,7 @@ public interface IAppOpsService extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -824,6 +722,7 @@ public interface IAppOpsService extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // com.android.internal.app.IAppOpsService
             public int checkOperation(int code, int uid, String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -832,13 +731,12 @@ public interface IAppOpsService extends IInterface {
                     _data.writeInt(code);
                     _data.writeInt(uid);
                     _data.writeString(packageName);
-                    if (!this.mRemote.transact(1, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().checkOperation(code, uid, packageName);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -846,6 +744,7 @@ public interface IAppOpsService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.app.IAppOpsService
             public int noteOperation(int code, int uid, String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -854,13 +753,12 @@ public interface IAppOpsService extends IInterface {
                     _data.writeInt(code);
                     _data.writeInt(uid);
                     _data.writeString(packageName);
-                    if (!this.mRemote.transact(2, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().noteOperation(code, uid, packageName);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -868,6 +766,7 @@ public interface IAppOpsService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.app.IAppOpsService
             public int startOperation(IBinder token, int code, int uid, String packageName, boolean startIfModeDefault) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -877,14 +776,13 @@ public interface IAppOpsService extends IInterface {
                     _data.writeInt(code);
                     _data.writeInt(uid);
                     _data.writeString(packageName);
-                    _data.writeInt(startIfModeDefault);
-                    if (!this.mRemote.transact(3, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(startIfModeDefault ? 1 : 0);
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().startOperation(token, code, uid, packageName, startIfModeDefault);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -892,6 +790,7 @@ public interface IAppOpsService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.app.IAppOpsService
             public void finishOperation(IBinder token, int code, int uid, String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -901,19 +800,19 @@ public interface IAppOpsService extends IInterface {
                     _data.writeInt(code);
                     _data.writeInt(uid);
                     _data.writeString(packageName);
-                    if (this.mRemote.transact(4, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().finishOperation(token, code, uid, packageName);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().finishOperation(token, code, uid, packageName);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IAppOpsService
             public void startWatchingMode(int op, String packageName, IAppOpsCallback callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -922,51 +821,50 @@ public interface IAppOpsService extends IInterface {
                     _data.writeInt(op);
                     _data.writeString(packageName);
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                    if (this.mRemote.transact(5, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().startWatchingMode(op, packageName, callback);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().startWatchingMode(op, packageName, callback);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IAppOpsService
             public void stopWatchingMode(IAppOpsCallback callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                    if (this.mRemote.transact(6, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().stopWatchingMode(callback);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().stopWatchingMode(callback);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IAppOpsService
             public IBinder getToken(IBinder clientToken) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(clientToken);
-                    if (!this.mRemote.transact(7, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getToken(clientToken);
                     }
                     _reply.readException();
                     IBinder _result = _reply.readStrongBinder();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -974,19 +872,19 @@ public interface IAppOpsService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.app.IAppOpsService
             public int permissionToOpCode(String permission) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(permission);
-                    if (!this.mRemote.transact(8, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().permissionToOpCode(permission);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -994,6 +892,7 @@ public interface IAppOpsService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.app.IAppOpsService
             public int checkAudioOperation(int code, int usage, int uid, String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1003,13 +902,12 @@ public interface IAppOpsService extends IInterface {
                     _data.writeInt(usage);
                     _data.writeInt(uid);
                     _data.writeString(packageName);
-                    if (!this.mRemote.transact(9, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(9, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().checkAudioOperation(code, usage, uid, packageName);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1017,6 +915,7 @@ public interface IAppOpsService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.app.IAppOpsService
             public int noteProxyOperation(int code, int proxyUid, String proxyPackageName, int callingUid, String callingPackageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1027,13 +926,12 @@ public interface IAppOpsService extends IInterface {
                     _data.writeString(proxyPackageName);
                     _data.writeInt(callingUid);
                     _data.writeString(callingPackageName);
-                    if (!this.mRemote.transact(10, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(10, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().noteProxyOperation(code, proxyUid, proxyPackageName, callingUid, callingPackageName);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1041,6 +939,7 @@ public interface IAppOpsService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.app.IAppOpsService
             public int checkPackage(int uid, String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1048,13 +947,12 @@ public interface IAppOpsService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(uid);
                     _data.writeString(packageName);
-                    if (!this.mRemote.transact(11, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(11, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().checkPackage(uid, packageName);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1062,19 +960,19 @@ public interface IAppOpsService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.app.IAppOpsService
             public List<AppOpsManager.PackageOps> getPackagesForOps(int[] ops) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeIntArray(ops);
-                    if (!this.mRemote.transact(12, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(12, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPackagesForOps(ops);
                     }
                     _reply.readException();
                     List<AppOpsManager.PackageOps> _result = _reply.createTypedArrayList(AppOpsManager.PackageOps.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1082,6 +980,7 @@ public interface IAppOpsService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.app.IAppOpsService
             public List<AppOpsManager.PackageOps> getOpsForPackage(int uid, String packageName, int[] ops) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1090,13 +989,12 @@ public interface IAppOpsService extends IInterface {
                     _data.writeInt(uid);
                     _data.writeString(packageName);
                     _data.writeIntArray(ops);
-                    if (!this.mRemote.transact(13, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(13, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getOpsForPackage(uid, packageName, ops);
                     }
                     _reply.readException();
                     List<AppOpsManager.PackageOps> _result = _reply.createTypedArrayList(AppOpsManager.PackageOps.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1104,129 +1002,120 @@ public interface IAppOpsService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.app.IAppOpsService
             public void getHistoricalOps(int uid, String packageName, List<String> ops, long beginTimeMillis, long endTimeMillis, int flags, RemoteCallback callback) throws RemoteException {
-                RemoteCallback remoteCallback = callback;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    try {
-                        _data.writeInt(uid);
-                        try {
-                            _data.writeString(packageName);
-                            _data.writeStringList(ops);
-                            _data.writeLong(beginTimeMillis);
-                            _data.writeLong(endTimeMillis);
-                            _data.writeInt(flags);
-                            if (remoteCallback != null) {
-                                _data.writeInt(1);
-                                remoteCallback.writeToParcel(_data, 0);
-                            } else {
-                                _data.writeInt(0);
-                            }
-                            if (this.mRemote.transact(14, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                _reply.readException();
-                                _reply.recycle();
-                                _data.recycle();
-                                return;
-                            }
-                            Stub.getDefaultImpl().getHistoricalOps(uid, packageName, ops, beginTimeMillis, endTimeMillis, flags, callback);
-                            _reply.recycle();
-                            _data.recycle();
-                        } catch (Throwable th) {
-                            th = th;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                    } catch (Throwable th2) {
-                        th = th2;
-                        String str = packageName;
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeInt(uid);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeString(packageName);
+                    _data.writeStringList(ops);
+                    _data.writeLong(beginTimeMillis);
+                    _data.writeLong(endTimeMillis);
+                    _data.writeInt(flags);
+                    if (callback != null) {
+                        _data.writeInt(1);
+                        callback.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
+                    }
+                    boolean _status = this.mRemote.transact(14, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().getHistoricalOps(uid, packageName, ops, beginTimeMillis, endTimeMillis, flags, callback);
                         _reply.recycle();
                         _data.recycle();
-                        throw th;
+                        return;
                     }
+                    _reply.readException();
+                    _reply.recycle();
+                    _data.recycle();
                 } catch (Throwable th3) {
                     th = th3;
-                    int i = uid;
-                    String str2 = packageName;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // com.android.internal.app.IAppOpsService
             public void getHistoricalOpsFromDiskRaw(int uid, String packageName, List<String> ops, long beginTimeMillis, long endTimeMillis, int flags, RemoteCallback callback) throws RemoteException {
-                RemoteCallback remoteCallback = callback;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    try {
-                        _data.writeInt(uid);
-                        try {
-                            _data.writeString(packageName);
-                            _data.writeStringList(ops);
-                            _data.writeLong(beginTimeMillis);
-                            _data.writeLong(endTimeMillis);
-                            _data.writeInt(flags);
-                            if (remoteCallback != null) {
-                                _data.writeInt(1);
-                                remoteCallback.writeToParcel(_data, 0);
-                            } else {
-                                _data.writeInt(0);
-                            }
-                            if (this.mRemote.transact(15, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                _reply.readException();
-                                _reply.recycle();
-                                _data.recycle();
-                                return;
-                            }
-                            Stub.getDefaultImpl().getHistoricalOpsFromDiskRaw(uid, packageName, ops, beginTimeMillis, endTimeMillis, flags, callback);
-                            _reply.recycle();
-                            _data.recycle();
-                        } catch (Throwable th) {
-                            th = th;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                    } catch (Throwable th2) {
-                        th = th2;
-                        String str = packageName;
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeInt(uid);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeString(packageName);
+                    _data.writeStringList(ops);
+                    _data.writeLong(beginTimeMillis);
+                    _data.writeLong(endTimeMillis);
+                    _data.writeInt(flags);
+                    if (callback != null) {
+                        _data.writeInt(1);
+                        callback.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
+                    }
+                    boolean _status = this.mRemote.transact(15, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().getHistoricalOpsFromDiskRaw(uid, packageName, ops, beginTimeMillis, endTimeMillis, flags, callback);
                         _reply.recycle();
                         _data.recycle();
-                        throw th;
+                        return;
                     }
+                    _reply.readException();
+                    _reply.recycle();
+                    _data.recycle();
                 } catch (Throwable th3) {
                     th = th3;
-                    int i = uid;
-                    String str2 = packageName;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // com.android.internal.app.IAppOpsService
             public void offsetHistory(long duration) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeLong(duration);
-                    if (this.mRemote.transact(16, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(16, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().offsetHistory(duration);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().offsetHistory(duration);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IAppOpsService
             public void setHistoryParameters(int mode, long baseSnapshotInterval, int compressionStep) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1235,19 +1124,19 @@ public interface IAppOpsService extends IInterface {
                     _data.writeInt(mode);
                     _data.writeLong(baseSnapshotInterval);
                     _data.writeInt(compressionStep);
-                    if (this.mRemote.transact(17, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(17, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setHistoryParameters(mode, baseSnapshotInterval, compressionStep);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setHistoryParameters(mode, baseSnapshotInterval, compressionStep);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IAppOpsService
             public void addHistoricalOps(AppOpsManager.HistoricalOps ops) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1259,55 +1148,55 @@ public interface IAppOpsService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(18, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(18, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().addHistoricalOps(ops);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().addHistoricalOps(ops);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IAppOpsService
             public void resetHistoryParameters() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(19, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(19, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().resetHistoryParameters();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().resetHistoryParameters();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IAppOpsService
             public void clearHistory() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(20, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(20, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().clearHistory();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().clearHistory();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IAppOpsService
             public List<AppOpsManager.PackageOps> getUidOps(int uid, int[] ops) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1315,13 +1204,12 @@ public interface IAppOpsService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(uid);
                     _data.writeIntArray(ops);
-                    if (!this.mRemote.transact(21, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(21, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getUidOps(uid, ops);
                     }
                     _reply.readException();
                     List<AppOpsManager.PackageOps> _result = _reply.createTypedArrayList(AppOpsManager.PackageOps.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1329,6 +1217,7 @@ public interface IAppOpsService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.app.IAppOpsService
             public void setUidMode(int code, int uid, int mode) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1337,19 +1226,19 @@ public interface IAppOpsService extends IInterface {
                     _data.writeInt(code);
                     _data.writeInt(uid);
                     _data.writeInt(mode);
-                    if (this.mRemote.transact(22, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(22, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setUidMode(code, uid, mode);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setUidMode(code, uid, mode);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IAppOpsService
             public void setMode(int code, int uid, String packageName, int mode) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1359,19 +1248,19 @@ public interface IAppOpsService extends IInterface {
                     _data.writeInt(uid);
                     _data.writeString(packageName);
                     _data.writeInt(mode);
-                    if (this.mRemote.transact(23, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(23, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setMode(code, uid, packageName, mode);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setMode(code, uid, packageName, mode);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IAppOpsService
             public void resetAllModes(int reqUserId, String reqPackageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1379,19 +1268,19 @@ public interface IAppOpsService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(reqUserId);
                     _data.writeString(reqPackageName);
-                    if (this.mRemote.transact(24, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(24, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().resetAllModes(reqUserId, reqPackageName);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().resetAllModes(reqUserId, reqPackageName);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IAppOpsService
             public void setAudioRestriction(int code, int usage, int uid, int mode, String[] exceptionPackages) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1402,19 +1291,19 @@ public interface IAppOpsService extends IInterface {
                     _data.writeInt(uid);
                     _data.writeInt(mode);
                     _data.writeStringArray(exceptionPackages);
-                    if (this.mRemote.transact(25, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(25, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setAudioRestriction(code, usage, uid, mode, exceptionPackages);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setAudioRestriction(code, usage, uid, mode, exceptionPackages);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IAppOpsService
             public void setUserRestrictions(Bundle restrictions, IBinder token, int userHandle) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1428,61 +1317,61 @@ public interface IAppOpsService extends IInterface {
                     }
                     _data.writeStrongBinder(token);
                     _data.writeInt(userHandle);
-                    if (this.mRemote.transact(26, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(26, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setUserRestrictions(restrictions, token, userHandle);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setUserRestrictions(restrictions, token, userHandle);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IAppOpsService
             public void setUserRestriction(int code, boolean restricted, IBinder token, int userHandle, String[] exceptionPackages) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(code);
-                    _data.writeInt(restricted);
+                    _data.writeInt(restricted ? 1 : 0);
                     _data.writeStrongBinder(token);
                     _data.writeInt(userHandle);
                     _data.writeStringArray(exceptionPackages);
-                    if (this.mRemote.transact(27, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(27, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setUserRestriction(code, restricted, token, userHandle, exceptionPackages);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setUserRestriction(code, restricted, token, userHandle, exceptionPackages);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IAppOpsService
             public void removeUser(int userHandle) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userHandle);
-                    if (this.mRemote.transact(28, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(28, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().removeUser(userHandle);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().removeUser(userHandle);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IAppOpsService
             public void startWatchingActive(int[] ops, IAppOpsActiveCallback callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1490,38 +1379,38 @@ public interface IAppOpsService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeIntArray(ops);
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                    if (this.mRemote.transact(29, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(29, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().startWatchingActive(ops, callback);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().startWatchingActive(ops, callback);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IAppOpsService
             public void stopWatchingActive(IAppOpsActiveCallback callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                    if (this.mRemote.transact(30, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(30, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().stopWatchingActive(callback);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().stopWatchingActive(callback);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IAppOpsService
             public boolean isOperationActive(int code, int uid, String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1530,24 +1419,20 @@ public interface IAppOpsService extends IInterface {
                     _data.writeInt(code);
                     _data.writeInt(uid);
                     _data.writeString(packageName);
-                    boolean z = false;
-                    if (!this.mRemote.transact(31, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(31, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isOperationActive(code, uid, packageName);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IAppOpsService
             public void startWatchingModeWithFlags(int op, String packageName, int flags, IAppOpsCallback callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1557,19 +1442,19 @@ public interface IAppOpsService extends IInterface {
                     _data.writeString(packageName);
                     _data.writeInt(flags);
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                    if (this.mRemote.transact(32, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(32, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().startWatchingModeWithFlags(op, packageName, flags, callback);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().startWatchingModeWithFlags(op, packageName, flags, callback);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IAppOpsService
             public void startWatchingNoted(int[] ops, IAppOpsNotedCallback callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1577,38 +1462,38 @@ public interface IAppOpsService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeIntArray(ops);
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                    if (this.mRemote.transact(33, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(33, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().startWatchingNoted(ops, callback);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().startWatchingNoted(ops, callback);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IAppOpsService
             public void stopWatchingNoted(IAppOpsNotedCallback callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                    if (this.mRemote.transact(34, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(34, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().stopWatchingNoted(callback);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().stopWatchingNoted(callback);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IAppOpsService
             public int checkOperationRaw(int code, int uid, String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1617,13 +1502,12 @@ public interface IAppOpsService extends IInterface {
                     _data.writeInt(code);
                     _data.writeInt(uid);
                     _data.writeString(packageName);
-                    if (!this.mRemote.transact(35, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(35, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().checkOperationRaw(code, uid, packageName);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1631,18 +1515,18 @@ public interface IAppOpsService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.app.IAppOpsService
             public void reloadNonHistoricalState() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(36, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(36, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().reloadNonHistoricalState();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().reloadNonHistoricalState();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -1651,11 +1535,11 @@ public interface IAppOpsService extends IInterface {
         }
 
         public static boolean setDefaultImpl(IAppOpsService impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IAppOpsService getDefaultImpl() {

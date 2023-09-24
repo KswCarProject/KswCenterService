@@ -1,11 +1,14 @@
 package android.net.lowpan;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.Objects;
 
+/* loaded from: classes3.dex */
 public class LowpanProvision implements Parcelable {
-    public static final Parcelable.Creator<LowpanProvision> CREATOR = new Parcelable.Creator<LowpanProvision>() {
+    public static final Parcelable.Creator<LowpanProvision> CREATOR = new Parcelable.Creator<LowpanProvision>() { // from class: android.net.lowpan.LowpanProvision.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public LowpanProvision createFromParcel(Parcel in) {
             Builder builder = new Builder();
             builder.setLowpanIdentity(LowpanIdentity.CREATOR.createFromParcel(in));
@@ -15,25 +18,26 @@ public class LowpanProvision implements Parcelable {
             return builder.build();
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public LowpanProvision[] newArray(int size) {
             return new LowpanProvision[size];
         }
     };
-    /* access modifiers changed from: private */
-    public LowpanCredential mCredential;
-    /* access modifiers changed from: private */
-    public LowpanIdentity mIdentity;
+    private LowpanCredential mCredential;
+    private LowpanIdentity mIdentity;
 
+    /* loaded from: classes3.dex */
     public static class Builder {
         private final LowpanProvision provision = new LowpanProvision();
 
         public Builder setLowpanIdentity(LowpanIdentity identity) {
-            LowpanIdentity unused = this.provision.mIdentity = identity;
+            this.provision.mIdentity = identity;
             return this;
         }
 
         public Builder setLowpanCredential(LowpanCredential credential) {
-            LowpanCredential unused = this.provision.mCredential = credential;
+            this.provision.mCredential = credential;
             return this;
         }
 
@@ -68,24 +72,23 @@ public class LowpanProvision implements Parcelable {
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{this.mIdentity, this.mCredential});
+        return Objects.hash(this.mIdentity, this.mCredential);
     }
 
     public boolean equals(Object obj) {
-        if (!(obj instanceof LowpanProvision)) {
-            return false;
-        }
-        LowpanProvision rhs = (LowpanProvision) obj;
-        if (this.mIdentity.equals(rhs.mIdentity) && Objects.equals(this.mCredential, rhs.mCredential)) {
-            return true;
+        if (obj instanceof LowpanProvision) {
+            LowpanProvision rhs = (LowpanProvision) obj;
+            return this.mIdentity.equals(rhs.mIdentity) && Objects.equals(this.mCredential, rhs.mCredential);
         }
         return false;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         this.mIdentity.writeToParcel(dest, flags);
         if (this.mCredential == null) {

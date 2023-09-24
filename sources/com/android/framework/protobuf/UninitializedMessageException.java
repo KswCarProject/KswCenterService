@@ -3,6 +3,7 @@ package com.android.framework.protobuf;
 import java.util.Collections;
 import java.util.List;
 
+/* loaded from: classes4.dex */
 public class UninitializedMessageException extends RuntimeException {
     private static final long serialVersionUID = -7466929953374883507L;
     private final List<String> missingFields;
@@ -12,9 +13,9 @@ public class UninitializedMessageException extends RuntimeException {
         this.missingFields = null;
     }
 
-    public UninitializedMessageException(List<String> missingFields2) {
-        super(buildDescription(missingFields2));
-        this.missingFields = missingFields2;
+    public UninitializedMessageException(List<String> missingFields) {
+        super(buildDescription(missingFields));
+        this.missingFields = missingFields;
     }
 
     public List<String> getMissingFields() {
@@ -25,10 +26,10 @@ public class UninitializedMessageException extends RuntimeException {
         return new InvalidProtocolBufferException(getMessage());
     }
 
-    private static String buildDescription(List<String> missingFields2) {
+    private static String buildDescription(List<String> missingFields) {
         StringBuilder description = new StringBuilder("Message missing required fields: ");
         boolean first = true;
-        for (String field : missingFields2) {
+        for (String field : missingFields) {
             if (first) {
                 first = false;
             } else {

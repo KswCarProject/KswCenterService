@@ -8,8 +8,10 @@ import com.android.framework.protobuf.nano.MessageNano;
 import com.android.framework.protobuf.nano.WireFormatNano;
 import java.io.IOException;
 
+/* loaded from: classes4.dex */
 public interface GnssLogsProto {
 
+    /* loaded from: classes4.dex */
     public static final class GnssLog extends MessageNano {
         private static volatile GnssLog[] _emptyArray;
         public String hardwareRevision;
@@ -59,6 +61,7 @@ public interface GnssLogsProto {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.numLocationReportProcessed != 0) {
                 output.writeInt32(1, this.numLocationReportProcessed);
@@ -102,8 +105,8 @@ public interface GnssLogsProto {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.numLocationReportProcessed != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(1, this.numLocationReportProcessed);
@@ -147,6 +150,7 @@ public interface GnssLogsProto {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public GnssLog mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -214,6 +218,7 @@ public interface GnssLogsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class PowerMetrics extends MessageNano {
         private static volatile PowerMetrics[] _emptyArray;
         public double energyConsumedMah;
@@ -236,13 +241,14 @@ public interface GnssLogsProto {
         }
 
         public PowerMetrics clear() {
-            this.loggingDurationMs = 0;
+            this.loggingDurationMs = 0L;
             this.energyConsumedMah = 0.0d;
             this.timeInSignalQualityLevelMs = WireFormatNano.EMPTY_LONG_ARRAY;
             this.cachedSize = -1;
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.loggingDurationMs != 0) {
                 output.writeInt64(1, this.loggingDurationMs);
@@ -251,15 +257,15 @@ public interface GnssLogsProto {
                 output.writeDouble(2, this.energyConsumedMah);
             }
             if (this.timeInSignalQualityLevelMs != null && this.timeInSignalQualityLevelMs.length > 0) {
-                for (long writeInt64 : this.timeInSignalQualityLevelMs) {
-                    output.writeInt64(3, writeInt64);
+                for (int i = 0; i < this.timeInSignalQualityLevelMs.length; i++) {
+                    output.writeInt64(3, this.timeInSignalQualityLevelMs[i]);
                 }
             }
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.loggingDurationMs != 0) {
                 size += CodedOutputByteBufferNano.computeInt64Size(1, this.loggingDurationMs);
@@ -267,16 +273,18 @@ public interface GnssLogsProto {
             if (Double.doubleToLongBits(this.energyConsumedMah) != Double.doubleToLongBits(0.0d)) {
                 size += CodedOutputByteBufferNano.computeDoubleSize(2, this.energyConsumedMah);
             }
-            if (this.timeInSignalQualityLevelMs == null || this.timeInSignalQualityLevelMs.length <= 0) {
-                return size;
+            if (this.timeInSignalQualityLevelMs != null && this.timeInSignalQualityLevelMs.length > 0) {
+                int dataSize = 0;
+                for (int i = 0; i < this.timeInSignalQualityLevelMs.length; i++) {
+                    long element = this.timeInSignalQualityLevelMs[i];
+                    dataSize += CodedOutputByteBufferNano.computeInt64SizeNoTag(element);
+                }
+                return size + dataSize + (this.timeInSignalQualityLevelMs.length * 1);
             }
-            int dataSize = 0;
-            for (long element : this.timeInSignalQualityLevelMs) {
-                dataSize += CodedOutputByteBufferNano.computeInt64SizeNoTag(element);
-            }
-            return size + dataSize + (this.timeInSignalQualityLevelMs.length * 1);
+            return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public PowerMetrics mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -290,7 +298,7 @@ public interface GnssLogsProto {
                 } else if (tag == 24) {
                     int arrayLength = WireFormatNano.getRepeatedFieldArrayLength(input, 24);
                     int i = this.timeInSignalQualityLevelMs == null ? 0 : this.timeInSignalQualityLevelMs.length;
-                    long[] newArray = new long[(i + arrayLength)];
+                    long[] newArray = new long[i + arrayLength];
                     if (i != 0) {
                         System.arraycopy(this.timeInSignalQualityLevelMs, 0, newArray, 0, i);
                     }
@@ -301,8 +309,13 @@ public interface GnssLogsProto {
                     }
                     newArray[i] = input.readInt64();
                     this.timeInSignalQualityLevelMs = newArray;
-                } else if (tag == 26) {
-                    int limit = input.pushLimit(input.readRawVarint32());
+                } else if (tag != 26) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
+                    }
+                } else {
+                    int length = input.readRawVarint32();
+                    int limit = input.pushLimit(length);
                     int arrayLength2 = 0;
                     int startPos = input.getPosition();
                     while (input.getBytesUntilLimit() > 0) {
@@ -311,7 +324,7 @@ public interface GnssLogsProto {
                     }
                     input.rewindToPosition(startPos);
                     int i2 = this.timeInSignalQualityLevelMs == null ? 0 : this.timeInSignalQualityLevelMs.length;
-                    long[] newArray2 = new long[(i2 + arrayLength2)];
+                    long[] newArray2 = new long[i2 + arrayLength2];
                     if (i2 != 0) {
                         System.arraycopy(this.timeInSignalQualityLevelMs, 0, newArray2, 0, i2);
                     }
@@ -321,8 +334,6 @@ public interface GnssLogsProto {
                     }
                     this.timeInSignalQualityLevelMs = newArray2;
                     input.popLimit(limit);
-                } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                    return this;
                 }
             }
         }

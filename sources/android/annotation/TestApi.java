@@ -7,5 +7,6 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD, ElementType.CONSTRUCTOR, ElementType.ANNOTATION_TYPE, ElementType.PACKAGE})
 @Retention(RetentionPolicy.SOURCE)
+/* loaded from: classes.dex */
 public @interface TestApi {
 }

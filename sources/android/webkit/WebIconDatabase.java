@@ -5,9 +5,11 @@ import android.content.ContentResolver;
 import android.graphics.Bitmap;
 
 @Deprecated
+/* loaded from: classes4.dex */
 public abstract class WebIconDatabase {
 
     @Deprecated
+    /* loaded from: classes4.dex */
     public interface IconListener {
         void onReceivedIcon(String str, Bitmap bitmap);
     }

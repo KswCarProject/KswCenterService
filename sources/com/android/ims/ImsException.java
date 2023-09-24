@@ -1,6 +1,7 @@
 package com.android.ims;
 
 @Deprecated
+/* loaded from: classes4.dex */
 public class ImsException extends Exception {
     private int mCode;
 

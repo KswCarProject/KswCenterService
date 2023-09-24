@@ -1,10 +1,11 @@
 package android.text.style;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.view.View;
 import android.view.accessibility.AccessibilityNodeInfo;
 
+/* loaded from: classes4.dex */
 public class AccessibilityURLSpan extends URLSpan implements Parcelable {
     final AccessibilityClickableSpan mAccessibilityClickableSpan;
 
@@ -18,23 +19,28 @@ public class AccessibilityURLSpan extends URLSpan implements Parcelable {
         this.mAccessibilityClickableSpan = new AccessibilityClickableSpan(p);
     }
 
+    @Override // android.text.style.URLSpan, android.text.ParcelableSpan
     public int getSpanTypeId() {
         return getSpanTypeIdInternal();
     }
 
+    @Override // android.text.style.URLSpan, android.text.ParcelableSpan
     public int getSpanTypeIdInternal() {
         return 26;
     }
 
+    @Override // android.text.style.URLSpan, android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         writeToParcelInternal(dest, flags);
     }
 
+    @Override // android.text.style.URLSpan, android.text.ParcelableSpan
     public void writeToParcelInternal(Parcel dest, int flags) {
         super.writeToParcelInternal(dest, flags);
         this.mAccessibilityClickableSpan.writeToParcel(dest, flags);
     }
 
+    @Override // android.text.style.URLSpan, android.text.style.ClickableSpan
     public void onClick(View unused) {
         this.mAccessibilityClickableSpan.onClick(unused);
     }

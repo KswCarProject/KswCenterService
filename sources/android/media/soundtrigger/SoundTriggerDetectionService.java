@@ -6,36 +6,39 @@ import android.content.Context;
 import android.content.Intent;
 import android.hardware.soundtrigger.SoundTrigger;
 import android.media.soundtrigger.ISoundTriggerDetectionService;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.ParcelUuid;
-import android.os.RemoteException;
+import android.p007os.Bundle;
+import android.p007os.Handler;
+import android.p007os.IBinder;
+import android.p007os.ParcelUuid;
+import android.p007os.RemoteException;
 import android.util.ArrayMap;
 import android.util.Log;
 import com.android.internal.annotations.GuardedBy;
+import com.android.internal.util.function.QuadConsumer;
+import com.android.internal.util.function.QuintConsumer;
+import com.android.internal.util.function.TriConsumer;
 import com.android.internal.util.function.pooled.PooledLambda;
 import java.util.UUID;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public abstract class SoundTriggerDetectionService extends Service {
     private static final boolean DEBUG = false;
     private static final String LOG_TAG = SoundTriggerDetectionService.class.getSimpleName();
+    private Handler mHandler;
+    private final Object mLock = new Object();
     @GuardedBy({"mLock"})
     private final ArrayMap<UUID, ISoundTriggerDetectionServiceClient> mClients = new ArrayMap<>();
-    /* access modifiers changed from: private */
-    public Handler mHandler;
-    private final Object mLock = new Object();
 
     public abstract void onStopOperation(UUID uuid, Bundle bundle, int i);
 
-    /* access modifiers changed from: protected */
-    public final void attachBaseContext(Context base) {
+    @Override // android.content.ContextWrapper
+    protected final void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         this.mHandler = new Handler(base.getMainLooper());
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void setClient(UUID uuid, Bundle params, ISoundTriggerDetectionServiceClient client) {
         synchronized (this.mLock) {
             this.mClients.put(uuid, client);
@@ -43,7 +46,7 @@ public abstract class SoundTriggerDetectionService extends Service {
         onConnected(uuid, params);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void removeClient(UUID uuid, Bundle params) {
         synchronized (this.mLock) {
             this.mClients.remove(uuid);
@@ -71,69 +74,108 @@ public abstract class SoundTriggerDetectionService extends Service {
                 ISoundTriggerDetectionServiceClient client = this.mClients.get(uuid);
                 if (client == null) {
                     String str = LOG_TAG;
-                    Log.w(str, "operationFinished called, but no client for " + uuid + ". Was this called after onDisconnected?");
+                    Log.m64w(str, "operationFinished called, but no client for " + uuid + ". Was this called after onDisconnected?");
                     return;
                 }
                 client.onOpFinished(opId);
             }
         } catch (RemoteException e) {
             String str2 = LOG_TAG;
-            Log.e(str2, "operationFinished, remote exception for client " + uuid, e);
+            Log.m69e(str2, "operationFinished, remote exception for client " + uuid, e);
         }
     }
 
-    public final IBinder onBind(Intent intent) {
-        return new ISoundTriggerDetectionService.Stub() {
-            private final Object mBinderLock = new Object();
-            @GuardedBy({"mBinderLock"})
-            public final ArrayMap<UUID, Bundle> mParams = new ArrayMap<>();
+    /* renamed from: android.media.soundtrigger.SoundTriggerDetectionService$1 */
+    /* loaded from: classes3.dex */
+    class BinderC11931 extends ISoundTriggerDetectionService.Stub {
+        private final Object mBinderLock = new Object();
+        @GuardedBy({"mBinderLock"})
+        public final ArrayMap<UUID, Bundle> mParams = new ArrayMap<>();
 
-            public void setClient(ParcelUuid puuid, Bundle params, ISoundTriggerDetectionServiceClient client) {
-                UUID uuid = puuid.getUuid();
-                synchronized (this.mBinderLock) {
-                    this.mParams.put(uuid, params);
-                }
-                SoundTriggerDetectionService.this.mHandler.sendMessage(PooledLambda.obtainMessage($$Lambda$SoundTriggerDetectionService$1$LlOo7TiZplZCgGhS07DqYHocFcw.INSTANCE, SoundTriggerDetectionService.this, uuid, params, client));
-            }
+        BinderC11931() {
+        }
 
-            public void removeClient(ParcelUuid puuid) {
-                Bundle params;
-                UUID uuid = puuid.getUuid();
-                synchronized (this.mBinderLock) {
-                    params = this.mParams.remove(uuid);
-                }
-                SoundTriggerDetectionService.this.mHandler.sendMessage(PooledLambda.obtainMessage($$Lambda$SoundTriggerDetectionService$1$pKR4r0FzOzoVczcnvLQIZNjkZZw.INSTANCE, SoundTriggerDetectionService.this, uuid, params));
+        @Override // android.media.soundtrigger.ISoundTriggerDetectionService
+        public void setClient(ParcelUuid puuid, Bundle params, ISoundTriggerDetectionServiceClient client) {
+            UUID uuid = puuid.getUuid();
+            synchronized (this.mBinderLock) {
+                this.mParams.put(uuid, params);
             }
+            SoundTriggerDetectionService.this.mHandler.sendMessage(PooledLambda.obtainMessage(new QuadConsumer() { // from class: android.media.soundtrigger.-$$Lambda$SoundTriggerDetectionService$1$LlOo7TiZplZCgGhS07DqYHocFcw
+                @Override // com.android.internal.util.function.QuadConsumer
+                public final void accept(Object obj, Object obj2, Object obj3, Object obj4) {
+                    ((SoundTriggerDetectionService) obj).setClient((UUID) obj2, (Bundle) obj3, (ISoundTriggerDetectionServiceClient) obj4);
+                }
+            }, SoundTriggerDetectionService.this, uuid, params, client));
+        }
 
-            public void onGenericRecognitionEvent(ParcelUuid puuid, int opId, SoundTrigger.GenericRecognitionEvent event) {
-                Bundle params;
-                UUID uuid = puuid.getUuid();
-                synchronized (this.mBinderLock) {
-                    params = this.mParams.get(uuid);
-                }
-                SoundTriggerDetectionService.this.mHandler.sendMessage(PooledLambda.obtainMessage($$Lambda$ISQYIYPBRBIOLBUJy7rrJWSiJg.INSTANCE, SoundTriggerDetectionService.this, uuid, params, Integer.valueOf(opId), event));
+        @Override // android.media.soundtrigger.ISoundTriggerDetectionService
+        public void removeClient(ParcelUuid puuid) {
+            Bundle params;
+            UUID uuid = puuid.getUuid();
+            synchronized (this.mBinderLock) {
+                params = this.mParams.remove(uuid);
             }
+            SoundTriggerDetectionService.this.mHandler.sendMessage(PooledLambda.obtainMessage(new TriConsumer() { // from class: android.media.soundtrigger.-$$Lambda$SoundTriggerDetectionService$1$pKR4r0FzOzoVczcnvLQIZNjkZZw
+                @Override // com.android.internal.util.function.TriConsumer
+                public final void accept(Object obj, Object obj2, Object obj3) {
+                    ((SoundTriggerDetectionService) obj).removeClient((UUID) obj2, (Bundle) obj3);
+                }
+            }, SoundTriggerDetectionService.this, uuid, params));
+        }
 
-            public void onError(ParcelUuid puuid, int opId, int status) {
-                Bundle params;
-                UUID uuid = puuid.getUuid();
-                synchronized (this.mBinderLock) {
-                    params = this.mParams.get(uuid);
-                }
-                SoundTriggerDetectionService.this.mHandler.sendMessage(PooledLambda.obtainMessage($$Lambda$oNgT3sYhSGVWlnU92bECo_ULGeY.INSTANCE, SoundTriggerDetectionService.this, uuid, params, Integer.valueOf(opId), Integer.valueOf(status)));
+        @Override // android.media.soundtrigger.ISoundTriggerDetectionService
+        public void onGenericRecognitionEvent(ParcelUuid puuid, int opId, SoundTrigger.GenericRecognitionEvent event) {
+            Bundle params;
+            UUID uuid = puuid.getUuid();
+            synchronized (this.mBinderLock) {
+                params = this.mParams.get(uuid);
             }
+            SoundTriggerDetectionService.this.mHandler.sendMessage(PooledLambda.obtainMessage(new QuintConsumer() { // from class: android.media.soundtrigger.-$$Lambda$ISQYIYPBRBIOLBUJy7rrJW-SiJg
+                @Override // com.android.internal.util.function.QuintConsumer
+                public final void accept(Object obj, Object obj2, Object obj3, Object obj4, Object obj5) {
+                    ((SoundTriggerDetectionService) obj).onGenericRecognitionEvent((UUID) obj2, (Bundle) obj3, ((Integer) obj4).intValue(), (SoundTrigger.GenericRecognitionEvent) obj5);
+                }
+            }, SoundTriggerDetectionService.this, uuid, params, Integer.valueOf(opId), event));
+        }
 
-            public void onStopOperation(ParcelUuid puuid, int opId) {
-                Bundle params;
-                UUID uuid = puuid.getUuid();
-                synchronized (this.mBinderLock) {
-                    params = this.mParams.get(uuid);
-                }
-                SoundTriggerDetectionService.this.mHandler.sendMessage(PooledLambda.obtainMessage($$Lambda$bPGNpvkCtpPW14oaI3pxn1e6JtQ.INSTANCE, SoundTriggerDetectionService.this, uuid, params, Integer.valueOf(opId)));
+        @Override // android.media.soundtrigger.ISoundTriggerDetectionService
+        public void onError(ParcelUuid puuid, int opId, int status) {
+            Bundle params;
+            UUID uuid = puuid.getUuid();
+            synchronized (this.mBinderLock) {
+                params = this.mParams.get(uuid);
             }
-        };
+            SoundTriggerDetectionService.this.mHandler.sendMessage(PooledLambda.obtainMessage(new QuintConsumer() { // from class: android.media.soundtrigger.-$$Lambda$oNgT3sYhSGVWlnU92bECo_ULGeY
+                @Override // com.android.internal.util.function.QuintConsumer
+                public final void accept(Object obj, Object obj2, Object obj3, Object obj4, Object obj5) {
+                    ((SoundTriggerDetectionService) obj).onError((UUID) obj2, (Bundle) obj3, ((Integer) obj4).intValue(), ((Integer) obj5).intValue());
+                }
+            }, SoundTriggerDetectionService.this, uuid, params, Integer.valueOf(opId), Integer.valueOf(status)));
+        }
+
+        @Override // android.media.soundtrigger.ISoundTriggerDetectionService
+        public void onStopOperation(ParcelUuid puuid, int opId) {
+            Bundle params;
+            UUID uuid = puuid.getUuid();
+            synchronized (this.mBinderLock) {
+                params = this.mParams.get(uuid);
+            }
+            SoundTriggerDetectionService.this.mHandler.sendMessage(PooledLambda.obtainMessage(new QuadConsumer() { // from class: android.media.soundtrigger.-$$Lambda$bPGNpvkCtpPW14oaI3pxn1e6JtQ
+                @Override // com.android.internal.util.function.QuadConsumer
+                public final void accept(Object obj, Object obj2, Object obj3, Object obj4) {
+                    ((SoundTriggerDetectionService) obj).onStopOperation((UUID) obj2, (Bundle) obj3, ((Integer) obj4).intValue());
+                }
+            }, SoundTriggerDetectionService.this, uuid, params, Integer.valueOf(opId)));
+        }
     }
 
+    @Override // android.app.Service
+    public final IBinder onBind(Intent intent) {
+        return new BinderC11931();
+    }
+
+    @Override // android.app.Service
     public boolean onUnbind(Intent intent) {
         this.mClients.clear();
         return false;

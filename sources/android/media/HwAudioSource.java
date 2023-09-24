@@ -6,6 +6,7 @@ import android.media.VolumeShaper;
 import com.android.internal.util.Preconditions;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public class HwAudioSource extends PlayerBase {
     private final AudioAttributes mAudioAttributes;
     private final AudioDeviceInfo mAudioDeviceInfo;
@@ -21,37 +22,37 @@ public class HwAudioSource extends PlayerBase {
         baseRegisterPlayer();
     }
 
-    /* access modifiers changed from: package-private */
-    public void playerSetVolume(boolean muting, float leftVolume, float rightVolume) {
+    @Override // android.media.PlayerBase
+    void playerSetVolume(boolean muting, float leftVolume, float rightVolume) {
     }
 
-    /* access modifiers changed from: package-private */
-    public int playerApplyVolumeShaper(VolumeShaper.Configuration configuration, VolumeShaper.Operation operation) {
+    @Override // android.media.PlayerBase
+    int playerApplyVolumeShaper(VolumeShaper.Configuration configuration, VolumeShaper.Operation operation) {
         return 0;
     }
 
-    /* access modifiers changed from: package-private */
-    public VolumeShaper.State playerGetVolumeShaperState(int id) {
+    @Override // android.media.PlayerBase
+    VolumeShaper.State playerGetVolumeShaperState(int id) {
         return new VolumeShaper.State(1.0f, 1.0f);
     }
 
-    /* access modifiers changed from: package-private */
-    public int playerSetAuxEffectSendLevel(boolean muting, float level) {
+    @Override // android.media.PlayerBase
+    int playerSetAuxEffectSendLevel(boolean muting, float level) {
         return 0;
     }
 
-    /* access modifiers changed from: package-private */
-    public void playerStart() {
+    @Override // android.media.PlayerBase
+    void playerStart() {
         start();
     }
 
-    /* access modifiers changed from: package-private */
-    public void playerPause() {
+    @Override // android.media.PlayerBase
+    void playerPause() {
         stop();
     }
 
-    /* access modifiers changed from: package-private */
-    public void playerStop() {
+    @Override // android.media.PlayerBase
+    void playerStop() {
         stop();
     }
 
@@ -73,6 +74,7 @@ public class HwAudioSource extends PlayerBase {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class Builder {
         private AudioAttributes mAudioAttributes;
         private AudioDeviceInfo mAudioDeviceInfo;

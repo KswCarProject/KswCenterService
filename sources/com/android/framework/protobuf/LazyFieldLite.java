@@ -2,6 +2,7 @@ package com.android.framework.protobuf;
 
 import java.io.IOException;
 
+/* loaded from: classes4.dex */
 public class LazyFieldLite {
     private static final ExtensionRegistryLite EMPTY_REGISTRY = ExtensionRegistryLite.getEmptyRegistry();
     private ByteString delayedBytes;
@@ -9,18 +10,18 @@ public class LazyFieldLite {
     private volatile ByteString memoizedBytes;
     protected volatile MessageLite value;
 
-    public LazyFieldLite(ExtensionRegistryLite extensionRegistry2, ByteString bytes) {
-        checkArguments(extensionRegistry2, bytes);
-        this.extensionRegistry = extensionRegistry2;
+    public LazyFieldLite(ExtensionRegistryLite extensionRegistry, ByteString bytes) {
+        checkArguments(extensionRegistry, bytes);
+        this.extensionRegistry = extensionRegistry;
         this.delayedBytes = bytes;
     }
 
     public LazyFieldLite() {
     }
 
-    public static LazyFieldLite fromValue(MessageLite value2) {
+    public static LazyFieldLite fromValue(MessageLite value) {
         LazyFieldLite lf = new LazyFieldLite();
-        lf.setValue(value2);
+        lf.setValue(value);
         return lf;
     }
 
@@ -74,69 +75,70 @@ public class LazyFieldLite {
         return this.value;
     }
 
-    public MessageLite setValue(MessageLite value2) {
+    public MessageLite setValue(MessageLite value) {
         MessageLite originalValue = this.value;
         this.delayedBytes = null;
         this.memoizedBytes = null;
-        this.value = value2;
+        this.value = value;
         return originalValue;
     }
 
     public void merge(LazyFieldLite other) {
-        if (!other.containsDefaultInstance()) {
-            if (containsDefaultInstance()) {
-                set(other);
-                return;
-            }
-            if (this.extensionRegistry == null) {
-                this.extensionRegistry = other.extensionRegistry;
-            }
-            if (this.delayedBytes != null && other.delayedBytes != null) {
-                this.delayedBytes = this.delayedBytes.concat(other.delayedBytes);
-            } else if (this.value == null && other.value != null) {
-                setValue(mergeValueAndBytes(other.value, this.delayedBytes, this.extensionRegistry));
-            } else if (this.value != null && other.value == null) {
-                setValue(mergeValueAndBytes(this.value, other.delayedBytes, other.extensionRegistry));
-            } else if (other.extensionRegistry != null) {
-                setValue(mergeValueAndBytes(this.value, other.toByteString(), other.extensionRegistry));
-            } else if (this.extensionRegistry != null) {
-                setValue(mergeValueAndBytes(other.value, toByteString(), this.extensionRegistry));
-            } else {
-                setValue(mergeValueAndBytes(this.value, other.toByteString(), EMPTY_REGISTRY));
-            }
+        if (other.containsDefaultInstance()) {
+            return;
         }
-    }
-
-    public void mergeFrom(CodedInputStream input, ExtensionRegistryLite extensionRegistry2) throws IOException {
         if (containsDefaultInstance()) {
-            setByteString(input.readBytes(), extensionRegistry2);
+            set(other);
             return;
         }
         if (this.extensionRegistry == null) {
-            this.extensionRegistry = extensionRegistry2;
+            this.extensionRegistry = other.extensionRegistry;
+        }
+        if (this.delayedBytes != null && other.delayedBytes != null) {
+            this.delayedBytes = this.delayedBytes.concat(other.delayedBytes);
+        } else if (this.value == null && other.value != null) {
+            setValue(mergeValueAndBytes(other.value, this.delayedBytes, this.extensionRegistry));
+        } else if (this.value != null && other.value == null) {
+            setValue(mergeValueAndBytes(this.value, other.delayedBytes, other.extensionRegistry));
+        } else if (other.extensionRegistry != null) {
+            setValue(mergeValueAndBytes(this.value, other.toByteString(), other.extensionRegistry));
+        } else if (this.extensionRegistry != null) {
+            setValue(mergeValueAndBytes(other.value, toByteString(), this.extensionRegistry));
+        } else {
+            setValue(mergeValueAndBytes(this.value, other.toByteString(), EMPTY_REGISTRY));
+        }
+    }
+
+    public void mergeFrom(CodedInputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+        if (containsDefaultInstance()) {
+            setByteString(input.readBytes(), extensionRegistry);
+            return;
+        }
+        if (this.extensionRegistry == null) {
+            this.extensionRegistry = extensionRegistry;
         }
         if (this.delayedBytes != null) {
             setByteString(this.delayedBytes.concat(input.readBytes()), this.extensionRegistry);
             return;
         }
         try {
-            setValue(this.value.toBuilder().mergeFrom(input, extensionRegistry2).build());
+            setValue(this.value.toBuilder().mergeFrom(input, extensionRegistry).build());
         } catch (InvalidProtocolBufferException e) {
         }
     }
 
-    private static MessageLite mergeValueAndBytes(MessageLite value2, ByteString otherBytes, ExtensionRegistryLite extensionRegistry2) {
+    private static MessageLite mergeValueAndBytes(MessageLite value, ByteString otherBytes, ExtensionRegistryLite extensionRegistry) {
         try {
-            return value2.toBuilder().mergeFrom(otherBytes, extensionRegistry2).build();
+            return value.toBuilder().mergeFrom(otherBytes, extensionRegistry).build();
         } catch (InvalidProtocolBufferException e) {
-            return value2;
+            return value;
         }
     }
 
-    public void setByteString(ByteString bytes, ExtensionRegistryLite extensionRegistry2) {
-        checkArguments(extensionRegistry2, bytes);
+    public void setByteString(ByteString bytes, ExtensionRegistryLite extensionRegistry) {
+        checkArguments(extensionRegistry, bytes);
         this.delayedBytes = bytes;
-        this.extensionRegistry = extensionRegistry2;
+        this.extensionRegistry = extensionRegistry;
         this.value = null;
         this.memoizedBytes = null;
     }
@@ -163,45 +165,46 @@ public class LazyFieldLite {
         }
         synchronized (this) {
             if (this.memoizedBytes != null) {
-                ByteString byteString = this.memoizedBytes;
-                return byteString;
+                return this.memoizedBytes;
             }
             if (this.value == null) {
                 this.memoizedBytes = ByteString.EMPTY;
             } else {
                 this.memoizedBytes = this.value.toByteString();
             }
-            ByteString byteString2 = this.memoizedBytes;
-            return byteString2;
+            return this.memoizedBytes;
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void ensureInitialized(MessageLite defaultInstance) {
-        if (this.value == null) {
-            synchronized (this) {
-                if (this.value == null) {
-                    try {
-                        if (this.delayedBytes != null) {
-                            this.value = (MessageLite) defaultInstance.getParserForType().parseFrom(this.delayedBytes, this.extensionRegistry);
-                            this.memoizedBytes = this.delayedBytes;
-                        } else {
-                            this.value = defaultInstance;
-                            this.memoizedBytes = ByteString.EMPTY;
-                        }
-                    } catch (InvalidProtocolBufferException e) {
-                        this.value = defaultInstance;
-                        this.memoizedBytes = ByteString.EMPTY;
-                    }
+    protected void ensureInitialized(MessageLite defaultInstance) {
+        if (this.value != null) {
+            return;
+        }
+        synchronized (this) {
+            if (this.value != null) {
+                return;
+            }
+            try {
+                if (this.delayedBytes != null) {
+                    MessageLite parsedValue = defaultInstance.getParserForType().parseFrom(this.delayedBytes, this.extensionRegistry);
+                    this.value = parsedValue;
+                    this.memoizedBytes = this.delayedBytes;
+                } else {
+                    this.value = defaultInstance;
+                    this.memoizedBytes = ByteString.EMPTY;
                 }
+            } catch (InvalidProtocolBufferException e) {
+                this.value = defaultInstance;
+                this.memoizedBytes = ByteString.EMPTY;
             }
         }
     }
 
-    private static void checkArguments(ExtensionRegistryLite extensionRegistry2, ByteString bytes) {
-        if (extensionRegistry2 == null) {
+    private static void checkArguments(ExtensionRegistryLite extensionRegistry, ByteString bytes) {
+        if (extensionRegistry == null) {
             throw new NullPointerException("found null ExtensionRegistry");
-        } else if (bytes == null) {
+        }
+        if (bytes == null) {
             throw new NullPointerException("found null ByteString");
         }
     }

@@ -2,6 +2,7 @@ package android.renderscript;
 
 import android.annotation.UnsupportedAppUsage;
 
+/* loaded from: classes3.dex */
 public class Element extends BaseObj {
     int[] mArraySizes;
     String[] mElementNames;
@@ -15,20 +16,22 @@ public class Element extends BaseObj {
     int[] mVisibleElementMap;
 
     private void updateVisibleSubElements() {
-        if (this.mElements != null) {
-            int noPaddingFieldCount = 0;
-            for (String charAt : this.mElementNames) {
-                if (charAt.charAt(0) != '#') {
-                    noPaddingFieldCount++;
-                }
+        if (this.mElements == null) {
+            return;
+        }
+        int fieldCount = this.mElementNames.length;
+        int noPaddingFieldCount = 0;
+        for (int noPaddingFieldCount2 = 0; noPaddingFieldCount2 < fieldCount; noPaddingFieldCount2++) {
+            if (this.mElementNames[noPaddingFieldCount2].charAt(0) != '#') {
+                noPaddingFieldCount++;
             }
-            this.mVisibleElementMap = new int[noPaddingFieldCount];
-            int ctNoPadding = 0;
-            for (int ct = 0; ct < fieldCount; ct++) {
-                if (this.mElementNames[ct].charAt(0) != '#') {
-                    this.mVisibleElementMap[ctNoPadding] = ct;
-                    ctNoPadding++;
-                }
+        }
+        this.mVisibleElementMap = new int[noPaddingFieldCount];
+        int ctNoPadding = 0;
+        for (int ct = 0; ct < fieldCount; ct++) {
+            if (this.mElementNames[ct].charAt(0) != '#') {
+                this.mVisibleElementMap[ctNoPadding] = ct;
+                ctNoPadding++;
             }
         }
     }
@@ -41,6 +44,7 @@ public class Element extends BaseObj {
         return this.mVectorSize;
     }
 
+    /* loaded from: classes3.dex */
     public enum DataType {
         NONE(0, 0),
         FLOAT_16(1, 2),
@@ -76,12 +80,12 @@ public class Element extends BaseObj {
         int mID;
         int mSize;
 
-        private DataType(int id, int size) {
+        DataType(int id, int size) {
             this.mID = id;
             this.mSize = size;
         }
 
-        private DataType(int id) {
+        DataType(int id) {
             this.mID = id;
             this.mSize = 4;
             if (RenderScript.sPointerSize == 8) {
@@ -90,6 +94,7 @@ public class Element extends BaseObj {
         }
     }
 
+    /* loaded from: classes3.dex */
     public enum DataKind {
         USER(0),
         PIXEL_L(7),
@@ -102,7 +107,7 @@ public class Element extends BaseObj {
         
         int mID;
 
-        private DataKind(int id) {
+        DataKind(int id) {
             this.mID = id;
         }
     }
@@ -111,8 +116,8 @@ public class Element extends BaseObj {
         if (this.mElements == null) {
             return false;
         }
-        for (Element element : this.mElements) {
-            if (element.mElements != null) {
+        for (int ct = 0; ct < this.mElements.length; ct++) {
+            if (this.mElements[ct].mElements != null) {
                 return true;
             }
         }
@@ -129,41 +134,41 @@ public class Element extends BaseObj {
     public Element getSubElement(int index) {
         if (this.mVisibleElementMap == null) {
             throw new RSIllegalArgumentException("Element contains no sub-elements");
-        } else if (index >= 0 && index < this.mVisibleElementMap.length) {
-            return this.mElements[this.mVisibleElementMap[index]];
-        } else {
+        }
+        if (index < 0 || index >= this.mVisibleElementMap.length) {
             throw new RSIllegalArgumentException("Illegal sub-element index");
         }
+        return this.mElements[this.mVisibleElementMap[index]];
     }
 
     public String getSubElementName(int index) {
         if (this.mVisibleElementMap == null) {
             throw new RSIllegalArgumentException("Element contains no sub-elements");
-        } else if (index >= 0 && index < this.mVisibleElementMap.length) {
-            return this.mElementNames[this.mVisibleElementMap[index]];
-        } else {
+        }
+        if (index < 0 || index >= this.mVisibleElementMap.length) {
             throw new RSIllegalArgumentException("Illegal sub-element index");
         }
+        return this.mElementNames[this.mVisibleElementMap[index]];
     }
 
     public int getSubElementArraySize(int index) {
         if (this.mVisibleElementMap == null) {
             throw new RSIllegalArgumentException("Element contains no sub-elements");
-        } else if (index >= 0 && index < this.mVisibleElementMap.length) {
-            return this.mArraySizes[this.mVisibleElementMap[index]];
-        } else {
+        }
+        if (index < 0 || index >= this.mVisibleElementMap.length) {
             throw new RSIllegalArgumentException("Illegal sub-element index");
         }
+        return this.mArraySizes[this.mVisibleElementMap[index]];
     }
 
     public int getSubElementOffsetBytes(int index) {
         if (this.mVisibleElementMap == null) {
             throw new RSIllegalArgumentException("Element contains no sub-elements");
-        } else if (index >= 0 && index < this.mVisibleElementMap.length) {
-            return this.mOffsetInBytes[this.mVisibleElementMap[index]];
-        } else {
+        }
+        if (index < 0 || index >= this.mVisibleElementMap.length) {
             throw new RSIllegalArgumentException("Illegal sub-element index");
         }
+        return this.mOffsetInBytes[this.mVisibleElementMap[index]];
     }
 
     public DataType getDataType() {
@@ -185,7 +190,8 @@ public class Element extends BaseObj {
         return rs.mElement_BOOLEAN;
     }
 
-    public static Element U8(RenderScript rs) {
+    /* renamed from: U8 */
+    public static Element m108U8(RenderScript rs) {
         if (rs.mElement_U8 == null) {
             synchronized (rs) {
                 if (rs.mElement_U8 == null) {
@@ -196,7 +202,8 @@ public class Element extends BaseObj {
         return rs.mElement_U8;
     }
 
-    public static Element I8(RenderScript rs) {
+    /* renamed from: I8 */
+    public static Element m109I8(RenderScript rs) {
         if (rs.mElement_I8 == null) {
             synchronized (rs) {
                 if (rs.mElement_I8 == null) {
@@ -923,12 +930,14 @@ public class Element extends BaseObj {
 
     Element(long id, RenderScript rs, DataType dt, DataKind dk, boolean norm, int size) {
         super(id, rs);
-        if (dt == DataType.UNSIGNED_5_6_5 || dt == DataType.UNSIGNED_4_4_4_4 || dt == DataType.UNSIGNED_5_5_5_1) {
-            this.mSize = dt.mSize;
-        } else if (size == 3) {
-            this.mSize = dt.mSize * 4;
+        if (dt != DataType.UNSIGNED_5_6_5 && dt != DataType.UNSIGNED_4_4_4_4 && dt != DataType.UNSIGNED_5_5_5_1) {
+            if (size == 3) {
+                this.mSize = dt.mSize * 4;
+            } else {
+                this.mSize = dt.mSize * size;
+            }
         } else {
-            this.mSize = dt.mSize * size;
+            this.mSize = dt.mSize;
         }
         this.mType = dt;
         this.mKind = dk;
@@ -940,8 +949,10 @@ public class Element extends BaseObj {
         super(id, rs);
     }
 
-    /* access modifiers changed from: package-private */
-    public void updateFromNative() {
+    @Override // android.renderscript.BaseObj
+    void updateFromNative() {
+        DataType[] values;
+        DataKind[] values2;
         super.updateFromNative();
         int[] dataBuffer = new int[5];
         this.mRS.nElementGetNativeData(getID(this.mRS), dataBuffer);
@@ -980,7 +991,8 @@ public class Element extends BaseObj {
     @UnsupportedAppUsage
     static Element createUser(RenderScript rs, DataType dt) {
         DataKind dk = DataKind.USER;
-        return new Element(rs.nElementCreate((long) dt.mID, dk.mID, false, 1), rs, dt, dk, false, 1);
+        long id = rs.nElementCreate(dt.mID, dk.mID, false, 1);
+        return new Element(id, rs, dt, dk, false, 1);
     }
 
     public static Element createVector(RenderScript rs, DataType dt, int size) {
@@ -1001,7 +1013,8 @@ public class Element extends BaseObj {
             case UNSIGNED_64:
             case BOOLEAN:
                 DataKind dk = DataKind.USER;
-                return new Element(rs.nElementCreate((long) dt.mID, dk.mID, false, size), rs, dt, dk, false, size);
+                long id = rs.nElementCreate(dt.mID, dk.mID, false, size);
+                return new Element(id, rs, dt, dk, false, size);
             default:
                 throw new RSIllegalArgumentException("Cannot create vector of non-primitive type.");
         }
@@ -1010,53 +1023,56 @@ public class Element extends BaseObj {
     public static Element createPixel(RenderScript rs, DataType dt, DataKind dk) {
         if (dk != DataKind.PIXEL_L && dk != DataKind.PIXEL_A && dk != DataKind.PIXEL_LA && dk != DataKind.PIXEL_RGB && dk != DataKind.PIXEL_RGBA && dk != DataKind.PIXEL_DEPTH && dk != DataKind.PIXEL_YUV) {
             throw new RSIllegalArgumentException("Unsupported DataKind");
-        } else if (dt != DataType.UNSIGNED_8 && dt != DataType.UNSIGNED_16 && dt != DataType.UNSIGNED_5_6_5 && dt != DataType.UNSIGNED_4_4_4_4 && dt != DataType.UNSIGNED_5_5_5_1) {
+        }
+        if (dt != DataType.UNSIGNED_8 && dt != DataType.UNSIGNED_16 && dt != DataType.UNSIGNED_5_6_5 && dt != DataType.UNSIGNED_4_4_4_4 && dt != DataType.UNSIGNED_5_5_5_1) {
             throw new RSIllegalArgumentException("Unsupported DataType");
-        } else if (dt == DataType.UNSIGNED_5_6_5 && dk != DataKind.PIXEL_RGB) {
-            throw new RSIllegalArgumentException("Bad kind and type combo");
-        } else if (dt == DataType.UNSIGNED_5_5_5_1 && dk != DataKind.PIXEL_RGBA) {
-            throw new RSIllegalArgumentException("Bad kind and type combo");
-        } else if (dt == DataType.UNSIGNED_4_4_4_4 && dk != DataKind.PIXEL_RGBA) {
-            throw new RSIllegalArgumentException("Bad kind and type combo");
-        } else if (dt != DataType.UNSIGNED_16 || dk == DataKind.PIXEL_DEPTH) {
-            int size = 1;
-            switch (dk) {
-                case PIXEL_LA:
-                    size = 2;
-                    break;
-                case PIXEL_RGB:
-                    size = 3;
-                    break;
-                case PIXEL_RGBA:
-                    size = 4;
-                    break;
-                case PIXEL_DEPTH:
-                    size = 2;
-                    break;
-            }
-            return new Element(rs.nElementCreate((long) dt.mID, dk.mID, true, size), rs, dt, dk, true, size);
-        } else {
+        }
+        if (dt == DataType.UNSIGNED_5_6_5 && dk != DataKind.PIXEL_RGB) {
             throw new RSIllegalArgumentException("Bad kind and type combo");
         }
+        if (dt == DataType.UNSIGNED_5_5_5_1 && dk != DataKind.PIXEL_RGBA) {
+            throw new RSIllegalArgumentException("Bad kind and type combo");
+        }
+        if (dt == DataType.UNSIGNED_4_4_4_4 && dk != DataKind.PIXEL_RGBA) {
+            throw new RSIllegalArgumentException("Bad kind and type combo");
+        }
+        if (dt == DataType.UNSIGNED_16 && dk != DataKind.PIXEL_DEPTH) {
+            throw new RSIllegalArgumentException("Bad kind and type combo");
+        }
+        int size = 1;
+        switch (dk) {
+            case PIXEL_LA:
+                size = 2;
+                break;
+            case PIXEL_RGB:
+                size = 3;
+                break;
+            case PIXEL_RGBA:
+                size = 4;
+                break;
+            case PIXEL_DEPTH:
+                size = 2;
+                break;
+        }
+        long id = rs.nElementCreate(dt.mID, dk.mID, true, size);
+        return new Element(id, rs, dt, dk, true, size);
     }
 
     public boolean isCompatible(Element e) {
         if (equals(e)) {
             return true;
         }
-        if (this.mSize == e.mSize && this.mType != DataType.NONE && this.mType == e.mType && this.mVectorSize == e.mVectorSize) {
-            return true;
-        }
-        return false;
+        return this.mSize == e.mSize && this.mType != DataType.NONE && this.mType == e.mType && this.mVectorSize == e.mVectorSize;
     }
 
+    /* loaded from: classes3.dex */
     public static class Builder {
-        int[] mArraySizes = new int[8];
-        int mCount = 0;
-        String[] mElementNames = new String[8];
-        Element[] mElements = new Element[8];
         RenderScript mRS;
         int mSkipPadding;
+        int mCount = 0;
+        Element[] mElements = new Element[8];
+        String[] mElementNames = new String[8];
+        int[] mArraySizes = new int[8];
 
         public Builder(RenderScript rs) {
             this.mRS = rs;
@@ -1065,32 +1081,32 @@ public class Element extends BaseObj {
         public Builder add(Element element, String name, int arraySize) {
             if (arraySize < 1) {
                 throw new RSIllegalArgumentException("Array size cannot be less than 1.");
-            } else if (this.mSkipPadding == 0 || !name.startsWith("#padding_")) {
-                if (element.mVectorSize == 3) {
-                    this.mSkipPadding = 1;
-                } else {
-                    this.mSkipPadding = 0;
-                }
-                if (this.mCount == this.mElements.length) {
-                    Element[] e = new Element[(this.mCount + 8)];
-                    String[] s = new String[(this.mCount + 8)];
-                    int[] as = new int[(this.mCount + 8)];
-                    System.arraycopy(this.mElements, 0, e, 0, this.mCount);
-                    System.arraycopy(this.mElementNames, 0, s, 0, this.mCount);
-                    System.arraycopy(this.mArraySizes, 0, as, 0, this.mCount);
-                    this.mElements = e;
-                    this.mElementNames = s;
-                    this.mArraySizes = as;
-                }
-                this.mElements[this.mCount] = element;
-                this.mElementNames[this.mCount] = name;
-                this.mArraySizes[this.mCount] = arraySize;
-                this.mCount++;
-                return this;
-            } else {
+            }
+            if (this.mSkipPadding != 0 && name.startsWith("#padding_")) {
                 this.mSkipPadding = 0;
                 return this;
             }
+            if (element.mVectorSize == 3) {
+                this.mSkipPadding = 1;
+            } else {
+                this.mSkipPadding = 0;
+            }
+            if (this.mCount == this.mElements.length) {
+                Element[] e = new Element[this.mCount + 8];
+                String[] s = new String[this.mCount + 8];
+                int[] as = new int[this.mCount + 8];
+                System.arraycopy(this.mElements, 0, e, 0, this.mCount);
+                System.arraycopy(this.mElementNames, 0, s, 0, this.mCount);
+                System.arraycopy(this.mArraySizes, 0, as, 0, this.mCount);
+                this.mElements = e;
+                this.mElementNames = s;
+                this.mArraySizes = as;
+            }
+            this.mElements[this.mCount] = element;
+            this.mElementNames[this.mCount] = name;
+            this.mArraySizes[this.mCount] = arraySize;
+            this.mCount++;
+            return this;
         }
 
         public Builder add(Element element, String name) {
@@ -1113,7 +1129,8 @@ public class Element extends BaseObj {
                     ids[ct2] = ein[ct2].getID(this.mRS);
                     ct = ct2 + 1;
                 } else {
-                    return new Element(this.mRS.nElementCreate2(ids, sin, asin), this.mRS, ein, sin, asin);
+                    long id = this.mRS.nElementCreate2(ids, sin, asin);
+                    return new Element(id, this.mRS, ein, sin, asin);
                 }
             }
         }

@@ -8,6 +8,7 @@ import android.util.Rational;
 import android.util.Size;
 import com.android.internal.util.Preconditions;
 
+/* loaded from: classes.dex */
 public class ParamsUtils {
     private static final int RATIONAL_DENOMINATOR = 1000000;
 
@@ -52,28 +53,29 @@ public class ParamsUtils {
         }
         int den = 1000000;
         while (true) {
-            numF = ((float) den) * value;
-            if ((numF <= -2.14748365E9f || numF >= 2.14748365E9f) && den != 1) {
+            numF = den * value;
+            if ((numF <= -2.1474836E9f || numF >= 2.1474836E9f) && den != 1) {
                 den /= 10;
             }
         }
-        return new Rational((int) numF, den);
+        int num = (int) numF;
+        return new Rational(num, den);
     }
 
     public static void convertRectF(Rect source, RectF destination) {
         Preconditions.checkNotNull(source, "source must not be null");
         Preconditions.checkNotNull(destination, "destination must not be null");
-        destination.left = (float) source.left;
-        destination.right = (float) source.right;
-        destination.bottom = (float) source.bottom;
-        destination.top = (float) source.top;
+        destination.left = source.left;
+        destination.right = source.right;
+        destination.bottom = source.bottom;
+        destination.top = source.top;
     }
 
     public static <T> T getOrDefault(CaptureRequest r, CaptureRequest.Key<T> key, T defaultValue) {
         Preconditions.checkNotNull(r, "r must not be null");
         Preconditions.checkNotNull(key, "key must not be null");
         Preconditions.checkNotNull(defaultValue, "defaultValue must not be null");
-        T value = r.get(key);
+        T value = (T) r.get(key);
         if (value == null) {
             return defaultValue;
         }

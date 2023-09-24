@@ -3,6 +3,7 @@ package android.filterfw.core;
 import android.annotation.UnsupportedAppUsage;
 import java.util.Arrays;
 
+/* loaded from: classes.dex */
 public class MutableFrameFormat extends FrameFormat {
     public MutableFrameFormat() {
     }
@@ -33,18 +34,21 @@ public class MutableFrameFormat extends FrameFormat {
     }
 
     public void setDimensions(int size) {
-        this.mDimensions = new int[]{size};
+        int[] dimensions = {size};
+        this.mDimensions = dimensions;
         this.mSize = -1;
     }
 
     @UnsupportedAppUsage
     public void setDimensions(int width, int height) {
-        this.mDimensions = new int[]{width, height};
+        int[] dimensions = {width, height};
+        this.mDimensions = dimensions;
         this.mSize = -1;
     }
 
     public void setDimensions(int width, int height, int depth) {
-        this.mDimensions = new int[]{width, height, depth};
+        int[] dimensions = {width, height, depth};
+        this.mDimensions = dimensions;
         this.mSize = -1;
     }
 

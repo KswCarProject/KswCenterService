@@ -1,19 +1,24 @@
 package android.app.timezone;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.format.DateFormat;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes.dex */
 public final class RulesState implements Parcelable {
     private static final byte BYTE_FALSE = 0;
     private static final byte BYTE_TRUE = 1;
-    public static final Parcelable.Creator<RulesState> CREATOR = new Parcelable.Creator<RulesState>() {
+    public static final Parcelable.Creator<RulesState> CREATOR = new Parcelable.Creator<RulesState>() { // from class: android.app.timezone.RulesState.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RulesState createFromParcel(Parcel in) {
             return RulesState.createFromParcel(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RulesState[] newArray(int size) {
             return new RulesState[size];
         }
@@ -34,10 +39,12 @@ public final class RulesState implements Parcelable {
     private final int mStagedOperationType;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     private @interface DistroStatus {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     private @interface StagedOperationType {
     }
 
@@ -45,15 +52,13 @@ public final class RulesState implements Parcelable {
         this.mBaseRulesVersion = Utils.validateRulesVersion("baseRulesVersion", baseRulesVersion);
         this.mDistroFormatVersionSupported = (DistroFormatVersion) Utils.validateNotNull("distroFormatVersionSupported", distroFormatVersionSupported);
         this.mOperationInProgress = operationInProgress;
-        if (!operationInProgress || stagedOperationType == 0) {
-            this.mStagedOperationType = validateStagedOperation(stagedOperationType);
-            boolean z = false;
-            this.mStagedDistroRulesVersion = (DistroRulesVersion) Utils.validateConditionalNull(this.mStagedOperationType == 3, "stagedDistroRulesVersion", stagedDistroRulesVersion);
-            this.mDistroStatus = validateDistroStatus(distroStatus);
-            this.mInstalledDistroRulesVersion = (DistroRulesVersion) Utils.validateConditionalNull(this.mDistroStatus == 2 ? true : z, "installedDistroRulesVersion", installedDistroRulesVersion);
-            return;
+        if (operationInProgress && stagedOperationType != 0) {
+            throw new IllegalArgumentException("stagedOperationType != STAGED_OPERATION_UNKNOWN");
         }
-        throw new IllegalArgumentException("stagedOperationType != STAGED_OPERATION_UNKNOWN");
+        this.mStagedOperationType = validateStagedOperation(stagedOperationType);
+        this.mStagedDistroRulesVersion = (DistroRulesVersion) Utils.validateConditionalNull(this.mStagedOperationType == 3, "stagedDistroRulesVersion", stagedDistroRulesVersion);
+        this.mDistroStatus = validateDistroStatus(distroStatus);
+        this.mInstalledDistroRulesVersion = (DistroRulesVersion) Utils.validateConditionalNull(this.mDistroStatus == 2, "installedDistroRulesVersion", installedDistroRulesVersion);
     }
 
     public String getBaseRulesVersion() {
@@ -88,19 +93,28 @@ public final class RulesState implements Parcelable {
         return this.mBaseRulesVersion.compareTo(distroRulesVersion.getRulesVersion()) > 0;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static RulesState createFromParcel(Parcel in) {
-        return new RulesState(in.readString(), (DistroFormatVersion) in.readParcelable((ClassLoader) null), in.readByte() == 1, in.readByte(), (DistroRulesVersion) in.readParcelable((ClassLoader) null), in.readByte(), (DistroRulesVersion) in.readParcelable((ClassLoader) null));
+        String baseRulesVersion = in.readString();
+        DistroFormatVersion distroFormatVersionSupported = (DistroFormatVersion) in.readParcelable(null);
+        boolean operationInProgress = in.readByte() == 1;
+        int distroStagedState = in.readByte();
+        DistroRulesVersion stagedDistroRulesVersion = (DistroRulesVersion) in.readParcelable(null);
+        int installedDistroStatus = in.readByte();
+        DistroRulesVersion installedDistroRulesVersion = (DistroRulesVersion) in.readParcelable(null);
+        return new RulesState(baseRulesVersion, distroFormatVersionSupported, operationInProgress, distroStagedState, stagedDistroRulesVersion, installedDistroStatus, installedDistroRulesVersion);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(this.mBaseRulesVersion);
         out.writeParcelable(this.mDistroFormatVersionSupported, 0);
-        out.writeByte(this.mOperationInProgress ? (byte) 1 : 0);
+        out.writeByte(this.mOperationInProgress ? (byte) 1 : (byte) 0);
         out.writeByte((byte) this.mStagedOperationType);
         out.writeParcelable(this.mStagedDistroRulesVersion, 0);
         out.writeByte((byte) this.mDistroStatus);
@@ -132,18 +146,14 @@ public final class RulesState implements Parcelable {
 
     public int hashCode() {
         int i;
-        int result = ((((((this.mBaseRulesVersion.hashCode() * 31) + this.mDistroFormatVersionSupported.hashCode()) * 31) + (this.mOperationInProgress ? 1 : 0)) * 31) + this.mStagedOperationType) * 31;
-        int i2 = 0;
+        int result = this.mBaseRulesVersion.hashCode();
+        int result2 = ((((((result * 31) + this.mDistroFormatVersionSupported.hashCode()) * 31) + (this.mOperationInProgress ? 1 : 0)) * 31) + this.mStagedOperationType) * 31;
         if (this.mStagedDistroRulesVersion != null) {
             i = this.mStagedDistroRulesVersion.hashCode();
         } else {
             i = 0;
         }
-        int result2 = (((result + i) * 31) + this.mDistroStatus) * 31;
-        if (this.mInstalledDistroRulesVersion != null) {
-            i2 = this.mInstalledDistroRulesVersion.hashCode();
-        }
-        return result2 + i2;
+        return ((((result2 + i) * 31) + this.mDistroStatus) * 31) + (this.mInstalledDistroRulesVersion != null ? this.mInstalledDistroRulesVersion.hashCode() : 0);
     }
 
     public String toString() {
@@ -151,16 +161,16 @@ public final class RulesState implements Parcelable {
     }
 
     private static int validateStagedOperation(int stagedOperationType) {
-        if (stagedOperationType >= 0 && stagedOperationType <= 3) {
-            return stagedOperationType;
+        if (stagedOperationType < 0 || stagedOperationType > 3) {
+            throw new IllegalArgumentException("Unknown operation type=" + stagedOperationType);
         }
-        throw new IllegalArgumentException("Unknown operation type=" + stagedOperationType);
+        return stagedOperationType;
     }
 
     private static int validateDistroStatus(int distroStatus) {
-        if (distroStatus >= 0 && distroStatus <= 2) {
-            return distroStatus;
+        if (distroStatus < 0 || distroStatus > 2) {
+            throw new IllegalArgumentException("Unknown distro status=" + distroStatus);
         }
-        throw new IllegalArgumentException("Unknown distro status=" + distroStatus);
+        return distroStatus;
     }
 }

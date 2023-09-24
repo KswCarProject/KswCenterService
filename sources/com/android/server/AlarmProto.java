@@ -1,5 +1,6 @@
 package com.android.server;
 
+/* loaded from: classes4.dex */
 public final class AlarmProto {
     public static final long ALARM_CLOCK = 1146756268040L;
     public static final long COUNT = 1120986464262L;

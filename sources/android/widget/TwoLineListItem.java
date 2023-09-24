@@ -3,15 +3,16 @@ package android.widget;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
 @Deprecated
+/* loaded from: classes4.dex */
 public class TwoLineListItem extends RelativeLayout {
     private TextView mText1;
     private TextView mText2;
 
     public TwoLineListItem(Context context) {
-        this(context, (AttributeSet) null, 0);
+        this(context, null, 0);
     }
 
     public TwoLineListItem(Context context, AttributeSet attrs) {
@@ -24,13 +25,13 @@ public class TwoLineListItem extends RelativeLayout {
 
     public TwoLineListItem(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.TwoLineListItem, defStyleAttr, defStyleRes);
-        saveAttributeDataForStyleable(context, R.styleable.TwoLineListItem, attrs, a, defStyleAttr, defStyleRes);
+        TypedArray a = context.obtainStyledAttributes(attrs, C3132R.styleable.TwoLineListItem, defStyleAttr, defStyleRes);
+        saveAttributeDataForStyleable(context, C3132R.styleable.TwoLineListItem, attrs, a, defStyleAttr, defStyleRes);
         a.recycle();
     }
 
-    /* access modifiers changed from: protected */
-    public void onFinishInflate() {
+    @Override // android.view.View
+    protected void onFinishInflate() {
         super.onFinishInflate();
         this.mText1 = (TextView) findViewById(16908308);
         this.mText2 = (TextView) findViewById(16908309);
@@ -44,6 +45,7 @@ public class TwoLineListItem extends RelativeLayout {
         return this.mText2;
     }
 
+    @Override // android.widget.RelativeLayout, android.view.ViewGroup, android.view.View
     public CharSequence getAccessibilityClassName() {
         return TwoLineListItem.class.getName();
     }

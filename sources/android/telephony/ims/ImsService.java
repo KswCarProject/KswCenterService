@@ -3,8 +3,8 @@ package android.telephony.ims;
 import android.annotation.SystemApi;
 import android.app.Service;
 import android.content.Intent;
-import android.os.IBinder;
-import android.os.RemoteException;
+import android.p007os.IBinder;
+import android.p007os.RemoteException;
 import android.telephony.ims.aidl.IImsConfig;
 import android.telephony.ims.aidl.IImsMmTelFeature;
 import android.telephony.ims.aidl.IImsRcsFeature;
@@ -23,35 +23,43 @@ import com.android.ims.internal.IImsFeatureStatusCallback;
 import com.android.internal.annotations.VisibleForTesting;
 
 @SystemApi
+/* loaded from: classes4.dex */
 public class ImsService extends Service {
     private static final String LOG_TAG = "ImsService";
     public static final String SERVICE_INTERFACE = "android.telephony.ims.ImsService";
     private final SparseArray<SparseArray<ImsFeature>> mFeaturesBySlot = new SparseArray<>();
-    protected final IBinder mImsServiceController = new IImsServiceController.Stub() {
+    protected final IBinder mImsServiceController = new IImsServiceController.Stub() { // from class: android.telephony.ims.ImsService.1
+        @Override // android.telephony.ims.aidl.IImsServiceController
         public void setListener(IImsServiceControllerListener l) {
-            IImsServiceControllerListener unused = ImsService.this.mListener = l;
+            ImsService.this.mListener = l;
         }
 
+        @Override // android.telephony.ims.aidl.IImsServiceController
         public IImsMmTelFeature createMmTelFeature(int slotId, IImsFeatureStatusCallback c) {
             return ImsService.this.createMmTelFeatureInternal(slotId, c);
         }
 
+        @Override // android.telephony.ims.aidl.IImsServiceController
         public IImsRcsFeature createRcsFeature(int slotId, IImsFeatureStatusCallback c) {
             return ImsService.this.createRcsFeatureInternal(slotId, c);
         }
 
+        @Override // android.telephony.ims.aidl.IImsServiceController
         public void removeImsFeature(int slotId, int featureType, IImsFeatureStatusCallback c) {
             ImsService.this.removeImsFeature(slotId, featureType, c);
         }
 
+        @Override // android.telephony.ims.aidl.IImsServiceController
         public ImsFeatureConfiguration querySupportedImsFeatures() {
             return ImsService.this.querySupportedImsFeatures();
         }
 
+        @Override // android.telephony.ims.aidl.IImsServiceController
         public void notifyImsServiceReadyForFeatureCreation() {
             ImsService.this.readyForFeatureCreation();
         }
 
+        @Override // android.telephony.ims.aidl.IImsServiceController
         public IImsConfig getConfig(int slotId) {
             ImsConfigImplBase c = ImsService.this.getConfig(slotId);
             if (c != null) {
@@ -60,6 +68,7 @@ public class ImsService extends Service {
             return null;
         }
 
+        @Override // android.telephony.ims.aidl.IImsServiceController
         public IImsRegistration getRegistration(int slotId) {
             ImsRegistrationImplBase r = ImsService.this.getRegistration(slotId);
             if (r != null) {
@@ -68,28 +77,32 @@ public class ImsService extends Service {
             return null;
         }
 
+        @Override // android.telephony.ims.aidl.IImsServiceController
         public void enableIms(int slotId) {
             ImsService.this.enableIms(slotId);
         }
 
+        @Override // android.telephony.ims.aidl.IImsServiceController
         public void disableIms(int slotId) {
             ImsService.this.disableIms(slotId);
         }
     };
-    /* access modifiers changed from: private */
-    public IImsServiceControllerListener mListener;
+    private IImsServiceControllerListener mListener;
 
+    /* loaded from: classes4.dex */
     public static class Listener extends IImsServiceControllerListener.Stub {
+        @Override // android.telephony.ims.aidl.IImsServiceControllerListener
         public void onUpdateSupportedImsFeatures(ImsFeatureConfiguration c) {
         }
     }
 
+    @Override // android.app.Service
     public IBinder onBind(Intent intent) {
-        if (!SERVICE_INTERFACE.equals(intent.getAction())) {
-            return null;
+        if (SERVICE_INTERFACE.equals(intent.getAction())) {
+            Log.m68i(LOG_TAG, "ImsService Bound.");
+            return this.mImsServiceController;
         }
-        Log.i(LOG_TAG, "ImsService Bound.");
-        return this.mImsServiceController;
+        return null;
     }
 
     @VisibleForTesting
@@ -97,25 +110,25 @@ public class ImsService extends Service {
         return this.mFeaturesBySlot.get(slotId);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public IImsMmTelFeature createMmTelFeatureInternal(int slotId, IImsFeatureStatusCallback c) {
         MmTelFeature f = createMmTelFeature(slotId);
         if (f != null) {
             setupFeature(f, slotId, 1, c);
             return f.getBinder();
         }
-        Log.e(LOG_TAG, "createMmTelFeatureInternal: null feature returned.");
+        Log.m70e(LOG_TAG, "createMmTelFeatureInternal: null feature returned.");
         return null;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public IImsRcsFeature createRcsFeatureInternal(int slotId, IImsFeatureStatusCallback c) {
         RcsFeature f = createRcsFeature(slotId);
         if (f != null) {
             setupFeature(f, slotId, 2, c);
             return f.getBinder();
         }
-        Log.e(LOG_TAG, "createRcsFeatureInternal: null feature returned.");
+        Log.m70e(LOG_TAG, "createRcsFeatureInternal: null feature returned.");
         return null;
     }
 
@@ -136,17 +149,17 @@ public class ImsService extends Service {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void removeImsFeature(int slotId, int featureType, IImsFeatureStatusCallback c) {
         synchronized (this.mFeaturesBySlot) {
             SparseArray<ImsFeature> features = this.mFeaturesBySlot.get(slotId);
             if (features == null) {
-                Log.w(LOG_TAG, "Can not remove ImsFeature. No ImsFeatures exist on slot " + slotId);
+                Log.m64w(LOG_TAG, "Can not remove ImsFeature. No ImsFeatures exist on slot " + slotId);
                 return;
             }
             ImsFeature f = features.get(featureType);
             if (f == null) {
-                Log.w(LOG_TAG, "Can not remove ImsFeature. No feature with type " + featureType + " exists on slot " + slotId);
+                Log.m64w(LOG_TAG, "Can not remove ImsFeature. No feature with type " + featureType + " exists on slot " + slotId);
                 return;
             }
             f.removeImsFeatureStatusCallback(c);
@@ -160,11 +173,10 @@ public class ImsService extends Service {
     }
 
     public final void onUpdateSupportedImsFeatures(ImsFeatureConfiguration c) throws RemoteException {
-        if (this.mListener != null) {
-            this.mListener.onUpdateSupportedImsFeatures(c);
-            return;
+        if (this.mListener == null) {
+            throw new IllegalStateException("Framework is not ready");
         }
-        throw new IllegalStateException("Framework is not ready");
+        this.mListener.onUpdateSupportedImsFeatures(c);
     }
 
     public void readyForFeatureCreation() {

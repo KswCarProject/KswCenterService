@@ -2,20 +2,25 @@ package android.net.metrics;
 
 import android.annotation.SystemApi;
 import android.net.metrics.IpConnectivityLog;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.SparseArray;
 import com.android.internal.util.MessageUtils;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class DhcpErrorEvent implements IpConnectivityLog.Event {
     public static final int BOOTP_TOO_SHORT = 67174400;
     public static final int BUFFER_UNDERFLOW = 83951616;
-    public static final Parcelable.Creator<DhcpErrorEvent> CREATOR = new Parcelable.Creator<DhcpErrorEvent>() {
+    public static final Parcelable.Creator<DhcpErrorEvent> CREATOR = new Parcelable.Creator<DhcpErrorEvent>() { // from class: android.net.metrics.DhcpErrorEvent.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public DhcpErrorEvent createFromParcel(Parcel in) {
             return new DhcpErrorEvent(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public DhcpErrorEvent[] newArray(int size) {
             return new DhcpErrorEvent[size];
         }
@@ -46,30 +51,33 @@ public final class DhcpErrorEvent implements IpConnectivityLog.Event {
     public static final int RECEIVE_ERROR = 84017152;
     public final int errorCode;
 
-    public DhcpErrorEvent(int errorCode2) {
-        this.errorCode = errorCode2;
+    public DhcpErrorEvent(int errorCode) {
+        this.errorCode = errorCode;
     }
 
     private DhcpErrorEvent(Parcel in) {
         this.errorCode = in.readInt();
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(this.errorCode);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
-    public static int errorCodeWithOption(int errorCode2, int option) {
-        return (-65536 & errorCode2) | (option & 255);
+    public static int errorCodeWithOption(int errorCode, int option) {
+        return ((-65536) & errorCode) | (option & 255);
     }
 
     public String toString() {
-        return String.format("DhcpErrorEvent(%s)", new Object[]{Decoder.constants.get(this.errorCode)});
+        return String.format("DhcpErrorEvent(%s)", Decoder.constants.get(this.errorCode));
     }
 
+    /* loaded from: classes3.dex */
     static final class Decoder {
         static final SparseArray<String> constants = MessageUtils.findMessageNames(new Class[]{DhcpErrorEvent.class}, new String[]{"L2_", "L3_", "L4_", "BOOTP_", "DHCP_", "BUFFER_", "RECEIVE_", "PARSING_"});
 

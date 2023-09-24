@@ -2,10 +2,10 @@ package android.inputmethodservice;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.Looper;
-import android.os.ResultReceiver;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.Looper;
+import android.p007os.ResultReceiver;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.inputmethod.CompletionInfo;
@@ -13,12 +13,14 @@ import android.view.inputmethod.CursorAnchorInfo;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 
+/* loaded from: classes.dex */
 public final class MultiClientInputMethodServiceDelegate {
     public static final int INVALID_CLIENT_ID = -1;
     public static final int INVALID_WINDOW_HANDLE = -1;
     public static final String SERVICE_INTERFACE = "android.inputmethodservice.MultiClientInputMethodService";
     private final MultiClientInputMethodServiceDelegateImpl mImpl;
 
+    /* loaded from: classes.dex */
     public interface ClientCallback {
         void onAppPrivateCommand(String str, Bundle bundle);
 
@@ -51,6 +53,7 @@ public final class MultiClientInputMethodServiceDelegate {
         void onUpdateSelection(int i, int i2, int i3, int i4, int i5, int i6);
     }
 
+    /* loaded from: classes.dex */
     public interface ServiceCallback {
         void addClient(int i, int i2, int i3, int i4);
 

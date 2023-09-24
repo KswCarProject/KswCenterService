@@ -1,14 +1,23 @@
 package android.hardware.usb;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public class UsbEndpoint implements Parcelable {
-    public static final Parcelable.Creator<UsbEndpoint> CREATOR = new Parcelable.Creator<UsbEndpoint>() {
+    public static final Parcelable.Creator<UsbEndpoint> CREATOR = new Parcelable.Creator<UsbEndpoint>() { // from class: android.hardware.usb.UsbEndpoint.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public UsbEndpoint createFromParcel(Parcel in) {
-            return new UsbEndpoint(in.readInt(), in.readInt(), in.readInt(), in.readInt());
+            int address = in.readInt();
+            int attributes = in.readInt();
+            int maxPacketSize = in.readInt();
+            int interval = in.readInt();
+            return new UsbEndpoint(address, attributes, maxPacketSize, interval);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public UsbEndpoint[] newArray(int size) {
             return new UsbEndpoint[size];
         }
@@ -57,10 +66,12 @@ public class UsbEndpoint implements Parcelable {
         return "UsbEndpoint[mAddress=" + this.mAddress + ",mAttributes=" + this.mAttributes + ",mMaxPacketSize=" + this.mMaxPacketSize + ",mInterval=" + this.mInterval + "]";
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeInt(this.mAddress);
         parcel.writeInt(this.mAttributes);

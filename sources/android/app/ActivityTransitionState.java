@@ -1,8 +1,8 @@
 package android.app;
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.os.ResultReceiver;
+import android.p007os.Bundle;
+import android.p007os.ResultReceiver;
 import android.transition.Transition;
 import android.util.SparseArray;
 import android.view.View;
@@ -12,14 +12,14 @@ import com.android.internal.view.OneShotPreDrawListener;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 class ActivityTransitionState {
     private static final String EXITING_MAPPED_FROM = "android:exitingMappedFrom";
     private static final String EXITING_MAPPED_TO = "android:exitingMappedTo";
     private static final String PENDING_EXIT_SHARED_ELEMENTS = "android:pendingExitSharedElements";
     private ExitTransitionCoordinator mCalledExitCoordinator;
     private ActivityOptions mEnterActivityOptions;
-    /* access modifiers changed from: private */
-    public EnterTransitionCoordinator mEnterTransitionCoordinator;
+    private EnterTransitionCoordinator mEnterTransitionCoordinator;
     private SparseArray<WeakReference<ExitTransitionCoordinator>> mExitTransitionCoordinators;
     private int mExitTransitionCoordinatorsKey = 1;
     private ArrayList<String> mExitingFrom;
@@ -37,14 +37,15 @@ class ActivityTransitionState {
         }
         WeakReference<ExitTransitionCoordinator> ref = new WeakReference<>(exitTransitionCoordinator);
         for (int i = this.mExitTransitionCoordinators.size() - 1; i >= 0; i--) {
-            if (this.mExitTransitionCoordinators.valueAt(i).get() == null) {
+            WeakReference<ExitTransitionCoordinator> oldRef = this.mExitTransitionCoordinators.valueAt(i);
+            if (oldRef.get() == null) {
                 this.mExitTransitionCoordinators.removeAt(i);
             }
         }
-        int newKey = this.mExitTransitionCoordinatorsKey;
-        this.mExitTransitionCoordinatorsKey = newKey + 1;
-        this.mExitTransitionCoordinators.append(newKey, ref);
-        return newKey;
+        int i2 = this.mExitTransitionCoordinatorsKey;
+        this.mExitTransitionCoordinatorsKey = i2 + 1;
+        this.mExitTransitionCoordinators.append(i2, ref);
+        return i2;
     }
 
     public void readState(Bundle bundle) {
@@ -79,44 +80,46 @@ class ActivityTransitionState {
 
     public void setEnterActivityOptions(Activity activity, ActivityOptions options) {
         Window window = activity.getWindow();
-        if (window != null) {
-            window.getDecorView();
-            if (window.hasFeature(13) && options != null && this.mEnterActivityOptions == null && this.mEnterTransitionCoordinator == null && options.getAnimationType() == 5) {
-                this.mEnterActivityOptions = options;
-                this.mIsEnterTriggered = false;
-                if (this.mEnterActivityOptions.isReturning()) {
-                    restoreExitedViews();
-                    int result = this.mEnterActivityOptions.getResultCode();
-                    if (result != 0) {
-                        Intent intent = this.mEnterActivityOptions.getResultData();
-                        if (intent != null) {
-                            intent.setExtrasClassLoader(activity.getClassLoader());
-                        }
-                        activity.onActivityReenter(result, intent);
+        if (window == null) {
+            return;
+        }
+        window.getDecorView();
+        if (window.hasFeature(13) && options != null && this.mEnterActivityOptions == null && this.mEnterTransitionCoordinator == null && options.getAnimationType() == 5) {
+            this.mEnterActivityOptions = options;
+            this.mIsEnterTriggered = false;
+            if (this.mEnterActivityOptions.isReturning()) {
+                restoreExitedViews();
+                int result = this.mEnterActivityOptions.getResultCode();
+                if (result != 0) {
+                    Intent intent = this.mEnterActivityOptions.getResultData();
+                    if (intent != null) {
+                        intent.setExtrasClassLoader(activity.getClassLoader());
                     }
+                    activity.onActivityReenter(result, intent);
                 }
             }
         }
     }
 
     public void enterReady(Activity activity) {
-        if (this.mEnterActivityOptions != null && !this.mIsEnterTriggered) {
-            this.mIsEnterTriggered = true;
-            this.mHasExited = false;
-            ArrayList<String> sharedElementNames = this.mEnterActivityOptions.getSharedElementNames();
-            ResultReceiver resultReceiver = this.mEnterActivityOptions.getResultReceiver();
-            if (this.mEnterActivityOptions.isReturning()) {
-                restoreExitedViews();
-                activity.getWindow().getDecorView().setVisibility(0);
-            }
-            this.mEnterTransitionCoordinator = new EnterTransitionCoordinator(activity, resultReceiver, sharedElementNames, this.mEnterActivityOptions.isReturning(), this.mEnterActivityOptions.isCrossTask());
-            if (this.mEnterActivityOptions.isCrossTask()) {
-                this.mExitingFrom = new ArrayList<>(this.mEnterActivityOptions.getSharedElementNames());
-                this.mExitingTo = new ArrayList<>(this.mEnterActivityOptions.getSharedElementNames());
-            }
-            if (!this.mIsEnterPostponed) {
-                startEnter();
-            }
+        if (this.mEnterActivityOptions == null || this.mIsEnterTriggered) {
+            return;
+        }
+        this.mIsEnterTriggered = true;
+        this.mHasExited = false;
+        ArrayList<String> sharedElementNames = this.mEnterActivityOptions.getSharedElementNames();
+        ResultReceiver resultReceiver = this.mEnterActivityOptions.getResultReceiver();
+        if (this.mEnterActivityOptions.isReturning()) {
+            restoreExitedViews();
+            activity.getWindow().getDecorView().setVisibility(0);
+        }
+        this.mEnterTransitionCoordinator = new EnterTransitionCoordinator(activity, resultReceiver, sharedElementNames, this.mEnterActivityOptions.isReturning(), this.mEnterActivityOptions.isCrossTask());
+        if (this.mEnterActivityOptions.isCrossTask()) {
+            this.mExitingFrom = new ArrayList<>(this.mEnterActivityOptions.getSharedElementNames());
+            this.mExitingTo = new ArrayList<>(this.mEnterActivityOptions.getSharedElementNames());
+        }
+        if (!this.mIsEnterPostponed) {
+            startEnter();
         }
     }
 
@@ -134,13 +137,15 @@ class ActivityTransitionState {
     }
 
     private void startEnter() {
-        if (!this.mEnterTransitionCoordinator.isReturning()) {
-            this.mEnterTransitionCoordinator.namedViewsReady((ArrayList<String>) null, (ArrayList<String>) null);
-            this.mPendingExitNames = null;
-        } else if (this.mExitingToView != null) {
-            this.mEnterTransitionCoordinator.viewInstancesReady(this.mExitingFrom, this.mExitingTo, this.mExitingToView);
+        if (this.mEnterTransitionCoordinator.isReturning()) {
+            if (this.mExitingToView != null) {
+                this.mEnterTransitionCoordinator.viewInstancesReady(this.mExitingFrom, this.mExitingTo, this.mExitingToView);
+            } else {
+                this.mEnterTransitionCoordinator.namedViewsReady(this.mExitingFrom, this.mExitingTo);
+            }
         } else {
-            this.mEnterTransitionCoordinator.namedViewsReady(this.mExitingFrom, this.mExitingTo);
+            this.mEnterTransitionCoordinator.namedViewsReady(null, null);
+            this.mPendingExitNames = null;
         }
         this.mExitingFrom = null;
         this.mExitingTo = null;
@@ -166,14 +171,15 @@ class ActivityTransitionState {
             restoreReenteringViews();
             return;
         }
-        activity.mHandler.postDelayed(new Runnable() {
+        activity.mHandler.postDelayed(new Runnable() { // from class: android.app.ActivityTransitionState.1
+            @Override // java.lang.Runnable
             public void run() {
                 if (ActivityTransitionState.this.mEnterTransitionCoordinator == null || ActivityTransitionState.this.mEnterTransitionCoordinator.isWaitingForRemoteExit()) {
                     ActivityTransitionState.this.restoreExitedViews();
                     ActivityTransitionState.this.restoreReenteringViews();
                 }
             }
-        }, 1000);
+        }, 1000L);
     }
 
     public void clear() {
@@ -187,7 +193,7 @@ class ActivityTransitionState {
         this.mExitTransitionCoordinators = null;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void restoreExitedViews() {
         if (this.mCalledExitCoordinator != null) {
             this.mCalledExitCoordinator.resetViews();
@@ -195,7 +201,7 @@ class ActivityTransitionState {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void restoreReenteringViews() {
         if (this.mEnterTransitionCoordinator != null && this.mEnterTransitionCoordinator.isReturning() && !this.mEnterTransitionCoordinator.isCrossTask()) {
             this.mEnterTransitionCoordinator.forceViewsToAppear();
@@ -205,7 +211,7 @@ class ActivityTransitionState {
         }
     }
 
-    public boolean startExitBackTransition(Activity activity) {
+    public boolean startExitBackTransition(final Activity activity) {
         ArrayList<String> pendingExitNames = getPendingExitNames();
         if (pendingExitNames == null || this.mCalledExitCoordinator != null) {
             return false;
@@ -220,32 +226,26 @@ class ActivityTransitionState {
                 decor = this.mEnterTransitionCoordinator.getDecor();
                 delayExitBack = this.mEnterTransitionCoordinator.cancelEnter();
                 this.mEnterTransitionCoordinator = null;
-                if (!(enterViewsTransition == null || decor == null)) {
+                if (enterViewsTransition != null && decor != null) {
                     enterViewsTransition.pause(decor);
                 }
             }
             Transition enterViewsTransition2 = enterViewsTransition;
             ViewGroup decor2 = decor;
             boolean delayExitBack2 = delayExitBack;
-            this.mReturnExitCoordinator = new ExitTransitionCoordinator(activity, activity.getWindow(), activity.mEnterTransitionListener, pendingExitNames, (ArrayList<String>) null, (ArrayList<View>) null, true);
-            if (!(enterViewsTransition2 == null || decor2 == null)) {
+            this.mReturnExitCoordinator = new ExitTransitionCoordinator(activity, activity.getWindow(), activity.mEnterTransitionListener, pendingExitNames, null, null, true);
+            if (enterViewsTransition2 != null && decor2 != null) {
                 enterViewsTransition2.resume(decor2);
             }
-            if (!delayExitBack2 || decor2 == null) {
-                this.mReturnExitCoordinator.startExit(activity.mResultCode, activity.mResultData);
-            } else {
-                ViewGroup viewGroup = decor2;
-                OneShotPreDrawListener.add(decor2, new Runnable(activity) {
-                    private final /* synthetic */ Activity f$1;
-
-                    {
-                        this.f$1 = r2;
-                    }
-
+            if (delayExitBack2 && decor2 != null) {
+                OneShotPreDrawListener.add(decor2, new Runnable() { // from class: android.app.-$$Lambda$ActivityTransitionState$yioLR6wQWjZ9DcWK5bibElIbsXc
+                    @Override // java.lang.Runnable
                     public final void run() {
-                        ActivityTransitionState.lambda$startExitBackTransition$0(ActivityTransitionState.this, this.f$1);
+                        ActivityTransitionState.lambda$startExitBackTransition$0(ActivityTransitionState.this, activity);
                     }
                 });
+            } else {
+                this.mReturnExitCoordinator.startExit(activity.mResultCode, activity.mResultData);
             }
         }
         return true;
@@ -258,25 +258,26 @@ class ActivityTransitionState {
     }
 
     public boolean isTransitionRunning() {
-        if (this.mEnterTransitionCoordinator != null && this.mEnterTransitionCoordinator.isTransitionRunning()) {
+        if (this.mEnterTransitionCoordinator == null || !this.mEnterTransitionCoordinator.isTransitionRunning()) {
+            if (this.mCalledExitCoordinator == null || !this.mCalledExitCoordinator.isTransitionRunning()) {
+                return this.mReturnExitCoordinator != null && this.mReturnExitCoordinator.isTransitionRunning();
+            }
             return true;
-        }
-        if (this.mCalledExitCoordinator != null && this.mCalledExitCoordinator.isTransitionRunning()) {
-            return true;
-        }
-        if (this.mReturnExitCoordinator == null || !this.mReturnExitCoordinator.isTransitionRunning()) {
-            return false;
         }
         return true;
     }
 
     public void startExitOutTransition(Activity activity, Bundle options) {
-        int index;
         this.mEnterTransitionCoordinator = null;
-        if (activity.getWindow().hasFeature(13) && this.mExitTransitionCoordinators != null) {
-            ActivityOptions activityOptions = new ActivityOptions(options);
-            if (activityOptions.getAnimationType() == 5 && (index = this.mExitTransitionCoordinators.indexOfKey(activityOptions.getExitCoordinatorKey())) >= 0) {
-                this.mCalledExitCoordinator = (ExitTransitionCoordinator) this.mExitTransitionCoordinators.valueAt(index).get();
+        if (!activity.getWindow().hasFeature(13) || this.mExitTransitionCoordinators == null) {
+            return;
+        }
+        ActivityOptions activityOptions = new ActivityOptions(options);
+        if (activityOptions.getAnimationType() == 5) {
+            int key = activityOptions.getExitCoordinatorKey();
+            int index = this.mExitTransitionCoordinators.indexOfKey(key);
+            if (index >= 0) {
+                this.mCalledExitCoordinator = this.mExitTransitionCoordinators.valueAt(index).get();
                 this.mExitTransitionCoordinators.removeAt(index);
                 if (this.mCalledExitCoordinator != null) {
                     this.mExitingFrom = this.mCalledExitCoordinator.getAcceptedNames();

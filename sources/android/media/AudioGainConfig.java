@@ -2,6 +2,7 @@ package android.media;
 
 import android.annotation.UnsupportedAppUsage;
 
+/* loaded from: classes3.dex */
 public class AudioGainConfig {
     @UnsupportedAppUsage
     private final int mChannelMask;
@@ -25,8 +26,7 @@ public class AudioGainConfig {
         this.mRampDurationMs = rampDurationMs;
     }
 
-    /* access modifiers changed from: package-private */
-    public int index() {
+    int index() {
         return this.mIndex;
     }
 

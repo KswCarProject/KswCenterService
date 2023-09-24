@@ -1,5 +1,6 @@
 package android.graphics;
 
+/* loaded from: classes.dex */
 public final class BlendModeColorFilter extends ColorFilter {
     final int mColor;
     private final BlendMode mMode;
@@ -19,8 +20,8 @@ public final class BlendModeColorFilter extends ColorFilter {
         return this.mMode;
     }
 
-    /* access modifiers changed from: package-private */
-    public long createNativeInstance() {
+    @Override // android.graphics.ColorFilter
+    long createNativeInstance() {
         return native_CreateBlendModeFilter(this.mColor, this.mMode.getXfermode().porterDuffMode);
     }
 
@@ -31,7 +32,8 @@ public final class BlendModeColorFilter extends ColorFilter {
         if (object == null || getClass() != object.getClass()) {
             return false;
         }
-        if (((BlendModeColorFilter) object).mMode == this.mMode) {
+        BlendModeColorFilter other = (BlendModeColorFilter) object;
+        if (other.mMode == this.mMode) {
             return true;
         }
         return false;

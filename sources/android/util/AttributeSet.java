@@ -1,5 +1,6 @@
 package android.util;
 
+/* loaded from: classes4.dex */
 public interface AttributeSet {
     boolean getAttributeBooleanValue(int i, boolean z);
 
@@ -45,7 +46,7 @@ public interface AttributeSet {
 
     int getStyleAttribute();
 
-    String getAttributeNamespace(int index) {
+    default String getAttributeNamespace(int index) {
         return null;
     }
 }

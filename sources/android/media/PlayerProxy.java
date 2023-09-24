@@ -2,20 +2,20 @@ package android.media;
 
 import android.annotation.SystemApi;
 import android.media.VolumeShaper;
-import android.os.RemoteException;
+import android.p007os.RemoteException;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public class PlayerProxy {
     private static final boolean DEBUG = false;
     private static final String TAG = "PlayerProxy";
     private final AudioPlaybackConfiguration mConf;
 
     PlayerProxy(AudioPlaybackConfiguration apc) {
-        if (apc != null) {
-            this.mConf = apc;
-            return;
+        if (apc == null) {
+            throw new IllegalArgumentException("Illegal null AudioPlaybackConfiguration");
         }
-        throw new IllegalArgumentException("Illegal null AudioPlaybackConfiguration");
+        this.mConf = apc;
     }
 
     @SystemApi

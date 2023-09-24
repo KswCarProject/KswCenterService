@@ -1,41 +1,52 @@
 package android.hardware.display;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public final class WifiDisplay implements Parcelable {
-    public static final Parcelable.Creator<WifiDisplay> CREATOR = new Parcelable.Creator<WifiDisplay>() {
-        public WifiDisplay createFromParcel(Parcel in) {
-            return new WifiDisplay(in.readString(), in.readString(), in.readString(), in.readInt() != 0, in.readInt() != 0, in.readInt() != 0);
-        }
-
-        public WifiDisplay[] newArray(int size) {
-            return size == 0 ? WifiDisplay.EMPTY_ARRAY : new WifiDisplay[size];
-        }
-    };
-    public static final WifiDisplay[] EMPTY_ARRAY = new WifiDisplay[0];
     private final boolean mCanConnect;
     private final String mDeviceAddress;
     private final String mDeviceAlias;
     private final String mDeviceName;
     private final boolean mIsAvailable;
     private final boolean mIsRemembered;
+    public static final WifiDisplay[] EMPTY_ARRAY = new WifiDisplay[0];
+    public static final Parcelable.Creator<WifiDisplay> CREATOR = new Parcelable.Creator<WifiDisplay>() { // from class: android.hardware.display.WifiDisplay.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public WifiDisplay createFromParcel(Parcel in) {
+            String deviceAddress = in.readString();
+            String deviceName = in.readString();
+            String deviceAlias = in.readString();
+            boolean isAvailable = in.readInt() != 0;
+            boolean canConnect = in.readInt() != 0;
+            boolean isRemembered = in.readInt() != 0;
+            return new WifiDisplay(deviceAddress, deviceName, deviceAlias, isAvailable, canConnect, isRemembered);
+        }
+
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public WifiDisplay[] newArray(int size) {
+            return size == 0 ? WifiDisplay.EMPTY_ARRAY : new WifiDisplay[size];
+        }
+    };
 
     public WifiDisplay(String deviceAddress, String deviceName, String deviceAlias, boolean available, boolean canConnect, boolean remembered) {
         if (deviceAddress == null) {
             throw new IllegalArgumentException("deviceAddress must not be null");
-        } else if (deviceName != null) {
-            this.mDeviceAddress = deviceAddress;
-            this.mDeviceName = deviceName;
-            this.mDeviceAlias = deviceAlias;
-            this.mIsAvailable = available;
-            this.mCanConnect = canConnect;
-            this.mIsRemembered = remembered;
-        } else {
+        }
+        if (deviceName == null) {
             throw new IllegalArgumentException("deviceName must not be null");
         }
+        this.mDeviceAddress = deviceAddress;
+        this.mDeviceName = deviceName;
+        this.mDeviceAlias = deviceAlias;
+        this.mIsAvailable = available;
+        this.mCanConnect = canConnect;
+        this.mIsRemembered = remembered;
     }
 
     @UnsupportedAppUsage
@@ -89,6 +100,7 @@ public final class WifiDisplay implements Parcelable {
         return this.mDeviceAddress.hashCode();
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.mDeviceAddress);
         dest.writeString(this.mDeviceName);
@@ -98,6 +110,7 @@ public final class WifiDisplay implements Parcelable {
         dest.writeInt(this.mIsRemembered ? 1 : 0);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

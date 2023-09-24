@@ -1,17 +1,22 @@
 package android.view.inputmethod;
 
 import android.graphics.RectF;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.telephony.SmsManager;
 import java.util.Arrays;
 
+/* loaded from: classes4.dex */
 public final class SparseRectFArray implements Parcelable {
-    public static final Parcelable.Creator<SparseRectFArray> CREATOR = new Parcelable.Creator<SparseRectFArray>() {
+    public static final Parcelable.Creator<SparseRectFArray> CREATOR = new Parcelable.Creator<SparseRectFArray>() { // from class: android.view.inputmethod.SparseRectFArray.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SparseRectFArray createFromParcel(Parcel source) {
             return new SparseRectFArray(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SparseRectFArray[] newArray(int size) {
             return new SparseRectFArray[size];
         }
@@ -26,6 +31,7 @@ public final class SparseRectFArray implements Parcelable {
         this.mFlagsArray = source.createIntArray();
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeIntArray(this.mKeys);
         dest.writeFloatArray(this.mCoordinates);
@@ -37,10 +43,11 @@ public final class SparseRectFArray implements Parcelable {
             return 0;
         }
         int hash = this.mKeys.length;
-        for (int i = 0; i < 4; i++) {
-            hash = (int) (((float) (hash * 31)) + this.mCoordinates[i]);
+        int hash2 = hash;
+        for (int hash3 = 0; hash3 < 4; hash3++) {
+            hash2 = (int) ((hash2 * 31) + this.mCoordinates[hash3]);
         }
-        return (hash * 31) + this.mFlagsArray[0];
+        return (hash2 * 31) + this.mFlagsArray[0];
     }
 
     public boolean equals(Object obj) {
@@ -87,16 +94,13 @@ public final class SparseRectFArray implements Parcelable {
         return sb.toString();
     }
 
+    /* loaded from: classes4.dex */
     public static final class SparseRectFArrayBuilder {
         private static int INITIAL_SIZE = 16;
-        /* access modifiers changed from: private */
-        public float[] mCoordinates = null;
-        /* access modifiers changed from: private */
-        public int mCount = 0;
-        /* access modifiers changed from: private */
-        public int[] mFlagsArray = null;
-        /* access modifiers changed from: private */
-        public int[] mKeys = null;
+        private int mCount = 0;
+        private int[] mKeys = null;
+        private float[] mCoordinates = null;
+        private int[] mFlagsArray = null;
 
         private void checkIndex(int key) {
             if (this.mCount != 0 && this.mKeys[this.mCount - 1] >= key) {
@@ -109,26 +113,25 @@ public final class SparseRectFArray implements Parcelable {
                 this.mKeys = new int[INITIAL_SIZE];
             }
             if (this.mCoordinates == null) {
-                this.mCoordinates = new float[(INITIAL_SIZE * 4)];
+                this.mCoordinates = new float[INITIAL_SIZE * 4];
             }
             if (this.mFlagsArray == null) {
                 this.mFlagsArray = new int[INITIAL_SIZE];
             }
             int requiredIndexArraySize = this.mCount + 1;
             if (this.mKeys.length <= requiredIndexArraySize) {
-                int[] newArray = new int[(requiredIndexArraySize * 2)];
+                int[] newArray = new int[requiredIndexArraySize * 2];
                 System.arraycopy(this.mKeys, 0, newArray, 0, this.mCount);
                 this.mKeys = newArray;
             }
             int requiredCoordinatesArraySize = (this.mCount + 1) * 4;
             if (this.mCoordinates.length <= requiredCoordinatesArraySize) {
-                float[] newArray2 = new float[(requiredCoordinatesArraySize * 2)];
+                float[] newArray2 = new float[requiredCoordinatesArraySize * 2];
                 System.arraycopy(this.mCoordinates, 0, newArray2, 0, this.mCount * 4);
                 this.mCoordinates = newArray2;
             }
-            int requiredFlagsArraySize = requiredIndexArraySize;
-            if (this.mFlagsArray.length <= requiredFlagsArraySize) {
-                int[] newArray3 = new int[(requiredFlagsArraySize * 2)];
+            if (this.mFlagsArray.length <= requiredIndexArraySize) {
+                int[] newArray3 = new int[requiredIndexArraySize * 2];
                 System.arraycopy(this.mFlagsArray, 0, newArray3, 0, this.mCount);
                 this.mFlagsArray = newArray3;
             }
@@ -142,7 +145,8 @@ public final class SparseRectFArray implements Parcelable {
             this.mCoordinates[baseCoordinatesIndex + 1] = top;
             this.mCoordinates[baseCoordinatesIndex + 2] = right;
             this.mCoordinates[baseCoordinatesIndex + 3] = bottom;
-            this.mFlagsArray[this.mCount] = flags;
+            int flagsIndex = this.mCount;
+            this.mFlagsArray[flagsIndex] = flags;
             this.mKeys[this.mCount] = key;
             this.mCount++;
             return this;
@@ -167,37 +171,44 @@ public final class SparseRectFArray implements Parcelable {
     }
 
     private SparseRectFArray(SparseRectFArrayBuilder builder) {
-        if (builder.mCount == 0) {
-            this.mKeys = null;
-            this.mCoordinates = null;
-            this.mFlagsArray = null;
+        if (builder.mCount != 0) {
+            this.mKeys = new int[builder.mCount];
+            this.mCoordinates = new float[builder.mCount * 4];
+            this.mFlagsArray = new int[builder.mCount];
+            System.arraycopy(builder.mKeys, 0, this.mKeys, 0, builder.mCount);
+            System.arraycopy(builder.mCoordinates, 0, this.mCoordinates, 0, builder.mCount * 4);
+            System.arraycopy(builder.mFlagsArray, 0, this.mFlagsArray, 0, builder.mCount);
             return;
         }
-        this.mKeys = new int[builder.mCount];
-        this.mCoordinates = new float[(builder.mCount * 4)];
-        this.mFlagsArray = new int[builder.mCount];
-        System.arraycopy(builder.mKeys, 0, this.mKeys, 0, builder.mCount);
-        System.arraycopy(builder.mCoordinates, 0, this.mCoordinates, 0, builder.mCount * 4);
-        System.arraycopy(builder.mFlagsArray, 0, this.mFlagsArray, 0, builder.mCount);
+        this.mKeys = null;
+        this.mCoordinates = null;
+        this.mFlagsArray = null;
     }
 
     public RectF get(int index) {
         int arrayIndex;
-        if (this.mKeys == null || index < 0 || (arrayIndex = Arrays.binarySearch(this.mKeys, index)) < 0) {
-            return null;
+        if (this.mKeys != null && index >= 0 && (arrayIndex = Arrays.binarySearch(this.mKeys, index)) >= 0) {
+            int baseCoordIndex = arrayIndex * 4;
+            return new RectF(this.mCoordinates[baseCoordIndex], this.mCoordinates[baseCoordIndex + 1], this.mCoordinates[baseCoordIndex + 2], this.mCoordinates[baseCoordIndex + 3]);
         }
-        int baseCoordIndex = arrayIndex * 4;
-        return new RectF(this.mCoordinates[baseCoordIndex], this.mCoordinates[baseCoordIndex + 1], this.mCoordinates[baseCoordIndex + 2], this.mCoordinates[baseCoordIndex + 3]);
+        return null;
     }
 
     public int getFlags(int index, int valueIfKeyNotFound) {
-        int arrayIndex;
-        if (this.mKeys != null && index >= 0 && (arrayIndex = Arrays.binarySearch(this.mKeys, index)) >= 0) {
-            return this.mFlagsArray[arrayIndex];
+        if (this.mKeys == null) {
+            return valueIfKeyNotFound;
         }
-        return valueIfKeyNotFound;
+        if (index < 0) {
+            return valueIfKeyNotFound;
+        }
+        int arrayIndex = Arrays.binarySearch(this.mKeys, index);
+        if (arrayIndex < 0) {
+            return valueIfKeyNotFound;
+        }
+        return this.mFlagsArray[arrayIndex];
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

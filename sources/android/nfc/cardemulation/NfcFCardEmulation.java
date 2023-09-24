@@ -4,21 +4,22 @@ import android.app.Activity;
 import android.app.ActivityThread;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.pm.IPackageManager;
-import android.content.pm.PackageManager;
+import android.content.p002pm.IPackageManager;
+import android.content.p002pm.PackageManager;
 import android.nfc.INfcFCardEmulation;
 import android.nfc.NfcAdapter;
-import android.os.RemoteException;
+import android.p007os.RemoteException;
 import android.util.Log;
 import java.util.HashMap;
 import java.util.List;
 
+/* loaded from: classes3.dex */
 public final class NfcFCardEmulation {
     static final String TAG = "NfcFCardEmulation";
-    static HashMap<Context, NfcFCardEmulation> sCardEmus = new HashMap<>();
-    static boolean sIsInitialized = false;
     static INfcFCardEmulation sService;
     final Context mContext;
+    static boolean sIsInitialized = false;
+    static HashMap<Context, NfcFCardEmulation> sCardEmus = new HashMap<>();
 
     private NfcFCardEmulation(Context context, INfcFCardEmulation service) {
         this.mContext = context.getApplicationContext();
@@ -28,70 +29,64 @@ public final class NfcFCardEmulation {
     public static synchronized NfcFCardEmulation getInstance(NfcAdapter adapter) {
         NfcFCardEmulation manager;
         synchronized (NfcFCardEmulation.class) {
-            if (adapter != null) {
-                Context context = adapter.getContext();
-                if (context != null) {
-                    if (!sIsInitialized) {
-                        IPackageManager pm = ActivityThread.getPackageManager();
-                        if (pm != null) {
-                            try {
-                                if (pm.hasSystemFeature(PackageManager.FEATURE_NFC_HOST_CARD_EMULATION_NFCF, 0)) {
-                                    sIsInitialized = true;
-                                } else {
-                                    Log.e(TAG, "This device does not support NFC-F card emulation");
-                                    throw new UnsupportedOperationException();
-                                }
-                            } catch (RemoteException e) {
-                                Log.e(TAG, "PackageManager query failed.");
-                                throw new UnsupportedOperationException();
-                            }
-                        } else {
-                            Log.e(TAG, "Cannot get PackageManager");
-                            throw new UnsupportedOperationException();
-                        }
-                    }
-                    manager = sCardEmus.get(context);
-                    if (manager == null) {
-                        INfcFCardEmulation service = adapter.getNfcFCardEmulationService();
-                        if (service != null) {
-                            manager = new NfcFCardEmulation(context, service);
-                            sCardEmus.put(context, manager);
-                        } else {
-                            Log.e(TAG, "This device does not implement the INfcFCardEmulation interface.");
-                            throw new UnsupportedOperationException();
-                        }
-                    }
-                } else {
-                    Log.e(TAG, "NfcAdapter context is null.");
+            if (adapter == null) {
+                throw new NullPointerException("NfcAdapter is null");
+            }
+            Context context = adapter.getContext();
+            if (context == null) {
+                Log.m70e(TAG, "NfcAdapter context is null.");
+                throw new UnsupportedOperationException();
+            }
+            if (!sIsInitialized) {
+                IPackageManager pm = ActivityThread.getPackageManager();
+                if (pm == null) {
+                    Log.m70e(TAG, "Cannot get PackageManager");
                     throw new UnsupportedOperationException();
                 }
-            } else {
-                throw new NullPointerException("NfcAdapter is null");
+                try {
+                    if (!pm.hasSystemFeature(PackageManager.FEATURE_NFC_HOST_CARD_EMULATION_NFCF, 0)) {
+                        Log.m70e(TAG, "This device does not support NFC-F card emulation");
+                        throw new UnsupportedOperationException();
+                    }
+                    sIsInitialized = true;
+                } catch (RemoteException e) {
+                    Log.m70e(TAG, "PackageManager query failed.");
+                    throw new UnsupportedOperationException();
+                }
+            }
+            manager = sCardEmus.get(context);
+            if (manager == null) {
+                INfcFCardEmulation service = adapter.getNfcFCardEmulationService();
+                if (service == null) {
+                    Log.m70e(TAG, "This device does not implement the INfcFCardEmulation interface.");
+                    throw new UnsupportedOperationException();
+                }
+                manager = new NfcFCardEmulation(context, service);
+                sCardEmus.put(context, manager);
             }
         }
         return manager;
     }
 
     public String getSystemCodeForService(ComponentName service) throws RuntimeException {
-        if (service != null) {
+        if (service == null) {
+            throw new NullPointerException("service is null");
+        }
+        try {
+            return sService.getSystemCodeForService(this.mContext.getUserId(), service);
+        } catch (RemoteException e) {
+            recoverService();
+            if (sService == null) {
+                Log.m70e(TAG, "Failed to recover CardEmulationService.");
+                return null;
+            }
             try {
                 return sService.getSystemCodeForService(this.mContext.getUserId(), service);
-            } catch (RemoteException e) {
-                recoverService();
-                if (sService == null) {
-                    Log.e(TAG, "Failed to recover CardEmulationService.");
-                    return null;
-                }
-                try {
-                    return sService.getSystemCodeForService(this.mContext.getUserId(), service);
-                } catch (RemoteException ee) {
-                    Log.e(TAG, "Failed to reach CardEmulationService.");
-                    ee.rethrowAsRuntimeException();
-                    return null;
-                }
+            } catch (RemoteException ee) {
+                Log.m70e(TAG, "Failed to reach CardEmulationService.");
+                ee.rethrowAsRuntimeException();
+                return null;
             }
-        } else {
-            throw new NullPointerException("service is null");
         }
     }
 
@@ -104,13 +99,13 @@ public final class NfcFCardEmulation {
         } catch (RemoteException e) {
             recoverService();
             if (sService == null) {
-                Log.e(TAG, "Failed to recover CardEmulationService.");
+                Log.m70e(TAG, "Failed to recover CardEmulationService.");
                 return false;
             }
             try {
                 return sService.registerSystemCodeForService(this.mContext.getUserId(), service, systemCode);
             } catch (RemoteException ee) {
-                Log.e(TAG, "Failed to reach CardEmulationService.");
+                Log.m70e(TAG, "Failed to reach CardEmulationService.");
                 ee.rethrowAsRuntimeException();
                 return false;
             }
@@ -118,48 +113,46 @@ public final class NfcFCardEmulation {
     }
 
     public boolean unregisterSystemCodeForService(ComponentName service) throws RuntimeException {
-        if (service != null) {
+        if (service == null) {
+            throw new NullPointerException("service is null");
+        }
+        try {
+            return sService.removeSystemCodeForService(this.mContext.getUserId(), service);
+        } catch (RemoteException e) {
+            recoverService();
+            if (sService == null) {
+                Log.m70e(TAG, "Failed to recover CardEmulationService.");
+                return false;
+            }
             try {
                 return sService.removeSystemCodeForService(this.mContext.getUserId(), service);
-            } catch (RemoteException e) {
-                recoverService();
-                if (sService == null) {
-                    Log.e(TAG, "Failed to recover CardEmulationService.");
-                    return false;
-                }
-                try {
-                    return sService.removeSystemCodeForService(this.mContext.getUserId(), service);
-                } catch (RemoteException ee) {
-                    Log.e(TAG, "Failed to reach CardEmulationService.");
-                    ee.rethrowAsRuntimeException();
-                    return false;
-                }
+            } catch (RemoteException ee) {
+                Log.m70e(TAG, "Failed to reach CardEmulationService.");
+                ee.rethrowAsRuntimeException();
+                return false;
             }
-        } else {
-            throw new NullPointerException("service is null");
         }
     }
 
     public String getNfcid2ForService(ComponentName service) throws RuntimeException {
-        if (service != null) {
+        if (service == null) {
+            throw new NullPointerException("service is null");
+        }
+        try {
+            return sService.getNfcid2ForService(this.mContext.getUserId(), service);
+        } catch (RemoteException e) {
+            recoverService();
+            if (sService == null) {
+                Log.m70e(TAG, "Failed to recover CardEmulationService.");
+                return null;
+            }
             try {
                 return sService.getNfcid2ForService(this.mContext.getUserId(), service);
-            } catch (RemoteException e) {
-                recoverService();
-                if (sService == null) {
-                    Log.e(TAG, "Failed to recover CardEmulationService.");
-                    return null;
-                }
-                try {
-                    return sService.getNfcid2ForService(this.mContext.getUserId(), service);
-                } catch (RemoteException ee) {
-                    Log.e(TAG, "Failed to reach CardEmulationService.");
-                    ee.rethrowAsRuntimeException();
-                    return null;
-                }
+            } catch (RemoteException ee) {
+                Log.m70e(TAG, "Failed to reach CardEmulationService.");
+                ee.rethrowAsRuntimeException();
+                return null;
             }
-        } else {
-            throw new NullPointerException("service is null");
         }
     }
 
@@ -172,13 +165,13 @@ public final class NfcFCardEmulation {
         } catch (RemoteException e) {
             recoverService();
             if (sService == null) {
-                Log.e(TAG, "Failed to recover CardEmulationService.");
+                Log.m70e(TAG, "Failed to recover CardEmulationService.");
                 return false;
             }
             try {
                 return sService.setNfcid2ForService(this.mContext.getUserId(), service, nfcid2);
             } catch (RemoteException ee) {
-                Log.e(TAG, "Failed to reach CardEmulationService.");
+                Log.m70e(TAG, "Failed to reach CardEmulationService.");
                 ee.rethrowAsRuntimeException();
                 return false;
             }
@@ -188,50 +181,50 @@ public final class NfcFCardEmulation {
     public boolean enableService(Activity activity, ComponentName service) throws RuntimeException {
         if (activity == null || service == null) {
             throw new NullPointerException("activity or service is null");
-        } else if (activity.isResumed()) {
+        }
+        if (!activity.isResumed()) {
+            throw new IllegalArgumentException("Activity must be resumed.");
+        }
+        try {
+            return sService.enableNfcFForegroundService(service);
+        } catch (RemoteException e) {
+            recoverService();
+            if (sService == null) {
+                Log.m70e(TAG, "Failed to recover CardEmulationService.");
+                return false;
+            }
             try {
                 return sService.enableNfcFForegroundService(service);
-            } catch (RemoteException e) {
-                recoverService();
-                if (sService == null) {
-                    Log.e(TAG, "Failed to recover CardEmulationService.");
-                    return false;
-                }
-                try {
-                    return sService.enableNfcFForegroundService(service);
-                } catch (RemoteException ee) {
-                    Log.e(TAG, "Failed to reach CardEmulationService.");
-                    ee.rethrowAsRuntimeException();
-                    return false;
-                }
+            } catch (RemoteException ee) {
+                Log.m70e(TAG, "Failed to reach CardEmulationService.");
+                ee.rethrowAsRuntimeException();
+                return false;
             }
-        } else {
-            throw new IllegalArgumentException("Activity must be resumed.");
         }
     }
 
     public boolean disableService(Activity activity) throws RuntimeException {
         if (activity == null) {
             throw new NullPointerException("activity is null");
-        } else if (activity.isResumed()) {
+        }
+        if (!activity.isResumed()) {
+            throw new IllegalArgumentException("Activity must be resumed.");
+        }
+        try {
+            return sService.disableNfcFForegroundService();
+        } catch (RemoteException e) {
+            recoverService();
+            if (sService == null) {
+                Log.m70e(TAG, "Failed to recover CardEmulationService.");
+                return false;
+            }
             try {
                 return sService.disableNfcFForegroundService();
-            } catch (RemoteException e) {
-                recoverService();
-                if (sService == null) {
-                    Log.e(TAG, "Failed to recover CardEmulationService.");
-                    return false;
-                }
-                try {
-                    return sService.disableNfcFForegroundService();
-                } catch (RemoteException ee) {
-                    Log.e(TAG, "Failed to reach CardEmulationService.");
-                    ee.rethrowAsRuntimeException();
-                    return false;
-                }
+            } catch (RemoteException ee) {
+                Log.m70e(TAG, "Failed to reach CardEmulationService.");
+                ee.rethrowAsRuntimeException();
+                return false;
             }
-        } else {
-            throw new IllegalArgumentException("Activity must be resumed.");
         }
     }
 
@@ -241,13 +234,13 @@ public final class NfcFCardEmulation {
         } catch (RemoteException e) {
             recoverService();
             if (sService == null) {
-                Log.e(TAG, "Failed to recover CardEmulationService.");
+                Log.m70e(TAG, "Failed to recover CardEmulationService.");
                 return null;
             }
             try {
                 return sService.getNfcFServices(this.mContext.getUserId());
             } catch (RemoteException e2) {
-                Log.e(TAG, "Failed to reach CardEmulationService.");
+                Log.m70e(TAG, "Failed to reach CardEmulationService.");
                 return null;
             }
         }
@@ -259,13 +252,13 @@ public final class NfcFCardEmulation {
         } catch (RemoteException e) {
             recoverService();
             if (sService == null) {
-                Log.e(TAG, "Failed to recover CardEmulationService.");
+                Log.m70e(TAG, "Failed to recover CardEmulationService.");
                 return -1;
             }
             try {
                 return sService.getMaxNumOfRegisterableSystemCodes();
             } catch (RemoteException e2) {
-                Log.e(TAG, "Failed to reach CardEmulationService.");
+                Log.m70e(TAG, "Failed to reach CardEmulationService.");
                 return -1;
             }
         }
@@ -276,17 +269,17 @@ public final class NfcFCardEmulation {
             return false;
         }
         if (systemCode.length() != 4) {
-            Log.e(TAG, "System Code " + systemCode + " is not a valid System Code.");
+            Log.m70e(TAG, "System Code " + systemCode + " is not a valid System Code.");
             return false;
         } else if (!systemCode.startsWith("4") || systemCode.toUpperCase().endsWith("FF")) {
-            Log.e(TAG, "System Code " + systemCode + " is not a valid System Code.");
+            Log.m70e(TAG, "System Code " + systemCode + " is not a valid System Code.");
             return false;
         } else {
             try {
                 Integer.parseInt(systemCode, 16);
                 return true;
             } catch (NumberFormatException e) {
-                Log.e(TAG, "System Code " + systemCode + " is not a valid System Code.");
+                Log.m70e(TAG, "System Code " + systemCode + " is not a valid System Code.");
                 return false;
             }
         }
@@ -297,24 +290,24 @@ public final class NfcFCardEmulation {
             return false;
         }
         if (nfcid2.length() != 16) {
-            Log.e(TAG, "NFCID2 " + nfcid2 + " is not a valid NFCID2.");
+            Log.m70e(TAG, "NFCID2 " + nfcid2 + " is not a valid NFCID2.");
             return false;
         } else if (!nfcid2.toUpperCase().startsWith("02FE")) {
-            Log.e(TAG, "NFCID2 " + nfcid2 + " is not a valid NFCID2.");
+            Log.m70e(TAG, "NFCID2 " + nfcid2 + " is not a valid NFCID2.");
             return false;
         } else {
             try {
                 Long.parseLong(nfcid2, 16);
                 return true;
             } catch (NumberFormatException e) {
-                Log.e(TAG, "NFCID2 " + nfcid2 + " is not a valid NFCID2.");
+                Log.m70e(TAG, "NFCID2 " + nfcid2 + " is not a valid NFCID2.");
                 return false;
             }
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void recoverService() {
-        sService = NfcAdapter.getDefaultAdapter(this.mContext).getNfcFCardEmulationService();
+    void recoverService() {
+        NfcAdapter adapter = NfcAdapter.getDefaultAdapter(this.mContext);
+        sService = adapter.getNfcFCardEmulationService();
     }
 }

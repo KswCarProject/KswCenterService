@@ -1,17 +1,20 @@
 package android.speech.tts;
 
-import android.os.ConditionVariable;
+import android.p007os.ConditionVariable;
 import android.speech.tts.TextToSpeechService;
 
+/* loaded from: classes3.dex */
 class SilencePlaybackQueueItem extends PlaybackQueueItem {
-    private final ConditionVariable mCondVar = new ConditionVariable();
+    private final ConditionVariable mCondVar;
     private final long mSilenceDurationMs;
 
     SilencePlaybackQueueItem(TextToSpeechService.UtteranceProgressDispatcher dispatcher, Object callerIdentity, long silenceDurationMs) {
         super(dispatcher, callerIdentity);
+        this.mCondVar = new ConditionVariable();
         this.mSilenceDurationMs = silenceDurationMs;
     }
 
+    @Override // android.speech.tts.PlaybackQueueItem, java.lang.Runnable
     public void run() {
         getDispatcher().dispatchOnStart();
         boolean wasStopped = false;
@@ -25,8 +28,8 @@ class SilencePlaybackQueueItem extends PlaybackQueueItem {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void stop(int errorCode) {
+    @Override // android.speech.tts.PlaybackQueueItem
+    void stop(int errorCode) {
         this.mCondVar.open();
     }
 }

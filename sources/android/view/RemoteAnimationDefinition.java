@@ -2,17 +2,22 @@ package android.view;
 
 import android.annotation.UnsupportedAppUsage;
 import android.app.WindowConfiguration;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.ArraySet;
 import android.util.SparseArray;
 
+/* loaded from: classes4.dex */
 public class RemoteAnimationDefinition implements Parcelable {
-    public static final Parcelable.Creator<RemoteAnimationDefinition> CREATOR = new Parcelable.Creator<RemoteAnimationDefinition>() {
+    public static final Parcelable.Creator<RemoteAnimationDefinition> CREATOR = new Parcelable.Creator<RemoteAnimationDefinition>() { // from class: android.view.RemoteAnimationDefinition.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RemoteAnimationDefinition createFromParcel(Parcel in) {
             return new RemoteAnimationDefinition(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RemoteAnimationDefinition[] newArray(int size) {
             return new RemoteAnimationDefinition[size];
         }
@@ -43,17 +48,19 @@ public class RemoteAnimationDefinition implements Parcelable {
         if (entry == null) {
             return null;
         }
-        if (entry.activityTypeFilter == 0 || activityTypes.contains(Integer.valueOf(entry.activityTypeFilter))) {
-            return entry.adapter;
+        if (entry.activityTypeFilter != 0 && !activityTypes.contains(Integer.valueOf(entry.activityTypeFilter))) {
+            return null;
         }
-        return null;
+        return entry.adapter;
     }
 
     public RemoteAnimationDefinition(Parcel in) {
         int size = in.readInt();
         this.mTransitionAnimationMap = new SparseArray<>(size);
         for (int i = 0; i < size; i++) {
-            this.mTransitionAnimationMap.put(in.readInt(), (RemoteAnimationAdapterEntry) in.readTypedObject(RemoteAnimationAdapterEntry.CREATOR));
+            int transition = in.readInt();
+            RemoteAnimationAdapterEntry entry = (RemoteAnimationAdapterEntry) in.readTypedObject(RemoteAnimationAdapterEntry.CREATOR);
+            this.mTransitionAnimationMap.put(transition, entry);
         }
     }
 
@@ -63,10 +70,12 @@ public class RemoteAnimationDefinition implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         int size = this.mTransitionAnimationMap.size();
         dest.writeInt(size);
@@ -76,13 +85,17 @@ public class RemoteAnimationDefinition implements Parcelable {
         }
     }
 
+    /* loaded from: classes4.dex */
     private static class RemoteAnimationAdapterEntry implements Parcelable {
-        /* access modifiers changed from: private */
-        public static final Parcelable.Creator<RemoteAnimationAdapterEntry> CREATOR = new Parcelable.Creator<RemoteAnimationAdapterEntry>() {
+        private static final Parcelable.Creator<RemoteAnimationAdapterEntry> CREATOR = new Parcelable.Creator<RemoteAnimationAdapterEntry>() { // from class: android.view.RemoteAnimationDefinition.RemoteAnimationAdapterEntry.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public RemoteAnimationAdapterEntry createFromParcel(Parcel in) {
                 return new RemoteAnimationAdapterEntry(in);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public RemoteAnimationAdapterEntry[] newArray(int size) {
                 return new RemoteAnimationAdapterEntry[size];
             }
@@ -91,9 +104,9 @@ public class RemoteAnimationDefinition implements Parcelable {
         final int activityTypeFilter;
         final RemoteAnimationAdapter adapter;
 
-        RemoteAnimationAdapterEntry(RemoteAnimationAdapter adapter2, int activityTypeFilter2) {
-            this.adapter = adapter2;
-            this.activityTypeFilter = activityTypeFilter2;
+        RemoteAnimationAdapterEntry(RemoteAnimationAdapter adapter, int activityTypeFilter) {
+            this.adapter = adapter;
+            this.activityTypeFilter = activityTypeFilter;
         }
 
         private RemoteAnimationAdapterEntry(Parcel in) {
@@ -101,11 +114,13 @@ public class RemoteAnimationDefinition implements Parcelable {
             this.activityTypeFilter = in.readInt();
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeParcelable(this.adapter, flags);
             dest.writeInt(this.activityTypeFilter);
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }

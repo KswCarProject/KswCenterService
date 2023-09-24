@@ -2,6 +2,7 @@ package android.hardware.radio.V1_0;
 
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class CdmaSmsSubaddressType {
     public static final int NSAP = 0;
     public static final int USER_SPECIFIED = 1;

@@ -1,18 +1,23 @@
 package android.service.notification;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class NotificationStats implements Parcelable {
-    public static final Parcelable.Creator<NotificationStats> CREATOR = new Parcelable.Creator<NotificationStats>() {
+    public static final Parcelable.Creator<NotificationStats> CREATOR = new Parcelable.Creator<NotificationStats>() { // from class: android.service.notification.NotificationStats.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NotificationStats createFromParcel(Parcel in) {
             return new NotificationStats(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NotificationStats[] newArray(int size) {
             return new NotificationStats[size];
         }
@@ -27,8 +32,8 @@ public final class NotificationStats implements Parcelable {
     public static final int DISMISS_SENTIMENT_POSITIVE = 2;
     public static final int DISMISS_SENTIMENT_UNKNOWN = -1000;
     private boolean mDirectReplied;
-    private int mDismissalSentiment = -1000;
-    private int mDismissalSurface = -1;
+    private int mDismissalSentiment;
+    private int mDismissalSurface;
     private boolean mExpanded;
     private boolean mInteracted;
     private boolean mSeen;
@@ -36,40 +41,47 @@ public final class NotificationStats implements Parcelable {
     private boolean mViewedSettings;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface DismissalSentiment {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface DismissalSurface {
     }
 
     public NotificationStats() {
+        this.mDismissalSurface = -1;
+        this.mDismissalSentiment = -1000;
     }
 
     @SystemApi
     protected NotificationStats(Parcel in) {
-        boolean z = false;
+        this.mDismissalSurface = -1;
+        this.mDismissalSentiment = -1000;
         this.mSeen = in.readByte() != 0;
         this.mExpanded = in.readByte() != 0;
         this.mDirectReplied = in.readByte() != 0;
         this.mSnoozed = in.readByte() != 0;
         this.mViewedSettings = in.readByte() != 0;
-        this.mInteracted = in.readByte() != 0 ? true : z;
+        this.mInteracted = in.readByte() != 0;
         this.mDismissalSurface = in.readInt();
         this.mDismissalSentiment = in.readInt();
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeByte(this.mSeen ? (byte) 1 : 0);
-        dest.writeByte(this.mExpanded ? (byte) 1 : 0);
-        dest.writeByte(this.mDirectReplied ? (byte) 1 : 0);
-        dest.writeByte(this.mSnoozed ? (byte) 1 : 0);
-        dest.writeByte(this.mViewedSettings ? (byte) 1 : 0);
-        dest.writeByte(this.mInteracted ? (byte) 1 : 0);
+        dest.writeByte(this.mSeen ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.mExpanded ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.mDirectReplied ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.mSnoozed ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.mViewedSettings ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.mInteracted ? (byte) 1 : (byte) 0);
         dest.writeInt(this.mDismissalSurface);
         dest.writeInt(this.mDismissalSentiment);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -146,20 +158,18 @@ public final class NotificationStats implements Parcelable {
             return false;
         }
         NotificationStats that = (NotificationStats) o;
-        if (this.mSeen != that.mSeen || this.mExpanded != that.mExpanded || this.mDirectReplied != that.mDirectReplied || this.mSnoozed != that.mSnoozed || this.mViewedSettings != that.mViewedSettings || this.mInteracted != that.mInteracted) {
-            return false;
-        }
-        if (this.mDismissalSurface == that.mDismissalSurface) {
+        if (this.mSeen == that.mSeen && this.mExpanded == that.mExpanded && this.mDirectReplied == that.mDirectReplied && this.mSnoozed == that.mSnoozed && this.mViewedSettings == that.mViewedSettings && this.mInteracted == that.mInteracted && this.mDismissalSurface == that.mDismissalSurface) {
             return true;
         }
         return false;
     }
 
     public int hashCode() {
-        return (((((((((((((int) this.mSeen) * true) + (this.mExpanded ? 1 : 0)) * 31) + (this.mDirectReplied ? 1 : 0)) * 31) + (this.mSnoozed ? 1 : 0)) * 31) + (this.mViewedSettings ? 1 : 0)) * 31) + (this.mInteracted ? 1 : 0)) * 31) + this.mDismissalSurface;
+        int result = this.mSeen ? 1 : 0;
+        return (((((((((((result * 31) + (this.mExpanded ? 1 : 0)) * 31) + (this.mDirectReplied ? 1 : 0)) * 31) + (this.mSnoozed ? 1 : 0)) * 31) + (this.mViewedSettings ? 1 : 0)) * 31) + (this.mInteracted ? 1 : 0)) * 31) + this.mDismissalSurface;
     }
 
     public String toString() {
-        return "NotificationStats{" + "mSeen=" + this.mSeen + ", mExpanded=" + this.mExpanded + ", mDirectReplied=" + this.mDirectReplied + ", mSnoozed=" + this.mSnoozed + ", mViewedSettings=" + this.mViewedSettings + ", mInteracted=" + this.mInteracted + ", mDismissalSurface=" + this.mDismissalSurface + '}';
+        return "NotificationStats{mSeen=" + this.mSeen + ", mExpanded=" + this.mExpanded + ", mDirectReplied=" + this.mDirectReplied + ", mSnoozed=" + this.mSnoozed + ", mViewedSettings=" + this.mViewedSettings + ", mInteracted=" + this.mInteracted + ", mDismissalSurface=" + this.mDismissalSurface + '}';
     }
 }

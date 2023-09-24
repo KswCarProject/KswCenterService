@@ -1,28 +1,34 @@
 package android.net.wifi;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes3.dex */
 public interface INetworkRequestUserSelectionCallback extends IInterface {
     void reject() throws RemoteException;
 
     void select(WifiConfiguration wifiConfiguration) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements INetworkRequestUserSelectionCallback {
+        @Override // android.net.wifi.INetworkRequestUserSelectionCallback
         public void select(WifiConfiguration wificonfiguration) throws RemoteException {
         }
 
+        @Override // android.net.wifi.INetworkRequestUserSelectionCallback
         public void reject() throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements INetworkRequestUserSelectionCallback {
         private static final String DESCRIPTOR = "android.net.wifi.INetworkRequestUserSelectionCallback";
         static final int TRANSACTION_reject = 2;
@@ -37,12 +43,13 @@ public interface INetworkRequestUserSelectionCallback extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof INetworkRequestUserSelectionCallback)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof INetworkRequestUserSelectionCallback)) {
+                return (INetworkRequestUserSelectionCallback) iin;
             }
-            return (INetworkRequestUserSelectionCallback) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -58,36 +65,38 @@ public interface INetworkRequestUserSelectionCallback extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
             WifiConfiguration _arg0;
-            if (code != 1598968902) {
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = WifiConfiguration.CREATOR.createFromParcel(data);
-                        } else {
-                            _arg0 = null;
-                        }
-                        select(_arg0);
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        reject();
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg0 = WifiConfiguration.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg0 = null;
+                    }
+                    select(_arg0);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    reject();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements INetworkRequestUserSelectionCallback {
             public static INetworkRequestUserSelectionCallback sDefaultImpl;
             private IBinder mRemote;
@@ -96,6 +105,7 @@ public interface INetworkRequestUserSelectionCallback extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -104,6 +114,7 @@ public interface INetworkRequestUserSelectionCallback extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.net.wifi.INetworkRequestUserSelectionCallback
             public void select(WifiConfiguration wificonfiguration) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -114,9 +125,8 @@ public interface INetworkRequestUserSelectionCallback extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().select(wificonfiguration);
                     }
                 } finally {
@@ -124,13 +134,13 @@ public interface INetworkRequestUserSelectionCallback extends IInterface {
                 }
             }
 
+            @Override // android.net.wifi.INetworkRequestUserSelectionCallback
             public void reject() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().reject();
                     }
                 } finally {
@@ -140,11 +150,11 @@ public interface INetworkRequestUserSelectionCallback extends IInterface {
         }
 
         public static boolean setDefaultImpl(INetworkRequestUserSelectionCallback impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static INetworkRequestUserSelectionCallback getDefaultImpl() {

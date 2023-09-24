@@ -3,26 +3,28 @@ package com.android.internal.midi;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+/* loaded from: classes4.dex */
 public class EventScheduler {
     private static final long NANOS_PER_MILLI = 1000000;
     private boolean mClosed;
-    private volatile SortedMap<Long, FastEventQueue> mEventBuffer = new TreeMap();
-    private FastEventQueue mEventPool = null;
     private final Object mLock = new Object();
+    private FastEventQueue mEventPool = null;
     private int mMaxPoolSize = 200;
+    private volatile SortedMap<Long, FastEventQueue> mEventBuffer = new TreeMap();
 
+    /* loaded from: classes4.dex */
     private class FastEventQueue {
         volatile long mEventsAdded = 1;
         volatile long mEventsRemoved = 0;
         volatile SchedulableEvent mFirst;
-        volatile SchedulableEvent mLast = this.mFirst;
+        volatile SchedulableEvent mLast;
 
         FastEventQueue(SchedulableEvent event) {
             this.mFirst = event;
+            this.mLast = this.mFirst;
         }
 
-        /* access modifiers changed from: package-private */
-        public int size() {
+        int size() {
             return (int) (this.mEventsAdded - this.mEventsRemoved);
         }
 
@@ -30,21 +32,21 @@ public class EventScheduler {
             this.mEventsRemoved++;
             SchedulableEvent event = this.mFirst;
             this.mFirst = event.mNext;
-            SchedulableEvent unused = event.mNext = null;
+            event.mNext = null;
             return event;
         }
 
         public void add(SchedulableEvent event) {
-            SchedulableEvent unused = event.mNext = null;
-            SchedulableEvent unused2 = this.mLast.mNext = event;
+            event.mNext = null;
+            this.mLast.mNext = event;
             this.mLast = event;
             this.mEventsAdded++;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class SchedulableEvent {
-        /* access modifiers changed from: private */
-        public volatile SchedulableEvent mNext = null;
+        private volatile SchedulableEvent mNext = null;
         private long mTimestamp;
 
         public SchedulableEvent(long timestamp) {
@@ -64,7 +66,8 @@ public class EventScheduler {
         if (this.mEventPool == null || this.mEventPool.size() <= 1) {
             return null;
         }
-        return this.mEventPool.remove();
+        SchedulableEvent event = this.mEventPool.remove();
+        return event;
     }
 
     public void addEventToPool(SchedulableEvent event) {
@@ -76,15 +79,10 @@ public class EventScheduler {
     }
 
     public void add(SchedulableEvent event) {
-        long lowestTime;
         synchronized (this.mLock) {
-            FastEventQueue list = (FastEventQueue) this.mEventBuffer.get(Long.valueOf(event.getTimestamp()));
+            FastEventQueue list = this.mEventBuffer.get(Long.valueOf(event.getTimestamp()));
             if (list == null) {
-                if (this.mEventBuffer.isEmpty()) {
-                    lowestTime = Long.MAX_VALUE;
-                } else {
-                    lowestTime = this.mEventBuffer.firstKey().longValue();
-                }
+                long lowestTime = this.mEventBuffer.isEmpty() ? Long.MAX_VALUE : this.mEventBuffer.firstKey().longValue();
                 this.mEventBuffer.put(Long.valueOf(event.getTimestamp()), new FastEventQueue(event));
                 if (event.getTimestamp() < lowestTime) {
                     this.mLock.notify();
@@ -96,11 +94,12 @@ public class EventScheduler {
     }
 
     private SchedulableEvent removeNextEventLocked(long lowestTime) {
-        FastEventQueue list = (FastEventQueue) this.mEventBuffer.get(Long.valueOf(lowestTime));
+        FastEventQueue list = this.mEventBuffer.get(Long.valueOf(lowestTime));
         if (list.size() == 1) {
             this.mEventBuffer.remove(Long.valueOf(lowestTime));
         }
-        return list.remove();
+        SchedulableEvent event = list.remove();
+        return event;
     }
 
     public SchedulableEvent getNextEvent(long time) {
@@ -131,19 +130,19 @@ public class EventScheduler {
                         event = removeNextEventLocked(lowestTime);
                         break;
                     }
-                    millisToWait = ((lowestTime - now) / 1000000) + 1;
+                    long nanosToWait = lowestTime - now;
+                    millisToWait = (nanosToWait / 1000000) + 1;
                     if (millisToWait > 2147483647L) {
                         millisToWait = 2147483647L;
                     }
                 }
-                this.mLock.wait((long) ((int) millisToWait));
+                this.mLock.wait((int) millisToWait);
             }
         }
         return event;
     }
 
-    /* access modifiers changed from: protected */
-    public void flush() {
+    protected void flush() {
         this.mEventBuffer = new TreeMap();
     }
 

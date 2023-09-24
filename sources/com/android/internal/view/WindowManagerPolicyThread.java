@@ -1,8 +1,9 @@
 package com.android.internal.view;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Looper;
+import android.p007os.Looper;
 
+/* loaded from: classes4.dex */
 public class WindowManagerPolicyThread {
     static Looper mLooper;
     static Thread mThread;

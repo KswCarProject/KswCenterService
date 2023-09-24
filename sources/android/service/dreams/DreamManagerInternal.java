@@ -1,5 +1,6 @@
 package android.service.dreams;
 
+/* loaded from: classes3.dex */
 public abstract class DreamManagerInternal {
     public abstract boolean isDreaming();
 

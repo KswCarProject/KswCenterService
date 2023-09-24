@@ -1,15 +1,20 @@
 package android.app;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
-/* compiled from: FragmentManager */
+/* compiled from: FragmentManager.java */
+/* loaded from: classes.dex */
 final class FragmentManagerState implements Parcelable {
-    public static final Parcelable.Creator<FragmentManagerState> CREATOR = new Parcelable.Creator<FragmentManagerState>() {
+    public static final Parcelable.Creator<FragmentManagerState> CREATOR = new Parcelable.Creator<FragmentManagerState>() { // from class: android.app.FragmentManagerState.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public FragmentManagerState createFromParcel(Parcel in) {
             return new FragmentManagerState(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public FragmentManagerState[] newArray(int size) {
             return new FragmentManagerState[size];
         }
@@ -18,12 +23,14 @@ final class FragmentManagerState implements Parcelable {
     int[] mAdded;
     BackStackState[] mBackStack;
     int mNextFragmentIndex;
-    int mPrimaryNavActiveIndex = -1;
+    int mPrimaryNavActiveIndex;
 
     public FragmentManagerState() {
+        this.mPrimaryNavActiveIndex = -1;
     }
 
     public FragmentManagerState(Parcel in) {
+        this.mPrimaryNavActiveIndex = -1;
         this.mActive = (FragmentState[]) in.createTypedArray(FragmentState.CREATOR);
         this.mAdded = in.createIntArray();
         this.mBackStack = (BackStackState[]) in.createTypedArray(BackStackState.CREATOR);
@@ -31,10 +38,12 @@ final class FragmentManagerState implements Parcelable {
         this.mNextFragmentIndex = in.readInt();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeTypedArray(this.mActive, flags);
         dest.writeIntArray(this.mAdded);

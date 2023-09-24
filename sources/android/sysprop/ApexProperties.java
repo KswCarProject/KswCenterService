@@ -1,6 +1,6 @@
 package android.sysprop;
 
-import android.os.SystemProperties;
+import android.p007os.SystemProperties;
 import android.telephony.SmsManager;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -10,71 +10,58 @@ import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.function.Function;
 
+/* loaded from: classes3.dex */
 public final class ApexProperties {
     private ApexProperties() {
     }
 
-    /* JADX WARNING: Can't fix incorrect switch cases order */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    private static java.lang.Boolean tryParseBoolean(java.lang.String r2) {
-        /*
-            java.util.Locale r0 = java.util.Locale.US
-            java.lang.String r0 = r2.toLowerCase(r0)
-            int r1 = r0.hashCode()
-            switch(r1) {
-                case 48: goto L_0x002d;
-                case 49: goto L_0x0023;
-                case 3569038: goto L_0x0018;
-                case 97196323: goto L_0x000e;
-                default: goto L_0x000d;
-            }
-        L_0x000d:
-            goto L_0x0037
-        L_0x000e:
-            java.lang.String r1 = "false"
-            boolean r0 = r0.equals(r1)
-            if (r0 == 0) goto L_0x0037
-            r0 = 3
-            goto L_0x0038
-        L_0x0018:
-            java.lang.String r1 = "true"
-            boolean r0 = r0.equals(r1)
-            if (r0 == 0) goto L_0x0037
-            r0 = 1
-            goto L_0x0038
-        L_0x0023:
-            java.lang.String r1 = "1"
-            boolean r0 = r0.equals(r1)
-            if (r0 == 0) goto L_0x0037
-            r0 = 0
-            goto L_0x0038
-        L_0x002d:
-            java.lang.String r1 = "0"
-            boolean r0 = r0.equals(r1)
-            if (r0 == 0) goto L_0x0037
-            r0 = 2
-            goto L_0x0038
-        L_0x0037:
-            r0 = -1
-        L_0x0038:
-            switch(r0) {
-                case 0: goto L_0x0040;
-                case 1: goto L_0x0040;
-                case 2: goto L_0x003d;
-                case 3: goto L_0x003d;
-                default: goto L_0x003b;
-            }
-        L_0x003b:
-            r0 = 0
-            return r0
-        L_0x003d:
-            java.lang.Boolean r0 = java.lang.Boolean.FALSE
-            return r0
-        L_0x0040:
-            java.lang.Boolean r0 = java.lang.Boolean.TRUE
-            return r0
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.sysprop.ApexProperties.tryParseBoolean(java.lang.String):java.lang.Boolean");
+    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
+    private static Boolean tryParseBoolean(String str) {
+        char c;
+        String lowerCase = str.toLowerCase(Locale.US);
+        switch (lowerCase.hashCode()) {
+            case 48:
+                if (lowerCase.equals("0")) {
+                    c = 2;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 49:
+                if (lowerCase.equals("1")) {
+                    c = 0;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 3569038:
+                if (lowerCase.equals("true")) {
+                    c = 1;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            case 97196323:
+                if (lowerCase.equals("false")) {
+                    c = 3;
+                    break;
+                }
+                c = '\uffff';
+                break;
+            default:
+                c = '\uffff';
+                break;
+        }
+        switch (c) {
+            case 0:
+            case 1:
+                return Boolean.TRUE;
+            case 2:
+            case 3:
+                return Boolean.FALSE;
+            default:
+                return null;
+        }
     }
 
     private static Integer tryParseInteger(String str) {
@@ -110,13 +97,14 @@ public final class ApexProperties {
 
     private static <T extends Enum<T>> T tryParseEnum(Class<T> enumType, String str) {
         try {
-            return Enum.valueOf(enumType, str.toUpperCase(Locale.US));
+            return (T) Enum.valueOf(enumType, str.toUpperCase(Locale.US));
         } catch (IllegalArgumentException e) {
             return null;
         }
     }
 
     private static <T> List<T> tryParseList(Function<String, T> elementParser, String str) {
+        String[] split;
         if ("".equals(str)) {
             return new ArrayList();
         }
@@ -128,14 +116,15 @@ public final class ApexProperties {
     }
 
     private static <T extends Enum<T>> List<T> tryParseEnumList(Class<T> enumType, String str) {
+        String[] split;
         if ("".equals(str)) {
             return new ArrayList();
         }
-        List<T> ret = new ArrayList<>();
+        ArrayList arrayList = new ArrayList();
         for (String element : str.split(SmsManager.REGEX_PREFIX_DELIMITER)) {
-            ret.add(tryParseEnum(enumType, element));
+            arrayList.add(tryParseEnum(enumType, element));
         }
-        return ret;
+        return arrayList;
     }
 
     private static <T> String formatList(List<T> list) {
@@ -150,13 +139,16 @@ public final class ApexProperties {
 
     private static <T extends Enum<T>> String formatEnumList(List<T> list, Function<T, String> elementFormatter) {
         StringJoiner joiner = new StringJoiner(SmsManager.REGEX_PREFIX_DELIMITER);
-        for (T element : list) {
+        Iterator<T> it = list.iterator();
+        while (it.hasNext()) {
+            T element = it.next();
             joiner.add(element == null ? "" : elementFormatter.apply(element));
         }
         return joiner.toString();
     }
 
     public static Optional<Boolean> updatable() {
-        return Optional.ofNullable(tryParseBoolean(SystemProperties.get("ro.apex.updatable")));
+        String value = SystemProperties.get("ro.apex.updatable");
+        return Optional.ofNullable(tryParseBoolean(value));
     }
 }

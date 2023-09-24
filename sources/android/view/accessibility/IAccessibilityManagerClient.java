@@ -1,11 +1,12 @@
 package android.view.accessibility;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes4.dex */
 public interface IAccessibilityManagerClient extends IInterface {
     void notifyServicesStateChanged(long j) throws RemoteException;
 
@@ -13,21 +14,27 @@ public interface IAccessibilityManagerClient extends IInterface {
 
     void setState(int i) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IAccessibilityManagerClient {
+        @Override // android.view.accessibility.IAccessibilityManagerClient
         public void setState(int stateFlags) throws RemoteException {
         }
 
+        @Override // android.view.accessibility.IAccessibilityManagerClient
         public void notifyServicesStateChanged(long updatedUiTimeout) throws RemoteException {
         }
 
+        @Override // android.view.accessibility.IAccessibilityManagerClient
         public void setRelevantEventTypes(int eventTypes) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IAccessibilityManagerClient {
         private static final String DESCRIPTOR = "android.view.accessibility.IAccessibilityManagerClient";
         static final int TRANSACTION_notifyServicesStateChanged = 2;
@@ -43,12 +50,13 @@ public interface IAccessibilityManagerClient extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IAccessibilityManagerClient)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IAccessibilityManagerClient)) {
+                return (IAccessibilityManagerClient) iin;
             }
-            return (IAccessibilityManagerClient) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -66,34 +74,39 @@ public interface IAccessibilityManagerClient extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        setState(data.readInt());
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        notifyServicesStateChanged(data.readLong());
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        setRelevantEventTypes(data.readInt());
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0 = data.readInt();
+                    setState(_arg0);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _arg02 = data.readLong();
+                    notifyServicesStateChanged(_arg02);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg03 = data.readInt();
+                    setRelevantEventTypes(_arg03);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IAccessibilityManagerClient {
             public static IAccessibilityManagerClient sDefaultImpl;
             private IBinder mRemote;
@@ -102,6 +115,7 @@ public interface IAccessibilityManagerClient extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -110,14 +124,14 @@ public interface IAccessibilityManagerClient extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.view.accessibility.IAccessibilityManagerClient
             public void setState(int stateFlags) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(stateFlags);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().setState(stateFlags);
                     }
                 } finally {
@@ -125,14 +139,14 @@ public interface IAccessibilityManagerClient extends IInterface {
                 }
             }
 
+            @Override // android.view.accessibility.IAccessibilityManagerClient
             public void notifyServicesStateChanged(long updatedUiTimeout) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeLong(updatedUiTimeout);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().notifyServicesStateChanged(updatedUiTimeout);
                     }
                 } finally {
@@ -140,14 +154,14 @@ public interface IAccessibilityManagerClient extends IInterface {
                 }
             }
 
+            @Override // android.view.accessibility.IAccessibilityManagerClient
             public void setRelevantEventTypes(int eventTypes) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(eventTypes);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().setRelevantEventTypes(eventTypes);
                     }
                 } finally {
@@ -157,11 +171,11 @@ public interface IAccessibilityManagerClient extends IInterface {
         }
 
         public static boolean setDefaultImpl(IAccessibilityManagerClient impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IAccessibilityManagerClient getDefaultImpl() {

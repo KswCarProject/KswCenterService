@@ -2,6 +2,7 @@ package android.security.keystore;
 
 import java.security.KeyStore;
 
+/* loaded from: classes3.dex */
 class AndroidKeyStoreLoadStoreParameter implements KeyStore.LoadStoreParameter {
     private final int mUid;
 
@@ -9,12 +10,12 @@ class AndroidKeyStoreLoadStoreParameter implements KeyStore.LoadStoreParameter {
         this.mUid = uid;
     }
 
+    @Override // java.security.KeyStore.LoadStoreParameter
     public KeyStore.ProtectionParameter getProtectionParameter() {
         return null;
     }
 
-    /* access modifiers changed from: package-private */
-    public int getUid() {
+    int getUid() {
         return this.mUid;
     }
 }

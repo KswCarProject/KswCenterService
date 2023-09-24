@@ -2,15 +2,16 @@ package android.filterfw.core;
 
 import android.util.Log;
 
+/* loaded from: classes.dex */
 public abstract class FilterPort {
     private static final String TAG = "FilterPort";
-    protected boolean mChecksType = false;
     protected Filter mFilter;
-    protected boolean mIsBlocking = true;
-    protected boolean mIsOpen = false;
-    private boolean mLogVerbose;
     protected String mName;
     protected FrameFormat mPortFormat;
+    protected boolean mIsBlocking = true;
+    protected boolean mIsOpen = false;
+    protected boolean mChecksType = false;
+    private boolean mLogVerbose = Log.isLoggable(TAG, 2);
 
     public abstract void clear();
 
@@ -29,7 +30,6 @@ public abstract class FilterPort {
     public FilterPort(Filter filter, String name) {
         this.mName = name;
         this.mFilter = filter;
-        this.mLogVerbose = Log.isLoggable(TAG, 2);
     }
 
     public boolean isAttached() {
@@ -62,14 +62,14 @@ public abstract class FilterPort {
 
     public void open() {
         if (!this.mIsOpen && this.mLogVerbose) {
-            Log.v(TAG, "Opening " + this);
+            Log.m66v(TAG, "Opening " + this);
         }
         this.mIsOpen = true;
     }
 
     public void close() {
         if (this.mIsOpen && this.mLogVerbose) {
-            Log.v(TAG, "Closing " + this);
+            Log.m66v(TAG, "Closing " + this);
         }
         this.mIsOpen = false;
     }
@@ -86,22 +86,19 @@ public abstract class FilterPort {
         return "port '" + this.mName + "' of " + this.mFilter;
     }
 
-    /* access modifiers changed from: protected */
-    public void assertPortIsOpen() {
+    protected void assertPortIsOpen() {
         if (!isOpen()) {
             throw new RuntimeException("Illegal operation on closed " + this + "!");
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void checkFrameType(Frame frame, boolean forceCheck) {
+    protected void checkFrameType(Frame frame, boolean forceCheck) {
         if ((this.mChecksType || forceCheck) && this.mPortFormat != null && !frame.getFormat().isCompatibleWith(this.mPortFormat)) {
             throw new RuntimeException("Frame passed to " + this + " is of incorrect type! Expected " + this.mPortFormat + " but got " + frame.getFormat());
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void checkFrameManager(Frame frame, FilterContext context) {
+    protected void checkFrameManager(Frame frame, FilterContext context) {
         if (frame.getFrameManager() != null && frame.getFrameManager() != context.getFrameManager()) {
             throw new RuntimeException("Frame " + frame + " is managed by foreign FrameManager! ");
         }

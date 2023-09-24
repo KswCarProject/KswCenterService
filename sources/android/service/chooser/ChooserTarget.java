@@ -2,16 +2,21 @@ package android.service.chooser;
 
 import android.content.ComponentName;
 import android.graphics.drawable.Icon;
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes3.dex */
 public final class ChooserTarget implements Parcelable {
-    public static final Parcelable.Creator<ChooserTarget> CREATOR = new Parcelable.Creator<ChooserTarget>() {
+    public static final Parcelable.Creator<ChooserTarget> CREATOR = new Parcelable.Creator<ChooserTarget>() { // from class: android.service.chooser.ChooserTarget.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ChooserTarget createFromParcel(Parcel source) {
             return new ChooserTarget(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ChooserTarget[] newArray(int size) {
             return new ChooserTarget[size];
         }
@@ -67,13 +72,15 @@ public final class ChooserTarget implements Parcelable {
     }
 
     public String toString() {
-        return "ChooserTarget{" + this.mComponentName + ", " + this.mIntentExtras + ", '" + this.mTitle + "', " + this.mScore + "}";
+        return "ChooserTarget{" + this.mComponentName + ", " + this.mIntentExtras + ", '" + ((Object) this.mTitle) + "', " + this.mScore + "}";
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeCharSequence(this.mTitle);
         if (this.mIcon != null) {

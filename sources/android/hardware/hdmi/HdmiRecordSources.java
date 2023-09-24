@@ -4,6 +4,7 @@ import android.annotation.SystemApi;
 import android.util.Log;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class HdmiRecordSources {
     public static final int ANALOGUE_BROADCAST_TYPE_CABLE = 0;
     public static final int ANALOGUE_BROADCAST_TYPE_SATELLITE = 1;
@@ -40,6 +41,7 @@ public final class HdmiRecordSources {
     private static final int RECORD_SOURCE_TYPE_OWN_SOURCE = 1;
     private static final String TAG = "HdmiRecordSources";
 
+    /* loaded from: classes.dex */
     private interface DigitalServiceIdentification {
         int toByteArray(byte[] bArr, int i);
     }
@@ -48,25 +50,23 @@ public final class HdmiRecordSources {
     }
 
     @SystemApi
+    /* loaded from: classes.dex */
     public static abstract class RecordSource {
         final int mExtraDataSize;
         final int mSourceType;
 
-        /* access modifiers changed from: package-private */
-        public abstract int extraParamToByteArray(byte[] bArr, int i);
+        abstract int extraParamToByteArray(byte[] bArr, int i);
 
         RecordSource(int sourceType, int extraDataSize) {
             this.mSourceType = sourceType;
             this.mExtraDataSize = extraDataSize;
         }
 
-        /* access modifiers changed from: package-private */
-        public final int getDataSize(boolean includeType) {
+        final int getDataSize(boolean includeType) {
             return includeType ? this.mExtraDataSize + 1 : this.mExtraDataSize;
         }
 
-        /* access modifiers changed from: package-private */
-        public final int toByteArray(boolean includeType, byte[] data, int index) {
+        final int toByteArray(boolean includeType, byte[] data, int index) {
             if (includeType) {
                 data[index] = (byte) this.mSourceType;
                 index++;
@@ -81,6 +81,7 @@ public final class HdmiRecordSources {
     }
 
     @SystemApi
+    /* loaded from: classes.dex */
     public static final class OwnSource extends RecordSource {
         private static final int EXTRA_DATA_SIZE = 0;
 
@@ -88,12 +89,13 @@ public final class HdmiRecordSources {
             super(1, 0);
         }
 
-        /* access modifiers changed from: package-private */
-        public int extraParamToByteArray(byte[] data, int index) {
+        @Override // android.hardware.hdmi.HdmiRecordSources.RecordSource
+        int extraParamToByteArray(byte[] data, int index) {
             return 0;
         }
     }
 
+    /* loaded from: classes.dex */
     public static final class AribData implements DigitalServiceIdentification {
         private final int mOriginalNetworkId;
         private final int mServiceId;
@@ -105,11 +107,13 @@ public final class HdmiRecordSources {
             this.mOriginalNetworkId = originalNetworkId;
         }
 
+        @Override // android.hardware.hdmi.HdmiRecordSources.DigitalServiceIdentification
         public int toByteArray(byte[] data, int index) {
             return HdmiRecordSources.threeFieldsToSixBytes(this.mTransportStreamId, this.mServiceId, this.mOriginalNetworkId, data, index);
         }
     }
 
+    /* loaded from: classes.dex */
     public static final class AtscData implements DigitalServiceIdentification {
         private final int mProgramNumber;
         private final int mTransportStreamId;
@@ -119,11 +123,13 @@ public final class HdmiRecordSources {
             this.mProgramNumber = programNumber;
         }
 
+        @Override // android.hardware.hdmi.HdmiRecordSources.DigitalServiceIdentification
         public int toByteArray(byte[] data, int index) {
             return HdmiRecordSources.threeFieldsToSixBytes(this.mTransportStreamId, this.mProgramNumber, 0, data, index);
         }
     }
 
+    /* loaded from: classes.dex */
     public static final class DvbData implements DigitalServiceIdentification {
         private final int mOriginalNetworkId;
         private final int mServiceId;
@@ -135,11 +141,13 @@ public final class HdmiRecordSources {
             this.mOriginalNetworkId = originalNetworkId;
         }
 
+        @Override // android.hardware.hdmi.HdmiRecordSources.DigitalServiceIdentification
         public int toByteArray(byte[] data, int index) {
             return HdmiRecordSources.threeFieldsToSixBytes(this.mTransportStreamId, this.mServiceId, this.mOriginalNetworkId, data, index);
         }
     }
 
+    /* loaded from: classes.dex */
     private static final class ChannelIdentifier {
         private final int mChannelNumberFormat;
         private final int mMajorChannelNumber;
@@ -151,15 +159,16 @@ public final class HdmiRecordSources {
             this.mMinorChannelNumber = minorNumer;
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public int toByteArray(byte[] data, int index) {
             data[index] = (byte) ((this.mChannelNumberFormat << 2) | ((this.mMajorChannelNumber >>> 8) & 3));
             data[index + 1] = (byte) (this.mMajorChannelNumber & 255);
-            int unused = HdmiRecordSources.shortToByteArray((short) this.mMinorChannelNumber, data, index + 2);
+            HdmiRecordSources.shortToByteArray((short) this.mMinorChannelNumber, data, index + 2);
             return 4;
         }
     }
 
+    /* loaded from: classes.dex */
     public static final class DigitalChannelData implements DigitalServiceIdentification {
         private final ChannelIdentifier mChannelIdentifier;
 
@@ -175,8 +184,9 @@ public final class HdmiRecordSources {
             this.mChannelIdentifier = id;
         }
 
+        @Override // android.hardware.hdmi.HdmiRecordSources.DigitalServiceIdentification
         public int toByteArray(byte[] data, int index) {
-            int unused = this.mChannelIdentifier.toByteArray(data, index);
+            this.mChannelIdentifier.toByteArray(data, index);
             data[index + 4] = 0;
             data[index + 5] = 0;
             return 6;
@@ -184,99 +194,100 @@ public final class HdmiRecordSources {
     }
 
     public static DigitalServiceSource ofDigitalChannelId(int broadcastSystem, DigitalChannelData data) {
-        if (data != null) {
-            switch (broadcastSystem) {
-                case 0:
-                case 1:
-                case 2:
-                    break;
-                default:
-                    switch (broadcastSystem) {
-                        case 8:
-                        case 9:
-                        case 10:
-                            break;
-                        default:
-                            switch (broadcastSystem) {
-                                case 16:
-                                case 17:
-                                case 18:
-                                    break;
-                                default:
-                                    switch (broadcastSystem) {
-                                        case 24:
-                                        case 25:
-                                        case 26:
-                                        case 27:
-                                            break;
-                                        default:
-                                            Log.w(TAG, "Invalid broadcast type:" + broadcastSystem);
-                                            throw new IllegalArgumentException("Invalid broadcast system value:" + broadcastSystem);
-                                    }
-                            }
-                    }
-            }
-            return new DigitalServiceSource(1, broadcastSystem, data);
+        if (data == null) {
+            throw new IllegalArgumentException("data should not be null.");
         }
-        throw new IllegalArgumentException("data should not be null.");
-    }
-
-    public static DigitalServiceSource ofArib(int aribType, AribData data) {
-        if (data != null) {
-            if (aribType != 0) {
-                switch (aribType) {
+        switch (broadcastSystem) {
+            case 0:
+            case 1:
+            case 2:
+                break;
+            default:
+                switch (broadcastSystem) {
                     case 8:
                     case 9:
                     case 10:
                         break;
                     default:
-                        Log.w(TAG, "Invalid ARIB type:" + aribType);
-                        throw new IllegalArgumentException("type should not be null.");
+                        switch (broadcastSystem) {
+                            case 16:
+                            case 17:
+                            case 18:
+                                break;
+                            default:
+                                switch (broadcastSystem) {
+                                    case 24:
+                                    case 25:
+                                    case 26:
+                                    case 27:
+                                        break;
+                                    default:
+                                        Log.m64w(TAG, "Invalid broadcast type:" + broadcastSystem);
+                                        throw new IllegalArgumentException("Invalid broadcast system value:" + broadcastSystem);
+                                }
+                        }
                 }
-            }
-            return new DigitalServiceSource(0, aribType, data);
         }
-        throw new IllegalArgumentException("data should not be null.");
+        return new DigitalServiceSource(1, broadcastSystem, data);
+    }
+
+    public static DigitalServiceSource ofArib(int aribType, AribData data) {
+        if (data == null) {
+            throw new IllegalArgumentException("data should not be null.");
+        }
+        if (aribType != 0) {
+            switch (aribType) {
+                case 8:
+                case 9:
+                case 10:
+                    break;
+                default:
+                    Log.m64w(TAG, "Invalid ARIB type:" + aribType);
+                    throw new IllegalArgumentException("type should not be null.");
+            }
+        }
+        return new DigitalServiceSource(0, aribType, data);
     }
 
     public static DigitalServiceSource ofAtsc(int atscType, AtscData data) {
-        if (data != null) {
-            if (atscType != 1) {
-                switch (atscType) {
-                    case 16:
-                    case 17:
-                    case 18:
-                        break;
-                    default:
-                        Log.w(TAG, "Invalid ATSC type:" + atscType);
-                        throw new IllegalArgumentException("Invalid ATSC type:" + atscType);
-                }
-            }
-            return new DigitalServiceSource(0, atscType, data);
+        if (data == null) {
+            throw new IllegalArgumentException("data should not be null.");
         }
-        throw new IllegalArgumentException("data should not be null.");
+        if (atscType != 1) {
+            switch (atscType) {
+                case 16:
+                case 17:
+                case 18:
+                    break;
+                default:
+                    Log.m64w(TAG, "Invalid ATSC type:" + atscType);
+                    throw new IllegalArgumentException("Invalid ATSC type:" + atscType);
+            }
+        }
+        return new DigitalServiceSource(0, atscType, data);
     }
 
     public static DigitalServiceSource ofDvb(int dvbType, DvbData data) {
-        if (data != null) {
-            if (dvbType != 2) {
-                switch (dvbType) {
-                    case 24:
-                    case 25:
-                    case 26:
-                    case 27:
-                        break;
-                    default:
-                        Log.w(TAG, "Invalid DVB type:" + dvbType);
-                        throw new IllegalArgumentException("Invalid DVB type:" + dvbType);
-                }
-            }
-            return new DigitalServiceSource(0, dvbType, data);
+        if (data == null) {
+            throw new IllegalArgumentException("data should not be null.");
         }
-        throw new IllegalArgumentException("data should not be null.");
+        if (dvbType != 2) {
+            switch (dvbType) {
+                case 24:
+                case 25:
+                case 26:
+                case 27:
+                    break;
+                default:
+                    Log.m64w(TAG, "Invalid DVB type:" + dvbType);
+                    throw new IllegalArgumentException("Invalid DVB type:" + dvbType);
+            }
+        }
+        return new DigitalServiceSource(0, dvbType, data);
     }
 
     @SystemApi
+    /* loaded from: classes.dex */
     public static final class DigitalServiceSource extends RecordSource {
         private static final int DIGITAL_SERVICE_IDENTIFIED_BY_CHANNEL = 1;
         private static final int DIGITAL_SERVICE_IDENTIFIED_BY_DIGITAL_ID = 0;
@@ -292,8 +303,8 @@ public final class HdmiRecordSources {
             this.mIdentification = identification;
         }
 
-        /* access modifiers changed from: package-private */
-        public int extraParamToByteArray(byte[] data, int index) {
+        @Override // android.hardware.hdmi.HdmiRecordSources.RecordSource
+        int extraParamToByteArray(byte[] data, int index) {
             data[index] = (byte) ((this.mIdentificationMethod << 7) | (this.mBroadcastSystem & 127));
             this.mIdentification.toByteArray(data, index + 1);
             return 7;
@@ -302,20 +313,21 @@ public final class HdmiRecordSources {
 
     public static AnalogueServiceSource ofAnalogue(int broadcastType, int frequency, int broadcastSystem) {
         if (broadcastType < 0 || broadcastType > 2) {
-            Log.w(TAG, "Invalid Broadcast type:" + broadcastType);
+            Log.m64w(TAG, "Invalid Broadcast type:" + broadcastType);
             throw new IllegalArgumentException("Invalid Broadcast type:" + broadcastType);
         } else if (frequency < 0 || frequency > 65535) {
-            Log.w(TAG, "Invalid frequency value[0x0000-0xFFFF]:" + frequency);
+            Log.m64w(TAG, "Invalid frequency value[0x0000-0xFFFF]:" + frequency);
             throw new IllegalArgumentException("Invalid frequency value[0x0000-0xFFFF]:" + frequency);
-        } else if (broadcastSystem >= 0 && broadcastSystem <= 31) {
-            return new AnalogueServiceSource(broadcastType, frequency, broadcastSystem);
-        } else {
-            Log.w(TAG, "Invalid Broadcast system:" + broadcastSystem);
+        } else if (broadcastSystem < 0 || broadcastSystem > 31) {
+            Log.m64w(TAG, "Invalid Broadcast system:" + broadcastSystem);
             throw new IllegalArgumentException("Invalid Broadcast system:" + broadcastSystem);
+        } else {
+            return new AnalogueServiceSource(broadcastType, frequency, broadcastSystem);
         }
     }
 
     @SystemApi
+    /* loaded from: classes.dex */
     public static final class AnalogueServiceSource extends RecordSource {
         static final int EXTRA_DATA_SIZE = 4;
         private final int mBroadcastSystem;
@@ -329,24 +341,25 @@ public final class HdmiRecordSources {
             this.mBroadcastSystem = broadcastSystem;
         }
 
-        /* access modifiers changed from: package-private */
-        public int extraParamToByteArray(byte[] data, int index) {
+        @Override // android.hardware.hdmi.HdmiRecordSources.RecordSource
+        int extraParamToByteArray(byte[] data, int index) {
             data[index] = (byte) this.mBroadcastType;
-            int unused = HdmiRecordSources.shortToByteArray((short) this.mFrequency, data, index + 1);
+            HdmiRecordSources.shortToByteArray((short) this.mFrequency, data, index + 1);
             data[index + 3] = (byte) this.mBroadcastSystem;
             return 4;
         }
     }
 
     public static ExternalPlugData ofExternalPlug(int plugNumber) {
-        if (plugNumber >= 1 && plugNumber <= 255) {
-            return new ExternalPlugData(plugNumber);
+        if (plugNumber < 1 || plugNumber > 255) {
+            Log.m64w(TAG, "Invalid plug number[1-255]" + plugNumber);
+            throw new IllegalArgumentException("Invalid plug number[1-255]" + plugNumber);
         }
-        Log.w(TAG, "Invalid plug number[1-255]" + plugNumber);
-        throw new IllegalArgumentException("Invalid plug number[1-255]" + plugNumber);
+        return new ExternalPlugData(plugNumber);
     }
 
     @SystemApi
+    /* loaded from: classes.dex */
     public static final class ExternalPlugData extends RecordSource {
         static final int EXTRA_DATA_SIZE = 1;
         private final int mPlugNumber;
@@ -356,22 +369,23 @@ public final class HdmiRecordSources {
             this.mPlugNumber = plugNumber;
         }
 
-        /* access modifiers changed from: package-private */
-        public int extraParamToByteArray(byte[] data, int index) {
+        @Override // android.hardware.hdmi.HdmiRecordSources.RecordSource
+        int extraParamToByteArray(byte[] data, int index) {
             data[index] = (byte) this.mPlugNumber;
             return 1;
         }
     }
 
     public static ExternalPhysicalAddress ofExternalPhysicalAddress(int physicalAddress) {
-        if ((-65536 & physicalAddress) == 0) {
-            return new ExternalPhysicalAddress(physicalAddress);
+        if (((-65536) & physicalAddress) != 0) {
+            Log.m64w(TAG, "Invalid physical address:" + physicalAddress);
+            throw new IllegalArgumentException("Invalid physical address:" + physicalAddress);
         }
-        Log.w(TAG, "Invalid physical address:" + physicalAddress);
-        throw new IllegalArgumentException("Invalid physical address:" + physicalAddress);
+        return new ExternalPhysicalAddress(physicalAddress);
     }
 
     @SystemApi
+    /* loaded from: classes.dex */
     public static final class ExternalPhysicalAddress extends RecordSource {
         static final int EXTRA_DATA_SIZE = 2;
         private final int mPhysicalAddress;
@@ -381,14 +395,14 @@ public final class HdmiRecordSources {
             this.mPhysicalAddress = physicalAddress;
         }
 
-        /* access modifiers changed from: package-private */
-        public int extraParamToByteArray(byte[] data, int index) {
-            int unused = HdmiRecordSources.shortToByteArray((short) this.mPhysicalAddress, data, index);
+        @Override // android.hardware.hdmi.HdmiRecordSources.RecordSource
+        int extraParamToByteArray(byte[] data, int index) {
+            HdmiRecordSources.shortToByteArray((short) this.mPhysicalAddress, data, index);
             return 2;
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static int threeFieldsToSixBytes(int first, int second, int third, byte[] data, int index) {
         shortToByteArray((short) first, data, index);
         shortToByteArray((short) second, data, index + 2);
@@ -396,7 +410,7 @@ public final class HdmiRecordSources {
         return 6;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static int shortToByteArray(short value, byte[] byteArray, int index) {
         byteArray[index] = (byte) ((value >>> 8) & 255);
         byteArray[index + 1] = (byte) (value & 255);
@@ -408,31 +422,19 @@ public final class HdmiRecordSources {
         if (recordSource == null || recordSource.length == 0) {
             return false;
         }
-        byte recordSourceType = recordSource[0];
+        int recordSourceType = recordSource[0];
         int extraDataSize = recordSource.length - 1;
         switch (recordSourceType) {
             case 1:
                 return extraDataSize == 0;
             case 2:
-                if (extraDataSize == 7) {
-                    return true;
-                }
-                return false;
+                return extraDataSize == 7;
             case 3:
-                if (extraDataSize == 4) {
-                    return true;
-                }
-                return false;
+                return extraDataSize == 4;
             case 4:
-                if (extraDataSize == 1) {
-                    return true;
-                }
-                return false;
+                return extraDataSize == 1;
             case 5:
-                if (extraDataSize == 2) {
-                    return true;
-                }
-                return false;
+                return extraDataSize == 2;
             default:
                 return false;
         }

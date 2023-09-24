@@ -1,14 +1,19 @@
 package android.hardware.camera2.impl;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public class CaptureResultExtras implements Parcelable {
-    public static final Parcelable.Creator<CaptureResultExtras> CREATOR = new Parcelable.Creator<CaptureResultExtras>() {
+    public static final Parcelable.Creator<CaptureResultExtras> CREATOR = new Parcelable.Creator<CaptureResultExtras>() { // from class: android.hardware.camera2.impl.CaptureResultExtras.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public CaptureResultExtras createFromParcel(Parcel in) {
             return new CaptureResultExtras(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public CaptureResultExtras[] newArray(int size) {
             return new CaptureResultExtras[size];
         }
@@ -26,21 +31,23 @@ public class CaptureResultExtras implements Parcelable {
         readFromParcel(in);
     }
 
-    public CaptureResultExtras(int requestId2, int subsequenceId2, int afTriggerId2, int precaptureTriggerId2, long frameNumber2, int partialResultCount2, int errorStreamId2, String errorPhysicalCameraId2) {
-        this.requestId = requestId2;
-        this.subsequenceId = subsequenceId2;
-        this.afTriggerId = afTriggerId2;
-        this.precaptureTriggerId = precaptureTriggerId2;
-        this.frameNumber = frameNumber2;
-        this.partialResultCount = partialResultCount2;
-        this.errorStreamId = errorStreamId2;
-        this.errorPhysicalCameraId = errorPhysicalCameraId2;
+    public CaptureResultExtras(int requestId, int subsequenceId, int afTriggerId, int precaptureTriggerId, long frameNumber, int partialResultCount, int errorStreamId, String errorPhysicalCameraId) {
+        this.requestId = requestId;
+        this.subsequenceId = subsequenceId;
+        this.afTriggerId = afTriggerId;
+        this.precaptureTriggerId = precaptureTriggerId;
+        this.frameNumber = frameNumber;
+        this.partialResultCount = partialResultCount;
+        this.errorStreamId = errorStreamId;
+        this.errorPhysicalCameraId = errorPhysicalCameraId;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.requestId);
         dest.writeInt(this.subsequenceId);
@@ -49,12 +56,12 @@ public class CaptureResultExtras implements Parcelable {
         dest.writeLong(this.frameNumber);
         dest.writeInt(this.partialResultCount);
         dest.writeInt(this.errorStreamId);
-        if (this.errorPhysicalCameraId == null || this.errorPhysicalCameraId.isEmpty()) {
-            dest.writeBoolean(false);
+        if (this.errorPhysicalCameraId != null && !this.errorPhysicalCameraId.isEmpty()) {
+            dest.writeBoolean(true);
+            dest.writeString(this.errorPhysicalCameraId);
             return;
         }
-        dest.writeBoolean(true);
-        dest.writeString(this.errorPhysicalCameraId);
+        dest.writeBoolean(false);
     }
 
     public void readFromParcel(Parcel in) {
@@ -65,7 +72,8 @@ public class CaptureResultExtras implements Parcelable {
         this.frameNumber = in.readLong();
         this.partialResultCount = in.readInt();
         this.errorStreamId = in.readInt();
-        if (in.readBoolean()) {
+        boolean errorPhysicalCameraIdPresent = in.readBoolean();
+        if (errorPhysicalCameraIdPresent) {
             this.errorPhysicalCameraId = in.readString();
         }
     }

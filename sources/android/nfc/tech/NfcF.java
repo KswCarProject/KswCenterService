@@ -1,51 +1,59 @@
 package android.nfc.tech;
 
 import android.nfc.Tag;
-import android.os.Bundle;
-import android.os.RemoteException;
+import android.p007os.Bundle;
+import android.p007os.RemoteException;
 import android.util.Log;
 import java.io.IOException;
 
+/* loaded from: classes3.dex */
 public final class NfcF extends BasicTagTechnology {
     public static final String EXTRA_PMM = "pmm";
     public static final String EXTRA_SC = "systemcode";
     private static final String TAG = "NFC";
-    private byte[] mManufacturer = null;
-    private byte[] mSystemCode = null;
+    private byte[] mManufacturer;
+    private byte[] mSystemCode;
 
+    @Override // android.nfc.tech.BasicTagTechnology, android.nfc.tech.TagTechnology, java.io.Closeable, java.lang.AutoCloseable
     public /* bridge */ /* synthetic */ void close() throws IOException {
         super.close();
     }
 
+    @Override // android.nfc.tech.BasicTagTechnology, android.nfc.tech.TagTechnology
     public /* bridge */ /* synthetic */ void connect() throws IOException {
         super.connect();
     }
 
+    @Override // android.nfc.tech.BasicTagTechnology, android.nfc.tech.TagTechnology
     public /* bridge */ /* synthetic */ Tag getTag() {
         return super.getTag();
     }
 
+    @Override // android.nfc.tech.BasicTagTechnology, android.nfc.tech.TagTechnology
     public /* bridge */ /* synthetic */ boolean isConnected() {
         return super.isConnected();
     }
 
+    @Override // android.nfc.tech.BasicTagTechnology, android.nfc.tech.TagTechnology
     public /* bridge */ /* synthetic */ void reconnect() throws IOException {
         super.reconnect();
     }
 
     public static NfcF get(Tag tag) {
-        if (!tag.hasTech(4)) {
-            return null;
+        if (tag.hasTech(4)) {
+            try {
+                return new NfcF(tag);
+            } catch (RemoteException e) {
+                return null;
+            }
         }
-        try {
-            return new NfcF(tag);
-        } catch (RemoteException e) {
-            return null;
-        }
+        return null;
     }
 
     public NfcF(Tag tag) throws RemoteException {
         super(tag, 4);
+        this.mSystemCode = null;
+        this.mManufacturer = null;
         Bundle extras = tag.getTechExtras(4);
         if (extras != null) {
             this.mSystemCode = extras.getByteArray(EXTRA_SC);
@@ -71,11 +79,12 @@ public final class NfcF extends BasicTagTechnology {
 
     public void setTimeout(int timeout) {
         try {
-            if (this.mTag.getTagService().setTimeout(4, timeout) != 0) {
+            int err = this.mTag.getTagService().setTimeout(4, timeout);
+            if (err != 0) {
                 throw new IllegalArgumentException("The supplied timeout is not valid");
             }
         } catch (RemoteException e) {
-            Log.e(TAG, "NFC service dead", e);
+            Log.m69e(TAG, "NFC service dead", e);
         }
     }
 
@@ -83,7 +92,7 @@ public final class NfcF extends BasicTagTechnology {
         try {
             return this.mTag.getTagService().getTimeout(4);
         } catch (RemoteException e) {
-            Log.e(TAG, "NFC service dead", e);
+            Log.m69e(TAG, "NFC service dead", e);
             return 0;
         }
     }

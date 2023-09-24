@@ -11,9 +11,9 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.net.http.SslCertificate;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
+import android.p007os.Bundle;
+import android.p007os.Handler;
+import android.p007os.Message;
 import android.print.PrintDocumentAdapter;
 import android.util.SparseArray;
 import android.view.DragEvent;
@@ -36,8 +36,10 @@ import java.util.Map;
 import java.util.concurrent.Executor;
 
 @SystemApi
+/* loaded from: classes4.dex */
 public interface WebViewProvider {
 
+    /* loaded from: classes4.dex */
     public interface ScrollDelegate {
         int computeHorizontalScrollOffset();
 
@@ -256,13 +258,14 @@ public interface WebViewProvider {
 
     boolean zoomOut();
 
-    void setTextClassifier(TextClassifier textClassifier) {
+    default void setTextClassifier(TextClassifier textClassifier) {
     }
 
-    TextClassifier getTextClassifier() {
+    default TextClassifier getTextClassifier() {
         return TextClassifier.NO_OP;
     }
 
+    /* loaded from: classes4.dex */
     public interface ViewDelegate {
         boolean dispatchKeyEvent(KeyEvent keyEvent);
 
@@ -352,23 +355,23 @@ public interface WebViewProvider {
 
         boolean shouldDelayChildPressedState();
 
-        void onProvideAutofillVirtualStructure(ViewStructure structure, int flags) {
+        default void onProvideAutofillVirtualStructure(ViewStructure structure, int flags) {
         }
 
-        void autofill(SparseArray<AutofillValue> sparseArray) {
+        default void autofill(SparseArray<AutofillValue> values) {
         }
 
-        boolean isVisibleToUserForAutofill(int virtualId) {
+        default boolean isVisibleToUserForAutofill(int virtualId) {
             return true;
         }
 
-        void onProvideContentCaptureStructure(ViewStructure structure, int flags) {
+        default void onProvideContentCaptureStructure(ViewStructure structure, int flags) {
         }
 
-        void onMovedToDisplay(int displayId, Configuration config) {
+        default void onMovedToDisplay(int displayId, Configuration config) {
         }
 
-        boolean onCheckIsTextEditor() {
+        default boolean onCheckIsTextEditor() {
             return false;
         }
     }

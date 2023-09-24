@@ -6,13 +6,14 @@ import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.params.InputConfiguration;
 import android.hardware.camera2.params.OutputConfiguration;
 import android.hardware.camera2.params.SessionConfiguration;
-import android.os.Handler;
+import android.p007os.Handler;
 import android.view.Surface;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.List;
 import java.util.Set;
 
+/* loaded from: classes.dex */
 public abstract class CameraDevice implements AutoCloseable {
     @SystemApi
     public static final int SESSION_OPERATION_MODE_CONSTRAINED_HIGH_SPEED = 1;
@@ -28,13 +29,16 @@ public abstract class CameraDevice implements AutoCloseable {
     public static final int TEMPLATE_ZERO_SHUTTER_LAG = 5;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface RequestTemplate {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface SessionOperatingMode {
     }
 
+    @Override // java.lang.AutoCloseable
     public abstract void close();
 
     public abstract CaptureRequest.Builder createCaptureRequest(int i) throws CameraAccessException;
@@ -62,7 +66,7 @@ public abstract class CameraDevice implements AutoCloseable {
         throw new UnsupportedOperationException("No default implementation");
     }
 
-    public CaptureRequest.Builder createCaptureRequest(int templateType, Set<String> set) throws CameraAccessException {
+    public CaptureRequest.Builder createCaptureRequest(int templateType, Set<String> physicalCameraIdSet) throws CameraAccessException {
         throw new UnsupportedOperationException("Subclasses must override this method");
     }
 
@@ -70,6 +74,7 @@ public abstract class CameraDevice implements AutoCloseable {
         throw new UnsupportedOperationException("Subclasses must override this method");
     }
 
+    /* loaded from: classes.dex */
     public static abstract class StateCallback {
         public static final int ERROR_CAMERA_DEVICE = 4;
         public static final int ERROR_CAMERA_DISABLED = 3;
@@ -78,6 +83,7 @@ public abstract class CameraDevice implements AutoCloseable {
         public static final int ERROR_MAX_CAMERAS_IN_USE = 2;
 
         @Retention(RetentionPolicy.SOURCE)
+        /* loaded from: classes.dex */
         public @interface ErrorCode {
         }
 

@@ -4,6 +4,7 @@ import android.util.Log;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 
+/* loaded from: classes5.dex */
 public class RefConstructor<T> {
     private static final String TAG = "RefConstructor";
     private Constructor<?> ctor;
@@ -28,7 +29,7 @@ public class RefConstructor<T> {
                         try {
                             arraySetType = Class.forName("java.util.ArraySet");
                         } catch (ClassNotFoundException e) {
-                            Log.e(TAG, e.getMessage());
+                            Log.m70e(TAG, e.getMessage());
                         }
                         if (arraySetType != null) {
                             arraySetTypes[i] = arraySetType;
@@ -46,7 +47,7 @@ public class RefConstructor<T> {
             }
         }
         if (this.ctor == null) {
-            Log.e(TAG, "ctor of " + constructName + " is null");
+            Log.m70e(TAG, "ctor of " + constructName + " is null");
         }
         if (this.ctor != null && !this.ctor.isAccessible()) {
             this.ctor.setAccessible(true);
@@ -55,18 +56,20 @@ public class RefConstructor<T> {
 
     public T newInstance() {
         try {
-            return this.ctor.newInstance(new Object[0]);
+            T object = (T) this.ctor.newInstance(new Object[0]);
+            return object;
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage(), e);
+            Log.m69e(TAG, e.getMessage(), e);
             return null;
         }
     }
 
     public T newInstance(Object... params) {
         try {
-            return this.ctor.newInstance(params);
+            T object = (T) this.ctor.newInstance(params);
+            return object;
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage(), e);
+            Log.m69e(TAG, e.getMessage(), e);
             return null;
         }
     }

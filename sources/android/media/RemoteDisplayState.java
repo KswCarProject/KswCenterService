@@ -1,17 +1,22 @@
 package android.media;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.TextUtils;
 import java.util.ArrayList;
 
+/* loaded from: classes3.dex */
 public final class RemoteDisplayState implements Parcelable {
-    public static final Parcelable.Creator<RemoteDisplayState> CREATOR = new Parcelable.Creator<RemoteDisplayState>() {
+    public static final Parcelable.Creator<RemoteDisplayState> CREATOR = new Parcelable.Creator<RemoteDisplayState>() { // from class: android.media.RemoteDisplayState.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RemoteDisplayState createFromParcel(Parcel in) {
             return new RemoteDisplayState(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RemoteDisplayState[] newArray(int size) {
             return new RemoteDisplayState[size];
         }
@@ -45,20 +50,27 @@ public final class RemoteDisplayState implements Parcelable {
         return true;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeTypedList(this.displays);
     }
 
+    /* loaded from: classes3.dex */
     public static final class RemoteDisplayInfo implements Parcelable {
-        public static final Parcelable.Creator<RemoteDisplayInfo> CREATOR = new Parcelable.Creator<RemoteDisplayInfo>() {
+        public static final Parcelable.Creator<RemoteDisplayInfo> CREATOR = new Parcelable.Creator<RemoteDisplayInfo>() { // from class: android.media.RemoteDisplayState.RemoteDisplayInfo.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public RemoteDisplayInfo createFromParcel(Parcel in) {
                 return new RemoteDisplayInfo(in);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public RemoteDisplayInfo[] newArray(int size) {
                 return new RemoteDisplayInfo[size];
             }
@@ -71,7 +83,9 @@ public final class RemoteDisplayState implements Parcelable {
         public static final int STATUS_IN_USE = 1;
         public static final int STATUS_NOT_AVAILABLE = 0;
         public String description;
-        public String id;
+
+        /* renamed from: id */
+        public String f125id;
         public String name;
         public int presentationDisplayId;
         public int status;
@@ -79,15 +93,15 @@ public final class RemoteDisplayState implements Parcelable {
         public int volumeHandling;
         public int volumeMax;
 
-        public RemoteDisplayInfo(String id2) {
-            this.id = id2;
+        public RemoteDisplayInfo(String id) {
+            this.f125id = id;
             this.status = 0;
             this.volumeHandling = 0;
             this.presentationDisplayId = -1;
         }
 
         public RemoteDisplayInfo(RemoteDisplayInfo other) {
-            this.id = other.id;
+            this.f125id = other.f125id;
             this.name = other.name;
             this.description = other.description;
             this.status = other.status;
@@ -98,7 +112,7 @@ public final class RemoteDisplayState implements Parcelable {
         }
 
         RemoteDisplayInfo(Parcel in) {
-            this.id = in.readString();
+            this.f125id = in.readString();
             this.name = in.readString();
             this.description = in.readString();
             this.status = in.readInt();
@@ -109,15 +123,17 @@ public final class RemoteDisplayState implements Parcelable {
         }
 
         public boolean isValid() {
-            return !TextUtils.isEmpty(this.id) && !TextUtils.isEmpty(this.name);
+            return (TextUtils.isEmpty(this.f125id) || TextUtils.isEmpty(this.name)) ? false : true;
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
-            dest.writeString(this.id);
+            dest.writeString(this.f125id);
             dest.writeString(this.name);
             dest.writeString(this.description);
             dest.writeInt(this.status);
@@ -128,7 +144,7 @@ public final class RemoteDisplayState implements Parcelable {
         }
 
         public String toString() {
-            return "RemoteDisplayInfo{ id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", status=" + this.status + ", volume=" + this.volume + ", volumeMax=" + this.volumeMax + ", volumeHandling=" + this.volumeHandling + ", presentationDisplayId=" + this.presentationDisplayId + " }";
+            return "RemoteDisplayInfo{ id=" + this.f125id + ", name=" + this.name + ", description=" + this.description + ", status=" + this.status + ", volume=" + this.volume + ", volumeMax=" + this.volumeMax + ", volumeHandling=" + this.volumeHandling + ", presentationDisplayId=" + this.presentationDisplayId + " }";
         }
     }
 }

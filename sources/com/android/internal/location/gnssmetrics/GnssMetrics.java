@@ -2,9 +2,9 @@ package com.android.internal.location.gnssmetrics;
 
 import android.location.GnssStatus;
 import android.net.wifi.WifiEnterpriseConfig;
-import android.os.SystemClock;
-import android.os.SystemProperties;
-import android.os.connectivity.GpsBatteryStats;
+import android.p007os.SystemClock;
+import android.p007os.SystemProperties;
+import android.p007os.connectivity.GpsBatteryStats;
 import android.util.Base64;
 import android.util.Log;
 import android.util.StatsLog;
@@ -13,21 +13,20 @@ import com.android.internal.app.IBatteryStats;
 import com.android.internal.location.nano.GnssLogsProto;
 import java.util.Arrays;
 
+/* loaded from: classes4.dex */
 public class GnssMetrics {
     private static final int DEFAULT_TIME_BETWEEN_FIXES_MILLISECS = 1000;
     public static final int GPS_SIGNAL_QUALITY_GOOD = 1;
     public static final int GPS_SIGNAL_QUALITY_POOR = 0;
     public static final int GPS_SIGNAL_QUALITY_UNKNOWN = -1;
     public static final int NUM_GPS_SIGNAL_QUALITY_LEVELS = 2;
-    /* access modifiers changed from: private */
-    public static final String TAG = GnssMetrics.class.getSimpleName();
-    private Statistics locationFailureStatistics = new Statistics();
+    private static final String TAG = GnssMetrics.class.getSimpleName();
     private String logStartInElapsedRealTime;
     private boolean[] mConstellationTypes;
-    /* access modifiers changed from: private */
-    public GnssPowerMetrics mGnssPowerMetrics;
-    private Statistics positionAccuracyMeterStatistics = new Statistics();
+    private GnssPowerMetrics mGnssPowerMetrics;
+    private Statistics locationFailureStatistics = new Statistics();
     private Statistics timeToFirstFixSecStatistics = new Statistics();
+    private Statistics positionAccuracyMeterStatistics = new Statistics();
     private Statistics topFourAverageCn0Statistics = new Statistics();
 
     public GnssMetrics(IBatteryStats stats) {
@@ -53,34 +52,37 @@ public class GnssMetrics {
     }
 
     public void logTimeToFirstFixMilliSecs(int timeToFirstFixMilliSeconds) {
-        this.timeToFirstFixSecStatistics.addItem((double) (timeToFirstFixMilliSeconds / 1000));
+        this.timeToFirstFixSecStatistics.addItem(timeToFirstFixMilliSeconds / 1000);
     }
 
     public void logPositionAccuracyMeters(float positionAccuracyMeters) {
-        this.positionAccuracyMeterStatistics.addItem((double) positionAccuracyMeters);
+        this.positionAccuracyMeterStatistics.addItem(positionAccuracyMeters);
     }
 
     public void logCn0(float[] cn0s, int numSv) {
-        if (numSv != 0 && cn0s != null && cn0s.length != 0 && cn0s.length >= numSv) {
-            float[] cn0Array = Arrays.copyOf(cn0s, numSv);
-            Arrays.sort(cn0Array);
-            this.mGnssPowerMetrics.reportSignalQuality(cn0Array, numSv);
-            if (numSv >= 4 && ((double) cn0Array[numSv - 4]) > 0.0d) {
-                double top4AvgCn0 = 0.0d;
-                for (int i = numSv - 4; i < numSv; i++) {
-                    top4AvgCn0 += (double) cn0Array[i];
-                }
-                this.topFourAverageCn0Statistics.addItem(top4AvgCn0 / 4.0d);
+        if (numSv == 0 || cn0s == null || cn0s.length == 0 || cn0s.length < numSv) {
+            if (numSv == 0) {
+                this.mGnssPowerMetrics.reportSignalQuality(null, 0);
+                return;
             }
-        } else if (numSv == 0) {
-            this.mGnssPowerMetrics.reportSignalQuality((float[]) null, 0);
+            return;
+        }
+        float[] cn0Array = Arrays.copyOf(cn0s, numSv);
+        Arrays.sort(cn0Array);
+        this.mGnssPowerMetrics.reportSignalQuality(cn0Array, numSv);
+        if (numSv >= 4 && cn0Array[numSv - 4] > 0.0d) {
+            double top4AvgCn0 = 0.0d;
+            for (int i = numSv - 4; i < numSv; i++) {
+                top4AvgCn0 += cn0Array[i];
+            }
+            this.topFourAverageCn0Statistics.addItem(top4AvgCn0 / 4.0d);
         }
     }
 
     public void logConstellationType(int constellationType) {
         if (constellationType >= this.mConstellationTypes.length) {
             String str = TAG;
-            Log.e(str, "Constellation type " + constellationType + " is not valid.");
+            Log.m70e(str, "Constellation type " + constellationType + " is not valid.");
             return;
         }
         this.mConstellationTypes[constellationType] = true;
@@ -117,7 +119,7 @@ public class GnssMetrics {
     public String dumpGnssMetricsAsText() {
         StringBuilder s = new StringBuilder();
         s.append("GNSS_KPI_START");
-        s.append(10);
+        s.append('\n');
         s.append("  KPI logging start time: ");
         s.append(this.logStartInElapsedRealTime);
         s.append("\n");
@@ -179,7 +181,7 @@ public class GnssMetrics {
         if (stats != null) {
             s.append("Power Metrics");
             s.append("\n");
-            s.append("  Time on battery (min): " + (((double) stats.getLoggingDurationMs()) / 60000.0d));
+            s.append("  Time on battery (min): " + (stats.getLoggingDurationMs() / 60000.0d));
             s.append("\n");
             long[] t = stats.getTimeInGpsSignalQualityLevel();
             if (t != null && t.length == 2) {
@@ -191,7 +193,7 @@ public class GnssMetrics {
                 s.append("\n");
             }
             s.append("  Energy consumed while on battery (mAh): ");
-            s.append(((double) stats.getEnergyConsumedMaMs()) / 3600000.0d);
+            s.append(stats.getEnergyConsumedMaMs() / 3600000.0d);
             s.append("\n");
         }
         s.append("Hardware Version: " + SystemProperties.get("ro.boot.revision", ""));
@@ -199,6 +201,7 @@ public class GnssMetrics {
         return s.toString();
     }
 
+    /* loaded from: classes4.dex */
     private class Statistics {
         private int count;
         private double sum;
@@ -224,13 +227,13 @@ public class GnssMetrics {
         }
 
         public double getMean() {
-            return this.sum / ((double) this.count);
+            return this.sum / this.count;
         }
 
         public double getStandardDeviation() {
-            double m = this.sum / ((double) this.count);
+            double m = this.sum / this.count;
             double m2 = m * m;
-            double v = this.sumSquare / ((double) this.count);
+            double v = this.sumSquare / this.count;
             if (v > m2) {
                 return Math.sqrt(v - m2);
             }
@@ -253,6 +256,7 @@ public class GnssMetrics {
         this.mConstellationTypes = new boolean[8];
     }
 
+    /* loaded from: classes4.dex */
     private class GnssPowerMetrics {
         public static final double POOR_TOP_FOUR_AVG_CN0_THRESHOLD_DB_HZ = 20.0d;
         private static final double REPORTING_THRESHOLD_DB_HZ = 1.0d;
@@ -269,7 +273,7 @@ public class GnssMetrics {
             GpsBatteryStats stats = GnssMetrics.this.mGnssPowerMetrics.getGpsBatteryStats();
             if (stats != null) {
                 p.loggingDurationMs = stats.getLoggingDurationMs();
-                p.energyConsumedMah = ((double) stats.getEnergyConsumedMaMs()) / 3600000.0d;
+                p.energyConsumedMah = stats.getEnergyConsumedMaMs() / 3600000.0d;
                 long[] t = stats.getTimeInGpsSignalQualityLevel();
                 p.timeInSignalQualityLevelMs = new long[t.length];
                 for (int i = 0; i < t.length; i++) {
@@ -283,7 +287,7 @@ public class GnssMetrics {
             try {
                 return this.mBatteryStats.getGpsBatteryStats();
             } catch (Exception e) {
-                Log.w(GnssMetrics.TAG, "Exception", e);
+                Log.m63w(GnssMetrics.TAG, "Exception", e);
                 return null;
             }
         }
@@ -292,22 +296,23 @@ public class GnssMetrics {
             double avgCn0 = 0.0d;
             if (numSv > 0) {
                 for (int i = Math.max(0, numSv - 4); i < numSv; i++) {
-                    avgCn0 += (double) ascendingCN0Array[i];
+                    avgCn0 += ascendingCN0Array[i];
                 }
-                avgCn0 /= (double) Math.min(numSv, 4);
+                avgCn0 /= Math.min(numSv, 4);
             }
-            if (Math.abs(avgCn0 - this.mLastAverageCn0) >= REPORTING_THRESHOLD_DB_HZ) {
-                int signalLevel = getSignalLevel(avgCn0);
-                if (signalLevel != this.mLastSignalLevel) {
-                    StatsLog.write(69, signalLevel);
-                    this.mLastSignalLevel = signalLevel;
-                }
-                try {
-                    this.mBatteryStats.noteGpsSignalQuality(signalLevel);
-                    this.mLastAverageCn0 = avgCn0;
-                } catch (Exception e) {
-                    Log.w(GnssMetrics.TAG, "Exception", e);
-                }
+            if (Math.abs(avgCn0 - this.mLastAverageCn0) < REPORTING_THRESHOLD_DB_HZ) {
+                return;
+            }
+            int signalLevel = getSignalLevel(avgCn0);
+            if (signalLevel != this.mLastSignalLevel) {
+                StatsLog.write(69, signalLevel);
+                this.mLastSignalLevel = signalLevel;
+            }
+            try {
+                this.mBatteryStats.noteGpsSignalQuality(signalLevel);
+                this.mLastAverageCn0 = avgCn0;
+            } catch (Exception e) {
+                Log.m63w(GnssMetrics.TAG, "Exception", e);
             }
         }
 

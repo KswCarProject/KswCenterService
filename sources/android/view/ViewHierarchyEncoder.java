@@ -8,6 +8,7 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
+/* loaded from: classes4.dex */
 public class ViewHierarchyEncoder {
     private static final byte SIG_BOOLEAN = 90;
     private static final byte SIG_BYTE = 66;
@@ -19,10 +20,10 @@ public class ViewHierarchyEncoder {
     private static final byte SIG_MAP = 77;
     private static final byte SIG_SHORT = 83;
     private static final byte SIG_STRING = 82;
-    private Charset mCharset = Charset.forName("utf-8");
-    private short mPropertyId = 1;
-    private final Map<String, Short> mPropertyNames = new HashMap(200);
     private final DataOutputStream mStream;
+    private final Map<String, Short> mPropertyNames = new HashMap(200);
+    private short mPropertyId = 1;
+    private Charset mCharset = Charset.forName("utf-8");
 
     public ViewHierarchyEncoder(ByteArrayOutputStream stream) {
         this.mStream = new DataOutputStream(stream);
@@ -100,13 +101,13 @@ public class ViewHierarchyEncoder {
     }
 
     private void endPropertyMap() {
-        writeShort(0);
+        writeShort((short) 0);
     }
 
     private void writeBoolean(boolean v) {
         try {
             this.mStream.write(90);
-            this.mStream.write(v);
+            this.mStream.write(v ? 1 : 0);
         } catch (IOException e) {
         }
     }

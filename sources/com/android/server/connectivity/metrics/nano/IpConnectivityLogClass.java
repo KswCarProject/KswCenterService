@@ -8,6 +8,7 @@ import com.android.framework.protobuf.nano.MessageNano;
 import com.android.framework.protobuf.nano.WireFormatNano;
 import java.io.IOException;
 
+/* loaded from: classes4.dex */
 public interface IpConnectivityLogClass {
     public static final int BLUETOOTH = 1;
     public static final int CELLULAR = 2;
@@ -20,6 +21,7 @@ public interface IpConnectivityLogClass {
     public static final int WIFI_NAN = 8;
     public static final int WIFI_P2P = 7;
 
+    /* loaded from: classes4.dex */
     public static final class NetworkId extends MessageNano {
         private static volatile NetworkId[] _emptyArray;
         public int networkId;
@@ -45,6 +47,7 @@ public interface IpConnectivityLogClass {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.networkId != 0) {
                 output.writeInt32(1, this.networkId);
@@ -52,8 +55,8 @@ public interface IpConnectivityLogClass {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.networkId != 0) {
                 return size + CodedOutputByteBufferNano.computeInt32Size(1, this.networkId);
@@ -61,16 +64,19 @@ public interface IpConnectivityLogClass {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public NetworkId mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
                 if (tag == 0) {
                     return this;
                 }
-                if (tag == 8) {
+                if (tag != 8) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
+                    }
+                } else {
                     this.networkId = input.readInt32();
-                } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                    return this;
                 }
             }
         }
@@ -84,6 +90,7 @@ public interface IpConnectivityLogClass {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class Pair extends MessageNano {
         private static volatile Pair[] _emptyArray;
         public int key;
@@ -111,6 +118,7 @@ public interface IpConnectivityLogClass {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.key != 0) {
                 output.writeInt32(1, this.key);
@@ -121,8 +129,8 @@ public interface IpConnectivityLogClass {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.key != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(1, this.key);
@@ -133,6 +141,7 @@ public interface IpConnectivityLogClass {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public Pair mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -141,10 +150,12 @@ public interface IpConnectivityLogClass {
                 }
                 if (tag == 8) {
                     this.key = input.readInt32();
-                } else if (tag == 16) {
+                } else if (tag != 16) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
+                    }
+                } else {
                     this.value = input.readInt32();
-                } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                    return this;
                 }
             }
         }
@@ -158,6 +169,7 @@ public interface IpConnectivityLogClass {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class DefaultNetworkEvent extends MessageNano {
         public static final int DISCONNECT = 3;
         public static final int DUAL = 3;
@@ -196,21 +208,22 @@ public interface IpConnectivityLogClass {
         }
 
         public DefaultNetworkEvent clear() {
-            this.defaultNetworkDurationMs = 0;
-            this.validationDurationMs = 0;
-            this.initialScore = 0;
-            this.finalScore = 0;
+            this.defaultNetworkDurationMs = 0L;
+            this.validationDurationMs = 0L;
+            this.initialScore = 0L;
+            this.finalScore = 0L;
             this.ipSupport = 0;
             this.previousDefaultNetworkLinkLayer = 0;
             this.networkId = null;
             this.previousNetworkId = null;
             this.previousNetworkIpSupport = 0;
             this.transportTypes = WireFormatNano.EMPTY_INT_ARRAY;
-            this.noDefaultNetworkDurationMs = 0;
+            this.noDefaultNetworkDurationMs = 0L;
             this.cachedSize = -1;
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.networkId != null) {
                 output.writeMessage(1, this.networkId);
@@ -222,8 +235,8 @@ public interface IpConnectivityLogClass {
                 output.writeInt32(3, this.previousNetworkIpSupport);
             }
             if (this.transportTypes != null && this.transportTypes.length > 0) {
-                for (int writeInt32 : this.transportTypes) {
-                    output.writeInt32(4, writeInt32);
+                for (int i = 0; i < this.transportTypes.length; i++) {
+                    output.writeInt32(4, this.transportTypes[i]);
                 }
             }
             if (this.defaultNetworkDurationMs != 0) {
@@ -250,8 +263,8 @@ public interface IpConnectivityLogClass {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.networkId != null) {
                 size += CodedOutputByteBufferNano.computeMessageSize(1, this.networkId);
@@ -264,7 +277,8 @@ public interface IpConnectivityLogClass {
             }
             if (this.transportTypes != null && this.transportTypes.length > 0) {
                 int dataSize = 0;
-                for (int element : this.transportTypes) {
+                for (int i = 0; i < this.transportTypes.length; i++) {
+                    int element = this.transportTypes[i];
                     dataSize += CodedOutputByteBufferNano.computeInt32SizeNoTag(element);
                 }
                 size = size + dataSize + (this.transportTypes.length * 1);
@@ -293,6 +307,7 @@ public interface IpConnectivityLogClass {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public DefaultNetworkEvent mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -319,12 +334,12 @@ public interface IpConnectivityLogClass {
                             case 2:
                             case 3:
                                 this.previousNetworkIpSupport = value;
-                                break;
+                                continue;
                         }
                     case 32:
                         int arrayLength = WireFormatNano.getRepeatedFieldArrayLength(input, 32);
                         int i = this.transportTypes == null ? 0 : this.transportTypes.length;
-                        int[] newArray = new int[(i + arrayLength)];
+                        int[] newArray = new int[i + arrayLength];
                         if (i != 0) {
                             System.arraycopy(this.transportTypes, 0, newArray, 0, i);
                         }
@@ -337,7 +352,8 @@ public interface IpConnectivityLogClass {
                         this.transportTypes = newArray;
                         break;
                     case 34:
-                        int limit = input.pushLimit(input.readRawVarint32());
+                        int length = input.readRawVarint32();
+                        int limit = input.pushLimit(length);
                         int arrayLength2 = 0;
                         int startPos = input.getPosition();
                         while (input.getBytesUntilLimit() > 0) {
@@ -346,7 +362,7 @@ public interface IpConnectivityLogClass {
                         }
                         input.rewindToPosition(startPos);
                         int i2 = this.transportTypes == null ? 0 : this.transportTypes.length;
-                        int[] newArray2 = new int[(i2 + arrayLength2)];
+                        int[] newArray2 = new int[i2 + arrayLength2];
                         if (i2 != 0) {
                             System.arraycopy(this.transportTypes, 0, newArray2, 0, i2);
                         }
@@ -377,7 +393,7 @@ public interface IpConnectivityLogClass {
                             case 2:
                             case 3:
                                 this.ipSupport = value2;
-                                break;
+                                continue;
                         }
                     case 80:
                         int value3 = input.readInt32();
@@ -393,7 +409,7 @@ public interface IpConnectivityLogClass {
                             case 8:
                             case 9:
                                 this.previousDefaultNetworkLinkLayer = value3;
-                                break;
+                                continue;
                         }
                     case 88:
                         this.validationDurationMs = input.readInt64();
@@ -417,6 +433,7 @@ public interface IpConnectivityLogClass {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class IpReachabilityEvent extends MessageNano {
         private static volatile IpReachabilityEvent[] _emptyArray;
         public int eventType;
@@ -444,6 +461,7 @@ public interface IpConnectivityLogClass {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (!this.ifName.equals("")) {
                 output.writeString(1, this.ifName);
@@ -454,8 +472,8 @@ public interface IpConnectivityLogClass {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (!this.ifName.equals("")) {
                 size += CodedOutputByteBufferNano.computeStringSize(1, this.ifName);
@@ -466,6 +484,7 @@ public interface IpConnectivityLogClass {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public IpReachabilityEvent mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -474,10 +493,12 @@ public interface IpConnectivityLogClass {
                 }
                 if (tag == 10) {
                     this.ifName = input.readString();
-                } else if (tag == 16) {
+                } else if (tag != 16) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
+                    }
+                } else {
                     this.eventType = input.readInt32();
-                } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                    return this;
                 }
             }
         }
@@ -491,6 +512,7 @@ public interface IpConnectivityLogClass {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class NetworkEvent extends MessageNano {
         private static volatile NetworkEvent[] _emptyArray;
         public int eventType;
@@ -520,6 +542,7 @@ public interface IpConnectivityLogClass {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.networkId != null) {
                 output.writeMessage(1, this.networkId);
@@ -533,8 +556,8 @@ public interface IpConnectivityLogClass {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.networkId != null) {
                 size += CodedOutputByteBufferNano.computeMessageSize(1, this.networkId);
@@ -548,6 +571,7 @@ public interface IpConnectivityLogClass {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public NetworkEvent mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -561,10 +585,12 @@ public interface IpConnectivityLogClass {
                     input.readMessage(this.networkId);
                 } else if (tag == 16) {
                     this.eventType = input.readInt32();
-                } else if (tag == 24) {
+                } else if (tag != 24) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
+                    }
+                } else {
                     this.latencyMs = input.readInt32();
-                } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                    return this;
                 }
             }
         }
@@ -578,6 +604,7 @@ public interface IpConnectivityLogClass {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class ValidationProbeEvent extends MessageNano {
         private static volatile ValidationProbeEvent[] _emptyArray;
         public int latencyMs;
@@ -609,6 +636,7 @@ public interface IpConnectivityLogClass {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.networkId != null) {
                 output.writeMessage(1, this.networkId);
@@ -625,8 +653,8 @@ public interface IpConnectivityLogClass {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.networkId != null) {
                 size += CodedOutputByteBufferNano.computeMessageSize(1, this.networkId);
@@ -643,6 +671,7 @@ public interface IpConnectivityLogClass {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public ValidationProbeEvent mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -658,10 +687,12 @@ public interface IpConnectivityLogClass {
                     this.latencyMs = input.readInt32();
                 } else if (tag == 24) {
                     this.probeType = input.readInt32();
-                } else if (tag == 32) {
+                } else if (tag != 32) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
+                    }
+                } else {
                     this.probeResult = input.readInt32();
-                } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                    return this;
                 }
             }
         }
@@ -675,6 +706,7 @@ public interface IpConnectivityLogClass {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class DNSLookupBatch extends MessageNano {
         private static volatile DNSLookupBatch[] _emptyArray;
         public int[] eventTypes;
@@ -705,10 +737,10 @@ public interface IpConnectivityLogClass {
 
         public DNSLookupBatch clear() {
             this.latenciesMs = WireFormatNano.EMPTY_INT_ARRAY;
-            this.getaddrinfoQueryCount = 0;
-            this.gethostbynameQueryCount = 0;
-            this.getaddrinfoErrorCount = 0;
-            this.gethostbynameErrorCount = 0;
+            this.getaddrinfoQueryCount = 0L;
+            this.gethostbynameQueryCount = 0L;
+            this.getaddrinfoErrorCount = 0L;
+            this.gethostbynameErrorCount = 0L;
             this.getaddrinfoErrors = Pair.emptyArray();
             this.gethostbynameErrors = Pair.emptyArray();
             this.networkId = null;
@@ -718,24 +750,25 @@ public interface IpConnectivityLogClass {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.networkId != null) {
                 output.writeMessage(1, this.networkId);
             }
             int i = 0;
             if (this.eventTypes != null && this.eventTypes.length > 0) {
-                for (int writeInt32 : this.eventTypes) {
-                    output.writeInt32(2, writeInt32);
+                for (int i2 = 0; i2 < this.eventTypes.length; i2++) {
+                    output.writeInt32(2, this.eventTypes[i2]);
                 }
             }
             if (this.returnCodes != null && this.returnCodes.length > 0) {
-                for (int writeInt322 : this.returnCodes) {
-                    output.writeInt32(3, writeInt322);
+                for (int i3 = 0; i3 < this.returnCodes.length; i3++) {
+                    output.writeInt32(3, this.returnCodes[i3]);
                 }
             }
             if (this.latenciesMs != null && this.latenciesMs.length > 0) {
-                for (int writeInt323 : this.latenciesMs) {
-                    output.writeInt32(4, writeInt323);
+                for (int i4 = 0; i4 < this.latenciesMs.length; i4++) {
+                    output.writeInt32(4, this.latenciesMs[i4]);
                 }
             }
             if (this.getaddrinfoQueryCount != 0) {
@@ -751,7 +784,8 @@ public interface IpConnectivityLogClass {
                 output.writeInt64(8, this.gethostbynameErrorCount);
             }
             if (this.getaddrinfoErrors != null && this.getaddrinfoErrors.length > 0) {
-                for (Pair element : this.getaddrinfoErrors) {
+                for (int i5 = 0; i5 < this.getaddrinfoErrors.length; i5++) {
+                    Pair element = this.getaddrinfoErrors[i5];
                     if (element != null) {
                         output.writeMessage(9, element);
                     }
@@ -759,22 +793,22 @@ public interface IpConnectivityLogClass {
             }
             if (this.gethostbynameErrors != null && this.gethostbynameErrors.length > 0) {
                 while (true) {
-                    int i2 = i;
-                    if (i2 >= this.gethostbynameErrors.length) {
+                    int i6 = i;
+                    if (i6 >= this.gethostbynameErrors.length) {
                         break;
                     }
-                    Pair element2 = this.gethostbynameErrors[i2];
+                    Pair element2 = this.gethostbynameErrors[i6];
                     if (element2 != null) {
                         output.writeMessage(10, element2);
                     }
-                    i = i2 + 1;
+                    i = i6 + 1;
                 }
             }
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.networkId != null) {
                 size += CodedOutputByteBufferNano.computeMessageSize(1, this.networkId);
@@ -782,24 +816,24 @@ public interface IpConnectivityLogClass {
             int i = 0;
             if (this.eventTypes != null && this.eventTypes.length > 0) {
                 int dataSize = 0;
-                for (int element : this.eventTypes) {
-                    dataSize += CodedOutputByteBufferNano.computeInt32SizeNoTag(element);
+                for (int dataSize2 = 0; dataSize2 < this.eventTypes.length; dataSize2++) {
+                    dataSize += CodedOutputByteBufferNano.computeInt32SizeNoTag(this.eventTypes[dataSize2]);
                 }
                 size = size + dataSize + (this.eventTypes.length * 1);
             }
             if (this.returnCodes != null && this.returnCodes.length > 0) {
-                int dataSize2 = 0;
-                for (int element2 : this.returnCodes) {
-                    dataSize2 += CodedOutputByteBufferNano.computeInt32SizeNoTag(element2);
+                int dataSize3 = 0;
+                for (int dataSize4 = 0; dataSize4 < this.returnCodes.length; dataSize4++) {
+                    dataSize3 += CodedOutputByteBufferNano.computeInt32SizeNoTag(this.returnCodes[dataSize4]);
                 }
-                size = size + dataSize2 + (this.returnCodes.length * 1);
+                size = size + dataSize3 + (this.returnCodes.length * 1);
             }
             if (this.latenciesMs != null && this.latenciesMs.length > 0) {
-                int dataSize3 = 0;
-                for (int element3 : this.latenciesMs) {
-                    dataSize3 += CodedOutputByteBufferNano.computeInt32SizeNoTag(element3);
+                int dataSize5 = 0;
+                for (int dataSize6 = 0; dataSize6 < this.latenciesMs.length; dataSize6++) {
+                    dataSize5 += CodedOutputByteBufferNano.computeInt32SizeNoTag(this.latenciesMs[dataSize6]);
                 }
-                size = size + dataSize3 + (this.latenciesMs.length * 1);
+                size = size + dataSize5 + (this.latenciesMs.length * 1);
             }
             if (this.getaddrinfoQueryCount != 0) {
                 size += CodedOutputByteBufferNano.computeInt64Size(5, this.getaddrinfoQueryCount);
@@ -815,9 +849,10 @@ public interface IpConnectivityLogClass {
             }
             if (this.getaddrinfoErrors != null && this.getaddrinfoErrors.length > 0) {
                 int size2 = size;
-                for (Pair element4 : this.getaddrinfoErrors) {
-                    if (element4 != null) {
-                        size2 += CodedOutputByteBufferNano.computeMessageSize(9, element4);
+                for (int size3 = 0; size3 < this.getaddrinfoErrors.length; size3++) {
+                    Pair element = this.getaddrinfoErrors[size3];
+                    if (element != null) {
+                        size2 += CodedOutputByteBufferNano.computeMessageSize(9, element);
                     }
                 }
                 size = size2;
@@ -828,9 +863,9 @@ public interface IpConnectivityLogClass {
                     if (i2 >= this.gethostbynameErrors.length) {
                         break;
                     }
-                    Pair element5 = this.gethostbynameErrors[i2];
-                    if (element5 != null) {
-                        size += CodedOutputByteBufferNano.computeMessageSize(10, element5);
+                    Pair element2 = this.gethostbynameErrors[i2];
+                    if (element2 != null) {
+                        size += CodedOutputByteBufferNano.computeMessageSize(10, element2);
                     }
                     i = i2 + 1;
                 }
@@ -838,6 +873,7 @@ public interface IpConnectivityLogClass {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public DNSLookupBatch mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -853,7 +889,7 @@ public interface IpConnectivityLogClass {
                     case 16:
                         int arrayLength = WireFormatNano.getRepeatedFieldArrayLength(input, 16);
                         int i = this.eventTypes == null ? 0 : this.eventTypes.length;
-                        int[] newArray = new int[(i + arrayLength)];
+                        int[] newArray = new int[i + arrayLength];
                         if (i != 0) {
                             System.arraycopy(this.eventTypes, 0, newArray, 0, i);
                         }
@@ -866,7 +902,8 @@ public interface IpConnectivityLogClass {
                         this.eventTypes = newArray;
                         break;
                     case 18:
-                        int limit = input.pushLimit(input.readRawVarint32());
+                        int length = input.readRawVarint32();
+                        int limit = input.pushLimit(length);
                         int arrayLength2 = 0;
                         int startPos = input.getPosition();
                         while (input.getBytesUntilLimit() > 0) {
@@ -875,7 +912,7 @@ public interface IpConnectivityLogClass {
                         }
                         input.rewindToPosition(startPos);
                         int i2 = this.eventTypes == null ? 0 : this.eventTypes.length;
-                        int[] newArray2 = new int[(i2 + arrayLength2)];
+                        int[] newArray2 = new int[i2 + arrayLength2];
                         if (i2 != 0) {
                             System.arraycopy(this.eventTypes, 0, newArray2, 0, i2);
                         }
@@ -889,7 +926,7 @@ public interface IpConnectivityLogClass {
                     case 24:
                         int arrayLength3 = WireFormatNano.getRepeatedFieldArrayLength(input, 24);
                         int i3 = this.returnCodes == null ? 0 : this.returnCodes.length;
-                        int[] newArray3 = new int[(i3 + arrayLength3)];
+                        int[] newArray3 = new int[i3 + arrayLength3];
                         if (i3 != 0) {
                             System.arraycopy(this.returnCodes, 0, newArray3, 0, i3);
                         }
@@ -902,7 +939,8 @@ public interface IpConnectivityLogClass {
                         this.returnCodes = newArray3;
                         break;
                     case 26:
-                        int limit2 = input.pushLimit(input.readRawVarint32());
+                        int length2 = input.readRawVarint32();
+                        int limit2 = input.pushLimit(length2);
                         int arrayLength4 = 0;
                         int startPos2 = input.getPosition();
                         while (input.getBytesUntilLimit() > 0) {
@@ -911,7 +949,7 @@ public interface IpConnectivityLogClass {
                         }
                         input.rewindToPosition(startPos2);
                         int i4 = this.returnCodes == null ? 0 : this.returnCodes.length;
-                        int[] newArray4 = new int[(i4 + arrayLength4)];
+                        int[] newArray4 = new int[i4 + arrayLength4];
                         if (i4 != 0) {
                             System.arraycopy(this.returnCodes, 0, newArray4, 0, i4);
                         }
@@ -925,7 +963,7 @@ public interface IpConnectivityLogClass {
                     case 32:
                         int arrayLength5 = WireFormatNano.getRepeatedFieldArrayLength(input, 32);
                         int i5 = this.latenciesMs == null ? 0 : this.latenciesMs.length;
-                        int[] newArray5 = new int[(i5 + arrayLength5)];
+                        int[] newArray5 = new int[i5 + arrayLength5];
                         if (i5 != 0) {
                             System.arraycopy(this.latenciesMs, 0, newArray5, 0, i5);
                         }
@@ -938,7 +976,8 @@ public interface IpConnectivityLogClass {
                         this.latenciesMs = newArray5;
                         break;
                     case 34:
-                        int limit3 = input.pushLimit(input.readRawVarint32());
+                        int length3 = input.readRawVarint32();
+                        int limit3 = input.pushLimit(length3);
                         int arrayLength6 = 0;
                         int startPos3 = input.getPosition();
                         while (input.getBytesUntilLimit() > 0) {
@@ -947,7 +986,7 @@ public interface IpConnectivityLogClass {
                         }
                         input.rewindToPosition(startPos3);
                         int i6 = this.latenciesMs == null ? 0 : this.latenciesMs.length;
-                        int[] newArray6 = new int[(i6 + arrayLength6)];
+                        int[] newArray6 = new int[i6 + arrayLength6];
                         if (i6 != 0) {
                             System.arraycopy(this.latenciesMs, 0, newArray6, 0, i6);
                         }
@@ -973,7 +1012,7 @@ public interface IpConnectivityLogClass {
                     case 74:
                         int arrayLength7 = WireFormatNano.getRepeatedFieldArrayLength(input, 74);
                         int i7 = this.getaddrinfoErrors == null ? 0 : this.getaddrinfoErrors.length;
-                        Pair[] newArray7 = new Pair[(i7 + arrayLength7)];
+                        Pair[] newArray7 = new Pair[i7 + arrayLength7];
                         if (i7 != 0) {
                             System.arraycopy(this.getaddrinfoErrors, 0, newArray7, 0, i7);
                         }
@@ -990,7 +1029,7 @@ public interface IpConnectivityLogClass {
                     case 82:
                         int arrayLength8 = WireFormatNano.getRepeatedFieldArrayLength(input, 82);
                         int i8 = this.gethostbynameErrors == null ? 0 : this.gethostbynameErrors.length;
-                        Pair[] newArray8 = new Pair[(i8 + arrayLength8)];
+                        Pair[] newArray8 = new Pair[i8 + arrayLength8];
                         if (i8 != 0) {
                             System.arraycopy(this.gethostbynameErrors, 0, newArray8, 0, i8);
                         }
@@ -1023,6 +1062,7 @@ public interface IpConnectivityLogClass {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class DNSLatencies extends MessageNano {
         private static volatile DNSLatencies[] _emptyArray;
         public int aCount;
@@ -1058,6 +1098,7 @@ public interface IpConnectivityLogClass {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.type != 0) {
                 output.writeInt32(1, this.type);
@@ -1075,15 +1116,15 @@ public interface IpConnectivityLogClass {
                 output.writeInt32(5, this.aaaaCount);
             }
             if (this.latenciesMs != null && this.latenciesMs.length > 0) {
-                for (int writeInt32 : this.latenciesMs) {
-                    output.writeInt32(6, writeInt32);
+                for (int i = 0; i < this.latenciesMs.length; i++) {
+                    output.writeInt32(6, this.latenciesMs[i]);
                 }
             }
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.type != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(1, this.type);
@@ -1100,16 +1141,18 @@ public interface IpConnectivityLogClass {
             if (this.aaaaCount != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(5, this.aaaaCount);
             }
-            if (this.latenciesMs == null || this.latenciesMs.length <= 0) {
-                return size;
+            if (this.latenciesMs != null && this.latenciesMs.length > 0) {
+                int dataSize = 0;
+                for (int i = 0; i < this.latenciesMs.length; i++) {
+                    int element = this.latenciesMs[i];
+                    dataSize += CodedOutputByteBufferNano.computeInt32SizeNoTag(element);
+                }
+                return size + dataSize + (this.latenciesMs.length * 1);
             }
-            int dataSize = 0;
-            for (int element : this.latenciesMs) {
-                dataSize += CodedOutputByteBufferNano.computeInt32SizeNoTag(element);
-            }
-            return size + dataSize + (this.latenciesMs.length * 1);
+            return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public DNSLatencies mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -1125,11 +1168,12 @@ public interface IpConnectivityLogClass {
                 } else if (tag == 32) {
                     this.aCount = input.readInt32();
                 } else if (tag == 40) {
-                    this.aaaaCount = input.readInt32();
+                    int arrayLength = input.readInt32();
+                    this.aaaaCount = arrayLength;
                 } else if (tag == 48) {
-                    int arrayLength = WireFormatNano.getRepeatedFieldArrayLength(input, 48);
+                    int arrayLength2 = WireFormatNano.getRepeatedFieldArrayLength(input, 48);
                     int i = this.latenciesMs == null ? 0 : this.latenciesMs.length;
-                    int[] newArray = new int[(i + arrayLength)];
+                    int[] newArray = new int[i + arrayLength2];
                     if (i != 0) {
                         System.arraycopy(this.latenciesMs, 0, newArray, 0, i);
                     }
@@ -1140,17 +1184,22 @@ public interface IpConnectivityLogClass {
                     }
                     newArray[i] = input.readInt32();
                     this.latenciesMs = newArray;
-                } else if (tag == 50) {
-                    int limit = input.pushLimit(input.readRawVarint32());
-                    int arrayLength2 = 0;
+                } else if (tag != 50) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
+                    }
+                } else {
+                    int length = input.readRawVarint32();
+                    int limit = input.pushLimit(length);
+                    int arrayLength3 = 0;
                     int startPos = input.getPosition();
                     while (input.getBytesUntilLimit() > 0) {
                         input.readInt32();
-                        arrayLength2++;
+                        arrayLength3++;
                     }
                     input.rewindToPosition(startPos);
                     int i2 = this.latenciesMs == null ? 0 : this.latenciesMs.length;
-                    int[] newArray2 = new int[(i2 + arrayLength2)];
+                    int[] newArray2 = new int[i2 + arrayLength3];
                     if (i2 != 0) {
                         System.arraycopy(this.latenciesMs, 0, newArray2, 0, i2);
                     }
@@ -1160,8 +1209,6 @@ public interface IpConnectivityLogClass {
                     }
                     this.latenciesMs = newArray2;
                     input.popLimit(limit);
-                } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                    return this;
                 }
             }
         }
@@ -1175,6 +1222,7 @@ public interface IpConnectivityLogClass {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class ConnectStatistics extends MessageNano {
         private static volatile ConnectStatistics[] _emptyArray;
         public int connectBlockingCount;
@@ -1210,6 +1258,7 @@ public interface IpConnectivityLogClass {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.connectCount != 0) {
                 output.writeInt32(1, this.connectCount);
@@ -1219,35 +1268,37 @@ public interface IpConnectivityLogClass {
             }
             int i = 0;
             if (this.latenciesMs != null && this.latenciesMs.length > 0) {
-                for (int writeInt32 : this.latenciesMs) {
-                    output.writeInt32(3, writeInt32);
+                for (int i2 = 0; i2 < this.latenciesMs.length; i2++) {
+                    output.writeInt32(3, this.latenciesMs[i2]);
                 }
             }
             if (this.errnosCounters != null && this.errnosCounters.length > 0) {
-                for (Pair element : this.errnosCounters) {
+                for (int i3 = 0; i3 < this.errnosCounters.length; i3++) {
+                    Pair element = this.errnosCounters[i3];
                     if (element != null) {
                         output.writeMessage(4, element);
                     }
                 }
             }
-            if (this.connectBlockingCount != 0) {
+            int i4 = this.connectBlockingCount;
+            if (i4 != 0) {
                 output.writeInt32(5, this.connectBlockingCount);
             }
             if (this.nonBlockingLatenciesMs != null && this.nonBlockingLatenciesMs.length > 0) {
                 while (true) {
-                    int i2 = i;
-                    if (i2 >= this.nonBlockingLatenciesMs.length) {
+                    int i5 = i;
+                    if (i5 >= this.nonBlockingLatenciesMs.length) {
                         break;
                     }
-                    output.writeInt32(6, this.nonBlockingLatenciesMs[i2]);
-                    i = i2 + 1;
+                    output.writeInt32(6, this.nonBlockingLatenciesMs[i5]);
+                    i = i5 + 1;
                 }
             }
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.connectCount != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(1, this.connectCount);
@@ -1257,16 +1308,17 @@ public interface IpConnectivityLogClass {
             }
             if (this.latenciesMs != null && this.latenciesMs.length > 0) {
                 int dataSize = 0;
-                for (int element : this.latenciesMs) {
-                    dataSize += CodedOutputByteBufferNano.computeInt32SizeNoTag(element);
+                for (int dataSize2 = 0; dataSize2 < this.latenciesMs.length; dataSize2++) {
+                    dataSize += CodedOutputByteBufferNano.computeInt32SizeNoTag(this.latenciesMs[dataSize2]);
                 }
                 size = size + dataSize + (this.latenciesMs.length * 1);
             }
             if (this.errnosCounters != null && this.errnosCounters.length > 0) {
                 int size2 = size;
-                for (Pair element2 : this.errnosCounters) {
-                    if (element2 != null) {
-                        size2 += CodedOutputByteBufferNano.computeMessageSize(4, element2);
+                for (int size3 = 0; size3 < this.errnosCounters.length; size3++) {
+                    Pair element = this.errnosCounters[size3];
+                    if (element != null) {
+                        size2 += CodedOutputByteBufferNano.computeMessageSize(4, element);
                     }
                 }
                 size = size2;
@@ -1274,16 +1326,17 @@ public interface IpConnectivityLogClass {
             if (this.connectBlockingCount != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(5, this.connectBlockingCount);
             }
-            if (this.nonBlockingLatenciesMs == null || this.nonBlockingLatenciesMs.length <= 0) {
-                return size;
+            if (this.nonBlockingLatenciesMs != null && this.nonBlockingLatenciesMs.length > 0) {
+                int dataSize3 = 0;
+                for (int i = 0; i < this.nonBlockingLatenciesMs.length; i++) {
+                    dataSize3 += CodedOutputByteBufferNano.computeInt32SizeNoTag(this.nonBlockingLatenciesMs[i]);
+                }
+                return size + dataSize3 + (this.nonBlockingLatenciesMs.length * 1);
             }
-            int dataSize2 = 0;
-            for (int element3 : this.nonBlockingLatenciesMs) {
-                dataSize2 += CodedOutputByteBufferNano.computeInt32SizeNoTag(element3);
-            }
-            return size + dataSize2 + (this.nonBlockingLatenciesMs.length * 1);
+            return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public ConnectStatistics mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -1293,11 +1346,12 @@ public interface IpConnectivityLogClass {
                 if (tag == 8) {
                     this.connectCount = input.readInt32();
                 } else if (tag == 16) {
-                    this.ipv6AddrCount = input.readInt32();
+                    int arrayLength = input.readInt32();
+                    this.ipv6AddrCount = arrayLength;
                 } else if (tag == 24) {
-                    int arrayLength = WireFormatNano.getRepeatedFieldArrayLength(input, 24);
+                    int arrayLength2 = WireFormatNano.getRepeatedFieldArrayLength(input, 24);
                     int i = this.latenciesMs == null ? 0 : this.latenciesMs.length;
-                    int[] newArray = new int[(i + arrayLength)];
+                    int[] newArray = new int[i + arrayLength2];
                     if (i != 0) {
                         System.arraycopy(this.latenciesMs, 0, newArray, 0, i);
                     }
@@ -1309,16 +1363,17 @@ public interface IpConnectivityLogClass {
                     newArray[i] = input.readInt32();
                     this.latenciesMs = newArray;
                 } else if (tag == 26) {
-                    int limit = input.pushLimit(input.readRawVarint32());
-                    int arrayLength2 = 0;
+                    int length = input.readRawVarint32();
+                    int limit = input.pushLimit(length);
+                    int arrayLength3 = 0;
                     int startPos = input.getPosition();
                     while (input.getBytesUntilLimit() > 0) {
                         input.readInt32();
-                        arrayLength2++;
+                        arrayLength3++;
                     }
                     input.rewindToPosition(startPos);
                     int i2 = this.latenciesMs == null ? 0 : this.latenciesMs.length;
-                    int[] newArray2 = new int[(i2 + arrayLength2)];
+                    int[] newArray2 = new int[i2 + arrayLength3];
                     if (i2 != 0) {
                         System.arraycopy(this.latenciesMs, 0, newArray2, 0, i2);
                     }
@@ -1329,9 +1384,9 @@ public interface IpConnectivityLogClass {
                     this.latenciesMs = newArray2;
                     input.popLimit(limit);
                 } else if (tag == 34) {
-                    int arrayLength3 = WireFormatNano.getRepeatedFieldArrayLength(input, 34);
+                    int arrayLength4 = WireFormatNano.getRepeatedFieldArrayLength(input, 34);
                     int i3 = this.errnosCounters == null ? 0 : this.errnosCounters.length;
-                    Pair[] newArray3 = new Pair[(i3 + arrayLength3)];
+                    Pair[] newArray3 = new Pair[i3 + arrayLength4];
                     if (i3 != 0) {
                         System.arraycopy(this.errnosCounters, 0, newArray3, 0, i3);
                     }
@@ -1345,11 +1400,12 @@ public interface IpConnectivityLogClass {
                     input.readMessage(newArray3[i3]);
                     this.errnosCounters = newArray3;
                 } else if (tag == 40) {
-                    this.connectBlockingCount = input.readInt32();
+                    int arrayLength5 = input.readInt32();
+                    this.connectBlockingCount = arrayLength5;
                 } else if (tag == 48) {
-                    int arrayLength4 = WireFormatNano.getRepeatedFieldArrayLength(input, 48);
+                    int arrayLength6 = WireFormatNano.getRepeatedFieldArrayLength(input, 48);
                     int i4 = this.nonBlockingLatenciesMs == null ? 0 : this.nonBlockingLatenciesMs.length;
-                    int[] newArray4 = new int[(i4 + arrayLength4)];
+                    int[] newArray4 = new int[i4 + arrayLength6];
                     if (i4 != 0) {
                         System.arraycopy(this.nonBlockingLatenciesMs, 0, newArray4, 0, i4);
                     }
@@ -1360,17 +1416,22 @@ public interface IpConnectivityLogClass {
                     }
                     newArray4[i4] = input.readInt32();
                     this.nonBlockingLatenciesMs = newArray4;
-                } else if (tag == 50) {
-                    int limit2 = input.pushLimit(input.readRawVarint32());
-                    int arrayLength5 = 0;
+                } else if (tag != 50) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
+                    }
+                } else {
+                    int length2 = input.readRawVarint32();
+                    int limit2 = input.pushLimit(length2);
+                    int arrayLength7 = 0;
                     int startPos2 = input.getPosition();
                     while (input.getBytesUntilLimit() > 0) {
                         input.readInt32();
-                        arrayLength5++;
+                        arrayLength7++;
                     }
                     input.rewindToPosition(startPos2);
                     int i5 = this.nonBlockingLatenciesMs == null ? 0 : this.nonBlockingLatenciesMs.length;
-                    int[] newArray5 = new int[(i5 + arrayLength5)];
+                    int[] newArray5 = new int[i5 + arrayLength7];
                     if (i5 != 0) {
                         System.arraycopy(this.nonBlockingLatenciesMs, 0, newArray5, 0, i5);
                     }
@@ -1380,8 +1441,6 @@ public interface IpConnectivityLogClass {
                     }
                     this.nonBlockingLatenciesMs = newArray5;
                     input.popLimit(limit2);
-                } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                    return this;
                 }
             }
         }
@@ -1395,6 +1454,7 @@ public interface IpConnectivityLogClass {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class DHCPEvent extends MessageNano {
         public static final int ERROR_CODE_FIELD_NUMBER = 3;
         public static final int STATE_TRANSITION_FIELD_NUMBER = 2;
@@ -1471,6 +1531,7 @@ public interface IpConnectivityLogClass {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (!this.ifName.equals("")) {
                 output.writeString(1, this.ifName);
@@ -1487,8 +1548,8 @@ public interface IpConnectivityLogClass {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (!this.ifName.equals("")) {
                 size += CodedOutputByteBufferNano.computeStringSize(1, this.ifName);
@@ -1505,6 +1566,7 @@ public interface IpConnectivityLogClass {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public DHCPEvent mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -1519,10 +1581,12 @@ public interface IpConnectivityLogClass {
                 } else if (tag == 24) {
                     this.value_ = Integer.valueOf(input.readInt32());
                     this.valueCase_ = 3;
-                } else if (tag == 32) {
+                } else if (tag != 32) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
+                    }
+                } else {
                     this.durationMs = input.readInt32();
-                } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                    return this;
                 }
             }
         }
@@ -1536,6 +1600,7 @@ public interface IpConnectivityLogClass {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class ApfProgramEvent extends MessageNano {
         private static volatile ApfProgramEvent[] _emptyArray;
         public int currentRas;
@@ -1562,8 +1627,8 @@ public interface IpConnectivityLogClass {
         }
 
         public ApfProgramEvent clear() {
-            this.lifetime = 0;
-            this.effectiveLifetime = 0;
+            this.lifetime = 0L;
+            this.effectiveLifetime = 0L;
             this.filteredRas = 0;
             this.currentRas = 0;
             this.programLength = 0;
@@ -1573,6 +1638,7 @@ public interface IpConnectivityLogClass {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.lifetime != 0) {
                 output.writeInt64(1, this.lifetime);
@@ -1598,8 +1664,8 @@ public interface IpConnectivityLogClass {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.lifetime != 0) {
                 size += CodedOutputByteBufferNano.computeInt64Size(1, this.lifetime);
@@ -1625,6 +1691,7 @@ public interface IpConnectivityLogClass {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public ApfProgramEvent mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -1643,10 +1710,12 @@ public interface IpConnectivityLogClass {
                     this.dropMulticast = input.readBool();
                 } else if (tag == 48) {
                     this.hasIpv4Addr = input.readBool();
-                } else if (tag == 56) {
+                } else if (tag != 56) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
+                    }
+                } else {
                     this.effectiveLifetime = input.readInt64();
-                } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                    return this;
                 }
             }
         }
@@ -1660,6 +1729,7 @@ public interface IpConnectivityLogClass {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class ApfStatistics extends MessageNano {
         private static volatile ApfStatistics[] _emptyArray;
         public int droppedRas;
@@ -1692,7 +1762,7 @@ public interface IpConnectivityLogClass {
         }
 
         public ApfStatistics clear() {
-            this.durationMs = 0;
+            this.durationMs = 0L;
             this.receivedRas = 0;
             this.matchingRas = 0;
             this.droppedRas = 0;
@@ -1709,6 +1779,7 @@ public interface IpConnectivityLogClass {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.durationMs != 0) {
                 output.writeInt64(1, this.durationMs);
@@ -1747,7 +1818,8 @@ public interface IpConnectivityLogClass {
                 output.writeInt32(13, this.totalPacketDropped);
             }
             if (this.hardwareCounters != null && this.hardwareCounters.length > 0) {
-                for (Pair element : this.hardwareCounters) {
+                for (int i = 0; i < this.hardwareCounters.length; i++) {
+                    Pair element = this.hardwareCounters[i];
                     if (element != null) {
                         output.writeMessage(14, element);
                     }
@@ -1756,8 +1828,8 @@ public interface IpConnectivityLogClass {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.durationMs != 0) {
                 size += CodedOutputByteBufferNano.computeInt64Size(1, this.durationMs);
@@ -1796,7 +1868,8 @@ public interface IpConnectivityLogClass {
                 size += CodedOutputByteBufferNano.computeInt32Size(13, this.totalPacketDropped);
             }
             if (this.hardwareCounters != null && this.hardwareCounters.length > 0) {
-                for (Pair element : this.hardwareCounters) {
+                for (int i = 0; i < this.hardwareCounters.length; i++) {
+                    Pair element = this.hardwareCounters[i];
                     if (element != null) {
                         size += CodedOutputByteBufferNano.computeMessageSize(14, element);
                     }
@@ -1805,6 +1878,7 @@ public interface IpConnectivityLogClass {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public ApfStatistics mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -1845,12 +1919,13 @@ public interface IpConnectivityLogClass {
                         this.totalPacketProcessed = input.readInt32();
                         break;
                     case 104:
-                        this.totalPacketDropped = input.readInt32();
+                        int arrayLength = input.readInt32();
+                        this.totalPacketDropped = arrayLength;
                         break;
                     case 114:
-                        int arrayLength = WireFormatNano.getRepeatedFieldArrayLength(input, 114);
+                        int arrayLength2 = WireFormatNano.getRepeatedFieldArrayLength(input, 114);
                         int i = this.hardwareCounters == null ? 0 : this.hardwareCounters.length;
-                        Pair[] newArray = new Pair[(i + arrayLength)];
+                        Pair[] newArray = new Pair[i + arrayLength2];
                         if (i != 0) {
                             System.arraycopy(this.hardwareCounters, 0, newArray, 0, i);
                         }
@@ -1883,6 +1958,7 @@ public interface IpConnectivityLogClass {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class RaEvent extends MessageNano {
         private static volatile RaEvent[] _emptyArray;
         public long dnsslLifetime;
@@ -1908,16 +1984,17 @@ public interface IpConnectivityLogClass {
         }
 
         public RaEvent clear() {
-            this.routerLifetime = 0;
-            this.prefixValidLifetime = 0;
-            this.prefixPreferredLifetime = 0;
-            this.routeInfoLifetime = 0;
-            this.rdnssLifetime = 0;
-            this.dnsslLifetime = 0;
+            this.routerLifetime = 0L;
+            this.prefixValidLifetime = 0L;
+            this.prefixPreferredLifetime = 0L;
+            this.routeInfoLifetime = 0L;
+            this.rdnssLifetime = 0L;
+            this.dnsslLifetime = 0L;
             this.cachedSize = -1;
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.routerLifetime != 0) {
                 output.writeInt64(1, this.routerLifetime);
@@ -1940,8 +2017,8 @@ public interface IpConnectivityLogClass {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.routerLifetime != 0) {
                 size += CodedOutputByteBufferNano.computeInt64Size(1, this.routerLifetime);
@@ -1964,6 +2041,7 @@ public interface IpConnectivityLogClass {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public RaEvent mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -1980,10 +2058,12 @@ public interface IpConnectivityLogClass {
                     this.routeInfoLifetime = input.readInt64();
                 } else if (tag == 40) {
                     this.rdnssLifetime = input.readInt64();
-                } else if (tag == 48) {
+                } else if (tag != 48) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
+                    }
+                } else {
                     this.dnsslLifetime = input.readInt64();
-                } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                    return this;
                 }
             }
         }
@@ -1997,6 +2077,7 @@ public interface IpConnectivityLogClass {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class IpProvisioningEvent extends MessageNano {
         private static volatile IpProvisioningEvent[] _emptyArray;
         public int eventType;
@@ -2026,6 +2107,7 @@ public interface IpConnectivityLogClass {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (!this.ifName.equals("")) {
                 output.writeString(1, this.ifName);
@@ -2039,8 +2121,8 @@ public interface IpConnectivityLogClass {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (!this.ifName.equals("")) {
                 size += CodedOutputByteBufferNano.computeStringSize(1, this.ifName);
@@ -2054,6 +2136,7 @@ public interface IpConnectivityLogClass {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public IpProvisioningEvent mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -2064,10 +2147,12 @@ public interface IpConnectivityLogClass {
                     this.ifName = input.readString();
                 } else if (tag == 16) {
                     this.eventType = input.readInt32();
-                } else if (tag == 24) {
+                } else if (tag != 24) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
+                    }
+                } else {
                     this.latencyMs = input.readInt32();
-                } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                    return this;
                 }
             }
         }
@@ -2081,6 +2166,7 @@ public interface IpConnectivityLogClass {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class NetworkStats extends MessageNano {
         private static volatile NetworkStats[] _emptyArray;
         public long durationMs;
@@ -2108,7 +2194,7 @@ public interface IpConnectivityLogClass {
         }
 
         public NetworkStats clear() {
-            this.durationMs = 0;
+            this.durationMs = 0L;
             this.ipSupport = 0;
             this.everValidated = false;
             this.portalFound = false;
@@ -2120,6 +2206,7 @@ public interface IpConnectivityLogClass {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.durationMs != 0) {
                 output.writeInt64(1, this.durationMs);
@@ -2141,7 +2228,8 @@ public interface IpConnectivityLogClass {
             }
             int i = 0;
             if (this.validationEvents != null && this.validationEvents.length > 0) {
-                for (Pair element : this.validationEvents) {
+                for (int i2 = 0; i2 < this.validationEvents.length; i2++) {
+                    Pair element = this.validationEvents[i2];
                     if (element != null) {
                         output.writeMessage(7, element);
                     }
@@ -2149,22 +2237,22 @@ public interface IpConnectivityLogClass {
             }
             if (this.validationStates != null && this.validationStates.length > 0) {
                 while (true) {
-                    int i2 = i;
-                    if (i2 >= this.validationStates.length) {
+                    int i3 = i;
+                    if (i3 >= this.validationStates.length) {
                         break;
                     }
-                    Pair element2 = this.validationStates[i2];
+                    Pair element2 = this.validationStates[i3];
                     if (element2 != null) {
                         output.writeMessage(8, element2);
                     }
-                    i = i2 + 1;
+                    i = i3 + 1;
                 }
             }
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.durationMs != 0) {
                 size += CodedOutputByteBufferNano.computeInt64Size(1, this.durationMs);
@@ -2187,7 +2275,8 @@ public interface IpConnectivityLogClass {
             int i = 0;
             if (this.validationEvents != null && this.validationEvents.length > 0) {
                 int size2 = size;
-                for (Pair element : this.validationEvents) {
+                for (int size3 = 0; size3 < this.validationEvents.length; size3++) {
+                    Pair element = this.validationEvents[size3];
                     if (element != null) {
                         size2 += CodedOutputByteBufferNano.computeMessageSize(7, element);
                     }
@@ -2210,68 +2299,70 @@ public interface IpConnectivityLogClass {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public NetworkStats mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
                 if (tag == 0) {
                     return this;
                 }
-                if (tag != 8) {
-                    if (tag == 16) {
-                        int value = input.readInt32();
-                        switch (value) {
-                            case 0:
-                            case 1:
-                            case 2:
-                            case 3:
-                                this.ipSupport = value;
-                                break;
-                        }
-                    } else if (tag == 24) {
-                        this.everValidated = input.readBool();
-                    } else if (tag == 32) {
-                        this.portalFound = input.readBool();
-                    } else if (tag == 40) {
-                        this.noConnectivityReports = input.readInt32();
-                    } else if (tag == 48) {
-                        this.validationAttempts = input.readInt32();
-                    } else if (tag == 58) {
-                        int arrayLength = WireFormatNano.getRepeatedFieldArrayLength(input, 58);
-                        int i = this.validationEvents == null ? 0 : this.validationEvents.length;
-                        Pair[] newArray = new Pair[(i + arrayLength)];
-                        if (i != 0) {
-                            System.arraycopy(this.validationEvents, 0, newArray, 0, i);
-                        }
-                        while (i < newArray.length - 1) {
-                            newArray[i] = new Pair();
-                            input.readMessage(newArray[i]);
-                            input.readTag();
-                            i++;
-                        }
+                if (tag == 8) {
+                    this.durationMs = input.readInt64();
+                } else if (tag == 16) {
+                    int value = input.readInt32();
+                    switch (value) {
+                        case 0:
+                        case 1:
+                        case 2:
+                        case 3:
+                            this.ipSupport = value;
+                            continue;
+                    }
+                } else if (tag == 24) {
+                    this.everValidated = input.readBool();
+                } else if (tag == 32) {
+                    this.portalFound = input.readBool();
+                } else if (tag == 40) {
+                    this.noConnectivityReports = input.readInt32();
+                } else if (tag == 48) {
+                    int arrayLength = input.readInt32();
+                    this.validationAttempts = arrayLength;
+                } else if (tag == 58) {
+                    int arrayLength2 = WireFormatNano.getRepeatedFieldArrayLength(input, 58);
+                    int i = this.validationEvents == null ? 0 : this.validationEvents.length;
+                    Pair[] newArray = new Pair[i + arrayLength2];
+                    if (i != 0) {
+                        System.arraycopy(this.validationEvents, 0, newArray, 0, i);
+                    }
+                    while (i < newArray.length - 1) {
                         newArray[i] = new Pair();
                         input.readMessage(newArray[i]);
-                        this.validationEvents = newArray;
-                    } else if (tag == 66) {
-                        int arrayLength2 = WireFormatNano.getRepeatedFieldArrayLength(input, 66);
-                        int i2 = this.validationStates == null ? 0 : this.validationStates.length;
-                        Pair[] newArray2 = new Pair[(i2 + arrayLength2)];
-                        if (i2 != 0) {
-                            System.arraycopy(this.validationStates, 0, newArray2, 0, i2);
-                        }
-                        while (i2 < newArray2.length - 1) {
-                            newArray2[i2] = new Pair();
-                            input.readMessage(newArray2[i2]);
-                            input.readTag();
-                            i2++;
-                        }
-                        newArray2[i2] = new Pair();
-                        input.readMessage(newArray2[i2]);
-                        this.validationStates = newArray2;
-                    } else if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        input.readTag();
+                        i++;
+                    }
+                    newArray[i] = new Pair();
+                    input.readMessage(newArray[i]);
+                    this.validationEvents = newArray;
+                } else if (tag != 66) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
                         return this;
                     }
                 } else {
-                    this.durationMs = input.readInt64();
+                    int arrayLength3 = WireFormatNano.getRepeatedFieldArrayLength(input, 66);
+                    int i2 = this.validationStates == null ? 0 : this.validationStates.length;
+                    Pair[] newArray2 = new Pair[i2 + arrayLength3];
+                    if (i2 != 0) {
+                        System.arraycopy(this.validationStates, 0, newArray2, 0, i2);
+                    }
+                    while (i2 < newArray2.length - 1) {
+                        newArray2[i2] = new Pair();
+                        input.readMessage(newArray2[i2]);
+                        input.readTag();
+                        i2++;
+                    }
+                    newArray2[i2] = new Pair();
+                    input.readMessage(newArray2[i2]);
+                    this.validationStates = newArray2;
                 }
             }
         }
@@ -2285,6 +2376,7 @@ public interface IpConnectivityLogClass {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class WakeupStats extends MessageNano {
         private static volatile WakeupStats[] _emptyArray;
         public long applicationWakeups;
@@ -2316,22 +2408,23 @@ public interface IpConnectivityLogClass {
         }
 
         public WakeupStats clear() {
-            this.durationSec = 0;
-            this.totalWakeups = 0;
-            this.rootWakeups = 0;
-            this.systemWakeups = 0;
-            this.applicationWakeups = 0;
-            this.nonApplicationWakeups = 0;
-            this.noUidWakeups = 0;
+            this.durationSec = 0L;
+            this.totalWakeups = 0L;
+            this.rootWakeups = 0L;
+            this.systemWakeups = 0L;
+            this.applicationWakeups = 0L;
+            this.nonApplicationWakeups = 0L;
+            this.noUidWakeups = 0L;
             this.ethertypeCounts = Pair.emptyArray();
             this.ipNextHeaderCounts = Pair.emptyArray();
-            this.l2UnicastCount = 0;
-            this.l2MulticastCount = 0;
-            this.l2BroadcastCount = 0;
+            this.l2UnicastCount = 0L;
+            this.l2MulticastCount = 0L;
+            this.l2BroadcastCount = 0L;
             this.cachedSize = -1;
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.durationSec != 0) {
                 output.writeInt64(1, this.durationSec);
@@ -2356,7 +2449,8 @@ public interface IpConnectivityLogClass {
             }
             int i = 0;
             if (this.ethertypeCounts != null && this.ethertypeCounts.length > 0) {
-                for (Pair element : this.ethertypeCounts) {
+                for (int i2 = 0; i2 < this.ethertypeCounts.length; i2++) {
+                    Pair element = this.ethertypeCounts[i2];
                     if (element != null) {
                         output.writeMessage(8, element);
                     }
@@ -2364,15 +2458,15 @@ public interface IpConnectivityLogClass {
             }
             if (this.ipNextHeaderCounts != null && this.ipNextHeaderCounts.length > 0) {
                 while (true) {
-                    int i2 = i;
-                    if (i2 >= this.ipNextHeaderCounts.length) {
+                    int i3 = i;
+                    if (i3 >= this.ipNextHeaderCounts.length) {
                         break;
                     }
-                    Pair element2 = this.ipNextHeaderCounts[i2];
+                    Pair element2 = this.ipNextHeaderCounts[i3];
                     if (element2 != null) {
                         output.writeMessage(9, element2);
                     }
-                    i = i2 + 1;
+                    i = i3 + 1;
                 }
             }
             if (this.l2UnicastCount != 0) {
@@ -2387,8 +2481,8 @@ public interface IpConnectivityLogClass {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.durationSec != 0) {
                 size += CodedOutputByteBufferNano.computeInt64Size(1, this.durationSec);
@@ -2414,7 +2508,8 @@ public interface IpConnectivityLogClass {
             int i = 0;
             if (this.ethertypeCounts != null && this.ethertypeCounts.length > 0) {
                 int size2 = size;
-                for (Pair element : this.ethertypeCounts) {
+                for (int size3 = 0; size3 < this.ethertypeCounts.length; size3++) {
+                    Pair element = this.ethertypeCounts[size3];
                     if (element != null) {
                         size2 += CodedOutputByteBufferNano.computeMessageSize(8, element);
                     }
@@ -2446,6 +2541,7 @@ public interface IpConnectivityLogClass {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public WakeupStats mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -2476,7 +2572,7 @@ public interface IpConnectivityLogClass {
                     case 66:
                         int arrayLength = WireFormatNano.getRepeatedFieldArrayLength(input, 66);
                         int i = this.ethertypeCounts == null ? 0 : this.ethertypeCounts.length;
-                        Pair[] newArray = new Pair[(i + arrayLength)];
+                        Pair[] newArray = new Pair[i + arrayLength];
                         if (i != 0) {
                             System.arraycopy(this.ethertypeCounts, 0, newArray, 0, i);
                         }
@@ -2493,7 +2589,7 @@ public interface IpConnectivityLogClass {
                     case 74:
                         int arrayLength2 = WireFormatNano.getRepeatedFieldArrayLength(input, 74);
                         int i2 = this.ipNextHeaderCounts == null ? 0 : this.ipNextHeaderCounts.length;
-                        Pair[] newArray2 = new Pair[(i2 + arrayLength2)];
+                        Pair[] newArray2 = new Pair[i2 + arrayLength2];
                         if (i2 != 0) {
                             System.arraycopy(this.ipNextHeaderCounts, 0, newArray2, 0, i2);
                         }
@@ -2535,6 +2631,7 @@ public interface IpConnectivityLogClass {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class IpConnectivityEvent extends MessageNano {
         public static final int APF_PROGRAM_EVENT_FIELD_NUMBER = 9;
         public static final int APF_STATISTICS_FIELD_NUMBER = 10;
@@ -2592,12 +2689,12 @@ public interface IpConnectivityLogClass {
         }
 
         public IpConnectivityEvent setDefaultNetworkEvent(DefaultNetworkEvent value) {
-            if (value != null) {
-                this.eventCase_ = 2;
-                this.event_ = value;
-                return this;
+            if (value == null) {
+                throw new NullPointerException();
             }
-            throw new NullPointerException();
+            this.eventCase_ = 2;
+            this.event_ = value;
+            return this;
         }
 
         public boolean hasIpReachabilityEvent() {
@@ -2612,12 +2709,12 @@ public interface IpConnectivityLogClass {
         }
 
         public IpConnectivityEvent setIpReachabilityEvent(IpReachabilityEvent value) {
-            if (value != null) {
-                this.eventCase_ = 3;
-                this.event_ = value;
-                return this;
+            if (value == null) {
+                throw new NullPointerException();
             }
-            throw new NullPointerException();
+            this.eventCase_ = 3;
+            this.event_ = value;
+            return this;
         }
 
         public boolean hasNetworkEvent() {
@@ -2632,12 +2729,12 @@ public interface IpConnectivityLogClass {
         }
 
         public IpConnectivityEvent setNetworkEvent(NetworkEvent value) {
-            if (value != null) {
-                this.eventCase_ = 4;
-                this.event_ = value;
-                return this;
+            if (value == null) {
+                throw new NullPointerException();
             }
-            throw new NullPointerException();
+            this.eventCase_ = 4;
+            this.event_ = value;
+            return this;
         }
 
         public boolean hasDnsLookupBatch() {
@@ -2652,12 +2749,12 @@ public interface IpConnectivityLogClass {
         }
 
         public IpConnectivityEvent setDnsLookupBatch(DNSLookupBatch value) {
-            if (value != null) {
-                this.eventCase_ = 5;
-                this.event_ = value;
-                return this;
+            if (value == null) {
+                throw new NullPointerException();
             }
-            throw new NullPointerException();
+            this.eventCase_ = 5;
+            this.event_ = value;
+            return this;
         }
 
         public boolean hasDnsLatencies() {
@@ -2672,12 +2769,12 @@ public interface IpConnectivityLogClass {
         }
 
         public IpConnectivityEvent setDnsLatencies(DNSLatencies value) {
-            if (value != null) {
-                this.eventCase_ = 13;
-                this.event_ = value;
-                return this;
+            if (value == null) {
+                throw new NullPointerException();
             }
-            throw new NullPointerException();
+            this.eventCase_ = 13;
+            this.event_ = value;
+            return this;
         }
 
         public boolean hasConnectStatistics() {
@@ -2692,12 +2789,12 @@ public interface IpConnectivityLogClass {
         }
 
         public IpConnectivityEvent setConnectStatistics(ConnectStatistics value) {
-            if (value != null) {
-                this.eventCase_ = 14;
-                this.event_ = value;
-                return this;
+            if (value == null) {
+                throw new NullPointerException();
             }
-            throw new NullPointerException();
+            this.eventCase_ = 14;
+            this.event_ = value;
+            return this;
         }
 
         public boolean hasDhcpEvent() {
@@ -2712,12 +2809,12 @@ public interface IpConnectivityLogClass {
         }
 
         public IpConnectivityEvent setDhcpEvent(DHCPEvent value) {
-            if (value != null) {
-                this.eventCase_ = 6;
-                this.event_ = value;
-                return this;
+            if (value == null) {
+                throw new NullPointerException();
             }
-            throw new NullPointerException();
+            this.eventCase_ = 6;
+            this.event_ = value;
+            return this;
         }
 
         public boolean hasIpProvisioningEvent() {
@@ -2732,12 +2829,12 @@ public interface IpConnectivityLogClass {
         }
 
         public IpConnectivityEvent setIpProvisioningEvent(IpProvisioningEvent value) {
-            if (value != null) {
-                this.eventCase_ = 7;
-                this.event_ = value;
-                return this;
+            if (value == null) {
+                throw new NullPointerException();
             }
-            throw new NullPointerException();
+            this.eventCase_ = 7;
+            this.event_ = value;
+            return this;
         }
 
         public boolean hasValidationProbeEvent() {
@@ -2752,12 +2849,12 @@ public interface IpConnectivityLogClass {
         }
 
         public IpConnectivityEvent setValidationProbeEvent(ValidationProbeEvent value) {
-            if (value != null) {
-                this.eventCase_ = 8;
-                this.event_ = value;
-                return this;
+            if (value == null) {
+                throw new NullPointerException();
             }
-            throw new NullPointerException();
+            this.eventCase_ = 8;
+            this.event_ = value;
+            return this;
         }
 
         public boolean hasApfProgramEvent() {
@@ -2772,12 +2869,12 @@ public interface IpConnectivityLogClass {
         }
 
         public IpConnectivityEvent setApfProgramEvent(ApfProgramEvent value) {
-            if (value != null) {
-                this.eventCase_ = 9;
-                this.event_ = value;
-                return this;
+            if (value == null) {
+                throw new NullPointerException();
             }
-            throw new NullPointerException();
+            this.eventCase_ = 9;
+            this.event_ = value;
+            return this;
         }
 
         public boolean hasApfStatistics() {
@@ -2792,12 +2889,12 @@ public interface IpConnectivityLogClass {
         }
 
         public IpConnectivityEvent setApfStatistics(ApfStatistics value) {
-            if (value != null) {
-                this.eventCase_ = 10;
-                this.event_ = value;
-                return this;
+            if (value == null) {
+                throw new NullPointerException();
             }
-            throw new NullPointerException();
+            this.eventCase_ = 10;
+            this.event_ = value;
+            return this;
         }
 
         public boolean hasRaEvent() {
@@ -2812,12 +2909,12 @@ public interface IpConnectivityLogClass {
         }
 
         public IpConnectivityEvent setRaEvent(RaEvent value) {
-            if (value != null) {
-                this.eventCase_ = 11;
-                this.event_ = value;
-                return this;
+            if (value == null) {
+                throw new NullPointerException();
             }
-            throw new NullPointerException();
+            this.eventCase_ = 11;
+            this.event_ = value;
+            return this;
         }
 
         public boolean hasNetworkStats() {
@@ -2832,12 +2929,12 @@ public interface IpConnectivityLogClass {
         }
 
         public IpConnectivityEvent setNetworkStats(NetworkStats value) {
-            if (value != null) {
-                this.eventCase_ = 19;
-                this.event_ = value;
-                return this;
+            if (value == null) {
+                throw new NullPointerException();
             }
-            throw new NullPointerException();
+            this.eventCase_ = 19;
+            this.event_ = value;
+            return this;
         }
 
         public boolean hasWakeupStats() {
@@ -2852,12 +2949,12 @@ public interface IpConnectivityLogClass {
         }
 
         public IpConnectivityEvent setWakeupStats(WakeupStats value) {
-            if (value != null) {
-                this.eventCase_ = 20;
-                this.event_ = value;
-                return this;
+            if (value == null) {
+                throw new NullPointerException();
             }
-            throw new NullPointerException();
+            this.eventCase_ = 20;
+            this.event_ = value;
+            return this;
         }
 
         public IpConnectivityEvent() {
@@ -2865,16 +2962,17 @@ public interface IpConnectivityLogClass {
         }
 
         public IpConnectivityEvent clear() {
-            this.timeMs = 0;
+            this.timeMs = 0L;
             this.linkLayer = 0;
             this.networkId = 0;
             this.ifName = "";
-            this.transports = 0;
+            this.transports = 0L;
             clearEvent();
             this.cachedSize = -1;
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.timeMs != 0) {
                 output.writeInt64(1, this.timeMs);
@@ -2936,8 +3034,8 @@ public interface IpConnectivityLogClass {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.timeMs != 0) {
                 size += CodedOutputByteBufferNano.computeInt64Size(1, this.timeMs);
@@ -2999,6 +3097,7 @@ public interface IpConnectivityLogClass {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public IpConnectivityEvent mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -3106,7 +3205,7 @@ public interface IpConnectivityLogClass {
                             case 8:
                             case 9:
                                 this.linkLayer = value;
-                                break;
+                                continue;
                         }
                     case 128:
                         this.networkId = input.readInt32();
@@ -3150,6 +3249,7 @@ public interface IpConnectivityLogClass {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class IpConnectivityLog extends MessageNano {
         private static volatile IpConnectivityLog[] _emptyArray;
         public int droppedEvents;
@@ -3179,15 +3279,18 @@ public interface IpConnectivityLogClass {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.events != null && this.events.length > 0) {
-                for (IpConnectivityEvent element : this.events) {
+                for (int i = 0; i < this.events.length; i++) {
+                    IpConnectivityEvent element = this.events[i];
                     if (element != null) {
                         output.writeMessage(1, element);
                     }
                 }
             }
-            if (this.droppedEvents != 0) {
+            int i2 = this.droppedEvents;
+            if (i2 != 0) {
                 output.writeInt32(2, this.droppedEvents);
             }
             if (this.version != 0) {
@@ -3196,17 +3299,19 @@ public interface IpConnectivityLogClass {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.events != null && this.events.length > 0) {
-                for (IpConnectivityEvent element : this.events) {
+                for (int i = 0; i < this.events.length; i++) {
+                    IpConnectivityEvent element = this.events[i];
                     if (element != null) {
                         size += CodedOutputByteBufferNano.computeMessageSize(1, element);
                     }
                 }
             }
-            if (this.droppedEvents != 0) {
+            int i2 = this.droppedEvents;
+            if (i2 != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(2, this.droppedEvents);
             }
             if (this.version != 0) {
@@ -3215,6 +3320,7 @@ public interface IpConnectivityLogClass {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public IpConnectivityLog mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -3224,7 +3330,7 @@ public interface IpConnectivityLogClass {
                 if (tag == 10) {
                     int arrayLength = WireFormatNano.getRepeatedFieldArrayLength(input, 10);
                     int i = this.events == null ? 0 : this.events.length;
-                    IpConnectivityEvent[] newArray = new IpConnectivityEvent[(i + arrayLength)];
+                    IpConnectivityEvent[] newArray = new IpConnectivityEvent[i + arrayLength];
                     if (i != 0) {
                         System.arraycopy(this.events, 0, newArray, 0, i);
                     }
@@ -3239,10 +3345,12 @@ public interface IpConnectivityLogClass {
                     this.events = newArray;
                 } else if (tag == 16) {
                     this.droppedEvents = input.readInt32();
-                } else if (tag == 24) {
+                } else if (tag != 24) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
+                    }
+                } else {
                     this.version = input.readInt32();
-                } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                    return this;
                 }
             }
         }

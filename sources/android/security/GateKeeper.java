@@ -2,11 +2,12 @@ package android.security;
 
 import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
-import android.os.RemoteException;
-import android.os.ServiceManager;
-import android.os.UserHandle;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
+import android.p007os.UserHandle;
 import android.service.gatekeeper.IGateKeeperService;
 
+/* loaded from: classes3.dex */
 public abstract class GateKeeper {
     public static final long INVALID_SECURE_USER_ID = 0;
 
@@ -15,10 +16,10 @@ public abstract class GateKeeper {
 
     public static IGateKeeperService getService() {
         IGateKeeperService service = IGateKeeperService.Stub.asInterface(ServiceManager.getService(Context.GATEKEEPER_SERVICE));
-        if (service != null) {
-            return service;
+        if (service == null) {
+            throw new IllegalStateException("Gatekeeper service not available");
         }
-        throw new IllegalStateException("Gatekeeper service not available");
+        return service;
     }
 
     @UnsupportedAppUsage

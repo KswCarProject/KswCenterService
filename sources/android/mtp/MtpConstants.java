@@ -1,5 +1,6 @@
 package android.mtp;
 
+/* loaded from: classes3.dex */
 public final class MtpConstants {
     public static final int ASSOCIATION_TYPE_GENERIC_FOLDER = 1;
     public static final int DEVICE_PROPERTY_ARTIST = 20510;
@@ -293,25 +294,25 @@ public final class MtpConstants {
     public static final int TYPE_UNDEFINED = 0;
 
     public static boolean isAbstractObject(int format) {
-        if (format == 47745) {
-            return true;
+        if (format != 47745) {
+            switch (format) {
+                case FORMAT_ABSTRACT_MULTIMEDIA_ALBUM /* 47617 */:
+                case FORMAT_ABSTRACT_IMAGE_ALBUM /* 47618 */:
+                case FORMAT_ABSTRACT_AUDIO_ALBUM /* 47619 */:
+                case FORMAT_ABSTRACT_VIDEO_ALBUM /* 47620 */:
+                case FORMAT_ABSTRACT_AV_PLAYLIST /* 47621 */:
+                    return true;
+                default:
+                    switch (format) {
+                        case FORMAT_ABSTRACT_AUDIO_PLAYLIST /* 47625 */:
+                        case FORMAT_ABSTRACT_VIDEO_PLAYLIST /* 47626 */:
+                        case FORMAT_ABSTRACT_MEDIACAST /* 47627 */:
+                            return true;
+                        default:
+                            return false;
+                    }
+            }
         }
-        switch (format) {
-            case FORMAT_ABSTRACT_MULTIMEDIA_ALBUM /*47617*/:
-            case FORMAT_ABSTRACT_IMAGE_ALBUM /*47618*/:
-            case FORMAT_ABSTRACT_AUDIO_ALBUM /*47619*/:
-            case FORMAT_ABSTRACT_VIDEO_ALBUM /*47620*/:
-            case FORMAT_ABSTRACT_AV_PLAYLIST /*47621*/:
-                return true;
-            default:
-                switch (format) {
-                    case FORMAT_ABSTRACT_AUDIO_PLAYLIST /*47625*/:
-                    case FORMAT_ABSTRACT_VIDEO_PLAYLIST /*47626*/:
-                    case FORMAT_ABSTRACT_MEDIACAST /*47627*/:
-                        return true;
-                    default:
-                        return false;
-                }
-        }
+        return true;
     }
 }

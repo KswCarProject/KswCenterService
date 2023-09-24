@@ -1,5 +1,6 @@
 package android.service.print;
 
+/* loaded from: classes3.dex */
 public final class PrintSpoolerInternalStateProto {
     public static final long APPROVED_SERVICES = 2246267895811L;
     public static final long PRINT_JOBS = 2246267895809L;

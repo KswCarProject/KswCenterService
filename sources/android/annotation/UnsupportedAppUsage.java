@@ -9,10 +9,12 @@ import java.lang.annotation.Target;
 @Target({ElementType.CONSTRUCTOR, ElementType.METHOD, ElementType.FIELD, ElementType.TYPE})
 @Repeatable(Container.class)
 @Retention(RetentionPolicy.CLASS)
+/* loaded from: classes.dex */
 public @interface UnsupportedAppUsage {
 
     @Target({ElementType.TYPE})
     @Retention(RetentionPolicy.CLASS)
+    /* loaded from: classes.dex */
     public @interface Container {
         UnsupportedAppUsage[] value();
     }

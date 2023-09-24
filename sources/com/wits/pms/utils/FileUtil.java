@@ -1,6 +1,6 @@
 package com.wits.pms.utils;
 
-import android.os.Build;
+import android.p007os.Build;
 import android.provider.SettingsStringUtil;
 import android.telephony.SmsManager;
 import android.util.Log;
@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+/* loaded from: classes2.dex */
 public class FileUtil {
     public static final String OTAFileName_R = "Ksw-R-M600_OS_v";
     public static final String OTAFileName_S = "Ksw-S-M600_OS_v";
@@ -25,29 +26,15 @@ public class FileUtil {
     public static final String TAG = "FileUtil";
 
     public static boolean checkOtaFile(String fileName) {
-        if (Build.VERSION.RELEASE.equals("11")) {
-            if ((fileName.contains(OTAFileName_R) || fileName.contains(OTAFileName_S) || fileName.contains(OTAFileName_T)) && fileName.contains(".zip")) {
-                return true;
-            }
-            return false;
-        } else if (Build.VERSION.RELEASE.equals("12")) {
-            if ((fileName.contains(OTAFileName_S) || fileName.contains(OTAFileName_T)) && fileName.contains(".zip")) {
-                return true;
-            }
-            return false;
-        } else if (!Build.VERSION.RELEASE.equals("13") || !fileName.contains(OTAFileName_T) || !fileName.contains(".zip")) {
-            return false;
-        } else {
-            return true;
-        }
+        return Build.VERSION.RELEASE.equals("11") ? (fileName.contains(OTAFileName_R) || fileName.contains(OTAFileName_S) || fileName.contains(OTAFileName_T)) && fileName.contains(".zip") : Build.VERSION.RELEASE.equals("12") ? (fileName.contains(OTAFileName_S) || fileName.contains(OTAFileName_T)) && fileName.contains(".zip") : Build.VERSION.RELEASE.equals("13") && fileName.contains(OTAFileName_T) && fileName.contains(".zip");
     }
 
     public static boolean checkFile(String path) {
-        if (new File(path).exists()) {
-            return true;
+        if (!new File(path).exists()) {
+            Log.m70e(TAG, path + " not exist");
+            return false;
         }
-        Log.e(TAG, path + " not exist");
-        return false;
+        return true;
     }
 
     public static boolean upPackZip(File src, String entry, File dest) {
@@ -64,9 +51,8 @@ public class FileUtil {
             OutputStream out = new FileOutputStream(dest);
             byte[] buf1 = new byte[1024];
             while (true) {
-                int read = in.read(buf1);
-                int len = read;
-                if (read > 0) {
+                int len = in.read(buf1);
+                if (len > 0) {
                     out.write(buf1, 0, len);
                 } else {
                     in.close();
@@ -82,14 +68,14 @@ public class FileUtil {
 
     public static String[] getProperties(String path) {
         try {
-            InputStreamReader is = new InputStreamReader(new FileInputStream(new File(path)));
+            File file = new File(path);
+            InputStreamReader is = new InputStreamReader(new FileInputStream(file));
             BufferedReader br = new BufferedReader(is);
             List<String> lines = new ArrayList<>();
             while (true) {
-                String readLine = br.readLine();
-                String line = readLine;
-                if (readLine != null) {
-                    Log.d(TAG, "getProperties line: " + line);
+                String line = br.readLine();
+                if (line != null) {
+                    Log.m72d(TAG, "getProperties line: " + line);
                     lines.add(line);
                 } else {
                     br.close();
@@ -113,11 +99,12 @@ public class FileUtil {
     public static String[] getMetaDataProperties(String path) {
         String[] properties = getProperties(path);
         if (properties == null) {
-            Log.e(TAG, "getMetaDataProperties is null");
+            Log.m70e(TAG, "getMetaDataProperties is null");
             return null;
         }
         String[] temp = new String[properties.length];
-        for (String value : properties[0].split(SmsManager.REGEX_PREFIX_DELIMITER)) {
+        String[] second = properties[0].split(SmsManager.REGEX_PREFIX_DELIMITER);
+        for (String value : second) {
             if (value.contains("payload.bin")) {
                 String[] third = value.split(SettingsStringUtil.DELIMITER);
                 if (temp.length > 2 && third.length >= 3) {

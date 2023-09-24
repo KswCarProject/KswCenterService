@@ -2,20 +2,25 @@ package android.net.metrics;
 
 import android.annotation.SystemApi;
 import android.net.metrics.IpConnectivityLog;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.SparseArray;
 import com.android.internal.util.MessageUtils;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class NetworkEvent implements IpConnectivityLog.Event {
-    public static final Parcelable.Creator<NetworkEvent> CREATOR = new Parcelable.Creator<NetworkEvent>() {
+    public static final Parcelable.Creator<NetworkEvent> CREATOR = new Parcelable.Creator<NetworkEvent>() { // from class: android.net.metrics.NetworkEvent.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NetworkEvent createFromParcel(Parcel in) {
             return new NetworkEvent(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NetworkEvent[] newArray(int size) {
             return new NetworkEvent[size];
         }
@@ -37,16 +42,17 @@ public final class NetworkEvent implements IpConnectivityLog.Event {
     public final int eventType;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface EventType {
     }
 
-    public NetworkEvent(int eventType2, long durationMs2) {
-        this.eventType = eventType2;
-        this.durationMs = durationMs2;
+    public NetworkEvent(int eventType, long durationMs) {
+        this.eventType = eventType;
+        this.durationMs = durationMs;
     }
 
-    public NetworkEvent(int eventType2) {
-        this(eventType2, 0);
+    public NetworkEvent(int eventType) {
+        this(eventType, 0L);
     }
 
     private NetworkEvent(Parcel in) {
@@ -54,17 +60,19 @@ public final class NetworkEvent implements IpConnectivityLog.Event {
         this.durationMs = in.readLong();
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(this.eventType);
         out.writeLong(this.durationMs);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
     public String toString() {
-        return String.format("NetworkEvent(%s, %dms)", new Object[]{Decoder.constants.get(this.eventType), Long.valueOf(this.durationMs)});
+        return String.format("NetworkEvent(%s, %dms)", Decoder.constants.get(this.eventType), Long.valueOf(this.durationMs));
     }
 
     public boolean equals(Object obj) {
@@ -72,12 +80,10 @@ public final class NetworkEvent implements IpConnectivityLog.Event {
             return false;
         }
         NetworkEvent other = (NetworkEvent) obj;
-        if (this.eventType == other.eventType && this.durationMs == other.durationMs) {
-            return true;
-        }
-        return false;
+        return this.eventType == other.eventType && this.durationMs == other.durationMs;
     }
 
+    /* loaded from: classes3.dex */
     static final class Decoder {
         static final SparseArray<String> constants = MessageUtils.findMessageNames(new Class[]{NetworkEvent.class}, new String[]{"NETWORK_"});
 

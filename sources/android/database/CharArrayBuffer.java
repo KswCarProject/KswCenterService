@@ -1,5 +1,6 @@
 package android.database;
 
+/* loaded from: classes.dex */
 public final class CharArrayBuffer {
     public char[] data;
     public int sizeCopied;

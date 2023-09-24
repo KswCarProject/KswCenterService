@@ -2,12 +2,15 @@ package android.renderscript;
 
 import android.renderscript.Script;
 
+/* loaded from: classes3.dex */
 public final class ScriptIntrinsicColorMatrix extends ScriptIntrinsic {
-    private final Float4 mAdd = new Float4();
-    private final Matrix4f mMatrix = new Matrix4f();
+    private final Float4 mAdd;
+    private final Matrix4f mMatrix;
 
     private ScriptIntrinsicColorMatrix(long id, RenderScript rs) {
         super(id, rs);
+        this.mMatrix = new Matrix4f();
+        this.mAdd = new Float4();
     }
 
     @Deprecated
@@ -16,7 +19,8 @@ public final class ScriptIntrinsicColorMatrix extends ScriptIntrinsic {
     }
 
     public static ScriptIntrinsicColorMatrix create(RenderScript rs) {
-        return new ScriptIntrinsicColorMatrix(rs.nScriptIntrinsicCreate(2, 0), rs);
+        long id = rs.nScriptIntrinsicCreate(2, 0L);
+        return new ScriptIntrinsicColorMatrix(id, rs);
     }
 
     private void setMatrix() {
@@ -36,28 +40,28 @@ public final class ScriptIntrinsicColorMatrix extends ScriptIntrinsic {
     }
 
     public void setAdd(Float4 f) {
-        this.mAdd.x = f.x;
-        this.mAdd.y = f.y;
-        this.mAdd.z = f.z;
-        this.mAdd.w = f.w;
+        this.mAdd.f196x = f.f196x;
+        this.mAdd.f197y = f.f197y;
+        this.mAdd.f198z = f.f198z;
+        this.mAdd.f195w = f.f195w;
         FieldPacker fp = new FieldPacker(16);
-        fp.addF32(f.x);
-        fp.addF32(f.y);
-        fp.addF32(f.z);
-        fp.addF32(f.w);
+        fp.addF32(f.f196x);
+        fp.addF32(f.f197y);
+        fp.addF32(f.f198z);
+        fp.addF32(f.f195w);
         setVar(1, fp);
     }
 
     public void setAdd(float r, float g, float b, float a) {
-        this.mAdd.x = r;
-        this.mAdd.y = g;
-        this.mAdd.z = b;
-        this.mAdd.w = a;
+        this.mAdd.f196x = r;
+        this.mAdd.f197y = g;
+        this.mAdd.f198z = b;
+        this.mAdd.f195w = a;
         FieldPacker fp = new FieldPacker(16);
-        fp.addF32(this.mAdd.x);
-        fp.addF32(this.mAdd.y);
-        fp.addF32(this.mAdd.z);
-        fp.addF32(this.mAdd.w);
+        fp.addF32(this.mAdd.f196x);
+        fp.addF32(this.mAdd.f197y);
+        fp.addF32(this.mAdd.f198z);
+        fp.addF32(this.mAdd.f195w);
         setVar(1, fp);
     }
 
@@ -104,20 +108,20 @@ public final class ScriptIntrinsicColorMatrix extends ScriptIntrinsic {
     }
 
     public void forEach(Allocation ain, Allocation aout) {
-        forEach(ain, aout, (Script.LaunchOptions) null);
+        forEach(ain, aout, null);
     }
 
     public void forEach(Allocation ain, Allocation aout, Script.LaunchOptions opt) {
-        if (!ain.getElement().isCompatible(Element.U8(this.mRS)) && !ain.getElement().isCompatible(Element.U8_2(this.mRS)) && !ain.getElement().isCompatible(Element.U8_3(this.mRS)) && !ain.getElement().isCompatible(Element.U8_4(this.mRS)) && !ain.getElement().isCompatible(Element.F32(this.mRS)) && !ain.getElement().isCompatible(Element.F32_2(this.mRS)) && !ain.getElement().isCompatible(Element.F32_3(this.mRS)) && !ain.getElement().isCompatible(Element.F32_4(this.mRS))) {
-            throw new RSIllegalArgumentException("Unsupported element type.");
-        } else if (aout.getElement().isCompatible(Element.U8(this.mRS)) || aout.getElement().isCompatible(Element.U8_2(this.mRS)) || aout.getElement().isCompatible(Element.U8_3(this.mRS)) || aout.getElement().isCompatible(Element.U8_4(this.mRS)) || aout.getElement().isCompatible(Element.F32(this.mRS)) || aout.getElement().isCompatible(Element.F32_2(this.mRS)) || aout.getElement().isCompatible(Element.F32_3(this.mRS)) || aout.getElement().isCompatible(Element.F32_4(this.mRS))) {
-            forEach(0, ain, aout, (FieldPacker) null, opt);
-        } else {
+        if (!ain.getElement().isCompatible(Element.m108U8(this.mRS)) && !ain.getElement().isCompatible(Element.U8_2(this.mRS)) && !ain.getElement().isCompatible(Element.U8_3(this.mRS)) && !ain.getElement().isCompatible(Element.U8_4(this.mRS)) && !ain.getElement().isCompatible(Element.F32(this.mRS)) && !ain.getElement().isCompatible(Element.F32_2(this.mRS)) && !ain.getElement().isCompatible(Element.F32_3(this.mRS)) && !ain.getElement().isCompatible(Element.F32_4(this.mRS))) {
             throw new RSIllegalArgumentException("Unsupported element type.");
         }
+        if (!aout.getElement().isCompatible(Element.m108U8(this.mRS)) && !aout.getElement().isCompatible(Element.U8_2(this.mRS)) && !aout.getElement().isCompatible(Element.U8_3(this.mRS)) && !aout.getElement().isCompatible(Element.U8_4(this.mRS)) && !aout.getElement().isCompatible(Element.F32(this.mRS)) && !aout.getElement().isCompatible(Element.F32_2(this.mRS)) && !aout.getElement().isCompatible(Element.F32_3(this.mRS)) && !aout.getElement().isCompatible(Element.F32_4(this.mRS))) {
+            throw new RSIllegalArgumentException("Unsupported element type.");
+        }
+        forEach(0, ain, aout, (FieldPacker) null, opt);
     }
 
     public Script.KernelID getKernelID() {
-        return createKernelID(0, 3, (Element) null, (Element) null);
+        return createKernelID(0, 3, null, null);
     }
 }

@@ -1,5 +1,6 @@
 package com.android.internal.util;
 
+/* loaded from: classes4.dex */
 public class Protocol {
     public static final int BASE_CONNECTIVITY_MANAGER = 524288;
     public static final int BASE_DATA_CONNECTION = 262144;

@@ -1,16 +1,21 @@
 package android.app.backup;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
 @SystemApi
+/* loaded from: classes.dex */
 public class BackupProgress implements Parcelable {
-    public static final Parcelable.Creator<BackupProgress> CREATOR = new Parcelable.Creator<BackupProgress>() {
+    public static final Parcelable.Creator<BackupProgress> CREATOR = new Parcelable.Creator<BackupProgress>() { // from class: android.app.backup.BackupProgress.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public BackupProgress createFromParcel(Parcel in) {
             return new BackupProgress(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public BackupProgress[] newArray(int size) {
             return new BackupProgress[size];
         }
@@ -23,10 +28,12 @@ public class BackupProgress implements Parcelable {
         this.bytesTransferred = _bytesTransferred;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeLong(this.bytesExpected);
         out.writeLong(this.bytesTransferred);

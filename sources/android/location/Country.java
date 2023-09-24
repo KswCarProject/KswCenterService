@@ -1,21 +1,26 @@
 package android.location;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.SystemClock;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.SystemClock;
 import java.util.Locale;
 
+/* loaded from: classes.dex */
 public class Country implements Parcelable {
     public static final int COUNTRY_SOURCE_LOCALE = 3;
     public static final int COUNTRY_SOURCE_LOCATION = 1;
     public static final int COUNTRY_SOURCE_NETWORK = 0;
     public static final int COUNTRY_SOURCE_SIM = 2;
-    public static final Parcelable.Creator<Country> CREATOR = new Parcelable.Creator<Country>() {
+    public static final Parcelable.Creator<Country> CREATOR = new Parcelable.Creator<Country>() { // from class: android.location.Country.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Country createFromParcel(Parcel in) {
             return new Country(in.readString(), in.readInt(), in.readLong());
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Country[] newArray(int size) {
             return new Country[size];
         }
@@ -64,10 +69,12 @@ public class Country implements Parcelable {
         return this.mTimestamp;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeString(this.mCountryIso);
         parcel.writeInt(this.mSource);
@@ -78,19 +85,18 @@ public class Country implements Parcelable {
         if (object == this) {
             return true;
         }
-        if (!(object instanceof Country)) {
-            return false;
+        if (object instanceof Country) {
+            Country c = (Country) object;
+            return this.mCountryIso.equals(c.getCountryIso()) && this.mSource == c.getSource();
         }
-        Country c = (Country) object;
-        if (!this.mCountryIso.equals(c.getCountryIso()) || this.mSource != c.getSource()) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        if (this.mHashCode == 0) {
-            this.mHashCode = (((17 * 13) + this.mCountryIso.hashCode()) * 13) + this.mSource;
+        int hash = this.mHashCode;
+        if (hash == 0) {
+            int hash2 = (17 * 13) + this.mCountryIso.hashCode();
+            this.mHashCode = (hash2 * 13) + this.mSource;
         }
         return this.mHashCode;
     }

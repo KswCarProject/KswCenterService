@@ -1,7 +1,7 @@
 package android.telephony;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Build;
+import android.p007os.Build;
 import android.security.keystore.KeyProperties;
 import android.text.TextUtils;
 import android.util.Base64;
@@ -9,6 +9,7 @@ import android.util.Log;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+/* loaded from: classes.dex */
 public final class Rlog {
     private static final boolean USER_BUILD = Build.IS_USER;
 
@@ -16,56 +17,67 @@ public final class Rlog {
     }
 
     @UnsupportedAppUsage
-    public static int v(String tag, String msg) {
+    /* renamed from: v */
+    public static int m82v(String tag, String msg) {
         return Log.println_native(1, 2, tag, msg);
     }
 
-    public static int v(String tag, String msg, Throwable tr) {
-        return Log.println_native(1, 2, tag, msg + 10 + Log.getStackTraceString(tr));
+    /* renamed from: v */
+    public static int m81v(String tag, String msg, Throwable tr) {
+        return Log.println_native(1, 2, tag, msg + '\n' + Log.getStackTraceString(tr));
     }
 
     @UnsupportedAppUsage
-    public static int d(String tag, String msg) {
+    /* renamed from: d */
+    public static int m88d(String tag, String msg) {
         return Log.println_native(1, 3, tag, msg);
     }
 
     @UnsupportedAppUsage
-    public static int d(String tag, String msg, Throwable tr) {
-        return Log.println_native(1, 3, tag, msg + 10 + Log.getStackTraceString(tr));
+    /* renamed from: d */
+    public static int m87d(String tag, String msg, Throwable tr) {
+        return Log.println_native(1, 3, tag, msg + '\n' + Log.getStackTraceString(tr));
     }
 
     @UnsupportedAppUsage
-    public static int i(String tag, String msg) {
+    /* renamed from: i */
+    public static int m84i(String tag, String msg) {
         return Log.println_native(1, 4, tag, msg);
     }
 
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
-    public static int i(String tag, String msg, Throwable tr) {
-        return Log.println_native(1, 4, tag, msg + 10 + Log.getStackTraceString(tr));
+    /* renamed from: i */
+    public static int m83i(String tag, String msg, Throwable tr) {
+        return Log.println_native(1, 4, tag, msg + '\n' + Log.getStackTraceString(tr));
     }
 
     @UnsupportedAppUsage
-    public static int w(String tag, String msg) {
+    /* renamed from: w */
+    public static int m80w(String tag, String msg) {
         return Log.println_native(1, 5, tag, msg);
     }
 
     @UnsupportedAppUsage
-    public static int w(String tag, String msg, Throwable tr) {
-        return Log.println_native(1, 5, tag, msg + 10 + Log.getStackTraceString(tr));
+    /* renamed from: w */
+    public static int m79w(String tag, String msg, Throwable tr) {
+        return Log.println_native(1, 5, tag, msg + '\n' + Log.getStackTraceString(tr));
     }
 
-    public static int w(String tag, Throwable tr) {
+    /* renamed from: w */
+    public static int m78w(String tag, Throwable tr) {
         return Log.println_native(1, 5, tag, Log.getStackTraceString(tr));
     }
 
     @UnsupportedAppUsage
-    public static int e(String tag, String msg) {
+    /* renamed from: e */
+    public static int m86e(String tag, String msg) {
         return Log.println_native(1, 6, tag, msg);
     }
 
     @UnsupportedAppUsage
-    public static int e(String tag, String msg, Throwable tr) {
-        return Log.println_native(1, 6, tag, msg + 10 + Log.getStackTraceString(tr));
+    /* renamed from: e */
+    public static int m85e(String tag, String msg, Throwable tr) {
+        return Log.println_native(1, 6, tag, msg + '\n' + Log.getStackTraceString(tr));
     }
 
     public static int println(int priority, String tag, String msg) {
@@ -97,7 +109,9 @@ public final class Rlog {
             return "****";
         }
         try {
-            return Base64.encodeToString(MessageDigest.getInstance(KeyProperties.DIGEST_SHA1).digest(input), 11);
+            MessageDigest messageDigest = MessageDigest.getInstance(KeyProperties.DIGEST_SHA1);
+            byte[] result = messageDigest.digest(input);
+            return Base64.encodeToString(result, 11);
         } catch (NoSuchAlgorithmException e) {
             return "####";
         }

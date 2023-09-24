@@ -2,16 +2,20 @@ package android.hardware;
 
 import android.annotation.UnsupportedAppUsage;
 import android.graphics.GraphicBuffer;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import dalvik.annotation.optimization.FastNative;
 import dalvik.system.CloseGuard;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import libcore.util.NativeAllocationRegistry;
 
+/* loaded from: classes.dex */
 public final class HardwareBuffer implements Parcelable, AutoCloseable {
     public static final int BLOB = 33;
-    public static final Parcelable.Creator<HardwareBuffer> CREATOR = new Parcelable.Creator<HardwareBuffer>() {
+    public static final Parcelable.Creator<HardwareBuffer> CREATOR = new Parcelable.Creator<HardwareBuffer>() { // from class: android.hardware.HardwareBuffer.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public HardwareBuffer createFromParcel(Parcel in) {
             long nativeObject = HardwareBuffer.nReadHardwareBufferFromParcel(in);
             if (nativeObject != 0) {
@@ -20,6 +24,8 @@ public final class HardwareBuffer implements Parcelable, AutoCloseable {
             return null;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public HardwareBuffer[] newArray(int size) {
             return new HardwareBuffer[size];
         }
@@ -55,10 +61,12 @@ public final class HardwareBuffer implements Parcelable, AutoCloseable {
     private long mNativeObject;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface Format {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface Usage {
     }
 
@@ -66,21 +74,26 @@ public final class HardwareBuffer implements Parcelable, AutoCloseable {
 
     private static native long nCreateHardwareBuffer(int i, int i2, int i3, int i4, long j);
 
+    @FastNative
     private static native int nGetFormat(long j);
 
+    @FastNative
     private static native int nGetHeight(long j);
 
+    @FastNative
     private static native int nGetLayers(long j);
 
     private static native long nGetNativeFinalizer();
 
+    @FastNative
     private static native long nGetUsage(long j);
 
+    @FastNative
     private static native int nGetWidth(long j);
 
     private static native boolean nIsSupported(int i, int i2, int i3, int i4, long j);
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static native long nReadHardwareBufferFromParcel(Parcel parcel);
 
     private static native void nWriteHardwareBufferToParcel(long j, Parcel parcel);
@@ -94,14 +107,14 @@ public final class HardwareBuffer implements Parcelable, AutoCloseable {
             throw new IllegalArgumentException("Invalid height " + height);
         } else if (layers <= 0) {
             throw new IllegalArgumentException("Invalid layer count " + layers);
-        } else if (format != 33 || height == 1) {
-            long nativeObject = nCreateHardwareBuffer(width, height, format, layers, usage);
-            if (nativeObject != 0) {
-                return new HardwareBuffer(nativeObject);
-            }
-            throw new IllegalArgumentException("Unable to create a HardwareBuffer, either the dimensions passed were too large, too many image layers were requested, or an invalid set of usage flags or invalid format was passed");
-        } else {
+        } else if (format == 33 && height != 1) {
             throw new IllegalArgumentException("Height must be 1 when using the BLOB format");
+        } else {
+            long nativeObject = nCreateHardwareBuffer(width, height, format, layers, usage);
+            if (nativeObject == 0) {
+                throw new IllegalArgumentException("Unable to create a HardwareBuffer, either the dimensions passed were too large, too many image layers were requested, or an invalid set of usage flags or invalid format was passed");
+            }
+            return new HardwareBuffer(nativeObject);
         }
     }
 
@@ -114,27 +127,29 @@ public final class HardwareBuffer implements Parcelable, AutoCloseable {
             throw new IllegalArgumentException("Invalid height " + height);
         } else if (layers <= 0) {
             throw new IllegalArgumentException("Invalid layer count " + layers);
-        } else if (format != 33 || height == 1) {
-            return nIsSupported(width, height, format, layers, usage);
-        } else {
+        } else if (format == 33 && height != 1) {
             throw new IllegalArgumentException("Height must be 1 when using the BLOB format");
+        } else {
+            return nIsSupported(width, height, format, layers, usage);
         }
     }
 
     public static HardwareBuffer createFromGraphicBuffer(GraphicBuffer graphicBuffer) {
-        return new HardwareBuffer(nCreateFromGraphicBuffer(graphicBuffer));
+        long nativeObject = nCreateFromGraphicBuffer(graphicBuffer);
+        return new HardwareBuffer(nativeObject);
     }
 
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
     private HardwareBuffer(long nativeObject) {
         this.mCloseGuard = CloseGuard.get();
         this.mNativeObject = nativeObject;
-        this.mCleaner = new NativeAllocationRegistry(HardwareBuffer.class.getClassLoader(), nGetNativeFinalizer(), NATIVE_HARDWARE_BUFFER_SIZE).registerNativeAllocation(this, this.mNativeObject);
+        ClassLoader loader = HardwareBuffer.class.getClassLoader();
+        NativeAllocationRegistry registry = new NativeAllocationRegistry(loader, nGetNativeFinalizer(), (long) NATIVE_HARDWARE_BUFFER_SIZE);
+        this.mCleaner = registry.registerNativeAllocation(this, this.mNativeObject);
         this.mCloseGuard.open("close");
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         try {
             this.mCloseGuard.warnIfOpen();
             close();
@@ -144,38 +159,38 @@ public final class HardwareBuffer implements Parcelable, AutoCloseable {
     }
 
     public int getWidth() {
-        if (!isClosed()) {
-            return nGetWidth(this.mNativeObject);
+        if (isClosed()) {
+            throw new IllegalStateException("This HardwareBuffer has been closed and its width cannot be obtained.");
         }
-        throw new IllegalStateException("This HardwareBuffer has been closed and its width cannot be obtained.");
+        return nGetWidth(this.mNativeObject);
     }
 
     public int getHeight() {
-        if (!isClosed()) {
-            return nGetHeight(this.mNativeObject);
+        if (isClosed()) {
+            throw new IllegalStateException("This HardwareBuffer has been closed and its height cannot be obtained.");
         }
-        throw new IllegalStateException("This HardwareBuffer has been closed and its height cannot be obtained.");
+        return nGetHeight(this.mNativeObject);
     }
 
     public int getFormat() {
-        if (!isClosed()) {
-            return nGetFormat(this.mNativeObject);
+        if (isClosed()) {
+            throw new IllegalStateException("This HardwareBuffer has been closed and its format cannot be obtained.");
         }
-        throw new IllegalStateException("This HardwareBuffer has been closed and its format cannot be obtained.");
+        return nGetFormat(this.mNativeObject);
     }
 
     public int getLayers() {
-        if (!isClosed()) {
-            return nGetLayers(this.mNativeObject);
+        if (isClosed()) {
+            throw new IllegalStateException("This HardwareBuffer has been closed and its layer count cannot be obtained.");
         }
-        throw new IllegalStateException("This HardwareBuffer has been closed and its layer count cannot be obtained.");
+        return nGetLayers(this.mNativeObject);
     }
 
     public long getUsage() {
-        if (!isClosed()) {
-            return nGetUsage(this.mNativeObject);
+        if (isClosed()) {
+            throw new IllegalStateException("This HardwareBuffer has been closed and its usage cannot be obtained.");
         }
-        throw new IllegalStateException("This HardwareBuffer has been closed and its usage cannot be obtained.");
+        return nGetUsage(this.mNativeObject);
     }
 
     @Deprecated
@@ -188,10 +203,11 @@ public final class HardwareBuffer implements Parcelable, AutoCloseable {
         return isClosed();
     }
 
+    @Override // java.lang.AutoCloseable
     public void close() {
         if (!isClosed()) {
             this.mCloseGuard.close();
-            this.mNativeObject = 0;
+            this.mNativeObject = 0L;
             this.mCleaner.run();
             this.mCleaner = null;
         }
@@ -201,16 +217,17 @@ public final class HardwareBuffer implements Parcelable, AutoCloseable {
         return this.mNativeObject == 0;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 1;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
-        if (!isClosed()) {
-            nWriteHardwareBufferToParcel(this.mNativeObject, dest);
-            return;
+        if (isClosed()) {
+            throw new IllegalStateException("This HardwareBuffer has been closed and cannot be written to a parcel.");
         }
-        throw new IllegalStateException("This HardwareBuffer has been closed and cannot be written to a parcel.");
+        nWriteHardwareBufferToParcel(this.mNativeObject, dest);
     }
 
     private static boolean isSupportedFormat(int format) {

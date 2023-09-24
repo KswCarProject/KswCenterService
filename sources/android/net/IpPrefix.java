@@ -1,8 +1,8 @@
 package android.net;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.Pair;
 import java.net.Inet4Address;
 import java.net.Inet6Address;
@@ -11,58 +11,60 @@ import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Comparator;
 
+/* loaded from: classes3.dex */
 public final class IpPrefix implements Parcelable {
-    public static final Parcelable.Creator<IpPrefix> CREATOR = new Parcelable.Creator<IpPrefix>() {
+    public static final Parcelable.Creator<IpPrefix> CREATOR = new Parcelable.Creator<IpPrefix>() { // from class: android.net.IpPrefix.2
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public IpPrefix createFromParcel(Parcel in) {
-            return new IpPrefix(in.createByteArray(), in.readInt());
+            byte[] address = in.createByteArray();
+            int prefixLength = in.readInt();
+            return new IpPrefix(address, prefixLength);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public IpPrefix[] newArray(int size) {
             return new IpPrefix[size];
         }
     };
-    /* access modifiers changed from: private */
-    public final byte[] address;
+    private final byte[] address;
     private final int prefixLength;
 
     private void checkAndMaskAddressAndPrefixLength() {
-        if (this.address.length == 4 || this.address.length == 16) {
-            NetworkUtils.maskRawAddress(this.address, this.prefixLength);
-            return;
+        if (this.address.length != 4 && this.address.length != 16) {
+            throw new IllegalArgumentException("IpPrefix has " + this.address.length + " bytes which is neither 4 nor 16");
         }
-        throw new IllegalArgumentException("IpPrefix has " + this.address.length + " bytes which is neither 4 nor 16");
+        NetworkUtils.maskRawAddress(this.address, this.prefixLength);
     }
 
-    public IpPrefix(byte[] address2, int prefixLength2) {
-        this.address = (byte[]) address2.clone();
-        this.prefixLength = prefixLength2;
+    public IpPrefix(byte[] address, int prefixLength) {
+        this.address = (byte[]) address.clone();
+        this.prefixLength = prefixLength;
         checkAndMaskAddressAndPrefixLength();
     }
 
     @SystemApi
-    public IpPrefix(InetAddress address2, int prefixLength2) {
-        this.address = address2.getAddress();
-        this.prefixLength = prefixLength2;
+    public IpPrefix(InetAddress address, int prefixLength) {
+        this.address = address.getAddress();
+        this.prefixLength = prefixLength;
         checkAndMaskAddressAndPrefixLength();
     }
 
     @SystemApi
     public IpPrefix(String prefix) {
         Pair<InetAddress, Integer> ipAndMask = NetworkUtils.parseIpAndMask(prefix);
-        this.address = ((InetAddress) ipAndMask.first).getAddress();
-        this.prefixLength = ((Integer) ipAndMask.second).intValue();
+        this.address = ipAndMask.first.getAddress();
+        this.prefixLength = ipAndMask.second.intValue();
         checkAndMaskAddressAndPrefixLength();
     }
 
     public boolean equals(Object obj) {
-        if (!(obj instanceof IpPrefix)) {
-            return false;
+        if (obj instanceof IpPrefix) {
+            IpPrefix that = (IpPrefix) obj;
+            return Arrays.equals(this.address, that.address) && this.prefixLength == that.prefixLength;
         }
-        IpPrefix that = (IpPrefix) obj;
-        if (!Arrays.equals(this.address, that.address) || this.prefixLength != that.prefixLength) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
     public int hashCode() {
@@ -85,8 +87,8 @@ public final class IpPrefix implements Parcelable {
         return this.prefixLength;
     }
 
-    public boolean contains(InetAddress address2) {
-        byte[] addrBytes = address2.getAddress();
+    public boolean contains(InetAddress address) {
+        byte[] addrBytes = address.getAddress();
         if (addrBytes == null || addrBytes.length != this.address.length) {
             return false;
         }
@@ -119,17 +121,20 @@ public final class IpPrefix implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeByteArray(this.address);
         dest.writeInt(this.prefixLength);
     }
 
     public static Comparator<IpPrefix> lengthComparator() {
-        return new Comparator<IpPrefix>() {
+        return new Comparator<IpPrefix>() { // from class: android.net.IpPrefix.1
+            @Override // java.util.Comparator
             public int compare(IpPrefix prefix1, IpPrefix prefix2) {
                 if (prefix1.isIPv4()) {
                     if (prefix2.isIPv6()) {
@@ -157,13 +162,11 @@ public final class IpPrefix implements Parcelable {
                         return 1;
                     }
                 }
-                if (a2.length < len) {
+                int i2 = a2.length;
+                if (i2 < len) {
                     return 1;
                 }
-                if (a1.length < len) {
-                    return -1;
-                }
-                return 0;
+                return a1.length < len ? -1 : 0;
             }
         };
     }

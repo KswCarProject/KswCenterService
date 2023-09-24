@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.RandomAccess;
 
+/* loaded from: classes4.dex */
 final class BooleanArrayList extends AbstractProtobufList<Boolean> implements Internal.BooleanList, RandomAccess {
     private static final BooleanArrayList EMPTY_LIST = new BooleanArrayList();
     private boolean[] array;
@@ -22,11 +23,12 @@ final class BooleanArrayList extends AbstractProtobufList<Boolean> implements In
         this(new boolean[10], 0);
     }
 
-    private BooleanArrayList(boolean[] array2, int size2) {
-        this.array = array2;
-        this.size = size2;
+    private BooleanArrayList(boolean[] array, int size) {
+        this.array = array;
+        this.size = size;
     }
 
+    @Override // com.android.framework.protobuf.AbstractProtobufList, java.util.AbstractList, java.util.Collection, java.util.List
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -47,6 +49,7 @@ final class BooleanArrayList extends AbstractProtobufList<Boolean> implements In
         return true;
     }
 
+    @Override // com.android.framework.protobuf.AbstractProtobufList, java.util.AbstractList, java.util.Collection, java.util.List
     public int hashCode() {
         int result = 1;
         for (int i = 0; i < this.size; i++) {
@@ -55,30 +58,37 @@ final class BooleanArrayList extends AbstractProtobufList<Boolean> implements In
         return result;
     }
 
-    public Internal.BooleanList mutableCopyWithCapacity(int capacity) {
-        if (capacity >= this.size) {
-            return new BooleanArrayList(Arrays.copyOf(this.array, capacity), this.size);
+    @Override // com.android.framework.protobuf.Internal.ProtobufList, com.android.framework.protobuf.Internal.BooleanList
+    /* renamed from: mutableCopyWithCapacity */
+    public Internal.ProtobufList<Boolean> mutableCopyWithCapacity2(int capacity) {
+        if (capacity < this.size) {
+            throw new IllegalArgumentException();
         }
-        throw new IllegalArgumentException();
+        return new BooleanArrayList(Arrays.copyOf(this.array, capacity), this.size);
     }
 
+    @Override // java.util.AbstractList, java.util.List
     public Boolean get(int index) {
         return Boolean.valueOf(getBoolean(index));
     }
 
+    @Override // com.android.framework.protobuf.Internal.BooleanList
     public boolean getBoolean(int index) {
         ensureIndexInRange(index);
         return this.array[index];
     }
 
+    @Override // java.util.AbstractCollection, java.util.Collection, java.util.List
     public int size() {
         return this.size;
     }
 
+    @Override // com.android.framework.protobuf.AbstractProtobufList, java.util.AbstractList, java.util.List
     public Boolean set(int index, Boolean element) {
         return Boolean.valueOf(setBoolean(index, element.booleanValue()));
     }
 
+    @Override // com.android.framework.protobuf.Internal.BooleanList
     public boolean setBoolean(int index, boolean element) {
         ensureIsMutable();
         ensureIndexInRange(index);
@@ -87,10 +97,12 @@ final class BooleanArrayList extends AbstractProtobufList<Boolean> implements In
         return previousValue;
     }
 
+    @Override // com.android.framework.protobuf.AbstractProtobufList, java.util.AbstractList, java.util.List
     public void add(int index, Boolean element) {
         addBoolean(index, element.booleanValue());
     }
 
+    @Override // com.android.framework.protobuf.Internal.BooleanList
     public void addBoolean(boolean element) {
         addBoolean(this.size, element);
     }
@@ -103,7 +115,8 @@ final class BooleanArrayList extends AbstractProtobufList<Boolean> implements In
         if (this.size < this.array.length) {
             System.arraycopy(this.array, index, this.array, index + 1, this.size - index);
         } else {
-            boolean[] newArray = new boolean[(((this.size * 3) / 2) + 1)];
+            int length = ((this.size * 3) / 2) + 1;
+            boolean[] newArray = new boolean[length];
             System.arraycopy(this.array, 0, newArray, 0, index);
             System.arraycopy(this.array, index, newArray, index + 1, this.size - index);
             this.array = newArray;
@@ -113,31 +126,34 @@ final class BooleanArrayList extends AbstractProtobufList<Boolean> implements In
         this.modCount++;
     }
 
+    @Override // com.android.framework.protobuf.AbstractProtobufList, java.util.AbstractCollection, java.util.Collection, java.util.List
     public boolean addAll(Collection<? extends Boolean> collection) {
         ensureIsMutable();
         if (collection == null) {
             throw new NullPointerException();
-        } else if (!(collection instanceof BooleanArrayList)) {
+        }
+        if (!(collection instanceof BooleanArrayList)) {
             return super.addAll(collection);
-        } else {
-            BooleanArrayList list = (BooleanArrayList) collection;
-            if (list.size == 0) {
-                return false;
-            }
-            if (Integer.MAX_VALUE - this.size >= list.size) {
-                int newSize = this.size + list.size;
-                if (newSize > this.array.length) {
-                    this.array = Arrays.copyOf(this.array, newSize);
-                }
-                System.arraycopy(list.array, 0, this.array, this.size, list.size);
-                this.size = newSize;
-                this.modCount++;
-                return true;
-            }
+        }
+        BooleanArrayList list = (BooleanArrayList) collection;
+        if (list.size == 0) {
+            return false;
+        }
+        int overflow = Integer.MAX_VALUE - this.size;
+        if (overflow < list.size) {
             throw new OutOfMemoryError();
         }
+        int newSize = this.size + list.size;
+        if (newSize > this.array.length) {
+            this.array = Arrays.copyOf(this.array, newSize);
+        }
+        System.arraycopy(list.array, 0, this.array, this.size, list.size);
+        this.size = newSize;
+        this.modCount++;
+        return true;
     }
 
+    @Override // com.android.framework.protobuf.AbstractProtobufList, java.util.AbstractCollection, java.util.Collection, java.util.List
     public boolean remove(Object o) {
         ensureIsMutable();
         for (int i = 0; i < this.size; i++) {
@@ -151,6 +167,7 @@ final class BooleanArrayList extends AbstractProtobufList<Boolean> implements In
         return false;
     }
 
+    @Override // com.android.framework.protobuf.AbstractProtobufList, java.util.AbstractList, java.util.List
     public Boolean remove(int index) {
         ensureIsMutable();
         ensureIndexInRange(index);

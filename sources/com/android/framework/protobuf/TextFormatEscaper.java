@@ -1,7 +1,9 @@
 package com.android.framework.protobuf;
 
+/* loaded from: classes4.dex */
 final class TextFormatEscaper {
 
+    /* loaded from: classes4.dex */
     private interface ByteSequence {
         byte byteAt(int i);
 
@@ -23,29 +25,29 @@ final class TextFormatEscaper {
                 switch (b) {
                     case 7:
                         builder.append("\\a");
-                        break;
+                        continue;
                     case 8:
                         builder.append("\\b");
-                        break;
+                        continue;
                     case 9:
                         builder.append("\\t");
-                        break;
+                        continue;
                     case 10:
                         builder.append("\\n");
-                        break;
+                        continue;
                     case 11:
                         builder.append("\\v");
-                        break;
+                        continue;
                     case 12:
                         builder.append("\\f");
-                        break;
+                        continue;
                     case 13:
                         builder.append("\\r");
-                        break;
+                        continue;
                     default:
                         if (b >= 32 && b <= 126) {
                             builder.append((char) b);
-                            break;
+                            continue;
                         } else {
                             builder.append('\\');
                             builder.append((char) (((b >>> 6) & 3) + 48));
@@ -63,11 +65,13 @@ final class TextFormatEscaper {
     }
 
     static String escapeBytes(final ByteString input) {
-        return escapeBytes((ByteSequence) new ByteSequence() {
+        return escapeBytes(new ByteSequence() { // from class: com.android.framework.protobuf.TextFormatEscaper.1
+            @Override // com.android.framework.protobuf.TextFormatEscaper.ByteSequence
             public int size() {
                 return ByteString.this.size();
             }
 
+            @Override // com.android.framework.protobuf.TextFormatEscaper.ByteSequence
             public byte byteAt(int offset) {
                 return ByteString.this.byteAt(offset);
             }
@@ -75,11 +79,13 @@ final class TextFormatEscaper {
     }
 
     static String escapeBytes(final byte[] input) {
-        return escapeBytes((ByteSequence) new ByteSequence() {
+        return escapeBytes(new ByteSequence() { // from class: com.android.framework.protobuf.TextFormatEscaper.2
+            @Override // com.android.framework.protobuf.TextFormatEscaper.ByteSequence
             public int size() {
                 return input.length;
             }
 
+            @Override // com.android.framework.protobuf.TextFormatEscaper.ByteSequence
             public byte byteAt(int offset) {
                 return input[offset];
             }

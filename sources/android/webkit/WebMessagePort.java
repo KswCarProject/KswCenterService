@@ -1,7 +1,8 @@
 package android.webkit;
 
-import android.os.Handler;
+import android.p007os.Handler;
 
+/* loaded from: classes4.dex */
 public abstract class WebMessagePort {
     public abstract void close();
 
@@ -11,6 +12,7 @@ public abstract class WebMessagePort {
 
     public abstract void setWebMessageCallback(WebMessageCallback webMessageCallback, Handler handler);
 
+    /* loaded from: classes4.dex */
     public static abstract class WebMessageCallback {
         public void onMessage(WebMessagePort port, WebMessage message) {
         }

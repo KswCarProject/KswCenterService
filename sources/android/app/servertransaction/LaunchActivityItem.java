@@ -6,27 +6,32 @@ import android.app.ClientTransactionHandler;
 import android.app.ProfilerInfo;
 import android.app.ResultInfo;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
+import android.content.p002pm.ActivityInfo;
 import android.content.res.CompatibilityInfo;
 import android.content.res.Configuration;
-import android.os.BaseBundle;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.PersistableBundle;
-import android.os.Trace;
+import android.p007os.BaseBundle;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.PersistableBundle;
+import android.p007os.Trace;
 import com.android.internal.app.IVoiceInteractor;
 import com.android.internal.content.ReferrerIntent;
 import java.util.List;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public class LaunchActivityItem extends ClientTransactionItem {
-    public static final Parcelable.Creator<LaunchActivityItem> CREATOR = new Parcelable.Creator<LaunchActivityItem>() {
+    public static final Parcelable.Creator<LaunchActivityItem> CREATOR = new Parcelable.Creator<LaunchActivityItem>() { // from class: android.app.servertransaction.LaunchActivityItem.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public LaunchActivityItem createFromParcel(Parcel in) {
             return new LaunchActivityItem(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public LaunchActivityItem[] newArray(int size) {
             return new LaunchActivityItem[size];
         }
@@ -50,19 +55,22 @@ public class LaunchActivityItem extends ClientTransactionItem {
     private Bundle mState;
     private IVoiceInteractor mVoiceInteractor;
 
+    @Override // android.app.servertransaction.BaseClientRequest
     public void preExecute(ClientTransactionHandler client, IBinder token) {
         client.countLaunchingActivities(1);
         client.updateProcessState(this.mProcState, false);
         client.updatePendingConfiguration(this.mCurConfig);
     }
 
+    @Override // android.app.servertransaction.BaseClientRequest
     public void execute(ClientTransactionHandler client, IBinder token, PendingTransactionActions pendingActions) {
-        Trace.traceBegin(64, "activityStart");
-        ClientTransactionHandler clientTransactionHandler = client;
-        clientTransactionHandler.handleLaunchActivity(new ActivityThread.ActivityClientRecord(token, this.mIntent, this.mIdent, this.mInfo, this.mOverrideConfig, this.mCompatInfo, this.mReferrer, this.mVoiceInteractor, this.mState, this.mPersistentState, this.mPendingResults, this.mPendingNewIntents, this.mIsForward, this.mProfilerInfo, client, this.mAssistToken), pendingActions, (Intent) null);
-        Trace.traceEnd(64);
+        Trace.traceBegin(64L, "activityStart");
+        ActivityThread.ActivityClientRecord r = new ActivityThread.ActivityClientRecord(token, this.mIntent, this.mIdent, this.mInfo, this.mOverrideConfig, this.mCompatInfo, this.mReferrer, this.mVoiceInteractor, this.mState, this.mPersistentState, this.mPendingResults, this.mPendingNewIntents, this.mIsForward, this.mProfilerInfo, client, this.mAssistToken);
+        client.handleLaunchActivity(r, pendingActions, null);
+        Trace.traceEnd(64L);
     }
 
+    @Override // android.app.servertransaction.BaseClientRequest
     public void postExecute(ClientTransactionHandler client, IBinder token, PendingTransactionActions pendingActions) {
         client.countLaunchingActivities(-1);
     }
@@ -79,11 +87,13 @@ public class LaunchActivityItem extends ClientTransactionItem {
         return instance;
     }
 
+    @Override // android.app.servertransaction.ObjectPoolItem
     public void recycle() {
-        setValues(this, (Intent) null, 0, (ActivityInfo) null, (Configuration) null, (Configuration) null, (CompatibilityInfo) null, (String) null, (IVoiceInteractor) null, 0, (Bundle) null, (PersistableBundle) null, (List<ResultInfo>) null, (List<ReferrerIntent>) null, false, (ProfilerInfo) null, (IBinder) null);
+        setValues(this, null, 0, null, null, null, null, null, null, 0, null, null, null, null, false, null, null);
         ObjectPool.recycle(this);
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeTypedObject(this.mIntent, flags);
         dest.writeInt(this.mIdent);
@@ -104,11 +114,11 @@ public class LaunchActivityItem extends ClientTransactionItem {
     }
 
     private LaunchActivityItem(Parcel in) {
-        Parcel parcel = in;
-        setValues(this, (Intent) parcel.readTypedObject(Intent.CREATOR), in.readInt(), (ActivityInfo) parcel.readTypedObject(ActivityInfo.CREATOR), (Configuration) parcel.readTypedObject(Configuration.CREATOR), (Configuration) parcel.readTypedObject(Configuration.CREATOR), (CompatibilityInfo) parcel.readTypedObject(CompatibilityInfo.CREATOR), in.readString(), IVoiceInteractor.Stub.asInterface(in.readStrongBinder()), in.readInt(), parcel.readBundle(getClass().getClassLoader()), parcel.readPersistableBundle(getClass().getClassLoader()), parcel.createTypedArrayList(ResultInfo.CREATOR), parcel.createTypedArrayList(ReferrerIntent.CREATOR), in.readBoolean(), (ProfilerInfo) parcel.readTypedObject(ProfilerInfo.CREATOR), in.readStrongBinder());
+        setValues(this, (Intent) in.readTypedObject(Intent.CREATOR), in.readInt(), (ActivityInfo) in.readTypedObject(ActivityInfo.CREATOR), (Configuration) in.readTypedObject(Configuration.CREATOR), (Configuration) in.readTypedObject(Configuration.CREATOR), (CompatibilityInfo) in.readTypedObject(CompatibilityInfo.CREATOR), in.readString(), IVoiceInteractor.Stub.asInterface(in.readStrongBinder()), in.readInt(), in.readBundle(getClass().getClassLoader()), in.readPersistableBundle(getClass().getClassLoader()), in.createTypedArrayList(ResultInfo.CREATOR), in.createTypedArrayList(ReferrerIntent.CREATOR), in.readBoolean(), (ProfilerInfo) in.readTypedObject(ProfilerInfo.CREATOR), in.readStrongBinder());
     }
 
     public boolean equals(Object o) {
+        boolean intentsEqual;
         if (this == o) {
             return true;
         }
@@ -116,46 +126,39 @@ public class LaunchActivityItem extends ClientTransactionItem {
             return false;
         }
         LaunchActivityItem other = (LaunchActivityItem) o;
-        if (!((this.mIntent == null && other.mIntent == null) || (this.mIntent != null && this.mIntent.filterEquals(other.mIntent))) || this.mIdent != other.mIdent || !activityInfoEqual(other.mInfo) || !Objects.equals(this.mCurConfig, other.mCurConfig) || !Objects.equals(this.mOverrideConfig, other.mOverrideConfig) || !Objects.equals(this.mCompatInfo, other.mCompatInfo) || !Objects.equals(this.mReferrer, other.mReferrer) || this.mProcState != other.mProcState || !areBundlesEqual(this.mState, other.mState) || !areBundlesEqual(this.mPersistentState, other.mPersistentState) || !Objects.equals(this.mPendingResults, other.mPendingResults) || !Objects.equals(this.mPendingNewIntents, other.mPendingNewIntents) || this.mIsForward != other.mIsForward || !Objects.equals(this.mProfilerInfo, other.mProfilerInfo) || !Objects.equals(this.mAssistToken, other.mAssistToken)) {
-            return false;
+        if ((this.mIntent == null && other.mIntent == null) || (this.mIntent != null && this.mIntent.filterEquals(other.mIntent))) {
+            intentsEqual = true;
+        } else {
+            intentsEqual = false;
         }
-        return true;
+        if (intentsEqual && this.mIdent == other.mIdent && activityInfoEqual(other.mInfo) && Objects.equals(this.mCurConfig, other.mCurConfig) && Objects.equals(this.mOverrideConfig, other.mOverrideConfig) && Objects.equals(this.mCompatInfo, other.mCompatInfo) && Objects.equals(this.mReferrer, other.mReferrer) && this.mProcState == other.mProcState && areBundlesEqual(this.mState, other.mState) && areBundlesEqual(this.mPersistentState, other.mPersistentState) && Objects.equals(this.mPendingResults, other.mPendingResults) && Objects.equals(this.mPendingNewIntents, other.mPendingNewIntents) && this.mIsForward == other.mIsForward && Objects.equals(this.mProfilerInfo, other.mProfilerInfo) && Objects.equals(this.mAssistToken, other.mAssistToken)) {
+            return true;
+        }
+        return false;
     }
 
     public int hashCode() {
-        int i = 0;
-        int result = ((((((((((((((((17 * 31) + this.mIntent.filterHashCode()) * 31) + this.mIdent) * 31) + Objects.hashCode(this.mCurConfig)) * 31) + Objects.hashCode(this.mOverrideConfig)) * 31) + Objects.hashCode(this.mCompatInfo)) * 31) + Objects.hashCode(this.mReferrer)) * 31) + Objects.hashCode(Integer.valueOf(this.mProcState))) * 31) + (this.mState != null ? this.mState.size() : 0)) * 31;
-        if (this.mPersistentState != null) {
-            i = this.mPersistentState.size();
-        }
-        return ((((((((((result + i) * 31) + Objects.hashCode(this.mPendingResults)) * 31) + Objects.hashCode(this.mPendingNewIntents)) * 31) + (this.mIsForward ? 1 : 0)) * 31) + Objects.hashCode(this.mProfilerInfo)) * 31) + Objects.hashCode(this.mAssistToken);
+        int result = (17 * 31) + this.mIntent.filterHashCode();
+        return (((((((((((((((((((((((((result * 31) + this.mIdent) * 31) + Objects.hashCode(this.mCurConfig)) * 31) + Objects.hashCode(this.mOverrideConfig)) * 31) + Objects.hashCode(this.mCompatInfo)) * 31) + Objects.hashCode(this.mReferrer)) * 31) + Objects.hashCode(Integer.valueOf(this.mProcState))) * 31) + (this.mState != null ? this.mState.size() : 0)) * 31) + (this.mPersistentState != null ? this.mPersistentState.size() : 0)) * 31) + Objects.hashCode(this.mPendingResults)) * 31) + Objects.hashCode(this.mPendingNewIntents)) * 31) + (this.mIsForward ? 1 : 0)) * 31) + Objects.hashCode(this.mProfilerInfo)) * 31) + Objects.hashCode(this.mAssistToken);
     }
 
     private boolean activityInfoEqual(ActivityInfo other) {
-        if (this.mInfo == null) {
-            if (other == null) {
-                return true;
-            }
-            return false;
-        } else if (other == null || this.mInfo.flags != other.flags || this.mInfo.maxAspectRatio != other.maxAspectRatio || !Objects.equals(this.mInfo.launchToken, other.launchToken) || !Objects.equals(this.mInfo.getComponentName(), other.getComponentName())) {
-            return false;
-        } else {
-            return true;
-        }
+        return this.mInfo == null ? other == null : other != null && this.mInfo.flags == other.flags && this.mInfo.maxAspectRatio == other.maxAspectRatio && Objects.equals(this.mInfo.launchToken, other.launchToken) && Objects.equals(this.mInfo.getComponentName(), other.getComponentName());
     }
 
     private static boolean areBundlesEqual(BaseBundle extras, BaseBundle newExtras) {
         if (extras == null || newExtras == null) {
-            if (extras == newExtras) {
-                return true;
-            }
-            return false;
+            return extras == newExtras;
         } else if (extras.size() != newExtras.size()) {
             return false;
         } else {
             for (String key : extras.keySet()) {
-                if (key != null && !Objects.equals(extras.get(key), newExtras.get(key))) {
-                    return false;
+                if (key != null) {
+                    Object value = extras.get(key);
+                    Object newValue = newExtras.get(key);
+                    if (!Objects.equals(value, newValue)) {
+                        return false;
+                    }
                 }
             }
             return true;
@@ -167,22 +170,21 @@ public class LaunchActivityItem extends ClientTransactionItem {
     }
 
     private static void setValues(LaunchActivityItem instance, Intent intent, int ident, ActivityInfo info, Configuration curConfig, Configuration overrideConfig, CompatibilityInfo compatInfo, String referrer, IVoiceInteractor voiceInteractor, int procState, Bundle state, PersistableBundle persistentState, List<ResultInfo> pendingResults, List<ReferrerIntent> pendingNewIntents, boolean isForward, ProfilerInfo profilerInfo, IBinder assistToken) {
-        LaunchActivityItem launchActivityItem = instance;
-        launchActivityItem.mIntent = intent;
-        launchActivityItem.mIdent = ident;
-        launchActivityItem.mInfo = info;
-        launchActivityItem.mCurConfig = curConfig;
-        launchActivityItem.mOverrideConfig = overrideConfig;
-        launchActivityItem.mCompatInfo = compatInfo;
-        launchActivityItem.mReferrer = referrer;
-        launchActivityItem.mVoiceInteractor = voiceInteractor;
-        launchActivityItem.mProcState = procState;
-        launchActivityItem.mState = state;
-        launchActivityItem.mPersistentState = persistentState;
-        launchActivityItem.mPendingResults = pendingResults;
-        launchActivityItem.mPendingNewIntents = pendingNewIntents;
-        launchActivityItem.mIsForward = isForward;
-        launchActivityItem.mProfilerInfo = profilerInfo;
-        launchActivityItem.mAssistToken = assistToken;
+        instance.mIntent = intent;
+        instance.mIdent = ident;
+        instance.mInfo = info;
+        instance.mCurConfig = curConfig;
+        instance.mOverrideConfig = overrideConfig;
+        instance.mCompatInfo = compatInfo;
+        instance.mReferrer = referrer;
+        instance.mVoiceInteractor = voiceInteractor;
+        instance.mProcState = procState;
+        instance.mState = state;
+        instance.mPersistentState = persistentState;
+        instance.mPendingResults = pendingResults;
+        instance.mPendingNewIntents = pendingNewIntents;
+        instance.mIsForward = isForward;
+        instance.mProfilerInfo = profilerInfo;
+        instance.mAssistToken = assistToken;
     }
 }

@@ -3,31 +3,36 @@ package android.app;
 import android.annotation.SystemApi;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.content.pm.ServiceInfo;
+import android.content.p002pm.ApplicationInfo;
+import android.content.p002pm.PackageManager;
+import android.content.p002pm.ResolveInfo;
+import android.content.p002pm.ServiceInfo;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.content.res.XmlResourceParser;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.service.wallpaper.WallpaperService;
 import android.util.AttributeSet;
 import android.util.Printer;
 import android.util.Xml;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.io.IOException;
 import org.xmlpull.v1.XmlPullParserException;
 
+/* loaded from: classes.dex */
 public final class WallpaperInfo implements Parcelable {
-    public static final Parcelable.Creator<WallpaperInfo> CREATOR = new Parcelable.Creator<WallpaperInfo>() {
+    public static final Parcelable.Creator<WallpaperInfo> CREATOR = new Parcelable.Creator<WallpaperInfo>() { // from class: android.app.WallpaperInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WallpaperInfo createFromParcel(Parcel source) {
             return new WallpaperInfo(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WallpaperInfo[] newArray(int size) {
             return new WallpaperInfo[size];
         }
@@ -51,45 +56,42 @@ public final class WallpaperInfo implements Parcelable {
         PackageManager pm = context.getPackageManager();
         XmlResourceParser parser = null;
         try {
-            parser = si.loadXmlMetaData(pm, WallpaperService.SERVICE_META_DATA);
-            if (parser != null) {
+            try {
+                parser = si.loadXmlMetaData(pm, WallpaperService.SERVICE_META_DATA);
+                if (parser == null) {
+                    throw new XmlPullParserException("No android.service.wallpaper meta-data");
+                }
                 Resources res = pm.getResourcesForApplication(si.applicationInfo);
                 AttributeSet attrs = Xml.asAttributeSet(parser);
                 while (true) {
-                    int next = parser.next();
-                    int type = next;
-                    if (next == 1 || type == 2) {
+                    int type = parser.next();
+                    if (type == 1 || type == 2) {
+                        break;
                     }
                 }
-                if (Context.WALLPAPER_SERVICE.equals(parser.getName())) {
-                    TypedArray sa = res.obtainAttributes(attrs, R.styleable.Wallpaper);
-                    this.mSettingsActivityName = sa.getString(1);
-                    this.mThumbnailResource = sa.getResourceId(2, -1);
-                    this.mAuthorResource = sa.getResourceId(3, -1);
-                    this.mDescriptionResource = sa.getResourceId(0, -1);
-                    this.mContextUriResource = sa.getResourceId(4, -1);
-                    this.mContextDescriptionResource = sa.getResourceId(5, -1);
-                    this.mShowMetadataInPreview = sa.getBoolean(6, false);
-                    this.mSupportsAmbientMode = sa.getBoolean(7, false);
-                    this.mSettingsSliceUri = sa.getString(8);
-                    this.mSupportMultipleDisplays = sa.getBoolean(9, false);
-                    sa.recycle();
-                    if (parser != null) {
-                        parser.close();
-                        return;
-                    }
-                    return;
+                String nodeName = parser.getName();
+                if (!Context.WALLPAPER_SERVICE.equals(nodeName)) {
+                    throw new XmlPullParserException("Meta-data does not start with wallpaper tag");
                 }
-                throw new XmlPullParserException("Meta-data does not start with wallpaper tag");
+                TypedArray sa = res.obtainAttributes(attrs, C3132R.styleable.Wallpaper);
+                this.mSettingsActivityName = sa.getString(1);
+                this.mThumbnailResource = sa.getResourceId(2, -1);
+                this.mAuthorResource = sa.getResourceId(3, -1);
+                this.mDescriptionResource = sa.getResourceId(0, -1);
+                this.mContextUriResource = sa.getResourceId(4, -1);
+                this.mContextDescriptionResource = sa.getResourceId(5, -1);
+                this.mShowMetadataInPreview = sa.getBoolean(6, false);
+                this.mSupportsAmbientMode = sa.getBoolean(7, false);
+                this.mSettingsSliceUri = sa.getString(8);
+                this.mSupportMultipleDisplays = sa.getBoolean(9, false);
+                sa.recycle();
+            } catch (PackageManager.NameNotFoundException e) {
+                throw new XmlPullParserException("Unable to create context for: " + si.packageName);
             }
-            throw new XmlPullParserException("No android.service.wallpaper meta-data");
-        } catch (PackageManager.NameNotFoundException e) {
-            throw new XmlPullParserException("Unable to create context for: " + si.packageName);
-        } catch (Throwable th) {
+        } finally {
             if (parser != null) {
                 parser.close();
             }
-            throw th;
         }
     }
 
@@ -100,11 +102,10 @@ public final class WallpaperInfo implements Parcelable {
         this.mDescriptionResource = source.readInt();
         this.mContextUriResource = source.readInt();
         this.mContextDescriptionResource = source.readInt();
-        boolean z = false;
         this.mShowMetadataInPreview = source.readInt() != 0;
         this.mSupportsAmbientMode = source.readInt() != 0;
         this.mSettingsSliceUri = source.readString();
-        this.mSupportMultipleDisplays = source.readInt() != 0 ? true : z;
+        this.mSupportMultipleDisplays = source.readInt() != 0;
         this.mService = ResolveInfo.CREATOR.createFromParcel(source);
     }
 
@@ -140,16 +141,16 @@ public final class WallpaperInfo implements Parcelable {
     }
 
     public CharSequence loadAuthor(PackageManager pm) throws Resources.NotFoundException {
-        if (this.mAuthorResource > 0) {
-            String packageName = this.mService.resolvePackageName;
-            ApplicationInfo applicationInfo = null;
-            if (packageName == null) {
-                packageName = this.mService.serviceInfo.packageName;
-                applicationInfo = this.mService.serviceInfo.applicationInfo;
-            }
-            return pm.getText(packageName, this.mAuthorResource, applicationInfo);
+        if (this.mAuthorResource <= 0) {
+            throw new Resources.NotFoundException();
         }
-        throw new Resources.NotFoundException();
+        String packageName = this.mService.resolvePackageName;
+        ApplicationInfo applicationInfo = null;
+        if (packageName == null) {
+            packageName = this.mService.serviceInfo.packageName;
+            applicationInfo = this.mService.serviceInfo.applicationInfo;
+        }
+        return pm.getText(packageName, this.mAuthorResource, applicationInfo);
     }
 
     public CharSequence loadDescription(PackageManager pm) throws Resources.NotFoundException {
@@ -162,40 +163,40 @@ public final class WallpaperInfo implements Parcelable {
         if (this.mService.serviceInfo.descriptionRes != 0) {
             return pm.getText(packageName, this.mService.serviceInfo.descriptionRes, applicationInfo);
         }
-        if (this.mDescriptionResource > 0) {
-            return pm.getText(packageName, this.mDescriptionResource, this.mService.serviceInfo.applicationInfo);
+        if (this.mDescriptionResource <= 0) {
+            throw new Resources.NotFoundException();
         }
-        throw new Resources.NotFoundException();
+        return pm.getText(packageName, this.mDescriptionResource, this.mService.serviceInfo.applicationInfo);
     }
 
     public Uri loadContextUri(PackageManager pm) throws Resources.NotFoundException {
-        if (this.mContextUriResource > 0) {
-            String packageName = this.mService.resolvePackageName;
-            ApplicationInfo applicationInfo = null;
-            if (packageName == null) {
-                packageName = this.mService.serviceInfo.packageName;
-                applicationInfo = this.mService.serviceInfo.applicationInfo;
-            }
-            String contextUriString = pm.getText(packageName, this.mContextUriResource, applicationInfo).toString();
-            if (contextUriString == null) {
-                return null;
-            }
-            return Uri.parse(contextUriString);
+        if (this.mContextUriResource <= 0) {
+            throw new Resources.NotFoundException();
         }
-        throw new Resources.NotFoundException();
+        String packageName = this.mService.resolvePackageName;
+        ApplicationInfo applicationInfo = null;
+        if (packageName == null) {
+            packageName = this.mService.serviceInfo.packageName;
+            applicationInfo = this.mService.serviceInfo.applicationInfo;
+        }
+        String contextUriString = pm.getText(packageName, this.mContextUriResource, applicationInfo).toString();
+        if (contextUriString == null) {
+            return null;
+        }
+        return Uri.parse(contextUriString);
     }
 
     public CharSequence loadContextDescription(PackageManager pm) throws Resources.NotFoundException {
-        if (this.mContextDescriptionResource > 0) {
-            String packageName = this.mService.resolvePackageName;
-            ApplicationInfo applicationInfo = null;
-            if (packageName == null) {
-                packageName = this.mService.serviceInfo.packageName;
-                applicationInfo = this.mService.serviceInfo.applicationInfo;
-            }
-            return pm.getText(packageName, this.mContextDescriptionResource, applicationInfo).toString();
+        if (this.mContextDescriptionResource <= 0) {
+            throw new Resources.NotFoundException();
         }
-        throw new Resources.NotFoundException();
+        String packageName = this.mService.resolvePackageName;
+        ApplicationInfo applicationInfo = null;
+        if (packageName == null) {
+            packageName = this.mService.serviceInfo.packageName;
+            applicationInfo = this.mService.serviceInfo.applicationInfo;
+        }
+        return pm.getText(packageName, this.mContextDescriptionResource, applicationInfo).toString();
     }
 
     public boolean getShowMetadataInPreview() {
@@ -233,6 +234,7 @@ public final class WallpaperInfo implements Parcelable {
         return "WallpaperInfo{" + this.mService.serviceInfo.name + ", settings: " + this.mSettingsActivityName + "}";
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.mSettingsActivityName);
         dest.writeInt(this.mThumbnailResource);
@@ -247,6 +249,7 @@ public final class WallpaperInfo implements Parcelable {
         this.mService.writeToParcel(dest, flags);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

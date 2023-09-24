@@ -1,13 +1,14 @@
 package android.media.audiopolicy;
 
 import android.media.AudioManager;
-import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.Message;
+import android.p007os.Handler;
+import android.p007os.HandlerThread;
+import android.p007os.Message;
 import com.android.internal.util.Preconditions;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
+/* loaded from: classes3.dex */
 public class AudioVolumeGroupChangeHandler {
     private static final int AUDIOVOLUMEGROUP_EVENT_NEW_LISTENER = 4;
     private static final int AUDIOVOLUMEGROUP_EVENT_VOLUME_CHANGED = 1000;
@@ -15,8 +16,7 @@ public class AudioVolumeGroupChangeHandler {
     private Handler mHandler;
     private HandlerThread mHandlerThread;
     private long mJniCallback;
-    /* access modifiers changed from: private */
-    public final ArrayList<AudioManager.VolumeGroupCallback> mListeners = new ArrayList<>();
+    private final ArrayList<AudioManager.VolumeGroupCallback> mListeners = new ArrayList<>();
 
     private native void native_finalize();
 
@@ -24,40 +24,41 @@ public class AudioVolumeGroupChangeHandler {
 
     public void init() {
         synchronized (this) {
-            if (this.mHandler == null) {
-                this.mHandlerThread = new HandlerThread(TAG);
-                this.mHandlerThread.start();
-                if (this.mHandlerThread.getLooper() == null) {
-                    this.mHandler = null;
-                    return;
-                }
-                this.mHandler = new Handler(this.mHandlerThread.getLooper()) {
-                    public void handleMessage(Message msg) {
-                        ArrayList<AudioManager.VolumeGroupCallback> listeners;
-                        synchronized (this) {
-                            if (msg.what == 4) {
-                                listeners = new ArrayList<>();
-                                if (AudioVolumeGroupChangeHandler.this.mListeners.contains(msg.obj)) {
-                                    listeners.add((AudioManager.VolumeGroupCallback) msg.obj);
-                                }
-                            } else {
-                                listeners = AudioVolumeGroupChangeHandler.this.mListeners;
-                            }
-                        }
-                        if (!listeners.isEmpty() && msg.what == 1000) {
-                            for (int i = 0; i < listeners.size(); i++) {
-                                listeners.get(i).onAudioVolumeGroupChanged(msg.arg1, msg.arg2);
+            if (this.mHandler != null) {
+                return;
+            }
+            this.mHandlerThread = new HandlerThread(TAG);
+            this.mHandlerThread.start();
+            if (this.mHandlerThread.getLooper() == null) {
+                this.mHandler = null;
+                return;
+            }
+            this.mHandler = new Handler(this.mHandlerThread.getLooper()) { // from class: android.media.audiopolicy.AudioVolumeGroupChangeHandler.1
+                @Override // android.p007os.Handler
+                public void handleMessage(Message msg) {
+                    ArrayList<AudioManager.VolumeGroupCallback> listeners;
+                    synchronized (this) {
+                        if (msg.what != 4) {
+                            listeners = AudioVolumeGroupChangeHandler.this.mListeners;
+                        } else {
+                            listeners = new ArrayList<>();
+                            if (AudioVolumeGroupChangeHandler.this.mListeners.contains(msg.obj)) {
+                                listeners.add((AudioManager.VolumeGroupCallback) msg.obj);
                             }
                         }
                     }
-                };
-                native_setup(new WeakReference(this));
-            }
+                    if (!listeners.isEmpty() && msg.what == 1000) {
+                        for (int i = 0; i < listeners.size(); i++) {
+                            listeners.get(i).onAudioVolumeGroupChanged(msg.arg1, msg.arg2);
+                        }
+                    }
+                }
+            };
+            native_setup(new WeakReference(this));
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() {
+    protected void finalize() {
         native_finalize();
         if (this.mHandlerThread.isAlive()) {
             this.mHandlerThread.quit();
@@ -70,7 +71,8 @@ public class AudioVolumeGroupChangeHandler {
             this.mListeners.add(cb);
         }
         if (this.mHandler != null) {
-            this.mHandler.sendMessage(this.mHandler.obtainMessage(4, 0, 0, cb));
+            Message m = this.mHandler.obtainMessage(4, 0, 0, cb);
+            this.mHandler.sendMessage(m);
         }
     }
 
@@ -81,8 +83,7 @@ public class AudioVolumeGroupChangeHandler {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public Handler handler() {
+    Handler handler() {
         return this.mHandler;
     }
 

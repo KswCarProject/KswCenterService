@@ -3,9 +3,10 @@ package android.database.sqlite;
 import android.annotation.UnsupportedAppUsage;
 import android.database.CursorWindow;
 import android.database.DatabaseUtils;
-import android.os.CancellationSignal;
-import android.os.ParcelFileDescriptor;
+import android.p007os.CancellationSignal;
+import android.p007os.ParcelFileDescriptor;
 
+/* loaded from: classes.dex */
 public final class SQLiteSession {
     static final /* synthetic */ boolean $assertionsDisabled = false;
     public static final int TRANSACTION_MODE_DEFERRED = 0;
@@ -19,11 +20,10 @@ public final class SQLiteSession {
     private Transaction mTransactionStack;
 
     public SQLiteSession(SQLiteConnectionPool connectionPool) {
-        if (connectionPool != null) {
-            this.mConnectionPool = connectionPool;
-            return;
+        if (connectionPool == null) {
+            throw new IllegalArgumentException("connectionPool must not be null");
         }
-        throw new IllegalArgumentException("connectionPool must not be null");
+        this.mConnectionPool = connectionPool;
     }
 
     public boolean hasTransaction() {
@@ -49,41 +49,39 @@ public final class SQLiteSession {
             cancellationSignal.throwIfCanceled();
         }
         if (this.mTransactionStack == null) {
-            acquireConnection((String) null, connectionFlags, cancellationSignal);
+            acquireConnection(null, connectionFlags, cancellationSignal);
         }
         try {
             if (this.mTransactionStack == null) {
                 switch (transactionMode) {
                     case 1:
-                        this.mConnection.execute("BEGIN IMMEDIATE;", (Object[]) null, cancellationSignal);
+                        this.mConnection.execute("BEGIN IMMEDIATE;", null, cancellationSignal);
                         break;
                     case 2:
-                        this.mConnection.execute("BEGIN EXCLUSIVE;", (Object[]) null, cancellationSignal);
+                        this.mConnection.execute("BEGIN EXCLUSIVE;", null, cancellationSignal);
                         break;
                     default:
-                        this.mConnection.execute("BEGIN;", (Object[]) null, cancellationSignal);
+                        this.mConnection.execute("BEGIN;", null, cancellationSignal);
                         break;
                 }
             }
             if (transactionListener != null) {
-                transactionListener.onBegin();
+                try {
+                    transactionListener.onBegin();
+                } catch (RuntimeException ex) {
+                    if (this.mTransactionStack == null) {
+                        this.mConnection.execute("ROLLBACK;", null, cancellationSignal);
+                    }
+                    throw ex;
+                }
             }
             Transaction transaction = obtainTransaction(transactionMode, transactionListener);
             transaction.mParent = this.mTransactionStack;
             this.mTransactionStack = transaction;
+        } finally {
             if (this.mTransactionStack == null) {
                 releaseConnection();
             }
-        } catch (RuntimeException ex) {
-            if (this.mTransactionStack == null) {
-                this.mConnection.execute("ROLLBACK;", (Object[]) null, cancellationSignal);
-            }
-            throw ex;
-        } catch (Throwable th) {
-            if (this.mTransactionStack == null) {
-                releaseConnection();
-            }
-            throw th;
         }
     }
 
@@ -107,15 +105,15 @@ public final class SQLiteSession {
         RuntimeException listenerException = null;
         SQLiteTransactionListener listener = top.mListener;
         if (listener != null) {
-            if (successful) {
-                try {
+            try {
+                if (successful) {
                     listener.onCommit();
-                } catch (RuntimeException ex) {
-                    listenerException = ex;
-                    successful = false;
+                } else {
+                    listener.onRollback();
                 }
-            } else {
-                listener.onRollback();
+            } catch (RuntimeException ex) {
+                listenerException = ex;
+                successful = false;
             }
         }
         this.mTransactionStack = top.mParent;
@@ -124,14 +122,18 @@ public final class SQLiteSession {
             if (!successful) {
                 this.mTransactionStack.mChildFailed = true;
             }
-        } else if (successful) {
-            try {
-                this.mConnection.execute("COMMIT;", (Object[]) null, cancellationSignal);
-            } finally {
-                releaseConnection();
-            }
         } else {
-            this.mConnection.execute("ROLLBACK;", (Object[]) null, cancellationSignal);
+            try {
+                if (successful) {
+                    this.mConnection.execute("COMMIT;", null, cancellationSignal);
+                } else {
+                    this.mConnection.execute("ROLLBACK;", null, cancellationSignal);
+                }
+                releaseConnection();
+            } catch (Throwable th) {
+                releaseConnection();
+                throw th;
+            }
         }
         if (listenerException != null) {
             throw listenerException;
@@ -174,138 +176,137 @@ public final class SQLiteSession {
     }
 
     public void prepare(String sql, int connectionFlags, CancellationSignal cancellationSignal, SQLiteStatementInfo outStatementInfo) {
-        if (sql != null) {
-            if (cancellationSignal != null) {
-                cancellationSignal.throwIfCanceled();
-            }
-            acquireConnection(sql, connectionFlags, cancellationSignal);
-            try {
-                this.mConnection.prepare(sql, outStatementInfo);
-            } finally {
-                releaseConnection();
-            }
-        } else {
+        if (sql == null) {
             throw new IllegalArgumentException("sql must not be null.");
+        }
+        if (cancellationSignal != null) {
+            cancellationSignal.throwIfCanceled();
+        }
+        acquireConnection(sql, connectionFlags, cancellationSignal);
+        try {
+            this.mConnection.prepare(sql, outStatementInfo);
+        } finally {
+            releaseConnection();
         }
     }
 
     public void execute(String sql, Object[] bindArgs, int connectionFlags, CancellationSignal cancellationSignal) {
         if (sql == null) {
             throw new IllegalArgumentException("sql must not be null.");
-        } else if (!executeSpecial(sql, bindArgs, connectionFlags, cancellationSignal)) {
-            acquireConnection(sql, connectionFlags, cancellationSignal);
-            try {
-                this.mConnection.execute(sql, bindArgs, cancellationSignal);
-            } finally {
-                releaseConnection();
-            }
+        }
+        if (executeSpecial(sql, bindArgs, connectionFlags, cancellationSignal)) {
+            return;
+        }
+        acquireConnection(sql, connectionFlags, cancellationSignal);
+        try {
+            this.mConnection.execute(sql, bindArgs, cancellationSignal);
+        } finally {
+            releaseConnection();
         }
     }
 
     public long executeForLong(String sql, Object[] bindArgs, int connectionFlags, CancellationSignal cancellationSignal) {
         if (sql == null) {
             throw new IllegalArgumentException("sql must not be null.");
-        } else if (executeSpecial(sql, bindArgs, connectionFlags, cancellationSignal)) {
-            return 0;
-        } else {
-            acquireConnection(sql, connectionFlags, cancellationSignal);
-            try {
-                return this.mConnection.executeForLong(sql, bindArgs, cancellationSignal);
-            } finally {
-                releaseConnection();
-            }
+        }
+        if (executeSpecial(sql, bindArgs, connectionFlags, cancellationSignal)) {
+            return 0L;
+        }
+        acquireConnection(sql, connectionFlags, cancellationSignal);
+        try {
+            return this.mConnection.executeForLong(sql, bindArgs, cancellationSignal);
+        } finally {
+            releaseConnection();
         }
     }
 
     public String executeForString(String sql, Object[] bindArgs, int connectionFlags, CancellationSignal cancellationSignal) {
         if (sql == null) {
             throw new IllegalArgumentException("sql must not be null.");
-        } else if (executeSpecial(sql, bindArgs, connectionFlags, cancellationSignal)) {
+        }
+        if (executeSpecial(sql, bindArgs, connectionFlags, cancellationSignal)) {
             return null;
-        } else {
-            acquireConnection(sql, connectionFlags, cancellationSignal);
-            try {
-                return this.mConnection.executeForString(sql, bindArgs, cancellationSignal);
-            } finally {
-                releaseConnection();
-            }
+        }
+        acquireConnection(sql, connectionFlags, cancellationSignal);
+        try {
+            return this.mConnection.executeForString(sql, bindArgs, cancellationSignal);
+        } finally {
+            releaseConnection();
         }
     }
 
     public ParcelFileDescriptor executeForBlobFileDescriptor(String sql, Object[] bindArgs, int connectionFlags, CancellationSignal cancellationSignal) {
         if (sql == null) {
             throw new IllegalArgumentException("sql must not be null.");
-        } else if (executeSpecial(sql, bindArgs, connectionFlags, cancellationSignal)) {
+        }
+        if (executeSpecial(sql, bindArgs, connectionFlags, cancellationSignal)) {
             return null;
-        } else {
-            acquireConnection(sql, connectionFlags, cancellationSignal);
-            try {
-                return this.mConnection.executeForBlobFileDescriptor(sql, bindArgs, cancellationSignal);
-            } finally {
-                releaseConnection();
-            }
+        }
+        acquireConnection(sql, connectionFlags, cancellationSignal);
+        try {
+            return this.mConnection.executeForBlobFileDescriptor(sql, bindArgs, cancellationSignal);
+        } finally {
+            releaseConnection();
         }
     }
 
     public int executeForChangedRowCount(String sql, Object[] bindArgs, int connectionFlags, CancellationSignal cancellationSignal) {
         if (sql == null) {
             throw new IllegalArgumentException("sql must not be null.");
-        } else if (executeSpecial(sql, bindArgs, connectionFlags, cancellationSignal)) {
+        }
+        if (executeSpecial(sql, bindArgs, connectionFlags, cancellationSignal)) {
             return 0;
-        } else {
-            acquireConnection(sql, connectionFlags, cancellationSignal);
-            try {
-                return this.mConnection.executeForChangedRowCount(sql, bindArgs, cancellationSignal);
-            } finally {
-                releaseConnection();
-            }
+        }
+        acquireConnection(sql, connectionFlags, cancellationSignal);
+        try {
+            return this.mConnection.executeForChangedRowCount(sql, bindArgs, cancellationSignal);
+        } finally {
+            releaseConnection();
         }
     }
 
     public long executeForLastInsertedRowId(String sql, Object[] bindArgs, int connectionFlags, CancellationSignal cancellationSignal) {
         if (sql == null) {
             throw new IllegalArgumentException("sql must not be null.");
-        } else if (executeSpecial(sql, bindArgs, connectionFlags, cancellationSignal)) {
-            return 0;
-        } else {
-            acquireConnection(sql, connectionFlags, cancellationSignal);
-            try {
-                return this.mConnection.executeForLastInsertedRowId(sql, bindArgs, cancellationSignal);
-            } finally {
-                releaseConnection();
-            }
+        }
+        if (executeSpecial(sql, bindArgs, connectionFlags, cancellationSignal)) {
+            return 0L;
+        }
+        acquireConnection(sql, connectionFlags, cancellationSignal);
+        try {
+            return this.mConnection.executeForLastInsertedRowId(sql, bindArgs, cancellationSignal);
+        } finally {
+            releaseConnection();
         }
     }
 
     public int executeForCursorWindow(String sql, Object[] bindArgs, CursorWindow window, int startPos, int requiredPos, boolean countAllRows, int connectionFlags, CancellationSignal cancellationSignal) {
-        int i = connectionFlags;
-        CancellationSignal cancellationSignal2 = cancellationSignal;
-        if (sql == null) {
-            Object[] objArr = bindArgs;
-            throw new IllegalArgumentException("sql must not be null.");
-        } else if (window == null) {
-            Object[] objArr2 = bindArgs;
-            throw new IllegalArgumentException("window must not be null.");
-        } else if (executeSpecial(sql, bindArgs, i, cancellationSignal2)) {
-            window.clear();
-            return 0;
-        } else {
-            acquireConnection(sql, i, cancellationSignal2);
-            try {
-                return this.mConnection.executeForCursorWindow(sql, bindArgs, window, startPos, requiredPos, countAllRows, cancellationSignal);
-            } finally {
-                releaseConnection();
+        if (sql != null) {
+            if (window != null) {
+                if (executeSpecial(sql, bindArgs, connectionFlags, cancellationSignal)) {
+                    window.clear();
+                    return 0;
+                }
+                acquireConnection(sql, connectionFlags, cancellationSignal);
+                try {
+                    return this.mConnection.executeForCursorWindow(sql, bindArgs, window, startPos, requiredPos, countAllRows, cancellationSignal);
+                } finally {
+                    releaseConnection();
+                }
             }
+            throw new IllegalArgumentException("window must not be null.");
         }
+        throw new IllegalArgumentException("sql must not be null.");
     }
 
     private boolean executeSpecial(String sql, Object[] bindArgs, int connectionFlags, CancellationSignal cancellationSignal) {
         if (cancellationSignal != null) {
             cancellationSignal.throwIfCanceled();
         }
-        switch (DatabaseUtils.getSqlStatementType(sql)) {
+        int type = DatabaseUtils.getSqlStatementType(sql);
+        switch (type) {
             case 4:
-                beginTransaction(2, (SQLiteTransactionListener) null, connectionFlags, cancellationSignal);
+                beginTransaction(2, null, connectionFlags, cancellationSignal);
                 return true;
             case 5:
                 setTransactionSuccessful();
@@ -378,6 +379,7 @@ public final class SQLiteSession {
         this.mTransactionPool = transaction;
     }
 
+    /* loaded from: classes.dex */
     private static final class Transaction {
         public boolean mChildFailed;
         public SQLiteTransactionListener mListener;

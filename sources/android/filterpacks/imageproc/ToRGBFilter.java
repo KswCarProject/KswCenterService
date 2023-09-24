@@ -10,15 +10,18 @@ import android.filterfw.core.NativeProgram;
 import android.filterfw.core.Program;
 import android.filterfw.format.ImageFormat;
 
+/* loaded from: classes.dex */
 public class ToRGBFilter extends Filter {
     private int mInputBPP;
-    private FrameFormat mLastFormat = null;
+    private FrameFormat mLastFormat;
     private Program mProgram;
 
     public ToRGBFilter(String name) {
         super(name);
+        this.mLastFormat = null;
     }
 
+    @Override // android.filterfw.core.Filter
     public void setupPorts() {
         MutableFrameFormat mask = new MutableFrameFormat(2, 2);
         mask.setDimensionCount(2);
@@ -26,6 +29,7 @@ public class ToRGBFilter extends Filter {
         addOutputBasedOnInput(SliceItem.FORMAT_IMAGE, SliceItem.FORMAT_IMAGE);
     }
 
+    @Override // android.filterfw.core.Filter
     public FrameFormat getOutputFormat(String portName, FrameFormat inputFormat) {
         return getConvertedFormat(inputFormat);
     }
@@ -52,6 +56,7 @@ public class ToRGBFilter extends Filter {
         }
     }
 
+    @Override // android.filterfw.core.Filter
     public void process(FilterContext context) {
         Frame input = pullInput(SliceItem.FORMAT_IMAGE);
         createProgram(context, input.getFormat());

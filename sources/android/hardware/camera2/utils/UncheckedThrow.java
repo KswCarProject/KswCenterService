@@ -1,5 +1,6 @@
 package android.hardware.camera2.utils;
 
+/* loaded from: classes.dex */
 public class UncheckedThrow {
     public static void throwAnyException(Exception e) {
         throwAnyImpl(e);

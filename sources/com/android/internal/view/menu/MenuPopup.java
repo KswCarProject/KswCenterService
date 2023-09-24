@@ -11,6 +11,7 @@ import android.widget.HeaderViewListAdapter;
 import android.widget.ListAdapter;
 import android.widget.PopupWindow;
 
+/* loaded from: classes4.dex */
 public abstract class MenuPopup implements ShowableListMenu, MenuPresenter, AdapterView.OnItemClickListener {
     private Rect mEpicenterBounds;
 
@@ -38,28 +39,35 @@ public abstract class MenuPopup implements ShowableListMenu, MenuPresenter, Adap
         return this.mEpicenterBounds;
     }
 
+    @Override // com.android.internal.view.menu.MenuPresenter
     public void initForMenu(Context context, MenuBuilder menu) {
     }
 
+    @Override // com.android.internal.view.menu.MenuPresenter
     public MenuView getMenuView(ViewGroup root) {
         throw new UnsupportedOperationException("MenuPopups manage their own views");
     }
 
+    @Override // com.android.internal.view.menu.MenuPresenter
     public boolean expandItemActionView(MenuBuilder menu, MenuItemImpl item) {
         return false;
     }
 
+    @Override // com.android.internal.view.menu.MenuPresenter
     public boolean collapseItemActionView(MenuBuilder menu, MenuItemImpl item) {
         return false;
     }
 
+    @Override // com.android.internal.view.menu.MenuPresenter
     public int getId() {
         return 0;
     }
 
+    @Override // android.widget.AdapterView.OnItemClickListener
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         ListAdapter outerAdapter = (ListAdapter) parent.getAdapter();
-        toMenuAdapter(outerAdapter).mAdapterMenu.performItemAction((MenuItem) outerAdapter.getItem(position), 0);
+        MenuAdapter wrappedAdapter = toMenuAdapter(outerAdapter);
+        wrappedAdapter.mAdapterMenu.performItemAction((MenuItem) outerAdapter.getItem(position), 0);
     }
 
     protected static int measureIndividualMenuWidth(ListAdapter adapter, ViewGroup parent, Context context, int maxAllowedWidth) {

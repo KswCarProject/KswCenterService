@@ -1,12 +1,13 @@
 package android.gsi;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.ParcelFileDescriptor;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.ParcelFileDescriptor;
+import android.p007os.RemoteException;
 
+/* loaded from: classes.dex */
 public interface IGsiService extends IInterface {
     public static final int BOOT_STATUS_DISABLED = 1;
     public static final int BOOT_STATUS_ENABLED = 3;
@@ -55,80 +56,100 @@ public interface IGsiService extends IInterface {
 
     int wipeGsiUserdata() throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements IGsiService {
+        @Override // android.gsi.IGsiService
         public int startGsiInstall(long gsiSize, long userdataSize, boolean wipeUserdata) throws RemoteException {
             return 0;
         }
 
+        @Override // android.gsi.IGsiService
         public boolean commitGsiChunkFromStream(ParcelFileDescriptor stream, long bytes) throws RemoteException {
             return false;
         }
 
+        @Override // android.gsi.IGsiService
         public GsiProgress getInstallProgress() throws RemoteException {
             return null;
         }
 
+        @Override // android.gsi.IGsiService
         public boolean commitGsiChunkFromMemory(byte[] bytes) throws RemoteException {
             return false;
         }
 
+        @Override // android.gsi.IGsiService
         public int setGsiBootable(boolean oneShot) throws RemoteException {
             return 0;
         }
 
+        @Override // android.gsi.IGsiService
         public boolean isGsiEnabled() throws RemoteException {
             return false;
         }
 
+        @Override // android.gsi.IGsiService
         public boolean cancelGsiInstall() throws RemoteException {
             return false;
         }
 
+        @Override // android.gsi.IGsiService
         public boolean isGsiInstallInProgress() throws RemoteException {
             return false;
         }
 
+        @Override // android.gsi.IGsiService
         public boolean removeGsiInstall() throws RemoteException {
             return false;
         }
 
+        @Override // android.gsi.IGsiService
         public boolean disableGsiInstall() throws RemoteException {
             return false;
         }
 
+        @Override // android.gsi.IGsiService
         public long getUserdataImageSize() throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // android.gsi.IGsiService
         public boolean isGsiRunning() throws RemoteException {
             return false;
         }
 
+        @Override // android.gsi.IGsiService
         public boolean isGsiInstalled() throws RemoteException {
             return false;
         }
 
+        @Override // android.gsi.IGsiService
         public int getGsiBootStatus() throws RemoteException {
             return 0;
         }
 
+        @Override // android.gsi.IGsiService
         public String getInstalledGsiImageDir() throws RemoteException {
             return null;
         }
 
+        @Override // android.gsi.IGsiService
         public int beginGsiInstall(GsiInstallParams params) throws RemoteException {
             return 0;
         }
 
+        @Override // android.gsi.IGsiService
         public int wipeGsiUserdata() throws RemoteException {
             return 0;
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements IGsiService {
         private static final String DESCRIPTOR = "android.gsi.IGsiService";
         static final int TRANSACTION_beginGsiInstall = 16;
@@ -158,12 +179,13 @@ public interface IGsiService extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IGsiService)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IGsiService)) {
+                return (IGsiService) iin;
             }
-            return (IGsiService) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -209,203 +231,139 @@ public interface IGsiService extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v23, resolved type: android.gsi.GsiInstallParams} */
-        /* JADX WARNING: type inference failed for: r0v1 */
-        /* JADX WARNING: type inference failed for: r0v5, types: [android.os.ParcelFileDescriptor] */
-        /* JADX WARNING: type inference failed for: r0v29 */
-        /* JADX WARNING: type inference failed for: r0v30 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r17, android.os.Parcel r18, android.os.Parcel r19, int r20) throws android.os.RemoteException {
-            /*
-                r16 = this;
-                r6 = r16
-                r7 = r17
-                r8 = r18
-                r9 = r19
-                java.lang.String r10 = "android.gsi.IGsiService"
-                r0 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r11 = 1
-                if (r7 == r0) goto L_0x0157
-                r0 = 0
-                r1 = 0
-                switch(r7) {
-                    case 1: goto L_0x0134;
-                    case 2: goto L_0x0112;
-                    case 3: goto L_0x00fb;
-                    case 4: goto L_0x00e9;
-                    case 5: goto L_0x00d2;
-                    case 6: goto L_0x00c4;
-                    case 7: goto L_0x00b6;
-                    case 8: goto L_0x00a8;
-                    case 9: goto L_0x009a;
-                    case 10: goto L_0x008c;
-                    case 11: goto L_0x007e;
-                    case 12: goto L_0x0070;
-                    case 13: goto L_0x0062;
-                    case 14: goto L_0x0054;
-                    case 15: goto L_0x0046;
-                    case 16: goto L_0x0028;
-                    case 17: goto L_0x001a;
-                    default: goto L_0x0015;
-                }
-            L_0x0015:
-                boolean r0 = super.onTransact(r17, r18, r19, r20)
-                return r0
-            L_0x001a:
-                r8.enforceInterface(r10)
-                int r0 = r16.wipeGsiUserdata()
-                r19.writeNoException()
-                r9.writeInt(r0)
-                return r11
-            L_0x0028:
-                r8.enforceInterface(r10)
-                int r1 = r18.readInt()
-                if (r1 == 0) goto L_0x003a
-                android.os.Parcelable$Creator<android.gsi.GsiInstallParams> r0 = android.gsi.GsiInstallParams.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                android.gsi.GsiInstallParams r0 = (android.gsi.GsiInstallParams) r0
-                goto L_0x003b
-            L_0x003a:
-            L_0x003b:
-                int r1 = r6.beginGsiInstall(r0)
-                r19.writeNoException()
-                r9.writeInt(r1)
-                return r11
-            L_0x0046:
-                r8.enforceInterface(r10)
-                java.lang.String r0 = r16.getInstalledGsiImageDir()
-                r19.writeNoException()
-                r9.writeString(r0)
-                return r11
-            L_0x0054:
-                r8.enforceInterface(r10)
-                int r0 = r16.getGsiBootStatus()
-                r19.writeNoException()
-                r9.writeInt(r0)
-                return r11
-            L_0x0062:
-                r8.enforceInterface(r10)
-                boolean r0 = r16.isGsiInstalled()
-                r19.writeNoException()
-                r9.writeInt(r0)
-                return r11
-            L_0x0070:
-                r8.enforceInterface(r10)
-                boolean r0 = r16.isGsiRunning()
-                r19.writeNoException()
-                r9.writeInt(r0)
-                return r11
-            L_0x007e:
-                r8.enforceInterface(r10)
-                long r0 = r16.getUserdataImageSize()
-                r19.writeNoException()
-                r9.writeLong(r0)
-                return r11
-            L_0x008c:
-                r8.enforceInterface(r10)
-                boolean r0 = r16.disableGsiInstall()
-                r19.writeNoException()
-                r9.writeInt(r0)
-                return r11
-            L_0x009a:
-                r8.enforceInterface(r10)
-                boolean r0 = r16.removeGsiInstall()
-                r19.writeNoException()
-                r9.writeInt(r0)
-                return r11
-            L_0x00a8:
-                r8.enforceInterface(r10)
-                boolean r0 = r16.isGsiInstallInProgress()
-                r19.writeNoException()
-                r9.writeInt(r0)
-                return r11
-            L_0x00b6:
-                r8.enforceInterface(r10)
-                boolean r0 = r16.cancelGsiInstall()
-                r19.writeNoException()
-                r9.writeInt(r0)
-                return r11
-            L_0x00c4:
-                r8.enforceInterface(r10)
-                boolean r0 = r16.isGsiEnabled()
-                r19.writeNoException()
-                r9.writeInt(r0)
-                return r11
-            L_0x00d2:
-                r8.enforceInterface(r10)
-                int r0 = r18.readInt()
-                if (r0 == 0) goto L_0x00dd
-                r1 = r11
-            L_0x00dd:
-                r0 = r1
-                int r1 = r6.setGsiBootable(r0)
-                r19.writeNoException()
-                r9.writeInt(r1)
-                return r11
-            L_0x00e9:
-                r8.enforceInterface(r10)
-                byte[] r0 = r18.createByteArray()
-                boolean r1 = r6.commitGsiChunkFromMemory(r0)
-                r19.writeNoException()
-                r9.writeInt(r1)
-                return r11
-            L_0x00fb:
-                r8.enforceInterface(r10)
-                android.gsi.GsiProgress r0 = r16.getInstallProgress()
-                r19.writeNoException()
-                if (r0 == 0) goto L_0x010e
-                r9.writeInt(r11)
-                r0.writeToParcel(r9, r11)
-                goto L_0x0111
-            L_0x010e:
-                r9.writeInt(r1)
-            L_0x0111:
-                return r11
-            L_0x0112:
-                r8.enforceInterface(r10)
-                int r1 = r18.readInt()
-                if (r1 == 0) goto L_0x0124
-                android.os.Parcelable$Creator<android.os.ParcelFileDescriptor> r0 = android.os.ParcelFileDescriptor.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                android.os.ParcelFileDescriptor r0 = (android.os.ParcelFileDescriptor) r0
-                goto L_0x0125
-            L_0x0124:
-            L_0x0125:
-                long r1 = r18.readLong()
-                boolean r3 = r6.commitGsiChunkFromStream(r0, r1)
-                r19.writeNoException()
-                r9.writeInt(r3)
-                return r11
-            L_0x0134:
-                r8.enforceInterface(r10)
-                long r12 = r18.readLong()
-                long r14 = r18.readLong()
-                int r0 = r18.readInt()
-                if (r0 == 0) goto L_0x0147
-                r5 = r11
-                goto L_0x0148
-            L_0x0147:
-                r5 = r1
-            L_0x0148:
-                r0 = r16
-                r1 = r12
-                r3 = r14
-                int r0 = r0.startGsiInstall(r1, r3, r5)
-                r19.writeNoException()
-                r9.writeInt(r0)
-                return r11
-            L_0x0157:
-                r9.writeString(r10)
-                return r11
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.gsi.IGsiService.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _arg0 = data.readLong();
+                    long _arg1 = data.readLong();
+                    boolean _arg2 = data.readInt() != 0;
+                    int _result = startGsiInstall(_arg0, _arg1, _arg2);
+                    reply.writeNoException();
+                    reply.writeInt(_result);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    ParcelFileDescriptor _arg02 = data.readInt() != 0 ? ParcelFileDescriptor.CREATOR.createFromParcel(data) : null;
+                    long _arg12 = data.readLong();
+                    boolean commitGsiChunkFromStream = commitGsiChunkFromStream(_arg02, _arg12);
+                    reply.writeNoException();
+                    reply.writeInt(commitGsiChunkFromStream ? 1 : 0);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    GsiProgress _result2 = getInstallProgress();
+                    reply.writeNoException();
+                    if (_result2 != null) {
+                        reply.writeInt(1);
+                        _result2.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    byte[] _arg03 = data.createByteArray();
+                    boolean commitGsiChunkFromMemory = commitGsiChunkFromMemory(_arg03);
+                    reply.writeNoException();
+                    reply.writeInt(commitGsiChunkFromMemory ? 1 : 0);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean _arg04 = data.readInt() != 0;
+                    int _result3 = setGsiBootable(_arg04);
+                    reply.writeNoException();
+                    reply.writeInt(_result3);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isGsiEnabled = isGsiEnabled();
+                    reply.writeNoException();
+                    reply.writeInt(isGsiEnabled ? 1 : 0);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean cancelGsiInstall = cancelGsiInstall();
+                    reply.writeNoException();
+                    reply.writeInt(cancelGsiInstall ? 1 : 0);
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isGsiInstallInProgress = isGsiInstallInProgress();
+                    reply.writeNoException();
+                    reply.writeInt(isGsiInstallInProgress ? 1 : 0);
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean removeGsiInstall = removeGsiInstall();
+                    reply.writeNoException();
+                    reply.writeInt(removeGsiInstall ? 1 : 0);
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean disableGsiInstall = disableGsiInstall();
+                    reply.writeNoException();
+                    reply.writeInt(disableGsiInstall ? 1 : 0);
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _result4 = getUserdataImageSize();
+                    reply.writeNoException();
+                    reply.writeLong(_result4);
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isGsiRunning = isGsiRunning();
+                    reply.writeNoException();
+                    reply.writeInt(isGsiRunning ? 1 : 0);
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isGsiInstalled = isGsiInstalled();
+                    reply.writeNoException();
+                    reply.writeInt(isGsiInstalled ? 1 : 0);
+                    return true;
+                case 14:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result5 = getGsiBootStatus();
+                    reply.writeNoException();
+                    reply.writeInt(_result5);
+                    return true;
+                case 15:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _result6 = getInstalledGsiImageDir();
+                    reply.writeNoException();
+                    reply.writeString(_result6);
+                    return true;
+                case 16:
+                    data.enforceInterface(DESCRIPTOR);
+                    GsiInstallParams _arg05 = data.readInt() != 0 ? GsiInstallParams.CREATOR.createFromParcel(data) : null;
+                    int _result7 = beginGsiInstall(_arg05);
+                    reply.writeNoException();
+                    reply.writeInt(_result7);
+                    return true;
+                case 17:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result8 = wipeGsiUserdata();
+                    reply.writeNoException();
+                    reply.writeInt(_result8);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements IGsiService {
             public static IGsiService sDefaultImpl;
             private IBinder mRemote;
@@ -414,6 +372,7 @@ public interface IGsiService extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -422,6 +381,7 @@ public interface IGsiService extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.gsi.IGsiService
             public int startGsiInstall(long gsiSize, long userdataSize, boolean wipeUserdata) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -429,14 +389,13 @@ public interface IGsiService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeLong(gsiSize);
                     _data.writeLong(userdataSize);
-                    _data.writeInt(wipeUserdata);
-                    if (!this.mRemote.transact(1, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(wipeUserdata ? 1 : 0);
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().startGsiInstall(gsiSize, userdataSize, wipeUserdata);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -444,12 +403,12 @@ public interface IGsiService extends IInterface {
                 }
             }
 
+            @Override // android.gsi.IGsiService
             public boolean commitGsiChunkFromStream(ParcelFileDescriptor stream, long bytes) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (stream != null) {
                         _data.writeInt(1);
                         stream.writeToParcel(_data, 0);
@@ -457,15 +416,12 @@ public interface IGsiService extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeLong(bytes);
-                    if (!this.mRemote.transact(2, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().commitGsiChunkFromStream(stream, bytes);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -473,13 +429,15 @@ public interface IGsiService extends IInterface {
                 }
             }
 
+            @Override // android.gsi.IGsiService
             public GsiProgress getInstallProgress() throws RemoteException {
                 GsiProgress _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(3, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getInstallProgress();
                     }
                     _reply.readException();
@@ -488,53 +446,46 @@ public interface IGsiService extends IInterface {
                     } else {
                         _result = null;
                     }
-                    GsiProgress _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.gsi.IGsiService
             public boolean commitGsiChunkFromMemory(byte[] bytes) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeByteArray(bytes);
-                    boolean z = false;
-                    if (!this.mRemote.transact(4, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().commitGsiChunkFromMemory(bytes);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.gsi.IGsiService
             public int setGsiBootable(boolean oneShot) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(oneShot);
-                    if (!this.mRemote.transact(5, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(oneShot ? 1 : 0);
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setGsiBootable(oneShot);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -542,133 +493,113 @@ public interface IGsiService extends IInterface {
                 }
             }
 
+            @Override // android.gsi.IGsiService
             public boolean isGsiEnabled() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(6, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isGsiEnabled();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.gsi.IGsiService
             public boolean cancelGsiInstall() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(7, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().cancelGsiInstall();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.gsi.IGsiService
             public boolean isGsiInstallInProgress() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(8, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isGsiInstallInProgress();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.gsi.IGsiService
             public boolean removeGsiInstall() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(9, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(9, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().removeGsiInstall();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.gsi.IGsiService
             public boolean disableGsiInstall() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(10, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(10, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().disableGsiInstall();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.gsi.IGsiService
             public long getUserdataImageSize() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(11, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(11, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getUserdataImageSize();
                     }
                     _reply.readException();
                     long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -676,64 +607,56 @@ public interface IGsiService extends IInterface {
                 }
             }
 
+            @Override // android.gsi.IGsiService
             public boolean isGsiRunning() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(12, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(12, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isGsiRunning();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.gsi.IGsiService
             public boolean isGsiInstalled() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(13, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(13, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isGsiInstalled();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.gsi.IGsiService
             public int getGsiBootStatus() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(14, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(14, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getGsiBootStatus();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -741,18 +664,18 @@ public interface IGsiService extends IInterface {
                 }
             }
 
+            @Override // android.gsi.IGsiService
             public String getInstalledGsiImageDir() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(15, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(15, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getInstalledGsiImageDir();
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -760,6 +683,7 @@ public interface IGsiService extends IInterface {
                 }
             }
 
+            @Override // android.gsi.IGsiService
             public int beginGsiInstall(GsiInstallParams params) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -771,13 +695,12 @@ public interface IGsiService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(16, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(16, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().beginGsiInstall(params);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -785,18 +708,18 @@ public interface IGsiService extends IInterface {
                 }
             }
 
+            @Override // android.gsi.IGsiService
             public int wipeGsiUserdata() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(17, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(17, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().wipeGsiUserdata();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -806,11 +729,11 @@ public interface IGsiService extends IInterface {
         }
 
         public static boolean setDefaultImpl(IGsiService impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IGsiService getDefaultImpl() {

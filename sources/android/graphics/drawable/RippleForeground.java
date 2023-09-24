@@ -17,102 +17,115 @@ import android.view.animation.LinearInterpolator;
 import android.view.animation.PathInterpolator;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 class RippleForeground extends RippleComponent {
-    private static final TimeInterpolator DECELERATE_INTERPOLATOR = new PathInterpolator(0.4f, 0.0f, 0.2f, 1.0f);
-    private static final TimeInterpolator LINEAR_INTERPOLATOR = new LinearInterpolator();
-    private static final FloatProperty<RippleForeground> OPACITY = new FloatProperty<RippleForeground>("opacity") {
-        public void setValue(RippleForeground object, float value) {
-            float unused = object.mOpacity = value;
-            object.onAnimationPropertyChanged();
-        }
-
-        public Float get(RippleForeground object) {
-            return Float.valueOf(object.mOpacity);
-        }
-    };
     private static final int OPACITY_ENTER_DURATION = 75;
     private static final int OPACITY_EXIT_DURATION = 150;
     private static final int OPACITY_HOLD_DURATION = 225;
     private static final int RIPPLE_ENTER_DURATION = 225;
     private static final int RIPPLE_ORIGIN_DURATION = 225;
-    private static final FloatProperty<RippleForeground> TWEEN_ORIGIN = new FloatProperty<RippleForeground>("tweenOrigin") {
-        public void setValue(RippleForeground object, float value) {
-            float unused = object.mTweenX = value;
-            float unused2 = object.mTweenY = value;
-            object.onAnimationPropertyChanged();
-        }
-
-        public Float get(RippleForeground object) {
-            return Float.valueOf(object.mTweenX);
-        }
-    };
-    private static final FloatProperty<RippleForeground> TWEEN_RADIUS = new FloatProperty<RippleForeground>("tweenRadius") {
-        public void setValue(RippleForeground object, float value) {
-            float unused = object.mTweenRadius = value;
-            object.onAnimationPropertyChanged();
-        }
-
-        public Float get(RippleForeground object) {
-            return Float.valueOf(object.mTweenRadius);
-        }
-    };
-    private final AnimatorListenerAdapter mAnimationListener = new AnimatorListenerAdapter() {
-        public void onAnimationEnd(Animator animator) {
-            boolean unused = RippleForeground.this.mHasFinishedExit = true;
-            RippleForeground.this.pruneHwFinished();
-            RippleForeground.this.pruneSwFinished();
-            if (RippleForeground.this.mRunningHwAnimators.isEmpty()) {
-                RippleForeground.this.clearHwProps();
-            }
-        }
-    };
+    private final AnimatorListenerAdapter mAnimationListener;
     private float mClampedStartingX;
     private float mClampedStartingY;
     private long mEnterStartedAtMillis;
     private final boolean mForceSoftware;
-    /* access modifiers changed from: private */
-    public boolean mHasFinishedExit;
-    /* access modifiers changed from: private */
-    public float mOpacity = 0.0f;
-    private ArrayList<RenderNodeAnimator> mPendingHwAnimators = new ArrayList<>();
+    private boolean mHasFinishedExit;
+    private float mOpacity;
+    private ArrayList<RenderNodeAnimator> mPendingHwAnimators;
     private CanvasProperty<Paint> mPropPaint;
     private CanvasProperty<Float> mPropRadius;
     private CanvasProperty<Float> mPropX;
     private CanvasProperty<Float> mPropY;
-    /* access modifiers changed from: private */
-    public ArrayList<RenderNodeAnimator> mRunningHwAnimators = new ArrayList<>();
-    private ArrayList<Animator> mRunningSwAnimators = new ArrayList<>();
-    private float mStartRadius = 0.0f;
+    private ArrayList<RenderNodeAnimator> mRunningHwAnimators;
+    private ArrayList<Animator> mRunningSwAnimators;
+    private float mStartRadius;
     private float mStartingX;
     private float mStartingY;
-    private float mTargetX = 0.0f;
-    private float mTargetY = 0.0f;
-    /* access modifiers changed from: private */
-    public float mTweenRadius = 0.0f;
-    /* access modifiers changed from: private */
-    public float mTweenX = 0.0f;
-    /* access modifiers changed from: private */
-    public float mTweenY = 0.0f;
+    private float mTargetX;
+    private float mTargetY;
+    private float mTweenRadius;
+    private float mTweenX;
+    private float mTweenY;
     private boolean mUsingProperties;
+    private static final TimeInterpolator LINEAR_INTERPOLATOR = new LinearInterpolator();
+    private static final TimeInterpolator DECELERATE_INTERPOLATOR = new PathInterpolator(0.4f, 0.0f, 0.2f, 1.0f);
+    private static final FloatProperty<RippleForeground> TWEEN_RADIUS = new FloatProperty<RippleForeground>("tweenRadius") { // from class: android.graphics.drawable.RippleForeground.2
+        @Override // android.util.FloatProperty
+        public void setValue(RippleForeground object, float value) {
+            object.mTweenRadius = value;
+            object.onAnimationPropertyChanged();
+        }
+
+        @Override // android.util.Property
+        public Float get(RippleForeground object) {
+            return Float.valueOf(object.mTweenRadius);
+        }
+    };
+    private static final FloatProperty<RippleForeground> TWEEN_ORIGIN = new FloatProperty<RippleForeground>("tweenOrigin") { // from class: android.graphics.drawable.RippleForeground.3
+        @Override // android.util.FloatProperty
+        public void setValue(RippleForeground object, float value) {
+            object.mTweenX = value;
+            object.mTweenY = value;
+            object.onAnimationPropertyChanged();
+        }
+
+        @Override // android.util.Property
+        public Float get(RippleForeground object) {
+            return Float.valueOf(object.mTweenX);
+        }
+    };
+    private static final FloatProperty<RippleForeground> OPACITY = new FloatProperty<RippleForeground>("opacity") { // from class: android.graphics.drawable.RippleForeground.4
+        @Override // android.util.FloatProperty
+        public void setValue(RippleForeground object, float value) {
+            object.mOpacity = value;
+            object.onAnimationPropertyChanged();
+        }
+
+        @Override // android.util.Property
+        public Float get(RippleForeground object) {
+            return Float.valueOf(object.mOpacity);
+        }
+    };
 
     public RippleForeground(RippleDrawable owner, Rect bounds, float startingX, float startingY, boolean forceSoftware) {
         super(owner, bounds);
+        this.mTargetX = 0.0f;
+        this.mTargetY = 0.0f;
+        this.mOpacity = 0.0f;
+        this.mTweenRadius = 0.0f;
+        this.mTweenX = 0.0f;
+        this.mTweenY = 0.0f;
+        this.mPendingHwAnimators = new ArrayList<>();
+        this.mRunningHwAnimators = new ArrayList<>();
+        this.mRunningSwAnimators = new ArrayList<>();
+        this.mStartRadius = 0.0f;
+        this.mAnimationListener = new AnimatorListenerAdapter() { // from class: android.graphics.drawable.RippleForeground.1
+            @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
+            public void onAnimationEnd(Animator animator) {
+                RippleForeground.this.mHasFinishedExit = true;
+                RippleForeground.this.pruneHwFinished();
+                RippleForeground.this.pruneSwFinished();
+                if (RippleForeground.this.mRunningHwAnimators.isEmpty()) {
+                    RippleForeground.this.clearHwProps();
+                }
+            }
+        };
         this.mForceSoftware = forceSoftware;
         this.mStartingX = startingX;
         this.mStartingY = startingY;
-        this.mStartRadius = ((float) Math.max(bounds.width(), bounds.height())) * 0.3f;
+        this.mStartRadius = Math.max(bounds.width(), bounds.height()) * 0.3f;
         clampStartingPosition();
     }
 
-    /* access modifiers changed from: protected */
-    public void onTargetRadiusChanged(float targetRadius) {
+    @Override // android.graphics.drawable.RippleComponent
+    protected void onTargetRadiusChanged(float targetRadius) {
         clampStartingPosition();
         switchToUiThreadAnimation();
     }
 
     private void drawSoftware(Canvas c, Paint p) {
         int origAlpha = p.getAlpha();
-        int alpha = (int) ((((float) origAlpha) * this.mOpacity) + 0.5f);
+        int alpha = (int) ((origAlpha * this.mOpacity) + 0.5f);
         float radius = getCurrentRadius();
         if (alpha > 0 && radius > 0.0f) {
             float x = getCurrentX();
@@ -135,7 +148,7 @@ class RippleForeground extends RippleComponent {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void pruneHwFinished() {
         if (!this.mRunningHwAnimators.isEmpty()) {
             for (int i = this.mRunningHwAnimators.size() - 1; i >= 0; i--) {
@@ -146,7 +159,7 @@ class RippleForeground extends RippleComponent {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void pruneSwFinished() {
         if (!this.mRunningSwAnimators.isEmpty()) {
             for (int i = this.mRunningSwAnimators.size() - 1; i >= 0; i--) {
@@ -169,6 +182,7 @@ class RippleForeground extends RippleComponent {
         drawSoftware(c, p);
     }
 
+    @Override // android.graphics.drawable.RippleComponent
     public void getBounds(Rect bounds) {
         int outerX = (int) this.mTargetX;
         int outerY = (int) this.mTargetY;
@@ -189,7 +203,7 @@ class RippleForeground extends RippleComponent {
     private long computeFadeOutDelay() {
         long timeSinceEnter = AnimationUtils.currentAnimationTimeMillis() - this.mEnterStartedAtMillis;
         if (timeSinceEnter <= 0 || timeSinceEnter >= 225) {
-            return 0;
+            return 0L;
         }
         return 225 - timeSinceEnter;
     }
@@ -200,17 +214,17 @@ class RippleForeground extends RippleComponent {
         }
         this.mRunningSwAnimators.clear();
         ObjectAnimator tweenRadius = ObjectAnimator.ofFloat(this, TWEEN_RADIUS, 1.0f);
-        tweenRadius.setDuration(225);
+        tweenRadius.setDuration(225L);
         tweenRadius.setInterpolator(DECELERATE_INTERPOLATOR);
         tweenRadius.start();
         this.mRunningSwAnimators.add(tweenRadius);
         ObjectAnimator tweenOrigin = ObjectAnimator.ofFloat(this, TWEEN_ORIGIN, 1.0f);
-        tweenOrigin.setDuration(225);
+        tweenOrigin.setDuration(225L);
         tweenOrigin.setInterpolator(DECELERATE_INTERPOLATOR);
         tweenOrigin.start();
         this.mRunningSwAnimators.add(tweenOrigin);
         ObjectAnimator opacity = ObjectAnimator.ofFloat(this, OPACITY, 1.0f);
-        opacity.setDuration(75);
+        opacity.setDuration(75L);
         opacity.setInterpolator(LINEAR_INTERPOLATOR);
         opacity.start();
         this.mRunningSwAnimators.add(opacity);
@@ -218,7 +232,7 @@ class RippleForeground extends RippleComponent {
 
     private void startSoftwareExit() {
         ObjectAnimator opacity = ObjectAnimator.ofFloat(this, OPACITY, 0.0f);
-        opacity.setDuration(150);
+        opacity.setDuration(150L);
         opacity.setInterpolator(LINEAR_INTERPOLATOR);
         opacity.addListener(this.mAnimationListener);
         opacity.setStartDelay(computeFadeOutDelay());
@@ -227,44 +241,46 @@ class RippleForeground extends RippleComponent {
     }
 
     private void startHardwareEnter() {
-        if (!this.mForceSoftware) {
-            this.mPropX = CanvasProperty.createFloat(getCurrentX());
-            this.mPropY = CanvasProperty.createFloat(getCurrentY());
-            this.mPropRadius = CanvasProperty.createFloat(getCurrentRadius());
-            Paint paint = this.mOwner.getRipplePaint();
-            this.mPropPaint = CanvasProperty.createPaint(paint);
-            RenderNodeAnimator radius = new RenderNodeAnimator(this.mPropRadius, this.mTargetRadius);
-            radius.setDuration(225);
-            radius.setInterpolator(DECELERATE_INTERPOLATOR);
-            this.mPendingHwAnimators.add(radius);
-            RenderNodeAnimator x = new RenderNodeAnimator(this.mPropX, this.mTargetX);
-            x.setDuration(225);
-            x.setInterpolator(DECELERATE_INTERPOLATOR);
-            this.mPendingHwAnimators.add(x);
-            RenderNodeAnimator y = new RenderNodeAnimator(this.mPropY, this.mTargetY);
-            y.setDuration(225);
-            y.setInterpolator(DECELERATE_INTERPOLATOR);
-            this.mPendingHwAnimators.add(y);
-            RenderNodeAnimator opacity = new RenderNodeAnimator(this.mPropPaint, 1, (float) paint.getAlpha());
-            opacity.setDuration(75);
-            opacity.setInterpolator(LINEAR_INTERPOLATOR);
-            opacity.setStartValue(0.0f);
-            this.mPendingHwAnimators.add(opacity);
-            invalidateSelf();
+        if (this.mForceSoftware) {
+            return;
         }
+        this.mPropX = CanvasProperty.createFloat(getCurrentX());
+        this.mPropY = CanvasProperty.createFloat(getCurrentY());
+        this.mPropRadius = CanvasProperty.createFloat(getCurrentRadius());
+        Paint paint = this.mOwner.getRipplePaint();
+        this.mPropPaint = CanvasProperty.createPaint(paint);
+        RenderNodeAnimator radius = new RenderNodeAnimator(this.mPropRadius, this.mTargetRadius);
+        radius.setDuration(225L);
+        radius.setInterpolator(DECELERATE_INTERPOLATOR);
+        this.mPendingHwAnimators.add(radius);
+        RenderNodeAnimator x = new RenderNodeAnimator(this.mPropX, this.mTargetX);
+        x.setDuration(225L);
+        x.setInterpolator(DECELERATE_INTERPOLATOR);
+        this.mPendingHwAnimators.add(x);
+        RenderNodeAnimator y = new RenderNodeAnimator(this.mPropY, this.mTargetY);
+        y.setDuration(225L);
+        y.setInterpolator(DECELERATE_INTERPOLATOR);
+        this.mPendingHwAnimators.add(y);
+        RenderNodeAnimator opacity = new RenderNodeAnimator(this.mPropPaint, 1, paint.getAlpha());
+        opacity.setDuration(75L);
+        opacity.setInterpolator(LINEAR_INTERPOLATOR);
+        opacity.setStartValue(0.0f);
+        this.mPendingHwAnimators.add(opacity);
+        invalidateSelf();
     }
 
     private void startHardwareExit() {
-        if (!this.mForceSoftware && this.mPropPaint != null) {
-            RenderNodeAnimator opacity = new RenderNodeAnimator(this.mPropPaint, 1, 0.0f);
-            opacity.setDuration(150);
-            opacity.setInterpolator(LINEAR_INTERPOLATOR);
-            opacity.addListener(this.mAnimationListener);
-            opacity.setStartDelay(computeFadeOutDelay());
-            opacity.setStartValue((float) this.mOwner.getRipplePaint().getAlpha());
-            this.mPendingHwAnimators.add(opacity);
-            invalidateSelf();
+        if (this.mForceSoftware || this.mPropPaint == null) {
+            return;
         }
+        RenderNodeAnimator opacity = new RenderNodeAnimator(this.mPropPaint, 1, 0.0f);
+        opacity.setDuration(150L);
+        opacity.setInterpolator(LINEAR_INTERPOLATOR);
+        opacity.addListener(this.mAnimationListener);
+        opacity.setStartDelay(computeFadeOutDelay());
+        opacity.setStartValue(this.mOwner.getRipplePaint().getAlpha());
+        this.mPendingHwAnimators.add(opacity);
+        invalidateSelf();
     }
 
     public final void enter() {
@@ -294,10 +310,11 @@ class RippleForeground extends RippleComponent {
         boolean hasDisplayListCanvas = !this.mForceSoftware && (c instanceof RecordingCanvas);
         pruneSwFinished();
         if (hasDisplayListCanvas) {
-            drawHardware((RecordingCanvas) c, p);
-        } else {
-            drawSoftware(c, p);
+            RecordingCanvas hw = (RecordingCanvas) c;
+            drawHardware(hw, p);
+            return;
         }
+        drawSoftware(c, p);
     }
 
     private void clampStartingPosition() {
@@ -307,9 +324,9 @@ class RippleForeground extends RippleComponent {
         float dY = this.mStartingY - cY;
         float r = this.mTargetRadius - this.mStartRadius;
         if ((dX * dX) + (dY * dY) > r * r) {
-            double angle = Math.atan2((double) dY, (double) dX);
-            this.mClampedStartingX = ((float) (Math.cos(angle) * ((double) r))) + cX;
-            this.mClampedStartingY = ((float) (Math.sin(angle) * ((double) r))) + cY;
+            double angle = Math.atan2(dY, dX);
+            this.mClampedStartingX = ((float) (Math.cos(angle) * r)) + cX;
+            this.mClampedStartingY = ((float) (Math.sin(angle) * r)) + cY;
             return;
         }
         this.mClampedStartingX = this.mStartingX;
@@ -327,14 +344,14 @@ class RippleForeground extends RippleComponent {
         this.mRunningHwAnimators.clear();
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void onAnimationPropertyChanged() {
         if (!this.mUsingProperties) {
             invalidateSelf();
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void clearHwProps() {
         this.mPropPaint = null;
         this.mPropRadius = null;

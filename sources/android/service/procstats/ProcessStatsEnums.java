@@ -1,5 +1,6 @@
 package android.service.procstats;
 
+/* loaded from: classes3.dex */
 public final class ProcessStatsEnums {
     public static final int MEMORY_STATE_CRITICAL = 4;
     public static final int MEMORY_STATE_LOW = 3;

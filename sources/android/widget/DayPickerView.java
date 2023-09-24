@@ -12,40 +12,37 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityManager;
 import android.widget.DayPickerPagerAdapter;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import com.android.internal.widget.ViewPager;
 import java.util.Locale;
 import libcore.icu.LocaleData;
 
+/* loaded from: classes4.dex */
 class DayPickerView extends ViewGroup {
     private static final int[] ATTRS_TEXT_COLOR = {16842904};
     private static final int DEFAULT_END_YEAR = 2100;
     private static final int DEFAULT_LAYOUT = 17367136;
     private static final int DEFAULT_START_YEAR = 1900;
-    /* access modifiers changed from: private */
-    public final AccessibilityManager mAccessibilityManager;
+    private final AccessibilityManager mAccessibilityManager;
     private final DayPickerPagerAdapter mAdapter;
     private final Calendar mMaxDate;
     private final Calendar mMinDate;
-    /* access modifiers changed from: private */
-    public final ImageButton mNextButton;
+    private final ImageButton mNextButton;
     private final View.OnClickListener mOnClickListener;
-    /* access modifiers changed from: private */
-    public OnDaySelectedListener mOnDaySelectedListener;
+    private OnDaySelectedListener mOnDaySelectedListener;
     private final ViewPager.OnPageChangeListener mOnPageChangedListener;
-    /* access modifiers changed from: private */
-    public final ImageButton mPrevButton;
+    private final ImageButton mPrevButton;
     private final Calendar mSelectedDay;
     private Calendar mTempCalendar;
-    /* access modifiers changed from: private */
-    public final ViewPager mViewPager;
+    private final ViewPager mViewPager;
 
+    /* loaded from: classes4.dex */
     public interface OnDaySelectedListener {
         void onDaySelected(DayPickerView dayPickerView, Calendar calendar);
     }
 
     public DayPickerView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public DayPickerView(Context context, AttributeSet attrs) {
@@ -56,53 +53,58 @@ class DayPickerView extends ViewGroup {
         this(context, attrs, defStyleAttr, 0);
     }
 
-    /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     public DayPickerView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        Context context2 = context;
         this.mSelectedDay = Calendar.getInstance();
         this.mMinDate = Calendar.getInstance();
         this.mMaxDate = Calendar.getInstance();
-        this.mOnPageChangedListener = new ViewPager.OnPageChangeListener() {
+        this.mOnPageChangedListener = new ViewPager.OnPageChangeListener() { // from class: android.widget.DayPickerView.2
+            @Override // com.android.internal.widget.ViewPager.OnPageChangeListener
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 float alpha = Math.abs(0.5f - positionOffset) * 2.0f;
                 DayPickerView.this.mPrevButton.setAlpha(alpha);
                 DayPickerView.this.mNextButton.setAlpha(alpha);
             }
 
+            @Override // com.android.internal.widget.ViewPager.OnPageChangeListener
             public void onPageScrollStateChanged(int state) {
             }
 
+            @Override // com.android.internal.widget.ViewPager.OnPageChangeListener
             public void onPageSelected(int position) {
                 DayPickerView.this.updateButtonVisibility(position);
             }
         };
-        this.mOnClickListener = new View.OnClickListener() {
+        this.mOnClickListener = new View.OnClickListener() { // from class: android.widget.DayPickerView.3
+            @Override // android.view.View.OnClickListener
             public void onClick(View v) {
                 int direction;
-                if (v == DayPickerView.this.mPrevButton) {
-                    direction = -1;
-                } else if (v == DayPickerView.this.mNextButton) {
-                    direction = 1;
+                if (v != DayPickerView.this.mPrevButton) {
+                    if (v == DayPickerView.this.mNextButton) {
+                        direction = 1;
+                    } else {
+                        return;
+                    }
                 } else {
-                    return;
+                    direction = -1;
                 }
+                boolean animate = !DayPickerView.this.mAccessibilityManager.isEnabled();
                 int nextItem = DayPickerView.this.mViewPager.getCurrentItem() + direction;
-                DayPickerView.this.mViewPager.setCurrentItem(nextItem, !DayPickerView.this.mAccessibilityManager.isEnabled());
+                DayPickerView.this.mViewPager.setCurrentItem(nextItem, animate);
             }
         };
-        this.mAccessibilityManager = (AccessibilityManager) context2.getSystemService(Context.ACCESSIBILITY_SERVICE);
-        TypedArray a = context2.obtainStyledAttributes(attrs, R.styleable.CalendarView, defStyleAttr, defStyleRes);
-        saveAttributeDataForStyleable(context, R.styleable.CalendarView, attrs, a, defStyleAttr, defStyleRes);
+        this.mAccessibilityManager = (AccessibilityManager) context.getSystemService(Context.ACCESSIBILITY_SERVICE);
+        TypedArray a = context.obtainStyledAttributes(attrs, C3132R.styleable.CalendarView, defStyleAttr, defStyleRes);
+        saveAttributeDataForStyleable(context, C3132R.styleable.CalendarView, attrs, a, defStyleAttr, defStyleRes);
         int firstDayOfWeek = a.getInt(0, LocaleData.get(Locale.getDefault()).firstDayOfWeek.intValue());
         String minDate = a.getString(2);
         String maxDate = a.getString(3);
-        int monthTextAppearanceResId = a.getResourceId(16, R.style.TextAppearance_Material_Widget_Calendar_Month);
-        int dayOfWeekTextAppearanceResId = a.getResourceId(11, R.style.TextAppearance_Material_Widget_Calendar_DayOfWeek);
-        int dayTextAppearanceResId = a.getResourceId(12, R.style.TextAppearance_Material_Widget_Calendar_Day);
+        int monthTextAppearanceResId = a.getResourceId(16, C3132R.C3136style.TextAppearance_Material_Widget_Calendar_Month);
+        int dayOfWeekTextAppearanceResId = a.getResourceId(11, C3132R.C3136style.TextAppearance_Material_Widget_Calendar_DayOfWeek);
+        int dayTextAppearanceResId = a.getResourceId(12, C3132R.C3136style.TextAppearance_Material_Widget_Calendar_Day);
         ColorStateList daySelectorColor = a.getColorStateList(15);
         a.recycle();
-        this.mAdapter = new DayPickerPagerAdapter(context2, R.layout.date_picker_month_item_material, R.id.month_view);
+        this.mAdapter = new DayPickerPagerAdapter(context, C3132R.layout.date_picker_month_item_material, C3132R.C3134id.month_view);
         this.mAdapter.setMonthTextAppearance(monthTextAppearanceResId);
         this.mAdapter.setDayOfWeekTextAppearance(dayOfWeekTextAppearanceResId);
         this.mAdapter.setDayTextAppearance(dayTextAppearanceResId);
@@ -118,25 +120,21 @@ class DayPickerView extends ViewGroup {
             inflater = inflater2;
             i = 0;
         }
-        this.mPrevButton = (ImageButton) findViewById(R.id.prev);
+        this.mPrevButton = (ImageButton) findViewById(C3132R.C3134id.prev);
         this.mPrevButton.setOnClickListener(this.mOnClickListener);
-        this.mNextButton = (ImageButton) findViewById(R.id.next);
+        this.mNextButton = (ImageButton) findViewById(C3132R.C3134id.next);
         this.mNextButton.setOnClickListener(this.mOnClickListener);
-        this.mViewPager = (ViewPager) findViewById(R.id.day_picker_view_pager);
+        this.mViewPager = (ViewPager) findViewById(C3132R.C3134id.day_picker_view_pager);
         this.mViewPager.setAdapter(this.mAdapter);
         this.mViewPager.setOnPageChangeListener(this.mOnPageChangedListener);
         if (monthTextAppearanceResId != 0) {
-            ViewGroup viewGroup = content;
-            int i2 = dayOfWeekTextAppearanceResId;
-            TypedArray ta = this.mContext.obtainStyledAttributes((AttributeSet) null, ATTRS_TEXT_COLOR, 0, monthTextAppearanceResId);
+            TypedArray ta = this.mContext.obtainStyledAttributes(null, ATTRS_TEXT_COLOR, 0, monthTextAppearanceResId);
             ColorStateList monthColor = ta.getColorStateList(0);
             if (monthColor != null) {
                 this.mPrevButton.setImageTintList(monthColor);
                 this.mNextButton.setImageTintList(monthColor);
             }
             ta.recycle();
-        } else {
-            int i3 = dayOfWeekTextAppearanceResId;
         }
         Calendar tempDate = Calendar.getInstance();
         if (!CalendarView.parseDate(minDate, tempDate)) {
@@ -144,53 +142,42 @@ class DayPickerView extends ViewGroup {
         }
         long minDateMillis = tempDate.getTimeInMillis();
         if (!CalendarView.parseDate(maxDate, tempDate)) {
-            String str = minDate;
-            String str2 = maxDate;
             tempDate.set(2100, 11, 31);
-        } else {
-            String str3 = maxDate;
         }
         long maxDateMillis = tempDate.getTimeInMillis();
-        if (maxDateMillis >= minDateMillis) {
-            long setDateMillis = MathUtils.constrain(System.currentTimeMillis(), minDateMillis, maxDateMillis);
-            setFirstDayOfWeek(firstDayOfWeek);
-            setMinDate(minDateMillis);
-            setMaxDate(maxDateMillis);
-            setDate(setDateMillis, false);
-            int i4 = firstDayOfWeek;
-            this.mAdapter.setOnDaySelectedListener(new DayPickerPagerAdapter.OnDaySelectedListener() {
-                public void onDaySelected(DayPickerPagerAdapter adapter, Calendar day) {
-                    if (DayPickerView.this.mOnDaySelectedListener != null) {
-                        DayPickerView.this.mOnDaySelectedListener.onDaySelected(DayPickerView.this, day);
-                    }
+        if (maxDateMillis < minDateMillis) {
+            throw new IllegalArgumentException("maxDate must be >= minDate");
+        }
+        long setDateMillis = MathUtils.constrain(System.currentTimeMillis(), minDateMillis, maxDateMillis);
+        setFirstDayOfWeek(firstDayOfWeek);
+        setMinDate(minDateMillis);
+        setMaxDate(maxDateMillis);
+        setDate(setDateMillis, false);
+        this.mAdapter.setOnDaySelectedListener(new DayPickerPagerAdapter.OnDaySelectedListener() { // from class: android.widget.DayPickerView.1
+            @Override // android.widget.DayPickerPagerAdapter.OnDaySelectedListener
+            public void onDaySelected(DayPickerPagerAdapter adapter, Calendar day) {
+                if (DayPickerView.this.mOnDaySelectedListener != null) {
+                    DayPickerView.this.mOnDaySelectedListener.onDaySelected(DayPickerView.this, day);
                 }
-            });
-            return;
-        }
-        throw new IllegalArgumentException("maxDate must be >= minDate");
+            }
+        });
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void updateButtonVisibility(int position) {
-        boolean hasNext = true;
-        int i = 0;
         boolean hasPrev = position > 0;
-        if (position >= this.mAdapter.getCount() - 1) {
-            hasNext = false;
-        }
+        boolean hasNext = position < this.mAdapter.getCount() - 1;
         this.mPrevButton.setVisibility(hasPrev ? 0 : 4);
-        ImageButton imageButton = this.mNextButton;
-        if (!hasNext) {
-            i = 4;
-        }
-        imageButton.setVisibility(i);
+        this.mNextButton.setVisibility(hasNext ? 0 : 4);
     }
 
-    /* access modifiers changed from: protected */
-    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    @Override // android.view.View
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         ViewPager viewPager = this.mViewPager;
         measureChild(viewPager, widthMeasureSpec, heightMeasureSpec);
-        setMeasuredDimension(viewPager.getMeasuredWidthAndState(), viewPager.getMeasuredHeightAndState());
+        int measuredWidthAndState = viewPager.getMeasuredWidthAndState();
+        int measuredHeightAndState = viewPager.getMeasuredHeightAndState();
+        setMeasuredDimension(measuredWidthAndState, measuredHeightAndState);
         int pagerWidth = viewPager.getMeasuredWidth();
         int pagerHeight = viewPager.getMeasuredHeight();
         int buttonWidthSpec = View.MeasureSpec.makeMeasureSpec(pagerWidth, Integer.MIN_VALUE);
@@ -199,15 +186,16 @@ class DayPickerView extends ViewGroup {
         this.mNextButton.measure(buttonWidthSpec, buttonHeightSpec);
     }
 
+    @Override // android.view.View
     public void onRtlPropertiesChanged(int layoutDirection) {
         super.onRtlPropertiesChanged(layoutDirection);
         requestLayout();
     }
 
-    /* access modifiers changed from: protected */
-    public void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        ImageButton rightButton;
+    @Override // android.view.ViewGroup, android.view.View
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         ImageButton leftButton;
+        ImageButton rightButton;
         if (isLayoutRtl()) {
             leftButton = this.mNextButton;
             rightButton = this.mPrevButton;
@@ -216,7 +204,8 @@ class DayPickerView extends ViewGroup {
             rightButton = this.mNextButton;
         }
         int width = right - left;
-        this.mViewPager.layout(0, 0, width, bottom - top);
+        int height = bottom - top;
+        this.mViewPager.layout(0, 0, width, height);
         SimpleMonthView monthView = (SimpleMonthView) this.mViewPager.getChildAt(0);
         int monthHeight = monthView.getMonthHeight();
         int cellWidth = monthView.getCellWidth();
@@ -227,11 +216,8 @@ class DayPickerView extends ViewGroup {
         leftButton.layout(leftIconLeft, leftIconTop, leftIconLeft + leftDW, leftIconTop + leftDH);
         int rightDW = rightButton.getMeasuredWidth();
         int rightDH = rightButton.getMeasuredHeight();
-        ImageButton imageButton = leftButton;
         int rightIconTop = monthView.getPaddingTop() + ((monthHeight - rightDH) / 2);
         int rightIconRight = (width - monthView.getPaddingRight()) - ((cellWidth - rightDW) / 2);
-        int i = width;
-        int i2 = rightDW;
         rightButton.layout(rightIconRight - rightDW, rightIconTop, rightIconRight, rightIconTop + rightDH);
     }
 
@@ -284,7 +270,8 @@ class DayPickerView extends ViewGroup {
     }
 
     public boolean getBoundsForDate(long timeInMillis, Rect outBounds) {
-        if (getPositionFromDay(timeInMillis) != this.mViewPager.getCurrentItem()) {
+        int position = getPositionFromDay(timeInMillis);
+        if (position != this.mViewPager.getCurrentItem()) {
             return false;
         }
         this.mTempCalendar.setTimeInMillis(timeInMillis);
@@ -328,11 +315,14 @@ class DayPickerView extends ViewGroup {
     }
 
     private int getDiffMonths(Calendar start, Calendar end) {
-        return (end.get(2) - start.get(2)) + ((end.get(1) - start.get(1)) * 12);
+        int diffYears = end.get(1) - start.get(1);
+        return (end.get(2) - start.get(2)) + (diffYears * 12);
     }
 
     private int getPositionFromDay(long timeInMillis) {
-        return MathUtils.constrain(getDiffMonths(this.mMinDate, getTempCalendarForTime(timeInMillis)), 0, getDiffMonths(this.mMinDate, this.mMaxDate));
+        int diffMonthMax = getDiffMonths(this.mMinDate, this.mMaxDate);
+        int diffMonth = getDiffMonths(this.mMinDate, getTempCalendarForTime(timeInMillis));
+        return MathUtils.constrain(diffMonth, 0, diffMonthMax);
     }
 
     private Calendar getTempCalendarForTime(long timeInMillis) {

@@ -14,35 +14,15 @@ import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.hardware.display.DisplayManager;
-import android.os.Handler;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.util.AttributeSet;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.Log;
 import android.util.SparseArray;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import com.android.internal.util.XmlUtils;
 
+/* loaded from: classes4.dex */
 public final class PointerIcon implements Parcelable {
-    public static final Parcelable.Creator<PointerIcon> CREATOR = new Parcelable.Creator<PointerIcon>() {
-        public PointerIcon createFromParcel(Parcel in) {
-            int type = in.readInt();
-            if (type == 0) {
-                return PointerIcon.getNullIcon();
-            }
-            int systemIconResourceId = in.readInt();
-            if (systemIconResourceId == 0) {
-                return PointerIcon.create(Bitmap.CREATOR.createFromParcel(in), in.readFloat(), in.readFloat());
-            }
-            PointerIcon icon = new PointerIcon(type);
-            int unused = icon.mSystemIconResourceId = systemIconResourceId;
-            return icon;
-        }
-
-        public PointerIcon[] newArray(int size) {
-            return new PointerIcon[size];
-        }
-    };
     private static final String TAG = "PointerIcon";
     public static final int TYPE_ALIAS = 1010;
     public static final int TYPE_ALL_SCROLL = 1013;
@@ -73,11 +53,7 @@ public final class PointerIcon implements Parcelable {
     public static final int TYPE_WAIT = 1004;
     public static final int TYPE_ZOOM_IN = 1018;
     public static final int TYPE_ZOOM_OUT = 1019;
-    private static final PointerIcon gNullIcon = new PointerIcon(0);
-    /* access modifiers changed from: private */
-    public static final SparseArray<SparseArray<PointerIcon>> gSystemIconsByDisplay = new SparseArray<>();
     private static DisplayManager.DisplayListener sDisplayListener;
-    private static boolean sUseLargeIcons = false;
     @UnsupportedAppUsage
     private Bitmap mBitmap;
     @UnsupportedAppUsage
@@ -88,10 +64,38 @@ public final class PointerIcon implements Parcelable {
     private float mHotSpotX;
     @UnsupportedAppUsage
     private float mHotSpotY;
-    /* access modifiers changed from: private */
-    public int mSystemIconResourceId;
+    private int mSystemIconResourceId;
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
     private final int mType;
+    private static final PointerIcon gNullIcon = new PointerIcon(0);
+    private static final SparseArray<SparseArray<PointerIcon>> gSystemIconsByDisplay = new SparseArray<>();
+    private static boolean sUseLargeIcons = false;
+    public static final Parcelable.Creator<PointerIcon> CREATOR = new Parcelable.Creator<PointerIcon>() { // from class: android.view.PointerIcon.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public PointerIcon createFromParcel(Parcel in) {
+            int type = in.readInt();
+            if (type == 0) {
+                return PointerIcon.getNullIcon();
+            }
+            int systemIconResourceId = in.readInt();
+            if (systemIconResourceId != 0) {
+                PointerIcon icon = new PointerIcon(type);
+                icon.mSystemIconResourceId = systemIconResourceId;
+                return icon;
+            }
+            Bitmap bitmap = Bitmap.CREATOR.createFromParcel(in);
+            float hotSpotX = in.readFloat();
+            float hotSpotY = in.readFloat();
+            return PointerIcon.create(bitmap, hotSpotX, hotSpotY);
+        }
+
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public PointerIcon[] newArray(int size) {
+            return new PointerIcon[size];
+        }
+    };
 
     private PointerIcon(int type) {
         this.mType = type;
@@ -108,42 +112,43 @@ public final class PointerIcon implements Parcelable {
     public static PointerIcon getSystemIcon(Context context, int type) {
         if (context == null) {
             throw new IllegalArgumentException("context must not be null");
-        } else if (type == 0) {
-            return gNullIcon;
-        } else {
-            if (sDisplayListener == null) {
-                registerDisplayListener(context);
-            }
-            int displayId = context.getDisplayId();
-            SparseArray<PointerIcon> systemIcons = gSystemIconsByDisplay.get(displayId);
-            if (systemIcons == null) {
-                systemIcons = new SparseArray<>();
-                gSystemIconsByDisplay.put(displayId, systemIcons);
-            }
-            PointerIcon icon = systemIcons.get(type);
-            if (icon != null) {
-                return icon;
-            }
-            int typeIndex = getSystemIconTypeIndex(type);
-            if (typeIndex == 0) {
-                typeIndex = getSystemIconTypeIndex(1000);
-            }
-            TypedArray a = context.obtainStyledAttributes((AttributeSet) null, R.styleable.Pointer, 0, sUseLargeIcons ? R.style.LargePointer : R.style.Pointer);
-            int resourceId = a.getResourceId(typeIndex, -1);
-            a.recycle();
-            if (resourceId == -1) {
-                Log.w(TAG, "Missing theme resources for pointer icon type " + type);
-                return type == 1000 ? gNullIcon : getSystemIcon(context, 1000);
-            }
-            PointerIcon icon2 = new PointerIcon(type);
-            if ((-16777216 & resourceId) == 16777216) {
-                icon2.mSystemIconResourceId = resourceId;
-            } else {
-                icon2.loadResource(context, context.getResources(), resourceId);
-            }
-            systemIcons.append(type, icon2);
-            return icon2;
         }
+        if (type == 0) {
+            return gNullIcon;
+        }
+        if (sDisplayListener == null) {
+            registerDisplayListener(context);
+        }
+        int displayId = context.getDisplayId();
+        SparseArray<PointerIcon> systemIcons = gSystemIconsByDisplay.get(displayId);
+        if (systemIcons == null) {
+            systemIcons = new SparseArray<>();
+            gSystemIconsByDisplay.put(displayId, systemIcons);
+        }
+        PointerIcon icon = systemIcons.get(type);
+        if (icon != null) {
+            return icon;
+        }
+        int typeIndex = getSystemIconTypeIndex(type);
+        if (typeIndex == 0) {
+            typeIndex = getSystemIconTypeIndex(1000);
+        }
+        int defStyle = sUseLargeIcons ? C3132R.C3136style.LargePointer : C3132R.C3136style.Pointer;
+        TypedArray a = context.obtainStyledAttributes(null, C3132R.styleable.Pointer, 0, defStyle);
+        int resourceId = a.getResourceId(typeIndex, -1);
+        a.recycle();
+        if (resourceId == -1) {
+            Log.m64w(TAG, "Missing theme resources for pointer icon type " + type);
+            return type == 1000 ? gNullIcon : getSystemIcon(context, 1000);
+        }
+        PointerIcon icon2 = new PointerIcon(type);
+        if (((-16777216) & resourceId) == 16777216) {
+            icon2.mSystemIconResourceId = resourceId;
+        } else {
+            icon2.loadResource(context, context.getResources(), resourceId);
+        }
+        systemIcons.append(type, icon2);
+        return icon2;
     }
 
     public static void setUseLargeIcons(boolean use) {
@@ -152,48 +157,50 @@ public final class PointerIcon implements Parcelable {
     }
 
     public static PointerIcon create(Bitmap bitmap, float hotSpotX, float hotSpotY) {
-        if (bitmap != null) {
-            validateHotSpot(bitmap, hotSpotX, hotSpotY);
-            PointerIcon icon = new PointerIcon(-1);
-            icon.mBitmap = bitmap;
-            icon.mHotSpotX = hotSpotX;
-            icon.mHotSpotY = hotSpotY;
-            return icon;
+        if (bitmap == null) {
+            throw new IllegalArgumentException("bitmap must not be null");
         }
-        throw new IllegalArgumentException("bitmap must not be null");
+        validateHotSpot(bitmap, hotSpotX, hotSpotY);
+        PointerIcon icon = new PointerIcon(-1);
+        icon.mBitmap = bitmap;
+        icon.mHotSpotX = hotSpotX;
+        icon.mHotSpotY = hotSpotY;
+        return icon;
     }
 
     public static PointerIcon load(Resources resources, int resourceId) {
-        if (resources != null) {
-            PointerIcon icon = new PointerIcon(-1);
-            icon.loadResource((Context) null, resources, resourceId);
-            return icon;
+        if (resources == null) {
+            throw new IllegalArgumentException("resources must not be null");
         }
-        throw new IllegalArgumentException("resources must not be null");
+        PointerIcon icon = new PointerIcon(-1);
+        icon.loadResource(null, resources, resourceId);
+        return icon;
     }
 
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
     public PointerIcon load(Context context) {
         if (context == null) {
             throw new IllegalArgumentException("context must not be null");
-        } else if (this.mSystemIconResourceId == 0 || this.mBitmap != null) {
-            return this;
-        } else {
-            PointerIcon result = new PointerIcon(this.mType);
-            result.mSystemIconResourceId = this.mSystemIconResourceId;
-            result.loadResource(context, context.getResources(), this.mSystemIconResourceId);
-            return result;
         }
+        if (this.mSystemIconResourceId == 0 || this.mBitmap != null) {
+            return this;
+        }
+        PointerIcon result = new PointerIcon(this.mType);
+        result.mSystemIconResourceId = this.mSystemIconResourceId;
+        result.loadResource(context, context.getResources(), this.mSystemIconResourceId);
+        return result;
     }
 
     public int getType() {
         return this.mType;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(this.mType);
         if (this.mType != 0) {
@@ -231,7 +238,7 @@ public final class PointerIcon implements Parcelable {
             return bitmap;
         }
         Rect src = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
-        RectF dst = new RectF(0.0f, 0.0f, (float) scaledWidth, (float) scaledHeight);
+        RectF dst = new RectF(0.0f, 0.0f, scaledWidth, scaledHeight);
         Bitmap scaled = Bitmap.createBitmap(scaledWidth, scaledHeight, bitmap.getConfig());
         Canvas canvas = new Canvas(scaled);
         Paint paint = new Paint();
@@ -243,79 +250,72 @@ public final class PointerIcon implements Parcelable {
     private void loadResource(Context context, Resources resources, int resourceId) {
         Drawable drawable;
         Drawable drawable2;
-        Context context2 = context;
-        Resources resources2 = resources;
         XmlResourceParser parser = resources.getXml(resourceId);
         try {
-            XmlUtils.beginDocument(parser, "pointer-icon");
-            TypedArray a = resources2.obtainAttributes(parser, R.styleable.PointerIcon);
-            int bitmapRes = a.getResourceId(0, 0);
-            int i = 1;
-            float hotSpotX = a.getDimension(1, 0.0f);
-            float hotSpotY = a.getDimension(2, 0.0f);
-            a.recycle();
-            parser.close();
-            if (bitmapRes != 0) {
-                if (context2 == null) {
-                    drawable = resources2.getDrawable(bitmapRes);
+            try {
+                XmlUtils.beginDocument(parser, "pointer-icon");
+                TypedArray a = resources.obtainAttributes(parser, C3132R.styleable.PointerIcon);
+                int bitmapRes = a.getResourceId(0, 0);
+                float hotSpotX = a.getDimension(1, 0.0f);
+                float hotSpotY = a.getDimension(2, 0.0f);
+                a.recycle();
+                if (bitmapRes == 0) {
+                    throw new IllegalArgumentException("<pointer-icon> is missing bitmap attribute.");
+                }
+                if (context == null) {
+                    drawable = resources.getDrawable(bitmapRes);
                 } else {
-                    drawable = context2.getDrawable(bitmapRes);
+                    drawable = context.getDrawable(bitmapRes);
                 }
                 if (drawable instanceof AnimationDrawable) {
-                    AnimationDrawable animationDrawable = drawable;
+                    AnimationDrawable animationDrawable = (AnimationDrawable) drawable;
                     int frames = animationDrawable.getNumberOfFrames();
                     Drawable drawable3 = animationDrawable.getFrame(0);
-                    if (frames == 1) {
-                        Log.w(TAG, "Animation icon with single frame -- simply treating the first frame as a normal bitmap icon.");
-                        drawable2 = drawable3;
-                    } else {
+                    if (frames != 1) {
                         this.mDurationPerFrame = animationDrawable.getDuration(0);
-                        this.mBitmapFrames = new Bitmap[(frames - 1)];
+                        this.mBitmapFrames = new Bitmap[frames - 1];
                         int width = drawable3.getIntrinsicWidth();
                         int height = drawable3.getIntrinsicHeight();
-                        while (i < frames) {
+                        for (int i = 1; i < frames; i++) {
                             Drawable drawableFrame = animationDrawable.getFrame(i);
                             if (!(drawableFrame instanceof BitmapDrawable)) {
                                 throw new IllegalArgumentException("Frame of an animated pointer icon must refer to a bitmap drawable.");
-                            } else if (drawableFrame.getIntrinsicWidth() == width && drawableFrame.getIntrinsicHeight() == height) {
-                                this.mBitmapFrames[i - 1] = getBitmapFromDrawable((BitmapDrawable) drawableFrame);
-                                i++;
-                            } else {
-                                StringBuilder sb = new StringBuilder();
-                                Drawable drawable4 = drawable3;
-                                sb.append("The bitmap size of ");
-                                sb.append(i);
-                                sb.append("-th frame is different. All frames should have the exact same size and share the same hotspot.");
-                                throw new IllegalArgumentException(sb.toString());
                             }
+                            if (drawableFrame.getIntrinsicWidth() != width || drawableFrame.getIntrinsicHeight() != height) {
+                                throw new IllegalArgumentException("The bitmap size of " + i + "-th frame is different. All frames should have the exact same size and share the same hotspot.");
+                            }
+                            BitmapDrawable bitmapDrawableFrame = (BitmapDrawable) drawableFrame;
+                            this.mBitmapFrames[i - 1] = getBitmapFromDrawable(bitmapDrawableFrame);
                         }
+                        drawable2 = drawable3;
+                    } else {
+                        Log.m64w(TAG, "Animation icon with single frame -- simply treating the first frame as a normal bitmap icon.");
                         drawable2 = drawable3;
                     }
                     drawable = drawable2;
                 }
-                if (drawable instanceof BitmapDrawable) {
-                    Bitmap bitmap = getBitmapFromDrawable(drawable);
-                    validateHotSpot(bitmap, hotSpotX, hotSpotY);
-                    this.mBitmap = bitmap;
-                    this.mHotSpotX = hotSpotX;
-                    this.mHotSpotY = hotSpotY;
-                    return;
+                if (!(drawable instanceof BitmapDrawable)) {
+                    throw new IllegalArgumentException("<pointer-icon> bitmap attribute must refer to a bitmap drawable.");
                 }
-                throw new IllegalArgumentException("<pointer-icon> bitmap attribute must refer to a bitmap drawable.");
+                BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+                Bitmap bitmap = getBitmapFromDrawable(bitmapDrawable);
+                validateHotSpot(bitmap, hotSpotX, hotSpotY);
+                this.mBitmap = bitmap;
+                this.mHotSpotX = hotSpotX;
+                this.mHotSpotY = hotSpotY;
+            } catch (Exception ex) {
+                throw new IllegalArgumentException("Exception parsing pointer icon resource.", ex);
             }
-            throw new IllegalArgumentException("<pointer-icon> is missing bitmap attribute.");
-        } catch (Exception ex) {
-            throw new IllegalArgumentException("Exception parsing pointer icon resource.", ex);
-        } catch (Throwable th) {
+        } finally {
             parser.close();
-            throw th;
         }
     }
 
     private static void validateHotSpot(Bitmap bitmap, float hotSpotX, float hotSpotY) {
-        if (hotSpotX < 0.0f || hotSpotX >= ((float) bitmap.getWidth())) {
+        if (hotSpotX < 0.0f || hotSpotX >= bitmap.getWidth()) {
             throw new IllegalArgumentException("x hotspot lies outside of the bitmap area");
-        } else if (hotSpotY < 0.0f || hotSpotY >= ((float) bitmap.getHeight())) {
+        }
+        if (hotSpotY < 0.0f || hotSpotY >= bitmap.getHeight()) {
             throw new IllegalArgumentException("y hotspot lies outside of the bitmap area");
         }
     }
@@ -382,18 +382,22 @@ public final class PointerIcon implements Parcelable {
     }
 
     private static void registerDisplayListener(Context context) {
-        sDisplayListener = new DisplayManager.DisplayListener() {
+        sDisplayListener = new DisplayManager.DisplayListener() { // from class: android.view.PointerIcon.2
+            @Override // android.hardware.display.DisplayManager.DisplayListener
             public void onDisplayAdded(int displayId) {
             }
 
+            @Override // android.hardware.display.DisplayManager.DisplayListener
             public void onDisplayRemoved(int displayId) {
                 PointerIcon.gSystemIconsByDisplay.remove(displayId);
             }
 
+            @Override // android.hardware.display.DisplayManager.DisplayListener
             public void onDisplayChanged(int displayId) {
                 PointerIcon.gSystemIconsByDisplay.remove(displayId);
             }
         };
-        ((DisplayManager) context.getSystemService(DisplayManager.class)).registerDisplayListener(sDisplayListener, (Handler) null);
+        DisplayManager displayManager = (DisplayManager) context.getSystemService(DisplayManager.class);
+        displayManager.registerDisplayListener(sDisplayListener, null);
     }
 }

@@ -3,9 +3,9 @@ package com.wits.pms.mcu;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
-import android.os.Handler;
-import android.os.IBinder;
+import android.p007os.Build;
+import android.p007os.Handler;
+import android.p007os.IBinder;
 import android.support.annotation.Nullable;
 import android.telephony.SmsManager;
 import android.util.Log;
@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/* loaded from: classes2.dex */
 public class McuService extends Service implements McuSender {
     private static final boolean Debug = false;
     private static final String TAG = "McuService";
@@ -25,24 +26,24 @@ public class McuService extends Service implements McuSender {
     private static ReadThread mReadThread;
     private static String version = Build.DISPLAY;
     private Handler mHandler;
-    /* access modifiers changed from: private */
-    public InputStream mInputStream;
+    private InputStream mInputStream;
     protected OutputStream mOutputStream;
     protected SerialPort mSerialPort;
 
+    /* loaded from: classes2.dex */
     public interface OnReceiveData {
         void onReceiveMcu(byte[] bArr);
 
         void reset();
     }
 
-    /* access modifiers changed from: protected */
-    public void onDataReceived(byte[] buffer) {
+    protected void onDataReceived(byte[] buffer) {
         if (listener != null) {
             listener.onReceiveMcu(buffer);
         }
     }
 
+    @Override // android.app.Service
     public void onCreate() {
         String serial;
         try {
@@ -53,10 +54,10 @@ public class McuService extends Service implements McuSender {
             } else {
                 serial = "/dev/ttyMSM1";
             }
-            Log.d(TAG, "open port   serial = " + serial + "  version = " + version);
+            Log.m72d(TAG, "open port   serial = " + serial + "  version = " + version);
             this.mHandler = new Handler(getMainLooper());
             this.mSerialPort = new SerialPort(new File(serial), 115200, 0);
-            Log.d(TAG, "open port\t" + this.mSerialPort + "   serial = " + serial);
+            Log.m72d(TAG, "open port\t" + this.mSerialPort + "   serial = " + serial);
             this.mOutputStream = this.mSerialPort.getOutputStream();
             this.mInputStream = this.mSerialPort.getInputStream();
             mReadThread = new ReadThread();
@@ -74,11 +75,13 @@ public class McuService extends Service implements McuSender {
         }
     }
 
+    @Override // android.app.Service
     public int onStartCommand(Intent intent, int flags, int startId) {
         mContext = getApplicationContext();
         return super.onStartCommand(intent, flags, startId);
     }
 
+    /* loaded from: classes2.dex */
     private class ReadThread extends Thread {
         public final Object portLock;
 
@@ -86,8 +89,10 @@ public class McuService extends Service implements McuSender {
             this.portLock = new Object();
         }
 
+        /* JADX WARN: Type inference failed for: r0v0, types: [com.wits.pms.mcu.McuService$ReadThread$1] */
         public void write(final byte[] buf) {
-            new Thread() {
+            new Thread() { // from class: com.wits.pms.mcu.McuService.ReadThread.1
+                @Override // java.lang.Thread, java.lang.Runnable
                 public void run() {
                     if (McuService.this.mOutputStream != null) {
                         try {
@@ -99,6 +104,7 @@ public class McuService extends Service implements McuSender {
             }.start();
         }
 
+        @Override // java.lang.Thread, java.lang.Runnable
         public void run() {
             while (McuService.this.mInputStream != null) {
                 try {
@@ -118,16 +124,21 @@ public class McuService extends Service implements McuSender {
         }
     }
 
+    @Override // com.wits.pms.mcu.McuSender
     public void send(McuMessage msg) {
-        if (mReadThread == null) {
-            Log.d(TAG, "mReadThread is null");
-        } else if (msg != null) {
-            mReadThread.write(msg.outData);
-        } else {
-            Log.d(TAG, "msg is null");
+        if (mReadThread != null) {
+            if (msg == null) {
+                Log.m72d(TAG, "msg is null");
+                return;
+            } else {
+                mReadThread.write(msg.outData);
+                return;
+            }
         }
+        Log.m72d(TAG, "mReadThread is null");
     }
 
+    @Override // com.wits.pms.mcu.McuSender
     public void send(byte[] pack) {
     }
 
@@ -144,17 +155,18 @@ public class McuService extends Service implements McuSender {
             sb.append(hex.toUpperCase());
             sb.append(SmsManager.REGEX_PREFIX_DELIMITER);
         }
-        sb.replace(sb.length() - 1, sb.length(), "");
+        int i = sb.length();
+        sb.replace(i - 1, sb.length(), "");
         sb.append("]\n");
-        Log.v(TAG, sb.toString());
+        Log.m66v(TAG, sb.toString());
     }
 
     public static void printHex(String method, McuMessage msg) {
         StringBuilder sb = new StringBuilder();
         sb.append(method);
         sb.append("-----[");
-        for (byte b : msg.getData()) {
-            String hex = Integer.toHexString(b & 255);
+        for (int i = 0; i < msg.getData().length; i++) {
+            String hex = Integer.toHexString(msg.getData()[i] & 255);
             if (hex.length() == 1) {
                 hex = '0' + hex;
             }
@@ -162,14 +174,16 @@ public class McuService extends Service implements McuSender {
             sb.append(hex.toUpperCase());
             sb.append(SmsManager.REGEX_PREFIX_DELIMITER);
         }
-        sb.replace(sb.length() - 1, sb.length(), "");
+        int i2 = sb.length();
+        sb.replace(i2 - 1, sb.length(), "");
         sb.append("]\n");
-        Log.v(TAG, sb.toString());
+        Log.m66v(TAG, sb.toString());
     }
 
+    @Override // android.app.Service
     public void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "close port");
+        Log.m72d(TAG, "close port");
         if (mReadThread != null) {
             mReadThread.interrupt();
         }
@@ -180,6 +194,7 @@ public class McuService extends Service implements McuSender {
         this.mSerialPort = null;
     }
 
+    @Override // android.app.Service
     @Nullable
     public IBinder onBind(Intent intent) {
         return null;

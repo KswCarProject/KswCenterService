@@ -7,10 +7,11 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 
+/* loaded from: classes4.dex */
 public class ChangeScroll extends Transition {
-    private static final String[] PROPERTIES = {PROPNAME_SCROLL_X, PROPNAME_SCROLL_Y};
     private static final String PROPNAME_SCROLL_X = "android:changeScroll:x";
     private static final String PROPNAME_SCROLL_Y = "android:changeScroll:y";
+    private static final String[] PROPERTIES = {PROPNAME_SCROLL_X, PROPNAME_SCROLL_Y};
 
     public ChangeScroll() {
     }
@@ -19,14 +20,17 @@ public class ChangeScroll extends Transition {
         super(context, attrs);
     }
 
+    @Override // android.transition.Transition
     public void captureStartValues(TransitionValues transitionValues) {
         captureValues(transitionValues);
     }
 
+    @Override // android.transition.Transition
     public void captureEndValues(TransitionValues transitionValues) {
         captureValues(transitionValues);
     }
 
+    @Override // android.transition.Transition
     public String[] getTransitionProperties() {
         return PROPERTIES;
     }
@@ -36,6 +40,7 @@ public class ChangeScroll extends Transition {
         transitionValues.values.put(PROPNAME_SCROLL_Y, Integer.valueOf(transitionValues.view.getScrollY()));
     }
 
+    @Override // android.transition.Transition
     public Animator createAnimator(ViewGroup sceneRoot, TransitionValues startValues, TransitionValues endValues) {
         if (startValues == null || endValues == null) {
             return null;
@@ -49,11 +54,11 @@ public class ChangeScroll extends Transition {
         Animator scrollYAnimator = null;
         if (startX != endX) {
             view.setScrollX(startX);
-            scrollXAnimator = ObjectAnimator.ofInt((Object) view, "scrollX", startX, endX);
+            scrollXAnimator = ObjectAnimator.ofInt(view, "scrollX", startX, endX);
         }
         if (startY != endY) {
             view.setScrollY(startY);
-            scrollYAnimator = ObjectAnimator.ofInt((Object) view, "scrollY", startY, endY);
+            scrollYAnimator = ObjectAnimator.ofInt(view, "scrollY", startY, endY);
         }
         return TransitionUtils.mergeAnimators(scrollXAnimator, scrollYAnimator);
     }

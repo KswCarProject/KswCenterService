@@ -1,47 +1,44 @@
 package android.security.keystore.recovery;
 
 import android.annotation.SystemApi;
-import android.os.BadParcelableException;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.BadParcelableException;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.util.Preconditions;
 import java.security.cert.CertPath;
 import java.security.cert.CertificateException;
 import java.util.List;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class KeyChainSnapshot implements Parcelable {
-    public static final Parcelable.Creator<KeyChainSnapshot> CREATOR = new Parcelable.Creator<KeyChainSnapshot>() {
+    public static final Parcelable.Creator<KeyChainSnapshot> CREATOR = new Parcelable.Creator<KeyChainSnapshot>() { // from class: android.security.keystore.recovery.KeyChainSnapshot.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public KeyChainSnapshot createFromParcel(Parcel in) {
             return new KeyChainSnapshot(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public KeyChainSnapshot[] newArray(int length) {
             return new KeyChainSnapshot[length];
         }
     };
     private static final long DEFAULT_COUNTER_ID = 1;
     private static final int DEFAULT_MAX_ATTEMPTS = 10;
-    /* access modifiers changed from: private */
-    public RecoveryCertPath mCertPath;
-    /* access modifiers changed from: private */
-    public long mCounterId;
-    /* access modifiers changed from: private */
-    public byte[] mEncryptedRecoveryKeyBlob;
-    /* access modifiers changed from: private */
-    public List<WrappedApplicationKey> mEntryRecoveryData;
-    /* access modifiers changed from: private */
-    public List<KeyChainProtectionParams> mKeyChainProtectionParams;
-    /* access modifiers changed from: private */
-    public int mMaxAttempts;
-    /* access modifiers changed from: private */
-    public byte[] mServerParams;
-    /* access modifiers changed from: private */
-    public int mSnapshotVersion;
+    private RecoveryCertPath mCertPath;
+    private long mCounterId;
+    private byte[] mEncryptedRecoveryKeyBlob;
+    private List<WrappedApplicationKey> mEntryRecoveryData;
+    private List<KeyChainProtectionParams> mKeyChainProtectionParams;
+    private int mMaxAttempts;
+    private byte[] mServerParams;
+    private int mSnapshotVersion;
 
     private KeyChainSnapshot() {
         this.mMaxAttempts = 10;
-        this.mCounterId = 1;
+        this.mCounterId = 1L;
     }
 
     public int getSnapshotVersion() {
@@ -64,7 +61,7 @@ public final class KeyChainSnapshot implements Parcelable {
         try {
             return this.mCertPath.getCertPath();
         } catch (CertificateException e) {
-            throw new BadParcelableException((Exception) e);
+            throw new BadParcelableException(e);
         }
     }
 
@@ -80,46 +77,47 @@ public final class KeyChainSnapshot implements Parcelable {
         return this.mEncryptedRecoveryKeyBlob;
     }
 
+    /* loaded from: classes3.dex */
     public static class Builder {
         private KeyChainSnapshot mInstance = new KeyChainSnapshot();
 
         public Builder setSnapshotVersion(int snapshotVersion) {
-            int unused = this.mInstance.mSnapshotVersion = snapshotVersion;
+            this.mInstance.mSnapshotVersion = snapshotVersion;
             return this;
         }
 
         public Builder setMaxAttempts(int maxAttempts) {
-            int unused = this.mInstance.mMaxAttempts = maxAttempts;
+            this.mInstance.mMaxAttempts = maxAttempts;
             return this;
         }
 
         public Builder setCounterId(long counterId) {
-            long unused = this.mInstance.mCounterId = counterId;
+            this.mInstance.mCounterId = counterId;
             return this;
         }
 
         public Builder setServerParams(byte[] serverParams) {
-            byte[] unused = this.mInstance.mServerParams = serverParams;
+            this.mInstance.mServerParams = serverParams;
             return this;
         }
 
         public Builder setTrustedHardwareCertPath(CertPath certPath) throws CertificateException {
-            RecoveryCertPath unused = this.mInstance.mCertPath = RecoveryCertPath.createRecoveryCertPath(certPath);
+            this.mInstance.mCertPath = RecoveryCertPath.createRecoveryCertPath(certPath);
             return this;
         }
 
         public Builder setKeyChainProtectionParams(List<KeyChainProtectionParams> keyChainProtectionParams) {
-            List unused = this.mInstance.mKeyChainProtectionParams = keyChainProtectionParams;
+            this.mInstance.mKeyChainProtectionParams = keyChainProtectionParams;
             return this;
         }
 
         public Builder setWrappedApplicationKeys(List<WrappedApplicationKey> entryRecoveryData) {
-            List unused = this.mInstance.mEntryRecoveryData = entryRecoveryData;
+            this.mInstance.mEntryRecoveryData = entryRecoveryData;
             return this;
         }
 
         public Builder setEncryptedRecoveryKeyBlob(byte[] encryptedRecoveryKeyBlob) {
-            byte[] unused = this.mInstance.mEncryptedRecoveryKeyBlob = encryptedRecoveryKeyBlob;
+            this.mInstance.mEncryptedRecoveryKeyBlob = encryptedRecoveryKeyBlob;
             return this;
         }
 
@@ -133,6 +131,7 @@ public final class KeyChainSnapshot implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(this.mSnapshotVersion);
         out.writeTypedList(this.mKeyChainProtectionParams);
@@ -146,7 +145,7 @@ public final class KeyChainSnapshot implements Parcelable {
 
     protected KeyChainSnapshot(Parcel in) {
         this.mMaxAttempts = 10;
-        this.mCounterId = 1;
+        this.mCounterId = 1L;
         this.mSnapshotVersion = in.readInt();
         this.mKeyChainProtectionParams = in.createTypedArrayList(KeyChainProtectionParams.CREATOR);
         this.mEncryptedRecoveryKeyBlob = in.createByteArray();
@@ -157,6 +156,7 @@ public final class KeyChainSnapshot implements Parcelable {
         this.mCertPath = (RecoveryCertPath) in.readTypedObject(RecoveryCertPath.CREATOR);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

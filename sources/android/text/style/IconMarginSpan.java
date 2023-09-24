@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.text.Layout;
 import android.text.Spanned;
 
+/* loaded from: classes4.dex */
 public class IconMarginSpan implements LeadingMarginSpan, LineHeightSpan {
     private final Bitmap mBitmap;
     private final int mPad;
@@ -19,24 +20,25 @@ public class IconMarginSpan implements LeadingMarginSpan, LineHeightSpan {
         this.mPad = pad;
     }
 
+    @Override // android.text.style.LeadingMarginSpan
     public int getLeadingMargin(boolean first) {
         return this.mBitmap.getWidth() + this.mPad;
     }
 
+    @Override // android.text.style.LeadingMarginSpan
     public void drawLeadingMargin(Canvas c, Paint p, int x, int dir, int top, int baseline, int bottom, CharSequence text, int start, int end, boolean first, Layout layout) {
         int x2;
-        Layout layout2 = layout;
-        int itop = layout2.getLineTop(layout2.getLineForOffset(((Spanned) text).getSpanStart(this)));
+        int st = ((Spanned) text).getSpanStart(this);
+        int itop = layout.getLineTop(layout.getLineForOffset(st));
         if (dir < 0) {
             x2 = x - this.mBitmap.getWidth();
         } else {
             x2 = x;
         }
-        Canvas canvas = c;
-        Paint paint = p;
-        c.drawBitmap(this.mBitmap, (float) x2, (float) itop, p);
+        c.drawBitmap(this.mBitmap, x2, itop, p);
     }
 
+    @Override // android.text.style.LineHeightSpan
     public void chooseHeight(CharSequence text, int start, int end, int istartv, int v, Paint.FontMetricsInt fm) {
         if (end == ((Spanned) text).getSpanEnd(this)) {
             int ht = this.mBitmap.getHeight();

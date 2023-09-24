@@ -10,10 +10,10 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.media.session.MediaController;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.RemoteException;
+import android.p007os.Bundle;
+import android.p007os.Handler;
+import android.p007os.IBinder;
+import android.p007os.RemoteException;
 import android.provider.SettingsStringUtil;
 import android.transition.Scene;
 import android.transition.Transition;
@@ -24,10 +24,11 @@ import android.view.SurfaceHolder;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.util.Collections;
 import java.util.List;
 
+/* loaded from: classes4.dex */
 public abstract class Window {
     public static final int DECOR_CAPTION_SHADE_AUTO = 0;
     public static final int DECOR_CAPTION_SHADE_DARK = 2;
@@ -78,56 +79,61 @@ public abstract class Window {
     private IBinder mAppToken;
     @UnsupportedAppUsage
     private Callback mCallback;
-    private boolean mCloseOnSwipeEnabled = false;
-    private boolean mCloseOnTouchOutside = false;
     private Window mContainer;
     @UnsupportedAppUsage
     private final Context mContext;
-    private int mDefaultWindowFormat = -1;
     @UnsupportedAppUsage
     private boolean mDestroyed;
     @UnsupportedAppUsage
     private int mFeatures;
-    private int mForcedWindowFlags = 0;
     @UnsupportedAppUsage
     private boolean mHardwareAccelerated;
-    private boolean mHasChildren = false;
-    private boolean mHasSoftInputMode = false;
-    private boolean mHaveDimAmount = false;
-    private boolean mHaveWindowFormat = false;
-    private boolean mIsActive = false;
     @UnsupportedAppUsage
     private int mLocalFeatures;
     private OnRestrictedCaptionAreaChangedListener mOnRestrictedCaptionAreaChangedListener;
     private OnWindowDismissedCallback mOnWindowDismissedCallback;
     private OnWindowSwipeDismissedCallback mOnWindowSwipeDismissedCallback;
-    private boolean mOverlayWithDecorCaptionEnabled = false;
     private Rect mRestrictedCaptionAreaRect;
-    private boolean mSetCloseOnTouchOutside = false;
-    @UnsupportedAppUsage
-    private final WindowManager.LayoutParams mWindowAttributes = new WindowManager.LayoutParams();
     private WindowControllerCallback mWindowControllerCallback;
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
     private WindowManager mWindowManager;
     @UnsupportedAppUsage
     private TypedArray mWindowStyle;
+    private boolean mIsActive = false;
+    private boolean mHasChildren = false;
+    private boolean mCloseOnTouchOutside = false;
+    private boolean mSetCloseOnTouchOutside = false;
+    private int mForcedWindowFlags = 0;
+    private boolean mHaveWindowFormat = false;
+    private boolean mHaveDimAmount = false;
+    private int mDefaultWindowFormat = -1;
+    private boolean mHasSoftInputMode = false;
+    private boolean mOverlayWithDecorCaptionEnabled = false;
+    private boolean mCloseOnSwipeEnabled = false;
+    @UnsupportedAppUsage
+    private final WindowManager.LayoutParams mWindowAttributes = new WindowManager.LayoutParams();
 
+    /* loaded from: classes4.dex */
     public interface OnFrameMetricsAvailableListener {
         void onFrameMetricsAvailable(Window window, FrameMetrics frameMetrics, int i);
     }
 
+    /* loaded from: classes4.dex */
     public interface OnRestrictedCaptionAreaChangedListener {
         void onRestrictedCaptionAreaChanged(Rect rect);
     }
 
+    /* loaded from: classes4.dex */
     public interface OnWindowDismissedCallback {
         void onWindowDismissed(boolean z, boolean z2);
     }
 
+    /* loaded from: classes4.dex */
     public interface OnWindowSwipeDismissedCallback {
         void onWindowSwipeDismissed();
     }
 
+    /* loaded from: classes4.dex */
     public interface WindowControllerCallback {
         void enterPictureInPictureModeIfPossible();
 
@@ -167,8 +173,7 @@ public abstract class Window {
 
     public abstract boolean isShortcutKey(int i, KeyEvent keyEvent);
 
-    /* access modifiers changed from: protected */
-    public abstract void onActive();
+    protected abstract void onActive();
 
     public abstract void onConfigurationChanged(Configuration configuration);
 
@@ -247,6 +252,7 @@ public abstract class Window {
 
     public abstract void togglePanel(int i, KeyEvent keyEvent);
 
+    /* loaded from: classes4.dex */
     public interface Callback {
         boolean dispatchGenericMotionEvent(MotionEvent motionEvent);
 
@@ -294,10 +300,10 @@ public abstract class Window {
 
         ActionMode onWindowStartingActionMode(ActionMode.Callback callback, int i);
 
-        void onProvideKeyboardShortcuts(List<KeyboardShortcutGroup> list, Menu menu, int deviceId) {
+        default void onProvideKeyboardShortcuts(List<KeyboardShortcutGroup> data, Menu menu, int deviceId) {
         }
 
-        void onPointerCaptureChanged(boolean hasCapture) {
+        default void onPointerCaptureChanged(boolean hasCapture) {
         }
     }
 
@@ -316,7 +322,7 @@ public abstract class Window {
         TypedArray typedArray;
         synchronized (this) {
             if (this.mWindowStyle == null) {
-                this.mWindowStyle = this.mContext.obtainStyledAttributes(R.styleable.Window);
+                this.mWindowStyle = this.mContext.obtainStyledAttributes(C3132R.styleable.Window);
             }
             typedArray = this.mWindowStyle;
         }
@@ -353,34 +359,17 @@ public abstract class Window {
         setWindowManager(wm, appToken, appName, false);
     }
 
-    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v4, resolved type: java.lang.Object} */
-    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v2, resolved type: android.view.WindowManager} */
-    /* JADX WARNING: Multi-variable type inference failed */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void setWindowManager(android.view.WindowManager r3, android.os.IBinder r4, java.lang.String r5, boolean r6) {
-        /*
-            r2 = this;
-            r2.mAppToken = r4
-            r2.mAppName = r5
-            r2.mHardwareAccelerated = r6
-            if (r3 != 0) goto L_0x0014
-            android.content.Context r0 = r2.mContext
-            java.lang.String r1 = "window"
-            java.lang.Object r0 = r0.getSystemService((java.lang.String) r1)
-            r3 = r0
-            android.view.WindowManager r3 = (android.view.WindowManager) r3
-        L_0x0014:
-            r0 = r3
-            android.view.WindowManagerImpl r0 = (android.view.WindowManagerImpl) r0
-            android.view.WindowManagerImpl r0 = r0.createLocalWindowManager(r2)
-            r2.mWindowManager = r0
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.view.Window.setWindowManager(android.view.WindowManager, android.os.IBinder, java.lang.String, boolean):void");
+    public void setWindowManager(WindowManager wm, IBinder appToken, String appName, boolean hardwareAccelerated) {
+        this.mAppToken = appToken;
+        this.mAppName = appName;
+        this.mHardwareAccelerated = hardwareAccelerated;
+        if (wm == null) {
+            wm = (WindowManager) this.mContext.getSystemService(Context.WINDOW_SERVICE);
+        }
+        this.mWindowManager = ((WindowManagerImpl) wm).createLocalWindowManager(this);
     }
 
-    /* access modifiers changed from: package-private */
-    public void adjustLayoutParamsForSubWindow(WindowManager.LayoutParams wp) {
+    void adjustLayoutParamsForSubWindow(WindowManager.LayoutParams wp) {
         View decor;
         CharSequence curTitle = wp.getTitle();
         if (wp.type >= 1000 && wp.type <= 1999) {
@@ -410,22 +399,24 @@ public abstract class Window {
                 }
                 wp.setTitle(title);
             }
-        } else if (wp.type < 2000 || wp.type > 2999) {
+        } else if (wp.type >= 2000 && wp.type <= 2999) {
+            if (curTitle == null || curTitle.length() == 0) {
+                StringBuilder title2 = new StringBuilder(32);
+                title2.append("Sys");
+                title2.append(wp.type);
+                if (this.mAppName != null) {
+                    title2.append(SettingsStringUtil.DELIMITER);
+                    title2.append(this.mAppName);
+                }
+                wp.setTitle(title2);
+            }
+        } else {
             if (wp.token == null) {
                 wp.token = this.mContainer == null ? this.mAppToken : this.mContainer.mAppToken;
             }
             if ((curTitle == null || curTitle.length() == 0) && this.mAppName != null) {
                 wp.setTitle(this.mAppName);
             }
-        } else if (curTitle == null || curTitle.length() == 0) {
-            StringBuilder title2 = new StringBuilder(32);
-            title2.append("Sys");
-            title2.append(wp.type);
-            if (this.mAppName != null) {
-                title2.append(SettingsStringUtil.DELIMITER);
-                title2.append(this.mAppName);
-            }
-            wp.setTitle(title2);
         }
         if (wp.packageName == null) {
             wp.packageName = this.mContext.getPackageName();
@@ -451,15 +442,16 @@ public abstract class Window {
         View decorView = getDecorView();
         if (decorView == null) {
             throw new IllegalStateException("can't observe a Window without an attached view");
-        } else if (listener != null) {
-            decorView.addFrameMetricsListener(this, listener, handler);
-        } else {
+        }
+        if (listener == null) {
             throw new NullPointerException("listener cannot be null");
         }
+        decorView.addFrameMetricsListener(this, listener, handler);
     }
 
     public final void removeOnFrameMetricsAvailableListener(OnFrameMetricsAvailableListener listener) {
-        if (getDecorView() != null) {
+        View decorView = getDecorView();
+        if (decorView != null) {
             getDecorView().removeFrameMetricsListener(listener);
         }
     }
@@ -576,16 +568,14 @@ public abstract class Window {
         dispatchWindowAttributesChanged(attrs);
     }
 
-    /* access modifiers changed from: protected */
     @UnsupportedAppUsage
-    public void setNeedsMenuKey(int value) {
+    protected void setNeedsMenuKey(int value) {
         WindowManager.LayoutParams attrs = getAttributes();
         attrs.needsMenuKey = value;
         dispatchWindowAttributesChanged(attrs);
     }
 
-    /* access modifiers changed from: protected */
-    public void dispatchWindowAttributesChanged(WindowManager.LayoutParams attrs) {
+    protected void dispatchWindowAttributesChanged(WindowManager.LayoutParams attrs) {
         if (this.mCallback != null) {
             this.mCallback.onWindowAttributesChanged(attrs);
         }
@@ -602,10 +592,7 @@ public abstract class Window {
     }
 
     public boolean isWideColorGamut() {
-        if (getColorMode() != 1 || !getContext().getResources().getConfiguration().isScreenWideColorGamut()) {
-            return false;
-        }
-        return true;
+        return getColorMode() == 1 && getContext().getResources().getConfiguration().isScreenWideColorGamut();
     }
 
     public void setDimAmount(float amount) {
@@ -624,13 +611,11 @@ public abstract class Window {
         return this.mWindowAttributes;
     }
 
-    /* access modifiers changed from: protected */
-    public final int getForcedWindowFlags() {
+    protected final int getForcedWindowFlags() {
         return this.mForcedWindowFlags;
     }
 
-    /* access modifiers changed from: protected */
-    public final boolean hasSoftInputMode() {
+    protected final boolean hasSoftInputMode() {
         return this.mHasSoftInputMode;
     }
 
@@ -650,7 +635,8 @@ public abstract class Window {
 
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
     public boolean shouldCloseOnTouch(Context context, MotionEvent event) {
-        return this.mCloseOnTouchOutside && peekDecorView() != null && ((event.getAction() == 1 && isOutOfBounds(context, event)) || event.getAction() == 4);
+        boolean isOutside = (event.getAction() == 1 && isOutOfBounds(context, event)) || event.getAction() == 4;
+        return this.mCloseOnTouchOutside && peekDecorView() != null && isOutside;
     }
 
     public void setSustainedPerformanceMode(boolean enable) {
@@ -669,14 +655,10 @@ public abstract class Window {
         int flag = 1 << featureId;
         this.mFeatures |= flag;
         this.mLocalFeatures |= this.mContainer != null ? (~this.mContainer.mFeatures) & flag : flag;
-        if ((this.mFeatures & flag) != 0) {
-            return true;
-        }
-        return false;
+        return (this.mFeatures & flag) != 0;
     }
 
-    /* access modifiers changed from: protected */
-    public void removeFeature(int featureId) {
+    protected void removeFeature(int featureId) {
         int flag = 1 << featureId;
         this.mFeatures &= ~flag;
         this.mLocalFeatures &= ~(this.mContainer != null ? (~this.mContainer.mFeatures) & flag : flag);
@@ -698,15 +680,15 @@ public abstract class Window {
     }
 
     public <T extends View> T findViewById(int id) {
-        return getDecorView().findViewById(id);
+        return (T) getDecorView().findViewById(id);
     }
 
     public final <T extends View> T requireViewById(int id) {
-        T view = findViewById(id);
-        if (view != null) {
-            return view;
+        T view = (T) findViewById(id);
+        if (view == null) {
+            throw new IllegalArgumentException("ID does not reference a View inside this Window");
         }
-        throw new IllegalArgumentException("ID does not reference a View inside this Window");
+        return view;
     }
 
     public void setElevation(float elevation) {
@@ -723,18 +705,17 @@ public abstract class Window {
         setBackgroundDrawable(this.mContext.getDrawable(resId));
     }
 
-    /* access modifiers changed from: protected */
-    public final int getFeatures() {
+    protected final int getFeatures() {
         return this.mFeatures;
     }
 
     public static int getDefaultFeatures(Context context) {
         int features = 0;
         Resources res = context.getResources();
-        if (res.getBoolean(R.bool.config_defaultWindowFeatureOptionsPanel)) {
+        if (res.getBoolean(C3132R.bool.config_defaultWindowFeatureOptionsPanel)) {
             features = 0 | 1;
         }
-        if (res.getBoolean(R.bool.config_defaultWindowFeatureContextMenu)) {
+        if (res.getBoolean(C3132R.bool.config_defaultWindowFeatureContextMenu)) {
             return features | 64;
         }
         return features;
@@ -744,13 +725,11 @@ public abstract class Window {
         return (getFeatures() & (1 << feature)) != 0;
     }
 
-    /* access modifiers changed from: protected */
-    public final int getLocalFeatures() {
+    protected final int getLocalFeatures() {
         return this.mLocalFeatures;
     }
 
-    /* access modifiers changed from: protected */
-    public void setDefaultWindowFormat(int format) {
+    protected void setDefaultWindowFormat(int format) {
         this.mDefaultWindowFormat = format;
         if (!this.mHaveWindowFormat) {
             WindowManager.LayoutParams attrs = getAttributes();
@@ -759,8 +738,7 @@ public abstract class Window {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public boolean haveDimAmount() {
+    protected boolean haveDimAmount() {
         return this.mHaveDimAmount;
     }
 
@@ -878,7 +856,7 @@ public abstract class Window {
     }
 
     public long getTransitionBackgroundFadeDuration() {
-        return 0;
+        return 0L;
     }
 
     public void setTransitionBackgroundFadeDuration(long fadeDurationMillis) {
@@ -912,7 +890,7 @@ public abstract class Window {
         return false;
     }
 
-    public void setSystemGestureExclusionRects(List<Rect> list) {
+    public void setSystemGestureExclusionRects(List<Rect> rects) {
         throw new UnsupportedOperationException("window does not support gesture exclusion rects");
     }
 

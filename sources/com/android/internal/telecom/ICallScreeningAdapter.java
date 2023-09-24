@@ -1,12 +1,13 @@
 package com.android.internal.telecom;
 
 import android.content.ComponentName;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes4.dex */
 public interface ICallScreeningAdapter extends IInterface {
     void allowCall(String str) throws RemoteException;
 
@@ -14,21 +15,27 @@ public interface ICallScreeningAdapter extends IInterface {
 
     void silenceCall(String str) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements ICallScreeningAdapter {
+        @Override // com.android.internal.telecom.ICallScreeningAdapter
         public void allowCall(String callId) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.ICallScreeningAdapter
         public void silenceCall(String callId) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.ICallScreeningAdapter
         public void disallowCall(String callId, boolean shouldReject, boolean shouldAddToCallLog, boolean shouldShowNotification, ComponentName componentName) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements ICallScreeningAdapter {
         private static final String DESCRIPTOR = "com.android.internal.telecom.ICallScreeningAdapter";
         static final int TRANSACTION_allowCall = 1;
@@ -44,12 +51,13 @@ public interface ICallScreeningAdapter extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof ICallScreeningAdapter)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof ICallScreeningAdapter)) {
+                return (ICallScreeningAdapter) iin;
             }
-            return (ICallScreeningAdapter) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -67,44 +75,43 @@ public interface ICallScreeningAdapter extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            ComponentName _arg4;
-            if (code != 1598968902) {
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        allowCall(data.readString());
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        silenceCall(data.readString());
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        String _arg0 = data.readString();
-                        boolean _arg1 = data.readInt() != 0;
-                        boolean _arg2 = data.readInt() != 0;
-                        boolean _arg3 = data.readInt() != 0;
-                        if (data.readInt() != 0) {
-                            _arg4 = ComponentName.CREATOR.createFromParcel(data);
-                        } else {
-                            _arg4 = null;
-                        }
-                        disallowCall(_arg0, _arg1, _arg2, _arg3, _arg4);
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0 = data.readString();
+                    allowCall(_arg0);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg02 = data.readString();
+                    silenceCall(_arg02);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg03 = data.readString();
+                    boolean _arg1 = data.readInt() != 0;
+                    boolean _arg2 = data.readInt() != 0;
+                    boolean _arg3 = data.readInt() != 0;
+                    ComponentName _arg4 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    disallowCall(_arg03, _arg1, _arg2, _arg3, _arg4);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements ICallScreeningAdapter {
             public static ICallScreeningAdapter sDefaultImpl;
             private IBinder mRemote;
@@ -113,6 +120,7 @@ public interface ICallScreeningAdapter extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -121,14 +129,14 @@ public interface ICallScreeningAdapter extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // com.android.internal.telecom.ICallScreeningAdapter
             public void allowCall(String callId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callId);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().allowCall(callId);
                     }
                 } finally {
@@ -136,14 +144,14 @@ public interface ICallScreeningAdapter extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.ICallScreeningAdapter
             public void silenceCall(String callId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callId);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().silenceCall(callId);
                     }
                 } finally {
@@ -151,23 +159,23 @@ public interface ICallScreeningAdapter extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.ICallScreeningAdapter
             public void disallowCall(String callId, boolean shouldReject, boolean shouldAddToCallLog, boolean shouldShowNotification, ComponentName componentName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callId);
-                    _data.writeInt(shouldReject);
-                    _data.writeInt(shouldAddToCallLog);
-                    _data.writeInt(shouldShowNotification);
+                    _data.writeInt(shouldReject ? 1 : 0);
+                    _data.writeInt(shouldAddToCallLog ? 1 : 0);
+                    _data.writeInt(shouldShowNotification ? 1 : 0);
                     if (componentName != null) {
                         _data.writeInt(1);
                         componentName.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().disallowCall(callId, shouldReject, shouldAddToCallLog, shouldShowNotification, componentName);
                     }
                 } finally {
@@ -177,11 +185,11 @@ public interface ICallScreeningAdapter extends IInterface {
         }
 
         public static boolean setDefaultImpl(ICallScreeningAdapter impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static ICallScreeningAdapter getDefaultImpl() {

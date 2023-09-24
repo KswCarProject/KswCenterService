@@ -1,24 +1,24 @@
 package android.permission;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.util.Preconditions;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class RuntimePermissionPresentationInfo implements Parcelable {
-    public static final Parcelable.Creator<RuntimePermissionPresentationInfo> CREATOR = new Parcelable.Creator<RuntimePermissionPresentationInfo>() {
+    public static final Parcelable.Creator<RuntimePermissionPresentationInfo> CREATOR = new Parcelable.Creator<RuntimePermissionPresentationInfo>() { // from class: android.permission.RuntimePermissionPresentationInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RuntimePermissionPresentationInfo createFromParcel(Parcel source) {
             CharSequence label = source.readCharSequence();
             int flags = source.readInt();
-            boolean z = false;
-            boolean z2 = (flags & 1) != 0;
-            if ((flags & 2) != 0) {
-                z = true;
-            }
-            return new RuntimePermissionPresentationInfo(label, z2, z);
+            return new RuntimePermissionPresentationInfo(label, (flags & 1) != 0, (flags & 2) != 0);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RuntimePermissionPresentationInfo[] newArray(int size) {
             return new RuntimePermissionPresentationInfo[size];
         }
@@ -47,10 +47,12 @@ public final class RuntimePermissionPresentationInfo implements Parcelable {
         return this.mLabel;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeCharSequence(this.mLabel);
         parcel.writeInt(this.mFlags);

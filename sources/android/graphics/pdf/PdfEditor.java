@@ -3,7 +3,7 @@ package android.graphics.pdf;
 import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.os.ParcelFileDescriptor;
+import android.p007os.ParcelFileDescriptor;
 import android.system.ErrnoException;
 import android.system.Os;
 import android.system.OsConstants;
@@ -11,6 +11,7 @@ import dalvik.system.CloseGuard;
 import java.io.IOException;
 import libcore.io.IoUtils;
 
+/* loaded from: classes.dex */
 public final class PdfEditor {
     private final CloseGuard mCloseGuard = CloseGuard.get();
     private ParcelFileDescriptor mInput;
@@ -42,27 +43,20 @@ public final class PdfEditor {
     private static native void nativeWrite(long j, int i);
 
     public PdfEditor(ParcelFileDescriptor input) throws IOException {
-        if (input != null) {
-            try {
-                Os.lseek(input.getFileDescriptor(), 0, OsConstants.SEEK_SET);
-                long size = Os.fstat(input.getFileDescriptor()).st_size;
-                this.mInput = input;
-                synchronized (PdfRenderer.sPdfiumLock) {
-                    this.mNativeDocument = nativeOpen(this.mInput.getFd(), size);
-                    try {
-                        this.mPageCount = nativeGetPageCount(this.mNativeDocument);
-                    } catch (Throwable t) {
-                        nativeClose(this.mNativeDocument);
-                        this.mNativeDocument = 0;
-                        throw t;
-                    }
-                }
-                this.mCloseGuard.open("close");
-            } catch (ErrnoException e) {
-                throw new IllegalArgumentException("file descriptor not seekable");
-            }
-        } else {
+        if (input == null) {
             throw new NullPointerException("input cannot be null");
+        }
+        try {
+            Os.lseek(input.getFileDescriptor(), 0L, OsConstants.SEEK_SET);
+            long size = Os.fstat(input.getFileDescriptor()).st_size;
+            this.mInput = input;
+            synchronized (PdfRenderer.sPdfiumLock) {
+                this.mNativeDocument = nativeOpen(this.mInput.getFd(), size);
+                this.mPageCount = nativeGetPageCount(this.mNativeDocument);
+            }
+            this.mCloseGuard.open("close");
+        } catch (ErrnoException e) {
+            throw new IllegalArgumentException("file descriptor not seekable");
         }
     }
 
@@ -90,7 +84,7 @@ public final class PdfEditor {
             Point size = new Point();
             getPageSize(pageIndex, size);
             synchronized (PdfRenderer.sPdfiumLock) {
-                nativeSetTransformAndClip(this.mNativeDocument, pageIndex, transform.native_instance, 0, 0, size.x, size.y);
+                nativeSetTransformAndClip(this.mNativeDocument, pageIndex, transform.native_instance, 0, 0, size.f59x, size.f60y);
             }
             return;
         }
@@ -163,10 +157,8 @@ public final class PdfEditor {
             synchronized (PdfRenderer.sPdfiumLock) {
                 nativeWrite(this.mNativeDocument, output.getFd());
             }
+        } finally {
             IoUtils.closeQuietly(output);
-        } catch (Throwable th) {
-            IoUtils.closeQuietly(output);
-            throw th;
         }
     }
 
@@ -175,8 +167,7 @@ public final class PdfEditor {
         doClose();
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         try {
             if (this.mCloseGuard != null) {
                 this.mCloseGuard.warnIfOpen();
@@ -192,7 +183,7 @@ public final class PdfEditor {
             synchronized (PdfRenderer.sPdfiumLock) {
                 nativeClose(this.mNativeDocument);
             }
-            this.mNativeDocument = 0;
+            this.mNativeDocument = 0L;
         }
         if (this.mInput != null) {
             IoUtils.closeQuietly(this.mInput);

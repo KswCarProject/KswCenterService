@@ -1,6 +1,7 @@
 package android.hardware;
 
 @Deprecated
+/* loaded from: classes.dex */
 public interface SensorListener {
     void onAccuracyChanged(int i, int i2);
 

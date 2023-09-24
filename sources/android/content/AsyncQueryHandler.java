@@ -2,13 +2,14 @@ package android.content;
 
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.Looper;
-import android.os.Message;
+import android.p007os.Handler;
+import android.p007os.HandlerThread;
+import android.p007os.Looper;
+import android.p007os.Message;
 import android.util.Log;
 import java.lang.ref.WeakReference;
 
+/* loaded from: classes.dex */
 public abstract class AsyncQueryHandler extends Handler {
     private static final int EVENT_ARG_DELETE = 4;
     private static final int EVENT_ARG_INSERT = 2;
@@ -20,6 +21,7 @@ public abstract class AsyncQueryHandler extends Handler {
     final WeakReference<ContentResolver> mResolver;
     private Handler mWorkerThreadHandler;
 
+    /* loaded from: classes.dex */
     protected static final class WorkerArgs {
         public Object cookie;
         public Handler handler;
@@ -35,45 +37,49 @@ public abstract class AsyncQueryHandler extends Handler {
         }
     }
 
+    /* loaded from: classes.dex */
     protected class WorkerHandler extends Handler {
         public WorkerHandler(Looper looper) {
             super(looper);
         }
 
+        @Override // android.p007os.Handler
         public void handleMessage(Message msg) {
             Cursor cursor;
-            ContentResolver resolver = (ContentResolver) AsyncQueryHandler.this.mResolver.get();
-            if (resolver != null) {
-                WorkerArgs args = (WorkerArgs) msg.obj;
-                int token = msg.what;
-                switch (msg.arg1) {
-                    case 1:
-                        try {
-                            cursor = resolver.query(args.uri, args.projection, args.selection, args.selectionArgs, args.orderBy);
-                            if (cursor != null) {
-                                cursor.getCount();
-                            }
-                        } catch (Exception e) {
-                            Log.w(AsyncQueryHandler.TAG, "Exception thrown during handling EVENT_ARG_QUERY", e);
-                            cursor = null;
-                        }
-                        args.result = cursor;
-                        break;
-                    case 2:
-                        args.result = resolver.insert(args.uri, args.values);
-                        break;
-                    case 3:
-                        args.result = Integer.valueOf(resolver.update(args.uri, args.values, args.selection, args.selectionArgs));
-                        break;
-                    case 4:
-                        args.result = Integer.valueOf(resolver.delete(args.uri, args.selection, args.selectionArgs));
-                        break;
-                }
-                Message reply = args.handler.obtainMessage(token);
-                reply.obj = args;
-                reply.arg1 = msg.arg1;
-                reply.sendToTarget();
+            ContentResolver resolver = AsyncQueryHandler.this.mResolver.get();
+            if (resolver == null) {
+                return;
             }
+            WorkerArgs args = (WorkerArgs) msg.obj;
+            int token = msg.what;
+            int event = msg.arg1;
+            switch (event) {
+                case 1:
+                    try {
+                        cursor = resolver.query(args.uri, args.projection, args.selection, args.selectionArgs, args.orderBy);
+                        if (cursor != null) {
+                            cursor.getCount();
+                        }
+                    } catch (Exception e) {
+                        Log.m63w(AsyncQueryHandler.TAG, "Exception thrown during handling EVENT_ARG_QUERY", e);
+                        cursor = null;
+                    }
+                    args.result = cursor;
+                    break;
+                case 2:
+                    args.result = resolver.insert(args.uri, args.values);
+                    break;
+                case 3:
+                    args.result = Integer.valueOf(resolver.update(args.uri, args.values, args.selection, args.selectionArgs));
+                    break;
+                case 4:
+                    args.result = Integer.valueOf(resolver.delete(args.uri, args.selection, args.selectionArgs));
+                    break;
+            }
+            Message reply = args.handler.obtainMessage(token);
+            reply.obj = args;
+            reply.arg1 = msg.arg1;
+            reply.sendToTarget();
         }
     }
 
@@ -89,8 +95,7 @@ public abstract class AsyncQueryHandler extends Handler {
         this.mWorkerThreadHandler = createHandler(sLooper);
     }
 
-    /* access modifiers changed from: protected */
-    public Handler createHandler(Looper looper) {
+    protected Handler createHandler(Looper looper) {
         return new WorkerHandler(looper);
     }
 
@@ -152,26 +157,24 @@ public abstract class AsyncQueryHandler extends Handler {
         this.mWorkerThreadHandler.sendMessage(msg);
     }
 
-    /* access modifiers changed from: protected */
-    public void onQueryComplete(int token, Object cookie, Cursor cursor) {
+    protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
     }
 
-    /* access modifiers changed from: protected */
-    public void onInsertComplete(int token, Object cookie, Uri uri) {
+    protected void onInsertComplete(int token, Object cookie, Uri uri) {
     }
 
-    /* access modifiers changed from: protected */
-    public void onUpdateComplete(int token, Object cookie, int result) {
+    protected void onUpdateComplete(int token, Object cookie, int result) {
     }
 
-    /* access modifiers changed from: protected */
-    public void onDeleteComplete(int token, Object cookie, int result) {
+    protected void onDeleteComplete(int token, Object cookie, int result) {
     }
 
+    @Override // android.p007os.Handler
     public void handleMessage(Message msg) {
         WorkerArgs args = (WorkerArgs) msg.obj;
         int token = msg.what;
-        switch (msg.arg1) {
+        int event = msg.arg1;
+        switch (event) {
             case 1:
                 onQueryComplete(token, args.cookie, (Cursor) args.result);
                 return;

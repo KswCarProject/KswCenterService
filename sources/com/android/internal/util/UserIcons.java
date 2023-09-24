@@ -5,10 +5,11 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
+/* loaded from: classes4.dex */
 public class UserIcons {
-    private static final int[] USER_ICON_COLORS = {R.color.user_icon_1, R.color.user_icon_2, R.color.user_icon_3, R.color.user_icon_4, R.color.user_icon_5, R.color.user_icon_6, R.color.user_icon_7, R.color.user_icon_8};
+    private static final int[] USER_ICON_COLORS = {C3132R.color.user_icon_1, C3132R.color.user_icon_2, C3132R.color.user_icon_3, C3132R.color.user_icon_4, C3132R.color.user_icon_5, C3132R.color.user_icon_6, C3132R.color.user_icon_7, C3132R.color.user_icon_8};
 
     public static Bitmap convertToBitmap(Drawable icon) {
         if (icon == null) {
@@ -24,12 +25,12 @@ public class UserIcons {
     }
 
     public static Drawable getDefaultUserIcon(Resources resources, int userId, boolean light) {
-        int colorResId = light ? R.color.user_icon_default_white : R.color.user_icon_default_gray;
+        int colorResId = light ? C3132R.color.user_icon_default_white : C3132R.color.user_icon_default_gray;
         if (userId != -10000) {
             colorResId = USER_ICON_COLORS[userId % USER_ICON_COLORS.length];
         }
-        Drawable icon = resources.getDrawable(R.drawable.ic_account_circle, (Resources.Theme) null).mutate();
-        icon.setColorFilter(resources.getColor(colorResId, (Resources.Theme) null), PorterDuff.Mode.SRC_IN);
+        Drawable icon = resources.getDrawable(C3132R.C3133drawable.ic_account_circle, null).mutate();
+        icon.setColorFilter(resources.getColor(colorResId, null), PorterDuff.Mode.SRC_IN);
         icon.setBounds(0, 0, icon.getIntrinsicWidth(), icon.getIntrinsicHeight());
         return icon;
     }

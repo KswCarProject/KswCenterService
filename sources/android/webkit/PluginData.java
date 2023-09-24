@@ -5,14 +5,15 @@ import java.io.InputStream;
 import java.util.Map;
 
 @Deprecated
+/* loaded from: classes4.dex */
 public final class PluginData {
     private long mContentLength;
     private Map<String, String[]> mHeaders;
     private int mStatusCode;
     private InputStream mStream;
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public PluginData(InputStream stream, long length, Map<String, String[]> headers, int code) {
         this.mStream = stream;
         this.mContentLength = length;
@@ -20,26 +21,26 @@ public final class PluginData {
         this.mStatusCode = code;
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public InputStream getInputStream() {
         return this.mStream;
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public long getContentLength() {
         return this.mContentLength;
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public Map<String, String[]> getHeaders() {
         return this.mHeaders;
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public int getStatusCode() {
         return this.mStatusCode;
     }

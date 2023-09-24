@@ -4,14 +4,15 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Build;
-import android.os.SystemClock;
-import android.os.SystemProperties;
-import android.os.Trace;
+import android.p007os.Build;
+import android.p007os.SystemClock;
+import android.p007os.SystemProperties;
+import android.p007os.Trace;
 import android.util.EventLog;
 import android.util.Log;
 import android.util.SparseLongArray;
 
+/* loaded from: classes4.dex */
 public class LatencyTracker {
     public static final int ACTION_CHECK_CREDENTIAL = 3;
     public static final int ACTION_CHECK_CREDENTIAL_UNLOCKED = 4;
@@ -36,15 +37,16 @@ public class LatencyTracker {
     }
 
     private LatencyTracker(Context context) {
-        context.registerReceiver(new BroadcastReceiver() {
-            public void onReceive(Context context, Intent intent) {
+        context.registerReceiver(new BroadcastReceiver() { // from class: com.android.internal.util.LatencyTracker.1
+            @Override // android.content.BroadcastReceiver
+            public void onReceive(Context context2, Intent intent) {
                 LatencyTracker.this.reloadProperty();
             }
         }, new IntentFilter(ACTION_RELOAD_PROPERTY));
         reloadProperty();
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void reloadProperty() {
         this.mEnabled = SystemProperties.getBoolean("debug.systemui.latency_tracking", false);
     }
@@ -54,26 +56,29 @@ public class LatencyTracker {
     }
 
     public void onActionStart(int action) {
-        if (this.mEnabled) {
-            Trace.asyncTraceBegin(4096, NAMES[action], 0);
-            this.mStartRtc.put(action, SystemClock.elapsedRealtime());
+        if (!this.mEnabled) {
+            return;
         }
+        Trace.asyncTraceBegin(4096L, NAMES[action], 0);
+        this.mStartRtc.put(action, SystemClock.elapsedRealtime());
     }
 
     public void onActionEnd(int action) {
-        if (this.mEnabled) {
-            long endRtc = SystemClock.elapsedRealtime();
-            long startRtc = this.mStartRtc.get(action, -1);
-            if (startRtc != -1) {
-                this.mStartRtc.delete(action);
-                Trace.asyncTraceEnd(4096, NAMES[action], 0);
-                logAction(action, (int) (endRtc - startRtc));
-            }
+        if (!this.mEnabled) {
+            return;
         }
+        long endRtc = SystemClock.elapsedRealtime();
+        long startRtc = this.mStartRtc.get(action, -1L);
+        if (startRtc == -1) {
+            return;
+        }
+        this.mStartRtc.delete(action);
+        Trace.asyncTraceEnd(4096L, NAMES[action], 0);
+        logAction(action, (int) (endRtc - startRtc));
     }
 
     public static void logAction(int action, int duration) {
-        Log.i(TAG, "action=" + action + " latency=" + duration);
+        Log.m68i(TAG, "action=" + action + " latency=" + duration);
         EventLog.writeEvent(36070, Integer.valueOf(action), Integer.valueOf(duration));
     }
 }

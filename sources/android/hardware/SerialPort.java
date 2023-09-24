@@ -1,11 +1,12 @@
 package android.hardware;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.ParcelFileDescriptor;
+import android.p007os.ParcelFileDescriptor;
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
+/* loaded from: classes.dex */
 public class SerialPort {
     private static final String TAG = "SerialPort";
     private ParcelFileDescriptor mFileDescriptor;

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.media.TtmlUtils;
 import android.provider.Telephony;
 import android.text.Html;
 import android.text.Layout;
@@ -23,7 +24,7 @@ import android.text.style.SuperscriptSpan;
 import android.text.style.TypefaceSpan;
 import android.text.style.URLSpan;
 import android.text.style.UnderlineSpan;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import com.ibm.icu.text.DateFormat;
 import java.io.IOException;
 import java.io.StringReader;
@@ -40,11 +41,10 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
-/* compiled from: Html */
+/* compiled from: Html.java */
+/* loaded from: classes4.dex */
 class HtmlToSpannedConverter implements ContentHandler {
-    private static final float[] HEADING_SIZES = {1.5f, 1.4f, 1.3f, 1.2f, 1.1f, 1.0f};
     private static Pattern sBackgroundColorPattern;
-    private static final Map<String, Integer> sColorMap = new HashMap();
     private static Pattern sForegroundColorPattern;
     private static Pattern sTextAlignPattern;
     private static Pattern sTextDecorationPattern;
@@ -54,6 +54,8 @@ class HtmlToSpannedConverter implements ContentHandler {
     private String mSource;
     private SpannableStringBuilder mSpannableStringBuilder = new SpannableStringBuilder();
     private Html.TagHandler mTagHandler;
+    private static final float[] HEADING_SIZES = {1.5f, 1.4f, 1.3f, 1.2f, 1.1f, 1.0f};
+    private static final Map<String, Integer> sColorMap = new HashMap();
 
     static {
         sColorMap.put("darkgray", -5658199);
@@ -109,20 +111,21 @@ class HtmlToSpannedConverter implements ContentHandler {
             Object[] obj = this.mSpannableStringBuilder.getSpans(0, this.mSpannableStringBuilder.length(), ParagraphStyle.class);
             while (true) {
                 int i = end;
-                if (i >= obj.length) {
+                if (i < obj.length) {
+                    int start = this.mSpannableStringBuilder.getSpanStart(obj[i]);
+                    int end2 = this.mSpannableStringBuilder.getSpanEnd(obj[i]);
+                    if (end2 - 2 >= 0 && this.mSpannableStringBuilder.charAt(end2 - 1) == '\n' && this.mSpannableStringBuilder.charAt(end2 - 2) == '\n') {
+                        end2--;
+                    }
+                    if (end2 == start) {
+                        this.mSpannableStringBuilder.removeSpan(obj[i]);
+                    } else {
+                        this.mSpannableStringBuilder.setSpan(obj[i], start, end2, 51);
+                    }
+                    end = i + 1;
+                } else {
                     return this.mSpannableStringBuilder;
                 }
-                int start = this.mSpannableStringBuilder.getSpanStart(obj[i]);
-                int end2 = this.mSpannableStringBuilder.getSpanEnd(obj[i]);
-                if (end2 - 2 >= 0 && this.mSpannableStringBuilder.charAt(end2 - 1) == 10 && this.mSpannableStringBuilder.charAt(end2 - 2) == 10) {
-                    end2--;
-                }
-                if (end2 == start) {
-                    this.mSpannableStringBuilder.removeSpan(obj[i]);
-                } else {
-                    this.mSpannableStringBuilder.setSpan(obj[i], start, end2, 51);
-                }
-                end = i + 1;
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -280,21 +283,20 @@ class HtmlToSpannedConverter implements ContentHandler {
 
     private static void appendNewlines(Editable text, int minNewline) {
         int len = text.length();
-        if (len != 0) {
-            int existingNewlines = 0;
-            int i = len - 1;
-            while (i >= 0 && text.charAt(i) == 10) {
-                existingNewlines++;
-                i--;
-            }
-            for (int j = existingNewlines; j < minNewline; j++) {
-                text.append((CharSequence) "\n");
-            }
+        if (len == 0) {
+            return;
+        }
+        int existingNewlines = 0;
+        for (int i = len - 1; i >= 0 && text.charAt(i) == '\n'; i--) {
+            existingNewlines++;
+        }
+        for (int j = existingNewlines; j < minNewline; j++) {
+            text.append("\n");
         }
     }
 
     private static void startBlockElement(Editable text, Attributes attributes, int margin) {
-        int length = text.length();
+        text.length();
         if (margin > 0) {
             appendNewlines(text, margin);
             start(text, new Newline(margin));
@@ -328,7 +330,7 @@ class HtmlToSpannedConverter implements ContentHandler {
     }
 
     private static void handleBr(Editable text) {
-        text.append(10);
+        text.append('\n');
     }
 
     private void startLi(Editable text, Attributes attributes) {
@@ -367,11 +369,11 @@ class HtmlToSpannedConverter implements ContentHandler {
     }
 
     private static <T> T getLast(Spanned text, Class<T> kind) {
-        T[] objs = text.getSpans(0, text.length(), kind);
-        if (objs.length == 0) {
+        Object[] spans = text.getSpans(0, text.length(), kind);
+        if (spans.length == 0) {
             return null;
         }
-        return objs[objs.length - 1];
+        return (T) spans[spans.length - 1];
     }
 
     private static void setSpanFromMark(Spannable text, Object mark, Object... spans) {
@@ -391,7 +393,7 @@ class HtmlToSpannedConverter implements ContentHandler {
     }
 
     private static void end(Editable text, Class kind, Object repl) {
-        int length = text.length();
+        text.length();
         Object obj = getLast(text, kind);
         if (obj != null) {
             setSpanFromMark(text, obj, repl);
@@ -405,15 +407,18 @@ class HtmlToSpannedConverter implements ContentHandler {
         if (style != null) {
             Matcher m = getForegroundColorPattern().matcher(style);
             if (m.find() && (c2 = getHtmlColor(m.group(1))) != -1) {
-                start(text, new Foreground(c2 | -16777216));
+                start(text, new Foreground(c2 | (-16777216)));
             }
             Matcher m2 = getBackgroundColorPattern().matcher(style);
             if (m2.find() && (c = getHtmlColor(m2.group(1))) != -1) {
-                start(text, new Background(-16777216 | c));
+                start(text, new Background((-16777216) | c));
             }
             Matcher m3 = getTextDecorationPattern().matcher(style);
-            if (m3.find() && m3.group(1).equalsIgnoreCase("line-through")) {
-                start(text, new Strikethrough());
+            if (m3.find()) {
+                String textDecoration = m3.group(1);
+                if (textDecoration.equalsIgnoreCase("line-through")) {
+                    start(text, new Strikethrough());
+                }
             }
         }
     }
@@ -440,11 +445,11 @@ class HtmlToSpannedConverter implements ContentHandler {
             d = img.getDrawable(src);
         }
         if (d == null) {
-            d = Resources.getSystem().getDrawable(R.drawable.unknown_image);
+            d = Resources.getSystem().getDrawable(C3132R.C3133drawable.unknown_image);
             d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
         }
         int len = text.length();
-        text.append((CharSequence) "￼");
+        text.append("\ufffc");
         text.setSpan(new ImageSpan(d, src), len, text.length(), 33);
     }
 
@@ -453,9 +458,9 @@ class HtmlToSpannedConverter implements ContentHandler {
         String color = attributes.getValue("", "color");
         String face = attributes.getValue("", Context.FACE_SERVICE);
         if (!TextUtils.isEmpty(color) && (c = getHtmlColor(color)) != -1) {
-            start(text, new Foreground(-16777216 | c));
+            start(text, new Foreground((-16777216) | c));
         }
-        if (TextUtils.isEmpty(face) == 0) {
+        if (!TextUtils.isEmpty(face)) {
             start(text, new Font(face));
         }
     }
@@ -472,65 +477,75 @@ class HtmlToSpannedConverter implements ContentHandler {
     }
 
     private static void startA(Editable text, Attributes attributes) {
-        start(text, new Href(attributes.getValue("", "href")));
+        String href = attributes.getValue("", "href");
+        start(text, new Href(href));
     }
 
     private static void endA(Editable text) {
         Href h = (Href) getLast(text, Href.class);
-        if (h != null && h.mHref != null) {
-            setSpanFromMark(text, h, new URLSpan(h.mHref));
+        if (h == null || h.mHref == null) {
+            return;
         }
+        setSpanFromMark(text, h, new URLSpan(h.mHref));
     }
 
     private int getHtmlColor(String color) {
         Integer i;
-        if ((this.mFlags & 256) != 256 || (i = sColorMap.get(color.toLowerCase(Locale.US))) == null) {
-            return Color.getHtmlColor(color);
+        if ((this.mFlags & 256) == 256 && (i = sColorMap.get(color.toLowerCase(Locale.US))) != null) {
+            return i.intValue();
         }
-        return i.intValue();
+        return Color.getHtmlColor(color);
     }
 
+    @Override // org.xml.sax.ContentHandler
     public void setDocumentLocator(Locator locator) {
     }
 
+    @Override // org.xml.sax.ContentHandler
     public void startDocument() throws SAXException {
     }
 
+    @Override // org.xml.sax.ContentHandler
     public void endDocument() throws SAXException {
     }
 
+    @Override // org.xml.sax.ContentHandler
     public void startPrefixMapping(String prefix, String uri) throws SAXException {
     }
 
+    @Override // org.xml.sax.ContentHandler
     public void endPrefixMapping(String prefix) throws SAXException {
     }
 
+    @Override // org.xml.sax.ContentHandler
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         handleStartTag(localName, attributes);
     }
 
+    @Override // org.xml.sax.ContentHandler
     public void endElement(String uri, String localName, String qName) throws SAXException {
         handleEndTag(localName);
     }
 
+    @Override // org.xml.sax.ContentHandler
     public void characters(char[] ch, int start, int length) throws SAXException {
         char pred;
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < length; i++) {
             char c = ch[i + start];
-            if (c == ' ' || c == 10) {
+            if (c == ' ' || c == '\n') {
                 int len = sb.length();
                 if (len == 0) {
                     int len2 = this.mSpannableStringBuilder.length();
                     if (len2 == 0) {
-                        pred = 10;
+                        pred = '\n';
                     } else {
                         pred = this.mSpannableStringBuilder.charAt(len2 - 1);
                     }
                 } else {
                     pred = sb.charAt(len - 1);
                 }
-                if (!(pred == ' ' || pred == 10)) {
+                if (pred != ' ' && pred != '\n') {
                     sb.append(' ');
                 }
             } else {
@@ -540,82 +555,97 @@ class HtmlToSpannedConverter implements ContentHandler {
         this.mSpannableStringBuilder.append((CharSequence) sb);
     }
 
+    @Override // org.xml.sax.ContentHandler
     public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
     }
 
+    @Override // org.xml.sax.ContentHandler
     public void processingInstruction(String target, String data) throws SAXException {
     }
 
+    @Override // org.xml.sax.ContentHandler
     public void skippedEntity(String name) throws SAXException {
     }
 
-    /* compiled from: Html */
+    /* compiled from: Html.java */
+    /* loaded from: classes4.dex */
     private static class Bold {
         private Bold() {
         }
     }
 
-    /* compiled from: Html */
+    /* compiled from: Html.java */
+    /* loaded from: classes4.dex */
     private static class Italic {
         private Italic() {
         }
     }
 
-    /* compiled from: Html */
+    /* compiled from: Html.java */
+    /* loaded from: classes4.dex */
     private static class Underline {
         private Underline() {
         }
     }
 
-    /* compiled from: Html */
+    /* compiled from: Html.java */
+    /* loaded from: classes4.dex */
     private static class Strikethrough {
         private Strikethrough() {
         }
     }
 
-    /* compiled from: Html */
+    /* compiled from: Html.java */
+    /* loaded from: classes4.dex */
     private static class Big {
         private Big() {
         }
     }
 
-    /* compiled from: Html */
+    /* compiled from: Html.java */
+    /* loaded from: classes4.dex */
     private static class Small {
         private Small() {
         }
     }
 
-    /* compiled from: Html */
+    /* compiled from: Html.java */
+    /* loaded from: classes4.dex */
     private static class Monospace {
         private Monospace() {
         }
     }
 
-    /* compiled from: Html */
+    /* compiled from: Html.java */
+    /* loaded from: classes4.dex */
     private static class Blockquote {
         private Blockquote() {
         }
     }
 
-    /* compiled from: Html */
+    /* compiled from: Html.java */
+    /* loaded from: classes4.dex */
     private static class Super {
         private Super() {
         }
     }
 
-    /* compiled from: Html */
+    /* compiled from: Html.java */
+    /* loaded from: classes4.dex */
     private static class Sub {
         private Sub() {
         }
     }
 
-    /* compiled from: Html */
+    /* compiled from: Html.java */
+    /* loaded from: classes4.dex */
     private static class Bullet {
         private Bullet() {
         }
     }
 
-    /* compiled from: Html */
+    /* compiled from: Html.java */
+    /* loaded from: classes4.dex */
     private static class Font {
         public String mFace;
 
@@ -624,7 +654,8 @@ class HtmlToSpannedConverter implements ContentHandler {
         }
     }
 
-    /* compiled from: Html */
+    /* compiled from: Html.java */
+    /* loaded from: classes4.dex */
     private static class Href {
         public String mHref;
 
@@ -633,50 +664,50 @@ class HtmlToSpannedConverter implements ContentHandler {
         }
     }
 
-    /* compiled from: Html */
+    /* compiled from: Html.java */
+    /* loaded from: classes4.dex */
     private static class Foreground {
-        /* access modifiers changed from: private */
-        public int mForegroundColor;
+        private int mForegroundColor;
 
         public Foreground(int foregroundColor) {
             this.mForegroundColor = foregroundColor;
         }
     }
 
-    /* compiled from: Html */
+    /* compiled from: Html.java */
+    /* loaded from: classes4.dex */
     private static class Background {
-        /* access modifiers changed from: private */
-        public int mBackgroundColor;
+        private int mBackgroundColor;
 
         public Background(int backgroundColor) {
             this.mBackgroundColor = backgroundColor;
         }
     }
 
-    /* compiled from: Html */
+    /* compiled from: Html.java */
+    /* loaded from: classes4.dex */
     private static class Heading {
-        /* access modifiers changed from: private */
-        public int mLevel;
+        private int mLevel;
 
         public Heading(int level) {
             this.mLevel = level;
         }
     }
 
-    /* compiled from: Html */
+    /* compiled from: Html.java */
+    /* loaded from: classes4.dex */
     private static class Newline {
-        /* access modifiers changed from: private */
-        public int mNumNewlines;
+        private int mNumNewlines;
 
         public Newline(int numNewlines) {
             this.mNumNewlines = numNewlines;
         }
     }
 
-    /* compiled from: Html */
+    /* compiled from: Html.java */
+    /* loaded from: classes4.dex */
     private static class Alignment {
-        /* access modifiers changed from: private */
-        public Layout.Alignment mAlignment;
+        private Layout.Alignment mAlignment;
 
         public Alignment(Layout.Alignment alignment) {
             this.mAlignment = alignment;

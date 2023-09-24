@@ -2,8 +2,9 @@ package android.database.sqlite;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.CancellationSignal;
+import android.p007os.CancellationSignal;
 
+/* loaded from: classes.dex */
 public final class SQLiteDirectCursorDriver implements SQLiteCursorDriver {
     private final CancellationSignal mCancellationSignal;
     private final SQLiteDatabase mDatabase;
@@ -18,6 +19,7 @@ public final class SQLiteDirectCursorDriver implements SQLiteCursorDriver {
         this.mCancellationSignal = cancellationSignal;
     }
 
+    @Override // android.database.sqlite.SQLiteCursorDriver
     public Cursor query(SQLiteDatabase.CursorFactory factory, String[] selectionArgs) {
         Cursor cursor;
         SQLiteQuery query = new SQLiteQuery(this.mDatabase, this.mSql, this.mCancellationSignal);
@@ -36,16 +38,20 @@ public final class SQLiteDirectCursorDriver implements SQLiteCursorDriver {
         }
     }
 
+    @Override // android.database.sqlite.SQLiteCursorDriver
     public void cursorClosed() {
     }
 
+    @Override // android.database.sqlite.SQLiteCursorDriver
     public void setBindArguments(String[] bindArgs) {
         this.mQuery.bindAllArgsAsStrings(bindArgs);
     }
 
+    @Override // android.database.sqlite.SQLiteCursorDriver
     public void cursorDeactivated() {
     }
 
+    @Override // android.database.sqlite.SQLiteCursorDriver
     public void cursorRequeried(Cursor cursor) {
     }
 

@@ -7,6 +7,7 @@ import org.mozilla.universalchardet.prober.statemachine.ISO2022CNSMModel;
 import org.mozilla.universalchardet.prober.statemachine.ISO2022JPSMModel;
 import org.mozilla.universalchardet.prober.statemachine.ISO2022KRSMModel;
 
+/* loaded from: classes5.dex */
 public class EscCharsetProber extends CharsetProber {
     private static final HZSMModel hzsModel = new HZSMModel();
     private static final ISO2022CNSMModel iso2022cnModel = new ISO2022CNSMModel();
@@ -25,58 +26,60 @@ public class EscCharsetProber extends CharsetProber {
         reset();
     }
 
+    @Override // org.mozilla.universalchardet.prober.CharsetProber
     public String getCharSetName() {
         return this.detectedCharset;
     }
 
+    @Override // org.mozilla.universalchardet.prober.CharsetProber
     public float getConfidence() {
         return 0.99f;
     }
 
+    @Override // org.mozilla.universalchardet.prober.CharsetProber
     public CharsetProber.ProbingState getState() {
         return this.state;
     }
 
+    @Override // org.mozilla.universalchardet.prober.CharsetProber
     public CharsetProber.ProbingState handleData(byte[] bArr, int i, int i2) {
         int i3 = i2 + i;
         while (i < i3 && this.state == CharsetProber.ProbingState.DETECTING) {
-            int i4 = this.activeSM - 1;
-            while (i4 >= 0) {
+            for (int i4 = this.activeSM - 1; i4 >= 0; i4--) {
                 int nextState = this.codingSM[i4].nextState(bArr[i]);
                 if (nextState == 1) {
                     this.activeSM--;
                     if (this.activeSM <= 0) {
                         this.state = CharsetProber.ProbingState.NOT_ME;
-                    } else {
-                        if (i4 != this.activeSM) {
-                            CodingStateMachine codingStateMachine = this.codingSM[this.activeSM];
-                            this.codingSM[this.activeSM] = this.codingSM[i4];
-                            this.codingSM[i4] = codingStateMachine;
-                        }
-                        i4--;
+                        return this.state;
+                    }
+                    if (i4 != this.activeSM) {
+                        CodingStateMachine codingStateMachine = this.codingSM[this.activeSM];
+                        this.codingSM[this.activeSM] = this.codingSM[i4];
+                        this.codingSM[i4] = codingStateMachine;
                     }
                 } else if (nextState == 2) {
                     this.state = CharsetProber.ProbingState.FOUND_IT;
                     this.detectedCharset = this.codingSM[i4].getCodingStateMachine();
-                } else {
-                    i4--;
+                    return this.state;
                 }
-                return this.state;
             }
             i++;
         }
         return this.state;
     }
 
+    @Override // org.mozilla.universalchardet.prober.CharsetProber
     public void reset() {
         this.state = CharsetProber.ProbingState.DETECTING;
-        for (CodingStateMachine reset : this.codingSM) {
-            reset.reset();
+        for (int i = 0; i < this.codingSM.length; i++) {
+            this.codingSM[i].reset();
         }
         this.activeSM = this.codingSM.length;
         this.detectedCharset = null;
     }
 
+    @Override // org.mozilla.universalchardet.prober.CharsetProber
     public void setOption() {
     }
 }

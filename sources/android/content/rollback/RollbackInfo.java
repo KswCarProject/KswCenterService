@@ -1,18 +1,23 @@
 package android.content.rollback;
 
 import android.annotation.SystemApi;
-import android.content.pm.VersionedPackage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.content.p002pm.VersionedPackage;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.List;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class RollbackInfo implements Parcelable {
-    public static final Parcelable.Creator<RollbackInfo> CREATOR = new Parcelable.Creator<RollbackInfo>() {
+    public static final Parcelable.Creator<RollbackInfo> CREATOR = new Parcelable.Creator<RollbackInfo>() { // from class: android.content.rollback.RollbackInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RollbackInfo createFromParcel(Parcel in) {
             return new RollbackInfo(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RollbackInfo[] newArray(int size) {
             return new RollbackInfo[size];
         }
@@ -63,10 +68,12 @@ public final class RollbackInfo implements Parcelable {
         return this.mCausePackages;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(this.mRollbackId);
         out.writeTypedList(this.mPackages);

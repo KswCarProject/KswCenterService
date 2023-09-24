@@ -2,10 +2,10 @@ package com.android.internal.view;
 
 import android.annotation.UnsupportedAppUsage;
 import android.inputmethodservice.AbstractInputMethodService;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.RemoteException;
-import android.os.SystemClock;
+import android.p007os.Bundle;
+import android.p007os.Handler;
+import android.p007os.RemoteException;
+import android.p007os.SystemClock;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.inputmethod.CompletionInfo;
@@ -19,6 +19,7 @@ import com.android.internal.view.IInputContextCallback;
 import java.lang.ref.WeakReference;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/* loaded from: classes4.dex */
 public class InputConnectionWrapper implements InputConnection {
     private static final int MAX_WAIT_TIME_MILLIS = 2000;
     private final IInputContext mIInputContext;
@@ -26,6 +27,7 @@ public class InputConnectionWrapper implements InputConnection {
     private final AtomicBoolean mIsUnbindIssued;
     private final int mMissingMethods;
 
+    /* loaded from: classes4.dex */
     static class InputContextCallback extends IInputContextCallback.Stub {
         private static final String TAG = "InputConnectionWrapper.ICC";
         private static InputContextCallback sInstance = new InputContextCallback();
@@ -43,9 +45,12 @@ public class InputConnectionWrapper implements InputConnection {
         InputContextCallback() {
         }
 
-        /* access modifiers changed from: private */
+        static /* synthetic */ InputContextCallback access$000() {
+            return getInstance();
+        }
+
         @UnsupportedAppUsage
-        public static InputContextCallback getInstance() {
+        private static InputContextCallback getInstance() {
             InputContextCallback callback;
             synchronized (InputContextCallback.class) {
                 if (sInstance != null) {
@@ -62,7 +67,7 @@ public class InputConnectionWrapper implements InputConnection {
             return callback;
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         @UnsupportedAppUsage
         public void dispose() {
             synchronized (InputContextCallback.class) {
@@ -75,6 +80,7 @@ public class InputConnectionWrapper implements InputConnection {
             }
         }
 
+        @Override // com.android.internal.view.IInputContextCallback
         public void setTextBeforeCursor(CharSequence textBeforeCursor, int seq) {
             synchronized (this) {
                 if (seq == this.mSeq) {
@@ -82,11 +88,12 @@ public class InputConnectionWrapper implements InputConnection {
                     this.mHaveValue = true;
                     notifyAll();
                 } else {
-                    Log.i(TAG, "Got out-of-sequence callback " + seq + " (expected " + this.mSeq + ") in setTextBeforeCursor, ignoring.");
+                    Log.m68i(TAG, "Got out-of-sequence callback " + seq + " (expected " + this.mSeq + ") in setTextBeforeCursor, ignoring.");
                 }
             }
         }
 
+        @Override // com.android.internal.view.IInputContextCallback
         public void setTextAfterCursor(CharSequence textAfterCursor, int seq) {
             synchronized (this) {
                 if (seq == this.mSeq) {
@@ -94,11 +101,12 @@ public class InputConnectionWrapper implements InputConnection {
                     this.mHaveValue = true;
                     notifyAll();
                 } else {
-                    Log.i(TAG, "Got out-of-sequence callback " + seq + " (expected " + this.mSeq + ") in setTextAfterCursor, ignoring.");
+                    Log.m68i(TAG, "Got out-of-sequence callback " + seq + " (expected " + this.mSeq + ") in setTextAfterCursor, ignoring.");
                 }
             }
         }
 
+        @Override // com.android.internal.view.IInputContextCallback
         public void setSelectedText(CharSequence selectedText, int seq) {
             synchronized (this) {
                 if (seq == this.mSeq) {
@@ -106,11 +114,12 @@ public class InputConnectionWrapper implements InputConnection {
                     this.mHaveValue = true;
                     notifyAll();
                 } else {
-                    Log.i(TAG, "Got out-of-sequence callback " + seq + " (expected " + this.mSeq + ") in setSelectedText, ignoring.");
+                    Log.m68i(TAG, "Got out-of-sequence callback " + seq + " (expected " + this.mSeq + ") in setSelectedText, ignoring.");
                 }
             }
         }
 
+        @Override // com.android.internal.view.IInputContextCallback
         public void setCursorCapsMode(int capsMode, int seq) {
             synchronized (this) {
                 if (seq == this.mSeq) {
@@ -118,11 +127,12 @@ public class InputConnectionWrapper implements InputConnection {
                     this.mHaveValue = true;
                     notifyAll();
                 } else {
-                    Log.i(TAG, "Got out-of-sequence callback " + seq + " (expected " + this.mSeq + ") in setCursorCapsMode, ignoring.");
+                    Log.m68i(TAG, "Got out-of-sequence callback " + seq + " (expected " + this.mSeq + ") in setCursorCapsMode, ignoring.");
                 }
             }
         }
 
+        @Override // com.android.internal.view.IInputContextCallback
         public void setExtractedText(ExtractedText extractedText, int seq) {
             synchronized (this) {
                 if (seq == this.mSeq) {
@@ -130,11 +140,12 @@ public class InputConnectionWrapper implements InputConnection {
                     this.mHaveValue = true;
                     notifyAll();
                 } else {
-                    Log.i(TAG, "Got out-of-sequence callback " + seq + " (expected " + this.mSeq + ") in setExtractedText, ignoring.");
+                    Log.m68i(TAG, "Got out-of-sequence callback " + seq + " (expected " + this.mSeq + ") in setExtractedText, ignoring.");
                 }
             }
         }
 
+        @Override // com.android.internal.view.IInputContextCallback
         public void setRequestUpdateCursorAnchorInfoResult(boolean result, int seq) {
             synchronized (this) {
                 if (seq == this.mSeq) {
@@ -142,11 +153,12 @@ public class InputConnectionWrapper implements InputConnection {
                     this.mHaveValue = true;
                     notifyAll();
                 } else {
-                    Log.i(TAG, "Got out-of-sequence callback " + seq + " (expected " + this.mSeq + ") in setCursorAnchorInfoRequestResult, ignoring.");
+                    Log.m68i(TAG, "Got out-of-sequence callback " + seq + " (expected " + this.mSeq + ") in setCursorAnchorInfoRequestResult, ignoring.");
                 }
             }
         }
 
+        @Override // com.android.internal.view.IInputContextCallback
         public void setCommitContentResult(boolean result, int seq) {
             synchronized (this) {
                 if (seq == this.mSeq) {
@@ -154,18 +166,18 @@ public class InputConnectionWrapper implements InputConnection {
                     this.mHaveValue = true;
                     notifyAll();
                 } else {
-                    Log.i(TAG, "Got out-of-sequence callback " + seq + " (expected " + this.mSeq + ") in setCommitContentResult, ignoring.");
+                    Log.m68i(TAG, "Got out-of-sequence callback " + seq + " (expected " + this.mSeq + ") in setCommitContentResult, ignoring.");
                 }
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public void waitForResultLocked() {
-            long endTime = 2000 + SystemClock.uptimeMillis();
+        void waitForResultLocked() {
+            long startTime = SystemClock.uptimeMillis();
+            long endTime = 2000 + startTime;
             while (!this.mHaveValue) {
                 long remainingTime = endTime - SystemClock.uptimeMillis();
                 if (remainingTime <= 0) {
-                    Log.w(TAG, "Timed out waiting on IInputContextCallback");
+                    Log.m64w(TAG, "Timed out waiting on IInputContextCallback");
                     return;
                 }
                 try {
@@ -183,13 +195,14 @@ public class InputConnectionWrapper implements InputConnection {
         this.mIsUnbindIssued = isUnbindIssued;
     }
 
+    @Override // android.view.inputmethod.InputConnection
     public CharSequence getTextAfterCursor(int length, int flags) {
         if (this.mIsUnbindIssued.get()) {
             return null;
         }
         CharSequence value = null;
         try {
-            InputContextCallback callback = InputContextCallback.getInstance();
+            InputContextCallback callback = InputContextCallback.access$000();
             this.mIInputContext.getTextAfterCursor(length, flags, callback.mSeq, callback);
             synchronized (callback) {
                 callback.waitForResultLocked();
@@ -204,13 +217,14 @@ public class InputConnectionWrapper implements InputConnection {
         }
     }
 
+    @Override // android.view.inputmethod.InputConnection
     public CharSequence getTextBeforeCursor(int length, int flags) {
         if (this.mIsUnbindIssued.get()) {
             return null;
         }
         CharSequence value = null;
         try {
-            InputContextCallback callback = InputContextCallback.getInstance();
+            InputContextCallback callback = InputContextCallback.access$000();
             this.mIInputContext.getTextBeforeCursor(length, flags, callback.mSeq, callback);
             synchronized (callback) {
                 callback.waitForResultLocked();
@@ -225,13 +239,14 @@ public class InputConnectionWrapper implements InputConnection {
         }
     }
 
+    @Override // android.view.inputmethod.InputConnection
     public CharSequence getSelectedText(int flags) {
         if (this.mIsUnbindIssued.get() || isMethodMissing(1)) {
             return null;
         }
         CharSequence value = null;
         try {
-            InputContextCallback callback = InputContextCallback.getInstance();
+            InputContextCallback callback = InputContextCallback.access$000();
             this.mIInputContext.getSelectedText(flags, callback.mSeq, callback);
             synchronized (callback) {
                 callback.waitForResultLocked();
@@ -246,13 +261,14 @@ public class InputConnectionWrapper implements InputConnection {
         }
     }
 
+    @Override // android.view.inputmethod.InputConnection
     public int getCursorCapsMode(int reqModes) {
         if (this.mIsUnbindIssued.get()) {
             return 0;
         }
         int value = 0;
         try {
-            InputContextCallback callback = InputContextCallback.getInstance();
+            InputContextCallback callback = InputContextCallback.access$000();
             this.mIInputContext.getCursorCapsMode(reqModes, callback.mSeq, callback);
             synchronized (callback) {
                 callback.waitForResultLocked();
@@ -267,13 +283,14 @@ public class InputConnectionWrapper implements InputConnection {
         }
     }
 
+    @Override // android.view.inputmethod.InputConnection
     public ExtractedText getExtractedText(ExtractedTextRequest request, int flags) {
         if (this.mIsUnbindIssued.get()) {
             return null;
         }
         ExtractedText value = null;
         try {
-            InputContextCallback callback = InputContextCallback.getInstance();
+            InputContextCallback callback = InputContextCallback.access$000();
             this.mIInputContext.getExtractedText(request, flags, callback.mSeq, callback);
             synchronized (callback) {
                 callback.waitForResultLocked();
@@ -288,6 +305,7 @@ public class InputConnectionWrapper implements InputConnection {
         }
     }
 
+    @Override // android.view.inputmethod.InputConnection
     public boolean commitText(CharSequence text, int newCursorPosition) {
         try {
             this.mIInputContext.commitText(text, newCursorPosition);
@@ -299,12 +317,14 @@ public class InputConnectionWrapper implements InputConnection {
     }
 
     private void notifyUserActionIfNecessary() {
-        AbstractInputMethodService inputMethodService = (AbstractInputMethodService) this.mInputMethodService.get();
-        if (inputMethodService != null) {
-            inputMethodService.notifyUserActionIfNecessary();
+        AbstractInputMethodService inputMethodService = this.mInputMethodService.get();
+        if (inputMethodService == null) {
+            return;
         }
+        inputMethodService.notifyUserActionIfNecessary();
     }
 
+    @Override // android.view.inputmethod.InputConnection
     public boolean commitCompletion(CompletionInfo text) {
         if (isMethodMissing(4)) {
             return false;
@@ -317,6 +337,7 @@ public class InputConnectionWrapper implements InputConnection {
         }
     }
 
+    @Override // android.view.inputmethod.InputConnection
     public boolean commitCorrection(CorrectionInfo correctionInfo) {
         try {
             this.mIInputContext.commitCorrection(correctionInfo);
@@ -326,6 +347,7 @@ public class InputConnectionWrapper implements InputConnection {
         }
     }
 
+    @Override // android.view.inputmethod.InputConnection
     public boolean setSelection(int start, int end) {
         try {
             this.mIInputContext.setSelection(start, end);
@@ -335,6 +357,7 @@ public class InputConnectionWrapper implements InputConnection {
         }
     }
 
+    @Override // android.view.inputmethod.InputConnection
     public boolean performEditorAction(int actionCode) {
         try {
             this.mIInputContext.performEditorAction(actionCode);
@@ -344,6 +367,7 @@ public class InputConnectionWrapper implements InputConnection {
         }
     }
 
+    @Override // android.view.inputmethod.InputConnection
     public boolean performContextMenuAction(int id) {
         try {
             this.mIInputContext.performContextMenuAction(id);
@@ -353,6 +377,7 @@ public class InputConnectionWrapper implements InputConnection {
         }
     }
 
+    @Override // android.view.inputmethod.InputConnection
     public boolean setComposingRegion(int start, int end) {
         if (isMethodMissing(2)) {
             return false;
@@ -365,6 +390,7 @@ public class InputConnectionWrapper implements InputConnection {
         }
     }
 
+    @Override // android.view.inputmethod.InputConnection
     public boolean setComposingText(CharSequence text, int newCursorPosition) {
         try {
             this.mIInputContext.setComposingText(text, newCursorPosition);
@@ -375,6 +401,7 @@ public class InputConnectionWrapper implements InputConnection {
         }
     }
 
+    @Override // android.view.inputmethod.InputConnection
     public boolean finishComposingText() {
         try {
             this.mIInputContext.finishComposingText();
@@ -384,6 +411,7 @@ public class InputConnectionWrapper implements InputConnection {
         }
     }
 
+    @Override // android.view.inputmethod.InputConnection
     public boolean beginBatchEdit() {
         try {
             this.mIInputContext.beginBatchEdit();
@@ -393,6 +421,7 @@ public class InputConnectionWrapper implements InputConnection {
         }
     }
 
+    @Override // android.view.inputmethod.InputConnection
     public boolean endBatchEdit() {
         try {
             this.mIInputContext.endBatchEdit();
@@ -402,6 +431,7 @@ public class InputConnectionWrapper implements InputConnection {
         }
     }
 
+    @Override // android.view.inputmethod.InputConnection
     public boolean sendKeyEvent(KeyEvent event) {
         try {
             this.mIInputContext.sendKeyEvent(event);
@@ -412,6 +442,7 @@ public class InputConnectionWrapper implements InputConnection {
         }
     }
 
+    @Override // android.view.inputmethod.InputConnection
     public boolean clearMetaKeyStates(int states) {
         try {
             this.mIInputContext.clearMetaKeyStates(states);
@@ -421,6 +452,7 @@ public class InputConnectionWrapper implements InputConnection {
         }
     }
 
+    @Override // android.view.inputmethod.InputConnection
     public boolean deleteSurroundingText(int beforeLength, int afterLength) {
         try {
             this.mIInputContext.deleteSurroundingText(beforeLength, afterLength);
@@ -430,6 +462,7 @@ public class InputConnectionWrapper implements InputConnection {
         }
     }
 
+    @Override // android.view.inputmethod.InputConnection
     public boolean deleteSurroundingTextInCodePoints(int beforeLength, int afterLength) {
         if (isMethodMissing(16)) {
             return false;
@@ -442,10 +475,12 @@ public class InputConnectionWrapper implements InputConnection {
         }
     }
 
+    @Override // android.view.inputmethod.InputConnection
     public boolean reportFullscreenMode(boolean enabled) {
         return false;
     }
 
+    @Override // android.view.inputmethod.InputConnection
     public boolean performPrivateCommand(String action, Bundle data) {
         try {
             this.mIInputContext.performPrivateCommand(action, data);
@@ -455,6 +490,7 @@ public class InputConnectionWrapper implements InputConnection {
         }
     }
 
+    @Override // android.view.inputmethod.InputConnection
     public boolean requestCursorUpdates(int cursorUpdateMode) {
         if (this.mIsUnbindIssued.get()) {
             return false;
@@ -464,7 +500,7 @@ public class InputConnectionWrapper implements InputConnection {
             return false;
         }
         try {
-            InputContextCallback callback = InputContextCallback.getInstance();
+            InputContextCallback callback = InputContextCallback.access$000();
             this.mIInputContext.requestUpdateCursorAnchorInfo(cursorUpdateMode, callback.mSeq, callback);
             synchronized (callback) {
                 callback.waitForResultLocked();
@@ -479,13 +515,16 @@ public class InputConnectionWrapper implements InputConnection {
         }
     }
 
+    @Override // android.view.inputmethod.InputConnection
     public Handler getHandler() {
         return null;
     }
 
+    @Override // android.view.inputmethod.InputConnection
     public void closeConnection() {
     }
 
+    @Override // android.view.inputmethod.InputConnection
     public boolean commitContent(InputContentInfo inputContentInfo, int flags, Bundle opts) {
         if (this.mIsUnbindIssued.get()) {
             return false;
@@ -496,7 +535,7 @@ public class InputConnectionWrapper implements InputConnection {
         }
         if ((flags & 1) != 0) {
             try {
-                AbstractInputMethodService inputMethodService = (AbstractInputMethodService) this.mInputMethodService.get();
+                AbstractInputMethodService inputMethodService = this.mInputMethodService.get();
                 if (inputMethodService == null) {
                     return false;
                 }
@@ -505,7 +544,7 @@ public class InputConnectionWrapper implements InputConnection {
                 return false;
             }
         }
-        InputContextCallback callback = InputContextCallback.getInstance();
+        InputContextCallback callback = InputContextCallback.access$000();
         this.mIInputContext.commitContent(inputContentInfo, flags, opts, callback.mSeq, callback);
         synchronized (callback) {
             callback.waitForResultLocked();

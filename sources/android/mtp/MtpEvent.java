@@ -1,5 +1,6 @@
 package android.mtp;
 
+/* loaded from: classes3.dex */
 public class MtpEvent {
     public static final int EVENT_CANCEL_TRANSACTION = 16385;
     public static final int EVENT_CAPTURE_COMPLETE = 16397;
@@ -53,9 +54,9 @@ public class MtpEvent {
                 return this.mParameter1;
             case 16393:
                 return this.mParameter1;
-            case EVENT_OBJECT_PROP_CHANGED /*51201*/:
+            case EVENT_OBJECT_PROP_CHANGED /* 51201 */:
                 return this.mParameter1;
-            case EVENT_OBJECT_REFERENCES_CHANGED /*51203*/:
+            case EVENT_OBJECT_REFERENCES_CHANGED /* 51203 */:
                 return this.mParameter1;
             default:
                 throw new IllegalParameterAccess("objectHandle", this.mEventCode);
@@ -64,20 +65,20 @@ public class MtpEvent {
 
     public int getStorageId() {
         int i = this.mEventCode;
-        if (i == 16394) {
+        if (i != 16394) {
+            if (i != 16396) {
+                switch (i) {
+                    case 16388:
+                        return this.mParameter1;
+                    case 16389:
+                        return this.mParameter1;
+                    default:
+                        throw new IllegalParameterAccess("storageID", this.mEventCode);
+                }
+            }
             return this.mParameter1;
         }
-        if (i == 16396) {
-            return this.mParameter1;
-        }
-        switch (i) {
-            case 16388:
-                return this.mParameter1;
-            case 16389:
-                return this.mParameter1;
-            default:
-                throw new IllegalParameterAccess("storageID", this.mEventCode);
-        }
+        return this.mParameter1;
     }
 
     public int getDevicePropCode() {
@@ -96,9 +97,9 @@ public class MtpEvent {
 
     public int getObjectPropCode() {
         switch (this.mEventCode) {
-            case EVENT_OBJECT_PROP_CHANGED /*51201*/:
+            case EVENT_OBJECT_PROP_CHANGED /* 51201 */:
                 return this.mParameter2;
-            case EVENT_OBJECT_PROP_DESC_CHANGED /*51202*/:
+            case EVENT_OBJECT_PROP_DESC_CHANGED /* 51202 */:
                 return this.mParameter1;
             default:
                 throw new IllegalParameterAccess("objectPropCode", this.mEventCode);
@@ -112,6 +113,7 @@ public class MtpEvent {
         throw new IllegalParameterAccess("objectFormatCode", this.mEventCode);
     }
 
+    /* loaded from: classes3.dex */
     private static class IllegalParameterAccess extends UnsupportedOperationException {
         public IllegalParameterAccess(String propertyName, int eventCode) {
             super("Cannot obtain " + propertyName + " for the event: " + eventCode + ".");

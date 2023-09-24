@@ -4,6 +4,7 @@ import android.database.DataSetObserver;
 import android.view.View;
 import android.view.ViewGroup;
 
+/* loaded from: classes4.dex */
 public interface Adapter {
     public static final int IGNORE_ITEM_VIEW_TYPE = -1;
     public static final int NO_SELECTION = Integer.MIN_VALUE;
@@ -28,7 +29,7 @@ public interface Adapter {
 
     void unregisterDataSetObserver(DataSetObserver dataSetObserver);
 
-    CharSequence[] getAutofillOptions() {
+    default CharSequence[] getAutofillOptions() {
         return null;
     }
 }

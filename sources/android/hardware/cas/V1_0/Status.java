@@ -2,6 +2,7 @@ package android.hardware.cas.V1_0;
 
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class Status {
     public static final int BAD_VALUE = 6;
     public static final int ERROR_CAS_CANNOT_HANDLE = 4;
@@ -17,7 +18,9 @@ public final class Status {
     public static final int ERROR_CAS_SESSION_NOT_OPENED = 3;
     public static final int ERROR_CAS_TAMPER_DETECTED = 10;
     public static final int ERROR_CAS_UNKNOWN = 14;
-    public static final int OK = 0;
+
+    /* renamed from: OK */
+    public static final int f78OK = 0;
 
     public static final String toString(int o) {
         if (o == 0) {

@@ -1,17 +1,20 @@
 package android.telephony;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
 @Deprecated
+/* loaded from: classes.dex */
 public final class VoLteServiceState implements Parcelable {
-    public static final Parcelable.Creator<VoLteServiceState> CREATOR = new Parcelable.Creator() {
+    public static final Parcelable.Creator<VoLteServiceState> CREATOR = new Parcelable.Creator() { // from class: android.telephony.VoLteServiceState.1
+        @Override // android.p007os.Parcelable.Creator
         public VoLteServiceState createFromParcel(Parcel in) {
             return new VoLteServiceState(in);
         }
 
+        @Override // android.p007os.Parcelable.Creator
         public VoLteServiceState[] newArray(int size) {
             return new VoLteServiceState[size];
         }
@@ -51,8 +54,7 @@ public final class VoLteServiceState implements Parcelable {
         this.mSrvccState = Integer.MAX_VALUE;
     }
 
-    /* access modifiers changed from: protected */
-    public void copyFrom(VoLteServiceState s) {
+    protected void copyFrom(VoLteServiceState s) {
         this.mSrvccState = s.mSrvccState;
     }
 
@@ -60,10 +62,12 @@ public final class VoLteServiceState implements Parcelable {
         this.mSrvccState = in.readInt();
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(this.mSrvccState);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -78,10 +82,7 @@ public final class VoLteServiceState implements Parcelable {
     public boolean equals(Object o) {
         try {
             VoLteServiceState s = (VoLteServiceState) o;
-            if (o != null && this.mSrvccState == s.mSrvccState) {
-                return true;
-            }
-            return false;
+            return o != null && this.mSrvccState == s.mSrvccState;
         } catch (ClassCastException e) {
             return false;
         }
@@ -104,6 +105,6 @@ public final class VoLteServiceState implements Parcelable {
     }
 
     private static void log(String s) {
-        Rlog.w(LOG_TAG, s);
+        Rlog.m80w(LOG_TAG, s);
     }
 }

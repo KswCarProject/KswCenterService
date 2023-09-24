@@ -31,7 +31,7 @@
     <string name="install_app">应用正在安装!</string>
     <string name="no_update">否</string>
     <string name="ota_update">OTA 升级</string>
-    <string name="ota_update_message">检测到升级文件.\10是否要现在升级?</string>
+    <string name="ota_update_message">检测到升级文件.\n是否要现在升级?</string>
     <string name="search_menu_title">搜索</string>
     <string name="status_bar_notification_info_overflow">999+</string>
     <string name="tp_update_fail">TP 升级失败!</string>

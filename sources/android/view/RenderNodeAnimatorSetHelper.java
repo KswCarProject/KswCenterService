@@ -7,6 +7,7 @@ import com.android.internal.view.animation.FallbackLUTInterpolator;
 import com.android.internal.view.animation.NativeInterpolatorFactory;
 import com.android.internal.view.animation.NativeInterpolatorFactoryHelper;
 
+/* loaded from: classes4.dex */
 public class RenderNodeAnimatorSetHelper {
     public static RenderNode getTarget(RecordingCanvas recordingCanvas) {
         return recordingCanvas.mNode;

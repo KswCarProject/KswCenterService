@@ -1,9 +1,11 @@
 package android.permission;
 
-import android.os.UserHandle;
+import android.p007os.UserHandle;
 
+/* loaded from: classes3.dex */
 public abstract class PermissionManagerInternal {
 
+    /* loaded from: classes3.dex */
     public interface OnRuntimePermissionStateChangedListener {
         void onRuntimePermissionStateChanged(String str, int i);
     }

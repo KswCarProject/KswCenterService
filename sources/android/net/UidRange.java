@@ -1,17 +1,24 @@
 package android.net;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.UserHandle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.UserHandle;
 import com.android.internal.content.NativeLibraryHelper;
 import java.util.Collection;
 
+/* loaded from: classes3.dex */
 public final class UidRange implements Parcelable {
-    public static final Parcelable.Creator<UidRange> CREATOR = new Parcelable.Creator<UidRange>() {
+    public static final Parcelable.Creator<UidRange> CREATOR = new Parcelable.Creator<UidRange>() { // from class: android.net.UidRange.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public UidRange createFromParcel(Parcel in) {
-            return new UidRange(in.readInt(), in.readInt());
+            int start = in.readInt();
+            int stop = in.readInt();
+            return new UidRange(start, stop);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public UidRange[] newArray(int size) {
             return new UidRange[size];
         }
@@ -22,14 +29,15 @@ public final class UidRange implements Parcelable {
     public UidRange(int startUid, int stopUid) {
         if (startUid < 0) {
             throw new IllegalArgumentException("Invalid start UID.");
-        } else if (stopUid < 0) {
+        }
+        if (stopUid < 0) {
             throw new IllegalArgumentException("Invalid stop UID.");
-        } else if (startUid <= stopUid) {
-            this.start = startUid;
-            this.stop = stopUid;
-        } else {
+        }
+        if (startUid > stopUid) {
             throw new IllegalArgumentException("Invalid UID range.");
         }
+        this.start = startUid;
+        this.stop = stopUid;
     }
 
     public static UidRange createForUser(int userId) {
@@ -57,19 +65,17 @@ public final class UidRange implements Parcelable {
     }
 
     public int hashCode() {
-        return (((17 * 31) + this.start) * 31) + this.stop;
+        int result = (17 * 31) + this.start;
+        return (result * 31) + this.stop;
     }
 
     public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof UidRange)) {
-            return false;
-        }
-        UidRange other = (UidRange) o;
-        if (this.start == other.start && this.stop == other.stop) {
-            return true;
+        if (o instanceof UidRange) {
+            UidRange other = (UidRange) o;
+            return this.start == other.start && this.stop == other.stop;
         }
         return false;
     }
@@ -78,10 +84,12 @@ public final class UidRange implements Parcelable {
         return this.start + NativeLibraryHelper.CLEAR_ABI_OVERRIDE + this.stop;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.start);
         dest.writeInt(this.stop);

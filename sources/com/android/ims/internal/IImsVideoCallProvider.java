@@ -2,14 +2,16 @@ package com.android.ims.internal;
 
 import android.annotation.UnsupportedAppUsage;
 import android.net.Uri;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.telecom.VideoProfile;
 import android.view.Surface;
+import com.android.ims.internal.IImsVideoCallCallback;
 
+/* loaded from: classes4.dex */
 public interface IImsVideoCallProvider extends IInterface {
     void requestCallDataUsage() throws RemoteException;
 
@@ -34,45 +36,59 @@ public interface IImsVideoCallProvider extends IInterface {
 
     void setZoom(float f) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IImsVideoCallProvider {
+        @Override // com.android.ims.internal.IImsVideoCallProvider
         public void setCallback(IImsVideoCallCallback callback) throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.IImsVideoCallProvider
         public void setCamera(String cameraId, int uid) throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.IImsVideoCallProvider
         public void setPreviewSurface(Surface surface) throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.IImsVideoCallProvider
         public void setDisplaySurface(Surface surface) throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.IImsVideoCallProvider
         public void setDeviceOrientation(int rotation) throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.IImsVideoCallProvider
         public void setZoom(float value) throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.IImsVideoCallProvider
         public void sendSessionModifyRequest(VideoProfile fromProfile, VideoProfile toProfile) throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.IImsVideoCallProvider
         public void sendSessionModifyResponse(VideoProfile responseProfile) throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.IImsVideoCallProvider
         public void requestCameraCapabilities() throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.IImsVideoCallProvider
         public void requestCallDataUsage() throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.IImsVideoCallProvider
         public void setPauseImage(Uri uri) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IImsVideoCallProvider {
         private static final String DESCRIPTOR = "com.android.ims.internal.IImsVideoCallProvider";
         static final int TRANSACTION_requestCallDataUsage = 10;
@@ -96,12 +112,13 @@ public interface IImsVideoCallProvider extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IImsVideoCallProvider)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IImsVideoCallProvider)) {
+                return (IImsVideoCallProvider) iin;
             }
-            return (IImsVideoCallProvider) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -135,154 +152,84 @@ public interface IImsVideoCallProvider extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v15, resolved type: android.telecom.VideoProfile} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v19, resolved type: android.telecom.VideoProfile} */
-        /* JADX WARNING: type inference failed for: r1v1 */
-        /* JADX WARNING: type inference failed for: r1v5, types: [android.view.Surface] */
-        /* JADX WARNING: type inference failed for: r1v9, types: [android.view.Surface] */
-        /* JADX WARNING: type inference failed for: r1v23, types: [android.net.Uri] */
-        /* JADX WARNING: type inference failed for: r1v28 */
-        /* JADX WARNING: type inference failed for: r1v29 */
-        /* JADX WARNING: type inference failed for: r1v30 */
-        /* JADX WARNING: type inference failed for: r1v31 */
-        /* JADX WARNING: type inference failed for: r1v32 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r6, android.os.Parcel r7, android.os.Parcel r8, int r9) throws android.os.RemoteException {
-            /*
-                r5 = this;
-                java.lang.String r0 = "com.android.ims.internal.IImsVideoCallProvider"
-                r1 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r2 = 1
-                if (r6 == r1) goto L_0x00d6
-                r1 = 0
-                switch(r6) {
-                    case 1: goto L_0x00c7;
-                    case 2: goto L_0x00b8;
-                    case 3: goto L_0x00a1;
-                    case 4: goto L_0x008a;
-                    case 5: goto L_0x007f;
-                    case 6: goto L_0x0074;
-                    case 7: goto L_0x004d;
-                    case 8: goto L_0x0036;
-                    case 9: goto L_0x002f;
-                    case 10: goto L_0x0028;
-                    case 11: goto L_0x0011;
-                    default: goto L_0x000c;
-                }
-            L_0x000c:
-                boolean r1 = super.onTransact(r6, r7, r8, r9)
-                return r1
-            L_0x0011:
-                r7.enforceInterface(r0)
-                int r3 = r7.readInt()
-                if (r3 == 0) goto L_0x0023
-                android.os.Parcelable$Creator<android.net.Uri> r1 = android.net.Uri.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r7)
-                android.net.Uri r1 = (android.net.Uri) r1
-                goto L_0x0024
-            L_0x0023:
-            L_0x0024:
-                r5.setPauseImage(r1)
-                return r2
-            L_0x0028:
-                r7.enforceInterface(r0)
-                r5.requestCallDataUsage()
-                return r2
-            L_0x002f:
-                r7.enforceInterface(r0)
-                r5.requestCameraCapabilities()
-                return r2
-            L_0x0036:
-                r7.enforceInterface(r0)
-                int r3 = r7.readInt()
-                if (r3 == 0) goto L_0x0048
-                android.os.Parcelable$Creator<android.telecom.VideoProfile> r1 = android.telecom.VideoProfile.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r7)
-                android.telecom.VideoProfile r1 = (android.telecom.VideoProfile) r1
-                goto L_0x0049
-            L_0x0048:
-            L_0x0049:
-                r5.sendSessionModifyResponse(r1)
-                return r2
-            L_0x004d:
-                r7.enforceInterface(r0)
-                int r3 = r7.readInt()
-                if (r3 == 0) goto L_0x005f
-                android.os.Parcelable$Creator<android.telecom.VideoProfile> r3 = android.telecom.VideoProfile.CREATOR
-                java.lang.Object r3 = r3.createFromParcel(r7)
-                android.telecom.VideoProfile r3 = (android.telecom.VideoProfile) r3
-                goto L_0x0060
-            L_0x005f:
-                r3 = r1
-            L_0x0060:
-                int r4 = r7.readInt()
-                if (r4 == 0) goto L_0x006f
-                android.os.Parcelable$Creator<android.telecom.VideoProfile> r1 = android.telecom.VideoProfile.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r7)
-                android.telecom.VideoProfile r1 = (android.telecom.VideoProfile) r1
-                goto L_0x0070
-            L_0x006f:
-            L_0x0070:
-                r5.sendSessionModifyRequest(r3, r1)
-                return r2
-            L_0x0074:
-                r7.enforceInterface(r0)
-                float r1 = r7.readFloat()
-                r5.setZoom(r1)
-                return r2
-            L_0x007f:
-                r7.enforceInterface(r0)
-                int r1 = r7.readInt()
-                r5.setDeviceOrientation(r1)
-                return r2
-            L_0x008a:
-                r7.enforceInterface(r0)
-                int r3 = r7.readInt()
-                if (r3 == 0) goto L_0x009c
-                android.os.Parcelable$Creator<android.view.Surface> r1 = android.view.Surface.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r7)
-                android.view.Surface r1 = (android.view.Surface) r1
-                goto L_0x009d
-            L_0x009c:
-            L_0x009d:
-                r5.setDisplaySurface(r1)
-                return r2
-            L_0x00a1:
-                r7.enforceInterface(r0)
-                int r3 = r7.readInt()
-                if (r3 == 0) goto L_0x00b3
-                android.os.Parcelable$Creator<android.view.Surface> r1 = android.view.Surface.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r7)
-                android.view.Surface r1 = (android.view.Surface) r1
-                goto L_0x00b4
-            L_0x00b3:
-            L_0x00b4:
-                r5.setPreviewSurface(r1)
-                return r2
-            L_0x00b8:
-                r7.enforceInterface(r0)
-                java.lang.String r1 = r7.readString()
-                int r3 = r7.readInt()
-                r5.setCamera(r1, r3)
-                return r2
-            L_0x00c7:
-                r7.enforceInterface(r0)
-                android.os.IBinder r1 = r7.readStrongBinder()
-                com.android.ims.internal.IImsVideoCallCallback r1 = com.android.ims.internal.IImsVideoCallCallback.Stub.asInterface(r1)
-                r5.setCallback(r1)
-                return r2
-            L_0x00d6:
-                r8.writeString(r0)
-                return r2
-            */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.ims.internal.IImsVideoCallProvider.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            VideoProfile _arg0;
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    IImsVideoCallCallback _arg02 = IImsVideoCallCallback.Stub.asInterface(data.readStrongBinder());
+                    setCallback(_arg02);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg03 = data.readString();
+                    int _arg1 = data.readInt();
+                    setCamera(_arg03, _arg1);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    Surface _arg04 = data.readInt() != 0 ? Surface.CREATOR.createFromParcel(data) : null;
+                    setPreviewSurface(_arg04);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    Surface _arg05 = data.readInt() != 0 ? Surface.CREATOR.createFromParcel(data) : null;
+                    setDisplaySurface(_arg05);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg06 = data.readInt();
+                    setDeviceOrientation(_arg06);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    float _arg07 = data.readFloat();
+                    setZoom(_arg07);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg0 = VideoProfile.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg0 = null;
+                    }
+                    VideoProfile _arg12 = data.readInt() != 0 ? VideoProfile.CREATOR.createFromParcel(data) : null;
+                    sendSessionModifyRequest(_arg0, _arg12);
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    VideoProfile _arg08 = data.readInt() != 0 ? VideoProfile.CREATOR.createFromParcel(data) : null;
+                    sendSessionModifyResponse(_arg08);
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    requestCameraCapabilities();
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    requestCallDataUsage();
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    Uri _arg09 = data.readInt() != 0 ? Uri.CREATOR.createFromParcel(data) : null;
+                    setPauseImage(_arg09);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IImsVideoCallProvider {
             public static IImsVideoCallProvider sDefaultImpl;
             private IBinder mRemote;
@@ -291,6 +238,7 @@ public interface IImsVideoCallProvider extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -299,14 +247,14 @@ public interface IImsVideoCallProvider extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // com.android.ims.internal.IImsVideoCallProvider
             public void setCallback(IImsVideoCallCallback callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().setCallback(callback);
                     }
                 } finally {
@@ -314,15 +262,15 @@ public interface IImsVideoCallProvider extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsVideoCallProvider
             public void setCamera(String cameraId, int uid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(cameraId);
                     _data.writeInt(uid);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().setCamera(cameraId, uid);
                     }
                 } finally {
@@ -330,6 +278,7 @@ public interface IImsVideoCallProvider extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsVideoCallProvider
             public void setPreviewSurface(Surface surface) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -340,9 +289,8 @@ public interface IImsVideoCallProvider extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().setPreviewSurface(surface);
                     }
                 } finally {
@@ -350,6 +298,7 @@ public interface IImsVideoCallProvider extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsVideoCallProvider
             public void setDisplaySurface(Surface surface) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -360,9 +309,8 @@ public interface IImsVideoCallProvider extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().setDisplaySurface(surface);
                     }
                 } finally {
@@ -370,14 +318,14 @@ public interface IImsVideoCallProvider extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsVideoCallProvider
             public void setDeviceOrientation(int rotation) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(rotation);
-                    if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(5, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().setDeviceOrientation(rotation);
                     }
                 } finally {
@@ -385,14 +333,14 @@ public interface IImsVideoCallProvider extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsVideoCallProvider
             public void setZoom(float value) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeFloat(value);
-                    if (this.mRemote.transact(6, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(6, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().setZoom(value);
                     }
                 } finally {
@@ -400,6 +348,7 @@ public interface IImsVideoCallProvider extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsVideoCallProvider
             public void sendSessionModifyRequest(VideoProfile fromProfile, VideoProfile toProfile) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -416,9 +365,8 @@ public interface IImsVideoCallProvider extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(7, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(7, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().sendSessionModifyRequest(fromProfile, toProfile);
                     }
                 } finally {
@@ -426,6 +374,7 @@ public interface IImsVideoCallProvider extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsVideoCallProvider
             public void sendSessionModifyResponse(VideoProfile responseProfile) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -436,9 +385,8 @@ public interface IImsVideoCallProvider extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(8, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(8, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().sendSessionModifyResponse(responseProfile);
                     }
                 } finally {
@@ -446,13 +394,13 @@ public interface IImsVideoCallProvider extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsVideoCallProvider
             public void requestCameraCapabilities() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(9, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(9, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().requestCameraCapabilities();
                     }
                 } finally {
@@ -460,13 +408,13 @@ public interface IImsVideoCallProvider extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsVideoCallProvider
             public void requestCallDataUsage() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(10, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(10, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().requestCallDataUsage();
                     }
                 } finally {
@@ -474,6 +422,7 @@ public interface IImsVideoCallProvider extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsVideoCallProvider
             public void setPauseImage(Uri uri) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -484,9 +433,8 @@ public interface IImsVideoCallProvider extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(11, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(11, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().setPauseImage(uri);
                     }
                 } finally {
@@ -496,11 +444,11 @@ public interface IImsVideoCallProvider extends IInterface {
         }
 
         public static boolean setDefaultImpl(IImsVideoCallProvider impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IImsVideoCallProvider getDefaultImpl() {

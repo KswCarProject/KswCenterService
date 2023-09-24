@@ -1,25 +1,30 @@
 package com.android.ims.internal;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.telephony.ims.ImsExternalCallState;
 import java.util.List;
 
+/* loaded from: classes4.dex */
 public interface IImsExternalCallStateListener extends IInterface {
     void onImsExternalCallStateUpdate(List<ImsExternalCallState> list) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IImsExternalCallStateListener {
-        public void onImsExternalCallStateUpdate(List<ImsExternalCallState> list) throws RemoteException {
+        @Override // com.android.ims.internal.IImsExternalCallStateListener
+        public void onImsExternalCallStateUpdate(List<ImsExternalCallState> externalCallDialogs) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IImsExternalCallStateListener {
         private static final String DESCRIPTOR = "com.android.ims.internal.IImsExternalCallStateListener";
         static final int TRANSACTION_onImsExternalCallStateUpdate = 1;
@@ -33,40 +38,45 @@ public interface IImsExternalCallStateListener extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IImsExternalCallStateListener)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IImsExternalCallStateListener)) {
+                return (IImsExternalCallStateListener) iin;
             }
-            return (IImsExternalCallStateListener) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
 
         public static String getDefaultTransactionName(int transactionCode) {
-            if (transactionCode != 1) {
-                return null;
+            if (transactionCode == 1) {
+                return "onImsExternalCallStateUpdate";
             }
-            return "onImsExternalCallStateUpdate";
+            return null;
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code == 1) {
-                data.enforceInterface(DESCRIPTOR);
-                onImsExternalCallStateUpdate(data.createTypedArrayList(ImsExternalCallState.CREATOR));
-                return true;
-            } else if (code != 1598968902) {
+            if (code != 1) {
+                if (code == 1598968902) {
+                    reply.writeString(DESCRIPTOR);
+                    return true;
+                }
                 return super.onTransact(code, data, reply, flags);
-            } else {
-                reply.writeString(DESCRIPTOR);
-                return true;
             }
+            data.enforceInterface(DESCRIPTOR);
+            List<ImsExternalCallState> _arg0 = data.createTypedArrayList(ImsExternalCallState.CREATOR);
+            onImsExternalCallStateUpdate(_arg0);
+            return true;
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IImsExternalCallStateListener {
             public static IImsExternalCallStateListener sDefaultImpl;
             private IBinder mRemote;
@@ -75,6 +85,7 @@ public interface IImsExternalCallStateListener extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -83,14 +94,14 @@ public interface IImsExternalCallStateListener extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // com.android.ims.internal.IImsExternalCallStateListener
             public void onImsExternalCallStateUpdate(List<ImsExternalCallState> externalCallDialogs) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeTypedList(externalCallDialogs);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onImsExternalCallStateUpdate(externalCallDialogs);
                     }
                 } finally {
@@ -100,11 +111,11 @@ public interface IImsExternalCallStateListener extends IInterface {
         }
 
         public static boolean setDefaultImpl(IImsExternalCallStateListener impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IImsExternalCallStateListener getDefaultImpl() {

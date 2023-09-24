@@ -3,12 +3,12 @@ package android.media;
 import android.annotation.UnsupportedAppUsage;
 import android.graphics.Rect;
 import android.media.Image;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.IHwBinder;
-import android.os.Looper;
-import android.os.Message;
-import android.os.PersistableBundle;
+import android.p007os.Bundle;
+import android.p007os.Handler;
+import android.p007os.IHwBinder;
+import android.p007os.Looper;
+import android.p007os.Message;
+import android.p007os.PersistableBundle;
 import android.view.Surface;
 import com.android.internal.midi.MidiConstants;
 import java.io.IOException;
@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+/* loaded from: classes3.dex */
 public final class MediaCodec {
     public static final int BUFFER_FLAG_CODEC_CONFIG = 2;
     public static final int BUFFER_FLAG_END_OF_STREAM = 4;
@@ -52,37 +53,33 @@ public final class MediaCodec {
     public static final String PARAMETER_KEY_VIDEO_BITRATE = "video-bitrate";
     public static final int VIDEO_SCALING_MODE_SCALE_TO_FIT = 1;
     public static final int VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING = 2;
-    /* access modifiers changed from: private */
-    public final Object mBufferLock;
-    /* access modifiers changed from: private */
-    public ByteBuffer[] mCachedInputBuffers;
-    /* access modifiers changed from: private */
-    public ByteBuffer[] mCachedOutputBuffers;
-    /* access modifiers changed from: private */
-    public Callback mCallback;
+    private final Object mBufferLock;
+    private ByteBuffer[] mCachedInputBuffers;
+    private ByteBuffer[] mCachedOutputBuffers;
+    private Callback mCallback;
     private EventHandler mCallbackHandler;
     private MediaCodecInfo mCodecInfo;
-    private final Object mCodecInfoLock = new Object();
     private MediaCrypto mCrypto;
-    private final BufferMap mDequeuedInputBuffers;
-    private final BufferMap mDequeuedOutputBuffers;
-    private final Map<Integer, BufferInfo> mDequeuedOutputInfos;
     private EventHandler mEventHandler;
-    private boolean mHasSurface = false;
-    /* access modifiers changed from: private */
-    public final Object mListenerLock = new Object();
     private String mNameAtCreation;
-    @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
-    private long mNativeContext;
-    private final Lock mNativeContextLock;
     private EventHandler mOnFrameRenderedHandler;
-    /* access modifiers changed from: private */
-    public OnFrameRenderedListener mOnFrameRenderedListener;
+    private OnFrameRenderedListener mOnFrameRenderedListener;
+    private final Object mListenerLock = new Object();
+    private final Object mCodecInfoLock = new Object();
+    private boolean mHasSurface = false;
+    private final BufferMap mDequeuedInputBuffers = new BufferMap();
+    private final BufferMap mDequeuedOutputBuffers = new BufferMap();
+    private final Map<Integer, BufferInfo> mDequeuedOutputInfos = new HashMap();
+    @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
+    private long mNativeContext = 0;
+    private final Lock mNativeContextLock = new ReentrantLock();
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface BufferFlag {
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Callback {
         public abstract void onError(MediaCodec mediaCodec, CodecException codecException);
 
@@ -94,18 +91,22 @@ public final class MediaCodec {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface ConfigureFlag {
     }
 
+    /* loaded from: classes3.dex */
     public interface OnFrameRenderedListener {
         void onFrameRendered(MediaCodec mediaCodec, long j, long j2);
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface OutputBufferInfo {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface VideoScalingMode {
     }
 
@@ -146,7 +147,7 @@ public final class MediaCodec {
 
     private final native void native_release();
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static final native void native_releasePersistentInputSurface(Surface surface);
 
     private final native void native_reset();
@@ -179,6 +180,7 @@ public final class MediaCodec {
 
     public final native void signalEndOfInputStream();
 
+    /* loaded from: classes3.dex */
     public static final class BufferInfo {
         public int flags;
         public int offset;
@@ -199,6 +201,7 @@ public final class MediaCodec {
         }
     }
 
+    /* loaded from: classes3.dex */
     private class EventHandler extends Handler {
         private MediaCodec mCodec;
 
@@ -207,13 +210,14 @@ public final class MediaCodec {
             this.mCodec = codec;
         }
 
+        @Override // android.p007os.Handler
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 1:
                     handleCallback(msg);
                     return;
                 case 2:
-                    Callback unused = MediaCodec.this.mCallback = (Callback) msg.obj;
+                    MediaCodec.this.mCallback = (Callback) msg.obj;
                     return;
                 case 3:
                     synchronized (MediaCodec.this.mListenerLock) {
@@ -222,11 +226,9 @@ public final class MediaCodec {
                         while (true) {
                             Object mediaTimeUs = map.get(i + "-media-time-us");
                             Object systemNano = map.get(i + "-system-nano");
-                            if (!(mediaTimeUs == null || systemNano == null)) {
-                                if (MediaCodec.this.mOnFrameRenderedListener != null) {
-                                    MediaCodec.this.mOnFrameRenderedListener.onFrameRendered(this.mCodec, ((Long) mediaTimeUs).longValue(), ((Long) systemNano).longValue());
-                                    i++;
-                                }
+                            if (mediaTimeUs != null && systemNano != null && MediaCodec.this.mOnFrameRenderedListener != null) {
+                                MediaCodec.this.mOnFrameRenderedListener.onFrameRendered(this.mCodec, ((Long) mediaTimeUs).longValue(), ((Long) systemNano).longValue());
+                                i++;
                             }
                         }
                     }
@@ -237,32 +239,33 @@ public final class MediaCodec {
         }
 
         private void handleCallback(Message msg) {
-            if (MediaCodec.this.mCallback != null) {
-                switch (msg.arg1) {
-                    case 1:
-                        int index = msg.arg2;
-                        synchronized (MediaCodec.this.mBufferLock) {
-                            MediaCodec.this.validateInputByteBuffer(MediaCodec.this.mCachedInputBuffers, index);
-                        }
-                        MediaCodec.this.mCallback.onInputBufferAvailable(this.mCodec, index);
-                        return;
-                    case 2:
-                        int index2 = msg.arg2;
-                        BufferInfo info = (BufferInfo) msg.obj;
-                        synchronized (MediaCodec.this.mBufferLock) {
-                            MediaCodec.this.validateOutputByteBuffer(MediaCodec.this.mCachedOutputBuffers, index2, info);
-                        }
-                        MediaCodec.this.mCallback.onOutputBufferAvailable(this.mCodec, index2, info);
-                        return;
-                    case 3:
-                        MediaCodec.this.mCallback.onError(this.mCodec, (CodecException) msg.obj);
-                        return;
-                    case 4:
-                        MediaCodec.this.mCallback.onOutputFormatChanged(this.mCodec, new MediaFormat((Map<String, Object>) (Map) msg.obj));
-                        return;
-                    default:
-                        return;
-                }
+            if (MediaCodec.this.mCallback == null) {
+                return;
+            }
+            switch (msg.arg1) {
+                case 1:
+                    int index = msg.arg2;
+                    synchronized (MediaCodec.this.mBufferLock) {
+                        MediaCodec.this.validateInputByteBuffer(MediaCodec.this.mCachedInputBuffers, index);
+                    }
+                    MediaCodec.this.mCallback.onInputBufferAvailable(this.mCodec, index);
+                    return;
+                case 2:
+                    int index2 = msg.arg2;
+                    BufferInfo info = (BufferInfo) msg.obj;
+                    synchronized (MediaCodec.this.mBufferLock) {
+                        MediaCodec.this.validateOutputByteBuffer(MediaCodec.this.mCachedOutputBuffers, index2, info);
+                    }
+                    MediaCodec.this.mCallback.onOutputBufferAvailable(this.mCodec, index2, info);
+                    return;
+                case 3:
+                    MediaCodec.this.mCallback.onError(this.mCodec, (CodecException) msg.obj);
+                    return;
+                case 4:
+                    MediaCodec.this.mCallback.onOutputFormatChanged(this.mCodec, new MediaFormat((Map) msg.obj));
+                    return;
+                default:
+                    return;
             }
         }
     }
@@ -280,20 +283,12 @@ public final class MediaCodec {
     }
 
     private MediaCodec(String name, boolean nameIsType, boolean encoder) {
-        String str = null;
-        this.mDequeuedInputBuffers = new BufferMap();
-        this.mDequeuedOutputBuffers = new BufferMap();
-        this.mDequeuedOutputInfos = new HashMap();
-        this.mNativeContext = 0;
-        this.mNativeContextLock = new ReentrantLock();
-        Looper myLooper = Looper.myLooper();
-        Looper looper = myLooper;
-        if (myLooper != null) {
+        Looper looper = Looper.myLooper();
+        if (looper != null) {
             this.mEventHandler = new EventHandler(this, looper);
         } else {
-            Looper mainLooper = Looper.getMainLooper();
-            Looper looper2 = mainLooper;
-            if (mainLooper != null) {
+            Looper looper2 = Looper.getMainLooper();
+            if (looper2 != null) {
                 this.mEventHandler = new EventHandler(this, looper2);
             } else {
                 this.mEventHandler = null;
@@ -302,12 +297,11 @@ public final class MediaCodec {
         this.mCallbackHandler = this.mEventHandler;
         this.mOnFrameRenderedHandler = this.mEventHandler;
         this.mBufferLock = new Object();
-        this.mNameAtCreation = !nameIsType ? name : str;
+        this.mNameAtCreation = nameIsType ? null : name;
         native_setup(name, nameIsType, encoder);
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() {
+    protected void finalize() {
         native_finalize();
         this.mCrypto = null;
     }
@@ -325,73 +319,68 @@ public final class MediaCodec {
     }
 
     public void configure(MediaFormat format, Surface surface, MediaCrypto crypto, int flags) {
-        configure(format, surface, crypto, (IHwBinder) null, flags);
+        configure(format, surface, crypto, null, flags);
     }
 
     public void configure(MediaFormat format, Surface surface, int flags, MediaDescrambler descrambler) {
-        configure(format, surface, (MediaCrypto) null, descrambler != null ? descrambler.getBinder() : null, flags);
+        configure(format, surface, null, descrambler != null ? descrambler.getBinder() : null, flags);
     }
 
     private void configure(MediaFormat format, Surface surface, MediaCrypto crypto, IHwBinder descramblerBinder, int flags) {
         Object[] values;
-        MediaCrypto mediaCrypto = crypto;
-        if (mediaCrypto == null || descramblerBinder == null) {
-            String[] keys = null;
-            boolean z = false;
-            if (format != null) {
-                Map<String, Object> formatMap = format.getMap();
-                String[] keys2 = new String[formatMap.size()];
-                Object[] values2 = new Object[formatMap.size()];
-                int i = 0;
-                for (Map.Entry<String, Object> entry : formatMap.entrySet()) {
-                    if (entry.getKey().equals(MediaFormat.KEY_AUDIO_SESSION_ID)) {
-                        try {
-                            int sessionId = ((Integer) entry.getValue()).intValue();
-                            keys2[i] = "audio-hw-sync";
-                            values2[i] = Integer.valueOf(AudioSystem.getAudioHwSyncForSession(sessionId));
-                        } catch (Exception e) {
-                            throw new IllegalArgumentException("Wrong Session ID Parameter!");
-                        }
-                    } else {
-                        keys2[i] = entry.getKey();
-                        values2[i] = entry.getValue();
-                    }
-                    i++;
-                }
-                values = values2;
-                keys = keys2;
-            } else {
-                values = null;
-            }
-            if (surface != null) {
-                z = true;
-            }
-            this.mHasSurface = z;
-            this.mCrypto = mediaCrypto;
-            native_configure(keys, values, surface, crypto, descramblerBinder, flags);
-            return;
+        if (crypto != null && descramblerBinder != null) {
+            throw new IllegalArgumentException("Can't use crypto and descrambler together!");
         }
-        throw new IllegalArgumentException("Can't use crypto and descrambler together!");
+        String[] keys = null;
+        if (format == null) {
+            values = null;
+        } else {
+            Map<String, Object> formatMap = format.getMap();
+            String[] keys2 = new String[formatMap.size()];
+            Object[] values2 = new Object[formatMap.size()];
+            int i = 0;
+            for (Map.Entry<String, Object> entry : formatMap.entrySet()) {
+                if (entry.getKey().equals(MediaFormat.KEY_AUDIO_SESSION_ID)) {
+                    try {
+                        int sessionId = ((Integer) entry.getValue()).intValue();
+                        keys2[i] = "audio-hw-sync";
+                        values2[i] = Integer.valueOf(AudioSystem.getAudioHwSyncForSession(sessionId));
+                    } catch (Exception e) {
+                        throw new IllegalArgumentException("Wrong Session ID Parameter!");
+                    }
+                } else {
+                    keys2[i] = entry.getKey();
+                    values2[i] = entry.getValue();
+                }
+                i++;
+            }
+            values = values2;
+            keys = keys2;
+        }
+        this.mHasSurface = surface != null;
+        this.mCrypto = crypto;
+        native_configure(keys, values, surface, crypto, descramblerBinder, flags);
     }
 
     public void setOutputSurface(Surface surface) {
-        if (this.mHasSurface) {
-            native_setSurface(surface);
-            return;
+        if (!this.mHasSurface) {
+            throw new IllegalStateException("codec was not configured for an output surface");
         }
-        throw new IllegalStateException("codec was not configured for an output surface");
+        native_setSurface(surface);
     }
 
     public static Surface createPersistentInputSurface() {
         return native_createPersistentInputSurface();
     }
 
+    /* loaded from: classes3.dex */
     static class PersistentSurface extends Surface {
         private long mPersistentObject;
 
         PersistentSurface() {
         }
 
+        @Override // android.view.Surface
         public void release() {
             MediaCodec.native_releasePersistentInputSurface(this);
             super.release();
@@ -399,11 +388,10 @@ public final class MediaCodec {
     }
 
     public void setInputSurface(Surface surface) {
-        if (surface instanceof PersistentSurface) {
-            native_setInputSurface(surface);
-            return;
+        if (!(surface instanceof PersistentSurface)) {
+            throw new IllegalArgumentException("not a PersistentSurface");
         }
-        throw new IllegalArgumentException("not a PersistentSurface");
+        native_setInputSurface(surface);
     }
 
     public final void start() {
@@ -438,6 +426,7 @@ public final class MediaCodec {
         native_flush();
     }
 
+    /* loaded from: classes3.dex */
     public static final class CodecException extends IllegalStateException {
         private static final int ACTION_RECOVERABLE = 2;
         private static final int ACTION_TRANSIENT = 1;
@@ -448,6 +437,7 @@ public final class MediaCodec {
         private final int mErrorCode;
 
         @Retention(RetentionPolicy.SOURCE)
+        /* loaded from: classes3.dex */
         public @interface ReasonCode {
         }
 
@@ -477,6 +467,7 @@ public final class MediaCodec {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class CryptoException extends RuntimeException {
         public static final int ERROR_FRAME_TOO_LARGE = 8;
         public static final int ERROR_INSUFFICIENT_OUTPUT_PROTECTION = 4;
@@ -490,6 +481,7 @@ public final class MediaCodec {
         private int mErrorCode;
 
         @Retention(RetentionPolicy.SOURCE)
+        /* loaded from: classes3.dex */
         public @interface CryptoErrorCode {
         }
 
@@ -516,8 +508,11 @@ public final class MediaCodec {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class CryptoInfo {
-        public byte[] iv;
+
+        /* renamed from: iv */
+        public byte[] f119iv;
         public byte[] key;
         public int mode;
         public int[] numBytesOfClearData;
@@ -526,6 +521,7 @@ public final class MediaCodec {
         private Pattern pattern;
         private final Pattern zeroPattern = new Pattern(0, 0);
 
+        /* loaded from: classes3.dex */
         public static final class Pattern {
             private int mEncryptBlocks;
             private int mSkipBlocks;
@@ -553,7 +549,7 @@ public final class MediaCodec {
             this.numBytesOfClearData = newNumBytesOfClearData;
             this.numBytesOfEncryptedData = newNumBytesOfEncryptedData;
             this.key = newKey;
-            this.iv = newIV;
+            this.f119iv = newIV;
             this.mode = newMode;
             this.pattern = this.zeroPattern;
         }
@@ -575,8 +571,8 @@ public final class MediaCodec {
             }
             builder.append("], iv [");
             for (int i2 = 0; i2 < this.key.length; i2++) {
-                builder.append("0123456789abcdef".charAt((this.iv[i2] & 240) >> 4));
-                builder.append("0123456789abcdef".charAt(this.iv[i2] & MidiConstants.STATUS_CHANNEL_MASK));
+                builder.append("0123456789abcdef".charAt((this.f119iv[i2] & 240) >> 4));
+                builder.append("0123456789abcdef".charAt(this.f119iv[i2] & MidiConstants.STATUS_CHANNEL_MASK));
             }
             builder.append("], clear ");
             builder.append(Arrays.toString(this.numBytesOfClearData));
@@ -612,17 +608,17 @@ public final class MediaCodec {
     public final int dequeueOutputBuffer(BufferInfo info, long timeoutUs) {
         int res = native_dequeueOutputBuffer(info, timeoutUs);
         synchronized (this.mBufferLock) {
-            if (res == -3) {
-                try {
+            try {
+                if (res == -3) {
                     cacheBuffers(false);
-                } catch (Throwable th) {
-                    throw th;
+                } else if (res >= 0) {
+                    validateOutputByteBuffer(this.mCachedOutputBuffers, res, info);
+                    if (this.mHasSurface) {
+                        this.mDequeuedOutputInfos.put(Integer.valueOf(res), info.dup());
+                    }
                 }
-            } else if (res >= 0) {
-                validateOutputByteBuffer(this.mCachedOutputBuffers, res, info);
-                if (this.mHasSurface) {
-                    this.mDequeuedOutputInfos.put(Integer.valueOf(res), info.dup());
-                }
+            } catch (Throwable th) {
+                throw th;
             }
         }
         return res;
@@ -633,10 +629,10 @@ public final class MediaCodec {
             invalidateByteBuffer(this.mCachedOutputBuffers, index);
             this.mDequeuedOutputBuffers.remove(index);
             if (this.mHasSurface) {
-                BufferInfo info = this.mDequeuedOutputInfos.remove(Integer.valueOf(index));
+                this.mDequeuedOutputInfos.remove(Integer.valueOf(index));
             }
         }
-        releaseOutputBuffer(index, render, false, 0);
+        releaseOutputBuffer(index, render, false, 0L);
     }
 
     public final void releaseOutputBuffer(int index, long renderTimestampNs) {
@@ -644,7 +640,7 @@ public final class MediaCodec {
             invalidateByteBuffer(this.mCachedOutputBuffers, index);
             this.mDequeuedOutputBuffers.remove(index);
             if (this.mHasSurface) {
-                BufferInfo info = this.mDequeuedOutputInfos.remove(Integer.valueOf(index));
+                this.mDequeuedOutputInfos.remove(Integer.valueOf(index));
             }
         }
         releaseOutputBuffer(index, true, true, renderTimestampNs);
@@ -662,6 +658,7 @@ public final class MediaCodec {
         return new MediaFormat(getOutputFormatNative(index));
     }
 
+    /* loaded from: classes3.dex */
     private static class BufferMap {
         private final Map<Integer, CodecBuffer> mMap;
 
@@ -669,6 +666,7 @@ public final class MediaCodec {
             this.mMap = new HashMap();
         }
 
+        /* loaded from: classes3.dex */
         private static class CodecBuffer {
             private ByteBuffer mByteBuffer;
             private Image mImage;
@@ -739,7 +737,7 @@ public final class MediaCodec {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public final void validateInputByteBuffer(ByteBuffer[] buffers, int index) {
         ByteBuffer buffer;
         if (buffers != null && index >= 0 && index < buffers.length && (buffer = buffers[index]) != null) {
@@ -759,7 +757,7 @@ public final class MediaCodec {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public final void validateOutputByteBuffer(ByteBuffer[] buffers, int index, BufferInfo info) {
         ByteBuffer buffer;
         if (buffers != null && index >= 0 && index < buffers.length && (buffer = buffers[index]) != null) {
@@ -818,17 +816,17 @@ public final class MediaCodec {
     }
 
     public ByteBuffer[] getInputBuffers() {
-        if (this.mCachedInputBuffers != null) {
-            return this.mCachedInputBuffers;
+        if (this.mCachedInputBuffers == null) {
+            throw new IllegalStateException();
         }
-        throw new IllegalStateException();
+        return this.mCachedInputBuffers;
     }
 
     public ByteBuffer[] getOutputBuffers() {
-        if (this.mCachedOutputBuffers != null) {
-            return this.mCachedOutputBuffers;
+        if (this.mCachedOutputBuffers == null) {
+            throw new IllegalStateException();
         }
-        throw new IllegalStateException();
+        return this.mCachedOutputBuffers;
     }
 
     public ByteBuffer getInputBuffer(int index) {
@@ -868,38 +866,40 @@ public final class MediaCodec {
     }
 
     public void setAudioPresentation(AudioPresentation presentation) {
-        if (presentation != null) {
-            native_setAudioPresentation(presentation.getPresentationId(), presentation.getProgramId());
-            return;
+        if (presentation == null) {
+            throw new NullPointerException("audio presentation is null");
         }
-        throw new NullPointerException("audio presentation is null");
+        native_setAudioPresentation(presentation.getPresentationId(), presentation.getProgramId());
     }
 
     public final String getName() {
-        return this.mNameAtCreation != null ? this.mNameAtCreation : getCanonicalName();
+        String canonicalName = getCanonicalName();
+        return this.mNameAtCreation != null ? this.mNameAtCreation : canonicalName;
     }
 
     public PersistableBundle getMetrics() {
-        return native_getMetrics();
+        PersistableBundle bundle = native_getMetrics();
+        return bundle;
     }
 
     public final void setParameters(Bundle params) {
-        if (params != null) {
-            String[] keys = new String[params.size()];
-            Object[] values = new Object[params.size()];
-            int i = 0;
-            for (String key : params.keySet()) {
-                keys[i] = key;
-                Object value = params.get(key);
-                if (value instanceof byte[]) {
-                    values[i] = ByteBuffer.wrap((byte[]) value);
-                } else {
-                    values[i] = value;
-                }
-                i++;
-            }
-            setParameters(keys, values);
+        if (params == null) {
+            return;
         }
+        String[] keys = new String[params.size()];
+        Object[] values = new Object[params.size()];
+        int i = 0;
+        for (String key : params.keySet()) {
+            keys[i] = key;
+            Object value = params.get(key);
+            if (value instanceof byte[]) {
+                values[i] = ByteBuffer.wrap((byte[]) value);
+            } else {
+                values[i] = value;
+            }
+            i++;
+        }
+        setParameters(keys, values);
     }
 
     public void setCallback(Callback cb, Handler handler) {
@@ -917,13 +917,14 @@ public final class MediaCodec {
             this.mCallbackHandler.removeMessages(1);
         }
         if (this.mCallbackHandler != null) {
-            this.mCallbackHandler.sendMessage(this.mCallbackHandler.obtainMessage(2, 0, 0, cb));
+            Message msg = this.mCallbackHandler.obtainMessage(2, 0, 0, cb);
+            this.mCallbackHandler.sendMessage(msg);
             native_setCallback(cb);
         }
     }
 
     public void setCallback(Callback cb) {
-        setCallback(cb, (Handler) null);
+        setCallback(cb, null);
     }
 
     public void setOnFrameRenderedListener(OnFrameRenderedListener listener, Handler handler) {
@@ -962,7 +963,8 @@ public final class MediaCodec {
                 handler = this.mOnFrameRenderedHandler;
             }
             if (handler != null) {
-                handler.sendMessage(handler.obtainMessage(what, arg1, arg2, obj));
+                Message msg = handler.obtainMessage(what, arg1, arg2, obj);
+                handler.sendMessage(msg);
             }
         }
     }
@@ -997,56 +999,65 @@ public final class MediaCodec {
         this.mNativeContextLock.unlock();
     }
 
+    /* loaded from: classes3.dex */
     public static class MediaImage extends Image {
         private static final int TYPE_YUV = 1;
         private final ByteBuffer mBuffer;
-        private final int mFormat = 35;
         private final int mHeight;
         private final ByteBuffer mInfo;
         private final boolean mIsReadOnly;
         private final Image.Plane[] mPlanes;
-        private final int mScalingMode = 0;
         private long mTimestamp;
-        private final int mTransform = 0;
         private final int mWidth;
         private final int mXOffset;
         private final int mYOffset;
+        private final int mTransform = 0;
+        private final int mScalingMode = 0;
+        private final int mFormat = 35;
 
+        @Override // android.media.Image
         public int getFormat() {
             throwISEIfImageIsInvalid();
             return this.mFormat;
         }
 
+        @Override // android.media.Image
         public int getHeight() {
             throwISEIfImageIsInvalid();
             return this.mHeight;
         }
 
+        @Override // android.media.Image
         public int getWidth() {
             throwISEIfImageIsInvalid();
             return this.mWidth;
         }
 
+        @Override // android.media.Image
         public int getTransform() {
             throwISEIfImageIsInvalid();
             return 0;
         }
 
+        @Override // android.media.Image
         public int getScalingMode() {
             throwISEIfImageIsInvalid();
             return 0;
         }
 
+        @Override // android.media.Image
         public long getTimestamp() {
             throwISEIfImageIsInvalid();
             return this.mTimestamp;
         }
 
+        @Override // android.media.Image
         public Image.Plane[] getPlanes() {
             throwISEIfImageIsInvalid();
             return (Image.Plane[]) Arrays.copyOf(this.mPlanes, this.mPlanes.length);
         }
 
+        @Override // android.media.Image, java.lang.AutoCloseable
         public void close() {
             if (this.mIsImageValid) {
                 NioUtils.freeDirectBuffer(this.mBuffer);
@@ -1054,85 +1065,82 @@ public final class MediaCodec {
             }
         }
 
+        @Override // android.media.Image
         public void setCropRect(Rect cropRect) {
-            if (!this.mIsReadOnly) {
-                super.setCropRect(cropRect);
-                return;
+            if (this.mIsReadOnly) {
+                throw new ReadOnlyBufferException();
             }
-            throw new ReadOnlyBufferException();
+            super.setCropRect(cropRect);
         }
 
         public MediaImage(ByteBuffer buffer, ByteBuffer info, boolean readOnly, long timestamp, int xOffset, int yOffset, Rect cropRect) {
             Rect cropRect2;
             ByteBuffer byteBuffer = buffer;
-            int i = xOffset;
-            int i2 = yOffset;
             this.mTimestamp = timestamp;
             this.mIsImageValid = true;
             this.mIsReadOnly = buffer.isReadOnly();
             this.mBuffer = buffer.duplicate();
-            this.mXOffset = i;
-            this.mYOffset = i2;
+            this.mXOffset = xOffset;
+            this.mYOffset = yOffset;
             this.mInfo = info;
             if (info.remaining() == 104) {
                 int type = info.getInt();
-                if (type == 1) {
-                    int numPlanes = info.getInt();
-                    if (numPlanes == 3) {
-                        this.mWidth = info.getInt();
-                        this.mHeight = info.getInt();
-                        if (this.mWidth < 1 || this.mHeight < 1) {
-                            throw new UnsupportedOperationException("unsupported size: " + this.mWidth + "x" + this.mHeight);
-                        }
-                        int bitDepth = info.getInt();
-                        if (bitDepth == 8) {
-                            int bitDepthAllocated = info.getInt();
-                            if (bitDepthAllocated == 8) {
-                                this.mPlanes = new MediaPlane[numPlanes];
-                                int ix = 0;
-                                while (ix < numPlanes) {
-                                    int planeOffset = info.getInt();
-                                    int colInc = info.getInt();
-                                    int rowInc = info.getInt();
-                                    int horiz = info.getInt();
-                                    int vert = info.getInt();
-                                    if (horiz == vert) {
-                                        if (horiz == (ix == 0 ? 1 : 2)) {
-                                            if (colInc < 1 || rowInc < 1) {
-                                                throw new UnsupportedOperationException("unexpected strides: " + colInc + " pixel, " + rowInc + " row on plane " + ix);
-                                            }
-                                            buffer.clear();
-                                            byteBuffer.position(this.mBuffer.position() + planeOffset + ((i / horiz) * colInc) + ((i2 / vert) * rowInc));
-                                            byteBuffer.limit(buffer.position() + Utils.divUp(bitDepth, 8) + (((this.mHeight / vert) - 1) * rowInc) + (((this.mWidth / horiz) - 1) * colInc));
-                                            this.mPlanes[ix] = new MediaPlane(buffer.slice(), rowInc, colInc);
-                                            ix++;
-                                            byteBuffer = buffer;
-                                            long j = timestamp;
-                                            ByteBuffer byteBuffer2 = info;
-                                        }
-                                    }
-                                    throw new UnsupportedOperationException("unexpected subsampling: " + horiz + "x" + vert + " on plane " + ix);
-                                }
-                                if (cropRect == null) {
-                                    cropRect2 = new Rect(0, 0, this.mWidth, this.mHeight);
-                                } else {
-                                    cropRect2 = cropRect;
-                                }
-                                cropRect2.offset(-i, -i2);
-                                super.setCropRect(cropRect2);
-                                return;
-                            }
-                            throw new UnsupportedOperationException("unsupported allocated bit depth: " + bitDepthAllocated);
-                        }
+                if (type != 1) {
+                    throw new UnsupportedOperationException("unsupported type: " + type);
+                }
+                int numPlanes = info.getInt();
+                if (numPlanes == 3) {
+                    this.mWidth = info.getInt();
+                    this.mHeight = info.getInt();
+                    if (this.mWidth < 1 || this.mHeight < 1) {
+                        throw new UnsupportedOperationException("unsupported size: " + this.mWidth + "x" + this.mHeight);
+                    }
+                    int bitDepth = info.getInt();
+                    if (bitDepth != 8) {
                         throw new UnsupportedOperationException("unsupported bit depth: " + bitDepth);
                     }
-                    throw new RuntimeException("unexpected number of planes: " + numPlanes);
+                    int bitDepthAllocated = info.getInt();
+                    if (bitDepthAllocated == 8) {
+                        this.mPlanes = new MediaPlane[numPlanes];
+                        int ix = 0;
+                        while (ix < numPlanes) {
+                            int planeOffset = info.getInt();
+                            int colInc = info.getInt();
+                            int rowInc = info.getInt();
+                            int horiz = info.getInt();
+                            int vert = info.getInt();
+                            if (horiz == vert) {
+                                if (horiz == (ix == 0 ? 1 : 2)) {
+                                    if (colInc < 1 || rowInc < 1) {
+                                        throw new UnsupportedOperationException("unexpected strides: " + colInc + " pixel, " + rowInc + " row on plane " + ix);
+                                    }
+                                    buffer.clear();
+                                    byteBuffer.position(this.mBuffer.position() + planeOffset + ((xOffset / horiz) * colInc) + ((yOffset / vert) * rowInc));
+                                    byteBuffer.limit(buffer.position() + Utils.divUp(bitDepth, 8) + (((this.mHeight / vert) - 1) * rowInc) + (((this.mWidth / horiz) - 1) * colInc));
+                                    this.mPlanes[ix] = new MediaPlane(buffer.slice(), rowInc, colInc);
+                                    ix++;
+                                    byteBuffer = buffer;
+                                }
+                            }
+                            throw new UnsupportedOperationException("unexpected subsampling: " + horiz + "x" + vert + " on plane " + ix);
+                        }
+                        if (cropRect == null) {
+                            cropRect2 = new Rect(0, 0, this.mWidth, this.mHeight);
+                        } else {
+                            cropRect2 = cropRect;
+                        }
+                        cropRect2.offset(-xOffset, -yOffset);
+                        super.setCropRect(cropRect2);
+                        return;
+                    }
+                    throw new UnsupportedOperationException("unsupported allocated bit depth: " + bitDepthAllocated);
                 }
-                throw new UnsupportedOperationException("unsupported type: " + type);
+                throw new RuntimeException("unexpected number of planes: " + numPlanes);
             }
             throw new UnsupportedOperationException("unsupported info length: " + info.remaining());
         }
 
+        /* loaded from: classes3.dex */
         private class MediaPlane extends Image.Plane {
             private final int mColInc;
             private final ByteBuffer mData;
@@ -1144,16 +1152,19 @@ public final class MediaCodec {
                 this.mColInc = colInc;
             }
 
+            @Override // android.media.Image.Plane
             public int getRowStride() {
                 MediaImage.this.throwISEIfImageIsInvalid();
                 return this.mRowInc;
             }
 
+            @Override // android.media.Image.Plane
             public int getPixelStride() {
                 MediaImage.this.throwISEIfImageIsInvalid();
                 return this.mColInc;
             }
 
+            @Override // android.media.Image.Plane
             public ByteBuffer getBuffer() {
                 MediaImage.this.throwISEIfImageIsInvalid();
                 return this.mData;
@@ -1161,6 +1172,7 @@ public final class MediaCodec {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class MetricsConstants {
         public static final String CODEC = "android.media.mediacodec.codec";
         public static final String ENCODER = "android.media.mediacodec.encoder";

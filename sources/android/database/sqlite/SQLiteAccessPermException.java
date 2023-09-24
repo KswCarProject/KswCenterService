@@ -1,5 +1,6 @@
 package android.database.sqlite;
 
+/* loaded from: classes.dex */
 public class SQLiteAccessPermException extends SQLiteException {
     public SQLiteAccessPermException() {
     }

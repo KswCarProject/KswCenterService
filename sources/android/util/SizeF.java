@@ -2,6 +2,7 @@ package android.util;
 
 import com.android.internal.util.Preconditions;
 
+/* loaded from: classes4.dex */
 public final class SizeF {
     private final float mHeight;
     private final float mWidth;
@@ -30,10 +31,10 @@ public final class SizeF {
             return false;
         }
         SizeF other = (SizeF) obj;
-        if (this.mWidth == other.mWidth && this.mHeight == other.mHeight) {
-            return true;
+        if (this.mWidth != other.mWidth || this.mHeight != other.mHeight) {
+            return false;
         }
-        return false;
+        return true;
     }
 
     public String toString() {
@@ -50,15 +51,15 @@ public final class SizeF {
         if (sep_ix < 0) {
             sep_ix = string.indexOf(120);
         }
-        if (sep_ix >= 0) {
-            try {
-                return new SizeF(Float.parseFloat(string.substring(0, sep_ix)), Float.parseFloat(string.substring(sep_ix + 1)));
-            } catch (NumberFormatException e) {
-                throw invalidSizeF(string);
-            } catch (IllegalArgumentException e2) {
-                throw invalidSizeF(string);
-            }
-        } else {
+        if (sep_ix < 0) {
+            NumberFormatException e = invalidSizeF(string);
+            throw e;
+        }
+        try {
+            return new SizeF(Float.parseFloat(string.substring(0, sep_ix)), Float.parseFloat(string.substring(sep_ix + 1)));
+        } catch (NumberFormatException e2) {
+            throw invalidSizeF(string);
+        } catch (IllegalArgumentException e3) {
             throw invalidSizeF(string);
         }
     }

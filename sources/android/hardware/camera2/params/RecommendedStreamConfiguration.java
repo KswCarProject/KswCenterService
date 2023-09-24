@@ -2,6 +2,7 @@ package android.hardware.camera2.params;
 
 import android.hardware.camera2.utils.HashCodeHelpers;
 
+/* loaded from: classes.dex */
 public final class RecommendedStreamConfiguration extends StreamConfiguration {
     private final int mUsecaseBitmap;
 
@@ -14,6 +15,7 @@ public final class RecommendedStreamConfiguration extends StreamConfiguration {
         return this.mUsecaseBitmap;
     }
 
+    @Override // android.hardware.camera2.params.StreamConfiguration
     public boolean equals(Object obj) {
         if (obj == null) {
             return false;
@@ -25,13 +27,14 @@ public final class RecommendedStreamConfiguration extends StreamConfiguration {
             return false;
         }
         RecommendedStreamConfiguration other = (RecommendedStreamConfiguration) obj;
-        if (this.mFormat == other.mFormat && this.mWidth == other.mWidth && this.mHeight == other.mHeight && this.mUsecaseBitmap == other.mUsecaseBitmap && this.mInput == other.mInput) {
-            return true;
+        if (this.mFormat != other.mFormat || this.mWidth != other.mWidth || this.mHeight != other.mHeight || this.mUsecaseBitmap != other.mUsecaseBitmap || this.mInput != other.mInput) {
+            return false;
         }
-        return false;
+        return true;
     }
 
+    @Override // android.hardware.camera2.params.StreamConfiguration
     public int hashCode() {
-        return HashCodeHelpers.hashCode(this.mFormat, this.mWidth, this.mHeight, this.mInput, this.mUsecaseBitmap);
+        return HashCodeHelpers.hashCode(this.mFormat, this.mWidth, this.mHeight, this.mInput ? 1 : 0, this.mUsecaseBitmap);
     }
 }

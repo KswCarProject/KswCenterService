@@ -1,9 +1,9 @@
 package com.android.internal.content;
 
-import android.content.pm.PackageManager;
-import android.content.pm.PackageParser;
-import android.os.Build;
-import android.os.SELinux;
+import android.content.p002pm.PackageManager;
+import android.content.p002pm.PackageParser;
+import android.p007os.Build;
+import android.p007os.SELinux;
 import android.system.ErrnoException;
 import android.system.Os;
 import android.system.OsConstants;
@@ -16,6 +16,7 @@ import java.io.FileDescriptor;
 import java.io.IOException;
 import java.util.List;
 
+/* loaded from: classes4.dex */
 public class NativeLibraryHelper {
     private static final int BITCODE_PRESENT = 1;
     public static final String CLEAR_ABI_OVERRIDE = "-";
@@ -26,21 +27,22 @@ public class NativeLibraryHelper {
 
     private static native int hasRenderscriptBitcode(long j);
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static native void nativeClose(long j);
 
     private static native int nativeCopyNativeBinaries(long j, String str, String str2, boolean z, boolean z2);
 
     private static native int nativeFindSupportedAbi(long j, String[] strArr, boolean z);
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static native long nativeOpenApk(String str);
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static native long nativeOpenApkFd(FileDescriptor fileDescriptor, String str);
 
     private static native long nativeSumNativeBinaries(long j, String str, boolean z);
 
+    /* loaded from: classes4.dex */
     public static class Handle implements Closeable {
         final long[] apkHandles;
         final boolean debuggable;
@@ -51,61 +53,57 @@ public class NativeLibraryHelper {
 
         public static Handle create(File packageFile) throws IOException {
             try {
-                return create(PackageParser.parsePackageLite(packageFile, 0));
+                PackageParser.PackageLite lite = PackageParser.parsePackageLite(packageFile, 0);
+                return create(lite);
             } catch (PackageParser.PackageParserException e) {
                 throw new IOException("Failed to parse package: " + packageFile, e);
             }
         }
 
         public static Handle create(PackageParser.Package pkg) throws IOException {
-            List<String> allCodePaths = pkg.getAllCodePaths();
-            boolean z = false;
-            boolean z2 = (pkg.applicationInfo.flags & Integer.MIN_VALUE) != 0;
-            boolean z3 = (pkg.applicationInfo.flags & 268435456) != 0;
-            if ((pkg.applicationInfo.flags & 2) != 0) {
-                z = true;
-            }
-            return create(allCodePaths, z2, z3, z);
+            return create(pkg.getAllCodePaths(), (pkg.applicationInfo.flags & Integer.MIN_VALUE) != 0, (pkg.applicationInfo.flags & 268435456) != 0, (pkg.applicationInfo.flags & 2) != 0);
         }
 
         public static Handle create(PackageParser.PackageLite lite) throws IOException {
             return create(lite.getAllCodePaths(), lite.multiArch, lite.extractNativeLibs, lite.debuggable);
         }
 
-        private static Handle create(List<String> codePaths, boolean multiArch2, boolean extractNativeLibs2, boolean debuggable2) throws IOException {
+        private static Handle create(List<String> codePaths, boolean multiArch, boolean extractNativeLibs, boolean debuggable) throws IOException {
             int size = codePaths.size();
-            long[] apkHandles2 = new long[size];
+            long[] apkHandles = new long[size];
             for (int i = 0; i < size; i++) {
                 String path = codePaths.get(i);
-                apkHandles2[i] = NativeLibraryHelper.nativeOpenApk(path);
-                if (apkHandles2[i] == 0) {
+                apkHandles[i] = NativeLibraryHelper.nativeOpenApk(path);
+                if (apkHandles[i] == 0) {
                     for (int j = 0; j < i; j++) {
-                        NativeLibraryHelper.nativeClose(apkHandles2[j]);
+                        NativeLibraryHelper.nativeClose(apkHandles[j]);
                     }
                     throw new IOException("Unable to open APK: " + path);
                 }
             }
-            return new Handle(apkHandles2, multiArch2, extractNativeLibs2, debuggable2);
+            return new Handle(apkHandles, multiArch, extractNativeLibs, debuggable);
         }
 
         public static Handle createFd(PackageParser.PackageLite lite, FileDescriptor fd) throws IOException {
             String path = lite.baseCodePath;
-            long[] apkHandles2 = {NativeLibraryHelper.nativeOpenApkFd(fd, path)};
-            if (apkHandles2[0] != 0) {
-                return new Handle(apkHandles2, lite.multiArch, lite.extractNativeLibs, lite.debuggable);
+            long[] apkHandles = {NativeLibraryHelper.nativeOpenApkFd(fd, path)};
+            if (apkHandles[0] == 0) {
+                throw new IOException("Unable to open APK " + path + " from fd " + fd);
             }
-            throw new IOException("Unable to open APK " + path + " from fd " + fd);
+            return new Handle(apkHandles, lite.multiArch, lite.extractNativeLibs, lite.debuggable);
         }
 
-        Handle(long[] apkHandles2, boolean multiArch2, boolean extractNativeLibs2, boolean debuggable2) {
-            this.apkHandles = apkHandles2;
-            this.multiArch = multiArch2;
-            this.extractNativeLibs = extractNativeLibs2;
-            this.debuggable = debuggable2;
+        Handle(long[] apkHandles, boolean multiArch, boolean extractNativeLibs, boolean debuggable) {
+            this.apkHandles = apkHandles;
+            this.multiArch = multiArch;
+            this.extractNativeLibs = extractNativeLibs;
+            this.debuggable = debuggable;
             this.mGuard.open("close");
         }
 
+        @Override // java.io.Closeable, java.lang.AutoCloseable
         public void close() {
+            long[] jArr;
             for (long apkHandle : this.apkHandles) {
                 NativeLibraryHelper.nativeClose(apkHandle);
             }
@@ -113,8 +111,7 @@ public class NativeLibraryHelper {
             this.mClosed = true;
         }
 
-        /* access modifiers changed from: protected */
-        public void finalize() throws Throwable {
+        protected void finalize() throws Throwable {
             if (this.mGuard != null) {
                 this.mGuard.warnIfOpen();
             }
@@ -129,6 +126,7 @@ public class NativeLibraryHelper {
     }
 
     private static long sumNativeBinaries(Handle handle, String abi) {
+        long[] jArr;
         long sum = 0;
         for (long apkHandle : handle.apkHandles) {
             sum += nativeSumNativeBinaries(apkHandle, abi, handle.debuggable);
@@ -137,6 +135,7 @@ public class NativeLibraryHelper {
     }
 
     public static int copyNativeBinaries(Handle handle, File sharedLibraryDir, String abi) {
+        long[] jArr;
         for (long apkHandle : handle.apkHandles) {
             int res = nativeCopyNativeBinaries(apkHandle, sharedLibraryDir.getPath(), abi, handle.extractNativeLibs, handle.debuggable);
             if (res != 1) {
@@ -147,6 +146,7 @@ public class NativeLibraryHelper {
     }
 
     public static int findSupportedAbi(Handle handle, String[] supportedAbis) {
+        long[] jArr;
         int finalRes = PackageManager.NO_NATIVE_LIBRARIES;
         for (long apkHandle : handle.apkHandles) {
             int res = nativeFindSupportedAbi(apkHandle, supportedAbis, handle.debuggable);
@@ -155,12 +155,12 @@ public class NativeLibraryHelper {
                     if (finalRes < 0) {
                         finalRes = -113;
                     }
-                } else if (res < 0) {
-                    return res;
-                } else {
+                } else if (res >= 0) {
                     if (finalRes < 0 || res < finalRes) {
                         finalRes = res;
                     }
+                } else {
+                    return res;
                 }
             }
         }
@@ -168,9 +168,10 @@ public class NativeLibraryHelper {
     }
 
     public static void removeNativeBinariesLI(String nativeLibraryPath) {
-        if (nativeLibraryPath != null) {
-            removeNativeBinariesFromDirLI(new File(nativeLibraryPath), false);
+        if (nativeLibraryPath == null) {
+            return;
         }
+        removeNativeBinariesFromDirLI(new File(nativeLibraryPath), false);
     }
 
     public static void removeNativeBinariesFromDirLI(File nativeLibraryRoot, boolean deleteRootDir) {
@@ -181,12 +182,12 @@ public class NativeLibraryHelper {
                     if (files[nn].isDirectory()) {
                         removeNativeBinariesFromDirLI(files[nn], true);
                     } else if (!files[nn].delete()) {
-                        Slog.w(TAG, "Could not delete native binary: " + files[nn].getPath());
+                        Slog.m50w(TAG, "Could not delete native binary: " + files[nn].getPath());
                     }
                 }
             }
             if (deleteRootDir && !nativeLibraryRoot.delete()) {
-                Slog.w(TAG, "Could not delete native binary directory: " + nativeLibraryRoot.getPath());
+                Slog.m50w(TAG, "Could not delete native binary directory: " + nativeLibraryRoot.getPath());
             }
         }
     }
@@ -194,14 +195,13 @@ public class NativeLibraryHelper {
     public static void createNativeLibrarySubdir(File path) throws IOException {
         if (!path.isDirectory()) {
             path.delete();
-            if (path.mkdir()) {
-                try {
-                    Os.chmod(path.getPath(), OsConstants.S_IRWXU | OsConstants.S_IRGRP | OsConstants.S_IXGRP | OsConstants.S_IROTH | OsConstants.S_IXOTH);
-                } catch (ErrnoException e) {
-                    throw new IOException("Cannot chmod native library directory " + path.getPath(), e);
-                }
-            } else {
+            if (!path.mkdir()) {
                 throw new IOException("Cannot create " + path.getPath());
+            }
+            try {
+                Os.chmod(path.getPath(), OsConstants.S_IRWXU | OsConstants.S_IRGRP | OsConstants.S_IXGRP | OsConstants.S_IROTH | OsConstants.S_IXOTH);
+            } catch (ErrnoException e) {
+                throw new IOException("Cannot chmod native library directory " + path.getPath(), e);
             }
         } else if (!SELinux.restorecon(path)) {
             throw new IOException("Cannot set SELinux context for " + path.getPath());
@@ -213,7 +213,7 @@ public class NativeLibraryHelper {
         if (abi >= 0) {
             return sumNativeBinaries(handle, abiList[abi]);
         }
-        return 0;
+        return 0L;
     }
 
     public static int copyNativeBinariesForSupportedAbi(Handle handle, File libraryRoot, String[] abiList, boolean useIsaSubdir) throws IOException {
@@ -242,13 +242,13 @@ public class NativeLibraryHelper {
         try {
             if (handle.multiArch) {
                 if (abiOverride != null && !CLEAR_ABI_OVERRIDE.equals(abiOverride)) {
-                    Slog.w(TAG, "Ignoring abiOverride for multi arch application.");
+                    Slog.m50w(TAG, "Ignoring abiOverride for multi arch application.");
                 }
                 if (Build.SUPPORTED_32_BIT_ABIS.length > 0 && (copyRet2 = copyNativeBinariesForSupportedAbi(handle, libraryRoot, Build.SUPPORTED_32_BIT_ABIS, true)) < 0 && copyRet2 != -114 && copyRet2 != -113) {
-                    Slog.w(TAG, "Failure copying 32 bit native libraries; copyRet=" + copyRet2);
+                    Slog.m50w(TAG, "Failure copying 32 bit native libraries; copyRet=" + copyRet2);
                     return copyRet2;
                 } else if (Build.SUPPORTED_64_BIT_ABIS.length > 0 && (copyRet = copyNativeBinariesForSupportedAbi(handle, libraryRoot, Build.SUPPORTED_64_BIT_ABIS, true)) < 0 && copyRet != -114 && copyRet != -113) {
-                    Slog.w(TAG, "Failure copying 64 bit native libraries; copyRet=" + copyRet);
+                    Slog.m50w(TAG, "Failure copying 64 bit native libraries; copyRet=" + copyRet);
                     return copyRet;
                 }
             } else {
@@ -264,26 +264,23 @@ public class NativeLibraryHelper {
                 }
                 int copyRet3 = copyNativeBinariesForSupportedAbi(handle, libraryRoot, abiList, true);
                 if (copyRet3 < 0 && copyRet3 != -114) {
-                    Slog.w(TAG, "Failure copying native libraries [errorCode=" + copyRet3 + "]");
+                    Slog.m50w(TAG, "Failure copying native libraries [errorCode=" + copyRet3 + "]");
                     return copyRet3;
                 }
             }
             return 1;
         } catch (IOException e) {
-            Slog.e(TAG, "Copying native libraries failed", e);
+            Slog.m55e(TAG, "Copying native libraries failed", e);
             return -110;
         }
     }
 
     public static long sumNativeBinariesWithOverride(Handle handle, String abiOverride) throws IOException {
-        long sum = 0;
         if (handle.multiArch) {
             if (abiOverride != null && !CLEAR_ABI_OVERRIDE.equals(abiOverride)) {
-                Slog.w(TAG, "Ignoring abiOverride for multi arch application.");
+                Slog.m50w(TAG, "Ignoring abiOverride for multi arch application.");
             }
-            if (Build.SUPPORTED_32_BIT_ABIS.length > 0) {
-                sum = 0 + sumNativeBinariesForSupportedAbi(handle, Build.SUPPORTED_32_BIT_ABIS);
-            }
+            long sum = Build.SUPPORTED_32_BIT_ABIS.length > 0 ? 0 + sumNativeBinariesForSupportedAbi(handle, Build.SUPPORTED_32_BIT_ABIS) : 0L;
             if (Build.SUPPORTED_64_BIT_ABIS.length > 0) {
                 return sum + sumNativeBinariesForSupportedAbi(handle, Build.SUPPORTED_64_BIT_ABIS);
             }
@@ -303,17 +300,13 @@ public class NativeLibraryHelper {
     }
 
     public static boolean hasRenderscriptBitcode(Handle handle) throws IOException {
-        long[] jArr = handle.apkHandles;
-        int length = jArr.length;
-        int i = 0;
-        while (i < length) {
-            int res = hasRenderscriptBitcode(jArr[i]);
+        long[] jArr;
+        for (long apkHandle : handle.apkHandles) {
+            int res = hasRenderscriptBitcode(apkHandle);
             if (res < 0) {
                 throw new IOException("Error scanning APK, code: " + res);
             } else if (res == 1) {
                 return true;
-            } else {
-                i++;
             }
         }
         return false;

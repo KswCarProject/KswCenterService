@@ -2,20 +2,25 @@ package android.telephony.euicc;
 
 import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.telephony.UiccAccessRule;
 import com.android.internal.util.Preconditions;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/* loaded from: classes3.dex */
 public final class DownloadableSubscription implements Parcelable {
-    public static final Parcelable.Creator<DownloadableSubscription> CREATOR = new Parcelable.Creator<DownloadableSubscription>() {
+    public static final Parcelable.Creator<DownloadableSubscription> CREATOR = new Parcelable.Creator<DownloadableSubscription>() { // from class: android.telephony.euicc.DownloadableSubscription.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public DownloadableSubscription createFromParcel(Parcel in) {
             return new DownloadableSubscription(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public DownloadableSubscription[] newArray(int size) {
             return new DownloadableSubscription[size];
         }
@@ -23,16 +28,16 @@ public final class DownloadableSubscription implements Parcelable {
     private List<UiccAccessRule> accessRules;
     private String carrierName;
     private String confirmationCode;
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public final String encodedActivationCode;
 
     public String getEncodedActivationCode() {
         return this.encodedActivationCode;
     }
 
-    private DownloadableSubscription(String encodedActivationCode2) {
-        this.encodedActivationCode = encodedActivationCode2;
+    private DownloadableSubscription(String encodedActivationCode) {
+        this.encodedActivationCode = encodedActivationCode;
     }
 
     private DownloadableSubscription(Parcel in) {
@@ -43,14 +48,15 @@ public final class DownloadableSubscription implements Parcelable {
         in.readTypedList(this.accessRules, UiccAccessRule.CREATOR);
     }
 
-    private DownloadableSubscription(String encodedActivationCode2, String confirmationCode2, String carrierName2, List<UiccAccessRule> accessRules2) {
-        this.encodedActivationCode = encodedActivationCode2;
-        this.confirmationCode = confirmationCode2;
-        this.carrierName = carrierName2;
-        this.accessRules = accessRules2;
+    private DownloadableSubscription(String encodedActivationCode, String confirmationCode, String carrierName, List<UiccAccessRule> accessRules) {
+        this.encodedActivationCode = encodedActivationCode;
+        this.confirmationCode = confirmationCode;
+        this.carrierName = carrierName;
+        this.accessRules = accessRules;
     }
 
     @SystemApi
+    /* loaded from: classes3.dex */
     public static final class Builder {
         List<UiccAccessRule> accessRules;
         private String carrierName;
@@ -92,24 +98,24 @@ public final class DownloadableSubscription implements Parcelable {
         }
     }
 
-    public static DownloadableSubscription forActivationCode(String encodedActivationCode2) {
-        Preconditions.checkNotNull(encodedActivationCode2, "Activation code may not be null");
-        return new DownloadableSubscription(encodedActivationCode2);
+    public static DownloadableSubscription forActivationCode(String encodedActivationCode) {
+        Preconditions.checkNotNull(encodedActivationCode, "Activation code may not be null");
+        return new DownloadableSubscription(encodedActivationCode);
     }
 
     @Deprecated
-    public void setConfirmationCode(String confirmationCode2) {
-        this.confirmationCode = confirmationCode2;
+    public void setConfirmationCode(String confirmationCode) {
+        this.confirmationCode = confirmationCode;
     }
 
     public String getConfirmationCode() {
         return this.confirmationCode;
     }
 
-    @Deprecated
     @UnsupportedAppUsage
-    public void setCarrierName(String carrierName2) {
-        this.carrierName = carrierName2;
+    @Deprecated
+    public void setCarrierName(String carrierName) {
+        this.carrierName = carrierName;
     }
 
     @SystemApi
@@ -123,16 +129,17 @@ public final class DownloadableSubscription implements Parcelable {
     }
 
     @Deprecated
-    public void setAccessRules(List<UiccAccessRule> accessRules2) {
-        this.accessRules = accessRules2;
+    public void setAccessRules(List<UiccAccessRule> accessRules) {
+        this.accessRules = accessRules;
     }
 
-    @Deprecated
     @UnsupportedAppUsage
-    public void setAccessRules(UiccAccessRule[] accessRules2) {
-        this.accessRules = Arrays.asList(accessRules2);
+    @Deprecated
+    public void setAccessRules(UiccAccessRule[] accessRules) {
+        this.accessRules = Arrays.asList(accessRules);
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.encodedActivationCode);
         dest.writeString(this.confirmationCode);
@@ -140,6 +147,7 @@ public final class DownloadableSubscription implements Parcelable {
         dest.writeTypedList(this.accessRules);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

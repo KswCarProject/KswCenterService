@@ -9,7 +9,8 @@ import android.graphics.Movie;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.DrawableInflater;
-import android.os.Bundle;
+import android.media.TtmlUtils;
+import android.p007os.Bundle;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -19,7 +20,7 @@ import android.util.TypedValue;
 import android.view.DisplayAdjustments;
 import android.view.ViewDebug;
 import android.view.ViewHierarchyEncoder;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.util.GrowingArrayUtils;
 import com.android.internal.util.XmlUtils;
@@ -27,15 +28,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.function.Predicate;
 import org.xmlpull.v1.XmlPullParserException;
 
+/* loaded from: classes.dex */
 public class Resources {
     public static final int ID_NULL = 0;
     private static final int MIN_THEME_REFS_FLUSH_SIZE = 32;
     static final String TAG = "Resources";
-    @UnsupportedAppUsage
-    static Resources mSystem = null;
-    private static final Object sSync = new Object();
     @UnsupportedAppUsage
     final ClassLoader mClassLoader;
     @UnsupportedAppUsage
@@ -49,6 +49,9 @@ public class Resources {
     private final Object mTmpValueLock;
     @UnsupportedAppUsage
     final Pools.SynchronizedPool<TypedArray> mTypedArrayPool;
+    private static final Object sSync = new Object();
+    @UnsupportedAppUsage
+    static Resources mSystem = null;
 
     @UnsupportedAppUsage
     public static int selectDefaultTheme(int curTheme, int targetSdkVersion) {
@@ -83,6 +86,7 @@ public class Resources {
         return ret;
     }
 
+    /* loaded from: classes.dex */
     public static class NotFoundException extends RuntimeException {
         public NotFoundException() {
         }
@@ -98,7 +102,7 @@ public class Resources {
 
     @Deprecated
     public Resources(AssetManager assets, DisplayMetrics metrics, Configuration config) {
-        this((ClassLoader) null);
+        this(null);
         this.mResourcesImpl = new ResourcesImpl(assets, metrics, config, new DisplayAdjustments());
     }
 
@@ -114,7 +118,7 @@ public class Resources {
 
     @UnsupportedAppUsage
     private Resources() {
-        this((ClassLoader) null);
+        this(null);
         DisplayMetrics metrics = new DisplayMetrics();
         metrics.setToDefaults();
         Configuration config = new Configuration();
@@ -124,16 +128,17 @@ public class Resources {
 
     @UnsupportedAppUsage
     public void setImpl(ResourcesImpl impl) {
-        if (impl != this.mResourcesImpl) {
-            this.mResourcesImpl = impl;
-            synchronized (this.mThemeRefs) {
-                int count = this.mThemeRefs.size();
-                for (int i = 0; i < count; i++) {
-                    WeakReference<Theme> weakThemeRef = this.mThemeRefs.get(i);
-                    Theme theme = weakThemeRef != null ? (Theme) weakThemeRef.get() : null;
-                    if (theme != null) {
-                        theme.setImpl(this.mResourcesImpl.newThemeImpl(theme.getKey()));
-                    }
+        if (impl == this.mResourcesImpl) {
+            return;
+        }
+        this.mResourcesImpl = impl;
+        synchronized (this.mThemeRefs) {
+            int count = this.mThemeRefs.size();
+            for (int i = 0; i < count; i++) {
+                WeakReference<Theme> weakThemeRef = this.mThemeRefs.get(i);
+                Theme theme = weakThemeRef != null ? weakThemeRef.get() : null;
+                if (theme != null) {
+                    theme.setImpl(this.mResourcesImpl.newThemeImpl(theme.getKey()));
                 }
             }
         }
@@ -188,8 +193,7 @@ public class Resources {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public Typeface getFont(TypedValue value, int id) throws NotFoundException {
+    Typeface getFont(TypedValue value, int id) throws NotFoundException {
         return this.mResourcesImpl.loadFont(this, value, id);
     }
 
@@ -214,11 +218,13 @@ public class Resources {
     }
 
     public String getString(int id, Object... formatArgs) throws NotFoundException {
-        return String.format(this.mResourcesImpl.getConfiguration().getLocales().get(0), getString(id), formatArgs);
+        String raw = getString(id);
+        return String.format(this.mResourcesImpl.getConfiguration().getLocales().get(0), raw, formatArgs);
     }
 
     public String getQuantityString(int id, int quantity, Object... formatArgs) throws NotFoundException {
-        return String.format(this.mResourcesImpl.getConfiguration().getLocales().get(0), getQuantityText(id, quantity).toString(), formatArgs);
+        String raw = getQuantityText(id, quantity).toString();
+        return String.format(this.mResourcesImpl.getConfiguration().getLocales().get(0), raw, formatArgs);
     }
 
     public String getQuantityString(int id, int quantity) throws NotFoundException {
@@ -257,13 +263,13 @@ public class Resources {
     public TypedArray obtainTypedArray(int id) throws NotFoundException {
         ResourcesImpl impl = this.mResourcesImpl;
         int len = impl.getAssets().getResourceArraySize(id);
-        if (len >= 0) {
-            TypedArray array = TypedArray.obtain(this, len);
-            array.mLength = impl.getAssets().getResourceArray(id, array.mData);
-            array.mIndices[0] = 0;
-            return array;
+        if (len < 0) {
+            throw new NotFoundException("Array resource ID #0x" + Integer.toHexString(id));
         }
-        throw new NotFoundException("Array resource ID #0x" + Integer.toHexString(id));
+        TypedArray array = TypedArray.obtain(this, len);
+        array.mLength = impl.getAssets().getResourceArray(id, array.mData);
+        array.mIndices[0] = 0;
+        return array;
     }
 
     public float getDimension(int id) throws NotFoundException {
@@ -313,7 +319,7 @@ public class Resources {
         try {
             this.mResourcesImpl.getValue(id, value, true);
             if (value.type == 6) {
-                return TypedValue.complexToFraction(value.data, (float) base, (float) pbase);
+                return TypedValue.complexToFraction(value.data, base, pbase);
             }
             throw new NotFoundException("Resource ID #0x" + Integer.toHexString(id) + " type #0x" + Integer.toHexString(value.type) + " is not valid");
         } finally {
@@ -323,9 +329,9 @@ public class Resources {
 
     @Deprecated
     public Drawable getDrawable(int id) throws NotFoundException {
-        Drawable d = getDrawable(id, (Theme) null);
+        Drawable d = getDrawable(id, null);
         if (d != null && d.canApplyTheme()) {
-            Log.w(TAG, "Drawable " + getResourceName(id) + " has unresolved theme attributes! Consider using Resources.getDrawable(int, Theme) or Context.getDrawable(int).", new RuntimeException());
+            Log.m63w(TAG, "Drawable " + getResourceName(id) + " has unresolved theme attributes! Consider using Resources.getDrawable(int, Theme) or Context.getDrawable(int).", new RuntimeException());
         }
         return d;
     }
@@ -336,7 +342,7 @@ public class Resources {
 
     @Deprecated
     public Drawable getDrawableForDensity(int id, int density) throws NotFoundException {
-        return getDrawableForDensity(id, density, (Theme) null);
+        return getDrawableForDensity(id, density, null);
     }
 
     public Drawable getDrawableForDensity(int id, int density, Theme theme) {
@@ -350,9 +356,8 @@ public class Resources {
         }
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public Drawable loadDrawable(TypedValue value, int id, int density, Theme theme) throws NotFoundException {
+    Drawable loadDrawable(TypedValue value, int id, int density, Theme theme) throws NotFoundException {
         return this.mResourcesImpl.loadDrawable(this, value, id, density, theme);
     }
 
@@ -369,7 +374,7 @@ public class Resources {
 
     @Deprecated
     public int getColor(int id) throws NotFoundException {
-        return getColor(id, (Theme) null);
+        return getColor(id, null);
     }
 
     public int getColor(int id, Theme theme) throws NotFoundException {
@@ -380,12 +385,11 @@ public class Resources {
             if (value.type >= 16 && value.type <= 31) {
                 return value.data;
             }
-            if (value.type == 3) {
-                int defaultColor = impl.loadColorStateList(this, value, id, theme).getDefaultColor();
-                releaseTempTypedValue(value);
-                return defaultColor;
+            if (value.type != 3) {
+                throw new NotFoundException("Resource ID #0x" + Integer.toHexString(id) + " type #0x" + Integer.toHexString(value.type) + " is not valid");
             }
-            throw new NotFoundException("Resource ID #0x" + Integer.toHexString(id) + " type #0x" + Integer.toHexString(value.type) + " is not valid");
+            ColorStateList csl = impl.loadColorStateList(this, value, id, theme);
+            return csl.getDefaultColor();
         } finally {
             releaseTempTypedValue(value);
         }
@@ -393,9 +397,9 @@ public class Resources {
 
     @Deprecated
     public ColorStateList getColorStateList(int id) throws NotFoundException {
-        ColorStateList csl = getColorStateList(id, (Theme) null);
+        ColorStateList csl = getColorStateList(id, null);
         if (csl != null && csl.canApplyTheme()) {
-            Log.w(TAG, "ColorStateList " + getResourceName(id) + " has unresolved theme attributes! Consider using Resources.getColorStateList(int, Theme) or Context.getColorStateList(int).", new RuntimeException());
+            Log.m63w(TAG, "ColorStateList " + getResourceName(id) + " has unresolved theme attributes! Consider using Resources.getColorStateList(int, Theme) or Context.getColorStateList(int).", new RuntimeException());
         }
         return csl;
     }
@@ -411,8 +415,7 @@ public class Resources {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public ColorStateList loadColorStateList(TypedValue value, int id, Theme theme) throws NotFoundException {
+    ColorStateList loadColorStateList(TypedValue value, int id, Theme theme) throws NotFoundException {
         return this.mResourcesImpl.loadColorStateList(this, value, id, theme);
     }
 
@@ -423,15 +426,11 @@ public class Resources {
     public boolean getBoolean(int id) throws NotFoundException {
         TypedValue value = obtainTempTypedValue();
         try {
-            boolean z = true;
             this.mResourcesImpl.getValue(id, value, true);
-            if (value.type < 16 || value.type > 31) {
-                throw new NotFoundException("Resource ID #0x" + Integer.toHexString(id) + " type #0x" + Integer.toHexString(value.type) + " is not valid");
+            if (value.type >= 16 && value.type <= 31) {
+                return value.data != 0;
             }
-            if (value.data == 0) {
-                z = false;
-            }
-            return z;
+            throw new NotFoundException("Resource ID #0x" + Integer.toHexString(id) + " type #0x" + Integer.toHexString(value.type) + " is not valid");
         } finally {
             releaseTempTypedValue(value);
         }
@@ -535,6 +534,7 @@ public class Resources {
         return ResourcesImpl.getAttributeSetSourceResId(set);
     }
 
+    /* loaded from: classes.dex */
     public final class Theme {
         @UnsupportedAppUsage
         private ResourcesImpl.ThemeImpl mThemeImpl;
@@ -542,8 +542,7 @@ public class Resources {
         private Theme() {
         }
 
-        /* access modifiers changed from: package-private */
-        public void setImpl(ResourcesImpl.ThemeImpl impl) {
+        void setImpl(ResourcesImpl.ThemeImpl impl) {
             this.mThemeImpl = impl;
         }
 
@@ -556,11 +555,11 @@ public class Resources {
         }
 
         public TypedArray obtainStyledAttributes(int[] attrs) {
-            return this.mThemeImpl.obtainStyledAttributes(this, (AttributeSet) null, attrs, 0, 0);
+            return this.mThemeImpl.obtainStyledAttributes(this, null, attrs, 0, 0);
         }
 
         public TypedArray obtainStyledAttributes(int resId, int[] attrs) throws NotFoundException {
-            return this.mThemeImpl.obtainStyledAttributes(this, (AttributeSet) null, attrs, 0, resId);
+            return this.mThemeImpl.obtainStyledAttributes(this, null, attrs, 0, resId);
         }
 
         public TypedArray obtainStyledAttributes(AttributeSet set, int[] attrs, int defStyleAttr, int defStyleRes) {
@@ -596,13 +595,11 @@ public class Resources {
             this.mThemeImpl.dump(priority, tag, prefix);
         }
 
-        /* access modifiers changed from: package-private */
-        public long getNativeTheme() {
+        long getNativeTheme() {
             return this.mThemeImpl.getNativeTheme();
         }
 
-        /* access modifiers changed from: package-private */
-        public int getAppliedStyleResId() {
+        int getAppliedStyleResId() {
             return this.mThemeImpl.getAppliedStyleResId();
         }
 
@@ -640,7 +637,8 @@ public class Resources {
             String styleAttrType = getResources().getResourceTypeName(styleAttr);
             if ("attr".equals(styleAttrType)) {
                 TypedValue explicitStyle = new TypedValue();
-                if (resolveAttribute(styleAttr, explicitStyle, true)) {
+                boolean resolved = resolveAttribute(styleAttr, explicitStyle, true);
+                if (resolved) {
                     return explicitStyle.resourceId;
                 }
             } else if (TtmlUtils.TAG_STYLE.equals(styleAttrType)) {
@@ -658,6 +656,7 @@ public class Resources {
         }
     }
 
+    /* loaded from: classes.dex */
     static class ThemeKey implements Cloneable {
         int mCount;
         boolean[] mForce;
@@ -677,42 +676,13 @@ public class Resources {
             this.mResId = GrowingArrayUtils.append(this.mResId, this.mCount, resId);
             this.mForce = GrowingArrayUtils.append(this.mForce, this.mCount, force);
             this.mCount++;
-            this.mHashCode = (((this.mHashCode * 31) + resId) * 31) + (force);
+            this.mHashCode = (((this.mHashCode * 31) + resId) * 31) + (force ? 1 : 0);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v5, resolved type: java.lang.Object} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v2, resolved type: boolean[]} */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public void setTo(android.content.res.Resources.ThemeKey r3) {
-            /*
-                r2 = this;
-                int[] r0 = r3.mResId
-                r1 = 0
-                if (r0 != 0) goto L_0x0007
-                r0 = r1
-                goto L_0x000f
-            L_0x0007:
-                int[] r0 = r3.mResId
-                java.lang.Object r0 = r0.clone()
-                int[] r0 = (int[]) r0
-            L_0x000f:
-                r2.mResId = r0
-                boolean[] r0 = r3.mForce
-                if (r0 != 0) goto L_0x0016
-                goto L_0x001f
-            L_0x0016:
-                boolean[] r0 = r3.mForce
-                java.lang.Object r0 = r0.clone()
-                r1 = r0
-                boolean[] r1 = (boolean[]) r1
-            L_0x001f:
-                r2.mForce = r1
-                int r0 = r3.mCount
-                r2.mCount = r0
-                return
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.content.res.Resources.ThemeKey.setTo(android.content.res.Resources$ThemeKey):void");
+        public void setTo(ThemeKey other) {
+            this.mResId = other.mResId == null ? null : (int[]) other.mResId.clone();
+            this.mForce = other.mForce != null ? (boolean[]) other.mForce.clone() : null;
+            this.mCount = other.mCount;
         }
 
         public int hashCode() {
@@ -739,7 +709,8 @@ public class Resources {
             return true;
         }
 
-        public ThemeKey clone() {
+        /* renamed from: clone */
+        public ThemeKey m157clone() {
             ThemeKey other = new ThemeKey();
             other.mResId = this.mResId;
             other.mForce = this.mForce;
@@ -753,9 +724,14 @@ public class Resources {
         Theme theme = new Theme();
         theme.setImpl(this.mResourcesImpl.newThemeImpl());
         synchronized (this.mThemeRefs) {
-            this.mThemeRefs.add(new WeakReference(theme));
+            this.mThemeRefs.add(new WeakReference<>(theme));
             if (this.mThemeRefs.size() > this.mThemeRefsNextFlushSize) {
-                this.mThemeRefs.removeIf($$Lambda$Resources$4msWUw7LKsgLexLZjIfWa4oguq4.INSTANCE);
+                this.mThemeRefs.removeIf(new Predicate() { // from class: android.content.res.-$$Lambda$Resources$4msWUw7LKsgLexLZjIfWa4oguq4
+                    @Override // java.util.function.Predicate
+                    public final boolean test(Object obj) {
+                        return Resources.lambda$newTheme$0((WeakReference) obj);
+                    }
+                });
                 this.mThemeRefsNextFlushSize = Math.max(32, this.mThemeRefs.size() * 2);
             }
         }
@@ -767,7 +743,8 @@ public class Resources {
     }
 
     public TypedArray obtainAttributes(AttributeSet set, int[] attrs) {
-        TypedArray array = TypedArray.obtain(this, attrs.length);
+        int len = attrs.length;
+        TypedArray array = TypedArray.obtain(this, len);
         XmlBlock.Parser parser = (XmlBlock.Parser) set;
         this.mResourcesImpl.getAssets().retrieveAttributes(parser, attrs, array.mData, array.mIndices);
         array.mXml = parser;
@@ -776,7 +753,7 @@ public class Resources {
 
     @Deprecated
     public void updateConfiguration(Configuration config, DisplayMetrics metrics) {
-        updateConfiguration(config, metrics, (CompatibilityInfo) null);
+        updateConfiguration(config, metrics, null);
     }
 
     public void updateConfiguration(Configuration config, DisplayMetrics metrics, CompatibilityInfo compat) {
@@ -812,11 +789,11 @@ public class Resources {
         return this.mResourcesImpl.getCompatibilityInfo();
     }
 
-    @VisibleForTesting
     @UnsupportedAppUsage
+    @VisibleForTesting
     public void setCompatibilityInfo(CompatibilityInfo ci) {
         if (ci != null) {
-            this.mResourcesImpl.updateConfiguration((Configuration) null, (DisplayMetrics) null, ci);
+            this.mResourcesImpl.updateConfiguration(null, null, ci);
         }
     }
 
@@ -851,55 +828,58 @@ public class Resources {
     public void parseBundleExtras(XmlResourceParser parser, Bundle outBundle) throws XmlPullParserException, IOException {
         int outerDepth = parser.getDepth();
         while (true) {
-            int next = parser.next();
-            int type = next;
-            if (next == 1) {
-                return;
-            }
-            if (type == 3 && parser.getDepth() <= outerDepth) {
-                return;
-            }
-            if (!(type == 3 || type == 4)) {
-                if (parser.getName().equals("extra")) {
-                    parseBundleExtra("extra", parser, outBundle);
-                    XmlUtils.skipCurrentTag(parser);
+            int type = parser.next();
+            if (type != 1) {
+                if (type != 3 || parser.getDepth() > outerDepth) {
+                    if (type != 3 && type != 4) {
+                        String nodeName = parser.getName();
+                        if (nodeName.equals("extra")) {
+                            parseBundleExtra("extra", parser, outBundle);
+                            XmlUtils.skipCurrentTag(parser);
+                        } else {
+                            XmlUtils.skipCurrentTag(parser);
+                        }
+                    }
                 } else {
-                    XmlUtils.skipCurrentTag(parser);
+                    return;
                 }
+            } else {
+                return;
             }
         }
     }
 
     public void parseBundleExtra(String tagName, AttributeSet attrs, Bundle outBundle) throws XmlPullParserException {
-        TypedArray sa = obtainAttributes(attrs, R.styleable.Extra);
+        TypedArray sa = obtainAttributes(attrs, C3132R.styleable.Extra);
         boolean z = false;
         String name = sa.getString(0);
-        if (name != null) {
-            TypedValue v = sa.peekValue(1);
-            if (v != null) {
-                if (v.type == 3) {
-                    outBundle.putCharSequence(name, v.coerceToString());
-                } else if (v.type == 18) {
-                    if (v.data != 0) {
-                        z = true;
-                    }
-                    outBundle.putBoolean(name, z);
-                } else if (v.type >= 16 && v.type <= 31) {
-                    outBundle.putInt(name, v.data);
-                } else if (v.type == 4) {
-                    outBundle.putFloat(name, v.getFloat());
-                } else {
-                    sa.recycle();
-                    throw new XmlPullParserException("<" + tagName + "> only supports string, integer, float, color, and boolean at " + attrs.getPositionDescription());
+        if (name == null) {
+            sa.recycle();
+            throw new XmlPullParserException("<" + tagName + "> requires an android:name attribute at " + attrs.getPositionDescription());
+        }
+        TypedValue v = sa.peekValue(1);
+        if (v != null) {
+            if (v.type == 3) {
+                CharSequence cs = v.coerceToString();
+                outBundle.putCharSequence(name, cs);
+            } else if (v.type == 18) {
+                if (v.data != 0) {
+                    z = true;
                 }
+                outBundle.putBoolean(name, z);
+            } else if (v.type >= 16 && v.type <= 31) {
+                outBundle.putInt(name, v.data);
+            } else if (v.type == 4) {
+                outBundle.putFloat(name, v.getFloat());
+            } else {
                 sa.recycle();
-                return;
+                throw new XmlPullParserException("<" + tagName + "> only supports string, integer, float, color, and boolean at " + attrs.getPositionDescription());
             }
             sa.recycle();
-            throw new XmlPullParserException("<" + tagName + "> requires an android:value or android:resource attribute at " + attrs.getPositionDescription());
+            return;
         }
         sa.recycle();
-        throw new XmlPullParserException("<" + tagName + "> requires an android:name attribute at " + attrs.getPositionDescription());
+        throw new XmlPullParserException("<" + tagName + "> requires an android:value or android:resource attribute at " + attrs.getPositionDescription());
     }
 
     public final AssetManager getAssets() {
@@ -923,9 +903,8 @@ public class Resources {
         return this.mResourcesImpl.getPreloadedDrawables();
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public XmlResourceParser loadXmlResourceParser(int id, String type) throws NotFoundException {
+    XmlResourceParser loadXmlResourceParser(int id, String type) throws NotFoundException {
         TypedValue value = obtainTempTypedValue();
         try {
             ResourcesImpl impl = this.mResourcesImpl;
@@ -939,9 +918,8 @@ public class Resources {
         }
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public XmlResourceParser loadXmlResourceParser(String file, int id, int assetCookie, String type) throws NotFoundException {
+    XmlResourceParser loadXmlResourceParser(String file, int id, int assetCookie, String type) throws NotFoundException {
         return this.mResourcesImpl.loadXmlResourceParser(file, id, assetCookie, type);
     }
 

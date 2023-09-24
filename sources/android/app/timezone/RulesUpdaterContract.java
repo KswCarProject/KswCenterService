@@ -2,8 +2,9 @@ package android.app.timezone;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.UserHandle;
+import android.p007os.UserHandle;
 
+/* loaded from: classes.dex */
 public final class RulesUpdaterContract {
     public static final String ACTION_TRIGGER_RULES_UPDATE_CHECK = "com.android.intent.action.timezone.TRIGGER_RULES_UPDATE_CHECK";
     public static final String EXTRA_CHECK_TOKEN = "com.android.intent.extra.timezone.CHECK_TOKEN";

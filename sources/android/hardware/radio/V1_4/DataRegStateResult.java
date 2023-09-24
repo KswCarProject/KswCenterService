@@ -1,27 +1,29 @@
 package android.hardware.radio.V1_4;
 
 import android.internal.hidl.safe_union.V1_0.Monostate;
-import android.os.HidlSupport;
-import android.os.HwBlob;
-import android.os.HwParcel;
+import android.p007os.HidlSupport;
+import android.p007os.HwBlob;
+import android.p007os.HwParcel;
 import java.util.ArrayList;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public final class DataRegStateResult {
     public android.hardware.radio.V1_2.DataRegStateResult base = new android.hardware.radio.V1_2.DataRegStateResult();
-    public NrIndicators nrIndicators = new NrIndicators();
     public VopsInfo vopsInfo = new VopsInfo();
+    public NrIndicators nrIndicators = new NrIndicators();
 
+    /* loaded from: classes.dex */
     public static final class VopsInfo {
-        private byte hidl_d;
+        private byte hidl_d = 0;
         private Object hidl_o;
 
         public VopsInfo() {
-            this.hidl_d = 0;
             this.hidl_o = null;
             this.hidl_o = new Monostate();
         }
 
+        /* loaded from: classes.dex */
         public static final class hidl_discriminator {
             public static final byte lteVopsInfo = 1;
             public static final byte noinit = 0;
@@ -42,34 +44,34 @@ public final class DataRegStateResult {
         }
 
         public void noinit(Monostate noinit) {
-            this.hidl_d = 0;
+            this.hidl_d = (byte) 0;
             this.hidl_o = noinit;
         }
 
         public Monostate noinit() {
             if (this.hidl_d != 0) {
                 String className = this.hidl_o != null ? this.hidl_o.getClass().getName() : "null";
-                throw new IllegalStateException("Read access to inactive union components is disallowed. Discriminator value is " + this.hidl_d + " (corresponding to " + hidl_discriminator.getName(this.hidl_d) + "), and hidl_o is of type " + className + ".");
-            } else if (this.hidl_o == null || Monostate.class.isInstance(this.hidl_o)) {
-                return (Monostate) this.hidl_o;
-            } else {
+                throw new IllegalStateException("Read access to inactive union components is disallowed. Discriminator value is " + ((int) this.hidl_d) + " (corresponding to " + hidl_discriminator.getName(this.hidl_d) + "), and hidl_o is of type " + className + ".");
+            } else if (this.hidl_o != null && !Monostate.class.isInstance(this.hidl_o)) {
                 throw new Error("Union is in a corrupted state.");
+            } else {
+                return (Monostate) this.hidl_o;
             }
         }
 
         public void lteVopsInfo(LteVopsInfo lteVopsInfo) {
-            this.hidl_d = 1;
+            this.hidl_d = (byte) 1;
             this.hidl_o = lteVopsInfo;
         }
 
         public LteVopsInfo lteVopsInfo() {
             if (this.hidl_d != 1) {
                 String className = this.hidl_o != null ? this.hidl_o.getClass().getName() : "null";
-                throw new IllegalStateException("Read access to inactive union components is disallowed. Discriminator value is " + this.hidl_d + " (corresponding to " + hidl_discriminator.getName(this.hidl_d) + "), and hidl_o is of type " + className + ".");
-            } else if (this.hidl_o == null || LteVopsInfo.class.isInstance(this.hidl_o)) {
-                return (LteVopsInfo) this.hidl_o;
-            } else {
+                throw new IllegalStateException("Read access to inactive union components is disallowed. Discriminator value is " + ((int) this.hidl_d) + " (corresponding to " + hidl_discriminator.getName(this.hidl_d) + "), and hidl_o is of type " + className + ".");
+            } else if (this.hidl_o != null && !LteVopsInfo.class.isInstance(this.hidl_o)) {
                 throw new Error("Union is in a corrupted state.");
+            } else {
+                return (LteVopsInfo) this.hidl_o;
             }
         }
 
@@ -92,7 +94,7 @@ public final class DataRegStateResult {
         }
 
         public final int hashCode() {
-            return Objects.hash(new Object[]{Integer.valueOf(HidlSupport.deepHashCode(this.hidl_o)), Integer.valueOf(Objects.hashCode(Byte.valueOf(this.hidl_d)))});
+            return Objects.hash(Integer.valueOf(HidlSupport.deepHashCode(this.hidl_o)), Integer.valueOf(Objects.hashCode(Byte.valueOf(this.hidl_d))));
         }
 
         public final String toString() {
@@ -108,25 +110,26 @@ public final class DataRegStateResult {
                     builder.append(lteVopsInfo());
                     break;
                 default:
-                    throw new Error("Unknown union discriminator (value: " + this.hidl_d + ").");
+                    throw new Error("Unknown union discriminator (value: " + ((int) this.hidl_d) + ").");
             }
             builder.append("}");
             return builder.toString();
         }
 
         public final void readFromParcel(HwParcel parcel) {
-            readEmbeddedFromParcel(parcel, parcel.readBuffer(3), 0);
+            HwBlob blob = parcel.readBuffer(3L);
+            readEmbeddedFromParcel(parcel, blob, 0L);
         }
 
         public static final ArrayList<VopsInfo> readVectorFromParcel(HwParcel parcel) {
             ArrayList<VopsInfo> _hidl_vec = new ArrayList<>();
-            HwBlob _hidl_blob = parcel.readBuffer(16);
-            int _hidl_vec_size = _hidl_blob.getInt32(8);
-            HwBlob childBlob = parcel.readEmbeddedBuffer((long) (_hidl_vec_size * 3), _hidl_blob.handle(), 0, true);
+            HwBlob _hidl_blob = parcel.readBuffer(16L);
+            int _hidl_vec_size = _hidl_blob.getInt32(8L);
+            HwBlob childBlob = parcel.readEmbeddedBuffer(_hidl_vec_size * 3, _hidl_blob.handle(), 0L, true);
             _hidl_vec.clear();
             for (int _hidl_index_0 = 0; _hidl_index_0 < _hidl_vec_size; _hidl_index_0++) {
                 VopsInfo _hidl_vec_element = new VopsInfo();
-                _hidl_vec_element.readEmbeddedFromParcel(parcel, childBlob, (long) (_hidl_index_0 * 3));
+                _hidl_vec_element.readEmbeddedFromParcel(parcel, childBlob, _hidl_index_0 * 3);
                 _hidl_vec.add(_hidl_vec_element);
             }
             return _hidl_vec;
@@ -144,26 +147,26 @@ public final class DataRegStateResult {
                     ((LteVopsInfo) this.hidl_o).readEmbeddedFromParcel(parcel, _hidl_blob, 1 + _hidl_offset);
                     return;
                 default:
-                    throw new IllegalStateException("Unknown union discriminator (value: " + this.hidl_d + ").");
+                    throw new IllegalStateException("Unknown union discriminator (value: " + ((int) this.hidl_d) + ").");
             }
         }
 
         public final void writeToParcel(HwParcel parcel) {
             HwBlob _hidl_blob = new HwBlob(3);
-            writeEmbeddedToBlob(_hidl_blob, 0);
+            writeEmbeddedToBlob(_hidl_blob, 0L);
             parcel.writeBuffer(_hidl_blob);
         }
 
         public static final void writeVectorToParcel(HwParcel parcel, ArrayList<VopsInfo> _hidl_vec) {
             HwBlob _hidl_blob = new HwBlob(16);
             int _hidl_vec_size = _hidl_vec.size();
-            _hidl_blob.putInt32(8, _hidl_vec_size);
-            _hidl_blob.putBool(12, false);
+            _hidl_blob.putInt32(8L, _hidl_vec_size);
+            _hidl_blob.putBool(12L, false);
             HwBlob childBlob = new HwBlob(_hidl_vec_size * 3);
             for (int _hidl_index_0 = 0; _hidl_index_0 < _hidl_vec_size; _hidl_index_0++) {
-                _hidl_vec.get(_hidl_index_0).writeEmbeddedToBlob(childBlob, (long) (_hidl_index_0 * 3));
+                _hidl_vec.get(_hidl_index_0).writeEmbeddedToBlob(childBlob, _hidl_index_0 * 3);
             }
-            _hidl_blob.putBlob(0, childBlob);
+            _hidl_blob.putBlob(0L, childBlob);
             parcel.writeBuffer(_hidl_blob);
         }
 
@@ -177,7 +180,7 @@ public final class DataRegStateResult {
                     lteVopsInfo().writeEmbeddedToBlob(_hidl_blob, 1 + _hidl_offset);
                     return;
                 default:
-                    throw new Error("Unknown union discriminator (value: " + this.hidl_d + ").");
+                    throw new Error("Unknown union discriminator (value: " + ((int) this.hidl_d) + ").");
             }
         }
     }
@@ -197,26 +200,27 @@ public final class DataRegStateResult {
     }
 
     public final int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(HidlSupport.deepHashCode(this.base)), Integer.valueOf(HidlSupport.deepHashCode(this.vopsInfo)), Integer.valueOf(HidlSupport.deepHashCode(this.nrIndicators))});
+        return Objects.hash(Integer.valueOf(HidlSupport.deepHashCode(this.base)), Integer.valueOf(HidlSupport.deepHashCode(this.vopsInfo)), Integer.valueOf(HidlSupport.deepHashCode(this.nrIndicators)));
     }
 
     public final String toString() {
-        return "{" + ".base = " + this.base + ", .vopsInfo = " + this.vopsInfo + ", .nrIndicators = " + this.nrIndicators + "}";
+        return "{.base = " + this.base + ", .vopsInfo = " + this.vopsInfo + ", .nrIndicators = " + this.nrIndicators + "}";
     }
 
     public final void readFromParcel(HwParcel parcel) {
-        readEmbeddedFromParcel(parcel, parcel.readBuffer(112), 0);
+        HwBlob blob = parcel.readBuffer(112L);
+        readEmbeddedFromParcel(parcel, blob, 0L);
     }
 
     public static final ArrayList<DataRegStateResult> readVectorFromParcel(HwParcel parcel) {
         ArrayList<DataRegStateResult> _hidl_vec = new ArrayList<>();
-        HwBlob _hidl_blob = parcel.readBuffer(16);
-        int _hidl_vec_size = _hidl_blob.getInt32(8);
-        HwBlob childBlob = parcel.readEmbeddedBuffer((long) (_hidl_vec_size * 112), _hidl_blob.handle(), 0, true);
+        HwBlob _hidl_blob = parcel.readBuffer(16L);
+        int _hidl_vec_size = _hidl_blob.getInt32(8L);
+        HwBlob childBlob = parcel.readEmbeddedBuffer(_hidl_vec_size * 112, _hidl_blob.handle(), 0L, true);
         _hidl_vec.clear();
         for (int _hidl_index_0 = 0; _hidl_index_0 < _hidl_vec_size; _hidl_index_0++) {
             DataRegStateResult _hidl_vec_element = new DataRegStateResult();
-            _hidl_vec_element.readEmbeddedFromParcel(parcel, childBlob, (long) (_hidl_index_0 * 112));
+            _hidl_vec_element.readEmbeddedFromParcel(parcel, childBlob, _hidl_index_0 * 112);
             _hidl_vec.add(_hidl_vec_element);
         }
         return _hidl_vec;
@@ -230,20 +234,20 @@ public final class DataRegStateResult {
 
     public final void writeToParcel(HwParcel parcel) {
         HwBlob _hidl_blob = new HwBlob(112);
-        writeEmbeddedToBlob(_hidl_blob, 0);
+        writeEmbeddedToBlob(_hidl_blob, 0L);
         parcel.writeBuffer(_hidl_blob);
     }
 
     public static final void writeVectorToParcel(HwParcel parcel, ArrayList<DataRegStateResult> _hidl_vec) {
         HwBlob _hidl_blob = new HwBlob(16);
         int _hidl_vec_size = _hidl_vec.size();
-        _hidl_blob.putInt32(8, _hidl_vec_size);
-        _hidl_blob.putBool(12, false);
+        _hidl_blob.putInt32(8L, _hidl_vec_size);
+        _hidl_blob.putBool(12L, false);
         HwBlob childBlob = new HwBlob(_hidl_vec_size * 112);
         for (int _hidl_index_0 = 0; _hidl_index_0 < _hidl_vec_size; _hidl_index_0++) {
-            _hidl_vec.get(_hidl_index_0).writeEmbeddedToBlob(childBlob, (long) (_hidl_index_0 * 112));
+            _hidl_vec.get(_hidl_index_0).writeEmbeddedToBlob(childBlob, _hidl_index_0 * 112);
         }
-        _hidl_blob.putBlob(0, childBlob);
+        _hidl_blob.putBlob(0L, childBlob);
         parcel.writeBuffer(_hidl_blob);
     }
 

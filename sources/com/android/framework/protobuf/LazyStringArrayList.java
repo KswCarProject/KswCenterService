@@ -8,37 +8,45 @@ import java.util.Collections;
 import java.util.List;
 import java.util.RandomAccess;
 
+/* loaded from: classes4.dex */
 public class LazyStringArrayList extends AbstractProtobufList<String> implements LazyStringList, RandomAccess {
-    public static final LazyStringList EMPTY = EMPTY_LIST;
+    public static final LazyStringList EMPTY;
     private static final LazyStringArrayList EMPTY_LIST = new LazyStringArrayList();
     private final List<Object> list;
 
+    @Override // com.android.framework.protobuf.AbstractProtobufList, java.util.AbstractList, java.util.Collection, java.util.List
     public /* bridge */ /* synthetic */ boolean equals(Object obj) {
         return super.equals(obj);
     }
 
+    @Override // com.android.framework.protobuf.AbstractProtobufList, java.util.AbstractList, java.util.Collection, java.util.List
     public /* bridge */ /* synthetic */ int hashCode() {
         return super.hashCode();
     }
 
+    @Override // com.android.framework.protobuf.AbstractProtobufList, com.android.framework.protobuf.Internal.ProtobufList
     public /* bridge */ /* synthetic */ boolean isModifiable() {
         return super.isModifiable();
     }
 
+    @Override // com.android.framework.protobuf.AbstractProtobufList, java.util.AbstractCollection, java.util.Collection, java.util.List
     public /* bridge */ /* synthetic */ boolean remove(Object obj) {
         return super.remove(obj);
     }
 
+    @Override // com.android.framework.protobuf.AbstractProtobufList, java.util.AbstractCollection, java.util.Collection, java.util.List
     public /* bridge */ /* synthetic */ boolean removeAll(Collection collection) {
         return super.removeAll(collection);
     }
 
+    @Override // com.android.framework.protobuf.AbstractProtobufList, java.util.AbstractCollection, java.util.Collection, java.util.List
     public /* bridge */ /* synthetic */ boolean retainAll(Collection collection) {
         return super.retainAll(collection);
     }
 
     static {
         EMPTY_LIST.makeImmutable();
+        EMPTY = EMPTY_LIST;
     }
 
     static LazyStringArrayList emptyList() {
@@ -62,19 +70,21 @@ public class LazyStringArrayList extends AbstractProtobufList<String> implements
         this((ArrayList<Object>) new ArrayList(from));
     }
 
-    private LazyStringArrayList(ArrayList<Object> list2) {
-        this.list = list2;
+    private LazyStringArrayList(ArrayList<Object> list) {
+        this.list = list;
     }
 
+    @Override // com.android.framework.protobuf.Internal.ProtobufList, com.android.framework.protobuf.Internal.BooleanList
     public LazyStringArrayList mutableCopyWithCapacity(int capacity) {
-        if (capacity >= size()) {
-            ArrayList<Object> newList = new ArrayList<>(capacity);
-            newList.addAll(this.list);
-            return new LazyStringArrayList(newList);
+        if (capacity < size()) {
+            throw new IllegalArgumentException();
         }
-        throw new IllegalArgumentException();
+        ArrayList<Object> newList = new ArrayList<>(capacity);
+        newList.addAll(this.list);
+        return new LazyStringArrayList(newList);
     }
 
+    @Override // java.util.AbstractList, java.util.List
     public String get(int index) {
         Object o = this.list.get(index);
         if (o instanceof String) {
@@ -96,39 +106,45 @@ public class LazyStringArrayList extends AbstractProtobufList<String> implements
         return s2;
     }
 
+    @Override // java.util.AbstractCollection, java.util.Collection, java.util.List
     public int size() {
         return this.list.size();
     }
 
+    @Override // com.android.framework.protobuf.AbstractProtobufList, java.util.AbstractList, java.util.List
     public String set(int index, String s) {
         ensureIsMutable();
-        return asString(this.list.set(index, s));
+        Object o = this.list.set(index, s);
+        return asString(o);
     }
 
+    @Override // com.android.framework.protobuf.AbstractProtobufList, java.util.AbstractList, java.util.List
     public void add(int index, String element) {
         ensureIsMutable();
         this.list.add(index, element);
         this.modCount++;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void add(int index, ByteString element) {
         ensureIsMutable();
         this.list.add(index, element);
         this.modCount++;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void add(int index, byte[] element) {
         ensureIsMutable();
         this.list.add(index, element);
         this.modCount++;
     }
 
+    @Override // com.android.framework.protobuf.AbstractProtobufList, java.util.AbstractCollection, java.util.Collection, java.util.List
     public boolean addAll(Collection<? extends String> c) {
         return addAll(size(), c);
     }
 
+    @Override // com.android.framework.protobuf.AbstractProtobufList, java.util.AbstractList, java.util.List
     public boolean addAll(int index, Collection<? extends String> c) {
         ensureIsMutable();
         boolean ret = this.list.addAll(index, c instanceof LazyStringList ? ((LazyStringList) c).getUnderlyingElements() : c);
@@ -136,6 +152,7 @@ public class LazyStringArrayList extends AbstractProtobufList<String> implements
         return ret;
     }
 
+    @Override // com.android.framework.protobuf.LazyStringList
     public boolean addAllByteString(Collection<? extends ByteString> values) {
         ensureIsMutable();
         boolean ret = this.list.addAll(values);
@@ -143,6 +160,7 @@ public class LazyStringArrayList extends AbstractProtobufList<String> implements
         return ret;
     }
 
+    @Override // com.android.framework.protobuf.LazyStringList
     public boolean addAllByteArray(Collection<byte[]> c) {
         ensureIsMutable();
         boolean ret = this.list.addAll(c);
@@ -150,6 +168,7 @@ public class LazyStringArrayList extends AbstractProtobufList<String> implements
         return ret;
     }
 
+    @Override // com.android.framework.protobuf.AbstractProtobufList, java.util.AbstractList, java.util.List
     public String remove(int index) {
         ensureIsMutable();
         Object o = this.list.remove(index);
@@ -157,28 +176,33 @@ public class LazyStringArrayList extends AbstractProtobufList<String> implements
         return asString(o);
     }
 
+    @Override // com.android.framework.protobuf.AbstractProtobufList, java.util.AbstractList, java.util.AbstractCollection, java.util.Collection, java.util.List
     public void clear() {
         ensureIsMutable();
         this.list.clear();
         this.modCount++;
     }
 
+    @Override // com.android.framework.protobuf.LazyStringList
     public void add(ByteString element) {
         ensureIsMutable();
         this.list.add(element);
         this.modCount++;
     }
 
+    @Override // com.android.framework.protobuf.LazyStringList
     public void add(byte[] element) {
         ensureIsMutable();
         this.list.add(element);
         this.modCount++;
     }
 
+    @Override // com.android.framework.protobuf.LazyStringList
     public Object getRaw(int index) {
         return this.list.get(index);
     }
 
+    @Override // com.android.framework.protobuf.LazyStringList
     public ByteString getByteString(int index) {
         Object o = this.list.get(index);
         ByteString b = asByteString(o);
@@ -188,41 +212,34 @@ public class LazyStringArrayList extends AbstractProtobufList<String> implements
         return b;
     }
 
-    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v0, resolved type: java.util.List<java.lang.Object>} */
-    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v1, resolved type: java.lang.Object} */
-    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v0, resolved type: byte[]} */
-    /* JADX WARNING: Multi-variable type inference failed */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public byte[] getByteArray(int r4) {
-        /*
-            r3 = this;
-            java.util.List<java.lang.Object> r0 = r3.list
-            java.lang.Object r0 = r0.get(r4)
-            byte[] r1 = asByteArray(r0)
-            if (r1 == r0) goto L_0x0011
-            java.util.List<java.lang.Object> r2 = r3.list
-            r2.set(r4, r1)
-        L_0x0011:
-            return r1
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.framework.protobuf.LazyStringArrayList.getByteArray(int):byte[]");
+    /* JADX WARN: Multi-variable type inference failed */
+    @Override // com.android.framework.protobuf.LazyStringList
+    public byte[] getByteArray(int index) {
+        Object o = this.list.get(index);
+        byte[] b = asByteArray(o);
+        if (b != o) {
+            this.list.set(index, b);
+        }
+        return b;
     }
 
+    @Override // com.android.framework.protobuf.LazyStringList
     public void set(int index, ByteString s) {
         setAndReturn(index, s);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public Object setAndReturn(int index, ByteString s) {
         ensureIsMutable();
         return this.list.set(index, s);
     }
 
+    @Override // com.android.framework.protobuf.LazyStringList
     public void set(int index, byte[] s) {
         setAndReturn(index, s);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public Object setAndReturn(int index, byte[] s) {
         ensureIsMutable();
         return this.list.set(index, s);
@@ -238,7 +255,7 @@ public class LazyStringArrayList extends AbstractProtobufList<String> implements
         return Internal.toStringUtf8((byte[]) o);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static ByteString asByteString(Object o) {
         if (o instanceof ByteString) {
             return (ByteString) o;
@@ -249,7 +266,7 @@ public class LazyStringArrayList extends AbstractProtobufList<String> implements
         return ByteString.copyFrom((byte[]) o);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static byte[] asByteArray(Object o) {
         if (o instanceof byte[]) {
             return (byte[]) o;
@@ -260,48 +277,56 @@ public class LazyStringArrayList extends AbstractProtobufList<String> implements
         return ((ByteString) o).toByteArray();
     }
 
+    @Override // com.android.framework.protobuf.LazyStringList
     public List<?> getUnderlyingElements() {
         return Collections.unmodifiableList(this.list);
     }
 
+    @Override // com.android.framework.protobuf.LazyStringList
     public void mergeFrom(LazyStringList other) {
         ensureIsMutable();
-        for (Object next : other.getUnderlyingElements()) {
-            if (next instanceof byte[]) {
-                byte[] b = (byte[]) next;
+        for (Object o : other.getUnderlyingElements()) {
+            if (o instanceof byte[]) {
+                byte[] b = (byte[]) o;
                 this.list.add(Arrays.copyOf(b, b.length));
             } else {
-                this.list.add(next);
+                this.list.add(o);
             }
         }
     }
 
+    /* loaded from: classes4.dex */
     private static class ByteArrayListView extends AbstractList<byte[]> implements RandomAccess {
         private final LazyStringArrayList list;
 
-        ByteArrayListView(LazyStringArrayList list2) {
-            this.list = list2;
+        ByteArrayListView(LazyStringArrayList list) {
+            this.list = list;
         }
 
+        @Override // java.util.AbstractList, java.util.List
         public byte[] get(int index) {
             return this.list.getByteArray(index);
         }
 
+        @Override // java.util.AbstractCollection, java.util.Collection, java.util.List
         public int size() {
             return this.list.size();
         }
 
+        @Override // java.util.AbstractList, java.util.List
         public byte[] set(int index, byte[] s) {
             Object o = this.list.setAndReturn(index, s);
             this.modCount++;
             return LazyStringArrayList.asByteArray(o);
         }
 
+        @Override // java.util.AbstractList, java.util.List
         public void add(int index, byte[] s) {
             this.list.add(index, s);
             this.modCount++;
         }
 
+        @Override // java.util.AbstractList, java.util.List
         public byte[] remove(int index) {
             Object o = this.list.remove(index);
             this.modCount++;
@@ -309,36 +334,43 @@ public class LazyStringArrayList extends AbstractProtobufList<String> implements
         }
     }
 
+    @Override // com.android.framework.protobuf.LazyStringList
     public List<byte[]> asByteArrayList() {
         return new ByteArrayListView(this);
     }
 
+    /* loaded from: classes4.dex */
     private static class ByteStringListView extends AbstractList<ByteString> implements RandomAccess {
         private final LazyStringArrayList list;
 
-        ByteStringListView(LazyStringArrayList list2) {
-            this.list = list2;
+        ByteStringListView(LazyStringArrayList list) {
+            this.list = list;
         }
 
+        @Override // java.util.AbstractList, java.util.List
         public ByteString get(int index) {
             return this.list.getByteString(index);
         }
 
+        @Override // java.util.AbstractCollection, java.util.Collection, java.util.List
         public int size() {
             return this.list.size();
         }
 
+        @Override // java.util.AbstractList, java.util.List
         public ByteString set(int index, ByteString s) {
             Object o = this.list.setAndReturn(index, s);
             this.modCount++;
             return LazyStringArrayList.asByteString(o);
         }
 
+        @Override // java.util.AbstractList, java.util.List
         public void add(int index, ByteString s) {
             this.list.add(index, s);
             this.modCount++;
         }
 
+        @Override // java.util.AbstractList, java.util.List
         public ByteString remove(int index) {
             Object o = this.list.remove(index);
             this.modCount++;
@@ -346,10 +378,12 @@ public class LazyStringArrayList extends AbstractProtobufList<String> implements
         }
     }
 
+    @Override // com.android.framework.protobuf.ProtocolStringList
     public List<ByteString> asByteStringList() {
         return new ByteStringListView(this);
     }
 
+    @Override // com.android.framework.protobuf.LazyStringList
     public LazyStringList getUnmodifiableView() {
         if (isModifiable()) {
             return new UnmodifiableLazyStringList(this);

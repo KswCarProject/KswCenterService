@@ -2,9 +2,9 @@ package android.telephony.ims;
 
 import android.annotation.SystemApi;
 import android.net.wifi.WifiEnterpriseConfig;
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.telecom.Log;
 import com.ibm.icu.text.PluralRules;
 import java.util.HashMap;
@@ -12,12 +12,17 @@ import java.util.Map;
 import java.util.Set;
 
 @SystemApi
+/* loaded from: classes4.dex */
 public final class ImsConferenceState implements Parcelable {
-    public static final Parcelable.Creator<ImsConferenceState> CREATOR = new Parcelable.Creator<ImsConferenceState>() {
+    public static final Parcelable.Creator<ImsConferenceState> CREATOR = new Parcelable.Creator<ImsConferenceState>() { // from class: android.telephony.ims.ImsConferenceState.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ImsConferenceState createFromParcel(Parcel in) {
             return new ImsConferenceState(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ImsConferenceState[] newArray(int size) {
             return new ImsConferenceState[size];
         }
@@ -50,10 +55,12 @@ public final class ImsConferenceState implements Parcelable {
         readFromParcel(in);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         Set<Map.Entry<String, Bundle>> entries;
         out.writeInt(this.mParticipants.size());
@@ -68,7 +75,9 @@ public final class ImsConferenceState implements Parcelable {
     private void readFromParcel(Parcel in) {
         int size = in.readInt();
         for (int i = 0; i < size; i++) {
-            this.mParticipants.put(in.readString(), (Bundle) in.readParcelable((ClassLoader) null));
+            String user = in.readString();
+            Bundle state = (Bundle) in.readParcelable(null);
+            this.mParticipants.put(user, state);
         }
     }
 
@@ -85,10 +94,7 @@ public final class ImsConferenceState implements Parcelable {
         if (status.equals(STATUS_ON_HOLD) || status.equals(STATUS_SEND_ONLY)) {
             return 5;
         }
-        if (status.equals("connected") || status.equals(STATUS_MUTED_VIA_FOCUS) || status.equals(STATUS_DISCONNECTING) || status.equals(STATUS_SEND_RECV) || !status.equals(STATUS_DISCONNECTED)) {
-            return 4;
-        }
-        return 6;
+        return (status.equals("connected") || status.equals(STATUS_MUTED_VIA_FOCUS) || status.equals(STATUS_DISCONNECTING) || status.equals(STATUS_SEND_RECV) || !status.equals(STATUS_DISCONNECTED)) ? 4 : 6;
     }
 
     public String toString() {

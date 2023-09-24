@@ -2,11 +2,13 @@ package com.android.internal.util;
 
 import android.annotation.UnsupportedAppUsage;
 
+/* loaded from: classes4.dex */
 public class BitwiseOutputStream {
     private byte[] mBuf;
     private int mEnd;
     private int mPos = 0;
 
+    /* loaded from: classes4.dex */
     public static class AccessException extends Exception {
         public AccessException(String s) {
             super("BitwiseOutputStream access failed: " + s);
@@ -28,12 +30,13 @@ public class BitwiseOutputStream {
     }
 
     private void possExpand(int bits) {
-        if (this.mPos + bits >= this.mEnd) {
-            byte[] newBuf = new byte[((this.mPos + bits) >>> 2)];
-            System.arraycopy(this.mBuf, 0, newBuf, 0, this.mEnd >>> 3);
-            this.mBuf = newBuf;
-            this.mEnd = newBuf.length << 3;
+        if (this.mPos + bits < this.mEnd) {
+            return;
         }
+        byte[] newBuf = new byte[(this.mPos + bits) >>> 2];
+        System.arraycopy(this.mBuf, 0, newBuf, 0, this.mEnd >>> 3);
+        this.mBuf = newBuf;
+        this.mEnd = newBuf.length << 3;
     }
 
     @UnsupportedAppUsage
@@ -44,7 +47,7 @@ public class BitwiseOutputStream {
         possExpand(bits);
         int index = this.mPos >>> 3;
         int offset = (16 - (this.mPos & 7)) - bits;
-        int data2 = (data & (-1 >>> (32 - bits))) << offset;
+        int data2 = (data & ((-1) >>> (32 - bits))) << offset;
         this.mPos += bits;
         byte[] bArr = this.mBuf;
         bArr[index] = (byte) (bArr[index] | (data2 >>> 8));

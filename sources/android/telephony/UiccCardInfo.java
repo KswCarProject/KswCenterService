@@ -1,15 +1,20 @@
 package android.telephony;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public final class UiccCardInfo implements Parcelable {
-    public static final Parcelable.Creator<UiccCardInfo> CREATOR = new Parcelable.Creator<UiccCardInfo>() {
+    public static final Parcelable.Creator<UiccCardInfo> CREATOR = new Parcelable.Creator<UiccCardInfo>() { // from class: android.telephony.UiccCardInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public UiccCardInfo createFromParcel(Parcel in) {
             return new UiccCardInfo(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public UiccCardInfo[] newArray(int size) {
             return new UiccCardInfo[size];
         }
@@ -22,24 +27,25 @@ public final class UiccCardInfo implements Parcelable {
     private final int mSlotIndex;
 
     private UiccCardInfo(Parcel in) {
-        boolean z = false;
         this.mIsEuicc = in.readByte() != 0;
         this.mCardId = in.readInt();
         this.mEid = in.readString();
         this.mIccId = in.readString();
         this.mSlotIndex = in.readInt();
-        this.mIsRemovable = in.readByte() != 0 ? true : z;
+        this.mIsRemovable = in.readByte() != 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeByte(this.mIsEuicc ? (byte) 1 : 0);
+        dest.writeByte(this.mIsEuicc ? (byte) 1 : (byte) 0);
         dest.writeInt(this.mCardId);
         dest.writeString(this.mEid);
         dest.writeString(this.mIccId);
         dest.writeInt(this.mSlotIndex);
-        dest.writeByte(this.mIsRemovable ? (byte) 1 : 0);
+        dest.writeByte(this.mIsRemovable ? (byte) 1 : (byte) 0);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -77,7 +83,7 @@ public final class UiccCardInfo implements Parcelable {
     }
 
     public UiccCardInfo getUnprivileged() {
-        return new UiccCardInfo(this.mIsEuicc, this.mCardId, (String) null, (String) null, this.mSlotIndex, this.mIsRemovable);
+        return new UiccCardInfo(this.mIsEuicc, this.mCardId, null, null, this.mSlotIndex, this.mIsRemovable);
     }
 
     public boolean isRemovable() {
@@ -99,7 +105,7 @@ public final class UiccCardInfo implements Parcelable {
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Boolean.valueOf(this.mIsEuicc), Integer.valueOf(this.mCardId), this.mEid, this.mIccId, Integer.valueOf(this.mSlotIndex), Boolean.valueOf(this.mIsRemovable)});
+        return Objects.hash(Boolean.valueOf(this.mIsEuicc), Integer.valueOf(this.mCardId), this.mEid, this.mIccId, Integer.valueOf(this.mSlotIndex), Boolean.valueOf(this.mIsRemovable));
     }
 
     public String toString() {

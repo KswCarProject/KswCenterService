@@ -1,11 +1,12 @@
 package android.app;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes.dex */
 public interface IUidObserver extends IInterface {
     void onUidActive(int i) throws RemoteException;
 
@@ -17,27 +18,35 @@ public interface IUidObserver extends IInterface {
 
     void onUidStateChanged(int i, int i2, long j) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements IUidObserver {
+        @Override // android.app.IUidObserver
         public void onUidGone(int uid, boolean disabled) throws RemoteException {
         }
 
+        @Override // android.app.IUidObserver
         public void onUidActive(int uid) throws RemoteException {
         }
 
+        @Override // android.app.IUidObserver
         public void onUidIdle(int uid, boolean disabled) throws RemoteException {
         }
 
+        @Override // android.app.IUidObserver
         public void onUidStateChanged(int uid, int procState, long procStateSeq) throws RemoteException {
         }
 
+        @Override // android.app.IUidObserver
         public void onUidCachedChanged(int uid, boolean cached) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements IUidObserver {
         private static final String DESCRIPTOR = "android.app.IUidObserver";
         static final int TRANSACTION_onUidActive = 2;
@@ -55,12 +64,13 @@ public interface IUidObserver extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IUidObserver)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IUidObserver)) {
+                return (IUidObserver) iin;
             }
-            return (IUidObserver) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -82,55 +92,55 @@ public interface IUidObserver extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                boolean _arg1 = false;
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        int _arg0 = data.readInt();
-                        if (data.readInt() != 0) {
-                            _arg1 = true;
-                        }
-                        onUidGone(_arg0, _arg1);
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        onUidActive(data.readInt());
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        int _arg02 = data.readInt();
-                        if (data.readInt() != 0) {
-                            _arg1 = true;
-                        }
-                        onUidIdle(_arg02, _arg1);
-                        return true;
-                    case 4:
-                        data.enforceInterface(DESCRIPTOR);
-                        onUidStateChanged(data.readInt(), data.readInt(), data.readLong());
-                        return true;
-                    case 5:
-                        data.enforceInterface(DESCRIPTOR);
-                        int _arg03 = data.readInt();
-                        if (data.readInt() != 0) {
-                            _arg1 = true;
-                        }
-                        onUidCachedChanged(_arg03, _arg1);
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            boolean _arg1;
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    onUidGone(_arg0, _arg1);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    onUidActive(_arg02);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg03 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    onUidIdle(_arg03, _arg1);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg04 = data.readInt();
+                    int _arg12 = data.readInt();
+                    long _arg2 = data.readLong();
+                    onUidStateChanged(_arg04, _arg12, _arg2);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg05 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    onUidCachedChanged(_arg05, _arg1);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements IUidObserver {
             public static IUidObserver sDefaultImpl;
             private IBinder mRemote;
@@ -139,6 +149,7 @@ public interface IUidObserver extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -147,15 +158,15 @@ public interface IUidObserver extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.app.IUidObserver
             public void onUidGone(int uid, boolean disabled) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(uid);
-                    _data.writeInt(disabled);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(disabled ? 1 : 0);
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onUidGone(uid, disabled);
                     }
                 } finally {
@@ -163,14 +174,14 @@ public interface IUidObserver extends IInterface {
                 }
             }
 
+            @Override // android.app.IUidObserver
             public void onUidActive(int uid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(uid);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onUidActive(uid);
                     }
                 } finally {
@@ -178,15 +189,15 @@ public interface IUidObserver extends IInterface {
                 }
             }
 
+            @Override // android.app.IUidObserver
             public void onUidIdle(int uid, boolean disabled) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(uid);
-                    _data.writeInt(disabled);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(disabled ? 1 : 0);
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onUidIdle(uid, disabled);
                     }
                 } finally {
@@ -194,6 +205,7 @@ public interface IUidObserver extends IInterface {
                 }
             }
 
+            @Override // android.app.IUidObserver
             public void onUidStateChanged(int uid, int procState, long procStateSeq) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -201,9 +213,8 @@ public interface IUidObserver extends IInterface {
                     _data.writeInt(uid);
                     _data.writeInt(procState);
                     _data.writeLong(procStateSeq);
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onUidStateChanged(uid, procState, procStateSeq);
                     }
                 } finally {
@@ -211,15 +222,15 @@ public interface IUidObserver extends IInterface {
                 }
             }
 
+            @Override // android.app.IUidObserver
             public void onUidCachedChanged(int uid, boolean cached) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(uid);
-                    _data.writeInt(cached);
-                    if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(cached ? 1 : 0);
+                    boolean _status = this.mRemote.transact(5, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onUidCachedChanged(uid, cached);
                     }
                 } finally {
@@ -229,11 +240,11 @@ public interface IUidObserver extends IInterface {
         }
 
         public static boolean setDefaultImpl(IUidObserver impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IUidObserver getDefaultImpl() {

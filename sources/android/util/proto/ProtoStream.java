@@ -3,6 +3,7 @@ package android.util.proto;
 import android.net.wifi.WifiEnterpriseConfig;
 import com.android.internal.logging.EventLogTags;
 
+/* loaded from: classes4.dex */
 public abstract class ProtoStream {
     public static final long FIELD_COUNT_MASK = 16492674416640L;
     public static final long FIELD_COUNT_PACKED = 5497558138880L;
@@ -43,10 +44,10 @@ public abstract class ProtoStream {
 
     public static String getFieldTypeString(long fieldType) {
         int index = ((int) ((FIELD_TYPE_MASK & fieldType) >>> 32)) - 1;
-        if (index < 0 || index >= FIELD_TYPE_NAMES.length) {
-            return null;
+        if (index >= 0 && index < FIELD_TYPE_NAMES.length) {
+            return FIELD_TYPE_NAMES[index];
         }
-        return FIELD_TYPE_NAMES[index];
+        return null;
     }
 
     public static String getFieldCountString(long fieldCount) {
@@ -99,11 +100,11 @@ public abstract class ProtoStream {
     }
 
     public static long makeFieldId(int id, long fieldFlags) {
-        return (((long) id) & 4294967295L) | fieldFlags;
+        return (id & 4294967295L) | fieldFlags;
     }
 
     public static long makeToken(int tagSize, boolean repeated, int depth, int objectId, int offset) {
-        return ((((long) tagSize) & 7) << 61) | (repeated ? 1152921504606846976L : 0) | ((511 & ((long) depth)) << 51) | ((524287 & ((long) objectId)) << 32) | (4294967295L & ((long) offset));
+        return ((tagSize & 7) << 61) | (repeated ? 1152921504606846976L : 0L) | ((511 & depth) << 51) | ((524287 & objectId) << 32) | (4294967295L & offset);
     }
 
     public static int getTagSizeFromToken(long token) {

@@ -4,6 +4,7 @@ import android.annotation.UnsupportedAppUsage;
 import android.graphics.ColorSpace;
 import android.graphics.Shader;
 
+/* loaded from: classes.dex */
 public class RadialGradient extends Shader {
     @UnsupportedAppUsage
     private int mCenterColor;
@@ -19,9 +20,13 @@ public class RadialGradient extends Shader {
     @UnsupportedAppUsage
     private Shader.TileMode mTileMode;
     @UnsupportedAppUsage
-    private float mX;
+
+    /* renamed from: mX */
+    private float f65mX;
     @UnsupportedAppUsage
-    private float mY;
+
+    /* renamed from: mY */
+    private float f66mY;
 
     private static native long nativeCreate(long j, float f, float f2, float f3, long[] jArr, float[] fArr, int i, long j2);
 
@@ -37,16 +42,16 @@ public class RadialGradient extends Shader {
         super(colorSpace);
         if (radius <= 0.0f) {
             throw new IllegalArgumentException("radius must be > 0");
-        } else if (stops == null || colors.length == stops.length) {
-            this.mX = centerX;
-            this.mY = centerY;
-            this.mRadius = radius;
-            this.mColorLongs = colors;
-            this.mPositions = stops != null ? (float[]) stops.clone() : null;
-            this.mTileMode = tileMode;
-        } else {
+        }
+        if (stops != null && colors.length != stops.length) {
             throw new IllegalArgumentException("color and position arrays must be of equal length");
         }
+        this.f65mX = centerX;
+        this.f66mY = centerY;
+        this.mRadius = radius;
+        this.mColorLongs = colors;
+        this.mPositions = stops != null ? (float[]) stops.clone() : null;
+        this.mTileMode = tileMode;
     }
 
     public RadialGradient(float centerX, float centerY, float radius, int centerColor, int edgeColor, Shader.TileMode tileMode) {
@@ -57,8 +62,8 @@ public class RadialGradient extends Shader {
         this(centerX, centerY, radius, new long[]{centerColor, edgeColor}, (float[]) null, tileMode);
     }
 
-    /* access modifiers changed from: package-private */
-    public long createNativeInstance(long nativeMatrix) {
-        return nativeCreate(nativeMatrix, this.mX, this.mY, this.mRadius, this.mColorLongs, this.mPositions, this.mTileMode.nativeInt, colorSpace().getNativeInstance());
+    @Override // android.graphics.Shader
+    long createNativeInstance(long nativeMatrix) {
+        return nativeCreate(nativeMatrix, this.f65mX, this.f66mY, this.mRadius, this.mColorLongs, this.mPositions, this.mTileMode.nativeInt, colorSpace().getNativeInstance());
     }
 }

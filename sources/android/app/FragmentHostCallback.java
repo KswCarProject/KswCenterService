@@ -4,9 +4,9 @@ import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.UserHandle;
+import android.p007os.Bundle;
+import android.p007os.Handler;
+import android.p007os.UserHandle;
 import android.provider.SettingsStringUtil;
 import android.util.ArrayMap;
 import android.view.LayoutInflater;
@@ -15,6 +15,7 @@ import java.io.FileDescriptor;
 import java.io.PrintWriter;
 
 @Deprecated
+/* loaded from: classes.dex */
 public abstract class FragmentHostCallback<E> extends FragmentContainer {
     private final Activity mActivity;
     private ArrayMap<String, LoaderManager> mAllLoaderManagers;
@@ -30,7 +31,6 @@ public abstract class FragmentHostCallback<E> extends FragmentContainer {
 
     public abstract E onGetHost();
 
-    /* JADX INFO: this call moved to the top of the method (can break code semantics) */
     public FragmentHostCallback(Context context, Handler handler, int windowAnimations) {
         this(context instanceof Activity ? (Activity) context : null, context, chooseHandler(context, handler), windowAnimations);
     }
@@ -48,10 +48,11 @@ public abstract class FragmentHostCallback<E> extends FragmentContainer {
     }
 
     private static Handler chooseHandler(Context context, Handler handler) {
-        if (handler != null || !(context instanceof Activity)) {
-            return handler;
+        if (handler == null && (context instanceof Activity)) {
+            Activity activity = (Activity) context;
+            return activity.mHandler;
         }
-        return ((Activity) context).mHandler;
+        return handler;
     }
 
     public void onDump(String prefix, FileDescriptor fd, PrintWriter writer, String[] args) {
@@ -73,27 +74,24 @@ public abstract class FragmentHostCallback<E> extends FragmentContainer {
     }
 
     public void onStartActivityFromFragment(Fragment fragment, Intent intent, int requestCode, Bundle options) {
-        if (requestCode == -1) {
-            this.mContext.startActivity(intent);
-            return;
+        if (requestCode != -1) {
+            throw new IllegalStateException("Starting activity with a requestCode requires a FragmentActivity host");
         }
-        throw new IllegalStateException("Starting activity with a requestCode requires a FragmentActivity host");
+        this.mContext.startActivity(intent);
     }
 
     public void onStartActivityAsUserFromFragment(Fragment fragment, Intent intent, int requestCode, Bundle options, UserHandle userHandle) {
-        if (requestCode == -1) {
-            this.mContext.startActivityAsUser(intent, userHandle);
-            return;
+        if (requestCode != -1) {
+            throw new IllegalStateException("Starting activity with a requestCode requires a FragmentActivity host");
         }
-        throw new IllegalStateException("Starting activity with a requestCode requires a FragmentActivity host");
+        this.mContext.startActivityAsUser(intent, userHandle);
     }
 
     public void onStartIntentSenderFromFragment(Fragment fragment, IntentSender intent, int requestCode, Intent fillInIntent, int flagsMask, int flagsValues, int extraFlags, Bundle options) throws IntentSender.SendIntentException {
-        if (requestCode == -1) {
-            this.mContext.startIntentSender(intent, fillInIntent, flagsMask, flagsValues, extraFlags, options);
-        } else {
+        if (requestCode != -1) {
             throw new IllegalStateException("Starting intent sender with a requestCode requires a FragmentActivity host");
         }
+        this.mContext.startIntentSender(intent, fillInIntent, flagsMask, flagsValues, extraFlags, options);
     }
 
     public void onRequestPermissionsFromFragment(Fragment fragment, String[] permissions, int requestCode) {
@@ -110,41 +108,37 @@ public abstract class FragmentHostCallback<E> extends FragmentContainer {
     public void onAttachFragment(Fragment fragment) {
     }
 
+    @Override // android.app.FragmentContainer
     public <T extends View> T onFindViewById(int id) {
         return null;
     }
 
+    @Override // android.app.FragmentContainer
     public boolean onHasView() {
         return true;
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean getRetainLoaders() {
+    boolean getRetainLoaders() {
         return this.mRetainLoaders;
     }
 
-    /* access modifiers changed from: package-private */
-    public Activity getActivity() {
+    Activity getActivity() {
         return this.mActivity;
     }
 
-    /* access modifiers changed from: package-private */
-    public Context getContext() {
+    Context getContext() {
         return this.mContext;
     }
 
-    /* access modifiers changed from: package-private */
-    public Handler getHandler() {
+    Handler getHandler() {
         return this.mHandler;
     }
 
-    /* access modifiers changed from: package-private */
-    public FragmentManagerImpl getFragmentManagerImpl() {
+    FragmentManagerImpl getFragmentManagerImpl() {
         return this.mFragmentManager;
     }
 
-    /* access modifiers changed from: package-private */
-    public LoaderManagerImpl getLoaderManagerImpl() {
+    LoaderManagerImpl getLoaderManagerImpl() {
         if (this.mLoaderManager != null) {
             return this.mLoaderManager;
         }
@@ -153,8 +147,7 @@ public abstract class FragmentHostCallback<E> extends FragmentContainer {
         return this.mLoaderManager;
     }
 
-    /* access modifiers changed from: package-private */
-    public void inactivateFragment(String who) {
+    void inactivateFragment(String who) {
         LoaderManagerImpl lm;
         if (this.mAllLoaderManagers != null && (lm = (LoaderManagerImpl) this.mAllLoaderManagers.get(who)) != null && !lm.mRetaining) {
             lm.doDestroy();
@@ -162,48 +155,47 @@ public abstract class FragmentHostCallback<E> extends FragmentContainer {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void doLoaderStart() {
-        if (!this.mLoadersStarted) {
-            this.mLoadersStarted = true;
-            if (this.mLoaderManager != null) {
-                this.mLoaderManager.doStart();
-            } else if (!this.mCheckedForLoaderManager) {
-                this.mLoaderManager = getLoaderManager("(root)", this.mLoadersStarted, false);
-            }
-            this.mCheckedForLoaderManager = true;
+    void doLoaderStart() {
+        if (this.mLoadersStarted) {
+            return;
         }
+        this.mLoadersStarted = true;
+        if (this.mLoaderManager != null) {
+            this.mLoaderManager.doStart();
+        } else if (!this.mCheckedForLoaderManager) {
+            this.mLoaderManager = getLoaderManager("(root)", this.mLoadersStarted, false);
+        }
+        this.mCheckedForLoaderManager = true;
     }
 
-    /* access modifiers changed from: package-private */
-    public void doLoaderStop(boolean retain) {
+    void doLoaderStop(boolean retain) {
         this.mRetainLoaders = retain;
-        if (this.mLoaderManager != null && this.mLoadersStarted) {
-            this.mLoadersStarted = false;
-            if (retain) {
-                this.mLoaderManager.doRetain();
-            } else {
-                this.mLoaderManager.doStop();
-            }
+        if (this.mLoaderManager == null || !this.mLoadersStarted) {
+            return;
         }
-    }
-
-    /* access modifiers changed from: package-private */
-    public void doLoaderRetain() {
-        if (this.mLoaderManager != null) {
+        this.mLoadersStarted = false;
+        if (retain) {
             this.mLoaderManager.doRetain();
+        } else {
+            this.mLoaderManager.doStop();
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void doLoaderDestroy() {
-        if (this.mLoaderManager != null) {
-            this.mLoaderManager.doDestroy();
+    void doLoaderRetain() {
+        if (this.mLoaderManager == null) {
+            return;
         }
+        this.mLoaderManager.doRetain();
     }
 
-    /* access modifiers changed from: package-private */
-    public void reportLoaderStart() {
+    void doLoaderDestroy() {
+        if (this.mLoaderManager == null) {
+            return;
+        }
+        this.mLoaderManager.doDestroy();
+    }
+
+    void reportLoaderStart() {
         if (this.mAllLoaderManagers != null) {
             int N = this.mAllLoaderManagers.size();
             LoaderManagerImpl[] loaders = new LoaderManagerImpl[N];
@@ -218,8 +210,7 @@ public abstract class FragmentHostCallback<E> extends FragmentContainer {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public LoaderManagerImpl getLoaderManager(String who, boolean started, boolean create) {
+    LoaderManagerImpl getLoaderManager(String who, boolean started, boolean create) {
         if (this.mAllLoaderManagers == null) {
             this.mAllLoaderManagers = new ArrayMap<>();
         }
@@ -228,16 +219,15 @@ public abstract class FragmentHostCallback<E> extends FragmentContainer {
             LoaderManagerImpl lm2 = new LoaderManagerImpl(who, this, started);
             this.mAllLoaderManagers.put(who, lm2);
             return lm2;
-        } else if (!started || lm == null || lm.mStarted) {
+        } else if (started && lm != null && !lm.mStarted) {
+            lm.doStart();
             return lm;
         } else {
-            lm.doStart();
             return lm;
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public ArrayMap<String, LoaderManager> retainLoaderNonConfig() {
+    ArrayMap<String, LoaderManager> retainLoaderNonConfig() {
         boolean retainLoaders = false;
         if (this.mAllLoaderManagers != null) {
             int N = this.mAllLoaderManagers.size();
@@ -268,8 +258,7 @@ public abstract class FragmentHostCallback<E> extends FragmentContainer {
         return null;
     }
 
-    /* access modifiers changed from: package-private */
-    public void restoreLoaderNonConfig(ArrayMap<String, LoaderManager> loaderManagers) {
+    void restoreLoaderNonConfig(ArrayMap<String, LoaderManager> loaderManagers) {
         if (loaderManagers != null) {
             int N = loaderManagers.size();
             for (int i = 0; i < N; i++) {
@@ -279,8 +268,7 @@ public abstract class FragmentHostCallback<E> extends FragmentContainer {
         this.mAllLoaderManagers = loaderManagers;
     }
 
-    /* access modifiers changed from: package-private */
-    public void dumpLoaders(String prefix, FileDescriptor fd, PrintWriter writer, String[] args) {
+    void dumpLoaders(String prefix, FileDescriptor fd, PrintWriter writer, String[] args) {
         writer.print(prefix);
         writer.print("mLoadersStarted=");
         writer.println(this.mLoadersStarted);

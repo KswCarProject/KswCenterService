@@ -1,13 +1,14 @@
 package android.net;
 
 import android.net.INetworkScoreCache;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import java.util.List;
 
+/* loaded from: classes3.dex */
 public interface INetworkScoreService extends IInterface {
     boolean clearScores() throws RemoteException;
 
@@ -31,53 +32,67 @@ public interface INetworkScoreService extends IInterface {
 
     boolean updateScores(ScoredNetwork[] scoredNetworkArr) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements INetworkScoreService {
+        @Override // android.net.INetworkScoreService
         public boolean updateScores(ScoredNetwork[] networks) throws RemoteException {
             return false;
         }
 
+        @Override // android.net.INetworkScoreService
         public boolean clearScores() throws RemoteException {
             return false;
         }
 
+        @Override // android.net.INetworkScoreService
         public boolean setActiveScorer(String packageName) throws RemoteException {
             return false;
         }
 
+        @Override // android.net.INetworkScoreService
         public void disableScoring() throws RemoteException {
         }
 
+        @Override // android.net.INetworkScoreService
         public void registerNetworkScoreCache(int networkType, INetworkScoreCache scoreCache, int filterType) throws RemoteException {
         }
 
+        @Override // android.net.INetworkScoreService
         public void unregisterNetworkScoreCache(int networkType, INetworkScoreCache scoreCache) throws RemoteException {
         }
 
+        @Override // android.net.INetworkScoreService
         public boolean requestScores(NetworkKey[] networks) throws RemoteException {
             return false;
         }
 
+        @Override // android.net.INetworkScoreService
         public boolean isCallerActiveScorer(int callingUid) throws RemoteException {
             return false;
         }
 
+        @Override // android.net.INetworkScoreService
         public String getActiveScorerPackage() throws RemoteException {
             return null;
         }
 
+        @Override // android.net.INetworkScoreService
         public NetworkScorerAppData getActiveScorer() throws RemoteException {
             return null;
         }
 
+        @Override // android.net.INetworkScoreService
         public List<NetworkScorerAppData> getAllValidScorers() throws RemoteException {
             return null;
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements INetworkScoreService {
         private static final String DESCRIPTOR = "android.net.INetworkScoreService";
         static final int TRANSACTION_clearScores = 2;
@@ -101,12 +116,13 @@ public interface INetworkScoreService extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof INetworkScoreService)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof INetworkScoreService)) {
+                return (INetworkScoreService) iin;
             }
-            return (INetworkScoreService) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -140,90 +156,101 @@ public interface INetworkScoreService extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        boolean _result = updateScores((ScoredNetwork[]) data.createTypedArray(ScoredNetwork.CREATOR));
-                        reply.writeNoException();
-                        reply.writeInt(_result);
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        boolean _result2 = clearScores();
-                        reply.writeNoException();
-                        reply.writeInt(_result2);
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        boolean _result3 = setActiveScorer(data.readString());
-                        reply.writeNoException();
-                        reply.writeInt(_result3);
-                        return true;
-                    case 4:
-                        data.enforceInterface(DESCRIPTOR);
-                        disableScoring();
-                        reply.writeNoException();
-                        return true;
-                    case 5:
-                        data.enforceInterface(DESCRIPTOR);
-                        registerNetworkScoreCache(data.readInt(), INetworkScoreCache.Stub.asInterface(data.readStrongBinder()), data.readInt());
-                        reply.writeNoException();
-                        return true;
-                    case 6:
-                        data.enforceInterface(DESCRIPTOR);
-                        unregisterNetworkScoreCache(data.readInt(), INetworkScoreCache.Stub.asInterface(data.readStrongBinder()));
-                        reply.writeNoException();
-                        return true;
-                    case 7:
-                        data.enforceInterface(DESCRIPTOR);
-                        boolean _result4 = requestScores((NetworkKey[]) data.createTypedArray(NetworkKey.CREATOR));
-                        reply.writeNoException();
-                        reply.writeInt(_result4);
-                        return true;
-                    case 8:
-                        data.enforceInterface(DESCRIPTOR);
-                        boolean _result5 = isCallerActiveScorer(data.readInt());
-                        reply.writeNoException();
-                        reply.writeInt(_result5);
-                        return true;
-                    case 9:
-                        data.enforceInterface(DESCRIPTOR);
-                        String _result6 = getActiveScorerPackage();
-                        reply.writeNoException();
-                        reply.writeString(_result6);
-                        return true;
-                    case 10:
-                        data.enforceInterface(DESCRIPTOR);
-                        NetworkScorerAppData _result7 = getActiveScorer();
-                        reply.writeNoException();
-                        if (_result7 != null) {
-                            reply.writeInt(1);
-                            _result7.writeToParcel(reply, 1);
-                        } else {
-                            reply.writeInt(0);
-                        }
-                        return true;
-                    case 11:
-                        data.enforceInterface(DESCRIPTOR);
-                        List<NetworkScorerAppData> _result8 = getAllValidScorers();
-                        reply.writeNoException();
-                        reply.writeTypedList(_result8);
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    ScoredNetwork[] _arg0 = (ScoredNetwork[]) data.createTypedArray(ScoredNetwork.CREATOR);
+                    boolean updateScores = updateScores(_arg0);
+                    reply.writeNoException();
+                    reply.writeInt(updateScores ? 1 : 0);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean clearScores = clearScores();
+                    reply.writeNoException();
+                    reply.writeInt(clearScores ? 1 : 0);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg02 = data.readString();
+                    boolean activeScorer = setActiveScorer(_arg02);
+                    reply.writeNoException();
+                    reply.writeInt(activeScorer ? 1 : 0);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    disableScoring();
+                    reply.writeNoException();
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg03 = data.readInt();
+                    INetworkScoreCache _arg1 = INetworkScoreCache.Stub.asInterface(data.readStrongBinder());
+                    int _arg2 = data.readInt();
+                    registerNetworkScoreCache(_arg03, _arg1, _arg2);
+                    reply.writeNoException();
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg04 = data.readInt();
+                    INetworkScoreCache _arg12 = INetworkScoreCache.Stub.asInterface(data.readStrongBinder());
+                    unregisterNetworkScoreCache(_arg04, _arg12);
+                    reply.writeNoException();
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    NetworkKey[] _arg05 = (NetworkKey[]) data.createTypedArray(NetworkKey.CREATOR);
+                    boolean requestScores = requestScores(_arg05);
+                    reply.writeNoException();
+                    reply.writeInt(requestScores ? 1 : 0);
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg06 = data.readInt();
+                    boolean isCallerActiveScorer = isCallerActiveScorer(_arg06);
+                    reply.writeNoException();
+                    reply.writeInt(isCallerActiveScorer ? 1 : 0);
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _result = getActiveScorerPackage();
+                    reply.writeNoException();
+                    reply.writeString(_result);
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    NetworkScorerAppData _result2 = getActiveScorer();
+                    reply.writeNoException();
+                    if (_result2 != null) {
+                        reply.writeInt(1);
+                        _result2.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    List<NetworkScorerAppData> _result3 = getAllValidScorers();
+                    reply.writeNoException();
+                    reply.writeTypedList(_result3);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements INetworkScoreService {
             public static INetworkScoreService sDefaultImpl;
             private IBinder mRemote;
@@ -232,6 +259,7 @@ public interface INetworkScoreService extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -240,22 +268,19 @@ public interface INetworkScoreService extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.net.INetworkScoreService
             public boolean updateScores(ScoredNetwork[] networks) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = false;
                     _data.writeTypedArray(networks, 0);
-                    if (!this.mRemote.transact(1, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().updateScores(networks);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        _result = true;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -263,71 +288,64 @@ public interface INetworkScoreService extends IInterface {
                 }
             }
 
+            @Override // android.net.INetworkScoreService
             public boolean clearScores() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(2, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().clearScores();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.INetworkScoreService
             public boolean setActiveScorer(String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(packageName);
-                    boolean z = false;
-                    if (!this.mRemote.transact(3, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setActiveScorer(packageName);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.INetworkScoreService
             public void disableScoring() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(4, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().disableScoring();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().disableScoring();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.INetworkScoreService
             public void registerNetworkScoreCache(int networkType, INetworkScoreCache scoreCache, int filterType) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -336,19 +354,19 @@ public interface INetworkScoreService extends IInterface {
                     _data.writeInt(networkType);
                     _data.writeStrongBinder(scoreCache != null ? scoreCache.asBinder() : null);
                     _data.writeInt(filterType);
-                    if (this.mRemote.transact(5, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().registerNetworkScoreCache(networkType, scoreCache, filterType);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().registerNetworkScoreCache(networkType, scoreCache, filterType);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.INetworkScoreService
             public void unregisterNetworkScoreCache(int networkType, INetworkScoreCache scoreCache) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -356,35 +374,31 @@ public interface INetworkScoreService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(networkType);
                     _data.writeStrongBinder(scoreCache != null ? scoreCache.asBinder() : null);
-                    if (this.mRemote.transact(6, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().unregisterNetworkScoreCache(networkType, scoreCache);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().unregisterNetworkScoreCache(networkType, scoreCache);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.INetworkScoreService
             public boolean requestScores(NetworkKey[] networks) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = false;
                     _data.writeTypedArray(networks, 0);
-                    if (!this.mRemote.transact(7, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().requestScores(networks);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        _result = true;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -392,42 +406,38 @@ public interface INetworkScoreService extends IInterface {
                 }
             }
 
+            @Override // android.net.INetworkScoreService
             public boolean isCallerActiveScorer(int callingUid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(callingUid);
-                    boolean z = false;
-                    if (!this.mRemote.transact(8, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isCallerActiveScorer(callingUid);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.INetworkScoreService
             public String getActiveScorerPackage() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(9, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(9, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getActiveScorerPackage();
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -435,13 +445,15 @@ public interface INetworkScoreService extends IInterface {
                 }
             }
 
+            @Override // android.net.INetworkScoreService
             public NetworkScorerAppData getActiveScorer() throws RemoteException {
                 NetworkScorerAppData _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(10, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(10, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getActiveScorer();
                     }
                     _reply.readException();
@@ -450,28 +462,25 @@ public interface INetworkScoreService extends IInterface {
                     } else {
                         _result = null;
                     }
-                    NetworkScorerAppData _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.INetworkScoreService
             public List<NetworkScorerAppData> getAllValidScorers() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(11, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(11, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAllValidScorers();
                     }
                     _reply.readException();
                     List<NetworkScorerAppData> _result = _reply.createTypedArrayList(NetworkScorerAppData.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -481,11 +490,11 @@ public interface INetworkScoreService extends IInterface {
         }
 
         public static boolean setDefaultImpl(INetworkScoreService impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static INetworkScoreService getDefaultImpl() {

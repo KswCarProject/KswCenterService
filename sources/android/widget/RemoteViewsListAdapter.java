@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+/* loaded from: classes4.dex */
 public class RemoteViewsListAdapter extends BaseAdapter {
     private Context mContext;
     private ArrayList<RemoteViews> mRemoteViewsList;
@@ -26,21 +27,23 @@ public class RemoteViewsListAdapter extends BaseAdapter {
     }
 
     private void init() {
-        if (this.mRemoteViewsList != null) {
-            this.mViewTypes.clear();
-            Iterator<RemoteViews> it = this.mRemoteViewsList.iterator();
-            while (it.hasNext()) {
-                RemoteViews rv = it.next();
-                if (!this.mViewTypes.contains(Integer.valueOf(rv.getLayoutId()))) {
-                    this.mViewTypes.add(Integer.valueOf(rv.getLayoutId()));
-                }
+        if (this.mRemoteViewsList == null) {
+            return;
+        }
+        this.mViewTypes.clear();
+        Iterator<RemoteViews> it = this.mRemoteViewsList.iterator();
+        while (it.hasNext()) {
+            RemoteViews rv = it.next();
+            if (!this.mViewTypes.contains(Integer.valueOf(rv.getLayoutId()))) {
+                this.mViewTypes.add(Integer.valueOf(rv.getLayoutId()));
             }
-            if (this.mViewTypes.size() > this.mViewTypeCount || this.mViewTypeCount < 1) {
-                throw new RuntimeException("Invalid view type count -- view type count must be >= 1and must be as large as the total number of distinct view types");
-            }
+        }
+        if (this.mViewTypes.size() > this.mViewTypeCount || this.mViewTypeCount < 1) {
+            throw new RuntimeException("Invalid view type count -- view type count must be >= 1and must be as large as the total number of distinct view types");
         }
     }
 
+    @Override // android.widget.Adapter
     public int getCount() {
         if (this.mRemoteViewsList != null) {
             return this.mRemoteViewsList.size();
@@ -48,39 +51,46 @@ public class RemoteViewsListAdapter extends BaseAdapter {
         return 0;
     }
 
+    @Override // android.widget.Adapter
     public Object getItem(int position) {
         return null;
     }
 
+    @Override // android.widget.Adapter
     public long getItemId(int position) {
-        return (long) position;
+        return position;
     }
 
+    @Override // android.widget.Adapter
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (position >= getCount()) {
-            return null;
+        if (position < getCount()) {
+            RemoteViews rv = this.mRemoteViewsList.get(position);
+            rv.addFlags(2);
+            if (convertView != null && rv != null && convertView.getId() == rv.getLayoutId()) {
+                rv.reapply(this.mContext, convertView);
+                return convertView;
+            }
+            View v = rv.apply(this.mContext, parent);
+            return v;
         }
-        RemoteViews rv = this.mRemoteViewsList.get(position);
-        rv.addFlags(2);
-        if (convertView == null || rv == null || convertView.getId() != rv.getLayoutId()) {
-            return rv.apply(this.mContext, parent);
-        }
-        View v = convertView;
-        rv.reapply(this.mContext, v);
-        return v;
+        return null;
     }
 
+    @Override // android.widget.BaseAdapter, android.widget.Adapter
     public int getItemViewType(int position) {
-        if (position >= getCount()) {
-            return 0;
+        if (position < getCount()) {
+            int layoutId = this.mRemoteViewsList.get(position).getLayoutId();
+            return this.mViewTypes.indexOf(Integer.valueOf(layoutId));
         }
-        return this.mViewTypes.indexOf(Integer.valueOf(this.mRemoteViewsList.get(position).getLayoutId()));
+        return 0;
     }
 
+    @Override // android.widget.BaseAdapter, android.widget.Adapter
     public int getViewTypeCount() {
         return this.mViewTypeCount;
     }
 
+    @Override // android.widget.BaseAdapter, android.widget.Adapter
     public boolean hasStableIds() {
         return false;
     }

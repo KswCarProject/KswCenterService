@@ -4,20 +4,22 @@ import android.annotation.SystemApi;
 import android.net.ConnectivityMetricsEvent;
 import android.net.IIpConnectivityMetrics;
 import android.net.Network;
-import android.os.Parcelable;
-import android.os.RemoteException;
-import android.os.ServiceManager;
+import android.p007os.Parcelable;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
 import android.util.Log;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.util.BitUtils;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public class IpConnectivityLog {
     private static final boolean DBG = false;
     public static final String SERVICE_NAME = "connmetrics";
     private static final String TAG = IpConnectivityLog.class.getSimpleName();
     private IIpConnectivityMetrics mService;
 
+    /* loaded from: classes3.dex */
     public interface Event extends Parcelable {
     }
 
@@ -43,21 +45,19 @@ public class IpConnectivityLog {
     }
 
     public boolean log(ConnectivityMetricsEvent ev) {
-        if (!checkLoggerService()) {
-            return false;
-        }
-        if (ev.timestamp == 0) {
-            ev.timestamp = System.currentTimeMillis();
-        }
-        try {
-            if (this.mService.logEvent(ev) >= 0) {
-                return true;
+        if (checkLoggerService()) {
+            if (ev.timestamp == 0) {
+                ev.timestamp = System.currentTimeMillis();
             }
-            return false;
-        } catch (RemoteException e) {
-            Log.e(TAG, "Error logging event", e);
-            return false;
+            try {
+                int left = this.mService.logEvent(ev);
+                return left >= 0;
+            } catch (RemoteException e) {
+                Log.m69e(TAG, "Error logging event", e);
+                return false;
+            }
         }
+        return false;
     }
 
     public boolean log(long timestamp, Event data) {

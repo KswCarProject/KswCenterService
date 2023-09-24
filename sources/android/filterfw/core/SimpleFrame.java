@@ -4,6 +4,7 @@ import android.filterfw.format.ObjectFormat;
 import android.graphics.Bitmap;
 import java.nio.ByteBuffer;
 
+/* loaded from: classes.dex */
 public class SimpleFrame extends Frame {
     private Object mObject;
 
@@ -14,14 +15,16 @@ public class SimpleFrame extends Frame {
     }
 
     static SimpleFrame wrapObject(Object object, FrameManager frameManager) {
-        SimpleFrame result = new SimpleFrame(ObjectFormat.fromObject(object, 1), frameManager);
+        FrameFormat format = ObjectFormat.fromObject(object, 1);
+        SimpleFrame result = new SimpleFrame(format, frameManager);
         result.setObjectValue(object);
         return result;
     }
 
     private void initWithFormat(FrameFormat format) {
         int count = format.getLength();
-        switch (format.getBaseType()) {
+        int baseType = format.getBaseType();
+        switch (baseType) {
             case 2:
                 this.mObject = new byte[count];
                 return;
@@ -43,24 +46,27 @@ public class SimpleFrame extends Frame {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public boolean hasNativeAllocation() {
+    @Override // android.filterfw.core.Frame
+    protected boolean hasNativeAllocation() {
         return false;
     }
 
-    /* access modifiers changed from: protected */
-    public void releaseNativeAllocation() {
+    @Override // android.filterfw.core.Frame
+    protected void releaseNativeAllocation() {
     }
 
+    @Override // android.filterfw.core.Frame
     public Object getObjectValue() {
         return this.mObject;
     }
 
+    @Override // android.filterfw.core.Frame
     public void setInts(int[] ints) {
         assertFrameMutable();
         setGenericObjectValue(ints);
     }
 
+    @Override // android.filterfw.core.Frame
     public int[] getInts() {
         if (this.mObject instanceof int[]) {
             return (int[]) this.mObject;
@@ -68,11 +74,13 @@ public class SimpleFrame extends Frame {
         return null;
     }
 
+    @Override // android.filterfw.core.Frame
     public void setFloats(float[] floats) {
         assertFrameMutable();
         setGenericObjectValue(floats);
     }
 
+    @Override // android.filterfw.core.Frame
     public float[] getFloats() {
         if (this.mObject instanceof float[]) {
             return (float[]) this.mObject;
@@ -80,11 +88,13 @@ public class SimpleFrame extends Frame {
         return null;
     }
 
+    @Override // android.filterfw.core.Frame
     public void setData(ByteBuffer buffer, int offset, int length) {
         assertFrameMutable();
         setGenericObjectValue(ByteBuffer.wrap(buffer.array(), offset, length));
     }
 
+    @Override // android.filterfw.core.Frame
     public ByteBuffer getData() {
         if (this.mObject instanceof ByteBuffer) {
             return (ByteBuffer) this.mObject;
@@ -92,11 +102,13 @@ public class SimpleFrame extends Frame {
         return null;
     }
 
+    @Override // android.filterfw.core.Frame
     public void setBitmap(Bitmap bitmap) {
         assertFrameMutable();
         setGenericObjectValue(bitmap);
     }
 
+    @Override // android.filterfw.core.Frame
     public Bitmap getBitmap() {
         if (this.mObject instanceof Bitmap) {
             return (Bitmap) this.mObject;
@@ -110,8 +122,8 @@ public class SimpleFrame extends Frame {
         setFormat(format);
     }
 
-    /* access modifiers changed from: protected */
-    public void setGenericObjectValue(Object object) {
+    @Override // android.filterfw.core.Frame
+    protected void setGenericObjectValue(Object object) {
         FrameFormat format = getFormat();
         if (format.getObjectClass() == null) {
             setFormatObjectClass(object.getClass());

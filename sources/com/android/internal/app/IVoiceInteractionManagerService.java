@@ -5,17 +5,22 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.hardware.soundtrigger.IRecognitionStatusCallback;
 import android.hardware.soundtrigger.SoundTrigger;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteCallback;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteCallback;
+import android.p007os.RemoteException;
 import android.service.voice.IVoiceInteractionService;
 import android.service.voice.IVoiceInteractionSession;
+import com.android.internal.app.IVoiceActionCheckCallback;
+import com.android.internal.app.IVoiceInteractionSessionListener;
+import com.android.internal.app.IVoiceInteractionSessionShowCallback;
+import com.android.internal.app.IVoiceInteractor;
 import java.util.List;
 
+/* loaded from: classes4.dex */
 public interface IVoiceInteractionManagerService extends IInterface {
     boolean activeServiceSupportsAssist() throws RemoteException;
 
@@ -82,127 +87,162 @@ public interface IVoiceInteractionManagerService extends IInterface {
 
     int updateKeyphraseSoundModel(SoundTrigger.KeyphraseSoundModel keyphraseSoundModel) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IVoiceInteractionManagerService {
+        @Override // com.android.internal.app.IVoiceInteractionManagerService
         public void showSession(IVoiceInteractionService service, Bundle sessionArgs, int flags) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IVoiceInteractionManagerService
         public boolean deliverNewSession(IBinder token, IVoiceInteractionSession session, IVoiceInteractor interactor) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.app.IVoiceInteractionManagerService
         public boolean showSessionFromSession(IBinder token, Bundle sessionArgs, int flags) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.app.IVoiceInteractionManagerService
         public boolean hideSessionFromSession(IBinder token) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.app.IVoiceInteractionManagerService
         public int startVoiceActivity(IBinder token, Intent intent, String resolvedType) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.app.IVoiceInteractionManagerService
         public int startAssistantActivity(IBinder token, Intent intent, String resolvedType) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.app.IVoiceInteractionManagerService
         public void setKeepAwake(IBinder token, boolean keepAwake) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IVoiceInteractionManagerService
         public void closeSystemDialogs(IBinder token) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IVoiceInteractionManagerService
         public void finish(IBinder token) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IVoiceInteractionManagerService
         public void setDisabledShowContext(int flags) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IVoiceInteractionManagerService
         public int getDisabledShowContext() throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.app.IVoiceInteractionManagerService
         public int getUserDisabledShowContext() throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.app.IVoiceInteractionManagerService
         public SoundTrigger.KeyphraseSoundModel getKeyphraseSoundModel(int keyphraseId, String bcp47Locale) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.app.IVoiceInteractionManagerService
         public int updateKeyphraseSoundModel(SoundTrigger.KeyphraseSoundModel model) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.app.IVoiceInteractionManagerService
         public int deleteKeyphraseSoundModel(int keyphraseId, String bcp47Locale) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.app.IVoiceInteractionManagerService
         public SoundTrigger.ModuleProperties getDspModuleProperties(IVoiceInteractionService service) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.app.IVoiceInteractionManagerService
         public boolean isEnrolledForKeyphrase(IVoiceInteractionService service, int keyphraseId, String bcp47Locale) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.app.IVoiceInteractionManagerService
         public int startRecognition(IVoiceInteractionService service, int keyphraseId, String bcp47Locale, IRecognitionStatusCallback callback, SoundTrigger.RecognitionConfig recognitionConfig) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.app.IVoiceInteractionManagerService
         public int stopRecognition(IVoiceInteractionService service, int keyphraseId, IRecognitionStatusCallback callback) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.app.IVoiceInteractionManagerService
         public ComponentName getActiveServiceComponentName() throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.app.IVoiceInteractionManagerService
         public boolean showSessionForActiveService(Bundle args, int sourceFlags, IVoiceInteractionSessionShowCallback showCallback, IBinder activityToken) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.app.IVoiceInteractionManagerService
         public void hideCurrentSession() throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IVoiceInteractionManagerService
         public void launchVoiceAssistFromKeyguard() throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IVoiceInteractionManagerService
         public boolean isSessionRunning() throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.app.IVoiceInteractionManagerService
         public boolean activeServiceSupportsAssist() throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.app.IVoiceInteractionManagerService
         public boolean activeServiceSupportsLaunchFromKeyguard() throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.app.IVoiceInteractionManagerService
         public void onLockscreenShown() throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IVoiceInteractionManagerService
         public void registerVoiceInteractionSessionListener(IVoiceInteractionSessionListener listener) throws RemoteException {
         }
 
-        public void getActiveServiceSupportedActions(List<String> list, IVoiceActionCheckCallback callback) throws RemoteException {
+        @Override // com.android.internal.app.IVoiceInteractionManagerService
+        public void getActiveServiceSupportedActions(List<String> voiceActions, IVoiceActionCheckCallback callback) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IVoiceInteractionManagerService
         public void setUiHints(IVoiceInteractionService service, Bundle hints) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IVoiceInteractionManagerService
         public void requestDirectActions(IBinder token, int taskId, IBinder assistToken, RemoteCallback cancellationCallback, RemoteCallback callback) throws RemoteException {
         }
 
+        @Override // com.android.internal.app.IVoiceInteractionManagerService
         public void performDirectAction(IBinder token, String actionId, Bundle arguments, int taskId, IBinder assistToken, RemoteCallback cancellationCallback, RemoteCallback resultCallback) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IVoiceInteractionManagerService {
         private static final String DESCRIPTOR = "com.android.internal.app.IVoiceInteractionManagerService";
         static final int TRANSACTION_activeServiceSupportsAssist = 25;
@@ -247,12 +287,13 @@ public interface IVoiceInteractionManagerService extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IVoiceInteractionManagerService)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IVoiceInteractionManagerService)) {
+                return (IVoiceInteractionManagerService) iin;
             }
-            return (IVoiceInteractionManagerService) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -328,478 +369,278 @@ public interface IVoiceInteractionManagerService extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v1, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v7, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v39, resolved type: android.os.Bundle} */
-        /* JADX WARNING: type inference failed for: r1v0 */
-        /* JADX WARNING: type inference failed for: r1v12, types: [android.content.Intent] */
-        /* JADX WARNING: type inference failed for: r1v16, types: [android.content.Intent] */
-        /* JADX WARNING: type inference failed for: r1v22 */
-        /* JADX WARNING: type inference failed for: r1v33 */
-        /* JADX WARNING: type inference failed for: r1v45 */
-        /* JADX WARNING: type inference failed for: r1v46 */
-        /* JADX WARNING: type inference failed for: r1v47 */
-        /* JADX WARNING: type inference failed for: r1v48 */
-        /* JADX WARNING: type inference failed for: r1v49 */
-        /* JADX WARNING: type inference failed for: r1v50 */
-        /* JADX WARNING: type inference failed for: r1v51 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r19, android.os.Parcel r20, android.os.Parcel r21, int r22) throws android.os.RemoteException {
-            /*
-                r18 = this;
-                r8 = r18
-                r9 = r19
-                r10 = r20
-                r11 = r21
-                java.lang.String r12 = "com.android.internal.app.IVoiceInteractionManagerService"
-                r0 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r13 = 1
-                if (r9 == r0) goto L_0x039e
-                r0 = 0
-                r1 = 0
-                switch(r9) {
-                    case 1: goto L_0x0378;
-                    case 2: goto L_0x0356;
-                    case 3: goto L_0x0330;
-                    case 4: goto L_0x031e;
-                    case 5: goto L_0x02f8;
-                    case 6: goto L_0x02d2;
-                    case 7: goto L_0x02bc;
-                    case 8: goto L_0x02ae;
-                    case 9: goto L_0x02a0;
-                    case 10: goto L_0x0292;
-                    case 11: goto L_0x0284;
-                    case 12: goto L_0x0276;
-                    case 13: goto L_0x0257;
-                    case 14: goto L_0x0237;
-                    case 15: goto L_0x0221;
-                    case 16: goto L_0x0202;
-                    case 17: goto L_0x01e4;
-                    case 18: goto L_0x01a7;
-                    case 19: goto L_0x0185;
-                    case 20: goto L_0x016e;
-                    case 21: goto L_0x013e;
-                    case 22: goto L_0x0134;
-                    case 23: goto L_0x012a;
-                    case 24: goto L_0x011c;
-                    case 25: goto L_0x010e;
-                    case 26: goto L_0x0100;
-                    case 27: goto L_0x00f6;
-                    case 28: goto L_0x00e4;
-                    case 29: goto L_0x00ce;
-                    case 30: goto L_0x00ac;
-                    case 31: goto L_0x006f;
-                    case 32: goto L_0x001a;
-                    default: goto L_0x0015;
-                }
-            L_0x0015:
-                boolean r0 = super.onTransact(r19, r20, r21, r22)
-                return r0
-            L_0x001a:
-                r10.enforceInterface(r12)
-                android.os.IBinder r14 = r20.readStrongBinder()
-                java.lang.String r15 = r20.readString()
-                int r0 = r20.readInt()
-                if (r0 == 0) goto L_0x0035
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-                r3 = r0
-                goto L_0x0036
-            L_0x0035:
-                r3 = r1
-            L_0x0036:
-                int r16 = r20.readInt()
-                android.os.IBinder r17 = r20.readStrongBinder()
-                int r0 = r20.readInt()
-                if (r0 == 0) goto L_0x004e
-                android.os.Parcelable$Creator<android.os.RemoteCallback> r0 = android.os.RemoteCallback.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.os.RemoteCallback r0 = (android.os.RemoteCallback) r0
-                r6 = r0
-                goto L_0x004f
-            L_0x004e:
-                r6 = r1
-            L_0x004f:
-                int r0 = r20.readInt()
-                if (r0 == 0) goto L_0x005f
-                android.os.Parcelable$Creator<android.os.RemoteCallback> r0 = android.os.RemoteCallback.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.os.RemoteCallback r0 = (android.os.RemoteCallback) r0
-                r7 = r0
-                goto L_0x0060
-            L_0x005f:
-                r7 = r1
-            L_0x0060:
-                r0 = r18
-                r1 = r14
-                r2 = r15
-                r4 = r16
-                r5 = r17
-                r0.performDirectAction(r1, r2, r3, r4, r5, r6, r7)
-                r21.writeNoException()
-                return r13
-            L_0x006f:
-                r10.enforceInterface(r12)
-                android.os.IBinder r6 = r20.readStrongBinder()
-                int r7 = r20.readInt()
-                android.os.IBinder r14 = r20.readStrongBinder()
-                int r0 = r20.readInt()
-                if (r0 == 0) goto L_0x008e
-                android.os.Parcelable$Creator<android.os.RemoteCallback> r0 = android.os.RemoteCallback.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.os.RemoteCallback r0 = (android.os.RemoteCallback) r0
-                r4 = r0
-                goto L_0x008f
-            L_0x008e:
-                r4 = r1
-            L_0x008f:
-                int r0 = r20.readInt()
-                if (r0 == 0) goto L_0x009f
-                android.os.Parcelable$Creator<android.os.RemoteCallback> r0 = android.os.RemoteCallback.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.os.RemoteCallback r0 = (android.os.RemoteCallback) r0
-                r5 = r0
-                goto L_0x00a0
-            L_0x009f:
-                r5 = r1
-            L_0x00a0:
-                r0 = r18
-                r1 = r6
-                r2 = r7
-                r3 = r14
-                r0.requestDirectActions(r1, r2, r3, r4, r5)
-                r21.writeNoException()
-                return r13
-            L_0x00ac:
-                r10.enforceInterface(r12)
-                android.os.IBinder r0 = r20.readStrongBinder()
-                android.service.voice.IVoiceInteractionService r0 = android.service.voice.IVoiceInteractionService.Stub.asInterface(r0)
-                int r2 = r20.readInt()
-                if (r2 == 0) goto L_0x00c6
-                android.os.Parcelable$Creator<android.os.Bundle> r1 = android.os.Bundle.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.os.Bundle r1 = (android.os.Bundle) r1
-                goto L_0x00c7
-            L_0x00c6:
-            L_0x00c7:
-                r8.setUiHints(r0, r1)
-                r21.writeNoException()
-                return r13
-            L_0x00ce:
-                r10.enforceInterface(r12)
-                java.util.ArrayList r0 = r20.createStringArrayList()
-                android.os.IBinder r1 = r20.readStrongBinder()
-                com.android.internal.app.IVoiceActionCheckCallback r1 = com.android.internal.app.IVoiceActionCheckCallback.Stub.asInterface(r1)
-                r8.getActiveServiceSupportedActions(r0, r1)
-                r21.writeNoException()
-                return r13
-            L_0x00e4:
-                r10.enforceInterface(r12)
-                android.os.IBinder r0 = r20.readStrongBinder()
-                com.android.internal.app.IVoiceInteractionSessionListener r0 = com.android.internal.app.IVoiceInteractionSessionListener.Stub.asInterface(r0)
-                r8.registerVoiceInteractionSessionListener(r0)
-                r21.writeNoException()
-                return r13
-            L_0x00f6:
-                r10.enforceInterface(r12)
-                r18.onLockscreenShown()
-                r21.writeNoException()
-                return r13
-            L_0x0100:
-                r10.enforceInterface(r12)
-                boolean r0 = r18.activeServiceSupportsLaunchFromKeyguard()
-                r21.writeNoException()
-                r11.writeInt(r0)
-                return r13
-            L_0x010e:
-                r10.enforceInterface(r12)
-                boolean r0 = r18.activeServiceSupportsAssist()
-                r21.writeNoException()
-                r11.writeInt(r0)
-                return r13
-            L_0x011c:
-                r10.enforceInterface(r12)
-                boolean r0 = r18.isSessionRunning()
-                r21.writeNoException()
-                r11.writeInt(r0)
-                return r13
-            L_0x012a:
-                r10.enforceInterface(r12)
-                r18.launchVoiceAssistFromKeyguard()
-                r21.writeNoException()
-                return r13
-            L_0x0134:
-                r10.enforceInterface(r12)
-                r18.hideCurrentSession()
-                r21.writeNoException()
-                return r13
-            L_0x013e:
-                r10.enforceInterface(r12)
-                int r0 = r20.readInt()
-                if (r0 == 0) goto L_0x0151
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                r1 = r0
-                android.os.Bundle r1 = (android.os.Bundle) r1
-                goto L_0x0152
-            L_0x0151:
-            L_0x0152:
-                r0 = r1
-                int r1 = r20.readInt()
-                android.os.IBinder r2 = r20.readStrongBinder()
-                com.android.internal.app.IVoiceInteractionSessionShowCallback r2 = com.android.internal.app.IVoiceInteractionSessionShowCallback.Stub.asInterface(r2)
-                android.os.IBinder r3 = r20.readStrongBinder()
-                boolean r4 = r8.showSessionForActiveService(r0, r1, r2, r3)
-                r21.writeNoException()
-                r11.writeInt(r4)
-                return r13
-            L_0x016e:
-                r10.enforceInterface(r12)
-                android.content.ComponentName r1 = r18.getActiveServiceComponentName()
-                r21.writeNoException()
-                if (r1 == 0) goto L_0x0181
-                r11.writeInt(r13)
-                r1.writeToParcel((android.os.Parcel) r11, (int) r13)
-                goto L_0x0184
-            L_0x0181:
-                r11.writeInt(r0)
-            L_0x0184:
-                return r13
-            L_0x0185:
-                r10.enforceInterface(r12)
-                android.os.IBinder r0 = r20.readStrongBinder()
-                android.service.voice.IVoiceInteractionService r0 = android.service.voice.IVoiceInteractionService.Stub.asInterface(r0)
-                int r1 = r20.readInt()
-                android.os.IBinder r2 = r20.readStrongBinder()
-                android.hardware.soundtrigger.IRecognitionStatusCallback r2 = android.hardware.soundtrigger.IRecognitionStatusCallback.Stub.asInterface(r2)
-                int r3 = r8.stopRecognition(r0, r1, r2)
-                r21.writeNoException()
-                r11.writeInt(r3)
-                return r13
-            L_0x01a7:
-                r10.enforceInterface(r12)
-                android.os.IBinder r0 = r20.readStrongBinder()
-                android.service.voice.IVoiceInteractionService r6 = android.service.voice.IVoiceInteractionService.Stub.asInterface(r0)
-                int r7 = r20.readInt()
-                java.lang.String r14 = r20.readString()
-                android.os.IBinder r0 = r20.readStrongBinder()
-                android.hardware.soundtrigger.IRecognitionStatusCallback r15 = android.hardware.soundtrigger.IRecognitionStatusCallback.Stub.asInterface(r0)
-                int r0 = r20.readInt()
-                if (r0 == 0) goto L_0x01d2
-                android.os.Parcelable$Creator<android.hardware.soundtrigger.SoundTrigger$RecognitionConfig> r0 = android.hardware.soundtrigger.SoundTrigger.RecognitionConfig.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.hardware.soundtrigger.SoundTrigger$RecognitionConfig r0 = (android.hardware.soundtrigger.SoundTrigger.RecognitionConfig) r0
-                r5 = r0
-                goto L_0x01d3
-            L_0x01d2:
-                r5 = r1
-            L_0x01d3:
-                r0 = r18
-                r1 = r6
-                r2 = r7
-                r3 = r14
-                r4 = r15
-                int r0 = r0.startRecognition(r1, r2, r3, r4, r5)
-                r21.writeNoException()
-                r11.writeInt(r0)
-                return r13
-            L_0x01e4:
-                r10.enforceInterface(r12)
-                android.os.IBinder r0 = r20.readStrongBinder()
-                android.service.voice.IVoiceInteractionService r0 = android.service.voice.IVoiceInteractionService.Stub.asInterface(r0)
-                int r1 = r20.readInt()
-                java.lang.String r2 = r20.readString()
-                boolean r3 = r8.isEnrolledForKeyphrase(r0, r1, r2)
-                r21.writeNoException()
-                r11.writeInt(r3)
-                return r13
-            L_0x0202:
-                r10.enforceInterface(r12)
-                android.os.IBinder r1 = r20.readStrongBinder()
-                android.service.voice.IVoiceInteractionService r1 = android.service.voice.IVoiceInteractionService.Stub.asInterface(r1)
-                android.hardware.soundtrigger.SoundTrigger$ModuleProperties r2 = r8.getDspModuleProperties(r1)
-                r21.writeNoException()
-                if (r2 == 0) goto L_0x021d
-                r11.writeInt(r13)
-                r2.writeToParcel(r11, r13)
-                goto L_0x0220
-            L_0x021d:
-                r11.writeInt(r0)
-            L_0x0220:
-                return r13
-            L_0x0221:
-                r10.enforceInterface(r12)
-                int r0 = r20.readInt()
-                java.lang.String r1 = r20.readString()
-                int r2 = r8.deleteKeyphraseSoundModel(r0, r1)
-                r21.writeNoException()
-                r11.writeInt(r2)
-                return r13
-            L_0x0237:
-                r10.enforceInterface(r12)
-                int r0 = r20.readInt()
-                if (r0 == 0) goto L_0x024a
-                android.os.Parcelable$Creator<android.hardware.soundtrigger.SoundTrigger$KeyphraseSoundModel> r0 = android.hardware.soundtrigger.SoundTrigger.KeyphraseSoundModel.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                r1 = r0
-                android.hardware.soundtrigger.SoundTrigger$KeyphraseSoundModel r1 = (android.hardware.soundtrigger.SoundTrigger.KeyphraseSoundModel) r1
-                goto L_0x024b
-            L_0x024a:
-            L_0x024b:
-                r0 = r1
-                int r1 = r8.updateKeyphraseSoundModel(r0)
-                r21.writeNoException()
-                r11.writeInt(r1)
-                return r13
-            L_0x0257:
-                r10.enforceInterface(r12)
-                int r1 = r20.readInt()
-                java.lang.String r2 = r20.readString()
-                android.hardware.soundtrigger.SoundTrigger$KeyphraseSoundModel r3 = r8.getKeyphraseSoundModel(r1, r2)
-                r21.writeNoException()
-                if (r3 == 0) goto L_0x0272
-                r11.writeInt(r13)
-                r3.writeToParcel(r11, r13)
-                goto L_0x0275
-            L_0x0272:
-                r11.writeInt(r0)
-            L_0x0275:
-                return r13
-            L_0x0276:
-                r10.enforceInterface(r12)
-                int r0 = r18.getUserDisabledShowContext()
-                r21.writeNoException()
-                r11.writeInt(r0)
-                return r13
-            L_0x0284:
-                r10.enforceInterface(r12)
-                int r0 = r18.getDisabledShowContext()
-                r21.writeNoException()
-                r11.writeInt(r0)
-                return r13
-            L_0x0292:
-                r10.enforceInterface(r12)
-                int r0 = r20.readInt()
-                r8.setDisabledShowContext(r0)
-                r21.writeNoException()
-                return r13
-            L_0x02a0:
-                r10.enforceInterface(r12)
-                android.os.IBinder r0 = r20.readStrongBinder()
-                r8.finish(r0)
-                r21.writeNoException()
-                return r13
-            L_0x02ae:
-                r10.enforceInterface(r12)
-                android.os.IBinder r0 = r20.readStrongBinder()
-                r8.closeSystemDialogs(r0)
-                r21.writeNoException()
-                return r13
-            L_0x02bc:
-                r10.enforceInterface(r12)
-                android.os.IBinder r1 = r20.readStrongBinder()
-                int r2 = r20.readInt()
-                if (r2 == 0) goto L_0x02cb
-                r0 = r13
-            L_0x02cb:
-                r8.setKeepAwake(r1, r0)
-                r21.writeNoException()
-                return r13
-            L_0x02d2:
-                r10.enforceInterface(r12)
-                android.os.IBinder r0 = r20.readStrongBinder()
-                int r2 = r20.readInt()
-                if (r2 == 0) goto L_0x02e8
-                android.os.Parcelable$Creator<android.content.Intent> r1 = android.content.Intent.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.content.Intent r1 = (android.content.Intent) r1
-                goto L_0x02e9
-            L_0x02e8:
-            L_0x02e9:
-                java.lang.String r2 = r20.readString()
-                int r3 = r8.startAssistantActivity(r0, r1, r2)
-                r21.writeNoException()
-                r11.writeInt(r3)
-                return r13
-            L_0x02f8:
-                r10.enforceInterface(r12)
-                android.os.IBinder r0 = r20.readStrongBinder()
-                int r2 = r20.readInt()
-                if (r2 == 0) goto L_0x030e
-                android.os.Parcelable$Creator<android.content.Intent> r1 = android.content.Intent.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.content.Intent r1 = (android.content.Intent) r1
-                goto L_0x030f
-            L_0x030e:
-            L_0x030f:
-                java.lang.String r2 = r20.readString()
-                int r3 = r8.startVoiceActivity(r0, r1, r2)
-                r21.writeNoException()
-                r11.writeInt(r3)
-                return r13
-            L_0x031e:
-                r10.enforceInterface(r12)
-                android.os.IBinder r0 = r20.readStrongBinder()
-                boolean r1 = r8.hideSessionFromSession(r0)
-                r21.writeNoException()
-                r11.writeInt(r1)
-                return r13
-            L_0x0330:
-                r10.enforceInterface(r12)
-                android.os.IBinder r0 = r20.readStrongBinder()
-                int r2 = r20.readInt()
-                if (r2 == 0) goto L_0x0346
-                android.os.Parcelable$Creator<android.os.Bundle> r1 = android.os.Bundle.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.os.Bundle r1 = (android.os.Bundle) r1
-                goto L_0x0347
-            L_0x0346:
-            L_0x0347:
-                int r2 = r20.readInt()
-                boolean r3 = r8.showSessionFromSession(r0, r1, r2)
-                r21.writeNoException()
-                r11.writeInt(r3)
-                return r13
-            L_0x0356:
-                r10.enforceInterface(r12)
-                android.os.IBinder r0 = r20.readStrongBinder()
-                android.os.IBinder r1 = r20.readStrongBinder()
-                android.service.voice.IVoiceInteractionSession r1 = android.service.voice.IVoiceInteractionSession.Stub.asInterface(r1)
-                android.os.IBinder r2 = r20.readStrongBinder()
-                com.android.internal.app.IVoiceInteractor r2 = com.android.internal.app.IVoiceInteractor.Stub.asInterface(r2)
-                boolean r3 = r8.deliverNewSession(r0, r1, r2)
-                r21.writeNoException()
-                r11.writeInt(r3)
-                return r13
-            L_0x0378:
-                r10.enforceInterface(r12)
-                android.os.IBinder r0 = r20.readStrongBinder()
-                android.service.voice.IVoiceInteractionService r0 = android.service.voice.IVoiceInteractionService.Stub.asInterface(r0)
-                int r2 = r20.readInt()
-                if (r2 == 0) goto L_0x0392
-                android.os.Parcelable$Creator<android.os.Bundle> r1 = android.os.Bundle.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.os.Bundle r1 = (android.os.Bundle) r1
-                goto L_0x0393
-            L_0x0392:
-            L_0x0393:
-                int r2 = r20.readInt()
-                r8.showSession(r0, r1, r2)
-                r21.writeNoException()
-                return r13
-            L_0x039e:
-                r11.writeString(r12)
-                return r13
-            */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.internal.app.IVoiceInteractionManagerService.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    IVoiceInteractionService _arg0 = IVoiceInteractionService.Stub.asInterface(data.readStrongBinder());
+                    Bundle _arg1 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    int _arg2 = data.readInt();
+                    showSession(_arg0, _arg1, _arg2);
+                    reply.writeNoException();
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg02 = data.readStrongBinder();
+                    IVoiceInteractionSession _arg12 = IVoiceInteractionSession.Stub.asInterface(data.readStrongBinder());
+                    IVoiceInteractor _arg22 = IVoiceInteractor.Stub.asInterface(data.readStrongBinder());
+                    boolean deliverNewSession = deliverNewSession(_arg02, _arg12, _arg22);
+                    reply.writeNoException();
+                    reply.writeInt(deliverNewSession ? 1 : 0);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg03 = data.readStrongBinder();
+                    Bundle _arg13 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    int _arg23 = data.readInt();
+                    boolean showSessionFromSession = showSessionFromSession(_arg03, _arg13, _arg23);
+                    reply.writeNoException();
+                    reply.writeInt(showSessionFromSession ? 1 : 0);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg04 = data.readStrongBinder();
+                    boolean hideSessionFromSession = hideSessionFromSession(_arg04);
+                    reply.writeNoException();
+                    reply.writeInt(hideSessionFromSession ? 1 : 0);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg05 = data.readStrongBinder();
+                    Intent _arg14 = data.readInt() != 0 ? Intent.CREATOR.createFromParcel(data) : null;
+                    String _arg24 = data.readString();
+                    int _result = startVoiceActivity(_arg05, _arg14, _arg24);
+                    reply.writeNoException();
+                    reply.writeInt(_result);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg06 = data.readStrongBinder();
+                    Intent _arg15 = data.readInt() != 0 ? Intent.CREATOR.createFromParcel(data) : null;
+                    String _arg25 = data.readString();
+                    int _result2 = startAssistantActivity(_arg06, _arg15, _arg25);
+                    reply.writeNoException();
+                    reply.writeInt(_result2);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg07 = data.readStrongBinder();
+                    boolean _arg16 = data.readInt() != 0;
+                    setKeepAwake(_arg07, _arg16);
+                    reply.writeNoException();
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg08 = data.readStrongBinder();
+                    closeSystemDialogs(_arg08);
+                    reply.writeNoException();
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg09 = data.readStrongBinder();
+                    finish(_arg09);
+                    reply.writeNoException();
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg010 = data.readInt();
+                    setDisabledShowContext(_arg010);
+                    reply.writeNoException();
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result3 = getDisabledShowContext();
+                    reply.writeNoException();
+                    reply.writeInt(_result3);
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result4 = getUserDisabledShowContext();
+                    reply.writeNoException();
+                    reply.writeInt(_result4);
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg011 = data.readInt();
+                    String _arg17 = data.readString();
+                    SoundTrigger.KeyphraseSoundModel _result5 = getKeyphraseSoundModel(_arg011, _arg17);
+                    reply.writeNoException();
+                    if (_result5 != null) {
+                        reply.writeInt(1);
+                        _result5.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 14:
+                    data.enforceInterface(DESCRIPTOR);
+                    SoundTrigger.KeyphraseSoundModel _arg012 = data.readInt() != 0 ? SoundTrigger.KeyphraseSoundModel.CREATOR.createFromParcel(data) : null;
+                    int _result6 = updateKeyphraseSoundModel(_arg012);
+                    reply.writeNoException();
+                    reply.writeInt(_result6);
+                    return true;
+                case 15:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg013 = data.readInt();
+                    String _arg18 = data.readString();
+                    int _result7 = deleteKeyphraseSoundModel(_arg013, _arg18);
+                    reply.writeNoException();
+                    reply.writeInt(_result7);
+                    return true;
+                case 16:
+                    data.enforceInterface(DESCRIPTOR);
+                    IVoiceInteractionService _arg014 = IVoiceInteractionService.Stub.asInterface(data.readStrongBinder());
+                    SoundTrigger.ModuleProperties _result8 = getDspModuleProperties(_arg014);
+                    reply.writeNoException();
+                    if (_result8 != null) {
+                        reply.writeInt(1);
+                        _result8.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 17:
+                    data.enforceInterface(DESCRIPTOR);
+                    IVoiceInteractionService _arg015 = IVoiceInteractionService.Stub.asInterface(data.readStrongBinder());
+                    int _arg19 = data.readInt();
+                    String _arg26 = data.readString();
+                    boolean isEnrolledForKeyphrase = isEnrolledForKeyphrase(_arg015, _arg19, _arg26);
+                    reply.writeNoException();
+                    reply.writeInt(isEnrolledForKeyphrase ? 1 : 0);
+                    return true;
+                case 18:
+                    data.enforceInterface(DESCRIPTOR);
+                    IVoiceInteractionService _arg016 = IVoiceInteractionService.Stub.asInterface(data.readStrongBinder());
+                    int _arg110 = data.readInt();
+                    String _arg27 = data.readString();
+                    IRecognitionStatusCallback _arg3 = IRecognitionStatusCallback.Stub.asInterface(data.readStrongBinder());
+                    SoundTrigger.RecognitionConfig _arg4 = data.readInt() != 0 ? SoundTrigger.RecognitionConfig.CREATOR.createFromParcel(data) : null;
+                    int _result9 = startRecognition(_arg016, _arg110, _arg27, _arg3, _arg4);
+                    reply.writeNoException();
+                    reply.writeInt(_result9);
+                    return true;
+                case 19:
+                    data.enforceInterface(DESCRIPTOR);
+                    IVoiceInteractionService _arg017 = IVoiceInteractionService.Stub.asInterface(data.readStrongBinder());
+                    int _arg111 = data.readInt();
+                    IRecognitionStatusCallback _arg28 = IRecognitionStatusCallback.Stub.asInterface(data.readStrongBinder());
+                    int _result10 = stopRecognition(_arg017, _arg111, _arg28);
+                    reply.writeNoException();
+                    reply.writeInt(_result10);
+                    return true;
+                case 20:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _result11 = getActiveServiceComponentName();
+                    reply.writeNoException();
+                    if (_result11 != null) {
+                        reply.writeInt(1);
+                        _result11.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 21:
+                    data.enforceInterface(DESCRIPTOR);
+                    Bundle _arg018 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    Bundle _arg019 = _arg018;
+                    int _arg112 = data.readInt();
+                    IVoiceInteractionSessionShowCallback _arg29 = IVoiceInteractionSessionShowCallback.Stub.asInterface(data.readStrongBinder());
+                    IBinder _arg32 = data.readStrongBinder();
+                    boolean showSessionForActiveService = showSessionForActiveService(_arg019, _arg112, _arg29, _arg32);
+                    reply.writeNoException();
+                    reply.writeInt(showSessionForActiveService ? 1 : 0);
+                    return true;
+                case 22:
+                    data.enforceInterface(DESCRIPTOR);
+                    hideCurrentSession();
+                    reply.writeNoException();
+                    return true;
+                case 23:
+                    data.enforceInterface(DESCRIPTOR);
+                    launchVoiceAssistFromKeyguard();
+                    reply.writeNoException();
+                    return true;
+                case 24:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isSessionRunning = isSessionRunning();
+                    reply.writeNoException();
+                    reply.writeInt(isSessionRunning ? 1 : 0);
+                    return true;
+                case 25:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean activeServiceSupportsAssist = activeServiceSupportsAssist();
+                    reply.writeNoException();
+                    reply.writeInt(activeServiceSupportsAssist ? 1 : 0);
+                    return true;
+                case 26:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean activeServiceSupportsLaunchFromKeyguard = activeServiceSupportsLaunchFromKeyguard();
+                    reply.writeNoException();
+                    reply.writeInt(activeServiceSupportsLaunchFromKeyguard ? 1 : 0);
+                    return true;
+                case 27:
+                    data.enforceInterface(DESCRIPTOR);
+                    onLockscreenShown();
+                    reply.writeNoException();
+                    return true;
+                case 28:
+                    data.enforceInterface(DESCRIPTOR);
+                    IVoiceInteractionSessionListener _arg020 = IVoiceInteractionSessionListener.Stub.asInterface(data.readStrongBinder());
+                    registerVoiceInteractionSessionListener(_arg020);
+                    reply.writeNoException();
+                    return true;
+                case 29:
+                    data.enforceInterface(DESCRIPTOR);
+                    List<String> _arg021 = data.createStringArrayList();
+                    IVoiceActionCheckCallback _arg113 = IVoiceActionCheckCallback.Stub.asInterface(data.readStrongBinder());
+                    getActiveServiceSupportedActions(_arg021, _arg113);
+                    reply.writeNoException();
+                    return true;
+                case 30:
+                    data.enforceInterface(DESCRIPTOR);
+                    IVoiceInteractionService _arg022 = IVoiceInteractionService.Stub.asInterface(data.readStrongBinder());
+                    Bundle _arg114 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    setUiHints(_arg022, _arg114);
+                    reply.writeNoException();
+                    return true;
+                case 31:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg023 = data.readStrongBinder();
+                    int _arg115 = data.readInt();
+                    IBinder _arg210 = data.readStrongBinder();
+                    RemoteCallback _arg33 = data.readInt() != 0 ? RemoteCallback.CREATOR.createFromParcel(data) : null;
+                    RemoteCallback _arg42 = data.readInt() != 0 ? RemoteCallback.CREATOR.createFromParcel(data) : null;
+                    requestDirectActions(_arg023, _arg115, _arg210, _arg33, _arg42);
+                    reply.writeNoException();
+                    return true;
+                case 32:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg024 = data.readStrongBinder();
+                    String _arg116 = data.readString();
+                    Bundle _arg211 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    int _arg34 = data.readInt();
+                    IBinder _arg43 = data.readStrongBinder();
+                    RemoteCallback _arg5 = data.readInt() != 0 ? RemoteCallback.CREATOR.createFromParcel(data) : null;
+                    RemoteCallback _arg6 = data.readInt() != 0 ? RemoteCallback.CREATOR.createFromParcel(data) : null;
+                    performDirectAction(_arg024, _arg116, _arg211, _arg34, _arg43, _arg5, _arg6);
+                    reply.writeNoException();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IVoiceInteractionManagerService {
             public static IVoiceInteractionManagerService sDefaultImpl;
             private IBinder mRemote;
@@ -808,6 +649,7 @@ public interface IVoiceInteractionManagerService extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -816,6 +658,7 @@ public interface IVoiceInteractionManagerService extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // com.android.internal.app.IVoiceInteractionManagerService
             public void showSession(IVoiceInteractionService service, Bundle sessionArgs, int flags) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -829,56 +672,47 @@ public interface IVoiceInteractionManagerService extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(flags);
-                    if (this.mRemote.transact(1, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().showSession(service, sessionArgs, flags);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().showSession(service, sessionArgs, flags);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IVoiceInteractionManagerService
             public boolean deliverNewSession(IBinder token, IVoiceInteractionSession session, IVoiceInteractor interactor) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    IBinder iBinder = null;
                     _data.writeStrongBinder(session != null ? session.asBinder() : null);
-                    if (interactor != null) {
-                        iBinder = interactor.asBinder();
-                    }
-                    _data.writeStrongBinder(iBinder);
-                    boolean z = false;
-                    if (!this.mRemote.transact(2, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeStrongBinder(interactor != null ? interactor.asBinder() : null);
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().deliverNewSession(token, session, interactor);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IVoiceInteractionManagerService
             public boolean showSessionFromSession(IBinder token, Bundle sessionArgs, int flags) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    boolean _result = true;
                     if (sessionArgs != null) {
                         _data.writeInt(1);
                         sessionArgs.writeToParcel(_data, 0);
@@ -886,15 +720,12 @@ public interface IVoiceInteractionManagerService extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(flags);
-                    if (!this.mRemote.transact(3, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().showSessionFromSession(token, sessionArgs, flags);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -902,30 +733,27 @@ public interface IVoiceInteractionManagerService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.app.IVoiceInteractionManagerService
             public boolean hideSessionFromSession(IBinder token) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    boolean z = false;
-                    if (!this.mRemote.transact(4, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().hideSessionFromSession(token);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IVoiceInteractionManagerService
             public int startVoiceActivity(IBinder token, Intent intent, String resolvedType) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -939,13 +767,12 @@ public interface IVoiceInteractionManagerService extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(resolvedType);
-                    if (!this.mRemote.transact(5, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().startVoiceActivity(token, intent, resolvedType);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -953,6 +780,7 @@ public interface IVoiceInteractionManagerService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.app.IVoiceInteractionManagerService
             public int startAssistantActivity(IBinder token, Intent intent, String resolvedType) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -966,13 +794,12 @@ public interface IVoiceInteractionManagerService extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(resolvedType);
-                    if (!this.mRemote.transact(6, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().startAssistantActivity(token, intent, resolvedType);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -980,95 +807,95 @@ public interface IVoiceInteractionManagerService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.app.IVoiceInteractionManagerService
             public void setKeepAwake(IBinder token, boolean keepAwake) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    _data.writeInt(keepAwake);
-                    if (this.mRemote.transact(7, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(keepAwake ? 1 : 0);
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setKeepAwake(token, keepAwake);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setKeepAwake(token, keepAwake);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IVoiceInteractionManagerService
             public void closeSystemDialogs(IBinder token) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    if (this.mRemote.transact(8, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().closeSystemDialogs(token);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().closeSystemDialogs(token);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IVoiceInteractionManagerService
             public void finish(IBinder token) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    if (this.mRemote.transact(9, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(9, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().finish(token);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().finish(token);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IVoiceInteractionManagerService
             public void setDisabledShowContext(int flags) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(flags);
-                    if (this.mRemote.transact(10, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(10, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setDisabledShowContext(flags);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setDisabledShowContext(flags);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IVoiceInteractionManagerService
             public int getDisabledShowContext() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(11, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(11, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getDisabledShowContext();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1076,18 +903,18 @@ public interface IVoiceInteractionManagerService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.app.IVoiceInteractionManagerService
             public int getUserDisabledShowContext() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(12, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(12, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getUserDisabledShowContext();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1095,6 +922,7 @@ public interface IVoiceInteractionManagerService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.app.IVoiceInteractionManagerService
             public SoundTrigger.KeyphraseSoundModel getKeyphraseSoundModel(int keyphraseId, String bcp47Locale) throws RemoteException {
                 SoundTrigger.KeyphraseSoundModel _result;
                 Parcel _data = Parcel.obtain();
@@ -1103,7 +931,8 @@ public interface IVoiceInteractionManagerService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(keyphraseId);
                     _data.writeString(bcp47Locale);
-                    if (!this.mRemote.transact(13, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(13, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getKeyphraseSoundModel(keyphraseId, bcp47Locale);
                     }
                     _reply.readException();
@@ -1112,16 +941,14 @@ public interface IVoiceInteractionManagerService extends IInterface {
                     } else {
                         _result = null;
                     }
-                    SoundTrigger.KeyphraseSoundModel _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IVoiceInteractionManagerService
             public int updateKeyphraseSoundModel(SoundTrigger.KeyphraseSoundModel model) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1133,13 +960,12 @@ public interface IVoiceInteractionManagerService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(14, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(14, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().updateKeyphraseSoundModel(model);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1147,6 +973,7 @@ public interface IVoiceInteractionManagerService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.app.IVoiceInteractionManagerService
             public int deleteKeyphraseSoundModel(int keyphraseId, String bcp47Locale) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1154,13 +981,12 @@ public interface IVoiceInteractionManagerService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(keyphraseId);
                     _data.writeString(bcp47Locale);
-                    if (!this.mRemote.transact(15, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(15, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().deleteKeyphraseSoundModel(keyphraseId, bcp47Locale);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1168,6 +994,7 @@ public interface IVoiceInteractionManagerService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.app.IVoiceInteractionManagerService
             public SoundTrigger.ModuleProperties getDspModuleProperties(IVoiceInteractionService service) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1175,15 +1002,14 @@ public interface IVoiceInteractionManagerService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     SoundTrigger.ModuleProperties _result = null;
                     _data.writeStrongBinder(service != null ? service.asBinder() : null);
-                    if (!this.mRemote.transact(16, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(16, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getDspModuleProperties(service);
                     }
                     _reply.readException();
                     if (_reply.readInt() != 0) {
                         _result = SoundTrigger.ModuleProperties.CREATOR.createFromParcel(_reply);
                     }
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1191,6 +1017,7 @@ public interface IVoiceInteractionManagerService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.app.IVoiceInteractionManagerService
             public boolean isEnrolledForKeyphrase(IVoiceInteractionService service, int keyphraseId, String bcp47Locale) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1199,50 +1026,41 @@ public interface IVoiceInteractionManagerService extends IInterface {
                     _data.writeStrongBinder(service != null ? service.asBinder() : null);
                     _data.writeInt(keyphraseId);
                     _data.writeString(bcp47Locale);
-                    boolean z = false;
-                    if (!this.mRemote.transact(17, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(17, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isEnrolledForKeyphrase(service, keyphraseId, bcp47Locale);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IVoiceInteractionManagerService
             public int startRecognition(IVoiceInteractionService service, int keyphraseId, String bcp47Locale, IRecognitionStatusCallback callback, SoundTrigger.RecognitionConfig recognitionConfig) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    IBinder iBinder = null;
                     _data.writeStrongBinder(service != null ? service.asBinder() : null);
                     _data.writeInt(keyphraseId);
                     _data.writeString(bcp47Locale);
-                    if (callback != null) {
-                        iBinder = callback.asBinder();
-                    }
-                    _data.writeStrongBinder(iBinder);
+                    _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
                     if (recognitionConfig != null) {
                         _data.writeInt(1);
                         recognitionConfig.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(18, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(18, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().startRecognition(service, keyphraseId, bcp47Locale, callback, recognitionConfig);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1250,25 +1068,21 @@ public interface IVoiceInteractionManagerService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.app.IVoiceInteractionManagerService
             public int stopRecognition(IVoiceInteractionService service, int keyphraseId, IRecognitionStatusCallback callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    IBinder iBinder = null;
                     _data.writeStrongBinder(service != null ? service.asBinder() : null);
                     _data.writeInt(keyphraseId);
-                    if (callback != null) {
-                        iBinder = callback.asBinder();
-                    }
-                    _data.writeStrongBinder(iBinder);
-                    if (!this.mRemote.transact(19, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
+                    boolean _status = this.mRemote.transact(19, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().stopRecognition(service, keyphraseId, callback);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1276,13 +1090,15 @@ public interface IVoiceInteractionManagerService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.app.IVoiceInteractionManagerService
             public ComponentName getActiveServiceComponentName() throws RemoteException {
                 ComponentName _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(20, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(20, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getActiveServiceComponentName();
                     }
                     _reply.readException();
@@ -1291,22 +1107,19 @@ public interface IVoiceInteractionManagerService extends IInterface {
                     } else {
                         _result = null;
                     }
-                    ComponentName _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IVoiceInteractionManagerService
             public boolean showSessionForActiveService(Bundle args, int sourceFlags, IVoiceInteractionSessionShowCallback showCallback, IBinder activityToken) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (args != null) {
                         _data.writeInt(1);
                         args.writeToParcel(_data, 0);
@@ -1316,15 +1129,12 @@ public interface IVoiceInteractionManagerService extends IInterface {
                     _data.writeInt(sourceFlags);
                     _data.writeStrongBinder(showCallback != null ? showCallback.asBinder() : null);
                     _data.writeStrongBinder(activityToken);
-                    if (!this.mRemote.transact(21, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(21, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().showSessionForActiveService(args, sourceFlags, showCallback, activityToken);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1332,148 +1142,137 @@ public interface IVoiceInteractionManagerService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.app.IVoiceInteractionManagerService
             public void hideCurrentSession() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(22, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(22, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().hideCurrentSession();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().hideCurrentSession();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IVoiceInteractionManagerService
             public void launchVoiceAssistFromKeyguard() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(23, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(23, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().launchVoiceAssistFromKeyguard();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().launchVoiceAssistFromKeyguard();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IVoiceInteractionManagerService
             public boolean isSessionRunning() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(24, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(24, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isSessionRunning();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IVoiceInteractionManagerService
             public boolean activeServiceSupportsAssist() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(25, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(25, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().activeServiceSupportsAssist();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IVoiceInteractionManagerService
             public boolean activeServiceSupportsLaunchFromKeyguard() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(26, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(26, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().activeServiceSupportsLaunchFromKeyguard();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IVoiceInteractionManagerService
             public void onLockscreenShown() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(27, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(27, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().onLockscreenShown();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().onLockscreenShown();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IVoiceInteractionManagerService
             public void registerVoiceInteractionSessionListener(IVoiceInteractionSessionListener listener) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(listener != null ? listener.asBinder() : null);
-                    if (this.mRemote.transact(28, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(28, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().registerVoiceInteractionSessionListener(listener);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().registerVoiceInteractionSessionListener(listener);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IVoiceInteractionManagerService
             public void getActiveServiceSupportedActions(List<String> voiceActions, IVoiceActionCheckCallback callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1481,19 +1280,19 @@ public interface IVoiceInteractionManagerService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStringList(voiceActions);
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                    if (this.mRemote.transact(29, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(29, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().getActiveServiceSupportedActions(voiceActions, callback);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().getActiveServiceSupportedActions(voiceActions, callback);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IVoiceInteractionManagerService
             public void setUiHints(IVoiceInteractionService service, Bundle hints) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1506,19 +1305,19 @@ public interface IVoiceInteractionManagerService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(30, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(30, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setUiHints(service, hints);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setUiHints(service, hints);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IVoiceInteractionManagerService
             public void requestDirectActions(IBinder token, int taskId, IBinder assistToken, RemoteCallback cancellationCallback, RemoteCallback callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1539,77 +1338,69 @@ public interface IVoiceInteractionManagerService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(31, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(31, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().requestDirectActions(token, taskId, assistToken, cancellationCallback, callback);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().requestDirectActions(token, taskId, assistToken, cancellationCallback, callback);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.app.IVoiceInteractionManagerService
             public void performDirectAction(IBinder token, String actionId, Bundle arguments, int taskId, IBinder assistToken, RemoteCallback cancellationCallback, RemoteCallback resultCallback) throws RemoteException {
-                Bundle bundle = arguments;
-                RemoteCallback remoteCallback = cancellationCallback;
-                RemoteCallback remoteCallback2 = resultCallback;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    try {
-                        _data.writeStrongBinder(token);
-                        try {
-                            _data.writeString(actionId);
-                            if (bundle != null) {
-                                _data.writeInt(1);
-                                bundle.writeToParcel(_data, 0);
-                            } else {
-                                _data.writeInt(0);
-                            }
-                            _data.writeInt(taskId);
-                            _data.writeStrongBinder(assistToken);
-                            if (remoteCallback != null) {
-                                _data.writeInt(1);
-                                remoteCallback.writeToParcel(_data, 0);
-                            } else {
-                                _data.writeInt(0);
-                            }
-                            if (remoteCallback2 != null) {
-                                _data.writeInt(1);
-                                remoteCallback2.writeToParcel(_data, 0);
-                            } else {
-                                _data.writeInt(0);
-                            }
-                            if (this.mRemote.transact(32, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                _reply.readException();
-                                _reply.recycle();
-                                _data.recycle();
-                                return;
-                            }
-                            Stub.getDefaultImpl().performDirectAction(token, actionId, arguments, taskId, assistToken, cancellationCallback, resultCallback);
-                            _reply.recycle();
-                            _data.recycle();
-                        } catch (Throwable th) {
-                            th = th;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                    } catch (Throwable th2) {
-                        th = th2;
-                        String str = actionId;
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeStrongBinder(token);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeString(actionId);
+                    if (arguments != null) {
+                        _data.writeInt(1);
+                        arguments.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
+                    }
+                    _data.writeInt(taskId);
+                    _data.writeStrongBinder(assistToken);
+                    if (cancellationCallback != null) {
+                        _data.writeInt(1);
+                        cancellationCallback.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
+                    }
+                    if (resultCallback != null) {
+                        _data.writeInt(1);
+                        resultCallback.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
+                    }
+                    boolean _status = this.mRemote.transact(32, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().performDirectAction(token, actionId, arguments, taskId, assistToken, cancellationCallback, resultCallback);
                         _reply.recycle();
                         _data.recycle();
-                        throw th;
+                        return;
                     }
+                    _reply.readException();
+                    _reply.recycle();
+                    _data.recycle();
                 } catch (Throwable th3) {
                     th = th3;
-                    IBinder iBinder = token;
-                    String str2 = actionId;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
@@ -1618,11 +1409,11 @@ public interface IVoiceInteractionManagerService extends IInterface {
         }
 
         public static boolean setDefaultImpl(IVoiceInteractionManagerService impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IVoiceInteractionManagerService getDefaultImpl() {

@@ -1,11 +1,12 @@
 package android.bluetooth;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.security.keystore.KeyProperties;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public final class BluetoothCodecConfig implements Parcelable {
     @UnsupportedAppUsage
     public static final int BITS_PER_SAMPLE_16 = 1;
@@ -27,11 +28,24 @@ public final class BluetoothCodecConfig implements Parcelable {
     public static final int CODEC_PRIORITY_DISABLED = -1;
     @UnsupportedAppUsage
     public static final int CODEC_PRIORITY_HIGHEST = 1000000;
-    public static final Parcelable.Creator<BluetoothCodecConfig> CREATOR = new Parcelable.Creator<BluetoothCodecConfig>() {
+    public static final Parcelable.Creator<BluetoothCodecConfig> CREATOR = new Parcelable.Creator<BluetoothCodecConfig>() { // from class: android.bluetooth.BluetoothCodecConfig.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public BluetoothCodecConfig createFromParcel(Parcel in) {
-            return new BluetoothCodecConfig(in.readInt(), in.readInt(), in.readInt(), in.readInt(), in.readInt(), in.readLong(), in.readLong(), in.readLong(), in.readLong());
+            int codecType = in.readInt();
+            int codecPriority = in.readInt();
+            int sampleRate = in.readInt();
+            int bitsPerSample = in.readInt();
+            int channelMode = in.readInt();
+            long codecSpecific1 = in.readLong();
+            long codecSpecific2 = in.readLong();
+            long codecSpecific3 = in.readLong();
+            long codecSpecific4 = in.readLong();
+            return new BluetoothCodecConfig(codecType, codecPriority, sampleRate, bitsPerSample, channelMode, codecSpecific1, codecSpecific2, codecSpecific3, codecSpecific4);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public BluetoothCodecConfig[] newArray(int size) {
             return new BluetoothCodecConfig[size];
         }
@@ -100,25 +114,22 @@ public final class BluetoothCodecConfig implements Parcelable {
         this.mSampleRate = 0;
         this.mBitsPerSample = 0;
         this.mChannelMode = 0;
-        this.mCodecSpecific1 = 0;
-        this.mCodecSpecific2 = 0;
-        this.mCodecSpecific3 = 0;
-        this.mCodecSpecific4 = 0;
+        this.mCodecSpecific1 = 0L;
+        this.mCodecSpecific2 = 0L;
+        this.mCodecSpecific3 = 0L;
+        this.mCodecSpecific4 = 0L;
     }
 
     public boolean equals(Object o) {
-        if (!(o instanceof BluetoothCodecConfig)) {
-            return false;
-        }
-        BluetoothCodecConfig other = (BluetoothCodecConfig) o;
-        if (other.mCodecType == this.mCodecType && other.mCodecPriority == this.mCodecPriority && other.mSampleRate == this.mSampleRate && other.mBitsPerSample == this.mBitsPerSample && other.mChannelMode == this.mChannelMode && other.mCodecSpecific1 == this.mCodecSpecific1 && other.mCodecSpecific2 == this.mCodecSpecific2 && other.mCodecSpecific3 == this.mCodecSpecific3 && other.mCodecSpecific4 == this.mCodecSpecific4) {
-            return true;
+        if (o instanceof BluetoothCodecConfig) {
+            BluetoothCodecConfig other = (BluetoothCodecConfig) o;
+            return other.mCodecType == this.mCodecType && other.mCodecPriority == this.mCodecPriority && other.mSampleRate == this.mSampleRate && other.mBitsPerSample == this.mBitsPerSample && other.mChannelMode == this.mChannelMode && other.mCodecSpecific1 == this.mCodecSpecific1 && other.mCodecSpecific2 == this.mCodecSpecific2 && other.mCodecSpecific3 == this.mCodecSpecific3 && other.mCodecSpecific4 == this.mCodecSpecific4;
         }
         return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(this.mCodecType), Integer.valueOf(this.mCodecPriority), Integer.valueOf(this.mSampleRate), Integer.valueOf(this.mBitsPerSample), Integer.valueOf(this.mChannelMode), Long.valueOf(this.mCodecSpecific1), Long.valueOf(this.mCodecSpecific2), Long.valueOf(this.mCodecSpecific3), Long.valueOf(this.mCodecSpecific4)});
+        return Objects.hash(Integer.valueOf(this.mCodecType), Integer.valueOf(this.mCodecPriority), Integer.valueOf(this.mSampleRate), Integer.valueOf(this.mBitsPerSample), Integer.valueOf(this.mChannelMode), Long.valueOf(this.mCodecSpecific1), Long.valueOf(this.mCodecSpecific2), Long.valueOf(this.mCodecSpecific3), Long.valueOf(this.mCodecSpecific4));
     }
 
     public boolean isValid() {
@@ -133,10 +144,7 @@ public final class BluetoothCodecConfig implements Parcelable {
     }
 
     public String toString() {
-        String sampleRateStr = null;
-        if (this.mSampleRate == 0) {
-            sampleRateStr = appendCapabilityToString((String) null, KeyProperties.DIGEST_NONE);
-        }
+        String sampleRateStr = this.mSampleRate == 0 ? appendCapabilityToString(null, KeyProperties.DIGEST_NONE) : null;
         if ((this.mSampleRate & 1) != 0) {
             sampleRateStr = appendCapabilityToString(sampleRateStr, "44100");
         }
@@ -155,10 +163,7 @@ public final class BluetoothCodecConfig implements Parcelable {
         if ((this.mSampleRate & 32) != 0) {
             sampleRateStr = appendCapabilityToString(sampleRateStr, "192000");
         }
-        String bitsPerSampleStr = null;
-        if (this.mBitsPerSample == 0) {
-            bitsPerSampleStr = appendCapabilityToString((String) null, KeyProperties.DIGEST_NONE);
-        }
+        String bitsPerSampleStr = this.mBitsPerSample == 0 ? appendCapabilityToString(null, KeyProperties.DIGEST_NONE) : null;
         if ((this.mBitsPerSample & 1) != 0) {
             bitsPerSampleStr = appendCapabilityToString(bitsPerSampleStr, "16");
         }
@@ -168,23 +173,22 @@ public final class BluetoothCodecConfig implements Parcelable {
         if ((this.mBitsPerSample & 4) != 0) {
             bitsPerSampleStr = appendCapabilityToString(bitsPerSampleStr, "32");
         }
-        String channelModeStr = null;
-        if (this.mChannelMode == 0) {
-            channelModeStr = appendCapabilityToString((String) null, KeyProperties.DIGEST_NONE);
-        }
+        String channelModeStr = this.mChannelMode == 0 ? appendCapabilityToString(null, KeyProperties.DIGEST_NONE) : null;
         if ((this.mChannelMode & 1) != 0) {
             channelModeStr = appendCapabilityToString(channelModeStr, "MONO");
         }
         if ((this.mChannelMode & 2) != 0) {
             channelModeStr = appendCapabilityToString(channelModeStr, "STEREO");
         }
-        return "{codecName:" + getCodecName() + ",mCodecType:" + this.mCodecType + ",mCodecPriority:" + this.mCodecPriority + ",mSampleRate:" + String.format("0x%x", new Object[]{Integer.valueOf(this.mSampleRate)}) + "(" + sampleRateStr + "),mBitsPerSample:" + String.format("0x%x", new Object[]{Integer.valueOf(this.mBitsPerSample)}) + "(" + bitsPerSampleStr + "),mChannelMode:" + String.format("0x%x", new Object[]{Integer.valueOf(this.mChannelMode)}) + "(" + channelModeStr + "),mCodecSpecific1:" + this.mCodecSpecific1 + ",mCodecSpecific2:" + this.mCodecSpecific2 + ",mCodecSpecific3:" + this.mCodecSpecific3 + ",mCodecSpecific4:" + this.mCodecSpecific4 + "}";
+        return "{codecName:" + getCodecName() + ",mCodecType:" + this.mCodecType + ",mCodecPriority:" + this.mCodecPriority + ",mSampleRate:" + String.format("0x%x", Integer.valueOf(this.mSampleRate)) + "(" + sampleRateStr + "),mBitsPerSample:" + String.format("0x%x", Integer.valueOf(this.mBitsPerSample)) + "(" + bitsPerSampleStr + "),mChannelMode:" + String.format("0x%x", Integer.valueOf(this.mChannelMode)) + "(" + channelModeStr + "),mCodecSpecific1:" + this.mCodecSpecific1 + ",mCodecSpecific2:" + this.mCodecSpecific2 + ",mCodecSpecific3:" + this.mCodecSpecific3 + ",mCodecSpecific4:" + this.mCodecSpecific4 + "}";
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(this.mCodecType);
         out.writeInt(this.mCodecPriority);
@@ -199,27 +203,27 @@ public final class BluetoothCodecConfig implements Parcelable {
 
     public String getCodecName() {
         int i = this.mCodecType;
-        if (i == 1000000) {
-            return "INVALID CODEC";
+        if (i != 1000000) {
+            switch (i) {
+                case 0:
+                    return "SBC";
+                case 1:
+                    return "AAC";
+                case 2:
+                    return "aptX";
+                case 3:
+                    return "aptX HD";
+                case 4:
+                    return "aptX Adaptive";
+                case 5:
+                    return "LDAC";
+                case 6:
+                    return "aptX TWS+";
+                default:
+                    return "UNKNOWN CODEC(" + this.mCodecType + ")";
+            }
         }
-        switch (i) {
-            case 0:
-                return "SBC";
-            case 1:
-                return "AAC";
-            case 2:
-                return "aptX";
-            case 3:
-                return "aptX HD";
-            case 4:
-                return "aptX Adaptive";
-            case 5:
-                return "LDAC";
-            case 6:
-                return "aptX TWS+";
-            default:
-                return "UNKNOWN CODEC(" + this.mCodecType + ")";
-        }
+        return "INVALID CODEC";
     }
 
     @UnsupportedAppUsage
@@ -277,7 +281,7 @@ public final class BluetoothCodecConfig implements Parcelable {
     }
 
     private static boolean hasSingleBit(int valueSet) {
-        return valueSet == 0 || ((valueSet + -1) & valueSet) == 0;
+        return valueSet == 0 || ((valueSet + (-1)) & valueSet) == 0;
     }
 
     public boolean hasSingleSampleRate() {
@@ -297,26 +301,23 @@ public final class BluetoothCodecConfig implements Parcelable {
     }
 
     public boolean similarCodecFeedingParameters(BluetoothCodecConfig other) {
-        BluetoothCodecConfig bluetoothCodecConfig = other;
-        if (bluetoothCodecConfig == null || this.mCodecType != bluetoothCodecConfig.mCodecType) {
+        if (other == null || this.mCodecType != other.mCodecType) {
             return false;
         }
-        int sampleRate = bluetoothCodecConfig.mSampleRate;
+        int sampleRate = other.mSampleRate;
         if (this.mSampleRate == 0 || sampleRate == 0) {
             sampleRate = this.mSampleRate;
         }
-        int bitsPerSample = bluetoothCodecConfig.mBitsPerSample;
+        int bitsPerSample = other.mBitsPerSample;
         if (this.mBitsPerSample == 0 || bitsPerSample == 0) {
             bitsPerSample = this.mBitsPerSample;
         }
         int bitsPerSample2 = bitsPerSample;
-        int channelMode = bluetoothCodecConfig.mChannelMode;
+        int channelMode = other.mChannelMode;
         if (this.mChannelMode == 0 || channelMode == 0) {
             channelMode = this.mChannelMode;
         }
-        BluetoothCodecConfig bluetoothCodecConfig2 = r3;
-        BluetoothCodecConfig bluetoothCodecConfig3 = new BluetoothCodecConfig(this.mCodecType, 0, sampleRate, bitsPerSample2, channelMode, 0, 0, 0, 0);
-        return sameAudioFeedingParameters(bluetoothCodecConfig2);
+        return sameAudioFeedingParameters(new BluetoothCodecConfig(this.mCodecType, 0, sampleRate, bitsPerSample2, channelMode, 0L, 0L, 0L, 0L));
     }
 
     public boolean sameCodecSpecificParameters(BluetoothCodecConfig other) {
@@ -326,13 +327,13 @@ public final class BluetoothCodecConfig implements Parcelable {
         switch (this.mCodecType) {
             case 4:
                 break;
+            default:
+                return true;
             case 5:
                 if (this.mCodecSpecific1 != other.mCodecSpecific1) {
                     return false;
                 }
                 break;
-            default:
-                return true;
         }
         if (other.mCodecSpecific4 > 0) {
             return false;

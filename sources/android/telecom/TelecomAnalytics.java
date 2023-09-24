@@ -1,18 +1,23 @@
 package android.telecom;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.ArrayList;
 import java.util.List;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class TelecomAnalytics implements Parcelable {
-    public static final Parcelable.Creator<TelecomAnalytics> CREATOR = new Parcelable.Creator<TelecomAnalytics>() {
+    public static final Parcelable.Creator<TelecomAnalytics> CREATOR = new Parcelable.Creator<TelecomAnalytics>() { // from class: android.telecom.TelecomAnalytics.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public TelecomAnalytics createFromParcel(Parcel in) {
             return new TelecomAnalytics(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public TelecomAnalytics[] newArray(int size) {
             return new TelecomAnalytics[size];
         }
@@ -20,12 +25,17 @@ public final class TelecomAnalytics implements Parcelable {
     private List<ParcelableCallAnalytics> mCallAnalytics;
     private List<SessionTiming> mSessionTimings;
 
+    /* loaded from: classes3.dex */
     public static final class SessionTiming extends TimedEvent<Integer> implements Parcelable {
-        public static final Parcelable.Creator<SessionTiming> CREATOR = new Parcelable.Creator<SessionTiming>() {
+        public static final Parcelable.Creator<SessionTiming> CREATOR = new Parcelable.Creator<SessionTiming>() { // from class: android.telecom.TelecomAnalytics.SessionTiming.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public SessionTiming createFromParcel(Parcel in) {
                 return new SessionTiming(in);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public SessionTiming[] newArray(int size) {
                 return new SessionTiming[size];
             }
@@ -60,18 +70,23 @@ public final class TelecomAnalytics implements Parcelable {
             this.mTime = in.readLong();
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.telecom.TimedEvent
         public Integer getKey() {
             return Integer.valueOf(this.mId);
         }
 
+        @Override // android.telecom.TimedEvent
         public long getTime() {
             return this.mTime;
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel out, int flags) {
             out.writeInt(this.mId);
             out.writeLong(this.mTime);
@@ -98,10 +113,12 @@ public final class TelecomAnalytics implements Parcelable {
         return this.mCallAnalytics;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeTypedList(this.mSessionTimings);
         out.writeTypedList(this.mCallAnalytics);

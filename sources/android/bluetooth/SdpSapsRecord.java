@@ -1,14 +1,17 @@
 package android.bluetooth;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public class SdpSapsRecord implements Parcelable {
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() { // from class: android.bluetooth.SdpSapsRecord.1
+        @Override // android.p007os.Parcelable.Creator
         public SdpSapsRecord createFromParcel(Parcel in) {
             return new SdpSapsRecord(in);
         }
 
+        @Override // android.p007os.Parcelable.Creator
         public SdpRecord[] newArray(int size) {
             return new SdpRecord[size];
         }
@@ -29,6 +32,7 @@ public class SdpSapsRecord implements Parcelable {
         this.mServiceName = in.readString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -45,6 +49,7 @@ public class SdpSapsRecord implements Parcelable {
         return this.mServiceName;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mRfcommChannelNumber);
         dest.writeInt(this.mProfileVersion);
@@ -54,14 +59,14 @@ public class SdpSapsRecord implements Parcelable {
     public String toString() {
         String ret = "Bluetooth MAS SDP Record:\n";
         if (this.mRfcommChannelNumber != -1) {
-            ret = ret + "RFCOMM Chan Number: " + this.mRfcommChannelNumber + "\n";
+            ret = "Bluetooth MAS SDP Record:\nRFCOMM Chan Number: " + this.mRfcommChannelNumber + "\n";
         }
         if (this.mServiceName != null) {
             ret = ret + "Service Name: " + this.mServiceName + "\n";
         }
-        if (this.mProfileVersion == -1) {
-            return ret;
+        if (this.mProfileVersion != -1) {
+            return ret + "Profile version: " + this.mProfileVersion + "\n";
         }
-        return ret + "Profile version: " + this.mProfileVersion + "\n";
+        return ret;
     }
 }

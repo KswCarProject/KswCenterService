@@ -13,6 +13,7 @@ import android.widget.RemoteViews;
 import android.widget.TextView;
 
 @RemoteViews.RemoteView
+/* loaded from: classes4.dex */
 public class ImageFloatingTextView extends TextView {
     private int mImageEndMargin;
     private int mIndentLines;
@@ -21,7 +22,7 @@ public class ImageFloatingTextView extends TextView {
     private int mResolvedDirection;
 
     public ImageFloatingTextView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public ImageFloatingTextView(Context context, AttributeSet attrs) {
@@ -39,8 +40,8 @@ public class ImageFloatingTextView extends TextView {
         this.mLayoutMaxLines = -1;
     }
 
-    /* access modifiers changed from: protected */
-    public Layout makeSingleLayout(int wantWidth, BoringLayout.Metrics boring, int ellipsisWidth, Layout.Alignment alignment, boolean shouldEllipsize, TextUtils.TruncateAt effectiveEllipsize, boolean useSaved) {
+    @Override // android.widget.TextView
+    protected Layout makeSingleLayout(int wantWidth, BoringLayout.Metrics boring, int ellipsisWidth, Layout.Alignment alignment, boolean shouldEllipsize, TextUtils.TruncateAt effectiveEllipsize, boolean useSaved) {
         int maxLines;
         TransformationMethod transformationMethod = getTransformationMethod();
         CharSequence text = getText();
@@ -61,15 +62,16 @@ public class ImageFloatingTextView extends TextView {
         }
         int[] margins = null;
         if (this.mIndentLines > 0) {
-            margins = new int[(this.mIndentLines + 1)];
+            margins = new int[this.mIndentLines + 1];
             for (int i = 0; i < this.mIndentLines; i++) {
                 margins[i] = this.mImageEndMargin;
             }
         }
-        if (this.mResolvedDirection == 1) {
-            builder.setIndents(margins, (int[]) null);
+        int i2 = this.mResolvedDirection;
+        if (i2 == 1) {
+            builder.setIndents(margins, null);
         } else {
-            builder.setIndents((int[]) null, margins);
+            builder.setIndents(null, margins);
         }
         return builder.build();
     }
@@ -79,10 +81,10 @@ public class ImageFloatingTextView extends TextView {
         this.mImageEndMargin = imageEndMargin;
     }
 
-    /* access modifiers changed from: protected */
-    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    @Override // android.widget.TextView, android.view.View
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int availableHeight = (View.MeasureSpec.getSize(heightMeasureSpec) - this.mPaddingTop) - this.mPaddingBottom;
-        if (!(getLayout() == null || getLayout().getHeight() == availableHeight)) {
+        if (getLayout() != null && getLayout().getHeight() != availableHeight) {
             this.mMaxLinesForHeight = -1;
             nullLayouts();
         }
@@ -104,6 +106,7 @@ public class ImageFloatingTextView extends TextView {
         }
     }
 
+    @Override // android.widget.TextView, android.view.View
     public void onRtlPropertiesChanged(int layoutDirection) {
         super.onRtlPropertiesChanged(layoutDirection);
         if (layoutDirection != this.mResolvedDirection && isLayoutDirectionResolved()) {
@@ -121,12 +124,12 @@ public class ImageFloatingTextView extends TextView {
     }
 
     public boolean setNumIndentLines(int lines) {
-        if (this.mIndentLines == lines) {
-            return false;
+        if (this.mIndentLines != lines) {
+            this.mIndentLines = lines;
+            nullLayouts();
+            requestLayout();
+            return true;
         }
-        this.mIndentLines = lines;
-        nullLayouts();
-        requestLayout();
-        return true;
+        return false;
     }
 }

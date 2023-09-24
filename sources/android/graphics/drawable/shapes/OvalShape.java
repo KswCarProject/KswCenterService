@@ -5,17 +5,22 @@ import android.graphics.Outline;
 import android.graphics.Paint;
 import android.graphics.RectF;
 
+/* loaded from: classes.dex */
 public class OvalShape extends RectShape {
+    @Override // android.graphics.drawable.shapes.RectShape, android.graphics.drawable.shapes.Shape
     public void draw(Canvas canvas, Paint paint) {
         canvas.drawOval(rect(), paint);
     }
 
+    @Override // android.graphics.drawable.shapes.RectShape, android.graphics.drawable.shapes.Shape
     public void getOutline(Outline outline) {
         RectF rect = rect();
-        outline.setOval((int) Math.ceil((double) rect.left), (int) Math.ceil((double) rect.top), (int) Math.floor((double) rect.right), (int) Math.floor((double) rect.bottom));
+        outline.setOval((int) Math.ceil(rect.left), (int) Math.ceil(rect.top), (int) Math.floor(rect.right), (int) Math.floor(rect.bottom));
     }
 
-    public OvalShape clone() throws CloneNotSupportedException {
-        return (OvalShape) super.clone();
+    @Override // android.graphics.drawable.shapes.RectShape, android.graphics.drawable.shapes.Shape
+    /* renamed from: clone */
+    public OvalShape mo159clone() throws CloneNotSupportedException {
+        return (OvalShape) super.mo159clone();
     }
 }

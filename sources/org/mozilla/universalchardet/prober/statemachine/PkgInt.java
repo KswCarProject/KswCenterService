@@ -1,5 +1,6 @@
 package org.mozilla.universalchardet.prober.statemachine;
 
+/* loaded from: classes5.dex */
 public class PkgInt {
     public static final int BIT_SHIFT_16BITS = 4;
     public static final int BIT_SHIFT_4BITS = 2;

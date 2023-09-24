@@ -3,17 +3,34 @@ package android.hardware.usb;
 import android.annotation.UnsupportedAppUsage;
 import android.app.ActivityThread;
 import android.hardware.usb.IUsbSerialReader;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.RemoteException;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.RemoteException;
 import com.android.internal.util.Preconditions;
 
+/* loaded from: classes.dex */
 public class UsbDevice implements Parcelable {
-    public static final Parcelable.Creator<UsbDevice> CREATOR = new Parcelable.Creator<UsbDevice>() {
+    public static final Parcelable.Creator<UsbDevice> CREATOR = new Parcelable.Creator<UsbDevice>() { // from class: android.hardware.usb.UsbDevice.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public UsbDevice createFromParcel(Parcel in) {
-            return new UsbDevice(in.readString(), in.readInt(), in.readInt(), in.readInt(), in.readInt(), in.readInt(), in.readString(), in.readString(), in.readString(), (UsbConfiguration[]) in.readParcelableArray(UsbConfiguration.class.getClassLoader(), UsbConfiguration.class), IUsbSerialReader.Stub.asInterface(in.readStrongBinder()));
+            String name = in.readString();
+            int vendorId = in.readInt();
+            int productId = in.readInt();
+            int clasz = in.readInt();
+            int subClass = in.readInt();
+            int protocol = in.readInt();
+            String manufacturerName = in.readString();
+            String productName = in.readString();
+            String version = in.readString();
+            IUsbSerialReader serialNumberReader = IUsbSerialReader.Stub.asInterface(in.readStrongBinder());
+            UsbConfiguration[] configurations = (UsbConfiguration[]) in.readParcelableArray(UsbConfiguration.class.getClassLoader(), UsbConfiguration.class);
+            UsbDevice device = new UsbDevice(name, vendorId, productId, clasz, subClass, protocol, manufacturerName, productName, version, configurations, serialNumberReader);
+            return device;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public UsbDevice[] newArray(int size) {
             return new UsbDevice[size];
         }
@@ -114,25 +131,26 @@ public class UsbDevice implements Parcelable {
 
     private UsbInterface[] getInterfaceList() {
         if (this.mInterfaces == null) {
+            int configurationCount = this.mConfigurations.length;
             int interfaceCount = 0;
-            for (UsbConfiguration configuration : this.mConfigurations) {
-                interfaceCount += configuration.getInterfaceCount();
+            for (int interfaceCount2 = 0; interfaceCount2 < configurationCount; interfaceCount2++) {
+                interfaceCount += this.mConfigurations[interfaceCount2].getInterfaceCount();
             }
             this.mInterfaces = new UsbInterface[interfaceCount];
             int offset = 0;
-            int i = 0;
-            while (i < configurationCount) {
-                UsbConfiguration configuration2 = this.mConfigurations[i];
-                int interfaceCount2 = configuration2.getInterfaceCount();
-                int offset2 = offset;
-                int j = 0;
-                while (j < interfaceCount2) {
-                    this.mInterfaces[offset2] = configuration2.getInterface(j);
-                    j++;
-                    offset2++;
+            int offset2 = 0;
+            while (offset2 < configurationCount) {
+                UsbConfiguration configuration = this.mConfigurations[offset2];
+                int interfaceCount3 = configuration.getInterfaceCount();
+                int offset3 = offset;
+                int offset4 = 0;
+                while (offset4 < interfaceCount3) {
+                    this.mInterfaces[offset3] = configuration.getInterface(offset4);
+                    offset4++;
+                    offset3++;
                 }
-                i++;
-                offset = offset2;
+                offset2++;
+                offset = offset3;
             }
         }
         return this.mInterfaces;
@@ -162,18 +180,20 @@ public class UsbDevice implements Parcelable {
 
     public String toString() {
         StringBuilder builder = new StringBuilder("UsbDevice[mName=" + this.mName + ",mVendorId=" + this.mVendorId + ",mProductId=" + this.mProductId + ",mClass=" + this.mClass + ",mSubclass=" + this.mSubclass + ",mProtocol=" + this.mProtocol + ",mManufacturerName=" + this.mManufacturerName + ",mProductName=" + this.mProductName + ",mVersion=" + this.mVersion + ",mSerialNumberReader=" + this.mSerialNumberReader + ",mConfigurations=[");
-        for (UsbConfiguration usbConfiguration : this.mConfigurations) {
+        for (int i = 0; i < this.mConfigurations.length; i++) {
             builder.append("\n");
-            builder.append(usbConfiguration.toString());
+            builder.append(this.mConfigurations[i].toString());
         }
         builder.append("]");
         return builder.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeString(this.mName);
         parcel.writeInt(this.mVendorId);
@@ -196,6 +216,7 @@ public class UsbDevice implements Parcelable {
         return native_get_device_name(id);
     }
 
+    /* loaded from: classes.dex */
     public static class Builder {
         private final int mClass;
         private final UsbConfiguration[] mConfigurations;
@@ -209,7 +230,7 @@ public class UsbDevice implements Parcelable {
         private final String mVersion;
         public final String serialNumber;
 
-        public Builder(String name, int vendorId, int productId, int Class, int subClass, int protocol, String manufacturerName, String productName, String version, UsbConfiguration[] configurations, String serialNumber2) {
+        public Builder(String name, int vendorId, int productId, int Class, int subClass, int protocol, String manufacturerName, String productName, String version, UsbConfiguration[] configurations, String serialNumber) {
             this.mName = (String) Preconditions.checkNotNull(name);
             this.mVendorId = vendorId;
             this.mProductId = productId;
@@ -220,7 +241,7 @@ public class UsbDevice implements Parcelable {
             this.mProductName = productName;
             this.mVersion = (String) Preconditions.checkStringNotEmpty(version);
             this.mConfigurations = configurations;
-            this.serialNumber = serialNumber2;
+            this.serialNumber = serialNumber;
         }
 
         public UsbDevice build(IUsbSerialReader serialReader) {

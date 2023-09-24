@@ -2,19 +2,20 @@ package android.net.http;
 
 import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
-import android.os.Bundle;
+import android.p007os.Bundle;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import com.android.internal.util.HexDump;
 import com.android.org.bouncycastle.asn1.x509.X509Name;
 import java.io.ByteArrayInputStream;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
@@ -24,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Vector;
 
+/* loaded from: classes3.dex */
 public class SslCertificate {
     private static String ISO_8601_DATE_FORMAT = "yyyy-MM-dd HH:mm:ssZ";
     private static final String ISSUED_BY = "issued-by";
@@ -67,21 +69,24 @@ public class SslCertificate {
             x509Certificate = null;
         } else {
             try {
-                x509Certificate = (X509Certificate) CertificateFactory.getInstance("X.509").generateCertificate(new ByteArrayInputStream(bytes));
+                CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
+                Certificate cert = certFactory.generateCertificate(new ByteArrayInputStream(bytes));
+                x509Certificate = (X509Certificate) cert;
             } catch (CertificateException e) {
             }
         }
-        return new SslCertificate(bundle.getString(ISSUED_TO), bundle.getString(ISSUED_BY), parseDate(bundle.getString(VALID_NOT_BEFORE)), parseDate(bundle.getString(VALID_NOT_AFTER)), x509Certificate);
+        X509Certificate x509Certificate2 = x509Certificate;
+        return new SslCertificate(bundle.getString(ISSUED_TO), bundle.getString(ISSUED_BY), parseDate(bundle.getString(VALID_NOT_BEFORE)), parseDate(bundle.getString(VALID_NOT_AFTER)), x509Certificate2);
     }
 
     @Deprecated
     public SslCertificate(String issuedTo, String issuedBy, String validNotBefore, String validNotAfter) {
-        this(issuedTo, issuedBy, parseDate(validNotBefore), parseDate(validNotAfter), (X509Certificate) null);
+        this(issuedTo, issuedBy, parseDate(validNotBefore), parseDate(validNotAfter), null);
     }
 
     @Deprecated
     public SslCertificate(String issuedTo, String issuedBy, Date validNotBefore, Date validNotAfter) {
-        this(issuedTo, issuedBy, validNotBefore, validNotAfter, (X509Certificate) null);
+        this(issuedTo, issuedBy, validNotBefore, validNotAfter, null);
     }
 
     public SslCertificate(X509Certificate certificate) {
@@ -141,10 +146,13 @@ public class SslCertificate {
             return "";
         }
         try {
-            return fingerprint(MessageDigest.getInstance(algorithm).digest(x509Certificate.getEncoded()));
-        } catch (CertificateEncodingException e) {
+            byte[] bytes = x509Certificate.getEncoded();
+            MessageDigest md = MessageDigest.getInstance(algorithm);
+            byte[] digest = md.digest(bytes);
+            return fingerprint(digest);
+        } catch (NoSuchAlgorithmException e) {
             return "";
-        } catch (NoSuchAlgorithmException e2) {
+        } catch (CertificateEncodingException e2) {
             return "";
         }
     }
@@ -155,7 +163,8 @@ public class SslCertificate {
         }
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < bytes.length; i++) {
-            HexDump.appendByteAsHex(sb, bytes[i], true);
+            byte b = bytes[i];
+            HexDump.appendByteAsHex(sb, b, true);
             if (i + 1 != bytes.length) {
                 sb.append(':');
             }
@@ -189,6 +198,7 @@ public class SslCertificate {
         return (Date) date.clone();
     }
 
+    /* loaded from: classes3.dex */
     public class DName {
         private String mCName;
         private String mDName;
@@ -237,24 +247,27 @@ public class SslCertificate {
 
     @UnsupportedAppUsage
     public View inflateCertificateView(Context context) {
-        View certificateView = LayoutInflater.from(context).inflate((int) R.layout.ssl_certificate, (ViewGroup) null);
+        LayoutInflater factory = LayoutInflater.from(context);
+        View certificateView = factory.inflate(C3132R.layout.ssl_certificate, (ViewGroup) null);
         DName issuedTo = getIssuedTo();
         if (issuedTo != null) {
-            ((TextView) certificateView.findViewById(R.id.to_common)).setText((CharSequence) issuedTo.getCName());
-            ((TextView) certificateView.findViewById(R.id.to_org)).setText((CharSequence) issuedTo.getOName());
-            ((TextView) certificateView.findViewById(R.id.to_org_unit)).setText((CharSequence) issuedTo.getUName());
+            ((TextView) certificateView.findViewById(C3132R.C3134id.to_common)).setText(issuedTo.getCName());
+            ((TextView) certificateView.findViewById(C3132R.C3134id.to_org)).setText(issuedTo.getOName());
+            ((TextView) certificateView.findViewById(C3132R.C3134id.to_org_unit)).setText(issuedTo.getUName());
         }
-        ((TextView) certificateView.findViewById(R.id.serial_number)).setText((CharSequence) getSerialNumber(this.mX509Certificate));
+        ((TextView) certificateView.findViewById(C3132R.C3134id.serial_number)).setText(getSerialNumber(this.mX509Certificate));
         DName issuedBy = getIssuedBy();
         if (issuedBy != null) {
-            ((TextView) certificateView.findViewById(R.id.by_common)).setText((CharSequence) issuedBy.getCName());
-            ((TextView) certificateView.findViewById(R.id.by_org)).setText((CharSequence) issuedBy.getOName());
-            ((TextView) certificateView.findViewById(R.id.by_org_unit)).setText((CharSequence) issuedBy.getUName());
+            ((TextView) certificateView.findViewById(C3132R.C3134id.by_common)).setText(issuedBy.getCName());
+            ((TextView) certificateView.findViewById(C3132R.C3134id.by_org)).setText(issuedBy.getOName());
+            ((TextView) certificateView.findViewById(C3132R.C3134id.by_org_unit)).setText(issuedBy.getUName());
         }
-        ((TextView) certificateView.findViewById(R.id.issued_on)).setText((CharSequence) formatCertificateDate(context, getValidNotBeforeDate()));
-        ((TextView) certificateView.findViewById(R.id.expires_on)).setText((CharSequence) formatCertificateDate(context, getValidNotAfterDate()));
-        ((TextView) certificateView.findViewById(R.id.sha256_fingerprint)).setText((CharSequence) getDigest(this.mX509Certificate, "SHA256"));
-        ((TextView) certificateView.findViewById(R.id.sha1_fingerprint)).setText((CharSequence) getDigest(this.mX509Certificate, "SHA1"));
+        String issuedOn = formatCertificateDate(context, getValidNotBeforeDate());
+        ((TextView) certificateView.findViewById(C3132R.C3134id.issued_on)).setText(issuedOn);
+        String expiresOn = formatCertificateDate(context, getValidNotAfterDate());
+        ((TextView) certificateView.findViewById(C3132R.C3134id.expires_on)).setText(expiresOn);
+        ((TextView) certificateView.findViewById(C3132R.C3134id.sha256_fingerprint)).setText(getDigest(this.mX509Certificate, "SHA256"));
+        ((TextView) certificateView.findViewById(C3132R.C3134id.sha1_fingerprint)).setText(getDigest(this.mX509Certificate, "SHA1"));
         return certificateView;
     }
 

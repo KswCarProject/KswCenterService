@@ -1,17 +1,20 @@
 package android.text.method;
 
 import android.net.wifi.WifiEnterpriseConfig;
-import android.os.Handler;
-import android.os.SystemClock;
+import android.p007os.Handler;
+import android.p007os.SystemClock;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.SpanWatcher;
 import android.text.Spannable;
 import android.text.method.TextKeyListener;
 import android.util.SparseArray;
+import android.view.KeyEvent;
+import android.view.View;
 
+/* loaded from: classes4.dex */
 public class MultiTapKeyListener extends BaseKeyListener implements SpanWatcher {
-    private static MultiTapKeyListener[] sInstance = new MultiTapKeyListener[(TextKeyListener.Capitalize.values().length * 2)];
+    private static MultiTapKeyListener[] sInstance = new MultiTapKeyListener[TextKeyListener.Capitalize.values().length * 2];
     private static final SparseArray<String> sRecs = new SparseArray<>();
     private boolean mAutoText;
     private TextKeyListener.Capitalize mCapitalize;
@@ -36,208 +39,126 @@ public class MultiTapKeyListener extends BaseKeyListener implements SpanWatcher 
     }
 
     public static MultiTapKeyListener getInstance(boolean autotext, TextKeyListener.Capitalize cap) {
-        int off = (cap.ordinal() * 2) + (autotext);
+        int off = (cap.ordinal() * 2) + (autotext ? 1 : 0);
         if (sInstance[off] == null) {
             sInstance[off] = new MultiTapKeyListener(cap, autotext);
         }
         return sInstance[off];
     }
 
+    @Override // android.text.method.KeyListener
     public int getInputType() {
         return makeTextContentType(this.mCapitalize, this.mAutoText);
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:32:0x00ea  */
-    /* JADX WARNING: Removed duplicated region for block: B:56:0x0180  */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public boolean onKeyDown(android.view.View r21, android.text.Editable r22, int r23, android.view.KeyEvent r24) {
-        /*
-            r20 = this;
-            r0 = r20
-            r7 = r22
-            r8 = r23
-            r1 = 0
-            if (r21 == 0) goto L_0x0015
-            android.text.method.TextKeyListener r2 = android.text.method.TextKeyListener.getInstance()
-            android.content.Context r3 = r21.getContext()
-            int r1 = r2.getPrefs(r3)
-        L_0x0015:
-            r9 = r1
-            int r1 = android.text.Selection.getSelectionStart(r22)
-            int r2 = android.text.Selection.getSelectionEnd(r22)
-            int r10 = java.lang.Math.min(r1, r2)
-            int r11 = java.lang.Math.max(r1, r2)
-            java.lang.Object r1 = android.text.method.TextKeyListener.ACTIVE
-            int r12 = r7.getSpanStart(r1)
-            java.lang.Object r1 = android.text.method.TextKeyListener.ACTIVE
-            int r13 = r7.getSpanEnd(r1)
-            java.lang.Object r1 = android.text.method.TextKeyListener.ACTIVE
-            int r1 = r7.getSpanFlags(r1)
-            r2 = -16777216(0xffffffffff000000, float:-1.7014118E38)
-            r1 = r1 & r2
-            int r14 = r1 >>> 24
-            r1 = 17
-            r6 = 1
-            if (r12 != r10) goto L_0x00de
-            if (r13 != r11) goto L_0x00de
-            int r2 = r11 - r10
-            if (r2 != r6) goto L_0x00de
-            if (r14 < 0) goto L_0x00de
-            android.util.SparseArray<java.lang.String> r2 = sRecs
-            int r2 = r2.size()
-            if (r14 >= r2) goto L_0x00de
-            if (r8 != r1) goto L_0x008e
-            char r2 = r7.charAt(r10)
-            boolean r3 = java.lang.Character.isLowerCase(r2)
-            if (r3 == 0) goto L_0x0073
-            java.lang.String r1 = java.lang.String.valueOf(r2)
-            java.lang.String r1 = r1.toUpperCase()
-            r7.replace(r10, r11, r1)
-            removeTimeouts(r22)
-            android.text.method.MultiTapKeyListener$Timeout r1 = new android.text.method.MultiTapKeyListener$Timeout
-            r1.<init>(r7)
-            return r6
-        L_0x0073:
-            boolean r3 = java.lang.Character.isUpperCase(r2)
-            if (r3 == 0) goto L_0x008e
-            java.lang.String r1 = java.lang.String.valueOf(r2)
-            java.lang.String r1 = r1.toLowerCase()
-            r7.replace(r10, r11, r1)
-            removeTimeouts(r22)
-            android.text.method.MultiTapKeyListener$Timeout r1 = new android.text.method.MultiTapKeyListener$Timeout
-            r1.<init>(r7)
-            return r6
-        L_0x008e:
-            android.util.SparseArray<java.lang.String> r2 = sRecs
-            int r2 = r2.indexOfKey(r8)
-            if (r2 != r14) goto L_0x00cd
-            android.util.SparseArray<java.lang.String> r2 = sRecs
-            java.lang.Object r2 = r2.valueAt(r14)
-            r5 = r2
-            java.lang.String r5 = (java.lang.String) r5
-            char r4 = r7.charAt(r10)
-            int r2 = r5.indexOf(r4)
-            if (r2 < 0) goto L_0x00cd
-            int r1 = r2 + 1
-            int r3 = r5.length()
-            int r15 = r1 % r3
-            int r16 = r15 + 1
-            r1 = r22
-            r2 = r10
-            r3 = r11
-            r17 = r4
-            r4 = r5
-            r18 = r5
-            r5 = r15
-            r19 = r6
-            r6 = r16
-            r1.replace(r2, r3, r4, r5, r6)
-            removeTimeouts(r22)
-            android.text.method.MultiTapKeyListener$Timeout r1 = new android.text.method.MultiTapKeyListener$Timeout
-            r1.<init>(r7)
-            return r19
-        L_0x00cd:
-            r19 = r6
-            android.util.SparseArray<java.lang.String> r2 = sRecs
-            int r2 = r2.indexOfKey(r8)
-            if (r2 < 0) goto L_0x00e6
-            android.text.Selection.setSelection(r7, r11, r11)
-            r3 = r11
-            r10 = r2
-            r14 = r3
-            goto L_0x00e8
-        L_0x00de:
-            r19 = r6
-            android.util.SparseArray<java.lang.String> r2 = sRecs
-            int r2 = r2.indexOfKey(r8)
-        L_0x00e6:
-            r14 = r10
-            r10 = r2
-        L_0x00e8:
-            if (r10 < 0) goto L_0x0180
-            android.util.SparseArray<java.lang.String> r2 = sRecs
-            java.lang.Object r2 = r2.valueAt(r10)
-            r6 = r2
-            java.lang.String r6 = (java.lang.String) r6
-            r2 = 0
-            r3 = r9 & 1
-            r5 = 0
-            if (r3 == 0) goto L_0x0117
-            android.text.method.TextKeyListener$Capitalize r3 = r0.mCapitalize
-            boolean r3 = android.text.method.TextKeyListener.shouldCap(r3, r7, r14)
-            if (r3 == 0) goto L_0x0117
-            r3 = r5
-        L_0x0102:
-            int r4 = r6.length()
-            if (r3 >= r4) goto L_0x0117
-            char r4 = r6.charAt(r3)
-            boolean r4 = java.lang.Character.isUpperCase(r4)
-            if (r4 == 0) goto L_0x0114
-            r2 = r3
-            goto L_0x0117
-        L_0x0114:
-            int r3 = r3 + 1
-            goto L_0x0102
-        L_0x0117:
-            r15 = r2
-            if (r14 == r11) goto L_0x011d
-            android.text.Selection.setSelection(r7, r11)
-        L_0x011d:
-            java.lang.Object r2 = OLD_SEL_START
-            r7.setSpan(r2, r14, r14, r1)
-            int r16 = r15 + 1
-            r1 = r22
-            r2 = r14
-            r3 = r11
-            r4 = r6
-            r8 = r5
-            r5 = r15
-            r17 = r6
-            r6 = r16
-            r1.replace(r2, r3, r4, r5, r6)
-            java.lang.Object r1 = OLD_SEL_START
-            int r1 = r7.getSpanStart(r1)
-            int r2 = android.text.Selection.getSelectionEnd(r22)
-            if (r2 == r1) goto L_0x0150
-            android.text.Selection.setSelection(r7, r1, r2)
-            java.lang.Object r3 = android.text.method.TextKeyListener.LAST_TYPED
-            r4 = 33
-            r7.setSpan(r3, r1, r2, r4)
-            java.lang.Object r3 = android.text.method.TextKeyListener.ACTIVE
-            int r5 = r10 << 24
-            r4 = r4 | r5
-            r7.setSpan(r3, r1, r2, r4)
-        L_0x0150:
-            removeTimeouts(r22)
-            android.text.method.MultiTapKeyListener$Timeout r3 = new android.text.method.MultiTapKeyListener$Timeout
-            r3.<init>(r7)
-            int r3 = r7.getSpanStart(r0)
-            if (r3 >= 0) goto L_0x017f
-            int r3 = r22.length()
-            java.lang.Class<android.text.method.KeyListener> r4 = android.text.method.KeyListener.class
-            java.lang.Object[] r3 = r7.getSpans(r8, r3, r4)
-            android.text.method.KeyListener[] r3 = (android.text.method.KeyListener[]) r3
-            int r4 = r3.length
-            r5 = r8
-        L_0x016c:
-            if (r5 >= r4) goto L_0x0176
-            r6 = r3[r5]
-            r7.removeSpan(r6)
-            int r5 = r5 + 1
-            goto L_0x016c
-        L_0x0176:
-            int r4 = r22.length()
-            r5 = 18
-            r7.setSpan(r0, r8, r4, r5)
-        L_0x017f:
-            return r19
-        L_0x0180:
-            boolean r1 = super.onKeyDown(r21, r22, r23, r24)
-            return r1
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.text.method.MultiTapKeyListener.onKeyDown(android.view.View, android.text.Editable, int, android.view.KeyEvent):boolean");
+    /* JADX WARN: Removed duplicated region for block: B:34:0x00ea  */
+    /* JADX WARN: Removed duplicated region for block: B:58:0x0180  */
+    @Override // android.text.method.BaseKeyListener, android.text.method.MetaKeyKeyListener, android.text.method.KeyListener
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public boolean onKeyDown(View view, Editable content, int keyCode, KeyEvent event) {
+        boolean z;
+        int rec;
+        int selStart;
+        int selStart2;
+        int pref = view != null ? TextKeyListener.getInstance().getPrefs(view.getContext()) : 0;
+        int pref2 = pref;
+        int a = Selection.getSelectionStart(content);
+        int b = Selection.getSelectionEnd(content);
+        int selStart3 = Math.min(a, b);
+        int selEnd = Math.max(a, b);
+        int activeStart = content.getSpanStart(TextKeyListener.ACTIVE);
+        int activeEnd = content.getSpanEnd(TextKeyListener.ACTIVE);
+        int rec2 = (content.getSpanFlags(TextKeyListener.ACTIVE) & (-16777216)) >>> 24;
+        if (activeStart == selStart3 && activeEnd == selEnd && selEnd - selStart3 == 1 && rec2 >= 0 && rec2 < sRecs.size()) {
+            if (keyCode == 17) {
+                char current = content.charAt(selStart3);
+                if (Character.isLowerCase(current)) {
+                    content.replace(selStart3, selEnd, String.valueOf(current).toUpperCase());
+                    removeTimeouts(content);
+                    new Timeout(content);
+                    return true;
+                } else if (Character.isUpperCase(current)) {
+                    content.replace(selStart3, selEnd, String.valueOf(current).toLowerCase());
+                    removeTimeouts(content);
+                    new Timeout(content);
+                    return true;
+                }
+            }
+            if (sRecs.indexOfKey(keyCode) == rec2) {
+                String val = sRecs.valueAt(rec2);
+                char ch = content.charAt(selStart3);
+                int ix = val.indexOf(ch);
+                if (ix >= 0) {
+                    int ix2 = (ix + 1) % val.length();
+                    content.replace(selStart3, selEnd, val, ix2, ix2 + 1);
+                    removeTimeouts(content);
+                    new Timeout(content);
+                    return true;
+                }
+            }
+            z = true;
+            rec = sRecs.indexOfKey(keyCode);
+            if (rec >= 0) {
+                Selection.setSelection(content, selEnd, selEnd);
+                selStart2 = rec;
+                selStart = selEnd;
+                if (selStart2 < 0) {
+                    String val2 = sRecs.valueAt(selStart2);
+                    int off = 0;
+                    if ((pref2 & 1) != 0 && TextKeyListener.shouldCap(this.mCapitalize, content, selStart)) {
+                        int i = 0;
+                        while (true) {
+                            if (i < val2.length()) {
+                                if (!Character.isUpperCase(val2.charAt(i))) {
+                                    i++;
+                                } else {
+                                    off = i;
+                                    break;
+                                }
+                            } else {
+                                break;
+                            }
+                        }
+                    }
+                    int off2 = off;
+                    if (selStart != selEnd) {
+                        Selection.setSelection(content, selEnd);
+                    }
+                    content.setSpan(OLD_SEL_START, selStart, selStart, 17);
+                    content.replace(selStart, selEnd, val2, off2, off2 + 1);
+                    int oldStart = content.getSpanStart(OLD_SEL_START);
+                    int selEnd2 = Selection.getSelectionEnd(content);
+                    if (selEnd2 != oldStart) {
+                        Selection.setSelection(content, oldStart, selEnd2);
+                        content.setSpan(TextKeyListener.LAST_TYPED, oldStart, selEnd2, 33);
+                        content.setSpan(TextKeyListener.ACTIVE, oldStart, selEnd2, 33 | (selStart2 << 24));
+                    }
+                    removeTimeouts(content);
+                    new Timeout(content);
+                    if (content.getSpanStart(this) < 0) {
+                        Object[] methods = (KeyListener[]) content.getSpans(0, content.length(), KeyListener.class);
+                        for (Object method : methods) {
+                            content.removeSpan(method);
+                        }
+                        content.setSpan(this, 0, content.length(), 18);
+                    }
+                    return z;
+                }
+                return super.onKeyDown(view, content, keyCode, event);
+            }
+        } else {
+            z = true;
+            rec = sRecs.indexOfKey(keyCode);
+        }
+        selStart = selStart3;
+        selStart2 = rec;
+        if (selStart2 < 0) {
+        }
     }
 
+    @Override // android.text.SpanWatcher
     public void onSpanChanged(Spannable buf, Object what, int s, int e, int start, int stop) {
         if (what == Selection.SELECTION_END) {
             buf.removeSpan(TextKeyListener.ACTIVE);
@@ -250,10 +171,11 @@ public class MultiTapKeyListener extends BaseKeyListener implements SpanWatcher 
         Timeout[] timeout = (Timeout[]) buf.getSpans(0, buf.length(), Timeout.class);
         while (true) {
             int i2 = i;
-            if (i2 < timeout.length) {
+            int i3 = timeout.length;
+            if (i2 < i3) {
                 Timeout t = timeout[i2];
                 t.removeCallbacks(t);
-                Editable unused = t.mBuffer = null;
+                t.mBuffer = null;
                 buf.removeSpan(t);
                 i = i2 + 1;
             } else {
@@ -262,9 +184,9 @@ public class MultiTapKeyListener extends BaseKeyListener implements SpanWatcher 
         }
     }
 
+    /* loaded from: classes4.dex */
     private class Timeout extends Handler implements Runnable {
-        /* access modifiers changed from: private */
-        public Editable mBuffer;
+        private Editable mBuffer;
 
         public Timeout(Editable buffer) {
             this.mBuffer = buffer;
@@ -272,6 +194,7 @@ public class MultiTapKeyListener extends BaseKeyListener implements SpanWatcher 
             postAtTime(this, SystemClock.uptimeMillis() + 2000);
         }
 
+        @Override // java.lang.Runnable
         public void run() {
             Spannable buf = this.mBuffer;
             if (buf != null) {
@@ -287,9 +210,11 @@ public class MultiTapKeyListener extends BaseKeyListener implements SpanWatcher 
         }
     }
 
+    @Override // android.text.SpanWatcher
     public void onSpanAdded(Spannable s, Object what, int start, int end) {
     }
 
+    @Override // android.text.SpanWatcher
     public void onSpanRemoved(Spannable s, Object what, int start, int end) {
     }
 }

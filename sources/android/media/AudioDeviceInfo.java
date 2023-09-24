@@ -1,6 +1,6 @@
 package android.media;
 
-import android.os.Build;
+import android.p007os.Build;
 import android.util.SparseIntArray;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -8,8 +8,9 @@ import java.util.Iterator;
 import java.util.Objects;
 import java.util.TreeSet;
 
+/* loaded from: classes3.dex */
 public final class AudioDeviceInfo {
-    private static final SparseIntArray EXT_TO_INT_DEVICE_MAPPING = new SparseIntArray();
+    private static final SparseIntArray EXT_TO_INT_DEVICE_MAPPING;
     private static final SparseIntArray INT_TO_EXT_DEVICE_MAPPING = new SparseIntArray();
     public static final int TYPE_AUX_LINE = 19;
     public static final int TYPE_BLUETOOTH_A2DP = 8;
@@ -38,6 +39,7 @@ public final class AudioDeviceInfo {
     private final AudioDevicePort mPort;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface AudioDeviceTypeOut {
     }
 
@@ -64,6 +66,9 @@ public final class AudioDeviceInfo {
             case 22:
             case 23:
                 return true;
+            case 15:
+            case 16:
+            case 17:
             default:
                 return false;
         }
@@ -76,11 +81,12 @@ public final class AudioDeviceInfo {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        return Objects.equals(getPort(), ((AudioDeviceInfo) o).getPort());
+        AudioDeviceInfo that = (AudioDeviceInfo) o;
+        return Objects.equals(getPort(), that.getPort());
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{getPort()});
+        return Objects.hash(getPort());
     }
 
     AudioDeviceInfo(AudioDevicePort port) {
@@ -92,7 +98,7 @@ public final class AudioDeviceInfo {
     }
 
     public int getId() {
-        return this.mPort.handle().id();
+        return this.mPort.handle().m116id();
     }
 
     public CharSequence getProductName() {
@@ -125,15 +131,17 @@ public final class AudioDeviceInfo {
     }
 
     public int[] getChannelCounts() {
-        int i;
+        int[] channelMasks;
+        int[] channelIndexMasks;
+        int channelCountFromInChannelMask;
         TreeSet<Integer> countSet = new TreeSet<>();
         for (int mask : getChannelMasks()) {
             if (isSink()) {
-                i = AudioFormat.channelCountFromOutChannelMask(mask);
+                channelCountFromInChannelMask = AudioFormat.channelCountFromOutChannelMask(mask);
             } else {
-                i = AudioFormat.channelCountFromInChannelMask(mask);
+                channelCountFromInChannelMask = AudioFormat.channelCountFromInChannelMask(mask);
             }
-            countSet.add(Integer.valueOf(i));
+            countSet.add(Integer.valueOf(channelCountFromInChannelMask));
         }
         for (int index_mask : getChannelIndexMasks()) {
             countSet.add(Integer.valueOf(Integer.bitCount(index_mask)));
@@ -142,7 +150,8 @@ public final class AudioDeviceInfo {
         int index = 0;
         Iterator<Integer> it = countSet.iterator();
         while (it.hasNext()) {
-            counts[index] = it.next().intValue();
+            int count = it.next().intValue();
+            counts[index] = count;
             index++;
         }
         return counts;
@@ -208,6 +217,7 @@ public final class AudioDeviceInfo {
         INT_TO_EXT_DEVICE_MAPPING.put(AudioSystem.DEVICE_IN_BLUETOOTH_A2DP, 8);
         INT_TO_EXT_DEVICE_MAPPING.put(AudioSystem.DEVICE_IN_IP, 20);
         INT_TO_EXT_DEVICE_MAPPING.put(AudioSystem.DEVICE_IN_BUS, 21);
+        EXT_TO_INT_DEVICE_MAPPING = new SparseIntArray();
         EXT_TO_INT_DEVICE_MAPPING.put(1, 1);
         EXT_TO_INT_DEVICE_MAPPING.put(2, 2);
         EXT_TO_INT_DEVICE_MAPPING.put(3, 4);

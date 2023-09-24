@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.database.CursorWrapper;
 import android.net.Uri;
 
+/* loaded from: classes3.dex */
 public class ExternalRingtonesCursorWrapper extends CursorWrapper {
     private Uri mUri;
 
@@ -12,6 +13,7 @@ public class ExternalRingtonesCursorWrapper extends CursorWrapper {
         this.mUri = uri;
     }
 
+    @Override // android.database.CursorWrapper, android.database.Cursor
     public String getString(int index) {
         if (index == 2) {
             return this.mUri.toString();

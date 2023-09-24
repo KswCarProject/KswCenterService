@@ -1,11 +1,12 @@
 package android.net;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes3.dex */
 public interface INetworkPolicyListener extends IInterface {
     void onMeteredIfacesChanged(String[] strArr) throws RemoteException;
 
@@ -17,27 +18,35 @@ public interface INetworkPolicyListener extends IInterface {
 
     void onUidRulesChanged(int i, int i2) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements INetworkPolicyListener {
+        @Override // android.net.INetworkPolicyListener
         public void onUidRulesChanged(int uid, int uidRules) throws RemoteException {
         }
 
+        @Override // android.net.INetworkPolicyListener
         public void onMeteredIfacesChanged(String[] meteredIfaces) throws RemoteException {
         }
 
+        @Override // android.net.INetworkPolicyListener
         public void onRestrictBackgroundChanged(boolean restrictBackground) throws RemoteException {
         }
 
+        @Override // android.net.INetworkPolicyListener
         public void onUidPoliciesChanged(int uid, int uidPolicies) throws RemoteException {
         }
 
+        @Override // android.net.INetworkPolicyListener
         public void onSubscriptionOverride(int subId, int overrideMask, int overrideValue) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements INetworkPolicyListener {
         private static final String DESCRIPTOR = "android.net.INetworkPolicyListener";
         static final int TRANSACTION_onMeteredIfacesChanged = 2;
@@ -55,12 +64,13 @@ public interface INetworkPolicyListener extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof INetworkPolicyListener)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof INetworkPolicyListener)) {
+                return (INetworkPolicyListener) iin;
             }
-            return (INetworkPolicyListener) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -82,42 +92,53 @@ public interface INetworkPolicyListener extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        onUidRulesChanged(data.readInt(), data.readInt());
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        onMeteredIfacesChanged(data.createStringArray());
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        onRestrictBackgroundChanged(data.readInt() != 0);
-                        return true;
-                    case 4:
-                        data.enforceInterface(DESCRIPTOR);
-                        onUidPoliciesChanged(data.readInt(), data.readInt());
-                        return true;
-                    case 5:
-                        data.enforceInterface(DESCRIPTOR);
-                        onSubscriptionOverride(data.readInt(), data.readInt(), data.readInt());
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0 = data.readInt();
+                    int _arg1 = data.readInt();
+                    onUidRulesChanged(_arg0, _arg1);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    String[] _arg02 = data.createStringArray();
+                    onMeteredIfacesChanged(_arg02);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean _arg03 = data.readInt() != 0;
+                    onRestrictBackgroundChanged(_arg03);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg04 = data.readInt();
+                    int _arg12 = data.readInt();
+                    onUidPoliciesChanged(_arg04, _arg12);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg05 = data.readInt();
+                    int _arg13 = data.readInt();
+                    int _arg2 = data.readInt();
+                    onSubscriptionOverride(_arg05, _arg13, _arg2);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements INetworkPolicyListener {
             public static INetworkPolicyListener sDefaultImpl;
             private IBinder mRemote;
@@ -126,6 +147,7 @@ public interface INetworkPolicyListener extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -134,15 +156,15 @@ public interface INetworkPolicyListener extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.net.INetworkPolicyListener
             public void onUidRulesChanged(int uid, int uidRules) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(uid);
                     _data.writeInt(uidRules);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onUidRulesChanged(uid, uidRules);
                     }
                 } finally {
@@ -150,14 +172,14 @@ public interface INetworkPolicyListener extends IInterface {
                 }
             }
 
+            @Override // android.net.INetworkPolicyListener
             public void onMeteredIfacesChanged(String[] meteredIfaces) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStringArray(meteredIfaces);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onMeteredIfacesChanged(meteredIfaces);
                     }
                 } finally {
@@ -165,14 +187,14 @@ public interface INetworkPolicyListener extends IInterface {
                 }
             }
 
+            @Override // android.net.INetworkPolicyListener
             public void onRestrictBackgroundChanged(boolean restrictBackground) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(restrictBackground);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(restrictBackground ? 1 : 0);
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onRestrictBackgroundChanged(restrictBackground);
                     }
                 } finally {
@@ -180,15 +202,15 @@ public interface INetworkPolicyListener extends IInterface {
                 }
             }
 
+            @Override // android.net.INetworkPolicyListener
             public void onUidPoliciesChanged(int uid, int uidPolicies) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(uid);
                     _data.writeInt(uidPolicies);
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onUidPoliciesChanged(uid, uidPolicies);
                     }
                 } finally {
@@ -196,6 +218,7 @@ public interface INetworkPolicyListener extends IInterface {
                 }
             }
 
+            @Override // android.net.INetworkPolicyListener
             public void onSubscriptionOverride(int subId, int overrideMask, int overrideValue) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -203,9 +226,8 @@ public interface INetworkPolicyListener extends IInterface {
                     _data.writeInt(subId);
                     _data.writeInt(overrideMask);
                     _data.writeInt(overrideValue);
-                    if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(5, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onSubscriptionOverride(subId, overrideMask, overrideValue);
                     }
                 } finally {
@@ -215,11 +237,11 @@ public interface INetworkPolicyListener extends IInterface {
         }
 
         public static boolean setDefaultImpl(INetworkPolicyListener impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static INetworkPolicyListener getDefaultImpl() {

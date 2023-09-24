@@ -1,12 +1,15 @@
 package android.app.admin;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+/* loaded from: classes.dex */
 public final class ConnectEvent extends NetworkEvent implements Parcelable {
-    public static final Parcelable.Creator<ConnectEvent> CREATOR = new Parcelable.Creator<ConnectEvent>() {
+    public static final Parcelable.Creator<ConnectEvent> CREATOR = new Parcelable.Creator<ConnectEvent>() { // from class: android.app.admin.ConnectEvent.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ConnectEvent createFromParcel(Parcel in) {
             if (in.readInt() != 2) {
                 return null;
@@ -14,6 +17,8 @@ public final class ConnectEvent extends NetworkEvent implements Parcelable {
             return new ConnectEvent(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ConnectEvent[] newArray(int size) {
             return new ConnectEvent[size];
         }
@@ -48,13 +53,15 @@ public final class ConnectEvent extends NetworkEvent implements Parcelable {
     }
 
     public String toString() {
-        return String.format("ConnectEvent(%d, %s, %d, %d, %s)", new Object[]{Long.valueOf(this.mId), this.mIpAddress, Integer.valueOf(this.mPort), Long.valueOf(this.mTimestamp), this.mPackageName});
+        return String.format("ConnectEvent(%d, %s, %d, %d, %s)", Long.valueOf(this.mId), this.mIpAddress, Integer.valueOf(this.mPort), Long.valueOf(this.mTimestamp), this.mPackageName);
     }
 
+    @Override // android.app.admin.NetworkEvent, android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.app.admin.NetworkEvent, android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(2);
         out.writeString(this.mIpAddress);

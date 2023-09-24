@@ -1,10 +1,11 @@
 package android.util;
 
-import android.os.ParcelableException;
+import android.p007os.ParcelableException;
 import com.android.internal.util.Preconditions;
 import com.ibm.icu.text.PluralRules;
 import java.io.IOException;
 
+/* loaded from: classes4.dex */
 public class ExceptionUtils {
     public static RuntimeException wrap(IOException e) {
         throw new ParcelableException(e);
@@ -26,21 +27,22 @@ public class ExceptionUtils {
         while (true) {
             Throwable cause = t.getCause();
             t = cause;
-            if (cause == null) {
+            if (cause != null) {
+                builder.append(PluralRules.KEYWORD_RULE_SEPARATOR);
+                builder.append(t.getMessage());
+            } else {
                 return builder.toString();
             }
-            builder.append(PluralRules.KEYWORD_RULE_SEPARATOR);
-            builder.append(t.getMessage());
         }
     }
 
     public static String getCompleteMessage(Throwable t) {
-        return getCompleteMessage((String) null, t);
+        return getCompleteMessage(null, t);
     }
 
     public static <E extends Throwable> void propagateIfInstanceOf(Throwable t, Class<E> c) throws Throwable {
         if (t != null && c.isInstance(t)) {
-            throw ((Throwable) c.cast(t));
+            throw c.cast(t);
         }
     }
 

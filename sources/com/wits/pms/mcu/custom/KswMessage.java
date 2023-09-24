@@ -3,6 +3,7 @@ package com.wits.pms.mcu.custom;
 import com.android.internal.content.NativeLibraryHelper;
 import com.wits.pms.mcu.McuMessage;
 
+/* loaded from: classes2.dex */
 public class KswMessage extends McuMessage {
     public static final int FRAMEHEAD = 242;
     public static final int NORMAL_DATATYPE = 0;
@@ -11,37 +12,34 @@ public class KswMessage extends McuMessage {
     public static final int UPDATE_DATATYPE = 160;
     private int cmdType;
 
-    public KswMessage(int cmdType2, byte[] data) {
-        this(cmdType2, data, false);
+    public KswMessage(int cmdType, byte[] data) {
+        this(cmdType, data, false);
     }
 
-    public KswMessage(int cmdType2, byte[] data, boolean update) {
-        this.cmdType = cmdType2;
+    public KswMessage(int cmdType, byte[] data, boolean update) {
+        this.cmdType = cmdType;
         this.data = data;
-        byte[] bytes = new byte[(data.length + 2)];
+        byte[] bytes = new byte[data.length + 2];
         System.arraycopy(data, 0, bytes, 2, data.length);
         this.frameHead = 242;
         this.dataType = update ? 160 : 0;
-        bytes[0] = (byte) cmdType2;
+        bytes[0] = (byte) cmdType;
         bytes[1] = (byte) data.length;
         obtain(bytes);
     }
 
-    public static KswMessage obtain(int cmdType2, byte[] data) {
-        return new KswMessage(cmdType2, data);
+    public static KswMessage obtain(int cmdType, byte[] data) {
+        return new KswMessage(cmdType, data);
     }
 
     public static KswMessage parse(byte[] data) {
         byte[] realData = new byte[data[3]];
-        boolean z = false;
         System.arraycopy(data, 4, realData, 0, realData.length);
-        byte b = data[2] & 255;
-        if ((data[1] & 255) != 0) {
-            z = true;
-        }
-        return new KswMessage(b, realData, z);
+        KswMessage kswMessage = new KswMessage(data[2] & 255, realData, (data[1] & 255) != 0);
+        return kswMessage;
     }
 
+    @Override // com.wits.pms.mcu.McuMessage
     public String printHex(String method, McuMessage msg) {
         StringBuilder sb = new StringBuilder();
         sb.append("--");
@@ -49,15 +47,16 @@ public class KswMessage extends McuMessage {
         sb.append("-----[ cmdType:");
         sb.append(Integer.toHexString(getCmdType() & 255).toUpperCase());
         sb.append(" - data:");
-        for (byte b : msg.getRealData()) {
-            String hex = Integer.toHexString(b & 255);
+        for (int i = 0; i < msg.getRealData().length; i++) {
+            String hex = Integer.toHexString(msg.getRealData()[i] & 255);
             if (hex.length() == 1) {
                 hex = '0' + hex;
             }
             sb.append(hex.toUpperCase());
             sb.append(NativeLibraryHelper.CLEAR_ABI_OVERRIDE);
         }
-        sb.replace(sb.length() - 1, sb.length(), "");
+        int i2 = sb.length();
+        sb.replace(i2 - 1, sb.length(), "");
         sb.append(" ]\n");
         return sb.toString();
     }
@@ -66,10 +65,11 @@ public class KswMessage extends McuMessage {
         return this.cmdType;
     }
 
-    public static KswMessage obtain(int cmdType2, byte[] datas, boolean b) {
-        return new KswMessage(cmdType2, datas, b);
+    public static KswMessage obtain(int cmdType, byte[] datas, boolean b) {
+        return new KswMessage(cmdType, datas, b);
     }
 
+    @Override // com.wits.pms.mcu.McuMessage
     public byte[] getData() {
         return getRealData();
     }

@@ -2,6 +2,7 @@ package android.media;
 
 import android.annotation.UnsupportedAppUsage;
 
+/* loaded from: classes3.dex */
 public class AudioGain {
     public static final int MODE_CHANNELS = 2;
     public static final int MODE_JOINT = 1;

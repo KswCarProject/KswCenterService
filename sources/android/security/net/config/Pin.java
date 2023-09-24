@@ -3,15 +3,16 @@ package android.security.net.config;
 import android.security.keystore.KeyProperties;
 import java.util.Arrays;
 
+/* loaded from: classes3.dex */
 public final class Pin {
     public final byte[] digest;
     public final String digestAlgorithm;
     private final int mHashCode;
 
-    public Pin(String digestAlgorithm2, byte[] digest2) {
-        this.digestAlgorithm = digestAlgorithm2;
-        this.digest = digest2;
-        this.mHashCode = Arrays.hashCode(digest2) ^ digestAlgorithm2.hashCode();
+    public Pin(String digestAlgorithm, byte[] digest) {
+        this.digestAlgorithm = digestAlgorithm;
+        this.digest = digest;
+        this.mHashCode = Arrays.hashCode(digest) ^ digestAlgorithm.hashCode();
     }
 
     public static boolean isSupportedDigestAlgorithm(String algorithm) {
@@ -33,12 +34,9 @@ public final class Pin {
         if (this == obj) {
             return true;
         }
-        if (!(obj instanceof Pin)) {
-            return false;
-        }
-        Pin other = (Pin) obj;
-        if (other.hashCode() == this.mHashCode && Arrays.equals(this.digest, other.digest) && this.digestAlgorithm.equals(other.digestAlgorithm)) {
-            return true;
+        if (obj instanceof Pin) {
+            Pin other = (Pin) obj;
+            return other.hashCode() == this.mHashCode && Arrays.equals(this.digest, other.digest) && this.digestAlgorithm.equals(other.digestAlgorithm);
         }
         return false;
     }

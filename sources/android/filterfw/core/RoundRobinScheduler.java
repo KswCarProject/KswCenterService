@@ -2,17 +2,21 @@ package android.filterfw.core;
 
 import java.util.Set;
 
+/* loaded from: classes.dex */
 public class RoundRobinScheduler extends Scheduler {
-    private int mLastPos = -1;
+    private int mLastPos;
 
     public RoundRobinScheduler(FilterGraph graph) {
         super(graph);
+        this.mLastPos = -1;
     }
 
+    @Override // android.filterfw.core.Scheduler
     public void reset() {
         this.mLastPos = -1;
     }
 
+    @Override // android.filterfw.core.Scheduler
     public Filter scheduleNextNode() {
         Set<Filter> all_filters = getGraph().getFilters();
         if (this.mLastPos >= all_filters.size()) {
@@ -23,20 +27,22 @@ public class RoundRobinScheduler extends Scheduler {
         int firstNdx = -1;
         for (Filter filter : all_filters) {
             if (filter.canProcess()) {
-                if (pos > this.mLastPos) {
+                if (pos <= this.mLastPos) {
+                    if (first == null) {
+                        first = filter;
+                        firstNdx = pos;
+                    }
+                } else {
                     this.mLastPos = pos;
                     return filter;
-                } else if (first == null) {
-                    first = filter;
-                    firstNdx = pos;
                 }
             }
             pos++;
         }
-        if (first == null) {
-            return null;
+        if (first != null) {
+            this.mLastPos = firstNdx;
+            return first;
         }
-        this.mLastPos = firstNdx;
-        return first;
+        return null;
     }
 }

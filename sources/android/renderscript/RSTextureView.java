@@ -6,6 +6,7 @@ import android.renderscript.RenderScriptGL;
 import android.util.AttributeSet;
 import android.view.TextureView;
 
+/* loaded from: classes3.dex */
 public class RSTextureView extends TextureView implements TextureView.SurfaceTextureListener {
     private RenderScriptGL mRS;
     private SurfaceTexture mSurfaceTexture;
@@ -24,6 +25,7 @@ public class RSTextureView extends TextureView implements TextureView.SurfaceTex
         setSurfaceTextureListener(this);
     }
 
+    @Override // android.view.TextureView.SurfaceTextureListener
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
         this.mSurfaceTexture = surface;
         if (this.mRS != null) {
@@ -31,6 +33,7 @@ public class RSTextureView extends TextureView implements TextureView.SurfaceTex
         }
     }
 
+    @Override // android.view.TextureView.SurfaceTextureListener
     public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
         this.mSurfaceTexture = surface;
         if (this.mRS != null) {
@@ -38,15 +41,17 @@ public class RSTextureView extends TextureView implements TextureView.SurfaceTex
         }
     }
 
+    @Override // android.view.TextureView.SurfaceTextureListener
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
         this.mSurfaceTexture = surface;
-        if (this.mRS == null) {
+        if (this.mRS != null) {
+            this.mRS.setSurfaceTexture(null, 0, 0);
             return true;
         }
-        this.mRS.setSurfaceTexture((SurfaceTexture) null, 0, 0);
         return true;
     }
 
+    @Override // android.view.TextureView.SurfaceTextureListener
     public void onSurfaceTextureUpdated(SurfaceTexture surface) {
         this.mSurfaceTexture = surface;
     }

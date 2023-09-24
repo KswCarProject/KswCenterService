@@ -3,6 +3,7 @@ package android.view;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes4.dex */
 public interface WindowManagerPolicyConstants {
     public static final String ACTION_HDMI_PLUGGED = "android.intent.action.HDMI_PLUGGED";
     public static final String ACTION_USER_ACTIVITY_NOTIFICATION = "android.intent.action.USER_ACTIVITY_NOTIFICATION";
@@ -45,9 +46,11 @@ public interface WindowManagerPolicyConstants {
     public static final int PRESENCE_INTERNAL = 1;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface OnReason {
     }
 
+    /* loaded from: classes4.dex */
     public interface PointerEventListener {
         void onPointerEvent(MotionEvent motionEvent);
     }

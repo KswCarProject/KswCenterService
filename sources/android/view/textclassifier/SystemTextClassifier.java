@@ -1,11 +1,11 @@
 package android.view.textclassifier;
 
 import android.content.Context;
-import android.os.Bundle;
-import android.os.Looper;
-import android.os.Parcelable;
-import android.os.RemoteException;
-import android.os.ServiceManager;
+import android.p007os.Bundle;
+import android.p007os.Looper;
+import android.p007os.Parcelable;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
 import android.service.textclassifier.ITextClassifierCallback;
 import android.service.textclassifier.ITextClassifierService;
 import android.service.textclassifier.TextClassifierService;
@@ -22,6 +22,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 @VisibleForTesting(visibility = VisibleForTesting.Visibility.PACKAGE)
+/* loaded from: classes4.dex */
 public final class SystemTextClassifier implements TextClassifier {
     private static final String LOG_TAG = "SystemTextClassifier";
     private final TextClassifier mFallback;
@@ -36,6 +37,7 @@ public final class SystemTextClassifier implements TextClassifier {
         this.mPackageName = (String) Preconditions.checkNotNull(context.getOpPackageName());
     }
 
+    @Override // android.view.textclassifier.TextClassifier
     public TextSelection suggestSelection(TextSelection.Request request) {
         Preconditions.checkNotNull(request);
         TextClassifier.Utils.checkMainThread();
@@ -48,11 +50,12 @@ public final class SystemTextClassifier implements TextClassifier {
                 return selection;
             }
         } catch (RemoteException e) {
-            Log.e(LOG_TAG, "Error suggesting selection for text. Using fallback.", e);
+            Log.m39e(LOG_TAG, "Error suggesting selection for text. Using fallback.", e);
         }
         return this.mFallback.suggestSelection(request);
     }
 
+    @Override // android.view.textclassifier.TextClassifier
     public TextClassification classifyText(TextClassification.Request request) {
         Preconditions.checkNotNull(request);
         TextClassifier.Utils.checkMainThread();
@@ -65,11 +68,12 @@ public final class SystemTextClassifier implements TextClassifier {
                 return classification;
             }
         } catch (RemoteException e) {
-            Log.e(LOG_TAG, "Error classifying text. Using fallback.", e);
+            Log.m39e(LOG_TAG, "Error classifying text. Using fallback.", e);
         }
         return this.mFallback.classifyText(request);
     }
 
+    @Override // android.view.textclassifier.TextClassifier
     public TextLinks generateLinks(TextLinks.Request request) {
         Preconditions.checkNotNull(request);
         TextClassifier.Utils.checkMainThread();
@@ -85,31 +89,34 @@ public final class SystemTextClassifier implements TextClassifier {
                 return links;
             }
         } catch (RemoteException e) {
-            Log.e(LOG_TAG, "Error generating links. Using fallback.", e);
+            Log.m39e(LOG_TAG, "Error generating links. Using fallback.", e);
         }
         return this.mFallback.generateLinks(request);
     }
 
+    @Override // android.view.textclassifier.TextClassifier
     public void onSelectionEvent(SelectionEvent event) {
         Preconditions.checkNotNull(event);
         TextClassifier.Utils.checkMainThread();
         try {
             this.mManagerService.onSelectionEvent(this.mSessionId, event);
         } catch (RemoteException e) {
-            Log.e(LOG_TAG, "Error reporting selection event.", e);
+            Log.m39e(LOG_TAG, "Error reporting selection event.", e);
         }
     }
 
+    @Override // android.view.textclassifier.TextClassifier
     public void onTextClassifierEvent(TextClassifierEvent event) {
         Preconditions.checkNotNull(event);
         TextClassifier.Utils.checkMainThread();
         try {
             this.mManagerService.onTextClassifierEvent(this.mSessionId, event);
         } catch (RemoteException e) {
-            Log.e(LOG_TAG, "Error reporting textclassifier event.", e);
+            Log.m39e(LOG_TAG, "Error reporting textclassifier event.", e);
         }
     }
 
+    @Override // android.view.textclassifier.TextClassifier
     public TextLanguage detectLanguage(TextLanguage.Request request) {
         Preconditions.checkNotNull(request);
         TextClassifier.Utils.checkMainThread();
@@ -122,11 +129,12 @@ public final class SystemTextClassifier implements TextClassifier {
                 return textLanguage;
             }
         } catch (RemoteException e) {
-            Log.e(LOG_TAG, "Error detecting language.", e);
+            Log.m39e(LOG_TAG, "Error detecting language.", e);
         }
         return this.mFallback.detectLanguage(request);
     }
 
+    @Override // android.view.textclassifier.TextClassifier
     public ConversationActions suggestConversationActions(ConversationActions.Request request) {
         Preconditions.checkNotNull(request);
         TextClassifier.Utils.checkMainThread();
@@ -139,45 +147,48 @@ public final class SystemTextClassifier implements TextClassifier {
                 return conversationActions;
             }
         } catch (RemoteException e) {
-            Log.e(LOG_TAG, "Error reporting selection event.", e);
+            Log.m39e(LOG_TAG, "Error reporting selection event.", e);
         }
         return this.mFallback.suggestConversationActions(request);
     }
 
+    @Override // android.view.textclassifier.TextClassifier
     public int getMaxGenerateLinksTextLength() {
         return this.mFallback.getMaxGenerateLinksTextLength();
     }
 
+    @Override // android.view.textclassifier.TextClassifier
     public void destroy() {
         try {
             if (this.mSessionId != null) {
                 this.mManagerService.onDestroyTextClassificationSession(this.mSessionId);
             }
         } catch (RemoteException e) {
-            Log.e(LOG_TAG, "Error destroying classification session.", e);
+            Log.m39e(LOG_TAG, "Error destroying classification session.", e);
         }
     }
 
+    @Override // android.view.textclassifier.TextClassifier
     public void dump(IndentingPrintWriter printWriter) {
         printWriter.println("SystemTextClassifier:");
         printWriter.increaseIndent();
-        printWriter.printPair("mFallback", (Object) this.mFallback);
-        printWriter.printPair("mPackageName", (Object) this.mPackageName);
-        printWriter.printPair("mSessionId", (Object) this.mSessionId);
+        printWriter.printPair("mFallback", this.mFallback);
+        printWriter.printPair("mPackageName", this.mPackageName);
+        printWriter.printPair("mSessionId", this.mSessionId);
         printWriter.decreaseIndent();
         printWriter.println();
     }
 
-    /* access modifiers changed from: package-private */
-    public void initializeRemoteSession(TextClassificationContext classificationContext, TextClassificationSessionId sessionId) {
+    void initializeRemoteSession(TextClassificationContext classificationContext, TextClassificationSessionId sessionId) {
         this.mSessionId = (TextClassificationSessionId) Preconditions.checkNotNull(sessionId);
         try {
             this.mManagerService.onCreateTextClassificationSession(classificationContext, this.mSessionId);
         } catch (RemoteException e) {
-            Log.e(LOG_TAG, "Error starting a new classification session.", e);
+            Log.m39e(LOG_TAG, "Error starting a new classification session.", e);
         }
     }
 
+    /* loaded from: classes4.dex */
     private static final class BlockingCallback<T extends Parcelable> extends ITextClassifierCallback.Stub {
         private final ResponseReceiver<T> mReceiver;
 
@@ -185,19 +196,23 @@ public final class SystemTextClassifier implements TextClassifier {
             this.mReceiver = new ResponseReceiver<>(name);
         }
 
+        /* JADX WARN: Multi-variable type inference failed */
+        @Override // android.service.textclassifier.ITextClassifierCallback
         public void onSuccess(Bundle result) {
             this.mReceiver.onSuccess(TextClassifierService.getResponse(result));
         }
 
+        @Override // android.service.textclassifier.ITextClassifierCallback
         public void onFailure() {
             this.mReceiver.onFailure();
         }
 
         public T get() {
-            return (Parcelable) this.mReceiver.get();
+            return this.mReceiver.get();
         }
     }
 
+    /* loaded from: classes4.dex */
     private static final class ResponseReceiver<T> {
         private final CountDownLatch mLatch;
         private final String mName;
@@ -214,19 +229,20 @@ public final class SystemTextClassifier implements TextClassifier {
         }
 
         public void onFailure() {
-            Log.e(SystemTextClassifier.LOG_TAG, "Request failed.", (Throwable) null);
+            Log.m39e(SystemTextClassifier.LOG_TAG, "Request failed.", null);
             this.mLatch.countDown();
         }
 
         public T get() {
             if (Looper.myLooper() != Looper.getMainLooper()) {
                 try {
-                    if (!this.mLatch.await(2, TimeUnit.SECONDS)) {
-                        Log.w(SystemTextClassifier.LOG_TAG, "Timeout in ResponseReceiver.get(): " + this.mName);
+                    boolean success = this.mLatch.await(2L, TimeUnit.SECONDS);
+                    if (!success) {
+                        Log.m37w(SystemTextClassifier.LOG_TAG, "Timeout in ResponseReceiver.get(): " + this.mName);
                     }
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
-                    Log.e(SystemTextClassifier.LOG_TAG, "Interrupted during ResponseReceiver.get(): " + this.mName, e);
+                    Log.m39e(SystemTextClassifier.LOG_TAG, "Interrupted during ResponseReceiver.get(): " + this.mName, e);
                 }
             }
             return this.mResponse;

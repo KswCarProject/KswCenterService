@@ -7,10 +7,10 @@ import android.hardware.Camera;
 import android.media.AudioManager;
 import android.media.AudioRouting;
 import android.media.MediaCodec;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.os.PersistableBundle;
+import android.p007os.Handler;
+import android.p007os.Looper;
+import android.p007os.Message;
+import android.p007os.PersistableBundle;
 import android.util.ArrayMap;
 import android.util.Log;
 import android.util.Pair;
@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 
+/* loaded from: classes3.dex */
 public class MediaRecorder implements AudioRouting, AudioRecordingMonitor, AudioRecordingMonitorClient, MicrophoneDirection {
     public static final int MEDIA_ERROR_SERVER_DIED = 100;
     public static final int MEDIA_RECORDER_ERROR_UNKNOWN = 1;
@@ -55,33 +56,32 @@ public class MediaRecorder implements AudioRouting, AudioRecordingMonitor, Audio
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
     private FileDescriptor mFd;
     private File mFile;
-    /* access modifiers changed from: private */
-    public long mNativeContext;
-    /* access modifiers changed from: private */
+    private long mNativeContext;
     @UnsupportedAppUsage
-    public OnErrorListener mOnErrorListener;
-    /* access modifiers changed from: private */
+    private OnErrorListener mOnErrorListener;
     @UnsupportedAppUsage
-    public OnInfoListener mOnInfoListener;
+    private OnInfoListener mOnInfoListener;
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
     private String mPath;
-    private AudioDeviceInfo mPreferredDevice = null;
-    AudioRecordingMonitorImpl mRecordingInfoImpl = new AudioRecordingMonitorImpl(this);
-    /* access modifiers changed from: private */
-    @GuardedBy({"mRoutingChangeListeners"})
-    public ArrayMap<AudioRouting.OnRoutingChangedListener, NativeRoutingEventHandlerDelegate> mRoutingChangeListeners = new ArrayMap<>();
     @UnsupportedAppUsage
     private Surface mSurface;
+    private AudioDeviceInfo mPreferredDevice = null;
+    @GuardedBy({"mRoutingChangeListeners"})
+    private ArrayMap<AudioRouting.OnRoutingChangedListener, NativeRoutingEventHandlerDelegate> mRoutingChangeListeners = new ArrayMap<>();
+    AudioRecordingMonitorImpl mRecordingInfoImpl = new AudioRecordingMonitorImpl(this);
 
+    /* loaded from: classes3.dex */
     public interface OnErrorListener {
         void onError(MediaRecorder mediaRecorder, int i, int i2);
     }
 
+    /* loaded from: classes3.dex */
     public interface OnInfoListener {
         void onInfo(MediaRecorder mediaRecorder, int i, int i2);
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface Source {
     }
 
@@ -166,35 +166,34 @@ public class MediaRecorder implements AudioRouting, AudioRecordingMonitor, Audio
     }
 
     public MediaRecorder() {
-        Looper myLooper = Looper.myLooper();
-        Looper looper = myLooper;
-        if (myLooper != null) {
+        Looper looper = Looper.myLooper();
+        if (looper != null) {
             this.mEventHandler = new EventHandler(this, looper);
         } else {
-            Looper mainLooper = Looper.getMainLooper();
-            Looper looper2 = mainLooper;
-            if (mainLooper != null) {
+            Looper looper2 = Looper.getMainLooper();
+            if (looper2 != null) {
                 this.mEventHandler = new EventHandler(this, looper2);
             } else {
                 this.mEventHandler = null;
             }
         }
         this.mChannelCount = 1;
-        native_setup(new WeakReference(this), ActivityThread.currentPackageName(), ActivityThread.currentOpPackageName());
+        String packageName = ActivityThread.currentPackageName();
+        native_setup(new WeakReference(this), packageName, ActivityThread.currentOpPackageName());
     }
 
     public void setInputSurface(Surface surface) {
-        if (surface instanceof MediaCodec.PersistentSurface) {
-            native_setInputSurface(surface);
-            return;
+        if (!(surface instanceof MediaCodec.PersistentSurface)) {
+            throw new IllegalArgumentException("not a PersistentSurface");
         }
-        throw new IllegalArgumentException("not a PersistentSurface");
+        native_setInputSurface(surface);
     }
 
     public void setPreviewDisplay(Surface sv) {
         this.mSurface = sv;
     }
 
+    /* loaded from: classes3.dex */
     public final class AudioSource {
         public static final int AUDIO_SOURCE_INVALID = -1;
         public static final int CAMCORDER = 5;
@@ -232,6 +231,7 @@ public class MediaRecorder implements AudioRouting, AudioRecordingMonitor, Audio
             case 9:
             case 10:
                 return false;
+            case 8:
             default:
                 return true;
         }
@@ -265,9 +265,9 @@ public class MediaRecorder implements AudioRouting, AudioRecordingMonitor, Audio
                 return "VOICE_PERFORMANCE";
             default:
                 switch (source) {
-                    case AudioSource.ECHO_REFERENCE /*1997*/:
+                    case AudioSource.ECHO_REFERENCE /* 1997 */:
                         return "ECHO_REFERENCE";
-                    case AudioSource.RADIO_TUNER /*1998*/:
+                    case AudioSource.RADIO_TUNER /* 1998 */:
                         return "RADIO_TUNER";
                     case 1999:
                         return "HOTWORD";
@@ -277,6 +277,7 @@ public class MediaRecorder implements AudioRouting, AudioRecordingMonitor, Audio
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class VideoSource {
         public static final int CAMERA = 1;
         public static final int DEFAULT = 0;
@@ -286,6 +287,7 @@ public class MediaRecorder implements AudioRouting, AudioRecordingMonitor, Audio
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class OutputFormat {
         public static final int AAC_ADIF = 5;
         public static final int AAC_ADTS = 6;
@@ -307,6 +309,7 @@ public class MediaRecorder implements AudioRouting, AudioRecordingMonitor, Audio
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class AudioEncoder {
         public static final int AAC = 3;
         public static final int AAC_ELD = 5;
@@ -325,6 +328,7 @@ public class MediaRecorder implements AudioRouting, AudioRecordingMonitor, Audio
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class VideoEncoder {
         public static final int DEFAULT = 0;
         public static final int H263 = 1;
@@ -347,17 +351,15 @@ public class MediaRecorder implements AudioRouting, AudioRecordingMonitor, Audio
         setVideoSize(profile.videoFrameWidth, profile.videoFrameHeight);
         setVideoEncodingBitRate(profile.videoBitRate);
         setVideoEncoder(profile.videoCodec);
-        if (profile.quality >= 1000 && profile.quality <= 1008) {
-            return;
-        }
-        if (profile.quality >= 1009 && profile.quality <= 1010) {
-            return;
-        }
-        if ((profile.quality < 1011 || profile.quality > 1012) && profile.quality != 3002) {
-            setAudioEncodingBitRate(profile.audioBitRate);
-            setAudioChannels(profile.audioChannels);
-            setAudioSamplingRate(profile.audioSampleRate);
-            setAudioEncoder(profile.audioCodec);
+        if (profile.quality < 1000 || profile.quality > 1008) {
+            if (profile.quality < 1009 || profile.quality > 1010) {
+                if ((profile.quality < 1011 || profile.quality > 1012) && profile.quality != 3002) {
+                    setAudioEncodingBitRate(profile.audioBitRate);
+                    setAudioChannels(profile.audioChannels);
+                    setAudioSamplingRate(profile.audioSampleRate);
+                    setAudioEncoder(profile.audioCodec);
+                }
+            }
         }
     }
 
@@ -367,20 +369,21 @@ public class MediaRecorder implements AudioRouting, AudioRecordingMonitor, Audio
     }
 
     public void setOrientationHint(int degrees) {
-        if (degrees == 0 || degrees == 90 || degrees == 180 || degrees == 270) {
-            setParameter("video-param-rotation-angle-degrees=" + degrees);
-            return;
+        if (degrees != 0 && degrees != 90 && degrees != 180 && degrees != 270) {
+            throw new IllegalArgumentException("Unsupported angle: " + degrees);
         }
-        throw new IllegalArgumentException("Unsupported angle: " + degrees);
+        setParameter("video-param-rotation-angle-degrees=" + degrees);
     }
 
     public void setLocation(float latitude, float longitude) {
-        int latitudex10000 = (int) (((double) (latitude * 10000.0f)) + 0.5d);
-        int longitudex10000 = (int) (((double) (10000.0f * longitude)) + 0.5d);
+        int latitudex10000 = (int) ((latitude * 10000.0f) + 0.5d);
+        int longitudex10000 = (int) ((10000.0f * longitude) + 0.5d);
         if (latitudex10000 > 900000 || latitudex10000 < -900000) {
-            throw new IllegalArgumentException("Latitude: " + latitude + " out of range.");
+            String msg = "Latitude: " + latitude + " out of range.";
+            throw new IllegalArgumentException(msg);
         } else if (longitudex10000 > 1800000 || longitudex10000 < -1800000) {
-            throw new IllegalArgumentException("Longitude: " + longitude + " out of range");
+            String msg2 = "Longitude: " + longitude + " out of range";
+            throw new IllegalArgumentException(msg2);
         } else {
             setParameter("param-geotag-latitude=" + latitudex10000);
             setParameter("param-geotag-longitude=" + longitudex10000);
@@ -388,55 +391,51 @@ public class MediaRecorder implements AudioRouting, AudioRecordingMonitor, Audio
     }
 
     public void setAudioSamplingRate(int samplingRate) {
-        if (samplingRate > 0) {
-            setParameter("audio-param-sampling-rate=" + samplingRate);
-            return;
+        if (samplingRate <= 0) {
+            throw new IllegalArgumentException("Audio sampling rate is not positive");
         }
-        throw new IllegalArgumentException("Audio sampling rate is not positive");
+        setParameter("audio-param-sampling-rate=" + samplingRate);
     }
 
     public void setAudioChannels(int numChannels) {
-        if (numChannels > 0) {
-            this.mChannelCount = numChannels;
-            setParameter("audio-param-number-of-channels=" + numChannels);
-            return;
+        if (numChannels <= 0) {
+            throw new IllegalArgumentException("Number of channels is not positive");
         }
-        throw new IllegalArgumentException("Number of channels is not positive");
+        this.mChannelCount = numChannels;
+        setParameter("audio-param-number-of-channels=" + numChannels);
     }
 
     public void setAudioEncodingBitRate(int bitRate) {
-        if (bitRate > 0) {
-            setParameter("audio-param-encoding-bitrate=" + bitRate);
-            return;
+        if (bitRate <= 0) {
+            throw new IllegalArgumentException("Audio encoding bit rate is not positive");
         }
-        throw new IllegalArgumentException("Audio encoding bit rate is not positive");
+        setParameter("audio-param-encoding-bitrate=" + bitRate);
     }
 
     public void setVideoEncodingBitRate(int bitRate) {
-        if (bitRate > 0) {
-            setParameter("video-param-encoding-bitrate=" + bitRate);
-            return;
+        if (bitRate <= 0) {
+            throw new IllegalArgumentException("Video encoding bit rate is not positive");
         }
-        throw new IllegalArgumentException("Video encoding bit rate is not positive");
+        setParameter("video-param-encoding-bitrate=" + bitRate);
     }
 
     public void setVideoEncodingProfileLevel(int profile, int level) {
         if (profile <= 0) {
             throw new IllegalArgumentException("Video encoding profile is not positive");
-        } else if (level > 0) {
-            setParameter("video-param-encoder-profile=" + profile);
-            setParameter("video-param-encoder-level=" + level);
-        } else {
+        }
+        if (level <= 0) {
             throw new IllegalArgumentException("Video encoding level is not positive");
         }
+        setParameter("video-param-encoder-profile=" + profile);
+        setParameter("video-param-encoder-level=" + level);
     }
 
     public void setAuxiliaryOutputFile(FileDescriptor fd) {
-        Log.w(TAG, "setAuxiliaryOutputFile(FileDescriptor) is no longer supported.");
+        Log.m64w(TAG, "setAuxiliaryOutputFile(FileDescriptor) is no longer supported.");
     }
 
     public void setAuxiliaryOutputFile(String path) {
-        Log.w(TAG, "setAuxiliaryOutputFile(String) is no longer supported.");
+        Log.m64w(TAG, "setAuxiliaryOutputFile(String) is no longer supported.");
     }
 
     public void setOutputFile(FileDescriptor fd) throws IllegalStateException {
@@ -471,21 +470,21 @@ public class MediaRecorder implements AudioRouting, AudioRecordingMonitor, Audio
     }
 
     public void prepare() throws IllegalStateException, IOException {
+        RandomAccessFile file;
         if (this.mPath != null) {
-            RandomAccessFile file = new RandomAccessFile(this.mPath, "rw");
+            file = new RandomAccessFile(this.mPath, "rw");
             try {
                 _setOutputFile(file.getFD());
-            } finally {
                 file.close();
+            } finally {
             }
         } else if (this.mFd != null) {
             _setOutputFile(this.mFd);
         } else if (this.mFile != null) {
-            RandomAccessFile file2 = new RandomAccessFile(this.mFile, "rw");
+            file = new RandomAccessFile(this.mFile, "rw");
             try {
-                _setOutputFile(file2.getFD());
+                _setOutputFile(file.getFD());
             } finally {
-                file2.close();
             }
         } else {
             throw new IOException("No valid output file");
@@ -495,7 +494,7 @@ public class MediaRecorder implements AudioRouting, AudioRecordingMonitor, Audio
 
     public void reset() {
         native_reset();
-        this.mEventHandler.removeCallbacksAndMessages((Object) null);
+        this.mEventHandler.removeCallbacksAndMessages(null);
     }
 
     public void setOnErrorListener(OnErrorListener l) {
@@ -506,6 +505,7 @@ public class MediaRecorder implements AudioRouting, AudioRecordingMonitor, Audio
         this.mOnInfoListener = listener;
     }
 
+    /* loaded from: classes3.dex */
     private class EventHandler extends Handler {
         private static final int MEDIA_RECORDER_AUDIO_ROUTING_CHANGED = 10000;
         private static final int MEDIA_RECORDER_EVENT_ERROR = 1;
@@ -523,49 +523,47 @@ public class MediaRecorder implements AudioRouting, AudioRecordingMonitor, Audio
             this.mMediaRecorder = mr;
         }
 
+        @Override // android.p007os.Handler
         public void handleMessage(Message msg) {
-            if (this.mMediaRecorder.mNativeContext == 0) {
-                Log.w(MediaRecorder.TAG, "mediarecorder went away with unhandled events");
-                return;
-            }
-            switch (msg.what) {
-                case 1:
-                case 100:
-                    if (MediaRecorder.this.mOnErrorListener != null) {
-                        MediaRecorder.this.mOnErrorListener.onError(this.mMediaRecorder, msg.arg1, msg.arg2);
-                        return;
-                    }
-                    return;
-                case 2:
-                case 101:
-                    if (MediaRecorder.this.mOnInfoListener != null) {
-                        MediaRecorder.this.mOnInfoListener.onInfo(this.mMediaRecorder, msg.arg1, msg.arg2);
-                        return;
-                    }
-                    return;
-                case 10000:
-                    AudioManager.resetAudioPortGeneration();
-                    synchronized (MediaRecorder.this.mRoutingChangeListeners) {
-                        for (NativeRoutingEventHandlerDelegate delegate : MediaRecorder.this.mRoutingChangeListeners.values()) {
-                            delegate.notifyClient();
+            if (this.mMediaRecorder.mNativeContext != 0) {
+                switch (msg.what) {
+                    case 1:
+                    case 100:
+                        if (MediaRecorder.this.mOnErrorListener != null) {
+                            MediaRecorder.this.mOnErrorListener.onError(this.mMediaRecorder, msg.arg1, msg.arg2);
+                            return;
                         }
-                    }
-                    return;
-                default:
-                    Log.e(MediaRecorder.TAG, "Unknown message type " + msg.what);
-                    return;
+                        return;
+                    case 2:
+                    case 101:
+                        if (MediaRecorder.this.mOnInfoListener != null) {
+                            MediaRecorder.this.mOnInfoListener.onInfo(this.mMediaRecorder, msg.arg1, msg.arg2);
+                            return;
+                        }
+                        return;
+                    case 10000:
+                        AudioManager.resetAudioPortGeneration();
+                        synchronized (MediaRecorder.this.mRoutingChangeListeners) {
+                            for (NativeRoutingEventHandlerDelegate delegate : MediaRecorder.this.mRoutingChangeListeners.values()) {
+                                delegate.notifyClient();
+                            }
+                        }
+                        return;
+                    default:
+                        Log.m70e(MediaRecorder.TAG, "Unknown message type " + msg.what);
+                        return;
+                }
             }
+            Log.m64w(MediaRecorder.TAG, "mediarecorder went away with unhandled events");
         }
     }
 
+    @Override // android.media.AudioRouting
     public boolean setPreferredDevice(AudioDeviceInfo deviceInfo) {
-        int preferredDeviceId = 0;
         if (deviceInfo != null && !deviceInfo.isSource()) {
             return false;
         }
-        if (deviceInfo != null) {
-            preferredDeviceId = deviceInfo.getId();
-        }
+        int preferredDeviceId = deviceInfo != null ? deviceInfo.getId() : 0;
         boolean status = native_setInputDevice(preferredDeviceId);
         if (status) {
             synchronized (this) {
@@ -575,6 +573,7 @@ public class MediaRecorder implements AudioRouting, AudioRecordingMonitor, Audio
         return status;
     }
 
+    @Override // android.media.AudioRouting
     public AudioDeviceInfo getPreferredDevice() {
         AudioDeviceInfo audioDeviceInfo;
         synchronized (this) {
@@ -583,6 +582,7 @@ public class MediaRecorder implements AudioRouting, AudioRecordingMonitor, Audio
         return audioDeviceInfo;
     }
 
+    @Override // android.media.AudioRouting
     public AudioDeviceInfo getRoutedDevice() {
         int deviceId = native_getRoutedDeviceId();
         if (deviceId == 0) {
@@ -604,6 +604,7 @@ public class MediaRecorder implements AudioRouting, AudioRecordingMonitor, Audio
         }
     }
 
+    @Override // android.media.AudioRouting
     public void addOnRoutingChangedListener(AudioRouting.OnRoutingChangedListener listener, Handler handler) {
         synchronized (this.mRoutingChangeListeners) {
             if (listener != null) {
@@ -619,6 +620,7 @@ public class MediaRecorder implements AudioRouting, AudioRecordingMonitor, Audio
         }
     }
 
+    @Override // android.media.AudioRouting
     public void removeOnRoutingChangedListener(AudioRouting.OnRoutingChangedListener listener) {
         synchronized (this.mRoutingChangeListeners) {
             if (this.mRoutingChangeListeners.containsKey(listener)) {
@@ -634,16 +636,16 @@ public class MediaRecorder implements AudioRouting, AudioRecordingMonitor, Audio
         int status = native_getActiveMicrophones(activeMicrophones);
         if (status != 0) {
             if (status != -3) {
-                Log.e(TAG, "getActiveMicrophones failed:" + status);
+                Log.m70e(TAG, "getActiveMicrophones failed:" + status);
             }
-            Log.i(TAG, "getActiveMicrophones failed, fallback on routed device info");
+            Log.m68i(TAG, "getActiveMicrophones failed, fallback on routed device info");
         }
         AudioManager.setPortIdForMicrophones(activeMicrophones);
         if (activeMicrophones.size() == 0 && (device = getRoutedDevice()) != null) {
             MicrophoneInfo microphone = AudioManager.microphoneInfoFromAudioDeviceInfo(device);
             ArrayList<Pair<Integer, Integer>> channelMapping = new ArrayList<>();
             for (int i = 0; i < this.mChannelCount; i++) {
-                channelMapping.add(new Pair(Integer.valueOf(i), 1));
+                channelMapping.add(new Pair<>(Integer.valueOf(i), 1));
             }
             microphone.setChannelMapping(channelMapping);
             activeMicrophones.add(microphone);
@@ -651,30 +653,33 @@ public class MediaRecorder implements AudioRouting, AudioRecordingMonitor, Audio
         return activeMicrophones;
     }
 
+    @Override // android.media.MicrophoneDirection
     public boolean setPreferredMicrophoneDirection(int direction) {
         return native_setPreferredMicrophoneDirection(direction) == 0;
     }
 
+    @Override // android.media.MicrophoneDirection
     public boolean setPreferredMicrophoneFieldDimension(float zoom) {
         Preconditions.checkArgument(zoom >= -1.0f && zoom <= 1.0f, "Argument must fall between -1 & 1 (inclusive)");
-        if (native_setPreferredMicrophoneFieldDimension(zoom) == 0) {
-            return true;
-        }
-        return false;
+        return native_setPreferredMicrophoneFieldDimension(zoom) == 0;
     }
 
+    @Override // android.media.AudioRecordingMonitor
     public void registerAudioRecordingCallback(Executor executor, AudioManager.AudioRecordingCallback cb) {
         this.mRecordingInfoImpl.registerAudioRecordingCallback(executor, cb);
     }
 
+    @Override // android.media.AudioRecordingMonitor
     public void unregisterAudioRecordingCallback(AudioManager.AudioRecordingCallback cb) {
         this.mRecordingInfoImpl.unregisterAudioRecordingCallback(cb);
     }
 
+    @Override // android.media.AudioRecordingMonitor
     public AudioRecordingConfiguration getActiveRecordingConfiguration() {
         return this.mRecordingInfoImpl.getActiveRecordingConfiguration();
     }
 
+    @Override // android.media.AudioRecordingMonitorClient
     public int getPortId() {
         return native_getPortId();
     }
@@ -682,19 +687,21 @@ public class MediaRecorder implements AudioRouting, AudioRecordingMonitor, Audio
     private static void postEventFromNative(Object mediarecorder_ref, int what, int arg1, int arg2, Object obj) {
         MediaRecorder mr = (MediaRecorder) ((WeakReference) mediarecorder_ref).get();
         if (mr != null && mr.mEventHandler != null) {
-            mr.mEventHandler.sendMessage(mr.mEventHandler.obtainMessage(what, arg1, arg2, obj));
+            Message m = mr.mEventHandler.obtainMessage(what, arg1, arg2, obj);
+            mr.mEventHandler.sendMessage(m);
         }
     }
 
     public PersistableBundle getMetrics() {
-        return native_getMetrics();
+        PersistableBundle bundle = native_getMetrics();
+        return bundle;
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() {
+    protected void finalize() {
         native_finalize();
     }
 
+    /* loaded from: classes3.dex */
     public static final class MetricsConstants {
         public static final String AUDIO_BITRATE = "android.media.mediarecorder.audio-bitrate";
         public static final String AUDIO_CHANNELS = "android.media.mediarecorder.audio-channels";

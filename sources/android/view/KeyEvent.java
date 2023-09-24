@@ -1,27 +1,18 @@
 package android.view;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.SparseIntArray;
 import android.util.TimeUtils;
 import android.view.KeyCharacterMap;
 
+/* loaded from: classes4.dex */
 public class KeyEvent extends InputEvent implements Parcelable {
     public static final int ACTION_DOWN = 0;
     @Deprecated
     public static final int ACTION_MULTIPLE = 2;
     public static final int ACTION_UP = 1;
-    public static final Parcelable.Creator<KeyEvent> CREATOR = new Parcelable.Creator<KeyEvent>() {
-        public KeyEvent createFromParcel(Parcel in) {
-            in.readInt();
-            return KeyEvent.createFromParcelBody(in);
-        }
-
-        public KeyEvent[] newArray(int size) {
-            return new KeyEvent[size];
-        }
-    };
     static final boolean DEBUG = false;
     public static final int FLAG_CANCELED = 32;
     public static final int FLAG_CANCELED_LONG_PRESS = 256;
@@ -367,14 +358,11 @@ public class KeyEvent extends InputEvent implements Parcelable {
     public static final int META_SHIFT_ON = 1;
     public static final int META_SHIFT_RIGHT_ON = 128;
     @UnsupportedAppUsage
-    private static final String[] META_SYMBOLIC_NAMES = {"META_SHIFT_ON", "META_ALT_ON", "META_SYM_ON", "META_FUNCTION_ON", "META_ALT_LEFT_ON", "META_ALT_RIGHT_ON", "META_SHIFT_LEFT_ON", "META_SHIFT_RIGHT_ON", "META_CAP_LOCKED", "META_ALT_LOCKED", "META_SYM_LOCKED", "0x00000800", "META_CTRL_ON", "META_CTRL_LEFT_ON", "META_CTRL_RIGHT_ON", "0x00008000", "META_META_ON", "META_META_LEFT_ON", "META_META_RIGHT_ON", "0x00080000", "META_CAPS_LOCK_ON", "META_NUM_LOCK_ON", "META_SCROLL_LOCK_ON", "0x00800000", "0x01000000", "0x02000000", "0x04000000", "0x08000000", "0x10000000", "0x20000000", "0x40000000", "0x80000000"};
-    @UnsupportedAppUsage
     public static final int META_SYM_LOCKED = 1024;
     public static final int META_SYM_ON = 4;
     @UnsupportedAppUsage
     private static final int META_SYNTHETIC_MASK = 3840;
     static final String TAG = "KeyEvent";
-    private static final Object gRecyclerLock = new Object();
     private static KeyEvent gRecyclerTop;
     private static int gRecyclerUsed;
     @UnsupportedAppUsage
@@ -401,7 +389,25 @@ public class KeyEvent extends InputEvent implements Parcelable {
     private int mScanCode;
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
     private int mSource;
+    @UnsupportedAppUsage
+    private static final String[] META_SYMBOLIC_NAMES = {"META_SHIFT_ON", "META_ALT_ON", "META_SYM_ON", "META_FUNCTION_ON", "META_ALT_LEFT_ON", "META_ALT_RIGHT_ON", "META_SHIFT_LEFT_ON", "META_SHIFT_RIGHT_ON", "META_CAP_LOCKED", "META_ALT_LOCKED", "META_SYM_LOCKED", "0x00000800", "META_CTRL_ON", "META_CTRL_LEFT_ON", "META_CTRL_RIGHT_ON", "0x00008000", "META_META_ON", "META_META_LEFT_ON", "META_META_RIGHT_ON", "0x00080000", "META_CAPS_LOCK_ON", "META_NUM_LOCK_ON", "META_SCROLL_LOCK_ON", "0x00800000", "0x01000000", "0x02000000", "0x04000000", "0x08000000", "0x10000000", "0x20000000", "0x40000000", "0x80000000"};
+    private static final Object gRecyclerLock = new Object();
+    public static final Parcelable.Creator<KeyEvent> CREATOR = new Parcelable.Creator<KeyEvent>() { // from class: android.view.KeyEvent.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public KeyEvent createFromParcel(Parcel in) {
+            in.readInt();
+            return KeyEvent.createFromParcelBody(in);
+        }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public KeyEvent[] newArray(int size) {
+            return new KeyEvent[size];
+        }
+    };
+
+    /* loaded from: classes4.dex */
     public interface Callback {
         boolean onKeyDown(int i, KeyEvent keyEvent);
 
@@ -544,8 +550,7 @@ public class KeyEvent extends InputEvent implements Parcelable {
         synchronized (gRecyclerLock) {
             KeyEvent ev = gRecyclerTop;
             if (ev == null) {
-                KeyEvent keyEvent = new KeyEvent();
-                return keyEvent;
+                return new KeyEvent();
             }
             gRecyclerTop = ev.mNext;
             gRecyclerUsed--;
@@ -594,10 +599,12 @@ public class KeyEvent extends InputEvent implements Parcelable {
         return ev;
     }
 
+    @Override // android.view.InputEvent
     public KeyEvent copy() {
         return obtain(this);
     }
 
+    @Override // android.view.InputEvent
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
     public final void recycle() {
         super.recycle();
@@ -611,6 +618,7 @@ public class KeyEvent extends InputEvent implements Parcelable {
         }
     }
 
+    @Override // android.view.InputEvent
     public final void recycleIfNeededAfterDispatch() {
     }
 
@@ -650,16 +658,18 @@ public class KeyEvent extends InputEvent implements Parcelable {
         return event2;
     }
 
+    @Override // android.view.InputEvent
     public final boolean isTainted() {
         return (this.mFlags & Integer.MIN_VALUE) != 0;
     }
 
+    @Override // android.view.InputEvent
     public final void setTainted(boolean tainted) {
         this.mFlags = tainted ? this.mFlags | Integer.MIN_VALUE : this.mFlags & Integer.MAX_VALUE;
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public final boolean isDown() {
         return this.mAction == 0;
     }
@@ -838,22 +848,27 @@ public class KeyEvent extends InputEvent implements Parcelable {
         return keyCode == 57 || keyCode == 58;
     }
 
+    @Override // android.view.InputEvent
     public final int getDeviceId() {
         return this.mDeviceId;
     }
 
+    @Override // android.view.InputEvent
     public final int getSource() {
         return this.mSource;
     }
 
+    @Override // android.view.InputEvent
     public final void setSource(int source) {
         this.mSource = source;
     }
 
+    @Override // android.view.InputEvent
     public final int getDisplayId() {
         return this.mDisplayId;
     }
 
+    @Override // android.view.InputEvent
     public final void setDisplayId(int displayId) {
         this.mDisplayId = displayId;
     }
@@ -936,27 +951,21 @@ public class KeyEvent extends InputEvent implements Parcelable {
     }
 
     public static boolean metaStateHasModifiers(int metaState, int modifiers) {
-        if ((META_INVALID_MODIFIER_MASK & modifiers) != 0) {
-            throw new IllegalArgumentException("modifiers must not contain META_CAPS_LOCK_ON, META_NUM_LOCK_ON, META_SCROLL_LOCK_ON, META_CAP_LOCKED, META_ALT_LOCKED, META_SYM_LOCKED, or META_SELECTING");
-        } else if (metaStateFilterDirectionalModifiers(metaStateFilterDirectionalModifiers(metaStateFilterDirectionalModifiers(metaStateFilterDirectionalModifiers(normalizeMetaState(metaState) & META_MODIFIER_MASK, modifiers, 1, 64, 128), modifiers, 2, 16, 32), modifiers, 4096, 8192, 16384), modifiers, 65536, 131072, 262144) == modifiers) {
-            return true;
-        } else {
-            return false;
+        if ((META_INVALID_MODIFIER_MASK & modifiers) == 0) {
+            return metaStateFilterDirectionalModifiers(metaStateFilterDirectionalModifiers(metaStateFilterDirectionalModifiers(metaStateFilterDirectionalModifiers(normalizeMetaState(metaState) & META_MODIFIER_MASK, modifiers, 1, 64, 128), modifiers, 2, 16, 32), modifiers, 4096, 8192, 16384), modifiers, 65536, 131072, 262144) == modifiers;
         }
+        throw new IllegalArgumentException("modifiers must not contain META_CAPS_LOCK_ON, META_NUM_LOCK_ON, META_SCROLL_LOCK_ON, META_CAP_LOCKED, META_ALT_LOCKED, META_SYM_LOCKED, or META_SELECTING");
     }
 
     private static int metaStateFilterDirectionalModifiers(int metaState, int modifiers, int basic, int left, int right) {
-        boolean wantLeftOrRight = false;
         boolean wantBasic = (modifiers & basic) != 0;
         int directional = left | right;
-        if ((modifiers & directional) != 0) {
-            wantLeftOrRight = true;
-        }
+        boolean wantLeftOrRight = (modifiers & directional) != 0;
         if (wantBasic) {
-            if (!wantLeftOrRight) {
-                return (~directional) & metaState;
+            if (wantLeftOrRight) {
+                throw new IllegalArgumentException("modifiers must not contain " + metaStateToString(basic) + " combined with " + metaStateToString(left) + " or " + metaStateToString(right));
             }
-            throw new IllegalArgumentException("modifiers must not contain " + metaStateToString(basic) + " combined with " + metaStateToString(left) + " or " + metaStateToString(right));
+            return (~directional) & metaState;
         } else if (wantLeftOrRight) {
             return (~basic) & metaState;
         } else {
@@ -1016,6 +1025,7 @@ public class KeyEvent extends InputEvent implements Parcelable {
         return (this.mFlags & 32) != 0;
     }
 
+    @Override // android.view.InputEvent
     public final void cancel() {
         this.mFlags |= 32;
     }
@@ -1058,10 +1068,12 @@ public class KeyEvent extends InputEvent implements Parcelable {
         return this.mDownTime;
     }
 
+    @Override // android.view.InputEvent
     public final long getEventTime() {
         return this.mEventTime;
     }
 
+    @Override // android.view.InputEvent
     public final long getEventTimeNano() {
         return this.mEventTime * TimeUtils.NANOS_PER_MS;
     }
@@ -1110,7 +1122,7 @@ public class KeyEvent extends InputEvent implements Parcelable {
 
     @Deprecated
     public final boolean dispatch(Callback receiver) {
-        return dispatch(receiver, (DispatcherState) null, (Object) null);
+        return dispatch(receiver, null, null);
     }
 
     public final boolean dispatch(Callback receiver, DispatcherState state, Object target) {
@@ -1118,25 +1130,25 @@ public class KeyEvent extends InputEvent implements Parcelable {
             case 0:
                 this.mFlags &= -1073741825;
                 boolean res = receiver.onKeyDown(this.mKeyCode, this);
-                if (state == null) {
-                    return res;
-                }
-                if (res && this.mRepeatCount == 0 && (this.mFlags & 1073741824) != 0) {
-                    state.startTracking(this, target);
-                    return res;
-                } else if (!isLongPress() || !state.isTracking(this)) {
-                    return res;
-                } else {
-                    try {
-                        if (!receiver.onKeyLongPress(this.mKeyCode, this)) {
+                if (state != null) {
+                    if (res && this.mRepeatCount == 0 && (this.mFlags & 1073741824) != 0) {
+                        state.startTracking(this, target);
+                        return res;
+                    } else if (isLongPress() && state.isTracking(this)) {
+                        try {
+                            if (receiver.onKeyLongPress(this.mKeyCode, this)) {
+                                state.performedLongPress(this);
+                                return true;
+                            }
+                            return res;
+                        } catch (AbstractMethodError e) {
                             return res;
                         }
-                        state.performedLongPress(this);
-                        return true;
-                    } catch (AbstractMethodError e) {
+                    } else {
                         return res;
                     }
                 }
+                return res;
             case 1:
                 if (state != null) {
                     state.handleUpEvent(this);
@@ -1148,24 +1160,25 @@ public class KeyEvent extends InputEvent implements Parcelable {
                 if (receiver.onKeyMultiple(code, count, this)) {
                     return true;
                 }
-                if (code == 0) {
-                    return false;
+                if (code != 0) {
+                    this.mAction = 0;
+                    this.mRepeatCount = 0;
+                    boolean handled = receiver.onKeyDown(code, this);
+                    if (handled) {
+                        this.mAction = 1;
+                        receiver.onKeyUp(code, this);
+                    }
+                    this.mAction = 2;
+                    this.mRepeatCount = count;
+                    return handled;
                 }
-                this.mAction = 0;
-                this.mRepeatCount = 0;
-                boolean handled = receiver.onKeyDown(code, this);
-                if (handled) {
-                    this.mAction = 1;
-                    receiver.onKeyUp(code, this);
-                }
-                this.mAction = 2;
-                this.mRepeatCount = count;
-                return handled;
+                return false;
             default:
                 return false;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class DispatcherState {
         SparseIntArray mActiveLongPresses = new SparseIntArray();
         int mDownKeyCode;
@@ -1185,12 +1198,11 @@ public class KeyEvent extends InputEvent implements Parcelable {
         }
 
         public void startTracking(KeyEvent event, Object target) {
-            if (event.getAction() == 0) {
-                this.mDownKeyCode = event.getKeyCode();
-                this.mDownTarget = target;
-                return;
+            if (event.getAction() != 0) {
+                throw new IllegalArgumentException("Can only start tracking on a down event");
             }
-            throw new IllegalArgumentException("Can only start tracking on a down event");
+            this.mDownKeyCode = event.getKeyCode();
+            this.mDownTarget = target;
         }
 
         public boolean isTracking(KeyEvent event) {
@@ -1264,10 +1276,10 @@ public class KeyEvent extends InputEvent implements Parcelable {
 
     public static String keyCodeToString(int keyCode) {
         String symbolicName = nativeKeyCodeToString(keyCode);
-        if (symbolicName == null) {
-            return Integer.toString(keyCode);
+        if (symbolicName != null) {
+            return LABEL_PREFIX + symbolicName;
         }
-        return LABEL_PREFIX + symbolicName;
+        return Integer.toString(keyCode);
     }
 
     public static int keyCodeFromString(String symbolicName) {
@@ -1298,22 +1310,23 @@ public class KeyEvent extends InputEvent implements Parcelable {
         }
         StringBuilder result = null;
         int metaState2 = metaState;
-        int i = 0;
+        int metaState3 = 0;
         while (metaState2 != 0) {
             boolean isSet = (metaState2 & 1) != 0;
             metaState2 >>>= 1;
             if (isSet) {
-                String name = META_SYMBOLIC_NAMES[i];
-                if (result != null) {
+                String name = META_SYMBOLIC_NAMES[metaState3];
+                if (result == null) {
+                    if (metaState2 == 0) {
+                        return name;
+                    }
+                    result = new StringBuilder(name);
+                } else {
                     result.append('|');
                     result.append(name);
-                } else if (metaState2 == 0) {
-                    return name;
-                } else {
-                    result = new StringBuilder(name);
                 }
             }
-            i++;
+            metaState3++;
         }
         return result.toString();
     }
@@ -1337,6 +1350,7 @@ public class KeyEvent extends InputEvent implements Parcelable {
         this.mCharacters = in.readString();
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(2);
         out.writeInt(this.mDeviceId);

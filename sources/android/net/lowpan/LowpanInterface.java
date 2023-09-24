@@ -5,14 +5,15 @@ import android.net.IpPrefix;
 import android.net.LinkAddress;
 import android.net.lowpan.ILowpanInterfaceListener;
 import android.net.lowpan.LowpanInterface;
-import android.os.DeadObjectException;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.RemoteException;
-import android.os.ServiceSpecificException;
+import android.p007os.DeadObjectException;
+import android.p007os.Handler;
+import android.p007os.Looper;
+import android.p007os.RemoteException;
+import android.p007os.ServiceSpecificException;
 import android.util.Log;
 import java.util.HashMap;
 
+/* loaded from: classes3.dex */
 public class LowpanInterface {
     public static final String EMPTY_PARTITION_ID = "";
     public static final String NETWORK_TYPE_THREAD_V1 = "org.threadgroup.thread.v1";
@@ -28,13 +29,12 @@ public class LowpanInterface {
     public static final String STATE_COMMISSIONING = "commissioning";
     public static final String STATE_FAULT = "fault";
     public static final String STATE_OFFLINE = "offline";
-    /* access modifiers changed from: private */
-    public static final String TAG = LowpanInterface.class.getSimpleName();
+    private static final String TAG = LowpanInterface.class.getSimpleName();
     private final ILowpanInterface mBinder;
     private final HashMap<Integer, ILowpanInterfaceListener> mListenerMap = new HashMap<>();
-    /* access modifiers changed from: private */
-    public final Looper mLooper;
+    private final Looper mLooper;
 
+    /* loaded from: classes3.dex */
     public static abstract class Callback {
         public void onConnectedChanged(boolean value) {
         }
@@ -265,173 +265,167 @@ public class LowpanInterface {
         }
     }
 
-    public void registerCallback(final Callback cb, final Handler handler) {
-        ILowpanInterfaceListener.Stub listenerBinder = new ILowpanInterfaceListener.Stub() {
-            private Handler mHandler;
+    /* renamed from: android.net.lowpan.LowpanInterface$1 */
+    /* loaded from: classes3.dex */
+    class BinderC13301 extends ILowpanInterfaceListener.Stub {
+        private Handler mHandler;
+        final /* synthetic */ Callback val$cb;
+        final /* synthetic */ Handler val$handler;
 
-            {
-                if (handler != null) {
-                    this.mHandler = handler;
-                } else if (LowpanInterface.this.mLooper != null) {
+        BinderC13301(Handler handler, Callback callback) {
+            this.val$handler = handler;
+            this.val$cb = callback;
+            if (this.val$handler == null) {
+                if (LowpanInterface.this.mLooper != null) {
                     this.mHandler = new Handler(LowpanInterface.this.mLooper);
+                    return;
                 } else {
                     this.mHandler = new Handler();
+                    return;
                 }
             }
+            this.mHandler = this.val$handler;
+        }
 
-            public void onEnabledChanged(boolean value) {
-                this.mHandler.post(new Runnable(value) {
-                    private final /* synthetic */ boolean f$1;
-
-                    {
-                        this.f$1 = r2;
-                    }
-
-                    public final void run() {
-                        LowpanInterface.Callback.this.onEnabledChanged(this.f$1);
-                    }
-                });
-            }
-
-            public void onConnectedChanged(boolean value) {
-                this.mHandler.post(new Runnable(value) {
-                    private final /* synthetic */ boolean f$1;
-
-                    {
-                        this.f$1 = r2;
-                    }
-
-                    public final void run() {
-                        LowpanInterface.Callback.this.onConnectedChanged(this.f$1);
-                    }
-                });
-            }
-
-            public void onUpChanged(boolean value) {
-                this.mHandler.post(new Runnable(value) {
-                    private final /* synthetic */ boolean f$1;
-
-                    {
-                        this.f$1 = r2;
-                    }
-
-                    public final void run() {
-                        LowpanInterface.Callback.this.onUpChanged(this.f$1);
-                    }
-                });
-            }
-
-            public void onRoleChanged(String value) {
-                this.mHandler.post(new Runnable(value) {
-                    private final /* synthetic */ String f$1;
-
-                    {
-                        this.f$1 = r2;
-                    }
-
-                    public final void run() {
-                        LowpanInterface.Callback.this.onRoleChanged(this.f$1);
-                    }
-                });
-            }
-
-            public void onStateChanged(String value) {
-                this.mHandler.post(new Runnable(value) {
-                    private final /* synthetic */ String f$1;
-
-                    {
-                        this.f$1 = r2;
-                    }
-
-                    public final void run() {
-                        LowpanInterface.Callback.this.onStateChanged(this.f$1);
-                    }
-                });
-            }
-
-            public void onLowpanIdentityChanged(LowpanIdentity value) {
-                this.mHandler.post(new Runnable(value) {
-                    private final /* synthetic */ LowpanIdentity f$1;
-
-                    {
-                        this.f$1 = r2;
-                    }
-
-                    public final void run() {
-                        LowpanInterface.Callback.this.onLowpanIdentityChanged(this.f$1);
-                    }
-                });
-            }
-
-            public void onLinkNetworkAdded(IpPrefix value) {
-                this.mHandler.post(new Runnable(value) {
-                    private final /* synthetic */ IpPrefix f$1;
-
-                    {
-                        this.f$1 = r2;
-                    }
-
-                    public final void run() {
-                        LowpanInterface.Callback.this.onLinkNetworkAdded(this.f$1);
-                    }
-                });
-            }
-
-            public void onLinkNetworkRemoved(IpPrefix value) {
-                this.mHandler.post(new Runnable(value) {
-                    private final /* synthetic */ IpPrefix f$1;
-
-                    {
-                        this.f$1 = r2;
-                    }
-
-                    public final void run() {
-                        LowpanInterface.Callback.this.onLinkNetworkRemoved(this.f$1);
-                    }
-                });
-            }
-
-            public void onLinkAddressAdded(String value) {
-                try {
-                    this.mHandler.post(new Runnable(new LinkAddress(value)) {
-                        private final /* synthetic */ LinkAddress f$1;
-
-                        {
-                            this.f$1 = r2;
-                        }
-
-                        public final void run() {
-                            LowpanInterface.Callback.this.onLinkAddressAdded(this.f$1);
-                        }
-                    });
-                } catch (IllegalArgumentException x) {
-                    String access$100 = LowpanInterface.TAG;
-                    Log.e(access$100, "onLinkAddressAdded: Bad LinkAddress \"" + value + "\", " + x);
+        @Override // android.net.lowpan.ILowpanInterfaceListener
+        public void onEnabledChanged(final boolean value) {
+            Handler handler = this.mHandler;
+            final Callback callback = this.val$cb;
+            handler.post(new Runnable() { // from class: android.net.lowpan.-$$Lambda$LowpanInterface$1$LMuYw1xVwTG7Wbs4COpO6TLHuQ0
+                @Override // java.lang.Runnable
+                public final void run() {
+                    LowpanInterface.Callback.this.onEnabledChanged(value);
                 }
-            }
+            });
+        }
 
-            public void onLinkAddressRemoved(String value) {
-                try {
-                    this.mHandler.post(new Runnable(new LinkAddress(value)) {
-                        private final /* synthetic */ LinkAddress f$1;
-
-                        {
-                            this.f$1 = r2;
-                        }
-
-                        public final void run() {
-                            LowpanInterface.Callback.this.onLinkAddressRemoved(this.f$1);
-                        }
-                    });
-                } catch (IllegalArgumentException x) {
-                    String access$100 = LowpanInterface.TAG;
-                    Log.e(access$100, "onLinkAddressRemoved: Bad LinkAddress \"" + value + "\", " + x);
+        @Override // android.net.lowpan.ILowpanInterfaceListener
+        public void onConnectedChanged(final boolean value) {
+            Handler handler = this.mHandler;
+            final Callback callback = this.val$cb;
+            handler.post(new Runnable() { // from class: android.net.lowpan.-$$Lambda$LowpanInterface$1$Nidk8wBLJKibO6BNky-_lJftmGs
+                @Override // java.lang.Runnable
+                public final void run() {
+                    LowpanInterface.Callback.this.onConnectedChanged(value);
                 }
-            }
+            });
+        }
 
-            public void onReceiveFromCommissioner(byte[] packet) {
+        @Override // android.net.lowpan.ILowpanInterfaceListener
+        public void onUpChanged(final boolean value) {
+            Handler handler = this.mHandler;
+            final Callback callback = this.val$cb;
+            handler.post(new Runnable() { // from class: android.net.lowpan.-$$Lambda$LowpanInterface$1$a1rvbSIFSC6J5j7aKUf1ekbmIIA
+                @Override // java.lang.Runnable
+                public final void run() {
+                    LowpanInterface.Callback.this.onUpChanged(value);
+                }
+            });
+        }
+
+        @Override // android.net.lowpan.ILowpanInterfaceListener
+        public void onRoleChanged(final String value) {
+            Handler handler = this.mHandler;
+            final Callback callback = this.val$cb;
+            handler.post(new Runnable() { // from class: android.net.lowpan.-$$Lambda$LowpanInterface$1$9yiRqHwJmFc-LEKn1vk5rA75W0M
+                @Override // java.lang.Runnable
+                public final void run() {
+                    LowpanInterface.Callback.this.onRoleChanged(value);
+                }
+            });
+        }
+
+        @Override // android.net.lowpan.ILowpanInterfaceListener
+        public void onStateChanged(final String value) {
+            Handler handler = this.mHandler;
+            final Callback callback = this.val$cb;
+            handler.post(new Runnable() { // from class: android.net.lowpan.-$$Lambda$LowpanInterface$1$5PUJBkKF3VANgkiEem5Oq8oyB6U
+                @Override // java.lang.Runnable
+                public final void run() {
+                    LowpanInterface.Callback.this.onStateChanged(value);
+                }
+            });
+        }
+
+        @Override // android.net.lowpan.ILowpanInterfaceListener
+        public void onLowpanIdentityChanged(final LowpanIdentity value) {
+            Handler handler = this.mHandler;
+            final Callback callback = this.val$cb;
+            handler.post(new Runnable() { // from class: android.net.lowpan.-$$Lambda$LowpanInterface$1$rl_ENeH3C5Kvf22BOtLnz-Ehs5c
+                @Override // java.lang.Runnable
+                public final void run() {
+                    LowpanInterface.Callback.this.onLowpanIdentityChanged(value);
+                }
+            });
+        }
+
+        @Override // android.net.lowpan.ILowpanInterfaceListener
+        public void onLinkNetworkAdded(final IpPrefix value) {
+            Handler handler = this.mHandler;
+            final Callback callback = this.val$cb;
+            handler.post(new Runnable() { // from class: android.net.lowpan.-$$Lambda$LowpanInterface$1$oacwoIgJ4pmkBqVtGJfFzk7A35k
+                @Override // java.lang.Runnable
+                public final void run() {
+                    LowpanInterface.Callback.this.onLinkNetworkAdded(value);
+                }
+            });
+        }
+
+        @Override // android.net.lowpan.ILowpanInterfaceListener
+        public void onLinkNetworkRemoved(final IpPrefix value) {
+            Handler handler = this.mHandler;
+            final Callback callback = this.val$cb;
+            handler.post(new Runnable() { // from class: android.net.lowpan.-$$Lambda$LowpanInterface$1$cH3X25eT4t6pHlLvzBjlSOMs2vc
+                @Override // java.lang.Runnable
+                public final void run() {
+                    LowpanInterface.Callback.this.onLinkNetworkRemoved(value);
+                }
+            });
+        }
+
+        @Override // android.net.lowpan.ILowpanInterfaceListener
+        public void onLinkAddressAdded(String value) {
+            try {
+                final LinkAddress la = new LinkAddress(value);
+                Handler handler = this.mHandler;
+                final Callback callback = this.val$cb;
+                handler.post(new Runnable() { // from class: android.net.lowpan.-$$Lambda$LowpanInterface$1$i2_6hzE6WEaUSOaaltxLebbf7-E
+                    @Override // java.lang.Runnable
+                    public final void run() {
+                        LowpanInterface.Callback.this.onLinkAddressAdded(la);
+                    }
+                });
+            } catch (IllegalArgumentException x) {
+                String str = LowpanInterface.TAG;
+                Log.m70e(str, "onLinkAddressAdded: Bad LinkAddress \"" + value + "\", " + x);
             }
-        };
+        }
+
+        @Override // android.net.lowpan.ILowpanInterfaceListener
+        public void onLinkAddressRemoved(String value) {
+            try {
+                final LinkAddress la = new LinkAddress(value);
+                Handler handler = this.mHandler;
+                final Callback callback = this.val$cb;
+                handler.post(new Runnable() { // from class: android.net.lowpan.-$$Lambda$LowpanInterface$1$bAiJozbLxVR9_EMESl7KCJxLARA
+                    @Override // java.lang.Runnable
+                    public final void run() {
+                        LowpanInterface.Callback.this.onLinkAddressRemoved(la);
+                    }
+                });
+            } catch (IllegalArgumentException x) {
+                String str = LowpanInterface.TAG;
+                Log.m70e(str, "onLinkAddressRemoved: Bad LinkAddress \"" + value + "\", " + x);
+            }
+        }
+
+        @Override // android.net.lowpan.ILowpanInterfaceListener
+        public void onReceiveFromCommissioner(byte[] packet) {
+        }
+    }
+
+    public void registerCallback(Callback cb, Handler handler) {
+        ILowpanInterfaceListener.Stub listenerBinder = new BinderC13301(handler, cb);
         try {
             this.mBinder.addListener(listenerBinder);
             synchronized (this.mListenerMap) {
@@ -443,7 +437,7 @@ public class LowpanInterface {
     }
 
     public void registerCallback(Callback cb) {
-        registerCallback(cb, (Handler) null);
+        registerCallback(cb, null);
     }
 
     public void unregisterCallback(Callback cb) {
@@ -474,8 +468,9 @@ public class LowpanInterface {
             int length = linkAddressStrings.length;
             int i2 = 0;
             while (i2 < length) {
+                String str = linkAddressStrings[i2];
                 int i3 = i + 1;
-                ret[i] = new LinkAddress(linkAddressStrings[i2]);
+                ret[i] = new LinkAddress(str);
                 i2++;
                 i = i3;
             }
@@ -513,7 +508,7 @@ public class LowpanInterface {
         } catch (RemoteException x) {
             throw x.rethrowAsRuntimeException();
         } catch (ServiceSpecificException x2) {
-            Log.e(TAG, x2.toString());
+            Log.m70e(TAG, x2.toString());
         }
     }
 
@@ -533,7 +528,7 @@ public class LowpanInterface {
         } catch (RemoteException x) {
             throw x.rethrowAsRuntimeException();
         } catch (ServiceSpecificException x2) {
-            Log.e(TAG, x2.toString());
+            Log.m70e(TAG, x2.toString());
         }
     }
 }

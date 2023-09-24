@@ -1,7 +1,7 @@
 package android.view.textclassifier;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.util.Preconditions;
 import java.lang.annotation.Retention;
@@ -9,6 +9,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.Locale;
 import java.util.Objects;
 
+/* loaded from: classes4.dex */
 public final class SelectionEvent implements Parcelable {
     public static final int ACTION_ABANDON = 107;
     public static final int ACTION_COPY = 101;
@@ -21,11 +22,15 @@ public final class SelectionEvent implements Parcelable {
     public static final int ACTION_SELECT_ALL = 200;
     public static final int ACTION_SHARE = 104;
     public static final int ACTION_SMART_SHARE = 105;
-    public static final Parcelable.Creator<SelectionEvent> CREATOR = new Parcelable.Creator<SelectionEvent>() {
+    public static final Parcelable.Creator<SelectionEvent> CREATOR = new Parcelable.Creator<SelectionEvent>() { // from class: android.view.textclassifier.SelectionEvent.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SelectionEvent createFromParcel(Parcel in) {
             return new SelectionEvent(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SelectionEvent[] newArray(int size) {
             return new SelectionEvent[size];
         }
@@ -59,14 +64,17 @@ public final class SelectionEvent implements Parcelable {
     private String mWidgetVersion;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface ActionType {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface EventType {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface InvocationMethod {
     }
 
@@ -89,7 +97,6 @@ public final class SelectionEvent implements Parcelable {
         this.mAbsoluteEnd = in.readInt();
         this.mEventType = in.readInt();
         this.mEntityType = in.readString();
-        TextClassificationSessionId textClassificationSessionId = null;
         this.mWidgetVersion = in.readInt() > 0 ? in.readString() : null;
         this.mPackageName = in.readString();
         this.mWidgetType = in.readString();
@@ -99,19 +106,19 @@ public final class SelectionEvent implements Parcelable {
         this.mDurationSinceSessionStart = in.readLong();
         this.mDurationSincePreviousEvent = in.readLong();
         this.mEventIndex = in.readInt();
-        this.mSessionId = in.readInt() > 0 ? TextClassificationSessionId.CREATOR.createFromParcel(in) : textClassificationSessionId;
+        this.mSessionId = in.readInt() > 0 ? TextClassificationSessionId.CREATOR.createFromParcel(in) : null;
         this.mStart = in.readInt();
         this.mEnd = in.readInt();
         this.mSmartStart = in.readInt();
         this.mSmartEnd = in.readInt();
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mAbsoluteStart);
         dest.writeInt(this.mAbsoluteEnd);
         dest.writeInt(this.mEventType);
         dest.writeString(this.mEntityType);
-        int i = 0;
         dest.writeInt(this.mWidgetVersion != null ? 1 : 0);
         if (this.mWidgetVersion != null) {
             dest.writeString(this.mWidgetVersion);
@@ -124,10 +131,7 @@ public final class SelectionEvent implements Parcelable {
         dest.writeLong(this.mDurationSinceSessionStart);
         dest.writeLong(this.mDurationSincePreviousEvent);
         dest.writeInt(this.mEventIndex);
-        if (this.mSessionId != null) {
-            i = 1;
-        }
-        dest.writeInt(i);
+        dest.writeInt(this.mSessionId != null ? 1 : 0);
         if (this.mSessionId != null) {
             this.mSessionId.writeToParcel(dest, flags);
         }
@@ -137,6 +141,7 @@ public final class SelectionEvent implements Parcelable {
         dest.writeInt(this.mSmartEnd);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -151,26 +156,16 @@ public final class SelectionEvent implements Parcelable {
     }
 
     public static SelectionEvent createSelectionModifiedEvent(int start, int end, TextClassification classification) {
-        String entityType;
         Preconditions.checkArgument(end >= start, "end cannot be less than start");
         Preconditions.checkNotNull(classification);
-        if (classification.getEntityCount() > 0) {
-            entityType = classification.getEntity(0);
-        } else {
-            entityType = "";
-        }
+        String entityType = classification.getEntityCount() > 0 ? classification.getEntity(0) : "";
         return new SelectionEvent(start, end, 2, entityType, 0, classification.getId());
     }
 
     public static SelectionEvent createSelectionModifiedEvent(int start, int end, TextSelection selection) {
-        String entityType;
         Preconditions.checkArgument(end >= start, "end cannot be less than start");
         Preconditions.checkNotNull(selection);
-        if (selection.getEntityCount() > 0) {
-            entityType = selection.getEntity(0);
-        } else {
-            entityType = "";
-        }
+        String entityType = selection.getEntityCount() > 0 ? selection.getEntity(0) : "";
         return new SelectionEvent(start, end, 5, entityType, 0, selection.getId());
     }
 
@@ -181,15 +176,10 @@ public final class SelectionEvent implements Parcelable {
     }
 
     public static SelectionEvent createSelectionActionEvent(int start, int end, int actionType, TextClassification classification) {
-        String entityType;
         Preconditions.checkArgument(end >= start, "end cannot be less than start");
         Preconditions.checkNotNull(classification);
         checkActionType(actionType);
-        if (classification.getEntityCount() > 0) {
-            entityType = classification.getEntity(0);
-        } else {
-            entityType = "";
-        }
+        String entityType = classification.getEntityCount() > 0 ? classification.getEntity(0) : "";
         return new SelectionEvent(start, end, actionType, entityType, 0, classification.getId());
     }
 
@@ -211,18 +201,16 @@ public final class SelectionEvent implements Parcelable {
                     case 201:
                         return;
                     default:
-                        throw new IllegalArgumentException(String.format(Locale.US, "%d is not an eventType", new Object[]{Integer.valueOf(eventType)}));
+                        throw new IllegalArgumentException(String.format(Locale.US, "%d is not an eventType", Integer.valueOf(eventType)));
                 }
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public int getAbsoluteStart() {
+    int getAbsoluteStart() {
         return this.mAbsoluteStart;
     }
 
-    /* access modifiers changed from: package-private */
-    public int getAbsoluteEnd() {
+    int getAbsoluteEnd() {
         return this.mAbsoluteEnd;
     }
 
@@ -271,8 +259,7 @@ public final class SelectionEvent implements Parcelable {
         return this.mResultId;
     }
 
-    /* access modifiers changed from: package-private */
-    public SelectionEvent setResultId(String resultId) {
+    SelectionEvent setResultId(String resultId) {
         this.mResultId = resultId;
         return this;
     }
@@ -281,8 +268,7 @@ public final class SelectionEvent implements Parcelable {
         return this.mEventTime;
     }
 
-    /* access modifiers changed from: package-private */
-    public SelectionEvent setEventTime(long timeMs) {
+    SelectionEvent setEventTime(long timeMs) {
         this.mEventTime = timeMs;
         return this;
     }
@@ -291,8 +277,7 @@ public final class SelectionEvent implements Parcelable {
         return this.mDurationSinceSessionStart;
     }
 
-    /* access modifiers changed from: package-private */
-    public SelectionEvent setDurationSinceSessionStart(long durationMs) {
+    SelectionEvent setDurationSinceSessionStart(long durationMs) {
         this.mDurationSinceSessionStart = durationMs;
         return this;
     }
@@ -301,8 +286,7 @@ public final class SelectionEvent implements Parcelable {
         return this.mDurationSincePreviousEvent;
     }
 
-    /* access modifiers changed from: package-private */
-    public SelectionEvent setDurationSincePreviousEvent(long durationMs) {
+    SelectionEvent setDurationSincePreviousEvent(long durationMs) {
         this.mDurationSincePreviousEvent = durationMs;
         return this;
     }
@@ -367,8 +351,7 @@ public final class SelectionEvent implements Parcelable {
         return this;
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean isTerminal() {
+    boolean isTerminal() {
         return isTerminal(this.mEventType);
     }
 
@@ -390,24 +373,21 @@ public final class SelectionEvent implements Parcelable {
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(this.mAbsoluteStart), Integer.valueOf(this.mAbsoluteEnd), Integer.valueOf(this.mEventType), this.mEntityType, this.mWidgetVersion, this.mPackageName, this.mWidgetType, Integer.valueOf(this.mInvocationMethod), this.mResultId, Long.valueOf(this.mEventTime), Long.valueOf(this.mDurationSinceSessionStart), Long.valueOf(this.mDurationSincePreviousEvent), Integer.valueOf(this.mEventIndex), this.mSessionId, Integer.valueOf(this.mStart), Integer.valueOf(this.mEnd), Integer.valueOf(this.mSmartStart), Integer.valueOf(this.mSmartEnd)});
+        return Objects.hash(Integer.valueOf(this.mAbsoluteStart), Integer.valueOf(this.mAbsoluteEnd), Integer.valueOf(this.mEventType), this.mEntityType, this.mWidgetVersion, this.mPackageName, this.mWidgetType, Integer.valueOf(this.mInvocationMethod), this.mResultId, Long.valueOf(this.mEventTime), Long.valueOf(this.mDurationSinceSessionStart), Long.valueOf(this.mDurationSincePreviousEvent), Integer.valueOf(this.mEventIndex), this.mSessionId, Integer.valueOf(this.mStart), Integer.valueOf(this.mEnd), Integer.valueOf(this.mSmartStart), Integer.valueOf(this.mSmartEnd));
     }
 
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }
-        if (!(obj instanceof SelectionEvent)) {
-            return false;
-        }
-        SelectionEvent other = (SelectionEvent) obj;
-        if (this.mAbsoluteStart == other.mAbsoluteStart && this.mAbsoluteEnd == other.mAbsoluteEnd && this.mEventType == other.mEventType && Objects.equals(this.mEntityType, other.mEntityType) && Objects.equals(this.mWidgetVersion, other.mWidgetVersion) && Objects.equals(this.mPackageName, other.mPackageName) && Objects.equals(this.mWidgetType, other.mWidgetType) && this.mInvocationMethod == other.mInvocationMethod && Objects.equals(this.mResultId, other.mResultId) && this.mEventTime == other.mEventTime && this.mDurationSinceSessionStart == other.mDurationSinceSessionStart && this.mDurationSincePreviousEvent == other.mDurationSincePreviousEvent && this.mEventIndex == other.mEventIndex && Objects.equals(this.mSessionId, other.mSessionId) && this.mStart == other.mStart && this.mEnd == other.mEnd && this.mSmartStart == other.mSmartStart && this.mSmartEnd == other.mSmartEnd) {
-            return true;
+        if (obj instanceof SelectionEvent) {
+            SelectionEvent other = (SelectionEvent) obj;
+            return this.mAbsoluteStart == other.mAbsoluteStart && this.mAbsoluteEnd == other.mAbsoluteEnd && this.mEventType == other.mEventType && Objects.equals(this.mEntityType, other.mEntityType) && Objects.equals(this.mWidgetVersion, other.mWidgetVersion) && Objects.equals(this.mPackageName, other.mPackageName) && Objects.equals(this.mWidgetType, other.mWidgetType) && this.mInvocationMethod == other.mInvocationMethod && Objects.equals(this.mResultId, other.mResultId) && this.mEventTime == other.mEventTime && this.mDurationSinceSessionStart == other.mDurationSinceSessionStart && this.mDurationSincePreviousEvent == other.mDurationSincePreviousEvent && this.mEventIndex == other.mEventIndex && Objects.equals(this.mSessionId, other.mSessionId) && this.mStart == other.mStart && this.mEnd == other.mEnd && this.mSmartStart == other.mSmartStart && this.mSmartEnd == other.mSmartEnd;
         }
         return false;
     }
 
     public String toString() {
-        return String.format(Locale.US, "SelectionEvent {absoluteStart=%d, absoluteEnd=%d, eventType=%d, entityType=%s, widgetVersion=%s, packageName=%s, widgetType=%s, invocationMethod=%s, resultId=%s, eventTime=%d, durationSinceSessionStart=%d, durationSincePreviousEvent=%d, eventIndex=%d,sessionId=%s, start=%d, end=%d, smartStart=%d, smartEnd=%d}", new Object[]{Integer.valueOf(this.mAbsoluteStart), Integer.valueOf(this.mAbsoluteEnd), Integer.valueOf(this.mEventType), this.mEntityType, this.mWidgetVersion, this.mPackageName, this.mWidgetType, Integer.valueOf(this.mInvocationMethod), this.mResultId, Long.valueOf(this.mEventTime), Long.valueOf(this.mDurationSinceSessionStart), Long.valueOf(this.mDurationSincePreviousEvent), Integer.valueOf(this.mEventIndex), this.mSessionId, Integer.valueOf(this.mStart), Integer.valueOf(this.mEnd), Integer.valueOf(this.mSmartStart), Integer.valueOf(this.mSmartEnd)});
+        return String.format(Locale.US, "SelectionEvent {absoluteStart=%d, absoluteEnd=%d, eventType=%d, entityType=%s, widgetVersion=%s, packageName=%s, widgetType=%s, invocationMethod=%s, resultId=%s, eventTime=%d, durationSinceSessionStart=%d, durationSincePreviousEvent=%d, eventIndex=%d,sessionId=%s, start=%d, end=%d, smartStart=%d, smartEnd=%d}", Integer.valueOf(this.mAbsoluteStart), Integer.valueOf(this.mAbsoluteEnd), Integer.valueOf(this.mEventType), this.mEntityType, this.mWidgetVersion, this.mPackageName, this.mWidgetType, Integer.valueOf(this.mInvocationMethod), this.mResultId, Long.valueOf(this.mEventTime), Long.valueOf(this.mDurationSinceSessionStart), Long.valueOf(this.mDurationSincePreviousEvent), Integer.valueOf(this.mEventIndex), this.mSessionId, Integer.valueOf(this.mStart), Integer.valueOf(this.mEnd), Integer.valueOf(this.mSmartStart), Integer.valueOf(this.mSmartEnd));
     }
 }

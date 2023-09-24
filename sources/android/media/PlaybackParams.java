@@ -1,22 +1,27 @@
 package android.media;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes3.dex */
 public final class PlaybackParams implements Parcelable {
     public static final int AUDIO_FALLBACK_MODE_DEFAULT = 0;
     public static final int AUDIO_FALLBACK_MODE_FAIL = 2;
     public static final int AUDIO_FALLBACK_MODE_MUTE = 1;
     public static final int AUDIO_STRETCH_MODE_DEFAULT = 0;
     public static final int AUDIO_STRETCH_MODE_VOICE = 1;
-    public static final Parcelable.Creator<PlaybackParams> CREATOR = new Parcelable.Creator<PlaybackParams>() {
+    public static final Parcelable.Creator<PlaybackParams> CREATOR = new Parcelable.Creator<PlaybackParams>() { // from class: android.media.PlaybackParams.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PlaybackParams createFromParcel(Parcel in) {
             return new PlaybackParams(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PlaybackParams[] newArray(int size) {
             return new PlaybackParams[size];
         }
@@ -41,10 +46,12 @@ public final class PlaybackParams implements Parcelable {
     private float mSpeed;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface AudioFallbackMode {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface AudioStretchMode {
     }
 
@@ -84,10 +91,10 @@ public final class PlaybackParams implements Parcelable {
     }
 
     public int getAudioFallbackMode() {
-        if ((this.mSet & 4) != 0) {
-            return this.mAudioFallbackMode;
+        if ((this.mSet & 4) == 0) {
+            throw new IllegalStateException("audio fallback mode not set");
         }
-        throw new IllegalStateException("audio fallback mode not set");
+        return this.mAudioFallbackMode;
     }
 
     public PlaybackParams setAudioStretchMode(int audioStretchMode) {
@@ -97,26 +104,26 @@ public final class PlaybackParams implements Parcelable {
     }
 
     public int getAudioStretchMode() {
-        if ((this.mSet & 8) != 0) {
-            return this.mAudioStretchMode;
+        if ((this.mSet & 8) == 0) {
+            throw new IllegalStateException("audio stretch mode not set");
         }
-        throw new IllegalStateException("audio stretch mode not set");
+        return this.mAudioStretchMode;
     }
 
     public PlaybackParams setPitch(float pitch) {
-        if (pitch >= 0.0f) {
-            this.mPitch = pitch;
-            this.mSet |= 2;
-            return this;
+        if (pitch < 0.0f) {
+            throw new IllegalArgumentException("pitch must not be negative");
         }
-        throw new IllegalArgumentException("pitch must not be negative");
+        this.mPitch = pitch;
+        this.mSet |= 2;
+        return this;
     }
 
     public float getPitch() {
-        if ((this.mSet & 2) != 0) {
-            return this.mPitch;
+        if ((this.mSet & 2) == 0) {
+            throw new IllegalStateException("pitch not set");
         }
-        throw new IllegalStateException("pitch not set");
+        return this.mPitch;
     }
 
     public PlaybackParams setSpeed(float speed) {
@@ -126,16 +133,18 @@ public final class PlaybackParams implements Parcelable {
     }
 
     public float getSpeed() {
-        if ((this.mSet & 1) != 0) {
-            return this.mSpeed;
+        if ((this.mSet & 1) == 0) {
+            throw new IllegalStateException("speed not set");
         }
-        throw new IllegalStateException("speed not set");
+        return this.mSpeed;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mSet);
         dest.writeInt(this.mAudioFallbackMode);

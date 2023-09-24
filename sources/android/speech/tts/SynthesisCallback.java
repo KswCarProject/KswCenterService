@@ -3,9 +3,11 @@ package android.speech.tts;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes3.dex */
 public interface SynthesisCallback {
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface SupportedAudioFormat {
     }
 
@@ -25,6 +27,6 @@ public interface SynthesisCallback {
 
     int start(int i, int i2, int i3);
 
-    void rangeStart(int markerInFrames, int start, int end) {
+    default void rangeStart(int markerInFrames, int start, int end) {
     }
 }

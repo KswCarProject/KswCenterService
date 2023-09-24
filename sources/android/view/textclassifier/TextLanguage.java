@@ -1,21 +1,26 @@
 package android.view.textclassifier;
 
 import android.icu.util.ULocale;
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.ArrayMap;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.util.Preconditions;
 import java.util.Locale;
 import java.util.Map;
 
+/* loaded from: classes4.dex */
 public final class TextLanguage implements Parcelable {
-    public static final Parcelable.Creator<TextLanguage> CREATOR = new Parcelable.Creator<TextLanguage>() {
+    public static final Parcelable.Creator<TextLanguage> CREATOR = new Parcelable.Creator<TextLanguage>() { // from class: android.view.textclassifier.TextLanguage.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public TextLanguage createFromParcel(Parcel in) {
             return TextLanguage.readFromParcel(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public TextLanguage[] newArray(int size) {
             return new TextLanguage[size];
         }
@@ -52,24 +57,27 @@ public final class TextLanguage implements Parcelable {
     }
 
     public String toString() {
-        return String.format(Locale.US, "TextLanguage {id=%s, locales=%s, bundle=%s}", new Object[]{this.mId, this.mEntityConfidence, this.mBundle});
+        return String.format(Locale.US, "TextLanguage {id=%s, locales=%s, bundle=%s}", this.mId, this.mEntityConfidence, this.mBundle);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.mId);
         this.mEntityConfidence.writeToParcel(dest, flags);
         dest.writeBundle(this.mBundle);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static TextLanguage readFromParcel(Parcel in) {
         return new TextLanguage(in.readString(), EntityConfidence.CREATOR.createFromParcel(in), in.readBundle());
     }
 
+    /* loaded from: classes4.dex */
     public static final class Builder {
         private Bundle mBundle;
         private final Map<String, Float> mEntityConfidenceMap = new ArrayMap();
@@ -97,12 +105,17 @@ public final class TextLanguage implements Parcelable {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class Request implements Parcelable {
-        public static final Parcelable.Creator<Request> CREATOR = new Parcelable.Creator<Request>() {
+        public static final Parcelable.Creator<Request> CREATOR = new Parcelable.Creator<Request>() { // from class: android.view.textclassifier.TextLanguage.Request.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public Request createFromParcel(Parcel in) {
                 return Request.readFromParcel(in);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public Request[] newArray(int size) {
                 return new Request[size];
             }
@@ -133,25 +146,29 @@ public final class TextLanguage implements Parcelable {
             return this.mExtra;
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeCharSequence(this.mText);
             dest.writeString(this.mCallingPackageName);
             dest.writeBundle(this.mExtra);
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public static Request readFromParcel(Parcel in) {
             CharSequence text = in.readCharSequence();
             String callingPackageName = in.readString();
-            Request request = new Request(text, in.readBundle());
+            Bundle extra = in.readBundle();
+            Request request = new Request(text, extra);
             request.setCallingPackageName(callingPackageName);
             return request;
         }
 
+        /* loaded from: classes4.dex */
         public static final class Builder {
             private Bundle mBundle;
             private final CharSequence mText;

@@ -1,20 +1,25 @@
 package android.service.notification;
 
 import android.annotation.SystemApi;
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.UserHandle;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.UserHandle;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class Adjustment implements Parcelable {
-    public static final Parcelable.Creator<Adjustment> CREATOR = new Parcelable.Creator<Adjustment>() {
+    public static final Parcelable.Creator<Adjustment> CREATOR = new Parcelable.Creator<Adjustment>() { // from class: android.service.notification.Adjustment.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Adjustment createFromParcel(Parcel in) {
             return new Adjustment(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Adjustment[] newArray(int size) {
             return new Adjustment[size];
         }
@@ -35,6 +40,7 @@ public final class Adjustment implements Parcelable {
     private final int mUser;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface Keys {
     }
 
@@ -99,13 +105,15 @@ public final class Adjustment implements Parcelable {
     }
 
     public UserHandle getUserHandle() {
-        return UserHandle.of(this.mUser);
+        return UserHandle.m110of(this.mUser);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         if (this.mPackage != null) {
             dest.writeInt(1);

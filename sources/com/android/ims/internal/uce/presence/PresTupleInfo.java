@@ -1,15 +1,20 @@
 package com.android.ims.internal.uce.presence;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes4.dex */
 public class PresTupleInfo implements Parcelable {
-    public static final Parcelable.Creator<PresTupleInfo> CREATOR = new Parcelable.Creator<PresTupleInfo>() {
+    public static final Parcelable.Creator<PresTupleInfo> CREATOR = new Parcelable.Creator<PresTupleInfo>() { // from class: com.android.ims.internal.uce.presence.PresTupleInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PresTupleInfo createFromParcel(Parcel source) {
             return new PresTupleInfo(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PresTupleInfo[] newArray(int size) {
             return new PresTupleInfo[size];
         }
@@ -52,10 +57,12 @@ public class PresTupleInfo implements Parcelable {
         this.mTimestamp = "";
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.mFeatureTag);
         dest.writeString(this.mContactUri);

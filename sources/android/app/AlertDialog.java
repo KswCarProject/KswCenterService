@@ -6,8 +6,8 @@ import android.content.DialogInterface;
 import android.content.res.ResourceId;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.os.Message;
+import android.p007os.Bundle;
+import android.p007os.Message;
 import android.text.method.MovementMethod;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
@@ -17,9 +17,10 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import com.android.internal.app.AlertController;
 
+/* loaded from: classes.dex */
 public class AlertDialog extends Dialog implements DialogInterface {
     public static final int LAYOUT_HINT_NONE = 0;
     public static final int LAYOUT_HINT_SIDE = 1;
@@ -33,9 +34,8 @@ public class AlertDialog extends Dialog implements DialogInterface {
     public static final int THEME_HOLO_LIGHT = 3;
     @Deprecated
     public static final int THEME_TRADITIONAL = 1;
-    /* access modifiers changed from: private */
     @UnsupportedAppUsage
-    public AlertController mAlert;
+    private AlertController mAlert;
 
     protected AlertDialog(Context context) {
         this(context, 0);
@@ -51,7 +51,6 @@ public class AlertDialog extends Dialog implements DialogInterface {
         this(context, themeResId, true);
     }
 
-    /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     AlertDialog(Context context, int themeResId, boolean createContextThemeWrapper) {
         super(context, createContextThemeWrapper ? resolveDialogTheme(context, themeResId) : 0, createContextThemeWrapper);
         this.mWindow.alwaysReadCloseOnTouchAttr();
@@ -60,13 +59,13 @@ public class AlertDialog extends Dialog implements DialogInterface {
 
     static int resolveDialogTheme(Context context, int themeResId) {
         if (themeResId == 1) {
-            return R.style.Theme_Dialog_Alert;
+            return C3132R.C3136style.Theme_Dialog_Alert;
         }
         if (themeResId == 2) {
-            return R.style.Theme_Holo_Dialog_Alert;
+            return C3132R.C3136style.Theme_Holo_Dialog_Alert;
         }
         if (themeResId == 3) {
-            return R.style.Theme_Holo_Light_Dialog_Alert;
+            return C3132R.C3136style.Theme_Holo_Light_Dialog_Alert;
         }
         if (themeResId == 4) {
             return 16974545;
@@ -90,6 +89,7 @@ public class AlertDialog extends Dialog implements DialogInterface {
         return this.mAlert.getListView();
     }
 
+    @Override // android.app.Dialog
     public void setTitle(CharSequence title) {
         super.setTitle(title);
         this.mAlert.setTitle(title);
@@ -119,17 +119,16 @@ public class AlertDialog extends Dialog implements DialogInterface {
         this.mAlert.setView(view, viewSpacingLeft, viewSpacingTop, viewSpacingRight, viewSpacingBottom);
     }
 
-    /* access modifiers changed from: package-private */
-    public void setButtonPanelLayoutHint(int layoutHint) {
+    void setButtonPanelLayoutHint(int layoutHint) {
         this.mAlert.setButtonPanelLayoutHint(layoutHint);
     }
 
     public void setButton(int whichButton, CharSequence text, Message msg) {
-        this.mAlert.setButton(whichButton, text, (DialogInterface.OnClickListener) null, msg);
+        this.mAlert.setButton(whichButton, text, null, msg);
     }
 
     public void setButton(int whichButton, CharSequence text, DialogInterface.OnClickListener listener) {
-        this.mAlert.setButton(whichButton, text, listener, (Message) null);
+        this.mAlert.setButton(whichButton, text, listener, null);
     }
 
     @Deprecated
@@ -180,12 +179,13 @@ public class AlertDialog extends Dialog implements DialogInterface {
         this.mAlert.setInverseBackgroundForced(forceInverseBackground);
     }
 
-    /* access modifiers changed from: protected */
-    public void onCreate(Bundle savedInstanceState) {
+    @Override // android.app.Dialog
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.mAlert.installContent();
     }
 
+    @Override // android.app.Dialog, android.view.KeyEvent.Callback
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (this.mAlert.onKeyDown(keyCode, event)) {
             return true;
@@ -193,6 +193,7 @@ public class AlertDialog extends Dialog implements DialogInterface {
         return super.onKeyDown(keyCode, event);
     }
 
+    @Override // android.app.Dialog, android.view.KeyEvent.Callback
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         if (this.mAlert.onKeyUp(keyCode, event)) {
             return true;
@@ -200,258 +201,261 @@ public class AlertDialog extends Dialog implements DialogInterface {
         return super.onKeyUp(keyCode, event);
     }
 
+    /* loaded from: classes.dex */
     public static class Builder {
         @UnsupportedAppUsage
-        private final AlertController.AlertParams P;
+
+        /* renamed from: P */
+        private final AlertController.AlertParams f15P;
 
         public Builder(Context context) {
             this(context, AlertDialog.resolveDialogTheme(context, 0));
         }
 
         public Builder(Context context, int themeResId) {
-            this.P = new AlertController.AlertParams(new ContextThemeWrapper(context, AlertDialog.resolveDialogTheme(context, themeResId)));
+            this.f15P = new AlertController.AlertParams(new ContextThemeWrapper(context, AlertDialog.resolveDialogTheme(context, themeResId)));
         }
 
         public Context getContext() {
-            return this.P.mContext;
+            return this.f15P.mContext;
         }
 
         public Builder setTitle(int titleId) {
-            this.P.mTitle = this.P.mContext.getText(titleId);
+            this.f15P.mTitle = this.f15P.mContext.getText(titleId);
             return this;
         }
 
         public Builder setTitle(CharSequence title) {
-            this.P.mTitle = title;
+            this.f15P.mTitle = title;
             return this;
         }
 
         public Builder setCustomTitle(View customTitleView) {
-            this.P.mCustomTitleView = customTitleView;
+            this.f15P.mCustomTitleView = customTitleView;
             return this;
         }
 
         public Builder setMessage(int messageId) {
-            this.P.mMessage = this.P.mContext.getText(messageId);
+            this.f15P.mMessage = this.f15P.mContext.getText(messageId);
             return this;
         }
 
         public Builder setMessage(CharSequence message) {
-            this.P.mMessage = message;
+            this.f15P.mMessage = message;
             return this;
         }
 
         public Builder setIcon(int iconId) {
-            this.P.mIconId = iconId;
+            this.f15P.mIconId = iconId;
             return this;
         }
 
         public Builder setIcon(Drawable icon) {
-            this.P.mIcon = icon;
+            this.f15P.mIcon = icon;
             return this;
         }
 
         public Builder setIconAttribute(int attrId) {
             TypedValue out = new TypedValue();
-            this.P.mContext.getTheme().resolveAttribute(attrId, out, true);
-            this.P.mIconId = out.resourceId;
+            this.f15P.mContext.getTheme().resolveAttribute(attrId, out, true);
+            this.f15P.mIconId = out.resourceId;
             return this;
         }
 
         public Builder setPositiveButton(int textId, DialogInterface.OnClickListener listener) {
-            this.P.mPositiveButtonText = this.P.mContext.getText(textId);
-            this.P.mPositiveButtonListener = listener;
+            this.f15P.mPositiveButtonText = this.f15P.mContext.getText(textId);
+            this.f15P.mPositiveButtonListener = listener;
             return this;
         }
 
         public Builder setPositiveButton(CharSequence text, DialogInterface.OnClickListener listener) {
-            this.P.mPositiveButtonText = text;
-            this.P.mPositiveButtonListener = listener;
+            this.f15P.mPositiveButtonText = text;
+            this.f15P.mPositiveButtonListener = listener;
             return this;
         }
 
         public Builder setNegativeButton(int textId, DialogInterface.OnClickListener listener) {
-            this.P.mNegativeButtonText = this.P.mContext.getText(textId);
-            this.P.mNegativeButtonListener = listener;
+            this.f15P.mNegativeButtonText = this.f15P.mContext.getText(textId);
+            this.f15P.mNegativeButtonListener = listener;
             return this;
         }
 
         public Builder setNegativeButton(CharSequence text, DialogInterface.OnClickListener listener) {
-            this.P.mNegativeButtonText = text;
-            this.P.mNegativeButtonListener = listener;
+            this.f15P.mNegativeButtonText = text;
+            this.f15P.mNegativeButtonListener = listener;
             return this;
         }
 
         public Builder setNeutralButton(int textId, DialogInterface.OnClickListener listener) {
-            this.P.mNeutralButtonText = this.P.mContext.getText(textId);
-            this.P.mNeutralButtonListener = listener;
+            this.f15P.mNeutralButtonText = this.f15P.mContext.getText(textId);
+            this.f15P.mNeutralButtonListener = listener;
             return this;
         }
 
         public Builder setNeutralButton(CharSequence text, DialogInterface.OnClickListener listener) {
-            this.P.mNeutralButtonText = text;
-            this.P.mNeutralButtonListener = listener;
+            this.f15P.mNeutralButtonText = text;
+            this.f15P.mNeutralButtonListener = listener;
             return this;
         }
 
         public Builder setCancelable(boolean cancelable) {
-            this.P.mCancelable = cancelable;
+            this.f15P.mCancelable = cancelable;
             return this;
         }
 
         public Builder setOnCancelListener(DialogInterface.OnCancelListener onCancelListener) {
-            this.P.mOnCancelListener = onCancelListener;
+            this.f15P.mOnCancelListener = onCancelListener;
             return this;
         }
 
         public Builder setOnDismissListener(DialogInterface.OnDismissListener onDismissListener) {
-            this.P.mOnDismissListener = onDismissListener;
+            this.f15P.mOnDismissListener = onDismissListener;
             return this;
         }
 
         public Builder setOnKeyListener(DialogInterface.OnKeyListener onKeyListener) {
-            this.P.mOnKeyListener = onKeyListener;
+            this.f15P.mOnKeyListener = onKeyListener;
             return this;
         }
 
         public Builder setItems(int itemsId, DialogInterface.OnClickListener listener) {
-            this.P.mItems = this.P.mContext.getResources().getTextArray(itemsId);
-            this.P.mOnClickListener = listener;
+            this.f15P.mItems = this.f15P.mContext.getResources().getTextArray(itemsId);
+            this.f15P.mOnClickListener = listener;
             return this;
         }
 
         public Builder setItems(CharSequence[] items, DialogInterface.OnClickListener listener) {
-            this.P.mItems = items;
-            this.P.mOnClickListener = listener;
+            this.f15P.mItems = items;
+            this.f15P.mOnClickListener = listener;
             return this;
         }
 
         public Builder setAdapter(ListAdapter adapter, DialogInterface.OnClickListener listener) {
-            this.P.mAdapter = adapter;
-            this.P.mOnClickListener = listener;
+            this.f15P.mAdapter = adapter;
+            this.f15P.mOnClickListener = listener;
             return this;
         }
 
         public Builder setCursor(Cursor cursor, DialogInterface.OnClickListener listener, String labelColumn) {
-            this.P.mCursor = cursor;
-            this.P.mLabelColumn = labelColumn;
-            this.P.mOnClickListener = listener;
+            this.f15P.mCursor = cursor;
+            this.f15P.mLabelColumn = labelColumn;
+            this.f15P.mOnClickListener = listener;
             return this;
         }
 
         public Builder setMultiChoiceItems(int itemsId, boolean[] checkedItems, DialogInterface.OnMultiChoiceClickListener listener) {
-            this.P.mItems = this.P.mContext.getResources().getTextArray(itemsId);
-            this.P.mOnCheckboxClickListener = listener;
-            this.P.mCheckedItems = checkedItems;
-            this.P.mIsMultiChoice = true;
+            this.f15P.mItems = this.f15P.mContext.getResources().getTextArray(itemsId);
+            this.f15P.mOnCheckboxClickListener = listener;
+            this.f15P.mCheckedItems = checkedItems;
+            this.f15P.mIsMultiChoice = true;
             return this;
         }
 
         public Builder setMultiChoiceItems(CharSequence[] items, boolean[] checkedItems, DialogInterface.OnMultiChoiceClickListener listener) {
-            this.P.mItems = items;
-            this.P.mOnCheckboxClickListener = listener;
-            this.P.mCheckedItems = checkedItems;
-            this.P.mIsMultiChoice = true;
+            this.f15P.mItems = items;
+            this.f15P.mOnCheckboxClickListener = listener;
+            this.f15P.mCheckedItems = checkedItems;
+            this.f15P.mIsMultiChoice = true;
             return this;
         }
 
         public Builder setMultiChoiceItems(Cursor cursor, String isCheckedColumn, String labelColumn, DialogInterface.OnMultiChoiceClickListener listener) {
-            this.P.mCursor = cursor;
-            this.P.mOnCheckboxClickListener = listener;
-            this.P.mIsCheckedColumn = isCheckedColumn;
-            this.P.mLabelColumn = labelColumn;
-            this.P.mIsMultiChoice = true;
+            this.f15P.mCursor = cursor;
+            this.f15P.mOnCheckboxClickListener = listener;
+            this.f15P.mIsCheckedColumn = isCheckedColumn;
+            this.f15P.mLabelColumn = labelColumn;
+            this.f15P.mIsMultiChoice = true;
             return this;
         }
 
         public Builder setSingleChoiceItems(int itemsId, int checkedItem, DialogInterface.OnClickListener listener) {
-            this.P.mItems = this.P.mContext.getResources().getTextArray(itemsId);
-            this.P.mOnClickListener = listener;
-            this.P.mCheckedItem = checkedItem;
-            this.P.mIsSingleChoice = true;
+            this.f15P.mItems = this.f15P.mContext.getResources().getTextArray(itemsId);
+            this.f15P.mOnClickListener = listener;
+            this.f15P.mCheckedItem = checkedItem;
+            this.f15P.mIsSingleChoice = true;
             return this;
         }
 
         public Builder setSingleChoiceItems(Cursor cursor, int checkedItem, String labelColumn, DialogInterface.OnClickListener listener) {
-            this.P.mCursor = cursor;
-            this.P.mOnClickListener = listener;
-            this.P.mCheckedItem = checkedItem;
-            this.P.mLabelColumn = labelColumn;
-            this.P.mIsSingleChoice = true;
+            this.f15P.mCursor = cursor;
+            this.f15P.mOnClickListener = listener;
+            this.f15P.mCheckedItem = checkedItem;
+            this.f15P.mLabelColumn = labelColumn;
+            this.f15P.mIsSingleChoice = true;
             return this;
         }
 
         public Builder setSingleChoiceItems(CharSequence[] items, int checkedItem, DialogInterface.OnClickListener listener) {
-            this.P.mItems = items;
-            this.P.mOnClickListener = listener;
-            this.P.mCheckedItem = checkedItem;
-            this.P.mIsSingleChoice = true;
+            this.f15P.mItems = items;
+            this.f15P.mOnClickListener = listener;
+            this.f15P.mCheckedItem = checkedItem;
+            this.f15P.mIsSingleChoice = true;
             return this;
         }
 
         public Builder setSingleChoiceItems(ListAdapter adapter, int checkedItem, DialogInterface.OnClickListener listener) {
-            this.P.mAdapter = adapter;
-            this.P.mOnClickListener = listener;
-            this.P.mCheckedItem = checkedItem;
-            this.P.mIsSingleChoice = true;
+            this.f15P.mAdapter = adapter;
+            this.f15P.mOnClickListener = listener;
+            this.f15P.mCheckedItem = checkedItem;
+            this.f15P.mIsSingleChoice = true;
             return this;
         }
 
         public Builder setOnItemSelectedListener(AdapterView.OnItemSelectedListener listener) {
-            this.P.mOnItemSelectedListener = listener;
+            this.f15P.mOnItemSelectedListener = listener;
             return this;
         }
 
         public Builder setView(int layoutResId) {
-            this.P.mView = null;
-            this.P.mViewLayoutResId = layoutResId;
-            this.P.mViewSpacingSpecified = false;
+            this.f15P.mView = null;
+            this.f15P.mViewLayoutResId = layoutResId;
+            this.f15P.mViewSpacingSpecified = false;
             return this;
         }
 
         public Builder setView(View view) {
-            this.P.mView = view;
-            this.P.mViewLayoutResId = 0;
-            this.P.mViewSpacingSpecified = false;
+            this.f15P.mView = view;
+            this.f15P.mViewLayoutResId = 0;
+            this.f15P.mViewSpacingSpecified = false;
             return this;
         }
 
-        @Deprecated
         @UnsupportedAppUsage
+        @Deprecated
         public Builder setView(View view, int viewSpacingLeft, int viewSpacingTop, int viewSpacingRight, int viewSpacingBottom) {
-            this.P.mView = view;
-            this.P.mViewLayoutResId = 0;
-            this.P.mViewSpacingSpecified = true;
-            this.P.mViewSpacingLeft = viewSpacingLeft;
-            this.P.mViewSpacingTop = viewSpacingTop;
-            this.P.mViewSpacingRight = viewSpacingRight;
-            this.P.mViewSpacingBottom = viewSpacingBottom;
+            this.f15P.mView = view;
+            this.f15P.mViewLayoutResId = 0;
+            this.f15P.mViewSpacingSpecified = true;
+            this.f15P.mViewSpacingLeft = viewSpacingLeft;
+            this.f15P.mViewSpacingTop = viewSpacingTop;
+            this.f15P.mViewSpacingRight = viewSpacingRight;
+            this.f15P.mViewSpacingBottom = viewSpacingBottom;
             return this;
         }
 
         @Deprecated
         public Builder setInverseBackgroundForced(boolean useInverseBackground) {
-            this.P.mForceInverseBackground = useInverseBackground;
+            this.f15P.mForceInverseBackground = useInverseBackground;
             return this;
         }
 
         @UnsupportedAppUsage
         public Builder setRecycleOnMeasureEnabled(boolean enabled) {
-            this.P.mRecycleOnMeasure = enabled;
+            this.f15P.mRecycleOnMeasure = enabled;
             return this;
         }
 
         public AlertDialog create() {
-            AlertDialog dialog = new AlertDialog(this.P.mContext, 0, false);
-            this.P.apply(dialog.mAlert);
-            dialog.setCancelable(this.P.mCancelable);
-            if (this.P.mCancelable) {
+            AlertDialog dialog = new AlertDialog(this.f15P.mContext, 0, false);
+            this.f15P.apply(dialog.mAlert);
+            dialog.setCancelable(this.f15P.mCancelable);
+            if (this.f15P.mCancelable) {
                 dialog.setCanceledOnTouchOutside(true);
             }
-            dialog.setOnCancelListener(this.P.mOnCancelListener);
-            dialog.setOnDismissListener(this.P.mOnDismissListener);
-            if (this.P.mOnKeyListener != null) {
-                dialog.setOnKeyListener(this.P.mOnKeyListener);
+            dialog.setOnCancelListener(this.f15P.mOnCancelListener);
+            dialog.setOnDismissListener(this.f15P.mOnDismissListener);
+            if (this.f15P.mOnKeyListener != null) {
+                dialog.setOnKeyListener(this.f15P.mOnKeyListener);
             }
             return dialog;
         }

@@ -1,15 +1,15 @@
 package android.security.keystore;
 
-import android.os.IBinder;
+import android.p007os.IBinder;
 import android.security.KeyStore;
 import android.security.KeyStoreException;
-import android.security.keymaster.KeymasterArguments;
 import android.security.keymaster.OperationResult;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.ProviderException;
 import libcore.util.EmptyArray;
 
+/* loaded from: classes3.dex */
 class KeyStoreCryptoOperationChunkedStreamer implements KeyStoreCryptoOperationStreamer {
     private static final int DEFAULT_MAX_CHUNK_SIZE = 65536;
     private byte[] mBuffered;
@@ -20,6 +20,7 @@ class KeyStoreCryptoOperationChunkedStreamer implements KeyStoreCryptoOperationS
     private final int mMaxChunkSize;
     private long mProducedOutputSizeBytes;
 
+    /* loaded from: classes3.dex */
     interface Stream {
         OperationResult finish(byte[] bArr, byte[] bArr2);
 
@@ -36,10 +37,11 @@ class KeyStoreCryptoOperationChunkedStreamer implements KeyStoreCryptoOperationS
         this.mMaxChunkSize = maxChunkSize;
     }
 
+    @Override // android.security.keystore.KeyStoreCryptoOperationStreamer
     public byte[] update(byte[] input, int inputOffset, int inputLength) throws KeyStoreException {
         byte[] result;
-        int inputBytesInChunk;
         byte[] chunk;
+        int inputBytesInChunk;
         byte[] result2;
         if (inputLength == 0) {
             return EmptyArray.BYTE;
@@ -59,57 +61,56 @@ class KeyStoreCryptoOperationChunkedStreamer implements KeyStoreCryptoOperationS
             }
             inputOffset += inputBytesInChunk;
             inputLength -= inputBytesInChunk;
-            this.mConsumedInputSizeBytes += (long) inputBytesInChunk;
+            this.mConsumedInputSizeBytes += inputBytesInChunk;
             OperationResult opResult = this.mKeyStoreStream.update(chunk);
             if (opResult == null) {
                 throw new KeyStoreConnectException();
-            } else if (opResult.resultCode == 1) {
-                if (opResult.inputConsumed == chunk.length) {
-                    this.mBuffered = EmptyArray.BYTE;
-                    this.mBufferedOffset = 0;
-                    this.mBufferedLength = 0;
-                } else if (opResult.inputConsumed <= 0) {
-                    if (inputLength <= 0) {
-                        this.mBuffered = chunk;
-                        this.mBufferedOffset = 0;
-                        this.mBufferedLength = chunk.length;
-                    } else {
-                        throw new KeyStoreException(-1000, "Keystore consumed nothing from max-sized chunk: " + chunk.length + " bytes");
-                    }
-                } else if (opResult.inputConsumed < chunk.length) {
-                    this.mBuffered = chunk;
-                    this.mBufferedOffset = opResult.inputConsumed;
-                    this.mBufferedLength = chunk.length - opResult.inputConsumed;
-                } else {
-                    throw new KeyStoreException(-1000, "Keystore consumed more input than provided. Provided: " + chunk.length + ", consumed: " + opResult.inputConsumed);
+            }
+            if (opResult.resultCode != 1) {
+                throw KeyStore.getKeyStoreException(opResult.resultCode);
+            }
+            if (opResult.inputConsumed == chunk.length) {
+                this.mBuffered = EmptyArray.BYTE;
+                this.mBufferedOffset = 0;
+                this.mBufferedLength = 0;
+            } else if (opResult.inputConsumed <= 0) {
+                if (inputLength > 0) {
+                    throw new KeyStoreException(-1000, "Keystore consumed nothing from max-sized chunk: " + chunk.length + " bytes");
                 }
-                if (opResult.output != null && opResult.output.length > 0) {
-                    if (this.mBufferedLength + inputLength > 0) {
-                        if (bufferedOutput == null) {
-                            bufferedOutput = new ByteArrayOutputStream();
-                        }
+                this.mBuffered = chunk;
+                this.mBufferedOffset = 0;
+                this.mBufferedLength = chunk.length;
+            } else if (opResult.inputConsumed < chunk.length) {
+                this.mBuffered = chunk;
+                this.mBufferedOffset = opResult.inputConsumed;
+                this.mBufferedLength = chunk.length - opResult.inputConsumed;
+            } else {
+                throw new KeyStoreException(-1000, "Keystore consumed more input than provided. Provided: " + chunk.length + ", consumed: " + opResult.inputConsumed);
+            }
+            if (opResult.output != null && opResult.output.length > 0) {
+                if (this.mBufferedLength + inputLength > 0) {
+                    if (bufferedOutput == null) {
+                        bufferedOutput = new ByteArrayOutputStream();
+                    }
+                    try {
+                        bufferedOutput.write(opResult.output);
+                    } catch (IOException e) {
+                        throw new ProviderException("Failed to buffer output", e);
+                    }
+                } else {
+                    if (bufferedOutput == null) {
+                        result2 = opResult.output;
+                    } else {
                         try {
                             bufferedOutput.write(opResult.output);
-                        } catch (IOException e) {
-                            throw new ProviderException("Failed to buffer output", e);
+                            result2 = bufferedOutput.toByteArray();
+                        } catch (IOException e2) {
+                            throw new ProviderException("Failed to buffer output", e2);
                         }
-                    } else {
-                        if (bufferedOutput == null) {
-                            result2 = opResult.output;
-                        } else {
-                            try {
-                                bufferedOutput.write(opResult.output);
-                                result2 = bufferedOutput.toByteArray();
-                            } catch (IOException e2) {
-                                throw new ProviderException("Failed to buffer output", e2);
-                            }
-                        }
-                        this.mProducedOutputSizeBytes += (long) result2.length;
-                        return result2;
                     }
+                    this.mProducedOutputSizeBytes += result2.length;
+                    return result2;
                 }
-            } else {
-                throw KeyStore.getKeyStoreException(opResult.resultCode);
             }
         }
         if (bufferedOutput == null) {
@@ -117,25 +118,27 @@ class KeyStoreCryptoOperationChunkedStreamer implements KeyStoreCryptoOperationS
         } else {
             result = bufferedOutput.toByteArray();
         }
-        this.mProducedOutputSizeBytes += (long) result.length;
+        this.mProducedOutputSizeBytes += result.length;
         return result;
     }
 
+    @Override // android.security.keystore.KeyStoreCryptoOperationStreamer
     public byte[] doFinal(byte[] input, int inputOffset, int inputLength, byte[] signature, byte[] additionalEntropy) throws KeyStoreException {
         if (inputLength == 0) {
             input = EmptyArray.BYTE;
             inputOffset = 0;
         }
-        byte[] output = ArrayUtils.concat(update(input, inputOffset, inputLength), flush());
+        byte[] output = update(input, inputOffset, inputLength);
+        byte[] output2 = ArrayUtils.concat(output, flush());
         OperationResult opResult = this.mKeyStoreStream.finish(signature, additionalEntropy);
         if (opResult == null) {
             throw new KeyStoreConnectException();
-        } else if (opResult.resultCode == 1) {
-            this.mProducedOutputSizeBytes += (long) opResult.output.length;
-            return ArrayUtils.concat(output, opResult.output);
-        } else {
+        }
+        if (opResult.resultCode != 1) {
             throw KeyStore.getKeyStoreException(opResult.resultCode);
         }
+        this.mProducedOutputSizeBytes += opResult.output.length;
+        return ArrayUtils.concat(output2, opResult.output);
     }
 
     public byte[] flush() throws KeyStoreException {
@@ -149,35 +152,36 @@ class KeyStoreCryptoOperationChunkedStreamer implements KeyStoreCryptoOperationS
             OperationResult opResult = this.mKeyStoreStream.update(chunk);
             if (opResult == null) {
                 throw new KeyStoreConnectException();
-            } else if (opResult.resultCode != 1) {
+            }
+            if (opResult.resultCode != 1) {
                 throw KeyStore.getKeyStoreException(opResult.resultCode);
-            } else if (opResult.inputConsumed <= 0) {
+            }
+            if (opResult.inputConsumed <= 0) {
                 break;
+            }
+            if (opResult.inputConsumed >= chunk.length) {
+                this.mBuffered = EmptyArray.BYTE;
+                this.mBufferedOffset = 0;
+                this.mBufferedLength = 0;
             } else {
-                if (opResult.inputConsumed >= chunk.length) {
-                    this.mBuffered = EmptyArray.BYTE;
-                    this.mBufferedOffset = 0;
-                    this.mBufferedLength = 0;
-                } else {
-                    this.mBuffered = chunk;
-                    this.mBufferedOffset = opResult.inputConsumed;
-                    this.mBufferedLength = chunk.length - opResult.inputConsumed;
+                this.mBuffered = chunk;
+                this.mBufferedOffset = opResult.inputConsumed;
+                this.mBufferedLength = chunk.length - opResult.inputConsumed;
+            }
+            if (opResult.inputConsumed > chunk.length) {
+                throw new KeyStoreException(-1000, "Keystore consumed more input than provided. Provided: " + chunk.length + ", consumed: " + opResult.inputConsumed);
+            } else if (opResult.output != null && opResult.output.length > 0) {
+                if (bufferedOutput == null) {
+                    if (this.mBufferedLength == 0) {
+                        this.mProducedOutputSizeBytes += opResult.output.length;
+                        return opResult.output;
+                    }
+                    bufferedOutput = new ByteArrayOutputStream();
                 }
-                if (opResult.inputConsumed > chunk.length) {
-                    throw new KeyStoreException(-1000, "Keystore consumed more input than provided. Provided: " + chunk.length + ", consumed: " + opResult.inputConsumed);
-                } else if (opResult.output != null && opResult.output.length > 0) {
-                    if (bufferedOutput == null) {
-                        if (this.mBufferedLength == 0) {
-                            this.mProducedOutputSizeBytes += (long) opResult.output.length;
-                            return opResult.output;
-                        }
-                        bufferedOutput = new ByteArrayOutputStream();
-                    }
-                    try {
-                        bufferedOutput.write(opResult.output);
-                    } catch (IOException e) {
-                        throw new ProviderException("Failed to buffer output", e);
-                    }
+                try {
+                    bufferedOutput.write(opResult.output);
+                } catch (IOException e) {
+                    throw new ProviderException("Failed to buffer output", e);
                 }
             }
         }
@@ -194,18 +198,21 @@ class KeyStoreCryptoOperationChunkedStreamer implements KeyStoreCryptoOperationS
             throw new KeyStoreException(-21, sb.toString());
         }
         byte[] result = bufferedOutput != null ? bufferedOutput.toByteArray() : EmptyArray.BYTE;
-        this.mProducedOutputSizeBytes += (long) result.length;
+        this.mProducedOutputSizeBytes += result.length;
         return result;
     }
 
+    @Override // android.security.keystore.KeyStoreCryptoOperationStreamer
     public long getConsumedInputSizeBytes() {
         return this.mConsumedInputSizeBytes;
     }
 
+    @Override // android.security.keystore.KeyStoreCryptoOperationStreamer
     public long getProducedOutputSizeBytes() {
         return this.mProducedOutputSizeBytes;
     }
 
+    /* loaded from: classes3.dex */
     public static class MainDataStream implements Stream {
         private final KeyStore mKeyStore;
         private final IBinder mOperationToken;
@@ -215,12 +222,14 @@ class KeyStoreCryptoOperationChunkedStreamer implements KeyStoreCryptoOperationS
             this.mOperationToken = operationToken;
         }
 
+        @Override // android.security.keystore.KeyStoreCryptoOperationChunkedStreamer.Stream
         public OperationResult update(byte[] input) {
-            return this.mKeyStore.update(this.mOperationToken, (KeymasterArguments) null, input);
+            return this.mKeyStore.update(this.mOperationToken, null, input);
         }
 
+        @Override // android.security.keystore.KeyStoreCryptoOperationChunkedStreamer.Stream
         public OperationResult finish(byte[] signature, byte[] additionalEntropy) {
-            return this.mKeyStore.finish(this.mOperationToken, (KeymasterArguments) null, signature, additionalEntropy);
+            return this.mKeyStore.finish(this.mOperationToken, null, signature, additionalEntropy);
         }
     }
 }

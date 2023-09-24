@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/* loaded from: classes2.dex */
 public class SerialPort {
     private static final String TAG = "SerialPort";
     private FileDescriptor mFd;
@@ -20,15 +21,14 @@ public class SerialPort {
     public native void close();
 
     public SerialPort(File device, int baudrate, int flags) throws SecurityException, IOException {
-        Log.d("SerialPortService", "==" + device.canRead() + "==" + device.canWrite());
+        Log.m72d("SerialPortService", "==" + device.canRead() + "==" + device.canWrite());
         this.mFd = open(device.getAbsolutePath(), baudrate, flags);
-        if (this.mFd != null) {
-            this.mFileInputStream = new FileInputStream(this.mFd);
-            this.mFileOutputStream = new FileOutputStream(this.mFd);
-            return;
+        if (this.mFd == null) {
+            Log.m70e(TAG, "native open returns null");
+            throw new IOException();
         }
-        Log.e(TAG, "native open returns null");
-        throw new IOException();
+        this.mFileInputStream = new FileInputStream(this.mFd);
+        this.mFileOutputStream = new FileOutputStream(this.mFd);
     }
 
     public InputStream getInputStream() {

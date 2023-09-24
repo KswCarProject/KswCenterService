@@ -4,15 +4,18 @@ import android.media.midi.MidiReceiver;
 import com.android.internal.midi.EventScheduler;
 import java.io.IOException;
 
+/* loaded from: classes4.dex */
 public class MidiEventScheduler extends EventScheduler {
     private static final int POOL_EVENT_SIZE = 16;
     private static final String TAG = "MidiEventScheduler";
     private MidiReceiver mReceiver = new SchedulingReceiver();
 
+    /* loaded from: classes4.dex */
     private class SchedulingReceiver extends MidiReceiver {
         private SchedulingReceiver() {
         }
 
+        @Override // android.media.midi.MidiReceiver
         public void onSend(byte[] msg, int offset, int count, long timestamp) throws IOException {
             MidiEvent event = MidiEventScheduler.this.createScheduledEvent(msg, offset, count, timestamp);
             if (event != null) {
@@ -20,39 +23,41 @@ public class MidiEventScheduler extends EventScheduler {
             }
         }
 
+        @Override // android.media.midi.MidiReceiver
         public void onFlush() {
             MidiEventScheduler.this.flush();
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class MidiEvent extends EventScheduler.SchedulableEvent {
         public int count;
         public byte[] data;
 
-        private MidiEvent(int count2) {
-            super(0);
+        private MidiEvent(int count) {
+            super(0L);
             this.count = 0;
-            this.data = new byte[count2];
+            this.data = new byte[count];
         }
 
-        private MidiEvent(byte[] msg, int offset, int count2, long timestamp) {
+        private MidiEvent(byte[] msg, int offset, int count, long timestamp) {
             super(timestamp);
             this.count = 0;
-            this.data = new byte[count2];
-            System.arraycopy(msg, offset, this.data, 0, count2);
-            this.count = count2;
+            this.data = new byte[count];
+            System.arraycopy(msg, offset, this.data, 0, count);
+            this.count = count;
         }
 
         public String toString() {
             String text = "Event: ";
             for (int i = 0; i < this.count; i++) {
-                text = text + this.data[i] + ", ";
+                text = text + ((int) this.data[i]) + ", ";
             }
             return text;
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public MidiEvent createScheduledEvent(byte[] msg, int offset, int count, long timestamp) {
         MidiEvent event;
         if (count > 16) {
@@ -70,9 +75,13 @@ public class MidiEventScheduler extends EventScheduler {
         return event;
     }
 
+    @Override // com.android.internal.midi.EventScheduler
     public void addEventToPool(EventScheduler.SchedulableEvent event) {
-        if ((event instanceof MidiEvent) && ((MidiEvent) event).data.length == 16) {
-            super.addEventToPool(event);
+        if (event instanceof MidiEvent) {
+            MidiEvent midiEvent = (MidiEvent) event;
+            if (midiEvent.data.length == 16) {
+                super.addEventToPool(event);
+            }
         }
     }
 

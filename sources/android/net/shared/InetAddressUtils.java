@@ -1,12 +1,14 @@
 package android.net.shared;
 
-import android.os.Parcel;
+import android.p007os.Parcel;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+/* loaded from: classes3.dex */
 public class InetAddressUtils {
     public static void parcelInetAddress(Parcel parcel, InetAddress address, int flags) {
-        parcel.writeByteArray(address != null ? address.getAddress() : null);
+        byte[] addressArray = address != null ? address.getAddress() : null;
+        parcel.writeByteArray(addressArray);
     }
 
     public static InetAddress unparcelInetAddress(Parcel in) {

@@ -2,6 +2,7 @@ package org.chromium.arc;
 
 import android.util.EventLog;
 
+/* loaded from: classes5.dex */
 public class EventLogTags {
     public static final int ARC_SYSTEM_EVENT = 300000;
 

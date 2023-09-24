@@ -2,6 +2,7 @@ package android.security.keystore;
 
 import libcore.util.EmptyArray;
 
+/* loaded from: classes3.dex */
 public abstract class ArrayUtils {
     private ArrayUtils() {
     }
@@ -19,12 +20,7 @@ public abstract class ArrayUtils {
     }
 
     public static byte[] concat(byte[] arr1, byte[] arr2) {
-        int i = 0;
-        int length = arr1 != null ? arr1.length : 0;
-        if (arr2 != null) {
-            i = arr2.length;
-        }
-        return concat(arr1, 0, length, arr2, 0, i);
+        return concat(arr1, 0, arr1 != null ? arr1.length : 0, arr2, 0, arr2 != null ? arr2.length : 0);
     }
 
     public static byte[] concat(byte[] arr1, int offset1, int len1, byte[] arr2, int offset2, int len2) {
@@ -34,7 +30,7 @@ public abstract class ArrayUtils {
         if (len2 == 0) {
             return subarray(arr1, offset1, len1);
         }
-        byte[] result = new byte[(len1 + len2)];
+        byte[] result = new byte[len1 + len2];
         System.arraycopy(arr1, offset1, result, 0, len1);
         System.arraycopy(arr2, offset2, result, len1, len2);
         return result;
@@ -59,7 +55,7 @@ public abstract class ArrayUtils {
         if (arr2 == null || arr2.length == 0) {
             return arr1;
         }
-        int[] result = new int[(arr1.length + arr2.length)];
+        int[] result = new int[arr1.length + arr2.length];
         System.arraycopy(arr1, 0, result, 0, arr1.length);
         System.arraycopy(arr2, 0, result, arr1.length, arr2.length);
         return result;

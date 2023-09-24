@@ -2,8 +2,9 @@ package android.content;
 
 import android.annotation.UnsupportedAppUsage;
 import android.database.Cursor;
-import android.os.RemoteException;
+import android.p007os.RemoteException;
 
+/* loaded from: classes.dex */
 public abstract class CursorEntityIterator implements EntityIterator {
     private final Cursor mCursor;
     private boolean mIsClosed = false;
@@ -16,45 +17,49 @@ public abstract class CursorEntityIterator implements EntityIterator {
         this.mCursor.moveToFirst();
     }
 
+    @Override // java.util.Iterator
     public final boolean hasNext() {
-        if (!this.mIsClosed) {
-            return !this.mCursor.isAfterLast();
+        if (this.mIsClosed) {
+            throw new IllegalStateException("calling hasNext() when the iterator is closed");
         }
-        throw new IllegalStateException("calling hasNext() when the iterator is closed");
+        return !this.mCursor.isAfterLast();
     }
 
+    /* JADX WARN: Can't rename method to resolve collision */
+    @Override // java.util.Iterator
     public Entity next() {
         if (this.mIsClosed) {
             throw new IllegalStateException("calling next() when the iterator is closed");
-        } else if (hasNext()) {
-            try {
-                return getEntityAndIncrementCursor(this.mCursor);
-            } catch (RemoteException e) {
-                throw new RuntimeException("caught a remote exception, this process will die soon", e);
-            }
-        } else {
+        }
+        if (!hasNext()) {
             throw new IllegalStateException("you may only call next() if hasNext() is true");
+        }
+        try {
+            return getEntityAndIncrementCursor(this.mCursor);
+        } catch (RemoteException e) {
+            throw new RuntimeException("caught a remote exception, this process will die soon", e);
         }
     }
 
+    @Override // java.util.Iterator
     public void remove() {
         throw new UnsupportedOperationException("remove not supported by EntityIterators");
     }
 
+    @Override // android.content.EntityIterator
     public final void reset() {
-        if (!this.mIsClosed) {
-            this.mCursor.moveToFirst();
-            return;
+        if (this.mIsClosed) {
+            throw new IllegalStateException("calling reset() when the iterator is closed");
         }
-        throw new IllegalStateException("calling reset() when the iterator is closed");
+        this.mCursor.moveToFirst();
     }
 
+    @Override // android.content.EntityIterator
     public final void close() {
-        if (!this.mIsClosed) {
-            this.mIsClosed = true;
-            this.mCursor.close();
-            return;
+        if (this.mIsClosed) {
+            throw new IllegalStateException("closing when already closed");
         }
-        throw new IllegalStateException("closing when already closed");
+        this.mIsClosed = true;
+        this.mCursor.close();
     }
 }

@@ -1,11 +1,12 @@
 package android.service.carrier;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes3.dex */
 public interface ICarrierMessagingCallback extends IInterface {
     void onDownloadMmsComplete(int i) throws RemoteException;
 
@@ -17,27 +18,35 @@ public interface ICarrierMessagingCallback extends IInterface {
 
     void onSendSmsComplete(int i, int i2) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements ICarrierMessagingCallback {
+        @Override // android.service.carrier.ICarrierMessagingCallback
         public void onFilterComplete(int result) throws RemoteException {
         }
 
+        @Override // android.service.carrier.ICarrierMessagingCallback
         public void onSendSmsComplete(int result, int messageRef) throws RemoteException {
         }
 
+        @Override // android.service.carrier.ICarrierMessagingCallback
         public void onSendMultipartSmsComplete(int result, int[] messageRefs) throws RemoteException {
         }
 
+        @Override // android.service.carrier.ICarrierMessagingCallback
         public void onSendMmsComplete(int result, byte[] sendConfPdu) throws RemoteException {
         }
 
+        @Override // android.service.carrier.ICarrierMessagingCallback
         public void onDownloadMmsComplete(int result) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements ICarrierMessagingCallback {
         private static final String DESCRIPTOR = "android.service.carrier.ICarrierMessagingCallback";
         static final int TRANSACTION_onDownloadMmsComplete = 5;
@@ -55,12 +64,13 @@ public interface ICarrierMessagingCallback extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof ICarrierMessagingCallback)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof ICarrierMessagingCallback)) {
+                return (ICarrierMessagingCallback) iin;
             }
-            return (ICarrierMessagingCallback) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -82,42 +92,52 @@ public interface ICarrierMessagingCallback extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        onFilterComplete(data.readInt());
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        onSendSmsComplete(data.readInt(), data.readInt());
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        onSendMultipartSmsComplete(data.readInt(), data.createIntArray());
-                        return true;
-                    case 4:
-                        data.enforceInterface(DESCRIPTOR);
-                        onSendMmsComplete(data.readInt(), data.createByteArray());
-                        return true;
-                    case 5:
-                        data.enforceInterface(DESCRIPTOR);
-                        onDownloadMmsComplete(data.readInt());
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0 = data.readInt();
+                    onFilterComplete(_arg0);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    int _arg1 = data.readInt();
+                    onSendSmsComplete(_arg02, _arg1);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg03 = data.readInt();
+                    int[] _arg12 = data.createIntArray();
+                    onSendMultipartSmsComplete(_arg03, _arg12);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg04 = data.readInt();
+                    byte[] _arg13 = data.createByteArray();
+                    onSendMmsComplete(_arg04, _arg13);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg05 = data.readInt();
+                    onDownloadMmsComplete(_arg05);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements ICarrierMessagingCallback {
             public static ICarrierMessagingCallback sDefaultImpl;
             private IBinder mRemote;
@@ -126,6 +146,7 @@ public interface ICarrierMessagingCallback extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -134,14 +155,14 @@ public interface ICarrierMessagingCallback extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.service.carrier.ICarrierMessagingCallback
             public void onFilterComplete(int result) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(result);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onFilterComplete(result);
                     }
                 } finally {
@@ -149,15 +170,15 @@ public interface ICarrierMessagingCallback extends IInterface {
                 }
             }
 
+            @Override // android.service.carrier.ICarrierMessagingCallback
             public void onSendSmsComplete(int result, int messageRef) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(result);
                     _data.writeInt(messageRef);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onSendSmsComplete(result, messageRef);
                     }
                 } finally {
@@ -165,15 +186,15 @@ public interface ICarrierMessagingCallback extends IInterface {
                 }
             }
 
+            @Override // android.service.carrier.ICarrierMessagingCallback
             public void onSendMultipartSmsComplete(int result, int[] messageRefs) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(result);
                     _data.writeIntArray(messageRefs);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onSendMultipartSmsComplete(result, messageRefs);
                     }
                 } finally {
@@ -181,15 +202,15 @@ public interface ICarrierMessagingCallback extends IInterface {
                 }
             }
 
+            @Override // android.service.carrier.ICarrierMessagingCallback
             public void onSendMmsComplete(int result, byte[] sendConfPdu) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(result);
                     _data.writeByteArray(sendConfPdu);
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onSendMmsComplete(result, sendConfPdu);
                     }
                 } finally {
@@ -197,14 +218,14 @@ public interface ICarrierMessagingCallback extends IInterface {
                 }
             }
 
+            @Override // android.service.carrier.ICarrierMessagingCallback
             public void onDownloadMmsComplete(int result) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(result);
-                    if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(5, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onDownloadMmsComplete(result);
                     }
                 } finally {
@@ -214,11 +235,11 @@ public interface ICarrierMessagingCallback extends IInterface {
         }
 
         public static boolean setDefaultImpl(ICarrierMessagingCallback impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static ICarrierMessagingCallback getDefaultImpl() {

@@ -3,6 +3,7 @@ package android.view;
 import android.graphics.RecordingCanvas;
 import android.graphics.Rect;
 
+/* loaded from: classes4.dex */
 public interface WindowCallbacks {
     public static final int RESIZE_MODE_DOCKED_DIVIDER = 1;
     public static final int RESIZE_MODE_FREEFORM = 0;

@@ -4,6 +4,7 @@ import android.hardware.Camera;
 import java.util.Arrays;
 import java.util.HashMap;
 
+/* loaded from: classes3.dex */
 public class CameraProfile {
     public static final int QUALITY_HIGH = 2;
     public static final int QUALITY_LOW = 0;
@@ -51,14 +52,14 @@ public class CameraProfile {
 
     private static int[] getImageEncodingQualityLevels(int cameraId) {
         int nLevels = native_get_num_image_encoding_quality_levels(cameraId);
-        if (nLevels == 3) {
-            int[] levels = new int[nLevels];
-            for (int i = 0; i < nLevels; i++) {
-                levels[i] = native_get_image_encoding_quality_level(cameraId, i);
-            }
-            Arrays.sort(levels);
-            return levels;
+        if (nLevels != 3) {
+            throw new RuntimeException("Unexpected Jpeg encoding quality levels " + nLevels);
         }
-        throw new RuntimeException("Unexpected Jpeg encoding quality levels " + nLevels);
+        int[] levels = new int[nLevels];
+        for (int i = 0; i < nLevels; i++) {
+            levels[i] = native_get_image_encoding_quality_level(cameraId, i);
+        }
+        Arrays.sort(levels);
+        return levels;
     }
 }

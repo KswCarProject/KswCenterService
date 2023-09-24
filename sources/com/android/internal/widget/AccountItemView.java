@@ -10,21 +10,23 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import com.android.internal.widget.AccountViewAdapter;
 
+/* loaded from: classes4.dex */
 public class AccountItemView extends LinearLayout {
     private ImageView mAccountIcon;
     private TextView mAccountName;
     private TextView mAccountNumber;
 
     public AccountItemView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public AccountItemView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        View view = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate((int) R.layout.simple_account_item, (ViewGroup) null);
+        LayoutInflater inflator = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflator.inflate(C3132R.layout.simple_account_item, (ViewGroup) null);
         addView(view);
         initViewItem(view);
     }
@@ -67,7 +69,7 @@ public class AccountItemView extends LinearLayout {
             view.setVisibility(8);
             return;
         }
-        view.setText((CharSequence) text);
+        view.setText(text);
         view.setVisibility(0);
     }
 }

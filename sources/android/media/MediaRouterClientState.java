@@ -1,15 +1,20 @@
 package android.media;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.ArrayList;
 
+/* loaded from: classes3.dex */
 public final class MediaRouterClientState implements Parcelable {
-    public static final Parcelable.Creator<MediaRouterClientState> CREATOR = new Parcelable.Creator<MediaRouterClientState>() {
+    public static final Parcelable.Creator<MediaRouterClientState> CREATOR = new Parcelable.Creator<MediaRouterClientState>() { // from class: android.media.MediaRouterClientState.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public MediaRouterClientState createFromParcel(Parcel in) {
             return new MediaRouterClientState(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public MediaRouterClientState[] newArray(int size) {
             return new MediaRouterClientState[size];
         }
@@ -28,17 +33,19 @@ public final class MediaRouterClientState implements Parcelable {
         int count = this.routes.size();
         for (int i = 0; i < count; i++) {
             RouteInfo route = this.routes.get(i);
-            if (route.id.equals(id)) {
+            if (route.f121id.equals(id)) {
                 return route;
             }
         }
         return null;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeTypedList(this.routes);
     }
@@ -47,12 +54,17 @@ public final class MediaRouterClientState implements Parcelable {
         return "MediaRouterClientState{ routes=" + this.routes.toString() + " }";
     }
 
+    /* loaded from: classes3.dex */
     public static final class RouteInfo implements Parcelable {
-        public static final Parcelable.Creator<RouteInfo> CREATOR = new Parcelable.Creator<RouteInfo>() {
+        public static final Parcelable.Creator<RouteInfo> CREATOR = new Parcelable.Creator<RouteInfo>() { // from class: android.media.MediaRouterClientState.RouteInfo.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public RouteInfo createFromParcel(Parcel in) {
                 return new RouteInfo(in);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public RouteInfo[] newArray(int size) {
                 return new RouteInfo[size];
             }
@@ -60,7 +72,9 @@ public final class MediaRouterClientState implements Parcelable {
         public String description;
         public int deviceType;
         public boolean enabled;
-        public String id;
+
+        /* renamed from: id */
+        public String f121id;
         public String name;
         public int playbackStream;
         public int playbackType;
@@ -71,8 +85,8 @@ public final class MediaRouterClientState implements Parcelable {
         public int volumeHandling;
         public int volumeMax;
 
-        public RouteInfo(String id2) {
-            this.id = id2;
+        public RouteInfo(String id) {
+            this.f121id = id;
             this.enabled = true;
             this.statusCode = 0;
             this.playbackType = 1;
@@ -83,7 +97,7 @@ public final class MediaRouterClientState implements Parcelable {
         }
 
         public RouteInfo(RouteInfo other) {
-            this.id = other.id;
+            this.f121id = other.f121id;
             this.name = other.name;
             this.description = other.description;
             this.supportedTypes = other.supportedTypes;
@@ -99,7 +113,7 @@ public final class MediaRouterClientState implements Parcelable {
         }
 
         RouteInfo(Parcel in) {
-            this.id = in.readString();
+            this.f121id = in.readString();
             this.name = in.readString();
             this.description = in.readString();
             this.supportedTypes = in.readInt();
@@ -114,12 +128,14 @@ public final class MediaRouterClientState implements Parcelable {
             this.deviceType = in.readInt();
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
-            dest.writeString(this.id);
+            dest.writeString(this.f121id);
             dest.writeString(this.name);
             dest.writeString(this.description);
             dest.writeInt(this.supportedTypes);
@@ -135,7 +151,7 @@ public final class MediaRouterClientState implements Parcelable {
         }
 
         public String toString() {
-            return "RouteInfo{ id=" + this.id + ", name=" + this.name + ", description=" + this.description + ", supportedTypes=0x" + Integer.toHexString(this.supportedTypes) + ", enabled=" + this.enabled + ", statusCode=" + this.statusCode + ", playbackType=" + this.playbackType + ", playbackStream=" + this.playbackStream + ", volume=" + this.volume + ", volumeMax=" + this.volumeMax + ", volumeHandling=" + this.volumeHandling + ", presentationDisplayId=" + this.presentationDisplayId + ", deviceType=" + this.deviceType + " }";
+            return "RouteInfo{ id=" + this.f121id + ", name=" + this.name + ", description=" + this.description + ", supportedTypes=0x" + Integer.toHexString(this.supportedTypes) + ", enabled=" + this.enabled + ", statusCode=" + this.statusCode + ", playbackType=" + this.playbackType + ", playbackStream=" + this.playbackStream + ", volume=" + this.volume + ", volumeMax=" + this.volumeMax + ", volumeHandling=" + this.volumeHandling + ", presentationDisplayId=" + this.presentationDisplayId + ", deviceType=" + this.deviceType + " }";
         }
     }
 }

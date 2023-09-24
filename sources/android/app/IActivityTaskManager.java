@@ -1,25 +1,30 @@
 package android.app;
 
 import android.app.ActivityManager;
+import android.app.IActivityController;
+import android.app.IApplicationThread;
+import android.app.IAssistDataReceiver;
+import android.app.IRequestFinishCallback;
+import android.app.ITaskStackListener;
 import android.app.assist.AssistContent;
 import android.app.assist.AssistStructure;
 import android.content.ComponentName;
 import android.content.IIntentSender;
 import android.content.Intent;
-import android.content.pm.ConfigurationInfo;
-import android.content.pm.ParceledListSlice;
+import android.content.p002pm.ConfigurationInfo;
+import android.content.p002pm.ParceledListSlice;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.net.Uri;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.PersistableBundle;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.PersistableBundle;
+import android.p007os.RemoteException;
 import android.service.voice.IVoiceInteractionSession;
 import android.text.TextUtils;
 import android.view.IRecentsAnimationRunner;
@@ -29,6 +34,7 @@ import com.android.internal.app.IVoiceInteractor;
 import com.android.internal.policy.IKeyguardDismissCallback;
 import java.util.List;
 
+/* loaded from: classes.dex */
 public interface IActivityTaskManager extends IInterface {
     void activityDestroyed(IBinder iBinder) throws RemoteException;
 
@@ -352,569 +358,733 @@ public interface IActivityTaskManager extends IInterface {
 
     boolean willActivityBeVisible(IBinder iBinder) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements IActivityTaskManager {
+        @Override // android.app.IActivityTaskManager
         public int startActivity(IApplicationThread caller, String callingPackage, Intent intent, String resolvedType, IBinder resultTo, String resultWho, int requestCode, int flags, ProfilerInfo profilerInfo, Bundle options) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.IActivityTaskManager
         public int startActivities(IApplicationThread caller, String callingPackage, Intent[] intents, String[] resolvedTypes, IBinder resultTo, Bundle options, int userId) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.IActivityTaskManager
         public int startActivityAsUser(IApplicationThread caller, String callingPackage, Intent intent, String resolvedType, IBinder resultTo, String resultWho, int requestCode, int flags, ProfilerInfo profilerInfo, Bundle options, int userId) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.IActivityTaskManager
         public boolean startNextMatchingActivity(IBinder callingActivity, Intent intent, Bundle options) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IActivityTaskManager
         public int startActivityIntentSender(IApplicationThread caller, IIntentSender target, IBinder whitelistToken, Intent fillInIntent, String resolvedType, IBinder resultTo, String resultWho, int requestCode, int flagsMask, int flagsValues, Bundle options) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.IActivityTaskManager
         public WaitResult startActivityAndWait(IApplicationThread caller, String callingPackage, Intent intent, String resolvedType, IBinder resultTo, String resultWho, int requestCode, int flags, ProfilerInfo profilerInfo, Bundle options, int userId) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.IActivityTaskManager
         public int startActivityWithConfig(IApplicationThread caller, String callingPackage, Intent intent, String resolvedType, IBinder resultTo, String resultWho, int requestCode, int startFlags, Configuration newConfig, Bundle options, int userId) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.IActivityTaskManager
         public int startVoiceActivity(String callingPackage, int callingPid, int callingUid, Intent intent, String resolvedType, IVoiceInteractionSession session, IVoiceInteractor interactor, int flags, ProfilerInfo profilerInfo, Bundle options, int userId) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.IActivityTaskManager
         public int startAssistantActivity(String callingPackage, int callingPid, int callingUid, Intent intent, String resolvedType, Bundle options, int userId) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.IActivityTaskManager
         public void startRecentsActivity(Intent intent, IAssistDataReceiver assistDataReceiver, IRecentsAnimationRunner recentsAnimationRunner) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public int startActivityFromRecents(int taskId, Bundle options) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.IActivityTaskManager
         public int startActivityAsCaller(IApplicationThread caller, String callingPackage, Intent intent, String resolvedType, IBinder resultTo, String resultWho, int requestCode, int flags, ProfilerInfo profilerInfo, Bundle options, IBinder permissionToken, boolean ignoreTargetSecurity, int userId) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.IActivityTaskManager
         public boolean isActivityStartAllowedOnDisplay(int displayId, Intent intent, String resolvedType, int userId) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IActivityTaskManager
         public void unhandledBack() throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public boolean finishActivity(IBinder token, int code, Intent data, int finishTask) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IActivityTaskManager
         public boolean finishActivityAffinity(IBinder token) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IActivityTaskManager
         public void activityIdle(IBinder token, Configuration config, boolean stopProfiling) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void activityResumed(IBinder token) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void activityTopResumedStateLost() throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void activityPaused(IBinder token) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void activityStopped(IBinder token, Bundle state, PersistableBundle persistentState, CharSequence description) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void activityDestroyed(IBinder token) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void activityRelaunched(IBinder token) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void activitySlept(IBinder token) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public int getFrontActivityScreenCompatMode() throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.IActivityTaskManager
         public void setFrontActivityScreenCompatMode(int mode) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public String getCallingPackage(IBinder token) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.IActivityTaskManager
         public ComponentName getCallingActivity(IBinder token) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.IActivityTaskManager
         public void setFocusedTask(int taskId) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public boolean removeTask(int taskId) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IActivityTaskManager
         public void removeAllVisibleRecentTasks() throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public List<ActivityManager.RunningTaskInfo> getTasks(int maxNum) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.IActivityTaskManager
         public List<ActivityManager.RunningTaskInfo> getFilteredTasks(int maxNum, int ignoreActivityType, int ignoreWindowingMode) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.IActivityTaskManager
         public boolean shouldUpRecreateTask(IBinder token, String destAffinity) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IActivityTaskManager
         public boolean navigateUpTo(IBinder token, Intent target, int resultCode, Intent resultData) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IActivityTaskManager
         public void moveTaskToFront(IApplicationThread app, String callingPackage, int task, int flags, Bundle options) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public int getTaskForActivity(IBinder token, boolean onlyRoot) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.IActivityTaskManager
         public void finishSubActivity(IBinder token, String resultWho, int requestCode) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public ParceledListSlice getRecentTasks(int maxNum, int flags, int userId) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.IActivityTaskManager
         public boolean willActivityBeVisible(IBinder token) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IActivityTaskManager
         public void setRequestedOrientation(IBinder token, int requestedOrientation) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public int getRequestedOrientation(IBinder token) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.IActivityTaskManager
         public boolean convertFromTranslucent(IBinder token) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IActivityTaskManager
         public boolean convertToTranslucent(IBinder token, Bundle options) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IActivityTaskManager
         public void notifyActivityDrawn(IBinder token) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void reportActivityFullyDrawn(IBinder token, boolean restoredFromBundle) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public int getActivityDisplayId(IBinder activityToken) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.IActivityTaskManager
         public boolean isImmersive(IBinder token) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IActivityTaskManager
         public void setImmersive(IBinder token, boolean immersive) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public boolean isTopActivityImmersive() throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IActivityTaskManager
         public boolean moveActivityTaskToBack(IBinder token, boolean nonRoot) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IActivityTaskManager
         public ActivityManager.TaskDescription getTaskDescription(int taskId) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.IActivityTaskManager
         public void overridePendingTransition(IBinder token, String packageName, int enterAnim, int exitAnim) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public int getLaunchedFromUid(IBinder activityToken) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.IActivityTaskManager
         public String getLaunchedFromPackage(IBinder activityToken) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.IActivityTaskManager
         public void reportAssistContextExtras(IBinder token, Bundle extras, AssistStructure structure, AssistContent content, Uri referrer) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void setFocusedStack(int stackId) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public ActivityManager.StackInfo getFocusedStackInfo() throws RemoteException {
             return null;
         }
 
+        @Override // android.app.IActivityTaskManager
         public Rect getTaskBounds(int taskId) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.IActivityTaskManager
         public void cancelRecentsAnimation(boolean restoreHomeStackPosition) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void startLockTaskModeByToken(IBinder token) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void stopLockTaskModeByToken(IBinder token) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void updateLockTaskPackages(int userId, String[] packages) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public boolean isInLockTaskMode() throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IActivityTaskManager
         public int getLockTaskModeState() throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.IActivityTaskManager
         public void setTaskDescription(IBinder token, ActivityManager.TaskDescription values) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public Bundle getActivityOptions(IBinder token) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.IActivityTaskManager
         public List<IBinder> getAppTasks(String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.IActivityTaskManager
         public void startSystemLockTaskMode(int taskId) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void stopSystemLockTaskMode() throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void finishVoiceTask(IVoiceInteractionSession session) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public boolean isTopOfTask(IBinder token) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IActivityTaskManager
         public void notifyLaunchTaskBehindComplete(IBinder token) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void notifyEnterAnimationComplete(IBinder token) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public int addAppTask(IBinder activityToken, Intent intent, ActivityManager.TaskDescription description, Bitmap thumbnail) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.IActivityTaskManager
         public Point getAppTaskThumbnailSize() throws RemoteException {
             return null;
         }
 
+        @Override // android.app.IActivityTaskManager
         public boolean releaseActivityInstance(IBinder token) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IActivityTaskManager
         public IBinder requestStartActivityPermissionToken(IBinder delegatorToken) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.IActivityTaskManager
         public void releaseSomeActivities(IApplicationThread app) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public Bitmap getTaskDescriptionIcon(String filename, int userId) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.IActivityTaskManager
         public void startInPlaceAnimationOnFrontMostApplication(Bundle opts) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void registerTaskStackListener(ITaskStackListener listener) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void unregisterTaskStackListener(ITaskStackListener listener) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void setTaskResizeable(int taskId, int resizeableMode) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void toggleFreeformWindowingMode(IBinder token) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void resizeTask(int taskId, Rect bounds, int resizeMode) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void moveStackToDisplay(int stackId, int displayId) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void removeStack(int stackId) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void setTaskWindowingMode(int taskId, int windowingMode, boolean toTop) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void moveTaskToStack(int taskId, int stackId, boolean toTop) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void resizeStack(int stackId, Rect bounds, boolean allowResizeInDockedMode, boolean preserveWindows, boolean animate, int animationDuration) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public boolean setTaskWindowingModeSplitScreenPrimary(int taskId, int createMode, boolean toTop, boolean animate, Rect initialBounds, boolean showRecents) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IActivityTaskManager
         public void offsetPinnedStackBounds(int stackId, Rect compareBounds, int xOffset, int yOffset, int animationDuration) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void removeStacksInWindowingModes(int[] windowingModes) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void removeStacksWithActivityTypes(int[] activityTypes) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public List<ActivityManager.StackInfo> getAllStackInfos() throws RemoteException {
             return null;
         }
 
+        @Override // android.app.IActivityTaskManager
         public ActivityManager.StackInfo getStackInfo(int windowingMode, int activityType) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.IActivityTaskManager
         public void setLockScreenShown(boolean showingKeyguard, boolean showingAod) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public Bundle getAssistContextExtras(int requestType) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.IActivityTaskManager
         public boolean launchAssistIntent(Intent intent, int requestType, String hint, int userHandle, Bundle args) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IActivityTaskManager
         public boolean requestAssistContextExtras(int requestType, IAssistDataReceiver receiver, Bundle receiverExtras, IBinder activityToken, boolean focused, boolean newSessionId) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IActivityTaskManager
         public boolean requestAutofillData(IAssistDataReceiver receiver, Bundle receiverExtras, IBinder activityToken, int flags) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IActivityTaskManager
         public boolean isAssistDataAllowedOnCurrentActivity() throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IActivityTaskManager
         public boolean showAssistFromActivity(IBinder token, Bundle args) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IActivityTaskManager
         public boolean isRootVoiceInteraction(IBinder token) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IActivityTaskManager
         public void showLockTaskEscapeMessage(IBinder token) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void keyguardGoingAway(int flags) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public ComponentName getActivityClassForToken(IBinder token) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.IActivityTaskManager
         public String getPackageForToken(IBinder token) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.IActivityTaskManager
         public void positionTaskInStack(int taskId, int stackId, int position) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void reportSizeConfigurations(IBinder token, int[] horizontalSizeConfiguration, int[] verticalSizeConfigurations, int[] smallestWidthConfigurations) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void dismissSplitScreenMode(boolean toTop) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void dismissPip(boolean animate, int animationDuration) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void suppressResizeConfigChanges(boolean suppress) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void moveTasksToFullscreenStack(int fromStackId, boolean onTop) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public boolean moveTopActivityToPinnedStack(int stackId, Rect bounds) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IActivityTaskManager
         public boolean isInMultiWindowMode(IBinder token) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IActivityTaskManager
         public boolean isInPictureInPictureMode(IBinder token) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IActivityTaskManager
         public boolean enterPictureInPictureMode(IBinder token, PictureInPictureParams params) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IActivityTaskManager
         public void setPictureInPictureParams(IBinder token, PictureInPictureParams params) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public int getMaxNumPictureInPictureActions(IBinder token) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.IActivityTaskManager
         public IBinder getUriPermissionOwnerForActivity(IBinder activityToken) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.IActivityTaskManager
         public void resizeDockedStack(Rect dockedBounds, Rect tempDockedTaskBounds, Rect tempDockedTaskInsetBounds, Rect tempOtherTaskBounds, Rect tempOtherTaskInsetBounds) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void setSplitScreenResizing(boolean resizing) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public int setVrMode(IBinder token, boolean enabled, ComponentName packageName) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.IActivityTaskManager
         public void startLocalVoiceInteraction(IBinder token, Bundle options) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void stopLocalVoiceInteraction(IBinder token) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public boolean supportsLocalVoiceInteraction() throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IActivityTaskManager
         public void notifyPinnedStackAnimationStarted() throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void notifyPinnedStackAnimationEnded() throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public ConfigurationInfo getDeviceConfigurationInfo() throws RemoteException {
             return null;
         }
 
+        @Override // android.app.IActivityTaskManager
         public void resizePinnedStack(Rect pinnedBounds, Rect tempPinnedTaskBounds) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public boolean updateDisplayOverrideConfiguration(Configuration values, int displayId) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IActivityTaskManager
         public void dismissKeyguard(IBinder token, IKeyguardDismissCallback callback, CharSequence message) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void cancelTaskWindowTransition(int taskId) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public ActivityManager.TaskSnapshot getTaskSnapshot(int taskId, boolean reducedResolution) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.IActivityTaskManager
         public void setDisablePreviewScreenshots(IBinder token, boolean disable) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public int getLastResumedActivityUserId() throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.IActivityTaskManager
         public boolean updateConfiguration(Configuration values) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IActivityTaskManager
         public void updateLockTaskFeatures(int userId, int flags) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void setShowWhenLocked(IBinder token, boolean showWhenLocked) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void setInheritShowWhenLocked(IBinder token, boolean setInheritShownWhenLocked) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void setTurnScreenOn(IBinder token, boolean turnScreenOn) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void registerRemoteAnimations(IBinder token, RemoteAnimationDefinition definition) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void registerRemoteAnimationForNextActivityStart(String packageName, RemoteAnimationAdapter adapter) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void registerRemoteAnimationsForDisplay(int displayId, RemoteAnimationDefinition definition) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void alwaysShowUnsupportedCompileSdkWarning(ComponentName activity) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void setVrThread(int tid) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void setPersistentVrThread(int tid) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void stopAppSwitches() throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void resumeAppSwitches() throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void setActivityController(IActivityController watcher, boolean imAMonkey) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void setVoiceKeepAwake(IVoiceInteractionSession session, boolean keepAwake) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public int getPackageScreenCompatMode(String packageName) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.IActivityTaskManager
         public void setPackageScreenCompatMode(String packageName, int mode) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public boolean getPackageAskScreenCompat(String packageName) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IActivityTaskManager
         public void setPackageAskScreenCompat(String packageName, boolean ask) throws RemoteException {
         }
 
-        public void clearLaunchParamsForPackages(List<String> list) throws RemoteException {
+        @Override // android.app.IActivityTaskManager
+        public void clearLaunchParamsForPackages(List<String> packageNames) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void setDisplayToSingleTaskInstance(int displayId) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void restartActivityProcessIfVisible(IBinder activityToken) throws RemoteException {
         }
 
+        @Override // android.app.IActivityTaskManager
         public void onBackPressedOnTaskRoot(IBinder activityToken, IRequestFinishCallback callback) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements IActivityTaskManager {
         private static final String DESCRIPTOR = "android.app.IActivityTaskManager";
         static final int TRANSACTION_activityDestroyed = 22;
@@ -1088,12 +1258,13 @@ public interface IActivityTaskManager extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IActivityTaskManager)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IActivityTaskManager)) {
+                return (IActivityTaskManager) iin;
             }
-            return (IActivityTaskManager) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -1427,2550 +1598,1398 @@ public interface IActivityTaskManager extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v20, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v58, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v78, resolved type: android.content.res.Configuration} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v116, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v146, resolved type: android.app.ActivityManager$TaskDescription} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v158, resolved type: android.graphics.Bitmap} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v168, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v178, resolved type: android.graphics.Rect} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v229, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v234, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v252, resolved type: android.graphics.Rect} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v258, resolved type: android.app.PictureInPictureParams} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v262, resolved type: android.app.PictureInPictureParams} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v275, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v279, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v286, resolved type: android.graphics.Rect} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v290, resolved type: android.content.res.Configuration} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v302, resolved type: android.content.res.Configuration} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v310, resolved type: android.view.RemoteAnimationDefinition} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v314, resolved type: android.view.RemoteAnimationAdapter} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v318, resolved type: android.view.RemoteAnimationDefinition} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v322, resolved type: android.content.ComponentName} */
-        /* JADX WARNING: type inference failed for: r0v1 */
-        /* JADX WARNING: type inference failed for: r0v2 */
-        /* JADX WARNING: type inference failed for: r0v8 */
-        /* JADX WARNING: type inference failed for: r0v14 */
-        /* JADX WARNING: type inference failed for: r0v24 */
-        /* JADX WARNING: type inference failed for: r0v30 */
-        /* JADX WARNING: type inference failed for: r0v36 */
-        /* JADX WARNING: type inference failed for: r0v42 */
-        /* JADX WARNING: type inference failed for: r0v48 */
-        /* JADX WARNING: type inference failed for: r0v54, types: [android.content.Intent] */
-        /* JADX WARNING: type inference failed for: r0v62 */
-        /* JADX WARNING: type inference failed for: r0v69, types: [android.content.Intent] */
-        /* JADX WARNING: type inference failed for: r0v73, types: [android.content.Intent] */
-        /* JADX WARNING: type inference failed for: r0v84, types: [java.lang.CharSequence] */
-        /* JADX WARNING: type inference failed for: r0v100, types: [android.content.Intent] */
-        /* JADX WARNING: type inference failed for: r0v104 */
-        /* JADX WARNING: type inference failed for: r0v131 */
-        /* JADX WARNING: type inference failed for: r0v186 */
-        /* JADX WARNING: type inference failed for: r0v194 */
-        /* JADX WARNING: type inference failed for: r0v201 */
-        /* JADX WARNING: type inference failed for: r0v215 */
-        /* JADX WARNING: type inference failed for: r0v221 */
-        /* JADX WARNING: type inference failed for: r0v268 */
-        /* JADX WARNING: type inference failed for: r0v294, types: [java.lang.CharSequence] */
-        /* JADX WARNING: type inference failed for: r0v341 */
-        /* JADX WARNING: type inference failed for: r0v342 */
-        /* JADX WARNING: type inference failed for: r0v343 */
-        /* JADX WARNING: type inference failed for: r0v344 */
-        /* JADX WARNING: type inference failed for: r0v345 */
-        /* JADX WARNING: type inference failed for: r0v346 */
-        /* JADX WARNING: type inference failed for: r0v347 */
-        /* JADX WARNING: type inference failed for: r0v348 */
-        /* JADX WARNING: type inference failed for: r0v349 */
-        /* JADX WARNING: type inference failed for: r0v350 */
-        /* JADX WARNING: type inference failed for: r0v351 */
-        /* JADX WARNING: type inference failed for: r0v352 */
-        /* JADX WARNING: type inference failed for: r0v353 */
-        /* JADX WARNING: type inference failed for: r0v354 */
-        /* JADX WARNING: type inference failed for: r0v355 */
-        /* JADX WARNING: type inference failed for: r0v356 */
-        /* JADX WARNING: type inference failed for: r0v357 */
-        /* JADX WARNING: type inference failed for: r0v358 */
-        /* JADX WARNING: type inference failed for: r0v359 */
-        /* JADX WARNING: type inference failed for: r0v360 */
-        /* JADX WARNING: type inference failed for: r0v361 */
-        /* JADX WARNING: type inference failed for: r0v362 */
-        /* JADX WARNING: type inference failed for: r0v363 */
-        /* JADX WARNING: type inference failed for: r0v364 */
-        /* JADX WARNING: type inference failed for: r0v365 */
-        /* JADX WARNING: type inference failed for: r0v366 */
-        /* JADX WARNING: type inference failed for: r0v367 */
-        /* JADX WARNING: type inference failed for: r0v368 */
-        /* JADX WARNING: type inference failed for: r0v369 */
-        /* JADX WARNING: type inference failed for: r0v370 */
-        /* JADX WARNING: type inference failed for: r0v371 */
-        /* JADX WARNING: type inference failed for: r0v372 */
-        /* JADX WARNING: type inference failed for: r0v373 */
-        /* JADX WARNING: type inference failed for: r0v374 */
-        /* JADX WARNING: type inference failed for: r0v375 */
-        /* JADX WARNING: type inference failed for: r0v376 */
-        /* JADX WARNING: type inference failed for: r0v377 */
-        /* JADX WARNING: type inference failed for: r0v378 */
-        /* JADX WARNING: type inference failed for: r0v379 */
-        /* JADX WARNING: type inference failed for: r0v380 */
-        /* JADX WARNING: type inference failed for: r0v381 */
-        /* JADX WARNING: type inference failed for: r0v382 */
-        /* JADX WARNING: type inference failed for: r0v383 */
-        /* JADX WARNING: type inference failed for: r0v384 */
-        /* JADX WARNING: type inference failed for: r0v385 */
-        /*  JADX ERROR: NullPointerException in pass: CodeShrinkVisitor
-            java.lang.NullPointerException
-            */
-        /* JADX WARNING: Multi-variable type inference failed */
-        public boolean onTransact(int r27, android.os.Parcel r28, android.os.Parcel r29, int r30) throws android.os.RemoteException {
-            /*
-                r26 = this;
-                r14 = r26
-                r15 = r27
-                r13 = r28
-                r11 = r29
-                java.lang.String r8 = "android.app.IActivityTaskManager"
-                r0 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r7 = 1
-                if (r15 == r0) goto L_0x12f4
-                r12 = 0
-                r0 = 0
-                switch(r15) {
-                    case 1: goto L_0x1280;
-                    case 2: goto L_0x1232;
-                    case 3: goto L_0x11b7;
-                    case 4: goto L_0x1181;
-                    case 5: goto L_0x110c;
-                    case 6: goto L_0x1087;
-                    case 7: goto L_0x100c;
-                    case 8: goto L_0x0f8d;
-                    case 9: goto L_0x0f3d;
-                    case 10: goto L_0x0f0f;
-                    case 11: goto L_0x0ee3;
-                    case 12: goto L_0x0e58;
-                    case 13: goto L_0x0e2e;
-                    case 14: goto L_0x0e24;
-                    case 15: goto L_0x0dfa;
-                    case 16: goto L_0x0de8;
-                    case 17: goto L_0x0dc4;
-                    case 18: goto L_0x0db6;
-                    case 19: goto L_0x0dac;
-                    case 20: goto L_0x0d9e;
-                    case 21: goto L_0x0d60;
-                    case 22: goto L_0x0d55;
-                    case 23: goto L_0x0d47;
-                    case 24: goto L_0x0d3c;
-                    case 25: goto L_0x0d2e;
-                    case 26: goto L_0x0d20;
-                    case 27: goto L_0x0d0e;
-                    case 28: goto L_0x0cf3;
-                    case 29: goto L_0x0ce5;
-                    case 30: goto L_0x0cd3;
-                    case 31: goto L_0x0cc9;
-                    case 32: goto L_0x0cb7;
-                    case 33: goto L_0x0c9d;
-                    case 34: goto L_0x0c87;
-                    case 35: goto L_0x0c51;
-                    case 36: goto L_0x0c1c;
-                    case 37: goto L_0x0c01;
-                    case 38: goto L_0x0beb;
-                    case 39: goto L_0x0bc8;
-                    case 40: goto L_0x0bb6;
-                    case 41: goto L_0x0ba4;
-                    case 42: goto L_0x0b92;
-                    case 43: goto L_0x0b80;
-                    case 44: goto L_0x0b5e;
-                    case 45: goto L_0x0b50;
-                    case 46: goto L_0x0b39;
-                    case 47: goto L_0x0b27;
-                    case 48: goto L_0x0b15;
-                    case 49: goto L_0x0afe;
-                    case 50: goto L_0x0af0;
-                    case 51: goto L_0x0ad5;
-                    case 52: goto L_0x0aba;
-                    case 53: goto L_0x0aa0;
-                    case 54: goto L_0x0a8e;
-                    case 55: goto L_0x0a7c;
-                    case 56: goto L_0x0a27;
-                    case 57: goto L_0x0a19;
-                    case 58: goto L_0x0a02;
-                    case 59: goto L_0x09e7;
-                    case 60: goto L_0x09d4;
-                    case 61: goto L_0x09c6;
-                    case 62: goto L_0x09b8;
-                    case 63: goto L_0x09a6;
-                    case 64: goto L_0x0998;
-                    case 65: goto L_0x098a;
-                    case 66: goto L_0x096c;
-                    case 67: goto L_0x0951;
-                    case 68: goto L_0x093f;
-                    case 69: goto L_0x0931;
-                    case 70: goto L_0x0927;
-                    case 71: goto L_0x0915;
-                    case 72: goto L_0x0903;
-                    case 73: goto L_0x08f5;
-                    case 74: goto L_0x08e7;
-                    case 75: goto L_0x08a5;
-                    case 76: goto L_0x088e;
-                    case 77: goto L_0x087c;
-                    case 78: goto L_0x086a;
-                    case 79: goto L_0x0858;
-                    case 80: goto L_0x0839;
-                    case 81: goto L_0x081f;
-                    case 82: goto L_0x080d;
-                    case 83: goto L_0x07fb;
-                    case 84: goto L_0x07e9;
-                    case 85: goto L_0x07db;
-                    case 86: goto L_0x07b9;
-                    case 87: goto L_0x07a7;
-                    case 88: goto L_0x0799;
-                    case 89: goto L_0x077e;
-                    case 90: goto L_0x0763;
-                    case 91: goto L_0x0721;
-                    case 92: goto L_0x06db;
-                    case 93: goto L_0x06aa;
-                    case 94: goto L_0x069c;
-                    case 95: goto L_0x068e;
-                    case 96: goto L_0x0680;
-                    case 97: goto L_0x0661;
-                    case 98: goto L_0x0645;
-                    case 99: goto L_0x062a;
-                    case 100: goto L_0x05ea;
-                    case 101: goto L_0x05a3;
-                    case 102: goto L_0x0575;
-                    case 103: goto L_0x0567;
-                    case 104: goto L_0x0545;
-                    case 105: goto L_0x0533;
-                    case 106: goto L_0x0528;
-                    case 107: goto L_0x051a;
-                    case 108: goto L_0x04ff;
-                    case 109: goto L_0x04ed;
-                    case 110: goto L_0x04d7;
-                    case 111: goto L_0x04bd;
-                    case 112: goto L_0x04aa;
-                    case 113: goto L_0x0493;
-                    case 114: goto L_0x0480;
-                    case 115: goto L_0x0469;
-                    case 116: goto L_0x0447;
-                    case 117: goto L_0x0435;
-                    case 118: goto L_0x0423;
-                    case 119: goto L_0x0401;
-                    case 120: goto L_0x03e3;
-                    case 121: goto L_0x03d1;
-                    case 122: goto L_0x03bf;
-                    case 123: goto L_0x0362;
-                    case 124: goto L_0x034f;
-                    case 125: goto L_0x0324;
-                    case 126: goto L_0x0306;
-                    case 127: goto L_0x02f8;
-                    case 128: goto L_0x02ea;
-                    case 129: goto L_0x02e0;
-                    case 130: goto L_0x02d6;
-                    case 131: goto L_0x02bf;
-                    case 132: goto L_0x0295;
-                    case 133: goto L_0x0273;
-                    case 134: goto L_0x024d;
-                    case 135: goto L_0x023f;
-                    case 136: goto L_0x021b;
-                    case 137: goto L_0x0204;
-                    case 138: goto L_0x01f6;
-                    case 139: goto L_0x01d8;
-                    case 140: goto L_0x01c6;
-                    case 141: goto L_0x01af;
-                    case 142: goto L_0x0198;
-                    case 143: goto L_0x0181;
-                    case 144: goto L_0x0163;
-                    case 145: goto L_0x0145;
-                    case 146: goto L_0x0127;
-                    case 147: goto L_0x010d;
-                    case 148: goto L_0x00ff;
-                    case 149: goto L_0x00f1;
-                    case 150: goto L_0x00e7;
-                    case 151: goto L_0x00dd;
-                    case 152: goto L_0x00c2;
-                    case 153: goto L_0x00a7;
-                    case 154: goto L_0x0095;
-                    case 155: goto L_0x0083;
-                    case 156: goto L_0x0071;
-                    case 157: goto L_0x005a;
-                    case 158: goto L_0x004c;
-                    case 159: goto L_0x003e;
-                    case 160: goto L_0x0030;
-                    case 161: goto L_0x001a;
-                    default: goto L_0x0015;
-                }
-            L_0x0015:
-                boolean r0 = super.onTransact(r27, r28, r29, r30)
-                return r0
-            L_0x001a:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                android.os.IBinder r1 = r28.readStrongBinder()
-                android.app.IRequestFinishCallback r1 = android.app.IRequestFinishCallback.Stub.asInterface(r1)
-                r14.onBackPressedOnTaskRoot(r0, r1)
-                r29.writeNoException()
-                return r7
-            L_0x0030:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                r14.restartActivityProcessIfVisible(r0)
-                r29.writeNoException()
-                return r7
-            L_0x003e:
-                r13.enforceInterface(r8)
-                int r0 = r28.readInt()
-                r14.setDisplayToSingleTaskInstance(r0)
-                r29.writeNoException()
-                return r7
-            L_0x004c:
-                r13.enforceInterface(r8)
-                java.util.ArrayList r0 = r28.createStringArrayList()
-                r14.clearLaunchParamsForPackages(r0)
-                r29.writeNoException()
-                return r7
-            L_0x005a:
-                r13.enforceInterface(r8)
-                java.lang.String r0 = r28.readString()
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x0069
-                r12 = r7
-            L_0x0069:
-                r1 = r12
-                r14.setPackageAskScreenCompat(r0, r1)
-                r29.writeNoException()
-                return r7
-            L_0x0071:
-                r13.enforceInterface(r8)
-                java.lang.String r0 = r28.readString()
-                boolean r1 = r14.getPackageAskScreenCompat(r0)
-                r29.writeNoException()
-                r11.writeInt(r1)
-                return r7
-            L_0x0083:
-                r13.enforceInterface(r8)
-                java.lang.String r0 = r28.readString()
-                int r1 = r28.readInt()
-                r14.setPackageScreenCompatMode(r0, r1)
-                r29.writeNoException()
-                return r7
-            L_0x0095:
-                r13.enforceInterface(r8)
-                java.lang.String r0 = r28.readString()
-                int r1 = r14.getPackageScreenCompatMode(r0)
-                r29.writeNoException()
-                r11.writeInt(r1)
-                return r7
-            L_0x00a7:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                android.service.voice.IVoiceInteractionSession r0 = android.service.voice.IVoiceInteractionSession.Stub.asInterface(r0)
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x00ba
-                r12 = r7
-            L_0x00ba:
-                r1 = r12
-                r14.setVoiceKeepAwake(r0, r1)
-                r29.writeNoException()
-                return r7
-            L_0x00c2:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                android.app.IActivityController r0 = android.app.IActivityController.Stub.asInterface(r0)
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x00d5
-                r12 = r7
-            L_0x00d5:
-                r1 = r12
-                r14.setActivityController(r0, r1)
-                r29.writeNoException()
-                return r7
-            L_0x00dd:
-                r13.enforceInterface(r8)
-                r26.resumeAppSwitches()
-                r29.writeNoException()
-                return r7
-            L_0x00e7:
-                r13.enforceInterface(r8)
-                r26.stopAppSwitches()
-                r29.writeNoException()
-                return r7
-            L_0x00f1:
-                r13.enforceInterface(r8)
-                int r0 = r28.readInt()
-                r14.setPersistentVrThread(r0)
-                r29.writeNoException()
-                return r7
-            L_0x00ff:
-                r13.enforceInterface(r8)
-                int r0 = r28.readInt()
-                r14.setVrThread(r0)
-                r29.writeNoException()
-                return r7
-            L_0x010d:
-                r13.enforceInterface(r8)
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x011f
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0120
-            L_0x011f:
-            L_0x0120:
-                r14.alwaysShowUnsupportedCompileSdkWarning(r0)
-                r29.writeNoException()
-                return r7
-            L_0x0127:
-                r13.enforceInterface(r8)
-                int r1 = r28.readInt()
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x013d
-                android.os.Parcelable$Creator<android.view.RemoteAnimationDefinition> r0 = android.view.RemoteAnimationDefinition.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.view.RemoteAnimationDefinition r0 = (android.view.RemoteAnimationDefinition) r0
-                goto L_0x013e
-            L_0x013d:
-            L_0x013e:
-                r14.registerRemoteAnimationsForDisplay(r1, r0)
-                r29.writeNoException()
-                return r7
-            L_0x0145:
-                r13.enforceInterface(r8)
-                java.lang.String r1 = r28.readString()
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x015b
-                android.os.Parcelable$Creator<android.view.RemoteAnimationAdapter> r0 = android.view.RemoteAnimationAdapter.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.view.RemoteAnimationAdapter r0 = (android.view.RemoteAnimationAdapter) r0
-                goto L_0x015c
-            L_0x015b:
-            L_0x015c:
-                r14.registerRemoteAnimationForNextActivityStart(r1, r0)
-                r29.writeNoException()
-                return r7
-            L_0x0163:
-                r13.enforceInterface(r8)
-                android.os.IBinder r1 = r28.readStrongBinder()
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x0179
-                android.os.Parcelable$Creator<android.view.RemoteAnimationDefinition> r0 = android.view.RemoteAnimationDefinition.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.view.RemoteAnimationDefinition r0 = (android.view.RemoteAnimationDefinition) r0
-                goto L_0x017a
-            L_0x0179:
-            L_0x017a:
-                r14.registerRemoteAnimations(r1, r0)
-                r29.writeNoException()
-                return r7
-            L_0x0181:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x0190
-                r12 = r7
-            L_0x0190:
-                r1 = r12
-                r14.setTurnScreenOn(r0, r1)
-                r29.writeNoException()
-                return r7
-            L_0x0198:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x01a7
-                r12 = r7
-            L_0x01a7:
-                r1 = r12
-                r14.setInheritShowWhenLocked(r0, r1)
-                r29.writeNoException()
-                return r7
-            L_0x01af:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x01be
-                r12 = r7
-            L_0x01be:
-                r1 = r12
-                r14.setShowWhenLocked(r0, r1)
-                r29.writeNoException()
-                return r7
-            L_0x01c6:
-                r13.enforceInterface(r8)
-                int r0 = r28.readInt()
-                int r1 = r28.readInt()
-                r14.updateLockTaskFeatures(r0, r1)
-                r29.writeNoException()
-                return r7
-            L_0x01d8:
-                r13.enforceInterface(r8)
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x01ea
-                android.os.Parcelable$Creator<android.content.res.Configuration> r0 = android.content.res.Configuration.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.content.res.Configuration r0 = (android.content.res.Configuration) r0
-                goto L_0x01eb
-            L_0x01ea:
-            L_0x01eb:
-                boolean r1 = r14.updateConfiguration(r0)
-                r29.writeNoException()
-                r11.writeInt(r1)
-                return r7
-            L_0x01f6:
-                r13.enforceInterface(r8)
-                int r0 = r26.getLastResumedActivityUserId()
-                r29.writeNoException()
-                r11.writeInt(r0)
-                return r7
-            L_0x0204:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x0213
-                r12 = r7
-            L_0x0213:
-                r1 = r12
-                r14.setDisablePreviewScreenshots(r0, r1)
-                r29.writeNoException()
-                return r7
-            L_0x021b:
-                r13.enforceInterface(r8)
-                int r0 = r28.readInt()
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x022a
-                r1 = r7
-                goto L_0x022b
-            L_0x022a:
-                r1 = r12
-            L_0x022b:
-                android.app.ActivityManager$TaskSnapshot r2 = r14.getTaskSnapshot(r0, r1)
-                r29.writeNoException()
-                if (r2 == 0) goto L_0x023b
-                r11.writeInt(r7)
-                r2.writeToParcel(r11, r7)
-                goto L_0x023e
-            L_0x023b:
-                r11.writeInt(r12)
-            L_0x023e:
-                return r7
-            L_0x023f:
-                r13.enforceInterface(r8)
-                int r0 = r28.readInt()
-                r14.cancelTaskWindowTransition(r0)
-                r29.writeNoException()
-                return r7
-            L_0x024d:
-                r13.enforceInterface(r8)
-                android.os.IBinder r1 = r28.readStrongBinder()
-                android.os.IBinder r2 = r28.readStrongBinder()
-                com.android.internal.policy.IKeyguardDismissCallback r2 = com.android.internal.policy.IKeyguardDismissCallback.Stub.asInterface(r2)
-                int r3 = r28.readInt()
-                if (r3 == 0) goto L_0x026b
-                android.os.Parcelable$Creator<java.lang.CharSequence> r0 = android.text.TextUtils.CHAR_SEQUENCE_CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                java.lang.CharSequence r0 = (java.lang.CharSequence) r0
-                goto L_0x026c
-            L_0x026b:
-            L_0x026c:
-                r14.dismissKeyguard(r1, r2, r0)
-                r29.writeNoException()
-                return r7
-            L_0x0273:
-                r13.enforceInterface(r8)
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x0285
-                android.os.Parcelable$Creator<android.content.res.Configuration> r0 = android.content.res.Configuration.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.content.res.Configuration r0 = (android.content.res.Configuration) r0
-                goto L_0x0286
-            L_0x0285:
-            L_0x0286:
-                int r1 = r28.readInt()
-                boolean r2 = r14.updateDisplayOverrideConfiguration(r0, r1)
-                r29.writeNoException()
-                r11.writeInt(r2)
-                return r7
-            L_0x0295:
-                r13.enforceInterface(r8)
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x02a7
-                android.os.Parcelable$Creator<android.graphics.Rect> r1 = android.graphics.Rect.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r13)
-                android.graphics.Rect r1 = (android.graphics.Rect) r1
-                goto L_0x02a8
-            L_0x02a7:
-                r1 = r0
-            L_0x02a8:
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x02b7
-                android.os.Parcelable$Creator<android.graphics.Rect> r0 = android.graphics.Rect.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.graphics.Rect r0 = (android.graphics.Rect) r0
-                goto L_0x02b8
-            L_0x02b7:
-            L_0x02b8:
-                r14.resizePinnedStack(r1, r0)
-                r29.writeNoException()
-                return r7
-            L_0x02bf:
-                r13.enforceInterface(r8)
-                android.content.pm.ConfigurationInfo r0 = r26.getDeviceConfigurationInfo()
-                r29.writeNoException()
-                if (r0 == 0) goto L_0x02d2
-                r11.writeInt(r7)
-                r0.writeToParcel(r11, r7)
-                goto L_0x02d5
-            L_0x02d2:
-                r11.writeInt(r12)
-            L_0x02d5:
-                return r7
-            L_0x02d6:
-                r13.enforceInterface(r8)
-                r26.notifyPinnedStackAnimationEnded()
-                r29.writeNoException()
-                return r7
-            L_0x02e0:
-                r13.enforceInterface(r8)
-                r26.notifyPinnedStackAnimationStarted()
-                r29.writeNoException()
-                return r7
-            L_0x02ea:
-                r13.enforceInterface(r8)
-                boolean r0 = r26.supportsLocalVoiceInteraction()
-                r29.writeNoException()
-                r11.writeInt(r0)
-                return r7
-            L_0x02f8:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                r14.stopLocalVoiceInteraction(r0)
-                r29.writeNoException()
-                return r7
-            L_0x0306:
-                r13.enforceInterface(r8)
-                android.os.IBinder r1 = r28.readStrongBinder()
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x031c
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-                goto L_0x031d
-            L_0x031c:
-            L_0x031d:
-                r14.startLocalVoiceInteraction(r1, r0)
-                r29.writeNoException()
-                return r7
-            L_0x0324:
-                r13.enforceInterface(r8)
-                android.os.IBinder r1 = r28.readStrongBinder()
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x0333
-                r12 = r7
-            L_0x0333:
-                r2 = r12
-                int r3 = r28.readInt()
-                if (r3 == 0) goto L_0x0343
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0344
-            L_0x0343:
-            L_0x0344:
-                int r3 = r14.setVrMode(r1, r2, r0)
-                r29.writeNoException()
-                r11.writeInt(r3)
-                return r7
-            L_0x034f:
-                r13.enforceInterface(r8)
-                int r0 = r28.readInt()
-                if (r0 == 0) goto L_0x035a
-                r12 = r7
-            L_0x035a:
-                r0 = r12
-                r14.setSplitScreenResizing(r0)
-                r29.writeNoException()
-                return r7
-            L_0x0362:
-                r13.enforceInterface(r8)
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x0374
-                android.os.Parcelable$Creator<android.graphics.Rect> r1 = android.graphics.Rect.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r13)
-                android.graphics.Rect r1 = (android.graphics.Rect) r1
-                goto L_0x0375
-            L_0x0374:
-                r1 = r0
-            L_0x0375:
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x0384
-                android.os.Parcelable$Creator<android.graphics.Rect> r2 = android.graphics.Rect.CREATOR
-                java.lang.Object r2 = r2.createFromParcel(r13)
-                android.graphics.Rect r2 = (android.graphics.Rect) r2
-                goto L_0x0385
-            L_0x0384:
-                r2 = r0
-            L_0x0385:
-                int r3 = r28.readInt()
-                if (r3 == 0) goto L_0x0394
-                android.os.Parcelable$Creator<android.graphics.Rect> r3 = android.graphics.Rect.CREATOR
-                java.lang.Object r3 = r3.createFromParcel(r13)
-                android.graphics.Rect r3 = (android.graphics.Rect) r3
-                goto L_0x0395
-            L_0x0394:
-                r3 = r0
-            L_0x0395:
-                int r4 = r28.readInt()
-                if (r4 == 0) goto L_0x03a4
-                android.os.Parcelable$Creator<android.graphics.Rect> r4 = android.graphics.Rect.CREATOR
-                java.lang.Object r4 = r4.createFromParcel(r13)
-                android.graphics.Rect r4 = (android.graphics.Rect) r4
-                goto L_0x03a5
-            L_0x03a4:
-                r4 = r0
-            L_0x03a5:
-                int r5 = r28.readInt()
-                if (r5 == 0) goto L_0x03b5
-                android.os.Parcelable$Creator<android.graphics.Rect> r0 = android.graphics.Rect.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.graphics.Rect r0 = (android.graphics.Rect) r0
-            L_0x03b3:
-                r5 = r0
-                goto L_0x03b6
-            L_0x03b5:
-                goto L_0x03b3
-            L_0x03b6:
-                r0 = r26
-                r0.resizeDockedStack(r1, r2, r3, r4, r5)
-                r29.writeNoException()
-                return r7
-            L_0x03bf:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                android.os.IBinder r1 = r14.getUriPermissionOwnerForActivity(r0)
-                r29.writeNoException()
-                r11.writeStrongBinder(r1)
-                return r7
-            L_0x03d1:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                int r1 = r14.getMaxNumPictureInPictureActions(r0)
-                r29.writeNoException()
-                r11.writeInt(r1)
-                return r7
-            L_0x03e3:
-                r13.enforceInterface(r8)
-                android.os.IBinder r1 = r28.readStrongBinder()
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x03f9
-                android.os.Parcelable$Creator<android.app.PictureInPictureParams> r0 = android.app.PictureInPictureParams.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.app.PictureInPictureParams r0 = (android.app.PictureInPictureParams) r0
-                goto L_0x03fa
-            L_0x03f9:
-            L_0x03fa:
-                r14.setPictureInPictureParams(r1, r0)
-                r29.writeNoException()
-                return r7
-            L_0x0401:
-                r13.enforceInterface(r8)
-                android.os.IBinder r1 = r28.readStrongBinder()
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x0417
-                android.os.Parcelable$Creator<android.app.PictureInPictureParams> r0 = android.app.PictureInPictureParams.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.app.PictureInPictureParams r0 = (android.app.PictureInPictureParams) r0
-                goto L_0x0418
-            L_0x0417:
-            L_0x0418:
-                boolean r2 = r14.enterPictureInPictureMode(r1, r0)
-                r29.writeNoException()
-                r11.writeInt(r2)
-                return r7
-            L_0x0423:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                boolean r1 = r14.isInPictureInPictureMode(r0)
-                r29.writeNoException()
-                r11.writeInt(r1)
-                return r7
-            L_0x0435:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                boolean r1 = r14.isInMultiWindowMode(r0)
-                r29.writeNoException()
-                r11.writeInt(r1)
-                return r7
-            L_0x0447:
-                r13.enforceInterface(r8)
-                int r1 = r28.readInt()
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x045d
-                android.os.Parcelable$Creator<android.graphics.Rect> r0 = android.graphics.Rect.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.graphics.Rect r0 = (android.graphics.Rect) r0
-                goto L_0x045e
-            L_0x045d:
-            L_0x045e:
-                boolean r2 = r14.moveTopActivityToPinnedStack(r1, r0)
-                r29.writeNoException()
-                r11.writeInt(r2)
-                return r7
-            L_0x0469:
-                r13.enforceInterface(r8)
-                int r0 = r28.readInt()
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x0478
-                r12 = r7
-            L_0x0478:
-                r1 = r12
-                r14.moveTasksToFullscreenStack(r0, r1)
-                r29.writeNoException()
-                return r7
-            L_0x0480:
-                r13.enforceInterface(r8)
-                int r0 = r28.readInt()
-                if (r0 == 0) goto L_0x048b
-                r12 = r7
-            L_0x048b:
-                r0 = r12
-                r14.suppressResizeConfigChanges(r0)
-                r29.writeNoException()
-                return r7
-            L_0x0493:
-                r13.enforceInterface(r8)
-                int r0 = r28.readInt()
-                if (r0 == 0) goto L_0x049e
-                r12 = r7
-            L_0x049e:
-                r0 = r12
-                int r1 = r28.readInt()
-                r14.dismissPip(r0, r1)
-                r29.writeNoException()
-                return r7
-            L_0x04aa:
-                r13.enforceInterface(r8)
-                int r0 = r28.readInt()
-                if (r0 == 0) goto L_0x04b5
-                r12 = r7
-            L_0x04b5:
-                r0 = r12
-                r14.dismissSplitScreenMode(r0)
-                r29.writeNoException()
-                return r7
-            L_0x04bd:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                int[] r1 = r28.createIntArray()
-                int[] r2 = r28.createIntArray()
-                int[] r3 = r28.createIntArray()
-                r14.reportSizeConfigurations(r0, r1, r2, r3)
-                r29.writeNoException()
-                return r7
-            L_0x04d7:
-                r13.enforceInterface(r8)
-                int r0 = r28.readInt()
-                int r1 = r28.readInt()
-                int r2 = r28.readInt()
-                r14.positionTaskInStack(r0, r1, r2)
-                r29.writeNoException()
-                return r7
-            L_0x04ed:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                java.lang.String r1 = r14.getPackageForToken(r0)
-                r29.writeNoException()
-                r11.writeString(r1)
-                return r7
-            L_0x04ff:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                android.content.ComponentName r1 = r14.getActivityClassForToken(r0)
-                r29.writeNoException()
-                if (r1 == 0) goto L_0x0516
-                r11.writeInt(r7)
-                r1.writeToParcel((android.os.Parcel) r11, (int) r7)
-                goto L_0x0519
-            L_0x0516:
-                r11.writeInt(r12)
-            L_0x0519:
-                return r7
-            L_0x051a:
-                r13.enforceInterface(r8)
-                int r0 = r28.readInt()
-                r14.keyguardGoingAway(r0)
-                r29.writeNoException()
-                return r7
-            L_0x0528:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                r14.showLockTaskEscapeMessage(r0)
-                return r7
-            L_0x0533:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                boolean r1 = r14.isRootVoiceInteraction(r0)
-                r29.writeNoException()
-                r11.writeInt(r1)
-                return r7
-            L_0x0545:
-                r13.enforceInterface(r8)
-                android.os.IBinder r1 = r28.readStrongBinder()
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x055b
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-                goto L_0x055c
-            L_0x055b:
-            L_0x055c:
-                boolean r2 = r14.showAssistFromActivity(r1, r0)
-                r29.writeNoException()
-                r11.writeInt(r2)
-                return r7
-            L_0x0567:
-                r13.enforceInterface(r8)
-                boolean r0 = r26.isAssistDataAllowedOnCurrentActivity()
-                r29.writeNoException()
-                r11.writeInt(r0)
-                return r7
-            L_0x0575:
-                r13.enforceInterface(r8)
-                android.os.IBinder r1 = r28.readStrongBinder()
-                android.app.IAssistDataReceiver r1 = android.app.IAssistDataReceiver.Stub.asInterface(r1)
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x058f
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-                goto L_0x0590
-            L_0x058f:
-            L_0x0590:
-                android.os.IBinder r2 = r28.readStrongBinder()
-                int r3 = r28.readInt()
-                boolean r4 = r14.requestAutofillData(r1, r0, r2, r3)
-                r29.writeNoException()
-                r11.writeInt(r4)
-                return r7
-            L_0x05a3:
-                r13.enforceInterface(r8)
-                int r9 = r28.readInt()
-                android.os.IBinder r1 = r28.readStrongBinder()
-                android.app.IAssistDataReceiver r10 = android.app.IAssistDataReceiver.Stub.asInterface(r1)
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x05c2
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-            L_0x05c0:
-                r3 = r0
-                goto L_0x05c3
-            L_0x05c2:
-                goto L_0x05c0
-            L_0x05c3:
-                android.os.IBinder r16 = r28.readStrongBinder()
-                int r0 = r28.readInt()
-                if (r0 == 0) goto L_0x05cf
-                r5 = r7
-                goto L_0x05d0
-            L_0x05cf:
-                r5 = r12
-            L_0x05d0:
-                int r0 = r28.readInt()
-                if (r0 == 0) goto L_0x05d8
-                r6 = r7
-                goto L_0x05d9
-            L_0x05d8:
-                r6 = r12
-            L_0x05d9:
-                r0 = r26
-                r1 = r9
-                r2 = r10
-                r4 = r16
-                boolean r0 = r0.requestAssistContextExtras(r1, r2, r3, r4, r5, r6)
-                r29.writeNoException()
-                r11.writeInt(r0)
-                return r7
-            L_0x05ea:
-                r13.enforceInterface(r8)
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x05fc
-                android.os.Parcelable$Creator<android.content.Intent> r1 = android.content.Intent.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r13)
-                android.content.Intent r1 = (android.content.Intent) r1
-                goto L_0x05fd
-            L_0x05fc:
-                r1 = r0
-            L_0x05fd:
-                int r6 = r28.readInt()
-                java.lang.String r9 = r28.readString()
-                int r10 = r28.readInt()
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x0619
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-            L_0x0617:
-                r5 = r0
-                goto L_0x061a
-            L_0x0619:
-                goto L_0x0617
-            L_0x061a:
-                r0 = r26
-                r2 = r6
-                r3 = r9
-                r4 = r10
-                boolean r0 = r0.launchAssistIntent(r1, r2, r3, r4, r5)
-                r29.writeNoException()
-                r11.writeInt(r0)
-                return r7
-            L_0x062a:
-                r13.enforceInterface(r8)
-                int r0 = r28.readInt()
-                android.os.Bundle r1 = r14.getAssistContextExtras(r0)
-                r29.writeNoException()
-                if (r1 == 0) goto L_0x0641
-                r11.writeInt(r7)
-                r1.writeToParcel(r11, r7)
-                goto L_0x0644
-            L_0x0641:
-                r11.writeInt(r12)
-            L_0x0644:
-                return r7
-            L_0x0645:
-                r13.enforceInterface(r8)
-                int r0 = r28.readInt()
-                if (r0 == 0) goto L_0x0650
-                r0 = r7
-                goto L_0x0651
-            L_0x0650:
-                r0 = r12
-            L_0x0651:
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x0659
-                r12 = r7
-            L_0x0659:
-                r1 = r12
-                r14.setLockScreenShown(r0, r1)
-                r29.writeNoException()
-                return r7
-            L_0x0661:
-                r13.enforceInterface(r8)
-                int r0 = r28.readInt()
-                int r1 = r28.readInt()
-                android.app.ActivityManager$StackInfo r2 = r14.getStackInfo(r0, r1)
-                r29.writeNoException()
-                if (r2 == 0) goto L_0x067c
-                r11.writeInt(r7)
-                r2.writeToParcel(r11, r7)
-                goto L_0x067f
-            L_0x067c:
-                r11.writeInt(r12)
-            L_0x067f:
-                return r7
-            L_0x0680:
-                r13.enforceInterface(r8)
-                java.util.List r0 = r26.getAllStackInfos()
-                r29.writeNoException()
-                r11.writeTypedList(r0)
-                return r7
-            L_0x068e:
-                r13.enforceInterface(r8)
-                int[] r0 = r28.createIntArray()
-                r14.removeStacksWithActivityTypes(r0)
-                r29.writeNoException()
-                return r7
-            L_0x069c:
-                r13.enforceInterface(r8)
-                int[] r0 = r28.createIntArray()
-                r14.removeStacksInWindowingModes(r0)
-                r29.writeNoException()
-                return r7
-            L_0x06aa:
-                r13.enforceInterface(r8)
-                int r6 = r28.readInt()
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x06c1
-                android.os.Parcelable$Creator<android.graphics.Rect> r0 = android.graphics.Rect.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.graphics.Rect r0 = (android.graphics.Rect) r0
-            L_0x06bf:
-                r2 = r0
-                goto L_0x06c2
-            L_0x06c1:
-                goto L_0x06bf
-            L_0x06c2:
-                int r9 = r28.readInt()
-                int r10 = r28.readInt()
-                int r12 = r28.readInt()
-                r0 = r26
-                r1 = r6
-                r3 = r9
-                r4 = r10
-                r5 = r12
-                r0.offsetPinnedStackBounds(r1, r2, r3, r4, r5)
-                r29.writeNoException()
-                return r7
-            L_0x06db:
-                r13.enforceInterface(r8)
-                int r9 = r28.readInt()
-                int r10 = r28.readInt()
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x06ee
-                r3 = r7
-                goto L_0x06ef
-            L_0x06ee:
-                r3 = r12
-            L_0x06ef:
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x06f7
-                r4 = r7
-                goto L_0x06f8
-            L_0x06f7:
-                r4 = r12
-            L_0x06f8:
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x0708
-                android.os.Parcelable$Creator<android.graphics.Rect> r0 = android.graphics.Rect.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.graphics.Rect r0 = (android.graphics.Rect) r0
-            L_0x0706:
-                r5 = r0
-                goto L_0x0709
-            L_0x0708:
-                goto L_0x0706
-            L_0x0709:
-                int r0 = r28.readInt()
-                if (r0 == 0) goto L_0x0711
-                r6 = r7
-                goto L_0x0712
-            L_0x0711:
-                r6 = r12
-            L_0x0712:
-                r0 = r26
-                r1 = r9
-                r2 = r10
-                boolean r0 = r0.setTaskWindowingModeSplitScreenPrimary(r1, r2, r3, r4, r5, r6)
-                r29.writeNoException()
-                r11.writeInt(r0)
-                return r7
-            L_0x0721:
-                r13.enforceInterface(r8)
-                int r9 = r28.readInt()
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x0738
-                android.os.Parcelable$Creator<android.graphics.Rect> r0 = android.graphics.Rect.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.graphics.Rect r0 = (android.graphics.Rect) r0
-            L_0x0736:
-                r2 = r0
-                goto L_0x0739
-            L_0x0738:
-                goto L_0x0736
-            L_0x0739:
-                int r0 = r28.readInt()
-                if (r0 == 0) goto L_0x0741
-                r3 = r7
-                goto L_0x0742
-            L_0x0741:
-                r3 = r12
-            L_0x0742:
-                int r0 = r28.readInt()
-                if (r0 == 0) goto L_0x074a
-                r4 = r7
-                goto L_0x074b
-            L_0x074a:
-                r4 = r12
-            L_0x074b:
-                int r0 = r28.readInt()
-                if (r0 == 0) goto L_0x0753
-                r5 = r7
-                goto L_0x0754
-            L_0x0753:
-                r5 = r12
-            L_0x0754:
-                int r10 = r28.readInt()
-                r0 = r26
-                r1 = r9
-                r6 = r10
-                r0.resizeStack(r1, r2, r3, r4, r5, r6)
-                r29.writeNoException()
-                return r7
-            L_0x0763:
-                r13.enforceInterface(r8)
-                int r0 = r28.readInt()
-                int r1 = r28.readInt()
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x0776
-                r12 = r7
-            L_0x0776:
-                r2 = r12
-                r14.moveTaskToStack(r0, r1, r2)
-                r29.writeNoException()
-                return r7
-            L_0x077e:
-                r13.enforceInterface(r8)
-                int r0 = r28.readInt()
-                int r1 = r28.readInt()
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x0791
-                r12 = r7
-            L_0x0791:
-                r2 = r12
-                r14.setTaskWindowingMode(r0, r1, r2)
-                r29.writeNoException()
-                return r7
-            L_0x0799:
-                r13.enforceInterface(r8)
-                int r0 = r28.readInt()
-                r14.removeStack(r0)
-                r29.writeNoException()
-                return r7
-            L_0x07a7:
-                r13.enforceInterface(r8)
-                int r0 = r28.readInt()
-                int r1 = r28.readInt()
-                r14.moveStackToDisplay(r0, r1)
-                r29.writeNoException()
-                return r7
-            L_0x07b9:
-                r13.enforceInterface(r8)
-                int r1 = r28.readInt()
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x07cf
-                android.os.Parcelable$Creator<android.graphics.Rect> r0 = android.graphics.Rect.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.graphics.Rect r0 = (android.graphics.Rect) r0
-                goto L_0x07d0
-            L_0x07cf:
-            L_0x07d0:
-                int r2 = r28.readInt()
-                r14.resizeTask(r1, r0, r2)
-                r29.writeNoException()
-                return r7
-            L_0x07db:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                r14.toggleFreeformWindowingMode(r0)
-                r29.writeNoException()
-                return r7
-            L_0x07e9:
-                r13.enforceInterface(r8)
-                int r0 = r28.readInt()
-                int r1 = r28.readInt()
-                r14.setTaskResizeable(r0, r1)
-                r29.writeNoException()
-                return r7
-            L_0x07fb:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                android.app.ITaskStackListener r0 = android.app.ITaskStackListener.Stub.asInterface(r0)
-                r14.unregisterTaskStackListener(r0)
-                r29.writeNoException()
-                return r7
-            L_0x080d:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                android.app.ITaskStackListener r0 = android.app.ITaskStackListener.Stub.asInterface(r0)
-                r14.registerTaskStackListener(r0)
-                r29.writeNoException()
-                return r7
-            L_0x081f:
-                r13.enforceInterface(r8)
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x0831
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-                goto L_0x0832
-            L_0x0831:
-            L_0x0832:
-                r14.startInPlaceAnimationOnFrontMostApplication(r0)
-                r29.writeNoException()
-                return r7
-            L_0x0839:
-                r13.enforceInterface(r8)
-                java.lang.String r0 = r28.readString()
-                int r1 = r28.readInt()
-                android.graphics.Bitmap r2 = r14.getTaskDescriptionIcon(r0, r1)
-                r29.writeNoException()
-                if (r2 == 0) goto L_0x0854
-                r11.writeInt(r7)
-                r2.writeToParcel(r11, r7)
-                goto L_0x0857
-            L_0x0854:
-                r11.writeInt(r12)
-            L_0x0857:
-                return r7
-            L_0x0858:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                android.app.IApplicationThread r0 = android.app.IApplicationThread.Stub.asInterface(r0)
-                r14.releaseSomeActivities(r0)
-                r29.writeNoException()
-                return r7
-            L_0x086a:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                android.os.IBinder r1 = r14.requestStartActivityPermissionToken(r0)
-                r29.writeNoException()
-                r11.writeStrongBinder(r1)
-                return r7
-            L_0x087c:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                boolean r1 = r14.releaseActivityInstance(r0)
-                r29.writeNoException()
-                r11.writeInt(r1)
-                return r7
-            L_0x088e:
-                r13.enforceInterface(r8)
-                android.graphics.Point r0 = r26.getAppTaskThumbnailSize()
-                r29.writeNoException()
-                if (r0 == 0) goto L_0x08a1
-                r11.writeInt(r7)
-                r0.writeToParcel(r11, r7)
-                goto L_0x08a4
-            L_0x08a1:
-                r11.writeInt(r12)
-            L_0x08a4:
-                return r7
-            L_0x08a5:
-                r13.enforceInterface(r8)
-                android.os.IBinder r1 = r28.readStrongBinder()
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x08bb
-                android.os.Parcelable$Creator<android.content.Intent> r2 = android.content.Intent.CREATOR
-                java.lang.Object r2 = r2.createFromParcel(r13)
-                android.content.Intent r2 = (android.content.Intent) r2
-                goto L_0x08bc
-            L_0x08bb:
-                r2 = r0
-            L_0x08bc:
-                int r3 = r28.readInt()
-                if (r3 == 0) goto L_0x08cb
-                android.os.Parcelable$Creator<android.app.ActivityManager$TaskDescription> r3 = android.app.ActivityManager.TaskDescription.CREATOR
-                java.lang.Object r3 = r3.createFromParcel(r13)
-                android.app.ActivityManager$TaskDescription r3 = (android.app.ActivityManager.TaskDescription) r3
-                goto L_0x08cc
-            L_0x08cb:
-                r3 = r0
-            L_0x08cc:
-                int r4 = r28.readInt()
-                if (r4 == 0) goto L_0x08db
-                android.os.Parcelable$Creator<android.graphics.Bitmap> r0 = android.graphics.Bitmap.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.graphics.Bitmap r0 = (android.graphics.Bitmap) r0
-                goto L_0x08dc
-            L_0x08db:
-            L_0x08dc:
-                int r4 = r14.addAppTask(r1, r2, r3, r0)
-                r29.writeNoException()
-                r11.writeInt(r4)
-                return r7
-            L_0x08e7:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                r14.notifyEnterAnimationComplete(r0)
-                r29.writeNoException()
-                return r7
-            L_0x08f5:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                r14.notifyLaunchTaskBehindComplete(r0)
-                r29.writeNoException()
-                return r7
-            L_0x0903:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                boolean r1 = r14.isTopOfTask(r0)
-                r29.writeNoException()
-                r11.writeInt(r1)
-                return r7
-            L_0x0915:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                android.service.voice.IVoiceInteractionSession r0 = android.service.voice.IVoiceInteractionSession.Stub.asInterface(r0)
-                r14.finishVoiceTask(r0)
-                r29.writeNoException()
-                return r7
-            L_0x0927:
-                r13.enforceInterface(r8)
-                r26.stopSystemLockTaskMode()
-                r29.writeNoException()
-                return r7
-            L_0x0931:
-                r13.enforceInterface(r8)
-                int r0 = r28.readInt()
-                r14.startSystemLockTaskMode(r0)
-                r29.writeNoException()
-                return r7
-            L_0x093f:
-                r13.enforceInterface(r8)
-                java.lang.String r0 = r28.readString()
-                java.util.List r1 = r14.getAppTasks(r0)
-                r29.writeNoException()
-                r11.writeBinderList(r1)
-                return r7
-            L_0x0951:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                android.os.Bundle r1 = r14.getActivityOptions(r0)
-                r29.writeNoException()
-                if (r1 == 0) goto L_0x0968
-                r11.writeInt(r7)
-                r1.writeToParcel(r11, r7)
-                goto L_0x096b
-            L_0x0968:
-                r11.writeInt(r12)
-            L_0x096b:
-                return r7
-            L_0x096c:
-                r13.enforceInterface(r8)
-                android.os.IBinder r1 = r28.readStrongBinder()
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x0982
-                android.os.Parcelable$Creator<android.app.ActivityManager$TaskDescription> r0 = android.app.ActivityManager.TaskDescription.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.app.ActivityManager$TaskDescription r0 = (android.app.ActivityManager.TaskDescription) r0
-                goto L_0x0983
-            L_0x0982:
-            L_0x0983:
-                r14.setTaskDescription(r1, r0)
-                r29.writeNoException()
-                return r7
-            L_0x098a:
-                r13.enforceInterface(r8)
-                int r0 = r26.getLockTaskModeState()
-                r29.writeNoException()
-                r11.writeInt(r0)
-                return r7
-            L_0x0998:
-                r13.enforceInterface(r8)
-                boolean r0 = r26.isInLockTaskMode()
-                r29.writeNoException()
-                r11.writeInt(r0)
-                return r7
-            L_0x09a6:
-                r13.enforceInterface(r8)
-                int r0 = r28.readInt()
-                java.lang.String[] r1 = r28.createStringArray()
-                r14.updateLockTaskPackages(r0, r1)
-                r29.writeNoException()
-                return r7
-            L_0x09b8:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                r14.stopLockTaskModeByToken(r0)
-                r29.writeNoException()
-                return r7
-            L_0x09c6:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                r14.startLockTaskModeByToken(r0)
-                r29.writeNoException()
-                return r7
-            L_0x09d4:
-                r13.enforceInterface(r8)
-                int r0 = r28.readInt()
-                if (r0 == 0) goto L_0x09df
-                r12 = r7
-            L_0x09df:
-                r0 = r12
-                r14.cancelRecentsAnimation(r0)
-                r29.writeNoException()
-                return r7
-            L_0x09e7:
-                r13.enforceInterface(r8)
-                int r0 = r28.readInt()
-                android.graphics.Rect r1 = r14.getTaskBounds(r0)
-                r29.writeNoException()
-                if (r1 == 0) goto L_0x09fe
-                r11.writeInt(r7)
-                r1.writeToParcel(r11, r7)
-                goto L_0x0a01
-            L_0x09fe:
-                r11.writeInt(r12)
-            L_0x0a01:
-                return r7
-            L_0x0a02:
-                r13.enforceInterface(r8)
-                android.app.ActivityManager$StackInfo r0 = r26.getFocusedStackInfo()
-                r29.writeNoException()
-                if (r0 == 0) goto L_0x0a15
-                r11.writeInt(r7)
-                r0.writeToParcel(r11, r7)
-                goto L_0x0a18
-            L_0x0a15:
-                r11.writeInt(r12)
-            L_0x0a18:
-                return r7
-            L_0x0a19:
-                r13.enforceInterface(r8)
-                int r0 = r28.readInt()
-                r14.setFocusedStack(r0)
-                r29.writeNoException()
-                return r7
-            L_0x0a27:
-                r13.enforceInterface(r8)
-                android.os.IBinder r6 = r28.readStrongBinder()
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x0a3e
-                android.os.Parcelable$Creator<android.os.Bundle> r1 = android.os.Bundle.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r13)
-                android.os.Bundle r1 = (android.os.Bundle) r1
-                r2 = r1
-                goto L_0x0a3f
-            L_0x0a3e:
-                r2 = r0
-            L_0x0a3f:
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x0a4f
-                android.os.Parcelable$Creator<android.app.assist.AssistStructure> r1 = android.app.assist.AssistStructure.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r13)
-                android.app.assist.AssistStructure r1 = (android.app.assist.AssistStructure) r1
-                r3 = r1
-                goto L_0x0a50
-            L_0x0a4f:
-                r3 = r0
-            L_0x0a50:
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x0a60
-                android.os.Parcelable$Creator<android.app.assist.AssistContent> r1 = android.app.assist.AssistContent.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r13)
-                android.app.assist.AssistContent r1 = (android.app.assist.AssistContent) r1
-                r4 = r1
-                goto L_0x0a61
-            L_0x0a60:
-                r4 = r0
-            L_0x0a61:
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x0a71
-                android.os.Parcelable$Creator<android.net.Uri> r0 = android.net.Uri.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.net.Uri r0 = (android.net.Uri) r0
-            L_0x0a6f:
-                r5 = r0
-                goto L_0x0a72
-            L_0x0a71:
-                goto L_0x0a6f
-            L_0x0a72:
-                r0 = r26
-                r1 = r6
-                r0.reportAssistContextExtras(r1, r2, r3, r4, r5)
-                r29.writeNoException()
-                return r7
-            L_0x0a7c:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                java.lang.String r1 = r14.getLaunchedFromPackage(r0)
-                r29.writeNoException()
-                r11.writeString(r1)
-                return r7
-            L_0x0a8e:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                int r1 = r14.getLaunchedFromUid(r0)
-                r29.writeNoException()
-                r11.writeInt(r1)
-                return r7
-            L_0x0aa0:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                java.lang.String r1 = r28.readString()
-                int r2 = r28.readInt()
-                int r3 = r28.readInt()
-                r14.overridePendingTransition(r0, r1, r2, r3)
-                r29.writeNoException()
-                return r7
-            L_0x0aba:
-                r13.enforceInterface(r8)
-                int r0 = r28.readInt()
-                android.app.ActivityManager$TaskDescription r1 = r14.getTaskDescription(r0)
-                r29.writeNoException()
-                if (r1 == 0) goto L_0x0ad1
-                r11.writeInt(r7)
-                r1.writeToParcel(r11, r7)
-                goto L_0x0ad4
-            L_0x0ad1:
-                r11.writeInt(r12)
-            L_0x0ad4:
-                return r7
-            L_0x0ad5:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x0ae4
-                r12 = r7
-            L_0x0ae4:
-                r1 = r12
-                boolean r2 = r14.moveActivityTaskToBack(r0, r1)
-                r29.writeNoException()
-                r11.writeInt(r2)
-                return r7
-            L_0x0af0:
-                r13.enforceInterface(r8)
-                boolean r0 = r26.isTopActivityImmersive()
-                r29.writeNoException()
-                r11.writeInt(r0)
-                return r7
-            L_0x0afe:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x0b0d
-                r12 = r7
-            L_0x0b0d:
-                r1 = r12
-                r14.setImmersive(r0, r1)
-                r29.writeNoException()
-                return r7
-            L_0x0b15:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                boolean r1 = r14.isImmersive(r0)
-                r29.writeNoException()
-                r11.writeInt(r1)
-                return r7
-            L_0x0b27:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                int r1 = r14.getActivityDisplayId(r0)
-                r29.writeNoException()
-                r11.writeInt(r1)
-                return r7
-            L_0x0b39:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x0b48
-                r12 = r7
-            L_0x0b48:
-                r1 = r12
-                r14.reportActivityFullyDrawn(r0, r1)
-                r29.writeNoException()
-                return r7
-            L_0x0b50:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                r14.notifyActivityDrawn(r0)
-                r29.writeNoException()
-                return r7
-            L_0x0b5e:
-                r13.enforceInterface(r8)
-                android.os.IBinder r1 = r28.readStrongBinder()
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x0b74
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-                goto L_0x0b75
-            L_0x0b74:
-            L_0x0b75:
-                boolean r2 = r14.convertToTranslucent(r1, r0)
-                r29.writeNoException()
-                r11.writeInt(r2)
-                return r7
-            L_0x0b80:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                boolean r1 = r14.convertFromTranslucent(r0)
-                r29.writeNoException()
-                r11.writeInt(r1)
-                return r7
-            L_0x0b92:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                int r1 = r14.getRequestedOrientation(r0)
-                r29.writeNoException()
-                r11.writeInt(r1)
-                return r7
-            L_0x0ba4:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                int r1 = r28.readInt()
-                r14.setRequestedOrientation(r0, r1)
-                r29.writeNoException()
-                return r7
-            L_0x0bb6:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                boolean r1 = r14.willActivityBeVisible(r0)
-                r29.writeNoException()
-                r11.writeInt(r1)
-                return r7
-            L_0x0bc8:
-                r13.enforceInterface(r8)
-                int r0 = r28.readInt()
-                int r1 = r28.readInt()
-                int r2 = r28.readInt()
-                android.content.pm.ParceledListSlice r3 = r14.getRecentTasks(r0, r1, r2)
-                r29.writeNoException()
-                if (r3 == 0) goto L_0x0be7
-                r11.writeInt(r7)
-                r3.writeToParcel(r11, r7)
-                goto L_0x0bea
-            L_0x0be7:
-                r11.writeInt(r12)
-            L_0x0bea:
-                return r7
-            L_0x0beb:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                java.lang.String r1 = r28.readString()
-                int r2 = r28.readInt()
-                r14.finishSubActivity(r0, r1, r2)
-                r29.writeNoException()
-                return r7
-            L_0x0c01:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x0c10
-                r12 = r7
-            L_0x0c10:
-                r1 = r12
-                int r2 = r14.getTaskForActivity(r0, r1)
-                r29.writeNoException()
-                r11.writeInt(r2)
-                return r7
-            L_0x0c1c:
-                r13.enforceInterface(r8)
-                android.os.IBinder r1 = r28.readStrongBinder()
-                android.app.IApplicationThread r6 = android.app.IApplicationThread.Stub.asInterface(r1)
-                java.lang.String r9 = r28.readString()
-                int r10 = r28.readInt()
-                int r12 = r28.readInt()
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x0c43
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-            L_0x0c41:
-                r5 = r0
-                goto L_0x0c44
-            L_0x0c43:
-                goto L_0x0c41
-            L_0x0c44:
-                r0 = r26
-                r1 = r6
-                r2 = r9
-                r3 = r10
-                r4 = r12
-                r0.moveTaskToFront(r1, r2, r3, r4, r5)
-                r29.writeNoException()
-                return r7
-            L_0x0c51:
-                r13.enforceInterface(r8)
-                android.os.IBinder r1 = r28.readStrongBinder()
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x0c67
-                android.os.Parcelable$Creator<android.content.Intent> r2 = android.content.Intent.CREATOR
-                java.lang.Object r2 = r2.createFromParcel(r13)
-                android.content.Intent r2 = (android.content.Intent) r2
-                goto L_0x0c68
-            L_0x0c67:
-                r2 = r0
-            L_0x0c68:
-                int r3 = r28.readInt()
-                int r4 = r28.readInt()
-                if (r4 == 0) goto L_0x0c7b
-                android.os.Parcelable$Creator<android.content.Intent> r0 = android.content.Intent.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.content.Intent r0 = (android.content.Intent) r0
-                goto L_0x0c7c
-            L_0x0c7b:
-            L_0x0c7c:
-                boolean r4 = r14.navigateUpTo(r1, r2, r3, r0)
-                r29.writeNoException()
-                r11.writeInt(r4)
-                return r7
-            L_0x0c87:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                java.lang.String r1 = r28.readString()
-                boolean r2 = r14.shouldUpRecreateTask(r0, r1)
-                r29.writeNoException()
-                r11.writeInt(r2)
-                return r7
-            L_0x0c9d:
-                r13.enforceInterface(r8)
-                int r0 = r28.readInt()
-                int r1 = r28.readInt()
-                int r2 = r28.readInt()
-                java.util.List r3 = r14.getFilteredTasks(r0, r1, r2)
-                r29.writeNoException()
-                r11.writeTypedList(r3)
-                return r7
-            L_0x0cb7:
-                r13.enforceInterface(r8)
-                int r0 = r28.readInt()
-                java.util.List r1 = r14.getTasks(r0)
-                r29.writeNoException()
-                r11.writeTypedList(r1)
-                return r7
-            L_0x0cc9:
-                r13.enforceInterface(r8)
-                r26.removeAllVisibleRecentTasks()
-                r29.writeNoException()
-                return r7
-            L_0x0cd3:
-                r13.enforceInterface(r8)
-                int r0 = r28.readInt()
-                boolean r1 = r14.removeTask(r0)
-                r29.writeNoException()
-                r11.writeInt(r1)
-                return r7
-            L_0x0ce5:
-                r13.enforceInterface(r8)
-                int r0 = r28.readInt()
-                r14.setFocusedTask(r0)
-                r29.writeNoException()
-                return r7
-            L_0x0cf3:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                android.content.ComponentName r1 = r14.getCallingActivity(r0)
-                r29.writeNoException()
-                if (r1 == 0) goto L_0x0d0a
-                r11.writeInt(r7)
-                r1.writeToParcel((android.os.Parcel) r11, (int) r7)
-                goto L_0x0d0d
-            L_0x0d0a:
-                r11.writeInt(r12)
-            L_0x0d0d:
-                return r7
-            L_0x0d0e:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                java.lang.String r1 = r14.getCallingPackage(r0)
-                r29.writeNoException()
-                r11.writeString(r1)
-                return r7
-            L_0x0d20:
-                r13.enforceInterface(r8)
-                int r0 = r28.readInt()
-                r14.setFrontActivityScreenCompatMode(r0)
-                r29.writeNoException()
-                return r7
-            L_0x0d2e:
-                r13.enforceInterface(r8)
-                int r0 = r26.getFrontActivityScreenCompatMode()
-                r29.writeNoException()
-                r11.writeInt(r0)
-                return r7
-            L_0x0d3c:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                r14.activitySlept(r0)
-                return r7
-            L_0x0d47:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                r14.activityRelaunched(r0)
-                r29.writeNoException()
-                return r7
-            L_0x0d55:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                r14.activityDestroyed(r0)
-                return r7
-            L_0x0d60:
-                r13.enforceInterface(r8)
-                android.os.IBinder r1 = r28.readStrongBinder()
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x0d76
-                android.os.Parcelable$Creator<android.os.Bundle> r2 = android.os.Bundle.CREATOR
-                java.lang.Object r2 = r2.createFromParcel(r13)
-                android.os.Bundle r2 = (android.os.Bundle) r2
-                goto L_0x0d77
-            L_0x0d76:
-                r2 = r0
-            L_0x0d77:
-                int r3 = r28.readInt()
-                if (r3 == 0) goto L_0x0d86
-                android.os.Parcelable$Creator<android.os.PersistableBundle> r3 = android.os.PersistableBundle.CREATOR
-                java.lang.Object r3 = r3.createFromParcel(r13)
-                android.os.PersistableBundle r3 = (android.os.PersistableBundle) r3
-                goto L_0x0d87
-            L_0x0d86:
-                r3 = r0
-            L_0x0d87:
-                int r4 = r28.readInt()
-                if (r4 == 0) goto L_0x0d96
-                android.os.Parcelable$Creator<java.lang.CharSequence> r0 = android.text.TextUtils.CHAR_SEQUENCE_CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                java.lang.CharSequence r0 = (java.lang.CharSequence) r0
-                goto L_0x0d97
-            L_0x0d96:
-            L_0x0d97:
-                r14.activityStopped(r1, r2, r3, r0)
-                r29.writeNoException()
-                return r7
-            L_0x0d9e:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                r14.activityPaused(r0)
-                r29.writeNoException()
-                return r7
-            L_0x0dac:
-                r13.enforceInterface(r8)
-                r26.activityTopResumedStateLost()
-                r29.writeNoException()
-                return r7
-            L_0x0db6:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                r14.activityResumed(r0)
-                r29.writeNoException()
-                return r7
-            L_0x0dc4:
-                r13.enforceInterface(r8)
-                android.os.IBinder r1 = r28.readStrongBinder()
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x0dda
-                android.os.Parcelable$Creator<android.content.res.Configuration> r0 = android.content.res.Configuration.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.content.res.Configuration r0 = (android.content.res.Configuration) r0
-                goto L_0x0ddb
-            L_0x0dda:
-            L_0x0ddb:
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x0de3
-                r12 = r7
-            L_0x0de3:
-                r2 = r12
-                r14.activityIdle(r1, r0, r2)
-                return r7
-            L_0x0de8:
-                r13.enforceInterface(r8)
-                android.os.IBinder r0 = r28.readStrongBinder()
-                boolean r1 = r14.finishActivityAffinity(r0)
-                r29.writeNoException()
-                r11.writeInt(r1)
-                return r7
-            L_0x0dfa:
-                r13.enforceInterface(r8)
-                android.os.IBinder r1 = r28.readStrongBinder()
-                int r2 = r28.readInt()
-                int r3 = r28.readInt()
-                if (r3 == 0) goto L_0x0e14
-                android.os.Parcelable$Creator<android.content.Intent> r0 = android.content.Intent.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.content.Intent r0 = (android.content.Intent) r0
-                goto L_0x0e15
-            L_0x0e14:
-            L_0x0e15:
-                int r3 = r28.readInt()
-                boolean r4 = r14.finishActivity(r1, r2, r0, r3)
-                r29.writeNoException()
-                r11.writeInt(r4)
-                return r7
-            L_0x0e24:
-                r13.enforceInterface(r8)
-                r26.unhandledBack()
-                r29.writeNoException()
-                return r7
-            L_0x0e2e:
-                r13.enforceInterface(r8)
-                int r1 = r28.readInt()
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x0e44
-                android.os.Parcelable$Creator<android.content.Intent> r0 = android.content.Intent.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.content.Intent r0 = (android.content.Intent) r0
-                goto L_0x0e45
-            L_0x0e44:
-            L_0x0e45:
-                java.lang.String r2 = r28.readString()
-                int r3 = r28.readInt()
-                boolean r4 = r14.isActivityStartAllowedOnDisplay(r1, r0, r2, r3)
-                r29.writeNoException()
-                r11.writeInt(r4)
-                return r7
-            L_0x0e58:
-                r13.enforceInterface(r8)
-                android.os.IBinder r1 = r28.readStrongBinder()
-                android.app.IApplicationThread r16 = android.app.IApplicationThread.Stub.asInterface(r1)
-                java.lang.String r17 = r28.readString()
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x0e77
-                android.os.Parcelable$Creator<android.content.Intent> r1 = android.content.Intent.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r13)
-                android.content.Intent r1 = (android.content.Intent) r1
-                r3 = r1
-                goto L_0x0e78
-            L_0x0e77:
-                r3 = r0
-            L_0x0e78:
-                java.lang.String r18 = r28.readString()
-                android.os.IBinder r19 = r28.readStrongBinder()
-                java.lang.String r20 = r28.readString()
-                int r21 = r28.readInt()
-                int r22 = r28.readInt()
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x0e9c
-                android.os.Parcelable$Creator<android.app.ProfilerInfo> r1 = android.app.ProfilerInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r13)
-                android.app.ProfilerInfo r1 = (android.app.ProfilerInfo) r1
-                r9 = r1
-                goto L_0x0e9d
-            L_0x0e9c:
-                r9 = r0
-            L_0x0e9d:
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x0ead
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-            L_0x0eab:
-                r10 = r0
-                goto L_0x0eae
-            L_0x0ead:
-                goto L_0x0eab
-            L_0x0eae:
-                android.os.IBinder r23 = r28.readStrongBinder()
-                int r0 = r28.readInt()
-                if (r0 == 0) goto L_0x0eba
-                r12 = r7
-            L_0x0eba:
-                int r24 = r28.readInt()
-                r0 = r26
-                r1 = r16
-                r2 = r17
-                r4 = r18
-                r5 = r19
-                r6 = r20
-                r15 = r7
-                r7 = r21
-                r25 = r8
-                r8 = r22
-                r15 = r11
-                r11 = r23
-                r14 = r13
-                r13 = r24
-                int r0 = r0.startActivityAsCaller(r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13)
-                r29.writeNoException()
-                r15.writeInt(r0)
-                r1 = 1
-                return r1
-            L_0x0ee3:
-                r25 = r8
-                r15 = r11
-                r14 = r13
-                r13 = r25
-                r14.enforceInterface(r13)
-                int r1 = r28.readInt()
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x0eff
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r14)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-                goto L_0x0f00
-            L_0x0eff:
-            L_0x0f00:
-                r12 = r14
-                r14 = r26
-                int r2 = r14.startActivityFromRecents(r1, r0)
-                r29.writeNoException()
-                r15.writeInt(r2)
-                r3 = 1
-                return r3
-            L_0x0f0f:
-                r15 = r11
-                r12 = r13
-                r13 = r8
-                r12.enforceInterface(r13)
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x0f24
-                android.os.Parcelable$Creator<android.content.Intent> r0 = android.content.Intent.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r12)
-                android.content.Intent r0 = (android.content.Intent) r0
-                goto L_0x0f25
-            L_0x0f24:
-            L_0x0f25:
-                android.os.IBinder r1 = r28.readStrongBinder()
-                android.app.IAssistDataReceiver r1 = android.app.IAssistDataReceiver.Stub.asInterface(r1)
-                android.os.IBinder r2 = r28.readStrongBinder()
-                android.view.IRecentsAnimationRunner r2 = android.view.IRecentsAnimationRunner.Stub.asInterface(r2)
-                r14.startRecentsActivity(r0, r1, r2)
-                r29.writeNoException()
-                r3 = 1
-                return r3
-            L_0x0f3d:
-                r15 = r11
-                r12 = r13
-                r13 = r8
-                r12.enforceInterface(r13)
-                java.lang.String r8 = r28.readString()
-                int r9 = r28.readInt()
-                int r10 = r28.readInt()
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x0f5f
-                android.os.Parcelable$Creator<android.content.Intent> r1 = android.content.Intent.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r12)
-                android.content.Intent r1 = (android.content.Intent) r1
-                r4 = r1
-                goto L_0x0f60
-            L_0x0f5f:
-                r4 = r0
-            L_0x0f60:
-                java.lang.String r11 = r28.readString()
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x0f74
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r12)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-            L_0x0f72:
-                r6 = r0
-                goto L_0x0f75
-            L_0x0f74:
-                goto L_0x0f72
-            L_0x0f75:
-                int r16 = r28.readInt()
-                r0 = r26
-                r1 = r8
-                r2 = r9
-                r3 = r10
-                r5 = r11
-                r7 = r16
-                int r0 = r0.startAssistantActivity(r1, r2, r3, r4, r5, r6, r7)
-                r29.writeNoException()
-                r15.writeInt(r0)
-                r1 = 1
-                return r1
-            L_0x0f8d:
-                r15 = r11
-                r12 = r13
-                r13 = r8
-                r12.enforceInterface(r13)
-                java.lang.String r16 = r28.readString()
-                int r17 = r28.readInt()
-                int r18 = r28.readInt()
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x0faf
-                android.os.Parcelable$Creator<android.content.Intent> r1 = android.content.Intent.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r12)
-                android.content.Intent r1 = (android.content.Intent) r1
-                r4 = r1
-                goto L_0x0fb0
-            L_0x0faf:
-                r4 = r0
-            L_0x0fb0:
-                java.lang.String r19 = r28.readString()
-                android.os.IBinder r1 = r28.readStrongBinder()
-                android.service.voice.IVoiceInteractionSession r20 = android.service.voice.IVoiceInteractionSession.Stub.asInterface(r1)
-                android.os.IBinder r1 = r28.readStrongBinder()
-                com.android.internal.app.IVoiceInteractor r21 = com.android.internal.app.IVoiceInteractor.Stub.asInterface(r1)
-                int r22 = r28.readInt()
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x0fd8
-                android.os.Parcelable$Creator<android.app.ProfilerInfo> r1 = android.app.ProfilerInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r12)
-                android.app.ProfilerInfo r1 = (android.app.ProfilerInfo) r1
-                r9 = r1
-                goto L_0x0fd9
-            L_0x0fd8:
-                r9 = r0
-            L_0x0fd9:
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x0fe9
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r12)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-            L_0x0fe7:
-                r10 = r0
-                goto L_0x0fea
-            L_0x0fe9:
-                goto L_0x0fe7
-            L_0x0fea:
-                int r23 = r28.readInt()
-                r0 = r26
-                r1 = r16
-                r2 = r17
-                r3 = r18
-                r5 = r19
-                r6 = r20
-                r7 = r21
-                r8 = r22
-                r11 = r23
-                int r0 = r0.startVoiceActivity(r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11)
-                r29.writeNoException()
-                r15.writeInt(r0)
-                r1 = 1
-                return r1
-            L_0x100c:
-                r15 = r11
-                r12 = r13
-                r13 = r8
-                r12.enforceInterface(r13)
-                android.os.IBinder r1 = r28.readStrongBinder()
-                android.app.IApplicationThread r16 = android.app.IApplicationThread.Stub.asInterface(r1)
-                java.lang.String r17 = r28.readString()
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x102e
-                android.os.Parcelable$Creator<android.content.Intent> r1 = android.content.Intent.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r12)
-                android.content.Intent r1 = (android.content.Intent) r1
-                r3 = r1
-                goto L_0x102f
-            L_0x102e:
-                r3 = r0
-            L_0x102f:
-                java.lang.String r18 = r28.readString()
-                android.os.IBinder r19 = r28.readStrongBinder()
-                java.lang.String r20 = r28.readString()
-                int r21 = r28.readInt()
-                int r22 = r28.readInt()
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x1053
-                android.os.Parcelable$Creator<android.content.res.Configuration> r1 = android.content.res.Configuration.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r12)
-                android.content.res.Configuration r1 = (android.content.res.Configuration) r1
-                r9 = r1
-                goto L_0x1054
-            L_0x1053:
-                r9 = r0
-            L_0x1054:
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x1064
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r12)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-            L_0x1062:
-                r10 = r0
-                goto L_0x1065
-            L_0x1064:
-                goto L_0x1062
-            L_0x1065:
-                int r23 = r28.readInt()
-                r0 = r26
-                r1 = r16
-                r2 = r17
-                r4 = r18
-                r5 = r19
-                r6 = r20
-                r7 = r21
-                r8 = r22
-                r11 = r23
-                int r0 = r0.startActivityWithConfig(r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11)
-                r29.writeNoException()
-                r15.writeInt(r0)
-                r1 = 1
-                return r1
-            L_0x1087:
-                r15 = r11
-                r11 = r13
-                r13 = r8
-                r11.enforceInterface(r13)
-                android.os.IBinder r1 = r28.readStrongBinder()
-                android.app.IApplicationThread r16 = android.app.IApplicationThread.Stub.asInterface(r1)
-                java.lang.String r17 = r28.readString()
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x10a9
-                android.os.Parcelable$Creator<android.content.Intent> r1 = android.content.Intent.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r11)
-                android.content.Intent r1 = (android.content.Intent) r1
-                r3 = r1
-                goto L_0x10aa
-            L_0x10a9:
-                r3 = r0
-            L_0x10aa:
-                java.lang.String r18 = r28.readString()
-                android.os.IBinder r19 = r28.readStrongBinder()
-                java.lang.String r20 = r28.readString()
-                int r21 = r28.readInt()
-                int r22 = r28.readInt()
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x10ce
-                android.os.Parcelable$Creator<android.app.ProfilerInfo> r1 = android.app.ProfilerInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r11)
-                android.app.ProfilerInfo r1 = (android.app.ProfilerInfo) r1
-                r9 = r1
-                goto L_0x10cf
-            L_0x10ce:
-                r9 = r0
-            L_0x10cf:
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x10df
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r11)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-            L_0x10dd:
-                r10 = r0
-                goto L_0x10e0
-            L_0x10df:
-                goto L_0x10dd
-            L_0x10e0:
-                int r23 = r28.readInt()
-                r0 = r26
-                r1 = r16
-                r2 = r17
-                r4 = r18
-                r5 = r19
-                r6 = r20
-                r7 = r21
-                r8 = r22
-                r11 = r23
-                android.app.WaitResult r0 = r0.startActivityAndWait(r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11)
-                r29.writeNoException()
-                if (r0 == 0) goto L_0x1107
-                r1 = 1
-                r15.writeInt(r1)
-                r0.writeToParcel(r15, r1)
-                goto L_0x110b
-            L_0x1107:
-                r1 = 1
-                r15.writeInt(r12)
-            L_0x110b:
-                return r1
-            L_0x110c:
-                r13 = r8
-                r15 = r11
-                r12 = r28
-                r12.enforceInterface(r13)
-                android.os.IBinder r1 = r28.readStrongBinder()
-                android.app.IApplicationThread r16 = android.app.IApplicationThread.Stub.asInterface(r1)
-                android.os.IBinder r1 = r28.readStrongBinder()
-                android.content.IIntentSender r17 = android.content.IIntentSender.Stub.asInterface(r1)
-                android.os.IBinder r18 = r28.readStrongBinder()
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x1137
-                android.os.Parcelable$Creator<android.content.Intent> r1 = android.content.Intent.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r12)
-                android.content.Intent r1 = (android.content.Intent) r1
-                r4 = r1
-                goto L_0x1138
-            L_0x1137:
-                r4 = r0
-            L_0x1138:
-                java.lang.String r19 = r28.readString()
-                android.os.IBinder r20 = r28.readStrongBinder()
-                java.lang.String r21 = r28.readString()
-                int r22 = r28.readInt()
-                int r23 = r28.readInt()
-                int r24 = r28.readInt()
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x1160
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r12)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-            L_0x115e:
-                r11 = r0
-                goto L_0x1161
-            L_0x1160:
-                goto L_0x115e
-            L_0x1161:
-                r0 = r26
-                r1 = r16
-                r2 = r17
-                r3 = r18
-                r5 = r19
-                r6 = r20
-                r7 = r21
-                r8 = r22
-                r9 = r23
-                r10 = r24
-                int r0 = r0.startActivityIntentSender(r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11)
-                r29.writeNoException()
-                r15.writeInt(r0)
-                r1 = 1
-                return r1
-            L_0x1181:
-                r15 = r11
-                r12 = r13
-                r13 = r8
-                r12.enforceInterface(r13)
-                android.os.IBinder r1 = r28.readStrongBinder()
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x119a
-                android.os.Parcelable$Creator<android.content.Intent> r2 = android.content.Intent.CREATOR
-                java.lang.Object r2 = r2.createFromParcel(r12)
-                android.content.Intent r2 = (android.content.Intent) r2
-                goto L_0x119b
-            L_0x119a:
-                r2 = r0
-            L_0x119b:
-                int r3 = r28.readInt()
-                if (r3 == 0) goto L_0x11aa
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r12)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-                goto L_0x11ab
-            L_0x11aa:
-            L_0x11ab:
-                boolean r3 = r14.startNextMatchingActivity(r1, r2, r0)
-                r29.writeNoException()
-                r15.writeInt(r3)
-                r4 = 1
-                return r4
-            L_0x11b7:
-                r15 = r11
-                r12 = r13
-                r13 = r8
-                r12.enforceInterface(r13)
-                android.os.IBinder r1 = r28.readStrongBinder()
-                android.app.IApplicationThread r16 = android.app.IApplicationThread.Stub.asInterface(r1)
-                java.lang.String r17 = r28.readString()
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x11d9
-                android.os.Parcelable$Creator<android.content.Intent> r1 = android.content.Intent.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r12)
-                android.content.Intent r1 = (android.content.Intent) r1
-                r3 = r1
-                goto L_0x11da
-            L_0x11d9:
-                r3 = r0
-            L_0x11da:
-                java.lang.String r18 = r28.readString()
-                android.os.IBinder r19 = r28.readStrongBinder()
-                java.lang.String r20 = r28.readString()
-                int r21 = r28.readInt()
-                int r22 = r28.readInt()
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x11fe
-                android.os.Parcelable$Creator<android.app.ProfilerInfo> r1 = android.app.ProfilerInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r12)
-                android.app.ProfilerInfo r1 = (android.app.ProfilerInfo) r1
-                r9 = r1
-                goto L_0x11ff
-            L_0x11fe:
-                r9 = r0
-            L_0x11ff:
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x120f
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r12)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-            L_0x120d:
-                r10 = r0
-                goto L_0x1210
-            L_0x120f:
-                goto L_0x120d
-            L_0x1210:
-                int r23 = r28.readInt()
-                r0 = r26
-                r1 = r16
-                r2 = r17
-                r4 = r18
-                r5 = r19
-                r6 = r20
-                r7 = r21
-                r8 = r22
-                r11 = r23
-                int r0 = r0.startActivityAsUser(r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11)
-                r29.writeNoException()
-                r15.writeInt(r0)
-                r1 = 1
-                return r1
-            L_0x1232:
-                r15 = r11
-                r12 = r13
-                r13 = r8
-                r12.enforceInterface(r13)
-                android.os.IBinder r1 = r28.readStrongBinder()
-                android.app.IApplicationThread r8 = android.app.IApplicationThread.Stub.asInterface(r1)
-                java.lang.String r9 = r28.readString()
-                android.os.Parcelable$Creator<android.content.Intent> r1 = android.content.Intent.CREATOR
-                java.lang.Object[] r1 = r12.createTypedArray(r1)
-                r10 = r1
-                android.content.Intent[] r10 = (android.content.Intent[]) r10
-                java.lang.String[] r11 = r28.createStringArray()
-                android.os.IBinder r16 = r28.readStrongBinder()
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x1265
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r12)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-            L_0x1263:
-                r6 = r0
-                goto L_0x1266
-            L_0x1265:
-                goto L_0x1263
-            L_0x1266:
-                int r17 = r28.readInt()
-                r0 = r26
-                r1 = r8
-                r2 = r9
-                r3 = r10
-                r4 = r11
-                r5 = r16
-                r7 = r17
-                int r0 = r0.startActivities(r1, r2, r3, r4, r5, r6, r7)
-                r29.writeNoException()
-                r15.writeInt(r0)
-                r1 = 1
-                return r1
-            L_0x1280:
-                r15 = r11
-                r12 = r13
-                r13 = r8
-                r12.enforceInterface(r13)
-                android.os.IBinder r1 = r28.readStrongBinder()
-                android.app.IApplicationThread r11 = android.app.IApplicationThread.Stub.asInterface(r1)
-                java.lang.String r16 = r28.readString()
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x12a2
-                android.os.Parcelable$Creator<android.content.Intent> r1 = android.content.Intent.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r12)
-                android.content.Intent r1 = (android.content.Intent) r1
-                r3 = r1
-                goto L_0x12a3
-            L_0x12a2:
-                r3 = r0
-            L_0x12a3:
-                java.lang.String r17 = r28.readString()
-                android.os.IBinder r18 = r28.readStrongBinder()
-                java.lang.String r19 = r28.readString()
-                int r20 = r28.readInt()
-                int r21 = r28.readInt()
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x12c7
-                android.os.Parcelable$Creator<android.app.ProfilerInfo> r1 = android.app.ProfilerInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r12)
-                android.app.ProfilerInfo r1 = (android.app.ProfilerInfo) r1
-                r9 = r1
-                goto L_0x12c8
-            L_0x12c7:
-                r9 = r0
-            L_0x12c8:
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x12d8
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r12)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-            L_0x12d6:
-                r10 = r0
-                goto L_0x12d9
-            L_0x12d8:
-                goto L_0x12d6
-            L_0x12d9:
-                r0 = r26
-                r1 = r11
-                r2 = r16
-                r4 = r17
-                r5 = r18
-                r6 = r19
-                r7 = r20
-                r8 = r21
-                int r0 = r0.startActivity(r1, r2, r3, r4, r5, r6, r7, r8, r9, r10)
-                r29.writeNoException()
-                r15.writeInt(r0)
-                r1 = 1
-                return r1
-            L_0x12f4:
-                r1 = r7
-                r15 = r11
-                r12 = r13
-                r13 = r8
-                r15.writeString(r13)
-                return r1
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.app.IActivityTaskManager.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            Intent _arg1;
+            boolean _arg11;
+            Bundle _arg12;
+            PersistableBundle _arg2;
+            Intent _arg13;
+            Intent _arg14;
+            ActivityManager.TaskDescription _arg22;
+            Intent _arg0;
+            Rect _arg02;
+            Rect _arg15;
+            Rect _arg23;
+            Rect _arg3;
+            Rect _arg03;
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    IApplicationThread _arg04 = IApplicationThread.Stub.asInterface(data.readStrongBinder());
+                    String _arg16 = data.readString();
+                    Intent _arg24 = data.readInt() != 0 ? Intent.CREATOR.createFromParcel(data) : null;
+                    String _arg32 = data.readString();
+                    IBinder _arg4 = data.readStrongBinder();
+                    String _arg5 = data.readString();
+                    int _arg6 = data.readInt();
+                    int _arg7 = data.readInt();
+                    ProfilerInfo _arg8 = data.readInt() != 0 ? ProfilerInfo.CREATOR.createFromParcel(data) : null;
+                    Bundle _arg9 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    int _result = startActivity(_arg04, _arg16, _arg24, _arg32, _arg4, _arg5, _arg6, _arg7, _arg8, _arg9);
+                    reply.writeNoException();
+                    reply.writeInt(_result);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    IApplicationThread _arg05 = IApplicationThread.Stub.asInterface(data.readStrongBinder());
+                    String _arg17 = data.readString();
+                    Intent[] _arg25 = (Intent[]) data.createTypedArray(Intent.CREATOR);
+                    String[] _arg33 = data.createStringArray();
+                    IBinder _arg42 = data.readStrongBinder();
+                    Bundle _arg52 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    int _arg62 = data.readInt();
+                    int _result2 = startActivities(_arg05, _arg17, _arg25, _arg33, _arg42, _arg52, _arg62);
+                    reply.writeNoException();
+                    reply.writeInt(_result2);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    IApplicationThread _arg06 = IApplicationThread.Stub.asInterface(data.readStrongBinder());
+                    String _arg18 = data.readString();
+                    Intent _arg26 = data.readInt() != 0 ? Intent.CREATOR.createFromParcel(data) : null;
+                    String _arg34 = data.readString();
+                    IBinder _arg43 = data.readStrongBinder();
+                    String _arg53 = data.readString();
+                    int _arg63 = data.readInt();
+                    int _arg72 = data.readInt();
+                    ProfilerInfo _arg82 = data.readInt() != 0 ? ProfilerInfo.CREATOR.createFromParcel(data) : null;
+                    Bundle _arg92 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    int _arg10 = data.readInt();
+                    int _result3 = startActivityAsUser(_arg06, _arg18, _arg26, _arg34, _arg43, _arg53, _arg63, _arg72, _arg82, _arg92, _arg10);
+                    reply.writeNoException();
+                    reply.writeInt(_result3);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg07 = data.readStrongBinder();
+                    if (data.readInt() != 0) {
+                        _arg1 = Intent.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg1 = null;
+                    }
+                    Bundle _arg27 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    boolean startNextMatchingActivity = startNextMatchingActivity(_arg07, _arg1, _arg27);
+                    reply.writeNoException();
+                    reply.writeInt(startNextMatchingActivity ? 1 : 0);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    IApplicationThread _arg08 = IApplicationThread.Stub.asInterface(data.readStrongBinder());
+                    IIntentSender _arg19 = IIntentSender.Stub.asInterface(data.readStrongBinder());
+                    IBinder _arg28 = data.readStrongBinder();
+                    Intent _arg35 = data.readInt() != 0 ? Intent.CREATOR.createFromParcel(data) : null;
+                    String _arg44 = data.readString();
+                    IBinder _arg54 = data.readStrongBinder();
+                    String _arg64 = data.readString();
+                    int _arg73 = data.readInt();
+                    int _arg83 = data.readInt();
+                    int _arg93 = data.readInt();
+                    Bundle _arg102 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    int _result4 = startActivityIntentSender(_arg08, _arg19, _arg28, _arg35, _arg44, _arg54, _arg64, _arg73, _arg83, _arg93, _arg102);
+                    reply.writeNoException();
+                    reply.writeInt(_result4);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    IApplicationThread _arg09 = IApplicationThread.Stub.asInterface(data.readStrongBinder());
+                    String _arg110 = data.readString();
+                    Intent _arg29 = data.readInt() != 0 ? Intent.CREATOR.createFromParcel(data) : null;
+                    String _arg36 = data.readString();
+                    IBinder _arg45 = data.readStrongBinder();
+                    String _arg55 = data.readString();
+                    int _arg65 = data.readInt();
+                    int _arg74 = data.readInt();
+                    ProfilerInfo _arg84 = data.readInt() != 0 ? ProfilerInfo.CREATOR.createFromParcel(data) : null;
+                    Bundle _arg94 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    int _arg103 = data.readInt();
+                    WaitResult _result5 = startActivityAndWait(_arg09, _arg110, _arg29, _arg36, _arg45, _arg55, _arg65, _arg74, _arg84, _arg94, _arg103);
+                    reply.writeNoException();
+                    if (_result5 != null) {
+                        reply.writeInt(1);
+                        _result5.writeToParcel(reply, 1);
+                        return true;
+                    }
+                    reply.writeInt(0);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    IApplicationThread _arg010 = IApplicationThread.Stub.asInterface(data.readStrongBinder());
+                    String _arg111 = data.readString();
+                    Intent _arg210 = data.readInt() != 0 ? Intent.CREATOR.createFromParcel(data) : null;
+                    String _arg37 = data.readString();
+                    IBinder _arg46 = data.readStrongBinder();
+                    String _arg56 = data.readString();
+                    int _arg66 = data.readInt();
+                    int _arg75 = data.readInt();
+                    Configuration _arg85 = data.readInt() != 0 ? Configuration.CREATOR.createFromParcel(data) : null;
+                    Bundle _arg95 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    int _arg104 = data.readInt();
+                    int _result6 = startActivityWithConfig(_arg010, _arg111, _arg210, _arg37, _arg46, _arg56, _arg66, _arg75, _arg85, _arg95, _arg104);
+                    reply.writeNoException();
+                    reply.writeInt(_result6);
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg011 = data.readString();
+                    int _arg112 = data.readInt();
+                    int _arg211 = data.readInt();
+                    Intent _arg38 = data.readInt() != 0 ? Intent.CREATOR.createFromParcel(data) : null;
+                    String _arg47 = data.readString();
+                    IVoiceInteractionSession _arg57 = IVoiceInteractionSession.Stub.asInterface(data.readStrongBinder());
+                    IVoiceInteractor _arg67 = IVoiceInteractor.Stub.asInterface(data.readStrongBinder());
+                    int _arg76 = data.readInt();
+                    ProfilerInfo _arg86 = data.readInt() != 0 ? ProfilerInfo.CREATOR.createFromParcel(data) : null;
+                    Bundle _arg96 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    int _arg105 = data.readInt();
+                    int _result7 = startVoiceActivity(_arg011, _arg112, _arg211, _arg38, _arg47, _arg57, _arg67, _arg76, _arg86, _arg96, _arg105);
+                    reply.writeNoException();
+                    reply.writeInt(_result7);
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg012 = data.readString();
+                    int _arg113 = data.readInt();
+                    int _arg212 = data.readInt();
+                    Intent _arg39 = data.readInt() != 0 ? Intent.CREATOR.createFromParcel(data) : null;
+                    String _arg48 = data.readString();
+                    Bundle _arg58 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    int _arg68 = data.readInt();
+                    int _result8 = startAssistantActivity(_arg012, _arg113, _arg212, _arg39, _arg48, _arg58, _arg68);
+                    reply.writeNoException();
+                    reply.writeInt(_result8);
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    Intent _arg013 = data.readInt() != 0 ? Intent.CREATOR.createFromParcel(data) : null;
+                    IAssistDataReceiver _arg114 = IAssistDataReceiver.Stub.asInterface(data.readStrongBinder());
+                    IRecentsAnimationRunner _arg213 = IRecentsAnimationRunner.Stub.asInterface(data.readStrongBinder());
+                    startRecentsActivity(_arg013, _arg114, _arg213);
+                    reply.writeNoException();
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg014 = data.readInt();
+                    Bundle _arg115 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    int _result9 = startActivityFromRecents(_arg014, _arg115);
+                    reply.writeNoException();
+                    reply.writeInt(_result9);
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    IApplicationThread _arg015 = IApplicationThread.Stub.asInterface(data.readStrongBinder());
+                    String _arg116 = data.readString();
+                    Intent _arg214 = data.readInt() != 0 ? Intent.CREATOR.createFromParcel(data) : null;
+                    String _arg310 = data.readString();
+                    IBinder _arg49 = data.readStrongBinder();
+                    String _arg59 = data.readString();
+                    int _arg69 = data.readInt();
+                    int _arg77 = data.readInt();
+                    ProfilerInfo _arg87 = data.readInt() != 0 ? ProfilerInfo.CREATOR.createFromParcel(data) : null;
+                    Bundle _arg97 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    IBinder _arg106 = data.readStrongBinder();
+                    _arg11 = data.readInt() != 0;
+                    int _arg122 = data.readInt();
+                    int _result10 = startActivityAsCaller(_arg015, _arg116, _arg214, _arg310, _arg49, _arg59, _arg69, _arg77, _arg87, _arg97, _arg106, _arg11, _arg122);
+                    reply.writeNoException();
+                    reply.writeInt(_result10);
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg016 = data.readInt();
+                    Intent _arg117 = data.readInt() != 0 ? Intent.CREATOR.createFromParcel(data) : null;
+                    String _arg215 = data.readString();
+                    int _arg311 = data.readInt();
+                    boolean isActivityStartAllowedOnDisplay = isActivityStartAllowedOnDisplay(_arg016, _arg117, _arg215, _arg311);
+                    reply.writeNoException();
+                    reply.writeInt(isActivityStartAllowedOnDisplay ? 1 : 0);
+                    return true;
+                case 14:
+                    data.enforceInterface(DESCRIPTOR);
+                    unhandledBack();
+                    reply.writeNoException();
+                    return true;
+                case 15:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg017 = data.readStrongBinder();
+                    int _arg118 = data.readInt();
+                    Intent _arg216 = data.readInt() != 0 ? Intent.CREATOR.createFromParcel(data) : null;
+                    int _arg312 = data.readInt();
+                    boolean finishActivity = finishActivity(_arg017, _arg118, _arg216, _arg312);
+                    reply.writeNoException();
+                    reply.writeInt(finishActivity ? 1 : 0);
+                    return true;
+                case 16:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg018 = data.readStrongBinder();
+                    boolean finishActivityAffinity = finishActivityAffinity(_arg018);
+                    reply.writeNoException();
+                    reply.writeInt(finishActivityAffinity ? 1 : 0);
+                    return true;
+                case 17:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg019 = data.readStrongBinder();
+                    Configuration _arg119 = data.readInt() != 0 ? Configuration.CREATOR.createFromParcel(data) : null;
+                    _arg11 = data.readInt() != 0;
+                    boolean _arg217 = _arg11;
+                    activityIdle(_arg019, _arg119, _arg217);
+                    return true;
+                case 18:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg020 = data.readStrongBinder();
+                    activityResumed(_arg020);
+                    reply.writeNoException();
+                    return true;
+                case 19:
+                    data.enforceInterface(DESCRIPTOR);
+                    activityTopResumedStateLost();
+                    reply.writeNoException();
+                    return true;
+                case 20:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg021 = data.readStrongBinder();
+                    activityPaused(_arg021);
+                    reply.writeNoException();
+                    return true;
+                case 21:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg022 = data.readStrongBinder();
+                    if (data.readInt() != 0) {
+                        _arg12 = Bundle.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg12 = null;
+                    }
+                    if (data.readInt() != 0) {
+                        _arg2 = PersistableBundle.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg2 = null;
+                    }
+                    CharSequence _arg313 = data.readInt() != 0 ? TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(data) : null;
+                    activityStopped(_arg022, _arg12, _arg2, _arg313);
+                    reply.writeNoException();
+                    return true;
+                case 22:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg023 = data.readStrongBinder();
+                    activityDestroyed(_arg023);
+                    return true;
+                case 23:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg024 = data.readStrongBinder();
+                    activityRelaunched(_arg024);
+                    reply.writeNoException();
+                    return true;
+                case 24:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg025 = data.readStrongBinder();
+                    activitySlept(_arg025);
+                    return true;
+                case 25:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result11 = getFrontActivityScreenCompatMode();
+                    reply.writeNoException();
+                    reply.writeInt(_result11);
+                    return true;
+                case 26:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg026 = data.readInt();
+                    setFrontActivityScreenCompatMode(_arg026);
+                    reply.writeNoException();
+                    return true;
+                case 27:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg027 = data.readStrongBinder();
+                    String _result12 = getCallingPackage(_arg027);
+                    reply.writeNoException();
+                    reply.writeString(_result12);
+                    return true;
+                case 28:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg028 = data.readStrongBinder();
+                    ComponentName _result13 = getCallingActivity(_arg028);
+                    reply.writeNoException();
+                    if (_result13 != null) {
+                        reply.writeInt(1);
+                        _result13.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 29:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg029 = data.readInt();
+                    setFocusedTask(_arg029);
+                    reply.writeNoException();
+                    return true;
+                case 30:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg030 = data.readInt();
+                    boolean removeTask = removeTask(_arg030);
+                    reply.writeNoException();
+                    reply.writeInt(removeTask ? 1 : 0);
+                    return true;
+                case 31:
+                    data.enforceInterface(DESCRIPTOR);
+                    removeAllVisibleRecentTasks();
+                    reply.writeNoException();
+                    return true;
+                case 32:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg031 = data.readInt();
+                    List<ActivityManager.RunningTaskInfo> _result14 = getTasks(_arg031);
+                    reply.writeNoException();
+                    reply.writeTypedList(_result14);
+                    return true;
+                case 33:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg032 = data.readInt();
+                    int _arg120 = data.readInt();
+                    int _arg218 = data.readInt();
+                    List<ActivityManager.RunningTaskInfo> _result15 = getFilteredTasks(_arg032, _arg120, _arg218);
+                    reply.writeNoException();
+                    reply.writeTypedList(_result15);
+                    return true;
+                case 34:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg033 = data.readStrongBinder();
+                    String _arg121 = data.readString();
+                    boolean shouldUpRecreateTask = shouldUpRecreateTask(_arg033, _arg121);
+                    reply.writeNoException();
+                    reply.writeInt(shouldUpRecreateTask ? 1 : 0);
+                    return true;
+                case 35:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg034 = data.readStrongBinder();
+                    if (data.readInt() != 0) {
+                        _arg13 = Intent.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg13 = null;
+                    }
+                    int _arg219 = data.readInt();
+                    Intent _arg314 = data.readInt() != 0 ? Intent.CREATOR.createFromParcel(data) : null;
+                    boolean navigateUpTo = navigateUpTo(_arg034, _arg13, _arg219, _arg314);
+                    reply.writeNoException();
+                    reply.writeInt(navigateUpTo ? 1 : 0);
+                    return true;
+                case 36:
+                    data.enforceInterface(DESCRIPTOR);
+                    IApplicationThread _arg035 = IApplicationThread.Stub.asInterface(data.readStrongBinder());
+                    String _arg123 = data.readString();
+                    int _arg220 = data.readInt();
+                    int _arg315 = data.readInt();
+                    Bundle _arg410 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    moveTaskToFront(_arg035, _arg123, _arg220, _arg315, _arg410);
+                    reply.writeNoException();
+                    return true;
+                case 37:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg036 = data.readStrongBinder();
+                    _arg11 = data.readInt() != 0;
+                    boolean _arg124 = _arg11;
+                    int _result16 = getTaskForActivity(_arg036, _arg124);
+                    reply.writeNoException();
+                    reply.writeInt(_result16);
+                    return true;
+                case 38:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg037 = data.readStrongBinder();
+                    String _arg125 = data.readString();
+                    int _arg221 = data.readInt();
+                    finishSubActivity(_arg037, _arg125, _arg221);
+                    reply.writeNoException();
+                    return true;
+                case 39:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg038 = data.readInt();
+                    int _arg126 = data.readInt();
+                    int _arg222 = data.readInt();
+                    ParceledListSlice _result17 = getRecentTasks(_arg038, _arg126, _arg222);
+                    reply.writeNoException();
+                    if (_result17 != null) {
+                        reply.writeInt(1);
+                        _result17.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 40:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg039 = data.readStrongBinder();
+                    boolean willActivityBeVisible = willActivityBeVisible(_arg039);
+                    reply.writeNoException();
+                    reply.writeInt(willActivityBeVisible ? 1 : 0);
+                    return true;
+                case 41:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg040 = data.readStrongBinder();
+                    int _arg127 = data.readInt();
+                    setRequestedOrientation(_arg040, _arg127);
+                    reply.writeNoException();
+                    return true;
+                case 42:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg041 = data.readStrongBinder();
+                    int _result18 = getRequestedOrientation(_arg041);
+                    reply.writeNoException();
+                    reply.writeInt(_result18);
+                    return true;
+                case 43:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg042 = data.readStrongBinder();
+                    boolean convertFromTranslucent = convertFromTranslucent(_arg042);
+                    reply.writeNoException();
+                    reply.writeInt(convertFromTranslucent ? 1 : 0);
+                    return true;
+                case 44:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg043 = data.readStrongBinder();
+                    Bundle _arg128 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    boolean convertToTranslucent = convertToTranslucent(_arg043, _arg128);
+                    reply.writeNoException();
+                    reply.writeInt(convertToTranslucent ? 1 : 0);
+                    return true;
+                case 45:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg044 = data.readStrongBinder();
+                    notifyActivityDrawn(_arg044);
+                    reply.writeNoException();
+                    return true;
+                case 46:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg045 = data.readStrongBinder();
+                    _arg11 = data.readInt() != 0;
+                    boolean _arg129 = _arg11;
+                    reportActivityFullyDrawn(_arg045, _arg129);
+                    reply.writeNoException();
+                    return true;
+                case 47:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg046 = data.readStrongBinder();
+                    int _result19 = getActivityDisplayId(_arg046);
+                    reply.writeNoException();
+                    reply.writeInt(_result19);
+                    return true;
+                case 48:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg047 = data.readStrongBinder();
+                    boolean isImmersive = isImmersive(_arg047);
+                    reply.writeNoException();
+                    reply.writeInt(isImmersive ? 1 : 0);
+                    return true;
+                case 49:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg048 = data.readStrongBinder();
+                    _arg11 = data.readInt() != 0;
+                    boolean _arg130 = _arg11;
+                    setImmersive(_arg048, _arg130);
+                    reply.writeNoException();
+                    return true;
+                case 50:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isTopActivityImmersive = isTopActivityImmersive();
+                    reply.writeNoException();
+                    reply.writeInt(isTopActivityImmersive ? 1 : 0);
+                    return true;
+                case 51:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg049 = data.readStrongBinder();
+                    _arg11 = data.readInt() != 0;
+                    boolean _arg131 = _arg11;
+                    boolean moveActivityTaskToBack = moveActivityTaskToBack(_arg049, _arg131);
+                    reply.writeNoException();
+                    reply.writeInt(moveActivityTaskToBack ? 1 : 0);
+                    return true;
+                case 52:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg050 = data.readInt();
+                    ActivityManager.TaskDescription _result20 = getTaskDescription(_arg050);
+                    reply.writeNoException();
+                    if (_result20 != null) {
+                        reply.writeInt(1);
+                        _result20.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 53:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg051 = data.readStrongBinder();
+                    String _arg132 = data.readString();
+                    int _arg223 = data.readInt();
+                    int _arg316 = data.readInt();
+                    overridePendingTransition(_arg051, _arg132, _arg223, _arg316);
+                    reply.writeNoException();
+                    return true;
+                case 54:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg052 = data.readStrongBinder();
+                    int _result21 = getLaunchedFromUid(_arg052);
+                    reply.writeNoException();
+                    reply.writeInt(_result21);
+                    return true;
+                case 55:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg053 = data.readStrongBinder();
+                    String _result22 = getLaunchedFromPackage(_arg053);
+                    reply.writeNoException();
+                    reply.writeString(_result22);
+                    return true;
+                case 56:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg054 = data.readStrongBinder();
+                    Bundle _arg133 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    AssistStructure _arg224 = data.readInt() != 0 ? AssistStructure.CREATOR.createFromParcel(data) : null;
+                    AssistContent _arg317 = data.readInt() != 0 ? AssistContent.CREATOR.createFromParcel(data) : null;
+                    Uri _arg411 = data.readInt() != 0 ? Uri.CREATOR.createFromParcel(data) : null;
+                    reportAssistContextExtras(_arg054, _arg133, _arg224, _arg317, _arg411);
+                    reply.writeNoException();
+                    return true;
+                case 57:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg055 = data.readInt();
+                    setFocusedStack(_arg055);
+                    reply.writeNoException();
+                    return true;
+                case 58:
+                    data.enforceInterface(DESCRIPTOR);
+                    ActivityManager.StackInfo _result23 = getFocusedStackInfo();
+                    reply.writeNoException();
+                    if (_result23 != null) {
+                        reply.writeInt(1);
+                        _result23.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 59:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg056 = data.readInt();
+                    Rect _result24 = getTaskBounds(_arg056);
+                    reply.writeNoException();
+                    if (_result24 != null) {
+                        reply.writeInt(1);
+                        _result24.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 60:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg11 = data.readInt() != 0;
+                    boolean _arg057 = _arg11;
+                    cancelRecentsAnimation(_arg057);
+                    reply.writeNoException();
+                    return true;
+                case 61:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg058 = data.readStrongBinder();
+                    startLockTaskModeByToken(_arg058);
+                    reply.writeNoException();
+                    return true;
+                case 62:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg059 = data.readStrongBinder();
+                    stopLockTaskModeByToken(_arg059);
+                    reply.writeNoException();
+                    return true;
+                case 63:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg060 = data.readInt();
+                    String[] _arg134 = data.createStringArray();
+                    updateLockTaskPackages(_arg060, _arg134);
+                    reply.writeNoException();
+                    return true;
+                case 64:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isInLockTaskMode = isInLockTaskMode();
+                    reply.writeNoException();
+                    reply.writeInt(isInLockTaskMode ? 1 : 0);
+                    return true;
+                case 65:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result25 = getLockTaskModeState();
+                    reply.writeNoException();
+                    reply.writeInt(_result25);
+                    return true;
+                case 66:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg061 = data.readStrongBinder();
+                    ActivityManager.TaskDescription _arg135 = data.readInt() != 0 ? ActivityManager.TaskDescription.CREATOR.createFromParcel(data) : null;
+                    setTaskDescription(_arg061, _arg135);
+                    reply.writeNoException();
+                    return true;
+                case 67:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg062 = data.readStrongBinder();
+                    Bundle _result26 = getActivityOptions(_arg062);
+                    reply.writeNoException();
+                    if (_result26 != null) {
+                        reply.writeInt(1);
+                        _result26.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 68:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg063 = data.readString();
+                    List<IBinder> _result27 = getAppTasks(_arg063);
+                    reply.writeNoException();
+                    reply.writeBinderList(_result27);
+                    return true;
+                case 69:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg064 = data.readInt();
+                    startSystemLockTaskMode(_arg064);
+                    reply.writeNoException();
+                    return true;
+                case 70:
+                    data.enforceInterface(DESCRIPTOR);
+                    stopSystemLockTaskMode();
+                    reply.writeNoException();
+                    return true;
+                case 71:
+                    data.enforceInterface(DESCRIPTOR);
+                    IVoiceInteractionSession _arg065 = IVoiceInteractionSession.Stub.asInterface(data.readStrongBinder());
+                    finishVoiceTask(_arg065);
+                    reply.writeNoException();
+                    return true;
+                case 72:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg066 = data.readStrongBinder();
+                    boolean isTopOfTask = isTopOfTask(_arg066);
+                    reply.writeNoException();
+                    reply.writeInt(isTopOfTask ? 1 : 0);
+                    return true;
+                case 73:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg067 = data.readStrongBinder();
+                    notifyLaunchTaskBehindComplete(_arg067);
+                    reply.writeNoException();
+                    return true;
+                case 74:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg068 = data.readStrongBinder();
+                    notifyEnterAnimationComplete(_arg068);
+                    reply.writeNoException();
+                    return true;
+                case 75:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg069 = data.readStrongBinder();
+                    if (data.readInt() != 0) {
+                        _arg14 = Intent.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg14 = null;
+                    }
+                    if (data.readInt() != 0) {
+                        _arg22 = ActivityManager.TaskDescription.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg22 = null;
+                    }
+                    Bitmap _arg318 = data.readInt() != 0 ? Bitmap.CREATOR.createFromParcel(data) : null;
+                    int _result28 = addAppTask(_arg069, _arg14, _arg22, _arg318);
+                    reply.writeNoException();
+                    reply.writeInt(_result28);
+                    return true;
+                case 76:
+                    data.enforceInterface(DESCRIPTOR);
+                    Point _result29 = getAppTaskThumbnailSize();
+                    reply.writeNoException();
+                    if (_result29 != null) {
+                        reply.writeInt(1);
+                        _result29.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 77:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg070 = data.readStrongBinder();
+                    boolean releaseActivityInstance = releaseActivityInstance(_arg070);
+                    reply.writeNoException();
+                    reply.writeInt(releaseActivityInstance ? 1 : 0);
+                    return true;
+                case 78:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg071 = data.readStrongBinder();
+                    IBinder _result30 = requestStartActivityPermissionToken(_arg071);
+                    reply.writeNoException();
+                    reply.writeStrongBinder(_result30);
+                    return true;
+                case 79:
+                    data.enforceInterface(DESCRIPTOR);
+                    IApplicationThread _arg072 = IApplicationThread.Stub.asInterface(data.readStrongBinder());
+                    releaseSomeActivities(_arg072);
+                    reply.writeNoException();
+                    return true;
+                case 80:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg073 = data.readString();
+                    int _arg136 = data.readInt();
+                    Bitmap _result31 = getTaskDescriptionIcon(_arg073, _arg136);
+                    reply.writeNoException();
+                    if (_result31 != null) {
+                        reply.writeInt(1);
+                        _result31.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 81:
+                    data.enforceInterface(DESCRIPTOR);
+                    Bundle _arg074 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    startInPlaceAnimationOnFrontMostApplication(_arg074);
+                    reply.writeNoException();
+                    return true;
+                case 82:
+                    data.enforceInterface(DESCRIPTOR);
+                    ITaskStackListener _arg075 = ITaskStackListener.Stub.asInterface(data.readStrongBinder());
+                    registerTaskStackListener(_arg075);
+                    reply.writeNoException();
+                    return true;
+                case 83:
+                    data.enforceInterface(DESCRIPTOR);
+                    ITaskStackListener _arg076 = ITaskStackListener.Stub.asInterface(data.readStrongBinder());
+                    unregisterTaskStackListener(_arg076);
+                    reply.writeNoException();
+                    return true;
+                case 84:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg077 = data.readInt();
+                    int _arg137 = data.readInt();
+                    setTaskResizeable(_arg077, _arg137);
+                    reply.writeNoException();
+                    return true;
+                case 85:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg078 = data.readStrongBinder();
+                    toggleFreeformWindowingMode(_arg078);
+                    reply.writeNoException();
+                    return true;
+                case 86:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg079 = data.readInt();
+                    Rect _arg138 = data.readInt() != 0 ? Rect.CREATOR.createFromParcel(data) : null;
+                    int _arg225 = data.readInt();
+                    resizeTask(_arg079, _arg138, _arg225);
+                    reply.writeNoException();
+                    return true;
+                case 87:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg080 = data.readInt();
+                    int _arg139 = data.readInt();
+                    moveStackToDisplay(_arg080, _arg139);
+                    reply.writeNoException();
+                    return true;
+                case 88:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg081 = data.readInt();
+                    removeStack(_arg081);
+                    reply.writeNoException();
+                    return true;
+                case 89:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg082 = data.readInt();
+                    int _arg140 = data.readInt();
+                    _arg11 = data.readInt() != 0;
+                    boolean _arg226 = _arg11;
+                    setTaskWindowingMode(_arg082, _arg140, _arg226);
+                    reply.writeNoException();
+                    return true;
+                case 90:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg083 = data.readInt();
+                    int _arg141 = data.readInt();
+                    _arg11 = data.readInt() != 0;
+                    boolean _arg227 = _arg11;
+                    moveTaskToStack(_arg083, _arg141, _arg227);
+                    reply.writeNoException();
+                    return true;
+                case 91:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg084 = data.readInt();
+                    Rect _arg142 = data.readInt() != 0 ? Rect.CREATOR.createFromParcel(data) : null;
+                    boolean _arg228 = data.readInt() != 0;
+                    boolean _arg319 = data.readInt() != 0;
+                    boolean _arg412 = data.readInt() != 0;
+                    int _arg510 = data.readInt();
+                    resizeStack(_arg084, _arg142, _arg228, _arg319, _arg412, _arg510);
+                    reply.writeNoException();
+                    return true;
+                case 92:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg085 = data.readInt();
+                    int _arg143 = data.readInt();
+                    boolean _arg229 = data.readInt() != 0;
+                    boolean _arg320 = data.readInt() != 0;
+                    Rect _arg413 = data.readInt() != 0 ? Rect.CREATOR.createFromParcel(data) : null;
+                    boolean _arg511 = data.readInt() != 0;
+                    boolean taskWindowingModeSplitScreenPrimary = setTaskWindowingModeSplitScreenPrimary(_arg085, _arg143, _arg229, _arg320, _arg413, _arg511);
+                    reply.writeNoException();
+                    reply.writeInt(taskWindowingModeSplitScreenPrimary ? 1 : 0);
+                    return true;
+                case 93:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg086 = data.readInt();
+                    Rect _arg144 = data.readInt() != 0 ? Rect.CREATOR.createFromParcel(data) : null;
+                    int _arg230 = data.readInt();
+                    int _arg321 = data.readInt();
+                    int _arg414 = data.readInt();
+                    offsetPinnedStackBounds(_arg086, _arg144, _arg230, _arg321, _arg414);
+                    reply.writeNoException();
+                    return true;
+                case 94:
+                    data.enforceInterface(DESCRIPTOR);
+                    int[] _arg087 = data.createIntArray();
+                    removeStacksInWindowingModes(_arg087);
+                    reply.writeNoException();
+                    return true;
+                case 95:
+                    data.enforceInterface(DESCRIPTOR);
+                    int[] _arg088 = data.createIntArray();
+                    removeStacksWithActivityTypes(_arg088);
+                    reply.writeNoException();
+                    return true;
+                case 96:
+                    data.enforceInterface(DESCRIPTOR);
+                    List<ActivityManager.StackInfo> _result32 = getAllStackInfos();
+                    reply.writeNoException();
+                    reply.writeTypedList(_result32);
+                    return true;
+                case 97:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg089 = data.readInt();
+                    int _arg145 = data.readInt();
+                    ActivityManager.StackInfo _result33 = getStackInfo(_arg089, _arg145);
+                    reply.writeNoException();
+                    if (_result33 != null) {
+                        reply.writeInt(1);
+                        _result33.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 98:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean _arg090 = data.readInt() != 0;
+                    _arg11 = data.readInt() != 0;
+                    boolean _arg146 = _arg11;
+                    setLockScreenShown(_arg090, _arg146);
+                    reply.writeNoException();
+                    return true;
+                case 99:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg091 = data.readInt();
+                    Bundle _result34 = getAssistContextExtras(_arg091);
+                    reply.writeNoException();
+                    if (_result34 != null) {
+                        reply.writeInt(1);
+                        _result34.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 100:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg0 = Intent.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg0 = null;
+                    }
+                    int _arg147 = data.readInt();
+                    String _arg231 = data.readString();
+                    int _arg322 = data.readInt();
+                    Bundle _arg415 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    boolean launchAssistIntent = launchAssistIntent(_arg0, _arg147, _arg231, _arg322, _arg415);
+                    reply.writeNoException();
+                    reply.writeInt(launchAssistIntent ? 1 : 0);
+                    return true;
+                case 101:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg092 = data.readInt();
+                    IAssistDataReceiver _arg148 = IAssistDataReceiver.Stub.asInterface(data.readStrongBinder());
+                    Bundle _arg232 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    IBinder _arg323 = data.readStrongBinder();
+                    boolean _arg416 = data.readInt() != 0;
+                    boolean _arg512 = data.readInt() != 0;
+                    boolean requestAssistContextExtras = requestAssistContextExtras(_arg092, _arg148, _arg232, _arg323, _arg416, _arg512);
+                    reply.writeNoException();
+                    reply.writeInt(requestAssistContextExtras ? 1 : 0);
+                    return true;
+                case 102:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAssistDataReceiver _arg093 = IAssistDataReceiver.Stub.asInterface(data.readStrongBinder());
+                    Bundle _arg149 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    IBinder _arg233 = data.readStrongBinder();
+                    int _arg324 = data.readInt();
+                    boolean requestAutofillData = requestAutofillData(_arg093, _arg149, _arg233, _arg324);
+                    reply.writeNoException();
+                    reply.writeInt(requestAutofillData ? 1 : 0);
+                    return true;
+                case 103:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isAssistDataAllowedOnCurrentActivity = isAssistDataAllowedOnCurrentActivity();
+                    reply.writeNoException();
+                    reply.writeInt(isAssistDataAllowedOnCurrentActivity ? 1 : 0);
+                    return true;
+                case 104:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg094 = data.readStrongBinder();
+                    Bundle _arg150 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    boolean showAssistFromActivity = showAssistFromActivity(_arg094, _arg150);
+                    reply.writeNoException();
+                    reply.writeInt(showAssistFromActivity ? 1 : 0);
+                    return true;
+                case 105:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg095 = data.readStrongBinder();
+                    boolean isRootVoiceInteraction = isRootVoiceInteraction(_arg095);
+                    reply.writeNoException();
+                    reply.writeInt(isRootVoiceInteraction ? 1 : 0);
+                    return true;
+                case 106:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg096 = data.readStrongBinder();
+                    showLockTaskEscapeMessage(_arg096);
+                    return true;
+                case 107:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg097 = data.readInt();
+                    keyguardGoingAway(_arg097);
+                    reply.writeNoException();
+                    return true;
+                case 108:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg098 = data.readStrongBinder();
+                    ComponentName _result35 = getActivityClassForToken(_arg098);
+                    reply.writeNoException();
+                    if (_result35 != null) {
+                        reply.writeInt(1);
+                        _result35.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 109:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg099 = data.readStrongBinder();
+                    String _result36 = getPackageForToken(_arg099);
+                    reply.writeNoException();
+                    reply.writeString(_result36);
+                    return true;
+                case 110:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0100 = data.readInt();
+                    int _arg151 = data.readInt();
+                    int _arg234 = data.readInt();
+                    positionTaskInStack(_arg0100, _arg151, _arg234);
+                    reply.writeNoException();
+                    return true;
+                case 111:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg0101 = data.readStrongBinder();
+                    int[] _arg152 = data.createIntArray();
+                    int[] _arg235 = data.createIntArray();
+                    int[] _arg325 = data.createIntArray();
+                    reportSizeConfigurations(_arg0101, _arg152, _arg235, _arg325);
+                    reply.writeNoException();
+                    return true;
+                case 112:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg11 = data.readInt() != 0;
+                    boolean _arg0102 = _arg11;
+                    dismissSplitScreenMode(_arg0102);
+                    reply.writeNoException();
+                    return true;
+                case 113:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg11 = data.readInt() != 0;
+                    boolean _arg0103 = _arg11;
+                    int _arg153 = data.readInt();
+                    dismissPip(_arg0103, _arg153);
+                    reply.writeNoException();
+                    return true;
+                case 114:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg11 = data.readInt() != 0;
+                    boolean _arg0104 = _arg11;
+                    suppressResizeConfigChanges(_arg0104);
+                    reply.writeNoException();
+                    return true;
+                case 115:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0105 = data.readInt();
+                    _arg11 = data.readInt() != 0;
+                    boolean _arg154 = _arg11;
+                    moveTasksToFullscreenStack(_arg0105, _arg154);
+                    reply.writeNoException();
+                    return true;
+                case 116:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0106 = data.readInt();
+                    Rect _arg155 = data.readInt() != 0 ? Rect.CREATOR.createFromParcel(data) : null;
+                    boolean moveTopActivityToPinnedStack = moveTopActivityToPinnedStack(_arg0106, _arg155);
+                    reply.writeNoException();
+                    reply.writeInt(moveTopActivityToPinnedStack ? 1 : 0);
+                    return true;
+                case 117:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg0107 = data.readStrongBinder();
+                    boolean isInMultiWindowMode = isInMultiWindowMode(_arg0107);
+                    reply.writeNoException();
+                    reply.writeInt(isInMultiWindowMode ? 1 : 0);
+                    return true;
+                case 118:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg0108 = data.readStrongBinder();
+                    boolean isInPictureInPictureMode = isInPictureInPictureMode(_arg0108);
+                    reply.writeNoException();
+                    reply.writeInt(isInPictureInPictureMode ? 1 : 0);
+                    return true;
+                case 119:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg0109 = data.readStrongBinder();
+                    PictureInPictureParams _arg156 = data.readInt() != 0 ? PictureInPictureParams.CREATOR.createFromParcel(data) : null;
+                    boolean enterPictureInPictureMode = enterPictureInPictureMode(_arg0109, _arg156);
+                    reply.writeNoException();
+                    reply.writeInt(enterPictureInPictureMode ? 1 : 0);
+                    return true;
+                case 120:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg0110 = data.readStrongBinder();
+                    PictureInPictureParams _arg157 = data.readInt() != 0 ? PictureInPictureParams.CREATOR.createFromParcel(data) : null;
+                    setPictureInPictureParams(_arg0110, _arg157);
+                    reply.writeNoException();
+                    return true;
+                case 121:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg0111 = data.readStrongBinder();
+                    int _result37 = getMaxNumPictureInPictureActions(_arg0111);
+                    reply.writeNoException();
+                    reply.writeInt(_result37);
+                    return true;
+                case 122:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg0112 = data.readStrongBinder();
+                    IBinder _result38 = getUriPermissionOwnerForActivity(_arg0112);
+                    reply.writeNoException();
+                    reply.writeStrongBinder(_result38);
+                    return true;
+                case 123:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg02 = Rect.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg02 = null;
+                    }
+                    if (data.readInt() != 0) {
+                        _arg15 = Rect.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg15 = null;
+                    }
+                    if (data.readInt() != 0) {
+                        _arg23 = Rect.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg23 = null;
+                    }
+                    if (data.readInt() != 0) {
+                        _arg3 = Rect.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg3 = null;
+                    }
+                    Rect _arg417 = data.readInt() != 0 ? Rect.CREATOR.createFromParcel(data) : null;
+                    resizeDockedStack(_arg02, _arg15, _arg23, _arg3, _arg417);
+                    reply.writeNoException();
+                    return true;
+                case 124:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg11 = data.readInt() != 0;
+                    boolean _arg0113 = _arg11;
+                    setSplitScreenResizing(_arg0113);
+                    reply.writeNoException();
+                    return true;
+                case 125:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg0114 = data.readStrongBinder();
+                    _arg11 = data.readInt() != 0;
+                    boolean _arg158 = _arg11;
+                    ComponentName _arg236 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int _result39 = setVrMode(_arg0114, _arg158, _arg236);
+                    reply.writeNoException();
+                    reply.writeInt(_result39);
+                    return true;
+                case 126:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg0115 = data.readStrongBinder();
+                    Bundle _arg159 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    startLocalVoiceInteraction(_arg0115, _arg159);
+                    reply.writeNoException();
+                    return true;
+                case 127:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg0116 = data.readStrongBinder();
+                    stopLocalVoiceInteraction(_arg0116);
+                    reply.writeNoException();
+                    return true;
+                case 128:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean supportsLocalVoiceInteraction = supportsLocalVoiceInteraction();
+                    reply.writeNoException();
+                    reply.writeInt(supportsLocalVoiceInteraction ? 1 : 0);
+                    return true;
+                case 129:
+                    data.enforceInterface(DESCRIPTOR);
+                    notifyPinnedStackAnimationStarted();
+                    reply.writeNoException();
+                    return true;
+                case 130:
+                    data.enforceInterface(DESCRIPTOR);
+                    notifyPinnedStackAnimationEnded();
+                    reply.writeNoException();
+                    return true;
+                case 131:
+                    data.enforceInterface(DESCRIPTOR);
+                    ConfigurationInfo _result40 = getDeviceConfigurationInfo();
+                    reply.writeNoException();
+                    if (_result40 != null) {
+                        reply.writeInt(1);
+                        _result40.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 132:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg03 = Rect.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg03 = null;
+                    }
+                    Rect _arg160 = data.readInt() != 0 ? Rect.CREATOR.createFromParcel(data) : null;
+                    resizePinnedStack(_arg03, _arg160);
+                    reply.writeNoException();
+                    return true;
+                case 133:
+                    data.enforceInterface(DESCRIPTOR);
+                    Configuration _arg0117 = data.readInt() != 0 ? Configuration.CREATOR.createFromParcel(data) : null;
+                    int _arg161 = data.readInt();
+                    boolean updateDisplayOverrideConfiguration = updateDisplayOverrideConfiguration(_arg0117, _arg161);
+                    reply.writeNoException();
+                    reply.writeInt(updateDisplayOverrideConfiguration ? 1 : 0);
+                    return true;
+                case 134:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg0118 = data.readStrongBinder();
+                    IKeyguardDismissCallback _arg162 = IKeyguardDismissCallback.Stub.asInterface(data.readStrongBinder());
+                    CharSequence _arg237 = data.readInt() != 0 ? TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(data) : null;
+                    dismissKeyguard(_arg0118, _arg162, _arg237);
+                    reply.writeNoException();
+                    return true;
+                case 135:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0119 = data.readInt();
+                    cancelTaskWindowTransition(_arg0119);
+                    reply.writeNoException();
+                    return true;
+                case 136:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0120 = data.readInt();
+                    boolean _arg163 = data.readInt() != 0;
+                    ActivityManager.TaskSnapshot _result41 = getTaskSnapshot(_arg0120, _arg163);
+                    reply.writeNoException();
+                    if (_result41 != null) {
+                        reply.writeInt(1);
+                        _result41.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 137:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg0121 = data.readStrongBinder();
+                    _arg11 = data.readInt() != 0;
+                    boolean _arg164 = _arg11;
+                    setDisablePreviewScreenshots(_arg0121, _arg164);
+                    reply.writeNoException();
+                    return true;
+                case 138:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result42 = getLastResumedActivityUserId();
+                    reply.writeNoException();
+                    reply.writeInt(_result42);
+                    return true;
+                case 139:
+                    data.enforceInterface(DESCRIPTOR);
+                    Configuration _arg0122 = data.readInt() != 0 ? Configuration.CREATOR.createFromParcel(data) : null;
+                    boolean updateConfiguration = updateConfiguration(_arg0122);
+                    reply.writeNoException();
+                    reply.writeInt(updateConfiguration ? 1 : 0);
+                    return true;
+                case 140:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0123 = data.readInt();
+                    int _arg165 = data.readInt();
+                    updateLockTaskFeatures(_arg0123, _arg165);
+                    reply.writeNoException();
+                    return true;
+                case 141:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg0124 = data.readStrongBinder();
+                    _arg11 = data.readInt() != 0;
+                    boolean _arg166 = _arg11;
+                    setShowWhenLocked(_arg0124, _arg166);
+                    reply.writeNoException();
+                    return true;
+                case 142:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg0125 = data.readStrongBinder();
+                    _arg11 = data.readInt() != 0;
+                    boolean _arg167 = _arg11;
+                    setInheritShowWhenLocked(_arg0125, _arg167);
+                    reply.writeNoException();
+                    return true;
+                case 143:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg0126 = data.readStrongBinder();
+                    _arg11 = data.readInt() != 0;
+                    boolean _arg168 = _arg11;
+                    setTurnScreenOn(_arg0126, _arg168);
+                    reply.writeNoException();
+                    return true;
+                case 144:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg0127 = data.readStrongBinder();
+                    RemoteAnimationDefinition _arg169 = data.readInt() != 0 ? RemoteAnimationDefinition.CREATOR.createFromParcel(data) : null;
+                    registerRemoteAnimations(_arg0127, _arg169);
+                    reply.writeNoException();
+                    return true;
+                case 145:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0128 = data.readString();
+                    RemoteAnimationAdapter _arg170 = data.readInt() != 0 ? RemoteAnimationAdapter.CREATOR.createFromParcel(data) : null;
+                    registerRemoteAnimationForNextActivityStart(_arg0128, _arg170);
+                    reply.writeNoException();
+                    return true;
+                case 146:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0129 = data.readInt();
+                    RemoteAnimationDefinition _arg171 = data.readInt() != 0 ? RemoteAnimationDefinition.CREATOR.createFromParcel(data) : null;
+                    registerRemoteAnimationsForDisplay(_arg0129, _arg171);
+                    reply.writeNoException();
+                    return true;
+                case 147:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg0130 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    alwaysShowUnsupportedCompileSdkWarning(_arg0130);
+                    reply.writeNoException();
+                    return true;
+                case 148:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0131 = data.readInt();
+                    setVrThread(_arg0131);
+                    reply.writeNoException();
+                    return true;
+                case 149:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0132 = data.readInt();
+                    setPersistentVrThread(_arg0132);
+                    reply.writeNoException();
+                    return true;
+                case 150:
+                    data.enforceInterface(DESCRIPTOR);
+                    stopAppSwitches();
+                    reply.writeNoException();
+                    return true;
+                case 151:
+                    data.enforceInterface(DESCRIPTOR);
+                    resumeAppSwitches();
+                    reply.writeNoException();
+                    return true;
+                case 152:
+                    data.enforceInterface(DESCRIPTOR);
+                    IActivityController _arg0133 = IActivityController.Stub.asInterface(data.readStrongBinder());
+                    _arg11 = data.readInt() != 0;
+                    boolean _arg172 = _arg11;
+                    setActivityController(_arg0133, _arg172);
+                    reply.writeNoException();
+                    return true;
+                case 153:
+                    data.enforceInterface(DESCRIPTOR);
+                    IVoiceInteractionSession _arg0134 = IVoiceInteractionSession.Stub.asInterface(data.readStrongBinder());
+                    _arg11 = data.readInt() != 0;
+                    boolean _arg173 = _arg11;
+                    setVoiceKeepAwake(_arg0134, _arg173);
+                    reply.writeNoException();
+                    return true;
+                case 154:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0135 = data.readString();
+                    int _result43 = getPackageScreenCompatMode(_arg0135);
+                    reply.writeNoException();
+                    reply.writeInt(_result43);
+                    return true;
+                case 155:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0136 = data.readString();
+                    int _arg174 = data.readInt();
+                    setPackageScreenCompatMode(_arg0136, _arg174);
+                    reply.writeNoException();
+                    return true;
+                case 156:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0137 = data.readString();
+                    boolean packageAskScreenCompat = getPackageAskScreenCompat(_arg0137);
+                    reply.writeNoException();
+                    reply.writeInt(packageAskScreenCompat ? 1 : 0);
+                    return true;
+                case 157:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0138 = data.readString();
+                    _arg11 = data.readInt() != 0;
+                    boolean _arg175 = _arg11;
+                    setPackageAskScreenCompat(_arg0138, _arg175);
+                    reply.writeNoException();
+                    return true;
+                case 158:
+                    data.enforceInterface(DESCRIPTOR);
+                    List<String> _arg0139 = data.createStringArrayList();
+                    clearLaunchParamsForPackages(_arg0139);
+                    reply.writeNoException();
+                    return true;
+                case 159:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0140 = data.readInt();
+                    setDisplayToSingleTaskInstance(_arg0140);
+                    reply.writeNoException();
+                    return true;
+                case 160:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg0141 = data.readStrongBinder();
+                    restartActivityProcessIfVisible(_arg0141);
+                    reply.writeNoException();
+                    return true;
+                case 161:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg0142 = data.readStrongBinder();
+                    IRequestFinishCallback _arg176 = IRequestFinishCallback.Stub.asInterface(data.readStrongBinder());
+                    onBackPressedOnTaskRoot(_arg0142, _arg176);
+                    reply.writeNoException();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements IActivityTaskManager {
             public static IActivityTaskManager sDefaultImpl;
             private IBinder mRemote;
@@ -3979,6 +2998,7 @@ public interface IActivityTaskManager extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -3987,31 +3007,33 @@ public interface IActivityTaskManager extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.app.IActivityTaskManager
             public int startActivity(IApplicationThread caller, String callingPackage, Intent intent, String resolvedType, IBinder resultTo, String resultWho, int requestCode, int flags, ProfilerInfo profilerInfo, Bundle options) throws RemoteException {
                 Parcel _reply;
-                IBinder iBinder;
-                Intent intent2 = intent;
-                ProfilerInfo profilerInfo2 = profilerInfo;
-                Bundle bundle = options;
+                IBinder asBinder;
+                boolean _status;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply2 = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     if (caller != null) {
                         try {
-                            iBinder = caller.asBinder();
+                            asBinder = caller.asBinder();
                         } catch (Throwable th) {
                             th = th;
                             _reply = _reply2;
+                            _reply.recycle();
+                            _data.recycle();
+                            throw th;
                         }
                     } else {
-                        iBinder = null;
+                        asBinder = null;
                     }
-                    _data.writeStrongBinder(iBinder);
+                    _data.writeStrongBinder(asBinder);
                     _data.writeString(callingPackage);
-                    if (intent2 != null) {
+                    if (intent != null) {
                         _data.writeInt(1);
-                        intent2.writeToParcel(_data, 0);
+                        intent.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
@@ -4020,138 +3042,127 @@ public interface IActivityTaskManager extends IInterface {
                     _data.writeString(resultWho);
                     _data.writeInt(requestCode);
                     _data.writeInt(flags);
-                    if (profilerInfo2 != null) {
+                    if (profilerInfo != null) {
                         _data.writeInt(1);
-                        profilerInfo2.writeToParcel(_data, 0);
+                        profilerInfo.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (bundle != null) {
+                    if (options != null) {
                         _data.writeInt(1);
-                        bundle.writeToParcel(_data, 0);
+                        options.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(1, _data, _reply2, 0) || Stub.getDefaultImpl() == null) {
-                        _reply = _reply2;
-                        _reply.readException();
-                        int _result = _reply.readInt();
-                        _reply.recycle();
-                        _data.recycle();
-                        return _result;
-                    }
+                    _status = this.mRemote.transact(1, _data, _reply2, 0);
+                } catch (Throwable th2) {
+                    th = th2;
                     _reply = _reply2;
-                    try {
+                }
+                try {
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         int startActivity = Stub.getDefaultImpl().startActivity(caller, callingPackage, intent, resolvedType, resultTo, resultWho, requestCode, flags, profilerInfo, options);
-                        _reply.recycle();
+                        _reply2.recycle();
                         _data.recycle();
                         return startActivity;
-                    } catch (Throwable th2) {
-                        th = th2;
-                        _reply.recycle();
-                        _data.recycle();
-                        throw th;
                     }
+                    _reply2.readException();
+                    int _result = _reply2.readInt();
+                    _reply2.recycle();
+                    _data.recycle();
+                    return _result;
                 } catch (Throwable th3) {
                     th = th3;
-                    _reply = _reply2;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public int startActivities(IApplicationThread caller, String callingPackage, Intent[] intents, String[] resolvedTypes, IBinder resultTo, Bundle options, int userId) throws RemoteException {
-                Bundle bundle = options;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(caller != null ? caller.asBinder() : null);
-                    try {
-                        _data.writeString(callingPackage);
-                    } catch (Throwable th) {
-                        th = th;
-                        Intent[] intentArr = intents;
-                        String[] strArr = resolvedTypes;
-                        _reply.recycle();
-                        _data.recycle();
-                        throw th;
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeString(callingPackage);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeTypedArray(intents, 0);
+                } catch (Throwable th3) {
+                    th = th3;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeStringArray(resolvedTypes);
+                    _data.writeStrongBinder(resultTo);
+                    if (options != null) {
+                        _data.writeInt(1);
+                        options.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
                     }
-                    try {
-                        _data.writeTypedArray(intents, 0);
-                    } catch (Throwable th2) {
-                        th = th2;
-                        String[] strArr2 = resolvedTypes;
-                        _reply.recycle();
-                        _data.recycle();
-                        throw th;
-                    }
-                    try {
-                        _data.writeStringArray(resolvedTypes);
-                        _data.writeStrongBinder(resultTo);
-                        if (bundle != null) {
-                            _data.writeInt(1);
-                            bundle.writeToParcel(_data, 0);
-                        } else {
-                            _data.writeInt(0);
-                        }
-                        _data.writeInt(userId);
-                        if (this.mRemote.transact(2, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                            _reply.readException();
-                            int _result = _reply.readInt();
-                            _reply.recycle();
-                            _data.recycle();
-                            return _result;
-                        }
+                    _data.writeInt(userId);
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         int startActivities = Stub.getDefaultImpl().startActivities(caller, callingPackage, intents, resolvedTypes, resultTo, options, userId);
                         _reply.recycle();
                         _data.recycle();
                         return startActivities;
-                    } catch (Throwable th3) {
-                        th = th3;
-                        _reply.recycle();
-                        _data.recycle();
-                        throw th;
                     }
+                    _reply.readException();
+                    int _result = _reply.readInt();
+                    _reply.recycle();
+                    _data.recycle();
+                    return _result;
                 } catch (Throwable th4) {
                     th = th4;
-                    String str = callingPackage;
-                    Intent[] intentArr2 = intents;
-                    String[] strArr22 = resolvedTypes;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public int startActivityAsUser(IApplicationThread caller, String callingPackage, Intent intent, String resolvedType, IBinder resultTo, String resultWho, int requestCode, int flags, ProfilerInfo profilerInfo, Bundle options, int userId) throws RemoteException {
-                Parcel _data;
                 Parcel _reply;
-                IBinder iBinder;
-                Intent intent2 = intent;
-                ProfilerInfo profilerInfo2 = profilerInfo;
-                Bundle bundle = options;
+                Parcel _data;
+                IBinder asBinder;
                 Parcel _data2 = Parcel.obtain();
                 Parcel _reply2 = Parcel.obtain();
                 try {
                     _data2.writeInterfaceToken(Stub.DESCRIPTOR);
                     if (caller != null) {
                         try {
-                            iBinder = caller.asBinder();
+                            asBinder = caller.asBinder();
                         } catch (Throwable th) {
                             th = th;
                             _reply = _reply2;
                             _data = _data2;
+                            _reply.recycle();
+                            _data.recycle();
+                            throw th;
                         }
                     } else {
-                        iBinder = null;
+                        asBinder = null;
                     }
-                    _data2.writeStrongBinder(iBinder);
+                    _data2.writeStrongBinder(asBinder);
                     _data2.writeString(callingPackage);
-                    if (intent2 != null) {
+                    if (intent != null) {
                         _data2.writeInt(1);
-                        intent2.writeToParcel(_data2, 0);
+                        intent.writeToParcel(_data2, 0);
                     } else {
                         _data2.writeInt(0);
                     }
@@ -4160,35 +3171,32 @@ public interface IActivityTaskManager extends IInterface {
                     _data2.writeString(resultWho);
                     _data2.writeInt(requestCode);
                     _data2.writeInt(flags);
-                    if (profilerInfo2 != null) {
+                    if (profilerInfo != null) {
                         _data2.writeInt(1);
-                        profilerInfo2.writeToParcel(_data2, 0);
+                        profilerInfo.writeToParcel(_data2, 0);
                     } else {
                         _data2.writeInt(0);
                     }
-                    if (bundle != null) {
+                    if (options != null) {
                         _data2.writeInt(1);
-                        bundle.writeToParcel(_data2, 0);
+                        options.writeToParcel(_data2, 0);
                     } else {
                         _data2.writeInt(0);
                     }
                     _data2.writeInt(userId);
-                    if (this.mRemote.transact(3, _data2, _reply2, 0) || Stub.getDefaultImpl() == null) {
-                        _reply = _reply2;
-                        _data = _data2;
-                        _reply.readException();
-                        int _result = _reply.readInt();
-                        _reply.recycle();
-                        _data.recycle();
-                        return _result;
-                    }
-                    _reply = _reply2;
-                    _data = _data2;
+                    boolean _status = this.mRemote.transact(3, _data2, _reply2, 0);
                     try {
-                        int startActivityAsUser = Stub.getDefaultImpl().startActivityAsUser(caller, callingPackage, intent, resolvedType, resultTo, resultWho, requestCode, flags, profilerInfo, options, userId);
-                        _reply.recycle();
-                        _data.recycle();
-                        return startActivityAsUser;
+                        if (!_status && Stub.getDefaultImpl() != null) {
+                            int startActivityAsUser = Stub.getDefaultImpl().startActivityAsUser(caller, callingPackage, intent, resolvedType, resultTo, resultWho, requestCode, flags, profilerInfo, options, userId);
+                            _reply2.recycle();
+                            _data2.recycle();
+                            return startActivityAsUser;
+                        }
+                        _reply2.readException();
+                        int _result = _reply2.readInt();
+                        _reply2.recycle();
+                        _data2.recycle();
+                        return _result;
                     } catch (Throwable th2) {
                         th = th2;
                         _reply.recycle();
@@ -4199,19 +3207,16 @@ public interface IActivityTaskManager extends IInterface {
                     th = th3;
                     _reply = _reply2;
                     _data = _data2;
-                    _reply.recycle();
-                    _data.recycle();
-                    throw th;
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public boolean startNextMatchingActivity(IBinder callingActivity, Intent intent, Bundle options) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(callingActivity);
-                    boolean _result = true;
                     if (intent != null) {
                         _data.writeInt(1);
                         intent.writeToParcel(_data, 0);
@@ -4224,15 +3229,12 @@ public interface IActivityTaskManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(4, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().startNextMatchingActivity(callingActivity, intent, options);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -4240,35 +3242,34 @@ public interface IActivityTaskManager extends IInterface {
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public int startActivityIntentSender(IApplicationThread caller, IIntentSender target, IBinder whitelistToken, Intent fillInIntent, String resolvedType, IBinder resultTo, String resultWho, int requestCode, int flagsMask, int flagsValues, Bundle options) throws RemoteException {
                 Parcel _reply;
-                IBinder iBinder;
-                Intent intent = fillInIntent;
-                Bundle bundle = options;
+                IBinder asBinder;
+                boolean _status;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply2 = Parcel.obtain();
-                _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                IBinder iBinder2 = null;
-                if (caller != null) {
-                    try {
-                        iBinder = caller.asBinder();
-                    } catch (Throwable th) {
-                        th = th;
-                        _reply = _reply2;
-                    }
-                } else {
-                    iBinder = null;
-                }
                 try {
-                    _data.writeStrongBinder(iBinder);
-                    if (target != null) {
-                        iBinder2 = target.asBinder();
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    if (caller != null) {
+                        try {
+                            asBinder = caller.asBinder();
+                        } catch (Throwable th) {
+                            th = th;
+                            _reply = _reply2;
+                            _reply.recycle();
+                            _data.recycle();
+                            throw th;
+                        }
+                    } else {
+                        asBinder = null;
                     }
-                    _data.writeStrongBinder(iBinder2);
+                    _data.writeStrongBinder(asBinder);
+                    _data.writeStrongBinder(target != null ? target.asBinder() : null);
                     _data.writeStrongBinder(whitelistToken);
-                    if (intent != null) {
+                    if (fillInIntent != null) {
                         _data.writeInt(1);
-                        intent.writeToParcel(_data, 0);
+                        fillInIntent.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
@@ -4278,69 +3279,66 @@ public interface IActivityTaskManager extends IInterface {
                     _data.writeInt(requestCode);
                     _data.writeInt(flagsMask);
                     _data.writeInt(flagsValues);
-                    if (bundle != null) {
+                    if (options != null) {
                         _data.writeInt(1);
-                        bundle.writeToParcel(_data, 0);
+                        options.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(5, _data, _reply2, 0) || Stub.getDefaultImpl() == null) {
-                        _reply = _reply2;
-                        _reply.readException();
-                        int _result = _reply.readInt();
-                        _reply.recycle();
-                        _data.recycle();
-                        return _result;
-                    }
+                    _status = this.mRemote.transact(5, _data, _reply2, 0);
+                } catch (Throwable th2) {
+                    th = th2;
                     _reply = _reply2;
-                    try {
+                }
+                try {
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         int startActivityIntentSender = Stub.getDefaultImpl().startActivityIntentSender(caller, target, whitelistToken, fillInIntent, resolvedType, resultTo, resultWho, requestCode, flagsMask, flagsValues, options);
-                        _reply.recycle();
+                        _reply2.recycle();
                         _data.recycle();
                         return startActivityIntentSender;
-                    } catch (Throwable th2) {
-                        th = th2;
-                        _reply.recycle();
-                        _data.recycle();
-                        throw th;
                     }
+                    _reply2.readException();
+                    int _result = _reply2.readInt();
+                    _reply2.recycle();
+                    _data.recycle();
+                    return _result;
                 } catch (Throwable th3) {
                     th = th3;
-                    _reply = _reply2;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public WaitResult startActivityAndWait(IApplicationThread caller, String callingPackage, Intent intent, String resolvedType, IBinder resultTo, String resultWho, int requestCode, int flags, ProfilerInfo profilerInfo, Bundle options, int userId) throws RemoteException {
-                Parcel _data;
                 Parcel _reply;
-                IBinder iBinder;
+                Parcel _data;
+                IBinder asBinder;
                 WaitResult _result;
-                Intent intent2 = intent;
-                ProfilerInfo profilerInfo2 = profilerInfo;
-                Bundle bundle = options;
                 Parcel _data2 = Parcel.obtain();
                 Parcel _reply2 = Parcel.obtain();
                 try {
                     _data2.writeInterfaceToken(Stub.DESCRIPTOR);
                     if (caller != null) {
                         try {
-                            iBinder = caller.asBinder();
+                            asBinder = caller.asBinder();
                         } catch (Throwable th) {
                             th = th;
                             _reply = _reply2;
                             _data = _data2;
+                            _reply.recycle();
+                            _data.recycle();
+                            throw th;
                         }
                     } else {
-                        iBinder = null;
+                        asBinder = null;
                     }
-                    _data2.writeStrongBinder(iBinder);
+                    _data2.writeStrongBinder(asBinder);
                     _data2.writeString(callingPackage);
-                    if (intent2 != null) {
+                    if (intent != null) {
                         _data2.writeInt(1);
-                        intent2.writeToParcel(_data2, 0);
+                        intent.writeToParcel(_data2, 0);
                     } else {
                         _data2.writeInt(0);
                     }
@@ -4349,32 +3347,32 @@ public interface IActivityTaskManager extends IInterface {
                     _data2.writeString(resultWho);
                     _data2.writeInt(requestCode);
                     _data2.writeInt(flags);
-                    if (profilerInfo2 != null) {
+                    if (profilerInfo != null) {
                         _data2.writeInt(1);
-                        profilerInfo2.writeToParcel(_data2, 0);
+                        profilerInfo.writeToParcel(_data2, 0);
                     } else {
                         _data2.writeInt(0);
                     }
-                    if (bundle != null) {
+                    if (options != null) {
                         _data2.writeInt(1);
-                        bundle.writeToParcel(_data2, 0);
+                        options.writeToParcel(_data2, 0);
                     } else {
                         _data2.writeInt(0);
                     }
                     _data2.writeInt(userId);
-                    if (!this.mRemote.transact(6, _data2, _reply2, 0)) {
+                    boolean _status = this.mRemote.transact(6, _data2, _reply2, 0);
+                    if (!_status) {
                         try {
                             if (Stub.getDefaultImpl() != null) {
-                                Parcel _reply3 = _reply2;
                                 _data = _data2;
                                 try {
                                     WaitResult startActivityAndWait = Stub.getDefaultImpl().startActivityAndWait(caller, callingPackage, intent, resolvedType, resultTo, resultWho, requestCode, flags, profilerInfo, options, userId);
-                                    _reply3.recycle();
+                                    _reply2.recycle();
                                     _data.recycle();
                                     return startActivityAndWait;
                                 } catch (Throwable th2) {
                                     th = th2;
-                                    _reply = _reply3;
+                                    _reply = _reply2;
                                     _reply.recycle();
                                     _data.recycle();
                                     throw th;
@@ -4384,17 +3382,13 @@ public interface IActivityTaskManager extends IInterface {
                             th = th3;
                             _data = _data2;
                             _reply = _reply2;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
                         }
                     }
-                    Parcel _reply4 = _reply2;
                     _data = _data2;
                     try {
-                        _reply4.readException();
-                        if (_reply4.readInt() != 0) {
-                            _reply = _reply4;
+                        _reply2.readException();
+                        if (_reply2.readInt() != 0) {
+                            _reply = _reply2;
                             try {
                                 _result = WaitResult.CREATOR.createFromParcel(_reply);
                             } catch (Throwable th4) {
@@ -4404,7 +3398,7 @@ public interface IActivityTaskManager extends IInterface {
                                 throw th;
                             }
                         } else {
-                            _reply = _reply4;
+                            _reply = _reply2;
                             _result = null;
                         }
                         WaitResult _result2 = _result;
@@ -4413,48 +3407,43 @@ public interface IActivityTaskManager extends IInterface {
                         return _result2;
                     } catch (Throwable th5) {
                         th = th5;
-                        _reply = _reply4;
-                        _reply.recycle();
-                        _data.recycle();
-                        throw th;
+                        _reply = _reply2;
                     }
                 } catch (Throwable th6) {
                     th = th6;
                     _reply = _reply2;
                     _data = _data2;
-                    _reply.recycle();
-                    _data.recycle();
-                    throw th;
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public int startActivityWithConfig(IApplicationThread caller, String callingPackage, Intent intent, String resolvedType, IBinder resultTo, String resultWho, int requestCode, int startFlags, Configuration newConfig, Bundle options, int userId) throws RemoteException {
-                Parcel _data;
                 Parcel _reply;
-                IBinder iBinder;
-                Intent intent2 = intent;
-                Configuration configuration = newConfig;
-                Bundle bundle = options;
+                Parcel _data;
+                IBinder asBinder;
                 Parcel _data2 = Parcel.obtain();
                 Parcel _reply2 = Parcel.obtain();
                 try {
                     _data2.writeInterfaceToken(Stub.DESCRIPTOR);
                     if (caller != null) {
                         try {
-                            iBinder = caller.asBinder();
+                            asBinder = caller.asBinder();
                         } catch (Throwable th) {
                             th = th;
                             _reply = _reply2;
                             _data = _data2;
+                            _reply.recycle();
+                            _data.recycle();
+                            throw th;
                         }
                     } else {
-                        iBinder = null;
+                        asBinder = null;
                     }
-                    _data2.writeStrongBinder(iBinder);
+                    _data2.writeStrongBinder(asBinder);
                     _data2.writeString(callingPackage);
-                    if (intent2 != null) {
+                    if (intent != null) {
                         _data2.writeInt(1);
-                        intent2.writeToParcel(_data2, 0);
+                        intent.writeToParcel(_data2, 0);
                     } else {
                         _data2.writeInt(0);
                     }
@@ -4463,35 +3452,32 @@ public interface IActivityTaskManager extends IInterface {
                     _data2.writeString(resultWho);
                     _data2.writeInt(requestCode);
                     _data2.writeInt(startFlags);
-                    if (configuration != null) {
+                    if (newConfig != null) {
                         _data2.writeInt(1);
-                        configuration.writeToParcel(_data2, 0);
+                        newConfig.writeToParcel(_data2, 0);
                     } else {
                         _data2.writeInt(0);
                     }
-                    if (bundle != null) {
+                    if (options != null) {
                         _data2.writeInt(1);
-                        bundle.writeToParcel(_data2, 0);
+                        options.writeToParcel(_data2, 0);
                     } else {
                         _data2.writeInt(0);
                     }
                     _data2.writeInt(userId);
-                    if (this.mRemote.transact(7, _data2, _reply2, 0) || Stub.getDefaultImpl() == null) {
-                        _reply = _reply2;
-                        _data = _data2;
-                        _reply.readException();
-                        int _result = _reply.readInt();
-                        _reply.recycle();
-                        _data.recycle();
-                        return _result;
-                    }
-                    _reply = _reply2;
-                    _data = _data2;
+                    boolean _status = this.mRemote.transact(7, _data2, _reply2, 0);
                     try {
-                        int startActivityWithConfig = Stub.getDefaultImpl().startActivityWithConfig(caller, callingPackage, intent, resolvedType, resultTo, resultWho, requestCode, startFlags, newConfig, options, userId);
-                        _reply.recycle();
-                        _data.recycle();
-                        return startActivityWithConfig;
+                        if (!_status && Stub.getDefaultImpl() != null) {
+                            int startActivityWithConfig = Stub.getDefaultImpl().startActivityWithConfig(caller, callingPackage, intent, resolvedType, resultTo, resultWho, requestCode, startFlags, newConfig, options, userId);
+                            _reply2.recycle();
+                            _data2.recycle();
+                            return startActivityWithConfig;
+                        }
+                        _reply2.readException();
+                        int _result = _reply2.readInt();
+                        _reply2.recycle();
+                        _data2.recycle();
+                        return _result;
                     } catch (Throwable th2) {
                         th = th2;
                         _reply.recycle();
@@ -4502,160 +3488,141 @@ public interface IActivityTaskManager extends IInterface {
                     th = th3;
                     _reply = _reply2;
                     _data = _data2;
-                    _reply.recycle();
-                    _data.recycle();
-                    throw th;
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public int startVoiceActivity(String callingPackage, int callingPid, int callingUid, Intent intent, String resolvedType, IVoiceInteractionSession session, IVoiceInteractor interactor, int flags, ProfilerInfo profilerInfo, Bundle options, int userId) throws RemoteException {
-                Parcel _data;
                 Parcel _reply;
-                Intent intent2 = intent;
-                ProfilerInfo profilerInfo2 = profilerInfo;
-                Bundle bundle = options;
+                Parcel _data;
+                boolean _status;
                 Parcel _data2 = Parcel.obtain();
                 Parcel _reply2 = Parcel.obtain();
-                _data2.writeInterfaceToken(Stub.DESCRIPTOR);
-                _data2.writeString(callingPackage);
-                _data2.writeInt(callingPid);
-                _data2.writeInt(callingUid);
-                if (intent2 != null) {
-                    try {
-                        _data2.writeInt(1);
-                        intent2.writeToParcel(_data2, 0);
-                    } catch (Throwable th) {
-                        th = th;
-                        _reply = _reply2;
-                        _data = _data2;
-                    }
-                } else {
-                    _data2.writeInt(0);
-                }
-                _data2.writeString(resolvedType);
-                IBinder iBinder = null;
                 try {
-                    _data2.writeStrongBinder(session != null ? session.asBinder() : null);
-                    if (interactor != null) {
-                        iBinder = interactor.asBinder();
-                    }
-                    _data2.writeStrongBinder(iBinder);
-                    _data2.writeInt(flags);
-                    if (profilerInfo2 != null) {
-                        _data2.writeInt(1);
-                        profilerInfo2.writeToParcel(_data2, 0);
-                    } else {
-                        _data2.writeInt(0);
-                    }
-                    if (bundle != null) {
-                        _data2.writeInt(1);
-                        bundle.writeToParcel(_data2, 0);
-                    } else {
-                        _data2.writeInt(0);
-                    }
-                    _data2.writeInt(userId);
-                    if (this.mRemote.transact(8, _data2, _reply2, 0) || Stub.getDefaultImpl() == null) {
-                        _reply = _reply2;
-                        _data = _data2;
-                        _reply.readException();
-                        int _result = _reply.readInt();
-                        _reply.recycle();
-                        _data.recycle();
-                        return _result;
-                    }
-                    _reply = _reply2;
-                    _data = _data2;
-                    try {
-                        int startVoiceActivity = Stub.getDefaultImpl().startVoiceActivity(callingPackage, callingPid, callingUid, intent, resolvedType, session, interactor, flags, profilerInfo, options, userId);
-                        _reply.recycle();
-                        _data.recycle();
-                        return startVoiceActivity;
-                    } catch (Throwable th2) {
-                        th = th2;
-                        _reply.recycle();
-                        _data.recycle();
-                        throw th;
-                    }
-                } catch (Throwable th3) {
-                    th = th3;
-                    _reply = _reply2;
-                    _data = _data2;
-                    _reply.recycle();
-                    _data.recycle();
-                    throw th;
-                }
-            }
-
-            public int startAssistantActivity(String callingPackage, int callingPid, int callingUid, Intent intent, String resolvedType, Bundle options, int userId) throws RemoteException {
-                Intent intent2 = intent;
-                Bundle bundle = options;
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    try {
-                        _data.writeString(callingPackage);
-                    } catch (Throwable th) {
-                        th = th;
-                        int i = callingPid;
-                        int i2 = callingUid;
-                        _reply.recycle();
-                        _data.recycle();
-                        throw th;
-                    }
-                    try {
-                        _data.writeInt(callingPid);
+                    _data2.writeInterfaceToken(Stub.DESCRIPTOR);
+                    _data2.writeString(callingPackage);
+                    _data2.writeInt(callingPid);
+                    _data2.writeInt(callingUid);
+                    if (intent != null) {
                         try {
-                            _data.writeInt(callingUid);
-                            if (intent2 != null) {
-                                _data.writeInt(1);
-                                intent2.writeToParcel(_data, 0);
-                            } else {
-                                _data.writeInt(0);
-                            }
-                            _data.writeString(resolvedType);
-                            if (bundle != null) {
-                                _data.writeInt(1);
-                                bundle.writeToParcel(_data, 0);
-                            } else {
-                                _data.writeInt(0);
-                            }
-                            _data.writeInt(userId);
-                            if (this.mRemote.transact(9, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                _reply.readException();
-                                int _result = _reply.readInt();
-                                _reply.recycle();
-                                _data.recycle();
-                                return _result;
-                            }
-                            int startAssistantActivity = Stub.getDefaultImpl().startAssistantActivity(callingPackage, callingPid, callingUid, intent, resolvedType, options, userId);
-                            _reply.recycle();
-                            _data.recycle();
-                            return startAssistantActivity;
-                        } catch (Throwable th2) {
-                            th = th2;
+                            _data2.writeInt(1);
+                            intent.writeToParcel(_data2, 0);
+                        } catch (Throwable th) {
+                            th = th;
+                            _reply = _reply2;
+                            _data = _data2;
                             _reply.recycle();
                             _data.recycle();
                             throw th;
                         }
-                    } catch (Throwable th3) {
-                        th = th3;
-                        int i22 = callingUid;
-                        _reply.recycle();
-                        _data.recycle();
-                        throw th;
+                    } else {
+                        _data2.writeInt(0);
                     }
-                } catch (Throwable th4) {
-                    th = th4;
-                    String str = callingPackage;
-                    int i3 = callingPid;
-                    int i222 = callingUid;
+                    _data2.writeString(resolvedType);
+                    _data2.writeStrongBinder(session != null ? session.asBinder() : null);
+                    _data2.writeStrongBinder(interactor != null ? interactor.asBinder() : null);
+                    _data2.writeInt(flags);
+                    if (profilerInfo != null) {
+                        _data2.writeInt(1);
+                        profilerInfo.writeToParcel(_data2, 0);
+                    } else {
+                        _data2.writeInt(0);
+                    }
+                    if (options != null) {
+                        _data2.writeInt(1);
+                        options.writeToParcel(_data2, 0);
+                    } else {
+                        _data2.writeInt(0);
+                    }
+                    _data2.writeInt(userId);
+                    _status = this.mRemote.transact(8, _data2, _reply2, 0);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply = _reply2;
+                    _data = _data2;
+                }
+                try {
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        int startVoiceActivity = Stub.getDefaultImpl().startVoiceActivity(callingPackage, callingPid, callingUid, intent, resolvedType, session, interactor, flags, profilerInfo, options, userId);
+                        _reply2.recycle();
+                        _data2.recycle();
+                        return startVoiceActivity;
+                    }
+                    _reply2.readException();
+                    int _result = _reply2.readInt();
+                    _reply2.recycle();
+                    _data2.recycle();
+                    return _result;
+                } catch (Throwable th3) {
+                    th = th3;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
+            public int startAssistantActivity(String callingPackage, int callingPid, int callingUid, Intent intent, String resolvedType, Bundle options, int userId) throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeString(callingPackage);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(callingPid);
+                } catch (Throwable th3) {
+                    th = th3;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(callingUid);
+                    if (intent != null) {
+                        _data.writeInt(1);
+                        intent.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
+                    }
+                    _data.writeString(resolvedType);
+                    if (options != null) {
+                        _data.writeInt(1);
+                        options.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
+                    }
+                    _data.writeInt(userId);
+                    boolean _status = this.mRemote.transact(9, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        int startAssistantActivity = Stub.getDefaultImpl().startAssistantActivity(callingPackage, callingPid, callingUid, intent, resolvedType, options, userId);
+                        _reply.recycle();
+                        _data.recycle();
+                        return startAssistantActivity;
+                    }
+                    _reply.readException();
+                    int _result = _reply.readInt();
+                    _reply.recycle();
+                    _data.recycle();
+                    return _result;
+                } catch (Throwable th4) {
+                    th = th4;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+            }
+
+            @Override // android.app.IActivityTaskManager
             public void startRecentsActivity(Intent intent, IAssistDataReceiver assistDataReceiver, IRecentsAnimationRunner recentsAnimationRunner) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -4667,25 +3634,21 @@ public interface IActivityTaskManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    IBinder iBinder = null;
                     _data.writeStrongBinder(assistDataReceiver != null ? assistDataReceiver.asBinder() : null);
-                    if (recentsAnimationRunner != null) {
-                        iBinder = recentsAnimationRunner.asBinder();
-                    }
-                    _data.writeStrongBinder(iBinder);
-                    if (this.mRemote.transact(10, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeStrongBinder(recentsAnimationRunner != null ? recentsAnimationRunner.asBinder() : null);
+                    boolean _status = this.mRemote.transact(10, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().startRecentsActivity(intent, assistDataReceiver, recentsAnimationRunner);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().startRecentsActivity(intent, assistDataReceiver, recentsAnimationRunner);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public int startActivityFromRecents(int taskId, Bundle options) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -4698,13 +3661,12 @@ public interface IActivityTaskManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(11, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(11, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().startActivityFromRecents(taskId, options);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -4712,33 +3674,34 @@ public interface IActivityTaskManager extends IInterface {
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public int startActivityAsCaller(IApplicationThread caller, String callingPackage, Intent intent, String resolvedType, IBinder resultTo, String resultWho, int requestCode, int flags, ProfilerInfo profilerInfo, Bundle options, IBinder permissionToken, boolean ignoreTargetSecurity, int userId) throws RemoteException {
-                Parcel _data;
                 Parcel _reply;
-                IBinder iBinder;
-                Intent intent2 = intent;
-                ProfilerInfo profilerInfo2 = profilerInfo;
-                Bundle bundle = options;
+                Parcel _data;
+                IBinder asBinder;
                 Parcel _data2 = Parcel.obtain();
                 Parcel _reply2 = Parcel.obtain();
                 try {
                     _data2.writeInterfaceToken(Stub.DESCRIPTOR);
                     if (caller != null) {
                         try {
-                            iBinder = caller.asBinder();
+                            asBinder = caller.asBinder();
                         } catch (Throwable th) {
                             th = th;
                             _reply = _reply2;
                             _data = _data2;
+                            _reply.recycle();
+                            _data.recycle();
+                            throw th;
                         }
                     } else {
-                        iBinder = null;
+                        asBinder = null;
                     }
-                    _data2.writeStrongBinder(iBinder);
+                    _data2.writeStrongBinder(asBinder);
                     _data2.writeString(callingPackage);
-                    if (intent2 != null) {
+                    if (intent != null) {
                         _data2.writeInt(1);
-                        intent2.writeToParcel(_data2, 0);
+                        intent.writeToParcel(_data2, 0);
                     } else {
                         _data2.writeInt(0);
                     }
@@ -4747,37 +3710,34 @@ public interface IActivityTaskManager extends IInterface {
                     _data2.writeString(resultWho);
                     _data2.writeInt(requestCode);
                     _data2.writeInt(flags);
-                    if (profilerInfo2 != null) {
+                    if (profilerInfo != null) {
                         _data2.writeInt(1);
-                        profilerInfo2.writeToParcel(_data2, 0);
+                        profilerInfo.writeToParcel(_data2, 0);
                     } else {
                         _data2.writeInt(0);
                     }
-                    if (bundle != null) {
+                    if (options != null) {
                         _data2.writeInt(1);
-                        bundle.writeToParcel(_data2, 0);
+                        options.writeToParcel(_data2, 0);
                     } else {
                         _data2.writeInt(0);
                     }
                     _data2.writeStrongBinder(permissionToken);
                     _data2.writeInt(ignoreTargetSecurity ? 1 : 0);
                     _data2.writeInt(userId);
-                    if (this.mRemote.transact(12, _data2, _reply2, 0) || Stub.getDefaultImpl() == null) {
-                        _reply = _reply2;
-                        _data = _data2;
-                        _reply.readException();
-                        int _result = _reply.readInt();
-                        _reply.recycle();
-                        _data.recycle();
-                        return _result;
-                    }
-                    _reply = _reply2;
-                    _data = _data2;
+                    boolean _status = this.mRemote.transact(12, _data2, _reply2, 0);
                     try {
-                        int startActivityAsCaller = Stub.getDefaultImpl().startActivityAsCaller(caller, callingPackage, intent, resolvedType, resultTo, resultWho, requestCode, flags, profilerInfo, options, permissionToken, ignoreTargetSecurity, userId);
-                        _reply.recycle();
-                        _data.recycle();
-                        return startActivityAsCaller;
+                        if (!_status && Stub.getDefaultImpl() != null) {
+                            int startActivityAsCaller = Stub.getDefaultImpl().startActivityAsCaller(caller, callingPackage, intent, resolvedType, resultTo, resultWho, requestCode, flags, profilerInfo, options, permissionToken, ignoreTargetSecurity, userId);
+                            _reply2.recycle();
+                            _data2.recycle();
+                            return startActivityAsCaller;
+                        }
+                        _reply2.readException();
+                        int _result = _reply2.readInt();
+                        _reply2.recycle();
+                        _data2.recycle();
+                        return _result;
                     } catch (Throwable th2) {
                         th = th2;
                         _reply.recycle();
@@ -4788,19 +3748,16 @@ public interface IActivityTaskManager extends IInterface {
                     th = th3;
                     _reply = _reply2;
                     _data = _data2;
-                    _reply.recycle();
-                    _data.recycle();
-                    throw th;
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public boolean isActivityStartAllowedOnDisplay(int displayId, Intent intent, String resolvedType, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(displayId);
-                    boolean _result = true;
                     if (intent != null) {
                         _data.writeInt(1);
                         intent.writeToParcel(_data, 0);
@@ -4809,15 +3766,12 @@ public interface IActivityTaskManager extends IInterface {
                     }
                     _data.writeString(resolvedType);
                     _data.writeInt(userId);
-                    if (!this.mRemote.transact(13, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(13, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isActivityStartAllowedOnDisplay(displayId, intent, resolvedType, userId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -4825,24 +3779,25 @@ public interface IActivityTaskManager extends IInterface {
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void unhandledBack() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(14, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(14, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().unhandledBack();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().unhandledBack();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public boolean finishActivity(IBinder token, int code, Intent data, int finishTask) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -4850,7 +3805,6 @@ public interface IActivityTaskManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
                     _data.writeInt(code);
-                    boolean _result = true;
                     if (data != null) {
                         _data.writeInt(1);
                         data.writeToParcel(_data, 0);
@@ -4858,15 +3812,12 @@ public interface IActivityTaskManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(finishTask);
-                    if (!this.mRemote.transact(15, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(15, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().finishActivity(token, code, data, finishTask);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -4874,30 +3825,27 @@ public interface IActivityTaskManager extends IInterface {
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public boolean finishActivityAffinity(IBinder token) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    boolean z = false;
-                    if (!this.mRemote.transact(16, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(16, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().finishActivityAffinity(token);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void activityIdle(IBinder token, Configuration config, boolean stopProfiling) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -4909,10 +3857,9 @@ public interface IActivityTaskManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(stopProfiling);
-                    if (this.mRemote.transact(17, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(stopProfiling ? 1 : 0);
+                    boolean _status = this.mRemote.transact(17, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().activityIdle(token, config, stopProfiling);
                     }
                 } finally {
@@ -4920,62 +3867,63 @@ public interface IActivityTaskManager extends IInterface {
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void activityResumed(IBinder token) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    if (this.mRemote.transact(18, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(18, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().activityResumed(token);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().activityResumed(token);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void activityTopResumedStateLost() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(19, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(19, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().activityTopResumedStateLost();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().activityTopResumedStateLost();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void activityPaused(IBinder token) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    if (this.mRemote.transact(20, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(20, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().activityPaused(token);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().activityPaused(token);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void activityStopped(IBinder token, Bundle state, PersistableBundle persistentState, CharSequence description) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -5000,27 +3948,26 @@ public interface IActivityTaskManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(21, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(21, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().activityStopped(token, state, persistentState, description);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().activityStopped(token, state, persistentState, description);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void activityDestroyed(IBinder token) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    if (this.mRemote.transact(22, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(22, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().activityDestroyed(token);
                     }
                 } finally {
@@ -5028,33 +3975,33 @@ public interface IActivityTaskManager extends IInterface {
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void activityRelaunched(IBinder token) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    if (this.mRemote.transact(23, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(23, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().activityRelaunched(token);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().activityRelaunched(token);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void activitySlept(IBinder token) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    if (this.mRemote.transact(24, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(24, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().activitySlept(token);
                     }
                 } finally {
@@ -5062,18 +4009,18 @@ public interface IActivityTaskManager extends IInterface {
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public int getFrontActivityScreenCompatMode() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(25, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(25, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getFrontActivityScreenCompatMode();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -5081,38 +4028,38 @@ public interface IActivityTaskManager extends IInterface {
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void setFrontActivityScreenCompatMode(int mode) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(mode);
-                    if (this.mRemote.transact(26, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(26, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setFrontActivityScreenCompatMode(mode);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setFrontActivityScreenCompatMode(mode);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public String getCallingPackage(IBinder token) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    if (!this.mRemote.transact(27, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(27, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCallingPackage(token);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -5120,6 +4067,7 @@ public interface IActivityTaskManager extends IInterface {
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public ComponentName getCallingActivity(IBinder token) throws RemoteException {
                 ComponentName _result;
                 Parcel _data = Parcel.obtain();
@@ -5127,7 +4075,8 @@ public interface IActivityTaskManager extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    if (!this.mRemote.transact(28, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(28, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCallingActivity(token);
                     }
                     _reply.readException();
@@ -5136,90 +4085,6 @@ public interface IActivityTaskManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    ComponentName _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public void setFocusedTask(int taskId) throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(taskId);
-                    if (this.mRemote.transact(29, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                        _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
-                    }
-                    Stub.getDefaultImpl().setFocusedTask(taskId);
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public boolean removeTask(int taskId) throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(taskId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(30, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
-                        return Stub.getDefaultImpl().removeTask(taskId);
-                    }
-                    _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public void removeAllVisibleRecentTasks() throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(31, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                        _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
-                    }
-                    Stub.getDefaultImpl().removeAllVisibleRecentTasks();
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public List<ActivityManager.RunningTaskInfo> getTasks(int maxNum) throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(maxNum);
-                    if (!this.mRemote.transact(32, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
-                        return Stub.getDefaultImpl().getTasks(maxNum);
-                    }
-                    _reply.readException();
-                    List<ActivityManager.RunningTaskInfo> _result = _reply.createTypedArrayList(ActivityManager.RunningTaskInfo.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -5227,6 +4092,84 @@ public interface IActivityTaskManager extends IInterface {
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
+            public void setFocusedTask(int taskId) throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    _data.writeInt(taskId);
+                    boolean _status = this.mRemote.transact(29, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setFocusedTask(taskId);
+                    } else {
+                        _reply.readException();
+                    }
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // android.app.IActivityTaskManager
+            public boolean removeTask(int taskId) throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    _data.writeInt(taskId);
+                    boolean _status = this.mRemote.transact(30, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        return Stub.getDefaultImpl().removeTask(taskId);
+                    }
+                    _reply.readException();
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // android.app.IActivityTaskManager
+            public void removeAllVisibleRecentTasks() throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    boolean _status = this.mRemote.transact(31, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().removeAllVisibleRecentTasks();
+                    } else {
+                        _reply.readException();
+                    }
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // android.app.IActivityTaskManager
+            public List<ActivityManager.RunningTaskInfo> getTasks(int maxNum) throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    _data.writeInt(maxNum);
+                    boolean _status = this.mRemote.transact(32, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        return Stub.getDefaultImpl().getTasks(maxNum);
+                    }
+                    _reply.readException();
+                    List<ActivityManager.RunningTaskInfo> _result = _reply.createTypedArrayList(ActivityManager.RunningTaskInfo.CREATOR);
+                    return _result;
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // android.app.IActivityTaskManager
             public List<ActivityManager.RunningTaskInfo> getFilteredTasks(int maxNum, int ignoreActivityType, int ignoreWindowingMode) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -5235,13 +4178,12 @@ public interface IActivityTaskManager extends IInterface {
                     _data.writeInt(maxNum);
                     _data.writeInt(ignoreActivityType);
                     _data.writeInt(ignoreWindowingMode);
-                    if (!this.mRemote.transact(33, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(33, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getFilteredTasks(maxNum, ignoreActivityType, ignoreWindowingMode);
                     }
                     _reply.readException();
                     List<ActivityManager.RunningTaskInfo> _result = _reply.createTypedArrayList(ActivityManager.RunningTaskInfo.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -5249,6 +4191,7 @@ public interface IActivityTaskManager extends IInterface {
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public boolean shouldUpRecreateTask(IBinder token, String destAffinity) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -5256,31 +4199,26 @@ public interface IActivityTaskManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
                     _data.writeString(destAffinity);
-                    boolean z = false;
-                    if (!this.mRemote.transact(34, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(34, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().shouldUpRecreateTask(token, destAffinity);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public boolean navigateUpTo(IBinder token, Intent target, int resultCode, Intent resultData) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    boolean _result = true;
                     if (target != null) {
                         _data.writeInt(1);
                         target.writeToParcel(_data, 0);
@@ -5294,15 +4232,12 @@ public interface IActivityTaskManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(35, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(35, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().navigateUpTo(token, target, resultCode, resultData);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -5310,6 +4245,7 @@ public interface IActivityTaskManager extends IInterface {
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void moveTaskToFront(IApplicationThread app, String callingPackage, int task, int flags, Bundle options) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -5325,33 +4261,32 @@ public interface IActivityTaskManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(36, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(36, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().moveTaskToFront(app, callingPackage, task, flags, options);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().moveTaskToFront(app, callingPackage, task, flags, options);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public int getTaskForActivity(IBinder token, boolean onlyRoot) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    _data.writeInt(onlyRoot);
-                    if (!this.mRemote.transact(37, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(onlyRoot ? 1 : 0);
+                    boolean _status = this.mRemote.transact(37, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getTaskForActivity(token, onlyRoot);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -5359,6 +4294,7 @@ public interface IActivityTaskManager extends IInterface {
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void finishSubActivity(IBinder token, String resultWho, int requestCode) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -5367,19 +4303,19 @@ public interface IActivityTaskManager extends IInterface {
                     _data.writeStrongBinder(token);
                     _data.writeString(resultWho);
                     _data.writeInt(requestCode);
-                    if (this.mRemote.transact(38, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(38, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().finishSubActivity(token, resultWho, requestCode);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().finishSubActivity(token, resultWho, requestCode);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public ParceledListSlice getRecentTasks(int maxNum, int flags, int userId) throws RemoteException {
                 ParceledListSlice _result;
                 Parcel _data = Parcel.obtain();
@@ -5389,7 +4325,8 @@ public interface IActivityTaskManager extends IInterface {
                     _data.writeInt(maxNum);
                     _data.writeInt(flags);
                     _data.writeInt(userId);
-                    if (!this.mRemote.transact(39, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(39, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getRecentTasks(maxNum, flags, userId);
                     }
                     _reply.readException();
@@ -5398,40 +4335,34 @@ public interface IActivityTaskManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    ParceledListSlice _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public boolean willActivityBeVisible(IBinder token) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    boolean z = false;
-                    if (!this.mRemote.transact(40, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(40, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().willActivityBeVisible(token);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void setRequestedOrientation(IBinder token, int requestedOrientation) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -5439,32 +4370,31 @@ public interface IActivityTaskManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
                     _data.writeInt(requestedOrientation);
-                    if (this.mRemote.transact(41, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(41, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setRequestedOrientation(token, requestedOrientation);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setRequestedOrientation(token, requestedOrientation);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public int getRequestedOrientation(IBinder token) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    if (!this.mRemote.transact(42, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(42, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getRequestedOrientation(token);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -5472,52 +4402,45 @@ public interface IActivityTaskManager extends IInterface {
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public boolean convertFromTranslucent(IBinder token) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    boolean z = false;
-                    if (!this.mRemote.transact(43, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(43, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().convertFromTranslucent(token);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public boolean convertToTranslucent(IBinder token, Bundle options) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    boolean _result = true;
                     if (options != null) {
                         _data.writeInt(1);
                         options.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(44, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(44, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().convertToTranslucent(token, options);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -5525,58 +4448,58 @@ public interface IActivityTaskManager extends IInterface {
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void notifyActivityDrawn(IBinder token) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    if (this.mRemote.transact(45, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(45, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().notifyActivityDrawn(token);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().notifyActivityDrawn(token);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void reportActivityFullyDrawn(IBinder token, boolean restoredFromBundle) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    _data.writeInt(restoredFromBundle);
-                    if (this.mRemote.transact(46, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(restoredFromBundle ? 1 : 0);
+                    boolean _status = this.mRemote.transact(46, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().reportActivityFullyDrawn(token, restoredFromBundle);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().reportActivityFullyDrawn(token, restoredFromBundle);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public int getActivityDisplayId(IBinder activityToken) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(activityToken);
-                    if (!this.mRemote.transact(47, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(47, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getActivityDisplayId(activityToken);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -5584,98 +4507,87 @@ public interface IActivityTaskManager extends IInterface {
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public boolean isImmersive(IBinder token) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    boolean z = false;
-                    if (!this.mRemote.transact(48, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(48, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isImmersive(token);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void setImmersive(IBinder token, boolean immersive) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    _data.writeInt(immersive);
-                    if (this.mRemote.transact(49, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(immersive ? 1 : 0);
+                    boolean _status = this.mRemote.transact(49, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setImmersive(token, immersive);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setImmersive(token, immersive);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public boolean isTopActivityImmersive() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(50, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(50, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isTopActivityImmersive();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public boolean moveActivityTaskToBack(IBinder token, boolean nonRoot) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    _data.writeInt(nonRoot);
-                    boolean z = false;
-                    if (!this.mRemote.transact(51, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(nonRoot ? 1 : 0);
+                    boolean _status = this.mRemote.transact(51, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().moveActivityTaskToBack(token, nonRoot);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public ActivityManager.TaskDescription getTaskDescription(int taskId) throws RemoteException {
                 ActivityManager.TaskDescription _result;
                 Parcel _data = Parcel.obtain();
@@ -5683,7 +4595,8 @@ public interface IActivityTaskManager extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(taskId);
-                    if (!this.mRemote.transact(52, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(52, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getTaskDescription(taskId);
                     }
                     _reply.readException();
@@ -5692,16 +4605,14 @@ public interface IActivityTaskManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    ActivityManager.TaskDescription _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void overridePendingTransition(IBinder token, String packageName, int enterAnim, int exitAnim) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -5711,32 +4622,31 @@ public interface IActivityTaskManager extends IInterface {
                     _data.writeString(packageName);
                     _data.writeInt(enterAnim);
                     _data.writeInt(exitAnim);
-                    if (this.mRemote.transact(53, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(53, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().overridePendingTransition(token, packageName, enterAnim, exitAnim);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().overridePendingTransition(token, packageName, enterAnim, exitAnim);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public int getLaunchedFromUid(IBinder activityToken) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(activityToken);
-                    if (!this.mRemote.transact(54, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(54, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getLaunchedFromUid(activityToken);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -5744,19 +4654,19 @@ public interface IActivityTaskManager extends IInterface {
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public String getLaunchedFromPackage(IBinder activityToken) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(activityToken);
-                    if (!this.mRemote.transact(55, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(55, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getLaunchedFromPackage(activityToken);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -5764,6 +4674,7 @@ public interface IActivityTaskManager extends IInterface {
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void reportAssistContextExtras(IBinder token, Bundle extras, AssistStructure structure, AssistContent content, Uri referrer) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -5794,45 +4705,46 @@ public interface IActivityTaskManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(56, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(56, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().reportAssistContextExtras(token, extras, structure, content, referrer);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().reportAssistContextExtras(token, extras, structure, content, referrer);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void setFocusedStack(int stackId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(stackId);
-                    if (this.mRemote.transact(57, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(57, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setFocusedStack(stackId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setFocusedStack(stackId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public ActivityManager.StackInfo getFocusedStackInfo() throws RemoteException {
                 ActivityManager.StackInfo _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(58, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(58, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getFocusedStackInfo();
                     }
                     _reply.readException();
@@ -5841,16 +4753,14 @@ public interface IActivityTaskManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    ActivityManager.StackInfo _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public Rect getTaskBounds(int taskId) throws RemoteException {
                 Rect _result;
                 Parcel _data = Parcel.obtain();
@@ -5858,7 +4768,8 @@ public interface IActivityTaskManager extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(taskId);
-                    if (!this.mRemote.transact(59, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(59, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getTaskBounds(taskId);
                     }
                     _reply.readException();
@@ -5867,128 +4778,6 @@ public interface IActivityTaskManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    Rect _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public void cancelRecentsAnimation(boolean restoreHomeStackPosition) throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(restoreHomeStackPosition);
-                    if (this.mRemote.transact(60, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                        _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
-                    }
-                    Stub.getDefaultImpl().cancelRecentsAnimation(restoreHomeStackPosition);
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public void startLockTaskModeByToken(IBinder token) throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeStrongBinder(token);
-                    if (this.mRemote.transact(61, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                        _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
-                    }
-                    Stub.getDefaultImpl().startLockTaskModeByToken(token);
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public void stopLockTaskModeByToken(IBinder token) throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeStrongBinder(token);
-                    if (this.mRemote.transact(62, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                        _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
-                    }
-                    Stub.getDefaultImpl().stopLockTaskModeByToken(token);
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public void updateLockTaskPackages(int userId, String[] packages) throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(userId);
-                    _data.writeStringArray(packages);
-                    if (this.mRemote.transact(63, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                        _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
-                    }
-                    Stub.getDefaultImpl().updateLockTaskPackages(userId, packages);
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public boolean isInLockTaskMode() throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(64, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
-                        return Stub.getDefaultImpl().isInLockTaskMode();
-                    }
-                    _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public int getLockTaskModeState() throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(65, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
-                        return Stub.getDefaultImpl().getLockTaskModeState();
-                    }
-                    _reply.readException();
-                    int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -5996,6 +4785,122 @@ public interface IActivityTaskManager extends IInterface {
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
+            public void cancelRecentsAnimation(boolean restoreHomeStackPosition) throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    _data.writeInt(restoreHomeStackPosition ? 1 : 0);
+                    boolean _status = this.mRemote.transact(60, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().cancelRecentsAnimation(restoreHomeStackPosition);
+                    } else {
+                        _reply.readException();
+                    }
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // android.app.IActivityTaskManager
+            public void startLockTaskModeByToken(IBinder token) throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    _data.writeStrongBinder(token);
+                    boolean _status = this.mRemote.transact(61, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().startLockTaskModeByToken(token);
+                    } else {
+                        _reply.readException();
+                    }
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // android.app.IActivityTaskManager
+            public void stopLockTaskModeByToken(IBinder token) throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    _data.writeStrongBinder(token);
+                    boolean _status = this.mRemote.transact(62, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().stopLockTaskModeByToken(token);
+                    } else {
+                        _reply.readException();
+                    }
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // android.app.IActivityTaskManager
+            public void updateLockTaskPackages(int userId, String[] packages) throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    _data.writeInt(userId);
+                    _data.writeStringArray(packages);
+                    boolean _status = this.mRemote.transact(63, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().updateLockTaskPackages(userId, packages);
+                    } else {
+                        _reply.readException();
+                    }
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // android.app.IActivityTaskManager
+            public boolean isInLockTaskMode() throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    boolean _status = this.mRemote.transact(64, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        return Stub.getDefaultImpl().isInLockTaskMode();
+                    }
+                    _reply.readException();
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // android.app.IActivityTaskManager
+            public int getLockTaskModeState() throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    boolean _status = this.mRemote.transact(65, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        return Stub.getDefaultImpl().getLockTaskModeState();
+                    }
+                    _reply.readException();
+                    int _result = _reply.readInt();
+                    return _result;
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // android.app.IActivityTaskManager
             public void setTaskDescription(IBinder token, ActivityManager.TaskDescription values) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -6008,19 +4913,19 @@ public interface IActivityTaskManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(66, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(66, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setTaskDescription(token, values);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setTaskDescription(token, values);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public Bundle getActivityOptions(IBinder token) throws RemoteException {
                 Bundle _result;
                 Parcel _data = Parcel.obtain();
@@ -6028,7 +4933,8 @@ public interface IActivityTaskManager extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    if (!this.mRemote.transact(67, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(67, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getActivityOptions(token);
                     }
                     _reply.readException();
@@ -6037,29 +4943,6 @@ public interface IActivityTaskManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    Bundle _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public List<IBinder> getAppTasks(String callingPackage) throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(68, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
-                        return Stub.getDefaultImpl().getAppTasks(callingPackage);
-                    }
-                    _reply.readException();
-                    List<IBinder> _result = _reply.createBinderArrayList();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -6067,124 +4950,141 @@ public interface IActivityTaskManager extends IInterface {
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
+            public List<IBinder> getAppTasks(String callingPackage) throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    _data.writeString(callingPackage);
+                    boolean _status = this.mRemote.transact(68, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        return Stub.getDefaultImpl().getAppTasks(callingPackage);
+                    }
+                    _reply.readException();
+                    List<IBinder> _result = _reply.createBinderArrayList();
+                    return _result;
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // android.app.IActivityTaskManager
             public void startSystemLockTaskMode(int taskId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(taskId);
-                    if (this.mRemote.transact(69, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(69, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().startSystemLockTaskMode(taskId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().startSystemLockTaskMode(taskId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void stopSystemLockTaskMode() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(70, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(70, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().stopSystemLockTaskMode();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().stopSystemLockTaskMode();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void finishVoiceTask(IVoiceInteractionSession session) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(session != null ? session.asBinder() : null);
-                    if (this.mRemote.transact(71, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(71, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().finishVoiceTask(session);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().finishVoiceTask(session);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public boolean isTopOfTask(IBinder token) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    boolean z = false;
-                    if (!this.mRemote.transact(72, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(72, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isTopOfTask(token);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void notifyLaunchTaskBehindComplete(IBinder token) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    if (this.mRemote.transact(73, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(73, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().notifyLaunchTaskBehindComplete(token);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().notifyLaunchTaskBehindComplete(token);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void notifyEnterAnimationComplete(IBinder token) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    if (this.mRemote.transact(74, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(74, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().notifyEnterAnimationComplete(token);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().notifyEnterAnimationComplete(token);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public int addAppTask(IBinder activityToken, Intent intent, ActivityManager.TaskDescription description, Bitmap thumbnail) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -6209,13 +5109,12 @@ public interface IActivityTaskManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(75, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(75, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().addAppTask(activityToken, intent, description, thumbnail);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -6223,13 +5122,15 @@ public interface IActivityTaskManager extends IInterface {
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public Point getAppTaskThumbnailSize() throws RemoteException {
                 Point _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(76, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(76, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAppTaskThumbnailSize();
                     }
                     _reply.readException();
@@ -6238,53 +5139,6 @@ public interface IActivityTaskManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    Point _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public boolean releaseActivityInstance(IBinder token) throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeStrongBinder(token);
-                    boolean z = false;
-                    if (!this.mRemote.transact(77, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
-                        return Stub.getDefaultImpl().releaseActivityInstance(token);
-                    }
-                    _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public IBinder requestStartActivityPermissionToken(IBinder delegatorToken) throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeStrongBinder(delegatorToken);
-                    if (!this.mRemote.transact(78, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
-                        return Stub.getDefaultImpl().requestStartActivityPermissionToken(delegatorToken);
-                    }
-                    _reply.readException();
-                    IBinder _result = _reply.readStrongBinder();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -6292,25 +5146,66 @@ public interface IActivityTaskManager extends IInterface {
                 }
             }
 
-            public void releaseSomeActivities(IApplicationThread app) throws RemoteException {
+            @Override // android.app.IActivityTaskManager
+            public boolean releaseActivityInstance(IBinder token) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeStrongBinder(app != null ? app.asBinder() : null);
-                    if (this.mRemote.transact(79, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                        _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
+                    _data.writeStrongBinder(token);
+                    boolean _status = this.mRemote.transact(77, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        return Stub.getDefaultImpl().releaseActivityInstance(token);
                     }
-                    Stub.getDefaultImpl().releaseSomeActivities(app);
+                    _reply.readException();
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
+            public IBinder requestStartActivityPermissionToken(IBinder delegatorToken) throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    _data.writeStrongBinder(delegatorToken);
+                    boolean _status = this.mRemote.transact(78, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        return Stub.getDefaultImpl().requestStartActivityPermissionToken(delegatorToken);
+                    }
+                    _reply.readException();
+                    IBinder _result = _reply.readStrongBinder();
+                    return _result;
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // android.app.IActivityTaskManager
+            public void releaseSomeActivities(IApplicationThread app) throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    _data.writeStrongBinder(app != null ? app.asBinder() : null);
+                    boolean _status = this.mRemote.transact(79, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().releaseSomeActivities(app);
+                    } else {
+                        _reply.readException();
+                    }
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // android.app.IActivityTaskManager
             public Bitmap getTaskDescriptionIcon(String filename, int userId) throws RemoteException {
                 Bitmap _result;
                 Parcel _data = Parcel.obtain();
@@ -6319,7 +5214,8 @@ public interface IActivityTaskManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(filename);
                     _data.writeInt(userId);
-                    if (!this.mRemote.transact(80, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(80, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getTaskDescriptionIcon(filename, userId);
                     }
                     _reply.readException();
@@ -6328,16 +5224,14 @@ public interface IActivityTaskManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    Bitmap _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void startInPlaceAnimationOnFrontMostApplication(Bundle opts) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -6349,57 +5243,57 @@ public interface IActivityTaskManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(81, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(81, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().startInPlaceAnimationOnFrontMostApplication(opts);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().startInPlaceAnimationOnFrontMostApplication(opts);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void registerTaskStackListener(ITaskStackListener listener) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(listener != null ? listener.asBinder() : null);
-                    if (this.mRemote.transact(82, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(82, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().registerTaskStackListener(listener);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().registerTaskStackListener(listener);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void unregisterTaskStackListener(ITaskStackListener listener) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(listener != null ? listener.asBinder() : null);
-                    if (this.mRemote.transact(83, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(83, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().unregisterTaskStackListener(listener);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().unregisterTaskStackListener(listener);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void setTaskResizeable(int taskId, int resizeableMode) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -6407,38 +5301,38 @@ public interface IActivityTaskManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(taskId);
                     _data.writeInt(resizeableMode);
-                    if (this.mRemote.transact(84, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(84, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setTaskResizeable(taskId, resizeableMode);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setTaskResizeable(taskId, resizeableMode);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void toggleFreeformWindowingMode(IBinder token) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    if (this.mRemote.transact(85, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(85, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().toggleFreeformWindowingMode(token);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().toggleFreeformWindowingMode(token);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void resizeTask(int taskId, Rect bounds, int resizeMode) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -6452,19 +5346,19 @@ public interface IActivityTaskManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(resizeMode);
-                    if (this.mRemote.transact(86, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(86, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().resizeTask(taskId, bounds, resizeMode);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().resizeTask(taskId, bounds, resizeMode);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void moveStackToDisplay(int stackId, int displayId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -6472,38 +5366,38 @@ public interface IActivityTaskManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(stackId);
                     _data.writeInt(displayId);
-                    if (this.mRemote.transact(87, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(87, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().moveStackToDisplay(stackId, displayId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().moveStackToDisplay(stackId, displayId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void removeStack(int stackId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(stackId);
-                    if (this.mRemote.transact(88, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(88, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().removeStack(stackId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().removeStack(stackId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void setTaskWindowingMode(int taskId, int windowingMode, boolean toTop) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -6511,20 +5405,20 @@ public interface IActivityTaskManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(taskId);
                     _data.writeInt(windowingMode);
-                    _data.writeInt(toTop);
-                    if (this.mRemote.transact(89, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(toTop ? 1 : 0);
+                    boolean _status = this.mRemote.transact(89, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setTaskWindowingMode(taskId, windowingMode, toTop);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setTaskWindowingMode(taskId, windowingMode, toTop);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void moveTaskToStack(int taskId, int stackId, boolean toTop) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -6532,193 +5426,156 @@ public interface IActivityTaskManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(taskId);
                     _data.writeInt(stackId);
-                    _data.writeInt(toTop);
-                    if (this.mRemote.transact(90, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(toTop ? 1 : 0);
+                    boolean _status = this.mRemote.transact(90, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().moveTaskToStack(taskId, stackId, toTop);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().moveTaskToStack(taskId, stackId, toTop);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void resizeStack(int stackId, Rect bounds, boolean allowResizeInDockedMode, boolean preserveWindows, boolean animate, int animationDuration) throws RemoteException {
-                Rect rect = bounds;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    try {
-                        _data.writeInt(stackId);
-                        if (rect != null) {
-                            _data.writeInt(1);
-                            rect.writeToParcel(_data, 0);
-                        } else {
-                            _data.writeInt(0);
-                        }
-                        try {
-                            _data.writeInt(allowResizeInDockedMode ? 1 : 0);
-                        } catch (Throwable th) {
-                            th = th;
-                            boolean z = preserveWindows;
-                            boolean z2 = animate;
-                            int i = animationDuration;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                    } catch (Throwable th2) {
-                        th = th2;
-                        boolean z3 = allowResizeInDockedMode;
-                        boolean z4 = preserveWindows;
-                        boolean z22 = animate;
-                        int i2 = animationDuration;
-                        _reply.recycle();
-                        _data.recycle();
-                        throw th;
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeInt(stackId);
+                    if (bounds != null) {
+                        _data.writeInt(1);
+                        bounds.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
                     }
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(allowResizeInDockedMode ? 1 : 0);
+                } catch (Throwable th3) {
+                    th = th3;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(preserveWindows ? 1 : 0);
+                } catch (Throwable th4) {
+                    th = th4;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(animate ? 1 : 0);
                     try {
-                        _data.writeInt(preserveWindows ? 1 : 0);
-                        try {
-                            _data.writeInt(animate ? 1 : 0);
-                        } catch (Throwable th3) {
-                            th = th3;
-                            int i22 = animationDuration;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                        try {
-                            _data.writeInt(animationDuration);
-                            if (this.mRemote.transact(91, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                _reply.readException();
-                                _reply.recycle();
-                                _data.recycle();
-                                return;
-                            }
+                        _data.writeInt(animationDuration);
+                        boolean _status = this.mRemote.transact(91, _data, _reply, 0);
+                        if (!_status && Stub.getDefaultImpl() != null) {
                             Stub.getDefaultImpl().resizeStack(stackId, bounds, allowResizeInDockedMode, preserveWindows, animate, animationDuration);
                             _reply.recycle();
                             _data.recycle();
-                        } catch (Throwable th4) {
-                            th = th4;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
+                            return;
                         }
+                        _reply.readException();
+                        _reply.recycle();
+                        _data.recycle();
                     } catch (Throwable th5) {
                         th = th5;
-                        boolean z222 = animate;
-                        int i222 = animationDuration;
                         _reply.recycle();
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th6) {
                     th = th6;
-                    int i3 = stackId;
-                    boolean z32 = allowResizeInDockedMode;
-                    boolean z42 = preserveWindows;
-                    boolean z2222 = animate;
-                    int i2222 = animationDuration;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public boolean setTaskWindowingModeSplitScreenPrimary(int taskId, int createMode, boolean toTop, boolean animate, Rect initialBounds, boolean showRecents) throws RemoteException {
-                Rect rect = initialBounds;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeInt(taskId);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(createMode);
                     try {
-                        _data.writeInt(taskId);
-                        try {
-                            _data.writeInt(createMode);
-                        } catch (Throwable th) {
-                            th = th;
-                            boolean z = toTop;
-                            boolean z2 = animate;
-                            boolean z3 = showRecents;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                        try {
-                            _data.writeInt(toTop ? 1 : 0);
-                        } catch (Throwable th2) {
-                            th = th2;
-                            boolean z22 = animate;
-                            boolean z32 = showRecents;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
+                        _data.writeInt(toTop ? 1 : 0);
                     } catch (Throwable th3) {
                         th = th3;
-                        int i = createMode;
-                        boolean z4 = toTop;
-                        boolean z222 = animate;
-                        boolean z322 = showRecents;
                         _reply.recycle();
                         _data.recycle();
                         throw th;
                     }
                     try {
                         _data.writeInt(animate ? 1 : 0);
-                        boolean _result = true;
-                        if (rect != null) {
+                        if (initialBounds != null) {
                             _data.writeInt(1);
-                            rect.writeToParcel(_data, 0);
+                            initialBounds.writeToParcel(_data, 0);
                         } else {
                             _data.writeInt(0);
                         }
-                        try {
-                            _data.writeInt(showRecents ? 1 : 0);
-                            if (this.mRemote.transact(92, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                _reply.readException();
-                                if (_reply.readInt() == 0) {
-                                    _result = false;
-                                }
-                                _reply.recycle();
-                                _data.recycle();
-                                return _result;
-                            }
+                    } catch (Throwable th4) {
+                        th = th4;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeInt(showRecents ? 1 : 0);
+                        boolean _status = this.mRemote.transact(92, _data, _reply, 0);
+                        if (!_status && Stub.getDefaultImpl() != null) {
                             boolean taskWindowingModeSplitScreenPrimary = Stub.getDefaultImpl().setTaskWindowingModeSplitScreenPrimary(taskId, createMode, toTop, animate, initialBounds, showRecents);
                             _reply.recycle();
                             _data.recycle();
                             return taskWindowingModeSplitScreenPrimary;
-                        } catch (Throwable th4) {
-                            th = th4;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
                         }
+                        _reply.readException();
+                        boolean _result = _reply.readInt() != 0;
+                        _reply.recycle();
+                        _data.recycle();
+                        return _result;
                     } catch (Throwable th5) {
                         th = th5;
-                        boolean z3222 = showRecents;
                         _reply.recycle();
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th6) {
                     th = th6;
-                    int i2 = taskId;
-                    int i3 = createMode;
-                    boolean z42 = toTop;
-                    boolean z2222 = animate;
-                    boolean z32222 = showRecents;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void offsetPinnedStackBounds(int stackId, Rect compareBounds, int xOffset, int yOffset, int animationDuration) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -6734,69 +5591,68 @@ public interface IActivityTaskManager extends IInterface {
                     _data.writeInt(xOffset);
                     _data.writeInt(yOffset);
                     _data.writeInt(animationDuration);
-                    if (this.mRemote.transact(93, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(93, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().offsetPinnedStackBounds(stackId, compareBounds, xOffset, yOffset, animationDuration);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().offsetPinnedStackBounds(stackId, compareBounds, xOffset, yOffset, animationDuration);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void removeStacksInWindowingModes(int[] windowingModes) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeIntArray(windowingModes);
-                    if (this.mRemote.transact(94, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(94, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().removeStacksInWindowingModes(windowingModes);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().removeStacksInWindowingModes(windowingModes);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void removeStacksWithActivityTypes(int[] activityTypes) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeIntArray(activityTypes);
-                    if (this.mRemote.transact(95, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(95, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().removeStacksWithActivityTypes(activityTypes);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().removeStacksWithActivityTypes(activityTypes);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public List<ActivityManager.StackInfo> getAllStackInfos() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(96, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(96, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAllStackInfos();
                     }
                     _reply.readException();
                     List<ActivityManager.StackInfo> _result = _reply.createTypedArrayList(ActivityManager.StackInfo.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -6804,6 +5660,7 @@ public interface IActivityTaskManager extends IInterface {
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public ActivityManager.StackInfo getStackInfo(int windowingMode, int activityType) throws RemoteException {
                 ActivityManager.StackInfo _result;
                 Parcel _data = Parcel.obtain();
@@ -6812,7 +5669,8 @@ public interface IActivityTaskManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(windowingMode);
                     _data.writeInt(activityType);
-                    if (!this.mRemote.transact(97, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(97, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getStackInfo(windowingMode, activityType);
                     }
                     _reply.readException();
@@ -6821,36 +5679,34 @@ public interface IActivityTaskManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    ActivityManager.StackInfo _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void setLockScreenShown(boolean showingKeyguard, boolean showingAod) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(showingKeyguard);
-                    _data.writeInt(showingAod);
-                    if (this.mRemote.transact(98, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(showingKeyguard ? 1 : 0);
+                    _data.writeInt(showingAod ? 1 : 0);
+                    boolean _status = this.mRemote.transact(98, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setLockScreenShown(showingKeyguard, showingAod);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setLockScreenShown(showingKeyguard, showingAod);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public Bundle getAssistContextExtras(int requestType) throws RemoteException {
                 Bundle _result;
                 Parcel _data = Parcel.obtain();
@@ -6858,7 +5714,8 @@ public interface IActivityTaskManager extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(requestType);
-                    if (!this.mRemote.transact(99, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(99, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAssistContextExtras(requestType);
                     }
                     _reply.readException();
@@ -6867,179 +5724,145 @@ public interface IActivityTaskManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    Bundle _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public boolean launchAssistIntent(Intent intent, int requestType, String hint, int userHandle, Bundle args) throws RemoteException {
-                Intent intent2 = intent;
-                Bundle bundle = args;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
-                    if (intent2 != null) {
+                    if (intent != null) {
                         _data.writeInt(1);
-                        intent2.writeToParcel(_data, 0);
+                        intent.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeInt(requestType);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeString(hint);
                     try {
-                        _data.writeInt(requestType);
-                        try {
-                            _data.writeString(hint);
-                        } catch (Throwable th) {
-                            th = th;
-                            int i = userHandle;
+                        _data.writeInt(userHandle);
+                        if (args != null) {
+                            _data.writeInt(1);
+                            args.writeToParcel(_data, 0);
+                        } else {
+                            _data.writeInt(0);
+                        }
+                    } catch (Throwable th3) {
+                        th = th3;
+                    }
+                    try {
+                        boolean _status = this.mRemote.transact(100, _data, _reply, 0);
+                        if (!_status && Stub.getDefaultImpl() != null) {
+                            boolean launchAssistIntent = Stub.getDefaultImpl().launchAssistIntent(intent, requestType, hint, userHandle, args);
                             _reply.recycle();
                             _data.recycle();
-                            throw th;
+                            return launchAssistIntent;
                         }
-                        try {
-                            _data.writeInt(userHandle);
-                            if (bundle != null) {
-                                _data.writeInt(1);
-                                bundle.writeToParcel(_data, 0);
-                            } else {
-                                _data.writeInt(0);
-                            }
-                            try {
-                                if (this.mRemote.transact(100, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                    _reply.readException();
-                                    if (_reply.readInt() == 0) {
-                                        _result = false;
-                                    }
-                                    _reply.recycle();
-                                    _data.recycle();
-                                    return _result;
-                                }
-                                boolean launchAssistIntent = Stub.getDefaultImpl().launchAssistIntent(intent, requestType, hint, userHandle, args);
-                                _reply.recycle();
-                                _data.recycle();
-                                return launchAssistIntent;
-                            } catch (Throwable th2) {
-                                th = th2;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th3) {
-                            th = th3;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
+                        _reply.readException();
+                        boolean _result = _reply.readInt() != 0;
+                        _reply.recycle();
+                        _data.recycle();
+                        return _result;
                     } catch (Throwable th4) {
                         th = th4;
-                        String str = hint;
-                        int i2 = userHandle;
                         _reply.recycle();
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th5) {
                     th = th5;
-                    int i3 = requestType;
-                    String str2 = hint;
-                    int i22 = userHandle;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public boolean requestAssistContextExtras(int requestType, IAssistDataReceiver receiver, Bundle receiverExtras, IBinder activityToken, boolean focused, boolean newSessionId) throws RemoteException {
-                boolean _result;
-                Bundle bundle = receiverExtras;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    try {
-                        _data.writeInt(requestType);
-                        _data.writeStrongBinder(receiver != null ? receiver.asBinder() : null);
-                        _result = true;
-                        if (bundle != null) {
-                            _data.writeInt(1);
-                            bundle.writeToParcel(_data, 0);
-                        } else {
-                            _data.writeInt(0);
-                        }
-                    } catch (Throwable th) {
-                        th = th;
-                        IBinder iBinder = activityToken;
-                        boolean z = focused;
-                        boolean z2 = newSessionId;
-                        _reply.recycle();
-                        _data.recycle();
-                        throw th;
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeInt(requestType);
+                    _data.writeStrongBinder(receiver != null ? receiver.asBinder() : null);
+                    if (receiverExtras != null) {
+                        _data.writeInt(1);
+                        receiverExtras.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
                     }
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeStrongBinder(activityToken);
+                } catch (Throwable th3) {
+                    th = th3;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(focused ? 1 : 0);
                     try {
-                        _data.writeStrongBinder(activityToken);
-                        try {
-                            _data.writeInt(focused ? 1 : 0);
-                        } catch (Throwable th2) {
-                            th = th2;
-                            boolean z22 = newSessionId;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                        try {
-                            _data.writeInt(newSessionId ? 1 : 0);
-                            if (this.mRemote.transact(101, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                _reply.readException();
-                                if (_reply.readInt() == 0) {
-                                    _result = false;
-                                }
-                                _reply.recycle();
-                                _data.recycle();
-                                return _result;
-                            }
+                        _data.writeInt(newSessionId ? 1 : 0);
+                        boolean _status = this.mRemote.transact(101, _data, _reply, 0);
+                        if (!_status && Stub.getDefaultImpl() != null) {
                             boolean requestAssistContextExtras = Stub.getDefaultImpl().requestAssistContextExtras(requestType, receiver, receiverExtras, activityToken, focused, newSessionId);
                             _reply.recycle();
                             _data.recycle();
                             return requestAssistContextExtras;
-                        } catch (Throwable th3) {
-                            th = th3;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
                         }
+                        _reply.readException();
+                        boolean _result = _reply.readInt() != 0;
+                        _reply.recycle();
+                        _data.recycle();
+                        return _result;
                     } catch (Throwable th4) {
                         th = th4;
-                        boolean z3 = focused;
-                        boolean z222 = newSessionId;
                         _reply.recycle();
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th5) {
                     th = th5;
-                    int i = requestType;
-                    IBinder iBinder2 = activityToken;
-                    boolean z32 = focused;
-                    boolean z2222 = newSessionId;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public boolean requestAutofillData(IAssistDataReceiver receiver, Bundle receiverExtras, IBinder activityToken, int flags) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(receiver != null ? receiver.asBinder() : null);
-                    boolean _result = true;
                     if (receiverExtras != null) {
                         _data.writeInt(1);
                         receiverExtras.writeToParcel(_data, 0);
@@ -7048,15 +5871,12 @@ public interface IActivityTaskManager extends IInterface {
                     }
                     _data.writeStrongBinder(activityToken);
                     _data.writeInt(flags);
-                    if (!this.mRemote.transact(102, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(102, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().requestAutofillData(receiver, receiverExtras, activityToken, flags);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -7064,51 +5884,44 @@ public interface IActivityTaskManager extends IInterface {
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public boolean isAssistDataAllowedOnCurrentActivity() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(103, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(103, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isAssistDataAllowedOnCurrentActivity();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public boolean showAssistFromActivity(IBinder token, Bundle args) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    boolean _result = true;
                     if (args != null) {
                         _data.writeInt(1);
                         args.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(104, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(104, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().showAssistFromActivity(token, args);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -7116,38 +5929,34 @@ public interface IActivityTaskManager extends IInterface {
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public boolean isRootVoiceInteraction(IBinder token) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    boolean z = false;
-                    if (!this.mRemote.transact(105, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(105, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isRootVoiceInteraction(token);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void showLockTaskEscapeMessage(IBinder token) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    if (this.mRemote.transact(106, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(106, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().showLockTaskEscapeMessage(token);
                     }
                 } finally {
@@ -7155,25 +5964,26 @@ public interface IActivityTaskManager extends IInterface {
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void keyguardGoingAway(int flags) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(flags);
-                    if (this.mRemote.transact(107, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(107, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().keyguardGoingAway(flags);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().keyguardGoingAway(flags);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public ComponentName getActivityClassForToken(IBinder token) throws RemoteException {
                 ComponentName _result;
                 Parcel _data = Parcel.obtain();
@@ -7181,7 +5991,8 @@ public interface IActivityTaskManager extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    if (!this.mRemote.transact(108, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(108, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getActivityClassForToken(token);
                     }
                     _reply.readException();
@@ -7190,29 +6001,6 @@ public interface IActivityTaskManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    ComponentName _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public String getPackageForToken(IBinder token) throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeStrongBinder(token);
-                    if (!this.mRemote.transact(109, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
-                        return Stub.getDefaultImpl().getPackageForToken(token);
-                    }
-                    _reply.readException();
-                    String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -7220,6 +6008,27 @@ public interface IActivityTaskManager extends IInterface {
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
+            public String getPackageForToken(IBinder token) throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    _data.writeStrongBinder(token);
+                    boolean _status = this.mRemote.transact(109, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        return Stub.getDefaultImpl().getPackageForToken(token);
+                    }
+                    _reply.readException();
+                    String _result = _reply.readString();
+                    return _result;
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // android.app.IActivityTaskManager
             public void positionTaskInStack(int taskId, int stackId, int position) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -7228,19 +6037,19 @@ public interface IActivityTaskManager extends IInterface {
                     _data.writeInt(taskId);
                     _data.writeInt(stackId);
                     _data.writeInt(position);
-                    if (this.mRemote.transact(110, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(110, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().positionTaskInStack(taskId, stackId, position);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().positionTaskInStack(taskId, stackId, position);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void reportSizeConfigurations(IBinder token, int[] horizontalSizeConfiguration, int[] verticalSizeConfigurations, int[] smallestWidthConfigurations) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -7250,119 +6059,115 @@ public interface IActivityTaskManager extends IInterface {
                     _data.writeIntArray(horizontalSizeConfiguration);
                     _data.writeIntArray(verticalSizeConfigurations);
                     _data.writeIntArray(smallestWidthConfigurations);
-                    if (this.mRemote.transact(111, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(111, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().reportSizeConfigurations(token, horizontalSizeConfiguration, verticalSizeConfigurations, smallestWidthConfigurations);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().reportSizeConfigurations(token, horizontalSizeConfiguration, verticalSizeConfigurations, smallestWidthConfigurations);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void dismissSplitScreenMode(boolean toTop) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(toTop);
-                    if (this.mRemote.transact(112, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(toTop ? 1 : 0);
+                    boolean _status = this.mRemote.transact(112, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().dismissSplitScreenMode(toTop);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().dismissSplitScreenMode(toTop);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void dismissPip(boolean animate, int animationDuration) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(animate);
+                    _data.writeInt(animate ? 1 : 0);
                     _data.writeInt(animationDuration);
-                    if (this.mRemote.transact(113, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(113, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().dismissPip(animate, animationDuration);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().dismissPip(animate, animationDuration);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void suppressResizeConfigChanges(boolean suppress) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(suppress);
-                    if (this.mRemote.transact(114, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(suppress ? 1 : 0);
+                    boolean _status = this.mRemote.transact(114, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().suppressResizeConfigChanges(suppress);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().suppressResizeConfigChanges(suppress);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void moveTasksToFullscreenStack(int fromStackId, boolean onTop) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(fromStackId);
-                    _data.writeInt(onTop);
-                    if (this.mRemote.transact(115, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(onTop ? 1 : 0);
+                    boolean _status = this.mRemote.transact(115, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().moveTasksToFullscreenStack(fromStackId, onTop);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().moveTasksToFullscreenStack(fromStackId, onTop);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public boolean moveTopActivityToPinnedStack(int stackId, Rect bounds) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(stackId);
-                    boolean _result = true;
                     if (bounds != null) {
                         _data.writeInt(1);
                         bounds.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(116, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(116, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().moveTopActivityToPinnedStack(stackId, bounds);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -7370,76 +6175,65 @@ public interface IActivityTaskManager extends IInterface {
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public boolean isInMultiWindowMode(IBinder token) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    boolean z = false;
-                    if (!this.mRemote.transact(117, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(117, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isInMultiWindowMode(token);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public boolean isInPictureInPictureMode(IBinder token) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    boolean z = false;
-                    if (!this.mRemote.transact(118, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(118, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isInPictureInPictureMode(token);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public boolean enterPictureInPictureMode(IBinder token, PictureInPictureParams params) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    boolean _result = true;
                     if (params != null) {
                         _data.writeInt(1);
                         params.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(119, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(119, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().enterPictureInPictureMode(token, params);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -7447,6 +6241,7 @@ public interface IActivityTaskManager extends IInterface {
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void setPictureInPictureParams(IBinder token, PictureInPictureParams params) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -7459,32 +6254,31 @@ public interface IActivityTaskManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(120, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(120, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setPictureInPictureParams(token, params);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setPictureInPictureParams(token, params);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public int getMaxNumPictureInPictureActions(IBinder token) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    if (!this.mRemote.transact(121, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(121, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getMaxNumPictureInPictureActions(token);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -7492,19 +6286,19 @@ public interface IActivityTaskManager extends IInterface {
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public IBinder getUriPermissionOwnerForActivity(IBinder activityToken) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(activityToken);
-                    if (!this.mRemote.transact(122, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(122, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getUriPermissionOwnerForActivity(activityToken);
                     }
                     _reply.readException();
                     IBinder _result = _reply.readStrongBinder();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -7512,6 +6306,7 @@ public interface IActivityTaskManager extends IInterface {
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void resizeDockedStack(Rect dockedBounds, Rect tempDockedTaskBounds, Rect tempDockedTaskInsetBounds, Rect tempOtherTaskBounds, Rect tempOtherTaskInsetBounds) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -7547,58 +6342,57 @@ public interface IActivityTaskManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(123, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(123, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().resizeDockedStack(dockedBounds, tempDockedTaskBounds, tempDockedTaskInsetBounds, tempOtherTaskBounds, tempOtherTaskInsetBounds);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().resizeDockedStack(dockedBounds, tempDockedTaskBounds, tempDockedTaskInsetBounds, tempOtherTaskBounds, tempOtherTaskInsetBounds);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void setSplitScreenResizing(boolean resizing) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(resizing);
-                    if (this.mRemote.transact(124, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(resizing ? 1 : 0);
+                    boolean _status = this.mRemote.transact(124, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setSplitScreenResizing(resizing);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setSplitScreenResizing(resizing);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public int setVrMode(IBinder token, boolean enabled, ComponentName packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    _data.writeInt(enabled);
+                    _data.writeInt(enabled ? 1 : 0);
                     if (packageName != null) {
                         _data.writeInt(1);
                         packageName.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(125, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(125, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setVrMode(token, enabled, packageName);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -7606,6 +6400,7 @@ public interface IActivityTaskManager extends IInterface {
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void startLocalVoiceInteraction(IBinder token, Bundle options) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -7618,104 +6413,101 @@ public interface IActivityTaskManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(126, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(126, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().startLocalVoiceInteraction(token, options);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().startLocalVoiceInteraction(token, options);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void stopLocalVoiceInteraction(IBinder token) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    if (this.mRemote.transact(127, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(127, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().stopLocalVoiceInteraction(token);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().stopLocalVoiceInteraction(token);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public boolean supportsLocalVoiceInteraction() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(128, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(128, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().supportsLocalVoiceInteraction();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void notifyPinnedStackAnimationStarted() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(129, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(129, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().notifyPinnedStackAnimationStarted();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().notifyPinnedStackAnimationStarted();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void notifyPinnedStackAnimationEnded() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(130, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(130, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().notifyPinnedStackAnimationEnded();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().notifyPinnedStackAnimationEnded();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public ConfigurationInfo getDeviceConfigurationInfo() throws RemoteException {
                 ConfigurationInfo _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(131, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(131, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getDeviceConfigurationInfo();
                     }
                     _reply.readException();
@@ -7724,16 +6516,14 @@ public interface IActivityTaskManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    ConfigurationInfo _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void resizePinnedStack(Rect pinnedBounds, Rect tempPinnedTaskBounds) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -7751,25 +6541,24 @@ public interface IActivityTaskManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(132, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(132, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().resizePinnedStack(pinnedBounds, tempPinnedTaskBounds);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().resizePinnedStack(pinnedBounds, tempPinnedTaskBounds);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public boolean updateDisplayOverrideConfiguration(Configuration values, int displayId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (values != null) {
                         _data.writeInt(1);
                         values.writeToParcel(_data, 0);
@@ -7777,15 +6566,12 @@ public interface IActivityTaskManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(displayId);
-                    if (!this.mRemote.transact(133, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(133, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().updateDisplayOverrideConfiguration(values, displayId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -7793,6 +6579,7 @@ public interface IActivityTaskManager extends IInterface {
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void dismissKeyguard(IBinder token, IKeyguardDismissCallback callback, CharSequence message) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -7806,38 +6593,38 @@ public interface IActivityTaskManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(134, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(134, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().dismissKeyguard(token, callback, message);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().dismissKeyguard(token, callback, message);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void cancelTaskWindowTransition(int taskId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(taskId);
-                    if (this.mRemote.transact(135, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(135, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().cancelTaskWindowTransition(taskId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().cancelTaskWindowTransition(taskId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public ActivityManager.TaskSnapshot getTaskSnapshot(int taskId, boolean reducedResolution) throws RemoteException {
                 ActivityManager.TaskSnapshot _result;
                 Parcel _data = Parcel.obtain();
@@ -7845,8 +6632,9 @@ public interface IActivityTaskManager extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(taskId);
-                    _data.writeInt(reducedResolution);
-                    if (!this.mRemote.transact(136, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(reducedResolution ? 1 : 0);
+                    boolean _status = this.mRemote.transact(136, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getTaskSnapshot(taskId, reducedResolution);
                     }
                     _reply.readException();
@@ -7855,48 +6643,45 @@ public interface IActivityTaskManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    ActivityManager.TaskSnapshot _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void setDisablePreviewScreenshots(IBinder token, boolean disable) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    _data.writeInt(disable);
-                    if (this.mRemote.transact(137, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(disable ? 1 : 0);
+                    boolean _status = this.mRemote.transact(137, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setDisablePreviewScreenshots(token, disable);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setDisablePreviewScreenshots(token, disable);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public int getLastResumedActivityUserId() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(138, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(138, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getLastResumedActivityUserId();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -7904,27 +6689,24 @@ public interface IActivityTaskManager extends IInterface {
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public boolean updateConfiguration(Configuration values) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (values != null) {
                         _data.writeInt(1);
                         values.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(139, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(139, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().updateConfiguration(values);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -7932,6 +6714,7 @@ public interface IActivityTaskManager extends IInterface {
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void updateLockTaskFeatures(int userId, int flags) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -7939,79 +6722,79 @@ public interface IActivityTaskManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userId);
                     _data.writeInt(flags);
-                    if (this.mRemote.transact(140, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(140, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().updateLockTaskFeatures(userId, flags);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().updateLockTaskFeatures(userId, flags);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void setShowWhenLocked(IBinder token, boolean showWhenLocked) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    _data.writeInt(showWhenLocked);
-                    if (this.mRemote.transact(141, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(showWhenLocked ? 1 : 0);
+                    boolean _status = this.mRemote.transact(141, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setShowWhenLocked(token, showWhenLocked);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setShowWhenLocked(token, showWhenLocked);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void setInheritShowWhenLocked(IBinder token, boolean setInheritShownWhenLocked) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    _data.writeInt(setInheritShownWhenLocked);
-                    if (this.mRemote.transact(142, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(setInheritShownWhenLocked ? 1 : 0);
+                    boolean _status = this.mRemote.transact(142, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setInheritShowWhenLocked(token, setInheritShownWhenLocked);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setInheritShowWhenLocked(token, setInheritShownWhenLocked);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void setTurnScreenOn(IBinder token, boolean turnScreenOn) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(token);
-                    _data.writeInt(turnScreenOn);
-                    if (this.mRemote.transact(143, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(turnScreenOn ? 1 : 0);
+                    boolean _status = this.mRemote.transact(143, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setTurnScreenOn(token, turnScreenOn);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setTurnScreenOn(token, turnScreenOn);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void registerRemoteAnimations(IBinder token, RemoteAnimationDefinition definition) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8024,19 +6807,19 @@ public interface IActivityTaskManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(144, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(144, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().registerRemoteAnimations(token, definition);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().registerRemoteAnimations(token, definition);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void registerRemoteAnimationForNextActivityStart(String packageName, RemoteAnimationAdapter adapter) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8049,19 +6832,19 @@ public interface IActivityTaskManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(145, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(145, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().registerRemoteAnimationForNextActivityStart(packageName, adapter);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().registerRemoteAnimationForNextActivityStart(packageName, adapter);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void registerRemoteAnimationsForDisplay(int displayId, RemoteAnimationDefinition definition) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8074,19 +6857,19 @@ public interface IActivityTaskManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(146, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(146, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().registerRemoteAnimationsForDisplay(displayId, definition);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().registerRemoteAnimationsForDisplay(displayId, definition);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void alwaysShowUnsupportedCompileSdkWarning(ComponentName activity) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8098,146 +6881,145 @@ public interface IActivityTaskManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(147, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(147, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().alwaysShowUnsupportedCompileSdkWarning(activity);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().alwaysShowUnsupportedCompileSdkWarning(activity);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void setVrThread(int tid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(tid);
-                    if (this.mRemote.transact(148, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(148, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setVrThread(tid);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setVrThread(tid);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void setPersistentVrThread(int tid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(tid);
-                    if (this.mRemote.transact(149, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(149, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setPersistentVrThread(tid);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setPersistentVrThread(tid);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void stopAppSwitches() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(150, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(150, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().stopAppSwitches();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().stopAppSwitches();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void resumeAppSwitches() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(151, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(151, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().resumeAppSwitches();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().resumeAppSwitches();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void setActivityController(IActivityController watcher, boolean imAMonkey) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(watcher != null ? watcher.asBinder() : null);
-                    _data.writeInt(imAMonkey);
-                    if (this.mRemote.transact(152, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(imAMonkey ? 1 : 0);
+                    boolean _status = this.mRemote.transact(152, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setActivityController(watcher, imAMonkey);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setActivityController(watcher, imAMonkey);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void setVoiceKeepAwake(IVoiceInteractionSession session, boolean keepAwake) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(session != null ? session.asBinder() : null);
-                    _data.writeInt(keepAwake);
-                    if (this.mRemote.transact(153, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(keepAwake ? 1 : 0);
+                    boolean _status = this.mRemote.transact(153, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setVoiceKeepAwake(session, keepAwake);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setVoiceKeepAwake(session, keepAwake);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public int getPackageScreenCompatMode(String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(packageName);
-                    if (!this.mRemote.transact(154, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(154, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPackageScreenCompatMode(packageName);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -8245,6 +7027,7 @@ public interface IActivityTaskManager extends IInterface {
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void setPackageScreenCompatMode(String packageName, int mode) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8252,120 +7035,116 @@ public interface IActivityTaskManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(packageName);
                     _data.writeInt(mode);
-                    if (this.mRemote.transact(155, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(155, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setPackageScreenCompatMode(packageName, mode);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setPackageScreenCompatMode(packageName, mode);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public boolean getPackageAskScreenCompat(String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(packageName);
-                    boolean z = false;
-                    if (!this.mRemote.transact(156, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(156, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPackageAskScreenCompat(packageName);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void setPackageAskScreenCompat(String packageName, boolean ask) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(packageName);
-                    _data.writeInt(ask);
-                    if (this.mRemote.transact(157, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(ask ? 1 : 0);
+                    boolean _status = this.mRemote.transact(157, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setPackageAskScreenCompat(packageName, ask);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setPackageAskScreenCompat(packageName, ask);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void clearLaunchParamsForPackages(List<String> packageNames) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStringList(packageNames);
-                    if (this.mRemote.transact(158, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(158, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().clearLaunchParamsForPackages(packageNames);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().clearLaunchParamsForPackages(packageNames);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void setDisplayToSingleTaskInstance(int displayId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(displayId);
-                    if (this.mRemote.transact(159, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(159, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setDisplayToSingleTaskInstance(displayId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setDisplayToSingleTaskInstance(displayId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void restartActivityProcessIfVisible(IBinder activityToken) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(activityToken);
-                    if (this.mRemote.transact(160, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(160, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().restartActivityProcessIfVisible(activityToken);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().restartActivityProcessIfVisible(activityToken);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityTaskManager
             public void onBackPressedOnTaskRoot(IBinder activityToken, IRequestFinishCallback callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8373,13 +7152,12 @@ public interface IActivityTaskManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(activityToken);
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                    if (this.mRemote.transact(161, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(161, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().onBackPressedOnTaskRoot(activityToken, callback);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().onBackPressedOnTaskRoot(activityToken, callback);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -8388,11 +7166,11 @@ public interface IActivityTaskManager extends IInterface {
         }
 
         public static boolean setDefaultImpl(IActivityTaskManager impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IActivityTaskManager getDefaultImpl() {

@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.Arrays;
 
+/* loaded from: classes4.dex */
 public class LineBreakBufferedWriter extends PrintWriter {
     private char[] buffer;
     private int bufferIndex;
@@ -11,30 +12,32 @@ public class LineBreakBufferedWriter extends PrintWriter {
     private int lastNewline;
     private final String lineSeparator;
 
-    public LineBreakBufferedWriter(Writer out, int bufferSize2) {
-        this(out, bufferSize2, 16);
+    public LineBreakBufferedWriter(Writer out, int bufferSize) {
+        this(out, bufferSize, 16);
     }
 
-    public LineBreakBufferedWriter(Writer out, int bufferSize2, int initialCapacity) {
+    public LineBreakBufferedWriter(Writer out, int bufferSize, int initialCapacity) {
         super(out);
         this.lastNewline = -1;
-        this.buffer = new char[Math.min(initialCapacity, bufferSize2)];
+        this.buffer = new char[Math.min(initialCapacity, bufferSize)];
         this.bufferIndex = 0;
-        this.bufferSize = bufferSize2;
+        this.bufferSize = bufferSize;
         this.lineSeparator = System.getProperty("line.separator");
     }
 
+    @Override // java.io.PrintWriter, java.io.Writer, java.io.Flushable
     public void flush() {
         writeBuffer(this.bufferIndex);
         this.bufferIndex = 0;
         super.flush();
     }
 
+    @Override // java.io.PrintWriter, java.io.Writer
     public void write(int c) {
         if (this.bufferIndex < this.buffer.length) {
             this.buffer[this.bufferIndex] = (char) c;
             this.bufferIndex++;
-            if (((char) c) == 10) {
+            if (((char) c) == '\n') {
                 this.lastNewline = this.bufferIndex;
                 return;
             }
@@ -43,90 +46,97 @@ public class LineBreakBufferedWriter extends PrintWriter {
         write(new char[]{(char) c}, 0, 1);
     }
 
+    @Override // java.io.PrintWriter
     public void println() {
         write(this.lineSeparator);
     }
 
+    @Override // java.io.PrintWriter, java.io.Writer
     public void write(char[] buf, int off, int len) {
         while (this.bufferIndex + len > this.bufferSize) {
             int maxLength = this.bufferSize - this.bufferIndex;
             int nextNewLine = -1;
-            for (int i = 0; i < maxLength; i++) {
-                if (buf[off + i] == 10) {
-                    if (this.bufferIndex + i >= this.bufferSize) {
+            for (int nextNewLine2 = 0; nextNewLine2 < maxLength; nextNewLine2++) {
+                if (buf[off + nextNewLine2] == '\n') {
+                    if (this.bufferIndex + nextNewLine2 >= this.bufferSize) {
                         break;
                     }
-                    nextNewLine = i;
+                    nextNewLine = nextNewLine2;
                 }
             }
-            if (nextNewLine != -1) {
+            if (nextNewLine == -1) {
+                if (this.lastNewline != -1) {
+                    writeBuffer(this.lastNewline);
+                    removeFromBuffer(this.lastNewline + 1);
+                    this.lastNewline = -1;
+                } else {
+                    int rest = this.bufferSize - this.bufferIndex;
+                    appendToBuffer(buf, off, rest);
+                    writeBuffer(this.bufferIndex);
+                    this.bufferIndex = 0;
+                    off += rest;
+                    len -= rest;
+                }
+            } else {
                 appendToBuffer(buf, off, nextNewLine);
                 writeBuffer(this.bufferIndex);
                 this.bufferIndex = 0;
                 this.lastNewline = -1;
                 off += nextNewLine + 1;
                 len -= nextNewLine + 1;
-            } else if (this.lastNewline != -1) {
-                writeBuffer(this.lastNewline);
-                removeFromBuffer(this.lastNewline + 1);
-                this.lastNewline = -1;
-            } else {
-                int rest = this.bufferSize - this.bufferIndex;
-                appendToBuffer(buf, off, rest);
-                writeBuffer(this.bufferIndex);
-                this.bufferIndex = 0;
-                off += rest;
-                len -= rest;
             }
         }
         if (len > 0) {
             appendToBuffer(buf, off, len);
-            for (int i2 = len - 1; i2 >= 0; i2--) {
-                if (buf[off + i2] == 10) {
-                    this.lastNewline = (this.bufferIndex - len) + i2;
+            for (int i = len - 1; i >= 0; i--) {
+                if (buf[off + i] == '\n') {
+                    this.lastNewline = (this.bufferIndex - len) + i;
                     return;
                 }
             }
         }
     }
 
+    @Override // java.io.PrintWriter, java.io.Writer
     public void write(String s, int off, int len) {
         while (this.bufferIndex + len > this.bufferSize) {
             int maxLength = this.bufferSize - this.bufferIndex;
             int nextNewLine = -1;
-            for (int i = 0; i < maxLength; i++) {
-                if (s.charAt(off + i) == 10) {
-                    if (this.bufferIndex + i >= this.bufferSize) {
+            for (int nextNewLine2 = 0; nextNewLine2 < maxLength; nextNewLine2++) {
+                if (s.charAt(off + nextNewLine2) == '\n') {
+                    if (this.bufferIndex + nextNewLine2 >= this.bufferSize) {
                         break;
                     }
-                    nextNewLine = i;
+                    nextNewLine = nextNewLine2;
                 }
             }
-            if (nextNewLine != -1) {
+            if (nextNewLine == -1) {
+                if (this.lastNewline != -1) {
+                    writeBuffer(this.lastNewline);
+                    removeFromBuffer(this.lastNewline + 1);
+                    this.lastNewline = -1;
+                } else {
+                    int rest = this.bufferSize - this.bufferIndex;
+                    appendToBuffer(s, off, rest);
+                    writeBuffer(this.bufferIndex);
+                    this.bufferIndex = 0;
+                    off += rest;
+                    len -= rest;
+                }
+            } else {
                 appendToBuffer(s, off, nextNewLine);
                 writeBuffer(this.bufferIndex);
                 this.bufferIndex = 0;
                 this.lastNewline = -1;
                 off += nextNewLine + 1;
                 len -= nextNewLine + 1;
-            } else if (this.lastNewline != -1) {
-                writeBuffer(this.lastNewline);
-                removeFromBuffer(this.lastNewline + 1);
-                this.lastNewline = -1;
-            } else {
-                int rest = this.bufferSize - this.bufferIndex;
-                appendToBuffer(s, off, rest);
-                writeBuffer(this.bufferIndex);
-                this.bufferIndex = 0;
-                off += rest;
-                len -= rest;
             }
         }
         if (len > 0) {
             appendToBuffer(s, off, len);
-            for (int i2 = len - 1; i2 >= 0; i2--) {
-                if (s.charAt(off + i2) == 10) {
-                    this.lastNewline = (this.bufferIndex - len) + i2;
+            for (int i = len - 1; i >= 0; i--) {
+                if (s.charAt(off + i) == '\n') {
+                    this.lastNewline = (this.bufferIndex - len) + i;
                     return;
                 }
             }

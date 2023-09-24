@@ -1,11 +1,12 @@
 package android.nfc;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes3.dex */
 public interface IAppCallback extends IInterface {
     BeamShareData createBeamShareData(byte b) throws RemoteException;
 
@@ -13,22 +14,28 @@ public interface IAppCallback extends IInterface {
 
     void onTagDiscovered(Tag tag) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements IAppCallback {
+        @Override // android.nfc.IAppCallback
         public BeamShareData createBeamShareData(byte peerLlcpVersion) throws RemoteException {
             return null;
         }
 
+        @Override // android.nfc.IAppCallback
         public void onNdefPushComplete(byte peerLlcpVersion) throws RemoteException {
         }
 
+        @Override // android.nfc.IAppCallback
         public void onTagDiscovered(Tag tag) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements IAppCallback {
         private static final String DESCRIPTOR = "android.nfc.IAppCallback";
         static final int TRANSACTION_createBeamShareData = 1;
@@ -44,12 +51,13 @@ public interface IAppCallback extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IAppCallback)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IAppCallback)) {
+                return (IAppCallback) iin;
             }
-            return (IAppCallback) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -67,47 +75,51 @@ public interface IAppCallback extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
             Tag _arg0;
-            if (code != 1598968902) {
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        BeamShareData _result = createBeamShareData(data.readByte());
-                        reply.writeNoException();
-                        if (_result != null) {
-                            reply.writeInt(1);
-                            _result.writeToParcel(reply, 1);
-                        } else {
-                            reply.writeInt(0);
-                        }
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        onNdefPushComplete(data.readByte());
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = Tag.CREATOR.createFromParcel(data);
-                        } else {
-                            _arg0 = null;
-                        }
-                        onTagDiscovered(_arg0);
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    byte _arg02 = data.readByte();
+                    BeamShareData _result = createBeamShareData(_arg02);
+                    reply.writeNoException();
+                    if (_result != null) {
+                        reply.writeInt(1);
+                        _result.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    byte _arg03 = data.readByte();
+                    onNdefPushComplete(_arg03);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg0 = Tag.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg0 = null;
+                    }
+                    onTagDiscovered(_arg0);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements IAppCallback {
             public static IAppCallback sDefaultImpl;
             private IBinder mRemote;
@@ -116,6 +128,7 @@ public interface IAppCallback extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -124,6 +137,7 @@ public interface IAppCallback extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.nfc.IAppCallback
             public BeamShareData createBeamShareData(byte peerLlcpVersion) throws RemoteException {
                 BeamShareData _result;
                 Parcel _data = Parcel.obtain();
@@ -131,7 +145,8 @@ public interface IAppCallback extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeByte(peerLlcpVersion);
-                    if (!this.mRemote.transact(1, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().createBeamShareData(peerLlcpVersion);
                     }
                     _reply.readException();
@@ -140,24 +155,21 @@ public interface IAppCallback extends IInterface {
                     } else {
                         _result = null;
                     }
-                    BeamShareData _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.nfc.IAppCallback
             public void onNdefPushComplete(byte peerLlcpVersion) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeByte(peerLlcpVersion);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onNdefPushComplete(peerLlcpVersion);
                     }
                 } finally {
@@ -165,6 +177,7 @@ public interface IAppCallback extends IInterface {
                 }
             }
 
+            @Override // android.nfc.IAppCallback
             public void onTagDiscovered(Tag tag) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -175,9 +188,8 @@ public interface IAppCallback extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onTagDiscovered(tag);
                     }
                 } finally {
@@ -187,11 +199,11 @@ public interface IAppCallback extends IInterface {
         }
 
         public static boolean setDefaultImpl(IAppCallback impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IAppCallback getDefaultImpl() {

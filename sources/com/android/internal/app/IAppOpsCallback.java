@@ -1,23 +1,28 @@
 package com.android.internal.app;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes4.dex */
 public interface IAppOpsCallback extends IInterface {
     void opChanged(int i, int i2, String str) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IAppOpsCallback {
+        @Override // com.android.internal.app.IAppOpsCallback
         public void opChanged(int op, int uid, String packageName) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IAppOpsCallback {
         private static final String DESCRIPTOR = "com.android.internal.app.IAppOpsCallback";
         static final int TRANSACTION_opChanged = 1;
@@ -31,40 +36,47 @@ public interface IAppOpsCallback extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IAppOpsCallback)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IAppOpsCallback)) {
+                return (IAppOpsCallback) iin;
             }
-            return (IAppOpsCallback) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
 
         public static String getDefaultTransactionName(int transactionCode) {
-            if (transactionCode != 1) {
-                return null;
+            if (transactionCode == 1) {
+                return "opChanged";
             }
-            return "opChanged";
+            return null;
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code == 1) {
-                data.enforceInterface(DESCRIPTOR);
-                opChanged(data.readInt(), data.readInt(), data.readString());
-                return true;
-            } else if (code != 1598968902) {
+            if (code != 1) {
+                if (code == 1598968902) {
+                    reply.writeString(DESCRIPTOR);
+                    return true;
+                }
                 return super.onTransact(code, data, reply, flags);
-            } else {
-                reply.writeString(DESCRIPTOR);
-                return true;
             }
+            data.enforceInterface(DESCRIPTOR);
+            int _arg0 = data.readInt();
+            int _arg1 = data.readInt();
+            String _arg2 = data.readString();
+            opChanged(_arg0, _arg1, _arg2);
+            return true;
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IAppOpsCallback {
             public static IAppOpsCallback sDefaultImpl;
             private IBinder mRemote;
@@ -73,6 +85,7 @@ public interface IAppOpsCallback extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -81,6 +94,7 @@ public interface IAppOpsCallback extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // com.android.internal.app.IAppOpsCallback
             public void opChanged(int op, int uid, String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -88,9 +102,8 @@ public interface IAppOpsCallback extends IInterface {
                     _data.writeInt(op);
                     _data.writeInt(uid);
                     _data.writeString(packageName);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().opChanged(op, uid, packageName);
                     }
                 } finally {
@@ -100,11 +113,11 @@ public interface IAppOpsCallback extends IInterface {
         }
 
         public static boolean setDefaultImpl(IAppOpsCallback impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IAppOpsCallback getDefaultImpl() {

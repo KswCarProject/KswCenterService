@@ -2,15 +2,14 @@ package android.view;
 
 import android.annotation.UnsupportedAppUsage;
 import android.content.res.CompatibilityInfo;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.ColorSpace;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.hardware.display.DisplayManagerGlobal;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.SystemClock;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.SystemClock;
 import android.util.DisplayMetrics;
 import com.android.internal.telephony.IccCardConstants;
 import com.ibm.icu.text.PluralRules;
@@ -18,6 +17,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Arrays;
 
+/* loaded from: classes4.dex */
 public final class Display {
     private static final int CACHED_APP_SIZE_DURATION_MILLIS = 20;
     public static final int COLOR_MODE_ADOBE_RGB = 8;
@@ -81,11 +81,11 @@ public final class Display {
     private final int mType;
 
     public Display(DisplayManagerGlobal global, int displayId, DisplayInfo displayInfo, DisplayAdjustments daj) {
-        this(global, displayId, displayInfo, daj, (Resources) null);
+        this(global, displayId, displayInfo, daj, null);
     }
 
     public Display(DisplayManagerGlobal global, int displayId, DisplayInfo displayInfo, Resources res) {
-        this(global, displayId, displayInfo, (DisplayAdjustments) null, res);
+        this(global, displayId, displayInfo, null, res);
     }
 
     private Display(DisplayManagerGlobal global, int displayId, DisplayInfo displayInfo, DisplayAdjustments daj, Resources res) {
@@ -189,8 +189,8 @@ public final class Display {
         synchronized (this) {
             updateDisplayInfoLocked();
             this.mDisplayInfo.getAppMetrics(this.mTempMetrics, getDisplayAdjustments());
-            outSize.x = this.mTempMetrics.widthPixels;
-            outSize.y = this.mTempMetrics.heightPixels;
+            outSize.f59x = this.mTempMetrics.widthPixels;
+            outSize.f60y = this.mTempMetrics.heightPixels;
         }
     }
 
@@ -205,10 +205,10 @@ public final class Display {
     public void getCurrentSizeRange(Point outSmallestSize, Point outLargestSize) {
         synchronized (this) {
             updateDisplayInfoLocked();
-            outSmallestSize.x = this.mDisplayInfo.smallestNominalAppWidth;
-            outSmallestSize.y = this.mDisplayInfo.smallestNominalAppHeight;
-            outLargestSize.x = this.mDisplayInfo.largestNominalAppWidth;
-            outLargestSize.y = this.mDisplayInfo.largestNominalAppHeight;
+            outSmallestSize.f59x = this.mDisplayInfo.smallestNominalAppWidth;
+            outSmallestSize.f60y = this.mDisplayInfo.smallestNominalAppHeight;
+            outLargestSize.f59x = this.mDisplayInfo.largestNominalAppWidth;
+            outLargestSize.f60y = this.mDisplayInfo.largestNominalAppHeight;
         }
     }
 
@@ -362,11 +362,10 @@ public final class Display {
     public ColorSpace getPreferredWideGamutColorSpace() {
         synchronized (this) {
             updateDisplayInfoLocked();
-            if (!this.mDisplayInfo.isWideColorGamut()) {
-                return null;
+            if (this.mDisplayInfo.isWideColorGamut()) {
+                return this.mGlobal.getPreferredWideGamutColorSpace();
             }
-            ColorSpace preferredWideGamutColorSpace = this.mGlobal.getPreferredWideGamutColorSpace();
-            return preferredWideGamutColorSpace;
+            return null;
         }
     }
 
@@ -408,15 +407,15 @@ public final class Display {
     public void getRealSize(Point outSize) {
         synchronized (this) {
             updateDisplayInfoLocked();
-            outSize.x = this.mDisplayInfo.logicalWidth;
-            outSize.y = this.mDisplayInfo.logicalHeight;
+            outSize.f59x = this.mDisplayInfo.logicalWidth;
+            outSize.f60y = this.mDisplayInfo.logicalHeight;
         }
     }
 
     public void getRealMetrics(DisplayMetrics outMetrics) {
         synchronized (this) {
             updateDisplayInfoLocked();
-            this.mDisplayInfo.getLogicalMetrics(outMetrics, CompatibilityInfo.DEFAULT_COMPATIBILITY_INFO, (Configuration) null);
+            this.mDisplayInfo.getLogicalMetrics(outMetrics, CompatibilityInfo.DEFAULT_COMPATIBILITY_INFO, null);
         }
     }
 
@@ -443,13 +442,16 @@ public final class Display {
 
     private void updateDisplayInfoLocked() {
         DisplayInfo newInfo = this.mGlobal.getDisplayInfo(this.mDisplayId);
-        if (newInfo != null) {
-            this.mDisplayInfo = newInfo;
-            if (!this.mIsValid) {
-                this.mIsValid = true;
+        if (newInfo == null) {
+            if (this.mIsValid) {
+                this.mIsValid = false;
+                return;
             }
-        } else if (this.mIsValid) {
-            this.mIsValid = false;
+            return;
+        }
+        this.mDisplayInfo = newInfo;
+        if (!this.mIsValid) {
+            this.mIsValid = true;
         }
     }
 
@@ -522,21 +524,26 @@ public final class Display {
         return state == 3 || state == 4;
     }
 
+    /* loaded from: classes4.dex */
     public static final class Mode implements Parcelable {
-        public static final Parcelable.Creator<Mode> CREATOR = new Parcelable.Creator<Mode>() {
-            public Mode createFromParcel(Parcel in) {
-                return new Mode(in);
-            }
-
-            public Mode[] newArray(int size) {
-                return new Mode[size];
-            }
-        };
-        public static final Mode[] EMPTY_ARRAY = new Mode[0];
         private final int mHeight;
         private final int mModeId;
         private final float mRefreshRate;
         private final int mWidth;
+        public static final Mode[] EMPTY_ARRAY = new Mode[0];
+        public static final Parcelable.Creator<Mode> CREATOR = new Parcelable.Creator<Mode>() { // from class: android.view.Display.Mode.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
+            public Mode createFromParcel(Parcel in) {
+                return new Mode(in);
+            }
+
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
+            public Mode[] newArray(int size) {
+                return new Mode[size];
+            }
+        };
 
         @UnsupportedAppUsage
         public Mode(int modeId, int width, int height, float refreshRate) {
@@ -570,24 +577,23 @@ public final class Display {
             if (this == other) {
                 return true;
             }
-            if (!(other instanceof Mode)) {
-                return false;
+            if (other instanceof Mode) {
+                Mode that = (Mode) other;
+                return this.mModeId == that.mModeId && matches(that.mWidth, that.mHeight, that.mRefreshRate);
             }
-            Mode that = (Mode) other;
-            if (this.mModeId != that.mModeId || !matches(that.mWidth, that.mHeight, that.mRefreshRate)) {
-                return false;
-            }
-            return true;
+            return false;
         }
 
         public int hashCode() {
-            return (((((((1 * 17) + this.mModeId) * 17) + this.mWidth) * 17) + this.mHeight) * 17) + Float.floatToIntBits(this.mRefreshRate);
+            int hash = (1 * 17) + this.mModeId;
+            return (((((hash * 17) + this.mWidth) * 17) + this.mHeight) * 17) + Float.floatToIntBits(this.mRefreshRate);
         }
 
         public String toString() {
-            return "{" + "id=" + this.mModeId + ", width=" + this.mWidth + ", height=" + this.mHeight + ", fps=" + this.mRefreshRate + "}";
+            return "{id=" + this.mModeId + ", width=" + this.mWidth + ", height=" + this.mHeight + ", fps=" + this.mRefreshRate + "}";
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
@@ -596,6 +602,7 @@ public final class Display {
             this(in.readInt(), in.readInt(), in.readInt(), in.readFloat());
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel out, int parcelableFlags) {
             out.writeInt(this.mModeId);
             out.writeInt(this.mWidth);
@@ -604,12 +611,17 @@ public final class Display {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class HdrCapabilities implements Parcelable {
-        public static final Parcelable.Creator<HdrCapabilities> CREATOR = new Parcelable.Creator<HdrCapabilities>() {
+        public static final Parcelable.Creator<HdrCapabilities> CREATOR = new Parcelable.Creator<HdrCapabilities>() { // from class: android.view.Display.HdrCapabilities.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public HdrCapabilities createFromParcel(Parcel source) {
                 return new HdrCapabilities(source);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public HdrCapabilities[] newArray(int size) {
                 return new HdrCapabilities[size];
             }
@@ -625,6 +637,7 @@ public final class Display {
         private int[] mSupportedHdrTypes;
 
         @Retention(RetentionPolicy.SOURCE)
+        /* loaded from: classes4.dex */
         public @interface HdrType {
         }
 
@@ -667,18 +680,16 @@ public final class Display {
             if (this == other) {
                 return true;
             }
-            if (!(other instanceof HdrCapabilities)) {
-                return false;
-            }
-            HdrCapabilities that = (HdrCapabilities) other;
-            if (Arrays.equals(this.mSupportedHdrTypes, that.mSupportedHdrTypes) && this.mMaxLuminance == that.mMaxLuminance && this.mMaxAverageLuminance == that.mMaxAverageLuminance && this.mMinLuminance == that.mMinLuminance) {
-                return true;
+            if (other instanceof HdrCapabilities) {
+                HdrCapabilities that = (HdrCapabilities) other;
+                return Arrays.equals(this.mSupportedHdrTypes, that.mSupportedHdrTypes) && this.mMaxLuminance == that.mMaxLuminance && this.mMaxAverageLuminance == that.mMaxAverageLuminance && this.mMinLuminance == that.mMinLuminance;
             }
             return false;
         }
 
         public int hashCode() {
-            return (((((((23 * 17) + Arrays.hashCode(this.mSupportedHdrTypes)) * 17) + Float.floatToIntBits(this.mMaxLuminance)) * 17) + Float.floatToIntBits(this.mMaxAverageLuminance)) * 17) + Float.floatToIntBits(this.mMinLuminance);
+            int hash = (23 * 17) + Arrays.hashCode(this.mSupportedHdrTypes);
+            return (((((hash * 17) + Float.floatToIntBits(this.mMaxLuminance)) * 17) + Float.floatToIntBits(this.mMaxAverageLuminance)) * 17) + Float.floatToIntBits(this.mMinLuminance);
         }
 
         private HdrCapabilities(Parcel source) {
@@ -700,16 +711,18 @@ public final class Display {
             this.mMinLuminance = source.readFloat();
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeInt(this.mSupportedHdrTypes.length);
-            for (int writeInt : this.mSupportedHdrTypes) {
-                dest.writeInt(writeInt);
+            for (int i = 0; i < this.mSupportedHdrTypes.length; i++) {
+                dest.writeInt(this.mSupportedHdrTypes[i]);
             }
             dest.writeFloat(this.mMaxLuminance);
             dest.writeFloat(this.mMaxAverageLuminance);
             dest.writeFloat(this.mMinLuminance);
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }

@@ -1,15 +1,20 @@
 package android.bluetooth;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.provider.SettingsStringUtil;
 
+/* loaded from: classes.dex */
 public final class BluetoothMasInstance implements Parcelable {
-    public static final Parcelable.Creator<BluetoothMasInstance> CREATOR = new Parcelable.Creator<BluetoothMasInstance>() {
+    public static final Parcelable.Creator<BluetoothMasInstance> CREATOR = new Parcelable.Creator<BluetoothMasInstance>() { // from class: android.bluetooth.BluetoothMasInstance.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public BluetoothMasInstance createFromParcel(Parcel in) {
             return new BluetoothMasInstance(in.readInt(), in.readString(), in.readInt(), in.readInt());
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public BluetoothMasInstance[] newArray(int size) {
             return new BluetoothMasInstance[size];
         }
@@ -19,6 +24,7 @@ public final class BluetoothMasInstance implements Parcelable {
     private final int mMsgTypes;
     private final String mName;
 
+    /* loaded from: classes.dex */
     public static final class MessageType {
         public static final int EMAIL = 1;
         public static final int MMS = 8;
@@ -34,10 +40,7 @@ public final class BluetoothMasInstance implements Parcelable {
     }
 
     public boolean equals(Object o) {
-        if (!(o instanceof BluetoothMasInstance) || this.mId != ((BluetoothMasInstance) o).mId) {
-            return false;
-        }
-        return true;
+        return (o instanceof BluetoothMasInstance) && this.mId == ((BluetoothMasInstance) o).mId;
     }
 
     public int hashCode() {
@@ -48,10 +51,12 @@ public final class BluetoothMasInstance implements Parcelable {
         return Integer.toString(this.mId) + SettingsStringUtil.DELIMITER + this.mName + SettingsStringUtil.DELIMITER + this.mChannel + SettingsStringUtil.DELIMITER + Integer.toHexString(this.mMsgTypes);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(this.mId);
         out.writeString(this.mName);

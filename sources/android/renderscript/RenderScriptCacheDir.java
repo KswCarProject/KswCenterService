@@ -3,6 +3,7 @@ package android.renderscript;
 import android.annotation.UnsupportedAppUsage;
 import java.io.File;
 
+/* loaded from: classes3.dex */
 public class RenderScriptCacheDir {
     @UnsupportedAppUsage
     static File mCacheDir;

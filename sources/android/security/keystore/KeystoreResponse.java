@@ -1,14 +1,21 @@
 package android.security.keystore;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes3.dex */
 public class KeystoreResponse implements Parcelable {
-    public static final Parcelable.Creator<KeystoreResponse> CREATOR = new Parcelable.Creator<KeystoreResponse>() {
+    public static final Parcelable.Creator<KeystoreResponse> CREATOR = new Parcelable.Creator<KeystoreResponse>() { // from class: android.security.keystore.KeystoreResponse.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public KeystoreResponse createFromParcel(Parcel in) {
-            return new KeystoreResponse(in.readInt(), in.readString());
+            int error_code = in.readInt();
+            String error_msg = in.readString();
+            return new KeystoreResponse(error_code, error_msg);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public KeystoreResponse[] newArray(int size) {
             return new KeystoreResponse[size];
         }
@@ -29,10 +36,12 @@ public class KeystoreResponse implements Parcelable {
         return this.error_msg_;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(this.error_code_);
         out.writeString(this.error_msg_);

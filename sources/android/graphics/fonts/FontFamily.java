@@ -1,24 +1,29 @@
 package android.graphics.fonts;
 
 import com.android.internal.util.Preconditions;
+import dalvik.annotation.optimization.CriticalNative;
 import java.util.ArrayList;
 import java.util.HashSet;
 import libcore.util.NativeAllocationRegistry;
 
+/* loaded from: classes.dex */
 public final class FontFamily {
     private static final String TAG = "FontFamily";
     private final ArrayList<Font> mFonts;
     private final long mNativePtr;
 
+    /* loaded from: classes.dex */
     public static final class Builder {
         private static final NativeAllocationRegistry sFamilyRegistory = NativeAllocationRegistry.createMalloced(FontFamily.class.getClassLoader(), nGetReleaseNativeFamily());
         private final ArrayList<Font> mFonts = new ArrayList<>();
         private final HashSet<Integer> mStyleHashSet = new HashSet<>();
 
+        @CriticalNative
         private static native void nAddFont(long j, long j2);
 
         private static native long nBuild(long j, String str, int i, boolean z);
 
+        @CriticalNative
         private static native long nGetReleaseNativeFamily();
 
         private static native long nInitBuilder();
@@ -31,11 +36,11 @@ public final class FontFamily {
 
         public Builder addFont(Font font) {
             Preconditions.checkNotNull(font, "font can not be null");
-            if (this.mStyleHashSet.add(Integer.valueOf(makeStyleIdentifier(font)))) {
-                this.mFonts.add(font);
-                return this;
+            if (!this.mStyleHashSet.add(Integer.valueOf(makeStyleIdentifier(font)))) {
+                throw new IllegalArgumentException(font + " has already been added");
             }
-            throw new IllegalArgumentException(font + " has already been added");
+            this.mFonts.add(font);
+            return this;
         }
 
         public FontFamily build() {

@@ -12,8 +12,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.IContentProvider;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
+import android.content.p002pm.PackageManager;
+import android.content.p002pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -21,11 +21,14 @@ import android.database.SQLException;
 import android.media.AudioFormat;
 import android.net.Uri;
 import android.net.wifi.WifiEnterpriseConfig;
-import android.os.Bundle;
-import android.os.LocaleList;
-import android.os.Process;
-import android.os.RemoteException;
-import android.os.ServiceManager;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.LocaleList;
+import android.p007os.Process;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
+import android.p007os.UserHandle;
+import android.provider.Settings;
 import android.provider.SettingsValidators;
 import android.telephony.SmsManager;
 import android.text.TextUtils;
@@ -49,6 +52,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+/* loaded from: classes3.dex */
 public final class Settings {
     @SystemApi
     public static final String ACTION_ACCESSIBILITY_DETAILS_SETTINGS = "android.settings.ACCESSIBILITY_DETAILS_SETTINGS";
@@ -223,9 +227,6 @@ public final class Settings {
     private static final String JID_RESOURCE_PREFIX = "android";
     private static final boolean LOCAL_LOGV = false;
     public static final String METADATA_USAGE_ACCESS_REASON = "android.settings.metadata.USAGE_ACCESS_REASON";
-    private static final String[] PM_CHANGE_NETWORK_STATE = {Manifest.permission.CHANGE_NETWORK_STATE, Manifest.permission.WRITE_SETTINGS};
-    private static final String[] PM_SYSTEM_ALERT_WINDOW = {Manifest.permission.SYSTEM_ALERT_WINDOW};
-    private static final String[] PM_WRITE_SETTINGS = {Manifest.permission.WRITE_SETTINGS};
     public static final int RESET_MODE_PACKAGE_DEFAULTS = 1;
     public static final int RESET_MODE_TRUSTED_DEFAULTS = 4;
     public static final int RESET_MODE_UNTRUSTED_CHANGES = 3;
@@ -236,12 +237,17 @@ public final class Settings {
     private static final Object mLocationSettingsLock = new Object();
     private static boolean sInSystemServer = false;
     private static final Object sInSystemServerLock = new Object();
+    private static final String[] PM_WRITE_SETTINGS = {Manifest.C0000permission.WRITE_SETTINGS};
+    private static final String[] PM_CHANGE_NETWORK_STATE = {Manifest.C0000permission.CHANGE_NETWORK_STATE, Manifest.C0000permission.WRITE_SETTINGS};
+    private static final String[] PM_SYSTEM_ALERT_WINDOW = {Manifest.C0000permission.SYSTEM_ALERT_WINDOW};
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface EnableMmsDataReason {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface ResetMode {
     }
 
@@ -259,12 +265,14 @@ public final class Settings {
         return z;
     }
 
+    /* loaded from: classes3.dex */
     public static class SettingNotFoundException extends AndroidException {
         public SettingNotFoundException(String msg) {
             super(msg);
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class NameValueTable implements BaseColumns {
         public static final String NAME = "name";
         public static final String VALUE = "value";
@@ -277,7 +285,7 @@ public final class Settings {
                 resolver.insert(uri, values);
                 return true;
             } catch (SQLException e) {
-                Log.w(Settings.TAG, "Can't set key " + name + " in " + uri, e);
+                Log.m63w(Settings.TAG, "Can't set key " + name + " in " + uri, e);
                 return false;
             }
         }
@@ -287,6 +295,7 @@ public final class Settings {
         }
     }
 
+    /* loaded from: classes3.dex */
     private static final class GenerationTracker {
         private final MemoryIntArray mArray;
         private int mCurrentGeneration;
@@ -302,13 +311,13 @@ public final class Settings {
 
         public boolean isGenerationChanged() {
             int currentGeneration = readCurrentGeneration();
-            if (currentGeneration < 0) {
+            if (currentGeneration >= 0) {
+                if (currentGeneration == this.mCurrentGeneration) {
+                    return false;
+                }
+                this.mCurrentGeneration = currentGeneration;
                 return true;
             }
-            if (currentGeneration == this.mCurrentGeneration) {
-                return false;
-            }
-            this.mCurrentGeneration = currentGeneration;
             return true;
         }
 
@@ -320,11 +329,11 @@ public final class Settings {
             try {
                 return this.mArray.get(this.mIndex);
             } catch (IOException e) {
-                Log.e(Settings.TAG, "Error getting current generation", e);
-                if (this.mErrorHandler == null) {
+                Log.m69e(Settings.TAG, "Error getting current generation", e);
+                if (this.mErrorHandler != null) {
+                    this.mErrorHandler.run();
                     return -1;
                 }
-                this.mErrorHandler.run();
                 return -1;
             }
         }
@@ -333,7 +342,7 @@ public final class Settings {
             try {
                 this.mArray.close();
             } catch (IOException e) {
-                Log.e(Settings.TAG, "Error closing backing array", e);
+                Log.m69e(Settings.TAG, "Error closing backing array", e);
                 if (this.mErrorHandler != null) {
                     this.mErrorHandler.run();
                 }
@@ -341,14 +350,14 @@ public final class Settings {
         }
     }
 
+    /* loaded from: classes3.dex */
     private static final class ContentProviderHolder {
-        @GuardedBy({"mLock"})
         @UnsupportedAppUsage
+        @GuardedBy({"mLock"})
         private IContentProvider mContentProvider;
         private final Object mLock = new Object();
-        /* access modifiers changed from: private */
         @GuardedBy({"mLock"})
-        public final Uri mUri;
+        private final Uri mUri;
 
         public ContentProviderHolder(Uri uri) {
             this.mUri = uri;
@@ -372,6 +381,7 @@ public final class Settings {
         }
     }
 
+    /* loaded from: classes3.dex */
     private static class NameValueCache {
         private static final boolean DEBUG = false;
         private static final String NAME_EQ_PLACEHOLDER = "name=?";
@@ -403,402 +413,186 @@ public final class Settings {
                 if (makeDefault) {
                     arg.putBoolean(Settings.CALL_METHOD_MAKE_DEFAULT_KEY, true);
                 }
-                this.mProviderHolder.getProvider(cr).call(cr.getPackageName(), this.mProviderHolder.mUri.getAuthority(), this.mCallSetCommand, name, arg);
+                IContentProvider cp = this.mProviderHolder.getProvider(cr);
+                cp.call(cr.getPackageName(), this.mProviderHolder.mUri.getAuthority(), this.mCallSetCommand, name, arg);
                 return true;
             } catch (RemoteException e) {
-                Log.w(Settings.TAG, "Can't set key " + name + " in " + this.mUri, e);
+                Log.m63w(Settings.TAG, "Can't set key " + name + " in " + this.mUri, e);
                 return false;
             }
         }
 
-        /* JADX WARNING: Code restructure failed: missing block: B:50:0x008e, code lost:
-            if (android.provider.Settings.isInSystemServer() == false) goto L_0x00c5;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:52:0x0098, code lost:
-            if (android.os.Binder.getCallingUid() == android.os.Process.myUid()) goto L_0x00c5;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:54:0x009e, code lost:
-            r18 = android.os.Binder.clearCallingIdentity();
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:56:?, code lost:
-            r0 = r21.call(r24.getPackageName(), android.provider.Settings.ContentProviderHolder.access$000(r1.mProviderHolder).getAuthority(), r1.mCallGetCommand, r25, r16);
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:58:?, code lost:
-            android.os.Binder.restoreCallingIdentity(r18);
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:62:0x00c5, code lost:
-            r0 = r21.call(r24.getPackageName(), android.provider.Settings.ContentProviderHolder.access$000(r1.mProviderHolder).getAuthority(), r1.mCallGetCommand, r25, r16);
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:63:0x00df, code lost:
-            r2 = r0;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:64:0x00e0, code lost:
-            if (r2 == null) goto L_0x013f;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:65:0x00e2, code lost:
-            r3 = r2.getString("value");
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:66:0x00ea, code lost:
-            if (r12 == false) goto L_0x0135;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:67:0x00ec, code lost:
-            monitor-enter(r23);
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:68:0x00ed, code lost:
-            if (r17 == false) goto L_0x0120;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:71:?, code lost:
-            r0 = (android.util.MemoryIntArray) r2.getParcelable(android.provider.Settings.CALL_METHOD_TRACK_GENERATION_KEY);
-            r4 = r2.getInt(android.provider.Settings.CALL_METHOD_GENERATION_INDEX_KEY, -1);
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:72:0x00fe, code lost:
-            if (r0 == null) goto L_0x0120;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:73:0x0100, code lost:
-            if (r4 < 0) goto L_0x0120;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:74:0x0102, code lost:
-            r5 = r2.getInt(android.provider.Settings.CALL_METHOD_GENERATION_KEY, 0);
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:75:0x010a, code lost:
-            if (r1.mGenerationTracker == null) goto L_0x0111;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:76:0x010c, code lost:
-            r1.mGenerationTracker.destroy();
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:77:0x0111, code lost:
-            r1.mGenerationTracker = new android.provider.Settings.GenerationTracker(r0, r4, r5, new android.provider.$$Lambda$Settings$NameValueCache$qSyMM6rUAHCa5rsPatfAqR3sA(r1));
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:81:0x0122, code lost:
-            if (r1.mGenerationTracker == null) goto L_0x0131;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:83:0x012a, code lost:
-            if (r13 != r1.mGenerationTracker.getCurrentGeneration()) goto L_0x0131;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:84:0x012c, code lost:
-            r1.mValues.put(r8, r3);
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:85:0x0131, code lost:
-            monitor-exit(r23);
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:90:0x0135, code lost:
-            return r3;
-         */
-        /* JADX WARNING: Removed duplicated region for block: B:159:0x021b  */
-        @android.annotation.UnsupportedAppUsage
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public java.lang.String getStringForUser(android.content.ContentResolver r24, java.lang.String r25, int r26) {
-            /*
-                r23 = this;
-                r1 = r23
-                r8 = r25
-                r9 = r26
-                int r0 = android.os.UserHandle.myUserId()
-                r10 = 1
-                r11 = 0
-                if (r9 != r0) goto L_0x0010
-                r0 = r10
-                goto L_0x0011
-            L_0x0010:
-                r0 = r11
-            L_0x0011:
-                r12 = r0
-                r2 = -1
-                if (r12 == 0) goto L_0x004a
-                monitor-enter(r23)
-                android.provider.Settings$GenerationTracker r0 = r1.mGenerationTracker     // Catch:{ all -> 0x0047 }
-                if (r0 == 0) goto L_0x0045
-                android.provider.Settings$GenerationTracker r0 = r1.mGenerationTracker     // Catch:{ all -> 0x0047 }
-                boolean r0 = r0.isGenerationChanged()     // Catch:{ all -> 0x0047 }
-                if (r0 == 0) goto L_0x0028
-                java.util.HashMap<java.lang.String, java.lang.String> r0 = r1.mValues     // Catch:{ all -> 0x0047 }
-                r0.clear()     // Catch:{ all -> 0x0047 }
-                goto L_0x003a
-            L_0x0028:
-                java.util.HashMap<java.lang.String, java.lang.String> r0 = r1.mValues     // Catch:{ all -> 0x0047 }
-                boolean r0 = r0.containsKey(r8)     // Catch:{ all -> 0x0047 }
-                if (r0 == 0) goto L_0x003a
-                java.util.HashMap<java.lang.String, java.lang.String> r0 = r1.mValues     // Catch:{ all -> 0x0047 }
-                java.lang.Object r0 = r0.get(r8)     // Catch:{ all -> 0x0047 }
-                java.lang.String r0 = (java.lang.String) r0     // Catch:{ all -> 0x0047 }
-                monitor-exit(r23)     // Catch:{ all -> 0x0047 }
-                return r0
-            L_0x003a:
-                android.provider.Settings$GenerationTracker r0 = r1.mGenerationTracker     // Catch:{ all -> 0x0047 }
-                if (r0 == 0) goto L_0x0045
-                android.provider.Settings$GenerationTracker r0 = r1.mGenerationTracker     // Catch:{ all -> 0x0047 }
-                int r0 = r0.getCurrentGeneration()     // Catch:{ all -> 0x0047 }
-                r2 = r0
-            L_0x0045:
-                monitor-exit(r23)     // Catch:{ all -> 0x0047 }
-                goto L_0x004a
-            L_0x0047:
-                r0 = move-exception
-                monitor-exit(r23)     // Catch:{ all -> 0x0047 }
-                throw r0
-            L_0x004a:
-                r13 = r2
-                android.provider.Settings$ContentProviderHolder r0 = r1.mProviderHolder
-                r14 = r24
-                android.content.IContentProvider r21 = r0.getProvider(r14)
-                java.lang.String r0 = r1.mCallGetCommand
-                r15 = 0
-                if (r0 == 0) goto L_0x013f
-                r0 = 0
-                if (r12 != 0) goto L_0x006a
-                android.os.Bundle r2 = new android.os.Bundle     // Catch:{ RemoteException -> 0x0067 }
-                r2.<init>()     // Catch:{ RemoteException -> 0x0067 }
-                r0 = r2
-                java.lang.String r2 = "_user"
-                r0.putInt(r2, r9)     // Catch:{ RemoteException -> 0x0067 }
-                goto L_0x006a
-            L_0x0067:
-                r0 = move-exception
-                goto L_0x013e
-            L_0x006a:
-                r2 = r0
-                r3 = 0
-                monitor-enter(r23)     // Catch:{ RemoteException -> 0x0067 }
-                if (r12 == 0) goto L_0x0085
-                android.provider.Settings$GenerationTracker r0 = r1.mGenerationTracker     // Catch:{ all -> 0x0082 }
-                if (r0 != 0) goto L_0x0085
-                r3 = 1
-                if (r2 != 0) goto L_0x007c
-                android.os.Bundle r0 = new android.os.Bundle     // Catch:{ all -> 0x0082 }
-                r0.<init>()     // Catch:{ all -> 0x0082 }
-                r2 = r0
-            L_0x007c:
-                java.lang.String r0 = "_track_generation"
-                r2.putString(r0, r15)     // Catch:{ all -> 0x0082 }
-                goto L_0x0085
-            L_0x0082:
-                r0 = move-exception
-                goto L_0x013c
-            L_0x0085:
-                r16 = r2
-                r17 = r3
-                monitor-exit(r23)     // Catch:{ all -> 0x0137 }
-                boolean r0 = android.provider.Settings.isInSystemServer()     // Catch:{ RemoteException -> 0x0067 }
-                if (r0 == 0) goto L_0x00c5
-                int r0 = android.os.Binder.getCallingUid()     // Catch:{ RemoteException -> 0x0067 }
-                int r2 = android.os.Process.myUid()     // Catch:{ RemoteException -> 0x0067 }
-                if (r0 == r2) goto L_0x00c5
-                long r2 = android.os.Binder.clearCallingIdentity()     // Catch:{ RemoteException -> 0x0067 }
-                r18 = r2
-                java.lang.String r3 = r24.getPackageName()     // Catch:{ all -> 0x00c0 }
-                android.provider.Settings$ContentProviderHolder r0 = r1.mProviderHolder     // Catch:{ all -> 0x00c0 }
-                android.net.Uri r0 = r0.mUri     // Catch:{ all -> 0x00c0 }
-                java.lang.String r4 = r0.getAuthority()     // Catch:{ all -> 0x00c0 }
-                java.lang.String r5 = r1.mCallGetCommand     // Catch:{ all -> 0x00c0 }
-                r2 = r21
-                r6 = r25
-                r7 = r16
-                android.os.Bundle r0 = r2.call(r3, r4, r5, r6, r7)     // Catch:{ all -> 0x00c0 }
-                android.os.Binder.restoreCallingIdentity(r18)     // Catch:{ RemoteException -> 0x0067 }
-                goto L_0x00df
-            L_0x00c0:
-                r0 = move-exception
-                android.os.Binder.restoreCallingIdentity(r18)     // Catch:{ RemoteException -> 0x0067 }
-                throw r0     // Catch:{ RemoteException -> 0x0067 }
-            L_0x00c5:
-                java.lang.String r3 = r24.getPackageName()     // Catch:{ RemoteException -> 0x0067 }
-                android.provider.Settings$ContentProviderHolder r0 = r1.mProviderHolder     // Catch:{ RemoteException -> 0x0067 }
-                android.net.Uri r0 = r0.mUri     // Catch:{ RemoteException -> 0x0067 }
-                java.lang.String r4 = r0.getAuthority()     // Catch:{ RemoteException -> 0x0067 }
-                java.lang.String r5 = r1.mCallGetCommand     // Catch:{ RemoteException -> 0x0067 }
-                r2 = r21
-                r6 = r25
-                r7 = r16
-                android.os.Bundle r0 = r2.call(r3, r4, r5, r6, r7)     // Catch:{ RemoteException -> 0x0067 }
-            L_0x00df:
-                r2 = r0
-                if (r2 == 0) goto L_0x0136
-                java.lang.String r0 = "value"
-                java.lang.String r0 = r2.getString(r0)     // Catch:{ RemoteException -> 0x0067 }
-                r3 = r0
-                if (r12 == 0) goto L_0x0135
-                monitor-enter(r23)     // Catch:{ RemoteException -> 0x0067 }
-                if (r17 == 0) goto L_0x0120
-                java.lang.String r0 = "_track_generation"
-                android.os.Parcelable r0 = r2.getParcelable(r0)     // Catch:{ all -> 0x011e }
-                android.util.MemoryIntArray r0 = (android.util.MemoryIntArray) r0     // Catch:{ all -> 0x011e }
-                java.lang.String r4 = "_generation_index"
-                r5 = -1
-                int r4 = r2.getInt(r4, r5)     // Catch:{ all -> 0x011e }
-                if (r0 == 0) goto L_0x0120
-                if (r4 < 0) goto L_0x0120
-                java.lang.String r5 = "_generation"
-                int r5 = r2.getInt(r5, r11)     // Catch:{ all -> 0x011e }
-                android.provider.Settings$GenerationTracker r6 = r1.mGenerationTracker     // Catch:{ all -> 0x011e }
-                if (r6 == 0) goto L_0x0111
-                android.provider.Settings$GenerationTracker r6 = r1.mGenerationTracker     // Catch:{ all -> 0x011e }
-                r6.destroy()     // Catch:{ all -> 0x011e }
-            L_0x0111:
-                android.provider.Settings$GenerationTracker r6 = new android.provider.Settings$GenerationTracker     // Catch:{ all -> 0x011e }
-                android.provider.-$$Lambda$Settings$NameValueCache$qSyMM6rUAHCa-5rsP-atfAqR3sA r7 = new android.provider.-$$Lambda$Settings$NameValueCache$qSyMM6rUAHCa-5rsP-atfAqR3sA     // Catch:{ all -> 0x011e }
-                r7.<init>()     // Catch:{ all -> 0x011e }
-                r6.<init>(r0, r4, r5, r7)     // Catch:{ all -> 0x011e }
-                r1.mGenerationTracker = r6     // Catch:{ all -> 0x011e }
-                goto L_0x0120
-            L_0x011e:
-                r0 = move-exception
-                goto L_0x0133
-            L_0x0120:
-                android.provider.Settings$GenerationTracker r0 = r1.mGenerationTracker     // Catch:{ all -> 0x011e }
-                if (r0 == 0) goto L_0x0131
-                android.provider.Settings$GenerationTracker r0 = r1.mGenerationTracker     // Catch:{ all -> 0x011e }
-                int r0 = r0.getCurrentGeneration()     // Catch:{ all -> 0x011e }
-                if (r13 != r0) goto L_0x0131
-                java.util.HashMap<java.lang.String, java.lang.String> r0 = r1.mValues     // Catch:{ all -> 0x011e }
-                r0.put(r8, r3)     // Catch:{ all -> 0x011e }
-            L_0x0131:
-                monitor-exit(r23)     // Catch:{ all -> 0x011e }
-                goto L_0x0135
-            L_0x0133:
-                monitor-exit(r23)     // Catch:{ all -> 0x011e }
-                throw r0     // Catch:{ RemoteException -> 0x0067 }
-            L_0x0135:
-                return r3
-            L_0x0136:
-                goto L_0x013f
-            L_0x0137:
-                r0 = move-exception
-                r2 = r16
-                r3 = r17
-            L_0x013c:
-                monitor-exit(r23)     // Catch:{ all -> 0x0082 }
-                throw r0     // Catch:{ RemoteException -> 0x0067 }
-            L_0x013e:
-            L_0x013f:
-                r22 = r15
-                java.lang.String r0 = "name=?"
-                java.lang.String[] r2 = new java.lang.String[r10]     // Catch:{ RemoteException -> 0x01f6 }
-                r2[r11] = r8     // Catch:{ RemoteException -> 0x01f6 }
-                android.os.Bundle r6 = android.content.ContentResolver.createSqlQueryBundle(r0, r2, r15)     // Catch:{ RemoteException -> 0x01f6 }
-                boolean r0 = android.provider.Settings.isInSystemServer()     // Catch:{ RemoteException -> 0x01f6 }
-                if (r0 == 0) goto L_0x0181
-                int r0 = android.os.Binder.getCallingUid()     // Catch:{ RemoteException -> 0x01f6 }
-                int r2 = android.os.Process.myUid()     // Catch:{ RemoteException -> 0x01f6 }
-                if (r0 == r2) goto L_0x0181
-                long r2 = android.os.Binder.clearCallingIdentity()     // Catch:{ RemoteException -> 0x01f6 }
-                r16 = r2
-                java.lang.String r3 = r24.getPackageName()     // Catch:{ all -> 0x017c }
-                android.net.Uri r4 = r1.mUri     // Catch:{ all -> 0x017c }
-                java.lang.String[] r5 = SELECT_VALUE_PROJECTION     // Catch:{ all -> 0x017c }
-                r7 = 0
-                r2 = r21
-                android.database.Cursor r0 = r2.query(r3, r4, r5, r6, r7)     // Catch:{ all -> 0x017c }
-                r22 = r0
-                android.os.Binder.restoreCallingIdentity(r16)     // Catch:{ RemoteException -> 0x01f6 }
-                r2 = r15
-                r3 = r22
-                goto L_0x0197
-            L_0x017c:
-                r0 = move-exception
-                android.os.Binder.restoreCallingIdentity(r16)     // Catch:{ RemoteException -> 0x01f6 }
-                throw r0     // Catch:{ RemoteException -> 0x01f6 }
-            L_0x0181:
-                java.lang.String r16 = r24.getPackageName()     // Catch:{ RemoteException -> 0x01f6 }
-                android.net.Uri r0 = r1.mUri     // Catch:{ RemoteException -> 0x01f6 }
-                java.lang.String[] r18 = SELECT_VALUE_PROJECTION     // Catch:{ RemoteException -> 0x01f6 }
-                r20 = 0
-                r2 = r15
-                r15 = r21
-                r17 = r0
-                r19 = r6
-                android.database.Cursor r0 = r15.query(r16, r17, r18, r19, r20)     // Catch:{ RemoteException -> 0x01f2 }
-                r3 = r0
-            L_0x0197:
-                if (r3 != 0) goto L_0x01c8
-                java.lang.String r0 = "Settings"
-                java.lang.StringBuilder r4 = new java.lang.StringBuilder     // Catch:{ RemoteException -> 0x01c4, all -> 0x01c0 }
-                r4.<init>()     // Catch:{ RemoteException -> 0x01c4, all -> 0x01c0 }
-                java.lang.String r5 = "Can't get key "
-                r4.append(r5)     // Catch:{ RemoteException -> 0x01c4, all -> 0x01c0 }
-                r4.append(r8)     // Catch:{ RemoteException -> 0x01c4, all -> 0x01c0 }
-                java.lang.String r5 = " from "
-                r4.append(r5)     // Catch:{ RemoteException -> 0x01c4, all -> 0x01c0 }
-                android.net.Uri r5 = r1.mUri     // Catch:{ RemoteException -> 0x01c4, all -> 0x01c0 }
-                r4.append(r5)     // Catch:{ RemoteException -> 0x01c4, all -> 0x01c0 }
-                java.lang.String r4 = r4.toString()     // Catch:{ RemoteException -> 0x01c4, all -> 0x01c0 }
-                android.util.Log.w((java.lang.String) r0, (java.lang.String) r4)     // Catch:{ RemoteException -> 0x01c4, all -> 0x01c0 }
-                if (r3 == 0) goto L_0x01bf
-                r3.close()
-            L_0x01bf:
-                return r2
-            L_0x01c0:
-                r0 = move-exception
-                r22 = r3
-                goto L_0x021f
-            L_0x01c4:
-                r0 = move-exception
-                r22 = r3
-                goto L_0x01f8
-            L_0x01c8:
-                boolean r0 = r3.moveToNext()     // Catch:{ RemoteException -> 0x01c4, all -> 0x01c0 }
-                if (r0 == 0) goto L_0x01d3
-                java.lang.String r15 = r3.getString(r11)     // Catch:{ RemoteException -> 0x01c4, all -> 0x01c0 }
-                goto L_0x01d4
-            L_0x01d3:
-                r15 = r2
-            L_0x01d4:
-                r4 = r15
-                monitor-enter(r23)     // Catch:{ RemoteException -> 0x01c4, all -> 0x01c0 }
-                android.provider.Settings$GenerationTracker r0 = r1.mGenerationTracker     // Catch:{ all -> 0x01ef }
-                if (r0 == 0) goto L_0x01e7
-                android.provider.Settings$GenerationTracker r0 = r1.mGenerationTracker     // Catch:{ all -> 0x01ef }
-                int r0 = r0.getCurrentGeneration()     // Catch:{ all -> 0x01ef }
-                if (r13 != r0) goto L_0x01e7
-                java.util.HashMap<java.lang.String, java.lang.String> r0 = r1.mValues     // Catch:{ all -> 0x01ef }
-                r0.put(r8, r4)     // Catch:{ all -> 0x01ef }
-            L_0x01e7:
-                monitor-exit(r23)     // Catch:{ all -> 0x01ef }
-                if (r3 == 0) goto L_0x01ee
-                r3.close()
-            L_0x01ee:
-                return r4
-            L_0x01ef:
-                r0 = move-exception
-                monitor-exit(r23)     // Catch:{ all -> 0x01ef }
-                throw r0     // Catch:{ RemoteException -> 0x01c4, all -> 0x01c0 }
-            L_0x01f2:
-                r0 = move-exception
-                goto L_0x01f8
-            L_0x01f4:
-                r0 = move-exception
-                goto L_0x021f
-            L_0x01f6:
-                r0 = move-exception
-                r2 = r15
-            L_0x01f8:
-                java.lang.String r3 = "Settings"
-                java.lang.StringBuilder r4 = new java.lang.StringBuilder     // Catch:{ all -> 0x01f4 }
-                r4.<init>()     // Catch:{ all -> 0x01f4 }
-                java.lang.String r5 = "Can't get key "
-                r4.append(r5)     // Catch:{ all -> 0x01f4 }
-                r4.append(r8)     // Catch:{ all -> 0x01f4 }
-                java.lang.String r5 = " from "
-                r4.append(r5)     // Catch:{ all -> 0x01f4 }
-                android.net.Uri r5 = r1.mUri     // Catch:{ all -> 0x01f4 }
-                r4.append(r5)     // Catch:{ all -> 0x01f4 }
-                java.lang.String r4 = r4.toString()     // Catch:{ all -> 0x01f4 }
-                android.util.Log.w(r3, r4, r0)     // Catch:{ all -> 0x01f4 }
-                if (r22 == 0) goto L_0x021e
-                r22.close()
-            L_0x021e:
-                return r2
-            L_0x021f:
-                if (r22 == 0) goto L_0x0224
-                r22.close()
-            L_0x0224:
-                throw r0
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.provider.Settings.NameValueCache.getStringForUser(android.content.ContentResolver, java.lang.String, int):java.lang.String");
+        /* JADX WARN: Removed duplicated region for block: B:143:0x021b  */
+        /* JADX WARN: Unsupported multi-entry loop pattern (BACK_EDGE: B:44:0x0082 -> B:88:0x013c). Please submit an issue!!! */
+        @UnsupportedAppUsage
+        /*
+            Code decompiled incorrectly, please refer to instructions dump.
+        */
+        public String getStringForUser(ContentResolver cr, String name, int userHandle) {
+            String str;
+            Cursor c;
+            Bundle b;
+            boolean isSelf = userHandle == UserHandle.myUserId();
+            int currentGeneration = -1;
+            if (isSelf) {
+                synchronized (this) {
+                    if (this.mGenerationTracker != null) {
+                        if (this.mGenerationTracker.isGenerationChanged()) {
+                            this.mValues.clear();
+                        } else if (this.mValues.containsKey(name)) {
+                            return this.mValues.get(name);
+                        }
+                        if (this.mGenerationTracker != null) {
+                            currentGeneration = this.mGenerationTracker.getCurrentGeneration();
+                        }
+                    }
+                }
+            }
+            int currentGeneration2 = currentGeneration;
+            IContentProvider cp = this.mProviderHolder.getProvider(cr);
+            if (this.mCallGetCommand != null) {
+                Bundle args = null;
+                if (!isSelf) {
+                    try {
+                        args = new Bundle();
+                        args.putInt(Settings.CALL_METHOD_USER_KEY, userHandle);
+                    } catch (RemoteException e) {
+                    }
+                }
+                Bundle args2 = args;
+                boolean needsGenerationTracker = false;
+                synchronized (this) {
+                    if (isSelf) {
+                        try {
+                            if (this.mGenerationTracker == null) {
+                                needsGenerationTracker = true;
+                                if (args2 == null) {
+                                    args2 = new Bundle();
+                                }
+                                args2.putString(Settings.CALL_METHOD_TRACK_GENERATION_KEY, null);
+                            }
+                        } catch (Throwable th) {
+                            th = th;
+                            throw th;
+                        }
+                    }
+                    Bundle args3 = args2;
+                    boolean needsGenerationTracker2 = needsGenerationTracker;
+                    try {
+                        if (!Settings.isInSystemServer() || Binder.getCallingUid() == Process.myUid()) {
+                            b = cp.call(cr.getPackageName(), this.mProviderHolder.mUri.getAuthority(), this.mCallGetCommand, name, args3);
+                        } else {
+                            long token = Binder.clearCallingIdentity();
+                            b = cp.call(cr.getPackageName(), this.mProviderHolder.mUri.getAuthority(), this.mCallGetCommand, name, args3);
+                            Binder.restoreCallingIdentity(token);
+                        }
+                        Bundle b2 = b;
+                        if (b2 != null) {
+                            String value = b2.getString("value");
+                            if (isSelf) {
+                                synchronized (this) {
+                                    if (needsGenerationTracker2) {
+                                        MemoryIntArray array = (MemoryIntArray) b2.getParcelable(Settings.CALL_METHOD_TRACK_GENERATION_KEY);
+                                        int index = b2.getInt(Settings.CALL_METHOD_GENERATION_INDEX_KEY, -1);
+                                        if (array != null && index >= 0) {
+                                            int generation = b2.getInt(Settings.CALL_METHOD_GENERATION_KEY, 0);
+                                            if (this.mGenerationTracker != null) {
+                                                this.mGenerationTracker.destroy();
+                                            }
+                                            this.mGenerationTracker = new GenerationTracker(array, index, generation, new Runnable() { // from class: android.provider.-$$Lambda$Settings$NameValueCache$qSyMM6rUAHCa-5rsP-atfAqR3sA
+                                                @Override // java.lang.Runnable
+                                                public final void run() {
+                                                    Settings.NameValueCache.lambda$getStringForUser$0(Settings.NameValueCache.this);
+                                                }
+                                            });
+                                        }
+                                    }
+                                    if (this.mGenerationTracker != null && currentGeneration2 == this.mGenerationTracker.getCurrentGeneration()) {
+                                        this.mValues.put(name, value);
+                                    }
+                                }
+                            }
+                            return value;
+                        }
+                    } catch (Throwable th2) {
+                        th = th2;
+                        throw th;
+                    }
+                }
+            }
+            Cursor c2 = null;
+            try {
+                try {
+                    Bundle queryArgs = ContentResolver.createSqlQueryBundle(NAME_EQ_PLACEHOLDER, new String[]{name}, null);
+                    if (!Settings.isInSystemServer() || Binder.getCallingUid() == Process.myUid()) {
+                        str = null;
+                        try {
+                            c = cp.query(cr.getPackageName(), this.mUri, SELECT_VALUE_PROJECTION, queryArgs, null);
+                        } catch (RemoteException e2) {
+                            e = e2;
+                            Log.m63w(Settings.TAG, "Can't get key " + name + " from " + this.mUri, e);
+                            if (c2 != null) {
+                                c2.close();
+                            }
+                            return str;
+                        }
+                    } else {
+                        long token2 = Binder.clearCallingIdentity();
+                        try {
+                            Cursor c3 = cp.query(cr.getPackageName(), this.mUri, SELECT_VALUE_PROJECTION, queryArgs, null);
+                            Binder.restoreCallingIdentity(token2);
+                            str = null;
+                            c = c3;
+                        } catch (Throwable th3) {
+                            Binder.restoreCallingIdentity(token2);
+                            throw th3;
+                        }
+                    }
+                    try {
+                        if (c != null) {
+                            String value2 = c.moveToNext() ? c.getString(0) : str;
+                            synchronized (this) {
+                                if (this.mGenerationTracker != null && currentGeneration2 == this.mGenerationTracker.getCurrentGeneration()) {
+                                    this.mValues.put(name, value2);
+                                }
+                            }
+                            if (c != null) {
+                                c.close();
+                            }
+                            return value2;
+                        }
+                        Log.m64w(Settings.TAG, "Can't get key " + name + " from " + this.mUri);
+                        if (c != null) {
+                            c.close();
+                        }
+                        return str;
+                    } catch (RemoteException e3) {
+                        e = e3;
+                        c2 = c;
+                        Log.m63w(Settings.TAG, "Can't get key " + name + " from " + this.mUri, e);
+                        if (c2 != null) {
+                        }
+                        return str;
+                    } catch (Throwable th4) {
+                        e = th4;
+                        c2 = c;
+                        if (c2 != null) {
+                            c2.close();
+                        }
+                        throw e;
+                    }
+                } catch (RemoteException e4) {
+                    e = e4;
+                    str = null;
+                }
+            } catch (Throwable th5) {
+                e = th5;
+            }
         }
 
         public static /* synthetic */ void lambda$getStringForUser$0(NameValueCache nameValueCache) {
             synchronized (nameValueCache) {
-                Log.e(Settings.TAG, "Error accessing generation tracker - removing");
+                Log.m70e(Settings.TAG, "Error accessing generation tracker - removing");
                 if (nameValueCache.mGenerationTracker != null) {
                     GenerationTracker generationTracker = nameValueCache.mGenerationTracker;
                     nameValueCache.mGenerationTracker = null;
@@ -823,27 +617,28 @@ public final class Settings {
         return isCallingPackageAllowedToDrawOverlays(context, Process.myUid(), context.getOpPackageName(), false);
     }
 
+    /* loaded from: classes3.dex */
     public static final class System extends NameValueTable {
         public static final String ACCELEROMETER_ROTATION = "accelerometer_rotation";
-        public static final SettingsValidators.Validator ACCELEROMETER_ROTATION_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        public static final SettingsValidators.Validator ACCELEROMETER_ROTATION_VALIDATOR;
         public static final String ADAPTIVE_SLEEP = "adaptive_sleep";
-        private static final SettingsValidators.Validator ADAPTIVE_SLEEP_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator ADAPTIVE_SLEEP_VALIDATOR;
         @Deprecated
         public static final String ADB_ENABLED = "adb_enabled";
         public static final String ADVANCED_SETTINGS = "advanced_settings";
         public static final int ADVANCED_SETTINGS_DEFAULT = 0;
-        private static final SettingsValidators.Validator ADVANCED_SETTINGS_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator ADVANCED_SETTINGS_VALIDATOR;
         @Deprecated
         public static final String AIRPLANE_MODE_ON = "airplane_mode_on";
         @Deprecated
         public static final String AIRPLANE_MODE_RADIOS = "airplane_mode_radios";
-        @Deprecated
         @UnsupportedAppUsage
+        @Deprecated
         public static final String AIRPLANE_MODE_TOGGLEABLE_RADIOS = "airplane_mode_toggleable_radios";
         public static final String ALARM_ALERT = "alarm_alert";
         public static final String ALARM_ALERT_CACHE = "alarm_alert_cache";
-        public static final Uri ALARM_ALERT_CACHE_URI = getUriFor(ALARM_ALERT_CACHE);
-        private static final SettingsValidators.Validator ALARM_ALERT_VALIDATOR = SettingsValidators.URI_VALIDATOR;
+        public static final Uri ALARM_ALERT_CACHE_URI;
+        private static final SettingsValidators.Validator ALARM_ALERT_VALIDATOR;
         @Deprecated
         public static final String ALWAYS_FINISH_ACTIVITIES = "always_finish_activities";
         @Deprecated
@@ -853,184 +648,136 @@ public final class Settings {
         public static final String APPEND_FOR_LAST_AUDIBLE = "_last_audible";
         @Deprecated
         public static final String AUTO_TIME = "auto_time";
-        private static final SettingsValidators.Validator AUTO_TIME_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator AUTO_TIME_VALIDATOR;
         @Deprecated
         public static final String AUTO_TIME_ZONE = "auto_time_zone";
-        private static final SettingsValidators.Validator AUTO_TIME_ZONE_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator AUTO_TIME_ZONE_VALIDATOR;
         public static final String BLUETOOTH_DISCOVERABILITY = "bluetooth_discoverability";
         public static final String BLUETOOTH_DISCOVERABILITY_TIMEOUT = "bluetooth_discoverability_timeout";
-        private static final SettingsValidators.Validator BLUETOOTH_DISCOVERABILITY_TIMEOUT_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
-        private static final SettingsValidators.Validator BLUETOOTH_DISCOVERABILITY_VALIDATOR = new SettingsValidators.InclusiveIntegerRangeValidator(0, 2);
+        private static final SettingsValidators.Validator BLUETOOTH_DISCOVERABILITY_TIMEOUT_VALIDATOR;
+        private static final SettingsValidators.Validator BLUETOOTH_DISCOVERABILITY_VALIDATOR;
         @Deprecated
         public static final String BLUETOOTH_ON = "bluetooth_on";
-        private static final SettingsValidators.Validator BLUETOOTH_ON_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
-        @Deprecated
+        private static final SettingsValidators.Validator BLUETOOTH_ON_VALIDATOR;
         @UnsupportedAppUsage
+        @Deprecated
         public static final String CAR_DOCK_SOUND = "car_dock_sound";
+        @UnsupportedAppUsage
         @Deprecated
-        @UnsupportedAppUsage
         public static final String CAR_UNDOCK_SOUND = "car_undock_sound";
-        public static final Map<String, String> CLONE_FROM_PARENT_ON_VALUE = new ArrayMap();
+        public static final Map<String, String> CLONE_FROM_PARENT_ON_VALUE;
         @UnsupportedAppUsage
-        private static final Set<String> CLONE_TO_MANAGED_PROFILE = new ArraySet();
-        public static final Uri CONTENT_URI = Uri.parse("content://settings/system");
+        private static final Set<String> CLONE_TO_MANAGED_PROFILE;
         @Deprecated
         public static final String DATA_ROAMING = "data_roaming";
         public static final String DATE_FORMAT = "date_format";
-        public static final SettingsValidators.Validator DATE_FORMAT_VALIDATOR = new SettingsValidators.Validator() {
-            public boolean validate(String value) {
-                try {
-                    new SimpleDateFormat(value);
-                    return true;
-                } catch (IllegalArgumentException | NullPointerException e) {
-                    return false;
-                }
-            }
-        };
+        public static final SettingsValidators.Validator DATE_FORMAT_VALIDATOR;
         @Deprecated
         public static final String DEBUG_APP = "debug_app";
         public static final String DEBUG_ENABLE_ENHANCED_CALL_BLOCKING = "debug.enable_enhanced_calling";
-        public static final Uri DEFAULT_ALARM_ALERT_URI = getUriFor(ALARM_ALERT);
+        public static final Uri DEFAULT_ALARM_ALERT_URI;
         private static final float DEFAULT_FONT_SCALE = 1.0f;
-        public static final Uri DEFAULT_NOTIFICATION_URI = getUriFor(NOTIFICATION_SOUND);
-        public static final Uri DEFAULT_RINGTONE_URI = getUriFor(RINGTONE);
-        @Deprecated
+        public static final Uri DEFAULT_NOTIFICATION_URI;
+        public static final Uri DEFAULT_RINGTONE_URI;
         @UnsupportedAppUsage
+        @Deprecated
         public static final String DESK_DOCK_SOUND = "desk_dock_sound";
-        @Deprecated
         @UnsupportedAppUsage
+        @Deprecated
         public static final String DESK_UNDOCK_SOUND = "desk_undock_sound";
         @Deprecated
         public static final String DEVICE_PROVISIONED = "device_provisioned";
         @Deprecated
         public static final String DIM_SCREEN = "dim_screen";
-        private static final SettingsValidators.Validator DIM_SCREEN_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator DIM_SCREEN_VALIDATOR;
         public static final String DISPLAY_COLOR_MODE = "display_color_mode";
-        private static final SettingsValidators.Validator DISPLAY_COLOR_MODE_VALIDATOR = new SettingsValidators.Validator() {
-            public boolean validate(String value) {
-                try {
-                    int setting = Integer.parseInt(value);
-                    boolean isInFrameworkRange = setting >= 0 && setting <= 3;
-                    boolean isInVendorRange = setting >= 256 && setting <= 511;
-                    if (isInFrameworkRange || isInVendorRange) {
-                        return true;
-                    }
-                    return false;
-                } catch (NullPointerException | NumberFormatException e) {
-                    return false;
-                }
-            }
-        };
-        @Deprecated
+        private static final SettingsValidators.Validator DISPLAY_COLOR_MODE_VALIDATOR;
         @UnsupportedAppUsage
+        @Deprecated
         public static final String DOCK_SOUNDS_ENABLED = "dock_sounds_enabled";
-        private static final SettingsValidators.Validator DOCK_SOUNDS_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator DOCK_SOUNDS_ENABLED_VALIDATOR;
         public static final String DTMF_TONE_TYPE_WHEN_DIALING = "dtmf_tone_type";
-        public static final SettingsValidators.Validator DTMF_TONE_TYPE_WHEN_DIALING_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        public static final SettingsValidators.Validator DTMF_TONE_TYPE_WHEN_DIALING_VALIDATOR;
         public static final String DTMF_TONE_WHEN_DIALING = "dtmf_tone";
-        public static final SettingsValidators.Validator DTMF_TONE_WHEN_DIALING_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        public static final SettingsValidators.Validator DTMF_TONE_WHEN_DIALING_VALIDATOR;
         public static final String EGG_MODE = "egg_mode";
-        public static final SettingsValidators.Validator EGG_MODE_VALIDATOR = new SettingsValidators.Validator() {
-            public boolean validate(String value) {
-                try {
-                    return Long.parseLong(value) >= 0;
-                } catch (NumberFormatException e) {
-                    return false;
-                }
-            }
-        };
+        public static final SettingsValidators.Validator EGG_MODE_VALIDATOR;
         public static final String END_BUTTON_BEHAVIOR = "end_button_behavior";
         public static final int END_BUTTON_BEHAVIOR_DEFAULT = 2;
         public static final int END_BUTTON_BEHAVIOR_HOME = 1;
         public static final int END_BUTTON_BEHAVIOR_SLEEP = 2;
-        private static final SettingsValidators.Validator END_BUTTON_BEHAVIOR_VALIDATOR = new SettingsValidators.InclusiveIntegerRangeValidator(0, 3);
+        private static final SettingsValidators.Validator END_BUTTON_BEHAVIOR_VALIDATOR;
         public static final String FONT_SCALE = "font_scale";
-        private static final SettingsValidators.Validator FONT_SCALE_VALIDATOR = new SettingsValidators.Validator() {
-            public boolean validate(String value) {
-                try {
-                    return Float.parseFloat(value) >= 0.0f;
-                } catch (NullPointerException | NumberFormatException e) {
-                    return false;
-                }
-            }
-        };
+        private static final SettingsValidators.Validator FONT_SCALE_VALIDATOR;
         public static final String HAPTIC_FEEDBACK_ENABLED = "haptic_feedback_enabled";
-        public static final SettingsValidators.Validator HAPTIC_FEEDBACK_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        public static final SettingsValidators.Validator HAPTIC_FEEDBACK_ENABLED_VALIDATOR;
         public static final String HAPTIC_FEEDBACK_INTENSITY = "haptic_feedback_intensity";
         @UnsupportedAppUsage
         public static final String HEARING_AID = "hearing_aid";
-        public static final SettingsValidators.Validator HEARING_AID_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        public static final SettingsValidators.Validator HEARING_AID_VALIDATOR;
         @UnsupportedAppUsage
         public static final String HIDE_ROTATION_LOCK_TOGGLE_FOR_ACCESSIBILITY = "hide_rotation_lock_toggle_for_accessibility";
-        public static final SettingsValidators.Validator HIDE_ROTATION_LOCK_TOGGLE_FOR_ACCESSIBILITY_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        public static final SettingsValidators.Validator HIDE_ROTATION_LOCK_TOGGLE_FOR_ACCESSIBILITY_VALIDATOR;
         @Deprecated
         public static final String HTTP_PROXY = "http_proxy";
         @Deprecated
         public static final String INSTALL_NON_MARKET_APPS = "install_non_market_apps";
-        public static final Set<String> INSTANT_APP_SETTINGS = new ArraySet();
-        public static final String[] LEGACY_RESTORE_SETTINGS = new String[0];
+        public static final Set<String> INSTANT_APP_SETTINGS;
+        public static final String[] LEGACY_RESTORE_SETTINGS;
         @Deprecated
         public static final String LOCATION_PROVIDERS_ALLOWED = "location_providers_allowed";
         public static final String LOCKSCREEN_DISABLED = "lockscreen.disabled";
-        public static final SettingsValidators.Validator LOCKSCREEN_DISABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        public static final SettingsValidators.Validator LOCKSCREEN_DISABLED_VALIDATOR;
         @UnsupportedAppUsage
         public static final String LOCKSCREEN_SOUNDS_ENABLED = "lockscreen_sounds_enabled";
-        public static final SettingsValidators.Validator LOCKSCREEN_SOUNDS_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        public static final SettingsValidators.Validator LOCKSCREEN_SOUNDS_ENABLED_VALIDATOR;
         @Deprecated
         public static final String LOCK_PATTERN_ENABLED = "lock_pattern_autolock";
         @Deprecated
         public static final String LOCK_PATTERN_TACTILE_FEEDBACK_ENABLED = "lock_pattern_tactile_feedback_enabled";
         @Deprecated
         public static final String LOCK_PATTERN_VISIBLE = "lock_pattern_visible_pattern";
-        @Deprecated
         @UnsupportedAppUsage
+        @Deprecated
         public static final String LOCK_SOUND = "lock_sound";
         public static final String LOCK_TO_APP_ENABLED = "lock_to_app_enabled";
-        public static final SettingsValidators.Validator LOCK_TO_APP_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        public static final SettingsValidators.Validator LOCK_TO_APP_ENABLED_VALIDATOR;
         @Deprecated
         public static final String LOGGING_ID = "logging_id";
         @Deprecated
         public static final String LOW_BATTERY_SOUND = "low_battery_sound";
         public static final String MASTER_BALANCE = "master_balance";
-        private static final SettingsValidators.Validator MASTER_BALANCE_VALIDATOR = new SettingsValidators.InclusiveFloatRangeValidator(-1.0f, 1.0f);
+        private static final SettingsValidators.Validator MASTER_BALANCE_VALIDATOR;
         @UnsupportedAppUsage
         public static final String MASTER_MONO = "master_mono";
-        private static final SettingsValidators.Validator MASTER_MONO_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator MASTER_MONO_VALIDATOR;
         public static final String MEDIA_BUTTON_RECEIVER = "media_button_receiver";
-        private static final SettingsValidators.Validator MEDIA_BUTTON_RECEIVER_VALIDATOR = SettingsValidators.COMPONENT_NAME_VALIDATOR;
+        private static final SettingsValidators.Validator MEDIA_BUTTON_RECEIVER_VALIDATOR;
         @Deprecated
         public static final String MODE_RINGER = "mode_ringer";
         public static final String MODE_RINGER_STREAMS_AFFECTED = "mode_ringer_streams_affected";
-        private static final SettingsValidators.Validator MODE_RINGER_STREAMS_AFFECTED_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
+        private static final SettingsValidators.Validator MODE_RINGER_STREAMS_AFFECTED_VALIDATOR;
         @UnsupportedAppUsage
-        private static final HashSet<String> MOVED_TO_GLOBAL = new HashSet<>();
+        private static final HashSet<String> MOVED_TO_GLOBAL;
         @UnsupportedAppUsage
-        private static final HashSet<String> MOVED_TO_SECURE = new HashSet<>(30);
-        @UnsupportedAppUsage
-        private static final HashSet<String> MOVED_TO_SECURE_THEN_GLOBAL = new HashSet<>();
+        private static final HashSet<String> MOVED_TO_SECURE_THEN_GLOBAL;
         public static final String MUTE_STREAMS_AFFECTED = "mute_streams_affected";
-        private static final SettingsValidators.Validator MUTE_STREAMS_AFFECTED_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
+        private static final SettingsValidators.Validator MUTE_STREAMS_AFFECTED_VALIDATOR;
         @Deprecated
         public static final String NETWORK_PREFERENCE = "network_preference";
         @Deprecated
         public static final String NEXT_ALARM_FORMATTED = "next_alarm_formatted";
-        private static final SettingsValidators.Validator NEXT_ALARM_FORMATTED_VALIDATOR = new SettingsValidators.Validator() {
-            private static final int MAX_LENGTH = 1000;
-
-            public boolean validate(String value) {
-                return value == null || value.length() < 1000;
-            }
-        };
+        private static final SettingsValidators.Validator NEXT_ALARM_FORMATTED_VALIDATOR;
         @Deprecated
         public static final String NOTIFICATIONS_USE_RING_VOLUME = "notifications_use_ring_volume";
-        private static final SettingsValidators.Validator NOTIFICATIONS_USE_RING_VOLUME_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator NOTIFICATIONS_USE_RING_VOLUME_VALIDATOR;
         @UnsupportedAppUsage
         public static final String NOTIFICATION_LIGHT_PULSE = "notification_light_pulse";
-        public static final SettingsValidators.Validator NOTIFICATION_LIGHT_PULSE_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        public static final SettingsValidators.Validator NOTIFICATION_LIGHT_PULSE_VALIDATOR;
         public static final String NOTIFICATION_SOUND = "notification_sound";
         public static final String NOTIFICATION_SOUND_CACHE = "notification_sound_cache";
-        public static final Uri NOTIFICATION_SOUND_CACHE_URI = getUriFor(NOTIFICATION_SOUND_CACHE);
-        private static final SettingsValidators.Validator NOTIFICATION_SOUND_VALIDATOR = SettingsValidators.URI_VALIDATOR;
+        public static final Uri NOTIFICATION_SOUND_CACHE_URI;
+        private static final SettingsValidators.Validator NOTIFICATION_SOUND_VALIDATOR;
         public static final String NOTIFICATION_VIBRATION_INTENSITY = "notification_vibration_intensity";
         @Deprecated
         public static final String PARENTAL_CONTROL_ENABLED = "parental_control_enabled";
@@ -1039,20 +786,20 @@ public final class Settings {
         @Deprecated
         public static final String PARENTAL_CONTROL_REDIRECT_URL = "parental_control_redirect_url";
         public static final String PEAK_REFRESH_RATE = "peak_refresh_rate";
-        private static final SettingsValidators.Validator PEAK_REFRESH_RATE_VALIDATOR = new SettingsValidators.InclusiveFloatRangeValidator(24.0f, Float.MAX_VALUE);
+        private static final SettingsValidators.Validator PEAK_REFRESH_RATE_VALIDATOR;
         @UnsupportedAppUsage
         public static final String POINTER_LOCATION = "pointer_location";
-        public static final SettingsValidators.Validator POINTER_LOCATION_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        public static final SettingsValidators.Validator POINTER_LOCATION_VALIDATOR;
         @UnsupportedAppUsage
         public static final String POINTER_SPEED = "pointer_speed";
-        public static final SettingsValidators.Validator POINTER_SPEED_VALIDATOR = new SettingsValidators.InclusiveFloatRangeValidator(-7.0f, 7.0f);
+        public static final SettingsValidators.Validator POINTER_SPEED_VALIDATOR;
         @Deprecated
         public static final String POWER_SOUNDS_ENABLED = "power_sounds_enabled";
-        private static final SettingsValidators.Validator POWER_SOUNDS_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator POWER_SOUNDS_ENABLED_VALIDATOR;
         @UnsupportedAppUsage
-        public static final Set<String> PRIVATE_SETTINGS = new ArraySet();
+        public static final Set<String> PRIVATE_SETTINGS;
         @UnsupportedAppUsage
-        public static final Set<String> PUBLIC_SETTINGS = new ArraySet();
+        public static final Set<String> PUBLIC_SETTINGS;
         @Deprecated
         public static final String RADIO_BLUETOOTH = "bluetooth";
         @Deprecated
@@ -1065,105 +812,93 @@ public final class Settings {
         public static final String RADIO_WIMAX = "wimax";
         public static final String RINGTONE = "ringtone";
         public static final String RINGTONE_CACHE = "ringtone_cache";
-        public static final Uri RINGTONE_CACHE_URI = getUriFor(RINGTONE_CACHE);
-        private static final SettingsValidators.Validator RINGTONE_VALIDATOR = SettingsValidators.URI_VALIDATOR;
+        public static final Uri RINGTONE_CACHE_URI;
+        private static final SettingsValidators.Validator RINGTONE_VALIDATOR;
         public static final String RING_VIBRATION_INTENSITY = "ring_vibration_intensity";
         @UnsupportedAppUsage
         public static final String SCREEN_AUTO_BRIGHTNESS_ADJ = "screen_auto_brightness_adj";
-        private static final SettingsValidators.Validator SCREEN_AUTO_BRIGHTNESS_ADJ_VALIDATOR = new SettingsValidators.InclusiveFloatRangeValidator(-1.0f, 1.0f);
+        private static final SettingsValidators.Validator SCREEN_AUTO_BRIGHTNESS_ADJ_VALIDATOR;
         public static final String SCREEN_BRIGHTNESS = "screen_brightness";
         public static final String SCREEN_BRIGHTNESS_FOR_VR = "screen_brightness_for_vr";
-        private static final SettingsValidators.Validator SCREEN_BRIGHTNESS_FOR_VR_VALIDATOR = new SettingsValidators.InclusiveIntegerRangeValidator(0, 255);
+        private static final SettingsValidators.Validator SCREEN_BRIGHTNESS_FOR_VR_VALIDATOR;
         public static final String SCREEN_BRIGHTNESS_MODE = "screen_brightness_mode";
         public static final int SCREEN_BRIGHTNESS_MODE_AUTOMATIC = 1;
         public static final int SCREEN_BRIGHTNESS_MODE_MANUAL = 0;
-        private static final SettingsValidators.Validator SCREEN_BRIGHTNESS_MODE_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator SCREEN_BRIGHTNESS_MODE_VALIDATOR;
         public static final String SCREEN_OFF_TIMEOUT = "screen_off_timeout";
-        private static final SettingsValidators.Validator SCREEN_OFF_TIMEOUT_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
+        private static final SettingsValidators.Validator SCREEN_OFF_TIMEOUT_VALIDATOR;
         @Deprecated
         public static final String SETTINGS_CLASSNAME = "settings_classname";
         @UnsupportedAppUsage
-        public static final String[] SETTINGS_TO_BACKUP = {"stay_on_while_plugged_in", WIFI_USE_STATIC_IP, WIFI_STATIC_IP, WIFI_STATIC_GATEWAY, WIFI_STATIC_NETMASK, WIFI_STATIC_DNS1, WIFI_STATIC_DNS2, BLUETOOTH_DISCOVERABILITY, BLUETOOTH_DISCOVERABILITY_TIMEOUT, FONT_SCALE, DIM_SCREEN, SCREEN_OFF_TIMEOUT, SCREEN_BRIGHTNESS_MODE, SCREEN_AUTO_BRIGHTNESS_ADJ, SCREEN_BRIGHTNESS_FOR_VR, ADAPTIVE_SLEEP, VIBRATE_INPUT_DEVICES, MODE_RINGER_STREAMS_AFFECTED, TEXT_AUTO_REPLACE, TEXT_AUTO_CAPS, TEXT_AUTO_PUNCTUATE, TEXT_SHOW_PASSWORD, "auto_time", "auto_time_zone", TIME_12_24, DATE_FORMAT, DTMF_TONE_WHEN_DIALING, DTMF_TONE_TYPE_WHEN_DIALING, HEARING_AID, TTY_MODE, MASTER_MONO, MASTER_BALANCE, SOUND_EFFECTS_ENABLED, HAPTIC_FEEDBACK_ENABLED, "power_sounds_enabled", "dock_sounds_enabled", LOCKSCREEN_SOUNDS_ENABLED, SHOW_WEB_SUGGESTIONS, SIP_CALL_OPTIONS, SIP_RECEIVE_CALLS, POINTER_SPEED, VIBRATE_WHEN_RINGING, RINGTONE, LOCK_TO_APP_ENABLED, NOTIFICATION_SOUND, ACCELEROMETER_ROTATION, SHOW_BATTERY_PERCENT, NOTIFICATION_VIBRATION_INTENSITY, RING_VIBRATION_INTENSITY, HAPTIC_FEEDBACK_INTENSITY, DISPLAY_COLOR_MODE, ALARM_ALERT, NOTIFICATION_LIGHT_PULSE};
+        public static final String[] SETTINGS_TO_BACKUP;
         public static final String SETUP_WIZARD_HAS_RUN = "setup_wizard_has_run";
-        public static final SettingsValidators.Validator SETUP_WIZARD_HAS_RUN_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        public static final SettingsValidators.Validator SETUP_WIZARD_HAS_RUN_VALIDATOR;
         public static final String SHOW_BATTERY_PERCENT = "status_bar_show_battery_percent";
-        private static final SettingsValidators.Validator SHOW_BATTERY_PERCENT_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator SHOW_BATTERY_PERCENT_VALIDATOR;
         public static final String SHOW_GTALK_SERVICE_STATUS = "SHOW_GTALK_SERVICE_STATUS";
-        private static final SettingsValidators.Validator SHOW_GTALK_SERVICE_STATUS_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator SHOW_GTALK_SERVICE_STATUS_VALIDATOR;
         @Deprecated
         public static final String SHOW_PROCESSES = "show_processes";
         @UnsupportedAppUsage
         public static final String SHOW_TOUCHES = "show_touches";
-        public static final SettingsValidators.Validator SHOW_TOUCHES_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        public static final SettingsValidators.Validator SHOW_TOUCHES_VALIDATOR;
         @Deprecated
         public static final String SHOW_WEB_SUGGESTIONS = "show_web_suggestions";
-        public static final SettingsValidators.Validator SHOW_WEB_SUGGESTIONS_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        public static final SettingsValidators.Validator SHOW_WEB_SUGGESTIONS_VALIDATOR;
         public static final String SIP_ADDRESS_ONLY = "SIP_ADDRESS_ONLY";
-        public static final SettingsValidators.Validator SIP_ADDRESS_ONLY_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        public static final SettingsValidators.Validator SIP_ADDRESS_ONLY_VALIDATOR;
         public static final String SIP_ALWAYS = "SIP_ALWAYS";
-        public static final SettingsValidators.Validator SIP_ALWAYS_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        public static final SettingsValidators.Validator SIP_ALWAYS_VALIDATOR;
         @Deprecated
         public static final String SIP_ASK_ME_EACH_TIME = "SIP_ASK_ME_EACH_TIME";
-        public static final SettingsValidators.Validator SIP_ASK_ME_EACH_TIME_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        public static final SettingsValidators.Validator SIP_ASK_ME_EACH_TIME_VALIDATOR;
         public static final String SIP_CALL_OPTIONS = "sip_call_options";
-        public static final SettingsValidators.Validator SIP_CALL_OPTIONS_VALIDATOR = new SettingsValidators.DiscreteValueValidator(new String[]{SIP_ALWAYS, SIP_ADDRESS_ONLY});
+        public static final SettingsValidators.Validator SIP_CALL_OPTIONS_VALIDATOR;
         public static final String SIP_RECEIVE_CALLS = "sip_receive_calls";
-        public static final SettingsValidators.Validator SIP_RECEIVE_CALLS_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        public static final SettingsValidators.Validator SIP_RECEIVE_CALLS_VALIDATOR;
         public static final String SOUND_EFFECTS_ENABLED = "sound_effects_enabled";
-        public static final SettingsValidators.Validator SOUND_EFFECTS_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        public static final SettingsValidators.Validator SOUND_EFFECTS_ENABLED_VALIDATOR;
         @Deprecated
         public static final String STAY_ON_WHILE_PLUGGED_IN = "stay_on_while_plugged_in";
-        private static final SettingsValidators.Validator STAY_ON_WHILE_PLUGGED_IN_VALIDATOR = new SettingsValidators.Validator() {
-            public boolean validate(String value) {
-                try {
-                    int val = Integer.parseInt(value);
-                    if (val == 0 || val == 1 || val == 2 || val == 4 || val == 3 || val == 5 || val == 6 || val == 7) {
-                        return true;
-                    }
-                    return false;
-                } catch (NumberFormatException e) {
-                    return false;
-                }
-            }
-        };
+        private static final SettingsValidators.Validator STAY_ON_WHILE_PLUGGED_IN_VALIDATOR;
         public static final String SYSTEM_LOCALES = "system_locales";
         public static final String TEXT_AUTO_CAPS = "auto_caps";
-        private static final SettingsValidators.Validator TEXT_AUTO_CAPS_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator TEXT_AUTO_CAPS_VALIDATOR;
         public static final String TEXT_AUTO_PUNCTUATE = "auto_punctuate";
-        private static final SettingsValidators.Validator TEXT_AUTO_PUNCTUATE_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator TEXT_AUTO_PUNCTUATE_VALIDATOR;
         public static final String TEXT_AUTO_REPLACE = "auto_replace";
-        private static final SettingsValidators.Validator TEXT_AUTO_REPLACE_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator TEXT_AUTO_REPLACE_VALIDATOR;
         public static final String TEXT_SHOW_PASSWORD = "show_password";
-        private static final SettingsValidators.Validator TEXT_SHOW_PASSWORD_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator TEXT_SHOW_PASSWORD_VALIDATOR;
         public static final String TIME_12_24 = "time_12_24";
-        public static final SettingsValidators.Validator TIME_12_24_VALIDATOR = new SettingsValidators.DiscreteValueValidator(new String[]{"12", "24", null});
+        public static final SettingsValidators.Validator TIME_12_24_VALIDATOR;
         @Deprecated
         public static final String TRANSITION_ANIMATION_SCALE = "transition_animation_scale";
         @UnsupportedAppUsage
         public static final String TTY_MODE = "tty_mode";
-        public static final SettingsValidators.Validator TTY_MODE_VALIDATOR = new SettingsValidators.InclusiveIntegerRangeValidator(0, 3);
-        @Deprecated
+        public static final SettingsValidators.Validator TTY_MODE_VALIDATOR;
         @UnsupportedAppUsage
+        @Deprecated
         public static final String UNLOCK_SOUND = "unlock_sound";
         @Deprecated
         public static final String USB_MASS_STORAGE_ENABLED = "usb_mass_storage_enabled";
-        private static final SettingsValidators.Validator USB_MASS_STORAGE_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator USB_MASS_STORAGE_ENABLED_VALIDATOR;
         public static final String USER_ROTATION = "user_rotation";
-        public static final SettingsValidators.Validator USER_ROTATION_VALIDATOR = new SettingsValidators.InclusiveIntegerRangeValidator(0, 3);
+        public static final SettingsValidators.Validator USER_ROTATION_VALIDATOR;
         @Deprecated
         public static final String USE_GOOGLE_MAIL = "use_google_mail";
         @UnsupportedAppUsage
-        public static final Map<String, SettingsValidators.Validator> VALIDATORS = new ArrayMap();
+        public static final Map<String, SettingsValidators.Validator> VALIDATORS;
         public static final String VIBRATE_INPUT_DEVICES = "vibrate_input_devices";
-        private static final SettingsValidators.Validator VIBRATE_INPUT_DEVICES_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator VIBRATE_INPUT_DEVICES_VALIDATOR;
         @UnsupportedAppUsage
         public static final String VIBRATE_IN_SILENT = "vibrate_in_silent";
-        private static final SettingsValidators.Validator VIBRATE_IN_SILENT_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator VIBRATE_IN_SILENT_VALIDATOR;
         public static final String VIBRATE_ON = "vibrate_on";
-        private static final SettingsValidators.Validator VIBRATE_ON_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator VIBRATE_ON_VALIDATOR;
         public static final String VIBRATE_WHEN_RINGING = "vibrate_when_ringing";
-        public static final SettingsValidators.Validator VIBRATE_WHEN_RINGING_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
-        private static final SettingsValidators.Validator VIBRATION_INTENSITY_VALIDATOR = new SettingsValidators.InclusiveIntegerRangeValidator(0, 3);
+        public static final SettingsValidators.Validator VIBRATE_WHEN_RINGING_VALIDATOR;
+        private static final SettingsValidators.Validator VIBRATION_INTENSITY_VALIDATOR;
         public static final String VOLUME_ACCESSIBILITY = "volume_a11y";
         public static final String VOLUME_ALARM = "volume_alarm";
         public static final String VOLUME_BLUETOOTH_SCO = "volume_bluetooth_sco";
@@ -1171,24 +906,15 @@ public final class Settings {
         public static final String VOLUME_MUSIC = "volume_music";
         public static final String VOLUME_NOTIFICATION = "volume_notification";
         public static final String VOLUME_RING = "volume_ring";
-        public static final String[] VOLUME_SETTINGS = {VOLUME_VOICE, VOLUME_SYSTEM, VOLUME_RING, VOLUME_MUSIC, VOLUME_ALARM, VOLUME_NOTIFICATION, VOLUME_BLUETOOTH_SCO};
-        public static final String[] VOLUME_SETTINGS_INT = {VOLUME_VOICE, VOLUME_SYSTEM, VOLUME_RING, VOLUME_MUSIC, VOLUME_ALARM, VOLUME_NOTIFICATION, VOLUME_BLUETOOTH_SCO, "", "", "", VOLUME_ACCESSIBILITY};
+        public static final String[] VOLUME_SETTINGS;
+        public static final String[] VOLUME_SETTINGS_INT;
         public static final String VOLUME_SYSTEM = "volume_system";
         public static final String VOLUME_VOICE = "volume_voice";
         @Deprecated
         public static final String WAIT_FOR_DEBUGGER = "wait_for_debugger";
         @Deprecated
         public static final String WALLPAPER_ACTIVITY = "wallpaper_activity";
-        private static final SettingsValidators.Validator WALLPAPER_ACTIVITY_VALIDATOR = new SettingsValidators.Validator() {
-            private static final int MAX_LENGTH = 1000;
-
-            public boolean validate(String value) {
-                if ((value == null || value.length() <= 1000) && ComponentName.unflattenFromString(value) != null) {
-                    return true;
-                }
-                return false;
-            }
-        };
+        private static final SettingsValidators.Validator WALLPAPER_ACTIVITY_VALIDATOR;
         public static final String WHEN_TO_MAKE_WIFI_CALLS = "when_to_make_wifi_calls";
         @Deprecated
         public static final String WIFI_MAX_DHCP_RETRY_COUNT = "wifi_max_dhcp_retry_count";
@@ -1196,13 +922,13 @@ public final class Settings {
         public static final String WIFI_MOBILE_DATA_TRANSITION_WAKELOCK_TIMEOUT_MS = "wifi_mobile_data_transition_wakelock_timeout_ms";
         @Deprecated
         public static final String WIFI_NETWORKS_AVAILABLE_NOTIFICATION_ON = "wifi_networks_available_notification_on";
-        private static final SettingsValidators.Validator WIFI_NETWORKS_AVAILABLE_NOTIFICATION_ON_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator WIFI_NETWORKS_AVAILABLE_NOTIFICATION_ON_VALIDATOR;
         @Deprecated
         public static final String WIFI_NETWORKS_AVAILABLE_REPEAT_DELAY = "wifi_networks_available_repeat_delay";
-        private static final SettingsValidators.Validator WIFI_NETWORKS_AVAILABLE_REPEAT_DELAY_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
+        private static final SettingsValidators.Validator WIFI_NETWORKS_AVAILABLE_REPEAT_DELAY_VALIDATOR;
         @Deprecated
         public static final String WIFI_NUM_OPEN_NETWORKS_KEPT = "wifi_num_open_networks_kept";
-        private static final SettingsValidators.Validator WIFI_NUM_OPEN_NETWORKS_KEPT_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
+        private static final SettingsValidators.Validator WIFI_NUM_OPEN_NETWORKS_KEPT_VALIDATOR;
         @Deprecated
         public static final String WIFI_ON = "wifi_on";
         @Deprecated
@@ -1215,22 +941,22 @@ public final class Settings {
         public static final int WIFI_SLEEP_POLICY_NEVER_WHILE_PLUGGED = 1;
         @Deprecated
         public static final String WIFI_STATIC_DNS1 = "wifi_static_dns1";
-        private static final SettingsValidators.Validator WIFI_STATIC_DNS1_VALIDATOR = SettingsValidators.LENIENT_IP_ADDRESS_VALIDATOR;
+        private static final SettingsValidators.Validator WIFI_STATIC_DNS1_VALIDATOR;
         @Deprecated
         public static final String WIFI_STATIC_DNS2 = "wifi_static_dns2";
-        private static final SettingsValidators.Validator WIFI_STATIC_DNS2_VALIDATOR = SettingsValidators.LENIENT_IP_ADDRESS_VALIDATOR;
+        private static final SettingsValidators.Validator WIFI_STATIC_DNS2_VALIDATOR;
         @Deprecated
         public static final String WIFI_STATIC_GATEWAY = "wifi_static_gateway";
-        private static final SettingsValidators.Validator WIFI_STATIC_GATEWAY_VALIDATOR = SettingsValidators.LENIENT_IP_ADDRESS_VALIDATOR;
+        private static final SettingsValidators.Validator WIFI_STATIC_GATEWAY_VALIDATOR;
         @Deprecated
         public static final String WIFI_STATIC_IP = "wifi_static_ip";
-        private static final SettingsValidators.Validator WIFI_STATIC_IP_VALIDATOR = SettingsValidators.LENIENT_IP_ADDRESS_VALIDATOR;
+        private static final SettingsValidators.Validator WIFI_STATIC_IP_VALIDATOR;
         @Deprecated
         public static final String WIFI_STATIC_NETMASK = "wifi_static_netmask";
-        private static final SettingsValidators.Validator WIFI_STATIC_NETMASK_VALIDATOR = SettingsValidators.LENIENT_IP_ADDRESS_VALIDATOR;
+        private static final SettingsValidators.Validator WIFI_STATIC_NETMASK_VALIDATOR;
         @Deprecated
         public static final String WIFI_USE_STATIC_IP = "wifi_use_static_ip";
-        private static final SettingsValidators.Validator WIFI_USE_STATIC_IP_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator WIFI_USE_STATIC_IP_VALIDATOR;
         @Deprecated
         public static final String WIFI_WATCHDOG_ACCEPTABLE_PACKET_LOSS_PERCENTAGE = "wifi_watchdog_acceptable_packet_loss_percentage";
         @Deprecated
@@ -1256,11 +982,14 @@ public final class Settings {
         @Deprecated
         public static final String WINDOW_ANIMATION_SCALE = "window_animation_scale";
         public static final String WINDOW_ORIENTATION_LISTENER_LOG = "window_orientation_listener_log";
-        public static final SettingsValidators.Validator WINDOW_ORIENTATION_LISTENER_LOG_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        public static final SettingsValidators.Validator WINDOW_ORIENTATION_LISTENER_LOG_VALIDATOR;
+        public static final Uri CONTENT_URI = Uri.parse("content://settings/system");
+        @UnsupportedAppUsage
+        private static final ContentProviderHolder sProviderHolder = new ContentProviderHolder(CONTENT_URI);
         @UnsupportedAppUsage
         private static final NameValueCache sNameValueCache = new NameValueCache(CONTENT_URI, Settings.CALL_METHOD_GET_SYSTEM, Settings.CALL_METHOD_PUT_SYSTEM, sProviderHolder);
         @UnsupportedAppUsage
-        private static final ContentProviderHolder sProviderHolder = new ContentProviderHolder(CONTENT_URI);
+        private static final HashSet<String> MOVED_TO_SECURE = new HashSet<>(30);
 
         static {
             MOVED_TO_SECURE.add("android_id");
@@ -1292,6 +1021,8 @@ public final class Settings {
             MOVED_TO_SECURE.add("wifi_watchdog_ping_delay_ms");
             MOVED_TO_SECURE.add("wifi_watchdog_ping_timeout_ms");
             MOVED_TO_SECURE.add("install_non_market_apps");
+            MOVED_TO_GLOBAL = new HashSet<>();
+            MOVED_TO_SECURE_THEN_GLOBAL = new HashSet<>();
             MOVED_TO_SECURE_THEN_GLOBAL.add("adb_enabled");
             MOVED_TO_SECURE_THEN_GLOBAL.add("bluetooth_on");
             MOVED_TO_SECURE_THEN_GLOBAL.add("data_roaming");
@@ -1333,6 +1064,170 @@ public final class Settings {
             MOVED_TO_GLOBAL.add(Global.SMS_SHORT_CODES_UPDATE_METADATA_URL);
             MOVED_TO_GLOBAL.add(Global.CERT_PIN_UPDATE_CONTENT_URL);
             MOVED_TO_GLOBAL.add(Global.CERT_PIN_UPDATE_METADATA_URL);
+            STAY_ON_WHILE_PLUGGED_IN_VALIDATOR = new SettingsValidators.Validator() { // from class: android.provider.Settings.System.1
+                @Override // android.provider.SettingsValidators.Validator
+                public boolean validate(String value) {
+                    try {
+                        int val = Integer.parseInt(value);
+                        if (val != 0 && val != 1 && val != 2 && val != 4 && val != 3 && val != 5 && val != 6 && val != 7) {
+                            return false;
+                        }
+                        return true;
+                    } catch (NumberFormatException e) {
+                        return false;
+                    }
+                }
+            };
+            END_BUTTON_BEHAVIOR_VALIDATOR = new SettingsValidators.InclusiveIntegerRangeValidator(0, 3);
+            ADVANCED_SETTINGS_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            WIFI_USE_STATIC_IP_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            WIFI_STATIC_IP_VALIDATOR = SettingsValidators.LENIENT_IP_ADDRESS_VALIDATOR;
+            WIFI_STATIC_GATEWAY_VALIDATOR = SettingsValidators.LENIENT_IP_ADDRESS_VALIDATOR;
+            WIFI_STATIC_NETMASK_VALIDATOR = SettingsValidators.LENIENT_IP_ADDRESS_VALIDATOR;
+            WIFI_STATIC_DNS1_VALIDATOR = SettingsValidators.LENIENT_IP_ADDRESS_VALIDATOR;
+            WIFI_STATIC_DNS2_VALIDATOR = SettingsValidators.LENIENT_IP_ADDRESS_VALIDATOR;
+            BLUETOOTH_DISCOVERABILITY_VALIDATOR = new SettingsValidators.InclusiveIntegerRangeValidator(0, 2);
+            BLUETOOTH_DISCOVERABILITY_TIMEOUT_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
+            NEXT_ALARM_FORMATTED_VALIDATOR = new SettingsValidators.Validator() { // from class: android.provider.Settings.System.2
+                private static final int MAX_LENGTH = 1000;
+
+                @Override // android.provider.SettingsValidators.Validator
+                public boolean validate(String value) {
+                    return value == null || value.length() < 1000;
+                }
+            };
+            FONT_SCALE_VALIDATOR = new SettingsValidators.Validator() { // from class: android.provider.Settings.System.3
+                @Override // android.provider.SettingsValidators.Validator
+                public boolean validate(String value) {
+                    try {
+                        return Float.parseFloat(value) >= 0.0f;
+                    } catch (NullPointerException | NumberFormatException e) {
+                        return false;
+                    }
+                }
+            };
+            DIM_SCREEN_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            DISPLAY_COLOR_MODE_VALIDATOR = new SettingsValidators.Validator() { // from class: android.provider.Settings.System.4
+                @Override // android.provider.SettingsValidators.Validator
+                public boolean validate(String value) {
+                    boolean isInFrameworkRange;
+                    boolean isInVendorRange;
+                    try {
+                        int setting = Integer.parseInt(value);
+                        if (setting < 0 || setting > 3) {
+                            isInFrameworkRange = false;
+                        } else {
+                            isInFrameworkRange = true;
+                        }
+                        if (setting < 256 || setting > 511) {
+                            isInVendorRange = false;
+                        } else {
+                            isInVendorRange = true;
+                        }
+                        if (!isInFrameworkRange && !isInVendorRange) {
+                            return false;
+                        }
+                        return true;
+                    } catch (NullPointerException | NumberFormatException e) {
+                        return false;
+                    }
+                }
+            };
+            PEAK_REFRESH_RATE_VALIDATOR = new SettingsValidators.InclusiveFloatRangeValidator(24.0f, Float.MAX_VALUE);
+            SCREEN_OFF_TIMEOUT_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
+            SCREEN_BRIGHTNESS_FOR_VR_VALIDATOR = new SettingsValidators.InclusiveIntegerRangeValidator(0, 255);
+            SCREEN_BRIGHTNESS_MODE_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            SCREEN_AUTO_BRIGHTNESS_ADJ_VALIDATOR = new SettingsValidators.InclusiveFloatRangeValidator(-1.0f, 1.0f);
+            ADAPTIVE_SLEEP_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            MODE_RINGER_STREAMS_AFFECTED_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
+            MUTE_STREAMS_AFFECTED_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
+            VIBRATE_ON_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            VIBRATE_INPUT_DEVICES_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            VIBRATION_INTENSITY_VALIDATOR = new SettingsValidators.InclusiveIntegerRangeValidator(0, 3);
+            MASTER_MONO_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            MASTER_BALANCE_VALIDATOR = new SettingsValidators.InclusiveFloatRangeValidator(-1.0f, 1.0f);
+            NOTIFICATIONS_USE_RING_VOLUME_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            VIBRATE_IN_SILENT_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            VOLUME_SETTINGS = new String[]{VOLUME_VOICE, VOLUME_SYSTEM, VOLUME_RING, VOLUME_MUSIC, VOLUME_ALARM, VOLUME_NOTIFICATION, VOLUME_BLUETOOTH_SCO};
+            VOLUME_SETTINGS_INT = new String[]{VOLUME_VOICE, VOLUME_SYSTEM, VOLUME_RING, VOLUME_MUSIC, VOLUME_ALARM, VOLUME_NOTIFICATION, VOLUME_BLUETOOTH_SCO, "", "", "", VOLUME_ACCESSIBILITY};
+            RINGTONE_VALIDATOR = SettingsValidators.URI_VALIDATOR;
+            DEFAULT_RINGTONE_URI = getUriFor(RINGTONE);
+            RINGTONE_CACHE_URI = getUriFor(RINGTONE_CACHE);
+            NOTIFICATION_SOUND_VALIDATOR = SettingsValidators.URI_VALIDATOR;
+            DEFAULT_NOTIFICATION_URI = getUriFor(NOTIFICATION_SOUND);
+            NOTIFICATION_SOUND_CACHE_URI = getUriFor(NOTIFICATION_SOUND_CACHE);
+            ALARM_ALERT_VALIDATOR = SettingsValidators.URI_VALIDATOR;
+            DEFAULT_ALARM_ALERT_URI = getUriFor(ALARM_ALERT);
+            ALARM_ALERT_CACHE_URI = getUriFor(ALARM_ALERT_CACHE);
+            MEDIA_BUTTON_RECEIVER_VALIDATOR = SettingsValidators.COMPONENT_NAME_VALIDATOR;
+            TEXT_AUTO_REPLACE_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            TEXT_AUTO_CAPS_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            TEXT_AUTO_PUNCTUATE_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            TEXT_SHOW_PASSWORD_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            SHOW_GTALK_SERVICE_STATUS_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            WALLPAPER_ACTIVITY_VALIDATOR = new SettingsValidators.Validator() { // from class: android.provider.Settings.System.5
+                private static final int MAX_LENGTH = 1000;
+
+                @Override // android.provider.SettingsValidators.Validator
+                public boolean validate(String value) {
+                    return (value == null || value.length() <= 1000) && ComponentName.unflattenFromString(value) != null;
+                }
+            };
+            AUTO_TIME_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            AUTO_TIME_ZONE_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            TIME_12_24_VALIDATOR = new SettingsValidators.DiscreteValueValidator(new String[]{"12", "24", null});
+            DATE_FORMAT_VALIDATOR = new SettingsValidators.Validator() { // from class: android.provider.Settings.System.6
+                @Override // android.provider.SettingsValidators.Validator
+                public boolean validate(String value) {
+                    try {
+                        new SimpleDateFormat(value);
+                        return true;
+                    } catch (IllegalArgumentException | NullPointerException e) {
+                        return false;
+                    }
+                }
+            };
+            SETUP_WIZARD_HAS_RUN_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            ACCELEROMETER_ROTATION_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            USER_ROTATION_VALIDATOR = new SettingsValidators.InclusiveIntegerRangeValidator(0, 3);
+            HIDE_ROTATION_LOCK_TOGGLE_FOR_ACCESSIBILITY_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            VIBRATE_WHEN_RINGING_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            DTMF_TONE_WHEN_DIALING_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            DTMF_TONE_TYPE_WHEN_DIALING_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            HEARING_AID_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            TTY_MODE_VALIDATOR = new SettingsValidators.InclusiveIntegerRangeValidator(0, 3);
+            SOUND_EFFECTS_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            HAPTIC_FEEDBACK_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            SHOW_WEB_SUGGESTIONS_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            NOTIFICATION_LIGHT_PULSE_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            POINTER_LOCATION_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            SHOW_TOUCHES_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            WINDOW_ORIENTATION_LISTENER_LOG_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            POWER_SOUNDS_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            DOCK_SOUNDS_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            LOCKSCREEN_SOUNDS_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            LOCKSCREEN_DISABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            SIP_RECEIVE_CALLS_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            SIP_CALL_OPTIONS_VALIDATOR = new SettingsValidators.DiscreteValueValidator(new String[]{SIP_ALWAYS, SIP_ADDRESS_ONLY});
+            SIP_ALWAYS_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            SIP_ADDRESS_ONLY_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            SIP_ASK_ME_EACH_TIME_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            POINTER_SPEED_VALIDATOR = new SettingsValidators.InclusiveFloatRangeValidator(-7.0f, 7.0f);
+            LOCK_TO_APP_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            EGG_MODE_VALIDATOR = new SettingsValidators.Validator() { // from class: android.provider.Settings.System.7
+                @Override // android.provider.SettingsValidators.Validator
+                public boolean validate(String value) {
+                    try {
+                        return Long.parseLong(value) >= 0;
+                    } catch (NumberFormatException e) {
+                        return false;
+                    }
+                }
+            };
+            SHOW_BATTERY_PERCENT_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            SETTINGS_TO_BACKUP = new String[]{"stay_on_while_plugged_in", WIFI_USE_STATIC_IP, WIFI_STATIC_IP, WIFI_STATIC_GATEWAY, WIFI_STATIC_NETMASK, WIFI_STATIC_DNS1, WIFI_STATIC_DNS2, BLUETOOTH_DISCOVERABILITY, BLUETOOTH_DISCOVERABILITY_TIMEOUT, FONT_SCALE, DIM_SCREEN, SCREEN_OFF_TIMEOUT, SCREEN_BRIGHTNESS_MODE, SCREEN_AUTO_BRIGHTNESS_ADJ, SCREEN_BRIGHTNESS_FOR_VR, ADAPTIVE_SLEEP, VIBRATE_INPUT_DEVICES, MODE_RINGER_STREAMS_AFFECTED, TEXT_AUTO_REPLACE, TEXT_AUTO_CAPS, TEXT_AUTO_PUNCTUATE, TEXT_SHOW_PASSWORD, "auto_time", "auto_time_zone", TIME_12_24, DATE_FORMAT, DTMF_TONE_WHEN_DIALING, DTMF_TONE_TYPE_WHEN_DIALING, HEARING_AID, TTY_MODE, MASTER_MONO, MASTER_BALANCE, SOUND_EFFECTS_ENABLED, HAPTIC_FEEDBACK_ENABLED, "power_sounds_enabled", "dock_sounds_enabled", LOCKSCREEN_SOUNDS_ENABLED, SHOW_WEB_SUGGESTIONS, SIP_CALL_OPTIONS, SIP_RECEIVE_CALLS, POINTER_SPEED, VIBRATE_WHEN_RINGING, RINGTONE, LOCK_TO_APP_ENABLED, NOTIFICATION_SOUND, ACCELEROMETER_ROTATION, SHOW_BATTERY_PERCENT, NOTIFICATION_VIBRATION_INTENSITY, RING_VIBRATION_INTENSITY, HAPTIC_FEEDBACK_INTENSITY, DISPLAY_COLOR_MODE, ALARM_ALERT, NOTIFICATION_LIGHT_PULSE};
+            LEGACY_RESTORE_SETTINGS = new String[0];
+            PUBLIC_SETTINGS = new ArraySet();
             PUBLIC_SETTINGS.add(END_BUTTON_BEHAVIOR);
             PUBLIC_SETTINGS.add(WIFI_USE_STATIC_IP);
             PUBLIC_SETTINGS.add(WIFI_STATIC_IP);
@@ -1380,6 +1275,7 @@ public final class Settings {
             PUBLIC_SETTINGS.add(HAPTIC_FEEDBACK_ENABLED);
             PUBLIC_SETTINGS.add(SHOW_WEB_SUGGESTIONS);
             PUBLIC_SETTINGS.add(VIBRATE_WHEN_RINGING);
+            PRIVATE_SETTINGS = new ArraySet();
             PRIVATE_SETTINGS.add(WIFI_USE_STATIC_IP);
             PRIVATE_SETTINGS.add(END_BUTTON_BEHAVIOR);
             PRIVATE_SETTINGS.add(ADVANCED_SETTINGS);
@@ -1420,6 +1316,7 @@ public final class Settings {
             PRIVATE_SETTINGS.add(EGG_MODE);
             PRIVATE_SETTINGS.add(SHOW_BATTERY_PERCENT);
             PRIVATE_SETTINGS.add(DISPLAY_COLOR_MODE);
+            VALIDATORS = new ArrayMap();
             VALIDATORS.put("stay_on_while_plugged_in", STAY_ON_WHILE_PLUGGED_IN_VALIDATOR);
             VALIDATORS.put(END_BUTTON_BEHAVIOR, END_BUTTON_BEHAVIOR_VALIDATOR);
             VALIDATORS.put(WIFI_USE_STATIC_IP, WIFI_USE_STATIC_IP_VALIDATOR);
@@ -1497,14 +1394,17 @@ public final class Settings {
             VALIDATORS.put(WIFI_STATIC_DNS2, WIFI_STATIC_DNS2_VALIDATOR);
             VALIDATORS.put(SHOW_BATTERY_PERCENT, SHOW_BATTERY_PERCENT_VALIDATOR);
             VALIDATORS.put(NOTIFICATION_LIGHT_PULSE, SettingsValidators.BOOLEAN_VALIDATOR);
+            CLONE_TO_MANAGED_PROFILE = new ArraySet();
             CLONE_TO_MANAGED_PROFILE.add(DATE_FORMAT);
             CLONE_TO_MANAGED_PROFILE.add(HAPTIC_FEEDBACK_ENABLED);
             CLONE_TO_MANAGED_PROFILE.add(SOUND_EFFECTS_ENABLED);
             CLONE_TO_MANAGED_PROFILE.add(TEXT_SHOW_PASSWORD);
             CLONE_TO_MANAGED_PROFILE.add(TIME_12_24);
+            CLONE_FROM_PARENT_ON_VALUE = new ArrayMap();
             CLONE_FROM_PARENT_ON_VALUE.put(RINGTONE, Secure.SYNC_PARENT_SOUNDS);
             CLONE_FROM_PARENT_ON_VALUE.put(NOTIFICATION_SOUND, Secure.SYNC_PARENT_SOUNDS);
             CLONE_FROM_PARENT_ON_VALUE.put(ALARM_ALERT, Secure.SYNC_PARENT_SOUNDS);
+            INSTANT_APP_SETTINGS = new ArraySet();
             INSTANT_APP_SETTINGS.add(TEXT_AUTO_REPLACE);
             INSTANT_APP_SETTINGS.add(TEXT_AUTO_CAPS);
             INSTANT_APP_SETTINGS.add(TEXT_AUTO_PUNCTUATE);
@@ -1515,6 +1415,11 @@ public final class Settings {
             INSTANT_APP_SETTINGS.add(TIME_12_24);
             INSTANT_APP_SETTINGS.add(SOUND_EFFECTS_ENABLED);
             INSTANT_APP_SETTINGS.add(ACCELEROMETER_ROTATION);
+            BLUETOOTH_ON_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            USB_MASS_STORAGE_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            WIFI_NETWORKS_AVAILABLE_NOTIFICATION_ON_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            WIFI_NETWORKS_AVAILABLE_REPEAT_DELAY_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
+            WIFI_NUM_OPEN_NETWORKS_KEPT_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
         }
 
         public static void getMovedToGlobalSettings(Set<String> outKeySet) {
@@ -1543,13 +1448,13 @@ public final class Settings {
         public static String getStringForUser(ContentResolver resolver, String name, int userHandle) {
             SeempLog.record(SeempLog.getSeempGetApiIdFromValue(name));
             if (MOVED_TO_SECURE.contains(name)) {
-                Log.w(Settings.TAG, "Setting " + name + " has moved from android.provider.Settings.System to android.provider.Settings.Secure, returning read-only value.");
+                Log.m64w(Settings.TAG, "Setting " + name + " has moved from android.provider.Settings.System to android.provider.Settings.Secure, returning read-only value.");
                 return Secure.getStringForUser(resolver, name, userHandle);
-            } else if (!MOVED_TO_GLOBAL.contains(name) && !MOVED_TO_SECURE_THEN_GLOBAL.contains(name)) {
-                return sNameValueCache.getStringForUser(resolver, name, userHandle);
-            } else {
-                Log.w(Settings.TAG, "Setting " + name + " has moved from android.provider.Settings.System to android.provider.Settings.Global, returning read-only value.");
+            } else if (MOVED_TO_GLOBAL.contains(name) || MOVED_TO_SECURE_THEN_GLOBAL.contains(name)) {
+                Log.m64w(Settings.TAG, "Setting " + name + " has moved from android.provider.Settings.System to android.provider.Settings.Global, returning read-only value.");
                 return Global.getStringForUser(resolver, name, userHandle);
+            } else {
+                return sNameValueCache.getStringForUser(resolver, name, userHandle);
             }
         }
 
@@ -1561,25 +1466,25 @@ public final class Settings {
         public static boolean putStringForUser(ContentResolver resolver, String name, String value, int userHandle) {
             SeempLog.record(SeempLog.getSeempPutApiIdFromValue(name));
             if (MOVED_TO_SECURE.contains(name)) {
-                Log.w(Settings.TAG, "Setting " + name + " has moved from android.provider.Settings.System to android.provider.Settings.Secure, value is unchanged.");
+                Log.m64w(Settings.TAG, "Setting " + name + " has moved from android.provider.Settings.System to android.provider.Settings.Secure, value is unchanged.");
                 return false;
-            } else if (!MOVED_TO_GLOBAL.contains(name) && !MOVED_TO_SECURE_THEN_GLOBAL.contains(name)) {
-                return sNameValueCache.putStringForUser(resolver, name, value, (String) null, false, userHandle);
+            } else if (MOVED_TO_GLOBAL.contains(name) || MOVED_TO_SECURE_THEN_GLOBAL.contains(name)) {
+                Log.m64w(Settings.TAG, "Setting " + name + " has moved from android.provider.Settings.System to android.provider.Settings.Global, value is unchanged.");
+                return false;
             } else {
-                Log.w(Settings.TAG, "Setting " + name + " has moved from android.provider.Settings.System to android.provider.Settings.Global, value is unchanged.");
-                return false;
+                return sNameValueCache.putStringForUser(resolver, name, value, null, false, userHandle);
             }
         }
 
         public static Uri getUriFor(String name) {
             if (MOVED_TO_SECURE.contains(name)) {
-                Log.w(Settings.TAG, "Setting " + name + " has moved from android.provider.Settings.System to android.provider.Settings.Secure, returning Secure URI.");
+                Log.m64w(Settings.TAG, "Setting " + name + " has moved from android.provider.Settings.System to android.provider.Settings.Secure, returning Secure URI.");
                 return Secure.getUriFor(Secure.CONTENT_URI, name);
-            } else if (!MOVED_TO_GLOBAL.contains(name) && !MOVED_TO_SECURE_THEN_GLOBAL.contains(name)) {
-                return getUriFor(CONTENT_URI, name);
-            } else {
-                Log.w(Settings.TAG, "Setting " + name + " has moved from android.provider.Settings.System to android.provider.Settings.Global, returning read-only global URI.");
+            } else if (MOVED_TO_GLOBAL.contains(name) || MOVED_TO_SECURE_THEN_GLOBAL.contains(name)) {
+                Log.m64w(Settings.TAG, "Setting " + name + " has moved from android.provider.Settings.System to android.provider.Settings.Global, returning read-only global URI.");
                 return Global.getUriFor(Global.CONTENT_URI, name);
+            } else {
+                return getUriFor(CONTENT_URI, name);
             }
         }
 
@@ -1606,8 +1511,9 @@ public final class Settings {
 
         @UnsupportedAppUsage
         public static int getIntForUser(ContentResolver cr, String name, int userHandle) throws SettingNotFoundException {
+            String v = getStringForUser(cr, name, userHandle);
             try {
-                return Integer.parseInt(getStringForUser(cr, name, userHandle));
+                return Integer.parseInt(v);
             } catch (NumberFormatException e) {
                 throw new SettingNotFoundException(name);
             }
@@ -1632,7 +1538,8 @@ public final class Settings {
                 return def;
             }
             try {
-                return Long.parseLong(valString);
+                long value = Long.parseLong(valString);
+                return value;
             } catch (NumberFormatException e) {
                 return def;
             }
@@ -1643,8 +1550,9 @@ public final class Settings {
         }
 
         public static long getLongForUser(ContentResolver cr, String name, int userHandle) throws SettingNotFoundException {
+            String valString = getStringForUser(cr, name, userHandle);
             try {
-                return Long.parseLong(getStringForUser(cr, name, userHandle));
+                return Long.parseLong(valString);
             } catch (NumberFormatException e) {
                 throw new SettingNotFoundException(name);
             }
@@ -1680,13 +1588,12 @@ public final class Settings {
 
         public static float getFloatForUser(ContentResolver cr, String name, int userHandle) throws SettingNotFoundException {
             String v = getStringForUser(cr, name, userHandle);
-            if (v != null) {
-                try {
-                    return Float.parseFloat(v);
-                } catch (NumberFormatException e) {
-                    throw new SettingNotFoundException(name);
-                }
-            } else {
+            if (v == null) {
+                throw new SettingNotFoundException(name);
+            }
+            try {
+                return Float.parseFloat(v);
+            } catch (NumberFormatException e) {
                 throw new SettingNotFoundException(name);
             }
         }
@@ -1752,7 +1659,7 @@ public final class Settings {
 
         @Deprecated
         public static void setShowGTalkServiceStatusForUser(ContentResolver cr, boolean flag, int userHandle) {
-            putIntForUser(cr, SHOW_GTALK_SERVICE_STATUS, flag, userHandle);
+            putIntForUser(cr, SHOW_GTALK_SERVICE_STATUS, flag ? 1 : 0, userHandle);
         }
 
         public static void getCloneToManagedProfileSettings(Set<String> outKeySet) {
@@ -1768,73 +1675,70 @@ public final class Settings {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class Secure extends NameValueTable {
         public static final String ACCESSIBILITY_AUTOCLICK_DELAY = "accessibility_autoclick_delay";
-        private static final SettingsValidators.Validator ACCESSIBILITY_AUTOCLICK_DELAY_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
+        private static final SettingsValidators.Validator ACCESSIBILITY_AUTOCLICK_DELAY_VALIDATOR;
         @UnsupportedAppUsage
         public static final String ACCESSIBILITY_AUTOCLICK_ENABLED = "accessibility_autoclick_enabled";
-        private static final SettingsValidators.Validator ACCESSIBILITY_AUTOCLICK_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator ACCESSIBILITY_AUTOCLICK_ENABLED_VALIDATOR;
         public static final String ACCESSIBILITY_BUTTON_TARGET_COMPONENT = "accessibility_button_target_component";
-        private static final SettingsValidators.Validator ACCESSIBILITY_BUTTON_TARGET_COMPONENT_VALIDATOR = new SettingsValidators.Validator() {
-            public boolean validate(String value) {
-                return value != null;
-            }
-        };
+        private static final SettingsValidators.Validator ACCESSIBILITY_BUTTON_TARGET_COMPONENT_VALIDATOR;
         public static final String ACCESSIBILITY_CAPTIONING_BACKGROUND_COLOR = "accessibility_captioning_background_color";
-        private static final SettingsValidators.Validator ACCESSIBILITY_CAPTIONING_BACKGROUND_COLOR_VALIDATOR = SettingsValidators.ANY_INTEGER_VALIDATOR;
+        private static final SettingsValidators.Validator ACCESSIBILITY_CAPTIONING_BACKGROUND_COLOR_VALIDATOR;
         public static final String ACCESSIBILITY_CAPTIONING_EDGE_COLOR = "accessibility_captioning_edge_color";
-        private static final SettingsValidators.Validator ACCESSIBILITY_CAPTIONING_EDGE_COLOR_VALIDATOR = SettingsValidators.ANY_INTEGER_VALIDATOR;
+        private static final SettingsValidators.Validator ACCESSIBILITY_CAPTIONING_EDGE_COLOR_VALIDATOR;
         public static final String ACCESSIBILITY_CAPTIONING_EDGE_TYPE = "accessibility_captioning_edge_type";
-        private static final SettingsValidators.Validator ACCESSIBILITY_CAPTIONING_EDGE_TYPE_VALIDATOR = new SettingsValidators.DiscreteValueValidator(new String[]{"0", "1", "2"});
+        private static final SettingsValidators.Validator ACCESSIBILITY_CAPTIONING_EDGE_TYPE_VALIDATOR;
         public static final String ACCESSIBILITY_CAPTIONING_ENABLED = "accessibility_captioning_enabled";
-        private static final SettingsValidators.Validator ACCESSIBILITY_CAPTIONING_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator ACCESSIBILITY_CAPTIONING_ENABLED_VALIDATOR;
         public static final String ACCESSIBILITY_CAPTIONING_FONT_SCALE = "accessibility_captioning_font_scale";
-        private static final SettingsValidators.Validator ACCESSIBILITY_CAPTIONING_FONT_SCALE_VALIDATOR = new SettingsValidators.InclusiveFloatRangeValidator(0.5f, 2.0f);
+        private static final SettingsValidators.Validator ACCESSIBILITY_CAPTIONING_FONT_SCALE_VALIDATOR;
         public static final String ACCESSIBILITY_CAPTIONING_FOREGROUND_COLOR = "accessibility_captioning_foreground_color";
-        private static final SettingsValidators.Validator ACCESSIBILITY_CAPTIONING_FOREGROUND_COLOR_VALIDATOR = SettingsValidators.ANY_INTEGER_VALIDATOR;
+        private static final SettingsValidators.Validator ACCESSIBILITY_CAPTIONING_FOREGROUND_COLOR_VALIDATOR;
         public static final String ACCESSIBILITY_CAPTIONING_LOCALE = "accessibility_captioning_locale";
-        private static final SettingsValidators.Validator ACCESSIBILITY_CAPTIONING_LOCALE_VALIDATOR = SettingsValidators.LOCALE_VALIDATOR;
+        private static final SettingsValidators.Validator ACCESSIBILITY_CAPTIONING_LOCALE_VALIDATOR;
         public static final String ACCESSIBILITY_CAPTIONING_PRESET = "accessibility_captioning_preset";
-        private static final SettingsValidators.Validator ACCESSIBILITY_CAPTIONING_PRESET_VALIDATOR = new SettingsValidators.DiscreteValueValidator(new String[]{"-1", "0", "1", "2", "3", "4"});
+        private static final SettingsValidators.Validator ACCESSIBILITY_CAPTIONING_PRESET_VALIDATOR;
         @UnsupportedAppUsage
         public static final String ACCESSIBILITY_CAPTIONING_TYPEFACE = "accessibility_captioning_typeface";
-        private static final SettingsValidators.Validator ACCESSIBILITY_CAPTIONING_TYPEFACE_VALIDATOR = new SettingsValidators.DiscreteValueValidator(new String[]{"DEFAULT", "MONOSPACE", "SANS_SERIF", "SERIF"});
+        private static final SettingsValidators.Validator ACCESSIBILITY_CAPTIONING_TYPEFACE_VALIDATOR;
         public static final String ACCESSIBILITY_CAPTIONING_WINDOW_COLOR = "accessibility_captioning_window_color";
-        private static final SettingsValidators.Validator ACCESSIBILITY_CAPTIONING_WINDOW_COLOR_VALIDATOR = SettingsValidators.ANY_INTEGER_VALIDATOR;
+        private static final SettingsValidators.Validator ACCESSIBILITY_CAPTIONING_WINDOW_COLOR_VALIDATOR;
         @UnsupportedAppUsage
         public static final String ACCESSIBILITY_DISPLAY_DALTONIZER = "accessibility_display_daltonizer";
         @UnsupportedAppUsage
         public static final String ACCESSIBILITY_DISPLAY_DALTONIZER_ENABLED = "accessibility_display_daltonizer_enabled";
-        private static final SettingsValidators.Validator ACCESSIBILITY_DISPLAY_DALTONIZER_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
-        private static final SettingsValidators.Validator ACCESSIBILITY_DISPLAY_DALTONIZER_VALIDATOR = new SettingsValidators.DiscreteValueValidator(new String[]{"-1", "0", "11", "12", "13"});
+        private static final SettingsValidators.Validator ACCESSIBILITY_DISPLAY_DALTONIZER_ENABLED_VALIDATOR;
+        private static final SettingsValidators.Validator ACCESSIBILITY_DISPLAY_DALTONIZER_VALIDATOR;
         public static final String ACCESSIBILITY_DISPLAY_INVERSION_ENABLED = "accessibility_display_inversion_enabled";
-        private static final SettingsValidators.Validator ACCESSIBILITY_DISPLAY_INVERSION_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator ACCESSIBILITY_DISPLAY_INVERSION_ENABLED_VALIDATOR;
         @Deprecated
         public static final String ACCESSIBILITY_DISPLAY_MAGNIFICATION_AUTO_UPDATE = "accessibility_display_magnification_auto_update";
         public static final String ACCESSIBILITY_DISPLAY_MAGNIFICATION_ENABLED = "accessibility_display_magnification_enabled";
-        private static final SettingsValidators.Validator ACCESSIBILITY_DISPLAY_MAGNIFICATION_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator ACCESSIBILITY_DISPLAY_MAGNIFICATION_ENABLED_VALIDATOR;
         @SystemApi
         public static final String ACCESSIBILITY_DISPLAY_MAGNIFICATION_NAVBAR_ENABLED = "accessibility_display_magnification_navbar_enabled";
-        private static final SettingsValidators.Validator ACCESSIBILITY_DISPLAY_MAGNIFICATION_NAVBAR_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator ACCESSIBILITY_DISPLAY_MAGNIFICATION_NAVBAR_ENABLED_VALIDATOR;
         public static final String ACCESSIBILITY_DISPLAY_MAGNIFICATION_SCALE = "accessibility_display_magnification_scale";
-        private static final SettingsValidators.Validator ACCESSIBILITY_DISPLAY_MAGNIFICATION_SCALE_VALIDATOR = new SettingsValidators.InclusiveFloatRangeValidator(1.0f, Float.MAX_VALUE);
+        private static final SettingsValidators.Validator ACCESSIBILITY_DISPLAY_MAGNIFICATION_SCALE_VALIDATOR;
         public static final String ACCESSIBILITY_ENABLED = "accessibility_enabled";
-        private static final SettingsValidators.Validator ACCESSIBILITY_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator ACCESSIBILITY_ENABLED_VALIDATOR;
         public static final String ACCESSIBILITY_HIGH_TEXT_CONTRAST_ENABLED = "high_text_contrast_enabled";
-        private static final SettingsValidators.Validator ACCESSIBILITY_HIGH_TEXT_CONTRAST_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator ACCESSIBILITY_HIGH_TEXT_CONTRAST_ENABLED_VALIDATOR;
         public static final String ACCESSIBILITY_INTERACTIVE_UI_TIMEOUT_MS = "accessibility_interactive_ui_timeout_ms";
         @UnsupportedAppUsage
         public static final String ACCESSIBILITY_LARGE_POINTER_ICON = "accessibility_large_pointer_icon";
-        private static final SettingsValidators.Validator ACCESSIBILITY_LARGE_POINTER_ICON_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator ACCESSIBILITY_LARGE_POINTER_ICON_VALIDATOR;
         public static final String ACCESSIBILITY_NON_INTERACTIVE_UI_TIMEOUT_MS = "accessibility_non_interactive_ui_timeout_ms";
         public static final String ACCESSIBILITY_SHORTCUT_DIALOG_SHOWN = "accessibility_shortcut_dialog_shown";
-        private static final SettingsValidators.Validator ACCESSIBILITY_SHORTCUT_DIALOG_SHOWN_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator ACCESSIBILITY_SHORTCUT_DIALOG_SHOWN_VALIDATOR;
         public static final String ACCESSIBILITY_SHORTCUT_ENABLED = "accessibility_shortcut_enabled";
-        private static final SettingsValidators.Validator ACCESSIBILITY_SHORTCUT_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator ACCESSIBILITY_SHORTCUT_ENABLED_VALIDATOR;
         public static final String ACCESSIBILITY_SHORTCUT_ON_LOCK_SCREEN = "accessibility_shortcut_on_lock_screen";
-        private static final SettingsValidators.Validator ACCESSIBILITY_SHORTCUT_ON_LOCK_SCREEN_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator ACCESSIBILITY_SHORTCUT_ON_LOCK_SCREEN_VALIDATOR;
         public static final String ACCESSIBILITY_SHORTCUT_TARGET_SERVICE = "accessibility_shortcut_target_service";
-        private static final SettingsValidators.Validator ACCESSIBILITY_SHORTCUT_TARGET_SERVICE_VALIDATOR = SettingsValidators.NULLABLE_COMPONENT_NAME_VALIDATOR;
+        private static final SettingsValidators.Validator ACCESSIBILITY_SHORTCUT_TARGET_SERVICE_VALIDATOR;
         public static final String ACCESSIBILITY_SOFT_KEYBOARD_MODE = "accessibility_soft_keyboard_mode";
         @Deprecated
         public static final String ACCESSIBILITY_SPEAK_PASSWORD = "speak_password";
@@ -1843,7 +1747,7 @@ public final class Settings {
         public static final String ALLOWED_GEOLOCATION_ORIGINS = "allowed_geolocation_origins";
         @Deprecated
         public static final String ALLOW_MOCK_LOCATION = "mock_location";
-        private static final SettingsValidators.Validator ALLOW_MOCK_LOCATION_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator ALLOW_MOCK_LOCATION_VALIDATOR;
         public static final String ALWAYS_ON_VPN_APP = "always_on_vpn_app";
         public static final String ALWAYS_ON_VPN_LOCKDOWN = "always_on_vpn_lockdown";
         public static final String ALWAYS_ON_VPN_LOCKDOWN_WHITELIST = "always_on_vpn_lockdown_whitelist";
@@ -1854,21 +1758,21 @@ public final class Settings {
         public static final String ASSISTANT = "assistant";
         public static final String ASSIST_DISCLOSURE_ENABLED = "assist_disclosure_enabled";
         public static final String ASSIST_GESTURE_ENABLED = "assist_gesture_enabled";
-        private static final SettingsValidators.Validator ASSIST_GESTURE_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator ASSIST_GESTURE_ENABLED_VALIDATOR;
         public static final String ASSIST_GESTURE_SENSITIVITY = "assist_gesture_sensitivity";
         @SystemApi
         public static final String ASSIST_GESTURE_SETUP_COMPLETE = "assist_gesture_setup_complete";
         public static final String ASSIST_GESTURE_SILENCE_ALERTS_ENABLED = "assist_gesture_silence_alerts_enabled";
-        private static final SettingsValidators.Validator ASSIST_GESTURE_SILENCE_ALERTS_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator ASSIST_GESTURE_SILENCE_ALERTS_ENABLED_VALIDATOR;
         public static final String ASSIST_GESTURE_WAKE_ENABLED = "assist_gesture_wake_enabled";
-        private static final SettingsValidators.Validator ASSIST_GESTURE_WAKE_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator ASSIST_GESTURE_WAKE_ENABLED_VALIDATOR;
         public static final String ASSIST_SCREENSHOT_ENABLED = "assist_screenshot_enabled";
         public static final String ASSIST_STRUCTURE_ENABLED = "assist_structure_enabled";
         @SystemApi
         public static final String AUTOFILL_FEATURE_FIELD_CLASSIFICATION = "autofill_field_classification";
         public static final String AUTOFILL_SERVICE = "autofill_service";
         public static final String AUTOFILL_SERVICE_SEARCH_URI = "autofill_service_search_uri";
-        private static final SettingsValidators.Validator AUTOFILL_SERVICE_VALIDATOR = SettingsValidators.NULLABLE_COMPONENT_NAME_VALIDATOR;
+        private static final SettingsValidators.Validator AUTOFILL_SERVICE_VALIDATOR;
         @SystemApi
         public static final String AUTOFILL_USER_DATA_MAX_CATEGORY_COUNT = "autofill_user_data_max_category_count";
         @SystemApi
@@ -1882,14 +1786,14 @@ public final class Settings {
         public static final String AUTOMATIC_STORAGE_MANAGER_BYTES_CLEARED = "automatic_storage_manager_bytes_cleared";
         public static final String AUTOMATIC_STORAGE_MANAGER_DAYS_TO_RETAIN = "automatic_storage_manager_days_to_retain";
         public static final int AUTOMATIC_STORAGE_MANAGER_DAYS_TO_RETAIN_DEFAULT = 90;
-        private static final SettingsValidators.Validator AUTOMATIC_STORAGE_MANAGER_DAYS_TO_RETAIN_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
+        private static final SettingsValidators.Validator AUTOMATIC_STORAGE_MANAGER_DAYS_TO_RETAIN_VALIDATOR;
         public static final String AUTOMATIC_STORAGE_MANAGER_ENABLED = "automatic_storage_manager_enabled";
         public static final String AUTOMATIC_STORAGE_MANAGER_LAST_RUN = "automatic_storage_manager_last_run";
         public static final String AUTOMATIC_STORAGE_MANAGER_TURNED_OFF_BY_POLICY = "automatic_storage_manager_turned_off_by_policy";
         public static final String AWARE_ENABLED = "aware_enabled";
-        private static final SettingsValidators.Validator AWARE_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator AWARE_ENABLED_VALIDATOR;
         public static final String AWARE_LOCK_ENABLED = "aware_lock_enabled";
-        private static final SettingsValidators.Validator AWARE_LOCK_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator AWARE_LOCK_ENABLED_VALIDATOR;
         @Deprecated
         public static final String BACKGROUND_DATA = "background_data";
         @UnsupportedAppUsage
@@ -1905,30 +1809,29 @@ public final class Settings {
         public static final String BIOMETRIC_DEBUG_ENABLED = "biometric_debug_enabled";
         @Deprecated
         public static final String BLUETOOTH_ON = "bluetooth_on";
-        private static final SettingsValidators.Validator BLUETOOTH_ON_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator BLUETOOTH_ON_VALIDATOR;
         public static final String BLUETOOTH_ON_WHILE_DRIVING = "bluetooth_on_while_driving";
         @Deprecated
         public static final String BUGREPORT_IN_POWER_MENU = "bugreport_in_power_menu";
-        private static final SettingsValidators.Validator BUGREPORT_IN_POWER_MENU_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator BUGREPORT_IN_POWER_MENU_VALIDATOR;
         public static final String CALL_SCREENING_DEFAULT_COMPONENT = "call_screening_default_component";
         public static final String CAMERA_DOUBLE_TAP_POWER_GESTURE_DISABLED = "camera_double_tap_power_gesture_disabled";
-        private static final SettingsValidators.Validator CAMERA_DOUBLE_TAP_POWER_GESTURE_DISABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator CAMERA_DOUBLE_TAP_POWER_GESTURE_DISABLED_VALIDATOR;
         public static final String CAMERA_DOUBLE_TWIST_TO_FLIP_ENABLED = "camera_double_twist_to_flip_enabled";
-        private static final SettingsValidators.Validator CAMERA_DOUBLE_TWIST_TO_FLIP_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator CAMERA_DOUBLE_TWIST_TO_FLIP_ENABLED_VALIDATOR;
         public static final String CAMERA_GESTURE_DISABLED = "camera_gesture_disabled";
-        private static final SettingsValidators.Validator CAMERA_GESTURE_DISABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator CAMERA_GESTURE_DISABLED_VALIDATOR;
         public static final String CAMERA_LIFT_TRIGGER_ENABLED = "camera_lift_trigger_enabled";
         public static final int CAMERA_LIFT_TRIGGER_ENABLED_DEFAULT = 1;
         public static final String CARRIER_APPS_HANDLED = "carrier_apps_handled";
         public static final String CHARGING_SOUNDS_ENABLED = "charging_sounds_enabled";
         public static final String CHARGING_VIBRATION_ENABLED = "charging_vibration_enabled";
-        private static final Set<String> CLONE_TO_MANAGED_PROFILE = new ArraySet();
+        private static final Set<String> CLONE_TO_MANAGED_PROFILE;
         public static final String CMAS_ADDITIONAL_BROADCAST_PKG = "cmas_additional_broadcast_pkg";
         @SystemApi
         public static final String COMPLETED_CATEGORY_PREFIX = "suggested.completed_category.";
         public static final String CONNECTIVITY_RELEASE_PENDING_INTENT_DELAY_MS = "connectivity_release_pending_intent_delay_ms";
         public static final String CONTENT_CAPTURE_ENABLED = "content_capture_enabled";
-        public static final Uri CONTENT_URI = Uri.parse("content://settings/secure");
         public static final String CROSS_PROFILE_CALENDAR_ENABLED = "cross_profile_calendar_enabled";
         public static final String DARK_MODE_DIALOG_SEEN = "dark_mode_dialog_seen";
         @Deprecated
@@ -1945,68 +1848,68 @@ public final class Settings {
         public static final String DISABLED_SYSTEM_INPUT_METHODS = "disabled_system_input_methods";
         public static final String DISPLAY_DENSITY_FORCED = "display_density_forced";
         public static final String DISPLAY_WHITE_BALANCE_ENABLED = "display_white_balance_enabled";
-        private static final SettingsValidators.Validator DISPLAY_WHITE_BALANCE_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator DISPLAY_WHITE_BALANCE_ENABLED_VALIDATOR;
         public static final String DOCKED_CLOCK_FACE = "docked_clock_face";
         public static final String DOUBLE_TAP_TO_WAKE = "double_tap_to_wake";
-        private static final SettingsValidators.Validator DOUBLE_TAP_TO_WAKE_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator DOUBLE_TAP_TO_WAKE_VALIDATOR;
         @SystemApi
         public static final String DOZE_ALWAYS_ON = "doze_always_on";
-        private static final SettingsValidators.Validator DOZE_ALWAYS_ON_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator DOZE_ALWAYS_ON_VALIDATOR;
         public static final String DOZE_DOUBLE_TAP_GESTURE = "doze_pulse_on_double_tap";
-        private static final SettingsValidators.Validator DOZE_DOUBLE_TAP_GESTURE_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator DOZE_DOUBLE_TAP_GESTURE_VALIDATOR;
         @UnsupportedAppUsage
         public static final String DOZE_ENABLED = "doze_enabled";
-        private static final SettingsValidators.Validator DOZE_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator DOZE_ENABLED_VALIDATOR;
         public static final String DOZE_PICK_UP_GESTURE = "doze_pulse_on_pick_up";
-        private static final SettingsValidators.Validator DOZE_PICK_UP_GESTURE_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator DOZE_PICK_UP_GESTURE_VALIDATOR;
         public static final String DOZE_PULSE_ON_LONG_PRESS = "doze_pulse_on_long_press";
         public static final String DOZE_TAP_SCREEN_GESTURE = "doze_tap_gesture";
-        private static final SettingsValidators.Validator DOZE_TAP_SCREEN_GESTURE_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator DOZE_TAP_SCREEN_GESTURE_VALIDATOR;
         public static final String DOZE_WAKE_SCREEN_GESTURE = "doze_wake_screen_gesture";
-        private static final SettingsValidators.Validator DOZE_WAKE_SCREEN_GESTURE_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator DOZE_WAKE_SCREEN_GESTURE_VALIDATOR;
         public static final String EMERGENCY_ASSISTANCE_APPLICATION = "emergency_assistance_application";
         public static final String ENABLED_ACCESSIBILITY_SERVICES = "enabled_accessibility_services";
-        private static final SettingsValidators.Validator ENABLED_ACCESSIBILITY_SERVICES_VALIDATOR = new SettingsValidators.ComponentNameListValidator(SettingsStringUtil.DELIMITER);
+        private static final SettingsValidators.Validator ENABLED_ACCESSIBILITY_SERVICES_VALIDATOR;
         public static final String ENABLED_INPUT_METHODS = "enabled_input_methods";
         @Deprecated
         public static final String ENABLED_NOTIFICATION_ASSISTANT = "enabled_notification_assistant";
-        private static final SettingsValidators.Validator ENABLED_NOTIFICATION_ASSISTANT_VALIDATOR = new SettingsValidators.ComponentNameListValidator(SettingsStringUtil.DELIMITER);
-        @Deprecated
+        private static final SettingsValidators.Validator ENABLED_NOTIFICATION_ASSISTANT_VALIDATOR;
         @UnsupportedAppUsage
+        @Deprecated
         public static final String ENABLED_NOTIFICATION_LISTENERS = "enabled_notification_listeners";
-        private static final SettingsValidators.Validator ENABLED_NOTIFICATION_LISTENERS_VALIDATOR = new SettingsValidators.ComponentNameListValidator(SettingsStringUtil.DELIMITER);
+        private static final SettingsValidators.Validator ENABLED_NOTIFICATION_LISTENERS_VALIDATOR;
         @Deprecated
         public static final String ENABLED_NOTIFICATION_POLICY_ACCESS_PACKAGES = "enabled_notification_policy_access_packages";
-        private static final SettingsValidators.Validator ENABLED_NOTIFICATION_POLICY_ACCESS_PACKAGES_VALIDATOR = new SettingsValidators.PackageNameListValidator(SettingsStringUtil.DELIMITER);
+        private static final SettingsValidators.Validator ENABLED_NOTIFICATION_POLICY_ACCESS_PACKAGES_VALIDATOR;
         @UnsupportedAppUsage
         public static final String ENABLED_PRINT_SERVICES = "enabled_print_services";
         public static final String ENABLED_VR_LISTENERS = "enabled_vr_listeners";
-        private static final SettingsValidators.Validator ENABLED_VR_LISTENERS_VALIDATOR = new SettingsValidators.ComponentNameListValidator(SettingsStringUtil.DELIMITER);
+        private static final SettingsValidators.Validator ENABLED_VR_LISTENERS_VALIDATOR;
         public static final String ENHANCED_VOICE_PRIVACY_ENABLED = "enhanced_voice_privacy_enabled";
-        private static final SettingsValidators.Validator ENHANCED_VOICE_PRIVACY_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator ENHANCED_VOICE_PRIVACY_ENABLED_VALIDATOR;
         public static final String FACE_UNLOCK_ALWAYS_REQUIRE_CONFIRMATION = "face_unlock_always_require_confirmation";
-        private static final SettingsValidators.Validator FACE_UNLOCK_ALWAYS_REQUIRE_CONFIRMATION_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator FACE_UNLOCK_ALWAYS_REQUIRE_CONFIRMATION_VALIDATOR;
         public static final String FACE_UNLOCK_APP_ENABLED = "face_unlock_app_enabled";
-        private static final SettingsValidators.Validator FACE_UNLOCK_APP_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator FACE_UNLOCK_APP_ENABLED_VALIDATOR;
         public static final String FACE_UNLOCK_ATTENTION_REQUIRED = "face_unlock_attention_required";
         public static final String FACE_UNLOCK_DISMISSES_KEYGUARD = "face_unlock_dismisses_keyguard";
-        private static final SettingsValidators.Validator FACE_UNLOCK_DISMISSES_KEYGUARD_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator FACE_UNLOCK_DISMISSES_KEYGUARD_VALIDATOR;
         public static final String FACE_UNLOCK_DIVERSITY_REQUIRED = "face_unlock_diversity_required";
         public static final String FACE_UNLOCK_EDUCATION_INFO_DISPLAYED = "face_unlock_education_info_displayed";
-        private static final SettingsValidators.Validator FACE_UNLOCK_EDUCATION_INFO_DISPLAYED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator FACE_UNLOCK_EDUCATION_INFO_DISPLAYED_VALIDATOR;
         public static final String FACE_UNLOCK_KEYGUARD_ENABLED = "face_unlock_keyguard_enabled";
-        private static final SettingsValidators.Validator FACE_UNLOCK_KEYGUARD_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator FACE_UNLOCK_KEYGUARD_ENABLED_VALIDATOR;
         public static final String FLASHLIGHT_AVAILABLE = "flashlight_available";
         public static final String FLASHLIGHT_ENABLED = "flashlight_enabled";
         public static final String GLOBAL_ACTIONS_PANEL_AVAILABLE = "global_actions_panel_available";
         public static final String GLOBAL_ACTIONS_PANEL_DEBUG_ENABLED = "global_actions_panel_debug_enabled";
         public static final String GLOBAL_ACTIONS_PANEL_ENABLED = "global_actions_panel_enabled";
-        private static final SettingsValidators.Validator GLOBAL_ACTIONS_PANEL_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator GLOBAL_ACTIONS_PANEL_ENABLED_VALIDATOR;
         @Deprecated
         public static final String HTTP_PROXY = "http_proxy";
         @SystemApi
         public static final String HUSH_GESTURE_USED = "hush_gesture_used";
-        private static final SettingsValidators.Validator HUSH_GESTURE_USED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator HUSH_GESTURE_USED_VALIDATOR;
         @UnsupportedAppUsage
         public static final String IMMERSIVE_MODE_CONFIRMATIONS = "immersive_mode_confirmations";
         public static final String INCALL_BACK_BUTTON_BEHAVIOR = "incall_back_button_behavior";
@@ -2018,19 +1921,19 @@ public final class Settings {
         public static final int INCALL_POWER_BUTTON_BEHAVIOR_DEFAULT = 1;
         public static final int INCALL_POWER_BUTTON_BEHAVIOR_HANGUP = 2;
         public static final int INCALL_POWER_BUTTON_BEHAVIOR_SCREEN_OFF = 1;
-        private static final SettingsValidators.Validator INCALL_POWER_BUTTON_BEHAVIOR_VALIDATOR = new SettingsValidators.DiscreteValueValidator(new String[]{"1", "2"});
+        private static final SettingsValidators.Validator INCALL_POWER_BUTTON_BEHAVIOR_VALIDATOR;
         public static final String INPUT_METHODS_SUBTYPE_HISTORY = "input_methods_subtype_history";
         public static final String INPUT_METHOD_SELECTOR_VISIBILITY = "input_method_selector_visibility";
         public static final String INSTALL_NON_MARKET_APPS = "install_non_market_apps";
         @SystemApi
         public static final String INSTANT_APPS_ENABLED = "instant_apps_enabled";
-        public static final Set<String> INSTANT_APP_SETTINGS = new ArraySet();
+        public static final Set<String> INSTANT_APP_SETTINGS;
         public static final String IN_CALL_NOTIFICATION_ENABLED = "in_call_notification_enabled";
-        private static final SettingsValidators.Validator IN_CALL_NOTIFICATION_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator IN_CALL_NOTIFICATION_ENABLED_VALIDATOR;
         public static final String KEYGUARD_SLICE_URI = "keyguard_slice_uri";
         @SystemApi
         public static final String LAST_SETUP_SHOWN = "last_setup_shown";
-        public static final String[] LEGACY_RESTORE_SETTINGS = {ENABLED_NOTIFICATION_LISTENERS, ENABLED_NOTIFICATION_ASSISTANT, ENABLED_NOTIFICATION_POLICY_ACCESS_PACKAGES};
+        public static final String[] LEGACY_RESTORE_SETTINGS;
         @SystemApi
         public static final String LOCATION_ACCESS_CHECK_DELAY_MILLIS = "location_access_check_delay_millis";
         @SystemApi
@@ -2055,7 +1958,7 @@ public final class Settings {
         @Deprecated
         public static final String LOCATION_PROVIDERS_ALLOWED = "location_providers_allowed";
         public static final String LOCKDOWN_IN_POWER_MENU = "lockdown_in_power_menu";
-        private static final SettingsValidators.Validator LOCKDOWN_IN_POWER_MENU_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator LOCKDOWN_IN_POWER_MENU_VALIDATOR;
         @Deprecated
         public static final String LOCK_BIOMETRIC_WEAK_FLAGS = "lock_biometric_weak_flags";
         @Deprecated
@@ -2070,15 +1973,15 @@ public final class Settings {
         @Deprecated
         public static final String LOCK_SCREEN_APPWIDGET_IDS = "lock_screen_appwidget_ids";
         public static final String LOCK_SCREEN_CUSTOM_CLOCK_FACE = "lock_screen_custom_clock_face";
-        private static final SettingsValidators.Validator LOCK_SCREEN_CUSTOM_CLOCK_FACE_VALIDATOR = SettingsValidators.ANY_STRING_VALIDATOR;
+        private static final SettingsValidators.Validator LOCK_SCREEN_CUSTOM_CLOCK_FACE_VALIDATOR;
         @Deprecated
         public static final String LOCK_SCREEN_FALLBACK_APPWIDGET_ID = "lock_screen_fallback_appwidget_id";
         @UnsupportedAppUsage
         public static final String LOCK_SCREEN_LOCK_AFTER_TIMEOUT = "lock_screen_lock_after_timeout";
         @Deprecated
         public static final String LOCK_SCREEN_OWNER_INFO = "lock_screen_owner_info";
-        @Deprecated
         @UnsupportedAppUsage
+        @Deprecated
         public static final String LOCK_SCREEN_OWNER_INFO_ENABLED = "lock_screen_owner_info_enabled";
         @SystemApi
         public static final String LOCK_SCREEN_SHOW_NOTIFICATIONS = "lock_screen_show_notifications";
@@ -2086,60 +1989,58 @@ public final class Settings {
         @Deprecated
         public static final String LOCK_SCREEN_STICKY_APPWIDGET = "lock_screen_sticky_appwidget";
         public static final String LOCK_SCREEN_WHEN_TRUST_LOST = "lock_screen_when_trust_lost";
-        private static final SettingsValidators.Validator LOCK_SCREEN_WHEN_TRUST_LOST_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator LOCK_SCREEN_WHEN_TRUST_LOST_VALIDATOR;
         public static final String LOCK_TO_APP_EXIT_LOCKED = "lock_to_app_exit_locked";
         @Deprecated
         public static final String LOGGING_ID = "logging_id";
         @UnsupportedAppUsage
         public static final String LONG_PRESS_TIMEOUT = "long_press_timeout";
-        private static final SettingsValidators.Validator LONG_PRESS_TIMEOUT_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
+        private static final SettingsValidators.Validator LONG_PRESS_TIMEOUT_VALIDATOR;
         public static final String LOW_POWER_MANUAL_ACTIVATION_COUNT = "low_power_manual_activation_count";
         public static final String LOW_POWER_WARNING_ACKNOWLEDGED = "low_power_warning_acknowledged";
         public static final String MANAGED_PROFILE_CONTACT_REMOTE_SEARCH = "managed_profile_contact_remote_search";
         public static final String MANUAL_RINGER_TOGGLE_COUNT = "manual_ringer_toggle_count";
-        private static final SettingsValidators.Validator MANUAL_RINGER_TOGGLE_COUNT_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
+        private static final SettingsValidators.Validator MANUAL_RINGER_TOGGLE_COUNT_VALIDATOR;
         public static final String MOUNT_PLAY_NOTIFICATION_SND = "mount_play_not_snd";
-        private static final SettingsValidators.Validator MOUNT_PLAY_NOTIFICATION_SND_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator MOUNT_PLAY_NOTIFICATION_SND_VALIDATOR;
         public static final String MOUNT_UMS_AUTOSTART = "mount_ums_autostart";
-        private static final SettingsValidators.Validator MOUNT_UMS_AUTOSTART_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator MOUNT_UMS_AUTOSTART_VALIDATOR;
         public static final String MOUNT_UMS_NOTIFY_ENABLED = "mount_ums_notify_enabled";
-        private static final SettingsValidators.Validator MOUNT_UMS_NOTIFY_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator MOUNT_UMS_NOTIFY_ENABLED_VALIDATOR;
         public static final String MOUNT_UMS_PROMPT = "mount_ums_prompt";
-        private static final SettingsValidators.Validator MOUNT_UMS_PROMPT_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator MOUNT_UMS_PROMPT_VALIDATOR;
         @UnsupportedAppUsage
-        private static final HashSet<String> MOVED_TO_GLOBAL = new HashSet<>();
-        @UnsupportedAppUsage
-        private static final HashSet<String> MOVED_TO_LOCK_SETTINGS = new HashSet<>(3);
+        private static final HashSet<String> MOVED_TO_GLOBAL;
         public static final String MULTI_PRESS_TIMEOUT = "multi_press_timeout";
         public static final String NAVIGATION_MODE = "navigation_mode";
-        private static final SettingsValidators.Validator NAVIGATION_MODE_VALIDATOR = new SettingsValidators.DiscreteValueValidator(new String[]{"0", "1", "2"});
+        private static final SettingsValidators.Validator NAVIGATION_MODE_VALIDATOR;
         @Deprecated
         public static final String NETWORK_PREFERENCE = "network_preference";
         @UnsupportedAppUsage
         public static final String NFC_PAYMENT_DEFAULT_COMPONENT = "nfc_payment_default_component";
-        private static final SettingsValidators.Validator NFC_PAYMENT_DEFAULT_COMPONENT_VALIDATOR = SettingsValidators.COMPONENT_NAME_VALIDATOR;
+        private static final SettingsValidators.Validator NFC_PAYMENT_DEFAULT_COMPONENT_VALIDATOR;
         public static final String NFC_PAYMENT_FOREGROUND = "nfc_payment_foreground";
         public static final String NIGHT_DISPLAY_ACTIVATED = "night_display_activated";
         public static final String NIGHT_DISPLAY_AUTO_MODE = "night_display_auto_mode";
-        private static final SettingsValidators.Validator NIGHT_DISPLAY_AUTO_MODE_VALIDATOR = new SettingsValidators.InclusiveIntegerRangeValidator(0, 2);
+        private static final SettingsValidators.Validator NIGHT_DISPLAY_AUTO_MODE_VALIDATOR;
         public static final String NIGHT_DISPLAY_COLOR_TEMPERATURE = "night_display_color_temperature";
-        private static final SettingsValidators.Validator NIGHT_DISPLAY_COLOR_TEMPERATURE_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
+        private static final SettingsValidators.Validator NIGHT_DISPLAY_COLOR_TEMPERATURE_VALIDATOR;
         public static final String NIGHT_DISPLAY_CUSTOM_END_TIME = "night_display_custom_end_time";
-        private static final SettingsValidators.Validator NIGHT_DISPLAY_CUSTOM_END_TIME_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
+        private static final SettingsValidators.Validator NIGHT_DISPLAY_CUSTOM_END_TIME_VALIDATOR;
         public static final String NIGHT_DISPLAY_CUSTOM_START_TIME = "night_display_custom_start_time";
-        private static final SettingsValidators.Validator NIGHT_DISPLAY_CUSTOM_START_TIME_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
+        private static final SettingsValidators.Validator NIGHT_DISPLAY_CUSTOM_START_TIME_VALIDATOR;
         public static final String NIGHT_DISPLAY_LAST_ACTIVATED_TIME = "night_display_last_activated_time";
         public static final String NOTIFICATION_BADGING = "notification_badging";
-        private static final SettingsValidators.Validator NOTIFICATION_BADGING_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator NOTIFICATION_BADGING_VALIDATOR;
         public static final String NOTIFICATION_BUBBLES = "notification_bubbles";
-        private static final SettingsValidators.Validator NOTIFICATION_BUBBLES_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator NOTIFICATION_BUBBLES_VALIDATOR;
         public static final String NOTIFICATION_DISMISS_RTL = "notification_dismiss_rtl";
-        private static final SettingsValidators.Validator NOTIFICATION_DISMISS_RTL_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator NOTIFICATION_DISMISS_RTL_VALIDATOR;
         public static final String NOTIFICATION_NEW_INTERRUPTION_MODEL = "new_interruption_model";
         public static final String NUM_ROTATION_SUGGESTIONS_ACCEPTED = "num_rotation_suggestions_accepted";
         @SystemApi
         public static final String ODI_CAPTIONS_ENABLED = "odi_captions_enabled";
-        private static final SettingsValidators.Validator ODI_CAPTIONS_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator ODI_CAPTIONS_ENABLED_VALIDATOR;
         public static final String PACKAGES_TO_CLEAR_DATA_BEFORE_FULL_RESTORE = "packages_to_clear_data_before_full_restore";
         public static final String PACKAGE_VERIFIER_STATE = "package_verifier_state";
         @UnsupportedAppUsage
@@ -2149,45 +2050,23 @@ public final class Settings {
         public static final String PARENTAL_CONTROL_REDIRECT_URL = "parental_control_redirect_url";
         public static final String PAYMENT_SERVICE_SEARCH_URI = "payment_service_search_uri";
         public static final String PREFERRED_TTY_MODE = "preferred_tty_mode";
-        private static final SettingsValidators.Validator PREFERRED_TTY_MODE_VALIDATOR = new SettingsValidators.DiscreteValueValidator(new String[]{"0", "1", "2", "3"});
+        private static final SettingsValidators.Validator PREFERRED_TTY_MODE_VALIDATOR;
         public static final String PRINT_SERVICE_SEARCH_URI = "print_service_search_uri";
         public static final String QS_AUTO_ADDED_TILES = "qs_auto_tiles";
-        private static final SettingsValidators.Validator QS_AUTO_ADDED_TILES_VALIDATOR = new SettingsValidators.Validator() {
-            public boolean validate(String value) {
-                if (value == null) {
-                    return false;
-                }
-                boolean valid = true;
-                for (String tile : value.split(SmsManager.REGEX_PREFIX_DELIMITER)) {
-                    valid |= tile.length() > 0 && SettingsValidators.ANY_STRING_VALIDATOR.validate(tile);
-                }
-                return valid;
-            }
-        };
+        private static final SettingsValidators.Validator QS_AUTO_ADDED_TILES_VALIDATOR;
         public static final String QS_TILES = "sysui_qs_tiles";
-        private static final SettingsValidators.Validator QS_TILES_VALIDATOR = new SettingsValidators.Validator() {
-            public boolean validate(String value) {
-                if (value == null) {
-                    return false;
-                }
-                boolean valid = true;
-                for (String tile : value.split(SmsManager.REGEX_PREFIX_DELIMITER)) {
-                    valid |= tile.length() > 0 && SettingsValidators.ANY_STRING_VALIDATOR.validate(tile);
-                }
-                return valid;
-            }
-        };
+        private static final SettingsValidators.Validator QS_TILES_VALIDATOR;
         public static final String RTT_CALLING_MODE = "rtt_calling_mode";
-        private static final SettingsValidators.Validator RTT_CALLING_MODE_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator RTT_CALLING_MODE_VALIDATOR;
         public static final String SCREENSAVER_ACTIVATE_ON_DOCK = "screensaver_activate_on_dock";
-        private static final SettingsValidators.Validator SCREENSAVER_ACTIVATE_ON_DOCK_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator SCREENSAVER_ACTIVATE_ON_DOCK_VALIDATOR;
         public static final String SCREENSAVER_ACTIVATE_ON_SLEEP = "screensaver_activate_on_sleep";
-        private static final SettingsValidators.Validator SCREENSAVER_ACTIVATE_ON_SLEEP_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator SCREENSAVER_ACTIVATE_ON_SLEEP_VALIDATOR;
         public static final String SCREENSAVER_COMPONENTS = "screensaver_components";
-        private static final SettingsValidators.Validator SCREENSAVER_COMPONENTS_VALIDATOR = new SettingsValidators.ComponentNameListValidator(SmsManager.REGEX_PREFIX_DELIMITER);
+        private static final SettingsValidators.Validator SCREENSAVER_COMPONENTS_VALIDATOR;
         public static final String SCREENSAVER_DEFAULT_COMPONENT = "screensaver_default_component";
         public static final String SCREENSAVER_ENABLED = "screensaver_enabled";
-        private static final SettingsValidators.Validator SCREENSAVER_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator SCREENSAVER_ENABLED_VALIDATOR;
         public static final String SEARCH_GLOBAL_SEARCH_ACTIVITY = "search_global_search_activity";
         public static final String SEARCH_MAX_RESULTS_PER_SOURCE = "search_max_results_per_source";
         public static final String SEARCH_MAX_RESULTS_TO_DISPLAY = "search_max_results_to_display";
@@ -2214,11 +2093,11 @@ public final class Settings {
         public static final String SELECTED_SPELL_CHECKER_SUBTYPE = "selected_spell_checker_subtype";
         public static final String SETTINGS_CLASSNAME = "settings_classname";
         @UnsupportedAppUsage
-        public static final String[] SETTINGS_TO_BACKUP = {"bugreport_in_power_menu", ALLOW_MOCK_LOCATION, "usb_mass_storage_enabled", ACCESSIBILITY_DISPLAY_INVERSION_ENABLED, ACCESSIBILITY_DISPLAY_DALTONIZER, ACCESSIBILITY_DISPLAY_DALTONIZER_ENABLED, ACCESSIBILITY_DISPLAY_MAGNIFICATION_ENABLED, ACCESSIBILITY_DISPLAY_MAGNIFICATION_NAVBAR_ENABLED, AUTOFILL_SERVICE, ACCESSIBILITY_DISPLAY_MAGNIFICATION_SCALE, ENABLED_ACCESSIBILITY_SERVICES, ENABLED_VR_LISTENERS, TOUCH_EXPLORATION_GRANTED_ACCESSIBILITY_SERVICES, TOUCH_EXPLORATION_ENABLED, ACCESSIBILITY_ENABLED, ACCESSIBILITY_SHORTCUT_TARGET_SERVICE, ACCESSIBILITY_BUTTON_TARGET_COMPONENT, ACCESSIBILITY_SHORTCUT_DIALOG_SHOWN, ACCESSIBILITY_SHORTCUT_ENABLED, ACCESSIBILITY_SHORTCUT_ON_LOCK_SCREEN, ACCESSIBILITY_HIGH_TEXT_CONTRAST_ENABLED, ACCESSIBILITY_CAPTIONING_PRESET, ACCESSIBILITY_CAPTIONING_ENABLED, ACCESSIBILITY_CAPTIONING_LOCALE, ACCESSIBILITY_CAPTIONING_BACKGROUND_COLOR, ACCESSIBILITY_CAPTIONING_FOREGROUND_COLOR, ACCESSIBILITY_CAPTIONING_EDGE_TYPE, ACCESSIBILITY_CAPTIONING_EDGE_COLOR, ACCESSIBILITY_CAPTIONING_TYPEFACE, ACCESSIBILITY_CAPTIONING_FONT_SCALE, ACCESSIBILITY_CAPTIONING_WINDOW_COLOR, TTS_DEFAULT_RATE, TTS_DEFAULT_PITCH, TTS_DEFAULT_SYNTH, TTS_ENABLED_PLUGINS, TTS_DEFAULT_LOCALE, SHOW_IME_WITH_HARD_KEYBOARD, "wifi_networks_available_notification_on", "wifi_networks_available_repeat_delay", "wifi_num_open_networks_kept", MOUNT_PLAY_NOTIFICATION_SND, MOUNT_UMS_AUTOSTART, MOUNT_UMS_PROMPT, MOUNT_UMS_NOTIFY_ENABLED, DOUBLE_TAP_TO_WAKE, WAKE_GESTURE_ENABLED, LONG_PRESS_TIMEOUT, CAMERA_GESTURE_DISABLED, ACCESSIBILITY_AUTOCLICK_ENABLED, ACCESSIBILITY_AUTOCLICK_DELAY, ACCESSIBILITY_LARGE_POINTER_ICON, PREFERRED_TTY_MODE, ENHANCED_VOICE_PRIVACY_ENABLED, TTY_MODE_ENABLED, RTT_CALLING_MODE, INCALL_POWER_BUTTON_BEHAVIOR, NIGHT_DISPLAY_CUSTOM_START_TIME, NIGHT_DISPLAY_CUSTOM_END_TIME, NIGHT_DISPLAY_COLOR_TEMPERATURE, NIGHT_DISPLAY_AUTO_MODE, DISPLAY_WHITE_BALANCE_ENABLED, SYNC_PARENT_SOUNDS, CAMERA_DOUBLE_TWIST_TO_FLIP_ENABLED, CAMERA_DOUBLE_TAP_POWER_GESTURE_DISABLED, SYSTEM_NAVIGATION_KEYS_ENABLED, QS_TILES, DOZE_ENABLED, DOZE_ALWAYS_ON, DOZE_PICK_UP_GESTURE, DOZE_DOUBLE_TAP_GESTURE, DOZE_TAP_SCREEN_GESTURE, DOZE_WAKE_SCREEN_GESTURE, NFC_PAYMENT_DEFAULT_COMPONENT, AUTOMATIC_STORAGE_MANAGER_DAYS_TO_RETAIN, FACE_UNLOCK_KEYGUARD_ENABLED, FACE_UNLOCK_DISMISSES_KEYGUARD, FACE_UNLOCK_APP_ENABLED, FACE_UNLOCK_ALWAYS_REQUIRE_CONFIRMATION, ASSIST_GESTURE_ENABLED, ASSIST_GESTURE_SILENCE_ALERTS_ENABLED, ASSIST_GESTURE_WAKE_ENABLED, VR_DISPLAY_MODE, NOTIFICATION_BADGING, NOTIFICATION_BUBBLES, NOTIFICATION_DISMISS_RTL, QS_AUTO_ADDED_TILES, SCREENSAVER_ENABLED, SCREENSAVER_COMPONENTS, SCREENSAVER_ACTIVATE_ON_DOCK, SCREENSAVER_ACTIVATE_ON_SLEEP, LOCKDOWN_IN_POWER_MENU, SHOW_FIRST_CRASH_DIALOG_DEV_OPTION, VOLUME_HUSH_GESTURE, MANUAL_RINGER_TOGGLE_COUNT, HUSH_GESTURE_USED, IN_CALL_NOTIFICATION_ENABLED, LOCK_SCREEN_ALLOW_PRIVATE_NOTIFICATIONS, LOCK_SCREEN_CUSTOM_CLOCK_FACE, LOCK_SCREEN_SHOW_NOTIFICATIONS, LOCK_SCREEN_SHOW_SILENT_NOTIFICATIONS, SHOW_NOTIFICATION_SNOOZE, "zen_duration", "show_zen_upgrade_notification", "show_zen_settings_suggestion", "zen_settings_updated", "zen_settings_suggestion_viewed", "charging_sounds_enabled", "charging_vibration_enabled", WIFI_DISCONNECT_DELAY_DURATION, ACCESSIBILITY_NON_INTERACTIVE_UI_TIMEOUT_MS, ACCESSIBILITY_INTERACTIVE_UI_TIMEOUT_MS, NOTIFICATION_NEW_INTERRUPTION_MODEL, TRUST_AGENTS_EXTEND_UNLOCK, UI_NIGHT_MODE, LOCK_SCREEN_WHEN_TRUST_LOST, SKIP_GESTURE, SILENCE_GESTURE, THEME_CUSTOMIZATION_OVERLAY_PACKAGES, NAVIGATION_MODE, AWARE_ENABLED, SKIP_GESTURE_COUNT, SILENCE_ALARMS_GESTURE_COUNT, SILENCE_NOTIFICATION_GESTURE_COUNT, SILENCE_CALL_GESTURE_COUNT, SILENCE_TIMER_GESTURE_COUNT, DARK_MODE_DIALOG_SEEN, GLOBAL_ACTIONS_PANEL_ENABLED, AWARE_LOCK_ENABLED};
+        public static final String[] SETTINGS_TO_BACKUP;
         public static final String SHOW_FIRST_CRASH_DIALOG_DEV_OPTION = "show_first_crash_dialog_dev_option";
-        private static final SettingsValidators.Validator SHOW_FIRST_CRASH_DIALOG_DEV_OPTION_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator SHOW_FIRST_CRASH_DIALOG_DEV_OPTION_VALIDATOR;
         public static final String SHOW_IME_WITH_HARD_KEYBOARD = "show_ime_with_hard_keyboard";
-        private static final SettingsValidators.Validator SHOW_IME_WITH_HARD_KEYBOARD_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator SHOW_IME_WITH_HARD_KEYBOARD_VALIDATOR;
         public static final int SHOW_MODE_AUTO = 0;
         public static final int SHOW_MODE_HIDDEN = 1;
         public static final String SHOW_NOTE_ABOUT_NOTIFICATION_HIDING = "show_note_about_notification_hiding";
@@ -2232,82 +2111,66 @@ public final class Settings {
         public static final String SILENCE_ALARMS_GESTURE_COUNT = "silence_alarms_gesture_count";
         public static final String SILENCE_CALL_GESTURE_COUNT = "silence_call_gesture_count";
         public static final String SILENCE_GESTURE = "silence_gesture";
-        private static final SettingsValidators.Validator SILENCE_GESTURE_COUNT_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
-        private static final SettingsValidators.Validator SILENCE_GESTURE_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator SILENCE_GESTURE_COUNT_VALIDATOR;
+        private static final SettingsValidators.Validator SILENCE_GESTURE_VALIDATOR;
         public static final String SILENCE_NOTIFICATION_GESTURE_COUNT = "silence_notification_gesture_count";
         public static final String SILENCE_TIMER_GESTURE_COUNT = "silence_timer_gesture_count";
         public static final String SKIP_FIRST_USE_HINTS = "skip_first_use_hints";
         public static final String SKIP_GESTURE = "skip_gesture";
         public static final String SKIP_GESTURE_COUNT = "skip_gesture_count";
-        private static final SettingsValidators.Validator SKIP_GESTURE_COUNT_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
-        private static final SettingsValidators.Validator SKIP_GESTURE_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator SKIP_GESTURE_COUNT_VALIDATOR;
+        private static final SettingsValidators.Validator SKIP_GESTURE_VALIDATOR;
         public static final String SLEEP_TIMEOUT = "sleep_timeout";
         @UnsupportedAppUsage
         public static final String SMS_DEFAULT_APPLICATION = "sms_default_application";
         public static final String SPELL_CHECKER_ENABLED = "spell_checker_enabled";
         public static final String SUPPRESS_AUTO_BATTERY_SAVER_SUGGESTION = "suppress_auto_battery_saver_suggestion";
         public static final String SYNC_PARENT_SOUNDS = "sync_parent_sounds";
-        private static final SettingsValidators.Validator SYNC_PARENT_SOUNDS_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator SYNC_PARENT_SOUNDS_VALIDATOR;
         public static final String SYSTEM_NAVIGATION_KEYS_ENABLED = "system_navigation_keys_enabled";
-        private static final SettingsValidators.Validator SYSTEM_NAVIGATION_KEYS_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator SYSTEM_NAVIGATION_KEYS_ENABLED_VALIDATOR;
         @SystemApi
         public static final String THEME_CUSTOMIZATION_OVERLAY_PACKAGES = "theme_customization_overlay_packages";
-        private static final SettingsValidators.Validator THEME_CUSTOMIZATION_OVERLAY_PACKAGES_VALIDATOR = SettingsValidators.JSON_OBJECT_VALIDATOR;
+        private static final SettingsValidators.Validator THEME_CUSTOMIZATION_OVERLAY_PACKAGES_VALIDATOR;
         public static final String TOUCH_EXPLORATION_ENABLED = "touch_exploration_enabled";
-        private static final SettingsValidators.Validator TOUCH_EXPLORATION_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator TOUCH_EXPLORATION_ENABLED_VALIDATOR;
         public static final String TOUCH_EXPLORATION_GRANTED_ACCESSIBILITY_SERVICES = "touch_exploration_granted_accessibility_services";
-        private static final SettingsValidators.Validator TOUCH_EXPLORATION_GRANTED_ACCESSIBILITY_SERVICES_VALIDATOR = new SettingsValidators.ComponentNameListValidator(SettingsStringUtil.DELIMITER);
+        private static final SettingsValidators.Validator TOUCH_EXPLORATION_GRANTED_ACCESSIBILITY_SERVICES_VALIDATOR;
         public static final String TRUST_AGENTS_EXTEND_UNLOCK = "trust_agents_extend_unlock";
-        private static final SettingsValidators.Validator TRUST_AGENTS_EXTEND_UNLOCK_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator TRUST_AGENTS_EXTEND_UNLOCK_VALIDATOR;
         public static final String TRUST_AGENTS_INITIALIZED = "trust_agents_initialized";
         @Deprecated
         public static final String TTS_DEFAULT_COUNTRY = "tts_default_country";
         @Deprecated
         public static final String TTS_DEFAULT_LANG = "tts_default_lang";
         public static final String TTS_DEFAULT_LOCALE = "tts_default_locale";
-        private static final SettingsValidators.Validator TTS_DEFAULT_LOCALE_VALIDATOR = new SettingsValidators.Validator() {
-            public boolean validate(String value) {
-                if (value == null || value.length() == 0) {
-                    return false;
-                }
-                boolean valid = true;
-                for (String ttsLocale : value.split(SmsManager.REGEX_PREFIX_DELIMITER)) {
-                    String[] parts = ttsLocale.split(SettingsStringUtil.DELIMITER);
-                    boolean z = true;
-                    if (parts.length != 2 || parts[0].length() <= 0 || !SettingsValidators.ANY_STRING_VALIDATOR.validate(parts[0]) || !SettingsValidators.LOCALE_VALIDATOR.validate(parts[1])) {
-                        z = false;
-                    }
-                    valid |= z;
-                }
-                return valid;
-            }
-        };
+        private static final SettingsValidators.Validator TTS_DEFAULT_LOCALE_VALIDATOR;
         public static final String TTS_DEFAULT_PITCH = "tts_default_pitch";
-        private static final SettingsValidators.Validator TTS_DEFAULT_PITCH_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
+        private static final SettingsValidators.Validator TTS_DEFAULT_PITCH_VALIDATOR;
         public static final String TTS_DEFAULT_RATE = "tts_default_rate";
-        private static final SettingsValidators.Validator TTS_DEFAULT_RATE_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
+        private static final SettingsValidators.Validator TTS_DEFAULT_RATE_VALIDATOR;
         public static final String TTS_DEFAULT_SYNTH = "tts_default_synth";
-        private static final SettingsValidators.Validator TTS_DEFAULT_SYNTH_VALIDATOR = SettingsValidators.PACKAGE_NAME_VALIDATOR;
+        private static final SettingsValidators.Validator TTS_DEFAULT_SYNTH_VALIDATOR;
         @Deprecated
         public static final String TTS_DEFAULT_VARIANT = "tts_default_variant";
         public static final String TTS_ENABLED_PLUGINS = "tts_enabled_plugins";
-        private static final SettingsValidators.Validator TTS_ENABLED_PLUGINS_VALIDATOR = new SettingsValidators.PackageNameListValidator(WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER);
+        private static final SettingsValidators.Validator TTS_ENABLED_PLUGINS_VALIDATOR;
         @Deprecated
         public static final String TTS_USE_DEFAULTS = "tts_use_defaults";
         public static final String TTY_MODE_ENABLED = "tty_mode_enabled";
-        private static final SettingsValidators.Validator TTY_MODE_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator TTY_MODE_ENABLED_VALIDATOR;
         public static final String TV_APP_USES_NON_SYSTEM_INPUTS = "tv_app_uses_non_system_inputs";
         public static final String TV_INPUT_CUSTOM_LABELS = "tv_input_custom_labels";
         public static final String TV_INPUT_HIDDEN_INPUTS = "tv_input_hidden_inputs";
         public static final String TV_USER_SETUP_COMPLETE = "tv_user_setup_complete";
         public static final String UI_NIGHT_MODE = "ui_night_mode";
-        private static final SettingsValidators.Validator UI_NIGHT_MODE_VALIDATOR = new SettingsValidators.InclusiveIntegerRangeValidator(0, 2);
+        private static final SettingsValidators.Validator UI_NIGHT_MODE_VALIDATOR;
         public static final String UNKNOWN_SOURCES_DEFAULT_REVERSED = "unknown_sources_default_reversed";
         public static final String UNSAFE_VOLUME_MUSIC_ACTIVE_MS = "unsafe_volume_music_active_ms";
         public static final String USB_AUDIO_AUTOMATIC_ROUTING_DISABLED = "usb_audio_automatic_routing_disabled";
         @Deprecated
         public static final String USB_MASS_STORAGE_ENABLED = "usb_mass_storage_enabled";
-        private static final SettingsValidators.Validator USB_MASS_STORAGE_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator USB_MASS_STORAGE_ENABLED_VALIDATOR;
         @SystemApi
         public static final String USER_SETUP_COMPLETE = "user_setup_complete";
         @SystemApi
@@ -2322,13 +2185,13 @@ public final class Settings {
         public static final String USER_SETUP_PERSONALIZATION_STATE = "user_setup_personalization_state";
         @Deprecated
         public static final String USE_GOOGLE_MAIL = "use_google_mail";
-        public static final Map<String, SettingsValidators.Validator> VALIDATORS = new ArrayMap();
+        public static final Map<String, SettingsValidators.Validator> VALIDATORS;
         public static final String VOICE_INTERACTION_SERVICE = "voice_interaction_service";
         @UnsupportedAppUsage
         public static final String VOICE_RECOGNITION_SERVICE = "voice_recognition_service";
         @SystemApi
         public static final String VOLUME_HUSH_GESTURE = "volume_hush_gesture";
-        private static final SettingsValidators.Validator VOLUME_HUSH_GESTURE_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
+        private static final SettingsValidators.Validator VOLUME_HUSH_GESTURE_VALIDATOR;
         @SystemApi
         public static final int VOLUME_HUSH_MUTE = 2;
         @SystemApi
@@ -2338,11 +2201,11 @@ public final class Settings {
         public static final String VR_DISPLAY_MODE = "vr_display_mode";
         public static final int VR_DISPLAY_MODE_LOW_PERSISTENCE = 0;
         public static final int VR_DISPLAY_MODE_OFF = 1;
-        private static final SettingsValidators.Validator VR_DISPLAY_MODE_VALIDATOR = new SettingsValidators.DiscreteValueValidator(new String[]{"0", "1"});
+        private static final SettingsValidators.Validator VR_DISPLAY_MODE_VALIDATOR;
         public static final String WAKE_GESTURE_ENABLED = "wake_gesture_enabled";
-        private static final SettingsValidators.Validator WAKE_GESTURE_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator WAKE_GESTURE_ENABLED_VALIDATOR;
         public static final String WIFI_DISCONNECT_DELAY_DURATION = "wifi_disconnect_delay_duration";
-        private static final SettingsValidators.Validator WIFI_DISCONNECT_DELAY_DURATION_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
+        private static final SettingsValidators.Validator WIFI_DISCONNECT_DELAY_DURATION_VALIDATOR;
         @Deprecated
         public static final String WIFI_IDLE_MS = "wifi_idle_ms";
         @Deprecated
@@ -2351,13 +2214,13 @@ public final class Settings {
         public static final String WIFI_MOBILE_DATA_TRANSITION_WAKELOCK_TIMEOUT_MS = "wifi_mobile_data_transition_wakelock_timeout_ms";
         @Deprecated
         public static final String WIFI_NETWORKS_AVAILABLE_NOTIFICATION_ON = "wifi_networks_available_notification_on";
-        private static final SettingsValidators.Validator WIFI_NETWORKS_AVAILABLE_NOTIFICATION_ON_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator WIFI_NETWORKS_AVAILABLE_NOTIFICATION_ON_VALIDATOR;
         @Deprecated
         public static final String WIFI_NETWORKS_AVAILABLE_REPEAT_DELAY = "wifi_networks_available_repeat_delay";
-        private static final SettingsValidators.Validator WIFI_NETWORKS_AVAILABLE_REPEAT_DELAY_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
+        private static final SettingsValidators.Validator WIFI_NETWORKS_AVAILABLE_REPEAT_DELAY_VALIDATOR;
         @Deprecated
         public static final String WIFI_NUM_OPEN_NETWORKS_KEPT = "wifi_num_open_networks_kept";
-        private static final SettingsValidators.Validator WIFI_NUM_OPEN_NETWORKS_KEPT_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
+        private static final SettingsValidators.Validator WIFI_NUM_OPEN_NETWORKS_KEPT_VALIDATOR;
         @Deprecated
         public static final String WIFI_ON = "wifi_on";
         @Deprecated
@@ -2387,17 +2250,21 @@ public final class Settings {
         public static final String ZEN_DURATION = "zen_duration";
         public static final int ZEN_DURATION_FOREVER = 0;
         public static final int ZEN_DURATION_PROMPT = -1;
-        private static final SettingsValidators.Validator ZEN_DURATION_VALIDATOR = SettingsValidators.ANY_INTEGER_VALIDATOR;
+        private static final SettingsValidators.Validator ZEN_DURATION_VALIDATOR;
         public static final String ZEN_SETTINGS_SUGGESTION_VIEWED = "zen_settings_suggestion_viewed";
         public static final String ZEN_SETTINGS_UPDATED = "zen_settings_updated";
         private static boolean sIsSystemProcess;
-        private static ILockSettings sLockSettings = null;
-        @UnsupportedAppUsage
-        private static final NameValueCache sNameValueCache = new NameValueCache(CONTENT_URI, Settings.CALL_METHOD_GET_SECURE, Settings.CALL_METHOD_PUT_SECURE, sProviderHolder);
+        public static final Uri CONTENT_URI = Uri.parse("content://settings/secure");
         @UnsupportedAppUsage
         private static final ContentProviderHolder sProviderHolder = new ContentProviderHolder(CONTENT_URI);
+        @UnsupportedAppUsage
+        private static final NameValueCache sNameValueCache = new NameValueCache(CONTENT_URI, Settings.CALL_METHOD_GET_SECURE, Settings.CALL_METHOD_PUT_SECURE, sProviderHolder);
+        private static ILockSettings sLockSettings = null;
+        @UnsupportedAppUsage
+        private static final HashSet<String> MOVED_TO_LOCK_SETTINGS = new HashSet<>(3);
 
         @Retention(RetentionPolicy.SOURCE)
+        /* loaded from: classes3.dex */
         public @interface UserSetupPersonalization {
         }
 
@@ -2405,6 +2272,7 @@ public final class Settings {
             MOVED_TO_LOCK_SETTINGS.add("lock_pattern_autolock");
             MOVED_TO_LOCK_SETTINGS.add("lock_pattern_visible_pattern");
             MOVED_TO_LOCK_SETTINGS.add("lock_pattern_tactile_feedback_enabled");
+            MOVED_TO_GLOBAL = new HashSet<>();
             MOVED_TO_GLOBAL.add("adb_enabled");
             MOVED_TO_GLOBAL.add(Global.ASSISTED_GPS_ENABLED);
             MOVED_TO_GLOBAL.add("bluetooth_on");
@@ -2519,6 +2387,174 @@ public final class Settings {
             MOVED_TO_GLOBAL.add(Global.DEFAULT_DNS_SERVER);
             MOVED_TO_GLOBAL.add(Global.PREFERRED_NETWORK_MODE);
             MOVED_TO_GLOBAL.add(Global.WEBVIEW_DATA_REDUCTION_PROXY_KEY);
+            BUGREPORT_IN_POWER_MENU_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            ALLOW_MOCK_LOCATION_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            ODI_CAPTIONS_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            BLUETOOTH_ON_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            AUTOFILL_SERVICE_VALIDATOR = SettingsValidators.NULLABLE_COMPONENT_NAME_VALIDATOR;
+            SHOW_IME_WITH_HARD_KEYBOARD_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            WIFI_DISCONNECT_DELAY_DURATION_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
+            LOCK_SCREEN_CUSTOM_CLOCK_FACE_VALIDATOR = SettingsValidators.ANY_STRING_VALIDATOR;
+            USB_MASS_STORAGE_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            ACCESSIBILITY_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            ACCESSIBILITY_SHORTCUT_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            ACCESSIBILITY_SHORTCUT_ON_LOCK_SCREEN_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            ACCESSIBILITY_SHORTCUT_DIALOG_SHOWN_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            ACCESSIBILITY_SHORTCUT_TARGET_SERVICE_VALIDATOR = SettingsValidators.NULLABLE_COMPONENT_NAME_VALIDATOR;
+            ACCESSIBILITY_BUTTON_TARGET_COMPONENT_VALIDATOR = new SettingsValidators.Validator() { // from class: android.provider.Settings.Secure.1
+                @Override // android.provider.SettingsValidators.Validator
+                public boolean validate(String value) {
+                    return value != null;
+                }
+            };
+            TOUCH_EXPLORATION_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            ENABLED_ACCESSIBILITY_SERVICES_VALIDATOR = new SettingsValidators.ComponentNameListValidator(SettingsStringUtil.DELIMITER);
+            TOUCH_EXPLORATION_GRANTED_ACCESSIBILITY_SERVICES_VALIDATOR = new SettingsValidators.ComponentNameListValidator(SettingsStringUtil.DELIMITER);
+            GLOBAL_ACTIONS_PANEL_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            HUSH_GESTURE_USED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            MANUAL_RINGER_TOGGLE_COUNT_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
+            ZEN_DURATION_VALIDATOR = SettingsValidators.ANY_INTEGER_VALIDATOR;
+            IN_CALL_NOTIFICATION_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            ACCESSIBILITY_HIGH_TEXT_CONTRAST_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            ACCESSIBILITY_DISPLAY_MAGNIFICATION_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            ACCESSIBILITY_DISPLAY_MAGNIFICATION_NAVBAR_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            ACCESSIBILITY_DISPLAY_MAGNIFICATION_SCALE_VALIDATOR = new SettingsValidators.InclusiveFloatRangeValidator(1.0f, Float.MAX_VALUE);
+            ACCESSIBILITY_CAPTIONING_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            ACCESSIBILITY_CAPTIONING_LOCALE_VALIDATOR = SettingsValidators.LOCALE_VALIDATOR;
+            ACCESSIBILITY_CAPTIONING_PRESET_VALIDATOR = new SettingsValidators.DiscreteValueValidator(new String[]{"-1", "0", "1", "2", "3", "4"});
+            ACCESSIBILITY_CAPTIONING_BACKGROUND_COLOR_VALIDATOR = SettingsValidators.ANY_INTEGER_VALIDATOR;
+            ACCESSIBILITY_CAPTIONING_FOREGROUND_COLOR_VALIDATOR = SettingsValidators.ANY_INTEGER_VALIDATOR;
+            ACCESSIBILITY_CAPTIONING_EDGE_TYPE_VALIDATOR = new SettingsValidators.DiscreteValueValidator(new String[]{"0", "1", "2"});
+            ACCESSIBILITY_CAPTIONING_EDGE_COLOR_VALIDATOR = SettingsValidators.ANY_INTEGER_VALIDATOR;
+            ACCESSIBILITY_CAPTIONING_WINDOW_COLOR_VALIDATOR = SettingsValidators.ANY_INTEGER_VALIDATOR;
+            ACCESSIBILITY_CAPTIONING_TYPEFACE_VALIDATOR = new SettingsValidators.DiscreteValueValidator(new String[]{"DEFAULT", "MONOSPACE", "SANS_SERIF", "SERIF"});
+            ACCESSIBILITY_CAPTIONING_FONT_SCALE_VALIDATOR = new SettingsValidators.InclusiveFloatRangeValidator(0.5f, 2.0f);
+            ACCESSIBILITY_DISPLAY_INVERSION_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            ACCESSIBILITY_DISPLAY_DALTONIZER_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            ACCESSIBILITY_DISPLAY_DALTONIZER_VALIDATOR = new SettingsValidators.DiscreteValueValidator(new String[]{"-1", "0", "11", "12", "13"});
+            ACCESSIBILITY_AUTOCLICK_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            ACCESSIBILITY_AUTOCLICK_DELAY_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
+            ACCESSIBILITY_LARGE_POINTER_ICON_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            LONG_PRESS_TIMEOUT_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
+            TTS_DEFAULT_RATE_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
+            TTS_DEFAULT_PITCH_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
+            TTS_DEFAULT_SYNTH_VALIDATOR = SettingsValidators.PACKAGE_NAME_VALIDATOR;
+            TTS_DEFAULT_LOCALE_VALIDATOR = new SettingsValidators.Validator() { // from class: android.provider.Settings.Secure.2
+                @Override // android.provider.SettingsValidators.Validator
+                public boolean validate(String value) {
+                    if (value == null || value.length() == 0) {
+                        return false;
+                    }
+                    String[] ttsLocales = value.split(SmsManager.REGEX_PREFIX_DELIMITER);
+                    boolean valid = true;
+                    for (String ttsLocale : ttsLocales) {
+                        String[] parts = ttsLocale.split(SettingsStringUtil.DELIMITER);
+                        boolean z = true;
+                        if (parts.length != 2 || parts[0].length() <= 0 || !SettingsValidators.ANY_STRING_VALIDATOR.validate(parts[0]) || !SettingsValidators.LOCALE_VALIDATOR.validate(parts[1])) {
+                            z = false;
+                        }
+                        valid |= z;
+                    }
+                    return valid;
+                }
+            };
+            TTS_ENABLED_PLUGINS_VALIDATOR = new SettingsValidators.PackageNameListValidator(WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER);
+            WIFI_NETWORKS_AVAILABLE_NOTIFICATION_ON_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            WIFI_NETWORKS_AVAILABLE_REPEAT_DELAY_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
+            WIFI_NUM_OPEN_NETWORKS_KEPT_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
+            PREFERRED_TTY_MODE_VALIDATOR = new SettingsValidators.DiscreteValueValidator(new String[]{"0", "1", "2", "3"});
+            ENHANCED_VOICE_PRIVACY_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            TTY_MODE_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            RTT_CALLING_MODE_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            MOUNT_PLAY_NOTIFICATION_SND_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            MOUNT_UMS_AUTOSTART_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            MOUNT_UMS_PROMPT_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            MOUNT_UMS_NOTIFY_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            SHOW_FIRST_CRASH_DIALOG_DEV_OPTION_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            INCALL_POWER_BUTTON_BEHAVIOR_VALIDATOR = new SettingsValidators.DiscreteValueValidator(new String[]{"1", "2"});
+            WAKE_GESTURE_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            DOZE_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            DOZE_ALWAYS_ON_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            DOZE_PICK_UP_GESTURE_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            DOZE_DOUBLE_TAP_GESTURE_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            DOZE_TAP_SCREEN_GESTURE_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            DOZE_WAKE_SCREEN_GESTURE_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            SKIP_GESTURE_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            SKIP_GESTURE_COUNT_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
+            SILENCE_GESTURE_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            SILENCE_GESTURE_COUNT_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
+            UI_NIGHT_MODE_VALIDATOR = new SettingsValidators.InclusiveIntegerRangeValidator(0, 2);
+            SCREENSAVER_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            SCREENSAVER_COMPONENTS_VALIDATOR = new SettingsValidators.ComponentNameListValidator(SmsManager.REGEX_PREFIX_DELIMITER);
+            SCREENSAVER_ACTIVATE_ON_DOCK_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            SCREENSAVER_ACTIVATE_ON_SLEEP_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            NFC_PAYMENT_DEFAULT_COMPONENT_VALIDATOR = SettingsValidators.COMPONENT_NAME_VALIDATOR;
+            ENABLED_NOTIFICATION_ASSISTANT_VALIDATOR = new SettingsValidators.ComponentNameListValidator(SettingsStringUtil.DELIMITER);
+            ENABLED_NOTIFICATION_LISTENERS_VALIDATOR = new SettingsValidators.ComponentNameListValidator(SettingsStringUtil.DELIMITER);
+            ENABLED_NOTIFICATION_POLICY_ACCESS_PACKAGES_VALIDATOR = new SettingsValidators.PackageNameListValidator(SettingsStringUtil.DELIMITER);
+            SYNC_PARENT_SOUNDS_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            DOUBLE_TAP_TO_WAKE_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            CAMERA_GESTURE_DISABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            CAMERA_DOUBLE_TAP_POWER_GESTURE_DISABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            CAMERA_DOUBLE_TWIST_TO_FLIP_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            FACE_UNLOCK_KEYGUARD_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            FACE_UNLOCK_DISMISSES_KEYGUARD_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            FACE_UNLOCK_APP_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            FACE_UNLOCK_ALWAYS_REQUIRE_CONFIRMATION_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            FACE_UNLOCK_EDUCATION_INFO_DISPLAYED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            ASSIST_GESTURE_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            ASSIST_GESTURE_SILENCE_ALERTS_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            ASSIST_GESTURE_WAKE_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            TRUST_AGENTS_EXTEND_UNLOCK_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            LOCK_SCREEN_WHEN_TRUST_LOST_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            NIGHT_DISPLAY_AUTO_MODE_VALIDATOR = new SettingsValidators.InclusiveIntegerRangeValidator(0, 2);
+            NIGHT_DISPLAY_COLOR_TEMPERATURE_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
+            NIGHT_DISPLAY_CUSTOM_START_TIME_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
+            NIGHT_DISPLAY_CUSTOM_END_TIME_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
+            DISPLAY_WHITE_BALANCE_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            ENABLED_VR_LISTENERS_VALIDATOR = new SettingsValidators.ComponentNameListValidator(SettingsStringUtil.DELIMITER);
+            VR_DISPLAY_MODE_VALIDATOR = new SettingsValidators.DiscreteValueValidator(new String[]{"0", "1"});
+            AUTOMATIC_STORAGE_MANAGER_DAYS_TO_RETAIN_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
+            SYSTEM_NAVIGATION_KEYS_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            QS_TILES_VALIDATOR = new SettingsValidators.Validator() { // from class: android.provider.Settings.Secure.3
+                @Override // android.provider.SettingsValidators.Validator
+                public boolean validate(String value) {
+                    if (value == null) {
+                        return false;
+                    }
+                    String[] tiles = value.split(SmsManager.REGEX_PREFIX_DELIMITER);
+                    boolean valid = true;
+                    for (String tile : tiles) {
+                        valid |= tile.length() > 0 && SettingsValidators.ANY_STRING_VALIDATOR.validate(tile);
+                    }
+                    return valid;
+                }
+            };
+            NOTIFICATION_BADGING_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            NOTIFICATION_BUBBLES_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            NOTIFICATION_DISMISS_RTL_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            QS_AUTO_ADDED_TILES_VALIDATOR = new SettingsValidators.Validator() { // from class: android.provider.Settings.Secure.4
+                @Override // android.provider.SettingsValidators.Validator
+                public boolean validate(String value) {
+                    if (value == null) {
+                        return false;
+                    }
+                    String[] tiles = value.split(SmsManager.REGEX_PREFIX_DELIMITER);
+                    boolean valid = true;
+                    for (String tile : tiles) {
+                        valid |= tile.length() > 0 && SettingsValidators.ANY_STRING_VALIDATOR.validate(tile);
+                    }
+                    return valid;
+                }
+            };
+            LOCKDOWN_IN_POWER_MENU_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            VOLUME_HUSH_GESTURE_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
+            THEME_CUSTOMIZATION_OVERLAY_PACKAGES_VALIDATOR = SettingsValidators.JSON_OBJECT_VALIDATOR;
+            NAVIGATION_MODE_VALIDATOR = new SettingsValidators.DiscreteValueValidator(new String[]{"0", "1", "2"});
+            AWARE_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            AWARE_LOCK_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+            SETTINGS_TO_BACKUP = new String[]{"bugreport_in_power_menu", ALLOW_MOCK_LOCATION, "usb_mass_storage_enabled", ACCESSIBILITY_DISPLAY_INVERSION_ENABLED, ACCESSIBILITY_DISPLAY_DALTONIZER, ACCESSIBILITY_DISPLAY_DALTONIZER_ENABLED, ACCESSIBILITY_DISPLAY_MAGNIFICATION_ENABLED, ACCESSIBILITY_DISPLAY_MAGNIFICATION_NAVBAR_ENABLED, AUTOFILL_SERVICE, ACCESSIBILITY_DISPLAY_MAGNIFICATION_SCALE, ENABLED_ACCESSIBILITY_SERVICES, ENABLED_VR_LISTENERS, TOUCH_EXPLORATION_GRANTED_ACCESSIBILITY_SERVICES, TOUCH_EXPLORATION_ENABLED, ACCESSIBILITY_ENABLED, ACCESSIBILITY_SHORTCUT_TARGET_SERVICE, ACCESSIBILITY_BUTTON_TARGET_COMPONENT, ACCESSIBILITY_SHORTCUT_DIALOG_SHOWN, ACCESSIBILITY_SHORTCUT_ENABLED, ACCESSIBILITY_SHORTCUT_ON_LOCK_SCREEN, ACCESSIBILITY_HIGH_TEXT_CONTRAST_ENABLED, ACCESSIBILITY_CAPTIONING_PRESET, ACCESSIBILITY_CAPTIONING_ENABLED, ACCESSIBILITY_CAPTIONING_LOCALE, ACCESSIBILITY_CAPTIONING_BACKGROUND_COLOR, ACCESSIBILITY_CAPTIONING_FOREGROUND_COLOR, ACCESSIBILITY_CAPTIONING_EDGE_TYPE, ACCESSIBILITY_CAPTIONING_EDGE_COLOR, ACCESSIBILITY_CAPTIONING_TYPEFACE, ACCESSIBILITY_CAPTIONING_FONT_SCALE, ACCESSIBILITY_CAPTIONING_WINDOW_COLOR, TTS_DEFAULT_RATE, TTS_DEFAULT_PITCH, TTS_DEFAULT_SYNTH, TTS_ENABLED_PLUGINS, TTS_DEFAULT_LOCALE, SHOW_IME_WITH_HARD_KEYBOARD, "wifi_networks_available_notification_on", "wifi_networks_available_repeat_delay", "wifi_num_open_networks_kept", MOUNT_PLAY_NOTIFICATION_SND, MOUNT_UMS_AUTOSTART, MOUNT_UMS_PROMPT, MOUNT_UMS_NOTIFY_ENABLED, DOUBLE_TAP_TO_WAKE, WAKE_GESTURE_ENABLED, LONG_PRESS_TIMEOUT, CAMERA_GESTURE_DISABLED, ACCESSIBILITY_AUTOCLICK_ENABLED, ACCESSIBILITY_AUTOCLICK_DELAY, ACCESSIBILITY_LARGE_POINTER_ICON, PREFERRED_TTY_MODE, ENHANCED_VOICE_PRIVACY_ENABLED, TTY_MODE_ENABLED, RTT_CALLING_MODE, INCALL_POWER_BUTTON_BEHAVIOR, NIGHT_DISPLAY_CUSTOM_START_TIME, NIGHT_DISPLAY_CUSTOM_END_TIME, NIGHT_DISPLAY_COLOR_TEMPERATURE, NIGHT_DISPLAY_AUTO_MODE, DISPLAY_WHITE_BALANCE_ENABLED, SYNC_PARENT_SOUNDS, CAMERA_DOUBLE_TWIST_TO_FLIP_ENABLED, CAMERA_DOUBLE_TAP_POWER_GESTURE_DISABLED, SYSTEM_NAVIGATION_KEYS_ENABLED, QS_TILES, DOZE_ENABLED, DOZE_ALWAYS_ON, DOZE_PICK_UP_GESTURE, DOZE_DOUBLE_TAP_GESTURE, DOZE_TAP_SCREEN_GESTURE, DOZE_WAKE_SCREEN_GESTURE, NFC_PAYMENT_DEFAULT_COMPONENT, AUTOMATIC_STORAGE_MANAGER_DAYS_TO_RETAIN, FACE_UNLOCK_KEYGUARD_ENABLED, FACE_UNLOCK_DISMISSES_KEYGUARD, FACE_UNLOCK_APP_ENABLED, FACE_UNLOCK_ALWAYS_REQUIRE_CONFIRMATION, ASSIST_GESTURE_ENABLED, ASSIST_GESTURE_SILENCE_ALERTS_ENABLED, ASSIST_GESTURE_WAKE_ENABLED, VR_DISPLAY_MODE, NOTIFICATION_BADGING, NOTIFICATION_BUBBLES, NOTIFICATION_DISMISS_RTL, QS_AUTO_ADDED_TILES, SCREENSAVER_ENABLED, SCREENSAVER_COMPONENTS, SCREENSAVER_ACTIVATE_ON_DOCK, SCREENSAVER_ACTIVATE_ON_SLEEP, LOCKDOWN_IN_POWER_MENU, SHOW_FIRST_CRASH_DIALOG_DEV_OPTION, VOLUME_HUSH_GESTURE, MANUAL_RINGER_TOGGLE_COUNT, HUSH_GESTURE_USED, IN_CALL_NOTIFICATION_ENABLED, LOCK_SCREEN_ALLOW_PRIVATE_NOTIFICATIONS, LOCK_SCREEN_CUSTOM_CLOCK_FACE, LOCK_SCREEN_SHOW_NOTIFICATIONS, LOCK_SCREEN_SHOW_SILENT_NOTIFICATIONS, SHOW_NOTIFICATION_SNOOZE, "zen_duration", "show_zen_upgrade_notification", "show_zen_settings_suggestion", "zen_settings_updated", "zen_settings_suggestion_viewed", "charging_sounds_enabled", "charging_vibration_enabled", WIFI_DISCONNECT_DELAY_DURATION, ACCESSIBILITY_NON_INTERACTIVE_UI_TIMEOUT_MS, ACCESSIBILITY_INTERACTIVE_UI_TIMEOUT_MS, NOTIFICATION_NEW_INTERRUPTION_MODEL, TRUST_AGENTS_EXTEND_UNLOCK, UI_NIGHT_MODE, LOCK_SCREEN_WHEN_TRUST_LOST, SKIP_GESTURE, SILENCE_GESTURE, THEME_CUSTOMIZATION_OVERLAY_PACKAGES, NAVIGATION_MODE, AWARE_ENABLED, SKIP_GESTURE_COUNT, SILENCE_ALARMS_GESTURE_COUNT, SILENCE_NOTIFICATION_GESTURE_COUNT, SILENCE_CALL_GESTURE_COUNT, SILENCE_TIMER_GESTURE_COUNT, DARK_MODE_DIALOG_SEEN, GLOBAL_ACTIONS_PANEL_ENABLED, AWARE_LOCK_ENABLED};
+            VALIDATORS = new ArrayMap();
             VALIDATORS.put("bugreport_in_power_menu", BUGREPORT_IN_POWER_MENU_VALIDATOR);
             VALIDATORS.put(ALLOW_MOCK_LOCATION, ALLOW_MOCK_LOCATION_VALIDATOR);
             VALIDATORS.put("usb_mass_storage_enabled", USB_MASS_STORAGE_ENABLED_VALIDATOR);
@@ -2654,6 +2690,8 @@ public final class Settings {
             VALIDATORS.put(UI_NIGHT_MODE, UI_NIGHT_MODE_VALIDATOR);
             VALIDATORS.put(GLOBAL_ACTIONS_PANEL_ENABLED, GLOBAL_ACTIONS_PANEL_ENABLED_VALIDATOR);
             VALIDATORS.put(AWARE_LOCK_ENABLED, AWARE_LOCK_ENABLED_VALIDATOR);
+            LEGACY_RESTORE_SETTINGS = new String[]{ENABLED_NOTIFICATION_LISTENERS, ENABLED_NOTIFICATION_ASSISTANT, ENABLED_NOTIFICATION_POLICY_ACCESS_PACKAGES};
+            CLONE_TO_MANAGED_PROFILE = new ArraySet();
             CLONE_TO_MANAGED_PROFILE.add(ACCESSIBILITY_ENABLED);
             CLONE_TO_MANAGED_PROFILE.add(ALLOW_MOCK_LOCATION);
             CLONE_TO_MANAGED_PROFILE.add(ALLOWED_GEOLOCATION_ORIGINS);
@@ -2670,6 +2708,7 @@ public final class Settings {
                 CLONE_TO_MANAGED_PROFILE.add(SELECTED_SPELL_CHECKER);
                 CLONE_TO_MANAGED_PROFILE.add(SELECTED_SPELL_CHECKER_SUBTYPE);
             }
+            INSTANT_APP_SETTINGS = new ArraySet();
             INSTANT_APP_SETTINGS.add(ENABLED_ACCESSIBILITY_SERVICES);
             INSTANT_APP_SETTINGS.add(ACCESSIBILITY_SPEAK_PASSWORD);
             INSTANT_APP_SETTINGS.add(ACCESSIBILITY_DISPLAY_INVERSION_ENABLED);
@@ -2710,14 +2749,14 @@ public final class Settings {
 
         @UnsupportedAppUsage
         public static String getStringForUser(ContentResolver resolver, String name, int userHandle) {
-            boolean isPreMnc;
+            boolean z;
             if (MOVED_TO_GLOBAL.contains(name)) {
-                Log.w(Settings.TAG, "Setting " + name + " has moved from android.provider.Settings.Secure to android.provider.Settings.Global.");
+                Log.m64w(Settings.TAG, "Setting " + name + " has moved from android.provider.Settings.Secure to android.provider.Settings.Global.");
                 return Global.getStringForUser(resolver, name, userHandle);
             }
             if (MOVED_TO_LOCK_SETTINGS.contains(name)) {
                 synchronized (Secure.class) {
-                    isPreMnc = true;
+                    z = true;
                     if (sLockSettings == null) {
                         sLockSettings = ILockSettings.Stub.asInterface(ServiceManager.getService("lock_settings"));
                         sIsSystemProcess = Process.myUid() == 1000;
@@ -2726,8 +2765,9 @@ public final class Settings {
                 if (sLockSettings != null && !sIsSystemProcess) {
                     Application application = ActivityThread.currentApplication();
                     if (application == null || application.getApplicationInfo() == null || application.getApplicationInfo().targetSdkVersion > 22) {
-                        isPreMnc = false;
+                        z = false;
                     }
+                    boolean isPreMnc = z;
                     if (isPreMnc) {
                         try {
                             return sLockSettings.getString(name, "0", userHandle);
@@ -2747,16 +2787,16 @@ public final class Settings {
 
         @UnsupportedAppUsage
         public static boolean putStringForUser(ContentResolver resolver, String name, String value, int userHandle) {
-            return putStringForUser(resolver, name, value, (String) null, false, userHandle);
+            return putStringForUser(resolver, name, value, null, false, userHandle);
         }
 
         @UnsupportedAppUsage
         public static boolean putStringForUser(ContentResolver resolver, String name, String value, String tag, boolean makeDefault, int userHandle) {
-            if (!MOVED_TO_GLOBAL.contains(name)) {
-                return sNameValueCache.putStringForUser(resolver, name, value, tag, makeDefault, userHandle);
+            if (MOVED_TO_GLOBAL.contains(name)) {
+                Log.m64w(Settings.TAG, "Setting " + name + " has moved from android.provider.Settings.Secure to android.provider.Settings.Global");
+                return Global.putStringForUser(resolver, name, value, tag, makeDefault, userHandle);
             }
-            Log.w(Settings.TAG, "Setting " + name + " has moved from android.provider.Settings.Secure to android.provider.Settings.Global");
-            return Global.putStringForUser(resolver, name, value, tag, makeDefault, userHandle);
+            return sNameValueCache.putStringForUser(resolver, name, value, tag, makeDefault, userHandle);
         }
 
         @SystemApi
@@ -2777,18 +2817,19 @@ public final class Settings {
                     arg.putString(Settings.CALL_METHOD_TAG_KEY, tag);
                 }
                 arg.putInt(Settings.CALL_METHOD_RESET_MODE_KEY, mode);
-                sProviderHolder.getProvider(resolver).call(resolver.getPackageName(), sProviderHolder.mUri.getAuthority(), Settings.CALL_METHOD_RESET_SECURE, (String) null, arg);
+                IContentProvider cp = sProviderHolder.getProvider(resolver);
+                cp.call(resolver.getPackageName(), sProviderHolder.mUri.getAuthority(), Settings.CALL_METHOD_RESET_SECURE, null, arg);
             } catch (RemoteException e) {
-                Log.w(Settings.TAG, "Can't reset do defaults for " + CONTENT_URI, e);
+                Log.m63w(Settings.TAG, "Can't reset do defaults for " + CONTENT_URI, e);
             }
         }
 
         public static Uri getUriFor(String name) {
-            if (!MOVED_TO_GLOBAL.contains(name)) {
-                return getUriFor(CONTENT_URI, name);
+            if (MOVED_TO_GLOBAL.contains(name)) {
+                Log.m64w(Settings.TAG, "Setting " + name + " has moved from android.provider.Settings.Secure to android.provider.Settings.Global, returning global URI.");
+                return Global.getUriFor(Global.CONTENT_URI, name);
             }
-            Log.w(Settings.TAG, "Setting " + name + " has moved from android.provider.Settings.Secure to android.provider.Settings.Global, returning global URI.");
-            return Global.getUriFor(Global.CONTENT_URI, name);
+            return getUriFor(CONTENT_URI, name);
         }
 
         public static int getInt(ContentResolver cr, String name, int def) {
@@ -2813,8 +2854,9 @@ public final class Settings {
         }
 
         public static int getIntForUser(ContentResolver cr, String name, int userHandle) throws SettingNotFoundException {
+            String v = getStringForUser(cr, name, userHandle);
             try {
-                return Integer.parseInt(getStringForUser(cr, name, userHandle));
+                return Integer.parseInt(v);
             } catch (NumberFormatException e) {
                 throw new SettingNotFoundException(name);
             }
@@ -2840,7 +2882,8 @@ public final class Settings {
                 return def;
             }
             try {
-                return Long.parseLong(valString);
+                long value = Long.parseLong(valString);
+                return value;
             } catch (NumberFormatException e) {
                 return def;
             }
@@ -2851,8 +2894,9 @@ public final class Settings {
         }
 
         public static long getLongForUser(ContentResolver cr, String name, int userHandle) throws SettingNotFoundException {
+            String valString = getStringForUser(cr, name, userHandle);
             try {
-                return Long.parseLong(getStringForUser(cr, name, userHandle));
+                return Long.parseLong(valString);
             } catch (NumberFormatException e) {
                 throw new SettingNotFoundException(name);
             }
@@ -2889,13 +2933,12 @@ public final class Settings {
 
         public static float getFloatForUser(ContentResolver cr, String name, int userHandle) throws SettingNotFoundException {
             String v = getStringForUser(cr, name, userHandle);
-            if (v != null) {
-                try {
-                    return Float.parseFloat(v);
-                } catch (NumberFormatException e) {
-                    throw new SettingNotFoundException(name);
-                }
-            } else {
+            if (v == null) {
+                throw new SettingNotFoundException(name);
+            }
+            try {
+                return Float.parseFloat(v);
+            } catch (NumberFormatException e) {
                 throw new SettingNotFoundException(name);
             }
         }
@@ -2914,7 +2957,8 @@ public final class Settings {
 
         @Deprecated
         public static boolean isLocationProviderEnabled(ContentResolver cr, String provider) {
-            return TextUtils.delimitedStringContains(getStringForUser(cr, "location_providers_allowed", cr.getUserId()), ',', provider);
+            String allowedProviders = getStringForUser(cr, "location_providers_allowed", cr.getUserId());
+            return TextUtils.delimitedStringContains(allowedProviders, ',', provider);
         }
 
         @Deprecated
@@ -2922,6 +2966,7 @@ public final class Settings {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class Global extends NameValueTable {
         public static final String ACTIVITY_MANAGER_CONSTANTS = "activity_manager_constants";
         public static final String ACTIVITY_STARTS_LOGGING_ENABLED = "activity_starts_logging_enabled";
@@ -2942,14 +2987,10 @@ public final class Settings {
         public static final String ANOMALY_DETECTION_CONSTANTS = "anomaly_detection_constants";
         public static final String APN_DB_UPDATE_CONTENT_URL = "apn_db_content_url";
         public static final String APN_DB_UPDATE_METADATA_URL = "apn_db_metadata_url";
-        public static final String APPLY_RAMPING_RINGER = "apply_ramping_ringer";
-        private static final SettingsValidators.Validator APPLY_RAMPING_RINGER_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
         public static final String APPOP_HISTORY_BASE_INTERVAL_MILLIS = "baseIntervalMillis";
         public static final String APPOP_HISTORY_INTERVAL_MULTIPLIER = "intervalMultiplier";
         public static final String APPOP_HISTORY_MODE = "mode";
         public static final String APPOP_HISTORY_PARAMETERS = "appop_history_parameters";
-        public static final String APP_AUTO_RESTRICTION_ENABLED = "app_auto_restriction_enabled";
-        private static final SettingsValidators.Validator APP_AUTO_RESTRICTION_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
         public static final String APP_BINDING_CONSTANTS = "app_binding_constants";
         public static final String APP_IDLE_CONSTANTS = "app_idle_constants";
         public static final String APP_OPS_CONSTANTS = "app_ops_constants";
@@ -2965,14 +3006,9 @@ public final class Settings {
         public static final String AUTOFILL_MAX_PARTITIONS_SIZE = "autofill_max_partitions_size";
         public static final String AUTOFILL_MAX_VISIBLE_DATASETS = "autofill_max_visible_datasets";
         public static final String AUTOMATIC_POWER_SAVE_MODE = "automatic_power_save_mode";
-        private static final SettingsValidators.Validator AUTOMATIC_POWER_SAVE_MODE_VALIDATOR = new SettingsValidators.DiscreteValueValidator(new String[]{"0", "1"});
         public static final String AUTO_TIME = "auto_time";
-        private static final SettingsValidators.Validator AUTO_TIME_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
         public static final String AUTO_TIME_ZONE = "auto_time_zone";
-        private static final SettingsValidators.Validator AUTO_TIME_ZONE_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
         public static final String AVERAGE_TIME_TO_DISCHARGE = "average_time_to_discharge";
-        public static final String AWARE_ALLOWED = "aware_allowed";
-        private static final SettingsValidators.Validator AWARE_ALLOWED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
         public static final String BACKUP_AGENT_TIMEOUT_PARAMETERS = "backup_agent_timeout_parameters";
         public static final String BACKUP_MULTI_USER_ENABLED = "backup_multi_user_enabled";
         public static final String BATTERY_CHARGING_STATE_UPDATE_DELAY = "battery_charging_state_update_delay";
@@ -3011,7 +3047,6 @@ public final class Settings {
         public static final String BLUETOOTH_MAP_CLIENT_PRIORITY_PREFIX = "bluetooth_map_client_priority_";
         public static final String BLUETOOTH_MAP_PRIORITY_PREFIX = "bluetooth_map_priority_";
         public static final String BLUETOOTH_ON = "bluetooth_on";
-        private static final SettingsValidators.Validator BLUETOOTH_ON_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
         public static final String BLUETOOTH_PAN_PRIORITY_PREFIX = "bluetooth_pan_priority_";
         public static final String BLUETOOTH_PBAP_CLIENT_PRIORITY_PREFIX = "bluetooth_pbap_client_priority_";
         public static final String BLUETOOTH_SAP_PRIORITY_PREFIX = "bluetooth_sap_priority_";
@@ -3020,9 +3055,6 @@ public final class Settings {
         public static final String BROADCAST_FG_CONSTANTS = "bcast_fg_constants";
         public static final String BROADCAST_OFFLOAD_CONSTANTS = "bcast_offload_constants";
         public static final String BUGREPORT_IN_POWER_MENU = "bugreport_in_power_menu";
-        private static final SettingsValidators.Validator BUGREPORT_IN_POWER_MENU_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
-        public static final String CALL_AUTO_RETRY = "call_auto_retry";
-        private static final SettingsValidators.Validator CALL_AUTO_RETRY_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
         @Deprecated
         public static final String CAPTIVE_PORTAL_DETECTION_ENABLED = "captive_portal_detection_enabled";
         public static final String CAPTIVE_PORTAL_FALLBACK_PROBE_SPECS = "captive_portal_fallback_probe_specs";
@@ -3052,11 +3084,9 @@ public final class Settings {
         public static final String CHAINED_BATTERY_ATTRIBUTION_ENABLED = "chained_battery_attribution_enabled";
         @Deprecated
         public static final String CHARGING_SOUNDS_ENABLED = "charging_sounds_enabled";
-        private static final SettingsValidators.Validator CHARGING_SOUNDS_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
         public static final String CHARGING_STARTED_SOUND = "wireless_charging_started_sound";
         @Deprecated
         public static final String CHARGING_VIBRATION_ENABLED = "charging_vibration_enabled";
-        private static final SettingsValidators.Validator CHARGING_VIBRATION_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
         public static final String COMPATIBILITY_MODE = "compatibility_mode";
         public static final String CONNECTIVITY_CHANGE_DELAY = "connectivity_change_delay";
         public static final String CONNECTIVITY_METRICS_BUFFER_SIZE = "connectivity_metrics_buffer_size";
@@ -3065,7 +3095,6 @@ public final class Settings {
         @Deprecated
         public static final String CONTACT_METADATA_SYNC = "contact_metadata_sync";
         public static final String CONTACT_METADATA_SYNC_ENABLED = "contact_metadata_sync_enabled";
-        public static final Uri CONTENT_URI = Uri.parse("content://settings/global");
         public static final String CONVERSATION_ACTIONS_UPDATE_CONTENT_URL = "conversation_actions_content_url";
         public static final String CONVERSATION_ACTIONS_UPDATE_METADATA_URL = "conversation_actions_metadata_url";
         public static final String DATABASE_CREATION_BUILDID = "database_creation_buildid";
@@ -3109,10 +3138,7 @@ public final class Settings {
         public static final String DNS_RESOLVER_MIN_SAMPLES = "dns_resolver_min_samples";
         public static final String DNS_RESOLVER_SAMPLE_VALIDITY_SECONDS = "dns_resolver_sample_validity_seconds";
         public static final String DNS_RESOLVER_SUCCESS_THRESHOLD_PERCENT = "dns_resolver_success_threshold_percent";
-        public static final String DOCK_AUDIO_MEDIA_ENABLED = "dock_audio_media_enabled";
-        private static final SettingsValidators.Validator DOCK_AUDIO_MEDIA_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
         public static final String DOCK_SOUNDS_ENABLED = "dock_sounds_enabled";
-        private static final SettingsValidators.Validator DOCK_SOUNDS_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
         public static final String DOCK_SOUNDS_ENABLED_WHEN_ACCESSIBILITY = "dock_sounds_enabled_when_accessbility";
         public static final String DOWNLOAD_MAX_BYTES_OVER_MOBILE = "download_manager_max_bytes_over_mobile";
         public static final String DOWNLOAD_RECOMMENDED_MAX_BYTES_OVER_MOBILE = "download_manager_recommended_max_bytes_over_mobile";
@@ -3124,18 +3150,13 @@ public final class Settings {
         public static final String DROPBOX_TAG_PREFIX = "dropbox:";
         public static final String DYNAMIC_POWER_SAVINGS_DISABLE_THRESHOLD = "dynamic_power_savings_disable_threshold";
         public static final String DYNAMIC_POWER_SAVINGS_ENABLED = "dynamic_power_savings_enabled";
-        private static final SettingsValidators.Validator DYNAMIC_POWER_SAVINGS_VALIDATOR = new SettingsValidators.InclusiveIntegerRangeValidator(0, 100);
         public static final String EMERGENCY_AFFORDANCE_NEEDED = "emergency_affordance_needed";
-        public static final String EMERGENCY_TONE = "emergency_tone";
-        private static final SettingsValidators.Validator EMERGENCY_TONE_VALIDATOR = new SettingsValidators.DiscreteValueValidator(new String[]{"0", "1", "2"});
         public static final String EMULATE_DISPLAY_CUTOUT = "emulate_display_cutout";
         public static final int EMULATE_DISPLAY_CUTOUT_OFF = 0;
         public static final int EMULATE_DISPLAY_CUTOUT_ON = 1;
         public static final String ENABLED_SUBSCRIPTION_FOR_SLOT = "enabled_subscription_for_slot";
         @UnsupportedAppUsage
         public static final String ENABLE_ACCESSIBILITY_GLOBAL_GESTURE_ENABLED = "enable_accessibility_global_gesture_enabled";
-        public static final String ENABLE_AUTOMATIC_SYSTEM_SERVER_HEAP_DUMPS = "enable_automatic_system_server_heap_dumps";
-        private static final SettingsValidators.Validator ENABLE_AUTOMATIC_SYSTEM_SERVER_HEAP_DUMPS_VALIDATOR = new SettingsValidators.DiscreteValueValidator(new String[]{"0", "1"});
         public static final String ENABLE_CACHE_QUOTA_CALCULATION = "enable_cache_quota_calculation";
         public static final String ENABLE_CELLULAR_ON_BOOT = "enable_cellular_on_boot";
         public static final String ENABLE_DELETION_HELPER_NO_THRESHOLD_TOGGLE = "enable_deletion_helper_no_threshold_toggle";
@@ -3144,42 +3165,10 @@ public final class Settings {
         public static final String ENABLE_GNSS_RAW_MEAS_FULL_TRACKING = "enable_gnss_raw_meas_full_tracking";
         public static final String ENABLE_GPU_DEBUG_LAYERS = "enable_gpu_debug_layers";
         public static final String ENABLE_RADIO_BUG_DETECTION = "enable_radio_bug_detection";
-        public static final String ENCODED_SURROUND_OUTPUT = "encoded_surround_output";
         public static final int ENCODED_SURROUND_OUTPUT_ALWAYS = 2;
         public static final int ENCODED_SURROUND_OUTPUT_AUTO = 0;
-        public static final String ENCODED_SURROUND_OUTPUT_ENABLED_FORMATS = "encoded_surround_output_enabled_formats";
-        private static final SettingsValidators.Validator ENCODED_SURROUND_OUTPUT_ENABLED_FORMATS_VALIDATOR = new SettingsValidators.Validator() {
-            public boolean validate(String value) {
-                try {
-                    for (String format : TextUtils.split(value, SmsManager.REGEX_PREFIX_DELIMITER)) {
-                        int audioFormat = Integer.valueOf(format).intValue();
-                        boolean isSurroundFormat = false;
-                        int[] iArr = AudioFormat.SURROUND_SOUND_ENCODING;
-                        int length = iArr.length;
-                        int i = 0;
-                        while (true) {
-                            if (i >= length) {
-                                break;
-                            } else if (iArr[i] == audioFormat) {
-                                isSurroundFormat = true;
-                                break;
-                            } else {
-                                i++;
-                            }
-                        }
-                        if (!isSurroundFormat) {
-                            return false;
-                        }
-                    }
-                    return true;
-                } catch (NumberFormatException e) {
-                    return false;
-                }
-            }
-        };
         public static final int ENCODED_SURROUND_OUTPUT_MANUAL = 3;
         public static final int ENCODED_SURROUND_OUTPUT_NEVER = 1;
-        private static final SettingsValidators.Validator ENCODED_SURROUND_OUTPUT_VALIDATOR = new SettingsValidators.DiscreteValueValidator(new String[]{"0", "1", "2", "3"});
         @Deprecated
         public static final String ENHANCED_4G_MODE_ENABLED = "volte_vt_enabled";
         public static final String EPHEMERAL_COOKIE_MAX_SIZE_BYTES = "ephemeral_cookie_max_size_bytes";
@@ -3245,7 +3234,7 @@ public final class Settings {
         @Deprecated
         public static final String INSTALL_NON_MARKET_APPS = "install_non_market_apps";
         public static final String INSTANT_APP_DEXOPT_ENABLED = "instant_app_dexopt_enabled";
-        public static final Set<String> INSTANT_APP_SETTINGS = new ArraySet();
+        public static final Set<String> INSTANT_APP_SETTINGS;
         public static final String INTENT_FIREWALL_UPDATE_CONTENT_URL = "intent_firewall_content_url";
         public static final String INTENT_FIREWALL_UPDATE_METADATA_URL = "intent_firewall_metadata_url";
         public static final String ISOLATED_STORAGE_LOCAL = "isolated_storage_local";
@@ -3258,7 +3247,7 @@ public final class Settings {
         public static final String LANG_ID_UPDATE_CONTENT_URL = "lang_id_content_url";
         public static final String LANG_ID_UPDATE_METADATA_URL = "lang_id_metadata_url";
         public static final String LAST_ACTIVE_USER_ID = "last_active_persistent_user_id";
-        public static final String[] LEGACY_RESTORE_SETTINGS = new String[0];
+        public static final String[] LEGACY_RESTORE_SETTINGS;
         public static final String LID_BEHAVIOR = "lid_behavior";
         public static final String LOCATION_BACKGROUND_THROTTLE_INTERVAL_MS = "location_background_throttle_interval_ms";
         public static final String LOCATION_BACKGROUND_THROTTLE_PACKAGE_WHITELIST = "location_background_throttle_package_whitelist";
@@ -3274,14 +3263,8 @@ public final class Settings {
         public static final String LOW_BATTERY_SOUND_TIMEOUT = "low_battery_sound_timeout";
         public static final String LOW_POWER_MODE = "low_power";
         public static final String LOW_POWER_MODE_STICKY = "low_power_sticky";
-        public static final String LOW_POWER_MODE_STICKY_AUTO_DISABLE_ENABLED = "low_power_sticky_auto_disable_enabled";
-        private static final SettingsValidators.Validator LOW_POWER_MODE_STICKY_AUTO_DISABLE_ENABLED_VALIDATOR = new SettingsValidators.DiscreteValueValidator(new String[]{"0", "1"});
-        public static final String LOW_POWER_MODE_STICKY_AUTO_DISABLE_LEVEL = "low_power_sticky_auto_disable_level";
-        private static final SettingsValidators.Validator LOW_POWER_MODE_STICKY_AUTO_DISABLE_LEVEL_VALIDATOR = new SettingsValidators.InclusiveIntegerRangeValidator(0, 100);
         public static final String LOW_POWER_MODE_SUGGESTION_PARAMS = "low_power_mode_suggestion_params";
-        public static final String LOW_POWER_MODE_TRIGGER_LEVEL = "low_power_trigger_level";
         public static final String LOW_POWER_MODE_TRIGGER_LEVEL_MAX = "low_power_trigger_level_max";
-        private static final SettingsValidators.Validator LOW_POWER_MODE_TRIGGER_LEVEL_VALIDATOR = new SettingsValidators.InclusiveIntegerRangeValidator(0, 100);
         public static final String LTE_SERVICE_FORCED = "lte_service_forced";
         public static final String MAX_NOTIFICATION_ENQUEUE_RATE = "max_notification_enqueue_rate";
         public static final String MAX_SOUND_TRIGGER_DETECTION_SERVICE_OPS_PER_DAY = "max_sound_trigger_detection_service_ops_per_day";
@@ -3295,12 +3278,12 @@ public final class Settings {
         public static final String MODEM_STACK_ENABLED_FOR_SLOT = "modem_stack_enabled_for_slot";
         public static final String MODE_RINGER = "mode_ringer";
         @UnsupportedAppUsage
-        private static final HashSet<String> MOVED_TO_SECURE = new HashSet<>(8);
+        private static final HashSet<String> MOVED_TO_SECURE;
         public static final String MULTI_SIM_DATA_CALL_SUBSCRIPTION = "multi_sim_data_call";
         public static final String MULTI_SIM_SMS_PROMPT = "multi_sim_sms_prompt";
         public static final String MULTI_SIM_SMS_SUBSCRIPTION = "multi_sim_sms";
         @UnsupportedAppUsage
-        public static final String[] MULTI_SIM_USER_PREFERRED_SUBS = {"user_preferred_sub1", "user_preferred_sub2", "user_preferred_sub3"};
+        public static final String[] MULTI_SIM_USER_PREFERRED_SUBS;
         public static final String MULTI_SIM_VOICE_CALL_SUBSCRIPTION = "multi_sim_voice_call";
         @UnsupportedAppUsage
         public static final String MULTI_SIM_VOICE_PROMPT = "multi_sim_voice_prompt";
@@ -3335,8 +3318,6 @@ public final class Settings {
         public static final String NETWORK_DEFAULT_DAILY_MULTIPATH_QUOTA_BYTES = "network_default_daily_multipath_quota_bytes";
         public static final String NETWORK_METERED_MULTIPATH_PREFERENCE = "network_metered_multipath_preference";
         public static final String NETWORK_PREFERENCE = "network_preference";
-        public static final String NETWORK_RECOMMENDATIONS_ENABLED = "network_recommendations_enabled";
-        private static final SettingsValidators.Validator NETWORK_RECOMMENDATIONS_ENABLED_VALIDATOR = new SettingsValidators.DiscreteValueValidator(new String[]{"-1", "0", "1"});
         public static final String NETWORK_RECOMMENDATIONS_PACKAGE = "network_recommendations_package";
         public static final String NETWORK_RECOMMENDATION_REQUEST_TIMEOUT_MS = "network_recommendation_request_timeout_ms";
         @UnsupportedAppUsage
@@ -3375,20 +3356,13 @@ public final class Settings {
         public static final String PDP_WATCHDOG_TRIGGER_PACKET_COUNT = "pdp_watchdog_trigger_packet_count";
         public static final String POLICY_CONTROL = "policy_control";
         public static final String POWER_BUTTON_LONG_PRESS = "power_button_long_press";
-        private static final SettingsValidators.Validator POWER_BUTTON_LONG_PRESS_VALIDATOR = new SettingsValidators.InclusiveIntegerRangeValidator(0, 5);
         public static final String POWER_BUTTON_SUPPRESSION_DELAY_AFTER_GESTURE_WAKE = "power_button_suppression_delay_after_gesture_wake";
         public static final String POWER_BUTTON_VERY_LONG_PRESS = "power_button_very_long_press";
-        private static final SettingsValidators.Validator POWER_BUTTON_VERY_LONG_PRESS_VALIDATOR = new SettingsValidators.InclusiveIntegerRangeValidator(0, 1);
         public static final String POWER_MANAGER_CONSTANTS = "power_manager_constants";
         public static final String POWER_SOUNDS_ENABLED = "power_sounds_enabled";
-        private static final SettingsValidators.Validator POWER_SOUNDS_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
         @UnsupportedAppUsage
         public static final String PREFERRED_NETWORK_MODE = "preferred_network_mode";
         public static final String PRIVATE_DNS_DEFAULT_MODE = "private_dns_default_mode";
-        public static final String PRIVATE_DNS_MODE = "private_dns_mode";
-        private static final SettingsValidators.Validator PRIVATE_DNS_MODE_VALIDATOR = SettingsValidators.ANY_STRING_VALIDATOR;
-        public static final String PRIVATE_DNS_SPECIFIER = "private_dns_specifier";
-        private static final SettingsValidators.Validator PRIVATE_DNS_SPECIFIER_VALIDATOR = SettingsValidators.ANY_STRING_VALIDATOR;
         public static final String PROVISIONING_APN_ALARM_DELAY_IN_MS = "provisioning_apn_alarm_delay_in_ms";
         public static final String RADIO_BLUETOOTH = "bluetooth";
         public static final String RADIO_BUG_SYSTEM_ERROR_COUNT_THRESHOLD = "radio_bug_system_error_count_threshold";
@@ -3406,7 +3380,6 @@ public final class Settings {
         public static final String SELINUX_UPDATE_CONTENT_URL = "selinux_content_url";
         public static final String SELINUX_UPDATE_METADATA_URL = "selinux_metadata_url";
         public static final String SEND_ACTION_APP_ERROR = "send_action_app_error";
-        public static final String[] SETTINGS_TO_BACKUP = {APPLY_RAMPING_RINGER, "bugreport_in_power_menu", "stay_on_while_plugged_in", APP_AUTO_RESTRICTION_ENABLED, "auto_time", "auto_time_zone", "power_sounds_enabled", "dock_sounds_enabled", "charging_sounds_enabled", "usb_mass_storage_enabled", NETWORK_RECOMMENDATIONS_ENABLED, WIFI_WAKEUP_ENABLED, "wifi_networks_available_notification_on", WIFI_CARRIER_NETWORKS_AVAILABLE_NOTIFICATION_ON, USE_OPEN_WIFI_PACKAGE, WIFI_WATCHDOG_POOR_NETWORK_TEST_ENABLED, EMERGENCY_TONE, CALL_AUTO_RETRY, DOCK_AUDIO_MEDIA_ENABLED, ENABLE_AUTOMATIC_SYSTEM_SERVER_HEAP_DUMPS, ENCODED_SURROUND_OUTPUT, ENCODED_SURROUND_OUTPUT_ENABLED_FORMATS, LOW_POWER_MODE_TRIGGER_LEVEL, LOW_POWER_MODE_STICKY_AUTO_DISABLE_ENABLED, LOW_POWER_MODE_STICKY_AUTO_DISABLE_LEVEL, "bluetooth_on", PRIVATE_DNS_MODE, PRIVATE_DNS_SPECIFIER, SOFT_AP_TIMEOUT_ENABLED, "zen_duration", "charging_vibration_enabled", AWARE_ALLOWED};
         public static final String SETTINGS_USE_EXTERNAL_PROVIDER_API = "settings_use_external_provider_api";
         public static final String SETTINGS_USE_PSD_API = "settings_use_psd_api";
         public static final String SETUP_PREPAID_DATA_SERVICE_URL = "setup_prepaid_data_service_url";
@@ -3440,25 +3413,10 @@ public final class Settings {
         public static final String SMS_SHORT_CODES_UPDATE_METADATA_URL = "sms_short_codes_metadata_url";
         public static final String SMS_SHORT_CODE_CONFIRMATION = "sms_short_code_confirmation";
         public static final String SMS_SHORT_CODE_RULE = "sms_short_code_rule";
-        public static final String SOFT_AP_TIMEOUT_ENABLED = "soft_ap_timeout_enabled";
-        private static final SettingsValidators.Validator SOFT_AP_TIMEOUT_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
         public static final String SOUND_TRIGGER_DETECTION_SERVICE_OP_TIMEOUT = "sound_trigger_detection_service_op_timeout";
         public static final String SPEED_LABEL_CACHE_EVICTION_AGE_MILLIS = "speed_label_cache_eviction_age_millis";
         public static final String SQLITE_COMPATIBILITY_WAL_FLAGS = "sqlite_compatibility_wal_flags";
         public static final String STAY_ON_WHILE_PLUGGED_IN = "stay_on_while_plugged_in";
-        private static final SettingsValidators.Validator STAY_ON_WHILE_PLUGGED_IN_VALIDATOR = new SettingsValidators.Validator() {
-            public boolean validate(String value) {
-                try {
-                    int val = Integer.parseInt(value);
-                    if (val == 0 || val == 1 || val == 2 || val == 4 || val == 3 || val == 5 || val == 6 || val == 7) {
-                        return true;
-                    }
-                    return false;
-                } catch (NumberFormatException e) {
-                    return false;
-                }
-            }
-        };
         public static final String STORAGE_BENCHMARK_INTERVAL = "storage_benchmark_interval";
         public static final String STORAGE_SETTINGS_CLOBBER_THRESHOLD = "storage_settings_clobber_threshold";
         public static final String SYNC_MANAGER_CONSTANTS = "sync_manager_constants";
@@ -3485,7 +3443,7 @@ public final class Settings {
         public static final String TIME_ONLY_MODE_CONSTANTS = "time_only_mode_constants";
         public static final String TIME_REMAINING_ESTIMATE_BASED_ON_USAGE = "time_remaining_estimate_based_on_usage";
         public static final String TIME_REMAINING_ESTIMATE_MILLIS = "time_remaining_estimate_millis";
-        public static final String[] TRANSIENT_SETTINGS = {LOCATION_GLOBAL_KILL_SWITCH};
+        public static final String[] TRANSIENT_SETTINGS;
         public static final String TRANSITION_ANIMATION_SCALE = "transition_animation_scale";
         public static final String TRUSTED_SOUND = "trusted_sound";
         public static final String TZINFO_UPDATE_CONTENT_URL = "tzinfo_content_url";
@@ -3496,18 +3454,10 @@ public final class Settings {
         public static final String UNLOCK_SOUND = "unlock_sound";
         public static final String UNUSED_STATIC_SHARED_LIB_MIN_CACHE_PERIOD = "unused_static_shared_lib_min_cache_period";
         public static final String USB_MASS_STORAGE_ENABLED = "usb_mass_storage_enabled";
-        private static final SettingsValidators.Validator USB_MASS_STORAGE_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
         public static final String USER_ABSENT_RADIOS_OFF_FOR_SMALL_BATTERY_ENABLED = "user_absent_radios_off_for_small_battery_enabled";
         public static final String USER_ABSENT_TOUCH_OFF_FOR_SMALL_BATTERY_ENABLED = "user_absent_touch_off_for_small_battery_enabled";
         public static final String USER_SWITCHER_ENABLED = "user_switcher_enabled";
         public static final String USE_GOOGLE_MAIL = "use_google_mail";
-        public static final String USE_OPEN_WIFI_PACKAGE = "use_open_wifi_package";
-        private static final SettingsValidators.Validator USE_OPEN_WIFI_PACKAGE_VALIDATOR = new SettingsValidators.Validator() {
-            public boolean validate(String value) {
-                return value == null || SettingsValidators.PACKAGE_NAME_VALIDATOR.validate(value);
-            }
-        };
-        public static final Map<String, SettingsValidators.Validator> VALIDATORS = new ArrayMap();
         @Deprecated
         public static final String VT_IMS_ENABLED = "vt_ims_enabled";
         public static final String WAIT_FOR_DEBUGGER = "wait_for_debugger";
@@ -3530,8 +3480,6 @@ public final class Settings {
         @SystemApi
         public static final String WIFI_BADGING_THRESHOLDS = "wifi_badging_thresholds";
         public static final String WIFI_BOUNCE_DELAY_OVERRIDE_MS = "wifi_bounce_delay_override_ms";
-        public static final String WIFI_CARRIER_NETWORKS_AVAILABLE_NOTIFICATION_ON = "wifi_carrier_networks_available_notification_on";
-        private static final SettingsValidators.Validator WIFI_CARRIER_NETWORKS_AVAILABLE_NOTIFICATION_ON_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
         @Deprecated
         public static final String WIFI_CONNECTED_MAC_RANDOMIZATION_ENABLED = "wifi_connected_mac_randomization_enabled";
         public static final String WIFI_COUNTRY_CODE = "wifi_country_code";
@@ -3549,26 +3497,20 @@ public final class Settings {
         public static final String WIFI_IDLE_MS = "wifi_idle_ms";
         public static final String WIFI_IS_UNUSABLE_EVENT_METRICS_ENABLED = "wifi_is_unusable_event_metrics_enabled";
         public static final String WIFI_LINK_PROBING_ENABLED = "wifi_link_probing_enabled";
-        private static final SettingsValidators.Validator WIFI_LINK_PROBING_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
         public static final String WIFI_LINK_SPEED_METRICS_ENABLED = "wifi_link_speed_metrics_enabled";
         public static final String WIFI_MAX_DHCP_RETRY_COUNT = "wifi_max_dhcp_retry_count";
         public static final String WIFI_MOBILE_DATA_TRANSITION_WAKELOCK_TIMEOUT_MS = "wifi_mobile_data_transition_wakelock_timeout_ms";
         @Deprecated
         public static final String WIFI_NETWORKS_AVAILABLE_NOTIFICATION_ON = "wifi_networks_available_notification_on";
-        private static final SettingsValidators.Validator WIFI_NETWORKS_AVAILABLE_NOTIFICATION_ON_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
         public static final String WIFI_NETWORKS_AVAILABLE_REPEAT_DELAY = "wifi_networks_available_repeat_delay";
-        private static final SettingsValidators.Validator WIFI_NETWORKS_AVAILABLE_REPEAT_DELAY_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
         public static final String WIFI_NETWORK_SHOW_RSSI = "wifi_network_show_rssi";
         public static final String WIFI_NUM_OPEN_NETWORKS_KEPT = "wifi_num_open_networks_kept";
-        private static final SettingsValidators.Validator WIFI_NUM_OPEN_NETWORKS_KEPT_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
         public static final String WIFI_ON = "wifi_on";
         public static final String WIFI_ON_WHEN_PROXY_DISCONNECTED = "wifi_on_when_proxy_disconnected";
         public static final String WIFI_P2P_DEVICE_NAME = "wifi_p2p_device_name";
         public static final String WIFI_P2P_PENDING_FACTORY_RESET = "wifi_p2p_pending_factory_reset";
         public static final String WIFI_PNO_FREQUENCY_CULLING_ENABLED = "wifi_pno_frequency_culling_enabled";
-        private static final SettingsValidators.Validator WIFI_PNO_FREQUENCY_CULLING_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
         public static final String WIFI_PNO_RECENCY_SORTING_ENABLED = "wifi_pno_recency_sorting_enabled";
-        private static final SettingsValidators.Validator WIFI_PNO_RECENCY_SORTING_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
         public static final String WIFI_REENABLE_DELAY_MS = "wifi_reenable_delay";
         public static final String WIFI_RTT_BACKGROUND_EXEC_GAP_MS = "wifi_rtt_background_exec_gap_ms";
         @UnsupportedAppUsage
@@ -3576,7 +3518,6 @@ public final class Settings {
         public static final String WIFI_SCAN_ALWAYS_AVAILABLE = "wifi_scan_always_enabled";
         public static final String WIFI_SCAN_INTERVAL_WHEN_P2P_CONNECTED_MS = "wifi_scan_interval_p2p_connected_ms";
         public static final String WIFI_SCAN_THROTTLE_ENABLED = "wifi_scan_throttle_enabled";
-        private static final SettingsValidators.Validator WIFI_SCAN_THROTTLE_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
         public static final String WIFI_SCORE_PARAMS = "wifi_score_params";
         public static final String WIFI_SLEEP_POLICY = "wifi_sleep_policy";
         public static final int WIFI_SLEEP_POLICY_DEFAULT = 0;
@@ -3585,13 +3526,7 @@ public final class Settings {
         public static final String WIFI_SUPPLICANT_SCAN_INTERVAL_MS = "wifi_supplicant_scan_interval_ms";
         public static final String WIFI_SUSPEND_OPTIMIZATIONS_ENABLED = "wifi_suspend_optimizations_enabled";
         public static final String WIFI_VERBOSE_LOGGING_ENABLED = "wifi_verbose_logging_enabled";
-        @SystemApi
-        public static final String WIFI_WAKEUP_ENABLED = "wifi_wakeup_enabled";
-        private static final SettingsValidators.Validator WIFI_WAKEUP_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
         public static final String WIFI_WATCHDOG_ON = "wifi_watchdog_on";
-        @UnsupportedAppUsage
-        public static final String WIFI_WATCHDOG_POOR_NETWORK_TEST_ENABLED = "wifi_watchdog_poor_network_test_enabled";
-        private static final SettingsValidators.Validator WIFI_WATCHDOG_POOR_NETWORK_TEST_ENABLED_VALIDATOR = SettingsValidators.ANY_STRING_VALIDATOR;
         public static final String WIMAX_NETWORKS_AVAILABLE_NOTIFICATION_ON = "wimax_networks_available_notification_on";
         public static final String WINDOW_ANIMATION_SCALE = "window_animation_scale";
         public static final String WTF_IS_FATAL = "wtf_is_fatal";
@@ -3601,7 +3536,6 @@ public final class Settings {
         public static final int ZEN_DURATION_FOREVER = 0;
         @Deprecated
         public static final int ZEN_DURATION_PROMPT = -1;
-        private static final SettingsValidators.Validator ZEN_DURATION_VALIDATOR = SettingsValidators.ANY_INTEGER_VALIDATOR;
         @UnsupportedAppUsage
         public static final String ZEN_MODE = "zen_mode";
         @UnsupportedAppUsage
@@ -3621,9 +3555,126 @@ public final class Settings {
         public static final String ZEN_SETTINGS_UPDATED = "zen_settings_updated";
         public static final String ZRAM_ENABLED = "zram_enabled";
         @UnsupportedAppUsage
-        private static final NameValueCache sNameValueCache = new NameValueCache(CONTENT_URI, Settings.CALL_METHOD_GET_GLOBAL, Settings.CALL_METHOD_PUT_GLOBAL, sProviderHolder);
+        private static final NameValueCache sNameValueCache;
         @UnsupportedAppUsage
-        private static final ContentProviderHolder sProviderHolder = new ContentProviderHolder(CONTENT_URI);
+        private static final ContentProviderHolder sProviderHolder;
+        public static final Uri CONTENT_URI = Uri.parse("content://settings/global");
+        private static final SettingsValidators.Validator APPLY_RAMPING_RINGER_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator AUTO_TIME_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator AUTO_TIME_ZONE_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator DOCK_SOUNDS_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator POWER_SOUNDS_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator CHARGING_SOUNDS_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator CHARGING_VIBRATION_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator STAY_ON_WHILE_PLUGGED_IN_VALIDATOR = new SettingsValidators.Validator() { // from class: android.provider.Settings.Global.1
+            @Override // android.provider.SettingsValidators.Validator
+            public boolean validate(String value) {
+                try {
+                    int val = Integer.parseInt(value);
+                    if (val != 0 && val != 1 && val != 2 && val != 4 && val != 3 && val != 5 && val != 6 && val != 7) {
+                        return false;
+                    }
+                    return true;
+                } catch (NumberFormatException e) {
+                    return false;
+                }
+            }
+        };
+        private static final SettingsValidators.Validator BUGREPORT_IN_POWER_MENU_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator BLUETOOTH_ON_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator USB_MASS_STORAGE_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator WIFI_NETWORKS_AVAILABLE_NOTIFICATION_ON_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator WIFI_CARRIER_NETWORKS_AVAILABLE_NOTIFICATION_ON_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator WIFI_NETWORKS_AVAILABLE_REPEAT_DELAY_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
+        private static final SettingsValidators.Validator WIFI_NUM_OPEN_NETWORKS_KEPT_VALIDATOR = SettingsValidators.NON_NEGATIVE_INTEGER_VALIDATOR;
+        private static final SettingsValidators.Validator SOFT_AP_TIMEOUT_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator WIFI_WAKEUP_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator NETWORK_RECOMMENDATIONS_ENABLED_VALIDATOR = new SettingsValidators.DiscreteValueValidator(new String[]{"-1", "0", "1"});
+        private static final SettingsValidators.Validator USE_OPEN_WIFI_PACKAGE_VALIDATOR = new SettingsValidators.Validator() { // from class: android.provider.Settings.Global.2
+            @Override // android.provider.SettingsValidators.Validator
+            public boolean validate(String value) {
+                return value == null || SettingsValidators.PACKAGE_NAME_VALIDATOR.validate(value);
+            }
+        };
+        private static final SettingsValidators.Validator WIFI_SCAN_THROTTLE_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator WIFI_WATCHDOG_POOR_NETWORK_TEST_ENABLED_VALIDATOR = SettingsValidators.ANY_STRING_VALIDATOR;
+        private static final SettingsValidators.Validator WIFI_PNO_FREQUENCY_CULLING_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator WIFI_PNO_RECENCY_SORTING_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator WIFI_LINK_PROBING_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator PRIVATE_DNS_MODE_VALIDATOR = SettingsValidators.ANY_STRING_VALIDATOR;
+        private static final SettingsValidators.Validator PRIVATE_DNS_SPECIFIER_VALIDATOR = SettingsValidators.ANY_STRING_VALIDATOR;
+        private static final SettingsValidators.Validator APP_AUTO_RESTRICTION_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator EMERGENCY_TONE_VALIDATOR = new SettingsValidators.DiscreteValueValidator(new String[]{"0", "1", "2"});
+        private static final SettingsValidators.Validator CALL_AUTO_RETRY_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator ENABLE_AUTOMATIC_SYSTEM_SERVER_HEAP_DUMPS_VALIDATOR = new SettingsValidators.DiscreteValueValidator(new String[]{"0", "1"});
+        private static final SettingsValidators.Validator LOW_POWER_MODE_STICKY_AUTO_DISABLE_LEVEL_VALIDATOR = new SettingsValidators.InclusiveIntegerRangeValidator(0, 100);
+        private static final SettingsValidators.Validator LOW_POWER_MODE_STICKY_AUTO_DISABLE_ENABLED_VALIDATOR = new SettingsValidators.DiscreteValueValidator(new String[]{"0", "1"});
+        private static final SettingsValidators.Validator LOW_POWER_MODE_TRIGGER_LEVEL_VALIDATOR = new SettingsValidators.InclusiveIntegerRangeValidator(0, 100);
+        private static final SettingsValidators.Validator AUTOMATIC_POWER_SAVE_MODE_VALIDATOR = new SettingsValidators.DiscreteValueValidator(new String[]{"0", "1"});
+        private static final SettingsValidators.Validator DYNAMIC_POWER_SAVINGS_VALIDATOR = new SettingsValidators.InclusiveIntegerRangeValidator(0, 100);
+        private static final SettingsValidators.Validator DOCK_AUDIO_MEDIA_ENABLED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator ENCODED_SURROUND_OUTPUT_VALIDATOR = new SettingsValidators.DiscreteValueValidator(new String[]{"0", "1", "2", "3"});
+        private static final SettingsValidators.Validator ENCODED_SURROUND_OUTPUT_ENABLED_FORMATS_VALIDATOR = new SettingsValidators.Validator() { // from class: android.provider.Settings.Global.3
+            @Override // android.provider.SettingsValidators.Validator
+            public boolean validate(String value) {
+                try {
+                    String[] surroundFormats = TextUtils.split(value, SmsManager.REGEX_PREFIX_DELIMITER);
+                    for (String format : surroundFormats) {
+                        int audioFormat = Integer.valueOf(format).intValue();
+                        boolean isSurroundFormat = false;
+                        int[] iArr = AudioFormat.SURROUND_SOUND_ENCODING;
+                        int length = iArr.length;
+                        int i = 0;
+                        while (true) {
+                            if (i >= length) {
+                                break;
+                            }
+                            int sf = iArr[i];
+                            if (sf != audioFormat) {
+                                i++;
+                            } else {
+                                isSurroundFormat = true;
+                                break;
+                            }
+                        }
+                        if (!isSurroundFormat) {
+                            return false;
+                        }
+                    }
+                    return true;
+                } catch (NumberFormatException e) {
+                    return false;
+                }
+            }
+        };
+        private static final SettingsValidators.Validator ZEN_DURATION_VALIDATOR = SettingsValidators.ANY_INTEGER_VALIDATOR;
+        private static final SettingsValidators.Validator AWARE_ALLOWED_VALIDATOR = SettingsValidators.BOOLEAN_VALIDATOR;
+        private static final SettingsValidators.Validator POWER_BUTTON_LONG_PRESS_VALIDATOR = new SettingsValidators.InclusiveIntegerRangeValidator(0, 5);
+        private static final SettingsValidators.Validator POWER_BUTTON_VERY_LONG_PRESS_VALIDATOR = new SettingsValidators.InclusiveIntegerRangeValidator(0, 1);
+        public static final String APPLY_RAMPING_RINGER = "apply_ramping_ringer";
+        public static final String APP_AUTO_RESTRICTION_ENABLED = "app_auto_restriction_enabled";
+        public static final String NETWORK_RECOMMENDATIONS_ENABLED = "network_recommendations_enabled";
+        @SystemApi
+        public static final String WIFI_WAKEUP_ENABLED = "wifi_wakeup_enabled";
+        public static final String WIFI_CARRIER_NETWORKS_AVAILABLE_NOTIFICATION_ON = "wifi_carrier_networks_available_notification_on";
+        public static final String USE_OPEN_WIFI_PACKAGE = "use_open_wifi_package";
+        @UnsupportedAppUsage
+        public static final String WIFI_WATCHDOG_POOR_NETWORK_TEST_ENABLED = "wifi_watchdog_poor_network_test_enabled";
+        public static final String EMERGENCY_TONE = "emergency_tone";
+        public static final String CALL_AUTO_RETRY = "call_auto_retry";
+        public static final String DOCK_AUDIO_MEDIA_ENABLED = "dock_audio_media_enabled";
+        public static final String ENABLE_AUTOMATIC_SYSTEM_SERVER_HEAP_DUMPS = "enable_automatic_system_server_heap_dumps";
+        public static final String ENCODED_SURROUND_OUTPUT = "encoded_surround_output";
+        public static final String ENCODED_SURROUND_OUTPUT_ENABLED_FORMATS = "encoded_surround_output_enabled_formats";
+        public static final String LOW_POWER_MODE_TRIGGER_LEVEL = "low_power_trigger_level";
+        public static final String LOW_POWER_MODE_STICKY_AUTO_DISABLE_ENABLED = "low_power_sticky_auto_disable_enabled";
+        public static final String LOW_POWER_MODE_STICKY_AUTO_DISABLE_LEVEL = "low_power_sticky_auto_disable_level";
+        public static final String PRIVATE_DNS_MODE = "private_dns_mode";
+        public static final String PRIVATE_DNS_SPECIFIER = "private_dns_specifier";
+        public static final String SOFT_AP_TIMEOUT_ENABLED = "soft_ap_timeout_enabled";
+        public static final String AWARE_ALLOWED = "aware_allowed";
+        public static final String[] SETTINGS_TO_BACKUP = {APPLY_RAMPING_RINGER, "bugreport_in_power_menu", "stay_on_while_plugged_in", APP_AUTO_RESTRICTION_ENABLED, "auto_time", "auto_time_zone", "power_sounds_enabled", "dock_sounds_enabled", "charging_sounds_enabled", "usb_mass_storage_enabled", NETWORK_RECOMMENDATIONS_ENABLED, WIFI_WAKEUP_ENABLED, "wifi_networks_available_notification_on", WIFI_CARRIER_NETWORKS_AVAILABLE_NOTIFICATION_ON, USE_OPEN_WIFI_PACKAGE, WIFI_WATCHDOG_POOR_NETWORK_TEST_ENABLED, EMERGENCY_TONE, CALL_AUTO_RETRY, DOCK_AUDIO_MEDIA_ENABLED, ENABLE_AUTOMATIC_SYSTEM_SERVER_HEAP_DUMPS, ENCODED_SURROUND_OUTPUT, ENCODED_SURROUND_OUTPUT_ENABLED_FORMATS, LOW_POWER_MODE_TRIGGER_LEVEL, LOW_POWER_MODE_STICKY_AUTO_DISABLE_ENABLED, LOW_POWER_MODE_STICKY_AUTO_DISABLE_LEVEL, "bluetooth_on", PRIVATE_DNS_MODE, PRIVATE_DNS_SPECIFIER, SOFT_AP_TIMEOUT_ENABLED, "zen_duration", "charging_vibration_enabled", AWARE_ALLOWED};
+        public static final Map<String, SettingsValidators.Validator> VALIDATORS = new ArrayMap();
 
         static {
             VALIDATORS.put(APPLY_RAMPING_RINGER, APPLY_RAMPING_RINGER_VALIDATOR);
@@ -3670,6 +3721,11 @@ public final class Settings {
             VALIDATORS.put(AWARE_ALLOWED, AWARE_ALLOWED_VALIDATOR);
             VALIDATORS.put(POWER_BUTTON_LONG_PRESS, POWER_BUTTON_LONG_PRESS_VALIDATOR);
             VALIDATORS.put(POWER_BUTTON_VERY_LONG_PRESS, POWER_BUTTON_VERY_LONG_PRESS_VALIDATOR);
+            TRANSIENT_SETTINGS = new String[]{LOCATION_GLOBAL_KILL_SWITCH};
+            LEGACY_RESTORE_SETTINGS = new String[0];
+            sProviderHolder = new ContentProviderHolder(CONTENT_URI);
+            sNameValueCache = new NameValueCache(CONTENT_URI, Settings.CALL_METHOD_GET_GLOBAL, Settings.CALL_METHOD_PUT_GLOBAL, sProviderHolder);
+            MOVED_TO_SECURE = new HashSet<>(8);
             MOVED_TO_SECURE.add("install_non_market_apps");
             MOVED_TO_SECURE.add("zen_duration");
             MOVED_TO_SECURE.add("show_zen_upgrade_notification");
@@ -3678,6 +3734,8 @@ public final class Settings {
             MOVED_TO_SECURE.add("zen_settings_suggestion_viewed");
             MOVED_TO_SECURE.add("charging_sounds_enabled");
             MOVED_TO_SECURE.add("charging_vibration_enabled");
+            MULTI_SIM_USER_PREFERRED_SUBS = new String[]{"user_preferred_sub1", "user_preferred_sub2", "user_preferred_sub3"};
+            INSTANT_APP_SETTINGS = new ArraySet();
             INSTANT_APP_SETTINGS.add("wait_for_debugger");
             INSTANT_APP_SETTINGS.add("device_provisioned");
             INSTANT_APP_SETTINGS.add(DEVELOPMENT_FORCE_RESIZABLE_ACTIVITIES);
@@ -3743,16 +3801,7 @@ public final class Settings {
         }
 
         public static String zenModeToString(int mode) {
-            if (mode == 1) {
-                return "ZEN_MODE_IMPORTANT_INTERRUPTIONS";
-            }
-            if (mode == 3) {
-                return "ZEN_MODE_ALARMS";
-            }
-            if (mode == 2) {
-                return "ZEN_MODE_NO_INTERRUPTIONS";
-            }
-            return "ZEN_MODE_OFF";
+            return mode == 1 ? "ZEN_MODE_IMPORTANT_INTERRUPTIONS" : mode == 3 ? "ZEN_MODE_ALARMS" : mode == 2 ? "ZEN_MODE_NO_INTERRUPTIONS" : "ZEN_MODE_OFF";
         }
 
         public static boolean isValidZenMode(int value) {
@@ -3782,15 +3831,15 @@ public final class Settings {
 
         @UnsupportedAppUsage
         public static String getStringForUser(ContentResolver resolver, String name, int userHandle) {
-            if (!MOVED_TO_SECURE.contains(name)) {
-                return sNameValueCache.getStringForUser(resolver, name, userHandle);
+            if (MOVED_TO_SECURE.contains(name)) {
+                Log.m64w(Settings.TAG, "Setting " + name + " has moved from android.provider.Settings.Global to android.provider.Settings.Secure, returning read-only value.");
+                return Secure.getStringForUser(resolver, name, userHandle);
             }
-            Log.w(Settings.TAG, "Setting " + name + " has moved from android.provider.Settings.Global to android.provider.Settings.Secure, returning read-only value.");
-            return Secure.getStringForUser(resolver, name, userHandle);
+            return sNameValueCache.getStringForUser(resolver, name, userHandle);
         }
 
         public static boolean putString(ContentResolver resolver, String name, String value) {
-            return putStringForUser(resolver, name, value, (String) null, false, resolver.getUserId());
+            return putStringForUser(resolver, name, value, null, false, resolver.getUserId());
         }
 
         @SystemApi
@@ -3811,23 +3860,24 @@ public final class Settings {
                     arg.putString(Settings.CALL_METHOD_TAG_KEY, tag);
                 }
                 arg.putInt(Settings.CALL_METHOD_RESET_MODE_KEY, mode);
-                sProviderHolder.getProvider(resolver).call(resolver.getPackageName(), sProviderHolder.mUri.getAuthority(), Settings.CALL_METHOD_RESET_GLOBAL, (String) null, arg);
+                IContentProvider cp = sProviderHolder.getProvider(resolver);
+                cp.call(resolver.getPackageName(), sProviderHolder.mUri.getAuthority(), Settings.CALL_METHOD_RESET_GLOBAL, null, arg);
             } catch (RemoteException e) {
-                Log.w(Settings.TAG, "Can't reset do defaults for " + CONTENT_URI, e);
+                Log.m63w(Settings.TAG, "Can't reset do defaults for " + CONTENT_URI, e);
             }
         }
 
         @UnsupportedAppUsage
         public static boolean putStringForUser(ContentResolver resolver, String name, String value, int userHandle) {
-            return putStringForUser(resolver, name, value, (String) null, false, userHandle);
+            return putStringForUser(resolver, name, value, null, false, userHandle);
         }
 
         public static boolean putStringForUser(ContentResolver resolver, String name, String value, String tag, boolean makeDefault, int userHandle) {
-            if (!MOVED_TO_SECURE.contains(name)) {
-                return sNameValueCache.putStringForUser(resolver, name, value, tag, makeDefault, userHandle);
+            if (MOVED_TO_SECURE.contains(name)) {
+                Log.m64w(Settings.TAG, "Setting " + name + " has moved from android.provider.Settings.Global to android.provider.Settings.Secure, value is unchanged.");
+                return Secure.putStringForUser(resolver, name, value, tag, makeDefault, userHandle);
             }
-            Log.w(Settings.TAG, "Setting " + name + " has moved from android.provider.Settings.Global to android.provider.Settings.Secure, value is unchanged.");
-            return Secure.putStringForUser(resolver, name, value, tag, makeDefault, userHandle);
+            return sNameValueCache.putStringForUser(resolver, name, value, tag, makeDefault, userHandle);
         }
 
         public static Uri getUriFor(String name) {
@@ -3847,8 +3897,9 @@ public final class Settings {
         }
 
         public static int getInt(ContentResolver cr, String name) throws SettingNotFoundException {
+            String v = getString(cr, name);
             try {
-                return Integer.parseInt(getString(cr, name));
+                return Integer.parseInt(v);
             } catch (NumberFormatException e) {
                 throw new SettingNotFoundException(name);
             }
@@ -3864,15 +3915,17 @@ public final class Settings {
                 return def;
             }
             try {
-                return Long.parseLong(valString);
+                long value = Long.parseLong(valString);
+                return value;
             } catch (NumberFormatException e) {
                 return def;
             }
         }
 
         public static long getLong(ContentResolver cr, String name) throws SettingNotFoundException {
+            String valString = getString(cr, name);
             try {
-                return Long.parseLong(getString(cr, name));
+                return Long.parseLong(valString);
             } catch (NumberFormatException e) {
                 throw new SettingNotFoundException(name);
             }
@@ -3896,13 +3949,12 @@ public final class Settings {
 
         public static float getFloat(ContentResolver cr, String name) throws SettingNotFoundException {
             String v = getString(cr, name);
-            if (v != null) {
-                try {
-                    return Float.parseFloat(v);
-                } catch (NumberFormatException e) {
-                    throw new SettingNotFoundException(name);
-                }
-            } else {
+            if (v == null) {
+                throw new SettingNotFoundException(name);
+            }
+            try {
+                return Float.parseFloat(v);
+            } catch (NumberFormatException e) {
                 throw new SettingNotFoundException(name);
             }
         }
@@ -3912,16 +3964,17 @@ public final class Settings {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class Config extends NameValueTable {
-        private static final NameValueCache sNameValueCache = new NameValueCache(DeviceConfig.CONTENT_URI, Settings.CALL_METHOD_GET_CONFIG, Settings.CALL_METHOD_PUT_CONFIG, sProviderHolder);
         private static final ContentProviderHolder sProviderHolder = new ContentProviderHolder(DeviceConfig.CONTENT_URI);
+        private static final NameValueCache sNameValueCache = new NameValueCache(DeviceConfig.CONTENT_URI, Settings.CALL_METHOD_GET_CONFIG, Settings.CALL_METHOD_PUT_CONFIG, sProviderHolder);
 
         static String getString(ContentResolver resolver, String name) {
             return sNameValueCache.getStringForUser(resolver, name, resolver.getUserId());
         }
 
         static boolean putString(ContentResolver resolver, String name, String value, boolean makeDefault) {
-            return sNameValueCache.putStringForUser(resolver, name, value, (String) null, makeDefault, resolver.getUserId());
+            return sNameValueCache.putStringForUser(resolver, name, value, null, makeDefault, resolver.getUserId());
         }
 
         static void resetToDefaults(ContentResolver resolver, int resetMode, String prefix) {
@@ -3932,48 +3985,51 @@ public final class Settings {
                 if (prefix != null) {
                     arg.putString(Settings.CALL_METHOD_PREFIX_KEY, prefix);
                 }
-                sProviderHolder.getProvider(resolver).call(resolver.getPackageName(), sProviderHolder.mUri.getAuthority(), Settings.CALL_METHOD_RESET_CONFIG, (String) null, arg);
+                IContentProvider cp = sProviderHolder.getProvider(resolver);
+                cp.call(resolver.getPackageName(), sProviderHolder.mUri.getAuthority(), Settings.CALL_METHOD_RESET_CONFIG, null, arg);
             } catch (RemoteException e) {
-                Log.w(Settings.TAG, "Can't reset to defaults for " + DeviceConfig.CONTENT_URI, e);
+                Log.m63w(Settings.TAG, "Can't reset to defaults for " + DeviceConfig.CONTENT_URI, e);
             }
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class Bookmarks implements BaseColumns {
-        @UnsupportedAppUsage
-        public static final Uri CONTENT_URI = Uri.parse("content://settings/bookmarks");
         public static final String FOLDER = "folder";
-        public static final String ID = "_id";
+
+        /* renamed from: ID */
+        public static final String f161ID = "_id";
         public static final String INTENT = "intent";
         public static final String ORDERING = "ordering";
         public static final String SHORTCUT = "shortcut";
         private static final String TAG = "Bookmarks";
         public static final String TITLE = "title";
+        private static final String sShortcutSelection = "shortcut=?";
+        @UnsupportedAppUsage
+        public static final Uri CONTENT_URI = Uri.parse("content://settings/bookmarks");
         private static final String[] sIntentProjection = {"intent"};
         private static final String[] sShortcutProjection = {"_id", "shortcut"};
-        private static final String sShortcutSelection = "shortcut=?";
 
         public static Intent getIntentForShortcut(ContentResolver cr, char shortcut) {
             Intent intent = null;
-            Cursor c = cr.query(CONTENT_URI, sIntentProjection, sShortcutSelection, new String[]{String.valueOf(shortcut)}, ORDERING);
+            Cursor c = cr.query(CONTENT_URI, sIntentProjection, sShortcutSelection, new String[]{String.valueOf((int) shortcut)}, ORDERING);
             while (intent == null) {
                 try {
                     if (!c.moveToNext()) {
                         break;
                     }
-                    intent = Intent.parseUri(c.getString(c.getColumnIndexOrThrow("intent")), 0);
-                } catch (URISyntaxException e) {
-                } catch (IllegalArgumentException e2) {
-                    Log.w(TAG, "Intent column not found", e2);
-                } catch (Throwable th) {
+                    try {
+                        String intentURI = c.getString(c.getColumnIndexOrThrow("intent"));
+                        intent = Intent.parseUri(intentURI, 0);
+                    } catch (IllegalArgumentException e) {
+                        Log.m63w(TAG, "Intent column not found", e);
+                    } catch (URISyntaxException e2) {
+                    }
+                } finally {
                     if (c != null) {
                         c.close();
                     }
-                    throw th;
                 }
-            }
-            if (c != null) {
-                c.close();
             }
             return intent;
         }
@@ -3981,7 +4037,7 @@ public final class Settings {
         @UnsupportedAppUsage
         public static Uri add(ContentResolver cr, Intent intent, String title, String folder, char shortcut, int ordering) {
             if (shortcut != 0) {
-                cr.delete(CONTENT_URI, sShortcutSelection, new String[]{String.valueOf(shortcut)});
+                cr.delete(CONTENT_URI, sShortcutSelection, new String[]{String.valueOf((int) shortcut)});
             }
             ContentValues values = new ContentValues();
             if (title != null) {
@@ -4027,6 +4083,7 @@ public final class Settings {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class Panel {
         public static final String ACTION_INTERNET_CONNECTIVITY = "android.settings.panel.action.INTERNET_CONNECTIVITY";
         public static final String ACTION_NFC = "android.settings.panel.action.NFC";
@@ -4047,7 +4104,7 @@ public final class Settings {
     }
 
     public static boolean checkAndNoteChangeNetworkStateOperation(Context context, int uid, String callingPackage, boolean throwException) {
-        if (context.checkCallingOrSelfPermission(Manifest.permission.CHANGE_NETWORK_STATE) == 0) {
+        if (context.checkCallingOrSelfPermission(Manifest.C0000permission.CHANGE_NETWORK_STATE) == 0) {
             return true;
         }
         return isCallingPackageAllowedToPerformAppOpsProtectedOperation(context, uid, callingPackage, throwException, 23, PM_CHANGE_NETWORK_STATE, true);

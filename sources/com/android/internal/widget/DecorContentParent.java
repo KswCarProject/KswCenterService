@@ -1,12 +1,13 @@
 package com.android.internal.widget;
 
 import android.graphics.drawable.Drawable;
-import android.os.Parcelable;
+import android.p007os.Parcelable;
 import android.util.SparseArray;
 import android.view.Menu;
 import android.view.Window;
 import com.android.internal.view.menu.MenuPresenter;
 
+/* loaded from: classes4.dex */
 public interface DecorContentParent {
     boolean canShowOverflowMenu();
 

@@ -12,12 +12,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+/* loaded from: classes4.dex */
 final class FieldSet<FieldDescriptorType extends FieldDescriptorLite<FieldDescriptorType>> {
     private static final FieldSet DEFAULT_INSTANCE = new FieldSet(true);
-    private final SmallSortedMap<FieldDescriptorType, Object> fields = SmallSortedMap.newFieldMap(16);
-    private boolean hasLazyField = false;
     private boolean isImmutable;
+    private boolean hasLazyField = false;
+    private final SmallSortedMap<FieldDescriptorType, Object> fields = SmallSortedMap.newFieldMap(16);
 
+    /* loaded from: classes4.dex */
     public interface FieldDescriptorLite<T extends FieldDescriptorLite<T>> extends Comparable<T> {
         Internal.EnumLiteMap<?> getEnumType();
 
@@ -50,10 +52,11 @@ final class FieldSet<FieldDescriptorType extends FieldDescriptorLite<FieldDescri
     }
 
     public void makeImmutable() {
-        if (!this.isImmutable) {
-            this.fields.makeImmutable();
-            this.isImmutable = true;
+        if (this.isImmutable) {
+            return;
         }
+        this.fields.makeImmutable();
+        this.isImmutable = true;
     }
 
     public boolean isImmutable() {
@@ -75,14 +78,17 @@ final class FieldSet<FieldDescriptorType extends FieldDescriptorLite<FieldDescri
         return this.fields.hashCode();
     }
 
-    public FieldSet<FieldDescriptorType> clone() {
+    /* renamed from: clone */
+    public FieldSet<FieldDescriptorType> m188clone() {
         FieldSet<FieldDescriptorType> clone = newFieldSet();
         for (int i = 0; i < this.fields.getNumArrayEntries(); i++) {
             Map.Entry<FieldDescriptorType, Object> entry = this.fields.getArrayEntryAt(i);
-            clone.setField((FieldDescriptorLite) entry.getKey(), entry.getValue());
+            FieldDescriptorType descriptor = entry.getKey();
+            clone.setField(descriptor, entry.getValue());
         }
         for (Map.Entry<FieldDescriptorType, Object> entry2 : this.fields.getOverflowEntries()) {
-            clone.setField((FieldDescriptorLite) entry2.getKey(), entry2.getValue());
+            FieldDescriptorType descriptor2 = entry2.getKey();
+            clone.setField(descriptor2, entry2.getValue());
         }
         clone.hasLazyField = this.hasLazyField;
         return clone;
@@ -111,7 +117,7 @@ final class FieldSet<FieldDescriptorType extends FieldDescriptorLite<FieldDescri
     }
 
     private void cloneFieldEntry(Map<FieldDescriptorType, Object> map, Map.Entry<FieldDescriptorType, Object> entry) {
-        FieldDescriptorType key = (FieldDescriptorLite) entry.getKey();
+        FieldDescriptorType key = entry.getKey();
         Object value = entry.getValue();
         if (value instanceof LazyField) {
             map.put(key, ((LazyField) value).getValue());
@@ -128,10 +134,10 @@ final class FieldSet<FieldDescriptorType extends FieldDescriptorLite<FieldDescri
     }
 
     public boolean hasField(FieldDescriptorType descriptor) {
-        if (!descriptor.isRepeated()) {
-            return this.fields.get(descriptor) != null;
+        if (descriptor.isRepeated()) {
+            throw new IllegalArgumentException("hasField() can only be called on non-repeated fields.");
         }
-        throw new IllegalArgumentException("hasField() can only be called on non-repeated fields.");
+        return this.fields.get(descriptor) != null;
     }
 
     public Object getField(FieldDescriptorType descriptor) {
@@ -143,22 +149,23 @@ final class FieldSet<FieldDescriptorType extends FieldDescriptorLite<FieldDescri
     }
 
     public void setField(FieldDescriptorType descriptor, Object value) {
-        if (!descriptor.isRepeated()) {
-            verifyType(descriptor.getLiteType(), value);
-        } else if (value instanceof List) {
-            List<Object> newList = new ArrayList<>();
+        if (descriptor.isRepeated()) {
+            if (!(value instanceof List)) {
+                throw new IllegalArgumentException("Wrong object type used with protocol message reflection.");
+            }
+            List newList = new ArrayList();
             newList.addAll((List) value);
             for (Object element : newList) {
                 verifyType(descriptor.getLiteType(), element);
             }
             value = newList;
         } else {
-            throw new IllegalArgumentException("Wrong object type used with protocol message reflection.");
+            verifyType(descriptor.getLiteType(), value);
         }
         if (value instanceof LazyField) {
             this.hasLazyField = true;
         }
-        this.fields.put(descriptor, value);
+        this.fields.put((SmallSortedMap<FieldDescriptorType, Object>) descriptor, (FieldDescriptorType) value);
     }
 
     public void clearField(FieldDescriptorType descriptor) {
@@ -169,105 +176,102 @@ final class FieldSet<FieldDescriptorType extends FieldDescriptorLite<FieldDescri
     }
 
     public int getRepeatedFieldCount(FieldDescriptorType descriptor) {
-        if (descriptor.isRepeated()) {
-            Object value = getField(descriptor);
-            if (value == null) {
-                return 0;
-            }
-            return ((List) value).size();
+        if (!descriptor.isRepeated()) {
+            throw new IllegalArgumentException("getRepeatedField() can only be called on repeated fields.");
         }
-        throw new IllegalArgumentException("getRepeatedField() can only be called on repeated fields.");
+        Object value = getField(descriptor);
+        if (value == null) {
+            return 0;
+        }
+        return ((List) value).size();
     }
 
     public Object getRepeatedField(FieldDescriptorType descriptor, int index) {
-        if (descriptor.isRepeated()) {
-            Object value = getField(descriptor);
-            if (value != null) {
-                return ((List) value).get(index);
-            }
+        if (!descriptor.isRepeated()) {
+            throw new IllegalArgumentException("getRepeatedField() can only be called on repeated fields.");
+        }
+        Object value = getField(descriptor);
+        if (value == null) {
             throw new IndexOutOfBoundsException();
         }
-        throw new IllegalArgumentException("getRepeatedField() can only be called on repeated fields.");
+        return ((List) value).get(index);
     }
 
     public void setRepeatedField(FieldDescriptorType descriptor, int index, Object value) {
-        if (descriptor.isRepeated()) {
-            Object list = getField(descriptor);
-            if (list != null) {
-                verifyType(descriptor.getLiteType(), value);
-                ((List) list).set(index, value);
-                return;
-            }
+        if (!descriptor.isRepeated()) {
+            throw new IllegalArgumentException("getRepeatedField() can only be called on repeated fields.");
+        }
+        Object list = getField(descriptor);
+        if (list == null) {
             throw new IndexOutOfBoundsException();
         }
-        throw new IllegalArgumentException("getRepeatedField() can only be called on repeated fields.");
+        verifyType(descriptor.getLiteType(), value);
+        ((List) list).set(index, value);
     }
 
     public void addRepeatedField(FieldDescriptorType descriptor, Object value) {
         List<Object> list;
-        if (descriptor.isRepeated()) {
-            verifyType(descriptor.getLiteType(), value);
-            Object existingValue = getField(descriptor);
-            if (existingValue == null) {
-                list = new ArrayList<>();
-                this.fields.put(descriptor, list);
-            } else {
-                list = (List) existingValue;
-            }
-            list.add(value);
-            return;
+        if (!descriptor.isRepeated()) {
+            throw new IllegalArgumentException("addRepeatedField() can only be called on repeated fields.");
         }
-        throw new IllegalArgumentException("addRepeatedField() can only be called on repeated fields.");
+        verifyType(descriptor.getLiteType(), value);
+        Object existingValue = getField(descriptor);
+        if (existingValue == null) {
+            list = new ArrayList<>();
+            this.fields.put((SmallSortedMap<FieldDescriptorType, Object>) descriptor, (FieldDescriptorType) list);
+        } else {
+            list = (List) existingValue;
+        }
+        list.add(value);
     }
 
     private static void verifyType(WireFormat.FieldType type, Object value) {
-        if (value != null) {
-            boolean isValid = false;
-            boolean z = false;
-            switch (type.getJavaType()) {
-                case INT:
-                    isValid = value instanceof Integer;
-                    break;
-                case LONG:
-                    isValid = value instanceof Long;
-                    break;
-                case FLOAT:
-                    isValid = value instanceof Float;
-                    break;
-                case DOUBLE:
-                    isValid = value instanceof Double;
-                    break;
-                case BOOLEAN:
-                    isValid = value instanceof Boolean;
-                    break;
-                case STRING:
-                    isValid = value instanceof String;
-                    break;
-                case BYTE_STRING:
-                    if ((value instanceof ByteString) || (value instanceof byte[])) {
-                        z = true;
-                    }
-                    isValid = z;
-                    break;
-                case ENUM:
-                    if ((value instanceof Integer) || (value instanceof Internal.EnumLite)) {
-                        z = true;
-                    }
-                    isValid = z;
-                    break;
-                case MESSAGE:
-                    if ((value instanceof MessageLite) || (value instanceof LazyField)) {
-                        z = true;
-                    }
-                    isValid = z;
-                    break;
-            }
-            if (!isValid) {
-                throw new IllegalArgumentException("Wrong object type used with protocol message reflection.");
-            }
-            return;
+        if (value == null) {
+            throw new NullPointerException();
         }
-        throw new NullPointerException();
+        boolean isValid = false;
+        boolean z = false;
+        switch (type.getJavaType()) {
+            case INT:
+                isValid = value instanceof Integer;
+                break;
+            case LONG:
+                isValid = value instanceof Long;
+                break;
+            case FLOAT:
+                isValid = value instanceof Float;
+                break;
+            case DOUBLE:
+                isValid = value instanceof Double;
+                break;
+            case BOOLEAN:
+                isValid = value instanceof Boolean;
+                break;
+            case STRING:
+                isValid = value instanceof String;
+                break;
+            case BYTE_STRING:
+                if ((value instanceof ByteString) || (value instanceof byte[])) {
+                    z = true;
+                }
+                isValid = z;
+                break;
+            case ENUM:
+                if ((value instanceof Integer) || (value instanceof Internal.EnumLite)) {
+                    z = true;
+                }
+                isValid = z;
+                break;
+            case MESSAGE:
+                if ((value instanceof MessageLite) || (value instanceof LazyField)) {
+                    z = true;
+                }
+                isValid = z;
+                break;
+        }
+        if (!isValid) {
+            throw new IllegalArgumentException("Wrong object type used with protocol message reflection.");
+        }
     }
 
     public boolean isInitialized() {
@@ -285,7 +289,7 @@ final class FieldSet<FieldDescriptorType extends FieldDescriptorLite<FieldDescri
     }
 
     private boolean isInitialized(Map.Entry<FieldDescriptorType, Object> entry) {
-        FieldDescriptorType descriptor = (FieldDescriptorLite) entry.getKey();
+        FieldDescriptorType descriptor = entry.getKey();
         if (descriptor.getLiteJavaType() == WireFormat.JavaType.MESSAGE) {
             if (descriptor.isRepeated()) {
                 for (MessageLite element : (List) entry.getValue()) {
@@ -326,17 +330,17 @@ final class FieldSet<FieldDescriptorType extends FieldDescriptorLite<FieldDescri
     }
 
     private Object cloneIfMutable(Object value) {
-        if (!(value instanceof byte[])) {
-            return value;
+        if (value instanceof byte[]) {
+            byte[] bytes = (byte[]) value;
+            byte[] copy = new byte[bytes.length];
+            System.arraycopy(bytes, 0, copy, 0, bytes.length);
+            return copy;
         }
-        byte[] bytes = (byte[]) value;
-        byte[] copy = new byte[bytes.length];
-        System.arraycopy(bytes, 0, copy, 0, bytes.length);
-        return copy;
+        return value;
     }
 
     private void mergeFromField(Map.Entry<FieldDescriptorType, Object> entry) {
-        FieldDescriptorType descriptor = (FieldDescriptorLite) entry.getKey();
+        FieldDescriptorType descriptor = entry.getKey();
         Object otherValue = entry.getValue();
         if (otherValue instanceof LazyField) {
             otherValue = ((LazyField) otherValue).getValue();
@@ -349,16 +353,16 @@ final class FieldSet<FieldDescriptorType extends FieldDescriptorLite<FieldDescri
             for (Object element : (List) otherValue) {
                 ((List) value).add(cloneIfMutable(element));
             }
-            this.fields.put(descriptor, value);
+            this.fields.put((SmallSortedMap<FieldDescriptorType, Object>) descriptor, (FieldDescriptorType) value);
         } else if (descriptor.getLiteJavaType() == WireFormat.JavaType.MESSAGE) {
             Object value2 = getField(descriptor);
             if (value2 == null) {
-                this.fields.put(descriptor, cloneIfMutable(otherValue));
+                this.fields.put((SmallSortedMap<FieldDescriptorType, Object>) descriptor, (FieldDescriptorType) cloneIfMutable(otherValue));
                 return;
             }
-            this.fields.put(descriptor, descriptor.internalMergeFrom(((MessageLite) value2).toBuilder(), (MessageLite) otherValue).build());
+            this.fields.put((SmallSortedMap<FieldDescriptorType, Object>) descriptor, (FieldDescriptorType) descriptor.internalMergeFrom(((MessageLite) value2).toBuilder(), (MessageLite) otherValue).build());
         } else {
-            this.fields.put(descriptor, cloneIfMutable(otherValue));
+            this.fields.put((SmallSortedMap<FieldDescriptorType, Object>) descriptor, (FieldDescriptorType) cloneIfMutable(otherValue));
         }
     }
 
@@ -372,10 +376,10 @@ final class FieldSet<FieldDescriptorType extends FieldDescriptorLite<FieldDescri
     public void writeTo(CodedOutputStream output) throws IOException {
         for (int i = 0; i < this.fields.getNumArrayEntries(); i++) {
             Map.Entry<FieldDescriptorType, Object> entry = this.fields.getArrayEntryAt(i);
-            writeField((FieldDescriptorLite) entry.getKey(), entry.getValue(), output);
+            writeField(entry.getKey(), entry.getValue(), output);
         }
         for (Map.Entry<FieldDescriptorType, Object> entry2 : this.fields.getOverflowEntries()) {
-            writeField((FieldDescriptorLite) entry2.getKey(), entry2.getValue(), output);
+            writeField(entry2.getKey(), entry2.getValue(), output);
         }
     }
 
@@ -389,16 +393,16 @@ final class FieldSet<FieldDescriptorType extends FieldDescriptorLite<FieldDescri
     }
 
     private void writeMessageSetTo(Map.Entry<FieldDescriptorType, Object> entry, CodedOutputStream output) throws IOException {
-        FieldDescriptorType descriptor = (FieldDescriptorLite) entry.getKey();
-        if (descriptor.getLiteJavaType() != WireFormat.JavaType.MESSAGE || descriptor.isRepeated() || descriptor.isPacked()) {
-            writeField(descriptor, entry.getValue(), output);
+        FieldDescriptorType descriptor = entry.getKey();
+        if (descriptor.getLiteJavaType() == WireFormat.JavaType.MESSAGE && !descriptor.isRepeated() && !descriptor.isPacked()) {
+            Object value = entry.getValue();
+            if (value instanceof LazyField) {
+                value = ((LazyField) value).getValue();
+            }
+            output.writeMessageSetExtension(entry.getKey().getNumber(), (MessageLite) value);
             return;
         }
-        Object value = entry.getValue();
-        if (value instanceof LazyField) {
-            value = ((LazyField) value).getValue();
-        }
-        output.writeMessageSetExtension(((FieldDescriptorLite) entry.getKey()).getNumber(), (MessageLite) value);
+        writeField(descriptor, entry.getValue(), output);
     }
 
     private static void writeElement(CodedOutputStream output, WireFormat.FieldType type, int number, Object value) throws IOException {
@@ -517,10 +521,10 @@ final class FieldSet<FieldDescriptorType extends FieldDescriptorLite<FieldDescri
         int size = 0;
         for (int i = 0; i < this.fields.getNumArrayEntries(); i++) {
             Map.Entry<FieldDescriptorType, Object> entry = this.fields.getArrayEntryAt(i);
-            size += computeFieldSize((FieldDescriptorLite) entry.getKey(), entry.getValue());
+            size += computeFieldSize(entry.getKey(), entry.getValue());
         }
         for (Map.Entry<FieldDescriptorType, Object> entry2 : this.fields.getOverflowEntries()) {
-            size += computeFieldSize((FieldDescriptorLite) entry2.getKey(), entry2.getValue());
+            size += computeFieldSize(entry2.getKey(), entry2.getValue());
         }
         return size;
     }
@@ -537,15 +541,15 @@ final class FieldSet<FieldDescriptorType extends FieldDescriptorLite<FieldDescri
     }
 
     private int getMessageSetSerializedSize(Map.Entry<FieldDescriptorType, Object> entry) {
-        FieldDescriptorType descriptor = (FieldDescriptorLite) entry.getKey();
+        FieldDescriptorType descriptor = entry.getKey();
         Object value = entry.getValue();
-        if (descriptor.getLiteJavaType() != WireFormat.JavaType.MESSAGE || descriptor.isRepeated() || descriptor.isPacked()) {
-            return computeFieldSize(descriptor, value);
+        if (descriptor.getLiteJavaType() == WireFormat.JavaType.MESSAGE && !descriptor.isRepeated() && !descriptor.isPacked()) {
+            if (value instanceof LazyField) {
+                return CodedOutputStream.computeLazyFieldMessageSetExtensionSize(entry.getKey().getNumber(), (LazyField) value);
+            }
+            return CodedOutputStream.computeMessageSetExtensionSize(entry.getKey().getNumber(), (MessageLite) value);
         }
-        if (value instanceof LazyField) {
-            return CodedOutputStream.computeLazyFieldMessageSetExtensionSize(((FieldDescriptorLite) entry.getKey()).getNumber(), (LazyField) value);
-        }
-        return CodedOutputStream.computeMessageSetExtensionSize(((FieldDescriptorLite) entry.getKey()).getNumber(), (MessageLite) value);
+        return computeFieldSize(descriptor, value);
     }
 
     private static int computeElementSize(WireFormat.FieldType type, int number, Object value) {
@@ -614,20 +618,21 @@ final class FieldSet<FieldDescriptorType extends FieldDescriptorLite<FieldDescri
     public static int computeFieldSize(FieldDescriptorLite<?> descriptor, Object value) {
         WireFormat.FieldType type = descriptor.getLiteType();
         int number = descriptor.getNumber();
-        if (!descriptor.isRepeated()) {
-            return computeElementSize(type, number, value);
-        }
-        if (descriptor.isPacked()) {
-            int dataSize = 0;
-            for (Object element : (List) value) {
-                dataSize += computeElementSizeNoTag(type, element);
+        if (descriptor.isRepeated()) {
+            if (descriptor.isPacked()) {
+                int dataSize = 0;
+                for (Object element : (List) value) {
+                    dataSize += computeElementSizeNoTag(type, element);
+                }
+                return CodedOutputStream.computeTagSize(number) + dataSize + CodedOutputStream.computeRawVarint32Size(dataSize);
             }
-            return CodedOutputStream.computeTagSize(number) + dataSize + CodedOutputStream.computeRawVarint32Size(dataSize);
+            int size = 0;
+            for (Object element2 : (List) value) {
+                size += computeElementSize(type, number, element2);
+            }
+            return size;
         }
-        int size = 0;
-        for (Object element2 : (List) value) {
-            size += computeElementSize(type, number, element2);
-        }
-        return size;
+        int size2 = computeElementSize(type, number, value);
+        return size2;
     }
 }

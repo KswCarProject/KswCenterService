@@ -3,6 +3,7 @@ package com.android.framework.protobuf;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
+/* loaded from: classes4.dex */
 public abstract class ByteOutput {
     public abstract void write(byte b) throws IOException;
 

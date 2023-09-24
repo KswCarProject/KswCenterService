@@ -1,12 +1,12 @@
 package android.telecom;
 
 import android.content.ComponentName;
-import android.os.RemoteException;
-import android.telecom.Logging.Session;
+import android.p007os.RemoteException;
 import com.android.internal.telecom.IConnectionService;
 import java.util.HashMap;
 import java.util.Map;
 
+/* loaded from: classes3.dex */
 public class RemoteConnectionManager {
     private final ConnectionService mOurConnectionServiceImpl;
     private final Map<ComponentName, RemoteConnectionService> mRemoteConnectionServices = new HashMap();
@@ -15,39 +15,41 @@ public class RemoteConnectionManager {
         this.mOurConnectionServiceImpl = ourConnectionServiceImpl;
     }
 
-    /* access modifiers changed from: package-private */
-    public void addConnectionService(ComponentName componentName, IConnectionService outgoingConnectionServiceRpc) {
+    void addConnectionService(ComponentName componentName, IConnectionService outgoingConnectionServiceRpc) {
         if (!this.mRemoteConnectionServices.containsKey(componentName)) {
             try {
-                this.mRemoteConnectionServices.put(componentName, new RemoteConnectionService(outgoingConnectionServiceRpc, this.mOurConnectionServiceImpl));
+                RemoteConnectionService remoteConnectionService = new RemoteConnectionService(outgoingConnectionServiceRpc, this.mOurConnectionServiceImpl);
+                this.mRemoteConnectionServices.put(componentName, remoteConnectionService);
             } catch (RemoteException e) {
             }
         }
     }
 
     public RemoteConnection createRemoteConnection(PhoneAccountHandle connectionManagerPhoneAccount, ConnectionRequest request, boolean isIncoming) {
-        if (request.getAccountHandle() != null) {
-            ComponentName componentName = request.getAccountHandle().getComponentName();
-            if (this.mRemoteConnectionServices.containsKey(componentName)) {
-                RemoteConnectionService remoteService = this.mRemoteConnectionServices.get(componentName);
-                if (remoteService != null) {
-                    return remoteService.createRemoteConnection(connectionManagerPhoneAccount, request, isIncoming);
-                }
-                return null;
-            }
+        PhoneAccountHandle accountHandle = request.getAccountHandle();
+        if (accountHandle == null) {
+            throw new IllegalArgumentException("accountHandle must be specified.");
+        }
+        ComponentName componentName = request.getAccountHandle().getComponentName();
+        if (!this.mRemoteConnectionServices.containsKey(componentName)) {
             throw new UnsupportedOperationException("accountHandle not supported: " + componentName);
         }
-        throw new IllegalArgumentException("accountHandle must be specified.");
+        RemoteConnectionService remoteService = this.mRemoteConnectionServices.get(componentName);
+        if (remoteService != null) {
+            return remoteService.createRemoteConnection(connectionManagerPhoneAccount, request, isIncoming);
+        }
+        return null;
     }
 
     public void conferenceRemoteConnections(RemoteConnection a, RemoteConnection b) {
         if (a.getConnectionService() == b.getConnectionService()) {
             try {
-                a.getConnectionService().conference(a.getId(), b.getId(), (Session.Info) null);
+                a.getConnectionService().conference(a.getId(), b.getId(), null);
+                return;
             } catch (RemoteException e) {
+                return;
             }
-        } else {
-            Log.w((Object) this, "Request to conference incompatible remote connections (%s,%s) (%s,%s)", a.getConnectionService(), a.getId(), b.getConnectionService(), b.getId());
         }
+        Log.m90w(this, "Request to conference incompatible remote connections (%s,%s) (%s,%s)", a.getConnectionService(), a.getId(), b.getConnectionService(), b.getId());
     }
 }

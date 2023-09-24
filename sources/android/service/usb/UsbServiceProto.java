@@ -1,5 +1,6 @@
 package android.service.usb;
 
+/* loaded from: classes3.dex */
 public final class UsbServiceProto {
     public static final int CONTAMINANT_STATUS_DETECTED = 4;
     public static final int CONTAMINANT_STATUS_DISABLED = 2;

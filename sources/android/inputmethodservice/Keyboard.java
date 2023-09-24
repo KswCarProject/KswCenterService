@@ -12,7 +12,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.util.Xml;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +20,7 @@ import java.util.StringTokenizer;
 import org.xmlpull.v1.XmlPullParserException;
 
 @Deprecated
+/* loaded from: classes.dex */
 public class Keyboard {
     public static final int EDGE_BOTTOM = 8;
     public static final int EDGE_LEFT = 1;
@@ -41,18 +42,12 @@ public class Keyboard {
     private static final String TAG_ROW = "Row";
     private int mCellHeight;
     private int mCellWidth;
-    /* access modifiers changed from: private */
-    public int mDefaultHeight;
-    /* access modifiers changed from: private */
-    public int mDefaultHorizontalGap;
-    /* access modifiers changed from: private */
-    public int mDefaultVerticalGap;
-    /* access modifiers changed from: private */
-    public int mDefaultWidth;
-    /* access modifiers changed from: private */
-    public int mDisplayHeight;
-    /* access modifiers changed from: private */
-    public int mDisplayWidth;
+    private int mDefaultHeight;
+    private int mDefaultHorizontalGap;
+    private int mDefaultVerticalGap;
+    private int mDefaultWidth;
+    private int mDisplayHeight;
+    private int mDisplayWidth;
     private int[][] mGridNeighbors;
     private int mKeyHeight;
     private int mKeyWidth;
@@ -71,42 +66,37 @@ public class Keyboard {
     private int mTotalWidth;
     private ArrayList<Row> rows;
 
+    /* loaded from: classes.dex */
     public static class Row {
         public int defaultHeight;
         public int defaultHorizontalGap;
         public int defaultWidth;
         ArrayList<Key> mKeys = new ArrayList<>();
         public int mode;
-        /* access modifiers changed from: private */
-        public Keyboard parent;
+        private Keyboard parent;
         public int rowEdgeFlags;
         public int verticalGap;
 
-        public Row(Keyboard parent2) {
-            this.parent = parent2;
+        public Row(Keyboard parent) {
+            this.parent = parent;
         }
 
-        public Row(Resources res, Keyboard parent2, XmlResourceParser parser) {
-            this.parent = parent2;
-            TypedArray a = res.obtainAttributes(Xml.asAttributeSet(parser), R.styleable.Keyboard);
-            this.defaultWidth = Keyboard.getDimensionOrFraction(a, 0, parent2.mDisplayWidth, parent2.mDefaultWidth);
-            this.defaultHeight = Keyboard.getDimensionOrFraction(a, 1, parent2.mDisplayHeight, parent2.mDefaultHeight);
-            this.defaultHorizontalGap = Keyboard.getDimensionOrFraction(a, 2, parent2.mDisplayWidth, parent2.mDefaultHorizontalGap);
-            this.verticalGap = Keyboard.getDimensionOrFraction(a, 3, parent2.mDisplayHeight, parent2.mDefaultVerticalGap);
+        public Row(Resources res, Keyboard parent, XmlResourceParser parser) {
+            this.parent = parent;
+            TypedArray a = res.obtainAttributes(Xml.asAttributeSet(parser), C3132R.styleable.Keyboard);
+            this.defaultWidth = Keyboard.getDimensionOrFraction(a, 0, parent.mDisplayWidth, parent.mDefaultWidth);
+            this.defaultHeight = Keyboard.getDimensionOrFraction(a, 1, parent.mDisplayHeight, parent.mDefaultHeight);
+            this.defaultHorizontalGap = Keyboard.getDimensionOrFraction(a, 2, parent.mDisplayWidth, parent.mDefaultHorizontalGap);
+            this.verticalGap = Keyboard.getDimensionOrFraction(a, 3, parent.mDisplayHeight, parent.mDefaultVerticalGap);
             a.recycle();
-            TypedArray a2 = res.obtainAttributes(Xml.asAttributeSet(parser), R.styleable.Keyboard_Row);
+            TypedArray a2 = res.obtainAttributes(Xml.asAttributeSet(parser), C3132R.styleable.Keyboard_Row);
             this.rowEdgeFlags = a2.getInt(0, 0);
             this.mode = a2.getResourceId(1, 0);
         }
     }
 
+    /* loaded from: classes.dex */
     public static class Key {
-        private static final int[] KEY_STATE_NORMAL = new int[0];
-        private static final int[] KEY_STATE_NORMAL_OFF = {16842911};
-        private static final int[] KEY_STATE_NORMAL_ON = {16842911, 16842912};
-        private static final int[] KEY_STATE_PRESSED = {16842919};
-        private static final int[] KEY_STATE_PRESSED_OFF = {16842919, 16842911};
-        private static final int[] KEY_STATE_PRESSED_ON = {16842919, 16842911, 16842912};
         public int[] codes;
         public int edgeFlags;
         public int gap;
@@ -116,7 +106,9 @@ public class Keyboard {
         private Keyboard keyboard;
         public CharSequence label;
         public boolean modifier;
-        public boolean on;
+
+        /* renamed from: on */
+        public boolean f109on;
         public CharSequence popupCharacters;
         public int popupResId;
         public boolean pressed;
@@ -124,8 +116,18 @@ public class Keyboard {
         public boolean sticky;
         public CharSequence text;
         public int width;
-        public int x;
-        public int y;
+
+        /* renamed from: x */
+        public int f110x;
+
+        /* renamed from: y */
+        public int f111y;
+        private static final int[] KEY_STATE_NORMAL_ON = {16842911, 16842912};
+        private static final int[] KEY_STATE_PRESSED_ON = {16842919, 16842911, 16842912};
+        private static final int[] KEY_STATE_NORMAL_OFF = {16842911};
+        private static final int[] KEY_STATE_PRESSED_OFF = {16842919, 16842911};
+        private static final int[] KEY_STATE_NORMAL = new int[0];
+        private static final int[] KEY_STATE_PRESSED = {16842919};
 
         public Key(Row parent) {
             this.keyboard = parent.parent;
@@ -135,17 +137,17 @@ public class Keyboard {
             this.edgeFlags = parent.rowEdgeFlags;
         }
 
-        public Key(Resources res, Row parent, int x2, int y2, XmlResourceParser parser) {
+        public Key(Resources res, Row parent, int x, int y, XmlResourceParser parser) {
             this(parent);
-            this.x = x2;
-            this.y = y2;
-            TypedArray a = res.obtainAttributes(Xml.asAttributeSet(parser), R.styleable.Keyboard);
+            this.f110x = x;
+            this.f111y = y;
+            TypedArray a = res.obtainAttributes(Xml.asAttributeSet(parser), C3132R.styleable.Keyboard);
             this.width = Keyboard.getDimensionOrFraction(a, 0, this.keyboard.mDisplayWidth, parent.defaultWidth);
             this.height = Keyboard.getDimensionOrFraction(a, 1, this.keyboard.mDisplayHeight, parent.defaultHeight);
             this.gap = Keyboard.getDimensionOrFraction(a, 2, this.keyboard.mDisplayWidth, parent.defaultHorizontalGap);
             a.recycle();
-            TypedArray a2 = res.obtainAttributes(Xml.asAttributeSet(parser), R.styleable.Keyboard_Key);
-            this.x += this.gap;
+            TypedArray a2 = res.obtainAttributes(Xml.asAttributeSet(parser), C3132R.styleable.Keyboard_Key);
+            this.f110x += this.gap;
             TypedValue codesValue = new TypedValue();
             a2.getValue(0, codesValue);
             if (codesValue.type == 16 || codesValue.type == 17) {
@@ -183,12 +185,11 @@ public class Keyboard {
         public void onReleased(boolean inside) {
             this.pressed = !this.pressed;
             if (this.sticky && inside) {
-                this.on = !this.on;
+                this.f109on = !this.f109on;
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public int[] parseCSV(String value) {
+        int[] parseCSV(String value) {
             int count = 0;
             int lastIndex = 0;
             if (value.length() > 0) {
@@ -209,37 +210,46 @@ public class Keyboard {
                 try {
                     values[count2] = Integer.parseInt(st.nextToken());
                 } catch (NumberFormatException e) {
-                    Log.e("Keyboard", "Error parsing keycodes " + value);
+                    Log.m70e("Keyboard", "Error parsing keycodes " + value);
                 }
                 count2 = count3;
             }
             return values;
         }
 
-        public boolean isInside(int x2, int y2) {
-            return (x2 >= this.x || (((this.edgeFlags & 1) > 0) && x2 <= this.x + this.width)) && (x2 < this.x + this.width || (((this.edgeFlags & 2) > 0) && x2 >= this.x)) && ((y2 >= this.y || (((this.edgeFlags & 4) > 0) && y2 <= this.y + this.height)) && (y2 < this.y + this.height || (((this.edgeFlags & 8) > 0) && y2 >= this.y)));
+        public boolean isInside(int x, int y) {
+            boolean leftEdge = (this.edgeFlags & 1) > 0;
+            boolean rightEdge = (this.edgeFlags & 2) > 0;
+            boolean topEdge = (this.edgeFlags & 4) > 0;
+            boolean bottomEdge = (this.edgeFlags & 8) > 0;
+            return (x >= this.f110x || (leftEdge && x <= this.f110x + this.width)) && (x < this.f110x + this.width || (rightEdge && x >= this.f110x)) && ((y >= this.f111y || (topEdge && y <= this.f111y + this.height)) && (y < this.f111y + this.height || (bottomEdge && y >= this.f111y)));
         }
 
-        public int squaredDistanceFrom(int x2, int y2) {
-            int xDist = (this.x + (this.width / 2)) - x2;
-            int yDist = (this.y + (this.height / 2)) - y2;
+        public int squaredDistanceFrom(int x, int y) {
+            int xDist = (this.f110x + (this.width / 2)) - x;
+            int yDist = (this.f111y + (this.height / 2)) - y;
             return (xDist * xDist) + (yDist * yDist);
         }
 
         public int[] getCurrentDrawableState() {
             int[] states = KEY_STATE_NORMAL;
-            if (this.on) {
+            if (this.f109on) {
                 if (this.pressed) {
-                    return KEY_STATE_PRESSED_ON;
+                    int[] states2 = KEY_STATE_PRESSED_ON;
+                    return states2;
                 }
-                return KEY_STATE_NORMAL_ON;
+                int[] states3 = KEY_STATE_NORMAL_ON;
+                return states3;
             } else if (this.sticky) {
                 if (this.pressed) {
-                    return KEY_STATE_PRESSED_OFF;
+                    int[] states4 = KEY_STATE_PRESSED_OFF;
+                    return states4;
                 }
-                return KEY_STATE_NORMAL_OFF;
+                int[] states5 = KEY_STATE_NORMAL_OFF;
+                return states5;
             } else if (this.pressed) {
-                return KEY_STATE_PRESSED;
+                int[] states6 = KEY_STATE_PRESSED;
+                return states6;
             } else {
                 return states;
             }
@@ -283,122 +293,66 @@ public class Keyboard {
         loadKeyboard(context, context.getResources().getXml(xmlLayoutResId));
     }
 
-    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r13v0, resolved type: int[]} */
-    /* JADX WARNING: type inference failed for: r10v0, types: [char] */
-    /* JADX INFO: this call moved to the top of the method (can break code semantics) */
-    /* JADX WARNING: Multi-variable type inference failed */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public Keyboard(android.content.Context r15, int r16, java.lang.CharSequence r17, int r18, int r19) {
-        /*
-            r14 = this;
-            r0 = r14
-            r14.<init>(r15, r16)
-            r1 = 0
-            r2 = 0
-            r3 = 0
-            r4 = 0
-            r0.mTotalWidth = r4
-            android.inputmethodservice.Keyboard$Row r5 = new android.inputmethodservice.Keyboard$Row
-            r5.<init>(r14)
-            int r6 = r0.mDefaultHeight
-            r5.defaultHeight = r6
-            int r6 = r0.mDefaultWidth
-            r5.defaultWidth = r6
-            int r6 = r0.mDefaultHorizontalGap
-            r5.defaultHorizontalGap = r6
-            int r6 = r0.mDefaultVerticalGap
-            r5.verticalGap = r6
-            r6 = 12
-            r5.rowEdgeFlags = r6
-            r6 = -1
-            r7 = r18
-            if (r7 != r6) goto L_0x002c
-            r6 = 2147483647(0x7fffffff, float:NaN)
-            goto L_0x002d
-        L_0x002c:
-            r6 = r7
-        L_0x002d:
-            r8 = r1
-            r1 = r4
-        L_0x002f:
-            int r9 = r17.length()
-            if (r1 >= r9) goto L_0x007e
-            r9 = r17
-            char r10 = r9.charAt(r1)
-            if (r3 >= r6) goto L_0x0046
-            int r11 = r0.mDefaultWidth
-            int r11 = r11 + r8
-            int r11 = r11 + r19
-            int r12 = r0.mDisplayWidth
-            if (r11 <= r12) goto L_0x004e
-        L_0x0046:
-            r8 = 0
-            int r11 = r0.mDefaultVerticalGap
-            int r12 = r0.mDefaultHeight
-            int r11 = r11 + r12
-            int r2 = r2 + r11
-            r3 = 0
-        L_0x004e:
-            android.inputmethodservice.Keyboard$Key r11 = new android.inputmethodservice.Keyboard$Key
-            r11.<init>(r5)
-            r11.x = r8
-            r11.y = r2
-            java.lang.String r12 = java.lang.String.valueOf(r10)
-            r11.label = r12
-            r12 = 1
-            int[] r13 = new int[r12]
-            r13[r4] = r10
-            r11.codes = r13
-            int r3 = r3 + r12
-            int r12 = r11.width
-            int r13 = r11.gap
-            int r12 = r12 + r13
-            int r8 = r8 + r12
-            java.util.List<android.inputmethodservice.Keyboard$Key> r12 = r0.mKeys
-            r12.add(r11)
-            java.util.ArrayList<android.inputmethodservice.Keyboard$Key> r12 = r5.mKeys
-            r12.add(r11)
-            int r12 = r0.mTotalWidth
-            if (r8 <= r12) goto L_0x007b
-            r0.mTotalWidth = r8
-        L_0x007b:
-            int r1 = r1 + 1
-            goto L_0x002f
-        L_0x007e:
-            r9 = r17
-            int r1 = r0.mDefaultHeight
-            int r1 = r1 + r2
-            r0.mTotalHeight = r1
-            java.util.ArrayList<android.inputmethodservice.Keyboard$Row> r1 = r0.rows
-            r1.add(r5)
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.inputmethodservice.Keyboard.<init>(android.content.Context, int, java.lang.CharSequence, int, int):void");
+    public Keyboard(Context context, int layoutTemplateResId, CharSequence characters, int columns, int horizontalPadding) {
+        this(context, layoutTemplateResId);
+        int y = 0;
+        int column = 0;
+        this.mTotalWidth = 0;
+        Row row = new Row(this);
+        row.defaultHeight = this.mDefaultHeight;
+        row.defaultWidth = this.mDefaultWidth;
+        row.defaultHorizontalGap = this.mDefaultHorizontalGap;
+        row.verticalGap = this.mDefaultVerticalGap;
+        row.rowEdgeFlags = 12;
+        int maxColumns = columns == -1 ? Integer.MAX_VALUE : columns;
+        int x = 0;
+        for (int x2 = 0; x2 < characters.length(); x2++) {
+            char c = characters.charAt(x2);
+            if (column >= maxColumns || this.mDefaultWidth + x + horizontalPadding > this.mDisplayWidth) {
+                x = 0;
+                y += this.mDefaultVerticalGap + this.mDefaultHeight;
+                column = 0;
+            }
+            Key key = new Key(row);
+            key.f110x = x;
+            key.f111y = y;
+            key.label = String.valueOf(c);
+            key.codes = new int[]{c};
+            column++;
+            x += key.width + key.gap;
+            this.mKeys.add(key);
+            row.mKeys.add(key);
+            if (x > this.mTotalWidth) {
+                this.mTotalWidth = x;
+            }
+        }
+        this.mTotalHeight = this.mDefaultHeight + y;
+        this.rows.add(row);
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
-    public final void resize(int newWidth, int newHeight) {
+    final void resize(int newWidth, int newHeight) {
         int numRows = this.rows.size();
         for (int rowIndex = 0; rowIndex < numRows; rowIndex++) {
             Row row = this.rows.get(rowIndex);
             int numKeys = row.mKeys.size();
             int totalWidth = 0;
             int totalGap = 0;
-            for (int keyIndex = 0; keyIndex < numKeys; keyIndex++) {
-                Key key = row.mKeys.get(keyIndex);
-                if (keyIndex > 0) {
+            for (int totalGap2 = 0; totalGap2 < numKeys; totalGap2++) {
+                Key key = row.mKeys.get(totalGap2);
+                if (totalGap2 > 0) {
                     totalGap += key.gap;
                 }
                 totalWidth += key.width;
             }
-            if (totalGap + totalWidth > newWidth) {
-                float scaleFactor = ((float) (newWidth - totalGap)) / ((float) totalWidth);
+            int keyIndex = totalGap + totalWidth;
+            if (keyIndex > newWidth) {
+                float scaleFactor = (newWidth - totalGap) / totalWidth;
                 int x = 0;
-                for (int keyIndex2 = 0; keyIndex2 < numKeys; keyIndex2++) {
-                    Key key2 = row.mKeys.get(keyIndex2);
-                    key2.width = (int) (((float) key2.width) * scaleFactor);
-                    key2.x = x;
+                for (int x2 = 0; x2 < numKeys; x2++) {
+                    Key key2 = row.mKeys.get(x2);
+                    key2.width = (int) (key2.width * scaleFactor);
+                    key2.f110x = x;
                     x += key2.width + key2.gap;
                 }
             }
@@ -414,43 +368,35 @@ public class Keyboard {
         return this.mModifierKeys;
     }
 
-    /* access modifiers changed from: protected */
-    public int getHorizontalGap() {
+    protected int getHorizontalGap() {
         return this.mDefaultHorizontalGap;
     }
 
-    /* access modifiers changed from: protected */
-    public void setHorizontalGap(int gap) {
+    protected void setHorizontalGap(int gap) {
         this.mDefaultHorizontalGap = gap;
     }
 
-    /* access modifiers changed from: protected */
-    public int getVerticalGap() {
+    protected int getVerticalGap() {
         return this.mDefaultVerticalGap;
     }
 
-    /* access modifiers changed from: protected */
-    public void setVerticalGap(int gap) {
+    protected void setVerticalGap(int gap) {
         this.mDefaultVerticalGap = gap;
     }
 
-    /* access modifiers changed from: protected */
-    public int getKeyHeight() {
+    protected int getKeyHeight() {
         return this.mDefaultHeight;
     }
 
-    /* access modifiers changed from: protected */
-    public void setKeyHeight(int height) {
+    protected void setKeyHeight(int height) {
         this.mDefaultHeight = height;
     }
 
-    /* access modifiers changed from: protected */
-    public int getKeyWidth() {
+    protected int getKeyWidth() {
         return this.mDefaultWidth;
     }
 
-    /* access modifiers changed from: protected */
-    public void setKeyWidth(int width) {
+    protected void setKeyWidth(int width) {
         this.mDefaultWidth = width;
     }
 
@@ -463,16 +409,17 @@ public class Keyboard {
     }
 
     public boolean setShifted(boolean shiftState) {
+        Key[] keyArr;
         for (Key shiftKey : this.mShiftKeys) {
             if (shiftKey != null) {
-                shiftKey.on = shiftState;
+                shiftKey.f109on = shiftState;
             }
         }
-        if (this.mShifted == shiftState) {
-            return false;
+        if (this.mShifted != shiftState) {
+            this.mShifted = shiftState;
+            return true;
         }
-        this.mShifted = shiftState;
-        return true;
+        return false;
     }
 
     public boolean isShifted() {
@@ -490,7 +437,7 @@ public class Keyboard {
     private void computeNearestNeighbors() {
         this.mCellWidth = ((getMinWidth() + 10) - 1) / 10;
         this.mCellHeight = ((getHeight() + 5) - 1) / 5;
-        this.mGridNeighbors = new int[50][];
+        this.mGridNeighbors = new int[50];
         int[] indices = new int[this.mKeys.size()];
         int gridWidth = this.mCellWidth * 10;
         int gridHeight = this.mCellHeight * 5;
@@ -499,10 +446,10 @@ public class Keyboard {
             int y = 0;
             while (y < gridHeight) {
                 int count = 0;
-                for (int i = 0; i < this.mKeys.size(); i++) {
-                    Key key = this.mKeys.get(i);
+                for (int count2 = 0; count2 < this.mKeys.size(); count2++) {
+                    Key key = this.mKeys.get(count2);
                     if (key.squaredDistanceFrom(x, y) < this.mProximityThreshold || key.squaredDistanceFrom((this.mCellWidth + x) - 1, y) < this.mProximityThreshold || key.squaredDistanceFrom((this.mCellWidth + x) - 1, (this.mCellHeight + y) - 1) < this.mProximityThreshold || key.squaredDistanceFrom(x, (this.mCellHeight + y) - 1) < this.mProximityThreshold) {
-                        indices[count] = i;
+                        indices[count] = count2;
                         count++;
                     }
                 }
@@ -511,7 +458,8 @@ public class Keyboard {
                 this.mGridNeighbors[((y / this.mCellHeight) * 10) + (x / this.mCellWidth)] = cell;
                 y += this.mCellHeight;
             }
-            x += this.mCellWidth;
+            int y2 = this.mCellWidth;
+            x += y2;
         }
     }
 
@@ -520,41 +468,36 @@ public class Keyboard {
         if (this.mGridNeighbors == null) {
             computeNearestNeighbors();
         }
-        if (x < 0 || x >= getMinWidth() || y < 0 || y >= getHeight() || (index = ((y / this.mCellHeight) * 10) + (x / this.mCellWidth)) >= 50) {
-            return new int[0];
+        if (x >= 0 && x < getMinWidth() && y >= 0 && y < getHeight() && (index = ((y / this.mCellHeight) * 10) + (x / this.mCellWidth)) < 50) {
+            return this.mGridNeighbors[index];
         }
-        return this.mGridNeighbors[index];
+        return new int[0];
     }
 
-    /* access modifiers changed from: protected */
-    public Row createRowFromXml(Resources res, XmlResourceParser parser) {
+    protected Row createRowFromXml(Resources res, XmlResourceParser parser) {
         return new Row(res, this, parser);
     }
 
-    /* access modifiers changed from: protected */
-    public Key createKeyFromXml(Resources res, Row parent, int x, int y, XmlResourceParser parser) {
+    protected Key createKeyFromXml(Resources res, Row parent, int x, int y, XmlResourceParser parser) {
         return new Key(res, parent, x, y, parser);
     }
 
     private void loadKeyboard(Context context, XmlResourceParser parser) {
-        Key key;
-        XmlResourceParser xmlResourceParser = parser;
         Resources res = context.getResources();
         boolean inRow = false;
         int row = 0;
         int x = 0;
         int y = 0;
-        Key key2 = null;
+        Key key = null;
         Row currentRow = null;
-        Key key3 = null;
+        boolean inKey = false;
         boolean skipRow = false;
         while (true) {
             boolean skipRow2 = skipRow;
             try {
-                int next = parser.next();
-                int event = next;
+                int event = parser.next();
                 boolean z = true;
-                if (next == 1) {
+                if (event == 1) {
                     break;
                 } else if (event == 2) {
                     String tag = parser.getName();
@@ -562,7 +505,7 @@ public class Keyboard {
                         boolean inRow2 = true;
                         x = 0;
                         try {
-                            currentRow = createRowFromXml(res, xmlResourceParser);
+                            currentRow = createRowFromXml(res, parser);
                             this.rows.add(currentRow);
                             if (currentRow.mode == 0 || currentRow.mode == this.mKeyboardMode) {
                                 z = false;
@@ -570,12 +513,11 @@ public class Keyboard {
                             boolean skipRow3 = z;
                             if (skipRow3) {
                                 try {
-                                    skipToEndOfRow(xmlResourceParser);
+                                    skipToEndOfRow(parser);
                                     inRow2 = false;
                                 } catch (Exception e) {
                                     e = e;
-                                    boolean z2 = skipRow3;
-                                    Log.e("Keyboard", "Parse error:" + e);
+                                    Log.m70e("Keyboard", "Parse error:" + e);
                                     e.printStackTrace();
                                     this.mTotalHeight = y - this.mDefaultVerticalGap;
                                 }
@@ -584,62 +526,53 @@ public class Keyboard {
                             skipRow = skipRow3;
                         } catch (Exception e2) {
                             e = e2;
-                            Log.e("Keyboard", "Parse error:" + e);
-                            e.printStackTrace();
-                            this.mTotalHeight = y - this.mDefaultVerticalGap;
                         }
                     } else if (TAG_KEY.equals(tag)) {
-                        int i = event;
                         try {
-                            key = createKeyFromXml(res, currentRow, x, y, parser);
-                        } catch (Exception e3) {
-                            e = e3;
-                            Log.e("Keyboard", "Parse error:" + e);
-                            e.printStackTrace();
-                            this.mTotalHeight = y - this.mDefaultVerticalGap;
-                        }
-                        try {
-                            this.mKeys.add(key);
-                            if (key.codes[0] == -1) {
-                                int i2 = 0;
-                                while (true) {
-                                    if (i2 >= this.mShiftKeys.length) {
-                                        break;
-                                    } else if (this.mShiftKeys[i2] == null) {
-                                        this.mShiftKeys[i2] = key;
-                                        this.mShiftKeyIndices[i2] = this.mKeys.size() - 1;
-                                        break;
-                                    } else {
-                                        i2++;
+                            Key key2 = createKeyFromXml(res, currentRow, x, y, parser);
+                            try {
+                                this.mKeys.add(key2);
+                                if (key2.codes[0] == -1) {
+                                    int i = 0;
+                                    while (true) {
+                                        if (i >= this.mShiftKeys.length) {
+                                            break;
+                                        } else if (this.mShiftKeys[i] == null) {
+                                            this.mShiftKeys[i] = key2;
+                                            this.mShiftKeyIndices[i] = this.mKeys.size() - 1;
+                                            break;
+                                        } else {
+                                            i++;
+                                        }
                                     }
+                                    this.mModifierKeys.add(key2);
+                                } else if (key2.codes[0] == -6) {
+                                    this.mModifierKeys.add(key2);
                                 }
-                                this.mModifierKeys.add(key);
-                            } else if (key.codes[0] == -6) {
-                                this.mModifierKeys.add(key);
+                                currentRow.mKeys.add(key2);
+                                key = key2;
+                                skipRow = skipRow2;
+                                inKey = true;
+                            } catch (Exception e3) {
+                                e = e3;
+                                Log.m70e("Keyboard", "Parse error:" + e);
+                                e.printStackTrace();
+                                this.mTotalHeight = y - this.mDefaultVerticalGap;
                             }
-                            currentRow.mKeys.add(key);
-                            key2 = key;
-                            skipRow = skipRow2;
-                            key3 = 1;
                         } catch (Exception e4) {
                             e = e4;
-                            Key key4 = key;
-                            Log.e("Keyboard", "Parse error:" + e);
-                            e.printStackTrace();
-                            this.mTotalHeight = y - this.mDefaultVerticalGap;
                         }
                     } else {
-                        int i3 = event;
                         if ("Keyboard".equals(tag)) {
-                            parseKeyboardAttributes(res, xmlResourceParser);
+                            parseKeyboardAttributes(res, parser);
                         }
                         skipRow = skipRow2;
                     }
                 } else {
                     if (event == 3) {
-                        if (key3 != null) {
-                            key3 = null;
-                            int x2 = x + key2.gap + key2.width;
+                        if (inKey) {
+                            inKey = false;
+                            int x2 = x + key.gap + key.width;
                             try {
                                 if (x2 > this.mTotalWidth) {
                                     this.mTotalWidth = x2;
@@ -647,15 +580,13 @@ public class Keyboard {
                                 x = x2;
                             } catch (Exception e5) {
                                 e = e5;
-                                int i4 = x2;
-                                Log.e("Keyboard", "Parse error:" + e);
+                                Log.m70e("Keyboard", "Parse error:" + e);
                                 e.printStackTrace();
                                 this.mTotalHeight = y - this.mDefaultVerticalGap;
                             }
                         } else if (inRow) {
                             inRow = false;
-                            y += currentRow.verticalGap;
-                            y += currentRow.defaultHeight;
+                            y = y + currentRow.verticalGap + currentRow.defaultHeight;
                             row++;
                         }
                     }
@@ -663,9 +594,6 @@ public class Keyboard {
                 }
             } catch (Exception e6) {
                 e = e6;
-                Log.e("Keyboard", "Parse error:" + e);
-                e.printStackTrace();
-                this.mTotalHeight = y - this.mDefaultVerticalGap;
             }
         }
         this.mTotalHeight = y - this.mDefaultVerticalGap;
@@ -673,24 +601,24 @@ public class Keyboard {
 
     private void skipToEndOfRow(XmlResourceParser parser) throws XmlPullParserException, IOException {
         while (true) {
-            int next = parser.next();
-            int event = next;
-            if (next == 1) {
-                return;
-            }
-            if (event == 3 && parser.getName().equals(TAG_ROW)) {
+            int event = parser.next();
+            if (event != 1) {
+                if (event == 3 && parser.getName().equals(TAG_ROW)) {
+                    return;
+                }
+            } else {
                 return;
             }
         }
     }
 
     private void parseKeyboardAttributes(Resources res, XmlResourceParser parser) {
-        TypedArray a = res.obtainAttributes(Xml.asAttributeSet(parser), R.styleable.Keyboard);
+        TypedArray a = res.obtainAttributes(Xml.asAttributeSet(parser), C3132R.styleable.Keyboard);
         this.mDefaultWidth = getDimensionOrFraction(a, 0, this.mDisplayWidth, this.mDisplayWidth / 10);
         this.mDefaultHeight = getDimensionOrFraction(a, 1, this.mDisplayHeight, 50);
         this.mDefaultHorizontalGap = getDimensionOrFraction(a, 2, this.mDisplayWidth, 0);
         this.mDefaultVerticalGap = getDimensionOrFraction(a, 3, this.mDisplayHeight, 0);
-        this.mProximityThreshold = (int) (((float) this.mDefaultWidth) * SEARCH_DISTANCE);
+        this.mProximityThreshold = (int) (this.mDefaultWidth * SEARCH_DISTANCE);
         this.mProximityThreshold *= this.mProximityThreshold;
         a.recycle();
     }
@@ -704,7 +632,7 @@ public class Keyboard {
             return a.getDimensionPixelOffset(index, defValue);
         }
         if (value.type == 6) {
-            return Math.round(a.getFraction(index, base, base, (float) defValue));
+            return Math.round(a.getFraction(index, base, base, defValue));
         }
         return defValue;
     }

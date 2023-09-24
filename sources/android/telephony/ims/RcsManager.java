@@ -2,6 +2,7 @@ package android.telephony.ims;
 
 import android.content.Context;
 
+/* loaded from: classes4.dex */
 public class RcsManager {
     private final RcsMessageStore mRcsMessageStore;
 

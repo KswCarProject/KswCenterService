@@ -3,9 +3,9 @@ package android.content;
 import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
 import android.net.Uri;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.PatternMatcher;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.PatternMatcher;
 import android.text.TextUtils;
 import android.util.AndroidException;
 import android.util.Log;
@@ -22,17 +22,22 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
 
+/* loaded from: classes.dex */
 public class IntentFilter implements Parcelable {
     private static final String ACTION_STR = "action";
     private static final String AGLOB_STR = "aglob";
     private static final String AUTH_STR = "auth";
     private static final String AUTO_VERIFY_STR = "autoVerify";
     private static final String CAT_STR = "cat";
-    public static final Parcelable.Creator<IntentFilter> CREATOR = new Parcelable.Creator<IntentFilter>() {
+    public static final Parcelable.Creator<IntentFilter> CREATOR = new Parcelable.Creator<IntentFilter>() { // from class: android.content.IntentFilter.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public IntentFilter createFromParcel(Parcel source) {
             return new IntentFilter(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public IntentFilter[] newArray(int size) {
             return new IntentFilter[size];
         }
@@ -88,6 +93,7 @@ public class IntentFilter implements Parcelable {
     private int mVerifyState;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface InstantAppVisibility {
     }
 
@@ -120,12 +126,11 @@ public class IntentFilter implements Parcelable {
             lengths[lenPos] = N + 1;
             return set;
         }
-        String[] newSet = new String[(((N * 3) / 2) + 2)];
+        String[] newSet = new String[((N * 3) / 2) + 2];
         System.arraycopy(set, 0, newSet, 0, N);
-        String[] set3 = newSet;
-        set3[N] = string;
+        newSet[N] = string;
         lengths[lenPos] = N + 1;
-        return set3;
+        return newSet;
     }
 
     private static String[] removeStringFromSet(String[] set, String string, int[] lengths, int lenPos) {
@@ -143,7 +148,7 @@ public class IntentFilter implements Parcelable {
             lengths[lenPos] = N - 1;
             return set;
         }
-        String[] newSet = new String[(set.length / 3)];
+        String[] newSet = new String[set.length / 3];
         if (pos > 0) {
             System.arraycopy(set, 0, newSet, 0, pos);
         }
@@ -153,6 +158,7 @@ public class IntentFilter implements Parcelable {
         return newSet;
     }
 
+    /* loaded from: classes.dex */
     public static class MalformedMimeTypeException extends AndroidException {
         public MalformedMimeTypeException() {
         }
@@ -274,10 +280,7 @@ public class IntentFilter implements Parcelable {
     }
 
     public final boolean handleAllWebDataURI() {
-        if (hasCategory(Intent.CATEGORY_APP_BROWSER) || (handlesWebUris(false) && countDataAuthorities() == 0)) {
-            return true;
-        }
-        return false;
+        return hasCategory(Intent.CATEGORY_APP_BROWSER) || (handlesWebUris(false) && countDataAuthorities() == 0);
     }
 
     public final boolean handlesWebUris(boolean onlyWebSchemes) {
@@ -305,10 +308,7 @@ public class IntentFilter implements Parcelable {
 
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
     public final boolean isVerified() {
-        if ((this.mVerifyState & 256) == 256 && (this.mVerifyState & 16) == 16) {
-            return true;
-        }
-        return false;
+        return (this.mVerifyState & 256) == 256 && (this.mVerifyState & 16) == 16;
     }
 
     public void setVerified(boolean verified) {
@@ -371,21 +371,25 @@ public class IntentFilter implements Parcelable {
     public final void addDataType(String type) throws MalformedMimeTypeException {
         int slashpos = type.indexOf(47);
         int typelen = type.length();
-        if (slashpos <= 0 || typelen < slashpos + 2) {
-            throw new MalformedMimeTypeException(type);
-        }
-        if (this.mDataTypes == null) {
-            this.mDataTypes = new ArrayList<>();
-        }
-        if (typelen == slashpos + 2 && type.charAt(slashpos + 1) == '*') {
-            String str = type.substring(0, slashpos);
-            if (!this.mDataTypes.contains(str)) {
-                this.mDataTypes.add(str.intern());
+        if (slashpos > 0 && typelen >= slashpos + 2) {
+            if (this.mDataTypes == null) {
+                this.mDataTypes = new ArrayList<>();
             }
-            this.mHasPartialTypes = true;
-        } else if (!this.mDataTypes.contains(type)) {
-            this.mDataTypes.add(type.intern());
+            if (typelen == slashpos + 2 && type.charAt(slashpos + 1) == '*') {
+                String str = type.substring(0, slashpos);
+                if (!this.mDataTypes.contains(str)) {
+                    this.mDataTypes.add(str.intern());
+                }
+                this.mHasPartialTypes = true;
+                return;
+            } else if (!this.mDataTypes.contains(type)) {
+                this.mDataTypes.add(type.intern());
+                return;
+            } else {
+                return;
+            }
         }
+        throw new MalformedMimeTypeException(type);
     }
 
     public final boolean hasDataType(String type) {
@@ -446,14 +450,12 @@ public class IntentFilter implements Parcelable {
         return null;
     }
 
+    /* loaded from: classes.dex */
     public static final class AuthorityEntry {
-        /* access modifiers changed from: private */
-        public final String mHost;
+        private final String mHost;
         private final String mOrigHost;
-        /* access modifiers changed from: private */
-        public final int mPort;
-        /* access modifiers changed from: private */
-        public final boolean mWild;
+        private final int mPort;
+        private final boolean mWild;
 
         public AuthorityEntry(String host, String port) {
             this.mOrigHost = host;
@@ -473,16 +475,14 @@ public class IntentFilter implements Parcelable {
             this.mPort = src.readInt();
         }
 
-        /* access modifiers changed from: package-private */
-        public void writeToParcel(Parcel dest) {
+        void writeToParcel(Parcel dest) {
             dest.writeString(this.mOrigHost);
             dest.writeString(this.mHost);
             dest.writeInt(this.mWild ? 1 : 0);
             dest.writeInt(this.mPort);
         }
 
-        /* access modifiers changed from: package-private */
-        public void writeToProto(ProtoOutputStream proto, long fieldId) {
+        void writeToProto(ProtoOutputStream proto, long fieldId) {
             long token = proto.start(fieldId);
             proto.write(1138166333441L, this.mHost);
             proto.write(1133871366146L, this.mWild);
@@ -499,15 +499,13 @@ public class IntentFilter implements Parcelable {
         }
 
         public boolean match(AuthorityEntry other) {
-            if (this.mWild == other.mWild && this.mHost.equals(other.mHost) && this.mPort == other.mPort) {
-                return true;
-            }
-            return false;
+            return this.mWild == other.mWild && this.mHost.equals(other.mHost) && this.mPort == other.mPort;
         }
 
         public boolean equals(Object obj) {
             if (obj instanceof AuthorityEntry) {
-                return match((AuthorityEntry) obj);
+                AuthorityEntry other = (AuthorityEntry) obj;
+                return match(other);
             }
             return false;
         }
@@ -526,13 +524,13 @@ public class IntentFilter implements Parcelable {
             if (host.compareToIgnoreCase(this.mHost) != 0) {
                 return -2;
             }
-            if (this.mPort < 0) {
-                return IntentFilter.MATCH_CATEGORY_HOST;
+            if (this.mPort >= 0) {
+                if (this.mPort != data.getPort()) {
+                    return -2;
+                }
+                return 4194304;
             }
-            if (this.mPort != data.getPort()) {
-                return -2;
-            }
-            return 4194304;
+            return IntentFilter.MATCH_CATEGORY_HOST;
         }
     }
 
@@ -564,7 +562,8 @@ public class IntentFilter implements Parcelable {
         }
         int numDataSchemeSpecificParts = this.mDataSchemeSpecificParts.size();
         for (int i = 0; i < numDataSchemeSpecificParts; i++) {
-            if (this.mDataSchemeSpecificParts.get(i).match(data)) {
+            PatternMatcher pe = this.mDataSchemeSpecificParts.get(i);
+            if (pe.match(data)) {
                 return true;
             }
         }
@@ -671,7 +670,8 @@ public class IntentFilter implements Parcelable {
         }
         int numDataPaths = this.mDataPaths.size();
         for (int i = 0; i < numDataPaths; i++) {
-            if (this.mDataPaths.get(i).match(data)) {
+            PatternMatcher pe = this.mDataPaths.get(i);
+            if (pe.match(data)) {
                 return true;
             }
         }
@@ -706,7 +706,8 @@ public class IntentFilter implements Parcelable {
         }
         int numDataAuthorities = this.mDataAuthorities.size();
         for (int i = 0; i < numDataAuthorities; i++) {
-            int match = this.mDataAuthorities.get(i).match(data);
+            AuthorityEntry ae = this.mDataAuthorities.get(i);
+            int match = ae.match(data);
             if (match >= 0) {
                 return match;
             }
@@ -715,24 +716,39 @@ public class IntentFilter implements Parcelable {
     }
 
     public final int matchData(String type, String scheme, Uri data) {
+        int i;
         ArrayList<String> types = this.mDataTypes;
         ArrayList<String> schemes = this.mDataSchemes;
         int match = 1048576;
-        if (types != null || schemes != null) {
-            if (schemes != null) {
-                if (!schemes.contains(scheme != null ? scheme : "")) {
-                    return -2;
+        if (types == null && schemes == null) {
+            if (type != null || data != null) {
+                return -2;
+            }
+            return 1081344;
+        }
+        if (schemes != null) {
+            if (!schemes.contains(scheme != null ? scheme : "")) {
+                return -2;
+            }
+            match = 2097152;
+            ArrayList<PatternMatcher> schemeSpecificParts = this.mDataSchemeSpecificParts;
+            if (schemeSpecificParts != null && data != null) {
+                if (!hasDataSchemeSpecificPart(data.getSchemeSpecificPart())) {
+                    i = -2;
+                } else {
+                    i = 5767168;
                 }
-                match = 2097152;
-                if (!(this.mDataSchemeSpecificParts == null || data == null)) {
-                    match = hasDataSchemeSpecificPart(data.getSchemeSpecificPart()) ? 5767168 : -2;
-                }
-                if (!(match == 5767168 || this.mDataAuthorities == null)) {
+                match = i;
+            }
+            if (match != 5767168) {
+                ArrayList<AuthorityEntry> authorities = this.mDataAuthorities;
+                if (authorities != null) {
                     int authMatch = matchDataAuthority(data);
                     if (authMatch < 0) {
                         return -2;
                     }
-                    if (this.mDataPaths == null) {
+                    ArrayList<PatternMatcher> paths = this.mDataPaths;
+                    if (paths == null) {
                         match = authMatch;
                     } else if (!hasDataPath(data.getPath())) {
                         return -2;
@@ -740,26 +756,22 @@ public class IntentFilter implements Parcelable {
                         match = MATCH_CATEGORY_PATH;
                     }
                 }
-                if (match == -2) {
-                    return -2;
-                }
-            } else if (scheme != null && !"".equals(scheme) && !"content".equals(scheme) && !ContentResolver.SCHEME_FILE.equals(scheme)) {
+            }
+            if (match == -2) {
                 return -2;
             }
-            if (types != null) {
-                if (!findMimeType(type)) {
-                    return -1;
-                }
-                match = MATCH_CATEGORY_TYPE;
-            } else if (type != null) {
-                return -1;
-            }
-            return 32768 + match;
-        } else if (type == null && data == null) {
-            return 1081344;
-        } else {
+        } else if (scheme != null && !"".equals(scheme) && !"content".equals(scheme) && !ContentResolver.SCHEME_FILE.equals(scheme)) {
             return -2;
         }
+        if (types != null) {
+            if (!findMimeType(type)) {
+                return -1;
+            }
+            match = MATCH_CATEGORY_TYPE;
+        } else if (type != null) {
+            return -1;
+        }
+        return 32768 + match;
     }
 
     public final void addCategory(String category) {
@@ -798,23 +810,24 @@ public class IntentFilter implements Parcelable {
             return null;
         }
         Iterator<String> it = categories.iterator();
-        if (this.mCategories != null) {
-            while (it.hasNext()) {
-                String category = it.next();
-                if (!this.mCategories.contains(category)) {
-                    return category;
-                }
+        if (this.mCategories == null) {
+            if (it.hasNext()) {
+                return it.next();
             }
             return null;
-        } else if (it.hasNext()) {
-            return it.next();
-        } else {
-            return null;
         }
+        while (it.hasNext()) {
+            String category = it.next();
+            if (!this.mCategories.contains(category)) {
+                return category;
+            }
+        }
+        return null;
     }
 
     public final int match(ContentResolver resolver, Intent intent, boolean resolve, String logTag) {
-        return match(intent.getAction(), resolve ? intent.resolveType(resolver) : intent.getType(), intent.getScheme(), intent.getData(), intent.getCategories(), logTag);
+        String type = resolve ? intent.resolveType(resolver) : intent.getType();
+        return match(intent.getAction(), type, intent.getScheme(), intent.getData(), intent.getCategories(), logTag);
     }
 
     public final int match(String action, String type, String scheme, Uri data, Set<String> categories, String logTag) {
@@ -822,7 +835,11 @@ public class IntentFilter implements Parcelable {
             return -3;
         }
         int dataMatch = matchData(type, scheme, data);
-        if (dataMatch >= 0 && matchCategories(categories) != null) {
+        if (dataMatch < 0) {
+            return dataMatch;
+        }
+        String categoryMismatch = matchCategories(categories);
+        if (categoryMismatch != null) {
             return -4;
         }
         return dataMatch;
@@ -830,182 +847,177 @@ public class IntentFilter implements Parcelable {
 
     public void writeToXml(XmlSerializer serializer) throws IOException {
         if (getAutoVerify()) {
-            serializer.attribute((String) null, AUTO_VERIFY_STR, Boolean.toString(true));
+            serializer.attribute(null, AUTO_VERIFY_STR, Boolean.toString(true));
         }
         int N = countActions();
         for (int i = 0; i < N; i++) {
-            serializer.startTag((String) null, "action");
-            serializer.attribute((String) null, "name", this.mActions.get(i));
-            serializer.endTag((String) null, "action");
+            serializer.startTag(null, "action");
+            serializer.attribute(null, "name", this.mActions.get(i));
+            serializer.endTag(null, "action");
         }
         int N2 = countCategories();
         for (int i2 = 0; i2 < N2; i2++) {
-            serializer.startTag((String) null, CAT_STR);
-            serializer.attribute((String) null, "name", this.mCategories.get(i2));
-            serializer.endTag((String) null, CAT_STR);
+            serializer.startTag(null, CAT_STR);
+            serializer.attribute(null, "name", this.mCategories.get(i2));
+            serializer.endTag(null, CAT_STR);
         }
         int N3 = countDataTypes();
         for (int i3 = 0; i3 < N3; i3++) {
-            serializer.startTag((String) null, "type");
+            serializer.startTag(null, "type");
             String type = this.mDataTypes.get(i3);
             if (type.indexOf(47) < 0) {
                 type = type + "/*";
             }
-            serializer.attribute((String) null, "name", type);
-            serializer.endTag((String) null, "type");
+            serializer.attribute(null, "name", type);
+            serializer.endTag(null, "type");
         }
         int N4 = countDataSchemes();
         for (int i4 = 0; i4 < N4; i4++) {
-            serializer.startTag((String) null, SCHEME_STR);
-            serializer.attribute((String) null, "name", this.mDataSchemes.get(i4));
-            serializer.endTag((String) null, SCHEME_STR);
+            serializer.startTag(null, SCHEME_STR);
+            serializer.attribute(null, "name", this.mDataSchemes.get(i4));
+            serializer.endTag(null, SCHEME_STR);
         }
         int N5 = countDataSchemeSpecificParts();
         for (int i5 = 0; i5 < N5; i5++) {
-            serializer.startTag((String) null, SSP_STR);
+            serializer.startTag(null, SSP_STR);
             PatternMatcher pe = this.mDataSchemeSpecificParts.get(i5);
             switch (pe.getType()) {
                 case 0:
-                    serializer.attribute((String) null, LITERAL_STR, pe.getPath());
+                    serializer.attribute(null, LITERAL_STR, pe.getPath());
                     break;
                 case 1:
-                    serializer.attribute((String) null, PREFIX_STR, pe.getPath());
+                    serializer.attribute(null, PREFIX_STR, pe.getPath());
                     break;
                 case 2:
-                    serializer.attribute((String) null, SGLOB_STR, pe.getPath());
+                    serializer.attribute(null, SGLOB_STR, pe.getPath());
                     break;
                 case 3:
-                    serializer.attribute((String) null, AGLOB_STR, pe.getPath());
+                    serializer.attribute(null, AGLOB_STR, pe.getPath());
                     break;
             }
-            serializer.endTag((String) null, SSP_STR);
+            serializer.endTag(null, SSP_STR);
         }
         int N6 = countDataAuthorities();
         for (int i6 = 0; i6 < N6; i6++) {
-            serializer.startTag((String) null, AUTH_STR);
+            serializer.startTag(null, AUTH_STR);
             AuthorityEntry ae = this.mDataAuthorities.get(i6);
-            serializer.attribute((String) null, HOST_STR, ae.getHost());
+            serializer.attribute(null, HOST_STR, ae.getHost());
             if (ae.getPort() >= 0) {
-                serializer.attribute((String) null, "port", Integer.toString(ae.getPort()));
+                serializer.attribute(null, "port", Integer.toString(ae.getPort()));
             }
-            serializer.endTag((String) null, AUTH_STR);
+            serializer.endTag(null, AUTH_STR);
         }
         int N7 = countDataPaths();
         for (int i7 = 0; i7 < N7; i7++) {
-            serializer.startTag((String) null, PATH_STR);
+            serializer.startTag(null, PATH_STR);
             PatternMatcher pe2 = this.mDataPaths.get(i7);
             switch (pe2.getType()) {
                 case 0:
-                    serializer.attribute((String) null, LITERAL_STR, pe2.getPath());
+                    serializer.attribute(null, LITERAL_STR, pe2.getPath());
                     break;
                 case 1:
-                    serializer.attribute((String) null, PREFIX_STR, pe2.getPath());
+                    serializer.attribute(null, PREFIX_STR, pe2.getPath());
                     break;
                 case 2:
-                    serializer.attribute((String) null, SGLOB_STR, pe2.getPath());
+                    serializer.attribute(null, SGLOB_STR, pe2.getPath());
                     break;
                 case 3:
-                    serializer.attribute((String) null, AGLOB_STR, pe2.getPath());
+                    serializer.attribute(null, AGLOB_STR, pe2.getPath());
                     break;
             }
-            serializer.endTag((String) null, PATH_STR);
+            serializer.endTag(null, PATH_STR);
         }
     }
 
     public void readFromXml(XmlPullParser parser) throws XmlPullParserException, IOException {
-        String autoVerify = parser.getAttributeValue((String) null, AUTO_VERIFY_STR);
+        String autoVerify = parser.getAttributeValue(null, AUTO_VERIFY_STR);
         setAutoVerify(TextUtils.isEmpty(autoVerify) ? false : Boolean.getBoolean(autoVerify));
         int outerDepth = parser.getDepth();
         while (true) {
-            int next = parser.next();
-            int type = next;
-            if (next == 1) {
-                return;
-            }
-            if (type == 3 && parser.getDepth() <= outerDepth) {
-                return;
-            }
-            if (!(type == 3 || type == 4)) {
-                String tagName = parser.getName();
-                if (tagName.equals("action")) {
-                    String name = parser.getAttributeValue((String) null, "name");
-                    if (name != null) {
-                        addAction(name);
-                    }
-                } else if (tagName.equals(CAT_STR)) {
-                    String name2 = parser.getAttributeValue((String) null, "name");
-                    if (name2 != null) {
-                        addCategory(name2);
-                    }
-                } else if (tagName.equals("type")) {
-                    String name3 = parser.getAttributeValue((String) null, "name");
-                    if (name3 != null) {
-                        try {
-                            addDataType(name3);
-                        } catch (MalformedMimeTypeException e) {
-                        }
-                    }
-                } else if (tagName.equals(SCHEME_STR)) {
-                    String name4 = parser.getAttributeValue((String) null, "name");
-                    if (name4 != null) {
-                        addDataScheme(name4);
-                    }
-                } else if (tagName.equals(SSP_STR)) {
-                    String ssp = parser.getAttributeValue((String) null, LITERAL_STR);
-                    if (ssp != null) {
-                        addDataSchemeSpecificPart(ssp, 0);
-                    } else {
-                        String attributeValue = parser.getAttributeValue((String) null, PREFIX_STR);
-                        String ssp2 = attributeValue;
-                        if (attributeValue != null) {
-                            addDataSchemeSpecificPart(ssp2, 1);
-                        } else {
-                            String attributeValue2 = parser.getAttributeValue((String) null, SGLOB_STR);
-                            String ssp3 = attributeValue2;
-                            if (attributeValue2 != null) {
-                                addDataSchemeSpecificPart(ssp3, 2);
-                            } else {
-                                String attributeValue3 = parser.getAttributeValue((String) null, AGLOB_STR);
-                                String ssp4 = attributeValue3;
-                                if (attributeValue3 != null) {
-                                    addDataSchemeSpecificPart(ssp4, 3);
+            int type = parser.next();
+            if (type != 1) {
+                if (type != 3 || parser.getDepth() > outerDepth) {
+                    if (type != 3 && type != 4) {
+                        String tagName = parser.getName();
+                        if (tagName.equals("action")) {
+                            String name = parser.getAttributeValue(null, "name");
+                            if (name != null) {
+                                addAction(name);
+                            }
+                        } else if (tagName.equals(CAT_STR)) {
+                            String name2 = parser.getAttributeValue(null, "name");
+                            if (name2 != null) {
+                                addCategory(name2);
+                            }
+                        } else if (tagName.equals("type")) {
+                            String name3 = parser.getAttributeValue(null, "name");
+                            if (name3 != null) {
+                                try {
+                                    addDataType(name3);
+                                } catch (MalformedMimeTypeException e) {
                                 }
                             }
-                        }
-                    }
-                } else if (tagName.equals(AUTH_STR)) {
-                    String host = parser.getAttributeValue((String) null, HOST_STR);
-                    String port = parser.getAttributeValue((String) null, "port");
-                    if (host != null) {
-                        addDataAuthority(host, port);
-                    }
-                } else if (tagName.equals(PATH_STR)) {
-                    String path = parser.getAttributeValue((String) null, LITERAL_STR);
-                    if (path != null) {
-                        addDataPath(path, 0);
-                    } else {
-                        String attributeValue4 = parser.getAttributeValue((String) null, PREFIX_STR);
-                        String path2 = attributeValue4;
-                        if (attributeValue4 != null) {
-                            addDataPath(path2, 1);
-                        } else {
-                            String attributeValue5 = parser.getAttributeValue((String) null, SGLOB_STR);
-                            String path3 = attributeValue5;
-                            if (attributeValue5 != null) {
-                                addDataPath(path3, 2);
+                        } else if (tagName.equals(SCHEME_STR)) {
+                            String name4 = parser.getAttributeValue(null, "name");
+                            if (name4 != null) {
+                                addDataScheme(name4);
+                            }
+                        } else if (tagName.equals(SSP_STR)) {
+                            String ssp = parser.getAttributeValue(null, LITERAL_STR);
+                            if (ssp != null) {
+                                addDataSchemeSpecificPart(ssp, 0);
                             } else {
-                                String attributeValue6 = parser.getAttributeValue((String) null, AGLOB_STR);
-                                String path4 = attributeValue6;
-                                if (attributeValue6 != null) {
-                                    addDataPath(path4, 3);
+                                String ssp2 = parser.getAttributeValue(null, PREFIX_STR);
+                                if (ssp2 != null) {
+                                    addDataSchemeSpecificPart(ssp2, 1);
+                                } else {
+                                    String ssp3 = parser.getAttributeValue(null, SGLOB_STR);
+                                    if (ssp3 != null) {
+                                        addDataSchemeSpecificPart(ssp3, 2);
+                                    } else {
+                                        String ssp4 = parser.getAttributeValue(null, AGLOB_STR);
+                                        if (ssp4 != null) {
+                                            addDataSchemeSpecificPart(ssp4, 3);
+                                        }
+                                    }
                                 }
                             }
+                        } else if (tagName.equals(AUTH_STR)) {
+                            String host = parser.getAttributeValue(null, HOST_STR);
+                            String port = parser.getAttributeValue(null, "port");
+                            if (host != null) {
+                                addDataAuthority(host, port);
+                            }
+                        } else if (tagName.equals(PATH_STR)) {
+                            String path = parser.getAttributeValue(null, LITERAL_STR);
+                            if (path != null) {
+                                addDataPath(path, 0);
+                            } else {
+                                String path2 = parser.getAttributeValue(null, PREFIX_STR);
+                                if (path2 != null) {
+                                    addDataPath(path2, 1);
+                                } else {
+                                    String path3 = parser.getAttributeValue(null, SGLOB_STR);
+                                    if (path3 != null) {
+                                        addDataPath(path3, 2);
+                                    } else {
+                                        String path4 = parser.getAttributeValue(null, AGLOB_STR);
+                                        if (path4 != null) {
+                                            addDataPath(path4, 3);
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            Log.m64w("IntentFilter", "Unknown tag parsing IntentFilter: " + tagName);
                         }
+                        XmlUtils.skipCurrentTag(parser);
                     }
                 } else {
-                    Log.w("IntentFilter", "Unknown tag parsing IntentFilter: " + tagName);
+                    return;
                 }
-                XmlUtils.skipCurrentTag(parser);
+            } else {
+                return;
             }
         }
     }
@@ -1100,10 +1112,11 @@ public class IntentFilter implements Parcelable {
         if (this.mDataSchemeSpecificParts != null) {
             Iterator<PatternMatcher> it4 = this.mDataSchemeSpecificParts.iterator();
             while (it4.hasNext()) {
+                PatternMatcher pe = it4.next();
                 sb.setLength(0);
                 sb.append(prefix);
                 sb.append("Ssp: \"");
-                sb.append(it4.next());
+                sb.append(pe);
                 sb.append("\"");
                 du.println(sb.toString());
             }
@@ -1127,10 +1140,11 @@ public class IntentFilter implements Parcelable {
         if (this.mDataPaths != null) {
             Iterator<PatternMatcher> it6 = this.mDataPaths.iterator();
             while (it6.hasNext()) {
+                PatternMatcher pe2 = it6.next();
                 sb.setLength(0);
                 sb.append(prefix);
                 sb.append("Path: \"");
-                sb.append(it6.next());
+                sb.append(pe2);
                 sb.append("\"");
                 du.println(sb.toString());
             }
@@ -1146,7 +1160,7 @@ public class IntentFilter implements Parcelable {
                 du.println(sb.toString());
             }
         }
-        if (!(this.mPriority == 0 && this.mOrder == 0 && !this.mHasPartialTypes)) {
+        if (this.mPriority != 0 || this.mOrder != 0 || this.mHasPartialTypes) {
             sb.setLength(0);
             sb.append(prefix);
             sb.append("mPriority=");
@@ -1166,10 +1180,12 @@ public class IntentFilter implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public final int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public final void writeToParcel(Parcel dest, int flags) {
         dest.writeStringList(this.mActions);
         int i = 0;
@@ -1241,7 +1257,6 @@ public class IntentFilter implements Parcelable {
         this.mDataAuthorities = null;
         this.mDataPaths = null;
         this.mDataTypes = null;
-        boolean z = false;
         this.mHasPartialTypes = false;
         this.mActions = new ArrayList<>();
         source.readStringList(this.mActions);
@@ -1278,9 +1293,10 @@ public class IntentFilter implements Parcelable {
                 this.mDataPaths.add(new PatternMatcher(source));
             }
         }
-        this.mPriority = source.readInt();
+        int i4 = source.readInt();
+        this.mPriority = i4;
         this.mHasPartialTypes = source.readInt() > 0;
-        setAutoVerify(source.readInt() > 0 ? true : z);
+        setAutoVerify(source.readInt() > 0);
         setVisibilityToInstantApp(source.readInt());
         this.mOrder = source.readInt();
     }
@@ -1308,7 +1324,8 @@ public class IntentFilter implements Parcelable {
             if (typeLength == slashpos + 2 && type.charAt(slashpos + 1) == '*') {
                 int numTypes = t.size();
                 for (int i = 0; i < numTypes; i++) {
-                    if (type.regionMatches(0, t.get(i), 0, slashpos + 1)) {
+                    String v = t.get(i);
+                    if (type.regionMatches(0, v, 0, slashpos + 1)) {
                         return true;
                     }
                 }
@@ -1322,7 +1339,8 @@ public class IntentFilter implements Parcelable {
         Iterator<AuthorityEntry> it = authoritiesIterator();
         if (it != null) {
             while (it.hasNext()) {
-                result.add(it.next().getHost());
+                AuthorityEntry entry = it.next();
+                result.add(entry.getHost());
             }
         }
         return result;

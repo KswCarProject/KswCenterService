@@ -1,7 +1,6 @@
 package android.view;
 
-import android.os.Parcel;
-import android.os.ResultReceiver;
+import android.p007os.Parcel;
 import android.text.TextUtils;
 import android.view.SurfaceControl;
 import android.view.inputmethod.EditorInfo;
@@ -10,6 +9,7 @@ import com.android.internal.annotations.VisibleForTesting;
 import java.util.Arrays;
 import java.util.function.Supplier;
 
+/* loaded from: classes4.dex */
 public final class ImeInsetsSourceConsumer extends InsetsSourceConsumer {
     private EditorInfo mFocusedEditor;
     private boolean mHasWindowFocus;
@@ -38,31 +38,34 @@ public final class ImeInsetsSourceConsumer extends InsetsSourceConsumer {
     }
 
     public void applyImeVisibility(boolean setVisible) {
-        if (this.mHasWindowFocus) {
-            this.mController.applyImeVisibility(setVisible);
+        if (!this.mHasWindowFocus) {
+            return;
         }
+        this.mController.applyImeVisibility(setVisible);
     }
 
+    @Override // android.view.InsetsSourceConsumer
     public void onWindowFocusGained() {
         this.mHasWindowFocus = true;
         getImm().registerImeConsumer(this);
     }
 
+    @Override // android.view.InsetsSourceConsumer
     public void onWindowFocusLost() {
         this.mHasWindowFocus = false;
         getImm().unregisterImeConsumer(this);
     }
 
-    /* access modifiers changed from: package-private */
-    public int requestShow(boolean fromIme) {
+    @Override // android.view.InsetsSourceConsumer
+    int requestShow(boolean fromIme) {
         if (fromIme) {
             return 0;
         }
-        return getImm().requestImeShow((ResultReceiver) null) ? 1 : 2;
+        return getImm().requestImeShow(null) ? 1 : 2;
     }
 
-    /* access modifiers changed from: package-private */
-    public void notifyHidden() {
+    @Override // android.view.InsetsSourceConsumer
+    void notifyHidden() {
         getImm().notifyImeHidden();
     }
 
@@ -79,31 +82,32 @@ public final class ImeInsetsSourceConsumer extends InsetsSourceConsumer {
 
     @VisibleForTesting
     public static boolean areEditorsSimilar(EditorInfo info1, EditorInfo info2) {
-        if (!(info1.imeOptions == info2.imeOptions && info1.inputType == info2.inputType && TextUtils.equals(info1.packageName, info2.packageName)) || !(info1.privateImeOptions != null ? info1.privateImeOptions.equals(info2.privateImeOptions) : true)) {
+        boolean areOptionsSimilar = info1.imeOptions == info2.imeOptions && info1.inputType == info2.inputType && TextUtils.equals(info1.packageName, info2.packageName);
+        if (!areOptionsSimilar || !(info1.privateImeOptions != null ? info1.privateImeOptions.equals(info2.privateImeOptions) : true)) {
             return false;
         }
         if ((info1.extras == null && info2.extras == null) || info1.extras == info2.extras) {
             return true;
         }
-        if ((info1.extras == null && info2.extras != null) || (info1.extras == null && info2.extras != null)) {
-            return false;
+        if ((info1.extras != null || info2.extras == null) && (info1.extras != null || info2.extras == null)) {
+            if (info1.extras.hashCode() == info2.extras.hashCode() || info1.extras.equals(info1)) {
+                return true;
+            }
+            if (info1.extras.size() != info2.extras.size()) {
+                return false;
+            }
+            if (info1.extras.toString().equals(info2.extras.toString())) {
+                return true;
+            }
+            Parcel parcel1 = Parcel.obtain();
+            info1.extras.writeToParcel(parcel1, 0);
+            parcel1.setDataPosition(0);
+            Parcel parcel2 = Parcel.obtain();
+            info2.extras.writeToParcel(parcel2, 0);
+            parcel2.setDataPosition(0);
+            return Arrays.equals(parcel1.createByteArray(), parcel2.createByteArray());
         }
-        if (info1.extras.hashCode() == info2.extras.hashCode() || info1.extras.equals(info1)) {
-            return true;
-        }
-        if (info1.extras.size() != info2.extras.size()) {
-            return false;
-        }
-        if (info1.extras.toString().equals(info2.extras.toString())) {
-            return true;
-        }
-        Parcel parcel1 = Parcel.obtain();
-        info1.extras.writeToParcel(parcel1, 0);
-        parcel1.setDataPosition(0);
-        Parcel parcel2 = Parcel.obtain();
-        info2.extras.writeToParcel(parcel2, 0);
-        parcel2.setDataPosition(0);
-        return Arrays.equals(parcel1.createByteArray(), parcel2.createByteArray());
+        return false;
     }
 
     private InputMethodManager getImm() {

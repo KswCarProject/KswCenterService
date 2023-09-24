@@ -21,14 +21,13 @@ import com.android.i18n.phonenumbers.NumberParseException;
 import com.android.i18n.phonenumbers.PhoneNumberUtil;
 import com.android.i18n.phonenumbers.Phonenumber;
 import com.android.i18n.phonenumbers.geocoding.PhoneNumberOfflineGeocoder;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.util.Locale;
 
+/* loaded from: classes4.dex */
 public class CallerInfo {
-    private static final String TAG = "CallerInfo";
     public static final long USER_TYPE_CURRENT = 0;
     public static final long USER_TYPE_WORK = 1;
-    private static final boolean VDBG = Rlog.isLoggable(TAG, 2);
     public Drawable cachedPhoto;
     public Bitmap cachedPhotoIcon;
     public String cnapName;
@@ -41,8 +40,6 @@ public class CallerInfo {
     public String geoDescription;
     public boolean isCachedPhotoCurrent;
     public String lookupKey;
-    private boolean mIsEmergency = false;
-    private boolean mIsVoiceMail = false;
     @UnsupportedAppUsage
     public String name;
     public int namePresentation;
@@ -60,9 +57,14 @@ public class CallerInfo {
     public ComponentName preferredPhoneAccountComponent;
     public String preferredPhoneAccountId;
     public boolean shouldSendToVoicemail;
+    private static final String TAG = "CallerInfo";
+    private static final boolean VDBG = Rlog.isLoggable(TAG, 2);
+    private boolean mIsEmergency = false;
+    private boolean mIsVoiceMail = false;
     public long userType = 0;
 
     public static CallerInfo getCallerInfo(Context context, Uri contactRef, Cursor cursor) {
+        boolean z;
         int typeColumnIndex;
         SeempLog.record_uri(12, contactRef);
         CallerInfo info = new CallerInfo();
@@ -73,9 +75,9 @@ public class CallerInfo {
         info.cachedPhoto = null;
         info.isCachedPhotoCurrent = false;
         info.contactExists = false;
-        info.userType = 0;
+        info.userType = 0L;
         if (VDBG) {
-            Rlog.v(TAG, "getCallerInfo() based on cursor...");
+            Rlog.m82v(TAG, "getCallerInfo() based on cursor...");
         }
         if (cursor != null) {
             if (cursor.moveToFirst()) {
@@ -92,7 +94,7 @@ public class CallerInfo {
                     info.normalizedNumber = cursor.getString(columnIndex3);
                 }
                 int columnIndex4 = cursor.getColumnIndex("label");
-                if (!(columnIndex4 == -1 || (typeColumnIndex = cursor.getColumnIndex("type")) == -1)) {
+                if (columnIndex4 != -1 && (typeColumnIndex = cursor.getColumnIndex("type")) != -1) {
                     info.numberType = cursor.getInt(typeColumnIndex);
                     info.numberLabel = cursor.getString(columnIndex4);
                     info.phoneLabel = ContactsContract.CommonDataKinds.Phone.getDisplayLabel(context, info.numberType, info.numberLabel).toString();
@@ -103,43 +105,50 @@ public class CallerInfo {
                     if (contactId != 0 && !ContactsContract.Contacts.isEnterpriseContactId(contactId)) {
                         info.contactIdOrZero = contactId;
                         if (VDBG) {
-                            Rlog.v(TAG, "==> got info.contactIdOrZero: " + info.contactIdOrZero);
+                            Rlog.m82v(TAG, "==> got info.contactIdOrZero: " + info.contactIdOrZero);
                         }
                     }
                     if (ContactsContract.Contacts.isEnterpriseContactId(contactId)) {
-                        info.userType = 1;
+                        info.userType = 1L;
                     }
                 } else {
-                    Rlog.w(TAG, "Couldn't find contact_id column for " + contactRef);
+                    Rlog.m80w(TAG, "Couldn't find contact_id column for " + contactRef);
                 }
                 int columnIndex6 = cursor.getColumnIndex(ContactsContract.ContactsColumns.LOOKUP_KEY);
                 if (columnIndex6 != -1) {
                     info.lookupKey = cursor.getString(columnIndex6);
                 }
                 int columnIndex7 = cursor.getColumnIndex("photo_uri");
-                if (columnIndex7 == -1 || cursor.getString(columnIndex7) == null) {
-                    info.contactDisplayPhotoUri = null;
-                } else {
+                if (columnIndex7 != -1 && cursor.getString(columnIndex7) != null) {
                     info.contactDisplayPhotoUri = Uri.parse(cursor.getString(columnIndex7));
+                } else {
+                    info.contactDisplayPhotoUri = null;
                 }
                 int columnIndex8 = cursor.getColumnIndex(ContactsContract.DataColumns.PREFERRED_PHONE_ACCOUNT_COMPONENT_NAME);
-                if (!(columnIndex8 == -1 || cursor.getString(columnIndex8) == null)) {
+                if (columnIndex8 != -1 && cursor.getString(columnIndex8) != null) {
                     info.preferredPhoneAccountComponent = ComponentName.unflattenFromString(cursor.getString(columnIndex8));
                 }
                 int columnIndex9 = cursor.getColumnIndex(ContactsContract.DataColumns.PREFERRED_PHONE_ACCOUNT_ID);
-                if (!(columnIndex9 == -1 || cursor.getString(columnIndex9) == null)) {
+                if (columnIndex9 != -1 && cursor.getString(columnIndex9) != null) {
                     info.preferredPhoneAccountId = cursor.getString(columnIndex9);
                 }
                 int columnIndex10 = cursor.getColumnIndex("custom_ringtone");
-                if (columnIndex10 == -1 || cursor.getString(columnIndex10) == null) {
-                    info.contactRingtoneUri = null;
-                } else if (TextUtils.isEmpty(cursor.getString(columnIndex10))) {
-                    info.contactRingtoneUri = Uri.EMPTY;
+                if (columnIndex10 != -1 && cursor.getString(columnIndex10) != null) {
+                    if (TextUtils.isEmpty(cursor.getString(columnIndex10))) {
+                        info.contactRingtoneUri = Uri.EMPTY;
+                    } else {
+                        info.contactRingtoneUri = Uri.parse(cursor.getString(columnIndex10));
+                    }
                 } else {
-                    info.contactRingtoneUri = Uri.parse(cursor.getString(columnIndex10));
+                    info.contactRingtoneUri = null;
                 }
                 int columnIndex11 = cursor.getColumnIndex("send_to_voicemail");
-                info.shouldSendToVoicemail = columnIndex11 != -1 && cursor.getInt(columnIndex11) == 1;
+                if (columnIndex11 == -1 || cursor.getInt(columnIndex11) != 1) {
+                    z = false;
+                } else {
+                    z = true;
+                }
+                info.shouldSendToVoicemail = z;
                 info.contactExists = true;
             }
             cursor.close();
@@ -157,9 +166,10 @@ public class CallerInfo {
             return null;
         }
         try {
-            return getCallerInfo(context, contactRef, cr.query(contactRef, (String[]) null, (String) null, (String[]) null, (String) null));
+            CallerInfo info = getCallerInfo(context, contactRef, cr.query(contactRef, null, null, null, null));
+            return info;
         } catch (RuntimeException re) {
-            Rlog.e(TAG, "Error getting caller info.", re);
+            Rlog.m85e(TAG, "Error getting caller info.", re);
             return null;
         }
     }
@@ -167,9 +177,10 @@ public class CallerInfo {
     @UnsupportedAppUsage
     public static CallerInfo getCallerInfo(Context context, String number) {
         if (VDBG) {
-            Rlog.v(TAG, "getCallerInfo() based on number...");
+            Rlog.m82v(TAG, "getCallerInfo() based on number...");
         }
-        return getCallerInfo(context, number, SubscriptionManager.getDefaultSubscriptionId());
+        int subId = SubscriptionManager.getDefaultSubscriptionId();
+        return getCallerInfo(context, number, subId);
     }
 
     @UnsupportedAppUsage
@@ -184,7 +195,8 @@ public class CallerInfo {
         if (PhoneNumberUtils.isVoiceMailNumber(subId, number)) {
             return new CallerInfo().markAsVoiceMail();
         }
-        CallerInfo info = doSecondaryLookupIfNecessary(context, number, getCallerInfo(context, Uri.withAppendedPath(ContactsContract.PhoneLookup.ENTERPRISE_CONTENT_FILTER_URI, Uri.encode(number))));
+        Uri contactUri = Uri.withAppendedPath(ContactsContract.PhoneLookup.ENTERPRISE_CONTENT_FILTER_URI, Uri.encode(number));
+        CallerInfo info = doSecondaryLookupIfNecessary(context, number, getCallerInfo(context, contactUri));
         if (TextUtils.isEmpty(info.phoneNumber)) {
             info.phoneNumber = number;
         }
@@ -192,12 +204,12 @@ public class CallerInfo {
     }
 
     static CallerInfo doSecondaryLookupIfNecessary(Context context, String number, CallerInfo previousResult) {
-        if (previousResult.contactExists || !PhoneNumberUtils.isUriNumber(number)) {
+        if (!previousResult.contactExists && PhoneNumberUtils.isUriNumber(number)) {
+            String username = PhoneNumberUtils.getUsernameFromUriNumber(number);
+            if (PhoneNumberUtils.isGlobalPhoneNumber(username)) {
+                return getCallerInfo(context, Uri.withAppendedPath(ContactsContract.PhoneLookup.ENTERPRISE_CONTENT_FILTER_URI, Uri.encode(username)));
+            }
             return previousResult;
-        }
-        String username = PhoneNumberUtils.getUsernameFromUriNumber(number);
-        if (PhoneNumberUtils.isGlobalPhoneNumber(username)) {
-            return getCallerInfo(context, Uri.withAppendedPath(ContactsContract.PhoneLookup.ENTERPRISE_CONTENT_FILTER_URI, Uri.encode(username)));
         }
         return previousResult;
     }
@@ -210,26 +222,25 @@ public class CallerInfo {
         return this.mIsVoiceMail;
     }
 
-    /* access modifiers changed from: package-private */
-    public CallerInfo markAsEmergency(Context context) {
-        this.phoneNumber = context.getString(R.string.emergency_call_dialog_number_for_display);
-        this.photoResource = R.drawable.picture_emergency;
+    CallerInfo markAsEmergency(Context context) {
+        this.phoneNumber = context.getString(C3132R.string.emergency_call_dialog_number_for_display);
+        this.photoResource = C3132R.C3133drawable.picture_emergency;
         this.mIsEmergency = true;
         return this;
     }
 
-    /* access modifiers changed from: package-private */
-    public CallerInfo markAsVoiceMail() {
-        return markAsVoiceMail(SubscriptionManager.getDefaultSubscriptionId());
+    CallerInfo markAsVoiceMail() {
+        int subId = SubscriptionManager.getDefaultSubscriptionId();
+        return markAsVoiceMail(subId);
     }
 
-    /* access modifiers changed from: package-private */
-    public CallerInfo markAsVoiceMail(int subId) {
+    CallerInfo markAsVoiceMail(int subId) {
         this.mIsVoiceMail = true;
         try {
-            this.phoneNumber = TelephonyManager.getDefault().getVoiceMailAlphaTag(subId);
+            String voiceMailLabel = TelephonyManager.getDefault().getVoiceMailAlphaTag(subId);
+            this.phoneNumber = voiceMailLabel;
         } catch (SecurityException se) {
-            Rlog.e(TAG, "Cannot access VoiceMail.", se);
+            Rlog.m85e(TAG, "Cannot access VoiceMail.", se);
         }
         return this;
     }
@@ -243,42 +254,43 @@ public class CallerInfo {
 
     private static int getColumnIndexForPersonId(Uri contactRef, Cursor cursor) {
         if (VDBG) {
-            Rlog.v(TAG, "- getColumnIndexForPersonId: contactRef URI = '" + contactRef + "'...");
+            Rlog.m82v(TAG, "- getColumnIndexForPersonId: contactRef URI = '" + contactRef + "'...");
         }
         String url = contactRef.toString();
         String columnName = null;
         if (url.startsWith("content://com.android.contacts/data/phones")) {
             if (VDBG) {
-                Rlog.v(TAG, "'data/phones' URI; using RawContacts.CONTACT_ID");
+                Rlog.m82v(TAG, "'data/phones' URI; using RawContacts.CONTACT_ID");
             }
             columnName = "contact_id";
         } else if (url.startsWith("content://com.android.contacts/data")) {
             if (VDBG) {
-                Rlog.v(TAG, "'data' URI; using Data.CONTACT_ID");
+                Rlog.m82v(TAG, "'data' URI; using Data.CONTACT_ID");
             }
             columnName = "contact_id";
         } else if (url.startsWith("content://com.android.contacts/phone_lookup")) {
             if (VDBG) {
-                Rlog.v(TAG, "'phone_lookup' URI; using PhoneLookup._ID");
+                Rlog.m82v(TAG, "'phone_lookup' URI; using PhoneLookup._ID");
             }
             columnName = "_id";
         } else {
-            Rlog.w(TAG, "Unexpected prefix for contactRef '" + url + "'");
+            Rlog.m80w(TAG, "Unexpected prefix for contactRef '" + url + "'");
         }
         int columnIndex = columnName != null ? cursor.getColumnIndex(columnName) : -1;
         if (VDBG) {
-            Rlog.v(TAG, "==> Using column '" + columnName + "' (columnIndex = " + columnIndex + ") for person_id lookup...");
+            Rlog.m82v(TAG, "==> Using column '" + columnName + "' (columnIndex = " + columnIndex + ") for person_id lookup...");
         }
         return columnIndex;
     }
 
     public void updateGeoDescription(Context context, String fallbackNumber) {
-        this.geoDescription = getGeoDescription(context, TextUtils.isEmpty(this.phoneNumber) ? fallbackNumber : this.phoneNumber);
+        String number = TextUtils.isEmpty(this.phoneNumber) ? fallbackNumber : this.phoneNumber;
+        this.geoDescription = getGeoDescription(context, number);
     }
 
     public static String getGeoDescription(Context context, String number) {
         if (VDBG) {
-            Rlog.v(TAG, "getGeoDescription('" + number + "')...");
+            Rlog.m82v(TAG, "getGeoDescription('" + number + "')...");
         }
         if (TextUtils.isEmpty(number)) {
             return null;
@@ -290,23 +302,23 @@ public class CallerInfo {
         Phonenumber.PhoneNumber pn = null;
         try {
             if (VDBG) {
-                Rlog.v(TAG, "parsing '" + number + "' for countryIso '" + countryIso + "'...");
+                Rlog.m82v(TAG, "parsing '" + number + "' for countryIso '" + countryIso + "'...");
             }
             pn = util.parse(number, countryIso);
             if (VDBG) {
-                Rlog.v(TAG, "- parsed number: " + pn);
+                Rlog.m82v(TAG, "- parsed number: " + pn);
             }
         } catch (NumberParseException e) {
-            Rlog.w(TAG, "getGeoDescription: NumberParseException for incoming number '" + Rlog.pii(TAG, (Object) number) + "'");
+            Rlog.m80w(TAG, "getGeoDescription: NumberParseException for incoming number '" + Rlog.pii(TAG, number) + "'");
         }
-        if (pn == null) {
-            return null;
+        if (pn != null) {
+            String description = geocoder.getDescriptionForNumber(pn, locale);
+            if (VDBG) {
+                Rlog.m82v(TAG, "- got description: '" + description + "'");
+            }
+            return description;
         }
-        String description = geocoder.getDescriptionForNumber(pn, locale);
-        if (VDBG) {
-            Rlog.v(TAG, "- got description: '" + description + "'");
-        }
-        return description;
+        return null;
     }
 
     private static String getCurrentCountryIso(Context context, Locale locale) {
@@ -317,15 +329,15 @@ public class CallerInfo {
             if (country != null) {
                 countryIso = country.getCountryIso();
             } else {
-                Rlog.e(TAG, "CountryDetector.detectCountry() returned null.");
+                Rlog.m86e(TAG, "CountryDetector.detectCountry() returned null.");
             }
         }
-        if (countryIso != null) {
-            return countryIso;
+        if (countryIso == null) {
+            String countryIso2 = locale.getCountry();
+            Rlog.m80w(TAG, "No CountryDetector; falling back to countryIso based on locale: " + countryIso2);
+            return countryIso2;
         }
-        String countryIso2 = locale.getCountry();
-        Rlog.w(TAG, "No CountryDetector; falling back to countryIso based on locale: " + countryIso2);
-        return countryIso2;
+        return countryIso;
     }
 
     protected static String getCurrentCountryIso(Context context) {

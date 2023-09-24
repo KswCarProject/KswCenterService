@@ -6,13 +6,14 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Point;
-import android.os.RemoteException;
+import android.p007os.RemoteException;
 import android.provider.Settings;
 import android.support.graphics.drawable.PathInterpolatorCompat;
 import android.util.DisplayMetrics;
 import android.util.SparseArray;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
+/* loaded from: classes4.dex */
 public class ViewConfiguration {
     private static final int A11Y_SHORTCUT_KEY_TIMEOUT = 3000;
     private static final int A11Y_SHORTCUT_KEY_TIMEOUT_AFTER_CONFIRMATION = 1000;
@@ -110,11 +111,11 @@ public class ViewConfiguration {
         this.mOverscrollDistance = 0;
         this.mOverflingDistance = 6;
         this.mFadingMarqueeEnabled = true;
-        this.mGlobalActionsKeyTimeout = 500;
+        this.mGlobalActionsKeyTimeout = 500L;
         this.mHorizontalScrollFactor = 64.0f;
         this.mVerticalScrollFactor = 64.0f;
         this.mShowMenuShortcutsWhenKeyboardPresent = false;
-        this.mScreenshotChordKeyTimeout = 500;
+        this.mScreenshotChordKeyTimeout = 500L;
         this.mMinScalingSpan = 0;
     }
 
@@ -132,17 +133,19 @@ public class ViewConfiguration {
         }
         this.mEdgeSlop = (int) ((sizeAndDensity * 12.0f) + 0.5f);
         this.mFadingEdgeLength = (int) ((12.0f * sizeAndDensity) + 0.5f);
-        this.mScrollbarSize = res.getDimensionPixelSize(R.dimen.config_scrollbarSize);
+        this.mScrollbarSize = res.getDimensionPixelSize(C3132R.dimen.config_scrollbarSize);
         this.mDoubleTapSlop = (int) ((100.0f * sizeAndDensity) + 0.5f);
         this.mWindowTouchSlop = (int) ((16.0f * sizeAndDensity) + 0.5f);
-        Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        WindowManager win = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = win.getDefaultDisplay();
         Point size = new Point();
         display.getRealSize(size);
-        this.mMaximumDrawingCacheSize = size.x * 4 * size.y;
+        this.mMaximumDrawingCacheSize = size.f59x * 4 * size.f60y;
         this.mOverscrollDistance = (int) ((0.0f * sizeAndDensity) + 0.5f);
         this.mOverflingDistance = (int) ((6.0f * sizeAndDensity) + 0.5f);
         if (!this.sHasPermanentMenuKeySet) {
-            switch (res.getInteger(R.integer.config_overrideHasPermanentMenuKey)) {
+            int configVal = res.getInteger(C3132R.integer.config_overrideHasPermanentMenuKey);
+            switch (configVal) {
                 case 1:
                     this.sHasPermanentMenuKey = true;
                     this.sHasPermanentMenuKeySet = true;
@@ -152,8 +155,9 @@ public class ViewConfiguration {
                     this.sHasPermanentMenuKeySet = true;
                     break;
                 default:
+                    IWindowManager wm = WindowManagerGlobal.getWindowManagerService();
                     try {
-                        this.sHasPermanentMenuKey = !WindowManagerGlobal.getWindowManagerService().hasNavigationBar(context.getDisplayId());
+                        this.sHasPermanentMenuKey = !wm.hasNavigationBar(context.getDisplayId());
                         this.sHasPermanentMenuKeySet = true;
                         break;
                     } catch (RemoteException e) {
@@ -162,31 +166,32 @@ public class ViewConfiguration {
                     }
             }
         }
-        this.mFadingMarqueeEnabled = res.getBoolean(R.bool.config_ui_enableFadingMarquee);
-        this.mTouchSlop = res.getDimensionPixelSize(R.dimen.config_viewConfigurationTouchSlop);
-        this.mHoverSlop = res.getDimensionPixelSize(R.dimen.config_viewConfigurationHoverSlop);
-        this.mMinScrollbarTouchTarget = res.getDimensionPixelSize(R.dimen.config_minScrollbarTouchTarget);
+        this.mFadingMarqueeEnabled = res.getBoolean(C3132R.bool.config_ui_enableFadingMarquee);
+        this.mTouchSlop = res.getDimensionPixelSize(C3132R.dimen.config_viewConfigurationTouchSlop);
+        this.mHoverSlop = res.getDimensionPixelSize(C3132R.dimen.config_viewConfigurationHoverSlop);
+        this.mMinScrollbarTouchTarget = res.getDimensionPixelSize(C3132R.dimen.config_minScrollbarTouchTarget);
         this.mPagingTouchSlop = this.mTouchSlop * 2;
         this.mDoubleTapTouchSlop = this.mTouchSlop;
-        this.mMinimumFlingVelocity = res.getDimensionPixelSize(R.dimen.config_viewMinFlingVelocity);
-        this.mMaximumFlingVelocity = res.getDimensionPixelSize(R.dimen.config_viewMaxFlingVelocity);
-        this.mGlobalActionsKeyTimeout = (long) res.getInteger(R.integer.config_globalActionsKeyTimeout);
-        this.mHorizontalScrollFactor = (float) res.getDimensionPixelSize(R.dimen.config_horizontalScrollFactor);
-        this.mVerticalScrollFactor = (float) res.getDimensionPixelSize(R.dimen.config_verticalScrollFactor);
-        this.mShowMenuShortcutsWhenKeyboardPresent = res.getBoolean(R.bool.config_showMenuShortcutsWhenKeyboardPresent);
-        this.mMinScalingSpan = res.getDimensionPixelSize(R.dimen.config_minScalingSpan);
-        this.mScreenshotChordKeyTimeout = (long) res.getInteger(R.integer.config_screenshotChordKeyTimeout);
+        this.mMinimumFlingVelocity = res.getDimensionPixelSize(C3132R.dimen.config_viewMinFlingVelocity);
+        this.mMaximumFlingVelocity = res.getDimensionPixelSize(C3132R.dimen.config_viewMaxFlingVelocity);
+        this.mGlobalActionsKeyTimeout = res.getInteger(C3132R.integer.config_globalActionsKeyTimeout);
+        this.mHorizontalScrollFactor = res.getDimensionPixelSize(C3132R.dimen.config_horizontalScrollFactor);
+        this.mVerticalScrollFactor = res.getDimensionPixelSize(C3132R.dimen.config_verticalScrollFactor);
+        this.mShowMenuShortcutsWhenKeyboardPresent = res.getBoolean(C3132R.bool.config_showMenuShortcutsWhenKeyboardPresent);
+        this.mMinScalingSpan = res.getDimensionPixelSize(C3132R.dimen.config_minScalingSpan);
+        this.mScreenshotChordKeyTimeout = res.getInteger(C3132R.integer.config_screenshotChordKeyTimeout);
     }
 
     public static ViewConfiguration get(Context context) {
-        int density = (int) (context.getResources().getDisplayMetrics().density * 100.0f);
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        int density = (int) (metrics.density * 100.0f);
         ViewConfiguration configuration = sConfigurations.get(density);
-        if (configuration != null) {
-            return configuration;
+        if (configuration == null) {
+            ViewConfiguration configuration2 = new ViewConfiguration(context);
+            sConfigurations.put(density, configuration2);
+            return configuration2;
         }
-        ViewConfiguration configuration2 = new ViewConfiguration(context);
-        sConfigurations.put(density, configuration2);
-        return configuration2;
+        return configuration;
     }
 
     @Deprecated
@@ -296,8 +301,8 @@ public class ViewConfiguration {
         return this.mPagingTouchSlop;
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public static int getDoubleTapSlop() {
         return 100;
     }
@@ -367,12 +372,12 @@ public class ViewConfiguration {
     }
 
     public static long getZoomControlsTimeout() {
-        return 3000;
+        return 3000L;
     }
 
     @Deprecated
     public static long getGlobalActionKeyTimeout() {
-        return 500;
+        return 500L;
     }
 
     public long getDeviceGlobalActionKeyTimeout() {
@@ -384,11 +389,11 @@ public class ViewConfiguration {
     }
 
     public long getAccessibilityShortcutKeyTimeout() {
-        return 3000;
+        return 3000L;
     }
 
     public long getAccessibilityShortcutKeyTimeoutAfterConfirmation() {
-        return 1000;
+        return 1000L;
     }
 
     public static float getScrollFriction() {
@@ -412,10 +417,10 @@ public class ViewConfiguration {
     }
 
     public int getScaledMinimumScalingSpan() {
-        if (this.mConstructedWithContext) {
-            return this.mMinScalingSpan;
+        if (!this.mConstructedWithContext) {
+            throw new IllegalStateException("Min scaling span cannot be determined when this method is called on a ViewConfiguration that was instantiated using a constructor with no Context parameter");
         }
-        throw new IllegalStateException("Min scaling span cannot be determined when this method is called on a ViewConfiguration that was instantiated using a constructor with no Context parameter");
+        return this.mMinScalingSpan;
     }
 
     @UnsupportedAppUsage

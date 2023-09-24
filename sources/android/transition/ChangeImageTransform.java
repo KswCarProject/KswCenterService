@@ -10,28 +10,34 @@ import android.graphics.drawable.Drawable;
 import android.transition.TransitionUtils;
 import android.util.AttributeSet;
 import android.util.Property;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import java.util.Map;
 
+/* loaded from: classes4.dex */
 public class ChangeImageTransform extends Transition {
-    private static Property<ImageView, Matrix> ANIMATED_TRANSFORM_PROPERTY = new Property<ImageView, Matrix>(Matrix.class, "animatedTransform") {
-        public void set(ImageView object, Matrix value) {
-            object.animateTransform(value);
-        }
-
-        public Matrix get(ImageView object) {
-            return null;
-        }
-    };
-    private static TypeEvaluator<Matrix> NULL_MATRIX_EVALUATOR = new TypeEvaluator<Matrix>() {
+    private static final String TAG = "ChangeImageTransform";
+    private static final String PROPNAME_MATRIX = "android:changeImageTransform:matrix";
+    private static final String PROPNAME_BOUNDS = "android:changeImageTransform:bounds";
+    private static final String[] sTransitionProperties = {PROPNAME_MATRIX, PROPNAME_BOUNDS};
+    private static TypeEvaluator<Matrix> NULL_MATRIX_EVALUATOR = new TypeEvaluator<Matrix>() { // from class: android.transition.ChangeImageTransform.1
+        @Override // android.animation.TypeEvaluator
         public Matrix evaluate(float fraction, Matrix startValue, Matrix endValue) {
             return null;
         }
     };
-    private static final String PROPNAME_BOUNDS = "android:changeImageTransform:bounds";
-    private static final String PROPNAME_MATRIX = "android:changeImageTransform:matrix";
-    private static final String TAG = "ChangeImageTransform";
-    private static final String[] sTransitionProperties = {PROPNAME_MATRIX, PROPNAME_BOUNDS};
+    private static Property<ImageView, Matrix> ANIMATED_TRANSFORM_PROPERTY = new Property<ImageView, Matrix>(Matrix.class, "animatedTransform") { // from class: android.transition.ChangeImageTransform.2
+        @Override // android.util.Property
+        public void set(ImageView object, Matrix value) {
+            object.animateTransform(value);
+        }
+
+        @Override // android.util.Property
+        public Matrix get(ImageView object) {
+            return null;
+        }
+    };
 
     public ChangeImageTransform() {
     }
@@ -40,82 +46,51 @@ public class ChangeImageTransform extends Transition {
         super(context, attrs);
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:4:0x000f, code lost:
-        r2 = (android.widget.ImageView) r1;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    private void captureValues(android.transition.TransitionValues r17) {
-        /*
-            r16 = this;
-            r0 = r17
-            android.view.View r1 = r0.view
-            boolean r2 = r1 instanceof android.widget.ImageView
-            if (r2 == 0) goto L_0x0070
-            int r2 = r1.getVisibility()
-            if (r2 == 0) goto L_0x000f
-            goto L_0x0070
-        L_0x000f:
-            r2 = r1
-            android.widget.ImageView r2 = (android.widget.ImageView) r2
-            android.graphics.drawable.Drawable r3 = r2.getDrawable()
-            if (r3 != 0) goto L_0x0019
-            return
-        L_0x0019:
-            java.util.Map<java.lang.String, java.lang.Object> r4 = r0.values
-            int r5 = r1.getLeft()
-            int r6 = r1.getTop()
-            int r7 = r1.getRight()
-            int r8 = r1.getBottom()
-            android.graphics.Rect r9 = new android.graphics.Rect
-            r9.<init>(r5, r6, r7, r8)
-            java.lang.String r10 = "android:changeImageTransform:bounds"
-            r4.put(r10, r9)
-            android.widget.ImageView$ScaleType r10 = r2.getScaleType()
-            int r11 = r3.getIntrinsicWidth()
-            int r12 = r3.getIntrinsicHeight()
-            android.widget.ImageView$ScaleType r13 = android.widget.ImageView.ScaleType.FIT_XY
-            if (r10 != r13) goto L_0x0060
-            if (r11 <= 0) goto L_0x0060
-            if (r12 <= 0) goto L_0x0060
-            int r13 = r9.width()
-            float r13 = (float) r13
-            float r14 = (float) r11
-            float r13 = r13 / r14
-            int r14 = r9.height()
-            float r14 = (float) r14
-            float r15 = (float) r12
-            float r14 = r14 / r15
-            android.graphics.Matrix r15 = new android.graphics.Matrix
-            r15.<init>()
-            r15.setScale(r13, r14)
-            goto L_0x0069
-        L_0x0060:
-            android.graphics.Matrix r15 = new android.graphics.Matrix
-            android.graphics.Matrix r13 = r2.getImageMatrix()
-            r15.<init>(r13)
-        L_0x0069:
-            r13 = r15
-            java.lang.String r14 = "android:changeImageTransform:matrix"
-            r4.put(r14, r13)
-            return
-        L_0x0070:
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.transition.ChangeImageTransform.captureValues(android.transition.TransitionValues):void");
+    private void captureValues(TransitionValues transitionValues) {
+        ImageView imageView;
+        Drawable drawable;
+        Matrix matrix;
+        View view = transitionValues.view;
+        if (!(view instanceof ImageView) || view.getVisibility() != 0 || (drawable = (imageView = (ImageView) view).getDrawable()) == null) {
+            return;
+        }
+        Map<String, Object> values = transitionValues.values;
+        int left = view.getLeft();
+        int top = view.getTop();
+        int right = view.getRight();
+        int bottom = view.getBottom();
+        Rect bounds = new Rect(left, top, right, bottom);
+        values.put(PROPNAME_BOUNDS, bounds);
+        ImageView.ScaleType scaleType = imageView.getScaleType();
+        int drawableWidth = drawable.getIntrinsicWidth();
+        int drawableHeight = drawable.getIntrinsicHeight();
+        if (scaleType == ImageView.ScaleType.FIT_XY && drawableWidth > 0 && drawableHeight > 0) {
+            float scaleX = bounds.width() / drawableWidth;
+            float scaleY = bounds.height() / drawableHeight;
+            matrix = new Matrix();
+            matrix.setScale(scaleX, scaleY);
+        } else {
+            matrix = new Matrix(imageView.getImageMatrix());
+        }
+        values.put(PROPNAME_MATRIX, matrix);
     }
 
+    @Override // android.transition.Transition
     public void captureStartValues(TransitionValues transitionValues) {
         captureValues(transitionValues);
     }
 
+    @Override // android.transition.Transition
     public void captureEndValues(TransitionValues transitionValues) {
         captureValues(transitionValues);
     }
 
+    @Override // android.transition.Transition
     public String[] getTransitionProperties() {
         return sTransitionProperties;
     }
 
+    @Override // android.transition.Transition
     public Animator createAnimator(ViewGroup sceneRoot, TransitionValues startValues, TransitionValues endValues) {
         if (startValues == null || endValues == null) {
             return null;
@@ -135,17 +110,19 @@ public class ChangeImageTransform extends Transition {
         int drawableWidth = drawable.getIntrinsicWidth();
         int drawableHeight = drawable.getIntrinsicHeight();
         if (drawableWidth <= 0 || drawableHeight <= 0) {
-            return createNullAnimator(imageView);
+            ObjectAnimator animator = createNullAnimator(imageView);
+            return animator;
         }
         ANIMATED_TRANSFORM_PROPERTY.set(imageView, startMatrix);
-        return createMatrixAnimator(imageView, startMatrix, endMatrix);
+        ObjectAnimator animator2 = createMatrixAnimator(imageView, startMatrix, endMatrix);
+        return animator2;
     }
 
     private ObjectAnimator createNullAnimator(ImageView imageView) {
-        return ObjectAnimator.ofObject(imageView, ANIMATED_TRANSFORM_PROPERTY, NULL_MATRIX_EVALUATOR, (V[]) new Matrix[]{Matrix.IDENTITY_MATRIX, Matrix.IDENTITY_MATRIX});
+        return ObjectAnimator.ofObject(imageView, (Property<ImageView, V>) ANIMATED_TRANSFORM_PROPERTY, (TypeEvaluator) NULL_MATRIX_EVALUATOR, (Object[]) new Matrix[]{Matrix.IDENTITY_MATRIX, Matrix.IDENTITY_MATRIX});
     }
 
     private ObjectAnimator createMatrixAnimator(ImageView imageView, Matrix startMatrix, Matrix endMatrix) {
-        return ObjectAnimator.ofObject(imageView, ANIMATED_TRANSFORM_PROPERTY, new TransitionUtils.MatrixEvaluator(), (V[]) new Matrix[]{startMatrix, endMatrix});
+        return ObjectAnimator.ofObject(imageView, (Property<ImageView, V>) ANIMATED_TRANSFORM_PROPERTY, (TypeEvaluator) new TransitionUtils.MatrixEvaluator(), (Object[]) new Matrix[]{startMatrix, endMatrix});
     }
 }

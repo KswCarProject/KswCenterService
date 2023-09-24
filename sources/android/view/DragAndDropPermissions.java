@@ -1,18 +1,23 @@
 package android.view;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.RemoteException;
 import com.android.internal.view.IDragAndDropPermissions;
 
+/* loaded from: classes4.dex */
 public final class DragAndDropPermissions implements Parcelable {
-    public static final Parcelable.Creator<DragAndDropPermissions> CREATOR = new Parcelable.Creator<DragAndDropPermissions>() {
+    public static final Parcelable.Creator<DragAndDropPermissions> CREATOR = new Parcelable.Creator<DragAndDropPermissions>() { // from class: android.view.DragAndDropPermissions.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public DragAndDropPermissions createFromParcel(Parcel source) {
             return new DragAndDropPermissions(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public DragAndDropPermissions[] newArray(int size) {
             return new DragAndDropPermissions[size];
         }
@@ -58,10 +63,12 @@ public final class DragAndDropPermissions implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel destination, int flags) {
         destination.writeStrongInterface(this.mDragAndDropPermissions);
         destination.writeStrongBinder(this.mTransientToken);

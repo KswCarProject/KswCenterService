@@ -1,192 +1,201 @@
 package android.renderscript;
 
+/* loaded from: classes3.dex */
 public class Int4 {
-    public int w;
-    public int x;
-    public int y;
-    public int z;
+
+    /* renamed from: w */
+    public int f204w;
+
+    /* renamed from: x */
+    public int f205x;
+
+    /* renamed from: y */
+    public int f206y;
+
+    /* renamed from: z */
+    public int f207z;
 
     public Int4() {
     }
 
     public Int4(int i) {
-        this.w = i;
-        this.z = i;
-        this.y = i;
-        this.x = i;
+        this.f204w = i;
+        this.f207z = i;
+        this.f206y = i;
+        this.f205x = i;
     }
 
-    public Int4(int x2, int y2, int z2, int w2) {
-        this.x = x2;
-        this.y = y2;
-        this.z = z2;
-        this.w = w2;
+    public Int4(int x, int y, int z, int w) {
+        this.f205x = x;
+        this.f206y = y;
+        this.f207z = z;
+        this.f204w = w;
     }
 
     public Int4(Int4 source) {
-        this.x = source.x;
-        this.y = source.y;
-        this.z = source.z;
-        this.w = source.w;
+        this.f205x = source.f205x;
+        this.f206y = source.f206y;
+        this.f207z = source.f207z;
+        this.f204w = source.f204w;
     }
 
     public void add(Int4 a) {
-        this.x += a.x;
-        this.y += a.y;
-        this.z += a.z;
-        this.w += a.w;
+        this.f205x += a.f205x;
+        this.f206y += a.f206y;
+        this.f207z += a.f207z;
+        this.f204w += a.f204w;
     }
 
     public static Int4 add(Int4 a, Int4 b) {
         Int4 result = new Int4();
-        result.x = a.x + b.x;
-        result.y = a.y + b.y;
-        result.z = a.z + b.z;
-        result.w = a.w + b.w;
+        result.f205x = a.f205x + b.f205x;
+        result.f206y = a.f206y + b.f206y;
+        result.f207z = a.f207z + b.f207z;
+        result.f204w = a.f204w + b.f204w;
         return result;
     }
 
     public void add(int value) {
-        this.x += value;
-        this.y += value;
-        this.z += value;
-        this.w += value;
+        this.f205x += value;
+        this.f206y += value;
+        this.f207z += value;
+        this.f204w += value;
     }
 
     public static Int4 add(Int4 a, int b) {
         Int4 result = new Int4();
-        result.x = a.x + b;
-        result.y = a.y + b;
-        result.z = a.z + b;
-        result.w = a.w + b;
+        result.f205x = a.f205x + b;
+        result.f206y = a.f206y + b;
+        result.f207z = a.f207z + b;
+        result.f204w = a.f204w + b;
         return result;
     }
 
     public void sub(Int4 a) {
-        this.x -= a.x;
-        this.y -= a.y;
-        this.z -= a.z;
-        this.w -= a.w;
+        this.f205x -= a.f205x;
+        this.f206y -= a.f206y;
+        this.f207z -= a.f207z;
+        this.f204w -= a.f204w;
     }
 
     public static Int4 sub(Int4 a, Int4 b) {
         Int4 result = new Int4();
-        result.x = a.x - b.x;
-        result.y = a.y - b.y;
-        result.z = a.z - b.z;
-        result.w = a.w - b.w;
+        result.f205x = a.f205x - b.f205x;
+        result.f206y = a.f206y - b.f206y;
+        result.f207z = a.f207z - b.f207z;
+        result.f204w = a.f204w - b.f204w;
         return result;
     }
 
     public void sub(int value) {
-        this.x -= value;
-        this.y -= value;
-        this.z -= value;
-        this.w -= value;
+        this.f205x -= value;
+        this.f206y -= value;
+        this.f207z -= value;
+        this.f204w -= value;
     }
 
     public static Int4 sub(Int4 a, int b) {
         Int4 result = new Int4();
-        result.x = a.x - b;
-        result.y = a.y - b;
-        result.z = a.z - b;
-        result.w = a.w - b;
+        result.f205x = a.f205x - b;
+        result.f206y = a.f206y - b;
+        result.f207z = a.f207z - b;
+        result.f204w = a.f204w - b;
         return result;
     }
 
     public void mul(Int4 a) {
-        this.x *= a.x;
-        this.y *= a.y;
-        this.z *= a.z;
-        this.w *= a.w;
+        this.f205x *= a.f205x;
+        this.f206y *= a.f206y;
+        this.f207z *= a.f207z;
+        this.f204w *= a.f204w;
     }
 
     public static Int4 mul(Int4 a, Int4 b) {
         Int4 result = new Int4();
-        result.x = a.x * b.x;
-        result.y = a.y * b.y;
-        result.z = a.z * b.z;
-        result.w = a.w * b.w;
+        result.f205x = a.f205x * b.f205x;
+        result.f206y = a.f206y * b.f206y;
+        result.f207z = a.f207z * b.f207z;
+        result.f204w = a.f204w * b.f204w;
         return result;
     }
 
     public void mul(int value) {
-        this.x *= value;
-        this.y *= value;
-        this.z *= value;
-        this.w *= value;
+        this.f205x *= value;
+        this.f206y *= value;
+        this.f207z *= value;
+        this.f204w *= value;
     }
 
     public static Int4 mul(Int4 a, int b) {
         Int4 result = new Int4();
-        result.x = a.x * b;
-        result.y = a.y * b;
-        result.z = a.z * b;
-        result.w = a.w * b;
+        result.f205x = a.f205x * b;
+        result.f206y = a.f206y * b;
+        result.f207z = a.f207z * b;
+        result.f204w = a.f204w * b;
         return result;
     }
 
     public void div(Int4 a) {
-        this.x /= a.x;
-        this.y /= a.y;
-        this.z /= a.z;
-        this.w /= a.w;
+        this.f205x /= a.f205x;
+        this.f206y /= a.f206y;
+        this.f207z /= a.f207z;
+        this.f204w /= a.f204w;
     }
 
     public static Int4 div(Int4 a, Int4 b) {
         Int4 result = new Int4();
-        result.x = a.x / b.x;
-        result.y = a.y / b.y;
-        result.z = a.z / b.z;
-        result.w = a.w / b.w;
+        result.f205x = a.f205x / b.f205x;
+        result.f206y = a.f206y / b.f206y;
+        result.f207z = a.f207z / b.f207z;
+        result.f204w = a.f204w / b.f204w;
         return result;
     }
 
     public void div(int value) {
-        this.x /= value;
-        this.y /= value;
-        this.z /= value;
-        this.w /= value;
+        this.f205x /= value;
+        this.f206y /= value;
+        this.f207z /= value;
+        this.f204w /= value;
     }
 
     public static Int4 div(Int4 a, int b) {
         Int4 result = new Int4();
-        result.x = a.x / b;
-        result.y = a.y / b;
-        result.z = a.z / b;
-        result.w = a.w / b;
+        result.f205x = a.f205x / b;
+        result.f206y = a.f206y / b;
+        result.f207z = a.f207z / b;
+        result.f204w = a.f204w / b;
         return result;
     }
 
     public void mod(Int4 a) {
-        this.x %= a.x;
-        this.y %= a.y;
-        this.z %= a.z;
-        this.w %= a.w;
+        this.f205x %= a.f205x;
+        this.f206y %= a.f206y;
+        this.f207z %= a.f207z;
+        this.f204w %= a.f204w;
     }
 
     public static Int4 mod(Int4 a, Int4 b) {
         Int4 result = new Int4();
-        result.x = a.x % b.x;
-        result.y = a.y % b.y;
-        result.z = a.z % b.z;
-        result.w = a.w % b.w;
+        result.f205x = a.f205x % b.f205x;
+        result.f206y = a.f206y % b.f206y;
+        result.f207z = a.f207z % b.f207z;
+        result.f204w = a.f204w % b.f204w;
         return result;
     }
 
     public void mod(int value) {
-        this.x %= value;
-        this.y %= value;
-        this.z %= value;
-        this.w %= value;
+        this.f205x %= value;
+        this.f206y %= value;
+        this.f207z %= value;
+        this.f204w %= value;
     }
 
     public static Int4 mod(Int4 a, int b) {
         Int4 result = new Int4();
-        result.x = a.x % b;
-        result.y = a.y % b;
-        result.z = a.z % b;
-        result.w = a.w % b;
+        result.f205x = a.f205x % b;
+        result.f206y = a.f206y % b;
+        result.f207z = a.f207z % b;
+        result.f204w = a.f204w % b;
         return result;
     }
 
@@ -195,55 +204,55 @@ public class Int4 {
     }
 
     public void negate() {
-        this.x = -this.x;
-        this.y = -this.y;
-        this.z = -this.z;
-        this.w = -this.w;
+        this.f205x = -this.f205x;
+        this.f206y = -this.f206y;
+        this.f207z = -this.f207z;
+        this.f204w = -this.f204w;
     }
 
     public int dotProduct(Int4 a) {
-        return (this.x * a.x) + (this.y * a.y) + (this.z * a.z) + (this.w * a.w);
+        return (this.f205x * a.f205x) + (this.f206y * a.f206y) + (this.f207z * a.f207z) + (this.f204w * a.f204w);
     }
 
     public static int dotProduct(Int4 a, Int4 b) {
-        return (b.x * a.x) + (b.y * a.y) + (b.z * a.z) + (b.w * a.w);
+        return (b.f205x * a.f205x) + (b.f206y * a.f206y) + (b.f207z * a.f207z) + (b.f204w * a.f204w);
     }
 
     public void addMultiple(Int4 a, int factor) {
-        this.x += a.x * factor;
-        this.y += a.y * factor;
-        this.z += a.z * factor;
-        this.w += a.w * factor;
+        this.f205x += a.f205x * factor;
+        this.f206y += a.f206y * factor;
+        this.f207z += a.f207z * factor;
+        this.f204w += a.f204w * factor;
     }
 
     public void set(Int4 a) {
-        this.x = a.x;
-        this.y = a.y;
-        this.z = a.z;
-        this.w = a.w;
+        this.f205x = a.f205x;
+        this.f206y = a.f206y;
+        this.f207z = a.f207z;
+        this.f204w = a.f204w;
     }
 
     public void setValues(int a, int b, int c, int d) {
-        this.x = a;
-        this.y = b;
-        this.z = c;
-        this.w = d;
+        this.f205x = a;
+        this.f206y = b;
+        this.f207z = c;
+        this.f204w = d;
     }
 
     public int elementSum() {
-        return this.x + this.y + this.z + this.w;
+        return this.f205x + this.f206y + this.f207z + this.f204w;
     }
 
     public int get(int i) {
         switch (i) {
             case 0:
-                return this.x;
+                return this.f205x;
             case 1:
-                return this.y;
+                return this.f206y;
             case 2:
-                return this.z;
+                return this.f207z;
             case 3:
-                return this.w;
+                return this.f204w;
             default:
                 throw new IndexOutOfBoundsException("Index: i");
         }
@@ -252,16 +261,16 @@ public class Int4 {
     public void setAt(int i, int value) {
         switch (i) {
             case 0:
-                this.x = value;
+                this.f205x = value;
                 return;
             case 1:
-                this.y = value;
+                this.f206y = value;
                 return;
             case 2:
-                this.z = value;
+                this.f207z = value;
                 return;
             case 3:
-                this.w = value;
+                this.f204w = value;
                 return;
             default:
                 throw new IndexOutOfBoundsException("Index: i");
@@ -271,16 +280,16 @@ public class Int4 {
     public void addAt(int i, int value) {
         switch (i) {
             case 0:
-                this.x += value;
+                this.f205x += value;
                 return;
             case 1:
-                this.y += value;
+                this.f206y += value;
                 return;
             case 2:
-                this.z += value;
+                this.f207z += value;
                 return;
             case 3:
-                this.w += value;
+                this.f204w += value;
                 return;
             default:
                 throw new IndexOutOfBoundsException("Index: i");
@@ -288,9 +297,9 @@ public class Int4 {
     }
 
     public void copyTo(int[] data, int offset) {
-        data[offset] = this.x;
-        data[offset + 1] = this.y;
-        data[offset + 2] = this.z;
-        data[offset + 3] = this.w;
+        data[offset] = this.f205x;
+        data[offset + 1] = this.f206y;
+        data[offset + 2] = this.f207z;
+        data[offset + 3] = this.f204w;
     }
 }

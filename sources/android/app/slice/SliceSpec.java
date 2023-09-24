@@ -1,14 +1,19 @@
 package android.app.slice;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public final class SliceSpec implements Parcelable {
-    public static final Parcelable.Creator<SliceSpec> CREATOR = new Parcelable.Creator<SliceSpec>() {
+    public static final Parcelable.Creator<SliceSpec> CREATOR = new Parcelable.Creator<SliceSpec>() { // from class: android.app.slice.SliceSpec.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SliceSpec createFromParcel(Parcel source) {
             return new SliceSpec(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SliceSpec[] newArray(int size) {
             return new SliceSpec[size];
         }
@@ -26,10 +31,12 @@ public final class SliceSpec implements Parcelable {
         this.mRevision = source.readInt();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.mType);
         dest.writeInt(this.mRevision);
@@ -44,24 +51,18 @@ public final class SliceSpec implements Parcelable {
     }
 
     public boolean canRender(SliceSpec candidate) {
-        if (this.mType.equals(candidate.mType) && this.mRevision >= candidate.mRevision) {
-            return true;
+        return this.mType.equals(candidate.mType) && this.mRevision >= candidate.mRevision;
+    }
+
+    public boolean equals(Object obj) {
+        if (obj instanceof SliceSpec) {
+            SliceSpec other = (SliceSpec) obj;
+            return this.mType.equals(other.mType) && this.mRevision == other.mRevision;
         }
         return false;
     }
 
-    public boolean equals(Object obj) {
-        if (!(obj instanceof SliceSpec)) {
-            return false;
-        }
-        SliceSpec other = (SliceSpec) obj;
-        if (!this.mType.equals(other.mType) || this.mRevision != other.mRevision) {
-            return false;
-        }
-        return true;
-    }
-
     public String toString() {
-        return String.format("SliceSpec{%s,%d}", new Object[]{this.mType, Integer.valueOf(this.mRevision)});
+        return String.format("SliceSpec{%s,%d}", this.mType, Integer.valueOf(this.mRevision));
     }
 }

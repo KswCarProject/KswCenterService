@@ -1,161 +1,168 @@
 package android.renderscript;
 
+/* loaded from: classes3.dex */
 public class Double3 {
-    public double x;
-    public double y;
-    public double z;
+
+    /* renamed from: x */
+    public double f183x;
+
+    /* renamed from: y */
+    public double f184y;
+
+    /* renamed from: z */
+    public double f185z;
 
     public Double3() {
     }
 
     public Double3(Double3 data) {
-        this.x = data.x;
-        this.y = data.y;
-        this.z = data.z;
+        this.f183x = data.f183x;
+        this.f184y = data.f184y;
+        this.f185z = data.f185z;
     }
 
-    public Double3(double x2, double y2, double z2) {
-        this.x = x2;
-        this.y = y2;
-        this.z = z2;
+    public Double3(double x, double y, double z) {
+        this.f183x = x;
+        this.f184y = y;
+        this.f185z = z;
     }
 
     public static Double3 add(Double3 a, Double3 b) {
         Double3 res = new Double3();
-        res.x = a.x + b.x;
-        res.y = a.y + b.y;
-        res.z = a.z + b.z;
+        res.f183x = a.f183x + b.f183x;
+        res.f184y = a.f184y + b.f184y;
+        res.f185z = a.f185z + b.f185z;
         return res;
     }
 
     public void add(Double3 value) {
-        this.x += value.x;
-        this.y += value.y;
-        this.z += value.z;
+        this.f183x += value.f183x;
+        this.f184y += value.f184y;
+        this.f185z += value.f185z;
     }
 
     public void add(double value) {
-        this.x += value;
-        this.y += value;
-        this.z += value;
+        this.f183x += value;
+        this.f184y += value;
+        this.f185z += value;
     }
 
     public static Double3 add(Double3 a, double b) {
         Double3 res = new Double3();
-        res.x = a.x + b;
-        res.y = a.y + b;
-        res.z = a.z + b;
+        res.f183x = a.f183x + b;
+        res.f184y = a.f184y + b;
+        res.f185z = a.f185z + b;
         return res;
     }
 
     public void sub(Double3 value) {
-        this.x -= value.x;
-        this.y -= value.y;
-        this.z -= value.z;
+        this.f183x -= value.f183x;
+        this.f184y -= value.f184y;
+        this.f185z -= value.f185z;
     }
 
     public static Double3 sub(Double3 a, Double3 b) {
         Double3 res = new Double3();
-        res.x = a.x - b.x;
-        res.y = a.y - b.y;
-        res.z = a.z - b.z;
+        res.f183x = a.f183x - b.f183x;
+        res.f184y = a.f184y - b.f184y;
+        res.f185z = a.f185z - b.f185z;
         return res;
     }
 
     public void sub(double value) {
-        this.x -= value;
-        this.y -= value;
-        this.z -= value;
+        this.f183x -= value;
+        this.f184y -= value;
+        this.f185z -= value;
     }
 
     public static Double3 sub(Double3 a, double b) {
         Double3 res = new Double3();
-        res.x = a.x - b;
-        res.y = a.y - b;
-        res.z = a.z - b;
+        res.f183x = a.f183x - b;
+        res.f184y = a.f184y - b;
+        res.f185z = a.f185z - b;
         return res;
     }
 
     public void mul(Double3 value) {
-        this.x *= value.x;
-        this.y *= value.y;
-        this.z *= value.z;
+        this.f183x *= value.f183x;
+        this.f184y *= value.f184y;
+        this.f185z *= value.f185z;
     }
 
     public static Double3 mul(Double3 a, Double3 b) {
         Double3 res = new Double3();
-        res.x = a.x * b.x;
-        res.y = a.y * b.y;
-        res.z = a.z * b.z;
+        res.f183x = a.f183x * b.f183x;
+        res.f184y = a.f184y * b.f184y;
+        res.f185z = a.f185z * b.f185z;
         return res;
     }
 
     public void mul(double value) {
-        this.x *= value;
-        this.y *= value;
-        this.z *= value;
+        this.f183x *= value;
+        this.f184y *= value;
+        this.f185z *= value;
     }
 
     public static Double3 mul(Double3 a, double b) {
         Double3 res = new Double3();
-        res.x = a.x * b;
-        res.y = a.y * b;
-        res.z = a.z * b;
+        res.f183x = a.f183x * b;
+        res.f184y = a.f184y * b;
+        res.f185z = a.f185z * b;
         return res;
     }
 
     public void div(Double3 value) {
-        this.x /= value.x;
-        this.y /= value.y;
-        this.z /= value.z;
+        this.f183x /= value.f183x;
+        this.f184y /= value.f184y;
+        this.f185z /= value.f185z;
     }
 
     public static Double3 div(Double3 a, Double3 b) {
         Double3 res = new Double3();
-        res.x = a.x / b.x;
-        res.y = a.y / b.y;
-        res.z = a.z / b.z;
+        res.f183x = a.f183x / b.f183x;
+        res.f184y = a.f184y / b.f184y;
+        res.f185z = a.f185z / b.f185z;
         return res;
     }
 
     public void div(double value) {
-        this.x /= value;
-        this.y /= value;
-        this.z /= value;
+        this.f183x /= value;
+        this.f184y /= value;
+        this.f185z /= value;
     }
 
     public static Double3 div(Double3 a, double b) {
         Double3 res = new Double3();
-        res.x = a.x / b;
-        res.y = a.y / b;
-        res.z = a.z / b;
+        res.f183x = a.f183x / b;
+        res.f184y = a.f184y / b;
+        res.f185z = a.f185z / b;
         return res;
     }
 
     public double dotProduct(Double3 a) {
-        return (this.x * a.x) + (this.y * a.y) + (this.z * a.z);
+        return (this.f183x * a.f183x) + (this.f184y * a.f184y) + (this.f185z * a.f185z);
     }
 
     public static double dotProduct(Double3 a, Double3 b) {
-        return (b.x * a.x) + (b.y * a.y) + (b.z * a.z);
+        return (b.f183x * a.f183x) + (b.f184y * a.f184y) + (b.f185z * a.f185z);
     }
 
     public void addMultiple(Double3 a, double factor) {
-        this.x += a.x * factor;
-        this.y += a.y * factor;
-        this.z += a.z * factor;
+        this.f183x += a.f183x * factor;
+        this.f184y += a.f184y * factor;
+        this.f185z += a.f185z * factor;
     }
 
     public void set(Double3 a) {
-        this.x = a.x;
-        this.y = a.y;
-        this.z = a.z;
+        this.f183x = a.f183x;
+        this.f184y = a.f184y;
+        this.f185z = a.f185z;
     }
 
     public void negate() {
-        this.x = -this.x;
-        this.y = -this.y;
-        this.z = -this.z;
+        this.f183x = -this.f183x;
+        this.f184y = -this.f184y;
+        this.f185z = -this.f185z;
     }
 
     public int length() {
@@ -163,17 +170,17 @@ public class Double3 {
     }
 
     public double elementSum() {
-        return this.x + this.y + this.z;
+        return this.f183x + this.f184y + this.f185z;
     }
 
     public double get(int i) {
         switch (i) {
             case 0:
-                return this.x;
+                return this.f183x;
             case 1:
-                return this.y;
+                return this.f184y;
             case 2:
-                return this.z;
+                return this.f185z;
             default:
                 throw new IndexOutOfBoundsException("Index: i");
         }
@@ -182,13 +189,13 @@ public class Double3 {
     public void setAt(int i, double value) {
         switch (i) {
             case 0:
-                this.x = value;
+                this.f183x = value;
                 return;
             case 1:
-                this.y = value;
+                this.f184y = value;
                 return;
             case 2:
-                this.z = value;
+                this.f185z = value;
                 return;
             default:
                 throw new IndexOutOfBoundsException("Index: i");
@@ -198,28 +205,28 @@ public class Double3 {
     public void addAt(int i, double value) {
         switch (i) {
             case 0:
-                this.x += value;
+                this.f183x += value;
                 return;
             case 1:
-                this.y += value;
+                this.f184y += value;
                 return;
             case 2:
-                this.z += value;
+                this.f185z += value;
                 return;
             default:
                 throw new IndexOutOfBoundsException("Index: i");
         }
     }
 
-    public void setValues(double x2, double y2, double z2) {
-        this.x = x2;
-        this.y = y2;
-        this.z = z2;
+    public void setValues(double x, double y, double z) {
+        this.f183x = x;
+        this.f184y = y;
+        this.f185z = z;
     }
 
     public void copyTo(double[] data, int offset) {
-        data[offset] = this.x;
-        data[offset + 1] = this.y;
-        data[offset + 2] = this.z;
+        data[offset] = this.f183x;
+        data[offset + 1] = this.f184y;
+        data[offset + 2] = this.f185z;
     }
 }

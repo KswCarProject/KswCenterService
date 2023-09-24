@@ -1,19 +1,24 @@
 package android.service.quicksettings;
 
 import android.graphics.drawable.Icon;
-import android.os.IBinder;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.RemoteException;
+import android.p007os.IBinder;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.RemoteException;
 import android.text.TextUtils;
 import android.util.Log;
 
+/* loaded from: classes3.dex */
 public final class Tile implements Parcelable {
-    public static final Parcelable.Creator<Tile> CREATOR = new Parcelable.Creator<Tile>() {
+    public static final Parcelable.Creator<Tile> CREATOR = new Parcelable.Creator<Tile>() { // from class: android.service.quicksettings.Tile.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Tile createFromParcel(Parcel source) {
             return new Tile(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Tile[] newArray(int size) {
             return new Tile[size];
         }
@@ -82,6 +87,7 @@ public final class Tile implements Parcelable {
         this.mContentDescription = contentDescription;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -90,10 +96,11 @@ public final class Tile implements Parcelable {
         try {
             this.mService.updateQsTile(this, this.mToken);
         } catch (RemoteException e) {
-            Log.e(TAG, "Couldn't update tile");
+            Log.m70e(TAG, "Couldn't update tile");
         }
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         if (this.mIcon != null) {
             dest.writeByte((byte) 1);

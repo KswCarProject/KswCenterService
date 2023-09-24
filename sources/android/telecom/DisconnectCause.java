@@ -1,23 +1,33 @@
 package android.telecom;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.provider.CalendarContract;
 import android.text.TextUtils;
 import com.android.internal.telephony.IccCardConstants;
 import java.util.Objects;
 
+/* loaded from: classes3.dex */
 public final class DisconnectCause implements Parcelable {
     public static final int ANSWERED_ELSEWHERE = 11;
     public static final int BUSY = 7;
     public static final int CALL_PULLED = 12;
     public static final int CANCELED = 4;
     public static final int CONNECTION_MANAGER_NOT_SUPPORTED = 10;
-    public static final Parcelable.Creator<DisconnectCause> CREATOR = new Parcelable.Creator<DisconnectCause>() {
+    public static final Parcelable.Creator<DisconnectCause> CREATOR = new Parcelable.Creator<DisconnectCause>() { // from class: android.telecom.DisconnectCause.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public DisconnectCause createFromParcel(Parcel source) {
-            return new DisconnectCause(source.readInt(), TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(source), TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(source), source.readString(), source.readInt());
+            int code = source.readInt();
+            CharSequence label = TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(source);
+            CharSequence description = TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(source);
+            String reason = source.readString();
+            int tone = source.readInt();
+            return new DisconnectCause(code, label, description, reason, tone);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public DisconnectCause[] newArray(int size) {
             return new DisconnectCause[size];
         }
@@ -40,11 +50,11 @@ public final class DisconnectCause implements Parcelable {
     private int mToneToPlay;
 
     public DisconnectCause(int code) {
-        this(code, (CharSequence) null, (CharSequence) null, (String) null, -1);
+        this(code, null, null, null, -1);
     }
 
     public DisconnectCause(int code, String reason) {
-        this(code, (CharSequence) null, (CharSequence) null, reason, -1);
+        this(code, null, null, reason, -1);
     }
 
     public DisconnectCause(int code, CharSequence label, CharSequence description, String reason) {
@@ -79,6 +89,7 @@ public final class DisconnectCause implements Parcelable {
         return this.mToneToPlay;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel destination, int flags) {
         destination.writeInt(this.mDisconnectCode);
         TextUtils.writeToParcel(this.mDisconnectLabel, destination, flags);
@@ -87,6 +98,7 @@ public final class DisconnectCause implements Parcelable {
         destination.writeInt(this.mToneToPlay);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -96,14 +108,11 @@ public final class DisconnectCause implements Parcelable {
     }
 
     public boolean equals(Object o) {
-        if (!(o instanceof DisconnectCause)) {
-            return false;
+        if (o instanceof DisconnectCause) {
+            DisconnectCause d = (DisconnectCause) o;
+            return Objects.equals(Integer.valueOf(this.mDisconnectCode), Integer.valueOf(d.getCode())) && Objects.equals(this.mDisconnectLabel, d.getLabel()) && Objects.equals(this.mDisconnectDescription, d.getDescription()) && Objects.equals(this.mDisconnectReason, d.getReason()) && Objects.equals(Integer.valueOf(this.mToneToPlay), Integer.valueOf(d.getTone()));
         }
-        DisconnectCause d = (DisconnectCause) o;
-        if (!Objects.equals(Integer.valueOf(this.mDisconnectCode), Integer.valueOf(d.getCode())) || !Objects.equals(this.mDisconnectLabel, d.getLabel()) || !Objects.equals(this.mDisconnectDescription, d.getDescription()) || !Objects.equals(this.mDisconnectReason, d.getReason()) || !Objects.equals(Integer.valueOf(this.mToneToPlay), Integer.valueOf(d.getTone()))) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
     public String toString() {
@@ -152,6 +161,9 @@ public final class DisconnectCause implements Parcelable {
                 code = "invalid code: " + this.mDisconnectCode;
                 break;
         }
-        return "DisconnectCause [ Code: (" + code + ") Label: (" + (this.mDisconnectLabel == null ? "" : this.mDisconnectLabel.toString()) + ") Description: (" + (this.mDisconnectDescription == null ? "" : this.mDisconnectDescription.toString()) + ") Reason: (" + (this.mDisconnectReason == null ? "" : this.mDisconnectReason) + ") Tone: (" + this.mToneToPlay + ") ]";
+        String label = this.mDisconnectLabel == null ? "" : this.mDisconnectLabel.toString();
+        String description = this.mDisconnectDescription == null ? "" : this.mDisconnectDescription.toString();
+        String reason = this.mDisconnectReason == null ? "" : this.mDisconnectReason;
+        return "DisconnectCause [ Code: (" + code + ") Label: (" + label + ") Description: (" + description + ") Reason: (" + reason + ") Tone: (" + this.mToneToPlay + ") ]";
     }
 }

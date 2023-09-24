@@ -2,6 +2,7 @@ package android.opengl;
 
 import java.nio.Buffer;
 
+/* loaded from: classes3.dex */
 public final class EGL15 {
     public static final int EGL_CL_EVENT_HANDLE = 12444;
     public static final int EGL_CONDITION_SATISFIED = 12534;
@@ -31,12 +32,7 @@ public final class EGL15 {
     public static final int EGL_GL_TEXTURE_ZOFFSET = 12477;
     public static final int EGL_IMAGE_PRESERVED = 12498;
     public static final int EGL_LOSE_CONTEXT_ON_RESET = 12735;
-    public static final EGLContext EGL_NO_CONTEXT = null;
-    public static final EGLDisplay EGL_NO_DISPLAY = null;
-    public static final EGLImage EGL_NO_IMAGE = null;
     public static final int EGL_NO_RESET_NOTIFICATION = 12734;
-    public static final EGLSurface EGL_NO_SURFACE = null;
-    public static final EGLSync EGL_NO_SYNC = null;
     public static final int EGL_OPENGL_ES3_BIT = 64;
     public static final int EGL_PLATFORM_ANDROID_KHR = 12609;
     public static final int EGL_SIGNALED = 12530;
@@ -50,6 +46,11 @@ public final class EGL15 {
     public static final int EGL_SYNC_TYPE = 12535;
     public static final int EGL_TIMEOUT_EXPIRED = 12533;
     public static final int EGL_UNSIGNALED = 12531;
+    public static final EGLImage EGL_NO_IMAGE = null;
+    public static final EGLSync EGL_NO_SYNC = null;
+    public static final EGLContext EGL_NO_CONTEXT = null;
+    public static final EGLDisplay EGL_NO_DISPLAY = null;
+    public static final EGLSurface EGL_NO_SURFACE = null;
 
     private static native void _nativeClassInit();
 

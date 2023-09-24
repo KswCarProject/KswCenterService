@@ -2,6 +2,7 @@ package android.hardware.radio.V1_2;
 
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class DataRequestReason {
     public static final int HANDOVER = 3;
     public static final int NORMAL = 1;

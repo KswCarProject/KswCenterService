@@ -1,15 +1,16 @@
 package android.telephony.ims.aidl;
 
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.telephony.ims.ImsCallProfile;
 import android.telephony.ims.ImsReasonInfo;
 import com.android.ims.internal.IImsCallSession;
 
+/* loaded from: classes4.dex */
 public interface IImsMmTelListener extends IInterface {
     void onIncomingCall(IImsCallSession iImsCallSession, Bundle bundle) throws RemoteException;
 
@@ -17,21 +18,27 @@ public interface IImsMmTelListener extends IInterface {
 
     void onVoiceMessageCountUpdate(int i) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IImsMmTelListener {
+        @Override // android.telephony.ims.aidl.IImsMmTelListener
         public void onIncomingCall(IImsCallSession c, Bundle extras) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsMmTelListener
         public void onRejectedCall(ImsCallProfile callProfile, ImsReasonInfo reason) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsMmTelListener
         public void onVoiceMessageCountUpdate(int count) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IImsMmTelListener {
         private static final String DESCRIPTOR = "android.telephony.ims.aidl.IImsMmTelListener";
         static final int TRANSACTION_onIncomingCall = 1;
@@ -47,12 +54,13 @@ public interface IImsMmTelListener extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IImsMmTelListener)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IImsMmTelListener)) {
+                return (IImsMmTelListener) iin;
             }
-            return (IImsMmTelListener) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -70,81 +78,46 @@ public interface IImsMmTelListener extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v2, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v6, resolved type: android.telephony.ims.ImsReasonInfo} */
-        /* JADX WARNING: type inference failed for: r1v1 */
-        /* JADX WARNING: type inference failed for: r1v12 */
-        /* JADX WARNING: type inference failed for: r1v13 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r6, android.os.Parcel r7, android.os.Parcel r8, int r9) throws android.os.RemoteException {
-            /*
-                r5 = this;
-                java.lang.String r0 = "android.telephony.ims.aidl.IImsMmTelListener"
-                r1 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r2 = 1
-                if (r6 == r1) goto L_0x0062
-                r1 = 0
-                switch(r6) {
-                    case 1: goto L_0x0043;
-                    case 2: goto L_0x001c;
-                    case 3: goto L_0x0011;
-                    default: goto L_0x000c;
-                }
-            L_0x000c:
-                boolean r1 = super.onTransact(r6, r7, r8, r9)
-                return r1
-            L_0x0011:
-                r7.enforceInterface(r0)
-                int r1 = r7.readInt()
-                r5.onVoiceMessageCountUpdate(r1)
-                return r2
-            L_0x001c:
-                r7.enforceInterface(r0)
-                int r3 = r7.readInt()
-                if (r3 == 0) goto L_0x002e
-                android.os.Parcelable$Creator<android.telephony.ims.ImsCallProfile> r3 = android.telephony.ims.ImsCallProfile.CREATOR
-                java.lang.Object r3 = r3.createFromParcel(r7)
-                android.telephony.ims.ImsCallProfile r3 = (android.telephony.ims.ImsCallProfile) r3
-                goto L_0x002f
-            L_0x002e:
-                r3 = r1
-            L_0x002f:
-                int r4 = r7.readInt()
-                if (r4 == 0) goto L_0x003e
-                android.os.Parcelable$Creator<android.telephony.ims.ImsReasonInfo> r1 = android.telephony.ims.ImsReasonInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r7)
-                android.telephony.ims.ImsReasonInfo r1 = (android.telephony.ims.ImsReasonInfo) r1
-                goto L_0x003f
-            L_0x003e:
-            L_0x003f:
-                r5.onRejectedCall(r3, r1)
-                return r2
-            L_0x0043:
-                r7.enforceInterface(r0)
-                android.os.IBinder r3 = r7.readStrongBinder()
-                com.android.ims.internal.IImsCallSession r3 = com.android.ims.internal.IImsCallSession.Stub.asInterface(r3)
-                int r4 = r7.readInt()
-                if (r4 == 0) goto L_0x005d
-                android.os.Parcelable$Creator<android.os.Bundle> r1 = android.os.Bundle.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r7)
-                android.os.Bundle r1 = (android.os.Bundle) r1
-                goto L_0x005e
-            L_0x005d:
-            L_0x005e:
-                r5.onIncomingCall(r3, r1)
-                return r2
-            L_0x0062:
-                r8.writeString(r0)
-                return r2
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.telephony.ims.aidl.IImsMmTelListener.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            ImsCallProfile _arg0;
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    IImsCallSession _arg02 = IImsCallSession.Stub.asInterface(data.readStrongBinder());
+                    Bundle _arg1 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    onIncomingCall(_arg02, _arg1);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg0 = ImsCallProfile.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg0 = null;
+                    }
+                    ImsReasonInfo _arg12 = data.readInt() != 0 ? ImsReasonInfo.CREATOR.createFromParcel(data) : null;
+                    onRejectedCall(_arg0, _arg12);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg03 = data.readInt();
+                    onVoiceMessageCountUpdate(_arg03);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IImsMmTelListener {
             public static IImsMmTelListener sDefaultImpl;
             private IBinder mRemote;
@@ -153,6 +126,7 @@ public interface IImsMmTelListener extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -161,6 +135,7 @@ public interface IImsMmTelListener extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.telephony.ims.aidl.IImsMmTelListener
             public void onIncomingCall(IImsCallSession c, Bundle extras) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -172,9 +147,8 @@ public interface IImsMmTelListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onIncomingCall(c, extras);
                     }
                 } finally {
@@ -182,6 +156,7 @@ public interface IImsMmTelListener extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsMmTelListener
             public void onRejectedCall(ImsCallProfile callProfile, ImsReasonInfo reason) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -198,9 +173,8 @@ public interface IImsMmTelListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onRejectedCall(callProfile, reason);
                     }
                 } finally {
@@ -208,14 +182,14 @@ public interface IImsMmTelListener extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsMmTelListener
             public void onVoiceMessageCountUpdate(int count) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(count);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onVoiceMessageCountUpdate(count);
                     }
                 } finally {
@@ -225,11 +199,11 @@ public interface IImsMmTelListener extends IInterface {
         }
 
         public static boolean setDefaultImpl(IImsMmTelListener impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IImsMmTelListener getDefaultImpl() {

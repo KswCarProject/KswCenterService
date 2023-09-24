@@ -2,8 +2,8 @@ package android.app;
 
 import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.util.proto.ProtoOutputStream;
@@ -16,17 +16,22 @@ import org.json.JSONObject;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlSerializer;
 
+/* loaded from: classes.dex */
 public final class NotificationChannelGroup implements Parcelable {
     private static final String ATT_BLOCKED = "blocked";
     private static final String ATT_DESC = "desc";
     private static final String ATT_ID = "id";
     private static final String ATT_NAME = "name";
     private static final String ATT_USER_LOCKED = "locked";
-    public static final Parcelable.Creator<NotificationChannelGroup> CREATOR = new Parcelable.Creator<NotificationChannelGroup>() {
+    public static final Parcelable.Creator<NotificationChannelGroup> CREATOR = new Parcelable.Creator<NotificationChannelGroup>() { // from class: android.app.NotificationChannelGroup.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NotificationChannelGroup createFromParcel(Parcel in) {
             return new NotificationChannelGroup(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NotificationChannelGroup[] newArray(int size) {
             return new NotificationChannelGroup[size];
         }
@@ -65,12 +70,13 @@ public final class NotificationChannelGroup implements Parcelable {
     }
 
     private String getTrimmedString(String input) {
-        if (input == null || input.length() <= 1000) {
-            return input;
+        if (input != null && input.length() > 1000) {
+            return input.substring(0, 1000);
         }
-        return input.substring(0, 1000);
+        return input;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         if (this.mId != null) {
             dest.writeByte((byte) 1);
@@ -139,30 +145,27 @@ public final class NotificationChannelGroup implements Parcelable {
     }
 
     public void populateFromXml(XmlPullParser parser) {
-        setDescription(parser.getAttributeValue((String) null, ATT_DESC));
+        setDescription(parser.getAttributeValue(null, ATT_DESC));
         setBlocked(safeBool(parser, "blocked", false));
     }
 
     private static boolean safeBool(XmlPullParser parser, String att, boolean defValue) {
-        String value = parser.getAttributeValue((String) null, att);
-        if (TextUtils.isEmpty(value)) {
-            return defValue;
-        }
-        return Boolean.parseBoolean(value);
+        String value = parser.getAttributeValue(null, att);
+        return TextUtils.isEmpty(value) ? defValue : Boolean.parseBoolean(value);
     }
 
     public void writeXml(XmlSerializer out) throws IOException {
-        out.startTag((String) null, TAG_GROUP);
-        out.attribute((String) null, "id", getId());
+        out.startTag(null, TAG_GROUP);
+        out.attribute(null, "id", getId());
         if (getName() != null) {
-            out.attribute((String) null, "name", getName().toString());
+            out.attribute(null, "name", getName().toString());
         }
         if (getDescription() != null) {
-            out.attribute((String) null, ATT_DESC, getDescription().toString());
+            out.attribute(null, ATT_DESC, getDescription().toString());
         }
-        out.attribute((String) null, "blocked", Boolean.toString(isBlocked()));
-        out.attribute((String) null, "locked", Integer.toString(this.mUserLockedFields));
-        out.endTag((String) null, TAG_GROUP);
+        out.attribute(null, "blocked", Boolean.toString(isBlocked()));
+        out.attribute(null, "locked", Integer.toString(this.mUserLockedFields));
+        out.endTag(null, TAG_GROUP);
     }
 
     @SystemApi
@@ -176,6 +179,7 @@ public final class NotificationChannelGroup implements Parcelable {
         return record;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -188,17 +192,18 @@ public final class NotificationChannelGroup implements Parcelable {
             return false;
         }
         NotificationChannelGroup that = (NotificationChannelGroup) o;
-        if (isBlocked() != that.isBlocked() || this.mUserLockedFields != that.mUserLockedFields || !Objects.equals(getId(), that.getId()) || !Objects.equals(getName(), that.getName()) || !Objects.equals(getDescription(), that.getDescription()) || !Objects.equals(getChannels(), that.getChannels())) {
-            return false;
+        if (isBlocked() == that.isBlocked() && this.mUserLockedFields == that.mUserLockedFields && Objects.equals(getId(), that.getId()) && Objects.equals(getName(), that.getName()) && Objects.equals(getDescription(), that.getDescription()) && Objects.equals(getChannels(), that.getChannels())) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{getId(), getName(), getDescription(), Boolean.valueOf(isBlocked()), getChannels(), Integer.valueOf(this.mUserLockedFields)});
+        return Objects.hash(getId(), getName(), getDescription(), Boolean.valueOf(isBlocked()), getChannels(), Integer.valueOf(this.mUserLockedFields));
     }
 
-    public NotificationChannelGroup clone() {
+    /* renamed from: clone */
+    public NotificationChannelGroup m151clone() {
         NotificationChannelGroup cloned = new NotificationChannelGroup(getId(), getName());
         cloned.setDescription(getDescription());
         cloned.setBlocked(isBlocked());
@@ -213,7 +218,7 @@ public final class NotificationChannelGroup implements Parcelable {
         sb.append(this.mId);
         sb.append(DateFormat.QUOTE);
         sb.append(", mName=");
-        sb.append(this.mName);
+        sb.append((Object) this.mName);
         sb.append(", mDescription=");
         sb.append(!TextUtils.isEmpty(this.mDescription) ? "hasDescription " : "");
         sb.append(", mBlocked=");

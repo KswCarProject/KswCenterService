@@ -15,6 +15,7 @@ import javax.crypto.KeyGeneratorSpi;
 import javax.crypto.SecretKey;
 import libcore.util.EmptyArray;
 
+/* loaded from: classes3.dex */
 public abstract class AndroidKeyStoreKeyGeneratorSpi extends KeyGeneratorSpi {
     private final int mDefaultKeySizeBits;
     protected int mKeySizeBits;
@@ -28,56 +29,64 @@ public abstract class AndroidKeyStoreKeyGeneratorSpi extends KeyGeneratorSpi {
     private SecureRandom mRng;
     private KeyGenParameterSpec mSpec;
 
+    /* loaded from: classes3.dex */
     public static class AES extends AndroidKeyStoreKeyGeneratorSpi {
         public AES() {
             super(32, 128);
         }
 
-        /* access modifiers changed from: protected */
-        public void engineInit(AlgorithmParameterSpec params, SecureRandom random) throws InvalidAlgorithmParameterException {
-            AndroidKeyStoreKeyGeneratorSpi.super.engineInit(params, random);
+        @Override // android.security.keystore.AndroidKeyStoreKeyGeneratorSpi, javax.crypto.KeyGeneratorSpi
+        protected void engineInit(AlgorithmParameterSpec params, SecureRandom random) throws InvalidAlgorithmParameterException {
+            super.engineInit(params, random);
             if (this.mKeySizeBits != 128 && this.mKeySizeBits != 192 && this.mKeySizeBits != 256) {
                 throw new InvalidAlgorithmParameterException("Unsupported key size: " + this.mKeySizeBits + ". Supported: 128, 192, 256.");
             }
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class DESede extends AndroidKeyStoreKeyGeneratorSpi {
         public DESede() {
             super(33, 168);
         }
     }
 
+    /* loaded from: classes3.dex */
     protected static abstract class HmacBase extends AndroidKeyStoreKeyGeneratorSpi {
         protected HmacBase(int keymasterDigest) {
             super(128, keymasterDigest, KeymasterUtils.getDigestOutputSizeBits(keymasterDigest));
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class HmacSHA1 extends HmacBase {
         public HmacSHA1() {
             super(2);
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class HmacSHA224 extends HmacBase {
         public HmacSHA224() {
             super(3);
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class HmacSHA256 extends HmacBase {
         public HmacSHA256() {
             super(4);
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class HmacSHA384 extends HmacBase {
         public HmacSHA384() {
             super(5);
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class HmacSHA512 extends HmacBase {
         public HmacSHA512() {
             super(6);
@@ -95,96 +104,88 @@ public abstract class AndroidKeyStoreKeyGeneratorSpi extends KeyGeneratorSpi {
         this.mDefaultKeySizeBits = defaultKeySizeBits;
         if (this.mDefaultKeySizeBits <= 0) {
             throw new IllegalArgumentException("Default key size must be positive");
-        } else if (this.mKeymasterAlgorithm == 128 && this.mKeymasterDigest == -1) {
+        }
+        if (this.mKeymasterAlgorithm == 128 && this.mKeymasterDigest == -1) {
             throw new IllegalArgumentException("Digest algorithm must be specified for HMAC key");
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void engineInit(SecureRandom random) {
+    @Override // javax.crypto.KeyGeneratorSpi
+    protected void engineInit(SecureRandom random) {
         throw new UnsupportedOperationException("Cannot initialize without a " + KeyGenParameterSpec.class.getName() + " parameter");
     }
 
-    /* access modifiers changed from: protected */
-    public void engineInit(int keySize, SecureRandom random) {
+    @Override // javax.crypto.KeyGeneratorSpi
+    protected void engineInit(int keySize, SecureRandom random) {
         throw new UnsupportedOperationException("Cannot initialize without a " + KeyGenParameterSpec.class.getName() + " parameter");
     }
 
-    /* access modifiers changed from: protected */
-    public void engineInit(AlgorithmParameterSpec params, SecureRandom random) throws InvalidAlgorithmParameterException {
+    @Override // javax.crypto.KeyGeneratorSpi
+    protected void engineInit(AlgorithmParameterSpec params, SecureRandom random) throws InvalidAlgorithmParameterException {
+        int[] iArr;
         resetAll();
         if (params != null) {
             try {
                 if (params instanceof KeyGenParameterSpec) {
                     KeyGenParameterSpec spec = (KeyGenParameterSpec) params;
-                    if (spec.getKeystoreAlias() != null) {
-                        this.mRng = random;
-                        this.mSpec = spec;
-                        this.mKeySizeBits = spec.getKeySize() != -1 ? spec.getKeySize() : this.mDefaultKeySizeBits;
-                        if (this.mKeySizeBits <= 0) {
-                            throw new InvalidAlgorithmParameterException("Key size must be positive: " + this.mKeySizeBits);
-                        } else if (this.mKeySizeBits % 8 == 0) {
-                            this.mKeymasterPurposes = KeyProperties.Purpose.allToKeymaster(spec.getPurposes());
-                            this.mKeymasterPaddings = KeyProperties.EncryptionPadding.allToKeymaster(spec.getEncryptionPaddings());
-                            if (spec.getSignaturePaddings().length <= 0) {
-                                this.mKeymasterBlockModes = KeyProperties.BlockMode.allToKeymaster(spec.getBlockModes());
-                                if ((spec.getPurposes() & 1) != 0 && spec.isRandomizedEncryptionRequired()) {
-                                    int[] iArr = this.mKeymasterBlockModes;
-                                    int length = iArr.length;
-                                    int i = 0;
-                                    while (i < length) {
-                                        int keymasterBlockMode = iArr[i];
-                                        if (KeymasterUtils.isKeymasterBlockModeIndCpaCompatibleWithSymmetricCrypto(keymasterBlockMode)) {
-                                            i++;
-                                        } else {
-                                            throw new InvalidAlgorithmParameterException("Randomized encryption (IND-CPA) required but may be violated by block mode: " + KeyProperties.BlockMode.fromKeymaster(keymasterBlockMode) + ". See " + KeyGenParameterSpec.class.getName() + " documentation.");
-                                        }
-                                    }
-                                }
-                                if (this.mKeymasterAlgorithm == 33) {
-                                    if (this.mKeySizeBits != 168) {
-                                        throw new InvalidAlgorithmParameterException("3DES key size must be 168 bits.");
-                                    }
-                                }
-                                if (this.mKeymasterAlgorithm == 128) {
-                                    if (this.mKeySizeBits >= 64) {
-                                        if (this.mKeySizeBits > 512) {
-                                            if (spec.isStrongBoxBacked()) {
-                                                throw new InvalidAlgorithmParameterException("StrongBox HMAC key size must be smaller than 512 bits.");
-                                            }
-                                        }
-                                        this.mKeymasterDigests = new int[]{this.mKeymasterDigest};
-                                        if (spec.isDigestsSpecified()) {
-                                            int[] keymasterDigestsFromSpec = KeyProperties.Digest.allToKeymaster(spec.getDigests());
-                                            if (keymasterDigestsFromSpec.length != 1 || keymasterDigestsFromSpec[0] != this.mKeymasterDigest) {
-                                                throw new InvalidAlgorithmParameterException("Unsupported digests specification: " + Arrays.asList(spec.getDigests()) + ". Only " + KeyProperties.Digest.fromKeymaster(this.mKeymasterDigest) + " supported for this HMAC key algorithm");
-                                            }
-                                        }
-                                    } else {
-                                        throw new InvalidAlgorithmParameterException("HMAC key size must be at least 64 bits.");
-                                    }
-                                } else if (spec.isDigestsSpecified()) {
-                                    this.mKeymasterDigests = KeyProperties.Digest.allToKeymaster(spec.getDigests());
-                                } else {
-                                    this.mKeymasterDigests = EmptyArray.INT;
-                                }
-                                KeymasterUtils.addUserAuthArgs(new KeymasterArguments(), spec);
-                                if (1 == 0) {
-                                    resetAll();
-                                    return;
-                                }
-                                return;
-                            }
-                            throw new InvalidAlgorithmParameterException("Signature paddings not supported for symmetric key algorithms");
-                        } else {
-                            throw new InvalidAlgorithmParameterException("Key size must be a multiple of 8: " + this.mKeySizeBits);
-                        }
-                    } else {
+                    if (spec.getKeystoreAlias() == null) {
                         throw new InvalidAlgorithmParameterException("KeyStore entry alias not provided");
                     }
+                    this.mRng = random;
+                    this.mSpec = spec;
+                    this.mKeySizeBits = spec.getKeySize() != -1 ? spec.getKeySize() : this.mDefaultKeySizeBits;
+                    if (this.mKeySizeBits <= 0) {
+                        throw new InvalidAlgorithmParameterException("Key size must be positive: " + this.mKeySizeBits);
+                    } else if (this.mKeySizeBits % 8 != 0) {
+                        throw new InvalidAlgorithmParameterException("Key size must be a multiple of 8: " + this.mKeySizeBits);
+                    } else {
+                        try {
+                            this.mKeymasterPurposes = KeyProperties.Purpose.allToKeymaster(spec.getPurposes());
+                            this.mKeymasterPaddings = KeyProperties.EncryptionPadding.allToKeymaster(spec.getEncryptionPaddings());
+                            if (spec.getSignaturePaddings().length > 0) {
+                                throw new InvalidAlgorithmParameterException("Signature paddings not supported for symmetric key algorithms");
+                            }
+                            this.mKeymasterBlockModes = KeyProperties.BlockMode.allToKeymaster(spec.getBlockModes());
+                            if ((spec.getPurposes() & 1) != 0 && spec.isRandomizedEncryptionRequired()) {
+                                for (int keymasterBlockMode : this.mKeymasterBlockModes) {
+                                    if (!KeymasterUtils.isKeymasterBlockModeIndCpaCompatibleWithSymmetricCrypto(keymasterBlockMode)) {
+                                        throw new InvalidAlgorithmParameterException("Randomized encryption (IND-CPA) required but may be violated by block mode: " + KeyProperties.BlockMode.fromKeymaster(keymasterBlockMode) + ". See " + KeyGenParameterSpec.class.getName() + " documentation.");
+                                    }
+                                }
+                            }
+                            if (this.mKeymasterAlgorithm == 33 && this.mKeySizeBits != 168) {
+                                throw new InvalidAlgorithmParameterException("3DES key size must be 168 bits.");
+                            }
+                            if (this.mKeymasterAlgorithm == 128) {
+                                if (this.mKeySizeBits < 64) {
+                                    throw new InvalidAlgorithmParameterException("HMAC key size must be at least 64 bits.");
+                                }
+                                if (this.mKeySizeBits > 512 && spec.isStrongBoxBacked()) {
+                                    throw new InvalidAlgorithmParameterException("StrongBox HMAC key size must be smaller than 512 bits.");
+                                }
+                                this.mKeymasterDigests = new int[]{this.mKeymasterDigest};
+                                if (spec.isDigestsSpecified()) {
+                                    int[] keymasterDigestsFromSpec = KeyProperties.Digest.allToKeymaster(spec.getDigests());
+                                    if (keymasterDigestsFromSpec.length != 1 || keymasterDigestsFromSpec[0] != this.mKeymasterDigest) {
+                                        throw new InvalidAlgorithmParameterException("Unsupported digests specification: " + Arrays.asList(spec.getDigests()) + ". Only " + KeyProperties.Digest.fromKeymaster(this.mKeymasterDigest) + " supported for this HMAC key algorithm");
+                                    }
+                                }
+                            } else if (spec.isDigestsSpecified()) {
+                                this.mKeymasterDigests = KeyProperties.Digest.allToKeymaster(spec.getDigests());
+                            } else {
+                                this.mKeymasterDigests = EmptyArray.INT;
+                            }
+                            KeymasterUtils.addUserAuthArgs(new KeymasterArguments(), spec);
+                            if (1 == 0) {
+                                resetAll();
+                                return;
+                            }
+                            return;
+                        } catch (IllegalArgumentException | IllegalStateException e) {
+                            throw new InvalidAlgorithmParameterException(e);
+                        }
+                    }
                 }
-            } catch (IllegalArgumentException | IllegalStateException e) {
-                throw new InvalidAlgorithmParameterException(e);
             } catch (Throwable th) {
                 if (0 == 0) {
                     resetAll();
@@ -204,12 +205,12 @@ public abstract class AndroidKeyStoreKeyGeneratorSpi extends KeyGeneratorSpi {
         this.mKeymasterBlockModes = null;
     }
 
-    /* access modifiers changed from: protected */
-    public SecretKey engineGenerateKey() {
+    @Override // javax.crypto.KeyGeneratorSpi
+    protected SecretKey engineGenerateKey() {
         KeyGenParameterSpec spec = this.mSpec;
         if (spec != null) {
             KeymasterArguments args = new KeymasterArguments();
-            args.addUnsignedInt(KeymasterDefs.KM_TAG_KEY_SIZE, (long) this.mKeySizeBits);
+            args.addUnsignedInt(KeymasterDefs.KM_TAG_KEY_SIZE, this.mKeySizeBits);
             args.addEnum(KeymasterDefs.KM_TAG_ALGORITHM, this.mKeymasterAlgorithm);
             args.addEnums(KeymasterDefs.KM_TAG_PURPOSE, this.mKeymasterPurposes);
             args.addEnums(KeymasterDefs.KM_TAG_BLOCK_MODE, this.mKeymasterBlockModes);
@@ -224,37 +225,34 @@ public abstract class AndroidKeyStoreKeyGeneratorSpi extends KeyGeneratorSpi {
                 args.addBoolean(KeymasterDefs.KM_TAG_CALLER_NONCE);
             }
             byte[] additionalEntropy = KeyStoreCryptoOperationUtils.getRandomBytesToMixIntoKeystoreRng(this.mRng, (this.mKeySizeBits + 7) / 8);
-            int flags = 0;
-            if (spec.isStrongBoxBacked()) {
-                flags = 0 | 16;
-            }
+            int flags = spec.isStrongBoxBacked() ? 0 | 16 : 0;
             int flags2 = flags;
             String keyAliasInKeystore = Credentials.USER_PRIVATE_KEY + spec.getKeystoreAlias();
             KeyCharacteristics resultingKeyCharacteristics = new KeyCharacteristics();
+            boolean success = false;
             try {
                 Credentials.deleteAllTypesForAlias(this.mKeyStore, spec.getKeystoreAlias(), spec.getUid());
                 int errorCode = this.mKeyStore.generateKey(keyAliasInKeystore, args, additionalEntropy, spec.getUid(), flags2, resultingKeyCharacteristics);
-                if (errorCode == 1) {
-                    SecretKey result = new AndroidKeyStoreSecretKey(keyAliasInKeystore, spec.getUid(), KeyProperties.KeyAlgorithm.fromKeymasterSecretKeyAlgorithm(this.mKeymasterAlgorithm, this.mKeymasterDigest));
-                    if (1 == 0) {
-                        Credentials.deleteAllTypesForAlias(this.mKeyStore, spec.getKeystoreAlias(), spec.getUid());
+                if (errorCode != 1) {
+                    if (errorCode == -68) {
+                        throw new StrongBoxUnavailableException("Failed to generate key");
                     }
-                    return result;
-                } else if (errorCode == -68) {
-                    throw new StrongBoxUnavailableException("Failed to generate key");
-                } else {
                     throw new ProviderException("Keystore operation failed", KeyStore.getKeyStoreException(errorCode));
                 }
-            } catch (IllegalArgumentException e) {
-                throw new ProviderException("Failed to obtain JCA secret key algorithm name", e);
-            } catch (Throwable th) {
-                if (0 == 0) {
+                try {
+                    String keyAlgorithmJCA = KeyProperties.KeyAlgorithm.fromKeymasterSecretKeyAlgorithm(this.mKeymasterAlgorithm, this.mKeymasterDigest);
+                    SecretKey result = new AndroidKeyStoreSecretKey(keyAliasInKeystore, spec.getUid(), keyAlgorithmJCA);
+                    success = true;
+                    return result;
+                } catch (IllegalArgumentException e) {
+                    throw new ProviderException("Failed to obtain JCA secret key algorithm name", e);
+                }
+            } finally {
+                if (!success) {
                     Credentials.deleteAllTypesForAlias(this.mKeyStore, spec.getKeystoreAlias(), spec.getUid());
                 }
-                throw th;
             }
-        } else {
-            throw new IllegalStateException("Not initialized");
         }
+        throw new IllegalStateException("Not initialized");
     }
 }

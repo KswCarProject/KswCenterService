@@ -1,5 +1,6 @@
 package android.media.midi;
 
+/* loaded from: classes3.dex */
 class MidiPortImpl {
     private static final int DATA_PACKET_OVERHEAD = 9;
     public static final int MAX_PACKET_DATA_SIZE = 1015;
@@ -22,7 +23,7 @@ class MidiPortImpl {
         int length2 = length + size;
         int i = 0;
         while (i < 8) {
-            dest[length2] = (byte) ((int) timestamp);
+            dest[length2] = (byte) timestamp;
             timestamp >>= 8;
             i++;
             length2++;
@@ -52,7 +53,8 @@ class MidiPortImpl {
         long timestamp = 0;
         for (int i = 0; i < 8; i++) {
             offset--;
-            timestamp = (timestamp << 8) | ((long) (buffer[offset] & 255));
+            int b = buffer[offset] & 255;
+            timestamp = (timestamp << 8) | b;
         }
         return timestamp;
     }

@@ -1,7 +1,7 @@
 package android.telephony.emergency;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.telephony.PhoneNumberUtils;
 import android.telephony.Rlog;
 import java.lang.annotation.Retention;
@@ -13,16 +13,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+/* loaded from: classes3.dex */
 public final class EmergencyNumber implements Parcelable, Comparable<EmergencyNumber> {
-    public static final Parcelable.Creator<EmergencyNumber> CREATOR = new Parcelable.Creator<EmergencyNumber>() {
-        public EmergencyNumber createFromParcel(Parcel in) {
-            return new EmergencyNumber(in);
-        }
-
-        public EmergencyNumber[] newArray(int size) {
-            return new EmergencyNumber[size];
-        }
-    };
+    public static final Parcelable.Creator<EmergencyNumber> CREATOR;
     public static final int EMERGENCY_CALL_ROUTING_EMERGENCY = 1;
     public static final int EMERGENCY_CALL_ROUTING_NORMAL = 2;
     public static final int EMERGENCY_CALL_ROUTING_UNKNOWN = 0;
@@ -30,7 +23,7 @@ public final class EmergencyNumber implements Parcelable, Comparable<EmergencyNu
     public static final int EMERGENCY_NUMBER_SOURCE_DEFAULT = 8;
     public static final int EMERGENCY_NUMBER_SOURCE_MODEM_CONFIG = 4;
     public static final int EMERGENCY_NUMBER_SOURCE_NETWORK_SIGNALING = 1;
-    private static final Set<Integer> EMERGENCY_NUMBER_SOURCE_SET = new HashSet();
+    private static final Set<Integer> EMERGENCY_NUMBER_SOURCE_SET;
     public static final int EMERGENCY_NUMBER_SOURCE_SIM = 2;
     public static final int EMERGENCY_NUMBER_SOURCE_TEST = 32;
     public static final int EMERGENCY_SERVICE_CATEGORY_AIEC = 64;
@@ -52,14 +45,17 @@ public final class EmergencyNumber implements Parcelable, Comparable<EmergencyNu
     private final String mNumber;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface EmergencyCallRouting {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface EmergencyNumberSources {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface EmergencyServiceCategories {
     }
 
@@ -71,11 +67,25 @@ public final class EmergencyNumber implements Parcelable, Comparable<EmergencyNu
         EMERGENCY_SERVICE_CATEGORY_SET.add(16);
         EMERGENCY_SERVICE_CATEGORY_SET.add(32);
         EMERGENCY_SERVICE_CATEGORY_SET.add(64);
+        EMERGENCY_NUMBER_SOURCE_SET = new HashSet();
         EMERGENCY_NUMBER_SOURCE_SET.add(1);
         EMERGENCY_NUMBER_SOURCE_SET.add(2);
         EMERGENCY_NUMBER_SOURCE_SET.add(16);
         EMERGENCY_NUMBER_SOURCE_SET.add(4);
         EMERGENCY_NUMBER_SOURCE_SET.add(8);
+        CREATOR = new Parcelable.Creator<EmergencyNumber>() { // from class: android.telephony.emergency.EmergencyNumber.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
+            public EmergencyNumber createFromParcel(Parcel in) {
+                return new EmergencyNumber(in);
+            }
+
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
+            public EmergencyNumber[] newArray(int size) {
+                return new EmergencyNumber[size];
+            }
+        };
     }
 
     public EmergencyNumber(String number, String countryIso, String mnc, int emergencyServiceCategories, List<String> emergencyUrns, int emergencyNumberSources, int emergencyCallRouting) {
@@ -98,6 +108,7 @@ public final class EmergencyNumber implements Parcelable, Comparable<EmergencyNu
         this.mEmergencyCallRouting = source.readInt();
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.mNumber);
         dest.writeString(this.mCountryIso);
@@ -157,10 +168,7 @@ public final class EmergencyNumber implements Parcelable, Comparable<EmergencyNu
         if (categories == 0) {
             return serviceUnspecified();
         }
-        if (!serviceUnspecified() && (this.mEmergencyServiceCategoryBitmask & categories) != categories) {
-            return false;
-        }
-        return true;
+        return serviceUnspecified() || (this.mEmergencyServiceCategoryBitmask & categories) == categories;
     }
 
     public int getEmergencyNumberSourceBitmask() {
@@ -185,6 +193,7 @@ public final class EmergencyNumber implements Parcelable, Comparable<EmergencyNu
         return this.mEmergencyCallRouting;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -194,18 +203,15 @@ public final class EmergencyNumber implements Parcelable, Comparable<EmergencyNu
     }
 
     public boolean equals(Object o) {
-        if (!EmergencyNumber.class.isInstance(o)) {
-            return false;
+        if (EmergencyNumber.class.isInstance(o)) {
+            EmergencyNumber other = (EmergencyNumber) o;
+            return this.mNumber.equals(other.mNumber) && this.mCountryIso.equals(other.mCountryIso) && this.mMnc.equals(other.mMnc) && this.mEmergencyServiceCategoryBitmask == other.mEmergencyServiceCategoryBitmask && this.mEmergencyUrns.equals(other.mEmergencyUrns) && this.mEmergencyNumberSourceBitmask == other.mEmergencyNumberSourceBitmask && this.mEmergencyCallRouting == other.mEmergencyCallRouting;
         }
-        EmergencyNumber other = (EmergencyNumber) o;
-        if (!this.mNumber.equals(other.mNumber) || !this.mCountryIso.equals(other.mCountryIso) || !this.mMnc.equals(other.mMnc) || this.mEmergencyServiceCategoryBitmask != other.mEmergencyServiceCategoryBitmask || !this.mEmergencyUrns.equals(other.mEmergencyUrns) || this.mEmergencyNumberSourceBitmask != other.mEmergencyNumberSourceBitmask || this.mEmergencyCallRouting != other.mEmergencyCallRouting) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{this.mNumber, this.mCountryIso, this.mMnc, Integer.valueOf(this.mEmergencyServiceCategoryBitmask), this.mEmergencyUrns, Integer.valueOf(this.mEmergencyNumberSourceBitmask), Integer.valueOf(this.mEmergencyCallRouting)});
+        return Objects.hash(this.mNumber, this.mCountryIso, this.mMnc, Integer.valueOf(this.mEmergencyServiceCategoryBitmask), this.mEmergencyUrns, Integer.valueOf(this.mEmergencyNumberSourceBitmask), Integer.valueOf(this.mEmergencyCallRouting));
     }
 
     private int getDisplayPriorityScore() {
@@ -228,6 +234,7 @@ public final class EmergencyNumber implements Parcelable, Comparable<EmergencyNu
         return score;
     }
 
+    @Override // java.lang.Comparable
     public int compareTo(EmergencyNumber emergencyNumber) {
         if (getDisplayPriorityScore() > emergencyNumber.getDisplayPriorityScore()) {
             return -1;
@@ -245,62 +252,55 @@ public final class EmergencyNumber implements Parcelable, Comparable<EmergencyNu
             return getMnc().compareTo(emergencyNumber.getMnc());
         }
         if (getEmergencyServiceCategoryBitmask() != emergencyNumber.getEmergencyServiceCategoryBitmask()) {
-            if (getEmergencyServiceCategoryBitmask() > emergencyNumber.getEmergencyServiceCategoryBitmask()) {
-                return -1;
-            }
-            return 1;
+            return getEmergencyServiceCategoryBitmask() > emergencyNumber.getEmergencyServiceCategoryBitmask() ? -1 : 1;
         } else if (getEmergencyUrns().toString().compareTo(emergencyNumber.getEmergencyUrns().toString()) != 0) {
             return getEmergencyUrns().toString().compareTo(emergencyNumber.getEmergencyUrns().toString());
         } else {
-            if (getEmergencyCallRouting() == emergencyNumber.getEmergencyCallRouting()) {
-                return 0;
+            if (getEmergencyCallRouting() != emergencyNumber.getEmergencyCallRouting()) {
+                return getEmergencyCallRouting() > emergencyNumber.getEmergencyCallRouting() ? -1 : 1;
             }
-            if (getEmergencyCallRouting() > emergencyNumber.getEmergencyCallRouting()) {
-                return -1;
-            }
-            return 1;
+            return 0;
         }
     }
 
     public static void mergeSameNumbersInEmergencyNumberList(List<EmergencyNumber> emergencyNumberList) {
-        if (emergencyNumberList != null) {
-            Set<Integer> duplicatedEmergencyNumberPosition = new HashSet<>();
-            for (int i = 0; i < emergencyNumberList.size(); i++) {
-                for (int j = 0; j < i; j++) {
-                    if (areSameEmergencyNumbers(emergencyNumberList.get(i), emergencyNumberList.get(j))) {
-                        Rlog.e(LOG_TAG, "Found unexpected duplicate numbers: " + emergencyNumberList.get(i) + " vs " + emergencyNumberList.get(j));
-                        emergencyNumberList.set(i, mergeSameEmergencyNumbers(emergencyNumberList.get(i), emergencyNumberList.get(j)));
-                        duplicatedEmergencyNumberPosition.add(Integer.valueOf(j));
-                    }
-                }
-            }
-            for (int i2 = emergencyNumberList.size() - 1; i2 >= 0; i2--) {
-                if (duplicatedEmergencyNumberPosition.contains(Integer.valueOf(i2))) {
-                    emergencyNumberList.remove(i2);
-                }
-            }
-            Collections.sort(emergencyNumberList);
+        if (emergencyNumberList == null) {
+            return;
         }
+        Set<Integer> duplicatedEmergencyNumberPosition = new HashSet<>();
+        for (int i = 0; i < emergencyNumberList.size(); i++) {
+            for (int j = 0; j < i; j++) {
+                if (areSameEmergencyNumbers(emergencyNumberList.get(i), emergencyNumberList.get(j))) {
+                    Rlog.m86e(LOG_TAG, "Found unexpected duplicate numbers: " + emergencyNumberList.get(i) + " vs " + emergencyNumberList.get(j));
+                    emergencyNumberList.set(i, mergeSameEmergencyNumbers(emergencyNumberList.get(i), emergencyNumberList.get(j)));
+                    duplicatedEmergencyNumberPosition.add(Integer.valueOf(j));
+                }
+            }
+        }
+        for (int i2 = emergencyNumberList.size() - 1; i2 >= 0; i2--) {
+            if (duplicatedEmergencyNumberPosition.contains(Integer.valueOf(i2))) {
+                emergencyNumberList.remove(i2);
+            }
+        }
+        Collections.sort(emergencyNumberList);
     }
 
     public static boolean areSameEmergencyNumbers(EmergencyNumber first, EmergencyNumber second) {
-        if (!first.getNumber().equals(second.getNumber()) || !first.getCountryIso().equals(second.getCountryIso()) || !first.getMnc().equals(second.getMnc()) || first.getEmergencyServiceCategoryBitmask() != second.getEmergencyServiceCategoryBitmask() || !first.getEmergencyUrns().equals(second.getEmergencyUrns()) || first.getEmergencyCallRouting() != second.getEmergencyCallRouting()) {
-            return false;
+        if (first.getNumber().equals(second.getNumber()) && first.getCountryIso().equals(second.getCountryIso()) && first.getMnc().equals(second.getMnc()) && first.getEmergencyServiceCategoryBitmask() == second.getEmergencyServiceCategoryBitmask() && first.getEmergencyUrns().equals(second.getEmergencyUrns()) && first.getEmergencyCallRouting() == second.getEmergencyCallRouting()) {
+            return !(second.isFromSources(32) ^ first.isFromSources(32));
         }
-        if (second.isFromSources(32) ^ first.isFromSources(32)) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
     public static EmergencyNumber mergeSameEmergencyNumbers(EmergencyNumber first, EmergencyNumber second) {
-        if (!areSameEmergencyNumbers(first, second)) {
-            return null;
+        if (areSameEmergencyNumbers(first, second)) {
+            return new EmergencyNumber(first.getNumber(), first.getCountryIso(), first.getMnc(), first.getEmergencyServiceCategoryBitmask(), first.getEmergencyUrns(), second.getEmergencyNumberSourceBitmask() | first.getEmergencyNumberSourceBitmask(), first.getEmergencyCallRouting());
         }
-        return new EmergencyNumber(first.getNumber(), first.getCountryIso(), first.getMnc(), first.getEmergencyServiceCategoryBitmask(), first.getEmergencyUrns(), second.getEmergencyNumberSourceBitmask() | first.getEmergencyNumberSourceBitmask(), first.getEmergencyCallRouting());
+        return null;
     }
 
     public static boolean validateEmergencyNumberAddress(String address) {
+        char[] charArray;
         if (address == null) {
             return false;
         }

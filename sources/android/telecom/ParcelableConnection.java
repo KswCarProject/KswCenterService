@@ -1,22 +1,24 @@
 package android.telecom;
 
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.telecom.IVideoProvider;
 import java.util.ArrayList;
 import java.util.List;
 
+/* loaded from: classes3.dex */
 public final class ParcelableConnection implements Parcelable {
-    public static final Parcelable.Creator<ParcelableConnection> CREATOR = new Parcelable.Creator<ParcelableConnection>() {
+    public static final Parcelable.Creator<ParcelableConnection> CREATOR = new Parcelable.Creator<ParcelableConnection>() { // from class: android.telecom.ParcelableConnection.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ParcelableConnection createFromParcel(Parcel source) {
-            Parcel parcel = source;
             ClassLoader classLoader = ParcelableConnection.class.getClassLoader();
-            PhoneAccountHandle phoneAccount = (PhoneAccountHandle) parcel.readParcelable(classLoader);
+            PhoneAccountHandle phoneAccount = (PhoneAccountHandle) source.readParcelable(classLoader);
             int state = source.readInt();
             int capabilities = source.readInt();
-            Uri address = (Uri) parcel.readParcelable(classLoader);
+            Uri address = (Uri) source.readParcelable(classLoader);
             int addressPresentation = source.readInt();
             String callerDisplayName = source.readString();
             int callerDisplayNamePresentation = source.readInt();
@@ -24,12 +26,22 @@ public final class ParcelableConnection implements Parcelable {
             int videoState = source.readInt();
             boolean ringbackRequested = source.readByte() == 1;
             boolean audioModeIsVoip = source.readByte() == 1;
-            ArrayList arrayList = new ArrayList();
-            parcel.readStringList(arrayList);
-            ArrayList arrayList2 = arrayList;
-            return new ParcelableConnection(phoneAccount, state, capabilities, source.readInt(), source.readInt(), address, addressPresentation, callerDisplayName, callerDisplayNamePresentation, videoCallProvider, videoState, ringbackRequested, audioModeIsVoip, source.readLong(), source.readLong(), (StatusHints) parcel.readParcelable(classLoader), (DisconnectCause) parcel.readParcelable(classLoader), arrayList, Bundle.setDefusable(parcel.readBundle(classLoader), true), source.readString(), source.readInt());
+            long connectTimeMillis = source.readLong();
+            StatusHints statusHints = (StatusHints) source.readParcelable(classLoader);
+            DisconnectCause disconnectCause = (DisconnectCause) source.readParcelable(classLoader);
+            List<String> conferenceableConnectionIds = new ArrayList<>();
+            source.readStringList(conferenceableConnectionIds);
+            Bundle extras = Bundle.setDefusable(source.readBundle(classLoader), true);
+            int properties = source.readInt();
+            int supportedAudioRoutes = source.readInt();
+            String parentCallId = source.readString();
+            long connectElapsedTimeMillis = source.readLong();
+            int callDirection = source.readInt();
+            return new ParcelableConnection(phoneAccount, state, capabilities, properties, supportedAudioRoutes, address, addressPresentation, callerDisplayName, callerDisplayNamePresentation, videoCallProvider, videoState, ringbackRequested, audioModeIsVoip, connectTimeMillis, connectElapsedTimeMillis, statusHints, disconnectCause, conferenceableConnectionIds, extras, parentCallId, callDirection);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ParcelableConnection[] newArray(int size) {
             return new ParcelableConnection[size];
         }
@@ -56,7 +68,6 @@ public final class ParcelableConnection implements Parcelable {
     private final IVideoProvider mVideoProvider;
     private final int mVideoState;
 
-    /* JADX INFO: this call moved to the top of the method (can break code semantics) */
     public ParcelableConnection(PhoneAccountHandle phoneAccount, int state, int capabilities, int properties, int supportedAudioRoutes, Uri address, int addressPresentation, String callerDisplayName, int callerDisplayNamePresentation, IVideoProvider videoProvider, int videoState, boolean ringbackRequested, boolean isVoipAudioMode, long connectTimeMillis, long connectElapsedTimeMillis, StatusHints statusHints, DisconnectCause disconnectCause, List<String> conferenceableConnectionIds, Bundle extras, String parentCallId, int callDirection) {
         this(phoneAccount, state, capabilities, properties, supportedAudioRoutes, address, addressPresentation, callerDisplayName, callerDisplayNamePresentation, videoProvider, videoState, ringbackRequested, isVoipAudioMode, connectTimeMillis, connectElapsedTimeMillis, statusHints, disconnectCause, conferenceableConnectionIds, extras);
         this.mParentCallId = parentCallId;
@@ -175,10 +186,12 @@ public final class ParcelableConnection implements Parcelable {
         return "ParcelableConnection [act:" + this.mPhoneAccount + "], state:" + this.mState + ", capabilities:" + Connection.capabilitiesToString(this.mConnectionCapabilities) + ", properties:" + Connection.propertiesToString(this.mConnectionProperties) + ", extras:" + this.mExtras + ", parent:" + this.mParentCallId + ", callDirection:" + this.mCallDirection;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel destination, int flags) {
         destination.writeParcelable(this.mPhoneAccount, 0);
         destination.writeInt(this.mState);
@@ -189,8 +202,8 @@ public final class ParcelableConnection implements Parcelable {
         destination.writeInt(this.mCallerDisplayNamePresentation);
         destination.writeStrongBinder(this.mVideoProvider != null ? this.mVideoProvider.asBinder() : null);
         destination.writeInt(this.mVideoState);
-        destination.writeByte(this.mRingbackRequested ? (byte) 1 : 0);
-        destination.writeByte(this.mIsVoipAudioMode ? (byte) 1 : 0);
+        destination.writeByte(this.mRingbackRequested ? (byte) 1 : (byte) 0);
+        destination.writeByte(this.mIsVoipAudioMode ? (byte) 1 : (byte) 0);
         destination.writeLong(this.mConnectTimeMillis);
         destination.writeParcelable(this.mStatusHints, 0);
         destination.writeParcelable(this.mDisconnectCause, 0);

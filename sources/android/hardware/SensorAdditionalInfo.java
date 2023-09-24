@@ -3,6 +3,7 @@ package android.hardware;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes.dex */
 public class SensorAdditionalInfo {
     public static final int TYPE_CUSTOM_INFO = 268435456;
     public static final int TYPE_DEBUG_INFO = 1073741824;
@@ -25,6 +26,7 @@ public class SensorAdditionalInfo {
     public final int type;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface AdditionalInfoType {
     }
 
@@ -37,16 +39,16 @@ public class SensorAdditionalInfo {
     }
 
     public static SensorAdditionalInfo createLocalGeomagneticField(float strength, float declination, float inclination) {
-        if (strength < 10.0f || strength > 100.0f || declination < 0.0f || ((double) declination) > 3.141592653589793d || ((double) inclination) < -1.5707963267948966d || ((double) inclination) > 1.5707963267948966d) {
+        if (strength < 10.0f || strength > 100.0f || declination < 0.0f || declination > 3.141592653589793d || inclination < -1.5707963267948966d || inclination > 1.5707963267948966d) {
             throw new IllegalArgumentException("Geomagnetic field info out of range");
         }
-        return new SensorAdditionalInfo((Sensor) null, 196608, 0, (int[]) null, new float[]{strength, declination, inclination});
+        return new SensorAdditionalInfo(null, 196608, 0, null, new float[]{strength, declination, inclination});
     }
 
-    public static SensorAdditionalInfo createCustomInfo(Sensor aSensor, int type2, float[] data) {
-        if (type2 >= 268435456 && type2 < 1073741824 && aSensor != null) {
-            return new SensorAdditionalInfo(aSensor, type2, 0, (int[]) null, data);
+    public static SensorAdditionalInfo createCustomInfo(Sensor aSensor, int type, float[] data) {
+        if (type < 268435456 || type >= 1073741824 || aSensor == null) {
+            throw new IllegalArgumentException("invalid parameter(s): type: " + type + "; sensor: " + aSensor);
         }
-        throw new IllegalArgumentException("invalid parameter(s): type: " + type2 + "; sensor: " + aSensor);
+        return new SensorAdditionalInfo(aSensor, type, 0, null, data);
     }
 }

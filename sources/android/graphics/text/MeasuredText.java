@@ -3,27 +3,33 @@ package android.graphics.text;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import com.android.internal.util.Preconditions;
+import dalvik.annotation.optimization.CriticalNative;
 import libcore.util.NativeAllocationRegistry;
 
+/* loaded from: classes.dex */
 public class MeasuredText {
-    /* access modifiers changed from: private */
-    public char[] mChars;
-    /* access modifiers changed from: private */
-    public boolean mComputeHyphenation;
-    /* access modifiers changed from: private */
-    public boolean mComputeLayout;
+    private char[] mChars;
+    private boolean mComputeHyphenation;
+    private boolean mComputeLayout;
     private long mNativePtr;
 
     private static native void nGetBounds(long j, char[] cArr, int i, int i2, Rect rect);
 
+    @CriticalNative
     private static native float nGetCharWidthAt(long j, int i);
 
+    @CriticalNative
     private static native int nGetMemoryUsage(long j);
 
-    /* access modifiers changed from: private */
-    public static native long nGetReleaseFunc();
+    @CriticalNative
+    private static native long nGetReleaseFunc();
 
+    @CriticalNative
     private static native float nGetWidth(long j, int i, int i2);
+
+    static /* synthetic */ long access$000() {
+        return nGetReleaseFunc();
+    }
 
     private MeasuredText(long ptr, char[] chars, boolean computeHyphenation, boolean computeLayout) {
         this.mNativePtr = ptr;
@@ -37,13 +43,12 @@ public class MeasuredText {
     }
 
     public float getWidth(int start, int end) {
-        boolean z = true;
-        Preconditions.checkArgument(start >= 0 && start <= this.mChars.length, "start(" + start + ") must be 0 <= start <= " + this.mChars.length);
-        Preconditions.checkArgument(end >= 0 && end <= this.mChars.length, "end(" + end + ") must be 0 <= end <= " + this.mChars.length);
-        if (start > end) {
-            z = false;
-        }
-        Preconditions.checkArgument(z, "start(" + start + ") is larger than end(" + end + ")");
+        boolean z = start >= 0 && start <= this.mChars.length;
+        Preconditions.checkArgument(z, "start(" + start + ") must be 0 <= start <= " + this.mChars.length);
+        boolean z2 = end >= 0 && end <= this.mChars.length;
+        Preconditions.checkArgument(z2, "end(" + end + ") must be 0 <= end <= " + this.mChars.length);
+        boolean z3 = start <= end;
+        Preconditions.checkArgument(z3, "start(" + start + ") is larger than end(" + end + ")");
         return nGetWidth(this.mNativePtr, start, end);
     }
 
@@ -52,13 +57,12 @@ public class MeasuredText {
     }
 
     public void getBounds(int start, int end, Rect rect) {
-        boolean z = true;
-        Preconditions.checkArgument(start >= 0 && start <= this.mChars.length, "start(" + start + ") must be 0 <= start <= " + this.mChars.length);
-        Preconditions.checkArgument(end >= 0 && end <= this.mChars.length, "end(" + end + ") must be 0 <= end <= " + this.mChars.length);
-        if (start > end) {
-            z = false;
-        }
-        Preconditions.checkArgument(z, "start(" + start + ") is larger than end(" + end + ")");
+        boolean z = start >= 0 && start <= this.mChars.length;
+        Preconditions.checkArgument(z, "start(" + start + ") must be 0 <= start <= " + this.mChars.length);
+        boolean z2 = end >= 0 && end <= this.mChars.length;
+        Preconditions.checkArgument(z2, "end(" + end + ") must be 0 <= end <= " + this.mChars.length);
+        boolean z3 = start <= end;
+        Preconditions.checkArgument(z3, "start(" + start + ") is larger than end(" + end + ")");
         Preconditions.checkNotNull(rect);
         nGetBounds(this.mNativePtr, this.mChars, start, end, rect);
     }
@@ -73,12 +77,13 @@ public class MeasuredText {
         return this.mNativePtr;
     }
 
+    /* loaded from: classes.dex */
     public static final class Builder {
-        private static final NativeAllocationRegistry sRegistry = NativeAllocationRegistry.createMalloced(MeasuredText.class.getClassLoader(), MeasuredText.nGetReleaseFunc());
-        private boolean mComputeHyphenation = false;
-        private boolean mComputeLayout = true;
-        private int mCurrentOffset = 0;
-        private MeasuredText mHintMt = null;
+        private static final NativeAllocationRegistry sRegistry = NativeAllocationRegistry.createMalloced(MeasuredText.class.getClassLoader(), MeasuredText.access$000());
+        private boolean mComputeHyphenation;
+        private boolean mComputeLayout;
+        private int mCurrentOffset;
+        private MeasuredText mHintMt;
         private long mNativePtr;
         private final char[] mText;
 
@@ -93,12 +98,20 @@ public class MeasuredText {
         private static native long nInitBuilder();
 
         public Builder(char[] text) {
+            this.mComputeHyphenation = false;
+            this.mComputeLayout = true;
+            this.mCurrentOffset = 0;
+            this.mHintMt = null;
             Preconditions.checkNotNull(text);
             this.mText = text;
             this.mNativePtr = nInitBuilder();
         }
 
         public Builder(MeasuredText text) {
+            this.mComputeHyphenation = false;
+            this.mComputeLayout = true;
+            this.mCurrentOffset = 0;
+            this.mHintMt = null;
             Preconditions.checkNotNull(text);
             this.mText = text.mChars;
             this.mNativePtr = nInitBuilder();
@@ -113,26 +126,18 @@ public class MeasuredText {
 
         public Builder appendStyleRun(Paint paint, int length, boolean isRtl) {
             Preconditions.checkNotNull(paint);
-            boolean z = false;
             Preconditions.checkArgument(length > 0, "length can not be negative");
             int end = this.mCurrentOffset + length;
-            if (end <= this.mText.length) {
-                z = true;
-            }
-            Preconditions.checkArgument(z, "Style exceeds the text length");
+            Preconditions.checkArgument(end <= this.mText.length, "Style exceeds the text length");
             nAddStyleRun(this.mNativePtr, paint.getNativeInstance(), this.mCurrentOffset, end, isRtl);
             this.mCurrentOffset = end;
             return this;
         }
 
         public Builder appendReplacementRun(Paint paint, int length, float width) {
-            boolean z = false;
             Preconditions.checkArgument(length > 0, "length can not be negative");
             int end = this.mCurrentOffset + length;
-            if (end <= this.mText.length) {
-                z = true;
-            }
-            Preconditions.checkArgument(z, "Replacement exceeds the text length");
+            Preconditions.checkArgument(end <= this.mText.length, "Replacement exceeds the text length");
             nAddReplacementRun(this.mNativePtr, paint.getNativeInstance(), this.mCurrentOffset, end, width);
             this.mCurrentOffset = end;
             return this;
@@ -152,18 +157,19 @@ public class MeasuredText {
             ensureNativePtrNoReuse();
             if (this.mCurrentOffset != this.mText.length) {
                 throw new IllegalStateException("Style info has not been provided for all text.");
-            } else if (this.mHintMt == null || this.mHintMt.mComputeHyphenation == this.mComputeHyphenation) {
-                try {
-                    long ptr = nBuildMeasuredText(this.mNativePtr, this.mHintMt == null ? 0 : this.mHintMt.getNativePtr(), this.mText, this.mComputeHyphenation, this.mComputeLayout);
-                    MeasuredText measuredText = new MeasuredText(ptr, this.mText, this.mComputeHyphenation, this.mComputeLayout);
-                    sRegistry.registerNativeAllocation(measuredText, ptr);
-                    return measuredText;
-                } finally {
-                    nFreeBuilder(this.mNativePtr);
-                    this.mNativePtr = 0;
-                }
-            } else {
+            }
+            if (this.mHintMt != null && this.mHintMt.mComputeHyphenation != this.mComputeHyphenation) {
                 throw new IllegalArgumentException("The hyphenation configuration is different from given hint MeasuredText");
+            }
+            try {
+                long hintPtr = this.mHintMt == null ? 0L : this.mHintMt.getNativePtr();
+                long ptr = nBuildMeasuredText(this.mNativePtr, hintPtr, this.mText, this.mComputeHyphenation, this.mComputeLayout);
+                MeasuredText res = new MeasuredText(ptr, this.mText, this.mComputeHyphenation, this.mComputeLayout);
+                sRegistry.registerNativeAllocation(res, ptr);
+                return res;
+            } finally {
+                nFreeBuilder(this.mNativePtr);
+                this.mNativePtr = 0L;
             }
         }
 

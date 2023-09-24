@@ -1,5 +1,6 @@
 package android.opengl;
 
+/* loaded from: classes3.dex */
 public class GLException extends RuntimeException {
     private final int mError;
 
@@ -15,14 +16,13 @@ public class GLException extends RuntimeException {
 
     private static String getErrorString(int error) {
         String errorString = GLU.gluErrorString(error);
-        if (errorString != null) {
-            return errorString;
+        if (errorString == null) {
+            return "Unknown error 0x" + Integer.toHexString(error);
         }
-        return "Unknown error 0x" + Integer.toHexString(error);
+        return errorString;
     }
 
-    /* access modifiers changed from: package-private */
-    public int getError() {
+    int getError() {
         return this.mError;
     }
 }

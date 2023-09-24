@@ -5,6 +5,7 @@ import java.io.InputStream;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
+/* loaded from: classes.dex */
 public interface ContentInsertHandler extends ContentHandler {
     void insert(ContentResolver contentResolver, InputStream inputStream) throws IOException, SAXException;
 

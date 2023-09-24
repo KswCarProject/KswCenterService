@@ -1,18 +1,23 @@
 package android.app;
 
 import android.content.ComponentName;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.io.PrintWriter;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes.dex */
 public class WaitResult implements Parcelable {
-    public static final Parcelable.Creator<WaitResult> CREATOR = new Parcelable.Creator<WaitResult>() {
+    public static final Parcelable.Creator<WaitResult> CREATOR = new Parcelable.Creator<WaitResult>() { // from class: android.app.WaitResult.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WaitResult createFromParcel(Parcel source) {
             return new WaitResult(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WaitResult[] newArray(int size) {
             return new WaitResult[size];
         }
@@ -28,16 +33,19 @@ public class WaitResult implements Parcelable {
     public ComponentName who;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface LaunchState {
     }
 
     public WaitResult() {
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.result);
         dest.writeInt(this.timeout ? 1 : 0);

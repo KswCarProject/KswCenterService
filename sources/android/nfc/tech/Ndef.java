@@ -5,11 +5,12 @@ import android.nfc.INfcTag;
 import android.nfc.NdefMessage;
 import android.nfc.Tag;
 import android.nfc.TagLostException;
-import android.os.Bundle;
-import android.os.RemoteException;
+import android.p007os.Bundle;
+import android.p007os.RemoteException;
 import android.util.Log;
 import java.io.IOException;
 
+/* loaded from: classes3.dex */
 public final class Ndef extends BasicTagTechnology {
     public static final String EXTRA_NDEF_CARDSTATE = "ndefcardstate";
     public static final String EXTRA_NDEF_MAXLENGTH = "ndefmaxlength";
@@ -38,35 +39,40 @@ public final class Ndef extends BasicTagTechnology {
     private final NdefMessage mNdefMsg;
     private final int mNdefType;
 
+    @Override // android.nfc.tech.BasicTagTechnology, android.nfc.tech.TagTechnology, java.io.Closeable, java.lang.AutoCloseable
     public /* bridge */ /* synthetic */ void close() throws IOException {
         super.close();
     }
 
+    @Override // android.nfc.tech.BasicTagTechnology, android.nfc.tech.TagTechnology
     public /* bridge */ /* synthetic */ void connect() throws IOException {
         super.connect();
     }
 
+    @Override // android.nfc.tech.BasicTagTechnology, android.nfc.tech.TagTechnology
     public /* bridge */ /* synthetic */ Tag getTag() {
         return super.getTag();
     }
 
+    @Override // android.nfc.tech.BasicTagTechnology, android.nfc.tech.TagTechnology
     public /* bridge */ /* synthetic */ boolean isConnected() {
         return super.isConnected();
     }
 
+    @Override // android.nfc.tech.BasicTagTechnology, android.nfc.tech.TagTechnology
     public /* bridge */ /* synthetic */ void reconnect() throws IOException {
         super.reconnect();
     }
 
     public static Ndef get(Tag tag) {
-        if (!tag.hasTech(6)) {
-            return null;
+        if (tag.hasTech(6)) {
+            try {
+                return new Ndef(tag);
+            } catch (RemoteException e) {
+                return null;
+            }
         }
-        try {
-            return new Ndef(tag);
-        } catch (RemoteException e) {
-            return null;
-        }
+        return null;
     }
 
     public Ndef(Tag tag) throws RemoteException {
@@ -121,26 +127,23 @@ public final class Ndef extends BasicTagTechnology {
         checkConnected();
         try {
             INfcTag tagService = this.mTag.getTagService();
-            if (tagService != null) {
-                int serviceHandle = this.mTag.getServiceHandle();
-                if (tagService.isNdef(serviceHandle)) {
-                    NdefMessage msg = tagService.ndefRead(serviceHandle);
-                    if (msg == null) {
-                        if (!tagService.isPresent(serviceHandle)) {
-                            throw new TagLostException();
-                        }
-                    }
-                    return msg;
-                } else if (tagService.isPresent(serviceHandle)) {
-                    return null;
-                } else {
-                    throw new TagLostException();
-                }
-            } else {
+            if (tagService == null) {
                 throw new IOException("Mock tags don't support this operation.");
             }
+            int serviceHandle = this.mTag.getServiceHandle();
+            if (tagService.isNdef(serviceHandle)) {
+                NdefMessage msg = tagService.ndefRead(serviceHandle);
+                if (msg == null && !tagService.isPresent(serviceHandle)) {
+                    throw new TagLostException();
+                }
+                return msg;
+            } else if (tagService.isPresent(serviceHandle)) {
+                return null;
+            } else {
+                throw new TagLostException();
+            }
         } catch (RemoteException e) {
-            Log.e(TAG, "NFC service dead", e);
+            Log.m69e(TAG, "NFC service dead", e);
             return null;
         }
     }
@@ -149,30 +152,27 @@ public final class Ndef extends BasicTagTechnology {
         checkConnected();
         try {
             INfcTag tagService = this.mTag.getTagService();
-            if (tagService != null) {
-                int serviceHandle = this.mTag.getServiceHandle();
-                if (tagService.isNdef(serviceHandle)) {
-                    int errorCode = tagService.ndefWrite(serviceHandle, msg);
-                    if (errorCode != -8) {
-                        switch (errorCode) {
-                            case -1:
-                                throw new IOException();
-                            case 0:
-                                return;
-                            default:
-                                throw new IOException();
-                        }
-                    } else {
-                        throw new FormatException();
-                    }
-                } else {
-                    throw new IOException("Tag is not ndef");
-                }
-            } else {
+            if (tagService == null) {
                 throw new IOException("Mock tags don't support this operation.");
             }
+            int serviceHandle = this.mTag.getServiceHandle();
+            if (tagService.isNdef(serviceHandle)) {
+                int errorCode = tagService.ndefWrite(serviceHandle, msg);
+                if (errorCode != -8) {
+                    switch (errorCode) {
+                        case -1:
+                            throw new IOException();
+                        case 0:
+                            return;
+                        default:
+                            throw new IOException();
+                    }
+                }
+                throw new FormatException();
+            }
+            throw new IOException("Tag is not ndef");
         } catch (RemoteException e) {
-            Log.e(TAG, "NFC service dead", e);
+            Log.m69e(TAG, "NFC service dead", e);
         }
     }
 
@@ -184,7 +184,7 @@ public final class Ndef extends BasicTagTechnology {
         try {
             return tagService.canMakeReadOnly(this.mNdefType);
         } catch (RemoteException e) {
-            Log.e(TAG, "NFC service dead", e);
+            Log.m69e(TAG, "NFC service dead", e);
             return false;
         }
     }
@@ -209,11 +209,10 @@ public final class Ndef extends BasicTagTechnology {
                     default:
                         throw new IOException();
                 }
-            } else {
-                throw new IOException("Tag is not ndef");
             }
+            throw new IOException("Tag is not ndef");
         } catch (RemoteException e) {
-            Log.e(TAG, "NFC service dead", e);
+            Log.m69e(TAG, "NFC service dead", e);
             return false;
         }
     }

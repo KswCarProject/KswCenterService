@@ -2,8 +2,7 @@ package com.ibm.icu.text;
 
 import android.app.backup.FullBackup;
 import android.net.wifi.WifiEnterpriseConfig;
-import android.os.BatteryStats;
-import android.text.format.DateFormat;
+import android.p007os.BatteryStats;
 import com.ibm.icu.impl.ICUCache;
 import com.ibm.icu.impl.ICUResourceBundle;
 import com.ibm.icu.impl.SimpleCache;
@@ -27,26 +26,25 @@ import java.util.MissingResourceException;
 import java.util.Objects;
 import java.util.Set;
 
+/* loaded from: classes5.dex */
 public class DateIntervalInfo implements Cloneable, Freezable<DateIntervalInfo>, Serializable {
-    static final String[] CALENDAR_FIELD_TO_PATTERN_LETTER = {"G", DateFormat.YEAR, DateFormat.NUM_MONTH, "w", "W", DateFormat.DAY, "D", DateFormat.ABBR_WEEKDAY, "F", FullBackup.APK_TREE_TOKEN, "h", DateFormat.HOUR24, DateFormat.MINUTE, DateFormat.SECOND, "S", DateFormat.ABBR_SPECIFIC_TZ, WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER, "Y", "e", "u", "g", BatteryStats.UID_TIMES_TYPE_ALL, WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER, WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER};
-    /* access modifiers changed from: private */
-    public static String CALENDAR_KEY = "calendar";
-    private static final ICUCache<String, DateIntervalInfo> DIICACHE = new SimpleCache();
-    private static String EARLIEST_FIRST_PREFIX = "earliestFirst:";
-    private static String FALLBACK_STRING = "fallback";
-    /* access modifiers changed from: private */
-    public static String INTERVAL_FORMATS_KEY = "intervalFormats";
-    private static String LATEST_FIRST_PREFIX = "latestFirst:";
     private static final int MINIMUM_SUPPORTED_CALENDAR_FIELD = 13;
     static final int currentSerialVersion = 1;
     private static final long serialVersionUID = 1;
     private String fFallbackIntervalPattern;
     private boolean fFirstDateInPtnIsLaterDate;
-    /* access modifiers changed from: private */
-    public Map<String, Map<String, PatternInfo>> fIntervalPatterns;
+    private Map<String, Map<String, PatternInfo>> fIntervalPatterns;
     private transient boolean fIntervalPatternsReadOnly;
     private volatile transient boolean frozen;
+    static final String[] CALENDAR_FIELD_TO_PATTERN_LETTER = {"G", DateFormat.YEAR, DateFormat.NUM_MONTH, "w", "W", DateFormat.DAY, "D", DateFormat.ABBR_WEEKDAY, "F", FullBackup.APK_TREE_TOKEN, "h", DateFormat.HOUR24, DateFormat.MINUTE, DateFormat.SECOND, "S", DateFormat.ABBR_SPECIFIC_TZ, WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER, "Y", "e", "u", "g", BatteryStats.UID_TIMES_TYPE_ALL, WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER, WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER};
+    private static String CALENDAR_KEY = "calendar";
+    private static String INTERVAL_FORMATS_KEY = "intervalFormats";
+    private static String FALLBACK_STRING = "fallback";
+    private static String LATEST_FIRST_PREFIX = "latestFirst:";
+    private static String EARLIEST_FIRST_PREFIX = "earliestFirst:";
+    private static final ICUCache<String, DateIntervalInfo> DIICACHE = new SimpleCache();
 
+    /* loaded from: classes5.dex */
     public static final class PatternInfo implements Cloneable, Serializable {
         static final int currentSerialVersion = 1;
         private static final long serialVersionUID = 1;
@@ -73,14 +71,11 @@ public class DateIntervalInfo implements Cloneable, Freezable<DateIntervalInfo>,
         }
 
         public boolean equals(Object a) {
-            if (!(a instanceof PatternInfo)) {
-                return false;
+            if (a instanceof PatternInfo) {
+                PatternInfo patternInfo = (PatternInfo) a;
+                return Objects.equals(this.fIntervalPatternFirstPart, patternInfo.fIntervalPatternFirstPart) && Objects.equals(this.fIntervalPatternSecondPart, patternInfo.fIntervalPatternSecondPart) && this.fFirstDateInPtnIsLaterDate == patternInfo.fFirstDateInPtnIsLaterDate;
             }
-            PatternInfo patternInfo = (PatternInfo) a;
-            if (!Objects.equals(this.fIntervalPatternFirstPart, patternInfo.fIntervalPatternFirstPart) || !Objects.equals(this.fIntervalPatternSecondPart, patternInfo.fIntervalPatternSecondPart) || this.fFirstDateInPtnIsLaterDate != patternInfo.fFirstDateInPtnIsLaterDate) {
-                return false;
-            }
-            return true;
+            return false;
         }
 
         public int hashCode() {
@@ -95,7 +90,7 @@ public class DateIntervalInfo implements Cloneable, Freezable<DateIntervalInfo>,
         }
 
         public String toString() {
-            return "{first=«" + this.fIntervalPatternFirstPart + "», second=«" + this.fIntervalPatternSecondPart + "», reversed:" + this.fFirstDateInPtnIsLaterDate + "}";
+            return "{first=\u00ab" + this.fIntervalPatternFirstPart + "\u00bb, second=\u00ab" + this.fIntervalPatternSecondPart + "\u00bb, reversed:" + this.fFirstDateInPtnIsLaterDate + "}";
         }
     }
 
@@ -106,7 +101,7 @@ public class DateIntervalInfo implements Cloneable, Freezable<DateIntervalInfo>,
         this.frozen = false;
         this.fIntervalPatternsReadOnly = false;
         this.fIntervalPatterns = new HashMap();
-        this.fFallbackIntervalPattern = "{0} – {1}";
+        this.fFallbackIntervalPattern = "{0} \u2013 {1}";
     }
 
     public DateIntervalInfo(ULocale locale) {
@@ -127,7 +122,7 @@ public class DateIntervalInfo implements Cloneable, Freezable<DateIntervalInfo>,
         if (dii == null) {
             setup(locale);
             this.fIntervalPatternsReadOnly = true;
-            DIICACHE.put(key, ((DateIntervalInfo) clone()).freeze());
+            DIICACHE.put(key, ((DateIntervalInfo) clone()).m200freeze());
             return;
         }
         initializeFromReadOnlyPatterns(dii);
@@ -140,15 +135,16 @@ public class DateIntervalInfo implements Cloneable, Freezable<DateIntervalInfo>,
         this.fIntervalPatternsReadOnly = true;
     }
 
+    /* loaded from: classes5.dex */
     private static final class DateIntervalSink extends UResource.Sink {
         private static final String ACCEPTED_PATTERN_LETTERS = "yMdahHms";
-        private static final String DATE_INTERVAL_PATH_PREFIX = ("/LOCALE/" + DateIntervalInfo.CALENDAR_KEY + "/");
+        private static final String DATE_INTERVAL_PATH_PREFIX = "/LOCALE/" + DateIntervalInfo.CALENDAR_KEY + "/";
         private static final String DATE_INTERVAL_PATH_SUFFIX;
         DateIntervalInfo dateIntervalInfo;
         String nextCalendarType;
 
-        public DateIntervalSink(DateIntervalInfo dateIntervalInfo2) {
-            this.dateIntervalInfo = dateIntervalInfo2;
+        public DateIntervalSink(DateIntervalInfo dateIntervalInfo) {
+            this.dateIntervalInfo = dateIntervalInfo;
         }
 
         public void put(UResource.Key key, UResource.Value value, boolean noFallback) {
@@ -177,7 +173,8 @@ public class DateIntervalInfo implements Cloneable, Freezable<DateIntervalInfo>,
             UResource.Table patternData = value.getTable();
             for (int k = 0; patternData.getKeyAndValue(k, key, value); k++) {
                 if (value.getType() == 0 && (patternLetter = validateAndProcessPatternLetter(key)) != null) {
-                    setIntervalPatternIfAbsent(currentSkeleton, patternLetter.toString(), value);
+                    String lrgDiffCalUnit = patternLetter.toString();
+                    setIntervalPatternIfAbsent(currentSkeleton, lrgDiffCalUnit, value);
                 }
             }
         }
@@ -219,40 +216,43 @@ public class DateIntervalInfo implements Cloneable, Freezable<DateIntervalInfo>,
         private void setIntervalPatternIfAbsent(String currentSkeleton, String lrgDiffCalUnit, UResource.Value intervalPattern) {
             Map<String, PatternInfo> patternsOfOneSkeleton = (Map) this.dateIntervalInfo.fIntervalPatterns.get(currentSkeleton);
             if (patternsOfOneSkeleton == null || !patternsOfOneSkeleton.containsKey(lrgDiffCalUnit)) {
-                PatternInfo unused = this.dateIntervalInfo.setIntervalPatternInternally(currentSkeleton, lrgDiffCalUnit, intervalPattern.toString());
+                this.dateIntervalInfo.setIntervalPatternInternally(currentSkeleton, lrgDiffCalUnit, intervalPattern.toString());
             }
         }
     }
 
     private void setup(ULocale locale) {
         this.fIntervalPatterns = new HashMap(19);
-        this.fFallbackIntervalPattern = "{0} – {1}";
+        this.fFallbackIntervalPattern = "{0} \u2013 {1}";
         try {
             String calendarTypeToUse = locale.getKeywordValue("calendar");
             if (calendarTypeToUse == null) {
-                calendarTypeToUse = Calendar.getKeywordValuesForLocale("calendar", locale, true)[0];
+                String[] preferredCalendarTypes = Calendar.getKeywordValuesForLocale("calendar", locale, true);
+                calendarTypeToUse = preferredCalendarTypes[0];
             }
             if (calendarTypeToUse == null) {
                 calendarTypeToUse = "gregorian";
             }
             DateIntervalSink sink = new DateIntervalSink(this);
             ICUResourceBundle resource = UResourceBundle.getBundleInstance("com/ibm/icu/impl/data/icudt63b", locale);
-            setFallbackIntervalPattern(resource.getStringWithFallback(CALENDAR_KEY + "/" + calendarTypeToUse + "/" + INTERVAL_FORMATS_KEY + "/" + FALLBACK_STRING));
+            String fallbackPattern = resource.getStringWithFallback(CALENDAR_KEY + "/" + calendarTypeToUse + "/" + INTERVAL_FORMATS_KEY + "/" + FALLBACK_STRING);
+            setFallbackIntervalPattern(fallbackPattern);
             Set<String> loadedCalendarTypes = new HashSet<>();
             while (calendarTypeToUse != null) {
-                if (!loadedCalendarTypes.contains(calendarTypeToUse)) {
-                    loadedCalendarTypes.add(calendarTypeToUse);
-                    resource.getAllItemsWithFallback(CALENDAR_KEY + "/" + calendarTypeToUse, sink);
-                    calendarTypeToUse = sink.getAndResetNextCalendarType();
-                } else {
+                if (loadedCalendarTypes.contains(calendarTypeToUse)) {
                     throw new ICUException("Loop in calendar type fallback: " + calendarTypeToUse);
                 }
+                loadedCalendarTypes.add(calendarTypeToUse);
+                String pathToIntervalFormats = CALENDAR_KEY + "/" + calendarTypeToUse;
+                resource.getAllItemsWithFallback(pathToIntervalFormats, sink);
+                calendarTypeToUse = sink.getAndResetNextCalendarType();
             }
         } catch (MissingResourceException e) {
         }
     }
 
     private static int splitPatternInto2Part(String intervalPattern) {
+        boolean z;
         char prevCh = 0;
         int count = 0;
         int[] patternRepeated = new int[58];
@@ -265,18 +265,25 @@ public class DateIntervalInfo implements Cloneable, Freezable<DateIntervalInfo>,
             }
             char ch = intervalPattern.charAt(i);
             if (ch != prevCh && count > 0) {
-                if (patternRepeated[prevCh - DateFormat.CAPITAL_AM_PM] != 0) {
+                int repeated = patternRepeated[prevCh - android.text.format.DateFormat.CAPITAL_AM_PM];
+                if (repeated == 0) {
+                    patternRepeated[prevCh - android.text.format.DateFormat.CAPITAL_AM_PM] = 1;
+                    count = 0;
+                } else {
                     foundRepetition = true;
                     break;
                 }
-                patternRepeated[prevCh - DateFormat.CAPITAL_AM_PM] = 1;
-                count = 0;
             }
             if (ch == '\'') {
-                if (i + 1 >= intervalPattern.length() || intervalPattern.charAt(i + 1) != '\'') {
-                    inQuote = !inQuote;
-                } else {
+                if (i + 1 < intervalPattern.length() && intervalPattern.charAt(i + 1) == '\'') {
                     i++;
+                } else {
+                    if (inQuote) {
+                        z = false;
+                    } else {
+                        z = true;
+                    }
+                    inQuote = z;
                 }
             } else if (!inQuote && ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z'))) {
                 prevCh = ch;
@@ -284,7 +291,7 @@ public class DateIntervalInfo implements Cloneable, Freezable<DateIntervalInfo>,
             }
             i++;
         }
-        if (count > 0 && !foundRepetition && patternRepeated[prevCh - DateFormat.CAPITAL_AM_PM] == 0) {
+        if (count > 0 && !foundRepetition && patternRepeated[prevCh - android.text.format.DateFormat.CAPITAL_AM_PM] == 0) {
             count = 0;
         }
         return i - count;
@@ -293,38 +300,40 @@ public class DateIntervalInfo implements Cloneable, Freezable<DateIntervalInfo>,
     public void setIntervalPattern(String skeleton, int lrgDiffCalUnit, String intervalPattern) {
         if (this.frozen) {
             throw new UnsupportedOperationException("no modification is allowed after DII is frozen");
-        } else if (lrgDiffCalUnit <= 13) {
-            if (this.fIntervalPatternsReadOnly) {
-                this.fIntervalPatterns = cloneIntervalPatterns(this.fIntervalPatterns);
-                this.fIntervalPatternsReadOnly = false;
-            }
-            PatternInfo ptnInfo = setIntervalPatternInternally(skeleton, CALENDAR_FIELD_TO_PATTERN_LETTER[lrgDiffCalUnit], intervalPattern);
-            if (lrgDiffCalUnit == 11) {
-                setIntervalPattern(skeleton, CALENDAR_FIELD_TO_PATTERN_LETTER[9], ptnInfo);
-                setIntervalPattern(skeleton, CALENDAR_FIELD_TO_PATTERN_LETTER[10], ptnInfo);
-            } else if (lrgDiffCalUnit == 5 || lrgDiffCalUnit == 7) {
-                setIntervalPattern(skeleton, CALENDAR_FIELD_TO_PATTERN_LETTER[5], ptnInfo);
-            }
-        } else {
+        }
+        if (lrgDiffCalUnit > 13) {
             throw new IllegalArgumentException("calendar field is larger than MINIMUM_SUPPORTED_CALENDAR_FIELD");
+        }
+        if (this.fIntervalPatternsReadOnly) {
+            this.fIntervalPatterns = cloneIntervalPatterns(this.fIntervalPatterns);
+            this.fIntervalPatternsReadOnly = false;
+        }
+        PatternInfo ptnInfo = setIntervalPatternInternally(skeleton, CALENDAR_FIELD_TO_PATTERN_LETTER[lrgDiffCalUnit], intervalPattern);
+        if (lrgDiffCalUnit == 11) {
+            setIntervalPattern(skeleton, CALENDAR_FIELD_TO_PATTERN_LETTER[9], ptnInfo);
+            setIntervalPattern(skeleton, CALENDAR_FIELD_TO_PATTERN_LETTER[10], ptnInfo);
+        } else if (lrgDiffCalUnit == 5 || lrgDiffCalUnit == 7) {
+            setIntervalPattern(skeleton, CALENDAR_FIELD_TO_PATTERN_LETTER[5], ptnInfo);
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public PatternInfo setIntervalPatternInternally(String skeleton, String lrgDiffCalUnit, String intervalPattern) {
         Map<String, PatternInfo> patternsOfOneSkeleton = this.fIntervalPatterns.get(skeleton);
         boolean emptyHash = false;
         if (patternsOfOneSkeleton == null) {
-            patternsOfOneSkeleton = new HashMap<>();
+            patternsOfOneSkeleton = new HashMap();
             emptyHash = true;
         }
         boolean order = this.fFirstDateInPtnIsLaterDate;
         if (intervalPattern.startsWith(LATEST_FIRST_PREFIX)) {
             order = true;
-            intervalPattern = intervalPattern.substring(LATEST_FIRST_PREFIX.length(), intervalPattern.length());
+            int prefixLength = LATEST_FIRST_PREFIX.length();
+            intervalPattern = intervalPattern.substring(prefixLength, intervalPattern.length());
         } else if (intervalPattern.startsWith(EARLIEST_FIRST_PREFIX)) {
             order = false;
-            intervalPattern = intervalPattern.substring(EARLIEST_FIRST_PREFIX.length(), intervalPattern.length());
+            int earliestFirstLength = EARLIEST_FIRST_PREFIX.length();
+            intervalPattern = intervalPattern.substring(earliestFirstLength, intervalPattern.length());
         }
         PatternInfo itvPtnInfo = genPatternInfo(intervalPattern, order);
         patternsOfOneSkeleton.put(lrgDiffCalUnit, itvPtnInfo);
@@ -335,7 +344,8 @@ public class DateIntervalInfo implements Cloneable, Freezable<DateIntervalInfo>,
     }
 
     private void setIntervalPattern(String skeleton, String lrgDiffCalUnit, PatternInfo ptnInfo) {
-        this.fIntervalPatterns.get(skeleton).put(lrgDiffCalUnit, ptnInfo);
+        Map<String, PatternInfo> patternsOfOneSkeleton = this.fIntervalPatterns.get(skeleton);
+        patternsOfOneSkeleton.put(lrgDiffCalUnit, ptnInfo);
     }
 
     @Deprecated
@@ -351,14 +361,14 @@ public class DateIntervalInfo implements Cloneable, Freezable<DateIntervalInfo>,
 
     public PatternInfo getIntervalPattern(String skeleton, int field) {
         PatternInfo intervalPattern;
-        if (field <= 13) {
-            Map<String, PatternInfo> patternsOfOneSkeleton = this.fIntervalPatterns.get(skeleton);
-            if (patternsOfOneSkeleton == null || (intervalPattern = patternsOfOneSkeleton.get(CALENDAR_FIELD_TO_PATTERN_LETTER[field])) == null) {
-                return null;
-            }
+        if (field > 13) {
+            throw new IllegalArgumentException("no support for field less than SECOND");
+        }
+        Map<String, PatternInfo> patternsOfOneSkeleton = this.fIntervalPatterns.get(skeleton);
+        if (patternsOfOneSkeleton != null && (intervalPattern = patternsOfOneSkeleton.get(CALENDAR_FIELD_TO_PATTERN_LETTER[field])) != null) {
             return intervalPattern;
         }
-        throw new IllegalArgumentException("no support for field less than SECOND");
+        return null;
     }
 
     public String getFallbackIntervalPattern() {
@@ -366,19 +376,18 @@ public class DateIntervalInfo implements Cloneable, Freezable<DateIntervalInfo>,
     }
 
     public void setFallbackIntervalPattern(String fallbackPattern) {
-        if (!this.frozen) {
-            int firstPatternIndex = fallbackPattern.indexOf("{0}");
-            int secondPatternIndex = fallbackPattern.indexOf("{1}");
-            if (firstPatternIndex == -1 || secondPatternIndex == -1) {
-                throw new IllegalArgumentException("no pattern {0} or pattern {1} in fallbackPattern");
-            }
-            if (firstPatternIndex > secondPatternIndex) {
-                this.fFirstDateInPtnIsLaterDate = true;
-            }
-            this.fFallbackIntervalPattern = fallbackPattern;
-            return;
+        if (this.frozen) {
+            throw new UnsupportedOperationException("no modification is allowed after DII is frozen");
         }
-        throw new UnsupportedOperationException("no modification is allowed after DII is frozen");
+        int firstPatternIndex = fallbackPattern.indexOf("{0}");
+        int secondPatternIndex = fallbackPattern.indexOf("{1}");
+        if (firstPatternIndex == -1 || secondPatternIndex == -1) {
+            throw new IllegalArgumentException("no pattern {0} or pattern {1} in fallbackPattern");
+        }
+        if (firstPatternIndex > secondPatternIndex) {
+            this.fFirstDateInPtnIsLaterDate = true;
+        }
+        this.fFallbackIntervalPattern = fallbackPattern;
     }
 
     public boolean getDefaultOrder() {
@@ -415,9 +424,12 @@ public class DateIntervalInfo implements Cloneable, Freezable<DateIntervalInfo>,
         Map<String, Map<String, PatternInfo>> result = new HashMap<>();
         for (Map.Entry<String, Map<String, PatternInfo>> skeletonEntry : patterns.entrySet()) {
             String skeleton = skeletonEntry.getKey();
+            Map<String, PatternInfo> patternsOfOneSkeleton = skeletonEntry.getValue();
             Map<String, PatternInfo> oneSetPtn = new HashMap<>();
-            for (Map.Entry<String, PatternInfo> calEntry : skeletonEntry.getValue().entrySet()) {
-                oneSetPtn.put(calEntry.getKey(), calEntry.getValue());
+            for (Map.Entry<String, PatternInfo> calEntry : patternsOfOneSkeleton.entrySet()) {
+                String calField = calEntry.getKey();
+                PatternInfo value = calEntry.getValue();
+                oneSetPtn.put(calField, value);
             }
             result.put(skeleton, oneSetPtn);
         }
@@ -428,38 +440,40 @@ public class DateIntervalInfo implements Cloneable, Freezable<DateIntervalInfo>,
         return this.frozen;
     }
 
-    public DateIntervalInfo freeze() {
+    /* renamed from: freeze */
+    public DateIntervalInfo m200freeze() {
         this.fIntervalPatternsReadOnly = true;
         this.frozen = true;
         return this;
     }
 
-    public DateIntervalInfo cloneAsThawed() {
-        return (DateIntervalInfo) cloneUnfrozenDII();
+    /* renamed from: cloneAsThawed */
+    public DateIntervalInfo m199cloneAsThawed() {
+        DateIntervalInfo result = (DateIntervalInfo) cloneUnfrozenDII();
+        return result;
     }
 
     static void parseSkeleton(String skeleton, int[] skeletonFieldWidth) {
         for (int i = 0; i < skeleton.length(); i++) {
-            int charAt = skeleton.charAt(i) - DateFormat.CAPITAL_AM_PM;
+            int charAt = skeleton.charAt(i) - android.text.format.DateFormat.CAPITAL_AM_PM;
             skeletonFieldWidth[charAt] = skeletonFieldWidth[charAt] + 1;
         }
     }
 
     private static boolean stringNumeric(int fieldWidth, int anotherFieldWidth, char patternLetter) {
-        if (patternLetter != 'M') {
-            return false;
-        }
-        if (fieldWidth <= 2 && anotherFieldWidth > 2) {
+        if (patternLetter == 'M') {
+            if (fieldWidth > 2 || anotherFieldWidth <= 2) {
+                if (fieldWidth > 2 && anotherFieldWidth <= 2) {
+                    return true;
+                }
+                return false;
+            }
             return true;
         }
-        if (fieldWidth <= 2 || anotherFieldWidth > 2) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
-    /* access modifiers changed from: package-private */
-    public DateIntervalFormat.BestMatchInfo getBestSkeleton(String inputSkeleton) {
+    DateIntervalFormat.BestMatchInfo getBestSkeleton(String inputSkeleton) {
         String inputSkeleton2;
         int[] skeletonFieldWidth;
         String inputSkeleton3 = inputSkeleton;
@@ -468,7 +482,7 @@ public class DateIntervalInfo implements Cloneable, Freezable<DateIntervalInfo>,
         int[] skeletonFieldWidth2 = new int[58];
         boolean replaceZWithV = false;
         if (inputSkeleton3.indexOf(122) != -1) {
-            inputSkeleton3 = inputSkeleton3.replace(DateFormat.TIME_ZONE, 'v');
+            inputSkeleton3 = inputSkeleton3.replace(android.text.format.DateFormat.TIME_ZONE, 'v');
             replaceZWithV = true;
         }
         parseSkeleton(inputSkeleton3, inputSkeletonFieldWidth);
@@ -477,8 +491,6 @@ public class DateIntervalInfo implements Cloneable, Freezable<DateIntervalInfo>,
         Iterator<String> it = this.fIntervalPatterns.keySet().iterator();
         while (true) {
             if (!it.hasNext()) {
-                String str = bestSkeleton;
-                int[] iArr = skeletonFieldWidth2;
                 break;
             }
             String skeleton = it.next();
@@ -526,18 +538,20 @@ public class DateIntervalInfo implements Cloneable, Freezable<DateIntervalInfo>,
             String bestSkeleton3 = bestSkeleton;
             int[] skeletonFieldWidth3 = skeletonFieldWidth2;
             if (distance < bestDistance) {
-                bestDistance = distance;
+                int bestDistance2 = distance;
+                bestDistance = bestDistance2;
                 bestFieldDifference = fieldDifference;
                 bestSkeleton = skeleton;
             } else {
                 bestSkeleton = bestSkeleton3;
             }
-            if (distance == 0) {
+            if (distance != 0) {
+                inputSkeleton3 = inputSkeleton2;
+                skeletonFieldWidth2 = skeletonFieldWidth3;
+            } else {
                 bestFieldDifference = 0;
                 break;
             }
-            inputSkeleton3 = inputSkeleton2;
-            skeletonFieldWidth2 = skeletonFieldWidth3;
         }
         if (replaceZWithV && bestFieldDifference != -1) {
             bestFieldDifference = 2;
@@ -547,7 +561,8 @@ public class DateIntervalInfo implements Cloneable, Freezable<DateIntervalInfo>,
 
     public boolean equals(Object a) {
         if (a instanceof DateIntervalInfo) {
-            return this.fIntervalPatterns.equals(((DateIntervalInfo) a).fIntervalPatterns);
+            DateIntervalInfo dtInfo = (DateIntervalInfo) a;
+            return this.fIntervalPatterns.equals(dtInfo.fIntervalPatterns);
         }
         return false;
     }
@@ -560,7 +575,7 @@ public class DateIntervalInfo implements Cloneable, Freezable<DateIntervalInfo>,
     public Map<String, Set<String>> getPatterns() {
         LinkedHashMap<String, Set<String>> result = new LinkedHashMap<>();
         for (Map.Entry<String, Map<String, PatternInfo>> entry : this.fIntervalPatterns.entrySet()) {
-            result.put(entry.getKey(), new LinkedHashSet(entry.getValue().keySet()));
+            result.put(entry.getKey(), new LinkedHashSet<>(entry.getValue().keySet()));
         }
         return result;
     }
@@ -569,7 +584,7 @@ public class DateIntervalInfo implements Cloneable, Freezable<DateIntervalInfo>,
     public Map<String, Map<String, PatternInfo>> getRawPatterns() {
         LinkedHashMap<String, Map<String, PatternInfo>> result = new LinkedHashMap<>();
         for (Map.Entry<String, Map<String, PatternInfo>> entry : this.fIntervalPatterns.entrySet()) {
-            result.put(entry.getKey(), new LinkedHashMap(entry.getValue()));
+            result.put(entry.getKey(), new LinkedHashMap<>(entry.getValue()));
         }
         return result;
     }

@@ -3,17 +3,17 @@ package android.security.net.config;
 import com.android.internal.logging.nano.MetricsProto;
 import java.util.Locale;
 
+/* loaded from: classes3.dex */
 public final class Domain {
     public final String hostname;
     public final boolean subdomainsIncluded;
 
-    public Domain(String hostname2, boolean subdomainsIncluded2) {
-        if (hostname2 != null) {
-            this.hostname = hostname2.toLowerCase(Locale.US);
-            this.subdomainsIncluded = subdomainsIncluded2;
-            return;
+    public Domain(String hostname, boolean subdomainsIncluded) {
+        if (hostname == null) {
+            throw new NullPointerException("Hostname must not be null");
         }
-        throw new NullPointerException("Hostname must not be null");
+        this.hostname = hostname.toLowerCase(Locale.US);
+        this.subdomainsIncluded = subdomainsIncluded;
     }
 
     public int hashCode() {
@@ -24,13 +24,10 @@ public final class Domain {
         if (other == this) {
             return true;
         }
-        if (!(other instanceof Domain)) {
-            return false;
+        if (other instanceof Domain) {
+            Domain otherDomain = (Domain) other;
+            return otherDomain.subdomainsIncluded == this.subdomainsIncluded && otherDomain.hostname.equals(this.hostname);
         }
-        Domain otherDomain = (Domain) other;
-        if (otherDomain.subdomainsIncluded != this.subdomainsIncluded || !otherDomain.hostname.equals(this.hostname)) {
-            return false;
-        }
-        return true;
+        return false;
     }
 }

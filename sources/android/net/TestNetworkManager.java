@@ -1,9 +1,10 @@
 package android.net;
 
-import android.os.IBinder;
-import android.os.RemoteException;
+import android.p007os.IBinder;
+import android.p007os.RemoteException;
 import com.android.internal.util.Preconditions;
 
+/* loaded from: classes3.dex */
 public class TestNetworkManager {
     private static final String TAG = TestNetworkManager.class.getSimpleName();
     private final ITestNetworkManager mService;

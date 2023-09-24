@@ -4,27 +4,27 @@ import android.annotation.SystemApi;
 import android.app.IInstantAppResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.InstantAppResolveInfo;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.IRemoteCallback;
-import android.os.Looper;
-import android.os.Message;
-import android.os.RemoteException;
-import android.os.UserHandle;
+import android.content.p002pm.InstantAppResolveInfo;
+import android.p007os.Build;
+import android.p007os.Bundle;
+import android.p007os.Handler;
+import android.p007os.IBinder;
+import android.p007os.IRemoteCallback;
+import android.p007os.Looper;
+import android.p007os.Message;
+import android.p007os.RemoteException;
+import android.p007os.UserHandle;
 import android.util.Log;
 import android.util.Slog;
-import com.android.internal.os.SomeArgs;
+import com.android.internal.p016os.SomeArgs;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 @SystemApi
+/* loaded from: classes.dex */
 public abstract class InstantAppResolverService extends Service {
-    /* access modifiers changed from: private */
-    public static final boolean DEBUG_INSTANT = Build.IS_DEBUGGABLE;
+    private static final boolean DEBUG_INSTANT = Build.IS_DEBUGGABLE;
     public static final String EXTRA_RESOLVE_INFO = "android.app.extra.RESOLVE_INFO";
     public static final String EXTRA_SEQUENCE = "android.app.extra.SEQUENCE";
     private static final String TAG = "PackageManager";
@@ -51,7 +51,7 @@ public abstract class InstantAppResolverService extends Service {
 
     @Deprecated
     public void onGetInstantAppIntentFilter(Intent sanitizedIntent, int[] hostDigestPrefix, String token, InstantAppResolutionCallback callback) {
-        Log.e(TAG, "New onGetInstantAppIntentFilter is not overridden");
+        Log.m70e(TAG, "New onGetInstantAppIntentFilter is not overridden");
         if (sanitizedIntent.isWebIntent()) {
             onGetInstantAppIntentFilter(hostDigestPrefix, token, callback);
         } else {
@@ -67,21 +67,23 @@ public abstract class InstantAppResolverService extends Service {
         onGetInstantAppIntentFilter(sanitizedIntent, hostDigestPrefix, token, callback);
     }
 
-    /* access modifiers changed from: package-private */
-    public Looper getLooper() {
+    Looper getLooper() {
         return getBaseContext().getMainLooper();
     }
 
+    @Override // android.content.ContextWrapper
     public final void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         this.mHandler = new ServiceHandler(getLooper());
     }
 
+    @Override // android.app.Service
     public final IBinder onBind(Intent intent) {
-        return new IInstantAppResolver.Stub() {
+        return new IInstantAppResolver.Stub() { // from class: android.app.InstantAppResolverService.1
+            @Override // android.app.IInstantAppResolver
             public void getInstantAppResolveInfoList(Intent sanitizedIntent, int[] digestPrefix, int userId, String token, int sequence, IRemoteCallback callback) {
                 if (InstantAppResolverService.DEBUG_INSTANT) {
-                    Slog.v(InstantAppResolverService.TAG, "[" + token + "] Phase1 called; posting");
+                    Slog.m52v(InstantAppResolverService.TAG, "[" + token + "] Phase1 called; posting");
                 }
                 SomeArgs args = SomeArgs.obtain();
                 args.arg1 = callback;
@@ -92,9 +94,10 @@ public abstract class InstantAppResolverService extends Service {
                 InstantAppResolverService.this.mHandler.obtainMessage(1, sequence, 0, args).sendToTarget();
             }
 
+            @Override // android.app.IInstantAppResolver
             public void getInstantAppIntentFilterList(Intent sanitizedIntent, int[] digestPrefix, int userId, String token, IRemoteCallback callback) {
                 if (InstantAppResolverService.DEBUG_INSTANT) {
-                    Slog.v(InstantAppResolverService.TAG, "[" + token + "] Phase2 called; posting");
+                    Slog.m52v(InstantAppResolverService.TAG, "[" + token + "] Phase2 called; posting");
                 }
                 SomeArgs args = SomeArgs.obtain();
                 args.arg1 = callback;
@@ -107,6 +110,7 @@ public abstract class InstantAppResolverService extends Service {
         };
     }
 
+    /* loaded from: classes.dex */
     public static final class InstantAppResolutionCallback {
         private final IRemoteCallback mCallback;
         private final int mSequence;
@@ -127,14 +131,16 @@ public abstract class InstantAppResolverService extends Service {
         }
     }
 
+    /* loaded from: classes.dex */
     private final class ServiceHandler extends Handler {
         public static final int MSG_GET_INSTANT_APP_INTENT_FILTER = 2;
         public static final int MSG_GET_INSTANT_APP_RESOLVE_INFO = 1;
 
         public ServiceHandler(Looper looper) {
-            super(looper, (Handler.Callback) null, true);
+            super(looper, null, true);
         }
 
+        @Override // android.p007os.Handler
         public void handleMessage(Message message) {
             int action = message.what;
             switch (action) {
@@ -147,9 +153,9 @@ public abstract class InstantAppResolverService extends Service {
                     Intent intent = (Intent) args.arg5;
                     int sequence = message.arg1;
                     if (InstantAppResolverService.DEBUG_INSTANT) {
-                        Slog.d(InstantAppResolverService.TAG, "[" + token + "] Phase1 request; prefix: " + Arrays.toString(digestPrefix) + ", userId: " + userId);
+                        Slog.m58d(InstantAppResolverService.TAG, "[" + token + "] Phase1 request; prefix: " + Arrays.toString(digestPrefix) + ", userId: " + userId);
                     }
-                    InstantAppResolverService.this.onGetInstantAppResolveInfo(intent, digestPrefix, UserHandle.of(userId), token, new InstantAppResolutionCallback(sequence, callback));
+                    InstantAppResolverService.this.onGetInstantAppResolveInfo(intent, digestPrefix, UserHandle.m110of(userId), token, new InstantAppResolutionCallback(sequence, callback));
                     return;
                 case 2:
                     SomeArgs args2 = (SomeArgs) message.obj;
@@ -159,9 +165,9 @@ public abstract class InstantAppResolverService extends Service {
                     String token2 = (String) args2.arg4;
                     Intent intent2 = (Intent) args2.arg5;
                     if (InstantAppResolverService.DEBUG_INSTANT) {
-                        Slog.d(InstantAppResolverService.TAG, "[" + token2 + "] Phase2 request; prefix: " + Arrays.toString(digestPrefix2) + ", userId: " + userId2);
+                        Slog.m58d(InstantAppResolverService.TAG, "[" + token2 + "] Phase2 request; prefix: " + Arrays.toString(digestPrefix2) + ", userId: " + userId2);
                     }
-                    InstantAppResolverService.this.onGetInstantAppIntentFilter(intent2, digestPrefix2, UserHandle.of(userId2), token2, new InstantAppResolutionCallback(-1, callback2));
+                    InstantAppResolverService.this.onGetInstantAppIntentFilter(intent2, digestPrefix2, UserHandle.m110of(userId2), token2, new InstantAppResolutionCallback(-1, callback2));
                     return;
                 default:
                     throw new IllegalArgumentException("Unknown message: " + action);

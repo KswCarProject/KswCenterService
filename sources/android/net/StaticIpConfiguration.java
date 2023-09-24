@@ -4,8 +4,8 @@ import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
 import android.net.shared.InetAddressUtils;
 import android.net.wifi.WifiEnterpriseConfig;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -13,12 +13,17 @@ import java.util.List;
 import java.util.Objects;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class StaticIpConfiguration implements Parcelable {
-    public static final Parcelable.Creator<StaticIpConfiguration> CREATOR = new Parcelable.Creator<StaticIpConfiguration>() {
+    public static final Parcelable.Creator<StaticIpConfiguration> CREATOR = new Parcelable.Creator<StaticIpConfiguration>() { // from class: android.net.StaticIpConfiguration.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public StaticIpConfiguration createFromParcel(Parcel in) {
             return StaticIpConfiguration.readFromParcel(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public StaticIpConfiguration[] newArray(int size) {
             return new StaticIpConfiguration[size];
         }
@@ -69,6 +74,7 @@ public final class StaticIpConfiguration implements Parcelable {
         return this.domains;
     }
 
+    /* loaded from: classes3.dex */
     public static final class Builder {
         private Iterable<InetAddress> mDnsServers;
         private String mDomains;
@@ -137,7 +143,8 @@ public final class StaticIpConfiguration implements Parcelable {
         }
         Iterator<InetAddress> it = this.dnsServers.iterator();
         while (it.hasNext()) {
-            lp.addDnsServer(it.next());
+            InetAddress dns = it.next();
+            lp.addDnsServer(dns);
         }
         lp.setDomains(this.domains);
         return lp;
@@ -158,8 +165,9 @@ public final class StaticIpConfiguration implements Parcelable {
         str.append(" DNS servers: [");
         Iterator<InetAddress> it = this.dnsServers.iterator();
         while (it.hasNext()) {
+            InetAddress dnsServer = it.next();
             str.append(WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER);
-            str.append(it.next().getHostAddress());
+            str.append(dnsServer.getHostAddress());
         }
         str.append(" ] Domains ");
         if (this.domains != null) {
@@ -169,46 +177,42 @@ public final class StaticIpConfiguration implements Parcelable {
     }
 
     public int hashCode() {
-        int i = 0;
-        int result = ((((13 * 47) + (this.ipAddress == null ? 0 : this.ipAddress.hashCode())) * 47) + (this.gateway == null ? 0 : this.gateway.hashCode())) * 47;
-        if (this.domains != null) {
-            i = this.domains.hashCode();
-        }
-        return ((result + i) * 47) + this.dnsServers.hashCode();
+        int result = (13 * 47) + (this.ipAddress == null ? 0 : this.ipAddress.hashCode());
+        return (((((result * 47) + (this.gateway == null ? 0 : this.gateway.hashCode())) * 47) + (this.domains != null ? this.domains.hashCode() : 0)) * 47) + this.dnsServers.hashCode();
     }
 
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }
-        if (!(obj instanceof StaticIpConfiguration)) {
-            return false;
+        if (obj instanceof StaticIpConfiguration) {
+            StaticIpConfiguration other = (StaticIpConfiguration) obj;
+            return other != null && Objects.equals(this.ipAddress, other.ipAddress) && Objects.equals(this.gateway, other.gateway) && this.dnsServers.equals(other.dnsServers) && Objects.equals(this.domains, other.domains);
         }
-        StaticIpConfiguration other = (StaticIpConfiguration) obj;
-        if (other == null || !Objects.equals(this.ipAddress, other.ipAddress) || !Objects.equals(this.gateway, other.gateway) || !this.dnsServers.equals(other.dnsServers) || !Objects.equals(this.domains, other.domains)) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(this.ipAddress, flags);
         InetAddressUtils.parcelInetAddress(dest, this.gateway, flags);
         dest.writeInt(this.dnsServers.size());
         Iterator<InetAddress> it = this.dnsServers.iterator();
         while (it.hasNext()) {
-            InetAddressUtils.parcelInetAddress(dest, it.next(), flags);
+            InetAddress dnsServer = it.next();
+            InetAddressUtils.parcelInetAddress(dest, dnsServer, flags);
         }
         dest.writeString(this.domains);
     }
 
     public static StaticIpConfiguration readFromParcel(Parcel in) {
         StaticIpConfiguration s = new StaticIpConfiguration();
-        s.ipAddress = (LinkAddress) in.readParcelable((ClassLoader) null);
+        s.ipAddress = (LinkAddress) in.readParcelable(null);
         s.gateway = InetAddressUtils.unparcelInetAddress(in);
         s.dnsServers.clear();
         int size = in.readInt();

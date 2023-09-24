@@ -9,13 +9,13 @@ import android.net.wifi.p2p.nsd.WifiP2pServiceInfo;
 import android.net.wifi.p2p.nsd.WifiP2pServiceRequest;
 import android.net.wifi.p2p.nsd.WifiP2pServiceResponse;
 import android.net.wifi.p2p.nsd.WifiP2pUpnpServiceResponse;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.os.Messenger;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.Handler;
+import android.p007os.Looper;
+import android.p007os.Message;
+import android.p007os.Messenger;
+import android.p007os.RemoteException;
 import android.text.TextUtils;
 import android.util.Log;
 import com.android.internal.util.AsyncChannel;
@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/* loaded from: classes3.dex */
 public class WifiP2pManager {
     public static final int ADD_LOCAL_SERVICE = 139292;
     public static final int ADD_LOCAL_SERVICE_FAILED = 139293;
@@ -156,77 +157,95 @@ public class WifiP2pManager {
     public static final String WIFI_P2P_THIS_DEVICE_CHANGED_ACTION = "android.net.wifi.p2p.THIS_DEVICE_CHANGED";
     IWifiP2pManager mService;
 
+    /* loaded from: classes3.dex */
     public interface ActionListener {
         void onFailure(int i);
 
         void onSuccess();
     }
 
+    /* loaded from: classes3.dex */
     public interface ChannelListener {
         void onChannelDisconnected();
     }
 
+    /* loaded from: classes3.dex */
     public interface ConnectionInfoListener {
         void onConnectionInfoAvailable(WifiP2pInfo wifiP2pInfo);
     }
 
+    /* loaded from: classes3.dex */
     public interface DeviceInfoListener {
         void onDeviceInfoAvailable(WifiP2pDevice wifiP2pDevice);
     }
 
+    /* loaded from: classes3.dex */
     public interface DiscoveryStateListener {
         void onDiscoveryStateAvailable(int i);
     }
 
+    /* loaded from: classes3.dex */
     public interface DnsSdServiceResponseListener {
         void onDnsSdServiceAvailable(String str, String str2, WifiP2pDevice wifiP2pDevice);
     }
 
+    /* loaded from: classes3.dex */
     public interface DnsSdTxtRecordListener {
         void onDnsSdTxtRecordAvailable(String str, Map<String, String> map, WifiP2pDevice wifiP2pDevice);
     }
 
+    /* loaded from: classes3.dex */
     public interface GroupInfoListener {
         void onGroupInfoAvailable(WifiP2pGroup wifiP2pGroup);
     }
 
+    /* loaded from: classes3.dex */
     public interface HandoverMessageListener {
         void onHandoverMessageAvailable(String str);
     }
 
+    /* loaded from: classes3.dex */
     public interface NetworkInfoListener {
         void onNetworkInfoAvailable(NetworkInfo networkInfo);
     }
 
+    /* loaded from: classes3.dex */
     public interface OngoingPeerInfoListener {
         void onOngoingPeerAvailable(WifiP2pConfig wifiP2pConfig);
     }
 
+    /* loaded from: classes3.dex */
     public interface P2pStateListener {
         void onP2pStateAvailable(int i);
     }
 
+    /* loaded from: classes3.dex */
     public interface PeerListListener {
         void onPeersAvailable(WifiP2pDeviceList wifiP2pDeviceList);
     }
 
+    /* loaded from: classes3.dex */
     public interface PersistentGroupInfoListener {
         void onPersistentGroupInfoAvailable(WifiP2pGroupList wifiP2pGroupList);
     }
 
+    /* loaded from: classes3.dex */
     public interface ServiceResponseListener {
         void onServiceAvailable(int i, byte[] bArr, WifiP2pDevice wifiP2pDevice);
     }
 
+    /* loaded from: classes3.dex */
     public interface UpnpServiceResponseListener {
         void onUpnpServiceAvailable(List<String> list, WifiP2pDevice wifiP2pDevice);
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface WifiP2pDiscoveryState {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface WifiP2pState {
     }
 
@@ -235,30 +254,24 @@ public class WifiP2pManager {
         this.mService = service;
     }
 
+    /* loaded from: classes3.dex */
     public static class Channel implements AutoCloseable {
         private static final int INVALID_LISTENER_KEY = 0;
-        /* access modifiers changed from: private */
-        @UnsupportedAppUsage
-        public AsyncChannel mAsyncChannel = new AsyncChannel();
         final Binder mBinder;
-        /* access modifiers changed from: private */
-        public ChannelListener mChannelListener;
-        private final CloseGuard mCloseGuard = CloseGuard.get();
+        private ChannelListener mChannelListener;
         Context mContext;
-        /* access modifiers changed from: private */
-        public DnsSdServiceResponseListener mDnsSdServRspListener;
-        /* access modifiers changed from: private */
-        public DnsSdTxtRecordListener mDnsSdTxtListener;
-        /* access modifiers changed from: private */
-        public P2pHandler mHandler;
-        private int mListenerKey = 0;
+        private DnsSdServiceResponseListener mDnsSdServRspListener;
+        private DnsSdTxtRecordListener mDnsSdTxtListener;
+        private P2pHandler mHandler;
+        private final WifiP2pManager mP2pManager;
+        private ServiceResponseListener mServRspListener;
+        private UpnpServiceResponseListener mUpnpServRspListener;
         private HashMap<Integer, Object> mListenerMap = new HashMap<>();
         private final Object mListenerMapLock = new Object();
-        private final WifiP2pManager mP2pManager;
-        /* access modifiers changed from: private */
-        public ServiceResponseListener mServRspListener;
-        /* access modifiers changed from: private */
-        public UpnpServiceResponseListener mUpnpServRspListener;
+        private int mListenerKey = 0;
+        private final CloseGuard mCloseGuard = CloseGuard.get();
+        @UnsupportedAppUsage
+        private AsyncChannel mAsyncChannel = new AsyncChannel();
 
         public Channel(Context context, Looper looper, ChannelListener l, Binder binder, WifiP2pManager p2pManager) {
             this.mHandler = new P2pHandler(looper);
@@ -269,9 +282,10 @@ public class WifiP2pManager {
             this.mCloseGuard.open("close");
         }
 
+        @Override // java.lang.AutoCloseable
         public void close() {
             if (this.mP2pManager == null) {
-                Log.w(WifiP2pManager.TAG, "Channel.close(): Null mP2pManager!?");
+                Log.m64w(WifiP2pManager.TAG, "Channel.close(): Null mP2pManager!?");
             } else {
                 try {
                     this.mP2pManager.mService.close(this.mBinder);
@@ -283,8 +297,7 @@ public class WifiP2pManager {
             this.mCloseGuard.close();
         }
 
-        /* access modifiers changed from: protected */
-        public void finalize() throws Throwable {
+        protected void finalize() throws Throwable {
             try {
                 if (this.mCloseGuard != null) {
                     this.mCloseGuard.warnIfOpen();
@@ -295,160 +308,160 @@ public class WifiP2pManager {
             }
         }
 
+        /* loaded from: classes3.dex */
         class P2pHandler extends Handler {
             P2pHandler(Looper looper) {
                 super(looper);
             }
 
+            @Override // android.p007os.Handler
             public void handleMessage(Message message) {
                 Object listener = Channel.this.getListener(message.arg2);
-                String handoverMessage = null;
                 switch (message.what) {
-                    case AsyncChannel.CMD_CHANNEL_DISCONNECTED /*69636*/:
+                    case AsyncChannel.CMD_CHANNEL_DISCONNECTED /* 69636 */:
                         if (Channel.this.mChannelListener != null) {
                             Channel.this.mChannelListener.onChannelDisconnected();
-                            ChannelListener unused = Channel.this.mChannelListener = null;
+                            Channel.this.mChannelListener = null;
                             return;
                         }
                         return;
-                    case WifiP2pManager.DISCOVER_PEERS_FAILED /*139266*/:
-                    case WifiP2pManager.STOP_DISCOVERY_FAILED /*139269*/:
-                    case WifiP2pManager.CONNECT_FAILED /*139272*/:
-                    case WifiP2pManager.CANCEL_CONNECT_FAILED /*139275*/:
-                    case WifiP2pManager.CREATE_GROUP_FAILED /*139278*/:
-                    case WifiP2pManager.REMOVE_GROUP_FAILED /*139281*/:
-                    case WifiP2pManager.ADD_LOCAL_SERVICE_FAILED /*139293*/:
-                    case WifiP2pManager.REMOVE_LOCAL_SERVICE_FAILED /*139296*/:
-                    case WifiP2pManager.CLEAR_LOCAL_SERVICES_FAILED /*139299*/:
-                    case WifiP2pManager.ADD_SERVICE_REQUEST_FAILED /*139302*/:
-                    case WifiP2pManager.REMOVE_SERVICE_REQUEST_FAILED /*139305*/:
-                    case WifiP2pManager.CLEAR_SERVICE_REQUESTS_FAILED /*139308*/:
-                    case WifiP2pManager.DISCOVER_SERVICES_FAILED /*139311*/:
-                    case WifiP2pManager.SET_DEVICE_NAME_FAILED /*139316*/:
-                    case WifiP2pManager.DELETE_PERSISTENT_GROUP_FAILED /*139319*/:
-                    case WifiP2pManager.SET_WFD_INFO_FAILED /*139324*/:
-                    case WifiP2pManager.START_WPS_FAILED /*139327*/:
-                    case WifiP2pManager.START_LISTEN_FAILED /*139330*/:
-                    case WifiP2pManager.STOP_LISTEN_FAILED /*139333*/:
-                    case WifiP2pManager.SET_CHANNEL_FAILED /*139336*/:
-                    case WifiP2pManager.REPORT_NFC_HANDOVER_FAILED /*139345*/:
-                    case WifiP2pManager.FACTORY_RESET_FAILED /*139347*/:
-                    case WifiP2pManager.SET_ONGOING_PEER_CONFIG_FAILED /*139352*/:
-                    case WifiP2pManager.SET_WFDR2_INFO_FAILED /*139355*/:
+                    case WifiP2pManager.DISCOVER_PEERS_FAILED /* 139266 */:
+                    case WifiP2pManager.STOP_DISCOVERY_FAILED /* 139269 */:
+                    case WifiP2pManager.CONNECT_FAILED /* 139272 */:
+                    case WifiP2pManager.CANCEL_CONNECT_FAILED /* 139275 */:
+                    case WifiP2pManager.CREATE_GROUP_FAILED /* 139278 */:
+                    case WifiP2pManager.REMOVE_GROUP_FAILED /* 139281 */:
+                    case WifiP2pManager.ADD_LOCAL_SERVICE_FAILED /* 139293 */:
+                    case WifiP2pManager.REMOVE_LOCAL_SERVICE_FAILED /* 139296 */:
+                    case WifiP2pManager.CLEAR_LOCAL_SERVICES_FAILED /* 139299 */:
+                    case WifiP2pManager.ADD_SERVICE_REQUEST_FAILED /* 139302 */:
+                    case WifiP2pManager.REMOVE_SERVICE_REQUEST_FAILED /* 139305 */:
+                    case WifiP2pManager.CLEAR_SERVICE_REQUESTS_FAILED /* 139308 */:
+                    case WifiP2pManager.DISCOVER_SERVICES_FAILED /* 139311 */:
+                    case WifiP2pManager.SET_DEVICE_NAME_FAILED /* 139316 */:
+                    case WifiP2pManager.DELETE_PERSISTENT_GROUP_FAILED /* 139319 */:
+                    case WifiP2pManager.SET_WFD_INFO_FAILED /* 139324 */:
+                    case WifiP2pManager.START_WPS_FAILED /* 139327 */:
+                    case WifiP2pManager.START_LISTEN_FAILED /* 139330 */:
+                    case WifiP2pManager.STOP_LISTEN_FAILED /* 139333 */:
+                    case WifiP2pManager.SET_CHANNEL_FAILED /* 139336 */:
+                    case WifiP2pManager.REPORT_NFC_HANDOVER_FAILED /* 139345 */:
+                    case WifiP2pManager.FACTORY_RESET_FAILED /* 139347 */:
+                    case WifiP2pManager.SET_ONGOING_PEER_CONFIG_FAILED /* 139352 */:
+                    case WifiP2pManager.SET_WFDR2_INFO_FAILED /* 139355 */:
                         if (listener != null) {
                             ((ActionListener) listener).onFailure(message.arg1);
                             return;
                         }
                         return;
-                    case WifiP2pManager.DISCOVER_PEERS_SUCCEEDED /*139267*/:
-                    case WifiP2pManager.STOP_DISCOVERY_SUCCEEDED /*139270*/:
-                    case WifiP2pManager.CONNECT_SUCCEEDED /*139273*/:
-                    case WifiP2pManager.CANCEL_CONNECT_SUCCEEDED /*139276*/:
-                    case WifiP2pManager.CREATE_GROUP_SUCCEEDED /*139279*/:
-                    case WifiP2pManager.REMOVE_GROUP_SUCCEEDED /*139282*/:
-                    case WifiP2pManager.ADD_LOCAL_SERVICE_SUCCEEDED /*139294*/:
-                    case WifiP2pManager.REMOVE_LOCAL_SERVICE_SUCCEEDED /*139297*/:
-                    case WifiP2pManager.CLEAR_LOCAL_SERVICES_SUCCEEDED /*139300*/:
-                    case WifiP2pManager.ADD_SERVICE_REQUEST_SUCCEEDED /*139303*/:
-                    case WifiP2pManager.REMOVE_SERVICE_REQUEST_SUCCEEDED /*139306*/:
-                    case WifiP2pManager.CLEAR_SERVICE_REQUESTS_SUCCEEDED /*139309*/:
-                    case WifiP2pManager.DISCOVER_SERVICES_SUCCEEDED /*139312*/:
-                    case WifiP2pManager.SET_DEVICE_NAME_SUCCEEDED /*139317*/:
-                    case WifiP2pManager.DELETE_PERSISTENT_GROUP_SUCCEEDED /*139320*/:
-                    case WifiP2pManager.SET_WFD_INFO_SUCCEEDED /*139325*/:
-                    case WifiP2pManager.START_WPS_SUCCEEDED /*139328*/:
-                    case WifiP2pManager.START_LISTEN_SUCCEEDED /*139331*/:
-                    case WifiP2pManager.STOP_LISTEN_SUCCEEDED /*139334*/:
-                    case WifiP2pManager.SET_CHANNEL_SUCCEEDED /*139337*/:
-                    case WifiP2pManager.REPORT_NFC_HANDOVER_SUCCEEDED /*139344*/:
-                    case WifiP2pManager.FACTORY_RESET_SUCCEEDED /*139348*/:
-                    case WifiP2pManager.SET_ONGOING_PEER_CONFIG_SUCCEEDED /*139353*/:
-                    case WifiP2pManager.SET_WFDR2_INFO_SUCCEEDED /*139356*/:
+                    case WifiP2pManager.DISCOVER_PEERS_SUCCEEDED /* 139267 */:
+                    case WifiP2pManager.STOP_DISCOVERY_SUCCEEDED /* 139270 */:
+                    case WifiP2pManager.CONNECT_SUCCEEDED /* 139273 */:
+                    case WifiP2pManager.CANCEL_CONNECT_SUCCEEDED /* 139276 */:
+                    case WifiP2pManager.CREATE_GROUP_SUCCEEDED /* 139279 */:
+                    case WifiP2pManager.REMOVE_GROUP_SUCCEEDED /* 139282 */:
+                    case WifiP2pManager.ADD_LOCAL_SERVICE_SUCCEEDED /* 139294 */:
+                    case WifiP2pManager.REMOVE_LOCAL_SERVICE_SUCCEEDED /* 139297 */:
+                    case WifiP2pManager.CLEAR_LOCAL_SERVICES_SUCCEEDED /* 139300 */:
+                    case WifiP2pManager.ADD_SERVICE_REQUEST_SUCCEEDED /* 139303 */:
+                    case WifiP2pManager.REMOVE_SERVICE_REQUEST_SUCCEEDED /* 139306 */:
+                    case WifiP2pManager.CLEAR_SERVICE_REQUESTS_SUCCEEDED /* 139309 */:
+                    case WifiP2pManager.DISCOVER_SERVICES_SUCCEEDED /* 139312 */:
+                    case WifiP2pManager.SET_DEVICE_NAME_SUCCEEDED /* 139317 */:
+                    case WifiP2pManager.DELETE_PERSISTENT_GROUP_SUCCEEDED /* 139320 */:
+                    case WifiP2pManager.SET_WFD_INFO_SUCCEEDED /* 139325 */:
+                    case WifiP2pManager.START_WPS_SUCCEEDED /* 139328 */:
+                    case WifiP2pManager.START_LISTEN_SUCCEEDED /* 139331 */:
+                    case WifiP2pManager.STOP_LISTEN_SUCCEEDED /* 139334 */:
+                    case WifiP2pManager.SET_CHANNEL_SUCCEEDED /* 139337 */:
+                    case WifiP2pManager.REPORT_NFC_HANDOVER_SUCCEEDED /* 139344 */:
+                    case WifiP2pManager.FACTORY_RESET_SUCCEEDED /* 139348 */:
+                    case WifiP2pManager.SET_ONGOING_PEER_CONFIG_SUCCEEDED /* 139353 */:
+                    case WifiP2pManager.SET_WFDR2_INFO_SUCCEEDED /* 139356 */:
                         if (listener != null) {
                             ((ActionListener) listener).onSuccess();
                             return;
                         }
                         return;
-                    case WifiP2pManager.RESPONSE_PEERS /*139284*/:
+                    case WifiP2pManager.RESPONSE_PEERS /* 139284 */:
                         WifiP2pDeviceList peers = (WifiP2pDeviceList) message.obj;
                         if (listener != null) {
                             ((PeerListListener) listener).onPeersAvailable(peers);
                             return;
                         }
                         return;
-                    case WifiP2pManager.RESPONSE_CONNECTION_INFO /*139286*/:
+                    case WifiP2pManager.RESPONSE_CONNECTION_INFO /* 139286 */:
                         WifiP2pInfo wifiP2pInfo = (WifiP2pInfo) message.obj;
                         if (listener != null) {
                             ((ConnectionInfoListener) listener).onConnectionInfoAvailable(wifiP2pInfo);
                             return;
                         }
                         return;
-                    case WifiP2pManager.RESPONSE_GROUP_INFO /*139288*/:
+                    case WifiP2pManager.RESPONSE_GROUP_INFO /* 139288 */:
                         WifiP2pGroup group = (WifiP2pGroup) message.obj;
                         if (listener != null) {
                             ((GroupInfoListener) listener).onGroupInfoAvailable(group);
                             return;
                         }
                         return;
-                    case WifiP2pManager.RESPONSE_SERVICE /*139314*/:
-                        Channel.this.handleServiceResponse((WifiP2pServiceResponse) message.obj);
+                    case WifiP2pManager.RESPONSE_SERVICE /* 139314 */:
+                        WifiP2pServiceResponse resp = (WifiP2pServiceResponse) message.obj;
+                        Channel.this.handleServiceResponse(resp);
                         return;
-                    case WifiP2pManager.RESPONSE_PERSISTENT_GROUP_INFO /*139322*/:
+                    case WifiP2pManager.RESPONSE_PERSISTENT_GROUP_INFO /* 139322 */:
                         WifiP2pGroupList groups = (WifiP2pGroupList) message.obj;
                         if (listener != null) {
                             ((PersistentGroupInfoListener) listener).onPersistentGroupInfoAvailable(groups);
                             return;
                         }
                         return;
-                    case WifiP2pManager.RESPONSE_GET_HANDOVER_MESSAGE /*139341*/:
+                    case WifiP2pManager.RESPONSE_GET_HANDOVER_MESSAGE /* 139341 */:
                         Bundle handoverBundle = (Bundle) message.obj;
                         if (listener != null) {
-                            if (handoverBundle != null) {
-                                handoverMessage = handoverBundle.getString(WifiP2pManager.EXTRA_HANDOVER_MESSAGE);
-                            }
+                            String handoverMessage = handoverBundle != null ? handoverBundle.getString(WifiP2pManager.EXTRA_HANDOVER_MESSAGE) : null;
                             ((HandoverMessageListener) listener).onHandoverMessageAvailable(handoverMessage);
                             return;
                         }
                         return;
-                    case WifiP2pManager.RESPONSE_ONGOING_PEER_CONFIG /*139350*/:
+                    case WifiP2pManager.RESPONSE_ONGOING_PEER_CONFIG /* 139350 */:
                         WifiP2pConfig peerConfig = (WifiP2pConfig) message.obj;
                         if (listener != null) {
                             ((OngoingPeerInfoListener) listener).onOngoingPeerAvailable(peerConfig);
                             return;
                         }
                         return;
-                    case WifiP2pManager.RESPONSE_P2P_STATE /*139358*/:
+                    case WifiP2pManager.RESPONSE_P2P_STATE /* 139358 */:
                         if (listener != null) {
                             ((P2pStateListener) listener).onP2pStateAvailable(message.arg1);
                             return;
                         }
                         return;
-                    case WifiP2pManager.RESPONSE_DISCOVERY_STATE /*139360*/:
+                    case WifiP2pManager.RESPONSE_DISCOVERY_STATE /* 139360 */:
                         if (listener != null) {
                             ((DiscoveryStateListener) listener).onDiscoveryStateAvailable(message.arg1);
                             return;
                         }
                         return;
-                    case WifiP2pManager.RESPONSE_NETWORK_INFO /*139362*/:
+                    case WifiP2pManager.RESPONSE_NETWORK_INFO /* 139362 */:
                         if (listener != null) {
                             ((NetworkInfoListener) listener).onNetworkInfoAvailable((NetworkInfo) message.obj);
                             return;
                         }
                         return;
-                    case WifiP2pManager.RESPONSE_DEVICE_INFO /*139365*/:
+                    case WifiP2pManager.RESPONSE_DEVICE_INFO /* 139365 */:
                         if (listener != null) {
                             ((DeviceInfoListener) listener).onDeviceInfoAvailable((WifiP2pDevice) message.obj);
                             return;
                         }
                         return;
                     default:
-                        Log.d(WifiP2pManager.TAG, "Ignored " + message);
+                        Log.m72d(WifiP2pManager.TAG, "Ignored " + message);
                         return;
                 }
             }
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public void handleServiceResponse(WifiP2pServiceResponse resp) {
             if (resp instanceof WifiP2pDnsSdServiceResponse) {
                 handleDnsSdServiceResponse((WifiP2pDnsSdServiceResponse) resp);
@@ -470,14 +483,16 @@ public class WifiP2pManager {
                 if (this.mDnsSdServRspListener != null) {
                     this.mDnsSdServRspListener.onDnsSdServiceAvailable(resp.getInstanceName(), resp.getDnsQueryName(), resp.getSrcDevice());
                 }
-            } else if (resp.getDnsType() != 16) {
-                Log.e(WifiP2pManager.TAG, "Unhandled resp " + resp);
-            } else if (this.mDnsSdTxtListener != null) {
-                this.mDnsSdTxtListener.onDnsSdTxtRecordAvailable(resp.getDnsQueryName(), resp.getTxtRecord(), resp.getSrcDevice());
+            } else if (resp.getDnsType() == 16) {
+                if (this.mDnsSdTxtListener != null) {
+                    this.mDnsSdTxtListener.onDnsSdTxtRecordAvailable(resp.getDnsQueryName(), resp.getTxtRecord(), resp.getSrcDevice());
+                }
+            } else {
+                Log.m70e(WifiP2pManager.TAG, "Unhandled resp " + resp);
             }
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         @UnsupportedAppUsage
         public int putListener(Object listener) {
             int key;
@@ -494,7 +509,7 @@ public class WifiP2pManager {
             return key;
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public Object getListener(int key) {
             Object remove;
             if (key == 0) {
@@ -528,18 +543,20 @@ public class WifiP2pManager {
     private static void checkP2pConfig(WifiP2pConfig c) {
         if (c == null) {
             throw new IllegalArgumentException("config cannot be null");
-        } else if (TextUtils.isEmpty(c.deviceAddress)) {
+        }
+        if (TextUtils.isEmpty(c.deviceAddress)) {
             throw new IllegalArgumentException("deviceAddress cannot be empty");
         }
     }
 
     public Channel initialize(Context srcContext, Looper srcLooper, ChannelListener listener) {
         Binder binder = new Binder();
-        return initalizeChannel(srcContext, srcLooper, listener, getMessenger(binder), binder);
+        Channel channel = initalizeChannel(srcContext, srcLooper, listener, getMessenger(binder), binder);
+        return channel;
     }
 
     public Channel initializeInternal(Context srcContext, Looper srcLooper, ChannelListener listener) {
-        return initalizeChannel(srcContext, srcLooper, listener, getP2pStateMachineMessenger(), (Binder) null);
+        return initalizeChannel(srcContext, srcLooper, listener, getP2pStateMachineMessenger(), null);
     }
 
     private Channel initalizeChannel(Context srcContext, Looper srcLooper, ChannelListener listener, Messenger messenger, Binder binder) {
@@ -547,11 +564,11 @@ public class WifiP2pManager {
             return null;
         }
         Channel c = new Channel(srcContext, srcLooper, listener, binder, this);
-        if (c.mAsyncChannel.connectSync(srcContext, (Handler) c.mHandler, messenger) == 0) {
+        if (c.mAsyncChannel.connectSync(srcContext, c.mHandler, messenger) == 0) {
             Bundle bundle = new Bundle();
             bundle.putString(CALLING_PACKAGE, c.mContext.getOpPackageName());
             bundle.putBinder(CALLING_BINDER, binder);
-            c.mAsyncChannel.sendMessage(UPDATE_CHANNEL_INFO, 0, c.putListener((Object) null), bundle);
+            c.mAsyncChannel.sendMessage(UPDATE_CHANNEL_INFO, 0, c.putListener(null), bundle);
             return c;
         }
         c.close();
@@ -633,18 +650,18 @@ public class WifiP2pManager {
 
     public void setServiceResponseListener(Channel c, ServiceResponseListener listener) {
         checkChannel(c);
-        ServiceResponseListener unused = c.mServRspListener = listener;
+        c.mServRspListener = listener;
     }
 
     public void setDnsSdResponseListeners(Channel c, DnsSdServiceResponseListener servListener, DnsSdTxtRecordListener txtListener) {
         checkChannel(c);
-        DnsSdServiceResponseListener unused = c.mDnsSdServRspListener = servListener;
-        DnsSdTxtRecordListener unused2 = c.mDnsSdTxtListener = txtListener;
+        c.mDnsSdServRspListener = servListener;
+        c.mDnsSdTxtListener = txtListener;
     }
 
     public void setUpnpServiceResponseListener(Channel c, UpnpServiceResponseListener listener) {
         checkChannel(c);
-        UpnpServiceResponseListener unused = c.mUpnpServRspListener = listener;
+        c.mUpnpServRspListener = listener;
     }
 
     public void discoverServices(Channel c, ActionListener listener) {

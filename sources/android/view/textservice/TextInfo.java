@@ -1,17 +1,22 @@
 package android.view.textservice;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.SpellCheckSpan;
 
+/* loaded from: classes4.dex */
 public final class TextInfo implements Parcelable {
-    public static final Parcelable.Creator<TextInfo> CREATOR = new Parcelable.Creator<TextInfo>() {
+    public static final Parcelable.Creator<TextInfo> CREATOR = new Parcelable.Creator<TextInfo>() { // from class: android.view.textservice.TextInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public TextInfo createFromParcel(Parcel source) {
             return new TextInfo(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public TextInfo[] newArray(int size) {
             return new TextInfo[size];
         }
@@ -38,24 +43,24 @@ public final class TextInfo implements Parcelable {
     }
 
     public TextInfo(CharSequence charSequence, int start, int end, int cookie, int sequenceNumber) {
-        if (!TextUtils.isEmpty(charSequence)) {
-            SpannableStringBuilder spannableString = new SpannableStringBuilder(charSequence, start, end);
-            int i = 0;
-            SpellCheckSpan[] spans = (SpellCheckSpan[]) spannableString.getSpans(0, spannableString.length(), SpellCheckSpan.class);
-            while (true) {
-                int i2 = i;
-                if (i2 < spans.length) {
-                    spannableString.removeSpan(spans[i2]);
-                    i = i2 + 1;
-                } else {
-                    this.mCharSequence = spannableString;
-                    this.mCookie = cookie;
-                    this.mSequenceNumber = sequenceNumber;
-                    return;
-                }
-            }
-        } else {
+        if (TextUtils.isEmpty(charSequence)) {
             throw new IllegalArgumentException("charSequence is empty");
+        }
+        SpannableStringBuilder spannableString = new SpannableStringBuilder(charSequence, start, end);
+        int i = 0;
+        SpellCheckSpan[] spans = (SpellCheckSpan[]) spannableString.getSpans(0, spannableString.length(), SpellCheckSpan.class);
+        while (true) {
+            int i2 = i;
+            int i3 = spans.length;
+            if (i2 < i3) {
+                spannableString.removeSpan(spans[i2]);
+                i = i2 + 1;
+            } else {
+                this.mCharSequence = spannableString;
+                this.mCookie = cookie;
+                this.mSequenceNumber = sequenceNumber;
+                return;
+            }
         }
     }
 
@@ -65,6 +70,7 @@ public final class TextInfo implements Parcelable {
         this.mSequenceNumber = source.readInt();
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         TextUtils.writeToParcel(this.mCharSequence, dest, flags);
         dest.writeInt(this.mCookie);
@@ -90,6 +96,7 @@ public final class TextInfo implements Parcelable {
         return this.mSequenceNumber;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

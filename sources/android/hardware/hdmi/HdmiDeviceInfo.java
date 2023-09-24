@@ -2,36 +2,13 @@ package android.hardware.hdmi;
 
 import android.annotation.SystemApi;
 import android.net.wifi.WifiEnterpriseConfig;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
 @SystemApi
+/* loaded from: classes.dex */
 public class HdmiDeviceInfo implements Parcelable {
     public static final int ADDR_INTERNAL = 0;
-    public static final Parcelable.Creator<HdmiDeviceInfo> CREATOR = new Parcelable.Creator<HdmiDeviceInfo>() {
-        public HdmiDeviceInfo createFromParcel(Parcel source) {
-            int hdmiDeviceType = source.readInt();
-            int physicalAddress = source.readInt();
-            int portId = source.readInt();
-            if (hdmiDeviceType == 100) {
-                return HdmiDeviceInfo.INACTIVE_DEVICE;
-            }
-            switch (hdmiDeviceType) {
-                case 0:
-                    return new HdmiDeviceInfo(source.readInt(), physicalAddress, portId, source.readInt(), source.readInt(), source.readString(), source.readInt());
-                case 1:
-                    return new HdmiDeviceInfo(physicalAddress, portId, source.readInt(), source.readInt());
-                case 2:
-                    return new HdmiDeviceInfo(physicalAddress, portId);
-                default:
-                    return null;
-            }
-        }
-
-        public HdmiDeviceInfo[] newArray(int size) {
-            return new HdmiDeviceInfo[size];
-        }
-    };
     public static final int DEVICE_AUDIO_SYSTEM = 5;
     public static final int DEVICE_INACTIVE = -1;
     public static final int DEVICE_PLAYBACK = 4;
@@ -49,7 +26,6 @@ public class HdmiDeviceInfo implements Parcelable {
     private static final int ID_OFFSET_CEC = 0;
     private static final int ID_OFFSET_HARDWARE = 192;
     private static final int ID_OFFSET_MHL = 128;
-    public static final HdmiDeviceInfo INACTIVE_DEVICE = new HdmiDeviceInfo();
     public static final int PATH_INTERNAL = 0;
     public static final int PATH_INVALID = 65535;
     public static final int PORT_INVALID = -1;
@@ -64,6 +40,42 @@ public class HdmiDeviceInfo implements Parcelable {
     private final int mPhysicalAddress;
     private final int mPortId;
     private final int mVendorId;
+    public static final HdmiDeviceInfo INACTIVE_DEVICE = new HdmiDeviceInfo();
+    public static final Parcelable.Creator<HdmiDeviceInfo> CREATOR = new Parcelable.Creator<HdmiDeviceInfo>() { // from class: android.hardware.hdmi.HdmiDeviceInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public HdmiDeviceInfo createFromParcel(Parcel source) {
+            int hdmiDeviceType = source.readInt();
+            int physicalAddress = source.readInt();
+            int portId = source.readInt();
+            if (hdmiDeviceType != 100) {
+                switch (hdmiDeviceType) {
+                    case 0:
+                        int logicalAddress = source.readInt();
+                        int deviceType = source.readInt();
+                        int vendorId = source.readInt();
+                        int powerStatus = source.readInt();
+                        String displayName = source.readString();
+                        return new HdmiDeviceInfo(logicalAddress, physicalAddress, portId, deviceType, vendorId, displayName, powerStatus);
+                    case 1:
+                        int deviceId = source.readInt();
+                        int adopterId = source.readInt();
+                        return new HdmiDeviceInfo(physicalAddress, portId, adopterId, deviceId);
+                    case 2:
+                        return new HdmiDeviceInfo(physicalAddress, portId);
+                    default:
+                        return null;
+                }
+            }
+            return HdmiDeviceInfo.INACTIVE_DEVICE;
+        }
+
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public HdmiDeviceInfo[] newArray(int size) {
+            return new HdmiDeviceInfo[size];
+        }
+    };
 
     public HdmiDeviceInfo(int logicalAddress, int physicalAddress, int portId, int deviceType, int vendorId, String displayName, int powerStatus) {
         this.mHdmiDeviceType = 0;
@@ -170,13 +182,7 @@ public class HdmiDeviceInfo implements Parcelable {
     }
 
     public boolean isSourceType() {
-        if (!isCecDevice()) {
-            return isMhlDevice();
-        }
-        if (this.mDeviceType == 4 || this.mDeviceType == 1 || this.mDeviceType == 3) {
-            return true;
-        }
-        return false;
+        return isCecDevice() ? this.mDeviceType == 4 || this.mDeviceType == 1 || this.mDeviceType == 3 : isMhlDevice();
     }
 
     public boolean isCecDevice() {
@@ -199,10 +205,12 @@ public class HdmiDeviceInfo implements Parcelable {
         return this.mVendorId;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mHdmiDeviceType);
         dest.writeInt(this.mPhysicalAddress);
@@ -232,7 +240,7 @@ public class HdmiDeviceInfo implements Parcelable {
                 case 0:
                     s.append("CEC: ");
                     s.append("logical_address: ");
-                    s.append(String.format("0x%02X", new Object[]{Integer.valueOf(this.mLogicalAddress)}));
+                    s.append(String.format("0x%02X", Integer.valueOf(this.mLogicalAddress)));
                     s.append(WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER);
                     s.append("device_type: ");
                     s.append(this.mDeviceType);
@@ -250,10 +258,10 @@ public class HdmiDeviceInfo implements Parcelable {
                 case 1:
                     s.append("MHL: ");
                     s.append("device_id: ");
-                    s.append(String.format("0x%04X", new Object[]{Integer.valueOf(this.mDeviceId)}));
+                    s.append(String.format("0x%04X", Integer.valueOf(this.mDeviceId)));
                     s.append(WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER);
                     s.append("adopter_id: ");
-                    s.append(String.format("0x%04X", new Object[]{Integer.valueOf(this.mAdopterId)}));
+                    s.append(String.format("0x%04X", Integer.valueOf(this.mAdopterId)));
                     s.append(WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER);
                     break;
                 case 2:
@@ -266,7 +274,7 @@ public class HdmiDeviceInfo implements Parcelable {
             s.append("Inactivated: ");
         }
         s.append("physical_address: ");
-        s.append(String.format("0x%04X", new Object[]{Integer.valueOf(this.mPhysicalAddress)}));
+        s.append(String.format("0x%04X", Integer.valueOf(this.mPhysicalAddress)));
         s.append(WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER);
         s.append("port_id: ");
         s.append(this.mPortId);
@@ -274,12 +282,9 @@ public class HdmiDeviceInfo implements Parcelable {
     }
 
     public boolean equals(Object obj) {
-        if (!(obj instanceof HdmiDeviceInfo)) {
-            return false;
-        }
-        HdmiDeviceInfo other = (HdmiDeviceInfo) obj;
-        if (this.mHdmiDeviceType == other.mHdmiDeviceType && this.mPhysicalAddress == other.mPhysicalAddress && this.mPortId == other.mPortId && this.mLogicalAddress == other.mLogicalAddress && this.mDeviceType == other.mDeviceType && this.mVendorId == other.mVendorId && this.mDevicePowerStatus == other.mDevicePowerStatus && this.mDisplayName.equals(other.mDisplayName) && this.mDeviceId == other.mDeviceId && this.mAdopterId == other.mAdopterId) {
-            return true;
+        if (obj instanceof HdmiDeviceInfo) {
+            HdmiDeviceInfo other = (HdmiDeviceInfo) obj;
+            return this.mHdmiDeviceType == other.mHdmiDeviceType && this.mPhysicalAddress == other.mPhysicalAddress && this.mPortId == other.mPortId && this.mLogicalAddress == other.mLogicalAddress && this.mDeviceType == other.mDeviceType && this.mVendorId == other.mVendorId && this.mDevicePowerStatus == other.mDevicePowerStatus && this.mDisplayName.equals(other.mDisplayName) && this.mDeviceId == other.mDeviceId && this.mAdopterId == other.mAdopterId;
         }
         return false;
     }

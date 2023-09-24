@@ -1,28 +1,28 @@
 package com.wits.pms.custom;
 
-import android.os.Handler;
+import android.p007os.Handler;
 import android.util.Log;
 import com.google.gson.Gson;
 import com.wits.pms.core.PowerManagerAppService;
 import com.wits.pms.utils.SysConfigUtil;
 import java.io.File;
+import java.lang.reflect.Method;
 
+/* loaded from: classes2.dex */
 public class FactorySettings {
     public static final String FACTORY_SETTINGS_JSON = "/mnt/vendor/persist/OEM/FACTORY_SETTINGS";
-    public static final String FACTORY_TYPE = new Gson().toJson((Object) new FactorySettings());
     private static final String TAG = "FactorySettings";
-    public static final Handler mHandler = new Handler(PowerManagerAppService.serviceContext.getMainLooper());
-    public static final Object mLock = new Object();
+    private static volatile FactorySettings factorySettings;
     public static SaveRunnable saveRunnable;
     public int AMP_Type;
     public int APK_Install;
     public int AUX_Type;
-    public int Android_Bt_Switch = 1;
     public int AppsIcon_Select;
     public int Audi_Logo_Left;
     public int Audi_Logo_Right;
     public int BT_Type;
     public int Backlight_auto_set;
+    public int BootUpCamera;
     public int CCC_IDrive;
     public int CarAux_Operate;
     public int CarAux_auto_method;
@@ -32,7 +32,6 @@ public class FactorySettings {
     public int CarVideoDisplayStyle;
     public int DTV_Type;
     public int DVD_Type;
-    public String DVRApk_PackageName = "";
     public int DVR_Type;
     public int DashBoardUnit;
     public int Dashboard_MaxSpeed;
@@ -44,34 +43,46 @@ public class FactorySettings {
     public int GoogleAPP;
     public int HandsetAutomaticSelect;
     public int Map_key;
+    public int MicControl;
     public int Mic_gain;
     public int Mode_key;
-    public String Reverse_time = "";
+    public int OriginalRadar;
     public int Screen_cast;
     public int Support_FM_Transmit;
     public int Support_TXZ;
     public int Support_TXZ_Voice_Wakeup;
     public int Support_dashboard;
-    public String TXZ_Wakeup = "";
-    public int UI;
-    public String UI_type = "";
+    public int TurnSignalControl;
+
+    /* renamed from: UI */
+    public int f2569UI;
     public int Voice_key;
     public int Wifi_or_4G;
     public int cam360_video;
     public int canBusType;
     public int car_manufacturer;
-    public String client = "";
     public int e_car;
-    public String password = "";
+    public int globalweather_app;
+    public int ksw_logo;
     public int phone_key;
-    public int speed_play_switch = 1;
     public int touch_continuous_send;
-    public int txz_oil = 1;
-    public int txz_speed = 120;
     public int txz_temp;
-    public String ver = "";
     public int zlink_auto_start;
     public int zlink_hicar;
+    public static final Object mLock = new Object();
+    public static final String FACTORY_TYPE = new Gson().toJson(new FactorySettings());
+    public static final Handler mHandler = new Handler(PowerManagerAppService.serviceContext.getMainLooper());
+    public String ver = "";
+    public String client = "";
+    public String password = "";
+    public String UI_type = "";
+    public String TXZ_Wakeup = "";
+    public String DVRApk_PackageName = "";
+    public String Reverse_time = "";
+    public int Android_Bt_Switch = 1;
+    public int txz_oil = 1;
+    public int txz_speed = 120;
+    public int speed_play_switch = 1;
 
     public FactorySettings() {
         LogI(TAG, "create a new factory settings");
@@ -81,24 +92,24 @@ public class FactorySettings {
         return this.txz_oil;
     }
 
-    public void setTxz_oil(int txz_oil2) {
-        this.txz_oil = txz_oil2;
+    public void setTxz_oil(int txz_oil) {
+        this.txz_oil = txz_oil;
     }
 
     public int getTxz_speed() {
         return this.txz_speed;
     }
 
-    public void setTxz_speed(int txz_speed2) {
-        this.txz_speed = txz_speed2;
+    public void setTxz_speed(int txz_speed) {
+        this.txz_speed = txz_speed;
     }
 
     public int getTxz_temp() {
         return this.txz_temp;
     }
 
-    public void setTxz_temp(int txz_temp2) {
-        this.txz_temp = txz_temp2;
+    public void setTxz_temp(int txz_temp) {
+        this.txz_temp = txz_temp;
     }
 
     public void setReverse_time(String reverse_time) {
@@ -133,28 +144,44 @@ public class FactorySettings {
         this.DirtTravelSelection = dirtTravelSelection;
     }
 
+    public int getBootUpCamera() {
+        return this.BootUpCamera;
+    }
+
+    public void setBootUpCamera(int bootUpCamera) {
+        this.BootUpCamera = bootUpCamera;
+    }
+
+    public int getTurnSignalControl() {
+        return this.TurnSignalControl;
+    }
+
+    public void setTurnSignalControl(int turnSignalControl) {
+        this.TurnSignalControl = turnSignalControl;
+    }
+
     public int getSpeed_play_switch() {
         return this.speed_play_switch;
     }
 
-    public void setSpeed_play_switch(int speed_play_switch2) {
-        this.speed_play_switch = speed_play_switch2;
+    public void setSpeed_play_switch(int speed_play_switch) {
+        this.speed_play_switch = speed_play_switch;
     }
 
     public int getCanBusType() {
         return this.canBusType;
     }
 
-    public void setCanBusType(int canBusType2) {
-        this.canBusType = canBusType2;
+    public void setCanBusType(int canBusType) {
+        this.canBusType = canBusType;
     }
 
     public int getCar_manufacturer() {
         return this.car_manufacturer;
     }
 
-    public void setCar_manufacturer(int car_manufacturer2) {
-        this.car_manufacturer = car_manufacturer2;
+    public void setCar_manufacturer(int car_manufacturer) {
+        this.car_manufacturer = car_manufacturer;
     }
 
     public int getAppsIcon_Select() {
@@ -169,8 +196,8 @@ public class FactorySettings {
         return this.touch_continuous_send;
     }
 
-    public void setTouch_continuous_send(int touch_continuous_send2) {
-        this.touch_continuous_send = touch_continuous_send2;
+    public void setTouch_continuous_send(int touch_continuous_send) {
+        this.touch_continuous_send = touch_continuous_send;
     }
 
     public int getAndroid_Bt_Switch() {
@@ -185,56 +212,56 @@ public class FactorySettings {
         return this.ver;
     }
 
-    public void setVer(String ver2) {
-        this.ver = ver2;
+    public void setVer(String ver) {
+        this.ver = ver;
     }
 
     public String getClient() {
         return this.client;
     }
 
-    public void setClient(String client2) {
-        this.client = client2;
+    public void setClient(String client) {
+        this.client = client;
     }
 
     public String getPassword() {
         return this.password;
     }
 
-    public void setPassword(String password2) {
-        this.password = password2;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getUI_type() {
         return this.UI_type;
     }
 
-    public void setUI_type(String UI_type2) {
-        this.UI_type = UI_type2;
+    public void setUI_type(String UI_type) {
+        this.UI_type = UI_type;
     }
 
     public String getTXZ_Wakeup() {
         return this.TXZ_Wakeup;
     }
 
-    public void setTXZ_Wakeup(String TXZ_Wakeup2) {
-        this.TXZ_Wakeup = TXZ_Wakeup2;
+    public void setTXZ_Wakeup(String TXZ_Wakeup) {
+        this.TXZ_Wakeup = TXZ_Wakeup;
     }
 
     public String getDVRApk_PackageName() {
         return this.DVRApk_PackageName;
     }
 
-    public void setDVRApk_PackageName(String DVRApk_PackageName2) {
-        this.DVRApk_PackageName = DVRApk_PackageName2;
+    public void setDVRApk_PackageName(String DVRApk_PackageName) {
+        this.DVRApk_PackageName = DVRApk_PackageName;
     }
 
     public int getUI() {
-        return this.UI;
+        return this.f2569UI;
     }
 
-    public void setUI(int UI2) {
-        this.UI = UI2;
+    public void setUI(int UI) {
+        this.f2569UI = UI;
     }
 
     public int getCarVideoDisplayStyle() {
@@ -273,8 +300,8 @@ public class FactorySettings {
         return this.zlink_auto_start;
     }
 
-    public void setZlink_auto_start(int zlink_auto_start2) {
-        this.zlink_auto_start = zlink_auto_start2;
+    public void setZlink_auto_start(int zlink_auto_start) {
+        this.zlink_auto_start = zlink_auto_start;
     }
 
     public int getSupport_FM_Transmit() {
@@ -305,48 +332,48 @@ public class FactorySettings {
         return this.DVD_Type;
     }
 
-    public void setDVD_Type(int DVD_Type2) {
-        this.DVD_Type = DVD_Type2;
+    public void setDVD_Type(int DVD_Type) {
+        this.DVD_Type = DVD_Type;
     }
 
     public int getAUX_Type() {
         return this.AUX_Type;
     }
 
-    public void setAUX_Type(int AUX_Type2) {
-        this.AUX_Type = AUX_Type2;
+    public void setAUX_Type(int AUX_Type) {
+        this.AUX_Type = AUX_Type;
     }
 
     public int getDTV_Type() {
         return this.DTV_Type;
     }
 
-    public void setDTV_Type(int DTV_Type2) {
-        this.DTV_Type = DTV_Type2;
+    public void setDTV_Type(int DTV_Type) {
+        this.DTV_Type = DTV_Type;
     }
 
     public int getDVR_Type() {
         return this.DVR_Type;
     }
 
-    public void setDVR_Type(int DVR_Type2) {
-        this.DVR_Type = DVR_Type2;
+    public void setDVR_Type(int DVR_Type) {
+        this.DVR_Type = DVR_Type;
     }
 
     public int getBT_Type() {
         return this.BT_Type;
     }
 
-    public void setBT_Type(int BT_Type2) {
-        this.BT_Type = BT_Type2;
+    public void setBT_Type(int BT_Type) {
+        this.BT_Type = BT_Type;
     }
 
     public int getAPK_Install() {
         return this.APK_Install;
     }
 
-    public void setAPK_Install(int APK_Install2) {
-        this.APK_Install = APK_Install2;
+    public void setAPK_Install(int APK_Install) {
+        this.APK_Install = APK_Install;
     }
 
     public int getCarAux_auto_method() {
@@ -369,8 +396,8 @@ public class FactorySettings {
         return this.AMP_Type;
     }
 
-    public void setAMP_Type(int AMP_Type2) {
-        this.AMP_Type = AMP_Type2;
+    public void setAMP_Type(int AMP_Type) {
+        this.AMP_Type = AMP_Type;
     }
 
     public int getCarDisplay() {
@@ -397,6 +424,38 @@ public class FactorySettings {
         this.EQ_app = eq_app;
     }
 
+    public int getGlobalweather_app() {
+        return this.globalweather_app;
+    }
+
+    public void setGlobalweather_app(int value) {
+        this.globalweather_app = value;
+    }
+
+    public int getKsw_logo() {
+        return this.ksw_logo;
+    }
+
+    public void setKsw_logo(int value) {
+        this.ksw_logo = value;
+    }
+
+    public int getMicControl() {
+        return this.MicControl;
+    }
+
+    public void setMicControl(int value) {
+        this.MicControl = value;
+    }
+
+    public int getOriginalRadar() {
+        return this.OriginalRadar;
+    }
+
+    public void setOriginalRadar(int value) {
+        this.OriginalRadar = value;
+    }
+
     public int getSupport_TXZ_Voice_Wakeup() {
         return this.Support_TXZ_Voice_Wakeup;
     }
@@ -409,8 +468,8 @@ public class FactorySettings {
         return this.CCC_IDrive;
     }
 
-    public void setCCC_IDrive(int CCC_IDrive2) {
-        this.CCC_IDrive = CCC_IDrive2;
+    public void setCCC_IDrive(int CCC_IDrive) {
+        this.CCC_IDrive = CCC_IDrive;
     }
 
     public int getDashboard_MaxSpeed() {
@@ -457,8 +516,8 @@ public class FactorySettings {
         return this.phone_key;
     }
 
-    public void setPhone_key(int phone_key2) {
-        this.phone_key = phone_key2;
+    public void setPhone_key(int phone_key) {
+        this.phone_key = phone_key;
     }
 
     public int getMap_key() {
@@ -473,8 +532,8 @@ public class FactorySettings {
         return this.cam360_video;
     }
 
-    public void setCam360_video(int cam360_video2) {
-        this.cam360_video = cam360_video2;
+    public void setCam360_video(int cam360_video) {
+        this.cam360_video = cam360_video;
     }
 
     public int getCarDoorNum() {
@@ -521,25 +580,28 @@ public class FactorySettings {
         return this.e_car;
     }
 
-    public void setE_car(int e_car2) {
-        this.e_car = e_car2;
+    public void setE_car(int e_car) {
+        this.e_car = e_car;
     }
 
     public int getZlink_hicar() {
         return this.zlink_hicar;
     }
 
-    public void setZlink_hicar(int zlink_hicar2) {
-        this.zlink_hicar = zlink_hicar2;
+    public void setZlink_hicar(int zlink_hicar) {
+        this.zlink_hicar = zlink_hicar;
     }
 
     public static FactorySettings getFactorySettings() {
-        FactorySettings factorySettings;
-        synchronized (mLock) {
-            String settingsJson = SysConfigUtil.getArg(FACTORY_SETTINGS_JSON);
-            factorySettings = (FactorySettings) new Gson().fromJson(settingsJson, FactorySettings.class);
-            if (factorySettings != null) {
-                LogI(TAG, "getFactorySettings:" + settingsJson);
+        if (factorySettings == null) {
+            synchronized (FactorySettings.class) {
+                if (factorySettings == null) {
+                    String settingsJson = SysConfigUtil.getArg(FACTORY_SETTINGS_JSON);
+                    factorySettings = (FactorySettings) new Gson().fromJson(settingsJson, (Class<Object>) FactorySettings.class);
+                    if (factorySettings != null) {
+                        LogI(TAG, "getFactorySettings:" + settingsJson);
+                    }
+                }
             }
         }
         return factorySettings;
@@ -550,19 +612,23 @@ public class FactorySettings {
             new File(FACTORY_SETTINGS_JSON).delete();
         } catch (Exception e) {
         }
+        factorySettings = null;
     }
 
     public static void saveFactorySettings(FactorySettings settings) {
         synchronized (mLock) {
-            SysConfigUtil.writeArg(new Gson().toJson((Object) settings), FACTORY_SETTINGS_JSON, new SysConfigUtil.WriteListener() {
+            SysConfigUtil.writeArg(new Gson().toJson(settings), FACTORY_SETTINGS_JSON, new SysConfigUtil.WriteListener() { // from class: com.wits.pms.custom.FactorySettings.1
+                @Override // com.wits.pms.utils.SysConfigUtil.WriteListener
                 public void start() {
                     FactorySettings.LogI(FactorySettings.TAG, "save start");
                 }
 
+                @Override // com.wits.pms.utils.SysConfigUtil.WriteListener
                 public void success() {
                     FactorySettings.LogI(FactorySettings.TAG, "save success");
                 }
 
+                @Override // com.wits.pms.utils.SysConfigUtil.WriteListener
                 public void failed() {
                     FactorySettings.LogI(FactorySettings.TAG, "save failed");
                 }
@@ -574,13 +640,15 @@ public class FactorySettings {
         return FACTORY_TYPE.contains(key);
     }
 
+    /* loaded from: classes2.dex */
     public class SaveRunnable implements Runnable {
         private final FactorySettings settings;
 
-        public SaveRunnable(FactorySettings settings2) {
-            this.settings = settings2;
+        public SaveRunnable(FactorySettings settings) {
+            this.settings = settings;
         }
 
+        @Override // java.lang.Runnable
         public void run() {
             FactorySettings.saveFactorySettings(this.settings);
         }
@@ -588,7 +656,8 @@ public class FactorySettings {
 
     private String getFirstUpCaseString(String key) {
         StringBuilder sb = new StringBuilder(key);
-        sb.replace(0, 1, (key.charAt(0) + "").toUpperCase());
+        String str = (key.charAt(0) + "").toUpperCase();
+        sb.replace(0, 1, str);
         return sb.toString();
     }
 
@@ -596,11 +665,12 @@ public class FactorySettings {
         if (isFactory(key)) {
             LogI(TAG, "saveStringValue key:" + key + "- value:" + value);
             String key2 = getFirstUpCaseString(key);
-            Class<FactorySettings> cls = FactorySettings.class;
             try {
-                cls.getMethod("set" + key2, new Class[]{String.class}).invoke(this, new Object[]{value});
+                Method method = FactorySettings.class.getMethod("set" + key2, String.class);
+                method.invoke(this, value);
                 saveToFile();
             } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
@@ -609,50 +679,53 @@ public class FactorySettings {
         if (isFactory(key)) {
             LogI(TAG, "saveIntValue key:" + key + "- value:" + value);
             String key2 = getFirstUpCaseString(key);
-            Class<FactorySettings> cls = FactorySettings.class;
             try {
-                cls.getMethod("set" + key2, new Class[]{Integer.TYPE}).invoke(this, new Object[]{Integer.valueOf(value)});
+                Method method = FactorySettings.class.getMethod("set" + key2, Integer.TYPE);
+                method.invoke(this, Integer.valueOf(value));
                 saveToFile();
             } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
 
     public String getStringValue(String key) {
-        if (!isFactory(key)) {
-            return null;
+        if (isFactory(key)) {
+            LogI(TAG, "getStringValue key:" + key);
+            String key2 = getFirstUpCaseString(key);
+            try {
+                Method method = FactorySettings.class.getMethod("get" + key2, new Class[0]);
+                return String.valueOf(method.invoke(this, new Object[0]));
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
         }
-        LogI(TAG, "getStringValue key:" + key);
-        String key2 = getFirstUpCaseString(key);
-        Class<FactorySettings> cls = FactorySettings.class;
-        try {
-            return (String) cls.getMethod("get" + key2, new Class[0]).invoke(this, new Object[0]);
-        } catch (Exception e) {
-            return null;
-        }
+        return null;
     }
 
     public int getIntValue(String key) {
-        if (!isFactory(key)) {
-            return 0;
+        if (isFactory(key)) {
+            LogI(TAG, "getIntValue key:" + key);
+            String key2 = getFirstUpCaseString(key);
+            try {
+                Method method = FactorySettings.class.getMethod("get" + key2, new Class[0]);
+                return ((Integer) method.invoke(this, new Object[0])).intValue();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return 0;
+            }
         }
-        LogI(TAG, "getIntValue key:" + key);
-        String key2 = getFirstUpCaseString(key);
-        Class<FactorySettings> cls = FactorySettings.class;
-        try {
-            return ((Integer) cls.getMethod("get" + key2, new Class[0]).invoke(this, new Object[0])).intValue();
-        } catch (Exception e) {
-            return 0;
-        }
+        return 0;
     }
 
     public void saveToFile() {
         mHandler.removeCallbacks(saveRunnable);
         saveRunnable = new SaveRunnable(this);
-        mHandler.postDelayed(saveRunnable, 2000);
+        mHandler.postDelayed(saveRunnable, 2000L);
     }
 
     public static void LogI(String TAG2, String content) {
-        Log.i(TAG2, content);
+        Log.m68i(TAG2, content);
     }
 }

@@ -14,13 +14,13 @@ import android.location.GpsNavigationMessageEvent;
 import android.location.GpsStatus;
 import android.location.IGnssStatusListener;
 import android.location.ILocationListener;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.os.Process;
-import android.os.RemoteException;
-import android.os.UserHandle;
+import android.p007os.Bundle;
+import android.p007os.Handler;
+import android.p007os.Looper;
+import android.p007os.Message;
+import android.p007os.Process;
+import android.p007os.RemoteException;
+import android.p007os.UserHandle;
 import android.provider.Settings;
 import android.util.ArrayMap;
 import android.util.Log;
@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/* loaded from: classes.dex */
 public class LocationManager {
     public static final String EXTRA_PROVIDER_NAME = "android.location.extra.PROVIDER_NAME";
     public static final String FUSED_PROVIDER = "fused";
@@ -55,18 +56,16 @@ public class LocationManager {
     private final Context mContext;
     private final GnssMeasurementCallbackTransport mGnssMeasurementCallbackTransport;
     private final GnssNavigationMessageCallbackTransport mGnssNavigationMessageCallbackTransport;
-    private final ArrayMap<OnNmeaMessageListener, GnssStatusListenerTransport> mGnssNmeaListeners = new ArrayMap<>();
-    /* access modifiers changed from: private */
-    public volatile GnssStatus mGnssStatus;
+    private volatile GnssStatus mGnssStatus;
+    @UnsupportedAppUsage
+    private final ILocationManager mService;
+    private int mTimeToFirstFix;
     private final ArrayMap<GnssStatus.Callback, GnssStatusListenerTransport> mGnssStatusListeners = new ArrayMap<>();
+    private final ArrayMap<OnNmeaMessageListener, GnssStatusListenerTransport> mGnssNmeaListeners = new ArrayMap<>();
     private final ArrayMap<GpsStatus.Listener, GnssStatusListenerTransport> mGpsStatusListeners = new ArrayMap<>();
     private final ArrayMap<LocationListener, ListenerTransport> mListeners = new ArrayMap<>();
-    /* access modifiers changed from: private */
-    @UnsupportedAppUsage
-    public final ILocationManager mService;
-    /* access modifiers changed from: private */
-    public int mTimeToFirstFix;
 
+    /* loaded from: classes.dex */
     private class ListenerTransport extends ILocationListener.Stub {
         private static final int TYPE_LOCATION_CHANGED = 1;
         private static final int TYPE_PROVIDER_DISABLED = 4;
@@ -78,13 +77,15 @@ public class LocationManager {
         ListenerTransport(LocationListener listener, Looper looper) {
             this.mListener = listener;
             if (looper == null) {
-                this.mListenerHandler = new Handler(LocationManager.this) {
+                this.mListenerHandler = new Handler() { // from class: android.location.LocationManager.ListenerTransport.1
+                    @Override // android.p007os.Handler
                     public void handleMessage(Message msg) {
                         ListenerTransport.this._handleMessage(msg);
                     }
                 };
             } else {
-                this.mListenerHandler = new Handler(looper, LocationManager.this) {
+                this.mListenerHandler = new Handler(looper) { // from class: android.location.LocationManager.ListenerTransport.2
+                    @Override // android.p007os.Handler
                     public void handleMessage(Message msg) {
                         ListenerTransport.this._handleMessage(msg);
                     }
@@ -92,6 +93,7 @@ public class LocationManager {
             }
         }
 
+        @Override // android.location.ILocationListener
         public void onLocationChanged(Location location) {
             Message msg = Message.obtain();
             msg.what = 1;
@@ -99,6 +101,7 @@ public class LocationManager {
             sendCallbackMessage(msg);
         }
 
+        @Override // android.location.ILocationListener
         public void onStatusChanged(String provider, int status, Bundle extras) {
             Message msg = Message.obtain();
             msg.what = 2;
@@ -112,6 +115,7 @@ public class LocationManager {
             sendCallbackMessage(msg);
         }
 
+        @Override // android.location.ILocationListener
         public void onProviderEnabled(String provider) {
             Message msg = Message.obtain();
             msg.what = 3;
@@ -119,6 +123,7 @@ public class LocationManager {
             sendCallbackMessage(msg);
         }
 
+        @Override // android.location.ILocationListener
         public void onProviderDisabled(String provider) {
             Message msg = Message.obtain();
             msg.what = 4;
@@ -132,15 +137,19 @@ public class LocationManager {
             }
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public void _handleMessage(Message msg) {
             switch (msg.what) {
                 case 1:
-                    this.mListener.onLocationChanged(new Location((Location) msg.obj));
+                    Location location = new Location((Location) msg.obj);
+                    this.mListener.onLocationChanged(location);
                     break;
                 case 2:
                     Bundle b = (Bundle) msg.obj;
-                    this.mListener.onStatusChanged(b.getString("provider"), b.getInt("status"), b.getBundle("extras"));
+                    String provider = b.getString("provider");
+                    int status = b.getInt("status");
+                    Bundle extras = b.getBundle("extras");
+                    this.mListener.onStatusChanged(provider, status, extras);
                     break;
                 case 3:
                     this.mListener.onProviderEnabled((String) msg.obj);
@@ -199,7 +208,7 @@ public class LocationManager {
 
     public List<String> getProviders(boolean enabledOnly) {
         try {
-            return this.mService.getProviders((Criteria) null, enabledOnly);
+            return this.mService.getProviders(null, enabledOnly);
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
         }
@@ -240,63 +249,72 @@ public class LocationManager {
         SeempLog.record(47);
         checkProvider(provider);
         checkListener(listener);
-        requestLocationUpdates(LocationRequest.createFromDeprecatedProvider(provider, minTime, minDistance, false), listener, (Looper) null, (PendingIntent) null);
+        LocationRequest request = LocationRequest.createFromDeprecatedProvider(provider, minTime, minDistance, false);
+        requestLocationUpdates(request, listener, (Looper) null, (PendingIntent) null);
     }
 
     public void requestLocationUpdates(String provider, long minTime, float minDistance, LocationListener listener, Looper looper) {
         SeempLog.record(47);
         checkProvider(provider);
         checkListener(listener);
-        requestLocationUpdates(LocationRequest.createFromDeprecatedProvider(provider, minTime, minDistance, false), listener, looper, (PendingIntent) null);
+        LocationRequest request = LocationRequest.createFromDeprecatedProvider(provider, minTime, minDistance, false);
+        requestLocationUpdates(request, listener, looper, (PendingIntent) null);
     }
 
     public void requestLocationUpdates(long minTime, float minDistance, Criteria criteria, LocationListener listener, Looper looper) {
         SeempLog.record(47);
         checkCriteria(criteria);
         checkListener(listener);
-        requestLocationUpdates(LocationRequest.createFromDeprecatedCriteria(criteria, minTime, minDistance, false), listener, looper, (PendingIntent) null);
+        LocationRequest request = LocationRequest.createFromDeprecatedCriteria(criteria, minTime, minDistance, false);
+        requestLocationUpdates(request, listener, looper, (PendingIntent) null);
     }
 
     public void requestLocationUpdates(String provider, long minTime, float minDistance, PendingIntent intent) {
         SeempLog.record(47);
         checkProvider(provider);
         checkPendingIntent(intent);
-        requestLocationUpdates(LocationRequest.createFromDeprecatedProvider(provider, minTime, minDistance, false), (LocationListener) null, (Looper) null, intent);
+        LocationRequest request = LocationRequest.createFromDeprecatedProvider(provider, minTime, minDistance, false);
+        requestLocationUpdates(request, (LocationListener) null, (Looper) null, intent);
     }
 
     public void requestLocationUpdates(long minTime, float minDistance, Criteria criteria, PendingIntent intent) {
         SeempLog.record(47);
         checkCriteria(criteria);
         checkPendingIntent(intent);
-        requestLocationUpdates(LocationRequest.createFromDeprecatedCriteria(criteria, minTime, minDistance, false), (LocationListener) null, (Looper) null, intent);
+        LocationRequest request = LocationRequest.createFromDeprecatedCriteria(criteria, minTime, minDistance, false);
+        requestLocationUpdates(request, (LocationListener) null, (Looper) null, intent);
     }
 
     public void requestSingleUpdate(String provider, LocationListener listener, Looper looper) {
         SeempLog.record(64);
         checkProvider(provider);
         checkListener(listener);
-        requestLocationUpdates(LocationRequest.createFromDeprecatedProvider(provider, 0, 0.0f, true), listener, looper, (PendingIntent) null);
+        LocationRequest request = LocationRequest.createFromDeprecatedProvider(provider, 0L, 0.0f, true);
+        requestLocationUpdates(request, listener, looper, (PendingIntent) null);
     }
 
     public void requestSingleUpdate(Criteria criteria, LocationListener listener, Looper looper) {
         SeempLog.record(64);
         checkCriteria(criteria);
         checkListener(listener);
-        requestLocationUpdates(LocationRequest.createFromDeprecatedCriteria(criteria, 0, 0.0f, true), listener, looper, (PendingIntent) null);
+        LocationRequest request = LocationRequest.createFromDeprecatedCriteria(criteria, 0L, 0.0f, true);
+        requestLocationUpdates(request, listener, looper, (PendingIntent) null);
     }
 
     public void requestSingleUpdate(String provider, PendingIntent intent) {
         SeempLog.record(64);
         checkProvider(provider);
         checkPendingIntent(intent);
-        requestLocationUpdates(LocationRequest.createFromDeprecatedProvider(provider, 0, 0.0f, true), (LocationListener) null, (Looper) null, intent);
+        LocationRequest request = LocationRequest.createFromDeprecatedProvider(provider, 0L, 0.0f, true);
+        requestLocationUpdates(request, (LocationListener) null, (Looper) null, intent);
     }
 
     public void requestSingleUpdate(Criteria criteria, PendingIntent intent) {
         SeempLog.record(64);
         checkCriteria(criteria);
         checkPendingIntent(intent);
-        requestLocationUpdates(LocationRequest.createFromDeprecatedCriteria(criteria, 0, 0.0f, true), (LocationListener) null, (Looper) null, intent);
+        LocationRequest request = LocationRequest.createFromDeprecatedCriteria(criteria, 0L, 0.0f, true);
+        requestLocationUpdates(request, (LocationListener) null, (Looper) null, intent);
     }
 
     @SystemApi
@@ -340,8 +358,9 @@ public class LocationManager {
     private void requestLocationUpdates(LocationRequest request, LocationListener listener, Looper looper, PendingIntent intent) {
         SeempLog.record(47);
         String packageName = this.mContext.getPackageName();
+        ListenerTransport transport = wrapListener(listener, looper);
         try {
-            this.mService.requestLocationUpdates(request, wrapListener(listener, looper), intent, packageName);
+            this.mService.requestLocationUpdates(request, transport, intent, packageName);
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
         }
@@ -354,19 +373,21 @@ public class LocationManager {
         synchronized (this.mListeners) {
             transport = this.mListeners.remove(listener);
         }
-        if (transport != null) {
-            try {
-                this.mService.removeUpdates(transport, (PendingIntent) null, packageName);
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
+        if (transport == null) {
+            return;
+        }
+        try {
+            this.mService.removeUpdates(transport, null, packageName);
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
         }
     }
 
     public void removeUpdates(PendingIntent intent) {
         checkPendingIntent(intent);
+        String packageName = this.mContext.getPackageName();
         try {
-            this.mService.removeUpdates((ILocationListener) null, intent, this.mContext.getPackageName());
+            this.mService.removeUpdates(null, intent, packageName);
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
         }
@@ -379,8 +400,9 @@ public class LocationManager {
             expiration = Long.MAX_VALUE;
         }
         Geofence fence = Geofence.createCircle(latitude, longitude, radius);
+        LocationRequest request = new LocationRequest().setExpireIn(expiration);
         try {
-            this.mService.requestGeofence(new LocationRequest().setExpireIn(expiration), fence, intent, this.mContext.getPackageName());
+            this.mService.requestGeofence(request, fence, intent, this.mContext.getPackageName());
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
         }
@@ -398,8 +420,9 @@ public class LocationManager {
 
     public void removeProximityAlert(PendingIntent intent) {
         checkPendingIntent(intent);
+        String packageName = this.mContext.getPackageName();
         try {
-            this.mService.removeGeofence((Geofence) null, intent, this.mContext.getPackageName());
+            this.mService.removeGeofence(null, intent, packageName);
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
         }
@@ -408,8 +431,9 @@ public class LocationManager {
     public void removeGeofence(Geofence fence, PendingIntent intent) {
         checkPendingIntent(intent);
         checkGeofence(fence);
+        String packageName = this.mContext.getPackageName();
         try {
-            this.mService.removeGeofence(fence, intent, this.mContext.getPackageName());
+            this.mService.removeGeofence(fence, intent, packageName);
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
         }
@@ -417,8 +441,9 @@ public class LocationManager {
 
     public void removeAllGeofences(PendingIntent intent) {
         checkPendingIntent(intent);
+        String packageName = this.mContext.getPackageName();
         try {
-            this.mService.removeGeofence((Geofence) null, intent, this.mContext.getPackageName());
+            this.mService.removeGeofence(null, intent, packageName);
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
         }
@@ -475,8 +500,9 @@ public class LocationManager {
     }
 
     public Location getLastLocation() {
+        String packageName = this.mContext.getPackageName();
         try {
-            return this.mService.getLastLocation((LocationRequest) null, this.mContext.getPackageName());
+            return this.mService.getLastLocation(null, packageName);
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
         }
@@ -486,25 +512,25 @@ public class LocationManager {
         SeempLog.record(46);
         checkProvider(provider);
         String packageName = this.mContext.getPackageName();
+        LocationRequest request = LocationRequest.createFromDeprecatedProvider(provider, 0L, 0.0f, true);
         try {
-            return this.mService.getLastLocation(LocationRequest.createFromDeprecatedProvider(provider, 0, 0.0f, true), packageName);
+            return this.mService.getLastLocation(request, packageName);
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
         }
     }
 
     public void addTestProvider(String name, boolean requiresNetwork, boolean requiresSatellite, boolean requiresCell, boolean hasMonetaryCost, boolean supportsAltitude, boolean supportsSpeed, boolean supportsBearing, int powerRequirement, int accuracy) {
-        String str = name;
         ProviderProperties properties = new ProviderProperties(requiresNetwork, requiresSatellite, requiresCell, hasMonetaryCost, supportsAltitude, supportsSpeed, supportsBearing, powerRequirement, accuracy);
         if (!name.matches(LocationProvider.BAD_CHARS_REGEX)) {
             try {
                 this.mService.addTestProvider(name, properties, this.mContext.getOpPackageName());
+                return;
             } catch (RemoteException e) {
                 throw e.rethrowFromSystemServer();
             }
-        } else {
-            throw new IllegalArgumentException("provider name contains illegal character: " + name);
         }
+        throw new IllegalArgumentException("provider name contains illegal character: " + name);
     }
 
     public void removeTestProvider(String provider) {
@@ -519,7 +545,7 @@ public class LocationManager {
         if (!loc.isComplete()) {
             IllegalArgumentException e = new IllegalArgumentException("Incomplete location object, missing timestamp or accuracy? " + loc);
             if (this.mContext.getApplicationInfo().targetSdkVersion <= 16) {
-                Log.w(TAG, (Throwable) e);
+                Log.m62w(TAG, e);
                 loc.makeComplete();
             } else {
                 throw e;
@@ -560,7 +586,7 @@ public class LocationManager {
 
     @Deprecated
     public void clearTestProviderStatus(String provider) {
-        setTestProviderStatus(provider, 2, (Bundle) null, 0);
+        setTestProviderStatus(provider, 2, null, 0L);
     }
 
     public List<LocationRequest> getTestProviderCurrentRequests(String providerName) {
@@ -572,26 +598,25 @@ public class LocationManager {
         }
     }
 
+    /* loaded from: classes.dex */
     private class GnssStatusListenerTransport extends IGnssStatusListener.Stub {
         private static final int GNSS_EVENT_FIRST_FIX = 4;
         private static final int GNSS_EVENT_SATELLITE_STATUS = 5;
         private static final int GNSS_EVENT_STARTED = 2;
         private static final int GNSS_EVENT_STOPPED = 3;
         private static final int NMEA_RECEIVED = 1;
-        /* access modifiers changed from: private */
-        public final GnssStatus.Callback mGnssCallback;
+        private final GnssStatus.Callback mGnssCallback;
         private final Handler mGnssHandler;
-        /* access modifiers changed from: private */
-        public final OnNmeaMessageListener mGnssNmeaListener;
-        /* access modifiers changed from: private */
-        public final ArrayList<Nmea> mNmeaBuffer;
+        private final OnNmeaMessageListener mGnssNmeaListener;
+        private final ArrayList<Nmea> mNmeaBuffer;
 
+        /* loaded from: classes.dex */
         private class GnssHandler extends Handler {
-            /* JADX INFO: super call moved to the top of the method (can break code semantics) */
             GnssHandler(Handler handler) {
                 super(handler != null ? handler.getLooper() : Looper.myLooper());
             }
 
+            @Override // android.p007os.Handler
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case 1:
@@ -622,6 +647,7 @@ public class LocationManager {
             }
         }
 
+        /* loaded from: classes.dex */
         private class Nmea {
             String mNmea;
             long mTimestamp;
@@ -649,19 +675,23 @@ public class LocationManager {
         GnssStatusListenerTransport(final GpsStatus.Listener listener, Handler handler) {
             this.mGnssHandler = new GnssHandler(handler);
             this.mNmeaBuffer = null;
-            this.mGnssCallback = listener != null ? new GnssStatus.Callback(LocationManager.this) {
+            this.mGnssCallback = listener != null ? new GnssStatus.Callback() { // from class: android.location.LocationManager.GnssStatusListenerTransport.1
+                @Override // android.location.GnssStatus.Callback
                 public void onStarted() {
                     listener.onGpsStatusChanged(1);
                 }
 
+                @Override // android.location.GnssStatus.Callback
                 public void onStopped() {
                     listener.onGpsStatusChanged(2);
                 }
 
+                @Override // android.location.GnssStatus.Callback
                 public void onFirstFix(int ttff) {
                     listener.onGpsStatusChanged(3);
                 }
 
+                @Override // android.location.GnssStatus.Callback
                 public void onSatelliteStatusChanged(GnssStatus status) {
                     listener.onGpsStatusChanged(4);
                 }
@@ -669,33 +699,38 @@ public class LocationManager {
             this.mGnssNmeaListener = null;
         }
 
+        @Override // android.location.IGnssStatusListener
         public void onGnssStarted() {
             if (this.mGnssCallback != null) {
                 this.mGnssHandler.obtainMessage(2).sendToTarget();
             }
         }
 
+        @Override // android.location.IGnssStatusListener
         public void onGnssStopped() {
             if (this.mGnssCallback != null) {
                 this.mGnssHandler.obtainMessage(3).sendToTarget();
             }
         }
 
+        @Override // android.location.IGnssStatusListener
         public void onFirstFix(int ttff) {
             if (this.mGnssCallback != null) {
-                int unused = LocationManager.this.mTimeToFirstFix = ttff;
+                LocationManager.this.mTimeToFirstFix = ttff;
                 this.mGnssHandler.obtainMessage(4).sendToTarget();
             }
         }
 
+        @Override // android.location.IGnssStatusListener
         public void onSvStatusChanged(int svCount, int[] prnWithFlags, float[] cn0s, float[] elevations, float[] azimuths, float[] carrierFreqs) {
             if (this.mGnssCallback != null) {
-                GnssStatus unused = LocationManager.this.mGnssStatus = new GnssStatus(svCount, prnWithFlags, cn0s, elevations, azimuths, carrierFreqs);
+                LocationManager.this.mGnssStatus = new GnssStatus(svCount, prnWithFlags, cn0s, elevations, azimuths, carrierFreqs);
                 this.mGnssHandler.removeMessages(5);
                 this.mGnssHandler.obtainMessage(5).sendToTarget();
             }
         }
 
+        @Override // android.location.IGnssStatusListener
         public void onNmeaReceived(long timestamp, String nmea) {
             if (this.mGnssNmeaListener != null) {
                 synchronized (this.mNmeaBuffer) {
@@ -738,7 +773,7 @@ public class LocationManager {
     }
 
     public boolean registerGnssStatusCallback(GnssStatus.Callback callback) {
-        return registerGnssStatusCallback(callback, (Handler) null);
+        return registerGnssStatusCallback(callback, null);
     }
 
     public boolean registerGnssStatusCallback(GnssStatus.Callback callback, Handler handler) {
@@ -752,8 +787,7 @@ public class LocationManager {
                 if (result) {
                     this.mGnssStatusListeners.put(callback, transport);
                 }
-                boolean result2 = result;
-                return result2;
+                return result;
             } catch (RemoteException e) {
                 throw e.rethrowFromSystemServer();
             }
@@ -763,12 +797,14 @@ public class LocationManager {
     public void unregisterGnssStatusCallback(GnssStatus.Callback callback) {
         synchronized (this.mGnssStatusListeners) {
             try {
-                GnssStatusListenerTransport transport = this.mGnssStatusListeners.remove(callback);
-                if (transport != null) {
-                    this.mService.unregisterGnssStatusCallback(transport);
+                try {
+                    GnssStatusListenerTransport transport = this.mGnssStatusListeners.remove(callback);
+                    if (transport != null) {
+                        this.mService.unregisterGnssStatusCallback(transport);
+                    }
+                } catch (RemoteException e) {
+                    throw e.rethrowFromSystemServer();
                 }
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
             } catch (Throwable th) {
                 throw th;
             }
@@ -786,7 +822,7 @@ public class LocationManager {
     }
 
     public boolean addNmeaListener(OnNmeaMessageListener listener) {
-        return addNmeaListener(listener, (Handler) null);
+        return addNmeaListener(listener, null);
     }
 
     public boolean addNmeaListener(OnNmeaMessageListener listener, Handler handler) {
@@ -816,15 +852,15 @@ public class LocationManager {
         }
     }
 
-    @SuppressLint({"Doclava125"})
     @SystemApi
+    @SuppressLint({"Doclava125"})
     @Deprecated
     public boolean addGpsMeasurementListener(GpsMeasurementsEvent.Listener listener) {
         return false;
     }
 
     public boolean registerGnssMeasurementsCallback(GnssMeasurementsEvent.Callback callback) {
-        return registerGnssMeasurementsCallback(callback, (Handler) null);
+        return registerGnssMeasurementsCallback(callback, null);
     }
 
     public boolean registerGnssMeasurementsCallback(GnssMeasurementsEvent.Callback callback, Handler handler) {
@@ -847,14 +883,14 @@ public class LocationManager {
             if (gnssCapabilities == -1) {
                 gnssCapabilities = 0;
             }
-            return GnssCapabilities.of(gnssCapabilities);
+            return GnssCapabilities.m117of(gnssCapabilities);
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
         }
     }
 
-    @SuppressLint({"Doclava125"})
     @SystemApi
+    @SuppressLint({"Doclava125"})
     @Deprecated
     public void removeGpsMeasurementListener(GpsMeasurementsEvent.Listener listener) {
     }
@@ -863,21 +899,21 @@ public class LocationManager {
         this.mGnssMeasurementCallbackTransport.remove(callback);
     }
 
-    @SuppressLint({"Doclava125"})
     @SystemApi
+    @SuppressLint({"Doclava125"})
     @Deprecated
     public boolean addGpsNavigationMessageListener(GpsNavigationMessageEvent.Listener listener) {
         return false;
     }
 
-    @SuppressLint({"Doclava125"})
     @SystemApi
+    @SuppressLint({"Doclava125"})
     @Deprecated
     public void removeGpsNavigationMessageListener(GpsNavigationMessageEvent.Listener listener) {
     }
 
     public boolean registerGnssNavigationMessageCallback(GnssNavigationMessage.Callback callback) {
-        return registerGnssNavigationMessageCallback(callback, (Handler) null);
+        return registerGnssNavigationMessageCallback(callback, null);
     }
 
     public boolean registerGnssNavigationMessageCallback(GnssNavigationMessage.Callback callback, Handler handler) {
@@ -994,11 +1030,10 @@ public class LocationManager {
             throw new IllegalArgumentException("invalid pending intent: " + intent);
         } else if (!intent.isTargetedToPackage()) {
             IllegalArgumentException e = new IllegalArgumentException("pending intent must be targeted to package");
-            if (this.mContext.getApplicationInfo().targetSdkVersion <= 16) {
-                Log.w(TAG, (Throwable) e);
-                return;
+            if (this.mContext.getApplicationInfo().targetSdkVersion > 16) {
+                throw e;
             }
-            throw e;
+            Log.m62w(TAG, e);
         }
     }
 

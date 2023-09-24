@@ -1,17 +1,22 @@
 package android.security.keymaster;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.IBinder;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.IBinder;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes3.dex */
 public class OperationResult implements Parcelable {
     @UnsupportedAppUsage
-    public static final Parcelable.Creator<OperationResult> CREATOR = new Parcelable.Creator<OperationResult>() {
+    public static final Parcelable.Creator<OperationResult> CREATOR = new Parcelable.Creator<OperationResult>() { // from class: android.security.keymaster.OperationResult.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public OperationResult createFromParcel(Parcel in) {
             return new OperationResult(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public OperationResult[] newArray(int length) {
             return new OperationResult[length];
         }
@@ -23,17 +28,17 @@ public class OperationResult implements Parcelable {
     public final int resultCode;
     public final IBinder token;
 
-    public OperationResult(int resultCode2, IBinder token2, long operationHandle2, int inputConsumed2, byte[] output2, KeymasterArguments outParams2) {
-        this.resultCode = resultCode2;
-        this.token = token2;
-        this.operationHandle = operationHandle2;
-        this.inputConsumed = inputConsumed2;
-        this.output = output2;
-        this.outParams = outParams2;
+    public OperationResult(int resultCode, IBinder token, long operationHandle, int inputConsumed, byte[] output, KeymasterArguments outParams) {
+        this.resultCode = resultCode;
+        this.token = token;
+        this.operationHandle = operationHandle;
+        this.inputConsumed = inputConsumed;
+        this.output = output;
+        this.outParams = outParams;
     }
 
-    public OperationResult(int resultCode2) {
-        this(resultCode2, (IBinder) null, 0, 0, (byte[]) null, (KeymasterArguments) null);
+    public OperationResult(int resultCode) {
+        this(resultCode, null, 0L, 0, null, null);
     }
 
     protected OperationResult(Parcel in) {
@@ -45,10 +50,12 @@ public class OperationResult implements Parcelable {
         this.outParams = KeymasterArguments.CREATOR.createFromParcel(in);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(this.resultCode);
         out.writeStrongBinder(this.token);

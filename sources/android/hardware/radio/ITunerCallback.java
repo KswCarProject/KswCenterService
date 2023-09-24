@@ -2,13 +2,14 @@ package android.hardware.radio;
 
 import android.hardware.radio.ProgramList;
 import android.hardware.radio.RadioManager;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import java.util.Map;
 
+/* loaded from: classes.dex */
 public interface ITunerCallback extends IInterface {
     void onAntennaState(boolean z) throws RemoteException;
 
@@ -34,48 +35,63 @@ public interface ITunerCallback extends IInterface {
 
     void onTuneFailed(int i, ProgramSelector programSelector) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements ITunerCallback {
+        @Override // android.hardware.radio.ITunerCallback
         public void onError(int status) throws RemoteException {
         }
 
+        @Override // android.hardware.radio.ITunerCallback
         public void onTuneFailed(int result, ProgramSelector selector) throws RemoteException {
         }
 
+        @Override // android.hardware.radio.ITunerCallback
         public void onConfigurationChanged(RadioManager.BandConfig config) throws RemoteException {
         }
 
+        @Override // android.hardware.radio.ITunerCallback
         public void onCurrentProgramInfoChanged(RadioManager.ProgramInfo info) throws RemoteException {
         }
 
+        @Override // android.hardware.radio.ITunerCallback
         public void onTrafficAnnouncement(boolean active) throws RemoteException {
         }
 
+        @Override // android.hardware.radio.ITunerCallback
         public void onEmergencyAnnouncement(boolean active) throws RemoteException {
         }
 
+        @Override // android.hardware.radio.ITunerCallback
         public void onAntennaState(boolean connected) throws RemoteException {
         }
 
+        @Override // android.hardware.radio.ITunerCallback
         public void onBackgroundScanAvailabilityChange(boolean isAvailable) throws RemoteException {
         }
 
+        @Override // android.hardware.radio.ITunerCallback
         public void onBackgroundScanComplete() throws RemoteException {
         }
 
+        @Override // android.hardware.radio.ITunerCallback
         public void onProgramListChanged() throws RemoteException {
         }
 
+        @Override // android.hardware.radio.ITunerCallback
         public void onProgramListUpdated(ProgramList.Chunk chunk) throws RemoteException {
         }
 
+        @Override // android.hardware.radio.ITunerCallback
         public void onParametersUpdated(Map parameters) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements ITunerCallback {
         private static final String DESCRIPTOR = "android.hardware.radio.ITunerCallback";
         static final int TRANSACTION_onAntennaState = 7;
@@ -100,12 +116,13 @@ public interface ITunerCallback extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof ITunerCallback)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof ITunerCallback)) {
+                return (ITunerCallback) iin;
             }
-            return (ITunerCallback) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -141,168 +158,81 @@ public interface ITunerCallback extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v0, resolved type: android.hardware.radio.ProgramSelector} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v1, resolved type: android.hardware.radio.ProgramSelector} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v5, resolved type: android.hardware.radio.ProgramSelector} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v8, resolved type: android.hardware.radio.ProgramSelector} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v9, resolved type: android.hardware.radio.RadioManager$ProgramInfo} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v15, resolved type: android.hardware.radio.ProgramSelector} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v21, resolved type: android.hardware.radio.ProgramList$Chunk} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v19, resolved type: android.hardware.radio.ProgramSelector} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v20, resolved type: android.hardware.radio.ProgramSelector} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v21, resolved type: android.hardware.radio.ProgramSelector} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v22, resolved type: android.hardware.radio.ProgramSelector} */
-        /* JADX WARNING: type inference failed for: r1v5, types: [android.hardware.radio.RadioManager$BandConfig] */
-        /* JADX WARNING: type inference failed for: r3v7, types: [android.hardware.radio.RadioManager$BandConfig] */
-        /* JADX WARNING: type inference failed for: r3v10, types: [android.hardware.radio.RadioManager$ProgramInfo] */
-        /* JADX WARNING: type inference failed for: r3v17, types: [android.hardware.radio.ProgramList$Chunk] */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r6, android.os.Parcel r7, android.os.Parcel r8, int r9) throws android.os.RemoteException {
-            /*
-                r5 = this;
-                java.lang.String r0 = "android.hardware.radio.ITunerCallback"
-                r1 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r2 = 1
-                if (r6 == r1) goto L_0x00e0
-                r1 = 0
-                r3 = 0
-                switch(r6) {
-                    case 1: goto L_0x00d5;
-                    case 2: goto L_0x00ba;
-                    case 3: goto L_0x00a1;
-                    case 4: goto L_0x0088;
-                    case 5: goto L_0x0079;
-                    case 6: goto L_0x006a;
-                    case 7: goto L_0x005b;
-                    case 8: goto L_0x004c;
-                    case 9: goto L_0x0045;
-                    case 10: goto L_0x003e;
-                    case 11: goto L_0x0025;
-                    case 12: goto L_0x0012;
-                    default: goto L_0x000d;
-                }
-            L_0x000d:
-                boolean r1 = super.onTransact(r6, r7, r8, r9)
-                return r1
-            L_0x0012:
-                r7.enforceInterface(r0)
-                java.lang.Class r1 = r5.getClass()
-                java.lang.ClassLoader r1 = r1.getClassLoader()
-                java.util.HashMap r3 = r7.readHashMap(r1)
-                r5.onParametersUpdated(r3)
-                return r2
-            L_0x0025:
-                r7.enforceInterface(r0)
-                int r1 = r7.readInt()
-                if (r1 == 0) goto L_0x0038
-                android.os.Parcelable$Creator<android.hardware.radio.ProgramList$Chunk> r1 = android.hardware.radio.ProgramList.Chunk.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r7)
-                r3 = r1
-                android.hardware.radio.ProgramList$Chunk r3 = (android.hardware.radio.ProgramList.Chunk) r3
-                goto L_0x0039
-            L_0x0038:
-            L_0x0039:
-                r1 = r3
-                r5.onProgramListUpdated(r1)
-                return r2
-            L_0x003e:
-                r7.enforceInterface(r0)
-                r5.onProgramListChanged()
-                return r2
-            L_0x0045:
-                r7.enforceInterface(r0)
-                r5.onBackgroundScanComplete()
-                return r2
-            L_0x004c:
-                r7.enforceInterface(r0)
-                int r3 = r7.readInt()
-                if (r3 == 0) goto L_0x0057
-                r1 = r2
-            L_0x0057:
-                r5.onBackgroundScanAvailabilityChange(r1)
-                return r2
-            L_0x005b:
-                r7.enforceInterface(r0)
-                int r3 = r7.readInt()
-                if (r3 == 0) goto L_0x0066
-                r1 = r2
-            L_0x0066:
-                r5.onAntennaState(r1)
-                return r2
-            L_0x006a:
-                r7.enforceInterface(r0)
-                int r3 = r7.readInt()
-                if (r3 == 0) goto L_0x0075
-                r1 = r2
-            L_0x0075:
-                r5.onEmergencyAnnouncement(r1)
-                return r2
-            L_0x0079:
-                r7.enforceInterface(r0)
-                int r3 = r7.readInt()
-                if (r3 == 0) goto L_0x0084
-                r1 = r2
-            L_0x0084:
-                r5.onTrafficAnnouncement(r1)
-                return r2
-            L_0x0088:
-                r7.enforceInterface(r0)
-                int r1 = r7.readInt()
-                if (r1 == 0) goto L_0x009b
-                android.os.Parcelable$Creator<android.hardware.radio.RadioManager$ProgramInfo> r1 = android.hardware.radio.RadioManager.ProgramInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r7)
-                r3 = r1
-                android.hardware.radio.RadioManager$ProgramInfo r3 = (android.hardware.radio.RadioManager.ProgramInfo) r3
-                goto L_0x009c
-            L_0x009b:
-            L_0x009c:
-                r1 = r3
-                r5.onCurrentProgramInfoChanged(r1)
-                return r2
-            L_0x00a1:
-                r7.enforceInterface(r0)
-                int r1 = r7.readInt()
-                if (r1 == 0) goto L_0x00b4
-                android.os.Parcelable$Creator<android.hardware.radio.RadioManager$BandConfig> r1 = android.hardware.radio.RadioManager.BandConfig.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r7)
-                r3 = r1
-                android.hardware.radio.RadioManager$BandConfig r3 = (android.hardware.radio.RadioManager.BandConfig) r3
-                goto L_0x00b5
-            L_0x00b4:
-            L_0x00b5:
-                r1 = r3
-                r5.onConfigurationChanged(r1)
-                return r2
-            L_0x00ba:
-                r7.enforceInterface(r0)
-                int r1 = r7.readInt()
-                int r4 = r7.readInt()
-                if (r4 == 0) goto L_0x00d0
-                android.os.Parcelable$Creator<android.hardware.radio.ProgramSelector> r3 = android.hardware.radio.ProgramSelector.CREATOR
-                java.lang.Object r3 = r3.createFromParcel(r7)
-                android.hardware.radio.ProgramSelector r3 = (android.hardware.radio.ProgramSelector) r3
-                goto L_0x00d1
-            L_0x00d0:
-            L_0x00d1:
-                r5.onTuneFailed(r1, r3)
-                return r2
-            L_0x00d5:
-                r7.enforceInterface(r0)
-                int r1 = r7.readInt()
-                r5.onError(r1)
-                return r2
-            L_0x00e0:
-                r8.writeString(r0)
-                return r2
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.hardware.radio.ITunerCallback.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            boolean _arg0;
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    onError(data.readInt());
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    ProgramSelector _arg1 = data.readInt() != 0 ? ProgramSelector.CREATOR.createFromParcel(data) : null;
+                    onTuneFailed(_arg02, _arg1);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    onConfigurationChanged(data.readInt() != 0 ? RadioManager.BandConfig.CREATOR.createFromParcel(data) : null);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    onCurrentProgramInfoChanged(data.readInt() != 0 ? RadioManager.ProgramInfo.CREATOR.createFromParcel(data) : null);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0;
+                    onTrafficAnnouncement(_arg0);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0;
+                    onEmergencyAnnouncement(_arg0);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0;
+                    onAntennaState(_arg0);
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0;
+                    onBackgroundScanAvailabilityChange(_arg0);
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    onBackgroundScanComplete();
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    onProgramListChanged();
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    ProgramList.Chunk _arg03 = data.readInt() != 0 ? ProgramList.Chunk.CREATOR.createFromParcel(data) : null;
+                    onProgramListUpdated(_arg03);
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    ClassLoader cl = getClass().getClassLoader();
+                    onParametersUpdated(data.readHashMap(cl));
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements ITunerCallback {
             public static ITunerCallback sDefaultImpl;
             private IBinder mRemote;
@@ -311,6 +241,7 @@ public interface ITunerCallback extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -319,14 +250,14 @@ public interface ITunerCallback extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.hardware.radio.ITunerCallback
             public void onError(int status) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(status);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onError(status);
                     }
                 } finally {
@@ -334,6 +265,7 @@ public interface ITunerCallback extends IInterface {
                 }
             }
 
+            @Override // android.hardware.radio.ITunerCallback
             public void onTuneFailed(int result, ProgramSelector selector) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -345,9 +277,8 @@ public interface ITunerCallback extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onTuneFailed(result, selector);
                     }
                 } finally {
@@ -355,6 +286,7 @@ public interface ITunerCallback extends IInterface {
                 }
             }
 
+            @Override // android.hardware.radio.ITunerCallback
             public void onConfigurationChanged(RadioManager.BandConfig config) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -365,9 +297,8 @@ public interface ITunerCallback extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onConfigurationChanged(config);
                     }
                 } finally {
@@ -375,6 +306,7 @@ public interface ITunerCallback extends IInterface {
                 }
             }
 
+            @Override // android.hardware.radio.ITunerCallback
             public void onCurrentProgramInfoChanged(RadioManager.ProgramInfo info) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -385,9 +317,8 @@ public interface ITunerCallback extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onCurrentProgramInfoChanged(info);
                     }
                 } finally {
@@ -395,14 +326,14 @@ public interface ITunerCallback extends IInterface {
                 }
             }
 
+            @Override // android.hardware.radio.ITunerCallback
             public void onTrafficAnnouncement(boolean active) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(active);
-                    if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(active ? 1 : 0);
+                    boolean _status = this.mRemote.transact(5, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onTrafficAnnouncement(active);
                     }
                 } finally {
@@ -410,14 +341,14 @@ public interface ITunerCallback extends IInterface {
                 }
             }
 
+            @Override // android.hardware.radio.ITunerCallback
             public void onEmergencyAnnouncement(boolean active) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(active);
-                    if (this.mRemote.transact(6, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(active ? 1 : 0);
+                    boolean _status = this.mRemote.transact(6, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onEmergencyAnnouncement(active);
                     }
                 } finally {
@@ -425,14 +356,14 @@ public interface ITunerCallback extends IInterface {
                 }
             }
 
+            @Override // android.hardware.radio.ITunerCallback
             public void onAntennaState(boolean connected) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(connected);
-                    if (this.mRemote.transact(7, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(connected ? 1 : 0);
+                    boolean _status = this.mRemote.transact(7, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onAntennaState(connected);
                     }
                 } finally {
@@ -440,14 +371,14 @@ public interface ITunerCallback extends IInterface {
                 }
             }
 
+            @Override // android.hardware.radio.ITunerCallback
             public void onBackgroundScanAvailabilityChange(boolean isAvailable) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(isAvailable);
-                    if (this.mRemote.transact(8, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(isAvailable ? 1 : 0);
+                    boolean _status = this.mRemote.transact(8, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onBackgroundScanAvailabilityChange(isAvailable);
                     }
                 } finally {
@@ -455,13 +386,13 @@ public interface ITunerCallback extends IInterface {
                 }
             }
 
+            @Override // android.hardware.radio.ITunerCallback
             public void onBackgroundScanComplete() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(9, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(9, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onBackgroundScanComplete();
                     }
                 } finally {
@@ -469,13 +400,13 @@ public interface ITunerCallback extends IInterface {
                 }
             }
 
+            @Override // android.hardware.radio.ITunerCallback
             public void onProgramListChanged() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(10, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(10, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onProgramListChanged();
                     }
                 } finally {
@@ -483,6 +414,7 @@ public interface ITunerCallback extends IInterface {
                 }
             }
 
+            @Override // android.hardware.radio.ITunerCallback
             public void onProgramListUpdated(ProgramList.Chunk chunk) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -493,9 +425,8 @@ public interface ITunerCallback extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(11, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(11, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onProgramListUpdated(chunk);
                     }
                 } finally {
@@ -503,14 +434,14 @@ public interface ITunerCallback extends IInterface {
                 }
             }
 
+            @Override // android.hardware.radio.ITunerCallback
             public void onParametersUpdated(Map parameters) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeMap(parameters);
-                    if (this.mRemote.transact(12, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(12, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onParametersUpdated(parameters);
                     }
                 } finally {
@@ -520,11 +451,11 @@ public interface ITunerCallback extends IInterface {
         }
 
         public static boolean setDefaultImpl(ITunerCallback impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static ITunerCallback getDefaultImpl() {

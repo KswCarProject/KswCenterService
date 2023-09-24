@@ -1,25 +1,30 @@
 package android.media.session;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
-import android.os.ResultReceiver;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
+import android.p007os.ResultReceiver;
 import android.view.KeyEvent;
 
+/* loaded from: classes3.dex */
 public interface IOnMediaKeyListener extends IInterface {
     void onMediaKey(KeyEvent keyEvent, ResultReceiver resultReceiver) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements IOnMediaKeyListener {
+        @Override // android.media.session.IOnMediaKeyListener
         public void onMediaKey(KeyEvent event, ResultReceiver result) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements IOnMediaKeyListener {
         private static final String DESCRIPTOR = "android.media.session.IOnMediaKeyListener";
         static final int TRANSACTION_onMediaKey = 1;
@@ -33,50 +38,51 @@ public interface IOnMediaKeyListener extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IOnMediaKeyListener)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IOnMediaKeyListener)) {
+                return (IOnMediaKeyListener) iin;
             }
-            return (IOnMediaKeyListener) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
 
         public static String getDefaultTransactionName(int transactionCode) {
-            if (transactionCode != 1) {
-                return null;
+            if (transactionCode == 1) {
+                return "onMediaKey";
             }
-            return "onMediaKey";
+            return null;
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
             KeyEvent _arg0;
-            if (code == 1) {
-                data.enforceInterface(DESCRIPTOR);
-                ResultReceiver _arg1 = null;
-                if (data.readInt() != 0) {
-                    _arg0 = KeyEvent.CREATOR.createFromParcel(data);
-                } else {
-                    _arg0 = null;
+            if (code != 1) {
+                if (code == 1598968902) {
+                    reply.writeString(DESCRIPTOR);
+                    return true;
                 }
-                if (data.readInt() != 0) {
-                    _arg1 = ResultReceiver.CREATOR.createFromParcel(data);
-                }
-                onMediaKey(_arg0, _arg1);
-                return true;
-            } else if (code != 1598968902) {
                 return super.onTransact(code, data, reply, flags);
-            } else {
-                reply.writeString(DESCRIPTOR);
-                return true;
             }
+            data.enforceInterface(DESCRIPTOR);
+            if (data.readInt() != 0) {
+                _arg0 = KeyEvent.CREATOR.createFromParcel(data);
+            } else {
+                _arg0 = null;
+            }
+            ResultReceiver _arg1 = data.readInt() != 0 ? ResultReceiver.CREATOR.createFromParcel(data) : null;
+            onMediaKey(_arg0, _arg1);
+            return true;
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements IOnMediaKeyListener {
             public static IOnMediaKeyListener sDefaultImpl;
             private IBinder mRemote;
@@ -85,6 +91,7 @@ public interface IOnMediaKeyListener extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -93,6 +100,7 @@ public interface IOnMediaKeyListener extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.media.session.IOnMediaKeyListener
             public void onMediaKey(KeyEvent event, ResultReceiver result) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -109,9 +117,8 @@ public interface IOnMediaKeyListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onMediaKey(event, result);
                     }
                 } finally {
@@ -121,11 +128,11 @@ public interface IOnMediaKeyListener extends IInterface {
         }
 
         public static boolean setDefaultImpl(IOnMediaKeyListener impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IOnMediaKeyListener getDefaultImpl() {

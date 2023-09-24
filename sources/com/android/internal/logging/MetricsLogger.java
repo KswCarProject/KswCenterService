@@ -3,9 +3,10 @@ package com.android.internal.logging;
 import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
 import android.metrics.LogMaker;
-import android.os.Build;
+import android.p007os.Build;
 import android.util.StatsLog;
 
+/* loaded from: classes4.dex */
 public class MetricsLogger {
     public static final int LOGTAG = 524292;
     public static final int VIEW_UNKNOWN = 0;
@@ -18,8 +19,7 @@ public class MetricsLogger {
         return sMetricsLogger;
     }
 
-    /* access modifiers changed from: protected */
-    public void saveLog(LogMaker log) {
+    protected void saveLog(LogMaker log) {
         EventLogTags.writeSysuiMultiAction(log.serialize());
         StatsLog.write(83, 0, log.getEntries());
     }
@@ -41,19 +41,17 @@ public class MetricsLogger {
     }
 
     public void visible(int category) throws IllegalArgumentException {
-        if (!Build.IS_DEBUGGABLE || category != 0) {
-            saveLog(new LogMaker(category).setType(1));
-            return;
+        if (Build.IS_DEBUGGABLE && category == 0) {
+            throw new IllegalArgumentException("Must define metric category");
         }
-        throw new IllegalArgumentException("Must define metric category");
+        saveLog(new LogMaker(category).setType(1));
     }
 
     public void hidden(int category) throws IllegalArgumentException {
-        if (!Build.IS_DEBUGGABLE || category != 0) {
-            saveLog(new LogMaker(category).setType(2));
-            return;
+        if (Build.IS_DEBUGGABLE && category == 0) {
+            throw new IllegalArgumentException("Must define metric category");
         }
-        throw new IllegalArgumentException("Must define metric category");
+        saveLog(new LogMaker(category).setType(2));
     }
 
     public void visibility(int category, boolean visible) throws IllegalArgumentException {
@@ -77,15 +75,14 @@ public class MetricsLogger {
     }
 
     public void action(int category, boolean value) {
-        saveLog(new LogMaker(category).setType(4).setSubtype(value));
+        saveLog(new LogMaker(category).setType(4).setSubtype(value ? 1 : 0));
     }
 
     public void action(int category, String pkg) {
-        if (!Build.IS_DEBUGGABLE || category != 0) {
-            saveLog(new LogMaker(category).setType(4).setPackageName(pkg));
-            return;
+        if (Build.IS_DEBUGGABLE && category == 0) {
+            throw new IllegalArgumentException("Must define metric category");
         }
-        throw new IllegalArgumentException("Must define metric category");
+        saveLog(new LogMaker(category).setType(4).setPackageName(pkg));
     }
 
     @Deprecated

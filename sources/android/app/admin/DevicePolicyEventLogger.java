@@ -7,6 +7,7 @@ import com.android.framework.protobuf.nano.MessageNano;
 import com.android.internal.util.Preconditions;
 import java.util.Arrays;
 
+/* loaded from: classes.dex */
 public class DevicePolicyEventLogger {
     private String mAdminPackageName;
     private boolean mBooleanValue;
@@ -61,7 +62,7 @@ public class DevicePolicyEventLogger {
 
     public DevicePolicyEventLogger setStrings(String value, String[] values) {
         Preconditions.checkNotNull(values, "values parameter cannot be null");
-        this.mStringArrayValue = new String[(values.length + 1)];
+        this.mStringArrayValue = new String[values.length + 1];
         this.mStringArrayValue[0] = value;
         System.arraycopy(values, 0, this.mStringArrayValue, 1, values.length);
         return this;
@@ -69,7 +70,7 @@ public class DevicePolicyEventLogger {
 
     public DevicePolicyEventLogger setStrings(String value1, String value2, String[] values) {
         Preconditions.checkNotNull(values, "values parameter cannot be null");
-        this.mStringArrayValue = new String[(values.length + 2)];
+        this.mStringArrayValue = new String[values.length + 2];
         this.mStringArrayValue[0] = value1;
         this.mStringArrayValue[1] = value2;
         System.arraycopy(values, 0, this.mStringArrayValue, 2, values.length);
@@ -98,7 +99,8 @@ public class DevicePolicyEventLogger {
     }
 
     public void write() {
-        StatsLog.write(103, this.mEventId, this.mAdminPackageName, this.mIntValue, this.mBooleanValue, this.mTimePeriodMs, stringArrayValueToBytes(this.mStringArrayValue));
+        byte[] bytes = stringArrayValueToBytes(this.mStringArrayValue);
+        StatsLog.write(103, this.mEventId, this.mAdminPackageName, this.mIntValue, this.mBooleanValue, this.mTimePeriodMs, bytes);
     }
 
     private static byte[] stringArrayValueToBytes(String[] array) {

@@ -7,10 +7,10 @@ import android.view.Surface;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 
+/* loaded from: classes.dex */
 public final class RecommendedStreamConfigurationMap {
     public static final int MAX_USECASE_COUNT = 32;
     private static final String TAG = "RecommendedStreamConfigurationMap";
@@ -27,6 +27,7 @@ public final class RecommendedStreamConfigurationMap {
     private int mUsecase;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface RecommendedUsecase {
     }
 
@@ -41,15 +42,15 @@ public final class RecommendedStreamConfigurationMap {
     }
 
     private Set<Integer> getUnmodifiableIntegerSet(int[] intArray) {
-        if (intArray == null || intArray.length <= 0) {
-            return null;
+        if (intArray != null && intArray.length > 0) {
+            ArraySet<Integer> integerSet = new ArraySet<>();
+            integerSet.ensureCapacity(intArray.length);
+            for (int intEntry : intArray) {
+                integerSet.add(Integer.valueOf(intEntry));
+            }
+            return Collections.unmodifiableSet(integerSet);
         }
-        ArraySet<Integer> integerSet = new ArraySet<>();
-        integerSet.ensureCapacity(intArray.length);
-        for (int intEntry : intArray) {
-            integerSet.add(Integer.valueOf(intEntry));
-        }
-        return Collections.unmodifiableSet(integerSet);
+        return null;
     }
 
     public Set<Integer> getOutputFormats() {
@@ -65,12 +66,12 @@ public final class RecommendedStreamConfigurationMap {
     }
 
     private Set<Size> getUnmodifiableSizeSet(Size[] sizeArray) {
-        if (sizeArray == null || sizeArray.length <= 0) {
-            return null;
+        if (sizeArray != null && sizeArray.length > 0) {
+            ArraySet<Size> sizeSet = new ArraySet<>();
+            sizeSet.addAll(Arrays.asList(sizeArray));
+            return Collections.unmodifiableSet(sizeSet);
         }
-        ArraySet<Size> sizeSet = new ArraySet<>();
-        sizeSet.addAll((Collection<? extends Size>) Arrays.asList(sizeArray));
-        return Collections.unmodifiableSet(sizeSet);
+        return null;
     }
 
     public Set<Size> getInputSizes(int format) {
@@ -90,12 +91,12 @@ public final class RecommendedStreamConfigurationMap {
     }
 
     private Set<Range<Integer>> getUnmodifiableRangeSet(Range<Integer>[] rangeArray) {
-        if (rangeArray == null || rangeArray.length <= 0) {
-            return null;
+        if (rangeArray != null && rangeArray.length > 0) {
+            ArraySet<Range<Integer>> rangeSet = new ArraySet<>();
+            rangeSet.addAll(Arrays.asList(rangeArray));
+            return Collections.unmodifiableSet(rangeSet);
         }
-        ArraySet<Range<Integer>> rangeSet = new ArraySet<>();
-        rangeSet.addAll((Collection<? extends Range<Integer>>) Arrays.asList(rangeArray));
-        return Collections.unmodifiableSet(rangeSet);
+        return null;
     }
 
     public Set<Range<Integer>> getHighSpeedVideoFpsRangesFor(Size size) {
@@ -133,14 +134,14 @@ public final class RecommendedStreamConfigurationMap {
         if (this.mSupportsPrivate) {
             return this.mRecommendedMap.getOutputMinFrameDuration(klass, size);
         }
-        return 0;
+        return 0L;
     }
 
     public <T> long getOutputStallDuration(Class<T> klass, Size size) {
         if (this.mSupportsPrivate) {
             return this.mRecommendedMap.getOutputStallDuration(klass, size);
         }
-        return 0;
+        return 0L;
     }
 
     public boolean isOutputSupportedFor(Surface surface) {

@@ -1,10 +1,13 @@
 package android.net;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes3.dex */
 public class DhcpInfo implements Parcelable {
-    public static final Parcelable.Creator<DhcpInfo> CREATOR = new Parcelable.Creator<DhcpInfo>() {
+    public static final Parcelable.Creator<DhcpInfo> CREATOR = new Parcelable.Creator<DhcpInfo>() { // from class: android.net.DhcpInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public DhcpInfo createFromParcel(Parcel in) {
             DhcpInfo info = new DhcpInfo();
             info.ipAddress = in.readInt();
@@ -17,6 +20,8 @@ public class DhcpInfo implements Parcelable {
             return info;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public DhcpInfo[] newArray(int size) {
             return new DhcpInfo[size];
         }
@@ -68,10 +73,12 @@ public class DhcpInfo implements Parcelable {
         buf.append(NetworkUtils.intToInetAddress(addr).getHostAddress());
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.ipAddress);
         dest.writeInt(this.gateway);

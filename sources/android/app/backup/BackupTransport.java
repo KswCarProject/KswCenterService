@@ -2,13 +2,14 @@ package android.app.backup;
 
 import android.annotation.SystemApi;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.os.IBinder;
-import android.os.ParcelFileDescriptor;
-import android.os.RemoteException;
+import android.content.p002pm.PackageInfo;
+import android.p007os.IBinder;
+import android.p007os.ParcelFileDescriptor;
+import android.p007os.RemoteException;
 import com.android.internal.backup.IBackupTransport;
 
 @SystemApi
+/* loaded from: classes.dex */
 public class BackupTransport {
     public static final int AGENT_ERROR = -1003;
     public static final int AGENT_UNKNOWN = -1004;
@@ -71,7 +72,7 @@ public class BackupTransport {
     }
 
     public long requestBackupTime() {
-        return 0;
+        return 0L;
     }
 
     public int performBackup(PackageInfo packageInfo, ParcelFileDescriptor inFd, int flags) {
@@ -87,7 +88,7 @@ public class BackupTransport {
     }
 
     public long getCurrentRestoreSet() {
-        return 0;
+        return 0L;
     }
 
     public int startRestore(long token, PackageInfo[] packages) {
@@ -107,7 +108,7 @@ public class BackupTransport {
     }
 
     public long requestFullBackupTime() {
-        return 0;
+        return 0L;
     }
 
     public int performFullBackup(PackageInfo targetPackage, ParcelFileDescriptor socket, int flags) {
@@ -150,114 +151,142 @@ public class BackupTransport {
         return 0;
     }
 
+    /* loaded from: classes.dex */
     class TransportImpl extends IBackupTransport.Stub {
         TransportImpl() {
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public String name() throws RemoteException {
             return BackupTransport.this.name();
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public Intent configurationIntent() throws RemoteException {
             return BackupTransport.this.configurationIntent();
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public String currentDestinationString() throws RemoteException {
             return BackupTransport.this.currentDestinationString();
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public Intent dataManagementIntent() {
             return BackupTransport.this.dataManagementIntent();
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public CharSequence dataManagementIntentLabel() {
             return BackupTransport.this.dataManagementIntentLabel();
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public String transportDirName() throws RemoteException {
             return BackupTransport.this.transportDirName();
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public long requestBackupTime() throws RemoteException {
             return BackupTransport.this.requestBackupTime();
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public int initializeDevice() throws RemoteException {
             return BackupTransport.this.initializeDevice();
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public int performBackup(PackageInfo packageInfo, ParcelFileDescriptor inFd, int flags) throws RemoteException {
             return BackupTransport.this.performBackup(packageInfo, inFd, flags);
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public int clearBackupData(PackageInfo packageInfo) throws RemoteException {
             return BackupTransport.this.clearBackupData(packageInfo);
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public int finishBackup() throws RemoteException {
             return BackupTransport.this.finishBackup();
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public RestoreSet[] getAvailableRestoreSets() throws RemoteException {
             return BackupTransport.this.getAvailableRestoreSets();
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public long getCurrentRestoreSet() throws RemoteException {
             return BackupTransport.this.getCurrentRestoreSet();
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public int startRestore(long token, PackageInfo[] packages) throws RemoteException {
             return BackupTransport.this.startRestore(token, packages);
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public RestoreDescription nextRestorePackage() throws RemoteException {
             return BackupTransport.this.nextRestorePackage();
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public int getRestoreData(ParcelFileDescriptor outFd) throws RemoteException {
             return BackupTransport.this.getRestoreData(outFd);
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public void finishRestore() throws RemoteException {
             BackupTransport.this.finishRestore();
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public long requestFullBackupTime() throws RemoteException {
             return BackupTransport.this.requestFullBackupTime();
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public int performFullBackup(PackageInfo targetPackage, ParcelFileDescriptor socket, int flags) throws RemoteException {
             return BackupTransport.this.performFullBackup(targetPackage, socket, flags);
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public int checkFullBackupSize(long size) {
             return BackupTransport.this.checkFullBackupSize(size);
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public int sendBackupData(int numBytes) throws RemoteException {
             return BackupTransport.this.sendBackupData(numBytes);
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public void cancelFullBackup() throws RemoteException {
             BackupTransport.this.cancelFullBackup();
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public boolean isAppEligibleForBackup(PackageInfo targetPackage, boolean isFullBackup) throws RemoteException {
             return BackupTransport.this.isAppEligibleForBackup(targetPackage, isFullBackup);
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public long getBackupQuota(String packageName, boolean isFullBackup) {
             return BackupTransport.this.getBackupQuota(packageName, isFullBackup);
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public int getTransportFlags() {
             return BackupTransport.this.getTransportFlags();
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public int getNextFullRestoreDataChunk(ParcelFileDescriptor socket) {
             return BackupTransport.this.getNextFullRestoreDataChunk(socket);
         }
 
+        @Override // com.android.internal.backup.IBackupTransport
         public int abortFullRestore() {
             return BackupTransport.this.abortFullRestore();
         }

@@ -2,19 +2,27 @@ package android.telecom;
 
 import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.telephony.IccCardConstants;
 import java.util.Locale;
 
 @SystemApi
 @Deprecated
+/* loaded from: classes3.dex */
 public class AudioState implements Parcelable {
-    public static final Parcelable.Creator<AudioState> CREATOR = new Parcelable.Creator<AudioState>() {
+    public static final Parcelable.Creator<AudioState> CREATOR = new Parcelable.Creator<AudioState>() { // from class: android.telecom.AudioState.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AudioState createFromParcel(Parcel source) {
-            return new AudioState(source.readByte() != 0, source.readInt(), source.readInt());
+            boolean isMuted = source.readByte() != 0;
+            int route = source.readInt();
+            int supportedRouteMask = source.readInt();
+            return new AudioState(isMuted, route, supportedRouteMask);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AudioState[] newArray(int size) {
             return new AudioState[size];
         }
@@ -32,10 +40,10 @@ public class AudioState implements Parcelable {
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 127403196)
     private final int supportedRouteMask;
 
-    public AudioState(boolean muted, int route2, int supportedRouteMask2) {
+    public AudioState(boolean muted, int route, int supportedRouteMask) {
         this.isMuted = muted;
-        this.route = route2;
-        this.supportedRouteMask = supportedRouteMask2;
+        this.route = route;
+        this.supportedRouteMask = supportedRouteMask;
     }
 
     public AudioState(AudioState state) {
@@ -55,31 +63,28 @@ public class AudioState implements Parcelable {
             return false;
         }
         AudioState state = (AudioState) obj;
-        if (isMuted() == state.isMuted() && getRoute() == state.getRoute() && getSupportedRouteMask() == state.getSupportedRouteMask()) {
-            return true;
-        }
-        return false;
+        return isMuted() == state.isMuted() && getRoute() == state.getRoute() && getSupportedRouteMask() == state.getSupportedRouteMask();
     }
 
     public String toString() {
-        return String.format(Locale.US, "[AudioState isMuted: %b, route: %s, supportedRouteMask: %s]", new Object[]{Boolean.valueOf(this.isMuted), audioRouteToString(this.route), audioRouteToString(this.supportedRouteMask)});
+        return String.format(Locale.US, "[AudioState isMuted: %b, route: %s, supportedRouteMask: %s]", Boolean.valueOf(this.isMuted), audioRouteToString(this.route), audioRouteToString(this.supportedRouteMask));
     }
 
-    public static String audioRouteToString(int route2) {
-        if (route2 == 0 || (route2 & -16) != 0) {
+    public static String audioRouteToString(int route) {
+        if (route == 0 || (route & (-16)) != 0) {
             return IccCardConstants.INTENT_VALUE_ICC_UNKNOWN;
         }
         StringBuffer buffer = new StringBuffer();
-        if ((route2 & 1) == 1) {
+        if ((route & 1) == 1) {
             listAppend(buffer, "EARPIECE");
         }
-        if ((route2 & 2) == 2) {
+        if ((route & 2) == 2) {
             listAppend(buffer, "BLUETOOTH");
         }
-        if ((route2 & 4) == 4) {
+        if ((route & 4) == 4) {
             listAppend(buffer, "WIRED_HEADSET");
         }
-        if ((route2 & 8) == 8) {
+        if ((route & 8) == 8) {
             listAppend(buffer, "SPEAKER");
         }
         return buffer.toString();
@@ -92,12 +97,14 @@ public class AudioState implements Parcelable {
         buffer.append(str);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel destination, int flags) {
-        destination.writeByte(this.isMuted ? (byte) 1 : 0);
+        destination.writeByte(this.isMuted ? (byte) 1 : (byte) 0);
         destination.writeInt(this.route);
         destination.writeInt(this.supportedRouteMask);
     }

@@ -1,5 +1,6 @@
 package android.database.sqlite;
 
+/* loaded from: classes.dex */
 public class SQLiteDoneException extends SQLiteException {
     public SQLiteDoneException() {
     }

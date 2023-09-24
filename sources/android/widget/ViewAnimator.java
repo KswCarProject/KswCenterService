@@ -12,23 +12,26 @@ import android.view.animation.AnimationUtils;
 import android.view.inspector.InspectionCompanion;
 import android.view.inspector.PropertyMapper;
 import android.view.inspector.PropertyReader;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
+/* loaded from: classes4.dex */
 public class ViewAnimator extends FrameLayout {
-    boolean mAnimateFirstTime = true;
+    boolean mAnimateFirstTime;
     @UnsupportedAppUsage
-    boolean mFirstTime = true;
+    boolean mFirstTime;
     Animation mInAnimation;
     Animation mOutAnimation;
     @UnsupportedAppUsage
-    int mWhichChild = 0;
+    int mWhichChild;
 
+    /* loaded from: classes4.dex */
     public final class InspectionCompanion implements android.view.inspector.InspectionCompanion<ViewAnimator> {
         private int mAnimateFirstViewId;
         private int mInAnimationId;
         private int mOutAnimationId;
         private boolean mPropertiesMapped = false;
 
+        @Override // android.view.inspector.InspectionCompanion
         public void mapProperties(PropertyMapper propertyMapper) {
             this.mAnimateFirstViewId = propertyMapper.mapBoolean("animateFirstView", 16843477);
             this.mInAnimationId = propertyMapper.mapObject("inAnimation", 16843127);
@@ -36,25 +39,31 @@ public class ViewAnimator extends FrameLayout {
             this.mPropertiesMapped = true;
         }
 
+        @Override // android.view.inspector.InspectionCompanion
         public void readProperties(ViewAnimator node, PropertyReader propertyReader) {
-            if (this.mPropertiesMapped) {
-                propertyReader.readBoolean(this.mAnimateFirstViewId, node.getAnimateFirstView());
-                propertyReader.readObject(this.mInAnimationId, node.getInAnimation());
-                propertyReader.readObject(this.mOutAnimationId, node.getOutAnimation());
-                return;
+            if (!this.mPropertiesMapped) {
+                throw new InspectionCompanion.UninitializedPropertyMapException();
             }
-            throw new InspectionCompanion.UninitializedPropertyMapException();
+            propertyReader.readBoolean(this.mAnimateFirstViewId, node.getAnimateFirstView());
+            propertyReader.readObject(this.mInAnimationId, node.getInAnimation());
+            propertyReader.readObject(this.mOutAnimationId, node.getOutAnimation());
         }
     }
 
     public ViewAnimator(Context context) {
         super(context);
-        initViewAnimator(context, (AttributeSet) null);
+        this.mWhichChild = 0;
+        this.mFirstTime = true;
+        this.mAnimateFirstTime = true;
+        initViewAnimator(context, null);
     }
 
     public ViewAnimator(Context context, AttributeSet attrs) {
         super(context, attrs);
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ViewAnimator);
+        this.mWhichChild = 0;
+        this.mFirstTime = true;
+        this.mAnimateFirstTime = true;
+        TypedArray a = context.obtainStyledAttributes(attrs, C3132R.styleable.ViewAnimator);
         int resource = a.getResourceId(0, 0);
         if (resource > 0) {
             setInAnimation(context, resource);
@@ -63,7 +72,8 @@ public class ViewAnimator extends FrameLayout {
         if (resource2 > 0) {
             setOutAnimation(context, resource2);
         }
-        setAnimateFirstView(a.getBoolean(2, true));
+        boolean flag = a.getBoolean(2, true);
+        setAnimateFirstView(flag);
         a.recycle();
         initViewAnimator(context, attrs);
     }
@@ -73,24 +83,21 @@ public class ViewAnimator extends FrameLayout {
             this.mMeasureAllChildren = true;
             return;
         }
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.FrameLayout);
-        setMeasureAllChildren(a.getBoolean(0, true));
+        TypedArray a = context.obtainStyledAttributes(attrs, C3132R.styleable.FrameLayout);
+        boolean measureAllChildren = a.getBoolean(0, true);
+        setMeasureAllChildren(measureAllChildren);
         a.recycle();
     }
 
     @RemotableViewMethod
     public void setDisplayedChild(int whichChild) {
         this.mWhichChild = whichChild;
-        boolean z = true;
         if (whichChild >= getChildCount()) {
             this.mWhichChild = 0;
         } else if (whichChild < 0) {
             this.mWhichChild = getChildCount() - 1;
         }
-        if (getFocusedChild() == null) {
-            z = false;
-        }
-        boolean hasFocus = z;
+        boolean hasFocus = getFocusedChild() != null;
         showOnly(this.mWhichChild);
         if (hasFocus) {
             requestFocus(2);
@@ -111,9 +118,8 @@ public class ViewAnimator extends FrameLayout {
         setDisplayedChild(this.mWhichChild - 1);
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void showOnly(int childIndex, boolean animate) {
+    void showOnly(int childIndex, boolean animate) {
         int count = getChildCount();
         for (int i = 0; i < count; i++) {
             View child = getChildAt(i);
@@ -134,11 +140,12 @@ public class ViewAnimator extends FrameLayout {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void showOnly(int childIndex) {
-        showOnly(childIndex, !this.mFirstTime || this.mAnimateFirstTime);
+    void showOnly(int childIndex) {
+        boolean animate = !this.mFirstTime || this.mAnimateFirstTime;
+        showOnly(childIndex, animate);
     }
 
+    @Override // android.view.ViewGroup
     public void addView(View child, int index, ViewGroup.LayoutParams params) {
         super.addView(child, index, params);
         if (getChildCount() == 1) {
@@ -151,12 +158,14 @@ public class ViewAnimator extends FrameLayout {
         }
     }
 
+    @Override // android.view.ViewGroup
     public void removeAllViews() {
         super.removeAllViews();
         this.mWhichChild = 0;
         this.mFirstTime = true;
     }
 
+    @Override // android.view.ViewGroup, android.view.ViewManager
     public void removeView(View view) {
         int index = indexOfChild(view);
         if (index >= 0) {
@@ -164,6 +173,7 @@ public class ViewAnimator extends FrameLayout {
         }
     }
 
+    @Override // android.view.ViewGroup
     public void removeViewAt(int index) {
         super.removeViewAt(index);
         int childCount = getChildCount();
@@ -177,10 +187,12 @@ public class ViewAnimator extends FrameLayout {
         }
     }
 
+    @Override // android.view.ViewGroup
     public void removeViewInLayout(View view) {
         removeView(view);
     }
 
+    @Override // android.view.ViewGroup
     public void removeViews(int start, int count) {
         super.removeViews(start, count);
         if (getChildCount() == 0) {
@@ -191,6 +203,7 @@ public class ViewAnimator extends FrameLayout {
         }
     }
 
+    @Override // android.view.ViewGroup
     public void removeViewsInLayout(int start, int count) {
         removeViews(start, count);
     }
@@ -231,10 +244,12 @@ public class ViewAnimator extends FrameLayout {
         this.mAnimateFirstTime = animate;
     }
 
+    @Override // android.view.View
     public int getBaseline() {
         return getCurrentView() != null ? getCurrentView().getBaseline() : super.getBaseline();
     }
 
+    @Override // android.widget.FrameLayout, android.view.ViewGroup, android.view.View
     public CharSequence getAccessibilityClassName() {
         return ViewAnimator.class.getName();
     }

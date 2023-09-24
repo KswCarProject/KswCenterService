@@ -1,16 +1,17 @@
 package android.provider;
 
+import android.annotation.UnsupportedAppUsage;
 import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.pm.UserInfo;
+import android.content.p002pm.UserInfo;
 import android.database.Cursor;
 import android.location.Country;
 import android.location.CountryDetector;
 import android.net.Uri;
-import android.os.UserHandle;
-import android.os.UserManager;
+import android.p007os.UserHandle;
+import android.p007os.UserManager;
 import android.provider.ContactsContract;
 import android.telecom.PhoneAccount;
 import android.telecom.PhoneAccountHandle;
@@ -19,7 +20,9 @@ import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 import android.util.Log;
 import com.android.internal.telephony.CallerInfo;
+import java.util.List;
 
+/* loaded from: classes3.dex */
 public class CallLog {
     public static final String AUTHORITY = "call_log";
     public static final Uri CONTENT_URI = Uri.parse("content://call_log");
@@ -27,9 +30,9 @@ public class CallLog {
     public static final String SHADOW_AUTHORITY = "call_log_shadow";
     private static final boolean VERBOSE_LOG = false;
 
+    /* loaded from: classes3.dex */
     public static class Calls implements BaseColumns {
         public static final String ADD_FOR_ALL_USERS = "add_for_all_users";
-        public static final String ALLOW_VOICEMAILS_PARAM_KEY = "allow_voicemails";
         public static final int ANSWERED_EXTERNALLY_TYPE = 7;
         public static final int BLOCKED_TYPE = 6;
         public static final String BLOCK_REASON = "block_reason";
@@ -52,11 +55,8 @@ public class CallLog {
         public static final String CACHED_PHOTO_URI = "photo_uri";
         public static final String CALL_SCREENING_APP_NAME = "call_screening_app_name";
         public static final String CALL_SCREENING_COMPONENT_NAME = "call_screening_component_name";
-        public static final Uri CONTENT_FILTER_URI = Uri.parse("content://call_log/calls/filter");
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/calls";
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/calls";
-        public static final Uri CONTENT_URI = Uri.parse("content://call_log/calls");
-        public static final Uri CONTENT_URI_WITH_VOICEMAIL = CONTENT_URI.buildUpon().appendQueryParameter(ALLOW_VOICEMAILS_PARAM_KEY, "true").build();
         public static final String COUNTRY_ISO = "countryiso";
         public static final String DATA_USAGE = "data_usage";
         public static final String DATE = "date";
@@ -92,7 +92,6 @@ public class CallLog {
         public static final int PRESENTATION_RESTRICTED = 2;
         public static final int PRESENTATION_UNKNOWN = 3;
         public static final int REJECTED_TYPE = 5;
-        public static final Uri SHADOW_CONTENT_URI = Uri.parse("content://call_log_shadow/calls");
         public static final String SUB_ID = "sub_id";
         public static final String TRANSCRIPTION = "transcription";
         public static final String TRANSCRIPTION_STATE = "transcription_state";
@@ -100,318 +99,155 @@ public class CallLog {
         public static final String VIA_NUMBER = "via_number";
         public static final int VOICEMAIL_TYPE = 4;
         public static final String VOICEMAIL_URI = "voicemail_uri";
+        public static final Uri CONTENT_URI = Uri.parse("content://call_log/calls");
+        public static final Uri SHADOW_CONTENT_URI = Uri.parse("content://call_log_shadow/calls");
+        public static final Uri CONTENT_FILTER_URI = Uri.parse("content://call_log/calls/filter");
+        public static final String ALLOW_VOICEMAILS_PARAM_KEY = "allow_voicemails";
+        public static final Uri CONTENT_URI_WITH_VOICEMAIL = CONTENT_URI.buildUpon().appendQueryParameter(ALLOW_VOICEMAILS_PARAM_KEY, "true").build();
 
         public static Uri addCall(CallerInfo ci, Context context, String number, int presentation, int callType, int features, PhoneAccountHandle accountHandle, long start, int duration, Long dataUsage) {
-            return addCall(ci, context, number, "", "", presentation, callType, features, accountHandle, start, duration, dataUsage, false, (UserHandle) null, false, 0, (CharSequence) null, (String) null);
+            return addCall(ci, context, number, "", "", presentation, callType, features, accountHandle, start, duration, dataUsage, false, null, false, 0, null, null);
         }
 
         public static Uri addCall(CallerInfo ci, Context context, String number, String postDialDigits, String viaNumber, int presentation, int callType, int features, PhoneAccountHandle accountHandle, long start, int duration, Long dataUsage, boolean addForAllUsers, UserHandle userToBeInsertedTo) {
-            return addCall(ci, context, number, postDialDigits, viaNumber, presentation, callType, features, accountHandle, start, duration, dataUsage, addForAllUsers, userToBeInsertedTo, false, 0, (CharSequence) null, (String) null);
+            return addCall(ci, context, number, postDialDigits, viaNumber, presentation, callType, features, accountHandle, start, duration, dataUsage, addForAllUsers, userToBeInsertedTo, false, 0, null, null);
         }
 
-        /*  JADX ERROR: NullPointerException in pass: CodeShrinkVisitor
-            java.lang.NullPointerException
-            */
-        @android.annotation.UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
-        public static android.net.Uri addCall(com.android.internal.telephony.CallerInfo r28, android.content.Context r29, java.lang.String r30, java.lang.String r31, java.lang.String r32, int r33, int r34, int r35, android.telecom.PhoneAccountHandle r36, long r37, int r39, java.lang.Long r40, boolean r41, android.os.UserHandle r42, boolean r43, int r44, java.lang.CharSequence r45, java.lang.String r46) {
-            /*
-                r1 = r28
-                r2 = r29
-                r3 = r34
-                r4 = r36
-                r5 = r39
-                r6 = r40
-                android.content.ContentResolver r13 = r29.getContentResolver()
-                java.lang.String r14 = getLogAccountAddress(r2, r4)
-                r0 = r30
-                r15 = r33
-                int r12 = getLogNumberPresentation(r0, r15)
-                r11 = 1
-                if (r12 == r11) goto L_0x0027
-                java.lang.String r0 = ""
-                if (r1 == 0) goto L_0x0027
-                java.lang.String r7 = ""
-                r1.name = r7
-            L_0x0027:
-                r10 = r0
-                r0 = 0
-                r7 = 0
-                if (r4 == 0) goto L_0x0038
-                android.content.ComponentName r8 = r36.getComponentName()
-                java.lang.String r0 = r8.flattenToString()
-                java.lang.String r7 = r36.getId()
-            L_0x0038:
-                r9 = r0
-                r8 = r7
-                android.content.ContentValues r0 = new android.content.ContentValues
-                r7 = 6
-                r0.<init>((int) r7)
-                r7 = r0
-                java.lang.String r0 = "number"
-                r7.put((java.lang.String) r0, (java.lang.String) r10)
-                java.lang.String r0 = "post_dial_digits"
-                r11 = r31
-                r7.put((java.lang.String) r0, (java.lang.String) r11)
-                java.lang.String r0 = "via_number"
-                r4 = r32
-                r7.put((java.lang.String) r0, (java.lang.String) r4)
-                java.lang.String r0 = "presentation"
-                java.lang.Integer r4 = java.lang.Integer.valueOf(r12)
-                r7.put((java.lang.String) r0, (java.lang.Integer) r4)
-                java.lang.String r0 = "type"
-                java.lang.Integer r4 = java.lang.Integer.valueOf(r34)
-                r7.put((java.lang.String) r0, (java.lang.Integer) r4)
-                java.lang.String r0 = "features"
-                java.lang.Integer r4 = java.lang.Integer.valueOf(r35)
-                r7.put((java.lang.String) r0, (java.lang.Integer) r4)
-                java.lang.String r0 = "date"
-                java.lang.Long r4 = java.lang.Long.valueOf(r37)
-                r7.put((java.lang.String) r0, (java.lang.Long) r4)
-                java.lang.String r0 = "duration"
-                r17 = r10
-                long r10 = (long) r5
-                java.lang.Long r4 = java.lang.Long.valueOf(r10)
-                r7.put((java.lang.String) r0, (java.lang.Long) r4)
-                if (r6 == 0) goto L_0x0090
-                java.lang.String r0 = "data_usage"
-                r7.put((java.lang.String) r0, (java.lang.Long) r6)
-            L_0x0090:
-                java.lang.String r0 = "subscription_component_name"
-                r7.put((java.lang.String) r0, (java.lang.String) r9)
-                java.lang.String r0 = "subscription_id"
-                r7.put((java.lang.String) r0, (java.lang.String) r8)
-                java.lang.String r0 = "phone_account_address"
-                r7.put((java.lang.String) r0, (java.lang.String) r14)
-                java.lang.String r0 = "new"
-                r4 = 1
-                java.lang.Integer r10 = java.lang.Integer.valueOf(r4)
-                r7.put((java.lang.String) r0, (java.lang.Integer) r10)
-                if (r1 == 0) goto L_0x00bb
-                java.lang.String r0 = r1.name
-                if (r0 == 0) goto L_0x00bb
-                java.lang.String r0 = "name"
-                java.lang.String r4 = r1.name
-                r7.put((java.lang.String) r0, (java.lang.String) r4)
-            L_0x00bb:
-                java.lang.String r0 = "add_for_all_users"
-                java.lang.Integer r4 = java.lang.Integer.valueOf(r41)
-                r7.put((java.lang.String) r0, (java.lang.Integer) r4)
-                r0 = 3
-                if (r3 != r0) goto L_0x00d0
-                java.lang.String r0 = "is_read"
-                java.lang.Integer r4 = java.lang.Integer.valueOf(r43)
-                r7.put((java.lang.String) r0, (java.lang.Integer) r4)
-            L_0x00d0:
-                java.lang.String r0 = "block_reason"
-                java.lang.Integer r4 = java.lang.Integer.valueOf(r44)
-                r7.put((java.lang.String) r0, (java.lang.Integer) r4)
-                java.lang.String r0 = "call_screening_app_name"
-                java.lang.String r4 = charSequenceToString(r45)
-                r7.put((java.lang.String) r0, (java.lang.String) r4)
-                java.lang.String r0 = "call_screening_component_name"
-                r4 = r46
-                r7.put((java.lang.String) r0, (java.lang.String) r4)
-                if (r1 == 0) goto L_0x01b6
-                long r10 = r1.contactIdOrZero
-                r18 = 0
-                int r10 = (r10 > r18 ? 1 : (r10 == r18 ? 0 : -1))
-                if (r10 <= 0) goto L_0x01b6
-                java.lang.String r10 = r1.normalizedNumber
-                r11 = 2
-                if (r10 == 0) goto L_0x012f
-                java.lang.String r10 = r1.normalizedNumber
-                android.net.Uri r18 = android.provider.ContactsContract.CommonDataKinds.Phone.CONTENT_URI
-                java.lang.String r19 = "_id"
-                java.lang.String[] r19 = new java.lang.String[]{r19}
-                java.lang.String r20 = "contact_id =? AND data4 =?"
-                java.lang.String[] r0 = new java.lang.String[r11]
-                r21 = r12
-                long r11 = r1.contactIdOrZero
-                java.lang.String r11 = java.lang.String.valueOf(r11)
-                r12 = 0
-                r0[r12] = r11
-                r11 = 1
-                r0[r11] = r10
-                r12 = 0
-                r22 = r7
-                r7 = r13
-                r16 = r8
-                r8 = r18
-                r18 = r9
-                r9 = r19
-                r23 = r17
-                r17 = r10
-                r10 = r20
-                r4 = r11
-                r11 = r0
-                r19 = r21
-                android.database.Cursor r0 = r7.query(r8, r9, r10, r11, r12)
-                goto L_0x0167
-            L_0x012f:
-                r22 = r7
-                r16 = r8
-                r18 = r9
-                r19 = r12
-                r23 = r17
-                r4 = 1
-                java.lang.String r0 = r1.phoneNumber
-                if (r0 == 0) goto L_0x0141
-                java.lang.String r10 = r1.phoneNumber
-                goto L_0x0143
-            L_0x0141:
-                r10 = r23
-            L_0x0143:
-                r0 = r10
-                android.net.Uri r7 = android.provider.ContactsContract.CommonDataKinds.Callable.CONTENT_FILTER_URI
-                java.lang.String r8 = android.net.Uri.encode(r0)
-                android.net.Uri r8 = android.net.Uri.withAppendedPath(r7, r8)
-                java.lang.String r7 = "_id"
-                java.lang.String[] r9 = new java.lang.String[]{r7}
-                java.lang.String r10 = "contact_id =?"
-                java.lang.String[] r11 = new java.lang.String[r4]
-                long r4 = r1.contactIdOrZero
-                java.lang.String r4 = java.lang.String.valueOf(r4)
-                r5 = 0
-                r11[r5] = r4
-                r12 = 0
-                r7 = r13
-                android.database.Cursor r0 = r7.query(r8, r9, r10, r11, r12)
-            L_0x0167:
-                r4 = r0
-                if (r4 == 0) goto L_0x01b0
-                int r0 = r4.getCount()     // Catch:{ all -> 0x01a7 }
-                if (r0 <= 0) goto L_0x019e
-                boolean r0 = r4.moveToFirst()     // Catch:{ all -> 0x01a7 }
-                if (r0 == 0) goto L_0x019e
-                r12 = 0
-                java.lang.String r0 = r4.getString(r12)     // Catch:{ all -> 0x01a7 }
-                updateDataUsageStatForData(r13, r0)     // Catch:{ all -> 0x01a7 }
-                r5 = 10000(0x2710, float:1.4013E-41)
-                r7 = r39
-                if (r7 < r5) goto L_0x019b
-                r5 = 2
-                if (r3 != r5) goto L_0x019b
-                java.lang.String r5 = r1.normalizedNumber     // Catch:{ all -> 0x0197 }
-                boolean r5 = android.text.TextUtils.isEmpty(r5)     // Catch:{ all -> 0x0197 }
-                if (r5 == 0) goto L_0x019b
-                r5 = r23
-                updateNormalizedNumber(r2, r13, r0, r5)     // Catch:{ all -> 0x0195 }
-                goto L_0x01a3
-            L_0x0195:
-                r0 = move-exception
-                goto L_0x01ac
-            L_0x0197:
-                r0 = move-exception
-                r5 = r23
-                goto L_0x01ac
-            L_0x019b:
-                r5 = r23
-                goto L_0x01a3
-            L_0x019e:
-                r5 = r23
-                r7 = r39
-                r12 = 0
-            L_0x01a3:
-                r4.close()
-                goto L_0x01c2
-            L_0x01a7:
-                r0 = move-exception
-                r5 = r23
-                r7 = r39
-            L_0x01ac:
-                r4.close()
-                throw r0
-            L_0x01b0:
-                r5 = r23
-                r7 = r39
-                r12 = 0
-                goto L_0x01c2
-            L_0x01b6:
-                r22 = r7
-                r16 = r8
-                r18 = r9
-                r19 = r12
-                r12 = 0
-                r7 = r5
-                r5 = r17
-            L_0x01c2:
-                r0 = 0
-                java.lang.Class<android.os.UserManager> r4 = android.os.UserManager.class
-                java.lang.Object r4 = r2.getSystemService(r4)
-                android.os.UserManager r4 = (android.os.UserManager) r4
-                int r8 = r4.getUserHandle()
-                if (r41 == 0) goto L_0x0242
-                android.os.UserHandle r10 = android.os.UserHandle.SYSTEM
-                r11 = r22
-                android.net.Uri r10 = addEntryAndRemoveExpiredEntries(r2, r4, r10, r11)
-                if (r10 == 0) goto L_0x023e
-                java.lang.String r12 = "call_log_shadow"
-                r25 = r0
-                java.lang.String r0 = r10.getAuthority()
-                boolean r0 = r12.equals(r0)
-                if (r0 == 0) goto L_0x01ea
-                goto L_0x0240
-            L_0x01ea:
-                if (r8 != 0) goto L_0x01ef
-                r0 = r10
-                r25 = r0
-            L_0x01ef:
-                r0 = 1
-                java.util.List r0 = r4.getUsers(r0)
-                int r12 = r0.size()
-                r24 = 0
-            L_0x01fa:
-                r26 = r24
-                r1 = r26
-                if (r1 >= r12) goto L_0x023d
-                java.lang.Object r17 = r0.get(r1)
-                android.content.pm.UserInfo r17 = (android.content.pm.UserInfo) r17
-                r27 = r0
-                android.os.UserHandle r0 = r17.getUserHandle()
-                int r3 = r0.getIdentifier()
-                boolean r20 = r0.isSystem()
-                if (r20 == 0) goto L_0x0217
-                goto L_0x0234
-            L_0x0217:
-                boolean r20 = shouldHaveSharedCallLogEntries(r2, r4, r3)
-                if (r20 != 0) goto L_0x021e
-                goto L_0x0234
-            L_0x021e:
-                boolean r20 = r4.isUserRunning((android.os.UserHandle) r0)
-                if (r20 == 0) goto L_0x0234
-                boolean r20 = r4.isUserUnlocked((android.os.UserHandle) r0)
-                if (r20 == 0) goto L_0x0234
-                android.net.Uri r20 = addEntryAndRemoveExpiredEntries(r2, r4, r0, r11)
-                if (r3 != r8) goto L_0x0234
-                r0 = r20
-                r25 = r0
-            L_0x0234:
-                int r24 = r1 + 1
-                r0 = r27
-                r1 = r28
-                r3 = r34
-                goto L_0x01fa
-            L_0x023d:
-                goto L_0x0254
-            L_0x023e:
-                r25 = r0
-            L_0x0240:
-                r0 = 0
-                return r0
-            L_0x0242:
-                r25 = r0
-                r11 = r22
-                if (r42 == 0) goto L_0x024c
-                r0 = r42
-                goto L_0x0250
-            L_0x024c:
-                android.os.UserHandle r0 = android.os.UserHandle.of(r8)
-            L_0x0250:
-                android.net.Uri r25 = addEntryAndRemoveExpiredEntries(r2, r4, r0, r11)
-            L_0x0254:
-                return r25
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.provider.CallLog.Calls.addCall(com.android.internal.telephony.CallerInfo, android.content.Context, java.lang.String, java.lang.String, java.lang.String, int, int, int, android.telecom.PhoneAccountHandle, long, int, java.lang.Long, boolean, android.os.UserHandle, boolean, int, java.lang.CharSequence, java.lang.String):android.net.Uri");
+        @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
+        public static Uri addCall(CallerInfo ci, Context context, String number, String postDialDigits, String viaNumber, int presentation, int callType, int features, PhoneAccountHandle accountHandle, long start, int duration, Long dataUsage, boolean addForAllUsers, UserHandle userToBeInsertedTo, boolean isRead, int callBlockReason, CharSequence callScreeningAppName, String callScreeningComponentName) {
+            ContentValues values;
+            String number2;
+            Cursor cursor;
+            ContentResolver resolver = context.getContentResolver();
+            String accountAddress = getLogAccountAddress(context, accountHandle);
+            String number3 = number;
+            int numberPresentation = getLogNumberPresentation(number3, presentation);
+            if (numberPresentation != 1) {
+                number3 = "";
+                if (ci != null) {
+                    ci.name = "";
+                }
+            }
+            String number4 = number3;
+            String accountComponentString = null;
+            String accountId = null;
+            if (accountHandle != null) {
+                accountComponentString = accountHandle.getComponentName().flattenToString();
+                accountId = accountHandle.getId();
+            }
+            String accountComponentString2 = accountComponentString;
+            String accountId2 = accountId;
+            ContentValues values2 = new ContentValues(6);
+            values2.put("number", number4);
+            values2.put(POST_DIAL_DIGITS, postDialDigits);
+            values2.put(VIA_NUMBER, viaNumber);
+            values2.put(NUMBER_PRESENTATION, Integer.valueOf(numberPresentation));
+            values2.put("type", Integer.valueOf(callType));
+            values2.put(FEATURES, Integer.valueOf(features));
+            values2.put("date", Long.valueOf(start));
+            values2.put("duration", Long.valueOf(duration));
+            if (dataUsage != null) {
+                values2.put(DATA_USAGE, dataUsage);
+            }
+            values2.put("subscription_component_name", accountComponentString2);
+            values2.put("subscription_id", accountId2);
+            values2.put(PHONE_ACCOUNT_ADDRESS, accountAddress);
+            values2.put("new", (Integer) 1);
+            if (ci != null && ci.name != null) {
+                values2.put("name", ci.name);
+            }
+            values2.put(ADD_FOR_ALL_USERS, Integer.valueOf(addForAllUsers ? 1 : 0));
+            if (callType == 3) {
+                values2.put("is_read", Integer.valueOf(isRead ? 1 : 0));
+            }
+            values2.put(BLOCK_REASON, Integer.valueOf(callBlockReason));
+            values2.put(CALL_SCREENING_APP_NAME, charSequenceToString(callScreeningAppName));
+            values2.put(CALL_SCREENING_COMPONENT_NAME, callScreeningComponentName);
+            if (ci == null || ci.contactIdOrZero <= 0) {
+                values = values2;
+            } else {
+                if (ci.normalizedNumber != null) {
+                    String normalizedPhoneNumber = ci.normalizedNumber;
+                    values = values2;
+                    number2 = number4;
+                    cursor = resolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, new String[]{"_id"}, "contact_id =? AND data4 =?", new String[]{String.valueOf(ci.contactIdOrZero), normalizedPhoneNumber}, null);
+                } else {
+                    values = values2;
+                    number2 = number4;
+                    String phoneNumber = ci.phoneNumber != null ? ci.phoneNumber : number2;
+                    cursor = resolver.query(Uri.withAppendedPath(ContactsContract.CommonDataKinds.Callable.CONTENT_FILTER_URI, Uri.encode(phoneNumber)), new String[]{"_id"}, "contact_id =?", new String[]{String.valueOf(ci.contactIdOrZero)}, null);
+                }
+                Cursor cursor2 = cursor;
+                if (cursor2 != null) {
+                    try {
+                        if (cursor2.getCount() > 0 && cursor2.moveToFirst()) {
+                            String dataId = cursor2.getString(0);
+                            updateDataUsageStatForData(resolver, dataId);
+                            if (duration >= 10000 && callType == 2) {
+                                try {
+                                    if (TextUtils.isEmpty(ci.normalizedNumber)) {
+                                        try {
+                                            updateNormalizedNumber(context, resolver, dataId, number2);
+                                        } catch (Throwable th) {
+                                            th = th;
+                                            cursor2.close();
+                                            throw th;
+                                        }
+                                    }
+                                } catch (Throwable th2) {
+                                    th = th2;
+                                }
+                            }
+                        }
+                        cursor2.close();
+                    } catch (Throwable th3) {
+                        th = th3;
+                    }
+                }
+            }
+            UserManager userManager = (UserManager) context.getSystemService(UserManager.class);
+            int currentUserId = userManager.getUserHandle();
+            if (addForAllUsers) {
+                ContentValues values3 = values;
+                Uri uriForSystem = addEntryAndRemoveExpiredEntries(context, userManager, UserHandle.SYSTEM, values3);
+                if (uriForSystem == null) {
+                    return null;
+                }
+                Uri result = null;
+                if (CallLog.SHADOW_AUTHORITY.equals(uriForSystem.getAuthority())) {
+                    return null;
+                }
+                if (currentUserId == 0) {
+                    result = uriForSystem;
+                }
+                List<UserInfo> users = userManager.getUsers(true);
+                int count = users.size();
+                int i = 0;
+                while (true) {
+                    int i2 = i;
+                    if (i2 < count) {
+                        UserInfo userInfo = users.get(i2);
+                        List<UserInfo> users2 = users;
+                        UserHandle userHandle = userInfo.getUserHandle();
+                        int userId = userHandle.getIdentifier();
+                        if (!userHandle.isSystem() && shouldHaveSharedCallLogEntries(context, userManager, userId) && userManager.isUserRunning(userHandle) && userManager.isUserUnlocked(userHandle)) {
+                            Uri uri = addEntryAndRemoveExpiredEntries(context, userManager, userHandle, values3);
+                            if (userId == currentUserId) {
+                                result = uri;
+                            }
+                        }
+                        i = i2 + 1;
+                        users = users2;
+                    } else {
+                        return result;
+                    }
+                }
+            } else {
+                ContentValues values4 = values;
+                UserHandle targetUserHandle = userToBeInsertedTo != null ? userToBeInsertedTo : UserHandle.m110of(currentUserId);
+                Uri result2 = addEntryAndRemoveExpiredEntries(context, userManager, targetUserHandle, values4);
+                return result2;
+            }
         }
 
         private static String charSequenceToString(CharSequence sequence) {
@@ -423,24 +259,19 @@ public class CallLog {
 
         public static boolean shouldHaveSharedCallLogEntries(Context context, UserManager userManager, int userId) {
             UserInfo userInfo;
-            if (!userManager.hasUserRestriction(UserManager.DISALLOW_OUTGOING_CALLS, UserHandle.of(userId)) && (userInfo = userManager.getUserInfo(userId)) != null && !userInfo.isManagedProfile()) {
-                return true;
-            }
-            return false;
+            return (userManager.hasUserRestriction(UserManager.DISALLOW_OUTGOING_CALLS, UserHandle.m110of(userId)) || (userInfo = userManager.getUserInfo(userId)) == null || userInfo.isManagedProfile()) ? false : true;
         }
 
         public static String getLastOutgoingCall(Context context) {
+            ContentResolver resolver = context.getContentResolver();
             Cursor c = null;
             try {
-                c = context.getContentResolver().query(CONTENT_URI, new String[]{"number"}, "type = 2", (String[]) null, "date DESC LIMIT 1");
+                c = resolver.query(CONTENT_URI, new String[]{"number"}, "type = 2", null, "date DESC LIMIT 1");
+                if (c != null && c.moveToFirst()) {
+                    return c.getString(0);
+                }
                 if (c != null) {
-                    if (c.moveToFirst()) {
-                        String string = c.getString(0);
-                        if (c != null) {
-                            c.close();
-                        }
-                        return string;
-                    }
+                    c.close();
                 }
                 return "";
             } finally {
@@ -456,43 +287,47 @@ public class CallLog {
             try {
                 Uri result = resolver.insert(uri, values);
                 if (!values.containsKey("subscription_id") || TextUtils.isEmpty(values.getAsString("subscription_id")) || !values.containsKey("subscription_component_name") || TextUtils.isEmpty(values.getAsString("subscription_component_name"))) {
-                    resolver.delete(uri, "_id IN (SELECT _id FROM calls ORDER BY date DESC LIMIT -1 OFFSET 500)", (String[]) null);
+                    resolver.delete(uri, "_id IN (SELECT _id FROM calls ORDER BY date DESC LIMIT -1 OFFSET 500)", null);
                 } else {
                     resolver.delete(uri, "_id IN (SELECT _id FROM calls WHERE subscription_component_name = ? AND subscription_id = ? ORDER BY date DESC LIMIT -1 OFFSET 500)", new String[]{values.getAsString("subscription_component_name"), values.getAsString("subscription_id")});
                 }
                 return result;
             } catch (IllegalArgumentException e) {
-                Log.w(CallLog.LOG_TAG, "Failed to insert calllog", e);
+                Log.m63w(CallLog.LOG_TAG, "Failed to insert calllog", e);
                 return null;
             }
         }
 
         private static void updateDataUsageStatForData(ContentResolver resolver, String dataId) {
-            resolver.update(ContactsContract.DataUsageFeedback.FEEDBACK_URI.buildUpon().appendPath(dataId).appendQueryParameter("type", "call").build(), new ContentValues(), (String) null, (String[]) null);
+            Uri feedbackUri = ContactsContract.DataUsageFeedback.FEEDBACK_URI.buildUpon().appendPath(dataId).appendQueryParameter("type", "call").build();
+            resolver.update(feedbackUri, new ContentValues(), null, null);
         }
 
         private static void updateNormalizedNumber(Context context, ContentResolver resolver, String dataId, String number) {
-            if (!TextUtils.isEmpty(number) && !TextUtils.isEmpty(dataId)) {
-                String countryIso = getCurrentCountryIso(context);
-                if (!TextUtils.isEmpty(countryIso)) {
-                    String normalizedNumber = PhoneNumberUtils.formatNumberToE164(number, countryIso);
-                    if (!TextUtils.isEmpty(normalizedNumber)) {
-                        ContentValues values = new ContentValues();
-                        values.put("data4", normalizedNumber);
-                        resolver.update(ContactsContract.Data.CONTENT_URI, values, "_id=?", new String[]{dataId});
-                    }
-                }
+            if (TextUtils.isEmpty(number) || TextUtils.isEmpty(dataId)) {
+                return;
             }
+            String countryIso = getCurrentCountryIso(context);
+            if (TextUtils.isEmpty(countryIso)) {
+                return;
+            }
+            String normalizedNumber = PhoneNumberUtils.formatNumberToE164(number, countryIso);
+            if (TextUtils.isEmpty(normalizedNumber)) {
+                return;
+            }
+            ContentValues values = new ContentValues();
+            values.put("data4", normalizedNumber);
+            resolver.update(ContactsContract.Data.CONTENT_URI, values, "_id=?", new String[]{dataId});
         }
 
         private static int getLogNumberPresentation(String number, int presentation) {
-            if (presentation == 2 || presentation == 4) {
+            if (presentation == 2) {
                 return presentation;
             }
-            if (TextUtils.isEmpty(number) || presentation == 3) {
-                return 3;
+            if (presentation == 4) {
+                return presentation;
             }
-            return 1;
+            return (TextUtils.isEmpty(number) || presentation == 3) ? 3 : 1;
         }
 
         private static String getLogAccountAddress(Context context, PhoneAccountHandle accountHandle) {
@@ -506,7 +341,8 @@ public class CallLog {
             if (tm == null || accountHandle == null || (account = tm.getPhoneAccount(accountHandle)) == null || (address = account.getSubscriptionAddress()) == null) {
                 return null;
             }
-            return address.getSchemeSpecificPart();
+            String accountAddress = address.getSchemeSpecificPart();
+            return accountAddress;
         }
 
         private static String getCurrentCountryIso(Context context) {
@@ -515,7 +351,8 @@ public class CallLog {
             if (detector == null || (country = detector.detectCountry()) == null) {
                 return null;
             }
-            return country.getCountryIso();
+            String countryIso = country.getCountryIso();
+            return countryIso;
         }
     }
 }

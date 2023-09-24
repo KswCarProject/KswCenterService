@@ -6,12 +6,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
+/* loaded from: classes5.dex */
 public class CharsetMatch implements Comparable<CharsetMatch> {
     private String fCharsetName;
     private int fConfidence;
-    private InputStream fInputStream = null;
+    private InputStream fInputStream;
     private String fLang;
-    private byte[] fRawInput = null;
+    private byte[] fRawInput;
     private int fRawLength;
 
     public Reader getReader() {
@@ -37,12 +38,12 @@ public class CharsetMatch implements Comparable<CharsetMatch> {
             char[] buffer = new char[1024];
             Reader reader = getReader();
             int max = maxLength < 0 ? Integer.MAX_VALUE : maxLength;
+            int max2 = max;
             while (true) {
-                int read = reader.read(buffer, 0, Math.min(max, 1024));
-                int bytesRead = read;
-                if (read >= 0) {
+                int bytesRead = reader.read(buffer, 0, Math.min(max2, 1024));
+                if (bytesRead >= 0) {
                     sb.append(buffer, 0, bytesRead);
-                    max -= bytesRead;
+                    max2 -= bytesRead;
                 } else {
                     reader.close();
                     return sb.toString();
@@ -54,7 +55,8 @@ public class CharsetMatch implements Comparable<CharsetMatch> {
             if (startSuffix > 0) {
                 name = name.substring(0, startSuffix);
             }
-            return new String(this.fRawInput, name);
+            String result = new String(this.fRawInput, name);
+            return result;
         }
     }
 
@@ -70,17 +72,20 @@ public class CharsetMatch implements Comparable<CharsetMatch> {
         return this.fLang;
     }
 
+    @Override // java.lang.Comparable
     public int compareTo(CharsetMatch other) {
         if (this.fConfidence > other.fConfidence) {
             return 1;
         }
-        if (this.fConfidence < other.fConfidence) {
-            return -1;
+        if (this.fConfidence >= other.fConfidence) {
+            return 0;
         }
-        return 0;
+        return -1;
     }
 
     CharsetMatch(CharsetDetector det, CharsetRecognizer rec, int conf) {
+        this.fRawInput = null;
+        this.fInputStream = null;
         this.fConfidence = conf;
         if (det.fInputStream == null) {
             this.fRawInput = det.fRawInput;
@@ -92,6 +97,8 @@ public class CharsetMatch implements Comparable<CharsetMatch> {
     }
 
     CharsetMatch(CharsetDetector det, CharsetRecognizer rec, int conf, String csName, String lang) {
+        this.fRawInput = null;
+        this.fInputStream = null;
         this.fConfidence = conf;
         if (det.fInputStream == null) {
             this.fRawInput = det.fRawInput;

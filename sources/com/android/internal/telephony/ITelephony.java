@@ -5,15 +5,15 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.net.NetworkStats;
 import android.net.Uri;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Messenger;
-import android.os.Parcel;
-import android.os.RemoteException;
-import android.os.ResultReceiver;
-import android.os.WorkSource;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Messenger;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
+import android.p007os.ResultReceiver;
+import android.p007os.WorkSource;
 import android.telecom.PhoneAccount;
 import android.telecom.PhoneAccountHandle;
 import android.telephony.CarrierRestrictionRules;
@@ -40,9 +40,12 @@ import android.telephony.ims.aidl.IImsRcsFeature;
 import android.telephony.ims.aidl.IImsRegistration;
 import android.telephony.ims.aidl.IImsRegistrationCallback;
 import com.android.ims.internal.IImsServiceFeatureCallback;
+import com.android.internal.telephony.IIntegerConsumer;
+import com.android.internal.telephony.INumberVerificationCallback;
 import java.util.List;
 import java.util.Map;
 
+/* loaded from: classes4.dex */
 public interface ITelephony extends IInterface {
     void cacheMmTelCapabilityProvisioning(int i, int i2, int i3, boolean z) throws RemoteException;
 
@@ -569,955 +572,1210 @@ public interface ITelephony extends IInterface {
 
     void updateServiceLocationForSubscriber(int i) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements ITelephony {
+        @Override // com.android.internal.telephony.ITelephony
         public void dial(String number) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void call(String callingPackage, String number) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean isRadioOn(String callingPackage) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean isRadioOnForSubscriber(int subId, String callingPackage) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean supplyPin(String pin) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean supplyPinForSubscriber(int subId, String pin) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean supplyPuk(String puk, String pin) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean supplyPukForSubscriber(int subId, String puk, String pin) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int[] supplyPinReportResult(String pin) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int[] supplyPinReportResultForSubscriber(int subId, String pin) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int[] supplyPukReportResult(String puk, String pin) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int[] supplyPukReportResultForSubscriber(int subId, String puk, String pin) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean handlePinMmi(String dialString) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void handleUssdRequest(int subId, String ussdRequest, ResultReceiver wrappedCallback) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean handlePinMmiForSubscriber(int subId, String dialString) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void toggleRadioOnOff() throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void toggleRadioOnOffForSubscriber(int subId) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean setRadio(boolean turnOn) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean setRadioForSubscriber(int subId, boolean turnOn) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean setRadioPower(boolean turnOn) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void updateServiceLocation() throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void updateServiceLocationForSubscriber(int subId) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void enableLocationUpdates() throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void enableLocationUpdatesForSubscriber(int subId) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void disableLocationUpdates() throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void disableLocationUpdatesForSubscriber(int subId) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean enableDataConnectivity() throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean disableDataConnectivity() throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean isDataConnectivityPossible(int subId) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public Bundle getCellLocation(String callingPkg) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public String getNetworkCountryIsoForPhone(int phoneId) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public List<NeighboringCellInfo> getNeighboringCellInfo(String callingPkg) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int getCallState() throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int getCallStateForSlot(int slotIndex) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int getDataActivity() throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int getDataState() throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int getActivePhoneType() throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int getActivePhoneTypeForSlot(int slotIndex) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int getCdmaEriIconIndex(String callingPackage) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int getCdmaEriIconIndexForSubscriber(int subId, String callingPackage) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int getCdmaEriIconMode(String callingPackage) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int getCdmaEriIconModeForSubscriber(int subId, String callingPackage) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public String getCdmaEriText(String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public String getCdmaEriTextForSubscriber(int subId, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean needsOtaServiceProvisioning() throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean setVoiceMailNumber(int subId, String alphaTag, String number) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void setVoiceActivationState(int subId, int activationState) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void setDataActivationState(int subId, int activationState) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int getVoiceActivationState(int subId, String callingPackage) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int getDataActivationState(int subId, String callingPackage) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int getVoiceMessageCountForSubscriber(int subId, String callingPackage) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean isConcurrentVoiceAndDataAllowed(int subId) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public Bundle getVisualVoicemailSettings(String callingPackage, int subId) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public String getVisualVoicemailPackageName(String callingPackage, int subId) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void enableVisualVoicemailSmsFilter(String callingPackage, int subId, VisualVoicemailSmsFilterSettings settings) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void disableVisualVoicemailSmsFilter(String callingPackage, int subId) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public VisualVoicemailSmsFilterSettings getVisualVoicemailSmsFilterSettings(String callingPackage, int subId) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public VisualVoicemailSmsFilterSettings getActiveVisualVoicemailSmsFilterSettings(int subId) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void sendVisualVoicemailSmsForSubscriber(String callingPackage, int subId, String number, int port, String text, PendingIntent sentIntent) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void sendDialerSpecialCode(String callingPackageName, String inputCode) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int getNetworkTypeForSubscriber(int subId, String callingPackage) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int getDataNetworkType(String callingPackage) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int getDataNetworkTypeForSubscriber(int subId, String callingPackage) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int getVoiceNetworkTypeForSubscriber(int subId, String callingPackage) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean hasIccCard() throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean hasIccCardUsingSlotIndex(int slotIndex) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int getLteOnCdmaMode(String callingPackage) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int getLteOnCdmaModeForSubscriber(int subId, String callingPackage) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public List<CellInfo> getAllCellInfo(String callingPkg) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void requestCellInfoUpdate(int subId, ICellInfoCallback cb, String callingPkg) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void requestCellInfoUpdateWithWorkSource(int subId, ICellInfoCallback cb, String callingPkg, WorkSource ws) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void setCellInfoListRate(int rateInMillis) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public IccOpenLogicalChannelResponse iccOpenLogicalChannelBySlot(int slotIndex, String callingPackage, String AID, int p2) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public IccOpenLogicalChannelResponse iccOpenLogicalChannel(int subId, String callingPackage, String AID, int p2) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean iccCloseLogicalChannelBySlot(int slotIndex, int channel) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean iccCloseLogicalChannel(int subId, int channel) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public String iccTransmitApduLogicalChannelBySlot(int slotIndex, int channel, int cla, int instruction, int p1, int p2, int p3, String data) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public String iccTransmitApduLogicalChannel(int subId, int channel, int cla, int instruction, int p1, int p2, int p3, String data) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public String iccTransmitApduBasicChannelBySlot(int slotIndex, String callingPackage, int cla, int instruction, int p1, int p2, int p3, String data) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public String iccTransmitApduBasicChannel(int subId, String callingPackage, int cla, int instruction, int p1, int p2, int p3, String data) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public byte[] iccExchangeSimIO(int subId, int fileID, int command, int p1, int p2, int p3, String filePath) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public String sendEnvelopeWithStatus(int subId, String content) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public String nvReadItem(int itemID) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean nvWriteItem(int itemID, String itemValue) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean nvWriteCdmaPrl(byte[] preferredRoamingList) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean resetModemConfig(int slotIndex) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean rebootModem(int slotIndex) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int getCalculatedPreferredNetworkType(String callingPackage) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int getPreferredNetworkType(int subId) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean getTetherApnRequiredForSubscriber(int subId) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void enableIms(int slotId) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void disableIms(int slotId) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public IImsMmTelFeature getMmTelFeatureAndListen(int slotId, IImsServiceFeatureCallback callback) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public IImsRcsFeature getRcsFeatureAndListen(int slotId, IImsServiceFeatureCallback callback) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public IImsRegistration getImsRegistration(int slotId, int feature) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public IImsConfig getImsConfig(int slotId, int feature) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean setImsService(int slotId, boolean isCarrierImsService, String packageName) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public String getImsService(int slotId, boolean isCarrierImsService) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void setNetworkSelectionModeAutomatic(int subId) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public CellNetworkScanResult getCellNetworkScanResults(int subId, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int requestNetworkScan(int subId, NetworkScanRequest request, Messenger messenger, IBinder binder, String callingPackage) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void stopNetworkScan(int subId, int scanId) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean setNetworkSelectionModeManual(int subId, OperatorInfo operatorInfo, boolean persisSelection) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean setPreferredNetworkType(int subId, int networkType) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void setUserDataEnabled(int subId, boolean enable) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean getDataEnabled(int subId) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean isUserDataEnabled(int subId) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean isDataEnabled(int subId) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean isManualNetworkSelectionAllowed(int subId) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public String[] getPcscfAddress(String apnType, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void setImsRegistrationState(boolean registered) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public String getCdmaMdn(int subId) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public String getCdmaMin(int subId) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void requestNumberVerification(PhoneNumberRange range, long timeoutMillis, INumberVerificationCallback callback, String callingPackage) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int getCarrierPrivilegeStatus(int subId) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int getCarrierPrivilegeStatusForUid(int subId, int uid) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int checkCarrierPrivilegesForPackage(int subId, String pkgName) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int checkCarrierPrivilegesForPackageAnyPhone(String pkgName) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public List<String> getCarrierPackageNamesForIntentAndPhone(Intent intent, int phoneId) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean setLine1NumberForDisplayForSubscriber(int subId, String alphaTag, String number) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public String getLine1NumberForDisplay(int subId, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public String getLine1AlphaTagForDisplay(int subId, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public String[] getMergedSubscriberIds(int subId, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean setOperatorBrandOverride(int subId, String brand) throws RemoteException {
             return false;
         }
 
-        public boolean setRoamingOverride(int subId, List<String> list, List<String> list2, List<String> list3, List<String> list4) throws RemoteException {
+        @Override // com.android.internal.telephony.ITelephony
+        public boolean setRoamingOverride(int subId, List<String> gsmRoamingList, List<String> gsmNonRoamingList, List<String> cdmaRoamingList, List<String> cdmaNonRoamingList) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int invokeOemRilRequestRaw(byte[] oemReq, byte[] oemResp) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean needMobileRadioShutdown() throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void shutdownMobileRadios() throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void setRadioCapability(RadioAccessFamily[] rafs) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int getRadioAccessFamily(int phoneId, String callingPackage) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void enableVideoCalling(boolean enable) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean isVideoCallingEnabled(String callingPackage) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean canChangeDtmfToneLength(int subId, String callingPackage) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean isWorldPhone(int subId, String callingPackage) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean isTtyModeSupported() throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean isRttSupported(int subscriptionId) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean isHearingAidCompatibilitySupported() throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean isImsRegistered(int subId) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean isWifiCallingAvailable(int subId) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean isVideoTelephonyAvailable(int subId) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int getImsRegTechnologyForMmTel(int subId) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public String getDeviceId(String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public String getImeiForSlot(int slotIndex, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public String getTypeAllocationCodeForSlot(int slotIndex) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public String getMeidForSlot(int slotIndex, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public String getManufacturerCodeForSlot(int slotIndex) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public String getDeviceSoftwareVersionForSlot(int slotIndex, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int getSubIdForPhoneAccount(PhoneAccount phoneAccount) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public PhoneAccountHandle getPhoneAccountHandleForSubscriptionId(int subscriptionId) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void factoryReset(int subId) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public String getSimLocaleForSubscriber(int subId) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void requestModemActivityInfo(ResultReceiver result) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public ServiceState getServiceStateForSubscriber(int subId, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public Uri getVoicemailRingtoneUri(PhoneAccountHandle accountHandle) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void setVoicemailRingtoneUri(String callingPackage, PhoneAccountHandle phoneAccountHandle, Uri uri) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean isVoicemailVibrationEnabled(PhoneAccountHandle accountHandle) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void setVoicemailVibrationEnabled(String callingPackage, PhoneAccountHandle phoneAccountHandle, boolean enabled) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public List<String> getPackagesWithCarrierPrivileges(int phoneId) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public List<String> getPackagesWithCarrierPrivilegesForAllPhones() throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public String getAidForAppType(int subId, int appType) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public String getEsn(int subId) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public String getCdmaPrlVersion(int subId) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public List<TelephonyHistogram> getTelephonyHistograms() throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int setAllowedCarriers(CarrierRestrictionRules carrierRestrictionRules) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public CarrierRestrictionRules getAllowedCarriers() throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int getSubscriptionCarrierId(int subId) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public String getSubscriptionCarrierName(int subId) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int getSubscriptionSpecificCarrierId(int subId) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public String getSubscriptionSpecificCarrierName(int subId) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int getCarrierIdFromMccMnc(int slotIndex, String mccmnc, boolean isSubscriptionMccMnc) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void carrierActionSetMeteredApnsEnabled(int subId, boolean visible) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void carrierActionSetRadioEnabled(int subId, boolean enabled) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void carrierActionReportDefaultNetworkStatus(int subId, boolean report) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void carrierActionResetAll(int subId) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public NetworkStats getVtDataUsage(int subId, boolean perUidStats) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void setPolicyDataEnabled(boolean enabled, int subId) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public List<ClientRequestStats> getClientRequestStats(String callingPackage, int subid) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void setSimPowerStateForSlot(int slotIndex, int state) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public String[] getForbiddenPlmns(int subId, int appType, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean getEmergencyCallbackMode(int subId) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public SignalStrength getSignalStrength(int subId) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int getCardIdForDefaultEuicc(int subId, String callingPackage) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public List<UiccCardInfo> getUiccCardsInfo(String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public UiccSlotInfo[] getUiccSlotsInfo() throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean switchSlots(int[] physicalSlots) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void setRadioIndicationUpdateMode(int subId, int filters, int mode) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean isDataRoamingEnabled(int subId) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void setDataRoamingEnabled(int subId, boolean isEnabled) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int getCdmaRoamingMode(int subId) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean setCdmaRoamingMode(int subId, int mode) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean setCdmaSubscriptionMode(int subId, int mode) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void setCarrierTestOverride(int subId, String mccmnc, String imsi, String iccid, String gid1, String gid2, String plmn, String spn, String carrierPrivilegeRules, String apn) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int getCarrierIdListVersion(int subId) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void refreshUiccProfile(int subId) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int getNumberOfModemsWithSimultaneousDataConnections(int subId, String callingPackage) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int getNetworkSelectionMode(int subId) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean isInEmergencySmsMode() throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public String[] getSmsApps(int userId) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public String getDefaultSmsApp(int userId) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void setDefaultSmsApp(int userId, String packageName) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int getRadioPowerState(int slotIndex, String callingPackage) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void registerImsRegistrationCallback(int subId, IImsRegistrationCallback c) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void unregisterImsRegistrationCallback(int subId, IImsRegistrationCallback c) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void registerMmTelCapabilityCallback(int subId, IImsCapabilityCallback c) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void unregisterMmTelCapabilityCallback(int subId, IImsCapabilityCallback c) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean isCapable(int subId, int capability, int regTech) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean isAvailable(int subId, int capability, int regTech) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean isAdvancedCallingSettingEnabled(int subId) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void setAdvancedCallingSettingEnabled(int subId, boolean isEnabled) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean isVtSettingEnabled(int subId) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void setVtSettingEnabled(int subId, boolean isEnabled) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean isVoWiFiSettingEnabled(int subId) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void setVoWiFiSettingEnabled(int subId, boolean isEnabled) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean isVoWiFiRoamingSettingEnabled(int subId) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void setVoWiFiRoamingSettingEnabled(int subId, boolean isEnabled) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void setVoWiFiNonPersistent(int subId, boolean isCapable, int mode) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int getVoWiFiModeSetting(int subId) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void setVoWiFiModeSetting(int subId, int mode) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int getVoWiFiRoamingModeSetting(int subId) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void setVoWiFiRoamingModeSetting(int subId, int mode) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void setRttCapabilitySetting(int subId, boolean isEnabled) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean isTtyOverVolteEnabled(int subId) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public Map getEmergencyNumberList(String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean isEmergencyNumber(String number, boolean exactMatch) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public List<String> getCertsFromCarrierPrivilegeAccessRules(int subId) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void registerImsProvisioningChangedCallback(int subId, IImsConfigCallback callback) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void unregisterImsProvisioningChangedCallback(int subId, IImsConfigCallback callback) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void setImsProvisioningStatusForCapability(int subId, int capability, int tech, boolean isProvisioned) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean getImsProvisioningStatusForCapability(int subId, int capability, int tech) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean isMmTelCapabilityProvisionedInCache(int subId, int capability, int tech) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void cacheMmTelCapabilityProvisioning(int subId, int capability, int tech, boolean isProvisioned) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int getImsProvisioningInt(int subId, int key) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public String getImsProvisioningString(int subId, int key) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int setImsProvisioningInt(int subId, int key, int value) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int setImsProvisioningString(int subId, int key, String value) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void updateEmergencyNumberListTestMode(int action, EmergencyNumber num) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public List<String> getEmergencyNumberListTestMode() throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean enableModemForSlot(int slotIndex, boolean enable) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void setMultiSimCarrierRestriction(boolean isMultiSimCarrierRestricted) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int isMultiSimSupported(String callingPackage) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void switchMultiSimConfig(int numOfSims) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean doesSwitchMultiSimConfigTriggerReboot(int subId, String callingPackage) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int[] getSlotsMapping() throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public int getRadioHalVersion() throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean isModemEnabledForSlot(int slotIndex, String callingPackage) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean isDataEnabledForApn(int apnType, int subId, String callingPackage) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean isApnMetered(int apnType, int subId) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public void enqueueSmsPickResult(String callingPackage, IIntegerConsumer subIdResult) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public String getMmsUserAgent(int subId) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public String getMmsUAProfUrl(int subId) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean setDataAllowedDuringVoiceCall(int subId, boolean allow) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telephony.ITelephony
         public boolean isDataAllowedInVoiceCall(int subId) throws RemoteException {
             return false;
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements ITelephony {
         private static final String DESCRIPTOR = "com.android.internal.telephony.ITelephony";
         static final int TRANSACTION_cacheMmTelCapabilityProvisioning = 231;
@@ -1782,12 +2040,13 @@ public interface ITelephony extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof ITelephony)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof ITelephony)) {
+                return (ITelephony) iin;
             }
-            return (ITelephony) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -2303,2826 +2562,1914 @@ public interface ITelephony extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v57, resolved type: android.telephony.VisualVoicemailSmsFilterSettings} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v80, resolved type: android.os.WorkSource} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v129, resolved type: com.android.internal.telephony.OperatorInfo} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v189, resolved type: android.telecom.PhoneAccount} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v201, resolved type: android.telecom.PhoneAccountHandle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v209, resolved type: android.telecom.PhoneAccountHandle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v213, resolved type: android.telecom.PhoneAccountHandle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v223, resolved type: android.telephony.CarrierRestrictionRules} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v299, resolved type: android.telephony.emergency.EmergencyNumber} */
-        /* JADX WARNING: type inference failed for: r0v1 */
-        /* JADX WARNING: type inference failed for: r0v15, types: [android.os.ResultReceiver] */
-        /* JADX WARNING: type inference failed for: r0v64 */
-        /* JADX WARNING: type inference failed for: r0v110, types: [android.os.IBinder] */
-        /* JADX WARNING: type inference failed for: r0v112, types: [android.os.IBinder] */
-        /* JADX WARNING: type inference failed for: r0v114, types: [android.os.IBinder] */
-        /* JADX WARNING: type inference failed for: r0v116, types: [android.os.IBinder] */
-        /* JADX WARNING: type inference failed for: r0v122 */
-        /* JADX WARNING: type inference failed for: r0v144 */
-        /* JADX WARNING: type inference failed for: r0v154, types: [android.content.Intent] */
-        /* JADX WARNING: type inference failed for: r0v196, types: [android.os.ResultReceiver] */
-        /* JADX WARNING: type inference failed for: r0v205, types: [android.net.Uri] */
-        /* JADX WARNING: type inference failed for: r0v321 */
-        /* JADX WARNING: type inference failed for: r0v322 */
-        /* JADX WARNING: type inference failed for: r0v323 */
-        /* JADX WARNING: type inference failed for: r0v324 */
-        /* JADX WARNING: type inference failed for: r0v325 */
-        /* JADX WARNING: type inference failed for: r0v326 */
-        /* JADX WARNING: type inference failed for: r0v327 */
-        /* JADX WARNING: type inference failed for: r0v328 */
-        /* JADX WARNING: type inference failed for: r0v329 */
-        /* JADX WARNING: type inference failed for: r0v330 */
-        /* JADX WARNING: type inference failed for: r0v331 */
-        /* JADX WARNING: type inference failed for: r0v332 */
-        /* JADX WARNING: type inference failed for: r0v333 */
-        /* JADX WARNING: type inference failed for: r0v334 */
-        /* JADX WARNING: type inference failed for: r0v335 */
-        /* JADX WARNING: type inference failed for: r0v336 */
-        /* JADX WARNING: type inference failed for: r0v337 */
-        /* JADX WARNING: type inference failed for: r0v338 */
-        /* JADX WARNING: type inference failed for: r0v339 */
-        /* JADX WARNING: type inference failed for: r0v340 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r27, android.os.Parcel r28, android.os.Parcel r29, int r30) throws android.os.RemoteException {
-            /*
-                r26 = this;
-                r11 = r26
-                r12 = r27
-                r13 = r28
-                r14 = r29
-                java.lang.String r15 = "com.android.internal.telephony.ITelephony"
-                r0 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r10 = 1
-                if (r12 == r0) goto L_0x170e
-                r0 = 0
-                r1 = 0
-                switch(r12) {
-                    case 1: goto L_0x16ff;
-                    case 2: goto L_0x16ec;
-                    case 3: goto L_0x16d9;
-                    case 4: goto L_0x16c2;
-                    case 5: goto L_0x16af;
-                    case 6: goto L_0x1698;
-                    case 7: goto L_0x1681;
-                    case 8: goto L_0x1666;
-                    case 9: goto L_0x1653;
-                    case 10: goto L_0x163c;
-                    case 11: goto L_0x1625;
-                    case 12: goto L_0x160a;
-                    case 13: goto L_0x15f7;
-                    case 14: goto L_0x15d4;
-                    case 15: goto L_0x15bd;
-                    case 16: goto L_0x15b2;
-                    case 17: goto L_0x15a3;
-                    case 18: goto L_0x158b;
-                    case 19: goto L_0x1570;
-                    case 20: goto L_0x1558;
-                    case 21: goto L_0x154d;
-                    case 22: goto L_0x153e;
-                    case 23: goto L_0x1533;
-                    case 24: goto L_0x1524;
-                    case 25: goto L_0x1519;
-                    case 26: goto L_0x150a;
-                    case 27: goto L_0x14fb;
-                    case 28: goto L_0x14ec;
-                    case 29: goto L_0x14d9;
-                    case 30: goto L_0x14bd;
-                    case 31: goto L_0x14aa;
-                    case 32: goto L_0x1497;
-                    case 33: goto L_0x1488;
-                    case 34: goto L_0x1475;
-                    case 35: goto L_0x1466;
-                    case 36: goto L_0x1457;
-                    case 37: goto L_0x1448;
-                    case 38: goto L_0x1435;
-                    case 39: goto L_0x1422;
-                    case 40: goto L_0x140b;
-                    case 41: goto L_0x13f8;
-                    case 42: goto L_0x13e1;
-                    case 43: goto L_0x13ce;
-                    case 44: goto L_0x13b7;
-                    case 45: goto L_0x13a8;
-                    case 46: goto L_0x138d;
-                    case 47: goto L_0x137a;
-                    case 48: goto L_0x1367;
-                    case 49: goto L_0x1350;
-                    case 50: goto L_0x1339;
-                    case 51: goto L_0x1322;
-                    case 52: goto L_0x130f;
-                    case 53: goto L_0x12ef;
-                    case 54: goto L_0x12d8;
-                    case 55: goto L_0x12b5;
-                    case 56: goto L_0x12a5;
-                    case 57: goto L_0x1285;
-                    case 58: goto L_0x1269;
-                    case 59: goto L_0x1231;
-                    case 60: goto L_0x121e;
-                    case 61: goto L_0x1207;
-                    case 62: goto L_0x11f4;
-                    case 63: goto L_0x11dd;
-                    case 64: goto L_0x11c6;
-                    case 65: goto L_0x11b7;
-                    case 66: goto L_0x11a4;
-                    case 67: goto L_0x1191;
-                    case 68: goto L_0x117a;
-                    case 69: goto L_0x1167;
-                    case 70: goto L_0x114c;
-                    case 71: goto L_0x1121;
-                    case 72: goto L_0x1112;
-                    case 73: goto L_0x10ea;
-                    case 74: goto L_0x10c2;
-                    case 75: goto L_0x10ab;
-                    case 76: goto L_0x1094;
-                    case 77: goto L_0x1055;
-                    case 78: goto L_0x1016;
-                    case 79: goto L_0x0fd7;
-                    case 80: goto L_0x0f98;
-                    case 81: goto L_0x0f60;
-                    case 82: goto L_0x0f49;
-                    case 83: goto L_0x0f36;
-                    case 84: goto L_0x0f1f;
-                    case 85: goto L_0x0f0c;
-                    case 86: goto L_0x0ef9;
-                    case 87: goto L_0x0ee6;
-                    case 88: goto L_0x0ed3;
-                    case 89: goto L_0x0ec0;
-                    case 90: goto L_0x0ead;
-                    case 91: goto L_0x0e9e;
-                    case 92: goto L_0x0e8f;
-                    case 93: goto L_0x0e6d;
-                    case 94: goto L_0x0e4b;
-                    case 95: goto L_0x0e2d;
-                    case 96: goto L_0x0e0f;
-                    case 97: goto L_0x0df0;
-                    case 98: goto L_0x0dd5;
-                    case 99: goto L_0x0dc6;
-                    case 100: goto L_0x0da6;
-                    case 101: goto L_0x0d64;
-                    case 102: goto L_0x0d51;
-                    case 103: goto L_0x0d26;
-                    case 104: goto L_0x0d0f;
-                    case 105: goto L_0x0cf8;
-                    case 106: goto L_0x0ce5;
-                    case 107: goto L_0x0cd2;
-                    case 108: goto L_0x0cbf;
-                    case 109: goto L_0x0cac;
-                    case 110: goto L_0x0c95;
-                    case 111: goto L_0x0c81;
-                    case 112: goto L_0x0c6e;
-                    case 113: goto L_0x0c5b;
-                    case 114: goto L_0x0c2a;
-                    case 115: goto L_0x0c17;
-                    case 116: goto L_0x0c00;
-                    case 117: goto L_0x0be9;
-                    case 118: goto L_0x0bd6;
-                    case 119: goto L_0x0bb3;
-                    case 120: goto L_0x0b98;
-                    case 121: goto L_0x0b81;
-                    case 122: goto L_0x0b6a;
-                    case 123: goto L_0x0b53;
-                    case 124: goto L_0x0b3c;
-                    case 125: goto L_0x0b12;
-                    case 126: goto L_0x0af2;
-                    case 127: goto L_0x0ae3;
-                    case 128: goto L_0x0ad8;
-                    case 129: goto L_0x0ac5;
-                    case 130: goto L_0x0aae;
-                    case 131: goto L_0x0a9a;
-                    case 132: goto L_0x0a87;
-                    case 133: goto L_0x0a70;
-                    case 134: goto L_0x0a59;
-                    case 135: goto L_0x0a4a;
-                    case 136: goto L_0x0a37;
-                    case 137: goto L_0x0a28;
-                    case 138: goto L_0x0a15;
-                    case 139: goto L_0x0a02;
-                    case 140: goto L_0x09ef;
-                    case 141: goto L_0x09dc;
-                    case 142: goto L_0x09c9;
-                    case 143: goto L_0x09b2;
-                    case 144: goto L_0x099f;
-                    case 145: goto L_0x0988;
-                    case 146: goto L_0x0975;
-                    case 147: goto L_0x095e;
-                    case 148: goto L_0x093f;
-                    case 149: goto L_0x0923;
-                    case 150: goto L_0x0914;
-                    case 151: goto L_0x0901;
-                    case 152: goto L_0x08e9;
-                    case 153: goto L_0x08c9;
-                    case 154: goto L_0x08a1;
-                    case 155: goto L_0x0872;
-                    case 156: goto L_0x0853;
-                    case 157: goto L_0x082c;
-                    case 158: goto L_0x0819;
-                    case 159: goto L_0x080a;
-                    case 160: goto L_0x07f3;
-                    case 161: goto L_0x07e0;
-                    case 162: goto L_0x07cd;
-                    case 163: goto L_0x07be;
-                    case 164: goto L_0x079f;
-                    case 165: goto L_0x0787;
-                    case 166: goto L_0x0774;
-                    case 167: goto L_0x0761;
-                    case 168: goto L_0x074e;
-                    case 169: goto L_0x073b;
-                    case 170: goto L_0x071c;
-                    case 171: goto L_0x0705;
-                    case 172: goto L_0x06ee;
-                    case 173: goto L_0x06d7;
-                    case 174: goto L_0x06c8;
-                    case 175: goto L_0x06a3;
-                    case 176: goto L_0x068b;
-                    case 177: goto L_0x0674;
-                    case 178: goto L_0x0661;
-                    case 179: goto L_0x0646;
-                    case 180: goto L_0x0633;
-                    case 181: goto L_0x0617;
-                    case 182: goto L_0x0600;
-                    case 183: goto L_0x05ed;
-                    case 184: goto L_0x05de;
-                    case 185: goto L_0x05cb;
-                    case 186: goto L_0x05b4;
-                    case 187: goto L_0x05a1;
-                    case 188: goto L_0x058a;
-                    case 189: goto L_0x0577;
-                    case 190: goto L_0x0560;
-                    case 191: goto L_0x0549;
-                    case 192: goto L_0x0500;
-                    case 193: goto L_0x04ee;
-                    case 194: goto L_0x04e0;
-                    case 195: goto L_0x04ca;
-                    case 196: goto L_0x04b8;
-                    case 197: goto L_0x04aa;
-                    case 198: goto L_0x0498;
-                    case 199: goto L_0x0486;
-                    case 200: goto L_0x0474;
-                    case 201: goto L_0x045e;
-                    case 202: goto L_0x0448;
-                    case 203: goto L_0x0432;
-                    case 204: goto L_0x041c;
-                    case 205: goto L_0x0406;
-                    case 206: goto L_0x03ec;
-                    case 207: goto L_0x03d2;
-                    case 208: goto L_0x03c0;
-                    case 209: goto L_0x03aa;
-                    case 210: goto L_0x0398;
-                    case 211: goto L_0x0382;
-                    case 212: goto L_0x0370;
-                    case 213: goto L_0x035a;
-                    case 214: goto L_0x0348;
-                    case 215: goto L_0x0332;
-                    case 216: goto L_0x0318;
-                    case 217: goto L_0x0306;
-                    case 218: goto L_0x02f4;
-                    case 219: goto L_0x02e2;
-                    case 220: goto L_0x02d0;
-                    case 221: goto L_0x02ba;
-                    case 222: goto L_0x02a8;
-                    case 223: goto L_0x0296;
-                    case 224: goto L_0x027c;
-                    case 225: goto L_0x026a;
-                    case 226: goto L_0x0254;
-                    case 227: goto L_0x023e;
-                    case 228: goto L_0x0220;
-                    case 229: goto L_0x0206;
-                    case 230: goto L_0x01ec;
-                    case 231: goto L_0x01ce;
-                    case 232: goto L_0x01b8;
-                    case 233: goto L_0x01a2;
-                    case 234: goto L_0x0188;
-                    case 235: goto L_0x016e;
-                    case 236: goto L_0x0150;
-                    case 237: goto L_0x0142;
-                    case 238: goto L_0x0128;
-                    case 239: goto L_0x0115;
-                    case 240: goto L_0x0103;
-                    case 241: goto L_0x00f5;
-                    case 242: goto L_0x00df;
-                    case 243: goto L_0x00d1;
-                    case 244: goto L_0x00c3;
-                    case 245: goto L_0x00ad;
-                    case 246: goto L_0x0093;
-                    case 247: goto L_0x007d;
-                    case 248: goto L_0x006a;
-                    case 249: goto L_0x0058;
-                    case 250: goto L_0x0046;
-                    case 251: goto L_0x002c;
-                    case 252: goto L_0x001a;
-                    default: goto L_0x0015;
-                }
-            L_0x0015:
-                boolean r0 = super.onTransact(r27, r28, r29, r30)
-                return r0
-            L_0x001a:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                boolean r1 = r11.isDataAllowedInVoiceCall(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r10
-            L_0x002c:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x003b
-                r1 = r10
-            L_0x003b:
-                boolean r2 = r11.setDataAllowedDuringVoiceCall(r0, r1)
-                r29.writeNoException()
-                r14.writeInt(r2)
-                return r10
-            L_0x0046:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r11.getMmsUAProfUrl(r0)
-                r29.writeNoException()
-                r14.writeString(r1)
-                return r10
-            L_0x0058:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r11.getMmsUserAgent(r0)
-                r29.writeNoException()
-                r14.writeString(r1)
-                return r10
-            L_0x006a:
-                r13.enforceInterface(r15)
-                java.lang.String r0 = r28.readString()
-                android.os.IBinder r1 = r28.readStrongBinder()
-                com.android.internal.telephony.IIntegerConsumer r1 = com.android.internal.telephony.IIntegerConsumer.Stub.asInterface(r1)
-                r11.enqueueSmsPickResult(r0, r1)
-                return r10
-            L_0x007d:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r1 = r28.readInt()
-                boolean r2 = r11.isApnMetered(r0, r1)
-                r29.writeNoException()
-                r14.writeInt(r2)
-                return r10
-            L_0x0093:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r1 = r28.readInt()
-                java.lang.String r2 = r28.readString()
-                boolean r3 = r11.isDataEnabledForApn(r0, r1, r2)
-                r29.writeNoException()
-                r14.writeInt(r3)
-                return r10
-            L_0x00ad:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r28.readString()
-                boolean r2 = r11.isModemEnabledForSlot(r0, r1)
-                r29.writeNoException()
-                r14.writeInt(r2)
-                return r10
-            L_0x00c3:
-                r13.enforceInterface(r15)
-                int r0 = r26.getRadioHalVersion()
-                r29.writeNoException()
-                r14.writeInt(r0)
-                return r10
-            L_0x00d1:
-                r13.enforceInterface(r15)
-                int[] r0 = r26.getSlotsMapping()
-                r29.writeNoException()
-                r14.writeIntArray(r0)
-                return r10
-            L_0x00df:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r28.readString()
-                boolean r2 = r11.doesSwitchMultiSimConfigTriggerReboot(r0, r1)
-                r29.writeNoException()
-                r14.writeInt(r2)
-                return r10
-            L_0x00f5:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                r11.switchMultiSimConfig(r0)
-                r29.writeNoException()
-                return r10
-            L_0x0103:
-                r13.enforceInterface(r15)
-                java.lang.String r0 = r28.readString()
-                int r1 = r11.isMultiSimSupported(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r10
-            L_0x0115:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                if (r0 == 0) goto L_0x0120
-                r1 = r10
-            L_0x0120:
-                r0 = r1
-                r11.setMultiSimCarrierRestriction(r0)
-                r29.writeNoException()
-                return r10
-            L_0x0128:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x0137
-                r1 = r10
-            L_0x0137:
-                boolean r2 = r11.enableModemForSlot(r0, r1)
-                r29.writeNoException()
-                r14.writeInt(r2)
-                return r10
-            L_0x0142:
-                r13.enforceInterface(r15)
-                java.util.List r0 = r26.getEmergencyNumberListTestMode()
-                r29.writeNoException()
-                r14.writeStringList(r0)
-                return r10
-            L_0x0150:
-                r13.enforceInterface(r15)
-                int r1 = r28.readInt()
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x0166
-                android.os.Parcelable$Creator<android.telephony.emergency.EmergencyNumber> r0 = android.telephony.emergency.EmergencyNumber.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.telephony.emergency.EmergencyNumber r0 = (android.telephony.emergency.EmergencyNumber) r0
-                goto L_0x0167
-            L_0x0166:
-            L_0x0167:
-                r11.updateEmergencyNumberListTestMode(r1, r0)
-                r29.writeNoException()
-                return r10
-            L_0x016e:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r1 = r28.readInt()
-                java.lang.String r2 = r28.readString()
-                int r3 = r11.setImsProvisioningString(r0, r1, r2)
-                r29.writeNoException()
-                r14.writeInt(r3)
-                return r10
-            L_0x0188:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r1 = r28.readInt()
-                int r2 = r28.readInt()
-                int r3 = r11.setImsProvisioningInt(r0, r1, r2)
-                r29.writeNoException()
-                r14.writeInt(r3)
-                return r10
-            L_0x01a2:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r1 = r28.readInt()
-                java.lang.String r2 = r11.getImsProvisioningString(r0, r1)
-                r29.writeNoException()
-                r14.writeString(r2)
-                return r10
-            L_0x01b8:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r1 = r28.readInt()
-                int r2 = r11.getImsProvisioningInt(r0, r1)
-                r29.writeNoException()
-                r14.writeInt(r2)
-                return r10
-            L_0x01ce:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r2 = r28.readInt()
-                int r3 = r28.readInt()
-                int r4 = r28.readInt()
-                if (r4 == 0) goto L_0x01e5
-                r1 = r10
-            L_0x01e5:
-                r11.cacheMmTelCapabilityProvisioning(r0, r2, r3, r1)
-                r29.writeNoException()
-                return r10
-            L_0x01ec:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r1 = r28.readInt()
-                int r2 = r28.readInt()
-                boolean r3 = r11.isMmTelCapabilityProvisionedInCache(r0, r1, r2)
-                r29.writeNoException()
-                r14.writeInt(r3)
-                return r10
-            L_0x0206:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r1 = r28.readInt()
-                int r2 = r28.readInt()
-                boolean r3 = r11.getImsProvisioningStatusForCapability(r0, r1, r2)
-                r29.writeNoException()
-                r14.writeInt(r3)
-                return r10
-            L_0x0220:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r2 = r28.readInt()
-                int r3 = r28.readInt()
-                int r4 = r28.readInt()
-                if (r4 == 0) goto L_0x0237
-                r1 = r10
-            L_0x0237:
-                r11.setImsProvisioningStatusForCapability(r0, r2, r3, r1)
-                r29.writeNoException()
-                return r10
-            L_0x023e:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                android.os.IBinder r1 = r28.readStrongBinder()
-                android.telephony.ims.aidl.IImsConfigCallback r1 = android.telephony.ims.aidl.IImsConfigCallback.Stub.asInterface(r1)
-                r11.unregisterImsProvisioningChangedCallback(r0, r1)
-                r29.writeNoException()
-                return r10
-            L_0x0254:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                android.os.IBinder r1 = r28.readStrongBinder()
-                android.telephony.ims.aidl.IImsConfigCallback r1 = android.telephony.ims.aidl.IImsConfigCallback.Stub.asInterface(r1)
-                r11.registerImsProvisioningChangedCallback(r0, r1)
-                r29.writeNoException()
-                return r10
-            L_0x026a:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.util.List r1 = r11.getCertsFromCarrierPrivilegeAccessRules(r0)
-                r29.writeNoException()
-                r14.writeStringList(r1)
-                return r10
-            L_0x027c:
-                r13.enforceInterface(r15)
-                java.lang.String r0 = r28.readString()
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x028b
-                r1 = r10
-            L_0x028b:
-                boolean r2 = r11.isEmergencyNumber(r0, r1)
-                r29.writeNoException()
-                r14.writeInt(r2)
-                return r10
-            L_0x0296:
-                r13.enforceInterface(r15)
-                java.lang.String r0 = r28.readString()
-                java.util.Map r1 = r11.getEmergencyNumberList(r0)
-                r29.writeNoException()
-                r14.writeMap(r1)
-                return r10
-            L_0x02a8:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                boolean r1 = r11.isTtyOverVolteEnabled(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r10
-            L_0x02ba:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x02c9
-                r1 = r10
-            L_0x02c9:
-                r11.setRttCapabilitySetting(r0, r1)
-                r29.writeNoException()
-                return r10
-            L_0x02d0:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r1 = r28.readInt()
-                r11.setVoWiFiRoamingModeSetting(r0, r1)
-                r29.writeNoException()
-                return r10
-            L_0x02e2:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r1 = r11.getVoWiFiRoamingModeSetting(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r10
-            L_0x02f4:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r1 = r28.readInt()
-                r11.setVoWiFiModeSetting(r0, r1)
-                r29.writeNoException()
-                return r10
-            L_0x0306:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r1 = r11.getVoWiFiModeSetting(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r10
-            L_0x0318:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x0327
-                r1 = r10
-            L_0x0327:
-                int r2 = r28.readInt()
-                r11.setVoWiFiNonPersistent(r0, r1, r2)
-                r29.writeNoException()
-                return r10
-            L_0x0332:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x0341
-                r1 = r10
-            L_0x0341:
-                r11.setVoWiFiRoamingSettingEnabled(r0, r1)
-                r29.writeNoException()
-                return r10
-            L_0x0348:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                boolean r1 = r11.isVoWiFiRoamingSettingEnabled(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r10
-            L_0x035a:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x0369
-                r1 = r10
-            L_0x0369:
-                r11.setVoWiFiSettingEnabled(r0, r1)
-                r29.writeNoException()
-                return r10
-            L_0x0370:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                boolean r1 = r11.isVoWiFiSettingEnabled(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r10
-            L_0x0382:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x0391
-                r1 = r10
-            L_0x0391:
-                r11.setVtSettingEnabled(r0, r1)
-                r29.writeNoException()
-                return r10
-            L_0x0398:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                boolean r1 = r11.isVtSettingEnabled(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r10
-            L_0x03aa:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x03b9
-                r1 = r10
-            L_0x03b9:
-                r11.setAdvancedCallingSettingEnabled(r0, r1)
-                r29.writeNoException()
-                return r10
-            L_0x03c0:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                boolean r1 = r11.isAdvancedCallingSettingEnabled(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r10
-            L_0x03d2:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r1 = r28.readInt()
-                int r2 = r28.readInt()
-                boolean r3 = r11.isAvailable(r0, r1, r2)
-                r29.writeNoException()
-                r14.writeInt(r3)
-                return r10
-            L_0x03ec:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r1 = r28.readInt()
-                int r2 = r28.readInt()
-                boolean r3 = r11.isCapable(r0, r1, r2)
-                r29.writeNoException()
-                r14.writeInt(r3)
-                return r10
-            L_0x0406:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                android.os.IBinder r1 = r28.readStrongBinder()
-                android.telephony.ims.aidl.IImsCapabilityCallback r1 = android.telephony.ims.aidl.IImsCapabilityCallback.Stub.asInterface(r1)
-                r11.unregisterMmTelCapabilityCallback(r0, r1)
-                r29.writeNoException()
-                return r10
-            L_0x041c:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                android.os.IBinder r1 = r28.readStrongBinder()
-                android.telephony.ims.aidl.IImsCapabilityCallback r1 = android.telephony.ims.aidl.IImsCapabilityCallback.Stub.asInterface(r1)
-                r11.registerMmTelCapabilityCallback(r0, r1)
-                r29.writeNoException()
-                return r10
-            L_0x0432:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                android.os.IBinder r1 = r28.readStrongBinder()
-                android.telephony.ims.aidl.IImsRegistrationCallback r1 = android.telephony.ims.aidl.IImsRegistrationCallback.Stub.asInterface(r1)
-                r11.unregisterImsRegistrationCallback(r0, r1)
-                r29.writeNoException()
-                return r10
-            L_0x0448:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                android.os.IBinder r1 = r28.readStrongBinder()
-                android.telephony.ims.aidl.IImsRegistrationCallback r1 = android.telephony.ims.aidl.IImsRegistrationCallback.Stub.asInterface(r1)
-                r11.registerImsRegistrationCallback(r0, r1)
-                r29.writeNoException()
-                return r10
-            L_0x045e:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r28.readString()
-                int r2 = r11.getRadioPowerState(r0, r1)
-                r29.writeNoException()
-                r14.writeInt(r2)
-                return r10
-            L_0x0474:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r28.readString()
-                r11.setDefaultSmsApp(r0, r1)
-                r29.writeNoException()
-                return r10
-            L_0x0486:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r11.getDefaultSmsApp(r0)
-                r29.writeNoException()
-                r14.writeString(r1)
-                return r10
-            L_0x0498:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String[] r1 = r11.getSmsApps(r0)
-                r29.writeNoException()
-                r14.writeStringArray(r1)
-                return r10
-            L_0x04aa:
-                r13.enforceInterface(r15)
-                boolean r0 = r26.isInEmergencySmsMode()
-                r29.writeNoException()
-                r14.writeInt(r0)
-                return r10
-            L_0x04b8:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r1 = r11.getNetworkSelectionMode(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r10
-            L_0x04ca:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r28.readString()
-                int r2 = r11.getNumberOfModemsWithSimultaneousDataConnections(r0, r1)
-                r29.writeNoException()
-                r14.writeInt(r2)
-                return r10
-            L_0x04e0:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                r11.refreshUiccProfile(r0)
-                r29.writeNoException()
-                return r10
-            L_0x04ee:
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r1 = r11.getCarrierIdListVersion(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r10
-            L_0x0500:
-                r13.enforceInterface(r15)
-                int r16 = r28.readInt()
-                java.lang.String r17 = r28.readString()
-                java.lang.String r18 = r28.readString()
-                java.lang.String r19 = r28.readString()
-                java.lang.String r20 = r28.readString()
-                java.lang.String r21 = r28.readString()
-                java.lang.String r22 = r28.readString()
-                java.lang.String r23 = r28.readString()
-                java.lang.String r24 = r28.readString()
-                java.lang.String r25 = r28.readString()
-                r0 = r26
-                r1 = r16
-                r2 = r17
-                r3 = r18
-                r4 = r19
-                r5 = r20
-                r6 = r21
-                r7 = r22
-                r8 = r23
-                r9 = r24
-                r12 = r10
-                r10 = r25
-                r0.setCarrierTestOverride(r1, r2, r3, r4, r5, r6, r7, r8, r9, r10)
-                r29.writeNoException()
-                return r12
-            L_0x0549:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r1 = r28.readInt()
-                boolean r2 = r11.setCdmaSubscriptionMode(r0, r1)
-                r29.writeNoException()
-                r14.writeInt(r2)
-                return r12
-            L_0x0560:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r1 = r28.readInt()
-                boolean r2 = r11.setCdmaRoamingMode(r0, r1)
-                r29.writeNoException()
-                r14.writeInt(r2)
-                return r12
-            L_0x0577:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r1 = r11.getCdmaRoamingMode(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r12
-            L_0x058a:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x059a
-                r1 = r12
-            L_0x059a:
-                r11.setDataRoamingEnabled(r0, r1)
-                r29.writeNoException()
-                return r12
-            L_0x05a1:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                boolean r1 = r11.isDataRoamingEnabled(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r12
-            L_0x05b4:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r1 = r28.readInt()
-                int r2 = r28.readInt()
-                r11.setRadioIndicationUpdateMode(r0, r1, r2)
-                r29.writeNoException()
-                return r12
-            L_0x05cb:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int[] r0 = r28.createIntArray()
-                boolean r1 = r11.switchSlots(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r12
-            L_0x05de:
-                r12 = r10
-                r13.enforceInterface(r15)
-                android.telephony.UiccSlotInfo[] r0 = r26.getUiccSlotsInfo()
-                r29.writeNoException()
-                r14.writeTypedArray(r0, r12)
-                return r12
-            L_0x05ed:
-                r12 = r10
-                r13.enforceInterface(r15)
-                java.lang.String r0 = r28.readString()
-                java.util.List r1 = r11.getUiccCardsInfo(r0)
-                r29.writeNoException()
-                r14.writeTypedList(r1)
-                return r12
-            L_0x0600:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r28.readString()
-                int r2 = r11.getCardIdForDefaultEuicc(r0, r1)
-                r29.writeNoException()
-                r14.writeInt(r2)
-                return r12
-            L_0x0617:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                android.telephony.SignalStrength r2 = r11.getSignalStrength(r0)
-                r29.writeNoException()
-                if (r2 == 0) goto L_0x062f
-                r14.writeInt(r12)
-                r2.writeToParcel(r14, r12)
-                goto L_0x0632
-            L_0x062f:
-                r14.writeInt(r1)
-            L_0x0632:
-                return r12
-            L_0x0633:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                boolean r1 = r11.getEmergencyCallbackMode(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r12
-            L_0x0646:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r1 = r28.readInt()
-                java.lang.String r2 = r28.readString()
-                java.lang.String[] r3 = r11.getForbiddenPlmns(r0, r1, r2)
-                r29.writeNoException()
-                r14.writeStringArray(r3)
-                return r12
-            L_0x0661:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r1 = r28.readInt()
-                r11.setSimPowerStateForSlot(r0, r1)
-                r29.writeNoException()
-                return r12
-            L_0x0674:
-                r12 = r10
-                r13.enforceInterface(r15)
-                java.lang.String r0 = r28.readString()
-                int r1 = r28.readInt()
-                java.util.List r2 = r11.getClientRequestStats(r0, r1)
-                r29.writeNoException()
-                r14.writeTypedList(r2)
-                return r12
-            L_0x068b:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                if (r0 == 0) goto L_0x0697
-                r1 = r12
-            L_0x0697:
-                r0 = r1
-                int r1 = r28.readInt()
-                r11.setPolicyDataEnabled(r0, r1)
-                r29.writeNoException()
-                return r12
-            L_0x06a3:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x06b3
-                r2 = r12
-                goto L_0x06b4
-            L_0x06b3:
-                r2 = r1
-            L_0x06b4:
-                android.net.NetworkStats r3 = r11.getVtDataUsage(r0, r2)
-                r29.writeNoException()
-                if (r3 == 0) goto L_0x06c4
-                r14.writeInt(r12)
-                r3.writeToParcel(r14, r12)
-                goto L_0x06c7
-            L_0x06c4:
-                r14.writeInt(r1)
-            L_0x06c7:
-                return r12
-            L_0x06c8:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                r11.carrierActionResetAll(r0)
-                r29.writeNoException()
-                return r12
-            L_0x06d7:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x06e7
-                r1 = r12
-            L_0x06e7:
-                r11.carrierActionReportDefaultNetworkStatus(r0, r1)
-                r29.writeNoException()
-                return r12
-            L_0x06ee:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x06fe
-                r1 = r12
-            L_0x06fe:
-                r11.carrierActionSetRadioEnabled(r0, r1)
-                r29.writeNoException()
-                return r12
-            L_0x0705:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x0715
-                r1 = r12
-            L_0x0715:
-                r11.carrierActionSetMeteredApnsEnabled(r0, r1)
-                r29.writeNoException()
-                return r12
-            L_0x071c:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r2 = r28.readString()
-                int r3 = r28.readInt()
-                if (r3 == 0) goto L_0x0730
-                r1 = r12
-            L_0x0730:
-                int r3 = r11.getCarrierIdFromMccMnc(r0, r2, r1)
-                r29.writeNoException()
-                r14.writeInt(r3)
-                return r12
-            L_0x073b:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r11.getSubscriptionSpecificCarrierName(r0)
-                r29.writeNoException()
-                r14.writeString(r1)
-                return r12
-            L_0x074e:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r1 = r11.getSubscriptionSpecificCarrierId(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r12
-            L_0x0761:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r11.getSubscriptionCarrierName(r0)
-                r29.writeNoException()
-                r14.writeString(r1)
-                return r12
-            L_0x0774:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r1 = r11.getSubscriptionCarrierId(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r12
-            L_0x0787:
-                r12 = r10
-                r13.enforceInterface(r15)
-                android.telephony.CarrierRestrictionRules r0 = r26.getAllowedCarriers()
-                r29.writeNoException()
-                if (r0 == 0) goto L_0x079b
-                r14.writeInt(r12)
-                r0.writeToParcel(r14, r12)
-                goto L_0x079e
-            L_0x079b:
-                r14.writeInt(r1)
-            L_0x079e:
-                return r12
-            L_0x079f:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x07b2
-                android.os.Parcelable$Creator<android.telephony.CarrierRestrictionRules> r0 = android.telephony.CarrierRestrictionRules.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.telephony.CarrierRestrictionRules r0 = (android.telephony.CarrierRestrictionRules) r0
-                goto L_0x07b3
-            L_0x07b2:
-            L_0x07b3:
-                int r1 = r11.setAllowedCarriers(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r12
-            L_0x07be:
-                r12 = r10
-                r13.enforceInterface(r15)
-                java.util.List r0 = r26.getTelephonyHistograms()
-                r29.writeNoException()
-                r14.writeTypedList(r0)
-                return r12
-            L_0x07cd:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r11.getCdmaPrlVersion(r0)
-                r29.writeNoException()
-                r14.writeString(r1)
-                return r12
-            L_0x07e0:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r11.getEsn(r0)
-                r29.writeNoException()
-                r14.writeString(r1)
-                return r12
-            L_0x07f3:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r1 = r28.readInt()
-                java.lang.String r2 = r11.getAidForAppType(r0, r1)
-                r29.writeNoException()
-                r14.writeString(r2)
-                return r12
-            L_0x080a:
-                r12 = r10
-                r13.enforceInterface(r15)
-                java.util.List r0 = r26.getPackagesWithCarrierPrivilegesForAllPhones()
-                r29.writeNoException()
-                r14.writeStringList(r0)
-                return r12
-            L_0x0819:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.util.List r1 = r11.getPackagesWithCarrierPrivileges(r0)
-                r29.writeNoException()
-                r14.writeStringList(r1)
-                return r12
-            L_0x082c:
-                r12 = r10
-                r13.enforceInterface(r15)
-                java.lang.String r2 = r28.readString()
-                int r3 = r28.readInt()
-                if (r3 == 0) goto L_0x0843
-                android.os.Parcelable$Creator<android.telecom.PhoneAccountHandle> r0 = android.telecom.PhoneAccountHandle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.telecom.PhoneAccountHandle r0 = (android.telecom.PhoneAccountHandle) r0
-                goto L_0x0844
-            L_0x0843:
-            L_0x0844:
-                int r3 = r28.readInt()
-                if (r3 == 0) goto L_0x084c
-                r1 = r12
-            L_0x084c:
-                r11.setVoicemailVibrationEnabled(r2, r0, r1)
-                r29.writeNoException()
-                return r12
-            L_0x0853:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x0866
-                android.os.Parcelable$Creator<android.telecom.PhoneAccountHandle> r0 = android.telecom.PhoneAccountHandle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.telecom.PhoneAccountHandle r0 = (android.telecom.PhoneAccountHandle) r0
-                goto L_0x0867
-            L_0x0866:
-            L_0x0867:
-                boolean r1 = r11.isVoicemailVibrationEnabled(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r12
-            L_0x0872:
-                r12 = r10
-                r13.enforceInterface(r15)
-                java.lang.String r1 = r28.readString()
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x0889
-                android.os.Parcelable$Creator<android.telecom.PhoneAccountHandle> r2 = android.telecom.PhoneAccountHandle.CREATOR
-                java.lang.Object r2 = r2.createFromParcel(r13)
-                android.telecom.PhoneAccountHandle r2 = (android.telecom.PhoneAccountHandle) r2
-                goto L_0x088a
-            L_0x0889:
-                r2 = r0
-            L_0x088a:
-                int r3 = r28.readInt()
-                if (r3 == 0) goto L_0x0899
-                android.os.Parcelable$Creator<android.net.Uri> r0 = android.net.Uri.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.net.Uri r0 = (android.net.Uri) r0
-                goto L_0x089a
-            L_0x0899:
-            L_0x089a:
-                r11.setVoicemailRingtoneUri(r1, r2, r0)
-                r29.writeNoException()
-                return r12
-            L_0x08a1:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x08b4
-                android.os.Parcelable$Creator<android.telecom.PhoneAccountHandle> r0 = android.telecom.PhoneAccountHandle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.telecom.PhoneAccountHandle r0 = (android.telecom.PhoneAccountHandle) r0
-                goto L_0x08b5
-            L_0x08b4:
-            L_0x08b5:
-                android.net.Uri r2 = r11.getVoicemailRingtoneUri(r0)
-                r29.writeNoException()
-                if (r2 == 0) goto L_0x08c5
-                r14.writeInt(r12)
-                r2.writeToParcel(r14, r12)
-                goto L_0x08c8
-            L_0x08c5:
-                r14.writeInt(r1)
-            L_0x08c8:
-                return r12
-            L_0x08c9:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r2 = r28.readString()
-                android.telephony.ServiceState r3 = r11.getServiceStateForSubscriber(r0, r2)
-                r29.writeNoException()
-                if (r3 == 0) goto L_0x08e5
-                r14.writeInt(r12)
-                r3.writeToParcel(r14, r12)
-                goto L_0x08e8
-            L_0x08e5:
-                r14.writeInt(r1)
-            L_0x08e8:
-                return r12
-            L_0x08e9:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x08fc
-                android.os.Parcelable$Creator<android.os.ResultReceiver> r0 = android.os.ResultReceiver.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.os.ResultReceiver r0 = (android.os.ResultReceiver) r0
-                goto L_0x08fd
-            L_0x08fc:
-            L_0x08fd:
-                r11.requestModemActivityInfo(r0)
-                return r12
-            L_0x0901:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r11.getSimLocaleForSubscriber(r0)
-                r29.writeNoException()
-                r14.writeString(r1)
-                return r12
-            L_0x0914:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                r11.factoryReset(r0)
-                r29.writeNoException()
-                return r12
-            L_0x0923:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                android.telecom.PhoneAccountHandle r2 = r11.getPhoneAccountHandleForSubscriptionId(r0)
-                r29.writeNoException()
-                if (r2 == 0) goto L_0x093b
-                r14.writeInt(r12)
-                r2.writeToParcel(r14, r12)
-                goto L_0x093e
-            L_0x093b:
-                r14.writeInt(r1)
-            L_0x093e:
-                return r12
-            L_0x093f:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x0952
-                android.os.Parcelable$Creator<android.telecom.PhoneAccount> r0 = android.telecom.PhoneAccount.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.telecom.PhoneAccount r0 = (android.telecom.PhoneAccount) r0
-                goto L_0x0953
-            L_0x0952:
-            L_0x0953:
-                int r1 = r11.getSubIdForPhoneAccount(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r12
-            L_0x095e:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r28.readString()
-                java.lang.String r2 = r11.getDeviceSoftwareVersionForSlot(r0, r1)
-                r29.writeNoException()
-                r14.writeString(r2)
-                return r12
-            L_0x0975:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r11.getManufacturerCodeForSlot(r0)
-                r29.writeNoException()
-                r14.writeString(r1)
-                return r12
-            L_0x0988:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r28.readString()
-                java.lang.String r2 = r11.getMeidForSlot(r0, r1)
-                r29.writeNoException()
-                r14.writeString(r2)
-                return r12
-            L_0x099f:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r11.getTypeAllocationCodeForSlot(r0)
-                r29.writeNoException()
-                r14.writeString(r1)
-                return r12
-            L_0x09b2:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r28.readString()
-                java.lang.String r2 = r11.getImeiForSlot(r0, r1)
-                r29.writeNoException()
-                r14.writeString(r2)
-                return r12
-            L_0x09c9:
-                r12 = r10
-                r13.enforceInterface(r15)
-                java.lang.String r0 = r28.readString()
-                java.lang.String r1 = r11.getDeviceId(r0)
-                r29.writeNoException()
-                r14.writeString(r1)
-                return r12
-            L_0x09dc:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r1 = r11.getImsRegTechnologyForMmTel(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r12
-            L_0x09ef:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                boolean r1 = r11.isVideoTelephonyAvailable(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r12
-            L_0x0a02:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                boolean r1 = r11.isWifiCallingAvailable(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r12
-            L_0x0a15:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                boolean r1 = r11.isImsRegistered(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r12
-            L_0x0a28:
-                r12 = r10
-                r13.enforceInterface(r15)
-                boolean r0 = r26.isHearingAidCompatibilitySupported()
-                r29.writeNoException()
-                r14.writeInt(r0)
-                return r12
-            L_0x0a37:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                boolean r1 = r11.isRttSupported(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r12
-            L_0x0a4a:
-                r12 = r10
-                r13.enforceInterface(r15)
-                boolean r0 = r26.isTtyModeSupported()
-                r29.writeNoException()
-                r14.writeInt(r0)
-                return r12
-            L_0x0a59:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r28.readString()
-                boolean r2 = r11.isWorldPhone(r0, r1)
-                r29.writeNoException()
-                r14.writeInt(r2)
-                return r12
-            L_0x0a70:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r28.readString()
-                boolean r2 = r11.canChangeDtmfToneLength(r0, r1)
-                r29.writeNoException()
-                r14.writeInt(r2)
-                return r12
-            L_0x0a87:
-                r12 = r10
-                r13.enforceInterface(r15)
-                java.lang.String r0 = r28.readString()
-                boolean r1 = r11.isVideoCallingEnabled(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r12
-            L_0x0a9a:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                if (r0 == 0) goto L_0x0aa6
-                r1 = r12
-            L_0x0aa6:
-                r0 = r1
-                r11.enableVideoCalling(r0)
-                r29.writeNoException()
-                return r12
-            L_0x0aae:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r28.readString()
-                int r2 = r11.getRadioAccessFamily(r0, r1)
-                r29.writeNoException()
-                r14.writeInt(r2)
-                return r12
-            L_0x0ac5:
-                r12 = r10
-                r13.enforceInterface(r15)
-                android.os.Parcelable$Creator<android.telephony.RadioAccessFamily> r0 = android.telephony.RadioAccessFamily.CREATOR
-                java.lang.Object[] r0 = r13.createTypedArray(r0)
-                android.telephony.RadioAccessFamily[] r0 = (android.telephony.RadioAccessFamily[]) r0
-                r11.setRadioCapability(r0)
-                r29.writeNoException()
-                return r12
-            L_0x0ad8:
-                r12 = r10
-                r13.enforceInterface(r15)
-                r26.shutdownMobileRadios()
-                r29.writeNoException()
-                return r12
-            L_0x0ae3:
-                r12 = r10
-                r13.enforceInterface(r15)
-                boolean r0 = r26.needMobileRadioShutdown()
-                r29.writeNoException()
-                r14.writeInt(r0)
-                return r12
-            L_0x0af2:
-                r12 = r10
-                r13.enforceInterface(r15)
-                byte[] r0 = r28.createByteArray()
-                int r1 = r28.readInt()
-                if (r1 >= 0) goto L_0x0b02
-                r2 = 0
-                goto L_0x0b04
-            L_0x0b02:
-                byte[] r2 = new byte[r1]
-            L_0x0b04:
-                int r3 = r11.invokeOemRilRequestRaw(r0, r2)
-                r29.writeNoException()
-                r14.writeInt(r3)
-                r14.writeByteArray(r2)
-                return r12
-            L_0x0b12:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r6 = r28.readInt()
-                java.util.ArrayList r7 = r28.createStringArrayList()
-                java.util.ArrayList r8 = r28.createStringArrayList()
-                java.util.ArrayList r9 = r28.createStringArrayList()
-                java.util.ArrayList r10 = r28.createStringArrayList()
-                r0 = r26
-                r1 = r6
-                r2 = r7
-                r3 = r8
-                r4 = r9
-                r5 = r10
-                boolean r0 = r0.setRoamingOverride(r1, r2, r3, r4, r5)
-                r29.writeNoException()
-                r14.writeInt(r0)
-                return r12
-            L_0x0b3c:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r28.readString()
-                boolean r2 = r11.setOperatorBrandOverride(r0, r1)
-                r29.writeNoException()
-                r14.writeInt(r2)
-                return r12
-            L_0x0b53:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r28.readString()
-                java.lang.String[] r2 = r11.getMergedSubscriberIds(r0, r1)
-                r29.writeNoException()
-                r14.writeStringArray(r2)
-                return r12
-            L_0x0b6a:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r28.readString()
-                java.lang.String r2 = r11.getLine1AlphaTagForDisplay(r0, r1)
-                r29.writeNoException()
-                r14.writeString(r2)
-                return r12
-            L_0x0b81:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r28.readString()
-                java.lang.String r2 = r11.getLine1NumberForDisplay(r0, r1)
-                r29.writeNoException()
-                r14.writeString(r2)
-                return r12
-            L_0x0b98:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r28.readString()
-                java.lang.String r2 = r28.readString()
-                boolean r3 = r11.setLine1NumberForDisplayForSubscriber(r0, r1, r2)
-                r29.writeNoException()
-                r14.writeInt(r3)
-                return r12
-            L_0x0bb3:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x0bc6
-                android.os.Parcelable$Creator<android.content.Intent> r0 = android.content.Intent.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.content.Intent r0 = (android.content.Intent) r0
-                goto L_0x0bc7
-            L_0x0bc6:
-            L_0x0bc7:
-                int r1 = r28.readInt()
-                java.util.List r2 = r11.getCarrierPackageNamesForIntentAndPhone(r0, r1)
-                r29.writeNoException()
-                r14.writeStringList(r2)
-                return r12
-            L_0x0bd6:
-                r12 = r10
-                r13.enforceInterface(r15)
-                java.lang.String r0 = r28.readString()
-                int r1 = r11.checkCarrierPrivilegesForPackageAnyPhone(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r12
-            L_0x0be9:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r28.readString()
-                int r2 = r11.checkCarrierPrivilegesForPackage(r0, r1)
-                r29.writeNoException()
-                r14.writeInt(r2)
-                return r12
-            L_0x0c00:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r1 = r28.readInt()
-                int r2 = r11.getCarrierPrivilegeStatusForUid(r0, r1)
-                r29.writeNoException()
-                r14.writeInt(r2)
-                return r12
-            L_0x0c17:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r1 = r11.getCarrierPrivilegeStatus(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r12
-            L_0x0c2a:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x0c3e
-                android.os.Parcelable$Creator<android.telephony.PhoneNumberRange> r0 = android.telephony.PhoneNumberRange.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.telephony.PhoneNumberRange r0 = (android.telephony.PhoneNumberRange) r0
-            L_0x0c3c:
-                r1 = r0
-                goto L_0x0c3f
-            L_0x0c3e:
-                goto L_0x0c3c
-            L_0x0c3f:
-                long r6 = r28.readLong()
-                android.os.IBinder r0 = r28.readStrongBinder()
-                com.android.internal.telephony.INumberVerificationCallback r8 = com.android.internal.telephony.INumberVerificationCallback.Stub.asInterface(r0)
-                java.lang.String r9 = r28.readString()
-                r0 = r26
-                r2 = r6
-                r4 = r8
-                r5 = r9
-                r0.requestNumberVerification(r1, r2, r4, r5)
-                r29.writeNoException()
-                return r12
-            L_0x0c5b:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r11.getCdmaMin(r0)
-                r29.writeNoException()
-                r14.writeString(r1)
-                return r12
-            L_0x0c6e:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r11.getCdmaMdn(r0)
-                r29.writeNoException()
-                r14.writeString(r1)
-                return r12
-            L_0x0c81:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                if (r0 == 0) goto L_0x0c8d
-                r1 = r12
-            L_0x0c8d:
-                r0 = r1
-                r11.setImsRegistrationState(r0)
-                r29.writeNoException()
-                return r12
-            L_0x0c95:
-                r12 = r10
-                r13.enforceInterface(r15)
-                java.lang.String r0 = r28.readString()
-                java.lang.String r1 = r28.readString()
-                java.lang.String[] r2 = r11.getPcscfAddress(r0, r1)
-                r29.writeNoException()
-                r14.writeStringArray(r2)
-                return r12
-            L_0x0cac:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                boolean r1 = r11.isManualNetworkSelectionAllowed(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r12
-            L_0x0cbf:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                boolean r1 = r11.isDataEnabled(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r12
-            L_0x0cd2:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                boolean r1 = r11.isUserDataEnabled(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r12
-            L_0x0ce5:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                boolean r1 = r11.getDataEnabled(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r12
-            L_0x0cf8:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x0d08
-                r1 = r12
-            L_0x0d08:
-                r11.setUserDataEnabled(r0, r1)
-                r29.writeNoException()
-                return r12
-            L_0x0d0f:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r1 = r28.readInt()
-                boolean r2 = r11.setPreferredNetworkType(r0, r1)
-                r29.writeNoException()
-                r14.writeInt(r2)
-                return r12
-            L_0x0d26:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r2 = r28.readInt()
-                int r3 = r28.readInt()
-                if (r3 == 0) goto L_0x0d3d
-                android.os.Parcelable$Creator<com.android.internal.telephony.OperatorInfo> r0 = com.android.internal.telephony.OperatorInfo.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                com.android.internal.telephony.OperatorInfo r0 = (com.android.internal.telephony.OperatorInfo) r0
-                goto L_0x0d3e
-            L_0x0d3d:
-            L_0x0d3e:
-                int r3 = r28.readInt()
-                if (r3 == 0) goto L_0x0d46
-                r1 = r12
-            L_0x0d46:
-                boolean r3 = r11.setNetworkSelectionModeManual(r2, r0, r1)
-                r29.writeNoException()
-                r14.writeInt(r3)
-                return r12
-            L_0x0d51:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r1 = r28.readInt()
-                r11.stopNetworkScan(r0, r1)
-                r29.writeNoException()
-                return r12
-            L_0x0d64:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r6 = r28.readInt()
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x0d7c
-                android.os.Parcelable$Creator<android.telephony.NetworkScanRequest> r1 = android.telephony.NetworkScanRequest.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r13)
-                android.telephony.NetworkScanRequest r1 = (android.telephony.NetworkScanRequest) r1
-                r2 = r1
-                goto L_0x0d7d
-            L_0x0d7c:
-                r2 = r0
-            L_0x0d7d:
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x0d8d
-                android.os.Parcelable$Creator<android.os.Messenger> r0 = android.os.Messenger.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.os.Messenger r0 = (android.os.Messenger) r0
-            L_0x0d8b:
-                r3 = r0
-                goto L_0x0d8e
-            L_0x0d8d:
-                goto L_0x0d8b
-            L_0x0d8e:
-                android.os.IBinder r7 = r28.readStrongBinder()
-                java.lang.String r8 = r28.readString()
-                r0 = r26
-                r1 = r6
-                r4 = r7
-                r5 = r8
-                int r0 = r0.requestNetworkScan(r1, r2, r3, r4, r5)
-                r29.writeNoException()
-                r14.writeInt(r0)
-                return r12
-            L_0x0da6:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r2 = r28.readString()
-                com.android.internal.telephony.CellNetworkScanResult r3 = r11.getCellNetworkScanResults(r0, r2)
-                r29.writeNoException()
-                if (r3 == 0) goto L_0x0dc2
-                r14.writeInt(r12)
-                r3.writeToParcel(r14, r12)
-                goto L_0x0dc5
-            L_0x0dc2:
-                r14.writeInt(r1)
-            L_0x0dc5:
-                return r12
-            L_0x0dc6:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                r11.setNetworkSelectionModeAutomatic(r0)
-                r29.writeNoException()
-                return r12
-            L_0x0dd5:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x0de5
-                r1 = r12
-            L_0x0de5:
-                java.lang.String r2 = r11.getImsService(r0, r1)
-                r29.writeNoException()
-                r14.writeString(r2)
-                return r12
-            L_0x0df0:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x0e00
-                r1 = r12
-            L_0x0e00:
-                java.lang.String r2 = r28.readString()
-                boolean r3 = r11.setImsService(r0, r1, r2)
-                r29.writeNoException()
-                r14.writeInt(r3)
-                return r12
-            L_0x0e0f:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r1 = r28.readInt()
-                int r2 = r28.readInt()
-                android.telephony.ims.aidl.IImsConfig r3 = r11.getImsConfig(r1, r2)
-                r29.writeNoException()
-                if (r3 == 0) goto L_0x0e29
-                android.os.IBinder r0 = r3.asBinder()
-            L_0x0e29:
-                r14.writeStrongBinder(r0)
-                return r12
-            L_0x0e2d:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r1 = r28.readInt()
-                int r2 = r28.readInt()
-                android.telephony.ims.aidl.IImsRegistration r3 = r11.getImsRegistration(r1, r2)
-                r29.writeNoException()
-                if (r3 == 0) goto L_0x0e47
-                android.os.IBinder r0 = r3.asBinder()
-            L_0x0e47:
-                r14.writeStrongBinder(r0)
-                return r12
-            L_0x0e4b:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r1 = r28.readInt()
-                android.os.IBinder r2 = r28.readStrongBinder()
-                com.android.ims.internal.IImsServiceFeatureCallback r2 = com.android.ims.internal.IImsServiceFeatureCallback.Stub.asInterface(r2)
-                android.telephony.ims.aidl.IImsRcsFeature r3 = r11.getRcsFeatureAndListen(r1, r2)
-                r29.writeNoException()
-                if (r3 == 0) goto L_0x0e69
-                android.os.IBinder r0 = r3.asBinder()
-            L_0x0e69:
-                r14.writeStrongBinder(r0)
-                return r12
-            L_0x0e6d:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r1 = r28.readInt()
-                android.os.IBinder r2 = r28.readStrongBinder()
-                com.android.ims.internal.IImsServiceFeatureCallback r2 = com.android.ims.internal.IImsServiceFeatureCallback.Stub.asInterface(r2)
-                android.telephony.ims.aidl.IImsMmTelFeature r3 = r11.getMmTelFeatureAndListen(r1, r2)
-                r29.writeNoException()
-                if (r3 == 0) goto L_0x0e8b
-                android.os.IBinder r0 = r3.asBinder()
-            L_0x0e8b:
-                r14.writeStrongBinder(r0)
-                return r12
-            L_0x0e8f:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                r11.disableIms(r0)
-                r29.writeNoException()
-                return r12
-            L_0x0e9e:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                r11.enableIms(r0)
-                r29.writeNoException()
-                return r12
-            L_0x0ead:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                boolean r1 = r11.getTetherApnRequiredForSubscriber(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r12
-            L_0x0ec0:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r1 = r11.getPreferredNetworkType(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r12
-            L_0x0ed3:
-                r12 = r10
-                r13.enforceInterface(r15)
-                java.lang.String r0 = r28.readString()
-                int r1 = r11.getCalculatedPreferredNetworkType(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r12
-            L_0x0ee6:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                boolean r1 = r11.rebootModem(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r12
-            L_0x0ef9:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                boolean r1 = r11.resetModemConfig(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r12
-            L_0x0f0c:
-                r12 = r10
-                r13.enforceInterface(r15)
-                byte[] r0 = r28.createByteArray()
-                boolean r1 = r11.nvWriteCdmaPrl(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r12
-            L_0x0f1f:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r28.readString()
-                boolean r2 = r11.nvWriteItem(r0, r1)
-                r29.writeNoException()
-                r14.writeInt(r2)
-                return r12
-            L_0x0f36:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r11.nvReadItem(r0)
-                r29.writeNoException()
-                r14.writeString(r1)
-                return r12
-            L_0x0f49:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r28.readString()
-                java.lang.String r2 = r11.sendEnvelopeWithStatus(r0, r1)
-                r29.writeNoException()
-                r14.writeString(r2)
-                return r12
-            L_0x0f60:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r8 = r28.readInt()
-                int r9 = r28.readInt()
-                int r10 = r28.readInt()
-                int r16 = r28.readInt()
-                int r17 = r28.readInt()
-                int r18 = r28.readInt()
-                java.lang.String r19 = r28.readString()
-                r0 = r26
-                r1 = r8
-                r2 = r9
-                r3 = r10
-                r4 = r16
-                r5 = r17
-                r6 = r18
-                r7 = r19
-                byte[] r0 = r0.iccExchangeSimIO(r1, r2, r3, r4, r5, r6, r7)
-                r29.writeNoException()
-                r14.writeByteArray(r0)
-                return r12
-            L_0x0f98:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r9 = r28.readInt()
-                java.lang.String r10 = r28.readString()
-                int r16 = r28.readInt()
-                int r17 = r28.readInt()
-                int r18 = r28.readInt()
-                int r19 = r28.readInt()
-                int r20 = r28.readInt()
-                java.lang.String r21 = r28.readString()
-                r0 = r26
-                r1 = r9
-                r2 = r10
-                r3 = r16
-                r4 = r17
-                r5 = r18
-                r6 = r19
-                r7 = r20
-                r8 = r21
-                java.lang.String r0 = r0.iccTransmitApduBasicChannel(r1, r2, r3, r4, r5, r6, r7, r8)
-                r29.writeNoException()
-                r14.writeString(r0)
-                return r12
-            L_0x0fd7:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r9 = r28.readInt()
-                java.lang.String r10 = r28.readString()
-                int r16 = r28.readInt()
-                int r17 = r28.readInt()
-                int r18 = r28.readInt()
-                int r19 = r28.readInt()
-                int r20 = r28.readInt()
-                java.lang.String r21 = r28.readString()
-                r0 = r26
-                r1 = r9
-                r2 = r10
-                r3 = r16
-                r4 = r17
-                r5 = r18
-                r6 = r19
-                r7 = r20
-                r8 = r21
-                java.lang.String r0 = r0.iccTransmitApduBasicChannelBySlot(r1, r2, r3, r4, r5, r6, r7, r8)
-                r29.writeNoException()
-                r14.writeString(r0)
-                return r12
-            L_0x1016:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r9 = r28.readInt()
-                int r10 = r28.readInt()
-                int r16 = r28.readInt()
-                int r17 = r28.readInt()
-                int r18 = r28.readInt()
-                int r19 = r28.readInt()
-                int r20 = r28.readInt()
-                java.lang.String r21 = r28.readString()
-                r0 = r26
-                r1 = r9
-                r2 = r10
-                r3 = r16
-                r4 = r17
-                r5 = r18
-                r6 = r19
-                r7 = r20
-                r8 = r21
-                java.lang.String r0 = r0.iccTransmitApduLogicalChannel(r1, r2, r3, r4, r5, r6, r7, r8)
-                r29.writeNoException()
-                r14.writeString(r0)
-                return r12
-            L_0x1055:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r9 = r28.readInt()
-                int r10 = r28.readInt()
-                int r16 = r28.readInt()
-                int r17 = r28.readInt()
-                int r18 = r28.readInt()
-                int r19 = r28.readInt()
-                int r20 = r28.readInt()
-                java.lang.String r21 = r28.readString()
-                r0 = r26
-                r1 = r9
-                r2 = r10
-                r3 = r16
-                r4 = r17
-                r5 = r18
-                r6 = r19
-                r7 = r20
-                r8 = r21
-                java.lang.String r0 = r0.iccTransmitApduLogicalChannelBySlot(r1, r2, r3, r4, r5, r6, r7, r8)
-                r29.writeNoException()
-                r14.writeString(r0)
-                return r12
-            L_0x1094:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r1 = r28.readInt()
-                boolean r2 = r11.iccCloseLogicalChannel(r0, r1)
-                r29.writeNoException()
-                r14.writeInt(r2)
-                return r12
-            L_0x10ab:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r1 = r28.readInt()
-                boolean r2 = r11.iccCloseLogicalChannelBySlot(r0, r1)
-                r29.writeNoException()
-                r14.writeInt(r2)
-                return r12
-            L_0x10c2:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r2 = r28.readString()
-                java.lang.String r3 = r28.readString()
-                int r4 = r28.readInt()
-                android.telephony.IccOpenLogicalChannelResponse r5 = r11.iccOpenLogicalChannel(r0, r2, r3, r4)
-                r29.writeNoException()
-                if (r5 == 0) goto L_0x10e6
-                r14.writeInt(r12)
-                r5.writeToParcel(r14, r12)
-                goto L_0x10e9
-            L_0x10e6:
-                r14.writeInt(r1)
-            L_0x10e9:
-                return r12
-            L_0x10ea:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r2 = r28.readString()
-                java.lang.String r3 = r28.readString()
-                int r4 = r28.readInt()
-                android.telephony.IccOpenLogicalChannelResponse r5 = r11.iccOpenLogicalChannelBySlot(r0, r2, r3, r4)
-                r29.writeNoException()
-                if (r5 == 0) goto L_0x110e
-                r14.writeInt(r12)
-                r5.writeToParcel(r14, r12)
-                goto L_0x1111
-            L_0x110e:
-                r14.writeInt(r1)
-            L_0x1111:
-                return r12
-            L_0x1112:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                r11.setCellInfoListRate(r0)
-                r29.writeNoException()
-                return r12
-            L_0x1121:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r1 = r28.readInt()
-                android.os.IBinder r2 = r28.readStrongBinder()
-                android.telephony.ICellInfoCallback r2 = android.telephony.ICellInfoCallback.Stub.asInterface(r2)
-                java.lang.String r3 = r28.readString()
-                int r4 = r28.readInt()
-                if (r4 == 0) goto L_0x1144
-                android.os.Parcelable$Creator<android.os.WorkSource> r0 = android.os.WorkSource.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.os.WorkSource r0 = (android.os.WorkSource) r0
-                goto L_0x1145
-            L_0x1144:
-            L_0x1145:
-                r11.requestCellInfoUpdateWithWorkSource(r1, r2, r3, r0)
-                r29.writeNoException()
-                return r12
-            L_0x114c:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                android.os.IBinder r1 = r28.readStrongBinder()
-                android.telephony.ICellInfoCallback r1 = android.telephony.ICellInfoCallback.Stub.asInterface(r1)
-                java.lang.String r2 = r28.readString()
-                r11.requestCellInfoUpdate(r0, r1, r2)
-                r29.writeNoException()
-                return r12
-            L_0x1167:
-                r12 = r10
-                r13.enforceInterface(r15)
-                java.lang.String r0 = r28.readString()
-                java.util.List r1 = r11.getAllCellInfo(r0)
-                r29.writeNoException()
-                r14.writeTypedList(r1)
-                return r12
-            L_0x117a:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r28.readString()
-                int r2 = r11.getLteOnCdmaModeForSubscriber(r0, r1)
-                r29.writeNoException()
-                r14.writeInt(r2)
-                return r12
-            L_0x1191:
-                r12 = r10
-                r13.enforceInterface(r15)
-                java.lang.String r0 = r28.readString()
-                int r1 = r11.getLteOnCdmaMode(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r12
-            L_0x11a4:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                boolean r1 = r11.hasIccCardUsingSlotIndex(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r12
-            L_0x11b7:
-                r12 = r10
-                r13.enforceInterface(r15)
-                boolean r0 = r26.hasIccCard()
-                r29.writeNoException()
-                r14.writeInt(r0)
-                return r12
-            L_0x11c6:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r28.readString()
-                int r2 = r11.getVoiceNetworkTypeForSubscriber(r0, r1)
-                r29.writeNoException()
-                r14.writeInt(r2)
-                return r12
-            L_0x11dd:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r28.readString()
-                int r2 = r11.getDataNetworkTypeForSubscriber(r0, r1)
-                r29.writeNoException()
-                r14.writeInt(r2)
-                return r12
-            L_0x11f4:
-                r12 = r10
-                r13.enforceInterface(r15)
-                java.lang.String r0 = r28.readString()
-                int r1 = r11.getDataNetworkType(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r12
-            L_0x1207:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r28.readString()
-                int r2 = r11.getNetworkTypeForSubscriber(r0, r1)
-                r29.writeNoException()
-                r14.writeInt(r2)
-                return r12
-            L_0x121e:
-                r12 = r10
-                r13.enforceInterface(r15)
-                java.lang.String r0 = r28.readString()
-                java.lang.String r1 = r28.readString()
-                r11.sendDialerSpecialCode(r0, r1)
-                r29.writeNoException()
-                return r12
-            L_0x1231:
-                r12 = r10
-                r13.enforceInterface(r15)
-                java.lang.String r7 = r28.readString()
-                int r8 = r28.readInt()
-                java.lang.String r9 = r28.readString()
-                int r10 = r28.readInt()
-                java.lang.String r16 = r28.readString()
-                int r1 = r28.readInt()
-                if (r1 == 0) goto L_0x1259
-                android.os.Parcelable$Creator<android.app.PendingIntent> r0 = android.app.PendingIntent.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.app.PendingIntent r0 = (android.app.PendingIntent) r0
-            L_0x1257:
-                r6 = r0
-                goto L_0x125a
-            L_0x1259:
-                goto L_0x1257
-            L_0x125a:
-                r0 = r26
-                r1 = r7
-                r2 = r8
-                r3 = r9
-                r4 = r10
-                r5 = r16
-                r0.sendVisualVoicemailSmsForSubscriber(r1, r2, r3, r4, r5, r6)
-                r29.writeNoException()
-                return r12
-            L_0x1269:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                android.telephony.VisualVoicemailSmsFilterSettings r2 = r11.getActiveVisualVoicemailSmsFilterSettings(r0)
-                r29.writeNoException()
-                if (r2 == 0) goto L_0x1281
-                r14.writeInt(r12)
-                r2.writeToParcel(r14, r12)
-                goto L_0x1284
-            L_0x1281:
-                r14.writeInt(r1)
-            L_0x1284:
-                return r12
-            L_0x1285:
-                r12 = r10
-                r13.enforceInterface(r15)
-                java.lang.String r0 = r28.readString()
-                int r2 = r28.readInt()
-                android.telephony.VisualVoicemailSmsFilterSettings r3 = r11.getVisualVoicemailSmsFilterSettings(r0, r2)
-                r29.writeNoException()
-                if (r3 == 0) goto L_0x12a1
-                r14.writeInt(r12)
-                r3.writeToParcel(r14, r12)
-                goto L_0x12a4
-            L_0x12a1:
-                r14.writeInt(r1)
-            L_0x12a4:
-                return r12
-            L_0x12a5:
-                r12 = r10
-                r13.enforceInterface(r15)
-                java.lang.String r0 = r28.readString()
-                int r1 = r28.readInt()
-                r11.disableVisualVoicemailSmsFilter(r0, r1)
-                return r12
-            L_0x12b5:
-                r12 = r10
-                r13.enforceInterface(r15)
-                java.lang.String r1 = r28.readString()
-                int r2 = r28.readInt()
-                int r3 = r28.readInt()
-                if (r3 == 0) goto L_0x12d0
-                android.os.Parcelable$Creator<android.telephony.VisualVoicemailSmsFilterSettings> r0 = android.telephony.VisualVoicemailSmsFilterSettings.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.telephony.VisualVoicemailSmsFilterSettings r0 = (android.telephony.VisualVoicemailSmsFilterSettings) r0
-                goto L_0x12d1
-            L_0x12d0:
-            L_0x12d1:
-                r11.enableVisualVoicemailSmsFilter(r1, r2, r0)
-                r29.writeNoException()
-                return r12
-            L_0x12d8:
-                r12 = r10
-                r13.enforceInterface(r15)
-                java.lang.String r0 = r28.readString()
-                int r1 = r28.readInt()
-                java.lang.String r2 = r11.getVisualVoicemailPackageName(r0, r1)
-                r29.writeNoException()
-                r14.writeString(r2)
-                return r12
-            L_0x12ef:
-                r12 = r10
-                r13.enforceInterface(r15)
-                java.lang.String r0 = r28.readString()
-                int r2 = r28.readInt()
-                android.os.Bundle r3 = r11.getVisualVoicemailSettings(r0, r2)
-                r29.writeNoException()
-                if (r3 == 0) goto L_0x130b
-                r14.writeInt(r12)
-                r3.writeToParcel(r14, r12)
-                goto L_0x130e
-            L_0x130b:
-                r14.writeInt(r1)
-            L_0x130e:
-                return r12
-            L_0x130f:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                boolean r1 = r11.isConcurrentVoiceAndDataAllowed(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r12
-            L_0x1322:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r28.readString()
-                int r2 = r11.getVoiceMessageCountForSubscriber(r0, r1)
-                r29.writeNoException()
-                r14.writeInt(r2)
-                return r12
-            L_0x1339:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r28.readString()
-                int r2 = r11.getDataActivationState(r0, r1)
-                r29.writeNoException()
-                r14.writeInt(r2)
-                return r12
-            L_0x1350:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r28.readString()
-                int r2 = r11.getVoiceActivationState(r0, r1)
-                r29.writeNoException()
-                r14.writeInt(r2)
-                return r12
-            L_0x1367:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r1 = r28.readInt()
-                r11.setDataActivationState(r0, r1)
-                r29.writeNoException()
-                return r12
-            L_0x137a:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r1 = r28.readInt()
-                r11.setVoiceActivationState(r0, r1)
-                r29.writeNoException()
-                return r12
-            L_0x138d:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r28.readString()
-                java.lang.String r2 = r28.readString()
-                boolean r3 = r11.setVoiceMailNumber(r0, r1, r2)
-                r29.writeNoException()
-                r14.writeInt(r3)
-                return r12
-            L_0x13a8:
-                r12 = r10
-                r13.enforceInterface(r15)
-                boolean r0 = r26.needsOtaServiceProvisioning()
-                r29.writeNoException()
-                r14.writeInt(r0)
-                return r12
-            L_0x13b7:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r28.readString()
-                java.lang.String r2 = r11.getCdmaEriTextForSubscriber(r0, r1)
-                r29.writeNoException()
-                r14.writeString(r2)
-                return r12
-            L_0x13ce:
-                r12 = r10
-                r13.enforceInterface(r15)
-                java.lang.String r0 = r28.readString()
-                java.lang.String r1 = r11.getCdmaEriText(r0)
-                r29.writeNoException()
-                r14.writeString(r1)
-                return r12
-            L_0x13e1:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r28.readString()
-                int r2 = r11.getCdmaEriIconModeForSubscriber(r0, r1)
-                r29.writeNoException()
-                r14.writeInt(r2)
-                return r12
-            L_0x13f8:
-                r12 = r10
-                r13.enforceInterface(r15)
-                java.lang.String r0 = r28.readString()
-                int r1 = r11.getCdmaEriIconMode(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r12
-            L_0x140b:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r28.readString()
-                int r2 = r11.getCdmaEriIconIndexForSubscriber(r0, r1)
-                r29.writeNoException()
-                r14.writeInt(r2)
-                return r12
-            L_0x1422:
-                r12 = r10
-                r13.enforceInterface(r15)
-                java.lang.String r0 = r28.readString()
-                int r1 = r11.getCdmaEriIconIndex(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r12
-            L_0x1435:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r1 = r11.getActivePhoneTypeForSlot(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r12
-            L_0x1448:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r26.getActivePhoneType()
-                r29.writeNoException()
-                r14.writeInt(r0)
-                return r12
-            L_0x1457:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r26.getDataState()
-                r29.writeNoException()
-                r14.writeInt(r0)
-                return r12
-            L_0x1466:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r26.getDataActivity()
-                r29.writeNoException()
-                r14.writeInt(r0)
-                return r12
-            L_0x1475:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r1 = r11.getCallStateForSlot(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r12
-            L_0x1488:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r26.getCallState()
-                r29.writeNoException()
-                r14.writeInt(r0)
-                return r12
-            L_0x1497:
-                r12 = r10
-                r13.enforceInterface(r15)
-                java.lang.String r0 = r28.readString()
-                java.util.List r1 = r11.getNeighboringCellInfo(r0)
-                r29.writeNoException()
-                r14.writeTypedList(r1)
-                return r12
-            L_0x14aa:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r11.getNetworkCountryIsoForPhone(r0)
-                r29.writeNoException()
-                r14.writeString(r1)
-                return r12
-            L_0x14bd:
-                r12 = r10
-                r13.enforceInterface(r15)
-                java.lang.String r0 = r28.readString()
-                android.os.Bundle r2 = r11.getCellLocation(r0)
-                r29.writeNoException()
-                if (r2 == 0) goto L_0x14d5
-                r14.writeInt(r12)
-                r2.writeToParcel(r14, r12)
-                goto L_0x14d8
-            L_0x14d5:
-                r14.writeInt(r1)
-            L_0x14d8:
-                return r12
-            L_0x14d9:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                boolean r1 = r11.isDataConnectivityPossible(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r12
-            L_0x14ec:
-                r12 = r10
-                r13.enforceInterface(r15)
-                boolean r0 = r26.disableDataConnectivity()
-                r29.writeNoException()
-                r14.writeInt(r0)
-                return r12
-            L_0x14fb:
-                r12 = r10
-                r13.enforceInterface(r15)
-                boolean r0 = r26.enableDataConnectivity()
-                r29.writeNoException()
-                r14.writeInt(r0)
-                return r12
-            L_0x150a:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                r11.disableLocationUpdatesForSubscriber(r0)
-                r29.writeNoException()
-                return r12
-            L_0x1519:
-                r12 = r10
-                r13.enforceInterface(r15)
-                r26.disableLocationUpdates()
-                r29.writeNoException()
-                return r12
-            L_0x1524:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                r11.enableLocationUpdatesForSubscriber(r0)
-                r29.writeNoException()
-                return r12
-            L_0x1533:
-                r12 = r10
-                r13.enforceInterface(r15)
-                r26.enableLocationUpdates()
-                r29.writeNoException()
-                return r12
-            L_0x153e:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                r11.updateServiceLocationForSubscriber(r0)
-                r29.writeNoException()
-                return r12
-            L_0x154d:
-                r12 = r10
-                r13.enforceInterface(r15)
-                r26.updateServiceLocation()
-                r29.writeNoException()
-                return r12
-            L_0x1558:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                if (r0 == 0) goto L_0x1564
-                r1 = r12
-            L_0x1564:
-                r0 = r1
-                boolean r1 = r11.setRadioPower(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r12
-            L_0x1570:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                int r2 = r28.readInt()
-                if (r2 == 0) goto L_0x1580
-                r1 = r12
-            L_0x1580:
-                boolean r2 = r11.setRadioForSubscriber(r0, r1)
-                r29.writeNoException()
-                r14.writeInt(r2)
-                return r12
-            L_0x158b:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                if (r0 == 0) goto L_0x1597
-                r1 = r12
-            L_0x1597:
-                r0 = r1
-                boolean r1 = r11.setRadio(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r12
-            L_0x15a3:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                r11.toggleRadioOnOffForSubscriber(r0)
-                r29.writeNoException()
-                return r12
-            L_0x15b2:
-                r12 = r10
-                r13.enforceInterface(r15)
-                r26.toggleRadioOnOff()
-                r29.writeNoException()
-                return r12
-            L_0x15bd:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r28.readString()
-                boolean r2 = r11.handlePinMmiForSubscriber(r0, r1)
-                r29.writeNoException()
-                r14.writeInt(r2)
-                return r12
-            L_0x15d4:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r1 = r28.readInt()
-                java.lang.String r2 = r28.readString()
-                int r3 = r28.readInt()
-                if (r3 == 0) goto L_0x15ef
-                android.os.Parcelable$Creator<android.os.ResultReceiver> r0 = android.os.ResultReceiver.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r13)
-                android.os.ResultReceiver r0 = (android.os.ResultReceiver) r0
-                goto L_0x15f0
-            L_0x15ef:
-            L_0x15f0:
-                r11.handleUssdRequest(r1, r2, r0)
-                r29.writeNoException()
-                return r12
-            L_0x15f7:
-                r12 = r10
-                r13.enforceInterface(r15)
-                java.lang.String r0 = r28.readString()
-                boolean r1 = r11.handlePinMmi(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r12
-            L_0x160a:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r28.readString()
-                java.lang.String r2 = r28.readString()
-                int[] r3 = r11.supplyPukReportResultForSubscriber(r0, r1, r2)
-                r29.writeNoException()
-                r14.writeIntArray(r3)
-                return r12
-            L_0x1625:
-                r12 = r10
-                r13.enforceInterface(r15)
-                java.lang.String r0 = r28.readString()
-                java.lang.String r1 = r28.readString()
-                int[] r2 = r11.supplyPukReportResult(r0, r1)
-                r29.writeNoException()
-                r14.writeIntArray(r2)
-                return r12
-            L_0x163c:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r28.readString()
-                int[] r2 = r11.supplyPinReportResultForSubscriber(r0, r1)
-                r29.writeNoException()
-                r14.writeIntArray(r2)
-                return r12
-            L_0x1653:
-                r12 = r10
-                r13.enforceInterface(r15)
-                java.lang.String r0 = r28.readString()
-                int[] r1 = r11.supplyPinReportResult(r0)
-                r29.writeNoException()
-                r14.writeIntArray(r1)
-                return r12
-            L_0x1666:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r28.readString()
-                java.lang.String r2 = r28.readString()
-                boolean r3 = r11.supplyPukForSubscriber(r0, r1, r2)
-                r29.writeNoException()
-                r14.writeInt(r3)
-                return r12
-            L_0x1681:
-                r12 = r10
-                r13.enforceInterface(r15)
-                java.lang.String r0 = r28.readString()
-                java.lang.String r1 = r28.readString()
-                boolean r2 = r11.supplyPuk(r0, r1)
-                r29.writeNoException()
-                r14.writeInt(r2)
-                return r12
-            L_0x1698:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r28.readString()
-                boolean r2 = r11.supplyPinForSubscriber(r0, r1)
-                r29.writeNoException()
-                r14.writeInt(r2)
-                return r12
-            L_0x16af:
-                r12 = r10
-                r13.enforceInterface(r15)
-                java.lang.String r0 = r28.readString()
-                boolean r1 = r11.supplyPin(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r12
-            L_0x16c2:
-                r12 = r10
-                r13.enforceInterface(r15)
-                int r0 = r28.readInt()
-                java.lang.String r1 = r28.readString()
-                boolean r2 = r11.isRadioOnForSubscriber(r0, r1)
-                r29.writeNoException()
-                r14.writeInt(r2)
-                return r12
-            L_0x16d9:
-                r12 = r10
-                r13.enforceInterface(r15)
-                java.lang.String r0 = r28.readString()
-                boolean r1 = r11.isRadioOn(r0)
-                r29.writeNoException()
-                r14.writeInt(r1)
-                return r12
-            L_0x16ec:
-                r12 = r10
-                r13.enforceInterface(r15)
-                java.lang.String r0 = r28.readString()
-                java.lang.String r1 = r28.readString()
-                r11.call(r0, r1)
-                r29.writeNoException()
-                return r12
-            L_0x16ff:
-                r12 = r10
-                r13.enforceInterface(r15)
-                java.lang.String r0 = r28.readString()
-                r11.dial(r0)
-                r29.writeNoException()
-                return r12
-            L_0x170e:
-                r12 = r10
-                r14.writeString(r15)
-                return r12
-            */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.internal.telephony.ITelephony.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            boolean _arg1;
+            byte[] _arg12;
+            PhoneAccountHandle _arg13;
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0 = data.readString();
+                    dial(_arg0);
+                    reply.writeNoException();
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg02 = data.readString();
+                    call(_arg02, data.readString());
+                    reply.writeNoException();
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg03 = data.readString();
+                    boolean isRadioOn = isRadioOn(_arg03);
+                    reply.writeNoException();
+                    reply.writeInt(isRadioOn ? 1 : 0);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg04 = data.readInt();
+                    boolean isRadioOnForSubscriber = isRadioOnForSubscriber(_arg04, data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(isRadioOnForSubscriber ? 1 : 0);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg05 = data.readString();
+                    boolean supplyPin = supplyPin(_arg05);
+                    reply.writeNoException();
+                    reply.writeInt(supplyPin ? 1 : 0);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg06 = data.readInt();
+                    boolean supplyPinForSubscriber = supplyPinForSubscriber(_arg06, data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(supplyPinForSubscriber ? 1 : 0);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg07 = data.readString();
+                    boolean supplyPuk = supplyPuk(_arg07, data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(supplyPuk ? 1 : 0);
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg08 = data.readInt();
+                    String _arg14 = data.readString();
+                    String _arg2 = data.readString();
+                    boolean supplyPukForSubscriber = supplyPukForSubscriber(_arg08, _arg14, _arg2);
+                    reply.writeNoException();
+                    reply.writeInt(supplyPukForSubscriber ? 1 : 0);
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg09 = data.readString();
+                    int[] _result = supplyPinReportResult(_arg09);
+                    reply.writeNoException();
+                    reply.writeIntArray(_result);
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg010 = data.readInt();
+                    int[] _result2 = supplyPinReportResultForSubscriber(_arg010, data.readString());
+                    reply.writeNoException();
+                    reply.writeIntArray(_result2);
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg011 = data.readString();
+                    int[] _result3 = supplyPukReportResult(_arg011, data.readString());
+                    reply.writeNoException();
+                    reply.writeIntArray(_result3);
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg012 = data.readInt();
+                    String _arg15 = data.readString();
+                    String _arg22 = data.readString();
+                    int[] _result4 = supplyPukReportResultForSubscriber(_arg012, _arg15, _arg22);
+                    reply.writeNoException();
+                    reply.writeIntArray(_result4);
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg013 = data.readString();
+                    boolean handlePinMmi = handlePinMmi(_arg013);
+                    reply.writeNoException();
+                    reply.writeInt(handlePinMmi ? 1 : 0);
+                    return true;
+                case 14:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg014 = data.readInt();
+                    String _arg16 = data.readString();
+                    ResultReceiver _arg23 = data.readInt() != 0 ? ResultReceiver.CREATOR.createFromParcel(data) : null;
+                    handleUssdRequest(_arg014, _arg16, _arg23);
+                    reply.writeNoException();
+                    return true;
+                case 15:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg015 = data.readInt();
+                    boolean handlePinMmiForSubscriber = handlePinMmiForSubscriber(_arg015, data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(handlePinMmiForSubscriber ? 1 : 0);
+                    return true;
+                case 16:
+                    data.enforceInterface(DESCRIPTOR);
+                    toggleRadioOnOff();
+                    reply.writeNoException();
+                    return true;
+                case 17:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg016 = data.readInt();
+                    toggleRadioOnOffForSubscriber(_arg016);
+                    reply.writeNoException();
+                    return true;
+                case 18:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg1 = data.readInt() != 0;
+                    boolean _arg017 = _arg1;
+                    boolean radio = setRadio(_arg017);
+                    reply.writeNoException();
+                    reply.writeInt(radio ? 1 : 0);
+                    return true;
+                case 19:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg018 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    boolean radioForSubscriber = setRadioForSubscriber(_arg018, _arg1);
+                    reply.writeNoException();
+                    reply.writeInt(radioForSubscriber ? 1 : 0);
+                    return true;
+                case 20:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg1 = data.readInt() != 0;
+                    boolean _arg019 = _arg1;
+                    boolean radioPower = setRadioPower(_arg019);
+                    reply.writeNoException();
+                    reply.writeInt(radioPower ? 1 : 0);
+                    return true;
+                case 21:
+                    data.enforceInterface(DESCRIPTOR);
+                    updateServiceLocation();
+                    reply.writeNoException();
+                    return true;
+                case 22:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg020 = data.readInt();
+                    updateServiceLocationForSubscriber(_arg020);
+                    reply.writeNoException();
+                    return true;
+                case 23:
+                    data.enforceInterface(DESCRIPTOR);
+                    enableLocationUpdates();
+                    reply.writeNoException();
+                    return true;
+                case 24:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg021 = data.readInt();
+                    enableLocationUpdatesForSubscriber(_arg021);
+                    reply.writeNoException();
+                    return true;
+                case 25:
+                    data.enforceInterface(DESCRIPTOR);
+                    disableLocationUpdates();
+                    reply.writeNoException();
+                    return true;
+                case 26:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg022 = data.readInt();
+                    disableLocationUpdatesForSubscriber(_arg022);
+                    reply.writeNoException();
+                    return true;
+                case 27:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean enableDataConnectivity = enableDataConnectivity();
+                    reply.writeNoException();
+                    reply.writeInt(enableDataConnectivity ? 1 : 0);
+                    return true;
+                case 28:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean disableDataConnectivity = disableDataConnectivity();
+                    reply.writeNoException();
+                    reply.writeInt(disableDataConnectivity ? 1 : 0);
+                    return true;
+                case 29:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg023 = data.readInt();
+                    boolean isDataConnectivityPossible = isDataConnectivityPossible(_arg023);
+                    reply.writeNoException();
+                    reply.writeInt(isDataConnectivityPossible ? 1 : 0);
+                    return true;
+                case 30:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg024 = data.readString();
+                    Bundle _result5 = getCellLocation(_arg024);
+                    reply.writeNoException();
+                    if (_result5 != null) {
+                        reply.writeInt(1);
+                        _result5.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 31:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg025 = data.readInt();
+                    String _result6 = getNetworkCountryIsoForPhone(_arg025);
+                    reply.writeNoException();
+                    reply.writeString(_result6);
+                    return true;
+                case 32:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg026 = data.readString();
+                    List<NeighboringCellInfo> _result7 = getNeighboringCellInfo(_arg026);
+                    reply.writeNoException();
+                    reply.writeTypedList(_result7);
+                    return true;
+                case 33:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result8 = getCallState();
+                    reply.writeNoException();
+                    reply.writeInt(_result8);
+                    return true;
+                case 34:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg027 = data.readInt();
+                    int _result9 = getCallStateForSlot(_arg027);
+                    reply.writeNoException();
+                    reply.writeInt(_result9);
+                    return true;
+                case 35:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result10 = getDataActivity();
+                    reply.writeNoException();
+                    reply.writeInt(_result10);
+                    return true;
+                case 36:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result11 = getDataState();
+                    reply.writeNoException();
+                    reply.writeInt(_result11);
+                    return true;
+                case 37:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result12 = getActivePhoneType();
+                    reply.writeNoException();
+                    reply.writeInt(_result12);
+                    return true;
+                case 38:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg028 = data.readInt();
+                    int _result13 = getActivePhoneTypeForSlot(_arg028);
+                    reply.writeNoException();
+                    reply.writeInt(_result13);
+                    return true;
+                case 39:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg029 = data.readString();
+                    int _result14 = getCdmaEriIconIndex(_arg029);
+                    reply.writeNoException();
+                    reply.writeInt(_result14);
+                    return true;
+                case 40:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg030 = data.readInt();
+                    int _result15 = getCdmaEriIconIndexForSubscriber(_arg030, data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(_result15);
+                    return true;
+                case 41:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg031 = data.readString();
+                    int _result16 = getCdmaEriIconMode(_arg031);
+                    reply.writeNoException();
+                    reply.writeInt(_result16);
+                    return true;
+                case 42:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg032 = data.readInt();
+                    int _result17 = getCdmaEriIconModeForSubscriber(_arg032, data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(_result17);
+                    return true;
+                case 43:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg033 = data.readString();
+                    String _result18 = getCdmaEriText(_arg033);
+                    reply.writeNoException();
+                    reply.writeString(_result18);
+                    return true;
+                case 44:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg034 = data.readInt();
+                    String _result19 = getCdmaEriTextForSubscriber(_arg034, data.readString());
+                    reply.writeNoException();
+                    reply.writeString(_result19);
+                    return true;
+                case 45:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean needsOtaServiceProvisioning = needsOtaServiceProvisioning();
+                    reply.writeNoException();
+                    reply.writeInt(needsOtaServiceProvisioning ? 1 : 0);
+                    return true;
+                case 46:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg035 = data.readInt();
+                    String _arg17 = data.readString();
+                    String _arg24 = data.readString();
+                    boolean voiceMailNumber = setVoiceMailNumber(_arg035, _arg17, _arg24);
+                    reply.writeNoException();
+                    reply.writeInt(voiceMailNumber ? 1 : 0);
+                    return true;
+                case 47:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg036 = data.readInt();
+                    setVoiceActivationState(_arg036, data.readInt());
+                    reply.writeNoException();
+                    return true;
+                case 48:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg037 = data.readInt();
+                    setDataActivationState(_arg037, data.readInt());
+                    reply.writeNoException();
+                    return true;
+                case 49:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg038 = data.readInt();
+                    int _result20 = getVoiceActivationState(_arg038, data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(_result20);
+                    return true;
+                case 50:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg039 = data.readInt();
+                    int _result21 = getDataActivationState(_arg039, data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(_result21);
+                    return true;
+                case 51:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg040 = data.readInt();
+                    int _result22 = getVoiceMessageCountForSubscriber(_arg040, data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(_result22);
+                    return true;
+                case 52:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg041 = data.readInt();
+                    boolean isConcurrentVoiceAndDataAllowed = isConcurrentVoiceAndDataAllowed(_arg041);
+                    reply.writeNoException();
+                    reply.writeInt(isConcurrentVoiceAndDataAllowed ? 1 : 0);
+                    return true;
+                case 53:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg042 = data.readString();
+                    Bundle _result23 = getVisualVoicemailSettings(_arg042, data.readInt());
+                    reply.writeNoException();
+                    if (_result23 != null) {
+                        reply.writeInt(1);
+                        _result23.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 54:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg043 = data.readString();
+                    String _result24 = getVisualVoicemailPackageName(_arg043, data.readInt());
+                    reply.writeNoException();
+                    reply.writeString(_result24);
+                    return true;
+                case 55:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg044 = data.readString();
+                    int _arg18 = data.readInt();
+                    VisualVoicemailSmsFilterSettings _arg25 = data.readInt() != 0 ? VisualVoicemailSmsFilterSettings.CREATOR.createFromParcel(data) : null;
+                    enableVisualVoicemailSmsFilter(_arg044, _arg18, _arg25);
+                    reply.writeNoException();
+                    return true;
+                case 56:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg045 = data.readString();
+                    disableVisualVoicemailSmsFilter(_arg045, data.readInt());
+                    return true;
+                case 57:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg046 = data.readString();
+                    VisualVoicemailSmsFilterSettings _result25 = getVisualVoicemailSmsFilterSettings(_arg046, data.readInt());
+                    reply.writeNoException();
+                    if (_result25 != null) {
+                        reply.writeInt(1);
+                        _result25.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 58:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg047 = data.readInt();
+                    VisualVoicemailSmsFilterSettings _result26 = getActiveVisualVoicemailSmsFilterSettings(_arg047);
+                    reply.writeNoException();
+                    if (_result26 != null) {
+                        reply.writeInt(1);
+                        _result26.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 59:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg048 = data.readString();
+                    int _arg19 = data.readInt();
+                    String _arg26 = data.readString();
+                    int _arg3 = data.readInt();
+                    String _arg4 = data.readString();
+                    PendingIntent _arg5 = data.readInt() != 0 ? PendingIntent.CREATOR.createFromParcel(data) : null;
+                    sendVisualVoicemailSmsForSubscriber(_arg048, _arg19, _arg26, _arg3, _arg4, _arg5);
+                    reply.writeNoException();
+                    return true;
+                case 60:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg049 = data.readString();
+                    sendDialerSpecialCode(_arg049, data.readString());
+                    reply.writeNoException();
+                    return true;
+                case 61:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg050 = data.readInt();
+                    int _result27 = getNetworkTypeForSubscriber(_arg050, data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(_result27);
+                    return true;
+                case 62:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg051 = data.readString();
+                    int _result28 = getDataNetworkType(_arg051);
+                    reply.writeNoException();
+                    reply.writeInt(_result28);
+                    return true;
+                case 63:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg052 = data.readInt();
+                    int _result29 = getDataNetworkTypeForSubscriber(_arg052, data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(_result29);
+                    return true;
+                case 64:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg053 = data.readInt();
+                    int _result30 = getVoiceNetworkTypeForSubscriber(_arg053, data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(_result30);
+                    return true;
+                case 65:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean hasIccCard = hasIccCard();
+                    reply.writeNoException();
+                    reply.writeInt(hasIccCard ? 1 : 0);
+                    return true;
+                case 66:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg054 = data.readInt();
+                    boolean hasIccCardUsingSlotIndex = hasIccCardUsingSlotIndex(_arg054);
+                    reply.writeNoException();
+                    reply.writeInt(hasIccCardUsingSlotIndex ? 1 : 0);
+                    return true;
+                case 67:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg055 = data.readString();
+                    int _result31 = getLteOnCdmaMode(_arg055);
+                    reply.writeNoException();
+                    reply.writeInt(_result31);
+                    return true;
+                case 68:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg056 = data.readInt();
+                    int _result32 = getLteOnCdmaModeForSubscriber(_arg056, data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(_result32);
+                    return true;
+                case 69:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg057 = data.readString();
+                    List<CellInfo> _result33 = getAllCellInfo(_arg057);
+                    reply.writeNoException();
+                    reply.writeTypedList(_result33);
+                    return true;
+                case 70:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg058 = data.readInt();
+                    ICellInfoCallback _arg110 = ICellInfoCallback.Stub.asInterface(data.readStrongBinder());
+                    String _arg27 = data.readString();
+                    requestCellInfoUpdate(_arg058, _arg110, _arg27);
+                    reply.writeNoException();
+                    return true;
+                case 71:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg059 = data.readInt();
+                    ICellInfoCallback _arg111 = ICellInfoCallback.Stub.asInterface(data.readStrongBinder());
+                    String _arg28 = data.readString();
+                    WorkSource _arg32 = data.readInt() != 0 ? WorkSource.CREATOR.createFromParcel(data) : null;
+                    requestCellInfoUpdateWithWorkSource(_arg059, _arg111, _arg28, _arg32);
+                    reply.writeNoException();
+                    return true;
+                case 72:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg060 = data.readInt();
+                    setCellInfoListRate(_arg060);
+                    reply.writeNoException();
+                    return true;
+                case 73:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg061 = data.readInt();
+                    String _arg112 = data.readString();
+                    String _arg29 = data.readString();
+                    int _arg33 = data.readInt();
+                    IccOpenLogicalChannelResponse _result34 = iccOpenLogicalChannelBySlot(_arg061, _arg112, _arg29, _arg33);
+                    reply.writeNoException();
+                    if (_result34 != null) {
+                        reply.writeInt(1);
+                        _result34.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 74:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg062 = data.readInt();
+                    String _arg113 = data.readString();
+                    String _arg210 = data.readString();
+                    int _arg34 = data.readInt();
+                    IccOpenLogicalChannelResponse _result35 = iccOpenLogicalChannel(_arg062, _arg113, _arg210, _arg34);
+                    reply.writeNoException();
+                    if (_result35 != null) {
+                        reply.writeInt(1);
+                        _result35.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 75:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg063 = data.readInt();
+                    boolean iccCloseLogicalChannelBySlot = iccCloseLogicalChannelBySlot(_arg063, data.readInt());
+                    reply.writeNoException();
+                    reply.writeInt(iccCloseLogicalChannelBySlot ? 1 : 0);
+                    return true;
+                case 76:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg064 = data.readInt();
+                    boolean iccCloseLogicalChannel = iccCloseLogicalChannel(_arg064, data.readInt());
+                    reply.writeNoException();
+                    reply.writeInt(iccCloseLogicalChannel ? 1 : 0);
+                    return true;
+                case 77:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg065 = data.readInt();
+                    int _arg114 = data.readInt();
+                    int _arg211 = data.readInt();
+                    int _arg35 = data.readInt();
+                    int _arg42 = data.readInt();
+                    int _arg52 = data.readInt();
+                    int _arg6 = data.readInt();
+                    String _arg7 = data.readString();
+                    String _result36 = iccTransmitApduLogicalChannelBySlot(_arg065, _arg114, _arg211, _arg35, _arg42, _arg52, _arg6, _arg7);
+                    reply.writeNoException();
+                    reply.writeString(_result36);
+                    return true;
+                case 78:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg066 = data.readInt();
+                    int _arg115 = data.readInt();
+                    int _arg212 = data.readInt();
+                    int _arg36 = data.readInt();
+                    int _arg43 = data.readInt();
+                    int _arg53 = data.readInt();
+                    int _arg62 = data.readInt();
+                    String _arg72 = data.readString();
+                    String _result37 = iccTransmitApduLogicalChannel(_arg066, _arg115, _arg212, _arg36, _arg43, _arg53, _arg62, _arg72);
+                    reply.writeNoException();
+                    reply.writeString(_result37);
+                    return true;
+                case 79:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg067 = data.readInt();
+                    String _arg116 = data.readString();
+                    int _arg213 = data.readInt();
+                    int _arg37 = data.readInt();
+                    int _arg44 = data.readInt();
+                    int _arg54 = data.readInt();
+                    int _arg63 = data.readInt();
+                    String _arg73 = data.readString();
+                    String _result38 = iccTransmitApduBasicChannelBySlot(_arg067, _arg116, _arg213, _arg37, _arg44, _arg54, _arg63, _arg73);
+                    reply.writeNoException();
+                    reply.writeString(_result38);
+                    return true;
+                case 80:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg068 = data.readInt();
+                    String _arg117 = data.readString();
+                    int _arg214 = data.readInt();
+                    int _arg38 = data.readInt();
+                    int _arg45 = data.readInt();
+                    int _arg55 = data.readInt();
+                    int _arg64 = data.readInt();
+                    String _arg74 = data.readString();
+                    String _result39 = iccTransmitApduBasicChannel(_arg068, _arg117, _arg214, _arg38, _arg45, _arg55, _arg64, _arg74);
+                    reply.writeNoException();
+                    reply.writeString(_result39);
+                    return true;
+                case 81:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg069 = data.readInt();
+                    int _arg118 = data.readInt();
+                    int _arg215 = data.readInt();
+                    int _arg39 = data.readInt();
+                    int _arg46 = data.readInt();
+                    int _arg56 = data.readInt();
+                    String _arg65 = data.readString();
+                    byte[] _result40 = iccExchangeSimIO(_arg069, _arg118, _arg215, _arg39, _arg46, _arg56, _arg65);
+                    reply.writeNoException();
+                    reply.writeByteArray(_result40);
+                    return true;
+                case 82:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg070 = data.readInt();
+                    String _result41 = sendEnvelopeWithStatus(_arg070, data.readString());
+                    reply.writeNoException();
+                    reply.writeString(_result41);
+                    return true;
+                case 83:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg071 = data.readInt();
+                    String _result42 = nvReadItem(_arg071);
+                    reply.writeNoException();
+                    reply.writeString(_result42);
+                    return true;
+                case 84:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg072 = data.readInt();
+                    boolean nvWriteItem = nvWriteItem(_arg072, data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(nvWriteItem ? 1 : 0);
+                    return true;
+                case 85:
+                    data.enforceInterface(DESCRIPTOR);
+                    byte[] _arg073 = data.createByteArray();
+                    boolean nvWriteCdmaPrl = nvWriteCdmaPrl(_arg073);
+                    reply.writeNoException();
+                    reply.writeInt(nvWriteCdmaPrl ? 1 : 0);
+                    return true;
+                case 86:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg074 = data.readInt();
+                    boolean resetModemConfig = resetModemConfig(_arg074);
+                    reply.writeNoException();
+                    reply.writeInt(resetModemConfig ? 1 : 0);
+                    return true;
+                case 87:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg075 = data.readInt();
+                    boolean rebootModem = rebootModem(_arg075);
+                    reply.writeNoException();
+                    reply.writeInt(rebootModem ? 1 : 0);
+                    return true;
+                case 88:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg076 = data.readString();
+                    int _result43 = getCalculatedPreferredNetworkType(_arg076);
+                    reply.writeNoException();
+                    reply.writeInt(_result43);
+                    return true;
+                case 89:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg077 = data.readInt();
+                    int _result44 = getPreferredNetworkType(_arg077);
+                    reply.writeNoException();
+                    reply.writeInt(_result44);
+                    return true;
+                case 90:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg078 = data.readInt();
+                    boolean tetherApnRequiredForSubscriber = getTetherApnRequiredForSubscriber(_arg078);
+                    reply.writeNoException();
+                    reply.writeInt(tetherApnRequiredForSubscriber ? 1 : 0);
+                    return true;
+                case 91:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg079 = data.readInt();
+                    enableIms(_arg079);
+                    reply.writeNoException();
+                    return true;
+                case 92:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg080 = data.readInt();
+                    disableIms(_arg080);
+                    reply.writeNoException();
+                    return true;
+                case 93:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg081 = data.readInt();
+                    IImsMmTelFeature _result45 = getMmTelFeatureAndListen(_arg081, IImsServiceFeatureCallback.Stub.asInterface(data.readStrongBinder()));
+                    reply.writeNoException();
+                    reply.writeStrongBinder(_result45 != null ? _result45.asBinder() : null);
+                    return true;
+                case 94:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg082 = data.readInt();
+                    IImsRcsFeature _result46 = getRcsFeatureAndListen(_arg082, IImsServiceFeatureCallback.Stub.asInterface(data.readStrongBinder()));
+                    reply.writeNoException();
+                    reply.writeStrongBinder(_result46 != null ? _result46.asBinder() : null);
+                    return true;
+                case 95:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg083 = data.readInt();
+                    IImsRegistration _result47 = getImsRegistration(_arg083, data.readInt());
+                    reply.writeNoException();
+                    reply.writeStrongBinder(_result47 != null ? _result47.asBinder() : null);
+                    return true;
+                case 96:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg084 = data.readInt();
+                    IImsConfig _result48 = getImsConfig(_arg084, data.readInt());
+                    reply.writeNoException();
+                    reply.writeStrongBinder(_result48 != null ? _result48.asBinder() : null);
+                    return true;
+                case 97:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg085 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    String _arg216 = data.readString();
+                    boolean imsService = setImsService(_arg085, _arg1, _arg216);
+                    reply.writeNoException();
+                    reply.writeInt(imsService ? 1 : 0);
+                    return true;
+                case 98:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg086 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    String _result49 = getImsService(_arg086, _arg1);
+                    reply.writeNoException();
+                    reply.writeString(_result49);
+                    return true;
+                case 99:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg087 = data.readInt();
+                    setNetworkSelectionModeAutomatic(_arg087);
+                    reply.writeNoException();
+                    return true;
+                case 100:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg088 = data.readInt();
+                    CellNetworkScanResult _result50 = getCellNetworkScanResults(_arg088, data.readString());
+                    reply.writeNoException();
+                    if (_result50 != null) {
+                        reply.writeInt(1);
+                        _result50.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 101:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg089 = data.readInt();
+                    NetworkScanRequest _arg119 = data.readInt() != 0 ? NetworkScanRequest.CREATOR.createFromParcel(data) : null;
+                    Messenger _arg217 = data.readInt() != 0 ? Messenger.CREATOR.createFromParcel(data) : null;
+                    IBinder _arg310 = data.readStrongBinder();
+                    String _arg47 = data.readString();
+                    int _result51 = requestNetworkScan(_arg089, _arg119, _arg217, _arg310, _arg47);
+                    reply.writeNoException();
+                    reply.writeInt(_result51);
+                    return true;
+                case 102:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg090 = data.readInt();
+                    stopNetworkScan(_arg090, data.readInt());
+                    reply.writeNoException();
+                    return true;
+                case 103:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg091 = data.readInt();
+                    OperatorInfo _arg120 = data.readInt() != 0 ? OperatorInfo.CREATOR.createFromParcel(data) : null;
+                    _arg1 = data.readInt() != 0;
+                    boolean networkSelectionModeManual = setNetworkSelectionModeManual(_arg091, _arg120, _arg1);
+                    reply.writeNoException();
+                    reply.writeInt(networkSelectionModeManual ? 1 : 0);
+                    return true;
+                case 104:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg092 = data.readInt();
+                    boolean preferredNetworkType = setPreferredNetworkType(_arg092, data.readInt());
+                    reply.writeNoException();
+                    reply.writeInt(preferredNetworkType ? 1 : 0);
+                    return true;
+                case 105:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg093 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    setUserDataEnabled(_arg093, _arg1);
+                    reply.writeNoException();
+                    return true;
+                case 106:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg094 = data.readInt();
+                    boolean dataEnabled = getDataEnabled(_arg094);
+                    reply.writeNoException();
+                    reply.writeInt(dataEnabled ? 1 : 0);
+                    return true;
+                case 107:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg095 = data.readInt();
+                    boolean isUserDataEnabled = isUserDataEnabled(_arg095);
+                    reply.writeNoException();
+                    reply.writeInt(isUserDataEnabled ? 1 : 0);
+                    return true;
+                case 108:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg096 = data.readInt();
+                    boolean isDataEnabled = isDataEnabled(_arg096);
+                    reply.writeNoException();
+                    reply.writeInt(isDataEnabled ? 1 : 0);
+                    return true;
+                case 109:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg097 = data.readInt();
+                    boolean isManualNetworkSelectionAllowed = isManualNetworkSelectionAllowed(_arg097);
+                    reply.writeNoException();
+                    reply.writeInt(isManualNetworkSelectionAllowed ? 1 : 0);
+                    return true;
+                case 110:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg098 = data.readString();
+                    String[] _result52 = getPcscfAddress(_arg098, data.readString());
+                    reply.writeNoException();
+                    reply.writeStringArray(_result52);
+                    return true;
+                case 111:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg1 = data.readInt() != 0;
+                    boolean _arg099 = _arg1;
+                    setImsRegistrationState(_arg099);
+                    reply.writeNoException();
+                    return true;
+                case 112:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0100 = data.readInt();
+                    String _result53 = getCdmaMdn(_arg0100);
+                    reply.writeNoException();
+                    reply.writeString(_result53);
+                    return true;
+                case 113:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0101 = data.readInt();
+                    String _result54 = getCdmaMin(_arg0101);
+                    reply.writeNoException();
+                    reply.writeString(_result54);
+                    return true;
+                case 114:
+                    data.enforceInterface(DESCRIPTOR);
+                    PhoneNumberRange _arg0102 = data.readInt() != 0 ? PhoneNumberRange.CREATOR.createFromParcel(data) : null;
+                    long _arg121 = data.readLong();
+                    INumberVerificationCallback _arg218 = INumberVerificationCallback.Stub.asInterface(data.readStrongBinder());
+                    String _arg311 = data.readString();
+                    requestNumberVerification(_arg0102, _arg121, _arg218, _arg311);
+                    reply.writeNoException();
+                    return true;
+                case 115:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0103 = data.readInt();
+                    int _result55 = getCarrierPrivilegeStatus(_arg0103);
+                    reply.writeNoException();
+                    reply.writeInt(_result55);
+                    return true;
+                case 116:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0104 = data.readInt();
+                    int _result56 = getCarrierPrivilegeStatusForUid(_arg0104, data.readInt());
+                    reply.writeNoException();
+                    reply.writeInt(_result56);
+                    return true;
+                case 117:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0105 = data.readInt();
+                    int _result57 = checkCarrierPrivilegesForPackage(_arg0105, data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(_result57);
+                    return true;
+                case 118:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0106 = data.readString();
+                    int _result58 = checkCarrierPrivilegesForPackageAnyPhone(_arg0106);
+                    reply.writeNoException();
+                    reply.writeInt(_result58);
+                    return true;
+                case 119:
+                    data.enforceInterface(DESCRIPTOR);
+                    Intent _arg0107 = data.readInt() != 0 ? Intent.CREATOR.createFromParcel(data) : null;
+                    List<String> _result59 = getCarrierPackageNamesForIntentAndPhone(_arg0107, data.readInt());
+                    reply.writeNoException();
+                    reply.writeStringList(_result59);
+                    return true;
+                case 120:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0108 = data.readInt();
+                    String _arg122 = data.readString();
+                    String _arg219 = data.readString();
+                    boolean line1NumberForDisplayForSubscriber = setLine1NumberForDisplayForSubscriber(_arg0108, _arg122, _arg219);
+                    reply.writeNoException();
+                    reply.writeInt(line1NumberForDisplayForSubscriber ? 1 : 0);
+                    return true;
+                case 121:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0109 = data.readInt();
+                    String _result60 = getLine1NumberForDisplay(_arg0109, data.readString());
+                    reply.writeNoException();
+                    reply.writeString(_result60);
+                    return true;
+                case 122:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0110 = data.readInt();
+                    String _result61 = getLine1AlphaTagForDisplay(_arg0110, data.readString());
+                    reply.writeNoException();
+                    reply.writeString(_result61);
+                    return true;
+                case 123:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0111 = data.readInt();
+                    String[] _result62 = getMergedSubscriberIds(_arg0111, data.readString());
+                    reply.writeNoException();
+                    reply.writeStringArray(_result62);
+                    return true;
+                case 124:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0112 = data.readInt();
+                    boolean operatorBrandOverride = setOperatorBrandOverride(_arg0112, data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(operatorBrandOverride ? 1 : 0);
+                    return true;
+                case 125:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0113 = data.readInt();
+                    List<String> _arg123 = data.createStringArrayList();
+                    List<String> _arg220 = data.createStringArrayList();
+                    List<String> _arg312 = data.createStringArrayList();
+                    List<String> _arg48 = data.createStringArrayList();
+                    boolean roamingOverride = setRoamingOverride(_arg0113, _arg123, _arg220, _arg312, _arg48);
+                    reply.writeNoException();
+                    reply.writeInt(roamingOverride ? 1 : 0);
+                    return true;
+                case 126:
+                    data.enforceInterface(DESCRIPTOR);
+                    byte[] _arg0114 = data.createByteArray();
+                    int _arg1_length = data.readInt();
+                    if (_arg1_length < 0) {
+                        _arg12 = null;
+                    } else {
+                        _arg12 = new byte[_arg1_length];
+                    }
+                    int _result63 = invokeOemRilRequestRaw(_arg0114, _arg12);
+                    reply.writeNoException();
+                    reply.writeInt(_result63);
+                    reply.writeByteArray(_arg12);
+                    return true;
+                case 127:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean needMobileRadioShutdown = needMobileRadioShutdown();
+                    reply.writeNoException();
+                    reply.writeInt(needMobileRadioShutdown ? 1 : 0);
+                    return true;
+                case 128:
+                    data.enforceInterface(DESCRIPTOR);
+                    shutdownMobileRadios();
+                    reply.writeNoException();
+                    return true;
+                case 129:
+                    data.enforceInterface(DESCRIPTOR);
+                    RadioAccessFamily[] _arg0115 = (RadioAccessFamily[]) data.createTypedArray(RadioAccessFamily.CREATOR);
+                    setRadioCapability(_arg0115);
+                    reply.writeNoException();
+                    return true;
+                case 130:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0116 = data.readInt();
+                    int _result64 = getRadioAccessFamily(_arg0116, data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(_result64);
+                    return true;
+                case 131:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg1 = data.readInt() != 0;
+                    boolean _arg0117 = _arg1;
+                    enableVideoCalling(_arg0117);
+                    reply.writeNoException();
+                    return true;
+                case 132:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0118 = data.readString();
+                    boolean isVideoCallingEnabled = isVideoCallingEnabled(_arg0118);
+                    reply.writeNoException();
+                    reply.writeInt(isVideoCallingEnabled ? 1 : 0);
+                    return true;
+                case 133:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0119 = data.readInt();
+                    boolean canChangeDtmfToneLength = canChangeDtmfToneLength(_arg0119, data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(canChangeDtmfToneLength ? 1 : 0);
+                    return true;
+                case 134:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0120 = data.readInt();
+                    boolean isWorldPhone = isWorldPhone(_arg0120, data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(isWorldPhone ? 1 : 0);
+                    return true;
+                case 135:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isTtyModeSupported = isTtyModeSupported();
+                    reply.writeNoException();
+                    reply.writeInt(isTtyModeSupported ? 1 : 0);
+                    return true;
+                case 136:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0121 = data.readInt();
+                    boolean isRttSupported = isRttSupported(_arg0121);
+                    reply.writeNoException();
+                    reply.writeInt(isRttSupported ? 1 : 0);
+                    return true;
+                case 137:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isHearingAidCompatibilitySupported = isHearingAidCompatibilitySupported();
+                    reply.writeNoException();
+                    reply.writeInt(isHearingAidCompatibilitySupported ? 1 : 0);
+                    return true;
+                case 138:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0122 = data.readInt();
+                    boolean isImsRegistered = isImsRegistered(_arg0122);
+                    reply.writeNoException();
+                    reply.writeInt(isImsRegistered ? 1 : 0);
+                    return true;
+                case 139:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0123 = data.readInt();
+                    boolean isWifiCallingAvailable = isWifiCallingAvailable(_arg0123);
+                    reply.writeNoException();
+                    reply.writeInt(isWifiCallingAvailable ? 1 : 0);
+                    return true;
+                case 140:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0124 = data.readInt();
+                    boolean isVideoTelephonyAvailable = isVideoTelephonyAvailable(_arg0124);
+                    reply.writeNoException();
+                    reply.writeInt(isVideoTelephonyAvailable ? 1 : 0);
+                    return true;
+                case 141:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0125 = data.readInt();
+                    int _result65 = getImsRegTechnologyForMmTel(_arg0125);
+                    reply.writeNoException();
+                    reply.writeInt(_result65);
+                    return true;
+                case 142:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0126 = data.readString();
+                    String _result66 = getDeviceId(_arg0126);
+                    reply.writeNoException();
+                    reply.writeString(_result66);
+                    return true;
+                case 143:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0127 = data.readInt();
+                    String _result67 = getImeiForSlot(_arg0127, data.readString());
+                    reply.writeNoException();
+                    reply.writeString(_result67);
+                    return true;
+                case 144:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0128 = data.readInt();
+                    String _result68 = getTypeAllocationCodeForSlot(_arg0128);
+                    reply.writeNoException();
+                    reply.writeString(_result68);
+                    return true;
+                case 145:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0129 = data.readInt();
+                    String _result69 = getMeidForSlot(_arg0129, data.readString());
+                    reply.writeNoException();
+                    reply.writeString(_result69);
+                    return true;
+                case 146:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0130 = data.readInt();
+                    String _result70 = getManufacturerCodeForSlot(_arg0130);
+                    reply.writeNoException();
+                    reply.writeString(_result70);
+                    return true;
+                case 147:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0131 = data.readInt();
+                    String _result71 = getDeviceSoftwareVersionForSlot(_arg0131, data.readString());
+                    reply.writeNoException();
+                    reply.writeString(_result71);
+                    return true;
+                case 148:
+                    data.enforceInterface(DESCRIPTOR);
+                    PhoneAccount _arg0132 = data.readInt() != 0 ? PhoneAccount.CREATOR.createFromParcel(data) : null;
+                    int _result72 = getSubIdForPhoneAccount(_arg0132);
+                    reply.writeNoException();
+                    reply.writeInt(_result72);
+                    return true;
+                case 149:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0133 = data.readInt();
+                    PhoneAccountHandle _result73 = getPhoneAccountHandleForSubscriptionId(_arg0133);
+                    reply.writeNoException();
+                    if (_result73 != null) {
+                        reply.writeInt(1);
+                        _result73.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 150:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0134 = data.readInt();
+                    factoryReset(_arg0134);
+                    reply.writeNoException();
+                    return true;
+                case 151:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0135 = data.readInt();
+                    String _result74 = getSimLocaleForSubscriber(_arg0135);
+                    reply.writeNoException();
+                    reply.writeString(_result74);
+                    return true;
+                case 152:
+                    data.enforceInterface(DESCRIPTOR);
+                    ResultReceiver _arg0136 = data.readInt() != 0 ? ResultReceiver.CREATOR.createFromParcel(data) : null;
+                    requestModemActivityInfo(_arg0136);
+                    return true;
+                case 153:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0137 = data.readInt();
+                    ServiceState _result75 = getServiceStateForSubscriber(_arg0137, data.readString());
+                    reply.writeNoException();
+                    if (_result75 != null) {
+                        reply.writeInt(1);
+                        _result75.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 154:
+                    data.enforceInterface(DESCRIPTOR);
+                    PhoneAccountHandle _arg0138 = data.readInt() != 0 ? PhoneAccountHandle.CREATOR.createFromParcel(data) : null;
+                    Uri _result76 = getVoicemailRingtoneUri(_arg0138);
+                    reply.writeNoException();
+                    if (_result76 != null) {
+                        reply.writeInt(1);
+                        _result76.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 155:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0139 = data.readString();
+                    if (data.readInt() != 0) {
+                        _arg13 = PhoneAccountHandle.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg13 = null;
+                    }
+                    Uri _arg221 = data.readInt() != 0 ? Uri.CREATOR.createFromParcel(data) : null;
+                    setVoicemailRingtoneUri(_arg0139, _arg13, _arg221);
+                    reply.writeNoException();
+                    return true;
+                case 156:
+                    data.enforceInterface(DESCRIPTOR);
+                    PhoneAccountHandle _arg0140 = data.readInt() != 0 ? PhoneAccountHandle.CREATOR.createFromParcel(data) : null;
+                    boolean isVoicemailVibrationEnabled = isVoicemailVibrationEnabled(_arg0140);
+                    reply.writeNoException();
+                    reply.writeInt(isVoicemailVibrationEnabled ? 1 : 0);
+                    return true;
+                case 157:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0141 = data.readString();
+                    PhoneAccountHandle _arg124 = data.readInt() != 0 ? PhoneAccountHandle.CREATOR.createFromParcel(data) : null;
+                    _arg1 = data.readInt() != 0;
+                    setVoicemailVibrationEnabled(_arg0141, _arg124, _arg1);
+                    reply.writeNoException();
+                    return true;
+                case 158:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0142 = data.readInt();
+                    List<String> _result77 = getPackagesWithCarrierPrivileges(_arg0142);
+                    reply.writeNoException();
+                    reply.writeStringList(_result77);
+                    return true;
+                case 159:
+                    data.enforceInterface(DESCRIPTOR);
+                    List<String> _result78 = getPackagesWithCarrierPrivilegesForAllPhones();
+                    reply.writeNoException();
+                    reply.writeStringList(_result78);
+                    return true;
+                case 160:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0143 = data.readInt();
+                    String _result79 = getAidForAppType(_arg0143, data.readInt());
+                    reply.writeNoException();
+                    reply.writeString(_result79);
+                    return true;
+                case 161:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0144 = data.readInt();
+                    String _result80 = getEsn(_arg0144);
+                    reply.writeNoException();
+                    reply.writeString(_result80);
+                    return true;
+                case 162:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0145 = data.readInt();
+                    String _result81 = getCdmaPrlVersion(_arg0145);
+                    reply.writeNoException();
+                    reply.writeString(_result81);
+                    return true;
+                case 163:
+                    data.enforceInterface(DESCRIPTOR);
+                    List<TelephonyHistogram> _result82 = getTelephonyHistograms();
+                    reply.writeNoException();
+                    reply.writeTypedList(_result82);
+                    return true;
+                case 164:
+                    data.enforceInterface(DESCRIPTOR);
+                    CarrierRestrictionRules _arg0146 = data.readInt() != 0 ? CarrierRestrictionRules.CREATOR.createFromParcel(data) : null;
+                    int _result83 = setAllowedCarriers(_arg0146);
+                    reply.writeNoException();
+                    reply.writeInt(_result83);
+                    return true;
+                case 165:
+                    data.enforceInterface(DESCRIPTOR);
+                    CarrierRestrictionRules _result84 = getAllowedCarriers();
+                    reply.writeNoException();
+                    if (_result84 != null) {
+                        reply.writeInt(1);
+                        _result84.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 166:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0147 = data.readInt();
+                    int _result85 = getSubscriptionCarrierId(_arg0147);
+                    reply.writeNoException();
+                    reply.writeInt(_result85);
+                    return true;
+                case 167:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0148 = data.readInt();
+                    String _result86 = getSubscriptionCarrierName(_arg0148);
+                    reply.writeNoException();
+                    reply.writeString(_result86);
+                    return true;
+                case 168:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0149 = data.readInt();
+                    int _result87 = getSubscriptionSpecificCarrierId(_arg0149);
+                    reply.writeNoException();
+                    reply.writeInt(_result87);
+                    return true;
+                case 169:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0150 = data.readInt();
+                    String _result88 = getSubscriptionSpecificCarrierName(_arg0150);
+                    reply.writeNoException();
+                    reply.writeString(_result88);
+                    return true;
+                case 170:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0151 = data.readInt();
+                    String _arg125 = data.readString();
+                    _arg1 = data.readInt() != 0;
+                    int _result89 = getCarrierIdFromMccMnc(_arg0151, _arg125, _arg1);
+                    reply.writeNoException();
+                    reply.writeInt(_result89);
+                    return true;
+                case 171:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0152 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    carrierActionSetMeteredApnsEnabled(_arg0152, _arg1);
+                    reply.writeNoException();
+                    return true;
+                case 172:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0153 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    carrierActionSetRadioEnabled(_arg0153, _arg1);
+                    reply.writeNoException();
+                    return true;
+                case 173:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0154 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    carrierActionReportDefaultNetworkStatus(_arg0154, _arg1);
+                    reply.writeNoException();
+                    return true;
+                case 174:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0155 = data.readInt();
+                    carrierActionResetAll(_arg0155);
+                    reply.writeNoException();
+                    return true;
+                case 175:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0156 = data.readInt();
+                    NetworkStats _result90 = getVtDataUsage(_arg0156, data.readInt() != 0);
+                    reply.writeNoException();
+                    if (_result90 != null) {
+                        reply.writeInt(1);
+                        _result90.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 176:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg1 = data.readInt() != 0;
+                    boolean _arg0157 = _arg1;
+                    setPolicyDataEnabled(_arg0157, data.readInt());
+                    reply.writeNoException();
+                    return true;
+                case 177:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0158 = data.readString();
+                    List<ClientRequestStats> _result91 = getClientRequestStats(_arg0158, data.readInt());
+                    reply.writeNoException();
+                    reply.writeTypedList(_result91);
+                    return true;
+                case 178:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0159 = data.readInt();
+                    setSimPowerStateForSlot(_arg0159, data.readInt());
+                    reply.writeNoException();
+                    return true;
+                case 179:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0160 = data.readInt();
+                    int _arg126 = data.readInt();
+                    String _arg222 = data.readString();
+                    String[] _result92 = getForbiddenPlmns(_arg0160, _arg126, _arg222);
+                    reply.writeNoException();
+                    reply.writeStringArray(_result92);
+                    return true;
+                case 180:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0161 = data.readInt();
+                    boolean emergencyCallbackMode = getEmergencyCallbackMode(_arg0161);
+                    reply.writeNoException();
+                    reply.writeInt(emergencyCallbackMode ? 1 : 0);
+                    return true;
+                case 181:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0162 = data.readInt();
+                    SignalStrength _result93 = getSignalStrength(_arg0162);
+                    reply.writeNoException();
+                    if (_result93 != null) {
+                        reply.writeInt(1);
+                        _result93.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 182:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0163 = data.readInt();
+                    int _result94 = getCardIdForDefaultEuicc(_arg0163, data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(_result94);
+                    return true;
+                case 183:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0164 = data.readString();
+                    List<UiccCardInfo> _result95 = getUiccCardsInfo(_arg0164);
+                    reply.writeNoException();
+                    reply.writeTypedList(_result95);
+                    return true;
+                case 184:
+                    data.enforceInterface(DESCRIPTOR);
+                    UiccSlotInfo[] _result96 = getUiccSlotsInfo();
+                    reply.writeNoException();
+                    reply.writeTypedArray(_result96, 1);
+                    return true;
+                case 185:
+                    data.enforceInterface(DESCRIPTOR);
+                    int[] _arg0165 = data.createIntArray();
+                    boolean switchSlots = switchSlots(_arg0165);
+                    reply.writeNoException();
+                    reply.writeInt(switchSlots ? 1 : 0);
+                    return true;
+                case 186:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0166 = data.readInt();
+                    int _arg127 = data.readInt();
+                    int _arg223 = data.readInt();
+                    setRadioIndicationUpdateMode(_arg0166, _arg127, _arg223);
+                    reply.writeNoException();
+                    return true;
+                case 187:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0167 = data.readInt();
+                    boolean isDataRoamingEnabled = isDataRoamingEnabled(_arg0167);
+                    reply.writeNoException();
+                    reply.writeInt(isDataRoamingEnabled ? 1 : 0);
+                    return true;
+                case 188:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0168 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    setDataRoamingEnabled(_arg0168, _arg1);
+                    reply.writeNoException();
+                    return true;
+                case 189:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0169 = data.readInt();
+                    int _result97 = getCdmaRoamingMode(_arg0169);
+                    reply.writeNoException();
+                    reply.writeInt(_result97);
+                    return true;
+                case 190:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0170 = data.readInt();
+                    boolean cdmaRoamingMode = setCdmaRoamingMode(_arg0170, data.readInt());
+                    reply.writeNoException();
+                    reply.writeInt(cdmaRoamingMode ? 1 : 0);
+                    return true;
+                case 191:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0171 = data.readInt();
+                    boolean cdmaSubscriptionMode = setCdmaSubscriptionMode(_arg0171, data.readInt());
+                    reply.writeNoException();
+                    reply.writeInt(cdmaSubscriptionMode ? 1 : 0);
+                    return true;
+                case 192:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0172 = data.readInt();
+                    String _arg128 = data.readString();
+                    String _arg224 = data.readString();
+                    String _arg313 = data.readString();
+                    String _arg49 = data.readString();
+                    String _arg57 = data.readString();
+                    String _arg66 = data.readString();
+                    String _arg75 = data.readString();
+                    String _arg8 = data.readString();
+                    String _arg9 = data.readString();
+                    setCarrierTestOverride(_arg0172, _arg128, _arg224, _arg313, _arg49, _arg57, _arg66, _arg75, _arg8, _arg9);
+                    reply.writeNoException();
+                    return true;
+                case 193:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0173 = data.readInt();
+                    int _result98 = getCarrierIdListVersion(_arg0173);
+                    reply.writeNoException();
+                    reply.writeInt(_result98);
+                    return true;
+                case 194:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0174 = data.readInt();
+                    refreshUiccProfile(_arg0174);
+                    reply.writeNoException();
+                    return true;
+                case 195:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0175 = data.readInt();
+                    int _result99 = getNumberOfModemsWithSimultaneousDataConnections(_arg0175, data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(_result99);
+                    return true;
+                case 196:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0176 = data.readInt();
+                    int _result100 = getNetworkSelectionMode(_arg0176);
+                    reply.writeNoException();
+                    reply.writeInt(_result100);
+                    return true;
+                case 197:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isInEmergencySmsMode = isInEmergencySmsMode();
+                    reply.writeNoException();
+                    reply.writeInt(isInEmergencySmsMode ? 1 : 0);
+                    return true;
+                case 198:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0177 = data.readInt();
+                    String[] _result101 = getSmsApps(_arg0177);
+                    reply.writeNoException();
+                    reply.writeStringArray(_result101);
+                    return true;
+                case 199:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0178 = data.readInt();
+                    String _result102 = getDefaultSmsApp(_arg0178);
+                    reply.writeNoException();
+                    reply.writeString(_result102);
+                    return true;
+                case 200:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0179 = data.readInt();
+                    setDefaultSmsApp(_arg0179, data.readString());
+                    reply.writeNoException();
+                    return true;
+                case 201:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0180 = data.readInt();
+                    int _result103 = getRadioPowerState(_arg0180, data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(_result103);
+                    return true;
+                case 202:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0181 = data.readInt();
+                    registerImsRegistrationCallback(_arg0181, IImsRegistrationCallback.Stub.asInterface(data.readStrongBinder()));
+                    reply.writeNoException();
+                    return true;
+                case 203:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0182 = data.readInt();
+                    unregisterImsRegistrationCallback(_arg0182, IImsRegistrationCallback.Stub.asInterface(data.readStrongBinder()));
+                    reply.writeNoException();
+                    return true;
+                case 204:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0183 = data.readInt();
+                    registerMmTelCapabilityCallback(_arg0183, IImsCapabilityCallback.Stub.asInterface(data.readStrongBinder()));
+                    reply.writeNoException();
+                    return true;
+                case 205:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0184 = data.readInt();
+                    unregisterMmTelCapabilityCallback(_arg0184, IImsCapabilityCallback.Stub.asInterface(data.readStrongBinder()));
+                    reply.writeNoException();
+                    return true;
+                case 206:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0185 = data.readInt();
+                    int _arg129 = data.readInt();
+                    int _arg225 = data.readInt();
+                    boolean isCapable = isCapable(_arg0185, _arg129, _arg225);
+                    reply.writeNoException();
+                    reply.writeInt(isCapable ? 1 : 0);
+                    return true;
+                case 207:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0186 = data.readInt();
+                    int _arg130 = data.readInt();
+                    int _arg226 = data.readInt();
+                    boolean isAvailable = isAvailable(_arg0186, _arg130, _arg226);
+                    reply.writeNoException();
+                    reply.writeInt(isAvailable ? 1 : 0);
+                    return true;
+                case 208:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0187 = data.readInt();
+                    boolean isAdvancedCallingSettingEnabled = isAdvancedCallingSettingEnabled(_arg0187);
+                    reply.writeNoException();
+                    reply.writeInt(isAdvancedCallingSettingEnabled ? 1 : 0);
+                    return true;
+                case 209:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0188 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    setAdvancedCallingSettingEnabled(_arg0188, _arg1);
+                    reply.writeNoException();
+                    return true;
+                case 210:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0189 = data.readInt();
+                    boolean isVtSettingEnabled = isVtSettingEnabled(_arg0189);
+                    reply.writeNoException();
+                    reply.writeInt(isVtSettingEnabled ? 1 : 0);
+                    return true;
+                case 211:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0190 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    setVtSettingEnabled(_arg0190, _arg1);
+                    reply.writeNoException();
+                    return true;
+                case 212:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0191 = data.readInt();
+                    boolean isVoWiFiSettingEnabled = isVoWiFiSettingEnabled(_arg0191);
+                    reply.writeNoException();
+                    reply.writeInt(isVoWiFiSettingEnabled ? 1 : 0);
+                    return true;
+                case 213:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0192 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    setVoWiFiSettingEnabled(_arg0192, _arg1);
+                    reply.writeNoException();
+                    return true;
+                case 214:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0193 = data.readInt();
+                    boolean isVoWiFiRoamingSettingEnabled = isVoWiFiRoamingSettingEnabled(_arg0193);
+                    reply.writeNoException();
+                    reply.writeInt(isVoWiFiRoamingSettingEnabled ? 1 : 0);
+                    return true;
+                case 215:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0194 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    setVoWiFiRoamingSettingEnabled(_arg0194, _arg1);
+                    reply.writeNoException();
+                    return true;
+                case 216:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0195 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    int _arg227 = data.readInt();
+                    setVoWiFiNonPersistent(_arg0195, _arg1, _arg227);
+                    reply.writeNoException();
+                    return true;
+                case 217:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0196 = data.readInt();
+                    int _result104 = getVoWiFiModeSetting(_arg0196);
+                    reply.writeNoException();
+                    reply.writeInt(_result104);
+                    return true;
+                case 218:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0197 = data.readInt();
+                    setVoWiFiModeSetting(_arg0197, data.readInt());
+                    reply.writeNoException();
+                    return true;
+                case 219:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0198 = data.readInt();
+                    int _result105 = getVoWiFiRoamingModeSetting(_arg0198);
+                    reply.writeNoException();
+                    reply.writeInt(_result105);
+                    return true;
+                case 220:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0199 = data.readInt();
+                    setVoWiFiRoamingModeSetting(_arg0199, data.readInt());
+                    reply.writeNoException();
+                    return true;
+                case 221:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0200 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    setRttCapabilitySetting(_arg0200, _arg1);
+                    reply.writeNoException();
+                    return true;
+                case 222:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0201 = data.readInt();
+                    boolean isTtyOverVolteEnabled = isTtyOverVolteEnabled(_arg0201);
+                    reply.writeNoException();
+                    reply.writeInt(isTtyOverVolteEnabled ? 1 : 0);
+                    return true;
+                case 223:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0202 = data.readString();
+                    Map _result106 = getEmergencyNumberList(_arg0202);
+                    reply.writeNoException();
+                    reply.writeMap(_result106);
+                    return true;
+                case 224:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0203 = data.readString();
+                    _arg1 = data.readInt() != 0;
+                    boolean isEmergencyNumber = isEmergencyNumber(_arg0203, _arg1);
+                    reply.writeNoException();
+                    reply.writeInt(isEmergencyNumber ? 1 : 0);
+                    return true;
+                case 225:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0204 = data.readInt();
+                    List<String> _result107 = getCertsFromCarrierPrivilegeAccessRules(_arg0204);
+                    reply.writeNoException();
+                    reply.writeStringList(_result107);
+                    return true;
+                case 226:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0205 = data.readInt();
+                    registerImsProvisioningChangedCallback(_arg0205, IImsConfigCallback.Stub.asInterface(data.readStrongBinder()));
+                    reply.writeNoException();
+                    return true;
+                case 227:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0206 = data.readInt();
+                    unregisterImsProvisioningChangedCallback(_arg0206, IImsConfigCallback.Stub.asInterface(data.readStrongBinder()));
+                    reply.writeNoException();
+                    return true;
+                case 228:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0207 = data.readInt();
+                    int _arg131 = data.readInt();
+                    int _arg228 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    setImsProvisioningStatusForCapability(_arg0207, _arg131, _arg228, _arg1);
+                    reply.writeNoException();
+                    return true;
+                case 229:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0208 = data.readInt();
+                    int _arg132 = data.readInt();
+                    int _arg229 = data.readInt();
+                    boolean imsProvisioningStatusForCapability = getImsProvisioningStatusForCapability(_arg0208, _arg132, _arg229);
+                    reply.writeNoException();
+                    reply.writeInt(imsProvisioningStatusForCapability ? 1 : 0);
+                    return true;
+                case 230:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0209 = data.readInt();
+                    int _arg133 = data.readInt();
+                    int _arg230 = data.readInt();
+                    boolean isMmTelCapabilityProvisionedInCache = isMmTelCapabilityProvisionedInCache(_arg0209, _arg133, _arg230);
+                    reply.writeNoException();
+                    reply.writeInt(isMmTelCapabilityProvisionedInCache ? 1 : 0);
+                    return true;
+                case 231:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0210 = data.readInt();
+                    int _arg134 = data.readInt();
+                    int _arg231 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    cacheMmTelCapabilityProvisioning(_arg0210, _arg134, _arg231, _arg1);
+                    reply.writeNoException();
+                    return true;
+                case 232:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0211 = data.readInt();
+                    int _result108 = getImsProvisioningInt(_arg0211, data.readInt());
+                    reply.writeNoException();
+                    reply.writeInt(_result108);
+                    return true;
+                case 233:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0212 = data.readInt();
+                    String _result109 = getImsProvisioningString(_arg0212, data.readInt());
+                    reply.writeNoException();
+                    reply.writeString(_result109);
+                    return true;
+                case 234:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0213 = data.readInt();
+                    int _arg135 = data.readInt();
+                    int _arg232 = data.readInt();
+                    int _result110 = setImsProvisioningInt(_arg0213, _arg135, _arg232);
+                    reply.writeNoException();
+                    reply.writeInt(_result110);
+                    return true;
+                case 235:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0214 = data.readInt();
+                    int _arg136 = data.readInt();
+                    String _arg233 = data.readString();
+                    int _result111 = setImsProvisioningString(_arg0214, _arg136, _arg233);
+                    reply.writeNoException();
+                    reply.writeInt(_result111);
+                    return true;
+                case 236:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0215 = data.readInt();
+                    updateEmergencyNumberListTestMode(_arg0215, data.readInt() != 0 ? EmergencyNumber.CREATOR.createFromParcel(data) : null);
+                    reply.writeNoException();
+                    return true;
+                case 237:
+                    data.enforceInterface(DESCRIPTOR);
+                    List<String> _result112 = getEmergencyNumberListTestMode();
+                    reply.writeNoException();
+                    reply.writeStringList(_result112);
+                    return true;
+                case 238:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0216 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    boolean enableModemForSlot = enableModemForSlot(_arg0216, _arg1);
+                    reply.writeNoException();
+                    reply.writeInt(enableModemForSlot ? 1 : 0);
+                    return true;
+                case 239:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg1 = data.readInt() != 0;
+                    boolean _arg0217 = _arg1;
+                    setMultiSimCarrierRestriction(_arg0217);
+                    reply.writeNoException();
+                    return true;
+                case 240:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0218 = data.readString();
+                    int _result113 = isMultiSimSupported(_arg0218);
+                    reply.writeNoException();
+                    reply.writeInt(_result113);
+                    return true;
+                case 241:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0219 = data.readInt();
+                    switchMultiSimConfig(_arg0219);
+                    reply.writeNoException();
+                    return true;
+                case 242:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0220 = data.readInt();
+                    boolean doesSwitchMultiSimConfigTriggerReboot = doesSwitchMultiSimConfigTriggerReboot(_arg0220, data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(doesSwitchMultiSimConfigTriggerReboot ? 1 : 0);
+                    return true;
+                case 243:
+                    data.enforceInterface(DESCRIPTOR);
+                    int[] _result114 = getSlotsMapping();
+                    reply.writeNoException();
+                    reply.writeIntArray(_result114);
+                    return true;
+                case 244:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result115 = getRadioHalVersion();
+                    reply.writeNoException();
+                    reply.writeInt(_result115);
+                    return true;
+                case 245:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0221 = data.readInt();
+                    boolean isModemEnabledForSlot = isModemEnabledForSlot(_arg0221, data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(isModemEnabledForSlot ? 1 : 0);
+                    return true;
+                case 246:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0222 = data.readInt();
+                    int _arg137 = data.readInt();
+                    String _arg234 = data.readString();
+                    boolean isDataEnabledForApn = isDataEnabledForApn(_arg0222, _arg137, _arg234);
+                    reply.writeNoException();
+                    reply.writeInt(isDataEnabledForApn ? 1 : 0);
+                    return true;
+                case 247:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0223 = data.readInt();
+                    boolean isApnMetered = isApnMetered(_arg0223, data.readInt());
+                    reply.writeNoException();
+                    reply.writeInt(isApnMetered ? 1 : 0);
+                    return true;
+                case 248:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0224 = data.readString();
+                    enqueueSmsPickResult(_arg0224, IIntegerConsumer.Stub.asInterface(data.readStrongBinder()));
+                    return true;
+                case 249:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0225 = data.readInt();
+                    String _result116 = getMmsUserAgent(_arg0225);
+                    reply.writeNoException();
+                    reply.writeString(_result116);
+                    return true;
+                case 250:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0226 = data.readInt();
+                    String _result117 = getMmsUAProfUrl(_arg0226);
+                    reply.writeNoException();
+                    reply.writeString(_result117);
+                    return true;
+                case 251:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0227 = data.readInt();
+                    _arg1 = data.readInt() != 0;
+                    boolean dataAllowedDuringVoiceCall = setDataAllowedDuringVoiceCall(_arg0227, _arg1);
+                    reply.writeNoException();
+                    reply.writeInt(dataAllowedDuringVoiceCall ? 1 : 0);
+                    return true;
+                case 252:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0228 = data.readInt();
+                    boolean isDataAllowedInVoiceCall = isDataAllowedInVoiceCall(_arg0228);
+                    reply.writeNoException();
+                    reply.writeInt(isDataAllowedInVoiceCall ? 1 : 0);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements ITelephony {
             public static ITelephony sDefaultImpl;
             private IBinder mRemote;
@@ -5131,6 +4478,7 @@ public interface ITelephony extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -5139,25 +4487,26 @@ public interface ITelephony extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void dial(String number) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(number);
-                    if (this.mRemote.transact(1, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().dial(number);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().dial(number);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void call(String callingPackage, String number) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -5165,43 +4514,39 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPackage);
                     _data.writeString(number);
-                    if (this.mRemote.transact(2, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().call(callingPackage, number);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().call(callingPackage, number);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean isRadioOn(String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPackage);
-                    boolean z = false;
-                    if (!this.mRemote.transact(3, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isRadioOn(callingPackage);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean isRadioOnForSubscriber(int subId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -5209,48 +4554,40 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeString(callingPackage);
-                    boolean z = false;
-                    if (!this.mRemote.transact(4, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isRadioOnForSubscriber(subId, callingPackage);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean supplyPin(String pin) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(pin);
-                    boolean z = false;
-                    if (!this.mRemote.transact(5, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().supplyPin(pin);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean supplyPinForSubscriber(int subId, String pin) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -5258,24 +4595,20 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeString(pin);
-                    boolean z = false;
-                    if (!this.mRemote.transact(6, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().supplyPinForSubscriber(subId, pin);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean supplyPuk(String puk, String pin) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -5283,24 +4616,20 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(puk);
                     _data.writeString(pin);
-                    boolean z = false;
-                    if (!this.mRemote.transact(7, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().supplyPuk(puk, pin);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean supplyPukForSubscriber(int subId, String puk, String pin) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -5309,37 +4638,32 @@ public interface ITelephony extends IInterface {
                     _data.writeInt(subId);
                     _data.writeString(puk);
                     _data.writeString(pin);
-                    boolean z = false;
-                    if (!this.mRemote.transact(8, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().supplyPukForSubscriber(subId, puk, pin);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int[] supplyPinReportResult(String pin) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(pin);
-                    if (!this.mRemote.transact(9, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(9, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().supplyPinReportResult(pin);
                     }
                     _reply.readException();
                     int[] _result = _reply.createIntArray();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -5347,6 +4671,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int[] supplyPinReportResultForSubscriber(int subId, String pin) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -5354,13 +4679,12 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeString(pin);
-                    if (!this.mRemote.transact(10, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(10, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().supplyPinReportResultForSubscriber(subId, pin);
                     }
                     _reply.readException();
                     int[] _result = _reply.createIntArray();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -5368,6 +4692,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int[] supplyPukReportResult(String puk, String pin) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -5375,13 +4700,12 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(puk);
                     _data.writeString(pin);
-                    if (!this.mRemote.transact(11, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(11, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().supplyPukReportResult(puk, pin);
                     }
                     _reply.readException();
                     int[] _result = _reply.createIntArray();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -5389,6 +4713,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int[] supplyPukReportResultForSubscriber(int subId, String puk, String pin) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -5397,13 +4722,12 @@ public interface ITelephony extends IInterface {
                     _data.writeInt(subId);
                     _data.writeString(puk);
                     _data.writeString(pin);
-                    if (!this.mRemote.transact(12, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(12, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().supplyPukReportResultForSubscriber(subId, puk, pin);
                     }
                     _reply.readException();
                     int[] _result = _reply.createIntArray();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -5411,30 +4735,27 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean handlePinMmi(String dialString) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(dialString);
-                    boolean z = false;
-                    if (!this.mRemote.transact(13, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(13, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().handlePinMmi(dialString);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void handleUssdRequest(int subId, String ussdRequest, ResultReceiver wrappedCallback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -5448,19 +4769,19 @@ public interface ITelephony extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(14, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(14, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().handleUssdRequest(subId, ussdRequest, wrappedCallback);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().handleUssdRequest(subId, ussdRequest, wrappedCallback);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean handlePinMmiForSubscriber(int subId, String dialString) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -5468,315 +4789,287 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeString(dialString);
-                    boolean z = false;
-                    if (!this.mRemote.transact(15, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(15, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().handlePinMmiForSubscriber(subId, dialString);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void toggleRadioOnOff() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(16, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(16, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().toggleRadioOnOff();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().toggleRadioOnOff();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void toggleRadioOnOffForSubscriber(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    if (this.mRemote.transact(17, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(17, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().toggleRadioOnOffForSubscriber(subId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().toggleRadioOnOffForSubscriber(subId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean setRadio(boolean turnOn) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(turnOn);
-                    boolean z = false;
-                    if (!this.mRemote.transact(18, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(turnOn ? 1 : 0);
+                    boolean _status = this.mRemote.transact(18, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setRadio(turnOn);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean setRadioForSubscriber(int subId, boolean turnOn) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    _data.writeInt(turnOn);
-                    boolean z = false;
-                    if (!this.mRemote.transact(19, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(turnOn ? 1 : 0);
+                    boolean _status = this.mRemote.transact(19, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setRadioForSubscriber(subId, turnOn);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean setRadioPower(boolean turnOn) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(turnOn);
-                    boolean z = false;
-                    if (!this.mRemote.transact(20, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(turnOn ? 1 : 0);
+                    boolean _status = this.mRemote.transact(20, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setRadioPower(turnOn);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void updateServiceLocation() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(21, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(21, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().updateServiceLocation();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().updateServiceLocation();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void updateServiceLocationForSubscriber(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    if (this.mRemote.transact(22, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(22, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().updateServiceLocationForSubscriber(subId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().updateServiceLocationForSubscriber(subId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void enableLocationUpdates() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(23, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(23, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().enableLocationUpdates();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().enableLocationUpdates();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void enableLocationUpdatesForSubscriber(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    if (this.mRemote.transact(24, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(24, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().enableLocationUpdatesForSubscriber(subId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().enableLocationUpdatesForSubscriber(subId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void disableLocationUpdates() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(25, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(25, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().disableLocationUpdates();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().disableLocationUpdates();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void disableLocationUpdatesForSubscriber(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    if (this.mRemote.transact(26, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(26, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().disableLocationUpdatesForSubscriber(subId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().disableLocationUpdatesForSubscriber(subId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean enableDataConnectivity() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(27, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(27, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().enableDataConnectivity();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean disableDataConnectivity() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(28, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(28, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().disableDataConnectivity();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean isDataConnectivityPossible(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(29, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(29, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isDataConnectivityPossible(subId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public Bundle getCellLocation(String callingPkg) throws RemoteException {
                 Bundle _result;
                 Parcel _data = Parcel.obtain();
@@ -5784,7 +5077,8 @@ public interface ITelephony extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPkg);
-                    if (!this.mRemote.transact(30, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(30, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCellLocation(callingPkg);
                     }
                     _reply.readException();
@@ -5793,29 +5087,26 @@ public interface ITelephony extends IInterface {
                     } else {
                         _result = null;
                     }
-                    Bundle _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public String getNetworkCountryIsoForPhone(int phoneId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(phoneId);
-                    if (!this.mRemote.transact(31, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(31, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getNetworkCountryIsoForPhone(phoneId);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -5823,19 +5114,19 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public List<NeighboringCellInfo> getNeighboringCellInfo(String callingPkg) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPkg);
-                    if (!this.mRemote.transact(32, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(32, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getNeighboringCellInfo(callingPkg);
                     }
                     _reply.readException();
                     List<NeighboringCellInfo> _result = _reply.createTypedArrayList(NeighboringCellInfo.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -5843,18 +5134,18 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int getCallState() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(33, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(33, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCallState();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -5862,19 +5153,19 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int getCallStateForSlot(int slotIndex) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(slotIndex);
-                    if (!this.mRemote.transact(34, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(34, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCallStateForSlot(slotIndex);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -5882,18 +5173,18 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int getDataActivity() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(35, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(35, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getDataActivity();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -5901,18 +5192,18 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int getDataState() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(36, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(36, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getDataState();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -5920,18 +5211,18 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int getActivePhoneType() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(37, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(37, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getActivePhoneType();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -5939,19 +5230,19 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int getActivePhoneTypeForSlot(int slotIndex) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(slotIndex);
-                    if (!this.mRemote.transact(38, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(38, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getActivePhoneTypeForSlot(slotIndex);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -5959,19 +5250,19 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int getCdmaEriIconIndex(String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(39, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(39, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCdmaEriIconIndex(callingPackage);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -5979,6 +5270,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int getCdmaEriIconIndexForSubscriber(int subId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -5986,13 +5278,12 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(40, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(40, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCdmaEriIconIndexForSubscriber(subId, callingPackage);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -6000,19 +5291,19 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int getCdmaEriIconMode(String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(41, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(41, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCdmaEriIconMode(callingPackage);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -6020,6 +5311,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int getCdmaEriIconModeForSubscriber(int subId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -6027,13 +5319,12 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(42, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(42, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCdmaEriIconModeForSubscriber(subId, callingPackage);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -6041,19 +5332,19 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public String getCdmaEriText(String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(43, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(43, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCdmaEriText(callingPackage);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -6061,6 +5352,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public String getCdmaEriTextForSubscriber(int subId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -6068,13 +5360,12 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(44, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(44, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCdmaEriTextForSubscriber(subId, callingPackage);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -6082,29 +5373,26 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean needsOtaServiceProvisioning() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(45, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(45, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().needsOtaServiceProvisioning();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean setVoiceMailNumber(int subId, String alphaTag, String number) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -6113,24 +5401,20 @@ public interface ITelephony extends IInterface {
                     _data.writeInt(subId);
                     _data.writeString(alphaTag);
                     _data.writeString(number);
-                    boolean z = false;
-                    if (!this.mRemote.transact(46, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(46, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setVoiceMailNumber(subId, alphaTag, number);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void setVoiceActivationState(int subId, int activationState) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -6138,19 +5422,19 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeInt(activationState);
-                    if (this.mRemote.transact(47, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(47, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setVoiceActivationState(subId, activationState);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setVoiceActivationState(subId, activationState);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void setDataActivationState(int subId, int activationState) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -6158,19 +5442,19 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeInt(activationState);
-                    if (this.mRemote.transact(48, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(48, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setDataActivationState(subId, activationState);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setDataActivationState(subId, activationState);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int getVoiceActivationState(int subId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -6178,13 +5462,12 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(49, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(49, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getVoiceActivationState(subId, callingPackage);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -6192,6 +5475,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int getDataActivationState(int subId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -6199,13 +5483,12 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(50, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(50, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getDataActivationState(subId, callingPackage);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -6213,6 +5496,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int getVoiceMessageCountForSubscriber(int subId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -6220,13 +5504,12 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(51, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(51, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getVoiceMessageCountForSubscriber(subId, callingPackage);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -6234,30 +5517,27 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean isConcurrentVoiceAndDataAllowed(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(52, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(52, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isConcurrentVoiceAndDataAllowed(subId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public Bundle getVisualVoicemailSettings(String callingPackage, int subId) throws RemoteException {
                 Bundle _result;
                 Parcel _data = Parcel.obtain();
@@ -6266,7 +5546,8 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPackage);
                     _data.writeInt(subId);
-                    if (!this.mRemote.transact(53, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(53, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getVisualVoicemailSettings(callingPackage, subId);
                     }
                     _reply.readException();
@@ -6275,30 +5556,6 @@ public interface ITelephony extends IInterface {
                     } else {
                         _result = null;
                     }
-                    Bundle _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public String getVisualVoicemailPackageName(String callingPackage, int subId) throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeString(callingPackage);
-                    _data.writeInt(subId);
-                    if (!this.mRemote.transact(54, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
-                        return Stub.getDefaultImpl().getVisualVoicemailPackageName(callingPackage, subId);
-                    }
-                    _reply.readException();
-                    String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -6306,6 +5563,28 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
+            public String getVisualVoicemailPackageName(String callingPackage, int subId) throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    _data.writeString(callingPackage);
+                    _data.writeInt(subId);
+                    boolean _status = this.mRemote.transact(54, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        return Stub.getDefaultImpl().getVisualVoicemailPackageName(callingPackage, subId);
+                    }
+                    _reply.readException();
+                    String _result = _reply.readString();
+                    return _result;
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // com.android.internal.telephony.ITelephony
             public void enableVisualVoicemailSmsFilter(String callingPackage, int subId, VisualVoicemailSmsFilterSettings settings) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -6319,28 +5598,27 @@ public interface ITelephony extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(55, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(55, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().enableVisualVoicemailSmsFilter(callingPackage, subId, settings);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().enableVisualVoicemailSmsFilter(callingPackage, subId, settings);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void disableVisualVoicemailSmsFilter(String callingPackage, int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPackage);
                     _data.writeInt(subId);
-                    if (this.mRemote.transact(56, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(56, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().disableVisualVoicemailSmsFilter(callingPackage, subId);
                     }
                 } finally {
@@ -6348,6 +5626,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public VisualVoicemailSmsFilterSettings getVisualVoicemailSmsFilterSettings(String callingPackage, int subId) throws RemoteException {
                 VisualVoicemailSmsFilterSettings _result;
                 Parcel _data = Parcel.obtain();
@@ -6356,7 +5635,8 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPackage);
                     _data.writeInt(subId);
-                    if (!this.mRemote.transact(57, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(57, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getVisualVoicemailSmsFilterSettings(callingPackage, subId);
                     }
                     _reply.readException();
@@ -6365,16 +5645,14 @@ public interface ITelephony extends IInterface {
                     } else {
                         _result = null;
                     }
-                    VisualVoicemailSmsFilterSettings _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public VisualVoicemailSmsFilterSettings getActiveVisualVoicemailSmsFilterSettings(int subId) throws RemoteException {
                 VisualVoicemailSmsFilterSettings _result;
                 Parcel _data = Parcel.obtain();
@@ -6382,7 +5660,8 @@ public interface ITelephony extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    if (!this.mRemote.transact(58, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(58, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getActiveVisualVoicemailSmsFilterSettings(subId);
                     }
                     _reply.readException();
@@ -6391,100 +5670,81 @@ public interface ITelephony extends IInterface {
                     } else {
                         _result = null;
                     }
-                    VisualVoicemailSmsFilterSettings _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void sendVisualVoicemailSmsForSubscriber(String callingPackage, int subId, String number, int port, String text, PendingIntent sentIntent) throws RemoteException {
-                PendingIntent pendingIntent = sentIntent;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeString(callingPackage);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(subId);
+                } catch (Throwable th3) {
+                    th = th3;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeString(number);
+                } catch (Throwable th4) {
+                    th = th4;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(port);
                     try {
-                        _data.writeString(callingPackage);
-                        try {
-                            _data.writeInt(subId);
-                        } catch (Throwable th) {
-                            th = th;
-                            String str = number;
-                            int i = port;
-                            String str2 = text;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
+                        _data.writeString(text);
+                        if (sentIntent != null) {
+                            _data.writeInt(1);
+                            sentIntent.writeToParcel(_data, 0);
+                        } else {
+                            _data.writeInt(0);
                         }
-                        try {
-                            _data.writeString(number);
-                        } catch (Throwable th2) {
-                            th = th2;
-                            int i2 = port;
-                            String str22 = text;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                    } catch (Throwable th3) {
-                        th = th3;
-                        int i3 = subId;
-                        String str3 = number;
-                        int i22 = port;
-                        String str222 = text;
-                        _reply.recycle();
-                        _data.recycle();
-                        throw th;
-                    }
-                    try {
-                        _data.writeInt(port);
-                        try {
-                            _data.writeString(text);
-                            if (pendingIntent != null) {
-                                _data.writeInt(1);
-                                pendingIntent.writeToParcel(_data, 0);
-                            } else {
-                                _data.writeInt(0);
-                            }
-                            if (this.mRemote.transact(59, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                _reply.readException();
-                                _reply.recycle();
-                                _data.recycle();
-                                return;
-                            }
+                        boolean _status = this.mRemote.transact(59, _data, _reply, 0);
+                        if (!_status && Stub.getDefaultImpl() != null) {
                             Stub.getDefaultImpl().sendVisualVoicemailSmsForSubscriber(callingPackage, subId, number, port, text, sentIntent);
                             _reply.recycle();
                             _data.recycle();
-                        } catch (Throwable th4) {
-                            th = th4;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
+                            return;
                         }
+                        _reply.readException();
+                        _reply.recycle();
+                        _data.recycle();
                     } catch (Throwable th5) {
                         th = th5;
-                        String str2222 = text;
                         _reply.recycle();
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th6) {
                     th = th6;
-                    String str4 = callingPackage;
-                    int i32 = subId;
-                    String str32 = number;
-                    int i222 = port;
-                    String str22222 = text;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void sendDialerSpecialCode(String callingPackageName, String inputCode) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -6492,19 +5752,19 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPackageName);
                     _data.writeString(inputCode);
-                    if (this.mRemote.transact(60, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(60, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().sendDialerSpecialCode(callingPackageName, inputCode);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().sendDialerSpecialCode(callingPackageName, inputCode);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int getNetworkTypeForSubscriber(int subId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -6512,13 +5772,12 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(61, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(61, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getNetworkTypeForSubscriber(subId, callingPackage);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -6526,19 +5785,19 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int getDataNetworkType(String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(62, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(62, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getDataNetworkType(callingPackage);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -6546,6 +5805,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int getDataNetworkTypeForSubscriber(int subId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -6553,13 +5813,12 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(63, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(63, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getDataNetworkTypeForSubscriber(subId, callingPackage);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -6567,6 +5826,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int getVoiceNetworkTypeForSubscriber(int subId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -6574,13 +5834,12 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(64, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(64, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getVoiceNetworkTypeForSubscriber(subId, callingPackage);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -6588,66 +5847,58 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean hasIccCard() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(65, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(65, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().hasIccCard();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean hasIccCardUsingSlotIndex(int slotIndex) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(slotIndex);
-                    boolean z = false;
-                    if (!this.mRemote.transact(66, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(66, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().hasIccCardUsingSlotIndex(slotIndex);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int getLteOnCdmaMode(String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(67, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(67, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getLteOnCdmaMode(callingPackage);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -6655,6 +5906,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int getLteOnCdmaModeForSubscriber(int subId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -6662,13 +5914,12 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(68, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(68, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getLteOnCdmaModeForSubscriber(subId, callingPackage);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -6676,19 +5927,19 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public List<CellInfo> getAllCellInfo(String callingPkg) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPkg);
-                    if (!this.mRemote.transact(69, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(69, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAllCellInfo(callingPkg);
                     }
                     _reply.readException();
                     List<CellInfo> _result = _reply.createTypedArrayList(CellInfo.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -6696,6 +5947,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void requestCellInfoUpdate(int subId, ICellInfoCallback cb, String callingPkg) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -6704,19 +5956,19 @@ public interface ITelephony extends IInterface {
                     _data.writeInt(subId);
                     _data.writeStrongBinder(cb != null ? cb.asBinder() : null);
                     _data.writeString(callingPkg);
-                    if (this.mRemote.transact(70, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(70, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().requestCellInfoUpdate(subId, cb, callingPkg);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().requestCellInfoUpdate(subId, cb, callingPkg);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void requestCellInfoUpdateWithWorkSource(int subId, ICellInfoCallback cb, String callingPkg, WorkSource ws) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -6731,38 +5983,38 @@ public interface ITelephony extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(71, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(71, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().requestCellInfoUpdateWithWorkSource(subId, cb, callingPkg, ws);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().requestCellInfoUpdateWithWorkSource(subId, cb, callingPkg, ws);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void setCellInfoListRate(int rateInMillis) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(rateInMillis);
-                    if (this.mRemote.transact(72, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(72, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setCellInfoListRate(rateInMillis);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setCellInfoListRate(rateInMillis);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public IccOpenLogicalChannelResponse iccOpenLogicalChannelBySlot(int slotIndex, String callingPackage, String AID, int p2) throws RemoteException {
                 IccOpenLogicalChannelResponse _result;
                 Parcel _data = Parcel.obtain();
@@ -6773,7 +6025,8 @@ public interface ITelephony extends IInterface {
                     _data.writeString(callingPackage);
                     _data.writeString(AID);
                     _data.writeInt(p2);
-                    if (!this.mRemote.transact(73, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(73, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().iccOpenLogicalChannelBySlot(slotIndex, callingPackage, AID, p2);
                     }
                     _reply.readException();
@@ -6782,16 +6035,14 @@ public interface ITelephony extends IInterface {
                     } else {
                         _result = null;
                     }
-                    IccOpenLogicalChannelResponse _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public IccOpenLogicalChannelResponse iccOpenLogicalChannel(int subId, String callingPackage, String AID, int p2) throws RemoteException {
                 IccOpenLogicalChannelResponse _result;
                 Parcel _data = Parcel.obtain();
@@ -6802,7 +6053,8 @@ public interface ITelephony extends IInterface {
                     _data.writeString(callingPackage);
                     _data.writeString(AID);
                     _data.writeInt(p2);
-                    if (!this.mRemote.transact(74, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(74, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().iccOpenLogicalChannel(subId, callingPackage, AID, p2);
                     }
                     _reply.readException();
@@ -6811,16 +6063,14 @@ public interface ITelephony extends IInterface {
                     } else {
                         _result = null;
                     }
-                    IccOpenLogicalChannelResponse _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean iccCloseLogicalChannelBySlot(int slotIndex, int channel) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -6828,24 +6078,20 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(slotIndex);
                     _data.writeInt(channel);
-                    boolean z = false;
-                    if (!this.mRemote.transact(75, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(75, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().iccCloseLogicalChannelBySlot(slotIndex, channel);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean iccCloseLogicalChannel(int subId, int channel) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -6853,24 +6099,20 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeInt(channel);
-                    boolean z = false;
-                    if (!this.mRemote.transact(76, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(76, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().iccCloseLogicalChannel(subId, channel);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public String iccTransmitApduLogicalChannelBySlot(int slotIndex, int channel, int cla, int instruction, int p1, int p2, int p3, String data) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -6878,69 +6120,58 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     try {
                         _data.writeInt(slotIndex);
-                        try {
-                            _data.writeInt(channel);
-                        } catch (Throwable th) {
-                            th = th;
-                            int i = cla;
-                            int i2 = instruction;
+                    } catch (Throwable th) {
+                        th = th;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeInt(channel);
+                    } catch (Throwable th2) {
+                        th = th2;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeInt(cla);
+                    } catch (Throwable th3) {
+                        th = th3;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeInt(instruction);
+                        _data.writeInt(p1);
+                        _data.writeInt(p2);
+                        _data.writeInt(p3);
+                        _data.writeString(data);
+                        boolean _status = this.mRemote.transact(77, _data, _reply, 0);
+                        if (!_status && Stub.getDefaultImpl() != null) {
+                            String iccTransmitApduLogicalChannelBySlot = Stub.getDefaultImpl().iccTransmitApduLogicalChannelBySlot(slotIndex, channel, cla, instruction, p1, p2, p3, data);
                             _reply.recycle();
                             _data.recycle();
-                            throw th;
+                            return iccTransmitApduLogicalChannelBySlot;
                         }
-                        try {
-                            _data.writeInt(cla);
-                            try {
-                                _data.writeInt(instruction);
-                                _data.writeInt(p1);
-                                _data.writeInt(p2);
-                                _data.writeInt(p3);
-                                _data.writeString(data);
-                                if (this.mRemote.transact(77, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                    _reply.readException();
-                                    String _result = _reply.readString();
-                                    _reply.recycle();
-                                    _data.recycle();
-                                    return _result;
-                                }
-                                String iccTransmitApduLogicalChannelBySlot = Stub.getDefaultImpl().iccTransmitApduLogicalChannelBySlot(slotIndex, channel, cla, instruction, p1, p2, p3, data);
-                                _reply.recycle();
-                                _data.recycle();
-                                return iccTransmitApduLogicalChannelBySlot;
-                            } catch (Throwable th2) {
-                                th = th2;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th3) {
-                            th = th3;
-                            int i22 = instruction;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
+                        _reply.readException();
+                        String _result = _reply.readString();
+                        _reply.recycle();
+                        _data.recycle();
+                        return _result;
                     } catch (Throwable th4) {
                         th = th4;
-                        int i3 = channel;
-                        int i4 = cla;
-                        int i222 = instruction;
                         _reply.recycle();
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th5) {
                     th = th5;
-                    int i5 = slotIndex;
-                    int i32 = channel;
-                    int i42 = cla;
-                    int i2222 = instruction;
-                    _reply.recycle();
-                    _data.recycle();
-                    throw th;
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public String iccTransmitApduLogicalChannel(int subId, int channel, int cla, int instruction, int p1, int p2, int p3, String data) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -6948,69 +6179,58 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     try {
                         _data.writeInt(subId);
-                        try {
-                            _data.writeInt(channel);
-                        } catch (Throwable th) {
-                            th = th;
-                            int i = cla;
-                            int i2 = instruction;
+                    } catch (Throwable th) {
+                        th = th;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeInt(channel);
+                    } catch (Throwable th2) {
+                        th = th2;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeInt(cla);
+                    } catch (Throwable th3) {
+                        th = th3;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeInt(instruction);
+                        _data.writeInt(p1);
+                        _data.writeInt(p2);
+                        _data.writeInt(p3);
+                        _data.writeString(data);
+                        boolean _status = this.mRemote.transact(78, _data, _reply, 0);
+                        if (!_status && Stub.getDefaultImpl() != null) {
+                            String iccTransmitApduLogicalChannel = Stub.getDefaultImpl().iccTransmitApduLogicalChannel(subId, channel, cla, instruction, p1, p2, p3, data);
                             _reply.recycle();
                             _data.recycle();
-                            throw th;
+                            return iccTransmitApduLogicalChannel;
                         }
-                        try {
-                            _data.writeInt(cla);
-                            try {
-                                _data.writeInt(instruction);
-                                _data.writeInt(p1);
-                                _data.writeInt(p2);
-                                _data.writeInt(p3);
-                                _data.writeString(data);
-                                if (this.mRemote.transact(78, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                    _reply.readException();
-                                    String _result = _reply.readString();
-                                    _reply.recycle();
-                                    _data.recycle();
-                                    return _result;
-                                }
-                                String iccTransmitApduLogicalChannel = Stub.getDefaultImpl().iccTransmitApduLogicalChannel(subId, channel, cla, instruction, p1, p2, p3, data);
-                                _reply.recycle();
-                                _data.recycle();
-                                return iccTransmitApduLogicalChannel;
-                            } catch (Throwable th2) {
-                                th = th2;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th3) {
-                            th = th3;
-                            int i22 = instruction;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
+                        _reply.readException();
+                        String _result = _reply.readString();
+                        _reply.recycle();
+                        _data.recycle();
+                        return _result;
                     } catch (Throwable th4) {
                         th = th4;
-                        int i3 = channel;
-                        int i4 = cla;
-                        int i222 = instruction;
                         _reply.recycle();
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th5) {
                     th = th5;
-                    int i5 = subId;
-                    int i32 = channel;
-                    int i42 = cla;
-                    int i2222 = instruction;
-                    _reply.recycle();
-                    _data.recycle();
-                    throw th;
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public String iccTransmitApduBasicChannelBySlot(int slotIndex, String callingPackage, int cla, int instruction, int p1, int p2, int p3, String data) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -7018,69 +6238,58 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     try {
                         _data.writeInt(slotIndex);
-                        try {
-                            _data.writeString(callingPackage);
-                        } catch (Throwable th) {
-                            th = th;
-                            int i = cla;
-                            int i2 = instruction;
+                    } catch (Throwable th) {
+                        th = th;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeString(callingPackage);
+                    } catch (Throwable th2) {
+                        th = th2;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeInt(cla);
+                    } catch (Throwable th3) {
+                        th = th3;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeInt(instruction);
+                        _data.writeInt(p1);
+                        _data.writeInt(p2);
+                        _data.writeInt(p3);
+                        _data.writeString(data);
+                        boolean _status = this.mRemote.transact(79, _data, _reply, 0);
+                        if (!_status && Stub.getDefaultImpl() != null) {
+                            String iccTransmitApduBasicChannelBySlot = Stub.getDefaultImpl().iccTransmitApduBasicChannelBySlot(slotIndex, callingPackage, cla, instruction, p1, p2, p3, data);
                             _reply.recycle();
                             _data.recycle();
-                            throw th;
+                            return iccTransmitApduBasicChannelBySlot;
                         }
-                        try {
-                            _data.writeInt(cla);
-                            try {
-                                _data.writeInt(instruction);
-                                _data.writeInt(p1);
-                                _data.writeInt(p2);
-                                _data.writeInt(p3);
-                                _data.writeString(data);
-                                if (this.mRemote.transact(79, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                    _reply.readException();
-                                    String _result = _reply.readString();
-                                    _reply.recycle();
-                                    _data.recycle();
-                                    return _result;
-                                }
-                                String iccTransmitApduBasicChannelBySlot = Stub.getDefaultImpl().iccTransmitApduBasicChannelBySlot(slotIndex, callingPackage, cla, instruction, p1, p2, p3, data);
-                                _reply.recycle();
-                                _data.recycle();
-                                return iccTransmitApduBasicChannelBySlot;
-                            } catch (Throwable th2) {
-                                th = th2;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th3) {
-                            th = th3;
-                            int i22 = instruction;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
+                        _reply.readException();
+                        String _result = _reply.readString();
+                        _reply.recycle();
+                        _data.recycle();
+                        return _result;
                     } catch (Throwable th4) {
                         th = th4;
-                        String str = callingPackage;
-                        int i3 = cla;
-                        int i222 = instruction;
                         _reply.recycle();
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th5) {
                     th = th5;
-                    int i4 = slotIndex;
-                    String str2 = callingPackage;
-                    int i32 = cla;
-                    int i2222 = instruction;
-                    _reply.recycle();
-                    _data.recycle();
-                    throw th;
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public String iccTransmitApduBasicChannel(int subId, String callingPackage, int cla, int instruction, int p1, int p2, int p3, String data) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -7088,150 +6297,123 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     try {
                         _data.writeInt(subId);
-                        try {
-                            _data.writeString(callingPackage);
-                        } catch (Throwable th) {
-                            th = th;
-                            int i = cla;
-                            int i2 = instruction;
+                    } catch (Throwable th) {
+                        th = th;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeString(callingPackage);
+                    } catch (Throwable th2) {
+                        th = th2;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeInt(cla);
+                    } catch (Throwable th3) {
+                        th = th3;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeInt(instruction);
+                        _data.writeInt(p1);
+                        _data.writeInt(p2);
+                        _data.writeInt(p3);
+                        _data.writeString(data);
+                        boolean _status = this.mRemote.transact(80, _data, _reply, 0);
+                        if (!_status && Stub.getDefaultImpl() != null) {
+                            String iccTransmitApduBasicChannel = Stub.getDefaultImpl().iccTransmitApduBasicChannel(subId, callingPackage, cla, instruction, p1, p2, p3, data);
                             _reply.recycle();
                             _data.recycle();
-                            throw th;
+                            return iccTransmitApduBasicChannel;
                         }
-                        try {
-                            _data.writeInt(cla);
-                            try {
-                                _data.writeInt(instruction);
-                                _data.writeInt(p1);
-                                _data.writeInt(p2);
-                                _data.writeInt(p3);
-                                _data.writeString(data);
-                                if (this.mRemote.transact(80, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                    _reply.readException();
-                                    String _result = _reply.readString();
-                                    _reply.recycle();
-                                    _data.recycle();
-                                    return _result;
-                                }
-                                String iccTransmitApduBasicChannel = Stub.getDefaultImpl().iccTransmitApduBasicChannel(subId, callingPackage, cla, instruction, p1, p2, p3, data);
-                                _reply.recycle();
-                                _data.recycle();
-                                return iccTransmitApduBasicChannel;
-                            } catch (Throwable th2) {
-                                th = th2;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th3) {
-                            th = th3;
-                            int i22 = instruction;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
+                        _reply.readException();
+                        String _result = _reply.readString();
+                        _reply.recycle();
+                        _data.recycle();
+                        return _result;
                     } catch (Throwable th4) {
                         th = th4;
-                        String str = callingPackage;
-                        int i3 = cla;
-                        int i222 = instruction;
                         _reply.recycle();
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th5) {
                     th = th5;
-                    int i4 = subId;
-                    String str2 = callingPackage;
-                    int i32 = cla;
-                    int i2222 = instruction;
-                    _reply.recycle();
-                    _data.recycle();
-                    throw th;
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public byte[] iccExchangeSimIO(int subId, int fileID, int command, int p1, int p2, int p3, String filePath) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    try {
-                        _data.writeInt(subId);
-                        try {
-                            _data.writeInt(fileID);
-                        } catch (Throwable th) {
-                            th = th;
-                            int i = command;
-                            int i2 = p1;
-                            int i3 = p2;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                        try {
-                            _data.writeInt(command);
-                            try {
-                                _data.writeInt(p1);
-                            } catch (Throwable th2) {
-                                th = th2;
-                                int i32 = p2;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                            try {
-                                _data.writeInt(p2);
-                                _data.writeInt(p3);
-                                _data.writeString(filePath);
-                                if (this.mRemote.transact(81, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                    _reply.readException();
-                                    byte[] _result = _reply.createByteArray();
-                                    _reply.recycle();
-                                    _data.recycle();
-                                    return _result;
-                                }
-                                byte[] iccExchangeSimIO = Stub.getDefaultImpl().iccExchangeSimIO(subId, fileID, command, p1, p2, p3, filePath);
-                                _reply.recycle();
-                                _data.recycle();
-                                return iccExchangeSimIO;
-                            } catch (Throwable th3) {
-                                th = th3;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th4) {
-                            th = th4;
-                            int i22 = p1;
-                            int i322 = p2;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                    } catch (Throwable th5) {
-                        th = th5;
-                        int i4 = fileID;
-                        int i5 = command;
-                        int i222 = p1;
-                        int i3222 = p2;
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeInt(subId);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(fileID);
+                } catch (Throwable th3) {
+                    th = th3;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(command);
+                } catch (Throwable th4) {
+                    th = th4;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(p1);
+                } catch (Throwable th5) {
+                    th = th5;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(p2);
+                    _data.writeInt(p3);
+                    _data.writeString(filePath);
+                    boolean _status = this.mRemote.transact(81, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        byte[] iccExchangeSimIO = Stub.getDefaultImpl().iccExchangeSimIO(subId, fileID, command, p1, p2, p3, filePath);
                         _reply.recycle();
                         _data.recycle();
-                        throw th;
+                        return iccExchangeSimIO;
                     }
+                    _reply.readException();
+                    byte[] _result = _reply.createByteArray();
+                    _reply.recycle();
+                    _data.recycle();
+                    return _result;
                 } catch (Throwable th6) {
                     th = th6;
-                    int i6 = subId;
-                    int i42 = fileID;
-                    int i52 = command;
-                    int i2222 = p1;
-                    int i32222 = p2;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public String sendEnvelopeWithStatus(int subId, String content) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -7239,13 +6421,12 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeString(content);
-                    if (!this.mRemote.transact(82, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(82, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().sendEnvelopeWithStatus(subId, content);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -7253,19 +6434,19 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public String nvReadItem(int itemID) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(itemID);
-                    if (!this.mRemote.transact(83, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(83, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().nvReadItem(itemID);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -7273,6 +6454,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean nvWriteItem(int itemID, String itemValue) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -7280,109 +6462,92 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(itemID);
                     _data.writeString(itemValue);
-                    boolean z = false;
-                    if (!this.mRemote.transact(84, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(84, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().nvWriteItem(itemID, itemValue);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean nvWriteCdmaPrl(byte[] preferredRoamingList) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeByteArray(preferredRoamingList);
-                    boolean z = false;
-                    if (!this.mRemote.transact(85, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(85, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().nvWriteCdmaPrl(preferredRoamingList);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean resetModemConfig(int slotIndex) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(slotIndex);
-                    boolean z = false;
-                    if (!this.mRemote.transact(86, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(86, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().resetModemConfig(slotIndex);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean rebootModem(int slotIndex) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(slotIndex);
-                    boolean z = false;
-                    if (!this.mRemote.transact(87, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(87, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().rebootModem(slotIndex);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int getCalculatedPreferredNetworkType(String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(88, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(88, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCalculatedPreferredNetworkType(callingPackage);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -7390,19 +6555,19 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int getPreferredNetworkType(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    if (!this.mRemote.transact(89, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(89, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPreferredNetworkType(subId);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -7410,68 +6575,65 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean getTetherApnRequiredForSubscriber(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(90, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(90, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getTetherApnRequiredForSubscriber(subId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void enableIms(int slotId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(slotId);
-                    if (this.mRemote.transact(91, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(91, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().enableIms(slotId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().enableIms(slotId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void disableIms(int slotId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(slotId);
-                    if (this.mRemote.transact(92, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(92, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().disableIms(slotId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().disableIms(slotId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public IImsMmTelFeature getMmTelFeatureAndListen(int slotId, IImsServiceFeatureCallback callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -7479,13 +6641,12 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(slotId);
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                    if (!this.mRemote.transact(93, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(93, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getMmTelFeatureAndListen(slotId, callback);
                     }
                     _reply.readException();
                     IImsMmTelFeature _result = IImsMmTelFeature.Stub.asInterface(_reply.readStrongBinder());
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -7493,6 +6654,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public IImsRcsFeature getRcsFeatureAndListen(int slotId, IImsServiceFeatureCallback callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -7500,13 +6662,12 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(slotId);
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                    if (!this.mRemote.transact(94, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(94, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getRcsFeatureAndListen(slotId, callback);
                     }
                     _reply.readException();
                     IImsRcsFeature _result = IImsRcsFeature.Stub.asInterface(_reply.readStrongBinder());
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -7514,6 +6675,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public IImsRegistration getImsRegistration(int slotId, int feature) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -7521,13 +6683,12 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(slotId);
                     _data.writeInt(feature);
-                    if (!this.mRemote.transact(95, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(95, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getImsRegistration(slotId, feature);
                     }
                     _reply.readException();
                     IImsRegistration _result = IImsRegistration.Stub.asInterface(_reply.readStrongBinder());
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -7535,6 +6696,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public IImsConfig getImsConfig(int slotId, int feature) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -7542,13 +6704,12 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(slotId);
                     _data.writeInt(feature);
-                    if (!this.mRemote.transact(96, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(96, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getImsConfig(slotId, feature);
                     }
                     _reply.readException();
                     IImsConfig _result = IImsConfig.Stub.asInterface(_reply.readStrongBinder());
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -7556,46 +6717,42 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean setImsService(int slotId, boolean isCarrierImsService, String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(slotId);
-                    _data.writeInt(isCarrierImsService);
+                    _data.writeInt(isCarrierImsService ? 1 : 0);
                     _data.writeString(packageName);
-                    boolean z = false;
-                    if (!this.mRemote.transact(97, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(97, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setImsService(slotId, isCarrierImsService, packageName);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public String getImsService(int slotId, boolean isCarrierImsService) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(slotId);
-                    _data.writeInt(isCarrierImsService);
-                    if (!this.mRemote.transact(98, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(isCarrierImsService ? 1 : 0);
+                    boolean _status = this.mRemote.transact(98, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getImsService(slotId, isCarrierImsService);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -7603,25 +6760,26 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void setNetworkSelectionModeAutomatic(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    if (this.mRemote.transact(99, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(99, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setNetworkSelectionModeAutomatic(subId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setNetworkSelectionModeAutomatic(subId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public CellNetworkScanResult getCellNetworkScanResults(int subId, String callingPackage) throws RemoteException {
                 CellNetworkScanResult _result;
                 Parcel _data = Parcel.obtain();
@@ -7630,7 +6788,8 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(100, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(100, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCellNetworkScanResults(subId, callingPackage);
                     }
                     _reply.readException();
@@ -7639,16 +6798,14 @@ public interface ITelephony extends IInterface {
                     } else {
                         _result = null;
                     }
-                    CellNetworkScanResult _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int requestNetworkScan(int subId, NetworkScanRequest request, Messenger messenger, IBinder binder, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -7669,13 +6826,12 @@ public interface ITelephony extends IInterface {
                     }
                     _data.writeStrongBinder(binder);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(101, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(101, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().requestNetworkScan(subId, request, messenger, binder, callingPackage);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -7683,6 +6839,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void stopNetworkScan(int subId, int scanId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -7690,42 +6847,38 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeInt(scanId);
-                    if (this.mRemote.transact(102, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(102, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().stopNetworkScan(subId, scanId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().stopNetworkScan(subId, scanId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean setNetworkSelectionModeManual(int subId, OperatorInfo operatorInfo, boolean persisSelection) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    boolean _result = true;
                     if (operatorInfo != null) {
                         _data.writeInt(1);
                         operatorInfo.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(persisSelection);
-                    if (!this.mRemote.transact(103, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(persisSelection ? 1 : 0);
+                    boolean _status = this.mRemote.transact(103, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setNetworkSelectionModeManual(subId, operatorInfo, persisSelection);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -7733,6 +6886,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean setPreferredNetworkType(int subId, int networkType) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -7740,140 +6894,120 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeInt(networkType);
-                    boolean z = false;
-                    if (!this.mRemote.transact(104, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(104, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setPreferredNetworkType(subId, networkType);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void setUserDataEnabled(int subId, boolean enable) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    _data.writeInt(enable);
-                    if (this.mRemote.transact(105, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(enable ? 1 : 0);
+                    boolean _status = this.mRemote.transact(105, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setUserDataEnabled(subId, enable);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setUserDataEnabled(subId, enable);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean getDataEnabled(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(106, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(106, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getDataEnabled(subId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean isUserDataEnabled(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(107, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(107, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isUserDataEnabled(subId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean isDataEnabled(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(108, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(108, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isDataEnabled(subId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean isManualNetworkSelectionAllowed(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(109, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(109, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isManualNetworkSelectionAllowed(subId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public String[] getPcscfAddress(String apnType, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -7881,13 +7015,12 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(apnType);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(110, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(110, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPcscfAddress(apnType, callingPackage);
                     }
                     _reply.readException();
                     String[] _result = _reply.createStringArray();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -7895,38 +7028,38 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void setImsRegistrationState(boolean registered) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(registered);
-                    if (this.mRemote.transact(111, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(registered ? 1 : 0);
+                    boolean _status = this.mRemote.transact(111, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setImsRegistrationState(registered);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setImsRegistrationState(registered);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public String getCdmaMdn(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    if (!this.mRemote.transact(112, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(112, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCdmaMdn(subId);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -7934,19 +7067,19 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public String getCdmaMin(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    if (!this.mRemote.transact(113, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(113, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCdmaMin(subId);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -7954,6 +7087,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void requestNumberVerification(PhoneNumberRange range, long timeoutMillis, INumberVerificationCallback callback, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -7968,32 +7102,31 @@ public interface ITelephony extends IInterface {
                     _data.writeLong(timeoutMillis);
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(114, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(114, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().requestNumberVerification(range, timeoutMillis, callback, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().requestNumberVerification(range, timeoutMillis, callback, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int getCarrierPrivilegeStatus(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    if (!this.mRemote.transact(115, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(115, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCarrierPrivilegeStatus(subId);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -8001,6 +7134,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int getCarrierPrivilegeStatusForUid(int subId, int uid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8008,13 +7142,12 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeInt(uid);
-                    if (!this.mRemote.transact(116, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(116, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCarrierPrivilegeStatusForUid(subId, uid);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -8022,6 +7155,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int checkCarrierPrivilegesForPackage(int subId, String pkgName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8029,13 +7163,12 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeString(pkgName);
-                    if (!this.mRemote.transact(117, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(117, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().checkCarrierPrivilegesForPackage(subId, pkgName);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -8043,19 +7176,19 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int checkCarrierPrivilegesForPackageAnyPhone(String pkgName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(pkgName);
-                    if (!this.mRemote.transact(118, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(118, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().checkCarrierPrivilegesForPackageAnyPhone(pkgName);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -8063,6 +7196,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public List<String> getCarrierPackageNamesForIntentAndPhone(Intent intent, int phoneId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8075,13 +7209,12 @@ public interface ITelephony extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(phoneId);
-                    if (!this.mRemote.transact(119, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(119, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCarrierPackageNamesForIntentAndPhone(intent, phoneId);
                     }
                     _reply.readException();
                     List<String> _result = _reply.createStringArrayList();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -8089,6 +7222,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean setLine1NumberForDisplayForSubscriber(int subId, String alphaTag, String number) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8097,24 +7231,20 @@ public interface ITelephony extends IInterface {
                     _data.writeInt(subId);
                     _data.writeString(alphaTag);
                     _data.writeString(number);
-                    boolean z = false;
-                    if (!this.mRemote.transact(120, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(120, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setLine1NumberForDisplayForSubscriber(subId, alphaTag, number);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public String getLine1NumberForDisplay(int subId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8122,13 +7252,12 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(121, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(121, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getLine1NumberForDisplay(subId, callingPackage);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -8136,6 +7265,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public String getLine1AlphaTagForDisplay(int subId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8143,13 +7273,12 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(122, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(122, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getLine1AlphaTagForDisplay(subId, callingPackage);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -8157,6 +7286,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public String[] getMergedSubscriberIds(int subId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8164,13 +7294,12 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(123, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(123, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getMergedSubscriberIds(subId, callingPackage);
                     }
                     _reply.readException();
                     String[] _result = _reply.createStringArray();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -8178,6 +7307,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean setOperatorBrandOverride(int subId, String brand) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8185,114 +7315,87 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeString(brand);
-                    boolean z = false;
-                    if (!this.mRemote.transact(124, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(124, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setOperatorBrandOverride(subId, brand);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean setRoamingOverride(int subId, List<String> gsmRoamingList, List<String> gsmNonRoamingList, List<String> cdmaRoamingList, List<String> cdmaNonRoamingList) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeInt(subId);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeStringList(gsmRoamingList);
                     try {
-                        _data.writeInt(subId);
-                        try {
-                            _data.writeStringList(gsmRoamingList);
-                            try {
-                                _data.writeStringList(gsmNonRoamingList);
-                                try {
-                                    _data.writeStringList(cdmaRoamingList);
-                                } catch (Throwable th) {
-                                    th = th;
-                                    List<String> list = cdmaNonRoamingList;
-                                    _reply.recycle();
-                                    _data.recycle();
-                                    throw th;
-                                }
-                            } catch (Throwable th2) {
-                                th = th2;
-                                List<String> list2 = cdmaRoamingList;
-                                List<String> list3 = cdmaNonRoamingList;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th3) {
-                            th = th3;
-                            List<String> list4 = gsmNonRoamingList;
-                            List<String> list22 = cdmaRoamingList;
-                            List<String> list32 = cdmaNonRoamingList;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
+                        _data.writeStringList(gsmNonRoamingList);
+                    } catch (Throwable th3) {
+                        th = th3;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeStringList(cdmaRoamingList);
                         try {
                             _data.writeStringList(cdmaNonRoamingList);
-                            try {
-                                boolean z = false;
-                                if (this.mRemote.transact(125, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                    _reply.readException();
-                                    if (_reply.readInt() != 0) {
-                                        z = true;
-                                    }
-                                    boolean _status = z;
-                                    _reply.recycle();
-                                    _data.recycle();
-                                    return _status;
-                                }
-                                boolean roamingOverride = Stub.getDefaultImpl().setRoamingOverride(subId, gsmRoamingList, gsmNonRoamingList, cdmaRoamingList, cdmaNonRoamingList);
-                                _reply.recycle();
-                                _data.recycle();
-                                return roamingOverride;
-                            } catch (Throwable th4) {
-                                th = th4;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th5) {
-                            th = th5;
+                        } catch (Throwable th4) {
+                            th = th4;
+                        }
+                    } catch (Throwable th5) {
+                        th = th5;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        boolean _status = this.mRemote.transact(125, _data, _reply, 0);
+                        if (!_status && Stub.getDefaultImpl() != null) {
+                            boolean roamingOverride = Stub.getDefaultImpl().setRoamingOverride(subId, gsmRoamingList, gsmNonRoamingList, cdmaRoamingList, cdmaNonRoamingList);
                             _reply.recycle();
                             _data.recycle();
-                            throw th;
+                            return roamingOverride;
                         }
+                        _reply.readException();
+                        boolean _status2 = _reply.readInt() != 0;
+                        _reply.recycle();
+                        _data.recycle();
+                        return _status2;
                     } catch (Throwable th6) {
                         th = th6;
-                        List<String> list5 = gsmRoamingList;
-                        List<String> list42 = gsmNonRoamingList;
-                        List<String> list222 = cdmaRoamingList;
-                        List<String> list322 = cdmaNonRoamingList;
                         _reply.recycle();
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th7) {
                     th = th7;
-                    int i = subId;
-                    List<String> list52 = gsmRoamingList;
-                    List<String> list422 = gsmNonRoamingList;
-                    List<String> list2222 = cdmaRoamingList;
-                    List<String> list3222 = cdmaNonRoamingList;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int invokeOemRilRequestRaw(byte[] oemReq, byte[] oemResp) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8304,14 +7407,13 @@ public interface ITelephony extends IInterface {
                     } else {
                         _data.writeInt(oemResp.length);
                     }
-                    if (!this.mRemote.transact(126, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(126, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().invokeOemRilRequestRaw(oemReq, oemResp);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
                     _reply.readByteArray(oemResp);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -8319,66 +7421,63 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean needMobileRadioShutdown() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(127, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(127, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().needMobileRadioShutdown();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void shutdownMobileRadios() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(128, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(128, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().shutdownMobileRadios();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().shutdownMobileRadios();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void setRadioCapability(RadioAccessFamily[] rafs) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeTypedArray(rafs, 0);
-                    if (this.mRemote.transact(129, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(129, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setRadioCapability(rafs);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setRadioCapability(rafs);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int getRadioAccessFamily(int phoneId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8386,13 +7485,12 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(phoneId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(130, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(130, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getRadioAccessFamily(phoneId, callingPackage);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -8400,49 +7498,46 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void enableVideoCalling(boolean enable) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(enable);
-                    if (this.mRemote.transact(131, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(enable ? 1 : 0);
+                    boolean _status = this.mRemote.transact(131, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().enableVideoCalling(enable);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().enableVideoCalling(enable);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean isVideoCallingEnabled(String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPackage);
-                    boolean z = false;
-                    if (!this.mRemote.transact(132, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(132, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isVideoCallingEnabled(callingPackage);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean canChangeDtmfToneLength(int subId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8450,24 +7545,20 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeString(callingPackage);
-                    boolean z = false;
-                    if (!this.mRemote.transact(133, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(133, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().canChangeDtmfToneLength(subId, callingPackage);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean isWorldPhone(int subId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8475,179 +7566,150 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeString(callingPackage);
-                    boolean z = false;
-                    if (!this.mRemote.transact(134, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(134, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isWorldPhone(subId, callingPackage);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean isTtyModeSupported() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(135, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(135, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isTtyModeSupported();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean isRttSupported(int subscriptionId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subscriptionId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(136, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(136, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isRttSupported(subscriptionId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean isHearingAidCompatibilitySupported() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(137, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(137, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isHearingAidCompatibilitySupported();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean isImsRegistered(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(138, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(138, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isImsRegistered(subId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean isWifiCallingAvailable(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(139, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(139, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isWifiCallingAvailable(subId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean isVideoTelephonyAvailable(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(140, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(140, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isVideoTelephonyAvailable(subId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int getImsRegTechnologyForMmTel(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    if (!this.mRemote.transact(141, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(141, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getImsRegTechnologyForMmTel(subId);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -8655,19 +7717,19 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public String getDeviceId(String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(142, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(142, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getDeviceId(callingPackage);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -8675,6 +7737,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public String getImeiForSlot(int slotIndex, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8682,13 +7745,12 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(slotIndex);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(143, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(143, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getImeiForSlot(slotIndex, callingPackage);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -8696,19 +7758,19 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public String getTypeAllocationCodeForSlot(int slotIndex) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(slotIndex);
-                    if (!this.mRemote.transact(144, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(144, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getTypeAllocationCodeForSlot(slotIndex);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -8716,6 +7778,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public String getMeidForSlot(int slotIndex, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8723,13 +7786,12 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(slotIndex);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(145, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(145, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getMeidForSlot(slotIndex, callingPackage);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -8737,19 +7799,19 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public String getManufacturerCodeForSlot(int slotIndex) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(slotIndex);
-                    if (!this.mRemote.transact(146, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(146, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getManufacturerCodeForSlot(slotIndex);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -8757,6 +7819,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public String getDeviceSoftwareVersionForSlot(int slotIndex, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8764,13 +7827,12 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(slotIndex);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(147, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(147, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getDeviceSoftwareVersionForSlot(slotIndex, callingPackage);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -8778,6 +7840,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int getSubIdForPhoneAccount(PhoneAccount phoneAccount) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8789,13 +7852,12 @@ public interface ITelephony extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(148, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(148, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getSubIdForPhoneAccount(phoneAccount);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -8803,6 +7865,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public PhoneAccountHandle getPhoneAccountHandleForSubscriptionId(int subscriptionId) throws RemoteException {
                 PhoneAccountHandle _result;
                 Parcel _data = Parcel.obtain();
@@ -8810,7 +7873,8 @@ public interface ITelephony extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subscriptionId);
-                    if (!this.mRemote.transact(149, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(149, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPhoneAccountHandleForSubscriptionId(subscriptionId);
                     }
                     _reply.readException();
@@ -8819,48 +7883,6 @@ public interface ITelephony extends IInterface {
                     } else {
                         _result = null;
                     }
-                    PhoneAccountHandle _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public void factoryReset(int subId) throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(subId);
-                    if (this.mRemote.transact(150, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                        _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
-                    }
-                    Stub.getDefaultImpl().factoryReset(subId);
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public String getSimLocaleForSubscriber(int subId) throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(subId);
-                    if (!this.mRemote.transact(151, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
-                        return Stub.getDefaultImpl().getSimLocaleForSubscriber(subId);
-                    }
-                    _reply.readException();
-                    String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -8868,6 +7890,46 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
+            public void factoryReset(int subId) throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    _data.writeInt(subId);
+                    boolean _status = this.mRemote.transact(150, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().factoryReset(subId);
+                    } else {
+                        _reply.readException();
+                    }
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // com.android.internal.telephony.ITelephony
+            public String getSimLocaleForSubscriber(int subId) throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    _data.writeInt(subId);
+                    boolean _status = this.mRemote.transact(151, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        return Stub.getDefaultImpl().getSimLocaleForSubscriber(subId);
+                    }
+                    _reply.readException();
+                    String _result = _reply.readString();
+                    return _result;
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // com.android.internal.telephony.ITelephony
             public void requestModemActivityInfo(ResultReceiver result) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -8878,9 +7940,8 @@ public interface ITelephony extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(152, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(152, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().requestModemActivityInfo(result);
                     }
                 } finally {
@@ -8888,6 +7949,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public ServiceState getServiceStateForSubscriber(int subId, String callingPackage) throws RemoteException {
                 ServiceState _result;
                 Parcel _data = Parcel.obtain();
@@ -8896,7 +7958,8 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(153, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(153, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getServiceStateForSubscriber(subId, callingPackage);
                     }
                     _reply.readException();
@@ -8905,16 +7968,14 @@ public interface ITelephony extends IInterface {
                     } else {
                         _result = null;
                     }
-                    ServiceState _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public Uri getVoicemailRingtoneUri(PhoneAccountHandle accountHandle) throws RemoteException {
                 Uri _result;
                 Parcel _data = Parcel.obtain();
@@ -8927,7 +7988,8 @@ public interface ITelephony extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(154, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(154, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getVoicemailRingtoneUri(accountHandle);
                     }
                     _reply.readException();
@@ -8936,16 +7998,14 @@ public interface ITelephony extends IInterface {
                     } else {
                         _result = null;
                     }
-                    Uri _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void setVoicemailRingtoneUri(String callingPackage, PhoneAccountHandle phoneAccountHandle, Uri uri) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -8964,40 +8024,36 @@ public interface ITelephony extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(155, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(155, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setVoicemailRingtoneUri(callingPackage, phoneAccountHandle, uri);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setVoicemailRingtoneUri(callingPackage, phoneAccountHandle, uri);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean isVoicemailVibrationEnabled(PhoneAccountHandle accountHandle) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (accountHandle != null) {
                         _data.writeInt(1);
                         accountHandle.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(156, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(156, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isVoicemailVibrationEnabled(accountHandle);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -9005,6 +8061,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void setVoicemailVibrationEnabled(String callingPackage, PhoneAccountHandle phoneAccountHandle, boolean enabled) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -9017,33 +8074,32 @@ public interface ITelephony extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(enabled);
-                    if (this.mRemote.transact(157, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(enabled ? 1 : 0);
+                    boolean _status = this.mRemote.transact(157, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setVoicemailVibrationEnabled(callingPackage, phoneAccountHandle, enabled);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setVoicemailVibrationEnabled(callingPackage, phoneAccountHandle, enabled);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public List<String> getPackagesWithCarrierPrivileges(int phoneId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(phoneId);
-                    if (!this.mRemote.transact(158, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(158, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPackagesWithCarrierPrivileges(phoneId);
                     }
                     _reply.readException();
                     List<String> _result = _reply.createStringArrayList();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -9051,18 +8107,18 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public List<String> getPackagesWithCarrierPrivilegesForAllPhones() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(159, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(159, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPackagesWithCarrierPrivilegesForAllPhones();
                     }
                     _reply.readException();
                     List<String> _result = _reply.createStringArrayList();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -9070,6 +8126,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public String getAidForAppType(int subId, int appType) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -9077,13 +8134,12 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeInt(appType);
-                    if (!this.mRemote.transact(160, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(160, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAidForAppType(subId, appType);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -9091,19 +8147,19 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public String getEsn(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    if (!this.mRemote.transact(161, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(161, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getEsn(subId);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -9111,19 +8167,19 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public String getCdmaPrlVersion(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    if (!this.mRemote.transact(162, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(162, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCdmaPrlVersion(subId);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -9131,18 +8187,18 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public List<TelephonyHistogram> getTelephonyHistograms() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(163, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(163, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getTelephonyHistograms();
                     }
                     _reply.readException();
                     List<TelephonyHistogram> _result = _reply.createTypedArrayList(TelephonyHistogram.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -9150,6 +8206,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int setAllowedCarriers(CarrierRestrictionRules carrierRestrictionRules) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -9161,13 +8218,12 @@ public interface ITelephony extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(164, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(164, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setAllowedCarriers(carrierRestrictionRules);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -9175,13 +8231,15 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public CarrierRestrictionRules getAllowedCarriers() throws RemoteException {
                 CarrierRestrictionRules _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(165, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(165, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAllowedCarriers();
                     }
                     _reply.readException();
@@ -9190,29 +8248,26 @@ public interface ITelephony extends IInterface {
                     } else {
                         _result = null;
                     }
-                    CarrierRestrictionRules _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int getSubscriptionCarrierId(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    if (!this.mRemote.transact(166, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(166, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getSubscriptionCarrierId(subId);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -9220,19 +8275,19 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public String getSubscriptionCarrierName(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    if (!this.mRemote.transact(167, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(167, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getSubscriptionCarrierName(subId);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -9240,19 +8295,19 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int getSubscriptionSpecificCarrierId(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    if (!this.mRemote.transact(168, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(168, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getSubscriptionSpecificCarrierId(subId);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -9260,19 +8315,19 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public String getSubscriptionSpecificCarrierName(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    if (!this.mRemote.transact(169, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(169, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getSubscriptionSpecificCarrierName(subId);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -9280,6 +8335,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int getCarrierIdFromMccMnc(int slotIndex, String mccmnc, boolean isSubscriptionMccMnc) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -9287,14 +8343,13 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(slotIndex);
                     _data.writeString(mccmnc);
-                    _data.writeInt(isSubscriptionMccMnc);
-                    if (!this.mRemote.transact(170, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(isSubscriptionMccMnc ? 1 : 0);
+                    boolean _status = this.mRemote.transact(170, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCarrierIdFromMccMnc(slotIndex, mccmnc, isSubscriptionMccMnc);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -9302,85 +8357,86 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void carrierActionSetMeteredApnsEnabled(int subId, boolean visible) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    _data.writeInt(visible);
-                    if (this.mRemote.transact(171, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(visible ? 1 : 0);
+                    boolean _status = this.mRemote.transact(171, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().carrierActionSetMeteredApnsEnabled(subId, visible);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().carrierActionSetMeteredApnsEnabled(subId, visible);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void carrierActionSetRadioEnabled(int subId, boolean enabled) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    _data.writeInt(enabled);
-                    if (this.mRemote.transact(172, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(enabled ? 1 : 0);
+                    boolean _status = this.mRemote.transact(172, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().carrierActionSetRadioEnabled(subId, enabled);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().carrierActionSetRadioEnabled(subId, enabled);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void carrierActionReportDefaultNetworkStatus(int subId, boolean report) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    _data.writeInt(report);
-                    if (this.mRemote.transact(173, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(report ? 1 : 0);
+                    boolean _status = this.mRemote.transact(173, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().carrierActionReportDefaultNetworkStatus(subId, report);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().carrierActionReportDefaultNetworkStatus(subId, report);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void carrierActionResetAll(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    if (this.mRemote.transact(174, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(174, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().carrierActionResetAll(subId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().carrierActionResetAll(subId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public NetworkStats getVtDataUsage(int subId, boolean perUidStats) throws RemoteException {
                 NetworkStats _result;
                 Parcel _data = Parcel.obtain();
@@ -9388,8 +8444,9 @@ public interface ITelephony extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    _data.writeInt(perUidStats);
-                    if (!this.mRemote.transact(175, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(perUidStats ? 1 : 0);
+                    boolean _status = this.mRemote.transact(175, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getVtDataUsage(subId, perUidStats);
                     }
                     _reply.readException();
@@ -9398,50 +8455,6 @@ public interface ITelephony extends IInterface {
                     } else {
                         _result = null;
                     }
-                    NetworkStats _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public void setPolicyDataEnabled(boolean enabled, int subId) throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(enabled);
-                    _data.writeInt(subId);
-                    if (this.mRemote.transact(176, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                        _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
-                    }
-                    Stub.getDefaultImpl().setPolicyDataEnabled(enabled, subId);
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public List<ClientRequestStats> getClientRequestStats(String callingPackage, int subid) throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeString(callingPackage);
-                    _data.writeInt(subid);
-                    if (!this.mRemote.transact(177, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
-                        return Stub.getDefaultImpl().getClientRequestStats(callingPackage, subid);
-                    }
-                    _reply.readException();
-                    List<ClientRequestStats> _result = _reply.createTypedArrayList(ClientRequestStats.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -9449,6 +8462,48 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
+            public void setPolicyDataEnabled(boolean enabled, int subId) throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    _data.writeInt(enabled ? 1 : 0);
+                    _data.writeInt(subId);
+                    boolean _status = this.mRemote.transact(176, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setPolicyDataEnabled(enabled, subId);
+                    } else {
+                        _reply.readException();
+                    }
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // com.android.internal.telephony.ITelephony
+            public List<ClientRequestStats> getClientRequestStats(String callingPackage, int subid) throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    _data.writeString(callingPackage);
+                    _data.writeInt(subid);
+                    boolean _status = this.mRemote.transact(177, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        return Stub.getDefaultImpl().getClientRequestStats(callingPackage, subid);
+                    }
+                    _reply.readException();
+                    List<ClientRequestStats> _result = _reply.createTypedArrayList(ClientRequestStats.CREATOR);
+                    return _result;
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // com.android.internal.telephony.ITelephony
             public void setSimPowerStateForSlot(int slotIndex, int state) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -9456,19 +8511,19 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(slotIndex);
                     _data.writeInt(state);
-                    if (this.mRemote.transact(178, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(178, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setSimPowerStateForSlot(slotIndex, state);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setSimPowerStateForSlot(slotIndex, state);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public String[] getForbiddenPlmns(int subId, int appType, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -9477,13 +8532,12 @@ public interface ITelephony extends IInterface {
                     _data.writeInt(subId);
                     _data.writeInt(appType);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(179, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(179, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getForbiddenPlmns(subId, appType, callingPackage);
                     }
                     _reply.readException();
                     String[] _result = _reply.createStringArray();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -9491,30 +8545,27 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean getEmergencyCallbackMode(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(180, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(180, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getEmergencyCallbackMode(subId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public SignalStrength getSignalStrength(int subId) throws RemoteException {
                 SignalStrength _result;
                 Parcel _data = Parcel.obtain();
@@ -9522,7 +8573,8 @@ public interface ITelephony extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    if (!this.mRemote.transact(181, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(181, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getSignalStrength(subId);
                     }
                     _reply.readException();
@@ -9531,16 +8583,14 @@ public interface ITelephony extends IInterface {
                     } else {
                         _result = null;
                     }
-                    SignalStrength _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int getCardIdForDefaultEuicc(int subId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -9548,13 +8598,12 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(182, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(182, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCardIdForDefaultEuicc(subId, callingPackage);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -9562,19 +8611,19 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public List<UiccCardInfo> getUiccCardsInfo(String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(183, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(183, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getUiccCardsInfo(callingPackage);
                     }
                     _reply.readException();
                     List<UiccCardInfo> _result = _reply.createTypedArrayList(UiccCardInfo.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -9582,18 +8631,18 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public UiccSlotInfo[] getUiccSlotsInfo() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(184, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(184, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getUiccSlotsInfo();
                     }
                     _reply.readException();
                     UiccSlotInfo[] _result = (UiccSlotInfo[]) _reply.createTypedArray(UiccSlotInfo.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -9601,30 +8650,27 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean switchSlots(int[] physicalSlots) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeIntArray(physicalSlots);
-                    boolean z = false;
-                    if (!this.mRemote.transact(185, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(185, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().switchSlots(physicalSlots);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void setRadioIndicationUpdateMode(int subId, int filters, int mode) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -9633,76 +8679,71 @@ public interface ITelephony extends IInterface {
                     _data.writeInt(subId);
                     _data.writeInt(filters);
                     _data.writeInt(mode);
-                    if (this.mRemote.transact(186, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(186, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setRadioIndicationUpdateMode(subId, filters, mode);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setRadioIndicationUpdateMode(subId, filters, mode);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean isDataRoamingEnabled(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(187, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(187, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isDataRoamingEnabled(subId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void setDataRoamingEnabled(int subId, boolean isEnabled) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    _data.writeInt(isEnabled);
-                    if (this.mRemote.transact(188, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(isEnabled ? 1 : 0);
+                    boolean _status = this.mRemote.transact(188, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setDataRoamingEnabled(subId, isEnabled);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setDataRoamingEnabled(subId, isEnabled);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int getCdmaRoamingMode(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    if (!this.mRemote.transact(189, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(189, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCdmaRoamingMode(subId);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -9710,6 +8751,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean setCdmaRoamingMode(int subId, int mode) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -9717,24 +8759,20 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeInt(mode);
-                    boolean z = false;
-                    if (!this.mRemote.transact(190, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(190, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setCdmaRoamingMode(subId, mode);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean setCdmaSubscriptionMode(int subId, int mode) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -9742,86 +8780,77 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeInt(mode);
-                    boolean z = false;
-                    if (!this.mRemote.transact(191, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(191, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setCdmaSubscriptionMode(subId, mode);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void setCarrierTestOverride(int subId, String mccmnc, String imsi, String iccid, String gid1, String gid2, String plmn, String spn, String carrierPrivilegeRules, String apn) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    try {
-                        _data.writeInt(subId);
-                        try {
-                            _data.writeString(mccmnc);
-                            _data.writeString(imsi);
-                            _data.writeString(iccid);
-                            _data.writeString(gid1);
-                            _data.writeString(gid2);
-                            _data.writeString(plmn);
-                            _data.writeString(spn);
-                            _data.writeString(carrierPrivilegeRules);
-                            _data.writeString(apn);
-                            if (this.mRemote.transact(192, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                _reply.readException();
-                                _reply.recycle();
-                                _data.recycle();
-                                return;
-                            }
-                            Stub.getDefaultImpl().setCarrierTestOverride(subId, mccmnc, imsi, iccid, gid1, gid2, plmn, spn, carrierPrivilegeRules, apn);
-                            _reply.recycle();
-                            _data.recycle();
-                        } catch (Throwable th) {
-                            th = th;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                    } catch (Throwable th2) {
-                        th = th2;
-                        String str = mccmnc;
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeInt(subId);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeString(mccmnc);
+                    _data.writeString(imsi);
+                    _data.writeString(iccid);
+                    _data.writeString(gid1);
+                    _data.writeString(gid2);
+                    _data.writeString(plmn);
+                    _data.writeString(spn);
+                    _data.writeString(carrierPrivilegeRules);
+                    _data.writeString(apn);
+                    boolean _status = this.mRemote.transact(192, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setCarrierTestOverride(subId, mccmnc, imsi, iccid, gid1, gid2, plmn, spn, carrierPrivilegeRules, apn);
                         _reply.recycle();
                         _data.recycle();
-                        throw th;
+                        return;
                     }
+                    _reply.readException();
+                    _reply.recycle();
+                    _data.recycle();
                 } catch (Throwable th3) {
                     th = th3;
-                    int i = subId;
-                    String str2 = mccmnc;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int getCarrierIdListVersion(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    if (!this.mRemote.transact(193, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(193, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCarrierIdListVersion(subId);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -9829,25 +8858,26 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void refreshUiccProfile(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    if (this.mRemote.transact(194, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(194, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().refreshUiccProfile(subId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().refreshUiccProfile(subId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int getNumberOfModemsWithSimultaneousDataConnections(int subId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -9855,13 +8885,12 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(195, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(195, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getNumberOfModemsWithSimultaneousDataConnections(subId, callingPackage);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -9869,19 +8898,19 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int getNetworkSelectionMode(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    if (!this.mRemote.transact(196, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(196, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getNetworkSelectionMode(subId);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -9889,42 +8918,38 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean isInEmergencySmsMode() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(197, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(197, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isInEmergencySmsMode();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public String[] getSmsApps(int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userId);
-                    if (!this.mRemote.transact(198, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(198, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getSmsApps(userId);
                     }
                     _reply.readException();
                     String[] _result = _reply.createStringArray();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -9932,19 +8957,19 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public String getDefaultSmsApp(int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userId);
-                    if (!this.mRemote.transact(199, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(199, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getDefaultSmsApp(userId);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -9952,6 +8977,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void setDefaultSmsApp(int userId, String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -9959,19 +8985,19 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userId);
                     _data.writeString(packageName);
-                    if (this.mRemote.transact(200, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(200, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setDefaultSmsApp(userId, packageName);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setDefaultSmsApp(userId, packageName);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int getRadioPowerState(int slotIndex, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -9979,13 +9005,12 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(slotIndex);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(201, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(201, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getRadioPowerState(slotIndex, callingPackage);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -9993,6 +9018,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void registerImsRegistrationCallback(int subId, IImsRegistrationCallback c) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -10000,19 +9026,19 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeStrongBinder(c != null ? c.asBinder() : null);
-                    if (this.mRemote.transact(202, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(202, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().registerImsRegistrationCallback(subId, c);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().registerImsRegistrationCallback(subId, c);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void unregisterImsRegistrationCallback(int subId, IImsRegistrationCallback c) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -10020,19 +9046,19 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeStrongBinder(c != null ? c.asBinder() : null);
-                    if (this.mRemote.transact(203, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(203, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().unregisterImsRegistrationCallback(subId, c);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().unregisterImsRegistrationCallback(subId, c);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void registerMmTelCapabilityCallback(int subId, IImsCapabilityCallback c) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -10040,19 +9066,19 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeStrongBinder(c != null ? c.asBinder() : null);
-                    if (this.mRemote.transact(204, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(204, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().registerMmTelCapabilityCallback(subId, c);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().registerMmTelCapabilityCallback(subId, c);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void unregisterMmTelCapabilityCallback(int subId, IImsCapabilityCallback c) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -10060,19 +9086,19 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeStrongBinder(c != null ? c.asBinder() : null);
-                    if (this.mRemote.transact(205, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(205, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().unregisterMmTelCapabilityCallback(subId, c);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().unregisterMmTelCapabilityCallback(subId, c);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean isCapable(int subId, int capability, int regTech) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -10081,24 +9107,20 @@ public interface ITelephony extends IInterface {
                     _data.writeInt(subId);
                     _data.writeInt(capability);
                     _data.writeInt(regTech);
-                    boolean z = false;
-                    if (!this.mRemote.transact(206, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(206, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isCapable(subId, capability, regTech);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean isAvailable(int subId, int capability, int regTech) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -10107,234 +9129,213 @@ public interface ITelephony extends IInterface {
                     _data.writeInt(subId);
                     _data.writeInt(capability);
                     _data.writeInt(regTech);
-                    boolean z = false;
-                    if (!this.mRemote.transact(207, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(207, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isAvailable(subId, capability, regTech);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean isAdvancedCallingSettingEnabled(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(208, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(208, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isAdvancedCallingSettingEnabled(subId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void setAdvancedCallingSettingEnabled(int subId, boolean isEnabled) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    _data.writeInt(isEnabled);
-                    if (this.mRemote.transact(209, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(isEnabled ? 1 : 0);
+                    boolean _status = this.mRemote.transact(209, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setAdvancedCallingSettingEnabled(subId, isEnabled);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setAdvancedCallingSettingEnabled(subId, isEnabled);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean isVtSettingEnabled(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(210, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(210, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isVtSettingEnabled(subId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void setVtSettingEnabled(int subId, boolean isEnabled) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    _data.writeInt(isEnabled);
-                    if (this.mRemote.transact(211, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(isEnabled ? 1 : 0);
+                    boolean _status = this.mRemote.transact(211, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setVtSettingEnabled(subId, isEnabled);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setVtSettingEnabled(subId, isEnabled);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean isVoWiFiSettingEnabled(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(212, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(212, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isVoWiFiSettingEnabled(subId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void setVoWiFiSettingEnabled(int subId, boolean isEnabled) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    _data.writeInt(isEnabled);
-                    if (this.mRemote.transact(213, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(isEnabled ? 1 : 0);
+                    boolean _status = this.mRemote.transact(213, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setVoWiFiSettingEnabled(subId, isEnabled);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setVoWiFiSettingEnabled(subId, isEnabled);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean isVoWiFiRoamingSettingEnabled(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(214, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(214, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isVoWiFiRoamingSettingEnabled(subId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void setVoWiFiRoamingSettingEnabled(int subId, boolean isEnabled) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    _data.writeInt(isEnabled);
-                    if (this.mRemote.transact(215, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(isEnabled ? 1 : 0);
+                    boolean _status = this.mRemote.transact(215, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setVoWiFiRoamingSettingEnabled(subId, isEnabled);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setVoWiFiRoamingSettingEnabled(subId, isEnabled);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void setVoWiFiNonPersistent(int subId, boolean isCapable, int mode) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    _data.writeInt(isCapable);
+                    _data.writeInt(isCapable ? 1 : 0);
                     _data.writeInt(mode);
-                    if (this.mRemote.transact(216, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(216, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setVoWiFiNonPersistent(subId, isCapable, mode);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setVoWiFiNonPersistent(subId, isCapable, mode);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int getVoWiFiModeSetting(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    if (!this.mRemote.transact(217, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(217, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getVoWiFiModeSetting(subId);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -10342,6 +9343,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void setVoWiFiModeSetting(int subId, int mode) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -10349,32 +9351,31 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeInt(mode);
-                    if (this.mRemote.transact(218, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(218, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setVoWiFiModeSetting(subId, mode);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setVoWiFiModeSetting(subId, mode);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int getVoWiFiRoamingModeSetting(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    if (!this.mRemote.transact(219, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(219, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getVoWiFiRoamingModeSetting(subId);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -10382,6 +9383,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void setVoWiFiRoamingModeSetting(int subId, int mode) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -10389,76 +9391,72 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeInt(mode);
-                    if (this.mRemote.transact(220, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(220, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setVoWiFiRoamingModeSetting(subId, mode);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setVoWiFiRoamingModeSetting(subId, mode);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void setRttCapabilitySetting(int subId, boolean isEnabled) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    _data.writeInt(isEnabled);
-                    if (this.mRemote.transact(221, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(isEnabled ? 1 : 0);
+                    boolean _status = this.mRemote.transact(221, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setRttCapabilitySetting(subId, isEnabled);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setRttCapabilitySetting(subId, isEnabled);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean isTtyOverVolteEnabled(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(222, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(222, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isTtyOverVolteEnabled(subId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public Map getEmergencyNumberList(String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(223, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(223, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getEmergencyNumberList(callingPackage);
                     }
                     _reply.readException();
-                    Map _result = _reply.readHashMap(getClass().getClassLoader());
-                    _reply.recycle();
-                    _data.recycle();
+                    ClassLoader cl = getClass().getClassLoader();
+                    Map _result = _reply.readHashMap(cl);
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -10466,44 +9464,40 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean isEmergencyNumber(String number, boolean exactMatch) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(number);
-                    _data.writeInt(exactMatch);
-                    boolean z = false;
-                    if (!this.mRemote.transact(224, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(exactMatch ? 1 : 0);
+                    boolean _status = this.mRemote.transact(224, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isEmergencyNumber(number, exactMatch);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public List<String> getCertsFromCarrierPrivilegeAccessRules(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    if (!this.mRemote.transact(225, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(225, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCertsFromCarrierPrivilegeAccessRules(subId);
                     }
                     _reply.readException();
                     List<String> _result = _reply.createStringArrayList();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -10511,6 +9505,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void registerImsProvisioningChangedCallback(int subId, IImsConfigCallback callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -10518,19 +9513,19 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                    if (this.mRemote.transact(226, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(226, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().registerImsProvisioningChangedCallback(subId, callback);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().registerImsProvisioningChangedCallback(subId, callback);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void unregisterImsProvisioningChangedCallback(int subId, IImsConfigCallback callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -10538,19 +9533,19 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                    if (this.mRemote.transact(227, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(227, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().unregisterImsProvisioningChangedCallback(subId, callback);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().unregisterImsProvisioningChangedCallback(subId, callback);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void setImsProvisioningStatusForCapability(int subId, int capability, int tech, boolean isProvisioned) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -10559,20 +9554,20 @@ public interface ITelephony extends IInterface {
                     _data.writeInt(subId);
                     _data.writeInt(capability);
                     _data.writeInt(tech);
-                    _data.writeInt(isProvisioned);
-                    if (this.mRemote.transact(228, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(isProvisioned ? 1 : 0);
+                    boolean _status = this.mRemote.transact(228, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setImsProvisioningStatusForCapability(subId, capability, tech, isProvisioned);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setImsProvisioningStatusForCapability(subId, capability, tech, isProvisioned);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean getImsProvisioningStatusForCapability(int subId, int capability, int tech) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -10581,24 +9576,20 @@ public interface ITelephony extends IInterface {
                     _data.writeInt(subId);
                     _data.writeInt(capability);
                     _data.writeInt(tech);
-                    boolean z = false;
-                    if (!this.mRemote.transact(229, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(229, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getImsProvisioningStatusForCapability(subId, capability, tech);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean isMmTelCapabilityProvisionedInCache(int subId, int capability, int tech) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -10607,24 +9598,20 @@ public interface ITelephony extends IInterface {
                     _data.writeInt(subId);
                     _data.writeInt(capability);
                     _data.writeInt(tech);
-                    boolean z = false;
-                    if (!this.mRemote.transact(230, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(230, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isMmTelCapabilityProvisionedInCache(subId, capability, tech);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void cacheMmTelCapabilityProvisioning(int subId, int capability, int tech, boolean isProvisioned) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -10633,20 +9620,20 @@ public interface ITelephony extends IInterface {
                     _data.writeInt(subId);
                     _data.writeInt(capability);
                     _data.writeInt(tech);
-                    _data.writeInt(isProvisioned);
-                    if (this.mRemote.transact(231, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(isProvisioned ? 1 : 0);
+                    boolean _status = this.mRemote.transact(231, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().cacheMmTelCapabilityProvisioning(subId, capability, tech, isProvisioned);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().cacheMmTelCapabilityProvisioning(subId, capability, tech, isProvisioned);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int getImsProvisioningInt(int subId, int key) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -10654,13 +9641,12 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeInt(key);
-                    if (!this.mRemote.transact(232, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(232, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getImsProvisioningInt(subId, key);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -10668,6 +9654,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public String getImsProvisioningString(int subId, int key) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -10675,13 +9662,12 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeInt(key);
-                    if (!this.mRemote.transact(233, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(233, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getImsProvisioningString(subId, key);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -10689,6 +9675,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int setImsProvisioningInt(int subId, int key, int value) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -10697,13 +9684,12 @@ public interface ITelephony extends IInterface {
                     _data.writeInt(subId);
                     _data.writeInt(key);
                     _data.writeInt(value);
-                    if (!this.mRemote.transact(234, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(234, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setImsProvisioningInt(subId, key, value);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -10711,6 +9697,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int setImsProvisioningString(int subId, int key, String value) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -10719,13 +9706,12 @@ public interface ITelephony extends IInterface {
                     _data.writeInt(subId);
                     _data.writeInt(key);
                     _data.writeString(value);
-                    if (!this.mRemote.transact(235, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(235, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setImsProvisioningString(subId, key, value);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -10733,6 +9719,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void updateEmergencyNumberListTestMode(int action, EmergencyNumber num) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -10745,31 +9732,30 @@ public interface ITelephony extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(236, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(236, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().updateEmergencyNumberListTestMode(action, num);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().updateEmergencyNumberListTestMode(action, num);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public List<String> getEmergencyNumberListTestMode() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(237, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(237, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getEmergencyNumberListTestMode();
                     }
                     _reply.readException();
                     List<String> _result = _reply.createStringArrayList();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -10777,63 +9763,59 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean enableModemForSlot(int slotIndex, boolean enable) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(slotIndex);
-                    _data.writeInt(enable);
-                    boolean z = false;
-                    if (!this.mRemote.transact(238, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(enable ? 1 : 0);
+                    boolean _status = this.mRemote.transact(238, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().enableModemForSlot(slotIndex, enable);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void setMultiSimCarrierRestriction(boolean isMultiSimCarrierRestricted) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(isMultiSimCarrierRestricted);
-                    if (this.mRemote.transact(239, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(isMultiSimCarrierRestricted ? 1 : 0);
+                    boolean _status = this.mRemote.transact(239, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setMultiSimCarrierRestriction(isMultiSimCarrierRestricted);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setMultiSimCarrierRestriction(isMultiSimCarrierRestricted);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int isMultiSimSupported(String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(240, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(240, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isMultiSimSupported(callingPackage);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -10841,25 +9823,26 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void switchMultiSimConfig(int numOfSims) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(numOfSims);
-                    if (this.mRemote.transact(241, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(241, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().switchMultiSimConfig(numOfSims);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().switchMultiSimConfig(numOfSims);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean doesSwitchMultiSimConfigTriggerReboot(int subId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -10867,36 +9850,31 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeString(callingPackage);
-                    boolean z = false;
-                    if (!this.mRemote.transact(242, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(242, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().doesSwitchMultiSimConfigTriggerReboot(subId, callingPackage);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int[] getSlotsMapping() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(243, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(243, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getSlotsMapping();
                     }
                     _reply.readException();
                     int[] _result = _reply.createIntArray();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -10904,18 +9882,18 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public int getRadioHalVersion() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(244, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(244, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getRadioHalVersion();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -10923,6 +9901,7 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean isModemEnabledForSlot(int slotIndex, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -10930,24 +9909,20 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(slotIndex);
                     _data.writeString(callingPackage);
-                    boolean z = false;
-                    if (!this.mRemote.transact(245, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(245, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isModemEnabledForSlot(slotIndex, callingPackage);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean isDataEnabledForApn(int apnType, int subId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -10956,24 +9931,20 @@ public interface ITelephony extends IInterface {
                     _data.writeInt(apnType);
                     _data.writeInt(subId);
                     _data.writeString(callingPackage);
-                    boolean z = false;
-                    if (!this.mRemote.transact(246, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(246, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isDataEnabledForApn(apnType, subId, callingPackage);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean isApnMetered(int apnType, int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -10981,33 +9952,28 @@ public interface ITelephony extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(apnType);
                     _data.writeInt(subId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(247, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(247, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isApnMetered(apnType, subId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public void enqueueSmsPickResult(String callingPackage, IIntegerConsumer subIdResult) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPackage);
                     _data.writeStrongBinder(subIdResult != null ? subIdResult.asBinder() : null);
-                    if (this.mRemote.transact(248, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(248, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().enqueueSmsPickResult(callingPackage, subIdResult);
                     }
                 } finally {
@@ -11015,19 +9981,19 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public String getMmsUserAgent(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    if (!this.mRemote.transact(249, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(249, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getMmsUserAgent(subId);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -11035,19 +10001,19 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public String getMmsUAProfUrl(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    if (!this.mRemote.transact(250, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(250, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getMmsUAProfUrl(subId);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -11055,49 +10021,41 @@ public interface ITelephony extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean setDataAllowedDuringVoiceCall(int subId, boolean allow) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    _data.writeInt(allow);
-                    boolean z = false;
-                    if (!this.mRemote.transact(251, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(allow ? 1 : 0);
+                    boolean _status = this.mRemote.transact(251, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setDataAllowedDuringVoiceCall(subId, allow);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telephony.ITelephony
             public boolean isDataAllowedInVoiceCall(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(252, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(252, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isDataAllowedInVoiceCall(subId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -11106,11 +10064,11 @@ public interface ITelephony extends IInterface {
         }
 
         public static boolean setDefaultImpl(ITelephony impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static ITelephony getDefaultImpl() {

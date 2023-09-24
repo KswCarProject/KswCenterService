@@ -1,31 +1,35 @@
 package android.hardware.camera2.legacy;
 
-import android.os.ConditionVariable;
-import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.MessageQueue;
+import android.p007os.ConditionVariable;
+import android.p007os.Handler;
+import android.p007os.HandlerThread;
+import android.p007os.MessageQueue;
 
+/* loaded from: classes.dex */
 public class RequestHandlerThread extends HandlerThread {
     public static final int MSG_POKE_IDLE_HANDLER = -1;
     private Handler.Callback mCallback;
     private volatile Handler mHandler;
-    /* access modifiers changed from: private */
-    public final ConditionVariable mIdle = new ConditionVariable(true);
-    private final MessageQueue.IdleHandler mIdleHandler = new MessageQueue.IdleHandler() {
-        public boolean queueIdle() {
-            RequestHandlerThread.this.mIdle.open();
-            return false;
-        }
-    };
-    private final ConditionVariable mStarted = new ConditionVariable(false);
+    private final ConditionVariable mIdle;
+    private final MessageQueue.IdleHandler mIdleHandler;
+    private final ConditionVariable mStarted;
 
     public RequestHandlerThread(String name, Handler.Callback callback) {
         super(name, 10);
+        this.mStarted = new ConditionVariable(false);
+        this.mIdle = new ConditionVariable(true);
+        this.mIdleHandler = new MessageQueue.IdleHandler() { // from class: android.hardware.camera2.legacy.RequestHandlerThread.1
+            @Override // android.p007os.MessageQueue.IdleHandler
+            public boolean queueIdle() {
+                RequestHandlerThread.this.mIdle.open();
+                return false;
+            }
+        };
         this.mCallback = callback;
     }
 
-    /* access modifiers changed from: protected */
-    public void onLooperPrepared() {
+    @Override // android.p007os.HandlerThread
+    protected void onLooperPrepared() {
         this.mHandler = new Handler(getLooper(), this.mCallback);
         this.mStarted.open();
     }
@@ -65,13 +69,15 @@ public class RequestHandlerThread extends HandlerThread {
     public void waitUntilIdle() {
         Handler handler = waitAndGetHandler();
         MessageQueue queue = handler.getLooper().getQueue();
-        if (!queue.isIdle()) {
-            this.mIdle.close();
-            queue.addIdleHandler(this.mIdleHandler);
-            handler.sendEmptyMessage(-1);
-            if (!queue.isIdle()) {
-                this.mIdle.block();
-            }
+        if (queue.isIdle()) {
+            return;
         }
+        this.mIdle.close();
+        queue.addIdleHandler(this.mIdleHandler);
+        handler.sendEmptyMessage(-1);
+        if (queue.isIdle()) {
+            return;
+        }
+        this.mIdle.block();
     }
 }

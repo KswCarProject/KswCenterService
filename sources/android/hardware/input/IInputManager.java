@@ -1,16 +1,19 @@
 package android.hardware.input;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.hardware.input.IInputDevicesChangedListener;
+import android.hardware.input.ITabletModeChangedListener;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.view.InputDevice;
 import android.view.InputEvent;
 import android.view.InputMonitor;
 import android.view.PointerIcon;
 
+/* loaded from: classes.dex */
 public interface IInputManager extends IInterface {
     void addKeyboardLayoutForInputDevice(InputDeviceIdentifier inputDeviceIdentifier, String str) throws RemoteException;
 
@@ -67,106 +70,136 @@ public interface IInputManager extends IInterface {
 
     void vibrate(int i, long[] jArr, int i2, IBinder iBinder) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements IInputManager {
+        @Override // android.hardware.input.IInputManager
         public InputDevice getInputDevice(int deviceId) throws RemoteException {
             return null;
         }
 
+        @Override // android.hardware.input.IInputManager
         public int[] getInputDeviceIds() throws RemoteException {
             return null;
         }
 
+        @Override // android.hardware.input.IInputManager
         public boolean isInputDeviceEnabled(int deviceId) throws RemoteException {
             return false;
         }
 
+        @Override // android.hardware.input.IInputManager
         public void enableInputDevice(int deviceId) throws RemoteException {
         }
 
+        @Override // android.hardware.input.IInputManager
         public void disableInputDevice(int deviceId) throws RemoteException {
         }
 
+        @Override // android.hardware.input.IInputManager
         public boolean hasKeys(int deviceId, int sourceMask, int[] keyCodes, boolean[] keyExists) throws RemoteException {
             return false;
         }
 
+        @Override // android.hardware.input.IInputManager
         public void tryPointerSpeed(int speed) throws RemoteException {
         }
 
+        @Override // android.hardware.input.IInputManager
         public boolean injectInputEvent(InputEvent ev, int mode) throws RemoteException {
             return false;
         }
 
+        @Override // android.hardware.input.IInputManager
         public TouchCalibration getTouchCalibrationForInputDevice(String inputDeviceDescriptor, int rotation) throws RemoteException {
             return null;
         }
 
+        @Override // android.hardware.input.IInputManager
         public void setTouchCalibrationForInputDevice(String inputDeviceDescriptor, int rotation, TouchCalibration calibration) throws RemoteException {
         }
 
+        @Override // android.hardware.input.IInputManager
         public KeyboardLayout[] getKeyboardLayouts() throws RemoteException {
             return null;
         }
 
+        @Override // android.hardware.input.IInputManager
         public KeyboardLayout[] getKeyboardLayoutsForInputDevice(InputDeviceIdentifier identifier) throws RemoteException {
             return null;
         }
 
+        @Override // android.hardware.input.IInputManager
         public KeyboardLayout getKeyboardLayout(String keyboardLayoutDescriptor) throws RemoteException {
             return null;
         }
 
+        @Override // android.hardware.input.IInputManager
         public String getCurrentKeyboardLayoutForInputDevice(InputDeviceIdentifier identifier) throws RemoteException {
             return null;
         }
 
+        @Override // android.hardware.input.IInputManager
         public void setCurrentKeyboardLayoutForInputDevice(InputDeviceIdentifier identifier, String keyboardLayoutDescriptor) throws RemoteException {
         }
 
+        @Override // android.hardware.input.IInputManager
         public String[] getEnabledKeyboardLayoutsForInputDevice(InputDeviceIdentifier identifier) throws RemoteException {
             return null;
         }
 
+        @Override // android.hardware.input.IInputManager
         public void addKeyboardLayoutForInputDevice(InputDeviceIdentifier identifier, String keyboardLayoutDescriptor) throws RemoteException {
         }
 
+        @Override // android.hardware.input.IInputManager
         public void removeKeyboardLayoutForInputDevice(InputDeviceIdentifier identifier, String keyboardLayoutDescriptor) throws RemoteException {
         }
 
+        @Override // android.hardware.input.IInputManager
         public void registerInputDevicesChangedListener(IInputDevicesChangedListener listener) throws RemoteException {
         }
 
+        @Override // android.hardware.input.IInputManager
         public int isInTabletMode() throws RemoteException {
             return 0;
         }
 
+        @Override // android.hardware.input.IInputManager
         public void registerTabletModeChangedListener(ITabletModeChangedListener listener) throws RemoteException {
         }
 
+        @Override // android.hardware.input.IInputManager
         public void vibrate(int deviceId, long[] pattern, int repeat, IBinder token) throws RemoteException {
         }
 
+        @Override // android.hardware.input.IInputManager
         public void cancelVibrate(int deviceId, IBinder token) throws RemoteException {
         }
 
+        @Override // android.hardware.input.IInputManager
         public void setPointerIconType(int typeId) throws RemoteException {
         }
 
+        @Override // android.hardware.input.IInputManager
         public void setCustomPointerIcon(PointerIcon icon) throws RemoteException {
         }
 
+        @Override // android.hardware.input.IInputManager
         public void requestPointerCapture(IBinder windowToken, boolean enabled) throws RemoteException {
         }
 
+        @Override // android.hardware.input.IInputManager
         public InputMonitor monitorGestureInput(String name, int displayId) throws RemoteException {
             return null;
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements IInputManager {
         private static final String DESCRIPTOR = "android.hardware.input.IInputManager";
         static final int TRANSACTION_addKeyboardLayoutForInputDevice = 17;
@@ -206,12 +239,13 @@ public interface IInputManager extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IInputManager)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IInputManager)) {
+                return (IInputManager) iin;
             }
-            return (IInputManager) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -277,399 +311,243 @@ public interface IInputManager extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v0, resolved type: android.hardware.input.TouchCalibration} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v4, resolved type: android.hardware.input.TouchCalibration} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v9, resolved type: android.hardware.input.TouchCalibration} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v13, resolved type: android.hardware.input.TouchCalibration} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v15, resolved type: android.hardware.input.InputDeviceIdentifier} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v18, resolved type: android.hardware.input.TouchCalibration} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v19, resolved type: android.hardware.input.InputDeviceIdentifier} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v22, resolved type: android.hardware.input.TouchCalibration} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v23, resolved type: android.hardware.input.InputDeviceIdentifier} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v26, resolved type: android.hardware.input.TouchCalibration} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v27, resolved type: android.hardware.input.InputDeviceIdentifier} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v30, resolved type: android.hardware.input.TouchCalibration} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v31, resolved type: android.hardware.input.InputDeviceIdentifier} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v34, resolved type: android.hardware.input.TouchCalibration} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v35, resolved type: android.hardware.input.InputDeviceIdentifier} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v40, resolved type: android.hardware.input.TouchCalibration} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v47, resolved type: android.view.PointerIcon} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v45, resolved type: android.hardware.input.TouchCalibration} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v46, resolved type: android.hardware.input.TouchCalibration} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v47, resolved type: android.hardware.input.TouchCalibration} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v48, resolved type: android.hardware.input.TouchCalibration} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v49, resolved type: android.hardware.input.TouchCalibration} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v50, resolved type: android.hardware.input.TouchCalibration} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v51, resolved type: android.hardware.input.TouchCalibration} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v52, resolved type: android.hardware.input.TouchCalibration} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v53, resolved type: android.hardware.input.TouchCalibration} */
-        /* JADX WARNING: type inference failed for: r1v9, types: [android.view.InputEvent] */
-        /* JADX WARNING: type inference failed for: r3v7, types: [android.view.InputEvent] */
-        /* JADX WARNING: type inference failed for: r3v16, types: [android.hardware.input.InputDeviceIdentifier] */
-        /* JADX WARNING: type inference failed for: r3v21, types: [android.hardware.input.InputDeviceIdentifier] */
-        /* JADX WARNING: type inference failed for: r3v25, types: [android.hardware.input.InputDeviceIdentifier] */
-        /* JADX WARNING: type inference failed for: r3v29, types: [android.hardware.input.InputDeviceIdentifier] */
-        /* JADX WARNING: type inference failed for: r3v33, types: [android.hardware.input.InputDeviceIdentifier] */
-        /* JADX WARNING: type inference failed for: r3v37, types: [android.hardware.input.InputDeviceIdentifier] */
-        /* JADX WARNING: type inference failed for: r3v42, types: [android.view.PointerIcon] */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r9, android.os.Parcel r10, android.os.Parcel r11, int r12) throws android.os.RemoteException {
-            /*
-                r8 = this;
-                java.lang.String r0 = "android.hardware.input.IInputManager"
-                r1 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r2 = 1
-                if (r9 == r1) goto L_0x02a9
-                r1 = 0
-                r3 = 0
-                switch(r9) {
-                    case 1: goto L_0x028e;
-                    case 2: goto L_0x0280;
-                    case 3: goto L_0x026e;
-                    case 4: goto L_0x0260;
-                    case 5: goto L_0x0252;
-                    case 6: goto L_0x022b;
-                    case 7: goto L_0x021d;
-                    case 8: goto L_0x01f9;
-                    case 9: goto L_0x01da;
-                    case 10: goto L_0x01b8;
-                    case 11: goto L_0x01aa;
-                    case 12: goto L_0x018a;
-                    case 13: goto L_0x016f;
-                    case 14: goto L_0x014f;
-                    case 15: goto L_0x012f;
-                    case 16: goto L_0x010f;
-                    case 17: goto L_0x00ef;
-                    case 18: goto L_0x00cf;
-                    case 19: goto L_0x00bd;
-                    case 20: goto L_0x00af;
-                    case 21: goto L_0x009d;
-                    case 22: goto L_0x0083;
-                    case 23: goto L_0x0071;
-                    case 24: goto L_0x0063;
-                    case 25: goto L_0x0047;
-                    case 26: goto L_0x0031;
-                    case 27: goto L_0x0012;
-                    default: goto L_0x000d;
-                }
-            L_0x000d:
-                boolean r1 = super.onTransact(r9, r10, r11, r12)
-                return r1
-            L_0x0012:
-                r10.enforceInterface(r0)
-                java.lang.String r3 = r10.readString()
-                int r4 = r10.readInt()
-                android.view.InputMonitor r5 = r8.monitorGestureInput(r3, r4)
-                r11.writeNoException()
-                if (r5 == 0) goto L_0x002d
-                r11.writeInt(r2)
-                r5.writeToParcel(r11, r2)
-                goto L_0x0030
-            L_0x002d:
-                r11.writeInt(r1)
-            L_0x0030:
-                return r2
-            L_0x0031:
-                r10.enforceInterface(r0)
-                android.os.IBinder r3 = r10.readStrongBinder()
-                int r4 = r10.readInt()
-                if (r4 == 0) goto L_0x0040
-                r1 = r2
-            L_0x0040:
-                r8.requestPointerCapture(r3, r1)
-                r11.writeNoException()
-                return r2
-            L_0x0047:
-                r10.enforceInterface(r0)
-                int r1 = r10.readInt()
-                if (r1 == 0) goto L_0x005a
-                android.os.Parcelable$Creator<android.view.PointerIcon> r1 = android.view.PointerIcon.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                r3 = r1
-                android.view.PointerIcon r3 = (android.view.PointerIcon) r3
-                goto L_0x005b
-            L_0x005a:
-            L_0x005b:
-                r1 = r3
-                r8.setCustomPointerIcon(r1)
-                r11.writeNoException()
-                return r2
-            L_0x0063:
-                r10.enforceInterface(r0)
-                int r1 = r10.readInt()
-                r8.setPointerIconType(r1)
-                r11.writeNoException()
-                return r2
-            L_0x0071:
-                r10.enforceInterface(r0)
-                int r1 = r10.readInt()
-                android.os.IBinder r3 = r10.readStrongBinder()
-                r8.cancelVibrate(r1, r3)
-                r11.writeNoException()
-                return r2
-            L_0x0083:
-                r10.enforceInterface(r0)
-                int r1 = r10.readInt()
-                long[] r3 = r10.createLongArray()
-                int r4 = r10.readInt()
-                android.os.IBinder r5 = r10.readStrongBinder()
-                r8.vibrate(r1, r3, r4, r5)
-                r11.writeNoException()
-                return r2
-            L_0x009d:
-                r10.enforceInterface(r0)
-                android.os.IBinder r1 = r10.readStrongBinder()
-                android.hardware.input.ITabletModeChangedListener r1 = android.hardware.input.ITabletModeChangedListener.Stub.asInterface(r1)
-                r8.registerTabletModeChangedListener(r1)
-                r11.writeNoException()
-                return r2
-            L_0x00af:
-                r10.enforceInterface(r0)
-                int r1 = r8.isInTabletMode()
-                r11.writeNoException()
-                r11.writeInt(r1)
-                return r2
-            L_0x00bd:
-                r10.enforceInterface(r0)
-                android.os.IBinder r1 = r10.readStrongBinder()
-                android.hardware.input.IInputDevicesChangedListener r1 = android.hardware.input.IInputDevicesChangedListener.Stub.asInterface(r1)
-                r8.registerInputDevicesChangedListener(r1)
-                r11.writeNoException()
-                return r2
-            L_0x00cf:
-                r10.enforceInterface(r0)
-                int r1 = r10.readInt()
-                if (r1 == 0) goto L_0x00e2
-                android.os.Parcelable$Creator<android.hardware.input.InputDeviceIdentifier> r1 = android.hardware.input.InputDeviceIdentifier.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                r3 = r1
-                android.hardware.input.InputDeviceIdentifier r3 = (android.hardware.input.InputDeviceIdentifier) r3
-                goto L_0x00e3
-            L_0x00e2:
-            L_0x00e3:
-                r1 = r3
-                java.lang.String r3 = r10.readString()
-                r8.removeKeyboardLayoutForInputDevice(r1, r3)
-                r11.writeNoException()
-                return r2
-            L_0x00ef:
-                r10.enforceInterface(r0)
-                int r1 = r10.readInt()
-                if (r1 == 0) goto L_0x0102
-                android.os.Parcelable$Creator<android.hardware.input.InputDeviceIdentifier> r1 = android.hardware.input.InputDeviceIdentifier.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                r3 = r1
-                android.hardware.input.InputDeviceIdentifier r3 = (android.hardware.input.InputDeviceIdentifier) r3
-                goto L_0x0103
-            L_0x0102:
-            L_0x0103:
-                r1 = r3
-                java.lang.String r3 = r10.readString()
-                r8.addKeyboardLayoutForInputDevice(r1, r3)
-                r11.writeNoException()
-                return r2
-            L_0x010f:
-                r10.enforceInterface(r0)
-                int r1 = r10.readInt()
-                if (r1 == 0) goto L_0x0122
-                android.os.Parcelable$Creator<android.hardware.input.InputDeviceIdentifier> r1 = android.hardware.input.InputDeviceIdentifier.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                r3 = r1
-                android.hardware.input.InputDeviceIdentifier r3 = (android.hardware.input.InputDeviceIdentifier) r3
-                goto L_0x0123
-            L_0x0122:
-            L_0x0123:
-                r1 = r3
-                java.lang.String[] r3 = r8.getEnabledKeyboardLayoutsForInputDevice(r1)
-                r11.writeNoException()
-                r11.writeStringArray(r3)
-                return r2
-            L_0x012f:
-                r10.enforceInterface(r0)
-                int r1 = r10.readInt()
-                if (r1 == 0) goto L_0x0142
-                android.os.Parcelable$Creator<android.hardware.input.InputDeviceIdentifier> r1 = android.hardware.input.InputDeviceIdentifier.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                r3 = r1
-                android.hardware.input.InputDeviceIdentifier r3 = (android.hardware.input.InputDeviceIdentifier) r3
-                goto L_0x0143
-            L_0x0142:
-            L_0x0143:
-                r1 = r3
-                java.lang.String r3 = r10.readString()
-                r8.setCurrentKeyboardLayoutForInputDevice(r1, r3)
-                r11.writeNoException()
-                return r2
-            L_0x014f:
-                r10.enforceInterface(r0)
-                int r1 = r10.readInt()
-                if (r1 == 0) goto L_0x0162
-                android.os.Parcelable$Creator<android.hardware.input.InputDeviceIdentifier> r1 = android.hardware.input.InputDeviceIdentifier.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                r3 = r1
-                android.hardware.input.InputDeviceIdentifier r3 = (android.hardware.input.InputDeviceIdentifier) r3
-                goto L_0x0163
-            L_0x0162:
-            L_0x0163:
-                r1 = r3
-                java.lang.String r3 = r8.getCurrentKeyboardLayoutForInputDevice(r1)
-                r11.writeNoException()
-                r11.writeString(r3)
-                return r2
-            L_0x016f:
-                r10.enforceInterface(r0)
-                java.lang.String r3 = r10.readString()
-                android.hardware.input.KeyboardLayout r4 = r8.getKeyboardLayout(r3)
-                r11.writeNoException()
-                if (r4 == 0) goto L_0x0186
-                r11.writeInt(r2)
-                r4.writeToParcel(r11, r2)
-                goto L_0x0189
-            L_0x0186:
-                r11.writeInt(r1)
-            L_0x0189:
-                return r2
-            L_0x018a:
-                r10.enforceInterface(r0)
-                int r1 = r10.readInt()
-                if (r1 == 0) goto L_0x019d
-                android.os.Parcelable$Creator<android.hardware.input.InputDeviceIdentifier> r1 = android.hardware.input.InputDeviceIdentifier.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                r3 = r1
-                android.hardware.input.InputDeviceIdentifier r3 = (android.hardware.input.InputDeviceIdentifier) r3
-                goto L_0x019e
-            L_0x019d:
-            L_0x019e:
-                r1 = r3
-                android.hardware.input.KeyboardLayout[] r3 = r8.getKeyboardLayoutsForInputDevice(r1)
-                r11.writeNoException()
-                r11.writeTypedArray(r3, r2)
-                return r2
-            L_0x01aa:
-                r10.enforceInterface(r0)
-                android.hardware.input.KeyboardLayout[] r1 = r8.getKeyboardLayouts()
-                r11.writeNoException()
-                r11.writeTypedArray(r1, r2)
-                return r2
-            L_0x01b8:
-                r10.enforceInterface(r0)
-                java.lang.String r1 = r10.readString()
-                int r4 = r10.readInt()
-                int r5 = r10.readInt()
-                if (r5 == 0) goto L_0x01d2
-                android.os.Parcelable$Creator<android.hardware.input.TouchCalibration> r3 = android.hardware.input.TouchCalibration.CREATOR
-                java.lang.Object r3 = r3.createFromParcel(r10)
-                android.hardware.input.TouchCalibration r3 = (android.hardware.input.TouchCalibration) r3
-                goto L_0x01d3
-            L_0x01d2:
-            L_0x01d3:
-                r8.setTouchCalibrationForInputDevice(r1, r4, r3)
-                r11.writeNoException()
-                return r2
-            L_0x01da:
-                r10.enforceInterface(r0)
-                java.lang.String r3 = r10.readString()
-                int r4 = r10.readInt()
-                android.hardware.input.TouchCalibration r5 = r8.getTouchCalibrationForInputDevice(r3, r4)
-                r11.writeNoException()
-                if (r5 == 0) goto L_0x01f5
-                r11.writeInt(r2)
-                r5.writeToParcel(r11, r2)
-                goto L_0x01f8
-            L_0x01f5:
-                r11.writeInt(r1)
-            L_0x01f8:
-                return r2
-            L_0x01f9:
-                r10.enforceInterface(r0)
-                int r1 = r10.readInt()
-                if (r1 == 0) goto L_0x020c
-                android.os.Parcelable$Creator<android.view.InputEvent> r1 = android.view.InputEvent.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                r3 = r1
-                android.view.InputEvent r3 = (android.view.InputEvent) r3
-                goto L_0x020d
-            L_0x020c:
-            L_0x020d:
-                r1 = r3
-                int r3 = r10.readInt()
-                boolean r4 = r8.injectInputEvent(r1, r3)
-                r11.writeNoException()
-                r11.writeInt(r4)
-                return r2
-            L_0x021d:
-                r10.enforceInterface(r0)
-                int r1 = r10.readInt()
-                r8.tryPointerSpeed(r1)
-                r11.writeNoException()
-                return r2
-            L_0x022b:
-                r10.enforceInterface(r0)
-                int r1 = r10.readInt()
-                int r3 = r10.readInt()
-                int[] r4 = r10.createIntArray()
-                int r5 = r10.readInt()
-                if (r5 >= 0) goto L_0x0242
-                r6 = 0
-                goto L_0x0244
-            L_0x0242:
-                boolean[] r6 = new boolean[r5]
-            L_0x0244:
-                boolean r7 = r8.hasKeys(r1, r3, r4, r6)
-                r11.writeNoException()
-                r11.writeInt(r7)
-                r11.writeBooleanArray(r6)
-                return r2
-            L_0x0252:
-                r10.enforceInterface(r0)
-                int r1 = r10.readInt()
-                r8.disableInputDevice(r1)
-                r11.writeNoException()
-                return r2
-            L_0x0260:
-                r10.enforceInterface(r0)
-                int r1 = r10.readInt()
-                r8.enableInputDevice(r1)
-                r11.writeNoException()
-                return r2
-            L_0x026e:
-                r10.enforceInterface(r0)
-                int r1 = r10.readInt()
-                boolean r3 = r8.isInputDeviceEnabled(r1)
-                r11.writeNoException()
-                r11.writeInt(r3)
-                return r2
-            L_0x0280:
-                r10.enforceInterface(r0)
-                int[] r1 = r8.getInputDeviceIds()
-                r11.writeNoException()
-                r11.writeIntArray(r1)
-                return r2
-            L_0x028e:
-                r10.enforceInterface(r0)
-                int r3 = r10.readInt()
-                android.view.InputDevice r4 = r8.getInputDevice(r3)
-                r11.writeNoException()
-                if (r4 == 0) goto L_0x02a5
-                r11.writeInt(r2)
-                r4.writeToParcel(r11, r2)
-                goto L_0x02a8
-            L_0x02a5:
-                r11.writeInt(r1)
-            L_0x02a8:
-                return r2
-            L_0x02a9:
-                r11.writeString(r0)
-                return r2
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.hardware.input.IInputManager.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            boolean[] _arg3;
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0 = data.readInt();
+                    InputDevice _result = getInputDevice(_arg0);
+                    reply.writeNoException();
+                    if (_result != null) {
+                        reply.writeInt(1);
+                        _result.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    int[] _result2 = getInputDeviceIds();
+                    reply.writeNoException();
+                    reply.writeIntArray(_result2);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    boolean isInputDeviceEnabled = isInputDeviceEnabled(_arg02);
+                    reply.writeNoException();
+                    reply.writeInt(isInputDeviceEnabled ? 1 : 0);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg03 = data.readInt();
+                    enableInputDevice(_arg03);
+                    reply.writeNoException();
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg04 = data.readInt();
+                    disableInputDevice(_arg04);
+                    reply.writeNoException();
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg05 = data.readInt();
+                    int _arg1 = data.readInt();
+                    int[] _arg2 = data.createIntArray();
+                    int _arg3_length = data.readInt();
+                    if (_arg3_length < 0) {
+                        _arg3 = null;
+                    } else {
+                        _arg3 = new boolean[_arg3_length];
+                    }
+                    boolean hasKeys = hasKeys(_arg05, _arg1, _arg2, _arg3);
+                    reply.writeNoException();
+                    reply.writeInt(hasKeys ? 1 : 0);
+                    reply.writeBooleanArray(_arg3);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg06 = data.readInt();
+                    tryPointerSpeed(_arg06);
+                    reply.writeNoException();
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    InputEvent _arg07 = data.readInt() != 0 ? InputEvent.CREATOR.createFromParcel(data) : null;
+                    InputEvent _arg08 = _arg07;
+                    int _arg12 = data.readInt();
+                    boolean injectInputEvent = injectInputEvent(_arg08, _arg12);
+                    reply.writeNoException();
+                    reply.writeInt(injectInputEvent ? 1 : 0);
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg09 = data.readString();
+                    int _arg13 = data.readInt();
+                    TouchCalibration _result3 = getTouchCalibrationForInputDevice(_arg09, _arg13);
+                    reply.writeNoException();
+                    if (_result3 != null) {
+                        reply.writeInt(1);
+                        _result3.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg010 = data.readString();
+                    int _arg14 = data.readInt();
+                    TouchCalibration _arg22 = data.readInt() != 0 ? TouchCalibration.CREATOR.createFromParcel(data) : null;
+                    setTouchCalibrationForInputDevice(_arg010, _arg14, _arg22);
+                    reply.writeNoException();
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    KeyboardLayout[] _result4 = getKeyboardLayouts();
+                    reply.writeNoException();
+                    reply.writeTypedArray(_result4, 1);
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    InputDeviceIdentifier _arg011 = data.readInt() != 0 ? InputDeviceIdentifier.CREATOR.createFromParcel(data) : null;
+                    KeyboardLayout[] _result5 = getKeyboardLayoutsForInputDevice(_arg011);
+                    reply.writeNoException();
+                    reply.writeTypedArray(_result5, 1);
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg012 = data.readString();
+                    KeyboardLayout _result6 = getKeyboardLayout(_arg012);
+                    reply.writeNoException();
+                    if (_result6 != null) {
+                        reply.writeInt(1);
+                        _result6.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 14:
+                    data.enforceInterface(DESCRIPTOR);
+                    InputDeviceIdentifier _arg013 = data.readInt() != 0 ? InputDeviceIdentifier.CREATOR.createFromParcel(data) : null;
+                    String _result7 = getCurrentKeyboardLayoutForInputDevice(_arg013);
+                    reply.writeNoException();
+                    reply.writeString(_result7);
+                    return true;
+                case 15:
+                    data.enforceInterface(DESCRIPTOR);
+                    InputDeviceIdentifier _arg014 = data.readInt() != 0 ? InputDeviceIdentifier.CREATOR.createFromParcel(data) : null;
+                    InputDeviceIdentifier _arg015 = _arg014;
+                    String _arg15 = data.readString();
+                    setCurrentKeyboardLayoutForInputDevice(_arg015, _arg15);
+                    reply.writeNoException();
+                    return true;
+                case 16:
+                    data.enforceInterface(DESCRIPTOR);
+                    InputDeviceIdentifier _arg016 = data.readInt() != 0 ? InputDeviceIdentifier.CREATOR.createFromParcel(data) : null;
+                    String[] _result8 = getEnabledKeyboardLayoutsForInputDevice(_arg016);
+                    reply.writeNoException();
+                    reply.writeStringArray(_result8);
+                    return true;
+                case 17:
+                    data.enforceInterface(DESCRIPTOR);
+                    InputDeviceIdentifier _arg017 = data.readInt() != 0 ? InputDeviceIdentifier.CREATOR.createFromParcel(data) : null;
+                    InputDeviceIdentifier _arg018 = _arg017;
+                    String _arg16 = data.readString();
+                    addKeyboardLayoutForInputDevice(_arg018, _arg16);
+                    reply.writeNoException();
+                    return true;
+                case 18:
+                    data.enforceInterface(DESCRIPTOR);
+                    InputDeviceIdentifier _arg019 = data.readInt() != 0 ? InputDeviceIdentifier.CREATOR.createFromParcel(data) : null;
+                    InputDeviceIdentifier _arg020 = _arg019;
+                    String _arg17 = data.readString();
+                    removeKeyboardLayoutForInputDevice(_arg020, _arg17);
+                    reply.writeNoException();
+                    return true;
+                case 19:
+                    data.enforceInterface(DESCRIPTOR);
+                    IInputDevicesChangedListener _arg021 = IInputDevicesChangedListener.Stub.asInterface(data.readStrongBinder());
+                    registerInputDevicesChangedListener(_arg021);
+                    reply.writeNoException();
+                    return true;
+                case 20:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result9 = isInTabletMode();
+                    reply.writeNoException();
+                    reply.writeInt(_result9);
+                    return true;
+                case 21:
+                    data.enforceInterface(DESCRIPTOR);
+                    ITabletModeChangedListener _arg022 = ITabletModeChangedListener.Stub.asInterface(data.readStrongBinder());
+                    registerTabletModeChangedListener(_arg022);
+                    reply.writeNoException();
+                    return true;
+                case 22:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg023 = data.readInt();
+                    long[] _arg18 = data.createLongArray();
+                    int _arg23 = data.readInt();
+                    IBinder _arg32 = data.readStrongBinder();
+                    vibrate(_arg023, _arg18, _arg23, _arg32);
+                    reply.writeNoException();
+                    return true;
+                case 23:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg024 = data.readInt();
+                    IBinder _arg19 = data.readStrongBinder();
+                    cancelVibrate(_arg024, _arg19);
+                    reply.writeNoException();
+                    return true;
+                case 24:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg025 = data.readInt();
+                    setPointerIconType(_arg025);
+                    reply.writeNoException();
+                    return true;
+                case 25:
+                    data.enforceInterface(DESCRIPTOR);
+                    PointerIcon _arg026 = data.readInt() != 0 ? PointerIcon.CREATOR.createFromParcel(data) : null;
+                    setCustomPointerIcon(_arg026);
+                    reply.writeNoException();
+                    return true;
+                case 26:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg027 = data.readStrongBinder();
+                    boolean _arg110 = data.readInt() != 0;
+                    requestPointerCapture(_arg027, _arg110);
+                    reply.writeNoException();
+                    return true;
+                case 27:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg028 = data.readString();
+                    int _arg111 = data.readInt();
+                    InputMonitor _result10 = monitorGestureInput(_arg028, _arg111);
+                    reply.writeNoException();
+                    if (_result10 != null) {
+                        reply.writeInt(1);
+                        _result10.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements IInputManager {
             public static IInputManager sDefaultImpl;
             private IBinder mRemote;
@@ -678,6 +556,7 @@ public interface IInputManager extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -686,6 +565,7 @@ public interface IInputManager extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.hardware.input.IInputManager
             public InputDevice getInputDevice(int deviceId) throws RemoteException {
                 InputDevice _result;
                 Parcel _data = Parcel.obtain();
@@ -693,7 +573,8 @@ public interface IInputManager extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(deviceId);
-                    if (!this.mRemote.transact(1, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getInputDevice(deviceId);
                     }
                     _reply.readException();
@@ -702,28 +583,6 @@ public interface IInputManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    InputDevice _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public int[] getInputDeviceIds() throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(2, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
-                        return Stub.getDefaultImpl().getInputDeviceIds();
-                    }
-                    _reply.readException();
-                    int[] _result = _reply.createIntArray();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -731,68 +590,84 @@ public interface IInputManager extends IInterface {
                 }
             }
 
+            @Override // android.hardware.input.IInputManager
+            public int[] getInputDeviceIds() throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        return Stub.getDefaultImpl().getInputDeviceIds();
+                    }
+                    _reply.readException();
+                    int[] _result = _reply.createIntArray();
+                    return _result;
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // android.hardware.input.IInputManager
             public boolean isInputDeviceEnabled(int deviceId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(deviceId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(3, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isInputDeviceEnabled(deviceId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.input.IInputManager
             public void enableInputDevice(int deviceId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(deviceId);
-                    if (this.mRemote.transact(4, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().enableInputDevice(deviceId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().enableInputDevice(deviceId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.input.IInputManager
             public void disableInputDevice(int deviceId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(deviceId);
-                    if (this.mRemote.transact(5, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().disableInputDevice(deviceId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().disableInputDevice(deviceId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.input.IInputManager
             public boolean hasKeys(int deviceId, int sourceMask, int[] keyCodes, boolean[] keyExists) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -806,18 +681,13 @@ public interface IInputManager extends IInterface {
                     } else {
                         _data.writeInt(keyExists.length);
                     }
-                    boolean z = false;
-                    if (!this.mRemote.transact(6, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().hasKeys(deviceId, sourceMask, keyCodes, keyExists);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _result = z;
+                    boolean _result = _reply.readInt() != 0;
                     _reply.readBooleanArray(keyExists);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -825,31 +695,31 @@ public interface IInputManager extends IInterface {
                 }
             }
 
+            @Override // android.hardware.input.IInputManager
             public void tryPointerSpeed(int speed) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(speed);
-                    if (this.mRemote.transact(7, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().tryPointerSpeed(speed);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().tryPointerSpeed(speed);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.input.IInputManager
             public boolean injectInputEvent(InputEvent ev, int mode) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (ev != null) {
                         _data.writeInt(1);
                         ev.writeToParcel(_data, 0);
@@ -857,15 +727,12 @@ public interface IInputManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(mode);
-                    if (!this.mRemote.transact(8, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().injectInputEvent(ev, mode);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -873,6 +740,7 @@ public interface IInputManager extends IInterface {
                 }
             }
 
+            @Override // android.hardware.input.IInputManager
             public TouchCalibration getTouchCalibrationForInputDevice(String inputDeviceDescriptor, int rotation) throws RemoteException {
                 TouchCalibration _result;
                 Parcel _data = Parcel.obtain();
@@ -881,7 +749,8 @@ public interface IInputManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(inputDeviceDescriptor);
                     _data.writeInt(rotation);
-                    if (!this.mRemote.transact(9, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(9, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getTouchCalibrationForInputDevice(inputDeviceDescriptor, rotation);
                     }
                     _reply.readException();
@@ -890,16 +759,14 @@ public interface IInputManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    TouchCalibration _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.input.IInputManager
             public void setTouchCalibrationForInputDevice(String inputDeviceDescriptor, int rotation, TouchCalibration calibration) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -913,31 +780,30 @@ public interface IInputManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(10, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(10, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setTouchCalibrationForInputDevice(inputDeviceDescriptor, rotation, calibration);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setTouchCalibrationForInputDevice(inputDeviceDescriptor, rotation, calibration);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.input.IInputManager
             public KeyboardLayout[] getKeyboardLayouts() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(11, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(11, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getKeyboardLayouts();
                     }
                     _reply.readException();
                     KeyboardLayout[] _result = (KeyboardLayout[]) _reply.createTypedArray(KeyboardLayout.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -945,6 +811,7 @@ public interface IInputManager extends IInterface {
                 }
             }
 
+            @Override // android.hardware.input.IInputManager
             public KeyboardLayout[] getKeyboardLayoutsForInputDevice(InputDeviceIdentifier identifier) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -956,13 +823,12 @@ public interface IInputManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(12, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(12, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getKeyboardLayoutsForInputDevice(identifier);
                     }
                     _reply.readException();
                     KeyboardLayout[] _result = (KeyboardLayout[]) _reply.createTypedArray(KeyboardLayout.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -970,6 +836,7 @@ public interface IInputManager extends IInterface {
                 }
             }
 
+            @Override // android.hardware.input.IInputManager
             public KeyboardLayout getKeyboardLayout(String keyboardLayoutDescriptor) throws RemoteException {
                 KeyboardLayout _result;
                 Parcel _data = Parcel.obtain();
@@ -977,7 +844,8 @@ public interface IInputManager extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(keyboardLayoutDescriptor);
-                    if (!this.mRemote.transact(13, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(13, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getKeyboardLayout(keyboardLayoutDescriptor);
                     }
                     _reply.readException();
@@ -986,16 +854,14 @@ public interface IInputManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    KeyboardLayout _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.input.IInputManager
             public String getCurrentKeyboardLayoutForInputDevice(InputDeviceIdentifier identifier) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1007,13 +873,12 @@ public interface IInputManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(14, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(14, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCurrentKeyboardLayoutForInputDevice(identifier);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1021,6 +886,7 @@ public interface IInputManager extends IInterface {
                 }
             }
 
+            @Override // android.hardware.input.IInputManager
             public void setCurrentKeyboardLayoutForInputDevice(InputDeviceIdentifier identifier, String keyboardLayoutDescriptor) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1033,19 +899,19 @@ public interface IInputManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(keyboardLayoutDescriptor);
-                    if (this.mRemote.transact(15, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(15, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setCurrentKeyboardLayoutForInputDevice(identifier, keyboardLayoutDescriptor);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setCurrentKeyboardLayoutForInputDevice(identifier, keyboardLayoutDescriptor);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.input.IInputManager
             public String[] getEnabledKeyboardLayoutsForInputDevice(InputDeviceIdentifier identifier) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1057,13 +923,12 @@ public interface IInputManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(16, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(16, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getEnabledKeyboardLayoutsForInputDevice(identifier);
                     }
                     _reply.readException();
                     String[] _result = _reply.createStringArray();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1071,6 +936,7 @@ public interface IInputManager extends IInterface {
                 }
             }
 
+            @Override // android.hardware.input.IInputManager
             public void addKeyboardLayoutForInputDevice(InputDeviceIdentifier identifier, String keyboardLayoutDescriptor) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1083,19 +949,19 @@ public interface IInputManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(keyboardLayoutDescriptor);
-                    if (this.mRemote.transact(17, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(17, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().addKeyboardLayoutForInputDevice(identifier, keyboardLayoutDescriptor);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().addKeyboardLayoutForInputDevice(identifier, keyboardLayoutDescriptor);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.input.IInputManager
             public void removeKeyboardLayoutForInputDevice(InputDeviceIdentifier identifier, String keyboardLayoutDescriptor) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1108,50 +974,49 @@ public interface IInputManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(keyboardLayoutDescriptor);
-                    if (this.mRemote.transact(18, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(18, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().removeKeyboardLayoutForInputDevice(identifier, keyboardLayoutDescriptor);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().removeKeyboardLayoutForInputDevice(identifier, keyboardLayoutDescriptor);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.input.IInputManager
             public void registerInputDevicesChangedListener(IInputDevicesChangedListener listener) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(listener != null ? listener.asBinder() : null);
-                    if (this.mRemote.transact(19, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(19, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().registerInputDevicesChangedListener(listener);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().registerInputDevicesChangedListener(listener);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.input.IInputManager
             public int isInTabletMode() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(20, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(20, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isInTabletMode();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1159,25 +1024,26 @@ public interface IInputManager extends IInterface {
                 }
             }
 
+            @Override // android.hardware.input.IInputManager
             public void registerTabletModeChangedListener(ITabletModeChangedListener listener) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(listener != null ? listener.asBinder() : null);
-                    if (this.mRemote.transact(21, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(21, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().registerTabletModeChangedListener(listener);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().registerTabletModeChangedListener(listener);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.input.IInputManager
             public void vibrate(int deviceId, long[] pattern, int repeat, IBinder token) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1187,19 +1053,19 @@ public interface IInputManager extends IInterface {
                     _data.writeLongArray(pattern);
                     _data.writeInt(repeat);
                     _data.writeStrongBinder(token);
-                    if (this.mRemote.transact(22, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(22, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().vibrate(deviceId, pattern, repeat, token);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().vibrate(deviceId, pattern, repeat, token);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.input.IInputManager
             public void cancelVibrate(int deviceId, IBinder token) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1207,38 +1073,38 @@ public interface IInputManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(deviceId);
                     _data.writeStrongBinder(token);
-                    if (this.mRemote.transact(23, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(23, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().cancelVibrate(deviceId, token);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().cancelVibrate(deviceId, token);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.input.IInputManager
             public void setPointerIconType(int typeId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(typeId);
-                    if (this.mRemote.transact(24, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(24, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setPointerIconType(typeId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setPointerIconType(typeId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.input.IInputManager
             public void setCustomPointerIcon(PointerIcon icon) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1250,39 +1116,39 @@ public interface IInputManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(25, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(25, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setCustomPointerIcon(icon);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setCustomPointerIcon(icon);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.input.IInputManager
             public void requestPointerCapture(IBinder windowToken, boolean enabled) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(windowToken);
-                    _data.writeInt(enabled);
-                    if (this.mRemote.transact(26, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(enabled ? 1 : 0);
+                    boolean _status = this.mRemote.transact(26, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().requestPointerCapture(windowToken, enabled);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().requestPointerCapture(windowToken, enabled);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.hardware.input.IInputManager
             public InputMonitor monitorGestureInput(String name, int displayId) throws RemoteException {
                 InputMonitor _result;
                 Parcel _data = Parcel.obtain();
@@ -1291,7 +1157,8 @@ public interface IInputManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(name);
                     _data.writeInt(displayId);
-                    if (!this.mRemote.transact(27, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(27, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().monitorGestureInput(name, displayId);
                     }
                     _reply.readException();
@@ -1300,10 +1167,7 @@ public interface IInputManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    InputMonitor _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -1312,11 +1176,11 @@ public interface IInputManager extends IInterface {
         }
 
         public static boolean setDefaultImpl(IInputManager impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IInputManager getDefaultImpl() {

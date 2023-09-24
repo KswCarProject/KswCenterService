@@ -1,5 +1,6 @@
 package android.telephony.mbms;
 
+/* loaded from: classes4.dex */
 public class MbmsErrors {
     public static final int ERROR_MIDDLEWARE_LOST = 3;
     public static final int ERROR_MIDDLEWARE_NOT_BOUND = 2;
@@ -7,6 +8,7 @@ public class MbmsErrors {
     public static final int SUCCESS = 0;
     public static final int UNKNOWN = -1;
 
+    /* loaded from: classes4.dex */
     public static class InitializationErrors {
         public static final int ERROR_APP_PERMISSIONS_NOT_GRANTED = 102;
         public static final int ERROR_DUPLICATE_INITIALIZE = 101;
@@ -16,6 +18,7 @@ public class MbmsErrors {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class GeneralErrors {
         public static final int ERROR_CARRIER_CHANGE_NOT_ALLOWED = 207;
         public static final int ERROR_IN_E911 = 204;
@@ -29,6 +32,7 @@ public class MbmsErrors {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class StreamingErrors {
         public static final int ERROR_CONCURRENT_SERVICE_LIMIT_REACHED = 301;
         public static final int ERROR_DUPLICATE_START_STREAM = 303;
@@ -38,6 +42,7 @@ public class MbmsErrors {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class DownloadErrors {
         public static final int ERROR_CANNOT_CHANGE_TEMP_FILE_ROOT = 401;
         public static final int ERROR_UNKNOWN_DOWNLOAD_REQUEST = 402;
@@ -47,6 +52,7 @@ public class MbmsErrors {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class GroupCallErrors {
         public static final int ERROR_DUPLICATE_START_GROUP_CALL = 502;
         public static final int ERROR_UNABLE_TO_START_SERVICE = 501;

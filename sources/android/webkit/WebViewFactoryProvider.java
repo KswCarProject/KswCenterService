@@ -8,8 +8,10 @@ import android.webkit.WebView;
 import java.util.List;
 
 @SystemApi
+/* loaded from: classes4.dex */
 public interface WebViewFactoryProvider {
 
+    /* loaded from: classes4.dex */
     public interface Statics {
         void clearClientCertPreferences(Runnable runnable);
 

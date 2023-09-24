@@ -8,6 +8,7 @@ import com.android.framework.protobuf.nano.MessageNano;
 import com.android.framework.protobuf.nano.WireFormatNano;
 import java.io.IOException;
 
+/* loaded from: classes3.dex */
 public final class StringList extends MessageNano {
     private static volatile StringList[] _emptyArray;
     public String[] stringValue;
@@ -33,9 +34,11 @@ public final class StringList extends MessageNano {
         return this;
     }
 
+    @Override // com.android.framework.protobuf.nano.MessageNano
     public void writeTo(CodedOutputByteBufferNano output) throws IOException {
         if (this.stringValue != null && this.stringValue.length > 0) {
-            for (String element : this.stringValue) {
+            for (int i = 0; i < this.stringValue.length; i++) {
+                String element = this.stringValue[i];
                 if (element != null) {
                     output.writeString(1, element);
                 }
@@ -44,33 +47,39 @@ public final class StringList extends MessageNano {
         super.writeTo(output);
     }
 
-    /* access modifiers changed from: protected */
-    public int computeSerializedSize() {
+    @Override // com.android.framework.protobuf.nano.MessageNano
+    protected int computeSerializedSize() {
         int size = super.computeSerializedSize();
-        if (this.stringValue == null || this.stringValue.length <= 0) {
-            return size;
-        }
-        int dataCount = 0;
-        int dataSize = 0;
-        for (String element : this.stringValue) {
-            if (element != null) {
-                dataCount++;
-                dataSize += CodedOutputByteBufferNano.computeStringSizeNoTag(element);
+        if (this.stringValue != null && this.stringValue.length > 0) {
+            int dataCount = 0;
+            int dataSize = 0;
+            for (int i = 0; i < this.stringValue.length; i++) {
+                String element = this.stringValue[i];
+                if (element != null) {
+                    dataCount++;
+                    dataSize += CodedOutputByteBufferNano.computeStringSizeNoTag(element);
+                }
             }
+            return size + dataSize + (dataCount * 1);
         }
-        return size + dataSize + (dataCount * 1);
+        return size;
     }
 
+    @Override // com.android.framework.protobuf.nano.MessageNano
     public StringList mergeFrom(CodedInputByteBufferNano input) throws IOException {
         while (true) {
             int tag = input.readTag();
             if (tag == 0) {
                 return this;
             }
-            if (tag == 10) {
+            if (tag != 10) {
+                if (!WireFormatNano.parseUnknownField(input, tag)) {
+                    return this;
+                }
+            } else {
                 int arrayLength = WireFormatNano.getRepeatedFieldArrayLength(input, 10);
                 int i = this.stringValue == null ? 0 : this.stringValue.length;
-                String[] newArray = new String[(i + arrayLength)];
+                String[] newArray = new String[i + arrayLength];
                 if (i != 0) {
                     System.arraycopy(this.stringValue, 0, newArray, 0, i);
                 }
@@ -81,8 +90,6 @@ public final class StringList extends MessageNano {
                 }
                 newArray[i] = input.readString();
                 this.stringValue = newArray;
-            } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                return this;
             }
         }
     }

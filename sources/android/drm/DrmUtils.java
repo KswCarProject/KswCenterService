@@ -10,9 +10,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 
+/* loaded from: classes.dex */
 public class DrmUtils {
     static byte[] readBytes(String path) throws IOException {
-        return readBytes(new File(path));
+        File file = new File(path);
+        return readBytes(file);
     }
 
     static byte[] readBytes(File file) throws IOException {
@@ -45,7 +47,8 @@ public class DrmUtils {
     }
 
     static void removeFile(String path) throws IOException {
-        new File(path).delete();
+        File file = new File(path);
+        file.delete();
     }
 
     private static void quietlyDispose(Closeable closable) {
@@ -61,6 +64,7 @@ public class DrmUtils {
         return new ExtendedMetadataParser(extendedMetadata);
     }
 
+    /* loaded from: classes.dex */
     public static class ExtendedMetadataParser {
         HashMap<String, String> mMap;
 

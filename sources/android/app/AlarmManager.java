@@ -4,11 +4,11 @@ import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
 import android.app.IAlarmListener;
 import android.content.Context;
-import android.os.Handler;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.RemoteException;
-import android.os.WorkSource;
+import android.p007os.Handler;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.RemoteException;
+import android.p007os.WorkSource;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.util.Log;
@@ -18,6 +18,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import libcore.timezone.ZoneInfoDB;
 
+/* loaded from: classes.dex */
 public class AlarmManager {
     public static final String ACTION_NEXT_ALARM_CLOCK_CHANGED = "android.app.action.NEXT_ALARM_CLOCK_CHANGED";
     public static final int ELAPSED_REALTIME = 3;
@@ -43,25 +44,26 @@ public class AlarmManager {
     public static final long WINDOW_EXACT = 0;
     @UnsupportedAppUsage
     public static final long WINDOW_HEURISTIC = -1;
-    /* access modifiers changed from: private */
-    public static ArrayMap<OnAlarmListener, ListenerWrapper> sWrappers;
+    private static ArrayMap<OnAlarmListener, ListenerWrapper> sWrappers;
     private final boolean mAlwaysExact;
     private final Context mContext;
     private final Handler mMainThreadHandler;
     private final String mPackageName;
-    /* access modifiers changed from: private */
     @UnsupportedAppUsage
-    public final IAlarmManager mService;
+    private final IAlarmManager mService;
     private final int mTargetSdkVersion;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface AlarmType {
     }
 
+    /* loaded from: classes.dex */
     public interface OnAlarmListener {
         void onAlarm();
     }
 
+    /* loaded from: classes.dex */
     final class ListenerWrapper extends IAlarmListener.Stub implements Runnable {
         IAlarmCompleteListener mCompletion;
         Handler mHandler;
@@ -77,7 +79,7 @@ public class AlarmManager {
 
         public void cancel() {
             try {
-                AlarmManager.this.mService.remove((PendingIntent) null, this);
+                AlarmManager.this.mService.remove(null, this);
                 synchronized (AlarmManager.class) {
                     if (AlarmManager.sWrappers != null) {
                         AlarmManager.sWrappers.remove(this.mListener);
@@ -88,6 +90,7 @@ public class AlarmManager {
             }
         }
 
+        @Override // android.app.IAlarmListener
         public void doAlarm(IAlarmCompleteListener alarmManager) {
             this.mCompletion = alarmManager;
             synchronized (AlarmManager.class) {
@@ -98,17 +101,22 @@ public class AlarmManager {
             this.mHandler.post(this);
         }
 
+        @Override // java.lang.Runnable
         public void run() {
-            String str;
             try {
                 this.mListener.onAlarm();
-            } finally {
                 try {
                     this.mCompletion.alarmComplete(this);
                 } catch (Exception e) {
-                    str = "Unable to report completion to Alarm Manager!";
-                    Log.e(AlarmManager.TAG, str, e);
+                    Log.m69e(AlarmManager.TAG, "Unable to report completion to Alarm Manager!", e);
                 }
+            } catch (Throwable th) {
+                try {
+                    this.mCompletion.alarmComplete(this);
+                } catch (Exception e2) {
+                    Log.m69e(AlarmManager.TAG, "Unable to report completion to Alarm Manager!", e2);
+                }
+                throw th;
             }
         }
     }
@@ -123,81 +131,81 @@ public class AlarmManager {
     }
 
     private long legacyExactLength() {
-        return this.mAlwaysExact ? 0 : -1;
+        return this.mAlwaysExact ? 0L : -1L;
     }
 
     public void set(int type, long triggerAtMillis, PendingIntent operation) {
-        setImpl(type, triggerAtMillis, legacyExactLength(), 0, 0, operation, (OnAlarmListener) null, (String) null, (Handler) null, (WorkSource) null, (AlarmClockInfo) null);
+        setImpl(type, triggerAtMillis, legacyExactLength(), 0L, 0, operation, null, null, null, null, null);
     }
 
     public void set(int type, long triggerAtMillis, String tag, OnAlarmListener listener, Handler targetHandler) {
-        setImpl(type, triggerAtMillis, legacyExactLength(), 0, 0, (PendingIntent) null, listener, tag, targetHandler, (WorkSource) null, (AlarmClockInfo) null);
+        setImpl(type, triggerAtMillis, legacyExactLength(), 0L, 0, null, listener, tag, targetHandler, null, null);
     }
 
     public void setRepeating(int type, long triggerAtMillis, long intervalMillis, PendingIntent operation) {
-        setImpl(type, triggerAtMillis, legacyExactLength(), intervalMillis, 0, operation, (OnAlarmListener) null, (String) null, (Handler) null, (WorkSource) null, (AlarmClockInfo) null);
+        setImpl(type, triggerAtMillis, legacyExactLength(), intervalMillis, 0, operation, null, null, null, null, null);
     }
 
     public void setWindow(int type, long windowStartMillis, long windowLengthMillis, PendingIntent operation) {
-        setImpl(type, windowStartMillis, windowLengthMillis, 0, 0, operation, (OnAlarmListener) null, (String) null, (Handler) null, (WorkSource) null, (AlarmClockInfo) null);
+        setImpl(type, windowStartMillis, windowLengthMillis, 0L, 0, operation, null, null, null, null, null);
     }
 
     public void setWindow(int type, long windowStartMillis, long windowLengthMillis, String tag, OnAlarmListener listener, Handler targetHandler) {
-        setImpl(type, windowStartMillis, windowLengthMillis, 0, 0, (PendingIntent) null, listener, tag, targetHandler, (WorkSource) null, (AlarmClockInfo) null);
+        setImpl(type, windowStartMillis, windowLengthMillis, 0L, 0, null, listener, tag, targetHandler, null, null);
     }
 
     public void setExact(int type, long triggerAtMillis, PendingIntent operation) {
-        setImpl(type, triggerAtMillis, 0, 0, 0, operation, (OnAlarmListener) null, (String) null, (Handler) null, (WorkSource) null, (AlarmClockInfo) null);
+        setImpl(type, triggerAtMillis, 0L, 0L, 0, operation, null, null, null, null, null);
     }
 
     public void setExact(int type, long triggerAtMillis, String tag, OnAlarmListener listener, Handler targetHandler) {
-        setImpl(type, triggerAtMillis, 0, 0, 0, (PendingIntent) null, listener, tag, targetHandler, (WorkSource) null, (AlarmClockInfo) null);
+        setImpl(type, triggerAtMillis, 0L, 0L, 0, null, listener, tag, targetHandler, null, null);
     }
 
     public void setIdleUntil(int type, long triggerAtMillis, String tag, OnAlarmListener listener, Handler targetHandler) {
-        setImpl(type, triggerAtMillis, 0, 0, 16, (PendingIntent) null, listener, tag, targetHandler, (WorkSource) null, (AlarmClockInfo) null);
+        setImpl(type, triggerAtMillis, 0L, 0L, 16, null, listener, tag, targetHandler, null, null);
     }
 
     public void setAlarmClock(AlarmClockInfo info, PendingIntent operation) {
-        setImpl(0, info.getTriggerTime(), 0, 0, 0, operation, (OnAlarmListener) null, (String) null, (Handler) null, (WorkSource) null, info);
+        setImpl(0, info.getTriggerTime(), 0L, 0L, 0, operation, null, null, null, null, info);
     }
 
     @SystemApi
     public void set(int type, long triggerAtMillis, long windowMillis, long intervalMillis, PendingIntent operation, WorkSource workSource) {
-        setImpl(type, triggerAtMillis, windowMillis, intervalMillis, 0, operation, (OnAlarmListener) null, (String) null, (Handler) null, workSource, (AlarmClockInfo) null);
+        setImpl(type, triggerAtMillis, windowMillis, intervalMillis, 0, operation, null, null, null, workSource, null);
     }
 
     @UnsupportedAppUsage
     public void set(int type, long triggerAtMillis, long windowMillis, long intervalMillis, String tag, OnAlarmListener listener, Handler targetHandler, WorkSource workSource) {
-        setImpl(type, triggerAtMillis, windowMillis, intervalMillis, 0, (PendingIntent) null, listener, tag, targetHandler, workSource, (AlarmClockInfo) null);
+        setImpl(type, triggerAtMillis, windowMillis, intervalMillis, 0, null, listener, tag, targetHandler, workSource, null);
     }
 
     @SystemApi
     public void set(int type, long triggerAtMillis, long windowMillis, long intervalMillis, OnAlarmListener listener, Handler targetHandler, WorkSource workSource) {
-        setImpl(type, triggerAtMillis, windowMillis, intervalMillis, 0, (PendingIntent) null, listener, (String) null, targetHandler, workSource, (AlarmClockInfo) null);
+        setImpl(type, triggerAtMillis, windowMillis, intervalMillis, 0, null, listener, null, targetHandler, workSource, null);
     }
 
     private void setImpl(int type, long triggerAtMillis, long windowMillis, long intervalMillis, int flags, PendingIntent operation, OnAlarmListener listener, String listenerTag, Handler targetHandler, WorkSource workSource, AlarmClockInfo alarmClock) {
         long triggerAtMillis2;
-        OnAlarmListener onAlarmListener = listener;
         if (triggerAtMillis < 0) {
             triggerAtMillis2 = 0;
         } else {
             triggerAtMillis2 = triggerAtMillis;
         }
         ListenerWrapper recipientWrapper = null;
-        if (onAlarmListener != null) {
+        if (listener != null) {
             synchronized (AlarmManager.class) {
                 if (sWrappers == null) {
                     sWrappers = new ArrayMap<>();
                 }
-                recipientWrapper = sWrappers.get(onAlarmListener);
+                recipientWrapper = sWrappers.get(listener);
                 if (recipientWrapper == null) {
-                    recipientWrapper = new ListenerWrapper(onAlarmListener);
-                    sWrappers.put(onAlarmListener, recipientWrapper);
+                    recipientWrapper = new ListenerWrapper(listener);
+                    sWrappers.put(listener, recipientWrapper);
                 }
             }
-            recipientWrapper.setHandler(targetHandler != null ? targetHandler : this.mMainThreadHandler);
+            Handler handler = targetHandler != null ? targetHandler : this.mMainThreadHandler;
+            recipientWrapper.setHandler(handler);
         }
         try {
             this.mService.set(this.mPackageName, type, triggerAtMillis2, windowMillis, intervalMillis, flags, operation, recipientWrapper, listenerTag, workSource, alarmClock);
@@ -207,47 +215,47 @@ public class AlarmManager {
     }
 
     public void setInexactRepeating(int type, long triggerAtMillis, long intervalMillis, PendingIntent operation) {
-        setImpl(type, triggerAtMillis, -1, intervalMillis, 0, operation, (OnAlarmListener) null, (String) null, (Handler) null, (WorkSource) null, (AlarmClockInfo) null);
+        setImpl(type, triggerAtMillis, -1L, intervalMillis, 0, operation, null, null, null, null, null);
     }
 
     public void setAndAllowWhileIdle(int type, long triggerAtMillis, PendingIntent operation) {
-        setImpl(type, triggerAtMillis, -1, 0, 4, operation, (OnAlarmListener) null, (String) null, (Handler) null, (WorkSource) null, (AlarmClockInfo) null);
+        setImpl(type, triggerAtMillis, -1L, 0L, 4, operation, null, null, null, null, null);
     }
 
     public void setExactAndAllowWhileIdle(int type, long triggerAtMillis, PendingIntent operation) {
-        setImpl(type, triggerAtMillis, 0, 0, 4, operation, (OnAlarmListener) null, (String) null, (Handler) null, (WorkSource) null, (AlarmClockInfo) null);
+        setImpl(type, triggerAtMillis, 0L, 0L, 4, operation, null, null, null, null, null);
     }
 
     public void cancel(PendingIntent operation) {
-        if (operation != null) {
-            try {
-                this.mService.remove(operation, (IAlarmListener) null);
-            } catch (RemoteException ex) {
-                throw ex.rethrowFromSystemServer();
+        if (operation == null) {
+            if (this.mTargetSdkVersion >= 24) {
+                throw new NullPointerException("cancel() called with a null PendingIntent");
             }
-        } else if (this.mTargetSdkVersion < 24) {
-            Log.e(TAG, "cancel() called with a null PendingIntent");
-        } else {
-            throw new NullPointerException("cancel() called with a null PendingIntent");
+            Log.m70e(TAG, "cancel() called with a null PendingIntent");
+            return;
+        }
+        try {
+            this.mService.remove(operation, null);
+        } catch (RemoteException ex) {
+            throw ex.rethrowFromSystemServer();
         }
     }
 
     public void cancel(OnAlarmListener listener) {
-        if (listener != null) {
-            ListenerWrapper wrapper = null;
-            synchronized (AlarmManager.class) {
-                if (sWrappers != null) {
-                    wrapper = sWrappers.get(listener);
-                }
+        if (listener == null) {
+            throw new NullPointerException("cancel() called with a null OnAlarmListener");
+        }
+        ListenerWrapper wrapper = null;
+        synchronized (AlarmManager.class) {
+            if (sWrappers != null) {
+                wrapper = sWrappers.get(listener);
             }
-            if (wrapper == null) {
-                Log.w(TAG, "Unrecognized alarm listener " + listener);
-                return;
-            }
-            wrapper.cancel();
+        }
+        if (wrapper == null) {
+            Log.m64w(TAG, "Unrecognized alarm listener " + listener);
             return;
         }
-        throw new NullPointerException("cancel() called with a null OnAlarmListener");
+        wrapper.cancel();
     }
 
     public void setTime(long millis) {
@@ -259,22 +267,23 @@ public class AlarmManager {
     }
 
     public void setTimeZone(String timeZone) {
-        if (!TextUtils.isEmpty(timeZone)) {
-            if (this.mTargetSdkVersion >= 23) {
-                boolean hasTimeZone = false;
-                try {
-                    hasTimeZone = ZoneInfoDB.getInstance().hasTimeZone(timeZone);
-                } catch (IOException e) {
-                }
-                if (!hasTimeZone) {
-                    throw new IllegalArgumentException("Timezone: " + timeZone + " is not an Olson ID");
-                }
-            }
+        if (TextUtils.isEmpty(timeZone)) {
+            return;
+        }
+        if (this.mTargetSdkVersion >= 23) {
+            boolean hasTimeZone = false;
             try {
-                this.mService.setTimeZone(timeZone);
-            } catch (RemoteException ex) {
-                throw ex.rethrowFromSystemServer();
+                hasTimeZone = ZoneInfoDB.getInstance().hasTimeZone(timeZone);
+            } catch (IOException e) {
             }
+            if (!hasTimeZone) {
+                throw new IllegalArgumentException("Timezone: " + timeZone + " is not an Olson ID");
+            }
+        }
+        try {
+            this.mService.setTimeZone(timeZone);
+        } catch (RemoteException ex) {
+            throw ex.rethrowFromSystemServer();
         }
     }
 
@@ -298,12 +307,17 @@ public class AlarmManager {
         }
     }
 
+    /* loaded from: classes.dex */
     public static final class AlarmClockInfo implements Parcelable {
-        public static final Parcelable.Creator<AlarmClockInfo> CREATOR = new Parcelable.Creator<AlarmClockInfo>() {
+        public static final Parcelable.Creator<AlarmClockInfo> CREATOR = new Parcelable.Creator<AlarmClockInfo>() { // from class: android.app.AlarmManager.AlarmClockInfo.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public AlarmClockInfo createFromParcel(Parcel in) {
                 return new AlarmClockInfo(in);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public AlarmClockInfo[] newArray(int size) {
                 return new AlarmClockInfo[size];
             }
@@ -329,10 +343,12 @@ public class AlarmManager {
             return this.mShowIntent;
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeLong(this.mTriggerTime);
             dest.writeParcelable(this.mShowIntent, flags);

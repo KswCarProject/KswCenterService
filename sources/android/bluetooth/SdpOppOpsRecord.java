@@ -1,15 +1,18 @@
 package android.bluetooth;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.Arrays;
 
+/* loaded from: classes.dex */
 public class SdpOppOpsRecord implements Parcelable {
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() { // from class: android.bluetooth.SdpOppOpsRecord.1
+        @Override // android.p007os.Parcelable.Creator
         public SdpOppOpsRecord createFromParcel(Parcel in) {
             return new SdpOppOpsRecord(in);
         }
 
+        @Override // android.p007os.Parcelable.Creator
         public SdpOppOpsRecord[] newArray(int size) {
             return new SdpOppOpsRecord[size];
         }
@@ -48,6 +51,7 @@ public class SdpOppOpsRecord implements Parcelable {
         return this.mFormatsList;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -67,20 +71,21 @@ public class SdpOppOpsRecord implements Parcelable {
         this.mFormatsList = null;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mRfcommChannel);
         dest.writeInt(this.mL2capPsm);
         dest.writeInt(this.mProfileVersion);
         dest.writeString(this.mServiceName);
-        if (this.mFormatsList == null || this.mFormatsList.length <= 0) {
-            dest.writeInt(0);
+        if (this.mFormatsList != null && this.mFormatsList.length > 0) {
+            dest.writeInt(this.mFormatsList.length);
+            dest.writeByteArray(this.mFormatsList);
             return;
         }
-        dest.writeInt(this.mFormatsList.length);
-        dest.writeByteArray(this.mFormatsList);
+        dest.writeInt(0);
     }
 
     public String toString() {
-        return "Bluetooth OPP Server SDP Record:\n" + "  RFCOMM Chan Number: " + this.mRfcommChannel + "\n  L2CAP PSM: " + this.mL2capPsm + "\n  Profile version: " + this.mProfileVersion + "\n  Service Name: " + this.mServiceName + "\n  Formats List: " + Arrays.toString(this.mFormatsList);
+        return "Bluetooth OPP Server SDP Record:\n  RFCOMM Chan Number: " + this.mRfcommChannel + "\n  L2CAP PSM: " + this.mL2capPsm + "\n  Profile version: " + this.mProfileVersion + "\n  Service Name: " + this.mServiceName + "\n  Formats List: " + Arrays.toString(this.mFormatsList);
     }
 }

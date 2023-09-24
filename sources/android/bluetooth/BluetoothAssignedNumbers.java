@@ -1,5 +1,6 @@
 package android.bluetooth;
 
+/* loaded from: classes.dex */
 public class BluetoothAssignedNumbers {
     public static final int AAMP_OF_AMERICA = 190;
     public static final int ACCEL_SEMICONDUCTOR = 74;

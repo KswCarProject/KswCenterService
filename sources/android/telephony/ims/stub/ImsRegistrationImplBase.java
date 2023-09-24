@@ -2,8 +2,8 @@ package android.telephony.ims.stub;
 
 import android.annotation.SystemApi;
 import android.net.Uri;
-import android.os.RemoteCallbackList;
-import android.os.RemoteException;
+import android.p007os.RemoteCallbackList;
+import android.p007os.RemoteException;
 import android.telephony.ims.ImsReasonInfo;
 import android.telephony.ims.aidl.IImsRegistration;
 import android.telephony.ims.aidl.IImsRegistrationCallback;
@@ -14,6 +14,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.function.Consumer;
 
 @SystemApi
+/* loaded from: classes4.dex */
 public class ImsRegistrationImplBase {
     private static final String LOG_TAG = "ImsRegistrationImplBase";
     private static final int REGISTRATION_STATE_NOT_REGISTERED = 0;
@@ -23,26 +24,30 @@ public class ImsRegistrationImplBase {
     public static final int REGISTRATION_TECH_IWLAN = 1;
     public static final int REGISTRATION_TECH_LTE = 0;
     public static final int REGISTRATION_TECH_NONE = -1;
-    private final IImsRegistration mBinder = new IImsRegistration.Stub() {
+    private final IImsRegistration mBinder = new IImsRegistration.Stub() { // from class: android.telephony.ims.stub.ImsRegistrationImplBase.1
+        @Override // android.telephony.ims.aidl.IImsRegistration
         public int getRegistrationTechnology() throws RemoteException {
             return ImsRegistrationImplBase.this.getConnectionType();
         }
 
+        @Override // android.telephony.ims.aidl.IImsRegistration
         public void addRegistrationCallback(IImsRegistrationCallback c) throws RemoteException {
             ImsRegistrationImplBase.this.addRegistrationCallback(c);
         }
 
+        @Override // android.telephony.ims.aidl.IImsRegistration
         public void removeRegistrationCallback(IImsRegistrationCallback c) throws RemoteException {
             ImsRegistrationImplBase.this.removeRegistrationCallback(c);
         }
     };
     private final RemoteCallbackList<IImsRegistrationCallback> mCallbacks = new RemoteCallbackList<>();
-    private int mConnectionType = -1;
-    private ImsReasonInfo mLastDisconnectCause = new ImsReasonInfo();
     private final Object mLock = new Object();
+    private int mConnectionType = -1;
     private int mRegistrationState = -1;
+    private ImsReasonInfo mLastDisconnectCause = new ImsReasonInfo();
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface ImsRegistrationTech {
     }
 
@@ -50,28 +55,23 @@ public class ImsRegistrationImplBase {
         return this.mBinder;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void addRegistrationCallback(IImsRegistrationCallback c) throws RemoteException {
         this.mCallbacks.register(c);
         updateNewCallbackWithState(c);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void removeRegistrationCallback(IImsRegistrationCallback c) {
         this.mCallbacks.unregister(c);
     }
 
-    public final void onRegistered(int imsRadioTech) {
+    public final void onRegistered(final int imsRadioTech) {
         updateToState(imsRadioTech, 2);
-        this.mCallbacks.broadcast(new Consumer(imsRadioTech) {
-            private final /* synthetic */ int f$0;
-
-            {
-                this.f$0 = r1;
-            }
-
+        this.mCallbacks.broadcast(new Consumer() { // from class: android.telephony.ims.stub.-$$Lambda$ImsRegistrationImplBase$cWwTXSDsk-bWPbsDJYI--DUBMnE
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
-                ImsRegistrationImplBase.lambda$onRegistered$0(this.f$0, (IImsRegistrationCallback) obj);
+                ImsRegistrationImplBase.lambda$onRegistered$0(imsRadioTech, (IImsRegistrationCallback) obj);
             }
         });
     }
@@ -80,21 +80,16 @@ public class ImsRegistrationImplBase {
         try {
             c.onRegistered(imsRadioTech);
         } catch (RemoteException e) {
-            Log.w(LOG_TAG, e + " onRegistrationConnected() - Skipping callback.");
+            Log.m64w(LOG_TAG, e + " onRegistrationConnected() - Skipping callback.");
         }
     }
 
-    public final void onRegistering(int imsRadioTech) {
+    public final void onRegistering(final int imsRadioTech) {
         updateToState(imsRadioTech, 1);
-        this.mCallbacks.broadcast(new Consumer(imsRadioTech) {
-            private final /* synthetic */ int f$0;
-
-            {
-                this.f$0 = r1;
-            }
-
+        this.mCallbacks.broadcast(new Consumer() { // from class: android.telephony.ims.stub.-$$Lambda$ImsRegistrationImplBase$sbjuTvW-brOSWMR74UInSZEIQB0
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
-                ImsRegistrationImplBase.lambda$onRegistering$1(this.f$0, (IImsRegistrationCallback) obj);
+                ImsRegistrationImplBase.lambda$onRegistering$1(imsRadioTech, (IImsRegistrationCallback) obj);
             }
         });
     }
@@ -103,13 +98,14 @@ public class ImsRegistrationImplBase {
         try {
             c.onRegistering(imsRadioTech);
         } catch (RemoteException e) {
-            Log.w(LOG_TAG, e + " onRegistrationProcessing() - Skipping callback.");
+            Log.m64w(LOG_TAG, e + " onRegistrationProcessing() - Skipping callback.");
         }
     }
 
-    public final void onDeregistered(ImsReasonInfo info) {
+    public final void onDeregistered(final ImsReasonInfo info) {
         updateToDisconnectedState(info);
-        this.mCallbacks.broadcast(new Consumer() {
+        this.mCallbacks.broadcast(new Consumer() { // from class: android.telephony.ims.stub.-$$Lambda$ImsRegistrationImplBase$s7PspXVbCf1Q_WSzodP2glP9TjI
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
                 ImsRegistrationImplBase.lambda$onDeregistered$2(ImsReasonInfo.this, (IImsRegistrationCallback) obj);
             }
@@ -120,22 +116,15 @@ public class ImsRegistrationImplBase {
         try {
             c.onDeregistered(info);
         } catch (RemoteException e) {
-            Log.w(LOG_TAG, e + " onRegistrationDisconnected() - Skipping callback.");
+            Log.m64w(LOG_TAG, e + " onRegistrationDisconnected() - Skipping callback.");
         }
     }
 
-    public final void onTechnologyChangeFailed(int imsRadioTech, ImsReasonInfo info) {
-        this.mCallbacks.broadcast(new Consumer(imsRadioTech, info) {
-            private final /* synthetic */ int f$0;
-            private final /* synthetic */ ImsReasonInfo f$1;
-
-            {
-                this.f$0 = r1;
-                this.f$1 = r2;
-            }
-
+    public final void onTechnologyChangeFailed(final int imsRadioTech, final ImsReasonInfo info) {
+        this.mCallbacks.broadcast(new Consumer() { // from class: android.telephony.ims.stub.-$$Lambda$ImsRegistrationImplBase$wDtW65cPmn_jF6dfimhBTfdg1kI
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
-                ImsRegistrationImplBase.lambda$onTechnologyChangeFailed$3(this.f$0, this.f$1, (IImsRegistrationCallback) obj);
+                ImsRegistrationImplBase.lambda$onTechnologyChangeFailed$3(imsRadioTech, info, (IImsRegistrationCallback) obj);
             }
         });
     }
@@ -144,20 +133,15 @@ public class ImsRegistrationImplBase {
         try {
             c.onTechnologyChangeFailed(imsRadioTech, info);
         } catch (RemoteException e) {
-            Log.w(LOG_TAG, e + " onRegistrationChangeFailed() - Skipping callback.");
+            Log.m64w(LOG_TAG, e + " onRegistrationChangeFailed() - Skipping callback.");
         }
     }
 
-    public final void onSubscriberAssociatedUriChanged(Uri[] uris) {
-        this.mCallbacks.broadcast(new Consumer(uris) {
-            private final /* synthetic */ Uri[] f$0;
-
-            {
-                this.f$0 = r1;
-            }
-
+    public final void onSubscriberAssociatedUriChanged(final Uri[] uris) {
+        this.mCallbacks.broadcast(new Consumer() { // from class: android.telephony.ims.stub.-$$Lambda$ImsRegistrationImplBase$wwtkoeOtGwMjG5I0-ZTfjNpGU-s
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
-                ImsRegistrationImplBase.lambda$onSubscriberAssociatedUriChanged$4(this.f$0, (IImsRegistrationCallback) obj);
+                ImsRegistrationImplBase.lambda$onSubscriberAssociatedUriChanged$4(uris, (IImsRegistrationCallback) obj);
             }
         });
     }
@@ -166,7 +150,7 @@ public class ImsRegistrationImplBase {
         try {
             c.onSubscriberAssociatedUriChanged(uris);
         } catch (RemoteException e) {
-            Log.w(LOG_TAG, e + " onSubscriberAssociatedUriChanged() - Skipping callback.");
+            Log.m64w(LOG_TAG, e + " onSubscriberAssociatedUriChanged() - Skipping callback.");
         }
     }
 
@@ -184,7 +168,7 @@ public class ImsRegistrationImplBase {
             if (info != null) {
                 this.mLastDisconnectCause = info;
             } else {
-                Log.w(LOG_TAG, "updateToDisconnectedState: no ImsReasonInfo provided.");
+                Log.m64w(LOG_TAG, "updateToDisconnectedState: no ImsReasonInfo provided.");
                 this.mLastDisconnectCause = new ImsReasonInfo();
             }
         }

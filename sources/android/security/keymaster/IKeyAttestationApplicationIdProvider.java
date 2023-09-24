@@ -1,24 +1,29 @@
 package android.security.keymaster;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes3.dex */
 public interface IKeyAttestationApplicationIdProvider extends IInterface {
     KeyAttestationApplicationId getKeyAttestationApplicationId(int i) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements IKeyAttestationApplicationIdProvider {
+        @Override // android.security.keymaster.IKeyAttestationApplicationIdProvider
         public KeyAttestationApplicationId getKeyAttestationApplicationId(int uid) throws RemoteException {
             return null;
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements IKeyAttestationApplicationIdProvider {
         private static final String DESCRIPTOR = "android.security.keymaster.IKeyAttestationApplicationIdProvider";
         static final int TRANSACTION_getKeyAttestationApplicationId = 1;
@@ -32,47 +37,52 @@ public interface IKeyAttestationApplicationIdProvider extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IKeyAttestationApplicationIdProvider)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IKeyAttestationApplicationIdProvider)) {
+                return (IKeyAttestationApplicationIdProvider) iin;
             }
-            return (IKeyAttestationApplicationIdProvider) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
 
         public static String getDefaultTransactionName(int transactionCode) {
-            if (transactionCode != 1) {
-                return null;
+            if (transactionCode == 1) {
+                return "getKeyAttestationApplicationId";
             }
-            return "getKeyAttestationApplicationId";
+            return null;
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code == 1) {
-                data.enforceInterface(DESCRIPTOR);
-                KeyAttestationApplicationId _result = getKeyAttestationApplicationId(data.readInt());
-                reply.writeNoException();
-                if (_result != null) {
-                    reply.writeInt(1);
-                    _result.writeToParcel(reply, 1);
-                } else {
-                    reply.writeInt(0);
+            if (code != 1) {
+                if (code == 1598968902) {
+                    reply.writeString(DESCRIPTOR);
+                    return true;
                 }
-                return true;
-            } else if (code != 1598968902) {
                 return super.onTransact(code, data, reply, flags);
-            } else {
-                reply.writeString(DESCRIPTOR);
-                return true;
             }
+            data.enforceInterface(DESCRIPTOR);
+            int _arg0 = data.readInt();
+            KeyAttestationApplicationId _result = getKeyAttestationApplicationId(_arg0);
+            reply.writeNoException();
+            if (_result != null) {
+                reply.writeInt(1);
+                _result.writeToParcel(reply, 1);
+            } else {
+                reply.writeInt(0);
+            }
+            return true;
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements IKeyAttestationApplicationIdProvider {
             public static IKeyAttestationApplicationIdProvider sDefaultImpl;
             private IBinder mRemote;
@@ -81,6 +91,7 @@ public interface IKeyAttestationApplicationIdProvider extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -89,6 +100,7 @@ public interface IKeyAttestationApplicationIdProvider extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.security.keymaster.IKeyAttestationApplicationIdProvider
             public KeyAttestationApplicationId getKeyAttestationApplicationId(int uid) throws RemoteException {
                 KeyAttestationApplicationId _result;
                 Parcel _data = Parcel.obtain();
@@ -96,7 +108,8 @@ public interface IKeyAttestationApplicationIdProvider extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(uid);
-                    if (!this.mRemote.transact(1, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getKeyAttestationApplicationId(uid);
                     }
                     _reply.readException();
@@ -105,10 +118,7 @@ public interface IKeyAttestationApplicationIdProvider extends IInterface {
                     } else {
                         _result = null;
                     }
-                    KeyAttestationApplicationId _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -117,11 +127,11 @@ public interface IKeyAttestationApplicationIdProvider extends IInterface {
         }
 
         public static boolean setDefaultImpl(IKeyAttestationApplicationIdProvider impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IKeyAttestationApplicationIdProvider getDefaultImpl() {

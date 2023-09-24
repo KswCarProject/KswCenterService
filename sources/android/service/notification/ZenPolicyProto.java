@@ -1,5 +1,6 @@
 package android.service.notification;
 
+/* loaded from: classes3.dex */
 public final class ZenPolicyProto {
     public static final long ALARMS = 1159641169926L;
     public static final long AMBIENT = 1159641169934L;

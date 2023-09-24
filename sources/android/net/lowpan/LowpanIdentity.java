@@ -2,16 +2,22 @@ package android.net.lowpan;
 
 import android.icu.text.StringPrep;
 import android.icu.text.StringPrepParseException;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.Log;
 import com.android.internal.util.HexDump;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Objects;
 
+/* loaded from: classes3.dex */
 public class LowpanIdentity implements Parcelable {
-    public static final Parcelable.Creator<LowpanIdentity> CREATOR = new Parcelable.Creator<LowpanIdentity>() {
+    public static final int UNSPECIFIED_CHANNEL = -1;
+    public static final int UNSPECIFIED_PANID = -1;
+    private static final String TAG = LowpanIdentity.class.getSimpleName();
+    public static final Parcelable.Creator<LowpanIdentity> CREATOR = new Parcelable.Creator<LowpanIdentity>() { // from class: android.net.lowpan.LowpanIdentity.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public LowpanIdentity createFromParcel(Parcel in) {
             Builder builder = new Builder();
             builder.setRawName(in.createByteArray());
@@ -22,29 +28,21 @@ public class LowpanIdentity implements Parcelable {
             return builder.build();
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public LowpanIdentity[] newArray(int size) {
             return new LowpanIdentity[size];
         }
     };
-    /* access modifiers changed from: private */
-    public static final String TAG = LowpanIdentity.class.getSimpleName();
-    public static final int UNSPECIFIED_CHANNEL = -1;
-    public static final int UNSPECIFIED_PANID = -1;
-    /* access modifiers changed from: private */
-    public int mChannel = -1;
-    /* access modifiers changed from: private */
-    public boolean mIsNameValid = true;
-    /* access modifiers changed from: private */
-    public String mName = "";
-    /* access modifiers changed from: private */
-    public int mPanid = -1;
-    /* access modifiers changed from: private */
-    public byte[] mRawName = new byte[0];
-    /* access modifiers changed from: private */
-    public String mType = "";
-    /* access modifiers changed from: private */
-    public byte[] mXpanid = new byte[0];
+    private String mName = "";
+    private boolean mIsNameValid = true;
+    private byte[] mRawName = new byte[0];
+    private String mType = "";
+    private byte[] mXpanid = new byte[0];
+    private int mPanid = -1;
+    private int mChannel = -1;
 
+    /* loaded from: classes3.dex */
     public static class Builder {
         private static final StringPrep stringPrep = StringPrep.getInstance(8);
         final LowpanIdentity mIdentity = new LowpanIdentity();
@@ -52,10 +50,10 @@ public class LowpanIdentity implements Parcelable {
         private static String escape(byte[] bytes) {
             StringBuffer sb = new StringBuffer();
             for (byte b : bytes) {
-                if (b < 32 || b > 126) {
-                    sb.append(String.format("\\0x%02x", new Object[]{Integer.valueOf(b & 255)}));
-                } else {
+                if (b >= 32 && b <= 126) {
                     sb.append((char) b);
+                } else {
+                    sb.append(String.format("\\0x%02x", Integer.valueOf(b & 255)));
                 }
             }
             return sb.toString();
@@ -74,11 +72,11 @@ public class LowpanIdentity implements Parcelable {
         public Builder setName(String name) {
             Objects.requireNonNull(name);
             try {
-                String unused = this.mIdentity.mName = stringPrep.prepare(name, 0);
-                byte[] unused2 = this.mIdentity.mRawName = this.mIdentity.mName.getBytes(StandardCharsets.UTF_8);
-                boolean unused3 = this.mIdentity.mIsNameValid = true;
+                this.mIdentity.mName = stringPrep.prepare(name, 0);
+                this.mIdentity.mRawName = this.mIdentity.mName.getBytes(StandardCharsets.UTF_8);
+                this.mIdentity.mIsNameValid = true;
             } catch (StringPrepParseException x) {
-                Log.w(LowpanIdentity.TAG, x.toString());
+                Log.m64w(LowpanIdentity.TAG, x.toString());
                 setRawName(name.getBytes(StandardCharsets.UTF_8));
             }
             return this;
@@ -86,38 +84,39 @@ public class LowpanIdentity implements Parcelable {
 
         public Builder setRawName(byte[] name) {
             Objects.requireNonNull(name);
-            byte[] unused = this.mIdentity.mRawName = (byte[]) name.clone();
-            String unused2 = this.mIdentity.mName = new String(name, StandardCharsets.UTF_8);
+            this.mIdentity.mRawName = (byte[]) name.clone();
+            this.mIdentity.mName = new String(name, StandardCharsets.UTF_8);
             try {
-                boolean unused3 = this.mIdentity.mIsNameValid = Arrays.equals(stringPrep.prepare(this.mIdentity.mName, 0).getBytes(StandardCharsets.UTF_8), name);
+                String nameCheck = stringPrep.prepare(this.mIdentity.mName, 0);
+                this.mIdentity.mIsNameValid = Arrays.equals(nameCheck.getBytes(StandardCharsets.UTF_8), name);
             } catch (StringPrepParseException x) {
-                Log.w(LowpanIdentity.TAG, x.toString());
-                boolean unused4 = this.mIdentity.mIsNameValid = false;
+                Log.m64w(LowpanIdentity.TAG, x.toString());
+                this.mIdentity.mIsNameValid = false;
             }
             if (!this.mIdentity.mIsNameValid) {
                 LowpanIdentity lowpanIdentity = this.mIdentity;
-                String unused5 = lowpanIdentity.mName = "«" + escape(name) + "»";
+                lowpanIdentity.mName = "\u00ab" + escape(name) + "\u00bb";
             }
             return this;
         }
 
         public Builder setXpanid(byte[] x) {
-            byte[] unused = this.mIdentity.mXpanid = x != null ? (byte[]) x.clone() : null;
+            this.mIdentity.mXpanid = x != null ? (byte[]) x.clone() : null;
             return this;
         }
 
         public Builder setPanid(int x) {
-            int unused = this.mIdentity.mPanid = x;
+            this.mIdentity.mPanid = x;
             return this;
         }
 
         public Builder setType(String x) {
-            String unused = this.mIdentity.mType = x;
+            this.mIdentity.mType = x;
             return this;
         }
 
         public Builder setChannel(int x) {
-            int unused = this.mIdentity.mChannel = x;
+            this.mIdentity.mChannel = x;
             return this;
         }
 
@@ -171,7 +170,7 @@ public class LowpanIdentity implements Parcelable {
         }
         if (this.mPanid != -1) {
             sb.append(", PANID:");
-            sb.append(String.format("0x%04X", new Object[]{Integer.valueOf(this.mPanid)}));
+            sb.append(String.format("0x%04X", Integer.valueOf(this.mPanid)));
         }
         if (this.mChannel != -1) {
             sb.append(", Channel:");
@@ -181,24 +180,23 @@ public class LowpanIdentity implements Parcelable {
     }
 
     public boolean equals(Object obj) {
-        if (!(obj instanceof LowpanIdentity)) {
-            return false;
+        if (obj instanceof LowpanIdentity) {
+            LowpanIdentity rhs = (LowpanIdentity) obj;
+            return Arrays.equals(this.mRawName, rhs.mRawName) && Arrays.equals(this.mXpanid, rhs.mXpanid) && this.mType.equals(rhs.mType) && this.mPanid == rhs.mPanid && this.mChannel == rhs.mChannel;
         }
-        LowpanIdentity rhs = (LowpanIdentity) obj;
-        if (!Arrays.equals(this.mRawName, rhs.mRawName) || !Arrays.equals(this.mXpanid, rhs.mXpanid) || !this.mType.equals(rhs.mType) || this.mPanid != rhs.mPanid || this.mChannel != rhs.mChannel) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(Arrays.hashCode(this.mRawName)), this.mType, Integer.valueOf(Arrays.hashCode(this.mXpanid)), Integer.valueOf(this.mPanid), Integer.valueOf(this.mChannel)});
+        return Objects.hash(Integer.valueOf(Arrays.hashCode(this.mRawName)), this.mType, Integer.valueOf(Arrays.hashCode(this.mXpanid)), Integer.valueOf(this.mPanid), Integer.valueOf(this.mChannel));
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeByteArray(this.mRawName);
         dest.writeString(this.mType);

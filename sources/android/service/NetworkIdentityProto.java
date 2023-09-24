@@ -1,5 +1,6 @@
 package android.service;
 
+/* loaded from: classes3.dex */
 public final class NetworkIdentityProto {
     public static final long DEFAULT_NETWORK = 1133871366150L;
     public static final long METERED = 1133871366149L;

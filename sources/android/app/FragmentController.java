@@ -3,7 +3,7 @@ package android.app;
 import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.os.Parcelable;
+import android.p007os.Parcelable;
 import android.util.ArrayMap;
 import android.util.AttributeSet;
 import android.view.Menu;
@@ -15,6 +15,7 @@ import java.io.PrintWriter;
 import java.util.List;
 
 @Deprecated
+/* loaded from: classes.dex */
 public class FragmentController {
     @UnsupportedAppUsage
     private final FragmentHostCallback<?> mHost;
@@ -57,7 +58,7 @@ public class FragmentController {
 
     @Deprecated
     public void restoreAllState(Parcelable state, List<Fragment> nonConfigList) {
-        this.mHost.mFragmentManager.restoreAllState(state, new FragmentManagerNonConfig(nonConfigList, (List<FragmentManagerNonConfig>) null));
+        this.mHost.mFragmentManager.restoreAllState(state, new FragmentManagerNonConfig(nonConfigList, null));
     }
 
     public void restoreAllState(Parcelable state, FragmentManagerNonConfig nonConfig) {

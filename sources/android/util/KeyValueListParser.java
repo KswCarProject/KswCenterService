@@ -1,12 +1,13 @@
 package android.util;
 
+import android.media.TtmlUtils;
 import android.provider.SettingsStringUtil;
 import android.text.TextUtils;
 import android.util.proto.ProtoOutputStream;
 import java.io.PrintWriter;
-import java.time.Duration;
 import java.time.format.DateTimeParseException;
 
+/* loaded from: classes4.dex */
 public class KeyValueListParser {
     private final TextUtils.StringSplitter mSplitter;
     private final ArrayMap<String, String> mValues = new ArrayMap<>();
@@ -21,12 +22,11 @@ public class KeyValueListParser {
             this.mSplitter.setString(str);
             for (String pair : this.mSplitter) {
                 int sep = pair.indexOf(61);
-                if (sep >= 0) {
-                    this.mValues.put(pair.substring(0, sep).trim(), pair.substring(sep + 1).trim());
-                } else {
+                if (sep < 0) {
                     this.mValues.clear();
                     throw new IllegalArgumentException("'" + pair + "' in '" + str + "' is not a valid key-value pair");
                 }
+                this.mValues.put(pair.substring(0, sep).trim(), pair.substring(sep + 1).trim());
             }
         }
     }
@@ -113,26 +113,26 @@ public class KeyValueListParser {
         String value = this.mValues.get(key);
         if (value != null) {
             try {
-                if (!value.startsWith("P")) {
-                    if (!value.startsWith(TtmlUtils.TAG_P)) {
-                        return Long.parseLong(value);
-                    }
+                if (!value.startsWith("P") && !value.startsWith(TtmlUtils.TAG_P)) {
+                    return Long.parseLong(value);
                 }
-                return Duration.parse(value).toMillis();
+                return java.time.Duration.parse(value).toMillis();
             } catch (NumberFormatException | DateTimeParseException e) {
             }
         }
         return def;
     }
 
+    /* loaded from: classes4.dex */
     public static class IntValue {
         private final int mDefaultValue;
         private final String mKey;
-        private int mValue = this.mDefaultValue;
+        private int mValue;
 
         public IntValue(String key, int defaultValue) {
             this.mKey = key;
             this.mDefaultValue = defaultValue;
+            this.mValue = this.mDefaultValue;
         }
 
         public void parse(KeyValueListParser parser) {
@@ -168,14 +168,16 @@ public class KeyValueListParser {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class LongValue {
         private final long mDefaultValue;
         private final String mKey;
-        private long mValue = this.mDefaultValue;
+        private long mValue;
 
         public LongValue(String key, long defaultValue) {
             this.mKey = key;
             this.mDefaultValue = defaultValue;
+            this.mValue = this.mDefaultValue;
         }
 
         public void parse(KeyValueListParser parser) {
@@ -211,14 +213,16 @@ public class KeyValueListParser {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class StringValue {
         private final String mDefaultValue;
         private final String mKey;
-        private String mValue = this.mDefaultValue;
+        private String mValue;
 
         public StringValue(String key, String defaultValue) {
             this.mKey = key;
             this.mDefaultValue = defaultValue;
+            this.mValue = this.mDefaultValue;
         }
 
         public void parse(KeyValueListParser parser) {
@@ -254,14 +258,16 @@ public class KeyValueListParser {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class FloatValue {
         private final float mDefaultValue;
         private final String mKey;
-        private float mValue = this.mDefaultValue;
+        private float mValue;
 
         public FloatValue(String key, float defaultValue) {
             this.mKey = key;
             this.mDefaultValue = defaultValue;
+            this.mValue = this.mDefaultValue;
         }
 
         public void parse(KeyValueListParser parser) {

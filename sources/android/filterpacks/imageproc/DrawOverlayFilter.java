@@ -12,6 +12,7 @@ import android.filterfw.format.ImageFormat;
 import android.filterfw.format.ObjectFormat;
 import android.filterfw.geometry.Quad;
 
+/* loaded from: classes.dex */
 public class DrawOverlayFilter extends Filter {
     private ShaderProgram mProgram;
 
@@ -19,6 +20,7 @@ public class DrawOverlayFilter extends Filter {
         super(name);
     }
 
+    @Override // android.filterfw.core.Filter
     public void setupPorts() {
         FrameFormat imageFormatMask = ImageFormat.create(3, 3);
         addMaskedInputPort(Slice.SUBTYPE_SOURCE, imageFormatMask);
@@ -27,18 +29,23 @@ public class DrawOverlayFilter extends Filter {
         addOutputBasedOnInput(SliceItem.FORMAT_IMAGE, Slice.SUBTYPE_SOURCE);
     }
 
+    @Override // android.filterfw.core.Filter
     public FrameFormat getOutputFormat(String portName, FrameFormat inputFormat) {
         return inputFormat;
     }
 
+    @Override // android.filterfw.core.Filter
     public void prepare(FilterContext context) {
         this.mProgram = ShaderProgram.createIdentity(context);
     }
 
+    @Override // android.filterfw.core.Filter
     public void process(FilterContext env) {
         Frame sourceFrame = pullInput(Slice.SUBTYPE_SOURCE);
         Frame overlayFrame = pullInput(Context.OVERLAY_SERVICE);
-        this.mProgram.setTargetRegion(((Quad) pullInput("box").getObjectValue()).translated(1.0f, 1.0f).scaled(2.0f));
+        Frame boxFrame = pullInput("box");
+        Quad box = (Quad) boxFrame.getObjectValue();
+        this.mProgram.setTargetRegion(box.translated(1.0f, 1.0f).scaled(2.0f));
         Frame output = env.getFrameManager().newFrame(sourceFrame.getFormat());
         output.setDataFromFrame(sourceFrame);
         this.mProgram.process(overlayFrame, output);

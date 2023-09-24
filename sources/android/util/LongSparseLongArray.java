@@ -5,6 +5,7 @@ import com.android.internal.util.ArrayUtils;
 import com.android.internal.util.GrowingArrayUtils;
 import libcore.util.EmptyArray;
 
+/* loaded from: classes4.dex */
 public class LongSparseLongArray implements Cloneable {
     @UnsupportedAppUsage(maxTargetSdk = 28)
     private long[] mKeys;
@@ -28,7 +29,8 @@ public class LongSparseLongArray implements Cloneable {
         this.mSize = 0;
     }
 
-    public LongSparseLongArray clone() {
+    /* renamed from: clone */
+    public LongSparseLongArray m176clone() {
         LongSparseLongArray clone = null;
         try {
             clone = (LongSparseLongArray) super.clone();
@@ -41,7 +43,7 @@ public class LongSparseLongArray implements Cloneable {
     }
 
     public long get(long key) {
-        return get(key, 0);
+        return get(key, 0L);
     }
 
     public long get(long key, long valueIfKeyNotFound) {
@@ -82,17 +84,17 @@ public class LongSparseLongArray implements Cloneable {
     }
 
     public long keyAt(int index) {
-        if (index < this.mSize || !UtilConfig.sThrowExceptionForUpperArrayOutOfBounds) {
-            return this.mKeys[index];
+        if (index >= this.mSize && UtilConfig.sThrowExceptionForUpperArrayOutOfBounds) {
+            throw new ArrayIndexOutOfBoundsException(index);
         }
-        throw new ArrayIndexOutOfBoundsException(index);
+        return this.mKeys[index];
     }
 
     public long valueAt(int index) {
-        if (index < this.mSize || !UtilConfig.sThrowExceptionForUpperArrayOutOfBounds) {
-            return this.mValues[index];
+        if (index >= this.mSize && UtilConfig.sThrowExceptionForUpperArrayOutOfBounds) {
+            throw new ArrayIndexOutOfBoundsException(index);
         }
-        throw new ArrayIndexOutOfBoundsException(index);
+        return this.mValues[index];
     }
 
     public int indexOfKey(long key) {
@@ -113,13 +115,13 @@ public class LongSparseLongArray implements Cloneable {
     }
 
     public void append(long key, long value) {
-        if (this.mSize == 0 || key > this.mKeys[this.mSize - 1]) {
-            this.mKeys = GrowingArrayUtils.append(this.mKeys, this.mSize, key);
-            this.mValues = GrowingArrayUtils.append(this.mValues, this.mSize, value);
-            this.mSize++;
+        if (this.mSize != 0 && key <= this.mKeys[this.mSize - 1]) {
+            put(key, value);
             return;
         }
-        put(key, value);
+        this.mKeys = GrowingArrayUtils.append(this.mKeys, this.mSize, key);
+        this.mValues = GrowingArrayUtils.append(this.mValues, this.mSize, value);
+        this.mSize++;
     }
 
     public String toString() {
@@ -132,9 +134,11 @@ public class LongSparseLongArray implements Cloneable {
             if (i > 0) {
                 buffer.append(", ");
             }
-            buffer.append(keyAt(i));
+            long key = keyAt(i);
+            buffer.append(key);
             buffer.append('=');
-            buffer.append(valueAt(i));
+            long value = valueAt(i);
+            buffer.append(value);
         }
         buffer.append('}');
         return buffer.toString();

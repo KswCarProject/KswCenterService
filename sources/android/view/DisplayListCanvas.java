@@ -5,6 +5,7 @@ import android.graphics.BaseRecordingCanvas;
 import android.graphics.CanvasProperty;
 import android.graphics.Paint;
 
+/* loaded from: classes4.dex */
 public abstract class DisplayListCanvas extends BaseRecordingCanvas {
     @UnsupportedAppUsage
     public abstract void drawCircle(CanvasProperty<Float> canvasProperty, CanvasProperty<Float> canvasProperty2, CanvasProperty<Float> canvasProperty3, CanvasProperty<Paint> canvasProperty4);

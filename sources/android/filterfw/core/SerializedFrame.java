@@ -9,17 +9,20 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 
+/* loaded from: classes.dex */
 public class SerializedFrame extends Frame {
     private static final int INITIAL_CAPACITY = 64;
     private DirectByteOutputStream mByteOutputStream;
     private ObjectOutputStream mObjectOut;
 
+    /* loaded from: classes.dex */
     private class DirectByteOutputStream extends OutputStream {
-        private byte[] mBuffer = null;
-        private int mDataOffset = 0;
+        private byte[] mBuffer;
         private int mOffset = 0;
+        private int mDataOffset = 0;
 
         public DirectByteOutputStream(int size) {
+            this.mBuffer = null;
             this.mBuffer = new byte[size];
         }
 
@@ -43,16 +46,19 @@ public class SerializedFrame extends Frame {
             return this.mBuffer;
         }
 
+        @Override // java.io.OutputStream
         public final void write(byte[] b) {
             write(b, 0, b.length);
         }
 
+        @Override // java.io.OutputStream
         public final void write(byte[] b, int off, int len) {
             ensureFit(len);
             System.arraycopy(b, off, this.mBuffer, this.mOffset, len);
             this.mOffset += len;
         }
 
+        @Override // java.io.OutputStream
         public final void write(int b) {
             ensureFit(1);
             byte[] bArr = this.mBuffer;
@@ -70,6 +76,7 @@ public class SerializedFrame extends Frame {
         }
     }
 
+    /* loaded from: classes.dex */
     private class DirectByteInputStream extends InputStream {
         private byte[] mBuffer;
         private int mPos = 0;
@@ -80,20 +87,23 @@ public class SerializedFrame extends Frame {
             this.mSize = size;
         }
 
+        @Override // java.io.InputStream
         public final int available() {
             return this.mSize - this.mPos;
         }
 
+        @Override // java.io.InputStream
         public final int read() {
-            if (this.mPos >= this.mSize) {
-                return -1;
+            if (this.mPos < this.mSize) {
+                byte[] bArr = this.mBuffer;
+                int i = this.mPos;
+                this.mPos = i + 1;
+                return bArr[i] & 255;
             }
-            byte[] bArr = this.mBuffer;
-            int i = this.mPos;
-            this.mPos = i + 1;
-            return bArr[i] & 255;
+            return -1;
         }
 
+        @Override // java.io.InputStream
         public final int read(byte[] b, int off, int len) {
             if (this.mPos >= this.mSize) {
                 return -1;
@@ -106,14 +116,15 @@ public class SerializedFrame extends Frame {
             return len;
         }
 
+        @Override // java.io.InputStream
         public final long skip(long n) {
-            if (((long) this.mPos) + n > ((long) this.mSize)) {
-                n = (long) (this.mSize - this.mPos);
+            if (this.mPos + n > this.mSize) {
+                n = this.mSize - this.mPos;
             }
             if (n < 0) {
-                return 0;
+                return 0L;
             }
-            this.mPos = (int) (((long) this.mPos) + n);
+            this.mPos = (int) (this.mPos + n);
             return n;
         }
     }
@@ -131,29 +142,33 @@ public class SerializedFrame extends Frame {
     }
 
     static SerializedFrame wrapObject(Object object, FrameManager frameManager) {
-        SerializedFrame result = new SerializedFrame(ObjectFormat.fromObject(object, 1), frameManager);
+        FrameFormat format = ObjectFormat.fromObject(object, 1);
+        SerializedFrame result = new SerializedFrame(format, frameManager);
         result.setObjectValue(object);
         return result;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean hasNativeAllocation() {
+    @Override // android.filterfw.core.Frame
+    protected boolean hasNativeAllocation() {
         return false;
     }
 
-    /* access modifiers changed from: protected */
-    public void releaseNativeAllocation() {
+    @Override // android.filterfw.core.Frame
+    protected void releaseNativeAllocation() {
     }
 
+    @Override // android.filterfw.core.Frame
     public Object getObjectValue() {
         return deserializeObjectValue();
     }
 
+    @Override // android.filterfw.core.Frame
     public void setInts(int[] ints) {
         assertFrameMutable();
         setGenericObjectValue(ints);
     }
 
+    @Override // android.filterfw.core.Frame
     public int[] getInts() {
         Object result = deserializeObjectValue();
         if (result instanceof int[]) {
@@ -162,11 +177,13 @@ public class SerializedFrame extends Frame {
         return null;
     }
 
+    @Override // android.filterfw.core.Frame
     public void setFloats(float[] floats) {
         assertFrameMutable();
         setGenericObjectValue(floats);
     }
 
+    @Override // android.filterfw.core.Frame
     public float[] getFloats() {
         Object result = deserializeObjectValue();
         if (result instanceof float[]) {
@@ -175,11 +192,13 @@ public class SerializedFrame extends Frame {
         return null;
     }
 
+    @Override // android.filterfw.core.Frame
     public void setData(ByteBuffer buffer, int offset, int length) {
         assertFrameMutable();
         setGenericObjectValue(ByteBuffer.wrap(buffer.array(), offset, length));
     }
 
+    @Override // android.filterfw.core.Frame
     public ByteBuffer getData() {
         Object result = deserializeObjectValue();
         if (result instanceof ByteBuffer) {
@@ -188,11 +207,13 @@ public class SerializedFrame extends Frame {
         return null;
     }
 
+    @Override // android.filterfw.core.Frame
     public void setBitmap(Bitmap bitmap) {
         assertFrameMutable();
         setGenericObjectValue(bitmap);
     }
 
+    @Override // android.filterfw.core.Frame
     public Bitmap getBitmap() {
         Object result = deserializeObjectValue();
         if (result instanceof Bitmap) {
@@ -201,8 +222,8 @@ public class SerializedFrame extends Frame {
         return null;
     }
 
-    /* access modifiers changed from: protected */
-    public void setGenericObjectValue(Object object) {
+    @Override // android.filterfw.core.Frame
+    protected void setGenericObjectValue(Object object) {
         serializeObjectValue(object);
     }
 
@@ -219,7 +240,9 @@ public class SerializedFrame extends Frame {
 
     private final Object deserializeObjectValue() {
         try {
-            return new ObjectInputStream(this.mByteOutputStream.getInputStream()).readObject();
+            InputStream inputStream = this.mByteOutputStream.getInputStream();
+            ObjectInputStream objectStream = new ObjectInputStream(inputStream);
+            return objectStream.readObject();
         } catch (IOException e) {
             throw new RuntimeException("Could not deserialize object in " + this + "!", e);
         } catch (ClassNotFoundException e2) {

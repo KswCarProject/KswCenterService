@@ -3,6 +3,7 @@ package android.telephony.ims;
 import android.telephony.ims.RcsControllerCall;
 import android.telephony.ims.aidl.IRcs;
 
+/* loaded from: classes4.dex */
 public final class RcsParticipantAliasChangedEvent extends RcsEvent {
     private final String mNewAlias;
     private final RcsParticipant mParticipant;
@@ -21,11 +22,14 @@ public final class RcsParticipantAliasChangedEvent extends RcsEvent {
         return this.mNewAlias;
     }
 
-    /* access modifiers changed from: package-private */
-    public void persist(RcsControllerCall rcsControllerCall) throws RcsMessageStoreException {
-        rcsControllerCall.call(new RcsControllerCall.RcsServiceCall() {
+    @Override // android.telephony.ims.RcsEvent
+    void persist(RcsControllerCall rcsControllerCall) throws RcsMessageStoreException {
+        rcsControllerCall.call(new RcsControllerCall.RcsServiceCall() { // from class: android.telephony.ims.-$$Lambda$RcsParticipantAliasChangedEvent$iaidodGQwVEX4DZ8FekRuR-x3gQ
+            @Override // android.telephony.ims.RcsControllerCall.RcsServiceCall
             public final Object methodOnIRcs(IRcs iRcs, String str) {
-                return Integer.valueOf(iRcs.createParticipantAliasChangedEvent(RcsParticipantAliasChangedEvent.this.getTimestamp(), RcsParticipantAliasChangedEvent.this.getParticipant().getId(), RcsParticipantAliasChangedEvent.this.getNewAlias(), str));
+                Integer valueOf;
+                valueOf = Integer.valueOf(iRcs.createParticipantAliasChangedEvent(r0.getTimestamp(), r0.getParticipant().getId(), RcsParticipantAliasChangedEvent.this.getNewAlias(), str));
+                return valueOf;
             }
         });
     }

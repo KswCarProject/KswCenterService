@@ -1,11 +1,12 @@
 package android.hardware;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes.dex */
 public interface ICameraServiceProxy extends IInterface {
     public static final int CAMERA_API_LEVEL_1 = 1;
     public static final int CAMERA_API_LEVEL_2 = 2;
@@ -21,18 +22,23 @@ public interface ICameraServiceProxy extends IInterface {
 
     void pingForUserUpdate() throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements ICameraServiceProxy {
+        @Override // android.hardware.ICameraServiceProxy
         public void pingForUserUpdate() throws RemoteException {
         }
 
+        @Override // android.hardware.ICameraServiceProxy
         public void notifyCameraState(String cameraId, int facing, int newCameraState, String clientName, int apiLevel) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements ICameraServiceProxy {
         private static final String DESCRIPTOR = "android.hardware.ICameraServiceProxy";
         static final int TRANSACTION_notifyCameraState = 2;
@@ -47,12 +53,13 @@ public interface ICameraServiceProxy extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof ICameraServiceProxy)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof ICameraServiceProxy)) {
+                return (ICameraServiceProxy) iin;
             }
-            return (ICameraServiceProxy) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -68,32 +75,37 @@ public interface ICameraServiceProxy extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            int i = code;
-            Parcel parcel = data;
-            if (i != 1598968902) {
-                switch (i) {
-                    case 1:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        pingForUserUpdate();
-                        return true;
-                    case 2:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        notifyCameraState(data.readString(), data.readInt(), data.readInt(), data.readString(), data.readInt());
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    pingForUserUpdate();
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0 = data.readString();
+                    int _arg1 = data.readInt();
+                    int _arg2 = data.readInt();
+                    String _arg3 = data.readString();
+                    int _arg4 = data.readInt();
+                    notifyCameraState(_arg0, _arg1, _arg2, _arg3, _arg4);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements ICameraServiceProxy {
             public static ICameraServiceProxy sDefaultImpl;
             private IBinder mRemote;
@@ -102,6 +114,7 @@ public interface ICameraServiceProxy extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -110,13 +123,13 @@ public interface ICameraServiceProxy extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.hardware.ICameraServiceProxy
             public void pingForUserUpdate() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().pingForUserUpdate();
                     }
                 } finally {
@@ -124,6 +137,7 @@ public interface ICameraServiceProxy extends IInterface {
                 }
             }
 
+            @Override // android.hardware.ICameraServiceProxy
             public void notifyCameraState(String cameraId, int facing, int newCameraState, String clientName, int apiLevel) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -133,9 +147,8 @@ public interface ICameraServiceProxy extends IInterface {
                     _data.writeInt(newCameraState);
                     _data.writeString(clientName);
                     _data.writeInt(apiLevel);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().notifyCameraState(cameraId, facing, newCameraState, clientName, apiLevel);
                     }
                 } finally {
@@ -145,11 +158,11 @@ public interface ICameraServiceProxy extends IInterface {
         }
 
         public static boolean setDefaultImpl(ICameraServiceProxy impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static ICameraServiceProxy getDefaultImpl() {

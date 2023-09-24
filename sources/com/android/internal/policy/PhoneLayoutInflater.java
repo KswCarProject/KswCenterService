@@ -5,6 +5,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 
+/* loaded from: classes4.dex */
 public class PhoneLayoutInflater extends LayoutInflater {
     private static final String[] sClassPrefixList = {"android.widget.", "android.webkit.", "android.app."};
 
@@ -16,24 +17,23 @@ public class PhoneLayoutInflater extends LayoutInflater {
         super(original, newContext);
     }
 
-    /* access modifiers changed from: protected */
-    public View onCreateView(String name, AttributeSet attrs) throws ClassNotFoundException {
-        String[] strArr = sClassPrefixList;
-        int length = strArr.length;
-        int i = 0;
-        while (i < length) {
+    @Override // android.view.LayoutInflater
+    protected View onCreateView(String name, AttributeSet attrs) throws ClassNotFoundException {
+        String[] strArr;
+        View view;
+        for (String prefix : sClassPrefixList) {
             try {
-                View view = createView(name, strArr[i], attrs);
-                if (view != null) {
-                    return view;
-                }
-                i++;
+                view = createView(name, prefix, attrs);
             } catch (ClassNotFoundException e) {
+            }
+            if (view != null) {
+                return view;
             }
         }
         return super.onCreateView(name, attrs);
     }
 
+    @Override // android.view.LayoutInflater
     public LayoutInflater cloneInContext(Context newContext) {
         return new PhoneLayoutInflater(this, newContext);
     }

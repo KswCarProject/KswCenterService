@@ -1,14 +1,14 @@
 package android.telephony.mbms;
 
-import android.os.Binder;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.RemoteException;
 import android.telephony.mbms.IMbmsStreamingSessionCallback;
 import java.util.List;
 import java.util.concurrent.Executor;
 
+/* loaded from: classes4.dex */
 public class InternalStreamingSessionCallback extends IMbmsStreamingSessionCallback.Stub {
-    /* access modifiers changed from: private */
-    public final MbmsStreamingSessionCallback mAppCallback;
+    private final MbmsStreamingSessionCallback mAppCallback;
     private final Executor mExecutor;
     private volatile boolean mIsStopped = false;
 
@@ -17,48 +17,57 @@ public class InternalStreamingSessionCallback extends IMbmsStreamingSessionCallb
         this.mExecutor = executor;
     }
 
+    @Override // android.telephony.mbms.IMbmsStreamingSessionCallback
     public void onError(final int errorCode, final String message) throws RemoteException {
-        if (!this.mIsStopped) {
-            long token = Binder.clearCallingIdentity();
-            try {
-                this.mExecutor.execute(new Runnable() {
-                    public void run() {
-                        InternalStreamingSessionCallback.this.mAppCallback.onError(errorCode, message);
-                    }
-                });
-            } finally {
-                Binder.restoreCallingIdentity(token);
-            }
+        if (this.mIsStopped) {
+            return;
+        }
+        long token = Binder.clearCallingIdentity();
+        try {
+            this.mExecutor.execute(new Runnable() { // from class: android.telephony.mbms.InternalStreamingSessionCallback.1
+                @Override // java.lang.Runnable
+                public void run() {
+                    InternalStreamingSessionCallback.this.mAppCallback.onError(errorCode, message);
+                }
+            });
+        } finally {
+            Binder.restoreCallingIdentity(token);
         }
     }
 
+    @Override // android.telephony.mbms.IMbmsStreamingSessionCallback
     public void onStreamingServicesUpdated(final List<StreamingServiceInfo> services) throws RemoteException {
-        if (!this.mIsStopped) {
-            long token = Binder.clearCallingIdentity();
-            try {
-                this.mExecutor.execute(new Runnable() {
-                    public void run() {
-                        InternalStreamingSessionCallback.this.mAppCallback.onStreamingServicesUpdated(services);
-                    }
-                });
-            } finally {
-                Binder.restoreCallingIdentity(token);
-            }
+        if (this.mIsStopped) {
+            return;
+        }
+        long token = Binder.clearCallingIdentity();
+        try {
+            this.mExecutor.execute(new Runnable() { // from class: android.telephony.mbms.InternalStreamingSessionCallback.2
+                @Override // java.lang.Runnable
+                public void run() {
+                    InternalStreamingSessionCallback.this.mAppCallback.onStreamingServicesUpdated(services);
+                }
+            });
+        } finally {
+            Binder.restoreCallingIdentity(token);
         }
     }
 
+    @Override // android.telephony.mbms.IMbmsStreamingSessionCallback
     public void onMiddlewareReady() throws RemoteException {
-        if (!this.mIsStopped) {
-            long token = Binder.clearCallingIdentity();
-            try {
-                this.mExecutor.execute(new Runnable() {
-                    public void run() {
-                        InternalStreamingSessionCallback.this.mAppCallback.onMiddlewareReady();
-                    }
-                });
-            } finally {
-                Binder.restoreCallingIdentity(token);
-            }
+        if (this.mIsStopped) {
+            return;
+        }
+        long token = Binder.clearCallingIdentity();
+        try {
+            this.mExecutor.execute(new Runnable() { // from class: android.telephony.mbms.InternalStreamingSessionCallback.3
+                @Override // java.lang.Runnable
+                public void run() {
+                    InternalStreamingSessionCallback.this.mAppCallback.onMiddlewareReady();
+                }
+            });
+        } finally {
+            Binder.restoreCallingIdentity(token);
         }
     }
 

@@ -4,21 +4,23 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.List;
 
+/* loaded from: classes4.dex */
 public interface MbmsGroupCallSessionCallback {
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface GroupCallError {
     }
 
-    void onError(int errorCode, String message) {
+    default void onError(int errorCode, String message) {
     }
 
-    void onAvailableSaisUpdated(List<Integer> list, List<List<Integer>> list2) {
+    default void onAvailableSaisUpdated(List<Integer> currentSais, List<List<Integer>> availableSais) {
     }
 
-    void onServiceInterfaceAvailable(String interfaceName, int index) {
+    default void onServiceInterfaceAvailable(String interfaceName, int index) {
     }
 
-    void onMiddlewareReady() {
+    default void onMiddlewareReady() {
     }
 }

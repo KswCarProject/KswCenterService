@@ -1,12 +1,13 @@
 package android.net;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.ParcelFileDescriptor;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.ParcelFileDescriptor;
+import android.p007os.RemoteException;
 
+/* loaded from: classes3.dex */
 public interface IIpSecService extends IInterface {
     void addAddressToTunnelInterface(int i, LinkAddress linkAddress, String str) throws RemoteException;
 
@@ -34,55 +35,71 @@ public interface IIpSecService extends IInterface {
 
     void removeTransportModeTransforms(ParcelFileDescriptor parcelFileDescriptor) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements IIpSecService {
+        @Override // android.net.IIpSecService
         public IpSecSpiResponse allocateSecurityParameterIndex(String destinationAddress, int requestedSpi, IBinder binder) throws RemoteException {
             return null;
         }
 
+        @Override // android.net.IIpSecService
         public void releaseSecurityParameterIndex(int resourceId) throws RemoteException {
         }
 
+        @Override // android.net.IIpSecService
         public IpSecUdpEncapResponse openUdpEncapsulationSocket(int port, IBinder binder) throws RemoteException {
             return null;
         }
 
+        @Override // android.net.IIpSecService
         public void closeUdpEncapsulationSocket(int resourceId) throws RemoteException {
         }
 
+        @Override // android.net.IIpSecService
         public IpSecTunnelInterfaceResponse createTunnelInterface(String localAddr, String remoteAddr, Network underlyingNetwork, IBinder binder, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.net.IIpSecService
         public void addAddressToTunnelInterface(int tunnelResourceId, LinkAddress localAddr, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.net.IIpSecService
         public void removeAddressFromTunnelInterface(int tunnelResourceId, LinkAddress localAddr, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.net.IIpSecService
         public void deleteTunnelInterface(int resourceId, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.net.IIpSecService
         public IpSecTransformResponse createTransform(IpSecConfig c, IBinder binder, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // android.net.IIpSecService
         public void deleteTransform(int transformId) throws RemoteException {
         }
 
+        @Override // android.net.IIpSecService
         public void applyTransportModeTransform(ParcelFileDescriptor socket, int direction, int transformId) throws RemoteException {
         }
 
+        @Override // android.net.IIpSecService
         public void applyTunnelModeTransform(int tunnelResourceId, int direction, int transformResourceId, String callingPackage) throws RemoteException {
         }
 
+        @Override // android.net.IIpSecService
         public void removeTransportModeTransforms(ParcelFileDescriptor socket) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements IIpSecService {
         private static final String DESCRIPTOR = "android.net.IIpSecService";
         static final int TRANSACTION_addAddressToTunnelInterface = 6;
@@ -108,12 +125,13 @@ public interface IIpSecService extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IIpSecService)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IIpSecService)) {
+                return (IIpSecService) iin;
             }
-            return (IIpSecService) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -151,239 +169,145 @@ public interface IIpSecService extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v12, resolved type: android.net.LinkAddress} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v16, resolved type: android.net.LinkAddress} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v21, resolved type: android.net.IpSecConfig} */
-        /* JADX WARNING: type inference failed for: r0v1 */
-        /* JADX WARNING: type inference failed for: r0v6 */
-        /* JADX WARNING: type inference failed for: r0v26, types: [android.os.ParcelFileDescriptor] */
-        /* JADX WARNING: type inference failed for: r0v31, types: [android.os.ParcelFileDescriptor] */
-        /* JADX WARNING: type inference failed for: r0v36 */
-        /* JADX WARNING: type inference failed for: r0v37 */
-        /* JADX WARNING: type inference failed for: r0v38 */
-        /* JADX WARNING: type inference failed for: r0v39 */
-        /* JADX WARNING: type inference failed for: r0v40 */
-        /* JADX WARNING: type inference failed for: r0v41 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r18, android.os.Parcel r19, android.os.Parcel r20, int r21) throws android.os.RemoteException {
-            /*
-                r17 = this;
-                r6 = r17
-                r7 = r18
-                r8 = r19
-                r9 = r20
-                java.lang.String r10 = "android.net.IIpSecService"
-                r0 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r11 = 1
-                if (r7 == r0) goto L_0x01a0
-                r12 = 0
-                r0 = 0
-                switch(r7) {
-                    case 1: goto L_0x017d;
-                    case 2: goto L_0x016f;
-                    case 3: goto L_0x0150;
-                    case 4: goto L_0x0142;
-                    case 5: goto L_0x0103;
-                    case 6: goto L_0x00e1;
-                    case 7: goto L_0x00bf;
-                    case 8: goto L_0x00ad;
-                    case 9: goto L_0x007e;
-                    case 10: goto L_0x0070;
-                    case 11: goto L_0x004e;
-                    case 12: goto L_0x0034;
-                    case 13: goto L_0x001a;
-                    default: goto L_0x0015;
-                }
-            L_0x0015:
-                boolean r0 = super.onTransact(r18, r19, r20, r21)
-                return r0
-            L_0x001a:
-                r8.enforceInterface(r10)
-                int r1 = r19.readInt()
-                if (r1 == 0) goto L_0x002c
-                android.os.Parcelable$Creator<android.os.ParcelFileDescriptor> r0 = android.os.ParcelFileDescriptor.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                android.os.ParcelFileDescriptor r0 = (android.os.ParcelFileDescriptor) r0
-                goto L_0x002d
-            L_0x002c:
-            L_0x002d:
-                r6.removeTransportModeTransforms(r0)
-                r20.writeNoException()
-                return r11
-            L_0x0034:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                int r1 = r19.readInt()
-                int r2 = r19.readInt()
-                java.lang.String r3 = r19.readString()
-                r6.applyTunnelModeTransform(r0, r1, r2, r3)
-                r20.writeNoException()
-                return r11
-            L_0x004e:
-                r8.enforceInterface(r10)
-                int r1 = r19.readInt()
-                if (r1 == 0) goto L_0x0060
-                android.os.Parcelable$Creator<android.os.ParcelFileDescriptor> r0 = android.os.ParcelFileDescriptor.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                android.os.ParcelFileDescriptor r0 = (android.os.ParcelFileDescriptor) r0
-                goto L_0x0061
-            L_0x0060:
-            L_0x0061:
-                int r1 = r19.readInt()
-                int r2 = r19.readInt()
-                r6.applyTransportModeTransform(r0, r1, r2)
-                r20.writeNoException()
-                return r11
-            L_0x0070:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                r6.deleteTransform(r0)
-                r20.writeNoException()
-                return r11
-            L_0x007e:
-                r8.enforceInterface(r10)
-                int r1 = r19.readInt()
-                if (r1 == 0) goto L_0x0090
-                android.os.Parcelable$Creator<android.net.IpSecConfig> r0 = android.net.IpSecConfig.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                android.net.IpSecConfig r0 = (android.net.IpSecConfig) r0
-                goto L_0x0091
-            L_0x0090:
-            L_0x0091:
-                android.os.IBinder r1 = r19.readStrongBinder()
-                java.lang.String r2 = r19.readString()
-                android.net.IpSecTransformResponse r3 = r6.createTransform(r0, r1, r2)
-                r20.writeNoException()
-                if (r3 == 0) goto L_0x00a9
-                r9.writeInt(r11)
-                r3.writeToParcel(r9, r11)
-                goto L_0x00ac
-            L_0x00a9:
-                r9.writeInt(r12)
-            L_0x00ac:
-                return r11
-            L_0x00ad:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                java.lang.String r1 = r19.readString()
-                r6.deleteTunnelInterface(r0, r1)
-                r20.writeNoException()
-                return r11
-            L_0x00bf:
-                r8.enforceInterface(r10)
-                int r1 = r19.readInt()
-                int r2 = r19.readInt()
-                if (r2 == 0) goto L_0x00d5
-                android.os.Parcelable$Creator<android.net.LinkAddress> r0 = android.net.LinkAddress.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                android.net.LinkAddress r0 = (android.net.LinkAddress) r0
-                goto L_0x00d6
-            L_0x00d5:
-            L_0x00d6:
-                java.lang.String r2 = r19.readString()
-                r6.removeAddressFromTunnelInterface(r1, r0, r2)
-                r20.writeNoException()
-                return r11
-            L_0x00e1:
-                r8.enforceInterface(r10)
-                int r1 = r19.readInt()
-                int r2 = r19.readInt()
-                if (r2 == 0) goto L_0x00f7
-                android.os.Parcelable$Creator<android.net.LinkAddress> r0 = android.net.LinkAddress.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                android.net.LinkAddress r0 = (android.net.LinkAddress) r0
-                goto L_0x00f8
-            L_0x00f7:
-            L_0x00f8:
-                java.lang.String r2 = r19.readString()
-                r6.addAddressToTunnelInterface(r1, r0, r2)
-                r20.writeNoException()
-                return r11
-            L_0x0103:
-                r8.enforceInterface(r10)
-                java.lang.String r13 = r19.readString()
-                java.lang.String r14 = r19.readString()
-                int r1 = r19.readInt()
-                if (r1 == 0) goto L_0x011e
-                android.os.Parcelable$Creator<android.net.Network> r0 = android.net.Network.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r8)
-                android.net.Network r0 = (android.net.Network) r0
-            L_0x011c:
-                r3 = r0
-                goto L_0x011f
-            L_0x011e:
-                goto L_0x011c
-            L_0x011f:
-                android.os.IBinder r15 = r19.readStrongBinder()
-                java.lang.String r16 = r19.readString()
-                r0 = r17
-                r1 = r13
-                r2 = r14
-                r4 = r15
-                r5 = r16
-                android.net.IpSecTunnelInterfaceResponse r0 = r0.createTunnelInterface(r1, r2, r3, r4, r5)
-                r20.writeNoException()
-                if (r0 == 0) goto L_0x013e
-                r9.writeInt(r11)
-                r0.writeToParcel(r9, r11)
-                goto L_0x0141
-            L_0x013e:
-                r9.writeInt(r12)
-            L_0x0141:
-                return r11
-            L_0x0142:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                r6.closeUdpEncapsulationSocket(r0)
-                r20.writeNoException()
-                return r11
-            L_0x0150:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                android.os.IBinder r1 = r19.readStrongBinder()
-                android.net.IpSecUdpEncapResponse r2 = r6.openUdpEncapsulationSocket(r0, r1)
-                r20.writeNoException()
-                if (r2 == 0) goto L_0x016b
-                r9.writeInt(r11)
-                r2.writeToParcel(r9, r11)
-                goto L_0x016e
-            L_0x016b:
-                r9.writeInt(r12)
-            L_0x016e:
-                return r11
-            L_0x016f:
-                r8.enforceInterface(r10)
-                int r0 = r19.readInt()
-                r6.releaseSecurityParameterIndex(r0)
-                r20.writeNoException()
-                return r11
-            L_0x017d:
-                r8.enforceInterface(r10)
-                java.lang.String r0 = r19.readString()
-                int r1 = r19.readInt()
-                android.os.IBinder r2 = r19.readStrongBinder()
-                android.net.IpSecSpiResponse r3 = r6.allocateSecurityParameterIndex(r0, r1, r2)
-                r20.writeNoException()
-                if (r3 == 0) goto L_0x019c
-                r9.writeInt(r11)
-                r3.writeToParcel(r9, r11)
-                goto L_0x019f
-            L_0x019c:
-                r9.writeInt(r12)
-            L_0x019f:
-                return r11
-            L_0x01a0:
-                r9.writeString(r10)
-                return r11
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.net.IIpSecService.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0 = data.readString();
+                    int _arg1 = data.readInt();
+                    IBinder _arg2 = data.readStrongBinder();
+                    IpSecSpiResponse _result = allocateSecurityParameterIndex(_arg0, _arg1, _arg2);
+                    reply.writeNoException();
+                    if (_result != null) {
+                        reply.writeInt(1);
+                        _result.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    releaseSecurityParameterIndex(_arg02);
+                    reply.writeNoException();
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg03 = data.readInt();
+                    IBinder _arg12 = data.readStrongBinder();
+                    IpSecUdpEncapResponse _result2 = openUdpEncapsulationSocket(_arg03, _arg12);
+                    reply.writeNoException();
+                    if (_result2 != null) {
+                        reply.writeInt(1);
+                        _result2.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg04 = data.readInt();
+                    closeUdpEncapsulationSocket(_arg04);
+                    reply.writeNoException();
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg05 = data.readString();
+                    String _arg13 = data.readString();
+                    Network _arg22 = data.readInt() != 0 ? Network.CREATOR.createFromParcel(data) : null;
+                    IBinder _arg3 = data.readStrongBinder();
+                    String _arg4 = data.readString();
+                    IpSecTunnelInterfaceResponse _result3 = createTunnelInterface(_arg05, _arg13, _arg22, _arg3, _arg4);
+                    reply.writeNoException();
+                    if (_result3 != null) {
+                        reply.writeInt(1);
+                        _result3.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg06 = data.readInt();
+                    LinkAddress _arg14 = data.readInt() != 0 ? LinkAddress.CREATOR.createFromParcel(data) : null;
+                    String _arg23 = data.readString();
+                    addAddressToTunnelInterface(_arg06, _arg14, _arg23);
+                    reply.writeNoException();
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg07 = data.readInt();
+                    LinkAddress _arg15 = data.readInt() != 0 ? LinkAddress.CREATOR.createFromParcel(data) : null;
+                    String _arg24 = data.readString();
+                    removeAddressFromTunnelInterface(_arg07, _arg15, _arg24);
+                    reply.writeNoException();
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg08 = data.readInt();
+                    String _arg16 = data.readString();
+                    deleteTunnelInterface(_arg08, _arg16);
+                    reply.writeNoException();
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    IpSecConfig _arg09 = data.readInt() != 0 ? IpSecConfig.CREATOR.createFromParcel(data) : null;
+                    IBinder _arg17 = data.readStrongBinder();
+                    String _arg25 = data.readString();
+                    IpSecTransformResponse _result4 = createTransform(_arg09, _arg17, _arg25);
+                    reply.writeNoException();
+                    if (_result4 != null) {
+                        reply.writeInt(1);
+                        _result4.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg010 = data.readInt();
+                    deleteTransform(_arg010);
+                    reply.writeNoException();
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    ParcelFileDescriptor _arg011 = data.readInt() != 0 ? ParcelFileDescriptor.CREATOR.createFromParcel(data) : null;
+                    int _arg18 = data.readInt();
+                    int _arg26 = data.readInt();
+                    applyTransportModeTransform(_arg011, _arg18, _arg26);
+                    reply.writeNoException();
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg012 = data.readInt();
+                    int _arg19 = data.readInt();
+                    int _arg27 = data.readInt();
+                    String _arg32 = data.readString();
+                    applyTunnelModeTransform(_arg012, _arg19, _arg27, _arg32);
+                    reply.writeNoException();
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    ParcelFileDescriptor _arg013 = data.readInt() != 0 ? ParcelFileDescriptor.CREATOR.createFromParcel(data) : null;
+                    removeTransportModeTransforms(_arg013);
+                    reply.writeNoException();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements IIpSecService {
             public static IIpSecService sDefaultImpl;
             private IBinder mRemote;
@@ -392,6 +316,7 @@ public interface IIpSecService extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -400,6 +325,7 @@ public interface IIpSecService extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.net.IIpSecService
             public IpSecSpiResponse allocateSecurityParameterIndex(String destinationAddress, int requestedSpi, IBinder binder) throws RemoteException {
                 IpSecSpiResponse _result;
                 Parcel _data = Parcel.obtain();
@@ -409,7 +335,8 @@ public interface IIpSecService extends IInterface {
                     _data.writeString(destinationAddress);
                     _data.writeInt(requestedSpi);
                     _data.writeStrongBinder(binder);
-                    if (!this.mRemote.transact(1, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().allocateSecurityParameterIndex(destinationAddress, requestedSpi, binder);
                     }
                     _reply.readException();
@@ -418,35 +345,33 @@ public interface IIpSecService extends IInterface {
                     } else {
                         _result = null;
                     }
-                    IpSecSpiResponse _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.IIpSecService
             public void releaseSecurityParameterIndex(int resourceId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(resourceId);
-                    if (this.mRemote.transact(2, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().releaseSecurityParameterIndex(resourceId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().releaseSecurityParameterIndex(resourceId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.IIpSecService
             public IpSecUdpEncapResponse openUdpEncapsulationSocket(int port, IBinder binder) throws RemoteException {
                 IpSecUdpEncapResponse _result;
                 Parcel _data = Parcel.obtain();
@@ -455,7 +380,8 @@ public interface IIpSecService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(port);
                     _data.writeStrongBinder(binder);
-                    if (!this.mRemote.transact(3, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().openUdpEncapsulationSocket(port, binder);
                     }
                     _reply.readException();
@@ -464,35 +390,33 @@ public interface IIpSecService extends IInterface {
                     } else {
                         _result = null;
                     }
-                    IpSecUdpEncapResponse _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.IIpSecService
             public void closeUdpEncapsulationSocket(int resourceId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(resourceId);
-                    if (this.mRemote.transact(4, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().closeUdpEncapsulationSocket(resourceId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().closeUdpEncapsulationSocket(resourceId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.IIpSecService
             public IpSecTunnelInterfaceResponse createTunnelInterface(String localAddr, String remoteAddr, Network underlyingNetwork, IBinder binder, String callingPackage) throws RemoteException {
                 IpSecTunnelInterfaceResponse _result;
                 Parcel _data = Parcel.obtain();
@@ -509,7 +433,8 @@ public interface IIpSecService extends IInterface {
                     }
                     _data.writeStrongBinder(binder);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(5, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().createTunnelInterface(localAddr, remoteAddr, underlyingNetwork, binder, callingPackage);
                     }
                     _reply.readException();
@@ -518,16 +443,14 @@ public interface IIpSecService extends IInterface {
                     } else {
                         _result = null;
                     }
-                    IpSecTunnelInterfaceResponse _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.IIpSecService
             public void addAddressToTunnelInterface(int tunnelResourceId, LinkAddress localAddr, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -541,19 +464,19 @@ public interface IIpSecService extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(6, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().addAddressToTunnelInterface(tunnelResourceId, localAddr, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().addAddressToTunnelInterface(tunnelResourceId, localAddr, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.IIpSecService
             public void removeAddressFromTunnelInterface(int tunnelResourceId, LinkAddress localAddr, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -567,19 +490,19 @@ public interface IIpSecService extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(7, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().removeAddressFromTunnelInterface(tunnelResourceId, localAddr, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().removeAddressFromTunnelInterface(tunnelResourceId, localAddr, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.IIpSecService
             public void deleteTunnelInterface(int resourceId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -587,19 +510,19 @@ public interface IIpSecService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(resourceId);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(8, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().deleteTunnelInterface(resourceId, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().deleteTunnelInterface(resourceId, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.IIpSecService
             public IpSecTransformResponse createTransform(IpSecConfig c, IBinder binder, String callingPackage) throws RemoteException {
                 IpSecTransformResponse _result;
                 Parcel _data = Parcel.obtain();
@@ -614,7 +537,8 @@ public interface IIpSecService extends IInterface {
                     }
                     _data.writeStrongBinder(binder);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(9, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(9, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().createTransform(c, binder, callingPackage);
                     }
                     _reply.readException();
@@ -623,35 +547,33 @@ public interface IIpSecService extends IInterface {
                     } else {
                         _result = null;
                     }
-                    IpSecTransformResponse _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.IIpSecService
             public void deleteTransform(int transformId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(transformId);
-                    if (this.mRemote.transact(10, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(10, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().deleteTransform(transformId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().deleteTransform(transformId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.IIpSecService
             public void applyTransportModeTransform(ParcelFileDescriptor socket, int direction, int transformId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -665,19 +587,19 @@ public interface IIpSecService extends IInterface {
                     }
                     _data.writeInt(direction);
                     _data.writeInt(transformId);
-                    if (this.mRemote.transact(11, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(11, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().applyTransportModeTransform(socket, direction, transformId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().applyTransportModeTransform(socket, direction, transformId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.IIpSecService
             public void applyTunnelModeTransform(int tunnelResourceId, int direction, int transformResourceId, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -687,19 +609,19 @@ public interface IIpSecService extends IInterface {
                     _data.writeInt(direction);
                     _data.writeInt(transformResourceId);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(12, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(12, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().applyTunnelModeTransform(tunnelResourceId, direction, transformResourceId, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().applyTunnelModeTransform(tunnelResourceId, direction, transformResourceId, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.net.IIpSecService
             public void removeTransportModeTransforms(ParcelFileDescriptor socket) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -711,13 +633,12 @@ public interface IIpSecService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(13, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(13, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().removeTransportModeTransforms(socket);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().removeTransportModeTransforms(socket);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -726,11 +647,11 @@ public interface IIpSecService extends IInterface {
         }
 
         public static boolean setDefaultImpl(IIpSecService impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IIpSecService getDefaultImpl() {

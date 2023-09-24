@@ -3,9 +3,9 @@ package android.inputmethodservice;
 import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
 import android.graphics.Rect;
-import android.os.Bundle;
-import android.os.Looper;
-import android.os.Message;
+import android.p007os.Bundle;
+import android.p007os.Looper;
+import android.p007os.Message;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.InputChannel;
@@ -17,10 +17,11 @@ import android.view.inputmethod.CompletionInfo;
 import android.view.inputmethod.CursorAnchorInfo;
 import android.view.inputmethod.ExtractedText;
 import android.view.inputmethod.InputMethodSession;
-import com.android.internal.os.HandlerCaller;
-import com.android.internal.os.SomeArgs;
+import com.android.internal.p016os.HandlerCaller;
+import com.android.internal.p016os.SomeArgs;
 import com.android.internal.view.IInputMethodSession;
 
+/* loaded from: classes.dex */
 class IInputMethodSessionWrapper extends IInputMethodSession.Stub implements HandlerCaller.Callback {
     private static final int DO_APP_PRIVATE_COMMAND = 100;
     private static final int DO_DISPLAY_COMPLETIONS = 65;
@@ -40,7 +41,7 @@ class IInputMethodSessionWrapper extends IInputMethodSession.Stub implements Han
     ImeInputEventReceiver mReceiver;
 
     public IInputMethodSessionWrapper(Context context, InputMethodSession inputMethodSession, InputChannel channel) {
-        this.mCaller = new HandlerCaller(context, (Looper) null, this, true);
+        this.mCaller = new HandlerCaller(context, null, this, true);
         this.mInputMethodSession = inputMethodSession;
         this.mChannel = channel;
         if (channel != null) {
@@ -52,6 +53,7 @@ class IInputMethodSessionWrapper extends IInputMethodSession.Stub implements Han
         return this.mInputMethodSession;
     }
 
+    @Override // com.android.internal.p016os.HandlerCaller.Callback
     public void executeMessage(Message msg) {
         if (this.mInputMethodSession == null) {
             int i = msg.what;
@@ -77,12 +79,7 @@ class IInputMethodSessionWrapper extends IInputMethodSession.Stub implements Han
         } else if (i2 == 110) {
             doFinishSession();
         } else if (i2 == 115) {
-            InputMethodSession inputMethodSession = this.mInputMethodSession;
-            boolean z = true;
-            if (msg.arg1 != 1) {
-                z = false;
-            }
-            inputMethodSession.viewClicked(z);
+            this.mInputMethodSession.viewClicked(msg.arg1 == 1);
         } else if (i2 != 120) {
             switch (i2) {
                 case 99:
@@ -94,7 +91,7 @@ class IInputMethodSessionWrapper extends IInputMethodSession.Stub implements Han
                     args2.recycle();
                     return;
                 default:
-                    Log.w(TAG, "Unhandled message code: " + msg.what);
+                    Log.m64w(TAG, "Unhandled message code: " + msg.what);
                     return;
             }
         } else {
@@ -114,53 +111,66 @@ class IInputMethodSessionWrapper extends IInputMethodSession.Stub implements Han
         }
     }
 
+    @Override // com.android.internal.view.IInputMethodSession
     public void displayCompletions(CompletionInfo[] completions) {
         this.mCaller.executeOrSendMessage(this.mCaller.obtainMessageO(65, completions));
     }
 
+    @Override // com.android.internal.view.IInputMethodSession
     public void updateExtractedText(int token, ExtractedText text) {
         this.mCaller.executeOrSendMessage(this.mCaller.obtainMessageIO(67, token, text));
     }
 
+    @Override // com.android.internal.view.IInputMethodSession
     public void updateSelection(int oldSelStart, int oldSelEnd, int newSelStart, int newSelEnd, int candidatesStart, int candidatesEnd) {
         this.mCaller.executeOrSendMessage(this.mCaller.obtainMessageIIIIII(90, oldSelStart, oldSelEnd, newSelStart, newSelEnd, candidatesStart, candidatesEnd));
     }
 
+    @Override // com.android.internal.view.IInputMethodSession
     public void viewClicked(boolean focusChanged) {
-        this.mCaller.executeOrSendMessage(this.mCaller.obtainMessageI(115, focusChanged));
+        this.mCaller.executeOrSendMessage(this.mCaller.obtainMessageI(115, focusChanged ? 1 : 0));
     }
 
+    @Override // com.android.internal.view.IInputMethodSession
     public void notifyImeHidden() {
         this.mCaller.executeOrSendMessage(this.mCaller.obtainMessage(120));
     }
 
+    @Override // com.android.internal.view.IInputMethodSession
     public void updateCursor(Rect newCursor) {
         this.mCaller.executeOrSendMessage(this.mCaller.obtainMessageO(95, newCursor));
     }
 
+    @Override // com.android.internal.view.IInputMethodSession
     public void updateCursorAnchorInfo(CursorAnchorInfo cursorAnchorInfo) {
         this.mCaller.executeOrSendMessage(this.mCaller.obtainMessageO(99, cursorAnchorInfo));
     }
 
+    @Override // com.android.internal.view.IInputMethodSession
     public void appPrivateCommand(String action, Bundle data) {
         this.mCaller.executeOrSendMessage(this.mCaller.obtainMessageOO(100, action, data));
     }
 
+    @Override // com.android.internal.view.IInputMethodSession
     public void toggleSoftInput(int showFlags, int hideFlags) {
         this.mCaller.executeOrSendMessage(this.mCaller.obtainMessageII(105, showFlags, hideFlags));
     }
 
+    @Override // com.android.internal.view.IInputMethodSession
     public void finishSession() {
         this.mCaller.executeOrSendMessage(this.mCaller.obtainMessage(110));
     }
 
+    /* loaded from: classes.dex */
     private final class ImeInputEventReceiver extends InputEventReceiver implements InputMethodSession.EventCallback {
-        private final SparseArray<InputEvent> mPendingEvents = new SparseArray<>();
+        private final SparseArray<InputEvent> mPendingEvents;
 
         public ImeInputEventReceiver(InputChannel inputChannel, Looper looper) {
             super(inputChannel, looper);
+            this.mPendingEvents = new SparseArray<>();
         }
 
+        @Override // android.view.InputEventReceiver
         public void onInputEvent(InputEvent event) {
             if (IInputMethodSessionWrapper.this.mInputMethodSession == null) {
                 finishInputEvent(event, false);
@@ -169,7 +179,8 @@ class IInputMethodSessionWrapper extends IInputMethodSession.Stub implements Han
             int seq = event.getSequenceNumber();
             this.mPendingEvents.put(seq, event);
             if (event instanceof KeyEvent) {
-                IInputMethodSessionWrapper.this.mInputMethodSession.dispatchKeyEvent(seq, (KeyEvent) event, this);
+                KeyEvent keyEvent = (KeyEvent) event;
+                IInputMethodSessionWrapper.this.mInputMethodSession.dispatchKeyEvent(seq, keyEvent, this);
                 return;
             }
             MotionEvent motionEvent = (MotionEvent) event;
@@ -180,11 +191,13 @@ class IInputMethodSessionWrapper extends IInputMethodSession.Stub implements Han
             }
         }
 
+        @Override // android.view.inputmethod.InputMethodSession.EventCallback
         public void finishedEvent(int seq, boolean handled) {
             int index = this.mPendingEvents.indexOfKey(seq);
             if (index >= 0) {
+                InputEvent event = this.mPendingEvents.valueAt(index);
                 this.mPendingEvents.removeAt(index);
-                finishInputEvent(this.mPendingEvents.valueAt(index), handled);
+                finishInputEvent(event, handled);
             }
         }
     }

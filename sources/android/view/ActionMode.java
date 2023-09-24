@@ -2,6 +2,7 @@ package android.view;
 
 import android.graphics.Rect;
 
+/* loaded from: classes4.dex */
 public abstract class ActionMode {
     public static final int DEFAULT_HIDE_DURATION = -1;
     public static final int TYPE_FLOATING = 1;
@@ -10,6 +11,7 @@ public abstract class ActionMode {
     private boolean mTitleOptionalHint;
     private int mType = 0;
 
+    /* loaded from: classes4.dex */
     public interface Callback {
         boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem);
 
@@ -85,6 +87,7 @@ public abstract class ActionMode {
         return true;
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Callback2 implements Callback {
         public void onGetContentRect(ActionMode mode, View view, Rect outRect) {
             if (view != null) {

@@ -9,8 +9,9 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CodingErrorAction;
 
+/* loaded from: classes3.dex */
 public final class UriCodec {
-    private static final char INVALID_INPUT_CHARACTER = '�';
+    private static final char INVALID_INPUT_CHARACTER = '\ufffd';
 
     private UriCodec() {
     }
@@ -20,12 +21,12 @@ public final class UriCodec {
             return c - '0';
         }
         if ('a' <= c && c <= 'f') {
-            return (c + 10) - 97;
+            return (c + '\n') - 97;
         }
-        if ('A' > c || c > 'F') {
-            return -1;
+        if ('A' <= c && c <= 'F') {
+            return (c + '\n') - 65;
         }
-        return (c + 10) - 65;
+        return -1;
     }
 
     private static URISyntaxException unexpectedCharacterException(String uri, String name, char unexpected, int index) {
@@ -40,15 +41,15 @@ public final class UriCodec {
 
     private static char getNextCharacter(String uri, int index, int end, String name) throws URISyntaxException {
         String nameString;
-        if (index < end) {
-            return uri.charAt(index);
+        if (index >= end) {
+            if (name == null) {
+                nameString = "";
+            } else {
+                nameString = " in [" + name + "]";
+            }
+            throw new URISyntaxException(uri, "Unexpected end of string" + nameString, index);
         }
-        if (name == null) {
-            nameString = "";
-        } else {
-            nameString = " in [" + name + "]";
-        }
-        throw new URISyntaxException(uri, "Unexpected end of string" + nameString, index);
+        return uri.charAt(index);
     }
 
     public static String decode(String s, boolean convertPlus, Charset charset, boolean throwOnFailure) {
@@ -58,53 +59,49 @@ public final class UriCodec {
     }
 
     private static void appendDecoded(StringBuilder builder, String s, boolean convertPlus, Charset charset, boolean throwOnFailure) {
-        CharsetDecoder decoder = charset.newDecoder().onMalformedInput(CodingErrorAction.REPLACE).replaceWith("�").onUnmappableCharacter(CodingErrorAction.REPORT);
+        CharsetDecoder decoder = charset.newDecoder().onMalformedInput(CodingErrorAction.REPLACE).replaceWith("\ufffd").onUnmappableCharacter(CodingErrorAction.REPORT);
         ByteBuffer byteBuffer = ByteBuffer.allocate(s.length());
         int i = 0;
         while (i < s.length()) {
             char c = s.charAt(i);
             i++;
             if (c != '%') {
-                char c2 = '+';
-                if (c != '+') {
+                if (c == '+') {
                     flushDecodingByteAccumulator(builder, decoder, byteBuffer, throwOnFailure);
-                    builder.append(c);
+                    builder.append(convertPlus ? ' ' : '+');
                 } else {
                     flushDecodingByteAccumulator(builder, decoder, byteBuffer, throwOnFailure);
-                    if (convertPlus) {
-                        c2 = ' ';
-                    }
-                    builder.append(c2);
+                    builder.append(c);
                 }
             } else {
                 byte hexValue = 0;
-                byte hexValue2 = c;
                 int i2 = i;
-                int j = 0;
+                int i3 = 0;
                 while (true) {
-                    if (j >= 2) {
+                    if (i3 >= 2) {
                         break;
                     }
                     try {
-                        char c3 = getNextCharacter(s, i2, s.length(), (String) null);
+                        char c2 = getNextCharacter(s, i2, s.length(), null);
                         i2++;
-                        int newDigit = hexCharToValue(c3);
-                        if (newDigit >= 0) {
-                            hexValue = (byte) ((hexValue * WifiScanner.PnoSettings.PnoNetwork.FLAG_SAME_NETWORK) + newDigit);
-                            j++;
-                        } else if (!throwOnFailure) {
+                        int newDigit = hexCharToValue(c2);
+                        if (newDigit < 0) {
+                            if (throwOnFailure) {
+                                throw new IllegalArgumentException(unexpectedCharacterException(s, null, c2, i2 - 1));
+                            }
                             flushDecodingByteAccumulator(builder, decoder, byteBuffer, throwOnFailure);
                             builder.append(INVALID_INPUT_CHARACTER);
                         } else {
-                            throw new IllegalArgumentException(unexpectedCharacterException(s, (String) null, c3, i2 - 1));
+                            hexValue = (byte) ((hexValue * WifiScanner.PnoSettings.PnoNetwork.FLAG_SAME_NETWORK) + newDigit);
+                            i3++;
                         }
                     } catch (URISyntaxException e) {
-                        if (!throwOnFailure) {
-                            flushDecodingByteAccumulator(builder, decoder, byteBuffer, throwOnFailure);
-                            builder.append(INVALID_INPUT_CHARACTER);
-                            return;
+                        if (throwOnFailure) {
+                            throw new IllegalArgumentException(e);
                         }
-                        throw new IllegalArgumentException(e);
+                        flushDecodingByteAccumulator(builder, decoder, byteBuffer, throwOnFailure);
+                        builder.append(INVALID_INPUT_CHARACTER);
+                        return;
                     }
                 }
                 byteBuffer.put(hexValue);
@@ -115,21 +112,20 @@ public final class UriCodec {
     }
 
     private static void flushDecodingByteAccumulator(StringBuilder builder, CharsetDecoder decoder, ByteBuffer byteBuffer, boolean throwOnFailure) {
-        if (byteBuffer.position() != 0) {
-            byteBuffer.flip();
+        if (byteBuffer.position() == 0) {
+            return;
+        }
+        byteBuffer.flip();
+        try {
             try {
-                builder.append(decoder.decode(byteBuffer));
+                builder.append((CharSequence) decoder.decode(byteBuffer));
             } catch (CharacterCodingException e) {
-                if (!throwOnFailure) {
-                    builder.append(INVALID_INPUT_CHARACTER);
-                } else {
+                if (throwOnFailure) {
                     throw new IllegalArgumentException(e);
                 }
-            } catch (Throwable th) {
-                byteBuffer.flip();
-                byteBuffer.limit(byteBuffer.capacity());
-                throw th;
+                builder.append(INVALID_INPUT_CHARACTER);
             }
+        } finally {
             byteBuffer.flip();
             byteBuffer.limit(byteBuffer.capacity());
         }

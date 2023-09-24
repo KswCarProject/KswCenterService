@@ -4,17 +4,18 @@ import android.annotation.UnsupportedAppUsage;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.telecom.PhoneAccount;
 import android.telecom.PhoneAccountHandle;
 import android.telecom.TelecomAnalytics;
 import java.util.List;
 
+/* loaded from: classes4.dex */
 public interface ITelecomService extends IInterface {
     void acceptHandover(Uri uri, int i, PhoneAccountHandle phoneAccountHandle) throws RemoteException;
 
@@ -129,215 +130,274 @@ public interface ITelecomService extends IInterface {
 
     void waitOnHandlers() throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements ITelecomService {
+        @Override // com.android.internal.telecom.ITelecomService
         public void showInCallScreen(boolean showDialpad, String callingPackage) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public PhoneAccountHandle getDefaultOutgoingPhoneAccount(String uriScheme, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public PhoneAccountHandle getUserSelectedOutgoingPhoneAccount(String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public void setUserSelectedOutgoingPhoneAccount(PhoneAccountHandle account) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public List<PhoneAccountHandle> getCallCapablePhoneAccounts(boolean includeDisabledAccounts, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public List<PhoneAccountHandle> getSelfManagedPhoneAccounts(String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public List<PhoneAccountHandle> getPhoneAccountsSupportingScheme(String uriScheme, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public List<PhoneAccountHandle> getPhoneAccountsForPackage(String packageName) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public PhoneAccount getPhoneAccount(PhoneAccountHandle account) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public int getAllPhoneAccountsCount() throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public List<PhoneAccount> getAllPhoneAccounts() throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public List<PhoneAccountHandle> getAllPhoneAccountHandles() throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public PhoneAccountHandle getSimCallManager(int subId) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public PhoneAccountHandle getSimCallManagerForUser(int userId) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public void registerPhoneAccount(PhoneAccount metadata) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public void unregisterPhoneAccount(PhoneAccountHandle account) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public void clearAccounts(String packageName) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public boolean isVoiceMailNumber(PhoneAccountHandle accountHandle, String number, String callingPackage) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public String getVoiceMailNumber(PhoneAccountHandle accountHandle, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public String getLine1Number(PhoneAccountHandle accountHandle, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public ComponentName getDefaultPhoneApp() throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public String getDefaultDialerPackage() throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public String getSystemDialerPackage() throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public TelecomAnalytics dumpCallAnalytics() throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public void silenceRinger(String callingPackage) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public boolean isInCall(String callingPackage) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public boolean isInManagedCall(String callingPackage) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public boolean isRinging(String callingPackage) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public int getCallState() throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public boolean endCall(String callingPackage) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public void acceptRingingCall(String callingPackage) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public void acceptRingingCallWithVideoState(String callingPackage, int videoState) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public void cancelMissedCallsNotification(String callingPackage) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public boolean handlePinMmi(String dialString, String callingPackage) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public boolean handlePinMmiForPhoneAccount(PhoneAccountHandle accountHandle, String dialString, String callingPackage) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public Uri getAdnUriForPhoneAccount(PhoneAccountHandle accountHandle, String callingPackage) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public boolean isTtySupported(String callingPackage) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public int getCurrentTtyMode(String callingPackage) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public void addNewIncomingCall(PhoneAccountHandle phoneAccount, Bundle extras) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public void addNewUnknownCall(PhoneAccountHandle phoneAccount, Bundle extras) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public void placeCall(Uri handle, Bundle extras, String callingPackage) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public boolean enablePhoneAccount(PhoneAccountHandle accountHandle, boolean isEnabled) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public boolean setDefaultDialer(String packageName) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public Intent createManageBlockedNumbersIntent() throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public boolean isIncomingCallPermitted(PhoneAccountHandle phoneAccountHandle) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public boolean isOutgoingCallPermitted(PhoneAccountHandle phoneAccountHandle) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public void waitOnHandlers() throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public void acceptHandover(Uri srcAddr, int videoState, PhoneAccountHandle destAcct) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public boolean isInEmergencyCall() throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public void handleCallIntent(Intent intent) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public void setTestDefaultCallRedirectionApp(String packageName) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public void setTestPhoneAcctSuggestionComponent(String flattenedComponentName) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public void setTestDefaultCallScreeningApp(String packageName) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public void addOrRemoveTestCallCompanionApp(String packageName, boolean isAdded) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public void setTestAutoModeApp(String packageName) throws RemoteException {
         }
 
+        @Override // com.android.internal.telecom.ITelecomService
         public void setTestDefaultDialer(String packageName) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements ITelecomService {
         private static final String DESCRIPTOR = "com.android.internal.telecom.ITelecomService";
         static final int TRANSACTION_acceptHandover = 48;
@@ -406,12 +466,13 @@ public interface ITelecomService extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof ITelecomService)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof ITelecomService)) {
+                return (ITelecomService) iin;
             }
-            return (ITelecomService) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -535,743 +596,462 @@ public interface ITelecomService extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v13, resolved type: android.telecom.PhoneAccountHandle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v49, resolved type: android.telecom.PhoneAccountHandle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v55, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v59, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v63, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v67, resolved type: android.telecom.PhoneAccountHandle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v81, resolved type: android.telecom.PhoneAccountHandle} */
-        /* JADX WARNING: type inference failed for: r3v0 */
-        /* JADX WARNING: type inference failed for: r3v5 */
-        /* JADX WARNING: type inference failed for: r3v19 */
-        /* JADX WARNING: type inference failed for: r3v22 */
-        /* JADX WARNING: type inference failed for: r3v25 */
-        /* JADX WARNING: type inference failed for: r3v29 */
-        /* JADX WARNING: type inference failed for: r3v33 */
-        /* JADX WARNING: type inference failed for: r3v45 */
-        /* JADX WARNING: type inference failed for: r3v73 */
-        /* JADX WARNING: type inference failed for: r3v77 */
-        /* JADX WARNING: type inference failed for: r3v85 */
-        /* JADX WARNING: type inference failed for: r3v89 */
-        /* JADX WARNING: type inference failed for: r3v90 */
-        /* JADX WARNING: type inference failed for: r3v91 */
-        /* JADX WARNING: type inference failed for: r3v92 */
-        /* JADX WARNING: type inference failed for: r3v93 */
-        /* JADX WARNING: type inference failed for: r3v94 */
-        /* JADX WARNING: type inference failed for: r3v95 */
-        /* JADX WARNING: type inference failed for: r3v96 */
-        /* JADX WARNING: type inference failed for: r3v97 */
-        /* JADX WARNING: type inference failed for: r3v98 */
-        /* JADX WARNING: type inference failed for: r3v99 */
-        /* JADX WARNING: type inference failed for: r3v100 */
-        /* JADX WARNING: type inference failed for: r3v101 */
-        /* JADX WARNING: type inference failed for: r3v102 */
-        /* JADX WARNING: type inference failed for: r3v103 */
-        /* JADX WARNING: type inference failed for: r3v104 */
-        /* JADX WARNING: type inference failed for: r3v105 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r7, android.os.Parcel r8, android.os.Parcel r9, int r10) throws android.os.RemoteException {
-            /*
-                r6 = this;
-                java.lang.String r0 = "com.android.internal.telecom.ITelecomService"
-                r1 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r2 = 1
-                if (r7 == r1) goto L_0x0547
-                r1 = 0
-                r3 = 0
-                switch(r7) {
-                    case 1: goto L_0x0531;
-                    case 2: goto L_0x0512;
-                    case 3: goto L_0x04f7;
-                    case 4: goto L_0x04db;
-                    case 5: goto L_0x04c1;
-                    case 6: goto L_0x04af;
-                    case 7: goto L_0x0499;
-                    case 8: goto L_0x0487;
-                    case 9: goto L_0x0460;
-                    case 10: goto L_0x0452;
-                    case 11: goto L_0x0444;
-                    case 12: goto L_0x0436;
-                    case 13: goto L_0x041b;
-                    case 14: goto L_0x0400;
-                    case 15: goto L_0x03e4;
-                    case 16: goto L_0x03c8;
-                    case 17: goto L_0x03ba;
-                    case 18: goto L_0x0392;
-                    case 19: goto L_0x036e;
-                    case 20: goto L_0x034a;
-                    case 21: goto L_0x0333;
-                    case 22: goto L_0x0325;
-                    case 23: goto L_0x0317;
-                    case 24: goto L_0x0300;
-                    case 25: goto L_0x02f2;
-                    case 26: goto L_0x02e0;
-                    case 27: goto L_0x02ce;
-                    case 28: goto L_0x02bc;
-                    case 29: goto L_0x02ae;
-                    case 30: goto L_0x029c;
-                    case 31: goto L_0x028e;
-                    case 32: goto L_0x027c;
-                    case 33: goto L_0x026e;
-                    case 34: goto L_0x0258;
-                    case 35: goto L_0x0230;
-                    case 36: goto L_0x0205;
-                    case 37: goto L_0x01f3;
-                    case 38: goto L_0x01e1;
-                    case 39: goto L_0x01b7;
-                    case 40: goto L_0x018d;
-                    case 41: goto L_0x015f;
-                    case 42: goto L_0x0139;
-                    case 43: goto L_0x0127;
-                    case 44: goto L_0x0110;
-                    case 45: goto L_0x00f0;
-                    case 46: goto L_0x00d0;
-                    case 47: goto L_0x00c6;
-                    case 48: goto L_0x0098;
-                    case 49: goto L_0x008a;
-                    case 50: goto L_0x006e;
-                    case 51: goto L_0x0060;
-                    case 52: goto L_0x0052;
-                    case 53: goto L_0x0044;
-                    case 54: goto L_0x002e;
-                    case 55: goto L_0x0020;
-                    case 56: goto L_0x0012;
-                    default: goto L_0x000d;
-                }
-            L_0x000d:
-                boolean r1 = super.onTransact(r7, r8, r9, r10)
-                return r1
-            L_0x0012:
-                r8.enforceInterface(r0)
-                java.lang.String r1 = r8.readString()
-                r6.setTestDefaultDialer(r1)
-                r9.writeNoException()
-                return r2
-            L_0x0020:
-                r8.enforceInterface(r0)
-                java.lang.String r1 = r8.readString()
-                r6.setTestAutoModeApp(r1)
-                r9.writeNoException()
-                return r2
-            L_0x002e:
-                r8.enforceInterface(r0)
-                java.lang.String r3 = r8.readString()
-                int r4 = r8.readInt()
-                if (r4 == 0) goto L_0x003d
-                r1 = r2
-            L_0x003d:
-                r6.addOrRemoveTestCallCompanionApp(r3, r1)
-                r9.writeNoException()
-                return r2
-            L_0x0044:
-                r8.enforceInterface(r0)
-                java.lang.String r1 = r8.readString()
-                r6.setTestDefaultCallScreeningApp(r1)
-                r9.writeNoException()
-                return r2
-            L_0x0052:
-                r8.enforceInterface(r0)
-                java.lang.String r1 = r8.readString()
-                r6.setTestPhoneAcctSuggestionComponent(r1)
-                r9.writeNoException()
-                return r2
-            L_0x0060:
-                r8.enforceInterface(r0)
-                java.lang.String r1 = r8.readString()
-                r6.setTestDefaultCallRedirectionApp(r1)
-                r9.writeNoException()
-                return r2
-            L_0x006e:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                if (r1 == 0) goto L_0x0081
-                android.os.Parcelable$Creator<android.content.Intent> r1 = android.content.Intent.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                r3 = r1
-                android.content.Intent r3 = (android.content.Intent) r3
-                goto L_0x0082
-            L_0x0081:
-            L_0x0082:
-                r1 = r3
-                r6.handleCallIntent(r1)
-                r9.writeNoException()
-                return r2
-            L_0x008a:
-                r8.enforceInterface(r0)
-                boolean r1 = r6.isInEmergencyCall()
-                r9.writeNoException()
-                r9.writeInt(r1)
-                return r2
-            L_0x0098:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                if (r1 == 0) goto L_0x00aa
-                android.os.Parcelable$Creator<android.net.Uri> r1 = android.net.Uri.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.net.Uri r1 = (android.net.Uri) r1
-                goto L_0x00ab
-            L_0x00aa:
-                r1 = r3
-            L_0x00ab:
-                int r4 = r8.readInt()
-                int r5 = r8.readInt()
-                if (r5 == 0) goto L_0x00be
-                android.os.Parcelable$Creator<android.telecom.PhoneAccountHandle> r3 = android.telecom.PhoneAccountHandle.CREATOR
-                java.lang.Object r3 = r3.createFromParcel(r8)
-                android.telecom.PhoneAccountHandle r3 = (android.telecom.PhoneAccountHandle) r3
-                goto L_0x00bf
-            L_0x00be:
-            L_0x00bf:
-                r6.acceptHandover(r1, r4, r3)
-                r9.writeNoException()
-                return r2
-            L_0x00c6:
-                r8.enforceInterface(r0)
-                r6.waitOnHandlers()
-                r9.writeNoException()
-                return r2
-            L_0x00d0:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                if (r1 == 0) goto L_0x00e3
-                android.os.Parcelable$Creator<android.telecom.PhoneAccountHandle> r1 = android.telecom.PhoneAccountHandle.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                r3 = r1
-                android.telecom.PhoneAccountHandle r3 = (android.telecom.PhoneAccountHandle) r3
-                goto L_0x00e4
-            L_0x00e3:
-            L_0x00e4:
-                r1 = r3
-                boolean r3 = r6.isOutgoingCallPermitted(r1)
-                r9.writeNoException()
-                r9.writeInt(r3)
-                return r2
-            L_0x00f0:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                if (r1 == 0) goto L_0x0103
-                android.os.Parcelable$Creator<android.telecom.PhoneAccountHandle> r1 = android.telecom.PhoneAccountHandle.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                r3 = r1
-                android.telecom.PhoneAccountHandle r3 = (android.telecom.PhoneAccountHandle) r3
-                goto L_0x0104
-            L_0x0103:
-            L_0x0104:
-                r1 = r3
-                boolean r3 = r6.isIncomingCallPermitted(r1)
-                r9.writeNoException()
-                r9.writeInt(r3)
-                return r2
-            L_0x0110:
-                r8.enforceInterface(r0)
-                android.content.Intent r3 = r6.createManageBlockedNumbersIntent()
-                r9.writeNoException()
-                if (r3 == 0) goto L_0x0123
-                r9.writeInt(r2)
-                r3.writeToParcel(r9, r2)
-                goto L_0x0126
-            L_0x0123:
-                r9.writeInt(r1)
-            L_0x0126:
-                return r2
-            L_0x0127:
-                r8.enforceInterface(r0)
-                java.lang.String r1 = r8.readString()
-                boolean r3 = r6.setDefaultDialer(r1)
-                r9.writeNoException()
-                r9.writeInt(r3)
-                return r2
-            L_0x0139:
-                r8.enforceInterface(r0)
-                int r4 = r8.readInt()
-                if (r4 == 0) goto L_0x014b
-                android.os.Parcelable$Creator<android.telecom.PhoneAccountHandle> r3 = android.telecom.PhoneAccountHandle.CREATOR
-                java.lang.Object r3 = r3.createFromParcel(r8)
-                android.telecom.PhoneAccountHandle r3 = (android.telecom.PhoneAccountHandle) r3
-                goto L_0x014c
-            L_0x014b:
-            L_0x014c:
-                int r4 = r8.readInt()
-                if (r4 == 0) goto L_0x0154
-                r1 = r2
-            L_0x0154:
-                boolean r4 = r6.enablePhoneAccount(r3, r1)
-                r9.writeNoException()
-                r9.writeInt(r4)
-                return r2
-            L_0x015f:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                if (r1 == 0) goto L_0x0171
-                android.os.Parcelable$Creator<android.net.Uri> r1 = android.net.Uri.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.net.Uri r1 = (android.net.Uri) r1
-                goto L_0x0172
-            L_0x0171:
-                r1 = r3
-            L_0x0172:
-                int r4 = r8.readInt()
-                if (r4 == 0) goto L_0x0181
-                android.os.Parcelable$Creator<android.os.Bundle> r3 = android.os.Bundle.CREATOR
-                java.lang.Object r3 = r3.createFromParcel(r8)
-                android.os.Bundle r3 = (android.os.Bundle) r3
-                goto L_0x0182
-            L_0x0181:
-            L_0x0182:
-                java.lang.String r4 = r8.readString()
-                r6.placeCall(r1, r3, r4)
-                r9.writeNoException()
-                return r2
-            L_0x018d:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                if (r1 == 0) goto L_0x019f
-                android.os.Parcelable$Creator<android.telecom.PhoneAccountHandle> r1 = android.telecom.PhoneAccountHandle.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.telecom.PhoneAccountHandle r1 = (android.telecom.PhoneAccountHandle) r1
-                goto L_0x01a0
-            L_0x019f:
-                r1 = r3
-            L_0x01a0:
-                int r4 = r8.readInt()
-                if (r4 == 0) goto L_0x01af
-                android.os.Parcelable$Creator<android.os.Bundle> r3 = android.os.Bundle.CREATOR
-                java.lang.Object r3 = r3.createFromParcel(r8)
-                android.os.Bundle r3 = (android.os.Bundle) r3
-                goto L_0x01b0
-            L_0x01af:
-            L_0x01b0:
-                r6.addNewUnknownCall(r1, r3)
-                r9.writeNoException()
-                return r2
-            L_0x01b7:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                if (r1 == 0) goto L_0x01c9
-                android.os.Parcelable$Creator<android.telecom.PhoneAccountHandle> r1 = android.telecom.PhoneAccountHandle.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.telecom.PhoneAccountHandle r1 = (android.telecom.PhoneAccountHandle) r1
-                goto L_0x01ca
-            L_0x01c9:
-                r1 = r3
-            L_0x01ca:
-                int r4 = r8.readInt()
-                if (r4 == 0) goto L_0x01d9
-                android.os.Parcelable$Creator<android.os.Bundle> r3 = android.os.Bundle.CREATOR
-                java.lang.Object r3 = r3.createFromParcel(r8)
-                android.os.Bundle r3 = (android.os.Bundle) r3
-                goto L_0x01da
-            L_0x01d9:
-            L_0x01da:
-                r6.addNewIncomingCall(r1, r3)
-                r9.writeNoException()
-                return r2
-            L_0x01e1:
-                r8.enforceInterface(r0)
-                java.lang.String r1 = r8.readString()
-                int r3 = r6.getCurrentTtyMode(r1)
-                r9.writeNoException()
-                r9.writeInt(r3)
-                return r2
-            L_0x01f3:
-                r8.enforceInterface(r0)
-                java.lang.String r1 = r8.readString()
-                boolean r3 = r6.isTtySupported(r1)
-                r9.writeNoException()
-                r9.writeInt(r3)
-                return r2
-            L_0x0205:
-                r8.enforceInterface(r0)
-                int r4 = r8.readInt()
-                if (r4 == 0) goto L_0x0217
-                android.os.Parcelable$Creator<android.telecom.PhoneAccountHandle> r3 = android.telecom.PhoneAccountHandle.CREATOR
-                java.lang.Object r3 = r3.createFromParcel(r8)
-                android.telecom.PhoneAccountHandle r3 = (android.telecom.PhoneAccountHandle) r3
-                goto L_0x0218
-            L_0x0217:
-            L_0x0218:
-                java.lang.String r4 = r8.readString()
-                android.net.Uri r5 = r6.getAdnUriForPhoneAccount(r3, r4)
-                r9.writeNoException()
-                if (r5 == 0) goto L_0x022c
-                r9.writeInt(r2)
-                r5.writeToParcel(r9, r2)
-                goto L_0x022f
-            L_0x022c:
-                r9.writeInt(r1)
-            L_0x022f:
-                return r2
-            L_0x0230:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                if (r1 == 0) goto L_0x0243
-                android.os.Parcelable$Creator<android.telecom.PhoneAccountHandle> r1 = android.telecom.PhoneAccountHandle.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                r3 = r1
-                android.telecom.PhoneAccountHandle r3 = (android.telecom.PhoneAccountHandle) r3
-                goto L_0x0244
-            L_0x0243:
-            L_0x0244:
-                r1 = r3
-                java.lang.String r3 = r8.readString()
-                java.lang.String r4 = r8.readString()
-                boolean r5 = r6.handlePinMmiForPhoneAccount(r1, r3, r4)
-                r9.writeNoException()
-                r9.writeInt(r5)
-                return r2
-            L_0x0258:
-                r8.enforceInterface(r0)
-                java.lang.String r1 = r8.readString()
-                java.lang.String r3 = r8.readString()
-                boolean r4 = r6.handlePinMmi(r1, r3)
-                r9.writeNoException()
-                r9.writeInt(r4)
-                return r2
-            L_0x026e:
-                r8.enforceInterface(r0)
-                java.lang.String r1 = r8.readString()
-                r6.cancelMissedCallsNotification(r1)
-                r9.writeNoException()
-                return r2
-            L_0x027c:
-                r8.enforceInterface(r0)
-                java.lang.String r1 = r8.readString()
-                int r3 = r8.readInt()
-                r6.acceptRingingCallWithVideoState(r1, r3)
-                r9.writeNoException()
-                return r2
-            L_0x028e:
-                r8.enforceInterface(r0)
-                java.lang.String r1 = r8.readString()
-                r6.acceptRingingCall(r1)
-                r9.writeNoException()
-                return r2
-            L_0x029c:
-                r8.enforceInterface(r0)
-                java.lang.String r1 = r8.readString()
-                boolean r3 = r6.endCall(r1)
-                r9.writeNoException()
-                r9.writeInt(r3)
-                return r2
-            L_0x02ae:
-                r8.enforceInterface(r0)
-                int r1 = r6.getCallState()
-                r9.writeNoException()
-                r9.writeInt(r1)
-                return r2
-            L_0x02bc:
-                r8.enforceInterface(r0)
-                java.lang.String r1 = r8.readString()
-                boolean r3 = r6.isRinging(r1)
-                r9.writeNoException()
-                r9.writeInt(r3)
-                return r2
-            L_0x02ce:
-                r8.enforceInterface(r0)
-                java.lang.String r1 = r8.readString()
-                boolean r3 = r6.isInManagedCall(r1)
-                r9.writeNoException()
-                r9.writeInt(r3)
-                return r2
-            L_0x02e0:
-                r8.enforceInterface(r0)
-                java.lang.String r1 = r8.readString()
-                boolean r3 = r6.isInCall(r1)
-                r9.writeNoException()
-                r9.writeInt(r3)
-                return r2
-            L_0x02f2:
-                r8.enforceInterface(r0)
-                java.lang.String r1 = r8.readString()
-                r6.silenceRinger(r1)
-                r9.writeNoException()
-                return r2
-            L_0x0300:
-                r8.enforceInterface(r0)
-                android.telecom.TelecomAnalytics r3 = r6.dumpCallAnalytics()
-                r9.writeNoException()
-                if (r3 == 0) goto L_0x0313
-                r9.writeInt(r2)
-                r3.writeToParcel(r9, r2)
-                goto L_0x0316
-            L_0x0313:
-                r9.writeInt(r1)
-            L_0x0316:
-                return r2
-            L_0x0317:
-                r8.enforceInterface(r0)
-                java.lang.String r1 = r6.getSystemDialerPackage()
-                r9.writeNoException()
-                r9.writeString(r1)
-                return r2
-            L_0x0325:
-                r8.enforceInterface(r0)
-                java.lang.String r1 = r6.getDefaultDialerPackage()
-                r9.writeNoException()
-                r9.writeString(r1)
-                return r2
-            L_0x0333:
-                r8.enforceInterface(r0)
-                android.content.ComponentName r3 = r6.getDefaultPhoneApp()
-                r9.writeNoException()
-                if (r3 == 0) goto L_0x0346
-                r9.writeInt(r2)
-                r3.writeToParcel((android.os.Parcel) r9, (int) r2)
-                goto L_0x0349
-            L_0x0346:
-                r9.writeInt(r1)
-            L_0x0349:
-                return r2
-            L_0x034a:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                if (r1 == 0) goto L_0x035d
-                android.os.Parcelable$Creator<android.telecom.PhoneAccountHandle> r1 = android.telecom.PhoneAccountHandle.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                r3 = r1
-                android.telecom.PhoneAccountHandle r3 = (android.telecom.PhoneAccountHandle) r3
-                goto L_0x035e
-            L_0x035d:
-            L_0x035e:
-                r1 = r3
-                java.lang.String r3 = r8.readString()
-                java.lang.String r4 = r6.getLine1Number(r1, r3)
-                r9.writeNoException()
-                r9.writeString(r4)
-                return r2
-            L_0x036e:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                if (r1 == 0) goto L_0x0381
-                android.os.Parcelable$Creator<android.telecom.PhoneAccountHandle> r1 = android.telecom.PhoneAccountHandle.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                r3 = r1
-                android.telecom.PhoneAccountHandle r3 = (android.telecom.PhoneAccountHandle) r3
-                goto L_0x0382
-            L_0x0381:
-            L_0x0382:
-                r1 = r3
-                java.lang.String r3 = r8.readString()
-                java.lang.String r4 = r6.getVoiceMailNumber(r1, r3)
-                r9.writeNoException()
-                r9.writeString(r4)
-                return r2
-            L_0x0392:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                if (r1 == 0) goto L_0x03a5
-                android.os.Parcelable$Creator<android.telecom.PhoneAccountHandle> r1 = android.telecom.PhoneAccountHandle.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                r3 = r1
-                android.telecom.PhoneAccountHandle r3 = (android.telecom.PhoneAccountHandle) r3
-                goto L_0x03a6
-            L_0x03a5:
-            L_0x03a6:
-                r1 = r3
-                java.lang.String r3 = r8.readString()
-                java.lang.String r4 = r8.readString()
-                boolean r5 = r6.isVoiceMailNumber(r1, r3, r4)
-                r9.writeNoException()
-                r9.writeInt(r5)
-                return r2
-            L_0x03ba:
-                r8.enforceInterface(r0)
-                java.lang.String r1 = r8.readString()
-                r6.clearAccounts(r1)
-                r9.writeNoException()
-                return r2
-            L_0x03c8:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                if (r1 == 0) goto L_0x03db
-                android.os.Parcelable$Creator<android.telecom.PhoneAccountHandle> r1 = android.telecom.PhoneAccountHandle.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                r3 = r1
-                android.telecom.PhoneAccountHandle r3 = (android.telecom.PhoneAccountHandle) r3
-                goto L_0x03dc
-            L_0x03db:
-            L_0x03dc:
-                r1 = r3
-                r6.unregisterPhoneAccount(r1)
-                r9.writeNoException()
-                return r2
-            L_0x03e4:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                if (r1 == 0) goto L_0x03f7
-                android.os.Parcelable$Creator<android.telecom.PhoneAccount> r1 = android.telecom.PhoneAccount.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                r3 = r1
-                android.telecom.PhoneAccount r3 = (android.telecom.PhoneAccount) r3
-                goto L_0x03f8
-            L_0x03f7:
-            L_0x03f8:
-                r1 = r3
-                r6.registerPhoneAccount(r1)
-                r9.writeNoException()
-                return r2
-            L_0x0400:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                android.telecom.PhoneAccountHandle r4 = r6.getSimCallManagerForUser(r3)
-                r9.writeNoException()
-                if (r4 == 0) goto L_0x0417
-                r9.writeInt(r2)
-                r4.writeToParcel(r9, r2)
-                goto L_0x041a
-            L_0x0417:
-                r9.writeInt(r1)
-            L_0x041a:
-                return r2
-            L_0x041b:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                android.telecom.PhoneAccountHandle r4 = r6.getSimCallManager(r3)
-                r9.writeNoException()
-                if (r4 == 0) goto L_0x0432
-                r9.writeInt(r2)
-                r4.writeToParcel(r9, r2)
-                goto L_0x0435
-            L_0x0432:
-                r9.writeInt(r1)
-            L_0x0435:
-                return r2
-            L_0x0436:
-                r8.enforceInterface(r0)
-                java.util.List r1 = r6.getAllPhoneAccountHandles()
-                r9.writeNoException()
-                r9.writeTypedList(r1)
-                return r2
-            L_0x0444:
-                r8.enforceInterface(r0)
-                java.util.List r1 = r6.getAllPhoneAccounts()
-                r9.writeNoException()
-                r9.writeTypedList(r1)
-                return r2
-            L_0x0452:
-                r8.enforceInterface(r0)
-                int r1 = r6.getAllPhoneAccountsCount()
-                r9.writeNoException()
-                r9.writeInt(r1)
-                return r2
-            L_0x0460:
-                r8.enforceInterface(r0)
-                int r4 = r8.readInt()
-                if (r4 == 0) goto L_0x0472
-                android.os.Parcelable$Creator<android.telecom.PhoneAccountHandle> r3 = android.telecom.PhoneAccountHandle.CREATOR
-                java.lang.Object r3 = r3.createFromParcel(r8)
-                android.telecom.PhoneAccountHandle r3 = (android.telecom.PhoneAccountHandle) r3
-                goto L_0x0473
-            L_0x0472:
-            L_0x0473:
-                android.telecom.PhoneAccount r4 = r6.getPhoneAccount(r3)
-                r9.writeNoException()
-                if (r4 == 0) goto L_0x0483
-                r9.writeInt(r2)
-                r4.writeToParcel(r9, r2)
-                goto L_0x0486
-            L_0x0483:
-                r9.writeInt(r1)
-            L_0x0486:
-                return r2
-            L_0x0487:
-                r8.enforceInterface(r0)
-                java.lang.String r1 = r8.readString()
-                java.util.List r3 = r6.getPhoneAccountsForPackage(r1)
-                r9.writeNoException()
-                r9.writeTypedList(r3)
-                return r2
-            L_0x0499:
-                r8.enforceInterface(r0)
-                java.lang.String r1 = r8.readString()
-                java.lang.String r3 = r8.readString()
-                java.util.List r4 = r6.getPhoneAccountsSupportingScheme(r1, r3)
-                r9.writeNoException()
-                r9.writeTypedList(r4)
-                return r2
-            L_0x04af:
-                r8.enforceInterface(r0)
-                java.lang.String r1 = r8.readString()
-                java.util.List r3 = r6.getSelfManagedPhoneAccounts(r1)
-                r9.writeNoException()
-                r9.writeTypedList(r3)
-                return r2
-            L_0x04c1:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x04cc
-                r1 = r2
-            L_0x04cc:
-                java.lang.String r3 = r8.readString()
-                java.util.List r4 = r6.getCallCapablePhoneAccounts(r1, r3)
-                r9.writeNoException()
-                r9.writeTypedList(r4)
-                return r2
-            L_0x04db:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                if (r1 == 0) goto L_0x04ee
-                android.os.Parcelable$Creator<android.telecom.PhoneAccountHandle> r1 = android.telecom.PhoneAccountHandle.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                r3 = r1
-                android.telecom.PhoneAccountHandle r3 = (android.telecom.PhoneAccountHandle) r3
-                goto L_0x04ef
-            L_0x04ee:
-            L_0x04ef:
-                r1 = r3
-                r6.setUserSelectedOutgoingPhoneAccount(r1)
-                r9.writeNoException()
-                return r2
-            L_0x04f7:
-                r8.enforceInterface(r0)
-                java.lang.String r3 = r8.readString()
-                android.telecom.PhoneAccountHandle r4 = r6.getUserSelectedOutgoingPhoneAccount(r3)
-                r9.writeNoException()
-                if (r4 == 0) goto L_0x050e
-                r9.writeInt(r2)
-                r4.writeToParcel(r9, r2)
-                goto L_0x0511
-            L_0x050e:
-                r9.writeInt(r1)
-            L_0x0511:
-                return r2
-            L_0x0512:
-                r8.enforceInterface(r0)
-                java.lang.String r3 = r8.readString()
-                java.lang.String r4 = r8.readString()
-                android.telecom.PhoneAccountHandle r5 = r6.getDefaultOutgoingPhoneAccount(r3, r4)
-                r9.writeNoException()
-                if (r5 == 0) goto L_0x052d
-                r9.writeInt(r2)
-                r5.writeToParcel(r9, r2)
-                goto L_0x0530
-            L_0x052d:
-                r9.writeInt(r1)
-            L_0x0530:
-                return r2
-            L_0x0531:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x053c
-                r1 = r2
-            L_0x053c:
-                java.lang.String r3 = r8.readString()
-                r6.showInCallScreen(r1, r3)
-                r9.writeNoException()
-                return r2
-            L_0x0547:
-                r9.writeString(r0)
-                return r2
-            */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.internal.telecom.ITelecomService.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            boolean _arg1;
+            PhoneAccountHandle _arg0;
+            PhoneAccountHandle _arg02;
+            Uri _arg03;
+            Uri _arg04;
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg1 = data.readInt() != 0;
+                    showInCallScreen(_arg1, data.readString());
+                    reply.writeNoException();
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg05 = data.readString();
+                    PhoneAccountHandle _result = getDefaultOutgoingPhoneAccount(_arg05, data.readString());
+                    reply.writeNoException();
+                    if (_result != null) {
+                        reply.writeInt(1);
+                        _result.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg06 = data.readString();
+                    PhoneAccountHandle _result2 = getUserSelectedOutgoingPhoneAccount(_arg06);
+                    reply.writeNoException();
+                    if (_result2 != null) {
+                        reply.writeInt(1);
+                        _result2.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    PhoneAccountHandle _arg07 = data.readInt() != 0 ? PhoneAccountHandle.CREATOR.createFromParcel(data) : null;
+                    setUserSelectedOutgoingPhoneAccount(_arg07);
+                    reply.writeNoException();
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg1 = data.readInt() != 0;
+                    List<PhoneAccountHandle> _result3 = getCallCapablePhoneAccounts(_arg1, data.readString());
+                    reply.writeNoException();
+                    reply.writeTypedList(_result3);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg08 = data.readString();
+                    List<PhoneAccountHandle> _result4 = getSelfManagedPhoneAccounts(_arg08);
+                    reply.writeNoException();
+                    reply.writeTypedList(_result4);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg09 = data.readString();
+                    List<PhoneAccountHandle> _result5 = getPhoneAccountsSupportingScheme(_arg09, data.readString());
+                    reply.writeNoException();
+                    reply.writeTypedList(_result5);
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg010 = data.readString();
+                    List<PhoneAccountHandle> _result6 = getPhoneAccountsForPackage(_arg010);
+                    reply.writeNoException();
+                    reply.writeTypedList(_result6);
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    PhoneAccountHandle _arg011 = data.readInt() != 0 ? PhoneAccountHandle.CREATOR.createFromParcel(data) : null;
+                    PhoneAccount _result7 = getPhoneAccount(_arg011);
+                    reply.writeNoException();
+                    if (_result7 != null) {
+                        reply.writeInt(1);
+                        _result7.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result8 = getAllPhoneAccountsCount();
+                    reply.writeNoException();
+                    reply.writeInt(_result8);
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    List<PhoneAccount> _result9 = getAllPhoneAccounts();
+                    reply.writeNoException();
+                    reply.writeTypedList(_result9);
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    List<PhoneAccountHandle> _result10 = getAllPhoneAccountHandles();
+                    reply.writeNoException();
+                    reply.writeTypedList(_result10);
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg012 = data.readInt();
+                    PhoneAccountHandle _result11 = getSimCallManager(_arg012);
+                    reply.writeNoException();
+                    if (_result11 != null) {
+                        reply.writeInt(1);
+                        _result11.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 14:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg013 = data.readInt();
+                    PhoneAccountHandle _result12 = getSimCallManagerForUser(_arg013);
+                    reply.writeNoException();
+                    if (_result12 != null) {
+                        reply.writeInt(1);
+                        _result12.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 15:
+                    data.enforceInterface(DESCRIPTOR);
+                    PhoneAccount _arg014 = data.readInt() != 0 ? PhoneAccount.CREATOR.createFromParcel(data) : null;
+                    registerPhoneAccount(_arg014);
+                    reply.writeNoException();
+                    return true;
+                case 16:
+                    data.enforceInterface(DESCRIPTOR);
+                    PhoneAccountHandle _arg015 = data.readInt() != 0 ? PhoneAccountHandle.CREATOR.createFromParcel(data) : null;
+                    unregisterPhoneAccount(_arg015);
+                    reply.writeNoException();
+                    return true;
+                case 17:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg016 = data.readString();
+                    clearAccounts(_arg016);
+                    reply.writeNoException();
+                    return true;
+                case 18:
+                    data.enforceInterface(DESCRIPTOR);
+                    PhoneAccountHandle _arg017 = data.readInt() != 0 ? PhoneAccountHandle.CREATOR.createFromParcel(data) : null;
+                    PhoneAccountHandle _arg018 = _arg017;
+                    String _arg12 = data.readString();
+                    String _arg2 = data.readString();
+                    boolean isVoiceMailNumber = isVoiceMailNumber(_arg018, _arg12, _arg2);
+                    reply.writeNoException();
+                    reply.writeInt(isVoiceMailNumber ? 1 : 0);
+                    return true;
+                case 19:
+                    data.enforceInterface(DESCRIPTOR);
+                    PhoneAccountHandle _arg019 = data.readInt() != 0 ? PhoneAccountHandle.CREATOR.createFromParcel(data) : null;
+                    String _result13 = getVoiceMailNumber(_arg019, data.readString());
+                    reply.writeNoException();
+                    reply.writeString(_result13);
+                    return true;
+                case 20:
+                    data.enforceInterface(DESCRIPTOR);
+                    PhoneAccountHandle _arg020 = data.readInt() != 0 ? PhoneAccountHandle.CREATOR.createFromParcel(data) : null;
+                    String _result14 = getLine1Number(_arg020, data.readString());
+                    reply.writeNoException();
+                    reply.writeString(_result14);
+                    return true;
+                case 21:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _result15 = getDefaultPhoneApp();
+                    reply.writeNoException();
+                    if (_result15 != null) {
+                        reply.writeInt(1);
+                        _result15.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 22:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _result16 = getDefaultDialerPackage();
+                    reply.writeNoException();
+                    reply.writeString(_result16);
+                    return true;
+                case 23:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _result17 = getSystemDialerPackage();
+                    reply.writeNoException();
+                    reply.writeString(_result17);
+                    return true;
+                case 24:
+                    data.enforceInterface(DESCRIPTOR);
+                    TelecomAnalytics _result18 = dumpCallAnalytics();
+                    reply.writeNoException();
+                    if (_result18 != null) {
+                        reply.writeInt(1);
+                        _result18.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 25:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg021 = data.readString();
+                    silenceRinger(_arg021);
+                    reply.writeNoException();
+                    return true;
+                case 26:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg022 = data.readString();
+                    boolean isInCall = isInCall(_arg022);
+                    reply.writeNoException();
+                    reply.writeInt(isInCall ? 1 : 0);
+                    return true;
+                case 27:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg023 = data.readString();
+                    boolean isInManagedCall = isInManagedCall(_arg023);
+                    reply.writeNoException();
+                    reply.writeInt(isInManagedCall ? 1 : 0);
+                    return true;
+                case 28:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg024 = data.readString();
+                    boolean isRinging = isRinging(_arg024);
+                    reply.writeNoException();
+                    reply.writeInt(isRinging ? 1 : 0);
+                    return true;
+                case 29:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result19 = getCallState();
+                    reply.writeNoException();
+                    reply.writeInt(_result19);
+                    return true;
+                case 30:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg025 = data.readString();
+                    boolean endCall = endCall(_arg025);
+                    reply.writeNoException();
+                    reply.writeInt(endCall ? 1 : 0);
+                    return true;
+                case 31:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg026 = data.readString();
+                    acceptRingingCall(_arg026);
+                    reply.writeNoException();
+                    return true;
+                case 32:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg027 = data.readString();
+                    acceptRingingCallWithVideoState(_arg027, data.readInt());
+                    reply.writeNoException();
+                    return true;
+                case 33:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg028 = data.readString();
+                    cancelMissedCallsNotification(_arg028);
+                    reply.writeNoException();
+                    return true;
+                case 34:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg029 = data.readString();
+                    boolean handlePinMmi = handlePinMmi(_arg029, data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(handlePinMmi ? 1 : 0);
+                    return true;
+                case 35:
+                    data.enforceInterface(DESCRIPTOR);
+                    PhoneAccountHandle _arg030 = data.readInt() != 0 ? PhoneAccountHandle.CREATOR.createFromParcel(data) : null;
+                    PhoneAccountHandle _arg031 = _arg030;
+                    String _arg13 = data.readString();
+                    String _arg22 = data.readString();
+                    boolean handlePinMmiForPhoneAccount = handlePinMmiForPhoneAccount(_arg031, _arg13, _arg22);
+                    reply.writeNoException();
+                    reply.writeInt(handlePinMmiForPhoneAccount ? 1 : 0);
+                    return true;
+                case 36:
+                    data.enforceInterface(DESCRIPTOR);
+                    PhoneAccountHandle _arg032 = data.readInt() != 0 ? PhoneAccountHandle.CREATOR.createFromParcel(data) : null;
+                    Uri _result20 = getAdnUriForPhoneAccount(_arg032, data.readString());
+                    reply.writeNoException();
+                    if (_result20 != null) {
+                        reply.writeInt(1);
+                        _result20.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 37:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg033 = data.readString();
+                    boolean isTtySupported = isTtySupported(_arg033);
+                    reply.writeNoException();
+                    reply.writeInt(isTtySupported ? 1 : 0);
+                    return true;
+                case 38:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg034 = data.readString();
+                    int _result21 = getCurrentTtyMode(_arg034);
+                    reply.writeNoException();
+                    reply.writeInt(_result21);
+                    return true;
+                case 39:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg0 = PhoneAccountHandle.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg0 = null;
+                    }
+                    addNewIncomingCall(_arg0, data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null);
+                    reply.writeNoException();
+                    return true;
+                case 40:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg02 = PhoneAccountHandle.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg02 = null;
+                    }
+                    addNewUnknownCall(_arg02, data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null);
+                    reply.writeNoException();
+                    return true;
+                case 41:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg03 = Uri.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg03 = null;
+                    }
+                    Bundle _arg14 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    String _arg23 = data.readString();
+                    placeCall(_arg03, _arg14, _arg23);
+                    reply.writeNoException();
+                    return true;
+                case 42:
+                    data.enforceInterface(DESCRIPTOR);
+                    PhoneAccountHandle _arg035 = data.readInt() != 0 ? PhoneAccountHandle.CREATOR.createFromParcel(data) : null;
+                    _arg1 = data.readInt() != 0;
+                    boolean enablePhoneAccount = enablePhoneAccount(_arg035, _arg1);
+                    reply.writeNoException();
+                    reply.writeInt(enablePhoneAccount ? 1 : 0);
+                    return true;
+                case 43:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg036 = data.readString();
+                    boolean defaultDialer = setDefaultDialer(_arg036);
+                    reply.writeNoException();
+                    reply.writeInt(defaultDialer ? 1 : 0);
+                    return true;
+                case 44:
+                    data.enforceInterface(DESCRIPTOR);
+                    Intent _result22 = createManageBlockedNumbersIntent();
+                    reply.writeNoException();
+                    if (_result22 != null) {
+                        reply.writeInt(1);
+                        _result22.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 45:
+                    data.enforceInterface(DESCRIPTOR);
+                    PhoneAccountHandle _arg037 = data.readInt() != 0 ? PhoneAccountHandle.CREATOR.createFromParcel(data) : null;
+                    boolean isIncomingCallPermitted = isIncomingCallPermitted(_arg037);
+                    reply.writeNoException();
+                    reply.writeInt(isIncomingCallPermitted ? 1 : 0);
+                    return true;
+                case 46:
+                    data.enforceInterface(DESCRIPTOR);
+                    PhoneAccountHandle _arg038 = data.readInt() != 0 ? PhoneAccountHandle.CREATOR.createFromParcel(data) : null;
+                    boolean isOutgoingCallPermitted = isOutgoingCallPermitted(_arg038);
+                    reply.writeNoException();
+                    reply.writeInt(isOutgoingCallPermitted ? 1 : 0);
+                    return true;
+                case 47:
+                    data.enforceInterface(DESCRIPTOR);
+                    waitOnHandlers();
+                    reply.writeNoException();
+                    return true;
+                case 48:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg04 = Uri.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg04 = null;
+                    }
+                    int _arg15 = data.readInt();
+                    PhoneAccountHandle _arg24 = data.readInt() != 0 ? PhoneAccountHandle.CREATOR.createFromParcel(data) : null;
+                    acceptHandover(_arg04, _arg15, _arg24);
+                    reply.writeNoException();
+                    return true;
+                case 49:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isInEmergencyCall = isInEmergencyCall();
+                    reply.writeNoException();
+                    reply.writeInt(isInEmergencyCall ? 1 : 0);
+                    return true;
+                case 50:
+                    data.enforceInterface(DESCRIPTOR);
+                    Intent _arg039 = data.readInt() != 0 ? Intent.CREATOR.createFromParcel(data) : null;
+                    handleCallIntent(_arg039);
+                    reply.writeNoException();
+                    return true;
+                case 51:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg040 = data.readString();
+                    setTestDefaultCallRedirectionApp(_arg040);
+                    reply.writeNoException();
+                    return true;
+                case 52:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg041 = data.readString();
+                    setTestPhoneAcctSuggestionComponent(_arg041);
+                    reply.writeNoException();
+                    return true;
+                case 53:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg042 = data.readString();
+                    setTestDefaultCallScreeningApp(_arg042);
+                    reply.writeNoException();
+                    return true;
+                case 54:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg043 = data.readString();
+                    _arg1 = data.readInt() != 0;
+                    addOrRemoveTestCallCompanionApp(_arg043, _arg1);
+                    reply.writeNoException();
+                    return true;
+                case 55:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg044 = data.readString();
+                    setTestAutoModeApp(_arg044);
+                    reply.writeNoException();
+                    return true;
+                case 56:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg045 = data.readString();
+                    setTestDefaultDialer(_arg045);
+                    reply.writeNoException();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements ITelecomService {
             public static ITelecomService sDefaultImpl;
             private IBinder mRemote;
@@ -1280,6 +1060,7 @@ public interface ITelecomService extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -1288,26 +1069,27 @@ public interface ITelecomService extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public void showInCallScreen(boolean showDialpad, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(showDialpad);
+                    _data.writeInt(showDialpad ? 1 : 0);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(1, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().showInCallScreen(showDialpad, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().showInCallScreen(showDialpad, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public PhoneAccountHandle getDefaultOutgoingPhoneAccount(String uriScheme, String callingPackage) throws RemoteException {
                 PhoneAccountHandle _result;
                 Parcel _data = Parcel.obtain();
@@ -1316,7 +1098,8 @@ public interface ITelecomService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(uriScheme);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(2, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getDefaultOutgoingPhoneAccount(uriScheme, callingPackage);
                     }
                     _reply.readException();
@@ -1325,16 +1108,14 @@ public interface ITelecomService extends IInterface {
                     } else {
                         _result = null;
                     }
-                    PhoneAccountHandle _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public PhoneAccountHandle getUserSelectedOutgoingPhoneAccount(String callingPackage) throws RemoteException {
                 PhoneAccountHandle _result;
                 Parcel _data = Parcel.obtain();
@@ -1342,7 +1123,8 @@ public interface ITelecomService extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(3, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getUserSelectedOutgoingPhoneAccount(callingPackage);
                     }
                     _reply.readException();
@@ -1351,16 +1133,14 @@ public interface ITelecomService extends IInterface {
                     } else {
                         _result = null;
                     }
-                    PhoneAccountHandle _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public void setUserSelectedOutgoingPhoneAccount(PhoneAccountHandle account) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1372,33 +1152,32 @@ public interface ITelecomService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(4, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setUserSelectedOutgoingPhoneAccount(account);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setUserSelectedOutgoingPhoneAccount(account);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public List<PhoneAccountHandle> getCallCapablePhoneAccounts(boolean includeDisabledAccounts, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(includeDisabledAccounts);
+                    _data.writeInt(includeDisabledAccounts ? 1 : 0);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(5, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCallCapablePhoneAccounts(includeDisabledAccounts, callingPackage);
                     }
                     _reply.readException();
                     List<PhoneAccountHandle> _result = _reply.createTypedArrayList(PhoneAccountHandle.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1406,19 +1185,19 @@ public interface ITelecomService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public List<PhoneAccountHandle> getSelfManagedPhoneAccounts(String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(6, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getSelfManagedPhoneAccounts(callingPackage);
                     }
                     _reply.readException();
                     List<PhoneAccountHandle> _result = _reply.createTypedArrayList(PhoneAccountHandle.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1426,6 +1205,7 @@ public interface ITelecomService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public List<PhoneAccountHandle> getPhoneAccountsSupportingScheme(String uriScheme, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1433,13 +1213,12 @@ public interface ITelecomService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(uriScheme);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(7, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPhoneAccountsSupportingScheme(uriScheme, callingPackage);
                     }
                     _reply.readException();
                     List<PhoneAccountHandle> _result = _reply.createTypedArrayList(PhoneAccountHandle.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1447,19 +1226,19 @@ public interface ITelecomService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public List<PhoneAccountHandle> getPhoneAccountsForPackage(String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(packageName);
-                    if (!this.mRemote.transact(8, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPhoneAccountsForPackage(packageName);
                     }
                     _reply.readException();
                     List<PhoneAccountHandle> _result = _reply.createTypedArrayList(PhoneAccountHandle.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1467,6 +1246,7 @@ public interface ITelecomService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public PhoneAccount getPhoneAccount(PhoneAccountHandle account) throws RemoteException {
                 PhoneAccount _result;
                 Parcel _data = Parcel.obtain();
@@ -1479,7 +1259,8 @@ public interface ITelecomService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(9, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(9, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPhoneAccount(account);
                     }
                     _reply.readException();
@@ -1488,28 +1269,25 @@ public interface ITelecomService extends IInterface {
                     } else {
                         _result = null;
                     }
-                    PhoneAccount _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public int getAllPhoneAccountsCount() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(10, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(10, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAllPhoneAccountsCount();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1517,18 +1295,18 @@ public interface ITelecomService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public List<PhoneAccount> getAllPhoneAccounts() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(11, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(11, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAllPhoneAccounts();
                     }
                     _reply.readException();
                     List<PhoneAccount> _result = _reply.createTypedArrayList(PhoneAccount.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1536,18 +1314,18 @@ public interface ITelecomService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public List<PhoneAccountHandle> getAllPhoneAccountHandles() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(12, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(12, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAllPhoneAccountHandles();
                     }
                     _reply.readException();
                     List<PhoneAccountHandle> _result = _reply.createTypedArrayList(PhoneAccountHandle.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1555,6 +1333,7 @@ public interface ITelecomService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public PhoneAccountHandle getSimCallManager(int subId) throws RemoteException {
                 PhoneAccountHandle _result;
                 Parcel _data = Parcel.obtain();
@@ -1562,7 +1341,8 @@ public interface ITelecomService extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    if (!this.mRemote.transact(13, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(13, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getSimCallManager(subId);
                     }
                     _reply.readException();
@@ -1571,16 +1351,14 @@ public interface ITelecomService extends IInterface {
                     } else {
                         _result = null;
                     }
-                    PhoneAccountHandle _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public PhoneAccountHandle getSimCallManagerForUser(int userId) throws RemoteException {
                 PhoneAccountHandle _result;
                 Parcel _data = Parcel.obtain();
@@ -1588,7 +1366,8 @@ public interface ITelecomService extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userId);
-                    if (!this.mRemote.transact(14, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(14, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getSimCallManagerForUser(userId);
                     }
                     _reply.readException();
@@ -1597,16 +1376,14 @@ public interface ITelecomService extends IInterface {
                     } else {
                         _result = null;
                     }
-                    PhoneAccountHandle _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public void registerPhoneAccount(PhoneAccount metadata) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1618,19 +1395,19 @@ public interface ITelecomService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(15, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(15, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().registerPhoneAccount(metadata);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().registerPhoneAccount(metadata);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public void unregisterPhoneAccount(PhoneAccountHandle account) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1642,44 +1419,43 @@ public interface ITelecomService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(16, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(16, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().unregisterPhoneAccount(account);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().unregisterPhoneAccount(account);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public void clearAccounts(String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(packageName);
-                    if (this.mRemote.transact(17, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(17, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().clearAccounts(packageName);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().clearAccounts(packageName);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public boolean isVoiceMailNumber(PhoneAccountHandle accountHandle, String number, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (accountHandle != null) {
                         _data.writeInt(1);
                         accountHandle.writeToParcel(_data, 0);
@@ -1688,15 +1464,12 @@ public interface ITelecomService extends IInterface {
                     }
                     _data.writeString(number);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(18, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(18, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isVoiceMailNumber(accountHandle, number, callingPackage);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1704,6 +1477,7 @@ public interface ITelecomService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public String getVoiceMailNumber(PhoneAccountHandle accountHandle, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1716,13 +1490,12 @@ public interface ITelecomService extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(19, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(19, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getVoiceMailNumber(accountHandle, callingPackage);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1730,6 +1503,7 @@ public interface ITelecomService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public String getLine1Number(PhoneAccountHandle accountHandle, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1742,13 +1516,12 @@ public interface ITelecomService extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(20, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(20, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getLine1Number(accountHandle, callingPackage);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1756,13 +1529,15 @@ public interface ITelecomService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public ComponentName getDefaultPhoneApp() throws RemoteException {
                 ComponentName _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(21, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(21, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getDefaultPhoneApp();
                     }
                     _reply.readException();
@@ -1771,28 +1546,25 @@ public interface ITelecomService extends IInterface {
                     } else {
                         _result = null;
                     }
-                    ComponentName _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public String getDefaultDialerPackage() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(22, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(22, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getDefaultDialerPackage();
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1800,18 +1572,18 @@ public interface ITelecomService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public String getSystemDialerPackage() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(23, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(23, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getSystemDialerPackage();
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1819,13 +1591,15 @@ public interface ITelecomService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public TelecomAnalytics dumpCallAnalytics() throws RemoteException {
                 TelecomAnalytics _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(24, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(24, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().dumpCallAnalytics();
                     }
                     _reply.readException();
@@ -1834,119 +1608,6 @@ public interface ITelecomService extends IInterface {
                     } else {
                         _result = null;
                     }
-                    TelecomAnalytics _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public void silenceRinger(String callingPackage) throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeString(callingPackage);
-                    if (this.mRemote.transact(25, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                        _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
-                    }
-                    Stub.getDefaultImpl().silenceRinger(callingPackage);
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public boolean isInCall(String callingPackage) throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeString(callingPackage);
-                    boolean z = false;
-                    if (!this.mRemote.transact(26, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
-                        return Stub.getDefaultImpl().isInCall(callingPackage);
-                    }
-                    _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public boolean isInManagedCall(String callingPackage) throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeString(callingPackage);
-                    boolean z = false;
-                    if (!this.mRemote.transact(27, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
-                        return Stub.getDefaultImpl().isInManagedCall(callingPackage);
-                    }
-                    _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public boolean isRinging(String callingPackage) throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeString(callingPackage);
-                    boolean z = false;
-                    if (!this.mRemote.transact(28, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
-                        return Stub.getDefaultImpl().isRinging(callingPackage);
-                    }
-                    _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public int getCallState() throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(29, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
-                        return Stub.getDefaultImpl().getCallState();
-                    }
-                    _reply.readException();
-                    int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1954,49 +1615,144 @@ public interface ITelecomService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
+            public void silenceRinger(String callingPackage) throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    _data.writeString(callingPackage);
+                    boolean _status = this.mRemote.transact(25, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().silenceRinger(callingPackage);
+                    } else {
+                        _reply.readException();
+                    }
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // com.android.internal.telecom.ITelecomService
+            public boolean isInCall(String callingPackage) throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    _data.writeString(callingPackage);
+                    boolean _status = this.mRemote.transact(26, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        return Stub.getDefaultImpl().isInCall(callingPackage);
+                    }
+                    _reply.readException();
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // com.android.internal.telecom.ITelecomService
+            public boolean isInManagedCall(String callingPackage) throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    _data.writeString(callingPackage);
+                    boolean _status = this.mRemote.transact(27, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        return Stub.getDefaultImpl().isInManagedCall(callingPackage);
+                    }
+                    _reply.readException();
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // com.android.internal.telecom.ITelecomService
+            public boolean isRinging(String callingPackage) throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    _data.writeString(callingPackage);
+                    boolean _status = this.mRemote.transact(28, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        return Stub.getDefaultImpl().isRinging(callingPackage);
+                    }
+                    _reply.readException();
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // com.android.internal.telecom.ITelecomService
+            public int getCallState() throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    boolean _status = this.mRemote.transact(29, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        return Stub.getDefaultImpl().getCallState();
+                    }
+                    _reply.readException();
+                    int _result = _reply.readInt();
+                    return _result;
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // com.android.internal.telecom.ITelecomService
             public boolean endCall(String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPackage);
-                    boolean z = false;
-                    if (!this.mRemote.transact(30, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(30, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().endCall(callingPackage);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public void acceptRingingCall(String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(31, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(31, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().acceptRingingCall(callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().acceptRingingCall(callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public void acceptRingingCallWithVideoState(String callingPackage, int videoState) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2004,38 +1760,38 @@ public interface ITelecomService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPackage);
                     _data.writeInt(videoState);
-                    if (this.mRemote.transact(32, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(32, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().acceptRingingCallWithVideoState(callingPackage, videoState);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().acceptRingingCallWithVideoState(callingPackage, videoState);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public void cancelMissedCallsNotification(String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(33, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(33, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().cancelMissedCallsNotification(callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().cancelMissedCallsNotification(callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public boolean handlePinMmi(String dialString, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2043,30 +1799,25 @@ public interface ITelecomService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(dialString);
                     _data.writeString(callingPackage);
-                    boolean z = false;
-                    if (!this.mRemote.transact(34, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(34, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().handlePinMmi(dialString, callingPackage);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public boolean handlePinMmiForPhoneAccount(PhoneAccountHandle accountHandle, String dialString, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (accountHandle != null) {
                         _data.writeInt(1);
                         accountHandle.writeToParcel(_data, 0);
@@ -2075,15 +1826,12 @@ public interface ITelecomService extends IInterface {
                     }
                     _data.writeString(dialString);
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(35, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(35, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().handlePinMmiForPhoneAccount(accountHandle, dialString, callingPackage);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2091,6 +1839,7 @@ public interface ITelecomService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public Uri getAdnUriForPhoneAccount(PhoneAccountHandle accountHandle, String callingPackage) throws RemoteException {
                 Uri _result;
                 Parcel _data = Parcel.obtain();
@@ -2104,7 +1853,8 @@ public interface ITelecomService extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(36, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(36, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAdnUriForPhoneAccount(accountHandle, callingPackage);
                     }
                     _reply.readException();
@@ -2113,53 +1863,6 @@ public interface ITelecomService extends IInterface {
                     } else {
                         _result = null;
                     }
-                    Uri _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public boolean isTtySupported(String callingPackage) throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeString(callingPackage);
-                    boolean z = false;
-                    if (!this.mRemote.transact(37, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
-                        return Stub.getDefaultImpl().isTtySupported(callingPackage);
-                    }
-                    _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public int getCurrentTtyMode(String callingPackage) throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeString(callingPackage);
-                    if (!this.mRemote.transact(38, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
-                        return Stub.getDefaultImpl().getCurrentTtyMode(callingPackage);
-                    }
-                    _reply.readException();
-                    int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2167,6 +1870,47 @@ public interface ITelecomService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
+            public boolean isTtySupported(String callingPackage) throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    _data.writeString(callingPackage);
+                    boolean _status = this.mRemote.transact(37, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        return Stub.getDefaultImpl().isTtySupported(callingPackage);
+                    }
+                    _reply.readException();
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // com.android.internal.telecom.ITelecomService
+            public int getCurrentTtyMode(String callingPackage) throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    _data.writeString(callingPackage);
+                    boolean _status = this.mRemote.transact(38, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        return Stub.getDefaultImpl().getCurrentTtyMode(callingPackage);
+                    }
+                    _reply.readException();
+                    int _result = _reply.readInt();
+                    return _result;
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // com.android.internal.telecom.ITelecomService
             public void addNewIncomingCall(PhoneAccountHandle phoneAccount, Bundle extras) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2184,19 +1928,19 @@ public interface ITelecomService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(39, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(39, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().addNewIncomingCall(phoneAccount, extras);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().addNewIncomingCall(phoneAccount, extras);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public void addNewUnknownCall(PhoneAccountHandle phoneAccount, Bundle extras) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2214,19 +1958,19 @@ public interface ITelecomService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(40, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(40, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().addNewUnknownCall(phoneAccount, extras);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().addNewUnknownCall(phoneAccount, extras);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public void placeCall(Uri handle, Bundle extras, String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2245,41 +1989,37 @@ public interface ITelecomService extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(callingPackage);
-                    if (this.mRemote.transact(41, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(41, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().placeCall(handle, extras, callingPackage);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().placeCall(handle, extras, callingPackage);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public boolean enablePhoneAccount(PhoneAccountHandle accountHandle, boolean isEnabled) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (accountHandle != null) {
                         _data.writeInt(1);
                         accountHandle.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(isEnabled);
-                    if (!this.mRemote.transact(42, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(isEnabled ? 1 : 0);
+                    boolean _status = this.mRemote.transact(42, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().enablePhoneAccount(accountHandle, isEnabled);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2287,37 +2027,35 @@ public interface ITelecomService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public boolean setDefaultDialer(String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(packageName);
-                    boolean z = false;
-                    if (!this.mRemote.transact(43, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(43, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setDefaultDialer(packageName);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public Intent createManageBlockedNumbersIntent() throws RemoteException {
                 Intent _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(44, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(44, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().createManageBlockedNumbersIntent();
                     }
                     _reply.readException();
@@ -2326,37 +2064,31 @@ public interface ITelecomService extends IInterface {
                     } else {
                         _result = null;
                     }
-                    Intent _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public boolean isIncomingCallPermitted(PhoneAccountHandle phoneAccountHandle) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (phoneAccountHandle != null) {
                         _data.writeInt(1);
                         phoneAccountHandle.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(45, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(45, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isIncomingCallPermitted(phoneAccountHandle);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2364,27 +2096,24 @@ public interface ITelecomService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public boolean isOutgoingCallPermitted(PhoneAccountHandle phoneAccountHandle) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (phoneAccountHandle != null) {
                         _data.writeInt(1);
                         phoneAccountHandle.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(46, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(46, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isOutgoingCallPermitted(phoneAccountHandle);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2392,24 +2121,25 @@ public interface ITelecomService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public void waitOnHandlers() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(47, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(47, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().waitOnHandlers();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().waitOnHandlers();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public void acceptHandover(Uri srcAddr, int videoState, PhoneAccountHandle destAcct) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2428,42 +2158,38 @@ public interface ITelecomService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(48, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(48, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().acceptHandover(srcAddr, videoState, destAcct);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().acceptHandover(srcAddr, videoState, destAcct);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public boolean isInEmergencyCall() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(49, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(49, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isInEmergencyCall();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public void handleCallIntent(Intent intent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2475,128 +2201,127 @@ public interface ITelecomService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(50, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(50, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().handleCallIntent(intent);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().handleCallIntent(intent);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public void setTestDefaultCallRedirectionApp(String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(packageName);
-                    if (this.mRemote.transact(51, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(51, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setTestDefaultCallRedirectionApp(packageName);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setTestDefaultCallRedirectionApp(packageName);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public void setTestPhoneAcctSuggestionComponent(String flattenedComponentName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(flattenedComponentName);
-                    if (this.mRemote.transact(52, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(52, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setTestPhoneAcctSuggestionComponent(flattenedComponentName);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setTestPhoneAcctSuggestionComponent(flattenedComponentName);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public void setTestDefaultCallScreeningApp(String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(packageName);
-                    if (this.mRemote.transact(53, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(53, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setTestDefaultCallScreeningApp(packageName);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setTestDefaultCallScreeningApp(packageName);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public void addOrRemoveTestCallCompanionApp(String packageName, boolean isAdded) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(packageName);
-                    _data.writeInt(isAdded);
-                    if (this.mRemote.transact(54, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(isAdded ? 1 : 0);
+                    boolean _status = this.mRemote.transact(54, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().addOrRemoveTestCallCompanionApp(packageName, isAdded);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().addOrRemoveTestCallCompanionApp(packageName, isAdded);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public void setTestAutoModeApp(String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(packageName);
-                    if (this.mRemote.transact(55, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(55, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setTestAutoModeApp(packageName);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setTestAutoModeApp(packageName);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.telecom.ITelecomService
             public void setTestDefaultDialer(String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(packageName);
-                    if (this.mRemote.transact(56, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(56, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setTestDefaultDialer(packageName);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setTestDefaultDialer(packageName);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -2605,11 +2330,11 @@ public interface ITelecomService extends IInterface {
         }
 
         public static boolean setDefaultImpl(ITelecomService impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static ITelecomService getDefaultImpl() {

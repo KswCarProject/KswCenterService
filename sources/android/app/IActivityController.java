@@ -1,12 +1,13 @@
 package android.app;
 
 import android.content.Intent;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes.dex */
 public interface IActivityController extends IInterface {
     boolean activityResuming(String str) throws RemoteException;
 
@@ -20,36 +21,45 @@ public interface IActivityController extends IInterface {
 
     int systemNotResponding(String str) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements IActivityController {
+        @Override // android.app.IActivityController
         public boolean activityStarting(Intent intent, String pkg) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IActivityController
         public boolean activityResuming(String pkg) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IActivityController
         public boolean appCrashed(String processName, int pid, String shortMsg, String longMsg, long timeMillis, String stackTrace) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IActivityController
         public int appEarlyNotResponding(String processName, int pid, String annotation) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.IActivityController
         public int appNotResponding(String processName, int pid, String processStats) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.IActivityController
         public int systemNotResponding(String msg) throws RemoteException {
             return 0;
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements IActivityController {
         private static final String DESCRIPTOR = "android.app.IActivityController";
         static final int TRANSACTION_activityResuming = 2;
@@ -68,12 +78,13 @@ public interface IActivityController extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IActivityController)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IActivityController)) {
+                return (IActivityController) iin;
             }
-            return (IActivityController) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -97,67 +108,81 @@ public interface IActivityController extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
             Intent _arg0;
-            int i = code;
-            Parcel parcel = data;
-            Parcel parcel2 = reply;
-            if (i != 1598968902) {
-                switch (i) {
-                    case 1:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = Intent.CREATOR.createFromParcel(parcel);
-                        } else {
-                            _arg0 = null;
-                        }
-                        boolean _result = activityStarting(_arg0, data.readString());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result);
-                        return true;
-                    case 2:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        boolean _result2 = activityResuming(data.readString());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result2);
-                        return true;
-                    case 3:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        boolean _result3 = appCrashed(data.readString(), data.readInt(), data.readString(), data.readString(), data.readLong(), data.readString());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result3);
-                        return true;
-                    case 4:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _result4 = appEarlyNotResponding(data.readString(), data.readInt(), data.readString());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result4);
-                        return true;
-                    case 5:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _result5 = appNotResponding(data.readString(), data.readInt(), data.readString());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result5);
-                        return true;
-                    case 6:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _result6 = systemNotResponding(data.readString());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result6);
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
-                parcel2.writeString(DESCRIPTOR);
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
                 return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg0 = Intent.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg0 = null;
+                    }
+                    String _arg1 = data.readString();
+                    boolean activityStarting = activityStarting(_arg0, _arg1);
+                    reply.writeNoException();
+                    reply.writeInt(activityStarting ? 1 : 0);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg02 = data.readString();
+                    boolean activityResuming = activityResuming(_arg02);
+                    reply.writeNoException();
+                    reply.writeInt(activityResuming ? 1 : 0);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg03 = data.readString();
+                    int _arg12 = data.readInt();
+                    String _arg2 = data.readString();
+                    String _arg3 = data.readString();
+                    long _arg4 = data.readLong();
+                    String _arg5 = data.readString();
+                    boolean appCrashed = appCrashed(_arg03, _arg12, _arg2, _arg3, _arg4, _arg5);
+                    reply.writeNoException();
+                    reply.writeInt(appCrashed ? 1 : 0);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg04 = data.readString();
+                    int _arg13 = data.readInt();
+                    String _arg22 = data.readString();
+                    int _result = appEarlyNotResponding(_arg04, _arg13, _arg22);
+                    reply.writeNoException();
+                    reply.writeInt(_result);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg05 = data.readString();
+                    int _arg14 = data.readInt();
+                    String _arg23 = data.readString();
+                    int _result2 = appNotResponding(_arg05, _arg14, _arg23);
+                    reply.writeNoException();
+                    reply.writeInt(_result2);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg06 = data.readString();
+                    int _result3 = systemNotResponding(_arg06);
+                    reply.writeNoException();
+                    reply.writeInt(_result3);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
             }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements IActivityController {
             public static IActivityController sDefaultImpl;
             private IBinder mRemote;
@@ -166,6 +191,7 @@ public interface IActivityController extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -174,12 +200,12 @@ public interface IActivityController extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.app.IActivityController
             public boolean activityStarting(Intent intent, String pkg) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (intent != null) {
                         _data.writeInt(1);
                         intent.writeToParcel(_data, 0);
@@ -187,15 +213,12 @@ public interface IActivityController extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(pkg);
-                    if (!this.mRemote.transact(1, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().activityStarting(intent, pkg);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -203,114 +226,91 @@ public interface IActivityController extends IInterface {
                 }
             }
 
+            @Override // android.app.IActivityController
             public boolean activityResuming(String pkg) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(pkg);
-                    boolean z = false;
-                    if (!this.mRemote.transact(2, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().activityResuming(pkg);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IActivityController
             public boolean appCrashed(String processName, int pid, String shortMsg, String longMsg, long timeMillis, String stackTrace) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeString(processName);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(pid);
+                } catch (Throwable th3) {
+                    th = th3;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeString(shortMsg);
+                } catch (Throwable th4) {
+                    th = th4;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeString(longMsg);
+                    _data.writeLong(timeMillis);
                     try {
-                        _data.writeString(processName);
-                        try {
-                            _data.writeInt(pid);
-                        } catch (Throwable th) {
-                            th = th;
-                            String str = shortMsg;
-                            String str2 = longMsg;
-                            String str3 = stackTrace;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                        try {
-                            _data.writeString(shortMsg);
-                            try {
-                                _data.writeString(longMsg);
-                                _data.writeLong(timeMillis);
-                            } catch (Throwable th2) {
-                                th = th2;
-                                String str32 = stackTrace;
-                                _reply.recycle();
-                                _data.recycle();
-                                throw th;
-                            }
-                        } catch (Throwable th3) {
-                            th = th3;
-                            String str22 = longMsg;
-                            String str322 = stackTrace;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                        try {
-                            _data.writeString(stackTrace);
-                            boolean z = false;
-                            if (this.mRemote.transact(3, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                _reply.readException();
-                                if (_reply.readInt() != 0) {
-                                    z = true;
-                                }
-                                boolean _status = z;
-                                _reply.recycle();
-                                _data.recycle();
-                                return _status;
-                            }
+                        _data.writeString(stackTrace);
+                        boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                        if (!_status && Stub.getDefaultImpl() != null) {
                             boolean appCrashed = Stub.getDefaultImpl().appCrashed(processName, pid, shortMsg, longMsg, timeMillis, stackTrace);
                             _reply.recycle();
                             _data.recycle();
                             return appCrashed;
-                        } catch (Throwable th4) {
-                            th = th4;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
                         }
+                        _reply.readException();
+                        boolean _status2 = _reply.readInt() != 0;
+                        _reply.recycle();
+                        _data.recycle();
+                        return _status2;
                     } catch (Throwable th5) {
                         th = th5;
-                        int i = pid;
-                        String str4 = shortMsg;
-                        String str222 = longMsg;
-                        String str3222 = stackTrace;
                         _reply.recycle();
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th6) {
                     th = th6;
-                    String str5 = processName;
-                    int i2 = pid;
-                    String str42 = shortMsg;
-                    String str2222 = longMsg;
-                    String str32222 = stackTrace;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.app.IActivityController
             public int appEarlyNotResponding(String processName, int pid, String annotation) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -319,13 +319,12 @@ public interface IActivityController extends IInterface {
                     _data.writeString(processName);
                     _data.writeInt(pid);
                     _data.writeString(annotation);
-                    if (!this.mRemote.transact(4, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().appEarlyNotResponding(processName, pid, annotation);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -333,6 +332,7 @@ public interface IActivityController extends IInterface {
                 }
             }
 
+            @Override // android.app.IActivityController
             public int appNotResponding(String processName, int pid, String processStats) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -341,13 +341,12 @@ public interface IActivityController extends IInterface {
                     _data.writeString(processName);
                     _data.writeInt(pid);
                     _data.writeString(processStats);
-                    if (!this.mRemote.transact(5, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().appNotResponding(processName, pid, processStats);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -355,19 +354,19 @@ public interface IActivityController extends IInterface {
                 }
             }
 
+            @Override // android.app.IActivityController
             public int systemNotResponding(String msg) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(msg);
-                    if (!this.mRemote.transact(6, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().systemNotResponding(msg);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -377,11 +376,11 @@ public interface IActivityController extends IInterface {
         }
 
         public static boolean setDefaultImpl(IActivityController impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IActivityController getDefaultImpl() {

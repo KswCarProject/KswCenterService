@@ -3,6 +3,7 @@ package android.text.style;
 import android.text.TextPaint;
 import android.view.View;
 
+/* loaded from: classes4.dex */
 public abstract class ClickableSpan extends CharacterStyle implements UpdateAppearance {
     private static int sIdCounter = 0;
     private int mId;
@@ -15,6 +16,7 @@ public abstract class ClickableSpan extends CharacterStyle implements UpdateAppe
         this.mId = i;
     }
 
+    @Override // android.text.style.CharacterStyle
     public void updateDrawState(TextPaint ds) {
         ds.setColor(ds.linkColor);
         ds.setUnderlineText(true);

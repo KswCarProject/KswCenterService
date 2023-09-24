@@ -3,10 +3,10 @@ package android.app;
 import android.annotation.UnsupportedAppUsage;
 import android.app.IActivityManager;
 import android.content.Intent;
-import android.os.IBinder;
-import android.os.WorkSource;
+import android.p007os.IBinder;
 
 @Deprecated
+/* loaded from: classes.dex */
 public abstract class ActivityManagerNative {
     @UnsupportedAppUsage
     public static IActivityManager asInterface(IBinder obj) {
@@ -33,14 +33,14 @@ public abstract class ActivityManagerNative {
     }
 
     public static void noteWakeupAlarm(PendingIntent ps, int sourceUid, String sourcePkg, String tag) {
-        ActivityManager.noteWakeupAlarm(ps, (WorkSource) null, sourceUid, sourcePkg, tag);
+        ActivityManager.noteWakeupAlarm(ps, null, sourceUid, sourcePkg, tag);
     }
 
     public static void noteAlarmStart(PendingIntent ps, int sourceUid, String tag) {
-        ActivityManager.noteAlarmStart(ps, (WorkSource) null, sourceUid, tag);
+        ActivityManager.noteAlarmStart(ps, null, sourceUid, tag);
     }
 
     public static void noteAlarmFinish(PendingIntent ps, int sourceUid, String tag) {
-        ActivityManager.noteAlarmFinish(ps, (WorkSource) null, sourceUid, tag);
+        ActivityManager.noteAlarmFinish(ps, null, sourceUid, tag);
     }
 }

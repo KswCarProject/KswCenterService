@@ -1,23 +1,28 @@
 package android.hardware.hdmi;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes.dex */
 public interface IHdmiMhlVendorCommandListener extends IInterface {
     void onReceived(int i, int i2, int i3, byte[] bArr) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements IHdmiMhlVendorCommandListener {
+        @Override // android.hardware.hdmi.IHdmiMhlVendorCommandListener
         public void onReceived(int portId, int offset, int length, byte[] data) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements IHdmiMhlVendorCommandListener {
         private static final String DESCRIPTOR = "android.hardware.hdmi.IHdmiMhlVendorCommandListener";
         static final int TRANSACTION_onReceived = 1;
@@ -31,40 +36,48 @@ public interface IHdmiMhlVendorCommandListener extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IHdmiMhlVendorCommandListener)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IHdmiMhlVendorCommandListener)) {
+                return (IHdmiMhlVendorCommandListener) iin;
             }
-            return (IHdmiMhlVendorCommandListener) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
 
         public static String getDefaultTransactionName(int transactionCode) {
-            if (transactionCode != 1) {
-                return null;
+            if (transactionCode == 1) {
+                return "onReceived";
             }
-            return "onReceived";
+            return null;
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code == 1) {
-                data.enforceInterface(DESCRIPTOR);
-                onReceived(data.readInt(), data.readInt(), data.readInt(), data.createByteArray());
-                return true;
-            } else if (code != 1598968902) {
+            if (code != 1) {
+                if (code == 1598968902) {
+                    reply.writeString(DESCRIPTOR);
+                    return true;
+                }
                 return super.onTransact(code, data, reply, flags);
-            } else {
-                reply.writeString(DESCRIPTOR);
-                return true;
             }
+            data.enforceInterface(DESCRIPTOR);
+            int _arg0 = data.readInt();
+            int _arg1 = data.readInt();
+            int _arg2 = data.readInt();
+            byte[] _arg3 = data.createByteArray();
+            onReceived(_arg0, _arg1, _arg2, _arg3);
+            return true;
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements IHdmiMhlVendorCommandListener {
             public static IHdmiMhlVendorCommandListener sDefaultImpl;
             private IBinder mRemote;
@@ -73,6 +86,7 @@ public interface IHdmiMhlVendorCommandListener extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -81,6 +95,7 @@ public interface IHdmiMhlVendorCommandListener extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.hardware.hdmi.IHdmiMhlVendorCommandListener
             public void onReceived(int portId, int offset, int length, byte[] data) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -89,9 +104,8 @@ public interface IHdmiMhlVendorCommandListener extends IInterface {
                     _data.writeInt(offset);
                     _data.writeInt(length);
                     _data.writeByteArray(data);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onReceived(portId, offset, length, data);
                     }
                 } finally {
@@ -101,11 +115,11 @@ public interface IHdmiMhlVendorCommandListener extends IInterface {
         }
 
         public static boolean setDefaultImpl(IHdmiMhlVendorCommandListener impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IHdmiMhlVendorCommandListener getDefaultImpl() {

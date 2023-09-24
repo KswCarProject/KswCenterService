@@ -1,18 +1,23 @@
 package android.bluetooth;
 
 import android.hardware.contexthub.V1_0.HostEndPoint;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.Log;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+/* loaded from: classes.dex */
 public final class BluetoothQualityReport implements Parcelable {
-    public static final Parcelable.Creator<BluetoothQualityReport> CREATOR = new Parcelable.Creator<BluetoothQualityReport>() {
+    public static final Parcelable.Creator<BluetoothQualityReport> CREATOR = new Parcelable.Creator<BluetoothQualityReport>() { // from class: android.bluetooth.BluetoothQualityReport.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public BluetoothQualityReport createFromParcel(Parcel in) {
             return new BluetoothQualityReport(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public BluetoothQualityReport[] newArray(int size) {
             return new BluetoothQualityReport[size];
         }
@@ -36,6 +41,7 @@ public final class BluetoothQualityReport implements Parcelable {
     private int mManufacturerId;
     private String mName;
 
+    /* loaded from: classes.dex */
     enum PacketType {
         INVALID,
         TYPE_ID,
@@ -67,11 +73,7 @@ public final class BluetoothQualityReport implements Parcelable {
         TYPE_3DH3,
         TYPE_3DH5;
         
-        private static PacketType[] sAllValues;
-
-        static {
-            sAllValues = values();
-        }
+        private static PacketType[] sAllValues = values();
 
         static PacketType fromOrdinal(int n) {
             if (n < sAllValues.length) {
@@ -81,6 +83,7 @@ public final class BluetoothQualityReport implements Parcelable {
         }
     }
 
+    /* loaded from: classes.dex */
     enum ConnState {
         CONN_IDLE(0),
         CONN_ACTIVE(129),
@@ -102,18 +105,15 @@ public final class BluetoothQualityReport implements Parcelable {
         CONN_RECONNECTING(17),
         CONN_SEMI_CONN(18);
         
-        private static ConnState[] sAllStates;
+        private static ConnState[] sAllStates = values();
         private int mValue;
 
-        static {
-            sAllStates = values();
-        }
-
-        private ConnState(int val) {
+        ConnState(int val) {
             this.mValue = val;
         }
 
         public static String getName(int val) {
+            ConnState[] connStateArr;
             for (ConnState state : sAllStates) {
                 if (state.mValue == val) {
                     return state.toString();
@@ -123,6 +123,7 @@ public final class BluetoothQualityReport implements Parcelable {
         }
     }
 
+    /* loaded from: classes.dex */
     enum LinkQuality {
         ULTRA_HIGH,
         HIGH,
@@ -131,11 +132,7 @@ public final class BluetoothQualityReport implements Parcelable {
         LOW,
         INVALID;
         
-        private static LinkQuality[] sAllValues;
-
-        static {
-            sAllValues = values();
-        }
+        private static LinkQuality[] sAllValues = values();
 
         static LinkQuality fromOrdinal(int n) {
             if (n < sAllValues.length - 1) {
@@ -145,6 +142,7 @@ public final class BluetoothQualityReport implements Parcelable {
         }
     }
 
+    /* loaded from: classes.dex */
     enum AirMode {
         uLaw,
         aLaw,
@@ -152,11 +150,7 @@ public final class BluetoothQualityReport implements Parcelable {
         transparent_msbc,
         INVALID;
         
-        private static AirMode[] sAllValues;
-
-        static {
-            sAllValues = values();
-        }
+        private static AirMode[] sAllValues = values();
 
         static AirMode fromOrdinal(int n) {
             if (n < sAllValues.length - 1) {
@@ -168,7 +162,7 @@ public final class BluetoothQualityReport implements Parcelable {
 
     public BluetoothQualityReport(String remoteAddr, int lmpVer, int lmpSubVer, int manufacturerId, String remoteName, int remoteCoD, byte[] rawData) {
         if (!BluetoothAdapter.checkBluetoothAddress(remoteAddr)) {
-            Log.d(TAG, "remote addr is invalid");
+            Log.m72d(TAG, "remote addr is invalid");
             this.mAddr = "00:00:00:00:00:00";
         } else {
             this.mAddr = remoteAddr;
@@ -177,7 +171,7 @@ public final class BluetoothQualityReport implements Parcelable {
         this.mLmpSubVer = lmpSubVer;
         this.mManufacturerId = manufacturerId;
         if (remoteName == null) {
-            Log.d(TAG, "remote name is null");
+            Log.m72d(TAG, "remote name is null");
             this.mName = "";
         } else {
             this.mName = remoteName;
@@ -186,19 +180,20 @@ public final class BluetoothQualityReport implements Parcelable {
         this.mBqrCommon = new BqrCommon(rawData, 0);
         this.mBqrVsCommon = new BqrVsCommon(rawData, 48);
         int id = this.mBqrCommon.getQualityReportId();
-        if (id != 1) {
-            int vsPartOffset = this.mBqrVsCommon.getLength() + 48;
-            if (id == 2) {
-                this.mBqrVsLsto = new BqrVsLsto(rawData, vsPartOffset);
-            } else if (id == 3) {
-                this.mBqrVsA2dpChoppy = new BqrVsA2dpChoppy(rawData, vsPartOffset);
-            } else if (id == 4) {
-                this.mBqrVsScoChoppy = new BqrVsScoChoppy(rawData, vsPartOffset);
-            } else if (id == 32) {
-                this.mBqrVsConnectFail = new BqrVsConnectFail(rawData, vsPartOffset);
-            } else {
-                throw new IllegalArgumentException("BluetoothQualityReport: unkown quality report id:" + id);
-            }
+        if (id == 1) {
+            return;
+        }
+        int vsPartOffset = this.mBqrVsCommon.getLength() + 48;
+        if (id == 2) {
+            this.mBqrVsLsto = new BqrVsLsto(rawData, vsPartOffset);
+        } else if (id == 3) {
+            this.mBqrVsA2dpChoppy = new BqrVsA2dpChoppy(rawData, vsPartOffset);
+        } else if (id == 4) {
+            this.mBqrVsScoChoppy = new BqrVsScoChoppy(rawData, vsPartOffset);
+        } else if (id == 32) {
+            this.mBqrVsConnectFail = new BqrVsConnectFail(rawData, vsPartOffset);
+        } else {
+            throw new IllegalArgumentException("BluetoothQualityReport: unkown quality report id:" + id);
         }
     }
 
@@ -229,21 +224,21 @@ public final class BluetoothQualityReport implements Parcelable {
 
     public String getQualityReportIdStr() {
         int id = this.mBqrCommon.getQualityReportId();
-        if (id == 32) {
-            return "Connect fail";
+        if (id != 32) {
+            switch (id) {
+                case 1:
+                    return "Quality monitor";
+                case 2:
+                    return "Approaching LSTO";
+                case 3:
+                    return "A2DP choppy";
+                case 4:
+                    return "SCO choppy";
+                default:
+                    return "INVALID";
+            }
         }
-        switch (id) {
-            case 1:
-                return "Quality monitor";
-            case 2:
-                return "Approaching LSTO";
-            case 3:
-                return "A2DP choppy";
-            case 4:
-                return "SCO choppy";
-            default:
-                return "INVALID";
-        }
+        return "Connect fail";
     }
 
     public String getAddress() {
@@ -294,10 +289,12 @@ public final class BluetoothQualityReport implements Parcelable {
         return this.mBqrVsConnectFail;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         this.mBqrCommon.writeToParcel(out, flags);
         out.writeString(this.mAddr);
@@ -320,7 +317,7 @@ public final class BluetoothQualityReport implements Parcelable {
     }
 
     public String toString() {
-        String str = "BQR: {\n  mAddr: " + this.mAddr + ", mLmpVer: " + String.format("0x%02X", new Object[]{Integer.valueOf(this.mLmpVer)}) + ", mLmpSubVer: " + String.format("0x%04X", new Object[]{Integer.valueOf(this.mLmpSubVer)}) + ", mManufacturerId: " + String.format("0x%04X", new Object[]{Integer.valueOf(this.mManufacturerId)}) + ", mName: " + this.mName + ", mBluetoothClass: " + String.format("0x%X", new Object[]{Integer.valueOf(this.mBluetoothClass)}) + ",\n" + this.mBqrCommon + "\n" + this.mBqrVsCommon + "\n";
+        String str = "BQR: {\n  mAddr: " + this.mAddr + ", mLmpVer: " + String.format("0x%02X", Integer.valueOf(this.mLmpVer)) + ", mLmpSubVer: " + String.format("0x%04X", Integer.valueOf(this.mLmpSubVer)) + ", mManufacturerId: " + String.format("0x%04X", Integer.valueOf(this.mManufacturerId)) + ", mName: " + this.mName + ", mBluetoothClass: " + String.format("0x%X", Integer.valueOf(this.mBluetoothClass)) + ",\n" + this.mBqrCommon + "\n" + this.mBqrVsCommon + "\n";
         int id = this.mBqrCommon.getQualityReportId();
         if (id == 2) {
             return str + this.mBqrVsLsto + "\n}";
@@ -330,13 +327,14 @@ public final class BluetoothQualityReport implements Parcelable {
             return str + this.mBqrVsScoChoppy + "\n}";
         } else if (id == 32) {
             return str + this.mBqrVsConnectFail + "\n}";
-        } else if (id != 1) {
-            return str;
-        } else {
+        } else if (id == 1) {
             return str + "}";
+        } else {
+            return str;
         }
     }
 
+    /* loaded from: classes.dex */
     public class BqrCommon implements Parcelable {
         static final int BQR_COMMON_LEN = 48;
         private static final String TAG = "BluetoothQualityReport.BqrCommon";
@@ -376,15 +374,15 @@ public final class BluetoothQualityReport implements Parcelable {
             this.mUnusedAfhChannelCount = bqrBuf.get() & 255;
             this.mAfhSelectUnidealChannelCount = bqrBuf.get() & 255;
             this.mLsto = bqrBuf.getShort() & HostEndPoint.BROADCAST;
-            this.mPiconetClock = ((long) bqrBuf.getInt()) & 4294967295L;
-            this.mRetransmissionCount = ((long) bqrBuf.getInt()) & 4294967295L;
-            this.mNoRxCount = ((long) bqrBuf.getInt()) & 4294967295L;
-            this.mNakCount = ((long) bqrBuf.getInt()) & 4294967295L;
-            this.mLastTxAckTimestamp = ((long) bqrBuf.getInt()) & 4294967295L;
-            this.mFlowOffCount = ((long) bqrBuf.getInt()) & 4294967295L;
-            this.mLastFlowOnTimestamp = ((long) bqrBuf.getInt()) & 4294967295L;
-            this.mOverflowCount = ((long) bqrBuf.getInt()) & 4294967295L;
-            this.mUnderflowCount = ((long) bqrBuf.getInt()) & 4294967295L;
+            this.mPiconetClock = bqrBuf.getInt() & 4294967295L;
+            this.mRetransmissionCount = bqrBuf.getInt() & 4294967295L;
+            this.mNoRxCount = bqrBuf.getInt() & 4294967295L;
+            this.mNakCount = bqrBuf.getInt() & 4294967295L;
+            this.mLastTxAckTimestamp = bqrBuf.getInt() & 4294967295L;
+            this.mFlowOffCount = bqrBuf.getInt() & 4294967295L;
+            this.mLastFlowOnTimestamp = bqrBuf.getInt() & 4294967295L;
+            this.mOverflowCount = bqrBuf.getInt() & 4294967295L;
+            this.mUnderflowCount = bqrBuf.getInt() & 4294967295L;
         }
 
         private BqrCommon(Parcel in) {
@@ -409,8 +407,7 @@ public final class BluetoothQualityReport implements Parcelable {
             this.mUnderflowCount = in.readLong();
         }
 
-        /* access modifiers changed from: package-private */
-        public int getQualityReportId() {
+        int getQualityReportId() {
             return this.mQualityReportId;
         }
 
@@ -419,7 +416,8 @@ public final class BluetoothQualityReport implements Parcelable {
         }
 
         public String getPacketTypeStr() {
-            return PacketType.fromOrdinal(this.mPacketType).toString();
+            PacketType type = PacketType.fromOrdinal(this.mPacketType);
+            return type.toString();
         }
 
         public int getConnectionHandle() {
@@ -496,10 +494,12 @@ public final class BluetoothQualityReport implements Parcelable {
             return this.mUnderflowCount;
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeInt(this.mQualityReportId);
             dest.writeInt(this.mPacketType);
@@ -523,10 +523,12 @@ public final class BluetoothQualityReport implements Parcelable {
         }
 
         public String toString() {
-            return "  BqrCommon: {\n    mQualityReportId: " + BluetoothQualityReport.this.getQualityReportIdStr() + "(" + String.format("0x%02X", new Object[]{Integer.valueOf(this.mQualityReportId)}) + "), mPacketType: " + getPacketTypeStr() + "(" + String.format("0x%02X", new Object[]{Integer.valueOf(this.mPacketType)}) + "), mConnectionHandle: " + String.format("0x%04X", new Object[]{Integer.valueOf(this.mConnectionHandle)}) + ", mConnectionRole: " + getConnectionRole() + "(" + this.mConnectionRole + "), mTxPowerLevel: " + this.mTxPowerLevel + ", mRssi: " + this.mRssi + ", mSnr: " + this.mSnr + ", mUnusedAfhChannelCount: " + this.mUnusedAfhChannelCount + ",\n    mAfhSelectUnidealChannelCount: " + this.mAfhSelectUnidealChannelCount + ", mLsto: " + this.mLsto + ", mPiconetClock: " + String.format("0x%08X", new Object[]{Long.valueOf(this.mPiconetClock)}) + ", mRetransmissionCount: " + this.mRetransmissionCount + ", mNoRxCount: " + this.mNoRxCount + ", mNakCount: " + this.mNakCount + ", mLastTxAckTimestamp: " + String.format("0x%08X", new Object[]{Long.valueOf(this.mLastTxAckTimestamp)}) + ", mFlowOffCount: " + this.mFlowOffCount + ",\n    mLastFlowOnTimestamp: " + String.format("0x%08X", new Object[]{Long.valueOf(this.mLastFlowOnTimestamp)}) + ", mOverflowCount: " + this.mOverflowCount + ", mUnderflowCount: " + this.mUnderflowCount + "\n  }";
+            String str = "  BqrCommon: {\n    mQualityReportId: " + BluetoothQualityReport.this.getQualityReportIdStr() + "(" + String.format("0x%02X", Integer.valueOf(this.mQualityReportId)) + "), mPacketType: " + getPacketTypeStr() + "(" + String.format("0x%02X", Integer.valueOf(this.mPacketType)) + "), mConnectionHandle: " + String.format("0x%04X", Integer.valueOf(this.mConnectionHandle)) + ", mConnectionRole: " + getConnectionRole() + "(" + this.mConnectionRole + "), mTxPowerLevel: " + this.mTxPowerLevel + ", mRssi: " + this.mRssi + ", mSnr: " + this.mSnr + ", mUnusedAfhChannelCount: " + this.mUnusedAfhChannelCount + ",\n    mAfhSelectUnidealChannelCount: " + this.mAfhSelectUnidealChannelCount + ", mLsto: " + this.mLsto + ", mPiconetClock: " + String.format("0x%08X", Long.valueOf(this.mPiconetClock)) + ", mRetransmissionCount: " + this.mRetransmissionCount + ", mNoRxCount: " + this.mNoRxCount + ", mNakCount: " + this.mNakCount + ", mLastTxAckTimestamp: " + String.format("0x%08X", Long.valueOf(this.mLastTxAckTimestamp)) + ", mFlowOffCount: " + this.mFlowOffCount + ",\n    mLastFlowOnTimestamp: " + String.format("0x%08X", Long.valueOf(this.mLastFlowOnTimestamp)) + ", mOverflowCount: " + this.mOverflowCount + ", mUnderflowCount: " + this.mUnderflowCount + "\n  }";
+            return str;
         }
     }
 
+    /* loaded from: classes.dex */
     public class BqrVsCommon implements Parcelable {
         private static final int BQR_VS_COMMON_LEN = 7;
         private static final String TAG = "BluetoothQualityReport.BqrVsCommon";
@@ -539,7 +541,7 @@ public final class BluetoothQualityReport implements Parcelable {
             }
             ByteBuffer bqrBuf = ByteBuffer.wrap(rawData, offset, rawData.length - offset).asReadOnlyBuffer();
             bqrBuf.order(ByteOrder.LITTLE_ENDIAN);
-            this.mAddr = String.format("%02X:%02X:%02X:%02X:%02X:%02X", new Object[]{Byte.valueOf(bqrBuf.get(offset + 5)), Byte.valueOf(bqrBuf.get(offset + 4)), Byte.valueOf(bqrBuf.get(offset + 3)), Byte.valueOf(bqrBuf.get(offset + 2)), Byte.valueOf(bqrBuf.get(offset + 1)), Byte.valueOf(bqrBuf.get(offset + 0))});
+            this.mAddr = String.format("%02X:%02X:%02X:%02X:%02X:%02X", Byte.valueOf(bqrBuf.get(offset + 5)), Byte.valueOf(bqrBuf.get(offset + 4)), Byte.valueOf(bqrBuf.get(offset + 3)), Byte.valueOf(bqrBuf.get(offset + 2)), Byte.valueOf(bqrBuf.get(offset + 1)), Byte.valueOf(bqrBuf.get(offset + 0)));
             bqrBuf.position(offset + 6);
             this.mCalFailedItemCount = bqrBuf.get() & 255;
         }
@@ -553,25 +555,28 @@ public final class BluetoothQualityReport implements Parcelable {
             return this.mCalFailedItemCount;
         }
 
-        /* access modifiers changed from: package-private */
-        public int getLength() {
+        int getLength() {
             return 7;
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeString(this.mAddr);
             dest.writeInt(this.mCalFailedItemCount);
         }
 
         public String toString() {
-            return "  BqrVsCommon: {\n    mAddr: " + this.mAddr + ", mCalFailedItemCount: " + this.mCalFailedItemCount + "\n  }";
+            String str = "  BqrVsCommon: {\n    mAddr: " + this.mAddr + ", mCalFailedItemCount: " + this.mCalFailedItemCount + "\n  }";
+            return str;
         }
     }
 
+    /* loaded from: classes.dex */
     public class BqrVsLsto implements Parcelable {
         private static final String TAG = "BluetoothQualityReport.BqrVsLsto";
         private long mBasebandStats;
@@ -590,13 +595,13 @@ public final class BluetoothQualityReport implements Parcelable {
             ByteBuffer bqrBuf = ByteBuffer.wrap(rawData, offset, rawData.length - offset).asReadOnlyBuffer();
             bqrBuf.order(ByteOrder.LITTLE_ENDIAN);
             this.mConnState = bqrBuf.get() & 255;
-            this.mBasebandStats = ((long) bqrBuf.getInt()) & 4294967295L;
-            this.mSlotsUsed = ((long) bqrBuf.getInt()) & 4294967295L;
+            this.mBasebandStats = bqrBuf.getInt() & 4294967295L;
+            this.mSlotsUsed = bqrBuf.getInt() & 4294967295L;
             this.mCxmDenials = bqrBuf.getShort() & HostEndPoint.BROADCAST;
             this.mTxSkipped = bqrBuf.getShort() & HostEndPoint.BROADCAST;
             this.mRfLoss = bqrBuf.getShort() & HostEndPoint.BROADCAST;
-            this.mNativeClock = ((long) bqrBuf.getInt()) & 4294967295L;
-            this.mLastTxAckTimestamp = ((long) bqrBuf.getInt()) & 4294967295L;
+            this.mNativeClock = bqrBuf.getInt() & 4294967295L;
+            this.mLastTxAckTimestamp = bqrBuf.getInt() & 4294967295L;
         }
 
         private BqrVsLsto(Parcel in) {
@@ -646,10 +651,12 @@ public final class BluetoothQualityReport implements Parcelable {
             return this.mLastTxAckTimestamp;
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeInt(this.mConnState);
             dest.writeLong(this.mBasebandStats);
@@ -662,10 +669,12 @@ public final class BluetoothQualityReport implements Parcelable {
         }
 
         public String toString() {
-            return "  BqrVsLsto: {\n    mConnState: " + getConnStateStr() + "(" + String.format("0x%02X", new Object[]{Integer.valueOf(this.mConnState)}) + "), mBasebandStats: " + String.format("0x%08X", new Object[]{Long.valueOf(this.mBasebandStats)}) + ", mSlotsUsed: " + this.mSlotsUsed + ", mCxmDenials: " + this.mCxmDenials + ", mTxSkipped: " + this.mTxSkipped + ", mRfLoss: " + this.mRfLoss + ", mNativeClock: " + String.format("0x%08X", new Object[]{Long.valueOf(this.mNativeClock)}) + ", mLastTxAckTimestamp: " + String.format("0x%08X", new Object[]{Long.valueOf(this.mLastTxAckTimestamp)}) + "\n  }";
+            String str = "  BqrVsLsto: {\n    mConnState: " + getConnStateStr() + "(" + String.format("0x%02X", Integer.valueOf(this.mConnState)) + "), mBasebandStats: " + String.format("0x%08X", Long.valueOf(this.mBasebandStats)) + ", mSlotsUsed: " + this.mSlotsUsed + ", mCxmDenials: " + this.mCxmDenials + ", mTxSkipped: " + this.mTxSkipped + ", mRfLoss: " + this.mRfLoss + ", mNativeClock: " + String.format("0x%08X", Long.valueOf(this.mNativeClock)) + ", mLastTxAckTimestamp: " + String.format("0x%08X", Long.valueOf(this.mLastTxAckTimestamp)) + "\n  }";
+            return str;
         }
     }
 
+    /* loaded from: classes.dex */
     public class BqrVsA2dpChoppy implements Parcelable {
         private static final String TAG = "BluetoothQualityReport.BqrVsA2dpChoppy";
         private int mAclTxQueueLength;
@@ -682,8 +691,8 @@ public final class BluetoothQualityReport implements Parcelable {
             }
             ByteBuffer bqrBuf = ByteBuffer.wrap(rawData, offset, rawData.length - offset).asReadOnlyBuffer();
             bqrBuf.order(ByteOrder.LITTLE_ENDIAN);
-            this.mArrivalTime = ((long) bqrBuf.getInt()) & 4294967295L;
-            this.mScheduleTime = ((long) bqrBuf.getInt()) & 4294967295L;
+            this.mArrivalTime = bqrBuf.getInt() & 4294967295L;
+            this.mScheduleTime = bqrBuf.getInt() & 4294967295L;
             this.mGlitchCount = bqrBuf.getShort() & HostEndPoint.BROADCAST;
             this.mTxCxmDenials = bqrBuf.getShort() & HostEndPoint.BROADCAST;
             this.mRxCxmDenials = bqrBuf.getShort() & HostEndPoint.BROADCAST;
@@ -730,13 +739,16 @@ public final class BluetoothQualityReport implements Parcelable {
         }
 
         public String getLinkQualityStr() {
-            return LinkQuality.fromOrdinal(this.mLinkQuality).toString();
+            LinkQuality q = LinkQuality.fromOrdinal(this.mLinkQuality);
+            return q.toString();
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeLong(this.mArrivalTime);
             dest.writeLong(this.mScheduleTime);
@@ -748,10 +760,12 @@ public final class BluetoothQualityReport implements Parcelable {
         }
 
         public String toString() {
-            return "  BqrVsA2dpChoppy: {\n    mArrivalTime: " + String.format("0x%08X", new Object[]{Long.valueOf(this.mArrivalTime)}) + ", mScheduleTime: " + String.format("0x%08X", new Object[]{Long.valueOf(this.mScheduleTime)}) + ", mGlitchCount: " + this.mGlitchCount + ", mTxCxmDenials: " + this.mTxCxmDenials + ", mRxCxmDenials: " + this.mRxCxmDenials + ", mAclTxQueueLength: " + this.mAclTxQueueLength + ", mLinkQuality: " + getLinkQualityStr() + "(" + String.format("0x%02X", new Object[]{Integer.valueOf(this.mLinkQuality)}) + ")\n  }";
+            String str = "  BqrVsA2dpChoppy: {\n    mArrivalTime: " + String.format("0x%08X", Long.valueOf(this.mArrivalTime)) + ", mScheduleTime: " + String.format("0x%08X", Long.valueOf(this.mScheduleTime)) + ", mGlitchCount: " + this.mGlitchCount + ", mTxCxmDenials: " + this.mTxCxmDenials + ", mRxCxmDenials: " + this.mRxCxmDenials + ", mAclTxQueueLength: " + this.mAclTxQueueLength + ", mLinkQuality: " + getLinkQualityStr() + "(" + String.format("0x%02X", Integer.valueOf(this.mLinkQuality)) + ")\n  }";
+            return str;
         }
     }
 
+    /* loaded from: classes.dex */
     public class BqrVsScoChoppy implements Parcelable {
         private static final String TAG = "BluetoothQualityReport.BqrVsScoChoppy";
         private int mAirFormat;
@@ -825,7 +839,8 @@ public final class BluetoothQualityReport implements Parcelable {
         }
 
         public String getAirFormatStr() {
-            return AirMode.fromOrdinal(this.mAirFormat).toString();
+            AirMode m = AirMode.fromOrdinal(this.mAirFormat);
+            return m.toString();
         }
 
         public int getInstanceCount() {
@@ -868,10 +883,12 @@ public final class BluetoothQualityReport implements Parcelable {
             return this.mPlcDiscardCount;
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeInt(this.mGlitchCount);
             dest.writeInt(this.mIntervalEsco);
@@ -890,10 +907,12 @@ public final class BluetoothQualityReport implements Parcelable {
         }
 
         public String toString() {
-            return "  BqrVsScoChoppy: {\n    mGlitchCount: " + this.mGlitchCount + ", mIntervalEsco: " + this.mIntervalEsco + ", mWindowEsco: " + this.mWindowEsco + ", mAirFormat: " + getAirFormatStr() + "(" + String.format("0x%02X", new Object[]{Integer.valueOf(this.mAirFormat)}) + "), mInstanceCount: " + this.mInstanceCount + ", mTxCxmDenials: " + this.mTxCxmDenials + ", mRxCxmDenials: " + this.mRxCxmDenials + ", mTxAbortCount: " + this.mTxAbortCount + ",\n    mLateDispatch: " + this.mLateDispatch + ", mMicIntrMiss: " + this.mMicIntrMiss + ", mLpaIntrMiss: " + this.mLpaIntrMiss + ", mSprIntrMiss: " + this.mSprIntrMiss + ", mPlcFillCount: " + this.mPlcFillCount + ", mPlcDiscardCount: " + this.mPlcDiscardCount + "\n  }";
+            String str = "  BqrVsScoChoppy: {\n    mGlitchCount: " + this.mGlitchCount + ", mIntervalEsco: " + this.mIntervalEsco + ", mWindowEsco: " + this.mWindowEsco + ", mAirFormat: " + getAirFormatStr() + "(" + String.format("0x%02X", Integer.valueOf(this.mAirFormat)) + "), mInstanceCount: " + this.mInstanceCount + ", mTxCxmDenials: " + this.mTxCxmDenials + ", mRxCxmDenials: " + this.mRxCxmDenials + ", mTxAbortCount: " + this.mTxAbortCount + ",\n    mLateDispatch: " + this.mLateDispatch + ", mMicIntrMiss: " + this.mMicIntrMiss + ", mLpaIntrMiss: " + this.mLpaIntrMiss + ", mSprIntrMiss: " + this.mSprIntrMiss + ", mPlcFillCount: " + this.mPlcFillCount + ", mPlcDiscardCount: " + this.mPlcDiscardCount + "\n  }";
+            return str;
         }
     }
 
+    /* loaded from: classes.dex */
     public class BqrVsConnectFail implements Parcelable {
         private static final String TAG = "BluetoothQualityReport.BqrVsConnectFail";
         private int mFailReason;
@@ -915,16 +934,19 @@ public final class BluetoothQualityReport implements Parcelable {
             return this.mFailReason;
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeInt(this.mFailReason);
         }
 
         public String toString() {
-            return "  BqrVsConnectFail: {\n    mFailReason: " + String.format("0x%02X", new Object[]{Integer.valueOf(this.mFailReason)}) + "\n  }";
+            String str = "  BqrVsConnectFail: {\n    mFailReason: " + String.format("0x%02X", Integer.valueOf(this.mFailReason)) + "\n  }";
+            return str;
         }
     }
 }

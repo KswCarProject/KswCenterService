@@ -1,15 +1,20 @@
 package android.content;
 
 import android.net.Uri;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public final class UriPermission implements Parcelable {
-    public static final Parcelable.Creator<UriPermission> CREATOR = new Parcelable.Creator<UriPermission>() {
+    public static final Parcelable.Creator<UriPermission> CREATOR = new Parcelable.Creator<UriPermission>() { // from class: android.content.UriPermission.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public UriPermission createFromParcel(Parcel source) {
             return new UriPermission(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public UriPermission[] newArray(int size) {
             return new UriPermission[size];
         }
@@ -26,7 +31,7 @@ public final class UriPermission implements Parcelable {
     }
 
     public UriPermission(Parcel in) {
-        this.mUri = (Uri) in.readParcelable((ClassLoader) null);
+        this.mUri = (Uri) in.readParcelable(null);
         this.mModeFlags = in.readInt();
         this.mPersistedTime = in.readLong();
     }
@@ -51,10 +56,12 @@ public final class UriPermission implements Parcelable {
         return "UriPermission {uri=" + this.mUri + ", modeFlags=" + this.mModeFlags + ", persistedTime=" + this.mPersistedTime + "}";
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(this.mUri, flags);
         dest.writeInt(this.mModeFlags);

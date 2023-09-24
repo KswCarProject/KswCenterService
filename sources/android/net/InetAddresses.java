@@ -3,6 +3,7 @@ package android.net;
 import java.net.InetAddress;
 import libcore.net.InetAddressUtils;
 
+/* loaded from: classes3.dex */
 public class InetAddresses {
     private InetAddresses() {
     }

@@ -2,6 +2,7 @@ package android.drm;
 
 import java.util.HashMap;
 
+/* loaded from: classes.dex */
 public class DrmInfoEvent extends DrmEvent {
     public static final int TYPE_ACCOUNT_ALREADY_REGISTERED = 5;
     public static final int TYPE_ALREADY_REGISTERED_BY_ANOTHER_ACCOUNT = 1;
@@ -22,7 +23,8 @@ public class DrmInfoEvent extends DrmEvent {
 
     private void checkTypeValidity(int type) {
         if ((type < 1 || type > 6) && type != 1001 && type != 1002) {
-            throw new IllegalArgumentException("Unsupported type: " + type);
+            String msg = "Unsupported type: " + type;
+            throw new IllegalArgumentException(msg);
         }
     }
 }

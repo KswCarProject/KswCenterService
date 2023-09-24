@@ -1,0 +1,17 @@
+package android.content.p002pm;
+
+import android.annotation.UnsupportedAppUsage;
+import java.io.IOException;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlSerializer;
+
+/* renamed from: android.content.pm.XmlSerializerAndParser */
+/* loaded from: classes.dex */
+public interface XmlSerializerAndParser<T> {
+    @UnsupportedAppUsage
+    T createFromXml(XmlPullParser xmlPullParser) throws IOException, XmlPullParserException;
+
+    @UnsupportedAppUsage
+    void writeAsXml(T t, XmlSerializer xmlSerializer) throws IOException;
+}

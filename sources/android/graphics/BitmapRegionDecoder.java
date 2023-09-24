@@ -8,10 +8,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+/* loaded from: classes.dex */
 public final class BitmapRegionDecoder {
     private long mNativeBitmapRegionDecoder;
     private final Object mNativeLock = new Object();
-    private boolean mRecycled;
+    private boolean mRecycled = false;
 
     private static native void nativeClean(long j);
 
@@ -31,10 +32,10 @@ public final class BitmapRegionDecoder {
     private static native BitmapRegionDecoder nativeNewInstance(byte[] bArr, int i, int i2, boolean z);
 
     public static BitmapRegionDecoder newInstance(byte[] data, int offset, int length, boolean isShareable) throws IOException {
-        if ((offset | length) >= 0 && data.length >= offset + length) {
-            return nativeNewInstance(data, offset, length, isShareable);
+        if ((offset | length) < 0 || data.length < offset + length) {
+            throw new ArrayIndexOutOfBoundsException();
         }
-        throw new ArrayIndexOutOfBoundsException();
+        return nativeNewInstance(data, offset, length, isShareable);
     }
 
     public static BitmapRegionDecoder newInstance(FileDescriptor fd, boolean isShareable) throws IOException {
@@ -45,16 +46,17 @@ public final class BitmapRegionDecoder {
         if (is instanceof AssetManager.AssetInputStream) {
             return nativeNewInstance(((AssetManager.AssetInputStream) is).getNativeAsset(), isShareable);
         }
-        return nativeNewInstance(is, new byte[16384], isShareable);
+        byte[] tempStorage = new byte[16384];
+        return nativeNewInstance(is, tempStorage, isShareable);
     }
 
     public static BitmapRegionDecoder newInstance(String pathName, boolean isShareable) throws IOException {
         InputStream stream = null;
         try {
-            InputStream stream2 = new FileInputStream(pathName);
-            BitmapRegionDecoder decoder = newInstance(stream2, isShareable);
+            stream = new FileInputStream(pathName);
+            BitmapRegionDecoder decoder = newInstance(stream, isShareable);
             try {
-                stream2.close();
+                stream.close();
             } catch (IOException e) {
             }
             return decoder;
@@ -72,19 +74,17 @@ public final class BitmapRegionDecoder {
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
     private BitmapRegionDecoder(long decoder) {
         this.mNativeBitmapRegionDecoder = decoder;
-        this.mRecycled = false;
     }
 
     public Bitmap decodeRegion(Rect rect, BitmapFactory.Options options) {
         Bitmap nativeDecodeRegion;
-        Rect rect2 = rect;
         BitmapFactory.Options.validate(options);
         synchronized (this.mNativeLock) {
             checkRecycled("decodeRegion called on recycled region decoder");
-            if (rect2.right <= 0 || rect2.bottom <= 0 || rect2.left >= getWidth() || rect2.top >= getHeight()) {
+            if (rect.right <= 0 || rect.bottom <= 0 || rect.left >= getWidth() || rect.top >= getHeight()) {
                 throw new IllegalArgumentException("rectangle is outside the image");
             }
-            nativeDecodeRegion = nativeDecodeRegion(this.mNativeBitmapRegionDecoder, rect2.left, rect2.top, rect2.right - rect2.left, rect2.bottom - rect2.top, options, BitmapFactory.Options.nativeInBitmap(options), BitmapFactory.Options.nativeColorSpace(options));
+            nativeDecodeRegion = nativeDecodeRegion(this.mNativeBitmapRegionDecoder, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, options, BitmapFactory.Options.nativeInBitmap(options), BitmapFactory.Options.nativeColorSpace(options));
         }
         return nativeDecodeRegion;
     }
@@ -126,8 +126,7 @@ public final class BitmapRegionDecoder {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         try {
             recycle();
         } finally {

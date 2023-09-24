@@ -3,12 +3,13 @@ package android.hardware.radio;
 import android.graphics.Bitmap;
 import android.hardware.radio.ProgramList;
 import android.hardware.radio.RadioManager;
-import android.os.RemoteException;
+import android.p007os.RemoteException;
 import android.util.Log;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 class TunerAdapter extends RadioTuner {
     private static final String TAG = "BroadcastRadio.TunerAdapter";
     private int mBand;
@@ -24,10 +25,11 @@ class TunerAdapter extends RadioTuner {
         this.mBand = band;
     }
 
+    @Override // android.hardware.radio.RadioTuner
     public void close() {
         synchronized (this.mTuner) {
             if (this.mIsClosed) {
-                Log.v(TAG, "Tuner is already closed");
+                Log.m66v(TAG, "Tuner is already closed");
                 return;
             }
             this.mIsClosed = true;
@@ -39,11 +41,12 @@ class TunerAdapter extends RadioTuner {
             try {
                 this.mTuner.close();
             } catch (RemoteException e) {
-                Log.e(TAG, "Exception trying to close tuner", e);
+                Log.m69e(TAG, "Exception trying to close tuner", e);
             }
         }
     }
 
+    @Override // android.hardware.radio.RadioTuner
     public int setConfiguration(RadioManager.BandConfig config) {
         if (config == null) {
             return -22;
@@ -52,15 +55,16 @@ class TunerAdapter extends RadioTuner {
             this.mTuner.setConfiguration(config);
             this.mBand = config.getType();
             return 0;
-        } catch (IllegalArgumentException e) {
-            Log.e(TAG, "Can't set configuration", e);
-            return -22;
-        } catch (RemoteException e2) {
-            Log.e(TAG, "service died", e2);
+        } catch (RemoteException e) {
+            Log.m69e(TAG, "service died", e);
             return -32;
+        } catch (IllegalArgumentException e2) {
+            Log.m69e(TAG, "Can't set configuration", e2);
+            return -22;
         }
     }
 
+    @Override // android.hardware.radio.RadioTuner
     public int getConfiguration(RadioManager.BandConfig[] config) {
         if (config == null || config.length != 1) {
             throw new IllegalArgumentException("The argument must be an array of length 1");
@@ -69,33 +73,36 @@ class TunerAdapter extends RadioTuner {
             config[0] = this.mTuner.getConfiguration();
             return 0;
         } catch (RemoteException e) {
-            Log.e(TAG, "service died", e);
+            Log.m69e(TAG, "service died", e);
             return -32;
         }
     }
 
+    @Override // android.hardware.radio.RadioTuner
     public int setMute(boolean mute) {
         try {
             this.mTuner.setMuted(mute);
             return 0;
-        } catch (IllegalStateException e) {
-            Log.e(TAG, "Can't set muted", e);
-            return Integer.MIN_VALUE;
-        } catch (RemoteException e2) {
-            Log.e(TAG, "service died", e2);
+        } catch (RemoteException e) {
+            Log.m69e(TAG, "service died", e);
             return -32;
+        } catch (IllegalStateException e2) {
+            Log.m69e(TAG, "Can't set muted", e2);
+            return Integer.MIN_VALUE;
         }
     }
 
+    @Override // android.hardware.radio.RadioTuner
     public boolean getMute() {
         try {
             return this.mTuner.isMuted();
         } catch (RemoteException e) {
-            Log.e(TAG, "service died", e);
+            Log.m69e(TAG, "service died", e);
             return true;
         }
     }
 
+    @Override // android.hardware.radio.RadioTuner
     public int step(int direction, boolean skipSubChannel) {
         try {
             ITuner iTuner = this.mTuner;
@@ -105,15 +112,16 @@ class TunerAdapter extends RadioTuner {
             }
             iTuner.step(z, skipSubChannel);
             return 0;
-        } catch (IllegalStateException e) {
-            Log.e(TAG, "Can't step", e);
-            return -38;
-        } catch (RemoteException e2) {
-            Log.e(TAG, "service died", e2);
+        } catch (RemoteException e) {
+            Log.m69e(TAG, "service died", e);
             return -32;
+        } catch (IllegalStateException e2) {
+            Log.m69e(TAG, "Can't step", e2);
+            return -38;
         }
     }
 
+    @Override // android.hardware.radio.RadioTuner
     public int scan(int direction, boolean skipSubChannel) {
         try {
             ITuner iTuner = this.mTuner;
@@ -123,31 +131,33 @@ class TunerAdapter extends RadioTuner {
             }
             iTuner.scan(z, skipSubChannel);
             return 0;
-        } catch (IllegalStateException e) {
-            Log.e(TAG, "Can't scan", e);
-            return -38;
-        } catch (RemoteException e2) {
-            Log.e(TAG, "service died", e2);
+        } catch (RemoteException e) {
+            Log.m69e(TAG, "service died", e);
             return -32;
+        } catch (IllegalStateException e2) {
+            Log.m69e(TAG, "Can't scan", e2);
+            return -38;
         }
     }
 
+    @Override // android.hardware.radio.RadioTuner
     public int tune(int channel, int subChannel) {
         try {
             this.mTuner.tune(ProgramSelector.createAmFmSelector(this.mBand, channel, subChannel));
             return 0;
-        } catch (IllegalStateException e) {
-            Log.e(TAG, "Can't tune", e);
-            return -38;
-        } catch (IllegalArgumentException e2) {
-            Log.e(TAG, "Can't tune", e2);
-            return -22;
-        } catch (RemoteException e3) {
-            Log.e(TAG, "service died", e3);
+        } catch (RemoteException e) {
+            Log.m69e(TAG, "service died", e);
             return -32;
+        } catch (IllegalArgumentException e2) {
+            Log.m69e(TAG, "Can't tune", e2);
+            return -22;
+        } catch (IllegalStateException e3) {
+            Log.m69e(TAG, "Can't tune", e3);
+            return -38;
         }
     }
 
+    @Override // android.hardware.radio.RadioTuner
     public void tune(ProgramSelector selector) {
         try {
             this.mTuner.tune(selector);
@@ -156,19 +166,21 @@ class TunerAdapter extends RadioTuner {
         }
     }
 
+    @Override // android.hardware.radio.RadioTuner
     public int cancel() {
         try {
             this.mTuner.cancel();
             return 0;
-        } catch (IllegalStateException e) {
-            Log.e(TAG, "Can't cancel", e);
-            return -38;
-        } catch (RemoteException e2) {
-            Log.e(TAG, "service died", e2);
+        } catch (RemoteException e) {
+            Log.m69e(TAG, "service died", e);
             return -32;
+        } catch (IllegalStateException e2) {
+            Log.m69e(TAG, "Can't cancel", e2);
+            return -38;
         }
     }
 
+    @Override // android.hardware.radio.RadioTuner
     public void cancelAnnouncement() {
         try {
             this.mTuner.cancelAnnouncement();
@@ -177,20 +189,22 @@ class TunerAdapter extends RadioTuner {
         }
     }
 
+    @Override // android.hardware.radio.RadioTuner
     public int getProgramInformation(RadioManager.ProgramInfo[] info) {
         if (info == null || info.length != 1) {
-            Log.e(TAG, "The argument must be an array of length 1");
+            Log.m70e(TAG, "The argument must be an array of length 1");
             return -22;
         }
         RadioManager.ProgramInfo current = this.mCallback.getCurrentProgramInformation();
         if (current == null) {
-            Log.w(TAG, "Didn't get program info yet");
+            Log.m64w(TAG, "Didn't get program info yet");
             return -38;
         }
         info[0] = current;
         return 0;
     }
 
+    @Override // android.hardware.radio.RadioTuner
     public Bitmap getMetadataImage(int id) {
         try {
             return this.mTuner.getImage(id);
@@ -199,6 +213,7 @@ class TunerAdapter extends RadioTuner {
         }
     }
 
+    @Override // android.hardware.radio.RadioTuner
     public boolean startBackgroundScan() {
         try {
             return this.mTuner.startBackgroundScan();
@@ -207,15 +222,21 @@ class TunerAdapter extends RadioTuner {
         }
     }
 
+    @Override // android.hardware.radio.RadioTuner
     public List<RadioManager.ProgramInfo> getProgramList(Map<String, String> vendorFilter) {
         List<RadioManager.ProgramInfo> list;
         synchronized (this.mTuner) {
             if (this.mLegacyListProxy == null || !Objects.equals(this.mLegacyListFilter, vendorFilter)) {
-                Log.i(TAG, "Program list filter has changed, requesting new list");
+                Log.m68i(TAG, "Program list filter has changed, requesting new list");
                 this.mLegacyListProxy = new ProgramList();
                 this.mLegacyListFilter = vendorFilter;
                 this.mCallback.clearLastCompleteList();
-                this.mCallback.setProgramListObserver(this.mLegacyListProxy, $$Lambda$TunerAdapter$xm27iP_3PUgByOaDoK2KJcP5fnA.INSTANCE);
+                this.mCallback.setProgramListObserver(this.mLegacyListProxy, new ProgramList.OnCloseListener() { // from class: android.hardware.radio.-$$Lambda$TunerAdapter$xm27iP_3PUgByOaDoK2KJcP5fnA
+                    @Override // android.hardware.radio.ProgramList.OnCloseListener
+                    public final void onClose() {
+                        TunerAdapter.lambda$getProgramList$0();
+                    }
+                });
                 try {
                     this.mTuner.startProgramListUpdates(new ProgramList.Filter(vendorFilter));
                 } catch (RemoteException ex) {
@@ -233,6 +254,7 @@ class TunerAdapter extends RadioTuner {
     static /* synthetic */ void lambda$getProgramList$0() {
     }
 
+    @Override // android.hardware.radio.RadioTuner
     public ProgramList getDynamicProgramList(ProgramList.Filter filter) {
         ProgramList list;
         synchronized (this.mTuner) {
@@ -242,18 +264,26 @@ class TunerAdapter extends RadioTuner {
             }
             this.mLegacyListFilter = null;
             list = new ProgramList();
-            this.mCallback.setProgramListObserver(list, new ProgramList.OnCloseListener() {
+            this.mCallback.setProgramListObserver(list, new ProgramList.OnCloseListener() { // from class: android.hardware.radio.-$$Lambda$TunerAdapter$ytmKJEaNVVp6n7nE6SVU6pZ9g7c
+                @Override // android.hardware.radio.ProgramList.OnCloseListener
                 public final void onClose() {
                     TunerAdapter.lambda$getDynamicProgramList$1(TunerAdapter.this);
                 }
             });
             try {
-                this.mTuner.startProgramListUpdates(filter);
-            } catch (UnsupportedOperationException e) {
-                Log.i(TAG, "Program list is not supported with this hardware");
-                return null;
+                try {
+                    this.mTuner.startProgramListUpdates(filter);
+                } catch (UnsupportedOperationException e) {
+                    Log.m68i(TAG, "Program list is not supported with this hardware");
+                    return null;
+                }
             } catch (RemoteException ex) {
-                this.mCallback.setProgramListObserver((ProgramList) null, $$Lambda$TunerAdapter$St9hluCzvLWs9wyE7kDX24NpwJQ.INSTANCE);
+                this.mCallback.setProgramListObserver(null, new ProgramList.OnCloseListener() { // from class: android.hardware.radio.-$$Lambda$TunerAdapter$St9hluCzvLWs9wyE7kDX24NpwJQ
+                    @Override // android.hardware.radio.ProgramList.OnCloseListener
+                    public final void onClose() {
+                        TunerAdapter.lambda$getDynamicProgramList$2();
+                    }
+                });
                 throw new RuntimeException("service died", ex);
             }
         }
@@ -264,13 +294,14 @@ class TunerAdapter extends RadioTuner {
         try {
             tunerAdapter.mTuner.stopProgramListUpdates();
         } catch (RemoteException ex) {
-            Log.e(TAG, "Couldn't stop program list updates", ex);
+            Log.m69e(TAG, "Couldn't stop program list updates", ex);
         }
     }
 
     static /* synthetic */ void lambda$getDynamicProgramList$2() {
     }
 
+    @Override // android.hardware.radio.RadioTuner
     public boolean isAnalogForced() {
         try {
             return isConfigFlagSet(2);
@@ -279,6 +310,7 @@ class TunerAdapter extends RadioTuner {
         }
     }
 
+    @Override // android.hardware.radio.RadioTuner
     public void setAnalogForced(boolean isForced) {
         try {
             setConfigFlag(2, isForced);
@@ -287,6 +319,7 @@ class TunerAdapter extends RadioTuner {
         }
     }
 
+    @Override // android.hardware.radio.RadioTuner
     public boolean isConfigFlagSupported(int flag) {
         try {
             return this.mTuner.isConfigFlagSupported(flag);
@@ -295,6 +328,7 @@ class TunerAdapter extends RadioTuner {
         }
     }
 
+    @Override // android.hardware.radio.RadioTuner
     public boolean isConfigFlagSet(int flag) {
         try {
             return this.mTuner.isConfigFlagSet(flag);
@@ -303,6 +337,7 @@ class TunerAdapter extends RadioTuner {
         }
     }
 
+    @Override // android.hardware.radio.RadioTuner
     public void setConfigFlag(int flag, boolean value) {
         try {
             this.mTuner.setConfigFlag(flag, value);
@@ -311,6 +346,7 @@ class TunerAdapter extends RadioTuner {
         }
     }
 
+    @Override // android.hardware.radio.RadioTuner
     public Map<String, String> setParameters(Map<String, String> parameters) {
         try {
             return this.mTuner.setParameters((Map) Objects.requireNonNull(parameters));
@@ -319,6 +355,7 @@ class TunerAdapter extends RadioTuner {
         }
     }
 
+    @Override // android.hardware.radio.RadioTuner
     public Map<String, String> getParameters(List<String> keys) {
         try {
             return this.mTuner.getParameters((List) Objects.requireNonNull(keys));
@@ -327,10 +364,12 @@ class TunerAdapter extends RadioTuner {
         }
     }
 
+    @Override // android.hardware.radio.RadioTuner
     public boolean isAntennaConnected() {
         return this.mCallback.isAntennaConnected();
     }
 
+    @Override // android.hardware.radio.RadioTuner
     public boolean hasControl() {
         try {
             return !this.mTuner.isClosed();

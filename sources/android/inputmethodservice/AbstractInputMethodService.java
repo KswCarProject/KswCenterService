@@ -2,7 +2,7 @@ package android.inputmethodservice;
 
 import android.app.Service;
 import android.content.Intent;
-import android.os.IBinder;
+import android.p007os.IBinder;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.inputmethod.InputConnection;
@@ -12,6 +12,7 @@ import android.view.inputmethod.InputMethodSession;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 
+/* loaded from: classes.dex */
 public abstract class AbstractInputMethodService extends Service implements KeyEvent.Callback {
     final KeyEvent.DispatcherState mDispatcherState = new KeyEvent.DispatcherState();
     private InputMethod mInputMethod;
@@ -20,23 +21,28 @@ public abstract class AbstractInputMethodService extends Service implements KeyE
 
     public abstract AbstractInputMethodSessionImpl onCreateInputMethodSessionInterface();
 
+    /* loaded from: classes.dex */
     public abstract class AbstractInputMethodImpl implements InputMethod {
         public AbstractInputMethodImpl() {
         }
 
+        @Override // android.view.inputmethod.InputMethod
         public void createSession(InputMethod.SessionCallback callback) {
             callback.sessionCreated(AbstractInputMethodService.this.onCreateInputMethodSessionInterface());
         }
 
+        @Override // android.view.inputmethod.InputMethod
         public void setSessionEnabled(InputMethodSession session, boolean enabled) {
             ((AbstractInputMethodSessionImpl) session).setEnabled(enabled);
         }
 
+        @Override // android.view.inputmethod.InputMethod
         public void revokeSession(InputMethodSession session) {
             ((AbstractInputMethodSessionImpl) session).revokeSelf();
         }
     }
 
+    /* loaded from: classes.dex */
     public abstract class AbstractInputMethodSessionImpl implements InputMethodSession {
         boolean mEnabled = true;
         boolean mRevoked;
@@ -63,6 +69,7 @@ public abstract class AbstractInputMethodService extends Service implements KeyE
             this.mEnabled = false;
         }
 
+        @Override // android.view.inputmethod.InputMethodSession
         public void dispatchKeyEvent(int seq, KeyEvent event, InputMethodSession.EventCallback callback) {
             boolean handled = event.dispatch(AbstractInputMethodService.this, AbstractInputMethodService.this.mDispatcherState, this);
             if (callback != null) {
@@ -70,6 +77,7 @@ public abstract class AbstractInputMethodService extends Service implements KeyE
             }
         }
 
+        @Override // android.view.inputmethod.InputMethodSession
         public void dispatchTrackballEvent(int seq, MotionEvent event, InputMethodSession.EventCallback callback) {
             boolean handled = AbstractInputMethodService.this.onTrackballEvent(event);
             if (callback != null) {
@@ -77,6 +85,7 @@ public abstract class AbstractInputMethodService extends Service implements KeyE
             }
         }
 
+        @Override // android.view.inputmethod.InputMethodSession
         public void dispatchGenericMotionEvent(int seq, MotionEvent event, InputMethodSession.EventCallback callback) {
             boolean handled = AbstractInputMethodService.this.onGenericMotionEvent(event);
             if (callback != null) {
@@ -89,10 +98,11 @@ public abstract class AbstractInputMethodService extends Service implements KeyE
         return this.mDispatcherState;
     }
 
-    /* access modifiers changed from: protected */
-    public void dump(FileDescriptor fd, PrintWriter fout, String[] args) {
+    @Override // android.app.Service
+    protected void dump(FileDescriptor fd, PrintWriter fout, String[] args) {
     }
 
+    @Override // android.app.Service
     public final IBinder onBind(Intent intent) {
         if (this.mInputMethod == null) {
             this.mInputMethod = onCreateInputMethodInterface();

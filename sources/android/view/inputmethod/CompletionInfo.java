@@ -1,15 +1,20 @@
 package android.view.inputmethod;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.TextUtils;
 
+/* loaded from: classes4.dex */
 public final class CompletionInfo implements Parcelable {
-    public static final Parcelable.Creator<CompletionInfo> CREATOR = new Parcelable.Creator<CompletionInfo>() {
+    public static final Parcelable.Creator<CompletionInfo> CREATOR = new Parcelable.Creator<CompletionInfo>() { // from class: android.view.inputmethod.CompletionInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public CompletionInfo createFromParcel(Parcel source) {
             return new CompletionInfo(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public CompletionInfo[] newArray(int size) {
             return new CompletionInfo[size];
         }
@@ -57,9 +62,10 @@ public final class CompletionInfo implements Parcelable {
     }
 
     public String toString() {
-        return "CompletionInfo{#" + this.mPosition + " \"" + this.mText + "\" id=" + this.mId + " label=" + this.mLabel + "}";
+        return "CompletionInfo{#" + this.mPosition + " \"" + ((Object) this.mText) + "\" id=" + this.mId + " label=" + ((Object) this.mLabel) + "}";
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(this.mId);
         dest.writeInt(this.mPosition);
@@ -67,6 +73,7 @@ public final class CompletionInfo implements Parcelable {
         TextUtils.writeToParcel(this.mLabel, dest, flags);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

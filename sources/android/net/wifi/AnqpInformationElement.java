@@ -1,5 +1,6 @@
 package android.net.wifi;
 
+/* loaded from: classes3.dex */
 public class AnqpInformationElement {
     public static final int ANQP_3GPP_NETWORK = 264;
     public static final int ANQP_CAPABILITY_LIST = 257;

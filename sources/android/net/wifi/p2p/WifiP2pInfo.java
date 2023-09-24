@@ -1,20 +1,19 @@
 package android.net.wifi.p2p;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+/* loaded from: classes3.dex */
 public class WifiP2pInfo implements Parcelable {
-    public static final Parcelable.Creator<WifiP2pInfo> CREATOR = new Parcelable.Creator<WifiP2pInfo>() {
+    public static final Parcelable.Creator<WifiP2pInfo> CREATOR = new Parcelable.Creator<WifiP2pInfo>() { // from class: android.net.wifi.p2p.WifiP2pInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WifiP2pInfo createFromParcel(Parcel in) {
             WifiP2pInfo info = new WifiP2pInfo();
-            boolean z = false;
             info.groupFormed = in.readByte() == 1;
-            if (in.readByte() == 1) {
-                z = true;
-            }
-            info.isGroupOwner = z;
+            info.isGroupOwner = in.readByte() == 1;
             if (in.readByte() == 1) {
                 try {
                     info.groupOwnerAddress = InetAddress.getByAddress(in.createByteArray());
@@ -24,6 +23,8 @@ public class WifiP2pInfo implements Parcelable {
             return info;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WifiP2pInfo[] newArray(int size) {
             return new WifiP2pInfo[size];
         }
@@ -46,6 +47,7 @@ public class WifiP2pInfo implements Parcelable {
         return sbuf.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -58,9 +60,10 @@ public class WifiP2pInfo implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeByte(this.groupFormed ? (byte) 1 : 0);
-        dest.writeByte(this.isGroupOwner ? (byte) 1 : 0);
+        dest.writeByte(this.groupFormed ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.isGroupOwner ? (byte) 1 : (byte) 0);
         if (this.groupOwnerAddress != null) {
             dest.writeByte((byte) 1);
             dest.writeByteArray(this.groupOwnerAddress.getAddress());

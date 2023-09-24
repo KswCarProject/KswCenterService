@@ -2,15 +2,15 @@ package android.app.servertransaction;
 
 import android.app.ActivityTaskManager;
 import android.app.ActivityThread;
-import android.os.BaseBundle;
-import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.os.RemoteException;
-import android.os.TransactionTooLargeException;
+import android.p007os.Bundle;
+import android.p007os.PersistableBundle;
+import android.p007os.RemoteException;
+import android.p007os.TransactionTooLargeException;
 import android.util.Log;
 import android.util.LogWriter;
 import com.android.internal.util.IndentingPrintWriter;
 
+/* loaded from: classes.dex */
 public class PendingTransactionActions {
     private boolean mCallOnPostCreate;
     private Bundle mOldState;
@@ -69,6 +69,7 @@ public class PendingTransactionActions {
         this.mReportRelaunchToWM = reportToWm;
     }
 
+    /* loaded from: classes.dex */
     public static class StopInfo implements Runnable {
         private static final String TAG = "ActivityStopInfo";
         private ActivityThread.ActivityClientRecord mActivity;
@@ -92,19 +93,22 @@ public class PendingTransactionActions {
             this.mDescription = description;
         }
 
+        @Override // java.lang.Runnable
         public void run() {
             try {
                 ActivityTaskManager.getService().activityStopped(this.mActivity.token, this.mState, this.mPersistentState, this.mDescription);
             } catch (RemoteException ex) {
-                IndentingPrintWriter pw = new IndentingPrintWriter(new LogWriter(5, TAG), "  ");
+                LogWriter writer = new LogWriter(5, TAG);
+                IndentingPrintWriter pw = new IndentingPrintWriter(writer, "  ");
                 pw.println("Bundle stats:");
-                Bundle.dumpStats(pw, (BaseBundle) this.mState);
+                Bundle.dumpStats(pw, this.mState);
                 pw.println("PersistableBundle stats:");
-                Bundle.dumpStats(pw, (BaseBundle) this.mPersistentState);
-                if (!(ex instanceof TransactionTooLargeException) || this.mActivity.packageInfo.getTargetSdkVersion() >= 24) {
-                    throw ex.rethrowFromSystemServer();
+                Bundle.dumpStats(pw, this.mPersistentState);
+                if ((ex instanceof TransactionTooLargeException) && this.mActivity.packageInfo.getTargetSdkVersion() < 24) {
+                    Log.m69e(TAG, "App sent too much data in instance state, so it was ignored", ex);
+                    return;
                 }
-                Log.e(TAG, "App sent too much data in instance state, so it was ignored", ex);
+                throw ex.rethrowFromSystemServer();
             }
         }
     }

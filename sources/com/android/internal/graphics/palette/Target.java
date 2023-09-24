@@ -1,15 +1,16 @@
 package com.android.internal.graphics.palette;
 
+/* loaded from: classes4.dex */
 public final class Target {
-    public static final Target DARK_MUTED = new Target();
-    public static final Target DARK_VIBRANT = new Target();
+    public static final Target DARK_MUTED;
+    public static final Target DARK_VIBRANT;
     static final int INDEX_MAX = 2;
     static final int INDEX_MIN = 0;
     static final int INDEX_TARGET = 1;
     static final int INDEX_WEIGHT_LUMA = 1;
     static final int INDEX_WEIGHT_POP = 2;
     static final int INDEX_WEIGHT_SAT = 0;
-    public static final Target LIGHT_MUTED = new Target();
+    public static final Target LIGHT_MUTED;
     public static final Target LIGHT_VIBRANT = new Target();
     private static final float MAX_DARK_LUMA = 0.45f;
     private static final float MAX_MUTED_SATURATION = 0.4f;
@@ -17,43 +18,56 @@ public final class Target {
     private static final float MIN_LIGHT_LUMA = 0.55f;
     private static final float MIN_NORMAL_LUMA = 0.3f;
     private static final float MIN_VIBRANT_SATURATION = 0.35f;
-    public static final Target MUTED = new Target();
+    public static final Target MUTED;
     private static final float TARGET_DARK_LUMA = 0.26f;
     private static final float TARGET_LIGHT_LUMA = 0.74f;
     private static final float TARGET_MUTED_SATURATION = 0.3f;
     private static final float TARGET_NORMAL_LUMA = 0.5f;
     private static final float TARGET_VIBRANT_SATURATION = 1.0f;
-    public static final Target VIBRANT = new Target();
+    public static final Target VIBRANT;
     private static final float WEIGHT_LUMA = 0.52f;
     private static final float WEIGHT_POPULATION = 0.24f;
     private static final float WEIGHT_SATURATION = 0.24f;
-    boolean mIsExclusive = true;
-    final float[] mLightnessTargets = new float[3];
-    final float[] mSaturationTargets = new float[3];
-    final float[] mWeights = new float[3];
+    boolean mIsExclusive;
+    final float[] mLightnessTargets;
+    final float[] mSaturationTargets;
+    final float[] mWeights;
 
     static {
         setDefaultLightLightnessValues(LIGHT_VIBRANT);
         setDefaultVibrantSaturationValues(LIGHT_VIBRANT);
+        VIBRANT = new Target();
         setDefaultNormalLightnessValues(VIBRANT);
         setDefaultVibrantSaturationValues(VIBRANT);
+        DARK_VIBRANT = new Target();
         setDefaultDarkLightnessValues(DARK_VIBRANT);
         setDefaultVibrantSaturationValues(DARK_VIBRANT);
+        LIGHT_MUTED = new Target();
         setDefaultLightLightnessValues(LIGHT_MUTED);
         setDefaultMutedSaturationValues(LIGHT_MUTED);
+        MUTED = new Target();
         setDefaultNormalLightnessValues(MUTED);
         setDefaultMutedSaturationValues(MUTED);
+        DARK_MUTED = new Target();
         setDefaultDarkLightnessValues(DARK_MUTED);
         setDefaultMutedSaturationValues(DARK_MUTED);
     }
 
     Target() {
+        this.mSaturationTargets = new float[3];
+        this.mLightnessTargets = new float[3];
+        this.mWeights = new float[3];
+        this.mIsExclusive = true;
         setTargetDefaultValues(this.mSaturationTargets);
         setTargetDefaultValues(this.mLightnessTargets);
         setDefaultWeights();
     }
 
     Target(Target from) {
+        this.mSaturationTargets = new float[3];
+        this.mLightnessTargets = new float[3];
+        this.mWeights = new float[3];
+        this.mIsExclusive = true;
         System.arraycopy(from.mSaturationTargets, 0, this.mSaturationTargets, 0, this.mSaturationTargets.length);
         System.arraycopy(from.mLightnessTargets, 0, this.mLightnessTargets, 0, this.mLightnessTargets.length);
         System.arraycopy(from.mWeights, 0, this.mWeights, 0, this.mWeights.length);
@@ -111,20 +125,22 @@ public final class Target {
         this.mWeights[2] = 0.24f;
     }
 
-    /* access modifiers changed from: package-private */
-    public void normalizeWeights() {
+    void normalizeWeights() {
         float sum = 0.0f;
-        for (float weight : this.mWeights) {
+        int z = this.mWeights.length;
+        for (int i = 0; i < z; i++) {
+            float weight = this.mWeights[i];
             if (weight > 0.0f) {
                 sum += weight;
             }
         }
-        if (sum != 0.0f) {
-            int z = this.mWeights.length;
-            for (int i = 0; i < z; i++) {
-                if (this.mWeights[i] > 0.0f) {
+        int i2 = (sum > 0.0f ? 1 : (sum == 0.0f ? 0 : -1));
+        if (i2 != 0) {
+            int z2 = this.mWeights.length;
+            for (int i3 = 0; i3 < z2; i3++) {
+                if (this.mWeights[i3] > 0.0f) {
                     float[] fArr = this.mWeights;
-                    fArr[i] = fArr[i] / sum;
+                    fArr[i3] = fArr[i3] / sum;
                 }
             }
         }
@@ -156,6 +172,7 @@ public final class Target {
         target.mSaturationTargets[2] = 0.4f;
     }
 
+    /* loaded from: classes4.dex */
     public static final class Builder {
         private final Target mTarget;
 

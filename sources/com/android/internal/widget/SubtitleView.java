@@ -1,10 +1,12 @@
 package com.android.internal.widget;
 
-import android.R;
+import android.C0001R;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Typeface;
@@ -15,7 +17,9 @@ import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.accessibility.CaptioningManager;
+import com.android.internal.C3132R;
 
+/* loaded from: classes4.dex */
 public class SubtitleView extends View {
     private static final int COLOR_BEVEL_DARK = Integer.MIN_VALUE;
     private static final int COLOR_BEVEL_LIGHT = -2130706433;
@@ -42,7 +46,7 @@ public class SubtitleView extends View {
     private TextPaint mTextPaint;
 
     public SubtitleView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public SubtitleView(Context context, AttributeSet attrs) {
@@ -61,7 +65,7 @@ public class SubtitleView extends View {
         this.mSpacingMult = 1.0f;
         this.mSpacingAdd = 0.0f;
         this.mInnerPaddingX = 0;
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.TextView, defStyleAttr, defStyleRes);
+        TypedArray a = context.obtainStyledAttributes(attrs, C0001R.styleable.TextView, defStyleAttr, defStyleRes);
         CharSequence text = "";
         int textSize = 15;
         int n = a.getIndexCount();
@@ -69,24 +73,24 @@ public class SubtitleView extends View {
             int attr = a.getIndex(i);
             if (attr == 0) {
                 textSize = a.getDimensionPixelSize(attr, textSize);
-            } else if (attr != 18) {
+            } else if (attr == 18) {
+                text = a.getText(attr);
+            } else {
                 switch (attr) {
                     case 53:
-                        this.mSpacingAdd = (float) a.getDimensionPixelSize(attr, (int) this.mSpacingAdd);
-                        break;
+                        this.mSpacingAdd = a.getDimensionPixelSize(attr, (int) this.mSpacingAdd);
+                        continue;
                     case 54:
                         this.mSpacingMult = a.getFloat(attr, this.mSpacingMult);
-                        break;
+                        continue;
                 }
-            } else {
-                text = a.getText(attr);
             }
         }
         Resources res = getContext().getResources();
-        this.mCornerRadius = (float) res.getDimensionPixelSize(com.android.internal.R.dimen.subtitle_corner_radius);
-        this.mOutlineWidth = (float) res.getDimensionPixelSize(com.android.internal.R.dimen.subtitle_outline_width);
-        this.mShadowRadius = (float) res.getDimensionPixelSize(com.android.internal.R.dimen.subtitle_shadow_radius);
-        this.mShadowOffsetX = (float) res.getDimensionPixelSize(com.android.internal.R.dimen.subtitle_shadow_offset);
+        this.mCornerRadius = res.getDimensionPixelSize(C3132R.dimen.subtitle_corner_radius);
+        this.mOutlineWidth = res.getDimensionPixelSize(C3132R.dimen.subtitle_outline_width);
+        this.mShadowRadius = res.getDimensionPixelSize(C3132R.dimen.subtitle_shadow_radius);
+        this.mShadowOffsetX = res.getDimensionPixelSize(C3132R.dimen.subtitle_shadow_offset);
         this.mShadowOffsetY = this.mShadowOffsetX;
         this.mTextPaint = new TextPaint();
         this.mTextPaint.setAntiAlias(true);
@@ -94,11 +98,12 @@ public class SubtitleView extends View {
         this.mPaint = new Paint();
         this.mPaint.setAntiAlias(true);
         setText(text);
-        setTextSize((float) textSize);
+        setTextSize(textSize);
     }
 
     public void setText(int resId) {
-        setText(getContext().getText(resId));
+        CharSequence text = getContext().getText(resId);
+        setText(text);
     }
 
     public void setText(CharSequence text) {
@@ -114,6 +119,7 @@ public class SubtitleView extends View {
         invalidate();
     }
 
+    @Override // android.view.View
     public void setBackgroundColor(int color) {
         this.mBackgroundColor = color;
         invalidate();
@@ -157,25 +163,32 @@ public class SubtitleView extends View {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        if (computeMeasurements(View.MeasureSpec.getSize(widthMeasureSpec))) {
+    @Override // android.view.View
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int widthSpec = View.MeasureSpec.getSize(widthMeasureSpec);
+        if (computeMeasurements(widthSpec)) {
             StaticLayout layout = this.mLayout;
-            setMeasuredDimension(layout.getWidth() + this.mPaddingLeft + this.mPaddingRight + (this.mInnerPaddingX * 2), layout.getHeight() + this.mPaddingTop + this.mPaddingBottom);
+            int paddingX = this.mPaddingLeft + this.mPaddingRight + (this.mInnerPaddingX * 2);
+            int width = layout.getWidth() + paddingX;
+            int height = layout.getHeight() + this.mPaddingTop + this.mPaddingBottom;
+            setMeasuredDimension(width, height);
             return;
         }
         setMeasuredDimension(16777216, 16777216);
     }
 
+    @Override // android.view.View
     public void onLayout(boolean changed, int l, int t, int r, int b) {
-        computeMeasurements(r - l);
+        int width = r - l;
+        computeMeasurements(width);
     }
 
     private boolean computeMeasurements(int maxWidth) {
         if (this.mHasMeasurements && maxWidth == this.mLastMeasuredWidth) {
             return true;
         }
-        int maxWidth2 = maxWidth - ((this.mPaddingLeft + this.mPaddingRight) + (this.mInnerPaddingX * 2));
+        int paddingX = this.mPaddingLeft + this.mPaddingRight + (this.mInnerPaddingX * 2);
+        int maxWidth2 = maxWidth - paddingX;
         if (maxWidth2 <= 0) {
             return false;
         }
@@ -187,7 +200,8 @@ public class SubtitleView extends View {
 
     public void setStyle(int styleId) {
         CaptioningManager.CaptionStyle style;
-        ContentResolver cr = this.mContext.getContentResolver();
+        Context context = this.mContext;
+        ContentResolver cr = context.getContentResolver();
         if (styleId == -1) {
             style = CaptioningManager.CaptionStyle.getCustomStyle(cr);
         } else {
@@ -199,154 +213,88 @@ public class SubtitleView extends View {
         this.mEdgeType = style.hasEdgeType() ? style.edgeType : defStyle.edgeType;
         this.mEdgeColor = style.hasEdgeColor() ? style.edgeColor : defStyle.edgeColor;
         this.mHasMeasurements = false;
-        setTypeface(style.getTypeface());
+        Typeface typeface = style.getTypeface();
+        setTypeface(typeface);
         requestLayout();
     }
 
-    /* access modifiers changed from: protected */
-    /* JADX WARNING: Removed duplicated region for block: B:35:0x00de A[LOOP:3: B:34:0x00dc->B:35:0x00de, LOOP_END] */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void onDraw(android.graphics.Canvas r18) {
-        /*
-            r17 = this;
-            r0 = r17
-            r1 = r18
-            android.text.StaticLayout r2 = r0.mLayout
-            if (r2 != 0) goto L_0x0009
-            return
-        L_0x0009:
-            int r3 = r18.save()
-            int r4 = r0.mInnerPaddingX
-            int r5 = r0.mPaddingLeft
-            int r5 = r5 + r4
-            float r5 = (float) r5
-            int r6 = r0.mPaddingTop
-            float r6 = (float) r6
-            r1.translate(r5, r6)
-            int r5 = r2.getLineCount()
-            android.text.TextPaint r6 = r0.mTextPaint
-            android.graphics.Paint r7 = r0.mPaint
-            android.graphics.RectF r8 = r0.mLineBounds
-            int r9 = r0.mBackgroundColor
-            int r9 = android.graphics.Color.alpha((int) r9)
-            r10 = 0
-            if (r9 <= 0) goto L_0x0062
-            float r9 = r0.mCornerRadius
-            int r11 = r2.getLineTop(r10)
-            float r11 = (float) r11
-            int r12 = r0.mBackgroundColor
-            r7.setColor((int) r12)
-            android.graphics.Paint$Style r12 = android.graphics.Paint.Style.FILL
-            r7.setStyle(r12)
-            r12 = r11
-            r11 = r10
-        L_0x003f:
-            if (r11 >= r5) goto L_0x0062
-            float r13 = r2.getLineLeft(r11)
-            float r14 = (float) r4
-            float r13 = r13 - r14
-            r8.left = r13
-            float r13 = r2.getLineRight(r11)
-            float r14 = (float) r4
-            float r13 = r13 + r14
-            r8.right = r13
-            r8.top = r12
-            int r13 = r2.getLineBottom(r11)
-            float r13 = (float) r13
-            r8.bottom = r13
-            float r12 = r8.bottom
-            r1.drawRoundRect(r8, r9, r9, r7)
-            int r11 = r11 + 1
-            goto L_0x003f
-        L_0x0062:
-            int r9 = r0.mEdgeType
-            r11 = 1
-            if (r9 != r11) goto L_0x0084
-            android.graphics.Paint$Join r11 = android.graphics.Paint.Join.ROUND
-            r6.setStrokeJoin(r11)
-            float r11 = r0.mOutlineWidth
-            r6.setStrokeWidth(r11)
-            int r11 = r0.mEdgeColor
-            r6.setColor((int) r11)
-            android.graphics.Paint$Style r11 = android.graphics.Paint.Style.FILL_AND_STROKE
-            r6.setStyle(r11)
-            r11 = r10
-        L_0x007c:
-            if (r11 >= r5) goto L_0x0092
-            r2.drawText(r1, r11, r11)
-            int r11 = r11 + 1
-            goto L_0x007c
-        L_0x0084:
-            r12 = 2
-            if (r9 != r12) goto L_0x0095
-            float r11 = r0.mShadowRadius
-            float r12 = r0.mShadowOffsetX
-            float r13 = r0.mShadowOffsetY
-            int r14 = r0.mEdgeColor
-            r6.setShadowLayer((float) r11, (float) r12, (float) r13, (int) r14)
-        L_0x0092:
-            r16 = r4
-            goto L_0x00d1
-        L_0x0095:
-            r12 = 3
-            if (r9 == r12) goto L_0x009b
-            r13 = 4
-            if (r9 != r13) goto L_0x0092
-        L_0x009b:
-            if (r9 != r12) goto L_0x009e
-            goto L_0x009f
-        L_0x009e:
-            r11 = r10
-        L_0x009f:
-            r12 = -1
-            if (r11 == 0) goto L_0x00a4
-            r13 = r12
-            goto L_0x00a6
-        L_0x00a4:
-            int r13 = r0.mEdgeColor
-        L_0x00a6:
-            if (r11 == 0) goto L_0x00ab
-            int r12 = r0.mEdgeColor
-        L_0x00ab:
-            float r14 = r0.mShadowRadius
-            r15 = 1073741824(0x40000000, float:2.0)
-            float r14 = r14 / r15
-            int r15 = r0.mForegroundColor
-            r6.setColor((int) r15)
-            android.graphics.Paint$Style r15 = android.graphics.Paint.Style.FILL
-            r6.setStyle(r15)
-            float r15 = r0.mShadowRadius
-            float r10 = -r14
-            r16 = r4
-            float r4 = -r14
-            r6.setShadowLayer((float) r15, (float) r10, (float) r4, (int) r13)
-            r4 = 0
-        L_0x00c4:
-            if (r4 >= r5) goto L_0x00cc
-            r2.drawText(r1, r4, r4)
-            int r4 = r4 + 1
-            goto L_0x00c4
-        L_0x00cc:
-            float r4 = r0.mShadowRadius
-            r6.setShadowLayer((float) r4, (float) r14, (float) r14, (int) r12)
-        L_0x00d1:
-            int r4 = r0.mForegroundColor
-            r6.setColor((int) r4)
-            android.graphics.Paint$Style r4 = android.graphics.Paint.Style.FILL
-            r6.setStyle(r4)
-            r4 = 0
-        L_0x00dc:
-            if (r4 >= r5) goto L_0x00e4
-            r2.drawText(r1, r4, r4)
-            int r4 = r4 + 1
-            goto L_0x00dc
-        L_0x00e4:
-            r4 = 0
-            r10 = 0
-            r6.setShadowLayer((float) r4, (float) r4, (float) r4, (int) r10)
-            r1.restoreToCount(r3)
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.internal.widget.SubtitleView.onDraw(android.graphics.Canvas):void");
+    /* JADX WARN: Removed duplicated region for block: B:38:0x00de A[LOOP:2: B:37:0x00dc->B:38:0x00de, LOOP_END] */
+    @Override // android.view.View
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    protected void onDraw(Canvas c) {
+        int colorUp;
+        int i;
+        StaticLayout layout = this.mLayout;
+        if (layout == null) {
+            return;
+        }
+        int saveCount = c.save();
+        int innerPaddingX = this.mInnerPaddingX;
+        c.translate(this.mPaddingLeft + innerPaddingX, this.mPaddingTop);
+        int lineCount = layout.getLineCount();
+        Paint textPaint = this.mTextPaint;
+        Paint paint = this.mPaint;
+        RectF bounds = this.mLineBounds;
+        if (Color.alpha(this.mBackgroundColor) > 0) {
+            float cornerRadius = this.mCornerRadius;
+            float previousBottom = layout.getLineTop(0);
+            paint.setColor(this.mBackgroundColor);
+            paint.setStyle(Paint.Style.FILL);
+            float previousBottom2 = previousBottom;
+            for (int i2 = 0; i2 < lineCount; i2++) {
+                bounds.left = layout.getLineLeft(i2) - innerPaddingX;
+                bounds.right = layout.getLineRight(i2) + innerPaddingX;
+                bounds.top = previousBottom2;
+                bounds.bottom = layout.getLineBottom(i2);
+                previousBottom2 = bounds.bottom;
+                c.drawRoundRect(bounds, cornerRadius, cornerRadius, paint);
+            }
+        }
+        int edgeType = this.mEdgeType;
+        if (edgeType == 1) {
+            textPaint.setStrokeJoin(Paint.Join.ROUND);
+            textPaint.setStrokeWidth(this.mOutlineWidth);
+            textPaint.setColor(this.mEdgeColor);
+            textPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+            for (int i3 = 0; i3 < lineCount; i3++) {
+                layout.drawText(c, i3, i3);
+            }
+        } else if (edgeType == 2) {
+            textPaint.setShadowLayer(this.mShadowRadius, this.mShadowOffsetX, this.mShadowOffsetY, this.mEdgeColor);
+        } else if (edgeType == 3 || edgeType == 4) {
+            boolean raised = edgeType == 3;
+            int colorDown = -1;
+            if (!raised) {
+                colorUp = this.mEdgeColor;
+            } else {
+                colorUp = -1;
+            }
+            if (raised) {
+                colorDown = this.mEdgeColor;
+            }
+            float offset = this.mShadowRadius / 2.0f;
+            textPaint.setColor(this.mForegroundColor);
+            textPaint.setStyle(Paint.Style.FILL);
+            textPaint.setShadowLayer(this.mShadowRadius, -offset, -offset, colorUp);
+            for (int i4 = 0; i4 < lineCount; i4++) {
+                layout.drawText(c, i4, i4);
+            }
+            textPaint.setShadowLayer(this.mShadowRadius, offset, offset, colorDown);
+            textPaint.setColor(this.mForegroundColor);
+            textPaint.setStyle(Paint.Style.FILL);
+            for (i = 0; i < lineCount; i++) {
+                layout.drawText(c, i, i);
+            }
+            textPaint.setShadowLayer(0.0f, 0.0f, 0.0f, 0);
+            c.restoreToCount(saveCount);
+        }
+        textPaint.setColor(this.mForegroundColor);
+        textPaint.setStyle(Paint.Style.FILL);
+        while (i < lineCount) {
+        }
+        textPaint.setShadowLayer(0.0f, 0.0f, 0.0f, 0);
+        c.restoreToCount(saveCount);
     }
 }

@@ -2,11 +2,12 @@ package android.hardware.soundtrigger;
 
 import android.annotation.UnsupportedAppUsage;
 import android.hardware.soundtrigger.SoundTrigger;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
+import android.p007os.Handler;
+import android.p007os.Looper;
+import android.p007os.Message;
 import java.lang.ref.WeakReference;
 
+/* loaded from: classes.dex */
 public class SoundTriggerModule {
     private static final int EVENT_RECOGNITION = 1;
     private static final int EVENT_SERVICE_DIED = 2;
@@ -45,11 +46,11 @@ public class SoundTriggerModule {
         native_setup(SoundTrigger.getCurrentOpPackageName(), new WeakReference(this));
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() {
+    protected void finalize() {
         native_finalize();
     }
 
+    /* loaded from: classes.dex */
     private class NativeEventHandlerDelegate {
         private final Handler mHandler;
 
@@ -61,7 +62,8 @@ public class SoundTriggerModule {
                 looper = Looper.getMainLooper();
             }
             if (looper != null) {
-                this.mHandler = new Handler(looper, SoundTriggerModule.this) {
+                this.mHandler = new Handler(looper) { // from class: android.hardware.soundtrigger.SoundTriggerModule.NativeEventHandlerDelegate.1
+                    @Override // android.p007os.Handler
                     public void handleMessage(Message msg) {
                         switch (msg.what) {
                             case 1:
@@ -98,8 +100,7 @@ public class SoundTriggerModule {
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public Handler handler() {
+        Handler handler() {
             return this.mHandler;
         }
     }
@@ -110,7 +111,8 @@ public class SoundTriggerModule {
         Handler handler;
         SoundTriggerModule module = (SoundTriggerModule) ((WeakReference) module_ref).get();
         if (module != null && (delegate = module.mEventHandlerDelegate) != null && (handler = delegate.handler()) != null) {
-            handler.sendMessage(handler.obtainMessage(what, arg1, arg2, obj));
+            Message m = handler.obtainMessage(what, arg1, arg2, obj);
+            handler.sendMessage(m);
         }
     }
 }

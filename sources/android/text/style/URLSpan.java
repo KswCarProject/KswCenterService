@@ -4,12 +4,13 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Parcel;
+import android.p007os.Parcel;
 import android.provider.Browser;
 import android.text.ParcelableSpan;
 import android.util.Log;
 import android.view.View;
 
+/* loaded from: classes4.dex */
 public class URLSpan extends ClickableSpan implements ParcelableSpan {
     private final String mURL;
 
@@ -29,6 +30,7 @@ public class URLSpan extends ClickableSpan implements ParcelableSpan {
         return 11;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -45,6 +47,7 @@ public class URLSpan extends ClickableSpan implements ParcelableSpan {
         return this.mURL;
     }
 
+    @Override // android.text.style.ClickableSpan
     public void onClick(View widget) {
         Uri uri = Uri.parse(getURL());
         Context context = widget.getContext();
@@ -53,7 +56,7 @@ public class URLSpan extends ClickableSpan implements ParcelableSpan {
         try {
             context.startActivity(intent);
         } catch (ActivityNotFoundException e) {
-            Log.w("URLSpan", "Actvity was not found for intent, " + intent.toString());
+            Log.m64w("URLSpan", "Actvity was not found for intent, " + intent.toString());
         }
     }
 }

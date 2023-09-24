@@ -1,5 +1,6 @@
 package android.telephony;
 
+/* loaded from: classes.dex */
 public class AccessNetworkUtils {
     public static final int INVALID_BAND = -1;
 
@@ -19,10 +20,7 @@ public class AccessNetworkUtils {
         if (band >= 33) {
             return 2;
         }
-        if (band >= 1) {
-            return 1;
-        }
-        return 0;
+        return band >= 1 ? 1 : 0;
     }
 
     public static int getOperatingBandForEarfcn(int earfcn) {
@@ -170,9 +168,9 @@ public class AccessNetworkUtils {
         if (earfcn >= 600) {
             return 2;
         }
-        if (earfcn >= 0) {
-            return 1;
+        if (earfcn < 0) {
+            return -1;
         }
-        return -1;
+        return 1;
     }
 }

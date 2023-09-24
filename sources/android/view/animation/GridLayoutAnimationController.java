@@ -7,9 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.LayoutAnimationController;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.util.Random;
 
+/* loaded from: classes4.dex */
 public class GridLayoutAnimationController extends LayoutAnimationController {
     public static final int DIRECTION_BOTTOM_TO_TOP = 2;
     public static final int DIRECTION_HORIZONTAL_MASK = 1;
@@ -25,6 +26,7 @@ public class GridLayoutAnimationController extends LayoutAnimationController {
     private int mDirectionPriority;
     private float mRowDelay;
 
+    /* loaded from: classes4.dex */
     public static class AnimationParameters extends LayoutAnimationController.AnimationParameters {
         public int column;
         public int columnsCount;
@@ -34,9 +36,11 @@ public class GridLayoutAnimationController extends LayoutAnimationController {
 
     public GridLayoutAnimationController(Context context, AttributeSet attrs) {
         super(context, attrs);
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.GridLayoutAnimation);
-        this.mColumnDelay = Animation.Description.parseValue(a.peekValue(0)).value;
-        this.mRowDelay = Animation.Description.parseValue(a.peekValue(1)).value;
+        TypedArray a = context.obtainStyledAttributes(attrs, C3132R.styleable.GridLayoutAnimation);
+        Animation.Description d = Animation.Description.parseValue(a.peekValue(0));
+        this.mColumnDelay = d.value;
+        Animation.Description d2 = Animation.Description.parseValue(a.peekValue(1));
+        this.mRowDelay = d2.value;
         this.mDirection = a.getInt(2, 0);
         this.mDirectionPriority = a.getInt(3, 0);
         a.recycle();
@@ -84,18 +88,19 @@ public class GridLayoutAnimationController extends LayoutAnimationController {
         this.mDirectionPriority = directionPriority;
     }
 
+    @Override // android.view.animation.LayoutAnimationController
     public boolean willOverlap() {
         return this.mColumnDelay < 1.0f || this.mRowDelay < 1.0f;
     }
 
-    /* access modifiers changed from: protected */
-    public long getDelayForView(View view) {
-        float totalDelay;
+    @Override // android.view.animation.LayoutAnimationController
+    protected long getDelayForView(View view) {
         long viewDelay;
+        float totalDelay;
         ViewGroup.LayoutParams lp = view.getLayoutParams();
         AnimationParameters params = (AnimationParameters) lp.layoutAnimationParameters;
         if (params == null) {
-            return 0;
+            return 0L;
         }
         int column = getTransformedColumnIndex(params);
         int row = getTransformedRowIndex(params);
@@ -109,39 +114,41 @@ public class GridLayoutAnimationController extends LayoutAnimationController {
         }
         switch (this.mDirectionPriority) {
             case 1:
-                viewDelay = (long) ((((float) row) * rowDelay) + (((float) (column * rowsCount)) * rowDelay));
-                totalDelay = (((float) rowsCount) * rowDelay) + (((float) (columnsCount * rowsCount)) * rowDelay);
+                viewDelay = (row * rowDelay) + (column * rowsCount * rowDelay);
+                totalDelay = (rowsCount * rowDelay) + (columnsCount * rowsCount * rowDelay);
                 break;
             case 2:
-                viewDelay = (long) ((((float) column) * columnDelay) + (((float) (row * columnsCount)) * columnDelay));
-                totalDelay = (((float) columnsCount) * columnDelay) + (((float) (rowsCount * columnsCount)) * columnDelay);
+                viewDelay = (column * columnDelay) + (row * columnsCount * columnDelay);
+                totalDelay = (columnsCount * columnDelay) + (rowsCount * columnsCount * columnDelay);
                 break;
             default:
-                viewDelay = (long) ((((float) column) * columnDelay) + (((float) row) * rowDelay));
-                totalDelay = (((float) columnsCount) * columnDelay) + (((float) rowsCount) * rowDelay);
+                viewDelay = (column * columnDelay) + (row * rowDelay);
+                totalDelay = (columnsCount * columnDelay) + (rowsCount * rowDelay);
                 break;
         }
-        ViewGroup.LayoutParams layoutParams = lp;
-        return (long) (this.mInterpolator.getInterpolation(((float) viewDelay) / totalDelay) * totalDelay);
+        float normalizedDelay = ((float) viewDelay) / totalDelay;
+        return this.mInterpolator.getInterpolation(normalizedDelay) * totalDelay;
     }
 
     private int getTransformedColumnIndex(AnimationParameters params) {
         int index;
         switch (getOrder()) {
             case 1:
-                index = (params.columnsCount - 1) - params.column;
+                int index2 = params.columnsCount;
+                index = (index2 - 1) - params.column;
                 break;
             case 2:
                 if (this.mRandomizer == null) {
                     this.mRandomizer = new Random();
                 }
-                index = (int) (((float) params.columnsCount) * this.mRandomizer.nextFloat());
+                index = (int) (params.columnsCount * this.mRandomizer.nextFloat());
                 break;
             default:
                 index = params.column;
                 break;
         }
-        if ((this.mDirection & 1) == 1) {
+        int direction = this.mDirection & 1;
+        if (direction == 1) {
             return (params.columnsCount - 1) - index;
         }
         return index;
@@ -151,19 +158,21 @@ public class GridLayoutAnimationController extends LayoutAnimationController {
         int index;
         switch (getOrder()) {
             case 1:
-                index = (params.rowsCount - 1) - params.row;
+                int index2 = params.rowsCount;
+                index = (index2 - 1) - params.row;
                 break;
             case 2:
                 if (this.mRandomizer == null) {
                     this.mRandomizer = new Random();
                 }
-                index = (int) (((float) params.rowsCount) * this.mRandomizer.nextFloat());
+                index = (int) (params.rowsCount * this.mRandomizer.nextFloat());
                 break;
             default:
                 index = params.row;
                 break;
         }
-        if ((this.mDirection & 2) == 2) {
+        int direction = this.mDirection & 2;
+        if (direction == 2) {
             return (params.rowsCount - 1) - index;
         }
         return index;

@@ -1,8 +1,9 @@
 package android.content.res;
 
+import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Xml;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,12 +11,15 @@ import java.util.List;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+/* loaded from: classes.dex */
 public class FontResourcesParser {
     private static final String TAG = "FontResourcesParser";
 
+    /* loaded from: classes.dex */
     public interface FamilyResourceEntry {
     }
 
+    /* loaded from: classes.dex */
     public static final class ProviderResourceEntry implements FamilyResourceEntry {
         private final List<List<String>> mCerts;
         private final String mProviderAuthority;
@@ -46,6 +50,7 @@ public class FontResourcesParser {
         }
     }
 
+    /* loaded from: classes.dex */
     public static final class FontFileResourceEntry {
         public static final int ITALIC = 1;
         public static final int RESOLVE_BY_FONT_TABLE = -1;
@@ -86,6 +91,7 @@ public class FontResourcesParser {
         }
     }
 
+    /* loaded from: classes.dex */
     public static final class FontFamilyFilesResourceEntry implements FamilyResourceEntry {
         private final FontFileResourceEntry[] mEntries;
 
@@ -98,95 +104,91 @@ public class FontResourcesParser {
         }
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:0:0x0000 A[LOOP_START, MTH_ENTER_BLOCK] */
-    /* JADX WARNING: Removed duplicated region for block: B:5:0x000e  */
-    /* JADX WARNING: Removed duplicated region for block: B:7:0x0013  */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public static android.content.res.FontResourcesParser.FamilyResourceEntry parse(org.xmlpull.v1.XmlPullParser r3, android.content.res.Resources r4) throws org.xmlpull.v1.XmlPullParserException, java.io.IOException {
-        /*
-        L_0x0000:
-            int r0 = r3.next()
-            r1 = r0
-            r2 = 2
-            if (r0 == r2) goto L_0x000c
-            r0 = 1
-            if (r1 == r0) goto L_0x000c
-            goto L_0x0000
-        L_0x000c:
-            if (r1 != r2) goto L_0x0013
-            android.content.res.FontResourcesParser$FamilyResourceEntry r0 = readFamilies(r3, r4)
-            return r0
-        L_0x0013:
-            org.xmlpull.v1.XmlPullParserException r0 = new org.xmlpull.v1.XmlPullParserException
-            java.lang.String r2 = "No start tag found"
-            r0.<init>(r2)
-            throw r0
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.content.res.FontResourcesParser.parse(org.xmlpull.v1.XmlPullParser, android.content.res.Resources):android.content.res.FontResourcesParser$FamilyResourceEntry");
+    public static FamilyResourceEntry parse(XmlPullParser parser, Resources resources) throws XmlPullParserException, IOException {
+        int type;
+        do {
+            type = parser.next();
+            if (type == 2) {
+                break;
+            }
+        } while (type != 1);
+        if (type != 2) {
+            throw new XmlPullParserException("No start tag found");
+        }
+        return readFamilies(parser, resources);
     }
 
     private static FamilyResourceEntry readFamilies(XmlPullParser parser, Resources resources) throws XmlPullParserException, IOException {
-        parser.require(2, (String) null, "font-family");
-        if (parser.getName().equals("font-family")) {
+        parser.require(2, null, "font-family");
+        String tag = parser.getName();
+        if (tag.equals("font-family")) {
             return readFamily(parser, resources);
         }
         skip(parser);
-        Log.e(TAG, "Failed to find font-family tag");
+        Log.m70e(TAG, "Failed to find font-family tag");
         return null;
     }
 
     private static FamilyResourceEntry readFamily(XmlPullParser parser, Resources resources) throws XmlPullParserException, IOException {
-        TypedArray array = resources.obtainAttributes(Xml.asAttributeSet(parser), R.styleable.FontFamily);
+        AttributeSet attrs = Xml.asAttributeSet(parser);
+        TypedArray array = resources.obtainAttributes(attrs, C3132R.styleable.FontFamily);
         String authority = array.getString(0);
         String providerPackage = array.getString(2);
         boolean isArrayOfArrays = true;
         String query = array.getString(1);
         int certsId = array.getResourceId(3, 0);
         array.recycle();
-        if (authority == null || providerPackage == null || query == null) {
-            List<FontFileResourceEntry> fonts = new ArrayList<>();
+        if (authority != null && providerPackage != null && query != null) {
             while (parser.next() != 3) {
-                if (parser.getEventType() == 2) {
-                    if (parser.getName().equals("font")) {
-                        FontFileResourceEntry entry = readFont(parser, resources);
-                        if (entry != null) {
-                            fonts.add(entry);
+                skip(parser);
+            }
+            List<List<String>> certs = null;
+            if (certsId != 0) {
+                TypedArray typedArray = resources.obtainTypedArray(certsId);
+                if (typedArray.length() > 0) {
+                    certs = new ArrayList<>();
+                    if (typedArray.getResourceId(0, 0) == 0) {
+                        isArrayOfArrays = false;
+                    }
+                    if (isArrayOfArrays) {
+                        for (int i = 0; i < typedArray.length(); i++) {
+                            int certId = typedArray.getResourceId(i, 0);
+                            String[] certsArray = resources.getStringArray(certId);
+                            List<String> certsList = Arrays.asList(certsArray);
+                            certs.add(certsList);
                         }
                     } else {
-                        skip(parser);
+                        String[] certsArray2 = resources.getStringArray(certsId);
+                        List<String> certsList2 = Arrays.asList(certsArray2);
+                        certs.add(certsList2);
                     }
                 }
             }
-            if (fonts.isEmpty()) {
-                return null;
-            }
-            return new FontFamilyFilesResourceEntry((FontFileResourceEntry[]) fonts.toArray(new FontFileResourceEntry[fonts.size()]));
+            return new ProviderResourceEntry(authority, providerPackage, query, certs);
         }
+        List<FontFileResourceEntry> fonts = new ArrayList<>();
         while (parser.next() != 3) {
-            skip(parser);
-        }
-        List<List<String>> certs = null;
-        if (certsId != 0) {
-            TypedArray typedArray = resources.obtainTypedArray(certsId);
-            if (typedArray.length() > 0) {
-                certs = new ArrayList<>();
-                if (typedArray.getResourceId(0, 0) == 0) {
-                    isArrayOfArrays = false;
-                }
-                if (isArrayOfArrays) {
-                    for (int i = 0; i < typedArray.length(); i++) {
-                        certs.add(Arrays.asList(resources.getStringArray(typedArray.getResourceId(i, 0))));
+            if (parser.getEventType() == 2) {
+                String tag = parser.getName();
+                if (tag.equals("font")) {
+                    FontFileResourceEntry entry = readFont(parser, resources);
+                    if (entry != null) {
+                        fonts.add(entry);
                     }
                 } else {
-                    certs.add(Arrays.asList(resources.getStringArray(certsId)));
+                    skip(parser);
                 }
             }
         }
-        return new ProviderResourceEntry(authority, providerPackage, query, certs);
+        if (fonts.isEmpty()) {
+            return null;
+        }
+        return new FontFamilyFilesResourceEntry((FontFileResourceEntry[]) fonts.toArray(new FontFileResourceEntry[fonts.size()]));
     }
 
     private static FontFileResourceEntry readFont(XmlPullParser parser, Resources resources) throws XmlPullParserException, IOException {
-        TypedArray array = resources.obtainAttributes(Xml.asAttributeSet(parser), R.styleable.FontFamilyFont);
+        AttributeSet attrs = Xml.asAttributeSet(parser);
+        TypedArray array = resources.obtainAttributes(attrs, C3132R.styleable.FontFamilyFont);
         int weight = array.getInt(1, -1);
         int italic = array.getInt(2, -1);
         String variationSettings = array.getString(4);

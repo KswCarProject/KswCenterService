@@ -7,14 +7,14 @@ import com.wits.pms.statuscontrol.MusicStatus;
 import com.wits.pms.statuscontrol.SystemStatus;
 import com.wits.pms.statuscontrol.VideoStatus;
 
+/* loaded from: classes2.dex */
 public abstract class LogicSystem {
     protected static CenterControlImpl mController;
-    /* access modifiers changed from: protected */
-    public BtPhoneStatus mBtPhoneStatus = new BtPhoneStatus();
     protected McuStatus mMcuStatus = new McuStatus();
-    protected MusicStatus mMusicStatus = new MusicStatus();
     protected SystemStatus mSystemStatus = new SystemStatus();
+    protected MusicStatus mMusicStatus = new MusicStatus();
     protected VideoStatus mVideoStatus = new VideoStatus();
+    protected BtPhoneStatus mBtPhoneStatus = new BtPhoneStatus();
 
     public abstract void handle();
 

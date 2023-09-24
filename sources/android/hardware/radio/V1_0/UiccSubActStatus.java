@@ -2,6 +2,7 @@ package android.hardware.radio.V1_0;
 
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class UiccSubActStatus {
     public static final int ACTIVATE = 1;
     public static final int DEACTIVATE = 0;

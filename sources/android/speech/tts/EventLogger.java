@@ -2,6 +2,7 @@ package android.speech.tts;
 
 import android.text.TextUtils;
 
+/* loaded from: classes3.dex */
 class EventLogger extends AbstractEventLogger {
     private final SynthesisRequest mRequest;
 
@@ -10,15 +11,15 @@ class EventLogger extends AbstractEventLogger {
         this.mRequest = request;
     }
 
-    /* access modifiers changed from: protected */
-    public void logFailure(int statusCode) {
+    @Override // android.speech.tts.AbstractEventLogger
+    protected void logFailure(int statusCode) {
         if (statusCode != -2) {
             EventLogTags.writeTtsSpeakFailure(this.mServiceApp, this.mCallerUid, this.mCallerPid, getUtteranceLength(), getLocaleString(), this.mRequest.getSpeechRate(), this.mRequest.getPitch());
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void logSuccess(long audioLatency, long engineLatency, long engineTotal) {
+    @Override // android.speech.tts.AbstractEventLogger
+    protected void logSuccess(long audioLatency, long engineLatency, long engineTotal) {
         EventLogTags.writeTtsSpeakSuccess(this.mServiceApp, this.mCallerUid, this.mCallerPid, getUtteranceLength(), getLocaleString(), this.mRequest.getSpeechRate(), this.mRequest.getPitch(), engineLatency, engineTotal, audioLatency);
     }
 

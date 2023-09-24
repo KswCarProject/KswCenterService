@@ -3,8 +3,8 @@ package android.telephony.mbms;
 import android.annotation.SystemApi;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.security.keystore.KeyProperties;
 import android.util.Base64;
 import android.util.Log;
@@ -22,12 +22,17 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
 
+/* loaded from: classes4.dex */
 public final class DownloadRequest implements Parcelable {
-    public static final Parcelable.Creator<DownloadRequest> CREATOR = new Parcelable.Creator<DownloadRequest>() {
+    public static final Parcelable.Creator<DownloadRequest> CREATOR = new Parcelable.Creator<DownloadRequest>() { // from class: android.telephony.mbms.DownloadRequest.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public DownloadRequest createFromParcel(Parcel in) {
             return new DownloadRequest(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public DownloadRequest[] newArray(int size) {
             return new DownloadRequest[size];
         }
@@ -36,32 +41,21 @@ public final class DownloadRequest implements Parcelable {
     private static final String LOG_TAG = "MbmsDownloadRequest";
     public static final int MAX_APP_INTENT_SIZE = 50000;
     public static final int MAX_DESTINATION_URI_SIZE = 50000;
-    /* access modifiers changed from: private */
-    public final Uri destinationUri;
-    /* access modifiers changed from: private */
-    public final String fileServiceId;
-    /* access modifiers changed from: private */
-    public final String serializedResultIntentForApp;
-    /* access modifiers changed from: private */
-    public final Uri sourceUri;
-    /* access modifiers changed from: private */
-    public final int subscriptionId;
-    /* access modifiers changed from: private */
-    public final int version;
+    private final Uri destinationUri;
+    private final String fileServiceId;
+    private final String serializedResultIntentForApp;
+    private final Uri sourceUri;
+    private final int subscriptionId;
+    private final int version;
 
+    /* loaded from: classes4.dex */
     private static class SerializationDataContainer implements Externalizable {
-        /* access modifiers changed from: private */
-        public String appIntent;
-        /* access modifiers changed from: private */
-        public Uri destination;
-        /* access modifiers changed from: private */
-        public String fileServiceId;
-        /* access modifiers changed from: private */
-        public Uri source;
-        /* access modifiers changed from: private */
-        public int subscriptionId;
-        /* access modifiers changed from: private */
-        public int version;
+        private String appIntent;
+        private Uri destination;
+        private String fileServiceId;
+        private Uri source;
+        private int subscriptionId;
+        private int version;
 
         public SerializationDataContainer() {
         }
@@ -75,6 +69,7 @@ public final class DownloadRequest implements Parcelable {
             this.version = request.version;
         }
 
+        @Override // java.io.Externalizable
         public void writeExternal(ObjectOutput objectOutput) throws IOException {
             objectOutput.write(this.version);
             objectOutput.writeUTF(this.fileServiceId);
@@ -84,6 +79,7 @@ public final class DownloadRequest implements Parcelable {
             objectOutput.writeUTF(this.appIntent);
         }
 
+        @Override // java.io.Externalizable
         public void readExternal(ObjectInput objectInput) throws IOException {
             this.version = objectInput.read();
             this.fileServiceId = objectInput.readUTF();
@@ -94,6 +90,7 @@ public final class DownloadRequest implements Parcelable {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class Builder {
         private String appIntent;
         private Uri destination;
@@ -110,7 +107,8 @@ public final class DownloadRequest implements Parcelable {
 
         public static Builder fromSerializedRequest(byte[] data) {
             try {
-                SerializationDataContainer dataContainer = (SerializationDataContainer) new ObjectInputStream(new ByteArrayInputStream(data)).readObject();
+                ObjectInputStream stream = new ObjectInputStream(new ByteArrayInputStream(data));
+                SerializationDataContainer dataContainer = (SerializationDataContainer) stream.readObject();
                 Builder builder = new Builder(dataContainer.source, dataContainer.destination);
                 builder.version = dataContainer.version;
                 builder.appIntent = dataContainer.appIntent;
@@ -118,10 +116,10 @@ public final class DownloadRequest implements Parcelable {
                 builder.subscriptionId = dataContainer.subscriptionId;
                 return builder;
             } catch (IOException e) {
-                Log.e(DownloadRequest.LOG_TAG, "Got IOException trying to parse opaque data");
+                Log.m70e(DownloadRequest.LOG_TAG, "Got IOException trying to parse opaque data");
                 throw new IllegalArgumentException(e);
             } catch (ClassNotFoundException e2) {
-                Log.e(DownloadRequest.LOG_TAG, "Got ClassNotFoundException trying to parse opaque data");
+                Log.m70e(DownloadRequest.LOG_TAG, "Got ClassNotFoundException trying to parse opaque data");
                 throw new IllegalArgumentException(e2);
             }
         }
@@ -145,17 +143,17 @@ public final class DownloadRequest implements Parcelable {
             return this;
         }
 
-        public Builder setSubscriptionId(int subscriptionId2) {
-            this.subscriptionId = subscriptionId2;
+        public Builder setSubscriptionId(int subscriptionId) {
+            this.subscriptionId = subscriptionId;
             return this;
         }
 
         public Builder setAppIntent(Intent intent) {
             this.appIntent = intent.toUri(0);
-            if (this.appIntent.length() <= 50000) {
-                return this;
+            if (this.appIntent.length() > 50000) {
+                throw new IllegalArgumentException("App intent must not exceed length 50000");
             }
-            throw new IllegalArgumentException("App intent must not exceed length 50000");
+            return this;
         }
 
         public DownloadRequest build() {
@@ -163,13 +161,13 @@ public final class DownloadRequest implements Parcelable {
         }
     }
 
-    private DownloadRequest(String fileServiceId2, Uri source, Uri destination, int sub, String appIntent, int version2) {
-        this.fileServiceId = fileServiceId2;
+    private DownloadRequest(String fileServiceId, Uri source, Uri destination, int sub, String appIntent, int version) {
+        this.fileServiceId = fileServiceId;
         this.sourceUri = source;
         this.subscriptionId = sub;
         this.destinationUri = destination;
         this.serializedResultIntentForApp = appIntent;
-        this.version = version2;
+        this.version = version;
     }
 
     private DownloadRequest(Parcel in) {
@@ -181,10 +179,12 @@ public final class DownloadRequest implements Parcelable {
         this.version = in.readInt();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(this.fileServiceId);
         out.writeParcelable(this.sourceUri, flags);
@@ -222,11 +222,12 @@ public final class DownloadRequest implements Parcelable {
         try {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             ObjectOutputStream stream = new ObjectOutputStream(byteArrayOutputStream);
-            stream.writeObject(new SerializationDataContainer(this));
+            SerializationDataContainer container = new SerializationDataContainer(this);
+            stream.writeObject(container);
             stream.flush();
             return byteArrayOutputStream.toByteArray();
         } catch (IOException e) {
-            Log.e(LOG_TAG, "Got IOException trying to serialize opaque data");
+            Log.m70e(LOG_TAG, "Got IOException trying to serialize opaque data");
             return null;
         }
     }
@@ -267,13 +268,13 @@ public final class DownloadRequest implements Parcelable {
             return false;
         }
         DownloadRequest request = (DownloadRequest) o;
-        if (this.subscriptionId != request.subscriptionId || this.version != request.version || !Objects.equals(this.fileServiceId, request.fileServiceId) || !Objects.equals(this.sourceUri, request.sourceUri) || !Objects.equals(this.destinationUri, request.destinationUri) || !Objects.equals(this.serializedResultIntentForApp, request.serializedResultIntentForApp)) {
-            return false;
+        if (this.subscriptionId == request.subscriptionId && this.version == request.version && Objects.equals(this.fileServiceId, request.fileServiceId) && Objects.equals(this.sourceUri, request.sourceUri) && Objects.equals(this.destinationUri, request.destinationUri) && Objects.equals(this.serializedResultIntentForApp, request.serializedResultIntentForApp)) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{this.fileServiceId, this.sourceUri, this.destinationUri, Integer.valueOf(this.subscriptionId), this.serializedResultIntentForApp, Integer.valueOf(this.version)});
+        return Objects.hash(this.fileServiceId, this.sourceUri, this.destinationUri, Integer.valueOf(this.subscriptionId), this.serializedResultIntentForApp, Integer.valueOf(this.version));
     }
 }

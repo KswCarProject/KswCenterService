@@ -7,31 +7,34 @@ import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+/* loaded from: classes3.dex */
 public class ETC1Util {
     public static void loadTexture(int target, int level, int border, int fallbackFormat, int fallbackType, InputStream input) throws IOException {
         loadTexture(target, level, border, fallbackFormat, fallbackType, createTexture(input));
     }
 
     public static void loadTexture(int target, int level, int border, int fallbackFormat, int fallbackType, ETC1Texture texture) {
-        int i = fallbackType;
-        if (fallbackFormat != 6407) {
-            throw new IllegalArgumentException("fallbackFormat must be GL_RGB");
-        } else if (i == 33635 || i == 5121) {
+        if (fallbackFormat == 6407) {
+            if (fallbackType != 33635 && fallbackType != 5121) {
+                throw new IllegalArgumentException("Unsupported fallbackType");
+            }
             int width = texture.getWidth();
             int height = texture.getHeight();
-            ByteBuffer data = texture.getData();
+            Buffer data = texture.getData();
             if (isETC1Supported()) {
-                GLES10.glCompressedTexImage2D(target, level, 36196, width, height, border, data.remaining(), data);
+                int imageSize = data.remaining();
+                GLES10.glCompressedTexImage2D(target, level, 36196, width, height, border, imageSize, data);
                 return;
             }
-            int pixelSize = i != 5121 ? 2 : 3;
+            boolean useShorts = fallbackType != 5121;
+            int pixelSize = useShorts ? 2 : 3;
             int stride = pixelSize * width;
             ByteBuffer decodedData = ByteBuffer.allocateDirect(stride * height).order(ByteOrder.nativeOrder());
             ETC1.decodeImage(data, decodedData, width, height, pixelSize, stride);
             GLES10.glTexImage2D(target, level, fallbackFormat, width, height, border, fallbackFormat, fallbackType, decodedData);
-        } else {
-            throw new IllegalArgumentException("Unsupported fallbackType");
+            return;
         }
+        throw new IllegalArgumentException("fallbackFormat must be GL_RGB");
     }
 
     public static boolean isETC1Supported() {
@@ -50,6 +53,7 @@ public class ETC1Util {
         return false;
     }
 
+    /* loaded from: classes3.dex */
     public static class ETC1Texture {
         private ByteBuffer mData;
         private int mHeight;
@@ -76,34 +80,34 @@ public class ETC1Util {
 
     public static ETC1Texture createTexture(InputStream input) throws IOException {
         byte[] ioBuffer = new byte[4096];
-        if (input.read(ioBuffer, 0, 16) == 16) {
-            ByteBuffer headerBuffer = ByteBuffer.allocateDirect(16).order(ByteOrder.nativeOrder());
-            headerBuffer.put(ioBuffer, 0, 16).position(0);
-            if (ETC1.isValid(headerBuffer)) {
-                int width = ETC1.getWidth(headerBuffer);
-                int height = ETC1.getHeight(headerBuffer);
-                int encodedSize = ETC1.getEncodedDataSize(width, height);
-                ByteBuffer dataBuffer = ByteBuffer.allocateDirect(encodedSize).order(ByteOrder.nativeOrder());
-                int i = 0;
-                while (i < encodedSize) {
-                    int chunkSize = Math.min(ioBuffer.length, encodedSize - i);
-                    if (input.read(ioBuffer, 0, chunkSize) == chunkSize) {
-                        dataBuffer.put(ioBuffer, 0, chunkSize);
-                        i += chunkSize;
-                    } else {
-                        throw new IOException("Unable to read PKM file data.");
-                    }
-                }
-                dataBuffer.position(0);
-                return new ETC1Texture(width, height, dataBuffer);
-            }
+        if (input.read(ioBuffer, 0, 16) != 16) {
+            throw new IOException("Unable to read PKM file header.");
+        }
+        ByteBuffer headerBuffer = ByteBuffer.allocateDirect(16).order(ByteOrder.nativeOrder());
+        headerBuffer.put(ioBuffer, 0, 16).position(0);
+        if (!ETC1.isValid(headerBuffer)) {
             throw new IOException("Not a PKM file.");
         }
-        throw new IOException("Unable to read PKM file header.");
+        int width = ETC1.getWidth(headerBuffer);
+        int height = ETC1.getHeight(headerBuffer);
+        int encodedSize = ETC1.getEncodedDataSize(width, height);
+        ByteBuffer dataBuffer = ByteBuffer.allocateDirect(encodedSize).order(ByteOrder.nativeOrder());
+        int i = 0;
+        while (i < encodedSize) {
+            int chunkSize = Math.min(ioBuffer.length, encodedSize - i);
+            if (input.read(ioBuffer, 0, chunkSize) != chunkSize) {
+                throw new IOException("Unable to read PKM file data.");
+            }
+            dataBuffer.put(ioBuffer, 0, chunkSize);
+            i += chunkSize;
+        }
+        dataBuffer.position(0);
+        return new ETC1Texture(width, height, dataBuffer);
     }
 
     public static ETC1Texture compressTexture(Buffer input, int width, int height, int pixelSize, int stride) {
-        ByteBuffer compressedImage = ByteBuffer.allocateDirect(ETC1.getEncodedDataSize(width, height)).order(ByteOrder.nativeOrder());
+        int encodedImageSize = ETC1.getEncodedDataSize(width, height);
+        ByteBuffer compressedImage = ByteBuffer.allocateDirect(encodedImageSize).order(ByteOrder.nativeOrder());
         ETC1.encodeImage(input, width, height, pixelSize, stride, compressedImage);
         return new ETC1Texture(width, height, compressedImage);
     }

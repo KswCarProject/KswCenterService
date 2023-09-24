@@ -6,8 +6,9 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
+/* loaded from: classes4.dex */
 public final class Scene {
     private Context mContext;
     @UnsupportedAppUsage(maxTargetSdk = 28)
@@ -15,14 +16,14 @@ public final class Scene {
     @UnsupportedAppUsage(maxTargetSdk = 28)
     Runnable mExitAction;
     private View mLayout;
-    private int mLayoutId = -1;
+    private int mLayoutId;
     private ViewGroup mSceneRoot;
 
     public static Scene getSceneForLayout(ViewGroup sceneRoot, int layoutId, Context context) {
-        SparseArray<Scene> scenes = (SparseArray) sceneRoot.getTag(R.id.scene_layoutid_cache);
+        SparseArray<Scene> scenes = (SparseArray) sceneRoot.getTag(C3132R.C3134id.scene_layoutid_cache);
         if (scenes == null) {
             scenes = new SparseArray<>();
-            sceneRoot.setTagInternal(R.id.scene_layoutid_cache, scenes);
+            sceneRoot.setTagInternal(C3132R.C3134id.scene_layoutid_cache, scenes);
         }
         Scene scene = scenes.get(layoutId);
         if (scene != null) {
@@ -34,22 +35,26 @@ public final class Scene {
     }
 
     public Scene(ViewGroup sceneRoot) {
+        this.mLayoutId = -1;
         this.mSceneRoot = sceneRoot;
     }
 
     private Scene(ViewGroup sceneRoot, int layoutId, Context context) {
+        this.mLayoutId = -1;
         this.mContext = context;
         this.mSceneRoot = sceneRoot;
         this.mLayoutId = layoutId;
     }
 
     public Scene(ViewGroup sceneRoot, View layout) {
+        this.mLayoutId = -1;
         this.mSceneRoot = sceneRoot;
         this.mLayout = layout;
     }
 
     @Deprecated
     public Scene(ViewGroup sceneRoot, ViewGroup layout) {
+        this.mLayoutId = -1;
         this.mSceneRoot = sceneRoot;
         this.mLayout = layout;
     }
@@ -81,11 +86,11 @@ public final class Scene {
 
     @UnsupportedAppUsage(maxTargetSdk = 28)
     static void setCurrentScene(ViewGroup sceneRoot, Scene scene) {
-        sceneRoot.setTagInternal(R.id.current_scene, scene);
+        sceneRoot.setTagInternal(C3132R.C3134id.current_scene, scene);
     }
 
     public static Scene getCurrentScene(ViewGroup sceneRoot) {
-        return (Scene) sceneRoot.getTag(R.id.current_scene);
+        return (Scene) sceneRoot.getTag(C3132R.C3134id.current_scene);
     }
 
     public void setEnterAction(Runnable action) {
@@ -96,8 +101,7 @@ public final class Scene {
         this.mExitAction = action;
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean isCreatedFromLayoutResource() {
+    boolean isCreatedFromLayoutResource() {
         return this.mLayoutId > 0;
     }
 }

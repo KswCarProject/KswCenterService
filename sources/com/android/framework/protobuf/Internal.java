@@ -14,72 +14,86 @@ import java.util.Map;
 import java.util.RandomAccess;
 import java.util.Set;
 
+/* loaded from: classes4.dex */
 public final class Internal {
     private static final int DEFAULT_BUFFER_SIZE = 4096;
+    static final Charset UTF_8 = Charset.forName("UTF-8");
+    static final Charset ISO_8859_1 = Charset.forName("ISO-8859-1");
     public static final byte[] EMPTY_BYTE_ARRAY = new byte[0];
     public static final ByteBuffer EMPTY_BYTE_BUFFER = ByteBuffer.wrap(EMPTY_BYTE_ARRAY);
     public static final CodedInputStream EMPTY_CODED_INPUT_STREAM = CodedInputStream.newInstance(EMPTY_BYTE_ARRAY);
-    static final Charset ISO_8859_1 = Charset.forName("ISO-8859-1");
-    static final Charset UTF_8 = Charset.forName("UTF-8");
 
+    /* loaded from: classes4.dex */
     public interface BooleanList extends ProtobufList<Boolean> {
         void addBoolean(boolean z);
 
         boolean getBoolean(int i);
 
-        BooleanList mutableCopyWithCapacity(int i);
+        @Override // 
+        ProtobufList<Boolean> mutableCopyWithCapacity(int i);
 
         boolean setBoolean(int i, boolean z);
     }
 
+    /* loaded from: classes4.dex */
     public interface DoubleList extends ProtobufList<Double> {
         void addDouble(double d);
 
         double getDouble(int i);
 
-        DoubleList mutableCopyWithCapacity(int i);
+        @Override // com.android.framework.protobuf.Internal.ProtobufList, com.android.framework.protobuf.Internal.BooleanList
+        ProtobufList<Double> mutableCopyWithCapacity(int i);
 
         double setDouble(int i, double d);
     }
 
+    /* loaded from: classes4.dex */
     public interface EnumLite {
         int getNumber();
     }
 
+    /* loaded from: classes4.dex */
     public interface EnumLiteMap<T extends EnumLite> {
         T findValueByNumber(int i);
     }
 
+    /* loaded from: classes4.dex */
     public interface FloatList extends ProtobufList<Float> {
         void addFloat(float f);
 
         float getFloat(int i);
 
-        FloatList mutableCopyWithCapacity(int i);
+        @Override // com.android.framework.protobuf.Internal.ProtobufList, com.android.framework.protobuf.Internal.BooleanList
+        ProtobufList<Float> mutableCopyWithCapacity(int i);
 
         float setFloat(int i, float f);
     }
 
+    /* loaded from: classes4.dex */
     public interface IntList extends ProtobufList<Integer> {
         void addInt(int i);
 
         int getInt(int i);
 
-        IntList mutableCopyWithCapacity(int i);
+        @Override // com.android.framework.protobuf.Internal.ProtobufList, com.android.framework.protobuf.Internal.BooleanList
+        ProtobufList<Integer> mutableCopyWithCapacity(int i);
 
         int setInt(int i, int i2);
     }
 
+    /* loaded from: classes4.dex */
     public interface LongList extends ProtobufList<Long> {
         void addLong(long j);
 
         long getLong(int i);
 
-        LongList mutableCopyWithCapacity(int i);
+        @Override // com.android.framework.protobuf.Internal.ProtobufList, com.android.framework.protobuf.Internal.BooleanList
+        ProtobufList<Long> mutableCopyWithCapacity(int i);
 
         long setLong(int i, long j);
     }
 
+    /* loaded from: classes4.dex */
     public interface ProtobufList<E> extends List<E>, RandomAccess {
         boolean isModifiable();
 
@@ -186,8 +200,8 @@ public final class Internal {
 
     static int partialHash(int h, byte[] bytes, int offset, int length) {
         int h2 = h;
-        for (int i = offset; i < offset + length; i++) {
-            h2 = (h2 * 31) + bytes[i];
+        for (int h3 = offset; h3 < offset + length; h3++) {
+            h2 = (h2 * 31) + bytes[h3];
         }
         return h2;
     }
@@ -227,62 +241,64 @@ public final class Internal {
             }
             return h;
         }
-        int i = 4096;
-        if (bytes.capacity() <= 4096) {
-            i = bytes.capacity();
-        }
-        int bufferSize = i;
+        int h2 = bytes.capacity();
+        int bufferSize = h2 <= 4096 ? bytes.capacity() : 4096;
         byte[] buffer = new byte[bufferSize];
         ByteBuffer duplicated = bytes.duplicate();
         duplicated.clear();
-        int h2 = bytes.capacity();
+        int h3 = bytes.capacity();
         while (duplicated.remaining() > 0) {
             int length = duplicated.remaining() <= bufferSize ? duplicated.remaining() : bufferSize;
             duplicated.get(buffer, 0, length);
-            h2 = partialHash(h2, buffer, 0, length);
+            h3 = partialHash(h3, buffer, 0, length);
         }
-        if (h2 == 0) {
+        if (h3 == 0) {
             return 1;
         }
-        return h2;
+        return h3;
     }
 
     public static <T extends MessageLite> T getDefaultInstance(Class<T> clazz) {
         try {
             Method method = clazz.getMethod("getDefaultInstance", new Class[0]);
-            return (MessageLite) method.invoke(method, new Object[0]);
+            return (T) method.invoke(method, new Object[0]);
         } catch (Exception e) {
             throw new RuntimeException("Failed to get default instance for " + clazz, e);
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class ListAdapter<F, T> extends AbstractList<T> {
         private final Converter<F, T> converter;
         private final List<F> fromList;
 
+        /* loaded from: classes4.dex */
         public interface Converter<F, T> {
             T convert(F f);
         }
 
-        public ListAdapter(List<F> fromList2, Converter<F, T> converter2) {
-            this.fromList = fromList2;
-            this.converter = converter2;
+        public ListAdapter(List<F> fromList, Converter<F, T> converter) {
+            this.fromList = fromList;
+            this.converter = converter;
         }
 
+        @Override // java.util.AbstractList, java.util.List
         public T get(int index) {
             return this.converter.convert(this.fromList.get(index));
         }
 
+        @Override // java.util.AbstractCollection, java.util.Collection, java.util.List
         public int size() {
             return this.fromList.size();
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class MapAdapter<K, V, RealValue> extends AbstractMap<K, V> {
         private final Map<K, RealValue> realMap;
-        /* access modifiers changed from: private */
-        public final Converter<RealValue, V> valueConverter;
+        private final Converter<RealValue, V> valueConverter;
 
+        /* loaded from: classes4.dex */
         public interface Converter<A, B> {
             A doBackward(B b);
 
@@ -290,23 +306,28 @@ public final class Internal {
         }
 
         public static <T extends EnumLite> Converter<Integer, T> newEnumConverter(final EnumLiteMap<T> enumMap, final T unrecognizedValue) {
-            return new Converter<Integer, T>() {
-                public T doForward(Integer value) {
-                    T result = EnumLiteMap.this.findValueByNumber(value.intValue());
-                    return result == null ? unrecognizedValue : result;
+            return (Converter<Integer, T>) new Converter<Integer, T>() { // from class: com.android.framework.protobuf.Internal.MapAdapter.1
+                /* JADX WARN: Incorrect return type in method signature: (Ljava/lang/Integer;)TT; */
+                @Override // com.android.framework.protobuf.Internal.MapAdapter.Converter
+                public EnumLite doForward(Integer value) {
+                    EnumLite findValueByNumber = EnumLiteMap.this.findValueByNumber(value.intValue());
+                    return findValueByNumber == null ? unrecognizedValue : findValueByNumber;
                 }
 
-                public Integer doBackward(T value) {
-                    return Integer.valueOf(value.getNumber());
+                /* JADX WARN: Incorrect types in method signature: (TT;)Ljava/lang/Integer; */
+                @Override // com.android.framework.protobuf.Internal.MapAdapter.Converter
+                public Integer doBackward(EnumLite enumLite) {
+                    return Integer.valueOf(enumLite.getNumber());
                 }
             };
         }
 
-        public MapAdapter(Map<K, RealValue> realMap2, Converter<RealValue, V> valueConverter2) {
-            this.realMap = realMap2;
-            this.valueConverter = valueConverter2;
+        public MapAdapter(Map<K, RealValue> realMap, Converter<RealValue, V> valueConverter) {
+            this.realMap = realMap;
+            this.valueConverter = valueConverter;
         }
 
+        @Override // java.util.AbstractMap, java.util.Map
         public V get(Object key) {
             RealValue result = this.realMap.get(key);
             if (result == null) {
@@ -315,6 +336,7 @@ public final class Internal {
             return this.valueConverter.doForward(result);
         }
 
+        @Override // java.util.AbstractMap, java.util.Map
         public V put(K key, V value) {
             RealValue oldValue = this.realMap.put(key, this.valueConverter.doBackward(value));
             if (oldValue == null) {
@@ -323,67 +345,80 @@ public final class Internal {
             return this.valueConverter.doForward(oldValue);
         }
 
+        @Override // java.util.AbstractMap, java.util.Map
         public Set<Map.Entry<K, V>> entrySet() {
             return new SetAdapter(this.realMap.entrySet());
         }
 
+        /* loaded from: classes4.dex */
         private class SetAdapter extends AbstractSet<Map.Entry<K, V>> {
             private final Set<Map.Entry<K, RealValue>> realSet;
 
-            public SetAdapter(Set<Map.Entry<K, RealValue>> realSet2) {
-                this.realSet = realSet2;
+            public SetAdapter(Set<Map.Entry<K, RealValue>> realSet) {
+                this.realSet = realSet;
             }
 
+            @Override // java.util.AbstractCollection, java.util.Collection, java.lang.Iterable, java.util.Set
             public Iterator<Map.Entry<K, V>> iterator() {
                 return new IteratorAdapter(this.realSet.iterator());
             }
 
+            @Override // java.util.AbstractCollection, java.util.Collection, java.util.Set
             public int size() {
                 return this.realSet.size();
             }
         }
 
+        /* loaded from: classes4.dex */
         private class IteratorAdapter implements Iterator<Map.Entry<K, V>> {
             private final Iterator<Map.Entry<K, RealValue>> realIterator;
 
-            public IteratorAdapter(Iterator<Map.Entry<K, RealValue>> realIterator2) {
-                this.realIterator = realIterator2;
+            public IteratorAdapter(Iterator<Map.Entry<K, RealValue>> realIterator) {
+                this.realIterator = realIterator;
             }
 
+            @Override // java.util.Iterator
             public boolean hasNext() {
                 return this.realIterator.hasNext();
             }
 
+            @Override // java.util.Iterator
             public Map.Entry<K, V> next() {
                 return new EntryAdapter(this.realIterator.next());
             }
 
+            @Override // java.util.Iterator
             public void remove() {
                 this.realIterator.remove();
             }
         }
 
+        /* loaded from: classes4.dex */
         private class EntryAdapter implements Map.Entry<K, V> {
             private final Map.Entry<K, RealValue> realEntry;
 
-            public EntryAdapter(Map.Entry<K, RealValue> realEntry2) {
-                this.realEntry = realEntry2;
+            public EntryAdapter(Map.Entry<K, RealValue> realEntry) {
+                this.realEntry = realEntry;
             }
 
+            @Override // java.util.Map.Entry
             public K getKey() {
                 return this.realEntry.getKey();
             }
 
+            @Override // java.util.Map.Entry
             public V getValue() {
-                return MapAdapter.this.valueConverter.doForward(this.realEntry.getValue());
+                return (V) MapAdapter.this.valueConverter.doForward(this.realEntry.getValue());
             }
 
+            /* JADX WARN: Multi-variable type inference failed */
+            @Override // java.util.Map.Entry
             public V setValue(V value) {
                 RealValue oldValue = this.realEntry.setValue(MapAdapter.this.valueConverter.doBackward(value));
-                if (oldValue == null) {
-                    return null;
+                if (oldValue != null) {
+                    return (V) MapAdapter.this.valueConverter.doForward(oldValue);
                 }
-                return MapAdapter.this.valueConverter.doForward(oldValue);
+                return null;
             }
         }
     }

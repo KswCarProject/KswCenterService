@@ -4,14 +4,16 @@ import android.annotation.SystemApi;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Message;
+import android.p007os.Message;
 import android.util.SeempLog;
 import android.view.View;
 import android.webkit.GeolocationPermissions;
 import android.webkit.WebStorage;
 
+/* loaded from: classes4.dex */
 public class WebChromeClient {
 
+    /* loaded from: classes4.dex */
     public interface CustomViewCallback {
         void onCustomViewHidden();
     }
@@ -110,13 +112,14 @@ public class WebChromeClient {
         return null;
     }
 
-    public void getVisitedHistory(ValueCallback<String[]> valueCallback) {
+    public void getVisitedHistory(ValueCallback<String[]> callback) {
     }
 
-    public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> valueCallback, FileChooserParams fileChooserParams) {
+    public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
         return false;
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class FileChooserParams {
         public static final int MODE_OPEN = 0;
         public static final int MODE_OPEN_FOLDER = 2;

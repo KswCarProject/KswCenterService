@@ -3,12 +3,13 @@ package android.view;
 import android.animation.Animator;
 import android.animation.TimeInterpolator;
 import android.animation.ValueAnimator;
-import android.graphics.Paint;
 import android.graphics.RenderNode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Set;
 
+/* loaded from: classes4.dex */
 public class ViewPropertyAnimator {
     static final int ALPHA = 2048;
     static final int NONE = 0;
@@ -21,43 +22,44 @@ public class ViewPropertyAnimator {
     static final int TRANSLATION_X = 1;
     static final int TRANSLATION_Y = 2;
     static final int TRANSLATION_Z = 4;
-    static final int X = 256;
-    static final int Y = 512;
-    static final int Z = 1024;
-    private Runnable mAnimationStarter = new Runnable() {
-        public void run() {
-            ViewPropertyAnimator.this.startAnimation();
-        }
-    };
-    /* access modifiers changed from: private */
-    public HashMap<Animator, Runnable> mAnimatorCleanupMap;
-    private AnimatorEventListener mAnimatorEventListener = new AnimatorEventListener();
-    /* access modifiers changed from: private */
-    public HashMap<Animator, PropertyBundle> mAnimatorMap = new HashMap<>();
-    /* access modifiers changed from: private */
-    public HashMap<Animator, Runnable> mAnimatorOnEndMap;
-    /* access modifiers changed from: private */
-    public HashMap<Animator, Runnable> mAnimatorOnStartMap;
-    /* access modifiers changed from: private */
-    public HashMap<Animator, Runnable> mAnimatorSetupMap;
+
+    /* renamed from: X */
+    static final int f2418X = 256;
+
+    /* renamed from: Y */
+    static final int f2419Y = 512;
+
+    /* renamed from: Z */
+    static final int f2420Z = 1024;
+    private HashMap<Animator, Runnable> mAnimatorCleanupMap;
+    private HashMap<Animator, Runnable> mAnimatorOnEndMap;
+    private HashMap<Animator, Runnable> mAnimatorOnStartMap;
+    private HashMap<Animator, Runnable> mAnimatorSetupMap;
     private long mDuration;
-    private boolean mDurationSet = false;
     private TimeInterpolator mInterpolator;
-    private boolean mInterpolatorSet = false;
-    /* access modifiers changed from: private */
-    public Animator.AnimatorListener mListener = null;
-    ArrayList<NameValuesHolder> mPendingAnimations = new ArrayList<>();
     private Runnable mPendingCleanupAction;
     private Runnable mPendingOnEndAction;
     private Runnable mPendingOnStartAction;
     private Runnable mPendingSetupAction;
+    private ValueAnimator mTempValueAnimator;
+    final View mView;
+    private boolean mDurationSet = false;
     private long mStartDelay = 0;
     private boolean mStartDelaySet = false;
-    private ValueAnimator mTempValueAnimator;
-    /* access modifiers changed from: private */
-    public ValueAnimator.AnimatorUpdateListener mUpdateListener = null;
-    final View mView;
+    private boolean mInterpolatorSet = false;
+    private Animator.AnimatorListener mListener = null;
+    private ValueAnimator.AnimatorUpdateListener mUpdateListener = null;
+    private AnimatorEventListener mAnimatorEventListener = new AnimatorEventListener();
+    ArrayList<NameValuesHolder> mPendingAnimations = new ArrayList<>();
+    private Runnable mAnimationStarter = new Runnable() { // from class: android.view.ViewPropertyAnimator.1
+        @Override // java.lang.Runnable
+        public void run() {
+            ViewPropertyAnimator.this.startAnimation();
+        }
+    };
+    private HashMap<Animator, PropertyBundle> mAnimatorMap = new HashMap<>();
 
+    /* loaded from: classes4.dex */
     private static class PropertyBundle {
         ArrayList<NameValuesHolder> mNameValuesHolder;
         int mPropertyMask;
@@ -67,12 +69,12 @@ public class ViewPropertyAnimator {
             this.mNameValuesHolder = nameValuesHolder;
         }
 
-        /* access modifiers changed from: package-private */
-        public boolean cancel(int propertyConstant) {
-            if (!((this.mPropertyMask & propertyConstant) == 0 || this.mNameValuesHolder == null)) {
+        boolean cancel(int propertyConstant) {
+            if ((this.mPropertyMask & propertyConstant) != 0 && this.mNameValuesHolder != null) {
                 int count = this.mNameValuesHolder.size();
                 for (int i = 0; i < count; i++) {
-                    if (this.mNameValuesHolder.get(i).mNameConstant == propertyConstant) {
+                    NameValuesHolder nameValuesHolder = this.mNameValuesHolder.get(i);
+                    if (nameValuesHolder.mNameConstant == propertyConstant) {
                         this.mNameValuesHolder.remove(i);
                         this.mPropertyMask &= ~propertyConstant;
                         return true;
@@ -83,6 +85,7 @@ public class ViewPropertyAnimator {
         }
     }
 
+    /* loaded from: classes4.dex */
     static class NameValuesHolder {
         float mDeltaValue;
         float mFromValue;
@@ -101,12 +104,12 @@ public class ViewPropertyAnimator {
     }
 
     public ViewPropertyAnimator setDuration(long duration) {
-        if (duration >= 0) {
-            this.mDurationSet = true;
-            this.mDuration = duration;
-            return this;
+        if (duration < 0) {
+            throw new IllegalArgumentException("Animators cannot have negative duration: " + duration);
         }
-        throw new IllegalArgumentException("Animators cannot have negative duration: " + duration);
+        this.mDurationSet = true;
+        this.mDuration = duration;
+        return this;
     }
 
     public long getDuration() {
@@ -123,16 +126,16 @@ public class ViewPropertyAnimator {
         if (this.mStartDelaySet) {
             return this.mStartDelay;
         }
-        return 0;
+        return 0L;
     }
 
     public ViewPropertyAnimator setStartDelay(long startDelay) {
-        if (startDelay >= 0) {
-            this.mStartDelaySet = true;
-            this.mStartDelay = startDelay;
-            return this;
+        if (startDelay < 0) {
+            throw new IllegalArgumentException("Animators cannot have negative start delay: " + startDelay);
         }
-        throw new IllegalArgumentException("Animators cannot have negative start delay: " + startDelay);
+        this.mStartDelaySet = true;
+        this.mStartDelay = startDelay;
+        return this;
     }
 
     public ViewPropertyAnimator setInterpolator(TimeInterpolator interpolator) {
@@ -156,8 +159,7 @@ public class ViewPropertyAnimator {
         return this;
     }
 
-    /* access modifiers changed from: package-private */
-    public Animator.AnimatorListener getListener() {
+    Animator.AnimatorListener getListener() {
         return this.mListener;
     }
 
@@ -166,8 +168,7 @@ public class ViewPropertyAnimator {
         return this;
     }
 
-    /* access modifiers changed from: package-private */
-    public ValueAnimator.AnimatorUpdateListener getUpdateListener() {
+    ValueAnimator.AnimatorUpdateListener getUpdateListener() {
         return this.mUpdateListener;
     }
 
@@ -178,7 +179,9 @@ public class ViewPropertyAnimator {
 
     public void cancel() {
         if (this.mAnimatorMap.size() > 0) {
-            for (Animator runningAnim : ((HashMap) this.mAnimatorMap.clone()).keySet()) {
+            HashMap<Animator, PropertyBundle> mAnimatorMapCopy = (HashMap) this.mAnimatorMap.clone();
+            Set<Animator> animatorSet = mAnimatorMapCopy.keySet();
+            for (Animator runningAnim : animatorSet) {
                 runningAnim.cancel();
             }
         }
@@ -190,7 +193,8 @@ public class ViewPropertyAnimator {
         this.mView.removeCallbacks(this.mAnimationStarter);
     }
 
-    public ViewPropertyAnimator x(float value) {
+    /* renamed from: x */
+    public ViewPropertyAnimator m45x(float value) {
         animateProperty(256, value);
         return this;
     }
@@ -200,7 +204,8 @@ public class ViewPropertyAnimator {
         return this;
     }
 
-    public ViewPropertyAnimator y(float value) {
+    /* renamed from: y */
+    public ViewPropertyAnimator m44y(float value) {
         animateProperty(512, value);
         return this;
     }
@@ -210,7 +215,8 @@ public class ViewPropertyAnimator {
         return this;
     }
 
-    public ViewPropertyAnimator z(float value) {
+    /* renamed from: z */
+    public ViewPropertyAnimator m43z(float value) {
         animateProperty(1024, value);
         return this;
     }
@@ -311,18 +317,20 @@ public class ViewPropertyAnimator {
     }
 
     public ViewPropertyAnimator withLayer() {
-        this.mPendingSetupAction = new Runnable() {
+        this.mPendingSetupAction = new Runnable() { // from class: android.view.ViewPropertyAnimator.2
+            @Override // java.lang.Runnable
             public void run() {
-                ViewPropertyAnimator.this.mView.setLayerType(2, (Paint) null);
+                ViewPropertyAnimator.this.mView.setLayerType(2, null);
                 if (ViewPropertyAnimator.this.mView.isAttachedToWindow()) {
                     ViewPropertyAnimator.this.mView.buildLayer();
                 }
             }
         };
         final int currentLayerType = this.mView.getLayerType();
-        this.mPendingCleanupAction = new Runnable() {
+        this.mPendingCleanupAction = new Runnable() { // from class: android.view.ViewPropertyAnimator.3
+            @Override // java.lang.Runnable
             public void run() {
-                ViewPropertyAnimator.this.mView.setLayerType(currentLayerType, (Paint) null);
+                ViewPropertyAnimator.this.mView.setLayerType(currentLayerType, null);
             }
         };
         if (this.mAnimatorSetupMap == null) {
@@ -350,12 +358,11 @@ public class ViewPropertyAnimator {
         return this;
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean hasActions() {
+    boolean hasActions() {
         return (this.mPendingSetupAction == null && this.mPendingCleanupAction == null && this.mPendingOnStartAction == null && this.mPendingOnEndAction == null) ? false : true;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void startAnimation() {
         this.mView.setHasTransientState(true);
         ValueAnimator animator = ValueAnimator.ofFloat(1.0f);
@@ -364,7 +371,8 @@ public class ViewPropertyAnimator {
         int propertyMask = 0;
         int propertyCount = nameValueList.size();
         for (int i = 0; i < propertyCount; i++) {
-            propertyMask |= nameValueList.get(i).mNameConstant;
+            NameValuesHolder nameValuesHolder = nameValueList.get(i);
+            propertyMask |= nameValuesHolder.mNameConstant;
         }
         this.mAnimatorMap.put(animator, new PropertyBundle(propertyMask, nameValueList));
         if (this.mPendingSetupAction != null) {
@@ -399,17 +407,20 @@ public class ViewPropertyAnimator {
 
     private void animateProperty(int constantName, float toValue) {
         float fromValue = getValue(constantName);
-        animatePropertyBy(constantName, fromValue, toValue - fromValue);
+        float deltaValue = toValue - fromValue;
+        animatePropertyBy(constantName, fromValue, deltaValue);
     }
 
     private void animatePropertyBy(int constantName, float byValue) {
-        animatePropertyBy(constantName, getValue(constantName), byValue);
+        float fromValue = getValue(constantName);
+        animatePropertyBy(constantName, fromValue, byValue);
     }
 
     private void animatePropertyBy(int constantName, float startValue, float byValue) {
         if (this.mAnimatorMap.size() > 0) {
             Animator animatorToCancel = null;
-            Iterator<Animator> it = this.mAnimatorMap.keySet().iterator();
+            Set<Animator> animatorSet = this.mAnimatorMap.keySet();
+            Iterator<Animator> it = animatorSet.iterator();
             while (true) {
                 if (!it.hasNext()) {
                     break;
@@ -425,12 +436,13 @@ public class ViewPropertyAnimator {
                 animatorToCancel.cancel();
             }
         }
-        this.mPendingAnimations.add(new NameValuesHolder(constantName, startValue, byValue));
+        NameValuesHolder nameValuePair = new NameValuesHolder(constantName, startValue, byValue);
+        this.mPendingAnimations.add(nameValuePair);
         this.mView.removeCallbacks(this.mAnimationStarter);
         this.mView.postOnAnimation(this.mAnimationStarter);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void setValue(int propertyConstant, float value) {
         RenderNode renderNode = this.mView.mRenderNode;
         switch (propertyConstant) {
@@ -459,10 +471,10 @@ public class ViewPropertyAnimator {
                 renderNode.setRotationY(value);
                 return;
             case 256:
-                renderNode.setTranslationX(value - ((float) this.mView.mLeft));
+                renderNode.setTranslationX(value - this.mView.mLeft);
                 return;
             case 512:
-                renderNode.setTranslationY(value - ((float) this.mView.mTop));
+                renderNode.setTranslationY(value - this.mView.mTop);
                 return;
             case 1024:
                 renderNode.setTranslationZ(value - renderNode.getElevation());
@@ -496,9 +508,9 @@ public class ViewPropertyAnimator {
             case 128:
                 return node.getRotationY();
             case 256:
-                return ((float) this.mView.mLeft) + node.getTranslationX();
+                return this.mView.mLeft + node.getTranslationX();
             case 512:
-                return ((float) this.mView.mTop) + node.getTranslationY();
+                return this.mView.mTop + node.getTranslationY();
             case 1024:
                 return node.getElevation() + node.getTranslationZ();
             case 2048:
@@ -508,10 +520,12 @@ public class ViewPropertyAnimator {
         }
     }
 
+    /* loaded from: classes4.dex */
     private class AnimatorEventListener implements Animator.AnimatorListener, ValueAnimator.AnimatorUpdateListener {
         private AnimatorEventListener() {
         }
 
+        @Override // android.animation.Animator.AnimatorListener
         public void onAnimationStart(Animator animation) {
             if (ViewPropertyAnimator.this.mAnimatorSetupMap != null) {
                 Runnable r = (Runnable) ViewPropertyAnimator.this.mAnimatorSetupMap.get(animation);
@@ -532,6 +546,7 @@ public class ViewPropertyAnimator {
             }
         }
 
+        @Override // android.animation.Animator.AnimatorListener
         public void onAnimationCancel(Animator animation) {
             if (ViewPropertyAnimator.this.mListener != null) {
                 ViewPropertyAnimator.this.mListener.onAnimationCancel(animation);
@@ -541,12 +556,14 @@ public class ViewPropertyAnimator {
             }
         }
 
+        @Override // android.animation.Animator.AnimatorListener
         public void onAnimationRepeat(Animator animation) {
             if (ViewPropertyAnimator.this.mListener != null) {
                 ViewPropertyAnimator.this.mListener.onAnimationRepeat(animation);
             }
         }
 
+        @Override // android.animation.Animator.AnimatorListener
         public void onAnimationEnd(Animator animation) {
             ViewPropertyAnimator.this.mView.setHasTransientState(false);
             if (ViewPropertyAnimator.this.mAnimatorCleanupMap != null) {
@@ -569,33 +586,37 @@ public class ViewPropertyAnimator {
             ViewPropertyAnimator.this.mAnimatorMap.remove(animation);
         }
 
+        @Override // android.animation.ValueAnimator.AnimatorUpdateListener
         public void onAnimationUpdate(ValueAnimator animation) {
             PropertyBundle propertyBundle = (PropertyBundle) ViewPropertyAnimator.this.mAnimatorMap.get(animation);
-            if (propertyBundle != null) {
-                boolean hardwareAccelerated = ViewPropertyAnimator.this.mView.isHardwareAccelerated();
-                if (!hardwareAccelerated) {
-                    ViewPropertyAnimator.this.mView.invalidateParentCaches();
+            if (propertyBundle == null) {
+                return;
+            }
+            boolean hardwareAccelerated = ViewPropertyAnimator.this.mView.isHardwareAccelerated();
+            if (!hardwareAccelerated) {
+                ViewPropertyAnimator.this.mView.invalidateParentCaches();
+            }
+            float fraction = animation.getAnimatedFraction();
+            int propertyMask = propertyBundle.mPropertyMask;
+            if ((propertyMask & 2047) != 0) {
+                ViewPropertyAnimator.this.mView.invalidateViewProperty(hardwareAccelerated, false);
+            }
+            ArrayList<NameValuesHolder> valueList = propertyBundle.mNameValuesHolder;
+            if (valueList != null) {
+                int count = valueList.size();
+                for (int i = 0; i < count; i++) {
+                    NameValuesHolder values = valueList.get(i);
+                    float value = values.mFromValue + (values.mDeltaValue * fraction);
+                    ViewPropertyAnimator.this.setValue(values.mNameConstant, value);
                 }
-                float fraction = animation.getAnimatedFraction();
-                int propertyMask = propertyBundle.mPropertyMask;
-                if ((propertyMask & 2047) != 0) {
-                    ViewPropertyAnimator.this.mView.invalidateViewProperty(hardwareAccelerated, false);
-                }
-                ArrayList<NameValuesHolder> valueList = propertyBundle.mNameValuesHolder;
-                if (valueList != null) {
-                    int count = valueList.size();
-                    for (int i = 0; i < count; i++) {
-                        NameValuesHolder values = valueList.get(i);
-                        ViewPropertyAnimator.this.setValue(values.mNameConstant, values.mFromValue + (values.mDeltaValue * fraction));
-                    }
-                }
-                if ((propertyMask & 2047) != 0 && !hardwareAccelerated) {
-                    ViewPropertyAnimator.this.mView.mPrivateFlags |= 32;
-                }
-                ViewPropertyAnimator.this.mView.invalidateViewProperty(false, false);
-                if (ViewPropertyAnimator.this.mUpdateListener != null) {
-                    ViewPropertyAnimator.this.mUpdateListener.onAnimationUpdate(animation);
-                }
+            }
+            int count2 = propertyMask & 2047;
+            if (count2 != 0 && !hardwareAccelerated) {
+                ViewPropertyAnimator.this.mView.mPrivateFlags |= 32;
+            }
+            ViewPropertyAnimator.this.mView.invalidateViewProperty(false, false);
+            if (ViewPropertyAnimator.this.mUpdateListener != null) {
+                ViewPropertyAnimator.this.mUpdateListener.onAnimationUpdate(animation);
             }
         }
     }

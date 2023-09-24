@@ -3,6 +3,7 @@ package android.media;
 import android.annotation.UnsupportedAppUsage;
 import android.security.keystore.KeyProperties;
 
+/* loaded from: classes3.dex */
 public class AudioPort {
     public static final int ROLE_NONE = 0;
     public static final int ROLE_SINK = 2;
@@ -38,14 +39,14 @@ public class AudioPort {
         this.mGains = gains;
     }
 
-    /* access modifiers changed from: package-private */
-    public AudioHandle handle() {
+    AudioHandle handle() {
         return this.mHandle;
     }
 
     @UnsupportedAppUsage
-    public int id() {
-        return this.mHandle.id();
+    /* renamed from: id */
+    public int m114id() {
+        return this.mHandle.m116id();
     }
 
     @UnsupportedAppUsage
@@ -77,8 +78,7 @@ public class AudioPort {
         return this.mGains;
     }
 
-    /* access modifiers changed from: package-private */
-    public AudioGain gain(int index) {
+    AudioGain gain(int index) {
         if (index < 0 || index >= this.mGains.length) {
             return null;
         }
@@ -97,7 +97,8 @@ public class AudioPort {
         if (o == null || !(o instanceof AudioPort)) {
             return false;
         }
-        return this.mHandle.equals(((AudioPort) o).handle());
+        AudioPort ap = (AudioPort) o;
+        return this.mHandle.equals(ap.handle());
     }
 
     public int hashCode() {

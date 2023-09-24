@@ -1,12 +1,22 @@
 package android.view;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/* loaded from: classes4.dex */
 public abstract class InputEvent implements Parcelable {
-    public static final Parcelable.Creator<InputEvent> CREATOR = new Parcelable.Creator<InputEvent>() {
+    protected static final int PARCEL_TOKEN_KEY_EVENT = 2;
+    protected static final int PARCEL_TOKEN_MOTION_EVENT = 1;
+    private static final boolean TRACK_RECYCLED_LOCATION = false;
+    protected boolean mRecycled;
+    private RuntimeException mRecycledLocation;
+    protected int mSeq = mNextSeq.getAndIncrement();
+    private static final AtomicInteger mNextSeq = new AtomicInteger();
+    public static final Parcelable.Creator<InputEvent> CREATOR = new Parcelable.Creator<InputEvent>() { // from class: android.view.InputEvent.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public InputEvent createFromParcel(Parcel in) {
             int token = in.readInt();
             if (token == 2) {
@@ -18,17 +28,12 @@ public abstract class InputEvent implements Parcelable {
             throw new IllegalStateException("Unexpected input event type token in parcel.");
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public InputEvent[] newArray(int size) {
             return new InputEvent[size];
         }
     };
-    protected static final int PARCEL_TOKEN_KEY_EVENT = 2;
-    protected static final int PARCEL_TOKEN_MOTION_EVENT = 1;
-    private static final boolean TRACK_RECYCLED_LOCATION = false;
-    private static final AtomicInteger mNextSeq = new AtomicInteger();
-    protected boolean mRecycled;
-    private RuntimeException mRecycledLocation;
-    protected int mSeq = mNextSeq.getAndIncrement();
 
     public abstract void cancel();
 
@@ -64,19 +69,17 @@ public abstract class InputEvent implements Parcelable {
     }
 
     public void recycle() {
-        if (!this.mRecycled) {
-            this.mRecycled = true;
-            return;
+        if (this.mRecycled) {
+            throw new RuntimeException(toString() + " recycled twice!");
         }
-        throw new RuntimeException(toString() + " recycled twice!");
+        this.mRecycled = true;
     }
 
     public void recycleIfNeededAfterDispatch() {
         recycle();
     }
 
-    /* access modifiers changed from: protected */
-    public void prepareForReuse() {
+    protected void prepareForReuse() {
         this.mRecycled = false;
         this.mRecycledLocation = null;
         this.mSeq = mNextSeq.getAndIncrement();
@@ -87,6 +90,7 @@ public abstract class InputEvent implements Parcelable {
         return this.mSeq;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

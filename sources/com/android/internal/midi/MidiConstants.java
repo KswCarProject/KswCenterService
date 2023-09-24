@@ -1,7 +1,7 @@
 package com.android.internal.midi;
 
+/* loaded from: classes4.dex */
 public final class MidiConstants {
-    public static final int[] CHANNEL_BYTE_LENGTHS = {3, 3, 3, 3, 2, 2, 3};
     public static final byte STATUS_ACTIVE_SENSING = -2;
     public static final byte STATUS_CHANNEL_MASK = 15;
     public static final byte STATUS_CHANNEL_PRESSURE = -48;
@@ -23,6 +23,7 @@ public final class MidiConstants {
     public static final byte STATUS_SYSTEM_EXCLUSIVE = -16;
     public static final byte STATUS_TIMING_CLOCK = -8;
     public static final byte STATUS_TUNE_REQUEST = -10;
+    public static final int[] CHANNEL_BYTE_LENGTHS = {3, 3, 3, 3, 2, 2, 3};
     public static final int[] SYSTEM_BYTE_LENGTHS = {1, 2, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
 
     public static int getBytesPerMessage(byte statusByte) {
@@ -38,15 +39,13 @@ public final class MidiConstants {
 
     public static boolean isAllActiveSensing(byte[] msg, int offset, int count) {
         int goodBytes = 0;
-        for (int i = 0; i < count; i++) {
-            if (msg[offset + i] != -2) {
+        for (int goodBytes2 = 0; goodBytes2 < count; goodBytes2++) {
+            byte b = msg[offset + goodBytes2];
+            if (b != -2) {
                 goodBytes++;
             }
         }
-        if (goodBytes == 0) {
-            return true;
-        }
-        return false;
+        return goodBytes == 0;
     }
 
     public static boolean allowRunningStatus(byte command) {

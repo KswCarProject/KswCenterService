@@ -2,6 +2,7 @@ package android.hardware.radio.V1_2;
 
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class AudioQuality {
     public static final int AMR = 1;
     public static final int AMR_WB = 2;

@@ -10,9 +10,10 @@ import android.util.AttributeSet;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.TextView;
 
+/* loaded from: classes4.dex */
 public class EditText extends TextView {
     public EditText(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public EditText(Context context, AttributeSet attrs) {
@@ -27,20 +28,22 @@ public class EditText extends TextView {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
+    @Override // android.widget.TextView
     public boolean getFreezesText() {
         return true;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean getDefaultEditable() {
+    @Override // android.widget.TextView
+    protected boolean getDefaultEditable() {
         return true;
     }
 
-    /* access modifiers changed from: protected */
-    public MovementMethod getDefaultMovementMethod() {
+    @Override // android.widget.TextView
+    protected MovementMethod getDefaultMovementMethod() {
         return ArrowKeyMovementMethod.getInstance();
     }
 
+    @Override // android.widget.TextView
     public Editable getText() {
         CharSequence text = super.getText();
         if (text == null) {
@@ -53,6 +56,7 @@ public class EditText extends TextView {
         return (Editable) super.getText();
     }
 
+    @Override // android.widget.TextView
     public void setText(CharSequence text, TextView.BufferType type) {
         super.setText(text, TextView.BufferType.EDITABLE);
     }
@@ -73,23 +77,25 @@ public class EditText extends TextView {
         Selection.extendSelection(getText(), index);
     }
 
+    @Override // android.widget.TextView
     public void setEllipsize(TextUtils.TruncateAt ellipsis) {
-        if (ellipsis != TextUtils.TruncateAt.MARQUEE) {
-            super.setEllipsize(ellipsis);
-            return;
+        if (ellipsis == TextUtils.TruncateAt.MARQUEE) {
+            throw new IllegalArgumentException("EditText cannot use the ellipsize mode TextUtils.TruncateAt.MARQUEE");
         }
-        throw new IllegalArgumentException("EditText cannot use the ellipsize mode TextUtils.TruncateAt.MARQUEE");
+        super.setEllipsize(ellipsis);
     }
 
+    @Override // android.widget.TextView, android.view.View
     public CharSequence getAccessibilityClassName() {
         return EditText.class.getName();
     }
 
-    /* access modifiers changed from: protected */
-    public boolean supportsAutoSizeText() {
+    @Override // android.widget.TextView
+    protected boolean supportsAutoSizeText() {
         return false;
     }
 
+    @Override // android.widget.TextView, android.view.View
     public void onInitializeAccessibilityNodeInfoInternal(AccessibilityNodeInfo info) {
         super.onInitializeAccessibilityNodeInfoInternal(info);
         if (isEnabled()) {

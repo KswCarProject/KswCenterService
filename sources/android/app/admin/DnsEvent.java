@@ -1,8 +1,8 @@
 package android.app.admin;
 
 import android.net.wifi.WifiEnterpriseConfig;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.security.keystore.KeyProperties;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -10,8 +10,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/* loaded from: classes.dex */
 public final class DnsEvent extends NetworkEvent implements Parcelable {
-    public static final Parcelable.Creator<DnsEvent> CREATOR = new Parcelable.Creator<DnsEvent>() {
+    public static final Parcelable.Creator<DnsEvent> CREATOR = new Parcelable.Creator<DnsEvent>() { // from class: android.app.admin.DnsEvent.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public DnsEvent createFromParcel(Parcel in) {
             if (in.readInt() != 1) {
                 return null;
@@ -19,6 +22,8 @@ public final class DnsEvent extends NetworkEvent implements Parcelable {
             return new DnsEvent(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public DnsEvent[] newArray(int size) {
             return new DnsEvent[size];
         }
@@ -48,6 +53,7 @@ public final class DnsEvent extends NetworkEvent implements Parcelable {
     }
 
     public List<InetAddress> getInetAddresses() {
+        String[] strArr;
         if (this.mIpAddresses == null || this.mIpAddresses.length == 0) {
             return Collections.emptyList();
         }
@@ -76,10 +82,12 @@ public final class DnsEvent extends NetworkEvent implements Parcelable {
         return String.format("DnsEvent(%d, %s, %s, %d, %d, %s)", objArr);
     }
 
+    @Override // android.app.admin.NetworkEvent, android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.app.admin.NetworkEvent, android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(1);
         out.writeString(this.mHostname);

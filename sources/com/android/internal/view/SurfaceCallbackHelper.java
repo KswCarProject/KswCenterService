@@ -2,16 +2,19 @@ package com.android.internal.view;
 
 import android.view.SurfaceHolder;
 
+/* loaded from: classes4.dex */
 public class SurfaceCallbackHelper {
     int mFinishDrawingCollected = 0;
     int mFinishDrawingExpected = 0;
-    private Runnable mFinishDrawingRunnable = new Runnable() {
+    private Runnable mFinishDrawingRunnable = new Runnable() { // from class: com.android.internal.view.SurfaceCallbackHelper.1
+        @Override // java.lang.Runnable
         public void run() {
             synchronized (SurfaceCallbackHelper.this) {
                 SurfaceCallbackHelper.this.mFinishDrawingCollected++;
-                if (SurfaceCallbackHelper.this.mFinishDrawingCollected >= SurfaceCallbackHelper.this.mFinishDrawingExpected) {
-                    SurfaceCallbackHelper.this.mRunnable.run();
+                if (SurfaceCallbackHelper.this.mFinishDrawingCollected < SurfaceCallbackHelper.this.mFinishDrawingExpected) {
+                    return;
                 }
+                SurfaceCallbackHelper.this.mRunnable.run();
             }
         }
     };
@@ -31,9 +34,9 @@ public class SurfaceCallbackHelper {
             this.mFinishDrawingExpected = callbacks.length;
             this.mFinishDrawingCollected = 0;
         }
-        for (SurfaceHolder.Callback2 callback2 : callbacks) {
-            if (callback2 instanceof SurfaceHolder.Callback2) {
-                callback2.surfaceRedrawNeededAsync(holder, this.mFinishDrawingRunnable);
+        for (SurfaceHolder.Callback c : callbacks) {
+            if (c instanceof SurfaceHolder.Callback2) {
+                ((SurfaceHolder.Callback2) c).surfaceRedrawNeededAsync(holder, this.mFinishDrawingRunnable);
             } else {
                 this.mFinishDrawingRunnable.run();
             }

@@ -1,15 +1,20 @@
 package android.telephony;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public class VoiceSpecificRegistrationInfo implements Parcelable {
-    public static final Parcelable.Creator<VoiceSpecificRegistrationInfo> CREATOR = new Parcelable.Creator<VoiceSpecificRegistrationInfo>() {
+    public static final Parcelable.Creator<VoiceSpecificRegistrationInfo> CREATOR = new Parcelable.Creator<VoiceSpecificRegistrationInfo>() { // from class: android.telephony.VoiceSpecificRegistrationInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public VoiceSpecificRegistrationInfo createFromParcel(Parcel source) {
             return new VoiceSpecificRegistrationInfo(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public VoiceSpecificRegistrationInfo[] newArray(int size) {
             return new VoiceSpecificRegistrationInfo[size];
         }
@@ -19,11 +24,11 @@ public class VoiceSpecificRegistrationInfo implements Parcelable {
     public final int roamingIndicator;
     public final int systemIsInPrl;
 
-    VoiceSpecificRegistrationInfo(boolean cssSupported2, int roamingIndicator2, int systemIsInPrl2, int defaultRoamingIndicator2) {
-        this.cssSupported = cssSupported2;
-        this.roamingIndicator = roamingIndicator2;
-        this.systemIsInPrl = systemIsInPrl2;
-        this.defaultRoamingIndicator = defaultRoamingIndicator2;
+    VoiceSpecificRegistrationInfo(boolean cssSupported, int roamingIndicator, int systemIsInPrl, int defaultRoamingIndicator) {
+        this.cssSupported = cssSupported;
+        this.roamingIndicator = roamingIndicator;
+        this.systemIsInPrl = systemIsInPrl;
+        this.defaultRoamingIndicator = defaultRoamingIndicator;
     }
 
     VoiceSpecificRegistrationInfo(VoiceSpecificRegistrationInfo vsri) {
@@ -40,6 +45,7 @@ public class VoiceSpecificRegistrationInfo implements Parcelable {
         this.defaultRoamingIndicator = source.readInt();
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeBoolean(this.cssSupported);
         dest.writeInt(this.roamingIndicator);
@@ -47,6 +53,7 @@ public class VoiceSpecificRegistrationInfo implements Parcelable {
         dest.writeInt(this.defaultRoamingIndicator);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -56,7 +63,7 @@ public class VoiceSpecificRegistrationInfo implements Parcelable {
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Boolean.valueOf(this.cssSupported), Integer.valueOf(this.roamingIndicator), Integer.valueOf(this.systemIsInPrl), Integer.valueOf(this.defaultRoamingIndicator)});
+        return Objects.hash(Boolean.valueOf(this.cssSupported), Integer.valueOf(this.roamingIndicator), Integer.valueOf(this.systemIsInPrl), Integer.valueOf(this.defaultRoamingIndicator));
     }
 
     public boolean equals(Object o) {

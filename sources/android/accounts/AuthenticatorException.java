@@ -1,5 +1,6 @@
 package android.accounts;
 
+/* loaded from: classes.dex */
 public class AuthenticatorException extends AccountsException {
     public AuthenticatorException() {
     }

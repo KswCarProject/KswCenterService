@@ -3,13 +3,14 @@ package android.location;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.Message;
-import android.os.Messenger;
-import android.os.RemoteException;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.Message;
+import android.p007os.Messenger;
+import android.p007os.RemoteException;
 import android.util.Log;
 
+/* loaded from: classes.dex */
 public abstract class SettingInjectorService extends Service {
     public static final String ACTION_INJECTED_SETTING_CHANGED = "android.location.InjectedSettingChanged";
     public static final String ACTION_SERVICE_INTENT = "android.location.SettingInjectorService";
@@ -21,24 +22,25 @@ public abstract class SettingInjectorService extends Service {
     private static final String TAG = "SettingInjectorService";
     private final String mName;
 
-    /* access modifiers changed from: protected */
-    public abstract boolean onGetEnabled();
+    protected abstract boolean onGetEnabled();
 
-    /* access modifiers changed from: protected */
-    public abstract String onGetSummary();
+    protected abstract String onGetSummary();
 
     public SettingInjectorService(String name) {
         this.mName = name;
     }
 
+    @Override // android.app.Service
     public final IBinder onBind(Intent intent) {
         return null;
     }
 
+    @Override // android.app.Service
     public final void onStart(Intent intent, int startId) {
         super.onStart(intent, startId);
     }
 
+    @Override // android.app.Service
     public final int onStartCommand(Intent intent, int flags, int startId) {
         onHandleIntent(intent);
         stopSelf(startId);
@@ -58,24 +60,26 @@ public abstract class SettingInjectorService extends Service {
 
     private void sendStatus(Intent intent, String summary, boolean enabled) {
         Messenger messenger = (Messenger) intent.getParcelableExtra("messenger");
-        if (messenger != null) {
-            Message message = Message.obtain();
-            Bundle bundle = new Bundle();
-            bundle.putString("summary", summary);
-            bundle.putBoolean("enabled", enabled);
-            message.setData(bundle);
-            if (Log.isLoggable(TAG, 3)) {
-                Log.d(TAG, this.mName + ": received " + intent + ", summary=" + summary + ", enabled=" + enabled + ", sending message: " + message);
-            }
-            try {
-                messenger.send(message);
-            } catch (RemoteException e) {
-                Log.e(TAG, this.mName + ": sending dynamic status failed", e);
-            }
+        if (messenger == null) {
+            return;
+        }
+        Message message = Message.obtain();
+        Bundle bundle = new Bundle();
+        bundle.putString("summary", summary);
+        bundle.putBoolean("enabled", enabled);
+        message.setData(bundle);
+        if (Log.isLoggable(TAG, 3)) {
+            Log.m72d(TAG, this.mName + ": received " + intent + ", summary=" + summary + ", enabled=" + enabled + ", sending message: " + message);
+        }
+        try {
+            messenger.send(message);
+        } catch (RemoteException e) {
+            Log.m69e(TAG, this.mName + ": sending dynamic status failed", e);
         }
     }
 
     public static final void refreshSettings(Context context) {
-        context.sendBroadcast(new Intent(ACTION_INJECTED_SETTING_CHANGED));
+        Intent intent = new Intent(ACTION_INJECTED_SETTING_CHANGED);
+        context.sendBroadcast(intent);
     }
 }

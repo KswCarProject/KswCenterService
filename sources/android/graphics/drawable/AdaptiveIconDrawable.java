@@ -19,11 +19,12 @@ import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.PathParser;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.io.IOException;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+/* loaded from: classes.dex */
 public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback {
     private static final int BACKGROUND_ID = 0;
     private static final float DEFAULT_VIEW_PORT_SCALE = 0.6666667f;
@@ -61,7 +62,7 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
         } else {
             r = ActivityThread.currentActivityThread().getApplication().getResources();
         }
-        sMask = PathParser.createPathFromPathData(r.getString(R.string.config_icon_mask));
+        sMask = PathParser.createPathFromPathData(r.getString(C3132R.string.config_icon_mask));
         this.mMask = new Path(sMask);
         this.mMaskScaleOnly = new Path(this.mMask);
         this.mMaskMatrix = new Matrix();
@@ -77,8 +78,7 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
         return layer;
     }
 
-    /* access modifiers changed from: package-private */
-    public LayerState createConstantState(LayerState state, Resources res) {
+    LayerState createConstantState(LayerState state, Resources res) {
         return new LayerState(state, this, res);
     }
 
@@ -97,19 +97,22 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
         this.mLayerState.invalidateCache();
     }
 
+    @Override // android.graphics.drawable.Drawable
     public void inflate(Resources r, XmlPullParser parser, AttributeSet attrs, Resources.Theme theme) throws XmlPullParserException, IOException {
         super.inflate(r, parser, attrs, theme);
         LayerState state = this.mLayerState;
-        if (state != null) {
-            int deviceDensity = Drawable.resolveDensity(r, 0);
-            state.setDensity(deviceDensity);
-            state.mSrcDensityOverride = this.mSrcDensityOverride;
-            ChildDrawable[] array = state.mChildren;
-            for (int i = 0; i < state.mChildren.length; i++) {
-                array[i].setDensity(deviceDensity);
-            }
-            inflateLayers(r, parser, attrs, theme);
+        if (state == null) {
+            return;
         }
+        int deviceDensity = Drawable.resolveDensity(r, 0);
+        state.setDensity(deviceDensity);
+        state.mSrcDensityOverride = this.mSrcDensityOverride;
+        ChildDrawable[] array = state.mChildren;
+        for (int i = 0; i < state.mChildren.length; i++) {
+            ChildDrawable layer = array[i];
+            layer.setDensity(deviceDensity);
+        }
+        inflateLayers(r, parser, attrs, theme);
     }
 
     public static float getExtraInsetFraction() {
@@ -132,22 +135,24 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
         return this.mLayerState.mChildren[0].mDrawable;
     }
 
-    /* access modifiers changed from: protected */
-    public void onBoundsChange(Rect bounds) {
-        if (!bounds.isEmpty()) {
-            updateLayerBounds(bounds);
+    @Override // android.graphics.drawable.Drawable
+    protected void onBoundsChange(Rect bounds) {
+        if (bounds.isEmpty()) {
+            return;
         }
+        updateLayerBounds(bounds);
     }
 
     private void updateLayerBounds(Rect bounds) {
-        if (!bounds.isEmpty()) {
-            try {
-                suspendChildInvalidation();
-                updateLayerBoundsInternal(bounds);
-                updateMaskBoundsInternal(bounds);
-            } finally {
-                resumeChildInvalidation();
-            }
+        if (bounds.isEmpty()) {
+            return;
+        }
+        try {
+            suspendChildInvalidation();
+            updateLayerBoundsInternal(bounds);
+            updateMaskBoundsInternal(bounds);
+        } finally {
+            resumeChildInvalidation();
         }
     }
 
@@ -158,9 +163,9 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
         LayerState layerState = this.mLayerState;
         for (int i = 0; i < 2; i++) {
             ChildDrawable r = this.mLayerState.mChildren[i];
-            if (!(r == null || (d = r.mDrawable) == null)) {
-                int insetWidth = (int) (((float) bounds.width()) / 1.3333334f);
-                int insetHeight = (int) (((float) bounds.height()) / 1.3333334f);
+            if (r != null && (d = r.mDrawable) != null) {
+                int insetWidth = (int) (bounds.width() / 1.3333334f);
+                int insetHeight = (int) (bounds.height() / 1.3333334f);
                 Rect outRect = this.mTmpOutRect;
                 outRect.set(cX - insetWidth, cY - insetHeight, cX + insetWidth, cY + insetHeight);
                 d.setBounds(outRect);
@@ -169,59 +174,63 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
     }
 
     private void updateMaskBoundsInternal(Rect b) {
-        this.mMaskMatrix.setScale(((float) b.width()) / 100.0f, ((float) b.height()) / 100.0f);
+        this.mMaskMatrix.setScale(b.width() / 100.0f, b.height() / 100.0f);
         sMask.transform(this.mMaskMatrix, this.mMaskScaleOnly);
-        this.mMaskMatrix.postTranslate((float) b.left, (float) b.top);
+        this.mMaskMatrix.postTranslate(b.left, b.top);
         sMask.transform(this.mMaskMatrix, this.mMask);
-        if (!(this.mLayersBitmap != null && this.mLayersBitmap.getWidth() == b.width() && this.mLayersBitmap.getHeight() == b.height())) {
+        if (this.mLayersBitmap == null || this.mLayersBitmap.getWidth() != b.width() || this.mLayersBitmap.getHeight() != b.height()) {
             this.mLayersBitmap = Bitmap.createBitmap(b.width(), b.height(), Bitmap.Config.ARGB_8888);
         }
-        this.mPaint.setShader((Shader) null);
+        this.mPaint.setShader(null);
         this.mTransparentRegion.setEmpty();
         this.mLayersShader = null;
     }
 
+    @Override // android.graphics.drawable.Drawable
     public void draw(Canvas canvas) {
         Drawable dr;
-        if (this.mLayersBitmap != null) {
-            if (this.mLayersShader == null) {
-                this.mCanvas.setBitmap(this.mLayersBitmap);
-                this.mCanvas.drawColor(-16777216);
-                int i = 0;
-                while (true) {
-                    LayerState layerState = this.mLayerState;
-                    if (i >= 2) {
-                        break;
-                    }
-                    if (!(this.mLayerState.mChildren[i] == null || (dr = this.mLayerState.mChildren[i].mDrawable) == null)) {
-                        dr.draw(this.mCanvas);
-                    }
-                    i++;
+        if (this.mLayersBitmap == null) {
+            return;
+        }
+        if (this.mLayersShader == null) {
+            this.mCanvas.setBitmap(this.mLayersBitmap);
+            this.mCanvas.drawColor(-16777216);
+            int i = 0;
+            while (true) {
+                LayerState layerState = this.mLayerState;
+                if (i >= 2) {
+                    break;
                 }
-                this.mLayersShader = new BitmapShader(this.mLayersBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
-                this.mPaint.setShader(this.mLayersShader);
+                if (this.mLayerState.mChildren[i] != null && (dr = this.mLayerState.mChildren[i].mDrawable) != null) {
+                    dr.draw(this.mCanvas);
+                }
+                i++;
             }
-            if (this.mMaskScaleOnly != null) {
-                Rect bounds = getBounds();
-                canvas.translate((float) bounds.left, (float) bounds.top);
-                canvas.drawPath(this.mMaskScaleOnly, this.mPaint);
-                canvas.translate((float) (-bounds.left), (float) (-bounds.top));
-            }
+            this.mLayersShader = new BitmapShader(this.mLayersBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
+            this.mPaint.setShader(this.mLayersShader);
+        }
+        if (this.mMaskScaleOnly != null) {
+            Rect bounds = getBounds();
+            canvas.translate(bounds.left, bounds.top);
+            canvas.drawPath(this.mMaskScaleOnly, this.mPaint);
+            canvas.translate(-bounds.left, -bounds.top);
         }
     }
 
+    @Override // android.graphics.drawable.Drawable
     public void invalidateSelf() {
         this.mLayersShader = null;
         super.invalidateSelf();
     }
 
+    @Override // android.graphics.drawable.Drawable
     public void getOutline(Outline outline) {
         outline.setConvexPath(this.mMask);
     }
 
     public Region getSafeZone() {
         this.mMaskMatrix.reset();
-        this.mMaskMatrix.setScale(SAFEZONE_SCALE, SAFEZONE_SCALE, (float) getBounds().centerX(), (float) getBounds().centerY());
+        this.mMaskMatrix.setScale(SAFEZONE_SCALE, SAFEZONE_SCALE, getBounds().centerX(), getBounds().centerY());
         Path p = new Path();
         this.mMask.transform(this.mMaskMatrix, p);
         Region safezoneRegion = new Region(getBounds());
@@ -229,6 +238,7 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
         return safezoneRegion;
     }
 
+    @Override // android.graphics.drawable.Drawable
     public Region getTransparentRegion() {
         if (this.mTransparentRegion.isEmpty()) {
             this.mMask.toggleInverseFillType();
@@ -239,51 +249,49 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
         return this.mTransparentRegion;
     }
 
+    @Override // android.graphics.drawable.Drawable
     public void applyTheme(Resources.Theme t) {
         super.applyTheme(t);
         LayerState state = this.mLayerState;
-        if (state != null) {
-            int density = Drawable.resolveDensity(t.getResources(), 0);
-            state.setDensity(density);
-            ChildDrawable[] array = state.mChildren;
-            for (int i = 0; i < 2; i++) {
-                ChildDrawable layer = array[i];
-                layer.setDensity(density);
-                if (layer.mThemeAttrs != null) {
-                    TypedArray a = t.resolveAttributes(layer.mThemeAttrs, R.styleable.AdaptiveIconDrawableLayer);
-                    updateLayerFromTypedArray(layer, a);
-                    a.recycle();
-                }
-                Drawable d = layer.mDrawable;
-                if (d != null && d.canApplyTheme()) {
-                    d.applyTheme(t);
-                    state.mChildrenChangingConfigurations |= d.getChangingConfigurations();
-                }
+        if (state == null) {
+            return;
+        }
+        int density = Drawable.resolveDensity(t.getResources(), 0);
+        state.setDensity(density);
+        ChildDrawable[] array = state.mChildren;
+        for (int i = 0; i < 2; i++) {
+            ChildDrawable layer = array[i];
+            layer.setDensity(density);
+            if (layer.mThemeAttrs != null) {
+                TypedArray a = t.resolveAttributes(layer.mThemeAttrs, C3132R.styleable.AdaptiveIconDrawableLayer);
+                updateLayerFromTypedArray(layer, a);
+                a.recycle();
+            }
+            Drawable d = layer.mDrawable;
+            if (d != null && d.canApplyTheme()) {
+                d.applyTheme(t);
+                state.mChildrenChangingConfigurations |= d.getChangingConfigurations();
             }
         }
     }
 
+    /* JADX WARN: Code restructure failed: missing block: B:34:0x00ac, code lost:
+        return;
+     */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
     private void inflateLayers(Resources r, XmlPullParser parser, AttributeSet attrs, Resources.Theme theme) throws XmlPullParserException, IOException {
+        int depth;
         int childIndex;
-        int next;
         int type;
-        Resources resources = r;
-        AttributeSet attributeSet = attrs;
-        Resources.Theme theme2 = theme;
         LayerState state = this.mLayerState;
         int innerDepth = parser.getDepth() + 1;
         while (true) {
-            int next2 = parser.next();
-            int type2 = next2;
-            if (next2 == 1) {
+            int type2 = parser.next();
+            if (type2 == 1 || ((depth = parser.getDepth()) < innerDepth && type2 == 3)) {
                 break;
-            }
-            int depth = parser.getDepth();
-            int depth2 = depth;
-            if (depth < innerDepth && type2 == 3) {
-                break;
-            }
-            if (type2 == 2 && depth2 <= innerDepth) {
+            } else if (type2 == 2 && depth <= innerDepth) {
                 String tagName = parser.getName();
                 if (tagName.equals("background")) {
                     childIndex = 0;
@@ -291,30 +299,23 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
                     childIndex = 1;
                 }
                 ChildDrawable layer = new ChildDrawable(state.mDensity);
-                TypedArray a = obtainAttributes(resources, theme2, attributeSet, R.styleable.AdaptiveIconDrawableLayer);
+                TypedArray a = obtainAttributes(r, theme, attrs, C3132R.styleable.AdaptiveIconDrawableLayer);
                 updateLayerFromTypedArray(layer, a);
                 a.recycle();
                 if (layer.mDrawable == null && layer.mThemeAttrs == null) {
                     do {
-                        next = parser.next();
-                        type = next;
-                    } while (next == 4);
-                    if (type == 2) {
-                        layer.mDrawable = Drawable.createFromXmlInnerForDensity(resources, parser, attributeSet, this.mLayerState.mSrcDensityOverride, theme2);
-                        layer.mDrawable.setCallback(this);
-                        state.mChildrenChangingConfigurations |= layer.mDrawable.getChangingConfigurations();
-                    } else {
-                        XmlPullParser xmlPullParser = parser;
+                        type = parser.next();
+                    } while (type == 4);
+                    if (type != 2) {
                         throw new XmlPullParserException(parser.getPositionDescription() + ": <foreground> or <background> tag requires a 'drawable'attribute or child tag defining a drawable");
                     }
-                } else {
-                    XmlPullParser xmlPullParser2 = parser;
+                    layer.mDrawable = Drawable.createFromXmlInnerForDensity(r, parser, attrs, this.mLayerState.mSrcDensityOverride, theme);
+                    layer.mDrawable.setCallback(this);
+                    state.mChildrenChangingConfigurations |= layer.mDrawable.getChangingConfigurations();
                 }
                 addLayer(childIndex, layer);
             }
-            XmlPullParser xmlPullParser3 = parser;
         }
-        XmlPullParser xmlPullParser4 = parser;
     }
 
     private void updateLayerFromTypedArray(ChildDrawable layer, TypedArray a) {
@@ -324,7 +325,7 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
         Drawable dr = a.getDrawableForDensity(0, state.mSrcDensityOverride);
         if (dr != null) {
             if (layer.mDrawable != null) {
-                layer.mDrawable.setCallback((Drawable.Callback) null);
+                layer.mDrawable.setCallback(null);
             }
             layer.mDrawable = dr;
             layer.mDrawable.setCallback(this);
@@ -332,10 +333,12 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
         }
     }
 
+    @Override // android.graphics.drawable.Drawable
     public boolean canApplyTheme() {
         return (this.mLayerState != null && this.mLayerState.canApplyTheme()) || super.canApplyTheme();
     }
 
+    @Override // android.graphics.drawable.Drawable
     public boolean isProjected() {
         if (super.isProjected()) {
             return true;
@@ -366,6 +369,7 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
         }
     }
 
+    @Override // android.graphics.drawable.Drawable.Callback
     public void invalidateDrawable(Drawable who) {
         if (this.mSuspendChildInvalidation) {
             this.mChildRequestedInvalidation = true;
@@ -374,18 +378,22 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
         }
     }
 
+    @Override // android.graphics.drawable.Drawable.Callback
     public void scheduleDrawable(Drawable who, Runnable what, long when) {
         scheduleSelf(what, when);
     }
 
+    @Override // android.graphics.drawable.Drawable.Callback
     public void unscheduleDrawable(Drawable who, Runnable what) {
         unscheduleSelf(what);
     }
 
+    @Override // android.graphics.drawable.Drawable
     public int getChangingConfigurations() {
         return super.getChangingConfigurations() | this.mLayerState.getChangingConfigurations();
     }
 
+    @Override // android.graphics.drawable.Drawable
     public void setHotspot(float x, float y) {
         ChildDrawable[] array = this.mLayerState.mChildren;
         int i = 0;
@@ -403,6 +411,7 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
         }
     }
 
+    @Override // android.graphics.drawable.Drawable
     public void setHotspotBounds(int left, int top, int right, int bottom) {
         ChildDrawable[] array = this.mLayerState.mChildren;
         int i = 0;
@@ -424,6 +433,7 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
         }
     }
 
+    @Override // android.graphics.drawable.Drawable
     public void getHotspotBounds(Rect outRect) {
         if (this.mHotspotBounds != null) {
             outRect.set(this.mHotspotBounds);
@@ -432,23 +442,26 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
         }
     }
 
+    @Override // android.graphics.drawable.Drawable
     public boolean setVisible(boolean visible, boolean restart) {
         boolean changed = super.setVisible(visible, restart);
         ChildDrawable[] array = this.mLayerState.mChildren;
         int i = 0;
         while (true) {
             LayerState layerState = this.mLayerState;
-            if (i >= 2) {
+            if (i < 2) {
+                Drawable dr = array[i].mDrawable;
+                if (dr != null) {
+                    dr.setVisible(visible, restart);
+                }
+                i++;
+            } else {
                 return changed;
             }
-            Drawable dr = array[i].mDrawable;
-            if (dr != null) {
-                dr.setVisible(visible, restart);
-            }
-            i++;
         }
     }
 
+    @Override // android.graphics.drawable.Drawable
     public void setDither(boolean dither) {
         ChildDrawable[] array = this.mLayerState.mChildren;
         int i = 0;
@@ -466,14 +479,17 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
         }
     }
 
+    @Override // android.graphics.drawable.Drawable
     public void setAlpha(int alpha) {
         this.mPaint.setAlpha(alpha);
     }
 
+    @Override // android.graphics.drawable.Drawable
     public int getAlpha() {
         return this.mPaint.getAlpha();
     }
 
+    @Override // android.graphics.drawable.Drawable
     public void setColorFilter(ColorFilter colorFilter) {
         ChildDrawable[] array = this.mLayerState.mChildren;
         int i = 0;
@@ -491,6 +507,7 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
         }
     }
 
+    @Override // android.graphics.drawable.Drawable
     public void setTintList(ColorStateList tint) {
         ChildDrawable[] array = this.mLayerState.mChildren;
         LayerState layerState = this.mLayerState;
@@ -502,6 +519,7 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
         }
     }
 
+    @Override // android.graphics.drawable.Drawable
     public void setTintBlendMode(BlendMode blendMode) {
         ChildDrawable[] array = this.mLayerState.mChildren;
         LayerState layerState = this.mLayerState;
@@ -517,12 +535,14 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
         this.mLayerState.mOpacityOverride = opacity;
     }
 
+    @Override // android.graphics.drawable.Drawable
     public int getOpacity() {
         return -3;
     }
 
+    @Override // android.graphics.drawable.Drawable
     public void setAutoMirrored(boolean mirrored) {
-        boolean unused = this.mLayerState.mAutoMirrored = mirrored;
+        this.mLayerState.mAutoMirrored = mirrored;
         ChildDrawable[] array = this.mLayerState.mChildren;
         int i = 0;
         while (true) {
@@ -539,10 +559,12 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
         }
     }
 
+    @Override // android.graphics.drawable.Drawable
     public boolean isAutoMirrored() {
         return this.mLayerState.mAutoMirrored;
     }
 
+    @Override // android.graphics.drawable.Drawable
     public void jumpToCurrentState() {
         ChildDrawable[] array = this.mLayerState.mChildren;
         int i = 0;
@@ -560,16 +582,18 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
         }
     }
 
+    @Override // android.graphics.drawable.Drawable
     public boolean isStateful() {
         return this.mLayerState.isStateful();
     }
 
+    @Override // android.graphics.drawable.Drawable
     public boolean hasFocusStateSpecified() {
         return this.mLayerState.hasFocusStateSpecified();
     }
 
-    /* access modifiers changed from: protected */
-    public boolean onStateChange(int[] state) {
+    @Override // android.graphics.drawable.Drawable
+    protected boolean onStateChange(int[] state) {
         boolean changed = false;
         ChildDrawable[] array = this.mLayerState.mChildren;
         int i = 0;
@@ -590,8 +614,8 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
         return changed;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean onLevelChange(int level) {
+    @Override // android.graphics.drawable.Drawable
+    protected boolean onLevelChange(int level) {
         boolean changed = false;
         ChildDrawable[] array = this.mLayerState.mChildren;
         int i = 0;
@@ -612,8 +636,9 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
         return changed;
     }
 
+    @Override // android.graphics.drawable.Drawable
     public int getIntrinsicWidth() {
-        return (int) (((float) getMaxIntrinsicWidth()) * DEFAULT_VIEW_PORT_SCALE);
+        return (int) (getMaxIntrinsicWidth() * DEFAULT_VIEW_PORT_SCALE);
     }
 
     private int getMaxIntrinsicWidth() {
@@ -622,19 +647,21 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
         int i = 0;
         while (true) {
             LayerState layerState = this.mLayerState;
-            if (i >= 2) {
+            if (i < 2) {
+                ChildDrawable r = this.mLayerState.mChildren[i];
+                if (r.mDrawable != null && (w = r.mDrawable.getIntrinsicWidth()) > width) {
+                    width = w;
+                }
+                i++;
+            } else {
                 return width;
             }
-            ChildDrawable r = this.mLayerState.mChildren[i];
-            if (r.mDrawable != null && (w = r.mDrawable.getIntrinsicWidth()) > width) {
-                width = w;
-            }
-            i++;
         }
     }
 
+    @Override // android.graphics.drawable.Drawable
     public int getIntrinsicHeight() {
-        return (int) (((float) getMaxIntrinsicHeight()) * DEFAULT_VIEW_PORT_SCALE);
+        return (int) (getMaxIntrinsicHeight() * DEFAULT_VIEW_PORT_SCALE);
     }
 
     private int getMaxIntrinsicHeight() {
@@ -643,28 +670,31 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
         int i = 0;
         while (true) {
             LayerState layerState = this.mLayerState;
-            if (i >= 2) {
+            if (i < 2) {
+                ChildDrawable r = this.mLayerState.mChildren[i];
+                if (r.mDrawable != null && (h = r.mDrawable.getIntrinsicHeight()) > height) {
+                    height = h;
+                }
+                i++;
+            } else {
                 return height;
             }
-            ChildDrawable r = this.mLayerState.mChildren[i];
-            if (r.mDrawable != null && (h = r.mDrawable.getIntrinsicHeight()) > height) {
-                height = h;
-            }
-            i++;
         }
     }
 
+    @Override // android.graphics.drawable.Drawable
     public Drawable.ConstantState getConstantState() {
-        if (!this.mLayerState.canConstantState()) {
-            return null;
+        if (this.mLayerState.canConstantState()) {
+            this.mLayerState.mChangingConfigurations = getChangingConfigurations();
+            return this.mLayerState;
         }
-        this.mLayerState.mChangingConfigurations = getChangingConfigurations();
-        return this.mLayerState;
+        return null;
     }
 
+    @Override // android.graphics.drawable.Drawable
     public Drawable mutate() {
         if (!this.mMutated && super.mutate() == this) {
-            this.mLayerState = createConstantState(this.mLayerState, (Resources) null);
+            this.mLayerState = createConstantState(this.mLayerState, null);
             int i = 0;
             while (true) {
                 LayerState layerState = this.mLayerState;
@@ -682,6 +712,7 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
         return this;
     }
 
+    @Override // android.graphics.drawable.Drawable
     public void clearMutated() {
         super.clearMutated();
         ChildDrawable[] array = this.mLayerState.mChildren;
@@ -701,17 +732,20 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
         }
     }
 
+    /* loaded from: classes.dex */
     static class ChildDrawable {
-        public int mDensity = 160;
+        public int mDensity;
         public Drawable mDrawable;
         public int[] mThemeAttrs;
 
         ChildDrawable(int density) {
+            this.mDensity = 160;
             this.mDensity = density;
         }
 
         ChildDrawable(ChildDrawable orig, AdaptiveIconDrawable owner, Resources res) {
             Drawable clone;
+            this.mDensity = 160;
             Drawable dr = orig.mDrawable;
             if (dr != null) {
                 Drawable.ConstantState cs = dr.getConstantState();
@@ -744,10 +778,10 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
         }
     }
 
+    /* loaded from: classes.dex */
     static class LayerState extends Drawable.ConstantState {
         static final int N_CHILDREN = 2;
-        /* access modifiers changed from: private */
-        public boolean mAutoMirrored = false;
+        private boolean mAutoMirrored;
         int mChangingConfigurations;
         private boolean mCheckedOpacity;
         private boolean mCheckedStateful;
@@ -756,36 +790,40 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
         int mDensity;
         private boolean mIsStateful;
         private int mOpacity;
-        int mOpacityOverride = 0;
-        int mSrcDensityOverride = 0;
+        int mOpacityOverride;
+        int mSrcDensityOverride;
         private int[] mThemeAttrs;
 
         LayerState(LayerState orig, AdaptiveIconDrawable owner, Resources res) {
             int i = 0;
+            this.mSrcDensityOverride = 0;
+            this.mOpacityOverride = 0;
+            this.mAutoMirrored = false;
             this.mDensity = Drawable.resolveDensity(res, orig != null ? orig.mDensity : 0);
             this.mChildren = new ChildDrawable[2];
-            if (orig != null) {
-                ChildDrawable[] origChildDrawable = orig.mChildren;
-                this.mChangingConfigurations = orig.mChangingConfigurations;
-                this.mChildrenChangingConfigurations = orig.mChildrenChangingConfigurations;
+            if (orig == null) {
                 while (i < 2) {
-                    this.mChildren[i] = new ChildDrawable(origChildDrawable[i], owner, res);
+                    this.mChildren[i] = new ChildDrawable(this.mDensity);
                     i++;
                 }
-                this.mCheckedOpacity = orig.mCheckedOpacity;
-                this.mOpacity = orig.mOpacity;
-                this.mCheckedStateful = orig.mCheckedStateful;
-                this.mIsStateful = orig.mIsStateful;
-                this.mAutoMirrored = orig.mAutoMirrored;
-                this.mThemeAttrs = orig.mThemeAttrs;
-                this.mOpacityOverride = orig.mOpacityOverride;
-                this.mSrcDensityOverride = orig.mSrcDensityOverride;
                 return;
             }
+            ChildDrawable[] origChildDrawable = orig.mChildren;
+            this.mChangingConfigurations = orig.mChangingConfigurations;
+            this.mChildrenChangingConfigurations = orig.mChildrenChangingConfigurations;
             while (i < 2) {
-                this.mChildren[i] = new ChildDrawable(this.mDensity);
+                ChildDrawable or = origChildDrawable[i];
+                this.mChildren[i] = new ChildDrawable(or, owner, res);
                 i++;
             }
+            this.mCheckedOpacity = orig.mCheckedOpacity;
+            this.mOpacity = orig.mOpacity;
+            this.mCheckedStateful = orig.mCheckedStateful;
+            this.mIsStateful = orig.mIsStateful;
+            this.mAutoMirrored = orig.mAutoMirrored;
+            this.mThemeAttrs = orig.mThemeAttrs;
+            this.mOpacityOverride = orig.mOpacityOverride;
+            this.mSrcDensityOverride = orig.mSrcDensityOverride;
         }
 
         public final void setDensity(int targetDensity) {
@@ -794,27 +832,32 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
             }
         }
 
+        @Override // android.graphics.drawable.Drawable.ConstantState
         public boolean canApplyTheme() {
             if (this.mThemeAttrs != null || super.canApplyTheme()) {
                 return true;
             }
             ChildDrawable[] array = this.mChildren;
             for (int i = 0; i < 2; i++) {
-                if (array[i].canApplyTheme()) {
+                ChildDrawable layer = array[i];
+                if (layer.canApplyTheme()) {
                     return true;
                 }
             }
             return false;
         }
 
+        @Override // android.graphics.drawable.Drawable.ConstantState
         public Drawable newDrawable() {
             return new AdaptiveIconDrawable(this, (Resources) null);
         }
 
+        @Override // android.graphics.drawable.Drawable.ConstantState
         public Drawable newDrawable(Resources res) {
             return new AdaptiveIconDrawable(this, res);
         }
 
+        @Override // android.graphics.drawable.Drawable.ConstantState
         public int getChangingConfigurations() {
             return this.mChangingConfigurations | this.mChildrenChangingConfigurations;
         }
@@ -828,13 +871,15 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
             int firstIndex = -1;
             int i = 0;
             while (true) {
-                if (i >= 2) {
-                    break;
-                } else if (array[i].mDrawable != null) {
-                    firstIndex = i;
-                    break;
+                if (i < 2) {
+                    if (array[i].mDrawable == null) {
+                        i++;
+                    } else {
+                        firstIndex = i;
+                        break;
+                    }
                 } else {
-                    i++;
+                    break;
                 }
             }
             if (firstIndex >= 0) {
@@ -863,11 +908,12 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
             while (true) {
                 if (i < 2) {
                     Drawable dr = array[i].mDrawable;
-                    if (dr != null && dr.isStateful()) {
+                    if (dr == null || !dr.isStateful()) {
+                        i++;
+                    } else {
                         isStateful = true;
                         break;
                     }
-                    i++;
                 } else {
                     break;
                 }

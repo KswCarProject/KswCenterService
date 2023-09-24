@@ -2,6 +2,7 @@ package android.telephony.ims;
 
 import java.util.List;
 
+/* loaded from: classes4.dex */
 public class RcsEventQueryResult {
     private RcsQueryContinuationToken mContinuationToken;
     private List<RcsEvent> mEvents;

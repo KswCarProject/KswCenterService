@@ -2,6 +2,7 @@ package android.hardware.radio.V1_2;
 
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class MaxSearchTimeRange {
     public static final int MAX = 3600;
     public static final int MIN = 60;

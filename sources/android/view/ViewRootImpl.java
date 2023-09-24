@@ -15,6 +15,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.HardwareRenderer;
 import android.graphics.Matrix;
+import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.PorterDuff;
@@ -26,19 +27,20 @@ import android.graphics.drawable.Drawable;
 import android.hardware.display.DisplayManager;
 import android.hardware.input.InputManager;
 import android.media.AudioManager;
+import android.media.TtmlUtils;
 import android.net.TrafficStats;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.Debug;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.os.ParcelFileDescriptor;
-import android.os.Process;
-import android.os.RemoteException;
-import android.os.SystemClock;
-import android.os.SystemProperties;
-import android.os.Trace;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.Debug;
+import android.p007os.Handler;
+import android.p007os.Looper;
+import android.p007os.Message;
+import android.p007os.ParcelFileDescriptor;
+import android.p007os.Process;
+import android.p007os.RemoteException;
+import android.p007os.SystemClock;
+import android.p007os.SystemProperties;
+import android.p007os.Trace;
 import android.sysprop.DisplayProperties;
 import android.util.AndroidRuntimeException;
 import android.util.DisplayMetrics;
@@ -75,10 +77,10 @@ import android.view.animation.Interpolator;
 import android.view.autofill.AutofillManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Scroller;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import com.android.internal.annotations.GuardedBy;
-import com.android.internal.os.IResultReceiver;
-import com.android.internal.os.SomeArgs;
+import com.android.internal.p016os.IResultReceiver;
+import com.android.internal.p016os.SomeArgs;
 import com.android.internal.policy.PhoneFallbackEventHandler;
 import com.android.internal.util.Preconditions;
 import com.android.internal.view.BaseSurfaceHolder;
@@ -96,6 +98,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.CountDownLatch;
 
+/* loaded from: classes4.dex */
 public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks, ThreadedRenderer.DrawCallbacks {
     private static final boolean DBG = false;
     private static final boolean DEBUG_CONFIGURATION = false;
@@ -150,19 +153,9 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
     public static final String PROPERTY_EMULATOR_WIN_OUTSET_BOTTOM_PX = "ro.emu.win_outset_bottom_px";
     private static final String PROPERTY_PROFILE_RENDERING = "viewroot.profile_rendering";
     private static final String TAG = "ViewRootImpl";
-    private static final String USE_NEW_INSETS_PROPERTY = "persist.wm.new_insets";
-    static final Interpolator mResizeInterpolator = new AccelerateDecelerateInterpolator();
     private static boolean sAlwaysAssignFocus;
-    private static boolean sCompatibilityDone = false;
-    private static final ArrayList<ConfigChangedCallback> sConfigCallbacks = new ArrayList<>();
-    static boolean sFirstDrawComplete = false;
-    static final ArrayList<Runnable> sFirstDrawHandlers = new ArrayList<>();
-    public static int sNewInsetsMode = SystemProperties.getInt(USE_NEW_INSETS_PROPERTY, 0);
-    @UnsupportedAppUsage
-    static final ThreadLocal<HandlerActionQueue> sRunQueues = new ThreadLocal<>();
     View mAccessibilityFocusedHost;
     AccessibilityNodeInfo mAccessibilityFocusedVirtualView;
-    final AccessibilityInteractionConnectionManager mAccessibilityInteractionConnectionManager;
     AccessibilityInteractionController mAccessibilityInteractionController;
     final AccessibilityManager mAccessibilityManager;
     private ActivityConfigCallback mActivityConfigCallback;
@@ -171,13 +164,11 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
     boolean mAdded;
     boolean mAddedTouchMode;
     private boolean mAppVisibilityChanged;
-    boolean mAppVisible = true;
     boolean mApplyInsetsRequested;
     @UnsupportedAppUsage
     final View.AttachInfo mAttachInfo;
     AudioManager mAudioManager;
     final String mBasePackageName;
-    public final Surface mBoundsSurface;
     private SurfaceControl mBoundsSurfaceControl;
     private int mCanvasOffsetX;
     private int mCanvasOffsetY;
@@ -191,18 +182,13 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
     public final Context mContext;
     int mCurScrollY;
     View mCurrentDragView;
-    private PointerIcon mCustomPointerIcon;
     private final int mDensity;
     @UnsupportedAppUsage
     Rect mDirty;
-    final Rect mDispatchContentInsets;
-    DisplayCutout mDispatchDisplayCutout;
-    final Rect mDispatchStableInsets;
     Display mDisplay;
     private final DisplayManager.DisplayListener mDisplayListener;
     final DisplayManager mDisplayManager;
     ClipDescription mDragDescription;
-    final PointF mDragPoint;
     private boolean mDragResizing;
     boolean mDrawingAllowed;
     int mDrawsNeededToReport;
@@ -211,17 +197,13 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
     boolean mFirst;
     InputStage mFirstInputStage;
     InputStage mFirstPostImeInputStage;
-    private boolean mForceDecorViewVisibility;
     private boolean mForceNextConfigUpdate;
     boolean mForceNextWindowRelayout;
     private int mFpsNumFrames;
-    private long mFpsPrevTime;
-    private long mFpsStartTime;
     boolean mFullRedrawNeeded;
     private final GestureExclusionTracker mGestureExclusionTracker;
     boolean mHadWindowFocus;
     final ViewRootHandler mHandler;
-    boolean mHandlingLayoutInLayoutRequest;
     int mHardwareXOffset;
     int mHardwareYOffset;
     boolean mHasHadWindowFocus;
@@ -229,77 +211,48 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
     @UnsupportedAppUsage
     int mHeight;
     final HighContrastTextManager mHighContrastTextManager;
-    private boolean mInLayout;
     InputChannel mInputChannel;
-    /* access modifiers changed from: private */
-    public final InputEventCompatProcessor mInputCompatProcessor;
+    private final InputEventCompatProcessor mInputCompatProcessor;
     protected final InputEventConsistencyVerifier mInputEventConsistencyVerifier;
     WindowInputEventReceiver mInputEventReceiver;
     InputQueue mInputQueue;
     InputQueue.Callback mInputQueueCallback;
-    /* access modifiers changed from: private */
-    public final InsetsController mInsetsController;
+    private final InsetsController mInsetsController;
     final InvalidateOnAnimationRunnable mInvalidateOnAnimationRunnable;
     private boolean mInvalidateRootRequested;
-    boolean mIsAmbientMode;
     public boolean mIsAnimating;
     boolean mIsCreating;
     boolean mIsDrawing;
     boolean mIsInTraversal;
-    /* access modifiers changed from: private */
-    public final Configuration mLastConfigurationFromResources;
-    final ViewTreeObserver.InternalInsetsInfo mLastGivenInsets;
-    boolean mLastInCompatMode;
     boolean mLastOverscanRequested;
-    /* access modifiers changed from: private */
-    public final MergedConfiguration mLastReportedMergedConfiguration;
     @UnsupportedAppUsage
     WeakReference<View> mLastScrolledFocus;
     int mLastSystemUiVisibility;
-    final PointF mLastTouchPoint;
     int mLastTouchSource;
     boolean mLastWasImTarget;
     private WindowInsets mLastWindowInsets;
     boolean mLayoutRequested;
-    ArrayList<View> mLayoutRequesters;
     volatile Object mLocalDragState;
     final WindowLeaked mLocation;
     boolean mLostWindowFocus;
     private boolean mNeedsRendererSetup;
     boolean mNewSurfaceNeeded;
     private final int mNoncompatDensity;
-    int mOrigWindowType;
-    boolean mPausedForTransition;
     boolean mPendingAlwaysConsumeSystemBars;
-    final Rect mPendingBackDropFrame;
-    final Rect mPendingContentInsets;
-    final DisplayCutout.ParcelableWrapper mPendingDisplayCutout;
     int mPendingInputEventCount;
     QueuedInputEvent mPendingInputEventHead;
-    String mPendingInputEventQueueLengthCounterName;
     QueuedInputEvent mPendingInputEventTail;
-    /* access modifiers changed from: private */
-    public final MergedConfiguration mPendingMergedConfiguration;
-    final Rect mPendingOutsets;
-    final Rect mPendingOverscanInsets;
-    final Rect mPendingStableInsets;
     private ArrayList<LayoutTransition> mPendingTransitions;
-    final Rect mPendingVisibleInsets;
     boolean mPointerCapture;
-    /* access modifiers changed from: private */
-    public int mPointerIconType;
     final Region mPreviousTransparentRegion;
     boolean mProcessInputEventsScheduled;
     private boolean mProfile;
-    /* access modifiers changed from: private */
-    public boolean mProfileRendering;
+    private boolean mProfileRendering;
     private QueuedInputEvent mQueuedInputEventPool;
     private int mQueuedInputEventPoolSize;
     private boolean mRemoved;
-    /* access modifiers changed from: private */
-    public Choreographer.FrameCallback mRenderProfiler;
-    /* access modifiers changed from: private */
-    public boolean mRenderProfilingEnabled;
+    private Choreographer.FrameCallback mRenderProfiler;
+    private boolean mRenderProfilingEnabled;
     boolean mReportNextDraw;
     private int mResizeMode;
     boolean mScrollMayChange;
@@ -308,35 +261,21 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
     SendWindowContentChangedAccessibilityEvent mSendWindowContentChangedAccessibilityEvent;
     int mSeq;
     int mSoftInputMode;
-    @UnsupportedAppUsage
-    boolean mStopped;
-    @UnsupportedAppUsage
-    public final Surface mSurface;
-    private final SurfaceControl mSurfaceControl;
     BaseSurfaceHolder mSurfaceHolder;
     SurfaceHolder.Callback2 mSurfaceHolderCallback;
     private SurfaceSession mSurfaceSession;
     InputStage mSyntheticInputStage;
-    /* access modifiers changed from: private */
-    public String mTag;
+    private String mTag;
     final int mTargetSdkVersion;
-    private final Rect mTempBoundsRect;
     HashSet<View> mTempHashSet;
-    private InsetsState mTempInsets;
     final Rect mTempRect;
     final Thread mThread;
-    final Rect mTmpFrame;
-    final int[] mTmpLocation = new int[2];
-    final TypedValue mTmpValue = new TypedValue();
-    private final SurfaceControl.Transaction mTransaction;
     CompatibilityInfo.Translator mTranslator;
     final Region mTransparentRegion;
     int mTraversalBarrier;
     final TraversalRunnable mTraversalRunnable;
     public boolean mTraversalScheduled;
     boolean mUnbufferedInputDispatch;
-    /* access modifiers changed from: private */
-    public final UnhandledKeyManager mUnhandledKeyManager;
     @GuardedBy({"this"})
     boolean mUpcomingInTouchMode;
     @GuardedBy({"this"})
@@ -352,31 +291,88 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
     int mWidth;
     boolean mWillDrawSoon;
     final Rect mWinFrame;
-    final W mWindow;
-    public final WindowManager.LayoutParams mWindowAttributes = new WindowManager.LayoutParams();
-    boolean mWindowAttributesChanged;
-    int mWindowAttributesChangesFlag;
-    @GuardedBy({"mWindowCallbacks"})
-    final ArrayList<WindowCallbacks> mWindowCallbacks = new ArrayList<>();
+    final BinderC2750W mWindow;
     CountDownLatch mWindowDrawCountDown;
     @GuardedBy({"this"})
     boolean mWindowFocusChanged;
     @UnsupportedAppUsage
     final IWindowSession mWindowSession;
     private final ArrayList<WindowStoppedCallback> mWindowStoppedCallbacks;
+    private static final String USE_NEW_INSETS_PROPERTY = "persist.wm.new_insets";
+    public static int sNewInsetsMode = SystemProperties.getInt(USE_NEW_INSETS_PROPERTY, 0);
+    @UnsupportedAppUsage
+    static final ThreadLocal<HandlerActionQueue> sRunQueues = new ThreadLocal<>();
+    static final ArrayList<Runnable> sFirstDrawHandlers = new ArrayList<>();
+    static boolean sFirstDrawComplete = false;
+    private static final ArrayList<ConfigChangedCallback> sConfigCallbacks = new ArrayList<>();
+    private static boolean sCompatibilityDone = false;
+    static final Interpolator mResizeInterpolator = new AccelerateDecelerateInterpolator();
+    @GuardedBy({"mWindowCallbacks"})
+    final ArrayList<WindowCallbacks> mWindowCallbacks = new ArrayList<>();
+    final int[] mTmpLocation = new int[2];
+    final TypedValue mTmpValue = new TypedValue();
+    public final WindowManager.LayoutParams mWindowAttributes = new WindowManager.LayoutParams();
+    boolean mAppVisible = true;
+    private boolean mForceDecorViewVisibility = false;
+    int mOrigWindowType = -1;
+    @UnsupportedAppUsage
+    boolean mStopped = false;
+    boolean mIsAmbientMode = false;
+    boolean mPausedForTransition = false;
+    boolean mLastInCompatMode = false;
+    private final Rect mTempBoundsRect = new Rect();
+    String mPendingInputEventQueueLengthCounterName = "pq";
+    private final UnhandledKeyManager mUnhandledKeyManager = new UnhandledKeyManager();
+    boolean mWindowAttributesChanged = false;
+    int mWindowAttributesChangesFlag = 0;
+    @UnsupportedAppUsage
+    public final Surface mSurface = new Surface();
+    private final SurfaceControl mSurfaceControl = new SurfaceControl();
+    public final Surface mBoundsSurface = new Surface();
+    private final SurfaceControl.Transaction mTransaction = new SurfaceControl.Transaction();
+    final Rect mTmpFrame = new Rect();
+    final Rect mPendingOverscanInsets = new Rect();
+    final Rect mPendingVisibleInsets = new Rect();
+    final Rect mPendingStableInsets = new Rect();
+    final Rect mPendingContentInsets = new Rect();
+    final Rect mPendingOutsets = new Rect();
+    final Rect mPendingBackDropFrame = new Rect();
+    final DisplayCutout.ParcelableWrapper mPendingDisplayCutout = new DisplayCutout.ParcelableWrapper(DisplayCutout.NO_CUTOUT);
+    private InsetsState mTempInsets = new InsetsState();
+    final ViewTreeObserver.InternalInsetsInfo mLastGivenInsets = new ViewTreeObserver.InternalInsetsInfo();
+    final Rect mDispatchContentInsets = new Rect();
+    final Rect mDispatchStableInsets = new Rect();
+    DisplayCutout mDispatchDisplayCutout = DisplayCutout.NO_CUTOUT;
+    private final Configuration mLastConfigurationFromResources = new Configuration();
+    private final MergedConfiguration mLastReportedMergedConfiguration = new MergedConfiguration();
+    private final MergedConfiguration mPendingMergedConfiguration = new MergedConfiguration();
+    final PointF mDragPoint = new PointF();
+    final PointF mLastTouchPoint = new PointF();
+    private long mFpsStartTime = -1;
+    private long mFpsPrevTime = -1;
+    private int mPointerIconType = 1;
+    private PointerIcon mCustomPointerIcon = null;
+    final AccessibilityInteractionConnectionManager mAccessibilityInteractionConnectionManager = new AccessibilityInteractionConnectionManager();
+    private boolean mInLayout = false;
+    ArrayList<View> mLayoutRequesters = new ArrayList<>();
+    boolean mHandlingLayoutInLayoutRequest = false;
 
+    /* loaded from: classes4.dex */
     public interface ActivityConfigCallback {
         void onConfigurationChanged(Configuration configuration, int i);
     }
 
+    /* loaded from: classes4.dex */
     public interface ConfigChangedCallback {
         void onConfigurationChanged(Configuration configuration);
     }
 
+    /* loaded from: classes4.dex */
     interface WindowStoppedCallback {
         void windowStopped(boolean z);
     }
 
+    /* loaded from: classes4.dex */
     static final class SystemUiVisibilityInfo {
         int globalVisibility;
         int localChanges;
@@ -388,55 +384,14 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
     }
 
     public ViewRootImpl(Context context, Display display) {
-        boolean z = false;
-        this.mForceDecorViewVisibility = false;
-        this.mOrigWindowType = -1;
-        this.mStopped = false;
-        this.mIsAmbientMode = false;
-        this.mPausedForTransition = false;
-        this.mLastInCompatMode = false;
-        this.mTempBoundsRect = new Rect();
-        this.mPendingInputEventQueueLengthCounterName = "pq";
-        this.mUnhandledKeyManager = new UnhandledKeyManager();
-        this.mWindowAttributesChanged = false;
-        this.mWindowAttributesChangesFlag = 0;
-        this.mSurface = new Surface();
-        this.mSurfaceControl = new SurfaceControl();
-        this.mBoundsSurface = new Surface();
-        this.mTransaction = new SurfaceControl.Transaction();
-        this.mTmpFrame = new Rect();
-        this.mPendingOverscanInsets = new Rect();
-        this.mPendingVisibleInsets = new Rect();
-        this.mPendingStableInsets = new Rect();
-        this.mPendingContentInsets = new Rect();
-        this.mPendingOutsets = new Rect();
-        this.mPendingBackDropFrame = new Rect();
-        this.mPendingDisplayCutout = new DisplayCutout.ParcelableWrapper(DisplayCutout.NO_CUTOUT);
-        this.mTempInsets = new InsetsState();
-        this.mLastGivenInsets = new ViewTreeObserver.InternalInsetsInfo();
-        this.mDispatchContentInsets = new Rect();
-        this.mDispatchStableInsets = new Rect();
-        this.mDispatchDisplayCutout = DisplayCutout.NO_CUTOUT;
-        this.mLastConfigurationFromResources = new Configuration();
-        this.mLastReportedMergedConfiguration = new MergedConfiguration();
-        this.mPendingMergedConfiguration = new MergedConfiguration();
-        this.mDragPoint = new PointF();
-        this.mLastTouchPoint = new PointF();
-        this.mFpsStartTime = -1;
-        this.mFpsPrevTime = -1;
-        this.mPointerIconType = 1;
-        this.mCustomPointerIcon = null;
-        this.mAccessibilityInteractionConnectionManager = new AccessibilityInteractionConnectionManager();
-        this.mInLayout = false;
-        this.mLayoutRequesters = new ArrayList<>();
-        this.mHandlingLayoutInLayoutRequest = false;
         this.mInputEventConsistencyVerifier = InputEventConsistencyVerifier.isInstrumentationEnabled() ? new InputEventConsistencyVerifier(this, 0) : null;
         this.mInsetsController = new InsetsController(this);
         this.mGestureExclusionTracker = new GestureExclusionTracker();
         this.mTag = TAG;
         this.mHaveMoveEvent = false;
         this.mProfile = false;
-        this.mDisplayListener = new DisplayManager.DisplayListener() {
+        this.mDisplayListener = new DisplayManager.DisplayListener() { // from class: android.view.ViewRootImpl.1
+            @Override // android.hardware.display.DisplayManager.DisplayListener
             public void onDisplayChanged(int displayId) {
                 int oldDisplayState;
                 int newDisplayState;
@@ -457,17 +412,19 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
                 }
             }
 
+            @Override // android.hardware.display.DisplayManager.DisplayListener
             public void onDisplayRemoved(int displayId) {
             }
 
+            @Override // android.hardware.display.DisplayManager.DisplayListener
             public void onDisplayAdded(int displayId) {
             }
 
             private int toViewScreenState(int displayState) {
-                if (displayState == 1) {
-                    return 0;
+                if (displayState != 1) {
+                    return 1;
                 }
-                return 1;
+                return 0;
             }
         };
         this.mWindowStoppedCallbacks = new ArrayList<>();
@@ -482,7 +439,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         this.mDisplay = display;
         this.mBasePackageName = context.getBasePackageName();
         this.mThread = Thread.currentThread();
-        this.mLocation = new WindowLeaked((String) null);
+        this.mLocation = new WindowLeaked(null);
         this.mLocation.fillInStackTrace();
         this.mWidth = -1;
         this.mHeight = -1;
@@ -490,7 +447,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         this.mTempRect = new Rect();
         this.mVisRect = new Rect();
         this.mWinFrame = new Rect();
-        this.mWindow = new W(this);
+        this.mWindow = new BinderC2750W(this);
         this.mTargetSdkVersion = context.getApplicationInfo().targetSdkVersion;
         this.mViewVisibility = 8;
         this.mTransparentRegion = new Region();
@@ -508,23 +465,23 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         this.mFallbackEventHandler = new PhoneFallbackEventHandler(context);
         this.mChoreographer = Choreographer.getInstance();
         this.mDisplayManager = (DisplayManager) context.getSystemService(Context.DISPLAY_SERVICE);
-        String processorOverrideName = context.getResources().getString(R.string.config_inputEventCompatProcessorOverrideClassName);
+        String processorOverrideName = context.getResources().getString(C3132R.string.config_inputEventCompatProcessorOverrideClassName);
         if (processorOverrideName.isEmpty()) {
             this.mInputCompatProcessor = new InputEventCompatProcessor(context);
         } else {
             InputEventCompatProcessor compatProcessor = null;
             try {
-                compatProcessor = (InputEventCompatProcessor) Class.forName(processorOverrideName).getConstructor(new Class[]{Context.class}).newInstance(new Object[]{context});
-            } catch (Exception e) {
-                Log.e(TAG, "Unable to create the InputEventCompatProcessor. ", e);
-            } catch (Throwable th) {
-                this.mInputCompatProcessor = null;
-                throw th;
+                try {
+                    compatProcessor = (InputEventCompatProcessor) Class.forName(processorOverrideName).getConstructor(Context.class).newInstance(context);
+                } catch (Exception e) {
+                    Log.m69e(TAG, "Unable to create the InputEventCompatProcessor. ", e);
+                }
+            } finally {
+                this.mInputCompatProcessor = compatProcessor;
             }
-            this.mInputCompatProcessor = compatProcessor;
         }
         if (!sCompatibilityDone) {
-            sAlwaysAssignFocus = this.mTargetSdkVersion < 28 ? true : z;
+            sAlwaysAssignFocus = this.mTargetSdkVersion < 28;
             sCompatibilityDone = true;
         }
         loadSystemProperties();
@@ -573,14 +530,14 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
 
     static boolean isInTouchMode() {
         IWindowSession windowSession = WindowManagerGlobal.peekWindowSession();
-        if (windowSession == null) {
-            return false;
+        if (windowSession != null) {
+            try {
+                return windowSession.getInTouchMode();
+            } catch (RemoteException e) {
+                return false;
+            }
         }
-        try {
-            return windowSession.getInTouchMode();
-        } catch (RemoteException e) {
-            return false;
-        }
+        return false;
     }
 
     public void notifyChildRebuilt() {
@@ -603,559 +560,197 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         }
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:143:0x040f, code lost:
-        return;
-     */
-    /* JADX WARNING: Removed duplicated region for block: B:138:0x0408 A[SYNTHETIC, Splitter:B:138:0x0408] */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void setView(android.view.View r25, android.view.WindowManager.LayoutParams r26, android.view.View r27) {
-        /*
-            r24 = this;
-            r1 = r24
-            r2 = r25
-            monitor-enter(r24)
-            android.view.View r0 = r1.mView     // Catch:{ all -> 0x0410 }
-            if (r0 != 0) goto L_0x040c
-            r1.mView = r2     // Catch:{ all -> 0x0410 }
-            android.view.View$AttachInfo r0 = r1.mAttachInfo     // Catch:{ all -> 0x0410 }
-            android.view.Display r3 = r1.mDisplay     // Catch:{ all -> 0x0410 }
-            int r3 = r3.getState()     // Catch:{ all -> 0x0410 }
-            r0.mDisplayState = r3     // Catch:{ all -> 0x0410 }
-            android.hardware.display.DisplayManager r0 = r1.mDisplayManager     // Catch:{ all -> 0x0410 }
-            android.hardware.display.DisplayManager$DisplayListener r3 = r1.mDisplayListener     // Catch:{ all -> 0x0410 }
-            android.view.ViewRootImpl$ViewRootHandler r4 = r1.mHandler     // Catch:{ all -> 0x0410 }
-            r0.registerDisplayListener(r3, r4)     // Catch:{ all -> 0x0410 }
-            android.view.View r0 = r1.mView     // Catch:{ all -> 0x0410 }
-            int r0 = r0.getRawLayoutDirection()     // Catch:{ all -> 0x0410 }
-            r1.mViewLayoutDirectionInitial = r0     // Catch:{ all -> 0x0410 }
-            android.view.FallbackEventHandler r0 = r1.mFallbackEventHandler     // Catch:{ all -> 0x0410 }
-            r0.setView(r2)     // Catch:{ all -> 0x0410 }
-            android.view.WindowManager$LayoutParams r0 = r1.mWindowAttributes     // Catch:{ all -> 0x0410 }
-            r3 = r26
-            r0.copyFrom(r3)     // Catch:{ all -> 0x0415 }
-            android.view.WindowManager$LayoutParams r0 = r1.mWindowAttributes     // Catch:{ all -> 0x0415 }
-            java.lang.String r0 = r0.packageName     // Catch:{ all -> 0x0415 }
-            if (r0 != 0) goto L_0x003e
-            android.view.WindowManager$LayoutParams r0 = r1.mWindowAttributes     // Catch:{ all -> 0x0415 }
-            java.lang.String r4 = r1.mBasePackageName     // Catch:{ all -> 0x0415 }
-            r0.packageName = r4     // Catch:{ all -> 0x0415 }
-        L_0x003e:
-            android.view.WindowManager$LayoutParams r0 = r1.mWindowAttributes     // Catch:{ all -> 0x0415 }
-            r3 = r0
-            r24.setTag()     // Catch:{ all -> 0x0415 }
-            int r0 = r3.flags     // Catch:{ all -> 0x0415 }
-            r1.mClientWindowLayoutFlags = r0     // Catch:{ all -> 0x0415 }
-            r4 = 0
-            r1.setAccessibilityFocus(r4, r4)     // Catch:{ all -> 0x0415 }
-            boolean r0 = r2 instanceof com.android.internal.view.RootViewSurfaceTaker     // Catch:{ all -> 0x0415 }
-            r5 = 0
-            if (r0 == 0) goto L_0x0071
-            r0 = r2
-            com.android.internal.view.RootViewSurfaceTaker r0 = (com.android.internal.view.RootViewSurfaceTaker) r0     // Catch:{ all -> 0x0415 }
-            android.view.SurfaceHolder$Callback2 r0 = r0.willYouTakeTheSurface()     // Catch:{ all -> 0x0415 }
-            r1.mSurfaceHolderCallback = r0     // Catch:{ all -> 0x0415 }
-            android.view.SurfaceHolder$Callback2 r0 = r1.mSurfaceHolderCallback     // Catch:{ all -> 0x0415 }
-            if (r0 == 0) goto L_0x0071
-            android.view.ViewRootImpl$TakenSurfaceHolder r0 = new android.view.ViewRootImpl$TakenSurfaceHolder     // Catch:{ all -> 0x0415 }
-            r0.<init>()     // Catch:{ all -> 0x0415 }
-            r1.mSurfaceHolder = r0     // Catch:{ all -> 0x0415 }
-            com.android.internal.view.BaseSurfaceHolder r0 = r1.mSurfaceHolder     // Catch:{ all -> 0x0415 }
-            r0.setFormat(r5)     // Catch:{ all -> 0x0415 }
-            com.android.internal.view.BaseSurfaceHolder r0 = r1.mSurfaceHolder     // Catch:{ all -> 0x0415 }
-            android.view.SurfaceHolder$Callback2 r6 = r1.mSurfaceHolderCallback     // Catch:{ all -> 0x0415 }
-            r0.addCallback(r6)     // Catch:{ all -> 0x0415 }
-        L_0x0071:
-            boolean r0 = r3.hasManualSurfaceInsets     // Catch:{ all -> 0x0415 }
-            r6 = 1
-            if (r0 != 0) goto L_0x0079
-            r3.setSurfaceInsets(r2, r5, r6)     // Catch:{ all -> 0x0415 }
-        L_0x0079:
-            android.view.Display r0 = r1.mDisplay     // Catch:{ all -> 0x0415 }
-            android.view.DisplayAdjustments r0 = r0.getDisplayAdjustments()     // Catch:{ all -> 0x0415 }
-            android.content.res.CompatibilityInfo r0 = r0.getCompatibilityInfo()     // Catch:{ all -> 0x0415 }
-            r7 = r0
-            android.content.res.CompatibilityInfo$Translator r0 = r7.getTranslator()     // Catch:{ all -> 0x0415 }
-            r1.mTranslator = r0     // Catch:{ all -> 0x0415 }
-            com.android.internal.view.BaseSurfaceHolder r0 = r1.mSurfaceHolder     // Catch:{ all -> 0x0415 }
-            if (r0 != 0) goto L_0x00a3
-            r1.enableHardwareAcceleration(r3)     // Catch:{ all -> 0x0415 }
-            android.view.View$AttachInfo r0 = r1.mAttachInfo     // Catch:{ all -> 0x0415 }
-            android.view.ThreadedRenderer r0 = r0.mThreadedRenderer     // Catch:{ all -> 0x0415 }
-            if (r0 == 0) goto L_0x0099
-            r0 = r6
-            goto L_0x009a
-        L_0x0099:
-            r0 = r5
-        L_0x009a:
-            boolean r8 = r1.mUseMTRenderer     // Catch:{ all -> 0x0415 }
-            if (r8 == r0) goto L_0x00a3
-            r24.endDragResizing()     // Catch:{ all -> 0x0415 }
-            r1.mUseMTRenderer = r0     // Catch:{ all -> 0x0415 }
-        L_0x00a3:
-            r0 = 0
-            android.content.res.CompatibilityInfo$Translator r8 = r1.mTranslator     // Catch:{ all -> 0x0415 }
-            if (r8 == 0) goto L_0x00b8
-            android.view.Surface r8 = r1.mSurface     // Catch:{ all -> 0x0415 }
-            android.content.res.CompatibilityInfo$Translator r9 = r1.mTranslator     // Catch:{ all -> 0x0415 }
-            r8.setCompatibilityTranslator(r9)     // Catch:{ all -> 0x0415 }
-            r0 = 1
-            r3.backup()     // Catch:{ all -> 0x0415 }
-            android.content.res.CompatibilityInfo$Translator r8 = r1.mTranslator     // Catch:{ all -> 0x0415 }
-            r8.translateWindowLayout(r3)     // Catch:{ all -> 0x0415 }
-        L_0x00b8:
-            r8 = r0
-            boolean r0 = r7.supportsScreen()     // Catch:{ all -> 0x0415 }
-            if (r0 != 0) goto L_0x00c7
-            int r0 = r3.privateFlags     // Catch:{ all -> 0x0415 }
-            r0 = r0 | 128(0x80, float:1.794E-43)
-            r3.privateFlags = r0     // Catch:{ all -> 0x0415 }
-            r1.mLastInCompatMode = r6     // Catch:{ all -> 0x0415 }
-        L_0x00c7:
-            int r0 = r3.softInputMode     // Catch:{ all -> 0x0415 }
-            r1.mSoftInputMode = r0     // Catch:{ all -> 0x0415 }
-            r1.mWindowAttributesChanged = r6     // Catch:{ all -> 0x0415 }
-            r0 = -1
-            r1.mWindowAttributesChangesFlag = r0     // Catch:{ all -> 0x0415 }
-            android.view.View$AttachInfo r0 = r1.mAttachInfo     // Catch:{ all -> 0x0415 }
-            r0.mRootView = r2     // Catch:{ all -> 0x0415 }
-            android.view.View$AttachInfo r0 = r1.mAttachInfo     // Catch:{ all -> 0x0415 }
-            android.content.res.CompatibilityInfo$Translator r9 = r1.mTranslator     // Catch:{ all -> 0x0415 }
-            if (r9 == 0) goto L_0x00dc
-            r9 = r6
-            goto L_0x00dd
-        L_0x00dc:
-            r9 = r5
-        L_0x00dd:
-            r0.mScalingRequired = r9     // Catch:{ all -> 0x0415 }
-            android.view.View$AttachInfo r0 = r1.mAttachInfo     // Catch:{ all -> 0x0415 }
-            android.content.res.CompatibilityInfo$Translator r9 = r1.mTranslator     // Catch:{ all -> 0x0415 }
-            if (r9 != 0) goto L_0x00e8
-            r9 = 1065353216(0x3f800000, float:1.0)
-            goto L_0x00ec
-        L_0x00e8:
-            android.content.res.CompatibilityInfo$Translator r9 = r1.mTranslator     // Catch:{ all -> 0x0415 }
-            float r9 = r9.applicationScale     // Catch:{ all -> 0x0415 }
-        L_0x00ec:
-            r0.mApplicationScale = r9     // Catch:{ all -> 0x0415 }
-            if (r27 == 0) goto L_0x00f8
-            android.view.View$AttachInfo r0 = r1.mAttachInfo     // Catch:{ all -> 0x0415 }
-            android.os.IBinder r10 = r27.getApplicationWindowToken()     // Catch:{ all -> 0x0415 }
-            r0.mPanelParentWindowToken = r10     // Catch:{ all -> 0x0415 }
-        L_0x00f8:
-            r1.mAdded = r6     // Catch:{ all -> 0x0415 }
-            r24.requestLayout()     // Catch:{ all -> 0x0415 }
-            android.view.WindowManager$LayoutParams r0 = r1.mWindowAttributes     // Catch:{ all -> 0x0415 }
-            int r0 = r0.inputFeatures     // Catch:{ all -> 0x0415 }
-            r0 = r0 & 2
-            if (r0 != 0) goto L_0x010c
-            android.view.InputChannel r0 = new android.view.InputChannel     // Catch:{ all -> 0x0415 }
-            r0.<init>()     // Catch:{ all -> 0x0415 }
-            r1.mInputChannel = r0     // Catch:{ all -> 0x0415 }
-        L_0x010c:
-            android.view.WindowManager$LayoutParams r0 = r1.mWindowAttributes     // Catch:{ all -> 0x0415 }
-            int r0 = r0.privateFlags     // Catch:{ all -> 0x0415 }
-            r0 = r0 & 16384(0x4000, float:2.2959E-41)
-            if (r0 == 0) goto L_0x0116
-            r0 = r6
-            goto L_0x0117
-        L_0x0116:
-            r0 = r5
-        L_0x0117:
-            r1.mForceDecorViewVisibility = r0     // Catch:{ all -> 0x0415 }
-            android.view.WindowManager$LayoutParams r0 = r1.mWindowAttributes     // Catch:{ RemoteException -> 0x03e3, all -> 0x03df }
-            int r0 = r0.type     // Catch:{ RemoteException -> 0x03e3, all -> 0x03df }
-            r1.mOrigWindowType = r0     // Catch:{ RemoteException -> 0x03e3, all -> 0x03df }
-            android.view.View$AttachInfo r0 = r1.mAttachInfo     // Catch:{ RemoteException -> 0x03e3, all -> 0x03df }
-            r0.mRecomputeGlobalAttributes = r6     // Catch:{ RemoteException -> 0x03e3, all -> 0x03df }
-            r24.collectViewAttributes()     // Catch:{ RemoteException -> 0x03e3, all -> 0x03df }
-            android.view.IWindowSession r10 = r1.mWindowSession     // Catch:{ RemoteException -> 0x03e3, all -> 0x03df }
-            android.view.ViewRootImpl$W r11 = r1.mWindow     // Catch:{ RemoteException -> 0x03e3, all -> 0x03df }
-            int r12 = r1.mSeq     // Catch:{ RemoteException -> 0x03e3, all -> 0x03df }
-            android.view.WindowManager$LayoutParams r13 = r1.mWindowAttributes     // Catch:{ RemoteException -> 0x03e3, all -> 0x03df }
-            int r14 = r24.getHostVisibility()     // Catch:{ RemoteException -> 0x03e3, all -> 0x03df }
-            android.view.Display r0 = r1.mDisplay     // Catch:{ RemoteException -> 0x03e3, all -> 0x03df }
-            int r15 = r0.getDisplayId()     // Catch:{ RemoteException -> 0x03e3, all -> 0x03df }
-            android.graphics.Rect r0 = r1.mTmpFrame     // Catch:{ RemoteException -> 0x03e3, all -> 0x03df }
-            android.view.View$AttachInfo r6 = r1.mAttachInfo     // Catch:{ RemoteException -> 0x03e3, all -> 0x03df }
-            android.graphics.Rect r6 = r6.mContentInsets     // Catch:{ RemoteException -> 0x03e3, all -> 0x03df }
-            android.view.View$AttachInfo r4 = r1.mAttachInfo     // Catch:{ RemoteException -> 0x03e3, all -> 0x03df }
-            android.graphics.Rect r4 = r4.mStableInsets     // Catch:{ RemoteException -> 0x03e3, all -> 0x03df }
-            android.view.View$AttachInfo r5 = r1.mAttachInfo     // Catch:{ RemoteException -> 0x03e3, all -> 0x03df }
-            android.graphics.Rect r5 = r5.mOutsets     // Catch:{ RemoteException -> 0x03e3, all -> 0x03df }
-            r23 = r7
-            android.view.View$AttachInfo r7 = r1.mAttachInfo     // Catch:{ RemoteException -> 0x03dd }
-            android.view.DisplayCutout$ParcelableWrapper r7 = r7.mDisplayCutout     // Catch:{ RemoteException -> 0x03dd }
-            android.view.InputChannel r9 = r1.mInputChannel     // Catch:{ RemoteException -> 0x03dd }
-            android.view.InsetsState r2 = r1.mTempInsets     // Catch:{ RemoteException -> 0x03d9, all -> 0x03d5 }
-            r16 = r0
-            r17 = r6
-            r18 = r4
-            r19 = r5
-            r20 = r7
-            r21 = r9
-            r22 = r2
-            int r0 = r10.addToDisplay(r11, r12, r13, r14, r15, r16, r17, r18, r19, r20, r21, r22)     // Catch:{ RemoteException -> 0x03d9, all -> 0x03d5 }
-            android.graphics.Rect r2 = r1.mTmpFrame     // Catch:{ RemoteException -> 0x03d9, all -> 0x03d5 }
-            r1.setFrame(r2)     // Catch:{ RemoteException -> 0x03d9, all -> 0x03d5 }
-            if (r8 == 0) goto L_0x0172
-            r3.restore()     // Catch:{ all -> 0x016d }
-            goto L_0x0172
-        L_0x016d:
-            r0 = move-exception
-            r2 = r25
-            goto L_0x0413
-        L_0x0172:
-            android.content.res.CompatibilityInfo$Translator r2 = r1.mTranslator     // Catch:{ all -> 0x016d }
-            if (r2 == 0) goto L_0x0180
-            android.content.res.CompatibilityInfo$Translator r2 = r1.mTranslator     // Catch:{ all -> 0x016d }
-            android.view.View$AttachInfo r4 = r1.mAttachInfo     // Catch:{ all -> 0x016d }
-            android.graphics.Rect r4 = r4.mContentInsets     // Catch:{ all -> 0x016d }
-            r2.translateRectInScreenToAppWindow(r4)     // Catch:{ all -> 0x016d }
-        L_0x0180:
-            android.graphics.Rect r2 = r1.mPendingOverscanInsets     // Catch:{ all -> 0x016d }
-            r4 = 0
-            r2.set(r4, r4, r4, r4)     // Catch:{ all -> 0x016d }
-            android.graphics.Rect r2 = r1.mPendingContentInsets     // Catch:{ all -> 0x016d }
-            android.view.View$AttachInfo r4 = r1.mAttachInfo     // Catch:{ all -> 0x016d }
-            android.graphics.Rect r4 = r4.mContentInsets     // Catch:{ all -> 0x016d }
-            r2.set(r4)     // Catch:{ all -> 0x016d }
-            android.graphics.Rect r2 = r1.mPendingStableInsets     // Catch:{ all -> 0x016d }
-            android.view.View$AttachInfo r4 = r1.mAttachInfo     // Catch:{ all -> 0x016d }
-            android.graphics.Rect r4 = r4.mStableInsets     // Catch:{ all -> 0x016d }
-            r2.set(r4)     // Catch:{ all -> 0x016d }
-            android.view.DisplayCutout$ParcelableWrapper r2 = r1.mPendingDisplayCutout     // Catch:{ all -> 0x016d }
-            android.view.View$AttachInfo r4 = r1.mAttachInfo     // Catch:{ all -> 0x016d }
-            android.view.DisplayCutout$ParcelableWrapper r4 = r4.mDisplayCutout     // Catch:{ all -> 0x016d }
-            r2.set((android.view.DisplayCutout.ParcelableWrapper) r4)     // Catch:{ all -> 0x016d }
-            android.graphics.Rect r2 = r1.mPendingVisibleInsets     // Catch:{ all -> 0x016d }
-            r4 = 0
-            r2.set(r4, r4, r4, r4)     // Catch:{ all -> 0x016d }
-            android.view.View$AttachInfo r2 = r1.mAttachInfo     // Catch:{ all -> 0x016d }
-            r4 = r0 & 4
-            if (r4 == 0) goto L_0x01af
-            r4 = 1
-            goto L_0x01b0
-        L_0x01af:
-            r4 = 0
-        L_0x01b0:
-            r2.mAlwaysConsumeSystemBars = r4     // Catch:{ all -> 0x016d }
-            android.view.View$AttachInfo r2 = r1.mAttachInfo     // Catch:{ all -> 0x016d }
-            boolean r2 = r2.mAlwaysConsumeSystemBars     // Catch:{ all -> 0x016d }
-            r1.mPendingAlwaysConsumeSystemBars = r2     // Catch:{ all -> 0x016d }
-            android.view.InsetsController r2 = r1.mInsetsController     // Catch:{ all -> 0x016d }
-            android.view.InsetsState r4 = r1.mTempInsets     // Catch:{ all -> 0x016d }
-            r2.onStateChanged(r4)     // Catch:{ all -> 0x016d }
-            if (r0 >= 0) goto L_0x0301
-            android.view.View$AttachInfo r2 = r1.mAttachInfo     // Catch:{ all -> 0x016d }
-            r4 = 0
-            r2.mRootView = r4     // Catch:{ all -> 0x016d }
-            r2 = 0
-            r1.mAdded = r2     // Catch:{ all -> 0x016d }
-            android.view.FallbackEventHandler r2 = r1.mFallbackEventHandler     // Catch:{ all -> 0x016d }
-            r2.setView(r4)     // Catch:{ all -> 0x016d }
-            r24.unscheduleTraversals()     // Catch:{ all -> 0x016d }
-            r1.setAccessibilityFocus(r4, r4)     // Catch:{ all -> 0x016d }
-            switch(r0) {
-                case -10: goto L_0x02c2;
-                case -9: goto L_0x02a4;
-                case -8: goto L_0x027f;
-                case -7: goto L_0x0255;
-                case -6: goto L_0x0253;
-                case -5: goto L_0x0235;
-                case -4: goto L_0x0217;
-                case -3: goto L_0x01f9;
-                case -2: goto L_0x01db;
-                case -1: goto L_0x01db;
-                default: goto L_0x01d7;
-            }     // Catch:{ all -> 0x016d }
-        L_0x01d7:
-            java.lang.RuntimeException r2 = new java.lang.RuntimeException     // Catch:{ all -> 0x016d }
-            goto L_0x02ec
-        L_0x01db:
-            android.view.WindowManager$BadTokenException r2 = new android.view.WindowManager$BadTokenException     // Catch:{ all -> 0x016d }
-            java.lang.StringBuilder r4 = new java.lang.StringBuilder     // Catch:{ all -> 0x016d }
-            r4.<init>()     // Catch:{ all -> 0x016d }
-            java.lang.String r5 = "Unable to add window -- token "
-            r4.append(r5)     // Catch:{ all -> 0x016d }
-            android.os.IBinder r5 = r3.token     // Catch:{ all -> 0x016d }
-            r4.append(r5)     // Catch:{ all -> 0x016d }
-            java.lang.String r5 = " is not valid; is your activity running?"
-            r4.append(r5)     // Catch:{ all -> 0x016d }
-            java.lang.String r4 = r4.toString()     // Catch:{ all -> 0x016d }
-            r2.<init>(r4)     // Catch:{ all -> 0x016d }
-            throw r2     // Catch:{ all -> 0x016d }
-        L_0x01f9:
-            android.view.WindowManager$BadTokenException r2 = new android.view.WindowManager$BadTokenException     // Catch:{ all -> 0x016d }
-            java.lang.StringBuilder r4 = new java.lang.StringBuilder     // Catch:{ all -> 0x016d }
-            r4.<init>()     // Catch:{ all -> 0x016d }
-            java.lang.String r5 = "Unable to add window -- token "
-            r4.append(r5)     // Catch:{ all -> 0x016d }
-            android.os.IBinder r5 = r3.token     // Catch:{ all -> 0x016d }
-            r4.append(r5)     // Catch:{ all -> 0x016d }
-            java.lang.String r5 = " is not for an application"
-            r4.append(r5)     // Catch:{ all -> 0x016d }
-            java.lang.String r4 = r4.toString()     // Catch:{ all -> 0x016d }
-            r2.<init>(r4)     // Catch:{ all -> 0x016d }
-            throw r2     // Catch:{ all -> 0x016d }
-        L_0x0217:
-            android.view.WindowManager$BadTokenException r2 = new android.view.WindowManager$BadTokenException     // Catch:{ all -> 0x016d }
-            java.lang.StringBuilder r4 = new java.lang.StringBuilder     // Catch:{ all -> 0x016d }
-            r4.<init>()     // Catch:{ all -> 0x016d }
-            java.lang.String r5 = "Unable to add window -- app for token "
-            r4.append(r5)     // Catch:{ all -> 0x016d }
-            android.os.IBinder r5 = r3.token     // Catch:{ all -> 0x016d }
-            r4.append(r5)     // Catch:{ all -> 0x016d }
-            java.lang.String r5 = " is exiting"
-            r4.append(r5)     // Catch:{ all -> 0x016d }
-            java.lang.String r4 = r4.toString()     // Catch:{ all -> 0x016d }
-            r2.<init>(r4)     // Catch:{ all -> 0x016d }
-            throw r2     // Catch:{ all -> 0x016d }
-        L_0x0235:
-            android.view.WindowManager$BadTokenException r2 = new android.view.WindowManager$BadTokenException     // Catch:{ all -> 0x016d }
-            java.lang.StringBuilder r4 = new java.lang.StringBuilder     // Catch:{ all -> 0x016d }
-            r4.<init>()     // Catch:{ all -> 0x016d }
-            java.lang.String r5 = "Unable to add window -- window "
-            r4.append(r5)     // Catch:{ all -> 0x016d }
-            android.view.ViewRootImpl$W r5 = r1.mWindow     // Catch:{ all -> 0x016d }
-            r4.append(r5)     // Catch:{ all -> 0x016d }
-            java.lang.String r5 = " has already been added"
-            r4.append(r5)     // Catch:{ all -> 0x016d }
-            java.lang.String r4 = r4.toString()     // Catch:{ all -> 0x016d }
-            r2.<init>(r4)     // Catch:{ all -> 0x016d }
-            throw r2     // Catch:{ all -> 0x016d }
-        L_0x0253:
-            monitor-exit(r24)     // Catch:{ all -> 0x016d }
-            return
-        L_0x0255:
-            android.view.WindowManager$BadTokenException r2 = new android.view.WindowManager$BadTokenException     // Catch:{ all -> 0x016d }
-            java.lang.StringBuilder r4 = new java.lang.StringBuilder     // Catch:{ all -> 0x016d }
-            r4.<init>()     // Catch:{ all -> 0x016d }
-            java.lang.String r5 = "Unable to add window "
-            r4.append(r5)     // Catch:{ all -> 0x016d }
-            android.view.ViewRootImpl$W r5 = r1.mWindow     // Catch:{ all -> 0x016d }
-            r4.append(r5)     // Catch:{ all -> 0x016d }
-            java.lang.String r5 = " -- another window of type "
-            r4.append(r5)     // Catch:{ all -> 0x016d }
-            android.view.WindowManager$LayoutParams r5 = r1.mWindowAttributes     // Catch:{ all -> 0x016d }
-            int r5 = r5.type     // Catch:{ all -> 0x016d }
-            r4.append(r5)     // Catch:{ all -> 0x016d }
-            java.lang.String r5 = " already exists"
-            r4.append(r5)     // Catch:{ all -> 0x016d }
-            java.lang.String r4 = r4.toString()     // Catch:{ all -> 0x016d }
-            r2.<init>(r4)     // Catch:{ all -> 0x016d }
-            throw r2     // Catch:{ all -> 0x016d }
-        L_0x027f:
-            android.view.WindowManager$BadTokenException r2 = new android.view.WindowManager$BadTokenException     // Catch:{ all -> 0x016d }
-            java.lang.StringBuilder r4 = new java.lang.StringBuilder     // Catch:{ all -> 0x016d }
-            r4.<init>()     // Catch:{ all -> 0x016d }
-            java.lang.String r5 = "Unable to add window "
-            r4.append(r5)     // Catch:{ all -> 0x016d }
-            android.view.ViewRootImpl$W r5 = r1.mWindow     // Catch:{ all -> 0x016d }
-            r4.append(r5)     // Catch:{ all -> 0x016d }
-            java.lang.String r5 = " -- permission denied for window type "
-            r4.append(r5)     // Catch:{ all -> 0x016d }
-            android.view.WindowManager$LayoutParams r5 = r1.mWindowAttributes     // Catch:{ all -> 0x016d }
-            int r5 = r5.type     // Catch:{ all -> 0x016d }
-            r4.append(r5)     // Catch:{ all -> 0x016d }
-            java.lang.String r4 = r4.toString()     // Catch:{ all -> 0x016d }
-            r2.<init>(r4)     // Catch:{ all -> 0x016d }
-            throw r2     // Catch:{ all -> 0x016d }
-        L_0x02a4:
-            android.view.WindowManager$InvalidDisplayException r2 = new android.view.WindowManager$InvalidDisplayException     // Catch:{ all -> 0x016d }
-            java.lang.StringBuilder r4 = new java.lang.StringBuilder     // Catch:{ all -> 0x016d }
-            r4.<init>()     // Catch:{ all -> 0x016d }
-            java.lang.String r5 = "Unable to add window "
-            r4.append(r5)     // Catch:{ all -> 0x016d }
-            android.view.ViewRootImpl$W r5 = r1.mWindow     // Catch:{ all -> 0x016d }
-            r4.append(r5)     // Catch:{ all -> 0x016d }
-            java.lang.String r5 = " -- the specified display can not be found"
-            r4.append(r5)     // Catch:{ all -> 0x016d }
-            java.lang.String r4 = r4.toString()     // Catch:{ all -> 0x016d }
-            r2.<init>(r4)     // Catch:{ all -> 0x016d }
-            throw r2     // Catch:{ all -> 0x016d }
-        L_0x02c2:
-            android.view.WindowManager$InvalidDisplayException r2 = new android.view.WindowManager$InvalidDisplayException     // Catch:{ all -> 0x016d }
-            java.lang.StringBuilder r4 = new java.lang.StringBuilder     // Catch:{ all -> 0x016d }
-            r4.<init>()     // Catch:{ all -> 0x016d }
-            java.lang.String r5 = "Unable to add window "
-            r4.append(r5)     // Catch:{ all -> 0x016d }
-            android.view.ViewRootImpl$W r5 = r1.mWindow     // Catch:{ all -> 0x016d }
-            r4.append(r5)     // Catch:{ all -> 0x016d }
-            java.lang.String r5 = " -- the specified window type "
-            r4.append(r5)     // Catch:{ all -> 0x016d }
-            android.view.WindowManager$LayoutParams r5 = r1.mWindowAttributes     // Catch:{ all -> 0x016d }
-            int r5 = r5.type     // Catch:{ all -> 0x016d }
-            r4.append(r5)     // Catch:{ all -> 0x016d }
-            java.lang.String r5 = " is not valid"
-            r4.append(r5)     // Catch:{ all -> 0x016d }
-            java.lang.String r4 = r4.toString()     // Catch:{ all -> 0x016d }
-            r2.<init>(r4)     // Catch:{ all -> 0x016d }
-            throw r2     // Catch:{ all -> 0x016d }
-        L_0x02ec:
-            java.lang.StringBuilder r4 = new java.lang.StringBuilder     // Catch:{ all -> 0x016d }
-            r4.<init>()     // Catch:{ all -> 0x016d }
-            java.lang.String r5 = "Unable to add window -- unknown error code "
-            r4.append(r5)     // Catch:{ all -> 0x016d }
-            r4.append(r0)     // Catch:{ all -> 0x016d }
-            java.lang.String r4 = r4.toString()     // Catch:{ all -> 0x016d }
-            r2.<init>(r4)     // Catch:{ all -> 0x016d }
-            throw r2     // Catch:{ all -> 0x016d }
-        L_0x0301:
-            r2 = r25
-            boolean r4 = r2 instanceof com.android.internal.view.RootViewSurfaceTaker     // Catch:{ all -> 0x0415 }
-            if (r4 == 0) goto L_0x0310
-            r4 = r2
-            com.android.internal.view.RootViewSurfaceTaker r4 = (com.android.internal.view.RootViewSurfaceTaker) r4     // Catch:{ all -> 0x0415 }
-            android.view.InputQueue$Callback r4 = r4.willYouTakeTheInputQueue()     // Catch:{ all -> 0x0415 }
-            r1.mInputQueueCallback = r4     // Catch:{ all -> 0x0415 }
-        L_0x0310:
-            android.view.InputChannel r4 = r1.mInputChannel     // Catch:{ all -> 0x0415 }
-            if (r4 == 0) goto L_0x0333
-            android.view.InputQueue$Callback r4 = r1.mInputQueueCallback     // Catch:{ all -> 0x0415 }
-            if (r4 == 0) goto L_0x0326
-            android.view.InputQueue r4 = new android.view.InputQueue     // Catch:{ all -> 0x0415 }
-            r4.<init>()     // Catch:{ all -> 0x0415 }
-            r1.mInputQueue = r4     // Catch:{ all -> 0x0415 }
-            android.view.InputQueue$Callback r4 = r1.mInputQueueCallback     // Catch:{ all -> 0x0415 }
-            android.view.InputQueue r5 = r1.mInputQueue     // Catch:{ all -> 0x0415 }
-            r4.onInputQueueCreated(r5)     // Catch:{ all -> 0x0415 }
-        L_0x0326:
-            android.view.ViewRootImpl$WindowInputEventReceiver r4 = new android.view.ViewRootImpl$WindowInputEventReceiver     // Catch:{ all -> 0x0415 }
-            android.view.InputChannel r5 = r1.mInputChannel     // Catch:{ all -> 0x0415 }
-            android.os.Looper r6 = android.os.Looper.myLooper()     // Catch:{ all -> 0x0415 }
-            r4.<init>(r5, r6)     // Catch:{ all -> 0x0415 }
-            r1.mInputEventReceiver = r4     // Catch:{ all -> 0x0415 }
-        L_0x0333:
-            r2.assignParent(r1)     // Catch:{ all -> 0x0415 }
-            r4 = r0 & 1
-            if (r4 == 0) goto L_0x033c
-            r4 = 1
-            goto L_0x033d
-        L_0x033c:
-            r4 = 0
-        L_0x033d:
-            r1.mAddedTouchMode = r4     // Catch:{ all -> 0x0415 }
-            r4 = r0 & 2
-            if (r4 == 0) goto L_0x0345
-            r4 = 1
-            goto L_0x0346
-        L_0x0345:
-            r4 = 0
-        L_0x0346:
-            r1.mAppVisible = r4     // Catch:{ all -> 0x0415 }
-            android.view.accessibility.AccessibilityManager r4 = r1.mAccessibilityManager     // Catch:{ all -> 0x0415 }
-            boolean r4 = r4.isEnabled()     // Catch:{ all -> 0x0415 }
-            if (r4 == 0) goto L_0x0355
-            android.view.ViewRootImpl$AccessibilityInteractionConnectionManager r4 = r1.mAccessibilityInteractionConnectionManager     // Catch:{ all -> 0x0415 }
-            r4.ensureConnection()     // Catch:{ all -> 0x0415 }
-        L_0x0355:
-            int r4 = r25.getImportantForAccessibility()     // Catch:{ all -> 0x0415 }
-            if (r4 != 0) goto L_0x035f
-            r4 = 1
-            r2.setImportantForAccessibility(r4)     // Catch:{ all -> 0x0415 }
-        L_0x035f:
-            java.lang.CharSequence r4 = r3.getTitle()     // Catch:{ all -> 0x0415 }
-            android.view.ViewRootImpl$SyntheticInputStage r5 = new android.view.ViewRootImpl$SyntheticInputStage     // Catch:{ all -> 0x0415 }
-            r5.<init>()     // Catch:{ all -> 0x0415 }
-            r1.mSyntheticInputStage = r5     // Catch:{ all -> 0x0415 }
-            android.view.ViewRootImpl$ViewPostImeInputStage r5 = new android.view.ViewRootImpl$ViewPostImeInputStage     // Catch:{ all -> 0x0415 }
-            android.view.ViewRootImpl$InputStage r6 = r1.mSyntheticInputStage     // Catch:{ all -> 0x0415 }
-            r5.<init>(r6)     // Catch:{ all -> 0x0415 }
-            android.view.ViewRootImpl$NativePostImeInputStage r6 = new android.view.ViewRootImpl$NativePostImeInputStage     // Catch:{ all -> 0x0415 }
-            java.lang.StringBuilder r7 = new java.lang.StringBuilder     // Catch:{ all -> 0x0415 }
-            r7.<init>()     // Catch:{ all -> 0x0415 }
-            java.lang.String r9 = "aq:native-post-ime:"
-            r7.append(r9)     // Catch:{ all -> 0x0415 }
-            r7.append(r4)     // Catch:{ all -> 0x0415 }
-            java.lang.String r7 = r7.toString()     // Catch:{ all -> 0x0415 }
-            r6.<init>(r5, r7)     // Catch:{ all -> 0x0415 }
-            android.view.ViewRootImpl$EarlyPostImeInputStage r7 = new android.view.ViewRootImpl$EarlyPostImeInputStage     // Catch:{ all -> 0x0415 }
-            r7.<init>(r6)     // Catch:{ all -> 0x0415 }
-            android.view.ViewRootImpl$ImeInputStage r9 = new android.view.ViewRootImpl$ImeInputStage     // Catch:{ all -> 0x0415 }
-            java.lang.StringBuilder r10 = new java.lang.StringBuilder     // Catch:{ all -> 0x0415 }
-            r10.<init>()     // Catch:{ all -> 0x0415 }
-            java.lang.String r11 = "aq:ime:"
-            r10.append(r11)     // Catch:{ all -> 0x0415 }
-            r10.append(r4)     // Catch:{ all -> 0x0415 }
-            java.lang.String r10 = r10.toString()     // Catch:{ all -> 0x0415 }
-            r9.<init>(r7, r10)     // Catch:{ all -> 0x0415 }
-            android.view.ViewRootImpl$ViewPreImeInputStage r10 = new android.view.ViewRootImpl$ViewPreImeInputStage     // Catch:{ all -> 0x0415 }
-            r10.<init>(r9)     // Catch:{ all -> 0x0415 }
-            android.view.ViewRootImpl$NativePreImeInputStage r11 = new android.view.ViewRootImpl$NativePreImeInputStage     // Catch:{ all -> 0x0415 }
-            java.lang.StringBuilder r12 = new java.lang.StringBuilder     // Catch:{ all -> 0x0415 }
-            r12.<init>()     // Catch:{ all -> 0x0415 }
-            java.lang.String r13 = "aq:native-pre-ime:"
-            r12.append(r13)     // Catch:{ all -> 0x0415 }
-            r12.append(r4)     // Catch:{ all -> 0x0415 }
-            java.lang.String r12 = r12.toString()     // Catch:{ all -> 0x0415 }
-            r11.<init>(r10, r12)     // Catch:{ all -> 0x0415 }
-            r1.mFirstInputStage = r11     // Catch:{ all -> 0x0415 }
-            r1.mFirstPostImeInputStage = r7     // Catch:{ all -> 0x0415 }
-            java.lang.StringBuilder r12 = new java.lang.StringBuilder     // Catch:{ all -> 0x0415 }
-            r12.<init>()     // Catch:{ all -> 0x0415 }
-            java.lang.String r13 = "aq:pending:"
-            r12.append(r13)     // Catch:{ all -> 0x0415 }
-            r12.append(r4)     // Catch:{ all -> 0x0415 }
-            java.lang.String r12 = r12.toString()     // Catch:{ all -> 0x0415 }
-            r1.mPendingInputEventQueueLengthCounterName = r12     // Catch:{ all -> 0x0415 }
-            goto L_0x040e
-        L_0x03d5:
-            r0 = move-exception
-            r2 = r25
-            goto L_0x0406
-        L_0x03d9:
-            r0 = move-exception
-            r2 = r25
-            goto L_0x03e6
-        L_0x03dd:
-            r0 = move-exception
-            goto L_0x03e6
-        L_0x03df:
-            r0 = move-exception
-            r23 = r7
-            goto L_0x0406
-        L_0x03e3:
-            r0 = move-exception
-            r23 = r7
-        L_0x03e6:
-            r4 = 0
-            r1.mAdded = r4     // Catch:{ all -> 0x0405 }
-            r4 = 0
-            r1.mView = r4     // Catch:{ all -> 0x0405 }
-            android.view.View$AttachInfo r5 = r1.mAttachInfo     // Catch:{ all -> 0x0405 }
-            r5.mRootView = r4     // Catch:{ all -> 0x0405 }
-            r1.mInputChannel = r4     // Catch:{ all -> 0x0405 }
-            android.view.FallbackEventHandler r5 = r1.mFallbackEventHandler     // Catch:{ all -> 0x0405 }
-            r5.setView(r4)     // Catch:{ all -> 0x0405 }
-            r24.unscheduleTraversals()     // Catch:{ all -> 0x0405 }
-            r1.setAccessibilityFocus(r4, r4)     // Catch:{ all -> 0x0405 }
-            java.lang.RuntimeException r4 = new java.lang.RuntimeException     // Catch:{ all -> 0x0405 }
-            java.lang.String r5 = "Adding window failed"
-            r4.<init>(r5, r0)     // Catch:{ all -> 0x0405 }
-            throw r4     // Catch:{ all -> 0x0405 }
-        L_0x0405:
-            r0 = move-exception
-        L_0x0406:
-            if (r8 == 0) goto L_0x040b
-            r3.restore()     // Catch:{ all -> 0x0415 }
-        L_0x040b:
-            throw r0     // Catch:{ all -> 0x0415 }
-        L_0x040c:
-            r3 = r26
-        L_0x040e:
-            monitor-exit(r24)     // Catch:{ all -> 0x0415 }
-            return
-        L_0x0410:
-            r0 = move-exception
-            r3 = r26
-        L_0x0413:
-            monitor-exit(r24)     // Catch:{ all -> 0x0415 }
-            throw r0
-        L_0x0415:
-            r0 = move-exception
-            goto L_0x0413
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.view.ViewRootImpl.setView(android.view.View, android.view.WindowManager$LayoutParams, android.view.View):void");
+    public void setView(View view, WindowManager.LayoutParams attrs, View panelParentView) {
+        synchronized (this) {
+            try {
+                try {
+                    if (this.mView == null) {
+                        this.mView = view;
+                        this.mAttachInfo.mDisplayState = this.mDisplay.getState();
+                        this.mDisplayManager.registerDisplayListener(this.mDisplayListener, this.mHandler);
+                        this.mViewLayoutDirectionInitial = this.mView.getRawLayoutDirection();
+                        this.mFallbackEventHandler.setView(view);
+                        this.mWindowAttributes.copyFrom(attrs);
+                        if (this.mWindowAttributes.packageName == null) {
+                            this.mWindowAttributes.packageName = this.mBasePackageName;
+                        }
+                        WindowManager.LayoutParams attrs2 = this.mWindowAttributes;
+                        setTag();
+                        this.mClientWindowLayoutFlags = attrs2.flags;
+                        setAccessibilityFocus(null, null);
+                        if (view instanceof RootViewSurfaceTaker) {
+                            this.mSurfaceHolderCallback = ((RootViewSurfaceTaker) view).willYouTakeTheSurface();
+                            if (this.mSurfaceHolderCallback != null) {
+                                this.mSurfaceHolder = new TakenSurfaceHolder();
+                                this.mSurfaceHolder.setFormat(0);
+                                this.mSurfaceHolder.addCallback(this.mSurfaceHolderCallback);
+                            }
+                        }
+                        if (!attrs2.hasManualSurfaceInsets) {
+                            attrs2.setSurfaceInsets(view, false, true);
+                        }
+                        CompatibilityInfo compatibilityInfo = this.mDisplay.getDisplayAdjustments().getCompatibilityInfo();
+                        this.mTranslator = compatibilityInfo.getTranslator();
+                        if (this.mSurfaceHolder == null) {
+                            enableHardwareAcceleration(attrs2);
+                            boolean useMTRenderer = this.mAttachInfo.mThreadedRenderer != null;
+                            if (this.mUseMTRenderer != useMTRenderer) {
+                                endDragResizing();
+                                this.mUseMTRenderer = useMTRenderer;
+                            }
+                        }
+                        boolean restore = false;
+                        if (this.mTranslator != null) {
+                            this.mSurface.setCompatibilityTranslator(this.mTranslator);
+                            restore = true;
+                            attrs2.backup();
+                            this.mTranslator.translateWindowLayout(attrs2);
+                        }
+                        boolean restore2 = restore;
+                        boolean restore3 = compatibilityInfo.supportsScreen();
+                        if (!restore3) {
+                            attrs2.privateFlags |= 128;
+                            this.mLastInCompatMode = true;
+                        }
+                        this.mSoftInputMode = attrs2.softInputMode;
+                        this.mWindowAttributesChanged = true;
+                        this.mWindowAttributesChangesFlag = -1;
+                        this.mAttachInfo.mRootView = view;
+                        this.mAttachInfo.mScalingRequired = this.mTranslator != null;
+                        this.mAttachInfo.mApplicationScale = this.mTranslator == null ? 1.0f : this.mTranslator.applicationScale;
+                        if (panelParentView != null) {
+                            this.mAttachInfo.mPanelParentWindowToken = panelParentView.getApplicationWindowToken();
+                        }
+                        this.mAdded = true;
+                        requestLayout();
+                        if ((this.mWindowAttributes.inputFeatures & 2) == 0) {
+                            this.mInputChannel = new InputChannel();
+                        }
+                        this.mForceDecorViewVisibility = (this.mWindowAttributes.privateFlags & 16384) != 0;
+                        try {
+                            this.mOrigWindowType = this.mWindowAttributes.type;
+                            this.mAttachInfo.mRecomputeGlobalAttributes = true;
+                            collectViewAttributes();
+                            try {
+                                try {
+                                    try {
+                                        int res = this.mWindowSession.addToDisplay(this.mWindow, this.mSeq, this.mWindowAttributes, getHostVisibility(), this.mDisplay.getDisplayId(), this.mTmpFrame, this.mAttachInfo.mContentInsets, this.mAttachInfo.mStableInsets, this.mAttachInfo.mOutsets, this.mAttachInfo.mDisplayCutout, this.mInputChannel, this.mTempInsets);
+                                        setFrame(this.mTmpFrame);
+                                        if (restore2) {
+                                            try {
+                                                attrs2.restore();
+                                            } catch (Throwable th) {
+                                                th = th;
+                                                throw th;
+                                            }
+                                        }
+                                        if (this.mTranslator != null) {
+                                            this.mTranslator.translateRectInScreenToAppWindow(this.mAttachInfo.mContentInsets);
+                                        }
+                                        this.mPendingOverscanInsets.set(0, 0, 0, 0);
+                                        this.mPendingContentInsets.set(this.mAttachInfo.mContentInsets);
+                                        this.mPendingStableInsets.set(this.mAttachInfo.mStableInsets);
+                                        this.mPendingDisplayCutout.set(this.mAttachInfo.mDisplayCutout);
+                                        this.mPendingVisibleInsets.set(0, 0, 0, 0);
+                                        this.mAttachInfo.mAlwaysConsumeSystemBars = (res & 4) != 0;
+                                        this.mPendingAlwaysConsumeSystemBars = this.mAttachInfo.mAlwaysConsumeSystemBars;
+                                        this.mInsetsController.onStateChanged(this.mTempInsets);
+                                        if (res < 0) {
+                                            this.mAttachInfo.mRootView = null;
+                                            this.mAdded = false;
+                                            this.mFallbackEventHandler.setView(null);
+                                            unscheduleTraversals();
+                                            setAccessibilityFocus(null, null);
+                                            switch (res) {
+                                                case -10:
+                                                    throw new WindowManager.InvalidDisplayException("Unable to add window " + this.mWindow + " -- the specified window type " + this.mWindowAttributes.type + " is not valid");
+                                                case -9:
+                                                    throw new WindowManager.InvalidDisplayException("Unable to add window " + this.mWindow + " -- the specified display can not be found");
+                                                case -8:
+                                                    throw new WindowManager.BadTokenException("Unable to add window " + this.mWindow + " -- permission denied for window type " + this.mWindowAttributes.type);
+                                                case -7:
+                                                    throw new WindowManager.BadTokenException("Unable to add window " + this.mWindow + " -- another window of type " + this.mWindowAttributes.type + " already exists");
+                                                case -6:
+                                                    return;
+                                                case -5:
+                                                    throw new WindowManager.BadTokenException("Unable to add window -- window " + this.mWindow + " has already been added");
+                                                case -4:
+                                                    throw new WindowManager.BadTokenException("Unable to add window -- app for token " + attrs2.token + " is exiting");
+                                                case -3:
+                                                    throw new WindowManager.BadTokenException("Unable to add window -- token " + attrs2.token + " is not for an application");
+                                                case -2:
+                                                case -1:
+                                                    throw new WindowManager.BadTokenException("Unable to add window -- token " + attrs2.token + " is not valid; is your activity running?");
+                                                default:
+                                                    throw new RuntimeException("Unable to add window -- unknown error code " + res);
+                                            }
+                                        }
+                                        if (view instanceof RootViewSurfaceTaker) {
+                                            this.mInputQueueCallback = ((RootViewSurfaceTaker) view).willYouTakeTheInputQueue();
+                                        }
+                                        if (this.mInputChannel != null) {
+                                            if (this.mInputQueueCallback != null) {
+                                                this.mInputQueue = new InputQueue();
+                                                this.mInputQueueCallback.onInputQueueCreated(this.mInputQueue);
+                                            }
+                                            this.mInputEventReceiver = new WindowInputEventReceiver(this.mInputChannel, Looper.myLooper());
+                                        }
+                                        view.assignParent(this);
+                                        this.mAddedTouchMode = (res & 1) != 0;
+                                        this.mAppVisible = (res & 2) != 0;
+                                        if (this.mAccessibilityManager.isEnabled()) {
+                                            this.mAccessibilityInteractionConnectionManager.ensureConnection();
+                                        }
+                                        if (view.getImportantForAccessibility() == 0) {
+                                            view.setImportantForAccessibility(1);
+                                        }
+                                        CharSequence counterSuffix = attrs2.getTitle();
+                                        this.mSyntheticInputStage = new SyntheticInputStage();
+                                        InputStage viewPostImeStage = new ViewPostImeInputStage(this.mSyntheticInputStage);
+                                        InputStage nativePostImeStage = new NativePostImeInputStage(viewPostImeStage, "aq:native-post-ime:" + ((Object) counterSuffix));
+                                        InputStage earlyPostImeStage = new EarlyPostImeInputStage(nativePostImeStage);
+                                        InputStage imeStage = new ImeInputStage(earlyPostImeStage, "aq:ime:" + ((Object) counterSuffix));
+                                        InputStage viewPreImeStage = new ViewPreImeInputStage(imeStage);
+                                        InputStage nativePreImeStage = new NativePreImeInputStage(viewPreImeStage, "aq:native-pre-ime:" + ((Object) counterSuffix));
+                                        this.mFirstInputStage = nativePreImeStage;
+                                        this.mFirstPostImeInputStage = earlyPostImeStage;
+                                        this.mPendingInputEventQueueLengthCounterName = "aq:pending:" + ((Object) counterSuffix);
+                                    } catch (RemoteException e) {
+                                        e = e;
+                                        this.mAdded = false;
+                                        this.mView = null;
+                                        this.mAttachInfo.mRootView = null;
+                                        this.mInputChannel = null;
+                                        this.mFallbackEventHandler.setView(null);
+                                        unscheduleTraversals();
+                                        setAccessibilityFocus(null, null);
+                                        throw new RuntimeException("Adding window failed", e);
+                                    } catch (Throwable th2) {
+                                        e = th2;
+                                        if (restore2) {
+                                            attrs2.restore();
+                                        }
+                                        throw e;
+                                    }
+                                } catch (Throwable th3) {
+                                    e = th3;
+                                }
+                            } catch (RemoteException e2) {
+                                e = e2;
+                            }
+                        } catch (RemoteException e3) {
+                            e = e3;
+                        } catch (Throwable th4) {
+                            e = th4;
+                        }
+                    }
+                } catch (Throwable th5) {
+                    th = th5;
+                }
+            } catch (Throwable th6) {
+                th = th6;
+            }
+        }
     }
 
     private void setTag() {
@@ -1165,7 +760,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public boolean isInLocalFocusMode() {
         return (this.mWindowAttributes.flags & 268435456) != 0;
     }
@@ -1191,22 +786,21 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         return this.mHeight;
     }
 
-    /* access modifiers changed from: package-private */
-    public void destroyHardwareResources() {
+    void destroyHardwareResources() {
         ThreadedRenderer renderer = this.mAttachInfo.mThreadedRenderer;
-        if (renderer == null) {
-            return;
+        if (renderer != null) {
+            if (Looper.myLooper() != this.mAttachInfo.mHandler.getLooper()) {
+                this.mAttachInfo.mHandler.postAtFrontOfQueue(new Runnable() { // from class: android.view.-$$Lambda$dj1hfDQd0iEp_uBDBPEUMMYJJwk
+                    @Override // java.lang.Runnable
+                    public final void run() {
+                        ViewRootImpl.this.destroyHardwareResources();
+                    }
+                });
+                return;
+            }
+            renderer.destroyHardwareResources(this.mView);
+            renderer.destroy();
         }
-        if (Looper.myLooper() != this.mAttachInfo.mHandler.getLooper()) {
-            this.mAttachInfo.mHandler.postAtFrontOfQueue(new Runnable() {
-                public final void run() {
-                    ViewRootImpl.this.destroyHardwareResources();
-                }
-            });
-            return;
-        }
-        renderer.destroyHardwareResources(this.mView);
-        renderer.destroy();
     }
 
     @UnsupportedAppUsage
@@ -1238,9 +832,10 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         }
     }
 
-    public void registerRtFrameCallback(HardwareRenderer.FrameDrawingCallback callback) {
+    public void registerRtFrameCallback(final HardwareRenderer.FrameDrawingCallback callback) {
         if (this.mAttachInfo.mThreadedRenderer != null) {
-            this.mAttachInfo.mThreadedRenderer.registerRtFrameCallback(new HardwareRenderer.FrameDrawingCallback() {
+            this.mAttachInfo.mThreadedRenderer.registerRtFrameCallback(new HardwareRenderer.FrameDrawingCallback() { // from class: android.view.-$$Lambda$ViewRootImpl$IReiNMSbDakZSGbIZuL_ifaFWn8
+                @Override // android.graphics.HardwareRenderer.FrameDrawingCallback
                 public final void onFrameDraw(long j) {
                     ViewRootImpl.lambda$registerRtFrameCallback$0(HardwareRenderer.FrameDrawingCallback.this, j);
                 }
@@ -1252,7 +847,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         try {
             callback.onFrameDraw(frame);
         } catch (Exception e) {
-            Log.e(TAG, "Exception while executing onFrameDraw", e);
+            Log.m69e(TAG, "Exception while executing onFrameDraw", e);
         }
     }
 
@@ -1261,30 +856,34 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         boolean wideGamut = false;
         this.mAttachInfo.mHardwareAccelerated = false;
         this.mAttachInfo.mHardwareAccelerationRequested = false;
-        if (this.mTranslator == null) {
-            if (((attrs.flags & 16777216) != 0) && ThreadedRenderer.isAvailable()) {
-                boolean fakeHwAccelerated = (attrs.privateFlags & 1) != 0;
-                boolean forceHwAccelerated = (attrs.privateFlags & 2) != 0;
-                if (fakeHwAccelerated) {
-                    this.mAttachInfo.mHardwareAccelerationRequested = true;
-                } else if (!ThreadedRenderer.sRendererDisabled || (ThreadedRenderer.sSystemRendererDisabled && forceHwAccelerated)) {
-                    if (this.mAttachInfo.mThreadedRenderer != null) {
-                        this.mAttachInfo.mThreadedRenderer.destroy();
-                    }
-                    Rect insets = attrs.surfaceInsets;
-                    boolean translucent = attrs.format != -1 || (insets.left != 0 || insets.right != 0 || insets.top != 0 || insets.bottom != 0);
-                    if (this.mContext.getResources().getConfiguration().isScreenWideColorGamut() && attrs.getColorMode() == 1) {
-                        wideGamut = true;
-                    }
-                    this.mAttachInfo.mThreadedRenderer = ThreadedRenderer.create(this.mContext, translucent, attrs.getTitle().toString());
-                    this.mAttachInfo.mThreadedRenderer.setWideGamut(wideGamut);
-                    updateForceDarkMode();
-                    if (this.mAttachInfo.mThreadedRenderer != null) {
-                        View.AttachInfo attachInfo = this.mAttachInfo;
-                        this.mAttachInfo.mHardwareAccelerationRequested = true;
-                        attachInfo.mHardwareAccelerated = true;
-                    }
-                }
+        if (this.mTranslator != null) {
+            return;
+        }
+        boolean hardwareAccelerated = (attrs.flags & 16777216) != 0;
+        if (!hardwareAccelerated || !ThreadedRenderer.isAvailable()) {
+            return;
+        }
+        boolean fakeHwAccelerated = (attrs.privateFlags & 1) != 0;
+        boolean forceHwAccelerated = (attrs.privateFlags & 2) != 0;
+        if (fakeHwAccelerated) {
+            this.mAttachInfo.mHardwareAccelerationRequested = true;
+        } else if (!ThreadedRenderer.sRendererDisabled || (ThreadedRenderer.sSystemRendererDisabled && forceHwAccelerated)) {
+            if (this.mAttachInfo.mThreadedRenderer != null) {
+                this.mAttachInfo.mThreadedRenderer.destroy();
+            }
+            Rect insets = attrs.surfaceInsets;
+            boolean hasSurfaceInsets = (insets.left == 0 && insets.right == 0 && insets.top == 0 && insets.bottom == 0) ? false : true;
+            boolean translucent = attrs.format != -1 || hasSurfaceInsets;
+            if (this.mContext.getResources().getConfiguration().isScreenWideColorGamut() && attrs.getColorMode() == 1) {
+                wideGamut = true;
+            }
+            this.mAttachInfo.mThreadedRenderer = ThreadedRenderer.create(this.mContext, translucent, attrs.getTitle().toString());
+            this.mAttachInfo.mThreadedRenderer.setWideGamut(wideGamut);
+            updateForceDarkMode();
+            if (this.mAttachInfo.mThreadedRenderer != null) {
+                View.AttachInfo attachInfo = this.mAttachInfo;
+                this.mAttachInfo.mHardwareAccelerationRequested = true;
+                attachInfo.mHardwareAccelerated = true;
             }
         }
     }
@@ -1294,21 +893,22 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
     }
 
     private void updateForceDarkMode() {
-        if (this.mAttachInfo.mThreadedRenderer != null) {
-            boolean z = false;
-            boolean useAutoDark = getNightMode() == 32;
-            if (useAutoDark) {
-                boolean forceDarkAllowedDefault = SystemProperties.getBoolean(ThreadedRenderer.DEBUG_FORCE_DARK, false);
-                TypedArray a = this.mContext.obtainStyledAttributes(R.styleable.Theme);
-                if (a.getBoolean(279, true) && a.getBoolean(278, forceDarkAllowedDefault)) {
-                    z = true;
-                }
-                useAutoDark = z;
-                a.recycle();
+        if (this.mAttachInfo.mThreadedRenderer == null) {
+            return;
+        }
+        boolean z = false;
+        boolean useAutoDark = getNightMode() == 32;
+        if (useAutoDark) {
+            boolean forceDarkAllowedDefault = SystemProperties.getBoolean(ThreadedRenderer.DEBUG_FORCE_DARK, false);
+            TypedArray a = this.mContext.obtainStyledAttributes(C3132R.styleable.Theme);
+            if (a.getBoolean(279, true) && a.getBoolean(278, forceDarkAllowedDefault)) {
+                z = true;
             }
-            if (this.mAttachInfo.mThreadedRenderer.setForceDark(useAutoDark)) {
-                invalidateWorld(this.mView);
-            }
+            useAutoDark = z;
+            a.recycle();
+        }
+        if (this.mAttachInfo.mThreadedRenderer.setForceDark(useAutoDark)) {
+            invalidateWorld(this.mView);
         }
     }
 
@@ -1317,13 +917,11 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         return this.mView;
     }
 
-    /* access modifiers changed from: package-private */
-    public final WindowLeaked getLocation() {
+    final WindowLeaked getLocation() {
         return this.mLocation;
     }
 
-    /* access modifiers changed from: package-private */
-    public void setLayoutParams(WindowManager.LayoutParams attrs, boolean newView) {
+    void setLayoutParams(WindowManager.LayoutParams attrs, boolean newView) {
         synchronized (this) {
             int oldInsetLeft = this.mWindowAttributes.surfaceInsets.left;
             int oldInsetTop = this.mWindowAttributes.surfaceInsets.top;
@@ -1349,7 +947,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
             if (this.mWindowAttributes.preservePreviousSurfaceInsets) {
                 this.mWindowAttributes.surfaceInsets.set(oldInsetLeft, oldInsetTop, oldInsetRight, oldInsetBottom);
                 this.mWindowAttributes.hasManualSurfaceInsets = oldHasManualSurfaceInsets;
-            } else if (!(this.mWindowAttributes.surfaceInsets.left == oldInsetLeft && this.mWindowAttributes.surfaceInsets.top == oldInsetTop && this.mWindowAttributes.surfaceInsets.right == oldInsetRight && this.mWindowAttributes.surfaceInsets.bottom == oldInsetBottom)) {
+            } else if (this.mWindowAttributes.surfaceInsets.left != oldInsetLeft || this.mWindowAttributes.surfaceInsets.top != oldInsetTop || this.mWindowAttributes.surfaceInsets.right != oldInsetRight || this.mWindowAttributes.surfaceInsets.bottom != oldInsetBottom) {
                 this.mNeedsRendererSetup = true;
             }
             applyKeepScreenOnFlag(this.mWindowAttributes);
@@ -1365,8 +963,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void handleAppVisibility(boolean visible) {
+    void handleAppVisibility(boolean visible) {
         if (this.mAppVisible != visible) {
             this.mAppVisible = visible;
             this.mAppVisibilityChanged = true;
@@ -1377,25 +974,25 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void handleGetNewSurface() {
+    void handleGetNewSurface() {
         this.mNewSurfaceNeeded = true;
         this.mFullRedrawNeeded = true;
         scheduleTraversals();
     }
 
     public void onMovedToDisplay(int displayId, Configuration config) {
-        if (this.mDisplay.getDisplayId() != displayId) {
-            updateInternalDisplay(displayId, this.mView.getResources());
-            this.mAttachInfo.mDisplayState = this.mDisplay.getState();
-            this.mView.dispatchMovedToDisplay(this.mDisplay, config);
+        if (this.mDisplay.getDisplayId() == displayId) {
+            return;
         }
+        updateInternalDisplay(displayId, this.mView.getResources());
+        this.mAttachInfo.mDisplayState = this.mDisplay.getState();
+        this.mView.dispatchMovedToDisplay(this.mDisplay, config);
     }
 
     private void updateInternalDisplay(int displayId, Resources resources) {
         Display preferredDisplay = ResourcesManager.getInstance().getAdjustedDisplay(displayId, resources);
         if (preferredDisplay == null) {
-            Slog.w(TAG, "Cannot get desired display with Id: " + displayId);
+            Slog.m50w(TAG, "Cannot get desired display with Id: " + displayId);
             this.mDisplay = ResourcesManager.getInstance().getAdjustedDisplay(0, resources);
         } else {
             this.mDisplay = preferredDisplay;
@@ -1403,8 +1000,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         this.mContext.updateDisplay(this.mDisplay.getDisplayId());
     }
 
-    /* access modifiers changed from: package-private */
-    public void pokeDrawLockIfNeeded() {
+    void pokeDrawLockIfNeeded() {
         int displayState = this.mAttachInfo.mDisplayState;
         if (this.mView != null && this.mAdded && this.mTraversalScheduled) {
             if (displayState == 3 || displayState == 4) {
@@ -1416,22 +1012,24 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         }
     }
 
+    @Override // android.view.ViewParent
     public void requestFitSystemWindows() {
         checkThread();
         this.mApplyInsetsRequested = true;
         scheduleTraversals();
     }
 
-    /* access modifiers changed from: package-private */
-    public void notifyInsetsChanged() {
-        if (sNewInsetsMode != 0) {
-            this.mApplyInsetsRequested = true;
-            if (!this.mIsInTraversal) {
-                scheduleTraversals();
-            }
+    void notifyInsetsChanged() {
+        if (sNewInsetsMode == 0) {
+            return;
+        }
+        this.mApplyInsetsRequested = true;
+        if (!this.mIsInTraversal) {
+            scheduleTraversals();
         }
     }
 
+    @Override // android.view.ViewParent
     public void requestLayout() {
         if (!this.mHandlingLayoutInLayoutRequest) {
             checkThread();
@@ -1440,10 +1038,12 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         }
     }
 
+    @Override // android.view.ViewParent
     public boolean isLayoutRequested() {
         return this.mLayoutRequested;
     }
 
+    @Override // android.view.ViewParent
     public void onDescendantInvalidated(View child, View descendant) {
         if ((descendant.mPrivateFlags & 64) != 0) {
             this.mIsAnimating = true;
@@ -1451,17 +1051,15 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         invalidate();
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void invalidate() {
+    void invalidate() {
         this.mDirty.set(0, 0, this.mWidth, this.mHeight);
         if (!this.mWillDrawSoon) {
             scheduleTraversals();
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void invalidateWorld(View view) {
+    void invalidateWorld(View view) {
         view.invalidate();
         if (view instanceof ViewGroup) {
             ViewGroup parent = (ViewGroup) view;
@@ -1471,10 +1069,12 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         }
     }
 
+    @Override // android.view.ViewParent
     public void invalidateChild(View child, Rect dirty) {
-        invalidateChildInParent((int[]) null, dirty);
+        invalidateChildInParent(null, dirty);
     }
 
+    @Override // android.view.ViewParent
     public ViewParent invalidateChildInParent(int[] location, Rect dirty) {
         checkThread();
         if (dirty == null) {
@@ -1483,7 +1083,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         } else if (dirty.isEmpty() && !this.mIsAnimating) {
             return null;
         } else {
-            if (!(this.mCurScrollY == 0 && this.mTranslator == null)) {
+            if (this.mCurScrollY != 0 || this.mTranslator != null) {
                 this.mTempRect.set(dirty);
                 dirty = this.mTempRect;
                 if (this.mCurScrollY != 0) {
@@ -1505,7 +1105,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         Rect localDirty = this.mDirty;
         localDirty.union(dirty.left, dirty.top, dirty.right, dirty.bottom);
         float appScale = this.mAttachInfo.mApplicationScale;
-        boolean intersected = localDirty.intersect(0, 0, (int) ((((float) this.mWidth) * appScale) + 0.5f), (int) ((((float) this.mHeight) * appScale) + 0.5f));
+        boolean intersected = localDirty.intersect(0, 0, (int) ((this.mWidth * appScale) + 0.5f), (int) ((this.mHeight * appScale) + 0.5f));
         if (!intersected) {
             localDirty.setEmpty();
         }
@@ -1521,17 +1121,15 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         this.mIsAmbientMode = ambient;
     }
 
-    /* access modifiers changed from: package-private */
-    public void addWindowStoppedCallback(WindowStoppedCallback c) {
+    void addWindowStoppedCallback(WindowStoppedCallback c) {
         this.mWindowStoppedCallbacks.add(c);
     }
 
-    /* access modifiers changed from: package-private */
-    public void removeWindowStoppedCallback(WindowStoppedCallback c) {
+    void removeWindowStoppedCallback(WindowStoppedCallback c) {
         this.mWindowStoppedCallbacks.remove(c);
     }
 
-    /* access modifiers changed from: package-private */
+    /* JADX INFO: Access modifiers changed from: package-private */
     public void setWindowStopped(boolean stopped) {
         checkThread();
         if (this.mStopped != stopped) {
@@ -1549,7 +1147,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
             for (int i = 0; i < this.mWindowStoppedCallbacks.size(); i++) {
                 this.mWindowStoppedCallbacks.get(i).windowStopped(stopped);
             }
-            if (this.mStopped != 0) {
+            if (this.mStopped) {
                 if (this.mSurfaceHolder != null && this.mSurface.isValid()) {
                     notifySurfaceDestroyed();
                 }
@@ -1562,13 +1160,14 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         if (this.mSurfaceSession == null) {
             this.mSurfaceSession = new SurfaceSession();
         }
-        if (this.mBoundsSurfaceControl == null || !this.mBoundsSurface.isValid()) {
-            SurfaceControl.Builder builder = new SurfaceControl.Builder(this.mSurfaceSession);
-            this.mBoundsSurfaceControl = builder.setName("Bounds for - " + getTitle().toString()).setParent(this.mSurfaceControl).build();
-            setBoundsSurfaceCrop();
-            this.mTransaction.setLayer(this.mBoundsSurfaceControl, zOrderLayer).show(this.mBoundsSurfaceControl).apply();
-            this.mBoundsSurface.copyFrom(this.mBoundsSurfaceControl);
+        if (this.mBoundsSurfaceControl != null && this.mBoundsSurface.isValid()) {
+            return;
         }
+        SurfaceControl.Builder builder = new SurfaceControl.Builder(this.mSurfaceSession);
+        this.mBoundsSurfaceControl = builder.setName("Bounds for - " + getTitle().toString()).setParent(this.mSurfaceControl).build();
+        setBoundsSurfaceCrop();
+        this.mTransaction.setLayer(this.mBoundsSurfaceControl, zOrderLayer).show(this.mBoundsSurfaceControl).apply();
+        this.mBoundsSurface.copyFrom(this.mBoundsSurfaceControl);
     }
 
     private void setBoundsSurfaceCrop() {
@@ -1599,22 +1198,24 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         this.mPausedForTransition = paused;
     }
 
+    @Override // android.view.ViewParent
     public ViewParent getParent() {
         return null;
     }
 
+    @Override // android.view.ViewParent
     public boolean getChildVisibleRect(View child, Rect r, Point offset) {
-        if (child == this.mView) {
-            return r.intersect(0, 0, this.mWidth, this.mHeight);
+        if (child != this.mView) {
+            throw new RuntimeException("child is not mine, honest!");
         }
-        throw new RuntimeException("child is not mine, honest!");
+        return r.intersect(0, 0, this.mWidth, this.mHeight);
     }
 
+    @Override // android.view.ViewParent
     public void bringChildToFront(View child) {
     }
 
-    /* access modifiers changed from: package-private */
-    public int getHostVisibility() {
+    int getHostVisibility() {
         if (this.mAppVisible || this.mForceDecorViewVisibility) {
             return this.mView.getVisibility();
         }
@@ -1630,20 +1231,18 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void notifyRendererOfFramePending() {
+    void notifyRendererOfFramePending() {
         if (this.mAttachInfo.mThreadedRenderer != null) {
             this.mAttachInfo.mThreadedRenderer.notifyFramePending();
         }
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void scheduleTraversals() {
+    void scheduleTraversals() {
         if (!this.mTraversalScheduled) {
             this.mTraversalScheduled = true;
             this.mTraversalBarrier = this.mHandler.getLooper().getQueue().postSyncBarrier();
-            this.mChoreographer.postCallback(3, this.mTraversalRunnable, (Object) null);
+            this.mChoreographer.postCallback(3, this.mTraversalRunnable, null);
             if (!this.mUnbufferedInputDispatch) {
                 scheduleConsumeBatchedInput();
             }
@@ -1652,17 +1251,15 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void unscheduleTraversals() {
+    void unscheduleTraversals() {
         if (this.mTraversalScheduled) {
             this.mTraversalScheduled = false;
             this.mHandler.getLooper().getQueue().removeSyncBarrier(this.mTraversalBarrier);
-            this.mChoreographer.removeCallbacks(3, this.mTraversalRunnable, (Object) null);
+            this.mChoreographer.removeCallbacks(3, this.mTraversalRunnable, null);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void doTraversal() {
+    void doTraversal() {
         if (this.mTraversalScheduled) {
             this.mTraversalScheduled = false;
             this.mHandler.getLooper().getQueue().removeSyncBarrier(this.mTraversalBarrier);
@@ -1681,7 +1278,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         if (this.mAttachInfo.mKeepScreenOn) {
             params.flags |= 128;
         } else {
-            params.flags = (params.flags & -129) | (this.mClientWindowLayoutFlags & 128);
+            params.flags = (params.flags & (-129)) | (this.mClientWindowLayoutFlags & 128);
         }
     }
 
@@ -1696,7 +1293,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
             this.mAttachInfo.mSystemUiVisibility &= ~this.mAttachInfo.mDisabledSystemUiVisibility;
             WindowManager.LayoutParams params = this.mWindowAttributes;
             this.mAttachInfo.mSystemUiVisibility |= getImpliedSystemUiVisibility(params);
-            if (!(this.mAttachInfo.mKeepScreenOn == oldScreenOn && this.mAttachInfo.mSystemUiVisibility == params.subtreeSystemUiVisibility && this.mAttachInfo.mHasSystemUiListeners == params.hasSystemUiListeners)) {
+            if (this.mAttachInfo.mKeepScreenOn != oldScreenOn || this.mAttachInfo.mSystemUiVisibility != params.subtreeSystemUiVisibility || this.mAttachInfo.mHasSystemUiListeners != params.hasSystemUiListeners) {
                 applyKeepScreenOnFlag(params);
                 params.subtreeSystemUiVisibility = this.mAttachInfo.mSystemUiVisibility;
                 params.hasSystemUiListeners = this.mAttachInfo.mHasSystemUiListeners;
@@ -1722,7 +1319,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         boolean goodMeasure = false;
         if (lp.width == -2) {
             DisplayMetrics packageMetrics = res.getDisplayMetrics();
-            res.getValue((int) R.dimen.config_prefDialogWidth, this.mTmpValue, true);
+            res.getValue(C3132R.dimen.config_prefDialogWidth, this.mTmpValue, true);
             int baseSize = 0;
             if (this.mTmpValue.type == 5) {
                 baseSize = (int) this.mTmpValue.getDimension(packageMetrics);
@@ -1734,7 +1331,10 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
                 if ((host.getMeasuredWidthAndState() & 16777216) == 0) {
                     goodMeasure = true;
                 } else {
-                    performMeasure(getRootMeasureSpec((baseSize + desiredWindowWidth) / 2, lp.width), childHeightMeasureSpec);
+                    int baseSize2 = (baseSize + desiredWindowWidth) / 2;
+                    int baseSize3 = lp.width;
+                    int childWidthMeasureSpec2 = getRootMeasureSpec(baseSize2, baseSize3);
+                    performMeasure(childWidthMeasureSpec2, childHeightMeasureSpec);
                     if ((host.getMeasuredWidthAndState() & 16777216) == 0) {
                         goodMeasure = true;
                     }
@@ -1744,25 +1344,23 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         if (goodMeasure) {
             return false;
         }
-        performMeasure(getRootMeasureSpec(desiredWindowWidth, lp.width), getRootMeasureSpec(desiredWindowHeight, lp.height));
+        int childWidthMeasureSpec3 = getRootMeasureSpec(desiredWindowWidth, lp.width);
+        performMeasure(childWidthMeasureSpec3, getRootMeasureSpec(desiredWindowHeight, lp.height));
         if (this.mWidth == host.getMeasuredWidth() && this.mHeight == host.getMeasuredHeight()) {
             return false;
         }
         return true;
     }
 
-    /* access modifiers changed from: package-private */
-    public void transformMatrixToGlobal(Matrix m) {
-        m.preTranslate((float) this.mAttachInfo.mWindowLeft, (float) this.mAttachInfo.mWindowTop);
+    void transformMatrixToGlobal(Matrix m) {
+        m.preTranslate(this.mAttachInfo.mWindowLeft, this.mAttachInfo.mWindowTop);
     }
 
-    /* access modifiers changed from: package-private */
-    public void transformMatrixToLocal(Matrix m) {
-        m.postTranslate((float) (-this.mAttachInfo.mWindowLeft), (float) (-this.mAttachInfo.mWindowTop));
+    void transformMatrixToLocal(Matrix m) {
+        m.postTranslate(-this.mAttachInfo.mWindowLeft, -this.mAttachInfo.mWindowTop);
     }
 
-    /* access modifiers changed from: package-private */
-    public WindowInsets getWindowInsets(boolean forceConstruct) {
+    WindowInsets getWindowInsets(boolean forceConstruct) {
         if (this.mLastWindowInsets == null || forceConstruct) {
             this.mDispatchContentInsets.set(this.mAttachInfo.mContentInsets);
             this.mDispatchStableInsets.set(this.mAttachInfo.mStableInsets);
@@ -1780,39 +1378,32 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
             if (outsets.left > 0 || outsets.top > 0 || outsets.right > 0 || outsets.bottom > 0) {
                 contentInsets = new Rect(contentInsets.left + outsets.left, contentInsets.top + outsets.top, contentInsets.right + outsets.right, contentInsets.bottom + outsets.bottom);
             }
-            Rect contentInsets2 = ensureInsetsNonNegative(contentInsets, "content");
-            Rect stableInsets2 = ensureInsetsNonNegative(stableInsets, "stable");
-            this.mLastWindowInsets = this.mInsetsController.calculateInsets(this.mContext.getResources().getConfiguration().isScreenRound(), this.mAttachInfo.mAlwaysConsumeSystemBars, displayCutout2, contentInsets2, stableInsets2, this.mWindowAttributes.softInputMode);
+            this.mLastWindowInsets = this.mInsetsController.calculateInsets(this.mContext.getResources().getConfiguration().isScreenRound(), this.mAttachInfo.mAlwaysConsumeSystemBars, displayCutout2, ensureInsetsNonNegative(contentInsets, "content"), ensureInsetsNonNegative(stableInsets, "stable"), this.mWindowAttributes.softInputMode);
         }
         return this.mLastWindowInsets;
     }
 
     private Rect ensureInsetsNonNegative(Rect insets, String kind) {
-        if (insets.left >= 0 && insets.top >= 0 && insets.right >= 0 && insets.bottom >= 0) {
-            return insets;
+        if (insets.left < 0 || insets.top < 0 || insets.right < 0 || insets.bottom < 0) {
+            String str = this.mTag;
+            Log.wtf(str, "Negative " + kind + "Insets: " + insets + ", mFirst=" + this.mFirst);
+            return new Rect(Math.max(0, insets.left), Math.max(0, insets.top), Math.max(0, insets.right), Math.max(0, insets.bottom));
         }
-        String str = this.mTag;
-        Log.wtf(str, "Negative " + kind + "Insets: " + insets + ", mFirst=" + this.mFirst);
-        return new Rect(Math.max(0, insets.left), Math.max(0, insets.top), Math.max(0, insets.right), Math.max(0, insets.bottom));
+        return insets;
     }
 
-    /* access modifiers changed from: package-private */
-    public void dispatchApplyInsets(View host) {
-        Trace.traceBegin(8, "dispatchApplyInsets");
-        boolean dispatchCutout = true;
+    void dispatchApplyInsets(View host) {
+        Trace.traceBegin(8L, "dispatchApplyInsets");
         WindowInsets insets = getWindowInsets(true);
-        if (this.mWindowAttributes.layoutInDisplayCutoutMode != 1) {
-            dispatchCutout = false;
-        }
+        boolean dispatchCutout = this.mWindowAttributes.layoutInDisplayCutoutMode == 1;
         if (!dispatchCutout) {
             insets = insets.consumeDisplayCutout();
         }
         host.dispatchApplyWindowInsets(insets);
-        Trace.traceEnd(8);
+        Trace.traceEnd(8L);
     }
 
-    /* access modifiers changed from: package-private */
-    public InsetsController getInsetsController() {
+    InsetsController getInsetsController() {
         return this.mInsetsController;
     }
 
@@ -1821,1744 +1412,1933 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
     }
 
     private int dipToPx(int dip) {
-        return (int) ((this.mContext.getResources().getDisplayMetrics().density * ((float) dip)) + 0.5f);
+        DisplayMetrics displayMetrics = this.mContext.getResources().getDisplayMetrics();
+        return (int) ((displayMetrics.density * dip) + 0.5f);
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:174:0x030a, code lost:
-        if (r23.height() != r7.mHeight) goto L_0x030f;
+    /* JADX WARN: Can't wrap try/catch for region: R(149:5|(1:650)(1:13)|14|(4:16|(1:18)(1:648)|(1:20)(1:647)|(142:22|23|(1:25)|26|(2:28|(1:30)(1:31))|32|(5:34|(1:36)(1:641)|37|(1:39)|40)(2:642|(1:646))|(5:42|(2:(1:45)(1:47)|46)|(1:54)|51|(1:53))|55|(1:57)|58|(1:640)(1:64)|65|(4:67|(1:69)(16:610|(1:612)|613|(1:615)|616|(1:618)|619|(1:621)|622|(1:624)|625|(1:627)|628|(1:630)|631|(2:635|(1:637)(1:638)))|70|71)(1:639)|72|(1:74)|75|(1:77)|78|(2:594|(6:596|(3:598|(2:600|601)(1:603)|602)|604|(1:606)|607|(1:609)))|82|(5:84|(1:88)|89|(1:91)(1:93)|92)|94|(2:96|(118:98|99|(1:101)|(115:104|(1:591)(2:108|(2:584|(99:586|(1:588)|590|116|(1:583)(1:120)|121|(1:582)(1:125)|126|(1:128)(1:581)|129|(1:580)(2:134|(2:136|(1:138)(36:578|(1:266)|(1:403)(1:272)|273|(1:402)(1:277)|278|(2:280|(25:282|(1:284)|285|(3:287|288|289)|(1:293)|(2:295|(5:299|(1:301)(1:307)|302|303|304))|308|(2:310|(2:319|(1:323))(2:314|(1:318)))|(1:400)(1:327)|328|(1:398)(1:331)|(1:397)(1:335)|(1:337)(1:(1:396))|(3:385|(1:392)(1:387)|(1:389))|340|(2:346|(9:349|350|(1:352)|353|(1:356)|357|(3:359|(4:363|(2:366|364)|367|368)|369)(1:(1:373)(2:374|(4:378|(2:381|379)|382|383)))|370|371))|384|350|(0)|353|(1:356)|357|(0)(0)|370|371))|401|(0)|(0)|308|(0)|(1:325)|400|328|(0)|398|(1:333)|397|(0)(0)|(0)|385|(14:390|392|(0)|340|(4:342|344|346|(9:349|350|(0)|353|(0)|357|(0)(0)|370|371))|384|350|(0)|353|(0)|357|(0)(0)|370|371)|387|(0)|340|(0)|384|350|(0)|353|(0)|357|(0)(0)|370|371))(1:579))|139|(2:(1:576)(1:145)|146)(1:577)|147|(1:149)(1:575)|150|151|152|(4:545|546|(10:548|549|550|551|552|553|554|555|556|557)(1:569)|558)(1:154)|155|156|157|158|159|(3:537|538|539)|161|(1:163)(1:536)|164|(1:166)(1:535)|167|168|(1:170)|(1:172)|(1:174)|(1:176)|(1:178)|(2:533|534)|(1:188)|(3:192|(1:194)(1:196)|195)|(2:198|(3:200|201|(5:203|204|205|(3:208|209|(1:211))|207)))(2:499|(8:501|(1:503)|504|(1:506)|507|(1:509)|510|(1:514))(2:515|(3:524|525|526)))|444|(1:446)(1:498)|447|(1:449)(1:497)|450|(1:496)(1:453)|454|455|456|(1:(14:(1:460)(1:492)|461|(1:491)(1:465)|466|(1:468)(1:490)|469|470|471|472|473|474|475|476|477)(1:493))(1:494)|478|(1:(1:481)(1:482))|223|(1:443)|227|(4:229|(1:231)|232|(3:(3:235|(3:237|(1:239)|240)|241)|(3:425|(3:427|(1:429)|430)|431)(1:245)|246)(2:432|(4:434|435|436|437)))(1:442)|247|(1:258)|259|(4:404|(1:406)(1:424)|407|(44:415|(1:417)|418|(1:420)|(1:422)|423|264|(0)|(2:268|270)|403|273|(1:275)|402|278|(0)|401|(0)|(0)|308|(0)|(0)|400|328|(0)|398|(0)|397|(0)(0)|(0)|385|(0)|387|(0)|340|(0)|384|350|(0)|353|(0)|357|(0)(0)|370|371))|263|264|(0)|(0)|403|273|(0)|402|278|(0)|401|(0)|(0)|308|(0)|(0)|400|328|(0)|398|(0)|397|(0)(0)|(0)|385|(0)|387|(0)|340|(0)|384|350|(0)|353|(0)|357|(0)(0)|370|371))(1:114))|115|116|(1:118)|583|121|(1:123)|582|126|(0)(0)|129|(0)|580|139|(0)(0)|147|(0)(0)|150|151|152|(0)(0)|155|156|157|158|159|(0)|161|(0)(0)|164|(0)(0)|167|168|(0)|(0)|(0)|(0)|(0)|(1:180)|533|534|(0)|(4:190|192|(0)(0)|195)|(0)(0)|444|(0)(0)|447|(0)(0)|450|(0)|496|454|455|456|(0)(0)|478|(0)|223|(1:225)|443|227|(0)(0)|247|(2:249|258)|259|(1:261)|404|(0)(0)|407|(1:409)|415|(0)|418|(0)|(0)|423|264|(0)|(0)|403|273|(0)|402|278|(0)|401|(0)|(0)|308|(0)|(0)|400|328|(0)|398|(0)|397|(0)(0)|(0)|385|(0)|387|(0)|340|(0)|384|350|(0)|353|(0)|357|(0)(0)|370|371)|592|590|116|(0)|583|121|(0)|582|126|(0)(0)|129|(0)|580|139|(0)(0)|147|(0)(0)|150|151|152|(0)(0)|155|156|157|158|159|(0)|161|(0)(0)|164|(0)(0)|167|168|(0)|(0)|(0)|(0)|(0)|(0)|533|534|(0)|(0)|(0)(0)|444|(0)(0)|447|(0)(0)|450|(0)|496|454|455|456|(0)(0)|478|(0)|223|(0)|443|227|(0)(0)|247|(0)|259|(0)|404|(0)(0)|407|(0)|415|(0)|418|(0)|(0)|423|264|(0)|(0)|403|273|(0)|402|278|(0)|401|(0)|(0)|308|(0)|(0)|400|328|(0)|398|(0)|397|(0)(0)|(0)|385|(0)|387|(0)|340|(0)|384|350|(0)|353|(0)|357|(0)(0)|370|371))|593|99|(0)|(116:104|(1:106)|591|115|116|(0)|583|121|(0)|582|126|(0)(0)|129|(0)|580|139|(0)(0)|147|(0)(0)|150|151|152|(0)(0)|155|156|157|158|159|(0)|161|(0)(0)|164|(0)(0)|167|168|(0)|(0)|(0)|(0)|(0)|(0)|533|534|(0)|(0)|(0)(0)|444|(0)(0)|447|(0)(0)|450|(0)|496|454|455|456|(0)(0)|478|(0)|223|(0)|443|227|(0)(0)|247|(0)|259|(0)|404|(0)(0)|407|(0)|415|(0)|418|(0)|(0)|423|264|(0)|(0)|403|273|(0)|402|278|(0)|401|(0)|(0)|308|(0)|(0)|400|328|(0)|398|(0)|397|(0)(0)|(0)|385|(0)|387|(0)|340|(0)|384|350|(0)|353|(0)|357|(0)(0)|370|371)|592|590|116|(0)|583|121|(0)|582|126|(0)(0)|129|(0)|580|139|(0)(0)|147|(0)(0)|150|151|152|(0)(0)|155|156|157|158|159|(0)|161|(0)(0)|164|(0)(0)|167|168|(0)|(0)|(0)|(0)|(0)|(0)|533|534|(0)|(0)|(0)(0)|444|(0)(0)|447|(0)(0)|450|(0)|496|454|455|456|(0)(0)|478|(0)|223|(0)|443|227|(0)(0)|247|(0)|259|(0)|404|(0)(0)|407|(0)|415|(0)|418|(0)|(0)|423|264|(0)|(0)|403|273|(0)|402|278|(0)|401|(0)|(0)|308|(0)|(0)|400|328|(0)|398|(0)|397|(0)(0)|(0)|385|(0)|387|(0)|340|(0)|384|350|(0)|353|(0)|357|(0)(0)|370|371))|649|23|(0)|26|(0)|32|(0)(0)|(0)|55|(0)|58|(2:60|62)|640|65|(0)(0)|72|(0)|75|(0)|78|(1:80)|594|(0)|82|(0)|94|(0)|593|99|(0)|(0)|592|590|116|(0)|583|121|(0)|582|126|(0)(0)|129|(0)|580|139|(0)(0)|147|(0)(0)|150|151|152|(0)(0)|155|156|157|158|159|(0)|161|(0)(0)|164|(0)(0)|167|168|(0)|(0)|(0)|(0)|(0)|(0)|533|534|(0)|(0)|(0)(0)|444|(0)(0)|447|(0)(0)|450|(0)|496|454|455|456|(0)(0)|478|(0)|223|(0)|443|227|(0)(0)|247|(0)|259|(0)|404|(0)(0)|407|(0)|415|(0)|418|(0)|(0)|423|264|(0)|(0)|403|273|(0)|402|278|(0)|401|(0)|(0)|308|(0)|(0)|400|328|(0)|398|(0)|397|(0)(0)|(0)|385|(0)|387|(0)|340|(0)|384|350|(0)|353|(0)|357|(0)(0)|370|371) */
+    /* JADX WARN: Code restructure failed: missing block: B:178:0x030a, code lost:
+        if (r23.height() != r58.mHeight) goto L115;
      */
-    /* JADX WARNING: Removed duplicated region for block: B:111:0x020e  */
-    /* JADX WARNING: Removed duplicated region for block: B:114:0x021b  */
-    /* JADX WARNING: Removed duplicated region for block: B:117:0x0223  */
-    /* JADX WARNING: Removed duplicated region for block: B:124:0x023f  */
-    /* JADX WARNING: Removed duplicated region for block: B:137:0x0277  */
-    /* JADX WARNING: Removed duplicated region for block: B:149:0x029a  */
-    /* JADX WARNING: Removed duplicated region for block: B:155:0x02cb  */
-    /* JADX WARNING: Removed duplicated region for block: B:162:0x02e2  */
-    /* JADX WARNING: Removed duplicated region for block: B:175:0x030d  */
-    /* JADX WARNING: Removed duplicated region for block: B:183:0x031c  */
-    /* JADX WARNING: Removed duplicated region for block: B:184:0x031e  */
-    /* JADX WARNING: Removed duplicated region for block: B:189:0x0335  */
-    /* JADX WARNING: Removed duplicated region for block: B:190:0x0337  */
-    /* JADX WARNING: Removed duplicated region for block: B:193:0x0345  */
-    /* JADX WARNING: Removed duplicated region for block: B:194:0x0347  */
-    /* JADX WARNING: Removed duplicated region for block: B:197:0x0351 A[ADDED_TO_REGION] */
-    /* JADX WARNING: Removed duplicated region for block: B:210:0x0390  */
-    /* JADX WARNING: Removed duplicated region for block: B:217:0x039d  */
-    /* JADX WARNING: Removed duplicated region for block: B:220:0x03a3  */
-    /* JADX WARNING: Removed duplicated region for block: B:221:0x03b0  */
-    /* JADX WARNING: Removed duplicated region for block: B:226:0x03c3 A[SYNTHETIC, Splitter:B:226:0x03c3] */
-    /* JADX WARNING: Removed duplicated region for block: B:249:0x042a  */
-    /* JADX WARNING: Removed duplicated region for block: B:256:0x043f A[SYNTHETIC, Splitter:B:256:0x043f] */
-    /* JADX WARNING: Removed duplicated region for block: B:265:0x04b1 A[Catch:{ RemoteException -> 0x06e0 }] */
-    /* JADX WARNING: Removed duplicated region for block: B:266:0x04b3 A[Catch:{ RemoteException -> 0x06e0 }] */
-    /* JADX WARNING: Removed duplicated region for block: B:269:0x04c0 A[Catch:{ RemoteException -> 0x06e0 }] */
-    /* JADX WARNING: Removed duplicated region for block: B:270:0x04c2 A[Catch:{ RemoteException -> 0x06e0 }] */
-    /* JADX WARNING: Removed duplicated region for block: B:274:0x04d1 A[SYNTHETIC, Splitter:B:274:0x04d1] */
-    /* JADX WARNING: Removed duplicated region for block: B:277:0x04dc A[Catch:{ RemoteException -> 0x044d }] */
-    /* JADX WARNING: Removed duplicated region for block: B:279:0x04ea A[Catch:{ RemoteException -> 0x044d }] */
-    /* JADX WARNING: Removed duplicated region for block: B:281:0x04f8 A[Catch:{ RemoteException -> 0x044d }] */
-    /* JADX WARNING: Removed duplicated region for block: B:283:0x0506 A[Catch:{ RemoteException -> 0x044d }] */
-    /* JADX WARNING: Removed duplicated region for block: B:28:0x004b  */
-    /* JADX WARNING: Removed duplicated region for block: B:296:0x0547 A[SYNTHETIC, Splitter:B:296:0x0547] */
-    /* JADX WARNING: Removed duplicated region for block: B:303:0x0563 A[Catch:{ RemoteException -> 0x044d }] */
-    /* JADX WARNING: Removed duplicated region for block: B:304:0x0565 A[Catch:{ RemoteException -> 0x044d }] */
-    /* JADX WARNING: Removed duplicated region for block: B:307:0x056c A[Catch:{ RemoteException -> 0x044d }] */
-    /* JADX WARNING: Removed duplicated region for block: B:31:0x0062  */
-    /* JADX WARNING: Removed duplicated region for block: B:328:0x05b2 A[SYNTHETIC, Splitter:B:328:0x05b2] */
-    /* JADX WARNING: Removed duplicated region for block: B:366:0x0626  */
-    /* JADX WARNING: Removed duplicated region for block: B:367:0x0628  */
-    /* JADX WARNING: Removed duplicated region for block: B:370:0x062d  */
-    /* JADX WARNING: Removed duplicated region for block: B:371:0x062f  */
-    /* JADX WARNING: Removed duplicated region for block: B:374:0x0634 A[ADDED_TO_REGION] */
-    /* JADX WARNING: Removed duplicated region for block: B:37:0x0086  */
-    /* JADX WARNING: Removed duplicated region for block: B:381:0x063f A[Catch:{ RemoteException -> 0x06e0 }] */
-    /* JADX WARNING: Removed duplicated region for block: B:395:0x066e A[Catch:{ RemoteException -> 0x06e0 }] */
-    /* JADX WARNING: Removed duplicated region for block: B:396:0x0671 A[Catch:{ RemoteException -> 0x06e0 }] */
-    /* JADX WARNING: Removed duplicated region for block: B:412:0x06b8 A[Catch:{ RemoteException -> 0x06de }] */
-    /* JADX WARNING: Removed duplicated region for block: B:415:0x06c9 A[Catch:{ RemoteException -> 0x06de }] */
-    /* JADX WARNING: Removed duplicated region for block: B:432:0x0738  */
-    /* JADX WARNING: Removed duplicated region for block: B:45:0x00e8  */
-    /* JADX WARNING: Removed duplicated region for block: B:464:0x07f3  */
-    /* JADX WARNING: Removed duplicated region for block: B:483:0x0835  */
-    /* JADX WARNING: Removed duplicated region for block: B:484:0x0837  */
-    /* JADX WARNING: Removed duplicated region for block: B:496:0x087f  */
-    /* JADX WARNING: Removed duplicated region for block: B:499:0x0896  */
-    /* JADX WARNING: Removed duplicated region for block: B:501:0x08a9  */
-    /* JADX WARNING: Removed duplicated region for block: B:505:0x08b5  */
-    /* JADX WARNING: Removed duplicated region for block: B:511:0x08c2  */
-    /* JADX WARNING: Removed duplicated region for block: B:512:0x08c4  */
-    /* JADX WARNING: Removed duplicated region for block: B:517:0x08cf  */
-    /* JADX WARNING: Removed duplicated region for block: B:518:0x08d1  */
-    /* JADX WARNING: Removed duplicated region for block: B:51:0x00ff  */
-    /* JADX WARNING: Removed duplicated region for block: B:521:0x08d5  */
-    /* JADX WARNING: Removed duplicated region for block: B:534:0x0945  */
-    /* JADX WARNING: Removed duplicated region for block: B:536:0x0953  */
-    /* JADX WARNING: Removed duplicated region for block: B:550:0x09bb  */
-    /* JADX WARNING: Removed duplicated region for block: B:572:0x0a01 A[ADDED_TO_REGION] */
-    /* JADX WARNING: Removed duplicated region for block: B:578:0x0a0c  */
-    /* JADX WARNING: Removed duplicated region for block: B:579:0x0a0e  */
-    /* JADX WARNING: Removed duplicated region for block: B:581:0x0a11  */
-    /* JADX WARNING: Removed duplicated region for block: B:582:0x0a15 A[ADDED_TO_REGION] */
-    /* JADX WARNING: Removed duplicated region for block: B:590:0x0a26  */
-    /* JADX WARNING: Removed duplicated region for block: B:593:0x0a30  */
-    /* JADX WARNING: Removed duplicated region for block: B:595:0x0a35  */
-    /* JADX WARNING: Removed duplicated region for block: B:609:0x0aa0  */
-    /* JADX WARNING: Removed duplicated region for block: B:616:0x0ab7  */
-    /* JADX WARNING: Removed duplicated region for block: B:626:0x0ae3  */
-    /* JADX WARNING: Removed duplicated region for block: B:66:0x0128  */
-    /* JADX WARNING: Removed duplicated region for block: B:73:0x0143  */
-    /* JADX WARNING: Removed duplicated region for block: B:74:0x0145  */
-    /* JADX WARNING: Removed duplicated region for block: B:77:0x014b  */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
+    /* JADX WARN: Code restructure failed: missing block: B:407:0x06e1, code lost:
+        r44 = r1;
+        r46 = r12;
+        r12 = r6;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:409:0x06ec, code lost:
+        r44 = r1;
+        r12 = r6;
+        r46 = 0;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:411:0x06f7, code lost:
+        r44 = r1;
+        r30 = false;
+        r31 = false;
+        r12 = r6;
+        r46 = 0;
+     */
+    /* JADX WARN: Removed duplicated region for block: B:114:0x020e  */
+    /* JADX WARN: Removed duplicated region for block: B:117:0x021b  */
+    /* JADX WARN: Removed duplicated region for block: B:120:0x0223  */
+    /* JADX WARN: Removed duplicated region for block: B:127:0x023f  */
+    /* JADX WARN: Removed duplicated region for block: B:140:0x0277  */
+    /* JADX WARN: Removed duplicated region for block: B:152:0x029a  */
+    /* JADX WARN: Removed duplicated region for block: B:158:0x02cb  */
+    /* JADX WARN: Removed duplicated region for block: B:160:0x02d0 A[ADDED_TO_REGION] */
+    /* JADX WARN: Removed duplicated region for block: B:186:0x0318  */
+    /* JADX WARN: Removed duplicated region for block: B:192:0x032e  */
+    /* JADX WARN: Removed duplicated region for block: B:199:0x0345  */
+    /* JADX WARN: Removed duplicated region for block: B:200:0x0347  */
+    /* JADX WARN: Removed duplicated region for block: B:203:0x0351 A[ADDED_TO_REGION] */
+    /* JADX WARN: Removed duplicated region for block: B:216:0x0390  */
+    /* JADX WARN: Removed duplicated region for block: B:223:0x039d  */
+    /* JADX WARN: Removed duplicated region for block: B:226:0x03a3  */
+    /* JADX WARN: Removed duplicated region for block: B:227:0x03b0  */
+    /* JADX WARN: Removed duplicated region for block: B:251:0x042a  */
+    /* JADX WARN: Removed duplicated region for block: B:263:0x04b1  */
+    /* JADX WARN: Removed duplicated region for block: B:264:0x04b3  */
+    /* JADX WARN: Removed duplicated region for block: B:267:0x04c0  */
+    /* JADX WARN: Removed duplicated region for block: B:268:0x04c2  */
+    /* JADX WARN: Removed duplicated region for block: B:272:0x04d1 A[Catch: RemoteException -> 0x044d, TRY_ENTER, TryCatch #11 {RemoteException -> 0x044d, blocks: (B:256:0x043f, B:272:0x04d1, B:274:0x04dc, B:276:0x04ea, B:278:0x04f8, B:280:0x0506, B:282:0x0511, B:284:0x0519, B:286:0x051d, B:292:0x0547, B:294:0x0552, B:296:0x0558, B:300:0x0567, B:302:0x056c, B:304:0x0574, B:306:0x0582, B:377:0x0659, B:324:0x05ba, B:326:0x05be, B:327:0x05c3, B:329:0x05ce, B:330:0x05d7, B:332:0x05db, B:333:0x05e0, B:335:0x05e6, B:337:0x05f0, B:346:0x060a, B:348:0x0610, B:349:0x0613, B:352:0x061e), top: B:653:0x043f, inners: #8 }] */
+    /* JADX WARN: Removed duplicated region for block: B:274:0x04dc A[Catch: RemoteException -> 0x044d, TryCatch #11 {RemoteException -> 0x044d, blocks: (B:256:0x043f, B:272:0x04d1, B:274:0x04dc, B:276:0x04ea, B:278:0x04f8, B:280:0x0506, B:282:0x0511, B:284:0x0519, B:286:0x051d, B:292:0x0547, B:294:0x0552, B:296:0x0558, B:300:0x0567, B:302:0x056c, B:304:0x0574, B:306:0x0582, B:377:0x0659, B:324:0x05ba, B:326:0x05be, B:327:0x05c3, B:329:0x05ce, B:330:0x05d7, B:332:0x05db, B:333:0x05e0, B:335:0x05e6, B:337:0x05f0, B:346:0x060a, B:348:0x0610, B:349:0x0613, B:352:0x061e), top: B:653:0x043f, inners: #8 }] */
+    /* JADX WARN: Removed duplicated region for block: B:276:0x04ea A[Catch: RemoteException -> 0x044d, TryCatch #11 {RemoteException -> 0x044d, blocks: (B:256:0x043f, B:272:0x04d1, B:274:0x04dc, B:276:0x04ea, B:278:0x04f8, B:280:0x0506, B:282:0x0511, B:284:0x0519, B:286:0x051d, B:292:0x0547, B:294:0x0552, B:296:0x0558, B:300:0x0567, B:302:0x056c, B:304:0x0574, B:306:0x0582, B:377:0x0659, B:324:0x05ba, B:326:0x05be, B:327:0x05c3, B:329:0x05ce, B:330:0x05d7, B:332:0x05db, B:333:0x05e0, B:335:0x05e6, B:337:0x05f0, B:346:0x060a, B:348:0x0610, B:349:0x0613, B:352:0x061e), top: B:653:0x043f, inners: #8 }] */
+    /* JADX WARN: Removed duplicated region for block: B:278:0x04f8 A[Catch: RemoteException -> 0x044d, TryCatch #11 {RemoteException -> 0x044d, blocks: (B:256:0x043f, B:272:0x04d1, B:274:0x04dc, B:276:0x04ea, B:278:0x04f8, B:280:0x0506, B:282:0x0511, B:284:0x0519, B:286:0x051d, B:292:0x0547, B:294:0x0552, B:296:0x0558, B:300:0x0567, B:302:0x056c, B:304:0x0574, B:306:0x0582, B:377:0x0659, B:324:0x05ba, B:326:0x05be, B:327:0x05c3, B:329:0x05ce, B:330:0x05d7, B:332:0x05db, B:333:0x05e0, B:335:0x05e6, B:337:0x05f0, B:346:0x060a, B:348:0x0610, B:349:0x0613, B:352:0x061e), top: B:653:0x043f, inners: #8 }] */
+    /* JADX WARN: Removed duplicated region for block: B:280:0x0506 A[Catch: RemoteException -> 0x044d, TryCatch #11 {RemoteException -> 0x044d, blocks: (B:256:0x043f, B:272:0x04d1, B:274:0x04dc, B:276:0x04ea, B:278:0x04f8, B:280:0x0506, B:282:0x0511, B:284:0x0519, B:286:0x051d, B:292:0x0547, B:294:0x0552, B:296:0x0558, B:300:0x0567, B:302:0x056c, B:304:0x0574, B:306:0x0582, B:377:0x0659, B:324:0x05ba, B:326:0x05be, B:327:0x05c3, B:329:0x05ce, B:330:0x05d7, B:332:0x05db, B:333:0x05e0, B:335:0x05e6, B:337:0x05f0, B:346:0x060a, B:348:0x0610, B:349:0x0613, B:352:0x061e), top: B:653:0x043f, inners: #8 }] */
+    /* JADX WARN: Removed duplicated region for block: B:282:0x0511 A[Catch: RemoteException -> 0x044d, TryCatch #11 {RemoteException -> 0x044d, blocks: (B:256:0x043f, B:272:0x04d1, B:274:0x04dc, B:276:0x04ea, B:278:0x04f8, B:280:0x0506, B:282:0x0511, B:284:0x0519, B:286:0x051d, B:292:0x0547, B:294:0x0552, B:296:0x0558, B:300:0x0567, B:302:0x056c, B:304:0x0574, B:306:0x0582, B:377:0x0659, B:324:0x05ba, B:326:0x05be, B:327:0x05c3, B:329:0x05ce, B:330:0x05d7, B:332:0x05db, B:333:0x05e0, B:335:0x05e6, B:337:0x05f0, B:346:0x060a, B:348:0x0610, B:349:0x0613, B:352:0x061e), top: B:653:0x043f, inners: #8 }] */
+    /* JADX WARN: Removed duplicated region for block: B:292:0x0547 A[Catch: RemoteException -> 0x044d, TRY_ENTER, TryCatch #11 {RemoteException -> 0x044d, blocks: (B:256:0x043f, B:272:0x04d1, B:274:0x04dc, B:276:0x04ea, B:278:0x04f8, B:280:0x0506, B:282:0x0511, B:284:0x0519, B:286:0x051d, B:292:0x0547, B:294:0x0552, B:296:0x0558, B:300:0x0567, B:302:0x056c, B:304:0x0574, B:306:0x0582, B:377:0x0659, B:324:0x05ba, B:326:0x05be, B:327:0x05c3, B:329:0x05ce, B:330:0x05d7, B:332:0x05db, B:333:0x05e0, B:335:0x05e6, B:337:0x05f0, B:346:0x060a, B:348:0x0610, B:349:0x0613, B:352:0x061e), top: B:653:0x043f, inners: #8 }] */
+    /* JADX WARN: Removed duplicated region for block: B:294:0x0552 A[Catch: RemoteException -> 0x044d, TryCatch #11 {RemoteException -> 0x044d, blocks: (B:256:0x043f, B:272:0x04d1, B:274:0x04dc, B:276:0x04ea, B:278:0x04f8, B:280:0x0506, B:282:0x0511, B:284:0x0519, B:286:0x051d, B:292:0x0547, B:294:0x0552, B:296:0x0558, B:300:0x0567, B:302:0x056c, B:304:0x0574, B:306:0x0582, B:377:0x0659, B:324:0x05ba, B:326:0x05be, B:327:0x05c3, B:329:0x05ce, B:330:0x05d7, B:332:0x05db, B:333:0x05e0, B:335:0x05e6, B:337:0x05f0, B:346:0x060a, B:348:0x0610, B:349:0x0613, B:352:0x061e), top: B:653:0x043f, inners: #8 }] */
+    /* JADX WARN: Removed duplicated region for block: B:298:0x0563  */
+    /* JADX WARN: Removed duplicated region for block: B:299:0x0565  */
+    /* JADX WARN: Removed duplicated region for block: B:302:0x056c A[Catch: RemoteException -> 0x044d, TryCatch #11 {RemoteException -> 0x044d, blocks: (B:256:0x043f, B:272:0x04d1, B:274:0x04dc, B:276:0x04ea, B:278:0x04f8, B:280:0x0506, B:282:0x0511, B:284:0x0519, B:286:0x051d, B:292:0x0547, B:294:0x0552, B:296:0x0558, B:300:0x0567, B:302:0x056c, B:304:0x0574, B:306:0x0582, B:377:0x0659, B:324:0x05ba, B:326:0x05be, B:327:0x05c3, B:329:0x05ce, B:330:0x05d7, B:332:0x05db, B:333:0x05e0, B:335:0x05e6, B:337:0x05f0, B:346:0x060a, B:348:0x0610, B:349:0x0613, B:352:0x061e), top: B:653:0x043f, inners: #8 }] */
+    /* JADX WARN: Removed duplicated region for block: B:31:0x004b  */
+    /* JADX WARN: Removed duplicated region for block: B:322:0x05b2 A[Catch: RemoteException -> 0x06e0, TRY_ENTER, TRY_LEAVE, TryCatch #0 {RemoteException -> 0x06e0, blocks: (B:254:0x0435, B:261:0x0459, B:265:0x04b4, B:269:0x04c3, B:369:0x063b, B:375:0x0647, B:381:0x066a, B:385:0x0673, B:322:0x05b2, B:339:0x05f8, B:344:0x0606, B:289:0x0527), top: B:633:0x0435 }] */
+    /* JADX WARN: Removed duplicated region for block: B:34:0x0062  */
+    /* JADX WARN: Removed duplicated region for block: B:356:0x0626  */
+    /* JADX WARN: Removed duplicated region for block: B:357:0x0628  */
+    /* JADX WARN: Removed duplicated region for block: B:360:0x062d  */
+    /* JADX WARN: Removed duplicated region for block: B:361:0x062f  */
+    /* JADX WARN: Removed duplicated region for block: B:364:0x0634 A[ADDED_TO_REGION] */
+    /* JADX WARN: Removed duplicated region for block: B:371:0x063f  */
+    /* JADX WARN: Removed duplicated region for block: B:397:0x06b8  */
+    /* JADX WARN: Removed duplicated region for block: B:400:0x06c9  */
+    /* JADX WARN: Removed duplicated region for block: B:40:0x0086  */
+    /* JADX WARN: Removed duplicated region for block: B:414:0x0720  */
+    /* JADX WARN: Removed duplicated region for block: B:419:0x0738  */
+    /* JADX WARN: Removed duplicated region for block: B:451:0x07f3  */
+    /* JADX WARN: Removed duplicated region for block: B:454:0x07fd  */
+    /* JADX WARN: Removed duplicated region for block: B:466:0x082d  */
+    /* JADX WARN: Removed duplicated region for block: B:470:0x0835  */
+    /* JADX WARN: Removed duplicated region for block: B:471:0x0837  */
+    /* JADX WARN: Removed duplicated region for block: B:474:0x083e  */
+    /* JADX WARN: Removed duplicated region for block: B:484:0x087f  */
+    /* JADX WARN: Removed duplicated region for block: B:487:0x0896  */
+    /* JADX WARN: Removed duplicated region for block: B:489:0x08a9  */
+    /* JADX WARN: Removed duplicated region for block: B:48:0x00e8  */
+    /* JADX WARN: Removed duplicated region for block: B:493:0x08b5  */
+    /* JADX WARN: Removed duplicated region for block: B:495:0x08ba  */
+    /* JADX WARN: Removed duplicated region for block: B:503:0x08c8  */
+    /* JADX WARN: Removed duplicated region for block: B:510:0x08d5  */
+    /* JADX WARN: Removed duplicated region for block: B:524:0x0945  */
+    /* JADX WARN: Removed duplicated region for block: B:526:0x0953  */
+    /* JADX WARN: Removed duplicated region for block: B:540:0x09bb  */
+    /* JADX WARN: Removed duplicated region for block: B:54:0x00ff  */
+    /* JADX WARN: Removed duplicated region for block: B:556:0x09f2  */
+    /* JADX WARN: Removed duplicated region for block: B:563:0x0a01 A[ADDED_TO_REGION] */
+    /* JADX WARN: Removed duplicated region for block: B:567:0x0a08  */
+    /* JADX WARN: Removed duplicated region for block: B:572:0x0a11  */
+    /* JADX WARN: Removed duplicated region for block: B:573:0x0a15  */
+    /* JADX WARN: Removed duplicated region for block: B:578:0x0a20 A[ADDED_TO_REGION] */
+    /* JADX WARN: Removed duplicated region for block: B:582:0x0a28  */
+    /* JADX WARN: Removed duplicated region for block: B:587:0x0a35  */
+    /* JADX WARN: Removed duplicated region for block: B:590:0x0a49  */
+    /* JADX WARN: Removed duplicated region for block: B:601:0x0aa0  */
+    /* JADX WARN: Removed duplicated region for block: B:604:0x0aad A[ADDED_TO_REGION] */
+    /* JADX WARN: Removed duplicated region for block: B:609:0x0ab7  */
+    /* JADX WARN: Removed duplicated region for block: B:619:0x0ae3  */
+    /* JADX WARN: Removed duplicated region for block: B:653:0x043f A[EXC_TOP_SPLITTER, SYNTHETIC] */
+    /* JADX WARN: Removed duplicated region for block: B:658:0x03c3 A[EXC_TOP_SPLITTER, SYNTHETIC] */
+    /* JADX WARN: Removed duplicated region for block: B:69:0x0128  */
+    /* JADX WARN: Removed duplicated region for block: B:80:0x014b  */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
     private void performTraversals() {
-        /*
-            r58 = this;
-            r7 = r58
-            android.view.View r8 = r7.mView
-            if (r8 == 0) goto L_0x0b15
-            boolean r0 = r7.mAdded
-            if (r0 != 0) goto L_0x000c
-            goto L_0x0b15
-        L_0x000c:
-            r9 = 1
-            r7.mIsInTraversal = r9
-            r7.mWillDrawSoon = r9
-            r0 = 0
-            r1 = 0
-            android.view.WindowManager$LayoutParams r10 = r7.mWindowAttributes
-            int r11 = r58.getHostVisibility()
-            boolean r2 = r7.mFirst
-            r12 = 0
-            if (r2 != 0) goto L_0x002c
-            int r2 = r7.mViewVisibility
-            if (r2 != r11) goto L_0x002a
-            boolean r2 = r7.mNewSurfaceNeeded
-            if (r2 != 0) goto L_0x002a
-            boolean r2 = r7.mAppVisibilityChanged
-            if (r2 == 0) goto L_0x002c
-        L_0x002a:
-            r2 = r9
-            goto L_0x002d
-        L_0x002c:
-            r2 = r12
-        L_0x002d:
-            r13 = r2
-            r7.mAppVisibilityChanged = r12
-            boolean r2 = r7.mFirst
-            if (r2 != 0) goto L_0x0044
-            int r2 = r7.mViewVisibility
-            if (r2 != 0) goto L_0x003a
-            r2 = r9
-            goto L_0x003b
-        L_0x003a:
-            r2 = r12
-        L_0x003b:
-            if (r11 != 0) goto L_0x003f
-            r3 = r9
-            goto L_0x0040
-        L_0x003f:
-            r3 = r12
-        L_0x0040:
-            if (r2 == r3) goto L_0x0044
-            r2 = r9
-            goto L_0x0045
-        L_0x0044:
-            r2 = r12
-        L_0x0045:
-            r14 = r2
-            r2 = 0
-            boolean r3 = r7.mWindowAttributesChanged
-            if (r3 == 0) goto L_0x004f
-            r7.mWindowAttributesChanged = r12
-            r1 = 1
-            r2 = r10
-        L_0x004f:
-            r15 = r1
-            android.view.Display r1 = r7.mDisplay
-            android.view.DisplayAdjustments r1 = r1.getDisplayAdjustments()
-            android.content.res.CompatibilityInfo r16 = r1.getCompatibilityInfo()
-            boolean r1 = r16.supportsScreen()
-            boolean r3 = r7.mLastInCompatMode
-            if (r1 != r3) goto L_0x007c
-            r2 = r10
-            r7.mFullRedrawNeeded = r9
-            r7.mLayoutRequested = r9
-            boolean r1 = r7.mLastInCompatMode
-            if (r1 == 0) goto L_0x0074
-            int r1 = r2.privateFlags
-            r1 = r1 & -129(0xffffffffffffff7f, float:NaN)
-            r2.privateFlags = r1
-            r7.mLastInCompatMode = r12
-            goto L_0x007c
-        L_0x0074:
-            int r1 = r2.privateFlags
-            r1 = r1 | 128(0x80, float:1.794E-43)
-            r2.privateFlags = r1
-            r7.mLastInCompatMode = r9
-        L_0x007c:
-            r17 = r2
-            r7.mWindowAttributesChangesFlag = r12
-            android.graphics.Rect r6 = r7.mWinFrame
-            boolean r1 = r7.mFirst
-            if (r1 == 0) goto L_0x00e8
-            r7.mFullRedrawNeeded = r9
-            r7.mLayoutRequested = r9
-            android.content.Context r1 = r7.mContext
-            android.content.res.Resources r1 = r1.getResources()
-            android.content.res.Configuration r1 = r1.getConfiguration()
-            boolean r2 = shouldUseDisplaySize(r10)
-            if (r2 == 0) goto L_0x00a9
-            android.graphics.Point r2 = new android.graphics.Point
-            r2.<init>()
-            android.view.Display r3 = r7.mDisplay
-            r3.getRealSize(r2)
-            int r3 = r2.x
-            int r2 = r2.y
-            goto L_0x00b5
-        L_0x00a9:
-            android.graphics.Rect r2 = r7.mWinFrame
-            int r3 = r2.width()
-            android.graphics.Rect r2 = r7.mWinFrame
-            int r2 = r2.height()
-        L_0x00b5:
-            android.view.View$AttachInfo r4 = r7.mAttachInfo
-            r4.mUse32BitDrawingCache = r9
-            android.view.View$AttachInfo r4 = r7.mAttachInfo
-            r4.mWindowVisibility = r11
-            android.view.View$AttachInfo r4 = r7.mAttachInfo
-            r4.mRecomputeGlobalAttributes = r12
-            android.content.res.Configuration r4 = r7.mLastConfigurationFromResources
-            r4.setTo(r1)
-            android.view.View$AttachInfo r4 = r7.mAttachInfo
-            int r4 = r4.mSystemUiVisibility
-            r7.mLastSystemUiVisibility = r4
-            int r4 = r7.mViewLayoutDirectionInitial
-            r5 = 2
-            if (r4 != r5) goto L_0x00d8
-            int r4 = r1.getLayoutDirection()
-            r8.setLayoutDirection(r4)
-        L_0x00d8:
-            android.view.View$AttachInfo r4 = r7.mAttachInfo
-            r8.dispatchAttachedToWindow(r4, r12)
-            android.view.View$AttachInfo r4 = r7.mAttachInfo
-            android.view.ViewTreeObserver r4 = r4.mTreeObserver
-            r4.dispatchOnWindowAttachedChange(r9)
-            r7.dispatchApplyInsets(r8)
-            goto L_0x00fd
-        L_0x00e8:
-            int r3 = r6.width()
-            int r2 = r6.height()
-            int r1 = r7.mWidth
-            if (r3 != r1) goto L_0x00f8
-            int r1 = r7.mHeight
-            if (r2 == r1) goto L_0x00fd
-        L_0x00f8:
-            r7.mFullRedrawNeeded = r9
-            r7.mLayoutRequested = r9
-            r0 = 1
-        L_0x00fd:
-            if (r13 == 0) goto L_0x0122
-            android.view.View$AttachInfo r1 = r7.mAttachInfo
-            r1.mWindowVisibility = r11
-            r8.dispatchWindowVisibilityChanged(r11)
-            if (r14 == 0) goto L_0x0110
-            if (r11 != 0) goto L_0x010c
-            r1 = r9
-            goto L_0x010d
-        L_0x010c:
-            r1 = r12
-        L_0x010d:
-            r8.dispatchVisibilityAggregated(r1)
-        L_0x0110:
-            if (r11 != 0) goto L_0x0116
-            boolean r1 = r7.mNewSurfaceNeeded
-            if (r1 == 0) goto L_0x011c
-        L_0x0116:
-            r58.endDragResizing()
-            r58.destroyHardwareResources()
-        L_0x011c:
-            r1 = 8
-            if (r11 != r1) goto L_0x0122
-            r7.mHasHadWindowFocus = r12
-        L_0x0122:
-            android.view.View$AttachInfo r1 = r7.mAttachInfo
-            int r1 = r1.mWindowVisibility
-            if (r1 == 0) goto L_0x012b
-            r8.clearAccessibilityFocus()
-        L_0x012b:
-            android.view.HandlerActionQueue r1 = getRunQueue()
-            android.view.View$AttachInfo r4 = r7.mAttachInfo
-            android.os.Handler r4 = r4.mHandler
-            r1.executeActions(r4)
-            r1 = 0
-            boolean r4 = r7.mLayoutRequested
-            if (r4 == 0) goto L_0x0145
-            boolean r4 = r7.mStopped
-            if (r4 == 0) goto L_0x0143
-            boolean r4 = r7.mReportNextDraw
-            if (r4 == 0) goto L_0x0145
-        L_0x0143:
-            r4 = r9
-            goto L_0x0146
-        L_0x0145:
-            r4 = r12
-        L_0x0146:
-            r18 = r4
-            r5 = -2
-            if (r18 == 0) goto L_0x020e
-            android.view.View r4 = r7.mView
-            android.content.Context r4 = r4.getContext()
-            android.content.res.Resources r19 = r4.getResources()
-            boolean r4 = r7.mFirst
-            if (r4 == 0) goto L_0x016c
-            android.view.View$AttachInfo r4 = r7.mAttachInfo
-            boolean r12 = r7.mAddedTouchMode
-            r12 = r12 ^ r9
-            r4.mInTouchMode = r12
-            boolean r4 = r7.mAddedTouchMode
-            r7.ensureTouchModeLocally(r4)
-        L_0x0165:
-            r21 = r1
-            r20 = r2
-            r12 = r3
-            goto L_0x01fc
-        L_0x016c:
-            android.graphics.Rect r4 = r7.mPendingOverscanInsets
-            android.view.View$AttachInfo r12 = r7.mAttachInfo
-            android.graphics.Rect r12 = r12.mOverscanInsets
-            boolean r4 = r4.equals(r12)
-            if (r4 != 0) goto L_0x0179
-            r1 = 1
-        L_0x0179:
-            android.graphics.Rect r4 = r7.mPendingContentInsets
-            android.view.View$AttachInfo r12 = r7.mAttachInfo
-            android.graphics.Rect r12 = r12.mContentInsets
-            boolean r4 = r4.equals(r12)
-            if (r4 != 0) goto L_0x0186
-            r1 = 1
-        L_0x0186:
-            android.graphics.Rect r4 = r7.mPendingStableInsets
-            android.view.View$AttachInfo r12 = r7.mAttachInfo
-            android.graphics.Rect r12 = r12.mStableInsets
-            boolean r4 = r4.equals(r12)
-            if (r4 != 0) goto L_0x0193
-            r1 = 1
-        L_0x0193:
-            android.view.DisplayCutout$ParcelableWrapper r4 = r7.mPendingDisplayCutout
-            android.view.View$AttachInfo r12 = r7.mAttachInfo
-            android.view.DisplayCutout$ParcelableWrapper r12 = r12.mDisplayCutout
-            boolean r4 = r4.equals(r12)
-            if (r4 != 0) goto L_0x01a0
-            r1 = 1
-        L_0x01a0:
-            android.graphics.Rect r4 = r7.mPendingVisibleInsets
-            android.view.View$AttachInfo r12 = r7.mAttachInfo
-            android.graphics.Rect r12 = r12.mVisibleInsets
-            boolean r4 = r4.equals(r12)
-            if (r4 != 0) goto L_0x01b5
-            android.view.View$AttachInfo r4 = r7.mAttachInfo
-            android.graphics.Rect r4 = r4.mVisibleInsets
-            android.graphics.Rect r12 = r7.mPendingVisibleInsets
-            r4.set(r12)
-        L_0x01b5:
-            android.graphics.Rect r4 = r7.mPendingOutsets
-            android.view.View$AttachInfo r12 = r7.mAttachInfo
-            android.graphics.Rect r12 = r12.mOutsets
-            boolean r4 = r4.equals(r12)
-            if (r4 != 0) goto L_0x01c2
-            r1 = 1
-        L_0x01c2:
-            boolean r4 = r7.mPendingAlwaysConsumeSystemBars
-            android.view.View$AttachInfo r12 = r7.mAttachInfo
-            boolean r12 = r12.mAlwaysConsumeSystemBars
-            if (r4 == r12) goto L_0x01cb
-            r1 = 1
-        L_0x01cb:
-            int r4 = r10.width
-            if (r4 == r5) goto L_0x01d3
-            int r4 = r10.height
-            if (r4 != r5) goto L_0x0165
-        L_0x01d3:
-            r0 = 1
-            boolean r4 = shouldUseDisplaySize(r10)
-            if (r4 == 0) goto L_0x01ea
-            android.graphics.Point r4 = new android.graphics.Point
-            r4.<init>()
-            android.view.Display r12 = r7.mDisplay
-            r12.getRealSize(r4)
-            int r3 = r4.x
-            int r2 = r4.y
-            goto L_0x0165
-        L_0x01ea:
-            android.content.res.Configuration r4 = r19.getConfiguration()
-            int r12 = r4.screenWidthDp
-            int r3 = r7.dipToPx(r12)
-            int r12 = r4.screenHeightDp
-            int r2 = r7.dipToPx(r12)
-            goto L_0x0165
-        L_0x01fc:
-            r1 = r58
-            r2 = r8
-            r3 = r10
-            r4 = r19
-            r9 = r5
-            r5 = r12
-            r23 = r6
-            r6 = r20
-            boolean r1 = r1.measureHierarchy(r2, r3, r4, r5, r6)
-            r0 = r0 | r1
-            goto L_0x0215
-        L_0x020e:
-            r9 = r5
-            r23 = r6
-            r21 = r1
-            r6 = r2
-            r12 = r3
-        L_0x0215:
-            boolean r1 = r58.collectViewAttributes()
-            if (r1 == 0) goto L_0x021d
-            r17 = r10
-        L_0x021d:
-            android.view.View$AttachInfo r1 = r7.mAttachInfo
-            boolean r1 = r1.mForceReportNewAttributes
-            if (r1 == 0) goto L_0x022a
-            android.view.View$AttachInfo r1 = r7.mAttachInfo
-            r2 = 0
-            r1.mForceReportNewAttributes = r2
-            r17 = r10
-        L_0x022a:
-            boolean r1 = r7.mFirst
-            if (r1 != 0) goto L_0x0234
-            android.view.View$AttachInfo r1 = r7.mAttachInfo
-            boolean r1 = r1.mViewVisibilityChanged
-            if (r1 == 0) goto L_0x0273
-        L_0x0234:
-            android.view.View$AttachInfo r1 = r7.mAttachInfo
-            r2 = 0
-            r1.mViewVisibilityChanged = r2
-            int r1 = r7.mSoftInputMode
-            r1 = r1 & 240(0xf0, float:3.36E-43)
-            if (r1 != 0) goto L_0x0273
-            android.view.View$AttachInfo r2 = r7.mAttachInfo
-            java.util.ArrayList<android.view.View> r2 = r2.mScrollContainers
-            int r2 = r2.size()
-            r3 = r1
-            r1 = 0
-        L_0x0249:
-            if (r1 >= r2) goto L_0x0260
-            android.view.View$AttachInfo r4 = r7.mAttachInfo
-            java.util.ArrayList<android.view.View> r4 = r4.mScrollContainers
-            java.lang.Object r4 = r4.get(r1)
-            android.view.View r4 = (android.view.View) r4
-            boolean r4 = r4.isShown()
-            if (r4 == 0) goto L_0x025d
-            r3 = 16
-        L_0x025d:
-            int r1 = r1 + 1
-            goto L_0x0249
-        L_0x0260:
-            if (r3 != 0) goto L_0x0264
-            r3 = 32
-        L_0x0264:
-            int r1 = r10.softInputMode
-            r1 = r1 & 240(0xf0, float:3.36E-43)
-            if (r1 == r3) goto L_0x0273
-            int r1 = r10.softInputMode
-            r1 = r1 & -241(0xffffffffffffff0f, float:NaN)
-            r1 = r1 | r3
-            r10.softInputMode = r1
-            r17 = r10
-        L_0x0273:
-            r5 = r17
-            if (r5 == 0) goto L_0x0296
-            int r1 = r8.mPrivateFlags
-            r1 = r1 & 512(0x200, float:7.175E-43)
-            if (r1 == 0) goto L_0x0288
-            int r1 = r5.format
-            boolean r1 = android.graphics.PixelFormat.formatHasAlpha(r1)
-            if (r1 != 0) goto L_0x0288
-            r1 = -3
-            r5.format = r1
-        L_0x0288:
-            android.view.View$AttachInfo r1 = r7.mAttachInfo
-            int r2 = r5.flags
-            r3 = 33554432(0x2000000, float:9.403955E-38)
-            r2 = r2 & r3
-            if (r2 == 0) goto L_0x0293
-            r2 = 1
-            goto L_0x0294
-        L_0x0293:
-            r2 = 0
-        L_0x0294:
-            r1.mOverscanRequested = r2
-        L_0x0296:
-            boolean r1 = r7.mApplyInsetsRequested
-            if (r1 == 0) goto L_0x02c3
-            r1 = 0
-            r7.mApplyInsetsRequested = r1
-            android.view.View$AttachInfo r1 = r7.mAttachInfo
-            boolean r1 = r1.mOverscanRequested
-            r7.mLastOverscanRequested = r1
-            r7.dispatchApplyInsets(r8)
-            boolean r1 = r7.mLayoutRequested
-            if (r1 == 0) goto L_0x02c3
-            android.view.View r1 = r7.mView
-            android.content.Context r1 = r1.getContext()
-            android.content.res.Resources r4 = r1.getResources()
-            r1 = r58
-            r2 = r8
-            r3 = r10
-            r24 = r5
-            r5 = r12
-            r25 = r6
-            boolean r1 = r1.measureHierarchy(r2, r3, r4, r5, r6)
-            r0 = r0 | r1
-            goto L_0x02c7
-        L_0x02c3:
-            r24 = r5
-            r25 = r6
-        L_0x02c7:
-            r17 = r0
-            if (r18 == 0) goto L_0x02ce
-            r1 = 0
-            r7.mLayoutRequested = r1
-        L_0x02ce:
-            if (r18 == 0) goto L_0x0311
-            if (r17 == 0) goto L_0x0311
-            int r0 = r7.mWidth
-            int r1 = r8.getMeasuredWidth()
-            if (r0 != r1) goto L_0x030d
-            int r0 = r7.mHeight
-            int r1 = r8.getMeasuredHeight()
-            if (r0 != r1) goto L_0x030d
-            int r0 = r10.width
-            if (r0 != r9) goto L_0x02f8
-            int r0 = r23.width()
-            if (r0 >= r12) goto L_0x02f8
-            int r0 = r23.width()
-            int r1 = r7.mWidth
-            if (r0 != r1) goto L_0x02f5
-            goto L_0x02f8
-        L_0x02f5:
-            r9 = r25
-            goto L_0x030f
-        L_0x02f8:
-            int r0 = r10.height
-            if (r0 != r9) goto L_0x0311
-            int r0 = r23.height()
-            r9 = r25
-            if (r0 >= r9) goto L_0x0313
-            int r0 = r23.height()
-            int r1 = r7.mHeight
-            if (r0 == r1) goto L_0x0313
-            goto L_0x030f
-        L_0x030d:
-            r9 = r25
-        L_0x030f:
-            r0 = 1
-            goto L_0x0314
-        L_0x0311:
-            r9 = r25
-        L_0x0313:
-            r0 = 0
-        L_0x0314:
-            boolean r1 = r7.mDragResizing
-            if (r1 == 0) goto L_0x031e
-            int r1 = r7.mResizeMode
-            if (r1 != 0) goto L_0x031e
-            r1 = 1
-            goto L_0x031f
-        L_0x031e:
-            r1 = 0
-        L_0x031f:
-            r0 = r0 | r1
-            boolean r1 = r7.mActivityRelaunched
-            r19 = r0 | r1
-            android.view.View$AttachInfo r0 = r7.mAttachInfo
-            android.view.ViewTreeObserver r0 = r0.mTreeObserver
-            boolean r0 = r0.hasComputeInternalInsetsListeners()
-            if (r0 != 0) goto L_0x0337
-            android.view.View$AttachInfo r0 = r7.mAttachInfo
-            boolean r0 = r0.mHasNonEmptyGivenInternalInsets
-            if (r0 == 0) goto L_0x0335
-            goto L_0x0337
-        L_0x0335:
-            r0 = 0
-            goto L_0x0338
-        L_0x0337:
-            r0 = 1
-        L_0x0338:
-            r20 = r0
-            r0 = 0
-            r1 = 0
-            r2 = 0
-            android.view.Surface r3 = r7.mSurface
-            int r6 = r3.getGenerationId()
-            if (r11 != 0) goto L_0x0347
-            r3 = 1
-            goto L_0x0348
-        L_0x0347:
-            r3 = 0
-        L_0x0348:
-            r25 = r3
-            boolean r5 = r7.mForceNextWindowRelayout
-            r3 = 0
-            boolean r4 = r7.mFirst
-            if (r4 != 0) goto L_0x0381
-            if (r19 != 0) goto L_0x0381
-            if (r21 != 0) goto L_0x0381
-            if (r13 != 0) goto L_0x0381
-            r4 = r24
-            if (r4 != 0) goto L_0x037a
-            r26 = r0
-            boolean r0 = r7.mForceNextWindowRelayout
-            if (r0 == 0) goto L_0x0366
-            r27 = r9
-            r9 = r23
-            goto L_0x0389
-        L_0x0366:
-            r27 = r9
-            r9 = r23
-            r7.maybeHandleWindowMove(r9)
-            r49 = r3
-            r40 = r4
-            r42 = r5
-            r51 = r9
-            r32 = r12
-            r12 = r6
-            goto L_0x08b3
-        L_0x037a:
-            r26 = r0
-            r27 = r9
-            r9 = r23
-            goto L_0x0389
-        L_0x0381:
-            r26 = r0
-            r27 = r9
-            r9 = r23
-            r4 = r24
-        L_0x0389:
-            r28 = r1
-            r1 = 0
-            r7.mForceNextWindowRelayout = r1
-            if (r25 == 0) goto L_0x039d
-            if (r20 == 0) goto L_0x039a
-            boolean r0 = r7.mFirst
-            if (r0 != 0) goto L_0x0398
-            if (r13 == 0) goto L_0x039a
-        L_0x0398:
-            r0 = 1
-            goto L_0x039b
-        L_0x039a:
-            r0 = 0
-        L_0x039b:
-            r1 = r0
-            goto L_0x039f
-        L_0x039d:
-            r1 = r26
-        L_0x039f:
-            com.android.internal.view.BaseSurfaceHolder r0 = r7.mSurfaceHolder
-            if (r0 == 0) goto L_0x03b0
-            com.android.internal.view.BaseSurfaceHolder r0 = r7.mSurfaceHolder
-            java.util.concurrent.locks.ReentrantLock r0 = r0.mSurfaceLock
-            r0.lock()
-            r29 = r2
-            r2 = 1
-            r7.mDrawingAllowed = r2
-            goto L_0x03b2
-        L_0x03b0:
-            r29 = r2
-        L_0x03b2:
-            r2 = 0
-            r23 = 0
-            android.view.Surface r0 = r7.mSurface
-            boolean r0 = r0.isValid()
-            r24 = r0
-            android.view.View$AttachInfo r0 = r7.mAttachInfo     // Catch:{ RemoteException -> 0x06f6 }
-            android.view.ThreadedRenderer r0 = r0.mThreadedRenderer     // Catch:{ RemoteException -> 0x06f6 }
-            if (r0 == 0) goto L_0x042a
-            android.view.View$AttachInfo r0 = r7.mAttachInfo     // Catch:{ RemoteException -> 0x0418 }
-            android.view.ThreadedRenderer r0 = r0.mThreadedRenderer     // Catch:{ RemoteException -> 0x0418 }
-            boolean r0 = r0.pause()     // Catch:{ RemoteException -> 0x0418 }
-            if (r0 == 0) goto L_0x03fc
-            android.graphics.Rect r0 = r7.mDirty     // Catch:{ RemoteException -> 0x0418 }
-            r30 = r2
-            int r2 = r7.mWidth     // Catch:{ RemoteException -> 0x03ec }
-            r31 = r3
-            int r3 = r7.mHeight     // Catch:{ RemoteException -> 0x03de }
-            r32 = r12
-            r12 = 0
-            r0.set(r12, r12, r2, r3)     // Catch:{ RemoteException -> 0x040c }
-            goto L_0x0402
-        L_0x03de:
-            r0 = move-exception
-            r32 = r12
-            r44 = r1
-            r40 = r4
-            r42 = r5
-            r12 = r6
-            r46 = r28
-            goto L_0x0706
-        L_0x03ec:
-            r0 = move-exception
-            r31 = r3
-            r32 = r12
-            r44 = r1
-            r40 = r4
-            r42 = r5
-            r12 = r6
-            r46 = r28
-            goto L_0x0706
-        L_0x03fc:
-            r30 = r2
-            r31 = r3
-            r32 = r12
-        L_0x0402:
-            android.view.Choreographer r0 = r7.mChoreographer     // Catch:{ RemoteException -> 0x040c }
-            android.graphics.FrameInfo r0 = r0.mFrameInfo     // Catch:{ RemoteException -> 0x040c }
-            r2 = 1
-            r0.addFlags(r2)     // Catch:{ RemoteException -> 0x040c }
-            goto L_0x0430
-        L_0x040c:
-            r0 = move-exception
-            r44 = r1
-            r40 = r4
-            r42 = r5
-            r12 = r6
-            r46 = r28
-            goto L_0x0706
-        L_0x0418:
-            r0 = move-exception
-            r30 = r2
-            r31 = r3
-            r32 = r12
-            r44 = r1
-            r40 = r4
-            r42 = r5
-            r12 = r6
-            r46 = r28
-            goto L_0x0706
-        L_0x042a:
-            r30 = r2
-            r31 = r3
-            r32 = r12
-        L_0x0430:
-            int r0 = r7.relayoutWindow(r4, r11, r1)     // Catch:{ RemoteException -> 0x06eb }
-            r12 = r0
-            android.util.MergedConfiguration r0 = r7.mPendingMergedConfiguration     // Catch:{ RemoteException -> 0x06e0 }
-            android.util.MergedConfiguration r2 = r7.mLastReportedMergedConfiguration     // Catch:{ RemoteException -> 0x06e0 }
-            boolean r0 = r0.equals(r2)     // Catch:{ RemoteException -> 0x06e0 }
-            if (r0 != 0) goto L_0x0459
-            android.util.MergedConfiguration r0 = r7.mPendingMergedConfiguration     // Catch:{ RemoteException -> 0x044d }
-            boolean r2 = r7.mFirst     // Catch:{ RemoteException -> 0x044d }
-            r3 = 1
-            r2 = r2 ^ r3
-            r3 = -1
-            r7.performConfigurationChange(r0, r2, r3)     // Catch:{ RemoteException -> 0x044d }
-            r2 = 1
-            r29 = r2
-            goto L_0x0459
-        L_0x044d:
-            r0 = move-exception
-            r44 = r1
-        L_0x0450:
-            r40 = r4
-            r42 = r5
-            r46 = r12
-            r12 = r6
-            goto L_0x0706
-        L_0x0459:
-            android.graphics.Rect r0 = r7.mPendingOverscanInsets     // Catch:{ RemoteException -> 0x06e0 }
-            android.view.View$AttachInfo r2 = r7.mAttachInfo     // Catch:{ RemoteException -> 0x06e0 }
-            android.graphics.Rect r2 = r2.mOverscanInsets     // Catch:{ RemoteException -> 0x06e0 }
-            boolean r0 = r0.equals(r2)     // Catch:{ RemoteException -> 0x06e0 }
-            r2 = 1
-            r0 = r0 ^ r2
-            r26 = r0
-            android.graphics.Rect r0 = r7.mPendingContentInsets     // Catch:{ RemoteException -> 0x06e0 }
-            android.view.View$AttachInfo r2 = r7.mAttachInfo     // Catch:{ RemoteException -> 0x06e0 }
-            android.graphics.Rect r2 = r2.mContentInsets     // Catch:{ RemoteException -> 0x06e0 }
-            boolean r0 = r0.equals(r2)     // Catch:{ RemoteException -> 0x06e0 }
-            r2 = 1
-            r0 = r0 ^ r2
-            r23 = r0
-            android.graphics.Rect r0 = r7.mPendingVisibleInsets     // Catch:{ RemoteException -> 0x06e0 }
-            android.view.View$AttachInfo r2 = r7.mAttachInfo     // Catch:{ RemoteException -> 0x06e0 }
-            android.graphics.Rect r2 = r2.mVisibleInsets     // Catch:{ RemoteException -> 0x06e0 }
-            boolean r0 = r0.equals(r2)     // Catch:{ RemoteException -> 0x06e0 }
-            r2 = 1
-            r0 = r0 ^ r2
-            r28 = r0
-            android.graphics.Rect r0 = r7.mPendingStableInsets     // Catch:{ RemoteException -> 0x06e0 }
-            android.view.View$AttachInfo r2 = r7.mAttachInfo     // Catch:{ RemoteException -> 0x06e0 }
-            android.graphics.Rect r2 = r2.mStableInsets     // Catch:{ RemoteException -> 0x06e0 }
-            boolean r0 = r0.equals(r2)     // Catch:{ RemoteException -> 0x06e0 }
-            r2 = 1
-            r0 = r0 ^ r2
-            r33 = r0
-            android.view.DisplayCutout$ParcelableWrapper r0 = r7.mPendingDisplayCutout     // Catch:{ RemoteException -> 0x06e0 }
-            android.view.View$AttachInfo r2 = r7.mAttachInfo     // Catch:{ RemoteException -> 0x06e0 }
-            android.view.DisplayCutout$ParcelableWrapper r2 = r2.mDisplayCutout     // Catch:{ RemoteException -> 0x06e0 }
-            boolean r0 = r0.equals(r2)     // Catch:{ RemoteException -> 0x06e0 }
-            r2 = 1
-            r0 = r0 ^ r2
-            r34 = r0
-            android.graphics.Rect r0 = r7.mPendingOutsets     // Catch:{ RemoteException -> 0x06e0 }
-            android.view.View$AttachInfo r2 = r7.mAttachInfo     // Catch:{ RemoteException -> 0x06e0 }
-            android.graphics.Rect r2 = r2.mOutsets     // Catch:{ RemoteException -> 0x06e0 }
-            boolean r0 = r0.equals(r2)     // Catch:{ RemoteException -> 0x06e0 }
-            r2 = 1
-            r0 = r0 ^ r2
-            r35 = r0
-            r0 = r12 & 32
-            if (r0 == 0) goto L_0x04b3
-            r0 = 1
-            goto L_0x04b4
-        L_0x04b3:
-            r0 = 0
-        L_0x04b4:
-            r31 = r0
-            r15 = r15 | r31
-            boolean r0 = r7.mPendingAlwaysConsumeSystemBars     // Catch:{ RemoteException -> 0x06e0 }
-            android.view.View$AttachInfo r2 = r7.mAttachInfo     // Catch:{ RemoteException -> 0x06e0 }
-            boolean r2 = r2.mAlwaysConsumeSystemBars     // Catch:{ RemoteException -> 0x06e0 }
-            if (r0 == r2) goto L_0x04c2
-            r0 = 1
-            goto L_0x04c3
-        L_0x04c2:
-            r0 = 0
-        L_0x04c3:
-            r36 = r0
-            int r0 = r10.getColorMode()     // Catch:{ RemoteException -> 0x06e0 }
-            boolean r0 = r7.hasColorModeChanged(r0)     // Catch:{ RemoteException -> 0x06e0 }
-            r37 = r0
-            if (r23 == 0) goto L_0x04da
-            android.view.View$AttachInfo r0 = r7.mAttachInfo     // Catch:{ RemoteException -> 0x044d }
-            android.graphics.Rect r0 = r0.mContentInsets     // Catch:{ RemoteException -> 0x044d }
-            android.graphics.Rect r2 = r7.mPendingContentInsets     // Catch:{ RemoteException -> 0x044d }
-            r0.set(r2)     // Catch:{ RemoteException -> 0x044d }
-        L_0x04da:
-            if (r26 == 0) goto L_0x04e8
-            android.view.View$AttachInfo r0 = r7.mAttachInfo     // Catch:{ RemoteException -> 0x044d }
-            android.graphics.Rect r0 = r0.mOverscanInsets     // Catch:{ RemoteException -> 0x044d }
-            android.graphics.Rect r2 = r7.mPendingOverscanInsets     // Catch:{ RemoteException -> 0x044d }
-            r0.set(r2)     // Catch:{ RemoteException -> 0x044d }
-            r0 = 1
-            r23 = r0
-        L_0x04e8:
-            if (r33 == 0) goto L_0x04f6
-            android.view.View$AttachInfo r0 = r7.mAttachInfo     // Catch:{ RemoteException -> 0x044d }
-            android.graphics.Rect r0 = r0.mStableInsets     // Catch:{ RemoteException -> 0x044d }
-            android.graphics.Rect r2 = r7.mPendingStableInsets     // Catch:{ RemoteException -> 0x044d }
-            r0.set(r2)     // Catch:{ RemoteException -> 0x044d }
-            r0 = 1
-            r23 = r0
-        L_0x04f6:
-            if (r34 == 0) goto L_0x0504
-            android.view.View$AttachInfo r0 = r7.mAttachInfo     // Catch:{ RemoteException -> 0x044d }
-            android.view.DisplayCutout$ParcelableWrapper r0 = r0.mDisplayCutout     // Catch:{ RemoteException -> 0x044d }
-            android.view.DisplayCutout$ParcelableWrapper r2 = r7.mPendingDisplayCutout     // Catch:{ RemoteException -> 0x044d }
-            r0.set((android.view.DisplayCutout.ParcelableWrapper) r2)     // Catch:{ RemoteException -> 0x044d }
-            r0 = 1
-            r23 = r0
-        L_0x0504:
-            if (r36 == 0) goto L_0x050f
-            android.view.View$AttachInfo r0 = r7.mAttachInfo     // Catch:{ RemoteException -> 0x044d }
-            boolean r2 = r7.mPendingAlwaysConsumeSystemBars     // Catch:{ RemoteException -> 0x044d }
-            r0.mAlwaysConsumeSystemBars = r2     // Catch:{ RemoteException -> 0x044d }
-            r0 = 1
-            r23 = r0
-        L_0x050f:
-            if (r23 != 0) goto L_0x0527
-            int r0 = r7.mLastSystemUiVisibility     // Catch:{ RemoteException -> 0x044d }
-            android.view.View$AttachInfo r2 = r7.mAttachInfo     // Catch:{ RemoteException -> 0x044d }
-            int r2 = r2.mSystemUiVisibility     // Catch:{ RemoteException -> 0x044d }
-            if (r0 != r2) goto L_0x0527
-            boolean r0 = r7.mApplyInsetsRequested     // Catch:{ RemoteException -> 0x044d }
-            if (r0 != 0) goto L_0x0527
-            boolean r0 = r7.mLastOverscanRequested     // Catch:{ RemoteException -> 0x044d }
-            android.view.View$AttachInfo r2 = r7.mAttachInfo     // Catch:{ RemoteException -> 0x044d }
-            boolean r2 = r2.mOverscanRequested     // Catch:{ RemoteException -> 0x044d }
-            if (r0 != r2) goto L_0x0527
-            if (r35 == 0) goto L_0x0545
-        L_0x0527:
-            android.view.View$AttachInfo r0 = r7.mAttachInfo     // Catch:{ RemoteException -> 0x06e0 }
-            int r0 = r0.mSystemUiVisibility     // Catch:{ RemoteException -> 0x06e0 }
-            r7.mLastSystemUiVisibility = r0     // Catch:{ RemoteException -> 0x06e0 }
-            android.view.View$AttachInfo r0 = r7.mAttachInfo     // Catch:{ RemoteException -> 0x06e0 }
-            boolean r0 = r0.mOverscanRequested     // Catch:{ RemoteException -> 0x06e0 }
-            r7.mLastOverscanRequested = r0     // Catch:{ RemoteException -> 0x06e0 }
-            android.view.View$AttachInfo r0 = r7.mAttachInfo     // Catch:{ RemoteException -> 0x06e0 }
-            android.graphics.Rect r0 = r0.mOutsets     // Catch:{ RemoteException -> 0x06e0 }
-            android.graphics.Rect r2 = r7.mPendingOutsets     // Catch:{ RemoteException -> 0x06e0 }
-            r0.set(r2)     // Catch:{ RemoteException -> 0x06e0 }
-            r2 = 0
-            r7.mApplyInsetsRequested = r2     // Catch:{ RemoteException -> 0x06e0 }
-            r7.dispatchApplyInsets(r8)     // Catch:{ RemoteException -> 0x06e0 }
-            r0 = 1
-            r23 = r0
-        L_0x0545:
-            if (r28 == 0) goto L_0x0550
-            android.view.View$AttachInfo r0 = r7.mAttachInfo     // Catch:{ RemoteException -> 0x044d }
-            android.graphics.Rect r0 = r0.mVisibleInsets     // Catch:{ RemoteException -> 0x044d }
-            android.graphics.Rect r2 = r7.mPendingVisibleInsets     // Catch:{ RemoteException -> 0x044d }
-            r0.set(r2)     // Catch:{ RemoteException -> 0x044d }
-        L_0x0550:
-            if (r37 == 0) goto L_0x056a
-            android.view.View$AttachInfo r0 = r7.mAttachInfo     // Catch:{ RemoteException -> 0x044d }
-            android.view.ThreadedRenderer r0 = r0.mThreadedRenderer     // Catch:{ RemoteException -> 0x044d }
-            if (r0 == 0) goto L_0x056a
-            android.view.View$AttachInfo r0 = r7.mAttachInfo     // Catch:{ RemoteException -> 0x044d }
-            android.view.ThreadedRenderer r0 = r0.mThreadedRenderer     // Catch:{ RemoteException -> 0x044d }
-            int r2 = r10.getColorMode()     // Catch:{ RemoteException -> 0x044d }
-            r3 = 1
-            if (r2 != r3) goto L_0x0565
-            r2 = 1
-            goto L_0x0567
-        L_0x0565:
-            r2 = 0
-        L_0x0567:
-            r0.setWideGamut(r2)     // Catch:{ RemoteException -> 0x044d }
-        L_0x056a:
-            if (r24 != 0) goto L_0x05b2
-            android.view.Surface r0 = r7.mSurface     // Catch:{ RemoteException -> 0x044d }
-            boolean r0 = r0.isValid()     // Catch:{ RemoteException -> 0x044d }
-            if (r0 == 0) goto L_0x0622
-            r2 = 1
-            r7.mFullRedrawNeeded = r2     // Catch:{ RemoteException -> 0x044d }
-            android.graphics.Region r0 = r7.mPreviousTransparentRegion     // Catch:{ RemoteException -> 0x044d }
-            r0.setEmpty()     // Catch:{ RemoteException -> 0x044d }
-            android.view.View$AttachInfo r0 = r7.mAttachInfo     // Catch:{ RemoteException -> 0x044d }
-            android.view.ThreadedRenderer r0 = r0.mThreadedRenderer     // Catch:{ RemoteException -> 0x044d }
-            if (r0 == 0) goto L_0x0622
-            android.view.View$AttachInfo r0 = r7.mAttachInfo     // Catch:{ OutOfResourcesException -> 0x05a4 }
-            android.view.ThreadedRenderer r0 = r0.mThreadedRenderer     // Catch:{ OutOfResourcesException -> 0x05a4 }
-            android.view.Surface r2 = r7.mSurface     // Catch:{ OutOfResourcesException -> 0x05a4 }
-            boolean r0 = r0.initialize(r2)     // Catch:{ OutOfResourcesException -> 0x05a4 }
-            r2 = r0
-            if (r2 == 0) goto L_0x059f
-            int r0 = r8.mPrivateFlags     // Catch:{ OutOfResourcesException -> 0x059d }
-            r0 = r0 & 512(0x200, float:7.175E-43)
-            if (r0 != 0) goto L_0x059f
-            android.view.View$AttachInfo r0 = r7.mAttachInfo     // Catch:{ OutOfResourcesException -> 0x059d }
-            android.view.ThreadedRenderer r0 = r0.mThreadedRenderer     // Catch:{ OutOfResourcesException -> 0x059d }
-            r0.allocateBuffers()     // Catch:{ OutOfResourcesException -> 0x059d }
-            goto L_0x059f
-        L_0x059d:
-            r0 = move-exception
-            goto L_0x05a7
-        L_0x059f:
-            r30 = r2
-            goto L_0x0622
-        L_0x05a4:
-            r0 = move-exception
-            r2 = r30
-        L_0x05a7:
-            r7.handleOutOfResourcesException(r0)     // Catch:{ RemoteException -> 0x05ab }
-            return
-        L_0x05ab:
-            r0 = move-exception
-            r44 = r1
-            r30 = r2
-            goto L_0x0450
-        L_0x05b2:
-            android.view.Surface r0 = r7.mSurface     // Catch:{ RemoteException -> 0x06e0 }
-            boolean r0 = r0.isValid()     // Catch:{ RemoteException -> 0x06e0 }
-            if (r0 != 0) goto L_0x05f8
-            java.lang.ref.WeakReference<android.view.View> r0 = r7.mLastScrolledFocus     // Catch:{ RemoteException -> 0x044d }
-            if (r0 == 0) goto L_0x05c3
-            java.lang.ref.WeakReference<android.view.View> r0 = r7.mLastScrolledFocus     // Catch:{ RemoteException -> 0x044d }
-            r0.clear()     // Catch:{ RemoteException -> 0x044d }
-        L_0x05c3:
-            r2 = 0
-            r7.mCurScrollY = r2     // Catch:{ RemoteException -> 0x044d }
-            r7.mScrollY = r2     // Catch:{ RemoteException -> 0x044d }
-            android.view.View r0 = r7.mView     // Catch:{ RemoteException -> 0x044d }
-            boolean r0 = r0 instanceof com.android.internal.view.RootViewSurfaceTaker     // Catch:{ RemoteException -> 0x044d }
-            if (r0 == 0) goto L_0x05d7
-            android.view.View r0 = r7.mView     // Catch:{ RemoteException -> 0x044d }
-            com.android.internal.view.RootViewSurfaceTaker r0 = (com.android.internal.view.RootViewSurfaceTaker) r0     // Catch:{ RemoteException -> 0x044d }
-            int r2 = r7.mCurScrollY     // Catch:{ RemoteException -> 0x044d }
-            r0.onRootViewScrollYChanged(r2)     // Catch:{ RemoteException -> 0x044d }
-        L_0x05d7:
-            android.widget.Scroller r0 = r7.mScroller     // Catch:{ RemoteException -> 0x044d }
-            if (r0 == 0) goto L_0x05e0
-            android.widget.Scroller r0 = r7.mScroller     // Catch:{ RemoteException -> 0x044d }
-            r0.abortAnimation()     // Catch:{ RemoteException -> 0x044d }
-        L_0x05e0:
-            android.view.View$AttachInfo r0 = r7.mAttachInfo     // Catch:{ RemoteException -> 0x044d }
-            android.view.ThreadedRenderer r0 = r0.mThreadedRenderer     // Catch:{ RemoteException -> 0x044d }
-            if (r0 == 0) goto L_0x0622
-            android.view.View$AttachInfo r0 = r7.mAttachInfo     // Catch:{ RemoteException -> 0x044d }
-            android.view.ThreadedRenderer r0 = r0.mThreadedRenderer     // Catch:{ RemoteException -> 0x044d }
-            boolean r0 = r0.isEnabled()     // Catch:{ RemoteException -> 0x044d }
-            if (r0 == 0) goto L_0x0622
-            android.view.View$AttachInfo r0 = r7.mAttachInfo     // Catch:{ RemoteException -> 0x044d }
-            android.view.ThreadedRenderer r0 = r0.mThreadedRenderer     // Catch:{ RemoteException -> 0x044d }
-            r0.destroy()     // Catch:{ RemoteException -> 0x044d }
-            goto L_0x0622
-        L_0x05f8:
-            android.view.Surface r0 = r7.mSurface     // Catch:{ RemoteException -> 0x06e0 }
-            int r0 = r0.getGenerationId()     // Catch:{ RemoteException -> 0x06e0 }
-            if (r6 != r0) goto L_0x0606
-            if (r31 != 0) goto L_0x0606
-            if (r5 != 0) goto L_0x0606
-            if (r37 == 0) goto L_0x0622
-        L_0x0606:
-            com.android.internal.view.BaseSurfaceHolder r0 = r7.mSurfaceHolder     // Catch:{ RemoteException -> 0x06e0 }
-            if (r0 != 0) goto L_0x0622
-            android.view.View$AttachInfo r0 = r7.mAttachInfo     // Catch:{ RemoteException -> 0x044d }
-            android.view.ThreadedRenderer r0 = r0.mThreadedRenderer     // Catch:{ RemoteException -> 0x044d }
-            if (r0 == 0) goto L_0x0622
-            r2 = 1
-            r7.mFullRedrawNeeded = r2     // Catch:{ RemoteException -> 0x044d }
-            android.view.View$AttachInfo r0 = r7.mAttachInfo     // Catch:{ OutOfResourcesException -> 0x061d }
-            android.view.ThreadedRenderer r0 = r0.mThreadedRenderer     // Catch:{ OutOfResourcesException -> 0x061d }
-            android.view.Surface r2 = r7.mSurface     // Catch:{ OutOfResourcesException -> 0x061d }
-            r0.updateSurface(r2)     // Catch:{ OutOfResourcesException -> 0x061d }
-            goto L_0x0622
-        L_0x061d:
-            r0 = move-exception
-            r7.handleOutOfResourcesException(r0)     // Catch:{ RemoteException -> 0x044d }
-            return
-        L_0x0622:
-            r0 = r12 & 16
-            if (r0 == 0) goto L_0x0628
-            r0 = 1
-            goto L_0x0629
-        L_0x0628:
-            r0 = 0
-        L_0x0629:
-            r2 = r12 & 8
-            if (r2 == 0) goto L_0x062f
-            r2 = 1
-            goto L_0x0630
-        L_0x062f:
-            r2 = 0
-        L_0x0630:
-            r38 = r2
-            if (r0 != 0) goto L_0x0639
-            if (r38 == 0) goto L_0x0637
-            goto L_0x0639
-        L_0x0637:
-            r2 = 0
-            goto L_0x063a
-        L_0x0639:
-            r2 = 1
-        L_0x063a:
-            r3 = r2
-            boolean r2 = r7.mDragResizing     // Catch:{ RemoteException -> 0x06e0 }
-            if (r2 == r3) goto L_0x06b8
-            if (r3 == 0) goto L_0x06a7
-            if (r0 == 0) goto L_0x0646
-            r2 = 0
-            goto L_0x0647
-        L_0x0646:
-            r2 = 1
-        L_0x0647:
-            r7.mResizeMode = r2     // Catch:{ RemoteException -> 0x06e0 }
-            android.graphics.Rect r2 = r7.mWinFrame     // Catch:{ RemoteException -> 0x06e0 }
-            int r2 = r2.width()     // Catch:{ RemoteException -> 0x06e0 }
-            r39 = r0
-            android.graphics.Rect r0 = r7.mPendingBackDropFrame     // Catch:{ RemoteException -> 0x06e0 }
-            int r0 = r0.width()     // Catch:{ RemoteException -> 0x06e0 }
-            if (r2 != r0) goto L_0x0669
-            android.graphics.Rect r0 = r7.mWinFrame     // Catch:{ RemoteException -> 0x044d }
-            int r0 = r0.height()     // Catch:{ RemoteException -> 0x044d }
-            android.graphics.Rect r2 = r7.mPendingBackDropFrame     // Catch:{ RemoteException -> 0x044d }
-            int r2 = r2.height()     // Catch:{ RemoteException -> 0x044d }
-            if (r0 != r2) goto L_0x0669
-            r0 = 1
-            goto L_0x066a
-        L_0x0669:
-            r0 = 0
-        L_0x066a:
-            android.graphics.Rect r2 = r7.mPendingBackDropFrame     // Catch:{ RemoteException -> 0x06e0 }
-            if (r0 != 0) goto L_0x0671
-            r40 = 1
-            goto L_0x0673
-        L_0x0671:
-            r40 = 0
-        L_0x0673:
-            r41 = r0
-            android.graphics.Rect r0 = r7.mPendingVisibleInsets     // Catch:{ RemoteException -> 0x06e0 }
-            r42 = r5
-            android.graphics.Rect r5 = r7.mPendingStableInsets     // Catch:{ RemoteException -> 0x069d }
-            r43 = r6
-            int r6 = r7.mResizeMode     // Catch:{ RemoteException -> 0x0692 }
-            r44 = r1
-            r1 = r58
-            r45 = r3
-            r3 = r40
-            r40 = r4
-            r4 = r0
-            r46 = r12
-            r12 = r43
-            r1.startDragResizing(r2, r3, r4, r5, r6)     // Catch:{ RemoteException -> 0x06de }
-            goto L_0x06c5
-        L_0x0692:
-            r0 = move-exception
-            r44 = r1
-            r40 = r4
-            r46 = r12
-            r12 = r43
-            goto L_0x0706
-        L_0x069d:
-            r0 = move-exception
-            r44 = r1
-            r40 = r4
-            r46 = r12
-            r12 = r6
-            goto L_0x0706
-        L_0x06a7:
-            r39 = r0
-            r44 = r1
-            r45 = r3
-            r40 = r4
-            r42 = r5
-            r46 = r12
-            r12 = r6
-            r58.endDragResizing()     // Catch:{ RemoteException -> 0x06de }
-            goto L_0x06c5
-        L_0x06b8:
-            r39 = r0
-            r44 = r1
-            r45 = r3
-            r40 = r4
-            r42 = r5
-            r46 = r12
-            r12 = r6
-        L_0x06c5:
-            boolean r0 = r7.mUseMTRenderer     // Catch:{ RemoteException -> 0x06de }
-            if (r0 != 0) goto L_0x06dd
-            if (r45 == 0) goto L_0x06d8
-            android.graphics.Rect r0 = r7.mWinFrame     // Catch:{ RemoteException -> 0x06de }
-            int r0 = r0.left     // Catch:{ RemoteException -> 0x06de }
-            r7.mCanvasOffsetX = r0     // Catch:{ RemoteException -> 0x06de }
-            android.graphics.Rect r0 = r7.mWinFrame     // Catch:{ RemoteException -> 0x06de }
-            int r0 = r0.top     // Catch:{ RemoteException -> 0x06de }
-            r7.mCanvasOffsetY = r0     // Catch:{ RemoteException -> 0x06de }
-            goto L_0x06dd
-        L_0x06d8:
-            r1 = 0
-            r7.mCanvasOffsetY = r1     // Catch:{ RemoteException -> 0x06de }
-            r7.mCanvasOffsetX = r1     // Catch:{ RemoteException -> 0x06de }
-        L_0x06dd:
-            goto L_0x0706
-        L_0x06de:
-            r0 = move-exception
-            goto L_0x0706
-        L_0x06e0:
-            r0 = move-exception
-            r44 = r1
-            r40 = r4
-            r42 = r5
-            r46 = r12
-            r12 = r6
-            goto L_0x0706
-        L_0x06eb:
-            r0 = move-exception
-            r44 = r1
-            r40 = r4
-            r42 = r5
-            r12 = r6
-            r46 = r28
-            goto L_0x0706
-        L_0x06f6:
-            r0 = move-exception
-            r44 = r1
-            r30 = r2
-            r31 = r3
-            r40 = r4
-            r42 = r5
-            r32 = r12
-            r12 = r6
-            r46 = r28
-        L_0x0706:
-            r2 = r29
-            r3 = r31
-            r1 = r46
-            android.view.View$AttachInfo r0 = r7.mAttachInfo
-            int r4 = r9.left
-            r0.mWindowLeft = r4
-            android.view.View$AttachInfo r0 = r7.mAttachInfo
-            int r4 = r9.top
-            r0.mWindowTop = r4
-            int r0 = r7.mWidth
-            int r4 = r9.width()
-            if (r0 != r4) goto L_0x0728
-            int r0 = r7.mHeight
-            int r4 = r9.height()
-            if (r0 == r4) goto L_0x0734
-        L_0x0728:
-            int r0 = r9.width()
-            r7.mWidth = r0
-            int r0 = r9.height()
-            r7.mHeight = r0
-        L_0x0734:
-            com.android.internal.view.BaseSurfaceHolder r0 = r7.mSurfaceHolder
-            if (r0 == 0) goto L_0x07f3
-            android.view.Surface r0 = r7.mSurface
-            boolean r0 = r0.isValid()
-            if (r0 == 0) goto L_0x0746
-            com.android.internal.view.BaseSurfaceHolder r0 = r7.mSurfaceHolder
-            android.view.Surface r4 = r7.mSurface
-            r0.mSurface = r4
-        L_0x0746:
-            com.android.internal.view.BaseSurfaceHolder r0 = r7.mSurfaceHolder
-            int r4 = r7.mWidth
-            int r5 = r7.mHeight
-            r0.setSurfaceFrameSize(r4, r5)
-            com.android.internal.view.BaseSurfaceHolder r0 = r7.mSurfaceHolder
-            java.util.concurrent.locks.ReentrantLock r0 = r0.mSurfaceLock
-            r0.unlock()
-            android.view.Surface r0 = r7.mSurface
-            boolean r0 = r0.isValid()
-            if (r0 == 0) goto L_0x07c9
-            if (r24 != 0) goto L_0x0785
-            com.android.internal.view.BaseSurfaceHolder r0 = r7.mSurfaceHolder
-            r0.ungetCallbacks()
-            r4 = 1
-            r7.mIsCreating = r4
-            com.android.internal.view.BaseSurfaceHolder r0 = r7.mSurfaceHolder
-            android.view.SurfaceHolder$Callback[] r0 = r0.getCallbacks()
-            if (r0 == 0) goto L_0x0782
-            int r4 = r0.length
-            r5 = 0
-        L_0x0772:
-            if (r5 >= r4) goto L_0x0782
-            r6 = r0[r5]
-            r47 = r0
-            com.android.internal.view.BaseSurfaceHolder r0 = r7.mSurfaceHolder
-            r6.surfaceCreated(r0)
-            int r5 = r5 + 1
-            r0 = r47
-            goto L_0x0772
-        L_0x0782:
-            r47 = r0
-            r15 = 1
-        L_0x0785:
-            if (r15 != 0) goto L_0x0795
-            android.view.Surface r0 = r7.mSurface
-            int r0 = r0.getGenerationId()
-            if (r12 == r0) goto L_0x0790
-            goto L_0x0795
-        L_0x0790:
-            r49 = r3
-            r51 = r9
-            goto L_0x07c5
-        L_0x0795:
-            com.android.internal.view.BaseSurfaceHolder r0 = r7.mSurfaceHolder
-            android.view.SurfaceHolder$Callback[] r0 = r0.getCallbacks()
-            if (r0 == 0) goto L_0x07c1
-            int r4 = r0.length
-            r5 = 0
-        L_0x079f:
-            if (r5 >= r4) goto L_0x07c1
-            r6 = r0[r5]
-            r48 = r0
-            com.android.internal.view.BaseSurfaceHolder r0 = r7.mSurfaceHolder
-            r49 = r3
-            int r3 = r10.format
-            r50 = r4
-            int r4 = r7.mWidth
-            r51 = r9
-            int r9 = r7.mHeight
-            r6.surfaceChanged(r0, r3, r4, r9)
-            int r5 = r5 + 1
-            r0 = r48
-            r3 = r49
-            r4 = r50
-            r9 = r51
-            goto L_0x079f
-        L_0x07c1:
-            r49 = r3
-            r51 = r9
-        L_0x07c5:
-            r3 = 0
-            r7.mIsCreating = r3
-            goto L_0x07f7
-        L_0x07c9:
-            r49 = r3
-            r51 = r9
-            if (r24 == 0) goto L_0x07f7
-            r58.notifySurfaceDestroyed()
-            com.android.internal.view.BaseSurfaceHolder r0 = r7.mSurfaceHolder
-            java.util.concurrent.locks.ReentrantLock r0 = r0.mSurfaceLock
-            r0.lock()
-            com.android.internal.view.BaseSurfaceHolder r0 = r7.mSurfaceHolder     // Catch:{ all -> 0x07ea }
-            android.view.Surface r3 = new android.view.Surface     // Catch:{ all -> 0x07ea }
-            r3.<init>()     // Catch:{ all -> 0x07ea }
-            r0.mSurface = r3     // Catch:{ all -> 0x07ea }
-            com.android.internal.view.BaseSurfaceHolder r0 = r7.mSurfaceHolder
-            java.util.concurrent.locks.ReentrantLock r0 = r0.mSurfaceLock
-            r0.unlock()
-            goto L_0x07f7
-        L_0x07ea:
-            r0 = move-exception
-            com.android.internal.view.BaseSurfaceHolder r3 = r7.mSurfaceHolder
-            java.util.concurrent.locks.ReentrantLock r3 = r3.mSurfaceLock
-            r3.unlock()
-            throw r0
-        L_0x07f3:
-            r49 = r3
-            r51 = r9
-        L_0x07f7:
-            android.view.View$AttachInfo r0 = r7.mAttachInfo
-            android.view.ThreadedRenderer r0 = r0.mThreadedRenderer
-            if (r0 == 0) goto L_0x0829
-            boolean r3 = r0.isEnabled()
-            if (r3 == 0) goto L_0x0829
-            if (r30 != 0) goto L_0x0819
-            int r3 = r7.mWidth
-            int r4 = r0.getWidth()
-            if (r3 != r4) goto L_0x0819
-            int r3 = r7.mHeight
-            int r4 = r0.getHeight()
-            if (r3 != r4) goto L_0x0819
-            boolean r3 = r7.mNeedsRendererSetup
-            if (r3 == 0) goto L_0x0829
-        L_0x0819:
-            int r3 = r7.mWidth
-            int r4 = r7.mHeight
-            android.view.View$AttachInfo r5 = r7.mAttachInfo
-            android.view.WindowManager$LayoutParams r6 = r7.mWindowAttributes
-            android.graphics.Rect r6 = r6.surfaceInsets
-            r0.setup(r3, r4, r5, r6)
-            r3 = 0
-            r7.mNeedsRendererSetup = r3
-        L_0x0829:
-            boolean r3 = r7.mStopped
-            if (r3 == 0) goto L_0x0831
-            boolean r3 = r7.mReportNextDraw
-            if (r3 == 0) goto L_0x0853
-        L_0x0831:
-            r3 = r1 & 1
-            if (r3 == 0) goto L_0x0837
-            r3 = 1
-            goto L_0x0838
-        L_0x0837:
-            r3 = 0
-        L_0x0838:
-            boolean r3 = r7.ensureTouchModeLocally(r3)
-            if (r3 != 0) goto L_0x0856
-            int r4 = r7.mWidth
-            int r5 = r8.getMeasuredWidth()
-            if (r4 != r5) goto L_0x0856
-            int r4 = r7.mHeight
-            int r5 = r8.getMeasuredHeight()
-            if (r4 != r5) goto L_0x0856
-            if (r23 != 0) goto L_0x0856
-            if (r2 == 0) goto L_0x0853
-            goto L_0x0856
-        L_0x0853:
-            r53 = r1
-            goto L_0x08af
-        L_0x0856:
-            int r4 = r7.mWidth
-            int r5 = r10.width
-            int r4 = getRootMeasureSpec(r4, r5)
-            int r5 = r7.mHeight
-            int r6 = r10.height
-            int r5 = getRootMeasureSpec(r5, r6)
-            r7.performMeasure(r4, r5)
-            int r6 = r8.getMeasuredWidth()
-            int r9 = r8.getMeasuredHeight()
-            r26 = 0
-            r52 = r0
-            float r0 = r10.horizontalWeight
-            r28 = 0
-            int r0 = (r0 > r28 ? 1 : (r0 == r28 ? 0 : -1))
-            r53 = r1
-            if (r0 <= 0) goto L_0x0890
-            int r0 = r7.mWidth
-            int r0 = r0 - r6
-            float r0 = (float) r0
-            float r1 = r10.horizontalWeight
-            float r0 = r0 * r1
-            int r0 = (int) r0
-            int r6 = r6 + r0
-            r0 = 1073741824(0x40000000, float:2.0)
-            int r4 = android.view.View.MeasureSpec.makeMeasureSpec(r6, r0)
-            r26 = 1
-        L_0x0890:
-            float r0 = r10.verticalWeight
-            int r0 = (r0 > r28 ? 1 : (r0 == r28 ? 0 : -1))
-            if (r0 <= 0) goto L_0x08a7
-            int r0 = r7.mHeight
-            int r0 = r0 - r9
-            float r0 = (float) r0
-            float r1 = r10.verticalWeight
-            float r0 = r0 * r1
-            int r0 = (int) r0
-            int r9 = r9 + r0
-            r0 = 1073741824(0x40000000, float:2.0)
-            int r5 = android.view.View.MeasureSpec.makeMeasureSpec(r9, r0)
-            r26 = 1
-        L_0x08a7:
-            if (r26 == 0) goto L_0x08ac
-            r7.performMeasure(r4, r5)
-        L_0x08ac:
-            r0 = 1
-            r18 = r0
-        L_0x08af:
-            r26 = r44
-            r1 = r53
-        L_0x08b3:
-            if (r49 == 0) goto L_0x08b8
-            r58.updateBoundsSurface()
-        L_0x08b8:
-            if (r18 == 0) goto L_0x08c4
-            boolean r0 = r7.mStopped
-            if (r0 == 0) goto L_0x08c2
-            boolean r0 = r7.mReportNextDraw
-            if (r0 == 0) goto L_0x08c4
-        L_0x08c2:
-            r0 = 1
-            goto L_0x08c5
-        L_0x08c4:
-            r0 = 0
-        L_0x08c5:
-            r3 = r0
-            if (r3 != 0) goto L_0x08d1
-            android.view.View$AttachInfo r0 = r7.mAttachInfo
-            boolean r0 = r0.mRecomputeGlobalAttributes
-            if (r0 == 0) goto L_0x08cf
-            goto L_0x08d1
-        L_0x08cf:
-            r0 = 0
-            goto L_0x08d2
-        L_0x08d1:
-            r0 = 1
-        L_0x08d2:
-            r4 = r0
-            if (r3 == 0) goto L_0x093f
-            int r0 = r7.mWidth
-            int r5 = r7.mHeight
-            r7.performLayout(r10, r0, r5)
-            int r0 = r8.mPrivateFlags
-            r0 = r0 & 512(0x200, float:7.175E-43)
-            if (r0 == 0) goto L_0x093f
-            int[] r0 = r7.mTmpLocation
-            r8.getLocationInWindow(r0)
-            android.graphics.Region r0 = r7.mTransparentRegion
-            int[] r5 = r7.mTmpLocation
-            r6 = 0
-            r5 = r5[r6]
-            int[] r9 = r7.mTmpLocation
-            r22 = 1
-            r9 = r9[r22]
-            r54 = r2
-            int[] r2 = r7.mTmpLocation
-            r2 = r2[r6]
-            int r6 = r8.mRight
-            int r2 = r2 + r6
-            int r6 = r8.mLeft
-            int r2 = r2 - r6
-            int[] r6 = r7.mTmpLocation
-            r6 = r6[r22]
-            r55 = r3
-            int r3 = r8.mBottom
-            int r6 = r6 + r3
-            int r3 = r8.mTop
-            int r6 = r6 - r3
-            r0.set(r5, r9, r2, r6)
-            android.graphics.Region r0 = r7.mTransparentRegion
-            r8.gatherTransparentRegion(r0)
-            android.content.res.CompatibilityInfo$Translator r0 = r7.mTranslator
-            if (r0 == 0) goto L_0x091f
-            android.content.res.CompatibilityInfo$Translator r0 = r7.mTranslator
-            android.graphics.Region r2 = r7.mTransparentRegion
-            r0.translateRegionInWindowToScreen(r2)
-        L_0x091f:
-            android.graphics.Region r0 = r7.mTransparentRegion
-            android.graphics.Region r2 = r7.mPreviousTransparentRegion
-            boolean r0 = r0.equals(r2)
-            if (r0 != 0) goto L_0x0943
-            android.graphics.Region r0 = r7.mPreviousTransparentRegion
-            android.graphics.Region r2 = r7.mTransparentRegion
-            r0.set((android.graphics.Region) r2)
-            r2 = 1
-            r7.mFullRedrawNeeded = r2
-            android.view.IWindowSession r0 = r7.mWindowSession     // Catch:{ RemoteException -> 0x093d }
-            android.view.ViewRootImpl$W r2 = r7.mWindow     // Catch:{ RemoteException -> 0x093d }
-            android.graphics.Region r3 = r7.mTransparentRegion     // Catch:{ RemoteException -> 0x093d }
-            r0.setTransparentRegion(r2, r3)     // Catch:{ RemoteException -> 0x093d }
-            goto L_0x0943
-        L_0x093d:
-            r0 = move-exception
-            goto L_0x0943
-        L_0x093f:
-            r54 = r2
-            r55 = r3
-        L_0x0943:
-            if (r4 == 0) goto L_0x0951
-            android.view.View$AttachInfo r0 = r7.mAttachInfo
-            r2 = 0
-            r0.mRecomputeGlobalAttributes = r2
-            android.view.View$AttachInfo r0 = r7.mAttachInfo
-            android.view.ViewTreeObserver r0 = r0.mTreeObserver
-            r0.dispatchOnGlobalLayout()
-        L_0x0951:
-            if (r20 == 0) goto L_0x09b7
-            android.view.View$AttachInfo r0 = r7.mAttachInfo
-            android.view.ViewTreeObserver$InternalInsetsInfo r2 = r0.mGivenInternalInsets
-            r2.reset()
-            android.view.View$AttachInfo r0 = r7.mAttachInfo
-            android.view.ViewTreeObserver r0 = r0.mTreeObserver
-            r0.dispatchOnComputeInternalInsets(r2)
-            android.view.View$AttachInfo r0 = r7.mAttachInfo
-            boolean r3 = r2.isEmpty()
-            r5 = 1
-            r3 = r3 ^ r5
-            r0.mHasNonEmptyGivenInternalInsets = r3
-            if (r26 != 0) goto L_0x0975
-            android.view.ViewTreeObserver$InternalInsetsInfo r0 = r7.mLastGivenInsets
-            boolean r0 = r0.equals(r2)
-            if (r0 != 0) goto L_0x09b7
-        L_0x0975:
-            android.view.ViewTreeObserver$InternalInsetsInfo r0 = r7.mLastGivenInsets
-            r0.set(r2)
-            android.content.res.CompatibilityInfo$Translator r0 = r7.mTranslator
-            if (r0 == 0) goto L_0x099b
-            android.content.res.CompatibilityInfo$Translator r0 = r7.mTranslator
-            android.graphics.Rect r3 = r2.contentInsets
-            android.graphics.Rect r0 = r0.getTranslatedContentInsets(r3)
-            android.content.res.CompatibilityInfo$Translator r3 = r7.mTranslator
-            android.graphics.Rect r5 = r2.visibleInsets
-            android.graphics.Rect r3 = r3.getTranslatedVisibleInsets(r5)
-            android.content.res.CompatibilityInfo$Translator r5 = r7.mTranslator
-            android.graphics.Region r6 = r2.touchableRegion
-            android.graphics.Region r5 = r5.getTranslatedTouchableArea(r6)
-        L_0x0996:
-            r38 = r5
-            r5 = r3
-            r3 = r0
-            goto L_0x09a2
-        L_0x099b:
-            android.graphics.Rect r0 = r2.contentInsets
-            android.graphics.Rect r3 = r2.visibleInsets
-            android.graphics.Region r5 = r2.touchableRegion
-            goto L_0x0996
-        L_0x09a2:
-            android.view.IWindowSession r0 = r7.mWindowSession     // Catch:{ RemoteException -> 0x09b6 }
-            android.view.ViewRootImpl$W r6 = r7.mWindow     // Catch:{ RemoteException -> 0x09b6 }
-            int r9 = r2.mTouchableInsets     // Catch:{ RemoteException -> 0x09b6 }
-            r33 = r0
-            r34 = r6
-            r35 = r9
-            r36 = r3
-            r37 = r5
-            r33.setInsets(r34, r35, r36, r37, r38)     // Catch:{ RemoteException -> 0x09b6 }
-            goto L_0x09b7
-        L_0x09b6:
-            r0 = move-exception
-        L_0x09b7:
-            boolean r0 = r7.mFirst
-            if (r0 == 0) goto L_0x09f0
-            boolean r0 = sAlwaysAssignFocus
-            if (r0 != 0) goto L_0x09df
-            boolean r0 = isInTouchMode()
-            if (r0 != 0) goto L_0x09c6
-            goto L_0x09df
-        L_0x09c6:
-            android.view.View r0 = r7.mView
-            android.view.View r0 = r0.findFocus()
-            boolean r2 = r0 instanceof android.view.ViewGroup
-            if (r2 == 0) goto L_0x09f0
-            r2 = r0
-            android.view.ViewGroup r2 = (android.view.ViewGroup) r2
-            int r2 = r2.getDescendantFocusability()
-            r3 = 262144(0x40000, float:3.67342E-40)
-            if (r2 != r3) goto L_0x09f0
-            r0.restoreDefaultFocus()
-            goto L_0x09f0
-        L_0x09df:
-            android.view.View r0 = r7.mView
-            if (r0 == 0) goto L_0x09f0
-            android.view.View r0 = r7.mView
-            boolean r0 = r0.hasFocus()
-            if (r0 != 0) goto L_0x09f0
-            android.view.View r0 = r7.mView
-            r0.restoreDefaultFocus()
-        L_0x09f0:
-            if (r13 != 0) goto L_0x09f6
-            boolean r0 = r7.mFirst
-            if (r0 == 0) goto L_0x09fa
-        L_0x09f6:
-            if (r25 == 0) goto L_0x09fa
-            r0 = 1
-            goto L_0x09fb
-        L_0x09fa:
-            r0 = 0
-        L_0x09fb:
-            android.view.View$AttachInfo r2 = r7.mAttachInfo
-            boolean r2 = r2.mHasWindowFocus
-            if (r2 == 0) goto L_0x0a05
-            if (r25 == 0) goto L_0x0a05
-            r2 = 1
-            goto L_0x0a06
-        L_0x0a05:
-            r2 = 0
-        L_0x0a06:
-            if (r2 == 0) goto L_0x0a0e
-            boolean r3 = r7.mLostWindowFocus
-            if (r3 == 0) goto L_0x0a0e
-            r3 = 1
-            goto L_0x0a0f
-        L_0x0a0e:
-            r3 = 0
-        L_0x0a0f:
-            if (r3 == 0) goto L_0x0a15
-            r5 = 0
-            r7.mLostWindowFocus = r5
-            goto L_0x0a1e
-        L_0x0a15:
-            if (r2 != 0) goto L_0x0a1e
-            boolean r5 = r7.mHadWindowFocus
-            if (r5 == 0) goto L_0x0a1e
-            r5 = 1
-            r7.mLostWindowFocus = r5
-        L_0x0a1e:
-            if (r0 != 0) goto L_0x0a22
-            if (r3 == 0) goto L_0x0a3a
-        L_0x0a22:
-            android.view.WindowManager$LayoutParams r5 = r7.mWindowAttributes
-            if (r5 != 0) goto L_0x0a28
-        L_0x0a26:
-            r5 = 0
-            goto L_0x0a33
-        L_0x0a28:
-            android.view.WindowManager$LayoutParams r5 = r7.mWindowAttributes
-            int r5 = r5.type
-            r6 = 2005(0x7d5, float:2.81E-42)
-            if (r5 != r6) goto L_0x0a32
-            r5 = 1
-            goto L_0x0a33
-        L_0x0a32:
-            goto L_0x0a26
-        L_0x0a33:
-            if (r5 != 0) goto L_0x0a3a
-            r6 = 32
-            r8.sendAccessibilityEvent(r6)
-        L_0x0a3a:
-            r5 = 0
-            r7.mFirst = r5
-            r7.mWillDrawSoon = r5
-            r7.mNewSurfaceNeeded = r5
-            r7.mActivityRelaunched = r5
-            r7.mViewVisibility = r11
-            r7.mHadWindowFocus = r2
-            if (r2 == 0) goto L_0x0a96
-            boolean r5 = r58.isInLocalFocusMode()
-            if (r5 != 0) goto L_0x0a96
-            android.view.WindowManager$LayoutParams r5 = r7.mWindowAttributes
-            int r5 = r5.flags
-            boolean r5 = android.view.WindowManager.LayoutParams.mayUseInputMethod(r5)
-            boolean r6 = r7.mLastWasImTarget
-            if (r5 == r6) goto L_0x0a96
-            r7.mLastWasImTarget = r5
-            android.content.Context r6 = r7.mContext
-            java.lang.Class<android.view.inputmethod.InputMethodManager> r9 = android.view.inputmethod.InputMethodManager.class
-            java.lang.Object r6 = r6.getSystemService(r9)
-            android.view.inputmethod.InputMethodManager r6 = (android.view.inputmethod.InputMethodManager) r6
-            if (r6 == 0) goto L_0x0a96
-            if (r5 == 0) goto L_0x0a96
-            android.view.View r9 = r7.mView
-            r6.onPreWindowFocus(r9, r2)
-            android.view.View r9 = r7.mView
-            r56 = r0
-            android.view.View r0 = r7.mView
-            android.view.View r35 = r0.findFocus()
-            android.view.WindowManager$LayoutParams r0 = r7.mWindowAttributes
-            int r0 = r0.softInputMode
-            r57 = r2
-            boolean r2 = r7.mHasHadWindowFocus
-            r22 = 1
-            r37 = r2 ^ 1
-            android.view.WindowManager$LayoutParams r2 = r7.mWindowAttributes
-            int r2 = r2.flags
-            r33 = r6
-            r34 = r9
-            r36 = r0
-            r38 = r2
-            r33.onPostWindowFocus(r34, r35, r36, r37, r38)
-            goto L_0x0a9c
-        L_0x0a96:
-            r56 = r0
-            r57 = r2
-            r22 = 1
-        L_0x0a9c:
-            r0 = r1 & 2
-            if (r0 == 0) goto L_0x0aa3
-            r58.reportNextDraw()
-        L_0x0aa3:
-            android.view.View$AttachInfo r0 = r7.mAttachInfo
-            android.view.ViewTreeObserver r0 = r0.mTreeObserver
-            boolean r0 = r0.dispatchOnPreDraw()
-            if (r0 != 0) goto L_0x0ab3
-            if (r25 != 0) goto L_0x0ab0
-            goto L_0x0ab3
-        L_0x0ab0:
-            r22 = 0
-        L_0x0ab3:
-            r0 = r22
-            if (r0 != 0) goto L_0x0ae3
-            java.util.ArrayList<android.animation.LayoutTransition> r2 = r7.mPendingTransitions
-            if (r2 == 0) goto L_0x0adf
-            java.util.ArrayList<android.animation.LayoutTransition> r2 = r7.mPendingTransitions
-            int r2 = r2.size()
-            if (r2 <= 0) goto L_0x0adf
-            r2 = 0
-        L_0x0ac4:
-            java.util.ArrayList<android.animation.LayoutTransition> r5 = r7.mPendingTransitions
-            int r5 = r5.size()
-            if (r2 >= r5) goto L_0x0ada
-            java.util.ArrayList<android.animation.LayoutTransition> r5 = r7.mPendingTransitions
-            java.lang.Object r5 = r5.get(r2)
-            android.animation.LayoutTransition r5 = (android.animation.LayoutTransition) r5
-            r5.startChangingAnimations()
-            int r2 = r2 + 1
-            goto L_0x0ac4
-        L_0x0ada:
-            java.util.ArrayList<android.animation.LayoutTransition> r2 = r7.mPendingTransitions
-            r2.clear()
-        L_0x0adf:
-            r58.performDraw()
-            goto L_0x0b11
-        L_0x0ae3:
-            if (r25 == 0) goto L_0x0ae9
-            r58.scheduleTraversals()
-            goto L_0x0b11
-        L_0x0ae9:
-            java.util.ArrayList<android.animation.LayoutTransition> r2 = r7.mPendingTransitions
-            if (r2 == 0) goto L_0x0b11
-            java.util.ArrayList<android.animation.LayoutTransition> r2 = r7.mPendingTransitions
-            int r2 = r2.size()
-            if (r2 <= 0) goto L_0x0b11
-            r2 = 0
-        L_0x0af6:
-            java.util.ArrayList<android.animation.LayoutTransition> r5 = r7.mPendingTransitions
-            int r5 = r5.size()
-            if (r2 >= r5) goto L_0x0b0c
-            java.util.ArrayList<android.animation.LayoutTransition> r5 = r7.mPendingTransitions
-            java.lang.Object r5 = r5.get(r2)
-            android.animation.LayoutTransition r5 = (android.animation.LayoutTransition) r5
-            r5.endChangingAnimations()
-            int r2 = r2 + 1
-            goto L_0x0af6
-        L_0x0b0c:
-            java.util.ArrayList<android.animation.LayoutTransition> r2 = r7.mPendingTransitions
-            r2.clear()
-        L_0x0b11:
-            r2 = 0
-            r7.mIsInTraversal = r2
-            return
-        L_0x0b15:
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.view.ViewRootImpl.performTraversals():void");
+        boolean z;
+        CompatibilityInfo compatibilityInfo;
+        int desiredWindowWidth;
+        int desiredWindowHeight;
+        boolean layoutRequested;
+        int i;
+        Rect frame;
+        boolean insetsChanged;
+        int desiredWindowHeight2;
+        int desiredWindowWidth2;
+        int resizeMode;
+        WindowManager.LayoutParams params;
+        WindowManager.LayoutParams params2;
+        int desiredWindowHeight3;
+        int desiredWindowHeight4;
+        boolean windowShouldResize;
+        boolean computesInternalInsets;
+        int relayoutResult;
+        boolean isViewVisible;
+        boolean insetsPending;
+        Rect frame2;
+        WindowManager.LayoutParams params3;
+        boolean surfaceSizeChanged;
+        boolean didLayout;
+        boolean triggerGlobalLayoutListener;
+        boolean changedVisibility;
+        boolean hasWindowFocus;
+        boolean regainedFocus;
+        boolean isToast;
+        boolean z2;
+        boolean cancelDraw;
+        boolean imTarget;
+        InputMethodManager imm;
+        Rect contentInsets;
+        Rect visibleInsets;
+        Region region;
+        boolean updatedConfiguration;
+        boolean contentInsetsChanged;
+        boolean hadSurface;
+        boolean insetsPending2;
+        boolean hwInitialized;
+        boolean surfaceSizeChanged2;
+        int relayoutResult2;
+        int relayoutResult3;
+        int relayoutResult4;
+        ThreadedRenderer threadedRenderer;
+        boolean focusChangedDueToTouchMode;
+        boolean measureAgain;
+        int relayoutResult5;
+        boolean overscanInsetsChanged;
+        boolean visibleInsetsChanged;
+        boolean stableInsetsChanged;
+        boolean cutoutChanged;
+        boolean alwaysConsumeSystemBarsChanged;
+        boolean colorModeChanged;
+        boolean dragResizing;
+        boolean dragResizing2;
+        View host = this.mView;
+        if (host == null || !this.mAdded) {
+            return;
+        }
+        this.mIsInTraversal = true;
+        this.mWillDrawSoon = true;
+        boolean windowSizeMayChange = false;
+        boolean surfaceChanged = false;
+        WindowManager.LayoutParams lp = this.mWindowAttributes;
+        int viewVisibility = getHostVisibility();
+        boolean viewVisibilityChanged = !this.mFirst && (this.mViewVisibility != viewVisibility || this.mNewSurfaceNeeded || this.mAppVisibilityChanged);
+        this.mAppVisibilityChanged = false;
+        if (!this.mFirst) {
+            if ((this.mViewVisibility == 0) != (viewVisibility == 0)) {
+                z = true;
+                boolean viewUserVisibilityChanged = z;
+                WindowManager.LayoutParams params4 = null;
+                if (this.mWindowAttributesChanged) {
+                    this.mWindowAttributesChanged = false;
+                    surfaceChanged = true;
+                    params4 = lp;
+                }
+                boolean surfaceChanged2 = surfaceChanged;
+                compatibilityInfo = this.mDisplay.getDisplayAdjustments().getCompatibilityInfo();
+                if (compatibilityInfo.supportsScreen() == this.mLastInCompatMode) {
+                    params4 = lp;
+                    this.mFullRedrawNeeded = true;
+                    this.mLayoutRequested = true;
+                    if (this.mLastInCompatMode) {
+                        params4.privateFlags &= -129;
+                        this.mLastInCompatMode = false;
+                    } else {
+                        params4.privateFlags |= 128;
+                        this.mLastInCompatMode = true;
+                    }
+                }
+                WindowManager.LayoutParams params5 = params4;
+                this.mWindowAttributesChangesFlag = 0;
+                Rect frame3 = this.mWinFrame;
+                if (this.mFirst) {
+                    desiredWindowWidth = frame3.width();
+                    desiredWindowHeight = frame3.height();
+                    if (desiredWindowWidth != this.mWidth || desiredWindowHeight != this.mHeight) {
+                        this.mFullRedrawNeeded = true;
+                        this.mLayoutRequested = true;
+                        windowSizeMayChange = true;
+                    }
+                } else {
+                    this.mFullRedrawNeeded = true;
+                    this.mLayoutRequested = true;
+                    Configuration config = this.mContext.getResources().getConfiguration();
+                    if (shouldUseDisplaySize(lp)) {
+                        Point size = new Point();
+                        this.mDisplay.getRealSize(size);
+                        desiredWindowWidth = size.f59x;
+                        desiredWindowHeight = size.f60y;
+                    } else {
+                        desiredWindowWidth = this.mWinFrame.width();
+                        desiredWindowHeight = this.mWinFrame.height();
+                    }
+                    this.mAttachInfo.mUse32BitDrawingCache = true;
+                    this.mAttachInfo.mWindowVisibility = viewVisibility;
+                    this.mAttachInfo.mRecomputeGlobalAttributes = false;
+                    this.mLastConfigurationFromResources.setTo(config);
+                    this.mLastSystemUiVisibility = this.mAttachInfo.mSystemUiVisibility;
+                    if (this.mViewLayoutDirectionInitial == 2) {
+                        host.setLayoutDirection(config.getLayoutDirection());
+                    }
+                    host.dispatchAttachedToWindow(this.mAttachInfo, 0);
+                    this.mAttachInfo.mTreeObserver.dispatchOnWindowAttachedChange(true);
+                    dispatchApplyInsets(host);
+                }
+                if (viewVisibilityChanged) {
+                    this.mAttachInfo.mWindowVisibility = viewVisibility;
+                    host.dispatchWindowVisibilityChanged(viewVisibility);
+                    if (viewUserVisibilityChanged) {
+                        host.dispatchVisibilityAggregated(viewVisibility == 0);
+                    }
+                    if (viewVisibility != 0 || this.mNewSurfaceNeeded) {
+                        endDragResizing();
+                        destroyHardwareResources();
+                    }
+                    if (viewVisibility == 8) {
+                        this.mHasHadWindowFocus = false;
+                    }
+                }
+                if (this.mAttachInfo.mWindowVisibility != 0) {
+                    host.clearAccessibilityFocus();
+                }
+                getRunQueue().executeActions(this.mAttachInfo.mHandler);
+                layoutRequested = !this.mLayoutRequested && (!this.mStopped || this.mReportNextDraw);
+                if (layoutRequested) {
+                    i = -2;
+                    frame = frame3;
+                    insetsChanged = false;
+                    desiredWindowHeight2 = desiredWindowHeight;
+                    desiredWindowWidth2 = desiredWindowWidth;
+                } else {
+                    Resources res = this.mView.getContext().getResources();
+                    if (this.mFirst) {
+                        this.mAttachInfo.mInTouchMode = !this.mAddedTouchMode;
+                        ensureTouchModeLocally(this.mAddedTouchMode);
+                    } else {
+                        insetsChanged = this.mPendingOverscanInsets.equals(this.mAttachInfo.mOverscanInsets) ? false : true;
+                        if (!this.mPendingContentInsets.equals(this.mAttachInfo.mContentInsets)) {
+                            insetsChanged = true;
+                        }
+                        if (!this.mPendingStableInsets.equals(this.mAttachInfo.mStableInsets)) {
+                            insetsChanged = true;
+                        }
+                        if (!this.mPendingDisplayCutout.equals(this.mAttachInfo.mDisplayCutout)) {
+                            insetsChanged = true;
+                        }
+                        if (!this.mPendingVisibleInsets.equals(this.mAttachInfo.mVisibleInsets)) {
+                            this.mAttachInfo.mVisibleInsets.set(this.mPendingVisibleInsets);
+                        }
+                        if (!this.mPendingOutsets.equals(this.mAttachInfo.mOutsets)) {
+                            insetsChanged = true;
+                        }
+                        if (this.mPendingAlwaysConsumeSystemBars != this.mAttachInfo.mAlwaysConsumeSystemBars) {
+                            insetsChanged = true;
+                        }
+                        if (lp.width == -2 || lp.height == -2) {
+                            windowSizeMayChange = true;
+                            if (shouldUseDisplaySize(lp)) {
+                                Point size2 = new Point();
+                                this.mDisplay.getRealSize(size2);
+                                desiredWindowWidth = size2.f59x;
+                                desiredWindowHeight = size2.f60y;
+                            } else {
+                                Configuration config2 = res.getConfiguration();
+                                desiredWindowWidth = dipToPx(config2.screenWidthDp);
+                                desiredWindowHeight = dipToPx(config2.screenHeightDp);
+                            }
+                        }
+                    }
+                    insetsChanged = insetsChanged;
+                    desiredWindowWidth2 = desiredWindowWidth;
+                    i = -2;
+                    frame = frame3;
+                    desiredWindowHeight2 = desiredWindowHeight;
+                    windowSizeMayChange |= measureHierarchy(host, lp, res, desiredWindowWidth2, desiredWindowHeight2);
+                }
+                if (collectViewAttributes()) {
+                    params5 = lp;
+                }
+                if (this.mAttachInfo.mForceReportNewAttributes) {
+                    this.mAttachInfo.mForceReportNewAttributes = false;
+                    params5 = lp;
+                }
+                if (!this.mFirst || this.mAttachInfo.mViewVisibilityChanged) {
+                    this.mAttachInfo.mViewVisibilityChanged = false;
+                    resizeMode = this.mSoftInputMode & 240;
+                    if (resizeMode == 0) {
+                        int N = this.mAttachInfo.mScrollContainers.size();
+                        int resizeMode2 = resizeMode;
+                        for (int resizeMode3 = 0; resizeMode3 < N; resizeMode3++) {
+                            if (this.mAttachInfo.mScrollContainers.get(resizeMode3).isShown()) {
+                                resizeMode2 = 16;
+                            }
+                        }
+                        if (resizeMode2 == 0) {
+                            resizeMode2 = 32;
+                        }
+                        if ((lp.softInputMode & 240) != resizeMode2) {
+                            lp.softInputMode = (lp.softInputMode & TrafficStats.TAG_SYSTEM_IMPERSONATION_RANGE_END) | resizeMode2;
+                            params5 = lp;
+                        }
+                    }
+                }
+                params = params5;
+                if (params != null) {
+                    if ((host.mPrivateFlags & 512) != 0 && !PixelFormat.formatHasAlpha(params.format)) {
+                        params.format = -3;
+                    }
+                    this.mAttachInfo.mOverscanRequested = (params.flags & 33554432) != 0;
+                }
+                if (this.mApplyInsetsRequested) {
+                    this.mApplyInsetsRequested = false;
+                    this.mLastOverscanRequested = this.mAttachInfo.mOverscanRequested;
+                    dispatchApplyInsets(host);
+                    if (this.mLayoutRequested) {
+                        params2 = params;
+                        desiredWindowHeight3 = desiredWindowHeight2;
+                        windowSizeMayChange |= measureHierarchy(host, lp, this.mView.getContext().getResources(), desiredWindowWidth2, desiredWindowHeight2);
+                        boolean windowSizeMayChange2 = windowSizeMayChange;
+                        if (layoutRequested) {
+                            this.mLayoutRequested = false;
+                        }
+                        if (layoutRequested && windowSizeMayChange2) {
+                            if (this.mWidth == host.getMeasuredWidth() || this.mHeight != host.getMeasuredHeight()) {
+                                desiredWindowHeight4 = desiredWindowHeight3;
+                            } else if (lp.width == i && frame.width() < desiredWindowWidth2 && frame.width() != this.mWidth) {
+                                desiredWindowHeight4 = desiredWindowHeight3;
+                            } else if (lp.height == i) {
+                                desiredWindowHeight4 = desiredWindowHeight3;
+                                if (frame.height() < desiredWindowHeight4) {
+                                }
+                                windowShouldResize = false;
+                                boolean windowShouldResize2 = windowShouldResize | (!this.mDragResizing && this.mResizeMode == 0) | this.mActivityRelaunched;
+                                computesInternalInsets = !this.mAttachInfo.mTreeObserver.hasComputeInternalInsetsListeners() || this.mAttachInfo.mHasNonEmptyGivenInternalInsets;
+                                relayoutResult = 0;
+                                boolean updatedConfiguration2 = false;
+                                int surfaceGenerationId = this.mSurface.getGenerationId();
+                                isViewVisible = viewVisibility != 0;
+                                boolean windowRelayoutWasForced = this.mForceNextWindowRelayout;
+                                if (!this.mFirst || windowShouldResize2 || insetsChanged || viewVisibilityChanged) {
+                                    insetsPending = false;
+                                    frame2 = frame;
+                                    params3 = params2;
+                                } else {
+                                    params3 = params2;
+                                    if (params3 == null) {
+                                        insetsPending = false;
+                                        boolean insetsPending3 = this.mForceNextWindowRelayout;
+                                        if (!insetsPending3) {
+                                            maybeHandleWindowMove(frame);
+                                            surfaceSizeChanged = false;
+                                            if (surfaceSizeChanged) {
+                                                updateBoundsSurface();
+                                            }
+                                            didLayout = !layoutRequested && (!this.mStopped || this.mReportNextDraw);
+                                            triggerGlobalLayoutListener = !didLayout || this.mAttachInfo.mRecomputeGlobalAttributes;
+                                            if (didLayout) {
+                                                performLayout(lp, this.mWidth, this.mHeight);
+                                                if ((host.mPrivateFlags & 512) != 0) {
+                                                    host.getLocationInWindow(this.mTmpLocation);
+                                                    this.mTransparentRegion.set(this.mTmpLocation[0], this.mTmpLocation[1], (this.mTmpLocation[0] + host.mRight) - host.mLeft, (this.mTmpLocation[1] + host.mBottom) - host.mTop);
+                                                    host.gatherTransparentRegion(this.mTransparentRegion);
+                                                    if (this.mTranslator != null) {
+                                                        this.mTranslator.translateRegionInWindowToScreen(this.mTransparentRegion);
+                                                    }
+                                                    if (!this.mTransparentRegion.equals(this.mPreviousTransparentRegion)) {
+                                                        this.mPreviousTransparentRegion.set(this.mTransparentRegion);
+                                                        this.mFullRedrawNeeded = true;
+                                                        try {
+                                                            this.mWindowSession.setTransparentRegion(this.mWindow, this.mTransparentRegion);
+                                                        } catch (RemoteException e) {
+                                                        }
+                                                    }
+                                                    if (triggerGlobalLayoutListener) {
+                                                        this.mAttachInfo.mRecomputeGlobalAttributes = false;
+                                                        this.mAttachInfo.mTreeObserver.dispatchOnGlobalLayout();
+                                                    }
+                                                    if (computesInternalInsets) {
+                                                        ViewTreeObserver.InternalInsetsInfo insets = this.mAttachInfo.mGivenInternalInsets;
+                                                        insets.reset();
+                                                        this.mAttachInfo.mTreeObserver.dispatchOnComputeInternalInsets(insets);
+                                                        this.mAttachInfo.mHasNonEmptyGivenInternalInsets = !insets.isEmpty();
+                                                        if (insetsPending || !this.mLastGivenInsets.equals(insets)) {
+                                                            this.mLastGivenInsets.set(insets);
+                                                            if (this.mTranslator != null) {
+                                                                contentInsets = this.mTranslator.getTranslatedContentInsets(insets.contentInsets);
+                                                                visibleInsets = this.mTranslator.getTranslatedVisibleInsets(insets.visibleInsets);
+                                                                region = this.mTranslator.getTranslatedTouchableArea(insets.touchableRegion);
+                                                            } else {
+                                                                contentInsets = insets.contentInsets;
+                                                                visibleInsets = insets.visibleInsets;
+                                                                region = insets.touchableRegion;
+                                                            }
+                                                            Region touchableRegion = region;
+                                                            try {
+                                                                this.mWindowSession.setInsets(this.mWindow, insets.mTouchableInsets, contentInsets, visibleInsets, touchableRegion);
+                                                            } catch (RemoteException e2) {
+                                                            }
+                                                        }
+                                                    }
+                                                    if (this.mFirst) {
+                                                        if (!sAlwaysAssignFocus && isInTouchMode()) {
+                                                            View focused = this.mView.findFocus();
+                                                            if ((focused instanceof ViewGroup) && ((ViewGroup) focused).getDescendantFocusability() == 262144) {
+                                                                focused.restoreDefaultFocus();
+                                                            }
+                                                        } else if (this.mView != null && !this.mView.hasFocus()) {
+                                                            this.mView.restoreDefaultFocus();
+                                                        }
+                                                    }
+                                                    changedVisibility = (!viewVisibilityChanged || this.mFirst) && isViewVisible;
+                                                    hasWindowFocus = !this.mAttachInfo.mHasWindowFocus && isViewVisible;
+                                                    regainedFocus = !hasWindowFocus && this.mLostWindowFocus;
+                                                    if (regainedFocus) {
+                                                        this.mLostWindowFocus = false;
+                                                    } else if (!hasWindowFocus && this.mHadWindowFocus) {
+                                                        this.mLostWindowFocus = true;
+                                                    }
+                                                    if (!changedVisibility || regainedFocus) {
+                                                        isToast = this.mWindowAttributes != null && this.mWindowAttributes.type == 2005;
+                                                        if (!isToast) {
+                                                            host.sendAccessibilityEvent(32);
+                                                        }
+                                                    }
+                                                    this.mFirst = false;
+                                                    this.mWillDrawSoon = false;
+                                                    this.mNewSurfaceNeeded = false;
+                                                    this.mActivityRelaunched = false;
+                                                    this.mViewVisibility = viewVisibility;
+                                                    this.mHadWindowFocus = hasWindowFocus;
+                                                    if (hasWindowFocus && !isInLocalFocusMode() && (imTarget = WindowManager.LayoutParams.mayUseInputMethod(this.mWindowAttributes.flags)) != this.mLastWasImTarget) {
+                                                        this.mLastWasImTarget = imTarget;
+                                                        imm = (InputMethodManager) this.mContext.getSystemService(InputMethodManager.class);
+                                                        if (imm != null && imTarget) {
+                                                            imm.onPreWindowFocus(this.mView, hasWindowFocus);
+                                                            z2 = true;
+                                                            imm.onPostWindowFocus(this.mView, this.mView.findFocus(), this.mWindowAttributes.softInputMode, !this.mHasHadWindowFocus, this.mWindowAttributes.flags);
+                                                            if ((relayoutResult & 2) != 0) {
+                                                                reportNextDraw();
+                                                            }
+                                                            if (!this.mAttachInfo.mTreeObserver.dispatchOnPreDraw() && isViewVisible) {
+                                                                z2 = false;
+                                                            }
+                                                            cancelDraw = z2;
+                                                            if (cancelDraw) {
+                                                                if (this.mPendingTransitions != null && this.mPendingTransitions.size() > 0) {
+                                                                    for (int i2 = 0; i2 < this.mPendingTransitions.size(); i2++) {
+                                                                        this.mPendingTransitions.get(i2).startChangingAnimations();
+                                                                    }
+                                                                    this.mPendingTransitions.clear();
+                                                                }
+                                                                performDraw();
+                                                            } else if (isViewVisible) {
+                                                                scheduleTraversals();
+                                                            } else if (this.mPendingTransitions != null && this.mPendingTransitions.size() > 0) {
+                                                                for (int i3 = 0; i3 < this.mPendingTransitions.size(); i3++) {
+                                                                    this.mPendingTransitions.get(i3).endChangingAnimations();
+                                                                }
+                                                                this.mPendingTransitions.clear();
+                                                            }
+                                                            this.mIsInTraversal = false;
+                                                        }
+                                                    }
+                                                    z2 = true;
+                                                    if ((relayoutResult & 2) != 0) {
+                                                    }
+                                                    if (!this.mAttachInfo.mTreeObserver.dispatchOnPreDraw()) {
+                                                        z2 = false;
+                                                    }
+                                                    cancelDraw = z2;
+                                                    if (cancelDraw) {
+                                                    }
+                                                    this.mIsInTraversal = false;
+                                                }
+                                            }
+                                            if (triggerGlobalLayoutListener) {
+                                            }
+                                            if (computesInternalInsets) {
+                                            }
+                                            if (this.mFirst) {
+                                            }
+                                            if (viewVisibilityChanged) {
+                                            }
+                                            if (this.mAttachInfo.mHasWindowFocus) {
+                                            }
+                                            if (hasWindowFocus) {
+                                            }
+                                            if (regainedFocus) {
+                                            }
+                                            if (!changedVisibility) {
+                                            }
+                                            if (this.mWindowAttributes != null) {
+                                                if (!isToast) {
+                                                }
+                                                this.mFirst = false;
+                                                this.mWillDrawSoon = false;
+                                                this.mNewSurfaceNeeded = false;
+                                                this.mActivityRelaunched = false;
+                                                this.mViewVisibility = viewVisibility;
+                                                this.mHadWindowFocus = hasWindowFocus;
+                                                if (hasWindowFocus) {
+                                                    this.mLastWasImTarget = imTarget;
+                                                    imm = (InputMethodManager) this.mContext.getSystemService(InputMethodManager.class);
+                                                    if (imm != null) {
+                                                        imm.onPreWindowFocus(this.mView, hasWindowFocus);
+                                                        z2 = true;
+                                                        imm.onPostWindowFocus(this.mView, this.mView.findFocus(), this.mWindowAttributes.softInputMode, !this.mHasHadWindowFocus, this.mWindowAttributes.flags);
+                                                        if ((relayoutResult & 2) != 0) {
+                                                        }
+                                                        if (!this.mAttachInfo.mTreeObserver.dispatchOnPreDraw()) {
+                                                        }
+                                                        cancelDraw = z2;
+                                                        if (cancelDraw) {
+                                                        }
+                                                        this.mIsInTraversal = false;
+                                                    }
+                                                }
+                                                z2 = true;
+                                                if ((relayoutResult & 2) != 0) {
+                                                }
+                                                if (!this.mAttachInfo.mTreeObserver.dispatchOnPreDraw()) {
+                                                }
+                                                cancelDraw = z2;
+                                                if (cancelDraw) {
+                                                }
+                                                this.mIsInTraversal = false;
+                                            }
+                                            if (!isToast) {
+                                            }
+                                            this.mFirst = false;
+                                            this.mWillDrawSoon = false;
+                                            this.mNewSurfaceNeeded = false;
+                                            this.mActivityRelaunched = false;
+                                            this.mViewVisibility = viewVisibility;
+                                            this.mHadWindowFocus = hasWindowFocus;
+                                            if (hasWindowFocus) {
+                                            }
+                                            z2 = true;
+                                            if ((relayoutResult & 2) != 0) {
+                                            }
+                                            if (!this.mAttachInfo.mTreeObserver.dispatchOnPreDraw()) {
+                                            }
+                                            cancelDraw = z2;
+                                            if (cancelDraw) {
+                                            }
+                                            this.mIsInTraversal = false;
+                                        }
+                                        frame2 = frame;
+                                    } else {
+                                        insetsPending = false;
+                                        frame2 = frame;
+                                    }
+                                }
+                                this.mForceNextWindowRelayout = false;
+                                boolean insetsPending4 = isViewVisible ? insetsPending : computesInternalInsets && (this.mFirst || viewVisibilityChanged);
+                                if (this.mSurfaceHolder == null) {
+                                    this.mSurfaceHolder.mSurfaceLock.lock();
+                                    updatedConfiguration = false;
+                                    this.mDrawingAllowed = true;
+                                } else {
+                                    updatedConfiguration = false;
+                                }
+                                contentInsetsChanged = false;
+                                hadSurface = this.mSurface.isValid();
+                                if (this.mAttachInfo.mThreadedRenderer == null) {
+                                    try {
+                                        if (this.mAttachInfo.mThreadedRenderer.pause()) {
+                                            hwInitialized = false;
+                                            try {
+                                                surfaceSizeChanged2 = false;
+                                                try {
+                                                    try {
+                                                        this.mDirty.set(0, 0, this.mWidth, this.mHeight);
+                                                    } catch (RemoteException e3) {
+                                                        insetsPending2 = insetsPending4;
+                                                        relayoutResult2 = surfaceGenerationId;
+                                                        relayoutResult3 = 0;
+                                                    }
+                                                } catch (RemoteException e4) {
+                                                    insetsPending2 = insetsPending4;
+                                                    relayoutResult2 = surfaceGenerationId;
+                                                    relayoutResult3 = 0;
+                                                }
+                                            } catch (RemoteException e5) {
+                                                surfaceSizeChanged2 = false;
+                                                insetsPending2 = insetsPending4;
+                                                relayoutResult2 = surfaceGenerationId;
+                                                relayoutResult3 = 0;
+                                            }
+                                        } else {
+                                            hwInitialized = false;
+                                            surfaceSizeChanged2 = false;
+                                        }
+                                        this.mChoreographer.mFrameInfo.addFlags(1L);
+                                    } catch (RemoteException e6) {
+                                        hwInitialized = false;
+                                        surfaceSizeChanged2 = false;
+                                        insetsPending2 = insetsPending4;
+                                        relayoutResult2 = surfaceGenerationId;
+                                        relayoutResult3 = 0;
+                                    }
+                                } else {
+                                    hwInitialized = false;
+                                    surfaceSizeChanged2 = false;
+                                }
+                                relayoutResult2 = relayoutWindow(params3, viewVisibility, insetsPending4);
+                                if (!this.mPendingMergedConfiguration.equals(this.mLastReportedMergedConfiguration)) {
+                                    try {
+                                        performConfigurationChange(this.mPendingMergedConfiguration, !this.mFirst, -1);
+                                        updatedConfiguration = true;
+                                    } catch (RemoteException e7) {
+                                        insetsPending2 = insetsPending4;
+                                        relayoutResult3 = relayoutResult2;
+                                        relayoutResult2 = surfaceGenerationId;
+                                        updatedConfiguration2 = updatedConfiguration;
+                                        boolean surfaceSizeChanged3 = surfaceSizeChanged2;
+                                        relayoutResult4 = relayoutResult3;
+                                        this.mAttachInfo.mWindowLeft = frame2.left;
+                                        this.mAttachInfo.mWindowTop = frame2.top;
+                                        if (this.mWidth == frame2.width()) {
+                                        }
+                                        this.mWidth = frame2.width();
+                                        this.mHeight = frame2.height();
+                                        if (this.mSurfaceHolder == null) {
+                                        }
+                                        threadedRenderer = this.mAttachInfo.mThreadedRenderer;
+                                        if (threadedRenderer != null) {
+                                        }
+                                        if (this.mStopped) {
+                                        }
+                                        focusChangedDueToTouchMode = ensureTouchModeLocally((relayoutResult4 & 1) == 0);
+                                        if (!focusChangedDueToTouchMode) {
+                                        }
+                                        int childWidthMeasureSpec = getRootMeasureSpec(this.mWidth, lp.width);
+                                        int childHeightMeasureSpec = getRootMeasureSpec(this.mHeight, lp.height);
+                                        performMeasure(childWidthMeasureSpec, childHeightMeasureSpec);
+                                        int width = host.getMeasuredWidth();
+                                        int height = host.getMeasuredHeight();
+                                        measureAgain = false;
+                                        relayoutResult5 = relayoutResult4;
+                                        if (lp.horizontalWeight > 0.0f) {
+                                        }
+                                        if (lp.verticalWeight > 0.0f) {
+                                        }
+                                        if (measureAgain) {
+                                        }
+                                        layoutRequested = true;
+                                        insetsPending = insetsPending2;
+                                        relayoutResult = relayoutResult5;
+                                        if (surfaceSizeChanged) {
+                                        }
+                                        didLayout = !layoutRequested && (!this.mStopped || this.mReportNextDraw);
+                                        triggerGlobalLayoutListener = !didLayout || this.mAttachInfo.mRecomputeGlobalAttributes;
+                                        if (didLayout) {
+                                        }
+                                        if (triggerGlobalLayoutListener) {
+                                        }
+                                        if (computesInternalInsets) {
+                                        }
+                                        if (this.mFirst) {
+                                        }
+                                        if (viewVisibilityChanged) {
+                                        }
+                                        if (this.mAttachInfo.mHasWindowFocus) {
+                                        }
+                                        if (hasWindowFocus) {
+                                        }
+                                        if (regainedFocus) {
+                                        }
+                                        if (!changedVisibility) {
+                                        }
+                                        if (this.mWindowAttributes != null) {
+                                        }
+                                        if (!isToast) {
+                                        }
+                                        this.mFirst = false;
+                                        this.mWillDrawSoon = false;
+                                        this.mNewSurfaceNeeded = false;
+                                        this.mActivityRelaunched = false;
+                                        this.mViewVisibility = viewVisibility;
+                                        this.mHadWindowFocus = hasWindowFocus;
+                                        if (hasWindowFocus) {
+                                        }
+                                        z2 = true;
+                                        if ((relayoutResult & 2) != 0) {
+                                        }
+                                        if (!this.mAttachInfo.mTreeObserver.dispatchOnPreDraw()) {
+                                        }
+                                        cancelDraw = z2;
+                                        if (cancelDraw) {
+                                        }
+                                        this.mIsInTraversal = false;
+                                    }
+                                }
+                                overscanInsetsChanged = !this.mPendingOverscanInsets.equals(this.mAttachInfo.mOverscanInsets);
+                                contentInsetsChanged = !this.mPendingContentInsets.equals(this.mAttachInfo.mContentInsets);
+                                visibleInsetsChanged = !this.mPendingVisibleInsets.equals(this.mAttachInfo.mVisibleInsets);
+                                stableInsetsChanged = !this.mPendingStableInsets.equals(this.mAttachInfo.mStableInsets);
+                                cutoutChanged = !this.mPendingDisplayCutout.equals(this.mAttachInfo.mDisplayCutout);
+                                boolean outsetsChanged = !this.mPendingOutsets.equals(this.mAttachInfo.mOutsets);
+                                surfaceSizeChanged2 = (relayoutResult2 & 32) == 0;
+                                surfaceChanged2 |= surfaceSizeChanged2;
+                                alwaysConsumeSystemBarsChanged = this.mPendingAlwaysConsumeSystemBars == this.mAttachInfo.mAlwaysConsumeSystemBars;
+                                colorModeChanged = hasColorModeChanged(lp.getColorMode());
+                                if (contentInsetsChanged) {
+                                    this.mAttachInfo.mContentInsets.set(this.mPendingContentInsets);
+                                }
+                                if (overscanInsetsChanged) {
+                                    this.mAttachInfo.mOverscanInsets.set(this.mPendingOverscanInsets);
+                                    contentInsetsChanged = true;
+                                }
+                                if (stableInsetsChanged) {
+                                    this.mAttachInfo.mStableInsets.set(this.mPendingStableInsets);
+                                    contentInsetsChanged = true;
+                                }
+                                if (cutoutChanged) {
+                                    this.mAttachInfo.mDisplayCutout.set(this.mPendingDisplayCutout);
+                                    contentInsetsChanged = true;
+                                }
+                                if (alwaysConsumeSystemBarsChanged) {
+                                    this.mAttachInfo.mAlwaysConsumeSystemBars = this.mPendingAlwaysConsumeSystemBars;
+                                    contentInsetsChanged = true;
+                                }
+                                if (!contentInsetsChanged || this.mLastSystemUiVisibility != this.mAttachInfo.mSystemUiVisibility || this.mApplyInsetsRequested || this.mLastOverscanRequested != this.mAttachInfo.mOverscanRequested || outsetsChanged) {
+                                    this.mLastSystemUiVisibility = this.mAttachInfo.mSystemUiVisibility;
+                                    this.mLastOverscanRequested = this.mAttachInfo.mOverscanRequested;
+                                    this.mAttachInfo.mOutsets.set(this.mPendingOutsets);
+                                    this.mApplyInsetsRequested = false;
+                                    dispatchApplyInsets(host);
+                                    contentInsetsChanged = true;
+                                }
+                                if (visibleInsetsChanged) {
+                                    this.mAttachInfo.mVisibleInsets.set(this.mPendingVisibleInsets);
+                                }
+                                if (colorModeChanged && this.mAttachInfo.mThreadedRenderer != null) {
+                                    this.mAttachInfo.mThreadedRenderer.setWideGamut(lp.getColorMode() != 1);
+                                }
+                                if (hadSurface) {
+                                    if (this.mSurface.isValid()) {
+                                        this.mFullRedrawNeeded = true;
+                                        this.mPreviousTransparentRegion.setEmpty();
+                                        try {
+                                            if (this.mAttachInfo.mThreadedRenderer != null) {
+                                                try {
+                                                    boolean hwInitialized2 = this.mAttachInfo.mThreadedRenderer.initialize(this.mSurface);
+                                                    if (hwInitialized2) {
+                                                        try {
+                                                            if ((host.mPrivateFlags & 512) == 0) {
+                                                                this.mAttachInfo.mThreadedRenderer.allocateBuffers();
+                                                            }
+                                                        } catch (Surface.OutOfResourcesException e8) {
+                                                            e = e8;
+                                                            handleOutOfResourcesException(e);
+                                                            return;
+                                                        }
+                                                    }
+                                                    hwInitialized = hwInitialized2;
+                                                } catch (Surface.OutOfResourcesException e9) {
+                                                    e = e9;
+                                                }
+                                            }
+                                        } catch (RemoteException e10) {
+                                            insetsPending2 = insetsPending4;
+                                            hwInitialized = true;
+                                            relayoutResult3 = relayoutResult2;
+                                            relayoutResult2 = surfaceGenerationId;
+                                            updatedConfiguration2 = updatedConfiguration;
+                                            boolean surfaceSizeChanged32 = surfaceSizeChanged2;
+                                            relayoutResult4 = relayoutResult3;
+                                            this.mAttachInfo.mWindowLeft = frame2.left;
+                                            this.mAttachInfo.mWindowTop = frame2.top;
+                                            if (this.mWidth == frame2.width()) {
+                                            }
+                                            this.mWidth = frame2.width();
+                                            this.mHeight = frame2.height();
+                                            if (this.mSurfaceHolder == null) {
+                                            }
+                                            threadedRenderer = this.mAttachInfo.mThreadedRenderer;
+                                            if (threadedRenderer != null) {
+                                            }
+                                            if (this.mStopped) {
+                                            }
+                                            focusChangedDueToTouchMode = ensureTouchModeLocally((relayoutResult4 & 1) == 0);
+                                            if (!focusChangedDueToTouchMode) {
+                                            }
+                                            int childWidthMeasureSpec2 = getRootMeasureSpec(this.mWidth, lp.width);
+                                            int childHeightMeasureSpec2 = getRootMeasureSpec(this.mHeight, lp.height);
+                                            performMeasure(childWidthMeasureSpec2, childHeightMeasureSpec2);
+                                            int width2 = host.getMeasuredWidth();
+                                            int height2 = host.getMeasuredHeight();
+                                            measureAgain = false;
+                                            relayoutResult5 = relayoutResult4;
+                                            if (lp.horizontalWeight > 0.0f) {
+                                            }
+                                            if (lp.verticalWeight > 0.0f) {
+                                            }
+                                            if (measureAgain) {
+                                            }
+                                            layoutRequested = true;
+                                            insetsPending = insetsPending2;
+                                            relayoutResult = relayoutResult5;
+                                            if (surfaceSizeChanged) {
+                                            }
+                                            didLayout = !layoutRequested && (!this.mStopped || this.mReportNextDraw);
+                                            triggerGlobalLayoutListener = !didLayout || this.mAttachInfo.mRecomputeGlobalAttributes;
+                                            if (didLayout) {
+                                            }
+                                            if (triggerGlobalLayoutListener) {
+                                            }
+                                            if (computesInternalInsets) {
+                                            }
+                                            if (this.mFirst) {
+                                            }
+                                            if (viewVisibilityChanged) {
+                                            }
+                                            if (this.mAttachInfo.mHasWindowFocus) {
+                                            }
+                                            if (hasWindowFocus) {
+                                            }
+                                            if (regainedFocus) {
+                                            }
+                                            if (!changedVisibility) {
+                                            }
+                                            if (this.mWindowAttributes != null) {
+                                            }
+                                            if (!isToast) {
+                                            }
+                                            this.mFirst = false;
+                                            this.mWillDrawSoon = false;
+                                            this.mNewSurfaceNeeded = false;
+                                            this.mActivityRelaunched = false;
+                                            this.mViewVisibility = viewVisibility;
+                                            this.mHadWindowFocus = hasWindowFocus;
+                                            if (hasWindowFocus) {
+                                            }
+                                            z2 = true;
+                                            if ((relayoutResult & 2) != 0) {
+                                            }
+                                            if (!this.mAttachInfo.mTreeObserver.dispatchOnPreDraw()) {
+                                            }
+                                            cancelDraw = z2;
+                                            if (cancelDraw) {
+                                            }
+                                            this.mIsInTraversal = false;
+                                        }
+                                    }
+                                } else if (!this.mSurface.isValid()) {
+                                    if (this.mLastScrolledFocus != null) {
+                                        this.mLastScrolledFocus.clear();
+                                    }
+                                    this.mCurScrollY = 0;
+                                    this.mScrollY = 0;
+                                    if (this.mView instanceof RootViewSurfaceTaker) {
+                                        ((RootViewSurfaceTaker) this.mView).onRootViewScrollYChanged(this.mCurScrollY);
+                                    }
+                                    if (this.mScroller != null) {
+                                        this.mScroller.abortAnimation();
+                                    }
+                                    if (this.mAttachInfo.mThreadedRenderer != null && this.mAttachInfo.mThreadedRenderer.isEnabled()) {
+                                        this.mAttachInfo.mThreadedRenderer.destroy();
+                                    }
+                                } else if ((surfaceGenerationId != this.mSurface.getGenerationId() || surfaceSizeChanged2 || windowRelayoutWasForced || colorModeChanged) && this.mSurfaceHolder == null && this.mAttachInfo.mThreadedRenderer != null) {
+                                    this.mFullRedrawNeeded = true;
+                                    try {
+                                        this.mAttachInfo.mThreadedRenderer.updateSurface(this.mSurface);
+                                    } catch (Surface.OutOfResourcesException e11) {
+                                        handleOutOfResourcesException(e11);
+                                        return;
+                                    }
+                                }
+                                boolean freeformResizing = (relayoutResult2 & 16) == 0;
+                                boolean dockedResizing = (relayoutResult2 & 8) == 0;
+                                dragResizing = !freeformResizing || dockedResizing;
+                                if (this.mDragResizing != dragResizing) {
+                                    insetsPending2 = insetsPending4;
+                                    dragResizing2 = dragResizing;
+                                    relayoutResult3 = relayoutResult2;
+                                    relayoutResult2 = surfaceGenerationId;
+                                } else if (dragResizing) {
+                                    this.mResizeMode = freeformResizing ? 0 : 1;
+                                    boolean backdropSizeMatchesFrame = this.mWinFrame.width() == this.mPendingBackDropFrame.width() && this.mWinFrame.height() == this.mPendingBackDropFrame.height();
+                                    try {
+                                        try {
+                                            insetsPending2 = insetsPending4;
+                                            dragResizing2 = dragResizing;
+                                            relayoutResult3 = relayoutResult2;
+                                            relayoutResult2 = surfaceGenerationId;
+                                            startDragResizing(this.mPendingBackDropFrame, !backdropSizeMatchesFrame, this.mPendingVisibleInsets, this.mPendingStableInsets, this.mResizeMode);
+                                        } catch (RemoteException e12) {
+                                            insetsPending2 = insetsPending4;
+                                            relayoutResult3 = relayoutResult2;
+                                            relayoutResult2 = surfaceGenerationId;
+                                        }
+                                    } catch (RemoteException e13) {
+                                        insetsPending2 = insetsPending4;
+                                        relayoutResult3 = relayoutResult2;
+                                        relayoutResult2 = surfaceGenerationId;
+                                    }
+                                } else {
+                                    insetsPending2 = insetsPending4;
+                                    dragResizing2 = dragResizing;
+                                    relayoutResult3 = relayoutResult2;
+                                    relayoutResult2 = surfaceGenerationId;
+                                    endDragResizing();
+                                }
+                                if (!this.mUseMTRenderer) {
+                                    if (dragResizing2) {
+                                        this.mCanvasOffsetX = this.mWinFrame.left;
+                                        this.mCanvasOffsetY = this.mWinFrame.top;
+                                    } else {
+                                        this.mCanvasOffsetY = 0;
+                                        this.mCanvasOffsetX = 0;
+                                    }
+                                }
+                                updatedConfiguration2 = updatedConfiguration;
+                                boolean surfaceSizeChanged322 = surfaceSizeChanged2;
+                                relayoutResult4 = relayoutResult3;
+                                this.mAttachInfo.mWindowLeft = frame2.left;
+                                this.mAttachInfo.mWindowTop = frame2.top;
+                                if (this.mWidth == frame2.width() || this.mHeight != frame2.height()) {
+                                    this.mWidth = frame2.width();
+                                    this.mHeight = frame2.height();
+                                }
+                                if (this.mSurfaceHolder == null) {
+                                    if (this.mSurface.isValid()) {
+                                        this.mSurfaceHolder.mSurface = this.mSurface;
+                                    }
+                                    this.mSurfaceHolder.setSurfaceFrameSize(this.mWidth, this.mHeight);
+                                    this.mSurfaceHolder.mSurfaceLock.unlock();
+                                    if (this.mSurface.isValid()) {
+                                        if (!hadSurface) {
+                                            this.mSurfaceHolder.ungetCallbacks();
+                                            this.mIsCreating = true;
+                                            SurfaceHolder.Callback[] callbacks = this.mSurfaceHolder.getCallbacks();
+                                            if (callbacks != null) {
+                                                int length = callbacks.length;
+                                                int i4 = 0;
+                                                while (i4 < length) {
+                                                    SurfaceHolder.Callback c = callbacks[i4];
+                                                    c.surfaceCreated(this.mSurfaceHolder);
+                                                    i4++;
+                                                    callbacks = callbacks;
+                                                }
+                                            }
+                                            surfaceChanged2 = true;
+                                        }
+                                        if (surfaceChanged2 || relayoutResult2 != this.mSurface.getGenerationId()) {
+                                            SurfaceHolder.Callback[] callbacks2 = this.mSurfaceHolder.getCallbacks();
+                                            if (callbacks2 != null) {
+                                                int length2 = callbacks2.length;
+                                                int i5 = 0;
+                                                while (i5 < length2) {
+                                                    SurfaceHolder.Callback c2 = callbacks2[i5];
+                                                    c2.surfaceChanged(this.mSurfaceHolder, lp.format, this.mWidth, this.mHeight);
+                                                    i5++;
+                                                    callbacks2 = callbacks2;
+                                                    surfaceSizeChanged322 = surfaceSizeChanged322;
+                                                    length2 = length2;
+                                                    frame2 = frame2;
+                                                }
+                                            }
+                                            surfaceSizeChanged = surfaceSizeChanged322;
+                                        } else {
+                                            surfaceSizeChanged = surfaceSizeChanged322;
+                                        }
+                                        this.mIsCreating = false;
+                                    } else {
+                                        surfaceSizeChanged = surfaceSizeChanged322;
+                                        if (hadSurface) {
+                                            notifySurfaceDestroyed();
+                                            this.mSurfaceHolder.mSurfaceLock.lock();
+                                            try {
+                                                this.mSurfaceHolder.mSurface = new Surface();
+                                            } finally {
+                                                this.mSurfaceHolder.mSurfaceLock.unlock();
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    surfaceSizeChanged = surfaceSizeChanged322;
+                                }
+                                threadedRenderer = this.mAttachInfo.mThreadedRenderer;
+                                if (threadedRenderer != null && threadedRenderer.isEnabled() && (hwInitialized || this.mWidth != threadedRenderer.getWidth() || this.mHeight != threadedRenderer.getHeight() || this.mNeedsRendererSetup)) {
+                                    threadedRenderer.setup(this.mWidth, this.mHeight, this.mAttachInfo, this.mWindowAttributes.surfaceInsets);
+                                    this.mNeedsRendererSetup = false;
+                                }
+                                if (this.mStopped || this.mReportNextDraw) {
+                                    focusChangedDueToTouchMode = ensureTouchModeLocally((relayoutResult4 & 1) == 0);
+                                    if (!focusChangedDueToTouchMode || this.mWidth != host.getMeasuredWidth() || this.mHeight != host.getMeasuredHeight() || contentInsetsChanged || updatedConfiguration2) {
+                                        int childWidthMeasureSpec22 = getRootMeasureSpec(this.mWidth, lp.width);
+                                        int childHeightMeasureSpec22 = getRootMeasureSpec(this.mHeight, lp.height);
+                                        performMeasure(childWidthMeasureSpec22, childHeightMeasureSpec22);
+                                        int width22 = host.getMeasuredWidth();
+                                        int height22 = host.getMeasuredHeight();
+                                        measureAgain = false;
+                                        relayoutResult5 = relayoutResult4;
+                                        if (lp.horizontalWeight > 0.0f) {
+                                            childWidthMeasureSpec22 = View.MeasureSpec.makeMeasureSpec(width22 + ((int) ((this.mWidth - width22) * lp.horizontalWeight)), 1073741824);
+                                            measureAgain = true;
+                                        }
+                                        if (lp.verticalWeight > 0.0f) {
+                                            childHeightMeasureSpec22 = View.MeasureSpec.makeMeasureSpec(height22 + ((int) ((this.mHeight - height22) * lp.verticalWeight)), 1073741824);
+                                            measureAgain = true;
+                                        }
+                                        if (measureAgain) {
+                                            performMeasure(childWidthMeasureSpec22, childHeightMeasureSpec22);
+                                        }
+                                        layoutRequested = true;
+                                        insetsPending = insetsPending2;
+                                        relayoutResult = relayoutResult5;
+                                        if (surfaceSizeChanged) {
+                                        }
+                                        didLayout = !layoutRequested && (!this.mStopped || this.mReportNextDraw);
+                                        triggerGlobalLayoutListener = !didLayout || this.mAttachInfo.mRecomputeGlobalAttributes;
+                                        if (didLayout) {
+                                        }
+                                        if (triggerGlobalLayoutListener) {
+                                        }
+                                        if (computesInternalInsets) {
+                                        }
+                                        if (this.mFirst) {
+                                        }
+                                        if (viewVisibilityChanged) {
+                                        }
+                                        if (this.mAttachInfo.mHasWindowFocus) {
+                                        }
+                                        if (hasWindowFocus) {
+                                        }
+                                        if (regainedFocus) {
+                                        }
+                                        if (!changedVisibility) {
+                                        }
+                                        if (this.mWindowAttributes != null) {
+                                        }
+                                        if (!isToast) {
+                                        }
+                                        this.mFirst = false;
+                                        this.mWillDrawSoon = false;
+                                        this.mNewSurfaceNeeded = false;
+                                        this.mActivityRelaunched = false;
+                                        this.mViewVisibility = viewVisibility;
+                                        this.mHadWindowFocus = hasWindowFocus;
+                                        if (hasWindowFocus) {
+                                        }
+                                        z2 = true;
+                                        if ((relayoutResult & 2) != 0) {
+                                        }
+                                        if (!this.mAttachInfo.mTreeObserver.dispatchOnPreDraw()) {
+                                        }
+                                        cancelDraw = z2;
+                                        if (cancelDraw) {
+                                        }
+                                        this.mIsInTraversal = false;
+                                    }
+                                }
+                                relayoutResult5 = relayoutResult4;
+                                insetsPending = insetsPending2;
+                                relayoutResult = relayoutResult5;
+                                if (surfaceSizeChanged) {
+                                }
+                                didLayout = !layoutRequested && (!this.mStopped || this.mReportNextDraw);
+                                triggerGlobalLayoutListener = !didLayout || this.mAttachInfo.mRecomputeGlobalAttributes;
+                                if (didLayout) {
+                                }
+                                if (triggerGlobalLayoutListener) {
+                                }
+                                if (computesInternalInsets) {
+                                }
+                                if (this.mFirst) {
+                                }
+                                if (viewVisibilityChanged) {
+                                }
+                                if (this.mAttachInfo.mHasWindowFocus) {
+                                }
+                                if (hasWindowFocus) {
+                                }
+                                if (regainedFocus) {
+                                }
+                                if (!changedVisibility) {
+                                }
+                                if (this.mWindowAttributes != null) {
+                                }
+                                if (!isToast) {
+                                }
+                                this.mFirst = false;
+                                this.mWillDrawSoon = false;
+                                this.mNewSurfaceNeeded = false;
+                                this.mActivityRelaunched = false;
+                                this.mViewVisibility = viewVisibility;
+                                this.mHadWindowFocus = hasWindowFocus;
+                                if (hasWindowFocus) {
+                                }
+                                z2 = true;
+                                if ((relayoutResult & 2) != 0) {
+                                }
+                                if (!this.mAttachInfo.mTreeObserver.dispatchOnPreDraw()) {
+                                }
+                                cancelDraw = z2;
+                                if (cancelDraw) {
+                                }
+                                this.mIsInTraversal = false;
+                            }
+                            windowShouldResize = true;
+                            boolean windowShouldResize22 = windowShouldResize | (!this.mDragResizing && this.mResizeMode == 0) | this.mActivityRelaunched;
+                            computesInternalInsets = !this.mAttachInfo.mTreeObserver.hasComputeInternalInsetsListeners() || this.mAttachInfo.mHasNonEmptyGivenInternalInsets;
+                            relayoutResult = 0;
+                            boolean updatedConfiguration22 = false;
+                            int surfaceGenerationId2 = this.mSurface.getGenerationId();
+                            isViewVisible = viewVisibility != 0;
+                            boolean windowRelayoutWasForced2 = this.mForceNextWindowRelayout;
+                            if (this.mFirst) {
+                            }
+                            insetsPending = false;
+                            frame2 = frame;
+                            params3 = params2;
+                            this.mForceNextWindowRelayout = false;
+                            if (isViewVisible) {
+                            }
+                            if (this.mSurfaceHolder == null) {
+                            }
+                            contentInsetsChanged = false;
+                            hadSurface = this.mSurface.isValid();
+                            if (this.mAttachInfo.mThreadedRenderer == null) {
+                            }
+                            relayoutResult2 = relayoutWindow(params3, viewVisibility, insetsPending4);
+                            if (!this.mPendingMergedConfiguration.equals(this.mLastReportedMergedConfiguration)) {
+                            }
+                            overscanInsetsChanged = !this.mPendingOverscanInsets.equals(this.mAttachInfo.mOverscanInsets);
+                            contentInsetsChanged = !this.mPendingContentInsets.equals(this.mAttachInfo.mContentInsets);
+                            visibleInsetsChanged = !this.mPendingVisibleInsets.equals(this.mAttachInfo.mVisibleInsets);
+                            stableInsetsChanged = !this.mPendingStableInsets.equals(this.mAttachInfo.mStableInsets);
+                            cutoutChanged = !this.mPendingDisplayCutout.equals(this.mAttachInfo.mDisplayCutout);
+                            boolean outsetsChanged2 = !this.mPendingOutsets.equals(this.mAttachInfo.mOutsets);
+                            surfaceSizeChanged2 = (relayoutResult2 & 32) == 0;
+                            surfaceChanged2 |= surfaceSizeChanged2;
+                            alwaysConsumeSystemBarsChanged = this.mPendingAlwaysConsumeSystemBars == this.mAttachInfo.mAlwaysConsumeSystemBars;
+                            colorModeChanged = hasColorModeChanged(lp.getColorMode());
+                            if (contentInsetsChanged) {
+                            }
+                            if (overscanInsetsChanged) {
+                            }
+                            if (stableInsetsChanged) {
+                            }
+                            if (cutoutChanged) {
+                            }
+                            if (alwaysConsumeSystemBarsChanged) {
+                            }
+                            if (!contentInsetsChanged) {
+                            }
+                            this.mLastSystemUiVisibility = this.mAttachInfo.mSystemUiVisibility;
+                            this.mLastOverscanRequested = this.mAttachInfo.mOverscanRequested;
+                            this.mAttachInfo.mOutsets.set(this.mPendingOutsets);
+                            this.mApplyInsetsRequested = false;
+                            dispatchApplyInsets(host);
+                            contentInsetsChanged = true;
+                            if (visibleInsetsChanged) {
+                            }
+                            if (colorModeChanged) {
+                                this.mAttachInfo.mThreadedRenderer.setWideGamut(lp.getColorMode() != 1);
+                            }
+                            if (hadSurface) {
+                            }
+                            if ((relayoutResult2 & 16) == 0) {
+                            }
+                            boolean dockedResizing2 = (relayoutResult2 & 8) == 0;
+                            dragResizing = !freeformResizing || dockedResizing2;
+                            if (this.mDragResizing != dragResizing) {
+                            }
+                            if (!this.mUseMTRenderer) {
+                            }
+                            updatedConfiguration22 = updatedConfiguration;
+                            boolean surfaceSizeChanged3222 = surfaceSizeChanged2;
+                            relayoutResult4 = relayoutResult3;
+                            this.mAttachInfo.mWindowLeft = frame2.left;
+                            this.mAttachInfo.mWindowTop = frame2.top;
+                            if (this.mWidth == frame2.width()) {
+                            }
+                            this.mWidth = frame2.width();
+                            this.mHeight = frame2.height();
+                            if (this.mSurfaceHolder == null) {
+                            }
+                            threadedRenderer = this.mAttachInfo.mThreadedRenderer;
+                            if (threadedRenderer != null) {
+                                threadedRenderer.setup(this.mWidth, this.mHeight, this.mAttachInfo, this.mWindowAttributes.surfaceInsets);
+                                this.mNeedsRendererSetup = false;
+                            }
+                            if (this.mStopped) {
+                            }
+                            focusChangedDueToTouchMode = ensureTouchModeLocally((relayoutResult4 & 1) == 0);
+                            if (!focusChangedDueToTouchMode) {
+                            }
+                            int childWidthMeasureSpec222 = getRootMeasureSpec(this.mWidth, lp.width);
+                            int childHeightMeasureSpec222 = getRootMeasureSpec(this.mHeight, lp.height);
+                            performMeasure(childWidthMeasureSpec222, childHeightMeasureSpec222);
+                            int width222 = host.getMeasuredWidth();
+                            int height222 = host.getMeasuredHeight();
+                            measureAgain = false;
+                            relayoutResult5 = relayoutResult4;
+                            if (lp.horizontalWeight > 0.0f) {
+                            }
+                            if (lp.verticalWeight > 0.0f) {
+                            }
+                            if (measureAgain) {
+                            }
+                            layoutRequested = true;
+                            insetsPending = insetsPending2;
+                            relayoutResult = relayoutResult5;
+                            if (surfaceSizeChanged) {
+                            }
+                            didLayout = !layoutRequested && (!this.mStopped || this.mReportNextDraw);
+                            triggerGlobalLayoutListener = !didLayout || this.mAttachInfo.mRecomputeGlobalAttributes;
+                            if (didLayout) {
+                            }
+                            if (triggerGlobalLayoutListener) {
+                            }
+                            if (computesInternalInsets) {
+                            }
+                            if (this.mFirst) {
+                            }
+                            if (viewVisibilityChanged) {
+                            }
+                            if (this.mAttachInfo.mHasWindowFocus) {
+                            }
+                            if (hasWindowFocus) {
+                            }
+                            if (regainedFocus) {
+                            }
+                            if (!changedVisibility) {
+                            }
+                            if (this.mWindowAttributes != null) {
+                            }
+                            if (!isToast) {
+                            }
+                            this.mFirst = false;
+                            this.mWillDrawSoon = false;
+                            this.mNewSurfaceNeeded = false;
+                            this.mActivityRelaunched = false;
+                            this.mViewVisibility = viewVisibility;
+                            this.mHadWindowFocus = hasWindowFocus;
+                            if (hasWindowFocus) {
+                            }
+                            z2 = true;
+                            if ((relayoutResult & 2) != 0) {
+                            }
+                            if (!this.mAttachInfo.mTreeObserver.dispatchOnPreDraw()) {
+                            }
+                            cancelDraw = z2;
+                            if (cancelDraw) {
+                            }
+                            this.mIsInTraversal = false;
+                        }
+                        desiredWindowHeight4 = desiredWindowHeight3;
+                        windowShouldResize = false;
+                        boolean windowShouldResize222 = windowShouldResize | (!this.mDragResizing && this.mResizeMode == 0) | this.mActivityRelaunched;
+                        computesInternalInsets = !this.mAttachInfo.mTreeObserver.hasComputeInternalInsetsListeners() || this.mAttachInfo.mHasNonEmptyGivenInternalInsets;
+                        relayoutResult = 0;
+                        boolean updatedConfiguration222 = false;
+                        int surfaceGenerationId22 = this.mSurface.getGenerationId();
+                        isViewVisible = viewVisibility != 0;
+                        boolean windowRelayoutWasForced22 = this.mForceNextWindowRelayout;
+                        if (this.mFirst) {
+                        }
+                        insetsPending = false;
+                        frame2 = frame;
+                        params3 = params2;
+                        this.mForceNextWindowRelayout = false;
+                        if (isViewVisible) {
+                        }
+                        if (this.mSurfaceHolder == null) {
+                        }
+                        contentInsetsChanged = false;
+                        hadSurface = this.mSurface.isValid();
+                        if (this.mAttachInfo.mThreadedRenderer == null) {
+                        }
+                        relayoutResult2 = relayoutWindow(params3, viewVisibility, insetsPending4);
+                        if (!this.mPendingMergedConfiguration.equals(this.mLastReportedMergedConfiguration)) {
+                        }
+                        overscanInsetsChanged = !this.mPendingOverscanInsets.equals(this.mAttachInfo.mOverscanInsets);
+                        contentInsetsChanged = !this.mPendingContentInsets.equals(this.mAttachInfo.mContentInsets);
+                        visibleInsetsChanged = !this.mPendingVisibleInsets.equals(this.mAttachInfo.mVisibleInsets);
+                        stableInsetsChanged = !this.mPendingStableInsets.equals(this.mAttachInfo.mStableInsets);
+                        cutoutChanged = !this.mPendingDisplayCutout.equals(this.mAttachInfo.mDisplayCutout);
+                        boolean outsetsChanged22 = !this.mPendingOutsets.equals(this.mAttachInfo.mOutsets);
+                        surfaceSizeChanged2 = (relayoutResult2 & 32) == 0;
+                        surfaceChanged2 |= surfaceSizeChanged2;
+                        alwaysConsumeSystemBarsChanged = this.mPendingAlwaysConsumeSystemBars == this.mAttachInfo.mAlwaysConsumeSystemBars;
+                        colorModeChanged = hasColorModeChanged(lp.getColorMode());
+                        if (contentInsetsChanged) {
+                        }
+                        if (overscanInsetsChanged) {
+                        }
+                        if (stableInsetsChanged) {
+                        }
+                        if (cutoutChanged) {
+                        }
+                        if (alwaysConsumeSystemBarsChanged) {
+                        }
+                        if (!contentInsetsChanged) {
+                        }
+                        this.mLastSystemUiVisibility = this.mAttachInfo.mSystemUiVisibility;
+                        this.mLastOverscanRequested = this.mAttachInfo.mOverscanRequested;
+                        this.mAttachInfo.mOutsets.set(this.mPendingOutsets);
+                        this.mApplyInsetsRequested = false;
+                        dispatchApplyInsets(host);
+                        contentInsetsChanged = true;
+                        if (visibleInsetsChanged) {
+                        }
+                        if (colorModeChanged) {
+                        }
+                        if (hadSurface) {
+                        }
+                        if ((relayoutResult2 & 16) == 0) {
+                        }
+                        boolean dockedResizing22 = (relayoutResult2 & 8) == 0;
+                        dragResizing = !freeformResizing || dockedResizing22;
+                        if (this.mDragResizing != dragResizing) {
+                        }
+                        if (!this.mUseMTRenderer) {
+                        }
+                        updatedConfiguration222 = updatedConfiguration;
+                        boolean surfaceSizeChanged32222 = surfaceSizeChanged2;
+                        relayoutResult4 = relayoutResult3;
+                        this.mAttachInfo.mWindowLeft = frame2.left;
+                        this.mAttachInfo.mWindowTop = frame2.top;
+                        if (this.mWidth == frame2.width()) {
+                        }
+                        this.mWidth = frame2.width();
+                        this.mHeight = frame2.height();
+                        if (this.mSurfaceHolder == null) {
+                        }
+                        threadedRenderer = this.mAttachInfo.mThreadedRenderer;
+                        if (threadedRenderer != null) {
+                        }
+                        if (this.mStopped) {
+                        }
+                        focusChangedDueToTouchMode = ensureTouchModeLocally((relayoutResult4 & 1) == 0);
+                        if (!focusChangedDueToTouchMode) {
+                        }
+                        int childWidthMeasureSpec2222 = getRootMeasureSpec(this.mWidth, lp.width);
+                        int childHeightMeasureSpec2222 = getRootMeasureSpec(this.mHeight, lp.height);
+                        performMeasure(childWidthMeasureSpec2222, childHeightMeasureSpec2222);
+                        int width2222 = host.getMeasuredWidth();
+                        int height2222 = host.getMeasuredHeight();
+                        measureAgain = false;
+                        relayoutResult5 = relayoutResult4;
+                        if (lp.horizontalWeight > 0.0f) {
+                        }
+                        if (lp.verticalWeight > 0.0f) {
+                        }
+                        if (measureAgain) {
+                        }
+                        layoutRequested = true;
+                        insetsPending = insetsPending2;
+                        relayoutResult = relayoutResult5;
+                        if (surfaceSizeChanged) {
+                        }
+                        didLayout = !layoutRequested && (!this.mStopped || this.mReportNextDraw);
+                        triggerGlobalLayoutListener = !didLayout || this.mAttachInfo.mRecomputeGlobalAttributes;
+                        if (didLayout) {
+                        }
+                        if (triggerGlobalLayoutListener) {
+                        }
+                        if (computesInternalInsets) {
+                        }
+                        if (this.mFirst) {
+                        }
+                        if (viewVisibilityChanged) {
+                        }
+                        if (this.mAttachInfo.mHasWindowFocus) {
+                        }
+                        if (hasWindowFocus) {
+                        }
+                        if (regainedFocus) {
+                        }
+                        if (!changedVisibility) {
+                        }
+                        if (this.mWindowAttributes != null) {
+                        }
+                        if (!isToast) {
+                        }
+                        this.mFirst = false;
+                        this.mWillDrawSoon = false;
+                        this.mNewSurfaceNeeded = false;
+                        this.mActivityRelaunched = false;
+                        this.mViewVisibility = viewVisibility;
+                        this.mHadWindowFocus = hasWindowFocus;
+                        if (hasWindowFocus) {
+                        }
+                        z2 = true;
+                        if ((relayoutResult & 2) != 0) {
+                        }
+                        if (!this.mAttachInfo.mTreeObserver.dispatchOnPreDraw()) {
+                        }
+                        cancelDraw = z2;
+                        if (cancelDraw) {
+                        }
+                        this.mIsInTraversal = false;
+                    }
+                }
+                params2 = params;
+                desiredWindowHeight3 = desiredWindowHeight2;
+                boolean windowSizeMayChange22 = windowSizeMayChange;
+                if (layoutRequested) {
+                }
+                if (layoutRequested) {
+                    if (this.mWidth == host.getMeasuredWidth()) {
+                    }
+                    desiredWindowHeight4 = desiredWindowHeight3;
+                    windowShouldResize = true;
+                    boolean windowShouldResize2222 = windowShouldResize | (!this.mDragResizing && this.mResizeMode == 0) | this.mActivityRelaunched;
+                    computesInternalInsets = !this.mAttachInfo.mTreeObserver.hasComputeInternalInsetsListeners() || this.mAttachInfo.mHasNonEmptyGivenInternalInsets;
+                    relayoutResult = 0;
+                    boolean updatedConfiguration2222 = false;
+                    int surfaceGenerationId222 = this.mSurface.getGenerationId();
+                    isViewVisible = viewVisibility != 0;
+                    boolean windowRelayoutWasForced222 = this.mForceNextWindowRelayout;
+                    if (this.mFirst) {
+                    }
+                    insetsPending = false;
+                    frame2 = frame;
+                    params3 = params2;
+                    this.mForceNextWindowRelayout = false;
+                    if (isViewVisible) {
+                    }
+                    if (this.mSurfaceHolder == null) {
+                    }
+                    contentInsetsChanged = false;
+                    hadSurface = this.mSurface.isValid();
+                    if (this.mAttachInfo.mThreadedRenderer == null) {
+                    }
+                    relayoutResult2 = relayoutWindow(params3, viewVisibility, insetsPending4);
+                    if (!this.mPendingMergedConfiguration.equals(this.mLastReportedMergedConfiguration)) {
+                    }
+                    overscanInsetsChanged = !this.mPendingOverscanInsets.equals(this.mAttachInfo.mOverscanInsets);
+                    contentInsetsChanged = !this.mPendingContentInsets.equals(this.mAttachInfo.mContentInsets);
+                    visibleInsetsChanged = !this.mPendingVisibleInsets.equals(this.mAttachInfo.mVisibleInsets);
+                    stableInsetsChanged = !this.mPendingStableInsets.equals(this.mAttachInfo.mStableInsets);
+                    cutoutChanged = !this.mPendingDisplayCutout.equals(this.mAttachInfo.mDisplayCutout);
+                    boolean outsetsChanged222 = !this.mPendingOutsets.equals(this.mAttachInfo.mOutsets);
+                    surfaceSizeChanged2 = (relayoutResult2 & 32) == 0;
+                    surfaceChanged2 |= surfaceSizeChanged2;
+                    alwaysConsumeSystemBarsChanged = this.mPendingAlwaysConsumeSystemBars == this.mAttachInfo.mAlwaysConsumeSystemBars;
+                    colorModeChanged = hasColorModeChanged(lp.getColorMode());
+                    if (contentInsetsChanged) {
+                    }
+                    if (overscanInsetsChanged) {
+                    }
+                    if (stableInsetsChanged) {
+                    }
+                    if (cutoutChanged) {
+                    }
+                    if (alwaysConsumeSystemBarsChanged) {
+                    }
+                    if (!contentInsetsChanged) {
+                    }
+                    this.mLastSystemUiVisibility = this.mAttachInfo.mSystemUiVisibility;
+                    this.mLastOverscanRequested = this.mAttachInfo.mOverscanRequested;
+                    this.mAttachInfo.mOutsets.set(this.mPendingOutsets);
+                    this.mApplyInsetsRequested = false;
+                    dispatchApplyInsets(host);
+                    contentInsetsChanged = true;
+                    if (visibleInsetsChanged) {
+                    }
+                    if (colorModeChanged) {
+                    }
+                    if (hadSurface) {
+                    }
+                    if ((relayoutResult2 & 16) == 0) {
+                    }
+                    boolean dockedResizing222 = (relayoutResult2 & 8) == 0;
+                    dragResizing = !freeformResizing || dockedResizing222;
+                    if (this.mDragResizing != dragResizing) {
+                    }
+                    if (!this.mUseMTRenderer) {
+                    }
+                    updatedConfiguration2222 = updatedConfiguration;
+                    boolean surfaceSizeChanged322222 = surfaceSizeChanged2;
+                    relayoutResult4 = relayoutResult3;
+                    this.mAttachInfo.mWindowLeft = frame2.left;
+                    this.mAttachInfo.mWindowTop = frame2.top;
+                    if (this.mWidth == frame2.width()) {
+                    }
+                    this.mWidth = frame2.width();
+                    this.mHeight = frame2.height();
+                    if (this.mSurfaceHolder == null) {
+                    }
+                    threadedRenderer = this.mAttachInfo.mThreadedRenderer;
+                    if (threadedRenderer != null) {
+                    }
+                    if (this.mStopped) {
+                    }
+                    focusChangedDueToTouchMode = ensureTouchModeLocally((relayoutResult4 & 1) == 0);
+                    if (!focusChangedDueToTouchMode) {
+                    }
+                    int childWidthMeasureSpec22222 = getRootMeasureSpec(this.mWidth, lp.width);
+                    int childHeightMeasureSpec22222 = getRootMeasureSpec(this.mHeight, lp.height);
+                    performMeasure(childWidthMeasureSpec22222, childHeightMeasureSpec22222);
+                    int width22222 = host.getMeasuredWidth();
+                    int height22222 = host.getMeasuredHeight();
+                    measureAgain = false;
+                    relayoutResult5 = relayoutResult4;
+                    if (lp.horizontalWeight > 0.0f) {
+                    }
+                    if (lp.verticalWeight > 0.0f) {
+                    }
+                    if (measureAgain) {
+                    }
+                    layoutRequested = true;
+                    insetsPending = insetsPending2;
+                    relayoutResult = relayoutResult5;
+                    if (surfaceSizeChanged) {
+                    }
+                    didLayout = !layoutRequested && (!this.mStopped || this.mReportNextDraw);
+                    triggerGlobalLayoutListener = !didLayout || this.mAttachInfo.mRecomputeGlobalAttributes;
+                    if (didLayout) {
+                    }
+                    if (triggerGlobalLayoutListener) {
+                    }
+                    if (computesInternalInsets) {
+                    }
+                    if (this.mFirst) {
+                    }
+                    if (viewVisibilityChanged) {
+                    }
+                    if (this.mAttachInfo.mHasWindowFocus) {
+                    }
+                    if (hasWindowFocus) {
+                    }
+                    if (regainedFocus) {
+                    }
+                    if (!changedVisibility) {
+                    }
+                    if (this.mWindowAttributes != null) {
+                    }
+                    if (!isToast) {
+                    }
+                    this.mFirst = false;
+                    this.mWillDrawSoon = false;
+                    this.mNewSurfaceNeeded = false;
+                    this.mActivityRelaunched = false;
+                    this.mViewVisibility = viewVisibility;
+                    this.mHadWindowFocus = hasWindowFocus;
+                    if (hasWindowFocus) {
+                    }
+                    z2 = true;
+                    if ((relayoutResult & 2) != 0) {
+                    }
+                    if (!this.mAttachInfo.mTreeObserver.dispatchOnPreDraw()) {
+                    }
+                    cancelDraw = z2;
+                    if (cancelDraw) {
+                    }
+                    this.mIsInTraversal = false;
+                }
+                desiredWindowHeight4 = desiredWindowHeight3;
+                windowShouldResize = false;
+                boolean windowShouldResize22222 = windowShouldResize | (!this.mDragResizing && this.mResizeMode == 0) | this.mActivityRelaunched;
+                computesInternalInsets = !this.mAttachInfo.mTreeObserver.hasComputeInternalInsetsListeners() || this.mAttachInfo.mHasNonEmptyGivenInternalInsets;
+                relayoutResult = 0;
+                boolean updatedConfiguration22222 = false;
+                int surfaceGenerationId2222 = this.mSurface.getGenerationId();
+                isViewVisible = viewVisibility != 0;
+                boolean windowRelayoutWasForced2222 = this.mForceNextWindowRelayout;
+                if (this.mFirst) {
+                }
+                insetsPending = false;
+                frame2 = frame;
+                params3 = params2;
+                this.mForceNextWindowRelayout = false;
+                if (isViewVisible) {
+                }
+                if (this.mSurfaceHolder == null) {
+                }
+                contentInsetsChanged = false;
+                hadSurface = this.mSurface.isValid();
+                if (this.mAttachInfo.mThreadedRenderer == null) {
+                }
+                relayoutResult2 = relayoutWindow(params3, viewVisibility, insetsPending4);
+                if (!this.mPendingMergedConfiguration.equals(this.mLastReportedMergedConfiguration)) {
+                }
+                overscanInsetsChanged = !this.mPendingOverscanInsets.equals(this.mAttachInfo.mOverscanInsets);
+                contentInsetsChanged = !this.mPendingContentInsets.equals(this.mAttachInfo.mContentInsets);
+                visibleInsetsChanged = !this.mPendingVisibleInsets.equals(this.mAttachInfo.mVisibleInsets);
+                stableInsetsChanged = !this.mPendingStableInsets.equals(this.mAttachInfo.mStableInsets);
+                cutoutChanged = !this.mPendingDisplayCutout.equals(this.mAttachInfo.mDisplayCutout);
+                boolean outsetsChanged2222 = !this.mPendingOutsets.equals(this.mAttachInfo.mOutsets);
+                surfaceSizeChanged2 = (relayoutResult2 & 32) == 0;
+                surfaceChanged2 |= surfaceSizeChanged2;
+                alwaysConsumeSystemBarsChanged = this.mPendingAlwaysConsumeSystemBars == this.mAttachInfo.mAlwaysConsumeSystemBars;
+                colorModeChanged = hasColorModeChanged(lp.getColorMode());
+                if (contentInsetsChanged) {
+                }
+                if (overscanInsetsChanged) {
+                }
+                if (stableInsetsChanged) {
+                }
+                if (cutoutChanged) {
+                }
+                if (alwaysConsumeSystemBarsChanged) {
+                }
+                if (!contentInsetsChanged) {
+                }
+                this.mLastSystemUiVisibility = this.mAttachInfo.mSystemUiVisibility;
+                this.mLastOverscanRequested = this.mAttachInfo.mOverscanRequested;
+                this.mAttachInfo.mOutsets.set(this.mPendingOutsets);
+                this.mApplyInsetsRequested = false;
+                dispatchApplyInsets(host);
+                contentInsetsChanged = true;
+                if (visibleInsetsChanged) {
+                }
+                if (colorModeChanged) {
+                }
+                if (hadSurface) {
+                }
+                if ((relayoutResult2 & 16) == 0) {
+                }
+                boolean dockedResizing2222 = (relayoutResult2 & 8) == 0;
+                dragResizing = !freeformResizing || dockedResizing2222;
+                if (this.mDragResizing != dragResizing) {
+                }
+                if (!this.mUseMTRenderer) {
+                }
+                updatedConfiguration22222 = updatedConfiguration;
+                boolean surfaceSizeChanged3222222 = surfaceSizeChanged2;
+                relayoutResult4 = relayoutResult3;
+                this.mAttachInfo.mWindowLeft = frame2.left;
+                this.mAttachInfo.mWindowTop = frame2.top;
+                if (this.mWidth == frame2.width()) {
+                }
+                this.mWidth = frame2.width();
+                this.mHeight = frame2.height();
+                if (this.mSurfaceHolder == null) {
+                }
+                threadedRenderer = this.mAttachInfo.mThreadedRenderer;
+                if (threadedRenderer != null) {
+                }
+                if (this.mStopped) {
+                }
+                focusChangedDueToTouchMode = ensureTouchModeLocally((relayoutResult4 & 1) == 0);
+                if (!focusChangedDueToTouchMode) {
+                }
+                int childWidthMeasureSpec222222 = getRootMeasureSpec(this.mWidth, lp.width);
+                int childHeightMeasureSpec222222 = getRootMeasureSpec(this.mHeight, lp.height);
+                performMeasure(childWidthMeasureSpec222222, childHeightMeasureSpec222222);
+                int width222222 = host.getMeasuredWidth();
+                int height222222 = host.getMeasuredHeight();
+                measureAgain = false;
+                relayoutResult5 = relayoutResult4;
+                if (lp.horizontalWeight > 0.0f) {
+                }
+                if (lp.verticalWeight > 0.0f) {
+                }
+                if (measureAgain) {
+                }
+                layoutRequested = true;
+                insetsPending = insetsPending2;
+                relayoutResult = relayoutResult5;
+                if (surfaceSizeChanged) {
+                }
+                didLayout = !layoutRequested && (!this.mStopped || this.mReportNextDraw);
+                triggerGlobalLayoutListener = !didLayout || this.mAttachInfo.mRecomputeGlobalAttributes;
+                if (didLayout) {
+                }
+                if (triggerGlobalLayoutListener) {
+                }
+                if (computesInternalInsets) {
+                }
+                if (this.mFirst) {
+                }
+                if (viewVisibilityChanged) {
+                }
+                if (this.mAttachInfo.mHasWindowFocus) {
+                }
+                if (hasWindowFocus) {
+                }
+                if (regainedFocus) {
+                }
+                if (!changedVisibility) {
+                }
+                if (this.mWindowAttributes != null) {
+                }
+                if (!isToast) {
+                }
+                this.mFirst = false;
+                this.mWillDrawSoon = false;
+                this.mNewSurfaceNeeded = false;
+                this.mActivityRelaunched = false;
+                this.mViewVisibility = viewVisibility;
+                this.mHadWindowFocus = hasWindowFocus;
+                if (hasWindowFocus) {
+                }
+                z2 = true;
+                if ((relayoutResult & 2) != 0) {
+                }
+                if (!this.mAttachInfo.mTreeObserver.dispatchOnPreDraw()) {
+                }
+                cancelDraw = z2;
+                if (cancelDraw) {
+                }
+                this.mIsInTraversal = false;
+            }
+        }
+        z = false;
+        boolean viewUserVisibilityChanged2 = z;
+        WindowManager.LayoutParams params42 = null;
+        if (this.mWindowAttributesChanged) {
+        }
+        boolean surfaceChanged22 = surfaceChanged;
+        compatibilityInfo = this.mDisplay.getDisplayAdjustments().getCompatibilityInfo();
+        if (compatibilityInfo.supportsScreen() == this.mLastInCompatMode) {
+        }
+        WindowManager.LayoutParams params52 = params42;
+        this.mWindowAttributesChangesFlag = 0;
+        Rect frame32 = this.mWinFrame;
+        if (this.mFirst) {
+        }
+        if (viewVisibilityChanged) {
+        }
+        if (this.mAttachInfo.mWindowVisibility != 0) {
+        }
+        getRunQueue().executeActions(this.mAttachInfo.mHandler);
+        layoutRequested = !this.mLayoutRequested && (!this.mStopped || this.mReportNextDraw);
+        if (layoutRequested) {
+        }
+        if (collectViewAttributes()) {
+        }
+        if (this.mAttachInfo.mForceReportNewAttributes) {
+        }
+        if (!this.mFirst) {
+        }
+        this.mAttachInfo.mViewVisibilityChanged = false;
+        resizeMode = this.mSoftInputMode & 240;
+        if (resizeMode == 0) {
+        }
+        params = params52;
+        if (params != null) {
+        }
+        if (this.mApplyInsetsRequested) {
+        }
+        params2 = params;
+        desiredWindowHeight3 = desiredWindowHeight2;
+        boolean windowSizeMayChange222 = windowSizeMayChange;
+        if (layoutRequested) {
+        }
+        if (layoutRequested) {
+        }
+        desiredWindowHeight4 = desiredWindowHeight3;
+        windowShouldResize = false;
+        boolean windowShouldResize222222 = windowShouldResize | (!this.mDragResizing && this.mResizeMode == 0) | this.mActivityRelaunched;
+        computesInternalInsets = !this.mAttachInfo.mTreeObserver.hasComputeInternalInsetsListeners() || this.mAttachInfo.mHasNonEmptyGivenInternalInsets;
+        relayoutResult = 0;
+        boolean updatedConfiguration222222 = false;
+        int surfaceGenerationId22222 = this.mSurface.getGenerationId();
+        isViewVisible = viewVisibility != 0;
+        boolean windowRelayoutWasForced22222 = this.mForceNextWindowRelayout;
+        if (this.mFirst) {
+        }
+        insetsPending = false;
+        frame2 = frame;
+        params3 = params2;
+        this.mForceNextWindowRelayout = false;
+        if (isViewVisible) {
+        }
+        if (this.mSurfaceHolder == null) {
+        }
+        contentInsetsChanged = false;
+        hadSurface = this.mSurface.isValid();
+        if (this.mAttachInfo.mThreadedRenderer == null) {
+        }
+        relayoutResult2 = relayoutWindow(params3, viewVisibility, insetsPending4);
+        if (!this.mPendingMergedConfiguration.equals(this.mLastReportedMergedConfiguration)) {
+        }
+        overscanInsetsChanged = !this.mPendingOverscanInsets.equals(this.mAttachInfo.mOverscanInsets);
+        contentInsetsChanged = !this.mPendingContentInsets.equals(this.mAttachInfo.mContentInsets);
+        visibleInsetsChanged = !this.mPendingVisibleInsets.equals(this.mAttachInfo.mVisibleInsets);
+        stableInsetsChanged = !this.mPendingStableInsets.equals(this.mAttachInfo.mStableInsets);
+        cutoutChanged = !this.mPendingDisplayCutout.equals(this.mAttachInfo.mDisplayCutout);
+        boolean outsetsChanged22222 = !this.mPendingOutsets.equals(this.mAttachInfo.mOutsets);
+        surfaceSizeChanged2 = (relayoutResult2 & 32) == 0;
+        surfaceChanged22 |= surfaceSizeChanged2;
+        alwaysConsumeSystemBarsChanged = this.mPendingAlwaysConsumeSystemBars == this.mAttachInfo.mAlwaysConsumeSystemBars;
+        colorModeChanged = hasColorModeChanged(lp.getColorMode());
+        if (contentInsetsChanged) {
+        }
+        if (overscanInsetsChanged) {
+        }
+        if (stableInsetsChanged) {
+        }
+        if (cutoutChanged) {
+        }
+        if (alwaysConsumeSystemBarsChanged) {
+        }
+        if (!contentInsetsChanged) {
+        }
+        this.mLastSystemUiVisibility = this.mAttachInfo.mSystemUiVisibility;
+        this.mLastOverscanRequested = this.mAttachInfo.mOverscanRequested;
+        this.mAttachInfo.mOutsets.set(this.mPendingOutsets);
+        this.mApplyInsetsRequested = false;
+        dispatchApplyInsets(host);
+        contentInsetsChanged = true;
+        if (visibleInsetsChanged) {
+        }
+        if (colorModeChanged) {
+        }
+        if (hadSurface) {
+        }
+        if ((relayoutResult2 & 16) == 0) {
+        }
+        boolean dockedResizing22222 = (relayoutResult2 & 8) == 0;
+        dragResizing = !freeformResizing || dockedResizing22222;
+        if (this.mDragResizing != dragResizing) {
+        }
+        if (!this.mUseMTRenderer) {
+        }
+        updatedConfiguration222222 = updatedConfiguration;
+        boolean surfaceSizeChanged32222222 = surfaceSizeChanged2;
+        relayoutResult4 = relayoutResult3;
+        this.mAttachInfo.mWindowLeft = frame2.left;
+        this.mAttachInfo.mWindowTop = frame2.top;
+        if (this.mWidth == frame2.width()) {
+        }
+        this.mWidth = frame2.width();
+        this.mHeight = frame2.height();
+        if (this.mSurfaceHolder == null) {
+        }
+        threadedRenderer = this.mAttachInfo.mThreadedRenderer;
+        if (threadedRenderer != null) {
+        }
+        if (this.mStopped) {
+        }
+        focusChangedDueToTouchMode = ensureTouchModeLocally((relayoutResult4 & 1) == 0);
+        if (!focusChangedDueToTouchMode) {
+        }
+        int childWidthMeasureSpec2222222 = getRootMeasureSpec(this.mWidth, lp.width);
+        int childHeightMeasureSpec2222222 = getRootMeasureSpec(this.mHeight, lp.height);
+        performMeasure(childWidthMeasureSpec2222222, childHeightMeasureSpec2222222);
+        int width2222222 = host.getMeasuredWidth();
+        int height2222222 = host.getMeasuredHeight();
+        measureAgain = false;
+        relayoutResult5 = relayoutResult4;
+        if (lp.horizontalWeight > 0.0f) {
+        }
+        if (lp.verticalWeight > 0.0f) {
+        }
+        if (measureAgain) {
+        }
+        layoutRequested = true;
+        insetsPending = insetsPending2;
+        relayoutResult = relayoutResult5;
+        if (surfaceSizeChanged) {
+        }
+        didLayout = !layoutRequested && (!this.mStopped || this.mReportNextDraw);
+        triggerGlobalLayoutListener = !didLayout || this.mAttachInfo.mRecomputeGlobalAttributes;
+        if (didLayout) {
+        }
+        if (triggerGlobalLayoutListener) {
+        }
+        if (computesInternalInsets) {
+        }
+        if (this.mFirst) {
+        }
+        if (viewVisibilityChanged) {
+        }
+        if (this.mAttachInfo.mHasWindowFocus) {
+        }
+        if (hasWindowFocus) {
+        }
+        if (regainedFocus) {
+        }
+        if (!changedVisibility) {
+        }
+        if (this.mWindowAttributes != null) {
+        }
+        if (!isToast) {
+        }
+        this.mFirst = false;
+        this.mWillDrawSoon = false;
+        this.mNewSurfaceNeeded = false;
+        this.mActivityRelaunched = false;
+        this.mViewVisibility = viewVisibility;
+        this.mHadWindowFocus = hasWindowFocus;
+        if (hasWindowFocus) {
+        }
+        z2 = true;
+        if ((relayoutResult & 2) != 0) {
+        }
+        if (!this.mAttachInfo.mTreeObserver.dispatchOnPreDraw()) {
+        }
+        cancelDraw = z2;
+        if (cancelDraw) {
+        }
+        this.mIsInTraversal = false;
     }
 
     private void notifySurfaceDestroyed() {
@@ -3571,7 +3351,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void maybeHandleWindowMove(Rect frame) {
         boolean windowMoved = (this.mAttachInfo.mWindowLeft == frame.left && this.mAttachInfo.mWindowTop == frame.top) ? false : true;
         if (windowMoved) {
@@ -3589,323 +3369,98 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         }
     }
 
-    /* access modifiers changed from: private */
-    /* JADX WARNING: Code restructure failed: missing block: B:10:0x0013, code lost:
-        if (r1 == false) goto L_0x001b;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:11:0x0015, code lost:
-        r12.mInsetsController.onWindowFocusGained();
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:12:0x001b, code lost:
-        r12.mInsetsController.onWindowFocusLost();
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:14:0x0022, code lost:
-        if (r12.mAdded == false) goto L_0x011d;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:15:0x0024, code lost:
-        profileRendering(r1);
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:16:0x0028, code lost:
-        if (r1 == false) goto L_0x0087;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:17:0x002a, code lost:
-        ensureTouchModeLocally(r2);
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:18:0x0031, code lost:
-        if (r12.mAttachInfo.mThreadedRenderer == null) goto L_0x0087;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:20:0x0039, code lost:
-        if (r12.mSurface.isValid() == false) goto L_0x0087;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:21:0x003b, code lost:
-        r12.mFullRedrawNeeded = true;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:23:?, code lost:
-        r4 = r12.mWindowAttributes;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:24:0x003f, code lost:
-        if (r4 == null) goto L_0x0044;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:25:0x0041, code lost:
-        r5 = r4.surfaceInsets;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:26:0x0044, code lost:
-        r5 = null;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:27:0x0045, code lost:
-        r12.mAttachInfo.mThreadedRenderer.initializeIfNeeded(r12.mWidth, r12.mHeight, r12.mAttachInfo, r12.mSurface, r5);
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:28:0x0056, code lost:
-        r0 = move-exception;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:29:0x0057, code lost:
-        android.util.Log.e(r12.mTag, "OutOfResourcesException locking surface", r0);
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:32:0x0066, code lost:
-        if (r12.mWindowSession.outOfMemory(r12.mWindow) == false) goto L_0x0068;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:33:0x0068, code lost:
-        android.util.Slog.w(r12.mTag, "No processes killed for memory; killing self");
-        android.os.Process.killProcess(android.os.Process.myPid());
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:35:0x0078, code lost:
-        r12.mHandler.sendMessageDelayed(r12.mHandler.obtainMessage(6), 500);
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:36:0x0086, code lost:
-        return;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:37:0x0087, code lost:
-        r12.mAttachInfo.mHasWindowFocus = r1;
-        r12.mLastWasImTarget = android.view.WindowManager.LayoutParams.mayUseInputMethod(r12.mWindowAttributes.flags);
-        r4 = (android.view.inputmethod.InputMethodManager) r12.mContext.getSystemService(android.view.inputmethod.InputMethodManager.class);
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:38:0x009f, code lost:
-        if (r4 == null) goto L_0x00b0;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:40:0x00a3, code lost:
-        if (r12.mLastWasImTarget == false) goto L_0x00b0;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:42:0x00a9, code lost:
-        if (isInLocalFocusMode() != false) goto L_0x00b0;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:43:0x00ab, code lost:
-        r4.onPreWindowFocus(r12.mView, r1);
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:45:0x00b2, code lost:
-        if (r12.mView == null) goto L_0x00d4;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:46:0x00b4, code lost:
-        r12.mAttachInfo.mKeyDispatchState.reset();
-        r12.mView.dispatchWindowFocusChanged(r1);
-        r12.mAttachInfo.mTreeObserver.dispatchOnWindowFocusChange(r1);
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:47:0x00cb, code lost:
-        if (r12.mAttachInfo.mTooltipHost == null) goto L_0x00d4;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:48:0x00cd, code lost:
-        r12.mAttachInfo.mTooltipHost.hideTooltip();
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:49:0x00d4, code lost:
-        if (r1 == false) goto L_0x0116;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:50:0x00d6, code lost:
-        if (r4 == null) goto L_0x00fa;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:52:0x00da, code lost:
-        if (r12.mLastWasImTarget == false) goto L_0x00fa;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:54:0x00e0, code lost:
-        if (isInLocalFocusMode() != false) goto L_0x00fa;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:55:0x00e2, code lost:
-        r4.onPostWindowFocus(r12.mView, r12.mView.findFocus(), r12.mWindowAttributes.softInputMode, !r12.mHasHadWindowFocus, r12.mWindowAttributes.flags);
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:56:0x00fa, code lost:
-        r12.mWindowAttributes.softInputMode &= android.net.TrafficStats.TAG_NETWORK_STACK_RANGE_END;
-        ((android.view.WindowManager.LayoutParams) r12.mView.getLayoutParams()).softInputMode &= android.net.TrafficStats.TAG_NETWORK_STACK_RANGE_END;
-        r12.mHasHadWindowFocus = true;
-        fireAccessibilityFocusEventIfHasFocusedNode();
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:58:0x0118, code lost:
-        if (r12.mPointerCapture == false) goto L_0x011d;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:59:0x011a, code lost:
-        handlePointerCaptureChanged(false);
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:60:0x011d, code lost:
-        r12.mFirstInputStage.onWindowFocusChanged(r1);
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:61:0x0122, code lost:
-        return;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:9:0x0011, code lost:
-        if (sNewInsetsMode == 0) goto L_0x0020;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
+    /* JADX INFO: Access modifiers changed from: private */
     public void handleWindowFocusChanged() {
-        /*
-            r12 = this;
-            monitor-enter(r12)
-            boolean r0 = r12.mWindowFocusChanged     // Catch:{ all -> 0x0123 }
-            if (r0 != 0) goto L_0x0007
-            monitor-exit(r12)     // Catch:{ all -> 0x0123 }
-            return
-        L_0x0007:
-            r0 = 0
-            r12.mWindowFocusChanged = r0     // Catch:{ all -> 0x0123 }
-            boolean r1 = r12.mUpcomingWindowFocus     // Catch:{ all -> 0x0123 }
-            boolean r2 = r12.mUpcomingInTouchMode     // Catch:{ all -> 0x0123 }
-            monitor-exit(r12)     // Catch:{ all -> 0x0123 }
-            int r3 = sNewInsetsMode
-            if (r3 == 0) goto L_0x0020
-            if (r1 == 0) goto L_0x001b
-            android.view.InsetsController r3 = r12.mInsetsController
-            r3.onWindowFocusGained()
-            goto L_0x0020
-        L_0x001b:
-            android.view.InsetsController r3 = r12.mInsetsController
-            r3.onWindowFocusLost()
-        L_0x0020:
-            boolean r3 = r12.mAdded
-            if (r3 == 0) goto L_0x011d
-            r12.profileRendering(r1)
-            r3 = 1
-            if (r1 == 0) goto L_0x0087
-            r12.ensureTouchModeLocally(r2)
-            android.view.View$AttachInfo r4 = r12.mAttachInfo
-            android.view.ThreadedRenderer r4 = r4.mThreadedRenderer
-            if (r4 == 0) goto L_0x0087
-            android.view.Surface r4 = r12.mSurface
-            boolean r4 = r4.isValid()
-            if (r4 == 0) goto L_0x0087
-            r12.mFullRedrawNeeded = r3
-            android.view.WindowManager$LayoutParams r4 = r12.mWindowAttributes     // Catch:{ OutOfResourcesException -> 0x0056 }
-            if (r4 == 0) goto L_0x0044
-            android.graphics.Rect r5 = r4.surfaceInsets     // Catch:{ OutOfResourcesException -> 0x0056 }
-            goto L_0x0045
-        L_0x0044:
-            r5 = 0
-        L_0x0045:
-            r11 = r5
-            android.view.View$AttachInfo r5 = r12.mAttachInfo     // Catch:{ OutOfResourcesException -> 0x0056 }
-            android.view.ThreadedRenderer r6 = r5.mThreadedRenderer     // Catch:{ OutOfResourcesException -> 0x0056 }
-            int r7 = r12.mWidth     // Catch:{ OutOfResourcesException -> 0x0056 }
-            int r8 = r12.mHeight     // Catch:{ OutOfResourcesException -> 0x0056 }
-            android.view.View$AttachInfo r9 = r12.mAttachInfo     // Catch:{ OutOfResourcesException -> 0x0056 }
-            android.view.Surface r10 = r12.mSurface     // Catch:{ OutOfResourcesException -> 0x0056 }
-            r6.initializeIfNeeded(r7, r8, r9, r10, r11)     // Catch:{ OutOfResourcesException -> 0x0056 }
-            goto L_0x0087
-        L_0x0056:
-            r0 = move-exception
-            java.lang.String r3 = r12.mTag
-            java.lang.String r4 = "OutOfResourcesException locking surface"
-            android.util.Log.e(r3, r4, r0)
-            android.view.IWindowSession r3 = r12.mWindowSession     // Catch:{ RemoteException -> 0x0077 }
-            android.view.ViewRootImpl$W r4 = r12.mWindow     // Catch:{ RemoteException -> 0x0077 }
-            boolean r3 = r3.outOfMemory(r4)     // Catch:{ RemoteException -> 0x0077 }
-            if (r3 != 0) goto L_0x0076
-            java.lang.String r3 = r12.mTag     // Catch:{ RemoteException -> 0x0077 }
-            java.lang.String r4 = "No processes killed for memory; killing self"
-            android.util.Slog.w((java.lang.String) r3, (java.lang.String) r4)     // Catch:{ RemoteException -> 0x0077 }
-            int r3 = android.os.Process.myPid()     // Catch:{ RemoteException -> 0x0077 }
-            android.os.Process.killProcess(r3)     // Catch:{ RemoteException -> 0x0077 }
-        L_0x0076:
-            goto L_0x0078
-        L_0x0077:
-            r3 = move-exception
-        L_0x0078:
-            android.view.ViewRootImpl$ViewRootHandler r3 = r12.mHandler
-            android.view.ViewRootImpl$ViewRootHandler r4 = r12.mHandler
-            r5 = 6
-            android.os.Message r4 = r4.obtainMessage(r5)
-            r5 = 500(0x1f4, double:2.47E-321)
-            r3.sendMessageDelayed(r4, r5)
-            return
-        L_0x0087:
-            android.view.View$AttachInfo r4 = r12.mAttachInfo
-            r4.mHasWindowFocus = r1
-            android.view.WindowManager$LayoutParams r4 = r12.mWindowAttributes
-            int r4 = r4.flags
-            boolean r4 = android.view.WindowManager.LayoutParams.mayUseInputMethod(r4)
-            r12.mLastWasImTarget = r4
-            android.content.Context r4 = r12.mContext
-            java.lang.Class<android.view.inputmethod.InputMethodManager> r5 = android.view.inputmethod.InputMethodManager.class
-            java.lang.Object r4 = r4.getSystemService(r5)
-            android.view.inputmethod.InputMethodManager r4 = (android.view.inputmethod.InputMethodManager) r4
-            if (r4 == 0) goto L_0x00b0
-            boolean r5 = r12.mLastWasImTarget
-            if (r5 == 0) goto L_0x00b0
-            boolean r5 = r12.isInLocalFocusMode()
-            if (r5 != 0) goto L_0x00b0
-            android.view.View r5 = r12.mView
-            r4.onPreWindowFocus(r5, r1)
-        L_0x00b0:
-            android.view.View r5 = r12.mView
-            if (r5 == 0) goto L_0x00d4
-            android.view.View$AttachInfo r5 = r12.mAttachInfo
-            android.view.KeyEvent$DispatcherState r5 = r5.mKeyDispatchState
-            r5.reset()
-            android.view.View r5 = r12.mView
-            r5.dispatchWindowFocusChanged(r1)
-            android.view.View$AttachInfo r5 = r12.mAttachInfo
-            android.view.ViewTreeObserver r5 = r5.mTreeObserver
-            r5.dispatchOnWindowFocusChange(r1)
-            android.view.View$AttachInfo r5 = r12.mAttachInfo
-            android.view.View r5 = r5.mTooltipHost
-            if (r5 == 0) goto L_0x00d4
-            android.view.View$AttachInfo r5 = r12.mAttachInfo
-            android.view.View r5 = r5.mTooltipHost
-            r5.hideTooltip()
-        L_0x00d4:
-            if (r1 == 0) goto L_0x0116
-            if (r4 == 0) goto L_0x00fa
-            boolean r0 = r12.mLastWasImTarget
-            if (r0 == 0) goto L_0x00fa
-            boolean r0 = r12.isInLocalFocusMode()
-            if (r0 != 0) goto L_0x00fa
-            android.view.View r6 = r12.mView
-            android.view.View r0 = r12.mView
-            android.view.View r7 = r0.findFocus()
-            android.view.WindowManager$LayoutParams r0 = r12.mWindowAttributes
-            int r8 = r0.softInputMode
-            boolean r0 = r12.mHasHadWindowFocus
-            r9 = r0 ^ 1
-            android.view.WindowManager$LayoutParams r0 = r12.mWindowAttributes
-            int r10 = r0.flags
-            r5 = r4
-            r5.onPostWindowFocus(r6, r7, r8, r9, r10)
-        L_0x00fa:
-            android.view.WindowManager$LayoutParams r0 = r12.mWindowAttributes
-            int r5 = r0.softInputMode
-            r5 = r5 & -257(0xfffffffffffffeff, float:NaN)
-            r0.softInputMode = r5
-            android.view.View r0 = r12.mView
-            android.view.ViewGroup$LayoutParams r0 = r0.getLayoutParams()
-            android.view.WindowManager$LayoutParams r0 = (android.view.WindowManager.LayoutParams) r0
-            int r5 = r0.softInputMode
-            r5 = r5 & -257(0xfffffffffffffeff, float:NaN)
-            r0.softInputMode = r5
-            r12.mHasHadWindowFocus = r3
-            r12.fireAccessibilityFocusEventIfHasFocusedNode()
-            goto L_0x011d
-        L_0x0116:
-            boolean r3 = r12.mPointerCapture
-            if (r3 == 0) goto L_0x011d
-            r12.handlePointerCaptureChanged(r0)
-        L_0x011d:
-            android.view.ViewRootImpl$InputStage r0 = r12.mFirstInputStage
-            r0.onWindowFocusChanged(r1)
-            return
-        L_0x0123:
-            r0 = move-exception
-            monitor-exit(r12)     // Catch:{ all -> 0x0123 }
-            throw r0
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.view.ViewRootImpl.handleWindowFocusChanged():void");
+        synchronized (this) {
+            if (this.mWindowFocusChanged) {
+                this.mWindowFocusChanged = false;
+                boolean hasWindowFocus = this.mUpcomingWindowFocus;
+                boolean inTouchMode = this.mUpcomingInTouchMode;
+                if (sNewInsetsMode != 0) {
+                    if (hasWindowFocus) {
+                        this.mInsetsController.onWindowFocusGained();
+                    } else {
+                        this.mInsetsController.onWindowFocusLost();
+                    }
+                }
+                if (this.mAdded) {
+                    profileRendering(hasWindowFocus);
+                    if (hasWindowFocus) {
+                        ensureTouchModeLocally(inTouchMode);
+                        if (this.mAttachInfo.mThreadedRenderer != null && this.mSurface.isValid()) {
+                            this.mFullRedrawNeeded = true;
+                            try {
+                                WindowManager.LayoutParams lp = this.mWindowAttributes;
+                                Rect surfaceInsets = lp != null ? lp.surfaceInsets : null;
+                                this.mAttachInfo.mThreadedRenderer.initializeIfNeeded(this.mWidth, this.mHeight, this.mAttachInfo, this.mSurface, surfaceInsets);
+                            } catch (Surface.OutOfResourcesException e) {
+                                Log.m69e(this.mTag, "OutOfResourcesException locking surface", e);
+                                try {
+                                    if (!this.mWindowSession.outOfMemory(this.mWindow)) {
+                                        Slog.m50w(this.mTag, "No processes killed for memory; killing self");
+                                        Process.killProcess(Process.myPid());
+                                    }
+                                } catch (RemoteException e2) {
+                                }
+                                this.mHandler.sendMessageDelayed(this.mHandler.obtainMessage(6), 500L);
+                                return;
+                            }
+                        }
+                    }
+                    this.mAttachInfo.mHasWindowFocus = hasWindowFocus;
+                    this.mLastWasImTarget = WindowManager.LayoutParams.mayUseInputMethod(this.mWindowAttributes.flags);
+                    InputMethodManager imm = (InputMethodManager) this.mContext.getSystemService(InputMethodManager.class);
+                    if (imm != null && this.mLastWasImTarget && !isInLocalFocusMode()) {
+                        imm.onPreWindowFocus(this.mView, hasWindowFocus);
+                    }
+                    if (this.mView != null) {
+                        this.mAttachInfo.mKeyDispatchState.reset();
+                        this.mView.dispatchWindowFocusChanged(hasWindowFocus);
+                        this.mAttachInfo.mTreeObserver.dispatchOnWindowFocusChange(hasWindowFocus);
+                        if (this.mAttachInfo.mTooltipHost != null) {
+                            this.mAttachInfo.mTooltipHost.hideTooltip();
+                        }
+                    }
+                    if (hasWindowFocus) {
+                        if (imm != null && this.mLastWasImTarget && !isInLocalFocusMode()) {
+                            imm.onPostWindowFocus(this.mView, this.mView.findFocus(), this.mWindowAttributes.softInputMode, !this.mHasHadWindowFocus, this.mWindowAttributes.flags);
+                        }
+                        this.mWindowAttributes.softInputMode &= TrafficStats.TAG_NETWORK_STACK_RANGE_END;
+                        ((WindowManager.LayoutParams) this.mView.getLayoutParams()).softInputMode &= TrafficStats.TAG_NETWORK_STACK_RANGE_END;
+                        this.mHasHadWindowFocus = true;
+                        fireAccessibilityFocusEventIfHasFocusedNode();
+                    } else if (this.mPointerCapture) {
+                        handlePointerCaptureChanged(false);
+                    }
+                }
+                this.mFirstInputStage.onWindowFocusChanged(hasWindowFocus);
+            }
+        }
     }
 
     private void fireAccessibilityFocusEventIfHasFocusedNode() {
         View focusedView;
-        if (AccessibilityManager.getInstance(this.mContext).isEnabled() && (focusedView = this.mView.findFocus()) != null) {
-            AccessibilityNodeProvider provider = focusedView.getAccessibilityNodeProvider();
-            if (provider == null) {
-                focusedView.sendAccessibilityEvent(8);
-                return;
-            }
-            AccessibilityNodeInfo focusedNode = findFocusedVirtualNode(provider);
-            if (focusedNode != null) {
-                int virtualId = AccessibilityNodeInfo.getVirtualDescendantId(focusedNode.getSourceNodeId());
-                AccessibilityEvent event = AccessibilityEvent.obtain(8);
-                event.setSource(focusedView, virtualId);
-                event.setPackageName(focusedNode.getPackageName());
-                event.setChecked(focusedNode.isChecked());
-                event.setContentDescription(focusedNode.getContentDescription());
-                event.setPassword(focusedNode.isPassword());
-                event.getText().add(focusedNode.getText());
-                event.setEnabled(focusedNode.isEnabled());
-                focusedView.getParent().requestSendAccessibilityEvent(focusedView, event);
-                focusedNode.recycle();
-            }
+        if (!AccessibilityManager.getInstance(this.mContext).isEnabled() || (focusedView = this.mView.findFocus()) == null) {
+            return;
+        }
+        AccessibilityNodeProvider provider = focusedView.getAccessibilityNodeProvider();
+        if (provider == null) {
+            focusedView.sendAccessibilityEvent(8);
+            return;
+        }
+        AccessibilityNodeInfo focusedNode = findFocusedVirtualNode(provider);
+        if (focusedNode != null) {
+            int virtualId = AccessibilityNodeInfo.getVirtualDescendantId(focusedNode.getSourceNodeId());
+            AccessibilityEvent event = AccessibilityEvent.obtain(8);
+            event.setSource(focusedView, virtualId);
+            event.setPackageName(focusedNode.getPackageName());
+            event.setChecked(focusedNode.isChecked());
+            event.setContentDescription(focusedNode.getContentDescription());
+            event.setPassword(focusedNode.isPassword());
+            event.getText().add(focusedNode.getText());
+            event.setEnabled(focusedNode.isEnabled());
+            focusedView.getParent().requestSendAccessibilityEvent(focusedView, event);
+            focusedNode.recycle();
         }
     }
 
@@ -3914,40 +3469,41 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         if (focusedNode != null) {
             return focusedNode;
         }
-        if (!this.mContext.isAutofillCompatibilityEnabled()) {
-            return null;
-        }
-        AccessibilityNodeInfo current = provider.createAccessibilityNodeInfo(-1);
-        if (current.isFocused()) {
-            return current;
-        }
-        Queue<AccessibilityNodeInfo> fringe = new LinkedList<>();
-        fringe.offer(current);
-        while (!fringe.isEmpty()) {
-            AccessibilityNodeInfo current2 = fringe.poll();
-            LongArray childNodeIds = current2.getChildNodeIds();
-            if (childNodeIds != null && childNodeIds.size() > 0) {
-                int childCount = childNodeIds.size();
-                for (int i = 0; i < childCount; i++) {
-                    AccessibilityNodeInfo child = provider.createAccessibilityNodeInfo(AccessibilityNodeInfo.getVirtualDescendantId(childNodeIds.get(i)));
-                    if (child != null) {
-                        if (child.isFocused()) {
-                            return child;
-                        }
-                        fringe.offer(child);
-                    }
-                }
-                current2.recycle();
+        if (this.mContext.isAutofillCompatibilityEnabled()) {
+            AccessibilityNodeInfo current = provider.createAccessibilityNodeInfo(-1);
+            if (current.isFocused()) {
+                return current;
             }
+            Queue<AccessibilityNodeInfo> fringe = new LinkedList<>();
+            fringe.offer(current);
+            while (!fringe.isEmpty()) {
+                AccessibilityNodeInfo current2 = fringe.poll();
+                LongArray childNodeIds = current2.getChildNodeIds();
+                if (childNodeIds != null && childNodeIds.size() > 0) {
+                    int childCount = childNodeIds.size();
+                    for (int i = 0; i < childCount; i++) {
+                        int virtualId = AccessibilityNodeInfo.getVirtualDescendantId(childNodeIds.get(i));
+                        AccessibilityNodeInfo child = provider.createAccessibilityNodeInfo(virtualId);
+                        if (child != null) {
+                            if (child.isFocused()) {
+                                return child;
+                            }
+                            fringe.offer(child);
+                        }
+                    }
+                    current2.recycle();
+                }
+            }
+            return null;
         }
         return null;
     }
 
     private void handleOutOfResourcesException(Surface.OutOfResourcesException e) {
-        Log.e(this.mTag, "OutOfResourcesException initializing HW surface", e);
+        Log.m69e(this.mTag, "OutOfResourcesException initializing HW surface", e);
         try {
             if (!this.mWindowSession.outOfMemory(this.mWindow) && Process.myUid() != 1000) {
-                Slog.w(this.mTag, "No processes killed for memory; killing self");
+                Slog.m50w(this.mTag, "No processes killed for memory; killing self");
                 Process.killProcess(Process.myPid());
             }
         } catch (RemoteException e2) {
@@ -3956,177 +3512,132 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
     }
 
     private void performMeasure(int childWidthMeasureSpec, int childHeightMeasureSpec) {
-        if (this.mView != null) {
-            Trace.traceBegin(8, "measure");
-            try {
-                this.mView.measure(childWidthMeasureSpec, childHeightMeasureSpec);
-            } finally {
-                Trace.traceEnd(8);
-            }
+        if (this.mView == null) {
+            return;
+        }
+        Trace.traceBegin(8L, "measure");
+        try {
+            this.mView.measure(childWidthMeasureSpec, childHeightMeasureSpec);
+        } finally {
+            Trace.traceEnd(8L);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean isInLayout() {
+    boolean isInLayout() {
         return this.mInLayout;
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean requestLayoutDuringLayout(View view) {
+    boolean requestLayoutDuringLayout(View view) {
         if (view.mParent == null || view.mAttachInfo == null) {
             return true;
         }
         if (!this.mLayoutRequesters.contains(view)) {
             this.mLayoutRequesters.add(view);
         }
-        if (!this.mHandlingLayoutInLayoutRequest) {
-            return true;
-        }
-        return false;
+        return !this.mHandlingLayoutInLayoutRequest;
     }
 
-    /* JADX INFO: finally extract failed */
     private void performLayout(WindowManager.LayoutParams lp, int desiredWindowWidth, int desiredWindowHeight) {
         ArrayList<View> validLayoutRequesters;
         this.mLayoutRequested = false;
         this.mScrollMayChange = true;
         this.mInLayout = true;
         View host = this.mView;
-        if (host != null) {
-            Trace.traceBegin(8, TtmlUtils.TAG_LAYOUT);
-            try {
-                host.layout(0, 0, host.getMeasuredWidth(), host.getMeasuredHeight());
-                this.mInLayout = false;
-                if (this.mLayoutRequesters.size() > 0 && (validLayoutRequesters = getValidLayoutRequesters(this.mLayoutRequesters, false)) != null) {
-                    this.mHandlingLayoutInLayoutRequest = true;
-                    int numValidRequests = validLayoutRequesters.size();
-                    for (int i = 0; i < numValidRequests; i++) {
-                        View view = validLayoutRequesters.get(i);
-                        Log.w("View", "requestLayout() improperly called by " + view + " during layout: running second layout pass");
-                        view.requestLayout();
-                    }
-                    measureHierarchy(host, lp, this.mView.getContext().getResources(), desiredWindowWidth, desiredWindowHeight);
-                    this.mInLayout = true;
-                    host.layout(0, 0, host.getMeasuredWidth(), host.getMeasuredHeight());
-                    this.mHandlingLayoutInLayoutRequest = false;
-                    ArrayList<View> validLayoutRequesters2 = getValidLayoutRequesters(this.mLayoutRequesters, true);
-                    if (validLayoutRequesters2 != null) {
-                        final ArrayList<View> finalRequesters = validLayoutRequesters2;
-                        getRunQueue().post(new Runnable() {
-                            public void run() {
-                                int numValidRequests = finalRequesters.size();
-                                for (int i = 0; i < numValidRequests; i++) {
-                                    View view = (View) finalRequesters.get(i);
-                                    Log.w("View", "requestLayout() improperly called by " + view + " during second layout pass: posting in next frame");
-                                    view.requestLayout();
-                                }
-                            }
-                        });
-                    }
+        if (host == null) {
+            return;
+        }
+        Trace.traceBegin(8L, TtmlUtils.TAG_LAYOUT);
+        try {
+            host.layout(0, 0, host.getMeasuredWidth(), host.getMeasuredHeight());
+            this.mInLayout = false;
+            int numViewsRequestingLayout = this.mLayoutRequesters.size();
+            if (numViewsRequestingLayout > 0 && (validLayoutRequesters = getValidLayoutRequesters(this.mLayoutRequesters, false)) != null) {
+                this.mHandlingLayoutInLayoutRequest = true;
+                int numValidRequests = validLayoutRequesters.size();
+                for (int i = 0; i < numValidRequests; i++) {
+                    View view = validLayoutRequesters.get(i);
+                    Log.m64w("View", "requestLayout() improperly called by " + view + " during layout: running second layout pass");
+                    view.requestLayout();
                 }
-                Trace.traceEnd(8);
-                this.mInLayout = false;
-            } catch (Throwable th) {
-                Trace.traceEnd(8);
-                throw th;
+                measureHierarchy(host, lp, this.mView.getContext().getResources(), desiredWindowWidth, desiredWindowHeight);
+                this.mInLayout = true;
+                host.layout(0, 0, host.getMeasuredWidth(), host.getMeasuredHeight());
+                this.mHandlingLayoutInLayoutRequest = false;
+                final ArrayList<View> validLayoutRequesters2 = getValidLayoutRequesters(this.mLayoutRequesters, true);
+                if (validLayoutRequesters2 != null) {
+                    getRunQueue().post(new Runnable() { // from class: android.view.ViewRootImpl.2
+                        @Override // java.lang.Runnable
+                        public void run() {
+                            int numValidRequests2 = validLayoutRequesters2.size();
+                            for (int i2 = 0; i2 < numValidRequests2; i2++) {
+                                View view2 = (View) validLayoutRequesters2.get(i2);
+                                Log.m64w("View", "requestLayout() improperly called by " + view2 + " during second layout pass: posting in next frame");
+                                view2.requestLayout();
+                            }
+                        }
+                    });
+                }
             }
+            Trace.traceEnd(8L);
+            this.mInLayout = false;
+        } catch (Throwable th) {
+            Trace.traceEnd(8L);
+            throw th;
         }
     }
 
-    /* JADX WARNING: type inference failed for: r5v6, types: [android.view.ViewParent] */
-    /* JADX WARNING: type inference failed for: r7v5, types: [android.view.ViewParent] */
-    /* JADX WARNING: Multi-variable type inference failed */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    private java.util.ArrayList<android.view.View> getValidLayoutRequesters(java.util.ArrayList<android.view.View> r10, boolean r11) {
-        /*
-            r9 = this;
-            int r0 = r10.size()
-            r1 = 0
-            r2 = 0
-            r3 = r1
-            r1 = r2
-        L_0x0008:
-            r4 = 4096(0x1000, float:5.74E-42)
-            if (r1 >= r0) goto L_0x004f
-            java.lang.Object r5 = r10.get(r1)
-            android.view.View r5 = (android.view.View) r5
-            if (r5 == 0) goto L_0x004c
-            android.view.View$AttachInfo r6 = r5.mAttachInfo
-            if (r6 == 0) goto L_0x004c
-            android.view.ViewParent r6 = r5.mParent
-            if (r6 == 0) goto L_0x004c
-            if (r11 != 0) goto L_0x0023
-            int r6 = r5.mPrivateFlags
-            r6 = r6 & r4
-            if (r6 != r4) goto L_0x004c
-        L_0x0023:
-            r4 = 0
-            r6 = r5
-        L_0x0025:
-            if (r6 == 0) goto L_0x003f
-            int r7 = r6.mViewFlags
-            r7 = r7 & 12
-            r8 = 8
-            if (r7 != r8) goto L_0x0031
-            r4 = 1
-            goto L_0x003f
-        L_0x0031:
-            android.view.ViewParent r7 = r6.mParent
-            boolean r7 = r7 instanceof android.view.View
-            if (r7 == 0) goto L_0x003d
-            android.view.ViewParent r7 = r6.mParent
-            r6 = r7
-            android.view.View r6 = (android.view.View) r6
-            goto L_0x0025
-        L_0x003d:
-            r6 = 0
-            goto L_0x0025
-        L_0x003f:
-            if (r4 != 0) goto L_0x004c
-            if (r3 != 0) goto L_0x0049
-            java.util.ArrayList r7 = new java.util.ArrayList
-            r7.<init>()
-            r3 = r7
-        L_0x0049:
-            r3.add(r5)
-        L_0x004c:
-            int r1 = r1 + 1
-            goto L_0x0008
-        L_0x004f:
-            if (r11 != 0) goto L_0x0079
-        L_0x0052:
-            r1 = r2
-            if (r1 >= r0) goto L_0x0079
-            java.lang.Object r2 = r10.get(r1)
-            android.view.View r2 = (android.view.View) r2
-        L_0x005b:
-            if (r2 == 0) goto L_0x0076
-            int r5 = r2.mPrivateFlags
-            r5 = r5 & r4
-            if (r5 == 0) goto L_0x0076
-            int r5 = r2.mPrivateFlags
-            r5 = r5 & -4097(0xffffffffffffefff, float:NaN)
-            r2.mPrivateFlags = r5
-            android.view.ViewParent r5 = r2.mParent
-            boolean r5 = r5 instanceof android.view.View
-            if (r5 == 0) goto L_0x0074
-            android.view.ViewParent r5 = r2.mParent
-            r2 = r5
-            android.view.View r2 = (android.view.View) r2
-            goto L_0x005b
-        L_0x0074:
-            r2 = 0
-            goto L_0x005b
-        L_0x0076:
-            int r2 = r1 + 1
-            goto L_0x0052
-        L_0x0079:
-            r10.clear()
-            return r3
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.view.ViewRootImpl.getValidLayoutRequesters(java.util.ArrayList, boolean):java.util.ArrayList");
+    private ArrayList<View> getValidLayoutRequesters(ArrayList<View> layoutRequesters, boolean secondLayoutRequests) {
+        int numViewsRequestingLayout = layoutRequesters.size();
+        int i = 0;
+        ArrayList<View> validLayoutRequesters = null;
+        for (int i2 = 0; i2 < numViewsRequestingLayout; i2++) {
+            View view = layoutRequesters.get(i2);
+            if (view != null && view.mAttachInfo != null && view.mParent != null && (secondLayoutRequests || (view.mPrivateFlags & 4096) == 4096)) {
+                boolean gone = false;
+                View parent = view;
+                while (true) {
+                    if (parent == null) {
+                        break;
+                    } else if ((parent.mViewFlags & 12) == 8) {
+                        gone = true;
+                        break;
+                    } else if (parent.mParent instanceof View) {
+                        parent = (View) parent.mParent;
+                    } else {
+                        parent = null;
+                    }
+                }
+                if (!gone) {
+                    if (validLayoutRequesters == null) {
+                        validLayoutRequesters = new ArrayList<>();
+                    }
+                    validLayoutRequesters.add(view);
+                }
+            }
+        }
+        if (!secondLayoutRequests) {
+            while (true) {
+                int i3 = i;
+                if (i3 >= numViewsRequestingLayout) {
+                    break;
+                }
+                View view2 = layoutRequesters.get(i3);
+                while (view2 != null && (view2.mPrivateFlags & 4096) != 0) {
+                    view2.mPrivateFlags &= -4097;
+                    if (view2.mParent instanceof View) {
+                        view2 = (View) view2.mParent;
+                    } else {
+                        view2 = null;
+                    }
+                }
+                i = i3 + 1;
+            }
+        }
+        layoutRequesters.clear();
+        return validLayoutRequesters;
     }
 
+    @Override // android.view.ViewParent
     public void requestTransparentRegion(View child) {
         checkThread();
         if (this.mView == child) {
@@ -4140,21 +3651,26 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
     private static int getRootMeasureSpec(int windowSize, int rootDimension) {
         switch (rootDimension) {
             case -2:
-                return View.MeasureSpec.makeMeasureSpec(windowSize, Integer.MIN_VALUE);
+                int measureSpec = View.MeasureSpec.makeMeasureSpec(windowSize, Integer.MIN_VALUE);
+                return measureSpec;
             case -1:
-                return View.MeasureSpec.makeMeasureSpec(windowSize, 1073741824);
+                int measureSpec2 = View.MeasureSpec.makeMeasureSpec(windowSize, 1073741824);
+                return measureSpec2;
             default:
-                return View.MeasureSpec.makeMeasureSpec(rootDimension, 1073741824);
+                int measureSpec3 = View.MeasureSpec.makeMeasureSpec(rootDimension, 1073741824);
+                return measureSpec3;
         }
     }
 
+    @Override // android.view.ThreadedRenderer.DrawCallbacks
     public void onPreDraw(RecordingCanvas canvas) {
-        if (!(this.mCurScrollY == 0 || this.mHardwareYOffset == 0 || !this.mAttachInfo.mThreadedRenderer.isOpaque())) {
+        if (this.mCurScrollY != 0 && this.mHardwareYOffset != 0 && this.mAttachInfo.mThreadedRenderer.isOpaque()) {
             canvas.drawColor(-16777216);
         }
-        canvas.translate((float) (-this.mHardwareXOffset), (float) (-this.mHardwareYOffset));
+        canvas.translate(-this.mHardwareXOffset, -this.mHardwareYOffset);
     }
 
+    @Override // android.view.ThreadedRenderer.DrawCallbacks
     public void onPostDraw(RecordingCanvas canvas) {
         drawAccessibilityFocusedDrawableIfNeeded(canvas);
         if (this.mUseMTRenderer) {
@@ -4164,12 +3680,11 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void outputDisplayList(View view) {
+    void outputDisplayList(View view) {
         view.mRenderNode.output();
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void profileRendering(boolean enabled) {
         if (this.mProfileRendering) {
             this.mRenderProfilingEnabled = enabled;
@@ -4178,7 +3693,8 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
             }
             if (this.mRenderProfilingEnabled) {
                 if (this.mRenderProfiler == null) {
-                    this.mRenderProfiler = new Choreographer.FrameCallback() {
+                    this.mRenderProfiler = new Choreographer.FrameCallback() { // from class: android.view.ViewRootImpl.3
+                        @Override // android.view.Choreographer.FrameCallback
                         public void doFrame(long frameTimeNanos) {
                             ViewRootImpl.this.mDirty.set(0, 0, ViewRootImpl.this.mWidth, ViewRootImpl.this.mHeight);
                             ViewRootImpl.this.scheduleTraversals();
@@ -4205,36 +3721,33 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         }
         this.mFpsNumFrames++;
         String thisHash = Integer.toHexString(System.identityHashCode(this));
+        long frameTime = nowTime - this.mFpsPrevTime;
         long totalTime = nowTime - this.mFpsStartTime;
-        Log.v(this.mTag, "0x" + thisHash + "\tFrame time:\t" + (nowTime - this.mFpsPrevTime));
+        Log.m66v(this.mTag, "0x" + thisHash + "\tFrame time:\t" + frameTime);
         this.mFpsPrevTime = nowTime;
         if (totalTime > 1000) {
-            float fps = (((float) this.mFpsNumFrames) * 1000.0f) / ((float) totalTime);
-            Log.v(this.mTag, "0x" + thisHash + "\tFPS:\t" + fps);
+            float fps = (this.mFpsNumFrames * 1000.0f) / ((float) totalTime);
+            Log.m66v(this.mTag, "0x" + thisHash + "\tFPS:\t" + fps);
             this.mFpsStartTime = nowTime;
             this.mFpsNumFrames = 0;
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void drawPending() {
+    void drawPending() {
         this.mDrawsNeededToReport++;
     }
 
-    /* access modifiers changed from: package-private */
-    public void pendingDrawFinished() {
-        if (this.mDrawsNeededToReport != 0) {
-            this.mDrawsNeededToReport--;
-            if (this.mDrawsNeededToReport == 0) {
-                reportDrawFinished();
-                return;
-            }
-            return;
+    void pendingDrawFinished() {
+        if (this.mDrawsNeededToReport == 0) {
+            throw new RuntimeException("Unbalanced drawPending/pendingDrawFinished calls");
         }
-        throw new RuntimeException("Unbalanced drawPending/pendingDrawFinished calls");
+        this.mDrawsNeededToReport--;
+        if (this.mDrawsNeededToReport == 0) {
+            reportDrawFinished();
+        }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void postDrawFinished() {
         this.mHandler.sendEmptyMessage(29);
     }
@@ -4247,111 +3760,94 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         }
     }
 
-    /* JADX INFO: finally extract failed */
     private void performDraw() {
-        if ((this.mAttachInfo.mDisplayState != 1 || this.mReportNextDraw) && this.mView != null) {
-            boolean fullRedrawNeeded = this.mFullRedrawNeeded || this.mReportNextDraw;
-            this.mFullRedrawNeeded = false;
-            this.mIsDrawing = true;
-            Trace.traceBegin(8, "draw");
-            boolean usingAsyncReport = false;
-            if (this.mAttachInfo.mThreadedRenderer != null && this.mAttachInfo.mThreadedRenderer.isEnabled()) {
-                ArrayList<Runnable> commitCallbacks = this.mAttachInfo.mTreeObserver.captureFrameCommitCallbacks();
-                if (this.mReportNextDraw) {
-                    usingAsyncReport = true;
-                    this.mAttachInfo.mThreadedRenderer.setFrameCompleteCallback(new HardwareRenderer.FrameCompleteCallback(this.mAttachInfo.mHandler, commitCallbacks) {
-                        private final /* synthetic */ Handler f$1;
-                        private final /* synthetic */ ArrayList f$2;
-
-                        {
-                            this.f$1 = r2;
-                            this.f$2 = r3;
-                        }
-
-                        public final void onFrameComplete(long j) {
-                            this.f$1.postAtFrontOfQueue(new Runnable(this.f$2) {
-                                private final /* synthetic */ ArrayList f$1;
-
-                                {
-                                    this.f$1 = r2;
-                                }
-
-                                public final void run() {
-                                    ViewRootImpl.lambda$performDraw$1(ViewRootImpl.this, this.f$1);
-                                }
-                            });
-                        }
-                    });
-                } else if (commitCallbacks != null && commitCallbacks.size() > 0) {
-                    this.mAttachInfo.mThreadedRenderer.setFrameCompleteCallback(new HardwareRenderer.FrameCompleteCallback(commitCallbacks) {
-                        private final /* synthetic */ ArrayList f$1;
-
-                        {
-                            this.f$1 = r2;
-                        }
-
-                        public final void onFrameComplete(long j) {
-                            Handler.this.postAtFrontOfQueue(new Runnable(this.f$1) {
-                                private final /* synthetic */ ArrayList f$0;
-
-                                {
-                                    this.f$0 = r1;
-                                }
-
-                                public final void run() {
-                                    ViewRootImpl.lambda$performDraw$3(this.f$0);
-                                }
-                            });
-                        }
-                    });
-                }
-            }
-            try {
-                boolean canUseAsync = draw(fullRedrawNeeded);
-                if (usingAsyncReport && !canUseAsync) {
-                    this.mAttachInfo.mThreadedRenderer.setFrameCompleteCallback((HardwareRenderer.FrameCompleteCallback) null);
-                    usingAsyncReport = false;
-                }
-                this.mIsDrawing = false;
-                Trace.traceEnd(8);
-                if (this.mAttachInfo.mPendingAnimatingRenderNodes != null) {
-                    int count = this.mAttachInfo.mPendingAnimatingRenderNodes.size();
-                    for (int i = 0; i < count; i++) {
-                        this.mAttachInfo.mPendingAnimatingRenderNodes.get(i).endAllAnimators();
-                    }
-                    this.mAttachInfo.mPendingAnimatingRenderNodes.clear();
-                }
-                if (this.mReportNextDraw != 0) {
-                    this.mReportNextDraw = false;
-                    if (this.mWindowDrawCountDown != null) {
-                        try {
-                            this.mWindowDrawCountDown.await();
-                        } catch (InterruptedException e) {
-                            Log.e(this.mTag, "Window redraw count down interrupted!");
-                        }
-                        this.mWindowDrawCountDown = null;
-                    }
-                    if (this.mAttachInfo.mThreadedRenderer != null) {
-                        this.mAttachInfo.mThreadedRenderer.setStopped(this.mStopped);
-                    }
-                    if (this.mSurfaceHolder != null && this.mSurface.isValid()) {
-                        new SurfaceCallbackHelper(new Runnable() {
+        if ((this.mAttachInfo.mDisplayState == 1 && !this.mReportNextDraw) || this.mView == null) {
+            return;
+        }
+        boolean fullRedrawNeeded = this.mFullRedrawNeeded || this.mReportNextDraw;
+        this.mFullRedrawNeeded = false;
+        this.mIsDrawing = true;
+        Trace.traceBegin(8L, "draw");
+        boolean usingAsyncReport = false;
+        if (this.mAttachInfo.mThreadedRenderer != null && this.mAttachInfo.mThreadedRenderer.isEnabled()) {
+            final ArrayList<Runnable> commitCallbacks = this.mAttachInfo.mTreeObserver.captureFrameCommitCallbacks();
+            if (this.mReportNextDraw) {
+                usingAsyncReport = true;
+                final Handler handler = this.mAttachInfo.mHandler;
+                this.mAttachInfo.mThreadedRenderer.setFrameCompleteCallback(new HardwareRenderer.FrameCompleteCallback() { // from class: android.view.-$$Lambda$ViewRootImpl$YBiqAhbCbXVPSKdbE3K4rH2gpxI
+                    @Override // android.graphics.HardwareRenderer.FrameCompleteCallback
+                    public final void onFrameComplete(long j) {
+                        handler.postAtFrontOfQueue(new Runnable() { // from class: android.view.-$$Lambda$ViewRootImpl$7A_3tkr_Kw4TZAeIUGVlOoTcZhg
+                            @Override // java.lang.Runnable
                             public final void run() {
-                                ViewRootImpl.this.postDrawFinished();
+                                ViewRootImpl.lambda$performDraw$1(ViewRootImpl.this, r2);
                             }
-                        }).dispatchSurfaceRedrawNeededAsync(this.mSurfaceHolder, this.mSurfaceHolder.getCallbacks());
-                    } else if (!usingAsyncReport) {
-                        if (this.mAttachInfo.mThreadedRenderer != null) {
-                            this.mAttachInfo.mThreadedRenderer.fence();
-                        }
-                        pendingDrawFinished();
+                        });
                     }
-                }
-            } catch (Throwable th) {
-                this.mIsDrawing = false;
-                Trace.traceEnd(8);
-                throw th;
+                });
+            } else if (commitCallbacks != null && commitCallbacks.size() > 0) {
+                final Handler handler2 = this.mAttachInfo.mHandler;
+                this.mAttachInfo.mThreadedRenderer.setFrameCompleteCallback(new HardwareRenderer.FrameCompleteCallback() { // from class: android.view.-$$Lambda$ViewRootImpl$zlBUjCwDtoAWMNaHI62DIq-eKFY
+                    @Override // android.graphics.HardwareRenderer.FrameCompleteCallback
+                    public final void onFrameComplete(long j) {
+                        Handler.this.postAtFrontOfQueue(new Runnable() { // from class: android.view.-$$Lambda$ViewRootImpl$-dgEKMWLAJVMlaVy41safRlNQBo
+                            @Override // java.lang.Runnable
+                            public final void run() {
+                                ViewRootImpl.lambda$performDraw$3(r1);
+                            }
+                        });
+                    }
+                });
             }
+        }
+        try {
+            boolean canUseAsync = draw(fullRedrawNeeded);
+            if (usingAsyncReport && !canUseAsync) {
+                this.mAttachInfo.mThreadedRenderer.setFrameCompleteCallback(null);
+                usingAsyncReport = false;
+            }
+            this.mIsDrawing = false;
+            Trace.traceEnd(8L);
+            if (this.mAttachInfo.mPendingAnimatingRenderNodes != null) {
+                int count = this.mAttachInfo.mPendingAnimatingRenderNodes.size();
+                for (int i = 0; i < count; i++) {
+                    this.mAttachInfo.mPendingAnimatingRenderNodes.get(i).endAllAnimators();
+                }
+                this.mAttachInfo.mPendingAnimatingRenderNodes.clear();
+            }
+            if (this.mReportNextDraw) {
+                this.mReportNextDraw = false;
+                if (this.mWindowDrawCountDown != null) {
+                    try {
+                        this.mWindowDrawCountDown.await();
+                    } catch (InterruptedException e) {
+                        Log.m70e(this.mTag, "Window redraw count down interrupted!");
+                    }
+                    this.mWindowDrawCountDown = null;
+                }
+                if (this.mAttachInfo.mThreadedRenderer != null) {
+                    this.mAttachInfo.mThreadedRenderer.setStopped(this.mStopped);
+                }
+                if (this.mSurfaceHolder != null && this.mSurface.isValid()) {
+                    SurfaceCallbackHelper sch = new SurfaceCallbackHelper(new Runnable() { // from class: android.view.-$$Lambda$ViewRootImpl$dznxCZGM2R1fsBljsJKomLjBRoM
+                        @Override // java.lang.Runnable
+                        public final void run() {
+                            ViewRootImpl.this.postDrawFinished();
+                        }
+                    });
+                    SurfaceHolder.Callback[] callbacks = this.mSurfaceHolder.getCallbacks();
+                    sch.dispatchSurfaceRedrawNeededAsync(this.mSurfaceHolder, callbacks);
+                } else if (!usingAsyncReport) {
+                    if (this.mAttachInfo.mThreadedRenderer != null) {
+                        this.mAttachInfo.mThreadedRenderer.fence();
+                    }
+                    pendingDrawFinished();
+                }
+            }
+        } catch (Throwable th) {
+            this.mIsDrawing = false;
+            Trace.traceEnd(8L);
+            throw th;
         }
     }
 
@@ -4375,234 +3871,197 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         boolean fullRedrawNeeded2;
         Drawable drawable;
         Surface surface = this.mSurface;
-        if (!surface.isValid()) {
-            return false;
-        }
-        if (!sFirstDrawComplete) {
-            synchronized (sFirstDrawHandlers) {
-                sFirstDrawComplete = true;
-                int count = sFirstDrawHandlers.size();
-                for (int i = 0; i < count; i++) {
-                    this.mHandler.post(sFirstDrawHandlers.get(i));
+        if (surface.isValid()) {
+            if (!sFirstDrawComplete) {
+                synchronized (sFirstDrawHandlers) {
+                    sFirstDrawComplete = true;
+                    int count = sFirstDrawHandlers.size();
+                    for (int i = 0; i < count; i++) {
+                        this.mHandler.post(sFirstDrawHandlers.get(i));
+                    }
                 }
             }
-        }
-        Rect rect = null;
-        scrollToRectOrFocus((Rect) null, false);
-        if (this.mAttachInfo.mViewScrollChanged) {
-            this.mAttachInfo.mViewScrollChanged = false;
-            this.mAttachInfo.mTreeObserver.dispatchOnScrollChanged();
-        }
-        boolean animating = this.mScroller != null && this.mScroller.computeScrollOffset();
-        if (animating) {
-            curScrollY = this.mScroller.getCurrY();
-        } else {
-            curScrollY = this.mScrollY;
-        }
-        int curScrollY2 = curScrollY;
-        if (this.mCurScrollY != curScrollY2) {
-            this.mCurScrollY = curScrollY2;
-            if (this.mView instanceof RootViewSurfaceTaker) {
-                ((RootViewSurfaceTaker) this.mView).onRootViewScrollYChanged(this.mCurScrollY);
+            scrollToRectOrFocus(null, false);
+            if (this.mAttachInfo.mViewScrollChanged) {
+                this.mAttachInfo.mViewScrollChanged = false;
+                this.mAttachInfo.mTreeObserver.dispatchOnScrollChanged();
             }
-            fullRedrawNeeded2 = true;
-        } else {
-            fullRedrawNeeded2 = fullRedrawNeeded;
-        }
-        float appScale = this.mAttachInfo.mApplicationScale;
-        boolean scalingRequired = this.mAttachInfo.mScalingRequired;
-        Rect dirty = this.mDirty;
-        if (this.mSurfaceHolder != null) {
-            dirty.setEmpty();
-            if (animating && this.mScroller != null) {
-                this.mScroller.abortAnimation();
-            }
-            return false;
-        }
-        if (fullRedrawNeeded2) {
-            dirty.set(0, 0, (int) ((((float) this.mWidth) * appScale) + 0.5f), (int) ((((float) this.mHeight) * appScale) + 0.5f));
-        }
-        this.mAttachInfo.mTreeObserver.dispatchOnDraw();
-        int xOffset = -this.mCanvasOffsetX;
-        int yOffset = (-this.mCanvasOffsetY) + curScrollY2;
-        WindowManager.LayoutParams params = this.mWindowAttributes;
-        if (params != null) {
-            rect = params.surfaceInsets;
-        }
-        Rect surfaceInsets = rect;
-        if (surfaceInsets != null) {
-            xOffset -= surfaceInsets.left;
-            yOffset -= surfaceInsets.top;
-            dirty.offset(surfaceInsets.left, surfaceInsets.right);
-        }
-        int yOffset2 = yOffset;
-        int xOffset2 = xOffset;
-        boolean accessibilityFocusDirty = false;
-        Drawable drawable2 = this.mAttachInfo.mAccessibilityFocusDrawable;
-        if (drawable2 != null) {
-            Rect bounds = this.mAttachInfo.mTmpInvalRect;
-            if (!getAccessibilityFocusedRect(bounds)) {
-                bounds.setEmpty();
-            }
-            if (!bounds.equals(drawable2.getBounds())) {
-                accessibilityFocusDirty = true;
-            }
-        }
-        boolean accessibilityFocusDirty2 = accessibilityFocusDirty;
-        int i2 = curScrollY2;
-        boolean z = fullRedrawNeeded2;
-        this.mAttachInfo.mDrawingTime = this.mChoreographer.getFrameTimeNanos() / TimeUtils.NANOS_PER_MS;
-        boolean useAsyncReport = false;
-        if (dirty.isEmpty() && !this.mIsAnimating && !accessibilityFocusDirty2) {
-            Drawable drawable3 = drawable2;
-            int i3 = xOffset2;
-            int i4 = yOffset2;
-            Rect rect2 = surfaceInsets;
-            WindowManager.LayoutParams layoutParams = params;
-            Rect rect3 = dirty;
-            boolean z2 = scalingRequired;
-            float f = appScale;
-        } else if (this.mAttachInfo.mThreadedRenderer == null || !this.mAttachInfo.mThreadedRenderer.isEnabled()) {
-            Drawable drawable4 = drawable2;
-            if (this.mAttachInfo.mThreadedRenderer == null || this.mAttachInfo.mThreadedRenderer.isEnabled() || !this.mAttachInfo.mThreadedRenderer.isRequested() || !this.mSurface.isValid()) {
-                Drawable drawable5 = drawable4;
-                WindowManager.LayoutParams layoutParams2 = params;
-                boolean z3 = scalingRequired;
-                float f2 = appScale;
-                if (!drawSoftware(surface, this.mAttachInfo, xOffset2, yOffset2, scalingRequired, dirty, surfaceInsets)) {
-                    return false;
-                }
+            boolean animating = this.mScroller != null && this.mScroller.computeScrollOffset();
+            if (animating) {
+                curScrollY = this.mScroller.getCurrY();
             } else {
-                try {
-                    int i5 = xOffset2;
-                    try {
-                        this.mAttachInfo.mThreadedRenderer.initializeIfNeeded(this.mWidth, this.mHeight, this.mAttachInfo, this.mSurface, surfaceInsets);
-                        this.mFullRedrawNeeded = true;
-                        scheduleTraversals();
-                        return false;
-                    } catch (Surface.OutOfResourcesException e) {
-                        e = e;
-                        handleOutOfResourcesException(e);
+                curScrollY = this.mScrollY;
+            }
+            int curScrollY2 = curScrollY;
+            int curScrollY3 = this.mCurScrollY;
+            if (curScrollY3 != curScrollY2) {
+                this.mCurScrollY = curScrollY2;
+                if (this.mView instanceof RootViewSurfaceTaker) {
+                    ((RootViewSurfaceTaker) this.mView).onRootViewScrollYChanged(this.mCurScrollY);
+                }
+                fullRedrawNeeded2 = true;
+            } else {
+                fullRedrawNeeded2 = fullRedrawNeeded;
+            }
+            float appScale = this.mAttachInfo.mApplicationScale;
+            boolean scalingRequired = this.mAttachInfo.mScalingRequired;
+            Rect dirty = this.mDirty;
+            if (this.mSurfaceHolder != null) {
+                dirty.setEmpty();
+                if (animating && this.mScroller != null) {
+                    this.mScroller.abortAnimation();
+                }
+                return false;
+            }
+            if (fullRedrawNeeded2) {
+                dirty.set(0, 0, (int) ((this.mWidth * appScale) + 0.5f), (int) ((this.mHeight * appScale) + 0.5f));
+            }
+            this.mAttachInfo.mTreeObserver.dispatchOnDraw();
+            int xOffset = -this.mCanvasOffsetX;
+            int yOffset = (-this.mCanvasOffsetY) + curScrollY2;
+            WindowManager.LayoutParams params = this.mWindowAttributes;
+            Rect surfaceInsets = params != null ? params.surfaceInsets : null;
+            if (surfaceInsets != null) {
+                xOffset -= surfaceInsets.left;
+                yOffset -= surfaceInsets.top;
+                dirty.offset(surfaceInsets.left, surfaceInsets.right);
+            }
+            int yOffset2 = yOffset;
+            int xOffset2 = xOffset;
+            boolean accessibilityFocusDirty = false;
+            Drawable drawable2 = this.mAttachInfo.mAccessibilityFocusDrawable;
+            if (drawable2 != null) {
+                Rect bounds = this.mAttachInfo.mTmpInvalRect;
+                boolean hasFocus = getAccessibilityFocusedRect(bounds);
+                if (!hasFocus) {
+                    bounds.setEmpty();
+                }
+                if (!bounds.equals(drawable2.getBounds())) {
+                    accessibilityFocusDirty = true;
+                }
+            }
+            boolean accessibilityFocusDirty2 = accessibilityFocusDirty;
+            this.mAttachInfo.mDrawingTime = this.mChoreographer.getFrameTimeNanos() / TimeUtils.NANOS_PER_MS;
+            boolean useAsyncReport = false;
+            if (!dirty.isEmpty() || this.mIsAnimating || accessibilityFocusDirty2) {
+                if (this.mAttachInfo.mThreadedRenderer == null || !this.mAttachInfo.mThreadedRenderer.isEnabled()) {
+                    if (this.mAttachInfo.mThreadedRenderer != null && !this.mAttachInfo.mThreadedRenderer.isEnabled() && this.mAttachInfo.mThreadedRenderer.isRequested() && this.mSurface.isValid()) {
+                        try {
+                        } catch (Surface.OutOfResourcesException e) {
+                            e = e;
+                        }
+                        try {
+                            this.mAttachInfo.mThreadedRenderer.initializeIfNeeded(this.mWidth, this.mHeight, this.mAttachInfo, this.mSurface, surfaceInsets);
+                            this.mFullRedrawNeeded = true;
+                            scheduleTraversals();
+                            return false;
+                        } catch (Surface.OutOfResourcesException e2) {
+                            e = e2;
+                            handleOutOfResourcesException(e);
+                            return false;
+                        }
+                    } else if (!drawSoftware(surface, this.mAttachInfo, xOffset2, yOffset2, scalingRequired, dirty, surfaceInsets)) {
                         return false;
                     }
-                } catch (Surface.OutOfResourcesException e2) {
-                    e = e2;
-                    int i6 = xOffset2;
-                    handleOutOfResourcesException(e);
-                    return false;
+                } else {
+                    boolean invalidateRoot = accessibilityFocusDirty2 || this.mInvalidateRootRequested;
+                    this.mInvalidateRootRequested = false;
+                    this.mIsAnimating = false;
+                    if (this.mHardwareYOffset != yOffset2 || this.mHardwareXOffset != xOffset2) {
+                        this.mHardwareYOffset = yOffset2;
+                        this.mHardwareXOffset = xOffset2;
+                        invalidateRoot = true;
+                    }
+                    if (invalidateRoot) {
+                        this.mAttachInfo.mThreadedRenderer.invalidateRoot();
+                    }
+                    dirty.setEmpty();
+                    boolean updated = updateContentDrawBounds();
+                    if (this.mReportNextDraw) {
+                        drawable = drawable2;
+                        this.mAttachInfo.mThreadedRenderer.setStopped(false);
+                    } else {
+                        drawable = drawable2;
+                    }
+                    if (updated) {
+                        requestDrawWindow();
+                    }
+                    useAsyncReport = true;
+                    this.mAttachInfo.mThreadedRenderer.draw(this.mView, this.mAttachInfo, this);
                 }
             }
-        } else {
-            boolean invalidateRoot = accessibilityFocusDirty2 || this.mInvalidateRootRequested;
-            this.mInvalidateRootRequested = false;
-            this.mIsAnimating = false;
-            if (!(this.mHardwareYOffset == yOffset2 && this.mHardwareXOffset == xOffset2)) {
-                this.mHardwareYOffset = yOffset2;
-                this.mHardwareXOffset = xOffset2;
-                invalidateRoot = true;
+            if (animating) {
+                this.mFullRedrawNeeded = true;
+                scheduleTraversals();
             }
-            if (invalidateRoot) {
-                this.mAttachInfo.mThreadedRenderer.invalidateRoot();
-            }
-            dirty.setEmpty();
-            boolean updated = updateContentDrawBounds();
-            if (this.mReportNextDraw) {
-                drawable = drawable2;
-                this.mAttachInfo.mThreadedRenderer.setStopped(false);
-            } else {
-                drawable = drawable2;
-            }
-            if (updated) {
-                requestDrawWindow();
-            }
-            useAsyncReport = true;
-            boolean z4 = invalidateRoot;
-            this.mAttachInfo.mThreadedRenderer.draw(this.mView, this.mAttachInfo, this);
-            int i7 = xOffset2;
-            int i8 = yOffset2;
-            Rect rect4 = surfaceInsets;
-            WindowManager.LayoutParams layoutParams3 = params;
-            Rect rect5 = dirty;
-            boolean z5 = scalingRequired;
-            float f3 = appScale;
-            Drawable drawable6 = drawable;
+            return useAsyncReport;
         }
-        if (animating) {
-            this.mFullRedrawNeeded = true;
-            scheduleTraversals();
-        }
-        return useAsyncReport;
+        return false;
     }
 
-    /* Debug info: failed to restart local var, previous not found, register: 16 */
     private boolean drawSoftware(Surface surface, View.AttachInfo attachInfo, int xoff, int yoff, boolean scalingRequired, Rect dirty, Rect surfaceInsets) {
-        Surface surface2 = surface;
-        int i = xoff;
-        int i2 = yoff;
-        Rect rect = dirty;
-        Rect rect2 = surfaceInsets;
         int dirtyXOffset = xoff;
         int dirtyYOffset = yoff;
-        if (rect2 != null) {
-            dirtyXOffset += rect2.left;
-            dirtyYOffset += rect2.top;
+        if (surfaceInsets != null) {
+            dirtyXOffset += surfaceInsets.left;
+            dirtyYOffset += surfaceInsets.top;
         }
         int dirtyYOffset2 = dirtyYOffset;
         int dirtyXOffset2 = dirtyXOffset;
         try {
-            rect.offset(-dirtyXOffset2, -dirtyYOffset2);
-            int i3 = rect.left;
-            int i4 = rect.top;
-            int i5 = rect.right;
-            int i6 = rect.bottom;
-            Canvas canvas = this.mSurface.lockCanvas(rect);
+            dirty.offset(-dirtyXOffset2, -dirtyYOffset2);
+            int i = dirty.left;
+            int i2 = dirty.top;
+            int i3 = dirty.right;
+            int i4 = dirty.bottom;
+            Canvas canvas = this.mSurface.lockCanvas(dirty);
             canvas.setDensity(this.mDensity);
             try {
-                if (!(canvas.isOpaque() && i2 == 0 && i == 0)) {
+                if (!canvas.isOpaque() || yoff != 0 || xoff != 0) {
                     canvas.drawColor(0, PorterDuff.Mode.CLEAR);
                 }
                 dirty.setEmpty();
                 this.mIsAnimating = false;
                 this.mView.mPrivateFlags |= 32;
-                canvas.translate((float) (-i), (float) (-i2));
+                canvas.translate(-xoff, -yoff);
                 if (this.mTranslator != null) {
                     this.mTranslator.translateCanvas(canvas);
                 }
                 canvas.setScreenDensity(scalingRequired ? this.mNoncompatDensity : 0);
                 this.mView.draw(canvas);
                 drawAccessibilityFocusedDrawableIfNeeded(canvas);
-                try {
-                    return true;
-                } catch (IllegalArgumentException e) {
-                    Log.e(this.mTag, "Could not unlock surface", e);
-                    this.mLayoutRequested = true;
-                    return false;
-                }
-            } finally {
-                surface2.unlockCanvasAndPost(canvas);
+                surface.unlockCanvasAndPost(canvas);
+                return true;
+            } catch (IllegalArgumentException e) {
+                Log.m69e(this.mTag, "Could not unlock surface", e);
+                this.mLayoutRequested = true;
+                return false;
             }
         } catch (Surface.OutOfResourcesException e2) {
             handleOutOfResourcesException(e2);
             return false;
         } catch (IllegalArgumentException e3) {
-            Log.e(this.mTag, "Could not lock surface", e3);
+            Log.m69e(this.mTag, "Could not lock surface", e3);
             this.mLayoutRequested = true;
             return false;
         } finally {
-            rect.offset(dirtyXOffset2, dirtyYOffset2);
+            dirty.offset(dirtyXOffset2, dirtyYOffset2);
         }
     }
 
     private void drawAccessibilityFocusedDrawableIfNeeded(Canvas canvas) {
         Rect bounds = this.mAttachInfo.mTmpInvalRect;
-        if (getAccessibilityFocusedRect(bounds)) {
-            Drawable drawable = getAccessibilityFocusedDrawable();
-            if (drawable != null) {
-                drawable.setBounds(bounds);
-                drawable.draw(canvas);
+        if (!getAccessibilityFocusedRect(bounds)) {
+            if (this.mAttachInfo.mAccessibilityFocusDrawable != null) {
+                this.mAttachInfo.mAccessibilityFocusDrawable.setBounds(0, 0, 0, 0);
+                return;
             }
-        } else if (this.mAttachInfo.mAccessibilityFocusDrawable != null) {
-            this.mAttachInfo.mAccessibilityFocusDrawable.setBounds(0, 0, 0, 0);
+            return;
+        }
+        Drawable drawable = getAccessibilityFocusedDrawable();
+        if (drawable != null) {
+            drawable.setBounds(bounds);
+            drawable.draw(canvas);
         }
     }
 
@@ -4612,7 +4071,8 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         if (!manager.isEnabled() || !manager.isTouchExplorationEnabled() || (host = this.mAccessibilityFocusedHost) == null || host.mAttachInfo == null) {
             return false;
         }
-        if (host.getAccessibilityNodeProvider() == null) {
+        AccessibilityNodeProvider provider = host.getAccessibilityNodeProvider();
+        if (provider == null) {
             host.getBoundsOnScreen(bounds, true);
         } else if (this.mAccessibilityFocusedVirtualView == null) {
             return false;
@@ -4631,21 +4091,20 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
     private Drawable getAccessibilityFocusedDrawable() {
         if (this.mAttachInfo.mAccessibilityFocusDrawable == null) {
             TypedValue value = new TypedValue();
-            if (this.mView.mContext.getTheme().resolveAttribute(R.attr.accessibilityFocusedDrawable, value, true)) {
+            boolean resolved = this.mView.mContext.getTheme().resolveAttribute(C3132R.attr.accessibilityFocusedDrawable, value, true);
+            if (resolved) {
                 this.mAttachInfo.mAccessibilityFocusDrawable = this.mView.mContext.getDrawable(value.resourceId);
             }
         }
         return this.mAttachInfo.mAccessibilityFocusDrawable;
     }
 
-    /* access modifiers changed from: package-private */
-    public void updateSystemGestureExclusionRectsForView(View view) {
+    void updateSystemGestureExclusionRectsForView(View view) {
         this.mGestureExclusionTracker.updateRectsForView(view);
         this.mHandler.sendEmptyMessage(32);
     }
 
-    /* access modifiers changed from: package-private */
-    public void systemGestureExclusionChanged() {
+    void systemGestureExclusionChanged() {
         List<Rect> rectsForWindowManager = this.mGestureExclusionTracker.computeChangedRects();
         if (rectsForWindowManager != null && this.mView != null) {
             try {
@@ -4670,8 +4129,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         this.mInvalidateRootRequested = true;
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean scrollToRectOrFocus(Rect rectangle, boolean immediate) {
+    boolean scrollToRectOrFocus(Rect rectangle, boolean immediate) {
         int height;
         Rect ci = this.mAttachInfo.mContentInsets;
         Rect vi = this.mAttachInfo.mVisibleInsets;
@@ -4683,14 +4141,14 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
             if (focus == null) {
                 return false;
             }
-            View lastScrolledFocus = this.mLastScrolledFocus != null ? (View) this.mLastScrolledFocus.get() : null;
+            View lastScrolledFocus = this.mLastScrolledFocus != null ? this.mLastScrolledFocus.get() : null;
             if (focus != lastScrolledFocus) {
                 rectangle = null;
             }
-            if (!(focus == lastScrolledFocus && !this.mScrollMayChange && rectangle == null)) {
+            if (focus != lastScrolledFocus || this.mScrollMayChange || rectangle != null) {
                 this.mLastScrolledFocus = new WeakReference<>(focus);
                 this.mScrollMayChange = false;
-                if (focus.getGlobalVisibleRect(this.mVisRect, (Point) null)) {
+                if (focus.getGlobalVisibleRect(this.mVisRect, null)) {
                     if (rectangle == null) {
                         focus.getFocusedRect(this.mTempRect);
                         if (this.mView instanceof ViewGroup) {
@@ -4739,8 +4197,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         return this.mAccessibilityFocusedVirtualView;
     }
 
-    /* access modifiers changed from: package-private */
-    public void setAccessibilityFocus(View view, AccessibilityNodeInfo node) {
+    void setAccessibilityFocus(View view, AccessibilityNodeInfo node) {
         if (this.mAccessibilityFocusedVirtualView != null) {
             AccessibilityNodeInfo focusNode = this.mAccessibilityFocusedVirtualView;
             View focusHost = this.mAccessibilityFocusedHost;
@@ -4751,11 +4208,12 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
             if (provider != null) {
                 focusNode.getBoundsInParent(this.mTempRect);
                 focusHost.invalidate(this.mTempRect);
-                provider.performAction(AccessibilityNodeInfo.getVirtualDescendantId(focusNode.getSourceNodeId()), 128, (Bundle) null);
+                int virtualNodeId = AccessibilityNodeInfo.getVirtualDescendantId(focusNode.getSourceNodeId());
+                provider.performAction(virtualNodeId, 128, null);
             }
             focusNode.recycle();
         }
-        if (!(this.mAccessibilityFocusedHost == null || this.mAccessibilityFocusedHost == view)) {
+        if (this.mAccessibilityFocusedHost != null && this.mAccessibilityFocusedHost != view) {
             this.mAccessibilityFocusedHost.clearAccessibilityFocusNoCallbacks(64);
         }
         this.mAccessibilityFocusedHost = view;
@@ -4765,25 +4223,25 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean hasPointerCapture() {
+    boolean hasPointerCapture() {
         return this.mPointerCapture;
     }
 
-    /* access modifiers changed from: package-private */
-    public void requestPointerCapture(boolean enabled) {
-        if (this.mPointerCapture != enabled) {
-            InputManager.getInstance().requestPointerCapture(this.mAttachInfo.mWindowToken, enabled);
+    void requestPointerCapture(boolean enabled) {
+        if (this.mPointerCapture == enabled) {
+            return;
         }
+        InputManager.getInstance().requestPointerCapture(this.mAttachInfo.mWindowToken, enabled);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void handlePointerCaptureChanged(boolean hasCapture) {
-        if (this.mPointerCapture != hasCapture) {
-            this.mPointerCapture = hasCapture;
-            if (this.mView != null) {
-                this.mView.dispatchPointerCaptureChanged(hasCapture);
-            }
+        if (this.mPointerCapture == hasCapture) {
+            return;
+        }
+        this.mPointerCapture = hasCapture;
+        if (this.mView != null) {
+            this.mView.dispatchPointerCaptureChanged(hasCapture);
         }
     }
 
@@ -4795,41 +4253,48 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         if (this.mAttachInfo.mThreadedRenderer.isWideGamut() == isWideGamut) {
             return false;
         }
-        if (!isWideGamut || this.mContext.getResources().getConfiguration().isScreenWideColorGamut()) {
-            return true;
-        }
-        return false;
+        return !isWideGamut || this.mContext.getResources().getConfiguration().isScreenWideColorGamut();
     }
 
+    @Override // android.view.ViewParent
     public void requestChildFocus(View child, View focused) {
         checkThread();
         scheduleTraversals();
     }
 
+    @Override // android.view.ViewParent
     public void clearChildFocus(View child) {
         checkThread();
         scheduleTraversals();
     }
 
+    @Override // android.view.ViewParent
     public ViewParent getParentForAccessibility() {
         return null;
     }
 
+    @Override // android.view.ViewParent
     public void focusableViewAvailable(View v) {
         checkThread();
-        if (this.mView == null) {
-            return;
-        }
-        if (this.mView.hasFocus()) {
-            View focused = this.mView.findFocus();
-            if ((focused instanceof ViewGroup) && ((ViewGroup) focused).getDescendantFocusability() == 262144 && isViewDescendantOf(v, focused)) {
-                v.requestFocus();
+        if (this.mView != null) {
+            if (!this.mView.hasFocus()) {
+                if (sAlwaysAssignFocus || !this.mAttachInfo.mInTouchMode) {
+                    v.requestFocus();
+                    return;
+                }
+                return;
             }
-        } else if (sAlwaysAssignFocus || !this.mAttachInfo.mInTouchMode) {
-            v.requestFocus();
+            View focused = this.mView.findFocus();
+            if (focused instanceof ViewGroup) {
+                ViewGroup group = (ViewGroup) focused;
+                if (group.getDescendantFocusability() == 262144 && isViewDescendantOf(v, focused)) {
+                    v.requestFocus();
+                }
+            }
         }
     }
 
+    @Override // android.view.ViewParent
     public void recomputeViewAttributes(View child) {
         checkThread();
         if (this.mView == child) {
@@ -4840,10 +4305,9 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void dispatchDetachedFromWindow() {
+    void dispatchDetachedFromWindow() {
         this.mFirstInputStage.onDetachedFromWindow();
-        if (!(this.mView == null || this.mView.mAttachInfo == null)) {
+        if (this.mView != null && this.mView.mAttachInfo != null) {
             this.mAttachInfo.mTreeObserver.dispatchOnWindowAttachedChange(false);
             this.mView.dispatchDetachedFromWindow();
         }
@@ -4852,12 +4316,12 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         this.mAccessibilityManager.removeHighTextContrastStateChangeListener(this.mHighContrastTextManager);
         removeSendWindowContentChangedCallback();
         destroyHardwareRenderer();
-        setAccessibilityFocus((View) null, (AccessibilityNodeInfo) null);
-        this.mView.assignParent((ViewParent) null);
+        setAccessibilityFocus(null, null);
+        this.mView.assignParent(null);
         this.mView = null;
         this.mAttachInfo.mRootView = null;
         destroySurface();
-        if (!(this.mInputQueueCallback == null || this.mInputQueue == null)) {
+        if (this.mInputQueueCallback != null && this.mInputQueue != null) {
             this.mInputQueueCallback.onInputQueueDestroyed(this.mInputQueue);
             this.mInputQueue.dispose();
             this.mInputQueueCallback = null;
@@ -4879,55 +4343,55 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         unscheduleTraversals();
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void performConfigurationChange(MergedConfiguration mergedConfiguration, boolean force, int newDisplayId) {
-        if (mergedConfiguration != null) {
-            Configuration globalConfig = mergedConfiguration.getGlobalConfiguration();
-            Configuration overrideConfig = mergedConfiguration.getOverrideConfiguration();
-            CompatibilityInfo ci = this.mDisplay.getDisplayAdjustments().getCompatibilityInfo();
-            if (!ci.equals(CompatibilityInfo.DEFAULT_COMPATIBILITY_INFO)) {
-                globalConfig = new Configuration(globalConfig);
-                ci.applyToConfiguration(this.mNoncompatDensity, globalConfig);
-            }
-            synchronized (sConfigCallbacks) {
-                for (int i = sConfigCallbacks.size() - 1; i >= 0; i--) {
-                    sConfigCallbacks.get(i).onConfigurationChanged(globalConfig);
-                }
-            }
-            this.mLastReportedMergedConfiguration.setConfiguration(globalConfig, overrideConfig);
-            this.mForceNextConfigUpdate = force;
-            if (this.mActivityConfigCallback != null) {
-                this.mActivityConfigCallback.onConfigurationChanged(overrideConfig, newDisplayId);
-            } else {
-                updateConfiguration(newDisplayId);
-            }
-            this.mForceNextConfigUpdate = false;
-            return;
+        if (mergedConfiguration == null) {
+            throw new IllegalArgumentException("No merged config provided.");
         }
-        throw new IllegalArgumentException("No merged config provided.");
+        Configuration globalConfig = mergedConfiguration.getGlobalConfiguration();
+        Configuration overrideConfig = mergedConfiguration.getOverrideConfiguration();
+        CompatibilityInfo ci = this.mDisplay.getDisplayAdjustments().getCompatibilityInfo();
+        if (!ci.equals(CompatibilityInfo.DEFAULT_COMPATIBILITY_INFO)) {
+            globalConfig = new Configuration(globalConfig);
+            ci.applyToConfiguration(this.mNoncompatDensity, globalConfig);
+        }
+        synchronized (sConfigCallbacks) {
+            for (int i = sConfigCallbacks.size() - 1; i >= 0; i--) {
+                sConfigCallbacks.get(i).onConfigurationChanged(globalConfig);
+            }
+        }
+        this.mLastReportedMergedConfiguration.setConfiguration(globalConfig, overrideConfig);
+        this.mForceNextConfigUpdate = force;
+        if (this.mActivityConfigCallback != null) {
+            this.mActivityConfigCallback.onConfigurationChanged(overrideConfig, newDisplayId);
+        } else {
+            updateConfiguration(newDisplayId);
+        }
+        this.mForceNextConfigUpdate = false;
     }
 
     public void updateConfiguration(int newDisplayId) {
-        if (this.mView != null) {
-            Resources localResources = this.mView.getResources();
-            Configuration config = localResources.getConfiguration();
-            if (newDisplayId != -1) {
-                onMovedToDisplay(newDisplayId, config);
-            }
-            if (this.mForceNextConfigUpdate || this.mLastConfigurationFromResources.diff(config) != 0) {
-                updateInternalDisplay(this.mDisplay.getDisplayId(), localResources);
-                int lastLayoutDirection = this.mLastConfigurationFromResources.getLayoutDirection();
-                int currentLayoutDirection = config.getLayoutDirection();
-                this.mLastConfigurationFromResources.setTo(config);
-                if (lastLayoutDirection != currentLayoutDirection && this.mViewLayoutDirectionInitial == 2) {
-                    this.mView.setLayoutDirection(currentLayoutDirection);
-                }
-                this.mView.dispatchConfigurationChanged(config);
-                this.mForceNextWindowRelayout = true;
-                requestLayout();
-            }
-            updateForceDarkMode();
+        if (this.mView == null) {
+            return;
         }
+        Resources localResources = this.mView.getResources();
+        Configuration config = localResources.getConfiguration();
+        if (newDisplayId != -1) {
+            onMovedToDisplay(newDisplayId, config);
+        }
+        if (this.mForceNextConfigUpdate || this.mLastConfigurationFromResources.diff(config) != 0) {
+            updateInternalDisplay(this.mDisplay.getDisplayId(), localResources);
+            int lastLayoutDirection = this.mLastConfigurationFromResources.getLayoutDirection();
+            int currentLayoutDirection = config.getLayoutDirection();
+            this.mLastConfigurationFromResources.setTo(config);
+            if (lastLayoutDirection != currentLayoutDirection && this.mViewLayoutDirectionInitial == 2) {
+                this.mView.setLayoutDirection(currentLayoutDirection);
+            }
+            this.mView.dispatchConfigurationChanged(config);
+            this.mForceNextWindowRelayout = true;
+            requestLayout();
+        }
+        updateForceDarkMode();
     }
 
     public static boolean isViewDescendantOf(View child, View parent) {
@@ -4935,13 +4399,10 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
             return true;
         }
         ViewParent theParent = child.getParent();
-        if (!(theParent instanceof ViewGroup) || !isViewDescendantOf((View) theParent, parent)) {
-            return false;
-        }
-        return true;
+        return (theParent instanceof ViewGroup) && isViewDescendantOf((View) theParent, parent);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static void forceLayout(View view) {
         view.forceLayout();
         if (view instanceof ViewGroup) {
@@ -4953,10 +4414,12 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         }
     }
 
+    /* loaded from: classes4.dex */
     final class ViewRootHandler extends Handler {
         ViewRootHandler() {
         }
 
+        @Override // android.p007os.Handler
         public String getMessageName(Message message) {
             switch (message.what) {
                 case 1:
@@ -4977,6 +4440,12 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
                     return "MSG_DISPATCH_APP_VISIBILITY";
                 case 9:
                     return "MSG_DISPATCH_GET_NEW_SURFACE";
+                case 10:
+                case 20:
+                case 22:
+                case 26:
+                default:
+                    return super.getMessageName(message);
                 case 11:
                     return "MSG_DISPATCH_KEY_FROM_IME";
                 case 12:
@@ -5015,21 +4484,20 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
                     return "MSG_INSETS_CONTROL_CHANGED";
                 case 32:
                     return "MSG_SYSTEM_GESTURE_EXCLUSION_CHANGED";
-                default:
-                    return super.getMessageName(message);
             }
         }
 
+        @Override // android.p007os.Handler
         public boolean sendMessageAtTime(Message msg, long uptimeMillis) {
-            if (msg.what != 26 || msg.obj != null) {
-                return super.sendMessageAtTime(msg, uptimeMillis);
+            if (msg.what == 26 && msg.obj == null) {
+                throw new NullPointerException("Attempted to call MSG_REQUEST_KEYBOARD_SHORTCUTS with null receiver:");
             }
-            throw new NullPointerException("Attempted to call MSG_REQUEST_KEYBOARD_SHORTCUTS with null receiver:");
+            return super.sendMessageAtTime(msg, uptimeMillis);
         }
 
+        /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
+        @Override // android.p007os.Handler
         public void handleMessage(Message msg) {
-            int i = -1;
-            boolean hasCapture = true;
             switch (msg.what) {
                 case 1:
                     ((View) msg.obj).invalidate();
@@ -5047,6 +4515,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
                     if (ViewRootImpl.this.mWinFrame.equals(args.arg1) && ViewRootImpl.this.mPendingOverscanInsets.equals(args.arg5) && ViewRootImpl.this.mPendingContentInsets.equals(args.arg2) && ViewRootImpl.this.mPendingStableInsets.equals(args.arg6) && ViewRootImpl.this.mPendingDisplayCutout.get().equals(args.arg9) && ViewRootImpl.this.mPendingVisibleInsets.equals(args.arg3) && ViewRootImpl.this.mPendingOutsets.equals(args.arg7) && ViewRootImpl.this.mPendingBackDropFrame.equals(args.arg8) && args.arg4 == null && args.argi1 == 0 && ViewRootImpl.this.mDisplay.getDisplayId() == args.argi3) {
                         return;
                     }
+                    break;
                 case 5:
                     break;
                 case 6:
@@ -5054,28 +4523,29 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
                     return;
                 case 7:
                     SomeArgs args2 = (SomeArgs) msg.obj;
-                    ViewRootImpl.this.enqueueInputEvent((InputEvent) args2.arg1, (InputEventReceiver) args2.arg2, 0, true);
+                    InputEventReceiver receiver = (InputEventReceiver) args2.arg2;
+                    ViewRootImpl.this.enqueueInputEvent((InputEvent) args2.arg1, receiver, 0, true);
                     args2.recycle();
                     return;
                 case 8:
-                    ViewRootImpl viewRootImpl = ViewRootImpl.this;
-                    if (msg.arg1 == 0) {
-                        hasCapture = false;
-                    }
-                    viewRootImpl.handleAppVisibility(hasCapture);
+                    ViewRootImpl.this.handleAppVisibility(msg.arg1 != 0);
                     return;
                 case 9:
                     ViewRootImpl.this.handleGetNewSurface();
                     return;
+                case 10:
+                case 20:
+                default:
+                    return;
                 case 11:
                     KeyEvent event = (KeyEvent) msg.obj;
                     if ((event.getFlags() & 8) != 0) {
-                        event = KeyEvent.changeFlags(event, event.getFlags() & -9);
+                        event = KeyEvent.changeFlags(event, event.getFlags() & (-9));
                     }
-                    ViewRootImpl.this.enqueueInputEvent(event, (InputEventReceiver) null, 1, true);
+                    ViewRootImpl.this.enqueueInputEvent(event, null, 1, true);
                     return;
                 case 12:
-                    ViewRootImpl.this.enqueueInputEvent((KeyEvent) msg.obj, (InputEventReceiver) null, 0, true);
+                    ViewRootImpl.this.enqueueInputEvent((KeyEvent) msg.obj, null, 0, true);
                     return;
                 case 13:
                     InputMethodManager imm = (InputMethodManager) ViewRootImpl.this.mContext.getSystemService(InputMethodManager.class);
@@ -5112,7 +4582,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
                     ViewRootImpl.this.doProcessInputEvents();
                     return;
                 case 21:
-                    ViewRootImpl.this.setAccessibilityFocus((View) null, (AccessibilityNodeInfo) null);
+                    ViewRootImpl.this.setAccessibilityFocus(null, null);
                     return;
                 case 22:
                     if (ViewRootImpl.this.mView != null) {
@@ -5137,21 +4607,21 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
                     }
                     return;
                 case 24:
-                    ViewRootImpl.this.enqueueInputEvent((InputEvent) msg.obj, (InputEventReceiver) null, 32, true);
+                    ViewRootImpl.this.enqueueInputEvent((InputEvent) msg.obj, null, 32, true);
                     return;
                 case 25:
                     ViewRootImpl.this.handleDispatchWindowShown();
                     return;
                 case 26:
-                    ViewRootImpl.this.handleRequestKeyboardShortcuts((IResultReceiver) msg.obj, msg.arg1);
+                    IResultReceiver receiver2 = (IResultReceiver) msg.obj;
+                    int deviceId = msg.arg1;
+                    ViewRootImpl.this.handleRequestKeyboardShortcuts(receiver2, deviceId);
                     return;
                 case 27:
                     ViewRootImpl.this.resetPointerIcon((MotionEvent) msg.obj);
                     return;
                 case 28:
-                    if (msg.arg1 == 0) {
-                        hasCapture = false;
-                    }
+                    boolean hasCapture = msg.arg1 != 0;
                     ViewRootImpl.this.handlePointerCaptureChanged(hasCapture);
                     return;
                 case 29:
@@ -5168,8 +4638,6 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
                 case 32:
                     ViewRootImpl.this.systemGestureExclusionChanged();
                     return;
-                default:
-                    return;
             }
             if (ViewRootImpl.this.mAdded) {
                 SomeArgs args4 = (SomeArgs) msg.obj;
@@ -5178,16 +4646,12 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
                 boolean displayChanged = ViewRootImpl.this.mDisplay.getDisplayId() != displayId;
                 boolean configChanged = false;
                 if (!ViewRootImpl.this.mLastReportedMergedConfiguration.equals(mergedConfiguration)) {
-                    ViewRootImpl viewRootImpl2 = ViewRootImpl.this;
-                    if (displayChanged) {
-                        i = displayId;
-                    }
-                    viewRootImpl2.performConfigurationChange(mergedConfiguration, false, i);
+                    ViewRootImpl.this.performConfigurationChange(mergedConfiguration, false, displayChanged ? displayId : -1);
                     configChanged = true;
                 } else if (displayChanged) {
                     ViewRootImpl.this.onMovedToDisplay(displayId, ViewRootImpl.this.mLastConfigurationFromResources);
                 }
-                boolean framesChanged = !ViewRootImpl.this.mWinFrame.equals(args4.arg1) || !ViewRootImpl.this.mPendingOverscanInsets.equals(args4.arg5) || !ViewRootImpl.this.mPendingContentInsets.equals(args4.arg2) || !ViewRootImpl.this.mPendingStableInsets.equals(args4.arg6) || !ViewRootImpl.this.mPendingDisplayCutout.get().equals(args4.arg9) || !ViewRootImpl.this.mPendingVisibleInsets.equals(args4.arg3) || !ViewRootImpl.this.mPendingOutsets.equals(args4.arg7);
+                boolean framesChanged = (ViewRootImpl.this.mWinFrame.equals(args4.arg1) && ViewRootImpl.this.mPendingOverscanInsets.equals(args4.arg5) && ViewRootImpl.this.mPendingContentInsets.equals(args4.arg2) && ViewRootImpl.this.mPendingStableInsets.equals(args4.arg6) && ViewRootImpl.this.mPendingDisplayCutout.get().equals(args4.arg9) && ViewRootImpl.this.mPendingVisibleInsets.equals(args4.arg3) && ViewRootImpl.this.mPendingOutsets.equals(args4.arg7)) ? false : true;
                 ViewRootImpl.this.setFrame((Rect) args4.arg1);
                 ViewRootImpl.this.mPendingOverscanInsets.set((Rect) args4.arg5);
                 ViewRootImpl.this.mPendingContentInsets.set((Rect) args4.arg2);
@@ -5197,11 +4661,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
                 ViewRootImpl.this.mPendingOutsets.set((Rect) args4.arg7);
                 ViewRootImpl.this.mPendingBackDropFrame.set((Rect) args4.arg8);
                 ViewRootImpl.this.mForceNextWindowRelayout = args4.argi1 != 0;
-                ViewRootImpl viewRootImpl3 = ViewRootImpl.this;
-                if (args4.argi2 == 0) {
-                    hasCapture = false;
-                }
-                viewRootImpl3.mPendingAlwaysConsumeSystemBars = hasCapture;
+                ViewRootImpl.this.mPendingAlwaysConsumeSystemBars = args4.argi2 != 0;
                 args4.recycle();
                 if (msg.what == 5) {
                     ViewRootImpl.this.reportNextDraw();
@@ -5214,9 +4674,8 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         }
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public boolean ensureTouchMode(boolean inTouchMode) {
+    boolean ensureTouchMode(boolean inTouchMode) {
         if (this.mAttachInfo.mInTouchMode == inTouchMode) {
             return false;
         }
@@ -5246,7 +4705,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         if (ancestorToTakeFocus != null) {
             return ancestorToTakeFocus.requestFocus();
         }
-        focused.clearFocusInternal((View) null, true, false);
+        focused.clearFocusInternal(null, true, false);
         return true;
     }
 
@@ -5266,18 +4725,19 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
     }
 
     private boolean leaveTouchMode() {
-        if (this.mView == null) {
-            return false;
-        }
-        if (this.mView.hasFocus()) {
-            View focusedView = this.mView.findFocus();
-            if (!(focusedView instanceof ViewGroup) || ((ViewGroup) focusedView).getDescendantFocusability() != 262144) {
-                return false;
+        if (this.mView != null) {
+            if (this.mView.hasFocus()) {
+                View focusedView = this.mView.findFocus();
+                if (!(focusedView instanceof ViewGroup) || ((ViewGroup) focusedView).getDescendantFocusability() != 262144) {
+                    return false;
+                }
             }
+            return this.mView.restoreDefaultFocus();
         }
-        return this.mView.restoreDefaultFocus();
+        return false;
     }
 
+    /* loaded from: classes4.dex */
     abstract class InputStage {
         protected static final int FINISH_HANDLED = 1;
         protected static final int FINISH_NOT_HANDLED = 2;
@@ -5298,8 +4758,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
             }
         }
 
-        /* access modifiers changed from: protected */
-        public void finish(QueuedInputEvent q, boolean handled) {
+        protected void finish(QueuedInputEvent q, boolean handled) {
             q.mFlags |= 4;
             if (handled) {
                 q.mFlags |= 8;
@@ -5307,13 +4766,11 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
             forward(q);
         }
 
-        /* access modifiers changed from: protected */
-        public void forward(QueuedInputEvent q) {
+        protected void forward(QueuedInputEvent q) {
             onDeliverToNext(q);
         }
 
-        /* access modifiers changed from: protected */
-        public void apply(QueuedInputEvent q, int result) {
+        protected void apply(QueuedInputEvent q, int result) {
             if (result == 0) {
                 forward(q);
             } else if (result == 1) {
@@ -5325,70 +4782,62 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
             }
         }
 
-        /* access modifiers changed from: protected */
-        public int onProcess(QueuedInputEvent q) {
+        protected int onProcess(QueuedInputEvent q) {
             return 0;
         }
 
-        /* access modifiers changed from: protected */
-        public void onDeliverToNext(QueuedInputEvent q) {
-            if (this.mNext != null) {
-                this.mNext.deliver(q);
-            } else {
+        protected void onDeliverToNext(QueuedInputEvent q) {
+            if (this.mNext == null) {
                 ViewRootImpl.this.finishInputEvent(q);
+            } else {
+                this.mNext.deliver(q);
             }
         }
 
-        /* access modifiers changed from: protected */
-        public void onWindowFocusChanged(boolean hasWindowFocus) {
+        protected void onWindowFocusChanged(boolean hasWindowFocus) {
             if (this.mNext != null) {
                 this.mNext.onWindowFocusChanged(hasWindowFocus);
             }
         }
 
-        /* access modifiers changed from: protected */
-        public void onDetachedFromWindow() {
+        protected void onDetachedFromWindow() {
             if (this.mNext != null) {
                 this.mNext.onDetachedFromWindow();
             }
         }
 
-        /* access modifiers changed from: protected */
-        public boolean shouldDropInputEvent(QueuedInputEvent q) {
+        protected boolean shouldDropInputEvent(QueuedInputEvent q) {
             if (ViewRootImpl.this.mView == null || !ViewRootImpl.this.mAdded) {
-                String access$1700 = ViewRootImpl.this.mTag;
-                Slog.w(access$1700, "Dropping event due to root view being removed: " + q.mEvent);
+                String str = ViewRootImpl.this.mTag;
+                Slog.m50w(str, "Dropping event due to root view being removed: " + q.mEvent);
                 return true;
             } else if ((ViewRootImpl.this.mAttachInfo.mHasWindowFocus || q.mEvent.isFromSource(2) || ViewRootImpl.this.isAutofillUiShowing()) && !ViewRootImpl.this.mStopped && ((!ViewRootImpl.this.mIsAmbientMode || q.mEvent.isFromSource(1)) && (!ViewRootImpl.this.mPausedForTransition || isBack(q.mEvent)))) {
                 return false;
             } else {
-                if (ViewRootImpl.isTerminalInputEvent(q.mEvent)) {
-                    q.mEvent.cancel();
-                    String access$17002 = ViewRootImpl.this.mTag;
-                    Slog.w(access$17002, "Cancelling event due to no window focus: " + q.mEvent);
-                    return false;
+                if (!ViewRootImpl.isTerminalInputEvent(q.mEvent)) {
+                    String str2 = ViewRootImpl.this.mTag;
+                    Slog.m50w(str2, "Dropping event due to no window focus: " + q.mEvent);
+                    return true;
                 }
-                String access$17003 = ViewRootImpl.this.mTag;
-                Slog.w(access$17003, "Dropping event due to no window focus: " + q.mEvent);
-                return true;
+                q.mEvent.cancel();
+                String str3 = ViewRootImpl.this.mTag;
+                Slog.m50w(str3, "Cancelling event due to no window focus: " + q.mEvent);
+                return false;
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public void dump(String prefix, PrintWriter writer) {
+        void dump(String prefix, PrintWriter writer) {
             if (this.mNext != null) {
                 this.mNext.dump(prefix, writer);
             }
         }
 
         private boolean isBack(InputEvent event) {
-            if (!(event instanceof KeyEvent) || ((KeyEvent) event).getKeyCode() != 4) {
-                return false;
-            }
-            return true;
+            return (event instanceof KeyEvent) && ((KeyEvent) event).getKeyCode() == 4;
         }
     }
 
+    /* loaded from: classes4.dex */
     abstract class AsyncInputStage extends InputStage {
         protected static final int DEFER = 3;
         private QueuedInputEvent mQueueHead;
@@ -5401,42 +4850,44 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
             this.mTraceCounter = traceCounter;
         }
 
-        /* access modifiers changed from: protected */
-        public void defer(QueuedInputEvent q) {
+        protected void defer(QueuedInputEvent q) {
             q.mFlags |= 2;
             enqueue(q);
         }
 
-        /* access modifiers changed from: protected */
-        public void forward(QueuedInputEvent q) {
-            QueuedInputEvent curr;
+        @Override // android.view.ViewRootImpl.InputStage
+        protected void forward(QueuedInputEvent q) {
             q.mFlags &= -3;
-            QueuedInputEvent curr2 = this.mQueueHead;
-            if (curr2 == null) {
+            QueuedInputEvent curr = this.mQueueHead;
+            if (curr == null) {
                 super.forward(q);
                 return;
             }
             int deviceId = q.mEvent.getDeviceId();
             QueuedInputEvent prev = null;
             boolean blocked = false;
-            while (curr2 != null && curr2 != q) {
-                if (!blocked && deviceId == curr2.mEvent.getDeviceId()) {
+            while (curr != null && curr != q) {
+                if (!blocked && deviceId == curr.mEvent.getDeviceId()) {
                     blocked = true;
                 }
-                prev = curr2;
-                curr2 = curr2.mNext;
+                prev = curr;
+                curr = curr.mNext;
             }
-            if (!blocked) {
-                if (curr2 != null) {
-                    curr2 = curr2.mNext;
-                    dequeue(q, prev);
+            if (blocked) {
+                if (curr == null) {
+                    enqueue(q);
+                    return;
                 }
-                super.forward(q);
-                while (curr != null) {
-                    if (deviceId != curr.mEvent.getDeviceId()) {
-                        prev = curr;
-                        curr = curr.mNext;
-                    } else if ((curr.mFlags & 2) == 0) {
+                return;
+            }
+            if (curr != null) {
+                curr = curr.mNext;
+                dequeue(q, prev);
+            }
+            super.forward(q);
+            while (curr != null) {
+                if (deviceId == curr.mEvent.getDeviceId()) {
+                    if ((curr.mFlags & 2) == 0) {
                         QueuedInputEvent next = curr.mNext;
                         dequeue(curr, prev);
                         super.forward(curr);
@@ -5444,14 +4895,15 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
                     } else {
                         return;
                     }
+                } else {
+                    prev = curr;
+                    curr = curr.mNext;
                 }
-            } else if (curr2 == null) {
-                enqueue(q);
             }
         }
 
-        /* access modifiers changed from: protected */
-        public void apply(QueuedInputEvent q, int result) {
+        @Override // android.view.ViewRootImpl.InputStage
+        protected void apply(QueuedInputEvent q, int result) {
             if (result == 3) {
                 defer(q);
             } else {
@@ -5468,7 +4920,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
                 this.mQueueTail = q;
             }
             this.mQueueLength++;
-            Trace.traceCounter(4, this.mTraceCounter, this.mQueueLength);
+            Trace.traceCounter(4L, this.mTraceCounter, this.mQueueLength);
         }
 
         private void dequeue(QueuedInputEvent q, QueuedInputEvent prev) {
@@ -5482,11 +4934,11 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
             }
             q.mNext = null;
             this.mQueueLength--;
-            Trace.traceCounter(4, this.mTraceCounter, this.mQueueLength);
+            Trace.traceCounter(4L, this.mTraceCounter, this.mQueueLength);
         }
 
-        /* access modifiers changed from: package-private */
-        public void dump(String prefix, PrintWriter writer) {
+        @Override // android.view.ViewRootImpl.InputStage
+        void dump(String prefix, PrintWriter writer) {
             writer.print(prefix);
             writer.print(getClass().getName());
             writer.print(": mQueueLength=");
@@ -5495,20 +4947,22 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         }
     }
 
+    /* loaded from: classes4.dex */
     final class NativePreImeInputStage extends AsyncInputStage implements InputQueue.FinishedInputEventCallback {
         public NativePreImeInputStage(InputStage next, String traceCounter) {
             super(next, traceCounter);
         }
 
-        /* access modifiers changed from: protected */
-        public int onProcess(QueuedInputEvent q) {
-            if (ViewRootImpl.this.mInputQueue == null || !(q.mEvent instanceof KeyEvent)) {
-                return 0;
+        @Override // android.view.ViewRootImpl.InputStage
+        protected int onProcess(QueuedInputEvent q) {
+            if (ViewRootImpl.this.mInputQueue != null && (q.mEvent instanceof KeyEvent)) {
+                ViewRootImpl.this.mInputQueue.sendInputEvent(q.mEvent, q, true, this);
+                return 3;
             }
-            ViewRootImpl.this.mInputQueue.sendInputEvent(q.mEvent, q, true, this);
-            return 3;
+            return 0;
         }
 
+        @Override // android.view.InputQueue.FinishedInputEventCallback
         public void onFinishedInputEvent(Object token, boolean handled) {
             QueuedInputEvent q = (QueuedInputEvent) token;
             if (handled) {
@@ -5519,13 +4973,14 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         }
     }
 
+    /* loaded from: classes4.dex */
     final class ViewPreImeInputStage extends InputStage {
         public ViewPreImeInputStage(InputStage next) {
             super(next);
         }
 
-        /* access modifiers changed from: protected */
-        public int onProcess(QueuedInputEvent q) {
+        @Override // android.view.ViewRootImpl.InputStage
+        protected int onProcess(QueuedInputEvent q) {
             if (q.mEvent instanceof KeyEvent) {
                 return processKeyEvent(q);
             }
@@ -5533,34 +4988,35 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         }
 
         private int processKeyEvent(QueuedInputEvent q) {
-            if (ViewRootImpl.this.mView.dispatchKeyEventPreIme((KeyEvent) q.mEvent)) {
+            KeyEvent event = (KeyEvent) q.mEvent;
+            if (ViewRootImpl.this.mView.dispatchKeyEventPreIme(event)) {
                 return 1;
             }
             return 0;
         }
     }
 
+    /* loaded from: classes4.dex */
     final class ImeInputStage extends AsyncInputStage implements InputMethodManager.FinishedInputEventCallback {
         public ImeInputStage(InputStage next, String traceCounter) {
             super(next, traceCounter);
         }
 
-        /* access modifiers changed from: protected */
-        public int onProcess(QueuedInputEvent q) {
+        @Override // android.view.ViewRootImpl.InputStage
+        protected int onProcess(QueuedInputEvent q) {
             InputMethodManager imm;
             if (!ViewRootImpl.this.mLastWasImTarget || ViewRootImpl.this.isInLocalFocusMode() || (imm = (InputMethodManager) ViewRootImpl.this.mContext.getSystemService(InputMethodManager.class)) == null) {
                 return 0;
             }
-            int result = imm.dispatchInputEvent(q.mEvent, q, this, ViewRootImpl.this.mHandler);
+            InputEvent event = q.mEvent;
+            int result = imm.dispatchInputEvent(event, q, this, ViewRootImpl.this.mHandler);
             if (result == 1) {
                 return 1;
             }
-            if (result == 0) {
-                return 0;
-            }
-            return 3;
+            return result == 0 ? 0 : 3;
         }
 
+        @Override // android.view.inputmethod.InputMethodManager.FinishedInputEventCallback
         public void onFinishedInputEvent(Object token, boolean handled) {
             QueuedInputEvent q = (QueuedInputEvent) token;
             if (handled) {
@@ -5571,13 +5027,14 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         }
     }
 
+    /* loaded from: classes4.dex */
     final class EarlyPostImeInputStage extends InputStage {
         public EarlyPostImeInputStage(InputStage next) {
             super(next);
         }
 
-        /* access modifiers changed from: protected */
-        public int onProcess(QueuedInputEvent q) {
+        @Override // android.view.ViewRootImpl.InputStage
+        protected int onProcess(QueuedInputEvent q) {
             if (q.mEvent instanceof KeyEvent) {
                 return processKeyEvent(q);
             }
@@ -5628,32 +5085,34 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
                 ViewRootImpl.this.mAttachInfo.mTooltipHost.hideTooltip();
             }
             if (ViewRootImpl.this.mCurScrollY != 0) {
-                event.offsetLocation(0.0f, (float) ViewRootImpl.this.mCurScrollY);
+                event.offsetLocation(0.0f, ViewRootImpl.this.mCurScrollY);
             }
-            if (!event.isTouchEvent()) {
+            if (event.isTouchEvent()) {
+                ViewRootImpl.this.mLastTouchPoint.f61x = event.getRawX();
+                ViewRootImpl.this.mLastTouchPoint.f62y = event.getRawY();
+                ViewRootImpl.this.mLastTouchSource = event.getSource();
                 return 0;
             }
-            ViewRootImpl.this.mLastTouchPoint.x = event.getRawX();
-            ViewRootImpl.this.mLastTouchPoint.y = event.getRawY();
-            ViewRootImpl.this.mLastTouchSource = event.getSource();
             return 0;
         }
     }
 
+    /* loaded from: classes4.dex */
     final class NativePostImeInputStage extends AsyncInputStage implements InputQueue.FinishedInputEventCallback {
         public NativePostImeInputStage(InputStage next, String traceCounter) {
             super(next, traceCounter);
         }
 
-        /* access modifiers changed from: protected */
-        public int onProcess(QueuedInputEvent q) {
-            if (ViewRootImpl.this.mInputQueue == null) {
-                return 0;
+        @Override // android.view.ViewRootImpl.InputStage
+        protected int onProcess(QueuedInputEvent q) {
+            if (ViewRootImpl.this.mInputQueue != null) {
+                ViewRootImpl.this.mInputQueue.sendInputEvent(q.mEvent, q, false, this);
+                return 3;
             }
-            ViewRootImpl.this.mInputQueue.sendInputEvent(q.mEvent, q, false, this);
-            return 3;
+            return 0;
         }
 
+        @Override // android.view.InputQueue.FinishedInputEventCallback
         public void onFinishedInputEvent(Object token, boolean handled) {
             QueuedInputEvent q = (QueuedInputEvent) token;
             if (handled) {
@@ -5664,13 +5123,14 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         }
     }
 
+    /* loaded from: classes4.dex */
     final class ViewPostImeInputStage extends InputStage {
         public ViewPostImeInputStage(InputStage next) {
             super(next);
         }
 
-        /* access modifiers changed from: protected */
-        public int onProcess(QueuedInputEvent q) {
+        @Override // android.view.ViewRootImpl.InputStage
+        protected int onProcess(QueuedInputEvent q) {
             if (q.mEvent instanceof KeyEvent) {
                 return processKeyEvent(q);
             }
@@ -5684,8 +5144,8 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
             return processGenericMotionEvent(q);
         }
 
-        /* access modifiers changed from: protected */
-        public void onDeliverToNext(QueuedInputEvent q) {
+        @Override // android.view.ViewRootImpl.InputStage
+        protected void onDeliverToNext(QueuedInputEvent q) {
             if (ViewRootImpl.this.mUnbufferedInputDispatch && (q.mEvent instanceof MotionEvent) && ((MotionEvent) q.mEvent).isTouchEvent() && ViewRootImpl.isTerminalInputEvent(q.mEvent)) {
                 ViewRootImpl.this.mUnbufferedInputDispatch = false;
                 ViewRootImpl.this.scheduleConsumeBatchedInput();
@@ -5693,127 +5153,69 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
             super.onDeliverToNext(q);
         }
 
-        /* JADX WARNING: Code restructure failed: missing block: B:11:0x0027, code lost:
-            if (r7.hasNoModifiers() == false) goto L_0x0044;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:12:0x0029, code lost:
-            r0 = 130;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:14:0x0030, code lost:
-            if (r7.hasNoModifiers() == false) goto L_0x0044;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:15:0x0032, code lost:
-            r0 = 33;
-         */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        private boolean performFocusNavigation(android.view.KeyEvent r7) {
-            /*
-                r6 = this;
-                r0 = 0
-                int r1 = r7.getKeyCode()
-                r2 = 61
-                r3 = 1
-                if (r1 == r2) goto L_0x0035
-                switch(r1) {
-                    case 19: goto L_0x002c;
-                    case 20: goto L_0x0023;
-                    case 21: goto L_0x001a;
-                    case 22: goto L_0x0011;
-                    default: goto L_0x000d;
+        /* JADX WARN: Removed duplicated region for block: B:13:0x0023  */
+        /* JADX WARN: Removed duplicated region for block: B:16:0x002c  */
+        /*
+            Code decompiled incorrectly, please refer to instructions dump.
+        */
+        private boolean performFocusNavigation(KeyEvent event) {
+            int direction = 0;
+            int keyCode = event.getKeyCode();
+            if (keyCode != 61) {
+                switch (keyCode) {
+                    case 19:
+                        if (event.hasNoModifiers()) {
+                            direction = 33;
+                            break;
+                        }
+                        break;
+                    case 20:
+                        if (event.hasNoModifiers()) {
+                            direction = 130;
+                            break;
+                        }
+                        break;
+                    case 21:
+                        if (event.hasNoModifiers()) {
+                            direction = 17;
+                            break;
+                        }
+                        break;
+                    case 22:
+                        if (event.hasNoModifiers()) {
+                            direction = 66;
+                            break;
+                        }
+                        break;
+                    default:
+                        switch (keyCode) {
+                        }
                 }
-            L_0x000d:
-                switch(r1) {
-                    case 691: goto L_0x002c;
-                    case 692: goto L_0x0023;
-                    default: goto L_0x0010;
+            } else if (event.hasNoModifiers()) {
+                direction = 2;
+            } else if (event.hasModifiers(1)) {
+                direction = 1;
+            }
+            if (direction != 0) {
+                View focused = ViewRootImpl.this.mView.findFocus();
+                if (focused == null) {
+                    return ViewRootImpl.this.mView.restoreDefaultFocus();
                 }
-            L_0x0010:
-                goto L_0x0044
-            L_0x0011:
-                boolean r1 = r7.hasNoModifiers()
-                if (r1 == 0) goto L_0x0044
-                r0 = 66
-                goto L_0x0044
-            L_0x001a:
-                boolean r1 = r7.hasNoModifiers()
-                if (r1 == 0) goto L_0x0044
-                r0 = 17
-                goto L_0x0044
-            L_0x0023:
-                boolean r1 = r7.hasNoModifiers()
-                if (r1 == 0) goto L_0x0044
-                r0 = 130(0x82, float:1.82E-43)
-                goto L_0x0044
-            L_0x002c:
-                boolean r1 = r7.hasNoModifiers()
-                if (r1 == 0) goto L_0x0044
-                r0 = 33
-                goto L_0x0044
-            L_0x0035:
-                boolean r1 = r7.hasNoModifiers()
-                if (r1 == 0) goto L_0x003d
-                r0 = 2
-                goto L_0x0044
-            L_0x003d:
-                boolean r1 = r7.hasModifiers(r3)
-                if (r1 == 0) goto L_0x0044
-                r0 = 1
-            L_0x0044:
-                if (r0 == 0) goto L_0x00ac
-                android.view.ViewRootImpl r1 = android.view.ViewRootImpl.this
-                android.view.View r1 = r1.mView
-                android.view.View r1 = r1.findFocus()
-                if (r1 == 0) goto L_0x00a1
-                android.view.View r2 = r1.focusSearch(r0)
-                if (r2 == 0) goto L_0x0095
-                if (r2 == r1) goto L_0x0095
-                android.view.ViewRootImpl r4 = android.view.ViewRootImpl.this
-                android.graphics.Rect r4 = r4.mTempRect
-                r1.getFocusedRect(r4)
-                android.view.ViewRootImpl r4 = android.view.ViewRootImpl.this
-                android.view.View r4 = r4.mView
-                boolean r4 = r4 instanceof android.view.ViewGroup
-                if (r4 == 0) goto L_0x0081
-                android.view.ViewRootImpl r4 = android.view.ViewRootImpl.this
-                android.view.View r4 = r4.mView
-                android.view.ViewGroup r4 = (android.view.ViewGroup) r4
-                android.view.ViewRootImpl r5 = android.view.ViewRootImpl.this
-                android.graphics.Rect r5 = r5.mTempRect
-                r4.offsetDescendantRectToMyCoords(r1, r5)
-                android.view.ViewRootImpl r4 = android.view.ViewRootImpl.this
-                android.view.View r4 = r4.mView
-                android.view.ViewGroup r4 = (android.view.ViewGroup) r4
-                android.view.ViewRootImpl r5 = android.view.ViewRootImpl.this
-                android.graphics.Rect r5 = r5.mTempRect
-                r4.offsetRectIntoDescendantCoords(r2, r5)
-            L_0x0081:
-                android.view.ViewRootImpl r4 = android.view.ViewRootImpl.this
-                android.graphics.Rect r4 = r4.mTempRect
-                boolean r4 = r2.requestFocus(r0, r4)
-                if (r4 == 0) goto L_0x0095
-                android.view.ViewRootImpl r4 = android.view.ViewRootImpl.this
-                int r5 = android.view.SoundEffectConstants.getContantForFocusDirection(r0)
-                r4.playSoundEffect(r5)
-                return r3
-            L_0x0095:
-                android.view.ViewRootImpl r4 = android.view.ViewRootImpl.this
-                android.view.View r4 = r4.mView
-                boolean r4 = r4.dispatchUnhandledMove(r1, r0)
-                if (r4 == 0) goto L_0x00a0
-                return r3
-            L_0x00a0:
-                goto L_0x00ac
-            L_0x00a1:
-                android.view.ViewRootImpl r2 = android.view.ViewRootImpl.this
-                android.view.View r2 = r2.mView
-                boolean r2 = r2.restoreDefaultFocus()
-                if (r2 == 0) goto L_0x00ac
-                return r3
-            L_0x00ac:
-                r1 = 0
-                return r1
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.view.ViewRootImpl.ViewPostImeInputStage.performFocusNavigation(android.view.KeyEvent):boolean");
+                View v = focused.focusSearch(direction);
+                if (v != null && v != focused) {
+                    focused.getFocusedRect(ViewRootImpl.this.mTempRect);
+                    if (ViewRootImpl.this.mView instanceof ViewGroup) {
+                        ((ViewGroup) ViewRootImpl.this.mView).offsetDescendantRectToMyCoords(focused, ViewRootImpl.this.mTempRect);
+                        ((ViewGroup) ViewRootImpl.this.mView).offsetRectIntoDescendantCoords(v, ViewRootImpl.this.mTempRect);
+                    }
+                    if (v.requestFocus(direction, ViewRootImpl.this.mTempRect)) {
+                        ViewRootImpl.this.playSoundEffect(SoundEffectConstants.getContantForFocusDirection(direction));
+                        return true;
+                    }
+                }
+                return ViewRootImpl.this.mView.dispatchUnhandledMove(focused, direction);
+            }
+            return false;
         }
 
         private boolean performKeyboardGroupNavigation(int direction) {
@@ -5823,26 +5225,25 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
                 return true;
             }
             if (focused == null) {
-                cluster = ViewRootImpl.this.keyboardNavigationClusterSearch((View) null, direction);
+                cluster = ViewRootImpl.this.keyboardNavigationClusterSearch(null, direction);
             } else {
-                cluster = focused.keyboardNavigationClusterSearch((View) null, direction);
+                cluster = focused.keyboardNavigationClusterSearch(null, direction);
             }
             int realDirection = direction;
-            if (direction == 2 || direction == 1) {
-                realDirection = 130;
-            }
+            realDirection = (direction == 2 || direction == 1) ? 130 : 130;
             if (cluster != null && cluster.isRootNamespace()) {
-                if (cluster.restoreFocusNotInCluster()) {
+                if (!cluster.restoreFocusNotInCluster()) {
+                    cluster = ViewRootImpl.this.keyboardNavigationClusterSearch(null, direction);
+                } else {
                     ViewRootImpl.this.playSoundEffect(SoundEffectConstants.getContantForFocusDirection(direction));
                     return true;
                 }
-                cluster = ViewRootImpl.this.keyboardNavigationClusterSearch((View) null, direction);
             }
-            if (cluster == null || !cluster.restoreFocusInCluster(realDirection)) {
-                return false;
+            if (cluster != null && cluster.restoreFocusInCluster(realDirection)) {
+                ViewRootImpl.this.playSoundEffect(SoundEffectConstants.getContantForFocusDirection(direction));
+                return true;
             }
-            ViewRootImpl.this.playSoundEffect(SoundEffectConstants.getContantForFocusDirection(direction));
-            return true;
+            return false;
         }
 
         private int processKeyEvent(QueuedInputEvent q) {
@@ -5878,26 +5279,17 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
             if (shouldDropInputEvent(q)) {
                 return 2;
             }
-            if (event.getAction() != 0) {
-                return 0;
+            if (event.getAction() == 0) {
+                return groupNavigationDirection != 0 ? performKeyboardGroupNavigation(groupNavigationDirection) ? 1 : 0 : performFocusNavigation(event) ? 1 : 0;
             }
-            if (groupNavigationDirection != 0) {
-                if (performKeyboardGroupNavigation(groupNavigationDirection)) {
-                    return 1;
-                }
-                return 0;
-            } else if (performFocusNavigation(event)) {
-                return 1;
-            } else {
-                return 0;
-            }
+            return 0;
         }
 
         private int processPointerEvent(QueuedInputEvent q) {
             MotionEvent event = (MotionEvent) q.mEvent;
             ViewRootImpl.this.mAttachInfo.mUnbufferedDispatchRequested = false;
             ViewRootImpl.this.mAttachInfo.mHandlingPointerEvent = true;
-            boolean handled = ViewRootImpl.this.mView.dispatchPointerEvent(event);
+            boolean dispatchPointerEvent = ViewRootImpl.this.mView.dispatchPointerEvent(event);
             int action = event.getActionMasked();
             if (action == 2) {
                 ViewRootImpl.this.mHaveMoveEvent = true;
@@ -5913,54 +5305,45 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
                     ViewRootImpl.this.scheduleConsumeBatchedInputImmediately();
                 }
             }
-            return handled;
+            return dispatchPointerEvent ? 1 : 0;
         }
 
         private void maybeUpdatePointerIcon(MotionEvent event) {
             if (event.getPointerCount() == 1 && event.isFromSource(8194)) {
                 if (event.getActionMasked() == 9 || event.getActionMasked() == 10) {
-                    int unused = ViewRootImpl.this.mPointerIconType = 1;
+                    ViewRootImpl.this.mPointerIconType = 1;
                 }
                 if (event.getActionMasked() != 10 && !ViewRootImpl.this.updatePointerIcon(event) && event.getActionMasked() == 7) {
-                    int unused2 = ViewRootImpl.this.mPointerIconType = 1;
+                    ViewRootImpl.this.mPointerIconType = 1;
                 }
             }
         }
 
         private int processTrackballEvent(QueuedInputEvent q) {
             MotionEvent event = (MotionEvent) q.mEvent;
-            if ((!event.isFromSource(InputDevice.SOURCE_MOUSE_RELATIVE) || (ViewRootImpl.this.hasPointerCapture() && !ViewRootImpl.this.mView.dispatchCapturedPointerEvent(event))) && !ViewRootImpl.this.mView.dispatchTrackballEvent(event)) {
-                return 0;
-            }
-            return 1;
+            return ((!event.isFromSource(InputDevice.SOURCE_MOUSE_RELATIVE) || (ViewRootImpl.this.hasPointerCapture() && !ViewRootImpl.this.mView.dispatchCapturedPointerEvent(event))) && !ViewRootImpl.this.mView.dispatchTrackballEvent(event)) ? 0 : 1;
         }
 
         private int processGenericMotionEvent(QueuedInputEvent q) {
             MotionEvent event = (MotionEvent) q.mEvent;
-            if ((!event.isFromSource(1048584) || !ViewRootImpl.this.hasPointerCapture() || !ViewRootImpl.this.mView.dispatchCapturedPointerEvent(event)) && !ViewRootImpl.this.mView.dispatchGenericMotionEvent(event)) {
-                return 0;
-            }
-            return 1;
+            return ((event.isFromSource(1048584) && ViewRootImpl.this.hasPointerCapture() && ViewRootImpl.this.mView.dispatchCapturedPointerEvent(event)) || ViewRootImpl.this.mView.dispatchGenericMotionEvent(event)) ? 1 : 0;
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void resetPointerIcon(MotionEvent event) {
         this.mPointerIconType = 1;
         updatePointerIcon(event);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public boolean updatePointerIcon(MotionEvent event) {
         float x = event.getX(0);
         float y = event.getY(0);
         if (this.mView == null) {
-            Slog.d(this.mTag, "updatePointerIcon called after view was removed");
+            Slog.m58d(this.mTag, "updatePointerIcon called after view was removed");
             return false;
-        } else if (x < 0.0f || x >= ((float) this.mView.getWidth()) || y < 0.0f || y >= ((float) this.mView.getHeight())) {
-            Slog.d(this.mTag, "updatePointerIcon called with position out of bounds");
-            return false;
-        } else {
+        } else if (x >= 0.0f && x < this.mView.getWidth() && y >= 0.0f && y < this.mView.getHeight()) {
             PointerIcon pointerIcon = this.mView.onResolvePointerIcon(event, 0);
             int pointerType = pointerIcon != null ? pointerIcon.getType() : 1000;
             if (this.mPointerIconType != pointerType) {
@@ -5976,109 +5359,125 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
                 InputManager.getInstance().setCustomPointerIcon(this.mCustomPointerIcon);
             }
             return true;
+        } else {
+            Slog.m58d(this.mTag, "updatePointerIcon called with position out of bounds");
+            return false;
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void maybeUpdateTooltip(MotionEvent event) {
-        if (event.getPointerCount() == 1) {
-            int action = event.getActionMasked();
-            if (action == 9 || action == 7 || action == 10) {
-                AccessibilityManager manager = AccessibilityManager.getInstance(this.mContext);
-                if (manager.isEnabled() && manager.isTouchExplorationEnabled()) {
-                    return;
-                }
-                if (this.mView == null) {
-                    Slog.d(this.mTag, "maybeUpdateTooltip called after view was removed");
-                } else {
-                    this.mView.dispatchTooltipHoverEvent(event);
-                }
-            }
+        if (event.getPointerCount() != 1) {
+            return;
+        }
+        int action = event.getActionMasked();
+        if (action != 9 && action != 7 && action != 10) {
+            return;
+        }
+        AccessibilityManager manager = AccessibilityManager.getInstance(this.mContext);
+        if (manager.isEnabled() && manager.isTouchExplorationEnabled()) {
+            return;
+        }
+        if (this.mView == null) {
+            Slog.m58d(this.mTag, "maybeUpdateTooltip called after view was removed");
+        } else {
+            this.mView.dispatchTooltipHoverEvent(event);
         }
     }
 
+    /* loaded from: classes4.dex */
     final class SyntheticInputStage extends InputStage {
-        private final SyntheticJoystickHandler mJoystick = new SyntheticJoystickHandler();
-        private final SyntheticKeyboardHandler mKeyboard = new SyntheticKeyboardHandler();
-        private final SyntheticTouchNavigationHandler mTouchNavigation = new SyntheticTouchNavigationHandler();
-        private final SyntheticTrackballHandler mTrackball = new SyntheticTrackballHandler();
+        private final SyntheticJoystickHandler mJoystick;
+        private final SyntheticKeyboardHandler mKeyboard;
+        private final SyntheticTouchNavigationHandler mTouchNavigation;
+        private final SyntheticTrackballHandler mTrackball;
 
         public SyntheticInputStage() {
-            super((InputStage) null);
+            super(null);
+            this.mTrackball = new SyntheticTrackballHandler();
+            this.mJoystick = new SyntheticJoystickHandler();
+            this.mTouchNavigation = new SyntheticTouchNavigationHandler();
+            this.mKeyboard = new SyntheticKeyboardHandler();
         }
 
-        /* access modifiers changed from: protected */
-        public int onProcess(QueuedInputEvent q) {
+        @Override // android.view.ViewRootImpl.InputStage
+        protected int onProcess(QueuedInputEvent q) {
             q.mFlags |= 16;
-            if (q.mEvent instanceof MotionEvent) {
-                MotionEvent event = (MotionEvent) q.mEvent;
-                int source = event.getSource();
-                if ((source & 4) != 0) {
-                    this.mTrackball.process(event);
-                    return 1;
-                } else if ((source & 16) != 0) {
-                    this.mJoystick.process(event);
-                    return 1;
-                } else if ((source & 2097152) != 2097152) {
-                    return 0;
-                } else {
-                    this.mTouchNavigation.process(event);
+            if (!(q.mEvent instanceof MotionEvent)) {
+                if ((q.mFlags & 32) != 0) {
+                    this.mKeyboard.process((KeyEvent) q.mEvent);
                     return 1;
                 }
-            } else if ((q.mFlags & 32) == 0) {
                 return 0;
-            } else {
-                this.mKeyboard.process((KeyEvent) q.mEvent);
+            }
+            MotionEvent event = (MotionEvent) q.mEvent;
+            int source = event.getSource();
+            if ((source & 4) != 0) {
+                this.mTrackball.process(event);
                 return 1;
+            } else if ((source & 16) != 0) {
+                this.mJoystick.process(event);
+                return 1;
+            } else if ((source & 2097152) == 2097152) {
+                this.mTouchNavigation.process(event);
+                return 1;
+            } else {
+                return 0;
             }
         }
 
-        /* access modifiers changed from: protected */
-        public void onDeliverToNext(QueuedInputEvent q) {
+        @Override // android.view.ViewRootImpl.InputStage
+        protected void onDeliverToNext(QueuedInputEvent q) {
             if ((q.mFlags & 16) == 0 && (q.mEvent instanceof MotionEvent)) {
                 MotionEvent event = (MotionEvent) q.mEvent;
                 int source = event.getSource();
                 if ((source & 4) != 0) {
                     this.mTrackball.cancel();
-                } else if ((source & 16) != 0) {
+                } else if ((source & 16) == 0) {
+                    if ((source & 2097152) == 2097152) {
+                        this.mTouchNavigation.cancel(event);
+                    }
+                } else {
                     this.mJoystick.cancel();
-                } else if ((source & 2097152) == 2097152) {
-                    this.mTouchNavigation.cancel(event);
                 }
             }
             super.onDeliverToNext(q);
         }
 
-        /* access modifiers changed from: protected */
-        public void onWindowFocusChanged(boolean hasWindowFocus) {
-            if (!hasWindowFocus) {
-                this.mJoystick.cancel();
+        @Override // android.view.ViewRootImpl.InputStage
+        protected void onWindowFocusChanged(boolean hasWindowFocus) {
+            if (hasWindowFocus) {
+                return;
             }
+            this.mJoystick.cancel();
         }
 
-        /* access modifiers changed from: protected */
-        public void onDetachedFromWindow() {
+        @Override // android.view.ViewRootImpl.InputStage
+        protected void onDetachedFromWindow() {
             this.mJoystick.cancel();
         }
     }
 
+    /* loaded from: classes4.dex */
     final class SyntheticTrackballHandler {
         private long mLastTime;
-        private final TrackballAxis mX = new TrackballAxis();
-        private final TrackballAxis mY = new TrackballAxis();
+
+        /* renamed from: mX */
+        private final TrackballAxis f2421mX = new TrackballAxis();
+
+        /* renamed from: mY */
+        private final TrackballAxis f2422mY = new TrackballAxis();
 
         SyntheticTrackballHandler() {
         }
 
         public void process(MotionEvent event) {
             long curTime;
-            int i;
             long curTime2;
-            int i2;
             long curTime3 = SystemClock.uptimeMillis();
             if (this.mLastTime + 250 < curTime3) {
-                this.mX.reset(0);
-                this.mY.reset(0);
+                this.f2421mX.reset(0);
+                this.f2422mY.reset(0);
                 this.mLastTime = curTime3;
             }
             int action = event.getAction();
@@ -6086,51 +5485,36 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
             switch (action) {
                 case 0:
                     curTime = curTime3;
-                    this.mX.reset(2);
-                    this.mY.reset(2);
-                    ViewRootImpl viewRootImpl = ViewRootImpl.this;
-                    KeyEvent keyEvent = r1;
-                    KeyEvent keyEvent2 = new KeyEvent(curTime, curTime, 0, 23, 0, metaState, -1, 0, 1024, 257);
-                    viewRootImpl.enqueueInputEvent(keyEvent);
+                    this.f2421mX.reset(2);
+                    this.f2422mY.reset(2);
+                    ViewRootImpl.this.enqueueInputEvent(new KeyEvent(curTime, curTime, 0, 23, 0, metaState, -1, 0, 1024, 257));
                     break;
                 case 1:
-                    this.mX.reset(2);
-                    this.mY.reset(2);
-                    KeyEvent keyEvent3 = r1;
+                    this.f2421mX.reset(2);
+                    this.f2422mY.reset(2);
                     curTime = curTime3;
-                    KeyEvent keyEvent4 = new KeyEvent(curTime3, curTime3, 1, 23, 0, metaState, -1, 0, 1024, 257);
-                    ViewRootImpl.this.enqueueInputEvent(keyEvent3);
+                    ViewRootImpl.this.enqueueInputEvent(new KeyEvent(curTime3, curTime3, 1, 23, 0, metaState, -1, 0, 1024, 257));
                     break;
                 default:
                     curTime = curTime3;
                     break;
             }
-            float xOff = this.mX.collect(event.getX(), event.getEventTime(), "X");
-            float yOff = this.mY.collect(event.getY(), event.getEventTime(), "Y");
+            float xOff = this.f2421mX.collect(event.getX(), event.getEventTime(), "X");
+            float yOff = this.f2422mY.collect(event.getY(), event.getEventTime(), "Y");
             int keycode = 0;
             int movement = 0;
             float accel = 1.0f;
             if (xOff > yOff) {
-                movement = this.mX.generate();
+                movement = this.f2421mX.generate();
                 if (movement != 0) {
-                    if (movement > 0) {
-                        i2 = 22;
-                    } else {
-                        i2 = 21;
-                    }
-                    keycode = i2;
-                    accel = this.mX.acceleration;
-                    this.mY.reset(2);
+                    keycode = movement > 0 ? 22 : 21;
+                    accel = this.f2421mX.acceleration;
+                    this.f2422mY.reset(2);
                 }
-            } else if (yOff > 0.0f && (movement = this.mY.generate()) != 0) {
-                if (movement > 0) {
-                    i = 20;
-                } else {
-                    i = 19;
-                }
-                keycode = i;
-                accel = this.mY.acceleration;
-                this.mX.reset(2);
+            } else if (yOff > 0.0f && (movement = this.f2422mY.generate()) != 0) {
+                keycode = movement > 0 ? 20 : 19;
+                accel = this.f2422mY.acceleration;
+                this.f2421mX.reset(2);
             }
             int keycode2 = keycode;
             float accel2 = accel;
@@ -6138,45 +5522,27 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
                 if (movement < 0) {
                     movement = -movement;
                 }
-                int accelMovement = (int) (((float) movement) * accel2);
+                int accelMovement = (int) (movement * accel2);
                 if (accelMovement > movement) {
                     int movement2 = movement - 1;
-                    KeyEvent keyEvent5 = r1;
-                    int i3 = accelMovement;
-                    KeyEvent keyEvent6 = new KeyEvent(curTime, curTime, 2, keycode2, accelMovement - movement2, metaState, -1, 0, 1024, 257);
-                    ViewRootImpl.this.enqueueInputEvent(keyEvent5);
+                    int repeatCount = accelMovement - movement2;
+                    ViewRootImpl.this.enqueueInputEvent(new KeyEvent(curTime, curTime, 2, keycode2, repeatCount, metaState, -1, 0, 1024, 257));
                     movement = movement2;
                     curTime2 = curTime;
                 } else {
                     curTime2 = curTime;
                 }
                 while (movement > 0) {
-                    int movement3 = movement - 1;
                     long curTime4 = SystemClock.uptimeMillis();
-                    long j = curTime4;
-                    long j2 = curTime4;
-                    int i4 = keycode2;
-                    int i5 = metaState;
-                    KeyEvent keyEvent7 = r1;
-                    float xOff2 = xOff;
-                    KeyEvent keyEvent8 = new KeyEvent(j, j2, 0, i4, 0, i5, -1, 0, 1024, 257);
-                    ViewRootImpl.this.enqueueInputEvent(keyEvent7);
-                    ViewRootImpl viewRootImpl2 = ViewRootImpl.this;
-                    float yOff2 = yOff;
-                    KeyEvent keyEvent9 = r1;
-                    KeyEvent keyEvent10 = new KeyEvent(j, j2, 1, i4, 0, i5, -1, 0, 1024, 257);
-                    viewRootImpl2.enqueueInputEvent(keyEvent9);
-                    movement = movement3;
+                    ViewRootImpl.this.enqueueInputEvent(new KeyEvent(curTime4, curTime4, 0, keycode2, 0, metaState, -1, 0, 1024, 257));
+                    ViewRootImpl.this.enqueueInputEvent(new KeyEvent(curTime4, curTime4, 1, keycode2, 0, metaState, -1, 0, 1024, 257));
+                    movement--;
                     curTime2 = curTime4;
-                    xOff = xOff2;
-                    yOff = yOff2;
+                    xOff = xOff;
+                    yOff = yOff;
                 }
-                float f = yOff;
                 this.mLastTime = curTime2;
-                return;
             }
-            float f2 = yOff;
-            long j3 = curTime;
         }
 
         public void cancel() {
@@ -6187,6 +5553,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         }
     }
 
+    /* loaded from: classes4.dex */
     static final class TrackballAxis {
         static final float ACCEL_MOVE_SCALING_FACTOR = 0.025f;
         static final long FAST_MOVE_TIME = 150;
@@ -6194,45 +5561,42 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         static final float MAX_ACCELERATION = 20.0f;
         static final float SECOND_CUMULATIVE_MOVEMENT_THRESHOLD = 2.0f;
         static final float SUBSEQUENT_INCREMENTAL_MOVEMENT_THRESHOLD = 1.0f;
-        float acceleration = 1.0f;
         int dir;
-        long lastMoveTime = 0;
         int nonAccelMovement;
         float position;
         int step;
+        float acceleration = 1.0f;
+        long lastMoveTime = 0;
 
         TrackballAxis() {
         }
 
-        /* access modifiers changed from: package-private */
-        public void reset(int _step) {
+        void reset(int _step) {
             this.position = 0.0f;
             this.acceleration = 1.0f;
-            this.lastMoveTime = 0;
+            this.lastMoveTime = 0L;
             this.step = _step;
             this.dir = 0;
         }
 
-        /* access modifiers changed from: package-private */
-        public float collect(float off, long time, String axis) {
+        float collect(float off, long time, String axis) {
             long normTime;
-            float f = 1.0f;
             if (off > 0.0f) {
-                normTime = (long) (150.0f * off);
+                normTime = 150.0f * off;
                 if (this.dir < 0) {
                     this.position = 0.0f;
                     this.step = 0;
                     this.acceleration = 1.0f;
-                    this.lastMoveTime = 0;
+                    this.lastMoveTime = 0L;
                 }
                 this.dir = 1;
             } else if (off < 0.0f) {
-                normTime = (long) ((-off) * 150.0f);
+                normTime = (-off) * 150.0f;
                 if (this.dir > 0) {
                     this.position = 0.0f;
                     this.step = 0;
                     this.acceleration = 1.0f;
-                    this.lastMoveTime = 0;
+                    this.lastMoveTime = 0L;
                 }
                 this.dir = -1;
             } else {
@@ -6248,78 +5612,74 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
                     if (scale > 1.0f) {
                         acc *= scale;
                     }
-                    float f2 = MAX_ACCELERATION;
+                    float f = MAX_ACCELERATION;
                     if (acc < MAX_ACCELERATION) {
-                        f2 = acc;
+                        f = acc;
                     }
-                    this.acceleration = f2;
+                    this.acceleration = f;
                 } else {
                     float scale2 = ((float) (delta - normTime2)) * ACCEL_MOVE_SCALING_FACTOR;
                     if (scale2 > 1.0f) {
                         acc /= scale2;
                     }
-                    if (acc > 1.0f) {
-                        f = acc;
-                    }
-                    this.acceleration = f;
+                    this.acceleration = acc > 1.0f ? acc : 1.0f;
                 }
             }
             this.position += off;
             return Math.abs(this.position);
         }
 
-        /* access modifiers changed from: package-private */
-        public int generate() {
+        int generate() {
             int movement = 0;
             this.nonAccelMovement = 0;
             while (true) {
-                int dir2 = this.position >= 0.0f ? 1 : -1;
+                int dir = this.position >= 0.0f ? 1 : -1;
                 switch (this.step) {
                     case 0:
-                        if (Math.abs(this.position) >= 0.5f) {
-                            movement += dir2;
-                            this.nonAccelMovement += dir2;
-                            this.step = 1;
-                            break;
-                        } else {
+                        if (Math.abs(this.position) < 0.5f) {
                             return movement;
                         }
+                        movement += dir;
+                        this.nonAccelMovement += dir;
+                        this.step = 1;
+                        break;
                     case 1:
-                        if (Math.abs(this.position) >= SECOND_CUMULATIVE_MOVEMENT_THRESHOLD) {
-                            movement += dir2;
-                            this.nonAccelMovement += dir2;
-                            this.position -= ((float) dir2) * SECOND_CUMULATIVE_MOVEMENT_THRESHOLD;
-                            this.step = 2;
-                            break;
-                        } else {
+                        if (Math.abs(this.position) < SECOND_CUMULATIVE_MOVEMENT_THRESHOLD) {
                             return movement;
                         }
+                        movement += dir;
+                        this.nonAccelMovement += dir;
+                        this.position -= dir * SECOND_CUMULATIVE_MOVEMENT_THRESHOLD;
+                        this.step = 2;
+                        break;
                     default:
-                        if (Math.abs(this.position) >= 1.0f) {
-                            movement += dir2;
-                            this.position -= ((float) dir2) * 1.0f;
-                            float acc = this.acceleration * 1.1f;
-                            this.acceleration = acc < MAX_ACCELERATION ? acc : this.acceleration;
-                            break;
-                        } else {
+                        if (Math.abs(this.position) < 1.0f) {
                             return movement;
                         }
+                        movement += dir;
+                        this.position -= dir * 1.0f;
+                        float acc = this.acceleration * 1.1f;
+                        this.acceleration = acc < MAX_ACCELERATION ? acc : this.acceleration;
+                        break;
                 }
             }
         }
     }
 
+    /* loaded from: classes4.dex */
     final class SyntheticJoystickHandler extends Handler {
         private static final int MSG_ENQUEUE_X_AXIS_KEY_REPEAT = 1;
         private static final int MSG_ENQUEUE_Y_AXIS_KEY_REPEAT = 2;
-        /* access modifiers changed from: private */
-        public final SparseArray<KeyEvent> mDeviceKeyEvents = new SparseArray<>();
-        private final JoystickAxesState mJoystickAxesState = new JoystickAxesState();
+        private final SparseArray<KeyEvent> mDeviceKeyEvents;
+        private final JoystickAxesState mJoystickAxesState;
 
         public SyntheticJoystickHandler() {
             super(true);
+            this.mJoystickAxesState = new JoystickAxesState();
+            this.mDeviceKeyEvents = new SparseArray<>();
         }
 
+        @Override // android.p007os.Handler
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 1:
@@ -6330,7 +5690,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
                         ViewRootImpl.this.enqueueInputEvent(e);
                         Message m = obtainMessage(msg.what, e);
                         m.setAsynchronous(true);
-                        sendMessageDelayed(m, (long) ViewConfiguration.getKeyRepeatDelay());
+                        sendMessageDelayed(m, ViewConfiguration.getKeyRepeatDelay());
                         return;
                     }
                     return;
@@ -6348,13 +5708,13 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
                     cancel();
                     return;
                 default:
-                    String access$1700 = ViewRootImpl.this.mTag;
-                    Log.w(access$1700, "Unexpected action: " + event.getActionMasked());
+                    String str = ViewRootImpl.this.mTag;
+                    Log.m64w(str, "Unexpected action: " + event.getActionMasked());
                     return;
             }
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public void cancel() {
             removeMessages(1);
             removeMessages(2);
@@ -6371,20 +5731,20 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         private void update(MotionEvent event) {
             int historySize = event.getHistorySize();
             for (int h = 0; h < historySize; h++) {
-                MotionEvent motionEvent = event;
-                long historicalEventTime = event.getHistoricalEventTime(h);
-                this.mJoystickAxesState.updateStateForAxis(motionEvent, historicalEventTime, 0, event.getHistoricalAxisValue(0, 0, h));
-                this.mJoystickAxesState.updateStateForAxis(motionEvent, historicalEventTime, 1, event.getHistoricalAxisValue(1, 0, h));
-                this.mJoystickAxesState.updateStateForAxis(motionEvent, historicalEventTime, 15, event.getHistoricalAxisValue(15, 0, h));
-                this.mJoystickAxesState.updateStateForAxis(motionEvent, historicalEventTime, 16, event.getHistoricalAxisValue(16, 0, h));
+                long time = event.getHistoricalEventTime(h);
+                this.mJoystickAxesState.updateStateForAxis(event, time, 0, event.getHistoricalAxisValue(0, 0, h));
+                this.mJoystickAxesState.updateStateForAxis(event, time, 1, event.getHistoricalAxisValue(1, 0, h));
+                this.mJoystickAxesState.updateStateForAxis(event, time, 15, event.getHistoricalAxisValue(15, 0, h));
+                this.mJoystickAxesState.updateStateForAxis(event, time, 16, event.getHistoricalAxisValue(16, 0, h));
             }
-            long time = event.getEventTime();
-            this.mJoystickAxesState.updateStateForAxis(event, time, 0, event.getAxisValue(0));
-            this.mJoystickAxesState.updateStateForAxis(event, time, 1, event.getAxisValue(1));
-            this.mJoystickAxesState.updateStateForAxis(event, time, 15, event.getAxisValue(15));
-            this.mJoystickAxesState.updateStateForAxis(event, time, 16, event.getAxisValue(16));
+            long time2 = event.getEventTime();
+            this.mJoystickAxesState.updateStateForAxis(event, time2, 0, event.getAxisValue(0));
+            this.mJoystickAxesState.updateStateForAxis(event, time2, 1, event.getAxisValue(1));
+            this.mJoystickAxesState.updateStateForAxis(event, time2, 15, event.getAxisValue(15));
+            this.mJoystickAxesState.updateStateForAxis(event, time2, 16, event.getAxisValue(16));
         }
 
+        /* loaded from: classes4.dex */
         final class JoystickAxesState {
             private static final int STATE_DOWN_OR_RIGHT = 1;
             private static final int STATE_NEUTRAL = 0;
@@ -6395,78 +5755,63 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
             JoystickAxesState() {
             }
 
-            /* access modifiers changed from: package-private */
-            public void resetState() {
+            void resetState() {
                 this.mAxisStatesHat[0] = 0;
                 this.mAxisStatesHat[1] = 0;
                 this.mAxisStatesStick[0] = 0;
                 this.mAxisStatesStick[1] = 0;
             }
 
-            /* access modifiers changed from: package-private */
-            public void updateStateForAxis(MotionEvent event, long time, int axis, float value) {
-                int repeatMessage;
+            void updateStateForAxis(MotionEvent event, long time, int axis, float value) {
                 int axisStateIndex;
+                int repeatMessage;
                 int currentState;
-                int i = axis;
-                if (isXAxis(i)) {
+                int keyCode;
+                if (isXAxis(axis)) {
                     axisStateIndex = 0;
                     repeatMessage = 1;
-                } else if (isYAxis(i) != 0) {
+                } else if (!isYAxis(axis)) {
+                    String str = ViewRootImpl.this.mTag;
+                    Log.m70e(str, "Unexpected axis " + axis + " in updateStateForAxis!");
+                    return;
+                } else {
                     axisStateIndex = 1;
                     repeatMessage = 2;
-                } else {
-                    float f = value;
-                    String access$1700 = ViewRootImpl.this.mTag;
-                    Log.e(access$1700, "Unexpected axis " + i + " in updateStateForAxis!");
-                    return;
                 }
                 int newState = joystickAxisValueToState(value);
-                if (i == 0 || i == 1) {
+                if (axis == 0 || axis == 1) {
                     currentState = this.mAxisStatesStick[axisStateIndex];
                 } else {
                     currentState = this.mAxisStatesHat[axisStateIndex];
                 }
-                if (currentState != newState) {
-                    int metaState = event.getMetaState();
-                    int deviceId = event.getDeviceId();
-                    int source = event.getSource();
-                    if (currentState == 1 || currentState == -1) {
-                        int keyCode = joystickAxisAndStateToKeycode(i, currentState);
-                        if (keyCode != 0) {
-                            KeyEvent keyEvent = r8;
-                            int deviceId2 = deviceId;
-                            KeyEvent keyEvent2 = new KeyEvent(time, time, 1, keyCode, 0, metaState, deviceId2, 0, 1024, source);
-                            ViewRootImpl.this.enqueueInputEvent(keyEvent);
-                            deviceId = deviceId2;
-                            SyntheticJoystickHandler.this.mDeviceKeyEvents.put(deviceId, null);
-                        }
-                        SyntheticJoystickHandler.this.removeMessages(repeatMessage);
+                if (currentState == newState) {
+                    return;
+                }
+                int metaState = event.getMetaState();
+                int deviceId = event.getDeviceId();
+                int source = event.getSource();
+                if (currentState == 1 || currentState == -1) {
+                    int keyCode2 = joystickAxisAndStateToKeycode(axis, currentState);
+                    if (keyCode2 != 0) {
+                        ViewRootImpl.this.enqueueInputEvent(new KeyEvent(time, time, 1, keyCode2, 0, metaState, deviceId, 0, 1024, source));
+                        deviceId = deviceId;
+                        SyntheticJoystickHandler.this.mDeviceKeyEvents.put(deviceId, null);
                     }
-                    if (newState == 1 || newState == -1) {
-                        int keyCode2 = joystickAxisAndStateToKeycode(i, newState);
-                        if (keyCode2 != 0) {
-                            int deviceId3 = deviceId;
-                            int i2 = source;
-                            KeyEvent keyEvent3 = new KeyEvent(time, time, 0, keyCode2, 0, metaState, deviceId3, 0, 1024, i2);
-                            ViewRootImpl.this.enqueueInputEvent(keyEvent3);
-                            Message m = SyntheticJoystickHandler.this.obtainMessage(repeatMessage, keyEvent3);
-                            m.setAsynchronous(true);
-                            SyntheticJoystickHandler.this.sendMessageDelayed(m, (long) ViewConfiguration.getKeyRepeatTimeout());
-                            KeyEvent keyEvent4 = r8;
-                            Message message = m;
-                            KeyEvent keyEvent5 = keyEvent3;
-                            KeyEvent keyEvent6 = new KeyEvent(time, time, 1, keyCode2, 0, metaState, deviceId3, 0, 1056, i2);
-                            SyntheticJoystickHandler.this.mDeviceKeyEvents.put(deviceId3, keyEvent4);
-                        }
-                    } else {
-                        int i3 = deviceId;
-                    }
-                    if (i == 0 || i == 1) {
-                        this.mAxisStatesStick[axisStateIndex] = newState;
-                    } else {
-                        this.mAxisStatesHat[axisStateIndex] = newState;
-                    }
+                    SyntheticJoystickHandler.this.removeMessages(repeatMessage);
+                }
+                if ((newState == 1 || newState == -1) && (keyCode = joystickAxisAndStateToKeycode(axis, newState)) != 0) {
+                    int deviceId2 = deviceId;
+                    KeyEvent keyEvent = new KeyEvent(time, time, 0, keyCode, 0, metaState, deviceId2, 0, 1024, source);
+                    ViewRootImpl.this.enqueueInputEvent(keyEvent);
+                    Message m = SyntheticJoystickHandler.this.obtainMessage(repeatMessage, keyEvent);
+                    m.setAsynchronous(true);
+                    SyntheticJoystickHandler.this.sendMessageDelayed(m, ViewConfiguration.getKeyRepeatTimeout());
+                    SyntheticJoystickHandler.this.mDeviceKeyEvents.put(deviceId2, new KeyEvent(time, time, 1, keyCode, 0, metaState, deviceId2, 0, 1056, source));
+                }
+                if (axis == 0 || axis == 1) {
+                    this.mAxisStatesStick[axisStateIndex] = newState;
+                } else {
+                    this.mAxisStatesHat[axisStateIndex] = newState;
                 }
             }
 
@@ -6488,12 +5833,12 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
                 if (isYAxis(axis) && state == -1) {
                     return 19;
                 }
-                if (isYAxis(axis) && state == 1) {
-                    return 20;
+                if (!isYAxis(axis) || state != 1) {
+                    String str = ViewRootImpl.this.mTag;
+                    Log.m70e(str, "Unknown axis " + axis + " or direction " + state);
+                    return 0;
                 }
-                String access$1700 = ViewRootImpl.this.mTag;
-                Log.e(access$1700, "Unknown axis " + axis + " or direction " + state);
-                return 0;
+                return 20;
             }
 
             private int joystickAxisValueToState(float value) {
@@ -6508,6 +5853,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         }
     }
 
+    /* loaded from: classes4.dex */
     final class SyntheticTouchNavigationHandler extends Handler {
         private static final float DEFAULT_HEIGHT_MILLIMETERS = 48.0f;
         private static final float DEFAULT_WIDTH_MILLIMETERS = 48.0f;
@@ -6519,35 +5865,22 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         private static final int TICK_DISTANCE_MILLIMETERS = 12;
         private float mAccumulatedX;
         private float mAccumulatedY;
-        private int mActivePointerId = -1;
+        private int mActivePointerId;
         private float mConfigMaxFlingVelocity;
         private float mConfigMinFlingVelocity;
         private float mConfigTickDistance;
         private boolean mConsumedMovement;
-        private int mCurrentDeviceId = -1;
+        private int mCurrentDeviceId;
         private boolean mCurrentDeviceSupported;
         private int mCurrentSource;
-        private final Runnable mFlingRunnable = new Runnable() {
-            public void run() {
-                long time = SystemClock.uptimeMillis();
-                SyntheticTouchNavigationHandler.this.sendKeyDownOrRepeat(time, SyntheticTouchNavigationHandler.this.mPendingKeyCode, SyntheticTouchNavigationHandler.this.mPendingKeyMetaState);
-                SyntheticTouchNavigationHandler.access$3132(SyntheticTouchNavigationHandler.this, SyntheticTouchNavigationHandler.FLING_TICK_DECAY);
-                if (!SyntheticTouchNavigationHandler.this.postFling(time)) {
-                    boolean unused = SyntheticTouchNavigationHandler.this.mFlinging = false;
-                    SyntheticTouchNavigationHandler.this.finishKeys(time);
-                }
-            }
-        };
+        private final Runnable mFlingRunnable;
         private float mFlingVelocity;
-        /* access modifiers changed from: private */
-        public boolean mFlinging;
+        private boolean mFlinging;
         private float mLastX;
         private float mLastY;
-        /* access modifiers changed from: private */
-        public int mPendingKeyCode = 0;
+        private int mPendingKeyCode;
         private long mPendingKeyDownTime;
-        /* access modifiers changed from: private */
-        public int mPendingKeyMetaState;
+        private int mPendingKeyMetaState;
         private int mPendingKeyRepeatCount;
         private float mStartX;
         private float mStartY;
@@ -6561,14 +5894,28 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
 
         public SyntheticTouchNavigationHandler() {
             super(true);
+            this.mCurrentDeviceId = -1;
+            this.mActivePointerId = -1;
+            this.mPendingKeyCode = 0;
+            this.mFlingRunnable = new Runnable() { // from class: android.view.ViewRootImpl.SyntheticTouchNavigationHandler.1
+                @Override // java.lang.Runnable
+                public void run() {
+                    long time = SystemClock.uptimeMillis();
+                    SyntheticTouchNavigationHandler.this.sendKeyDownOrRepeat(time, SyntheticTouchNavigationHandler.this.mPendingKeyCode, SyntheticTouchNavigationHandler.this.mPendingKeyMetaState);
+                    SyntheticTouchNavigationHandler.access$3132(SyntheticTouchNavigationHandler.this, SyntheticTouchNavigationHandler.FLING_TICK_DECAY);
+                    if (!SyntheticTouchNavigationHandler.this.postFling(time)) {
+                        SyntheticTouchNavigationHandler.this.mFlinging = false;
+                        SyntheticTouchNavigationHandler.this.finishKeys(time);
+                    }
+                }
+            };
         }
 
         public void process(MotionEvent event) {
-            MotionEvent motionEvent = event;
             long time = event.getEventTime();
             int deviceId = event.getDeviceId();
             int source = event.getSource();
-            if (!(this.mCurrentDeviceId == deviceId && this.mCurrentSource == source)) {
+            if (this.mCurrentDeviceId != deviceId || this.mCurrentSource != source) {
                 finishKeys(time);
                 finishTracking(time);
                 this.mCurrentDeviceId = deviceId;
@@ -6578,7 +5925,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
                 if (device != null) {
                     InputDevice.MotionRange xRange = device.getMotionRange(0);
                     InputDevice.MotionRange yRange = device.getMotionRange(1);
-                    if (!(xRange == null || yRange == null)) {
+                    if (xRange != null && yRange != null) {
                         this.mCurrentDeviceSupported = true;
                         float xRes = xRange.getResolution();
                         if (xRes <= 0.0f) {
@@ -6588,67 +5935,72 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
                         if (yRes <= 0.0f) {
                             yRes = yRange.getRange() / 48.0f;
                         }
-                        this.mConfigTickDistance = 12.0f * (xRes + yRes) * 0.5f;
+                        float nominalRes = (xRes + yRes) * 0.5f;
+                        this.mConfigTickDistance = 12.0f * nominalRes;
                         this.mConfigMinFlingVelocity = this.mConfigTickDistance * 6.0f;
                         this.mConfigMaxFlingVelocity = this.mConfigTickDistance * MAX_FLING_VELOCITY_TICKS_PER_SECOND;
                     }
                 }
             }
-            if (this.mCurrentDeviceSupported) {
-                int action = event.getActionMasked();
-                switch (action) {
-                    case 0:
-                        boolean caughtFling = this.mFlinging;
-                        finishKeys(time);
-                        finishTracking(time);
-                        this.mActivePointerId = motionEvent.getPointerId(0);
-                        this.mVelocityTracker = VelocityTracker.obtain();
-                        this.mVelocityTracker.addMovement(motionEvent);
-                        this.mStartX = event.getX();
-                        this.mStartY = event.getY();
-                        this.mLastX = this.mStartX;
-                        this.mLastY = this.mStartY;
-                        this.mAccumulatedX = 0.0f;
-                        this.mAccumulatedY = 0.0f;
-                        this.mConsumedMovement = caughtFling;
-                        return;
-                    case 1:
-                    case 2:
-                        if (this.mActivePointerId >= 0) {
-                            int index = motionEvent.findPointerIndex(this.mActivePointerId);
-                            if (index < 0) {
-                                finishKeys(time);
-                                finishTracking(time);
-                                return;
-                            }
-                            this.mVelocityTracker.addMovement(motionEvent);
-                            float x = motionEvent.getX(index);
-                            float y = motionEvent.getY(index);
-                            this.mAccumulatedX += x - this.mLastX;
-                            this.mAccumulatedY += y - this.mLastY;
-                            this.mLastX = x;
-                            this.mLastY = y;
-                            consumeAccumulatedMovement(time, event.getMetaState());
-                            if (action == 1) {
-                                if (this.mConsumedMovement && this.mPendingKeyCode != 0) {
-                                    this.mVelocityTracker.computeCurrentVelocity(1000, this.mConfigMaxFlingVelocity);
-                                    if (!startFling(time, this.mVelocityTracker.getXVelocity(this.mActivePointerId), this.mVelocityTracker.getYVelocity(this.mActivePointerId))) {
-                                        finishKeys(time);
-                                    }
+            if (!this.mCurrentDeviceSupported) {
+                return;
+            }
+            int action = event.getActionMasked();
+            switch (action) {
+                case 0:
+                    boolean caughtFling = this.mFlinging;
+                    finishKeys(time);
+                    finishTracking(time);
+                    this.mActivePointerId = event.getPointerId(0);
+                    this.mVelocityTracker = VelocityTracker.obtain();
+                    this.mVelocityTracker.addMovement(event);
+                    this.mStartX = event.getX();
+                    this.mStartY = event.getY();
+                    this.mLastX = this.mStartX;
+                    this.mLastY = this.mStartY;
+                    this.mAccumulatedX = 0.0f;
+                    this.mAccumulatedY = 0.0f;
+                    this.mConsumedMovement = caughtFling;
+                    return;
+                case 1:
+                case 2:
+                    if (this.mActivePointerId >= 0) {
+                        int index = event.findPointerIndex(this.mActivePointerId);
+                        if (index < 0) {
+                            finishKeys(time);
+                            finishTracking(time);
+                            return;
+                        }
+                        this.mVelocityTracker.addMovement(event);
+                        float x = event.getX(index);
+                        float y = event.getY(index);
+                        this.mAccumulatedX += x - this.mLastX;
+                        this.mAccumulatedY += y - this.mLastY;
+                        this.mLastX = x;
+                        this.mLastY = y;
+                        int metaState = event.getMetaState();
+                        consumeAccumulatedMovement(time, metaState);
+                        if (action == 1) {
+                            if (this.mConsumedMovement && this.mPendingKeyCode != 0) {
+                                this.mVelocityTracker.computeCurrentVelocity(1000, this.mConfigMaxFlingVelocity);
+                                float vx = this.mVelocityTracker.getXVelocity(this.mActivePointerId);
+                                float vy = this.mVelocityTracker.getYVelocity(this.mActivePointerId);
+                                if (!startFling(time, vx, vy)) {
+                                    finishKeys(time);
                                 }
-                                finishTracking(time);
-                                return;
                             }
+                            finishTracking(time);
                             return;
                         }
                         return;
-                    case 3:
-                        finishKeys(time);
-                        finishTracking(time);
-                        return;
-                    default:
-                        return;
-                }
+                    }
+                    return;
+                case 3:
+                    finishKeys(time);
+                    finishTracking(time);
+                    return;
+                default:
+                    return;
             }
         }
 
@@ -6660,7 +6012,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
             }
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public void finishKeys(long time) {
             cancelFling();
             sendKeyUp(time);
@@ -6702,23 +6054,18 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
             return accumulator;
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public void sendKeyDownOrRepeat(long time, int keyCode, int metaState) {
-            int i = keyCode;
-            if (this.mPendingKeyCode != i) {
+            if (this.mPendingKeyCode == keyCode) {
+                this.mPendingKeyRepeatCount++;
+            } else {
                 sendKeyUp(time);
                 this.mPendingKeyDownTime = time;
-                this.mPendingKeyCode = i;
+                this.mPendingKeyCode = keyCode;
                 this.mPendingKeyRepeatCount = 0;
-            } else {
-                long j = time;
-                this.mPendingKeyRepeatCount++;
             }
             this.mPendingKeyMetaState = metaState;
-            ViewRootImpl viewRootImpl = ViewRootImpl.this;
-            KeyEvent keyEvent = r3;
-            KeyEvent keyEvent2 = new KeyEvent(this.mPendingKeyDownTime, time, 0, this.mPendingKeyCode, this.mPendingKeyRepeatCount, this.mPendingKeyMetaState, this.mCurrentDeviceId, 1024, this.mCurrentSource);
-            viewRootImpl.enqueueInputEvent(keyEvent);
+            ViewRootImpl.this.enqueueInputEvent(new KeyEvent(this.mPendingKeyDownTime, time, 0, this.mPendingKeyCode, this.mPendingKeyRepeatCount, this.mPendingKeyMetaState, this.mCurrentDeviceId, 1024, this.mCurrentSource));
         }
 
         private void sendKeyUp(long time) {
@@ -6728,124 +6075,63 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
             }
         }
 
-        /* JADX WARNING: Code restructure failed: missing block: B:16:0x0038, code lost:
-            if (r7 < r3.mConfigMinFlingVelocity) goto L_0x0047;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:18:0x0042, code lost:
-            if (java.lang.Math.abs(r6) >= r3.mConfigMinFlingVelocity) goto L_0x0047;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:19:0x0044, code lost:
-            r3.mFlingVelocity = r7;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:20:0x0047, code lost:
-            return false;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:22:0x004d, code lost:
-            if ((-r7) < r3.mConfigMinFlingVelocity) goto L_0x0066;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:24:0x0057, code lost:
-            if (java.lang.Math.abs(r6) >= r3.mConfigMinFlingVelocity) goto L_0x0066;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:25:0x0059, code lost:
-            r3.mFlingVelocity = -r7;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:26:0x005d, code lost:
-            r3.mFlinging = postFling(r4);
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:27:0x0065, code lost:
-            return r3.mFlinging;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:28:0x0066, code lost:
-            return false;
-         */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        private boolean startFling(long r4, float r6, float r7) {
-            /*
-                r3 = this;
-                int r0 = r3.mPendingKeyCode
-                r1 = 0
-                switch(r0) {
-                    case 19: goto L_0x0048;
-                    case 20: goto L_0x0034;
-                    case 21: goto L_0x001e;
-                    case 22: goto L_0x000a;
-                    default: goto L_0x0006;
-                }
-            L_0x0006:
-                switch(r0) {
-                    case 691: goto L_0x0048;
-                    case 692: goto L_0x0034;
-                    default: goto L_0x0009;
-                }
-            L_0x0009:
-                goto L_0x005d
-            L_0x000a:
-                float r0 = r3.mConfigMinFlingVelocity
-                int r0 = (r6 > r0 ? 1 : (r6 == r0 ? 0 : -1))
-                if (r0 < 0) goto L_0x001d
-                float r0 = java.lang.Math.abs(r7)
-                float r2 = r3.mConfigMinFlingVelocity
-                int r0 = (r0 > r2 ? 1 : (r0 == r2 ? 0 : -1))
-                if (r0 >= 0) goto L_0x001d
-                r3.mFlingVelocity = r6
-                goto L_0x005d
-            L_0x001d:
-                return r1
-            L_0x001e:
-                float r0 = -r6
-                float r2 = r3.mConfigMinFlingVelocity
-                int r0 = (r0 > r2 ? 1 : (r0 == r2 ? 0 : -1))
-                if (r0 < 0) goto L_0x0033
-                float r0 = java.lang.Math.abs(r7)
-                float r2 = r3.mConfigMinFlingVelocity
-                int r0 = (r0 > r2 ? 1 : (r0 == r2 ? 0 : -1))
-                if (r0 >= 0) goto L_0x0033
-                float r0 = -r6
-                r3.mFlingVelocity = r0
-                goto L_0x005d
-            L_0x0033:
-                return r1
-            L_0x0034:
-                float r0 = r3.mConfigMinFlingVelocity
-                int r0 = (r7 > r0 ? 1 : (r7 == r0 ? 0 : -1))
-                if (r0 < 0) goto L_0x0047
-                float r0 = java.lang.Math.abs(r6)
-                float r2 = r3.mConfigMinFlingVelocity
-                int r0 = (r0 > r2 ? 1 : (r0 == r2 ? 0 : -1))
-                if (r0 >= 0) goto L_0x0047
-                r3.mFlingVelocity = r7
-                goto L_0x005d
-            L_0x0047:
-                return r1
-            L_0x0048:
-                float r0 = -r7
-                float r2 = r3.mConfigMinFlingVelocity
-                int r0 = (r0 > r2 ? 1 : (r0 == r2 ? 0 : -1))
-                if (r0 < 0) goto L_0x0066
-                float r0 = java.lang.Math.abs(r6)
-                float r2 = r3.mConfigMinFlingVelocity
-                int r0 = (r0 > r2 ? 1 : (r0 == r2 ? 0 : -1))
-                if (r0 >= 0) goto L_0x0066
-                float r0 = -r7
-                r3.mFlingVelocity = r0
-            L_0x005d:
-                boolean r0 = r3.postFling(r4)
-                r3.mFlinging = r0
-                boolean r0 = r3.mFlinging
-                return r0
-            L_0x0066:
-                return r1
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.view.ViewRootImpl.SyntheticTouchNavigationHandler.startFling(long, float, float):boolean");
+        /* JADX WARN: Removed duplicated region for block: B:18:0x0034  */
+        /* JADX WARN: Removed duplicated region for block: B:24:0x0048  */
+        /*
+            Code decompiled incorrectly, please refer to instructions dump.
+        */
+        private boolean startFling(long time, float vx, float vy) {
+            int i = this.mPendingKeyCode;
+            switch (i) {
+                case 19:
+                    if ((-vy) < this.mConfigMinFlingVelocity || Math.abs(vx) >= this.mConfigMinFlingVelocity) {
+                        return false;
+                    }
+                    this.mFlingVelocity = -vy;
+                    this.mFlinging = postFling(time);
+                    return this.mFlinging;
+                case 20:
+                    if (vy < this.mConfigMinFlingVelocity || Math.abs(vx) >= this.mConfigMinFlingVelocity) {
+                        return false;
+                    }
+                    this.mFlingVelocity = vy;
+                    this.mFlinging = postFling(time);
+                    return this.mFlinging;
+                case 21:
+                    if ((-vx) < this.mConfigMinFlingVelocity || Math.abs(vy) >= this.mConfigMinFlingVelocity) {
+                        return false;
+                    }
+                    this.mFlingVelocity = -vx;
+                    this.mFlinging = postFling(time);
+                    return this.mFlinging;
+                case 22:
+                    if (vx < this.mConfigMinFlingVelocity || Math.abs(vy) >= this.mConfigMinFlingVelocity) {
+                        return false;
+                    }
+                    this.mFlingVelocity = vx;
+                    this.mFlinging = postFling(time);
+                    return this.mFlinging;
+                default:
+                    switch (i) {
+                        case 691:
+                            break;
+                        case 692:
+                            break;
+                        default:
+                            this.mFlinging = postFling(time);
+                            return this.mFlinging;
+                    }
+            }
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public boolean postFling(long time) {
-            if (this.mFlingVelocity < this.mConfigMinFlingVelocity) {
-                return false;
+            if (this.mFlingVelocity >= this.mConfigMinFlingVelocity) {
+                long delay = (this.mConfigTickDistance / this.mFlingVelocity) * 1000.0f;
+                postAtTime(this.mFlingRunnable, time + delay);
+                return true;
             }
-            postAtTime(this.mFlingRunnable, time + ((long) ((this.mConfigTickDistance / this.mFlingVelocity) * 1000.0f)));
-            return true;
+            return false;
         }
 
         private void cancelFling() {
@@ -6856,19 +6142,24 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         }
     }
 
+    /* loaded from: classes4.dex */
     final class SyntheticKeyboardHandler {
         SyntheticKeyboardHandler() {
         }
 
         public void process(KeyEvent event) {
-            if ((event.getFlags() & 1024) == 0) {
-                KeyCharacterMap.FallbackAction fallbackAction = event.getKeyCharacterMap().getFallbackAction(event.getKeyCode(), event.getMetaState());
-                if (fallbackAction != null) {
-                    KeyEvent fallbackEvent = KeyEvent.obtain(event.getDownTime(), event.getEventTime(), event.getAction(), fallbackAction.keyCode, event.getRepeatCount(), fallbackAction.metaState, event.getDeviceId(), event.getScanCode(), event.getFlags() | 1024, event.getSource(), (String) null);
-                    fallbackAction.recycle();
-                    ViewRootImpl.this.enqueueInputEvent(fallbackEvent);
-                    return;
-                }
+            if ((event.getFlags() & 1024) != 0) {
+                return;
+            }
+            KeyCharacterMap kcm = event.getKeyCharacterMap();
+            int keyCode = event.getKeyCode();
+            int metaState = event.getMetaState();
+            KeyCharacterMap.FallbackAction fallbackAction = kcm.getFallbackAction(keyCode, metaState);
+            if (fallbackAction != null) {
+                int flags = event.getFlags() | 1024;
+                KeyEvent fallbackEvent = KeyEvent.obtain(event.getDownTime(), event.getEventTime(), event.getAction(), fallbackAction.keyCode, event.getRepeatCount(), fallbackAction.metaState, event.getDeviceId(), event.getScanCode(), flags, event.getSource(), null);
+                fallbackAction.recycle();
+                ViewRootImpl.this.enqueueInputEvent(fallbackEvent);
             }
         }
     }
@@ -6899,32 +6190,31 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         return keyEvent.getUnicodeChar() > 0;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public boolean checkForLeavingTouchModeAndConsume(KeyEvent event) {
-        if (!this.mAttachInfo.mInTouchMode) {
+        if (this.mAttachInfo.mInTouchMode) {
+            int action = event.getAction();
+            if ((action == 0 || action == 2) && (event.getFlags() & 4) == 0) {
+                if (isNavigationKey(event)) {
+                    return ensureTouchMode(false);
+                }
+                if (isTypingKey(event)) {
+                    ensureTouchMode(false);
+                    return false;
+                }
+                return false;
+            }
             return false;
         }
-        int action = event.getAction();
-        if ((action != 0 && action != 2) || (event.getFlags() & 4) != 0) {
-            return false;
-        }
-        if (isNavigationKey(event)) {
-            return ensureTouchMode(false);
-        }
-        if (!isTypingKey(event)) {
-            return false;
-        }
-        ensureTouchMode(false);
         return false;
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void setLocalDragState(Object obj) {
+    void setLocalDragState(Object obj) {
         this.mLocalDragState = obj;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void handleDragEvent(DragEvent event) {
         if (this.mView != null && this.mAdded) {
             int what = event.mAction;
@@ -6941,18 +6231,18 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
                 if (View.sCascadedDragDrop) {
                     this.mView.dispatchDragEnterExitInPreN(event);
                 }
-                setDragFocus((View) null, event);
+                setDragFocus(null, event);
             } else {
                 if (what == 2 || what == 3) {
-                    this.mDragPoint.set(event.mX, event.mY);
+                    this.mDragPoint.set(event.f2398mX, event.f2399mY);
                     if (this.mTranslator != null) {
                         this.mTranslator.translatePointInScreenToAppWindow(this.mDragPoint);
                     }
                     if (this.mCurScrollY != 0) {
-                        this.mDragPoint.offset(0.0f, (float) this.mCurScrollY);
+                        this.mDragPoint.offset(0.0f, this.mCurScrollY);
                     }
-                    event.mX = this.mDragPoint.x;
-                    event.mY = this.mDragPoint.y;
+                    event.f2398mX = this.mDragPoint.f61x;
+                    event.f2399mY = this.mDragPoint.f62y;
                 }
                 View prevDragView = this.mCurrentDragView;
                 if (what == 3 && event.mClipData != null) {
@@ -6960,14 +6250,14 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
                 }
                 boolean result = this.mView.dispatchDragEvent(event);
                 if (what == 2 && !event.mEventHandlerWasCalled) {
-                    setDragFocus((View) null, event);
+                    setDragFocus(null, event);
                 }
                 if (prevDragView != this.mCurrentDragView) {
                     if (prevDragView != null) {
                         try {
                             this.mWindowSession.dragRecipientExited(this.mWindow);
                         } catch (RemoteException e) {
-                            Slog.e(this.mTag, "Unable to note drag target change");
+                            Slog.m56e(this.mTag, "Unable to note drag target change");
                         }
                     }
                     if (this.mCurrentDragView != null) {
@@ -6977,15 +6267,15 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
                 if (what == 3) {
                     try {
                         String str = this.mTag;
-                        Log.i(str, "Reporting drop result: " + result);
+                        Log.m68i(str, "Reporting drop result: " + result);
                         this.mWindowSession.reportDropResult(this.mWindow, result);
                     } catch (RemoteException e2) {
-                        Log.e(this.mTag, "Unable to report drop result");
+                        Log.m70e(this.mTag, "Unable to report drop result");
                     }
                 }
                 if (what == 4) {
                     this.mCurrentDragView = null;
-                    setLocalDragState((Object) null);
+                    setLocalDragState(null);
                     this.mAttachInfo.mDragToken = null;
                     if (this.mAttachInfo.mDragSurface != null) {
                         this.mAttachInfo.mDragSurface.release();
@@ -7003,15 +6293,16 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
             this.mAttachInfo.mForceReportNewAttributes = true;
             scheduleTraversals();
         }
-        if (this.mView != null) {
-            if (args.localChanges != 0) {
-                this.mView.updateLocalSystemUiVisibility(args.localValue, args.localChanges);
-            }
-            int visibility = args.globalVisibility & 7;
-            if (visibility != this.mAttachInfo.mGlobalSystemUiVisibility) {
-                this.mAttachInfo.mGlobalSystemUiVisibility = visibility;
-                this.mView.dispatchSystemUiVisibilityChanged(visibility);
-            }
+        if (this.mView == null) {
+            return;
+        }
+        if (args.localChanges != 0) {
+            this.mView.updateLocalSystemUiVisibility(args.localValue, args.localChanges);
+        }
+        int visibility = args.globalVisibility & 7;
+        if (visibility != this.mAttachInfo.mGlobalSystemUiVisibility) {
+            this.mAttachInfo.mGlobalSystemUiVisibility = visibility;
+            this.mView.dispatchSystemUiVisibilityChanged(visibility);
         }
     }
 
@@ -7038,8 +6329,8 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
 
     @UnsupportedAppUsage
     public void getLastTouchPoint(Point outLocation) {
-        outLocation.x = (int) this.mLastTouchPoint.x;
-        outLocation.y = (int) this.mLastTouchPoint.y;
+        outLocation.f59x = (int) this.mLastTouchPoint.f61x;
+        outLocation.f60y = (int) this.mLastTouchPoint.f62y;
     }
 
     public int getLastTouchSource() {
@@ -7048,12 +6339,12 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
 
     public void setDragFocus(View newDragTarget, DragEvent event) {
         if (this.mCurrentDragView != newDragTarget && !View.sCascadedDragDrop) {
-            float tx = event.mX;
-            float ty = event.mY;
+            float tx = event.f2398mX;
+            float ty = event.f2399mY;
             int action = event.mAction;
             ClipData td = event.mClipData;
-            event.mX = 0.0f;
-            event.mY = 0.0f;
+            event.f2398mX = 0.0f;
+            event.f2399mY = 0.0f;
             event.mClipData = null;
             if (this.mCurrentDragView != null) {
                 event.mAction = 6;
@@ -7064,36 +6355,36 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
                 newDragTarget.callDragEventHandler(event);
             }
             event.mAction = action;
-            event.mX = tx;
-            event.mY = ty;
+            event.f2398mX = tx;
+            event.f2399mY = ty;
             event.mClipData = td;
         }
         this.mCurrentDragView = newDragTarget;
     }
 
     private AudioManager getAudioManager() {
-        if (this.mView != null) {
-            if (this.mAudioManager == null) {
-                this.mAudioManager = (AudioManager) this.mView.getContext().getSystemService("audio");
-            }
-            return this.mAudioManager;
+        if (this.mView == null) {
+            throw new IllegalStateException("getAudioManager called when there is no mView");
         }
-        throw new IllegalStateException("getAudioManager called when there is no mView");
+        if (this.mAudioManager == null) {
+            this.mAudioManager = (AudioManager) this.mView.getContext().getSystemService("audio");
+        }
+        return this.mAudioManager;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public AutofillManager getAutofillManager() {
-        if (!(this.mView instanceof ViewGroup)) {
+        if (this.mView instanceof ViewGroup) {
+            ViewGroup decorView = (ViewGroup) this.mView;
+            if (decorView.getChildCount() > 0) {
+                return (AutofillManager) decorView.getChildAt(0).getContext().getSystemService(AutofillManager.class);
+            }
             return null;
-        }
-        ViewGroup decorView = (ViewGroup) this.mView;
-        if (decorView.getChildCount() > 0) {
-            return (AutofillManager) decorView.getChildAt(0).getContext().getSystemService(AutofillManager.class);
         }
         return null;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public boolean isAutofillUiShowing() {
         AutofillManager afm = getAutofillManager();
         if (afm == null) {
@@ -7103,37 +6394,34 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
     }
 
     public AccessibilityInteractionController getAccessibilityInteractionController() {
-        if (this.mView != null) {
-            if (this.mAccessibilityInteractionController == null) {
-                this.mAccessibilityInteractionController = new AccessibilityInteractionController(this);
-            }
-            return this.mAccessibilityInteractionController;
+        if (this.mView == null) {
+            throw new IllegalStateException("getAccessibilityInteractionController called when there is no mView");
         }
-        throw new IllegalStateException("getAccessibilityInteractionController called when there is no mView");
+        if (this.mAccessibilityInteractionController == null) {
+            this.mAccessibilityInteractionController = new AccessibilityInteractionController(this);
+        }
+        return this.mAccessibilityInteractionController;
     }
 
     private int relayoutWindow(WindowManager.LayoutParams params, int viewVisibility, boolean insetsPending) throws RemoteException {
-        WindowManager.LayoutParams layoutParams = params;
         float appScale = this.mAttachInfo.mApplicationScale;
         boolean restore = false;
-        if (!(layoutParams == null || this.mTranslator == null)) {
+        if (params != null && this.mTranslator != null) {
             restore = true;
             params.backup();
-            this.mTranslator.translateWindowLayout(layoutParams);
+            this.mTranslator.translateWindowLayout(params);
         }
         boolean restore2 = restore;
-        if (!(layoutParams == null || this.mOrigWindowType == layoutParams.type || this.mTargetSdkVersion >= 14)) {
+        if (params != null && this.mOrigWindowType != params.type && this.mTargetSdkVersion < 14) {
             String str = this.mTag;
-            Slog.w(str, "Window type can not be changed after the window is added; ignoring change of " + this.mView);
-            layoutParams.type = this.mOrigWindowType;
+            Slog.m50w(str, "Window type can not be changed after the window is added; ignoring change of " + this.mView);
+            params.type = this.mOrigWindowType;
         }
         long frameNumber = -1;
         if (this.mSurface.isValid()) {
             frameNumber = this.mSurface.getNextFrameNumber();
         }
-        long frameNumber2 = frameNumber;
-        float f = appScale;
-        int relayoutResult = this.mWindowSession.relayout(this.mWindow, this.mSeq, params, (int) ((((float) this.mView.getMeasuredWidth()) * appScale) + 0.5f), (int) ((((float) this.mView.getMeasuredHeight()) * appScale) + 0.5f), viewVisibility, insetsPending ? 1 : 0, frameNumber2, this.mTmpFrame, this.mPendingOverscanInsets, this.mPendingContentInsets, this.mPendingVisibleInsets, this.mPendingStableInsets, this.mPendingOutsets, this.mPendingBackDropFrame, this.mPendingDisplayCutout, this.mPendingMergedConfiguration, this.mSurfaceControl, this.mTempInsets);
+        int relayoutResult = this.mWindowSession.relayout(this.mWindow, this.mSeq, params, (int) ((this.mView.getMeasuredWidth() * appScale) + 0.5f), (int) ((this.mView.getMeasuredHeight() * appScale) + 0.5f), viewVisibility, insetsPending ? 1 : 0, frameNumber, this.mTmpFrame, this.mPendingOverscanInsets, this.mPendingContentInsets, this.mPendingVisibleInsets, this.mPendingStableInsets, this.mPendingOutsets, this.mPendingBackDropFrame, this.mPendingDisplayCutout, this.mPendingMergedConfiguration, this.mSurfaceControl, this.mTempInsets);
         if (this.mSurfaceControl.isValid()) {
             this.mSurface.copyFrom(this.mSurfaceControl);
         } else {
@@ -7155,12 +6443,13 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         return relayoutResult;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void setFrame(Rect frame) {
         this.mWinFrame.set(frame);
         this.mInsetsController.onFrameChanged(frame);
     }
 
+    @Override // android.view.View.AttachInfo.Callbacks
     public void playSoundEffect(int effectId) {
         checkThread();
         try {
@@ -7186,11 +6475,12 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
             }
         } catch (IllegalStateException e) {
             String str = this.mTag;
-            Log.e(str, "FATAL EXCEPTION when attempting to play sound effect: " + e);
+            Log.m70e(str, "FATAL EXCEPTION when attempting to play sound effect: " + e);
             e.printStackTrace();
         }
     }
 
+    @Override // android.view.View.AttachInfo.Callbacks
     public boolean performHapticFeedback(int effectId, boolean always) {
         try {
             return this.mWindowSession.performHapticFeedback(effectId, always);
@@ -7199,6 +6489,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         }
     }
 
+    @Override // android.view.ViewParent
     public View focusSearch(View focused, int direction) {
         checkThread();
         if (!(this.mView instanceof ViewGroup)) {
@@ -7207,6 +6498,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         return FocusFinder.getInstance().findNextFocus((ViewGroup) this.mView, focused, direction);
     }
 
+    @Override // android.view.ViewParent
     public View keyboardNavigationClusterSearch(View currentCluster, int direction) {
         checkThread();
         return FocusFinder.getInstance().findNextKeyboardNavigationCluster(this.mView, currentCluster, direction);
@@ -7267,11 +6559,12 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
             return;
         }
         writer.println(view.toString());
-        if ((view instanceof ViewGroup) && (N = grp.getChildCount()) > 0) {
-            String prefix2 = prefix + "  ";
-            for (int i = 0; i < N; i++) {
-                dumpViewHierarchy(prefix2, writer, (grp = (ViewGroup) view).getChildAt(i));
-            }
+        if (!(view instanceof ViewGroup) || (N = (grp = (ViewGroup) view).getChildCount()) <= 0) {
+            return;
+        }
+        String prefix2 = prefix + "  ";
+        for (int i = 0; i < N; i++) {
+            dumpViewHierarchy(prefix2, writer, grp.getChildAt(i));
         }
     }
 
@@ -7298,64 +6591,65 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean die(boolean immediate) {
-        if (!immediate || this.mIsInTraversal) {
-            if (!this.mIsDrawing) {
-                destroyHardwareRenderer();
-            } else {
-                String str = this.mTag;
-                Log.e(str, "Attempting to destroy the window while drawing!\n  window=" + this + ", title=" + this.mWindowAttributes.getTitle());
-            }
-            this.mHandler.sendEmptyMessage(3);
-            return true;
+    boolean die(boolean immediate) {
+        if (immediate && !this.mIsInTraversal) {
+            doDie();
+            return false;
         }
-        doDie();
-        return false;
+        if (!this.mIsDrawing) {
+            destroyHardwareRenderer();
+        } else {
+            String str = this.mTag;
+            Log.m70e(str, "Attempting to destroy the window while drawing!\n  window=" + this + ", title=" + ((Object) this.mWindowAttributes.getTitle()));
+        }
+        this.mHandler.sendEmptyMessage(3);
+        return true;
     }
 
-    /* access modifiers changed from: package-private */
-    public void doDie() {
+    void doDie() {
         checkThread();
         synchronized (this) {
-            if (!this.mRemoved) {
-                boolean viewVisibilityChanged = true;
-                this.mRemoved = true;
-                if (this.mAdded) {
-                    dispatchDetachedFromWindow();
-                }
-                if (this.mAdded && !this.mFirst) {
-                    destroyHardwareRenderer();
-                    if (this.mView != null) {
-                        int viewVisibility = this.mView.getVisibility();
-                        if (this.mViewVisibility == viewVisibility) {
-                            viewVisibilityChanged = false;
-                        }
-                        if (this.mWindowAttributesChanged || viewVisibilityChanged) {
-                            try {
-                                if ((relayoutWindow(this.mWindowAttributes, viewVisibility, false) & 2) != 0) {
-                                    this.mWindowSession.finishDrawing(this.mWindow);
-                                }
-                            } catch (RemoteException e) {
-                            }
-                        }
-                        destroySurface();
-                    }
-                }
-                this.mAdded = false;
-                WindowManagerGlobal.getInstance().doRemoveView(this);
+            if (this.mRemoved) {
+                return;
             }
+            boolean viewVisibilityChanged = true;
+            this.mRemoved = true;
+            if (this.mAdded) {
+                dispatchDetachedFromWindow();
+            }
+            if (this.mAdded && !this.mFirst) {
+                destroyHardwareRenderer();
+                if (this.mView != null) {
+                    int viewVisibility = this.mView.getVisibility();
+                    if (this.mViewVisibility == viewVisibility) {
+                        viewVisibilityChanged = false;
+                    }
+                    if (this.mWindowAttributesChanged || viewVisibilityChanged) {
+                        try {
+                            if ((relayoutWindow(this.mWindowAttributes, viewVisibility, false) & 2) != 0) {
+                                this.mWindowSession.finishDrawing(this.mWindow);
+                            }
+                        } catch (RemoteException e) {
+                        }
+                    }
+                    destroySurface();
+                }
+            }
+            this.mAdded = false;
+            WindowManagerGlobal.getInstance().doRemoveView(this);
         }
     }
 
     public void requestUpdateConfiguration(Configuration config) {
-        this.mHandler.sendMessage(this.mHandler.obtainMessage(18, config));
+        Message msg = this.mHandler.obtainMessage(18, config);
+        this.mHandler.sendMessage(msg);
     }
 
     public void loadSystemProperties() {
-        this.mHandler.post(new Runnable() {
+        this.mHandler.post(new Runnable() { // from class: android.view.ViewRootImpl.4
+            @Override // java.lang.Runnable
             public void run() {
-                boolean unused = ViewRootImpl.this.mProfileRendering = SystemProperties.getBoolean(ViewRootImpl.PROPERTY_PROFILE_RENDERING, false);
+                ViewRootImpl.this.mProfileRendering = SystemProperties.getBoolean(ViewRootImpl.PROPERTY_PROFILE_RENDERING, false);
                 ViewRootImpl.this.profileRendering(ViewRootImpl.this.mAttachInfo.mHasWindowFocus);
                 if (ViewRootImpl.this.mAttachInfo.mThreadedRenderer != null && ViewRootImpl.this.mAttachInfo.mThreadedRenderer.loadSystemProperties()) {
                     ViewRootImpl.this.invalidate();
@@ -7364,7 +6658,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
                 if (layout != ViewRootImpl.this.mAttachInfo.mDebugLayout) {
                     ViewRootImpl.this.mAttachInfo.mDebugLayout = layout;
                     if (!ViewRootImpl.this.mHandler.hasMessages(22)) {
-                        ViewRootImpl.this.mHandler.sendEmptyMessageDelayed(22, 200);
+                        ViewRootImpl.this.mHandler.sendEmptyMessageDelayed(22, 200L);
                     }
                 }
             }
@@ -7384,44 +6678,34 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     @UnsupportedAppUsage
     public void dispatchResized(Rect frame, Rect overscanInsets, Rect contentInsets, Rect visibleInsets, Rect stableInsets, Rect outsets, boolean reportDraw, MergedConfiguration mergedConfiguration, Rect backDropFrame, boolean forceLayout, boolean alwaysConsumeSystemBars, int displayId, DisplayCutout.ParcelableWrapper displayCutout) {
-        Rect rect = frame;
-        Rect rect2 = overscanInsets;
-        Rect rect3 = contentInsets;
-        Rect rect4 = visibleInsets;
-        Rect rect5 = stableInsets;
-        MergedConfiguration mergedConfiguration2 = mergedConfiguration;
-        Rect rect6 = backDropFrame;
-        boolean sameProcessCall = true;
         if (this.mDragResizing && this.mUseMTRenderer) {
-            boolean fullscreen = rect.equals(rect6);
+            boolean fullscreen = frame.equals(backDropFrame);
             synchronized (this.mWindowCallbacks) {
                 for (int i = this.mWindowCallbacks.size() - 1; i >= 0; i--) {
-                    this.mWindowCallbacks.get(i).onWindowSizeIsChanging(rect6, fullscreen, rect4, rect5);
+                    this.mWindowCallbacks.get(i).onWindowSizeIsChanging(backDropFrame, fullscreen, visibleInsets, stableInsets);
                 }
             }
         }
         Message msg = this.mHandler.obtainMessage(reportDraw ? 5 : 4);
         if (this.mTranslator != null) {
-            this.mTranslator.translateRectInScreenToAppWindow(rect);
-            this.mTranslator.translateRectInScreenToAppWindow(rect2);
-            this.mTranslator.translateRectInScreenToAppWindow(rect3);
-            this.mTranslator.translateRectInScreenToAppWindow(rect4);
+            this.mTranslator.translateRectInScreenToAppWindow(frame);
+            this.mTranslator.translateRectInScreenToAppWindow(overscanInsets);
+            this.mTranslator.translateRectInScreenToAppWindow(contentInsets);
+            this.mTranslator.translateRectInScreenToAppWindow(visibleInsets);
         }
         SomeArgs args = SomeArgs.obtain();
-        if (Binder.getCallingPid() != Process.myPid()) {
-            sameProcessCall = false;
-        }
-        args.arg1 = sameProcessCall ? new Rect(rect) : rect;
-        args.arg2 = sameProcessCall ? new Rect(rect3) : rect3;
-        args.arg3 = sameProcessCall ? new Rect(rect4) : rect4;
-        args.arg4 = (!sameProcessCall || mergedConfiguration2 == null) ? mergedConfiguration2 : new MergedConfiguration(mergedConfiguration2);
-        args.arg5 = sameProcessCall ? new Rect(rect2) : rect2;
-        args.arg6 = sameProcessCall ? new Rect(rect5) : rect5;
+        boolean sameProcessCall = Binder.getCallingPid() == Process.myPid();
+        args.arg1 = sameProcessCall ? new Rect(frame) : frame;
+        args.arg2 = sameProcessCall ? new Rect(contentInsets) : contentInsets;
+        args.arg3 = sameProcessCall ? new Rect(visibleInsets) : visibleInsets;
+        args.arg4 = (!sameProcessCall || mergedConfiguration == null) ? mergedConfiguration : new MergedConfiguration(mergedConfiguration);
+        args.arg5 = sameProcessCall ? new Rect(overscanInsets) : overscanInsets;
+        args.arg6 = sameProcessCall ? new Rect(stableInsets) : stableInsets;
         args.arg7 = sameProcessCall ? new Rect(outsets) : outsets;
-        args.arg8 = sameProcessCall ? new Rect(rect6) : rect6;
+        args.arg8 = sameProcessCall ? new Rect(backDropFrame) : backDropFrame;
         args.arg9 = displayCutout.get();
         args.argi1 = forceLayout ? 1 : 0;
         args.argi2 = alwaysConsumeSystemBars ? 1 : 0;
@@ -7430,12 +6714,12 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         this.mHandler.sendMessage(msg);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void dispatchInsetsChanged(InsetsState insetsState) {
         this.mHandler.obtainMessage(30, insetsState).sendToTarget();
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void dispatchInsetsControlChanged(InsetsState insetsState, InsetsSourceControl[] activeControls) {
         SomeArgs args = SomeArgs.obtain();
         args.arg1 = insetsState;
@@ -7445,14 +6729,16 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
 
     public void dispatchMoved(int newX, int newY) {
         if (this.mTranslator != null) {
-            PointF point = new PointF((float) newX, (float) newY);
+            PointF point = new PointF(newX, newY);
             this.mTranslator.translatePointInScreenToAppWindow(point);
-            newX = (int) (((double) point.x) + 0.5d);
-            newY = (int) (((double) point.y) + 0.5d);
+            newX = (int) (point.f61x + 0.5d);
+            newY = (int) (point.f62y + 0.5d);
         }
-        this.mHandler.sendMessage(this.mHandler.obtainMessage(23, newX, newY));
+        Message msg = this.mHandler.obtainMessage(23, newX, newY);
+        this.mHandler.sendMessage(msg);
     }
 
+    /* loaded from: classes4.dex */
     private static final class QueuedInputEvent {
         public static final int FLAG_DEFERRED = 2;
         public static final int FLAG_DELIVER_POST_IME = 1;
@@ -7473,10 +6759,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
             if ((this.mFlags & 1) != 0) {
                 return true;
             }
-            if (!(this.mEvent instanceof MotionEvent) || (!this.mEvent.isFromSource(2) && !this.mEvent.isFromSource(4194304))) {
-                return false;
-            }
-            return true;
+            return (this.mEvent instanceof MotionEvent) && (this.mEvent.isFromSource(2) || this.mEvent.isFromSource(4194304));
         }
 
         public boolean shouldSendToSynthesizer() {
@@ -7488,7 +6771,8 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
 
         public String toString() {
             StringBuilder sb = new StringBuilder("QueuedInputEvent{flags=");
-            if (!flagToString("UNHANDLED", 32, flagToString("RESYNTHESIZED", 16, flagToString("FINISHED_HANDLED", 8, flagToString("FINISHED", 4, flagToString("DEFERRED", 2, flagToString("DELIVER_POST_IME", 1, false, sb), sb), sb), sb), sb), sb)) {
+            boolean hasPrevious = flagToString("DELIVER_POST_IME", 1, false, sb);
+            if (!flagToString("UNHANDLED", 32, flagToString("RESYNTHESIZED", 16, flagToString("FINISHED_HANDLED", 8, flagToString("FINISHED", 4, flagToString("DEFERRED", 2, hasPrevious, sb), sb), sb), sb), sb)) {
                 sb.append("0");
             }
             StringBuilder sb2 = new StringBuilder();
@@ -7504,14 +6788,14 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         }
 
         private boolean flagToString(String name, int flag, boolean hasPrevious, StringBuilder sb) {
-            if ((this.mFlags & flag) == 0) {
-                return hasPrevious;
+            if ((this.mFlags & flag) != 0) {
+                if (hasPrevious) {
+                    sb.append("|");
+                }
+                sb.append(name);
+                return true;
             }
-            if (hasPrevious) {
-                sb.append("|");
-            }
-            sb.append(name);
-            return true;
+            return hasPrevious;
         }
     }
 
@@ -7540,15 +6824,13 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         }
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void enqueueInputEvent(InputEvent event) {
-        enqueueInputEvent(event, (InputEventReceiver) null, 0, false);
+    void enqueueInputEvent(InputEvent event) {
+        enqueueInputEvent(event, null, 0, false);
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void enqueueInputEvent(InputEvent event, InputEventReceiver receiver, int flags, boolean processImmediately) {
+    void enqueueInputEvent(InputEvent event, InputEventReceiver receiver, int flags, boolean processImmediately) {
         QueuedInputEvent q = obtainQueuedInputEvent(event, receiver, flags);
         QueuedInputEvent last = this.mPendingInputEventTail;
         if (last == null) {
@@ -7559,7 +6841,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
             this.mPendingInputEventTail = q;
         }
         this.mPendingInputEventCount++;
-        Trace.traceCounter(4, this.mPendingInputEventQueueLengthCounterName, this.mPendingInputEventCount);
+        Trace.traceCounter(4L, this.mPendingInputEventQueueLengthCounterName, this.mPendingInputEventCount);
         if (processImmediately) {
             doProcessInputEvents();
         } else {
@@ -7576,8 +6858,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void doProcessInputEvents() {
+    void doProcessInputEvents() {
         while (this.mPendingInputEventHead != null) {
             QueuedInputEvent q = this.mPendingInputEventHead;
             this.mPendingInputEventHead = q.mNext;
@@ -7586,7 +6867,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
             }
             q.mNext = null;
             this.mPendingInputEventCount--;
-            Trace.traceCounter(4, this.mPendingInputEventQueueLengthCounterName, this.mPendingInputEventCount);
+            Trace.traceCounter(4L, this.mPendingInputEventQueueLengthCounterName, this.mPendingInputEventCount);
             long eventTime = q.mEvent.getEventTimeNano();
             long oldestEventTime = eventTime;
             if (q.mEvent instanceof MotionEvent) {
@@ -7606,7 +6887,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
 
     private void deliverInputEvent(QueuedInputEvent q) {
         InputStage stage;
-        Trace.asyncTraceBegin(8, "deliverInputEvent", q.mEvent.getSequenceNumber());
+        Trace.asyncTraceBegin(8L, "deliverInputEvent", q.mEvent.getSequenceNumber());
         if (this.mInputEventConsistencyVerifier != null) {
             this.mInputEventConsistencyVerifier.onInputEvent(q.mEvent, 0);
         }
@@ -7626,24 +6907,21 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         finishInputEvent(q);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void finishInputEvent(QueuedInputEvent q) {
-        Trace.asyncTraceEnd(8, "deliverInputEvent", q.mEvent.getSequenceNumber());
+        Trace.asyncTraceEnd(8L, "deliverInputEvent", q.mEvent.getSequenceNumber());
         if (q.mReceiver != null) {
-            boolean modified = false;
             boolean handled = (q.mFlags & 8) != 0;
-            if ((q.mFlags & 64) != 0) {
-                modified = true;
-            }
+            boolean modified = (q.mFlags & 64) != 0;
             if (modified) {
-                Trace.traceBegin(8, "processInputEventBeforeFinish");
+                Trace.traceBegin(8L, "processInputEventBeforeFinish");
                 try {
                     InputEvent processedEvent = this.mInputCompatProcessor.processInputEventBeforeFinish(q.mEvent);
                     if (processedEvent != null) {
                         q.mReceiver.finishInputEvent(processedEvent, handled);
                     }
                 } finally {
-                    Trace.traceEnd(8);
+                    Trace.traceEnd(8L);
                 }
             } else {
                 q.mReceiver.finishInputEvent(q.mEvent, handled);
@@ -7655,37 +6933,30 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
     }
 
     static boolean isTerminalInputEvent(InputEvent event) {
-        if (!(event instanceof KeyEvent)) {
-            int action = ((MotionEvent) event).getAction();
-            if (action == 1 || action == 3 || action == 10) {
-                return true;
-            }
-            return false;
-        } else if (((KeyEvent) event).getAction() == 1) {
-            return true;
-        } else {
-            return false;
+        if (event instanceof KeyEvent) {
+            KeyEvent keyEvent = (KeyEvent) event;
+            return keyEvent.getAction() == 1;
         }
+        MotionEvent motionEvent = (MotionEvent) event;
+        int action = motionEvent.getAction();
+        return action == 1 || action == 3 || action == 10;
     }
 
-    /* access modifiers changed from: package-private */
-    public void scheduleConsumeBatchedInput() {
+    void scheduleConsumeBatchedInput() {
         if (!this.mConsumeBatchedInputScheduled) {
             this.mConsumeBatchedInputScheduled = true;
-            this.mChoreographer.postCallback(0, this.mConsumedBatchedInputRunnable, (Object) null);
+            this.mChoreographer.postCallback(0, this.mConsumedBatchedInputRunnable, null);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void unscheduleConsumeBatchedInput() {
+    void unscheduleConsumeBatchedInput() {
         if (this.mConsumeBatchedInputScheduled) {
             this.mConsumeBatchedInputScheduled = false;
-            this.mChoreographer.removeCallbacks(0, this.mConsumedBatchedInputRunnable, (Object) null);
+            this.mChoreographer.removeCallbacks(0, this.mConsumedBatchedInputRunnable, null);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void scheduleConsumeBatchedInputImmediately() {
+    void scheduleConsumeBatchedInputImmediately() {
         if (!this.mConsumeBatchedInputImmediatelyScheduled) {
             unscheduleConsumeBatchedInput();
             this.mConsumeBatchedInputImmediatelyScheduled = true;
@@ -7693,37 +6964,39 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void doConsumeBatchedInput(long frameTimeNanos) {
+    void doConsumeBatchedInput(long frameTimeNanos) {
         if (this.mConsumeBatchedInputScheduled) {
             this.mConsumeBatchedInputScheduled = false;
-            if (!(this.mInputEventReceiver == null || !this.mInputEventReceiver.consumeBatchedInputEvents(frameTimeNanos) || frameTimeNanos == -1)) {
+            if (this.mInputEventReceiver != null && this.mInputEventReceiver.consumeBatchedInputEvents(frameTimeNanos) && frameTimeNanos != -1) {
                 scheduleConsumeBatchedInput();
             }
             doProcessInputEvents();
         }
     }
 
+    /* loaded from: classes4.dex */
     final class TraversalRunnable implements Runnable {
         TraversalRunnable() {
         }
 
+        @Override // java.lang.Runnable
         public void run() {
             ViewRootImpl.this.doTraversal();
         }
     }
 
+    /* loaded from: classes4.dex */
     final class WindowInputEventReceiver extends InputEventReceiver {
         public WindowInputEventReceiver(InputChannel inputChannel, Looper looper) {
             super(inputChannel, looper);
         }
 
-        /* JADX INFO: finally extract failed */
+        @Override // android.view.InputEventReceiver
         public void onInputEvent(InputEvent event) {
-            Trace.traceBegin(8, "processInputEventForCompatibility");
+            Trace.traceBegin(8L, "processInputEventForCompatibility");
             try {
                 List<InputEvent> processedEvents = ViewRootImpl.this.mInputCompatProcessor.processInputEventForCompatibility(event);
-                Trace.traceEnd(8);
+                Trace.traceEnd(8L);
                 if (processedEvents == null) {
                     ViewRootImpl.this.enqueueInputEvent(event, this, 0, true);
                 } else if (processedEvents.isEmpty()) {
@@ -7734,11 +7007,12 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
                     }
                 }
             } catch (Throwable th) {
-                Trace.traceEnd(8);
+                Trace.traceEnd(8L);
                 throw th;
             }
         }
 
+        @Override // android.view.InputEventReceiver
         public void onBatchedInputEventPending() {
             if (ViewRootImpl.this.mUnbufferedInputDispatch) {
                 super.onBatchedInputEventPending();
@@ -7747,36 +7021,42 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
             }
         }
 
+        @Override // android.view.InputEventReceiver
         public void dispose() {
             ViewRootImpl.this.unscheduleConsumeBatchedInput();
             super.dispose();
         }
     }
 
+    /* loaded from: classes4.dex */
     final class ConsumeBatchedInputRunnable implements Runnable {
         ConsumeBatchedInputRunnable() {
         }
 
+        @Override // java.lang.Runnable
         public void run() {
             ViewRootImpl.this.doConsumeBatchedInput(ViewRootImpl.this.mChoreographer.getFrameTimeNanos());
         }
     }
 
+    /* loaded from: classes4.dex */
     final class ConsumeBatchedInputImmediatelyRunnable implements Runnable {
         ConsumeBatchedInputImmediatelyRunnable() {
         }
 
+        @Override // java.lang.Runnable
         public void run() {
-            ViewRootImpl.this.doConsumeBatchedInput(-1);
+            ViewRootImpl.this.doConsumeBatchedInput(-1L);
         }
     }
 
+    /* loaded from: classes4.dex */
     final class InvalidateOnAnimationRunnable implements Runnable {
         private boolean mPosted;
         private View.AttachInfo.InvalidateInfo[] mTempViewRects;
         private View[] mTempViews;
-        private final ArrayList<View.AttachInfo.InvalidateInfo> mViewRects = new ArrayList<>();
         private final ArrayList<View> mViews = new ArrayList<>();
+        private final ArrayList<View.AttachInfo.InvalidateInfo> mViewRects = new ArrayList<>();
 
         InvalidateOnAnimationRunnable() {
         }
@@ -7812,12 +7092,13 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
                     i = i2;
                 }
                 if (this.mPosted && this.mViews.isEmpty() && this.mViewRects.isEmpty()) {
-                    ViewRootImpl.this.mChoreographer.removeCallbacks(1, this, (Object) null);
+                    ViewRootImpl.this.mChoreographer.removeCallbacks(1, this, null);
                     this.mPosted = false;
                 }
             }
         }
 
+        @Override // java.lang.Runnable
         public void run() {
             int i;
             int viewCount;
@@ -7848,18 +7129,20 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
 
         private void postIfNeededLocked() {
             if (!this.mPosted) {
-                ViewRootImpl.this.mChoreographer.postCallback(1, this, (Object) null);
+                ViewRootImpl.this.mChoreographer.postCallback(1, this, null);
                 this.mPosted = true;
             }
         }
     }
 
     public void dispatchInvalidateDelayed(View view, long delayMilliseconds) {
-        this.mHandler.sendMessageDelayed(this.mHandler.obtainMessage(1, view), delayMilliseconds);
+        Message msg = this.mHandler.obtainMessage(1, view);
+        this.mHandler.sendMessageDelayed(msg, delayMilliseconds);
     }
 
     public void dispatchInvalidateRectDelayed(View.AttachInfo.InvalidateInfo info, long delayMilliseconds) {
-        this.mHandler.sendMessageDelayed(this.mHandler.obtainMessage(2, info), delayMilliseconds);
+        Message msg = this.mHandler.obtainMessage(2, info);
+        this.mHandler.sendMessageDelayed(msg, delayMilliseconds);
     }
 
     public void dispatchInvalidateOnAnimation(View view) {
@@ -7879,7 +7162,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
 
     @UnsupportedAppUsage
     public void dispatchInputEvent(InputEvent event) {
-        dispatchInputEvent(event, (InputEventReceiver) null);
+        dispatchInputEvent(event, null);
     }
 
     @UnsupportedAppUsage
@@ -7921,12 +7204,13 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
 
     public void dispatchAppVisibility(boolean visible) {
         Message msg = this.mHandler.obtainMessage(8);
-        msg.arg1 = visible;
+        msg.arg1 = visible ? 1 : 0;
         this.mHandler.sendMessage(msg);
     }
 
     public void dispatchGetNewSurface() {
-        this.mHandler.sendMessage(this.mHandler.obtainMessage(9));
+        Message msg = this.mHandler.obtainMessage(9);
+        this.mHandler.sendMessage(msg);
     }
 
     public void windowFocusChanged(boolean hasFocus, boolean inTouchMode) {
@@ -7959,12 +7243,16 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         } else {
             what = 15;
         }
-        this.mHandler.sendMessage(this.mHandler.obtainMessage(what, event));
+        Message msg = this.mHandler.obtainMessage(what, event);
+        this.mHandler.sendMessage(msg);
     }
 
     public void updatePointerIcon(float x, float y) {
         this.mHandler.removeMessages(27);
-        this.mHandler.sendMessage(this.mHandler.obtainMessage(27, MotionEvent.obtain(0, SystemClock.uptimeMillis(), 7, x, y, 0)));
+        long now = SystemClock.uptimeMillis();
+        MotionEvent event = MotionEvent.obtain(0L, now, 7, x, y, 0);
+        Message msg = this.mHandler.obtainMessage(27, event);
+        this.mHandler.sendMessage(msg);
     }
 
     public void dispatchSystemUiVisibilityChanged(int seq, int globalVisibility, int localValue, int localChanges) {
@@ -7989,7 +7277,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
     public void dispatchPointerCaptureChanged(boolean on) {
         this.mHandler.removeMessages(28);
         Message msg = this.mHandler.obtainMessage(28);
-        msg.arg1 = on;
+        msg.arg1 = on ? 1 : 0;
         this.mHandler.sendMessage(msg);
     }
 
@@ -8006,253 +7294,218 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         }
     }
 
+    @Override // android.view.ViewParent
     public boolean showContextMenuForChild(View originalView) {
         return false;
     }
 
+    @Override // android.view.ViewParent
     public boolean showContextMenuForChild(View originalView, float x, float y) {
         return false;
     }
 
+    @Override // android.view.ViewParent
     public ActionMode startActionModeForChild(View originalView, ActionMode.Callback callback) {
         return null;
     }
 
+    @Override // android.view.ViewParent
     public ActionMode startActionModeForChild(View originalView, ActionMode.Callback callback, int type) {
         return null;
     }
 
+    @Override // android.view.ViewParent
     public void createContextMenu(ContextMenu menu) {
     }
 
+    @Override // android.view.ViewParent
     public void childDrawableStateChanged(View child) {
     }
 
+    @Override // android.view.ViewParent
     public boolean requestSendAccessibilityEvent(View child, AccessibilityEvent event) {
         AccessibilityNodeProvider provider;
         if (this.mView == null || this.mStopped || this.mPausedForTransition) {
             return false;
         }
-        if (!(event.getEventType() == 2048 || this.mSendWindowContentChangedAccessibilityEvent == null || this.mSendWindowContentChangedAccessibilityEvent.mSource == null)) {
+        if (event.getEventType() != 2048 && this.mSendWindowContentChangedAccessibilityEvent != null && this.mSendWindowContentChangedAccessibilityEvent.mSource != null) {
             this.mSendWindowContentChangedAccessibilityEvent.removeCallbacksAndRun();
         }
         int eventType = event.getEventType();
         View source = getSourceForAccessibilityEvent(event);
         if (eventType == 2048) {
             handleWindowContentChangedEvent(event);
-        } else if (eventType != 32768) {
-            if (!(eventType != 65536 || source == null || source.getAccessibilityNodeProvider() == null)) {
-                setAccessibilityFocus((View) null, (AccessibilityNodeInfo) null);
+        } else if (eventType == 32768) {
+            if (source != null && (provider = source.getAccessibilityNodeProvider()) != null) {
+                int virtualNodeId = AccessibilityNodeInfo.getVirtualDescendantId(event.getSourceNodeId());
+                AccessibilityNodeInfo node = provider.createAccessibilityNodeInfo(virtualNodeId);
+                setAccessibilityFocus(source, node);
             }
-        } else if (!(source == null || (provider = source.getAccessibilityNodeProvider()) == null)) {
-            setAccessibilityFocus(source, provider.createAccessibilityNodeInfo(AccessibilityNodeInfo.getVirtualDescendantId(event.getSourceNodeId())));
+        } else if (eventType == 65536 && source != null && source.getAccessibilityNodeProvider() != null) {
+            setAccessibilityFocus(null, null);
         }
         this.mAccessibilityManager.sendAccessibilityEvent(event);
         return true;
     }
 
     private View getSourceForAccessibilityEvent(AccessibilityEvent event) {
-        return AccessibilityNodeIdManager.getInstance().findView(AccessibilityNodeInfo.getAccessibilityViewId(event.getSourceNodeId()));
+        long sourceNodeId = event.getSourceNodeId();
+        int accessibilityViewId = AccessibilityNodeInfo.getAccessibilityViewId(sourceNodeId);
+        return AccessibilityNodeIdManager.getInstance().findView(accessibilityViewId);
     }
 
-    /* JADX WARNING: type inference failed for: r11v3, types: [android.view.ViewParent] */
-    /* JADX WARNING: Multi-variable type inference failed */
-    /* JADX WARNING: Unknown variable types count: 1 */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    private void handleWindowContentChangedEvent(android.view.accessibility.AccessibilityEvent r17) {
-        /*
-            r16 = this;
-            r0 = r16
-            android.view.View r1 = r0.mAccessibilityFocusedHost
-            if (r1 == 0) goto L_0x008f
-            android.view.accessibility.AccessibilityNodeInfo r2 = r0.mAccessibilityFocusedVirtualView
-            if (r2 != 0) goto L_0x000c
-            goto L_0x008f
-        L_0x000c:
-            android.view.accessibility.AccessibilityNodeProvider r2 = r1.getAccessibilityNodeProvider()
-            r3 = 0
-            r4 = 0
-            if (r2 != 0) goto L_0x001c
-            r0.mAccessibilityFocusedHost = r4
-            r0.mAccessibilityFocusedVirtualView = r4
-            r1.clearAccessibilityFocusNoCallbacks(r3)
-            return
-        L_0x001c:
-            int r5 = r17.getContentChangeTypes()
-            r6 = r5 & 1
-            if (r6 != 0) goto L_0x0027
-            if (r5 == 0) goto L_0x0027
-            return
-        L_0x0027:
-            long r6 = r17.getSourceNodeId()
-            int r8 = android.view.accessibility.AccessibilityNodeInfo.getAccessibilityViewId(r6)
-            r9 = 0
-            android.view.View r10 = r0.mAccessibilityFocusedHost
-        L_0x0032:
-            if (r10 == 0) goto L_0x004c
-            if (r9 != 0) goto L_0x004c
-            int r11 = r10.getAccessibilityViewId()
-            if (r8 != r11) goto L_0x003e
-            r9 = 1
-            goto L_0x0032
-        L_0x003e:
-            android.view.ViewParent r11 = r10.getParent()
-            boolean r12 = r11 instanceof android.view.View
-            if (r12 == 0) goto L_0x004a
-            r10 = r11
-            android.view.View r10 = (android.view.View) r10
-            goto L_0x004b
-        L_0x004a:
-            r10 = 0
-        L_0x004b:
-            goto L_0x0032
-        L_0x004c:
-            if (r9 != 0) goto L_0x004f
-            return
-        L_0x004f:
-            android.view.accessibility.AccessibilityNodeInfo r11 = r0.mAccessibilityFocusedVirtualView
-            long r11 = r11.getSourceNodeId()
-            int r13 = android.view.accessibility.AccessibilityNodeInfo.getVirtualDescendantId(r11)
-            android.graphics.Rect r14 = r0.mTempRect
-            android.view.accessibility.AccessibilityNodeInfo r15 = r0.mAccessibilityFocusedVirtualView
-            r15.getBoundsInScreen(r14)
-            android.view.accessibility.AccessibilityNodeInfo r15 = r2.createAccessibilityNodeInfo(r13)
-            r0.mAccessibilityFocusedVirtualView = r15
-            android.view.accessibility.AccessibilityNodeInfo r15 = r0.mAccessibilityFocusedVirtualView
-            if (r15 != 0) goto L_0x007c
-            r0.mAccessibilityFocusedHost = r4
-            r1.clearAccessibilityFocusNoCallbacks(r3)
-            android.view.accessibility.AccessibilityNodeInfo$AccessibilityAction r3 = android.view.accessibility.AccessibilityNodeInfo.AccessibilityAction.ACTION_CLEAR_ACCESSIBILITY_FOCUS
-            int r3 = r3.getId()
-            r2.performAction(r13, r3, r4)
-            r0.invalidateRectOnScreen(r14)
-            goto L_0x008e
-        L_0x007c:
-            android.view.accessibility.AccessibilityNodeInfo r3 = r0.mAccessibilityFocusedVirtualView
-            android.graphics.Rect r3 = r3.getBoundsInScreen()
-            boolean r4 = r14.equals(r3)
-            if (r4 != 0) goto L_0x008e
-            r14.union(r3)
-            r0.invalidateRectOnScreen(r14)
-        L_0x008e:
-            return
-        L_0x008f:
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.view.ViewRootImpl.handleWindowContentChangedEvent(android.view.accessibility.AccessibilityEvent):void");
+    private void handleWindowContentChangedEvent(AccessibilityEvent event) {
+        View focusedHost = this.mAccessibilityFocusedHost;
+        if (focusedHost == null || this.mAccessibilityFocusedVirtualView == null) {
+            return;
+        }
+        AccessibilityNodeProvider provider = focusedHost.getAccessibilityNodeProvider();
+        if (provider == null) {
+            this.mAccessibilityFocusedHost = null;
+            this.mAccessibilityFocusedVirtualView = null;
+            focusedHost.clearAccessibilityFocusNoCallbacks(0);
+            return;
+        }
+        int changes = event.getContentChangeTypes();
+        if ((changes & 1) == 0 && changes != 0) {
+            return;
+        }
+        long eventSourceNodeId = event.getSourceNodeId();
+        int changedViewId = AccessibilityNodeInfo.getAccessibilityViewId(eventSourceNodeId);
+        boolean hostInSubtree = false;
+        View root = this.mAccessibilityFocusedHost;
+        while (root != null && !hostInSubtree) {
+            if (changedViewId == root.getAccessibilityViewId()) {
+                hostInSubtree = true;
+            } else {
+                ViewParent parent = root.getParent();
+                if (parent instanceof View) {
+                    root = (View) parent;
+                } else {
+                    root = null;
+                }
+            }
+        }
+        if (!hostInSubtree) {
+            return;
+        }
+        long focusedSourceNodeId = this.mAccessibilityFocusedVirtualView.getSourceNodeId();
+        int focusedChildId = AccessibilityNodeInfo.getVirtualDescendantId(focusedSourceNodeId);
+        Rect oldBounds = this.mTempRect;
+        this.mAccessibilityFocusedVirtualView.getBoundsInScreen(oldBounds);
+        this.mAccessibilityFocusedVirtualView = provider.createAccessibilityNodeInfo(focusedChildId);
+        if (this.mAccessibilityFocusedVirtualView == null) {
+            this.mAccessibilityFocusedHost = null;
+            focusedHost.clearAccessibilityFocusNoCallbacks(0);
+            provider.performAction(focusedChildId, AccessibilityNodeInfo.AccessibilityAction.ACTION_CLEAR_ACCESSIBILITY_FOCUS.getId(), null);
+            invalidateRectOnScreen(oldBounds);
+            return;
+        }
+        Rect newBounds = this.mAccessibilityFocusedVirtualView.getBoundsInScreen();
+        if (!oldBounds.equals(newBounds)) {
+            oldBounds.union(newBounds);
+            invalidateRectOnScreen(oldBounds);
+        }
     }
 
+    @Override // android.view.ViewParent
     public void notifySubtreeAccessibilityStateChanged(View child, View source, int changeType) {
         postSendWindowContentChangedCallback((View) Preconditions.checkNotNull(source), changeType);
     }
 
+    @Override // android.view.ViewParent
     public boolean canResolveLayoutDirection() {
         return true;
     }
 
+    @Override // android.view.ViewParent
     public boolean isLayoutDirectionResolved() {
         return true;
     }
 
+    @Override // android.view.ViewParent
     public int getLayoutDirection() {
         return 0;
     }
 
+    @Override // android.view.ViewParent
     public boolean canResolveTextDirection() {
         return true;
     }
 
+    @Override // android.view.ViewParent
     public boolean isTextDirectionResolved() {
         return true;
     }
 
+    @Override // android.view.ViewParent
     public int getTextDirection() {
         return 1;
     }
 
+    @Override // android.view.ViewParent
     public boolean canResolveTextAlignment() {
         return true;
     }
 
+    @Override // android.view.ViewParent
     public boolean isTextAlignmentResolved() {
         return true;
     }
 
+    @Override // android.view.ViewParent
     public int getTextAlignment() {
         return 1;
     }
 
-    /* JADX WARNING: type inference failed for: r3v2, types: [android.view.ViewParent] */
-    /* JADX WARNING: type inference failed for: r2v6, types: [android.view.ViewParent] */
-    /* access modifiers changed from: private */
-    /* JADX WARNING: Multi-variable type inference failed */
-    /* JADX WARNING: Unknown variable types count: 2 */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public android.view.View getCommonPredecessor(android.view.View r6, android.view.View r7) {
-        /*
-            r5 = this;
-            java.util.HashSet<android.view.View> r0 = r5.mTempHashSet
-            if (r0 != 0) goto L_0x000b
-            java.util.HashSet r0 = new java.util.HashSet
-            r0.<init>()
-            r5.mTempHashSet = r0
-        L_0x000b:
-            java.util.HashSet<android.view.View> r0 = r5.mTempHashSet
-            r0.clear()
-            r1 = r6
-        L_0x0011:
-            if (r1 == 0) goto L_0x0022
-            r0.add(r1)
-            android.view.ViewParent r2 = r1.mParent
-            boolean r3 = r2 instanceof android.view.View
-            if (r3 == 0) goto L_0x0020
-            r1 = r2
-            android.view.View r1 = (android.view.View) r1
-            goto L_0x0021
-        L_0x0020:
-            r1 = 0
-        L_0x0021:
-            goto L_0x0011
-        L_0x0022:
-            r2 = r7
-        L_0x0023:
-            if (r2 == 0) goto L_0x003b
-            boolean r3 = r0.contains(r2)
-            if (r3 == 0) goto L_0x002f
-            r0.clear()
-            return r2
-        L_0x002f:
-            android.view.ViewParent r3 = r2.mParent
-            boolean r4 = r3 instanceof android.view.View
-            if (r4 == 0) goto L_0x0039
-            r2 = r3
-            android.view.View r2 = (android.view.View) r2
-            goto L_0x003a
-        L_0x0039:
-            r2 = 0
-        L_0x003a:
-            goto L_0x0023
-        L_0x003b:
-            r0.clear()
-            r3 = 0
-            return r3
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.view.ViewRootImpl.getCommonPredecessor(android.view.View, android.view.View):android.view.View");
+    /* JADX INFO: Access modifiers changed from: private */
+    public View getCommonPredecessor(View first, View second) {
+        if (this.mTempHashSet == null) {
+            this.mTempHashSet = new HashSet<>();
+        }
+        HashSet<View> seen = this.mTempHashSet;
+        seen.clear();
+        View firstCurrent = first;
+        while (firstCurrent != null) {
+            seen.add(firstCurrent);
+            ViewParent firstCurrentParent = firstCurrent.mParent;
+            if (firstCurrentParent instanceof View) {
+                firstCurrent = (View) firstCurrentParent;
+            } else {
+                firstCurrent = null;
+            }
+        }
+        View secondCurrent = second;
+        while (secondCurrent != null) {
+            if (seen.contains(secondCurrent)) {
+                seen.clear();
+                return secondCurrent;
+            }
+            ViewParent secondCurrentParent = secondCurrent.mParent;
+            if (secondCurrentParent instanceof View) {
+                secondCurrent = (View) secondCurrentParent;
+            } else {
+                secondCurrent = null;
+            }
+        }
+        seen.clear();
+        return null;
     }
 
-    /* access modifiers changed from: package-private */
-    public void checkThread() {
+    void checkThread() {
         if (this.mThread != Thread.currentThread()) {
             throw new CalledFromWrongThreadException("Only the original thread that created a view hierarchy can touch its views.");
         }
     }
 
+    @Override // android.view.ViewParent
     public void requestDisallowInterceptTouchEvent(boolean disallowIntercept) {
     }
 
+    @Override // android.view.ViewParent
     public boolean requestChildRectangleOnScreen(View child, Rect rectangle, boolean immediate) {
         if (rectangle == null) {
-            return scrollToRectOrFocus((Rect) null, immediate);
+            return scrollToRectOrFocus(null, immediate);
         }
         rectangle.offset(child.getLeft() - child.getScrollX(), child.getTop() - child.getScrollY());
         boolean scrolled = scrollToRectOrFocus(rectangle, immediate);
@@ -8266,38 +7519,47 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         return scrolled;
     }
 
+    @Override // android.view.ViewParent
     public void childHasTransientStateChanged(View child, boolean hasTransientState) {
     }
 
+    @Override // android.view.ViewParent, android.support.p011v4.view.NestedScrollingParent
     public boolean onStartNestedScroll(View child, View target, int nestedScrollAxes) {
         return false;
     }
 
+    @Override // android.view.ViewParent, android.support.p011v4.view.NestedScrollingParent
     public void onStopNestedScroll(View target) {
     }
 
+    @Override // android.view.ViewParent, android.support.p011v4.view.NestedScrollingParent
     public void onNestedScrollAccepted(View child, View target, int nestedScrollAxes) {
     }
 
+    @Override // android.view.ViewParent, android.support.p011v4.view.NestedScrollingParent
     public void onNestedScroll(View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
     }
 
+    @Override // android.view.ViewParent, android.support.p011v4.view.NestedScrollingParent
     public void onNestedPreScroll(View target, int dx, int dy, int[] consumed) {
     }
 
+    @Override // android.view.ViewParent, android.support.p011v4.view.NestedScrollingParent
     public boolean onNestedFling(View target, float velocityX, float velocityY, boolean consumed) {
         return false;
     }
 
+    @Override // android.view.ViewParent, android.support.p011v4.view.NestedScrollingParent
     public boolean onNestedPreFling(View target, float velocityX, float velocityY) {
         return false;
     }
 
+    @Override // android.view.ViewParent
     public boolean onNestedPrePerformAccessibilityAction(View target, int action, Bundle args) {
         return false;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void reportNextDraw() {
         if (!this.mReportNextDraw) {
             drawPending();
@@ -8310,10 +7572,9 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         invalidate();
     }
 
-    /* access modifiers changed from: package-private */
-    public void changeCanvasOpacity(boolean opaque) {
+    void changeCanvasOpacity(boolean opaque) {
         String str = this.mTag;
-        Log.d(str, "changeCanvasOpacity: opaque=" + opaque);
+        Log.m72d(str, "changeCanvasOpacity: opaque=" + opaque);
         boolean opaque2 = opaque & ((this.mView.mPrivateFlags & 512) == 0);
         if (this.mAttachInfo.mThreadedRenderer != null) {
             this.mAttachInfo.mThreadedRenderer.setOpaque(opaque2);
@@ -8324,95 +7585,113 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         return this.mUnhandledKeyManager.dispatch(this.mView, event);
     }
 
+    /* loaded from: classes4.dex */
     class TakenSurfaceHolder extends BaseSurfaceHolder {
         TakenSurfaceHolder() {
         }
 
+        @Override // com.android.internal.view.BaseSurfaceHolder
         public boolean onAllowLockCanvas() {
             return ViewRootImpl.this.mDrawingAllowed;
         }
 
+        @Override // com.android.internal.view.BaseSurfaceHolder
         public void onRelayoutContainer() {
         }
 
+        @Override // com.android.internal.view.BaseSurfaceHolder, android.view.SurfaceHolder
         public void setFormat(int format) {
             ((RootViewSurfaceTaker) ViewRootImpl.this.mView).setSurfaceFormat(format);
         }
 
+        @Override // com.android.internal.view.BaseSurfaceHolder, android.view.SurfaceHolder
         public void setType(int type) {
             ((RootViewSurfaceTaker) ViewRootImpl.this.mView).setSurfaceType(type);
         }
 
+        @Override // com.android.internal.view.BaseSurfaceHolder
         public void onUpdateSurface() {
             throw new IllegalStateException("Shouldn't be here");
         }
 
+        @Override // android.view.SurfaceHolder
         public boolean isCreating() {
             return ViewRootImpl.this.mIsCreating;
         }
 
+        @Override // com.android.internal.view.BaseSurfaceHolder, android.view.SurfaceHolder
         public void setFixedSize(int width, int height) {
             throw new UnsupportedOperationException("Currently only support sizing from layout");
         }
 
+        @Override // android.view.SurfaceHolder
         public void setKeepScreenOn(boolean screenOn) {
             ((RootViewSurfaceTaker) ViewRootImpl.this.mView).setSurfaceKeepScreenOn(screenOn);
         }
     }
 
-    static class W extends IWindow.Stub {
+    /* renamed from: android.view.ViewRootImpl$W */
+    /* loaded from: classes4.dex */
+    static class BinderC2750W extends IWindow.Stub {
         private final WeakReference<ViewRootImpl> mViewAncestor;
         private final IWindowSession mWindowSession;
 
-        W(ViewRootImpl viewAncestor) {
+        BinderC2750W(ViewRootImpl viewAncestor) {
             this.mViewAncestor = new WeakReference<>(viewAncestor);
             this.mWindowSession = viewAncestor.mWindowSession;
         }
 
+        @Override // android.view.IWindow
         public void resized(Rect frame, Rect overscanInsets, Rect contentInsets, Rect visibleInsets, Rect stableInsets, Rect outsets, boolean reportDraw, MergedConfiguration mergedConfiguration, Rect backDropFrame, boolean forceLayout, boolean alwaysConsumeSystemBars, int displayId, DisplayCutout.ParcelableWrapper displayCutout) {
-            ViewRootImpl viewAncestor = (ViewRootImpl) this.mViewAncestor.get();
+            ViewRootImpl viewAncestor = this.mViewAncestor.get();
             if (viewAncestor != null) {
                 viewAncestor.dispatchResized(frame, overscanInsets, contentInsets, visibleInsets, stableInsets, outsets, reportDraw, mergedConfiguration, backDropFrame, forceLayout, alwaysConsumeSystemBars, displayId, displayCutout);
             }
         }
 
+        @Override // android.view.IWindow
         public void insetsChanged(InsetsState insetsState) {
-            ViewRootImpl viewAncestor = (ViewRootImpl) this.mViewAncestor.get();
+            ViewRootImpl viewAncestor = this.mViewAncestor.get();
             if (viewAncestor != null) {
                 viewAncestor.dispatchInsetsChanged(insetsState);
             }
         }
 
+        @Override // android.view.IWindow
         public void insetsControlChanged(InsetsState insetsState, InsetsSourceControl[] activeControls) {
-            ViewRootImpl viewAncestor = (ViewRootImpl) this.mViewAncestor.get();
+            ViewRootImpl viewAncestor = this.mViewAncestor.get();
             if (viewAncestor != null) {
                 viewAncestor.dispatchInsetsControlChanged(insetsState, activeControls);
             }
         }
 
+        @Override // android.view.IWindow
         public void moved(int newX, int newY) {
-            ViewRootImpl viewAncestor = (ViewRootImpl) this.mViewAncestor.get();
+            ViewRootImpl viewAncestor = this.mViewAncestor.get();
             if (viewAncestor != null) {
                 viewAncestor.dispatchMoved(newX, newY);
             }
         }
 
+        @Override // android.view.IWindow
         public void dispatchAppVisibility(boolean visible) {
-            ViewRootImpl viewAncestor = (ViewRootImpl) this.mViewAncestor.get();
+            ViewRootImpl viewAncestor = this.mViewAncestor.get();
             if (viewAncestor != null) {
                 viewAncestor.dispatchAppVisibility(visible);
             }
         }
 
+        @Override // android.view.IWindow
         public void dispatchGetNewSurface() {
-            ViewRootImpl viewAncestor = (ViewRootImpl) this.mViewAncestor.get();
+            ViewRootImpl viewAncestor = this.mViewAncestor.get();
             if (viewAncestor != null) {
                 viewAncestor.dispatchGetNewSurface();
             }
         }
 
+        @Override // android.view.IWindow
         public void windowFocusChanged(boolean hasFocus, boolean inTouchMode) {
-            ViewRootImpl viewAncestor = (ViewRootImpl) this.mViewAncestor.get();
+            ViewRootImpl viewAncestor = this.mViewAncestor.get();
             if (viewAncestor != null) {
                 viewAncestor.windowFocusChanged(hasFocus, inTouchMode);
             }
@@ -8426,48 +7705,52 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
             }
         }
 
+        @Override // android.view.IWindow
         public void executeCommand(String command, String parameters, ParcelFileDescriptor out) {
             View view;
-            ViewRootImpl viewAncestor = (ViewRootImpl) this.mViewAncestor.get();
+            ViewRootImpl viewAncestor = this.mViewAncestor.get();
             if (viewAncestor != null && (view = viewAncestor.mView) != null) {
-                if (checkCallingPermission(Manifest.permission.DUMP) == 0) {
-                    OutputStream clientStream = null;
+                if (checkCallingPermission(Manifest.C0000permission.DUMP) != 0) {
+                    throw new SecurityException("Insufficient permissions to invoke executeCommand() from pid=" + Binder.getCallingPid() + ", uid=" + Binder.getCallingUid());
+                }
+                OutputStream clientStream = null;
+                try {
                     try {
-                        clientStream = new ParcelFileDescriptor.AutoCloseOutputStream(out);
-                        ViewDebug.dispatchCommand(view, command, parameters, clientStream);
                         try {
+                            clientStream = new ParcelFileDescriptor.AutoCloseOutputStream(out);
+                            ViewDebug.dispatchCommand(view, command, parameters, clientStream);
                             clientStream.close();
                         } catch (IOException e) {
                             e.printStackTrace();
-                        }
-                    } catch (IOException e2) {
-                        e2.printStackTrace();
-                        if (clientStream != null) {
-                            clientStream.close();
+                            if (clientStream != null) {
+                                clientStream.close();
+                            }
                         }
                     } catch (Throwable th) {
                         if (clientStream != null) {
                             try {
                                 clientStream.close();
-                            } catch (IOException e3) {
-                                e3.printStackTrace();
+                            } catch (IOException e2) {
+                                e2.printStackTrace();
                             }
                         }
                         throw th;
                     }
-                } else {
-                    throw new SecurityException("Insufficient permissions to invoke executeCommand() from pid=" + Binder.getCallingPid() + ", uid=" + Binder.getCallingUid());
+                } catch (IOException e3) {
+                    e3.printStackTrace();
                 }
             }
         }
 
+        @Override // android.view.IWindow
         public void closeSystemDialogs(String reason) {
-            ViewRootImpl viewAncestor = (ViewRootImpl) this.mViewAncestor.get();
+            ViewRootImpl viewAncestor = this.mViewAncestor.get();
             if (viewAncestor != null) {
                 viewAncestor.dispatchCloseSystemDialogs(reason);
             }
         }
 
+        @Override // android.view.IWindow
         public void dispatchWallpaperOffsets(float x, float y, float xStep, float yStep, boolean sync) {
             if (sync) {
                 try {
@@ -8477,58 +7760,66 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
             }
         }
 
+        @Override // android.view.IWindow
         public void dispatchWallpaperCommand(String action, int x, int y, int z, Bundle extras, boolean sync) {
             if (sync) {
                 try {
-                    this.mWindowSession.wallpaperCommandComplete(asBinder(), (Bundle) null);
+                    this.mWindowSession.wallpaperCommandComplete(asBinder(), null);
                 } catch (RemoteException e) {
                 }
             }
         }
 
+        @Override // android.view.IWindow
         public void dispatchDragEvent(DragEvent event) {
-            ViewRootImpl viewAncestor = (ViewRootImpl) this.mViewAncestor.get();
+            ViewRootImpl viewAncestor = this.mViewAncestor.get();
             if (viewAncestor != null) {
                 viewAncestor.dispatchDragEvent(event);
             }
         }
 
+        @Override // android.view.IWindow
         public void updatePointerIcon(float x, float y) {
-            ViewRootImpl viewAncestor = (ViewRootImpl) this.mViewAncestor.get();
+            ViewRootImpl viewAncestor = this.mViewAncestor.get();
             if (viewAncestor != null) {
                 viewAncestor.updatePointerIcon(x, y);
             }
         }
 
+        @Override // android.view.IWindow
         public void dispatchSystemUiVisibilityChanged(int seq, int globalVisibility, int localValue, int localChanges) {
-            ViewRootImpl viewAncestor = (ViewRootImpl) this.mViewAncestor.get();
+            ViewRootImpl viewAncestor = this.mViewAncestor.get();
             if (viewAncestor != null) {
                 viewAncestor.dispatchSystemUiVisibilityChanged(seq, globalVisibility, localValue, localChanges);
             }
         }
 
+        @Override // android.view.IWindow
         public void dispatchWindowShown() {
-            ViewRootImpl viewAncestor = (ViewRootImpl) this.mViewAncestor.get();
+            ViewRootImpl viewAncestor = this.mViewAncestor.get();
             if (viewAncestor != null) {
                 viewAncestor.dispatchWindowShown();
             }
         }
 
+        @Override // android.view.IWindow
         public void requestAppKeyboardShortcuts(IResultReceiver receiver, int deviceId) {
-            ViewRootImpl viewAncestor = (ViewRootImpl) this.mViewAncestor.get();
+            ViewRootImpl viewAncestor = this.mViewAncestor.get();
             if (viewAncestor != null) {
                 viewAncestor.dispatchRequestKeyboardShortcuts(receiver, deviceId);
             }
         }
 
+        @Override // android.view.IWindow
         public void dispatchPointerCaptureChanged(boolean hasCapture) {
-            ViewRootImpl viewAncestor = (ViewRootImpl) this.mViewAncestor.get();
+            ViewRootImpl viewAncestor = this.mViewAncestor.get();
             if (viewAncestor != null) {
                 viewAncestor.dispatchPointerCaptureChanged(hasCapture);
             }
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class CalledFromWrongThreadException extends AndroidRuntimeException {
         @UnsupportedAppUsage
         public CalledFromWrongThreadException(String msg) {
@@ -8578,18 +7869,16 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
                 updated |= this.mWindowCallbacks.get(i).onContentDrawn(this.mWindowAttributes.surfaceInsets.left, this.mWindowAttributes.surfaceInsets.top, this.mWidth, this.mHeight);
             }
         }
-        if (this.mDragResizing == 0 || !this.mReportNextDraw) {
-            z = false;
-        }
-        return updated | z;
+        return updated | ((this.mDragResizing && this.mReportNextDraw) ? false : false);
     }
 
     private void requestDrawWindow() {
-        if (this.mUseMTRenderer) {
-            this.mWindowDrawCountDown = new CountDownLatch(this.mWindowCallbacks.size());
-            for (int i = this.mWindowCallbacks.size() - 1; i >= 0; i--) {
-                this.mWindowCallbacks.get(i).onRequestDraw(this.mReportNextDraw);
-            }
+        if (!this.mUseMTRenderer) {
+            return;
+        }
+        this.mWindowDrawCountDown = new CountDownLatch(this.mWindowCallbacks.size());
+        for (int i = this.mWindowCallbacks.size() - 1; i >= 0; i--) {
+            this.mWindowCallbacks.get(i).onRequestDraw(this.mReportNextDraw);
         }
     }
 
@@ -8601,10 +7890,12 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         return this.mSurfaceControl;
     }
 
+    /* loaded from: classes4.dex */
     final class AccessibilityInteractionConnectionManager implements AccessibilityManager.AccessibilityStateChangeListener {
         AccessibilityInteractionConnectionManager() {
         }
 
+        @Override // android.view.accessibility.AccessibilityManager.AccessibilityStateChangeListener
         public void onAccessibilityStateChanged(boolean enabled) {
             if (enabled) {
                 ensureConnection();
@@ -8624,24 +7915,28 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         }
 
         public void ensureConnection() {
-            if (!(ViewRootImpl.this.mAttachInfo.mAccessibilityWindowId != -1)) {
+            boolean registered = ViewRootImpl.this.mAttachInfo.mAccessibilityWindowId != -1;
+            if (!registered) {
                 ViewRootImpl.this.mAttachInfo.mAccessibilityWindowId = ViewRootImpl.this.mAccessibilityManager.addAccessibilityInteractionConnection(ViewRootImpl.this.mWindow, ViewRootImpl.this.mContext.getPackageName(), new AccessibilityInteractionConnection(ViewRootImpl.this));
             }
         }
 
         public void ensureNoConnection() {
-            if (ViewRootImpl.this.mAttachInfo.mAccessibilityWindowId != -1) {
+            boolean registered = ViewRootImpl.this.mAttachInfo.mAccessibilityWindowId != -1;
+            if (registered) {
                 ViewRootImpl.this.mAttachInfo.mAccessibilityWindowId = -1;
                 ViewRootImpl.this.mAccessibilityManager.removeAccessibilityInteractionConnection(ViewRootImpl.this.mWindow);
             }
         }
     }
 
+    /* loaded from: classes4.dex */
     final class HighContrastTextManager implements AccessibilityManager.HighTextContrastChangeListener {
         HighContrastTextManager() {
             ThreadedRenderer.setHighContrastText(ViewRootImpl.this.mAccessibilityManager.isHighTextContrastEnabled());
         }
 
+        @Override // android.view.accessibility.AccessibilityManager.HighTextContrastChangeListener
         public void onHighTextContrastStateChanged(boolean enabled) {
             ThreadedRenderer.setHighContrastText(enabled);
             ViewRootImpl.this.destroyHardwareResources();
@@ -8649,6 +7944,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         }
     }
 
+    /* loaded from: classes4.dex */
     static final class AccessibilityInteractionConnection extends IAccessibilityInteractionConnection.Stub {
         private final WeakReference<ViewRootImpl> mViewRootImpl;
 
@@ -8656,105 +7952,102 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
             this.mViewRootImpl = new WeakReference<>(viewRootImpl);
         }
 
+        @Override // android.view.accessibility.IAccessibilityInteractionConnection
         public void findAccessibilityNodeInfoByAccessibilityId(long accessibilityNodeId, Region interactiveRegion, int interactionId, IAccessibilityInteractionConnectionCallback callback, int flags, int interrogatingPid, long interrogatingTid, MagnificationSpec spec, Bundle args) {
-            ViewRootImpl viewRootImpl = (ViewRootImpl) this.mViewRootImpl.get();
-            if (viewRootImpl == null || viewRootImpl.mView == null) {
-                try {
-                    callback.setFindAccessibilityNodeInfosResult((List<AccessibilityNodeInfo>) null, interactionId);
-                } catch (RemoteException e) {
-                }
-            } else {
+            ViewRootImpl viewRootImpl = this.mViewRootImpl.get();
+            if (viewRootImpl != null && viewRootImpl.mView != null) {
                 viewRootImpl.getAccessibilityInteractionController().findAccessibilityNodeInfoByAccessibilityIdClientThread(accessibilityNodeId, interactiveRegion, interactionId, callback, flags, interrogatingPid, interrogatingTid, spec, args);
-                int i = interactionId;
-                IAccessibilityInteractionConnectionCallback iAccessibilityInteractionConnectionCallback = callback;
+                return;
+            }
+            try {
+                callback.setFindAccessibilityNodeInfosResult(null, interactionId);
+            } catch (RemoteException e) {
             }
         }
 
+        @Override // android.view.accessibility.IAccessibilityInteractionConnection
         public void performAccessibilityAction(long accessibilityNodeId, int action, Bundle arguments, int interactionId, IAccessibilityInteractionConnectionCallback callback, int flags, int interrogatingPid, long interrogatingTid) {
-            ViewRootImpl viewRootImpl = (ViewRootImpl) this.mViewRootImpl.get();
-            if (viewRootImpl == null || viewRootImpl.mView == null) {
-                try {
-                    callback.setPerformAccessibilityActionResult(false, interactionId);
-                } catch (RemoteException e) {
-                }
-            } else {
+            ViewRootImpl viewRootImpl = this.mViewRootImpl.get();
+            if (viewRootImpl != null && viewRootImpl.mView != null) {
                 viewRootImpl.getAccessibilityInteractionController().performAccessibilityActionClientThread(accessibilityNodeId, action, arguments, interactionId, callback, flags, interrogatingPid, interrogatingTid);
-                int i = interactionId;
-                IAccessibilityInteractionConnectionCallback iAccessibilityInteractionConnectionCallback = callback;
+                return;
+            }
+            try {
+                callback.setPerformAccessibilityActionResult(false, interactionId);
+            } catch (RemoteException e) {
             }
         }
 
+        @Override // android.view.accessibility.IAccessibilityInteractionConnection
         public void findAccessibilityNodeInfosByViewId(long accessibilityNodeId, String viewId, Region interactiveRegion, int interactionId, IAccessibilityInteractionConnectionCallback callback, int flags, int interrogatingPid, long interrogatingTid, MagnificationSpec spec) {
-            ViewRootImpl viewRootImpl = (ViewRootImpl) this.mViewRootImpl.get();
-            if (viewRootImpl == null || viewRootImpl.mView == null) {
-                try {
-                    callback.setFindAccessibilityNodeInfoResult((AccessibilityNodeInfo) null, interactionId);
-                } catch (RemoteException e) {
-                }
-            } else {
+            ViewRootImpl viewRootImpl = this.mViewRootImpl.get();
+            if (viewRootImpl != null && viewRootImpl.mView != null) {
                 viewRootImpl.getAccessibilityInteractionController().findAccessibilityNodeInfosByViewIdClientThread(accessibilityNodeId, viewId, interactiveRegion, interactionId, callback, flags, interrogatingPid, interrogatingTid, spec);
-                int i = interactionId;
-                IAccessibilityInteractionConnectionCallback iAccessibilityInteractionConnectionCallback = callback;
+                return;
+            }
+            try {
+                callback.setFindAccessibilityNodeInfoResult(null, interactionId);
+            } catch (RemoteException e) {
             }
         }
 
+        @Override // android.view.accessibility.IAccessibilityInteractionConnection
         public void findAccessibilityNodeInfosByText(long accessibilityNodeId, String text, Region interactiveRegion, int interactionId, IAccessibilityInteractionConnectionCallback callback, int flags, int interrogatingPid, long interrogatingTid, MagnificationSpec spec) {
-            ViewRootImpl viewRootImpl = (ViewRootImpl) this.mViewRootImpl.get();
-            if (viewRootImpl == null || viewRootImpl.mView == null) {
-                try {
-                    callback.setFindAccessibilityNodeInfosResult((List<AccessibilityNodeInfo>) null, interactionId);
-                } catch (RemoteException e) {
-                }
-            } else {
+            ViewRootImpl viewRootImpl = this.mViewRootImpl.get();
+            if (viewRootImpl != null && viewRootImpl.mView != null) {
                 viewRootImpl.getAccessibilityInteractionController().findAccessibilityNodeInfosByTextClientThread(accessibilityNodeId, text, interactiveRegion, interactionId, callback, flags, interrogatingPid, interrogatingTid, spec);
-                int i = interactionId;
-                IAccessibilityInteractionConnectionCallback iAccessibilityInteractionConnectionCallback = callback;
+                return;
+            }
+            try {
+                callback.setFindAccessibilityNodeInfosResult(null, interactionId);
+            } catch (RemoteException e) {
             }
         }
 
+        @Override // android.view.accessibility.IAccessibilityInteractionConnection
         public void findFocus(long accessibilityNodeId, int focusType, Region interactiveRegion, int interactionId, IAccessibilityInteractionConnectionCallback callback, int flags, int interrogatingPid, long interrogatingTid, MagnificationSpec spec) {
-            ViewRootImpl viewRootImpl = (ViewRootImpl) this.mViewRootImpl.get();
-            if (viewRootImpl == null || viewRootImpl.mView == null) {
-                try {
-                    callback.setFindAccessibilityNodeInfoResult((AccessibilityNodeInfo) null, interactionId);
-                } catch (RemoteException e) {
-                }
-            } else {
+            ViewRootImpl viewRootImpl = this.mViewRootImpl.get();
+            if (viewRootImpl != null && viewRootImpl.mView != null) {
                 viewRootImpl.getAccessibilityInteractionController().findFocusClientThread(accessibilityNodeId, focusType, interactiveRegion, interactionId, callback, flags, interrogatingPid, interrogatingTid, spec);
-                int i = interactionId;
-                IAccessibilityInteractionConnectionCallback iAccessibilityInteractionConnectionCallback = callback;
+                return;
+            }
+            try {
+                callback.setFindAccessibilityNodeInfoResult(null, interactionId);
+            } catch (RemoteException e) {
             }
         }
 
+        @Override // android.view.accessibility.IAccessibilityInteractionConnection
         public void focusSearch(long accessibilityNodeId, int direction, Region interactiveRegion, int interactionId, IAccessibilityInteractionConnectionCallback callback, int flags, int interrogatingPid, long interrogatingTid, MagnificationSpec spec) {
-            ViewRootImpl viewRootImpl = (ViewRootImpl) this.mViewRootImpl.get();
-            if (viewRootImpl == null || viewRootImpl.mView == null) {
-                try {
-                    callback.setFindAccessibilityNodeInfoResult((AccessibilityNodeInfo) null, interactionId);
-                } catch (RemoteException e) {
-                }
-            } else {
+            ViewRootImpl viewRootImpl = this.mViewRootImpl.get();
+            if (viewRootImpl != null && viewRootImpl.mView != null) {
                 viewRootImpl.getAccessibilityInteractionController().focusSearchClientThread(accessibilityNodeId, direction, interactiveRegion, interactionId, callback, flags, interrogatingPid, interrogatingTid, spec);
-                int i = interactionId;
-                IAccessibilityInteractionConnectionCallback iAccessibilityInteractionConnectionCallback = callback;
+                return;
+            }
+            try {
+                callback.setFindAccessibilityNodeInfoResult(null, interactionId);
+            } catch (RemoteException e) {
             }
         }
 
+        @Override // android.view.accessibility.IAccessibilityInteractionConnection
         public void clearAccessibilityFocus() {
-            ViewRootImpl viewRootImpl = (ViewRootImpl) this.mViewRootImpl.get();
+            ViewRootImpl viewRootImpl = this.mViewRootImpl.get();
             if (viewRootImpl != null && viewRootImpl.mView != null) {
                 viewRootImpl.getAccessibilityInteractionController().clearAccessibilityFocusClientThread();
             }
         }
 
+        @Override // android.view.accessibility.IAccessibilityInteractionConnection
         public void notifyOutsideTouch() {
-            ViewRootImpl viewRootImpl = (ViewRootImpl) this.mViewRootImpl.get();
+            ViewRootImpl viewRootImpl = this.mViewRootImpl.get();
             if (viewRootImpl != null && viewRootImpl.mView != null) {
                 viewRootImpl.getAccessibilityInteractionController().notifyOutsideTouchClientThread();
             }
         }
     }
 
+    /* loaded from: classes4.dex */
     private class SendWindowContentChangedAccessibilityEvent implements Runnable {
         private int mChangeTypes;
         public long mLastEventTimeMillis;
@@ -8765,11 +8058,12 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
             this.mChangeTypes = 0;
         }
 
+        @Override // java.lang.Runnable
         public void run() {
             View source = this.mSource;
             this.mSource = null;
             if (source == null) {
-                Log.e(ViewRootImpl.TAG, "Accessibility content change has no source");
+                Log.m70e(ViewRootImpl.TAG, "Accessibility content change has no source");
                 return;
             }
             if (AccessibilityManager.getInstance(ViewRootImpl.this.mContext).isEnabled()) {
@@ -8779,7 +8073,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
                 event.setContentChangeTypes(this.mChangeTypes);
                 source.sendAccessibilityEventUnchecked(event);
             } else {
-                this.mLastEventTimeMillis = 0;
+                this.mLastEventTimeMillis = 0L;
             }
             source.resetSubtreeAccessibilityStateChanged();
             this.mChangeTypes = 0;
@@ -8787,7 +8081,8 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
 
         public void runOrPost(View source, int changeType) {
             if (ViewRootImpl.this.mHandler.getLooper() != Looper.myLooper()) {
-                Log.e(ViewRootImpl.TAG, "Accessibility content change on non-UI thread. Future Android versions will throw an exception.", new CalledFromWrongThreadException("Only the original thread that created a view hierarchy can touch its views."));
+                CalledFromWrongThreadException e = new CalledFromWrongThreadException("Only the original thread that created a view hierarchy can touch its views.");
+                Log.m69e(ViewRootImpl.TAG, "Accessibility content change on non-UI thread. Future Android versions will throw an exception.", e);
                 ViewRootImpl.this.mHandler.removeCallbacks(this);
                 if (this.mSource != null) {
                     run();
@@ -8819,6 +8114,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
         }
     }
 
+    /* loaded from: classes4.dex */
     private static class UnhandledKeyManager {
         private final SparseArray<WeakReference<View>> mCapturedKeys;
         private WeakReference<View> mCurrentReceiver;
@@ -8830,35 +8126,27 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
             this.mCurrentReceiver = null;
         }
 
-        /* JADX INFO: finally extract failed */
-        /* access modifiers changed from: package-private */
-        public boolean dispatch(View root, KeyEvent event) {
+        boolean dispatch(View root, KeyEvent event) {
             if (this.mDispatched) {
                 return false;
             }
             try {
-                Trace.traceBegin(8, "UnhandledKeyEvent dispatch");
+                Trace.traceBegin(8L, "UnhandledKeyEvent dispatch");
                 this.mDispatched = true;
                 View consumer = root.dispatchUnhandledKeyEvent(event);
                 if (event.getAction() == 0) {
                     int keycode = event.getKeyCode();
                     if (consumer != null && !KeyEvent.isModifierKey(keycode)) {
-                        this.mCapturedKeys.put(keycode, new WeakReference(consumer));
+                        this.mCapturedKeys.put(keycode, new WeakReference<>(consumer));
                     }
                 }
-                Trace.traceEnd(8);
-                if (consumer != null) {
-                    return true;
-                }
-                return false;
-            } catch (Throwable th) {
-                Trace.traceEnd(8);
-                throw th;
+                return consumer != null;
+            } finally {
+                Trace.traceEnd(8L);
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public void preDispatch(KeyEvent event) {
+        void preDispatch(KeyEvent event) {
             int idx;
             this.mCurrentReceiver = null;
             if (event.getAction() == 1 && (idx = this.mCapturedKeys.indexOfKey(event.getKeyCode())) >= 0) {
@@ -8867,8 +8155,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public boolean preViewDispatch(KeyEvent event) {
+        boolean preViewDispatch(KeyEvent event) {
             this.mDispatched = false;
             if (this.mCurrentReceiver == null) {
                 this.mCurrentReceiver = this.mCapturedKeys.get(event.getKeyCode());
@@ -8876,7 +8163,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
             if (this.mCurrentReceiver == null) {
                 return false;
             }
-            View target = (View) this.mCurrentReceiver.get();
+            View target = this.mCurrentReceiver.get();
             if (event.getAction() == 1) {
                 this.mCurrentReceiver = null;
             }

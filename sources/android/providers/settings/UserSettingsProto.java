@@ -1,5 +1,6 @@
 package android.providers.settings;
 
+/* loaded from: classes3.dex */
 public final class UserSettingsProto {
     public static final long SECURE_SETTINGS = 1146756268034L;
     public static final long SYSTEM_SETTINGS = 1146756268035L;

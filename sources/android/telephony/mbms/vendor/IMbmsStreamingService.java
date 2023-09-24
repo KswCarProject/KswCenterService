@@ -3,15 +3,16 @@ package android.telephony.mbms.vendor;
 import android.annotation.UnsupportedAppUsage;
 import android.content.ContentResolver;
 import android.net.Uri;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.telephony.mbms.IMbmsStreamingSessionCallback;
 import android.telephony.mbms.IStreamingServiceCallback;
 import java.util.List;
 
+/* loaded from: classes4.dex */
 public interface IMbmsStreamingService extends IInterface {
     void dispose(int i) throws RemoteException;
 
@@ -29,34 +30,43 @@ public interface IMbmsStreamingService extends IInterface {
 
     void stopStreaming(int i, String str) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IMbmsStreamingService {
+        @Override // android.telephony.mbms.vendor.IMbmsStreamingService
         public int initialize(IMbmsStreamingSessionCallback callback, int subId) throws RemoteException {
             return 0;
         }
 
-        public int requestUpdateStreamingServices(int subId, List<String> list) throws RemoteException {
+        @Override // android.telephony.mbms.vendor.IMbmsStreamingService
+        public int requestUpdateStreamingServices(int subId, List<String> serviceClasses) throws RemoteException {
             return 0;
         }
 
+        @Override // android.telephony.mbms.vendor.IMbmsStreamingService
         public int startStreaming(int subId, String serviceId, IStreamingServiceCallback callback) throws RemoteException {
             return 0;
         }
 
+        @Override // android.telephony.mbms.vendor.IMbmsStreamingService
         public Uri getPlaybackUri(int subId, String serviceId) throws RemoteException {
             return null;
         }
 
+        @Override // android.telephony.mbms.vendor.IMbmsStreamingService
         public void stopStreaming(int subId, String serviceId) throws RemoteException {
         }
 
+        @Override // android.telephony.mbms.vendor.IMbmsStreamingService
         public void dispose(int subId) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IMbmsStreamingService {
         private static final String DESCRIPTOR = "android.telephony.mbms.vendor.IMbmsStreamingService";
         static final int TRANSACTION_dispose = 6;
@@ -75,12 +85,13 @@ public interface IMbmsStreamingService extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IMbmsStreamingService)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IMbmsStreamingService)) {
+                return (IMbmsStreamingService) iin;
             }
-            return (IMbmsStreamingService) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -104,61 +115,75 @@ public interface IMbmsStreamingService extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        int _result = initialize(IMbmsStreamingSessionCallback.Stub.asInterface(data.readStrongBinder()), data.readInt());
-                        reply.writeNoException();
-                        reply.writeInt(_result);
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        int _result2 = requestUpdateStreamingServices(data.readInt(), data.createStringArrayList());
-                        reply.writeNoException();
-                        reply.writeInt(_result2);
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        int _result3 = startStreaming(data.readInt(), data.readString(), IStreamingServiceCallback.Stub.asInterface(data.readStrongBinder()));
-                        reply.writeNoException();
-                        reply.writeInt(_result3);
-                        return true;
-                    case 4:
-                        data.enforceInterface(DESCRIPTOR);
-                        Uri _result4 = getPlaybackUri(data.readInt(), data.readString());
-                        reply.writeNoException();
-                        if (_result4 != null) {
-                            reply.writeInt(1);
-                            _result4.writeToParcel(reply, 1);
-                        } else {
-                            reply.writeInt(0);
-                        }
-                        return true;
-                    case 5:
-                        data.enforceInterface(DESCRIPTOR);
-                        stopStreaming(data.readInt(), data.readString());
-                        reply.writeNoException();
-                        return true;
-                    case 6:
-                        data.enforceInterface(DESCRIPTOR);
-                        dispose(data.readInt());
-                        reply.writeNoException();
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    IMbmsStreamingSessionCallback _arg0 = IMbmsStreamingSessionCallback.Stub.asInterface(data.readStrongBinder());
+                    int _arg1 = data.readInt();
+                    int _result = initialize(_arg0, _arg1);
+                    reply.writeNoException();
+                    reply.writeInt(_result);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    List<String> _arg12 = data.createStringArrayList();
+                    int _result2 = requestUpdateStreamingServices(_arg02, _arg12);
+                    reply.writeNoException();
+                    reply.writeInt(_result2);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg03 = data.readInt();
+                    String _arg13 = data.readString();
+                    IStreamingServiceCallback _arg2 = IStreamingServiceCallback.Stub.asInterface(data.readStrongBinder());
+                    int _result3 = startStreaming(_arg03, _arg13, _arg2);
+                    reply.writeNoException();
+                    reply.writeInt(_result3);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg04 = data.readInt();
+                    String _arg14 = data.readString();
+                    Uri _result4 = getPlaybackUri(_arg04, _arg14);
+                    reply.writeNoException();
+                    if (_result4 != null) {
+                        reply.writeInt(1);
+                        _result4.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg05 = data.readInt();
+                    String _arg15 = data.readString();
+                    stopStreaming(_arg05, _arg15);
+                    reply.writeNoException();
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg06 = data.readInt();
+                    dispose(_arg06);
+                    reply.writeNoException();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IMbmsStreamingService {
             public static IMbmsStreamingService sDefaultImpl;
             private IBinder mRemote;
@@ -167,6 +192,7 @@ public interface IMbmsStreamingService extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -175,6 +201,7 @@ public interface IMbmsStreamingService extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.telephony.mbms.vendor.IMbmsStreamingService
             public int initialize(IMbmsStreamingSessionCallback callback, int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -182,13 +209,12 @@ public interface IMbmsStreamingService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
                     _data.writeInt(subId);
-                    if (!this.mRemote.transact(1, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().initialize(callback, subId);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -196,6 +222,7 @@ public interface IMbmsStreamingService extends IInterface {
                 }
             }
 
+            @Override // android.telephony.mbms.vendor.IMbmsStreamingService
             public int requestUpdateStreamingServices(int subId, List<String> serviceClasses) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -203,13 +230,12 @@ public interface IMbmsStreamingService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeStringList(serviceClasses);
-                    if (!this.mRemote.transact(2, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().requestUpdateStreamingServices(subId, serviceClasses);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -217,6 +243,7 @@ public interface IMbmsStreamingService extends IInterface {
                 }
             }
 
+            @Override // android.telephony.mbms.vendor.IMbmsStreamingService
             public int startStreaming(int subId, String serviceId, IStreamingServiceCallback callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -225,13 +252,12 @@ public interface IMbmsStreamingService extends IInterface {
                     _data.writeInt(subId);
                     _data.writeString(serviceId);
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                    if (!this.mRemote.transact(3, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().startStreaming(subId, serviceId, callback);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -239,6 +265,7 @@ public interface IMbmsStreamingService extends IInterface {
                 }
             }
 
+            @Override // android.telephony.mbms.vendor.IMbmsStreamingService
             public Uri getPlaybackUri(int subId, String serviceId) throws RemoteException {
                 Uri _result;
                 Parcel _data = Parcel.obtain();
@@ -247,7 +274,8 @@ public interface IMbmsStreamingService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeString(serviceId);
-                    if (!this.mRemote.transact(4, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPlaybackUri(subId, serviceId);
                     }
                     _reply.readException();
@@ -256,16 +284,14 @@ public interface IMbmsStreamingService extends IInterface {
                     } else {
                         _result = null;
                     }
-                    Uri _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.mbms.vendor.IMbmsStreamingService
             public void stopStreaming(int subId, String serviceId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -273,32 +299,31 @@ public interface IMbmsStreamingService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
                     _data.writeString(serviceId);
-                    if (this.mRemote.transact(5, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().stopStreaming(subId, serviceId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().stopStreaming(subId, serviceId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.telephony.mbms.vendor.IMbmsStreamingService
             public void dispose(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    if (this.mRemote.transact(6, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().dispose(subId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().dispose(subId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -307,11 +332,11 @@ public interface IMbmsStreamingService extends IInterface {
         }
 
         public static boolean setDefaultImpl(IMbmsStreamingService impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IMbmsStreamingService getDefaultImpl() {

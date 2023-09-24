@@ -1,5 +1,6 @@
 package android.drm;
 
+/* loaded from: classes.dex */
 public class DrmConvertedStatus {
     public static final int STATUS_ERROR = 3;
     public static final int STATUS_INPUTDATA_ERROR = 2;
@@ -8,17 +9,16 @@ public class DrmConvertedStatus {
     public final int offset;
     public final int statusCode;
 
-    public DrmConvertedStatus(int statusCode2, byte[] convertedData2, int offset2) {
-        if (isValidStatusCode(statusCode2)) {
-            this.statusCode = statusCode2;
-            this.convertedData = convertedData2;
-            this.offset = offset2;
-            return;
+    public DrmConvertedStatus(int statusCode, byte[] convertedData, int offset) {
+        if (!isValidStatusCode(statusCode)) {
+            throw new IllegalArgumentException("Unsupported status code: " + statusCode);
         }
-        throw new IllegalArgumentException("Unsupported status code: " + statusCode2);
+        this.statusCode = statusCode;
+        this.convertedData = convertedData;
+        this.offset = offset;
     }
 
-    private boolean isValidStatusCode(int statusCode2) {
-        return statusCode2 == 1 || statusCode2 == 2 || statusCode2 == 3;
+    private boolean isValidStatusCode(int statusCode) {
+        return statusCode == 1 || statusCode == 2 || statusCode == 3;
     }
 }

@@ -4,6 +4,7 @@ import java.nio.Buffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+/* loaded from: classes5.dex */
 public interface GL11 extends GL10 {
     public static final int GL_ACTIVE_TEXTURE = 34016;
     public static final int GL_ADD_SIGNED = 34164;

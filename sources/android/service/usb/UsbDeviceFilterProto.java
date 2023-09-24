@@ -1,5 +1,6 @@
 package android.service.usb;
 
+/* loaded from: classes3.dex */
 public final class UsbDeviceFilterProto {
     public static final long CLASS = 1120986464259L;
     public static final long MANUFACTURER_NAME = 1138166333446L;

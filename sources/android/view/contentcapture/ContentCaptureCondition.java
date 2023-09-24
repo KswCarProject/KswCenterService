@@ -1,19 +1,24 @@
 package android.view.contentcapture;
 
 import android.content.LocusId;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.DebugUtils;
 import com.android.internal.util.Preconditions;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes4.dex */
 public final class ContentCaptureCondition implements Parcelable {
-    public static final Parcelable.Creator<ContentCaptureCondition> CREATOR = new Parcelable.Creator<ContentCaptureCondition>() {
+    public static final Parcelable.Creator<ContentCaptureCondition> CREATOR = new Parcelable.Creator<ContentCaptureCondition>() { // from class: android.view.contentcapture.ContentCaptureCondition.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ContentCaptureCondition createFromParcel(Parcel parcel) {
-            return new ContentCaptureCondition((LocusId) parcel.readParcelable((ClassLoader) null), parcel.readInt());
+            return new ContentCaptureCondition((LocusId) parcel.readParcelable(null), parcel.readInt());
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ContentCaptureCondition[] newArray(int size) {
             return new ContentCaptureCondition[size];
         }
@@ -23,6 +28,7 @@ public final class ContentCaptureCondition implements Parcelable {
     private final LocusId mLocusId;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     @interface Flags {
     }
 
@@ -40,7 +46,8 @@ public final class ContentCaptureCondition implements Parcelable {
     }
 
     public int hashCode() {
-        return (((1 * 31) + this.mFlags) * 31) + (this.mLocusId == null ? 0 : this.mLocusId.hashCode());
+        int result = (1 * 31) + this.mFlags;
+        return (result * 31) + (this.mLocusId == null ? 0 : this.mLocusId.hashCode());
     }
 
     public boolean equals(Object obj) {
@@ -74,10 +81,12 @@ public final class ContentCaptureCondition implements Parcelable {
         return string.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeParcelable(this.mLocusId, flags);
         parcel.writeInt(this.mFlags);

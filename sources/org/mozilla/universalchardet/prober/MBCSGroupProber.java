@@ -2,12 +2,13 @@ package org.mozilla.universalchardet.prober;
 
 import org.mozilla.universalchardet.prober.CharsetProber;
 
+/* loaded from: classes5.dex */
 public class MBCSGroupProber extends CharsetProber {
     private int activeNum;
     private int bestGuess;
-    private boolean[] isActive = new boolean[7];
-    private CharsetProber[] probers = new CharsetProber[7];
     private CharsetProber.ProbingState state;
+    private CharsetProber[] probers = new CharsetProber[7];
+    private boolean[] isActive = new boolean[7];
 
     public MBCSGroupProber() {
         this.probers[0] = new UTF8Prober();
@@ -20,6 +21,7 @@ public class MBCSGroupProber extends CharsetProber {
         reset();
     }
 
+    @Override // org.mozilla.universalchardet.prober.CharsetProber
     public String getCharSetName() {
         if (this.bestGuess == -1) {
             getConfidence();
@@ -30,6 +32,7 @@ public class MBCSGroupProber extends CharsetProber {
         return this.probers[this.bestGuess].getCharSetName();
     }
 
+    @Override // org.mozilla.universalchardet.prober.CharsetProber
     public float getConfidence() {
         if (this.state == CharsetProber.ProbingState.FOUND_IT) {
             return 0.99f;
@@ -50,10 +53,12 @@ public class MBCSGroupProber extends CharsetProber {
         return f;
     }
 
+    @Override // org.mozilla.universalchardet.prober.CharsetProber
     public CharsetProber.ProbingState getState() {
         return this.state;
     }
 
+    @Override // org.mozilla.universalchardet.prober.CharsetProber
     public CharsetProber.ProbingState handleData(byte[] bArr, int i, int i2) {
         CharsetProber.ProbingState probingState;
         byte[] bArr2 = new byte[i2];
@@ -72,34 +77,29 @@ public class MBCSGroupProber extends CharsetProber {
             }
             i++;
         }
-        int i5 = 0;
-        while (true) {
-            if (i5 >= this.probers.length) {
-                break;
-            }
+        for (int i5 = 0; i5 < this.probers.length; i5++) {
             if (this.isActive[i5]) {
                 CharsetProber.ProbingState handleData = this.probers[i5].handleData(bArr2, 0, i4);
                 if (handleData == CharsetProber.ProbingState.FOUND_IT) {
                     this.bestGuess = i5;
                     probingState = CharsetProber.ProbingState.FOUND_IT;
-                    break;
                 } else if (handleData == CharsetProber.ProbingState.NOT_ME) {
                     this.isActive[i5] = false;
                     this.activeNum--;
                     if (this.activeNum <= 0) {
                         probingState = CharsetProber.ProbingState.NOT_ME;
-                        break;
                     }
                 } else {
                     continue;
                 }
+                this.state = probingState;
+                break;
             }
-            i5++;
         }
-        this.state = probingState;
         return this.state;
     }
 
+    @Override // org.mozilla.universalchardet.prober.CharsetProber
     public void reset() {
         this.activeNum = 0;
         for (int i = 0; i < this.probers.length; i++) {
@@ -111,6 +111,7 @@ public class MBCSGroupProber extends CharsetProber {
         this.state = CharsetProber.ProbingState.DETECTING;
     }
 
+    @Override // org.mozilla.universalchardet.prober.CharsetProber
     public void setOption() {
     }
 }

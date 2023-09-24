@@ -2,9 +2,10 @@ package android.webkit;
 
 import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
-import android.os.RemoteException;
+import android.p007os.RemoteException;
 
 @SystemApi
+/* loaded from: classes4.dex */
 public final class WebViewUpdateService {
     @UnsupportedAppUsage
     private WebViewUpdateService() {

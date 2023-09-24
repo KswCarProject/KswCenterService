@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:sharedUserId="android.uid.system" android:versionCode="1" android:versionName="1.0_230309_1" android:compileSdkVersion="28" android:compileSdkVersionCodename="9" coreApp="true" package="com.wits.pms" platformBuildVersionCode="1" platformBuildVersionName="1.0_230309_1">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:sharedUserId="android.uid.system" android:versionCode="1" android:versionName="1.0_230802" android:compileSdkVersion="28" android:compileSdkVersionCodename="9" coreApp="true" package="com.wits.pms" platformBuildVersionCode="1" platformBuildVersionName="1.0_230802">
     <uses-sdk android:minSdkVersion="26" android:targetSdkVersion="28"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
@@ -27,6 +27,7 @@
     <uses-permission android:name="android.permission.EXPAND_STATUS_BAR"/>
     <permission android:name="com.txz.service.CENTER_CONTROL" android:protectionLevel="signature"/>
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/>
+    <protected-broadcast android:name="com.example.KeyEvent.control"/>
     <application android:theme="@style/AppTheme" android:label="@string/app_name" android:icon="@mipmap/ic_launcher" android:persistent="true" android:debuggable="true" android:allowBackup="true" android:supportsRtl="true" android:directBootAware="true" android:roundIcon="@mipmap/ic_launcher_round">
         <service android:name="com.wits.pms.core.TempControllerService" android:exported="false"/>
         <service android:name="com.wits.pms.custom.CallBackServiceImpl" android:enabled="true" android:exported="true"/>
@@ -51,11 +52,6 @@
         </receiver>
         <service android:name="com.wits.pms.mcu.McuService" android:exported="true"/>
         <activity android:name="com.wits.pms.TestActivity" android:excludeFromRecents="true"/>
-        <receiver android:name="com.wits.pms.receiver.TxzReceiver" android:exported="true">
-            <intent-filter>
-                <action android:name="com.txznet.adapter.send"/>
-            </intent-filter>
-        </receiver>
         <service android:name="com.wits.pms.core.PowerManagerAppService" android:exported="true"/>
         <activity android:theme="@style/FullScreenTheme" android:name="com.wits.pms.ClockActivity" android:exported="true" android:excludeFromRecents="true" android:resizeableActivity="false"/>
         <meta-data android:name="android.support.VERSION" android:value="26.1.0"/>

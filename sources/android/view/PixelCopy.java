@@ -2,10 +2,11 @@ package android.view;
 
 import android.graphics.Bitmap;
 import android.graphics.Rect;
-import android.os.Handler;
+import android.p007os.Handler;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes4.dex */
 public final class PixelCopy {
     public static final int ERROR_DESTINATION_INVALID = 5;
     public static final int ERROR_SOURCE_INVALID = 4;
@@ -15,9 +16,11 @@ public final class PixelCopy {
     public static final int SUCCESS = 0;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface CopyResultStatus {
     }
 
+    /* loaded from: classes4.dex */
     public interface OnPixelCopyFinishedListener {
         void onPixelCopyFinished(int i);
     }
@@ -38,16 +41,17 @@ public final class PixelCopy {
         validateBitmapDest(dest);
         if (!source.isValid()) {
             throw new IllegalArgumentException("Surface isn't valid, source.isValid() == false");
-        } else if (srcRect == null || !srcRect.isEmpty()) {
-            final int result = ThreadedRenderer.copySurfaceInto(source, srcRect, dest);
-            listenerThread.post(new Runnable() {
-                public void run() {
-                    OnPixelCopyFinishedListener.this.onPixelCopyFinished(result);
-                }
-            });
-        } else {
+        }
+        if (srcRect != null && srcRect.isEmpty()) {
             throw new IllegalArgumentException("sourceRect is empty");
         }
+        final int result = ThreadedRenderer.copySurfaceInto(source, srcRect, dest);
+        listenerThread.post(new Runnable() { // from class: android.view.PixelCopy.1
+            @Override // java.lang.Runnable
+            public void run() {
+                OnPixelCopyFinishedListener.this.onPixelCopyFinished(result);
+            }
+        });
     }
 
     public static void request(Window source, Bitmap dest, OnPixelCopyFinishedListener listener, Handler listenerThread) {
@@ -58,33 +62,35 @@ public final class PixelCopy {
         validateBitmapDest(dest);
         if (source == null) {
             throw new IllegalArgumentException("source is null");
-        } else if (source.peekDecorView() != null) {
-            Surface surface = null;
-            ViewRootImpl root = source.peekDecorView().getViewRootImpl();
-            if (root != null) {
-                surface = root.mSurface;
-                Rect surfaceInsets = root.mWindowAttributes.surfaceInsets;
-                if (srcRect == null) {
-                    srcRect = new Rect(surfaceInsets.left, surfaceInsets.top, root.mWidth + surfaceInsets.left, root.mHeight + surfaceInsets.top);
-                } else {
-                    srcRect.offset(surfaceInsets.left, surfaceInsets.top);
-                }
-            }
-            if (surface == null || !surface.isValid()) {
-                throw new IllegalArgumentException("Window doesn't have a backing surface!");
-            }
-            request(surface, srcRect, dest, listener, listenerThread);
-        } else {
+        }
+        if (source.peekDecorView() == null) {
             throw new IllegalArgumentException("Only able to copy windows with decor views");
         }
+        Surface surface = null;
+        ViewRootImpl root = source.peekDecorView().getViewRootImpl();
+        if (root != null) {
+            surface = root.mSurface;
+            Rect surfaceInsets = root.mWindowAttributes.surfaceInsets;
+            if (srcRect == null) {
+                srcRect = new Rect(surfaceInsets.left, surfaceInsets.top, root.mWidth + surfaceInsets.left, root.mHeight + surfaceInsets.top);
+            } else {
+                srcRect.offset(surfaceInsets.left, surfaceInsets.top);
+            }
+        }
+        if (surface == null || !surface.isValid()) {
+            throw new IllegalArgumentException("Window doesn't have a backing surface!");
+        }
+        request(surface, srcRect, dest, listener, listenerThread);
     }
 
     private static void validateBitmapDest(Bitmap bitmap) {
         if (bitmap == null) {
             throw new IllegalArgumentException("Bitmap cannot be null");
-        } else if (bitmap.isRecycled()) {
+        }
+        if (bitmap.isRecycled()) {
             throw new IllegalArgumentException("Bitmap is recycled");
-        } else if (!bitmap.isMutable()) {
+        }
+        if (!bitmap.isMutable()) {
             throw new IllegalArgumentException("Bitmap is immutable");
         }
     }

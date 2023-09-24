@@ -2,19 +2,18 @@ package android.media;
 
 import android.app.backup.FullBackup;
 import android.net.wifi.WifiEnterpriseConfig;
-import android.os.IncidentManager;
+import android.p007os.IncidentManager;
 import com.ibm.icu.text.DateFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/* compiled from: TtmlRenderer */
+/* compiled from: TtmlRenderer.java */
+/* loaded from: classes3.dex */
 final class TtmlUtils {
     public static final String ATTR_BEGIN = "begin";
     public static final String ATTR_DURATION = "dur";
     public static final String ATTR_END = "end";
-    private static final Pattern CLOCK_TIME = Pattern.compile("^([0-9][0-9]+):([0-9][0-9]):([0-9][0-9])(?:(\\.[0-9]+)|:([0-9][0-9])(?:\\.([0-9]+))?)?$");
     public static final long INVALID_TIMESTAMP = Long.MAX_VALUE;
-    private static final Pattern OFFSET_TIME = Pattern.compile("^([0-9]+(?:\\.[0-9]+)?)(h|m|s|ms|f|t)$");
     public static final String PCDATA = "#pcdata";
     public static final String TAG_BODY = "body";
     public static final String TAG_BR = "br";
@@ -31,34 +30,21 @@ final class TtmlUtils {
     public static final String TAG_STYLE = "style";
     public static final String TAG_STYLING = "styling";
     public static final String TAG_TT = "tt";
+    private static final Pattern CLOCK_TIME = Pattern.compile("^([0-9][0-9]+):([0-9][0-9]):([0-9][0-9])(?:(\\.[0-9]+)|:([0-9][0-9])(?:\\.([0-9]+))?)?$");
+    private static final Pattern OFFSET_TIME = Pattern.compile("^([0-9]+(?:\\.[0-9]+)?)(h|m|s|ms|f|t)$");
 
     private TtmlUtils() {
     }
 
     public static long parseTimeExpression(String time, int frameRate, int subframeRate, int tickRate) throws NumberFormatException {
-        double d;
-        String str = time;
-        int i = frameRate;
-        Matcher matcher = CLOCK_TIME.matcher(str);
-        if (matcher.matches()) {
-            double durationSeconds = ((double) (Long.parseLong(matcher.group(1)) * 3600)) + ((double) (Long.parseLong(matcher.group(2)) * 60)) + ((double) Long.parseLong(matcher.group(3)));
-            String fraction = matcher.group(4);
-            double durationSeconds2 = durationSeconds + (fraction != null ? Double.parseDouble(fraction) : 0.0d);
-            String frames = matcher.group(5);
-            double durationSeconds3 = durationSeconds2 + (frames != null ? ((double) Long.parseLong(frames)) / ((double) i) : 0.0d);
-            String subframes = matcher.group(6);
-            if (subframes != null) {
-                d = (((double) Long.parseLong(subframes)) / ((double) subframeRate)) / ((double) i);
-            } else {
-                int i2 = subframeRate;
-                d = 0.0d;
+        Matcher matcher = CLOCK_TIME.matcher(time);
+        if (!matcher.matches()) {
+            Matcher matcher2 = OFFSET_TIME.matcher(time);
+            if (!matcher2.matches()) {
+                throw new NumberFormatException("Malformed time expression : " + time);
             }
-            return (long) (1000.0d * (durationSeconds3 + d));
-        }
-        int i3 = subframeRate;
-        Matcher matcher2 = OFFSET_TIME.matcher(str);
-        if (matcher2.matches()) {
-            double value = Double.parseDouble(matcher2.group(1));
+            String timeValue = matcher2.group(1);
+            double value = Double.parseDouble(timeValue);
             String unit = matcher2.group(2);
             if (unit.equals("h")) {
                 value *= 3.6E9d;
@@ -69,16 +55,24 @@ final class TtmlUtils {
             } else if (unit.equals(DateFormat.MINUTE_SECOND)) {
                 value *= 1000.0d;
             } else if (unit.equals(FullBackup.FILES_TREE_TOKEN)) {
-                value = (value / ((double) i)) * 1000000.0d;
+                value = (value / frameRate) * 1000000.0d;
             } else if (unit.equals(IncidentManager.URI_PARAM_TIMESTAMP)) {
-                value = (value / ((double) tickRate)) * 1000000.0d;
+                value = (value / tickRate) * 1000000.0d;
                 return (long) value;
             }
-            int i4 = tickRate;
             return (long) value;
         }
-        int i5 = tickRate;
-        throw new NumberFormatException("Malformed time expression : " + str);
+        String hours = matcher.group(1);
+        double durationSeconds = Long.parseLong(hours) * 3600;
+        String minutes = matcher.group(2);
+        String seconds = matcher.group(3);
+        double durationSeconds2 = durationSeconds + (Long.parseLong(minutes) * 60) + Long.parseLong(seconds);
+        String fraction = matcher.group(4);
+        double durationSeconds3 = durationSeconds2 + (fraction != null ? Double.parseDouble(fraction) : 0.0d);
+        String frames = matcher.group(5);
+        double durationSeconds4 = durationSeconds3 + (frames != null ? Long.parseLong(frames) / frameRate : 0.0d);
+        String subframes = matcher.group(6);
+        return (long) (1000.0d * (durationSeconds4 + (subframes != null ? (Long.parseLong(subframes) / subframeRate) / frameRate : 0.0d)));
     }
 
     public static String applyDefaultSpacePolicy(String in) {
@@ -86,14 +80,11 @@ final class TtmlUtils {
     }
 
     public static String applySpacePolicy(String in, boolean treatLfAsSpace) {
-        String lfToSpace;
-        String spacesNeighboringLfRemoved = in.replaceAll("\r\n", "\n").replaceAll(" *\n *", "\n");
-        if (treatLfAsSpace) {
-            lfToSpace = spacesNeighboringLfRemoved.replaceAll("\n", WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER);
-        } else {
-            lfToSpace = spacesNeighboringLfRemoved;
-        }
-        return lfToSpace.replaceAll("[ \t\\x0B\f\r]+", WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER);
+        String crRemoved = in.replaceAll("\r\n", "\n");
+        String spacesNeighboringLfRemoved = crRemoved.replaceAll(" *\n *", "\n");
+        String lfToSpace = treatLfAsSpace ? spacesNeighboringLfRemoved.replaceAll("\n", WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER) : spacesNeighboringLfRemoved;
+        String spacesCollapsed = lfToSpace.replaceAll("[ \t\\x0B\f\r]+", WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER);
+        return spacesCollapsed;
     }
 
     public static String extractText(TtmlNode root, long startUs, long endUs) {
@@ -103,26 +94,24 @@ final class TtmlUtils {
     }
 
     private static void extractText(TtmlNode node, long startUs, long endUs, StringBuilder out, boolean inPTag) {
-        TtmlNode ttmlNode = node;
-        StringBuilder sb = out;
-        if (ttmlNode.mName.equals(PCDATA) && inPTag) {
-            sb.append(ttmlNode.mText);
-        } else if (ttmlNode.mName.equals(TAG_BR) && inPTag) {
-            sb.append("\n");
-        } else if (!ttmlNode.mName.equals(TAG_METADATA) && node.isActive(startUs, endUs)) {
-            boolean pTag = ttmlNode.mName.equals(TAG_P);
+        if (node.mName.equals(PCDATA) && inPTag) {
+            out.append(node.mText);
+        } else if (node.mName.equals(TAG_BR) && inPTag) {
+            out.append("\n");
+        } else if (!node.mName.equals(TAG_METADATA) && node.isActive(startUs, endUs)) {
+            boolean pTag = node.mName.equals(TAG_P);
             int length = out.length();
             int i = 0;
             while (true) {
                 int i2 = i;
-                if (i2 >= ttmlNode.mChildren.size()) {
+                if (i2 >= node.mChildren.size()) {
                     break;
                 }
-                extractText(ttmlNode.mChildren.get(i2), startUs, endUs, out, pTag || inPTag);
+                extractText(node.mChildren.get(i2), startUs, endUs, out, pTag || inPTag);
                 i = i2 + 1;
             }
             if (pTag && length != out.length()) {
-                sb.append("\n");
+                out.append("\n");
             }
         }
     }

@@ -1,10 +1,11 @@
 package android.widget;
 
 import android.annotation.UnsupportedAppUsage;
+import android.app.slice.Slice;
 import android.content.Context;
 import android.database.DataSetObserver;
-import android.os.Parcelable;
-import android.os.SystemClock;
+import android.p007os.Parcelable;
+import android.p007os.SystemClock;
 import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.view.ContextMenu;
@@ -20,6 +21,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.view.autofill.AutofillManager;
 import android.widget.Adapter;
 
+/* loaded from: classes4.dex */
 public abstract class AdapterView<T extends Adapter> extends ViewGroup {
     public static final int INVALID_POSITION = -1;
     public static final long INVALID_ROW_ID = Long.MIN_VALUE;
@@ -34,17 +36,17 @@ public abstract class AdapterView<T extends Adapter> extends ViewGroup {
     private boolean mDesiredFocusableInTouchModeState;
     private int mDesiredFocusableState;
     private View mEmptyView;
-    @ViewDebug.ExportedProperty(category = "scrolling")
     @UnsupportedAppUsage
+    @ViewDebug.ExportedProperty(category = "scrolling")
     int mFirstPosition;
     boolean mInLayout;
-    @ViewDebug.ExportedProperty(category = "list")
+    @ViewDebug.ExportedProperty(category = Slice.HINT_LIST)
     int mItemCount;
     private int mLayoutHeight;
     @UnsupportedAppUsage
     boolean mNeedSync;
-    @ViewDebug.ExportedProperty(category = "list")
     @UnsupportedAppUsage
+    @ViewDebug.ExportedProperty(category = Slice.HINT_LIST)
     int mNextSelectedPosition;
     @UnsupportedAppUsage
     long mNextSelectedRowId;
@@ -57,10 +59,9 @@ public abstract class AdapterView<T extends Adapter> extends ViewGroup {
     OnItemLongClickListener mOnItemLongClickListener;
     @UnsupportedAppUsage
     OnItemSelectedListener mOnItemSelectedListener;
-    /* access modifiers changed from: private */
-    public AdapterView<T>.SelectionNotifier mPendingSelectionNotifier;
-    @ViewDebug.ExportedProperty(category = "list")
+    private AdapterView<T>.SelectionNotifier mPendingSelectionNotifier;
     @UnsupportedAppUsage
+    @ViewDebug.ExportedProperty(category = Slice.HINT_LIST)
     int mSelectedPosition;
     long mSelectedRowId;
     private AdapterView<T>.SelectionNotifier mSelectionNotifier;
@@ -71,14 +72,17 @@ public abstract class AdapterView<T extends Adapter> extends ViewGroup {
     int mSyncPosition;
     long mSyncRowId;
 
+    /* loaded from: classes4.dex */
     public interface OnItemClickListener {
         void onItemClick(AdapterView<?> adapterView, View view, int i, long j);
     }
 
+    /* loaded from: classes4.dex */
     public interface OnItemLongClickListener {
         boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long j);
     }
 
+    /* loaded from: classes4.dex */
     public interface OnItemSelectedListener {
         void onItemSelected(AdapterView<?> adapterView, View view, int i, long j);
 
@@ -94,7 +98,7 @@ public abstract class AdapterView<T extends Adapter> extends ViewGroup {
     public abstract void setSelection(int i);
 
     public AdapterView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public AdapterView(Context context, AttributeSet attrs) {
@@ -169,48 +173,58 @@ public abstract class AdapterView<T extends Adapter> extends ViewGroup {
         return this.mOnItemSelectedListener;
     }
 
+    /* loaded from: classes4.dex */
     public static class AdapterContextMenuInfo implements ContextMenu.ContextMenuInfo {
-        public long id;
+
+        /* renamed from: id */
+        public long f2444id;
         public int position;
         public View targetView;
 
-        public AdapterContextMenuInfo(View targetView2, int position2, long id2) {
-            this.targetView = targetView2;
-            this.position = position2;
-            this.id = id2;
+        public AdapterContextMenuInfo(View targetView, int position, long id) {
+            this.targetView = targetView;
+            this.position = position;
+            this.f2444id = id;
         }
     }
 
+    @Override // android.view.ViewGroup
     public void addView(View child) {
         throw new UnsupportedOperationException("addView(View) is not supported in AdapterView");
     }
 
+    @Override // android.view.ViewGroup
     public void addView(View child, int index) {
         throw new UnsupportedOperationException("addView(View, int) is not supported in AdapterView");
     }
 
+    @Override // android.view.ViewGroup, android.view.ViewManager
     public void addView(View child, ViewGroup.LayoutParams params) {
         throw new UnsupportedOperationException("addView(View, LayoutParams) is not supported in AdapterView");
     }
 
+    @Override // android.view.ViewGroup
     public void addView(View child, int index, ViewGroup.LayoutParams params) {
         throw new UnsupportedOperationException("addView(View, int, LayoutParams) is not supported in AdapterView");
     }
 
+    @Override // android.view.ViewGroup, android.view.ViewManager
     public void removeView(View child) {
         throw new UnsupportedOperationException("removeView(View) is not supported in AdapterView");
     }
 
+    @Override // android.view.ViewGroup
     public void removeViewAt(int index) {
         throw new UnsupportedOperationException("removeViewAt(int) is not supported in AdapterView");
     }
 
+    @Override // android.view.ViewGroup
     public void removeAllViews() {
         throw new UnsupportedOperationException("removeAllViews() is not supported in AdapterView");
     }
 
-    /* access modifiers changed from: protected */
-    public void onLayout(boolean changed, int left, int top, int right, int bottom) {
+    @Override // android.view.ViewGroup, android.view.View
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         this.mLayoutHeight = getHeight();
     }
 
@@ -227,10 +241,10 @@ public abstract class AdapterView<T extends Adapter> extends ViewGroup {
     public Object getSelectedItem() {
         T adapter = getAdapter();
         int selection = getSelectedItemPosition();
-        if (adapter == null || adapter.getCount() <= 0 || selection < 0) {
-            return null;
+        if (adapter != null && adapter.getCount() > 0 && selection >= 0) {
+            return adapter.getItem(selection);
         }
-        return adapter.getItem(selection);
+        return null;
     }
 
     @ViewDebug.CapturedViewProperty
@@ -238,44 +252,28 @@ public abstract class AdapterView<T extends Adapter> extends ViewGroup {
         return this.mItemCount;
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:9:0x0016  */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public int getPositionForView(android.view.View r6) {
-        /*
-            r5 = this;
-            r0 = r6
-        L_0x0001:
-            r1 = -1
-            android.view.ViewParent r2 = r0.getParent()     // Catch:{ ClassCastException -> 0x002f }
-            android.view.View r2 = (android.view.View) r2     // Catch:{ ClassCastException -> 0x002f }
-            r3 = r2
-            if (r2 == 0) goto L_0x0013
-            boolean r2 = r3.equals(r5)     // Catch:{ ClassCastException -> 0x002f }
-            if (r2 != 0) goto L_0x0013
-            r0 = r3
-            goto L_0x0001
-        L_0x0013:
-            if (r0 == 0) goto L_0x002e
-            int r2 = r5.getChildCount()
-            r3 = 0
-        L_0x001b:
-            if (r3 >= r2) goto L_0x002e
-            android.view.View r4 = r5.getChildAt(r3)
-            boolean r4 = r4.equals(r0)
-            if (r4 == 0) goto L_0x002b
-            int r1 = r5.mFirstPosition
-            int r1 = r1 + r3
-            return r1
-        L_0x002b:
-            int r3 = r3 + 1
-            goto L_0x001b
-        L_0x002e:
-            return r1
-        L_0x002f:
-            r2 = move-exception
-            return r1
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.widget.AdapterView.getPositionForView(android.view.View):int");
+    public int getPositionForView(View view) {
+        View listItem = view;
+        while (true) {
+            try {
+                View v = (View) listItem.getParent();
+                if (v == null || v.equals(this)) {
+                    break;
+                }
+                listItem = v;
+            } catch (ClassCastException e) {
+                return -1;
+            }
+        }
+        if (listItem != null) {
+            int childCount = getChildCount();
+            for (int i = 0; i < childCount; i++) {
+                if (getChildAt(i).equals(listItem)) {
+                    return this.mFirstPosition + i;
+                }
+            }
+        }
+        return -1;
     }
 
     public int getFirstVisiblePosition() {
@@ -304,11 +302,11 @@ public abstract class AdapterView<T extends Adapter> extends ViewGroup {
         return this.mEmptyView;
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean isInFilterMode() {
+    boolean isInFilterMode() {
         return false;
     }
 
+    @Override // android.view.View
     public void setFocusable(int focusable) {
         T adapter = getAdapter();
         int i = 0;
@@ -323,6 +321,7 @@ public abstract class AdapterView<T extends Adapter> extends ViewGroup {
         super.setFocusable(i);
     }
 
+    @Override // android.view.View
     public void setFocusableInTouchMode(boolean focusable) {
         T adapter = getAdapter();
         boolean z = false;
@@ -337,11 +336,11 @@ public abstract class AdapterView<T extends Adapter> extends ViewGroup {
         super.setFocusableInTouchMode(z);
     }
 
-    /* access modifiers changed from: package-private */
-    public void checkFocus() {
+    void checkFocus() {
         T adapter = getAdapter();
         boolean z = true;
-        boolean focusable = !(adapter == null || adapter.getCount() == 0) || isInFilterMode();
+        boolean empty = adapter == null || adapter.getCount() == 0;
+        boolean focusable = !empty || isInFilterMode();
         super.setFocusableInTouchMode(focusable && this.mDesiredFocusableInTouchModeState);
         super.setFocusable(focusable ? this.mDesiredFocusableState : 0);
         if (this.mEmptyView != null) {
@@ -391,40 +390,44 @@ public abstract class AdapterView<T extends Adapter> extends ViewGroup {
         return adapter.getItemId(position);
     }
 
+    @Override // android.view.View
     public void setOnClickListener(View.OnClickListener l) {
         throw new RuntimeException("Don't call setOnClickListener for an AdapterView. You probably want setOnItemClickListener instead");
     }
 
-    /* access modifiers changed from: protected */
-    public void dispatchSaveInstanceState(SparseArray<Parcelable> container) {
+    @Override // android.view.ViewGroup, android.view.View
+    protected void dispatchSaveInstanceState(SparseArray<Parcelable> container) {
         dispatchFreezeSelfOnly(container);
     }
 
-    /* access modifiers changed from: protected */
-    public void dispatchRestoreInstanceState(SparseArray<Parcelable> container) {
+    @Override // android.view.ViewGroup, android.view.View
+    protected void dispatchRestoreInstanceState(SparseArray<Parcelable> container) {
         dispatchThawSelfOnly(container);
     }
 
+    /* loaded from: classes4.dex */
     class AdapterDataSetObserver extends DataSetObserver {
         private Parcelable mInstanceState = null;
 
         AdapterDataSetObserver() {
         }
 
+        @Override // android.database.DataSetObserver
         public void onChanged() {
             AdapterView.this.mDataChanged = true;
             AdapterView.this.mOldItemCount = AdapterView.this.mItemCount;
             AdapterView.this.mItemCount = AdapterView.this.getAdapter().getCount();
-            if (!AdapterView.this.getAdapter().hasStableIds() || this.mInstanceState == null || AdapterView.this.mOldItemCount != 0 || AdapterView.this.mItemCount <= 0) {
-                AdapterView.this.rememberSyncState();
-            } else {
+            if (AdapterView.this.getAdapter().hasStableIds() && this.mInstanceState != null && AdapterView.this.mOldItemCount == 0 && AdapterView.this.mItemCount > 0) {
                 AdapterView.this.onRestoreInstanceState(this.mInstanceState);
                 this.mInstanceState = null;
+            } else {
+                AdapterView.this.rememberSyncState();
             }
             AdapterView.this.checkFocus();
             AdapterView.this.requestLayout();
         }
 
+        @Override // android.database.DataSetObserver
         public void onInvalidated() {
             AdapterView.this.mDataChanged = true;
             if (AdapterView.this.getAdapter().hasStableIds()) {
@@ -446,29 +449,30 @@ public abstract class AdapterView<T extends Adapter> extends ViewGroup {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onDetachedFromWindow() {
+    @Override // android.view.ViewGroup, android.view.View
+    protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         removeCallbacks(this.mSelectionNotifier);
     }
 
+    /* loaded from: classes4.dex */
     private class SelectionNotifier implements Runnable {
         private SelectionNotifier() {
         }
 
+        @Override // java.lang.Runnable
         public void run() {
-            SelectionNotifier unused = AdapterView.this.mPendingSelectionNotifier = null;
+            AdapterView.this.mPendingSelectionNotifier = null;
             if (!AdapterView.this.mDataChanged || AdapterView.this.getViewRootImpl() == null || !AdapterView.this.getViewRootImpl().isLayoutRequested()) {
                 AdapterView.this.dispatchOnItemSelected();
             } else if (AdapterView.this.getAdapter() != null) {
-                SelectionNotifier unused2 = AdapterView.this.mPendingSelectionNotifier = this;
+                AdapterView.this.mPendingSelectionNotifier = this;
             }
         }
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void selectionChanged() {
+    void selectionChanged() {
         this.mPendingSelectionNotifier = null;
         if (this.mOnItemSelectedListener != null || AccessibilityManager.getInstance(this.mContext).isEnabled()) {
             if (this.mInLayout || this.mBlockLayoutRequests) {
@@ -488,53 +492,62 @@ public abstract class AdapterView<T extends Adapter> extends ViewGroup {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void dispatchOnItemSelected() {
         fireOnSelected();
         performAccessibilityActionsOnSelected();
     }
 
     private void fireOnSelected() {
-        if (this.mOnItemSelectedListener != null) {
-            int selection = getSelectedItemPosition();
-            if (selection >= 0) {
-                View v = getSelectedView();
-                this.mOnItemSelectedListener.onItemSelected(this, v, selection, getAdapter().getItemId(selection));
-                return;
-            }
-            this.mOnItemSelectedListener.onNothingSelected(this);
+        if (this.mOnItemSelectedListener == null) {
+            return;
         }
+        int selection = getSelectedItemPosition();
+        if (selection >= 0) {
+            View v = getSelectedView();
+            this.mOnItemSelectedListener.onItemSelected(this, v, selection, getAdapter().getItemId(selection));
+            return;
+        }
+        this.mOnItemSelectedListener.onNothingSelected(this);
     }
 
     private void performAccessibilityActionsOnSelected() {
-        if (AccessibilityManager.getInstance(this.mContext).isEnabled() && getSelectedItemPosition() >= 0) {
+        if (!AccessibilityManager.getInstance(this.mContext).isEnabled()) {
+            return;
+        }
+        int position = getSelectedItemPosition();
+        if (position >= 0) {
             sendAccessibilityEvent(4);
         }
     }
 
+    @Override // android.view.ViewGroup, android.view.View
     public boolean dispatchPopulateAccessibilityEventInternal(AccessibilityEvent event) {
         View selectedView = getSelectedView();
-        if (selectedView == null || selectedView.getVisibility() != 0 || !selectedView.dispatchPopulateAccessibilityEvent(event)) {
-            return false;
+        if (selectedView != null && selectedView.getVisibility() == 0 && selectedView.dispatchPopulateAccessibilityEvent(event)) {
+            return true;
         }
-        return true;
+        return false;
     }
 
+    @Override // android.view.ViewGroup
     public boolean onRequestSendAccessibilityEventInternal(View child, AccessibilityEvent event) {
-        if (!super.onRequestSendAccessibilityEventInternal(child, event)) {
-            return false;
+        if (super.onRequestSendAccessibilityEventInternal(child, event)) {
+            AccessibilityEvent record = AccessibilityEvent.obtain();
+            onInitializeAccessibilityEvent(record);
+            child.dispatchPopulateAccessibilityEvent(record);
+            event.appendRecord(record);
+            return true;
         }
-        AccessibilityEvent record = AccessibilityEvent.obtain();
-        onInitializeAccessibilityEvent(record);
-        child.dispatchPopulateAccessibilityEvent(record);
-        event.appendRecord(record);
-        return true;
+        return false;
     }
 
+    @Override // android.view.ViewGroup, android.view.View
     public CharSequence getAccessibilityClassName() {
         return AdapterView.class.getName();
     }
 
+    @Override // android.view.ViewGroup, android.view.View
     public void onInitializeAccessibilityNodeInfoInternal(AccessibilityNodeInfo info) {
         super.onInitializeAccessibilityNodeInfoInternal(info);
         info.setScrollable(isScrollableForAccessibility());
@@ -544,6 +557,7 @@ public abstract class AdapterView<T extends Adapter> extends ViewGroup {
         }
     }
 
+    @Override // android.view.View
     public void onInitializeAccessibilityEventInternal(AccessibilityEvent event) {
         super.onInitializeAccessibilityEventInternal(event);
         event.setScrollable(isScrollableForAccessibility());
@@ -563,19 +577,18 @@ public abstract class AdapterView<T extends Adapter> extends ViewGroup {
         if (adapter == null || (itemCount = adapter.getCount()) <= 0) {
             return false;
         }
-        if (getFirstVisiblePosition() > 0 || getLastVisiblePosition() < itemCount - 1) {
-            return true;
+        if (getFirstVisiblePosition() <= 0 && getLastVisiblePosition() >= itemCount - 1) {
+            return false;
         }
-        return false;
+        return true;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean canAnimate() {
+    @Override // android.view.ViewGroup
+    protected boolean canAnimate() {
         return super.canAnimate() && this.mItemCount > 0;
     }
 
-    /* access modifiers changed from: package-private */
-    public void handleDataChanged() {
+    void handleDataChanged() {
         int count = this.mItemCount;
         boolean found = false;
         if (count > 0) {
@@ -617,9 +630,8 @@ public abstract class AdapterView<T extends Adapter> extends ViewGroup {
         notifySubtreeAccessibilityStateChangedIfNeeded();
     }
 
-    /* access modifiers changed from: package-private */
-    public void checkSelectionChanged() {
-        if (!(this.mSelectedPosition == this.mOldSelectedPosition && this.mSelectedRowId == this.mOldSelectedRowId)) {
+    void checkSelectionChanged() {
+        if (this.mSelectedPosition != this.mOldSelectedPosition || this.mSelectedRowId != this.mOldSelectedRowId) {
             selectionChanged();
             this.mOldSelectedPosition = this.mSelectedPosition;
             this.mOldSelectedRowId = this.mSelectedRowId;
@@ -629,8 +641,7 @@ public abstract class AdapterView<T extends Adapter> extends ViewGroup {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public int findSyncPosition() {
+    int findSyncPosition() {
         int count = this.mItemCount;
         if (count == 0) {
             return -1;
@@ -650,45 +661,39 @@ public abstract class AdapterView<T extends Adapter> extends ViewGroup {
             return -1;
         }
         while (SystemClock.uptimeMillis() <= endTime) {
-            if (adapter.getItemId(seed2) != idToMatch) {
-                boolean hitFirst = true;
-                boolean hitLast = last == count + -1;
-                if (first != 0) {
-                    hitFirst = false;
-                }
-                if (hitLast && hitFirst) {
-                    break;
-                } else if (hitFirst || (next && !hitLast)) {
-                    last++;
-                    seed2 = last;
-                    next = false;
-                } else if (hitLast || (!next && !hitFirst)) {
-                    first--;
-                    seed2 = first;
-                    next = true;
-                }
-            } else {
+            long rowId = adapter.getItemId(seed2);
+            if (rowId == idToMatch) {
                 return seed2;
+            }
+            boolean hitLast = last == count + (-1);
+            boolean hitFirst = first == 0;
+            if (hitLast && hitFirst) {
+                break;
+            } else if (hitFirst || (next && !hitLast)) {
+                last++;
+                seed2 = last;
+                next = false;
+            } else if (hitLast || (!next && !hitFirst)) {
+                first--;
+                seed2 = first;
+                next = true;
             }
         }
         return -1;
     }
 
-    /* access modifiers changed from: package-private */
-    public int lookForSelectablePosition(int position, boolean lookDown) {
+    int lookForSelectablePosition(int position, boolean lookDown) {
         return position;
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void setSelectedPositionInt(int position) {
+    void setSelectedPositionInt(int position) {
         this.mSelectedPosition = position;
         this.mSelectedRowId = getItemIdAtPosition(position);
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void setNextSelectedPositionInt(int position) {
+    void setNextSelectedPositionInt(int position) {
         this.mNextSelectedPosition = position;
         this.mNextSelectedRowId = getItemIdAtPosition(position);
         if (this.mNeedSync && this.mSyncMode == 0 && position >= 0) {
@@ -697,11 +702,10 @@ public abstract class AdapterView<T extends Adapter> extends ViewGroup {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void rememberSyncState() {
+    void rememberSyncState() {
         if (getChildCount() > 0) {
             this.mNeedSync = true;
-            this.mSyncHeight = (long) this.mLayoutHeight;
+            this.mSyncHeight = this.mLayoutHeight;
             if (this.mSelectedPosition >= 0) {
                 View v = getChildAt(this.mSelectedPosition - this.mFirstPosition);
                 this.mSyncRowId = this.mNextSelectedRowId;
@@ -714,10 +718,10 @@ public abstract class AdapterView<T extends Adapter> extends ViewGroup {
             }
             View v2 = getChildAt(0);
             T adapter = getAdapter();
-            if (this.mFirstPosition < 0 || this.mFirstPosition >= adapter.getCount()) {
-                this.mSyncRowId = -1;
-            } else {
+            if (this.mFirstPosition >= 0 && this.mFirstPosition < adapter.getCount()) {
                 this.mSyncRowId = adapter.getItemId(this.mFirstPosition);
+            } else {
+                this.mSyncRowId = -1L;
             }
             this.mSyncPosition = this.mFirstPosition;
             if (v2 != null) {
@@ -727,8 +731,8 @@ public abstract class AdapterView<T extends Adapter> extends ViewGroup {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void encodeProperties(ViewHierarchyEncoder encoder) {
+    @Override // android.view.ViewGroup, android.view.View
+    protected void encodeProperties(ViewHierarchyEncoder encoder) {
         super.encodeProperties(encoder);
         encoder.addProperty("scrolling:firstPosition", this.mFirstPosition);
         encoder.addProperty("list:nextSelectedPosition", this.mNextSelectedPosition);
@@ -737,12 +741,13 @@ public abstract class AdapterView<T extends Adapter> extends ViewGroup {
         encoder.addProperty("list:itemCount", this.mItemCount);
     }
 
+    @Override // android.view.View
     public void onProvideAutofillStructure(ViewStructure structure, int flags) {
         super.onProvideAutofillStructure(structure, flags);
     }
 
-    /* access modifiers changed from: protected */
-    public void onProvideStructure(ViewStructure structure, int viewFor, int flags) {
+    @Override // android.view.View
+    protected void onProvideStructure(ViewStructure structure, int viewFor, int flags) {
         Adapter adapter;
         CharSequence[] options;
         super.onProvideStructure(structure, viewFor, flags);

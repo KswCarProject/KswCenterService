@@ -1,9 +1,10 @@
 package android.service.oemlock;
 
 import android.annotation.SystemApi;
-import android.os.RemoteException;
+import android.p007os.RemoteException;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public class OemLockManager {
     private IOemLockService mService;
 

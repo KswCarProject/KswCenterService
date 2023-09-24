@@ -1,16 +1,21 @@
 package android.net;
 
 import android.content.ComponentName;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.Objects;
 
+/* loaded from: classes3.dex */
 public final class NetworkScorerAppData implements Parcelable {
-    public static final Parcelable.Creator<NetworkScorerAppData> CREATOR = new Parcelable.Creator<NetworkScorerAppData>() {
+    public static final Parcelable.Creator<NetworkScorerAppData> CREATOR = new Parcelable.Creator<NetworkScorerAppData>() { // from class: android.net.NetworkScorerAppData.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NetworkScorerAppData createFromParcel(Parcel in) {
             return new NetworkScorerAppData(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NetworkScorerAppData[] newArray(int size) {
             return new NetworkScorerAppData[size];
         }
@@ -21,8 +26,8 @@ public final class NetworkScorerAppData implements Parcelable {
     private final String mRecommendationServiceLabel;
     public final int packageUid;
 
-    public NetworkScorerAppData(int packageUid2, ComponentName recommendationServiceComp, String recommendationServiceLabel, ComponentName enableUseOpenWifiActivity, String networkAvailableNotificationChannelId) {
-        this.packageUid = packageUid2;
+    public NetworkScorerAppData(int packageUid, ComponentName recommendationServiceComp, String recommendationServiceLabel, ComponentName enableUseOpenWifiActivity, String networkAvailableNotificationChannelId) {
+        this.packageUid = packageUid;
         this.mRecommendationService = recommendationServiceComp;
         this.mRecommendationServiceLabel = recommendationServiceLabel;
         this.mEnableUseOpenWifiActivity = enableUseOpenWifiActivity;
@@ -37,6 +42,7 @@ public final class NetworkScorerAppData implements Parcelable {
         this.mNetworkAvailableNotificationChannelId = in.readString();
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.packageUid);
         ComponentName.writeToParcel(this.mRecommendationService, dest);
@@ -45,6 +51,7 @@ public final class NetworkScorerAppData implements Parcelable {
         dest.writeString(this.mNetworkAvailableNotificationChannelId);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -81,13 +88,13 @@ public final class NetworkScorerAppData implements Parcelable {
             return false;
         }
         NetworkScorerAppData that = (NetworkScorerAppData) o;
-        if (this.packageUid != that.packageUid || !Objects.equals(this.mRecommendationService, that.mRecommendationService) || !Objects.equals(this.mRecommendationServiceLabel, that.mRecommendationServiceLabel) || !Objects.equals(this.mEnableUseOpenWifiActivity, that.mEnableUseOpenWifiActivity) || !Objects.equals(this.mNetworkAvailableNotificationChannelId, that.mNetworkAvailableNotificationChannelId)) {
-            return false;
+        if (this.packageUid == that.packageUid && Objects.equals(this.mRecommendationService, that.mRecommendationService) && Objects.equals(this.mRecommendationServiceLabel, that.mRecommendationServiceLabel) && Objects.equals(this.mEnableUseOpenWifiActivity, that.mEnableUseOpenWifiActivity) && Objects.equals(this.mNetworkAvailableNotificationChannelId, that.mNetworkAvailableNotificationChannelId)) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(this.packageUid), this.mRecommendationService, this.mRecommendationServiceLabel, this.mEnableUseOpenWifiActivity, this.mNetworkAvailableNotificationChannelId});
+        return Objects.hash(Integer.valueOf(this.packageUid), this.mRecommendationService, this.mRecommendationServiceLabel, this.mEnableUseOpenWifiActivity, this.mNetworkAvailableNotificationChannelId);
     }
 }

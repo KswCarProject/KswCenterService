@@ -2,16 +2,16 @@ package android.security.net.config;
 
 import java.security.cert.X509Certificate;
 
+/* loaded from: classes3.dex */
 public final class TrustAnchor {
     public final X509Certificate certificate;
     public final boolean overridesPins;
 
-    public TrustAnchor(X509Certificate certificate2, boolean overridesPins2) {
-        if (certificate2 != null) {
-            this.certificate = certificate2;
-            this.overridesPins = overridesPins2;
-            return;
+    public TrustAnchor(X509Certificate certificate, boolean overridesPins) {
+        if (certificate == null) {
+            throw new NullPointerException("certificate");
         }
-        throw new NullPointerException("certificate");
+        this.certificate = certificate;
+        this.overridesPins = overridesPins;
     }
 }

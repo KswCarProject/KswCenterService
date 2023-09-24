@@ -9,11 +9,12 @@ import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public class MarshalQueryableArray<T> implements MarshalQueryable<T> {
     private static final boolean DEBUG = false;
-    /* access modifiers changed from: private */
-    public static final String TAG = MarshalQueryableArray.class.getSimpleName();
+    private static final String TAG = MarshalQueryableArray.class.getSimpleName();
 
+    /* loaded from: classes.dex */
     private class MarshalerArray extends Marshaler<T> {
         private final Class<T> mClass;
         private final Class<?> mComponentClass;
@@ -21,12 +22,13 @@ public class MarshalQueryableArray<T> implements MarshalQueryable<T> {
 
         protected MarshalerArray(TypeReference<T> typeReference, int nativeType) {
             super(MarshalQueryableArray.this, typeReference, nativeType);
-            this.mClass = typeReference.getRawType();
+            this.mClass = (Class<? super T>) typeReference.getRawType();
             TypeReference<?> componentToken = typeReference.getComponentType();
             this.mComponentMarshaler = MarshalRegistry.getMarshaler(componentToken, this.mNativeType);
             this.mComponentClass = componentToken.getRawType();
         }
 
+        @Override // android.hardware.camera2.marshal.Marshaler
         public void marshal(T value, ByteBuffer buffer) {
             int length = Array.getLength(value);
             for (int i = 0; i < length; i++) {
@@ -34,39 +36,43 @@ public class MarshalQueryableArray<T> implements MarshalQueryable<T> {
             }
         }
 
+        @Override // android.hardware.camera2.marshal.Marshaler
         public T unmarshal(ByteBuffer buffer) {
             Object array;
             int elementSize = this.mComponentMarshaler.getNativeSize();
             if (elementSize != Marshaler.NATIVE_SIZE_DYNAMIC) {
                 int remaining = buffer.remaining();
                 int arraySize = remaining / elementSize;
-                if (remaining % elementSize == 0) {
-                    array = Array.newInstance(this.mComponentClass, arraySize);
-                    for (int i = 0; i < arraySize; i++) {
-                        Array.set(array, i, this.mComponentMarshaler.unmarshal(buffer));
-                    }
-                } else {
+                if (remaining % elementSize != 0) {
                     throw new UnsupportedOperationException("Arrays for " + this.mTypeReference + " must be packed tighly into a multiple of " + elementSize + "; but there are " + (remaining % elementSize) + " left over bytes");
+                }
+                array = Array.newInstance(this.mComponentClass, arraySize);
+                for (int i = 0; i < arraySize; i++) {
+                    Object elem = this.mComponentMarshaler.unmarshal(buffer);
+                    Array.set(array, i, elem);
                 }
             } else {
                 ArrayList<Object> arrayList = new ArrayList<>();
                 while (buffer.hasRemaining()) {
-                    arrayList.add(this.mComponentMarshaler.unmarshal(buffer));
+                    Object elem2 = this.mComponentMarshaler.unmarshal(buffer);
+                    arrayList.add(elem2);
                 }
                 array = copyListToArray(arrayList, Array.newInstance(this.mComponentClass, arrayList.size()));
             }
             Object array2 = array;
             if (buffer.remaining() != 0) {
-                String access$000 = MarshalQueryableArray.TAG;
-                Log.e(access$000, "Trailing bytes (" + buffer.remaining() + ") left over after unpacking " + this.mClass);
+                String str = MarshalQueryableArray.TAG;
+                Log.m70e(str, "Trailing bytes (" + buffer.remaining() + ") left over after unpacking " + this.mClass);
             }
             return this.mClass.cast(array2);
         }
 
+        @Override // android.hardware.camera2.marshal.Marshaler
         public int getNativeSize() {
             return NATIVE_SIZE_DYNAMIC;
         }
 
+        @Override // android.hardware.camera2.marshal.Marshaler
         public int calculateMarshalSize(T value) {
             int elementSize = this.mComponentMarshaler.getNativeSize();
             int arrayLength = Array.getLength(value);
@@ -80,6 +86,7 @@ public class MarshalQueryableArray<T> implements MarshalQueryable<T> {
             return size;
         }
 
+        /* JADX WARN: Multi-variable type inference failed */
         private <TElem> void marshalArrayElement(Marshaler<TElem> marshaler, ByteBuffer buffer, Object array, int index) {
             marshaler.marshal(Array.get(array, index), buffer);
         }
@@ -88,15 +95,19 @@ public class MarshalQueryableArray<T> implements MarshalQueryable<T> {
             return arrayList.toArray((Object[]) arrayDest);
         }
 
+        /* JADX WARN: Multi-variable type inference failed */
         private <TElem> int calculateElementMarshalSize(Marshaler<TElem> marshaler, Object array, int index) {
-            return marshaler.calculateMarshalSize(Array.get(array, index));
+            Object elem = Array.get(array, index);
+            return marshaler.calculateMarshalSize(elem);
         }
     }
 
+    @Override // android.hardware.camera2.marshal.MarshalQueryable
     public Marshaler<T> createMarshaler(TypeReference<T> managedType, int nativeType) {
         return new MarshalerArray(managedType, nativeType);
     }
 
+    @Override // android.hardware.camera2.marshal.MarshalQueryable
     public boolean isTypeMappingSupported(TypeReference<T> managedType, int nativeType) {
         return managedType.getRawType().isArray();
     }

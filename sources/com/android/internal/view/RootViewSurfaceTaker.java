@@ -3,6 +3,7 @@ package com.android.internal.view;
 import android.view.InputQueue;
 import android.view.SurfaceHolder;
 
+/* loaded from: classes4.dex */
 public interface RootViewSurfaceTaker {
     void onRootViewScrollYChanged(int i);
 

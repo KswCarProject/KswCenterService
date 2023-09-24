@@ -3,37 +3,46 @@ package android.content;
 import android.annotation.UnsupportedAppUsage;
 import android.content.IClipboard;
 import android.content.IOnPrimaryClipChangedListener;
-import android.os.Handler;
-import android.os.RemoteException;
-import android.os.ServiceManager;
+import android.p007os.Handler;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
 import com.android.internal.util.Preconditions;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public class ClipboardManager extends android.text.ClipboardManager {
     private final Context mContext;
-    /* access modifiers changed from: private */
-    public final Handler mHandler;
+    private final Handler mHandler;
     private final ArrayList<OnPrimaryClipChangedListener> mPrimaryClipChangedListeners = new ArrayList<>();
-    private final IOnPrimaryClipChangedListener.Stub mPrimaryClipChangedServiceListener = new IOnPrimaryClipChangedListener.Stub() {
+    private final IOnPrimaryClipChangedListener.Stub mPrimaryClipChangedServiceListener = new BinderC05471();
+    private final IClipboard mService = IClipboard.Stub.asInterface(ServiceManager.getServiceOrThrow(Context.CLIPBOARD_SERVICE));
+
+    /* loaded from: classes.dex */
+    public interface OnPrimaryClipChangedListener {
+        void onPrimaryClipChanged();
+    }
+
+    /* renamed from: android.content.ClipboardManager$1 */
+    /* loaded from: classes.dex */
+    class BinderC05471 extends IOnPrimaryClipChangedListener.Stub {
+        BinderC05471() {
+        }
+
+        @Override // android.content.IOnPrimaryClipChangedListener
         public void dispatchPrimaryClipChanged() {
-            ClipboardManager.this.mHandler.post(new Runnable() {
+            ClipboardManager.this.mHandler.post(new Runnable() { // from class: android.content.-$$Lambda$ClipboardManager$1$hQk8olbGAgUi4WWNG4ZuDZsM39s
+                @Override // java.lang.Runnable
                 public final void run() {
                     ClipboardManager.this.reportPrimaryClipChanged();
                 }
             });
         }
-    };
-    private final IClipboard mService;
-
-    public interface OnPrimaryClipChangedListener {
-        void onPrimaryClipChanged();
     }
 
     @UnsupportedAppUsage
     public ClipboardManager(Context context, Handler handler) throws ServiceManager.ServiceNotFoundException {
         this.mContext = context;
         this.mHandler = handler;
-        this.mService = IClipboard.Stub.asInterface(ServiceManager.getServiceOrThrow(Context.CLIPBOARD_SERVICE));
     }
 
     public void setPrimaryClip(ClipData clip) {
@@ -104,20 +113,23 @@ public class ClipboardManager extends android.text.ClipboardManager {
         }
     }
 
+    @Override // android.text.ClipboardManager
     @Deprecated
     public CharSequence getText() {
         ClipData clip = getPrimaryClip();
-        if (clip == null || clip.getItemCount() <= 0) {
-            return null;
+        if (clip != null && clip.getItemCount() > 0) {
+            return clip.getItemAt(0).coerceToText(this.mContext);
         }
-        return clip.getItemAt(0).coerceToText(this.mContext);
+        return null;
     }
 
+    @Override // android.text.ClipboardManager
     @Deprecated
     public void setText(CharSequence text) {
-        setPrimaryClip(ClipData.newPlainText((CharSequence) null, text));
+        setPrimaryClip(ClipData.newPlainText(null, text));
     }
 
+    @Override // android.text.ClipboardManager
     @Deprecated
     public boolean hasText() {
         try {
@@ -127,53 +139,18 @@ public class ClipboardManager extends android.text.ClipboardManager {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    /* JADX WARNING: Code restructure failed: missing block: B:11:0x0017, code lost:
-        if (r0 >= r1.length) goto L_0x0023;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:12:0x0019, code lost:
-        ((android.content.ClipboardManager.OnPrimaryClipChangedListener) r1[r0]).onPrimaryClipChanged();
-        r0 = r0 + 1;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:13:0x0023, code lost:
-        return;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:9:0x0015, code lost:
-        r0 = 0;
-     */
-    @android.annotation.UnsupportedAppUsage
-    /* Code decompiled incorrectly, please refer to instructions dump. */
+    /* JADX INFO: Access modifiers changed from: package-private */
+    @UnsupportedAppUsage
     public void reportPrimaryClipChanged() {
-        /*
-            r3 = this;
-            java.util.ArrayList<android.content.ClipboardManager$OnPrimaryClipChangedListener> r0 = r3.mPrimaryClipChangedListeners
-            monitor-enter(r0)
-            java.util.ArrayList<android.content.ClipboardManager$OnPrimaryClipChangedListener> r1 = r3.mPrimaryClipChangedListeners     // Catch:{ all -> 0x0024 }
-            int r1 = r1.size()     // Catch:{ all -> 0x0024 }
-            if (r1 > 0) goto L_0x000d
-            monitor-exit(r0)     // Catch:{ all -> 0x0024 }
-            return
-        L_0x000d:
-            java.util.ArrayList<android.content.ClipboardManager$OnPrimaryClipChangedListener> r2 = r3.mPrimaryClipChangedListeners     // Catch:{ all -> 0x0024 }
-            java.lang.Object[] r2 = r2.toArray()     // Catch:{ all -> 0x0024 }
-            r1 = r2
-            monitor-exit(r0)     // Catch:{ all -> 0x0024 }
-            r0 = 0
-        L_0x0016:
-            int r2 = r1.length
-            if (r0 >= r2) goto L_0x0023
-            r2 = r1[r0]
-            android.content.ClipboardManager$OnPrimaryClipChangedListener r2 = (android.content.ClipboardManager.OnPrimaryClipChangedListener) r2
-            r2.onPrimaryClipChanged()
-            int r0 = r0 + 1
-            goto L_0x0016
-        L_0x0023:
-            return
-        L_0x0024:
-            r1 = move-exception
-            monitor-exit(r0)     // Catch:{ all -> 0x0024 }
-            throw r1
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.content.ClipboardManager.reportPrimaryClipChanged():void");
+        synchronized (this.mPrimaryClipChangedListeners) {
+            int N = this.mPrimaryClipChangedListeners.size();
+            if (N <= 0) {
+                return;
+            }
+            Object[] listeners = this.mPrimaryClipChangedListeners.toArray();
+            for (Object obj : listeners) {
+                ((OnPrimaryClipChangedListener) obj).onPrimaryClipChanged();
+            }
+        }
     }
 }

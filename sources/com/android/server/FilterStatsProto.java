@@ -1,5 +1,6 @@
 package com.android.server;
 
+/* loaded from: classes4.dex */
 public final class FilterStatsProto {
     public static final long COUNT = 1120986464260L;
     public static final long LAST_FLIGHT_TIME_REALTIME = 1112396529666L;

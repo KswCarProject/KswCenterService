@@ -1,5 +1,6 @@
 package android.text;
 
+/* loaded from: classes4.dex */
 public interface SpanWatcher extends NoCopySpan {
     void onSpanAdded(Spannable spannable, Object obj, int i, int i2);
 

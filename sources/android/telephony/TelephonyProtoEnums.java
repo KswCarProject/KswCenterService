@@ -1,5 +1,6 @@
 package android.telephony;
 
+/* loaded from: classes.dex */
 public final class TelephonyProtoEnums {
     public static final int DATA_CONNECTION_POWER_STATE_HIGH = 3;
     public static final int DATA_CONNECTION_POWER_STATE_LOW = 1;

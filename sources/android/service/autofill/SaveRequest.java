@@ -1,18 +1,23 @@
 package android.service.autofill;
 
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.util.Preconditions;
 import java.util.ArrayList;
 import java.util.List;
 
+/* loaded from: classes3.dex */
 public final class SaveRequest implements Parcelable {
-    public static final Parcelable.Creator<SaveRequest> CREATOR = new Parcelable.Creator<SaveRequest>() {
+    public static final Parcelable.Creator<SaveRequest> CREATOR = new Parcelable.Creator<SaveRequest>() { // from class: android.service.autofill.SaveRequest.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SaveRequest createFromParcel(Parcel parcel) {
             return new SaveRequest(parcel);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SaveRequest[] newArray(int size) {
             return new SaveRequest[size];
         }
@@ -43,10 +48,12 @@ public final class SaveRequest implements Parcelable {
         return this.mDatasetIds;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeTypedList(this.mFillContexts, flags);
         parcel.writeBundle(this.mClientState);

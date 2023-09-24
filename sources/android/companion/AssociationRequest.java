@@ -1,8 +1,8 @@
 package android.companion;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.provider.OneTimeUseBuilder;
 import com.android.internal.util.ArrayUtils;
 import com.android.internal.util.CollectionUtils;
@@ -10,12 +10,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public final class AssociationRequest implements Parcelable {
-    public static final Parcelable.Creator<AssociationRequest> CREATOR = new Parcelable.Creator<AssociationRequest>() {
+    public static final Parcelable.Creator<AssociationRequest> CREATOR = new Parcelable.Creator<AssociationRequest>() { // from class: android.companion.AssociationRequest.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AssociationRequest createFromParcel(Parcel in) {
             return new AssociationRequest(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AssociationRequest[] newArray(int size) {
             return new AssociationRequest[size];
         }
@@ -28,9 +33,8 @@ public final class AssociationRequest implements Parcelable {
         this.mDeviceFilters = CollectionUtils.emptyIfNull(deviceFilters);
     }
 
-    /* JADX INFO: this call moved to the top of the method (can break code semantics) */
     private AssociationRequest(Parcel in) {
-        this(in.readByte() != 0, (List<DeviceFilter<?>>) in.readParcelableList(new ArrayList(), AssociationRequest.class.getClassLoader()));
+        this(in.readByte() != 0, in.readParcelableList(new ArrayList(), AssociationRequest.class.getClassLoader()));
     }
 
     @UnsupportedAppUsage
@@ -51,32 +55,35 @@ public final class AssociationRequest implements Parcelable {
             return false;
         }
         AssociationRequest that = (AssociationRequest) o;
-        if (this.mSingleDevice != that.mSingleDevice || !Objects.equals(this.mDeviceFilters, that.mDeviceFilters)) {
-            return false;
+        if (this.mSingleDevice == that.mSingleDevice && Objects.equals(this.mDeviceFilters, that.mDeviceFilters)) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Boolean.valueOf(this.mSingleDevice), this.mDeviceFilters});
+        return Objects.hash(Boolean.valueOf(this.mSingleDevice), this.mDeviceFilters);
     }
 
     public String toString() {
         return "AssociationRequest{mSingleDevice=" + this.mSingleDevice + ", mDeviceFilters=" + this.mDeviceFilters + '}';
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeByte(this.mSingleDevice ? (byte) 1 : 0);
+        dest.writeByte(this.mSingleDevice ? (byte) 1 : (byte) 0);
         dest.writeParcelableList(this.mDeviceFilters, flags);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    /* loaded from: classes.dex */
     public static final class Builder extends OneTimeUseBuilder<AssociationRequest> {
-        private ArrayList<DeviceFilter<?>> mDeviceFilters = null;
         private boolean mSingleDevice = false;
+        private ArrayList<DeviceFilter<?>> mDeviceFilters = null;
 
         public Builder setSingleDevice(boolean singleDevice) {
             checkNotUsed();
@@ -92,6 +99,8 @@ public final class AssociationRequest implements Parcelable {
             return this;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.provider.OneTimeUseBuilder
         public AssociationRequest build() {
             markUsed();
             return new AssociationRequest(this.mSingleDevice, this.mDeviceFilters);

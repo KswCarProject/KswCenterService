@@ -1,7 +1,7 @@
 package android.widget;
 
 import android.content.Context;
-import android.os.LocaleList;
+import android.p007os.LocaleList;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextUtils;
@@ -11,14 +11,19 @@ import android.util.MathUtils;
 import android.view.View;
 import android.view.accessibility.AccessibilityManager;
 import android.widget.AdapterView;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
+/* loaded from: classes4.dex */
 public class TextInputTimePickerView extends RelativeLayout {
-    private static final int AM = 0;
+
+    /* renamed from: AM */
+    private static final int f2461AM = 0;
     public static final int AMPM = 2;
     public static final int HOURS = 0;
     public static final int MINUTES = 1;
-    private static final int PM = 1;
+
+    /* renamed from: PM */
+    private static final int f2462PM = 1;
     private final Spinner mAmPmSpinner;
     private final TextView mErrorLabel;
     private boolean mErrorShowing;
@@ -27,19 +32,18 @@ public class TextInputTimePickerView extends RelativeLayout {
     private final TextView mHourLabel;
     private final TextView mInputSeparatorView;
     private boolean mIs24Hour;
-    /* access modifiers changed from: private */
-    public OnValueTypedListener mListener;
-    /* access modifiers changed from: private */
-    public final EditText mMinuteEditText;
+    private OnValueTypedListener mListener;
+    private final EditText mMinuteEditText;
     private final TextView mMinuteLabel;
     private boolean mTimeSet;
 
+    /* loaded from: classes4.dex */
     interface OnValueTypedListener {
         void onValueChanged(int i, int i2);
     }
 
     public TextInputTimePickerView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public TextInputTimePickerView(Context context, AttributeSet attrs) {
@@ -52,48 +56,56 @@ public class TextInputTimePickerView extends RelativeLayout {
 
     public TextInputTimePickerView(final Context context, AttributeSet attrs, int defStyle, int defStyleRes) {
         super(context, attrs, defStyle, defStyleRes);
-        inflate(context, R.layout.time_picker_text_input_material, this);
-        this.mHourEditText = (EditText) findViewById(R.id.input_hour);
-        this.mMinuteEditText = (EditText) findViewById(R.id.input_minute);
-        this.mInputSeparatorView = (TextView) findViewById(R.id.input_separator);
-        this.mErrorLabel = (TextView) findViewById(R.id.label_error);
-        this.mHourLabel = (TextView) findViewById(R.id.label_hour);
-        this.mMinuteLabel = (TextView) findViewById(R.id.label_minute);
-        this.mHourEditText.addTextChangedListener(new TextWatcher() {
+        inflate(context, C3132R.layout.time_picker_text_input_material, this);
+        this.mHourEditText = (EditText) findViewById(C3132R.C3134id.input_hour);
+        this.mMinuteEditText = (EditText) findViewById(C3132R.C3134id.input_minute);
+        this.mInputSeparatorView = (TextView) findViewById(C3132R.C3134id.input_separator);
+        this.mErrorLabel = (TextView) findViewById(C3132R.C3134id.label_error);
+        this.mHourLabel = (TextView) findViewById(C3132R.C3134id.label_hour);
+        this.mMinuteLabel = (TextView) findViewById(C3132R.C3134id.label_minute);
+        this.mHourEditText.addTextChangedListener(new TextWatcher() { // from class: android.widget.TextInputTimePickerView.1
+            @Override // android.text.TextWatcher
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
 
+            @Override // android.text.TextWatcher
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
 
+            @Override // android.text.TextWatcher
             public void afterTextChanged(Editable editable) {
                 if (TextInputTimePickerView.this.parseAndSetHourInternal(editable.toString()) && editable.length() > 1) {
-                    Context context = context;
                     Context context2 = context;
-                    if (!((AccessibilityManager) context.getSystemService(Context.ACCESSIBILITY_SERVICE)).isEnabled()) {
+                    Context context3 = context;
+                    AccessibilityManager am = (AccessibilityManager) context2.getSystemService(Context.ACCESSIBILITY_SERVICE);
+                    if (!am.isEnabled()) {
                         TextInputTimePickerView.this.mMinuteEditText.requestFocus();
                     }
                 }
             }
         });
-        this.mMinuteEditText.addTextChangedListener(new TextWatcher() {
+        this.mMinuteEditText.addTextChangedListener(new TextWatcher() { // from class: android.widget.TextInputTimePickerView.2
+            @Override // android.text.TextWatcher
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
 
+            @Override // android.text.TextWatcher
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
 
+            @Override // android.text.TextWatcher
             public void afterTextChanged(Editable editable) {
-                boolean unused = TextInputTimePickerView.this.parseAndSetMinuteInternal(editable.toString());
+                TextInputTimePickerView.this.parseAndSetMinuteInternal(editable.toString());
             }
         });
-        this.mAmPmSpinner = (Spinner) findViewById(R.id.am_pm_spinner);
+        this.mAmPmSpinner = (Spinner) findViewById(C3132R.C3134id.am_pm_spinner);
         String[] amPmStrings = TimePicker.getAmPmStrings(context);
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>(context, 17367049);
         adapter.add(TimePickerClockDelegate.obtainVerbatim(amPmStrings[0]));
         adapter.add(TimePickerClockDelegate.obtainVerbatim(amPmStrings[1]));
         this.mAmPmSpinner.setAdapter((SpinnerAdapter) adapter);
-        this.mAmPmSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        this.mAmPmSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() { // from class: android.widget.TextInputTimePickerView.3
+            @Override // android.widget.AdapterView.OnItemSelectedListener
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
                 if (position == 0) {
                     TextInputTimePickerView.this.mListener.onValueChanged(2, 0);
@@ -102,18 +114,17 @@ public class TextInputTimePickerView extends RelativeLayout {
                 }
             }
 
+            @Override // android.widget.AdapterView.OnItemSelectedListener
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
     }
 
-    /* access modifiers changed from: package-private */
-    public void setListener(OnValueTypedListener listener) {
+    void setListener(OnValueTypedListener listener) {
         this.mListener = listener;
     }
 
-    /* access modifiers changed from: package-private */
-    public void setHourFormat(int maxCharLength) {
+    void setHourFormat(int maxCharLength) {
         this.mHourEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxCharLength)});
         this.mMinuteEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxCharLength)});
         LocaleList locales = this.mContext.getResources().getConfiguration().getLocales();
@@ -121,8 +132,7 @@ public class TextInputTimePickerView extends RelativeLayout {
         this.mMinuteEditText.setImeHintLocales(locales);
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean validateInput() {
+    boolean validateInput() {
         String hourText;
         String minuteText;
         if (TextUtils.isEmpty(this.mHourEditText.getText())) {
@@ -135,30 +145,20 @@ public class TextInputTimePickerView extends RelativeLayout {
         } else {
             minuteText = this.mMinuteEditText.getText().toString();
         }
-        boolean z = true;
         boolean inputValid = parseAndSetHourInternal(hourText) && parseAndSetMinuteInternal(minuteText);
-        if (inputValid) {
-            z = false;
-        }
-        setError(z);
+        setError(inputValid ? false : true);
         return inputValid;
     }
 
-    /* access modifiers changed from: package-private */
-    public void updateSeparator(String separatorText) {
-        this.mInputSeparatorView.setText((CharSequence) separatorText);
+    void updateSeparator(String separatorText) {
+        this.mInputSeparatorView.setText(separatorText);
     }
 
     private void setError(boolean enabled) {
         this.mErrorShowing = enabled;
-        int i = 4;
         this.mErrorLabel.setVisibility(enabled ? 0 : 4);
         this.mHourLabel.setVisibility(enabled ? 4 : 0);
-        TextView textView = this.mMinuteLabel;
-        if (!enabled) {
-            i = 0;
-        }
-        textView.setVisibility(i);
+        this.mMinuteLabel.setVisibility(enabled ? 4 : 0);
     }
 
     private void setTimeSet(boolean timeSet) {
@@ -169,55 +169,53 @@ public class TextInputTimePickerView extends RelativeLayout {
         return this.mTimeSet;
     }
 
-    /* access modifiers changed from: package-private */
-    public void updateTextInputValues(int localizedHour, int minute, int amOrPm, boolean is24Hour, boolean hourFormatStartsAtZero) {
+    void updateTextInputValues(int localizedHour, int minute, int amOrPm, boolean is24Hour, boolean hourFormatStartsAtZero) {
         this.mIs24Hour = is24Hour;
         this.mHourFormatStartsAtZero = hourFormatStartsAtZero;
         this.mAmPmSpinner.setVisibility(is24Hour ? 4 : 0);
-        if (amOrPm == 0) {
-            this.mAmPmSpinner.setSelection(0);
-        } else {
+        if (amOrPm != 0) {
             this.mAmPmSpinner.setSelection(1);
+        } else {
+            this.mAmPmSpinner.setSelection(0);
         }
         if (isTimeSet()) {
-            this.mHourEditText.setText((CharSequence) String.format("%d", new Object[]{Integer.valueOf(localizedHour)}));
-            this.mMinuteEditText.setText((CharSequence) String.format("%02d", new Object[]{Integer.valueOf(minute)}));
+            this.mHourEditText.setText(String.format("%d", Integer.valueOf(localizedHour)));
+            this.mMinuteEditText.setText(String.format("%02d", Integer.valueOf(minute)));
         } else {
-            this.mHourEditText.setHint((CharSequence) String.format("%d", new Object[]{Integer.valueOf(localizedHour)}));
-            this.mMinuteEditText.setHint((CharSequence) String.format("%02d", new Object[]{Integer.valueOf(minute)}));
+            this.mHourEditText.setHint(String.format("%d", Integer.valueOf(localizedHour)));
+            this.mMinuteEditText.setHint(String.format("%02d", Integer.valueOf(minute)));
         }
         if (this.mErrorShowing) {
             validateInput();
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public boolean parseAndSetHourInternal(String input) {
         try {
             int hour = Integer.parseInt(input);
-            if (!isValidLocalizedHour(hour)) {
-                int minHour = this.mHourFormatStartsAtZero ^ 1;
-                this.mListener.onValueChanged(0, getHourOfDayFromLocalizedHour(MathUtils.constrain(hour, (int) minHour, this.mIs24Hour ? 23 : minHour + 11)));
-                return false;
+            if (isValidLocalizedHour(hour)) {
+                this.mListener.onValueChanged(0, getHourOfDayFromLocalizedHour(hour));
+                setTimeSet(true);
+                return true;
             }
-            this.mListener.onValueChanged(0, getHourOfDayFromLocalizedHour(hour));
-            setTimeSet(true);
-            return true;
+            int minHour = !this.mHourFormatStartsAtZero ? 1 : 0;
+            int maxHour = this.mIs24Hour ? 23 : minHour + 11;
+            this.mListener.onValueChanged(0, getHourOfDayFromLocalizedHour(MathUtils.constrain(hour, minHour, maxHour)));
+            return false;
         } catch (NumberFormatException e) {
             return false;
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public boolean parseAndSetMinuteInternal(String input) {
         try {
             int minutes = Integer.parseInt(input);
-            if (minutes >= 0) {
-                if (minutes <= 59) {
-                    this.mListener.onValueChanged(1, minutes);
-                    setTimeSet(true);
-                    return true;
-                }
+            if (minutes >= 0 && minutes <= 59) {
+                this.mListener.onValueChanged(1, minutes);
+                setTimeSet(true);
+                return true;
             }
             this.mListener.onValueChanged(1, MathUtils.constrain(minutes, 0, 59));
             return false;
@@ -227,28 +225,25 @@ public class TextInputTimePickerView extends RelativeLayout {
     }
 
     private boolean isValidLocalizedHour(int localizedHour) {
-        int minHour = !this.mHourFormatStartsAtZero;
+        int minHour = !this.mHourFormatStartsAtZero ? 1 : 0;
         int maxHour = (this.mIs24Hour ? 23 : 11) + minHour;
-        if (localizedHour < minHour || localizedHour > maxHour) {
-            return false;
-        }
-        return true;
+        return localizedHour >= minHour && localizedHour <= maxHour;
     }
 
     private int getHourOfDayFromLocalizedHour(int localizedHour) {
         int hourOfDay = localizedHour;
-        if (!this.mIs24Hour) {
-            if (!this.mHourFormatStartsAtZero && localizedHour == 12) {
-                hourOfDay = 0;
-            }
-            if (this.mAmPmSpinner.getSelectedItemPosition() == 1) {
-                return hourOfDay + 12;
+        if (this.mIs24Hour) {
+            if (!this.mHourFormatStartsAtZero && localizedHour == 24) {
+                return 0;
             }
             return hourOfDay;
-        } else if (this.mHourFormatStartsAtZero || localizedHour != 24) {
-            return hourOfDay;
-        } else {
-            return 0;
         }
+        if (!this.mHourFormatStartsAtZero && localizedHour == 12) {
+            hourOfDay = 0;
+        }
+        if (this.mAmPmSpinner.getSelectedItemPosition() == 1) {
+            return hourOfDay + 12;
+        }
+        return hourOfDay;
     }
 }

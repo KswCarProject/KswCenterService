@@ -1,13 +1,13 @@
 package android.telephony.mbms;
 
-import android.os.Binder;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.RemoteException;
 import android.telephony.mbms.IDownloadProgressListener;
 import java.util.concurrent.Executor;
 
+/* loaded from: classes4.dex */
 public class InternalDownloadProgressListener extends IDownloadProgressListener.Stub {
-    /* access modifiers changed from: private */
-    public final DownloadProgressListener mAppListener;
+    private final DownloadProgressListener mAppListener;
     private final Executor mExecutor;
     private volatile boolean mIsStopped = false;
 
@@ -16,24 +16,21 @@ public class InternalDownloadProgressListener extends IDownloadProgressListener.
         this.mExecutor = executor;
     }
 
-    public void onProgressUpdated(DownloadRequest request, FileInfo fileInfo, int currentDownloadSize, int fullDownloadSize, int currentDecodedSize, int fullDecodedSize) throws RemoteException {
-        if (!this.mIsStopped) {
-            long token = Binder.clearCallingIdentity();
-            try {
-                final DownloadRequest downloadRequest = request;
-                final FileInfo fileInfo2 = fileInfo;
-                final int i = currentDownloadSize;
-                final int i2 = fullDownloadSize;
-                final int i3 = currentDecodedSize;
-                final int i4 = fullDecodedSize;
-                this.mExecutor.execute(new Runnable() {
-                    public void run() {
-                        InternalDownloadProgressListener.this.mAppListener.onProgressUpdated(downloadRequest, fileInfo2, i, i2, i3, i4);
-                    }
-                });
-            } finally {
-                Binder.restoreCallingIdentity(token);
-            }
+    @Override // android.telephony.mbms.IDownloadProgressListener
+    public void onProgressUpdated(final DownloadRequest request, final FileInfo fileInfo, final int currentDownloadSize, final int fullDownloadSize, final int currentDecodedSize, final int fullDecodedSize) throws RemoteException {
+        if (this.mIsStopped) {
+            return;
+        }
+        long token = Binder.clearCallingIdentity();
+        try {
+            this.mExecutor.execute(new Runnable() { // from class: android.telephony.mbms.InternalDownloadProgressListener.1
+                @Override // java.lang.Runnable
+                public void run() {
+                    InternalDownloadProgressListener.this.mAppListener.onProgressUpdated(request, fileInfo, currentDownloadSize, fullDownloadSize, currentDecodedSize, fullDecodedSize);
+                }
+            });
+        } finally {
+            Binder.restoreCallingIdentity(token);
         }
     }
 

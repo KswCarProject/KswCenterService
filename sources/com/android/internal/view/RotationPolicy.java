@@ -1,28 +1,31 @@
 package com.android.internal.view;
 
 import android.content.Context;
-import android.content.pm.PackageManager;
+import android.content.p002pm.PackageManager;
 import android.database.ContentObserver;
 import android.graphics.Point;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.RemoteException;
-import android.os.UserHandle;
+import android.p007os.AsyncTask;
+import android.p007os.Handler;
+import android.p007os.RemoteException;
+import android.p007os.UserHandle;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Display;
 import android.view.IWindowManager;
 import android.view.WindowManagerGlobal;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
+/* loaded from: classes4.dex */
 public final class RotationPolicy {
     private static final int CURRENT_ROTATION = -1;
     public static final int NATURAL_ROTATION = 0;
     private static final String TAG = "RotationPolicy";
 
+    /* loaded from: classes4.dex */
     public static abstract class RotationPolicyListener {
-        final ContentObserver mObserver = new ContentObserver(new Handler()) {
+        final ContentObserver mObserver = new ContentObserver(new Handler()) { // from class: com.android.internal.view.RotationPolicy.RotationPolicyListener.1
+            @Override // android.database.ContentObserver
             public void onChange(boolean selfChange, Uri uri) {
                 RotationPolicyListener.this.onChange();
             }
@@ -36,7 +39,7 @@ public final class RotationPolicy {
 
     public static boolean isRotationSupported(Context context) {
         PackageManager pm = context.getPackageManager();
-        return pm.hasSystemFeature(PackageManager.FEATURE_SENSOR_ACCELEROMETER) && pm.hasSystemFeature(PackageManager.FEATURE_SCREEN_PORTRAIT) && pm.hasSystemFeature(PackageManager.FEATURE_SCREEN_LANDSCAPE) && context.getResources().getBoolean(R.bool.config_supportAutoRotation);
+        return pm.hasSystemFeature(PackageManager.FEATURE_SENSOR_ACCELEROMETER) && pm.hasSystemFeature(PackageManager.FEATURE_SCREEN_PORTRAIT) && pm.hasSystemFeature(PackageManager.FEATURE_SCREEN_LANDSCAPE) && context.getResources().getBoolean(C3132R.bool.config_supportAutoRotation);
     }
 
     public static int getRotationLockOrientation(Context context) {
@@ -52,19 +55,16 @@ public final class RotationPolicy {
                     displayId = 0;
                 }
                 wm.getInitialDisplaySize(displayId, size);
-                return size.x < size.y ? 1 : 2;
+                return size.f59x < size.f60y ? 1 : 2;
             } catch (RemoteException e) {
-                Log.w(TAG, "Unable to get the display size");
+                Log.m64w(TAG, "Unable to get the display size");
             }
         }
         return 0;
     }
 
     public static boolean isRotationLockToggleVisible(Context context) {
-        if (!isRotationSupported(context) || Settings.System.getIntForUser(context.getContentResolver(), Settings.System.HIDE_ROTATION_LOCK_TOGGLE_FOR_ACCESSIBILITY, 0, -2) != 0) {
-            return false;
-        }
-        return true;
+        return isRotationSupported(context) && Settings.System.getIntForUser(context.getContentResolver(), Settings.System.HIDE_ROTATION_LOCK_TOGGLE_FOR_ACCESSIBILITY, 0, -2) == 0;
     }
 
     public static boolean isRotationLocked(Context context) {
@@ -72,7 +72,8 @@ public final class RotationPolicy {
     }
 
     public static void setRotationLock(Context context, boolean enabled) {
-        setRotationLockAtAngle(context, enabled, areAllRotationsAllowed(context) ? -1 : 0);
+        int rotation = areAllRotationsAllowed(context) ? -1 : 0;
+        setRotationLockAtAngle(context, enabled, rotation);
     }
 
     public static void setRotationLockAtAngle(Context context, boolean enabled, int rotation) {
@@ -81,16 +82,17 @@ public final class RotationPolicy {
     }
 
     public static void setRotationLockForAccessibility(Context context, boolean enabled) {
-        Settings.System.putIntForUser(context.getContentResolver(), Settings.System.HIDE_ROTATION_LOCK_TOGGLE_FOR_ACCESSIBILITY, enabled, -2);
+        Settings.System.putIntForUser(context.getContentResolver(), Settings.System.HIDE_ROTATION_LOCK_TOGGLE_FOR_ACCESSIBILITY, enabled ? 1 : 0, -2);
         setRotationLock(enabled, 0);
     }
 
     private static boolean areAllRotationsAllowed(Context context) {
-        return context.getResources().getBoolean(R.bool.config_allowAllRotations);
+        return context.getResources().getBoolean(C3132R.bool.config_allowAllRotations);
     }
 
     private static void setRotationLock(final boolean enabled, final int rotation) {
-        AsyncTask.execute((Runnable) new Runnable() {
+        AsyncTask.execute(new Runnable() { // from class: com.android.internal.view.RotationPolicy.1
+            @Override // java.lang.Runnable
             public void run() {
                 try {
                     IWindowManager wm = WindowManagerGlobal.getWindowManagerService();
@@ -100,7 +102,7 @@ public final class RotationPolicy {
                         wm.thawRotation();
                     }
                 } catch (RemoteException e) {
-                    Log.w(RotationPolicy.TAG, "Unable to save auto-rotate setting");
+                    Log.m64w(RotationPolicy.TAG, "Unable to save auto-rotate setting");
                 }
             }
         });

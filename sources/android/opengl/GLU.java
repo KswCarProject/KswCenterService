@@ -2,6 +2,7 @@ package android.opengl;
 
 import javax.microedition.khronos.opengles.GL10;
 
+/* loaded from: classes3.dex */
 public class GLU {
     private static final float[] sScratch = new float[32];
 
@@ -31,11 +32,14 @@ public class GLU {
         float[] scratch = sScratch;
         synchronized (scratch) {
             try {
-                Matrix.setLookAtM(scratch, 0, eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
-                GL10 gl10 = gl;
-                gl.glMultMatrixf(scratch, 0);
             } catch (Throwable th) {
                 th = th;
+            }
+            try {
+                Matrix.setLookAtM(scratch, 0, eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
+                gl.glMultMatrixf(scratch, 0);
+            } catch (Throwable th2) {
+                th = th2;
                 throw th;
             }
         }
@@ -46,9 +50,11 @@ public class GLU {
     }
 
     public static void gluPerspective(GL10 gl, float fovy, float aspect, float zNear, float zFar) {
-        float top = ((float) Math.tan(((double) fovy) * 0.008726646259971648d)) * zNear;
+        float top = ((float) Math.tan(fovy * 0.008726646259971648d)) * zNear;
         float bottom = -top;
-        gl.glFrustumf(bottom * aspect, top * aspect, bottom, top, zNear, zFar);
+        float left = bottom * aspect;
+        float right = top * aspect;
+        gl.glFrustumf(left, right, bottom, top, zNear, zFar);
     }
 
     public static int gluProject(float objX, float objY, float objZ, float[] model, int modelOffset, float[] project, int projectOffset, int[] view, int viewOffset, float[] win, int winOffset) {
@@ -65,8 +71,8 @@ public class GLU {
                 return 0;
             }
             float rw = 1.0f / w;
-            win[winOffset] = ((float) view[viewOffset]) + (((float) view[viewOffset + 2]) * ((scratch[20] * rw) + 1.0f) * 0.5f);
-            win[winOffset + 1] = ((float) view[viewOffset + 1]) + (((float) view[viewOffset + 3]) * ((scratch[21] * rw) + 1.0f) * 0.5f);
+            win[winOffset] = view[viewOffset] + (view[viewOffset + 2] * ((scratch[20] * rw) + 1.0f) * 0.5f);
+            win[winOffset + 1] = view[viewOffset + 1] + (view[viewOffset + 3] * ((scratch[21] * rw) + 1.0f) * 0.5f);
             win[winOffset + 2] = ((scratch[22] * rw) + 1.0f) * 0.5f;
             return 1;
         }
@@ -76,15 +82,15 @@ public class GLU {
         float[] scratch = sScratch;
         synchronized (scratch) {
             Matrix.multiplyMM(scratch, 0, project, projectOffset, model, modelOffset);
-            if (!Matrix.invertM(scratch, 16, scratch, 0)) {
-                return 0;
+            if (Matrix.invertM(scratch, 16, scratch, 0)) {
+                scratch[0] = (((winX - view[viewOffset + 0]) * 2.0f) / view[viewOffset + 2]) - 1.0f;
+                scratch[1] = (((winY - view[viewOffset + 1]) * 2.0f) / view[viewOffset + 3]) - 1.0f;
+                scratch[2] = (winZ * 2.0f) - 1.0f;
+                scratch[3] = 1.0f;
+                Matrix.multiplyMV(obj, objOffset, scratch, 16, scratch, 0);
+                return 1;
             }
-            scratch[0] = (((winX - ((float) view[viewOffset + 0])) * 2.0f) / ((float) view[viewOffset + 2])) - 1.0f;
-            scratch[1] = (((winY - ((float) view[viewOffset + 1])) * 2.0f) / ((float) view[viewOffset + 3])) - 1.0f;
-            scratch[2] = (winZ * 2.0f) - 1.0f;
-            scratch[3] = 1.0f;
-            Matrix.multiplyMV(obj, objOffset, scratch, 16, scratch, 0);
-            return 1;
+            return 0;
         }
     }
 }

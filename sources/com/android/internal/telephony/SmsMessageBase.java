@@ -9,10 +9,10 @@ import com.android.internal.telephony.SmsConstants;
 import java.text.BreakIterator;
 import java.util.Arrays;
 
+/* loaded from: classes4.dex */
 public abstract class SmsMessageBase {
     protected String mEmailBody;
     protected String mEmailFrom;
-    protected int mIndexOnIcc = -1;
     protected boolean mIsEmail;
     @UnsupportedAppUsage
     protected boolean mIsMwi;
@@ -33,10 +33,11 @@ public abstract class SmsMessageBase {
     @UnsupportedAppUsage
     protected String mScAddress;
     protected long mScTimeMillis;
-    protected int mStatusOnIcc = -1;
     protected byte[] mUserData;
     @UnsupportedAppUsage
     protected SmsHeader mUserDataHeader;
+    protected int mStatusOnIcc = -1;
+    protected int mIndexOnIcc = -1;
 
     public abstract SmsConstants.MessageClass getMessageClass();
 
@@ -63,6 +64,7 @@ public abstract class SmsMessageBase {
     @UnsupportedAppUsage
     public abstract boolean isStatusReportMessage();
 
+    /* loaded from: classes4.dex */
     public static abstract class SubmitPduBase {
         @UnsupportedAppUsage
         public byte[] encodedMessage;
@@ -152,42 +154,44 @@ public abstract class SmsMessageBase {
         return this.mIndexOnIcc;
     }
 
-    /* access modifiers changed from: protected */
-    public void parseMessageBody() {
+    protected void parseMessageBody() {
         if (this.mOriginatingAddress != null && this.mOriginatingAddress.couldBeEmailGateway()) {
             extractEmailAddressFromMessageBody();
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void extractEmailAddressFromMessageBody() {
+    protected void extractEmailAddressFromMessageBody() {
         String[] parts = this.mMessageBody.split("( /)|( )", 2);
-        if (parts.length >= 2) {
-            this.mEmailFrom = parts[0];
-            this.mEmailBody = parts[1];
-            this.mIsEmail = Telephony.Mms.isEmailAddress(this.mEmailFrom);
+        if (parts.length < 2) {
+            return;
         }
+        this.mEmailFrom = parts[0];
+        this.mEmailBody = parts[1];
+        this.mIsEmail = Telephony.Mms.isEmailAddress(this.mEmailFrom);
     }
 
+    /* JADX WARN: Code restructure failed: missing block: B:25:?, code lost:
+        return r2;
+     */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
     public static int findNextUnicodePosition(int currentPosition, int byteLimit, CharSequence msgBody) {
         int nextPos = Math.min((byteLimit / 2) + currentPosition, msgBody.length());
-        if (nextPos >= msgBody.length()) {
+        if (nextPos < msgBody.length()) {
+            BreakIterator breakIterator = BreakIterator.getCharacterInstance();
+            breakIterator.setText(msgBody.toString());
+            if (!breakIterator.isBoundary(nextPos)) {
+                int breakPos = breakIterator.preceding(nextPos);
+                while (breakPos + 4 <= nextPos && Emoji.isRegionalIndicatorSymbol(Character.codePointAt(msgBody, breakPos)) && Emoji.isRegionalIndicatorSymbol(Character.codePointAt(msgBody, breakPos + 2))) {
+                    breakPos += 4;
+                }
+                if (Character.isHighSurrogate(msgBody.charAt(nextPos - 1))) {
+                    return nextPos - 1;
+                }
+                return nextPos;
+            }
             return nextPos;
-        }
-        BreakIterator breakIterator = BreakIterator.getCharacterInstance();
-        breakIterator.setText(msgBody.toString());
-        if (breakIterator.isBoundary(nextPos)) {
-            return nextPos;
-        }
-        int breakPos = breakIterator.preceding(nextPos);
-        while (breakPos + 4 <= nextPos && Emoji.isRegionalIndicatorSymbol(Character.codePointAt(msgBody, breakPos)) && Emoji.isRegionalIndicatorSymbol(Character.codePointAt(msgBody, breakPos + 2))) {
-            breakPos += 4;
-        }
-        if (breakPos > currentPosition) {
-            return breakPos;
-        }
-        if (Character.isHighSurrogate(msgBody.charAt(nextPos - 1))) {
-            return nextPos - 1;
         }
         return nextPos;
     }

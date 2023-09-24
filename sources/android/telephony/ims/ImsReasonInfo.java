@@ -2,12 +2,13 @@ package android.telephony.ims;
 
 import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @SystemApi
+/* loaded from: classes4.dex */
 public final class ImsReasonInfo implements Parcelable {
     public static final int CODE_ACCESS_CLASS_BLOCKED = 1512;
     public static final int CODE_ANSWERED_ELSEWHERE = 1014;
@@ -181,11 +182,15 @@ public final class ImsReasonInfo implements Parcelable {
     public static final int CODE_UT_SS_MODIFIED_TO_SS = 824;
     public static final int CODE_UT_SS_MODIFIED_TO_USSD = 823;
     public static final int CODE_WIFI_LOST = 1407;
-    public static final Parcelable.Creator<ImsReasonInfo> CREATOR = new Parcelable.Creator<ImsReasonInfo>() {
+    public static final Parcelable.Creator<ImsReasonInfo> CREATOR = new Parcelable.Creator<ImsReasonInfo>() { // from class: android.telephony.ims.ImsReasonInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ImsReasonInfo createFromParcel(Parcel in) {
             return new ImsReasonInfo(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ImsReasonInfo[] newArray(int size) {
             return new ImsReasonInfo[size];
         }
@@ -202,10 +207,12 @@ public final class ImsReasonInfo implements Parcelable {
     public String mExtraMessage;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface ImsCode {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface UtReason {
     }
 
@@ -250,10 +257,12 @@ public final class ImsReasonInfo implements Parcelable {
         return "ImsReasonInfo :: {" + this.mCode + ", " + this.mExtraCode + ", " + this.mExtraMessage + "}";
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(this.mCode);
         out.writeInt(this.mExtraCode);

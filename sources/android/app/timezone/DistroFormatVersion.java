@@ -1,14 +1,21 @@
 package android.app.timezone;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public final class DistroFormatVersion implements Parcelable {
-    public static final Parcelable.Creator<DistroFormatVersion> CREATOR = new Parcelable.Creator<DistroFormatVersion>() {
+    public static final Parcelable.Creator<DistroFormatVersion> CREATOR = new Parcelable.Creator<DistroFormatVersion>() { // from class: android.app.timezone.DistroFormatVersion.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public DistroFormatVersion createFromParcel(Parcel in) {
-            return new DistroFormatVersion(in.readInt(), in.readInt());
+            int majorVersion = in.readInt();
+            int minorVersion = in.readInt();
+            return new DistroFormatVersion(majorVersion, minorVersion);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public DistroFormatVersion[] newArray(int size) {
             return new DistroFormatVersion[size];
         }
@@ -29,10 +36,12 @@ public final class DistroFormatVersion implements Parcelable {
         return this.mMinorVersion;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(this.mMajorVersion);
         out.writeInt(this.mMinorVersion);
@@ -50,17 +59,15 @@ public final class DistroFormatVersion implements Parcelable {
             return false;
         }
         DistroFormatVersion that = (DistroFormatVersion) o;
-        if (this.mMajorVersion != that.mMajorVersion) {
-            return false;
-        }
-        if (this.mMinorVersion == that.mMinorVersion) {
+        if (this.mMajorVersion == that.mMajorVersion && this.mMinorVersion == that.mMinorVersion) {
             return true;
         }
         return false;
     }
 
     public int hashCode() {
-        return (this.mMajorVersion * 31) + this.mMinorVersion;
+        int result = this.mMajorVersion;
+        return (result * 31) + this.mMinorVersion;
     }
 
     public String toString() {

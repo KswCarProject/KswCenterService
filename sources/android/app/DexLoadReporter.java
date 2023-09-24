@@ -1,8 +1,8 @@
 package android.app;
 
-import android.os.FileUtils;
-import android.os.RemoteException;
-import android.os.SystemProperties;
+import android.p007os.FileUtils;
+import android.p007os.RemoteException;
+import android.p007os.SystemProperties;
 import android.provider.SettingsStringUtil;
 import android.util.Slog;
 import com.android.internal.annotations.GuardedBy;
@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/* loaded from: classes.dex */
 class DexLoadReporter implements BaseDexClassLoader.Reporter {
     private static final boolean DEBUG = false;
     private static final DexLoadReporter INSTANCE = new DexLoadReporter();
@@ -29,8 +30,7 @@ class DexLoadReporter implements BaseDexClassLoader.Reporter {
         return INSTANCE;
     }
 
-    /* access modifiers changed from: package-private */
-    public void registerAppDataDir(String packageName, String dataDir) {
+    void registerAppDataDir(String packageName, String dataDir) {
         if (dataDir != null) {
             synchronized (this.mDataDirs) {
                 this.mDataDirs.add(dataDir);
@@ -45,10 +45,11 @@ class DexLoadReporter implements BaseDexClassLoader.Reporter {
             Slog.wtf(TAG, "Bad call to DexLoadReporter: empty dex paths");
         } else {
             String[] dexPathsForRegistration = classPaths.get(0).split(File.pathSeparator);
-            if (dexPathsForRegistration.length != 0) {
-                notifyPackageManager(classLoadersChain, classPaths);
-                registerSecondaryDexForProfiling(dexPathsForRegistration);
+            if (dexPathsForRegistration.length == 0) {
+                return;
             }
+            notifyPackageManager(classLoadersChain, classPaths);
+            registerSecondaryDexForProfiling(dexPathsForRegistration);
         }
     }
 
@@ -61,37 +62,39 @@ class DexLoadReporter implements BaseDexClassLoader.Reporter {
         try {
             ActivityThread.getPackageManager().notifyDexLoad(packageName, classLoadersNames, classPaths, VMRuntime.getRuntime().vmInstructionSet());
         } catch (RemoteException re) {
-            Slog.e(TAG, "Failed to notify PM about dex load for package " + packageName, re);
+            Slog.m55e(TAG, "Failed to notify PM about dex load for package " + packageName, re);
         }
     }
 
     private void registerSecondaryDexForProfiling(String[] dexPaths) {
         String[] dataDirs;
-        if (SystemProperties.getBoolean("dalvik.vm.dexopt.secondary", false)) {
-            synchronized (this.mDataDirs) {
-                dataDirs = (String[]) this.mDataDirs.toArray(new String[0]);
-            }
-            for (String dexPath : dexPaths) {
-                registerSecondaryDexForProfiling(dexPath, dataDirs);
-            }
+        if (!SystemProperties.getBoolean("dalvik.vm.dexopt.secondary", false)) {
+            return;
+        }
+        synchronized (this.mDataDirs) {
+            dataDirs = (String[]) this.mDataDirs.toArray(new String[0]);
+        }
+        for (String dexPath : dexPaths) {
+            registerSecondaryDexForProfiling(dexPath, dataDirs);
         }
     }
 
     private void registerSecondaryDexForProfiling(String dexPath, String[] dataDirs) {
-        if (isSecondaryDexFile(dexPath, dataDirs)) {
-            File dexPathFile = new File(dexPath);
-            File secondaryProfileDir = new File(dexPathFile.getParent(), "oat");
-            File secondaryProfile = new File(secondaryProfileDir, dexPathFile.getName() + ".cur.prof");
-            if (secondaryProfileDir.exists() || secondaryProfileDir.mkdir()) {
-                try {
-                    secondaryProfile.createNewFile();
-                    VMRuntime.registerAppInfo(secondaryProfile.getPath(), new String[]{dexPath});
-                } catch (IOException ex) {
-                    Slog.e(TAG, "Failed to create profile for secondary dex " + dexPath + SettingsStringUtil.DELIMITER + ex.getMessage());
-                }
-            } else {
-                Slog.e(TAG, "Could not create the profile directory: " + secondaryProfile);
-            }
+        if (!isSecondaryDexFile(dexPath, dataDirs)) {
+            return;
+        }
+        File dexPathFile = new File(dexPath);
+        File secondaryProfileDir = new File(dexPathFile.getParent(), "oat");
+        File secondaryProfile = new File(secondaryProfileDir, dexPathFile.getName() + ".cur.prof");
+        if (!secondaryProfileDir.exists() && !secondaryProfileDir.mkdir()) {
+            Slog.m56e(TAG, "Could not create the profile directory: " + secondaryProfile);
+            return;
+        }
+        try {
+            secondaryProfile.createNewFile();
+            VMRuntime.registerAppInfo(secondaryProfile.getPath(), new String[]{dexPath});
+        } catch (IOException ex) {
+            Slog.m56e(TAG, "Failed to create profile for secondary dex " + dexPath + SettingsStringUtil.DELIMITER + ex.getMessage());
         }
     }
 

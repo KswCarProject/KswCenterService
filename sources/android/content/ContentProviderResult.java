@@ -2,16 +2,21 @@ package android.content;
 
 import android.net.Uri;
 import android.net.wifi.WifiEnterpriseConfig;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.util.Preconditions;
 
+/* loaded from: classes.dex */
 public class ContentProviderResult implements Parcelable {
-    public static final Parcelable.Creator<ContentProviderResult> CREATOR = new Parcelable.Creator<ContentProviderResult>() {
+    public static final Parcelable.Creator<ContentProviderResult> CREATOR = new Parcelable.Creator<ContentProviderResult>() { // from class: android.content.ContentProviderResult.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ContentProviderResult createFromParcel(Parcel source) {
             return new ContentProviderResult(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ContentProviderResult[] newArray(int size) {
             return new ContentProviderResult[size];
         }
@@ -20,22 +25,22 @@ public class ContentProviderResult implements Parcelable {
     public final String failure;
     public final Uri uri;
 
-    public ContentProviderResult(Uri uri2) {
-        this((Uri) Preconditions.checkNotNull(uri2), (Integer) null, (String) null);
+    public ContentProviderResult(Uri uri) {
+        this((Uri) Preconditions.checkNotNull(uri), null, null);
     }
 
-    public ContentProviderResult(int count2) {
-        this((Uri) null, Integer.valueOf(count2), (String) null);
+    public ContentProviderResult(int count) {
+        this(null, Integer.valueOf(count), null);
     }
 
-    public ContentProviderResult(String failure2) {
-        this((Uri) null, (Integer) null, failure2);
+    public ContentProviderResult(String failure) {
+        this(null, null, failure);
     }
 
-    public ContentProviderResult(Uri uri2, Integer count2, String failure2) {
-        this.uri = uri2;
-        this.count = count2;
-        this.failure = failure2;
+    public ContentProviderResult(Uri uri, Integer count, String failure) {
+        this.uri = uri;
+        this.count = count;
+        this.failure = failure;
     }
 
     public ContentProviderResult(Parcel source) {
@@ -62,6 +67,7 @@ public class ContentProviderResult implements Parcelable {
         this.failure = cpr.failure;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         if (this.uri != null) {
             dest.writeInt(1);
@@ -83,6 +89,7 @@ public class ContentProviderResult implements Parcelable {
         dest.writeInt(0);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

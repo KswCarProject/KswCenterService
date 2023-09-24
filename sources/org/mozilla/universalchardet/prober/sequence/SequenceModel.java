@@ -1,5 +1,6 @@
 package org.mozilla.universalchardet.prober.sequence;
 
+/* loaded from: classes5.dex */
 public abstract class SequenceModel {
     protected short[] charToOrderMap;
     protected String charsetName;

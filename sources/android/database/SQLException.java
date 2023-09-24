@@ -1,5 +1,6 @@
 package android.database;
 
+/* loaded from: classes.dex */
 public class SQLException extends RuntimeException {
     public SQLException() {
     }

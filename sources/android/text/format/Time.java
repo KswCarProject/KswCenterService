@@ -9,8 +9,8 @@ import libcore.timezone.ZoneInfoDB;
 import libcore.util.ZoneInfo;
 
 @Deprecated
+/* loaded from: classes4.dex */
 public class Time {
-    private static final int[] DAYS_PER_MONTH = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     public static final int EPOCH_JULIAN_DAY = 2440588;
     public static final int FRIDAY = 5;
     public static final int HOUR = 3;
@@ -33,7 +33,6 @@ public class Time {
     private static final String Y_M_D = "%Y-%m-%d";
     private static final String Y_M_D_T_H_M_S_000 = "%Y-%m-%dT%H:%M:%S.000";
     private static final String Y_M_D_T_H_M_S_000_Z = "%Y-%m-%dT%H:%M:%S.000Z";
-    private static final int[] sThursdayOffset = {-3, 3, 2, 1, 0, -1, -2};
     public boolean allDay;
     private TimeCalculator calculator;
     public long gmtoff;
@@ -47,13 +46,14 @@ public class Time {
     public int weekDay;
     public int year;
     public int yearDay;
+    private static final int[] DAYS_PER_MONTH = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    private static final int[] sThursdayOffset = {-3, 3, 2, 1, 0, -1, -2};
 
     public Time(String timezoneId) {
-        if (timezoneId != null) {
-            initialize(timezoneId);
-            return;
+        if (timezoneId == null) {
+            throw new NullPointerException("timezoneId is null!");
         }
-        throw new NullPointerException("timezoneId is null!");
+        initialize(timezoneId);
     }
 
     public Time() {
@@ -80,11 +80,11 @@ public class Time {
         return timeInMillis;
     }
 
-    public void switchTimezone(String timezone2) {
+    public void switchTimezone(String timezone) {
         this.calculator.copyFieldsFromTime(this);
-        this.calculator.switchTimeZone(timezone2);
+        this.calculator.switchTimeZone(timezone);
         this.calculator.copyFieldsToTime(this);
-        this.timezone = timezone2;
+        this.timezone = timezone;
     }
 
     public int getActualMaximum(int field) {
@@ -101,11 +101,8 @@ public class Time {
                     return n;
                 }
                 int y = this.year;
-                if (y % 4 != 0) {
-                    return 28;
-                }
-                if (y % 100 != 0 || y % 400 == 0) {
-                    return 29;
+                if (y % 4 == 0) {
+                    return (y % 100 != 0 || y % 400 == 0) ? 29 : 28;
                 }
                 return 28;
             case 5:
@@ -125,34 +122,33 @@ public class Time {
     }
 
     public void clear(String timezoneId) {
-        if (timezoneId != null) {
-            this.timezone = timezoneId;
-            this.allDay = false;
-            this.second = 0;
-            this.minute = 0;
-            this.hour = 0;
-            this.monthDay = 0;
-            this.month = 0;
-            this.year = 0;
-            this.weekDay = 0;
-            this.yearDay = 0;
-            this.gmtoff = 0;
-            this.isDst = -1;
-            return;
+        if (timezoneId == null) {
+            throw new NullPointerException("timezone is null!");
         }
-        throw new NullPointerException("timezone is null!");
+        this.timezone = timezoneId;
+        this.allDay = false;
+        this.second = 0;
+        this.minute = 0;
+        this.hour = 0;
+        this.monthDay = 0;
+        this.month = 0;
+        this.year = 0;
+        this.weekDay = 0;
+        this.yearDay = 0;
+        this.gmtoff = 0L;
+        this.isDst = -1;
     }
 
     public static int compare(Time a, Time b) {
         if (a == null) {
             throw new NullPointerException("a == null");
-        } else if (b != null) {
-            a.calculator.copyFieldsFromTime(a);
-            b.calculator.copyFieldsFromTime(b);
-            return TimeCalculator.compare(a.calculator, b.calculator);
-        } else {
+        }
+        if (b == null) {
             throw new NullPointerException("b == null");
         }
+        a.calculator.copyFieldsFromTime(a);
+        b.calculator.copyFieldsFromTime(b);
+        return TimeCalculator.compare(a.calculator, b.calculator);
     }
 
     public String format(String format) {
@@ -161,40 +157,45 @@ public class Time {
     }
 
     public String toString() {
-        TimeCalculator calculator2 = new TimeCalculator(this.timezone);
-        calculator2.copyFieldsFromTime(this);
-        return calculator2.toStringInternal();
+        TimeCalculator calculator = new TimeCalculator(this.timezone);
+        calculator.copyFieldsFromTime(this);
+        return calculator.toStringInternal();
     }
 
     public boolean parse(String s) {
         if (s == null) {
             throw new NullPointerException("time string is null");
-        } else if (!parseInternal(s)) {
-            return false;
-        } else {
+        }
+        if (parseInternal(s)) {
             this.timezone = TIMEZONE_UTC;
             return true;
         }
+        return false;
     }
 
     private boolean parseInternal(String s) {
         int len = s.length();
-        if (len >= 8) {
-            boolean inUtc = false;
-            this.year = getChar(s, 0, 1000) + getChar(s, 1, 100) + getChar(s, 2, 10) + getChar(s, 3, 1);
-            this.month = (getChar(s, 4, 10) + getChar(s, 5, 1)) - 1;
-            this.monthDay = getChar(s, 6, 10) + getChar(s, 7, 1);
-            if (len <= 8) {
-                this.allDay = true;
-                this.hour = 0;
-                this.minute = 0;
-                this.second = 0;
-            } else if (len >= 15) {
+        if (len < 8) {
+            throw new TimeFormatException("String is too short: \"" + s + "\" Expected at least 8 characters.");
+        }
+        boolean inUtc = false;
+        int n = getChar(s, 0, 1000);
+        this.year = n + getChar(s, 1, 100) + getChar(s, 2, 10) + getChar(s, 3, 1);
+        int n2 = getChar(s, 4, 10);
+        this.month = (n2 + getChar(s, 5, 1)) - 1;
+        int n3 = getChar(s, 6, 10);
+        this.monthDay = n3 + getChar(s, 7, 1);
+        if (len > 8) {
+            if (len >= 15) {
                 checkChar(s, 8, 'T');
                 this.allDay = false;
-                this.hour = getChar(s, 9, 10) + getChar(s, 10, 1);
-                this.minute = getChar(s, 11, 10) + getChar(s, 12, 1);
-                this.second = getChar(s, 14, 1) + getChar(s, 13, 10);
+                int n4 = getChar(s, 9, 10);
+                int n5 = getChar(s, 10, 1);
+                this.hour = n4 + n5;
+                int n6 = getChar(s, 11, 10);
+                this.minute = n6 + getChar(s, 12, 1);
+                int n7 = getChar(s, 13, 10);
+                this.second = getChar(s, 14, 1) + n7;
                 if (len > 15) {
                     checkChar(s, 15, 'Z');
                     inUtc = true;
@@ -202,19 +203,23 @@ public class Time {
             } else {
                 throw new TimeFormatException("String is too short: \"" + s + "\" If there are more than 8 characters there must be at least 15.");
             }
-            this.weekDay = 0;
-            this.yearDay = 0;
-            this.isDst = -1;
-            this.gmtoff = 0;
-            return inUtc;
+        } else {
+            this.allDay = true;
+            this.hour = 0;
+            this.minute = 0;
+            this.second = 0;
         }
-        throw new TimeFormatException("String is too short: \"" + s + "\" Expected at least 8 characters.");
+        this.weekDay = 0;
+        this.yearDay = 0;
+        this.isDst = -1;
+        this.gmtoff = 0L;
+        return inUtc;
     }
 
     private void checkChar(String s, int spos, char expected) {
         char c = s.charAt(spos);
         if (c != expected) {
-            throw new TimeFormatException(String.format("Unexpected character 0x%02d at pos=%d.  Expected 0x%02d ('%c').", new Object[]{Integer.valueOf(c), Integer.valueOf(spos), Integer.valueOf(expected), Character.valueOf(expected)}));
+            throw new TimeFormatException(String.format("Unexpected character 0x%02d at pos=%d.  Expected 0x%02d ('%c').", Integer.valueOf(c), Integer.valueOf(spos), Integer.valueOf(expected), Character.valueOf(expected)));
         }
     }
 
@@ -229,85 +234,91 @@ public class Time {
     public boolean parse3339(String s) {
         if (s == null) {
             throw new NullPointerException("time string is null");
-        } else if (!parse3339Internal(s)) {
-            return false;
-        } else {
+        }
+        if (parse3339Internal(s)) {
             this.timezone = TIMEZONE_UTC;
             return true;
         }
+        return false;
     }
 
     private boolean parse3339Internal(String s) {
         int offset;
-        String str = s;
         int len = s.length();
-        if (len >= 10) {
-            boolean inUtc = false;
-            this.year = getChar(str, 0, 1000) + getChar(str, 1, 100) + getChar(str, 2, 10) + getChar(str, 3, 1);
-            checkChar(str, 4, '-');
-            this.month = (getChar(str, 5, 10) + getChar(str, 6, 1)) - 1;
-            checkChar(str, 7, '-');
-            this.monthDay = getChar(str, 8, 10) + getChar(str, 9, 1);
-            if (len >= 19) {
-                checkChar(str, 10, 'T');
-                this.allDay = false;
-                int hour2 = getChar(str, 11, 10) + getChar(str, 12, 1);
-                checkChar(str, 13, ':');
-                int minute2 = getChar(str, 14, 10) + getChar(str, 15, 1);
-                checkChar(str, 16, ':');
-                this.second = getChar(str, 17, 10) + getChar(str, 18, 1);
-                int tzIndex = 19;
-                if (19 < len && str.charAt(19) == '.') {
-                    do {
-                        tzIndex++;
-                        if (tzIndex >= len) {
-                            break;
-                        }
-                    } while (!Character.isDigit(str.charAt(tzIndex)));
-                }
-                int offset2 = 0;
-                if (len > tzIndex) {
-                    char c = str.charAt(tzIndex);
-                    if (c == '+') {
-                        offset = -1;
-                    } else if (c == '-') {
-                        offset = 1;
-                    } else if (c == 'Z') {
-                        offset = 0;
-                    } else {
-                        throw new TimeFormatException(String.format("Unexpected character 0x%02d at position %d.  Expected + or -", new Object[]{Integer.valueOf(c), Integer.valueOf(tzIndex)}));
-                    }
-                    offset2 = offset;
-                    inUtc = true;
-                    if (offset2 != 0) {
-                        if (len >= tzIndex + 6) {
-                            hour2 += (getChar(str, tzIndex + 1, 10) + getChar(str, tzIndex + 2, 1)) * offset2;
-                            int n = (getChar(str, tzIndex + 4, 10) + getChar(str, tzIndex + 5, 1)) * offset2;
-                            minute2 += n;
-                            int i = n;
-                        } else {
-                            throw new TimeFormatException(String.format("Unexpected length; should be %d characters", new Object[]{Integer.valueOf(tzIndex + 6)}));
-                        }
-                    }
-                }
-                this.hour = hour2;
-                this.minute = minute2;
-                if (offset2 != 0) {
-                    normalize(false);
-                }
-            } else {
-                this.allDay = true;
-                this.hour = 0;
-                this.minute = 0;
-                this.second = 0;
-            }
-            this.weekDay = 0;
-            this.yearDay = 0;
-            this.isDst = -1;
-            this.gmtoff = 0;
-            return inUtc;
+        if (len < 10) {
+            throw new TimeFormatException("String too short --- expected at least 10 characters.");
         }
-        throw new TimeFormatException("String too short --- expected at least 10 characters.");
+        boolean inUtc = false;
+        int n = getChar(s, 0, 1000);
+        this.year = n + getChar(s, 1, 100) + getChar(s, 2, 10) + getChar(s, 3, 1);
+        checkChar(s, 4, '-');
+        int n2 = getChar(s, 5, 10);
+        this.month = (n2 + getChar(s, 6, 1)) - 1;
+        checkChar(s, 7, '-');
+        int n3 = getChar(s, 8, 10);
+        this.monthDay = n3 + getChar(s, 9, 1);
+        if (len >= 19) {
+            checkChar(s, 10, 'T');
+            this.allDay = false;
+            int n4 = getChar(s, 11, 10);
+            int hour = n4 + getChar(s, 12, 1);
+            checkChar(s, 13, ':');
+            int n5 = getChar(s, 14, 10);
+            int minute = n5 + getChar(s, 15, 1);
+            checkChar(s, 16, ':');
+            int n6 = getChar(s, 17, 10);
+            this.second = n6 + getChar(s, 18, 1);
+            int tzIndex = 19;
+            if (19 < len && s.charAt(19) == '.') {
+                do {
+                    tzIndex++;
+                    if (tzIndex >= len) {
+                        break;
+                    }
+                } while (Character.isDigit(s.charAt(tzIndex)));
+            }
+            int offset2 = 0;
+            if (len > tzIndex) {
+                char c = s.charAt(tzIndex);
+                if (c == '+') {
+                    offset = -1;
+                } else if (c == '-') {
+                    offset = 1;
+                } else if (c == 'Z') {
+                    offset = 0;
+                } else {
+                    throw new TimeFormatException(String.format("Unexpected character 0x%02d at position %d.  Expected + or -", Integer.valueOf(c), Integer.valueOf(tzIndex)));
+                }
+                offset2 = offset;
+                inUtc = true;
+                if (offset2 != 0) {
+                    if (len >= tzIndex + 6) {
+                        int n7 = getChar(s, tzIndex + 1, 10);
+                        hour += (n7 + getChar(s, tzIndex + 2, 1)) * offset2;
+                        int n8 = getChar(s, tzIndex + 4, 10);
+                        int n9 = tzIndex + 5;
+                        minute += (n8 + getChar(s, n9, 1)) * offset2;
+                    } else {
+                        throw new TimeFormatException(String.format("Unexpected length; should be %d characters", Integer.valueOf(tzIndex + 6)));
+                    }
+                }
+            }
+            this.hour = hour;
+            this.minute = minute;
+            if (offset2 != 0) {
+                normalize(false);
+            }
+        } else {
+            this.allDay = true;
+            this.hour = 0;
+            this.minute = 0;
+            this.second = 0;
+        }
+        this.weekDay = 0;
+        this.yearDay = 0;
+        this.isDst = -1;
+        this.gmtoff = 0L;
+        return inUtc;
     }
 
     public static String getCurrentTimezone() {
@@ -350,32 +361,32 @@ public class Time {
         this.gmtoff = that.gmtoff;
     }
 
-    public void set(int second2, int minute2, int hour2, int monthDay2, int month2, int year2) {
+    public void set(int second, int minute, int hour, int monthDay, int month, int year) {
         this.allDay = false;
-        this.second = second2;
-        this.minute = minute2;
-        this.hour = hour2;
-        this.monthDay = monthDay2;
-        this.month = month2;
-        this.year = year2;
+        this.second = second;
+        this.minute = minute;
+        this.hour = hour;
+        this.monthDay = monthDay;
+        this.month = month;
+        this.year = year;
         this.weekDay = 0;
         this.yearDay = 0;
         this.isDst = -1;
-        this.gmtoff = 0;
+        this.gmtoff = 0L;
     }
 
-    public void set(int monthDay2, int month2, int year2) {
+    public void set(int monthDay, int month, int year) {
         this.allDay = true;
         this.second = 0;
         this.minute = 0;
         this.hour = 0;
-        this.monthDay = monthDay2;
-        this.month = month2;
-        this.year = year2;
+        this.monthDay = monthDay;
+        this.month = month;
+        this.year = year;
         this.weekDay = 0;
         this.yearDay = 0;
         this.isDst = -1;
-        this.gmtoff = 0;
+        this.gmtoff = 0L;
     }
 
     public boolean before(Time that) {
@@ -397,8 +408,8 @@ public class Time {
         return (temp.yearDay / 7) + 1;
     }
 
-    public String format3339(boolean allDay2) {
-        if (allDay2) {
+    public String format3339(boolean allDay) {
+        if (allDay) {
             return format(Y_M_D);
         }
         if (TIMEZONE_UTC.equals(this.timezone)) {
@@ -407,24 +418,28 @@ public class Time {
         String base = format(Y_M_D_T_H_M_S_000);
         String sign = this.gmtoff < 0 ? NativeLibraryHelper.CLEAR_ABI_OVERRIDE : "+";
         int offset = (int) Math.abs(this.gmtoff);
-        return String.format(Locale.US, "%s%s%02d:%02d", new Object[]{base, sign, Integer.valueOf(offset / 3600), Integer.valueOf((offset % 3600) / 60)});
+        int minutes = (offset % 3600) / 60;
+        int hours = offset / 3600;
+        return String.format(Locale.US, "%s%s%02d:%02d", base, sign, Integer.valueOf(hours), Integer.valueOf(minutes));
     }
 
     public static boolean isEpoch(Time time) {
-        if (getJulianDay(time.toMillis(true), 0) == 2440588) {
-            return true;
-        }
-        return false;
+        long millis = time.toMillis(true);
+        return getJulianDay(millis, 0L) == 2440588;
     }
 
-    public static int getJulianDay(long millis, long gmtoff2) {
-        return ((int) ((millis + (1000 * gmtoff2)) / 86400000)) + EPOCH_JULIAN_DAY;
+    public static int getJulianDay(long millis, long gmtoff) {
+        long offsetMillis = 1000 * gmtoff;
+        long julianDay = (millis + offsetMillis) / 86400000;
+        return ((int) julianDay) + EPOCH_JULIAN_DAY;
     }
 
     public long setJulianDay(int julianDay) {
-        long millis = ((long) (julianDay - EPOCH_JULIAN_DAY)) * 86400000;
+        long millis = (julianDay - EPOCH_JULIAN_DAY) * 86400000;
         set(millis);
-        this.monthDay += julianDay - getJulianDay(millis, this.gmtoff);
+        int approximateDay = getJulianDay(millis, this.gmtoff);
+        int diff = julianDay - approximateDay;
+        this.monthDay += diff;
         this.hour = 0;
         this.minute = 0;
         this.second = 0;
@@ -436,13 +451,15 @@ public class Time {
         if (diff < 0) {
             diff += 7;
         }
-        return (julianDay - (EPOCH_JULIAN_DAY - diff)) / 7;
+        int refDay = EPOCH_JULIAN_DAY - diff;
+        return (julianDay - refDay) / 7;
     }
 
     public static int getJulianMondayFromWeeksSinceEpoch(int week) {
         return (week * 7) + MONDAY_BEFORE_JULIAN_EPOCH;
     }
 
+    /* loaded from: classes4.dex */
     private static class TimeCalculator {
         public String timezone;
         public final ZoneInfo.WallTime wallTime = new ZoneInfo.WallTime();
@@ -458,21 +475,23 @@ public class Time {
             }
             int r = this.wallTime.mktime(this.zoneInfo);
             if (r == -1) {
-                return -1;
+                return -1L;
             }
-            return ((long) r) * 1000;
+            return r * 1000;
         }
 
         public void setTimeInMillis(long millis) {
+            int intSeconds = (int) (millis / 1000);
             updateZoneInfoFromTimeZone();
-            this.wallTime.localtime((int) (millis / 1000), this.zoneInfo);
+            this.wallTime.localtime(intSeconds, this.zoneInfo);
         }
 
         public String format(String format) {
             if (format == null) {
                 format = "%c";
             }
-            return new TimeFormatter().format(format, this.wallTime, this.zoneInfo);
+            TimeFormatter formatter = new TimeFormatter();
+            return formatter.format(format, this.wallTime, this.zoneInfo);
         }
 
         private void updateZoneInfoFromTimeZone() {
@@ -483,28 +502,28 @@ public class Time {
 
         private static ZoneInfo lookupZoneInfo(String timezoneId) {
             try {
-                ZoneInfo zoneInfo2 = ZoneInfoDB.getInstance().makeTimeZone(timezoneId);
-                if (zoneInfo2 == null) {
-                    zoneInfo2 = ZoneInfoDB.getInstance().makeTimeZone("GMT");
+                ZoneInfo zoneInfo = ZoneInfoDB.getInstance().makeTimeZone(timezoneId);
+                if (zoneInfo == null) {
+                    zoneInfo = ZoneInfoDB.getInstance().makeTimeZone("GMT");
                 }
-                if (zoneInfo2 != null) {
-                    return zoneInfo2;
+                if (zoneInfo == null) {
+                    throw new AssertionError("GMT not found: \"" + timezoneId + "\"");
                 }
-                throw new AssertionError("GMT not found: \"" + timezoneId + "\"");
+                return zoneInfo;
             } catch (IOException e) {
                 throw new AssertionError("Error loading timezone: \"" + timezoneId + "\"", e);
             }
         }
 
-        public void switchTimeZone(String timezone2) {
+        public void switchTimeZone(String timezone) {
             int seconds = this.wallTime.mktime(this.zoneInfo);
-            this.timezone = timezone2;
+            this.timezone = timezone;
             updateZoneInfoFromTimeZone();
             this.wallTime.localtime(seconds, this.zoneInfo);
         }
 
         public String format2445(boolean hasTime) {
-            char[] buf = new char[(hasTime ? 16 : 8)];
+            char[] buf = new char[hasTime ? 16 : 8];
             int n = this.wallTime.getYear();
             buf[0] = toChar(n / 1000);
             int n2 = n % 1000;
@@ -531,11 +550,11 @@ public class Time {
             int n8 = this.wallTime.getSecond();
             buf[13] = toChar(n8 / 10);
             buf[14] = toChar(n8 % 10);
-            if (!Time.TIMEZONE_UTC.equals(this.timezone)) {
-                return new String(buf, 0, 15);
+            if (Time.TIMEZONE_UTC.equals(this.timezone)) {
+                buf[15] = 'Z';
+                return new String(buf, 0, 16);
             }
-            buf[15] = 'Z';
-            return new String(buf, 0, 16);
+            return new String(buf, 0, 15);
         }
 
         private char toChar(int n) {
@@ -546,7 +565,7 @@ public class Time {
         }
 
         public String toStringInternal() {
-            return String.format("%04d%02d%02dT%02d%02d%02d%s(%d,%d,%d,%d,%d)", new Object[]{Integer.valueOf(this.wallTime.getYear()), Integer.valueOf(this.wallTime.getMonth() + 1), Integer.valueOf(this.wallTime.getMonthDay()), Integer.valueOf(this.wallTime.getHour()), Integer.valueOf(this.wallTime.getMinute()), Integer.valueOf(this.wallTime.getSecond()), this.timezone, Integer.valueOf(this.wallTime.getWeekDay()), Integer.valueOf(this.wallTime.getYearDay()), Integer.valueOf(this.wallTime.getGmtOffset()), Integer.valueOf(this.wallTime.getIsDst()), Long.valueOf(toMillis(false) / 1000)});
+            return String.format("%04d%02d%02dT%02d%02d%02d%s(%d,%d,%d,%d,%d)", Integer.valueOf(this.wallTime.getYear()), Integer.valueOf(this.wallTime.getMonth() + 1), Integer.valueOf(this.wallTime.getMonthDay()), Integer.valueOf(this.wallTime.getHour()), Integer.valueOf(this.wallTime.getMinute()), Integer.valueOf(this.wallTime.getSecond()), this.timezone, Integer.valueOf(this.wallTime.getWeekDay()), Integer.valueOf(this.wallTime.getYearDay()), Integer.valueOf(this.wallTime.getGmtOffset()), Integer.valueOf(this.wallTime.getIsDst()), Long.valueOf(toMillis(false) / 1000));
         }
 
         public static int compare(TimeCalculator aObject, TimeCalculator bObject) {
@@ -577,14 +596,13 @@ public class Time {
                 }
                 return 0;
             }
-            long diff7 = aObject.toMillis(false) - bObject.toMillis(false);
+            long am = aObject.toMillis(false);
+            long bm = bObject.toMillis(false);
+            long diff7 = am - bm;
             if (diff7 < 0) {
                 return -1;
             }
-            if (diff7 > 0) {
-                return 1;
-            }
-            return 0;
+            return diff7 > 0 ? 1 : 0;
         }
 
         public void copyFieldsToTime(Time time) {
@@ -597,7 +615,7 @@ public class Time {
             time.weekDay = this.wallTime.getWeekDay();
             time.yearDay = this.wallTime.getYearDay();
             time.isDst = this.wallTime.getIsDst();
-            time.gmtoff = (long) this.wallTime.getGmtOffset();
+            time.gmtoff = this.wallTime.getGmtOffset();
         }
 
         public void copyFieldsFromTime(Time time) {
@@ -611,12 +629,11 @@ public class Time {
             this.wallTime.setYearDay(time.yearDay);
             this.wallTime.setIsDst(time.isDst);
             this.wallTime.setGmtOffset((int) time.gmtoff);
-            if (!time.allDay || (time.second == 0 && time.minute == 0 && time.hour == 0)) {
-                this.timezone = time.timezone;
-                updateZoneInfoFromTimeZone();
-                return;
+            if (time.allDay && (time.second != 0 || time.minute != 0 || time.hour != 0)) {
+                throw new IllegalArgumentException("allDay is true but sec, min, hour are not 0.");
             }
-            throw new IllegalArgumentException("allDay is true but sec, min, hour are not 0.");
+            this.timezone = time.timezone;
+            updateZoneInfoFromTimeZone();
         }
     }
 }

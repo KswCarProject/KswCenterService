@@ -8,8 +8,9 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/* loaded from: classes.dex */
 public final class GestureUtils {
-    private static final float NONUNIFORM_SCALE = ((float) Math.sqrt(2.0d));
+    private static final float NONUNIFORM_SCALE = (float) Math.sqrt(2.0d);
     private static final float SCALING_THRESHOLD = 0.26f;
 
     private GestureUtils() {
@@ -20,7 +21,7 @@ public final class GestureUtils {
             try {
                 stream.close();
             } catch (IOException e) {
-                Log.e(GestureConstants.LOG_TAG, "Could not close stream", e);
+                Log.m69e(GestureConstants.LOG_TAG, "Could not close stream", e);
             }
         }
     }
@@ -34,9 +35,8 @@ public final class GestureUtils {
         float targetPatchSize;
         float[] pts;
         float preDx;
-        int i = bitmapSize;
-        float targetPatchSize2 = (float) (i - 1);
-        float[] sample = new float[(i * i)];
+        float targetPatchSize2 = bitmapSize - 1;
+        float[] sample = new float[bitmapSize * bitmapSize];
         Arrays.fill(sample, 0.0f);
         RectF rect = gesture.getBoundingBox();
         float gestureWidth = rect.width();
@@ -73,146 +73,130 @@ public final class GestureUtils {
         float postDx = targetPatchSize2 / 2.0f;
         float postDy = targetPatchSize2 / 2.0f;
         ArrayList<GestureStroke> strokes = gesture.getStrokes();
-        int i2 = strokes.size();
+        int i = strokes.size();
         int index = 0;
         while (true) {
             int index2 = index;
-            if (index2 < i2) {
-                RectF rect2 = rect;
-                GestureStroke stroke = strokes.get(index2);
-                float gestureWidth2 = gestureWidth;
-                float[] strokepoints = stroke.points;
-                GestureStroke gestureStroke = stroke;
-                int size = strokepoints.length;
-                float gestureHeight2 = gestureHeight;
-                float[] pts2 = new float[size];
-                int i3 = 0;
-                while (true) {
-                    count = i2;
-                    int count2 = i3;
-                    if (count2 >= size) {
-                        break;
-                    }
-                    pts2[count2] = ((strokepoints[count2] + preDx2) * sx) + postDx;
-                    pts2[count2 + 1] = ((strokepoints[count2 + 1] + preDy) * sy) + postDy;
-                    i3 = count2 + 2;
-                    i2 = count;
+            if (index2 >= i) {
+                return sample;
+            }
+            RectF rect2 = rect;
+            GestureStroke stroke = strokes.get(index2);
+            float gestureWidth2 = gestureWidth;
+            float[] strokepoints = stroke.points;
+            int size = strokepoints.length;
+            float gestureHeight2 = gestureHeight;
+            float[] pts2 = new float[size];
+            int i2 = 0;
+            while (true) {
+                int i3 = i2;
+                count = i;
+                if (i3 >= size) {
+                    break;
                 }
-                float[] fArr = strokepoints;
-                float sx2 = sx;
-                float segmentEndX = -1.0f;
-                int i4 = 0;
-                float segmentEndY = -1.0f;
-                while (i4 < size) {
-                    float segmentStartX = pts2[i4] < 0.0f ? 0.0f : pts2[i4];
-                    float segmentStartY = pts2[i4 + 1] < 0.0f ? 0.0f : pts2[i4 + 1];
-                    if (segmentStartX > targetPatchSize2) {
-                        segmentStartX = targetPatchSize2;
-                    }
-                    int size2 = size;
-                    float segmentStartX2 = segmentStartX;
-                    if (segmentStartY > targetPatchSize2) {
-                        float segmentStartY2 = targetPatchSize2;
-                        targetPatchSize = targetPatchSize2;
-                    } else {
-                        targetPatchSize = targetPatchSize2;
-                        targetPatchSize2 = segmentStartY;
-                    }
-                    plot(segmentStartX2, targetPatchSize2, sample, i);
-                    if (segmentEndX != -1.0f) {
-                        if (segmentEndX > segmentStartX2) {
-                            preDx = preDx2;
-                            float xpos = (float) Math.ceil((double) segmentStartX2);
-                            float slope = (segmentEndY - targetPatchSize2) / (segmentEndX - segmentStartX2);
-                            while (xpos < segmentEndX) {
-                                plot(xpos, ((xpos - segmentStartX2) * slope) + targetPatchSize2, sample, i);
-                                xpos += 1.0f;
-                                pts2 = pts2;
-                            }
-                            pts = pts2;
-                        } else {
-                            pts = pts2;
-                            preDx = preDx2;
-                            if (segmentEndX < segmentStartX2) {
-                                float slope2 = (segmentEndY - targetPatchSize2) / (segmentEndX - segmentStartX2);
-                                for (float xpos2 = (float) Math.ceil((double) segmentEndX); xpos2 < segmentStartX2; xpos2 += 1.0f) {
-                                    plot(xpos2, ((xpos2 - segmentStartX2) * slope2) + targetPatchSize2, sample, i);
-                                }
-                            }
+                pts2[i3] = ((strokepoints[i3] + preDx2) * sx) + postDx;
+                pts2[i3 + 1] = ((strokepoints[i3 + 1] + preDy) * sy) + postDy;
+                i2 = i3 + 2;
+                i = count;
+            }
+            float sx2 = sx;
+            float segmentEndX = -1.0f;
+            int i4 = 0;
+            float segmentEndY = -1.0f;
+            while (i4 < size) {
+                float segmentStartX = pts2[i4] < 0.0f ? 0.0f : pts2[i4];
+                float segmentStartY = pts2[i4 + 1] < 0.0f ? 0.0f : pts2[i4 + 1];
+                if (segmentStartX > targetPatchSize2) {
+                    segmentStartX = targetPatchSize2;
+                }
+                int size2 = size;
+                float segmentStartX2 = segmentStartX;
+                if (segmentStartY > targetPatchSize2) {
+                    targetPatchSize = targetPatchSize2;
+                } else {
+                    targetPatchSize = targetPatchSize2;
+                    targetPatchSize2 = segmentStartY;
+                }
+                plot(segmentStartX2, targetPatchSize2, sample, bitmapSize);
+                if (segmentEndX != -1.0f) {
+                    if (segmentEndX > segmentStartX2) {
+                        preDx = preDx2;
+                        float xpos = (float) Math.ceil(segmentStartX2);
+                        float slope = (segmentEndY - targetPatchSize2) / (segmentEndX - segmentStartX2);
+                        while (xpos < segmentEndX) {
+                            float[] pts3 = pts2;
+                            float ypos = ((xpos - segmentStartX2) * slope) + targetPatchSize2;
+                            plot(xpos, ypos, sample, bitmapSize);
+                            xpos += 1.0f;
+                            pts2 = pts3;
                         }
-                        if (segmentEndY > targetPatchSize2) {
-                            float invertSlope = (segmentEndX - segmentStartX2) / (segmentEndY - targetPatchSize2);
-                            for (float ypos = (float) Math.ceil((double) targetPatchSize2); ypos < segmentEndY; ypos += 1.0f) {
-                                plot(((ypos - targetPatchSize2) * invertSlope) + segmentStartX2, ypos, sample, i);
-                            }
-                        } else if (segmentEndY < targetPatchSize2) {
-                            float invertSlope2 = (segmentEndX - segmentStartX2) / (segmentEndY - targetPatchSize2);
-                            for (float ypos2 = (float) Math.ceil((double) segmentEndY); ypos2 < targetPatchSize2; ypos2 += 1.0f) {
-                                plot(((ypos2 - targetPatchSize2) * invertSlope2) + segmentStartX2, ypos2, sample, i);
-                            }
-                        }
+                        pts = pts2;
                     } else {
                         pts = pts2;
                         preDx = preDx2;
+                        if (segmentEndX < segmentStartX2) {
+                            float slope2 = (segmentEndY - targetPatchSize2) / (segmentEndX - segmentStartX2);
+                            for (float xpos2 = (float) Math.ceil(segmentEndX); xpos2 < segmentStartX2; xpos2 += 1.0f) {
+                                float ypos2 = ((xpos2 - segmentStartX2) * slope2) + targetPatchSize2;
+                                plot(xpos2, ypos2, sample, bitmapSize);
+                            }
+                        }
                     }
-                    segmentEndX = segmentStartX2;
-                    segmentEndY = targetPatchSize2;
-                    i4 += 2;
-                    size = size2;
-                    targetPatchSize2 = targetPatchSize;
-                    preDx2 = preDx;
-                    pts2 = pts;
+                    if (segmentEndY > targetPatchSize2) {
+                        float invertSlope = (segmentEndX - segmentStartX2) / (segmentEndY - targetPatchSize2);
+                        for (float ypos3 = (float) Math.ceil(targetPatchSize2); ypos3 < segmentEndY; ypos3 += 1.0f) {
+                            float xpos3 = ((ypos3 - targetPatchSize2) * invertSlope) + segmentStartX2;
+                            plot(xpos3, ypos3, sample, bitmapSize);
+                        }
+                    } else if (segmentEndY < targetPatchSize2) {
+                        float invertSlope2 = (segmentEndX - segmentStartX2) / (segmentEndY - targetPatchSize2);
+                        for (float ypos4 = (float) Math.ceil(segmentEndY); ypos4 < targetPatchSize2; ypos4 += 1.0f) {
+                            float xpos4 = ((ypos4 - targetPatchSize2) * invertSlope2) + segmentStartX2;
+                            plot(xpos4, ypos4, sample, bitmapSize);
+                        }
+                    }
+                } else {
+                    pts = pts2;
+                    preDx = preDx2;
                 }
-                int i5 = size;
-                float f = preDx2;
-                index = index2 + 1;
-                rect = rect2;
-                gestureWidth = gestureWidth2;
-                gestureHeight = gestureHeight2;
-                i2 = count;
-                sx = sx2;
-            } else {
-                RectF rectF = rect;
-                float f2 = gestureWidth;
-                float f3 = gestureHeight;
-                float f4 = sx;
-                int i6 = i2;
-                float f5 = preDx2;
-                return sample;
+                segmentEndX = segmentStartX2;
+                segmentEndY = targetPatchSize2;
+                i4 += 2;
+                size = size2;
+                targetPatchSize2 = targetPatchSize;
+                preDx2 = preDx;
+                pts2 = pts;
             }
+            index = index2 + 1;
+            rect = rect2;
+            gestureWidth = gestureWidth2;
+            gestureHeight = gestureHeight2;
+            i = count;
+            sx = sx2;
         }
     }
 
     private static void plot(float x, float y, float[] sample, int sampleSize) {
-        float y2 = 0.0f;
         float x2 = x < 0.0f ? 0.0f : x;
-        if (y >= 0.0f) {
-            y2 = y;
-        }
-        int xFloor = (int) Math.floor((double) x2);
-        int xCeiling = (int) Math.ceil((double) x2);
-        int yFloor = (int) Math.floor((double) y2);
-        int yCeiling = (int) Math.ceil((double) y2);
-        if (x2 == ((float) xFloor) && y2 == ((float) yFloor)) {
+        float y2 = y >= 0.0f ? y : 0.0f;
+        int xFloor = (int) Math.floor(x2);
+        int xCeiling = (int) Math.ceil(x2);
+        int yFloor = (int) Math.floor(y2);
+        int yCeiling = (int) Math.ceil(y2);
+        if (x2 == xFloor && y2 == yFloor) {
             int index = (yCeiling * sampleSize) + xCeiling;
             if (sample[index] < 1.0f) {
                 sample[index] = 1.0f;
             }
-            float f = y2;
-            float f2 = x2;
             return;
         }
-        double xFloorSq = Math.pow((double) (((float) xFloor) - x2), 2.0d);
-        double yFloorSq = Math.pow((double) (((float) yFloor) - y2), 2.0d);
-        double xCeilingSq = Math.pow((double) (((float) xCeiling) - x2), 2.0d);
-        float f3 = y2;
-        float f4 = x2;
-        double yCeilingSq = Math.pow((double) (((float) yCeiling) - y2), 2.0d);
+        double xFloorSq = Math.pow(xFloor - x2, 2.0d);
+        double yFloorSq = Math.pow(yFloor - y2, 2.0d);
+        double xCeilingSq = Math.pow(xCeiling - x2, 2.0d);
+        double yCeilingSq = Math.pow(yCeiling - y2, 2.0d);
         float topLeft = (float) Math.sqrt(xFloorSq + yFloorSq);
-        double d = yFloorSq;
         float topRight = (float) Math.sqrt(xCeilingSq + yFloorSq);
         float btmLeft = (float) Math.sqrt(xFloorSq + yCeilingSq);
-        double d2 = yCeilingSq;
         float btmRight = (float) Math.sqrt(xCeilingSq + yCeilingSq);
         float sum = topLeft + topRight + btmLeft + btmRight;
         float value = topLeft / sum;
@@ -239,12 +223,11 @@ public final class GestureUtils {
 
     public static float[] temporalSampling(GestureStroke stroke, int numPoints) {
         int i;
-        GestureStroke gestureStroke = stroke;
-        float increment = gestureStroke.length / ((float) (numPoints - 1));
+        float increment = stroke.length / (numPoints - 1);
         int vectorLength = numPoints * 2;
         float[] vector = new float[vectorLength];
         float distanceSoFar = 0.0f;
-        float[] pts = gestureStroke.points;
+        float[] pts = stroke.points;
         float lstPointX = pts[0];
         int i2 = 1;
         float lstPointY = pts[1];
@@ -256,14 +239,10 @@ public final class GestureUtils {
         int index2 = index + 1;
         int i3 = 0;
         int count = pts.length / 2;
-        while (true) {
-            if (i3 >= count) {
-                break;
-            }
+        while (i3 < count) {
             if (currentPointX == Float.MIN_VALUE) {
                 i3++;
                 if (i3 >= count) {
-                    int i4 = count;
                     break;
                 }
                 currentPointX = pts[i3 * 2];
@@ -271,9 +250,9 @@ public final class GestureUtils {
             }
             float deltaX = currentPointX - lstPointX;
             float deltaY = currentPointY - lstPointY;
-            int i5 = i3;
+            int i4 = i3;
             int count2 = count;
-            float distance = (float) Math.hypot((double) deltaX, (double) deltaY);
+            float distance = (float) Math.hypot(deltaX, deltaY);
             if (distanceSoFar + distance >= increment) {
                 float ratio = (increment - distanceSoFar) / distance;
                 float nx = (ratio * deltaX) + lstPointX;
@@ -298,12 +277,11 @@ public final class GestureUtils {
             }
             i2 = i;
             count = count2;
-            i3 = i5;
-            GestureStroke gestureStroke2 = stroke;
+            i3 = i4;
         }
-        for (int i6 = index2; i6 < vectorLength; i6 += 2) {
-            vector[i6] = lstPointX;
-            vector[i6 + 1] = lstPointY;
+        for (int i5 = index2; i5 < vectorLength; i5 += 2) {
+            vector[i5] = lstPointX;
+            vector[i5 + 1] = lstPointY;
         }
         return vector;
     }
@@ -311,19 +289,20 @@ public final class GestureUtils {
     static float[] computeCentroid(float[] points) {
         int count = points.length;
         float centerY = 0.0f;
-        float centerX = 0.0f;
+        float centerY2 = 0.0f;
         int i = 0;
         while (i < count) {
-            centerX += points[i];
+            centerY2 += points[i];
             int i2 = i + 1;
             centerY += points[i2];
             i = i2 + 1;
         }
-        return new float[]{(centerX * 2.0f) / ((float) count), (2.0f * centerY) / ((float) count)};
+        float[] center = {(centerY2 * 2.0f) / count, (2.0f * centerY) / count};
+        return center;
     }
 
     private static float[][] computeCoVariance(float[] points) {
-        float[][] array = (float[][]) Array.newInstance(float.class, new int[]{2, 2});
+        float[][] array = (float[][]) Array.newInstance(float.class, 2, 2);
         array[0][0] = 0.0f;
         array[0][1] = 0.0f;
         array[1][0] = 0.0f;
@@ -344,13 +323,13 @@ public final class GestureUtils {
             i = i2 + 1;
         }
         float[] fArr4 = array[0];
-        fArr4[0] = fArr4[0] / ((float) (count / 2));
+        fArr4[0] = fArr4[0] / (count / 2);
         float[] fArr5 = array[0];
-        fArr5[1] = fArr5[1] / ((float) (count / 2));
+        fArr5[1] = fArr5[1] / (count / 2);
         float[] fArr6 = array[1];
-        fArr6[0] = fArr6[0] / ((float) (count / 2));
+        fArr6[0] = fArr6[0] / (count / 2);
         float[] fArr7 = array[1];
-        fArr7[1] = fArr7[1] / ((float) (count / 2));
+        fArr7[1] = fArr7[1] / (count / 2);
         return array;
     }
 
@@ -358,17 +337,24 @@ public final class GestureUtils {
         float sum = 0.0f;
         int count = points.length - 4;
         for (int i = 0; i < count; i += 2) {
-            sum = (float) (((double) sum) + Math.hypot((double) (points[i + 2] - points[i]), (double) (points[i + 3] - points[i + 1])));
+            float dx = points[i + 2] - points[i];
+            float dy = points[i + 3] - points[i + 1];
+            sum = (float) (sum + Math.hypot(dx, dy));
         }
         return sum;
     }
 
     static float computeStraightness(float[] points) {
-        return ((float) Math.hypot((double) (points[2] - points[0]), (double) (points[3] - points[1]))) / computeTotalLength(points);
+        float totalLen = computeTotalLength(points);
+        float dx = points[2] - points[0];
+        float dy = points[3] - points[1];
+        return ((float) Math.hypot(dx, dy)) / totalLen;
     }
 
     static float computeStraightness(float[] points, float totalLen) {
-        return ((float) Math.hypot((double) (points[2] - points[0]), (double) (points[3] - points[1]))) / totalLen;
+        float dx = points[2] - points[0];
+        float dy = points[3] - points[1];
+        return ((float) Math.hypot(dx, dy)) / totalLen;
     }
 
     static float squaredEuclideanDistance(float[] vector1, float[] vector2) {
@@ -378,7 +364,7 @@ public final class GestureUtils {
             float difference = vector1[i] - vector2[i];
             squaredDistance += difference * difference;
         }
-        return squaredDistance / ((float) size);
+        return squaredDistance / size;
     }
 
     static float cosineDistance(float[] vector1, float[] vector2) {
@@ -387,41 +373,41 @@ public final class GestureUtils {
         for (int i = 0; i < len; i++) {
             sum += vector1[i] * vector2[i];
         }
-        return (float) Math.acos((double) sum);
+        return (float) Math.acos(sum);
     }
 
     static float minimumCosineDistance(float[] vector1, float[] vector2, int numOrientations) {
-        float[] fArr = vector1;
-        int i = numOrientations;
-        int len = fArr.length;
+        int len = vector1.length;
         float a = 0.0f;
         float b = 0.0f;
-        for (int i2 = 0; i2 < len; i2 += 2) {
-            a += (fArr[i2] * vector2[i2]) + (fArr[i2 + 1] * vector2[i2 + 1]);
-            b += (fArr[i2] * vector2[i2 + 1]) - (fArr[i2 + 1] * vector2[i2]);
+        for (int i = 0; i < len; i += 2) {
+            a += (vector1[i] * vector2[i]) + (vector1[i + 1] * vector2[i + 1]);
+            b += (vector1[i] * vector2[i + 1]) - (vector1[i + 1] * vector2[i]);
         }
-        if (a == 0.0f) {
-            return 1.5707964f;
+        if (a != 0.0f) {
+            float tan = b / a;
+            double angle = Math.atan(tan);
+            if (numOrientations > 2 && Math.abs(angle) >= 3.141592653589793d / numOrientations) {
+                return (float) Math.acos(a);
+            }
+            double cosine = Math.cos(angle);
+            double sine = tan * cosine;
+            return (float) Math.acos((a * cosine) + (b * sine));
         }
-        float tan = b / a;
-        double angle = Math.atan((double) tan);
-        if (i > 2 && Math.abs(angle) >= 3.141592653589793d / ((double) i)) {
-            return (float) Math.acos((double) a);
-        }
-        double cosine = Math.cos(angle);
-        return (float) Math.acos((((double) a) * cosine) + (((double) b) * ((double) tan) * cosine));
+        return 1.5707964f;
     }
 
     public static OrientedBoundingBox computeOrientedBoundingBox(ArrayList<GesturePoint> originalPoints) {
         int count = originalPoints.size();
-        float[] points = new float[(count * 2)];
+        float[] points = new float[count * 2];
         for (int i = 0; i < count; i++) {
             GesturePoint point = originalPoints.get(i);
             int index = i * 2;
-            points[index] = point.x;
-            points[index + 1] = point.y;
+            points[index] = point.f41x;
+            points[index + 1] = point.f42y;
         }
-        return computeOrientedBoundingBox(points, computeCentroid(points));
+        float[] meanVector = computeCentroid(points);
+        return computeOrientedBoundingBox(points, meanVector);
     }
 
     public static OrientedBoundingBox computeOrientedBoundingBox(float[] originalPoints) {
@@ -430,43 +416,44 @@ public final class GestureUtils {
         for (int i = 0; i < size; i++) {
             points[i] = originalPoints[i];
         }
-        return computeOrientedBoundingBox(points, computeCentroid(points));
+        float[] meanVector = computeCentroid(points);
+        return computeOrientedBoundingBox(points, meanVector);
     }
 
     private static OrientedBoundingBox computeOrientedBoundingBox(float[] points, float[] centroid) {
         float angle;
-        float[] fArr = points;
-        translate(fArr, -centroid[0], -centroid[1]);
-        float[] targetVector = computeOrientation(computeCoVariance(points));
+        translate(points, -centroid[0], -centroid[1]);
+        float[][] array = computeCoVariance(points);
+        float[] targetVector = computeOrientation(array);
         if (targetVector[0] == 0.0f && targetVector[1] == 0.0f) {
             angle = -1.5707964f;
         } else {
-            angle = (float) Math.atan2((double) targetVector[1], (double) targetVector[0]);
-            rotate(fArr, -angle);
+            angle = (float) Math.atan2(targetVector[1], targetVector[0]);
+            rotate(points, -angle);
         }
         float maxx = Float.MIN_VALUE;
         float maxy = Float.MIN_VALUE;
-        int count = fArr.length;
+        int count = points.length;
         float miny = Float.MAX_VALUE;
         float minx = Float.MAX_VALUE;
         int i = 0;
         while (i < count) {
-            if (fArr[i] < minx) {
-                minx = fArr[i];
+            if (points[i] < minx) {
+                minx = points[i];
             }
-            if (fArr[i] > maxx) {
-                maxx = fArr[i];
+            if (points[i] > maxx) {
+                maxx = points[i];
             }
             int i2 = i + 1;
-            if (fArr[i2] < miny) {
-                miny = fArr[i2];
+            if (points[i2] < miny) {
+                miny = points[i2];
             }
-            if (fArr[i2] > maxy) {
-                maxy = fArr[i2];
+            if (points[i2] > maxy) {
+                maxy = points[i2];
             }
             i = i2 + 1;
         }
-        return new OrientedBoundingBox((float) (((double) (180.0f * angle)) / 3.141592653589793d), centroid[0], centroid[1], maxx - minx, maxy - miny);
+        return new OrientedBoundingBox((float) ((180.0f * angle) / 3.141592653589793d), centroid[0], centroid[1], maxx - minx, maxy - miny);
     }
 
     private static float[] computeOrientation(float[][] covarianceMatrix) {
@@ -475,8 +462,10 @@ public final class GestureUtils {
             targetVector[0] = 1.0f;
             targetVector[1] = 0.0f;
         }
-        float value = ((-covarianceMatrix[0][0]) - covarianceMatrix[1][1]) / 2.0f;
-        float rightside = (float) Math.sqrt(Math.pow((double) value, 2.0d) - ((double) ((covarianceMatrix[0][0] * covarianceMatrix[1][1]) - (covarianceMatrix[0][1] * covarianceMatrix[1][0]))));
+        float a = (-covarianceMatrix[0][0]) - covarianceMatrix[1][1];
+        float b = (covarianceMatrix[0][0] * covarianceMatrix[1][1]) - (covarianceMatrix[0][1] * covarianceMatrix[1][0]);
+        float value = a / 2.0f;
+        float rightside = (float) Math.sqrt(Math.pow(value, 2.0d) - b);
         float lambda1 = (-value) + rightside;
         float lambda2 = (-value) - rightside;
         if (lambda1 == lambda2) {
@@ -491,8 +480,8 @@ public final class GestureUtils {
     }
 
     static float[] rotate(float[] points, float angle) {
-        float cos = (float) Math.cos((double) angle);
-        float sin = (float) Math.sin((double) angle);
+        float cos = (float) Math.cos(angle);
+        float sin = (float) Math.sin(angle);
         int size = points.length;
         for (int i = 0; i < size; i += 2) {
             float x = (points[i] * cos) - (points[i + 1] * sin);

@@ -16,96 +16,108 @@ import android.view.inspector.InspectionCompanion;
 import android.view.inspector.PropertyMapper;
 import android.view.inspector.PropertyReader;
 import android.widget.RemoteViews;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.util.ArrayList;
 
 @RemoteViews.RemoteView
+/* loaded from: classes4.dex */
 public class FrameLayout extends ViewGroup {
     private static final int DEFAULT_CHILD_GRAVITY = 8388659;
-    @ViewDebug.ExportedProperty(category = "padding")
     @UnsupportedAppUsage
+    @ViewDebug.ExportedProperty(category = "padding")
     private int mForegroundPaddingBottom;
-    @ViewDebug.ExportedProperty(category = "padding")
     @UnsupportedAppUsage
+    @ViewDebug.ExportedProperty(category = "padding")
     private int mForegroundPaddingLeft;
-    @ViewDebug.ExportedProperty(category = "padding")
     @UnsupportedAppUsage
+    @ViewDebug.ExportedProperty(category = "padding")
     private int mForegroundPaddingRight;
-    @ViewDebug.ExportedProperty(category = "padding")
     @UnsupportedAppUsage
+    @ViewDebug.ExportedProperty(category = "padding")
     private int mForegroundPaddingTop;
     private final ArrayList<View> mMatchParentChildren;
-    @ViewDebug.ExportedProperty(category = "measurement")
     @UnsupportedAppUsage
+    @ViewDebug.ExportedProperty(category = "measurement")
     boolean mMeasureAllChildren;
 
+    /* loaded from: classes4.dex */
     public static class LayoutParams extends ViewGroup.MarginLayoutParams {
         public static final int UNSPECIFIED_GRAVITY = -1;
-        public int gravity = -1;
+        public int gravity;
 
+        /* loaded from: classes4.dex */
         public final class InspectionCompanion implements android.view.inspector.InspectionCompanion<LayoutParams> {
             private int mLayout_gravityId;
             private boolean mPropertiesMapped = false;
 
+            @Override // android.view.inspector.InspectionCompanion
             public void mapProperties(PropertyMapper propertyMapper) {
                 this.mLayout_gravityId = propertyMapper.mapGravity("layout_gravity", 16842931);
                 this.mPropertiesMapped = true;
             }
 
+            @Override // android.view.inspector.InspectionCompanion
             public void readProperties(LayoutParams node, PropertyReader propertyReader) {
-                if (this.mPropertiesMapped) {
-                    propertyReader.readGravity(this.mLayout_gravityId, node.gravity);
-                    return;
+                if (!this.mPropertiesMapped) {
+                    throw new InspectionCompanion.UninitializedPropertyMapException();
                 }
-                throw new InspectionCompanion.UninitializedPropertyMapException();
+                propertyReader.readGravity(this.mLayout_gravityId, node.gravity);
             }
         }
 
         public LayoutParams(Context c, AttributeSet attrs) {
             super(c, attrs);
-            TypedArray a = c.obtainStyledAttributes(attrs, R.styleable.FrameLayout_Layout);
+            this.gravity = -1;
+            TypedArray a = c.obtainStyledAttributes(attrs, C3132R.styleable.FrameLayout_Layout);
             this.gravity = a.getInt(0, -1);
             a.recycle();
         }
 
         public LayoutParams(int width, int height) {
             super(width, height);
+            this.gravity = -1;
         }
 
-        public LayoutParams(int width, int height, int gravity2) {
+        public LayoutParams(int width, int height, int gravity) {
             super(width, height);
-            this.gravity = gravity2;
+            this.gravity = -1;
+            this.gravity = gravity;
         }
 
         public LayoutParams(ViewGroup.LayoutParams source) {
             super(source);
+            this.gravity = -1;
         }
 
         public LayoutParams(ViewGroup.MarginLayoutParams source) {
             super(source);
+            this.gravity = -1;
         }
 
         public LayoutParams(LayoutParams source) {
             super((ViewGroup.MarginLayoutParams) source);
+            this.gravity = -1;
             this.gravity = source.gravity;
         }
     }
 
+    /* loaded from: classes4.dex */
     public final class InspectionCompanion implements android.view.inspector.InspectionCompanion<FrameLayout> {
         private int mMeasureAllChildrenId;
         private boolean mPropertiesMapped = false;
 
+        @Override // android.view.inspector.InspectionCompanion
         public void mapProperties(PropertyMapper propertyMapper) {
             this.mMeasureAllChildrenId = propertyMapper.mapBoolean("measureAllChildren", 16843018);
             this.mPropertiesMapped = true;
         }
 
+        @Override // android.view.inspector.InspectionCompanion
         public void readProperties(FrameLayout node, PropertyReader propertyReader) {
-            if (this.mPropertiesMapped) {
-                propertyReader.readBoolean(this.mMeasureAllChildrenId, node.getMeasureAllChildren());
-                return;
+            if (!this.mPropertiesMapped) {
+                throw new InspectionCompanion.UninitializedPropertyMapException();
             }
-            throw new InspectionCompanion.UninitializedPropertyMapException();
+            propertyReader.readBoolean(this.mMeasureAllChildrenId, node.getMeasureAllChildren());
         }
     }
 
@@ -135,25 +147,21 @@ public class FrameLayout extends ViewGroup {
         this.mForegroundPaddingRight = 0;
         this.mForegroundPaddingBottom = 0;
         this.mMatchParentChildren = new ArrayList<>(1);
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.FrameLayout, defStyleAttr, defStyleRes);
-        saveAttributeDataForStyleable(context, R.styleable.FrameLayout, attrs, a, defStyleAttr, defStyleRes);
+        TypedArray a = context.obtainStyledAttributes(attrs, C3132R.styleable.FrameLayout, defStyleAttr, defStyleRes);
+        saveAttributeDataForStyleable(context, C3132R.styleable.FrameLayout, attrs, a, defStyleAttr, defStyleRes);
         if (a.getBoolean(0, false)) {
             setMeasureAllChildren(true);
         }
         a.recycle();
     }
 
+    @Override // android.view.View
     @RemotableViewMethod
     public void setForegroundGravity(int foregroundGravity) {
         if (getForegroundGravity() != foregroundGravity) {
             super.setForegroundGravity(foregroundGravity);
             Drawable foreground = getForeground();
-            if (getForegroundGravity() != 119 || foreground == null) {
-                this.mForegroundPaddingLeft = 0;
-                this.mForegroundPaddingTop = 0;
-                this.mForegroundPaddingRight = 0;
-                this.mForegroundPaddingBottom = 0;
-            } else {
+            if (getForegroundGravity() == 119 && foreground != null) {
                 Rect padding = new Rect();
                 if (foreground.getPadding(padding)) {
                     this.mForegroundPaddingLeft = padding.left;
@@ -161,53 +169,43 @@ public class FrameLayout extends ViewGroup {
                     this.mForegroundPaddingRight = padding.right;
                     this.mForegroundPaddingBottom = padding.bottom;
                 }
+            } else {
+                this.mForegroundPaddingLeft = 0;
+                this.mForegroundPaddingTop = 0;
+                this.mForegroundPaddingRight = 0;
+                this.mForegroundPaddingBottom = 0;
             }
             requestLayout();
         }
     }
 
-    /* access modifiers changed from: protected */
+    /* JADX INFO: Access modifiers changed from: protected */
+    @Override // android.view.ViewGroup
     public LayoutParams generateDefaultLayoutParams() {
         return new LayoutParams(-1, -1);
     }
 
-    /* access modifiers changed from: package-private */
-    public int getPaddingLeftWithForeground() {
-        if (isForegroundInsidePadding()) {
-            return Math.max(this.mPaddingLeft, this.mForegroundPaddingLeft);
-        }
-        return this.mPaddingLeft + this.mForegroundPaddingLeft;
+    int getPaddingLeftWithForeground() {
+        return isForegroundInsidePadding() ? Math.max(this.mPaddingLeft, this.mForegroundPaddingLeft) : this.mPaddingLeft + this.mForegroundPaddingLeft;
     }
 
-    /* access modifiers changed from: package-private */
-    public int getPaddingRightWithForeground() {
-        if (isForegroundInsidePadding()) {
-            return Math.max(this.mPaddingRight, this.mForegroundPaddingRight);
-        }
-        return this.mPaddingRight + this.mForegroundPaddingRight;
+    int getPaddingRightWithForeground() {
+        return isForegroundInsidePadding() ? Math.max(this.mPaddingRight, this.mForegroundPaddingRight) : this.mPaddingRight + this.mForegroundPaddingRight;
     }
 
     private int getPaddingTopWithForeground() {
-        if (isForegroundInsidePadding()) {
-            return Math.max(this.mPaddingTop, this.mForegroundPaddingTop);
-        }
-        return this.mPaddingTop + this.mForegroundPaddingTop;
+        return isForegroundInsidePadding() ? Math.max(this.mPaddingTop, this.mForegroundPaddingTop) : this.mPaddingTop + this.mForegroundPaddingTop;
     }
 
     private int getPaddingBottomWithForeground() {
-        if (isForegroundInsidePadding()) {
-            return Math.max(this.mPaddingBottom, this.mForegroundPaddingBottom);
-        }
-        return this.mPaddingBottom + this.mForegroundPaddingBottom;
+        return isForegroundInsidePadding() ? Math.max(this.mPaddingBottom, this.mForegroundPaddingBottom) : this.mPaddingBottom + this.mForegroundPaddingBottom;
     }
 
-    /* access modifiers changed from: protected */
-    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    @Override // android.view.View
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int width;
         int height;
         int i;
-        int i2 = widthMeasureSpec;
-        int i3 = heightMeasureSpec;
         int count = getChildCount();
         boolean measureMatchParentChildren = (View.MeasureSpec.getMode(widthMeasureSpec) == 1073741824 && View.MeasureSpec.getMode(heightMeasureSpec) == 1073741824) ? false : true;
         this.mMatchParentChildren.clear();
@@ -216,31 +214,30 @@ public class FrameLayout extends ViewGroup {
         int childState = 0;
         int maxHeight2 = 0;
         while (true) {
-            int i4 = maxHeight2;
-            if (i4 >= count) {
+            int i2 = maxHeight2;
+            if (i2 >= count) {
                 break;
             }
-            View child = getChildAt(i4);
-            if (this.mMeasureAllChildren || child.getVisibility() != 8) {
-                View child2 = child;
-                i = i4;
+            View child = getChildAt(i2);
+            if (!this.mMeasureAllChildren && child.getVisibility() == 8) {
+                i = i2;
+            } else {
+                i = i2;
                 measureChildWithMargins(child, widthMeasureSpec, 0, heightMeasureSpec, 0);
-                LayoutParams lp = (LayoutParams) child2.getLayoutParams();
-                int maxWidth2 = Math.max(maxWidth, child2.getMeasuredWidth() + lp.leftMargin + lp.rightMargin);
-                int maxHeight3 = Math.max(maxHeight, child2.getMeasuredHeight() + lp.topMargin + lp.bottomMargin);
-                int childState2 = combineMeasuredStates(childState, child2.getMeasuredState());
+                LayoutParams lp = (LayoutParams) child.getLayoutParams();
+                int maxWidth2 = Math.max(maxWidth, child.getMeasuredWidth() + lp.leftMargin + lp.rightMargin);
+                int maxHeight3 = Math.max(maxHeight, child.getMeasuredHeight() + lp.topMargin + lp.bottomMargin);
+                int childState2 = combineMeasuredStates(childState, child.getMeasuredState());
                 if (measureMatchParentChildren && (lp.width == -1 || lp.height == -1)) {
-                    this.mMatchParentChildren.add(child2);
+                    this.mMatchParentChildren.add(child);
                 }
                 maxWidth = maxWidth2;
                 maxHeight = maxHeight3;
                 childState = childState2;
-            } else {
-                i = i4;
             }
             maxHeight2 = i + 1;
         }
-        int i5 = -1;
+        int i3 = -1;
         int childState3 = childState;
         int maxWidth3 = maxWidth + getPaddingLeftWithForeground() + getPaddingRightWithForeground();
         int maxHeight4 = Math.max(maxHeight + getPaddingTopWithForeground() + getPaddingBottomWithForeground(), getSuggestedMinimumHeight());
@@ -250,39 +247,41 @@ public class FrameLayout extends ViewGroup {
             maxHeight4 = Math.max(maxHeight4, drawable.getMinimumHeight());
             maxWidth4 = Math.max(maxWidth4, drawable.getMinimumWidth());
         }
-        setMeasuredDimension(resolveSizeAndState(maxWidth4, i2, childState3), resolveSizeAndState(maxHeight4, i3, childState3 << 16));
+        setMeasuredDimension(resolveSizeAndState(maxWidth4, widthMeasureSpec, childState3), resolveSizeAndState(maxHeight4, heightMeasureSpec, childState3 << 16));
         int count2 = this.mMatchParentChildren.size();
         if (count2 > 1) {
-            int i6 = 0;
-            while (i6 < count2) {
-                View child3 = this.mMatchParentChildren.get(i6);
-                ViewGroup.MarginLayoutParams lp2 = (ViewGroup.MarginLayoutParams) child3.getLayoutParams();
-                if (lp2.width == i5) {
-                    width = View.MeasureSpec.makeMeasureSpec(Math.max(0, (((getMeasuredWidth() - getPaddingLeftWithForeground()) - getPaddingRightWithForeground()) - lp2.leftMargin) - lp2.rightMargin), 1073741824);
+            int i4 = 0;
+            while (i4 < count2) {
+                View child2 = this.mMatchParentChildren.get(i4);
+                ViewGroup.MarginLayoutParams lp2 = (ViewGroup.MarginLayoutParams) child2.getLayoutParams();
+                if (lp2.width == i3) {
+                    int width2 = Math.max(0, (((getMeasuredWidth() - getPaddingLeftWithForeground()) - getPaddingRightWithForeground()) - lp2.leftMargin) - lp2.rightMargin);
+                    width = View.MeasureSpec.makeMeasureSpec(width2, 1073741824);
                 } else {
-                    width = getChildMeasureSpec(i2, getPaddingLeftWithForeground() + getPaddingRightWithForeground() + lp2.leftMargin + lp2.rightMargin, lp2.width);
+                    width = getChildMeasureSpec(widthMeasureSpec, getPaddingLeftWithForeground() + getPaddingRightWithForeground() + lp2.leftMargin + lp2.rightMargin, lp2.width);
                 }
-                if (lp2.height == i5) {
-                    height = View.MeasureSpec.makeMeasureSpec(Math.max(0, (((getMeasuredHeight() - getPaddingTopWithForeground()) - getPaddingBottomWithForeground()) - lp2.topMargin) - lp2.bottomMargin), 1073741824);
+                if (lp2.height == i3) {
+                    int height2 = Math.max(0, (((getMeasuredHeight() - getPaddingTopWithForeground()) - getPaddingBottomWithForeground()) - lp2.topMargin) - lp2.bottomMargin);
+                    height = View.MeasureSpec.makeMeasureSpec(height2, 1073741824);
                 } else {
-                    height = getChildMeasureSpec(i3, getPaddingTopWithForeground() + getPaddingBottomWithForeground() + lp2.topMargin + lp2.bottomMargin, lp2.height);
+                    height = getChildMeasureSpec(heightMeasureSpec, getPaddingTopWithForeground() + getPaddingBottomWithForeground() + lp2.topMargin + lp2.bottomMargin, lp2.height);
                 }
-                child3.measure(width, height);
-                i6++;
-                i5 = -1;
+                int childHeightMeasureSpec = height;
+                child2.measure(width, childHeightMeasureSpec);
+                i4++;
+                i3 = -1;
             }
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onLayout(boolean changed, int left, int top, int right, int bottom) {
+    @Override // android.view.ViewGroup, android.view.View
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         layoutChildren(left, top, right, bottom, false);
     }
 
-    /* access modifiers changed from: package-private */
-    public void layoutChildren(int left, int top, int right, int bottom, boolean forceLeftGravity) {
-        int parentLeft;
+    void layoutChildren(int left, int top, int right, int bottom, boolean forceLeftGravity) {
         int count;
+        int parentLeft;
         int childLeft;
         int childTop;
         int count2 = getChildCount();
@@ -293,7 +292,10 @@ public class FrameLayout extends ViewGroup {
         int i = 0;
         while (i < count2) {
             View child = getChildAt(i);
-            if (child.getVisibility() != 8) {
+            if (child.getVisibility() == 8) {
+                count = count2;
+                parentLeft = parentLeft2;
+            } else {
                 LayoutParams lp = (LayoutParams) child.getLayoutParams();
                 int width = child.getMeasuredWidth();
                 int height = child.getMeasuredHeight();
@@ -302,41 +304,39 @@ public class FrameLayout extends ViewGroup {
                 if (gravity == -1) {
                     gravity = DEFAULT_CHILD_GRAVITY;
                 }
-                int layoutDirection = getLayoutDirection();
-                int absoluteGravity = Gravity.getAbsoluteGravity(gravity, layoutDirection);
-                int i2 = layoutDirection;
-                int verticalGravity = gravity & 112;
-                int i3 = absoluteGravity & 7;
-                if (i3 != 1) {
-                    childLeft = (i3 == 5 && !forceLeftGravity) ? (parentRight - width) - lp.rightMargin : parentLeft2 + lp.leftMargin;
-                } else {
+                int absoluteGravity = Gravity.getAbsoluteGravity(gravity, getLayoutDirection());
+                int layoutDirection = gravity & 112;
+                int i2 = absoluteGravity & 7;
+                if (i2 == 1) {
                     childLeft = (((((parentRight - parentLeft2) - width) / 2) + parentLeft2) + lp.leftMargin) - lp.rightMargin;
+                } else if (i2 == 5 && !forceLeftGravity) {
+                    childLeft = (parentRight - width) - lp.rightMargin;
+                } else {
+                    childLeft = parentLeft2 + lp.leftMargin;
                 }
                 int childLeft2 = childLeft;
-                if (verticalGravity == 16) {
-                    childTop = (((((parentBottom - parentTop) - height) / 2) + parentTop) + lp.topMargin) - lp.bottomMargin;
-                } else if (verticalGravity == 48) {
-                    childTop = parentTop + lp.topMargin;
-                } else if (verticalGravity != 80) {
-                    childTop = lp.topMargin + parentTop;
-                    int i4 = verticalGravity;
+                if (layoutDirection == 16) {
+                    int verticalGravity = parentBottom - parentTop;
+                    childTop = ((((verticalGravity - height) / 2) + parentTop) + lp.topMargin) - lp.bottomMargin;
+                } else if (layoutDirection == 48) {
+                    int verticalGravity2 = lp.topMargin;
+                    childTop = parentTop + verticalGravity2;
+                } else if (layoutDirection == 80) {
+                    int verticalGravity3 = lp.bottomMargin;
+                    childTop = (parentBottom - height) - verticalGravity3;
                 } else {
-                    int i5 = verticalGravity;
-                    childTop = (parentBottom - height) - lp.bottomMargin;
+                    childTop = lp.topMargin + parentTop;
                 }
                 int childTop2 = childTop;
+                int childTop3 = childLeft2 + width;
                 parentLeft = parentLeft2;
-                child.layout(childLeft2, childTop2, childLeft2 + width, childTop2 + height);
-            } else {
-                count = count2;
-                parentLeft = parentLeft2;
+                int parentLeft3 = childTop2 + height;
+                child.layout(childLeft2, childTop2, childTop3, parentLeft3);
             }
             i++;
             count2 = count;
             parentLeft2 = parentLeft;
         }
-        int i6 = count2;
-        int i7 = parentLeft2;
     }
 
     @RemotableViewMethod
@@ -353,21 +353,23 @@ public class FrameLayout extends ViewGroup {
         return this.mMeasureAllChildren;
     }
 
+    @Override // android.view.ViewGroup
     public LayoutParams generateLayoutParams(AttributeSet attrs) {
         return new LayoutParams(getContext(), attrs);
     }
 
+    @Override // android.view.ViewGroup
     public boolean shouldDelayChildPressedState() {
         return false;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean checkLayoutParams(ViewGroup.LayoutParams p) {
+    @Override // android.view.ViewGroup
+    protected boolean checkLayoutParams(ViewGroup.LayoutParams p) {
         return p instanceof LayoutParams;
     }
 
-    /* access modifiers changed from: protected */
-    public ViewGroup.LayoutParams generateLayoutParams(ViewGroup.LayoutParams lp) {
+    @Override // android.view.ViewGroup
+    protected ViewGroup.LayoutParams generateLayoutParams(ViewGroup.LayoutParams lp) {
         if (sPreserveMarginParamsInLayoutParamConversion) {
             if (lp instanceof LayoutParams) {
                 return new LayoutParams((LayoutParams) lp);
@@ -379,12 +381,13 @@ public class FrameLayout extends ViewGroup {
         return new LayoutParams(lp);
     }
 
+    @Override // android.view.ViewGroup, android.view.View
     public CharSequence getAccessibilityClassName() {
         return FrameLayout.class.getName();
     }
 
-    /* access modifiers changed from: protected */
-    public void encodeProperties(ViewHierarchyEncoder encoder) {
+    @Override // android.view.ViewGroup, android.view.View
+    protected void encodeProperties(ViewHierarchyEncoder encoder) {
         super.encodeProperties(encoder);
         encoder.addProperty("measurement:measureAllChildren", this.mMeasureAllChildren);
         encoder.addProperty("padding:foregroundPaddingLeft", this.mForegroundPaddingLeft);

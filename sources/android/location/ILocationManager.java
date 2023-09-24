@@ -2,15 +2,22 @@ package android.location;
 
 import android.annotation.UnsupportedAppUsage;
 import android.app.PendingIntent;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.location.IBatchedLocationCallback;
+import android.location.IGnssMeasurementsListener;
+import android.location.IGnssNavigationMessageListener;
+import android.location.IGnssStatusListener;
+import android.location.ILocationListener;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import com.android.internal.location.ProviderProperties;
+import java.util.ArrayList;
 import java.util.List;
 
+/* loaded from: classes.dex */
 public interface ILocationManager extends IInterface {
     boolean addGnssBatchingCallback(IBatchedLocationCallback iBatchedLocationCallback, String str) throws RemoteException;
 
@@ -109,186 +116,237 @@ public interface ILocationManager extends IInterface {
 
     void unregisterGnssStatusCallback(IGnssStatusListener iGnssStatusListener) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements ILocationManager {
+        @Override // android.location.ILocationManager
         public void requestLocationUpdates(LocationRequest request, ILocationListener listener, PendingIntent intent, String packageName) throws RemoteException {
         }
 
+        @Override // android.location.ILocationManager
         public void removeUpdates(ILocationListener listener, PendingIntent intent, String packageName) throws RemoteException {
         }
 
+        @Override // android.location.ILocationManager
         public void requestGeofence(LocationRequest request, Geofence geofence, PendingIntent intent, String packageName) throws RemoteException {
         }
 
+        @Override // android.location.ILocationManager
         public void removeGeofence(Geofence fence, PendingIntent intent, String packageName) throws RemoteException {
         }
 
+        @Override // android.location.ILocationManager
         public Location getLastLocation(LocationRequest request, String packageName) throws RemoteException {
             return null;
         }
 
+        @Override // android.location.ILocationManager
         public boolean registerGnssStatusCallback(IGnssStatusListener callback, String packageName) throws RemoteException {
             return false;
         }
 
+        @Override // android.location.ILocationManager
         public void unregisterGnssStatusCallback(IGnssStatusListener callback) throws RemoteException {
         }
 
+        @Override // android.location.ILocationManager
         public boolean geocoderIsPresent() throws RemoteException {
             return false;
         }
 
-        public String getFromLocation(double latitude, double longitude, int maxResults, GeocoderParams params, List<Address> list) throws RemoteException {
+        @Override // android.location.ILocationManager
+        public String getFromLocation(double latitude, double longitude, int maxResults, GeocoderParams params, List<Address> addrs) throws RemoteException {
             return null;
         }
 
-        public String getFromLocationName(String locationName, double lowerLeftLatitude, double lowerLeftLongitude, double upperRightLatitude, double upperRightLongitude, int maxResults, GeocoderParams params, List<Address> list) throws RemoteException {
+        @Override // android.location.ILocationManager
+        public String getFromLocationName(String locationName, double lowerLeftLatitude, double lowerLeftLongitude, double upperRightLatitude, double upperRightLongitude, int maxResults, GeocoderParams params, List<Address> addrs) throws RemoteException {
             return null;
         }
 
+        @Override // android.location.ILocationManager
         public boolean sendNiResponse(int notifId, int userResponse) throws RemoteException {
             return false;
         }
 
+        @Override // android.location.ILocationManager
         public boolean addGnssMeasurementsListener(IGnssMeasurementsListener listener, String packageName) throws RemoteException {
             return false;
         }
 
+        @Override // android.location.ILocationManager
         public void injectGnssMeasurementCorrections(GnssMeasurementCorrections corrections, String packageName) throws RemoteException {
         }
 
+        @Override // android.location.ILocationManager
         public long getGnssCapabilities(String packageName) throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // android.location.ILocationManager
         public void removeGnssMeasurementsListener(IGnssMeasurementsListener listener) throws RemoteException {
         }
 
+        @Override // android.location.ILocationManager
         public boolean addGnssNavigationMessageListener(IGnssNavigationMessageListener listener, String packageName) throws RemoteException {
             return false;
         }
 
+        @Override // android.location.ILocationManager
         public void removeGnssNavigationMessageListener(IGnssNavigationMessageListener listener) throws RemoteException {
         }
 
+        @Override // android.location.ILocationManager
         public int getGnssYearOfHardware() throws RemoteException {
             return 0;
         }
 
+        @Override // android.location.ILocationManager
         public String getGnssHardwareModelName() throws RemoteException {
             return null;
         }
 
+        @Override // android.location.ILocationManager
         public int getGnssBatchSize(String packageName) throws RemoteException {
             return 0;
         }
 
+        @Override // android.location.ILocationManager
         public boolean addGnssBatchingCallback(IBatchedLocationCallback callback, String packageName) throws RemoteException {
             return false;
         }
 
+        @Override // android.location.ILocationManager
         public void removeGnssBatchingCallback() throws RemoteException {
         }
 
+        @Override // android.location.ILocationManager
         public boolean startGnssBatch(long periodNanos, boolean wakeOnFifoFull, String packageName) throws RemoteException {
             return false;
         }
 
+        @Override // android.location.ILocationManager
         public void flushGnssBatch(String packageName) throws RemoteException {
         }
 
+        @Override // android.location.ILocationManager
         public boolean stopGnssBatch() throws RemoteException {
             return false;
         }
 
+        @Override // android.location.ILocationManager
         public boolean injectLocation(Location location) throws RemoteException {
             return false;
         }
 
+        @Override // android.location.ILocationManager
         public List<String> getAllProviders() throws RemoteException {
             return null;
         }
 
+        @Override // android.location.ILocationManager
         public List<String> getProviders(Criteria criteria, boolean enabledOnly) throws RemoteException {
             return null;
         }
 
+        @Override // android.location.ILocationManager
         public String getBestProvider(Criteria criteria, boolean enabledOnly) throws RemoteException {
             return null;
         }
 
+        @Override // android.location.ILocationManager
         public ProviderProperties getProviderProperties(String provider) throws RemoteException {
             return null;
         }
 
+        @Override // android.location.ILocationManager
         public boolean isProviderPackage(String packageName) throws RemoteException {
             return false;
         }
 
+        @Override // android.location.ILocationManager
         public void setExtraLocationControllerPackage(String packageName) throws RemoteException {
         }
 
+        @Override // android.location.ILocationManager
         public String getExtraLocationControllerPackage() throws RemoteException {
             return null;
         }
 
+        @Override // android.location.ILocationManager
         public void setExtraLocationControllerPackageEnabled(boolean enabled) throws RemoteException {
         }
 
+        @Override // android.location.ILocationManager
         public boolean isExtraLocationControllerPackageEnabled() throws RemoteException {
             return false;
         }
 
+        @Override // android.location.ILocationManager
         public boolean isProviderEnabledForUser(String provider, int userId) throws RemoteException {
             return false;
         }
 
+        @Override // android.location.ILocationManager
         public boolean isLocationEnabledForUser(int userId) throws RemoteException {
             return false;
         }
 
+        @Override // android.location.ILocationManager
         public void addTestProvider(String name, ProviderProperties properties, String opPackageName) throws RemoteException {
         }
 
+        @Override // android.location.ILocationManager
         public void removeTestProvider(String provider, String opPackageName) throws RemoteException {
         }
 
+        @Override // android.location.ILocationManager
         public void setTestProviderLocation(String provider, Location loc, String opPackageName) throws RemoteException {
         }
 
+        @Override // android.location.ILocationManager
         public void setTestProviderEnabled(String provider, boolean enabled, String opPackageName) throws RemoteException {
         }
 
+        @Override // android.location.ILocationManager
         public List<LocationRequest> getTestProviderCurrentRequests(String provider, String opPackageName) throws RemoteException {
             return null;
         }
 
+        @Override // android.location.ILocationManager
         public LocationTime getGnssTimeMillis() throws RemoteException {
             return null;
         }
 
+        @Override // android.location.ILocationManager
         public void setTestProviderStatus(String provider, int status, Bundle extras, long updateTime, String opPackageName) throws RemoteException {
         }
 
+        @Override // android.location.ILocationManager
         public boolean sendExtraCommand(String provider, String command, Bundle extras) throws RemoteException {
             return false;
         }
 
+        @Override // android.location.ILocationManager
         public void locationCallbackFinished(ILocationListener listener) throws RemoteException {
         }
 
+        @Override // android.location.ILocationManager
         public String[] getBackgroundThrottlingWhitelist() throws RemoteException {
             return null;
         }
 
+        @Override // android.location.ILocationManager
         public String[] getIgnoreSettingsWhitelist() throws RemoteException {
             return null;
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements ILocationManager {
         private static final String DESCRIPTOR = "android.location.ILocationManager";
         static final int TRANSACTION_addGnssBatchingCallback = 21;
@@ -349,12 +407,13 @@ public interface ILocationManager extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof ILocationManager)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof ILocationManager)) {
+                return (ILocationManager) iin;
             }
-            return (ILocationManager) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -462,727 +521,412 @@ public interface ILocationManager extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v1, resolved type: android.app.PendingIntent} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v5, resolved type: android.app.PendingIntent} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v9, resolved type: android.app.PendingIntent} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v13, resolved type: android.app.PendingIntent} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v17, resolved type: android.location.LocationRequest} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v43, resolved type: android.location.Criteria} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v47, resolved type: android.location.Criteria} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v56, resolved type: com.android.internal.location.ProviderProperties} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v61, resolved type: android.location.Location} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v69, resolved type: android.os.Bundle} */
-        /* JADX WARNING: type inference failed for: r1v0 */
-        /* JADX WARNING: type inference failed for: r1v30 */
-        /* JADX WARNING: type inference failed for: r1v39 */
-        /* JADX WARNING: type inference failed for: r1v73 */
-        /* JADX WARNING: type inference failed for: r1v74 */
-        /* JADX WARNING: type inference failed for: r1v75 */
-        /* JADX WARNING: type inference failed for: r1v76 */
-        /* JADX WARNING: type inference failed for: r1v77 */
-        /* JADX WARNING: type inference failed for: r1v78 */
-        /* JADX WARNING: type inference failed for: r1v79 */
-        /* JADX WARNING: type inference failed for: r1v80 */
-        /* JADX WARNING: type inference failed for: r1v81 */
-        /* JADX WARNING: type inference failed for: r1v82 */
-        /* JADX WARNING: type inference failed for: r1v83 */
-        /* JADX WARNING: type inference failed for: r1v84 */
-        /*  JADX ERROR: NullPointerException in pass: CodeShrinkVisitor
-            java.lang.NullPointerException
-            */
-        /* JADX WARNING: Multi-variable type inference failed */
-        public boolean onTransact(int r30, android.os.Parcel r31, android.os.Parcel r32, int r33) throws android.os.RemoteException {
-            /*
-                r29 = this;
-                r13 = r29
-                r14 = r30
-                r15 = r31
-                r12 = r32
-                java.lang.String r10 = "android.location.ILocationManager"
-                r0 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r8 = 1
-                if (r14 == r0) goto L_0x0563
-                r0 = 0
-                r1 = 0
-                switch(r14) {
-                    case 1: goto L_0x052a;
-                    case 2: goto L_0x0501;
-                    case 3: goto L_0x04c0;
-                    case 4: goto L_0x048f;
-                    case 5: goto L_0x0460;
-                    case 6: goto L_0x0443;
-                    case 7: goto L_0x042e;
-                    case 8: goto L_0x041d;
-                    case 9: goto L_0x03d9;
-                    case 10: goto L_0x0380;
-                    case 11: goto L_0x036a;
-                    case 12: goto L_0x0350;
-                    case 13: goto L_0x0330;
-                    case 14: goto L_0x031e;
-                    case 15: goto L_0x030c;
-                    case 16: goto L_0x02f2;
-                    case 17: goto L_0x02e0;
-                    case 18: goto L_0x02d2;
-                    case 19: goto L_0x02c4;
-                    case 20: goto L_0x02b2;
-                    case 21: goto L_0x0298;
-                    case 22: goto L_0x028e;
-                    case 23: goto L_0x0270;
-                    case 24: goto L_0x0262;
-                    case 25: goto L_0x0254;
-                    case 26: goto L_0x0234;
-                    case 27: goto L_0x0226;
-                    case 28: goto L_0x0200;
-                    case 29: goto L_0x01da;
-                    case 30: goto L_0x01bf;
-                    case 31: goto L_0x01ad;
-                    case 32: goto L_0x019f;
-                    case 33: goto L_0x0191;
-                    case 34: goto L_0x017f;
-                    case 35: goto L_0x0171;
-                    case 36: goto L_0x015b;
-                    case 37: goto L_0x0149;
-                    case 38: goto L_0x0127;
-                    case 39: goto L_0x0115;
-                    case 40: goto L_0x00f3;
-                    case 41: goto L_0x00d9;
-                    case 42: goto L_0x00c3;
-                    case 43: goto L_0x00ac;
-                    case 44: goto L_0x007a;
-                    case 45: goto L_0x0048;
-                    case 46: goto L_0x0036;
-                    case 47: goto L_0x0028;
-                    case 48: goto L_0x001a;
-                    default: goto L_0x0015;
-                }
-            L_0x0015:
-                boolean r0 = super.onTransact(r30, r31, r32, r33)
-                return r0
-            L_0x001a:
-                r15.enforceInterface(r10)
-                java.lang.String[] r0 = r29.getIgnoreSettingsWhitelist()
-                r32.writeNoException()
-                r12.writeStringArray(r0)
-                return r8
-            L_0x0028:
-                r15.enforceInterface(r10)
-                java.lang.String[] r0 = r29.getBackgroundThrottlingWhitelist()
-                r32.writeNoException()
-                r12.writeStringArray(r0)
-                return r8
-            L_0x0036:
-                r15.enforceInterface(r10)
-                android.os.IBinder r0 = r31.readStrongBinder()
-                android.location.ILocationListener r0 = android.location.ILocationListener.Stub.asInterface(r0)
-                r13.locationCallbackFinished(r0)
-                r32.writeNoException()
-                return r8
-            L_0x0048:
-                r15.enforceInterface(r10)
-                java.lang.String r2 = r31.readString()
-                java.lang.String r3 = r31.readString()
-                int r4 = r31.readInt()
-                if (r4 == 0) goto L_0x0062
-                android.os.Parcelable$Creator<android.os.Bundle> r1 = android.os.Bundle.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r15)
-                android.os.Bundle r1 = (android.os.Bundle) r1
-                goto L_0x0063
-            L_0x0062:
-            L_0x0063:
-                boolean r4 = r13.sendExtraCommand(r2, r3, r1)
-                r32.writeNoException()
-                r12.writeInt(r4)
-                if (r1 == 0) goto L_0x0076
-                r12.writeInt(r8)
-                r1.writeToParcel(r12, r8)
-                goto L_0x0079
-            L_0x0076:
-                r12.writeInt(r0)
-            L_0x0079:
-                return r8
-            L_0x007a:
-                r15.enforceInterface(r10)
-                java.lang.String r7 = r31.readString()
-                int r9 = r31.readInt()
-                int r0 = r31.readInt()
-                if (r0 == 0) goto L_0x0095
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r15)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-                r3 = r0
-                goto L_0x0096
-            L_0x0095:
-                r3 = r1
-            L_0x0096:
-                long r16 = r31.readLong()
-                java.lang.String r11 = r31.readString()
-                r0 = r29
-                r1 = r7
-                r2 = r9
-                r4 = r16
-                r6 = r11
-                r0.setTestProviderStatus(r1, r2, r3, r4, r6)
-                r32.writeNoException()
-                return r8
-            L_0x00ac:
-                r15.enforceInterface(r10)
-                android.location.LocationTime r1 = r29.getGnssTimeMillis()
-                r32.writeNoException()
-                if (r1 == 0) goto L_0x00bf
-                r12.writeInt(r8)
-                r1.writeToParcel(r12, r8)
-                goto L_0x00c2
-            L_0x00bf:
-                r12.writeInt(r0)
-            L_0x00c2:
-                return r8
-            L_0x00c3:
-                r15.enforceInterface(r10)
-                java.lang.String r0 = r31.readString()
-                java.lang.String r1 = r31.readString()
-                java.util.List r2 = r13.getTestProviderCurrentRequests(r0, r1)
-                r32.writeNoException()
-                r12.writeTypedList(r2)
-                return r8
-            L_0x00d9:
-                r15.enforceInterface(r10)
-                java.lang.String r1 = r31.readString()
-                int r2 = r31.readInt()
-                if (r2 == 0) goto L_0x00e8
-                r0 = r8
-            L_0x00e8:
-                java.lang.String r2 = r31.readString()
-                r13.setTestProviderEnabled(r1, r0, r2)
-                r32.writeNoException()
-                return r8
-            L_0x00f3:
-                r15.enforceInterface(r10)
-                java.lang.String r0 = r31.readString()
-                int r2 = r31.readInt()
-                if (r2 == 0) goto L_0x0109
-                android.os.Parcelable$Creator<android.location.Location> r1 = android.location.Location.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r15)
-                android.location.Location r1 = (android.location.Location) r1
-                goto L_0x010a
-            L_0x0109:
-            L_0x010a:
-                java.lang.String r2 = r31.readString()
-                r13.setTestProviderLocation(r0, r1, r2)
-                r32.writeNoException()
-                return r8
-            L_0x0115:
-                r15.enforceInterface(r10)
-                java.lang.String r0 = r31.readString()
-                java.lang.String r1 = r31.readString()
-                r13.removeTestProvider(r0, r1)
-                r32.writeNoException()
-                return r8
-            L_0x0127:
-                r15.enforceInterface(r10)
-                java.lang.String r0 = r31.readString()
-                int r2 = r31.readInt()
-                if (r2 == 0) goto L_0x013d
-                android.os.Parcelable$Creator<com.android.internal.location.ProviderProperties> r1 = com.android.internal.location.ProviderProperties.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r15)
-                com.android.internal.location.ProviderProperties r1 = (com.android.internal.location.ProviderProperties) r1
-                goto L_0x013e
-            L_0x013d:
-            L_0x013e:
-                java.lang.String r2 = r31.readString()
-                r13.addTestProvider(r0, r1, r2)
-                r32.writeNoException()
-                return r8
-            L_0x0149:
-                r15.enforceInterface(r10)
-                int r0 = r31.readInt()
-                boolean r1 = r13.isLocationEnabledForUser(r0)
-                r32.writeNoException()
-                r12.writeInt(r1)
-                return r8
-            L_0x015b:
-                r15.enforceInterface(r10)
-                java.lang.String r0 = r31.readString()
-                int r1 = r31.readInt()
-                boolean r2 = r13.isProviderEnabledForUser(r0, r1)
-                r32.writeNoException()
-                r12.writeInt(r2)
-                return r8
-            L_0x0171:
-                r15.enforceInterface(r10)
-                boolean r0 = r29.isExtraLocationControllerPackageEnabled()
-                r32.writeNoException()
-                r12.writeInt(r0)
-                return r8
-            L_0x017f:
-                r15.enforceInterface(r10)
-                int r1 = r31.readInt()
-                if (r1 == 0) goto L_0x018a
-                r0 = r8
-            L_0x018a:
-                r13.setExtraLocationControllerPackageEnabled(r0)
-                r32.writeNoException()
-                return r8
-            L_0x0191:
-                r15.enforceInterface(r10)
-                java.lang.String r0 = r29.getExtraLocationControllerPackage()
-                r32.writeNoException()
-                r12.writeString(r0)
-                return r8
-            L_0x019f:
-                r15.enforceInterface(r10)
-                java.lang.String r0 = r31.readString()
-                r13.setExtraLocationControllerPackage(r0)
-                r32.writeNoException()
-                return r8
-            L_0x01ad:
-                r15.enforceInterface(r10)
-                java.lang.String r0 = r31.readString()
-                boolean r1 = r13.isProviderPackage(r0)
-                r32.writeNoException()
-                r12.writeInt(r1)
-                return r8
-            L_0x01bf:
-                r15.enforceInterface(r10)
-                java.lang.String r1 = r31.readString()
-                com.android.internal.location.ProviderProperties r2 = r13.getProviderProperties(r1)
-                r32.writeNoException()
-                if (r2 == 0) goto L_0x01d6
-                r12.writeInt(r8)
-                r2.writeToParcel(r12, r8)
-                goto L_0x01d9
-            L_0x01d6:
-                r12.writeInt(r0)
-            L_0x01d9:
-                return r8
-            L_0x01da:
-                r15.enforceInterface(r10)
-                int r2 = r31.readInt()
-                if (r2 == 0) goto L_0x01ec
-                android.os.Parcelable$Creator<android.location.Criteria> r1 = android.location.Criteria.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r15)
-                android.location.Criteria r1 = (android.location.Criteria) r1
-                goto L_0x01ed
-            L_0x01ec:
-            L_0x01ed:
-                int r2 = r31.readInt()
-                if (r2 == 0) goto L_0x01f5
-                r0 = r8
-            L_0x01f5:
-                java.lang.String r2 = r13.getBestProvider(r1, r0)
-                r32.writeNoException()
-                r12.writeString(r2)
-                return r8
-            L_0x0200:
-                r15.enforceInterface(r10)
-                int r2 = r31.readInt()
-                if (r2 == 0) goto L_0x0212
-                android.os.Parcelable$Creator<android.location.Criteria> r1 = android.location.Criteria.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r15)
-                android.location.Criteria r1 = (android.location.Criteria) r1
-                goto L_0x0213
-            L_0x0212:
-            L_0x0213:
-                int r2 = r31.readInt()
-                if (r2 == 0) goto L_0x021b
-                r0 = r8
-            L_0x021b:
-                java.util.List r2 = r13.getProviders(r1, r0)
-                r32.writeNoException()
-                r12.writeStringList(r2)
-                return r8
-            L_0x0226:
-                r15.enforceInterface(r10)
-                java.util.List r0 = r29.getAllProviders()
-                r32.writeNoException()
-                r12.writeStringList(r0)
-                return r8
-            L_0x0234:
-                r15.enforceInterface(r10)
-                int r0 = r31.readInt()
-                if (r0 == 0) goto L_0x0247
-                android.os.Parcelable$Creator<android.location.Location> r0 = android.location.Location.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r15)
-                r1 = r0
-                android.location.Location r1 = (android.location.Location) r1
-                goto L_0x0248
-            L_0x0247:
-            L_0x0248:
-                r0 = r1
-                boolean r1 = r13.injectLocation(r0)
-                r32.writeNoException()
-                r12.writeInt(r1)
-                return r8
-            L_0x0254:
-                r15.enforceInterface(r10)
-                boolean r0 = r29.stopGnssBatch()
-                r32.writeNoException()
-                r12.writeInt(r0)
-                return r8
-            L_0x0262:
-                r15.enforceInterface(r10)
-                java.lang.String r0 = r31.readString()
-                r13.flushGnssBatch(r0)
-                r32.writeNoException()
-                return r8
-            L_0x0270:
-                r15.enforceInterface(r10)
-                long r1 = r31.readLong()
-                int r3 = r31.readInt()
-                if (r3 == 0) goto L_0x027f
-                r0 = r8
-            L_0x027f:
-                java.lang.String r3 = r31.readString()
-                boolean r4 = r13.startGnssBatch(r1, r0, r3)
-                r32.writeNoException()
-                r12.writeInt(r4)
-                return r8
-            L_0x028e:
-                r15.enforceInterface(r10)
-                r29.removeGnssBatchingCallback()
-                r32.writeNoException()
-                return r8
-            L_0x0298:
-                r15.enforceInterface(r10)
-                android.os.IBinder r0 = r31.readStrongBinder()
-                android.location.IBatchedLocationCallback r0 = android.location.IBatchedLocationCallback.Stub.asInterface(r0)
-                java.lang.String r1 = r31.readString()
-                boolean r2 = r13.addGnssBatchingCallback(r0, r1)
-                r32.writeNoException()
-                r12.writeInt(r2)
-                return r8
-            L_0x02b2:
-                r15.enforceInterface(r10)
-                java.lang.String r0 = r31.readString()
-                int r1 = r13.getGnssBatchSize(r0)
-                r32.writeNoException()
-                r12.writeInt(r1)
-                return r8
-            L_0x02c4:
-                r15.enforceInterface(r10)
-                java.lang.String r0 = r29.getGnssHardwareModelName()
-                r32.writeNoException()
-                r12.writeString(r0)
-                return r8
-            L_0x02d2:
-                r15.enforceInterface(r10)
-                int r0 = r29.getGnssYearOfHardware()
-                r32.writeNoException()
-                r12.writeInt(r0)
-                return r8
-            L_0x02e0:
-                r15.enforceInterface(r10)
-                android.os.IBinder r0 = r31.readStrongBinder()
-                android.location.IGnssNavigationMessageListener r0 = android.location.IGnssNavigationMessageListener.Stub.asInterface(r0)
-                r13.removeGnssNavigationMessageListener(r0)
-                r32.writeNoException()
-                return r8
-            L_0x02f2:
-                r15.enforceInterface(r10)
-                android.os.IBinder r0 = r31.readStrongBinder()
-                android.location.IGnssNavigationMessageListener r0 = android.location.IGnssNavigationMessageListener.Stub.asInterface(r0)
-                java.lang.String r1 = r31.readString()
-                boolean r2 = r13.addGnssNavigationMessageListener(r0, r1)
-                r32.writeNoException()
-                r12.writeInt(r2)
-                return r8
-            L_0x030c:
-                r15.enforceInterface(r10)
-                android.os.IBinder r0 = r31.readStrongBinder()
-                android.location.IGnssMeasurementsListener r0 = android.location.IGnssMeasurementsListener.Stub.asInterface(r0)
-                r13.removeGnssMeasurementsListener(r0)
-                r32.writeNoException()
-                return r8
-            L_0x031e:
-                r15.enforceInterface(r10)
-                java.lang.String r0 = r31.readString()
-                long r1 = r13.getGnssCapabilities(r0)
-                r32.writeNoException()
-                r12.writeLong(r1)
-                return r8
-            L_0x0330:
-                r15.enforceInterface(r10)
-                int r0 = r31.readInt()
-                if (r0 == 0) goto L_0x0343
-                android.os.Parcelable$Creator<android.location.GnssMeasurementCorrections> r0 = android.location.GnssMeasurementCorrections.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r15)
-                r1 = r0
-                android.location.GnssMeasurementCorrections r1 = (android.location.GnssMeasurementCorrections) r1
-                goto L_0x0344
-            L_0x0343:
-            L_0x0344:
-                r0 = r1
-                java.lang.String r1 = r31.readString()
-                r13.injectGnssMeasurementCorrections(r0, r1)
-                r32.writeNoException()
-                return r8
-            L_0x0350:
-                r15.enforceInterface(r10)
-                android.os.IBinder r0 = r31.readStrongBinder()
-                android.location.IGnssMeasurementsListener r0 = android.location.IGnssMeasurementsListener.Stub.asInterface(r0)
-                java.lang.String r1 = r31.readString()
-                boolean r2 = r13.addGnssMeasurementsListener(r0, r1)
-                r32.writeNoException()
-                r12.writeInt(r2)
-                return r8
-            L_0x036a:
-                r15.enforceInterface(r10)
-                int r0 = r31.readInt()
-                int r1 = r31.readInt()
-                boolean r2 = r13.sendNiResponse(r0, r1)
-                r32.writeNoException()
-                r12.writeInt(r2)
-                return r8
-            L_0x0380:
-                r15.enforceInterface(r10)
-                java.lang.String r16 = r31.readString()
-                double r17 = r31.readDouble()
-                double r19 = r31.readDouble()
-                double r21 = r31.readDouble()
-                double r23 = r31.readDouble()
-                int r25 = r31.readInt()
-                int r0 = r31.readInt()
-                if (r0 == 0) goto L_0x03ab
-                android.os.Parcelable$Creator<android.location.GeocoderParams> r0 = android.location.GeocoderParams.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r15)
-                android.location.GeocoderParams r0 = (android.location.GeocoderParams) r0
-                r11 = r0
-                goto L_0x03ac
-            L_0x03ab:
-                r11 = r1
-            L_0x03ac:
-                java.util.ArrayList r0 = new java.util.ArrayList
-                r0.<init>()
-                r9 = r0
-                r0 = r29
-                r1 = r16
-                r2 = r17
-                r4 = r19
-                r6 = r21
-                r14 = r8
-                r26 = r9
-                r8 = r23
-                r27 = r10
-                r10 = r25
-                r14 = r12
-                r12 = r26
-                java.lang.String r0 = r0.getFromLocationName(r1, r2, r4, r6, r8, r10, r11, r12)
-                r32.writeNoException()
-                r14.writeString(r0)
-                r1 = r26
-                r14.writeTypedList(r1)
-                r2 = 1
-                return r2
-            L_0x03d9:
-                r27 = r10
-                r14 = r12
-                r8 = r27
-                r15.enforceInterface(r8)
-                double r9 = r31.readDouble()
-                double r11 = r31.readDouble()
-                int r16 = r31.readInt()
-                int r0 = r31.readInt()
-                if (r0 == 0) goto L_0x03fd
-                android.os.Parcelable$Creator<android.location.GeocoderParams> r0 = android.location.GeocoderParams.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r15)
-                android.location.GeocoderParams r0 = (android.location.GeocoderParams) r0
-                r6 = r0
-                goto L_0x03fe
-            L_0x03fd:
-                r6 = r1
-            L_0x03fe:
-                java.util.ArrayList r0 = new java.util.ArrayList
-                r0.<init>()
-                r7 = r0
-                r0 = r29
-                r1 = r9
-                r3 = r11
-                r5 = r16
-                r28 = r7
-                java.lang.String r0 = r0.getFromLocation(r1, r3, r5, r6, r7)
-                r32.writeNoException()
-                r14.writeString(r0)
-                r1 = r28
-                r14.writeTypedList(r1)
-                r2 = 1
-                return r2
-            L_0x041d:
-                r8 = r10
-                r14 = r12
-                r15.enforceInterface(r8)
-                boolean r0 = r29.geocoderIsPresent()
-                r32.writeNoException()
-                r14.writeInt(r0)
-                r1 = 1
-                return r1
-            L_0x042e:
-                r1 = r8
-                r8 = r10
-                r14 = r12
-                r15.enforceInterface(r8)
-                android.os.IBinder r0 = r31.readStrongBinder()
-                android.location.IGnssStatusListener r0 = android.location.IGnssStatusListener.Stub.asInterface(r0)
-                r13.unregisterGnssStatusCallback(r0)
-                r32.writeNoException()
-                return r1
-            L_0x0443:
-                r8 = r10
-                r14 = r12
-                r15.enforceInterface(r8)
-                android.os.IBinder r0 = r31.readStrongBinder()
-                android.location.IGnssStatusListener r0 = android.location.IGnssStatusListener.Stub.asInterface(r0)
-                java.lang.String r1 = r31.readString()
-                boolean r2 = r13.registerGnssStatusCallback(r0, r1)
-                r32.writeNoException()
-                r14.writeInt(r2)
-                r3 = 1
-                return r3
-            L_0x0460:
-                r8 = r10
-                r14 = r12
-                r15.enforceInterface(r8)
-                int r2 = r31.readInt()
-                if (r2 == 0) goto L_0x0474
-                android.os.Parcelable$Creator<android.location.LocationRequest> r1 = android.location.LocationRequest.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r15)
-                android.location.LocationRequest r1 = (android.location.LocationRequest) r1
-                goto L_0x0475
-            L_0x0474:
-            L_0x0475:
-                java.lang.String r2 = r31.readString()
-                android.location.Location r3 = r13.getLastLocation(r1, r2)
-                r32.writeNoException()
-                if (r3 == 0) goto L_0x048a
-                r4 = 1
-                r14.writeInt(r4)
-                r3.writeToParcel(r14, r4)
-                goto L_0x048e
-            L_0x048a:
-                r4 = 1
-                r14.writeInt(r0)
-            L_0x048e:
-                return r4
-            L_0x048f:
-                r8 = r10
-                r14 = r12
-                r15.enforceInterface(r8)
-                int r0 = r31.readInt()
-                if (r0 == 0) goto L_0x04a3
-                android.os.Parcelable$Creator<android.location.Geofence> r0 = android.location.Geofence.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r15)
-                android.location.Geofence r0 = (android.location.Geofence) r0
-                goto L_0x04a4
-            L_0x04a3:
-                r0 = r1
-            L_0x04a4:
-                int r2 = r31.readInt()
-                if (r2 == 0) goto L_0x04b3
-                android.os.Parcelable$Creator<android.app.PendingIntent> r1 = android.app.PendingIntent.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r15)
-                android.app.PendingIntent r1 = (android.app.PendingIntent) r1
-                goto L_0x04b4
-            L_0x04b3:
-            L_0x04b4:
-                java.lang.String r2 = r31.readString()
-                r13.removeGeofence(r0, r1, r2)
-                r32.writeNoException()
-                r3 = 1
-                return r3
-            L_0x04c0:
-                r8 = r10
-                r14 = r12
-                r15.enforceInterface(r8)
-                int r0 = r31.readInt()
-                if (r0 == 0) goto L_0x04d4
-                android.os.Parcelable$Creator<android.location.LocationRequest> r0 = android.location.LocationRequest.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r15)
-                android.location.LocationRequest r0 = (android.location.LocationRequest) r0
-                goto L_0x04d5
-            L_0x04d4:
-                r0 = r1
-            L_0x04d5:
-                int r2 = r31.readInt()
-                if (r2 == 0) goto L_0x04e4
-                android.os.Parcelable$Creator<android.location.Geofence> r2 = android.location.Geofence.CREATOR
-                java.lang.Object r2 = r2.createFromParcel(r15)
-                android.location.Geofence r2 = (android.location.Geofence) r2
-                goto L_0x04e5
-            L_0x04e4:
-                r2 = r1
-            L_0x04e5:
-                int r3 = r31.readInt()
-                if (r3 == 0) goto L_0x04f4
-                android.os.Parcelable$Creator<android.app.PendingIntent> r1 = android.app.PendingIntent.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r15)
-                android.app.PendingIntent r1 = (android.app.PendingIntent) r1
-                goto L_0x04f5
-            L_0x04f4:
-            L_0x04f5:
-                java.lang.String r3 = r31.readString()
-                r13.requestGeofence(r0, r2, r1, r3)
-                r32.writeNoException()
-                r4 = 1
-                return r4
-            L_0x0501:
-                r8 = r10
-                r14 = r12
-                r15.enforceInterface(r8)
-                android.os.IBinder r0 = r31.readStrongBinder()
-                android.location.ILocationListener r0 = android.location.ILocationListener.Stub.asInterface(r0)
-                int r2 = r31.readInt()
-                if (r2 == 0) goto L_0x051d
-                android.os.Parcelable$Creator<android.app.PendingIntent> r1 = android.app.PendingIntent.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r15)
-                android.app.PendingIntent r1 = (android.app.PendingIntent) r1
-                goto L_0x051e
-            L_0x051d:
-            L_0x051e:
-                java.lang.String r2 = r31.readString()
-                r13.removeUpdates(r0, r1, r2)
-                r32.writeNoException()
-                r3 = 1
-                return r3
-            L_0x052a:
-                r8 = r10
-                r14 = r12
-                r15.enforceInterface(r8)
-                int r0 = r31.readInt()
-                if (r0 == 0) goto L_0x053e
-                android.os.Parcelable$Creator<android.location.LocationRequest> r0 = android.location.LocationRequest.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r15)
-                android.location.LocationRequest r0 = (android.location.LocationRequest) r0
-                goto L_0x053f
-            L_0x053e:
-                r0 = r1
-            L_0x053f:
-                android.os.IBinder r2 = r31.readStrongBinder()
-                android.location.ILocationListener r2 = android.location.ILocationListener.Stub.asInterface(r2)
-                int r3 = r31.readInt()
-                if (r3 == 0) goto L_0x0556
-                android.os.Parcelable$Creator<android.app.PendingIntent> r1 = android.app.PendingIntent.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r15)
-                android.app.PendingIntent r1 = (android.app.PendingIntent) r1
-                goto L_0x0557
-            L_0x0556:
-            L_0x0557:
-                java.lang.String r3 = r31.readString()
-                r13.requestLocationUpdates(r0, r2, r1, r3)
-                r32.writeNoException()
-                r4 = 1
-                return r4
-            L_0x0563:
-                r4 = r8
-                r8 = r10
-                r14 = r12
-                r14.writeString(r8)
-                return r4
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.location.ILocationManager.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            LocationRequest _arg0;
+            LocationRequest _arg02;
+            Geofence _arg1;
+            Geofence _arg03;
+            boolean _arg12;
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg0 = LocationRequest.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg0 = null;
+                    }
+                    ILocationListener _arg13 = ILocationListener.Stub.asInterface(data.readStrongBinder());
+                    PendingIntent _arg2 = data.readInt() != 0 ? PendingIntent.CREATOR.createFromParcel(data) : null;
+                    String _arg3 = data.readString();
+                    requestLocationUpdates(_arg0, _arg13, _arg2, _arg3);
+                    reply.writeNoException();
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    ILocationListener _arg04 = ILocationListener.Stub.asInterface(data.readStrongBinder());
+                    PendingIntent _arg14 = data.readInt() != 0 ? PendingIntent.CREATOR.createFromParcel(data) : null;
+                    String _arg22 = data.readString();
+                    removeUpdates(_arg04, _arg14, _arg22);
+                    reply.writeNoException();
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg02 = LocationRequest.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg02 = null;
+                    }
+                    if (data.readInt() != 0) {
+                        _arg1 = Geofence.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg1 = null;
+                    }
+                    PendingIntent _arg23 = data.readInt() != 0 ? PendingIntent.CREATOR.createFromParcel(data) : null;
+                    String _arg32 = data.readString();
+                    requestGeofence(_arg02, _arg1, _arg23, _arg32);
+                    reply.writeNoException();
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg03 = Geofence.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg03 = null;
+                    }
+                    PendingIntent _arg15 = data.readInt() != 0 ? PendingIntent.CREATOR.createFromParcel(data) : null;
+                    String _arg24 = data.readString();
+                    removeGeofence(_arg03, _arg15, _arg24);
+                    reply.writeNoException();
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    LocationRequest _arg05 = data.readInt() != 0 ? LocationRequest.CREATOR.createFromParcel(data) : null;
+                    Location _result = getLastLocation(_arg05, data.readString());
+                    reply.writeNoException();
+                    if (_result != null) {
+                        reply.writeInt(1);
+                        _result.writeToParcel(reply, 1);
+                        return true;
+                    }
+                    reply.writeInt(0);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    IGnssStatusListener _arg06 = IGnssStatusListener.Stub.asInterface(data.readStrongBinder());
+                    boolean registerGnssStatusCallback = registerGnssStatusCallback(_arg06, data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(registerGnssStatusCallback ? 1 : 0);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    IGnssStatusListener _arg07 = IGnssStatusListener.Stub.asInterface(data.readStrongBinder());
+                    unregisterGnssStatusCallback(_arg07);
+                    reply.writeNoException();
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean geocoderIsPresent = geocoderIsPresent();
+                    reply.writeNoException();
+                    reply.writeInt(geocoderIsPresent ? 1 : 0);
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    double _arg08 = data.readDouble();
+                    double _arg16 = data.readDouble();
+                    int _arg25 = data.readInt();
+                    GeocoderParams _arg33 = data.readInt() != 0 ? GeocoderParams.CREATOR.createFromParcel(data) : null;
+                    ArrayList arrayList = new ArrayList();
+                    String _result2 = getFromLocation(_arg08, _arg16, _arg25, _arg33, arrayList);
+                    reply.writeNoException();
+                    reply.writeString(_result2);
+                    reply.writeTypedList(arrayList);
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg09 = data.readString();
+                    double _arg17 = data.readDouble();
+                    double _arg26 = data.readDouble();
+                    double _arg34 = data.readDouble();
+                    double _arg4 = data.readDouble();
+                    int _arg5 = data.readInt();
+                    GeocoderParams _arg6 = data.readInt() != 0 ? GeocoderParams.CREATOR.createFromParcel(data) : null;
+                    ArrayList arrayList2 = new ArrayList();
+                    String _result3 = getFromLocationName(_arg09, _arg17, _arg26, _arg34, _arg4, _arg5, _arg6, arrayList2);
+                    reply.writeNoException();
+                    reply.writeString(_result3);
+                    reply.writeTypedList(arrayList2);
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg010 = data.readInt();
+                    boolean sendNiResponse = sendNiResponse(_arg010, data.readInt());
+                    reply.writeNoException();
+                    reply.writeInt(sendNiResponse ? 1 : 0);
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    IGnssMeasurementsListener _arg011 = IGnssMeasurementsListener.Stub.asInterface(data.readStrongBinder());
+                    boolean addGnssMeasurementsListener = addGnssMeasurementsListener(_arg011, data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(addGnssMeasurementsListener ? 1 : 0);
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    GnssMeasurementCorrections _arg012 = data.readInt() != 0 ? GnssMeasurementCorrections.CREATOR.createFromParcel(data) : null;
+                    injectGnssMeasurementCorrections(_arg012, data.readString());
+                    reply.writeNoException();
+                    return true;
+                case 14:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg013 = data.readString();
+                    long _result4 = getGnssCapabilities(_arg013);
+                    reply.writeNoException();
+                    reply.writeLong(_result4);
+                    return true;
+                case 15:
+                    data.enforceInterface(DESCRIPTOR);
+                    IGnssMeasurementsListener _arg014 = IGnssMeasurementsListener.Stub.asInterface(data.readStrongBinder());
+                    removeGnssMeasurementsListener(_arg014);
+                    reply.writeNoException();
+                    return true;
+                case 16:
+                    data.enforceInterface(DESCRIPTOR);
+                    IGnssNavigationMessageListener _arg015 = IGnssNavigationMessageListener.Stub.asInterface(data.readStrongBinder());
+                    boolean addGnssNavigationMessageListener = addGnssNavigationMessageListener(_arg015, data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(addGnssNavigationMessageListener ? 1 : 0);
+                    return true;
+                case 17:
+                    data.enforceInterface(DESCRIPTOR);
+                    IGnssNavigationMessageListener _arg016 = IGnssNavigationMessageListener.Stub.asInterface(data.readStrongBinder());
+                    removeGnssNavigationMessageListener(_arg016);
+                    reply.writeNoException();
+                    return true;
+                case 18:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result5 = getGnssYearOfHardware();
+                    reply.writeNoException();
+                    reply.writeInt(_result5);
+                    return true;
+                case 19:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _result6 = getGnssHardwareModelName();
+                    reply.writeNoException();
+                    reply.writeString(_result6);
+                    return true;
+                case 20:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg017 = data.readString();
+                    int _result7 = getGnssBatchSize(_arg017);
+                    reply.writeNoException();
+                    reply.writeInt(_result7);
+                    return true;
+                case 21:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBatchedLocationCallback _arg018 = IBatchedLocationCallback.Stub.asInterface(data.readStrongBinder());
+                    boolean addGnssBatchingCallback = addGnssBatchingCallback(_arg018, data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(addGnssBatchingCallback ? 1 : 0);
+                    return true;
+                case 22:
+                    data.enforceInterface(DESCRIPTOR);
+                    removeGnssBatchingCallback();
+                    reply.writeNoException();
+                    return true;
+                case 23:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _arg019 = data.readLong();
+                    _arg12 = data.readInt() != 0;
+                    String _arg27 = data.readString();
+                    boolean startGnssBatch = startGnssBatch(_arg019, _arg12, _arg27);
+                    reply.writeNoException();
+                    reply.writeInt(startGnssBatch ? 1 : 0);
+                    return true;
+                case 24:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg020 = data.readString();
+                    flushGnssBatch(_arg020);
+                    reply.writeNoException();
+                    return true;
+                case 25:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean stopGnssBatch = stopGnssBatch();
+                    reply.writeNoException();
+                    reply.writeInt(stopGnssBatch ? 1 : 0);
+                    return true;
+                case 26:
+                    data.enforceInterface(DESCRIPTOR);
+                    Location _arg021 = data.readInt() != 0 ? Location.CREATOR.createFromParcel(data) : null;
+                    boolean injectLocation = injectLocation(_arg021);
+                    reply.writeNoException();
+                    reply.writeInt(injectLocation ? 1 : 0);
+                    return true;
+                case 27:
+                    data.enforceInterface(DESCRIPTOR);
+                    List<String> _result8 = getAllProviders();
+                    reply.writeNoException();
+                    reply.writeStringList(_result8);
+                    return true;
+                case 28:
+                    data.enforceInterface(DESCRIPTOR);
+                    Criteria _arg022 = data.readInt() != 0 ? Criteria.CREATOR.createFromParcel(data) : null;
+                    _arg12 = data.readInt() != 0;
+                    List<String> _result9 = getProviders(_arg022, _arg12);
+                    reply.writeNoException();
+                    reply.writeStringList(_result9);
+                    return true;
+                case 29:
+                    data.enforceInterface(DESCRIPTOR);
+                    Criteria _arg023 = data.readInt() != 0 ? Criteria.CREATOR.createFromParcel(data) : null;
+                    _arg12 = data.readInt() != 0;
+                    String _result10 = getBestProvider(_arg023, _arg12);
+                    reply.writeNoException();
+                    reply.writeString(_result10);
+                    return true;
+                case 30:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg024 = data.readString();
+                    ProviderProperties _result11 = getProviderProperties(_arg024);
+                    reply.writeNoException();
+                    if (_result11 != null) {
+                        reply.writeInt(1);
+                        _result11.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 31:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg025 = data.readString();
+                    boolean isProviderPackage = isProviderPackage(_arg025);
+                    reply.writeNoException();
+                    reply.writeInt(isProviderPackage ? 1 : 0);
+                    return true;
+                case 32:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg026 = data.readString();
+                    setExtraLocationControllerPackage(_arg026);
+                    reply.writeNoException();
+                    return true;
+                case 33:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _result12 = getExtraLocationControllerPackage();
+                    reply.writeNoException();
+                    reply.writeString(_result12);
+                    return true;
+                case 34:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg12 = data.readInt() != 0;
+                    setExtraLocationControllerPackageEnabled(_arg12);
+                    reply.writeNoException();
+                    return true;
+                case 35:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isExtraLocationControllerPackageEnabled = isExtraLocationControllerPackageEnabled();
+                    reply.writeNoException();
+                    reply.writeInt(isExtraLocationControllerPackageEnabled ? 1 : 0);
+                    return true;
+                case 36:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg027 = data.readString();
+                    boolean isProviderEnabledForUser = isProviderEnabledForUser(_arg027, data.readInt());
+                    reply.writeNoException();
+                    reply.writeInt(isProviderEnabledForUser ? 1 : 0);
+                    return true;
+                case 37:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg028 = data.readInt();
+                    boolean isLocationEnabledForUser = isLocationEnabledForUser(_arg028);
+                    reply.writeNoException();
+                    reply.writeInt(isLocationEnabledForUser ? 1 : 0);
+                    return true;
+                case 38:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg029 = data.readString();
+                    ProviderProperties _arg18 = data.readInt() != 0 ? ProviderProperties.CREATOR.createFromParcel(data) : null;
+                    String _arg28 = data.readString();
+                    addTestProvider(_arg029, _arg18, _arg28);
+                    reply.writeNoException();
+                    return true;
+                case 39:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg030 = data.readString();
+                    removeTestProvider(_arg030, data.readString());
+                    reply.writeNoException();
+                    return true;
+                case 40:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg031 = data.readString();
+                    Location _arg19 = data.readInt() != 0 ? Location.CREATOR.createFromParcel(data) : null;
+                    String _arg29 = data.readString();
+                    setTestProviderLocation(_arg031, _arg19, _arg29);
+                    reply.writeNoException();
+                    return true;
+                case 41:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg032 = data.readString();
+                    _arg12 = data.readInt() != 0;
+                    String _arg210 = data.readString();
+                    setTestProviderEnabled(_arg032, _arg12, _arg210);
+                    reply.writeNoException();
+                    return true;
+                case 42:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg033 = data.readString();
+                    List<LocationRequest> _result13 = getTestProviderCurrentRequests(_arg033, data.readString());
+                    reply.writeNoException();
+                    reply.writeTypedList(_result13);
+                    return true;
+                case 43:
+                    data.enforceInterface(DESCRIPTOR);
+                    LocationTime _result14 = getGnssTimeMillis();
+                    reply.writeNoException();
+                    if (_result14 != null) {
+                        reply.writeInt(1);
+                        _result14.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 44:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg034 = data.readString();
+                    int _arg110 = data.readInt();
+                    Bundle _arg211 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    long _arg35 = data.readLong();
+                    String _arg42 = data.readString();
+                    setTestProviderStatus(_arg034, _arg110, _arg211, _arg35, _arg42);
+                    reply.writeNoException();
+                    return true;
+                case 45:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg035 = data.readString();
+                    String _arg111 = data.readString();
+                    Bundle _arg212 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    boolean sendExtraCommand = sendExtraCommand(_arg035, _arg111, _arg212);
+                    reply.writeNoException();
+                    reply.writeInt(sendExtraCommand ? 1 : 0);
+                    if (_arg212 != null) {
+                        reply.writeInt(1);
+                        _arg212.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 46:
+                    data.enforceInterface(DESCRIPTOR);
+                    ILocationListener _arg036 = ILocationListener.Stub.asInterface(data.readStrongBinder());
+                    locationCallbackFinished(_arg036);
+                    reply.writeNoException();
+                    return true;
+                case 47:
+                    data.enforceInterface(DESCRIPTOR);
+                    String[] _result15 = getBackgroundThrottlingWhitelist();
+                    reply.writeNoException();
+                    reply.writeStringArray(_result15);
+                    return true;
+                case 48:
+                    data.enforceInterface(DESCRIPTOR);
+                    String[] _result16 = getIgnoreSettingsWhitelist();
+                    reply.writeNoException();
+                    reply.writeStringArray(_result16);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements ILocationManager {
             public static ILocationManager sDefaultImpl;
             private IBinder mRemote;
@@ -1191,6 +935,7 @@ public interface ILocationManager extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -1199,6 +944,7 @@ public interface ILocationManager extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.location.ILocationManager
             public void requestLocationUpdates(LocationRequest request, ILocationListener listener, PendingIntent intent, String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1218,19 +964,19 @@ public interface ILocationManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(packageName);
-                    if (this.mRemote.transact(1, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().requestLocationUpdates(request, listener, intent, packageName);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().requestLocationUpdates(request, listener, intent, packageName);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.location.ILocationManager
             public void removeUpdates(ILocationListener listener, PendingIntent intent, String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1244,19 +990,19 @@ public interface ILocationManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(packageName);
-                    if (this.mRemote.transact(2, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().removeUpdates(listener, intent, packageName);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().removeUpdates(listener, intent, packageName);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.location.ILocationManager
             public void requestGeofence(LocationRequest request, Geofence geofence, PendingIntent intent, String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1281,19 +1027,19 @@ public interface ILocationManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(packageName);
-                    if (this.mRemote.transact(3, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().requestGeofence(request, geofence, intent, packageName);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().requestGeofence(request, geofence, intent, packageName);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.location.ILocationManager
             public void removeGeofence(Geofence fence, PendingIntent intent, String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1312,19 +1058,19 @@ public interface ILocationManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(packageName);
-                    if (this.mRemote.transact(4, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().removeGeofence(fence, intent, packageName);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().removeGeofence(fence, intent, packageName);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.location.ILocationManager
             public Location getLastLocation(LocationRequest request, String packageName) throws RemoteException {
                 Location _result;
                 Parcel _data = Parcel.obtain();
@@ -1338,7 +1084,8 @@ public interface ILocationManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(packageName);
-                    if (!this.mRemote.transact(5, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getLastLocation(request, packageName);
                     }
                     _reply.readException();
@@ -1347,16 +1094,14 @@ public interface ILocationManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    Location _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.location.ILocationManager
             public boolean registerGnssStatusCallback(IGnssStatusListener callback, String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1364,132 +1109,115 @@ public interface ILocationManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
                     _data.writeString(packageName);
-                    boolean z = false;
-                    if (!this.mRemote.transact(6, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().registerGnssStatusCallback(callback, packageName);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.location.ILocationManager
             public void unregisterGnssStatusCallback(IGnssStatusListener callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                    if (this.mRemote.transact(7, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().unregisterGnssStatusCallback(callback);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().unregisterGnssStatusCallback(callback);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.location.ILocationManager
             public boolean geocoderIsPresent() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(8, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().geocoderIsPresent();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.location.ILocationManager
             public String getFromLocation(double latitude, double longitude, int maxResults, GeocoderParams params, List<Address> addrs) throws RemoteException {
-                GeocoderParams geocoderParams = params;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeDouble(latitude);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeDouble(longitude);
+                    _data.writeInt(maxResults);
+                    if (params != null) {
+                        _data.writeInt(1);
+                        params.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
+                    }
+                    boolean _status = this.mRemote.transact(9, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        String fromLocation = Stub.getDefaultImpl().getFromLocation(latitude, longitude, maxResults, params, addrs);
+                        _reply.recycle();
+                        _data.recycle();
+                        return fromLocation;
+                    }
+                    _reply.readException();
+                    String _result = _reply.readString();
                     try {
-                        _data.writeDouble(latitude);
-                        try {
-                            _data.writeDouble(longitude);
-                            _data.writeInt(maxResults);
-                            if (geocoderParams != null) {
-                                _data.writeInt(1);
-                                geocoderParams.writeToParcel(_data, 0);
-                            } else {
-                                _data.writeInt(0);
-                            }
-                            if (this.mRemote.transact(9, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                _reply.readException();
-                                String _result = _reply.readString();
-                                try {
-                                    _reply.readTypedList(addrs, Address.CREATOR);
-                                    _reply.recycle();
-                                    _data.recycle();
-                                    return _result;
-                                } catch (Throwable th) {
-                                    th = th;
-                                    _reply.recycle();
-                                    _data.recycle();
-                                    throw th;
-                                }
-                            } else {
-                                String fromLocation = Stub.getDefaultImpl().getFromLocation(latitude, longitude, maxResults, params, addrs);
-                                _reply.recycle();
-                                _data.recycle();
-                                return fromLocation;
-                            }
-                        } catch (Throwable th2) {
-                            th = th2;
-                            List<Address> list = addrs;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
+                        _reply.readTypedList(addrs, Address.CREATOR);
+                        _reply.recycle();
+                        _data.recycle();
+                        return _result;
                     } catch (Throwable th3) {
                         th = th3;
-                        double d = longitude;
-                        List<Address> list2 = addrs;
                         _reply.recycle();
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th4) {
                     th = th4;
-                    double d2 = latitude;
-                    double d3 = longitude;
-                    List<Address> list22 = addrs;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.location.ILocationManager
             public String getFromLocationName(String locationName, double lowerLeftLatitude, double lowerLeftLongitude, double upperRightLatitude, double upperRightLongitude, int maxResults, GeocoderParams params, List<Address> addrs) throws RemoteException {
                 Parcel _reply;
-                GeocoderParams geocoderParams = params;
+                String _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply2 = Parcel.obtain();
                 try {
@@ -1500,31 +1228,32 @@ public interface ILocationManager extends IInterface {
                     _data.writeDouble(upperRightLatitude);
                     _data.writeDouble(upperRightLongitude);
                     _data.writeInt(maxResults);
-                    if (geocoderParams != null) {
+                    if (params != null) {
                         try {
                             _data.writeInt(1);
-                            geocoderParams.writeToParcel(_data, 0);
+                            params.writeToParcel(_data, 0);
                         } catch (Throwable th) {
                             th = th;
-                            List<Address> list = addrs;
                             _reply = _reply2;
+                            _reply.recycle();
+                            _data.recycle();
+                            throw th;
                         }
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(10, _data, _reply2, 0)) {
+                    boolean _status = this.mRemote.transact(10, _data, _reply2, 0);
+                    if (!_status) {
                         try {
                             if (Stub.getDefaultImpl() != null) {
-                                Parcel _reply3 = _reply2;
                                 try {
                                     String fromLocationName = Stub.getDefaultImpl().getFromLocationName(locationName, lowerLeftLatitude, lowerLeftLongitude, upperRightLatitude, upperRightLongitude, maxResults, params, addrs);
-                                    _reply3.recycle();
+                                    _reply2.recycle();
                                     _data.recycle();
                                     return fromLocationName;
                                 } catch (Throwable th2) {
                                     th = th2;
-                                    List<Address> list2 = addrs;
-                                    _reply = _reply3;
+                                    _reply = _reply2;
                                     _reply.recycle();
                                     _data.recycle();
                                     throw th;
@@ -1532,47 +1261,35 @@ public interface ILocationManager extends IInterface {
                             }
                         } catch (Throwable th3) {
                             th = th3;
-                            List<Address> list3 = addrs;
                             _reply = _reply2;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
                         }
                     }
-                    Parcel _reply4 = _reply2;
                     try {
-                        _reply4.readException();
-                        String _result = _reply4.readString();
-                        _reply = _reply4;
-                        try {
-                            _reply.readTypedList(addrs, Address.CREATOR);
-                            _reply.recycle();
-                            _data.recycle();
-                            return _result;
-                        } catch (Throwable th4) {
-                            th = th4;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
+                        _reply2.readException();
+                        _result = _reply2.readString();
+                        _reply = _reply2;
+                    } catch (Throwable th4) {
+                        th = th4;
+                        _reply = _reply2;
+                    }
+                    try {
+                        _reply.readTypedList(addrs, Address.CREATOR);
+                        _reply.recycle();
+                        _data.recycle();
+                        return _result;
                     } catch (Throwable th5) {
                         th = th5;
-                        List<Address> list4 = addrs;
-                        _reply = _reply4;
                         _reply.recycle();
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th6) {
                     th = th6;
-                    List<Address> list5 = addrs;
                     _reply = _reply2;
-                    _reply.recycle();
-                    _data.recycle();
-                    throw th;
                 }
             }
 
+            @Override // android.location.ILocationManager
             public boolean sendNiResponse(int notifId, int userResponse) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1580,24 +1297,20 @@ public interface ILocationManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(notifId);
                     _data.writeInt(userResponse);
-                    boolean z = false;
-                    if (!this.mRemote.transact(11, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(11, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().sendNiResponse(notifId, userResponse);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.location.ILocationManager
             public boolean addGnssMeasurementsListener(IGnssMeasurementsListener listener, String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1605,24 +1318,20 @@ public interface ILocationManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(listener != null ? listener.asBinder() : null);
                     _data.writeString(packageName);
-                    boolean z = false;
-                    if (!this.mRemote.transact(12, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(12, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().addGnssMeasurementsListener(listener, packageName);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.location.ILocationManager
             public void injectGnssMeasurementCorrections(GnssMeasurementCorrections corrections, String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1635,32 +1344,31 @@ public interface ILocationManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(packageName);
-                    if (this.mRemote.transact(13, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(13, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().injectGnssMeasurementCorrections(corrections, packageName);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().injectGnssMeasurementCorrections(corrections, packageName);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.location.ILocationManager
             public long getGnssCapabilities(String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(packageName);
-                    if (!this.mRemote.transact(14, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(14, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getGnssCapabilities(packageName);
                     }
                     _reply.readException();
                     long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1668,25 +1376,26 @@ public interface ILocationManager extends IInterface {
                 }
             }
 
+            @Override // android.location.ILocationManager
             public void removeGnssMeasurementsListener(IGnssMeasurementsListener listener) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(listener != null ? listener.asBinder() : null);
-                    if (this.mRemote.transact(15, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(15, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().removeGnssMeasurementsListener(listener);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().removeGnssMeasurementsListener(listener);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.location.ILocationManager
             public boolean addGnssNavigationMessageListener(IGnssNavigationMessageListener listener, String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1694,55 +1403,50 @@ public interface ILocationManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(listener != null ? listener.asBinder() : null);
                     _data.writeString(packageName);
-                    boolean z = false;
-                    if (!this.mRemote.transact(16, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(16, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().addGnssNavigationMessageListener(listener, packageName);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.location.ILocationManager
             public void removeGnssNavigationMessageListener(IGnssNavigationMessageListener listener) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(listener != null ? listener.asBinder() : null);
-                    if (this.mRemote.transact(17, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(17, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().removeGnssNavigationMessageListener(listener);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().removeGnssNavigationMessageListener(listener);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.location.ILocationManager
             public int getGnssYearOfHardware() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(18, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(18, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getGnssYearOfHardware();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1750,18 +1454,18 @@ public interface ILocationManager extends IInterface {
                 }
             }
 
+            @Override // android.location.ILocationManager
             public String getGnssHardwareModelName() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(19, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(19, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getGnssHardwareModelName();
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1769,19 +1473,19 @@ public interface ILocationManager extends IInterface {
                 }
             }
 
+            @Override // android.location.ILocationManager
             public int getGnssBatchSize(String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(packageName);
-                    if (!this.mRemote.transact(20, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(20, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getGnssBatchSize(packageName);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1789,6 +1493,7 @@ public interface ILocationManager extends IInterface {
                 }
             }
 
+            @Override // android.location.ILocationManager
             public boolean addGnssBatchingCallback(IBatchedLocationCallback callback, String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1796,131 +1501,115 @@ public interface ILocationManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
                     _data.writeString(packageName);
-                    boolean z = false;
-                    if (!this.mRemote.transact(21, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(21, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().addGnssBatchingCallback(callback, packageName);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.location.ILocationManager
             public void removeGnssBatchingCallback() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(22, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(22, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().removeGnssBatchingCallback();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().removeGnssBatchingCallback();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.location.ILocationManager
             public boolean startGnssBatch(long periodNanos, boolean wakeOnFifoFull, String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeLong(periodNanos);
-                    _data.writeInt(wakeOnFifoFull);
+                    _data.writeInt(wakeOnFifoFull ? 1 : 0);
                     _data.writeString(packageName);
-                    boolean z = false;
-                    if (!this.mRemote.transact(23, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(23, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().startGnssBatch(periodNanos, wakeOnFifoFull, packageName);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.location.ILocationManager
             public void flushGnssBatch(String packageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(packageName);
-                    if (this.mRemote.transact(24, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(24, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().flushGnssBatch(packageName);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().flushGnssBatch(packageName);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.location.ILocationManager
             public boolean stopGnssBatch() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(25, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(25, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().stopGnssBatch();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.location.ILocationManager
             public boolean injectLocation(Location location) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (location != null) {
                         _data.writeInt(1);
                         location.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(26, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(26, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().injectLocation(location);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1928,18 +1617,18 @@ public interface ILocationManager extends IInterface {
                 }
             }
 
+            @Override // android.location.ILocationManager
             public List<String> getAllProviders() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(27, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(27, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAllProviders();
                     }
                     _reply.readException();
                     List<String> _result = _reply.createStringArrayList();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1947,6 +1636,7 @@ public interface ILocationManager extends IInterface {
                 }
             }
 
+            @Override // android.location.ILocationManager
             public List<String> getProviders(Criteria criteria, boolean enabledOnly) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1958,14 +1648,13 @@ public interface ILocationManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(enabledOnly);
-                    if (!this.mRemote.transact(28, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(enabledOnly ? 1 : 0);
+                    boolean _status = this.mRemote.transact(28, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getProviders(criteria, enabledOnly);
                     }
                     _reply.readException();
                     List<String> _result = _reply.createStringArrayList();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1973,6 +1662,7 @@ public interface ILocationManager extends IInterface {
                 }
             }
 
+            @Override // android.location.ILocationManager
             public String getBestProvider(Criteria criteria, boolean enabledOnly) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1984,14 +1674,13 @@ public interface ILocationManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(enabledOnly);
-                    if (!this.mRemote.transact(29, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(enabledOnly ? 1 : 0);
+                    boolean _status = this.mRemote.transact(29, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getBestProvider(criteria, enabledOnly);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1999,6 +1688,7 @@ public interface ILocationManager extends IInterface {
                 }
             }
 
+            @Override // android.location.ILocationManager
             public ProviderProperties getProviderProperties(String provider) throws RemoteException {
                 ProviderProperties _result;
                 Parcel _data = Parcel.obtain();
@@ -2006,7 +1696,8 @@ public interface ILocationManager extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(provider);
-                    if (!this.mRemote.transact(30, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(30, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getProviderProperties(provider);
                     }
                     _reply.readException();
@@ -2015,71 +1706,6 @@ public interface ILocationManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    ProviderProperties _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public boolean isProviderPackage(String packageName) throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeString(packageName);
-                    boolean z = false;
-                    if (!this.mRemote.transact(31, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
-                        return Stub.getDefaultImpl().isProviderPackage(packageName);
-                    }
-                    _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public void setExtraLocationControllerPackage(String packageName) throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeString(packageName);
-                    if (this.mRemote.transact(32, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                        _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
-                    }
-                    Stub.getDefaultImpl().setExtraLocationControllerPackage(packageName);
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public String getExtraLocationControllerPackage() throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(33, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
-                        return Stub.getDefaultImpl().getExtraLocationControllerPackage();
-                    }
-                    _reply.readException();
-                    String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2087,48 +1713,103 @@ public interface ILocationManager extends IInterface {
                 }
             }
 
+            @Override // android.location.ILocationManager
+            public boolean isProviderPackage(String packageName) throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    _data.writeString(packageName);
+                    boolean _status = this.mRemote.transact(31, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        return Stub.getDefaultImpl().isProviderPackage(packageName);
+                    }
+                    _reply.readException();
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // android.location.ILocationManager
+            public void setExtraLocationControllerPackage(String packageName) throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    _data.writeString(packageName);
+                    boolean _status = this.mRemote.transact(32, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setExtraLocationControllerPackage(packageName);
+                    } else {
+                        _reply.readException();
+                    }
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // android.location.ILocationManager
+            public String getExtraLocationControllerPackage() throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    boolean _status = this.mRemote.transact(33, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        return Stub.getDefaultImpl().getExtraLocationControllerPackage();
+                    }
+                    _reply.readException();
+                    String _result = _reply.readString();
+                    return _result;
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // android.location.ILocationManager
             public void setExtraLocationControllerPackageEnabled(boolean enabled) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(enabled);
-                    if (this.mRemote.transact(34, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(enabled ? 1 : 0);
+                    boolean _status = this.mRemote.transact(34, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setExtraLocationControllerPackageEnabled(enabled);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setExtraLocationControllerPackageEnabled(enabled);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.location.ILocationManager
             public boolean isExtraLocationControllerPackageEnabled() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(35, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(35, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isExtraLocationControllerPackageEnabled();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.location.ILocationManager
             public boolean isProviderEnabledForUser(String provider, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2136,48 +1817,40 @@ public interface ILocationManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(provider);
                     _data.writeInt(userId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(36, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(36, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isProviderEnabledForUser(provider, userId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.location.ILocationManager
             public boolean isLocationEnabledForUser(int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(37, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(37, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isLocationEnabledForUser(userId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.location.ILocationManager
             public void addTestProvider(String name, ProviderProperties properties, String opPackageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2191,19 +1864,19 @@ public interface ILocationManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(opPackageName);
-                    if (this.mRemote.transact(38, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(38, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().addTestProvider(name, properties, opPackageName);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().addTestProvider(name, properties, opPackageName);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.location.ILocationManager
             public void removeTestProvider(String provider, String opPackageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2211,19 +1884,19 @@ public interface ILocationManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(provider);
                     _data.writeString(opPackageName);
-                    if (this.mRemote.transact(39, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(39, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().removeTestProvider(provider, opPackageName);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().removeTestProvider(provider, opPackageName);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.location.ILocationManager
             public void setTestProviderLocation(String provider, Location loc, String opPackageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2237,40 +1910,40 @@ public interface ILocationManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(opPackageName);
-                    if (this.mRemote.transact(40, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(40, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setTestProviderLocation(provider, loc, opPackageName);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setTestProviderLocation(provider, loc, opPackageName);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.location.ILocationManager
             public void setTestProviderEnabled(String provider, boolean enabled, String opPackageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(provider);
-                    _data.writeInt(enabled);
+                    _data.writeInt(enabled ? 1 : 0);
                     _data.writeString(opPackageName);
-                    if (this.mRemote.transact(41, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(41, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setTestProviderEnabled(provider, enabled, opPackageName);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setTestProviderEnabled(provider, enabled, opPackageName);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.location.ILocationManager
             public List<LocationRequest> getTestProviderCurrentRequests(String provider, String opPackageName) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2278,13 +1951,12 @@ public interface ILocationManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(provider);
                     _data.writeString(opPackageName);
-                    if (!this.mRemote.transact(42, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(42, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getTestProviderCurrentRequests(provider, opPackageName);
                     }
                     _reply.readException();
                     List<LocationRequest> _result = _reply.createTypedArrayList(LocationRequest.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2292,13 +1964,15 @@ public interface ILocationManager extends IInterface {
                 }
             }
 
+            @Override // android.location.ILocationManager
             public LocationTime getGnssTimeMillis() throws RemoteException {
                 LocationTime _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(43, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(43, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getGnssTimeMillis();
                     }
                     _reply.readException();
@@ -2307,87 +1981,73 @@ public interface ILocationManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    LocationTime _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.location.ILocationManager
             public void setTestProviderStatus(String provider, int status, Bundle extras, long updateTime, String opPackageName) throws RemoteException {
-                Bundle bundle = extras;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    try {
-                        _data.writeString(provider);
-                        try {
-                            _data.writeInt(status);
-                            if (bundle != null) {
-                                _data.writeInt(1);
-                                bundle.writeToParcel(_data, 0);
-                            } else {
-                                _data.writeInt(0);
-                            }
-                        } catch (Throwable th) {
-                            th = th;
-                            long j = updateTime;
-                            String str = opPackageName;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                    } catch (Throwable th2) {
-                        th = th2;
-                        int i = status;
-                        long j2 = updateTime;
-                        String str2 = opPackageName;
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeString(provider);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(status);
+                    if (extras != null) {
+                        _data.writeInt(1);
+                        extras.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
+                    }
+                } catch (Throwable th3) {
+                    th = th3;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeLong(updateTime);
+                } catch (Throwable th4) {
+                    th = th4;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeString(opPackageName);
+                    boolean _status = this.mRemote.transact(44, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setTestProviderStatus(provider, status, extras, updateTime, opPackageName);
                         _reply.recycle();
                         _data.recycle();
-                        throw th;
+                        return;
                     }
-                    try {
-                        _data.writeLong(updateTime);
-                        try {
-                            _data.writeString(opPackageName);
-                            if (this.mRemote.transact(44, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                _reply.readException();
-                                _reply.recycle();
-                                _data.recycle();
-                                return;
-                            }
-                            Stub.getDefaultImpl().setTestProviderStatus(provider, status, extras, updateTime, opPackageName);
-                            _reply.recycle();
-                            _data.recycle();
-                        } catch (Throwable th3) {
-                            th = th3;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                    } catch (Throwable th4) {
-                        th = th4;
-                        String str22 = opPackageName;
-                        _reply.recycle();
-                        _data.recycle();
-                        throw th;
-                    }
+                    _reply.readException();
+                    _reply.recycle();
+                    _data.recycle();
                 } catch (Throwable th5) {
                     th = th5;
-                    String str3 = provider;
-                    int i2 = status;
-                    long j22 = updateTime;
-                    String str222 = opPackageName;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.location.ILocationManager
             public boolean sendExtraCommand(String provider, String command, Bundle extras) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -2402,7 +2062,8 @@ public interface ILocationManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(45, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(45, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().sendExtraCommand(provider, command, extras);
                     }
                     _reply.readException();
@@ -2412,8 +2073,6 @@ public interface ILocationManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         extras.readFromParcel(_reply);
                     }
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2421,37 +2080,37 @@ public interface ILocationManager extends IInterface {
                 }
             }
 
+            @Override // android.location.ILocationManager
             public void locationCallbackFinished(ILocationListener listener) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(listener != null ? listener.asBinder() : null);
-                    if (this.mRemote.transact(46, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(46, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().locationCallbackFinished(listener);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().locationCallbackFinished(listener);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.location.ILocationManager
             public String[] getBackgroundThrottlingWhitelist() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(47, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(47, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getBackgroundThrottlingWhitelist();
                     }
                     _reply.readException();
                     String[] _result = _reply.createStringArray();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2459,18 +2118,18 @@ public interface ILocationManager extends IInterface {
                 }
             }
 
+            @Override // android.location.ILocationManager
             public String[] getIgnoreSettingsWhitelist() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(48, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(48, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getIgnoreSettingsWhitelist();
                     }
                     _reply.readException();
                     String[] _result = _reply.createStringArray();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -2480,11 +2139,11 @@ public interface ILocationManager extends IInterface {
         }
 
         public static boolean setDefaultImpl(ILocationManager impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static ILocationManager getDefaultImpl() {

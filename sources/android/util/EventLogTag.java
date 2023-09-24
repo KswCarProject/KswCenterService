@@ -1,15 +1,19 @@
 package android.util;
 
+/* loaded from: classes4.dex */
 public final class EventLogTag {
     public static final long TAG_NAME = 1138166333442L;
     public static final long TAG_NUMBER = 1155346202625L;
     public static final long VALUE_DESCRIPTORS = 2246267895811L;
 
+    /* loaded from: classes4.dex */
     public final class ValueDescriptor {
         public static final int ALLOCATIONS = 4;
         public static final int BYTES = 2;
         public static final int FLOAT = 5;
-        public static final int ID = 5;
+
+        /* renamed from: ID */
+        public static final int f289ID = 5;
         public static final int INT = 1;
         public static final int LIST = 4;
         public static final int LONG = 2;

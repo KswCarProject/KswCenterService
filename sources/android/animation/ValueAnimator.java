@@ -3,8 +3,8 @@ package android.animation;
 import android.animation.AnimationHandler;
 import android.animation.Animator;
 import android.annotation.UnsupportedAppUsage;
-import android.os.Looper;
-import android.os.Trace;
+import android.p007os.Looper;
+import android.p007os.Trace;
 import android.util.AndroidRuntimeException;
 import android.util.Log;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -16,48 +16,51 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+/* loaded from: classes.dex */
 public class ValueAnimator extends Animator implements AnimationHandler.AnimationFrameCallback {
     private static final boolean DEBUG = false;
     public static final int INFINITE = -1;
     public static final int RESTART = 1;
     public static final int REVERSE = 2;
     private static final String TAG = "ValueAnimator";
-    private static final TimeInterpolator sDefaultInterpolator = new AccelerateDecelerateInterpolator();
-    @UnsupportedAppUsage(maxTargetSdk = 28)
-    private static float sDurationScale = 1.0f;
-    private boolean mAnimationEndRequested = false;
-    private float mCurrentFraction = 0.0f;
-    @UnsupportedAppUsage
-    private long mDuration = 300;
-    private float mDurationScale = -1.0f;
-    private long mFirstFrameTime = -1;
-    boolean mInitialized = false;
-    private TimeInterpolator mInterpolator = sDefaultInterpolator;
-    private long mLastFrameTime = -1;
-    private float mOverallFraction = 0.0f;
     private long mPauseTime;
-    private int mRepeatCount = 0;
-    private int mRepeatMode = 1;
-    private boolean mResumed = false;
     private boolean mReversing;
-    private boolean mRunning = false;
-    float mSeekFraction = -1.0f;
-    private boolean mSelfPulse = true;
-    private long mStartDelay = 0;
-    private boolean mStartListenersCalled = false;
-    long mStartTime = -1;
     boolean mStartTimeCommitted;
-    private boolean mStarted = false;
-    private boolean mSuppressSelfPulseRequested = false;
-    ArrayList<AnimatorUpdateListener> mUpdateListeners = null;
     PropertyValuesHolder[] mValues;
     HashMap<String, PropertyValuesHolder> mValuesMap;
+    @UnsupportedAppUsage(maxTargetSdk = 28)
+    private static float sDurationScale = 1.0f;
+    private static final TimeInterpolator sDefaultInterpolator = new AccelerateDecelerateInterpolator();
+    long mStartTime = -1;
+    float mSeekFraction = -1.0f;
+    private boolean mResumed = false;
+    private float mOverallFraction = 0.0f;
+    private float mCurrentFraction = 0.0f;
+    private long mLastFrameTime = -1;
+    private long mFirstFrameTime = -1;
+    private boolean mRunning = false;
+    private boolean mStarted = false;
+    private boolean mStartListenersCalled = false;
+    boolean mInitialized = false;
+    private boolean mAnimationEndRequested = false;
+    @UnsupportedAppUsage
+    private long mDuration = 300;
+    private long mStartDelay = 0;
+    private int mRepeatCount = 0;
+    private int mRepeatMode = 1;
+    private boolean mSelfPulse = true;
+    private boolean mSuppressSelfPulseRequested = false;
+    private TimeInterpolator mInterpolator = sDefaultInterpolator;
+    ArrayList<AnimatorUpdateListener> mUpdateListeners = null;
+    private float mDurationScale = -1.0f;
 
+    /* loaded from: classes.dex */
     public interface AnimatorUpdateListener {
         void onAnimationUpdate(ValueAnimator valueAnimator);
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface RepeatMode {
     }
 
@@ -106,39 +109,46 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
     }
 
     public void setIntValues(int... values) {
-        if (values != null && values.length != 0) {
-            if (this.mValues == null || this.mValues.length == 0) {
-                setValues(PropertyValuesHolder.ofInt("", values));
-            } else {
-                this.mValues[0].setIntValues(values);
-            }
-            this.mInitialized = false;
+        if (values == null || values.length == 0) {
+            return;
         }
+        if (this.mValues == null || this.mValues.length == 0) {
+            setValues(PropertyValuesHolder.ofInt("", values));
+        } else {
+            PropertyValuesHolder valuesHolder = this.mValues[0];
+            valuesHolder.setIntValues(values);
+        }
+        this.mInitialized = false;
     }
 
     public void setFloatValues(float... values) {
-        if (values != null && values.length != 0) {
-            if (this.mValues == null || this.mValues.length == 0) {
-                setValues(PropertyValuesHolder.ofFloat("", values));
-            } else {
-                this.mValues[0].setFloatValues(values);
-            }
-            this.mInitialized = false;
+        if (values == null || values.length == 0) {
+            return;
         }
+        if (this.mValues == null || this.mValues.length == 0) {
+            setValues(PropertyValuesHolder.ofFloat("", values));
+        } else {
+            PropertyValuesHolder valuesHolder = this.mValues[0];
+            valuesHolder.setFloatValues(values);
+        }
+        this.mInitialized = false;
     }
 
     public void setObjectValues(Object... values) {
-        if (values != null && values.length != 0) {
-            if (this.mValues == null || this.mValues.length == 0) {
-                setValues(PropertyValuesHolder.ofObject("", (TypeEvaluator) null, values));
-            } else {
-                this.mValues[0].setObjectValues(values);
-            }
-            this.mInitialized = false;
+        if (values == null || values.length == 0) {
+            return;
         }
+        if (this.mValues == null || this.mValues.length == 0) {
+            setValues(PropertyValuesHolder.ofObject("", (TypeEvaluator) null, values));
+        } else {
+            PropertyValuesHolder valuesHolder = this.mValues[0];
+            valuesHolder.setObjectValues(values);
+        }
+        this.mInitialized = false;
     }
 
     public void setValues(PropertyValuesHolder... values) {
+        int numValues = values.length;
         this.mValues = values;
         this.mValuesMap = new HashMap<>(numValues);
         for (PropertyValuesHolder valuesHolder : values) {
@@ -151,22 +161,23 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
         return this.mValues;
     }
 
-    /* access modifiers changed from: package-private */
-    public void initAnimation() {
+    void initAnimation() {
         if (!this.mInitialized) {
-            for (PropertyValuesHolder init : this.mValues) {
-                init.init();
+            int numValues = this.mValues.length;
+            for (int i = 0; i < numValues; i++) {
+                this.mValues[i].init();
             }
             this.mInitialized = true;
         }
     }
 
+    @Override // android.animation.Animator
     public ValueAnimator setDuration(long duration) {
-        if (duration >= 0) {
-            this.mDuration = duration;
-            return this;
+        if (duration < 0) {
+            throw new IllegalArgumentException("Animators cannot have negative duration: " + duration);
         }
-        throw new IllegalArgumentException("Animators cannot have negative duration: " + duration);
+        this.mDuration = duration;
+        return this;
     }
 
     public void overrideDurationScale(float durationScale) {
@@ -178,22 +189,25 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
     }
 
     private long getScaledDuration() {
-        return (long) (((float) this.mDuration) * resolveDurationScale());
+        return ((float) this.mDuration) * resolveDurationScale();
     }
 
+    @Override // android.animation.Animator
     public long getDuration() {
         return this.mDuration;
     }
 
+    @Override // android.animation.Animator
     public long getTotalDuration() {
         if (this.mRepeatCount == -1) {
-            return -1;
+            return -1L;
         }
-        return this.mStartDelay + (this.mDuration * ((long) (this.mRepeatCount + 1)));
+        return this.mStartDelay + (this.mDuration * (this.mRepeatCount + 1));
     }
 
     public void setCurrentPlayTime(long playTime) {
-        setCurrentFraction(this.mDuration > 0 ? ((float) playTime) / ((float) this.mDuration) : 1.0f);
+        float fraction = this.mDuration > 0 ? ((float) playTime) / ((float) this.mDuration) : 1.0f;
+        setCurrentFraction(fraction);
     }
 
     public void setCurrentFraction(float fraction) {
@@ -201,18 +215,21 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
         float fraction2 = clampFraction(fraction);
         this.mStartTimeCommitted = true;
         if (isPulsingInternal()) {
-            this.mStartTime = AnimationUtils.currentAnimationTimeMillis() - ((long) (((float) getScaledDuration()) * fraction2));
+            long seekTime = ((float) getScaledDuration()) * fraction2;
+            long currentTime = AnimationUtils.currentAnimationTimeMillis();
+            this.mStartTime = currentTime - seekTime;
         } else {
             this.mSeekFraction = fraction2;
         }
         this.mOverallFraction = fraction2;
-        animateValue(getCurrentIterationFraction(fraction2, this.mReversing));
+        float currentIterationFraction = getCurrentIterationFraction(fraction2, this.mReversing);
+        animateValue(currentIterationFraction);
     }
 
     private int getCurrentIteration(float fraction) {
         float fraction2 = clampFraction(fraction);
-        double iteration = Math.floor((double) fraction2);
-        if (((double) fraction2) == iteration && fraction2 > 0.0f) {
+        double iteration = Math.floor(fraction2);
+        if (fraction2 == iteration && fraction2 > 0.0f) {
             iteration -= 1.0d;
         }
         return (int) iteration;
@@ -221,7 +238,7 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
     private float getCurrentIterationFraction(float fraction, boolean inReverse) {
         float fraction2 = clampFraction(fraction);
         int iteration = getCurrentIteration(fraction2);
-        float currentFraction = fraction2 - ((float) iteration);
+        float currentFraction = fraction2 - iteration;
         return shouldPlayBackward(iteration, inReverse) ? 1.0f - currentFraction : currentFraction;
     }
 
@@ -230,7 +247,7 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
             return 0.0f;
         }
         if (this.mRepeatCount != -1) {
-            return Math.min(fraction, (float) (this.mRepeatCount + 1));
+            return Math.min(fraction, this.mRepeatCount + 1);
         }
         return fraction;
     }
@@ -239,42 +256,35 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
         if (iteration <= 0 || this.mRepeatMode != 2 || (iteration >= this.mRepeatCount + 1 && this.mRepeatCount != -1)) {
             return inReverse;
         }
-        if (inReverse) {
-            if (iteration % 2 == 0) {
-                return true;
-            }
-            return false;
-        } else if (iteration % 2 != 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return inReverse ? iteration % 2 == 0 : iteration % 2 != 0;
     }
 
     public long getCurrentPlayTime() {
-        if (!this.mInitialized) {
-            return 0;
+        if (this.mInitialized) {
+            if (!this.mStarted && this.mSeekFraction < 0.0f) {
+                return 0L;
+            }
+            if (this.mSeekFraction >= 0.0f) {
+                return ((float) this.mDuration) * this.mSeekFraction;
+            }
+            float durationScale = resolveDurationScale();
+            if (durationScale == 0.0f) {
+                durationScale = 1.0f;
+            }
+            return ((float) (AnimationUtils.currentAnimationTimeMillis() - this.mStartTime)) / durationScale;
         }
-        if (!this.mStarted && this.mSeekFraction < 0.0f) {
-            return 0;
-        }
-        if (this.mSeekFraction >= 0.0f) {
-            return (long) (((float) this.mDuration) * this.mSeekFraction);
-        }
-        float durationScale = resolveDurationScale();
-        if (durationScale == 0.0f) {
-            durationScale = 1.0f;
-        }
-        return (long) (((float) (AnimationUtils.currentAnimationTimeMillis() - this.mStartTime)) / durationScale);
+        return 0L;
     }
 
+    @Override // android.animation.Animator
     public long getStartDelay() {
         return this.mStartDelay;
     }
 
+    @Override // android.animation.Animator
     public void setStartDelay(long startDelay) {
         if (startDelay < 0) {
-            Log.w(TAG, "Start delay should always be non-negative");
+            Log.m64w(TAG, "Start delay should always be non-negative");
             startDelay = 0;
         }
         this.mStartDelay = startDelay;
@@ -291,10 +301,10 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
     }
 
     public Object getAnimatedValue() {
-        if (this.mValues == null || this.mValues.length <= 0) {
-            return null;
+        if (this.mValues != null && this.mValues.length > 0) {
+            return this.mValues[0].getAnimatedValue();
         }
-        return this.mValues[0].getAnimatedValue();
+        return null;
     }
 
     public Object getAnimatedValue(String propertyName) {
@@ -329,21 +339,24 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
     }
 
     public void removeAllUpdateListeners() {
-        if (this.mUpdateListeners != null) {
-            this.mUpdateListeners.clear();
+        if (this.mUpdateListeners == null) {
+            return;
+        }
+        this.mUpdateListeners.clear();
+        this.mUpdateListeners = null;
+    }
+
+    public void removeUpdateListener(AnimatorUpdateListener listener) {
+        if (this.mUpdateListeners == null) {
+            return;
+        }
+        this.mUpdateListeners.remove(listener);
+        if (this.mUpdateListeners.size() == 0) {
             this.mUpdateListeners = null;
         }
     }
 
-    public void removeUpdateListener(AnimatorUpdateListener listener) {
-        if (this.mUpdateListeners != null) {
-            this.mUpdateListeners.remove(listener);
-            if (this.mUpdateListeners.size() == 0) {
-                this.mUpdateListeners = null;
-            }
-        }
-    }
-
+    @Override // android.animation.Animator
     public void setInterpolator(TimeInterpolator value) {
         if (value != null) {
             this.mInterpolator = value;
@@ -352,6 +365,7 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
         }
     }
 
+    @Override // android.animation.Animator
     public TimeInterpolator getInterpolator() {
         return this.mInterpolator;
     }
@@ -374,39 +388,39 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
     }
 
     private void start(boolean playBackwards) {
-        if (Looper.myLooper() != null) {
-            this.mReversing = playBackwards;
-            this.mSelfPulse = !this.mSuppressSelfPulseRequested;
-            if (!(!playBackwards || this.mSeekFraction == -1.0f || this.mSeekFraction == 0.0f)) {
-                if (this.mRepeatCount == -1) {
-                    this.mSeekFraction = 1.0f - ((float) (((double) this.mSeekFraction) - Math.floor((double) this.mSeekFraction)));
-                } else {
-                    this.mSeekFraction = ((float) (this.mRepeatCount + 1)) - this.mSeekFraction;
-                }
-            }
-            this.mStarted = true;
-            this.mPaused = false;
-            this.mRunning = false;
-            this.mAnimationEndRequested = false;
-            this.mLastFrameTime = -1;
-            this.mFirstFrameTime = -1;
-            this.mStartTime = -1;
-            addAnimationCallback(0);
-            if (this.mStartDelay == 0 || this.mSeekFraction >= 0.0f || this.mReversing) {
-                startAnimation();
-                if (this.mSeekFraction == -1.0f) {
-                    setCurrentPlayTime(0);
-                } else {
-                    setCurrentFraction(this.mSeekFraction);
-                }
-            }
-        } else {
+        if (Looper.myLooper() == null) {
             throw new AndroidRuntimeException("Animators may only be run on Looper threads");
+        }
+        this.mReversing = playBackwards;
+        this.mSelfPulse = !this.mSuppressSelfPulseRequested;
+        if (playBackwards && this.mSeekFraction != -1.0f && this.mSeekFraction != 0.0f) {
+            if (this.mRepeatCount == -1) {
+                float fraction = (float) (this.mSeekFraction - Math.floor(this.mSeekFraction));
+                this.mSeekFraction = 1.0f - fraction;
+            } else {
+                this.mSeekFraction = (this.mRepeatCount + 1) - this.mSeekFraction;
+            }
+        }
+        this.mStarted = true;
+        this.mPaused = false;
+        this.mRunning = false;
+        this.mAnimationEndRequested = false;
+        this.mLastFrameTime = -1L;
+        this.mFirstFrameTime = -1L;
+        this.mStartTime = -1L;
+        addAnimationCallback(0L);
+        if (this.mStartDelay == 0 || this.mSeekFraction >= 0.0f || this.mReversing) {
+            startAnimation();
+            if (this.mSeekFraction == -1.0f) {
+                setCurrentPlayTime(0L);
+            } else {
+                setCurrentFraction(this.mSeekFraction);
+            }
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void startWithoutPulsing(boolean inReverse) {
+    @Override // android.animation.Animator
+    void startWithoutPulsing(boolean inReverse) {
         this.mSuppressSelfPulseRequested = true;
         if (inReverse) {
             reverse();
@@ -416,126 +430,142 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
         this.mSuppressSelfPulseRequested = false;
     }
 
+    @Override // android.animation.Animator
     public void start() {
         start(false);
     }
 
+    @Override // android.animation.Animator
     public void cancel() {
         if (Looper.myLooper() == null) {
             throw new AndroidRuntimeException("Animators may only be run on Looper threads");
-        } else if (!this.mAnimationEndRequested) {
-            if ((this.mStarted || this.mRunning) && this.mListeners != null) {
-                if (!this.mRunning) {
-                    notifyStartListeners();
-                }
-                Iterator<Animator.AnimatorListener> it = ((ArrayList) this.mListeners.clone()).iterator();
-                while (it.hasNext()) {
-                    it.next().onAnimationCancel(this);
-                }
-            }
-            endAnimation();
         }
-    }
-
-    public void end() {
-        if (Looper.myLooper() != null) {
+        if (this.mAnimationEndRequested) {
+            return;
+        }
+        if ((this.mStarted || this.mRunning) && this.mListeners != null) {
             if (!this.mRunning) {
-                startAnimation();
-                this.mStarted = true;
-            } else if (!this.mInitialized) {
-                initAnimation();
+                notifyStartListeners();
             }
-            animateValue(shouldPlayBackward(this.mRepeatCount, this.mReversing) ? 0.0f : 1.0f);
-            endAnimation();
-            return;
+            ArrayList<Animator.AnimatorListener> tmpListeners = (ArrayList) this.mListeners.clone();
+            Iterator<Animator.AnimatorListener> it = tmpListeners.iterator();
+            while (it.hasNext()) {
+                Animator.AnimatorListener listener = it.next();
+                listener.onAnimationCancel(this);
+            }
         }
-        throw new AndroidRuntimeException("Animators may only be run on Looper threads");
+        endAnimation();
     }
 
+    @Override // android.animation.Animator
+    public void end() {
+        if (Looper.myLooper() == null) {
+            throw new AndroidRuntimeException("Animators may only be run on Looper threads");
+        }
+        if (!this.mRunning) {
+            startAnimation();
+            this.mStarted = true;
+        } else if (!this.mInitialized) {
+            initAnimation();
+        }
+        animateValue(shouldPlayBackward(this.mRepeatCount, this.mReversing) ? 0.0f : 1.0f);
+        endAnimation();
+    }
+
+    @Override // android.animation.Animator
     public void resume() {
-        if (Looper.myLooper() != null) {
-            if (this.mPaused && !this.mResumed) {
-                this.mResumed = true;
-                if (this.mPauseTime > 0) {
-                    addAnimationCallback(0);
-                }
-            }
-            super.resume();
-            return;
+        if (Looper.myLooper() == null) {
+            throw new AndroidRuntimeException("Animators may only be resumed from the same thread that the animator was started on");
         }
-        throw new AndroidRuntimeException("Animators may only be resumed from the same thread that the animator was started on");
+        if (this.mPaused && !this.mResumed) {
+            this.mResumed = true;
+            if (this.mPauseTime > 0) {
+                addAnimationCallback(0L);
+            }
+        }
+        super.resume();
     }
 
+    @Override // android.animation.Animator
     public void pause() {
         boolean previouslyPaused = this.mPaused;
         super.pause();
         if (!previouslyPaused && this.mPaused) {
-            this.mPauseTime = -1;
+            this.mPauseTime = -1L;
             this.mResumed = false;
         }
     }
 
+    @Override // android.animation.Animator
     public boolean isRunning() {
         return this.mRunning;
     }
 
+    @Override // android.animation.Animator
     public boolean isStarted() {
         return this.mStarted;
     }
 
+    @Override // android.animation.Animator
     public void reverse() {
-        if (isPulsingInternal()) {
-            long currentTime = AnimationUtils.currentAnimationTimeMillis();
-            this.mStartTime = currentTime - (getScaledDuration() - (currentTime - this.mStartTime));
-            this.mStartTimeCommitted = true;
-            this.mReversing = !this.mReversing;
-        } else if (this.mStarted) {
-            this.mReversing = !this.mReversing;
-            end();
-        } else {
+        if (!isPulsingInternal()) {
+            if (this.mStarted) {
+                this.mReversing = !this.mReversing;
+                end();
+                return;
+            }
             start(true);
+            return;
         }
+        long currentTime = AnimationUtils.currentAnimationTimeMillis();
+        long currentPlayTime = currentTime - this.mStartTime;
+        long timeLeft = getScaledDuration() - currentPlayTime;
+        this.mStartTime = currentTime - timeLeft;
+        this.mStartTimeCommitted = true;
+        this.mReversing = !this.mReversing;
     }
 
+    @Override // android.animation.Animator
     public boolean canReverse() {
         return true;
     }
 
     private void endAnimation() {
-        if (!this.mAnimationEndRequested) {
-            removeAnimationCallback();
-            boolean notify = true;
-            this.mAnimationEndRequested = true;
-            this.mPaused = false;
-            if ((!this.mStarted && !this.mRunning) || this.mListeners == null) {
-                notify = false;
+        if (this.mAnimationEndRequested) {
+            return;
+        }
+        removeAnimationCallback();
+        boolean notify = true;
+        this.mAnimationEndRequested = true;
+        this.mPaused = false;
+        if ((!this.mStarted && !this.mRunning) || this.mListeners == null) {
+            notify = false;
+        }
+        if (notify && !this.mRunning) {
+            notifyStartListeners();
+        }
+        this.mRunning = false;
+        this.mStarted = false;
+        this.mStartListenersCalled = false;
+        this.mLastFrameTime = -1L;
+        this.mFirstFrameTime = -1L;
+        this.mStartTime = -1L;
+        if (notify && this.mListeners != null) {
+            ArrayList<Animator.AnimatorListener> tmpListeners = (ArrayList) this.mListeners.clone();
+            int numListeners = tmpListeners.size();
+            for (int i = 0; i < numListeners; i++) {
+                tmpListeners.get(i).onAnimationEnd(this, this.mReversing);
             }
-            if (notify && !this.mRunning) {
-                notifyStartListeners();
-            }
-            this.mRunning = false;
-            this.mStarted = false;
-            this.mStartListenersCalled = false;
-            this.mLastFrameTime = -1;
-            this.mFirstFrameTime = -1;
-            this.mStartTime = -1;
-            if (notify && this.mListeners != null) {
-                ArrayList<Animator.AnimatorListener> tmpListeners = (ArrayList) this.mListeners.clone();
-                int numListeners = tmpListeners.size();
-                for (int i = 0; i < numListeners; i++) {
-                    tmpListeners.get(i).onAnimationEnd(this, this.mReversing);
-                }
-            }
-            this.mReversing = false;
-            if (Trace.isTagEnabled(8)) {
-                Trace.asyncTraceEnd(8, getNameForTrace(), System.identityHashCode(this));
-            }
+        }
+        this.mReversing = false;
+        if (Trace.isTagEnabled(8L)) {
+            Trace.asyncTraceEnd(8L, getNameForTrace(), System.identityHashCode(this));
         }
     }
 
     private void startAnimation() {
-        if (Trace.isTagEnabled(8)) {
-            Trace.asyncTraceBegin(8, getNameForTrace(), System.identityHashCode(this));
+        if (Trace.isTagEnabled(8L)) {
+            Trace.asyncTraceBegin(8L, getNameForTrace(), System.identityHashCode(this));
         }
         this.mAnimationEndRequested = false;
         initAnimation();
@@ -554,11 +584,11 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
         return this.mLastFrameTime >= 0;
     }
 
-    /* access modifiers changed from: package-private */
-    public String getNameForTrace() {
+    String getNameForTrace() {
         return "animator";
     }
 
+    @Override // android.animation.AnimationHandler.AnimationFrameCallback
     public void commitAnimationFrame(long frameTime) {
         if (!this.mStartTimeCommitted) {
             this.mStartTimeCommitted = true;
@@ -569,63 +599,70 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean animateBasedOnTime(long currentTime) {
+    boolean animateBasedOnTime(long currentTime) {
         boolean done = false;
         if (this.mRunning) {
             long scaledDuration = getScaledDuration();
             float fraction = scaledDuration > 0 ? ((float) (currentTime - this.mStartTime)) / ((float) scaledDuration) : 1.0f;
+            float lastFraction = this.mOverallFraction;
             int i = 0;
             boolean z = true;
-            boolean newIteration = ((int) fraction) > ((int) this.mOverallFraction);
-            if (fraction < ((float) (this.mRepeatCount + 1)) || this.mRepeatCount == -1) {
+            boolean newIteration = ((int) fraction) > ((int) lastFraction);
+            if (fraction < this.mRepeatCount + 1 || this.mRepeatCount == -1) {
                 z = false;
             }
             boolean lastIterationFinished = z;
             if (scaledDuration == 0) {
                 done = true;
-            } else if (!newIteration || lastIterationFinished) {
-                if (lastIterationFinished) {
-                    done = true;
-                }
-            } else if (this.mListeners != null) {
-                int numListeners = this.mListeners.size();
-                while (true) {
-                    int i2 = i;
-                    if (i2 >= numListeners) {
-                        break;
+            } else if (newIteration && !lastIterationFinished) {
+                if (this.mListeners != null) {
+                    int numListeners = this.mListeners.size();
+                    while (true) {
+                        int i2 = i;
+                        if (i2 >= numListeners) {
+                            break;
+                        }
+                        this.mListeners.get(i2).onAnimationRepeat(this);
+                        i = i2 + 1;
                     }
-                    ((Animator.AnimatorListener) this.mListeners.get(i2)).onAnimationRepeat(this);
-                    i = i2 + 1;
                 }
+            } else if (lastIterationFinished) {
+                done = true;
             }
             this.mOverallFraction = clampFraction(fraction);
-            animateValue(getCurrentIterationFraction(this.mOverallFraction, this.mReversing));
+            float currentIterationFraction = getCurrentIterationFraction(this.mOverallFraction, this.mReversing);
+            animateValue(currentIterationFraction);
         }
         return done;
     }
 
-    /* access modifiers changed from: package-private */
-    public void animateBasedOnPlayTime(long currentPlayTime, long lastPlayTime, boolean inReverse) {
+    @Override // android.animation.Animator
+    void animateBasedOnPlayTime(long currentPlayTime, long lastPlayTime, boolean inReverse) {
         if (currentPlayTime < 0 || lastPlayTime < 0) {
             throw new UnsupportedOperationException("Error: Play time should never be negative.");
         }
         initAnimation();
-        if (!(this.mRepeatCount <= 0 || Math.min((int) (currentPlayTime / this.mDuration), this.mRepeatCount) == Math.min((int) (lastPlayTime / this.mDuration), this.mRepeatCount) || this.mListeners == null)) {
-            int numListeners = this.mListeners.size();
-            for (int i = 0; i < numListeners; i++) {
-                ((Animator.AnimatorListener) this.mListeners.get(i)).onAnimationRepeat(this);
+        if (this.mRepeatCount > 0) {
+            int iteration = (int) (currentPlayTime / this.mDuration);
+            int lastIteration = (int) (lastPlayTime / this.mDuration);
+            if (Math.min(iteration, this.mRepeatCount) != Math.min(lastIteration, this.mRepeatCount) && this.mListeners != null) {
+                int numListeners = this.mListeners.size();
+                for (int i = 0; i < numListeners; i++) {
+                    this.mListeners.get(i).onAnimationRepeat(this);
+                }
             }
         }
-        if (this.mRepeatCount == -1 || currentPlayTime < ((long) (this.mRepeatCount + 1)) * this.mDuration) {
-            animateValue(getCurrentIterationFraction(((float) currentPlayTime) / ((float) this.mDuration), inReverse));
-        } else {
+        int iteration2 = this.mRepeatCount;
+        if (iteration2 != -1 && currentPlayTime >= (this.mRepeatCount + 1) * this.mDuration) {
             skipToEndValue(inReverse);
+            return;
         }
+        float fraction = ((float) currentPlayTime) / ((float) this.mDuration);
+        animateValue(getCurrentIterationFraction(fraction, inReverse));
     }
 
-    /* access modifiers changed from: package-private */
-    public void skipToEndValue(boolean inReverse) {
+    @Override // android.animation.Animator
+    void skipToEndValue(boolean inReverse) {
         initAnimation();
         float endFraction = inReverse ? 0.0f : 1.0f;
         if (this.mRepeatCount % 2 == 1 && this.mRepeatMode == 2) {
@@ -634,14 +671,15 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
         animateValue(endFraction);
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean isInitialized() {
+    @Override // android.animation.Animator
+    boolean isInitialized() {
         return this.mInitialized;
     }
 
+    @Override // android.animation.AnimationHandler.AnimationFrameCallback
     public final boolean doAnimationFrame(long frameTime) {
         if (this.mStartTime < 0) {
-            this.mStartTime = this.mReversing ? frameTime : ((long) (((float) this.mStartDelay) * resolveDurationScale())) + frameTime;
+            this.mStartTime = this.mReversing ? frameTime : (((float) this.mStartDelay) * resolveDurationScale()) + frameTime;
         }
         if (this.mPaused) {
             this.mPauseTime = frameTime;
@@ -663,21 +701,23 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
         }
         if (this.mLastFrameTime < 0) {
             if (this.mSeekFraction >= 0.0f) {
-                this.mStartTime = frameTime - ((long) (((float) getScaledDuration()) * this.mSeekFraction));
+                long seekTime = ((float) getScaledDuration()) * this.mSeekFraction;
+                this.mStartTime = frameTime - seekTime;
                 this.mSeekFraction = -1.0f;
             }
             this.mStartTimeCommitted = false;
         }
         this.mLastFrameTime = frameTime;
-        boolean finished = animateBasedOnTime(Math.max(frameTime, this.mStartTime));
+        long currentTime = Math.max(frameTime, this.mStartTime);
+        boolean finished = animateBasedOnTime(currentTime);
         if (finished) {
             endAnimation();
         }
         return finished;
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean pulseAnimationFrame(long frameTime) {
+    @Override // android.animation.Animator
+    boolean pulseAnimationFrame(long frameTime) {
         if (this.mSelfPulse) {
             return false;
         }
@@ -685,45 +725,50 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
     }
 
     private void addOneShotCommitCallback() {
-        if (this.mSelfPulse) {
-            getAnimationHandler().addOneShotCommitCallback(this);
+        if (!this.mSelfPulse) {
+            return;
         }
+        getAnimationHandler().addOneShotCommitCallback(this);
     }
 
     private void removeAnimationCallback() {
-        if (this.mSelfPulse) {
-            getAnimationHandler().removeCallback(this);
+        if (!this.mSelfPulse) {
+            return;
         }
+        getAnimationHandler().removeCallback(this);
     }
 
     private void addAnimationCallback(long delay) {
-        if (this.mSelfPulse) {
-            getAnimationHandler().addAnimationFrameCallback(this, delay);
+        if (!this.mSelfPulse) {
+            return;
         }
+        getAnimationHandler().addAnimationFrameCallback(this, delay);
     }
 
     public float getAnimatedFraction() {
         return this.mCurrentFraction;
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void animateValue(float fraction) {
+    void animateValue(float fraction) {
         float fraction2 = this.mInterpolator.getInterpolation(fraction);
         this.mCurrentFraction = fraction2;
-        for (PropertyValuesHolder calculateValue : this.mValues) {
-            calculateValue.calculateValue(fraction2);
+        int numValues = this.mValues.length;
+        for (int i = 0; i < numValues; i++) {
+            this.mValues[i].calculateValue(fraction2);
         }
         if (this.mUpdateListeners != null) {
             int numListeners = this.mUpdateListeners.size();
-            for (int i = 0; i < numListeners; i++) {
-                this.mUpdateListeners.get(i).onAnimationUpdate(this);
+            for (int i2 = 0; i2 < numListeners; i2++) {
+                this.mUpdateListeners.get(i2).onAnimationUpdate(this);
             }
         }
     }
 
-    public ValueAnimator clone() {
-        ValueAnimator anim = (ValueAnimator) super.clone();
+    @Override // android.animation.Animator
+    /* renamed from: clone */
+    public ValueAnimator mo138clone() {
+        ValueAnimator anim = (ValueAnimator) super.mo138clone();
         if (this.mUpdateListeners != null) {
             anim.mUpdateListeners = new ArrayList<>(this.mUpdateListeners);
         }
@@ -735,12 +780,12 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
         anim.mPaused = false;
         anim.mResumed = false;
         anim.mStartListenersCalled = false;
-        anim.mStartTime = -1;
+        anim.mStartTime = -1L;
         anim.mStartTimeCommitted = false;
         anim.mAnimationEndRequested = false;
-        anim.mPauseTime = -1;
-        anim.mLastFrameTime = -1;
-        anim.mFirstFrameTime = -1;
+        anim.mPauseTime = -1L;
+        anim.mLastFrameTime = -1L;
+        anim.mFirstFrameTime = -1L;
         anim.mOverallFraction = 0.0f;
         anim.mCurrentFraction = 0.0f;
         anim.mSelfPulse = true;
@@ -751,7 +796,7 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
             anim.mValues = new PropertyValuesHolder[numValues];
             anim.mValuesMap = new HashMap<>(numValues);
             for (int i = 0; i < numValues; i++) {
-                PropertyValuesHolder newValuesHolder = oldValues[i].clone();
+                PropertyValuesHolder newValuesHolder = oldValues[i].mo144clone();
                 anim.mValues[i] = newValuesHolder;
                 anim.mValuesMap.put(newValuesHolder.getPropertyName(), newValuesHolder);
             }
@@ -773,6 +818,7 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
         return returnVal;
     }
 
+    @Override // android.animation.Animator
     public void setAllowRunningAsynchronously(boolean mayRunAsync) {
     }
 

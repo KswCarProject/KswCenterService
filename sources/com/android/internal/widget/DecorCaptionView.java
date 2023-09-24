@@ -2,7 +2,7 @@ package com.android.internal.widget;
 
 import android.content.Context;
 import android.graphics.Rect;
-import android.os.RemoteException;
+import android.p007os.RemoteException;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -12,53 +12,75 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
 import android.view.Window;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import com.android.internal.policy.PhoneWindow;
 import java.util.ArrayList;
 
+/* loaded from: classes4.dex */
 public class DecorCaptionView extends ViewGroup implements View.OnTouchListener, GestureDetector.OnGestureListener {
     private static final String TAG = "DecorCaptionView";
     private View mCaption;
     private boolean mCheckForDragging;
     private View mClickTarget;
     private View mClose;
-    private final Rect mCloseRect = new Rect();
+    private final Rect mCloseRect;
     private View mContent;
     private int mDragSlop;
-    private boolean mDragging = false;
+    private boolean mDragging;
     private GestureDetector mGestureDetector;
     private View mMaximize;
-    private final Rect mMaximizeRect = new Rect();
-    private boolean mOverlayWithAppContent = false;
-    private PhoneWindow mOwner = null;
+    private final Rect mMaximizeRect;
+    private boolean mOverlayWithAppContent;
+    private PhoneWindow mOwner;
     private int mRootScrollY;
-    private boolean mShow = false;
-    private ArrayList<View> mTouchDispatchList = new ArrayList<>(2);
+    private boolean mShow;
+    private ArrayList<View> mTouchDispatchList;
     private int mTouchDownX;
     private int mTouchDownY;
 
     public DecorCaptionView(Context context) {
         super(context);
+        this.mOwner = null;
+        this.mShow = false;
+        this.mDragging = false;
+        this.mOverlayWithAppContent = false;
+        this.mTouchDispatchList = new ArrayList<>(2);
+        this.mCloseRect = new Rect();
+        this.mMaximizeRect = new Rect();
         init(context);
     }
 
     public DecorCaptionView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        this.mOwner = null;
+        this.mShow = false;
+        this.mDragging = false;
+        this.mOverlayWithAppContent = false;
+        this.mTouchDispatchList = new ArrayList<>(2);
+        this.mCloseRect = new Rect();
+        this.mMaximizeRect = new Rect();
         init(context);
     }
 
     public DecorCaptionView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        this.mOwner = null;
+        this.mShow = false;
+        this.mDragging = false;
+        this.mOverlayWithAppContent = false;
+        this.mTouchDispatchList = new ArrayList<>(2);
+        this.mCloseRect = new Rect();
+        this.mMaximizeRect = new Rect();
         init(context);
     }
 
     private void init(Context context) {
         this.mDragSlop = ViewConfiguration.get(context).getScaledTouchSlop();
-        this.mGestureDetector = new GestureDetector(context, (GestureDetector.OnGestureListener) this);
+        this.mGestureDetector = new GestureDetector(context, this);
     }
 
-    /* access modifiers changed from: protected */
-    public void onFinishInflate() {
+    @Override // android.view.View
+    protected void onFinishInflate() {
         super.onFinishInflate();
         this.mCaption = getChildAt(0);
     }
@@ -72,10 +94,11 @@ public class DecorCaptionView extends ViewGroup implements View.OnTouchListener,
         }
         updateCaptionVisibility();
         this.mOwner.getDecorView().setOutlineProvider(ViewOutlineProvider.BOUNDS);
-        this.mMaximize = findViewById(R.id.maximize_window);
-        this.mClose = findViewById(R.id.close_window);
+        this.mMaximize = findViewById(C3132R.C3134id.maximize_window);
+        this.mClose = findViewById(C3132R.C3134id.close_window);
     }
 
+    @Override // android.view.ViewGroup
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         if (ev.getAction() == 0) {
             int x = (int) ev.getX();
@@ -90,18 +113,20 @@ public class DecorCaptionView extends ViewGroup implements View.OnTouchListener,
         return this.mClickTarget != null;
     }
 
+    @Override // android.view.View
     public boolean onTouchEvent(MotionEvent event) {
-        if (this.mClickTarget == null) {
-            return false;
+        if (this.mClickTarget != null) {
+            this.mGestureDetector.onTouchEvent(event);
+            int action = event.getAction();
+            if (action == 1 || action == 3) {
+                this.mClickTarget = null;
+            }
+            return true;
         }
-        this.mGestureDetector.onTouchEvent(event);
-        int action = event.getAction();
-        if (action == 1 || action == 3) {
-            this.mClickTarget = null;
-        }
-        return true;
+        return false;
     }
 
+    @Override // android.view.View.OnTouchListener
     public boolean onTouch(View v, MotionEvent e) {
         int x = (int) e.getX();
         int y = (int) e.getY();
@@ -110,15 +135,14 @@ public class DecorCaptionView extends ViewGroup implements View.OnTouchListener,
         int actionMasked = e.getActionMasked();
         switch (actionMasked) {
             case 0:
-                if (this.mShow) {
-                    if (!fromMouse || primaryButton) {
-                        this.mCheckForDragging = true;
-                        this.mTouchDownX = x;
-                        this.mTouchDownY = y;
-                        break;
-                    }
-                } else {
+                if (!this.mShow) {
                     return false;
+                }
+                if (!fromMouse || primaryButton) {
+                    this.mCheckForDragging = true;
+                    this.mTouchDownX = x;
+                    this.mTouchDownY = y;
+                    break;
                 }
             case 1:
             case 3:
@@ -137,13 +161,12 @@ public class DecorCaptionView extends ViewGroup implements View.OnTouchListener,
                     startMovingTask(e.getRawX(), e.getRawY());
                     break;
                 }
+                break;
         }
-        if (this.mDragging || this.mCheckForDragging) {
-            return true;
-        }
-        return false;
+        return this.mDragging || this.mCheckForDragging;
     }
 
+    @Override // android.view.ViewGroup
     public ArrayList<View> buildTouchDispatchChildList() {
         this.mTouchDispatchList.ensureCapacity(3);
         if (this.mCaption != null) {
@@ -155,6 +178,7 @@ public class DecorCaptionView extends ViewGroup implements View.OnTouchListener,
         return this.mTouchDispatchList;
     }
 
+    @Override // android.view.ViewGroup
     public boolean shouldDelayChildPressedState() {
         return false;
     }
@@ -168,6 +192,7 @@ public class DecorCaptionView extends ViewGroup implements View.OnTouchListener,
         updateCaptionVisibility();
     }
 
+    @Override // android.view.ViewGroup
     public void addView(View child, int index, ViewGroup.LayoutParams params) {
         if (!(params instanceof ViewGroup.MarginLayoutParams)) {
             throw new IllegalArgumentException("params " + params + " must subclass MarginLayoutParams");
@@ -179,8 +204,8 @@ public class DecorCaptionView extends ViewGroup implements View.OnTouchListener,
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    @Override // android.view.View
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int i;
         if (this.mCaption.getVisibility() != 8) {
             measureChildWithMargins(this.mCaption, widthMeasureSpec, 0, heightMeasureSpec, 0);
@@ -199,8 +224,8 @@ public class DecorCaptionView extends ViewGroup implements View.OnTouchListener,
         setMeasuredDimension(View.MeasureSpec.getSize(widthMeasureSpec), View.MeasureSpec.getSize(heightMeasureSpec));
     }
 
-    /* access modifiers changed from: protected */
-    public void onLayout(boolean changed, int left, int top, int right, int bottom) {
+    @Override // android.view.ViewGroup, android.view.View
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         int captionHeight;
         if (this.mCaption.getVisibility() != 8) {
             this.mCaption.layout(0, 0, this.mCaption.getMeasuredWidth(), this.mCaption.getMeasuredHeight());
@@ -233,7 +258,7 @@ public class DecorCaptionView extends ViewGroup implements View.OnTouchListener,
             try {
                 callback.toggleFreeformWindowingMode();
             } catch (RemoteException e) {
-                Log.e(TAG, "Cannot change task workspace.");
+                Log.m70e(TAG, "Cannot change task workspace.");
             }
         }
     }
@@ -260,32 +285,36 @@ public class DecorCaptionView extends ViewGroup implements View.OnTouchListener,
         return this.mCaption;
     }
 
+    @Override // android.view.ViewGroup
     public ViewGroup.LayoutParams generateLayoutParams(AttributeSet attrs) {
         return new ViewGroup.MarginLayoutParams(getContext(), attrs);
     }
 
-    /* access modifiers changed from: protected */
-    public ViewGroup.LayoutParams generateDefaultLayoutParams() {
+    @Override // android.view.ViewGroup
+    protected ViewGroup.LayoutParams generateDefaultLayoutParams() {
         return new ViewGroup.MarginLayoutParams(-1, -1);
     }
 
-    /* access modifiers changed from: protected */
-    public ViewGroup.LayoutParams generateLayoutParams(ViewGroup.LayoutParams p) {
+    @Override // android.view.ViewGroup
+    protected ViewGroup.LayoutParams generateLayoutParams(ViewGroup.LayoutParams p) {
         return new ViewGroup.MarginLayoutParams(p);
     }
 
-    /* access modifiers changed from: protected */
-    public boolean checkLayoutParams(ViewGroup.LayoutParams p) {
+    @Override // android.view.ViewGroup
+    protected boolean checkLayoutParams(ViewGroup.LayoutParams p) {
         return p instanceof ViewGroup.MarginLayoutParams;
     }
 
+    @Override // android.view.GestureDetector.OnGestureListener
     public boolean onDown(MotionEvent e) {
         return false;
     }
 
+    @Override // android.view.GestureDetector.OnGestureListener
     public void onShowPress(MotionEvent e) {
     }
 
+    @Override // android.view.GestureDetector.OnGestureListener
     public boolean onSingleTapUp(MotionEvent e) {
         if (this.mClickTarget == this.mMaximize) {
             toggleFreeformWindowingMode();
@@ -295,13 +324,16 @@ public class DecorCaptionView extends ViewGroup implements View.OnTouchListener,
         return true;
     }
 
+    @Override // android.view.GestureDetector.OnGestureListener
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
         return false;
     }
 
+    @Override // android.view.GestureDetector.OnGestureListener
     public void onLongPress(MotionEvent e) {
     }
 
+    @Override // android.view.GestureDetector.OnGestureListener
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
         return false;
     }
@@ -309,7 +341,7 @@ public class DecorCaptionView extends ViewGroup implements View.OnTouchListener,
     public void onRootViewScrollYChanged(int scrollY) {
         if (this.mCaption != null) {
             this.mRootScrollY = scrollY;
-            this.mCaption.setTranslationY((float) scrollY);
+            this.mCaption.setTranslationY(scrollY);
         }
     }
 }

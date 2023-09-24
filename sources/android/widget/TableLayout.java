@@ -7,9 +7,10 @@ import android.util.SparseBooleanArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.util.regex.Pattern;
 
+/* loaded from: classes4.dex */
 public class TableLayout extends LinearLayout {
     private SparseBooleanArray mCollapsedColumns;
     private boolean mInitialized;
@@ -27,7 +28,7 @@ public class TableLayout extends LinearLayout {
 
     public TableLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.TableLayout);
+        TypedArray a = context.obtainStyledAttributes(attrs, C3132R.styleable.TableLayout);
         String stretchedColumns = a.getString(0);
         if (stretchedColumns != null) {
             if (stretchedColumns.charAt(0) == '*') {
@@ -54,7 +55,9 @@ public class TableLayout extends LinearLayout {
 
     private static SparseBooleanArray parseColumns(String sequence) {
         SparseBooleanArray columns = new SparseBooleanArray();
-        for (String columnIdentifier : Pattern.compile("\\s*,\\s*").split(sequence)) {
+        Pattern pattern = Pattern.compile("\\s*,\\s*");
+        String[] columnDefs = pattern.split(sequence);
+        for (String columnIdentifier : columnDefs) {
             try {
                 int columnIndex = Integer.parseInt(columnIdentifier);
                 if (columnIndex >= 0) {
@@ -82,8 +85,9 @@ public class TableLayout extends LinearLayout {
         this.mInitialized = true;
     }
 
+    @Override // android.view.ViewGroup
     public void setOnHierarchyChangeListener(ViewGroup.OnHierarchyChangeListener listener) {
-        ViewGroup.OnHierarchyChangeListener unused = this.mPassThroughListener.mOnHierarchyChangeListener = listener;
+        this.mPassThroughListener.mOnHierarchyChangeListener = listener;
     }
 
     private void requestRowsLayout() {
@@ -95,6 +99,7 @@ public class TableLayout extends LinearLayout {
         }
     }
 
+    @Override // android.view.View, android.view.ViewParent
     public void requestLayout() {
         if (this.mInitialized) {
             int count = getChildCount();
@@ -155,7 +160,7 @@ public class TableLayout extends LinearLayout {
         return this.mShrinkAllColumns || this.mShrinkableColumns.get(columnIndex);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void trackCollapsedColumns(View child) {
         if (child instanceof TableRow) {
             TableRow row = (TableRow) child;
@@ -171,46 +176,50 @@ public class TableLayout extends LinearLayout {
         }
     }
 
+    @Override // android.view.ViewGroup
     public void addView(View child) {
         super.addView(child);
         requestRowsLayout();
     }
 
+    @Override // android.view.ViewGroup
     public void addView(View child, int index) {
         super.addView(child, index);
         requestRowsLayout();
     }
 
+    @Override // android.view.ViewGroup, android.view.ViewManager
     public void addView(View child, ViewGroup.LayoutParams params) {
         super.addView(child, params);
         requestRowsLayout();
     }
 
+    @Override // android.view.ViewGroup
     public void addView(View child, int index, ViewGroup.LayoutParams params) {
         super.addView(child, index, params);
         requestRowsLayout();
     }
 
-    /* access modifiers changed from: protected */
-    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    @Override // android.widget.LinearLayout, android.view.View
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         measureVertical(widthMeasureSpec, heightMeasureSpec);
     }
 
-    /* access modifiers changed from: protected */
-    public void onLayout(boolean changed, int l, int t, int r, int b) {
+    @Override // android.widget.LinearLayout, android.view.ViewGroup, android.view.View
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
         layoutVertical(l, t, r, b);
     }
 
-    /* access modifiers changed from: package-private */
-    public void measureChildBeforeLayout(View child, int childIndex, int widthMeasureSpec, int totalWidth, int heightMeasureSpec, int totalHeight) {
+    @Override // android.widget.LinearLayout
+    void measureChildBeforeLayout(View child, int childIndex, int widthMeasureSpec, int totalWidth, int heightMeasureSpec, int totalHeight) {
         if (child instanceof TableRow) {
             ((TableRow) child).setColumnsWidthConstraints(this.mMaxWidths);
         }
         super.measureChildBeforeLayout(child, childIndex, widthMeasureSpec, totalWidth, heightMeasureSpec, totalHeight);
     }
 
-    /* access modifiers changed from: package-private */
-    public void measureVertical(int widthMeasureSpec, int heightMeasureSpec) {
+    @Override // android.widget.LinearLayout
+    void measureVertical(int widthMeasureSpec, int heightMeasureSpec) {
         findLargestCells(widthMeasureSpec, heightMeasureSpec);
         shrinkAndStretchColumns(widthMeasureSpec);
         super.measureVertical(widthMeasureSpec, heightMeasureSpec);
@@ -224,13 +233,11 @@ public class TableLayout extends LinearLayout {
         int i2 = 0;
         while (i2 < count2) {
             View child = getChildAt(i2);
-            if (child.getVisibility() == 8) {
-                int i3 = widthMeasureSpec;
-                int i4 = heightMeasureSpec;
-            } else {
+            if (child.getVisibility() != 8) {
                 if (child instanceof TableRow) {
                     TableRow row = (TableRow) child;
-                    row.getLayoutParams().height = -2;
+                    ViewGroup.LayoutParams layoutParams = row.getLayoutParams();
+                    layoutParams.height = -2;
                     int[] widths = row.getColumnsWidths(widthMeasureSpec, heightMeasureSpec);
                     int newLength = widths.length;
                     if (firstRow) {
@@ -245,8 +252,10 @@ public class TableLayout extends LinearLayout {
                         if (difference > 0) {
                             int[] oldMaxWidths = this.mMaxWidths;
                             this.mMaxWidths = new int[newLength];
+                            int[] iArr = this.mMaxWidths;
                             count = count2;
-                            System.arraycopy(oldMaxWidths, i, this.mMaxWidths, i, oldMaxWidths.length);
+                            int count3 = oldMaxWidths.length;
+                            System.arraycopy(oldMaxWidths, i, iArr, i, count3);
                             System.arraycopy(widths, oldMaxWidths.length, this.mMaxWidths, oldMaxWidths.length, difference);
                         } else {
                             count = count2;
@@ -258,8 +267,6 @@ public class TableLayout extends LinearLayout {
                         }
                     }
                 } else {
-                    int i5 = widthMeasureSpec;
-                    int i6 = heightMeasureSpec;
                     count = count2;
                 }
                 i2++;
@@ -271,25 +278,23 @@ public class TableLayout extends LinearLayout {
             count2 = count;
             i = 0;
         }
-        int i7 = widthMeasureSpec;
-        int i8 = heightMeasureSpec;
-        int i9 = count2;
     }
 
     private void shrinkAndStretchColumns(int widthMeasureSpec) {
-        if (this.mMaxWidths != null) {
-            int totalWidth = 0;
-            for (int width : this.mMaxWidths) {
-                totalWidth += width;
-            }
-            int size = (View.MeasureSpec.getSize(widthMeasureSpec) - this.mPaddingLeft) - this.mPaddingRight;
-            if (totalWidth > size && (this.mShrinkAllColumns || this.mShrinkableColumns.size() > 0)) {
-                mutateColumnsWidth(this.mShrinkableColumns, this.mShrinkAllColumns, size, totalWidth);
-            } else if (totalWidth >= size) {
-            } else {
-                if (this.mStretchAllColumns || this.mStretchableColumns.size() > 0) {
-                    mutateColumnsWidth(this.mStretchableColumns, this.mStretchAllColumns, size, totalWidth);
-                }
+        int[] iArr;
+        if (this.mMaxWidths == null) {
+            return;
+        }
+        int totalWidth = 0;
+        for (int width : this.mMaxWidths) {
+            totalWidth += width;
+        }
+        int size = (View.MeasureSpec.getSize(widthMeasureSpec) - this.mPaddingLeft) - this.mPaddingRight;
+        if (totalWidth > size && (this.mShrinkAllColumns || this.mShrinkableColumns.size() > 0)) {
+            mutateColumnsWidth(this.mShrinkableColumns, this.mShrinkAllColumns, size, totalWidth);
+        } else if (totalWidth < size) {
+            if (this.mStretchAllColumns || this.mStretchableColumns.size() > 0) {
+                mutateColumnsWidth(this.mStretchableColumns, this.mStretchAllColumns, size, totalWidth);
             }
         }
     }
@@ -298,7 +303,8 @@ public class TableLayout extends LinearLayout {
         int[] maxWidths = this.mMaxWidths;
         int length = maxWidths.length;
         int count = allColumns ? length : columns.size();
-        int extraSpace = (size - totalWidth) / count;
+        int totalExtraSpace = size - totalWidth;
+        int extraSpace = totalExtraSpace / count;
         int nbChildren = getChildCount();
         for (int i = 0; i < nbChildren; i++) {
             View child = getChildAt(i);
@@ -308,9 +314,9 @@ public class TableLayout extends LinearLayout {
         }
         if (!allColumns) {
             int skipped = 0;
-            for (int i2 = 0; i2 < count; i2++) {
-                int column = columns.keyAt(i2);
-                if (columns.valueAt(i2)) {
+            for (int skipped2 = 0; skipped2 < count; skipped2++) {
+                int column = columns.keyAt(skipped2);
+                if (columns.valueAt(skipped2)) {
                     if (column < length) {
                         maxWidths[column] = maxWidths[column] + extraSpace;
                     } else {
@@ -320,9 +326,9 @@ public class TableLayout extends LinearLayout {
             }
             if (skipped > 0 && skipped < count) {
                 int extraSpace2 = (skipped * extraSpace) / (count - skipped);
-                for (int i3 = 0; i3 < count; i3++) {
-                    int column2 = columns.keyAt(i3);
-                    if (columns.valueAt(i3) && column2 < length) {
+                for (int i2 = 0; i2 < count; i2++) {
+                    int column2 = columns.keyAt(i2);
+                    if (columns.valueAt(i2) && column2 < length) {
                         if (extraSpace2 > maxWidths[column2]) {
                             maxWidths[column2] = 0;
                         } else {
@@ -334,34 +340,39 @@ public class TableLayout extends LinearLayout {
             }
             return;
         }
-        for (int i4 = 0; i4 < count; i4++) {
-            maxWidths[i4] = maxWidths[i4] + extraSpace;
+        for (int i3 = 0; i3 < count; i3++) {
+            maxWidths[i3] = maxWidths[i3] + extraSpace;
         }
     }
 
+    @Override // android.widget.LinearLayout, android.view.ViewGroup
     public LayoutParams generateLayoutParams(AttributeSet attrs) {
         return new LayoutParams(getContext(), attrs);
     }
 
-    /* access modifiers changed from: protected */
+    /* JADX INFO: Access modifiers changed from: protected */
+    @Override // android.widget.LinearLayout, android.view.ViewGroup
     public LinearLayout.LayoutParams generateDefaultLayoutParams() {
         return new LayoutParams();
     }
 
-    /* access modifiers changed from: protected */
-    public boolean checkLayoutParams(ViewGroup.LayoutParams p) {
+    @Override // android.widget.LinearLayout, android.view.ViewGroup
+    protected boolean checkLayoutParams(ViewGroup.LayoutParams p) {
         return p instanceof LayoutParams;
     }
 
-    /* access modifiers changed from: protected */
+    /* JADX INFO: Access modifiers changed from: protected */
+    @Override // android.widget.LinearLayout, android.view.ViewGroup
     public LinearLayout.LayoutParams generateLayoutParams(ViewGroup.LayoutParams p) {
         return new LayoutParams(p);
     }
 
+    @Override // android.widget.LinearLayout, android.view.ViewGroup, android.view.View
     public CharSequence getAccessibilityClassName() {
         return TableLayout.class.getName();
     }
 
+    /* loaded from: classes4.dex */
     public static class LayoutParams extends LinearLayout.LayoutParams {
         public LayoutParams(Context c, AttributeSet attrs) {
             super(c, attrs);
@@ -392,8 +403,8 @@ public class TableLayout extends LinearLayout {
             }
         }
 
-        /* access modifiers changed from: protected */
-        public void setBaseAttributes(TypedArray a, int widthAttr, int heightAttr) {
+        @Override // android.view.ViewGroup.LayoutParams
+        protected void setBaseAttributes(TypedArray a, int widthAttr, int heightAttr) {
             this.width = -1;
             if (a.hasValue(heightAttr)) {
                 this.height = a.getLayoutDimension(heightAttr, "layout_height");
@@ -403,13 +414,14 @@ public class TableLayout extends LinearLayout {
         }
     }
 
+    /* loaded from: classes4.dex */
     private class PassThroughHierarchyChangeListener implements ViewGroup.OnHierarchyChangeListener {
-        /* access modifiers changed from: private */
-        public ViewGroup.OnHierarchyChangeListener mOnHierarchyChangeListener;
+        private ViewGroup.OnHierarchyChangeListener mOnHierarchyChangeListener;
 
         private PassThroughHierarchyChangeListener() {
         }
 
+        @Override // android.view.ViewGroup.OnHierarchyChangeListener
         public void onChildViewAdded(View parent, View child) {
             TableLayout.this.trackCollapsedColumns(child);
             if (this.mOnHierarchyChangeListener != null) {
@@ -417,6 +429,7 @@ public class TableLayout extends LinearLayout {
             }
         }
 
+        @Override // android.view.ViewGroup.OnHierarchyChangeListener
         public void onChildViewRemoved(View parent, View child) {
             if (this.mOnHierarchyChangeListener != null) {
                 this.mOnHierarchyChangeListener.onChildViewRemoved(parent, child);

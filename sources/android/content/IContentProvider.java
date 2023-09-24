@@ -4,15 +4,16 @@ import android.annotation.UnsupportedAppUsage;
 import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.ICancellationSignal;
-import android.os.IInterface;
-import android.os.ParcelFileDescriptor;
-import android.os.RemoteException;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.ICancellationSignal;
+import android.p007os.IInterface;
+import android.p007os.ParcelFileDescriptor;
+import android.p007os.RemoteException;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public interface IContentProvider extends IInterface {
     public static final int APPLY_BATCH_TRANSACTION = 20;
     public static final int BULK_INSERT_TRANSACTION = 13;
@@ -71,13 +72,13 @@ public interface IContentProvider extends IInterface {
     int update(String str, Uri uri, ContentValues contentValues, String str2, String[] strArr) throws RemoteException;
 
     @Deprecated
-    ContentProviderResult[] applyBatch(String callingPkg, ArrayList<ContentProviderOperation> operations) throws RemoteException, OperationApplicationException {
+    default ContentProviderResult[] applyBatch(String callingPkg, ArrayList<ContentProviderOperation> operations) throws RemoteException, OperationApplicationException {
         return applyBatch(callingPkg, "unknown", operations);
     }
 
-    @Deprecated
     @UnsupportedAppUsage
-    Bundle call(String callingPkg, String method, String arg, Bundle extras) throws RemoteException {
+    @Deprecated
+    default Bundle call(String callingPkg, String method, String arg, Bundle extras) throws RemoteException {
         return call(callingPkg, "unknown", method, arg, extras);
     }
 }

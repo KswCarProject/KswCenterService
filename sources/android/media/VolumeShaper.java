@@ -1,14 +1,15 @@
 package android.media;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.ref.WeakReference;
 import java.util.Arrays;
 import java.util.Objects;
 
+/* loaded from: classes3.dex */
 public final class VolumeShaper implements AutoCloseable {
     private int mId;
     private final WeakReference<PlayerBase> mWeakPlayerBase;
@@ -18,8 +19,7 @@ public final class VolumeShaper implements AutoCloseable {
         this.mId = applyPlayer(configuration, new Operation.Builder().defer().build());
     }
 
-    /* access modifiers changed from: package-private */
-    public int getId() {
+    int getId() {
         return this.mId;
     }
 
@@ -35,6 +35,7 @@ public final class VolumeShaper implements AutoCloseable {
         return getStatePlayer(this.mId).getVolume();
     }
 
+    @Override // java.lang.AutoCloseable
     public void close() {
         try {
             applyPlayer(new Configuration(this.mId), new Operation.Builder().terminate().build());
@@ -45,79 +46,50 @@ public final class VolumeShaper implements AutoCloseable {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() {
+    protected void finalize() {
         close();
     }
 
     private int applyPlayer(Configuration configuration, Operation operation) {
         if (this.mWeakPlayerBase != null) {
-            PlayerBase player = (PlayerBase) this.mWeakPlayerBase.get();
-            if (player != null) {
-                int id = player.playerApplyVolumeShaper(configuration, operation);
-                if (id >= 0) {
-                    return id;
-                }
+            PlayerBase player = this.mWeakPlayerBase.get();
+            if (player == null) {
+                throw new IllegalStateException("player deallocated");
+            }
+            int id = player.playerApplyVolumeShaper(configuration, operation);
+            if (id < 0) {
                 if (id == -38) {
                     throw new IllegalStateException("player or VolumeShaper deallocated");
                 }
                 throw new IllegalArgumentException("invalid configuration or operation: " + id);
             }
-            throw new IllegalStateException("player deallocated");
+            return id;
         }
         throw new IllegalStateException("uninitialized shaper");
     }
 
     private State getStatePlayer(int id) {
         if (this.mWeakPlayerBase != null) {
-            PlayerBase player = (PlayerBase) this.mWeakPlayerBase.get();
-            if (player != null) {
-                State state = player.playerGetVolumeShaperState(id);
-                if (state != null) {
-                    return state;
-                }
+            PlayerBase player = this.mWeakPlayerBase.get();
+            if (player == null) {
+                throw new IllegalStateException("player deallocated");
+            }
+            State state = player.playerGetVolumeShaperState(id);
+            if (state == null) {
                 throw new IllegalStateException("shaper cannot be found");
             }
-            throw new IllegalStateException("player deallocated");
+            return state;
         }
         throw new IllegalStateException("uninitialized shaper");
     }
 
+    /* loaded from: classes3.dex */
     public static final class Configuration implements Parcelable {
-        public static final Parcelable.Creator<Configuration> CREATOR = new Parcelable.Creator<Configuration>() {
-            public Configuration createFromParcel(Parcel p) {
-                int type = p.readInt();
-                int id = p.readInt();
-                if (type == 0) {
-                    return new Configuration(id);
-                }
-                int optionFlags = p.readInt();
-                double durationMs = p.readDouble();
-                int interpolatorType = p.readInt();
-                float readFloat = p.readFloat();
-                float readFloat2 = p.readFloat();
-                int length = p.readInt();
-                float[] times = new float[length];
-                float[] volumes = new float[length];
-                for (int i = 0; i < length; i++) {
-                    times[i] = p.readFloat();
-                    volumes[i] = p.readFloat();
-                }
-                float[] fArr = times;
-                int i2 = length;
-                return new Configuration(type, id, optionFlags, durationMs, interpolatorType, times, volumes);
-            }
-
-            public Configuration[] newArray(int size) {
-                return new Configuration[size];
-            }
-        };
-        public static final Configuration CUBIC_RAMP = new Builder().setInterpolatorType(2).setCurve(new float[]{0.0f, 1.0f}, new float[]{0.0f, 1.0f}).setDuration(1000).build();
+        public static final Parcelable.Creator<Configuration> CREATOR;
         public static final int INTERPOLATOR_TYPE_CUBIC = 2;
         public static final int INTERPOLATOR_TYPE_CUBIC_MONOTONIC = 3;
         public static final int INTERPOLATOR_TYPE_LINEAR = 1;
         public static final int INTERPOLATOR_TYPE_STEP = 0;
-        public static final Configuration LINEAR_RAMP = new Builder().setInterpolatorType(1).setCurve(new float[]{0.0f, 1.0f}, new float[]{0.0f, 1.0f}).setDuration(1000).build();
         private static final int MAXIMUM_CURVE_POINTS = 16;
         public static final int OPTION_FLAG_CLOCK_TIME = 2;
         private static final int OPTION_FLAG_PUBLIC_ALL = 3;
@@ -140,16 +112,21 @@ public final class VolumeShaper implements AutoCloseable {
         private final int mType;
         @UnsupportedAppUsage
         private final float[] mVolumes;
+        public static final Configuration LINEAR_RAMP = new Builder().setInterpolatorType(1).setCurve(new float[]{0.0f, 1.0f}, new float[]{0.0f, 1.0f}).setDuration(1000).build();
+        public static final Configuration CUBIC_RAMP = new Builder().setInterpolatorType(2).setCurve(new float[]{0.0f, 1.0f}, new float[]{0.0f, 1.0f}).setDuration(1000).build();
 
         @Retention(RetentionPolicy.SOURCE)
+        /* loaded from: classes3.dex */
         public @interface InterpolatorType {
         }
 
         @Retention(RetentionPolicy.SOURCE)
+        /* loaded from: classes3.dex */
         public @interface OptionFlag {
         }
 
         @Retention(RetentionPolicy.SOURCE)
+        /* loaded from: classes3.dex */
         public @interface Type {
         }
 
@@ -162,13 +139,43 @@ public final class VolumeShaper implements AutoCloseable {
             float[] sines = new float[16];
             float[] scurve = new float[16];
             for (int i = 0; i < 16; i++) {
-                times[i] = ((float) i) / 15.0f;
-                float sine = (float) Math.sin((((double) times[i]) * 3.141592653589793d) / 2.0d);
+                times[i] = i / 15.0f;
+                float sine = (float) Math.sin((times[i] * 3.141592653589793d) / 2.0d);
                 sines[i] = sine;
                 scurve[i] = sine * sine;
             }
-            SINE_RAMP = new Builder().setInterpolatorType(2).setCurve(times, sines).setDuration(1000).build();
-            SCURVE_RAMP = new Builder().setInterpolatorType(2).setCurve(times, scurve).setDuration(1000).build();
+            SINE_RAMP = new Builder().setInterpolatorType(2).setCurve(times, sines).setDuration(1000L).build();
+            SCURVE_RAMP = new Builder().setInterpolatorType(2).setCurve(times, scurve).setDuration(1000L).build();
+            CREATOR = new Parcelable.Creator<Configuration>() { // from class: android.media.VolumeShaper.Configuration.1
+                /* JADX WARN: Can't rename method to resolve collision */
+                @Override // android.p007os.Parcelable.Creator
+                public Configuration createFromParcel(Parcel p) {
+                    int type = p.readInt();
+                    int id = p.readInt();
+                    if (type == 0) {
+                        return new Configuration(id);
+                    }
+                    int optionFlags = p.readInt();
+                    double durationMs = p.readDouble();
+                    int interpolatorType = p.readInt();
+                    p.readFloat();
+                    p.readFloat();
+                    int length = p.readInt();
+                    float[] times2 = new float[length];
+                    float[] volumes = new float[length];
+                    for (int i2 = 0; i2 < length; i2++) {
+                        times2[i2] = p.readFloat();
+                        volumes[i2] = p.readFloat();
+                    }
+                    return new Configuration(type, id, optionFlags, durationMs, interpolatorType, times2, volumes);
+                }
+
+                /* JADX WARN: Can't rename method to resolve collision */
+                @Override // android.p007os.Parcelable.Creator
+                public Configuration[] newArray(int size) {
+                    return new Configuration[size];
+                }
+            };
         }
 
         public String toString() {
@@ -188,35 +195,34 @@ public final class VolumeShaper implements AutoCloseable {
         }
 
         public int hashCode() {
-            if (this.mType == 0) {
-                return Objects.hash(new Object[]{Integer.valueOf(this.mType), Integer.valueOf(this.mId)});
-            }
-            return Objects.hash(new Object[]{Integer.valueOf(this.mType), Integer.valueOf(this.mId), Integer.valueOf(this.mOptionFlags), Double.valueOf(this.mDurationMs), Integer.valueOf(this.mInterpolatorType), Integer.valueOf(Arrays.hashCode(this.mTimes)), Integer.valueOf(Arrays.hashCode(this.mVolumes))});
+            return this.mType == 0 ? Objects.hash(Integer.valueOf(this.mType), Integer.valueOf(this.mId)) : Objects.hash(Integer.valueOf(this.mType), Integer.valueOf(this.mId), Integer.valueOf(this.mOptionFlags), Double.valueOf(this.mDurationMs), Integer.valueOf(this.mInterpolatorType), Integer.valueOf(Arrays.hashCode(this.mTimes)), Integer.valueOf(Arrays.hashCode(this.mVolumes)));
         }
 
         public boolean equals(Object o) {
-            if (!(o instanceof Configuration)) {
+            if (o instanceof Configuration) {
+                if (o == this) {
+                    return true;
+                }
+                Configuration other = (Configuration) o;
+                if (this.mType == other.mType && this.mId == other.mId) {
+                    if (this.mType == 0) {
+                        return true;
+                    }
+                    if (this.mOptionFlags == other.mOptionFlags && this.mDurationMs == other.mDurationMs && this.mInterpolatorType == other.mInterpolatorType && Arrays.equals(this.mTimes, other.mTimes) && Arrays.equals(this.mVolumes, other.mVolumes)) {
+                        return true;
+                    }
+                }
                 return false;
-            }
-            if (o == this) {
-                return true;
-            }
-            Configuration other = (Configuration) o;
-            if (this.mType == other.mType && this.mId == other.mId) {
-                if (this.mType == 0) {
-                    return true;
-                }
-                if (this.mOptionFlags == other.mOptionFlags && this.mDurationMs == other.mDurationMs && this.mInterpolatorType == other.mInterpolatorType && Arrays.equals(this.mTimes, other.mTimes) && Arrays.equals(this.mVolumes, other.mVolumes)) {
-                    return true;
-                }
             }
             return false;
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeInt(this.mType);
             dest.writeInt(this.mId);
@@ -235,17 +241,16 @@ public final class VolumeShaper implements AutoCloseable {
         }
 
         public Configuration(int id) {
-            if (id >= 0) {
-                this.mType = 0;
-                this.mId = id;
-                this.mInterpolatorType = 0;
-                this.mOptionFlags = 0;
-                this.mDurationMs = 0.0d;
-                this.mTimes = null;
-                this.mVolumes = null;
-                return;
+            if (id < 0) {
+                throw new IllegalArgumentException("negative id " + id);
             }
-            throw new IllegalArgumentException("negative id " + id);
+            this.mType = 0;
+            this.mId = id;
+            this.mInterpolatorType = 0;
+            this.mOptionFlags = 0;
+            this.mDurationMs = 0.0d;
+            this.mTimes = null;
+            this.mVolumes = null;
         }
 
         @UnsupportedAppUsage
@@ -275,8 +280,7 @@ public final class VolumeShaper implements AutoCloseable {
             return this.mOptionFlags & 3;
         }
 
-        /* access modifiers changed from: package-private */
-        public int getAllOptionFlags() {
+        int getAllOptionFlags() {
             return this.mOptionFlags;
         }
 
@@ -319,43 +323,45 @@ public final class VolumeShaper implements AutoCloseable {
             while (true) {
                 int i3 = i2;
                 if (i3 < times.length) {
-                    if (times[i3] <= times[i3 - 1]) {
+                    if (times[i3] > times[i3 - 1]) {
+                        i2 = i3 + 1;
+                    } else {
                         return "times not monotonic increasing, check index " + i3;
                     }
-                    i2 = i3 + 1;
                 } else if (log) {
                     while (i < volumes.length) {
-                        if (volumes[i] > 0.0f) {
+                        if (volumes[i] <= 0.0f) {
+                            i++;
+                        } else {
                             return "volumes for log scale cannot be positive, check index " + i;
                         }
-                        i++;
                     }
                     return null;
                 } else {
                     while (i < volumes.length) {
-                        if (volumes[i] < 0.0f || volumes[i] > 1.0f) {
+                        if (volumes[i] >= 0.0f && volumes[i] <= 1.0f) {
+                            i++;
+                        } else {
                             return "volumes for linear scale must be between 0.f and 1.f, check index " + i;
                         }
-                        i++;
                     }
                     return null;
                 }
             }
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public static void checkCurveForErrorsAndThrowException(float[] times, float[] volumes, boolean log, boolean ise) {
             String error = checkCurveForErrors(times, volumes, log);
-            if (error == null) {
-                return;
+            if (error != null) {
+                if (ise) {
+                    throw new IllegalStateException(error);
+                }
+                throw new IllegalArgumentException(error);
             }
-            if (ise) {
-                throw new IllegalStateException(error);
-            }
-            throw new IllegalArgumentException(error);
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public static void checkValidVolumeAndThrowException(float volume, boolean log) {
             if (log) {
                 if (volume > 0.0f) {
@@ -366,7 +372,7 @@ public final class VolumeShaper implements AutoCloseable {
             }
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public static void clampVolume(float[] volumes, boolean log) {
             int i = 0;
             if (log) {
@@ -388,34 +394,49 @@ public final class VolumeShaper implements AutoCloseable {
             }
         }
 
+        /* loaded from: classes3.dex */
         public static final class Builder {
-            private double mDurationMs = 1000.0d;
-            private int mId = -1;
-            private int mInterpolatorType = 2;
-            private int mOptionFlags = 2;
-            private float[] mTimes = null;
-            private int mType = 1;
-            private float[] mVolumes = null;
+            private double mDurationMs;
+            private int mId;
+            private int mInterpolatorType;
+            private int mOptionFlags;
+            private float[] mTimes;
+            private int mType;
+            private float[] mVolumes;
 
             public Builder() {
+                this.mType = 1;
+                this.mId = -1;
+                this.mInterpolatorType = 2;
+                this.mOptionFlags = 2;
+                this.mDurationMs = 1000.0d;
+                this.mTimes = null;
+                this.mVolumes = null;
             }
 
             public Builder(Configuration configuration) {
+                this.mType = 1;
+                this.mId = -1;
+                this.mInterpolatorType = 2;
+                this.mOptionFlags = 2;
+                this.mDurationMs = 1000.0d;
+                this.mTimes = null;
+                this.mVolumes = null;
                 this.mType = configuration.getType();
                 this.mId = configuration.getId();
                 this.mOptionFlags = configuration.getAllOptionFlags();
                 this.mInterpolatorType = configuration.getInterpolatorType();
-                this.mDurationMs = (double) configuration.getDuration();
+                this.mDurationMs = configuration.getDuration();
                 this.mTimes = (float[]) configuration.getTimes().clone();
                 this.mVolumes = (float[]) configuration.getVolumes().clone();
             }
 
             public Builder setId(int id) {
-                if (id >= -1) {
-                    this.mId = id;
-                    return this;
+                if (id < -1) {
+                    throw new IllegalArgumentException("invalid id: " + id);
                 }
-                throw new IllegalArgumentException("invalid id: " + id);
+                this.mId = id;
+                return this;
             }
 
             public Builder setInterpolatorType(int interpolatorType) {
@@ -432,26 +453,23 @@ public final class VolumeShaper implements AutoCloseable {
             }
 
             public Builder setOptionFlags(int optionFlags) {
-                if ((optionFlags & -4) == 0) {
-                    this.mOptionFlags = (this.mOptionFlags & -4) | optionFlags;
-                    return this;
+                if ((optionFlags & (-4)) != 0) {
+                    throw new IllegalArgumentException("invalid bits in flag: " + optionFlags);
                 }
-                throw new IllegalArgumentException("invalid bits in flag: " + optionFlags);
+                this.mOptionFlags = (this.mOptionFlags & (-4)) | optionFlags;
+                return this;
             }
 
             public Builder setDuration(long durationMillis) {
-                if (durationMillis > 0) {
-                    this.mDurationMs = (double) durationMillis;
-                    return this;
+                if (durationMillis <= 0) {
+                    throw new IllegalArgumentException("duration: " + durationMillis + " not positive");
                 }
-                throw new IllegalArgumentException("duration: " + durationMillis + " not positive");
+                this.mDurationMs = durationMillis;
+                return this;
             }
 
             public Builder setCurve(float[] times, float[] volumes) {
-                boolean log = true;
-                if ((this.mOptionFlags & 1) == 0) {
-                    log = false;
-                }
+                boolean log = (this.mOptionFlags & 1) != 0;
                 Configuration.checkCurveForErrorsAndThrowException(times, volumes, log, false);
                 this.mTimes = (float[]) times.clone();
                 this.mVolumes = (float[]) volumes.clone();
@@ -460,7 +478,8 @@ public final class VolumeShaper implements AutoCloseable {
 
             public Builder reflectTimes() {
                 int i = 0;
-                Configuration.checkCurveForErrorsAndThrowException(this.mTimes, this.mVolumes, (this.mOptionFlags & 1) != 0, true);
+                boolean log = (this.mOptionFlags & 1) != 0;
+                Configuration.checkCurveForErrorsAndThrowException(this.mTimes, this.mVolumes, log, true);
                 while (i < this.mTimes.length / 2) {
                     float temp = this.mTimes[i];
                     this.mTimes[i] = 1.0f - this.mTimes[(this.mTimes.length - 1) - i];
@@ -477,7 +496,8 @@ public final class VolumeShaper implements AutoCloseable {
             }
 
             public Builder invertVolumes() {
-                Configuration.checkCurveForErrorsAndThrowException(this.mTimes, this.mVolumes, (this.mOptionFlags & 1) != 0, true);
+                boolean log = (this.mOptionFlags & 1) != 0;
+                Configuration.checkCurveForErrorsAndThrowException(this.mTimes, this.mVolumes, log, true);
                 float min = this.mVolumes[0];
                 float max = this.mVolumes[0];
                 for (int i = 1; i < this.mVolumes.length; i++) {
@@ -543,22 +563,15 @@ public final class VolumeShaper implements AutoCloseable {
             }
 
             public Configuration build() {
-                Configuration.checkCurveForErrorsAndThrowException(this.mTimes, this.mVolumes, (this.mOptionFlags & 1) != 0, true);
+                boolean log = (this.mOptionFlags & 1) != 0;
+                Configuration.checkCurveForErrorsAndThrowException(this.mTimes, this.mVolumes, log, true);
                 return new Configuration(this.mType, this.mId, this.mOptionFlags, this.mDurationMs, this.mInterpolatorType, this.mTimes, this.mVolumes);
             }
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class Operation implements Parcelable {
-        public static final Parcelable.Creator<Operation> CREATOR = new Parcelable.Creator<Operation>() {
-            public Operation createFromParcel(Parcel p) {
-                return new Operation(p.readInt(), p.readInt(), p.readFloat());
-            }
-
-            public Operation[] newArray(int size) {
-                return new Operation[size];
-            }
-        };
         private static final int FLAG_CREATE_IF_NEEDED = 16;
         private static final int FLAG_DEFER = 8;
         private static final int FLAG_JOIN = 4;
@@ -566,19 +579,33 @@ public final class VolumeShaper implements AutoCloseable {
         private static final int FLAG_PUBLIC_ALL = 3;
         private static final int FLAG_REVERSE = 1;
         private static final int FLAG_TERMINATE = 2;
+        @UnsupportedAppUsage
+        private final int mFlags;
+        @UnsupportedAppUsage
+        private final int mReplaceId;
+        @UnsupportedAppUsage
+        private final float mXOffset;
         public static final Operation PLAY = new Builder().build();
         public static final Operation REVERSE = new Builder().reverse().build();
-        /* access modifiers changed from: private */
-        @UnsupportedAppUsage
-        public final int mFlags;
-        /* access modifiers changed from: private */
-        @UnsupportedAppUsage
-        public final int mReplaceId;
-        /* access modifiers changed from: private */
-        @UnsupportedAppUsage
-        public final float mXOffset;
+        public static final Parcelable.Creator<Operation> CREATOR = new Parcelable.Creator<Operation>() { // from class: android.media.VolumeShaper.Operation.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
+            public Operation createFromParcel(Parcel p) {
+                int flags = p.readInt();
+                int replaceId = p.readInt();
+                float xOffset = p.readFloat();
+                return new Operation(flags, replaceId, xOffset);
+            }
+
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
+            public Operation[] newArray(int size) {
+                return new Operation[size];
+            }
+        };
 
         @Retention(RetentionPolicy.SOURCE)
+        /* loaded from: classes3.dex */
         public @interface Flag {
         }
 
@@ -587,27 +614,26 @@ public final class VolumeShaper implements AutoCloseable {
         }
 
         public int hashCode() {
-            return Objects.hash(new Object[]{Integer.valueOf(this.mFlags), Integer.valueOf(this.mReplaceId), Float.valueOf(this.mXOffset)});
+            return Objects.hash(Integer.valueOf(this.mFlags), Integer.valueOf(this.mReplaceId), Float.valueOf(this.mXOffset));
         }
 
         public boolean equals(Object o) {
-            if (!(o instanceof Operation)) {
-                return false;
-            }
-            if (o == this) {
-                return true;
-            }
-            Operation other = (Operation) o;
-            if (this.mFlags == other.mFlags && this.mReplaceId == other.mReplaceId && Float.compare(this.mXOffset, other.mXOffset) == 0) {
-                return true;
+            if (o instanceof Operation) {
+                if (o == this) {
+                    return true;
+                }
+                Operation other = (Operation) o;
+                return this.mFlags == other.mFlags && this.mReplaceId == other.mReplaceId && Float.compare(this.mXOffset, other.mXOffset) == 0;
             }
             return false;
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeInt(this.mFlags);
             dest.writeInt(this.mReplaceId);
@@ -621,6 +647,7 @@ public final class VolumeShaper implements AutoCloseable {
             this.mXOffset = xOffset;
         }
 
+        /* loaded from: classes3.dex */
         public static final class Builder {
             int mFlags;
             int mReplaceId;
@@ -671,20 +698,20 @@ public final class VolumeShaper implements AutoCloseable {
             public Builder setXOffset(float xOffset) {
                 if (xOffset < -0.0f) {
                     throw new IllegalArgumentException("Negative xOffset not allowed");
-                } else if (xOffset <= 1.0f) {
-                    this.mXOffset = xOffset;
-                    return this;
-                } else {
+                }
+                if (xOffset > 1.0f) {
                     throw new IllegalArgumentException("xOffset > 1.f not allowed");
                 }
+                this.mXOffset = xOffset;
+                return this;
             }
 
             private Builder setFlags(int flags) {
-                if ((flags & -4) == 0) {
-                    this.mFlags = (this.mFlags & -4) | flags;
-                    return this;
+                if ((flags & (-4)) != 0) {
+                    throw new IllegalArgumentException("flag has unknown bits set: " + flags);
                 }
-                throw new IllegalArgumentException("flag has unknown bits set: " + flags);
+                this.mFlags = (this.mFlags & (-4)) | flags;
+                return this;
             }
 
             public Operation build() {
@@ -693,12 +720,17 @@ public final class VolumeShaper implements AutoCloseable {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class State implements Parcelable {
-        public static final Parcelable.Creator<State> CREATOR = new Parcelable.Creator<State>() {
+        public static final Parcelable.Creator<State> CREATOR = new Parcelable.Creator<State>() { // from class: android.media.VolumeShaper.State.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public State createFromParcel(Parcel p) {
                 return new State(p.readFloat(), p.readFloat());
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public State[] newArray(int size) {
                 return new State[size];
             }
@@ -713,27 +745,26 @@ public final class VolumeShaper implements AutoCloseable {
         }
 
         public int hashCode() {
-            return Objects.hash(new Object[]{Float.valueOf(this.mVolume), Float.valueOf(this.mXOffset)});
+            return Objects.hash(Float.valueOf(this.mVolume), Float.valueOf(this.mXOffset));
         }
 
         public boolean equals(Object o) {
-            if (!(o instanceof State)) {
-                return false;
-            }
-            if (o == this) {
-                return true;
-            }
-            State other = (State) o;
-            if (this.mVolume == other.mVolume && this.mXOffset == other.mXOffset) {
-                return true;
+            if (o instanceof State) {
+                if (o == this) {
+                    return true;
+                }
+                State other = (State) o;
+                return this.mVolume == other.mVolume && this.mXOffset == other.mXOffset;
             }
             return false;
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeFloat(this.mVolume);
             dest.writeFloat(this.mXOffset);

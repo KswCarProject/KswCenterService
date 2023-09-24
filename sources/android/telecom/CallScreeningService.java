@@ -3,28 +3,28 @@ package android.telecom;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Looper;
-import android.os.Message;
-import android.os.RemoteException;
+import android.p007os.Handler;
+import android.p007os.IBinder;
+import android.p007os.Looper;
+import android.p007os.Message;
+import android.p007os.RemoteException;
 import android.telecom.Call;
-import com.android.internal.os.SomeArgs;
+import com.android.internal.p016os.SomeArgs;
 import com.android.internal.telecom.ICallScreeningAdapter;
 import com.android.internal.telecom.ICallScreeningService;
 
+/* loaded from: classes3.dex */
 public abstract class CallScreeningService extends Service {
     private static final int MSG_SCREEN_CALL = 1;
     public static final String SERVICE_INTERFACE = "android.telecom.CallScreeningService";
-    /* access modifiers changed from: private */
-    public ICallScreeningAdapter mCallScreeningAdapter;
-    /* access modifiers changed from: private */
-    public final Handler mHandler = new Handler(Looper.getMainLooper()) {
+    private ICallScreeningAdapter mCallScreeningAdapter;
+    private final Handler mHandler = new Handler(Looper.getMainLooper()) { // from class: android.telecom.CallScreeningService.1
+        @Override // android.p007os.Handler
         public void handleMessage(Message msg) {
             if (msg.what == 1) {
                 SomeArgs args = (SomeArgs) msg.obj;
                 try {
-                    ICallScreeningAdapter unused = CallScreeningService.this.mCallScreeningAdapter = (ICallScreeningAdapter) args.arg1;
+                    CallScreeningService.this.mCallScreeningAdapter = (ICallScreeningAdapter) args.arg1;
                     CallScreeningService.this.onScreenCall(Call.Details.createFromParcelableCall((ParcelableCall) args.arg2));
                 } finally {
                     args.recycle();
@@ -35,12 +35,14 @@ public abstract class CallScreeningService extends Service {
 
     public abstract void onScreenCall(Call.Details details);
 
+    /* loaded from: classes3.dex */
     private final class CallScreeningBinder extends ICallScreeningService.Stub {
         private CallScreeningBinder() {
         }
 
+        @Override // com.android.internal.telecom.ICallScreeningService
         public void screenCall(ICallScreeningAdapter adapter, ParcelableCall call) {
-            Log.v((Object) this, "screenCall", new Object[0]);
+            Log.m92v(this, "screenCall", new Object[0]);
             SomeArgs args = SomeArgs.obtain();
             args.arg1 = adapter;
             args.arg2 = call;
@@ -48,6 +50,7 @@ public abstract class CallScreeningService extends Service {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class CallResponse {
         private final boolean mShouldDisallowCall;
         private final boolean mShouldRejectCall;
@@ -56,15 +59,14 @@ public abstract class CallScreeningService extends Service {
         private final boolean mShouldSkipNotification;
 
         private CallResponse(boolean shouldDisallowCall, boolean shouldRejectCall, boolean shouldSilenceCall, boolean shouldSkipCallLog, boolean shouldSkipNotification) {
-            if (shouldDisallowCall || (!shouldRejectCall && !shouldSkipCallLog && !shouldSkipNotification)) {
-                this.mShouldDisallowCall = shouldDisallowCall;
-                this.mShouldRejectCall = shouldRejectCall;
-                this.mShouldSkipCallLog = shouldSkipCallLog;
-                this.mShouldSkipNotification = shouldSkipNotification;
-                this.mShouldSilenceCall = shouldSilenceCall;
-                return;
+            if (!shouldDisallowCall && (shouldRejectCall || shouldSkipCallLog || shouldSkipNotification)) {
+                throw new IllegalStateException("Invalid response state for allowed call.");
             }
-            throw new IllegalStateException("Invalid response state for allowed call.");
+            this.mShouldDisallowCall = shouldDisallowCall;
+            this.mShouldRejectCall = shouldRejectCall;
+            this.mShouldSkipCallLog = shouldSkipCallLog;
+            this.mShouldSkipNotification = shouldSkipNotification;
+            this.mShouldSilenceCall = shouldSilenceCall;
         }
 
         public boolean getDisallowCall() {
@@ -87,6 +89,7 @@ public abstract class CallScreeningService extends Service {
             return this.mShouldSkipNotification;
         }
 
+        /* loaded from: classes3.dex */
         public static class Builder {
             private boolean mShouldDisallowCall;
             private boolean mShouldRejectCall;
@@ -125,13 +128,15 @@ public abstract class CallScreeningService extends Service {
         }
     }
 
+    @Override // android.app.Service
     public IBinder onBind(Intent intent) {
-        Log.v((Object) this, "onBind", new Object[0]);
+        Log.m92v(this, "onBind", new Object[0]);
         return new CallScreeningBinder();
     }
 
+    @Override // android.app.Service
     public boolean onUnbind(Intent intent) {
-        Log.v((Object) this, "onUnbind", new Object[0]);
+        Log.m92v(this, "onUnbind", new Object[0]);
         return false;
     }
 

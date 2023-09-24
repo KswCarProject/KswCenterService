@@ -1,18 +1,23 @@
 package android.hardware.location;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import libcore.util.EmptyArray;
 
 @SystemApi
 @Deprecated
+/* loaded from: classes.dex */
 public class NanoAppInstanceInfo implements Parcelable {
-    public static final Parcelable.Creator<NanoAppInstanceInfo> CREATOR = new Parcelable.Creator<NanoAppInstanceInfo>() {
+    public static final Parcelable.Creator<NanoAppInstanceInfo> CREATOR = new Parcelable.Creator<NanoAppInstanceInfo>() { // from class: android.hardware.location.NanoAppInstanceInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NanoAppInstanceInfo createFromParcel(Parcel in) {
             return new NanoAppInstanceInfo(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NanoAppInstanceInfo[] newArray(int size) {
             return new NanoAppInstanceInfo[size];
         }
@@ -114,16 +119,20 @@ public class NanoAppInstanceInfo implements Parcelable {
         this.mNeededReadMemBytes = in.readInt();
         this.mNeededWriteMemBytes = in.readInt();
         this.mNeededExecMemBytes = in.readInt();
-        this.mNeededSensors = new int[in.readInt()];
+        int neededSensorsLength = in.readInt();
+        this.mNeededSensors = new int[neededSensorsLength];
         in.readIntArray(this.mNeededSensors);
-        this.mOutputEvents = new int[in.readInt()];
+        int outputEventsLength = in.readInt();
+        this.mOutputEvents = new int[outputEventsLength];
         in.readIntArray(this.mOutputEvents);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(this.mPublisher);
         out.writeString(this.mName);
@@ -141,6 +150,7 @@ public class NanoAppInstanceInfo implements Parcelable {
     }
 
     public String toString() {
-        return (("handle : " + this.mHandle) + ", Id : 0x" + Long.toHexString(this.mAppId)) + ", Version : 0x" + Integer.toHexString(this.mAppVersion);
+        String retVal = "handle : " + this.mHandle;
+        return (retVal + ", Id : 0x" + Long.toHexString(this.mAppId)) + ", Version : 0x" + Integer.toHexString(this.mAppVersion);
     }
 }

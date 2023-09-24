@@ -8,8 +8,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 
+/* loaded from: classes5.dex */
 public abstract class Normalizer2 {
 
+    /* loaded from: classes5.dex */
     public enum Mode {
         COMPOSE,
         DECOMPOSE,
@@ -68,16 +70,16 @@ public abstract class Normalizer2 {
                 throw new ICUUncheckedIOException(e);
             }
         }
-        IOException e2 = Norm2AllModes.getInstance(bytes, name);
+        Norm2AllModes all2Modes = Norm2AllModes.getInstance(bytes, name);
         switch (mode) {
             case COMPOSE:
-                return e2.comp;
+                return all2Modes.comp;
             case DECOMPOSE:
-                return e2.decomp;
+                return all2Modes.decomp;
             case FCD:
-                return e2.fcd;
+                return all2Modes.fcd;
             case COMPOSE_CONTIGUOUS:
-                return e2.fcc;
+                return all2Modes.fcc;
             default:
                 return null;
         }
@@ -90,7 +92,8 @@ public abstract class Normalizer2 {
                 return (String) src;
             }
             if (spanLength != 0) {
-                return normalizeSecondAndAppend(new StringBuilder(src.length()).append(src, 0, spanLength), src.subSequence(spanLength, src.length())).toString();
+                StringBuilder sb = new StringBuilder(src.length()).append(src, 0, spanLength);
+                return normalizeSecondAndAppend(sb, src.subSequence(spanLength, src.length())).toString();
             }
         }
         return normalize(src, new StringBuilder(src.length())).toString();

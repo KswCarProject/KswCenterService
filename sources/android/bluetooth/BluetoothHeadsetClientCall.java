@@ -1,11 +1,12 @@
 package android.bluetooth;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.SystemClock;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.SystemClock;
 import java.util.UUID;
 
+/* loaded from: classes.dex */
 public final class BluetoothHeadsetClientCall implements Parcelable {
     public static final int CALL_STATE_ACTIVE = 0;
     public static final int CALL_STATE_ALERTING = 3;
@@ -15,11 +16,15 @@ public final class BluetoothHeadsetClientCall implements Parcelable {
     public static final int CALL_STATE_INCOMING = 4;
     public static final int CALL_STATE_TERMINATED = 7;
     public static final int CALL_STATE_WAITING = 5;
-    public static final Parcelable.Creator<BluetoothHeadsetClientCall> CREATOR = new Parcelable.Creator<BluetoothHeadsetClientCall>() {
+    public static final Parcelable.Creator<BluetoothHeadsetClientCall> CREATOR = new Parcelable.Creator<BluetoothHeadsetClientCall>() { // from class: android.bluetooth.BluetoothHeadsetClientCall.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public BluetoothHeadsetClientCall createFromParcel(Parcel in) {
-            return new BluetoothHeadsetClientCall((BluetoothDevice) in.readParcelable((ClassLoader) null), in.readInt(), UUID.fromString(in.readString()), in.readInt(), in.readString(), in.readInt() == 1, in.readInt() == 1, in.readInt() == 1);
+            return new BluetoothHeadsetClientCall((BluetoothDevice) in.readParcelable(null), in.readInt(), UUID.fromString(in.readString()), in.readInt(), in.readString(), in.readInt() == 1, in.readInt() == 1, in.readInt() == 1);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public BluetoothHeadsetClientCall[] newArray(int size) {
             return new BluetoothHeadsetClientCall[size];
         }
@@ -156,6 +161,7 @@ public final class BluetoothHeadsetClientCall implements Parcelable {
         return builder.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeParcelable(this.mDevice, 0);
         out.writeInt(this.mId);
@@ -167,6 +173,7 @@ public final class BluetoothHeadsetClientCall implements Parcelable {
         out.writeInt(this.mInBandRing ? 1 : 0);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

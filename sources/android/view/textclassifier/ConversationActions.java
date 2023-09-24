@@ -1,9 +1,9 @@
 package android.view.textclassifier;
 
 import android.app.Person;
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.SpannedString;
 import android.view.textclassifier.TextClassifier;
 import com.android.internal.annotations.VisibleForTesting;
@@ -16,12 +16,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/* loaded from: classes4.dex */
 public final class ConversationActions implements Parcelable {
-    public static final Parcelable.Creator<ConversationActions> CREATOR = new Parcelable.Creator<ConversationActions>() {
+    public static final Parcelable.Creator<ConversationActions> CREATOR = new Parcelable.Creator<ConversationActions>() { // from class: android.view.textclassifier.ConversationActions.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ConversationActions createFromParcel(Parcel in) {
             return new ConversationActions(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ConversationActions[] newArray(int size) {
             return new ConversationActions[size];
         }
@@ -39,10 +44,12 @@ public final class ConversationActions implements Parcelable {
         this.mId = in.readString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeTypedList(this.mConversationActions);
         parcel.writeString(this.mId);
@@ -56,22 +63,27 @@ public final class ConversationActions implements Parcelable {
         return this.mId;
     }
 
+    /* loaded from: classes4.dex */
     public static final class Message implements Parcelable {
-        public static final Parcelable.Creator<Message> CREATOR = new Parcelable.Creator<Message>() {
-            public Message createFromParcel(Parcel in) {
-                return new Message(in);
-            }
-
-            public Message[] newArray(int size) {
-                return new Message[size];
-            }
-        };
-        public static final Person PERSON_USER_OTHERS = new Person.Builder().setKey("text-classifier-conversation-actions-user-others").build();
-        public static final Person PERSON_USER_SELF = new Person.Builder().setKey("text-classifier-conversation-actions-user-self").build();
         private final Person mAuthor;
         private final Bundle mExtras;
         private final ZonedDateTime mReferenceTime;
         private final CharSequence mText;
+        public static final Person PERSON_USER_SELF = new Person.Builder().setKey("text-classifier-conversation-actions-user-self").build();
+        public static final Person PERSON_USER_OTHERS = new Person.Builder().setKey("text-classifier-conversation-actions-user-others").build();
+        public static final Parcelable.Creator<Message> CREATOR = new Parcelable.Creator<Message>() { // from class: android.view.textclassifier.ConversationActions.Message.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
+            public Message createFromParcel(Parcel in) {
+                return new Message(in);
+            }
+
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
+            public Message[] newArray(int size) {
+                return new Message[size];
+            }
+        };
 
         private Message(Person author, ZonedDateTime referenceTime, CharSequence text, Bundle bundle) {
             this.mAuthor = author;
@@ -81,13 +93,13 @@ public final class ConversationActions implements Parcelable {
         }
 
         private Message(Parcel in) {
-            ZonedDateTime zonedDateTime = null;
-            this.mAuthor = (Person) in.readParcelable((ClassLoader) null);
-            this.mReferenceTime = in.readInt() != 0 ? ZonedDateTime.parse(in.readString(), DateTimeFormatter.ISO_ZONED_DATE_TIME) : zonedDateTime;
+            this.mAuthor = (Person) in.readParcelable(null);
+            this.mReferenceTime = in.readInt() != 0 ? ZonedDateTime.parse(in.readString(), DateTimeFormatter.ISO_ZONED_DATE_TIME) : null;
             this.mText = in.readCharSequence();
             this.mExtras = in.readBundle();
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel parcel, int flags) {
             parcel.writeParcelable(this.mAuthor, flags);
             parcel.writeInt(this.mReferenceTime != null ? 1 : 0);
@@ -98,6 +110,7 @@ public final class ConversationActions implements Parcelable {
             parcel.writeBundle(this.mExtras);
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
@@ -118,6 +131,7 @@ public final class ConversationActions implements Parcelable {
             return this.mExtras;
         }
 
+        /* loaded from: classes4.dex */
         public static final class Builder {
             private Person mAuthor;
             private Bundle mExtras;
@@ -149,12 +163,17 @@ public final class ConversationActions implements Parcelable {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class Request implements Parcelable {
-        public static final Parcelable.Creator<Request> CREATOR = new Parcelable.Creator<Request>() {
+        public static final Parcelable.Creator<Request> CREATOR = new Parcelable.Creator<Request>() { // from class: android.view.textclassifier.ConversationActions.Request.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public Request createFromParcel(Parcel in) {
                 return Request.readFromParcel(in);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public Request[] newArray(int size) {
                 return new Request[size];
             }
@@ -169,6 +188,7 @@ public final class ConversationActions implements Parcelable {
         private final TextClassifier.EntityConfig mTypeConfig;
 
         @Retention(RetentionPolicy.SOURCE)
+        /* loaded from: classes4.dex */
         public @interface Hint {
         }
 
@@ -180,19 +200,22 @@ public final class ConversationActions implements Parcelable {
             this.mExtras = extras;
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public static Request readFromParcel(Parcel in) {
-            List<Message> conversation = new ArrayList<>();
-            in.readParcelableList(conversation, (ClassLoader) null);
+            ArrayList arrayList = new ArrayList();
+            in.readParcelableList(arrayList, null);
+            TextClassifier.EntityConfig typeConfig = (TextClassifier.EntityConfig) in.readParcelable(null);
             int maxSuggestions = in.readInt();
             List<String> hints = new ArrayList<>();
             in.readStringList(hints);
             String callingPackageName = in.readString();
-            Request request = new Request(conversation, (TextClassifier.EntityConfig) in.readParcelable((ClassLoader) null), maxSuggestions, hints, in.readBundle());
+            Bundle extras = in.readBundle();
+            Request request = new Request(arrayList, typeConfig, maxSuggestions, hints, extras);
             request.setCallingPackageName(callingPackageName);
             return request;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel parcel, int flags) {
             parcel.writeParcelableList(this.mConversation, flags);
             parcel.writeParcelable(this.mTypeConfig, flags);
@@ -202,6 +225,7 @@ public final class ConversationActions implements Parcelable {
             parcel.writeBundle(this.mExtras);
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
@@ -235,6 +259,7 @@ public final class ConversationActions implements Parcelable {
             return this.mExtras;
         }
 
+        /* loaded from: classes4.dex */
         public static final class Builder {
             private List<Message> mConversation;
             private Bundle mExtras;
@@ -267,22 +292,16 @@ public final class ConversationActions implements Parcelable {
             }
 
             public Request build() {
-                TextClassifier.EntityConfig entityConfig;
-                List<T> unmodifiableList;
-                List<T> unmodifiableList2 = Collections.unmodifiableList(this.mConversation);
-                if (this.mTypeConfig == null) {
-                    entityConfig = new TextClassifier.EntityConfig.Builder().build();
-                } else {
-                    entityConfig = this.mTypeConfig;
-                }
-                TextClassifier.EntityConfig entityConfig2 = entityConfig;
+                List unmodifiableList;
+                List unmodifiableList2 = Collections.unmodifiableList(this.mConversation);
+                TextClassifier.EntityConfig build = this.mTypeConfig == null ? new TextClassifier.EntityConfig.Builder().build() : this.mTypeConfig;
                 int i = this.mMaxSuggestions;
                 if (this.mHints == null) {
                     unmodifiableList = Collections.emptyList();
                 } else {
                     unmodifiableList = Collections.unmodifiableList(this.mHints);
                 }
-                return new Request(unmodifiableList2, entityConfig2, i, unmodifiableList, this.mExtras == null ? Bundle.EMPTY : this.mExtras);
+                return new Request(unmodifiableList2, build, i, unmodifiableList, this.mExtras == null ? Bundle.EMPTY : this.mExtras);
             }
         }
     }

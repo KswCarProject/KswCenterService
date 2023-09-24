@@ -2,22 +2,24 @@ package com.android.internal.view.menu;
 
 import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import com.android.internal.view.menu.MenuBuilder;
 import java.util.ArrayList;
 
+/* loaded from: classes4.dex */
 public final class IconMenuView extends ViewGroup implements MenuBuilder.ItemInvoker, MenuView, Runnable {
     private static final int ITEM_CAPTION_CYCLE_DELAY = 1000;
     private int mAnimations;
@@ -34,10 +36,9 @@ public final class IconMenuView extends ViewGroup implements MenuBuilder.ItemInv
     private int mMaxItems;
     private int mMaxItemsPerRow;
     private int mMaxRows;
-    /* access modifiers changed from: private */
     @UnsupportedAppUsage
-    public MenuBuilder mMenu;
-    private boolean mMenuBeingLongpressed = false;
+    private MenuBuilder mMenu;
+    private boolean mMenuBeingLongpressed;
     private Drawable mMoreIcon;
     private int mNumActualItemsShown;
     private int mRowHeight;
@@ -47,14 +48,15 @@ public final class IconMenuView extends ViewGroup implements MenuBuilder.ItemInv
 
     public IconMenuView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.IconMenuView, 0, 0);
+        this.mMenuBeingLongpressed = false;
+        TypedArray a = context.obtainStyledAttributes(attrs, C3132R.styleable.IconMenuView, 0, 0);
         this.mRowHeight = a.getDimensionPixelSize(0, 64);
         this.mMaxRows = a.getInt(1, 2);
         this.mMaxItems = a.getInt(4, 6);
         this.mMaxItemsPerRow = a.getInt(2, 3);
         this.mMoreIcon = a.getDrawable(3);
         a.recycle();
-        TypedArray a2 = context.obtainStyledAttributes(attrs, R.styleable.MenuView, 0, 0);
+        TypedArray a2 = context.obtainStyledAttributes(attrs, C3132R.styleable.MenuView, 0, 0);
         this.mItemBackground = a2.getDrawable(5);
         this.mHorizontalDivider = a2.getDrawable(2);
         this.mHorizontalDividerRects = new ArrayList<>();
@@ -80,8 +82,7 @@ public final class IconMenuView extends ViewGroup implements MenuBuilder.ItemInv
         setDescendantFocusability(262144);
     }
 
-    /* access modifiers changed from: package-private */
-    public int getMaxItems() {
+    int getMaxItems() {
         return this.mMaxItems;
     }
 
@@ -91,12 +92,9 @@ public final class IconMenuView extends ViewGroup implements MenuBuilder.ItemInv
             this.mLayoutNumRows = 0;
             return;
         }
-        int curNumRows = Math.min((int) Math.ceil((double) (((float) numItems) / ((float) this.mMaxItemsPerRow))), this.mMaxRows);
-        while (curNumRows <= this.mMaxRows) {
+        for (int curNumRows = Math.min((int) Math.ceil(numItems / this.mMaxItemsPerRow), this.mMaxRows); curNumRows <= this.mMaxRows; curNumRows++) {
             layoutItemsUsingGravity(curNumRows, numItems);
-            if (curNumRows < numItems && !doItemsFit()) {
-                curNumRows++;
-            } else {
+            if (curNumRows >= numItems || doItemsFit()) {
                 return;
             }
         }
@@ -104,7 +102,8 @@ public final class IconMenuView extends ViewGroup implements MenuBuilder.ItemInv
 
     private void layoutItemsUsingGravity(int numRows, int numItems) {
         int numBaseItemsPerRow = numItems / numRows;
-        int rowsThatGetALeftoverItem = numRows - (numItems % numRows);
+        int numLeftoverItems = numItems % numRows;
+        int rowsThatGetALeftoverItem = numRows - numLeftoverItems;
         int[] layout = this.mLayout;
         for (int i = 0; i < numRows; i++) {
             layout[i] = numBaseItemsPerRow;
@@ -119,39 +118,42 @@ public final class IconMenuView extends ViewGroup implements MenuBuilder.ItemInv
         int[] layout = this.mLayout;
         int numRows = this.mLayoutNumRows;
         int itemPos = 0;
-        for (int row = 0; row < numRows; row++) {
-            int numItemsOnRow = layout[row];
+        for (int itemPos2 = 0; itemPos2 < numRows; itemPos2++) {
+            int numItemsOnRow = layout[itemPos2];
             if (numItemsOnRow == 1) {
                 itemPos++;
             } else {
-                int itemPos2 = itemPos;
-                int itemsOnRowCounter = numItemsOnRow;
-                while (itemsOnRowCounter > 0) {
-                    int itemPos3 = itemPos2 + 1;
-                    if (((LayoutParams) getChildAt(itemPos2).getLayoutParams()).maxNumItemsOnRow < numItemsOnRow) {
+                int itemPos3 = itemPos;
+                int itemPos4 = numItemsOnRow;
+                while (itemPos4 > 0) {
+                    int itemPos5 = itemPos3 + 1;
+                    View child = getChildAt(itemPos3);
+                    LayoutParams lp = (LayoutParams) child.getLayoutParams();
+                    if (lp.maxNumItemsOnRow < numItemsOnRow) {
                         return false;
                     }
-                    itemsOnRowCounter--;
-                    itemPos2 = itemPos3;
+                    itemPos4--;
+                    itemPos3 = itemPos5;
                 }
-                itemPos = itemPos2;
+                itemPos = itemPos3;
             }
         }
         return true;
     }
 
-    /* access modifiers changed from: package-private */
-    public Drawable getItemBackgroundDrawable() {
+    Drawable getItemBackgroundDrawable() {
         return this.mItemBackground.getConstantState().newDrawable(getContext().getResources());
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public IconMenuItemView createMoreItemView() {
+    IconMenuItemView createMoreItemView() {
         Context context = getContext();
-        IconMenuItemView itemView = (IconMenuItemView) LayoutInflater.from(context).inflate((int) R.layout.icon_menu_item_layout, (ViewGroup) null);
-        itemView.initialize(context.getResources().getText(R.string.more_item_label), this.mMoreIcon);
-        itemView.setOnClickListener(new View.OnClickListener() {
+        LayoutInflater inflater = LayoutInflater.from(context);
+        IconMenuItemView itemView = (IconMenuItemView) inflater.inflate(C3132R.layout.icon_menu_item_layout, (ViewGroup) null);
+        Resources r = context.getResources();
+        itemView.initialize(r.getText(C3132R.string.more_item_label), this.mMoreIcon);
+        itemView.setOnClickListener(new View.OnClickListener() { // from class: com.android.internal.view.menu.IconMenuView.1
+            @Override // android.view.View.OnClickListener
             public void onClick(View v) {
                 IconMenuView.this.mMenu.changeMenuMode();
             }
@@ -159,170 +161,93 @@ public final class IconMenuView extends ViewGroup implements MenuBuilder.ItemInv
         return itemView;
     }
 
+    @Override // com.android.internal.view.menu.MenuView
     public void initialize(MenuBuilder menu) {
         this.mMenu = menu;
     }
 
-    /* JADX WARNING: type inference failed for: r2v12, types: [android.view.ViewGroup$LayoutParams] */
-    /* JADX WARNING: Multi-variable type inference failed */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    private void positionChildren(int r21, int r22) {
-        /*
-            r20 = this;
-            r0 = r20
-            r1 = r21
-            android.graphics.drawable.Drawable r2 = r0.mHorizontalDivider
-            if (r2 == 0) goto L_0x000d
-            java.util.ArrayList<android.graphics.Rect> r2 = r0.mHorizontalDividerRects
-            r2.clear()
-        L_0x000d:
-            android.graphics.drawable.Drawable r2 = r0.mVerticalDivider
-            if (r2 == 0) goto L_0x0016
-            java.util.ArrayList<android.graphics.Rect> r2 = r0.mVerticalDividerRects
-            r2.clear()
-        L_0x0016:
-            int r2 = r0.mLayoutNumRows
-            int r3 = r2 + -1
-            int[] r4 = r0.mLayout
-            r5 = 0
-            r6 = 0
-            r7 = 0
-            int r8 = r0.mHorizontalDividerHeight
-            int r9 = r2 + -1
-            int r8 = r8 * r9
-            int r8 = r22 - r8
-            float r8 = (float) r8
-            float r10 = (float) r2
-            float r8 = r8 / r10
-            r11 = r7
-            r7 = r5
-            r5 = 0
-        L_0x002c:
-            if (r5 >= r2) goto L_0x00d4
-            r12 = 0
-            int r13 = r0.mVerticalDividerWidth
-            r14 = r4[r5]
-            int r14 = r14 + -1
-            int r13 = r13 * r14
-            int r13 = r1 - r13
-            float r13 = (float) r13
-            r14 = r4[r5]
-            float r14 = (float) r14
-            float r13 = r13 / r14
-            r14 = r12
-            r12 = r6
-            r6 = 0
-        L_0x0040:
-            r15 = r4[r5]
-            if (r6 >= r15) goto L_0x00a5
-            android.view.View r15 = r0.getChildAt(r7)
-            int r10 = (int) r13
-            r16 = r2
-            r2 = 1073741824(0x40000000, float:2.0)
-            int r10 = android.view.View.MeasureSpec.makeMeasureSpec(r10, r2)
-            r17 = r4
-            int r4 = (int) r8
-            int r2 = android.view.View.MeasureSpec.makeMeasureSpec(r4, r2)
-            r15.measure(r10, r2)
-            android.view.ViewGroup$LayoutParams r2 = r15.getLayoutParams()
-            r12 = r2
-            com.android.internal.view.menu.IconMenuView$LayoutParams r12 = (com.android.internal.view.menu.IconMenuView.LayoutParams) r12
-            int r2 = (int) r14
-            r12.left = r2
-            float r2 = r14 + r13
-            int r2 = (int) r2
-            r12.right = r2
-            int r2 = (int) r11
-            r12.top = r2
-            float r2 = r11 + r8
-            int r2 = (int) r2
-            r12.bottom = r2
-            float r14 = r14 + r13
-            int r7 = r7 + 1
-            android.graphics.drawable.Drawable r2 = r0.mVerticalDivider
-            if (r2 == 0) goto L_0x0092
-            java.util.ArrayList<android.graphics.Rect> r2 = r0.mVerticalDividerRects
-            android.graphics.Rect r4 = new android.graphics.Rect
-            int r10 = (int) r14
-            r18 = r7
-            int r7 = (int) r11
-            int r9 = r0.mVerticalDividerWidth
-            float r9 = (float) r9
-            float r9 = r9 + r14
-            int r9 = (int) r9
-            r19 = r12
-            float r12 = r11 + r8
-            int r12 = (int) r12
-            r4.<init>(r10, r7, r9, r12)
-            r2.add(r4)
-            goto L_0x0096
-        L_0x0092:
-            r18 = r7
-            r19 = r12
-        L_0x0096:
-            int r2 = r0.mVerticalDividerWidth
-            float r2 = (float) r2
-            float r14 = r14 + r2
-            int r6 = r6 + 1
-            r2 = r16
-            r4 = r17
-            r7 = r18
-            r12 = r19
-            goto L_0x0040
-        L_0x00a5:
-            r16 = r2
-            r17 = r4
-            if (r12 == 0) goto L_0x00ad
-            r12.right = r1
-        L_0x00ad:
-            float r11 = r11 + r8
-            android.graphics.drawable.Drawable r2 = r0.mHorizontalDivider
-            if (r2 == 0) goto L_0x00ca
-            if (r5 >= r3) goto L_0x00ca
-            java.util.ArrayList<android.graphics.Rect> r2 = r0.mHorizontalDividerRects
-            android.graphics.Rect r4 = new android.graphics.Rect
-            int r6 = (int) r11
-            int r9 = r0.mHorizontalDividerHeight
-            float r9 = (float) r9
-            float r9 = r9 + r11
-            int r9 = (int) r9
-            r10 = 0
-            r4.<init>(r10, r6, r1, r9)
-            r2.add(r4)
-            int r2 = r0.mHorizontalDividerHeight
-            float r2 = (float) r2
-            float r11 = r11 + r2
-            goto L_0x00cb
-        L_0x00ca:
-            r10 = 0
-        L_0x00cb:
-            int r5 = r5 + 1
-            r6 = r12
-            r2 = r16
-            r4 = r17
-            goto L_0x002c
-        L_0x00d4:
-            r16 = r2
-            r17 = r4
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.internal.view.menu.IconMenuView.positionChildren(int, int):void");
+    private void positionChildren(int menuWidth, int menuHeight) {
+        int itemPos;
+        LayoutParams childLayoutParams;
+        if (this.mHorizontalDivider != null) {
+            this.mHorizontalDividerRects.clear();
+        }
+        if (this.mVerticalDivider != null) {
+            this.mVerticalDividerRects.clear();
+        }
+        int numRows = this.mLayoutNumRows;
+        int numRowsMinus1 = numRows - 1;
+        int[] numItemsForRow = this.mLayout;
+        LayoutParams childLayoutParams2 = null;
+        float itemHeight = (menuHeight - (this.mHorizontalDividerHeight * (numRows - 1))) / numRows;
+        float itemTop = 0.0f;
+        int itemPos2 = 0;
+        int itemPos3 = 0;
+        while (itemPos3 < numRows) {
+            float itemWidth = (menuWidth - (this.mVerticalDividerWidth * (numItemsForRow[itemPos3] - 1))) / numItemsForRow[itemPos3];
+            float itemLeft = 0.0f;
+            LayoutParams childLayoutParams3 = childLayoutParams2;
+            int itemPosOnRow = 0;
+            while (itemPosOnRow < numItemsForRow[itemPos3]) {
+                View child = getChildAt(itemPos2);
+                int numRows2 = numRows;
+                int[] numItemsForRow2 = numItemsForRow;
+                child.measure(View.MeasureSpec.makeMeasureSpec((int) itemWidth, 1073741824), View.MeasureSpec.makeMeasureSpec((int) itemHeight, 1073741824));
+                LayoutParams childLayoutParams4 = (LayoutParams) child.getLayoutParams();
+                childLayoutParams4.left = (int) itemLeft;
+                childLayoutParams4.right = (int) (itemLeft + itemWidth);
+                childLayoutParams4.top = (int) itemTop;
+                childLayoutParams4.bottom = (int) (itemTop + itemHeight);
+                float itemLeft2 = itemLeft + itemWidth;
+                int itemPos4 = itemPos2 + 1;
+                if (this.mVerticalDivider != null) {
+                    itemPos = itemPos4;
+                    int itemPos5 = (int) itemTop;
+                    childLayoutParams = childLayoutParams4;
+                    this.mVerticalDividerRects.add(new Rect((int) itemLeft2, itemPos5, (int) (this.mVerticalDividerWidth + itemLeft2), (int) (itemTop + itemHeight)));
+                } else {
+                    itemPos = itemPos4;
+                    childLayoutParams = childLayoutParams4;
+                }
+                itemLeft = itemLeft2 + this.mVerticalDividerWidth;
+                itemPosOnRow++;
+                numRows = numRows2;
+                numItemsForRow = numItemsForRow2;
+                itemPos2 = itemPos;
+                childLayoutParams3 = childLayoutParams;
+            }
+            int numRows3 = numRows;
+            int[] numItemsForRow3 = numItemsForRow;
+            if (childLayoutParams3 != null) {
+                childLayoutParams3.right = menuWidth;
+            }
+            itemTop += itemHeight;
+            if (this.mHorizontalDivider != null && itemPos3 < numRowsMinus1) {
+                this.mHorizontalDividerRects.add(new Rect(0, (int) itemTop, menuWidth, (int) (this.mHorizontalDividerHeight + itemTop)));
+                itemTop += this.mHorizontalDividerHeight;
+            }
+            itemPos3++;
+            childLayoutParams2 = childLayoutParams3;
+            numRows = numRows3;
+            numItemsForRow = numItemsForRow3;
+        }
     }
 
-    /* access modifiers changed from: protected */
-    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    @Override // android.view.View
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int measuredWidth = resolveSize(Integer.MAX_VALUE, widthMeasureSpec);
         calculateItemFittingMetadata(measuredWidth);
         layoutItems(measuredWidth);
         int layoutNumRows = this.mLayoutNumRows;
-        setMeasuredDimension(measuredWidth, resolveSize(((this.mRowHeight + this.mHorizontalDividerHeight) * layoutNumRows) - this.mHorizontalDividerHeight, heightMeasureSpec));
+        int desiredHeight = ((this.mRowHeight + this.mHorizontalDividerHeight) * layoutNumRows) - this.mHorizontalDividerHeight;
+        setMeasuredDimension(measuredWidth, resolveSize(desiredHeight, heightMeasureSpec));
         if (layoutNumRows > 0) {
             positionChildren(getMeasuredWidth(), getMeasuredHeight());
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onLayout(boolean changed, int l, int t, int r, int b) {
+    @Override // android.view.ViewGroup, android.view.View
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
         for (int i = getChildCount() - 1; i >= 0; i--) {
             View child = getChildAt(i);
             LayoutParams childLayoutParams = (LayoutParams) child.getLayoutParams();
@@ -330,8 +255,8 @@ public final class IconMenuView extends ViewGroup implements MenuBuilder.ItemInv
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onDraw(Canvas canvas) {
+    @Override // android.view.View
+    protected void onDraw(Canvas canvas) {
         Drawable drawable = this.mHorizontalDivider;
         if (drawable != null) {
             ArrayList<Rect> rects = this.mHorizontalDividerRects;
@@ -350,38 +275,38 @@ public final class IconMenuView extends ViewGroup implements MenuBuilder.ItemInv
         }
     }
 
+    @Override // com.android.internal.view.menu.MenuBuilder.ItemInvoker
     public boolean invokeItem(MenuItemImpl item) {
         return this.mMenu.performItemAction(item, 0);
     }
 
+    @Override // android.view.ViewGroup
     public LayoutParams generateLayoutParams(AttributeSet attrs) {
         return new LayoutParams(getContext(), attrs);
     }
 
-    /* access modifiers changed from: protected */
-    public boolean checkLayoutParams(ViewGroup.LayoutParams p) {
+    @Override // android.view.ViewGroup
+    protected boolean checkLayoutParams(ViewGroup.LayoutParams p) {
         return p instanceof LayoutParams;
     }
 
-    /* access modifiers changed from: package-private */
-    public void markStaleChildren() {
+    void markStaleChildren() {
         if (!this.mHasStaleChildren) {
             this.mHasStaleChildren = true;
             requestLayout();
         }
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public int getNumActualItemsShown() {
+    int getNumActualItemsShown() {
         return this.mNumActualItemsShown;
     }
 
-    /* access modifiers changed from: package-private */
-    public void setNumActualItemsShown(int count) {
+    void setNumActualItemsShown(int count) {
         this.mNumActualItemsShown = count;
     }
 
+    @Override // com.android.internal.view.menu.MenuView
     public int getWindowAnimations() {
         return this.mAnimations;
     }
@@ -394,11 +319,12 @@ public final class IconMenuView extends ViewGroup implements MenuBuilder.ItemInv
         return this.mLayoutNumRows;
     }
 
+    @Override // android.view.ViewGroup, android.view.View
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (event.getKeyCode() == 82) {
             if (event.getAction() == 0 && event.getRepeatCount() == 0) {
                 removeCallbacks(this);
-                postDelayed(this, (long) ViewConfiguration.getLongPressTimeout());
+                postDelayed(this, ViewConfiguration.getLongPressTimeout());
             } else if (event.getAction() == 1) {
                 if (this.mMenuBeingLongpressed) {
                     setCycleShortcutCaptionMode(false);
@@ -410,18 +336,19 @@ public final class IconMenuView extends ViewGroup implements MenuBuilder.ItemInv
         return super.dispatchKeyEvent(event);
     }
 
-    /* access modifiers changed from: protected */
-    public void onAttachedToWindow() {
+    @Override // android.view.ViewGroup, android.view.View
+    protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         requestFocus();
     }
 
-    /* access modifiers changed from: protected */
-    public void onDetachedFromWindow() {
+    @Override // android.view.ViewGroup, android.view.View
+    protected void onDetachedFromWindow() {
         setCycleShortcutCaptionMode(false);
         super.onDetachedFromWindow();
     }
 
+    @Override // android.view.View
     public void onWindowFocusChanged(boolean hasWindowFocus) {
         if (!hasWindowFocus) {
             setCycleShortcutCaptionMode(false);
@@ -439,6 +366,7 @@ public final class IconMenuView extends ViewGroup implements MenuBuilder.ItemInv
         setChildrenCaptionMode(true);
     }
 
+    @Override // java.lang.Runnable
     public void run() {
         if (this.mMenuBeingLongpressed) {
             setChildrenCaptionMode(!this.mLastChildrenCaptionMode);
@@ -446,7 +374,7 @@ public final class IconMenuView extends ViewGroup implements MenuBuilder.ItemInv
             this.mMenuBeingLongpressed = true;
             setCycleShortcutCaptionMode(true);
         }
-        postDelayed(this, 1000);
+        postDelayed(this, 1000L);
     }
 
     private void setChildrenCaptionMode(boolean shortcut) {
@@ -464,20 +392,22 @@ public final class IconMenuView extends ViewGroup implements MenuBuilder.ItemInv
             lp.maxNumItemsOnRow = 1;
             int curNumItemsPerRow = maxNumItemsPerRow;
             while (true) {
-                if (curNumItemsPerRow <= 0) {
-                    break;
-                } else if (lp.desiredWidth < width / curNumItemsPerRow) {
-                    lp.maxNumItemsOnRow = curNumItemsPerRow;
-                    break;
+                if (curNumItemsPerRow > 0) {
+                    if (lp.desiredWidth < width / curNumItemsPerRow) {
+                        lp.maxNumItemsOnRow = curNumItemsPerRow;
+                        break;
+                    } else {
+                        curNumItemsPerRow--;
+                    }
                 } else {
-                    curNumItemsPerRow--;
+                    break;
                 }
             }
         }
     }
 
-    /* access modifiers changed from: protected */
-    public Parcelable onSaveInstanceState() {
+    @Override // android.view.View
+    protected Parcelable onSaveInstanceState() {
         Parcelable superState = super.onSaveInstanceState();
         View focusedView = getFocusedChild();
         for (int i = getChildCount() - 1; i >= 0; i--) {
@@ -488,8 +418,8 @@ public final class IconMenuView extends ViewGroup implements MenuBuilder.ItemInv
         return new SavedState(superState, -1);
     }
 
-    /* access modifiers changed from: protected */
-    public void onRestoreInstanceState(Parcelable state) {
+    @Override // android.view.View
+    protected void onRestoreInstanceState(Parcelable state) {
         View v;
         SavedState ss = (SavedState) state;
         super.onRestoreInstanceState(ss.getSuperState());
@@ -498,21 +428,26 @@ public final class IconMenuView extends ViewGroup implements MenuBuilder.ItemInv
         }
     }
 
+    /* loaded from: classes4.dex */
     private static class SavedState extends View.BaseSavedState {
-        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
+        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() { // from class: com.android.internal.view.menu.IconMenuView.SavedState.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public SavedState createFromParcel(Parcel in) {
                 return new SavedState(in);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public SavedState[] newArray(int size) {
                 return new SavedState[size];
             }
         };
         int focusedPosition;
 
-        public SavedState(Parcelable superState, int focusedPosition2) {
+        public SavedState(Parcelable superState, int focusedPosition) {
             super(superState);
-            this.focusedPosition = focusedPosition2;
+            this.focusedPosition = focusedPosition;
         }
 
         @UnsupportedAppUsage
@@ -521,12 +456,14 @@ public final class IconMenuView extends ViewGroup implements MenuBuilder.ItemInv
             this.focusedPosition = in.readInt();
         }
 
+        @Override // android.view.View.BaseSavedState, android.view.AbsSavedState, android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             super.writeToParcel(dest, flags);
             dest.writeInt(this.focusedPosition);
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class LayoutParams extends ViewGroup.MarginLayoutParams {
         int bottom;
         int desiredWidth;

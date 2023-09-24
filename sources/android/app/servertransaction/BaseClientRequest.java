@@ -1,14 +1,15 @@
 package android.app.servertransaction;
 
 import android.app.ClientTransactionHandler;
-import android.os.IBinder;
+import android.p007os.IBinder;
 
+/* loaded from: classes.dex */
 public interface BaseClientRequest extends ObjectPoolItem {
     void execute(ClientTransactionHandler clientTransactionHandler, IBinder iBinder, PendingTransactionActions pendingTransactionActions);
 
-    void preExecute(ClientTransactionHandler client, IBinder token) {
+    default void preExecute(ClientTransactionHandler client, IBinder token) {
     }
 
-    void postExecute(ClientTransactionHandler client, IBinder token, PendingTransactionActions pendingActions) {
+    default void postExecute(ClientTransactionHandler client, IBinder token, PendingTransactionActions pendingActions) {
     }
 }

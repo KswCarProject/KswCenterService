@@ -1,8 +1,9 @@
 package android.app;
 
 import android.annotation.UnsupportedAppUsage;
-import android.content.pm.IPackageManager;
+import android.content.p002pm.IPackageManager;
 
+/* loaded from: classes.dex */
 public class AppGlobals {
     @UnsupportedAppUsage
     public static Application getInitialApplication() {

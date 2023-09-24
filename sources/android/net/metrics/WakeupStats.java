@@ -1,29 +1,30 @@
 package android.net.metrics;
 
-import android.os.SystemClock;
+import android.p007os.SystemClock;
 import android.util.SparseIntArray;
 import com.ibm.icu.text.DateFormat;
 import java.util.StringJoiner;
 
+/* loaded from: classes3.dex */
 public class WakeupStats {
     private static final int NO_UID = -1;
-    public long applicationWakeups = 0;
-    public final long creationTimeMs = SystemClock.elapsedRealtime();
-    public long durationSec = 0;
-    public final SparseIntArray ethertypes = new SparseIntArray();
     public final String iface;
-    public final SparseIntArray ipNextHeaders = new SparseIntArray();
-    public long l2BroadcastCount = 0;
-    public long l2MulticastCount = 0;
-    public long l2UnicastCount = 0;
-    public long noUidWakeups = 0;
-    public long nonApplicationWakeups = 0;
+    public final long creationTimeMs = SystemClock.elapsedRealtime();
+    public long totalWakeups = 0;
     public long rootWakeups = 0;
     public long systemWakeups = 0;
-    public long totalWakeups = 0;
+    public long nonApplicationWakeups = 0;
+    public long applicationWakeups = 0;
+    public long noUidWakeups = 0;
+    public long durationSec = 0;
+    public long l2UnicastCount = 0;
+    public long l2MulticastCount = 0;
+    public long l2BroadcastCount = 0;
+    public final SparseIntArray ethertypes = new SparseIntArray();
+    public final SparseIntArray ipNextHeaders = new SparseIntArray();
 
-    public WakeupStats(String iface2) {
-        this.iface = iface2;
+    public WakeupStats(String iface) {
+        this.iface = iface;
     }
 
     public void updateDuration() {
@@ -33,7 +34,9 @@ public class WakeupStats {
     public void countEvent(WakeupEvent ev) {
         this.totalWakeups++;
         int i = ev.uid;
-        if (i != 1000) {
+        if (i == 1000) {
+            this.systemWakeups++;
+        } else {
             switch (i) {
                 case -1:
                     this.noUidWakeups++;
@@ -42,16 +45,14 @@ public class WakeupStats {
                     this.rootWakeups++;
                     break;
                 default:
-                    if (ev.uid < 10000) {
-                        this.nonApplicationWakeups++;
+                    if (ev.uid >= 10000) {
+                        this.applicationWakeups++;
                         break;
                     } else {
-                        this.applicationWakeups++;
+                        this.nonApplicationWakeups++;
                         break;
                     }
             }
-        } else {
-            this.systemWakeups++;
         }
         switch (ev.dstHwAddr.getAddressType()) {
             case 1:
@@ -84,17 +85,22 @@ public class WakeupStats {
         j.add("apps: " + this.applicationWakeups);
         j.add("non-apps: " + this.nonApplicationWakeups);
         j.add("no uid: " + this.noUidWakeups);
-        j.add(String.format("l2 unicast/multicast/broadcast: %d/%d/%d", new Object[]{Long.valueOf(this.l2UnicastCount), Long.valueOf(this.l2MulticastCount), Long.valueOf(this.l2BroadcastCount)}));
+        j.add(String.format("l2 unicast/multicast/broadcast: %d/%d/%d", Long.valueOf(this.l2UnicastCount), Long.valueOf(this.l2MulticastCount), Long.valueOf(this.l2BroadcastCount)));
         for (int i = 0; i < this.ethertypes.size(); i++) {
-            j.add(String.format("ethertype 0x%x: %d", new Object[]{Integer.valueOf(this.ethertypes.keyAt(i)), Integer.valueOf(this.ethertypes.valueAt(i))}));
+            int eth = this.ethertypes.keyAt(i);
+            int count = this.ethertypes.valueAt(i);
+            j.add(String.format("ethertype 0x%x: %d", Integer.valueOf(eth), Integer.valueOf(count)));
         }
         for (int i2 = 0; i2 < this.ipNextHeaders.size(); i2++) {
-            j.add(String.format("ipNxtHdr %d: %d", new Object[]{Integer.valueOf(this.ipNextHeaders.keyAt(i2)), Integer.valueOf(this.ipNextHeaders.valueAt(i2))}));
+            int proto = this.ipNextHeaders.keyAt(i2);
+            int count2 = this.ipNextHeaders.valueAt(i2);
+            j.add(String.format("ipNxtHdr %d: %d", Integer.valueOf(proto), Integer.valueOf(count2)));
         }
         return j.toString();
     }
 
     private static void increment(SparseIntArray counters, int key) {
-        counters.put(key, counters.get(key, 0) + 1);
+        int newcount = counters.get(key, 0) + 1;
+        counters.put(key, newcount);
     }
 }

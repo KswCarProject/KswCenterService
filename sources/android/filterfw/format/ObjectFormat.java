@@ -3,6 +3,7 @@ package android.filterfw.format;
 import android.filterfw.core.MutableFrameFormat;
 import android.filterfw.core.NativeBuffer;
 
+/* loaded from: classes.dex */
 public class ObjectFormat {
     public static MutableFrameFormat fromClass(Class clazz, int count, int target) {
         MutableFrameFormat result = new MutableFrameFormat(8, target);
@@ -33,48 +34,47 @@ public class ObjectFormat {
     }
 
     private static int bytesPerSampleForClass(Class clazz, int target) {
-        if (target != 2) {
-            return 1;
-        }
-        if (NativeBuffer.class.isAssignableFrom(clazz)) {
+        if (target == 2) {
+            if (!NativeBuffer.class.isAssignableFrom(clazz)) {
+                throw new IllegalArgumentException("Native object-based formats must be of a NativeBuffer subclass! (Received class: " + clazz + ").");
+            }
             try {
                 return ((NativeBuffer) clazz.newInstance()).getElementSize();
             } catch (Exception e) {
                 throw new RuntimeException("Could not determine the size of an element in a native object-based frame of type " + clazz + "! Perhaps it is missing a default constructor?");
             }
-        } else {
-            throw new IllegalArgumentException("Native object-based formats must be of a NativeBuffer subclass! (Received class: " + clazz + ").");
         }
+        return 1;
     }
 
     private static Class getBoxedClass(Class type) {
-        if (!type.isPrimitive()) {
-            return type;
+        if (type.isPrimitive()) {
+            if (type == Boolean.TYPE) {
+                return Boolean.class;
+            }
+            if (type == Byte.TYPE) {
+                return Byte.class;
+            }
+            if (type == Character.TYPE) {
+                return Character.class;
+            }
+            if (type == Short.TYPE) {
+                return Short.class;
+            }
+            if (type == Integer.TYPE) {
+                return Integer.class;
+            }
+            if (type == Long.TYPE) {
+                return Long.class;
+            }
+            if (type == Float.TYPE) {
+                return Float.class;
+            }
+            if (type == Double.TYPE) {
+                return Double.class;
+            }
+            throw new IllegalArgumentException("Unknown primitive type: " + type.getSimpleName() + "!");
         }
-        if (type == Boolean.TYPE) {
-            return Boolean.class;
-        }
-        if (type == Byte.TYPE) {
-            return Byte.class;
-        }
-        if (type == Character.TYPE) {
-            return Character.class;
-        }
-        if (type == Short.TYPE) {
-            return Short.class;
-        }
-        if (type == Integer.TYPE) {
-            return Integer.class;
-        }
-        if (type == Long.TYPE) {
-            return Long.class;
-        }
-        if (type == Float.TYPE) {
-            return Float.class;
-        }
-        if (type == Double.TYPE) {
-            return Double.class;
-        }
-        throw new IllegalArgumentException("Unknown primitive type: " + type.getSimpleName() + "!");
+        return type;
     }
 }

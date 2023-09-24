@@ -3,6 +3,7 @@ package com.android.internal.app;
 import android.util.ArrayMap;
 import android.util.SparseArray;
 
+/* loaded from: classes4.dex */
 public class ProcessMap<E> {
     final ArrayMap<String, SparseArray<E>> mMap = new ArrayMap<>();
 
@@ -26,14 +27,14 @@ public class ProcessMap<E> {
 
     public E remove(String name, int uid) {
         SparseArray<E> uids = this.mMap.get(name);
-        if (uids == null) {
-            return null;
+        if (uids != null) {
+            E old = uids.removeReturnOld(uid);
+            if (uids.size() == 0) {
+                this.mMap.remove(name);
+            }
+            return old;
         }
-        E old = uids.removeReturnOld(uid);
-        if (uids.size() == 0) {
-            this.mMap.remove(name);
-        }
-        return old;
+        return null;
     }
 
     public ArrayMap<String, SparseArray<E>> getMap() {

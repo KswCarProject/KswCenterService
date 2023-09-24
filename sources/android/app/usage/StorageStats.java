@@ -1,14 +1,19 @@
 package android.app.usage;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public final class StorageStats implements Parcelable {
-    public static final Parcelable.Creator<StorageStats> CREATOR = new Parcelable.Creator<StorageStats>() {
+    public static final Parcelable.Creator<StorageStats> CREATOR = new Parcelable.Creator<StorageStats>() { // from class: android.app.usage.StorageStats.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public StorageStats createFromParcel(Parcel in) {
             return new StorageStats(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public StorageStats[] newArray(int size) {
             return new StorageStats[size];
         }
@@ -43,10 +48,12 @@ public final class StorageStats implements Parcelable {
         this.cacheBytes = in.readLong();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(this.codeBytes);
         dest.writeLong(this.dataBytes);

@@ -3,6 +3,7 @@ package android.app.usage;
 import android.util.LongSparseArray;
 import android.util.Slog;
 
+/* loaded from: classes.dex */
 public class TimeSparseArray<E> extends LongSparseArray<E> {
     private static final String TAG = TimeSparseArray.class.getSimpleName();
     private boolean mWtfReported;
@@ -18,21 +19,22 @@ public class TimeSparseArray<E> extends LongSparseArray<E> {
             key = keyAt(mid);
             if (time > key) {
                 lo = mid + 1;
-            } else if (time >= key) {
-                return mid;
-            } else {
+            } else if (time < key) {
                 hi = mid - 1;
+            } else {
+                return mid;
             }
         }
         if (time < key) {
             return mid;
         }
-        if (time <= key || lo >= size) {
-            return -1;
+        if (time > key && lo < size) {
+            return lo;
         }
-        return lo;
+        return -1;
     }
 
+    @Override // android.util.LongSparseArray
     public void put(long key, E value) {
         if (indexOfKey(key) >= 0 && !this.mWtfReported) {
             String str = TAG;

@@ -1,14 +1,16 @@
 package android.media.soundtrigger;
 
 import android.hardware.soundtrigger.SoundTrigger;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.ParcelUuid;
-import android.os.RemoteException;
+import android.media.soundtrigger.ISoundTriggerDetectionServiceClient;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.ParcelUuid;
+import android.p007os.RemoteException;
 
+/* loaded from: classes3.dex */
 public interface ISoundTriggerDetectionService extends IInterface {
     void onError(ParcelUuid parcelUuid, int i, int i2) throws RemoteException;
 
@@ -20,27 +22,35 @@ public interface ISoundTriggerDetectionService extends IInterface {
 
     void setClient(ParcelUuid parcelUuid, Bundle bundle, ISoundTriggerDetectionServiceClient iSoundTriggerDetectionServiceClient) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements ISoundTriggerDetectionService {
+        @Override // android.media.soundtrigger.ISoundTriggerDetectionService
         public void setClient(ParcelUuid uuid, Bundle params, ISoundTriggerDetectionServiceClient client) throws RemoteException {
         }
 
+        @Override // android.media.soundtrigger.ISoundTriggerDetectionService
         public void removeClient(ParcelUuid uuid) throws RemoteException {
         }
 
+        @Override // android.media.soundtrigger.ISoundTriggerDetectionService
         public void onGenericRecognitionEvent(ParcelUuid uuid, int opId, SoundTrigger.GenericRecognitionEvent event) throws RemoteException {
         }
 
+        @Override // android.media.soundtrigger.ISoundTriggerDetectionService
         public void onError(ParcelUuid uuid, int opId, int status) throws RemoteException {
         }
 
+        @Override // android.media.soundtrigger.ISoundTriggerDetectionService
         public void onStopOperation(ParcelUuid uuid, int opId) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements ISoundTriggerDetectionService {
         private static final String DESCRIPTOR = "android.media.soundtrigger.ISoundTriggerDetectionService";
         static final int TRANSACTION_onError = 4;
@@ -58,12 +68,13 @@ public interface ISoundTriggerDetectionService extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof ISoundTriggerDetectionService)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof ISoundTriggerDetectionService)) {
+                return (ISoundTriggerDetectionService) iin;
             }
-            return (ISoundTriggerDetectionService) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -85,133 +96,66 @@ public interface ISoundTriggerDetectionService extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v2, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v6, resolved type: android.os.ParcelUuid} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v10, resolved type: android.hardware.soundtrigger.SoundTrigger$GenericRecognitionEvent} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v14, resolved type: android.os.ParcelUuid} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v18, resolved type: android.os.ParcelUuid} */
-        /* JADX WARNING: type inference failed for: r1v1 */
-        /* JADX WARNING: type inference failed for: r1v23 */
-        /* JADX WARNING: type inference failed for: r1v24 */
-        /* JADX WARNING: type inference failed for: r1v25 */
-        /* JADX WARNING: type inference failed for: r1v26 */
-        /* JADX WARNING: type inference failed for: r1v27 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r7, android.os.Parcel r8, android.os.Parcel r9, int r10) throws android.os.RemoteException {
-            /*
-                r6 = this;
-                java.lang.String r0 = "android.media.soundtrigger.ISoundTriggerDetectionService"
-                r1 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r2 = 1
-                if (r7 == r1) goto L_0x00bc
-                r1 = 0
-                switch(r7) {
-                    case 1: goto L_0x008d;
-                    case 2: goto L_0x0076;
-                    case 3: goto L_0x004b;
-                    case 4: goto L_0x002c;
-                    case 5: goto L_0x0011;
-                    default: goto L_0x000c;
-                }
-            L_0x000c:
-                boolean r1 = super.onTransact(r7, r8, r9, r10)
-                return r1
-            L_0x0011:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x0023
-                android.os.Parcelable$Creator<android.os.ParcelUuid> r1 = android.os.ParcelUuid.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.os.ParcelUuid r1 = (android.os.ParcelUuid) r1
-                goto L_0x0024
-            L_0x0023:
-            L_0x0024:
-                int r3 = r8.readInt()
-                r6.onStopOperation(r1, r3)
-                return r2
-            L_0x002c:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x003e
-                android.os.Parcelable$Creator<android.os.ParcelUuid> r1 = android.os.ParcelUuid.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.os.ParcelUuid r1 = (android.os.ParcelUuid) r1
-                goto L_0x003f
-            L_0x003e:
-            L_0x003f:
-                int r3 = r8.readInt()
-                int r4 = r8.readInt()
-                r6.onError(r1, r3, r4)
-                return r2
-            L_0x004b:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x005d
-                android.os.Parcelable$Creator<android.os.ParcelUuid> r3 = android.os.ParcelUuid.CREATOR
-                java.lang.Object r3 = r3.createFromParcel(r8)
-                android.os.ParcelUuid r3 = (android.os.ParcelUuid) r3
-                goto L_0x005e
-            L_0x005d:
-                r3 = r1
-            L_0x005e:
-                int r4 = r8.readInt()
-                int r5 = r8.readInt()
-                if (r5 == 0) goto L_0x0071
-                android.os.Parcelable$Creator<android.hardware.soundtrigger.SoundTrigger$GenericRecognitionEvent> r1 = android.hardware.soundtrigger.SoundTrigger.GenericRecognitionEvent.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.hardware.soundtrigger.SoundTrigger$GenericRecognitionEvent r1 = (android.hardware.soundtrigger.SoundTrigger.GenericRecognitionEvent) r1
-                goto L_0x0072
-            L_0x0071:
-            L_0x0072:
-                r6.onGenericRecognitionEvent(r3, r4, r1)
-                return r2
-            L_0x0076:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x0088
-                android.os.Parcelable$Creator<android.os.ParcelUuid> r1 = android.os.ParcelUuid.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.os.ParcelUuid r1 = (android.os.ParcelUuid) r1
-                goto L_0x0089
-            L_0x0088:
-            L_0x0089:
-                r6.removeClient(r1)
-                return r2
-            L_0x008d:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                if (r3 == 0) goto L_0x009f
-                android.os.Parcelable$Creator<android.os.ParcelUuid> r3 = android.os.ParcelUuid.CREATOR
-                java.lang.Object r3 = r3.createFromParcel(r8)
-                android.os.ParcelUuid r3 = (android.os.ParcelUuid) r3
-                goto L_0x00a0
-            L_0x009f:
-                r3 = r1
-            L_0x00a0:
-                int r4 = r8.readInt()
-                if (r4 == 0) goto L_0x00af
-                android.os.Parcelable$Creator<android.os.Bundle> r1 = android.os.Bundle.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r8)
-                android.os.Bundle r1 = (android.os.Bundle) r1
-                goto L_0x00b0
-            L_0x00af:
-            L_0x00b0:
-                android.os.IBinder r4 = r8.readStrongBinder()
-                android.media.soundtrigger.ISoundTriggerDetectionServiceClient r4 = android.media.soundtrigger.ISoundTriggerDetectionServiceClient.Stub.asInterface(r4)
-                r6.setClient(r3, r1, r4)
-                return r2
-            L_0x00bc:
-                r9.writeString(r0)
-                return r2
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.media.soundtrigger.ISoundTriggerDetectionService.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            ParcelUuid _arg0;
+            ParcelUuid _arg02;
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg0 = ParcelUuid.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg0 = null;
+                    }
+                    Bundle _arg1 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    ISoundTriggerDetectionServiceClient _arg2 = ISoundTriggerDetectionServiceClient.Stub.asInterface(data.readStrongBinder());
+                    setClient(_arg0, _arg1, _arg2);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    ParcelUuid _arg03 = data.readInt() != 0 ? ParcelUuid.CREATOR.createFromParcel(data) : null;
+                    removeClient(_arg03);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg02 = ParcelUuid.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg02 = null;
+                    }
+                    int _arg12 = data.readInt();
+                    SoundTrigger.GenericRecognitionEvent _arg22 = data.readInt() != 0 ? SoundTrigger.GenericRecognitionEvent.CREATOR.createFromParcel(data) : null;
+                    onGenericRecognitionEvent(_arg02, _arg12, _arg22);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    ParcelUuid _arg04 = data.readInt() != 0 ? ParcelUuid.CREATOR.createFromParcel(data) : null;
+                    int _arg13 = data.readInt();
+                    int _arg23 = data.readInt();
+                    onError(_arg04, _arg13, _arg23);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    ParcelUuid _arg05 = data.readInt() != 0 ? ParcelUuid.CREATOR.createFromParcel(data) : null;
+                    int _arg14 = data.readInt();
+                    onStopOperation(_arg05, _arg14);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements ISoundTriggerDetectionService {
             public static ISoundTriggerDetectionService sDefaultImpl;
             private IBinder mRemote;
@@ -220,6 +164,7 @@ public interface ISoundTriggerDetectionService extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -228,6 +173,7 @@ public interface ISoundTriggerDetectionService extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.media.soundtrigger.ISoundTriggerDetectionService
             public void setClient(ParcelUuid uuid, Bundle params, ISoundTriggerDetectionServiceClient client) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -245,9 +191,8 @@ public interface ISoundTriggerDetectionService extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeStrongBinder(client != null ? client.asBinder() : null);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().setClient(uuid, params, client);
                     }
                 } finally {
@@ -255,6 +200,7 @@ public interface ISoundTriggerDetectionService extends IInterface {
                 }
             }
 
+            @Override // android.media.soundtrigger.ISoundTriggerDetectionService
             public void removeClient(ParcelUuid uuid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -265,9 +211,8 @@ public interface ISoundTriggerDetectionService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().removeClient(uuid);
                     }
                 } finally {
@@ -275,6 +220,7 @@ public interface ISoundTriggerDetectionService extends IInterface {
                 }
             }
 
+            @Override // android.media.soundtrigger.ISoundTriggerDetectionService
             public void onGenericRecognitionEvent(ParcelUuid uuid, int opId, SoundTrigger.GenericRecognitionEvent event) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -292,9 +238,8 @@ public interface ISoundTriggerDetectionService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onGenericRecognitionEvent(uuid, opId, event);
                     }
                 } finally {
@@ -302,6 +247,7 @@ public interface ISoundTriggerDetectionService extends IInterface {
                 }
             }
 
+            @Override // android.media.soundtrigger.ISoundTriggerDetectionService
             public void onError(ParcelUuid uuid, int opId, int status) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -314,9 +260,8 @@ public interface ISoundTriggerDetectionService extends IInterface {
                     }
                     _data.writeInt(opId);
                     _data.writeInt(status);
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onError(uuid, opId, status);
                     }
                 } finally {
@@ -324,6 +269,7 @@ public interface ISoundTriggerDetectionService extends IInterface {
                 }
             }
 
+            @Override // android.media.soundtrigger.ISoundTriggerDetectionService
             public void onStopOperation(ParcelUuid uuid, int opId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -335,9 +281,8 @@ public interface ISoundTriggerDetectionService extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(opId);
-                    if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(5, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onStopOperation(uuid, opId);
                     }
                 } finally {
@@ -347,11 +292,11 @@ public interface ISoundTriggerDetectionService extends IInterface {
         }
 
         public static boolean setDefaultImpl(ISoundTriggerDetectionService impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static ISoundTriggerDetectionService getDefaultImpl() {

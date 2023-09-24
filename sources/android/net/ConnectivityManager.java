@@ -12,28 +12,28 @@ import android.net.ITetheringEventCallback;
 import android.net.IpSecManager;
 import android.net.NetworkRequest;
 import android.net.SocketKeepalive;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.INetworkActivityListener;
-import android.os.INetworkManagementService;
-import android.os.Looper;
-import android.os.Message;
-import android.os.Messenger;
-import android.os.ParcelFileDescriptor;
-import android.os.Process;
-import android.os.RemoteException;
-import android.os.ResultReceiver;
-import android.os.ServiceManager;
-import android.os.ServiceSpecificException;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.Handler;
+import android.p007os.IBinder;
+import android.p007os.INetworkActivityListener;
+import android.p007os.INetworkManagementService;
+import android.p007os.Looper;
+import android.p007os.Message;
+import android.p007os.Messenger;
+import android.p007os.ParcelFileDescriptor;
+import android.p007os.Process;
+import android.p007os.RemoteException;
+import android.p007os.ResultReceiver;
+import android.p007os.ServiceManager;
+import android.p007os.ServiceSpecificException;
 import android.provider.Settings;
 import android.security.keystore.KeyProperties;
 import android.telephony.SubscriptionManager;
 import android.util.ArrayMap;
 import android.util.Log;
 import android.util.SparseIntArray;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import com.android.internal.annotations.GuardedBy;
 import com.android.internal.telephony.ITelephony;
 import com.android.internal.util.FunctionalUtils;
@@ -56,6 +56,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import libcore.net.event.NetworkEventDispatcher;
 
+/* loaded from: classes3.dex */
 public class ConnectivityManager {
     @Deprecated
     public static final String ACTION_BACKGROUND_DATA_SETTING_CHANGED = "android.net.conn.BACKGROUND_DATA_SETTING_CHANGED";
@@ -68,8 +69,6 @@ public class ConnectivityManager {
     public static final String ACTION_RESTRICT_BACKGROUND_CHANGED = "android.net.conn.RESTRICT_BACKGROUND_CHANGED";
     @UnsupportedAppUsage
     public static final String ACTION_TETHER_STATE_CHANGED = "android.net.conn.TETHER_STATE_CHANGED";
-    /* access modifiers changed from: private */
-    public static final NetworkRequest ALREADY_UNREGISTERED = new NetworkRequest.Builder().clearCapabilities().build();
     private static final int BASE = 524288;
     public static final int CALLBACK_AVAILABLE = 524290;
     public static final int CALLBACK_BLK_CHANGED = 524299;
@@ -84,7 +83,6 @@ public class ConnectivityManager {
     @Deprecated
     public static final String CONNECTIVITY_ACTION = "android.net.conn.CONNECTIVITY_CHANGE";
     public static final String CONNECTIVITY_ACTION_SUPL = "android.net.conn.CONNECTIVITY_CHANGE_SUPL";
-    private static final boolean DEBUG = Log.isLoggable(TAG, 3);
     @Deprecated
     public static final int DEFAULT_NETWORK_PREFERENCE = 1;
     private static final int EXPIRE_LEGACY_REQUEST = 524296;
@@ -145,7 +143,6 @@ public class ConnectivityManager {
     public static final int RESTRICT_BACKGROUND_STATUS_DISABLED = 1;
     public static final int RESTRICT_BACKGROUND_STATUS_ENABLED = 3;
     public static final int RESTRICT_BACKGROUND_STATUS_WHITELISTED = 2;
-    private static final String TAG = "ConnectivityManager";
     @SystemApi
     public static final int TETHERING_BLUETOOTH = 2;
     public static final int TETHERING_INVALID = -1;
@@ -179,24 +176,24 @@ public class ConnectivityManager {
     public static final int TYPE_ETHERNET = 9;
     @Deprecated
     public static final int TYPE_MOBILE = 0;
-    @Deprecated
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 130143562)
+    @Deprecated
     public static final int TYPE_MOBILE_CBS = 12;
     @Deprecated
     public static final int TYPE_MOBILE_DUN = 4;
-    @Deprecated
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 130143562)
+    @Deprecated
     public static final int TYPE_MOBILE_EMERGENCY = 15;
-    @Deprecated
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 130143562)
+    @Deprecated
     public static final int TYPE_MOBILE_FOTA = 10;
     @Deprecated
     public static final int TYPE_MOBILE_HIPRI = 5;
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public static final int TYPE_MOBILE_IA = 14;
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public static final int TYPE_MOBILE_IMS = 11;
     @Deprecated
     public static final int TYPE_MOBILE_MMS = 2;
@@ -204,8 +201,8 @@ public class ConnectivityManager {
     public static final int TYPE_MOBILE_SUPL = 3;
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 130143562)
     public static final int TYPE_NONE = -1;
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public static final int TYPE_PROXY = 16;
     @Deprecated
     public static final int TYPE_TEST = 18;
@@ -213,54 +210,62 @@ public class ConnectivityManager {
     public static final int TYPE_VPN = 17;
     @Deprecated
     public static final int TYPE_WIFI = 1;
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public static final int TYPE_WIFI_P2P = 13;
     @Deprecated
     public static final int TYPE_WIMAX = 6;
     private static CallbackHandler sCallbackHandler;
-    /* access modifiers changed from: private */
-    public static final HashMap<NetworkRequest, NetworkCallback> sCallbacks = new HashMap<>();
+    private static final HashMap<NetworkRequest, NetworkCallback> sCallbacks;
     private static ConnectivityManager sInstance;
-    @UnsupportedAppUsage
-    private static final HashMap<NetworkCapabilities, LegacyRequest> sLegacyRequests = new HashMap<>();
-    private static final SparseIntArray sLegacyTypeToCapability = new SparseIntArray();
-    private static final SparseIntArray sLegacyTypeToTransport = new SparseIntArray();
+    private static final SparseIntArray sLegacyTypeToCapability;
     private final Context mContext;
     private INetworkManagementService mNMService;
     private INetworkPolicyManager mNPManager;
-    private final ArrayMap<OnNetworkActiveListener, INetworkActivityListener> mNetworkActivityListeners = new ArrayMap<>();
-    /* access modifiers changed from: private */
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 130143562)
-    public final IConnectivityManager mService;
+    private final IConnectivityManager mService;
+    private static final String TAG = "ConnectivityManager";
+    private static final boolean DEBUG = Log.isLoggable(TAG, 3);
+    private static final NetworkRequest ALREADY_UNREGISTERED = new NetworkRequest.Builder().clearCapabilities().build();
+    @UnsupportedAppUsage
+    private static final HashMap<NetworkCapabilities, LegacyRequest> sLegacyRequests = new HashMap<>();
+    private static final SparseIntArray sLegacyTypeToTransport = new SparseIntArray();
+    private final ArrayMap<OnNetworkActiveListener, INetworkActivityListener> mNetworkActivityListeners = new ArrayMap<>();
     @GuardedBy({"mTetheringEventCallbacks"})
     private final ArrayMap<OnTetheringEventCallback, ITetheringEventCallback> mTetheringEventCallbacks = new ArrayMap<>();
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface EntitlementResultCode {
     }
 
+    /* loaded from: classes3.dex */
     public interface Errors {
         public static final int TOO_MANY_REQUESTS = 1;
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface MultipathPreference {
     }
 
+    /* loaded from: classes3.dex */
     public interface OnNetworkActiveListener {
         void onNetworkActive();
     }
 
     @SystemApi
+    /* loaded from: classes3.dex */
     public interface OnTetheringEntitlementResultListener {
         void onTetheringEntitlementResult(int i);
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface RestrictBackgroundStatus {
     }
 
+    /* loaded from: classes3.dex */
     public static class TooManyRequestsException extends RuntimeException {
     }
 
@@ -277,6 +282,7 @@ public class ConnectivityManager {
         sLegacyTypeToTransport.put(13, 1);
         sLegacyTypeToTransport.put(7, 2);
         sLegacyTypeToTransport.put(9, 3);
+        sLegacyTypeToCapability = new SparseIntArray();
         sLegacyTypeToCapability.put(12, 5);
         sLegacyTypeToCapability.put(4, 2);
         sLegacyTypeToCapability.put(10, 3);
@@ -284,6 +290,7 @@ public class ConnectivityManager {
         sLegacyTypeToCapability.put(2, 0);
         sLegacyTypeToCapability.put(3, 1);
         sLegacyTypeToCapability.put(13, 6);
+        sCallbacks = new HashMap<>();
     }
 
     @Deprecated
@@ -291,8 +298,8 @@ public class ConnectivityManager {
         return networkType >= 0 && networkType <= 18;
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public static String getNetworkTypeName(int type) {
         switch (type) {
             case -1:
@@ -338,8 +345,8 @@ public class ConnectivityManager {
         }
     }
 
-    @Deprecated
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 130143562)
+    @Deprecated
     public static boolean isNetworkTypeMobile(int networkType) {
         switch (networkType) {
             case 0:
@@ -353,6 +360,12 @@ public class ConnectivityManager {
             case 14:
             case 15:
                 return true;
+            case 1:
+            case 6:
+            case 7:
+            case 8:
+            case 9:
+            case 13:
             default:
                 return false;
         }
@@ -488,8 +501,8 @@ public class ConnectivityManager {
         }
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public Network getNetworkForType(int networkType) {
         try {
             return this.mService.getNetworkForType(networkType);
@@ -524,8 +537,8 @@ public class ConnectivityManager {
         }
     }
 
-    @Deprecated
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 130143562)
+    @Deprecated
     public LinkProperties getLinkProperties(int networkType) {
         try {
             return this.mService.getLinkPropertiesForType(networkType);
@@ -559,94 +572,32 @@ public class ConnectivityManager {
         }
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:18:0x0063, code lost:
-        if (r2 == null) goto L_0x007d;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:19:0x0065, code lost:
-        android.util.Log.d(TAG, "starting startUsingNetworkFeature for request " + r2);
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:20:0x007c, code lost:
-        return 1;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:21:0x007d, code lost:
-        android.util.Log.d(TAG, " request Failed");
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:22:0x0084, code lost:
-        return 3;
-     */
-    @java.lang.Deprecated
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public int startUsingNetworkFeature(int r9, java.lang.String r10) {
-        /*
-            r8 = this;
-            r8.checkLegacyRoutingApiAccess()
-            android.net.NetworkCapabilities r0 = r8.networkCapabilitiesForFeature(r9, r10)
-            r1 = 3
-            if (r0 != 0) goto L_0x0029
-            java.lang.String r2 = "ConnectivityManager"
-            java.lang.StringBuilder r3 = new java.lang.StringBuilder
-            r3.<init>()
-            java.lang.String r4 = "Can't satisfy startUsingNetworkFeature for "
-            r3.append(r4)
-            r3.append(r9)
-            java.lang.String r4 = ", "
-            r3.append(r4)
-            r3.append(r10)
-            java.lang.String r3 = r3.toString()
-            android.util.Log.d(r2, r3)
-            return r1
-        L_0x0029:
-            r2 = 0
-            java.util.HashMap<android.net.NetworkCapabilities, android.net.ConnectivityManager$LegacyRequest> r3 = sLegacyRequests
-            monitor-enter(r3)
-            java.util.HashMap<android.net.NetworkCapabilities, android.net.ConnectivityManager$LegacyRequest> r4 = sLegacyRequests     // Catch:{ all -> 0x0085 }
-            java.lang.Object r4 = r4.get(r0)     // Catch:{ all -> 0x0085 }
-            android.net.ConnectivityManager$LegacyRequest r4 = (android.net.ConnectivityManager.LegacyRequest) r4     // Catch:{ all -> 0x0085 }
-            r5 = 1
-            if (r4 == 0) goto L_0x005d
-            java.lang.String r1 = "ConnectivityManager"
-            java.lang.StringBuilder r6 = new java.lang.StringBuilder     // Catch:{ all -> 0x0085 }
-            r6.<init>()     // Catch:{ all -> 0x0085 }
-            java.lang.String r7 = "renewing startUsingNetworkFeature request "
-            r6.append(r7)     // Catch:{ all -> 0x0085 }
-            android.net.NetworkRequest r7 = r4.networkRequest     // Catch:{ all -> 0x0085 }
-            r6.append(r7)     // Catch:{ all -> 0x0085 }
-            java.lang.String r6 = r6.toString()     // Catch:{ all -> 0x0085 }
-            android.util.Log.d(r1, r6)     // Catch:{ all -> 0x0085 }
-            r8.renewRequestLocked(r4)     // Catch:{ all -> 0x0085 }
-            android.net.Network r1 = r4.currentNetwork     // Catch:{ all -> 0x0085 }
-            if (r1 == 0) goto L_0x005b
-            r1 = 0
-            monitor-exit(r3)     // Catch:{ all -> 0x0085 }
-            return r1
-        L_0x005b:
-            monitor-exit(r3)     // Catch:{ all -> 0x0085 }
-            return r5
-        L_0x005d:
-            android.net.NetworkRequest r6 = r8.requestNetworkForFeatureLocked(r0)     // Catch:{ all -> 0x0085 }
-            r2 = r6
-            monitor-exit(r3)     // Catch:{ all -> 0x0085 }
-            if (r2 == 0) goto L_0x007d
-            java.lang.String r1 = "ConnectivityManager"
-            java.lang.StringBuilder r3 = new java.lang.StringBuilder
-            r3.<init>()
-            java.lang.String r4 = "starting startUsingNetworkFeature for request "
-            r3.append(r4)
-            r3.append(r2)
-            java.lang.String r3 = r3.toString()
-            android.util.Log.d(r1, r3)
-            return r5
-        L_0x007d:
-            java.lang.String r3 = "ConnectivityManager"
-            java.lang.String r4 = " request Failed"
-            android.util.Log.d(r3, r4)
-            return r1
-        L_0x0085:
-            r1 = move-exception
-            monitor-exit(r3)     // Catch:{ all -> 0x0085 }
-            throw r1
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.net.ConnectivityManager.startUsingNetworkFeature(int, java.lang.String):int");
+    @Deprecated
+    public int startUsingNetworkFeature(int networkType, String feature) {
+        checkLegacyRoutingApiAccess();
+        NetworkCapabilities netCap = networkCapabilitiesForFeature(networkType, feature);
+        if (netCap == null) {
+            Log.m72d(TAG, "Can't satisfy startUsingNetworkFeature for " + networkType + ", " + feature);
+            return 3;
+        }
+        synchronized (sLegacyRequests) {
+            LegacyRequest l = sLegacyRequests.get(netCap);
+            if (l != null) {
+                Log.m72d(TAG, "renewing startUsingNetworkFeature request " + l.networkRequest);
+                renewRequestLocked(l);
+                if (l.currentNetwork == null) {
+                    return 1;
+                }
+                return 0;
+            }
+            NetworkRequest request = requestNetworkForFeatureLocked(netCap);
+            if (request != null) {
+                Log.m72d(TAG, "starting startUsingNetworkFeature for request " + request);
+                return 1;
+            }
+            Log.m72d(TAG, " request Failed");
+            return 3;
+        }
     }
 
     @Deprecated
@@ -654,146 +605,107 @@ public class ConnectivityManager {
         checkLegacyRoutingApiAccess();
         NetworkCapabilities netCap = networkCapabilitiesForFeature(networkType, feature);
         if (netCap == null) {
-            Log.d(TAG, "Can't satisfy stopUsingNetworkFeature for " + networkType + ", " + feature);
+            Log.m72d(TAG, "Can't satisfy stopUsingNetworkFeature for " + networkType + ", " + feature);
             return -1;
-        } else if (!removeRequestForFeature(netCap)) {
+        } else if (removeRequestForFeature(netCap)) {
+            Log.m72d(TAG, "stopUsingNetworkFeature for " + networkType + ", " + feature);
             return 1;
         } else {
-            Log.d(TAG, "stopUsingNetworkFeature for " + networkType + ", " + feature);
             return 1;
         }
     }
 
-    /* JADX WARNING: Can't fix incorrect switch cases order */
-    /* JADX WARNING: Code restructure failed: missing block: B:20:0x0049, code lost:
-        if (r10.equals("enableDUN") != false) goto L_0x0061;
+    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
+    /* JADX WARN: Code restructure failed: missing block: B:23:0x0049, code lost:
+        if (r10.equals("enableDUN") != false) goto L8;
      */
-    @android.annotation.UnsupportedAppUsage
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    private android.net.NetworkCapabilities networkCapabilitiesForFeature(int r9, java.lang.String r10) {
-        /*
-            r8 = this;
-            r0 = 0
-            r1 = 1
-            if (r9 != 0) goto L_0x008e
-            r2 = -1
-            int r3 = r10.hashCode()
-            r4 = 3
-            r5 = 2
-            r6 = 5
-            r7 = 4
-            switch(r3) {
-                case -1451370941: goto L_0x0056;
-                case -631682191: goto L_0x004c;
-                case -631680646: goto L_0x0043;
-                case -631676084: goto L_0x0039;
-                case -631672240: goto L_0x002f;
-                case 1892790521: goto L_0x0025;
-                case 1893183457: goto L_0x001b;
-                case 1998933033: goto L_0x0011;
-                default: goto L_0x0010;
+    @UnsupportedAppUsage
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    private NetworkCapabilities networkCapabilitiesForFeature(int networkType, String feature) {
+        char c = 1;
+        if (networkType == 0) {
+            switch (feature.hashCode()) {
+                case -1451370941:
+                    if (feature.equals("enableHIPRI")) {
+                        c = 4;
+                        break;
+                    }
+                    c = '\uffff';
+                    break;
+                case -631682191:
+                    if (feature.equals("enableCBS")) {
+                        c = 0;
+                        break;
+                    }
+                    c = '\uffff';
+                    break;
+                case -631680646:
+                    break;
+                case -631676084:
+                    if (feature.equals("enableIMS")) {
+                        c = 5;
+                        break;
+                    }
+                    c = '\uffff';
+                    break;
+                case -631672240:
+                    if (feature.equals("enableMMS")) {
+                        c = 6;
+                        break;
+                    }
+                    c = '\uffff';
+                    break;
+                case 1892790521:
+                    if (feature.equals("enableFOTA")) {
+                        c = 3;
+                        break;
+                    }
+                    c = '\uffff';
+                    break;
+                case 1893183457:
+                    if (feature.equals("enableSUPL")) {
+                        c = 7;
+                        break;
+                    }
+                    c = '\uffff';
+                    break;
+                case 1998933033:
+                    if (feature.equals("enableDUNAlways")) {
+                        c = 2;
+                        break;
+                    }
+                    c = '\uffff';
+                    break;
+                default:
+                    c = '\uffff';
+                    break;
             }
-        L_0x0010:
-            goto L_0x0060
-        L_0x0011:
-            java.lang.String r1 = "enableDUNAlways"
-            boolean r1 = r10.equals(r1)
-            if (r1 == 0) goto L_0x0060
-            r1 = r5
-            goto L_0x0061
-        L_0x001b:
-            java.lang.String r1 = "enableSUPL"
-            boolean r1 = r10.equals(r1)
-            if (r1 == 0) goto L_0x0060
-            r1 = 7
-            goto L_0x0061
-        L_0x0025:
-            java.lang.String r1 = "enableFOTA"
-            boolean r1 = r10.equals(r1)
-            if (r1 == 0) goto L_0x0060
-            r1 = r4
-            goto L_0x0061
-        L_0x002f:
-            java.lang.String r1 = "enableMMS"
-            boolean r1 = r10.equals(r1)
-            if (r1 == 0) goto L_0x0060
-            r1 = 6
-            goto L_0x0061
-        L_0x0039:
-            java.lang.String r1 = "enableIMS"
-            boolean r1 = r10.equals(r1)
-            if (r1 == 0) goto L_0x0060
-            r1 = r6
-            goto L_0x0061
-        L_0x0043:
-            java.lang.String r3 = "enableDUN"
-            boolean r3 = r10.equals(r3)
-            if (r3 == 0) goto L_0x0060
-            goto L_0x0061
-        L_0x004c:
-            java.lang.String r1 = "enableCBS"
-            boolean r1 = r10.equals(r1)
-            if (r1 == 0) goto L_0x0060
-            r1 = 0
-            goto L_0x0061
-        L_0x0056:
-            java.lang.String r1 = "enableHIPRI"
-            boolean r1 = r10.equals(r1)
-            if (r1 == 0) goto L_0x0060
-            r1 = r7
-            goto L_0x0061
-        L_0x0060:
-            r1 = r2
-        L_0x0061:
-            switch(r1) {
-                case 0: goto L_0x0087;
-                case 1: goto L_0x0082;
-                case 2: goto L_0x0082;
-                case 3: goto L_0x007b;
-                case 4: goto L_0x0076;
-                case 5: goto L_0x006f;
-                case 6: goto L_0x006a;
-                case 7: goto L_0x0065;
-                default: goto L_0x0064;
+            switch (c) {
+                case 0:
+                    return networkCapabilitiesForType(12);
+                case 1:
+                case 2:
+                    return networkCapabilitiesForType(4);
+                case 3:
+                    return networkCapabilitiesForType(10);
+                case 4:
+                    return networkCapabilitiesForType(5);
+                case 5:
+                    return networkCapabilitiesForType(11);
+                case 6:
+                    return networkCapabilitiesForType(2);
+                case 7:
+                    return networkCapabilitiesForType(3);
+                default:
+                    return null;
             }
-        L_0x0064:
-            return r0
-        L_0x0065:
-            android.net.NetworkCapabilities r0 = networkCapabilitiesForType(r4)
-            return r0
-        L_0x006a:
-            android.net.NetworkCapabilities r0 = networkCapabilitiesForType(r5)
-            return r0
-        L_0x006f:
-            r0 = 11
-            android.net.NetworkCapabilities r0 = networkCapabilitiesForType(r0)
-            return r0
-        L_0x0076:
-            android.net.NetworkCapabilities r0 = networkCapabilitiesForType(r6)
-            return r0
-        L_0x007b:
-            r0 = 10
-            android.net.NetworkCapabilities r0 = networkCapabilitiesForType(r0)
-            return r0
-        L_0x0082:
-            android.net.NetworkCapabilities r0 = networkCapabilitiesForType(r7)
-            return r0
-        L_0x0087:
-            r0 = 12
-            android.net.NetworkCapabilities r0 = networkCapabilitiesForType(r0)
-            return r0
-        L_0x008e:
-            if (r9 != r1) goto L_0x00a0
-            java.lang.String r1 = "p2p"
-            boolean r1 = r1.equals(r10)
-            if (r1 == 0) goto L_0x00a0
-            r0 = 13
-            android.net.NetworkCapabilities r0 = networkCapabilitiesForType(r0)
-            return r0
-        L_0x00a0:
-            return r0
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.net.ConnectivityManager.networkCapabilitiesForFeature(int, java.lang.String):android.net.NetworkCapabilities");
+        } else if (networkType != 1 || !"p2p".equals(feature)) {
+            return null;
+        } else {
+            return networkCapabilitiesForType(13);
+        }
     }
 
     private int inferLegacyTypeForNetworkCapabilities(NetworkCapabilities netCap) {
@@ -823,10 +735,9 @@ public class ConnectivityManager {
         }
         if (type != null) {
             NetworkCapabilities testCap = networkCapabilitiesForFeature(0, type);
-            if (!testCap.equalsNetCapabilities(netCap) || !testCap.equalsTransportTypes(netCap)) {
-                return -1;
+            if (testCap.equalsNetCapabilities(netCap) && testCap.equalsTransportTypes(netCap)) {
+                return result;
             }
-            return result;
         }
         return -1;
     }
@@ -856,12 +767,13 @@ public class ConnectivityManager {
         if (netCap.hasCapability(12)) {
             return 5;
         }
-        if (netCap.hasCapability(6)) {
-            return 13;
+        if (!netCap.hasCapability(6)) {
+            return -1;
         }
-        return -1;
+        return 13;
     }
 
+    /* loaded from: classes3.dex */
     private static class LegacyRequest {
         Network currentNetwork;
         int delay;
@@ -872,27 +784,29 @@ public class ConnectivityManager {
 
         private LegacyRequest() {
             this.delay = -1;
-            this.networkCallback = new NetworkCallback() {
+            this.networkCallback = new NetworkCallback() { // from class: android.net.ConnectivityManager.LegacyRequest.1
+                @Override // android.net.ConnectivityManager.NetworkCallback
                 public void onAvailable(Network network) {
                     LegacyRequest.this.currentNetwork = network;
-                    Log.d(ConnectivityManager.TAG, "startUsingNetworkFeature got Network:" + network);
+                    Log.m72d(ConnectivityManager.TAG, "startUsingNetworkFeature got Network:" + network);
                     ConnectivityManager.setProcessDefaultNetworkForHostResolution(network);
                 }
 
+                @Override // android.net.ConnectivityManager.NetworkCallback
                 public void onLost(Network network) {
                     if (network.equals(LegacyRequest.this.currentNetwork)) {
                         LegacyRequest.this.clearDnsBinding();
                     }
-                    Log.d(ConnectivityManager.TAG, "startUsingNetworkFeature lost Network:" + network);
+                    Log.m72d(ConnectivityManager.TAG, "startUsingNetworkFeature lost Network:" + network);
                 }
             };
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public void clearDnsBinding() {
             if (this.currentNetwork != null) {
                 this.currentNetwork = null;
-                ConnectivityManager.setProcessDefaultNetworkForHostResolution((Network) null);
+                ConnectivityManager.setProcessDefaultNetworkForHostResolution(null);
             }
         }
     }
@@ -900,66 +814,32 @@ public class ConnectivityManager {
     private NetworkRequest findRequestForFeature(NetworkCapabilities netCap) {
         synchronized (sLegacyRequests) {
             LegacyRequest l = sLegacyRequests.get(netCap);
-            if (l == null) {
-                return null;
+            if (l != null) {
+                return l.networkRequest;
             }
-            NetworkRequest networkRequest = l.networkRequest;
-            return networkRequest;
+            return null;
         }
     }
 
     private void renewRequestLocked(LegacyRequest l) {
         l.expireSequenceNumber++;
-        Log.d(TAG, "renewing request to seqNum " + l.expireSequenceNumber);
+        Log.m72d(TAG, "renewing request to seqNum " + l.expireSequenceNumber);
         sendExpireMsgForFeature(l.networkCapabilities, l.expireSequenceNumber, l.delay);
     }
 
-    /* access modifiers changed from: private */
-    /* JADX WARNING: Code restructure failed: missing block: B:11:0x001b, code lost:
-        android.util.Log.d(TAG, "expireRequest with " + r0 + ", " + r6);
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:12:0x0039, code lost:
-        return;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void expireRequest(android.net.NetworkCapabilities r5, int r6) {
-        /*
-            r4 = this;
-            r0 = -1
-            java.util.HashMap<android.net.NetworkCapabilities, android.net.ConnectivityManager$LegacyRequest> r1 = sLegacyRequests
-            monitor-enter(r1)
-            java.util.HashMap<android.net.NetworkCapabilities, android.net.ConnectivityManager$LegacyRequest> r2 = sLegacyRequests     // Catch:{ all -> 0x003a }
-            java.lang.Object r2 = r2.get(r5)     // Catch:{ all -> 0x003a }
-            android.net.ConnectivityManager$LegacyRequest r2 = (android.net.ConnectivityManager.LegacyRequest) r2     // Catch:{ all -> 0x003a }
-            if (r2 != 0) goto L_0x0010
-            monitor-exit(r1)     // Catch:{ all -> 0x003a }
-            return
-        L_0x0010:
-            int r3 = r2.expireSequenceNumber     // Catch:{ all -> 0x003a }
-            r0 = r3
-            int r3 = r2.expireSequenceNumber     // Catch:{ all -> 0x003a }
-            if (r3 != r6) goto L_0x001a
-            r4.removeRequestForFeature(r5)     // Catch:{ all -> 0x003a }
-        L_0x001a:
-            monitor-exit(r1)     // Catch:{ all -> 0x003a }
-            java.lang.String r1 = "ConnectivityManager"
-            java.lang.StringBuilder r2 = new java.lang.StringBuilder
-            r2.<init>()
-            java.lang.String r3 = "expireRequest with "
-            r2.append(r3)
-            r2.append(r0)
-            java.lang.String r3 = ", "
-            r2.append(r3)
-            r2.append(r6)
-            java.lang.String r2 = r2.toString()
-            android.util.Log.d(r1, r2)
-            return
-        L_0x003a:
-            r2 = move-exception
-            monitor-exit(r1)     // Catch:{ all -> 0x003a }
-            throw r2
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.net.ConnectivityManager.expireRequest(android.net.NetworkCapabilities, int):void");
+    /* JADX INFO: Access modifiers changed from: private */
+    public void expireRequest(NetworkCapabilities netCap, int sequenceNum) {
+        synchronized (sLegacyRequests) {
+            LegacyRequest l = sLegacyRequests.get(netCap);
+            if (l == null) {
+                return;
+            }
+            int ourSeqNum = l.expireSequenceNumber;
+            if (l.expireSequenceNumber == sequenceNum) {
+                removeRequestForFeature(netCap);
+            }
+            Log.m72d(TAG, "expireRequest with " + ourSeqNum + ", " + sequenceNum);
+        }
     }
 
     @UnsupportedAppUsage
@@ -985,9 +865,10 @@ public class ConnectivityManager {
 
     private void sendExpireMsgForFeature(NetworkCapabilities netCap, int seqNum, int delay) {
         if (delay >= 0) {
-            Log.d(TAG, "sending expire msg with seqNum " + seqNum + " and delay " + delay);
+            Log.m72d(TAG, "sending expire msg with seqNum " + seqNum + " and delay " + delay);
             CallbackHandler handler = getDefaultHandler();
-            handler.sendMessageDelayed(handler.obtainMessage(EXPIRE_LEGACY_REQUEST, seqNum, 0, netCap), (long) delay);
+            Message msg = handler.obtainMessage(EXPIRE_LEGACY_REQUEST, seqNum, 0, netCap);
+            handler.sendMessageDelayed(msg, (long) delay);
         }
     }
 
@@ -1016,6 +897,7 @@ public class ConnectivityManager {
         return nc;
     }
 
+    /* loaded from: classes3.dex */
     public static class PacketKeepaliveCallback {
         @UnsupportedAppUsage
         public void onStarted() {
@@ -1030,6 +912,7 @@ public class ConnectivityManager {
         }
     }
 
+    /* loaded from: classes3.dex */
     public class PacketKeepalive {
         public static final int BINDER_DIED = -10;
         public static final int ERROR_HARDWARE_ERROR = -31;
@@ -1044,18 +927,16 @@ public class ConnectivityManager {
         public static final int NO_KEEPALIVE = -1;
         public static final int SUCCESS = 0;
         private static final String TAG = "PacketKeepalive";
-        /* access modifiers changed from: private */
-        public final ISocketKeepaliveCallback mCallback;
-        /* access modifiers changed from: private */
-        public final ExecutorService mExecutor;
+        private final ISocketKeepaliveCallback mCallback;
+        private final ExecutorService mExecutor;
         private final Network mNetwork;
-        /* access modifiers changed from: private */
-        public volatile Integer mSlot;
+        private volatile Integer mSlot;
 
         @UnsupportedAppUsage
         public void stop() {
             try {
-                this.mExecutor.execute(new Runnable() {
+                this.mExecutor.execute(new Runnable() { // from class: android.net.-$$Lambda$ConnectivityManager$PacketKeepalive$--8nwufwzyblnuYRFEYIKx7L4Vg
+                    @Override // java.lang.Runnable
                     public final void run() {
                         ConnectivityManager.PacketKeepalive.lambda$stop$0(ConnectivityManager.PacketKeepalive.this);
                     }
@@ -1070,399 +951,98 @@ public class ConnectivityManager {
                     ConnectivityManager.this.mService.stopKeepalive(packetKeepalive.mNetwork, packetKeepalive.mSlot.intValue());
                 }
             } catch (RemoteException e) {
-                Log.e(TAG, "Error stopping packet keepalive: ", e);
+                Log.m69e(TAG, "Error stopping packet keepalive: ", e);
                 throw e.rethrowFromSystemServer();
             }
         }
 
-        private PacketKeepalive(Network network, final PacketKeepaliveCallback callback) {
+        private PacketKeepalive(Network network, PacketKeepaliveCallback callback) {
             Preconditions.checkNotNull(network, "network cannot be null");
             Preconditions.checkNotNull(callback, "callback cannot be null");
             this.mNetwork = network;
             this.mExecutor = Executors.newSingleThreadExecutor();
-            this.mCallback = new ISocketKeepaliveCallback.Stub(ConnectivityManager.this) {
-                public void onStarted(int slot) {
-                    Binder.withCleanCallingIdentity((FunctionalUtils.ThrowingRunnable) 
-                    /*  JADX ERROR: Method code generation error
-                        jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x0007: INVOKE  
-                          (wrap: android.net.-$$Lambda$ConnectivityManager$PacketKeepalive$1$iOtsqOYp69ztB6u3PYNu-iI_PGo : 0x0004: CONSTRUCTOR  (r1v0 android.net.-$$Lambda$ConnectivityManager$PacketKeepalive$1$iOtsqOYp69ztB6u3PYNu-iI_PGo) = 
-                          (r2v0 'this' android.net.ConnectivityManager$PacketKeepalive$1 A[THIS])
-                          (r3v0 'slot' int)
-                          (wrap: android.net.ConnectivityManager$PacketKeepaliveCallback : 0x0000: IGET  (r0v0 android.net.ConnectivityManager$PacketKeepaliveCallback) = 
-                          (r2v0 'this' android.net.ConnectivityManager$PacketKeepalive$1 A[THIS])
-                         android.net.ConnectivityManager.PacketKeepalive.1.val$callback android.net.ConnectivityManager$PacketKeepaliveCallback)
-                         call: android.net.-$$Lambda$ConnectivityManager$PacketKeepalive$1$iOtsqOYp69ztB6u3PYNu-iI_PGo.<init>(android.net.ConnectivityManager$PacketKeepalive$1, int, android.net.ConnectivityManager$PacketKeepaliveCallback):void type: CONSTRUCTOR)
-                         android.os.Binder.withCleanCallingIdentity(com.android.internal.util.FunctionalUtils$ThrowingRunnable):void type: STATIC in method: android.net.ConnectivityManager.PacketKeepalive.1.onStarted(int):void, dex: classes3.dex
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:221)
-                        	at jadx.core.codegen.RegionGen.makeSimpleBlock(RegionGen.java:109)
-                        	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:55)
-                        	at jadx.core.codegen.RegionGen.makeSimpleRegion(RegionGen.java:92)
-                        	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:58)
-                        	at jadx.core.codegen.MethodGen.addRegionInsns(MethodGen.java:211)
-                        	at jadx.core.codegen.MethodGen.addInstructions(MethodGen.java:204)
-                        	at jadx.core.codegen.ClassGen.addMethodCode(ClassGen.java:318)
-                        	at jadx.core.codegen.ClassGen.addMethod(ClassGen.java:271)
-                        	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:240)
-                        	at java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
-                        	at java.util.ArrayList.forEach(ArrayList.java:1259)
-                        	at java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
-                        	at java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                        	at java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:483)
-                        	at java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:472)
-                        	at java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
-                        	at java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
-                        	at java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                        	at java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:485)
-                        	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
-                        	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
-                        	at jadx.core.codegen.InsnGen.inlineAnonymousConstructor(InsnGen.java:676)
-                        	at jadx.core.codegen.InsnGen.makeConstructor(InsnGen.java:607)
-                        	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:364)
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:231)
-                        	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
-                        	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)
-                        	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:429)
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:250)
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:221)
-                        	at jadx.core.codegen.RegionGen.makeSimpleBlock(RegionGen.java:109)
-                        	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:55)
-                        	at jadx.core.codegen.RegionGen.makeSimpleRegion(RegionGen.java:92)
-                        	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:58)
-                        	at jadx.core.codegen.MethodGen.addRegionInsns(MethodGen.java:211)
-                        	at jadx.core.codegen.MethodGen.addInstructions(MethodGen.java:204)
-                        	at jadx.core.codegen.ClassGen.addMethodCode(ClassGen.java:318)
-                        	at jadx.core.codegen.ClassGen.addMethod(ClassGen.java:271)
-                        	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:240)
-                        	at java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
-                        	at java.util.ArrayList.forEach(ArrayList.java:1259)
-                        	at java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
-                        	at java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                        	at java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:483)
-                        	at java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:472)
-                        	at java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
-                        	at java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
-                        	at java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                        	at java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:485)
-                        	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
-                        	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
-                        	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)
-                        	at jadx.core.codegen.ClassGen.addInnerClass(ClassGen.java:249)
-                        	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:238)
-                        	at java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
-                        	at java.util.ArrayList.forEach(ArrayList.java:1259)
-                        	at java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
-                        	at java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                        	at java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:483)
-                        	at java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:472)
-                        	at java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
-                        	at java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
-                        	at java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                        	at java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:485)
-                        	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
-                        	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
-                        	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)
-                        	at jadx.core.codegen.ClassGen.makeClass(ClassGen.java:78)
-                        	at jadx.core.codegen.CodeGen.wrapCodeGen(CodeGen.java:44)
-                        	at jadx.core.codegen.CodeGen.generateJavaCode(CodeGen.java:33)
-                        	at jadx.core.codegen.CodeGen.generate(CodeGen.java:21)
-                        	at jadx.core.ProcessClass.generateCode(ProcessClass.java:61)
-                        	at jadx.core.dex.nodes.ClassNode.decompile(ClassNode.java:273)
-                        Caused by: jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x0004: CONSTRUCTOR  (r1v0 android.net.-$$Lambda$ConnectivityManager$PacketKeepalive$1$iOtsqOYp69ztB6u3PYNu-iI_PGo) = 
-                          (r2v0 'this' android.net.ConnectivityManager$PacketKeepalive$1 A[THIS])
-                          (r3v0 'slot' int)
-                          (wrap: android.net.ConnectivityManager$PacketKeepaliveCallback : 0x0000: IGET  (r0v0 android.net.ConnectivityManager$PacketKeepaliveCallback) = 
-                          (r2v0 'this' android.net.ConnectivityManager$PacketKeepalive$1 A[THIS])
-                         android.net.ConnectivityManager.PacketKeepalive.1.val$callback android.net.ConnectivityManager$PacketKeepaliveCallback)
-                         call: android.net.-$$Lambda$ConnectivityManager$PacketKeepalive$1$iOtsqOYp69ztB6u3PYNu-iI_PGo.<init>(android.net.ConnectivityManager$PacketKeepalive$1, int, android.net.ConnectivityManager$PacketKeepaliveCallback):void type: CONSTRUCTOR in method: android.net.ConnectivityManager.PacketKeepalive.1.onStarted(int):void, dex: classes3.dex
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
-                        	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
-                        	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)
-                        	at jadx.core.codegen.InsnGen.generateMethodArguments(InsnGen.java:787)
-                        	at jadx.core.codegen.InsnGen.makeInvoke(InsnGen.java:728)
-                        	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:368)
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:250)
-                        	... 74 more
-                        Caused by: jadx.core.utils.exceptions.JadxRuntimeException: Expected class to be processed at this point, class: android.net.-$$Lambda$ConnectivityManager$PacketKeepalive$1$iOtsqOYp69ztB6u3PYNu-iI_PGo, state: NOT_LOADED
-                        	at jadx.core.dex.nodes.ClassNode.ensureProcessed(ClassNode.java:260)
-                        	at jadx.core.codegen.InsnGen.makeConstructor(InsnGen.java:606)
-                        	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:364)
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:231)
-                        	... 80 more
-                        */
-                    /*
-                        this = this;
-                        android.net.ConnectivityManager$PacketKeepaliveCallback r0 = r4
-                        android.net.-$$Lambda$ConnectivityManager$PacketKeepalive$1$iOtsqOYp69ztB6u3PYNu-iI_PGo r1 = new android.net.-$$Lambda$ConnectivityManager$PacketKeepalive$1$iOtsqOYp69ztB6u3PYNu-iI_PGo
-                        r1.<init>(r2, r3, r0)
-                        android.os.Binder.withCleanCallingIdentity((com.android.internal.util.FunctionalUtils.ThrowingRunnable) r1)
-                        return
-                    */
-                    throw new UnsupportedOperationException("Method not decompiled: android.net.ConnectivityManager.PacketKeepalive.AnonymousClass1.onStarted(int):void");
-                }
+            this.mCallback = new BinderC12681(ConnectivityManager.this, callback);
+        }
 
-                public static /* synthetic */ void lambda$onStarted$0(AnonymousClass1 r2, int slot, PacketKeepaliveCallback callback) {
-                    Integer unused = PacketKeepalive.this.mSlot = Integer.valueOf(slot);
-                    callback.onStarted();
-                }
+        /* renamed from: android.net.ConnectivityManager$PacketKeepalive$1 */
+        /* loaded from: classes3.dex */
+        class BinderC12681 extends ISocketKeepaliveCallback.Stub {
+            final /* synthetic */ PacketKeepaliveCallback val$callback;
+            final /* synthetic */ ConnectivityManager val$this$0;
 
-                public void onStopped() {
-                    Binder.withCleanCallingIdentity((FunctionalUtils.ThrowingRunnable) 
-                    /*  JADX ERROR: Method code generation error
-                        jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x0007: INVOKE  
-                          (wrap: android.net.-$$Lambda$ConnectivityManager$PacketKeepalive$1$-H5tzn67t3ydWL8tXpl9UyOmDcc : 0x0004: CONSTRUCTOR  (r1v0 android.net.-$$Lambda$ConnectivityManager$PacketKeepalive$1$-H5tzn67t3ydWL8tXpl9UyOmDcc) = 
-                          (r2v0 'this' android.net.ConnectivityManager$PacketKeepalive$1 A[THIS])
-                          (wrap: android.net.ConnectivityManager$PacketKeepaliveCallback : 0x0000: IGET  (r0v0 android.net.ConnectivityManager$PacketKeepaliveCallback) = 
-                          (r2v0 'this' android.net.ConnectivityManager$PacketKeepalive$1 A[THIS])
-                         android.net.ConnectivityManager.PacketKeepalive.1.val$callback android.net.ConnectivityManager$PacketKeepaliveCallback)
-                         call: android.net.-$$Lambda$ConnectivityManager$PacketKeepalive$1$-H5tzn67t3ydWL8tXpl9UyOmDcc.<init>(android.net.ConnectivityManager$PacketKeepalive$1, android.net.ConnectivityManager$PacketKeepaliveCallback):void type: CONSTRUCTOR)
-                         android.os.Binder.withCleanCallingIdentity(com.android.internal.util.FunctionalUtils$ThrowingRunnable):void type: STATIC in method: android.net.ConnectivityManager.PacketKeepalive.1.onStopped():void, dex: classes3.dex
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:221)
-                        	at jadx.core.codegen.RegionGen.makeSimpleBlock(RegionGen.java:109)
-                        	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:55)
-                        	at jadx.core.codegen.RegionGen.makeSimpleRegion(RegionGen.java:92)
-                        	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:58)
-                        	at jadx.core.codegen.MethodGen.addRegionInsns(MethodGen.java:211)
-                        	at jadx.core.codegen.MethodGen.addInstructions(MethodGen.java:204)
-                        	at jadx.core.codegen.ClassGen.addMethodCode(ClassGen.java:318)
-                        	at jadx.core.codegen.ClassGen.addMethod(ClassGen.java:271)
-                        	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:240)
-                        	at java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
-                        	at java.util.ArrayList.forEach(ArrayList.java:1259)
-                        	at java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
-                        	at java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                        	at java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:483)
-                        	at java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:472)
-                        	at java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
-                        	at java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
-                        	at java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                        	at java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:485)
-                        	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
-                        	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
-                        	at jadx.core.codegen.InsnGen.inlineAnonymousConstructor(InsnGen.java:676)
-                        	at jadx.core.codegen.InsnGen.makeConstructor(InsnGen.java:607)
-                        	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:364)
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:231)
-                        	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
-                        	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)
-                        	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:429)
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:250)
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:221)
-                        	at jadx.core.codegen.RegionGen.makeSimpleBlock(RegionGen.java:109)
-                        	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:55)
-                        	at jadx.core.codegen.RegionGen.makeSimpleRegion(RegionGen.java:92)
-                        	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:58)
-                        	at jadx.core.codegen.MethodGen.addRegionInsns(MethodGen.java:211)
-                        	at jadx.core.codegen.MethodGen.addInstructions(MethodGen.java:204)
-                        	at jadx.core.codegen.ClassGen.addMethodCode(ClassGen.java:318)
-                        	at jadx.core.codegen.ClassGen.addMethod(ClassGen.java:271)
-                        	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:240)
-                        	at java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
-                        	at java.util.ArrayList.forEach(ArrayList.java:1259)
-                        	at java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
-                        	at java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                        	at java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:483)
-                        	at java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:472)
-                        	at java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
-                        	at java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
-                        	at java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                        	at java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:485)
-                        	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
-                        	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
-                        	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)
-                        	at jadx.core.codegen.ClassGen.addInnerClass(ClassGen.java:249)
-                        	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:238)
-                        	at java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
-                        	at java.util.ArrayList.forEach(ArrayList.java:1259)
-                        	at java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
-                        	at java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                        	at java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:483)
-                        	at java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:472)
-                        	at java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
-                        	at java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
-                        	at java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                        	at java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:485)
-                        	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
-                        	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
-                        	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)
-                        	at jadx.core.codegen.ClassGen.makeClass(ClassGen.java:78)
-                        	at jadx.core.codegen.CodeGen.wrapCodeGen(CodeGen.java:44)
-                        	at jadx.core.codegen.CodeGen.generateJavaCode(CodeGen.java:33)
-                        	at jadx.core.codegen.CodeGen.generate(CodeGen.java:21)
-                        	at jadx.core.ProcessClass.generateCode(ProcessClass.java:61)
-                        	at jadx.core.dex.nodes.ClassNode.decompile(ClassNode.java:273)
-                        Caused by: jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x0004: CONSTRUCTOR  (r1v0 android.net.-$$Lambda$ConnectivityManager$PacketKeepalive$1$-H5tzn67t3ydWL8tXpl9UyOmDcc) = 
-                          (r2v0 'this' android.net.ConnectivityManager$PacketKeepalive$1 A[THIS])
-                          (wrap: android.net.ConnectivityManager$PacketKeepaliveCallback : 0x0000: IGET  (r0v0 android.net.ConnectivityManager$PacketKeepaliveCallback) = 
-                          (r2v0 'this' android.net.ConnectivityManager$PacketKeepalive$1 A[THIS])
-                         android.net.ConnectivityManager.PacketKeepalive.1.val$callback android.net.ConnectivityManager$PacketKeepaliveCallback)
-                         call: android.net.-$$Lambda$ConnectivityManager$PacketKeepalive$1$-H5tzn67t3ydWL8tXpl9UyOmDcc.<init>(android.net.ConnectivityManager$PacketKeepalive$1, android.net.ConnectivityManager$PacketKeepaliveCallback):void type: CONSTRUCTOR in method: android.net.ConnectivityManager.PacketKeepalive.1.onStopped():void, dex: classes3.dex
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
-                        	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
-                        	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)
-                        	at jadx.core.codegen.InsnGen.generateMethodArguments(InsnGen.java:787)
-                        	at jadx.core.codegen.InsnGen.makeInvoke(InsnGen.java:728)
-                        	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:368)
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:250)
-                        	... 74 more
-                        Caused by: jadx.core.utils.exceptions.JadxRuntimeException: Expected class to be processed at this point, class: android.net.-$$Lambda$ConnectivityManager$PacketKeepalive$1$-H5tzn67t3ydWL8tXpl9UyOmDcc, state: NOT_LOADED
-                        	at jadx.core.dex.nodes.ClassNode.ensureProcessed(ClassNode.java:260)
-                        	at jadx.core.codegen.InsnGen.makeConstructor(InsnGen.java:606)
-                        	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:364)
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:231)
-                        	... 80 more
-                        */
-                    /*
-                        this = this;
-                        android.net.ConnectivityManager$PacketKeepaliveCallback r0 = r4
-                        android.net.-$$Lambda$ConnectivityManager$PacketKeepalive$1$-H5tzn67t3ydWL8tXpl9UyOmDcc r1 = new android.net.-$$Lambda$ConnectivityManager$PacketKeepalive$1$-H5tzn67t3ydWL8tXpl9UyOmDcc
-                        r1.<init>(r2, r0)
-                        android.os.Binder.withCleanCallingIdentity((com.android.internal.util.FunctionalUtils.ThrowingRunnable) r1)
-                        android.net.ConnectivityManager$PacketKeepalive r0 = android.net.ConnectivityManager.PacketKeepalive.this
-                        java.util.concurrent.ExecutorService r0 = r0.mExecutor
-                        r0.shutdown()
-                        return
-                    */
-                    throw new UnsupportedOperationException("Method not decompiled: android.net.ConnectivityManager.PacketKeepalive.AnonymousClass1.onStopped():void");
-                }
+            BinderC12681(ConnectivityManager connectivityManager, PacketKeepaliveCallback packetKeepaliveCallback) {
+                this.val$this$0 = connectivityManager;
+                this.val$callback = packetKeepaliveCallback;
+            }
 
-                public static /* synthetic */ void lambda$onStopped$2(AnonymousClass1 r2, PacketKeepaliveCallback callback) {
-                    Integer unused = PacketKeepalive.this.mSlot = null;
-                    callback.onStopped();
-                }
+            @Override // android.net.ISocketKeepaliveCallback
+            public void onStarted(final int slot) {
+                final PacketKeepaliveCallback packetKeepaliveCallback = this.val$callback;
+                Binder.withCleanCallingIdentity(new FunctionalUtils.ThrowingRunnable() { // from class: android.net.-$$Lambda$ConnectivityManager$PacketKeepalive$1$iOtsqOYp69ztB6u3PYNu-iI_PGo
+                    @Override // com.android.internal.util.FunctionalUtils.ThrowingRunnable
+                    public final void runOrThrow() {
+                        ConnectivityManager.PacketKeepalive.this.mExecutor.execute(new Runnable() { // from class: android.net.-$$Lambda$ConnectivityManager$PacketKeepalive$1$NfMgP6Nh6Ep6LcaiJ10o_zBccII
+                            @Override // java.lang.Runnable
+                            public final void run() {
+                                ConnectivityManager.PacketKeepalive.BinderC12681.lambda$onStarted$0(ConnectivityManager.PacketKeepalive.BinderC12681.this, r2, r3);
+                            }
+                        });
+                    }
+                });
+            }
 
-                public void onError(int error) {
-                    Binder.withCleanCallingIdentity((FunctionalUtils.ThrowingRunnable) 
-                    /*  JADX ERROR: Method code generation error
-                        jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x0007: INVOKE  
-                          (wrap: android.net.-$$Lambda$ConnectivityManager$PacketKeepalive$1$nt5Pgsn85fhX6h9EJ0eAK_PXAjU : 0x0004: CONSTRUCTOR  (r1v0 android.net.-$$Lambda$ConnectivityManager$PacketKeepalive$1$nt5Pgsn85fhX6h9EJ0eAK_PXAjU) = 
-                          (r2v0 'this' android.net.ConnectivityManager$PacketKeepalive$1 A[THIS])
-                          (wrap: android.net.ConnectivityManager$PacketKeepaliveCallback : 0x0000: IGET  (r0v0 android.net.ConnectivityManager$PacketKeepaliveCallback) = 
-                          (r2v0 'this' android.net.ConnectivityManager$PacketKeepalive$1 A[THIS])
-                         android.net.ConnectivityManager.PacketKeepalive.1.val$callback android.net.ConnectivityManager$PacketKeepaliveCallback)
-                          (r3v0 'error' int)
-                         call: android.net.-$$Lambda$ConnectivityManager$PacketKeepalive$1$nt5Pgsn85fhX6h9EJ0eAK_PXAjU.<init>(android.net.ConnectivityManager$PacketKeepalive$1, android.net.ConnectivityManager$PacketKeepaliveCallback, int):void type: CONSTRUCTOR)
-                         android.os.Binder.withCleanCallingIdentity(com.android.internal.util.FunctionalUtils$ThrowingRunnable):void type: STATIC in method: android.net.ConnectivityManager.PacketKeepalive.1.onError(int):void, dex: classes3.dex
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:221)
-                        	at jadx.core.codegen.RegionGen.makeSimpleBlock(RegionGen.java:109)
-                        	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:55)
-                        	at jadx.core.codegen.RegionGen.makeSimpleRegion(RegionGen.java:92)
-                        	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:58)
-                        	at jadx.core.codegen.MethodGen.addRegionInsns(MethodGen.java:211)
-                        	at jadx.core.codegen.MethodGen.addInstructions(MethodGen.java:204)
-                        	at jadx.core.codegen.ClassGen.addMethodCode(ClassGen.java:318)
-                        	at jadx.core.codegen.ClassGen.addMethod(ClassGen.java:271)
-                        	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:240)
-                        	at java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
-                        	at java.util.ArrayList.forEach(ArrayList.java:1259)
-                        	at java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
-                        	at java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                        	at java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:483)
-                        	at java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:472)
-                        	at java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
-                        	at java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
-                        	at java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                        	at java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:485)
-                        	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
-                        	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
-                        	at jadx.core.codegen.InsnGen.inlineAnonymousConstructor(InsnGen.java:676)
-                        	at jadx.core.codegen.InsnGen.makeConstructor(InsnGen.java:607)
-                        	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:364)
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:231)
-                        	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
-                        	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)
-                        	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:429)
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:250)
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:221)
-                        	at jadx.core.codegen.RegionGen.makeSimpleBlock(RegionGen.java:109)
-                        	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:55)
-                        	at jadx.core.codegen.RegionGen.makeSimpleRegion(RegionGen.java:92)
-                        	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:58)
-                        	at jadx.core.codegen.MethodGen.addRegionInsns(MethodGen.java:211)
-                        	at jadx.core.codegen.MethodGen.addInstructions(MethodGen.java:204)
-                        	at jadx.core.codegen.ClassGen.addMethodCode(ClassGen.java:318)
-                        	at jadx.core.codegen.ClassGen.addMethod(ClassGen.java:271)
-                        	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:240)
-                        	at java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
-                        	at java.util.ArrayList.forEach(ArrayList.java:1259)
-                        	at java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
-                        	at java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                        	at java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:483)
-                        	at java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:472)
-                        	at java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
-                        	at java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
-                        	at java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                        	at java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:485)
-                        	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
-                        	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
-                        	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)
-                        	at jadx.core.codegen.ClassGen.addInnerClass(ClassGen.java:249)
-                        	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:238)
-                        	at java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
-                        	at java.util.ArrayList.forEach(ArrayList.java:1259)
-                        	at java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
-                        	at java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                        	at java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:483)
-                        	at java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:472)
-                        	at java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
-                        	at java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
-                        	at java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                        	at java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:485)
-                        	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
-                        	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
-                        	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)
-                        	at jadx.core.codegen.ClassGen.makeClass(ClassGen.java:78)
-                        	at jadx.core.codegen.CodeGen.wrapCodeGen(CodeGen.java:44)
-                        	at jadx.core.codegen.CodeGen.generateJavaCode(CodeGen.java:33)
-                        	at jadx.core.codegen.CodeGen.generate(CodeGen.java:21)
-                        	at jadx.core.ProcessClass.generateCode(ProcessClass.java:61)
-                        	at jadx.core.dex.nodes.ClassNode.decompile(ClassNode.java:273)
-                        Caused by: jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x0004: CONSTRUCTOR  (r1v0 android.net.-$$Lambda$ConnectivityManager$PacketKeepalive$1$nt5Pgsn85fhX6h9EJ0eAK_PXAjU) = 
-                          (r2v0 'this' android.net.ConnectivityManager$PacketKeepalive$1 A[THIS])
-                          (wrap: android.net.ConnectivityManager$PacketKeepaliveCallback : 0x0000: IGET  (r0v0 android.net.ConnectivityManager$PacketKeepaliveCallback) = 
-                          (r2v0 'this' android.net.ConnectivityManager$PacketKeepalive$1 A[THIS])
-                         android.net.ConnectivityManager.PacketKeepalive.1.val$callback android.net.ConnectivityManager$PacketKeepaliveCallback)
-                          (r3v0 'error' int)
-                         call: android.net.-$$Lambda$ConnectivityManager$PacketKeepalive$1$nt5Pgsn85fhX6h9EJ0eAK_PXAjU.<init>(android.net.ConnectivityManager$PacketKeepalive$1, android.net.ConnectivityManager$PacketKeepaliveCallback, int):void type: CONSTRUCTOR in method: android.net.ConnectivityManager.PacketKeepalive.1.onError(int):void, dex: classes3.dex
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
-                        	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
-                        	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)
-                        	at jadx.core.codegen.InsnGen.generateMethodArguments(InsnGen.java:787)
-                        	at jadx.core.codegen.InsnGen.makeInvoke(InsnGen.java:728)
-                        	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:368)
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:250)
-                        	... 74 more
-                        Caused by: jadx.core.utils.exceptions.JadxRuntimeException: Expected class to be processed at this point, class: android.net.-$$Lambda$ConnectivityManager$PacketKeepalive$1$nt5Pgsn85fhX6h9EJ0eAK_PXAjU, state: NOT_LOADED
-                        	at jadx.core.dex.nodes.ClassNode.ensureProcessed(ClassNode.java:260)
-                        	at jadx.core.codegen.InsnGen.makeConstructor(InsnGen.java:606)
-                        	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:364)
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:231)
-                        	... 80 more
-                        */
-                    /*
-                        this = this;
-                        android.net.ConnectivityManager$PacketKeepaliveCallback r0 = r4
-                        android.net.-$$Lambda$ConnectivityManager$PacketKeepalive$1$nt5Pgsn85fhX6h9EJ0eAK_PXAjU r1 = new android.net.-$$Lambda$ConnectivityManager$PacketKeepalive$1$nt5Pgsn85fhX6h9EJ0eAK_PXAjU
-                        r1.<init>(r2, r0, r3)
-                        android.os.Binder.withCleanCallingIdentity((com.android.internal.util.FunctionalUtils.ThrowingRunnable) r1)
-                        android.net.ConnectivityManager$PacketKeepalive r0 = android.net.ConnectivityManager.PacketKeepalive.this
-                        java.util.concurrent.ExecutorService r0 = r0.mExecutor
-                        r0.shutdown()
-                        return
-                    */
-                    throw new UnsupportedOperationException("Method not decompiled: android.net.ConnectivityManager.PacketKeepalive.AnonymousClass1.onError(int):void");
-                }
+            public static /* synthetic */ void lambda$onStarted$0(BinderC12681 binderC12681, int slot, PacketKeepaliveCallback callback) {
+                PacketKeepalive.this.mSlot = Integer.valueOf(slot);
+                callback.onStarted();
+            }
 
-                public static /* synthetic */ void lambda$onError$4(AnonymousClass1 r2, PacketKeepaliveCallback callback, int error) {
-                    Integer unused = PacketKeepalive.this.mSlot = null;
-                    callback.onError(error);
-                }
+            @Override // android.net.ISocketKeepaliveCallback
+            public void onStopped() {
+                final PacketKeepaliveCallback packetKeepaliveCallback = this.val$callback;
+                Binder.withCleanCallingIdentity(new FunctionalUtils.ThrowingRunnable() { // from class: android.net.-$$Lambda$ConnectivityManager$PacketKeepalive$1$-H5tzn67t3ydWL8tXpl9UyOmDcc
+                    @Override // com.android.internal.util.FunctionalUtils.ThrowingRunnable
+                    public final void runOrThrow() {
+                        ConnectivityManager.PacketKeepalive.this.mExecutor.execute(new Runnable() { // from class: android.net.-$$Lambda$ConnectivityManager$PacketKeepalive$1$WmmtbYWlzqL-V8wWUDKe3CWjvy0
+                            @Override // java.lang.Runnable
+                            public final void run() {
+                                ConnectivityManager.PacketKeepalive.BinderC12681.lambda$onStopped$2(ConnectivityManager.PacketKeepalive.BinderC12681.this, r2);
+                            }
+                        });
+                    }
+                });
+                PacketKeepalive.this.mExecutor.shutdown();
+            }
 
-                public void onDataReceived() {
-                }
-            };
+            public static /* synthetic */ void lambda$onStopped$2(BinderC12681 binderC12681, PacketKeepaliveCallback callback) {
+                PacketKeepalive.this.mSlot = null;
+                callback.onStopped();
+            }
+
+            @Override // android.net.ISocketKeepaliveCallback
+            public void onError(final int error) {
+                final PacketKeepaliveCallback packetKeepaliveCallback = this.val$callback;
+                Binder.withCleanCallingIdentity(new FunctionalUtils.ThrowingRunnable() { // from class: android.net.-$$Lambda$ConnectivityManager$PacketKeepalive$1$nt5Pgsn85fhX6h9EJ0eAK_PXAjU
+                    @Override // com.android.internal.util.FunctionalUtils.ThrowingRunnable
+                    public final void runOrThrow() {
+                        ConnectivityManager.PacketKeepalive.this.mExecutor.execute(new Runnable() { // from class: android.net.-$$Lambda$ConnectivityManager$PacketKeepalive$1$JWcQQZv8Qrs81cZ-BMAOZZ8MUeU
+                            @Override // java.lang.Runnable
+                            public final void run() {
+                                ConnectivityManager.PacketKeepalive.BinderC12681.lambda$onError$4(ConnectivityManager.PacketKeepalive.BinderC12681.this, r2, r3);
+                            }
+                        });
+                    }
+                });
+                PacketKeepalive.this.mExecutor.shutdown();
+            }
+
+            public static /* synthetic */ void lambda$onError$4(BinderC12681 binderC12681, PacketKeepaliveCallback callback, int error) {
+                PacketKeepalive.this.mSlot = null;
+                callback.onError(error);
+            }
+
+            @Override // android.net.ISocketKeepaliveCallback
+            public void onDataReceived() {
+            }
         }
     }
 
@@ -1473,7 +1053,7 @@ public class ConnectivityManager {
             this.mService.startNattKeepalive(network, intervalSeconds, k.mCallback, srcAddr.getHostAddress(), srcPort, dstAddr.getHostAddress());
             return k;
         } catch (RemoteException e) {
-            Log.e(TAG, "Error starting packet keepalive: ", e);
+            Log.m69e(TAG, "Error starting packet keepalive: ", e);
             throw e.rethrowFromSystemServer();
         }
     }
@@ -1481,7 +1061,8 @@ public class ConnectivityManager {
     public SocketKeepalive createSocketKeepalive(Network network, IpSecManager.UdpEncapsulationSocket socket, InetAddress source, InetAddress destination, Executor executor, SocketKeepalive.Callback callback) {
         ParcelFileDescriptor dup;
         try {
-            dup = ParcelFileDescriptor.dup(socket.getFileDescriptor());
+            ParcelFileDescriptor dup2 = ParcelFileDescriptor.dup(socket.getFileDescriptor());
+            dup = dup2;
         } catch (IOException e) {
             dup = new ParcelFileDescriptor(new FileDescriptor());
         }
@@ -1492,9 +1073,9 @@ public class ConnectivityManager {
     public SocketKeepalive createNattKeepalive(Network network, ParcelFileDescriptor pfd, InetAddress source, InetAddress destination, Executor executor, SocketKeepalive.Callback callback) {
         ParcelFileDescriptor dup;
         try {
-            dup = pfd.dup();
+            ParcelFileDescriptor dup2 = pfd.dup();
+            dup = dup2;
         } catch (IOException e) {
-            IOException iOException = e;
             dup = new ParcelFileDescriptor(new FileDescriptor());
         }
         return new NattSocketKeepalive(this.mService, network, dup, -1, source, destination, executor, callback);
@@ -1504,7 +1085,8 @@ public class ConnectivityManager {
     public SocketKeepalive createSocketKeepalive(Network network, Socket socket, Executor executor, SocketKeepalive.Callback callback) {
         ParcelFileDescriptor dup;
         try {
-            dup = ParcelFileDescriptor.fromSocket(socket);
+            ParcelFileDescriptor dup2 = ParcelFileDescriptor.fromSocket(socket);
+            dup = dup2;
         } catch (UncheckedIOException e) {
             dup = new ParcelFileDescriptor(new FileDescriptor());
         }
@@ -1516,8 +1098,8 @@ public class ConnectivityManager {
         return requestRouteToHostAddress(networkType, NetworkUtils.intToInetAddress(hostAddress));
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public boolean requestRouteToHostAddress(int networkType, InetAddress hostAddress) {
         checkLegacyRoutingApiAccess();
         try {
@@ -1532,13 +1114,13 @@ public class ConnectivityManager {
         return true;
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public void setBackgroundDataSetting(boolean allowBackgroundData) {
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public NetworkQuotaInfo getActiveNetworkQuotaInfo() {
         try {
             return this.mService.getActiveNetworkQuotaInfo();
@@ -1547,41 +1129,40 @@ public class ConnectivityManager {
         }
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public boolean getMobileDataEnabled() {
         IBinder b = ServiceManager.getService("phone");
         if (b != null) {
             try {
                 ITelephony it = ITelephony.Stub.asInterface(b);
                 int subId = SubscriptionManager.getDefaultDataSubscriptionId();
-                Log.d(TAG, "getMobileDataEnabled()+ subId=" + subId);
+                Log.m72d(TAG, "getMobileDataEnabled()+ subId=" + subId);
                 boolean retVal = it.isUserDataEnabled(subId);
-                Log.d(TAG, "getMobileDataEnabled()- subId=" + subId + " retVal=" + retVal);
+                Log.m72d(TAG, "getMobileDataEnabled()- subId=" + subId + " retVal=" + retVal);
                 return retVal;
             } catch (RemoteException e) {
                 throw e.rethrowFromSystemServer();
             }
-        } else {
-            Log.d(TAG, "getMobileDataEnabled()- remote exception retVal=false");
-            return false;
         }
+        Log.m72d(TAG, "getMobileDataEnabled()- remote exception retVal=false");
+        return false;
     }
 
     private INetworkManagementService getNetworkManagementService() {
         synchronized (this) {
             if (this.mNMService != null) {
-                INetworkManagementService iNetworkManagementService = this.mNMService;
-                return iNetworkManagementService;
+                return this.mNMService;
             }
-            this.mNMService = INetworkManagementService.Stub.asInterface(ServiceManager.getService(Context.NETWORKMANAGEMENT_SERVICE));
-            INetworkManagementService iNetworkManagementService2 = this.mNMService;
-            return iNetworkManagementService2;
+            IBinder b = ServiceManager.getService(Context.NETWORKMANAGEMENT_SERVICE);
+            this.mNMService = INetworkManagementService.Stub.asInterface(b);
+            return this.mNMService;
         }
     }
 
     public void addDefaultNetworkActiveListener(final OnNetworkActiveListener l) {
-        INetworkActivityListener rl = new INetworkActivityListener.Stub() {
+        INetworkActivityListener rl = new INetworkActivityListener.Stub() { // from class: android.net.ConnectivityManager.1
+            @Override // android.p007os.INetworkActivityListener
             public void onNetworkActive() throws RemoteException {
                 l.onNetworkActive();
             }
@@ -1639,11 +1220,12 @@ public class ConnectivityManager {
     public static final void enforceTetherChangePermission(Context context, String callingPkg) {
         Preconditions.checkNotNull(context, "Context cannot be null");
         Preconditions.checkNotNull(callingPkg, "callingPkg cannot be null");
-        if (context.getResources().getStringArray(R.array.config_mobile_hotspot_provision_app).length == 2) {
-            context.enforceCallingOrSelfPermission(Manifest.permission.TETHER_PRIVILEGED, "ConnectivityService");
-        } else {
-            Settings.checkAndNoteWriteSettingsOperation(context, Binder.getCallingUid(), callingPkg, true);
+        if (context.getResources().getStringArray(C3132R.array.config_mobile_hotspot_provision_app).length == 2) {
+            context.enforceCallingOrSelfPermission(Manifest.C0000permission.TETHER_PRIVILEGED, "ConnectivityService");
+            return;
         }
+        int uid = Binder.getCallingUid();
+        Settings.checkAndNoteWriteSettingsOperation(context, uid, callingPkg, true);
     }
 
     @Deprecated
@@ -1651,13 +1233,13 @@ public class ConnectivityManager {
         return sInstance;
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     private static ConnectivityManager getInstance() {
-        if (getInstanceOrNull() != null) {
-            return getInstanceOrNull();
+        if (getInstanceOrNull() == null) {
+            throw new IllegalStateException("No ConnectivityManager yet constructed");
         }
-        throw new IllegalStateException("No ConnectivityManager yet constructed");
+        return getInstanceOrNull();
     }
 
     @UnsupportedAppUsage
@@ -1699,7 +1281,7 @@ public class ConnectivityManager {
     public int tether(String iface) {
         try {
             String pkgName = this.mContext.getOpPackageName();
-            Log.i(TAG, "tether caller:" + pkgName);
+            Log.m68i(TAG, "tether caller:" + pkgName);
             return this.mService.tether(iface, pkgName);
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
@@ -1710,7 +1292,7 @@ public class ConnectivityManager {
     public int untether(String iface) {
         try {
             String pkgName = this.mContext.getOpPackageName();
-            Log.i(TAG, "untether caller:" + pkgName);
+            Log.m68i(TAG, "untether caller:" + pkgName);
             return this.mService.untether(iface, pkgName);
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
@@ -1719,16 +1301,18 @@ public class ConnectivityManager {
 
     @SystemApi
     public boolean isTetheringSupported() {
+        String pkgName = this.mContext.getOpPackageName();
         try {
-            return this.mService.isTetheringSupported(this.mContext.getOpPackageName());
-        } catch (SecurityException e) {
+            return this.mService.isTetheringSupported(pkgName);
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
+        } catch (SecurityException e2) {
             return false;
-        } catch (RemoteException e2) {
-            throw e2.rethrowFromSystemServer();
         }
     }
 
     @SystemApi
+    /* loaded from: classes3.dex */
     public static abstract class OnStartTetheringCallback {
         public void onTetheringStarted() {
         }
@@ -1739,15 +1323,15 @@ public class ConnectivityManager {
 
     @SystemApi
     public void startTethering(int type, boolean showProvisioningUi, OnStartTetheringCallback callback) {
-        startTethering(type, showProvisioningUi, callback, (Handler) null);
+        startTethering(type, showProvisioningUi, callback, null);
     }
 
     @SystemApi
     public void startTethering(int type, boolean showProvisioningUi, final OnStartTetheringCallback callback, Handler handler) {
         Preconditions.checkNotNull(callback, "OnStartTetheringCallback cannot be null.");
-        ResultReceiver wrappedCallback = new ResultReceiver(handler) {
-            /* access modifiers changed from: protected */
-            public void onReceiveResult(int resultCode, Bundle resultData) {
+        ResultReceiver wrappedCallback = new ResultReceiver(handler) { // from class: android.net.ConnectivityManager.2
+            @Override // android.p007os.ResultReceiver
+            protected void onReceiveResult(int resultCode, Bundle resultData) {
                 if (resultCode == 0) {
                     callback.onTetheringStarted();
                 } else {
@@ -1757,11 +1341,11 @@ public class ConnectivityManager {
         };
         try {
             String pkgName = this.mContext.getOpPackageName();
-            Log.i(TAG, "startTethering caller:" + pkgName);
+            Log.m68i(TAG, "startTethering caller:" + pkgName);
             this.mService.startTethering(type, wrappedCallback, showProvisioningUi, pkgName);
         } catch (RemoteException e) {
-            Log.e(TAG, "Exception trying to start tethering.", e);
-            wrappedCallback.send(2, (Bundle) null);
+            Log.m69e(TAG, "Exception trying to start tethering.", e);
+            wrappedCallback.send(2, null);
         }
     }
 
@@ -1769,7 +1353,7 @@ public class ConnectivityManager {
     public void stopTethering(int type) {
         try {
             String pkgName = this.mContext.getOpPackageName();
-            Log.i(TAG, "stopTethering caller:" + pkgName);
+            Log.m68i(TAG, "stopTethering caller:" + pkgName);
             this.mService.stopTethering(type, pkgName);
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
@@ -1777,53 +1361,55 @@ public class ConnectivityManager {
     }
 
     @SystemApi
+    /* loaded from: classes3.dex */
     public static abstract class OnTetheringEventCallback {
         public void onUpstreamChanged(Network network) {
         }
     }
 
     @SystemApi
-    public void registerTetheringEventCallback(final Executor executor, final OnTetheringEventCallback callback) {
+    public void registerTetheringEventCallback(Executor executor, OnTetheringEventCallback callback) {
         Preconditions.checkNotNull(callback, "OnTetheringEventCallback cannot be null.");
         synchronized (this.mTetheringEventCallbacks) {
             Preconditions.checkArgument(!this.mTetheringEventCallbacks.containsKey(callback), "callback was already registered.");
-            ITetheringEventCallback remoteCallback = new ITetheringEventCallback.Stub() {
-                public void onUpstreamChanged(Network network) throws RemoteException {
-                    Binder.withCleanCallingIdentity((FunctionalUtils.ThrowingRunnable) new FunctionalUtils.ThrowingRunnable(executor, callback, network) {
-                        private final /* synthetic */ Executor f$0;
-                        private final /* synthetic */ ConnectivityManager.OnTetheringEventCallback f$1;
-                        private final /* synthetic */ Network f$2;
-
-                        {
-                            this.f$0 = r1;
-                            this.f$1 = r2;
-                            this.f$2 = r3;
-                        }
-
-                        public final void runOrThrow() {
-                            this.f$0.execute(new Runnable(this.f$2) {
-                                private final /* synthetic */ Network f$1;
-
-                                {
-                                    this.f$1 = r2;
-                                }
-
-                                public final void run() {
-                                    ConnectivityManager.OnTetheringEventCallback.this.onUpstreamChanged(this.f$1);
-                                }
-                            });
-                        }
-                    });
-                }
-            };
+            ITetheringEventCallback remoteCallback = new BinderC12653(executor, callback);
             try {
                 String pkgName = this.mContext.getOpPackageName();
-                Log.i(TAG, "registerTetheringUpstreamCallback:" + pkgName);
+                Log.m68i(TAG, "registerTetheringUpstreamCallback:" + pkgName);
                 this.mService.registerTetheringEventCallback(remoteCallback, pkgName);
                 this.mTetheringEventCallbacks.put(callback, remoteCallback);
             } catch (RemoteException e) {
                 throw e.rethrowFromSystemServer();
             }
+        }
+    }
+
+    /* renamed from: android.net.ConnectivityManager$3 */
+    /* loaded from: classes3.dex */
+    class BinderC12653 extends ITetheringEventCallback.Stub {
+        final /* synthetic */ OnTetheringEventCallback val$callback;
+        final /* synthetic */ Executor val$executor;
+
+        BinderC12653(Executor executor, OnTetheringEventCallback onTetheringEventCallback) {
+            this.val$executor = executor;
+            this.val$callback = onTetheringEventCallback;
+        }
+
+        @Override // android.net.ITetheringEventCallback
+        public void onUpstreamChanged(final Network network) throws RemoteException {
+            final Executor executor = this.val$executor;
+            final OnTetheringEventCallback onTetheringEventCallback = this.val$callback;
+            Binder.withCleanCallingIdentity(new FunctionalUtils.ThrowingRunnable() { // from class: android.net.-$$Lambda$ConnectivityManager$3$BfAvTRJTF0an2PdeqkENEBULYBU
+                @Override // com.android.internal.util.FunctionalUtils.ThrowingRunnable
+                public final void runOrThrow() {
+                    executor.execute(new Runnable() { // from class: android.net.-$$Lambda$ConnectivityManager$3$Hh_etCA-vVs2IV58umWLOd1O4yk
+                        @Override // java.lang.Runnable
+                        public final void run() {
+                            ConnectivityManager.OnTetheringEventCallback.this.onUpstreamChanged(r2);
+                        }
+                    });
+                }
+            });
         }
     }
 
@@ -1834,7 +1420,7 @@ public class ConnectivityManager {
             Preconditions.checkNotNull(remoteCallback, "callback was not registered.");
             try {
                 String pkgName = this.mContext.getOpPackageName();
-                Log.i(TAG, "unregisterTetheringEventCallback:" + pkgName);
+                Log.m68i(TAG, "unregisterTetheringEventCallback:" + pkgName);
                 this.mService.unregisterTetheringEventCallback(remoteCallback, pkgName);
             } catch (RemoteException e) {
                 throw e.rethrowFromSystemServer();
@@ -1873,7 +1459,7 @@ public class ConnectivityManager {
     public int setUsbTethering(boolean enable) {
         try {
             String pkgName = this.mContext.getOpPackageName();
-            Log.i(TAG, "setUsbTethering caller:" + pkgName);
+            Log.m68i(TAG, "setUsbTethering caller:" + pkgName);
             return this.mService.setUsbTethering(enable, pkgName);
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
@@ -1889,42 +1475,44 @@ public class ConnectivityManager {
         }
     }
 
+    /* renamed from: android.net.ConnectivityManager$4 */
+    /* loaded from: classes3.dex */
+    class ResultReceiverC12664 extends ResultReceiver {
+        final /* synthetic */ Executor val$executor;
+        final /* synthetic */ OnTetheringEntitlementResultListener val$listener;
+
+        /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
+        ResultReceiverC12664(Handler x0, Executor executor, OnTetheringEntitlementResultListener onTetheringEntitlementResultListener) {
+            super(x0);
+            this.val$executor = executor;
+            this.val$listener = onTetheringEntitlementResultListener;
+        }
+
+        @Override // android.p007os.ResultReceiver
+        protected void onReceiveResult(final int resultCode, Bundle resultData) {
+            final Executor executor = this.val$executor;
+            final OnTetheringEntitlementResultListener onTetheringEntitlementResultListener = this.val$listener;
+            Binder.withCleanCallingIdentity(new FunctionalUtils.ThrowingRunnable() { // from class: android.net.-$$Lambda$ConnectivityManager$4$Jk-u9vR1DwqMOUorHyaTIOdhOAs
+                @Override // com.android.internal.util.FunctionalUtils.ThrowingRunnable
+                public final void runOrThrow() {
+                    executor.execute(new Runnable() { // from class: android.net.-$$Lambda$ConnectivityManager$4$GbcJVaUJX-pIrYQi94EYHYBwTJI
+                        @Override // java.lang.Runnable
+                        public final void run() {
+                            ConnectivityManager.OnTetheringEntitlementResultListener.this.onTetheringEntitlementResult(r2);
+                        }
+                    });
+                }
+            });
+        }
+    }
+
     @SystemApi
-    public void getLatestTetheringEntitlementResult(int type, boolean showEntitlementUi, final Executor executor, final OnTetheringEntitlementResultListener listener) {
+    public void getLatestTetheringEntitlementResult(int type, boolean showEntitlementUi, Executor executor, OnTetheringEntitlementResultListener listener) {
         Preconditions.checkNotNull(listener, "TetheringEntitlementResultListener cannot be null.");
-        ResultReceiver wrappedListener = new ResultReceiver((Handler) null) {
-            /* access modifiers changed from: protected */
-            public void onReceiveResult(int resultCode, Bundle resultData) {
-                Binder.withCleanCallingIdentity((FunctionalUtils.ThrowingRunnable) new FunctionalUtils.ThrowingRunnable(executor, listener, resultCode) {
-                    private final /* synthetic */ Executor f$0;
-                    private final /* synthetic */ ConnectivityManager.OnTetheringEntitlementResultListener f$1;
-                    private final /* synthetic */ int f$2;
-
-                    {
-                        this.f$0 = r1;
-                        this.f$1 = r2;
-                        this.f$2 = r3;
-                    }
-
-                    public final void runOrThrow() {
-                        this.f$0.execute(new Runnable(this.f$2) {
-                            private final /* synthetic */ int f$1;
-
-                            {
-                                this.f$1 = r2;
-                            }
-
-                            public final void run() {
-                                ConnectivityManager.OnTetheringEntitlementResultListener.this.onTetheringEntitlementResult(this.f$1);
-                            }
-                        });
-                    }
-                });
-            }
-        };
+        ResultReceiver wrappedListener = new ResultReceiverC12664(null, executor, listener);
         try {
             String pkgName = this.mContext.getOpPackageName();
-            Log.i(TAG, "getLatestTetheringEntitlementResult:" + pkgName);
+            Log.m68i(TAG, "getLatestTetheringEntitlementResult:" + pkgName);
             this.mService.getLatestTetheringEntitlementResult(type, wrappedListener, showEntitlementUi, pkgName);
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
@@ -1988,8 +1576,8 @@ public class ConnectivityManager {
         return getProxyForNetwork(getBoundNetworkForProcess());
     }
 
-    @Deprecated
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 130143562)
+    @Deprecated
     public boolean isNetworkSupported(int networkType) {
         try {
             return this.mService.isNetworkSupported(networkType);
@@ -2016,7 +1604,8 @@ public class ConnectivityManager {
 
     public int checkMobileProvisioning(int suggestedTimeOutMs) {
         try {
-            return this.mService.checkMobileProvisioning(suggestedTimeOutMs);
+            int timeOutMs = this.mService.checkMobileProvisioning(suggestedTimeOutMs);
+            return timeOutMs;
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
         }
@@ -2078,9 +1667,9 @@ public class ConnectivityManager {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class NetworkCallback {
-        /* access modifiers changed from: private */
-        public NetworkRequest networkRequest;
+        private NetworkRequest networkRequest;
 
         public void onPreCheck(Network network) {
         }
@@ -2127,13 +1716,13 @@ public class ConnectivityManager {
         if (e.errorCode == 1) {
             return new TooManyRequestsException();
         }
-        Log.w(TAG, "Unknown service error code " + e.errorCode);
+        Log.m64w(TAG, "Unknown service error code " + e.errorCode);
         return new RuntimeException(e);
     }
 
     public static String getCallbackName(int whichCallback) {
         switch (whichCallback) {
-            case CALLBACK_PRECHECK /*524289*/:
+            case CALLBACK_PRECHECK /* 524289 */:
                 return "CALLBACK_PRECHECK";
             case 524290:
                 return "CALLBACK_AVAILABLE";
@@ -2141,25 +1730,26 @@ public class ConnectivityManager {
                 return "CALLBACK_LOSING";
             case 524292:
                 return "CALLBACK_LOST";
-            case CALLBACK_UNAVAIL /*524293*/:
+            case CALLBACK_UNAVAIL /* 524293 */:
                 return "CALLBACK_UNAVAIL";
-            case CALLBACK_CAP_CHANGED /*524294*/:
+            case CALLBACK_CAP_CHANGED /* 524294 */:
                 return "CALLBACK_CAP_CHANGED";
-            case CALLBACK_IP_CHANGED /*524295*/:
+            case CALLBACK_IP_CHANGED /* 524295 */:
                 return "CALLBACK_IP_CHANGED";
-            case EXPIRE_LEGACY_REQUEST /*524296*/:
+            case EXPIRE_LEGACY_REQUEST /* 524296 */:
                 return "EXPIRE_LEGACY_REQUEST";
-            case CALLBACK_SUSPENDED /*524297*/:
+            case CALLBACK_SUSPENDED /* 524297 */:
                 return "CALLBACK_SUSPENDED";
-            case CALLBACK_RESUMED /*524298*/:
+            case CALLBACK_RESUMED /* 524298 */:
                 return "CALLBACK_RESUMED";
-            case CALLBACK_BLK_CHANGED /*524299*/:
+            case CALLBACK_BLK_CHANGED /* 524299 */:
                 return "CALLBACK_BLK_CHANGED";
             default:
                 return Integer.toString(whichCallback);
         }
     }
 
+    /* loaded from: classes3.dex */
     private class CallbackHandler extends Handler {
         private static final boolean DBG = false;
         private static final String TAG = "ConnectivityManager.CallbackHandler";
@@ -2172,238 +1762,69 @@ public class ConnectivityManager {
             this(((Handler) Preconditions.checkNotNull(handler, "Handler cannot be null.")).getLooper());
         }
 
-        /* JADX WARNING: Code restructure failed: missing block: B:16:0x006d, code lost:
-            r2 = r3;
-            r4 = false;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:17:0x0072, code lost:
-            switch(r9.what) {
-                case android.net.ConnectivityManager.CALLBACK_PRECHECK :int: goto L_0x00c9;
-                case 524290: goto L_0x00af;
-                case 524291: goto L_0x00a9;
-                case 524292: goto L_0x00a5;
-                case android.net.ConnectivityManager.CALLBACK_UNAVAIL :int: goto L_0x00a1;
-                case android.net.ConnectivityManager.CALLBACK_CAP_CHANGED :int: goto L_0x0095;
-                case android.net.ConnectivityManager.CALLBACK_IP_CHANGED :int: goto L_0x0089;
-                case android.net.ConnectivityManager.EXPIRE_LEGACY_REQUEST :int: goto L_0x0075;
-                case android.net.ConnectivityManager.CALLBACK_SUSPENDED :int: goto L_0x0085;
-                case android.net.ConnectivityManager.CALLBACK_RESUMED :int: goto L_0x0081;
-                case android.net.ConnectivityManager.CALLBACK_BLK_CHANGED :int: goto L_0x0076;
-                default: goto L_0x0075;
-            };
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:19:0x0078, code lost:
-            if (r9.arg1 == 0) goto L_0x007c;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:20:0x007a, code lost:
-            r4 = true;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:21:0x007c, code lost:
-            r2.onBlockedStatusChanged(r1, r4);
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:22:0x0081, code lost:
-            r2.onNetworkResumed(r1);
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:23:0x0085, code lost:
-            r2.onNetworkSuspended(r1);
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:24:0x0089, code lost:
-            r2.onLinkPropertiesChanged(r1, (android.net.LinkProperties) getObject(r9, android.net.LinkProperties.class));
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:25:0x0095, code lost:
-            r2.onCapabilitiesChanged(r1, (android.net.NetworkCapabilities) getObject(r9, android.net.NetworkCapabilities.class));
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:26:0x00a1, code lost:
-            r2.onUnavailable();
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:27:0x00a5, code lost:
-            r2.onLost(r1);
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:28:0x00a9, code lost:
-            r2.onLosing(r1, r9.arg1);
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:29:0x00af, code lost:
-            r3 = (android.net.NetworkCapabilities) getObject(r9, android.net.NetworkCapabilities.class);
-            r6 = (android.net.LinkProperties) getObject(r9, android.net.LinkProperties.class);
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:30:0x00c1, code lost:
-            if (r9.arg1 == 0) goto L_0x00c5;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:31:0x00c3, code lost:
-            r4 = true;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:32:0x00c5, code lost:
-            r2.onAvailable(r1, r3, r6, r4);
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:33:0x00c9, code lost:
-            r2.onPreCheck(r1);
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:41:?, code lost:
-            return;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:42:?, code lost:
-            return;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:43:?, code lost:
-            return;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:44:?, code lost:
-            return;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:45:?, code lost:
-            return;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:46:?, code lost:
-            return;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:47:?, code lost:
-            return;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:48:?, code lost:
-            return;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:49:?, code lost:
-            return;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:50:?, code lost:
-            return;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:51:?, code lost:
-            return;
-         */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public void handleMessage(android.os.Message r9) {
-            /*
-                r8 = this;
-                int r0 = r9.what
-                r1 = 524296(0x80008, float:7.34695E-40)
-                if (r0 != r1) goto L_0x0013
-                android.net.ConnectivityManager r0 = android.net.ConnectivityManager.this
-                java.lang.Object r1 = r9.obj
-                android.net.NetworkCapabilities r1 = (android.net.NetworkCapabilities) r1
-                int r2 = r9.arg1
-                r0.expireRequest(r1, r2)
-                return
-            L_0x0013:
-                java.lang.Class<android.net.NetworkRequest> r0 = android.net.NetworkRequest.class
-                java.lang.Object r0 = r8.getObject(r9, r0)
-                android.net.NetworkRequest r0 = (android.net.NetworkRequest) r0
-                java.lang.Class<android.net.Network> r1 = android.net.Network.class
-                java.lang.Object r1 = r8.getObject(r9, r1)
-                android.net.Network r1 = (android.net.Network) r1
-                java.util.HashMap r2 = android.net.ConnectivityManager.sCallbacks
-                monitor-enter(r2)
-                java.util.HashMap r3 = android.net.ConnectivityManager.sCallbacks     // Catch:{ all -> 0x00ce }
-                java.lang.Object r3 = r3.get(r0)     // Catch:{ all -> 0x00ce }
-                android.net.ConnectivityManager$NetworkCallback r3 = (android.net.ConnectivityManager.NetworkCallback) r3     // Catch:{ all -> 0x00ce }
-                if (r3 != 0) goto L_0x0057
-                java.lang.String r4 = "ConnectivityManager.CallbackHandler"
-                java.lang.StringBuilder r5 = new java.lang.StringBuilder     // Catch:{ all -> 0x00ce }
-                r5.<init>()     // Catch:{ all -> 0x00ce }
-                java.lang.String r6 = "callback not found for "
-                r5.append(r6)     // Catch:{ all -> 0x00ce }
-                int r6 = r9.what     // Catch:{ all -> 0x00ce }
-                java.lang.String r6 = android.net.ConnectivityManager.getCallbackName(r6)     // Catch:{ all -> 0x00ce }
-                r5.append(r6)     // Catch:{ all -> 0x00ce }
-                java.lang.String r6 = " message"
-                r5.append(r6)     // Catch:{ all -> 0x00ce }
-                java.lang.String r5 = r5.toString()     // Catch:{ all -> 0x00ce }
-                android.util.Log.w((java.lang.String) r4, (java.lang.String) r5)     // Catch:{ all -> 0x00ce }
-                monitor-exit(r2)     // Catch:{ all -> 0x00ce }
-                return
-            L_0x0057:
-                int r4 = r9.what     // Catch:{ all -> 0x00ce }
-                r5 = 524293(0x80005, float:7.34691E-40)
-                if (r4 != r5) goto L_0x006c
-                java.util.HashMap r4 = android.net.ConnectivityManager.sCallbacks     // Catch:{ all -> 0x00ce }
-                r4.remove(r0)     // Catch:{ all -> 0x00ce }
-                android.net.NetworkRequest r4 = android.net.ConnectivityManager.ALREADY_UNREGISTERED     // Catch:{ all -> 0x00ce }
-                android.net.NetworkRequest unused = r3.networkRequest = r4     // Catch:{ all -> 0x00ce }
-            L_0x006c:
-                monitor-exit(r2)     // Catch:{ all -> 0x00ce }
-                r2 = r3
-                int r3 = r9.what
-                r4 = 0
-                r5 = 1
-                switch(r3) {
-                    case 524289: goto L_0x00c9;
-                    case 524290: goto L_0x00af;
-                    case 524291: goto L_0x00a9;
-                    case 524292: goto L_0x00a5;
-                    case 524293: goto L_0x00a1;
-                    case 524294: goto L_0x0095;
-                    case 524295: goto L_0x0089;
-                    case 524296: goto L_0x0075;
-                    case 524297: goto L_0x0085;
-                    case 524298: goto L_0x0081;
-                    case 524299: goto L_0x0076;
-                    default: goto L_0x0075;
+        @Override // android.p007os.Handler
+        public void handleMessage(Message message) {
+            if (message.what == ConnectivityManager.EXPIRE_LEGACY_REQUEST) {
+                ConnectivityManager.this.expireRequest((NetworkCapabilities) message.obj, message.arg1);
+                return;
+            }
+            NetworkRequest request = (NetworkRequest) getObject(message, NetworkRequest.class);
+            Network network = (Network) getObject(message, Network.class);
+            synchronized (ConnectivityManager.sCallbacks) {
+                NetworkCallback callback = (NetworkCallback) ConnectivityManager.sCallbacks.get(request);
+                if (callback == null) {
+                    Log.m64w(TAG, "callback not found for " + ConnectivityManager.getCallbackName(message.what) + " message");
+                    return;
                 }
-            L_0x0075:
-                goto L_0x00cd
-            L_0x0076:
-                int r3 = r9.arg1
-                if (r3 == 0) goto L_0x007c
-                r4 = r5
-            L_0x007c:
-                r3 = r4
-                r2.onBlockedStatusChanged(r1, r3)
-                goto L_0x00cd
-            L_0x0081:
-                r2.onNetworkResumed(r1)
-                goto L_0x00cd
-            L_0x0085:
-                r2.onNetworkSuspended(r1)
-                goto L_0x00cd
-            L_0x0089:
-                java.lang.Class<android.net.LinkProperties> r3 = android.net.LinkProperties.class
-                java.lang.Object r3 = r8.getObject(r9, r3)
-                android.net.LinkProperties r3 = (android.net.LinkProperties) r3
-                r2.onLinkPropertiesChanged(r1, r3)
-                goto L_0x00cd
-            L_0x0095:
-                java.lang.Class<android.net.NetworkCapabilities> r3 = android.net.NetworkCapabilities.class
-                java.lang.Object r3 = r8.getObject(r9, r3)
-                android.net.NetworkCapabilities r3 = (android.net.NetworkCapabilities) r3
-                r2.onCapabilitiesChanged(r1, r3)
-                goto L_0x00cd
-            L_0x00a1:
-                r2.onUnavailable()
-                goto L_0x00cd
-            L_0x00a5:
-                r2.onLost(r1)
-                goto L_0x00cd
-            L_0x00a9:
-                int r3 = r9.arg1
-                r2.onLosing(r1, r3)
-                goto L_0x00cd
-            L_0x00af:
-                java.lang.Class<android.net.NetworkCapabilities> r3 = android.net.NetworkCapabilities.class
-                java.lang.Object r3 = r8.getObject(r9, r3)
-                android.net.NetworkCapabilities r3 = (android.net.NetworkCapabilities) r3
-                java.lang.Class<android.net.LinkProperties> r6 = android.net.LinkProperties.class
-                java.lang.Object r6 = r8.getObject(r9, r6)
-                android.net.LinkProperties r6 = (android.net.LinkProperties) r6
-                int r7 = r9.arg1
-                if (r7 == 0) goto L_0x00c5
-                r4 = r5
-            L_0x00c5:
-                r2.onAvailable(r1, r3, r6, r4)
-                goto L_0x00cd
-            L_0x00c9:
-                r2.onPreCheck(r1)
-            L_0x00cd:
-                return
-            L_0x00ce:
-                r3 = move-exception
-                monitor-exit(r2)     // Catch:{ all -> 0x00ce }
-                throw r3
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.net.ConnectivityManager.CallbackHandler.handleMessage(android.os.Message):void");
+                if (message.what == 524293) {
+                    ConnectivityManager.sCallbacks.remove(request);
+                    callback.networkRequest = ConnectivityManager.ALREADY_UNREGISTERED;
+                }
+                switch (message.what) {
+                    case ConnectivityManager.CALLBACK_PRECHECK /* 524289 */:
+                        callback.onPreCheck(network);
+                        return;
+                    case 524290:
+                        NetworkCapabilities cap = (NetworkCapabilities) getObject(message, NetworkCapabilities.class);
+                        LinkProperties lp = (LinkProperties) getObject(message, LinkProperties.class);
+                        callback.onAvailable(network, cap, lp, message.arg1 != 0);
+                        return;
+                    case 524291:
+                        callback.onLosing(network, message.arg1);
+                        return;
+                    case 524292:
+                        callback.onLost(network);
+                        return;
+                    case ConnectivityManager.CALLBACK_UNAVAIL /* 524293 */:
+                        callback.onUnavailable();
+                        return;
+                    case ConnectivityManager.CALLBACK_CAP_CHANGED /* 524294 */:
+                        NetworkCapabilities cap2 = (NetworkCapabilities) getObject(message, NetworkCapabilities.class);
+                        callback.onCapabilitiesChanged(network, cap2);
+                        return;
+                    case ConnectivityManager.CALLBACK_IP_CHANGED /* 524295 */:
+                        LinkProperties lp2 = (LinkProperties) getObject(message, LinkProperties.class);
+                        callback.onLinkPropertiesChanged(network, lp2);
+                        return;
+                    case ConnectivityManager.EXPIRE_LEGACY_REQUEST /* 524296 */:
+                    default:
+                        return;
+                    case ConnectivityManager.CALLBACK_SUSPENDED /* 524297 */:
+                        callback.onNetworkSuspended(network);
+                        return;
+                    case ConnectivityManager.CALLBACK_RESUMED /* 524298 */:
+                        callback.onNetworkResumed(network);
+                        return;
+                    case ConnectivityManager.CALLBACK_BLK_CHANGED /* 524299 */:
+                        boolean blocked = message.arg1 != 0;
+                        callback.onBlockedStatusChanged(network, blocked);
+                        return;
+                }
+            }
         }
 
         private <T> T getObject(Message msg, Class<T> c) {
-            return msg.getData().getParcelable(c.getSimpleName());
+            return (T) msg.getData().getParcelable(c.getSimpleName());
         }
     }
 
@@ -2420,66 +1841,78 @@ public class ConnectivityManager {
 
     private NetworkRequest sendRequestForNetwork(NetworkCapabilities need, NetworkCallback callback, int timeoutMs, int action, int legacyType, CallbackHandler handler) {
         NetworkRequest request;
-        NetworkCapabilities networkCapabilities = need;
-        NetworkCallback networkCallback = callback;
-        int i = action;
         printStackTrace();
         checkCallbackNotNull(callback);
-        Preconditions.checkArgument(i == 2 || networkCapabilities != null, "null NetworkCapabilities");
+        Preconditions.checkArgument(action == 2 || need != null, "null NetworkCapabilities");
         try {
-            synchronized (sCallbacks) {
-                try {
-                    if (!(callback.networkRequest == null || callback.networkRequest == ALREADY_UNREGISTERED)) {
-                        Log.e(TAG, "NetworkCallback was already registered");
+            try {
+                synchronized (sCallbacks) {
+                    try {
+                        if (callback.networkRequest != null && callback.networkRequest != ALREADY_UNREGISTERED) {
+                            Log.m70e(TAG, "NetworkCallback was already registered");
+                        }
+                        Messenger messenger = new Messenger(handler);
+                        Binder binder = new Binder();
+                        if (action == 1) {
+                            request = this.mService.listenForNetwork(need, messenger, binder);
+                        } else {
+                            request = this.mService.requestNetwork(need, messenger, timeoutMs, binder, legacyType);
+                        }
+                        if (request != null) {
+                            sCallbacks.put(request, callback);
+                        }
+                        callback.networkRequest = request;
+                        return request;
+                    } catch (Throwable th) {
+                        th = th;
+                        try {
+                            throw th;
+                        } catch (RemoteException e) {
+                            e = e;
+                            throw e.rethrowFromSystemServer();
+                        } catch (ServiceSpecificException e2) {
+                            e = e2;
+                            throw convertServiceException(e);
+                        }
                     }
-                    Messenger messenger = new Messenger((Handler) handler);
-                    Binder binder = new Binder();
-                    if (i == 1) {
-                        request = this.mService.listenForNetwork(networkCapabilities, messenger, binder);
-                    } else {
-                        request = this.mService.requestNetwork(need, messenger, timeoutMs, binder, legacyType);
-                    }
-                    if (request != null) {
-                        sCallbacks.put(request, networkCallback);
-                    }
-                    NetworkRequest unused = networkCallback.networkRequest = request;
-                    return request;
-                } catch (Throwable th) {
-                    th = th;
-                    throw th;
                 }
+            } catch (Throwable th2) {
+                th = th2;
             }
-        } catch (RemoteException e) {
-            e = e;
-            CallbackHandler callbackHandler = handler;
-            throw e.rethrowFromSystemServer();
-        } catch (ServiceSpecificException e2) {
-            e = e2;
-            CallbackHandler callbackHandler2 = handler;
-            throw convertServiceException(e);
+        } catch (RemoteException e3) {
+            e = e3;
+        } catch (ServiceSpecificException e4) {
+            e = e4;
         }
     }
 
     public void requestNetwork(NetworkRequest request, NetworkCallback networkCallback, int timeoutMs, int legacyType, Handler handler) {
-        sendRequestForNetwork(request.networkCapabilities, networkCallback, timeoutMs, 2, legacyType, new CallbackHandler(this, handler));
+        CallbackHandler cbHandler = new CallbackHandler(this, handler);
+        NetworkCapabilities nc = request.networkCapabilities;
+        sendRequestForNetwork(nc, networkCallback, timeoutMs, 2, legacyType, cbHandler);
     }
 
     public void requestNetwork(NetworkRequest request, NetworkCallback networkCallback) {
-        requestNetwork(request, networkCallback, (Handler) getDefaultHandler());
+        requestNetwork(request, networkCallback, getDefaultHandler());
     }
 
     public void requestNetwork(NetworkRequest request, NetworkCallback networkCallback, Handler handler) {
-        requestNetwork(request, networkCallback, 0, inferLegacyTypeForNetworkCapabilities(request.networkCapabilities), new CallbackHandler(this, handler));
+        int legacyType = inferLegacyTypeForNetworkCapabilities(request.networkCapabilities);
+        CallbackHandler cbHandler = new CallbackHandler(this, handler);
+        requestNetwork(request, networkCallback, 0, legacyType, cbHandler);
     }
 
     public void requestNetwork(NetworkRequest request, NetworkCallback networkCallback, int timeoutMs) {
         checkTimeout(timeoutMs);
-        requestNetwork(request, networkCallback, timeoutMs, inferLegacyTypeForNetworkCapabilities(request.networkCapabilities), getDefaultHandler());
+        int legacyType = inferLegacyTypeForNetworkCapabilities(request.networkCapabilities);
+        requestNetwork(request, networkCallback, timeoutMs, legacyType, getDefaultHandler());
     }
 
     public void requestNetwork(NetworkRequest request, NetworkCallback networkCallback, Handler handler, int timeoutMs) {
         checkTimeout(timeoutMs);
-        requestNetwork(request, networkCallback, timeoutMs, inferLegacyTypeForNetworkCapabilities(request.networkCapabilities), new CallbackHandler(this, handler));
+        int legacyType = inferLegacyTypeForNetworkCapabilities(request.networkCapabilities);
+        CallbackHandler cbHandler = new CallbackHandler(this, handler);
+        requestNetwork(request, networkCallback, timeoutMs, legacyType, cbHandler);
     }
 
     public void requestNetwork(NetworkRequest request, PendingIntent operation) {
@@ -2521,7 +1954,9 @@ public class ConnectivityManager {
     }
 
     public void registerNetworkCallback(NetworkRequest request, NetworkCallback networkCallback, Handler handler) {
-        sendRequestForNetwork(request.networkCapabilities, networkCallback, 0, 1, -1, new CallbackHandler(this, handler));
+        CallbackHandler cbHandler = new CallbackHandler(this, handler);
+        NetworkCapabilities nc = request.networkCapabilities;
+        sendRequestForNetwork(nc, networkCallback, 0, 1, -1, cbHandler);
     }
 
     public void registerNetworkCallback(NetworkRequest request, PendingIntent operation) {
@@ -2541,7 +1976,8 @@ public class ConnectivityManager {
     }
 
     public void registerDefaultNetworkCallback(NetworkCallback networkCallback, Handler handler) {
-        sendRequestForNetwork((NetworkCapabilities) null, networkCallback, 0, 2, -1, new CallbackHandler(this, handler));
+        CallbackHandler cbHandler = new CallbackHandler(this, handler);
+        sendRequestForNetwork(null, networkCallback, 0, 2, -1, cbHandler);
     }
 
     public boolean requestBandwidthUpdate(Network network) {
@@ -2559,7 +1995,7 @@ public class ConnectivityManager {
         synchronized (sCallbacks) {
             Preconditions.checkArgument(networkCallback.networkRequest != null, "NetworkCallback was not registered");
             if (networkCallback.networkRequest == ALREADY_UNREGISTERED) {
-                Log.d(TAG, "NetworkCallback was already unregistered");
+                Log.m72d(TAG, "NetworkCallback was already unregistered");
                 return;
             }
             for (Map.Entry<NetworkRequest, NetworkCallback> e : sCallbacks.entrySet()) {
@@ -2575,7 +2011,7 @@ public class ConnectivityManager {
                     throw e2.rethrowFromSystemServer();
                 }
             }
-            NetworkRequest unused = networkCallback.networkRequest = ALREADY_UNREGISTERED;
+            networkCallback.networkRequest = ALREADY_UNREGISTERED;
         }
     }
 
@@ -2668,7 +2104,7 @@ public class ConnectivityManager {
             try {
                 Proxy.setHttpProxySystemProperty(getInstance().getDefaultProxy());
             } catch (SecurityException e) {
-                Log.e(TAG, "Can't set proxy properties", e);
+                Log.m69e(TAG, "Can't set proxy properties", e);
             }
             InetAddress.clearDnsCache();
             NetworkEventDispatcher.getInstance().onNetworkConfigurationChanged();
@@ -2699,8 +2135,8 @@ public class ConnectivityManager {
         unsupportedStartingFrom(23);
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public static boolean setProcessDefaultNetworkForHostResolution(Network network) {
         return NetworkUtils.bindProcessToNetworkForHostResolution(network == null ? 0 : network.getNetIdForResolv());
     }
@@ -2708,12 +2144,10 @@ public class ConnectivityManager {
     private INetworkPolicyManager getNetworkPolicyManager() {
         synchronized (this) {
             if (this.mNPManager != null) {
-                INetworkPolicyManager iNetworkPolicyManager = this.mNPManager;
-                return iNetworkPolicyManager;
+                return this.mNPManager;
             }
             this.mNPManager = INetworkPolicyManager.Stub.asInterface(ServiceManager.getService(Context.NETWORK_POLICY_SERVICE));
-            INetworkPolicyManager iNetworkPolicyManager2 = this.mNPManager;
-            return iNetworkPolicyManager2;
+            return this.mNPManager;
         }
     }
 
@@ -2729,14 +2163,15 @@ public class ConnectivityManager {
         try {
             return this.mService.getNetworkWatchlistConfigHash();
         } catch (RemoteException e) {
-            Log.e(TAG, "Unable to get watchlist config hash");
+            Log.m70e(TAG, "Unable to get watchlist config hash");
             throw e.rethrowFromSystemServer();
         }
     }
 
     public int getConnectionOwnerUid(int protocol, InetSocketAddress local, InetSocketAddress remote) {
+        ConnectionInfo connectionInfo = new ConnectionInfo(protocol, local, remote);
         try {
-            return this.mService.getConnectionOwnerUid(new ConnectionInfo(protocol, local, remote));
+            return this.mService.getConnectionOwnerUid(connectionInfo);
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
         }
@@ -2747,14 +2182,12 @@ public class ConnectivityManager {
         if (DEBUG) {
             StackTraceElement[] callStack = Thread.currentThread().getStackTrace();
             StringBuffer sb = new StringBuffer();
-            int i = 3;
-            while (i < callStack.length && (stackTrace = callStack[i].toString()) != null && !stackTrace.contains("android.os")) {
+            for (int i = 3; i < callStack.length && (stackTrace = callStack[i].toString()) != null && !stackTrace.contains("android.os"); i++) {
                 sb.append(" [");
                 sb.append(stackTrace);
                 sb.append("]");
-                i++;
             }
-            Log.d(TAG, "StackLog:" + sb.toString());
+            Log.m72d(TAG, "StackLog:" + sb.toString());
         }
     }
 }

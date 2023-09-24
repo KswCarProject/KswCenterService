@@ -3,6 +3,7 @@ package android.graphics;
 import android.annotation.UnsupportedAppUsage;
 import com.android.internal.util.ArrayUtils;
 
+/* loaded from: classes.dex */
 public class TemporaryBuffer {
     private static char[] sTemp = null;
 
@@ -21,10 +22,11 @@ public class TemporaryBuffer {
 
     @UnsupportedAppUsage
     public static void recycle(char[] temp) {
-        if (temp.length <= 1000) {
-            synchronized (TemporaryBuffer.class) {
-                sTemp = temp;
-            }
+        if (temp.length > 1000) {
+            return;
+        }
+        synchronized (TemporaryBuffer.class) {
+            sTemp = temp;
         }
     }
 }
